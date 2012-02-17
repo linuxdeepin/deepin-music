@@ -41,10 +41,10 @@ class Config(gobject.GObject, Logger):
         self.remove_option = self._config.remove_option
         self.has_option    = self._config.has_option
         self.add_section   = self._config.add_section
-        self.getboolean    = self.getboolean
-        self.getint        = self.getint
-        self.getfloat      = self.getfloat
-        self.options       = self.options
+        self.getboolean    = self._config.getboolean
+        self.getint        = self._config.getint
+        self.getfloat      = self._config.getfloat
+        self.options       = self._config.options
         
         # Load default configure.
         for section, items in self.__get_default().iteritems():
@@ -99,4 +99,3 @@ class Config(gobject.GObject, Logger):
         
     
 config = Config()    
-    

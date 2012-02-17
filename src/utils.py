@@ -431,3 +431,35 @@ def download(remote_uri, local_uri, buffer_len=4096, timeout=DEFAULT_TIMEOUT):
         return False
     return True
     
+def threaded(func):
+    ''' the func threaded. '''
+    def wrapper(*args):
+        t = threading.Thread(target=func, args=args)
+        t.setDaemon(True)
+        t.start()
+    return wrapper    
+
+def print_timeing(func):
+    def wrapper(*arg):
+        start_time = time.time()
+        res = func(*arg)
+        end_time   = time.time()
+        if hasattr(func, "im_class"):
+            class_name = func.im_class__name__ + ":"
+        print "%s took %0.3fms" % (class_name + func.func_name, (start_time - end_time) * 1000.0)    
+        return res
+    return wrapper
+
+def dbus_service_available(bus, interface, try_start_service=False):
+    ''' detect the dbus service is available. and try to start it.'''
+    try:
+        import dbus
+    except:    
+        return False
+    if try_start_service:
+        bus.start_service_by_name(interface)
+    obj = bus.get_object("org.freedesktop.DBus", "/org/freedesktop/DBus")    
+    dbus_interface = dbus.Interface(obj, "org.freedesktop.DBus")
+    avail = dbus_interface.ListNames()
+    return interface in avail
+

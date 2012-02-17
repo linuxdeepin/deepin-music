@@ -1,13 +1,16 @@
+#! /usr/bin/env python
 # -*- coding: utf-8 -*-
-# vim: ts=4
-###
+
+# Copyright (C) 2011 Deepin, Inc.
+#               2011 Hou Shaohui
 #
-# Listen is the legal property of mehdi abaakouk <theli48@gmail.com>
-# Copyright (c) 2006 Mehdi Abaakouk
+# Author:     Hou Shaohui <houshao55@gmail.com>
+# Maintainer: Hou ShaoHui <houshao55@gmail.com>
 #
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License version 2 as
-# published by the Free Software Foundation
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
 #
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -15,32 +18,8 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
-#
-###
-#
-# Modification of easyid3 from mutagen
-# to add correction of broken latin-1 string 
-# Add a easyMP3 class to have same behavior than other mutagen FileType class
-#
-###
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
-# Simpler (but far more limited) API for ID3 editing
-# Copyright 2006 Joe Wreschnig
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of version 2 of the GNU General Public License as
-# published by the Free Software Foundation.
-#
-# $Id: id3.py 3086 2006-04-04 02:13:21Z piman $
-
-"""Easier access to ID3 tags.
-
-EasyID3 is a wrapper around mutagen.id3.ID3 to make ID3 tags appear
-more like Vorbis or APEv2 tags.
-"""
 
 import mutagen.id3
 from mutagen import Metadata
