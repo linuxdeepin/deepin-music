@@ -366,7 +366,7 @@ class Song(dict, Logger):
                 raise "W:Song:GstTag:Decoder error: %s\n%s" % (err,debug)
         try:    
             try:
-                pipeline = gst.parse_lauch("gnomevfssrc location="+self.get("uri")+" ! decodebin name=decoder ! fakesink")
+                pipeline = gst.parse_launch("gnomevfssrc location="+self.get("uri")+" ! decodebin name=decoder ! fakesink")
             except gobject.GError:    
                 raise "W:Song:GstTag:Failed to build pipeline to read metadata of",self.get("uri")
             
@@ -423,7 +423,7 @@ class Song(dict, Logger):
             audio = utils.MutagenFile(self.get_path(), utils.FORMATS)
             tag_keys_override = None
             
-            if aduio is not None:
+            if audio is not None:
                 if audio.tags is None:
                     audio.add_tags()
                 tag_keys_override = TAGS_KEYS_OVERRIDE.get(audio.__class__.__name__, None)    
@@ -434,7 +434,7 @@ class Song(dict, Logger):
                         
                     if self.get(tag):    
                         value = unicode(self.get(tag))
-                        aduio[file_tag] = value
+                        audio[file_tag] = value
                     else:    
                         try:
                             del(audio[file_tag]) # TEST
@@ -460,11 +460,18 @@ if __name__ == "__main__":
     song = Song()
     song.init_from_dict({"uri":unicode(sys.argv[1])})
     song.read_from_file()
+    print "标题: ", song.get_str("title")
+    print "艺术家: ", song.get_str("artist")
+    print "专辑: ", song.get_str("genre")
     print "歌曲总长: ", song.get_str("#duration")
+    print "添加时间: ", song.get_str("#added")
+    print "比特率: ", song.get_str("#bitrate")
+    print "文件路径:", song.get_str("uri")
     print "排序对象: ", song.sort_key
     print "检索文本: ", song.get_searchable()
     print "查看字典: ", song.get_dict()
-    
+    # song["genre"] = u"小邪兽"
+    # song.write_to_file()
 
    
     
