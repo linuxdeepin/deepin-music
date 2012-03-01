@@ -30,9 +30,9 @@ from constant import CONFIG_FILENAME
 
 
 class Config(gobject.GObject, Logger):
-    __gsignal__ = {
+    __gsignals__ = {
         "config-changed" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
-                            gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING)
+                            (gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING))
         }
     
     def __init__(self):

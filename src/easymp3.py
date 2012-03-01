@@ -26,6 +26,7 @@ from mutagen import Metadata
 from mutagen._util import DictMixin
 from mutagen.id3 import ID3 as mutagenID3, error
 from mutagen.mp3 import MP3
+import utils
 
 __all__ = ['EasyID3', 'Open', 'delete']
 
@@ -77,7 +78,7 @@ class EasyID3(DictMixin, Metadata):
         assert isinstance(text, unicode)
         if encoding == 0:
             text = text.encode('iso-8859-1')
-            for codec in ['utf-8','iso-8859-1','iso-8559-15','cp1251']:
+            for codec in ['utf-8','iso-8859-1','iso-8559-15','cp1251', "gbk"]:
                 try: text = text.decode(codec)
                 except (UnicodeError, LookupError): pass
                 else:break

@@ -20,52 +20,31 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+
 import os
-import traceback
 import gst
 import gobject
 from time import time
 from datetime import datetime
+import traceback
 
-from logger import Logger
+
 import utils
+from logger import Logger
+import pinyin
 
-from mutagen import File as MutagenFile
-from mutagen.asf import ASF
-from mutagen.apev2 import APEv2File
-from mutagen.flac import FLAC
-from mutagen.id3 import ID3FileType
-from mutagen.oggflac import OggFLAC
-from mutagen.oggspeex import OggSpeex
-from mutagen.oggtheora import OggTheora
-from mutagen.oggvorbis import OggVorbis
-from mutagen.trueaudio import TrueAudio
-from mutagen.wavpack import WavPack
-try: from mutagen.mp4 import MP4 #@UnusedImport
-except: from mutagen.m4a import M4A as MP4 #@Reimport
-from mutagen.musepack import Musepack
-from mutagen.monkeysaudio import MonkeysAudio
-from mutagen.optimfrog import OptimFROG
-from easymp3 import EasyMP3
-
-
-
-FORMATS = [EasyMP3, TrueAudio, OggTheora, OggSpeex, OggVorbis, OggFLAC,
-            FLAC, APEv2File, MP4, ID3FileType, WavPack, Musepack,
-            MonkeysAudio, OptimFROG, ASF]
-
-TAG_KEYS = {
-    "title"       : "title",
-    "artist"      : "artist",
-    "album"       : "album",
-    "tracknumber" : "#track",
-    "discnumber"  : "#disc",
-    "genre"       : "genre",
-    "date"        : "date"
-    }
+TAG_KEYS = {"title"      : "title",
+            "artist"     : "artist",
+            "album"      : "album",
+            "tracknumber": "#track",
+            "discnumber" : "#disc",
+            "genre"      : "genre",
+            "date"       : "date"}
 
 TAGS_KEYS_OVERRIDE = {}
+
 TAGS_KEYS_OVERRIDE['Musepack'] = {"tracknumber":"track","date":"year"}
+
 TAGS_KEYS_OVERRIDE['MP4'] = {
         "title":"\xa9nam",
         "artist":"\xa9ART",
@@ -75,6 +54,7 @@ TAGS_KEYS_OVERRIDE['MP4'] = {
         "genre":"\xa9gen",
         "date":"\xa9day"
         }
+
 TAGS_KEYS_OVERRIDE['ASF'] = {
         "title":"Title",
         "artist":"Author",
@@ -85,92 +65,67 @@ TAGS_KEYS_OVERRIDE['ASF'] = {
         "date":"WM/Year"
         }
 
-def fileIsSupported(filename):
-    ''' Determine whether a file support. '''
-    try:
-        fileobj = file(filename, "rb")
-    except:    
-        return False
-    try:
-        header = fileobj.read(128)
-        results = [kind.score(filename, fileobj, header) for kind in FORMATS]
-    finally:    
-        fileobj.close()
-    results = zip(results, FORMATS)    
-    results.sort()
-    score, kind  = results[-1]
-    if score > 0:
-        return True
-    else:
-        return False
-    
 USED_KEYS="""
-==song_type==
-uri station info_supp
-#track title artist album genre #duration #progress podcast_local_uri #disc
-#playcount #skipcount #lastplayed #added #date date year
-description descriptionrss podcast_feed_url hidden
-#mtime #ctime #rate 
-album_cover_url station_track_url
-#progress radio_person
-#bitrate
-#size
-#stream_offset 
+song_type
+uri title artist album genre data year 
+description hidden album_colver_url station info_supp station_track_url
+#track #duration #progress #disc 
+#playcount #skipcount 
+#lastplayed #added #date #mtime #ctime #rate #progress #bitrate #size #stream_offset
 """.split()
 
-KEY_TYPES= {
-    "float":"#date".split(),
-    "long":"#duration".split()
-    }
-
 class Song(dict, Logger):
-    " the deepin music player of song type. "
-    def initFromDict(self, otherdict=None):
-        if otherdict:
+    ''' The deepin music song class. '''
+    def init_from_dict(self, other_dict=None):
+        ''' init from other dict. '''
+        if other_dict:
             for key in USED_KEYS:
                 default = (key.startswith("#")) and 0 or None
-                self[key] = otherdict.get(key, default)
-        if "#added" not in self:        
+                self[key] = other_dict.get(key, default)
+        if not self["#added"]:
             self["#added"] = time()
             
-    def getDict(self):        
-        ''' get Song dict copy without None keys.'''
-        copydict = {}
+    def get_dict(self):        
+        ''' return valid key dict. '''
+        valid_dict = {}
         for key, value in self.iteritems():
-            if value in not None:
-                copydict[key] = value
-        return copydict        
+            if value is not None:
+                valid_dict[key] = value
+        return valid_dict        
     
-    def getType(self):
-        ''' get song type. '''
-        if self.has_key("==song_type=="):
-            return self["==song_type=="]
+    def get_type(self):
+        ''' return the song type. '''
+        if self.has_key("song_type"):
+            return self["song_type"]
         else:
-            return "unknow"
+            return "unknown"
         
-    def setType(self, songtype):    
-        ''' set song type. '''
-        self["==song_type"] = songtype
+    def set_type(self, song_type):
+        ''' Set the song type. '''
+        self["song_type"] = song_type
         
-    def getValue(self, key):    
-        ''' get a formated version of the tag \"key\". '''
-        if key in ["uri", "title", "album", "genre", "artist"]:
-            value = self.get(key)
+    def get_str(self, key, xml=False):    
+        '''Get a formated version of the tag information.'''
+        if key == "uri":
+            value = utils.unesape_string_for_display(self.get("uri"))
+        elif key == "title":    
+            value = self.get("title")
+            if not value:
+                value = utils.get_name(utils.unesape_string_for_display(self.get(uri)))
         elif key == "#bitrate":
             value = self.get("#bitrate")
-            if value:
-                value = "%dk" % value
-        elif key == "#duration":
-            value = utils.durationToString(self.get(key))
+            if value: value = "%dk" % value
+        elif key == "#duration":    
+            value = utils.duration_to_string(self.get(key))
         elif key == "#lastplayed":    
             value = self.get(key)
             if value:
                 value = datetime.fromtimestamp(int(value)).strftime("%x %X")
-            else:                
-                value = "never"
-        elif kye == "#playcount":        
-            value = self.get(key) or "never"
-        elif key == "#date" or key == "#added":    
+            else:    
+                value = "Never"
+        elif key == "#playcount":        
+            value = self.get(key) or "Never"
+        elif key in ["#date", "#added"]:
             value = self.get(key)
             if value:
                 value = datetime.fromtimestamp(int(value)).strftime("%x %X")
@@ -178,9 +133,8 @@ class Song(dict, Logger):
             rate = self.get("rate")
             if rate in [0,1,2,3,4,5,"0","1","2","3","4","5"]:
                 value = "rate-" + str(rate)
-            else:    
-                value = "rate-0"
-        elif key == "date":        
+            else: value = "rate-0"    
+        elif key == "date":    
             try:
                 value = self.get("date", "")[:4]
             except (ValueError, TypeError, KeyError):    
@@ -193,45 +147,310 @@ class Song(dict, Logger):
                     value = ""
         else:            
             value = None
-        if not value:    
-            value = self.get(key,"")
-            if isinstance(value, int) or isinstance(value, float):
-                value = "%d" % value
-        try:        
-            value = unicode(value)
-        except UnicodeDecodeError:    
-            value = ""
-        return Value    
+        if not value: value = self.get(key, "")    
+        if isinstance(value, int) or isinstance(value, float): value = "%d" % value
+        return value
+        
+    def get_filter(self):
+        return " ".join([self.get_str("artist"),
+                         self.get_str("album"),
+                         self.get_str("title"),])
     
-    def getFilter(self):
-        ''' return the filter string. '''
-        return " ".join([
-                self.getValue("artist"),
-                self.getValue("album"),
-                self.getValue("title"),
-                ])
-    
-    def match(self, filters):
-        if filters == None:
-            return True
-        search = self.getFilter()
-        return len( [ s for s in filters if search.find(s) != -1]) == len(filters)
-    
-    def getSortable(self, key):
-            
-        if key == "uri":
-            value = self.getValue("uri").lower()
-        elif key in ["album", "genre", "artist", "title"]:    
-            value = self.getValue(key).lower()
+    def match(self, filter):
+        if filter == None: return True
+        search = self.get_filter()
+        return len( [ s for s in filter if search.find(s) != -1 ] ) == len(filter)
+        
+    def get_sortable(self, key):
+        '''Get sortable of the key.'''
+        if key in ["uri", "album", "genre", "artist", "title"]:
+            value = pinyin.transfer(self.get_str(key))
         elif key == "date":    
             value = self.get("#date")
             if not value: value = None
         else:    
             value = self.get(key)
+            
         if not value and key[0] == "#": value = 0    
         return value
+    
+    def __setitem__(self, key, value):
+        if key == "#track":
+            if value is not None and not isinstance(value,int) and value.rfind("/")!=-1 and value.strip()!="":
+                value = value.strip()
 
+                disc_nr = value[value.rfind("/"):]
+                try: 
+                    disc_nr = int(disc_nr)
+                except: 
+                    disc_nr = self.get("#disc")
+                self["#disc"] = disc_nr
+                value = value[:value.rfind("/")]
+        elif key == "date":
+            try: 
+                self["#date"] = utils.strdate_to_time(value)
+            except: 
+                value = None
+                
+        if key[0] == "#":       
+            try:
+                if key == "#date":
+                    value = float(value)
+                elif key == "#duration":    
+                    value = long(value)
+                else:    
+                    value = int(value)
+            except:        
+                value = None
+        if value is None:        
+            if key in self:
+                dict.__delitem__(self, key)
+        else:        
+            dict.__setitem__(self, key, value)
+            
+    def __sort_key(self):   
+        return(
+                self.get_sortable("album"),
+                self.get_sortable("#disc"),
+                self.get_sortable("#track"),
+                self.get_sortable("artist"),
+                self.get_sortable("title"),
+                self.get_sortable("date"),
+                self.get_sortable("#bitrate"),
+                self.get_sortable("uri")
+                )    
+    sort_key = property(__sort_key)
+
+         
+    def __call__(self, key):        
+        return self.get(key)
+    
+    def __hash__(self):
+        return hash(self.get("uri"))
+    
+    def __repr__(self):
+        return "<Song %s>" % self.get("uri")
+    
+    def __cmp__(self, other_song):
+        if not other: return -1
+        try:
+            return cmp(self.sort_key, other.sort_key)
+        except AttributeError: return -1
+
+    
+    def __eq__(self, other_song):
+        try:
+            return self.get("uri") == other_song.get("uri")
+        except:
+            return False
+        
+    def exists(self):    
+        return utils.exists(self.get("uri"))
+    
+    def get_path(self):
+        try:
+            return utils.get_path_from_uri(self.get("uri"))
+        except:
+            return ""
+        
+    def get_scheme(self):    
+        return utils.get_scheme(self.get("uri"))
+    
+    def get_ext(self, complete=True):
+        return utils.get_ext(self.get("uri"), complete)
+    
+    def get_filename(self):
+        value = self.get("uri")
+        try:
+            return utils.auto_decode(utils.get_name(value))
+        except:
+            return value
+        
+    def read_from_file(self):    
+        ''' Read song infomation for file. '''
+        if self.get_scheme() == "file" and not self.exists():
+            ret = False
+        if self.get_scheme() == "file" and utils.file_is_supported(self.get_path()):
+            ret = self.__read_from_local_file()
+        else:    
+            ret = self.__read_from_remote_file()
+        return ret    
     
     def __read_from_local_file(self):
         try:
-           
+            path = self.get_path()
+            self["#size"]  = os.path.getsize(path)
+            self["#mtime"] = os.path.getmtime(path)
+            self["#ctime"] = os.path.getctime(path)
+            
+            audio = utils.MutagenFile(self.get_path(), utils.FORMATS)
+            tag_keys_override = None
+
+            if audio is not None:
+                tag_keys_override = TAGS_KEYS_OVERRIDE.get(audio.__class__.__name__, None)
+                for file_tag, tag in TAG_KEYS.iteritems():
+                    if tag_keys_override and tag_keys_override.has_key(file_tag):
+                        file_tag = tag_keys_override[file_tag]
+                    if audio.has_key(file_tag) and audio[file_tag]:    
+                        value = audio[file_tag]
+                        if isinstance(value, list) or isinstance(value, tuple):
+                            value = value[0]
+                        self[tag] = utils.fix_charset(value) # TEST
+
+                            
+                self["#duration"] = int(audio.info.length) * 1000        
+                try:
+                    self["#bitrate"] = int(audio.info.bitrate)
+                except AttributeError: pass    
+            else:    
+                raise "W:Song:MutagenTag:No audio found"
+        except Exception, e:    
+            print "W: Error while Loading (" + self.get_path() + ")\nTracback :", e
+            self.last_error = "Error while reading" + ":" + self.get_filename()
+            return False
+        else:
+            return True
+        
+    def __read_from_remote_file(self):    
+        ''' Load song information from remote file. '''
+        
+        GST_IDS = {"title"       : "title",
+                   "genre"       : "genre",
+                   "artist"      : "artist",
+                   "album"       : "album",
+                   "bitrate"     : "#bitrate",
+                   'track-number':"#track"}
+        is_finalize = False
+        if_tagged = False
+        
+        def unknown_type(*param):
+            raise "W:Song:GstTag:Gst decoder: type inconnu"
+        
+        def finalize(pipeline):
+            state_ret = pipeline.set_state(gst.STATE_NULL)
+            if state_ret != gst.STATE_CHANGE_SUCCESS:
+                print "Failed change to null"
+                
+        def message(bus, message, pipeline):        
+            if message.type == gst.MESSAGE_EOS:
+                finalize(pipeline)
+            elif message.type == gst.MESSAGE_TAG:    
+                taglist = message.parse_tag()
+                for key in taglist.keys():
+                    if GST_IDS.has_key(key):
+                        if key == "bitrate":
+                            value = int(taglist[key] / 100)
+                        elif isinstance(taglist[key], long):
+                            value = int(taglist[key])
+                        else:    
+                            value = taglist[key]
+                        self[GST_IDS[key]] = value   
+                        print key,":", value
+                is_tagged = True        
+                
+            elif message.type == gst.MESSAGE_ERROR:    
+                err, debug = message.parse_error()
+                finalize(pipeline)
+                raise "W:Song:GstTag:Decoder error: %s\n%s" % (err,debug)
+        try:    
+            try:
+                pipeline = gst.parse_lauch("gnomevfssrc location="+self.get("uri")+" ! decodebin name=decoder ! fakesink")
+            except gobject.GError:    
+                raise "W:Song:GstTag:Failed to build pipeline to read metadata of",self.get("uri")
+            
+            decoder = pipeline.get_by_name("decoder")
+            decoder.connect("unknown_type", unknown_type)
+            bus = pipeline.get_bus()
+            bus.connect("message", message, pipeline)
+            bus.add_signal_watch()
+            
+            state_ret = pipeline.set_state(gst.STATE_PAUSED)
+            timeout = 10
+            while state_ret == gst.STATE_CHANGE_ASYNC and not is_finalize and timeout > 0:
+                state_ret, _state, _pending_state = pipeline.get_state(1 * gst.SECOND)
+                timeout -= 1
+                
+            if state_ret != gst.STATE_CHANGE_SUCCESS:    
+                finalize(pipeline)
+                print "W:Song:GstTag:Failed Read Media"
+            else:    
+                if not is_tagged:
+                    bus.poll(gst.MESSAGE_TAG, 5 * gst.SECOND)
+                try:    
+                    query = gst.query_new_duration(gst.FORMAT_TIME)
+                    if pipeline.query(query):
+                        total = query.parse_duration()[1]
+                    else: total = 0    
+                except gst.QueryError: total = 0
+                total //= gst.MSECOND
+                self["#duration"] = tatal
+                if not is_tagged:
+                    print "W:Song:GstTag: Media found but no tag found" 
+                finalize(pipeline)    
+                
+        except Exception, e:        
+            print "W: Error while loading ("+self.get("uri")+")\nTracback :",e
+            self.last_error = ("Error while reading") + ": " + self.get_filename()
+            return False
+        else:
+            return True
+        
+    def write_to_file(self):    
+        ''' Save tag information to file. '''
+        if self.get_scheme() != "file":
+            self.last_error = self.get_scheme() + " " + "Scheme not supported"
+            return False
+        if not utils.exists(self.get("uri")):
+            self.last_error = self.get_filename() + " doesn't exist"
+            return False
+        if not os.access(self.get_path(), os.W_OK):
+            self.last_error = self.get_filename() + " doesn't have enough permission"
+            return False
+        
+        try:
+            audio = utils.MutagenFile(self.get_path(), utils.FORMATS)
+            tag_keys_override = None
+            
+            if aduio is not None:
+                if audio.tags is None:
+                    audio.add_tags()
+                tag_keys_override = TAGS_KEYS_OVERRIDE.get(audio.__class__.__name__, None)    
+                
+                for file_tag, tag in TAG_KEYS.iteritems():
+                    if tag_keys_override and tag_keys_override.has_key(file_tag):
+                        file_tag = tag_keys_override[file_tag]
+                        
+                    if self.get(tag):    
+                        value = unicode(self.get(tag))
+                        aduio[file_tag] = value
+                    else:    
+                        try:
+                            del(audio[file_tag]) # TEST
+                        except KeyError:
+                            pass
+                        
+                audio.save()        
+                
+            else:    
+                raise "w:Song:MutagenTag:No audio found"
+                
+        except Exception, e:    
+            print traceback.format_exc()
+            print "W: Error while writting ("+self.get("uri")+")\nTracback :",e
+            self.last_error = "Error while writting" + ": " + self.get_filename()
+            return False
+        else:
+            return True
+        
+        
+    
+if __name__ == "__main__":    
+    import sys
+    song = Song()
+    song.init_from_dict({"uri":sys.argv[1]})
+    song.read_from_file()
+    print song.get_dict()
+    
+
+   
+    

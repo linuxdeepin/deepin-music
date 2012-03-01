@@ -23,11 +23,14 @@
 import chardet
 import sys
 import os
+import fcntl
+import cPickle
 import shutil
 import gtk
 import gobject
 import locale
 import time
+from time import mktime, strptime
 import threading
 import mimetypes
 mimetypes.init()
@@ -87,6 +90,9 @@ def file_is_supported(filename):
 
 def get_scheme(uri):
     ''' get uri type, such as 'file://', return 'file'. '''
+    if not uri:
+        return ""
+        
     if uri.rfind("://") == -1:
         return ""
     scheme = uri[:uri.index("://")]
@@ -190,10 +196,29 @@ def auto_decode(s):
     if isinstance(s, unicode):
         return s
     try:
-        codedetect = chardet.detect(s)["encoding"]
-        return s.decode(codedetect)
+        return s.decode("gbk")
     except UnicodeError:
-        return s.decode(charset, "replace") + " " + ("[Invalid Encoding]")    
+        try:
+            codedetect = chardet.detect(s)["encoding"]
+            return s.decode(codedetect)
+        except:    
+            return s.decode(codedetect, "replace") + " " + ("[Invalid Encoding]")    
+
+    
+def fix_charset(s):    
+    '''Fix the charset. unicode error'''
+    if not s: return ""
+    try:
+        charset.detect(s)
+        return s
+    except:
+        repr_char = repr(s) 
+        if repr_char.startswith("u"):
+            if repr_char.find("\u") != -1:
+                return s
+            return auto_decode(eval(repr_char[1:]))
+        else:
+            return s
     
 def auto_encode(s, charset=fscoding): 
     ''' auto encode. '''
@@ -462,4 +487,91 @@ def dbus_service_available(bus, interface, try_start_service=False):
     dbus_interface = dbus.Interface(obj, "org.freedesktop.DBus")
     avail = dbus_interface.ListNames()
     return interface in avail
+
+def strdate_to_time(odate):
+    date = odate
+    #removing timezone
+    c = date.rfind("-")
+    if c!=-1:
+        date = date[:c-1]
+
+    c = date.rfind("+")
+    if c!=-1:
+        date = date[:c-1]
+
+    date = date.strip()
+
+    c = date[-3:]
+    if c in ["GMT","CST","EST","PST","EDT","PDT","MST","MDT"]:
+        date = date[:-3]
+    date = date.strip()
+
+    # Remove day because some times field have incorrect string
+    c = date.rfind(",")
+    if c!=-1:
+        date = date [c+1:]
+    date = date.strip()
+
+    #trying multiple date formats
+    new_date = None
+
+    #Set locale to C to parse date
+    locale.setlocale(locale.LC_TIME, "C")
+
+    formats = ["%d %b %Y %H:%M:%S",#without day, short month
+                "%d %B %Y %H:%M:%S",#without day, full month
+                "%d %b %Y",#only date , short month
+                "%d %B %Y",#only date , full month
+                "%b %d %Y %H:%M:%S",#without day, short month
+                "%B %d %Y %H:%M:%S",#without day, full month
+                "%b %d %Y",#only date , short month
+                "%B %d %Y",#only date , full month
+                "%b/%d/%Y",#only date
+                "%b/%d/%y",#only date
+                "%b-%d-%Y",#only date
+                "%b-%d-%y",#only date
+                "%Y",#only years
+                "%y",#only years
+                ]
+    for format in formats:
+        try: new_date = strptime(date,format)
+        except : continue
+
+    locale.setlocale(locale.LC_TIME, '')
+
+    if not new_date: return None
+    else: 
+        try:
+            return mktime(new_date)
+        except :
+            logger.logexception("problem to convert %s (%s) in date format",odate,new_date)
+            return None
+
+
+def save_db(objs, fn):
+    '''Save object to db file.'''
+    f = file(fn + ".tmp", "w")
+    fcntl.flock(f.fileno(), fcntl.LOCK_EX)
+    cPickle.dump(objs, f, cPickle.HIGHEST_PROTOCOL)
+    f.close()
+    os.rename(fn + ".tmp", fn)
+    
+def load_db(fn):    
+    '''Load object from db file.'''
+    objs = None
+    if os.path.exists(fn):
+        f = file(fn, "rb")
+        try:
+            objs = cPickle.load(f)
+        except:    
+            logger.logexception("%s is not a valid database.", fn)
+            try:
+                shutil.copy(fn, fn + ".not-valid")
+            except: pass    
+            objs = None
+        f.close()    
+    return objs    
+
+    
+    
 

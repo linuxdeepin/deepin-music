@@ -33,7 +33,7 @@ from player.fadebin import PlayerBin
 DEBUG = False
 
 class DeepinPlayer(gobject.GObject, Logger):
-    __gsignal__ {
+    __gsignals__ {
         "play-end" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),
         "new-song" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,)),
         "instant-new-song" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,)),
