@@ -107,11 +107,11 @@ class Song(dict, Logger):
     def get_str(self, key, xml=False):    
         '''Get a formated version of the tag information.'''
         if key == "uri":
-            value = utils.unesape_string_for_display(self.get("uri"))
+            value = utils.unescape_string_for_display(self.get("uri"))
         elif key == "title":    
             value = self.get("title")
             if not value:
-                value = utils.get_name(utils.unesape_string_for_display(self.get(uri)))
+                value = utils.get_name(utils.unescape_string_for_display(self.get("uri")))
         elif key == "#bitrate":
             value = self.get("#bitrate")
             if value: value = "%dk" % value
@@ -163,7 +163,7 @@ class Song(dict, Logger):
         
     def get_sortable(self, key):
         '''Get sortable of the key.'''
-        if key in ["uri", "album", "genre", "artist", "title"]:
+        if key in ["album", "genre", "artist", "title"]:
             value = pinyin.transfer(self.get_str(key))
         elif key == "date":    
             value = self.get("#date")
@@ -173,6 +173,18 @@ class Song(dict, Logger):
             
         if not value and key[0] == "#": value = 0    
         return value
+    
+    def get_searchable(self):
+        ''' Get searchable of the key, use to index'''
+        title_str    = self.get_str("title")
+        artist_str   = self.get_str("artist")
+        title_first  = pinyin.transfer(title_str)
+        artist_first = pinyin.transfer(artist_str)
+        title_fill   = pinyin.transfer(title_str, False)
+        artist_fill  = pinyin.transfer(artist_str, False)
+        return str(title_first + artist_first +
+                   title_fill + artist_fill +
+                   title_str + artist_str)
     
     def __setitem__(self, key, value):
         if key == "#track":
@@ -442,14 +454,16 @@ class Song(dict, Logger):
         else:
             return True
         
-        
     
 if __name__ == "__main__":    
     import sys
     song = Song()
-    song.init_from_dict({"uri":sys.argv[1]})
+    song.init_from_dict({"uri":unicode(sys.argv[1])})
     song.read_from_file()
-    print song.get_dict()
+    print "歌曲总长: ", song.get_str("#duration")
+    print "排序对象: ", song.sort_key
+    print "检索文本: ", song.get_searchable()
+    print "查看字典: ", song.get_dict()
     
 
    

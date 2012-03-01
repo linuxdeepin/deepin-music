@@ -30,7 +30,7 @@ WIDTH_CHARS = "－—！#＃%％&＆（）*，、。：；？？　@＠＼{｛�
 
 class Transfer(Logger):
     '''Chinese Transfer Pinyin.'''
-    def __init__(self, spliter="", first_spell=True):
+    def __init__(self, first_spell=True, spliter="",):
         '''Init.'''
         self.spliter = spliter
         self.first_spell = first_spell
@@ -71,13 +71,13 @@ class Transfer(Logger):
                 else: 
                     return self.dict_objs[unicode_char]
 
-def transfer(chars):
-    conv = Transfer()    
+def transfer(chars, first_spell=True):
+    conv = Transfer(first_spell)    
     return conv.convert(chars)
         
                 
 if __name__ == "__main__":               
     first_word = Transfer()
     print first_word.convert(u"#￥@深度音乐播放器 - 哪有這樣的書法, 我的企鵝號：464228236 SmallEvilBeast!")
-    second_word = Transfer(" ", False)
+    second_word = Transfer(False)
     print second_word.convert(u"深度音乐播放器#￥@ - 哪有這樣的書法, 我的企鵝號：464228236 SmallEvilBeast!")
