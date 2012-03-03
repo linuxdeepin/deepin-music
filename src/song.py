@@ -111,7 +111,7 @@ class Song(dict, Logger):
         elif key == "title":    
             value = self.get("title")
             if not value:
-                value = utils.get_name(utils.unescape_string_for_display(self.get("uri")))
+                value = self.get_filename()
         elif key == "#bitrate":
             value = self.get("#bitrate")
             if value: value = "%dk" % value
@@ -274,7 +274,7 @@ class Song(dict, Logger):
     def get_filename(self):
         value = self.get("uri")
         try:
-            return utils.auto_decode(utils.get_name(value))
+            return os.path.splitext(utils.get_name(value))[0]
         except:
             return value
         
@@ -333,7 +333,7 @@ class Song(dict, Logger):
                    "bitrate"     : "#bitrate",
                    'track-number':"#track"}
         is_finalize = False
-        if_tagged = False
+        is_tagged = False
         
         def unknown_type(*param):
             raise "W:Song:GstTag:Gst decoder: type inconnu"
@@ -356,8 +356,8 @@ class Song(dict, Logger):
                             value = int(taglist[key])
                         else:    
                             value = taglist[key]
-                        self[GST_IDS[key]] = value   
-                        print key,":", value
+                        self[GST_IDS[key]] = utils.fix_charset(value)
+                        print key,":", utils.fix_charset(value)
                 is_tagged = True        
                 
             elif message.type == gst.MESSAGE_ERROR:    
@@ -366,7 +366,9 @@ class Song(dict, Logger):
                 raise "W:Song:GstTag:Decoder error: %s\n%s" % (err,debug)
         try:    
             try:
-                pipeline = gst.parse_launch("gnomevfssrc location="+self.get("uri")+" ! decodebin name=decoder ! fakesink")
+                url = utils.get_uri_from_path(self.get("uri").encode("utf-8"))
+                print url
+                pipeline = gst.parse_launch("gnomevfssrc location="+url+" ! decodebin name=decoder ! fakesink")
             except gobject.GError:    
                 raise "W:Song:GstTag:Failed to build pipeline to read metadata of",self.get("uri")
             
@@ -395,7 +397,7 @@ class Song(dict, Logger):
                     else: total = 0    
                 except gst.QueryError: total = 0
                 total //= gst.MSECOND
-                self["#duration"] = tatal
+                self["#duration"] = total
                 if not is_tagged:
                     print "W:Song:GstTag: Media found but no tag found" 
                 finalize(pipeline)    
@@ -457,12 +459,14 @@ class Song(dict, Logger):
     
 if __name__ == "__main__":    
     import sys
+    import utils
     song = Song()
-    song.init_from_dict({"uri":unicode(sys.argv[1])})
+    song.init_from_dict({"uri":sys.argv[1]})
     song.read_from_file()
     print "标题: ", song.get_str("title")
     print "艺术家: ", song.get_str("artist")
-    print "专辑: ", song.get_str("genre")
+    print "专辑: ", song.get_str("album")
+    print "流派: ", song.get_str("genre")
     print "歌曲总长: ", song.get_str("#duration")
     print "添加时间: ", song.get_str("#added")
     print "比特率: ", song.get_str("#bitrate")
@@ -470,7 +474,9 @@ if __name__ == "__main__":
     print "排序对象: ", song.sort_key
     print "检索文本: ", song.get_searchable()
     print "查看字典: ", song.get_dict()
-    # song["genre"] = u"小邪兽"
+    # song["genre"] = "流行"
+    # song["album"] = "邪恶家族"
+    # song["artist"] = "小邪兽"
     # song.write_to_file()
 
    

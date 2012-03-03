@@ -119,11 +119,16 @@ def get_path_from_uri(uri):
         uri = uri.replace("#", "%23")
     return unquote(urlparse(uri)[2])    
 
-def get_uri_from_path(path):
+def get_uri_from_path(path, is_quote=True):
     ''' get uri from filepath. '''
     if get_scheme(path): 
         return path
-    return "file://" + quote(path)
+    if is_quote:
+        return "file://" + quote(path)
+    else:
+        return "file://" + path
+        
+
 
 def realuri(uri):
     '''Return the canonical path of the specified filename.'''

@@ -20,9 +20,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from utils import load_db
+
+from utils import load_db, fix_charset 
 from logger import Logger
 import os
+
 
 PINYIN_DICT_FILE = os.path.join(os.path.dirname(__file__), "chinese_dict.db")
 SINGLE_CHARS = "'\"`~!@#$%^&*()=+[]{}\\|;:,.<>/?"
@@ -55,6 +57,7 @@ class Transfer(Logger):
             
     def convert(self, unicode_chars):
         ''' Convert Unicode chinese_chars to PinYin. '''
+        unicode_chars = unicode(unicode_chars)
         pinyin_list = [self.filter_char(char) for char in unicode_chars]
                 
         return "".join(pinyin_list)
