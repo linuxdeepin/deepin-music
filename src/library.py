@@ -28,6 +28,7 @@ from random import shuffle
 from song import Song, TAG_KEYS
 from findfile import get_config_file
 from logger import Logger
+import utils
 
 AUTOSAVE_TIMEOUT = 1000 * 60 * 5 # 5min
 SIGNAL_DB_QUERY_FIRED = 50
@@ -45,8 +46,8 @@ class MediaDatebase(gobject.GObject, Logger):
         "simple-changed" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,)),
         "added": (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (str, gobject.TYPE_PYOBJECT)),
         "removed" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (str, gobject.TYPE_PYOBJECT)),
-        "playlist-added" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,)),
-        "playlist-removed" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,))}
+        "playlist-added" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (str, gobject.TYPE_PYOBJECT)),
+        "playlist-removed" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (str, gobject.TYPE_PYOBJECT))}
     
     def __init__(self):
         '''Init.'''
@@ -61,10 +62,11 @@ class MediaDatebase(gobject.GObject, Logger):
         # songs
         self.__songs = {}
         self.__song_types = []
+        self.__songs_by_type = {}
         
         # playlist
         self.__playlists = {}
-        self.__playlist_type = []
+        self.__playlist_types = []
         
         # init constant
         self.__is_loaded = False

@@ -460,8 +460,10 @@ class Song(dict, Logger):
 if __name__ == "__main__":    
     import sys
     import utils
+    from player import Player
+    import gtk
     song = Song()
-    song.init_from_dict({"uri":sys.argv[1]})
+    song.init_from_dict({"uri":utils.get_uri_from_path(sys.argv[1])})
     song.read_from_file()
     print "标题: ", song.get_str("title")
     print "艺术家: ", song.get_str("artist")
@@ -474,10 +476,8 @@ if __name__ == "__main__":
     print "排序对象: ", song.sort_key
     print "检索文本: ", song.get_searchable()
     print "查看字典: ", song.get_dict()
-    # song["genre"] = "流行"
-    # song["album"] = "邪恶家族"
-    # song["artist"] = "小邪兽"
-    # song.write_to_file()
+    Player.set_song(song, True)
+    gtk.main()
 
    
     
