@@ -32,6 +32,8 @@ if os.path.exists(configfile):
     fd.close()
 
 levelno = logging.WARN
+# levelno = logging.DEBUG    
+
 def setLevelNo(n):
     global levelno
     levelno = ( 100 - (n * 10) )

@@ -215,13 +215,13 @@ def fix_charset(s):
     if not s: return ""
     try:
         charset.detect(s)
-        return s
+        return s.encode("utf-8")
     except:
         repr_char = repr(s) 
         if repr_char.startswith("u"):
             if repr_char.find("\u") != -1:
-                return s
-            return auto_decode(eval(repr_char[1:]))
+                return s.encode("utf-8")
+            return auto_decode(eval(repr_char[1:])).encode("utf-8")
         else:
             return s
     

@@ -26,7 +26,7 @@ from logger import Logger
 import os
 
 
-PINYIN_DICT_FILE = os.path.join(os.path.dirname(__file__), "chinese_dict.db")
+PINYIN_DICT_FILE = os.path.realpath("chinese_dict.db")
 SINGLE_CHARS = "'\"`~!@#$%^&*()=+[]{}\\|;:,.<>/?"
 WIDTH_CHARS = "－—！#＃%％&＆（）*，、。：；？？　@＠＼{｛｜}｝~～‘’“”《》【】+＋=＝×￥·…　".decode("utf-8")
 
@@ -55,9 +55,9 @@ class Transfer(Logger):
     def set_spliter(self, value):
         self.spliter = value
             
-    def convert(self, unicode_chars):
+    def convert(self, chars):
         ''' Convert Unicode chinese_chars to PinYin. '''
-        unicode_chars = unicode(unicode_chars)
+        unicode_chars = unicode(chars)
         pinyin_list = [self.filter_char(char) for char in unicode_chars]
                 
         return "".join(pinyin_list)

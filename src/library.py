@@ -109,7 +109,7 @@ class MediaDatebase(gobject.GObject, Logger):
                 self.emit("quick-changed", song_type, infos)
             for pl_type, playlists in self.__queued_signal["playlist-added"].iteritems():    
                 self.emit("playlist-added", pl_type, playlists)
-            for pl_type, playlists in self.__queued_signal["playlist-removed"].iteritems:    
+            for pl_type, playlists in self.__queued_signal["playlist-removed"].iteritems():    
                 self.emit("playlist-removed", pl_type, playlists)
         except:        
             self.logexception("Failed fire queued signal")
@@ -149,9 +149,10 @@ class MediaDatebase(gobject.GObject, Logger):
         song_type = song.get_type()
         uri = song.get("uri")
         self.__db_operation_lock.acquire()
-        self.__song[uri] = song
-        self.__songs_by_type.sedefault(song_type, set())
+        self.__songs[uri] = song
+        self.__songs_by_type.setdefault(song_type, set())
         self.__songs_by_type[song_type].add(song)
+        self.loginfo("add %s by %s", uri, song_type)
         
         # add type, song to added signal.
         self.__condition.acquire()
@@ -168,7 +169,7 @@ class MediaDatebase(gobject.GObject, Logger):
         for song in songs:    
             self.__remove_cb(song)
             
-    def remove_cb(self, song):        
+    def __remove_cb(self, song):        
         song_type = song.get_type()
         self.__db_operation_lock.acquire()
         try:
@@ -176,11 +177,12 @@ class MediaDatebase(gobject.GObject, Logger):
         except KeyError:    
             pass
         self.__songs_by_type[song_type].remove(song)
+        self.loginfo("remove the %s success", song)
         
         # add signal.
         self.__condition.acquire()
         self.__queued_signal["removed"].setdefault(song_type, set())
-        self.__queued_signal["removed"]["song_type"].add(song)
+        self.__queued_signal["removed"][song_type].add(song)
         self.__condition.release()
         self.__db_operation_lock.release()
         
@@ -215,10 +217,14 @@ class MediaDatebase(gobject.GObject, Logger):
         '''delete song property'''
         if not song: return False
         self.is_busy = True
+        
+        if not isinstance(keys, (list, tuple)):
+            keys = [ keys ]
         song_type = song.get_type()
         old_keys_values = {}
         [ old_keys_values.update({key:song.get_sortable(key)}) for key in song.keys() if key in keys]
         for key in keys: del song[key]
+        self.loginfo("from %s delete property %s", song, keys)
         self.__condition.acquire()
         self.__queued_signal["changed"].setdefault(song_type, [])
         self.__queued_signal["changed"][song_type].append((song, old_keys_values))
@@ -276,16 +282,16 @@ class MediaDatebase(gobject.GObject, Logger):
             if not uri:
                 return None
             if uri.startswith("file://"):
-                return self.get_or_create_song({"uri":uri}, "unknown_local", read_from_fil=True)
+                return self.get_or_create_song({"uri":uri}, "unknown_local", read_from_file=True)
             else:
                 return self.get_or_create_song({"uri":uri}, "unknown", read_from_file=True)
             
     def get_songs(self, song_type):        
         try:
-            return set(self.__songs_by_type[song_type])
+            return list(set(self.__songs_by_type[song_type]))
         except KeyError:
             self.logwarn("get_songs: type %s unknown return empty set()", song_type)
-            return set()
+            return []
         
     def get_songs_from_uris(self, uris):    
         return [ self.__songs[utils.realuri(uri)] for uri in uris ]
@@ -315,8 +321,8 @@ class MediaDatebase(gobject.GObject, Logger):
         self.is_busy = True
         self.__condition.release()
         
-    def get_random_song(self, type):        
-        songs = list(self.__songs_by_type["local"])
+    def get_random_song(self, song_type="local"):        
+        songs = list(self.__songs_by_type[song_type])
         shuffle(songs)
         if songs:
             return songs[0]
@@ -423,8 +429,7 @@ class MediaDatebase(gobject.GObject, Logger):
         songs = self.__songs.values()
         playlists = self.__playlists["local"].copy()
         self.__db_operation_lock.release()
-        
-        objs = [ song.get_dict() for song in songs if song.get_type in self.__save_song_type ]
+        objs = [ song.get_dict() for song in songs if song.get_type() in self.__save_song_type ]
         
         # save
         utils.save_db(objs, get_config_file("songs.db"))

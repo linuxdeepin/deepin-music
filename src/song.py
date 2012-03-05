@@ -458,26 +458,7 @@ class Song(dict, Logger):
         
     
 if __name__ == "__main__":    
-    import sys
-    import utils
-    from player import Player
-    import gtk
-    song = Song()
-    song.init_from_dict({"uri":utils.get_uri_from_path(sys.argv[1])})
-    song.read_from_file()
-    print "标题: ", song.get_str("title")
-    print "艺术家: ", song.get_str("artist")
-    print "专辑: ", song.get_str("album")
-    print "流派: ", song.get_str("genre")
-    print "歌曲总长: ", song.get_str("#duration")
-    print "添加时间: ", song.get_str("#added")
-    print "比特率: ", song.get_str("#bitrate")
-    print "文件路径:", song.get_str("uri")
-    print "排序对象: ", song.sort_key
-    print "检索文本: ", song.get_searchable()
-    print "查看字典: ", song.get_dict()
-    Player.set_song(song, True)
-    gtk.main()
+    pass
 
    
     

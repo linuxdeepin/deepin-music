@@ -31,6 +31,7 @@ from library import MediaDB
 from logger import Logger
 from player.fadebin import PlayerBin
 from utils import get_mime_type, get_uris_from_pls, get_uris_from_m3u
+gobject.threads_init()
 
 DEBUG = False
 
@@ -50,10 +51,10 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         
         # Init.
         self.song = None        # current song
-        self.__playlist = None  # playlist
+        self.__source = None  # playlist
         self.__need_load_prefs = True # reload
         self.__current_stream_seeked = False # can be seeked
-        self.__next_alreay_called = False
+        self.__next_already_called = False
         self.__emit_signal_new_song_id = None
         
         self.stop_after_this_track = False
