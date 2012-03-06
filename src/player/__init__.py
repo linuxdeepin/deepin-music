@@ -31,6 +31,7 @@ from library import MediaDB
 from logger import Logger
 from player.fadebin import PlayerBin
 from utils import get_mime_type, get_uris_from_pls, get_uris_from_m3u
+
 gobject.threads_init()
 
 DEBUG = False
@@ -211,7 +212,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         # remove old stream for pipeline excepted when need to fade
         if self.song and (crossfade == -1 or self.is_paused() or not self.is_playable()):        
             self.logdebug("force remove stream:%s", self.song.get("uri"))
-            self.bin.xfade_close(self.song_get("uri"))
+            self.bin.xfade_close(self.song.get("uri"))
             
         # set current song and try play it.
         self.song = song    
@@ -455,6 +456,11 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
                 state = "playing"
             config.set("player", "state", state)    
             self.loginfo("player status saved, %s", state)
-                
+            
+    def update_skipcount(self):        
+        '''update skipcount.'''
+        # if not played until the end
+        if not self.__current_song_reported and self.song:
+            MediaDB.set_property(self.song, {"#skipcount":self.song.get("#skipcount", 0) + 1})
 
 Player = DeepinMusicPlayer()            
