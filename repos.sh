@@ -8,7 +8,7 @@ case "$1" in
         git pull origin master
         ;;
     "push" )
-        git push git@github.com:$2/deepin-ui.git
+        git push git@github.com:$2/deepin-music-player.git
         ;;
     "changelog" )
         git log --oneline
@@ -20,10 +20,10 @@ case "$1" in
         git revert $2
         ;;
     "add_remote" )
-        git remote add $2 git@github.com:$2/deepin-ui.git
+        git remote add $2 git@github.com:$2/deepin-music-player.git
         ;;
     "pull_remote" )
-        git remote add $2 git@github.com:$2/deepin-ui.git || git fetch $2 && git merge $2/master
+        git remote add $2 git@github.com:$2/deepin-music-player.git || git fetch $2 && git merge $2/master
         ;;
     "fetch" )
         git fetch $2
