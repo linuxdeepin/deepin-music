@@ -188,6 +188,7 @@ class Song(dict, Logger):
     
     def __setitem__(self, key, value):
         if key == "#track":
+            value = str(value)
             if value is not None and not isinstance(value,int) and value.rfind("/")!=-1 and value.strip()!="":
                 value = value.strip()
 

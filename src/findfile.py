@@ -71,3 +71,5 @@ def get_music_dir():
         else:
             return musicdir
         
+if __name__ == "__main__":       
+    print get_cache_file("media.db")
