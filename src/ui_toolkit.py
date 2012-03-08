@@ -30,6 +30,8 @@ from dtk.ui.progressbar import ProgressBar
 from dtk.ui.scalebar import HScalebar
 from dtk.ui.volume_button import VolumeButton
 from dtk.ui.frame import HorizontalFrame
+from dtk.ui.listview import *
+from dtk.ui.scrolled_window import *
 
 app_theme = Theme(os.path.join((os.path.dirname(os.path.realpath(__file__))), "../app_theme"))
 

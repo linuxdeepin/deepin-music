@@ -93,8 +93,9 @@ class Config(gobject.GObject, Logger):
                 "play" : "false",
                 "volume" : "1.0",
                 "seek" : "",
-                "crossfade" : "false",
-                "crossfade_time" : "3.0"}
+                "crossfade" : "true",
+                "crossfade_time" : "3.0",
+                "crossfade_gapless_album" : "true"}
             
             }
         

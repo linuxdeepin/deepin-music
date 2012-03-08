@@ -25,6 +25,9 @@ import gtk
 from player import Player
 from widget.information import PlayInfo
 from widget.timer import SongTimer, VolumeSlider
+from source.local import ImportFolderJob
+from library import MediaDB
+
 
 class HeaderBar(gtk.HBox):
     def __init__(self):
@@ -80,6 +83,11 @@ class HeaderBar(gtk.HBox):
         more_box = gtk.HBox(False, 10)
         more_align = gtk.Alignment()
         more_align.set(1.0, 0, 0, 0)
+        
+        # test
+        musicbox_button.connect("button-press-event", self.open_dir)
+        media_button.connect("button-press-event", self.save_db)
+        
         more_box.pack_start(playlist_button)
         more_box.pack_start(lyrics_button)
         more_box.pack_start(musicbox_button)
@@ -106,7 +114,12 @@ class HeaderBar(gtk.HBox):
         # Player.connect("stopped", self.reload_action_button)
         # Player.connect("instant-new-song", self.on_new_song)
         
+    def open_dir(self, widget, event):    
+        MediaDB.full_erase("local")
+        ImportFolderJob()
 
+    def save_db(self, widget, event):    
+        MediaDB.save()
         
     def __swap_play_status(self, obj, active):    
         self.__play.handler_block(self.__id_signal_play)

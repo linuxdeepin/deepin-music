@@ -30,6 +30,7 @@ from findfile import get_config_file
 from logger import Logger
 import utils
 
+gobject.threads_init()
 AUTOSAVE_TIMEOUT = 1000 * 60 * 5 # 5min
 SIGNAL_DB_QUERY_FIRED = 50
 
