@@ -462,5 +462,16 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         # if not played until the end
         if not self.__current_song_reported and self.song:
             MediaDB.set_property(self.song, {"#skipcount":self.song.get("#skipcount", 0) + 1})
+            
+    def fadeout_and_stop(self):
+        remaining = self.get_length() - self.get_position()
+        if remaining <= 0:
+            # when there is no crossfade
+            self.stop()
+        else:
+            handler_id = self.bin.connect("eos", lambda * args: self.stop())
+            gobject.timeout_add(remaining, lambda * args: self.bin.disconnect(handler_id) is not None, handler_id)
+        self.loginfo("playlist finished")
+            
 
 Player = DeepinMusicPlayer()            

@@ -42,6 +42,8 @@ class HeaderBar(gtk.HBox):
         Player.connect("played", self.__swap_play_status, True)
         Player.connect("paused", self.__swap_play_status, False)
         Player.connect("stopped", self.__swap_play_status, False)
+        Player.connect("play-end", self.__swap_play_status, False)
+        
         
         # play button
         self.__play = ToggleButton(play_status_pixbuf, None, pause_status_pixbuf)

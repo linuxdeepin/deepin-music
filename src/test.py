@@ -14,6 +14,27 @@ from widget.jobs_manager import jobs_manager
 from ui_toolkit import *
 from widget.headerbar import HeaderBar
 
+class PlayList(object):
+    def __init__(self):
+        MediaDB.load()
+        self.songs = MediaDB.get_songs("local")
+        self.index = 0
+        
+    def get_next_song(self):    
+        self.songs = MediaDB.get_songs("local")
+        self.index += 1
+        if self.index > len(self.songs) - 1:
+            self.index = 0
+        return self.songs[self.index], False   
+            
+    def get_previous_song(self):
+        self.songs = MediaDB.get_songs("local")
+        self.index -= 1
+        if self.index < 0:
+            self.index = len(self.songs) - 1
+        return self.songs[self.index]
+        
+playlists = PlayList()        
 
 class DeepinPlayer(object):
     '''Music player for linux deepin.'''
@@ -27,30 +48,31 @@ class DeepinPlayer(object):
 
         mainbox = gtk.VBox(spacing=5)
         
-        self.file_chooser = gtk.FileChooserButton("select file")        
-        self.file_chooser.connect("file-set", self.play_cb)
+        # self.file_chooser = gtk.FileChooserButton("select file")        
+        # self.file_chooser.connect("file-set", self.play_cb)
         
         mainbox.pack_start(HeaderBar(), False, False)
-        mainbox.pack_start(self.file_chooser, False, False)
+        # mainbox.pack_start(self.file_chooser, False, False)
         
-        test_button = gtk.Button("test")
+        test_button = gtk.Button("PlayList")
         test_button.connect("clicked", self.test_cb)
         
         mainbox.pack_start(test_button)
         mainbox.pack_start(jobs_manager)
-        # save_button = gtk.Button("save")
-        # save_button.connect("clicked", self.save_to_file)
-        # mainbox.pack_start(save_button)
         self.window.window.change_background(app_theme.get_pixbuf("skin/main.png"))
         self.window.main_box.pack_start(mainbox)
         
         self.player = Player        
+        self.player.set_source(playlists)
         self.window.run()
         
         
     def test_cb(self, widget):    
-        print "dd"
+        # print "dd"
+        MediaDB.full_erase("local")
         ImportFolderJob()
+        
+
         
         
     def play_cb(self, widget):
@@ -60,36 +82,7 @@ class DeepinPlayer(object):
 
         self.player.play_new(song)
         
-    # def save_to_file(self, widget):    
-    #     songs = MediaDB.get_songs("local")
-    #     for song in songs:
-    #         fp.write(song.get_str("title"))
         
-    #     fp.close()    
-        
-    # def rewind_cb(self, widget):    
-    #     # file_song = self.file_chooser.get_uri()
-
-    #     # song =  MediaDB.get_song(file_song)
-    #     # print song.get_dict()
-    #     # print song.get_str("#duration")
-    #     # print song.get_str("title")
-    #     # print song.get_str("album")
-    #     # print song.get_str("artist")
-    #     # print song.get_searchable()
-
-    #     artist_dict = {}
-        
-    #     all_songs = MediaDB.get_songs("local")
-        
-    #     for song in all_songs:
-            
-    #         artist = song.get("artist")
-            
-    #         if not artist_dict.has_key(artist):
-    #             artist_dict[artist] = [song]                
-    #         else:    
-    #             artist_dict[artist].append(song)
 
 
         

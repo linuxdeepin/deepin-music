@@ -62,6 +62,8 @@ class SongTimer(gtk.HBox):
         Player.bin.connect("tick", self.on_tick)
         Player.connect("seeked", self.on_seek)
         Player.connect("stopped", self.set_duration)
+        if not Player.song:
+            self.bar.set_sensitive(False)
 
     def get_label(self):
         return self.label_time
@@ -79,6 +81,7 @@ class SongTimer(gtk.HBox):
         self.duration = song.get("#duration", 0) / 1000
         self.set_current_time(0, self.duration)
 
+        
     def on_tick(self, bin, pos, duration):
         self.duration = duration
         if self.update_bar == 1:
@@ -96,9 +99,7 @@ class SongTimer(gtk.HBox):
                 self.bar.set_range(0, duration)
                 self.bar.set_value(pos)
 
-        if pos >= duration:
-            text = utils.duration_to_string(pos, "00:00", 1)
-        elif pos > 0:
+        if pos > 0 and pos < duration:
             text = utils.duration_to_string(pos, "00:00", 1) 
         else:    
             text = "00:00"
