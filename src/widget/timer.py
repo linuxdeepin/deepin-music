@@ -26,23 +26,24 @@ import gobject
 import utils
 from player import Player
 from config import config
+from ui_toolkit import song_scalebar, VolumeButton, HorizontalFrame
 
 class SongTimer(gtk.HBox):
     __gsignals__ = {
         "play-end" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ())
     }
     def __init__(self):
-        super(SongTimer, self).__init__(spacing=6)
+        super(SongTimer, self).__init__()
 
-        self.label_time = gtk.Label("<span size=\"small\">00:00</span>")
+        self.label_time = gtk.Label("<span size=\"small\" color=\"#A7A8A7\">00:00</span>")
         self.label_time.set_alignment(1, 1)
         self.label_time.set_use_markup(True)
 
-        self.bar = gtk.HScale()
+        self.bar = song_scalebar
         self.bar.set_draw_value(False)
         self.bar.set_range(0, 1000)
         self.bar.set_value(0)
-        self.bar.set_increments(1, 20)
+        # self.bar.set_increments(1, 20)
         self.bar.connect("button_press_event", self.on_bar_press)
         self.bar.connect("button_release_event", self.on_bar_release)
         self.__value_changed_id = self.bar.connect("value-changed", self.on_bar_value_changed)
@@ -101,13 +102,13 @@ class SongTimer(gtk.HBox):
             text = utils.duration_to_string(pos, "00:00", 1) 
         else:    
             text = "00:00"
-        self.label_time.set_label("<span size=\"small\">" + text + "</span>")
+        self.label_time.set_label("<span size=\"small\" color=\"#A7A8A7\">" + text + "</span>")
 
 
     def on_seek(self, *args, **kwargs):
         self.__need_report = False
     
-    def on_bar_value_changed(self, widget):
+    def on_bar_value_changed(self, widget):        
         pos = self.bar.get_value()
         self.set_current_time(pos, self.duration)
 
@@ -125,6 +126,7 @@ class SongTimer(gtk.HBox):
         self.__idle_release_id = None
 
     def on_bar_release(self, widget, event):
+
         self.bar.handler_block(self.__value_changed_id)
         
         s = Player.song
@@ -136,25 +138,40 @@ class SongTimer(gtk.HBox):
         if not self.__idle_release_id:
             self.__idle_release_id = gobject.idle_add(self.__idle_release)
 
-class VolumeSlider(gtk.VolumeButton):
+class VolumeSlider(gtk.HBox):
     def __init__(self):
-        gtk.VolumeButton.__init__(self)
-        self.set_property("size",gtk.ICON_SIZE_BUTTON)
-        self.set_relief(gtk.RELIEF_NORMAL)
-        self.connect("value-changed",self.__volume_changed)
+        super(VolumeSlider, self).__init__()
+        volume_button = VolumeButton(1.0, 0.0, 1.0, True)
+        volume_frame = HorizontalFrame(10, 0, 0, 0, 0)
+        volume_frame.add(volume_button)
+        
+        self.volume_progressbar = volume_button.volume_progressbar
+        self.mute_button = volume_button.volume_button
+        self.mute_button.connect("toggled", self.toggled_volume)
+        self.volume_progressbar.connect("value-changed",self.__volume_changed)
         volume = float(config.get("player","volume"))
         self.change_volume(None,volume)
-        # Dispatcher.connect("volume",self.change_volume)
-        self.show_all()
+        self.pack_start(volume_frame, False, False)
 
     def change_volume(self,helper,value):
-        self.set_value(value)
+        self.volume_progressbar.set_value(value)
         self.__volume_changed()
+        
+    def toggled_volume(self, widget):    
+        val = self.volume_progressbar.get_value()
+        val = (2 ** val) - 1
+        if widget.get_active():
+            Player.volume = val
+        else:    
+            Player.volume = 0.0
 
 
     def __volume_changed(self,*args):
-        val = self.get_value()
+        val = self.volume_progressbar.get_value()
         val = (2 ** val) - 1
-        config.set("player","volume","%f"%val)
+        config.set("player","volume","%f" % val)
         Player.volume = val
-            
+        if val == 0.0:
+            self.mute_button.set_active(False)
+        else:    
+            self.mute_button.set_active(True)

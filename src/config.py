@@ -95,6 +95,7 @@ class Config(gobject.GObject, Logger):
                 "seek" : "",
                 "crossfade" : "false",
                 "crossfade_time" : "3.0"}
+            
             }
         
     

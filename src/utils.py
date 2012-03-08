@@ -548,7 +548,7 @@ def strdate_to_time(odate):
     else: 
         try:
             return mktime(new_date)
-        except :
+        except:
             logger.logexception("problem to convert %s (%s) in date format",odate,new_date)
             return None
 
@@ -576,7 +576,4 @@ def load_db(fn):
             objs = None
         f.close()    
     return objs    
-
-    
-    
 

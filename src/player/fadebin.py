@@ -1504,7 +1504,7 @@ class StreamBin(gst.Bin, Logger):
         self.lock.acquire()
 
         if not self.needs_unlink or self.__adder_pad is None:
-            self.logwarn("stream is already unlinked.  huh? %s", self.cutted_uri)
+            self.loginfo("stream is already unlinked.  huh? %s", self.cutted_uri)
             self.lock.release()
             return 
         
@@ -1818,7 +1818,7 @@ class StreamBin(gst.Bin, Logger):
         self.lock.acquire()
         self.loginfo("__src_blocked_cb -> stream %s state:%s", self.cutted_uri, self.get_str_state())
         if self.src_blocked:
-            self.logwarn("stream %s already blocked", self.cutted_uri)
+            self.loginfo("stream %s already blocked", self.cutted_uri)
             self.lock.release()
             return
 
