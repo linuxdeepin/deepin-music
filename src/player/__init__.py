@@ -342,11 +342,9 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
                     
     def seek(self, pos):
         '''seek'''
-        #xiami
-        
+        print pos
         if self.bin.xfade_seekable():
             self.__current_stream_seeked = True
-            pos = max(0, pos)
             self.bin.xfade_set_time(pos)
             self.emit("seeked")
         else:                                
@@ -441,7 +439,9 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         if uri:    
             song = MediaDB.get_song(uri)
             if song:
-                self.set_song(song, play, self.get_crossfade() * 2, seek / 1000)
+                self.set_song(song, play, self.get_crossfade() * 2, seek)
+
+
         
     def save_state(self):            
         '''save current song's state'''

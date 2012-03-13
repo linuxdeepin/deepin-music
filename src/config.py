@@ -92,11 +92,25 @@ class Config(gobject.GObject, Logger):
                 "uri"  : "",
                 "play" : "false",
                 "volume" : "1.0",
-                "seek" : "",
+                "seek" : "0",
+                "state" : "stop",
                 "crossfade" : "true",
                 "crossfade_time" : "3.0",
-                "crossfade_gapless_album" : "true"}
-            
+                "crossfade_gapless_album" : "true",
+                "play_on_startup" : "true",
+                "enqueue":"false",
+                "click_enqueue":"false",
+                "queuewholealbum":"false",
+                "dynamic":"true",
+                "vis":"goom",
+                "stop_track":"-1",
+                "selected_track":"-1"
+                },
+
+            "desktop_lrc" : {
+                "font" : "迷你繁启体 32",
+                "color_top": "#"
+                }
             }
         
     

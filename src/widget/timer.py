@@ -145,7 +145,6 @@ class VolumeSlider(gtk.HBox):
         volume_button = VolumeButton(1.0, 0.0, 1.0, True)
         volume_frame = HorizontalFrame(10, 0, 0, 0, 0)
         volume_frame.add(volume_button)
-        
         self.volume_progressbar = volume_button.volume_progressbar
         self.mute_button = volume_button.volume_button
         self.mute_button.connect("toggled", self.toggled_volume)
@@ -165,7 +164,6 @@ class VolumeSlider(gtk.HBox):
             Player.volume = val
         else:    
             Player.volume = 0.0
-
 
     def __volume_changed(self,*args):
         val = self.volume_progressbar.get_value()

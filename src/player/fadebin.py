@@ -157,6 +157,7 @@ from threading import Lock
 
 from logger import Logger
 
+
 STREAM_URI = [ "http://", "mms://", "mmsh://", "mmsu://", "mmst://", "rtsp://" ]
 
 EPSILON = 0.001
@@ -569,11 +570,12 @@ class PlayerBin(gobject.GObject, Logger):
         return can_seek
 
     def xfade_set_time(self, time):
-
+        
         self.stream_list_lock.acquire()
         stream = self.find_stream_by_state(FADING_IN | PLAYING | PAUSED | FADING_OUT_PAUSED | PENDING_REMOVE)
-        self.stream_list_lock.release()
+        self.stream_list_lock.release()        
 
+        
         if not stream: 
             self.logdebug("got seek while no playing streams exist") 
             return
@@ -598,6 +600,7 @@ class PlayerBin(gobject.GObject, Logger):
             stream.perform_seek()
         else:
             self.logerror("xfade_set_time: invalid stream state")
+
 
     def xfade_get_time(self):
         ret = self.get_times_and_stream()

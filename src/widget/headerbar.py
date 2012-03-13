@@ -27,6 +27,7 @@ from widget.information import PlayInfo
 from widget.timer import SongTimer, VolumeSlider
 from source.local import ImportFolderJob
 from library import MediaDB
+from config import config
 
 
 class HeaderBar(gtk.HBox):
@@ -49,7 +50,7 @@ class HeaderBar(gtk.HBox):
         
         
         # play button
-        self.__play = ToggleButton(play_status_pixbuf, None, pause_status_pixbuf)
+        self.__play = ToggleButton(play_status_pixbuf, pause_status_pixbuf)
         self.__id_signal_play = self.__play.connect("toggled", lambda w: Player.playpause())
         
         prev = self.__create_button("previous")
@@ -120,6 +121,9 @@ class HeaderBar(gtk.HBox):
 
     def save_db(self, widget, event):    
         MediaDB.save()
+        Player.save_state()
+        config.write()
+        
         
     def __swap_play_status(self, obj, active):    
         self.__play.handler_block(self.__id_signal_play)

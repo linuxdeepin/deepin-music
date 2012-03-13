@@ -47,20 +47,16 @@ song_scalebar = HScalebar(
 
 playlist_button = ToggleButton(
     app_theme.get_pixbuf("control/playlist_normal.png"),
-    None,
     app_theme.get_pixbuf("control/playlist_hover.png"))
 
 lyrics_button = ToggleButton(
     app_theme.get_pixbuf("control/lyrics_normal.png"),
-    None,
     app_theme.get_pixbuf("control/lyrics_hover.png"))
 
 musicbox_button = ToggleButton(
     app_theme.get_pixbuf("control/musicbox_normal.png"),
-    None,
     app_theme.get_pixbuf("control/musicbox_hover.png"))
 
 media_button = ToggleButton(
     app_theme.get_pixbuf("control/media_normal.png"),
-    None,
     app_theme.get_pixbuf("control/media_hover.png"))

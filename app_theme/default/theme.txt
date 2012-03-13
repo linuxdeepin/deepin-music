@@ -15,7 +15,7 @@
  "buttonBorderActive" : "#9372c9",
  "buttonFont" : "#000000",
  },	
- "alphaColors" : {
+ "alpha_colors" : {
      "frame" : ("#000000", 0.5),
      "frameDot" : ("#000000", 0.2),
      "frameLight" : ("#FFFFFF", 0.2),
@@ -24,7 +24,7 @@
 	 "menuMask" : ("#FFFFFF", 0.9),
 	 "progressbarFrame" : ("#EF12AB", 1.0),
  },
- "shadowColors" : {
+ "shadow_colors" : {
      "linearBackground" : [
 	    (0,		("#EFEFEF", 0.6)),
 		(0.05,	("#EFEFEF", 0.75)),
@@ -127,5 +127,8 @@
         (0, ("#cfa2e4",1)),
         (1, ("#c797e0",1)),
      ],
- }
+ },
+ "text_styles" : {
+     "default" : ("#FFFFFF", "#000000", "#000000", 11, 14, 1),
+ },
 }
