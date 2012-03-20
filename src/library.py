@@ -30,6 +30,7 @@ from findfile import get_config_file
 from logger import Logger
 import utils
 
+
 gobject.threads_init()
 AUTOSAVE_TIMEOUT = 1000 * 60 * 5 # 5min
 SIGNAL_DB_QUERY_FIRED = 50
@@ -68,6 +69,7 @@ class MediaDatebase(gobject.GObject, Logger):
         # playlist
         self.__playlists = {}
         self.__playlist_types = []
+
         
         # init constant
         self.__is_loaded = False
@@ -116,6 +118,7 @@ class MediaDatebase(gobject.GObject, Logger):
             self.logexception("Failed fire queued signal")
         self.__reset_queued_signal()    
         self.__condition.release()
+        return True
         
     def create_song(self, tags, song_type, read_from_file=False):    
         '''Create song'''
@@ -314,6 +317,12 @@ class MediaDatebase(gobject.GObject, Logger):
         self.is_busy = True
         self.__condition.release()
         
+    def get_playlist_by_name(self, name, pl_type="local"):
+        for pl in self.__playlists[pl_type]:
+            if pl.get_name() == name:
+                return pl
+        return None    
+        
     def del_playlist(self, pl_type, pl):    
         self.__playlists[pl_type].discard(pl)
         self.__condition.acquire()
@@ -441,6 +450,7 @@ class MediaDatebase(gobject.GObject, Logger):
     @utils.threaded
     def async_save(self):
         self.save()
+
         
         
 class Playlist(gobject.GObject, Logger):        

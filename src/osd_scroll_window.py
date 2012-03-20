@@ -20,9 +20,3 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-CONFIG_FILENAME = "config"
-PROGRAM_NAME = "deepin-music-player"
-
-DEFAULT_TIMEOUT = 10
-DEFAULT_FONT_SIZE = 10
-AUTOSAVE_TIMEOUT = 1000 * 60 * 5  # 5min

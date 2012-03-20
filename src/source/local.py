@@ -149,7 +149,3 @@ def ReloadDB():
     if monitored_folder:
         ImportFolderJob([monitored_folder])
             
-            
-            
-
-           

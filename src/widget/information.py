@@ -42,7 +42,6 @@ class PlayInfo(gtk.Label):
         self.set_label("<span color=\"black\"> 深度音乐 Music</span>")
         self.set_use_markup(True)
 
-
         Player.connect("instant-new-song",self.__new_song)
         MediaDB.connect("simple-changed",self.__on_change)
         Player.bin.connect("buffering", self.__on_buffering)
@@ -52,7 +51,6 @@ class PlayInfo(gtk.Label):
     def __on_buffering(self, playbin, progress):
         if self.song:
             self.update(self.song, progress)
-
 
     def __on_change(self,db,songs):
         if self.song in songs:

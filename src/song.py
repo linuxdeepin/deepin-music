@@ -149,7 +149,7 @@ class Song(dict, Logger):
             value = None
         if not value: value = self.get(key, "")    
         if isinstance(value, int) or isinstance(value, float): value = "%d" % value
-        return value
+        return str(value)
         
     def get_filter(self):
         return " ".join([self.get_str("artist"),
@@ -309,6 +309,7 @@ class Song(dict, Logger):
                         if isinstance(value, list) or isinstance(value, tuple):
                             value = value[0]
                         self[tag] = utils.fix_charset(value) # TEST
+                        # self[tag] = value    
 
                             
                 self["#duration"] = int(audio.info.length) * 1000        

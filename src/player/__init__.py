@@ -80,7 +80,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         if uri == self.song.get("uri") and not self.__next_already_called:        
             self.loginfo("request new song: eos and play-end not emit")
             self.emit("play-end")
-            self.next(gapless=True, auto=True) # todo
+            self.next() # todo
         self.__next_already_called = False    
         
     def __on_error(self, bin, uri):   
@@ -125,7 +125,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         if not duration or duration <= 0:
             return
         else:
-            if not self.song.get("#duration"):
+            if not self.song.get("#duration") or self.song.get("#duration") != duration * 1000:
                 MediaDB.set_property(self.song, {"#duration": duration * 1000})
                 
         self.perhap_report(pos, duration)        # todo
@@ -169,6 +169,8 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         
     def set_song(self, song, play=False, crossfade=None, seek=None):
         '''set song'''
+        if song == None:
+            return
         # report playcount
         self.perhap_report()
         
@@ -228,6 +230,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         
     def play_new(self, song, crossfade=None, seek=None):
         '''add new song and try to play it'''
+
         self.set_song(song, True, crossfade, seek)
         
     def play(self, crossfade=-1, seek=None):    
@@ -273,30 +276,22 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
                 return
         self.stop()    
         
-    def next(self, gapless=False, auto=False):    
+    def next(self, maunal=False):    
         '''next song'''
         self.update_skipcount()
         if not self.__source:
             return
-        
-        if self.stop_after_this_track and auto:
-            self.loginfo("stop after this track request")
+        song = self.__source.get_next_song(maunal)
+        if song:
+            if config.getboolean("player", "crossfade") and config.getboolean("player", "crossfade_gapless_album") and self.song and song.get("album") == self.song.get("album"):        
+                self.logdebug("request gapless to the backend")
+                self.play_new(song, 0)
+            else:    
+                self.play_new(song)
+            return 
+        else:
+            # stop the current song
             self.fadeout_and_stop()
-        else:    
-            data = self.__source.get_next_song()
-            if data:
-                song, stop_after_this_track = data        
-                if gapless and config.getboolean("player", "crossfade") and config.getboolean("player", "crossfade_gapless_album") and self.song and song.get("album") == self.song.get("album"):        
-                    self.logdebug("request gapless to the backend")
-                    self.play_new(song, 0)
-                else:    
-                    self.play_new(song)
-                    
-                self.stop_after_this_track = stop_after_this_track    
-                return 
-            else:
-                # stop the current song
-                self.fadeout_and_stop()
                 
     def rewind(self):            
         '''rewind'''
@@ -337,6 +332,8 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
                 if self.song:
                     # Reload the current song
                     self.play_new(self.song)
+                elif self.__source != None:    
+                    self.next(True)
                 else:    
                     self.stop()
                     

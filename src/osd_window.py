@@ -1,5 +1,24 @@
-#!/usr/bin/env python
+#! /usr/bin/env python
 # -*- coding: utf-8 -*-
+
+# Copyright (C) 2011 Deepin, Inc.
+#               2011 Hou Shaohui
+#
+# Author:     Hou Shaohui <houshao55@gmail.com>
+# Maintainer: Hou ShaoHui <houshao55@gmail.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import gtk
 import cairo
@@ -59,28 +78,32 @@ class OsdWindow(gobject.GObject):
         ''' Init. '''
         gobject.GObject.__init__(self)
         self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
+
+        # self.window = gtk.Window(gtk.WINDOW_POPUP)
         self.window.set_property("allow-shrink", True)
+        self.window.set_skip_taskbar_hint(True)
+        self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DOCK)
+        
         self.window.set_position(gtk.WIN_POS_CENTER)
         self.window.set_decorated(False)
         self.window.set_app_paintable(True)
         self.window.stick()
         self.window.set_keep_above(True)
         self.window.set_default_size(600, 120)
-
         
         self.empty_mask = True
         self.time_out = 0.1
         
         # Init the osd.
         self.osd_current_line = 0
-        self.osd_bg_pixbuf = None
+        self.osd_bg_pixbuf = app_theme.get_pixbuf("skin/desktop_lrc.png").get_pixbuf()
         self.osd_line_count = 2
         self.osd_lyrics = ["", ""]
         self.osd_line_alignment = [0.0, 1.0]
         self.osd_lyric_rects = []
         self.osd_render_context = RenderContextNew()
         self.osd_translucent_on_mouse_over = True
-        self.osd_percentage = [0.7, 0.0]
+        self.osd_percentage = [0.0, 0.0]
         
         # Initilaize private data
         self.priv_active_lyric_surfaces = []
@@ -105,7 +128,7 @@ class OsdWindow(gobject.GObject):
         self.priv_mouse_y = 0
         self.priv_drag_state = DRAG_NONE 
         self.priv_update_shape = False
-        self.priv_blur_radius = 3.0
+        self.priv_blur_radius = 3
         self.priv_mode = OSD_WINDOW_NONE
         self.priv_osd_height = 0
         
@@ -124,6 +147,7 @@ class OsdWindow(gobject.GObject):
             
         # # The setting.
         self.set_window_mode(OSD_WINDOW_NORMAL)
+        # self.set_window_mode(OSD_WINDOW_DOCK)
         self.update_window_colormap()
         self.screen_composited_changed()
                         
@@ -145,7 +169,6 @@ class OsdWindow(gobject.GObject):
         self.window.connect("unmap-event", self.window_unmap_cb)         
         self.window.connect("realize", self.window_realize_cb)           
         self.window.connect("unrealize", self.window_unrealize_cb)       
-
                 
         
     def set_window_mode(self, mode):
@@ -219,49 +242,48 @@ class OsdWindow(gobject.GObject):
             return 
         width = self.priv_width
         height = self.compute_window_height()
-        if self.priv_shape_pixmap:
+        if self.priv_shape_pixmap !=None:
             w, h = self.priv_shape_pixmap.get_size()
             if w == width and h == height:
                 return 
             else:
                 self.priv_shape_pixmap = None
                 
-        self.priv_shape_pixmap = gtk.gdk.Pixmap(self.window.window, width, height, 1)        
+        self.priv_shape_pixmap = gtk.gdk.Pixmap(self.window.get_window(), width, height, 1)        
         cr = self.priv_shape_pixmap.cairo_create()
         self.clear_cairo(cr)    
         self.queue_reshape()
         
     def update_window_shape(self): # TRY
         ''' update window shape. '''
+        if not self.window.get_realized():
+            return 
+        if self.priv_composited or self.panel_visible():
+            if not self.empty_mask:
+                self.empty_mask = True
+                self.window.window.shape_combine_mask(None, 0.0, 0.0)
+            return
         
-        # if not self.window.get_realized():
-        #     return 
-        # if self.priv_composited or self.panel_visible():
-        #     if not self.empty_mask:
-        #         self.empty_mask = True
-        #         self.window.window.shape_combine_mask(None, 0, 0)
-        #     return
+        self.empty_mask = False
+        shape_mask = self.priv_shape_pixmap
+        color = gtk.gdk.Color()
+        color.pixel = 0.0
+        fg_gc = shape_mask.new_gc()
+        fg_gc.set_foreground(color)
+        fg_gc.set_foreground(color)
+        cr = shape_mask.cairo_create()
+        self.clear_cairo(cr)
+        self.paint_window_lyrics(cr)
+        self.window.window.shape_combine_mask(shape_mask, 0.0, 0.0)
+        self.window.queue_draw()
         
-        # self.empty_mask = False
-
-        # shape_mask = self.priv_shape_pixmap
-        # color = gtk.gdk.Color()
-        # color.pixel = 0
-        # fg_gc = shape_mask.new_gc()
-        # fg_gc.set_foreground(color)
-        # fg_gc.set_foreground(color)
-        # cr = shape_mask.cairo_create()
-        # # cr = self.window.window.cairo_create()
-        # self.clear_cairo(cr)
-        # self.paint_window_lyrics(cr)
-        # self.window.window.shape_combine_mask(shape_mask, 0, 0)
-        if self.priv_mouse_over and not self.priv_locked:
-            self.window.window.shape_combine_mask(None, 0, 0)
-        else:
-            cr = self.window.window.cairo_create()
-            self.clear_cairo(cr)
-            self.paint_window_lyrics(cr)
-        self.priv_update_shape = False
+        # if self.priv_mouse_over and not self.priv_locked:
+        #     self.window.window.shape_combine_mask(None, 0, 0)
+        # else:
+        #     cr = self.window.window.cairo_create()
+        #     self.clear_cairo(cr)
+        #     self.paint_window_lyrics(cr)
+        # self.priv_update_shape = False
         
         
     def update_render_blur_radius(self):    
@@ -269,7 +291,7 @@ class OsdWindow(gobject.GObject):
         if self.window_should_blur():
             self.osd_render_context.set_blur_radius(self.priv_blur_radius)
         else:    
-            self.osd_render_context.set_blur_radius(0.0)
+            self.osd_render_context.set_blur_radius(0)
             
     def update_lyric_surface(self, line):        
         ''' Update lyrics surface. '''
@@ -319,7 +341,6 @@ class OsdWindow(gobject.GObject):
             pos_changed = True
         self.priv_raw_x = new_x    
         self.priv_raw_y = new_y
-        
 
         if pos_changed:
             self.window.move(new_x, new_y)
@@ -484,7 +505,7 @@ class OsdWindow(gobject.GObject):
         ''' Get edge on point with x, y.'''
         width = self.window.allocation.width
         height = self.window.allocation.height
-        if y >= 0 and y < height:
+        if y >= 0 and y <= height:
             if x >= 0 and x < BORDER_WIDTH:                    
                 return gtk.gdk.WINDOW_EDGE_WEST
             if x >= width - BORDER_WIDTH and x < width:
@@ -509,7 +530,7 @@ class OsdWindow(gobject.GObject):
         y = self.priv_old_y + (event.y_root - self.priv_mouse_y)
         width, height = widget.get_size()
         if self.priv_drag_state == DRAG_MOVE:
-            widget.move(x, y)
+            widget.move(int(x), int(y))
         elif self.priv_drag_state == DRAG_EAST:    
             self.move_resize(self.priv_old_x, self.priv_old_y,
                              self.priv_old_width + (event.x_root - self.priv_mouse_x),
@@ -518,7 +539,7 @@ class OsdWindow(gobject.GObject):
 
         elif self.priv_drag_state == DRAG_WEST:    
             self.move_resize(x, self.priv_old_y,
-                             self.priv_old_width + priv_old_x - x,
+                             self.priv_old_width + self.priv_old_x - x,
                              height,
                              DRAG_WEST)
 
@@ -561,13 +582,13 @@ class OsdWindow(gobject.GObject):
         ''' expose before callback. '''
         if self.panel_visible(): 
             self.paint_window()  
-        return True    
+        return False    
     
     def expose_after(self, widget, event):
         ''' expose after callback. '''
         if not self.panel_visible():
             self.paint_window()
-        return True    
+        return False
     
     def panel_visible(self):    
         ''' Whether panel is visible. '''
@@ -575,7 +596,6 @@ class OsdWindow(gobject.GObject):
     
     def paint_window(self):
         ''' The window paint. '''
-
         cr = self.window.window.cairo_create()
         self.paint_window_bg(cr) 
         self.paint_window_lyrics(cr) 
@@ -636,8 +656,8 @@ class OsdWindow(gobject.GObject):
     
     def paint_window_lyrics(self, cr):
         ''' Paint window lyrics. '''
-        if not self.window.window.is_visible():
-            return True
+        # if not self.window.window.is_visible():
+        #     return True
         alpha = 1.0
         font_height = self.osd_render_context.get_font_height()
         if self.priv_composited and self.priv_locked and self.priv_mouse_over_lyrics and self.osd_translucent_on_mouse_over:
@@ -764,6 +784,7 @@ class OsdWindow(gobject.GObject):
             self.priv_composited_signal = self.window.connect("composited-changed", lambda w: self.screen_composited_changed())
         self.reset_shape_pixmap()    
         self.set_input_shape_mask(self.priv_locked) 
+
         
     def window_unrealize_cb(self, widget):    
         ''' window unrealize callback.'''
@@ -834,7 +855,7 @@ class OsdWindow(gobject.GObject):
         rel_x, rel_y = self.window.window.get_pointer()[:2]
         rect = rects(0, 0, self.window.allocation.width, self.window.allocation.height)
         if self.priv_mode != OSD_WINDOW_DOCK or self.priv_drag_state == DRAG_NONE and not self.__point_in_rect(rel_x, rel_y, rect):
-            # self.priv_mouse_over = False
+            self.priv_mouse_over = False
             self.queue_reshape()
             self.window.queue_draw()
            
@@ -955,18 +976,28 @@ class OsdWindow(gobject.GObject):
         self.update_lyric_surface(line)
         self.update_window_shape()
         self.window.queue_draw()
+        
+        if line == 1:
+            self.time_out = 0.0
+            gobject.timeout_add(50, self.test_cb)
             
+    def test_cb(self):        
+        self.time_out += 0.005
+        self.set_percentage(1, self.time_out)
+        if self.time_out > 1:
+            return False
+        return True
+        
+lrc_window = OsdWindow()    
 
 if __name__ == "__main__":        
-
     window = OsdWindow()
-    pixbuf = app_theme.get_pixbuf("skin/desktop_lrc.png").get_pixbuf()
-    window.set_window_bg(pixbuf)
     window.set_lyric(0, "把你捧在手上 虔诚地焚香")
-    window.set_lyric(1, "剪下一段烛光 将经纶点亮")
-    window.set_percentage(0, 0.0)
-    window.set_percentage(1, 0.68)
-    window.set_locked(True)
+    window.set_lyric(1, "剪下一段烛光 将经纶点亮, 不求荡气回肠 只求爱一场, 爱到最后受了伤 哭得好绝望, 我用尽一生一世 来将你供养")
+    window.set_percentage(0, 0.2)
+    window.set_percentage(1, 0.5)
+    # window.set_line_alignment(0, 0.0)
+    # window.set_locked(True)
     window.window.show_all()
     print window.get_min_width()
     gtk.main()

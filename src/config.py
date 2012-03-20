@@ -94,10 +94,10 @@ class Config(gobject.GObject, Logger):
                 "volume" : "1.0",
                 "seek" : "0",
                 "state" : "stop",
-                "crossfade" : "true",
+                "crossfade" : "false",
                 "crossfade_time" : "3.0",
-                "crossfade_gapless_album" : "true",
-                "play_on_startup" : "true",
+                "crossfade_gapless_album" : "false",
+                "play_on_startup" : "false",
                 "enqueue":"false",
                 "click_enqueue":"false",
                 "queuewholealbum":"false",
@@ -109,8 +109,13 @@ class Config(gobject.GObject, Logger):
 
             "desktop_lrc" : {
                 "font" : "迷你繁启体 32",
-                "color_top": "#"
-                }
+                },
+            
+            "setting" : {
+                "empty_random" : "true",
+                "loop_mode" : "random_mode",
+                },
+            
             }
         
     

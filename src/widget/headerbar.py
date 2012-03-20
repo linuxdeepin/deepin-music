@@ -38,10 +38,6 @@ class HeaderBar(gtk.HBox):
         # cover box
         cover_box = ImageBox(app_theme.get_pixbuf("skin/default_cover.png"))
         
-
-        play_status_pixbuf = app_theme.get_pixbuf("action/play.png")
-        pause_status_pixbuf = app_theme.get_pixbuf("action/pause.png")
-        
         # swap played status handler
         Player.connect("played", self.__swap_play_status, True)
         Player.connect("paused", self.__swap_play_status, False)
@@ -50,6 +46,8 @@ class HeaderBar(gtk.HBox):
         
         
         # play button
+        play_status_pixbuf = app_theme.get_pixbuf("action/play.png")
+        pause_status_pixbuf = app_theme.get_pixbuf("action/pause.png")
         self.__play = ToggleButton(play_status_pixbuf, pause_status_pixbuf)
         self.__id_signal_play = self.__play.connect("toggled", lambda w: Player.playpause())
         
@@ -98,18 +96,13 @@ class HeaderBar(gtk.HBox):
         volume_align = gtk.Alignment()
         volume_align.set(0, 1.0, 0, 0)
         volume_align.add(self.vol)
-        
 
         plugs_box.pack_start(volume_align, False, False)
         plugs_box.pack_start(more_align, True, True)        
-
         control_box.pack_start(plugs_box, False, False)
         information = gtk.HBox(spacing=6)
         information.pack_start(cover_box, False, False)
         information.pack_start(control_box, True, True)
-        
-        
-        
         self.pack_start(information, True, True)
                 
         # Player.connect("stopped", self.reload_action_button)
@@ -142,11 +135,7 @@ class HeaderBar(gtk.HBox):
         return button
     
     def player_control(self, button, name):
-        getattr(Player, name)()
-        
-        
-
-        
-
-        
-
+        if name == "next":
+            getattr(Player, name)(True)
+        else:    
+            getattr(Player, name)()

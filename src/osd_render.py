@@ -1,5 +1,24 @@
-#!/usr/bin/env python
+#! /usr/bin/env python
 # -*- coding: utf-8 -*-
+
+# Copyright (C) 2011 Deepin, Inc.
+#               2011 Hou Shaohui
+#
+# Author:     Hou Shaohui <houshao55@gmail.com>
+# Maintainer: Hou ShaoHui <houshao55@gmail.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import cairo
 import pango
@@ -26,7 +45,7 @@ class RenderContextNew(object):
         self.pango_layout = pango.Layout(self.pango_context)
         self.text = ""
         self.linear_colors = LINEAR_COLORS
-        self.blur_radius = 0.0
+        self.blur_radius = 3
         self.outline_width = OUTLINE_WIDTH
         self.update_font()
         
@@ -81,8 +100,6 @@ class RenderContextNew(object):
         self.set_text(text)
         xpos += self.outline_width / 2 + self.blur_radius
         ypos += self.outline_width / 2 + self.blur_radius
-        
-
         cr = pangocairo.CairoContext(cr)
         width, height = self.get_pixel_size(text)
         # Draw the outline of the text.
@@ -117,78 +134,3 @@ class RenderContextNew(object):
         cr.move_to(xpos, ypos)
         cr.show_layout(self.pango_layout)
         cr.restore()
-
-        
-def surface_gaussion_blur(surface, radious):
-    '''Gaussian blur surface.'''
-    surface.flush()
-    width = surface.get_width()
-    height = surface.get_height()
-    
-    tmp = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height);
-    
-    src = surface.get_data()    
-    src_stride = surface.get_stride()
-    
-    print type(src)
-    print type(src_stride)
-    
-    dst = tmp.get_data()
-    dst_stride = tmp.get_stride()
-    
-    size = 17
-    half = 17 / 2
-
-    kernel = range(0, size)
-    a = 0
-    for i in range(0, size):
-        f = i - half
-        kernel[i] = math.exp(-f * f / 30.0) * 80
-        a += kernel[i]
-        
-    for i in range(0, height):
-        s = src + i * src_stride
-        d = dst + i * dst_stride
-        for j in range(0, width):
-            if radious < j and j < width - radious:
-                continue
-
-            x = y = z = w = 0
-            for k in range(0, size):
-                if j - half + k < 0 or j - half + k >= width:
-                    continue
-                
-                p = s[j - half + k]
-                x += ((p >> 24) & 0xff) * kernel[k]
-                y += ((p >> 16) & 0xff) * kernel[k]
-                z += ((p >> 8) & 0xff) * kernel[k]
-                w += ((p >> 0) & 0xff) * kernel[k]
-                
-            d[j] = (x / a << 24) | (y / a << 16) | (z / a << 8) | w / a
-
-    for i in range(0, height):
-        s = dst + i * dst_stride
-        d = src + i * src_stride
-        for j in range(0, width):
-            if radious <= i and i < height - radious:
-                d[j] = s[j]
-                continue
-
-            x = y = z = w = 0
-            for k in range(0, size):
-                if i - half + k < 0 or i - half + k >= height:
-                    continue
-                
-                s = dst + (i - half + k) * dst_stride
-                p = s[j]
-                
-                x += ((p >> 24) & 0xff) * kernel[k]
-                y += ((p >> 16) & 0xff) * kernel[k]
-                z += ((p >> 8) & 0xff) * kernel[k]
-                w += ((p >> 0) & 0xff * kernel[k])
-                
-            d[j] = (x / a << 24) | (y / a << 16) | (z / a << 8) | w / a    
-            
-    surface.mark_dirty()
-
-        
