@@ -25,6 +25,7 @@ import gobject
 import pango
 import random
 from dtk.ui.listview import ListView
+from dtk.ui.menu import Menu
 
 import utils
 from config import config
@@ -38,7 +39,6 @@ class SongView(ListView):
     ''' song view. '''
     def __init__(self, *args):
         super(SongView, self).__init__(*args)
-        self.current_item = -1
         
     def get_songs(self):        
         songs = []
@@ -56,6 +56,7 @@ class SongView(ListView):
         confif.set("setting", "loop_mode", value)
         
     def get_previous_song(self):
+        
         if self.is_empty():
             if config.get("setting", "empty_random") == "true":
                 return MediaDB.get_random_song("local")
@@ -102,7 +103,7 @@ class SongView(ListView):
                     return self.highlight_item.get_song()
                 
             elif config.get("setting", "loop_mode") == "random_mode":    
-                self.get_random_song()
+                return self.get_random_song()
                         
     def get_manual_song(self):                    
         if self.highlight_item != None:
@@ -164,3 +165,54 @@ class SongView(ListView):
         for index in list_index:
             new_songs.append(songs[index])
         self.add_songs(new_songs)    
+        
+    def play_select_item(self):    
+        if len(self.select_rows) > 0:
+            self.highlight_item = self.items[self.select_rows[0]]
+            Player.play_new(self.highlight_item.get_song())
+        return True    
+    
+    def remove_select_items(self):
+        self.delete_select_items()
+        return True
+    
+    def __clear_items(self):
+        self.clear()
+        return True
+    
+    def open_song_dir(self):
+        if len(self.select_rows) > 0:
+            song = self.items[self.select_rows[0]].get_song()
+            utils.run_command("xdg-open %s" % song.get_dir())
+        return True    
+    
+    def move_to_trash(self):
+        flag = False
+        if len(self.select_rows) > 0:
+            songs = [ self.items[self.select_rows[index]].get_song() for index in range(0, len(self.select_rows))]
+            if self.highlight_item and self.highlight_item.get_song() in songs:
+                Player.stop()
+                self.highlight_item = None
+                flag = True
+            [ utils.move_to_trash(song.get("uri")) for song in songs ]
+            self.delete_select_items()            
+            if flag:
+                Player.next()
+        return True    
+        
+    def popup_menu(self):    
+        return Menu([(None, "播放歌曲",  self.play_select_item),
+                     (None, "添加到列表", None),
+                     (None, "移动到列表", None),
+                     (None, "发送到移动盘", None),
+                     None,
+                     (None, "删除", self.remove_select_items),
+                     (None, "从本地删除", self.move_to_trash),
+                     (None, "清空列表", self.__clear_items),
+                     None,
+                     (None, "播放模式", None),
+                     (None, "歌曲排序", None),
+                     (None, "打开文件目录", self.open_song_dir),
+                     (None, "编辑歌曲信息", None),
+                     ], opacity=1.0, menu_pos=1)
+        

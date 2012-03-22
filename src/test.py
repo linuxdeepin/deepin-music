@@ -21,40 +21,19 @@ import subprocess
 from ui_toolkit import *
 from widget.song_item import SongItem
 from widget.playlist import SongView
-
+from widget.equalizer import EqualizerWindow
 
 from widget.headerbar import HeaderBar
 gobject.threads_init()
 gtk.gdk.threads_init()
 
 
-class PlayList(object):
-    def __init__(self):
-        self.songs = MediaDB.get_songs("local")
-        self.index = 0
-        
-    def get_next_song(self):    
-        self.songs = MediaDB.get_songs("local")
-        self.index += 1
-        if self.index > len(self.songs) - 1:
-            self.index = 0
-        return self.songs[self.index], False   
-            
-    def get_previous_song(self):
-        self.songs = MediaDB.get_songs("local")
-        self.index -= 1
-        if self.index < 0:
-            self.index = len(self.songs) - 1
-        return self.songs[self.index]
-        
-playlists = PlayList()        
-
 
 class DeepinPlayer(object):
     '''Music player for linux deepin.'''
     def __init__(self):
         self.window = Application("DMuisc")
-        self.window.set_default_size(320, 400)
+        self.window.set_default_size(320, 550)
         self.window.add_titlebar(["min", "max", "close"], None,
                                  "  Deepin Music")
 
@@ -75,6 +54,7 @@ class DeepinPlayer(object):
              (lambda item: item.length, cmp)])
 
         self.list_view.connect("double-click-item", self.double_click_item)
+        self.list_view.connect("right-press-items", self.popup_listview_menu)
         self.list_view.add_titles(["歌名", "艺术家", "时间"])
 
         scrolled_window.add_child(self.list_view)
@@ -88,6 +68,9 @@ class DeepinPlayer(object):
         self.window.main_box.pack_start(mainbox, False, False)
         self.window.main_box.pack_start(scrolled_window, True, True)
         self.window.main_box.pack_start(jobs_manager, False, False)
+        eq_button = gtk.Button("equalizer")
+        eq_button.connect("clicked", self.open_equalizer)
+        self.window.main_box.pack_start(eq_button, False, False)
 
 
         # window = OsdWindow()
@@ -102,6 +85,9 @@ class DeepinPlayer(object):
         self.player.set_source(self.list_view)
         self.window.run()        
         
+    def open_equalizer(self, widget):    
+        EqualizerWindow(self.window.window)
+        
     def expose_cb(self, widget, event):    
         pass
     
@@ -109,7 +95,8 @@ class DeepinPlayer(object):
         Player.play_new(item.get_song())
         self.list_view.set_highlight(item)
 
-
+    def popup_listview_menu(self, widget, x, y, current_item,  select_items):    
+        self.list_view.popup_menu().show((x,y))
     
     def reload_db(self, db, song_type, songs):
 

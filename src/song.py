@@ -265,6 +265,11 @@ class Song(dict, Logger):
             return utils.get_path_from_uri(self.get("uri"))
         except:
             return ""
+    def get_dir(self):    
+        try:
+            return os.path.split(self.get_path())[0]
+        except:
+            return ""
         
     def get_scheme(self):    
         return utils.get_scheme(self.get("uri"))

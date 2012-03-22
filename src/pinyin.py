@@ -78,9 +78,3 @@ def transfer(chars, first_spell=True):
     conv = Transfer(first_spell)    
     return conv.convert(chars)
         
-                
-if __name__ == "__main__":               
-    first_word = Transfer()
-    print first_word.convert(u"#￥@深度音乐播放器 - 哪有這樣的書法, 我的企鵝號：464228236 SmallEvilBeast!")
-    second_word = Transfer(False)
-    print second_word.convert(u"深度音乐播放器#￥@ - 哪有這樣的書法, 我的企鵝號：464228236 SmallEvilBeast!")

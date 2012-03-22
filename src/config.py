@@ -94,8 +94,8 @@ class Config(gobject.GObject, Logger):
                 "volume" : "1.0",
                 "seek" : "0",
                 "state" : "stop",
-                "crossfade" : "false",
-                "crossfade_time" : "3.0",
+                "crossfade" : "true",
+                "crossfade_time" : "2.0",
                 "crossfade_gapless_album" : "false",
                 "play_on_startup" : "false",
                 "enqueue":"false",
@@ -112,8 +112,8 @@ class Config(gobject.GObject, Logger):
                 },
             
             "setting" : {
-                "empty_random" : "true",
-                "loop_mode" : "random_mode",
+                "empty_random" : "false",
+                "loop_mode" : "list_mode",
                 },
             
             }

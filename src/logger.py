@@ -55,11 +55,14 @@ logging.addLevelName(100,"DEPRECATED")
 formatter = logging.Formatter('%(levelname)-8s %(name)-30s %(message)s')
 
 handler = logging.StreamHandler()
+# filehandler = logging.FileHandler("deepin.log")
+
 handler.setFormatter(formatter)
 
 handler.addFilter(MyFilter())
 
 logger.addHandler(handler)
+# logger.addHandler(filehandler)
 
 def objaddr(obj):
     string = object.__repr__(obj)

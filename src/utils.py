@@ -32,6 +32,7 @@ import locale
 import time
 from time import mktime, strptime
 import threading
+import subprocess
 import mimetypes
 mimetypes.init()
 
@@ -352,7 +353,7 @@ def move_to_trash(uri):
         logger.logdebug("File %s doesn't exists.", path)
         return False
     # find the trash folder
-    home_dir = os.path.realpath(os.path.expandusr("~"))
+    home_dir = os.path.realpath(os.path.expanduser("~"))
     dirs_name = path.split("/")
     dirs_name = filter(lambda name: name != "", dirs_name)
     trash_dir = None
@@ -577,3 +578,89 @@ def load_db(fn):
         f.close()    
     return objs    
 
+def run_command(command):
+    '''Run command.'''
+    subprocess.Popen("nohup %s > /dev/null 2>&1" % (command), shell=True)
+
+    
+class OrderDict(dict):
+
+    def __init__(self, d={}):
+        self._keys = d.keys()
+        dict.__init__(self, d)
+
+    def __delitem__(self, key):
+        dict.__delitem__(self, key)
+        self._keys.remove(key)
+
+    def __setitem__(self, key, item):
+        dict.__setitem__(self, key, item)
+        # a peculiar sharp edge from copy.deepcopy
+        # we'll have our set item called without __init__
+        if not hasattr(self, '_keys'):
+            self._keys = [key,]
+        if key not in self._keys:
+            self._keys.append(key)
+
+    def clear(self):
+        dict.clear(self)
+        self._keys = []
+
+    def items(self):
+        items = []
+        for i in self._keys:
+            items.append(i, self[i])
+        return items
+
+    def keys(self):
+        return self._keys
+
+    def popitem(self):
+        if len(self._keys) == 0:
+            raise KeyError('dictionary is empty')
+        else:
+            key = self._keys[-1]
+            val = self[key]
+            del self[key]
+            return key, val
+
+    def setdefault(self, key, failobj = None):
+        dict.setdefault(self, key, failobj)
+        if key not in self._keys:
+            self._keys.append(key)
+
+    def update(self, d):
+        for key in d.keys():
+            if not self.has_key(key):
+                self._keys.append(key)
+        dict.update(self, d)
+
+    def values(self):
+        v = []
+        for i in self._keys:
+            v.append(self[i])
+        return v
+
+    def move(self, key, index):
+
+        """ Move the specified to key to *before* the specified index. """
+
+        try:
+            cur = self._keys.index(key)
+        except ValueError:
+            raise KeyError(key)
+        self._keys.insert(index, key)
+        # this may have shifted the position of cur, if it is after index
+        if cur >= index: cur = cur + 1
+        del self._keys[cur]
+
+    def index(self, key):
+        if not self.has_key(key):
+            raise KeyError(key)
+        return self._keys.index(key)
+
+    def __iter__(self):
+        for k in self._keys:
+            yield k
+
+    

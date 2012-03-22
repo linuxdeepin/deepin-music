@@ -79,20 +79,22 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         self.loginfo("received eos for %s", uri)
         if uri == self.song.get("uri") and not self.__next_already_called:        
             self.loginfo("request new song: eos and play-end not emit")
+            print "__on_eos__"
             self.emit("play-end")
             self.next() # todo
         self.__next_already_called = False    
         
     def __on_error(self, bin, uri):   
         self.logdebug("gst error received for %s", uri)
-        self.bin.xfade_close()
-        config.set("player", "play", "false")
-        self.emit("paused")
-        
+        # self.bin.xfade_close()
+        # config.set("player", "play", "false")
+        # self.emit("paused")
+
+        print "__on_error__"
         if uri == self.song.get("uri") and not self.__next_already_called:
             self.loginfo("request new song: error and play-end not emit")
-            self.emit("play-end")
-            self.next(gapless=True, auto=True)
+            # self.emit("play-end")
+            self.next()
         self.__next_already_called = False    
         
     def __on_tag(self, bin, taglist):    
@@ -137,7 +139,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
             if remaining < crossfade:
                 if not self.__next_already_called and remaining > 0:
                     self.loginfo("request new song: on tick and play-end not emit")
-                    self.next(gapless=True, auto=True)
+                    self.next()
                     self.emit("play-end")
                     self.__next_already_called = True
             else:        
@@ -162,14 +164,13 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
             gobject.source_remove(self.__emit_signal_new_song_id)
             self.__emit_signal_new_song_id = None
         self.__emit_signal_new_song_id = gobject.timeout_add(5000, real_emit_signal_new_song)    
-    
                     
     def set_source(self, source):    
         self.__source = source
         
     def set_song(self, song, play=False, crossfade=None, seek=None):
         '''set song'''
-        if song == None:
+        if not song:
             return
         # report playcount
         self.perhap_report()
@@ -223,7 +224,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         ret = uri and self.bin.xfade_open(uri)
         if not ret:
             gobject.idle_add(self.emit, "play-end")
-            self.next(auto=True)
+            self.next()
         elif play:    
             self.play(crossfade, seek)
                 
