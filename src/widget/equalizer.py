@@ -29,7 +29,7 @@ from config import config
 from player import Player
 from logger import Logger
 from ui_toolkit import *
-from dtk.ui.utils import get_widget_root_coordinate
+from dtk.ui.utils import get_widget_root_coordinate, move_window
 
 class PreampScalebar(gtk.VBox):
     
@@ -152,7 +152,7 @@ MANDATORY["Soft Rock"] = "4:4:2.4:0.0:-4:-5.6:-3.2:0.0:2.4:8.8"
 MANDATORY["Techno"] = "8:5.6:0.0:-5.6:-4.8:0.0:8:9.6:9.6:8.8"
 
         
-class EqualizerWindow(gtk.Dialog, Logger):        
+class EqualizerWindow(Logger):        
     def __init__(self, parent=""):
         
         try:
@@ -160,14 +160,13 @@ class EqualizerWindow(gtk.Dialog, Logger):
         except:    
             pre_value = 0.6
             
-            
         pre_adjust = gtk.Adjustment(value=pre_value, lower= 0.1 , upper=1.0, step_incr=0.1, page_incr=1, page_size=0)
         preamp_scale = PreampScalebar()
         preamp_scale.scalebar.set_adjustment(pre_adjust)
         pre_adjust.connect("value-changed", self.preamp_change)
         
-        equalizer_win = Window()
-        equalizer_win.set_transient_for(parent)
+        self.equalizer_win = Window()
+        self.equalizer_win.set_transient_for(parent)
         main_box = gtk.HBox(spacing=5)
         main_box.pack_start(preamp_scale, False, False)
         align = gtk.Alignment()
@@ -188,7 +187,6 @@ class EqualizerWindow(gtk.Dialog, Logger):
             main_box.pack_start(slipper_scale, False, False)
         align.add(main_box)                    
         
-        
         try:
             self.__equalizer = gst.element_factory_make("equalizer-10bands")
         except gst.PluginNotFoundError:    
@@ -204,18 +202,15 @@ class EqualizerWindow(gtk.Dialog, Logger):
 
                 self.__equalizer.set_property("band" + str(i), float(value))    
                 
-                
             Player.bin.connect("tee-removed", self.__on_remove)    
             config.connect("config-changed", self.__on_config_change)
-        
             
-        self.active_button = Button("启用", 70, 20)
+        self.active_button = Button("关闭", 70, 20)
         self.active_button.connect("clicked", self.active_or_inactive)
         self.reset_button = Button("重置", 70, 20)
         self.reset_button.connect("clicked", lambda w : self.__change("Default"))
         self.predefine_button = Button("预设", 70, 20)
         self.predefine_button.connect("clicked", self.show_predefine)
-        
             
         button_box = gtk.HBox(spacing=30)
         button_box.pack_start(self.active_button, False, False)
@@ -225,10 +220,14 @@ class EqualizerWindow(gtk.Dialog, Logger):
         button_align.set_padding(5, 5, 10, 10)
         button_align.add(button_box)
         
-        equalizer_win.window_frame.pack_start(align, False, False)    
-        equalizer_win.window_frame.pack_start(button_align,False, False)
-        equalizer_win.change_background(app_theme.get_pixbuf("skin/bg.png"))
-        equalizer_win.show_all()
+        self.equalizer_win.window_frame.pack_start(align, False, False)    
+        self.equalizer_win.window_frame.pack_start(button_align,False, False)
+        self.equalizer_win.change_background(app_theme.get_pixbuf("skin/bg.png"))
+        self.add_move_window_event(self.equalizer_win)
+        self.equalizer_win.show_all()
+        
+    def add_move_window_event(self, widget):    
+        widget.connect("button-press-event", lambda w, e: move_window(w, e, widget))
         
     def db_to_percent(self, dB):    
         return 10 ** (dB / 10)
@@ -237,8 +236,6 @@ class EqualizerWindow(gtk.Dialog, Logger):
         
         config.set("equalizer", "preamp", str(adjust.get_value()))
         Player.volume = adjust.get_value()
-        
-        
         
     def __on_remove(self, bin, tee, element):    
         if element != self.__equalizer:
@@ -250,10 +247,9 @@ class EqualizerWindow(gtk.Dialog, Logger):
         if section == "equalizer" and option.find("equalizer-band") == 0:
             band_name = option.replace("equalizer-", "")
             self.__equalizer.set_property(band_name, float(value))
-        
             
     def active_or_inactive(self, widget):    
-        pass
+        self.equalizer_win.destroy()
         
     def __select_name(self):
         
@@ -279,7 +275,6 @@ class EqualizerWindow(gtk.Dialog, Logger):
                 self.has_tick = True
         if not self.has_tick:        
             self.menu_dict[MANDATORY_CUSTOM][0] = app_theme.get_pixbuf("equalizer/tick1.png")
-        
         
     def show_predefine(self, widget):    
         self.__select_name()
