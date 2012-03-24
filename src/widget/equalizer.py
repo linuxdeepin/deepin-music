@@ -222,7 +222,7 @@ class EqualizerWindow(Logger):
         
         self.equalizer_win.window_frame.pack_start(align, False, False)    
         self.equalizer_win.window_frame.pack_start(button_align,False, False)
-        self.equalizer_win.change_background(app_theme.get_pixbuf("skin/bg.png"))
+        self.equalizer_win.change_background(app_theme.get_pixbuf("skin/main.png"))
         self.add_move_window_event(self.equalizer_win)
         self.equalizer_win.show_all()
         
