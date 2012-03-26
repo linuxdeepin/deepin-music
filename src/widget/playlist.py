@@ -35,6 +35,8 @@ from findfile import get_config_file
 from library import MediaDB
 from logger import Logger
 
+
+
 class SongView(ListView):
     ''' song view. '''
     def __init__(self, *args):
@@ -56,7 +58,6 @@ class SongView(ListView):
         config.set("setting", "loop_mode", value)
         
     def get_previous_song(self):
-        
         if self.is_empty():
             if config.get("setting", "empty_random") == "true":
                 return MediaDB.get_random_song("local")
@@ -157,15 +158,15 @@ class SongView(ListView):
         return self.highlight_item.get_song()
     
     def random_reorder(self, *args):
-        songs = self.get_songs()
-        new_songs = []
-        self.clear()
-        list_index = range(0, len(songs))
-        random.shuffle(list_index)
-        
-        for index in list_index:
-            new_songs.append(songs[index])
-        self.add_songs(new_songs)    
+        with self.keep_select_status():
+            random.shuffle(self.items)
+            self.update_item_index()
+            self.queue_draw()
+            
+    def set_highlight_song(self, song):        
+        if not song: return 
+        if SongItem(song) in self.items:
+            self.set_highlight(self.items[self.items.index(SongItem(song))])
         
     def play_select_item(self):    
         if len(self.select_rows) > 0:
@@ -254,4 +255,3 @@ class SongView(ListView):
                      (None, "打开文件目录", self.open_song_dir),
                      (None, "编辑歌曲信息", None),
                      ], opacity=1.0, menu_pos=1)
-        

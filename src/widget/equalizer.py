@@ -166,7 +166,7 @@ class EqualizerWindow(Logger):
         pre_adjust.connect("value-changed", self.preamp_change)
         
         self.equalizer_win = Window()
-        self.equalizer_win.set_transient_for(parent)
+        # self.equalizer_win.set_transient_for(parent)
         main_box = gtk.HBox(spacing=5)
         main_box.pack_start(preamp_scale, False, False)
         align = gtk.Alignment()
@@ -224,7 +224,7 @@ class EqualizerWindow(Logger):
         self.equalizer_win.window_frame.pack_start(button_align,False, False)
         self.equalizer_win.change_background(app_theme.get_pixbuf("skin/main.png"))
         self.add_move_window_event(self.equalizer_win)
-        self.equalizer_win.show_all()
+
         
     def add_move_window_event(self, widget):    
         widget.connect("button-press-event", lambda w, e: move_window(w, e, widget))
@@ -249,7 +249,9 @@ class EqualizerWindow(Logger):
             self.__equalizer.set_property(band_name, float(value))
             
     def active_or_inactive(self, widget):    
-        self.equalizer_win.destroy()
+        config.set("equalizer", "win_x", self.equalizer_win.get_position()[0])
+        config.set("equalizer", "win_y", self.equalizer_win.get_position()[1])
+        self.equalizer_win.hide_all()
         
     def __select_name(self):
         
@@ -312,3 +314,14 @@ class EqualizerWindow(Logger):
                 config.set("equalizer", "equalizer-band%s" % str(i), str(float(value)))
                 adj.handler_unblock(adj.changed_id)
         return True        
+
+    def run(self):
+        self.equalizer_win.show_all()
+        try:
+            x = config.getint("equalizer", "win_x")
+            y = config.getint("equalizer", "win_y")
+            self.equalizer_win.move(x, y)
+        except: pass    
+
+
+equalizer_win = EqualizerWindow()        

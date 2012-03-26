@@ -21,10 +21,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from ui_toolkit import *
+from dtk.ui.utils import foreach_recursive, is_left_button
 import gtk
 from player import Player
 from widget.information import PlayInfo
 from widget.timer import SongTimer, VolumeSlider
+from widget.equalizer import equalizer_win
 from source.local import ImportFolderJob
 from library import MediaDB
 from config import config
@@ -43,7 +45,6 @@ class HeaderBar(gtk.HBox):
         Player.connect("paused", self.__swap_play_status, False)
         Player.connect("stopped", self.__swap_play_status, False)
         Player.connect("play-end", self.__swap_play_status, False)
-        
         
         # play button
         play_status_pixbuf = app_theme.get_pixbuf("action/play.png")
@@ -105,19 +106,29 @@ class HeaderBar(gtk.HBox):
         information.pack_start(control_box, True, True)
         self.pack_start(information, True, True)
                 
+        # right click
+        foreach_recursive(self, lambda w: w.connect("button-press-event", self.right_click_cb))
+        
+       
         # Player.connect("stopped", self.reload_action_button)
         # Player.connect("instant-new-song", self.on_new_song)
         
     def open_dir(self, widget, event):    
-        MediaDB.full_erase("local")
-        ImportFolderJob()
+        if is_left_button(event):
+            MediaDB.full_erase("local")
+            ImportFolderJob()
 
     def save_db(self, widget, event):    
-        MediaDB.save()
-        Player.save_state()
-        config.write()
+        if is_left_button(event):
+            MediaDB.save()
+            Player.save_state()
+            config.write()
         
-        
+    def right_click_cb(self, widget, event):    
+        if event.button == 3:
+            Menu([(None, "均衡器", lambda : equalizer_win.run())]).show((int(event.x_root), int(event.y_root)))
+                
+                    
     def __swap_play_status(self, obj, active):    
         self.__play.handler_block(self.__id_signal_play)
         self.__play.set_active(active)

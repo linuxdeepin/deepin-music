@@ -21,7 +21,6 @@ import subprocess
 from ui_toolkit import *
 from widget.song_item import SongItem
 from widget.playlist import SongView
-from widget.equalizer import EqualizerWindow
 
 from widget.headerbar import HeaderBar
 gobject.threads_init()
@@ -36,23 +35,18 @@ class DeepinPlayer(object):
         self.window.set_default_size(320, 550)
         self.window.add_titlebar(["min", "max", "close"], None,
                                  "  Deepin Music")
-
-        # self.window.window.connect("expose-event", self.expose_cb)
         mainbox = gtk.VBox(spacing=5)
-        
         MediaDB.load()
         mainbox.pack_start(HeaderBar(), False, False)
-
-        Player.load()
         MediaDB.connect("added", self.reload_db)
         scrolled_window = ScrolledWindow()
-        
-        # 
-        self.list_view = SongView(
-            [(lambda item: item.title, cmp),
-             (lambda item: item.artist, cmp),
-             (lambda item: item.length, cmp)])
+        Player.load()
+        # self.list_view = SongView(
+        #     [(lambda item: item.title, cmp),
+        #      (lambda item: item.artist, cmp),
+        #      (lambda item: item.length, cmp)])
 
+        self.list_view = SongView()
         self.list_view.connect("double-click-item", self.double_click_item)
         self.list_view.connect("right-press-items", self.popup_listview_menu)
         self.list_view.add_titles(["歌名", "艺术家", "时间"])
@@ -60,33 +54,19 @@ class DeepinPlayer(object):
         scrolled_window.add_child(self.list_view)
         
         if MediaDB.get_songs("local"):
-            # items = [ SongItem(song) for song in MediaDB.get_songs("local")]
-            # self.list_view.add_items(items)
             self.list_view.add_songs(MediaDB.get_songs("local"))
+            self.list_view.set_highlight_song(Player.song)
 
+            
         self.window.window.change_background(app_theme.get_pixbuf("skin/main.png"))
         self.window.main_box.pack_start(mainbox, False, False)
         self.window.main_box.pack_start(scrolled_window, True, True)
         self.window.main_box.pack_start(jobs_manager, False, False)
-        eq_button = gtk.Button("equalizer")
-        eq_button.connect("clicked", self.open_equalizer)
-        self.window.main_box.pack_start(eq_button, False, False)
-
-
-        # window = OsdWindow()
-        # window.set_lyric(0, "把你捧在手上 虔诚地焚香")
-        # window.set_lyric(1, "剪下一段烛光 将经纶点亮, 不求荡气回肠 只求爱一场, 爱到最后受了伤 哭得好绝望, 我用尽一生一世 来将你供养")
-        # window.set_percentage(1, 0.5)
-        # window.window.show_all()
-        # lrc_win = ToolWindow('/home/vicious/.lyrics/王麟-伤不起.lrc')    
-        # lrc_win.run()
-        
         self.player = Player        
         self.player.set_source(self.list_view)
+
         self.window.run()        
-        
-    def open_equalizer(self, widget):    
-        EqualizerWindow(self.window.window)
+
         
     def expose_cb(self, widget, event):    
         pass
@@ -104,7 +84,6 @@ class DeepinPlayer(object):
         self.list_view.add_items(items)
         
     def test_cb(self, widget):    
-        # print "dd"
         MediaDB.full_erase("local")
         ImportFolderJob()
         
@@ -116,7 +95,3 @@ class DeepinPlayer(object):
         
 if __name__ == "__main__":       
     DeepinPlayer()
-
-    
-
-        

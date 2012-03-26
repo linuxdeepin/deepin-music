@@ -99,3 +99,21 @@ class SongItem(gobject.GObject):
     def get_song(self):
         return self.song
     
+    def __hash__(self):
+        return hash(self.song.get("uri"))
+    
+    def __repr__(self):
+        return "<SongItem %s>" % self.song.get("uri")
+    
+    def __cmp__(self, other_item):
+        if not other_item:
+            return -1
+        try:
+            return cmp(self.song, other_item.get_song())
+        except AttributeError: return -1
+        
+    def __eq__(self, other_item):    
+        try:
+            return self.song == other_item.get_song()
+        except:
+            return False

@@ -662,5 +662,3 @@ class OrderDict(dict):
     def __iter__(self):
         for k in self._keys:
             yield k
-
-    

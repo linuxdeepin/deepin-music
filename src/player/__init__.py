@@ -44,7 +44,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         "paused"   : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),
         "played"   : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),
         "stopped"  : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),
-        "seeked"   : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ())
+        "seeked"   : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),
         }
     
     def __init__(self):
@@ -79,7 +79,6 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         self.loginfo("received eos for %s", uri)
         if uri == self.song.get("uri") and not self.__next_already_called:        
             self.loginfo("request new song: eos and play-end not emit")
-            print "__on_eos__"
             self.emit("play-end")
             self.next() # todo
         self.__next_already_called = False    
@@ -340,7 +339,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
                     
     def seek(self, pos):
         '''seek'''
-        print pos
+        # print pos
         if self.bin.xfade_seekable():
             self.__current_stream_seeked = True
             self.bin.xfade_set_time(pos)
@@ -438,8 +437,6 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
             song = MediaDB.get_song(uri)
             if song:
                 self.set_song(song, play, self.get_crossfade() * 2, seek)
-
-
         
     def save_state(self):            
         '''save current song's state'''
