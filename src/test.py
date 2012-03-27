@@ -49,7 +49,7 @@ class DeepinPlayer(object):
         self.list_view = SongView()
         self.list_view.connect("double-click-item", self.double_click_item)
         self.list_view.connect("right-press-items", self.popup_listview_menu)
-        self.list_view.add_titles(["歌名", "艺术家", "时间"])
+        # self.list_view.add_titles(["歌名", "艺术家", "时间"])
 
         scrolled_window.add_child(self.list_view)
         

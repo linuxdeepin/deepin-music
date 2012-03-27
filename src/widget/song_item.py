@@ -68,17 +68,17 @@ class SongItem(gobject.GObject):
     def render_title(self, cr, rect):
         '''Render title.'''
         rect.x += self.title_padding_x
-        render_text(cr, rect, self.title)
+        render_text(cr, rect, self.title, font_size=DEFAULT_FONT_SIZE)
     
     def render_artist(self, cr, rect):
         '''Render artist.'''
         rect.x += self.artist_padding_x
-        render_text(cr, rect, self.artist)
+        render_text(cr, rect, self.artist, font_size=DEFAULT_FONT_SIZE)
     
     def render_length(self, cr, rect):
         '''Render length.'''
         rect.width -= self.length_padding_x
-        render_text(cr, rect, self.length, ALIGN_END)
+        render_text(cr, rect, self.length, ALIGN_END, font_size=DEFAULT_FONT_SIZE)
         
     def get_column_sizes(self):
         '''Get sizes.'''
