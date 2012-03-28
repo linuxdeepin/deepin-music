@@ -35,8 +35,6 @@ from findfile import get_config_file
 from library import MediaDB
 from logger import Logger
 
-
-
 class SongView(ListView):
     ''' song view. '''
     def __init__(self, *args):
@@ -214,20 +212,16 @@ class SongView(ListView):
         pos = self.get_coordinate_row(root_y)
         if pos != None:
             pos = pos + 1
-        
         if selection.target in ["text/uri-list", "text/plain", "text/deepin-songs"]:
             self.get_toplevel().window.set_cursor(gtk.gdk.Cursor(gtk.gdk.WATCH))
             if selection.target == "text/deepin-songs" and selection.data:
                 self.add_uris(selection.data.splitlines(), pos, False)
             elif selection.target == "text/uri-list":    
-                self.add_uris(selection.get_uris(), pos, False)
-                # utils.async_parse_uris(selection.get_uris(), False, False, self.add_uris, pos)
+                utils.async_parse_uris(selection.get_uris(), True, True, self.add_uris, pos)
             elif selection.target == "text/plain":    
-                pass
+                utils.async_get_uris_from_plain_text(selection.data, self.add_uris, pos)
             else:    
                 self.get_toplevel().window.set_cursor(None)
-
-
     
     def set_sort_keyword(self, keyword, reverse=False):
         with self.keep_select_status():
@@ -236,7 +230,6 @@ class SongView(ListView):
                                 reverse=reverse)
             self.update_item_index()
             self.queue_draw()
-            
         
     def popup_menu(self):    
         mode_dict = utils.OrderDict()

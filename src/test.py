@@ -40,7 +40,7 @@ class DeepinPlayer(object):
         utils.set_main_window(self.window.window)
         MediaDB.load()
         mainbox.pack_start(HeaderBar(), False, False)
-        MediaDB.connect("added", self.reload_db)
+        # MediaDB.connect("added", self.reload_db)
         scrolled_window = ScrolledWindow()
         Player.load()
         # self.list_view = SongView(

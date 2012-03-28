@@ -262,7 +262,6 @@ def parse_folder(parent_dir):
     ''' return all uri in a folder excepted hidden one.'''
     new_dir  = get_path_from_uri(parent_dir)
     uris = [ get_uri_from_path(os.path.join(new_dir, name)) for name in os.listdir(new_dir) if name[0] != "." and os.path.isfile(os.path.join(new_dir,name))]
-    print "ParserFolder: %d founds" % len(uris)
     return uris
 
 def get_uris_from_m3u(uri):
@@ -287,6 +286,51 @@ def get_uris_from_pls(uri):
     uris = [rebuild_uri(uri, u) for u in uris]        
     return uris
 
+from xml.sax import parseString, handler
+class XSPFParser(handler.ContentHandler):
+    def __init__(self):
+        self.uris = []
+
+    def startElement(self, name, attrs):
+        self.content = ""
+
+    def characters(self, content):
+        self.content = self.content + content
+
+    def endElement(self, name):
+        if name == "location":
+            self.uris.append(self.content)
+
+""" Return uri in a xspf playlist """
+def get_uris_from_xspf(uri):
+    try: 
+        handler = XSPFParser()
+        parseString(read_entire_file(uri), handler)
+    except:
+        logger.logexception("Failed to parse %s", uri)
+        return []
+    else:
+        return handler.uris
+
+def get_uris_from_asx(uri):
+    uri_list = []
+    uri_asx_list = [uri]
+    while len(uri_asx_list) > 0:
+        uri = uri_asx_list.pop()
+        text = read_entire_file(uri)
+        d = parseString(text)
+        links = [ ref.getAttribute('HREF')
+                for ref in d.getElementsByTagName('REF')
+                if ref.hasAttribute('HREF') ]
+        links.extend([ ref.getAttribute('href')
+                for ref in d.getElementsByTagName('ref')
+                if ref.hasAttribute('href') ])
+        for link in links:
+            if link[-4:] == ".asx" or (link.find("?") != -1 and link[link.find("?") - 4:link.find("?")] == ".asx"):
+                uri_asx_list.append(link)
+            else:
+                uri_list.append(link)
+    return uri_list
 
 
 def parse_uris(uris, follow_folder=True, follow_playlist=True, callback=None, *args_cb, **kwargs_cb):
@@ -311,16 +355,17 @@ def parse_uris(uris, follow_folder=True, follow_playlist=True, callback=None, *a
             
             is_pls  = False
             is_m3u  = False
-            # is_xsps = False
+            is_xspf = False
             try:
                 is_pls = (mime_type == "audio/x-scpls")
                 is_m3u = (mime_type == "audio/x-mpegurl" or mime_type == "audio/mpegurl" or mime_type == "audio/m3u")
-                # is_xspf = (mime_type == "application/xspf+xml")
+                is_xspf = (mime_type == "application/xspf+xml")
             except:    
                 pass
+            
             is_pls = is_pls or (ext == ".pls")
             is_m3u = is_m3u or (ext == ".m3u")
-            # is_xspf = is_xspf or (ext == ".xspf")
+            is_xspf = is_xspf or (ext == ".xspf")
             
             if is_local_dir(uri) and follow_folder:
                 valid_uris.extend(parse_uris(parse_folder(uri), follow_folder, follow_playlist))
@@ -328,11 +373,12 @@ def parse_uris(uris, follow_folder=True, follow_playlist=True, callback=None, *a
                 valid_uris.extend(parse_uris(get_uris_from_pls(uri), follow_folder, follow_playlist))
             elif follow_playlist and is_m3u:
                 valid_uris.extend(parse_uris(get_uris_from_m3u(uri), follow_folder, follow_playlist))    
+            elif follow_playlist and is_xspf:    
+                valid_uris.extend(parse_uris(get_uris_from_xspf(uri)), follow_folder, follow_playlist)
             elif get_scheme(uri) != "file" or file_is_supported(get_path_from_uri(uri)):
                 valid_uris.append(uri)
                 
     logger.loginfo("parse uris found %s uris", len(valid_uris))            
-    print valid_uris
     if callback:
         def launch_callback(callback, uris, args, kwargs):
             callback(uris, *args, **kwargs)
@@ -345,6 +391,21 @@ def async_parse_uris(*args, **kwargs):
     t = threading.Thread(target=parse_uris, args=args, kwargs=kwargs)
     t.setDaemon(True)
     t.start()
+    
+def async_get_uris_from_plain_text(content, callback=None, *args_cb, **kwargs_cb):
+    """ Return uri found in a string
+    For now return uri only if one line is one uri
+    use parse uri to follow directory and playlist """
+    uris = [ line.strip() for line in content.splitlines() if line.strip() ]
+    async_parse_uris(uris, True, True, callback, *args_cb, **kwargs_cb)
+
+def get_uris_from_plain_text(content, callback=None, *args_cb, **kwargs_cb):
+    """ Return uri found in a string
+    For now return uri only if one line is one uri
+    use parse uri to follow directory and playlist """
+    uris = [ line.strip() for line in content.splitlines() if line.strip() ]
+    return parse_uris(uris, True, True, callback, *args_cb, **kwargs_cb)
+    
     
 def move_to_trash(uri):    
     ''' move uri to trash. '''
