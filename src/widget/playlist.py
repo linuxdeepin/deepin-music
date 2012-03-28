@@ -41,6 +41,11 @@ class SongView(ListView):
     ''' song view. '''
     def __init__(self, *args):
         super(SongView, self).__init__(*args)
+        targets = [("text/deepin-songs", gtk.TARGET_SAME_APP, 1), ("text/uri-list", 0, 2), ("text/plain", 0, 3)]
+        self.drag_dest_set(gtk.DEST_DEFAULT_MOTION | gtk.DEST_DEFAULT_HIGHLIGHT | gtk.DEST_DEFAULT_DROP,
+                           targets, gtk.gdk.ACTION_COPY)
+        self.connect("drag-data-received", self.on_drag_data_received)
+
         
     def get_songs(self):        
         songs = []
@@ -135,11 +140,13 @@ class SongView(ListView):
             return
         if not isinstance(songs, (list, tuple)):
             songs = [ songs ]
-        song_items = [ SongItem(song) for song in songs]
-        self.add_items(song_items, pos, sort)
+
+        song_items = [ SongItem(song) for song in songs if song not in self.get_songs()]
+        if song_items:
+            self.add_items(song_items, pos, sort)
         
         if len(songs) == 1 and play:
-            self.highlight_item = SongItems[0]
+            self.highlight_item = song_items[0]
             gobject.idle_add(Player.play_new, self.highlight_item.get_song())
             
     def add_uris(self, uris, pos=None, sort=True):
@@ -201,6 +208,26 @@ class SongView(ListView):
             if flag:
                 Player.next()
         return True    
+        
+    def on_drag_data_received(self, widget, context, x, y, selection, info, timestamp):    
+        root_y = widget.allocation.y + y
+        pos = self.get_coordinate_row(root_y)
+        if pos != None:
+            pos = pos + 1
+        
+        if selection.target in ["text/uri-list", "text/plain", "text/deepin-songs"]:
+            self.get_toplevel().window.set_cursor(gtk.gdk.Cursor(gtk.gdk.WATCH))
+            if selection.target == "text/deepin-songs" and selection.data:
+                self.add_uris(selection.data.splitlines(), pos, False)
+            elif selection.target == "text/uri-list":    
+                self.add_uris(selection.get_uris(), pos, False)
+                # utils.async_parse_uris(selection.get_uris(), False, False, self.add_uris, pos)
+            elif selection.target == "text/plain":    
+                pass
+            else:    
+                self.get_toplevel().window.set_cursor(None)
+
+
     
     def set_sort_keyword(self, keyword, reverse=False):
         with self.keep_select_status():
@@ -226,7 +253,7 @@ class SongView(ListView):
             else:    
                 tick = None
             mode_items.append((tick, value, self.set_loop_mode, key))    
-        play_mode_menu =Menu(mode_items, MENU_POS_TOP_LEFT)
+        play_mode_menu = Menu(mode_items, MENU_POS_TOP_LEFT)
         
         sort_dict = utils.OrderDict()
         sort_dict["album"] = "按专辑" 

@@ -258,10 +258,10 @@ def duration_to_string(value, default="", i=1000):
         duration = "%d:" % (value/(60*i) % 60) + duration
     return duration    
 
-def parse_folder(dir):
+def parse_folder(parent_dir):
     ''' return all uri in a folder excepted hidden one.'''
-    dir  = get_path_from_uri(dir)
-    uris = [ get_uri_from_path(os.path.join(dir, name)) for name in os.listdir(dir) if name[0] != "." and os.path.isfile(os.path.join(dir,name))]
+    new_dir  = get_path_from_uri(parent_dir)
+    uris = [ get_uri_from_path(os.path.join(new_dir, name)) for name in os.listdir(new_dir) if name[0] != "." and os.path.isfile(os.path.join(new_dir,name))]
     print "ParserFolder: %d founds" % len(uris)
     return uris
 
@@ -332,6 +332,7 @@ def parse_uris(uris, follow_folder=True, follow_playlist=True, callback=None, *a
                 valid_uris.append(uri)
                 
     logger.loginfo("parse uris found %s uris", len(valid_uris))            
+    print valid_uris
     if callback:
         def launch_callback(callback, uris, args, kwargs):
             callback(uris, *args, **kwargs)
@@ -662,3 +663,15 @@ class OrderDict(dict):
     def __iter__(self):
         for k in self._keys:
             yield k
+
+global MAIN_WINDOW            
+MAIN_WINDOW = None
+
+def get_main_window():
+    global MAIN_WINDOW
+    return MAIN_WINDOW
+
+def set_main_window(win):
+    global MAIN_WINDOW
+    MAIN_WINDOW = win
+

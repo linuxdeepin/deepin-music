@@ -23,6 +23,7 @@
 from ui_toolkit import *
 from dtk.ui.utils import foreach_recursive, is_left_button
 import gtk
+import utils
 from player import Player
 from widget.information import PlayInfo
 from widget.timer import SongTimer, VolumeSlider
@@ -87,6 +88,7 @@ class HeaderBar(gtk.HBox):
         # test
         musicbox_button.connect("button-press-event", self.open_dir)
         media_button.connect("button-press-event", self.save_db)
+        lyrics_button.connect("clicked", self.start_lyrics)
         
         more_box.pack_start(playlist_button)
         more_box.pack_start(lyrics_button)
@@ -118,6 +120,12 @@ class HeaderBar(gtk.HBox):
             MediaDB.full_erase("local")
             ImportFolderJob()
 
+    def start_lyrics(self, widget):        
+        if widget.get_active():
+            utils.run_command("osdlyrics")
+        else:    
+            utils.run_command("pkill osdlyrics")
+            
     def save_db(self, widget, event):    
         if is_left_button(event):
             MediaDB.save()

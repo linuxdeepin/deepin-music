@@ -9,6 +9,7 @@ from player import Player
 from lrcparser import LrcParser
 from osd_lrc_module import ToolWindow
 from osd_window import OsdWindow
+from dbus_manager import DeepinMusicDBus
 
 import gtk
 from library import MediaDB
@@ -36,6 +37,7 @@ class DeepinPlayer(object):
         self.window.add_titlebar(["min", "max", "close"], None,
                                  "  Deepin Music")
         mainbox = gtk.VBox(spacing=5)
+        utils.set_main_window(self.window.window)
         MediaDB.load()
         mainbox.pack_start(HeaderBar(), False, False)
         MediaDB.connect("added", self.reload_db)
@@ -64,6 +66,7 @@ class DeepinPlayer(object):
         self.window.main_box.pack_start(jobs_manager, False, False)
         self.player = Player        
         self.player.set_source(self.list_view)
+        self.dbus_service = DeepinMusicDBus()
 
         self.window.run()        
 
