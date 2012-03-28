@@ -43,7 +43,6 @@ class SongView(ListView):
         self.drag_dest_set(gtk.DEST_DEFAULT_MOTION | gtk.DEST_DEFAULT_HIGHLIGHT | gtk.DEST_DEFAULT_DROP,
                            targets, gtk.gdk.ACTION_COPY)
         self.connect("drag-data-received", self.on_drag_data_received)
-
         
     def get_songs(self):        
         songs = []
@@ -209,19 +208,20 @@ class SongView(ListView):
         
     def on_drag_data_received(self, widget, context, x, y, selection, info, timestamp):    
         root_y = widget.allocation.y + y
-        pos = self.get_coordinate_row(root_y)
-        if pos != None:
-            pos = pos + 1
+        try:
+            pos = self.get_coordinate_row(root_y)
+        except:    
+            pos = None
+            
         if selection.target in ["text/uri-list", "text/plain", "text/deepin-songs"]:
-            self.get_toplevel().window.set_cursor(gtk.gdk.Cursor(gtk.gdk.WATCH))
             if selection.target == "text/deepin-songs" and selection.data:
                 self.add_uris(selection.data.splitlines(), pos, False)
             elif selection.target == "text/uri-list":    
                 utils.async_parse_uris(selection.get_uris(), True, True, self.add_uris, pos)
             elif selection.target == "text/plain":    
-                utils.async_get_uris_from_plain_text(selection.data, self.add_uris, pos)
-            else:    
-                self.get_toplevel().window.set_cursor(None)
+                raw_path = selection.data
+                path = eval("u" + repr(raw_path).replace("\\\\", "\\"))
+                utils.async_get_uris_from_plain_text(path, self.add_uris, pos)
     
     def set_sort_keyword(self, keyword, reverse=False):
         with self.keep_select_status():

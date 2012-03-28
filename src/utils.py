@@ -185,7 +185,7 @@ def read_entire_file(uri):
     data = ""
     if get_scheme(uri) == "file":
         f = file(get_path_from_uri(uri), "r")
-        date = f.read()
+        data = f.read()
         f.close()
     else:    
         try:
@@ -269,6 +269,7 @@ def get_uris_from_m3u(uri):
     uris = []
     content = read_entire_file(uri)
     lines = content.splitlines()
+
     for line in lines:
         if not line.startswith("#") and line.strip() != "":
             uris.append(line.strip())
@@ -295,7 +296,7 @@ class XSPFParser(handler.ContentHandler):
         self.content = ""
 
     def characters(self, content):
-        self.content = self.content + content
+        self.content = content
 
     def endElement(self, name):
         if name == "location":
@@ -344,7 +345,7 @@ def parse_uris(uris, follow_folder=True, follow_playlist=True, callback=None, *a
     valid_uris = []
     for uri in uris:
         #check file exists only is file is local to speed parsing of shared/remote file
-        uri = unquote(uri)
+        uri = fix_charset(unquote(uri))
         if uri and uri.strip() != "" and exists(uri):
             ext = get_ext(uri)
             try:
@@ -356,6 +357,7 @@ def parse_uris(uris, follow_folder=True, follow_playlist=True, callback=None, *a
             is_pls  = False
             is_m3u  = False
             is_xspf = False
+            
             try:
                 is_pls = (mime_type == "audio/x-scpls")
                 is_m3u = (mime_type == "audio/x-mpegurl" or mime_type == "audio/mpegurl" or mime_type == "audio/m3u")
@@ -374,7 +376,7 @@ def parse_uris(uris, follow_folder=True, follow_playlist=True, callback=None, *a
             elif follow_playlist and is_m3u:
                 valid_uris.extend(parse_uris(get_uris_from_m3u(uri), follow_folder, follow_playlist))    
             elif follow_playlist and is_xspf:    
-                valid_uris.extend(parse_uris(get_uris_from_xspf(uri)), follow_folder, follow_playlist)
+                valid_uris.extend(parse_uris(get_uris_from_xspf(uri), follow_folder, follow_playlist))
             elif get_scheme(uri) != "file" or file_is_supported(get_path_from_uri(uri)):
                 valid_uris.append(uri)
                 
@@ -396,6 +398,7 @@ def async_get_uris_from_plain_text(content, callback=None, *args_cb, **kwargs_cb
     """ Return uri found in a string
     For now return uri only if one line is one uri
     use parse uri to follow directory and playlist """
+    
     uris = [ line.strip() for line in content.splitlines() if line.strip() ]
     async_parse_uris(uris, True, True, callback, *args_cb, **kwargs_cb)
 
@@ -735,4 +738,3 @@ def get_main_window():
 def set_main_window(win):
     global MAIN_WINDOW
     MAIN_WINDOW = win
-
