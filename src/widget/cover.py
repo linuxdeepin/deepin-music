@@ -85,7 +85,7 @@ class CoverButton(gtk.EventBox):
                 self.condition.notify()
                 self.condition.release()
                 
-    def set_current_cover(self, try_web=False, force_song=None):            
+    def set_current_cover(self, try_web=True, force_song=None):            
         if not force_song:
             force_song = self.current_song
         filename = CoverManager.get_cover(force_song, try_web)    

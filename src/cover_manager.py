@@ -129,7 +129,7 @@ class DeepinCoverManager(Logger):
     def get_cover_path(self, song):
         return get_cache_file("cover/" + self.get_cover_search_str(song) + ".jpg")
     
-    def get_pixbuf_from_song(self, song, x, y, try_web=False):
+    def get_pixbuf_from_song(self, song, x, y, try_web=True):
         
         filename = self.get_cover(song, try_web)
         if not self.COVER_PIXBUF.has_key((filename, x, y)):
@@ -159,7 +159,7 @@ class DeepinCoverManager(Logger):
             
         return pixbuf    
     
-    def get_cover(self, song, try_web=False):
+    def get_cover(self, song, try_web=True):
         default_image_path = self.DEFAULT_COVER
         album = self.get_cover_search_str(song)
         image_path = get_cache_file("cover/%s.jpg" % album)
@@ -210,13 +210,13 @@ class DeepinCoverManager(Logger):
                         if self.cleanup_cover(song, song_dir + "/" + matches[0], image_path):
                             return image_path
 
-        if not config.getboolean("setting", "offline"):                
+        if not config.getboolean("setting", "offline") and try_web:                
             try:
                 ret = False
                 
                 # try url cover tag
                 if song.get("album_cover_url"):
-                    ret = utils.download(song.get("album_cover_url"), get_uri_from_path(image_path))
+                    ret = utils.download(song.get("album_cover_url"), utils.get_uri_from_path(image_path))
                     if ret and self.cleanup_cover(song, image_path):
                         return image_path
                     
