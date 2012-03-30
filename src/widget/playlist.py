@@ -26,6 +26,11 @@ import pango
 import random
 from dtk.ui.listview import ListView
 from dtk.ui.menu import Menu, MENU_POS_TOP_LEFT
+from dtk.ui.paned import HPaned
+from dtk.ui.categorybar import Categorybar
+from dtk.ui.scrolled_window import ScrolledWindow
+from dtk.ui.button import Button
+
 from ui_toolkit import app_theme
 import utils
 from config import config
@@ -275,3 +280,26 @@ class SongView(ListView):
                      (None, "打开文件目录", self.open_song_dir),
                      (None, "编辑歌曲信息", None),
                      ], opacity=1.0, menu_pos=1)
+
+    
+    
+class PlaylistUI(gtk.VBox):
+    '''Playlist UI.'''
+	
+    def __init__(self):
+        '''Init.'''
+        super(PlaylistUI, self).__init__()
+        paned_category = HPaned(100)
+        
+        category_box = gtk.VBox()
+        enjoy_button = Button("最愛")
+        test_button = Button("流行")
+        category_box.pack_start(enjoy_button, False, False)
+        category_box.pack_start(test_button, False, False)
+        paned_category.add1(category_box)
+        
+        scrolled_window = ScrolledWindow()
+        self.playlist = SongView()
+        scrolled_window.add_child(self.playlist)
+        # paned_category.add2(scrolled_window)
+        self.pack_start(scrolled_window)

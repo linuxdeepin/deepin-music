@@ -25,8 +25,7 @@ from utils import load_db, fix_charset
 from logger import Logger
 import os
 
-
-PINYIN_DICT_FILE = os.path.realpath("chinese_dict.db")
+PINYIN_DICT_FILE = os.path.join((os.path.dirname(os.path.realpath(__file__))), "data/chinese_dict.db")
 SINGLE_CHARS = "'\"`~!@#$%^&*()=+[]{}\\|;:,.<>/?"
 WIDTH_CHARS = "－—！#＃%％&＆（）*，、。：；？？　@＠＼{｛｜}｝~～‘’“”《》【】+＋=＝×￥·…　".decode("utf-8")
 
@@ -63,16 +62,19 @@ class Transfer(Logger):
         return "".join(pinyin_list)
         
     def filter_char(self, unicode_char):    
-            if unicode_char == ' ': return self.spliter
-            if set(unicode_char).issubset(SINGLE_CHARS): return self.spliter
-            if set(unicode_char).issubset(WIDTH_CHARS): return ""    
+        if not self.dict_objs:
+            return unicode_char
+        
+        if unicode_char == ' ': return self.spliter
+        if set(unicode_char).issubset(SINGLE_CHARS): return self.spliter
+        if set(unicode_char).issubset(WIDTH_CHARS): return ""    
             
-            if not self.dict_objs.has_key(unicode_char): return unicode_char
-            else:
-                if self.first_spell:
-                    return self.dict_objs[unicode_char][:1]
-                else: 
-                    return self.dict_objs[unicode_char]
+        if not self.dict_objs.has_key(unicode_char): return unicode_char
+        else:
+            if self.first_spell:
+                return self.dict_objs[unicode_char][:1]
+            else: 
+                return self.dict_objs[unicode_char]
 
 def transfer(chars, first_spell=True):
     conv = Transfer(first_spell)    

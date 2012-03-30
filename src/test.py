@@ -21,7 +21,7 @@ import gtk
 import subprocess
 from ui_toolkit import *
 from widget.song_item import SongItem
-from widget.playlist import SongView
+from widget.playlist import *
 
 from widget.headerbar import HeaderBar
 gobject.threads_init()
@@ -41,19 +41,17 @@ class DeepinPlayer(object):
         MediaDB.load()
         mainbox.pack_start(HeaderBar(), False, False)
         # MediaDB.connect("added", self.reload_db)
-        scrolled_window = ScrolledWindow()
-        Player.load()
-        # self.list_view = SongView(
-        #     [(lambda item: item.title, cmp),
-        #      (lambda item: item.artist, cmp),
-        #      (lambda item: item.length, cmp)])
 
-        self.list_view = SongView()
+        Player.load()
+
+        playlist_ui = PlaylistUI()
+        
+        self.list_view = playlist_ui.playlist
         self.list_view.connect("double-click-item", self.double_click_item)
         self.list_view.connect("right-press-items", self.popup_listview_menu)
         # self.list_view.add_titles(["歌名", "艺术家", "时间"])
 
-        scrolled_window.add_child(self.list_view)
+
         
         if MediaDB.get_songs("local"):
             self.list_view.add_songs(MediaDB.get_songs("local"))
@@ -62,7 +60,7 @@ class DeepinPlayer(object):
             
         self.window.window.change_background(app_theme.get_pixbuf("skin/main.png"))
         self.window.main_box.pack_start(mainbox, False, False)
-        self.window.main_box.pack_start(scrolled_window, True, True)
+        self.window.main_box.pack_start(playlist_ui, True, True)
         self.window.main_box.pack_start(jobs_manager, False, False)
         self.player = Player        
         self.player.set_source(self.list_view)

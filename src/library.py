@@ -199,10 +199,14 @@ class MediaDatebase(gobject.GObject, Logger):
         old_keys_values = {}
         mod_keys = keys_values.keys()
         
-        [ old_keys_values.update({key:song.get(key)}) for key in song.keys() if key in mod_keys ]
+        [ old_keys_values.update({key:song.get_str(key)}) for key in song.keys() if key in mod_keys ]
         [ song.update({key:value}) for key, value in keys_values.items() if value is not None ]
         for key in [ key for key, value in keys_values.items() if value is None ]:
-            del song[key]
+            try:
+                del song[key]
+            except KeyError:    
+                pass
+            
         if write_to_file:    
             ret = song.write_to_file()
             
@@ -286,7 +290,7 @@ class MediaDatebase(gobject.GObject, Logger):
             if not uri:
                 return None
             if uri.startswith("file://"):
-                return self.get_or_create_song({"uri":uri}, "unknown_local", read_from_file=True)
+                return self.get_or_create_song({"uri":uri}, "local", read_from_file=True)
             else:
                 return self.get_or_create_song({"uri":uri}, "unknown", read_from_file=True)
             

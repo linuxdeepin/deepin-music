@@ -28,6 +28,7 @@ from player import Player
 from widget.information import PlayInfo
 from widget.timer import SongTimer, VolumeSlider
 from widget.equalizer import equalizer_win
+from widget.cover import PlayerCoverButton
 from source.local import ImportFolderJob
 from library import MediaDB
 from config import config
@@ -39,7 +40,7 @@ class HeaderBar(gtk.HBox):
         self.set_border_width(5)
         
         # cover box
-        cover_box = ImageBox(app_theme.get_pixbuf("skin/default_cover.png"))
+        self.cover_box = PlayerCoverButton()
         
         # swap played status handler
         Player.connect("played", self.__swap_play_status, True)
@@ -104,7 +105,7 @@ class HeaderBar(gtk.HBox):
         plugs_box.pack_start(more_align, True, True)        
         control_box.pack_start(plugs_box, False, False)
         information = gtk.HBox(spacing=6)
-        information.pack_start(cover_box, False, False)
+        information.pack_start(self.cover_box, False, False)
         information.pack_start(control_box, True, True)
         self.pack_start(information, True, True)
                 
