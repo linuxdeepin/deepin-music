@@ -84,7 +84,7 @@ class SongItem(gobject.GObject):
         '''Get sizes.'''
         return [(min(self.title_width + self.title_padding_x * 2, 120),
                  self.title_height + self.title_padding_y * 2),
-                (min(self.artist_width + self.artist_padding_x * 2, 100)
+                (min(self.artist_width + self.artist_padding_x * 2, 100),
                  self.artist_height + self.artist_padding_y * 2),
                 (self.length_width + self.length_padding_x * 2, 
                  self.length_height + self.length_padding_y * 2),
