@@ -47,6 +47,8 @@ class SongView(ListView):
         targets = [("text/deepin-songs", gtk.TARGET_SAME_APP, 1), ("text/uri-list", 0, 2), ("text/plain", 0, 3)]
         self.drag_dest_set(gtk.DEST_DEFAULT_MOTION | gtk.DEST_DEFAULT_HIGHLIGHT | gtk.DEST_DEFAULT_DROP,
                            targets, gtk.gdk.ACTION_COPY)
+        
+
         self.connect("drag-data-received", self.on_drag_data_received)
         
     def get_songs(self):        
@@ -299,6 +301,7 @@ class PlaylistUI(gtk.VBox):
         paned_category.add1(category_box)
         
         scrolled_window = ScrolledWindow()
+        scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)        
         self.playlist = SongView()
         scrolled_window.add_child(self.playlist)
         # paned_category.add2(scrolled_window)

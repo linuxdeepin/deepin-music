@@ -51,7 +51,7 @@ class PreampScalebar(gtk.VBox):
         blank_image1 = ImageBox(app_theme.get_pixbuf("equalizer/blank.png"))
         
         self.scalebar = VScalebar()
-        self.scalebar.set_value(0)
+        self.scalebar.set_value(50)
         preamp_align = gtk.Alignment()
         preamp_align.set_padding(8, 8, 0, 0)
         preamp_align.add(scale_image)
@@ -160,7 +160,7 @@ class EqualizerWindow(Logger):
         except:    
             pre_value = 0.6
             
-        pre_adjust = gtk.Adjustment(value=pre_value, lower= 0.1 , upper=1.0, step_incr=0.1, page_incr=1, page_size=0)
+        pre_adjust = gtk.Adjustment(value=pre_value, lower= -10 , upper=10, step_incr=0.1, page_incr=1, page_size=0)
         preamp_scale = PreampScalebar()
         preamp_scale.scalebar.set_adjustment(pre_adjust)
         pre_adjust.connect("value-changed", self.preamp_change)
@@ -235,7 +235,7 @@ class EqualizerWindow(Logger):
     def preamp_change(self, adjust):
         
         config.set("equalizer", "preamp", str(adjust.get_value()))
-        Player.volume = adjust.get_value()
+        Player.volume = self.db_to_percent(adjust.get_value())
         
     def __on_remove(self, bin, tee, element):    
         if element != self.__equalizer:

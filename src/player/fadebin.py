@@ -605,7 +605,7 @@ class PlayerBin(gobject.GObject, Logger):
     def xfade_get_time(self):
         ret = self.get_times_and_stream()
         if ret:
-            _stream, pos, _duration = ret
+            _stream, pos, _duration, _lrc_pos, _lrc_duration = ret
         else:
             pos = 0.0
         return pos
@@ -613,15 +613,31 @@ class PlayerBin(gobject.GObject, Logger):
     def xfade_get_duration(self):
         ret = self.get_times_and_stream()
         if ret:
-            _stream, _pos, duration = ret
+            _stream, _pos, duration, _lrc_pos, _lrc_duration = ret
         else:
             duration = 0.0
         return duration
+    
+    def xfade_get_lrc_time(self):
+        ret = self.get_times_and_stream()
+        if ret:
+            _stream, _pos, _duration, lrc_pos, _lrc_duration = ret
+        else:    
+            lrc_pos = 0.0
+        return lrc_pos    
+    
+    def xfade_get_lrc_duration(self):
+        ret = self.get_times_and_stream()
+        if ret:
+            _stream, _pos, _duration, _lrc_pos, lrc_duration = ret
+        else:    
+            lrc_duration = 0.0
+        return lrc_duration
 
     def xfade_get_current_uri(self):
         ret = self.get_times_and_stream()
         if ret:
-            stream, _pos, _duration = ret
+            stream, _pos, _duration, _lrc_pos, _lrc_duation = ret
             return stream.uri
         else:
             return None
@@ -747,6 +763,7 @@ class PlayerBin(gobject.GObject, Logger):
     def get_times_and_stream(self):
         pos = 0.0
         duration = 0.0
+        lrc_duration = 0.0
         buffering = False
 
         if not self.pipeline:
@@ -768,6 +785,7 @@ class PlayerBin(gobject.GObject, Logger):
         if stream:
             if buffering:
                 pos = 0.0
+                lrc_pos = 0.0
             elif stream.state == PAUSED:
                 try: 
                     res = stream.query_stream_position(gst.FORMAT_TIME)
@@ -776,6 +794,7 @@ class PlayerBin(gobject.GObject, Logger):
                     res = None
                 if res:
                     pos, format = res
+                    lrc_pos = pos / gst.MSECOND
                     pos /= gst.SECOND
             else:
                 try: 
@@ -786,6 +805,7 @@ class PlayerBin(gobject.GObject, Logger):
                 if res:
                     pos, format = res
                     pos -= stream.base_time
+                    lrc_pos = pos / gst.MSECOND
                     pos /= gst.SECOND
 
             try: 
@@ -794,16 +814,17 @@ class PlayerBin(gobject.GObject, Logger):
                 res = None
             if res:
                 duration, format = res
+                lrc_duration = duration / gst.MSECOND
                 duration /= gst.SECOND
         else:
             return None
 
-        return stream, pos, duration
+        return stream, pos, duration, lrc_pos, lrc_duration
 
     def tick_timeout(self):
         res = self.get_times_and_stream()
         if res:
-            _stream, pos, duration = res
+            _stream, pos, duration, _lrc_pos, _lrc_duration = res
             self.emit("tick", pos, duration)
         return True
     

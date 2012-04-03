@@ -85,14 +85,13 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         
     def __on_error(self, bin, uri):   
         self.logdebug("gst error received for %s", uri)
-        # self.bin.xfade_close()
-        # config.set("player", "play", "false")
-        # self.emit("paused")
+        self.bin.xfade_close()
+        config.set("player", "play", "false")
+        self.emit("paused")
 
-        print "__on_error__"
         if uri == self.song.get("uri") and not self.__next_already_called:
             self.loginfo("request new song: error and play-end not emit")
-            # self.emit("play-end")
+            self.emit("play-end")
             self.next()
         self.__next_already_called = False    
         
@@ -370,6 +369,12 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         
         # return value
         return int(pos)
+    
+    def get_lyrics_position(self):
+        return self.bin.xfade_get_lrc_time()
+    
+    def get_lyrics_length(self):
+        return self.bin.xfade_get_lrc_duration()
     
     def get_length(self):
         '''get lenght'''

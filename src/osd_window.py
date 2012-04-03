@@ -29,7 +29,7 @@ from ui_toolkit import app_theme
 import copy
 import gobject
 from collections import namedtuple
-from osd_render import RenderContextNew
+from render_lyrics import RenderContextNew
 
 
 DEFAULT_COLORS = {
@@ -79,7 +79,7 @@ class OsdWindow(gobject.GObject):
         gobject.GObject.__init__(self)
         self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
 
-        # self.window = gtk.Window(gtk.WINDOW_POPUP)
+        self.window = gtk.Window(gtk.WINDOW_POPUP)
         self.window.set_property("allow-shrink", True)
         self.window.set_skip_taskbar_hint(True)
         self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DOCK)
@@ -150,6 +150,7 @@ class OsdWindow(gobject.GObject):
         # self.set_window_mode(OSD_WINDOW_DOCK)
         self.update_window_colormap()
         self.screen_composited_changed()
+        
                         
         # Add events.
         self.window.add_events(gtk.gdk.BUTTON_PRESS_MASK |
@@ -209,6 +210,8 @@ class OsdWindow(gobject.GObject):
         
         if mapped: self.window.unmap()
         if realized: self.window.unrealize()
+        
+        
         
         self.window.set_colormap(colormap)
         
@@ -996,7 +999,7 @@ if __name__ == "__main__":
     window.set_lyric(1, "剪下一段烛光 将经纶点亮, 不求荡气回肠 只求爱一场, 爱到最后受了伤 哭得好绝望, 我用尽一生一世 来将你供养")
     window.set_percentage(0, 0.2)
     window.set_percentage(1, 0.5)
-    window.set_locked(True)
+    # window.set_locked(True)
     window.window.show_all()
     print window.get_min_width()
     gtk.main()

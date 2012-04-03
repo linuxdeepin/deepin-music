@@ -727,6 +727,10 @@ class OrderDict(dict):
     def __iter__(self):
         for k in self._keys:
             yield k
+            
+def color_hex_to_cairo(color):            
+    gdk_color = gtk.gdk.color_parse(color)
+    return (gdk_color.red / 65535.0, gdk_color.green / 65535.0, gdk_color.blue / 65535.0)
 
 global MAIN_WINDOW            
 MAIN_WINDOW = None

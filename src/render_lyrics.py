@@ -28,8 +28,9 @@ import gtk
 import dtk_cairo_blur
 
 OUTLINE_WIDTH = 5
-FONT_NAME = "迷你繁启体 32"
-LINEAR_POS = [0.2, 0.9, 1.0]
+# FONT_NAME = "迷你繁启体 32"
+FONT_NAME = "华康少女文字 - Kelvin 30"
+LINEAR_POS = [0.0, 0.5, 1.0]
 LINEAR_COLOR_COUNT = 3
 BLACK_COLOR = (0.0, 0.0, 0.0)
 LINEAR_COLORS = [BLACK_COLOR, BLACK_COLOR, BLACK_COLOR]

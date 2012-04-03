@@ -164,7 +164,7 @@ class Song(dict, Logger):
     def get_sortable(self, key):
         '''Get sortable of the key.'''
         if key in ["album", "genre", "artist", "title"]:
-            value = pinyin.transfer(self.get_str(key))
+            value = pinyin.transfer(self.get_str(key).title())
         elif key == "date":    
             value = self.get("#date")
             if not value: value = None

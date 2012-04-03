@@ -1,8 +1,8 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2011 Deepin, Inc.
-#               2011 Hou Shaohui
+# Copyright (C) 2011~2012 Deepin, Inc.
+#               2011~2012 Hou Shaohui
 #
 # Author:     Hou Shaohui <houshao55@gmail.com>
 # Maintainer: Hou ShaoHui <houshao55@gmail.com>
@@ -68,16 +68,18 @@ class SongItem(gobject.GObject):
     def render_title(self, cr, rect):
         '''Render title.'''
         rect.x += self.title_padding_x
+        rect.width -= self.title_padding_x * 2
         render_text(cr, rect, self.title, font_size=DEFAULT_FONT_SIZE)
     
     def render_artist(self, cr, rect):
         '''Render artist.'''
         rect.x += self.artist_padding_x
-        render_text(cr, rect, self.artist, font_size=DEFAULT_FONT_SIZE)
+        rect.width -= self.title_padding_x * 2
+        render_text(cr, rect, self.artist, font_size = DEFAULT_FONT_SIZE)
     
     def render_length(self, cr, rect):
         '''Render length.'''
-        rect.width -= self.length_padding_x
+        rect.width -= self.length_padding_x * 2
         render_text(cr, rect, self.length, ALIGN_END, font_size=DEFAULT_FONT_SIZE)
         
     def get_column_sizes(self):

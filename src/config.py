@@ -107,8 +107,19 @@ class Config(gobject.GObject, Logger):
                 "selected_track":"-1"
                 },
 
-            "desktop_lrc" : {
+            "lyrics" : {
                 "font" : "迷你繁启体 32",
+                "locked" : "false",
+                "dock_mode" : "true",
+                "line_count" : "2",
+                "blur_radius" : "3",
+                "inactive_color_upper" : "#1CC8FA",
+                "inactive_color_middle" : "#2226E5",
+                "inactive_color_bottom" : "#51DEF1",
+                "active_color_upper" : "#662600",
+                "active_color_middle" : "#FFFF00",
+                "active_color_bottom" : "#FF8000",
+                "translucent_on_mouse_over" : "false",
                 },
             
             "setting" : {
