@@ -585,6 +585,8 @@ class LyricsWindow(gobject.GObject):
         self.lyrics_win.queue_draw()
         
         
+    
+        
 LINES_MODE = 1        
 SCROLL_MODE = 2
         
@@ -808,7 +810,6 @@ class ScrollLyricsWindow(object):
     def begin_move_resize(self, widget, event):    
         pass
     
-    
 
     def set_progress(self, lyric_id, percentage):    
         saved_lyric_id = self.current_lyric_id
@@ -830,3 +831,5 @@ class ScrollLyricsWindow(object):
         
     def get_font_name(self):    
         return self.font_name
+
+    

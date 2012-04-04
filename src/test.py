@@ -15,8 +15,10 @@ from source.local import ImportFolderJob
 from widget.jobs_manager import jobs_manager
 import gobject
 import gtk
+import os
 import subprocess
-from ui_toolkit import *
+from ui_toolkit import app_theme
+from dtk.ui.application import Application
 from widget.song_item import SongItem
 from widget.playlist import *
 from widget.lyrics_module import lyrics_display

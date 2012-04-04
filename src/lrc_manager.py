@@ -24,7 +24,14 @@ import urllib
 import random
 import os
 import re
+import gobject
+import gtk
+import threading
 import codecs
+
+from song import Song
+from player import Player
+
 
 class ttpClient(object):
     '''
@@ -214,11 +221,9 @@ class TTPlayer(Engine):
             else:
                 codes = ttplayer_client.CodeFunc(int(_id), (_artist+_title))
                 download_url = DOWNLOAD_URL % (int(_id), codes, random.randint(0, 0xFFFFFFFFFFFF))
-                parser_list.append([_artist, _title, download_url])
-                
+                parser_list.append((_artist, _title, download_url))
         return parser_list        
                
-        
     def request(self, artist, title):    
         convert_artist = ttplayer_client.EncodeArtTit(unicode(artist, self.locale).replace(u' ', '').lower())
         convert_title = ttplayer_client.EncodeArtTit(unicode(title, self.locale).replace(u' ', '').lower())
@@ -228,23 +233,21 @@ class TTPlayer(Engine):
             web_info = fp.read()
             fp.close()
         except IOError:    
-            return (None, True)
+            return None
         else:
             tmp_list = re.findall(r'<lrc.*?</lrc>', web_info)
             if len(tmp_list) == 0:
-                return (None, False)
+                return None
             else:
                 lrc_list = self.parser(tmp_list)
-                return (lrc_list, False)
+                return lrc_list
+            
+ttplayer_engine = TTPlayer()
     
 if __name__ == "__main__":
-    import os
-    ttplayer_engine = TTPlayer()
-    result =  ttplayer_engine.request("黄灿", "黄玫瑰")
-    if result:
-        down_result =  ttplayer_engine.download(result[0][0][2])
-        if down_result[0] != None:
-            fp = file(os.path.join(os.path.expanduser("~"), "a.lrc"), "w")
-            fp.write(down_result[0])
-            fp.close()
+    from widget.lyrics_search import SearchUI
+    import gtk
+    a = SearchUI()
+    a.run()
+    gtk.main()
         

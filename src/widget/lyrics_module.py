@@ -23,6 +23,7 @@
 import gobject
 from widget.lyrics import LyricsWindow
 from lrc_parser import LrcParser
+from config import config
 
 
 MESSAGE_DURATION_MS = 3000
@@ -155,9 +156,20 @@ class LyricsModule(object):
     
         
     def run(self):
+        x = None
+        try:
+            x = config.getint("lyrics", "x")
+            y = config.getint("lyrics", "y")
+        except:    
+            pass
         self.win.lyrics_win.show_all()
+        if x is not None:
+            self.win.lyrics_win.move(x, y)
         
     def hide_all(self):    
+        x, y = self.win.lyrics_win.get_position()
+        config.set("lyrics", "x", str(x))
+        config.set("lyrics", "y", str(y))
         self.win.lyrics_win.hide_all()
 
 lyrics_display = LyricsModule()        

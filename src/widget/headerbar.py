@@ -20,7 +20,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from ui_toolkit import *
+from ui_toolkit import app_theme, musicbox_button, lyrics_button, media_button, playlist_button
+from dtk.ui.button import ToggleButton, ImageButton
 from dtk.ui.utils import foreach_recursive, is_left_button
 import gtk
 import utils

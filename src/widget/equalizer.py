@@ -28,7 +28,11 @@ import utils
 from config import config
 from player import Player
 from logger import Logger
-from ui_toolkit import *
+from dtk.ui.scalebar import VScalebar
+from dtk.ui.box import ImageBox
+from dtk.ui.window import Window
+from dtk.ui.button import Button
+from ui_toolkit import app_theme
 from dtk.ui.utils import get_widget_root_coordinate, move_window
 
 class PreampScalebar(gtk.VBox):
