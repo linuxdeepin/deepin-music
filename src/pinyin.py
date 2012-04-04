@@ -72,9 +72,9 @@ class Transfer(Logger):
         if not self.dict_objs.has_key(unicode_char): return unicode_char
         else:
             if self.first_spell:
-                return self.dict_objs[unicode_char][:1]
+                return self.dict_objs.get(unicode_char, unicode_char)[:1]
             else: 
-                return self.dict_objs[unicode_char]
+                return self.dict_objs.get(unicode_char, unicode_char)
 
 def transfer(chars, first_spell=True):
     conv = Transfer(first_spell)    

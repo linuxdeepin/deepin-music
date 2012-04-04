@@ -165,7 +165,7 @@ class LrcParser(object):
     def get_item_time(self, item_id):    
         if not self.is_vaild_id(item_id):
             return
-        return self.sort_keys[item_id] - self.attr_dict["offset"]
+        return self.sort_keys[item_id] - self.attr_dict.get("offset", 0)
     
     def get_next_id(self, item_id):
         next_id = item_id - 1

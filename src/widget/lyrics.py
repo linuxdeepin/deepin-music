@@ -591,9 +591,9 @@ SCROLL_MODE = 2
 class ScrollLyricsWindow(object):        
     
     def __init__(self):
-        self.lyrics_win = Window()
-        # self.lyrics_win.set_decorated(False)
-        # self.lyrics_win.set_app_paintable(True)
+        self.lyrics_win = gtk.Window(gtk.WINDOW_TOPLEVEL)
+        self.lyrics_win.set_decorated(False)
+        self.lyrics_win.set_app_paintable(True)
         colormap = self.lyrics_win.get_screen().get_rgba_colormap()
         if not colormap:
             colormap = self.lyrics_win.get_screen().get_rgb_colormap()
@@ -617,23 +617,25 @@ class ScrollLyricsWindow(object):
         self.frame_width = 7
         self.text= None
         self.scroll_mode = SCROLL_MODE
+        self.seeking = False
 
         frame_align = gtk.Alignment()
         frame_align.set(0.0, 0.0, 1.0, 1.0)
         frame_align.set_padding(self.padding_y, self.padding_y, self.padding_x, self.padding_x)
-        self.lyrics_win.window_frame.pack_start(frame_align)
+        self.lyrics_win.add(frame_align)
           
-        self.lyrics_win.connect_after("expose-event", self.scroll_window_expose)
-        self.lyrics_win.connect("button-press-event", self.button_press)
-        self.lyrics_win.connect("button-release-event", self.button_realse)
-        self.lyrics_win.connect("motion-notify-event", self.motion_notify)
+        self.lyrics_win.connect("expose-event", self.scroll_window_expose)
+        # self.lyrics_win.connect("button-press-event", self.button_press)
+        # self.lyrics_win.connect("button-release-event", self.button_realse)
+        # self.lyrics_win.connect("motion-notify-event", self.motion_notify)
         
         
     def scroll_window_expose(self, widget, event):    
         cr = widget.window.cairo_create()
         if self.whole_lyrics != None:
             self.__paint_lyrics(cr)
-        elif self.text != None:    
+        if self.text != None:    
+            print "ddd"
             self.__paint_text(cr)
         return False
     
@@ -642,7 +644,7 @@ class ScrollLyricsWindow(object):
             return 
         self.whole_lyrics = lyrics
         self.saved_lrc_y = -1
-        self.queue_draw()
+        self.lyrics_win.queue_draw()
         
     def get_pango(self, cr):    
         context = pangocairo.CairoContext(cr)
@@ -722,7 +724,7 @@ class ScrollLyricsWindow(object):
         line_height = self.get_font_height()
         count = self.adjust_line_count()
         width, height = self.lyrics_win.get_size()
-        layout = self.get_pango()
+        layout = self.get_pango(cr)
         cr.save()
         cr.new_path()
         cr.rectangle(self.padding_x, 0, width - self.padding_x * 2, height - self.padding_y * 2)
@@ -736,38 +738,39 @@ class ScrollLyricsWindow(object):
         cr.set_source_rgb(*self.inactive_color)
         
         if self.whole_lyrics != None:
-            for i in range(begin, end):
-                ypos += line_height
-                if i < 0:
-                    continue
-                if i >= len(self.whole_lyrics):
-                    break
-                layout.set_text(self.whole_lyrics[i])
-                cr.save()    
-                ratio = self.get_active_color_ratio(i)
-                alpha = 1.0
-                if ypos < line_height / 2.0 + self.padding_y:
-                    alpha = 1.0 - (line_height / 2.0 + self.padding_y - ypos) * 1.0 / line_height *2
-                elif ypos > height - line_height * 1.5 - self.padding_y:    
-                    alpha = (height - line_height - self.padding_y - ypos) * 1.0 / line_height * 2
-                if alpha < 0.0: alpha = 0.0    
-                cr.set_source_rgba(self.active_color[0] * ratio + self.inactive_color[0] * (1 - ratio),
-                                   self.active_color[1] * ratio + self.inactive_color[0] * (1 - ratio),
-                                   self.active_color[2] * ratio + self.inactive_color[0] * (1 - ratio), 
-                                   alpha)
-                cr.move_to(self.padding_x, ypos)
-                cr.update_layout(layout)
-                cr.restore()
+            # for i in range(begin, end):
+            #     ypos += line_height
+            #     if i < 0:
+            #         continue
+            #     if i >= len(self.whole_lyrics):
+            #         break
+            layout.set_text(self.whole_lyrics)
+            cr.save()    
+            # ratio = self.get_active_color_ratio(i)
+            ratio = 0.0
+            alpha = 1.0
+            if ypos < line_height / 2.0 + self.padding_y:
+                alpha = 1.0 - (line_height / 2.0 + self.padding_y - ypos) * 1.0 / line_height *2
+            elif ypos > height - line_height * 1.5 - self.padding_y:    
+                alpha = (height - line_height - self.padding_y - ypos) * 1.0 / line_height * 2
+            if alpha < 0.0: alpha = 0.0    
+            cr.set_source_rgba(self.active_color[0] * ratio + self.inactive_color[0] * (1 - ratio),
+                               self.active_color[1] * ratio + self.inactive_color[0] * (1 - ratio),
+                               self.active_color[2] * ratio + self.inactive_color[0] * (1 - ratio), 
+                               alpha)
+            cr.move_to(self.padding_x, ypos)
+            cr.update_layout(layout)
+            cr.restore()
                 
-            cr.reset_clip()    
+            # cr.reset_clip()    
             cr.restore()    
             
-    def __paint_text(cr):        
+    def __paint_text(self, cr):        
         width, height = self.lyrics_win.get_size()
         cr.save()
         cr.set_source_rgb(*self.inactive_color)
-        layout = self.get_pango()
-        layout.set_text(self.text, -1)
+        layout = self.get_pango(cr)
+        layout.set_text(self.text)
         layout.set_alignment(pango.ALIGN_CENTER)
         extent = layout.get_pixel_extents()
         x = (width - extent[0][2]) / 2
@@ -801,6 +804,11 @@ class ScrollLyricsWindow(object):
             ret = False
         if ret:
             return ret
+        
+    def begin_move_resize(self, widget, event):    
+        pass
+    
+    
 
     def set_progress(self, lyric_id, percentage):    
         saved_lyric_id = self.current_lyric_id
@@ -822,16 +830,3 @@ class ScrollLyricsWindow(object):
         
     def get_font_name(self):    
         return self.font_name
-    
-
-                
-        
-            
-           
-        
-        
-
-    
-    
-    
-        
