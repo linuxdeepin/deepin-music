@@ -20,9 +20,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from ui_toolkit import app_theme, musicbox_button, lyrics_button, media_button, playlist_button
+from ui_toolkit import app_theme
 from dtk.ui.button import ToggleButton, ImageButton
 from dtk.ui.utils import foreach_recursive, is_left_button
+from dtk.ui.menu import Menu
 import gtk
 import utils
 from player import Player
@@ -30,6 +31,8 @@ from widget.information import PlayInfo
 from widget.timer import SongTimer, VolumeSlider
 from widget.equalizer import equalizer_win
 from widget.cover import PlayerCoverButton
+from widget.lyrics_module import lyrics_display
+
 from source.local import ImportFolderJob
 from library import MediaDB
 from config import config
@@ -48,6 +51,7 @@ class HeaderBar(gtk.HBox):
         Player.connect("paused", self.__swap_play_status, False)
         Player.connect("stopped", self.__swap_play_status, False)
         Player.connect("play-end", self.__swap_play_status, False)
+        config.connect("config-changed", self.sycnh_status)
         
         # play button
         play_status_pixbuf = app_theme.get_pixbuf("action/play.png")
@@ -88,12 +92,14 @@ class HeaderBar(gtk.HBox):
         more_align.set(1.0, 0, 0, 0)
         
         # test
-        musicbox_button.connect("button-press-event", self.open_dir)
-        media_button.connect("button-press-event", self.save_db)
-        lyrics_button.connect("clicked", self.start_lyrics)
+        self.lyrics_button = self.__create_simple_toggle_button("lyrics", self.start_lyrics)
+        musicbox_button = self.__create_simple_toggle_button("musicbox", self.open_dir)
+        media_button = self.__create_simple_toggle_button("media", self.save_db)
+        playlist_button = self.__create_simple_toggle_button("playlist", self.start_playlist)
+        
         
         more_box.pack_start(playlist_button)
-        more_box.pack_start(lyrics_button)
+        more_box.pack_start(self.lyrics_button)
         more_box.pack_start(musicbox_button)
         more_box.pack_start(media_button)
         more_align.add(more_box)        
@@ -109,30 +115,48 @@ class HeaderBar(gtk.HBox):
         information.pack_start(self.cover_box, False, False)
         information.pack_start(control_box, True, True)
         self.pack_start(information, True, True)
+        self.load_config()
                 
         # right click
         foreach_recursive(self, lambda w: w.connect("button-press-event", self.right_click_cb))
         
-       
-        # Player.connect("stopped", self.reload_action_button)
-        # Player.connect("instant-new-song", self.on_new_song)
+    def load_config(self):    
+        if config.getboolean("lyrics", "status"):
+            self.lyrics_button.set_active(True)
+        else:    
+            self.lyrics_button.set_active(False)
         
     def open_dir(self, widget, event):    
         if is_left_button(event):
             MediaDB.full_erase("local")
             ImportFolderJob()
+            
+    def __create_simple_toggle_button(self, name, callback):
+        toggle_button = ToggleButton(
+            app_theme.get_pixbuf("control/%s_normal.png" % name),
+            app_theme.get_pixbuf("control/%s_hover.png" % name))
+        toggle_button.connect("toggled", callback)
+        return toggle_button
 
+    def sycnh_status(self, config, selection, option, value):
+        if selection == "lyrics" and option == "status":
+            if not config.getboolean("lyrics", "status"):
+                self.lyrics_button.set_active(False)
+                
+    
     def start_lyrics(self, widget):        
         if widget.get_active():
-            utils.run_command("osdlyrics")
+            lyrics_display.run()
         else:    
-            utils.run_command("pkill osdlyrics")
+            lyrics_display.hide_all()
             
-    def save_db(self, widget, event):    
-        if is_left_button(event):
-            MediaDB.save()
-            Player.save_state()
-            config.write()
+    def start_playlist(self, widget):        
+        pass
+            
+    def save_db(self, widget):    
+        MediaDB.save()
+        Player.save_state()
+        config.write()
         
     def right_click_cb(self, widget, event):    
         if event.button == 3:
@@ -160,3 +184,6 @@ class HeaderBar(gtk.HBox):
             getattr(Player, name)(True)
         else:    
             getattr(Player, name)()
+
+            
+header_bar = HeaderBar()            

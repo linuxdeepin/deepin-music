@@ -21,17 +21,22 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import gobject
-from widget.lyrics import LyricsWindow
+import gtk
+from widget.lyrics import desktop_lyrics
 from lrc_parser import LrcParser
 from config import config
+from widget.toolbar import lyric_toolbar
 
 
 MESSAGE_DURATION_MS = 3000
 
 class LyricsModule(object):
-    
     def __init__(self):
-        self.win = LyricsWindow()
+        self.win = desktop_lyrics
+        self.win.connect("moved", self.adjust_toolbar_rect)
+        self.win.connect("resized", self.adjust_toolbar_rect)
+        self.win.connect("hide-bg", self.hide_toolbar)
+        self.win.connect("show-bg", self.show_toolbar)
         self.lrc = LrcParser()
         self.lrc_id = -1
         self.lrc_next_id = -1
@@ -156,21 +161,56 @@ class LyricsModule(object):
     
         
     def run(self):
-        x = None
+        screen_w, screen_h = gtk.gdk.get_default_root_window().get_size()
+        w , h = self.win.lyrics_win.get_size()
         try:
             x = config.getint("lyrics", "x")
             y = config.getint("lyrics", "y")
         except:    
-            pass
-        self.win.lyrics_win.show_all()
-        if x is not None:
-            self.win.lyrics_win.move(x, y)
+            x = screen_w / 2 - w / 2
+            y = screen_h - h
+            
+
+        self.win.lyrics_win.move(x, y) 
+        self.win.lyrics_win.show_all()           
+        config.set("lyrics", "status", "true")
+        
+        
+    def hide_toolbar(self, widget):    
+        lyric_toolbar.hide_all()
+        
+    def show_toolbar(self, widget):    
+        lyric_toolbar.show_all()
+        lyric_toolbar.hide_all()
+        l_x, l_y = self.win.lyrics_win.get_position()
+        l_w, l_h = self.win.lyrics_win.get_size()
+        rect = gtk.gdk.Rectangle(int(l_x), int(l_y), int(l_w), int(l_h))
+        self.adjust_toolbar_rect(None, rect)
+        lyric_toolbar.show_all()
+
         
     def hide_all(self):    
         x, y = self.win.lyrics_win.get_position()
         config.set("lyrics", "x", str(x))
         config.set("lyrics", "y", str(y))
         self.win.lyrics_win.hide_all()
-
+        lyric_toolbar.hide_all()
+        config.set("lyrics", "status", "false")
+        
+    def adjust_toolbar_rect(self, widget, rect):    
+        screen_w, screen_h = gtk.gdk.get_default_root_window().get_size()
+        centre_x = rect.x + rect.width / 2
+        l_w, l_h = lyric_toolbar.get_size()
+        l_x = centre_x - l_w / 2
+        if rect.y <  l_h:
+            l_y = rect.y + rect.height
+        elif rect.y > screen_h - rect.height:    
+            l_y = rect.y - l_h
+        else:    
+            l_y = rect.y - l_h
+        lyric_toolbar.move(l_x, l_y)    
+        
 lyrics_display = LyricsModule()        
+
+
 

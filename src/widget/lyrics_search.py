@@ -41,19 +41,15 @@ class SearchUI(NormalWindow):
     def __init__(self):
         NormalWindow.__init__(self)
         self.window.background_dpixbuf = app_theme.get_pixbuf("skin/main.png")
-        self.add_titlebar(["close"], title="歌词搜索")
-        padding_x = 10
-        padding_y = 5
-        
         info_box = gtk.HBox(spacing=10)
-        self.artist_entry = Entry()
-        # self.artist_entry = gtk.Entry()
+        # self.artist_entry = Entry()
+        self.artist_entry = gtk.Entry()
         self.artist_entry.set_text("Beyond")
-        self.artist_entry.set_size_request(150, 25)
-        # self.title_entry = gtk.Entry()
-        self.title_entry = Entry()
+        self.artist_entry.set_size_request(120, 25)
+        self.title_entry = gtk.Entry()
+        # self.title_entry = Entry()
         self.title_entry.set_text("海阔天空")
-        self.title_entry.set_size_request(150, 25)
+        self.title_entry.set_size_request(120, 25)
         artist_label = gtk.Label()
         artist_label.set_markup("<span color=\"black\">%s</span>" % "艺术家:")
         title_label = gtk.Label()
@@ -61,80 +57,52 @@ class SearchUI(NormalWindow):
         
         search_button = Button("搜索")
         search_button.connect("clicked", self.search_lyric_cb)
-        
         info_box.pack_start(title_label, False, False)
         info_box.pack_start(self.title_entry, False, False)
         info_box.pack_start(artist_label, False, False)
         info_box.pack_start(self.artist_entry, False, False)
         info_box.pack_start(search_button, False, False)
-        info_align = gtk.Alignment()
-        info_align.set_padding(0, 0, padding_x, padding_x)
-        info_align.add(info_box)
         
-        self.prompt_label = gtk.Label()
-        self.prompt_label.set_alignment(0.0, 0.5)
-        self.prompt_label.set_size_request(-1, -1)
-        
-        
-        fill_left = gtk.EventBox()
-        fill_left.set_size_request(padding_x, -1)
-        fill_left.set_visible_window(False)
-        
-        fill_right = gtk.EventBox()
-        fill_right.set_size_request(padding_x, -1)
-        fill_right.set_visible_window(False)
         scrolled_window = ScrolledWindow()
         scrolled_window.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
         sort_items = [(lambda item: item.title, cmp), (lambda item: item.artist, cmp)]
         self.result_view = ListView(sort_items)
         self.result_view.add_titles(["歌曲名", "艺术家"])
         scrolled_window.add_child(self.result_view)
-        scrolled_box = gtk.HBox()
-        scrolled_box.pack_start(fill_left, False, False)
-        scrolled_box.pack_start(scrolled_window, True, True)
-        scrolled_box.pack_start(fill_right, False, False)
         
+        self.prompt_label = gtk.Label()
+        self.prompt_label.set_alignment(0.0, 0.5)
+        self.prompt_label.set_size_request(-1, -1)
         left_align = gtk.Alignment()
         left_align.set(0, 0, 0, 1)
         bottom_box = gtk.HBox(spacing=10)
         download_button = Button("下载")
         download_button.connect("clicked", self.download_lyric_cb)
         cancel_button = Button("取消")
-        cancel_button.connect("clicked", self.cancel_cb)
-        right_align = gtk.EventBox()
-        right_align.set_visible_window(False)
+        cancel_button.connect("clicked", lambda w: self.hide_window())
 
         bottom_box.pack_start(self.prompt_label, False, False)
         bottom_box.pack_start(left_align, True, True)
         bottom_box.pack_start(download_button, False, False)
         bottom_box.pack_start(cancel_button, False, False)
-        bottom_box.pack_start(right_align, False, False)
+        self.window.set_size_request(460, 300)
         
-        botton_align = gtk.EventBox()
-        botton_align.set_visible_window(False)
-        botton_align.set_size_request(-1, padding_y)
-        
-        self.main_box.set_spacing(5)
-        self.main_box.pack_start(info_align, False, False)
-        self.main_box.pack_start(scrolled_box, True, True)
+        self.main_box.pack_start(info_box, False, False)
+        self.main_box.pack_start(scrolled_window, True, True)
         self.main_box.pack_start(bottom_box, False, False)
-        self.main_box.pack_start(botton_align, False, False)
-
-    def cancel_cb(self, widget):            
-        self.window.hide_all()
         
     def search_lyric_cb(self, widget):
-        self.result_view.clear()
         artist = self.artist_entry.get_text()
         title = self.title_entry.get_text()
         if artist == "" and title == "":
             self.prompt_label.set_markup("<span color=\"white\">   %s</span>" % "囧!没有找到!")
             return
-        utils.threaded(self.request_lyrics(artist, title))
-            
-    @post_gui        
-    def request_lyrics(self, artist, title):
-        result = ttplayer_engine.request(artist, title)
+        utils.ThreadRun(ttplayer_engine.request, self.render_lyrics, artist, title).start()
+        
+    @post_gui
+    def render_lyrics(self, result):
+        '''docs'''
+        self.result_view.clear()
         if result != None:
             items = [SearchItem(each_info) for each_info in result]
             self.result_view.add_items(items)
@@ -150,16 +118,16 @@ class SearchUI(NormalWindow):
         save_filepath = os.path.join(os.path.expanduser("~/.lyrics"), "%s-%s.lrc" % (artist, title))
         if len(select_items) > 0:
             url = self.result_view.items[select_items[0]].get_url()
-            utils.threaded(self.start_download(url, save_filepath))
+            utils.ThreadRun(utils.download, self.start_download, url, save_filepath).start()
             
     @post_gui        
-    def start_download(self, url, local_uri):
-        result = utils.download(url, local_uri)
+    def start_download(self, result):
         if result:
             self.prompt_label.set_markup("<span color=\"white\">   %s</span>" % "文件已保存到 ~\.lyrics")
         else:    
             self.prompt_label.set_markup("<span color=\"white\">   %s</span>" % "囧! 下载失败!")
         
+search_ui = SearchUI()            
         
 class SearchItem(gobject.GObject):        
     
@@ -219,11 +187,4 @@ class SearchItem(gobject.GObject):
     
     def get_url(self):
         return self.__url
-    
-    
-        
 
-    
-        
-        
-        

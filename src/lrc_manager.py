@@ -243,6 +243,12 @@ class TTPlayer(Engine):
                 return lrc_list
             
 ttplayer_engine = TTPlayer()
+
+class LrcManager(object):
+    
+    def __init__(self):
+        pass
+        
     
 if __name__ == "__main__":
     from widget.lyrics_search import SearchUI

@@ -34,92 +34,37 @@ from dtk.ui.frame import HorizontalFrame
 
 app_theme = Theme(os.path.join((os.path.dirname(os.path.realpath(__file__))), "../app_theme"))
 
-class NormalWindow():
+class NormalWindow(object):
     
-    def __init__(self):
-        self.window = Window(True)
+    def __init__(self, parent=None):
+        
+        # Init Window
+        self.window = Window()
         self.window.set_position(gtk.WIN_POS_CENTER)
-        self.window.set_default_size(400, 300)
+        # self.window.set_modal(True)
+        self.titlebar = Titlebar(["close"])
+        self.titlebar.close_button.connect("clicked", lambda w: self.hide_window())
+        self.titlebar.drag_box.connect('button-press-event', lambda w, e: move_window(w, e, self.window))
+        self.parent = parent
         
-        # Init main box.
-        self.main_box = self.window.window_frame
-        
-        # Add titlebar box.
-        self.titlebar = None
-        self.titlebar_box = gtk.HBox()
-        self.main_box.pack_start(self.titlebar_box, False)
-        
-    def add_titlebar(self, button_mask=["max", "min", "close"], 
-                     icon_dpixbuf=None, app_name=None, title=None, add_separator=False):
-        '''Add titlebar.'''
-        # Init titlebar.
-        self.titlebar = Titlebar(button_mask, icon_dpixbuf, app_name, title, add_separator)
-        if "min" in button_mask:
-            self.titlebar.min_button.connect("clicked", lambda w: self.window.min_window())
-        if "max" in button_mask:
-            self.titlebar.max_button.connect("clicked", lambda w: self.window.toggle_max_window())
-        if "close" in button_mask:
-            self.titlebar.close_button.connect("clicked", lambda w: self.window.close_window())
-        self.add_toggle_window_event(self.titlebar.drag_box)
-        self.add_move_window_event(self.titlebar.drag_box)
-        
-        # Show titlebar.
-        self.show_titlebar()
-        
-    def show_titlebar(self):
-        '''Show titlebar.'''
-        if self.titlebar_box.get_children() == [] and self.titlebar != None:
-            self.titlebar_box.add(self.titlebar.box)
-            
-    def hide_titlebar(self):
-        '''Hide titlebar.'''
-        container_remove_all(self.titlebar_box)            
-        
-    def raise_to_top(self):
-        '''Raise to top.'''
-        self.window.present()
-        
-    def set_title(self, title):
-        '''Set application title.'''
-        self.window.set_title(title)
+        main_align = gtk.Alignment()
+        main_align.set(0.0, 0.0, 1.0, 1.0)
+        main_align.set_padding(5, 5, 10, 10)
+        self.main_box = gtk.VBox(spacing=5)
+        main_align.add(self.main_box)
 
-    def set_default_size(self, default_width, default_height):
-        '''Set application default size.'''
-        self.window.set_default_size(default_width, default_height)
-        self.window.set_geometry_hints(
-            None,
-            default_width,       # minimum width
-            default_height       # minimum height
-            -1, -1, -1, -1, -1, -1, -1, -1
-            )
-
-    def set_icon(self, icon_dpixbuf):
-        '''Set icon.'''
-        gtk.window_set_default_icon(icon_dpixbuf.get_pixbuf())
-
-    def run(self):
-        '''Run.'''
-        # Show window.
-        self.window.show_window()
-    
-    def double_click_window(self, widget, event):
-        '''Handle double click on window.'''
-        if is_double_click(event):
-            self.window.toggle_max_window()
-            
-        return False
-            
-    def add_toggle_window_event(self, widget):
-        '''Add toggle window event.'''
-        widget.connect("button-press-event", self.double_click_window)
-    
-    def add_move_window_event(self, widget):
-        '''Add move window event.'''
-        widget.connect('button-press-event', lambda w, e: move_window(w, e, self.window))
+        self.window.window_frame.pack_start(self.titlebar.box, False, False)
+        self.window.window_frame.pack_start(main_align)
         
-    def set_menu_callback(self, callback):
-        '''Set menu callback.'''
-        self.menu_button_callback = callback
+    def show_window(self):    
+        if self.parent:
+            parent_rect = self.parent.get_toplevel().get_allocation()
+            self.window.move(parent_rect.x + parent_rect.width / 2, parent_rect.y + parent_rect.height / 2)
+        else:    
+            self.window.show_all()
+            
+    def hide_window(self):        
+        self.window.hide_all()
         
 
 song_scalebar = HScalebar(
@@ -131,26 +76,4 @@ song_scalebar = HScalebar(
     app_theme.get_pixbuf("hscalebar/right_bg.png"),
     app_theme.get_pixbuf("hscalebar/point.png"),
     )
-
-playlist_button = ToggleButton(
-    app_theme.get_pixbuf("control/playlist_normal.png"),
-    app_theme.get_pixbuf("control/playlist_hover.png"))
-
-lyrics_button = ToggleButton(
-    app_theme.get_pixbuf("control/lyrics_normal.png"),
-    app_theme.get_pixbuf("control/lyrics_hover.png"))
-
-musicbox_button = ToggleButton(
-    app_theme.get_pixbuf("control/musicbox_normal.png"),
-    app_theme.get_pixbuf("control/musicbox_hover.png"))
-
-media_button = ToggleButton(
-    app_theme.get_pixbuf("control/media_normal.png"),
-    app_theme.get_pixbuf("control/media_hover.png"))
-
-
-if __name__ == "__main__":
-    a = NormalWindow()
-    a.run()
-    gtk.main()
 

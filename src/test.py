@@ -1,14 +1,16 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
 
-        
+
+import gtk        
+gtk.gdk.threads_init()
 from config import config
 config.load()
 import utils
 from player import Player
 from dbus_manager import DeepinMusicDBus
 
-import gtk
+
 from library import MediaDB
 from widget.dialog import WinDir
 from source.local import ImportFolderJob
@@ -22,10 +24,8 @@ from dtk.ui.application import Application
 from widget.song_item import SongItem
 from widget.playlist import *
 from widget.lyrics_module import lyrics_display
+from widget.headerbar import header_bar
 
-from widget.headerbar import HeaderBar
-gobject.threads_init()
-gtk.gdk.threads_init()
 
 
 
@@ -39,7 +39,7 @@ class DeepinPlayer(object):
         mainbox = gtk.VBox(spacing=5)
         utils.set_main_window(self.window.window)
         MediaDB.load()
-        mainbox.pack_start(HeaderBar(), False, False)
+        mainbox.pack_start(header_bar, False, False)
         # MediaDB.connect("added", self.reload_db)
 
         Player.load()

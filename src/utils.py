@@ -535,6 +535,24 @@ def threaded(func):
         t.start()
     return wrapper    
 
+class ThreadRun(threading.Thread):
+    '''class docs'''
+	
+    def __init__(self, fetch_lyrics, render_func, artist, title):
+        '''init docs'''
+        super(ThreadRun, self).__init__()
+        self.setDaemon(True)
+        self.fetch_lyrics = fetch_lyrics
+        self.render_func = render_func
+        self.artist = artist
+        self.title = title
+
+    def run(self):
+        '''docs'''
+        result = self.fetch_lyrics(self.artist, self.title)
+        self.render_func(result)
+
+
 def print_timeing(func):
     def wrapper(*arg):
         start_time = time.time()

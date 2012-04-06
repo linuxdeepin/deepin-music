@@ -108,7 +108,8 @@ class Config(gobject.GObject, Logger):
                 },
 
             "lyrics" : {
-                "font" : "迷你繁启体 32",
+                "status" : "true",
+                "font_name" : "华康少女文字 - Kelvin 30",
                 "locked" : "false",
                 "dock_mode" : "true",
                 "line_count" : "2",
@@ -120,6 +121,7 @@ class Config(gobject.GObject, Logger):
                 "active_color_middle" : "#FFFF00",
                 "active_color_bottom" : "#FF8000",
                 "translucent_on_mouse_over" : "false",
+                "karaoke_mode" : "true",
                 },
             
             "setting" : {

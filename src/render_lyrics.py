@@ -25,22 +25,24 @@ import pango
 import pangocairo
 import math
 import gtk
+import gobject
 import dtk_cairo_blur
+from config import config
 
 OUTLINE_WIDTH = 5
-# FONT_NAME = "迷你繁启体 32"
-FONT_NAME = "华康少女文字 - Kelvin 30"
 LINEAR_POS = [0.0, 0.5, 1.0]
 LINEAR_COLOR_COUNT = 3
 BLACK_COLOR = (0.0, 0.0, 0.0)
 LINEAR_COLORS = [BLACK_COLOR, BLACK_COLOR, BLACK_COLOR]
 
-class RenderContextNew(object):
+class RenderContextNew(gobject.GObject):
     ''' The new render context. '''
+    __gsignals__ = {"font-changed" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ())}
 	
     def __init__(self):
         ''' Init. '''
-        self.font_name = FONT_NAME
+        super(RenderContextNew, self).__init__()
+        self.font_name = self.get_font_name()
         self.linear_pos = LINEAR_POS
         self.pango_context = gtk.gdk.pango_context_get()
         self.pango_layout = pango.Layout(self.pango_context)
@@ -63,10 +65,30 @@ class RenderContextNew(object):
             ascent = metrics.get_ascent()
             descent = metrics.get_descent()
             self.font_height = (ascent + descent) / pango.SCALE
+            self.emit("font-changed")
             
     def set_font_name(self, new_font_name):        
         self.font_name = new_font_name
+        config.set("lyrics", "font_name", str(self.font_name))
         self.update_font()
+        
+    def set_font_size(self, value):    
+        font_des = pango.FontDescription("%s %d" % (self.split_font()[0], value))
+        self.pango_layout.set_font_description(font_des)
+        self.update_font_height()
+        
+    def get_font_size(self):    
+        return self.split_font()[1]
+    
+    def split_font(self):
+        font_des = self.pango_layout.get_font_description().to_string()
+        font_size = int(font_des.split()[-1])
+        font_name = " ".join(font_des.split()[:-1])
+        return font_name, font_size
+        
+        
+    def get_font_name(self):    
+        return config.get("lyrics", "font_name")
         
     def get_font_height(self):    
         return self.font_height
@@ -135,3 +157,6 @@ class RenderContextNew(object):
         cr.move_to(xpos, ypos)
         cr.show_layout(self.pango_layout)
         cr.restore()
+
+        
+render_lyrics = RenderContextNew()    

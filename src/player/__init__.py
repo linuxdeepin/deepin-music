@@ -32,7 +32,6 @@ from logger import Logger
 from player.fadebin import PlayerBin
 from utils import get_mime_type, get_uris_from_pls, get_uris_from_m3u
 
-gobject.threads_init()
 
 DEBUG = False
 
