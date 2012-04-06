@@ -72,7 +72,7 @@ class DeepinPlayer(object):
 
     def show_lyrics(self, player, song):    
         filename = player.song.get_str("artist") + "-" + player.song.get_str("title") + ".lrc"
-        filepath = os.path.join("/home/vicious/.lyrics", filename)
+        filepath = os.path.join(os.path.expanduser("~/.lyrics"), filename)
         if os.path.exists(filepath):
             if self.time_source != 0:
                 gobject.source_remove(self.time_source)
