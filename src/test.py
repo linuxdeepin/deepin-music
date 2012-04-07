@@ -65,32 +65,32 @@ class DeepinPlayer(object):
         self.time_source = 0
         self.lyrics_display = lyrics_display
         self.lyrics_display.run()
-        self.player.connect("instant-new-song", self.show_lyrics)
+        # self.player.connect("instant-new-song", self.show_lyrics)
         self.player.set_source(self.list_view)
         self.dbus_service = DeepinMusicDBus()
         self.window.run()        
 
-    def show_lyrics(self, player, song):    
-        filename = player.song.get_str("artist") + "-" + player.song.get_str("title") + ".lrc"
-        filepath = os.path.join(os.path.expanduser("~/.lyrics"), filename)
-        if os.path.exists(filepath):
-            if self.time_source != 0:
-                gobject.source_remove(self.time_source)
-                self.lyrics_display.clear_lyrics()
-            self.lyrics_display.set_lrc_file(filepath)
-            self.lyrics_display.set_duration(song.get("#duration"))
-            self.time_source = gobject.timeout_add(100, self.real_show_lyrics)
-        else:    
-            if self.time_source != 0:
-                gobject.source_remove(self.time_source)
-            self.lyrics_display.clear_lyrics()
-            self.lyrics_display.set_search_fail_message("找不到匹配歌词")
+    # def show_lyrics(self, player, song):    
+    #     filename = player.song.get_str("artist") + "-" + player.song.get_str("title") + ".lrc"
+    #     filepath = os.path.join(os.path.expanduser("~/.lyrics"), filename)
+    #     if os.path.exists(filepath):
+    #         if self.time_source != 0:
+    #             gobject.source_remove(self.time_source)
+    #             self.lyrics_display.clear_lyrics()
+    #         self.lyrics_display.set_lrc_file(filepath)
+    #         self.lyrics_display.set_duration(song.get("#duration"))
+    #         self.time_source = gobject.timeout_add(100, self.real_show_lyrics)
+    #     else:    
+    #         if self.time_source != 0:
+    #             gobject.source_remove(self.time_source)
+    #         self.lyrics_display.clear_lyrics()
+    #         self.lyrics_display.set_search_fail_message("找不到匹配歌词")
 
             
-    def real_show_lyrics(self):        
-        played_timed = self.player.get_lyrics_position()
-        self.lyrics_display.set_played_time(played_timed)
-        return True
+    # def real_show_lyrics(self):        
+    #     played_timed = self.player.get_lyrics_position()
+    #     self.lyrics_display.set_played_time(played_timed)
+    #     return True
     
     def double_click_item(self, widget, item, column, x, y):
         Player.play_new(item.get_song())

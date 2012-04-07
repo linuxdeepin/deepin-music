@@ -21,11 +21,16 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import gobject
+import threading
 import gtk
+import os
 from widget.lyrics import desktop_lyrics
 from lrc_parser import LrcParser
 from config import config
 from widget.toolbar import lyric_toolbar
+from player import Player
+from lrc_manager import lrc_manager
+from lyrics_search import search_ui
 
 
 MESSAGE_DURATION_MS = 3000
@@ -37,12 +42,34 @@ class LyricsModule(object):
         self.win.connect("resized", self.adjust_toolbar_rect)
         self.win.connect("hide-bg", self.hide_toolbar)
         self.win.connect("show-bg", self.show_toolbar)
+        self.time_source = 0
+        
+        Player.connect("instant-new-song", self.instant_update_lrc)
+        search_ui.connect("finish", self.update_lrc)
+        
         self.lrc = LrcParser()
         self.lrc_id = -1
         self.lrc_next_id = -1
         self.current_line = 0
         self.message_source = 0
         self.song_duration = 0
+        
+        self.current_song = None
+        self.next_lrc_to_download = None
+        self.condition = threading.Condition()
+        self.thread = threading.Thread(target=self.func_thread)
+        self.thread.setDaemon(True)
+        self.thread.start()
+        
+    def func_thread(self):    
+        while True:
+            self.condition.acquire()
+            while not self.next_lrc_to_download:
+                self.condition.wait()
+            next_lrc_to_download = self.next_lrc_to_download    
+            self.next_lrc_to_download = None
+            self.condition.release()
+            self.set_current_lrc(True, next_lrc_to_download)
         
     def set_duration(self, duration):    
         if not duration:
@@ -158,7 +185,6 @@ class LyricsModule(object):
         
     def set_download_fail_message(self, message):
         self.set_message(message, MESSAGE_DURATION_MS)
-    
         
     def run(self):
         screen_w, screen_h = gtk.gdk.get_default_root_window().get_size()
@@ -169,12 +195,10 @@ class LyricsModule(object):
         except:    
             x = screen_w / 2 - w / 2
             y = screen_h - h
-            
 
         self.win.lyrics_win.move(x, y) 
         self.win.lyrics_win.show_all()           
         config.set("lyrics", "status", "true")
-        
         
     def hide_toolbar(self, widget):    
         lyric_toolbar.hide_all()
@@ -209,6 +233,52 @@ class LyricsModule(object):
         else:    
             l_y = rect.y - l_h
         lyric_toolbar.move(l_x, l_y)    
+        
+    def update_lrc(self, widget, songs):
+        if isinstance(songs, list):
+            if self.current_song in songs:
+                self.current_song = songs[songs.index(self.current_song)]
+        else:        
+            self.current_song = songs
+            
+        if self.current_song is not None:    
+            if not self.set_current_lrc(False):
+                self.condition.acquire()
+                self.next_lrc_to_download = self.current_song
+                self.condition.notify()
+                self.condition.release()
+                
+    def real_show_lyrics(self):            
+        played_timed = Player.get_lyrics_position()
+        self.set_played_time(played_timed)
+        return True
+                
+    def set_current_lrc(self, try_web=True, force_song=None):        
+        ret = False
+        if not force_song:
+            force_song = self.current_song
+        filename = lrc_manager.get_lrc(force_song, try_web)    
+        if filename and os.path.exists(filename):
+            if self.time_source != 0:
+                gobject.source_remove(self.time_source)
+                self.clear_lyrics()
+            if try_web:
+                gobject.idle_add(self.set_lrc_file, filename)
+            else:    
+                self.set_lrc_file(filename)
+                ret = True
+            self.set_duration(force_song.get("#duration"))    
+            self.time_source = gobject.timeout_add(100, self.real_show_lyrics)    
+        else:    
+            if self.time_source != 0:
+                gobject.source_remove(self.time_source)
+                self.clear_lyrics()    
+            self.set_search_fail_message("正在搜索歌词......")
+        return ret    
+        
+    def instant_update_lrc(self, widget, song):    
+        self.update_lrc(widget, song)
+        
         
 lyrics_display = LyricsModule()        
 

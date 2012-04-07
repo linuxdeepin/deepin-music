@@ -109,6 +109,8 @@ class Config(gobject.GObject, Logger):
 
             "lyrics" : {
                 "status" : "true",
+                "save_lrc_path" : "~/.lyrics",
+                "auto_download" : "true",
                 "font_name" : "华康少女文字 - Kelvin 30",
                 "locked" : "false",
                 "dock_mode" : "true",

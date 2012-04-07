@@ -524,7 +524,7 @@ def download(remote_uri, local_uri, buffer_len=4096, timeout=DEFAULT_TIMEOUT):
             pass
         return False
     if not exists(local_uri):
-        return False
+        return Falpse
     return True
     
 def threaded(func):
@@ -538,18 +538,18 @@ def threaded(func):
 class ThreadRun(threading.Thread):
     '''class docs'''
 	
-    def __init__(self, fetch_lyrics, render_func, artist, title):
+    def __init__(self, fetch_lyrics, render_func, *args):
         '''init docs'''
         super(ThreadRun, self).__init__()
         self.setDaemon(True)
         self.fetch_lyrics = fetch_lyrics
         self.render_func = render_func
-        self.artist = artist
-        self.title = title
+        self.args = args
+
 
     def run(self):
         '''docs'''
-        result = self.fetch_lyrics(self.artist, self.title)
+        result = self.fetch_lyrics(*self.args)
         self.render_func(result)
 
 

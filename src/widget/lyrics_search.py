@@ -32,23 +32,26 @@ from constant import DEFAULT_FONT_SIZE
 from dtk.ui.listview import ListView, render_text
 from dtk.ui.scrolled_window import ScrolledWindow
 from ui_toolkit import NormalWindow, app_theme
-from lrc_manager import ttplayer_engine
+from lrc_download import ttplayer_engine
+from lrc_manager import lrc_manager
+from player import Player
+from config import config
 import utils
 
 
-class SearchUI(NormalWindow):
+class SearchUI(NormalWindow, gobject.GObject):
+    __gsignals__ = {"finish" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,))}
     
     def __init__(self):
         NormalWindow.__init__(self)
+        gobject.GObject.__init__(self)
         self.window.background_dpixbuf = app_theme.get_pixbuf("skin/main.png")
         info_box = gtk.HBox(spacing=10)
         # self.artist_entry = Entry()
         self.artist_entry = gtk.Entry()
-        self.artist_entry.set_text("Beyond")
         self.artist_entry.set_size_request(120, 25)
         self.title_entry = gtk.Entry()
         # self.title_entry = Entry()
-        self.title_entry.set_text("海阔天空")
         self.title_entry.set_size_request(120, 25)
         artist_label = gtk.Label()
         artist_label.set_markup("<span color=\"black\">%s</span>" % "艺术家:")
@@ -94,6 +97,7 @@ class SearchUI(NormalWindow):
     def search_lyric_cb(self, widget):
         artist = self.artist_entry.get_text()
         title = self.title_entry.get_text()
+        self.prompt_label.set_markup("<span color=\"white\">   %s</span>" % "正在搜索歌词文件")
         if artist == "" and title == "":
             self.prompt_label.set_markup("<span color=\"white\">   %s</span>" % "囧!没有找到!")
             return
@@ -112,10 +116,9 @@ class SearchUI(NormalWindow):
         
 
     def download_lyric_cb(self, widget):
-        artist = self.artist_entry.get_text()
-        title = self.title_entry.get_text()
+        self.prompt_label.set_markup("<span color=\"white\">   %s</span>" % "正在下载歌词文件")
         select_items = self.result_view.select_rows
-        save_filepath = os.path.join(os.path.expanduser("~/.lyrics"), "%s-%s.lrc" % (artist, title))
+        save_filepath = lrc_manager.get_lrc_filepath(Player.song)
         if len(select_items) > 0:
             url = self.result_view.items[select_items[0]].get_url()
             utils.ThreadRun(utils.download, self.start_download, url, save_filepath).start()
@@ -123,7 +126,8 @@ class SearchUI(NormalWindow):
     @post_gui        
     def start_download(self, result):
         if result:
-            self.prompt_label.set_markup("<span color=\"white\">   %s</span>" % "文件已保存到 ~\.lyrics")
+            self.emit("finish", Player.song)
+            self.prompt_label.set_markup("<span color=\"white\">   %s</span>" % "文件已保存到 %s" % config.get("lyrics", "save_lrc_path"))
         else:    
             self.prompt_label.set_markup("<span color=\"white\">   %s</span>" % "囧! 下载失败!")
         

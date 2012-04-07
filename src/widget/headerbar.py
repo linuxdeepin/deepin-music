@@ -126,10 +126,9 @@ class HeaderBar(gtk.HBox):
         else:    
             self.lyrics_button.set_active(False)
         
-    def open_dir(self, widget, event):    
-        if is_left_button(event):
-            MediaDB.full_erase("local")
-            ImportFolderJob()
+    def open_dir(self, widget):    
+        MediaDB.full_erase("local")
+        ImportFolderJob()
             
     def __create_simple_toggle_button(self, name, callback):
         toggle_button = ToggleButton(
