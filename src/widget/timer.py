@@ -22,11 +22,14 @@
 
 import  gtk
 import gobject
+from dtk.ui.scalebar import HScalebar
+from dtk.ui.volume_button import VolumeButton
+from dtk.ui.frame import HorizontalFrame
 
 import utils
 from player import Player
 from config import config
-from ui_toolkit import song_scalebar, VolumeButton, HorizontalFrame
+
 
 class SongTimer(gtk.HBox):
     __gsignals__ = {
@@ -39,11 +42,10 @@ class SongTimer(gtk.HBox):
         self.label_time.set_alignment(1, 1)
         self.label_time.set_use_markup(True)
 
-        self.bar = song_scalebar
+        self.bar = HScalebar()
         self.bar.set_draw_value(False)
         self.bar.set_range(0, 1000)
         self.bar.set_value(0)
-        # self.bar.set_increments(1, 20)
         self.bar.connect("button_press_event", self.on_bar_press)
         self.bar.connect("button_release_event", self.on_bar_release)
         self.__value_changed_id = self.bar.connect("value-changed", self.on_bar_value_changed)
@@ -142,7 +144,7 @@ class SongTimer(gtk.HBox):
 class VolumeSlider(gtk.HBox):
     def __init__(self):
         super(VolumeSlider, self).__init__()
-        volume_button = VolumeButton(1.0, 0.0, 1.0, True)
+        volume_button = VolumeButton(1.0, 0.0, 1.0, 2)
         volume_frame = HorizontalFrame(10, 0, 0, 0, 0)
         volume_frame.add(volume_button)
         self.volume_progressbar = volume_button.volume_progressbar

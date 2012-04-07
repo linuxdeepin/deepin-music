@@ -31,7 +31,6 @@ from logger import Logger
 import utils
 
 
-gobject.threads_init()
 AUTOSAVE_TIMEOUT = 1000 * 60 * 5 # 5min
 SIGNAL_DB_QUERY_FIRED = 50
 
@@ -75,13 +74,13 @@ class MediaDatebase(gobject.GObject, Logger):
         self.__is_loaded = False
         self.__force_check = False
         self.__save_song_type = ["local", "xiami"]
-        self.is_busy = False
+        self.__dirty = False
         
         # Init queued signal.
         self.__reset_queued_signal()
         
-    def set_busy(self):    
-        self.is_busy = True
+    def set_dirty(self):    
+        self.__dirty = True
         
     def set_force_check(self):    
         self.__force_check = True
@@ -122,7 +121,7 @@ class MediaDatebase(gobject.GObject, Logger):
         
     def create_song(self, tags, song_type, read_from_file=False):    
         '''Create song'''
-        self.is_busy = True
+        self.set_dirty()
         try:
             uri = tags["uri"]
         except KeyError:    
@@ -149,7 +148,7 @@ class MediaDatebase(gobject.GObject, Logger):
             
     def __add_cb(self, song):        
         '''add song cb'''
-        self.is_busy = True
+        self.set_dirty()
         song_type = song.get_type()
         uri = song.get("uri")
         self.__db_operation_lock.acquire()
@@ -167,7 +166,7 @@ class MediaDatebase(gobject.GObject, Logger):
         
     def remove(self, songs):    
         '''Remove song'''
-        self.is_busy = True
+        self.set_dirty()
         if not isinstance(songs, (tuple, list, set)):
             songs = [ songs ]
         for song in songs:    
@@ -194,7 +193,7 @@ class MediaDatebase(gobject.GObject, Logger):
         '''Set song property'''
         if not song: return False
         ret = True
-        self.is_busy = True
+        self.set_dirty()
         song_type = song.get_type()
         old_keys_values = {}
         mod_keys = keys_values.keys()
@@ -224,7 +223,7 @@ class MediaDatebase(gobject.GObject, Logger):
     def del_property(self, song, keys):        
         '''delete song property'''
         if not song: return False
-        self.is_busy = True
+        self.set_dirty()
         
         if not isinstance(keys, (list, tuple)):
             keys = [ keys ]
@@ -254,7 +253,7 @@ class MediaDatebase(gobject.GObject, Logger):
         self.set_property(song, new_tags)        
         
     def get_or_create_song(self, tags, song_type, read_from_file=False):    
-        self.is_busy = True
+        self.set_dirty()
         try:
             uri = utils.realuri(tags["uri"])
         except KeyError:    
@@ -318,7 +317,7 @@ class MediaDatebase(gobject.GObject, Logger):
         self.__condition.acquire()
         self.__queued_signal["playlist-added"].setdefault(pl_type, [])
         self.__queued_signal["playlist-added"][pl_type].append(pl)
-        self.is_busy = True
+        self.set_dirty()
         self.__condition.release()
         
     def get_playlist_by_name(self, name, pl_type="local"):
@@ -332,7 +331,7 @@ class MediaDatebase(gobject.GObject, Logger):
         self.__condition.acquire()
         self.__queued_signal["playlist-removed"].setdefault(pl_type, [])
         self.__queued_signal["playlist-removed"][pl_name].append(pl)
-        self.is_busy = True
+        self.set_dirty()
         self.__condition.release()
         
     def get_random_song(self, song_type="local"):        
@@ -418,7 +417,7 @@ class MediaDatebase(gobject.GObject, Logger):
                 self.create_playlist("local", name, infos)    
         if self.__force_check:        
             self.save()
-        self.is_busy = False    
+        self.__dirty = False    
         
         # fire signal
         self.__reset_queued_signal()
@@ -435,7 +434,7 @@ class MediaDatebase(gobject.GObject, Logger):
         self.emit("loaded")
     
     def save(self):    
-        if not self.is_busy:
+        if not self.__dirty:
             return True
         
         # Quickly copy obj before pickle it
@@ -449,7 +448,7 @@ class MediaDatebase(gobject.GObject, Logger):
         utils.save_db(objs, get_config_file("songs.db"))
         utils.save_db([pl.get_pickle_obj() for pl in playlists], get_config_file("playlists.db"))
         self.loginfo("%d songs saved and %d playlists saved", len(objs), len(playlists))
-        self.is_busy = False
+        self.__dirty = False
         
     @utils.threaded
     def async_save(self):

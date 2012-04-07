@@ -25,7 +25,7 @@ import cairo
 import pango
 import pangocairo
 import math
-from ui_toolkit import app_theme
+from widget.ui import app_theme
 import copy
 import gobject
 from config import config

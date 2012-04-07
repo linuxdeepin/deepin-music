@@ -26,7 +26,7 @@ from dtk.ui.window import Window
 from dtk.ui.button import ImageButton, ToggleButton
 from dtk.ui.box import ImageBox
 
-from ui_toolkit import app_theme
+from widget.ui import app_theme
 from player import Player
 from render_lyrics import render_lyrics
 from widget.lyrics import desktop_lyrics

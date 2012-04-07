@@ -36,6 +36,7 @@ from lyrics_search import search_ui
 MESSAGE_DURATION_MS = 3000
 
 class LyricsModule(object):
+    
     def __init__(self):
         self.win = desktop_lyrics
         self.win.connect("moved", self.adjust_toolbar_rect)
@@ -273,7 +274,10 @@ class LyricsModule(object):
             if self.time_source != 0:
                 gobject.source_remove(self.time_source)
                 self.clear_lyrics()    
-            self.set_search_fail_message("正在搜索歌词......")
+            if try_web:    
+                self.set_search_fail_message("没有搜索到歌词!")
+            else:    
+                self.set_search_fail_message("正在搜索歌词......")
         return ret    
         
     def instant_update_lrc(self, widget, song):    

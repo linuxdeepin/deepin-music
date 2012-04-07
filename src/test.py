@@ -19,7 +19,7 @@ import gobject
 import gtk
 import os
 import subprocess
-from ui_toolkit import app_theme
+from widget.ui import app_theme
 from dtk.ui.application import Application
 from widget.song_item import SongItem
 from widget.playlist import *
@@ -93,8 +93,10 @@ class DeepinPlayer(object):
     #     return True
     
     def double_click_item(self, widget, item, column, x, y):
+        self.list_view.set_highlight(item)        
         Player.play_new(item.get_song())
-        self.list_view.set_highlight(item)
+        
+
 
     def popup_listview_menu(self, widget, x, y, current_item,  select_items):    
         self.list_view.popup_menu().show((x,y))

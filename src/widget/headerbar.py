@@ -20,7 +20,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from ui_toolkit import app_theme
+from widget.ui import app_theme
 from dtk.ui.button import ToggleButton, ImageButton
 from dtk.ui.utils import foreach_recursive, is_left_button
 from dtk.ui.menu import Menu

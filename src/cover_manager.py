@@ -35,7 +35,7 @@ from config import config
 from logger import Logger
 from library import MediaDB
 from findfile import get_cache_file
-from ui_toolkit import app_theme
+from widget.ui import app_theme
 
 
 REINIT_COVER_TO_SKIP_TIME = 100 * 60 * 30

@@ -30,7 +30,7 @@ from player import Player
 from library import MediaDB
 from logger import Logger
 from cover_manager import CoverManager, COVER_SIZE, COVER_SAVE_SIZE
-from ui_toolkit import app_theme
+from widget.ui import app_theme
 
 class CoverButton(gtk.EventBox):
     def __init__(self):

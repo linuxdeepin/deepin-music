@@ -50,10 +50,10 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         gobject.GObject.__init__(self)
         
         # Init.
-        self.song = None        # current song
-        self.__source = None  # playlist
-        self.__need_load_prefs = True # reload
-        self.__current_stream_seeked = False # can be seeked
+        self.song = None       
+        self.__source = None 
+        self.__need_load_prefs = True 
+        self.__current_stream_seeked = False 
         self.__next_already_called = False
         self.__emit_signal_new_song_id = None
         
@@ -76,15 +76,17 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         
     def __on_eos(self, bin, uri):    
         self.loginfo("received eos for %s", uri)
+        
         if uri == self.song.get("uri") and not self.__next_already_called:        
             self.loginfo("request new song: eos and play-end not emit")
             self.emit("play-end")
             self.next() # todo
+            
         self.__next_already_called = False    
         
     def __on_error(self, bin, uri):   
         self.logdebug("gst error received for %s", uri)
-        self.bin.xfade_close()
+        # self.bin.xfade_close()
         config.set("player", "play", "false")
         self.emit("paused")
 

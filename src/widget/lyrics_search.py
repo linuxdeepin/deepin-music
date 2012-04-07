@@ -31,7 +31,7 @@ from dtk.ui.constant import ALIGN_END
 from constant import DEFAULT_FONT_SIZE
 from dtk.ui.listview import ListView, render_text
 from dtk.ui.scrolled_window import ScrolledWindow
-from ui_toolkit import NormalWindow, app_theme
+from widget.ui import NormalWindow, app_theme
 from lrc_download import ttplayer_engine
 from lrc_manager import lrc_manager
 from player import Player
@@ -47,11 +47,9 @@ class SearchUI(NormalWindow, gobject.GObject):
         gobject.GObject.__init__(self)
         self.window.background_dpixbuf = app_theme.get_pixbuf("skin/main.png")
         info_box = gtk.HBox(spacing=10)
-        # self.artist_entry = Entry()
-        self.artist_entry = gtk.Entry()
+        self.artist_entry = Entry()
         self.artist_entry.set_size_request(120, 25)
-        self.title_entry = gtk.Entry()
-        # self.title_entry = Entry()
+        self.title_entry = Entry()
         self.title_entry.set_size_request(120, 25)
         artist_label = gtk.Label()
         artist_label.set_markup("<span color=\"black\">%s</span>" % "艺术家:")

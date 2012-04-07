@@ -31,7 +31,7 @@ from dtk.ui.categorybar import Categorybar
 from dtk.ui.scrolled_window import ScrolledWindow
 from dtk.ui.button import Button
 
-from ui_toolkit import app_theme
+from widget.ui import app_theme
 import utils
 from config import config
 from widget.song_item import SongItem

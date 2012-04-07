@@ -26,13 +26,8 @@ from dtk.ui.window import Window
 from dtk.ui.theme import Theme
 from dtk.ui.utils import move_window, is_double_click
 from dtk.ui.titlebar import Titlebar
-from dtk.ui.box import EventBox, ImageBox, TextBox
-from dtk.ui.button import Button, ImageButton, ToggleButton
-from dtk.ui.scalebar import HScalebar, VScalebar
-from dtk.ui.volume_button import VolumeButton
-from dtk.ui.frame import HorizontalFrame
 
-app_theme = Theme(os.path.join((os.path.dirname(os.path.realpath(__file__))), "../app_theme"))
+app_theme = Theme(os.path.join((os.path.dirname(os.path.realpath(__file__))), "../../app_theme"))
 
 class NormalWindow(object):
     
@@ -67,13 +62,13 @@ class NormalWindow(object):
         self.window.hide_all()
         
 
-song_scalebar = HScalebar(
-    app_theme.get_pixbuf("hscalebar/left_fg.png"),
-    app_theme.get_pixbuf("hscalebar/left_bg.png"),
-    app_theme.get_pixbuf("hscalebar/middle_fg.png"),
-    app_theme.get_pixbuf("hscalebar/middle_bg.png"),
-    app_theme.get_pixbuf("hscalebar/right_fg.png"),
-    app_theme.get_pixbuf("hscalebar/right_bg.png"),
-    app_theme.get_pixbuf("hscalebar/point.png"),
-    )
+# song_scalebar = HScalebar(
+#     app_theme.get_pixbuf("hscalebar/left_fg.png"),
+#     app_theme.get_pixbuf("hscalebar/left_bg.png"),
+#     app_theme.get_pixbuf("hscalebar/middle_fg.png"),
+#     app_theme.get_pixbuf("hscalebar/middle_bg.png"),
+#     app_theme.get_pixbuf("hscalebar/right_fg.png"),
+#     app_theme.get_pixbuf("hscalebar/right_bg.png"),
+#     app_theme.get_pixbuf("hscalebar/point.png"),
+#     )
 
