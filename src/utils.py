@@ -750,6 +750,38 @@ def color_hex_to_cairo(color):
     gdk_color = gtk.gdk.color_parse(color)
     return (gdk_color.red / 65535.0, gdk_color.green / 65535.0, gdk_color.blue / 65535.0)
 
+"""
+XML simple un/escape caracter
+"""
+
+def xmlescape(stri):
+    """Escape a string in a manner suitable for XML/Pango."""
+    stri = str(stri)
+    return stri.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+def xmlunescape(stri):
+    """Unescape a string in a manner suitable for XML/Pango."""
+    stri = str(stri)
+    return stri.replace("&lt;", "<").replace("&gt;", ">").replace("&amp;", "&")
+
+def export_playlist(list_song, filename, p_type="m3u"):
+    if p_type=="m3u":
+        fileout = open(filename, "w")
+        fileout.write("\n".join([song.get_path() for song in list_song if song.get_path() != None]))
+        fileout.close()
+    elif p_type=="pls":
+        fileout = open(filename, "w")
+        [ fileout.write("file%d=%s\n"%(i,song.get_path()))  for i,song in enumerate(list_song)  if song.get_path() != None  ]
+        fileout.close()
+    elif p_type=="xspf":
+        fileout = open(filename, "w")
+        fileout.write('<?xml version="1.0" encoding="UTF-8"?>\n<playlist version="0" xmlns = "http://xspf.org/ns/0/">\n<trackList>')
+        [ fileout.write("<track><location>%s</location></track>\n"%song.get("uri"))  for song in list_song if song.get("uri") != None  ]
+        fileout.write('  </trackList>\n</playlist>\n' )
+        fileout.close()
+    else:
+        raise TypeError, "Unknow playlist type"
+
 global MAIN_WINDOW            
 MAIN_WINDOW = None
 

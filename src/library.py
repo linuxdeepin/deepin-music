@@ -27,6 +27,7 @@ from random import shuffle
 
 from song import Song, TAG_KEYS
 from findfile import get_config_file
+from parse import Query
 from logger import Logger
 import utils
 
@@ -118,6 +119,18 @@ class MediaDatebase(gobject.GObject, Logger):
         self.__reset_queued_signal()    
         self.__condition.release()
         return True
+    
+    def request(self, string, song_type="local"):
+        try:
+            filter_func = Query(string).search
+        except Query.error:    
+            self.loginfo("Request: Query error %s", string)
+            return None
+        else:
+            if not self.__songs_by_type.has_key(song_type):
+                self.loginfo("Request: type %s not exist", song_type)
+                return None
+            return [ song for song in self.__songs_by_type[song_type] if filter_func(song) ]
         
     def create_song(self, tags, song_type, read_from_file=False):    
         '''Create song'''
@@ -432,6 +445,9 @@ class MediaDatebase(gobject.GObject, Logger):
     def __delay_post_load(self):    
         self.__is_loaded = True
         self.emit("loaded")
+        
+    def isloaded(self):    
+        return self.__is_loaded
     
     def save(self):    
         if not self.__dirty:
@@ -527,6 +543,403 @@ class Playlist(gobject.GObject, Logger):
     def append(self, song):    
         self.extend([song])
         
+class DBQuery(gobject.GObject, Logger):        
+    __gsignals__ = {
+        "full-update"  : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),
+        "update-tag" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (str, gobject.TYPE_PYOBJECT)),
+        "added" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,)),
+        "removed" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,)),
+        "quick-update" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,))
+        }
+    def __init__(self, song_type):
+        gobject.GObject.__init__(self)
+        self.__tree = ({}, set())
+        self.__type = song_type
+        self.__query_func = None
+        self.__query_string = ""
+        self.__cache_func_song_tuple = None
+        self.__cache_song_tuple = {}
+        
+        MediaDB.connect("added", self.db_entry_added)
+        MediaDB.connect("removed", self.db_entry_removed)
+        MediaDB.connect("changed", self.db_entry_changed)
+        MediaDB.connect("quick-changed", self.db_entry_changed, True)
+        
+        self.__condition = Condition()
+        self.__condition_query = Condition()
+        self.__query_id = 0
+        self.__reset_signal_queue()
+        gobject.timeout_add(SIGNAL_DB_QUERY_FIRED, self.__fire_queued_signal)
+        
+    def get_type(self):   
+        return self.__type
+    
+    def __reset_signal_queue(self):
+        self.__signal_to_fire = {
+            "added-songs" : set(),
+            "removed-songs" : set(),
+            "update-genre" : set(),
+            "update-artist" : set(),
+            "update-album" : set(),
+            "quick-update-songs" : set()
+            }
+        
+    def __fire_queued_signal(self):    
+        self.__condition.acquire()
+        try:
+            if self.__signal_to_fire["update-genre"]:
+                self.emit("update-tag", "genre", self.__signal_to_fire["update-genre"])
+            if self.__signal_to_fire["update-artist"]:    
+                self.emit("update-tag", "artist", self.__signal_to_fire["update-artist"])
+            if self.__signal_to_fire["update-album"]:    
+                self.emit("update-tag", "album", self.__signal_to_fire["update-album"])
+            if self.__signal_to_fire["removed-songs"]:    
+                self.emit("removed", self.__signal_to_fire["removed-songs"])
+            if self.__signal_to_fire["removed-songs"]:    
+                self.emit("added", self.__signal_to_fire['added-songs'])
+            if self.__signal_to_fire["quick-update-songs"]:    
+                self.emit("quick-update", self.__signal_to_fire["quick-update-songs"])
+                
+        except:        
+            self.logexception("Failed fire queued signal")
+            
+        self.__reset_signal_queue()    
+        self.__condition.release()
+        return True
+    
+    def get_all_songs(self):
+        return MediaDB.get_songs(self.__type)
+    
+    def __filter(self, song, query_func=None):
+        if query_func is None:
+            query_func = self.__query_func
+        if query_func is None:    
+            return True
+        else:
+            query_func(song)
+            
+    @utils.threaded        
+    def set_query(self, string=""):
+        self.__condition_query.acquire()
+        self.__query_id += 1
+        myid = self.__query_id
+        self.__condition_query.release()
+        
+        if not isinstance(string, unicode):
+            string = string.decode("utf-8")
+        string = string.strip()    
+        
+        deb = time.time()
+        self.loginfo("Begin query %s", string)
+        
+        if string:
+            try:
+                query_func = Query(string).search
+            except Query.error:    
+                return
+            self.empty()
+            [ self.__add_cache(song) for song in self.get_all_songs() if self.__filter(song, query_func)]
+        else:    
+            query_func = None
+            self.empty()
+            [ self.__add_cache(song) for song in self.get_all_songs()]
+            
+        self.__condition_query.acquire()    
+        if myid == self.__query_id:
+            self.__query_func = query_func
+            self.__query_string = string
+            def fire():
+                self.emit("full-update")
+            gobject.idle_add(fire)    
+        self.__condition_query.release()    
+        
+    def empty(self):    
+        self.__tree = ({}, set())
+        
+    def db_entry_added(self, db, song_type, songs):    
+        if song_type != self.__type: return
+        
+        for song in songs:
+            if self.__filter(song):
+                self.__add_cache(song)
+                
+                genre, artist, album = self.__get_info(song)
+                
+                self.__condition.acquire()
+                self.__signal_to_fire["update-genre"].add(genre)
+                self.__signal_to_fire["update-artist"].add(artist)
+                self.__signal_to_fire["update-album"].add(album)
+                self.__signal_to_fire["added-songs"].add(song)
+                
+                if self.__cache_func_song_tuple:
+                    self.__cache_song_tuple[song.get("uri")] = self.__cache_func_song_tuple(song)
+                self.__condition.release()    
+                
+    def db_entry_removed(self, db, song_type, songs):            
+        if song_type != self.__type: return
+        
+        for song in songs:
+            if self.__filter(song) and song in self.__tree[1]:
+                self.__delete_cache(song)
+                
+                genre, artist, album = self.__get_info(song)
+                
+                self.__condition.acquire()
+                self.__signal_to_fire["update-genre"].add(genre)
+                self.__signal_to_fire["update-artist"].add(artist)
+                self.__signal_to_fire["update-album"].add(album)
+                self.__signal_to_fire["removed-songs"].add(song)
+                self.__condition.release()                    
+                if self.__cache_func_song_tuple:
+                    del self.__cache_song_tuple[song.get("uri")]
+
+                    
+    def db_entry_changed(self, db, song_type, infos, use_quick_update_change=False):                
+        if song_type != self.__type: return
+        
+        for info in infos:
+            song, old_keys_values = info
+            if old_keys_values.has_key("genre") or old_keys_values.has_key("artist") or old_keys_values.has_key("album"):
+                use_quick_update_change = False
+                
+            if not use_quick_update_change:    
+                use_quick_update_change = True
+                for tag, old_value in old_keys_values.iteritems():
+                    new_value = song.get_sortable(tag)
+                    if old_value != new_value:    
+                        use_quick_update_change = False
+                        break
+                    
+            if not old_keys_values.has_key("genre"): genre = song.get_sortable("genre")        
+            else: genre = old_keys_values.get("genre")
+            if not old_keys_values.has_key("artist"): artist = song.get_sortable("artist")
+            else: artist = old_keys_values.get("artist")
+            if not old_keys_values.has_key("album"): album = song.get_sortable("album")
+            else: album = old_keys_values.get("album")
+                
+            if song in self.__tree[1]:
+                self.__condition.acquire()
+                if old_keys_values.has_key("genre"):
+                    self.__signal_to_fire["update-genre"].add(old_keys_values["genre"])
+                if old_keys_values.has_key("artist"):
+                    self.__signal_to_fire["update-artist"].add(old_keys_values["artist"])
+                if old_keys_values.has_key("album"):
+                    self.__signal_to_fire["update-album"].add(old_keys_values["album"])
+                if not use_quick_update_change:
+                    self.__signal_to_fire["removed-songs"].add(song)
+                self.__condition.release()
+                
+            try:    
+                self.__delete_cache(song, (genre, artist, album))
+            except: pass    
+            
+            if self.__cache_func_song_tuple:
+                try: del self.__cache_song_tuple[song.get("uri")]
+                except KeyError: pass 
+            
+            if self.__filter(song):
+                self.__add_cache(song)
+                if self.__cache_func_song_tuple:
+                    self.__cache_song_tuple[song.get("uri")]= self.__cache_func_song_tuple(song)
+
+                genre, artist, album = self.__get_info(song)
+
+                self.__condition.acquire()
+
+                if old_keys_values.has_key("genre"):
+                    self.__signal_to_fire["update-genre"].add(genre)
+                if old_keys_values.has_key("artist"):
+                    self.__signal_to_fire["update-artist"].add(artist)
+                if old_keys_values.has_key("album"):
+                    self.__signal_to_fire["update-album"].add(album)
+
+                if use_quick_update_change:
+                    self.__signal_to_fire["quick-update-songs"].add(song)
+                else:
+                    self.__signal_to_fire["added-songs"].add(song)
+                self.__condition.release()
+                
+    def __add_cache(self, song):            
+        if self.__cache_func_song_tuple:
+            self.set_song_tuple_cache(song)
+            
+        genre2, artist2, album = self.__get_info(song)    
+        sgenre, sartist, salbum = self.__get_str_info(song)
+        
+        self.__tree[1].add(song)
+        for genre in [genre2, "###ALL###"]:
+            for artist in [artist2, "###ALL###"]:
+                self.__tree[0].setdefault(genre, ({}, set(), sgenre))
+                self.__tree[0][genre][1].add(song)
+                self.__tree[0][genre][0].setdefault(artist, ({}, set(), sartist))
+                self.__tree[0][genre][0][artist][1].add(song)
+                self.__tree[0][genre][0][artist][0].setdefault(album, ({}, set(), salbum))
+                self.__tree[0][genre][0][artist][0][album][1].add(song)
+                
+    def __delete_cache(self, song, old_values=False):            
+        if old_values:
+            genre2, artist2, album = old_values
+        else:    
+            genre2, artist2, album = self.__get_info(song)
+            
+        try:    
+            self.__tree[1].remove(song)
+        except (KeyError, ValueError):    
+            return
+        for genre in [ genre2, "###ALL###"]:
+            self.__tree[0][genre][1].remove(song)
+            for artist in [artist2, "###ALL###"]:
+                self.__tree[0][genre][0][artist][1].remove(song)
+                self.__tree[0][genre][0][artist][0][album][1].remove(song)
+                
+                if len(self.__tree[0][genre][0][artist][0][album][1]) == 0:
+                    del self.__tree[0][genre][0][artist][0][album]
+                    if len(self.__tree[0][genre][0][artist][1]) == 0:
+                        del self.__tree[0][genre][0][artist]
+            if len(self.__tree[0][genre][1]) == 0:            
+                del self.__tree[0][genre]
+                
+    def __get_str_info(self, song):            
+        return song.get_str("genre"), song.get_str("artist"), song.get_str("album")
+    
+    def __get_info(self, song):
+        return song.get_sortable("genre"), song.get_sortable("artist"), song.get_sortable("album")
+    
+    def get_random_song(self):
+        songs = list(self.__tree[1])
+        shuffle(songs)
+        return songs[0]
+    
+    def get_songs(self, genres=[], artists=[], albums=[]):
+        songs = set()
+        if not genres and not artists and not albums:
+            songs.update(self.__tree[1].copy())
+        else:    
+            if not genres:
+                tmp_genres = ["###ALL###"]
+            else:    
+                tmp_genres = genres
+            for genre in tmp_genres:    
+                if not artists:
+                    if not albums:
+                        try:
+                            songs.update(self.__tree[0][genre][1].copy())
+                        except KeyError:    
+                            continue
+                        continue
+                    else:
+                        tmp_artists = ["###ALL###"]
+                        
+                else:        
+                    tmp_artists = artists
+                    
+                for artist in tmp_artists:    
+                    if not albums:
+                        try:
+                            songs.update(self.__tree[0][genre][0][artist][1].copy())
+                        except KeyError:    
+                            continue
+                    for album in albums:    
+                        try:
+                            songs.update(self.__tree[0][genre][0][artist][0][album][1].copy())
+                        except KeyError:    
+                            continue
+        return songs                
+    
+    def get_info(self, key_request, genres=[], artists=[], key_values=None, extended_info=False):
+        if key_request not in ["genre", "artist", "album"]:
+            raise NotImplementedError("Only genre, artist, album are support for key_request")
+        infos = {}
+        if key_request == "genre":
+            try:
+                if key_values is None:
+                    mydict = self.__tree[0].copy()
+                else:    
+                    mydict = {}
+                    for value in key_values:
+                        try:
+                            mydict[value] = self.__tree[0][value]
+                        except KeyError:    
+                            pass
+                for key, info in mydict.iteritems():        
+                    if key == "###ALL###":
+                        continue
+                    if extended_info:
+                        _title, playcount, duration, songs = infos.get(key, (info[2], 0, 0, []))
+                        playcount += sum(s.get("#playcount", 0) for s in info[1])
+                        duration += sum(s.get("#duration", 0) for s in info[1])
+                        songs.extend(info[1])
+                        infos[key] = (info[2], playcount, duration, songs)
+                    else:    
+                        nb = len(info[1])
+                        if nb > 0:
+                            infos[key] = (info[2], infos.setdefault(key, (info[2], 0))[1] + nb)
+            except KeyError:                
+                pass
+        else:    
+            tmp_genres = set(genres) & set(self.__tree[0].keys)
+            if not tmp_genres:
+                tmp_genres = ["###ALL###"]
+            for genre in tmp_genres:    
+                if key_request == "artist":
+                    try:
+                        if key_values is None:
+                            mydict = self.__tree[0][genre][0].copy()
+                        else:    
+                            mydict = {}
+                            for value in key_values:
+                                try: mydict[value] = self.__tree[0][genre][0][value]
+                                except KeyError: pass
+
+                        for key, info in mydict.iteritems():
+                            if key == "###ALL###": continue
+                            if extended_info:
+                                _title, playcount, duration, songs = infos.get(key,(info[2], 0, 0, []))
+                                playcount += sum(s.get("#playcount", 0) for s in info[1])
+                                duration += sum(s.get("#duration", 0) for s in info[1])
+                                songs.extend(info[1])
+                                infos[key] = (info[2], playcount, duration, songs)
+                            else:
+                                nb = len(info[1])
+                                if nb > 0: infos[key] = (info[2], infos.setdefault(key,(info[2], 0))[1] + nb)
+                    except KeyError: pass
+                else:
+                    try: tmp_artists = set(artists) & set(self.__tree[0][genre][0].keys())
+                    except KeyError: continue
+                    if not tmp_artists: tmp_artists = ["###ALL###"]
+                    for artist in tmp_artists:
+                        if key_request == "album":
+                            try:
+                                if key_values is None: mydict = self.__tree[0][genre][0][artist][0].copy()
+                                else:
+                                    mydict = {}
+                                    for value in key_values:
+                                        try: mydict[value] = self.__tree[0][genre][0][artist][0][value]
+                                        except KeyError: pass
+
+                                for key, info in mydict.iteritems():
+                                    if key == "###ALL###": continue
+                                    if extended_info:
+                                        _title, playcount, duration, songs = infos.get(key,(info[2], 0, 0, []))
+                                        playcount += sum(s.get("#playcount", 0) for s in info[1])
+                                        duration += sum(s.get("#duration", 0) for s in info[1])
+                                        songs.extend(info[1])
+                                        infos[key] = (info[2], playcount, duration, songs)
+                                    else:
+                                        nb = len(info[1])
+                                        if nb > 0: infos[key] = (info[2], infos.setdefault(key,(info[2], 0))[1] + nb)
+                            except KeyError: pass
+
+        if key_values:
+            [ infos.update({key:None}) for key in key_values if not infos.has_key(key) ]
+
+        return infos
+
+            
+    
+                
+        
+            
 
 MediaDB = MediaDatebase()        
 MediaDB.register_type("local")
