@@ -77,6 +77,7 @@ class SearchUI(NormalWindow, gobject.GObject):
         scrolled_window.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
         sort_items = [(lambda item: item.title, cmp), (lambda item: item.artist, cmp)]
         self.result_view = ListView(sort_items)
+        self.result_view.connect("double-click-item", self.double_click_cb)
         self.result_view.add_titles(["歌曲名", "艺术家"])
         scrolled_window.add_child(self.result_view)
         
@@ -101,6 +102,9 @@ class SearchUI(NormalWindow, gobject.GObject):
         self.main_box.pack_start(scrolled_window, True, True)
         self.main_box.pack_start(bottom_box, False, False)
         
+    def double_click_cb(self, widget, item, colume, x, y):   
+        self.download_lyric_cb(widget)
+        
     def search_lyric_cb(self, widget):
         artist = self.artist_entry.get_text()
         title = self.title_entry.get_text()
@@ -108,7 +112,7 @@ class SearchUI(NormalWindow, gobject.GObject):
         if artist == "" and title == "":
             self.prompt_label.set_markup("<span color=\"white\">   %s</span>" % "囧!没有找到!")
             return
-        utils.ThreadRun(ttplayer_engine.request, self.render_lyrics, artist, title).start()
+        utils.ThreadRun(ttplayer_engine.request, self.render_lyrics, [artist, title]).start()
         
     @post_gui
     def render_lyrics(self, result):
@@ -128,10 +132,10 @@ class SearchUI(NormalWindow, gobject.GObject):
         save_filepath = lrc_manager.get_lrc_filepath(Player.song)
         if len(select_items) > 0:
             url = self.result_view.items[select_items[0]].get_url()
-            utils.ThreadRun(utils.download, self.start_download, url, save_filepath).start()
+            utils.ThreadRun(utils.download, self.render_download, [url, save_filepath]).start()
             
     @post_gui        
-    def start_download(self, result):
+    def render_download(self, result):
         if result:
             self.emit("finish", Player.song)
             self.prompt_label.set_markup("<span color=\"white\">   %s</span>" % "文件已保存到 %s" % config.get("lyrics", "save_lrc_path"))

@@ -27,8 +27,6 @@ from widget.lyrics_module import lyrics_display
 from widget.headerbar import header_bar
 
 
-
-
 class DeepinPlayer(object):
     '''Music player for linux deepin.'''
     def __init__(self):
@@ -40,23 +38,19 @@ class DeepinPlayer(object):
         utils.set_main_window(self.window.window)
         MediaDB.load()
         mainbox.pack_start(header_bar, False, False)
-        # MediaDB.connect("added", self.reload_db)
-
         Player.load()
 
         playlist_ui = PlaylistUI()
         
         self.list_view = playlist_ui.playlist
-        self.list_view.connect("double-click-item", self.double_click_item)
-        self.list_view.connect("right-press-items", self.popup_listview_menu)
-        # self.list_view.add_titles(["歌名", "艺术家", "时间"])
-
+        # self.list_view.connect("double-click-item", self.double_click_item)
+        # self.list_view.connect("right-press-items", self.popup_listview_menu)
         
         if MediaDB.get_songs("local"):
             self.list_view.add_songs(MediaDB.get_songs("local"))
             self.list_view.set_highlight_song(Player.song)
 
-
+        MediaDB.connect("added", self.reload_db)    
         self.window.window.change_background(app_theme.get_pixbuf("skin/main.png"))
         self.window.main_box.pack_start(mainbox, False, False)
         self.window.main_box.pack_start(playlist_ui, True, True)
@@ -65,41 +59,16 @@ class DeepinPlayer(object):
         self.time_source = 0
         self.lyrics_display = lyrics_display
         self.lyrics_display.run()
-        # self.player.connect("instant-new-song", self.show_lyrics)
         self.player.set_source(self.list_view)
         self.dbus_service = DeepinMusicDBus()
         self.window.run()        
-
-    # def show_lyrics(self, player, song):    
-    #     filename = player.song.get_str("artist") + "-" + player.song.get_str("title") + ".lrc"
-    #     filepath = os.path.join(os.path.expanduser("~/.lyrics"), filename)
-    #     if os.path.exists(filepath):
-    #         if self.time_source != 0:
-    #             gobject.source_remove(self.time_source)
-    #             self.lyrics_display.clear_lyrics()
-    #         self.lyrics_display.set_lrc_file(filepath)
-    #         self.lyrics_display.set_duration(song.get("#duration"))
-    #         self.time_source = gobject.timeout_add(100, self.real_show_lyrics)
-    #     else:    
-    #         if self.time_source != 0:
-    #             gobject.source_remove(self.time_source)
-    #         self.lyrics_display.clear_lyrics()
-    #         self.lyrics_display.set_search_fail_message("找不到匹配歌词")
-
-            
-    # def real_show_lyrics(self):        
-    #     played_timed = self.player.get_lyrics_position()
-    #     self.lyrics_display.set_played_time(played_timed)
-    #     return True
     
-    def double_click_item(self, widget, item, column, x, y):
-        self.list_view.set_highlight(item)        
-        Player.play_new(item.get_song())
-        
+    # def double_click_item(self, widget, item, column, x, y):
+    #     self.list_view.set_highlight(item)        
+    #     Player.play_new(item.get_song())
 
-
-    def popup_listview_menu(self, widget, x, y, current_item,  select_items):    
-        self.list_view.popup_menu().show((x,y))
+    # def popup_listview_menu(self, widget, x, y, current_item,  select_items):    
+    #     self.list_view.popup_menu().show((x,y))
     
     def reload_db(self, db, song_type, songs):
 

@@ -537,22 +537,40 @@ def threaded(func):
         t.start()
     return wrapper    
 
+class ThreadLoad(threading.Thread):
+    def __init__(self, fetch_func, *args):
+        super(ThreadLoad, self).__init__()
+        self.setDaemon(True)
+        self.fetch_func = fetch_func
+        self.args = args
+        
+    def run(self):    
+        self.fetch_func(*self.args)
+
 class ThreadRun(threading.Thread):
     '''class docs'''
 	
-    def __init__(self, fetch_lyrics, render_func, *args):
+    def __init__(self, fetch_func, render_func, args=[], render_args=[]):
         '''init docs'''
         super(ThreadRun, self).__init__()
         self.setDaemon(True)
-        self.fetch_lyrics = fetch_lyrics
+        self.fetch_func = fetch_func
         self.render_func = render_func
         self.args = args
+        self.render_args = render_args
 
 
     def run(self):
         '''docs'''
-        result = self.fetch_lyrics(*self.args)
-        self.render_func(result)
+        if self.args:
+            result = self.fetch_func(*self.args)
+        else:    
+            result = self.fetch_func()
+            
+        if self.render_args:    
+            self.render_func(result, *self.render_args)
+        else:    
+            self.render_func(result)
 
 
 def print_timeing(func):
@@ -630,13 +648,16 @@ def strdate_to_time(odate):
 
     locale.setlocale(locale.LC_TIME, '')
 
+    
     if not new_date: return None
     else: 
         try:
-            return mktime(new_date)
-        except ValueError:
+            result_time = mktime(new_date)
+        except:
             logger.logexception("problem to convert %s (%s) in date format",odate,new_date)
             return None
+        else:
+            return result_time
 
 
 def save_db(objs, fn):

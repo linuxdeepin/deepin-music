@@ -24,12 +24,14 @@ import gtk
 import gobject
 import pango
 import random
+import time
 from dtk.ui.listview import ListView
 from dtk.ui.menu import Menu, MENU_POS_TOP_LEFT
 from dtk.ui.paned import HPaned
 from dtk.ui.categorybar import Categorybar
 from dtk.ui.scrolled_window import ScrolledWindow
 from dtk.ui.button import Button
+from dtk.ui.threads import post_gui
 
 from widget.ui import app_theme
 import utils
@@ -49,7 +51,16 @@ class SongView(ListView):
                            targets, gtk.gdk.ACTION_COPY)
         
 
+        self.add_song_cache = []
+        self.add_time_interval = 5
         self.connect("drag-data-received", self.on_drag_data_received)
+        self.connect("double-click-item", self.double_click_item)
+        self.connect("right-press-items", self.popup_menu)
+        
+    def double_click_item(self, widget, item, colume, x, y):    
+        if item:
+            self.set_highlight(item)
+            Player.play_new(item.get_song())
         
     def get_songs(self):        
         songs = []
@@ -162,12 +173,28 @@ class SongView(ListView):
             return
         if not isinstance(uris, (tuple, list)):
             uris = [ uris ]
-        songs = []
+        utils.ThreadLoad(self.load_taginfo, uris, pos, sort).start()
+    
+    def load_taginfo(self, uris, pos=None, sort=True):
+        start = time.time()
+        if pos is None:
+            pos = len(self.items)
         for uri in uris:    
             song = MediaDB.get_song(uri)
-            if song:
-                songs.append(song)
-        self.add_songs(songs, pos, sort)        
+            self.add_song_cache.append(song)
+            end = time.time()
+            if end - start > 3:
+                self.render_song(self.add_song_cache, pos, sort)
+                pos += len(self.add_song_cache)
+                del self.add_song_cache[:]
+                start = time.time()
+            else:    
+                end = time.time()
+                
+    @post_gui
+    def render_song(self, songs, pos, sort):    
+        if songs:
+            self.add_songs(songs, pos, sort)
         
     def get_current_song(self):        
         return self.highlight_item.get_song()
@@ -218,6 +245,7 @@ class SongView(ListView):
         return True    
         
     def on_drag_data_received(self, widget, context, x, y, selection, info, timestamp):    
+        self.get_toplevel().window.set_cursor(gtk.gdk.Cursor(gtk.gdk.WATCH))
         root_y = widget.allocation.y + y
         try:
             pos = self.get_coordinate_row(root_y)
@@ -237,12 +265,12 @@ class SongView(ListView):
     def set_sort_keyword(self, keyword, reverse=False):
         with self.keep_select_status():
             self.items = sorted(self.items, 
-                                key=lambda item: item.get_song().get_sortable(keyword),
+                                key=lambda item: item.get_song().get(keyword),
                                 reverse=reverse)
             self.update_item_index()
             self.queue_draw()
         
-    def popup_menu(self):    
+    def popup_menu(self, widget, x, y, item, select_items):    
         mode_dict = utils.OrderDict()
         mode_dict["single_mode"] = "单曲循环"
         mode_dict["order_mode"] = "顺序播放"
@@ -260,10 +288,10 @@ class SongView(ListView):
         play_mode_menu = Menu(mode_items, MENU_POS_TOP_LEFT)
         
         sort_dict = utils.OrderDict()
-        sort_dict["album"] = "按专辑" 
-        sort_dict["genre"] = "按流派"
-        sort_dict["artist"] = "按艺术家"
-        sort_dict["title"] = "按歌曲名"
+        sort_dict["sort_album"] = "按专辑" 
+        sort_dict["sort_genre"] = "按流派"
+        sort_dict["sort_artist"] = "按艺术家"
+        sort_dict["sort_title"] = "按歌曲名"
         sort_dict["#playcount"] = "按播放次数"
         sort_dict["#added"] = "按添加时间"
         
@@ -285,7 +313,7 @@ class SongView(ListView):
                      (None, "歌曲排序", sub_sort_menu),
                      (None, "打开文件目录", self.open_song_dir),
                      (None, "编辑歌曲信息", None),
-                     ], opacity=1.0, menu_pos=1)
+                     ], opacity=1.0, menu_pos=1).show((x, y))
 
     
     
