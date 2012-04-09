@@ -33,6 +33,7 @@ from render_lyrics import render_lyrics
 from utils import color_hex_to_cairo
 from dtk.ui.window import Window
 
+
 # drag state.
 DRAG_NONE = 1
 DRAG_MOVE = 2
@@ -66,8 +67,8 @@ class LyricsWindow(gobject.GObject):
         self.lyrics_win = gtk.Window(gtk.WINDOW_POPUP)
         self.lyrics_win.set_property("allow-shrink", True)
         self.lyrics_win.set_skip_taskbar_hint(True)
-        self.lyrics_win.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DOCK)
-        # self.lyrics_win.set_position(gtk.WIN_POS_CENTER)
+        # self.lyrics_win.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DOCK)
+
         self.lyrics_win.set_decorated(False)
         self.lyrics_win.set_app_paintable(True)
         self.lyrics_win.set_keep_above(True)
@@ -528,7 +529,7 @@ class LyricsWindow(gobject.GObject):
         cr.set_operator(cairo.OPERATOR_OVER)
         for line in range(start, end):
             percentage = self.line_percentage[line]
-            if self.active_lyric_surfaces[line] != None and self.inactive_lyric_surfaces[line] != None:
+            if self.active_lyric_surfaces[line] is not None and self.inactive_lyric_surfaces[line] is not None:
                 width = self.active_lyric_surfaces[line].get_width()
                 height = self.active_lyric_surfaces[line].get_height()
                 xpos = self.adjust_lyric_xpos(line, percentage)

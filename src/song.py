@@ -313,8 +313,8 @@ class Song(dict, Logger):
                         value = audio[file_tag]
                         if isinstance(value, list) or isinstance(value, tuple):
                             value = value[0]
-                        self[tag] = utils.fix_charset(value) # TEST
-                        # self[tag] = value    
+                        self[tag] = utils.fix_charset(value)
+                        # self[tag] = value
 
                             
                 self["#duration"] = int(audio.info.length) * 1000        

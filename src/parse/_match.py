@@ -147,6 +147,7 @@ class Tag(object):
     def __init__(self, names, res):
         self.__names = [Tag.ABBRS.get(n.lower(), n.lower()) for n in names]
         self.__res = res
+
         if not isinstance(self.__res, list):
             self.__res = [self.__res]
         if len([name for name in self.__names if name.startswith('~')]):    
@@ -162,7 +163,7 @@ class Tag(object):
         return False        
     
     def search(self, data):
-        if name in self.__names:
+        for name in self.__names:
             for re in self.__res:
                 if re.search(data.get(name, data.get("~" + name, ""))):
                     return True

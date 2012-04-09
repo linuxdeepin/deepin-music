@@ -44,22 +44,16 @@ class LrcParser(object):
         if not filename:
             return 
         self.filename = filename
-        fp = file(self.filename, "r")
-        raw_buffer = fp.read()
-        fp.close()
         try:
-            charset = chardet.detect(raw_buffer)["encoding"]
-        except:    
-            print "No supported charset"
-        else:    
-            try:
-                convert_buffer = raw_buffer.decode(charset).encode("utf-8")
-            except:    
-                pass
-            else:
-                while self.parser_buffer(convert_buffer) != "over":
-                    self.parser_buffer(convert_buffer)
-                self.parse_lyrics()    
+            fp = file(self.filename, "r")
+            raw_buffer = fp.read()
+            fp.close()
+        except:
+            pass
+        else:
+            while self.parser_buffer(raw_buffer) != "over":
+                self.parser_buffer(raw_buffer)
+            self.parse_lyrics()    
                 
     def parser_buffer(self, convert_buffer):            
         if self.parser_offset == len(convert_buffer):

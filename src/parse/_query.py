@@ -235,7 +235,7 @@ class QueryParser(object):
 
 STAR = ["artist", "album", "title"]
 def Query(string, star=STAR):
-    if not isinstance(string, unicode): string = string.decode('utf-8')
+    if isinstance(string, unicode): string = string.encode('utf-8')
     if string == "": return match.Inter([])
     elif not set("#=").intersection(string):
         parts = ["%s = /%s/" % (", ".join(star), re.escape(p))

@@ -803,7 +803,8 @@ class DBQuery(gobject.GObject, Logger):
         return song.get_str("genre"), song.get_str("artist"), song.get_str("album")
     
     def __get_info(self, song):
-        return song.get_sortable("genre"), song.get_sortable("artist"), song.get_sortable("album")
+        return song.get_str("genre"), song.get_str("artist"), song.get_str("album")
+        # return song.get_sortable("genre"), song.get_sortable("artist"), song.get_sortable("album")
     
     def get_random_song(self):
         songs = list(self.__tree[1])
@@ -935,17 +936,17 @@ class DBQuery(gobject.GObject, Logger):
 
         return infos
 
-            
-    
-                
-        
-            
-
 MediaDB = MediaDatebase()        
 MediaDB.register_type("local")
 MediaDB.register_type("xiami")
 MediaDB.register_type("unknown")
 MediaDB.register_type("unknown_local")
-
 MediaDB.register_playlist_type("local")
 
+if __name__ == "__main__":
+    import gtk
+    MediaDB.load()
+    # a = "artist =/^%s$/" %"李"
+    # a = "&(artist = %s, album = %s)" % ("小邪兽", "邪恶家族")
+    # a = "&(artist = %s, album = %s)" % ("小", "邪恶家族")
+    print MediaDB.request(a)

@@ -37,6 +37,7 @@ import mimetypes
 mimetypes.init()
 
 from urllib import pathname2url, quote, unquote
+from urllib import urlopen as urlopen1
 from urlparse import urlparse
 from urllib2 import urlopen
 
@@ -516,7 +517,8 @@ def download(remote_uri, local_uri, buffer_len=4096, timeout=DEFAULT_TIMEOUT):
         handle_read.close()    
         handle_write.close()
         logger.loginfo("download %s finish." % remote_uri)
-    except:    
+        
+    except:
         logger.logexception("Error while downloading %s", remote_uri)
         try:
             unlink(local_uri)
@@ -524,7 +526,7 @@ def download(remote_uri, local_uri, buffer_len=4096, timeout=DEFAULT_TIMEOUT):
             pass
         return False
     if not exists(local_uri):
-        return Falpse
+        return False
     return True
     
 def threaded(func):
@@ -632,7 +634,7 @@ def strdate_to_time(odate):
     else: 
         try:
             return mktime(new_date)
-        except:
+        except ValueError:
             logger.logexception("problem to convert %s (%s) in date format",odate,new_date)
             return None
 
