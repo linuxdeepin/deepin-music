@@ -51,9 +51,12 @@ class LrcParser(object):
         except:
             pass
         else:
-            while self.parser_buffer(raw_buffer) != "over":
-                self.parser_buffer(raw_buffer)
-            self.parse_lyrics()    
+            try:
+                while self.parser_buffer(raw_buffer) != "over":
+                    self.parser_buffer(raw_buffer)
+                self.parse_lyrics()    
+            except:    
+                return 
                 
     def parser_buffer(self, convert_buffer):            
         if self.parser_offset == len(convert_buffer):
@@ -108,11 +111,14 @@ class LrcParser(object):
                 timestamp = 0.0
             self.time_dict[timestamp] = self.nlyrics 
         else:    
-            attr = lrc_buffer[begin:end].split(":")
-            if attr[0] == "offset":
-                self.attr_dict[attr[0]] = float(attr[1])
-            else:    
-                self.attr_dict[attr[0]] = attr[1]
+            try:
+                attr = lrc_buffer[begin:end].split(":")
+                if attr[0] == "offset":
+                    self.attr_dict[attr[0]] = float(attr[1])
+                else:    
+                    self.attr_dict[attr[0]] = attr[1]
+            except:        
+                pass
             
     def parse_lyrics(self):        
         if not self.time_dict:

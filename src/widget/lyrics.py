@@ -527,37 +527,40 @@ class LyricsWindow(gobject.GObject):
         cr.rectangle(self.padding_x, self.padding_y, w, h)
         cr.clip()
         cr.set_operator(cairo.OPERATOR_OVER)
-        for line in range(start, end):
-            percentage = self.line_percentage[line]
-            if self.active_lyric_surfaces[line] is not None and self.inactive_lyric_surfaces[line] is not None:
-                width = self.active_lyric_surfaces[line].get_width()
-                height = self.active_lyric_surfaces[line].get_height()
-                xpos = self.adjust_lyric_xpos(line, percentage)
-                xpos += self.padding_x
-                text_mask = self.create_text_mask(line, xpos, alpha)
-                cr.save()
-                cr.rectangle(xpos, ypos, width * percentage, height)
-                cr.clip()
-                cr.set_source_surface(self.active_lyric_surfaces[line], xpos, ypos)
-                if text_mask:
-                    cr.mask(text_mask)
-                else:    
-                    cr.paint_with_alpha(alpha)
-                cr.restore()    
-                
-                cr.save()
-                cr.rectangle(xpos + width * percentage, ypos, width * (1.0 - percentage), height)
-                cr.clip()
-                cr.set_source_surface(self.inactive_lyric_surfaces[line], xpos, ypos)
-                
-                if text_mask:
-                    cr.mask(text_mask)
-                else:    
-                    cr.paint_with_alpha(alpha)
-                cr.restore()    
-                
-            ypos += font_height * ( 1 + self.line_padding)    
-        cr.restore()    
+        try:
+            for line in range(start, end):
+                percentage = self.line_percentage[line]
+                if self.active_lyric_surfaces[line] is not None and self.inactive_lyric_surfaces[line] is not None:
+                    width = self.active_lyric_surfaces[line].get_width()
+                    height = self.active_lyric_surfaces[line].get_height()
+                    xpos = self.adjust_lyric_xpos(line, percentage)
+                    xpos += self.padding_x
+                    text_mask = self.create_text_mask(line, xpos, alpha)
+                    cr.save()
+                    cr.rectangle(xpos, ypos, width * percentage, height)
+                    cr.clip()
+                    cr.set_source_surface(self.active_lyric_surfaces[line], xpos, ypos)
+                    if text_mask:
+                        cr.mask(text_mask)
+                    else:    
+                        cr.paint_with_alpha(alpha)
+                    cr.restore()    
+                    
+                    cr.save()
+                    cr.rectangle(xpos + width * percentage, ypos, width * (1.0 - percentage), height)
+                    cr.clip()
+                    cr.set_source_surface(self.inactive_lyric_surfaces[line], xpos, ypos)
+                    
+                    if text_mask:
+                        cr.mask(text_mask)
+                    else:    
+                        cr.paint_with_alpha(alpha)
+                    cr.restore()    
+                    
+                ypos += font_height * ( 1 + self.line_padding)    
+            cr.restore()    
+        except:    
+            pass
         
     def set_input_shape_mask(self, disable_input):    
         if disable_input:

@@ -54,10 +54,10 @@ class SongView(ListView):
         self.add_song_cache = []
         self.add_time_interval = 5
         self.connect("drag-data-received", self.on_drag_data_received)
-        self.connect("double-click-item", self.double_click_item)
+        self.connect("double-click-item", self.double_click_item_cb)
         self.connect("right-press-items", self.popup_menu)
         
-    def double_click_item(self, widget, item, colume, x, y):    
+    def double_click_item_cb(self, widget, item, colume, x, y):    
         if item:
             self.set_highlight(item)
             Player.play_new(item.get_song())
@@ -183,13 +183,14 @@ class SongView(ListView):
             song = MediaDB.get_song(uri)
             self.add_song_cache.append(song)
             end = time.time()
-            if end - start > 3:
+            if end - start > 0.2:
                 self.render_song(self.add_song_cache, pos, sort)
                 pos += len(self.add_song_cache)
                 del self.add_song_cache[:]
                 start = time.time()
             else:    
                 end = time.time()
+        print self.add_song_cache        
                 
     @post_gui
     def render_song(self, songs, pos, sort):    

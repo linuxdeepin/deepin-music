@@ -50,7 +50,7 @@ class DeepinPlayer(object):
             self.list_view.add_songs(MediaDB.get_songs("local"))
             self.list_view.set_highlight_song(Player.song)
 
-        MediaDB.connect("added", self.reload_db)    
+        # MediaDB.connect("added", self.reload_db)    
         self.window.window.change_background(app_theme.get_pixbuf("skin/main.png"))
         self.window.main_box.pack_start(mainbox, False, False)
         self.window.main_box.pack_start(playlist_ui, True, True)
@@ -70,10 +70,10 @@ class DeepinPlayer(object):
     # def popup_listview_menu(self, widget, x, y, current_item,  select_items):    
     #     self.list_view.popup_menu().show((x,y))
     
-    def reload_db(self, db, song_type, songs):
+    # def reload_db(self, db, song_type, songs):
 
-        items = [ SongItem(song) for song in songs]
-        self.list_view.add_items(items)
+    #     items = [ SongItem(song) for song in songs]
+    #     self.list_view.add_items(items)
         
     def test_cb(self, widget):    
         MediaDB.full_erase("local")
