@@ -79,10 +79,11 @@ class SongView(ListView):
                     prev_index = current_index - 1
                     if prev_index < 0:
                         prev_index = len(self.items) - 1
-                    self.highlight_item = self.items[prev_index]    
+                    highlight_item = self.items[prev_index]    
             else:        
-                self.highlight_item = self.items[0]
-            return self.highlight_item.get_song()
+                highlight_item = self.items[0]
+            self.set_highlight(highlight_item)    
+            return highlight_item.get_song()
     
     def get_next_song(self, manual=False):
         
@@ -105,8 +106,9 @@ class SongView(ListView):
                         current_index = self.items.index(self.highlight_item)
                         next_index = current_index + 1
                         if next_index <= len(self.items) -1:
-                            self.highlight_item = self.items[next_index]    
-                            return self.highlight_item.get_song()
+                            highlight_item = self.items[next_index]    
+                            self.set_highlight(highlight_item)
+                            return highlight_item.get_song()
                 return None        
             
             elif config.get("setting", "loop_mode") == "single_mode":
@@ -123,10 +125,11 @@ class SongView(ListView):
                 next_index = current_index + 1
                 if next_index > len(self.items) - 1:
                     next_index = 0
-                self.highlight_item = self.items[next_index]    
+                highlight_item = self.items[next_index]    
         else:        
-            self.highlight_item = self.items[0]
-        return self.highlight_item.get_song()
+            highlight_item = self.items[0]
+        self.set_highlight(highlight_item)    
+        return highlight_item.get_song()
     
     def get_random_song(self):
         if self.highlight_item in self.items:
@@ -135,8 +138,9 @@ class SongView(ListView):
             current_index = [-1]
         items_index = set(range(len(self.items)))
         remaining = items_index.difference(current_index)
-        self.highlight_item = self.items[random.choice(list(remaining))]
-        return self.highlight_item.get_song()
+        highlight_item = self.items[random.choice(list(remaining))]
+        self.set_highlight(highlight_item)
+        return highlight_item.get_song()
 
     def add_songs(self, songs, pos=None, sort=False, play=False):    
         '''Add song to songlist.'''
