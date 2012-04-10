@@ -129,7 +129,11 @@ class Config(gobject.GObject, Logger):
             "setting" : {
                 "empty_random" : "false",
                 "loop_mode" : "list_mode",
-                "offline" : "false",
+                "offline" : "false",                
+                },
+            
+            "playlist" : {
+                "current_name" : "[默认列表]",
                 },
             
             }

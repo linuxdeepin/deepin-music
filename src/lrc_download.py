@@ -127,37 +127,20 @@ class Engine(object):
         raise NotImplementedError("request must be implemented in subclass.")
     
     def valid_lrc(self, lrc):
-        partial = ""
-        
-        for i in lrc:
-            if ord(i) < 128 and ord(i) != 0:
-                partial += i
-        if re.search('\[\d{1,}:\d{1,}.*?\]', partial):        
-            return True
-        else:
-            return False
+        partial="".join( (i for i in lrc if (ord(i) < 128 and ord(i) != 0) ) )
+	return bool(re.search('\[\d{1,}:\d{1,}.*?\]',partial))
         
     def tokenize(self, content):    
-        content = content.replace('(', ' ').replace(')', ' ')
-        content = content.replace('[', ' ').replace(']', ' ')
-        content = content.replace('[', ' ').replace(']', ' ')
-        ignore = ["a", "an", "the"]
-        content = content.split()
-        for token in content:
-            if token.lower() in ignore:
-                content.remove(token)
-        return content        
-    
+	content=tuple( (i.lower() for i in re.findall("\w+",content) if i.lower() not in ('a','an','the')) )
+	return content
+        
     def similarity(self, string1, string2):
-        if string1.lower() == string2.lower():
-            return 1
-        string1 = self.tokenize(string1.lower())
-        string2 = self.tokenize(string2.lower())
-        count = 0
-        for i in string1:
-            if i in string2:
-                count += 1
-        return count / len(string1)        
+	if string1.lower() == string2.lower():
+		return 1
+	string1=tokenize(string1.lower())
+	string2=tokenize(string2.lower())
+	count = len(tuple( (i for i in string1 if i in string2) ))
+	return float(count)/max((len(string2), 1))
     
     def cmp_result(self, result, comp):
         value = self.similarity(result[0], comp[0])
@@ -166,16 +149,10 @@ class Engine(object):
         return value
     
     def order_results(self, results, artist, title):
-        comp = [artist, title, ""]
-        temp = []
-        for i in results:
-            temp.append([self.cmp_result(comp, i), i])
-        temp.sort()    
-        temp.reverse()
-        results = []
-        for i in temp:
-            results.append(i[1])
-        return results    
+	comp = [artist,title]
+	results = map(lambda x: x[1],reversed(sorted( ((cmpResult(comp,i),i) for i in results ) )))
+	return results
+        
     
     def download(self, url):
         try:
@@ -194,10 +171,10 @@ class Engine(object):
             return (original_lrc, False)            
         
         
-#DOWNLOAD_URL = "http://ttlrcct.qianqian.com/dll/lyricsvr.dll?dl?Id=%d&Code=%d&uid=01&mac=%012x"        
-DOWNLOAD_URL = 'http://lrcct2.ttplayer.com/dll/lyricsvr.dll?dl?Id=%d&Code=%d&uid=01&mac=%012x'
-#PREFIX_SEARCH_URL = "http://ttlrcct.qianqian.com/dll/lyricsvr.dll?sh?"
-PREFIX_SEARCH_URL = 'http://lrcct2.ttplayer.com/dll/lyricsvr.dll?sh?Artist=%s&Title=%s&Flags=0'
+DOWNLOAD_URL = "http://ttlrcct.qianqian.com/dll/lyricsvr.dll?dl?Id=%d&Code=%d&uid=01&mac=%012x"        
+PREFIX_SEARCH_URL = "http://ttlrcct.qianqian.com/dll/lyricsvr.dll?sh?Artist=%s&Title=%s&Flags=0"
+# DOWNLOAD_URL = 'http://lrcct2.ttplayer.com/dll/lyricsvr.dll?dl?Id=%d&Code=%d&uid=01&mac=%012x'
+# PREFIX_SEARCH_URL = 'http://lrcct2.ttplayer.com/dll/lyricsvr.dll?sh?Artist=%s&Title=%s&Flags=0'
 ttplayer_client = ttpClient()
         
 class TTPlayer(Engine):
@@ -214,6 +191,12 @@ class TTPlayer(Engine):
                 _id     = result.group(1)
                 _artist = result.group(2)
                 _title  = result.group(3)
+                entities={'&apos;':'\'','&quot;':'"','&gt;':'>','&lt;':'<','&amp;':'&'}
+                
+                for ii in entities:
+                    _id     = _id.replace(ii, entities[ii])
+                    _artist = _artist.replace(ii, entities[ii])
+                    _title  = _title.replace(ii, entities[ii])
             except:    
                 pass
             else:
@@ -242,3 +225,56 @@ class TTPlayer(Engine):
             
 ttplayer_engine = TTPlayer()
 
+SOSO_DOWNLOAD_URL = 'http://cgi.music.soso.com/fcgi-bin/fcg_download_lrc.q?song=%s&singer=%s&down=1' 
+SOSO_PREFIX_SEARCH_URL = 'http://cgi.music.soso.com/fcgi-bin/m.q?w='
+
+class SOSO(Engine):
+    def __init__(self, proxy=None, locale="utf-8"):
+        super(SOSO, self).__init__(proxy, locale)
+        self.net_encoder = "gb18030"
+        
+    def change_url_to_gb(self, info):    
+        address = unicode(info, self.locale).encode(self.net_encoder)
+        return address
+    
+    def parser(self, content):
+        parser_list = []
+        for each_lrc in content:
+            result = re.search('title=\'(.*?)\'.*?title="(.*?)">', each_lrc, re.S)
+            try:
+                _title = result.group(1)
+                _artist = re.sub('<font.*?>|</font>|<strong>|</strong>', '', result.group(2))
+                
+                _url = SOSO_DOWNLOAD_URL % (urllib.quote_plus(self.change_url_to_gb(_title)), 
+                                            urllib.quote_plus(self.change_url_to_gb(_artist)))
+                
+            except:    
+                pass
+            else:
+                parser_list.append([_artist, _title, _url])
+        return parser_list        
+    
+    def request(self, artist, title):
+        url1_pre = "%s+%s" % (self.change_url_to_gb(title), self.change_url_to_gb(artist))
+        url1 = urllib.quote_plus(url1_pre)
+        url2 = '&source=1&t=7'
+        url = SOSO_PREFIX_SEARCH_URL + url1 + url2
+        
+        try:
+            fp = urllib.urlopen(url, None, self.proxy)
+            info_gb = fp.read()
+            fp.close()
+            
+        except IOError:    
+            return None
+        else:
+            tmp = unicode(info_gb, self.net_encoder).encode("utf-8")
+            tmp_list = re.findall(r'class="title_song">.*?class="song_ablum">', tmp, re.S)
+
+            if len(tmp_list) == 0:
+                return None
+            else:
+                return self.parser(tmp_list)
+        
+
+soso_engine = SOSO()            

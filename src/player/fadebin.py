@@ -764,6 +764,7 @@ class PlayerBin(gobject.GObject, Logger):
         pos = 0.0
         duration = 0.0
         lrc_duration = 0.0
+        lrc_pos = 0.0
         buffering = False
 
         if not self.pipeline:
@@ -795,6 +796,7 @@ class PlayerBin(gobject.GObject, Logger):
                 if res:
                     pos, format = res
                     lrc_pos = pos / gst.MSECOND
+                    lrc_pos += 300
                     pos /= gst.SECOND
             else:
                 try: 

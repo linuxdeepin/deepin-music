@@ -46,6 +46,7 @@ class LyricsModule(object):
         self.time_source = 0
         
         Player.connect("instant-new-song", self.instant_update_lrc)
+        Player.connect("play-end", self.stop_source_time)
         search_ui.connect("finish", self.update_lrc)
         
         self.lrc = LrcParser()
@@ -84,6 +85,9 @@ class LyricsModule(object):
             self.clear_message()
         self.lrc.set_filename(filename)
         
+    def stop_source_time(self, player):    
+        if self.time_source != 0:
+            gobject.source_remove(self.time_source)
 
     def set_played_time(self, played_time):    
         info = self.lrc.get_lyric_by_time(played_time, self.song_duration)

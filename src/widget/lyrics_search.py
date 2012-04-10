@@ -32,7 +32,7 @@ from constant import DEFAULT_FONT_SIZE
 from dtk.ui.listview import ListView, render_text
 from dtk.ui.scrolled_window import ScrolledWindow
 from widget.ui import NormalWindow, app_theme
-from lrc_download import ttplayer_engine
+from lrc_download import ttplayer_engine, soso_engine
 from lrc_manager import lrc_manager
 from player import Player
 from config import config
@@ -102,8 +102,21 @@ class SearchUI(NormalWindow, gobject.GObject):
         self.main_box.pack_start(scrolled_window, True, True)
         self.main_box.pack_start(bottom_box, False, False)
         
+        self.soso_encode = None
+        
     def double_click_cb(self, widget, item, colume, x, y):   
         self.download_lyric_cb(widget)
+        
+    def search_engine(self, artist, title):    
+        ttplayer_result = ttplayer_engine.request(artist, title)
+        if ttplayer_result:
+            self.soso_encode = None
+            return ttplayer_result
+        soso_result = soso_engine.request(artist, title)
+        if soso_result:
+            self.soso_encode = "gb18030"
+            return soso_result
+        return None
         
     def search_lyric_cb(self, widget):
         artist = self.artist_entry.get_text()
@@ -112,7 +125,7 @@ class SearchUI(NormalWindow, gobject.GObject):
         if artist == "" and title == "":
             self.prompt_label.set_markup("<span color=\"white\">   %s</span>" % "囧!没有找到!")
             return
-        utils.ThreadRun(ttplayer_engine.request, self.render_lyrics, [artist, title]).start()
+        utils.ThreadRun(self.search_engine, self.render_lyrics, [artist, title]).start()
         
     @post_gui
     def render_lyrics(self, result):
@@ -132,7 +145,7 @@ class SearchUI(NormalWindow, gobject.GObject):
         save_filepath = lrc_manager.get_lrc_filepath(Player.song)
         if len(select_items) > 0:
             url = self.result_view.items[select_items[0]].get_url()
-            utils.ThreadRun(utils.download, self.render_download, [url, save_filepath]).start()
+            utils.ThreadRun(utils.download, self.render_download, [url, save_filepath, self.soso_encode]).start()
             
     @post_gui        
     def render_download(self, result):

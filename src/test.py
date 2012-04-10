@@ -22,7 +22,7 @@ import subprocess
 from widget.ui import app_theme
 from dtk.ui.application import Application
 from widget.song_item import SongItem
-from widget.playlist import *
+from widget.playlist import playlist_ui
 from widget.lyrics_module import lyrics_display
 from widget.headerbar import header_bar
 
@@ -40,15 +40,12 @@ class DeepinPlayer(object):
         mainbox.pack_start(header_bar, False, False)
         Player.load()
 
-        playlist_ui = PlaylistUI()
+    
+        # self.list_view = playlist_ui.song_view
         
-        self.list_view = playlist_ui.playlist
-        # self.list_view.connect("double-click-item", self.double_click_item)
-        # self.list_view.connect("right-press-items", self.popup_listview_menu)
-        
-        if MediaDB.get_songs("local"):
-            self.list_view.add_songs(MediaDB.get_songs("local"))
-            self.list_view.set_highlight_song(Player.song)
+        # if MediaDB.get_songs("local"):
+        #     self.list_view.add_songs(MediaDB.get_songs("local"))
+        #     self.list_view.set_highlight_song(Player.song)
 
         # MediaDB.connect("added", self.reload_db)    
         self.window.window.change_background(app_theme.get_pixbuf("skin/main.png"))
@@ -59,7 +56,7 @@ class DeepinPlayer(object):
         self.time_source = 0
         self.lyrics_display = lyrics_display
         self.lyrics_display.run()
-        self.player.set_source(self.list_view)
+        # self.player.set_source(self.list_view)
         self.dbus_service = DeepinMusicDBus()
         self.window.run()        
     

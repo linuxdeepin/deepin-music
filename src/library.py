@@ -326,18 +326,22 @@ class MediaDatebase(gobject.GObject, Logger):
     
     def add_playlist(self, pl_type, pl):
         pl_name = pl.get_name()
-        self.__playlists[pl_type].add(pl)
+        self.__playlists[pl_type][pl_name] = pl
         self.__condition.acquire()
         self.__queued_signal["playlist-added"].setdefault(pl_type, [])
         self.__queued_signal["playlist-added"][pl_type].append(pl)
         self.set_dirty()
         self.__condition.release()
         
+    def get_playlists(self, pl_type="local"):   
+        return self.__playlists[pl_type]
+    
+    def full_erase_playlists(self, pl_type="local"):
+        self.__playlists[pl_type].clear()
+        
     def get_playlist_by_name(self, name, pl_type="local"):
-        for pl in self.__playlists[pl_type]:
-            if pl.get_name() == name:
-                return pl
-        return None    
+        if name in self.__playlists[pl_type]:
+            return self.__playlists[pl_type][name]
         
     def del_playlist(self, pl_type, pl):    
         self.__playlists[pl_type].discard(pl)
@@ -373,7 +377,7 @@ class MediaDatebase(gobject.GObject, Logger):
     def register_playlist_type(self, name):        
         if name not in self.__playlist_types:
             self.__playlist_types.append(name)
-            self.__playlists[name] = set()
+            self.__playlists[name] = dict()
             
     def unregister_playlist_type(self, name):        
         if name in self.__playlist_types:
@@ -462,7 +466,7 @@ class MediaDatebase(gobject.GObject, Logger):
         
         # save
         utils.save_db(objs, get_config_file("songs.db"))
-        utils.save_db([pl.get_pickle_obj() for pl in playlists], get_config_file("playlists.db"))
+        utils.save_db([pl.get_pickle_obj() for pl in playlists.values()], get_config_file("playlists.db"))
         self.loginfo("%d songs saved and %d playlists saved", len(objs), len(playlists))
         self.__dirty = False
         
@@ -510,7 +514,7 @@ class Playlist(gobject.GObject, Logger):
         self.update()
         
     def extend(self, songs):    
-        self.__uris.extend( [ song.get(uri) for song in songs ] )
+        self.__uris.extend( [ song.get("uri") for song in songs ] )
         self.update()
         
     def extend_insert(self, songs, pos):    
@@ -539,6 +543,9 @@ class Playlist(gobject.GObject, Logger):
         for pos in positions:
             del self.__uris[pos]
         self.update()    
+        
+    def clear(self):    
+        del self.__uris[:]
         
     def append(self, song):    
         self.extend([song])
@@ -942,6 +949,7 @@ MediaDB.register_type("xiami")
 MediaDB.register_type("unknown")
 MediaDB.register_type("unknown_local")
 MediaDB.register_playlist_type("local")
+
 
 if __name__ == "__main__":
     import gtk

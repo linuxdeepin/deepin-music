@@ -21,324 +21,90 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import gtk
-import gobject
-import pango
-import random
-import time
-from dtk.ui.listview import ListView
-from dtk.ui.menu import Menu, MENU_POS_TOP_LEFT
-from dtk.ui.paned import HPaned
-from dtk.ui.categorybar import Categorybar
 from dtk.ui.scrolled_window import ScrolledWindow
-from dtk.ui.button import Button
-from dtk.ui.threads import post_gui
+from dtk.ui.paned import HPaned
+from dtk.ui.listview import ListView
 
-from widget.ui import app_theme
-import utils
-from config import config
-from widget.song_item import SongItem
-from player import Player
-from findfile import get_config_file
 from library import MediaDB
-from logger import Logger
+from widget.ui import SongView
+from widget.song_item import SongItem
+from widget.list_item import PlaylistItem
+from config import config
+from player import Player
+import utils
 
-class SongView(ListView):
-    ''' song view. '''
-    def __init__(self, *args):
-        super(SongView, self).__init__(*args)
-        targets = [("text/deepin-songs", gtk.TARGET_SAME_APP, 1), ("text/uri-list", 0, 2), ("text/plain", 0, 3)]
-        self.drag_dest_set(gtk.DEST_DEFAULT_MOTION | gtk.DEST_DEFAULT_HIGHLIGHT | gtk.DEST_DEFAULT_DROP,
-                           targets, gtk.gdk.ACTION_COPY)
-        
 
-        self.add_song_cache = []
-        self.add_time_interval = 5
-        self.connect("drag-data-received", self.on_drag_data_received)
-        self.connect("double-click-item", self.double_click_item_cb)
-        self.connect("right-press-items", self.popup_menu)
-        
-    def double_click_item_cb(self, widget, item, colume, x, y):    
-        if item:
-            self.set_highlight(item)
-            Player.play_new(item.get_song())
-        
-    def get_songs(self):        
-        songs = []
-        for song_item in self.items:
-            songs.append(song_item.get_song())
-        return songs    
-    
-    def is_empty(self):
-        return len(self.items) == 0
-    
-    def get_loop_mode(self):
-        return config.get("setting", "loop_mode")
-        
-    def set_loop_mode(self, value):    
-        config.set("setting", "loop_mode", value)
-        
-    def get_previous_song(self):
-        if self.is_empty():
-            if config.get("setting", "empty_random") == "true":
-                return MediaDB.get_random_song("local")
-        else:    
-            if config.get("setting", "loop_mode") == "random_mode":
-                return self.get_random_song()
-            if self.highlight_item != None:
-                if self.highlight_item in self.items:
-                    current_index = self.items.index(self.highlight_item)
-                    prev_index = current_index - 1
-                    if prev_index < 0:
-                        prev_index = len(self.items) - 1
-                    highlight_item = self.items[prev_index]    
-            else:        
-                highlight_item = self.items[0]
-            self.set_highlight(highlight_item)    
-            return highlight_item.get_song()
-    
-    def get_next_song(self, manual=False):
-        
-        if self.is_empty():
-            if config.getboolean("setting", "empty_random"):
-                return MediaDB.get_random_song("local")
-        else:    
-            if manual:
-                if config.get("setting", "loop_mode") != "random_mode":
-                    return self.get_manual_song()
-                else:
-                    return self.get_random_song()
-            
-            elif config.get("setting", "loop_mode") == "list_mode":
-                return self.get_manual_song()
-            
-            elif config.get("setting", "loop_mode") == "order_mode":            
-                if self.highlight_item != None:
-                    if self.highlight_item in self.items:
-                        current_index = self.items.index(self.highlight_item)
-                        next_index = current_index + 1
-                        if next_index <= len(self.items) -1:
-                            highlight_item = self.items[next_index]    
-                            self.set_highlight(highlight_item)
-                            return highlight_item.get_song()
-                return None        
-            
-            elif config.get("setting", "loop_mode") == "single_mode":
-                if self.highlight_item != None:
-                    return self.highlight_item.get_song()
-                
-            elif config.get("setting", "loop_mode") == "random_mode":    
-                return self.get_random_song()
-                        
-    def get_manual_song(self):                    
-        if self.highlight_item != None:
-            if self.highlight_item in self.items:
-                current_index = self.items.index(self.highlight_item)
-                next_index = current_index + 1
-                if next_index > len(self.items) - 1:
-                    next_index = 0
-                highlight_item = self.items[next_index]    
-        else:        
-            highlight_item = self.items[0]
-        self.set_highlight(highlight_item)    
-        return highlight_item.get_song()
-    
-    def get_random_song(self):
-        if self.highlight_item in self.items:
-            current_index = [self.items.index(self.highlight_item)]
-        else:    
-            current_index = [-1]
-        items_index = set(range(len(self.items)))
-        remaining = items_index.difference(current_index)
-        highlight_item = self.items[random.choice(list(remaining))]
-        self.set_highlight(highlight_item)
-        return highlight_item.get_song()
-
-    def add_songs(self, songs, pos=None, sort=False, play=False):    
-        '''Add song to songlist.'''
-        if songs == None:
-            return
-        if not isinstance(songs, (list, tuple)):
-            songs = [ songs ]
-
-        song_items = [ SongItem(song) for song in songs if song not in self.get_songs()]
-        if song_items:
-            self.add_items(song_items, pos, sort)
-        
-        if len(songs) == 1 and play:
-            self.highlight_item = song_items[0]
-            gobject.idle_add(Player.play_new, self.highlight_item.get_song())
-            
-    def add_uris(self, uris, pos=None, sort=True):
-        if uris == None:
-            return
-        if not isinstance(uris, (tuple, list)):
-            uris = [ uris ]
-        utils.ThreadLoad(self.load_taginfo, uris, pos, sort).start()
-    
-    def load_taginfo(self, uris, pos=None, sort=True):
-        start = time.time()
-        if pos is None:
-            pos = len(self.items)
-        for uri in uris:    
-            song = MediaDB.get_song(uri)
-            self.add_song_cache.append(song)
-            end = time.time()
-            if end - start > 0.2:
-                self.render_song(self.add_song_cache, pos, sort)
-                pos += len(self.add_song_cache)
-                del self.add_song_cache[:]
-                start = time.time()
-            else:    
-                end = time.time()
-
-        if self.add_song_cache:
-            self.render_song(self.add_song_cache, pos, sort)
-            del self.add_song_cache[:]
-                
-    @post_gui
-    def render_song(self, songs, pos, sort):    
-        if songs:
-            self.add_songs(songs, pos, sort)
-        
-    def get_current_song(self):        
-        return self.highlight_item.get_song()
-    
-    def random_reorder(self, *args):
-        with self.keep_select_status():
-            random.shuffle(self.items)
-            self.update_item_index()
-            self.queue_draw()
-            
-    def set_highlight_song(self, song):        
-        if not song: return 
-        if SongItem(song) in self.items:
-            self.set_highlight(self.items[self.items.index(SongItem(song))])
-        
-    def play_select_item(self):    
-        if len(self.select_rows) > 0:
-            self.highlight_item = self.items[self.select_rows[0]]
-            Player.play_new(self.highlight_item.get_song())
-        return True    
-    
-    def remove_select_items(self):
-        self.delete_select_items()
-        return True
-    
-    def __clear_items(self):
-        self.clear()
-        return True
-    
-    def open_song_dir(self):
-        if len(self.select_rows) > 0:
-            song = self.items[self.select_rows[0]].get_song()
-            utils.run_command("xdg-open %s" % song.get_dir())
-        return True    
-    
-    def move_to_trash(self):
-        flag = False
-        if len(self.select_rows) > 0:
-            songs = [ self.items[self.select_rows[index]].get_song() for index in range(0, len(self.select_rows))]
-            if self.highlight_item and self.highlight_item.get_song() in songs:
-                Player.stop()
-                self.highlight_item = None
-                flag = True
-            [ utils.move_to_trash(song.get("uri")) for song in songs ]
-            self.delete_select_items()            
-            if flag:
-                Player.next()
-        return True    
-        
-    def on_drag_data_received(self, widget, context, x, y, selection, info, timestamp):    
-        self.get_toplevel().window.set_cursor(gtk.gdk.Cursor(gtk.gdk.WATCH))
-        root_y = widget.allocation.y + y
-        try:
-            pos = self.get_coordinate_row(root_y)
-        except:    
-            pos = None
-            
-        if selection.target in ["text/uri-list", "text/plain", "text/deepin-songs"]:
-            if selection.target == "text/deepin-songs" and selection.data:
-                self.add_uris(selection.data.splitlines(), pos, False)
-            elif selection.target == "text/uri-list":    
-                utils.async_parse_uris(selection.get_uris(), True, True, self.add_uris, pos)
-            elif selection.target == "text/plain":    
-                raw_path = selection.data
-                path = eval("u" + repr(raw_path).replace("\\\\", "\\"))
-                utils.async_get_uris_from_plain_text(path, self.add_uris, pos)
-    
-    def set_sort_keyword(self, keyword, reverse=False):
-        with self.keep_select_status():
-            self.items = sorted(self.items, 
-                                key=lambda item: item.get_song().get(keyword),
-                                reverse=reverse)
-            self.update_item_index()
-            self.queue_draw()
-        
-    def popup_menu(self, widget, x, y, item, select_items):    
-        mode_dict = utils.OrderDict()
-        mode_dict["single_mode"] = "单曲循环"
-        mode_dict["order_mode"] = "顺序播放"
-        mode_dict["list_mode"] = "列表循环"
-        mode_dict["random_mode"] = "随机循环"
-        
-        mode_items = []
-        
-        for key, value in mode_dict.iteritems():
-            if self.get_loop_mode() == key:
-                tick = app_theme.get_pixbuf("equalizer/tick1.png")
-            else:    
-                tick = None
-            mode_items.append((tick, value, self.set_loop_mode, key))    
-        play_mode_menu = Menu(mode_items, MENU_POS_TOP_LEFT)
-        
-        sort_dict = utils.OrderDict()
-        sort_dict["sort_album"] = "按专辑" 
-        sort_dict["sort_genre"] = "按流派"
-        sort_dict["sort_artist"] = "按艺术家"
-        sort_dict["sort_title"] = "按歌曲名"
-        sort_dict["#playcount"] = "按播放次数"
-        sort_dict["#added"] = "按添加时间"
-        
-        sort_items = [(None, value, self.set_sort_keyword, key) for key, value in sort_dict.iteritems()]
-        sort_items.append(None)
-        sort_items.append((None, "随机排序", self.random_reorder))
-        sub_sort_menu = Menu(sort_items, MENU_POS_TOP_LEFT)
-        
-        return Menu([(None, "播放歌曲",  self.play_select_item),
-                     (None, "添加到列表", None),
-                     (None, "移动到列表", None),
-                     (None, "发送到移动盘", None),
-                     None,
-                     (None, "删除", self.remove_select_items),
-                     (None, "从本地删除", self.move_to_trash),
-                     (None, "清空列表", self.__clear_items),
-                     None,
-                     (None, "播放模式", play_mode_menu),
-                     (None, "歌曲排序", sub_sort_menu),
-                     (None, "打开文件目录", self.open_song_dir),
-                     (None, "编辑歌曲信息", None),
-                     ], opacity=1.0, menu_pos=1).show((x, y))
-
-    
-    
 class PlaylistUI(gtk.VBox):
     '''Playlist UI.'''
 	
     def __init__(self):
         '''Init.'''
         super(PlaylistUI, self).__init__()
-        paned_category = HPaned(100)
+        self.list_paned = HPaned(100)
+        self.category_list = ListView()
+        self.category_list.connect("button-press-item", self.list_button_press)
         
-        category_box = gtk.VBox()
-        enjoy_button = Button("最愛")
-        test_button = Button("流行")
-        category_box.pack_start(enjoy_button, False, False)
-        category_box.pack_start(test_button, False, False)
-        paned_category.add1(category_box)
+        category_scrolled_window = ScrolledWindow()
+        category_scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+        category_scrolled_window.add_child(self.category_list)
         
-        scrolled_window = ScrolledWindow()
-        scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)        
-        self.playlist = SongView()
-        scrolled_window.add_child(self.playlist)
-        # paned_category.add2(scrolled_window)
-        self.pack_start(scrolled_window)
+        self.right_box = gtk.HBox()
+        self.list_paned.pack1(category_scrolled_window)
+        self.list_paned.pack2(self.right_box)
+        self.pack_start(self.list_paned, True, True)            
+        
+        self.current_playlist = None
+        self.current_item = None
+        
+        
+        if MediaDB.isloaded():
+            self.__on_db_loaded(MediaDB)
+        else:    
+            MediaDB.connect("loaded", self.__on_db_loaded)
+            
+
+        
+    def __on_db_loaded(self, db):        
+        if not MediaDB.get_playlists():
+            MediaDB.create_playlist("local", "[最近播放]")
+            MediaDB.create_playlist("local", "[默认列表]")
+            
+        self.items_dict = {name : PlaylistItem(pl) for name,  pl in MediaDB.get_playlists().iteritems()} 
+        init_items = [ item for __, item in  self.items_dict.iteritems()]
+        init_items.reverse()
+        
+        
+        self.category_list.add_items(init_items)
+        self.current_item = self.items_dict[self.get_current_pname()]
+        if self.current_item in self.category_list.items:
+            index = self.category_list.items.index(self.current_item)
+        else:    
+            index = 0
+        self.category_list.select_rows.append(index)    
+        Player.set_source(self.current_item.song_view)
+        self.right_box.pack_start(self.current_item.get_list_widget(), True, True)
+        self.list_paned.show_all()
+        
+        
+    def get_current_pname(self):    
+        return config.get("playlist", "current_name")
+    
+    def __add_playlist(self, db, p_type, pls):    
+        pass
+            
+    def __removed_playlist(self, db, p_type, pls):
+        pass
+        
+    def list_button_press(self, widget, item, column, x, y):        
+        utils.container_remove_all(self.right_box)
+        self.right_box.pack_start(item.get_list_widget(), True, True)
+        self.list_paned.show_all()
+        
+    def save_to_library(self):    
+        MediaDB.full_erase_playlists()
+        for item in self.category_list.items:
+            songs = item.get_songs()
+            name = item.title
+            MediaDB.create_playlist("local", name, songs)
+                    
+playlist_ui = PlaylistUI()        

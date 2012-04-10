@@ -21,10 +21,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import re
+
 from song import Song
 from player import Player
 from config import config
-from lrc_download import ttplayer_engine
+from lrc_download import ttplayer_engine, soso_engine
 import utils
 
 class LrcManager(object):
@@ -40,6 +42,18 @@ class LrcManager(object):
         else:
             return "%s.lrc" % title
         
+    def vaild_lrc(self, filepath):    
+        try:
+            fp = open(filepath, "r")
+            lrc_content = fp.read()
+            fp.close()
+        except:    
+            return False
+        else:
+            partial="".join( (i for i in lrc_content if (ord(i) < 128 and ord(i) != 0) ) )
+            return bool(re.search('\[\d{1,}:\d{1,}.*?\]',partial))
+            
+        
     def get_lrc_filepath(self, song):    
         save_path = os.path.expanduser(config.get("lyrics", "save_lrc_path"))
         if not os.path.exists(save_path):
@@ -52,8 +66,11 @@ class LrcManager(object):
         lrc_path = self.get_lrc_filepath(song)
         
         # lrc already exist
-        if os.path.exists(lrc_path):        
-            return lrc_path
+        if os.path.exists(lrc_path):
+            if self.vaild_lrc(lrc_path):
+                return lrc_path
+            else:
+                os.unlink(lrc_path)
         
         # Search in local directory of the file
         if song.get("uri") != None and song.get_scheme() == "file":
@@ -68,11 +85,24 @@ class LrcManager(object):
                 title = song.get_str("title")
                 result = ttplayer_engine.request(artist, title)
                 if result:
+                    print "ttplayer_engine"
                     if config.getboolean("lyrics", "auto_download"):
                         ret = utils.download(result[0][2], lrc_path)
-                        if ret:
+                        if ret and self.vaild_lrc(lrc_path):
                             return lrc_path
-            except:            
+                        else:
+                            os.unlink(lrc_path)
+                        
+                soso_result =  soso_engine.request(artist, title)
+                if soso_result:
+                    print "soso_engine"
+                    if config.getboolean("lyrics", "auto_download"):
+                        ret = utils.download(soso_result[0][2], lrc_path, "gb18030")
+                        if ret and self.vaild_lrc(lrc_path):
+                            return lrc_path
+                        else:
+                            os.unlink(lrc_path)
+            except:
                 pass
         return None    
                 

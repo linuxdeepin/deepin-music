@@ -32,6 +32,7 @@ from widget.timer import SongTimer, VolumeSlider
 from widget.equalizer import equalizer_win
 from widget.cover import PlayerCoverButton
 from widget.lyrics_module import lyrics_display
+from widget.playlist import playlist_ui
 
 from source.local import ImportFolderJob
 from library import MediaDB
@@ -153,6 +154,7 @@ class HeaderBar(gtk.HBox):
         pass
             
     def save_db(self, widget):    
+        playlist_ui.save_to_library()
         MediaDB.save()
         Player.save_state()
         config.write()

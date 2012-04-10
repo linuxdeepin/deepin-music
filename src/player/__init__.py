@@ -167,6 +167,9 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
     def set_source(self, source):    
         self.__source = source
         
+    def get_source(self):    
+        return self.__source
+        
     def set_song(self, song, play=False, crossfade=None, seek=None):
         '''set song'''
         if not song:

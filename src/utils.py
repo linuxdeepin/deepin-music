@@ -501,17 +501,21 @@ def download_iterator(remote_uri, local_uri, buffer_len=4096, timeout=DEFAULT_TI
             pass
         raise IOError
     
-def download(remote_uri, local_uri, buffer_len=4096, timeout=DEFAULT_TIMEOUT):
+def download(remote_uri, local_uri, net_encode=None, buffer_len=4096, timeout=DEFAULT_TIMEOUT):
     try:
         logger.loginfo("download %s starting...", remote_uri)
         handle_read = urlopen(remote_uri, timeout=timeout)
         handle_write = file(get_path_from_uri(local_uri), "w")
         
         data = handle_read.read(buffer_len)
+        if net_encode:
+            data = unicode(data, net_encode).encode("utf-8")
         handle_write.write(data)
         
         while data:
             data = handle_read.read(buffer_len)
+            if net_encode:
+                data = unicode(data, net_encode).encode("utf-8")
             handle_write.write(data)
             
         handle_read.close()    
@@ -805,6 +809,11 @@ def export_playlist(list_song, filename, p_type="m3u"):
     else:
         raise TypeError, "Unknow playlist type"
 
+    
+def container_remove_all(container):
+    ''' Removee all child widgets for container. '''
+    container.foreach(lambda widget: container.remove(widget))
+    
 global MAIN_WINDOW            
 MAIN_WINDOW = None
 
