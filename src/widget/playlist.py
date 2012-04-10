@@ -190,7 +190,10 @@ class SongView(ListView):
                 start = time.time()
             else:    
                 end = time.time()
-        print self.add_song_cache        
+
+        if self.add_song_cache:
+            self.render_song(self.add_song_cache, pos, sort)
+            del self.add_song_cache[:]
                 
     @post_gui
     def render_song(self, songs, pos, sort):    
