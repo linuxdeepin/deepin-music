@@ -58,7 +58,6 @@ class LrcManager(object):
             ret = False
             result = ttplayer_engine.request(artist, title)
             if result:
-                print "ttplayer_engine"
                 if config.getboolean("lyrics", "auto_download"):
                     ret = utils.download(result[0][2], lrc_path)
                     if ret and self.vaild_lrc(lrc_path):
@@ -68,7 +67,6 @@ class LrcManager(object):
                         
             duomi_result = duomi_engine.request(artist, title)
             if duomi_result:
-                print "duomi_engine"
                 if config.getboolean("lyrics", "auto_download"):
                     ret = utils.download(duomi_result[0][2], lrc_path, "gbk")
                     if ret and self.vaild_lrc(lrc_path):
@@ -78,7 +76,6 @@ class LrcManager(object):
                         
             soso_result =  soso_engine.request(artist, title)
             if soso_result:
-                print "soso_engine"
                 if config.getboolean("lyrics", "auto_download"):
                     ret = utils.download(soso_result[0][2], lrc_path, "gb18030")
                     if ret and self.vaild_lrc(lrc_path):
@@ -117,11 +114,18 @@ class LrcManager(object):
             
             trust_a = song.get_str("artist")
             trust_t = song.get_str("title")
-            untrust_a = ""
-            untrust_t = song.get_filename()
-            
-            for artist, title in [(trust_a, trust_t), (untrust_a, untrust_t)]:
-                return self.multiple_engine(song, lrc_path, artist, title)
+            filename = song.get_filename()
+            if "-" in filename:
+                untrust_a = filename.split("-")[0].strip()
+                untrust_t = filename.split("-")[1].strip()
+            else:    
+                untrust_a = song.get_str("artist")
+                untrust_t = song.get_filename()
+            trust_result = self.multiple_engine(song, lrc_path, trust_a, trust_t)
+            if trust_result:
+                return trust_result
+            else:
+                return self.multiple_engine(song, lrc_path, untrust_a, untrust_t)
         return None    
                 
 lrc_manager = LrcManager()        
