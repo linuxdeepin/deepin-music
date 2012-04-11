@@ -26,7 +26,7 @@ import re
 from song import Song
 from player import Player
 from config import config
-from lrc_download import ttplayer_engine, soso_engine
+from lrc_download import ttplayer_engine, soso_engine, duomi_engine
 import utils
 
 class LrcManager(object):
@@ -53,6 +53,41 @@ class LrcManager(object):
             partial="".join( (i for i in lrc_content if (ord(i) < 128 and ord(i) != 0) ) )
             return bool(re.search('\[\d{1,}:\d{1,}.*?\]',partial))
             
+    def multiple_engine(self, song, lrc_path, artist, title):    
+        try:
+            ret = False
+            result = ttplayer_engine.request(artist, title)
+            if result:
+                print "ttplayer_engine"
+                if config.getboolean("lyrics", "auto_download"):
+                    ret = utils.download(result[0][2], lrc_path)
+                    if ret and self.vaild_lrc(lrc_path):
+                        return lrc_path
+                    else:
+                        os.unlink(lrc_path)
+                        
+            duomi_result = duomi_engine.request(artist, title)
+            if duomi_result:
+                print "duomi_engine"
+                if config.getboolean("lyrics", "auto_download"):
+                    ret = utils.download(duomi_result[0][2], lrc_path, "gbk")
+                    if ret and self.vaild_lrc(lrc_path):
+                        return lrc_path
+                    else:
+                        os.unlink(lrc_path)
+                        
+            soso_result =  soso_engine.request(artist, title)
+            if soso_result:
+                print "soso_engine"
+                if config.getboolean("lyrics", "auto_download"):
+                    ret = utils.download(soso_result[0][2], lrc_path, "gb18030")
+                    if ret and self.vaild_lrc(lrc_path):
+                        return lrc_path
+                    else:
+                        os.unlink(lrc_path)
+        except:
+            return None
+
         
     def get_lrc_filepath(self, song):    
         save_path = os.path.expanduser(config.get("lyrics", "save_lrc_path"))
@@ -79,31 +114,14 @@ class LrcManager(object):
                 return local_lrc
             
         if not config.getboolean("setting", "offline") and try_web:    
-            try:
-                ret = False
-                artist = song.get_str("artist")
-                title = song.get_str("title")
-                result = ttplayer_engine.request(artist, title)
-                if result:
-                    print "ttplayer_engine"
-                    if config.getboolean("lyrics", "auto_download"):
-                        ret = utils.download(result[0][2], lrc_path)
-                        if ret and self.vaild_lrc(lrc_path):
-                            return lrc_path
-                        else:
-                            os.unlink(lrc_path)
-                        
-                soso_result =  soso_engine.request(artist, title)
-                if soso_result:
-                    print "soso_engine"
-                    if config.getboolean("lyrics", "auto_download"):
-                        ret = utils.download(soso_result[0][2], lrc_path, "gb18030")
-                        if ret and self.vaild_lrc(lrc_path):
-                            return lrc_path
-                        else:
-                            os.unlink(lrc_path)
-            except:
-                pass
+            
+            trust_a = song.get_str("artist")
+            trust_t = song.get_str("title")
+            untrust_a = ""
+            untrust_t = song.get_filename()
+            
+            for artist, title in [(trust_a, trust_t), (untrust_a, untrust_t)]:
+                return self.multiple_engine(song, lrc_path, artist, title)
         return None    
                 
 lrc_manager = LrcManager()        

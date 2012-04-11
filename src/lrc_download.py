@@ -278,3 +278,95 @@ class SOSO(Engine):
         
 
 soso_engine = SOSO()            
+
+class YOUDAO(Engine):
+    def __init__(self, proxy=None, locale="utf-8"):
+        super(YOUDAO, self).__init__(proxy, locale)
+        self.net_encoder = "utf-8"
+        self.return_num = 3
+        
+    def parser(self, content):    
+        parser_list = []
+        for each_lrc in content:
+            result = re.search('<!--title start-->(.*?)<!--title end-->.*?<!--artist start-->(.*?)<!--artist end-->.*?<!--lyric-download-link start-->(.*?)target', each_lrc)
+            try:
+                _title = re.sub('</font>|</a>', '', result.group(1))
+                _title = re.sub('<.*>', '', _title)
+                _artist = re.sub('</font>|</a>', '', result.group(2))
+                _artist = re.sub('<.*>', '', _artist)
+                _url = 'http://mp3.youdao.com'+re.sub('<a href=\"|\"| ', '', result.group(3))
+            except:    
+                pass
+            else:
+                parser_list.append([_artist, _title, _url])
+              
+        return parser_list        
+    
+    def request(self, artist, title):
+        url1='http://mp3.youdao.com/search?q=%s+%s' % (title, artist)
+        url2='&start=0&ue=utf8&keyfrom=music.nextPage&t=LRC&len=%s' % self.return_num
+        url = url1 + url2
+        
+        try:
+            fp = urllib.urlopen(url, None, self.proxy)
+            info_utf8 = fp.read()
+            fp.close()
+        except IOError:    
+            return None
+        else:
+            tmp_list = re.findall('<div class="info p90">.*?</a></div>', info_utf8)
+            if len(tmp_list) == 0:
+                return None
+            else:
+                return self.parser(tmp_list)
+        
+youdao_engine = YOUDAO()            
+
+DUOMI_SEARCH_URL = "http://search.duomiyy.com/search?t=sealrc&name=%s&ar=%s&pi=20"
+DUOMI_DOWNLOAD_URL = "http://lyric.duomiyy.com/down/%d.lrc"
+
+class DUOMI(Engine):
+    def __init__(self, proxy=None, locale="utf-8"):
+        super(DUOMI, self).__init__(proxy, locale)
+        self.net_encoder = "gbk"
+        
+    def parser(self, content):    
+        parser_list = []
+        for each_item in content:
+            try:
+                _artist = each_item["sartist"]
+                if each_item["sver"].strip():
+                    _title = "%s(%s)" % (each_item["sname"], each_item["sver"])
+                else:    
+                    _title = each_item["sname"]
+                _url = DUOMI_DOWNLOAD_URL % each_item["llrc"]    
+            except:        
+                pass
+            else:
+                parser_list.append([_artist, _title, _url])
+        return parser_list        
+            
+    def request(self, artist, title):
+        artist_quote = urllib.quote_plus(unicode(artist, self.locale).encode(self.net_encoder))
+        title_quote = urllib.quote_plus(unicode(title, self.locale).encode(self.net_encoder))
+        url = DUOMI_SEARCH_URL % (title_quote, artist_quote)
+        
+        try:
+            fp = urllib.urlopen(url, None, self.proxy)
+            info_utf8 = fp.read()
+            fp.close()
+            
+        except IOError:    
+            return None
+        else:
+            raw_dict = eval(info_utf8)
+            if "item" in raw_dict:
+                if len(raw_dict["item"]) < 1:
+                    return None
+                else:
+                    return self.parser(raw_dict["item"])
+            return None    
+        
+duomi_engine = DUOMI()        
+        
+        

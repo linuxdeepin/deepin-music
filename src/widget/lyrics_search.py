@@ -32,7 +32,7 @@ from constant import DEFAULT_FONT_SIZE
 from dtk.ui.listview import ListView, render_text
 from dtk.ui.scrolled_window import ScrolledWindow
 from widget.ui import NormalWindow, app_theme
-from lrc_download import ttplayer_engine, soso_engine
+from lrc_download import ttplayer_engine, soso_engine, duomi_engine
 from lrc_manager import lrc_manager
 from player import Player
 from config import config
@@ -102,7 +102,7 @@ class SearchUI(NormalWindow, gobject.GObject):
         self.main_box.pack_start(scrolled_window, True, True)
         self.main_box.pack_start(bottom_box, False, False)
         
-        self.soso_encode = None
+        self.net_encode = None
         
     def double_click_cb(self, widget, item, colume, x, y):   
         self.download_lyric_cb(widget)
@@ -110,11 +110,17 @@ class SearchUI(NormalWindow, gobject.GObject):
     def search_engine(self, artist, title):    
         ttplayer_result = ttplayer_engine.request(artist, title)
         if ttplayer_result:
-            self.soso_encode = None
+            self.net_encode = None
             return ttplayer_result
+        
+        duomi_result = soso_engine.request(artist, title)
+        if duomi_result:
+            self.net_encode = "gbk"
+            return duomi_result
+        
         soso_result = soso_engine.request(artist, title)
         if soso_result:
-            self.soso_encode = "gb18030"
+            self.net_encode = "gb18030"
             return soso_result
         return None
         
