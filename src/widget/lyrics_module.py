@@ -25,7 +25,7 @@ import threading
 import gtk
 import os
 from widget.lyrics import desktop_lyrics
-from lrc_parser import LrcParser
+from lrc_parser import lrc_parser
 from config import config
 from widget.toolbar import lyric_toolbar
 from player import Player
@@ -49,7 +49,7 @@ class LyricsModule(object):
         Player.connect("play-end", self.stop_source_time)
         search_ui.connect("finish", self.update_lrc)
         
-        self.lrc = LrcParser()
+        self.lrc = lrc_parser
         self.lrc_id = -1
         self.lrc_next_id = -1
         self.current_line = 0

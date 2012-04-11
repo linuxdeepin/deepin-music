@@ -39,20 +39,8 @@ DRAG_NONE = 1
 DRAG_MOVE = 2
 DRAG_EAST = 3
 DRAG_WEST = 4
-MIN_WIDTH = 300
+MIN_WIDTH = 400
 
-COLORS_MAP = {
-    "inactive" : [
-        color_hex_to_cairo(config.get("lyrics", "inactive_color_upper")),
-        color_hex_to_cairo(config.get("lyrics", "inactive_color_middle")),
-        color_hex_to_cairo(config.get("lyrics", "inactive_color_bottom")),
-                  ],
-    "active" : [
-        color_hex_to_cairo(config.get("lyrics", "active_color_upper")),
-        color_hex_to_cairo(config.get("lyrics", "active_color_middle")),
-        color_hex_to_cairo(config.get("lyrics", "active_color_bottom")),
-        ]
-    }
 
 class LyricsWindow(gobject.GObject):
     __gsignals__ = {
@@ -116,7 +104,26 @@ class LyricsWindow(gobject.GObject):
         self.lyrics_win.connect("enter-notify-event", self.enter_notify)
         self.lyrics_win.connect("leave-notify-event", self.leave_notify)
         self.lyrics_win.connect("expose-event", self.expose_before)     
+        config.connect("config-changed", self.update_render_color)
         gobject.timeout_add(100, self.check_mouse_leave)        
+        
+    def update_render_color(self, config, selection, option, value):    
+        color_option  = ["inactive_color_upper", " inactive_color_middle", "inactive_color_bottom",
+                         "active_color_upper", "active_color_middle", "active_color_bottom"]
+        if selection == "lyrics" and option in color_option:
+            for i in range(self.get_line_count()):
+                self.update_lyric_surface(i)
+            
+    def get_render_color(self, active=False):        
+        if active:
+            return [color_hex_to_cairo(config.get("lyrics", "active_color_upper")),
+                    color_hex_to_cairo(config.get("lyrics", "active_color_middle")),
+                    color_hex_to_cairo(config.get("lyrics", "active_color_bottom"))]
+        else:
+            return [color_hex_to_cairo(config.get("lyrics", "inactive_color_upper")),
+                    color_hex_to_cairo(config.get("lyrics", "inactive_color_middle")),
+                    color_hex_to_cairo(config.get("lyrics", "inactive_color_bottom"))]
+            
         
     def set_locked(self):    
         if config.getboolean("lyrics", "locked"):
@@ -467,10 +474,10 @@ class LyricsWindow(gobject.GObject):
             int(font_height * line * ( 1+ self.line_padding)), int(w), int(h))
         
     def update_lyric_surface(self, line):    
-        self.render_lyrics.set_linear_color(COLORS_MAP["inactive"])
+        self.render_lyrics.set_linear_color(self.get_render_color())
         self.inactive_lyric_surfaces[line] = self.draw_lyric_surface(self.lyrics_text[line])
         
-        self.render_lyrics.set_linear_color(COLORS_MAP["active"])
+        self.render_lyrics.set_linear_color(self.get_render_color(True))
         self.active_lyric_surfaces[line] = self.draw_lyric_surface(self.lyrics_text[line])
         self.update_lyric_rect(line)
         

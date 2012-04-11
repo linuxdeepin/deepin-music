@@ -178,7 +178,7 @@ class LrcParser(object):
     def set_offset(self, offset):    
         if not offset:
             return
-        self.attr_dict["offset"] = "%d" % offset
+        self.attr_dict["offset"] = self.attr_dict.get("offset", 0) + offset
         if self.filename:
             self.save_to_file()
             
@@ -223,3 +223,4 @@ class LrcParser(object):
             if fp is not None:
                 fp.close()
 
+lrc_parser = LrcParser()

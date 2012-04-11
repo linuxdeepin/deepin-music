@@ -25,13 +25,24 @@ import pango
 from dtk.ui.window import Window
 from dtk.ui.button import ImageButton, ToggleButton
 from dtk.ui.box import ImageBox
+from dtk.ui.menu import Menu
 
+import utils
 from widget.ui import app_theme
 from player import Player
 from render_lyrics import render_lyrics
 from widget.lyrics import desktop_lyrics
+from lrc_parser import lrc_parser
 from config import config
 from widget.lyrics_search import search_ui
+
+PREDEFINE_COLORS = {
+   "vitality_yellow" : ["#ffffff", "#7cbee8", "#3993d2", "#fff5c9", "#ffe888", "#ffcc00"],
+   "fresh_green"     : ["#ffffff", "#9ce265", "#71ce2e", "#fff5c9", "#ffe888", "#ffcc00"],
+   "playful_pink"    : ["#ffffff", "#7cbee8", "#3993d2", "#ffc9e1", "#ff3490", "#ff2586"],
+   "cool_blue"       : ["#ffffff", "#66c3ff", "#23a2ff", "#f8f8f8", "#dedede", "#b4b4b4"],
+   "default"         : ["#1CC8FA", "#2226E5", "#51DEF1", "#662600", "#FFFF00", "#FF8000"],
+    }
 
 
 class ToolBar(Window):
@@ -40,7 +51,7 @@ class ToolBar(Window):
         self.background_dpixbuf = app_theme.get_pixbuf("lyric/background.png")
         padding_x, padding_y = 10, 5
         self.set_size_request(-1, 41)
-        play_box = gtk.HBox(spacing=10)
+        play_box = gtk.HBox(spacing=12)
         
         # swap played status handler
         Player.connect("played", self.__swap_play_status, True)
@@ -74,13 +85,15 @@ class ToolBar(Window):
         
         zoom_in_align = self.__create_zoom_button("zoom_in")
         zoom_out_align = self.__create_zoom_button("zoom_out")
-        predefine_align = self.__create_simple_button("predefine_color", self.popup_predefine_menu)
+        predefine_align = self.__create_simple_button("predefine_color", self.popup_predefine_menu , True)
         lock_align, self.lock_button = self.__create_simple_toggle_button("lock", "unlock", self.change_lock_status)
         karaoke_align = self.__create_simple_button("karaoke", self.change_karaoke_status)
         line_align, self.line_button = self.__create_simple_toggle_button("single_line", "double_line", self.change_line_status)
         setting_align = self.__create_simple_button("setting", self.open_setting_window)
         search_align = self.__create_simple_button("search", self.open_search_window)
         close_align = self.__create_simple_button("close", self.close_lyric_window)
+        before_align = self.__create_simple_button("before", self.before_offset)
+        after_align = self.__create_simple_button("after", self.after_offset)
 
         play_box.pack_start(prev_align, False, False)
         play_box.pack_start(play_align, False, False)
@@ -92,6 +105,8 @@ class ToolBar(Window):
         play_box.pack_start(lock_align, False, False)
         play_box.pack_start(karaoke_align, False, False)
         play_box.pack_start(line_align, False, False)
+        play_box.pack_start(before_align, False, False)
+        play_box.pack_start(after_align, False, False)
         play_box.pack_start(setting_align, False, False)
         play_box.pack_start(search_align, False, False)
         play_box.pack_start(close_align, False, False)
@@ -103,13 +118,17 @@ class ToolBar(Window):
         self.window_frame.pack_start(main_align)
         self.load_config()
         
-    def __create_simple_button(self, name, callback):    
+        
+    def __create_simple_button(self, name, callback, has_event=False):    
         button = ImageButton(
             app_theme.get_pixbuf("lyric/%s.png" % name),
             app_theme.get_pixbuf("lyric/%s.png" % name),
             app_theme.get_pixbuf("lyric/%s.png" % name)
             )
-        button.connect("clicked", callback)
+        if has_event:
+            button.connect("button-press-event", callback)
+        else:    
+            button.connect("clicked", callback)
         button_align = gtk.Alignment()
         button_align.set(0.5, 0.5, 0, 0)
         button_align.add(button)
@@ -125,6 +144,14 @@ class ToolBar(Window):
         toggle_align.set(0.5, 0.5, 0, 0)
         toggle_align.add(toggle_button)
         return toggle_align, toggle_button
+    
+    
+    def before_offset(self, widget):
+        lrc_parser.set_offset(-500)
+        
+    def after_offset(self, widget):    
+        lrc_parser.set_offset(500)
+        
     
     def load_config(self):
         if config.getint("lyrics", "line_count") == 1:
@@ -154,8 +181,30 @@ class ToolBar(Window):
     def change_lock_status(self, widget):        
         pass
         
-    def popup_predefine_menu(self, widget):    
-        pass
+    def popup_predefine_menu(self, widget, event):    
+        menu_dict = utils.OrderDict()
+        menu_dict["default"] = "默认"
+        menu_dict["vitality_yellow"] = "活力黄"
+        menu_dict["fresh_green"]  = "清新绿"
+        menu_dict["playful_pink"] = "俏皮粉"
+        menu_dict["cool_blue"] = "清爽蓝"
+        menu_items = [(None, value, self.set_predefine_color, key) for key, value in menu_dict.iteritems()]
+        menu_win = Menu(menu_items)
+        menu_win.menu_window.set_keep_above(True)
+        width, height = menu_win.menu_window.get_size()
+        y = event.y_root - height + 40
+        menu_win.show((int(event.x_root), int(y)))
+        # menu_win.menu_window.show_all()
+        # menu_win.menu_window.move(int(event.x_root), int(y))
+        
+    def set_predefine_color(self, key):    
+        values = PREDEFINE_COLORS[key]
+        config.set("lyrics", "inactive_color_upper", values[0])
+        config.set("lyrics", "inactive_color_middle", values[1])
+        config.set("lyrics", "inactive_color_bottom", values[2])
+        config.set("lyrics", "active_color_upper", values[3])
+        config.set("lyrics", "active_color_middle", values[4])
+        config.set("lyrics", "active_color_bottom", values[5])
     
     def change_karaoke_status(self, widget):
         desktop_lyrics.set_karaoke_mode()

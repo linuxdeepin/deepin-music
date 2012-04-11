@@ -203,7 +203,7 @@ class TTPlayer(Engine):
             else:
                 codes = ttplayer_client.CodeFunc(int(_id), (_artist+_title))
                 download_url = DOWNLOAD_URL % (int(_id), codes, random.randint(0, 0xFFFFFFFFFFFF))
-                parser_list.append((_artist, _title, download_url))
+                parser_list.append((_artist, _title, download_url, self.net_encoder))
         return parser_list        
                
     def request(self, artist, title):    
@@ -252,7 +252,7 @@ class SOSO(Engine):
             except:    
                 pass
             else:
-                parser_list.append([_artist, _title, _url])
+                parser_list.append([_artist, _title, _url, self.net_encoder])
         return parser_list        
     
     def request(self, artist, title):
@@ -305,7 +305,7 @@ class DUOMI(Engine):
             except:        
                 pass
             else:
-                parser_list.append([_artist, _title, _url])
+                parser_list.append([_artist, _title, _url, self.net_encoder])
         return parser_list        
             
     def request(self, artist, title):

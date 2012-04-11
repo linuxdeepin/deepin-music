@@ -24,6 +24,7 @@ import os
 import gtk
 import gobject
 import pango
+import cairo
 import random
 import time
 
@@ -35,6 +36,7 @@ from dtk.ui.listview import ListView
 from dtk.ui.menu import Menu, MENU_POS_TOP_LEFT
 from dtk.ui.button import Button
 from dtk.ui.threads import post_gui
+from dtk.ui.draw import propagate_expose
 
 import utils
 from config import config
@@ -358,11 +360,5 @@ class SongView(ListView):
                      (None, "编辑歌曲信息", None),
                      ], opacity=1.0, menu_pos=1).show((x, y))
     
-    
-    
-# class CategoryView(ListView):    
-    
-#     def __init__(self):
-#         super(ListView, self).__init__()
         
-        
+    

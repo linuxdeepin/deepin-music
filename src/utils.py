@@ -777,6 +777,24 @@ def color_hex_to_cairo(color):
     gdk_color = gtk.gdk.color_parse(color)
     return (gdk_color.red / 65535.0, gdk_color.green / 65535.0, gdk_color.blue / 65535.0)
 
+def str_size(nb, average=0, base=1024):
+    if average != 0:
+        average += 1
+    nb = float(nb)    
+    size_format = ""
+    if base == 1024:
+        units = ("B KiB MiB GiB").split()
+    else:    
+        units = ("B KB MB GB").split()
+        
+    for size_format in units:    
+        if len("%d" % int(nb)) <= 3:
+            break
+        nb = float(nb) / float(base)
+    nb = "%f" % round(nb, 1)    
+    nb = nb[:nb.rfind(".") + average] + size_format
+    return nb
+
 """
 XML simple un/escape caracter
 """

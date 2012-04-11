@@ -23,6 +23,7 @@
 import gtk
 import os
 import gobject
+import threading
 from dtk.ui.button import Button
 from dtk.ui.entry import Entry, TextEntry
 from dtk.ui.utils import get_content_size
@@ -37,6 +38,7 @@ from lrc_manager import lrc_manager
 from player import Player
 from config import config
 import utils
+
 
 
 class SearchUI(NormalWindow, gobject.GObject):
@@ -101,8 +103,7 @@ class SearchUI(NormalWindow, gobject.GObject):
         self.main_box.pack_start(info_box, False, False)
         self.main_box.pack_start(scrolled_window, True, True)
         self.main_box.pack_start(bottom_box, False, False)
-        
-        self.net_encode = None
+
         
     def double_click_cb(self, widget, item, colume, x, y):   
         self.download_lyric_cb(widget)
@@ -110,37 +111,39 @@ class SearchUI(NormalWindow, gobject.GObject):
     def search_engine(self, artist, title):    
         ttplayer_result = ttplayer_engine.request(artist, title)
         if ttplayer_result:
-            self.net_encode = None
-            return ttplayer_result
+            self.render_lyrics(ttplayer_result)
         
         duomi_result = duomi_engine.request(artist, title)
-        if duomi_result:
-            self.net_encode = "gbk"
-            return duomi_result
+        if duomi_result:    
+            self.render_lyrics(duomi_result)
         
         soso_result = soso_engine.request(artist, title)
-        if soso_result:
-            self.net_encode = "gb18030"
-            return soso_result
-        return None
+        if soso_result:    
+            self.render_lyrics(soso_result)
+
         
     def search_lyric_cb(self, widget):
+        self.result_view.clear()
         artist = self.artist_entry.entry.get_text()
         title = self.title_entry.entry.get_text()
         self.prompt_label.set_markup("<span color=\"white\">   %s</span>" % "正在搜索歌词文件")
         if artist == "" and title == "":
             self.prompt_label.set_markup("<span color=\"white\">   %s</span>" % "囧!没有找到!")
             return
-        utils.ThreadRun(self.search_engine, self.render_lyrics, [artist, title]).start()
+        utils.ThreadLoad(self.search_engine, artist, title).start()
         
     @post_gui
     def render_lyrics(self, result):
         '''docs'''
-        self.result_view.clear()
         if result != None:
-            items = [SearchItem(each_info) for each_info in result]
-            self.result_view.add_items(items)
-            self.prompt_label.set_markup("<span color=\"white\">   %s</span>" % "找到%d个歌词 :)" % len(result))
+            try:
+                items = [SearchItem(each_info) for each_info in result]
+            except:    
+                pass
+            else:
+                self.result_view.add_items(items)
+
+            self.prompt_label.set_markup("<span color=\"white\">   %s</span>" % "找到%d个歌词 :)" % len(self.result_view.items))
         else:    
             self.prompt_label.set_markup("<span color=\"white\">   %s</span>" % "囧!没有找到!")
         
@@ -150,8 +153,10 @@ class SearchUI(NormalWindow, gobject.GObject):
         select_items = self.result_view.select_rows
         save_filepath = lrc_manager.get_lrc_filepath(Player.song)
         if len(select_items) > 0:
-            url = self.result_view.items[select_items[0]].get_url()
-            utils.ThreadRun(utils.download, self.render_download, [url, save_filepath, self.net_encode]).start()
+            item = self.result_view.items[select_items[0]]
+            url = item.get_url()
+            net_encode = item.get_netcode()
+            utils.ThreadRun(utils.download, self.render_download, [url, save_filepath, net_encode]).start()
             
     @post_gui        
     def render_download(self, result):
@@ -184,6 +189,7 @@ class SearchItem(gobject.GObject):
         self.__url = lrc_list[2]
         self.title  = lrc_list[1]
         self.artist = lrc_list[0]
+        self.netcode = lrc_list[3]
         
         # Calculate item size.
         self.title_padding_x = 10
@@ -208,9 +214,9 @@ class SearchItem(gobject.GObject):
         
     def get_column_sizes(self):
         '''Get sizes.'''
-        return [(min(self.title_width + self.title_padding_x * 2, 120),
+        return [(min(self.title_width + self.title_padding_x * 2, 200),
                  self.title_height + self.title_padding_y * 2),
-                (min(self.artist_width + self.artist_padding_x * 2, 100),
+                (min(self.artist_width + self.artist_padding_x * 2, 200),
                  self.artist_height + self.artist_padding_y * 2)
                 ]    
     
@@ -221,4 +227,9 @@ class SearchItem(gobject.GObject):
     
     def get_url(self):
         return self.__url
+    
+    def get_netcode(self):
+        return self.netcode
+    
+    
 

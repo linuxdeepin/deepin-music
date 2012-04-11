@@ -162,11 +162,7 @@ class Transcoder(Logger):
 if __name__ == "__main__":            
     import sys
     import gtk
-    import utils
-    import gobject
-    a = Transcoder(utils.get_uri_from_path(sys.argv[1]), "file:///home/vicious/a.flac", "flac")
-    def show_ratio():
-        print a.get_ratio()
-        return True
-    gobject.timeout_add(100, show_ratio)
+    from widget.song_editor import SongEditor
+    a = SongEditor()
+    a.window.show_all()
     gtk.main()
