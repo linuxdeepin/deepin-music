@@ -151,7 +151,7 @@ class SearchUI(NormalWindow, gobject.GObject):
         save_filepath = lrc_manager.get_lrc_filepath(Player.song)
         if len(select_items) > 0:
             url = self.result_view.items[select_items[0]].get_url()
-            utils.ThreadRun(utils.download, self.render_download, [url, save_filepath, self.soso_encode]).start()
+            utils.ThreadRun(utils.download, self.render_download, [url, save_filepath, self.net_encode]).start()
             
     @post_gui        
     def render_download(self, result):
