@@ -24,7 +24,7 @@ import gtk
 import os
 import gobject
 from dtk.ui.button import Button
-from dtk.ui.entry import Entry
+from dtk.ui.entry import Entry, TextEntry
 from dtk.ui.utils import get_content_size
 from dtk.ui.threads import post_gui
 from dtk.ui.constant import ALIGN_END
@@ -46,9 +46,9 @@ class SearchUI(NormalWindow, gobject.GObject):
         NormalWindow.__init__(self)
         gobject.GObject.__init__(self)
         self.window.background_dpixbuf = app_theme.get_pixbuf("skin/main.png")
-        self.artist_entry = Entry()
+        self.artist_entry = TextEntry()
         self.artist_entry.set_size_request(120, 25)
-        self.title_entry = Entry()
+        self.title_entry = TextEntry()
         self.title_entry.set_size_request(120, 25)
         artist_label = gtk.Label()
         artist_label.set_markup("<span color=\"black\">%s</span>" % "艺术家:")
@@ -113,7 +113,7 @@ class SearchUI(NormalWindow, gobject.GObject):
             self.net_encode = None
             return ttplayer_result
         
-        duomi_result = soso_engine.request(artist, title)
+        duomi_result = duomi_engine.request(artist, title)
         if duomi_result:
             self.net_encode = "gbk"
             return duomi_result
@@ -125,8 +125,8 @@ class SearchUI(NormalWindow, gobject.GObject):
         return None
         
     def search_lyric_cb(self, widget):
-        artist = self.artist_entry.get_text()
-        title = self.title_entry.get_text()
+        artist = self.artist_entry.entry.get_text()
+        title = self.title_entry.entry.get_text()
         self.prompt_label.set_markup("<span color=\"white\">   %s</span>" % "正在搜索歌词文件")
         if artist == "" and title == "":
             self.prompt_label.set_markup("<span color=\"white\">   %s</span>" % "囧!没有找到!")

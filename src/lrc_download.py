@@ -137,8 +137,8 @@ class Engine(object):
     def similarity(self, string1, string2):
 	if string1.lower() == string2.lower():
 		return 1
-	string1=tokenize(string1.lower())
-	string2=tokenize(string2.lower())
+	string1=self.tokenize(string1.lower())
+	string2=self.tokenize(string2.lower())
 	count = len(tuple( (i for i in string1 if i in string2) ))
 	return float(count)/max((len(string2), 1))
     
@@ -150,9 +150,11 @@ class Engine(object):
     
     def order_results(self, results, artist, title):
 	comp = [artist,title]
-	results = map(lambda x: x[1],reversed(sorted( ((cmpResult(comp,i),i) for i in results ) )))
-	return results
-        
+	sorted_list = map(lambda x: x[1],reversed(sorted(((self.cmp_result(comp,i),i) for i in results))))
+	return sorted_list
+        # cmp_list = map(lambda (i, c): (i, self.cmp_result(comp, c)), enumerate(results))
+        # sorted_list = sorted(cmp_list, key=lambda i: i[1], reverse=True)
+        # results = map(lambda i: results[i[0]], sorted_list)
     
     def download(self, url):
         try:
@@ -171,11 +173,10 @@ class Engine(object):
             return (original_lrc, False)            
         
         
+ttplayer_client = ttpClient()        
 DOWNLOAD_URL = "http://ttlrcct.qianqian.com/dll/lyricsvr.dll?dl?Id=%d&Code=%d&uid=01&mac=%012x"        
 PREFIX_SEARCH_URL = "http://ttlrcct.qianqian.com/dll/lyricsvr.dll?sh?Artist=%s&Title=%s&Flags=0"
-# DOWNLOAD_URL = 'http://lrcct2.ttplayer.com/dll/lyricsvr.dll?dl?Id=%d&Code=%d&uid=01&mac=%012x'
-# PREFIX_SEARCH_URL = 'http://lrcct2.ttplayer.com/dll/lyricsvr.dll?sh?Artist=%s&Title=%s&Flags=0'
-ttplayer_client = ttpClient()
+
         
 class TTPlayer(Engine):
     
@@ -221,7 +222,7 @@ class TTPlayer(Engine):
                 return None
             else:
                 lrc_list = self.parser(tmp_list)
-                return lrc_list
+                return self.order_results(lrc_list, artist, title)
             
 ttplayer_engine = TTPlayer()
 
@@ -268,59 +269,20 @@ class SOSO(Engine):
         except IOError:    
             return None
         else:
-            tmp = unicode(info_gb, self.net_encoder).encode("utf-8")
+            try:
+                tmp = unicode(info_gb, self.net_encoder).encode("utf-8")
+            except:    
+                tmp = info_gb
             tmp_list = re.findall(r'class="title_song">.*?class="song_ablum">', tmp, re.S)
 
             if len(tmp_list) == 0:
                 return None
             else:
-                return self.parser(tmp_list)
+                return self.order_results(self.parser(tmp_list), artist, title)
         
 
 soso_engine = SOSO()            
 
-class YOUDAO(Engine):
-    def __init__(self, proxy=None, locale="utf-8"):
-        super(YOUDAO, self).__init__(proxy, locale)
-        self.net_encoder = "utf-8"
-        self.return_num = 3
-        
-    def parser(self, content):    
-        parser_list = []
-        for each_lrc in content:
-            result = re.search('<!--title start-->(.*?)<!--title end-->.*?<!--artist start-->(.*?)<!--artist end-->.*?<!--lyric-download-link start-->(.*?)target', each_lrc)
-            try:
-                _title = re.sub('</font>|</a>', '', result.group(1))
-                _title = re.sub('<.*>', '', _title)
-                _artist = re.sub('</font>|</a>', '', result.group(2))
-                _artist = re.sub('<.*>', '', _artist)
-                _url = 'http://mp3.youdao.com'+re.sub('<a href=\"|\"| ', '', result.group(3))
-            except:    
-                pass
-            else:
-                parser_list.append([_artist, _title, _url])
-              
-        return parser_list        
-    
-    def request(self, artist, title):
-        url1='http://mp3.youdao.com/search?q=%s+%s' % (title, artist)
-        url2='&start=0&ue=utf8&keyfrom=music.nextPage&t=LRC&len=%s' % self.return_num
-        url = url1 + url2
-        
-        try:
-            fp = urllib.urlopen(url, None, self.proxy)
-            info_utf8 = fp.read()
-            fp.close()
-        except IOError:    
-            return None
-        else:
-            tmp_list = re.findall('<div class="info p90">.*?</a></div>', info_utf8)
-            if len(tmp_list) == 0:
-                return None
-            else:
-                return self.parser(tmp_list)
-        
-youdao_engine = YOUDAO()            
 
 DUOMI_SEARCH_URL = "http://search.duomiyy.com/search?t=sealrc&name=%s&ar=%s&pi=20"
 DUOMI_DOWNLOAD_URL = "http://lyric.duomiyy.com/down/%d.lrc"
@@ -364,9 +326,51 @@ class DUOMI(Engine):
                 if len(raw_dict["item"]) < 1:
                     return None
                 else:
-                    return self.parser(raw_dict["item"])
+                    return self.order_results(self.parser(raw_dict["item"]), artist, title)
             return None    
         
 duomi_engine = DUOMI()        
         
         
+class YOUDAO(Engine):
+    def __init__(self, proxy=None, locale="utf-8"):
+        super(YOUDAO, self).__init__(proxy, locale)
+        self.net_encoder = "utf-8"
+        self.return_num = 3
+        
+    def parser(self, content):    
+        parser_list = []
+        for each_lrc in content:
+            result = re.search('<!--title start-->(.*?)<!--title end-->.*?<!--artist start-->(.*?)<!--artist end-->.*?<!--lyric-download-link start-->(.*?)target', each_lrc)
+            try:
+                _title = re.sub('</font>|</a>', '', result.group(1))
+                _title = re.sub('<.*>', '', _title)
+                _artist = re.sub('</font>|</a>', '', result.group(2))
+                _artist = re.sub('<.*>', '', _artist)
+                _url = 'http://mp3.youdao.com'+re.sub('<a href=\"|\"| ', '', result.group(3))
+            except:    
+                pass
+            else:
+                parser_list.append([_artist, _title, _url])
+              
+        return parser_list        
+    
+    def request(self, artist, title):
+        url1='http://mp3.youdao.com/search?q=%s+%s' % (title, artist)
+        url2='&start=0&ue=utf8&keyfrom=music.nextPage&t=LRC&len=%s' % self.return_num
+        url = url1 + url2
+        
+        try:
+            fp = urllib.urlopen(url, None, self.proxy)
+            info_utf8 = fp.read()
+            fp.close()
+        except IOError:    
+            return None
+        else:
+            tmp_list = re.findall('<div class="info p90">.*?</a></div>', info_utf8)
+            if len(tmp_list) == 0:
+                return None
+            else:
+                return self.parser(tmp_list)
+        
+youdao_engine = YOUDAO()            

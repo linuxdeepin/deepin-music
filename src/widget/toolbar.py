@@ -142,8 +142,8 @@ class ToolBar(Window):
     def open_search_window(self, widget):
         try:
             search_ui.result_view.clear()
-            search_ui.artist_entry.set_text(Player.song.get_str("artist"))
-            search_ui.title_entry.set_text(Player.song.get_str("title"))
+            search_ui.artist_entry.entry.set_text(Player.song.get_str("artist"))
+            search_ui.title_entry.entry.set_text(Player.song.get_str("title"))
         except:    
             pass
         search_ui.show_window()
