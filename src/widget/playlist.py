@@ -164,10 +164,13 @@ class PlaylistUI(gtk.VBox):
         
     def __on_db_loaded(self, db):        
         if not MediaDB.get_playlists():
-            MediaDB.create_playlist("local", "[默认列表]")
+            MediaDB.create_playlist("local", "[默认列表]")            
+            MediaDB.create_playlist("local", "[流行歌曲]")            
+            MediaDB.create_playlist("local", "[我的最爱]")
+
         self.items_dict = {name : PlaylistItem(pl) for name,  pl in MediaDB.get_playlists().iteritems()} 
         init_items = [ item for __, item in  self.items_dict.iteritems()]
-        init_items.reverse()
+        # init_items.reverse()
         self.category_list.add_items(init_items)
         self.current_item = self.items_dict[self.get_current_pname()]
         self.current_item.song_view.connect("delete-select-items", self.parser_delete_items)
