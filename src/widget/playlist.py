@@ -55,7 +55,7 @@ class PlaylistUI(gtk.VBox):
             )
         
         self.entry_box = TextEntry("", entry_button)
-        # entry_box.connect("changed", self.search_cb)
+        self.entry_box.entry.connect("changed", self.search_cb)
         # entry_box.connect("action-active", )
         self.entry_box.set_size(300, 25)
         self.entry_box.set_no_show_all(True)
@@ -76,13 +76,10 @@ class PlaylistUI(gtk.VBox):
         toolbar_align = gtk.Alignment()
         toolbar_align.set_padding(2, 4, 10, 5)
         toolbar_align.add(self.toolbar_box)
-        
                 
         category_scrolled_window = ScrolledWindow()
         category_scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
         category_scrolled_window.add_child(self.category_list)
-        
-        
         
         self.right_box = gtk.HBox()
         self.list_paned.pack1(category_scrolled_window)
@@ -91,19 +88,48 @@ class PlaylistUI(gtk.VBox):
         self.pack_start(entry_align, False, False)            
         self.pack_start(toolbar_align, False, False)            
         
+        
+        # Current
         self.current_playlist = None
         self.current_item = None
+        self.search_flag = False
+        self.cache_items = None
         
         if MediaDB.isloaded():
             self.__on_db_loaded(MediaDB)
         else:    
             MediaDB.connect("loaded", self.__on_db_loaded)
             
+    def search_cb(self, widget, text):        
+        if not self.search_flag:
+            self.cache_items = self.current_item.song_view.items[:]
+            self.tmp_highlight_item = self.current_item.song_view.highlight_item
+
+        self.current_item.song_view.clear_highlight()
+        self.current_item.song_view.select_rows = []
+        if text != "":
+            self.search_flag = True
+            results = filter(lambda item: text in item.get_song().get("search", ""), self.cache_items)
+            self.current_item.song_view.items = results
+            self.current_item.song_view.update_item_index()
+            self.current_item.song_view.queue_draw()
+        else:    
+            self.search_flag = False
+            self.current_item.song_view.items = self.cache_items
+            if Player.song:
+                played_item = SongItem(Player.song)
+                if played_item in self.current_item.song_view.items:
+                    index = self.current_item.song_view.items.index(played_item)
+                    self.current_item.song_view.set_highlight(self.current_item.song_view.items[index])
+            self.current_item.song_view.update_item_index()
+            self.current_item.song_view.queue_draw()
+            
+        
+            
     def __create_simple_toggle_button(self, name, callback):        
         toggle_button = ToggleButton(
             app_theme.get_pixbuf("toolbar/%s_normal.png" % name),
             app_theme.get_pixbuf("toolbar/%s_press.png" % name),
-            # app_theme.get_pixbuf("toolbar/%s_hover.png" % name),
             )
         toggle_button.connect("toggled", callback)
         self.toolbar_box.pack_start(toggle_button, False, False)
@@ -158,6 +184,7 @@ class PlaylistUI(gtk.VBox):
             self.entry_box.set_no_show_all(False)
             self.entry_box.show_all()
         else:    
+            self.entry_box.entry.set_text("")
             self.entry_box.hide_all()
             self.entry_box.set_no_show_all(True)            
         
