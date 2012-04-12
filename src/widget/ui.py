@@ -82,8 +82,9 @@ class NormalWindow(object):
         
 class SongView(ListView):
     ''' song view. '''
-    def __init__(self, *args):
-        super(SongView, self).__init__(*args)
+    def __init__(self):
+        
+        ListView.__init__(self)
         targets = [("text/deepin-songs", gtk.TARGET_SAME_APP, 1), ("text/uri-list", 0, 2), ("text/plain", 0, 3)]
         self.drag_dest_set(gtk.DEST_DEFAULT_MOTION | gtk.DEST_DEFAULT_HIGHLIGHT | gtk.DEST_DEFAULT_DROP,
                            targets, gtk.gdk.ACTION_COPY)
@@ -91,8 +92,9 @@ class SongView(ListView):
         self.background_pixbuf = app_theme.get_pixbuf("skin/main.png")
         self.pl = None
         self.add_song_cache = []
-        self.add_time_interval = 5
-        self.connect("drag-data-received", self.on_drag_data_received)
+        sort_key = ["sort_album", "sort_genre", "sort_artist", "sort_title", "#playcount", "#added"]
+        self.sort_reverse = {key : False for key in sort_key }
+        self.connect_after("drag-data-received", self.on_drag_data_received)
         self.connect("double-click-item", self.double_click_item_cb)
         self.connect("right-press-items", self.popup_menu)
         
@@ -309,10 +311,14 @@ class SongView(ListView):
     
     def set_sort_keyword(self, keyword, reverse=False):
         with self.keep_select_status():
+            reverse = self.sort_reverse[keyword]
             self.items = sorted(self.items, 
                                 key=lambda item: item.get_song().get(keyword),
                                 reverse=reverse)
+            self.sort_reverse[keyword] = not reverse
             self.update_item_index()
+            if self.highlight_item != None:
+                self.visible_highlight()
             self.queue_draw()
         
     def popup_menu(self, widget, x, y, item, select_items):    

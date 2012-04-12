@@ -78,7 +78,7 @@ class SearchUI(NormalWindow, gobject.GObject):
         scrolled_window = ScrolledWindow()
         scrolled_window.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
         sort_items = [(lambda item: item.title, cmp), (lambda item: item.artist, cmp)]
-        self.result_view = ListView(sort_items)
+        self.result_view = ListView(sort_items, app_theme.get_pixbuf("skin/main.png"))
         self.result_view.connect("double-click-item", self.double_click_cb)
         self.result_view.add_titles(["歌曲名", "艺术家"])
         scrolled_window.add_child(self.result_view)

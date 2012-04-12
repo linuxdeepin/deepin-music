@@ -340,7 +340,7 @@ class Song(dict, Logger):
             
         tmp_pinyin = self.get("sort_title", "")  + self.get("sort_artist", "")
         tmp_text = self.get_str("title") + self.get_str("artist")
-        self["search"] = "%s%s" % (tmp_pinyin, tmp_text)
+        self["search"] = "%s%s" % (tmp_pinyin.lower().strip(), tmp_text.lower().strip())
         
 
         

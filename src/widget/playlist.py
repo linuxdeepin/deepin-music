@@ -69,7 +69,7 @@ class PlaylistUI(gtk.VBox):
         paned_align.add(self.list_paned)
         
         self.toolbar_box = gtk.HBox(spacing=75)
-        self.__create_simple_toggle_button("search", self.show_text_entry)
+        self.search_button = self.__create_simple_toggle_button("search", self.show_text_entry)
         self.__create_simple_button("add", None)
         self.__create_simple_button("sort", None)
         self.__create_simple_button("delete", None)
@@ -110,7 +110,8 @@ class PlaylistUI(gtk.VBox):
         
         if text != "":
             self.search_flag = True
-            results = filter(lambda item: text in item.get_song().get("search", ""), self.cache_items)
+            
+            results = filter(lambda item: text.lower() in item.get_song().get("search", ""), self.cache_items)
             self.current_item.song_view.items = results
             self.current_item.song_view.update_item_index()
             self.current_item.song_view.update_vadjustment()        
@@ -131,6 +132,17 @@ class PlaylistUI(gtk.VBox):
         self.current_item.song_view.queue_draw()
             
         
+    def parser_delete_items(self, widget, items):    
+        if self.search_flag:
+            if self.cache_items != None:
+                [self.cache_items.remove(item) for item in items if item in self.cache_items]
+        
+    def parser_drag_event(self, widget, context, x, y, selection, info, timestamp):
+        if self.search_flag:
+            self.reset_search_entry()
+            
+    def reset_search_entry(self):        
+        self.search_button.set_active(False)
             
     def __create_simple_toggle_button(self, name, callback):        
         toggle_button = ToggleButton(
@@ -158,6 +170,8 @@ class PlaylistUI(gtk.VBox):
         init_items.reverse()
         self.category_list.add_items(init_items)
         self.current_item = self.items_dict[self.get_current_pname()]
+        self.current_item.song_view.connect("delete-select-items", self.parser_delete_items)
+        self.current_item.song_view.connect("drag_data_received", self.parser_drag_event)
         if self.current_item in self.category_list.items:
             index = self.category_list.items.index(self.current_item)
         else:    
@@ -180,11 +194,12 @@ class PlaylistUI(gtk.VBox):
         pass
         
     def list_button_press(self, widget, item, column, x, y):        
-        self.entry_box.entry.set_text("")
-        self.entry_box.hide_all()
-        self.entry_box.set_no_show_all(True)
+        self.reset_search_entry()
 
         self.current_item = item
+        self.current_item.song_view.connect("delete-select-items", self.parser_delete_items)
+        self.current_item.song_view.connect("drag_data_received", self.parser_drag_event)
+
         utils.container_remove_all(self.right_box)
         self.right_box.pack_start(item.get_list_widget(), True, True)
         self.list_paned.show_all()

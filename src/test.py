@@ -35,8 +35,8 @@ class DeepinPlayer(object):
     def __init__(self):
         self.window = Application("DMuisc")
         self.window.set_default_size(320, 550)
-        self.window.add_titlebar(["min", "max", "close"], None,
-                                 "  Deepin Music")
+        self.window.add_titlebar(["min", "max", "close"], app_theme.get_pixbuf("skin/logo1.png"),
+                                 "深度音乐")
         
         # self.browser = dtk_browser.browser_new("http://www.xiami.com", get_cache_file("cookie.txt"))
         # scrolled_window  = gtk.ScrolledWindow()
