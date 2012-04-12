@@ -21,12 +21,15 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import gtk
+import gobject
 from dtk.ui.scrolled_window import ScrolledWindow
 from dtk.ui.paned import HPaned
 from dtk.ui.listview import ListView
+from dtk.ui.entry import TextEntry
+from dtk.ui.button import ImageButton
 
 from library import MediaDB
-from widget.ui import SongView
+from widget.ui import SongView, app_theme
 from widget.song_item import SongItem
 from widget.list_item import PlaylistItem
 from config import config
@@ -40,40 +43,55 @@ class PlaylistUI(gtk.VBox):
     def __init__(self):
         '''Init.'''
         super(PlaylistUI, self).__init__()
-        self.list_paned = HPaned(100)
+        self.list_paned = HPaned(80)
         self.category_list = ListView()
         self.category_list.connect("button-press-item", self.list_button_press)
+        self.search_time_source = 0
+        
+        entry_button = ImageButton(
+            app_theme.get_pixbuf("entry/search_normal.png"),
+            app_theme.get_pixbuf("entry/search_hover.png"),
+            app_theme.get_pixbuf("entry/search_press.png")
+            )
+        
+        entry_box = TextEntry("", entry_button)
+        # entry_box.connect("changed", self.search_cb)
+        # entry_box.connect("action-active", )
+        entry_box.set_size(300, 25)
+        # entry_box.set_no_show_all(True)
+        entry_align = gtk.Alignment()
+        entry_align.set_padding(0, 4, 5, 5)
+        entry_align.add(entry_box)
+        
+        paned_align = gtk.Alignment()
+        paned_align.set_padding(2, 4, 5, 5)
+        paned_align.set(0, 0, 1, 1)
+        paned_align.add(self.list_paned)
         
         category_scrolled_window = ScrolledWindow()
         category_scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
         category_scrolled_window.add_child(self.category_list)
-        
         self.right_box = gtk.HBox()
         self.list_paned.pack1(category_scrolled_window)
         self.list_paned.pack2(self.right_box)
-        self.pack_start(self.list_paned, True, True)            
+        self.pack_start(paned_align, True, True)            
+        self.pack_start(entry_align, False, False)            
         
         self.current_playlist = None
         self.current_item = None
-        
         
         if MediaDB.isloaded():
             self.__on_db_loaded(MediaDB)
         else:    
             MediaDB.connect("loaded", self.__on_db_loaded)
             
-
         
     def __on_db_loaded(self, db):        
         if not MediaDB.get_playlists():
             MediaDB.create_playlist("local", "[最近播放]")
-            MediaDB.create_playlist("local", "[默认列表]")
-            
         self.items_dict = {name : PlaylistItem(pl) for name,  pl in MediaDB.get_playlists().iteritems()} 
         init_items = [ item for __, item in  self.items_dict.iteritems()]
         init_items.reverse()
-        
-        
         self.category_list.add_items(init_items)
         self.current_item = self.items_dict[self.get_current_pname()]
         if self.current_item in self.category_list.items:
@@ -81,10 +99,11 @@ class PlaylistUI(gtk.VBox):
         else:    
             index = 0
         self.category_list.select_rows.append(index)    
+        
         Player.set_source(self.current_item.song_view)
         self.right_box.pack_start(self.current_item.get_list_widget(), True, True)
         self.list_paned.show_all()
-        
+        self.tmp_items = self.current_item.song_view.items
         
     def get_current_pname(self):    
         return config.get("playlist", "current_name")
@@ -96,11 +115,13 @@ class PlaylistUI(gtk.VBox):
         pass
         
     def list_button_press(self, widget, item, column, x, y):        
+        self.current_item = item
         utils.container_remove_all(self.right_box)
         self.right_box.pack_start(item.get_list_widget(), True, True)
         self.list_paned.show_all()
         
     def save_to_library(self):    
+        config.set("playlist","current_name", self.current_item.get_name())
         MediaDB.full_erase_playlists()
         for item in self.category_list.items:
             songs = item.get_songs()

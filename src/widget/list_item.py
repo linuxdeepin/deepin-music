@@ -87,3 +87,6 @@ class PlaylistItem(gobject.GObject):
     def get_songs(self):
         if self.song_view:
             return self.song_view.get_songs()
+        
+    def get_name(self):
+        return self.title

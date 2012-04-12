@@ -72,7 +72,7 @@ description hidden album_colver_url station info_supp station_track_url
 #track #duration #progress #disc 
 #playcount #skipcount 
 #lastplayed #added #date #mtime #ctime #rate #progress #bitrate #size #stream_offset
-sort_title sort_artist sort_album sort_genre
+sort_title sort_artist sort_album sort_genre search
 """.split()
 
 class Song(dict, Logger):
@@ -337,7 +337,12 @@ class Song(dict, Logger):
     def load_sort_object(self):    
         for tag in ["artist", "title", "album", "genre"]:
             self["sort_%s" % tag ] = pinyin.transfer(self.get_str(tag).title())
+            
+        tmp_pinyin = self.get("sort_title", "")  + self.get("sort_artist", "")
+        tmp_text = self.get_str("title") + self.get_str("artist")
+        self["search"] = "%s%s" % (tmp_pinyin, tmp_text)
         
+
         
     def __read_from_remote_file(self):    
         ''' Load song information from remote file. '''

@@ -796,7 +796,7 @@ class PlayerBin(gobject.GObject, Logger):
                 if res:
                     pos, format = res
                     lrc_pos = pos / gst.MSECOND
-                    lrc_pos += 300
+                    # lrc_pos += 300
                     pos /= gst.SECOND
             else:
                 try: 

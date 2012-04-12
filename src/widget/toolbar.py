@@ -51,7 +51,7 @@ class ToolBar(Window):
         self.background_dpixbuf = app_theme.get_pixbuf("lyric/background.png")
         padding_x, padding_y = 10, 5
         self.set_size_request(-1, 41)
-        play_box = gtk.HBox(spacing=12)
+        play_box = gtk.HBox(spacing=2)
         
         # swap played status handler
         Player.connect("played", self.__swap_play_status, True)
@@ -59,8 +59,8 @@ class ToolBar(Window):
         Player.connect("stopped", self.__swap_play_status, False)
         Player.connect("play-end", self.__swap_play_status, False)
         self.playpause_button = ToggleButton(
-            app_theme.get_pixbuf("lyric/play.png"),
-            app_theme.get_pixbuf("lyric/pause.png"))
+            app_theme.get_pixbuf("lyric/play_normal.png"),
+            app_theme.get_pixbuf("lyric/pause_normal.png"))
         self.__id_signal_play = self.playpause_button.connect("toggled", lambda w: Player.playpause())
         prev = self.__create_button("previous")
         next = self.__create_button("next")
@@ -87,7 +87,7 @@ class ToolBar(Window):
         zoom_out_align = self.__create_zoom_button("zoom_out")
         predefine_align = self.__create_simple_button("predefine_color", self.popup_predefine_menu , True)
         lock_align, self.lock_button = self.__create_simple_toggle_button("lock", "unlock", self.change_lock_status)
-        karaoke_align = self.__create_simple_button("karaoke", self.change_karaoke_status)
+        karaoke_align, self.karaoke_button = self.__create_simple_toggle_button("karaoke", "karaoke", self.change_karaoke_status)
         line_align, self.line_button = self.__create_simple_toggle_button("single_line", "double_line", self.change_line_status)
         setting_align = self.__create_simple_button("setting", self.open_setting_window)
         search_align = self.__create_simple_button("search", self.open_search_window)
@@ -101,12 +101,12 @@ class ToolBar(Window):
         play_box.pack_start(sep_align, False, False)
         play_box.pack_start(zoom_in_align, False, False)
         play_box.pack_start(zoom_out_align, False, False)
-        play_box.pack_start(predefine_align, False, False)
-        play_box.pack_start(lock_align, False, False)
-        play_box.pack_start(karaoke_align, False, False)
-        play_box.pack_start(line_align, False, False)
         play_box.pack_start(before_align, False, False)
         play_box.pack_start(after_align, False, False)
+        play_box.pack_start(predefine_align, False, False)
+        play_box.pack_start(karaoke_align, False, False)
+        play_box.pack_start(line_align, False, False)
+        play_box.pack_start(lock_align, False, False)        
         play_box.pack_start(setting_align, False, False)
         play_box.pack_start(search_align, False, False)
         play_box.pack_start(close_align, False, False)
@@ -121,9 +121,9 @@ class ToolBar(Window):
         
     def __create_simple_button(self, name, callback, has_event=False):    
         button = ImageButton(
-            app_theme.get_pixbuf("lyric/%s.png" % name),
-            app_theme.get_pixbuf("lyric/%s.png" % name),
-            app_theme.get_pixbuf("lyric/%s.png" % name)
+            app_theme.get_pixbuf("lyric/%s_normal.png" % name),
+            app_theme.get_pixbuf("lyric/%s_hover.png" % name),
+            app_theme.get_pixbuf("lyric/%s_press.png" % name)
             )
         if has_event:
             button.connect("button-press-event", callback)
@@ -136,8 +136,8 @@ class ToolBar(Window):
         
     def __create_simple_toggle_button(self, normal_name, active_name, callback):
         toggle_button = ToggleButton(
-            app_theme.get_pixbuf("lyric/%s.png" % normal_name),
-            app_theme.get_pixbuf("lyric/%s.png" % active_name)
+            app_theme.get_pixbuf("lyric/%s_normal.png" % normal_name),
+            app_theme.get_pixbuf("lyric/%s_press.png" % active_name)
             )
         toggle_button.connect("toggled", callback)
         toggle_align = gtk.Alignment()
@@ -171,6 +171,7 @@ class ToolBar(Window):
             search_ui.result_view.clear()
             search_ui.artist_entry.entry.set_text(Player.song.get_str("artist"))
             search_ui.title_entry.entry.set_text(Player.song.get_str("title"))
+            search_ui.search_lyric_cb(None)
         except:    
             pass
         search_ui.show_window()
@@ -222,9 +223,9 @@ class ToolBar(Window):
         
     def __create_zoom_button(self, name, msg=None):    
         button = ImageButton(
-            app_theme.get_pixbuf("lyric/%s.png" % name),
-            app_theme.get_pixbuf("lyric/%s.png" % name),
-            app_theme.get_pixbuf("lyric/%s.png" % name)
+            app_theme.get_pixbuf("lyric/%s_normal.png" % name),
+            app_theme.get_pixbuf("lyric/%s_hover.png" % name),
+            app_theme.get_pixbuf("lyric/%s_press.png" % name)
             )
         button.connect("clicked", self.change_font_size, name)
         align = gtk.Alignment()
@@ -247,9 +248,9 @@ class ToolBar(Window):
         
     def __create_button(self, name, tip_msg=None):   
         button = ImageButton(
-            app_theme.get_pixbuf("lyric/%s.png" % name),
-            app_theme.get_pixbuf("lyric/%s.png" % name),
-            app_theme.get_pixbuf("lyric/%s.png" % name)
+            app_theme.get_pixbuf("lyric/%s_normal.png" % name),
+            app_theme.get_pixbuf("lyric/%s_hover.png" % name),
+            app_theme.get_pixbuf("lyric/%s_press.png" % name)
             )
         button.connect("clicked", self.player_control, name)
         return button
