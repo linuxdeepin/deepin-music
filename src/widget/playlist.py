@@ -113,6 +113,8 @@ class PlaylistUI(gtk.VBox):
             results = filter(lambda item: text in item.get_song().get("search", ""), self.cache_items)
             self.current_item.song_view.items = results
             self.current_item.song_view.update_item_index()
+            self.current_item.song_view.update_vadjustment()        
+        
         else:    
             self.search_flag = False
             self.current_item.song_view.items = self.cache_items
@@ -122,11 +124,10 @@ class PlaylistUI(gtk.VBox):
                     index = self.current_item.song_view.items.index(played_item)
                     self.current_item.song_view.set_highlight(self.current_item.song_view.items[index])
             self.current_item.song_view.update_item_index()
+            self.current_item.song_view.update_vadjustment()        
             if self.current_item.song_view.highlight_item != None:
                 self.current_item.song_view.visible_highlight()
                 
-        # Update song_view        
-        self.current_item.song_view.update_vadjustment()        
         self.current_item.song_view.queue_draw()
             
         
@@ -179,6 +180,10 @@ class PlaylistUI(gtk.VBox):
         pass
         
     def list_button_press(self, widget, item, column, x, y):        
+        self.entry_box.entry.set_text("")
+        self.entry_box.hide_all()
+        self.entry_box.set_no_show_all(True)
+
         self.current_item = item
         utils.container_remove_all(self.right_box)
         self.right_box.pack_start(item.get_list_widget(), True, True)
