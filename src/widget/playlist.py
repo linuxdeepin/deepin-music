@@ -88,7 +88,7 @@ class PlaylistUI(gtk.VBox):
         
     def __on_db_loaded(self, db):        
         if not MediaDB.get_playlists():
-            MediaDB.create_playlist("local", "[最近播放]")
+            MediaDB.create_playlist("local", "[默认列表]")
         self.items_dict = {name : PlaylistItem(pl) for name,  pl in MediaDB.get_playlists().iteritems()} 
         init_items = [ item for __, item in  self.items_dict.iteritems()]
         init_items.reverse()
