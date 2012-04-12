@@ -44,7 +44,7 @@ class PlaylistUI(gtk.VBox):
         '''Init.'''
         super(PlaylistUI, self).__init__()
         self.list_paned = HPaned(80)
-        self.category_list = ListView()
+        self.category_list = ListView(background_pixbuf=app_theme.get_pixbuf("skin/main.png"))
         self.category_list.connect("button-press-item", self.list_button_press)
         self.search_time_source = 0
         

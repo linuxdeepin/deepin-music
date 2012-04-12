@@ -88,7 +88,7 @@ class SongView(ListView):
         self.drag_dest_set(gtk.DEST_DEFAULT_MOTION | gtk.DEST_DEFAULT_HIGHLIGHT | gtk.DEST_DEFAULT_DROP,
                            targets, gtk.gdk.ACTION_COPY)
         
-
+        self.background_pixbuf = app_theme.get_pixbuf("skin/main.png")
         self.pl = None
         self.add_song_cache = []
         self.add_time_interval = 5
