@@ -103,16 +103,16 @@ class PlaylistUI(gtk.VBox):
     def search_cb(self, widget, text):        
         if not self.search_flag:
             self.cache_items = self.current_item.song_view.items[:]
-            self.tmp_highlight_item = self.current_item.song_view.highlight_item
-
+        
+        # Clear song_view select status    
         self.current_item.song_view.clear_highlight()
         self.current_item.song_view.select_rows = []
+        
         if text != "":
             self.search_flag = True
             results = filter(lambda item: text in item.get_song().get("search", ""), self.cache_items)
             self.current_item.song_view.items = results
             self.current_item.song_view.update_item_index()
-            self.current_item.song_view.queue_draw()
         else:    
             self.search_flag = False
             self.current_item.song_view.items = self.cache_items
@@ -122,7 +122,12 @@ class PlaylistUI(gtk.VBox):
                     index = self.current_item.song_view.items.index(played_item)
                     self.current_item.song_view.set_highlight(self.current_item.song_view.items[index])
             self.current_item.song_view.update_item_index()
-            self.current_item.song_view.queue_draw()
+            if self.current_item.song_view.highlight_item != None:
+                self.current_item.song_view.visible_highlight()
+                
+        # Update song_view        
+        self.current_item.song_view.update_vadjustment()        
+        self.current_item.song_view.queue_draw()
             
         
             
