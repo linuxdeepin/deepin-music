@@ -26,7 +26,7 @@ from dtk.ui.scrolled_window import ScrolledWindow
 from dtk.ui.paned import HPaned
 from dtk.ui.listview import ListView
 from dtk.ui.entry import TextEntry
-from dtk.ui.button import ImageButton
+from dtk.ui.button import ImageButton, ToggleButton
 
 from library import MediaDB
 from widget.ui import SongView, app_theme
@@ -54,28 +54,42 @@ class PlaylistUI(gtk.VBox):
             app_theme.get_pixbuf("entry/search_press.png")
             )
         
-        entry_box = TextEntry("", entry_button)
+        self.entry_box = TextEntry("", entry_button)
         # entry_box.connect("changed", self.search_cb)
         # entry_box.connect("action-active", )
-        entry_box.set_size(300, 25)
-        # entry_box.set_no_show_all(True)
+        self.entry_box.set_size(300, 25)
+        self.entry_box.set_no_show_all(True)
         entry_align = gtk.Alignment()
         entry_align.set_padding(0, 4, 5, 5)
-        entry_align.add(entry_box)
+        entry_align.add(self.entry_box)
         
         paned_align = gtk.Alignment()
         paned_align.set_padding(2, 4, 5, 5)
         paned_align.set(0, 0, 1, 1)
         paned_align.add(self.list_paned)
         
+        self.toolbar_box = gtk.HBox(spacing=75)
+        self.__create_simple_toggle_button("search", self.show_text_entry)
+        self.__create_simple_button("add", None)
+        self.__create_simple_button("sort", None)
+        self.__create_simple_button("delete", None)
+        toolbar_align = gtk.Alignment()
+        toolbar_align.set_padding(2, 4, 10, 5)
+        toolbar_align.add(self.toolbar_box)
+        
+                
         category_scrolled_window = ScrolledWindow()
         category_scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
         category_scrolled_window.add_child(self.category_list)
+        
+        
+        
         self.right_box = gtk.HBox()
         self.list_paned.pack1(category_scrolled_window)
         self.list_paned.pack2(self.right_box)
         self.pack_start(paned_align, True, True)            
         self.pack_start(entry_align, False, False)            
+        self.pack_start(toolbar_align, False, False)            
         
         self.current_playlist = None
         self.current_item = None
@@ -85,6 +99,24 @@ class PlaylistUI(gtk.VBox):
         else:    
             MediaDB.connect("loaded", self.__on_db_loaded)
             
+    def __create_simple_toggle_button(self, name, callback):        
+        toggle_button = ToggleButton(
+            app_theme.get_pixbuf("toolbar/%s_normal.png" % name),
+            app_theme.get_pixbuf("toolbar/%s_press.png" % name),
+            # app_theme.get_pixbuf("toolbar/%s_hover.png" % name),
+            )
+        toggle_button.connect("toggled", callback)
+        self.toolbar_box.pack_start(toggle_button, False, False)
+        return toggle_button
+            
+    def __create_simple_button(self, name, callback):        
+        button = ImageButton(
+            app_theme.get_pixbuf("toolbar/%s_normal.png" % name),
+            app_theme.get_pixbuf("toolbar/%s_hover.png" % name),
+            app_theme.get_pixbuf("toolbar/%s_press.png" % name),
+            )
+        self.toolbar_box.pack_start(button, False, False)
+        return button
         
     def __on_db_loaded(self, db):        
         if not MediaDB.get_playlists():
@@ -105,6 +137,7 @@ class PlaylistUI(gtk.VBox):
         self.list_paned.show_all()
         self.tmp_items = self.current_item.song_view.items
         
+        
     def get_current_pname(self):    
         return config.get("playlist", "current_name")
     
@@ -119,6 +152,14 @@ class PlaylistUI(gtk.VBox):
         utils.container_remove_all(self.right_box)
         self.right_box.pack_start(item.get_list_widget(), True, True)
         self.list_paned.show_all()
+        
+    def show_text_entry(self, widget):        
+        if widget.get_active():
+            self.entry_box.set_no_show_all(False)
+            self.entry_box.show_all()
+        else:    
+            self.entry_box.hide_all()
+            self.entry_box.set_no_show_all(True)            
         
     def save_to_library(self):    
         config.set("playlist","current_name", self.current_item.get_name())

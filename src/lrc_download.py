@@ -321,13 +321,17 @@ class DUOMI(Engine):
         except IOError:    
             return None
         else:
-            raw_dict = eval(info_utf8)
-            if "item" in raw_dict:
-                if len(raw_dict["item"]) < 1:
-                    return None
-                else:
-                    return self.order_results(self.parser(raw_dict["item"]), artist, title)
-            return None    
+            try:
+                raw_dict = eval(info_utf8)
+            except:    
+                return None
+            else:
+                if "item" in raw_dict:
+                    if len(raw_dict["item"]) < 1:
+                        return None
+                    else:
+                        return self.order_results(self.parser(raw_dict["item"]), artist, title)
+                return None    
         
 duomi_engine = DUOMI()        
         
