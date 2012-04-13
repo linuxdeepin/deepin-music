@@ -36,7 +36,6 @@ from config import config
 from player import Player
 import utils
 
-
 class PlaylistUI(gtk.VBox):
     '''Playlist UI.'''
 	
@@ -56,7 +55,6 @@ class PlaylistUI(gtk.VBox):
         
         self.entry_box = TextEntry("", entry_button)
         self.entry_box.entry.connect("changed", self.search_cb)
-        # entry_box.connect("action-active", )
         self.entry_box.set_size(300, 25)
         self.entry_box.set_no_show_all(True)
         entry_align = gtk.Alignment()
@@ -81,7 +79,13 @@ class PlaylistUI(gtk.VBox):
         category_scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
         category_scrolled_window.add_child(self.category_list)
         
-        self.right_box = gtk.HBox()
+        # fix load db
+        tmp_scrolled_win = ScrolledWindow()
+        tmp_listview = ListView(background_pixbuf=app_theme.get_pixbuf("skin/main.png"))
+        tmp_scrolled_win.add_child(tmp_listview)
+        
+        self.right_box = gtk.VBox()
+        self.right_box.pack_start(tmp_scrolled_win, True, True)
         self.list_paned.pack1(category_scrolled_window)
         self.list_paned.pack2(self.right_box)
         self.pack_start(paned_align, True, True)            
@@ -100,6 +104,35 @@ class PlaylistUI(gtk.VBox):
         else:    
             MediaDB.connect("loaded", self.__on_db_loaded)
             
+        Player.connect("loaded", self.__on_player_loaded)    
+            
+            
+    def __on_db_loaded(self, db):        
+        if not MediaDB.get_playlists():
+            MediaDB.create_playlist("local", "[默认列表]")            
+            MediaDB.create_playlist("local", "[流行歌曲]")            
+            MediaDB.create_playlist("local", "[我的最爱]")
+
+        self.items_dict = {name : PlaylistItem(pl) for name,  pl in MediaDB.get_playlists().iteritems()} 
+        init_items = [ item for __, item in  self.items_dict.iteritems()]
+        self.category_list.add_items(init_items)
+        self.current_item = self.items_dict[self.get_current_pname()]
+        self.current_item.song_view.connect("delete-select-items", self.parser_delete_items)
+        self.current_item.song_view.connect("drag_data_received", self.parser_drag_event)
+        if self.current_item in self.category_list.items:
+            index = self.category_list.items.index(self.current_item)
+        else:    
+            index = 0
+        self.category_list.select_rows.append(index)    
+        
+        Player.set_source(self.current_item.song_view)
+        utils.container_remove_all(self.right_box)
+        self.right_box.pack_start(self.current_item.get_list_widget(), True, True)
+        self.list_paned.show_all()
+        
+    def __on_player_loaded(self, player):   
+        self.current_item.song_view.set_highlight_song(Player.song)
+            
     def search_cb(self, widget, text):        
         if not self.search_flag:
             self.cache_items = self.current_item.song_view.items[:]
@@ -115,7 +148,7 @@ class PlaylistUI(gtk.VBox):
             self.current_item.song_view.items = results
             self.current_item.song_view.update_item_index()
             self.current_item.song_view.update_vadjustment()        
-        
+            
         else:    
             self.search_flag = False
             self.current_item.song_view.items = self.cache_items
@@ -130,7 +163,6 @@ class PlaylistUI(gtk.VBox):
                 self.current_item.song_view.visible_highlight()
                 
         self.current_item.song_view.queue_draw()
-            
         
     def parser_delete_items(self, widget, items):    
         if self.search_flag:
@@ -162,31 +194,6 @@ class PlaylistUI(gtk.VBox):
         self.toolbar_box.pack_start(button, False, False)
         return button
         
-    def __on_db_loaded(self, db):        
-        if not MediaDB.get_playlists():
-            MediaDB.create_playlist("local", "[默认列表]")            
-            MediaDB.create_playlist("local", "[流行歌曲]")            
-            MediaDB.create_playlist("local", "[我的最爱]")
-
-        self.items_dict = {name : PlaylistItem(pl) for name,  pl in MediaDB.get_playlists().iteritems()} 
-        init_items = [ item for __, item in  self.items_dict.iteritems()]
-        # init_items.reverse()
-        self.category_list.add_items(init_items)
-        self.current_item = self.items_dict[self.get_current_pname()]
-        self.current_item.song_view.connect("delete-select-items", self.parser_delete_items)
-        self.current_item.song_view.connect("drag_data_received", self.parser_drag_event)
-        if self.current_item in self.category_list.items:
-            index = self.category_list.items.index(self.current_item)
-        else:    
-            index = 0
-        self.category_list.select_rows.append(index)    
-        
-        Player.set_source(self.current_item.song_view)
-        self.right_box.pack_start(self.current_item.get_list_widget(), True, True)
-        self.list_paned.show_all()
-        self.tmp_items = self.current_item.song_view.items
-        
-        
     def get_current_pname(self):    
         return config.get("playlist", "current_name")
     
@@ -211,6 +218,7 @@ class PlaylistUI(gtk.VBox):
         if widget.get_active():
             self.entry_box.set_no_show_all(False)
             self.entry_box.show_all()
+            self.entry_box.focus_input()
         else:    
             self.entry_box.entry.set_text("")
             self.entry_box.hide_all()

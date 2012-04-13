@@ -256,6 +256,8 @@ class SongView(ListView):
         if not song: return 
         if SongItem(song) in self.items:
             self.set_highlight(self.items[self.items.index(SongItem(song))])
+            self.visible_highlight()
+            self.queue_draw()
         
     def play_select_item(self):    
         if len(self.select_rows) > 0:

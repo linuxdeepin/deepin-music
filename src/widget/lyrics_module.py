@@ -46,7 +46,6 @@ class LyricsModule(object):
         self.time_source = 0
         
         Player.connect("instant-new-song", self.instant_update_lrc)
-        # Player.connect("play-end", self.stop_source_time)
         search_ui.connect("finish", self.update_lrc)
         
         self.lrc = lrc_parser

@@ -50,7 +50,7 @@ class SongTimer(gtk.HBox):
         self.bar.connect("button_release_event", self.on_bar_release)
         self.__value_changed_id = self.bar.connect("value-changed", self.on_bar_value_changed)
         self.bar.handler_block(self.__value_changed_id)
-        self.bar.set_size_request(250, -1)
+        self.bar.set_size_request(200, -1)
         self.pack_start(self.bar, True, True)
         self.pack_start(self.label_time,False, False)
         self.update_bar = 1

@@ -44,6 +44,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         "played"   : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),
         "stopped"  : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),
         "seeked"   : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),
+        "loaded"   : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),
         }
     
     def __init__(self):
@@ -446,6 +447,8 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
             song = MediaDB.get_song(uri)
             if song:
                 self.set_song(song, play, self.get_crossfade() * 2, seek)
+                
+        self.emit("loaded")        
         
     def save_state(self):            
         '''save current song's state'''

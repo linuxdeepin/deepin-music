@@ -20,11 +20,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from widget.ui import app_theme
+
+import gtk
+import gobject
 from dtk.ui.button import ToggleButton, ImageButton
 from dtk.ui.utils import foreach_recursive, is_left_button
 from dtk.ui.menu import Menu
-import gtk
+
+
 import utils
 from player import Player
 from widget.information import PlayInfo
@@ -33,7 +36,7 @@ from widget.equalizer import equalizer_win
 from widget.cover import PlayerCoverButton
 from widget.lyrics_module import lyrics_display
 from widget.playlist import playlist_ui
-
+from widget.ui import app_theme
 from source.local import ImportFolderJob
 from library import MediaDB
 from config import config
@@ -116,10 +119,10 @@ class HeaderBar(gtk.HBox):
         information.pack_start(self.cover_box, False, False)
         information.pack_start(control_box, True, True)
         self.pack_start(information, True, True)
-        self.load_config()
+        gobject.idle_add(self.load_config)
                 
         # right click
-        foreach_recursive(self, lambda w: w.connect("button-press-event", self.right_click_cb))
+        # foreach_recursive(self, lambda w: w.connect("button-press-event", self.right_click_cb))
         
     def load_config(self):    
         if config.getboolean("lyrics", "status"):
