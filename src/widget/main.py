@@ -29,7 +29,6 @@ from dtk.ui.utils import move_window
 
 import utils
 from widget.ui import app_theme
-from widget.lyrics_module import lyrics_display
 from widget.headerbar import header_bar
 from widget.playlist import playlist_ui
 
@@ -63,11 +62,6 @@ class DeepinMusic(gobject.GObject):
             self.window.set_position(gtk.WIN_POS_CENTER)
         else:    
             self.window.move(int(config.get("window", "x"), int(config.get("window", "y"))))
-            
-        try:    
-            self.window.resize(int(config.get("window", "width")), int(config.get("window", "height")))
-        except:    
-            pass
         
         # self.dbus_service = DeepinMusicDBus()
         self.main_box.pack_start(header_bar, False)

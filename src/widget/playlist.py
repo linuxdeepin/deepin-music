@@ -80,12 +80,12 @@ class PlaylistUI(gtk.VBox):
         category_scrolled_window.add_child(self.category_list)
         
         # fix load db
-        tmp_scrolled_win = ScrolledWindow()
-        tmp_listview = ListView(background_pixbuf=app_theme.get_pixbuf("skin/main.png"))
-        tmp_scrolled_win.add_child(tmp_listview)
+        # tmp_scrolled_win = ScrolledWindow()
+        # tmp_listview = ListView(background_pixbuf=app_theme.get_pixbuf("skin/main.png"))
+        # tmp_scrolled_win.add_child(tmp_listview)
         
         self.right_box = gtk.VBox()
-        self.right_box.pack_start(tmp_scrolled_win, True, True)
+        # self.right_box.pack_start(tmp_scrolled_win, True, True)
         self.list_paned.pack1(category_scrolled_window)
         self.list_paned.pack2(self.right_box)
         self.pack_start(paned_align, True, True)            
@@ -126,7 +126,6 @@ class PlaylistUI(gtk.VBox):
         self.category_list.select_rows.append(index)    
         
         Player.set_source(self.current_item.song_view)
-        utils.container_remove_all(self.right_box)
         self.right_box.pack_start(self.current_item.get_list_widget(), True, True)
         self.list_paned.show_all()
         

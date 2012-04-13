@@ -59,12 +59,9 @@ class DeepinMusicApp(object):
         
         MediaDB.connect("loaded", self.on_db_loaded)
         MediaDB.load()
-        
         self.app_instance = DeepinMusic()
         self.app_instance.connect("ready", self.on_ready_cb)
-        
         gtk.main()
-    
     
     def on_ready_cb(self, app):
         self.app_ready = True

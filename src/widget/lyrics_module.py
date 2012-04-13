@@ -43,16 +43,18 @@ class LyricsModule(object):
         self.win.connect("resized", self.adjust_toolbar_rect)
         self.win.connect("hide-bg", self.hide_toolbar)
         self.win.connect("show-bg", self.show_toolbar)
-        self.time_source = 0
         
         Player.connect("instant-new-song", self.instant_update_lrc)
+        Player.connect("played", self.play_time_source)
+        Player.connect("paused", self.pause_time_source)
         search_ui.connect("finish", self.update_lrc)
         
         self.lrc = lrc_parser
         self.lrc_id = -1
         self.lrc_next_id = -1
         self.current_line = 0
-        self.message_source = 0
+        self.message_source = None
+        self.time_source = None
         self.song_duration = 0
         
         self.current_song = None
@@ -78,15 +80,11 @@ class LyricsModule(object):
         self.song_duration = duration
         
     def set_lrc_file(self, filename):    
-        if not filename and self.message_source == 0:
+        if not filename and self.message_source == None:
             self.clear_lyrics()
-        if filename and self.message_source != 0:
+        if filename and self.message_source != None:
             self.clear_message()
         self.lrc.set_filename(filename)
-        
-    def stop_source_time(self, player):    
-        if self.time_source != 0:
-            gobject.source_remove(self.time_source)
 
     def set_played_time(self, played_time):    
         info = self.lrc.get_lyric_by_time(played_time, self.song_duration)
@@ -167,17 +165,17 @@ class LyricsModule(object):
         self.win.set_lyric(0, message)
         self.win.set_lyric(1, "")
         
-        if self.message_source != 0:
+        if self.message_source != None:
             gobject.source_remove(self.message_source)
         self.message_source = gobject.timeout_add(duration_ms, self.hide_message)
             
     def hide_message(self):    
         self.win.set_lyric(0, "")
-        self.message_source = 0
+        self.message_source = None
         return False
     
     def clear_message(self):
-        if self.message_source != 0:
+        if self.message_source != None:
             gobject.source_remove(self.message_source)
             self.hide_message()
     
@@ -256,6 +254,15 @@ class LyricsModule(object):
         played_timed = Player.get_lyrics_position()
         self.set_played_time(played_timed)
         return True
+    
+    def pause_time_source(self, *args):
+        if self.time_source != None:
+            gobject.source_remove(self.time_source)
+            self.time_source = None
+            
+    def play_time_source(self, *args):        
+        self.pause_time_source()
+        self.time_source = gobject.timeout_add(100, self.real_show_lyrics)
                 
     def set_current_lrc(self, try_web=True, force_song=None):        
         ret = False
@@ -263,8 +270,9 @@ class LyricsModule(object):
             force_song = self.current_song
         filename = lrc_manager.get_lrc(force_song, try_web)    
         if filename and os.path.exists(filename):
-            if self.time_source != 0:
+            if self.time_source != None:
                 gobject.source_remove(self.time_source)
+                self.time_source = None
                 self.clear_lyrics()
             if try_web:
                 gobject.idle_add(self.set_lrc_file, filename)
@@ -272,10 +280,10 @@ class LyricsModule(object):
                 self.set_lrc_file(filename)
                 ret = True
             self.set_duration(force_song.get("#duration"))    
-            self.time_source = gobject.timeout_add(100, self.real_show_lyrics)    
         else:    
-            if self.time_source != 0:
+            if self.time_source != None:
                 gobject.source_remove(self.time_source)
+                self.time_source = None
                 self.clear_lyrics()    
             if try_web:    
                 self.set_search_fail_message("没有搜索到歌词!")
