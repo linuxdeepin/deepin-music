@@ -195,8 +195,7 @@ class ToolBar(Window):
         width, height = menu_win.menu_window.get_size()
         y = event.y_root - height + 40
         menu_win.show((int(event.x_root), int(y)))
-        # menu_win.menu_window.show_all()
-        # menu_win.menu_window.move(int(event.x_root), int(y))
+
         
     def set_predefine_color(self, key):    
         values = PREDEFINE_COLORS[key]

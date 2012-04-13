@@ -56,6 +56,7 @@ class LyricsModule(object):
         self.message_source = None
         self.time_source = None
         self.song_duration = 0
+        self.__find_flag = False
         
         self.current_song = None
         self.next_lrc_to_download = None
@@ -189,6 +190,8 @@ class LyricsModule(object):
         self.set_message(message, MESSAGE_DURATION_MS)
         
     def run(self):
+        config.set("lyrics", "status", "true")
+        self.play_time_source()
         screen_w, screen_h = gtk.gdk.get_default_root_window().get_size()
         w , h = self.win.lyrics_win.get_size()
         try:
@@ -200,7 +203,7 @@ class LyricsModule(object):
 
         self.win.lyrics_win.move(x, y) 
         self.win.lyrics_win.show_all()           
-        config.set("lyrics", "status", "true")
+
         
     def hide_toolbar(self, widget):    
         lyric_toolbar.hide_all()
@@ -222,6 +225,7 @@ class LyricsModule(object):
         self.win.lyrics_win.hide_all()
         lyric_toolbar.hide_all()
         config.set("lyrics", "status", "false")
+        self.pause_time_source()
         
     def adjust_toolbar_rect(self, widget, rect):    
         screen_w, screen_h = gtk.gdk.get_default_root_window().get_size()
@@ -262,6 +266,11 @@ class LyricsModule(object):
             
     def play_time_source(self, *args):        
         self.pause_time_source()
+        if not self.__find_flag:
+            return 
+        
+        if not config.getboolean("lyrics", "status"):
+            return 
         self.time_source = gobject.timeout_add(100, self.real_show_lyrics)
                 
     def set_current_lrc(self, try_web=True, force_song=None):        
@@ -280,15 +289,19 @@ class LyricsModule(object):
                 self.set_lrc_file(filename)
                 ret = True
             self.set_duration(force_song.get("#duration"))    
+            self.__find_flag = True
+            if config.getboolean("lyrics", "status"):
+                self.time_source = gobject.timeout_add(100, self.real_show_lyrics)
         else:    
             if self.time_source != None:
                 gobject.source_remove(self.time_source)
                 self.time_source = None
-                self.clear_lyrics()    
+                self.clear_lyrics()
             if try_web:    
                 self.set_search_fail_message("没有搜索到歌词!")
             else:    
                 self.set_search_fail_message("正在搜索歌词......")
+            self.__find_flag = False    
         return ret    
         
     def instant_update_lrc(self, widget, song):    
