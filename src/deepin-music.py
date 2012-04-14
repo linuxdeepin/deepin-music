@@ -46,6 +46,7 @@ if mutagen.version < (1, 8):
 from config import config
 from library import MediaDB
 from player import Player
+from pinyin import TransforDB
 
 from widget.main import DeepinMusic
 
@@ -56,9 +57,9 @@ class DeepinMusicApp(object):
     
     def __init__(self):
         config.load()
-        
         MediaDB.connect("loaded", self.on_db_loaded)
         MediaDB.load()
+        TransforDB.load()
         self.app_instance = DeepinMusic()
         self.app_instance.connect("ready", self.on_ready_cb)
         gtk.main()

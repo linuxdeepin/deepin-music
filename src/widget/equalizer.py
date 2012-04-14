@@ -328,5 +328,3 @@ class EqualizerWindow(Logger):
             self.equalizer_win.move(x, y)
         except: pass    
 
-
-equalizer_win = EqualizerWindow()        

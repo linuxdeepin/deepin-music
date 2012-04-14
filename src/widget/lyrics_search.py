@@ -29,24 +29,22 @@ from dtk.ui.entry import Entry, TextEntry
 from dtk.ui.utils import get_content_size
 from dtk.ui.threads import post_gui
 from dtk.ui.constant import ALIGN_END
+
 from constant import DEFAULT_FONT_SIZE
 from dtk.ui.listview import ListView, render_text
 from dtk.ui.scrolled_window import ScrolledWindow
 from widget.ui import NormalWindow, app_theme
-from lrc_download import ttplayer_engine, soso_engine, duomi_engine
-from lrc_manager import lrc_manager
+from lrc_download import TTPlayer, DUOMI, SOSO
+from helper import Dispatcher
+from lrc_manager import LrcManager
 from player import Player
 from config import config
 import utils
 
 
-
-class SearchUI(NormalWindow, gobject.GObject):
-    __gsignals__ = {"finish" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,))}
-    
+class SearchUI(NormalWindow):
     def __init__(self):
         NormalWindow.__init__(self)
-        gobject.GObject.__init__(self)
         self.window.background_dpixbuf = app_theme.get_pixbuf("skin/main.png")
         self.artist_entry = TextEntry()
         self.artist_entry.set_size(120, 25)
@@ -103,21 +101,22 @@ class SearchUI(NormalWindow, gobject.GObject):
         self.main_box.pack_start(info_box, False, False)
         self.main_box.pack_start(scrolled_window, True, True)
         self.main_box.pack_start(bottom_box, False, False)
+        self.lrc_manager = LrcManager()
 
         
     def double_click_cb(self, widget, item, colume, x, y):   
         self.download_lyric_cb(widget)
         
     def search_engine(self, artist, title):    
-        ttplayer_result = ttplayer_engine.request(artist, title)
+        ttplayer_result = TTPlayer().request(artist, title)
         if ttplayer_result:
             self.render_lyrics(ttplayer_result)
         
-        duomi_result = duomi_engine.request(artist, title)
+        duomi_result = DUOMI().request(artist, title)
         if duomi_result:    
             self.render_lyrics(duomi_result)
         
-        soso_result = soso_engine.request(artist, title)
+        soso_result = SOSO().request(artist, title)
         if soso_result:    
             self.render_lyrics(soso_result)
 
@@ -151,7 +150,7 @@ class SearchUI(NormalWindow, gobject.GObject):
     def download_lyric_cb(self, widget):
         self.prompt_label.set_markup("<span color=\"white\">   %s</span>" % "正在下载歌词文件")
         select_items = self.result_view.select_rows
-        save_filepath = lrc_manager.get_lrc_filepath(Player.song)
+        save_filepath = self.lrc_manager.get_lrc_filepath(Player.song)
         if len(select_items) > 0:
             item = self.result_view.items[select_items[0]]
             url = item.get_url()
@@ -161,12 +160,11 @@ class SearchUI(NormalWindow, gobject.GObject):
     @post_gui        
     def render_download(self, result):
         if result:
-            self.emit("finish", Player.song)
+            Dispatcher.reload_lrc(Player.song)
             self.prompt_label.set_markup("<span color=\"white\">   %s</span>" % "文件已保存到 %s" % config.get("lyrics", "save_lrc_path"))
         else:    
             self.prompt_label.set_markup("<span color=\"white\">   %s</span>" % "囧! 下载失败!")
         
-search_ui = SearchUI()            
         
 class SearchItem(gobject.GObject):        
     
@@ -230,6 +228,3 @@ class SearchItem(gobject.GObject):
     
     def get_netcode(self):
         return self.netcode
-    
-    
-

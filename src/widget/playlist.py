@@ -77,21 +77,24 @@ class PlaylistUI(gtk.VBox):
                 
         category_scrolled_window = ScrolledWindow()
         category_scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
-        category_scrolled_window.add_child(self.category_list)
         
-        # fix load db
-        # tmp_scrolled_win = ScrolledWindow()
-        # tmp_listview = ListView(background_pixbuf=app_theme.get_pixbuf("skin/main.png"))
-        # tmp_scrolled_win.add_child(tmp_listview)
+        # add_entry = TextEntry()
+        # add_entry.set_size(100, 24)
+        
+        # list_align = ListView(background_pixbuf=app_theme.get_pixbuf("skin/main.png"))
+                
+        self.category_vbox = gtk.VBox()
+        self.category_vbox.pack_start(self.category_list)
+        # self.category_vbox.pack_start(add_entry, False, True)
+        # self.category_vbox.pack_start(list_align, True, True)
+        category_scrolled_window.add_child(self.category_vbox)
         
         self.right_box = gtk.VBox()
-        # self.right_box.pack_start(tmp_scrolled_win, True, True)
         self.list_paned.pack1(category_scrolled_window)
         self.list_paned.pack2(self.right_box)
         self.pack_start(paned_align, True, True)            
         self.pack_start(entry_align, False, False)            
         self.pack_start(toolbar_align, False, False)            
-        
         
         # Current
         self.current_playlist = None
@@ -124,7 +127,6 @@ class PlaylistUI(gtk.VBox):
         else:    
             index = 0
         self.category_list.select_rows.append(index)    
-        
         Player.set_source(self.current_item.song_view)
         self.right_box.pack_start(self.current_item.get_list_widget(), True, True)
         self.list_paned.show_all()
@@ -224,11 +226,11 @@ class PlaylistUI(gtk.VBox):
             self.entry_box.set_no_show_all(True)            
         
     def save_to_library(self):    
+        if self.search_flag:
+            self.reset_search_entry()
         config.set("playlist","current_name", self.current_item.get_name())
         MediaDB.full_erase_playlists()
         for item in self.category_list.items:
             songs = item.get_songs()
             name = item.title
             MediaDB.create_playlist("local", name, songs)
-                    
-playlist_ui = PlaylistUI()        

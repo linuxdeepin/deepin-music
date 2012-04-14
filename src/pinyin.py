@@ -21,62 +21,67 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from utils import load_db, fix_charset 
-from logger import Logger
+from utils import load_db
 import os
 
-PINYIN_DICT_FILE = os.path.join((os.path.dirname(os.path.realpath(__file__))), "data/chinese_dict.db")
-SINGLE_CHARS = "'\"`~!@#$%^&*()=+[]{}\\|;:,.<>/?"
-WIDTH_CHARS = "－—！#＃%％&＆（）*，、。：；？？　@＠＼{｛｜}｝~～‘’“”《》【】+＋=＝×￥·…　".decode("utf-8")
 
-class Transfer(Logger):
+class Transfer(object):
     '''Chinese Transfer Pinyin.'''
-    def __init__(self, first_spell=True, spliter="",):
+    PINYIN_DICT_FILE = os.path.join((os.path.dirname(os.path.realpath(__file__))), "data/chinese_dict.db")
+    SINGLE_CHARS = "'\"`~!@#$%^&*()=+[]{}\\|;:,.<>/?"
+    WIDTH_CHARS = "－—！#＃%％&＆（）*，、。：；？？　@＠＼{｛｜}｝~～‘’“”《》【】+＋=＝×￥·…　".decode("utf-8")
+
+    def __init__(self, spliter=""):
         '''Init.'''
         self.spliter = spliter
-        self.first_spell = first_spell
+        
+    def load(self):
         # Load the db file.
         try:
-            self.dict_objs = load_db(PINYIN_DICT_FILE)
+            self.dict_objs = load_db(self.PINYIN_DICT_FILE)
         except:    
             self.logexception("Failed to load Library")
             self.dict_objs = {}
-                
-    def get_first_spell(self):            
-        return self.first_spell
-    
-    def set_first_spell(self, value):
-        self.first_spell = value
         
     def get_spliter(self):    
         return self.spliter
     
     def set_spliter(self, value):
         self.spliter = value
-            
-    def convert(self, chars):
-        ''' Convert Unicode chinese_chars to PinYin. '''
-        unicode_chars = unicode(chars)
-        pinyin_list = [self.filter_char(char) for char in unicode_chars]
-                
-        return "".join(pinyin_list)
         
-    def filter_char(self, unicode_char):    
+    def to_unicode(self, chars):    
+        if not isinstance(chars, unicode):
+            return unicode(chars, "utf-8")
+        return chars
+            
+    def convert_full(self, chars):
+        unicode_chars = self.to_unicode(chars)
+        pinyin_list = [self.filter_char(char, False) for char in unicode_chars]
+        return "".join(pinyin_list)
+    
+    def convert_first(self, chars):
+        ''' Convert Unicode chinese_chars to PinYin. '''
+        unicode_chars = self.to_unicode(chars)
+        pinyin_list = [self.filter_char(char) for char in unicode_chars]
+        return "".join(pinyin_list)
+    
+    def convert(self, chars):
+        result = self.convert_first(chars) + self.convert_full(chars)
+        return result
+        
+    def filter_char(self, unicode_char, first_spell=True):    
         if not self.dict_objs:
             return unicode_char
         
         if unicode_char == ' ': return self.spliter
-        if set(unicode_char).issubset(SINGLE_CHARS): return self.spliter
-        if set(unicode_char).issubset(WIDTH_CHARS): return ""    
+        if set(unicode_char).issubset(self.SINGLE_CHARS): return self.spliter
+        if set(unicode_char).issubset(self.WIDTH_CHARS): return ""    
             
         if not self.dict_objs.has_key(unicode_char): return unicode_char
         else:
-            if self.first_spell:
+            if first_spell:
                 return self.dict_objs.get(unicode_char, unicode_char)[:1]
             else: 
                 return self.dict_objs.get(unicode_char, unicode_char)
 
-def transfer(chars, first_spell=True):
-    conv = Transfer(first_spell)    
-    return conv.convert(chars)
-        
+TransforDB = Transfer()        

@@ -31,7 +31,7 @@ import traceback
 
 import utils
 from logger import Logger
-import pinyin
+from pinyin import TransforDB
 
 TAG_KEYS = {"title"      : "title",
             "artist"     : "artist",
@@ -165,7 +165,7 @@ class Song(dict, Logger):
     def get_sortable(self, key):
         '''Get sortable of the key.'''
         if key in ["album", "genre", "artist", "title"]:
-            value = pinyin.transfer(self.get_str(key).title())
+            value = TransforDB.convert_first(self.get_str(key).title())
         elif key == "date":    
             value = self.get("#date")
             if not value: value = None
@@ -175,17 +175,6 @@ class Song(dict, Logger):
         if not value and key[0] == "#": value = 0    
         return value
     
-    def get_searchable(self):
-        ''' Get searchable of the key, use to index'''
-        title_str    = self.get_str("title")
-        artist_str   = self.get_str("artist")
-        title_first  = pinyin.transfer(title_str)
-        artist_first = pinyin.transfer(artist_str)
-        title_fill   = pinyin.transfer(title_str, False)
-        artist_fill  = pinyin.transfer(artist_str, False)
-        return str(title_first + artist_first +
-                   title_fill + artist_fill +
-                   title_str + artist_str)
     
     def __setitem__(self, key, value):
         if key == "#track":
@@ -336,7 +325,7 @@ class Song(dict, Logger):
         
     def load_sort_object(self):    
         for tag in ["artist", "title", "album", "genre"]:
-            self["sort_%s" % tag ] = pinyin.transfer(self.get_str(tag).title())
+            self["sort_%s" % tag ] = TransforDB.convert(self.get_str(tag).title())
             
         tmp_pinyin = self.get("sort_title", "")  + self.get("sort_artist", "")
         tmp_text = self.get_str("title") + self.get_str("artist")
@@ -476,10 +465,4 @@ class Song(dict, Logger):
             return False
         else:
             return True
-        
-    
-if __name__ == "__main__":    
-    pass
-
-   
     

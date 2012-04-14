@@ -81,16 +81,4 @@ class SongInfo(gtk.VBox):
         hbox.pack_start(display_label, False, False)
         return (hbox, display_label)
         
-    
-class SongEditor(NormalWindow):
-    def __init__(self):
-        NormalWindow.__init__(self)
-        self.window.background_dpixbuf = app_theme.get_pixbuf("skin/main.png")
-        self.window.set_size_request(500, 400)
-        # body_box.pack_start(SongInfo(), False, False)
-        
-        # self.main_box.pack_start(body_box)
-        
-        
-        
 

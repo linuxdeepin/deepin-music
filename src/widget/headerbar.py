@@ -32,14 +32,14 @@ import utils
 from player import Player
 from widget.information import PlayInfo
 from widget.timer import SongTimer, VolumeSlider
-from widget.equalizer import equalizer_win
+from widget.equalizer import EqualizerWindow
 from widget.cover import PlayerCoverButton
-from widget.lyrics_module import lyrics_display
-from widget.playlist import playlist_ui
+from widget.lyrics_module import LyricsModule
 from widget.ui import app_theme
 from source.local import ImportFolderJob
 from library import MediaDB
 from config import config
+from helper import Dispatcher
 
 
 class HeaderBar(gtk.HBox):
@@ -47,15 +47,16 @@ class HeaderBar(gtk.HBox):
         super(HeaderBar, self).__init__()
         self.set_border_width(5)
         
-        # cover box
+        # init.
         self.cover_box = PlayerCoverButton()
+        self.equalizer_win = EqualizerWindow()
+        self.lyrics_display = LyricsModule()
         
         # swap played status handler
         Player.connect("played", self.__swap_play_status, True)
         Player.connect("paused", self.__swap_play_status, False)
         Player.connect("stopped", self.__swap_play_status, False)
         Player.connect("play-end", self.__swap_play_status, False)
-        config.connect("config-changed", self.sycnh_status)
         
         # play button
         play_status_pixbuf = app_theme.get_pixbuf("action/play.png")
@@ -119,6 +120,8 @@ class HeaderBar(gtk.HBox):
         information.pack_start(self.cover_box, False, False)
         information.pack_start(control_box, True, True)
         self.pack_start(information, True, True)
+        
+        Dispatcher.connect("close-lyrics", self.sync_lyrics_status)
         gobject.idle_add(self.load_config)
                 
         # right click
@@ -141,30 +144,24 @@ class HeaderBar(gtk.HBox):
         toggle_button.connect("toggled", callback)
         return toggle_button
 
-    def sycnh_status(self, config, selection, option, value):
-        if selection == "lyrics" and option == "status":
-            if not config.getboolean("lyrics", "status"):
-                self.lyrics_button.set_active(False)
-                
+    def sync_lyrics_status(self, obj):
+        self.lyrics_button.set_active(False)
     
     def start_lyrics(self, widget):        
         if widget.get_active():
-            lyrics_display.run()
+            self.lyrics_display.run()
         else:    
-            lyrics_display.hide_all()
+            self.lyrics_display.hide_all()
             
     def start_playlist(self, widget):        
         pass
             
     def save_db(self, widget):    
-        playlist_ui.save_to_library()
-        MediaDB.save()
-        Player.save_state()
-        config.write()
+        pass
         
     def right_click_cb(self, widget, event):    
         if event.button == 3:
-            Menu([(None, "均衡器", lambda : equalizer_win.run())]).show((int(event.x_root), int(event.y_root)))
+            Menu([(None, "均衡器", lambda : self.equalizer_win.run())]).show((int(event.x_root), int(event.y_root)))
                 
                     
     def __swap_play_status(self, obj, active):    
@@ -188,6 +185,3 @@ class HeaderBar(gtk.HBox):
             getattr(Player, name)(True)
         else:    
             getattr(Player, name)()
-
-            
-header_bar = HeaderBar()            

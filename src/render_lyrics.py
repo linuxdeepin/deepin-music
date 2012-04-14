@@ -35,13 +35,11 @@ LINEAR_COLOR_COUNT = 3
 BLACK_COLOR = (0.0, 0.0, 0.0)
 LINEAR_COLORS = [BLACK_COLOR, BLACK_COLOR, BLACK_COLOR]
 
-class RenderContextNew(gobject.GObject):
+class RenderContextNew(object):
     ''' The new render context. '''
-    __gsignals__ = {"font-changed" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ())}
 	
     def __init__(self):
         ''' Init. '''
-        super(RenderContextNew, self).__init__()
         self.font_name = self.get_font_name()
         self.linear_pos = LINEAR_POS
         self.pango_context = gtk.gdk.pango_context_get()
@@ -65,7 +63,6 @@ class RenderContextNew(gobject.GObject):
             ascent = metrics.get_ascent()
             descent = metrics.get_descent()
             self.font_height = (ascent + descent) / pango.SCALE
-            self.emit("font-changed")
             
     def set_font_name(self, new_font_name):        
         self.font_name = new_font_name
@@ -157,6 +154,3 @@ class RenderContextNew(gobject.GObject):
         cr.move_to(xpos, ypos)
         cr.show_layout(self.pango_layout)
         cr.restore()
-
-        
-render_lyrics = RenderContextNew()    

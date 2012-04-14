@@ -29,8 +29,8 @@ from dtk.ui.utils import move_window
 
 import utils
 from widget.ui import app_theme
-from widget.headerbar import header_bar
-from widget.playlist import playlist_ui
+from widget.headerbar import HeaderBar
+from widget.playlist import PlaylistUI
 
 from config import config
 from player import Player
@@ -63,9 +63,10 @@ class DeepinMusic(gobject.GObject):
         else:    
             self.window.move(int(config.get("window", "x"), int(config.get("window", "y"))))
         
+        self.playlist_ui = PlaylistUI()    
         # self.dbus_service = DeepinMusicDBus()
-        self.main_box.pack_start(header_bar, False)
-        self.main_box.pack_start(playlist_ui, True, True)
+        self.main_box.pack_start(HeaderBar(), False)
+        self.main_box.pack_start(self.playlist_ui, True, True)
         gobject.idle_add(self.ready)
         
     def ready(self):    
@@ -82,7 +83,7 @@ class DeepinMusic(gobject.GObject):
     def __idle_quit(self, *args):    
         print "Exiting..."
         Player.stop()
-        playlist_ui.save_to_library()
+        self.playlist_ui.save_to_library()
         MediaDB.save()
         config.write()
         gtk.main_quit()

@@ -33,12 +33,8 @@ class PlayInfo(gtk.Label):
         super(PlayInfo,self).__init__("")
 
         self.set_ellipsize(pango.ELLIPSIZE_END)
-        # self.set_use_markup(True)
-        # self.set_selectable(True)
         self.set_alignment(0,0.5)
-        
-        # self.set_markup("<span size=\"large\"><b>"+"深度音乐\n"+"</b></span>")
-        # self.set_tooltip_text("No playing")
+
         self.set_label("<span color=\"black\"> 深度音乐 Music</span>")
         self.set_use_markup(True)
 
@@ -66,34 +62,3 @@ class PlayInfo(gtk.Label):
         if "&" in content: content = content.replace("&", " ")
         self.set_label("<span color=\"black\"> %s</span>" % content)
         
-        
-        # markup = ""
-
-        # tip = song.get_str("title")
-        # markup += "<span size=\"large\"><b>"+song.get_str("title",True)+"</b></span>"
-        # if song.get("station"):
-        #     markup += " <b><i>("+song.get_str("station",True)+")</i></b>"
-        
-        # markup += "\n<span>"
-
-        # # if song.get("artist"):
-        # #     tip += " - "+song.get_str("artist")
-        # #     markup += "<i>"+song.get_str("artist",True)+"</i> "
-        # markup += "\n"
-        # if song.get("album"):
-        #     tip += " - "+song.get_str("album")
-        #     markup += song.get_str("album",True)
-        #     date =  song.get_str("date", True)
-        #     if date:
-        #         markup += " <i>(%s)</i>"%date
-        # elif song.get("info_supp"):
-        #     markup +=  song.get_str("info_supp",True)
-        # elif buffering is not None and buffering <= 100:
-        #     markup +=  "\n<i>(%s... %d%%)</i>"%("buffering", buffering)
-        # markup += "</span>"
-        
-        
-        
-
-        # self.set_markup(markup)
-        # self.set_tooltip_text(tip)

@@ -294,7 +294,7 @@ class SongView(ListView):
         return True    
         
     def on_drag_data_received(self, widget, context, x, y, selection, info, timestamp):    
-        self.get_toplevel().window.set_cursor(gtk.gdk.Cursor(gtk.gdk.WATCH))
+        # self.get_toplevel().window.set_cursor(gtk.gdk.Cursor(gtk.gdk.WATCH))
         root_y = widget.allocation.y + y
         try:
             pos = self.get_coordinate_row(root_y)

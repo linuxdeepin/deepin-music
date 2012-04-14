@@ -26,7 +26,7 @@ import re
 from song import Song
 from player import Player
 from config import config
-from lrc_download import ttplayer_engine, soso_engine, duomi_engine
+from lrc_download import TTPlayer, DUOMI, SOSO
 import utils
 
 class LrcManager(object):
@@ -56,7 +56,7 @@ class LrcManager(object):
     def multiple_engine(self, song, lrc_path, artist, title):    
         try:
             ret = False
-            result = ttplayer_engine.request(artist, title)
+            result = TTPlayer().request(artist, title)
             if result:
                 if config.getboolean("lyrics", "auto_download"):
                     ret = utils.download(result[0][2], lrc_path)
@@ -65,7 +65,7 @@ class LrcManager(object):
                     else:
                         os.unlink(lrc_path)
                         
-            duomi_result = duomi_engine.request(artist, title)
+            duomi_result = DUOMI().request(artist, title)
             if duomi_result:
                 if config.getboolean("lyrics", "auto_download"):
                     ret = utils.download(duomi_result[0][2], lrc_path, "gbk")
@@ -74,7 +74,7 @@ class LrcManager(object):
                     else:
                         os.unlink(lrc_path)
                         
-            soso_result =  soso_engine.request(artist, title)
+            soso_result =  SOSO().request(artist, title)
             if soso_result:
                 if config.getboolean("lyrics", "auto_download"):
                     ret = utils.download(soso_result[0][2], lrc_path, "gb18030")
@@ -127,6 +127,5 @@ class LrcManager(object):
             else:
                 return self.multiple_engine(song, lrc_path, untrust_a, untrust_t)
         return None    
-                
-lrc_manager = LrcManager()        
+
         

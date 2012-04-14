@@ -29,16 +29,17 @@ class EventDispatcher(gobject.GObject):
     SIGNAL_COMP = (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,gobject.TYPE_PYOBJECT,gobject.TYPE_INT))
     SIGNAL_COMP2 = (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,gobject.TYPE_PYOBJECT,gobject.TYPE_PYOBJECT))
     SIGNAL_CONFIG = (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_STRING,gobject.TYPE_STRING,gobject.TYPE_STRING))
-    
+    SIGNAL_BASE = (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ())
     __gsignals__ = {
         "config-changed" : SIGNAL_CONFIG,
         "source-updated" : SIGNAL_SIMPLE,
-        "show-lyrics" :  SIGNAL_SIMPLE,
+        "close-lyrics" :  SIGNAL_BASE,
         "show-playlist" :SIGNAL_SIMPLE,
         "select-source-id" :SIGNAL_SIMPLE,
         "volume" : (gobject.SIGNAL_RUN_LAST,gobject.TYPE_NONE, (gobject.TYPE_FLOAT,)),
         "play-device" :  (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_STRING,)),    
         "quit": SIGNAL_SIMPLE,
+        "reload-lrc" : SIGNAL_SIMPLE,
         }
     
     def __init__(self):
@@ -51,8 +52,11 @@ class EventDispatcher(gobject.GObject):
     def show_playlists(self, value):    
         self.emit("show-playlist", vaule)
         
-    def show_lyrics(self, value):    
-        self.emit("show-lyrics", value)
+    def close_lyrics(self):    
+        self.emit("close-lyrics")
+        
+    def reload_lrc(self, value):
+        self.emit("reload-lrc", value)
 
     def quit(self):    
         self.emit("quit", None)

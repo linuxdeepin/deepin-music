@@ -222,5 +222,3 @@ class LrcParser(object):
         finally:    
             if fp is not None:
                 fp.close()
-
-lrc_parser = LrcParser()
