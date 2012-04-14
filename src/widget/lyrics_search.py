@@ -116,7 +116,6 @@ class SearchUI(NormalWindow):
         
         soso_result = SOSO().request(artist, title)
         self.render_lyrics(soso_result)
-
         
     def search_lyric_cb(self, widget):
         self.result_view.clear()

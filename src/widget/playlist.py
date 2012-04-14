@@ -145,7 +145,7 @@ class PlaylistUI(gtk.VBox):
         if text != "":
             self.search_flag = True
             
-            results = filter(lambda item: text.lower() in item.get_song().get("search", ""), self.cache_items)
+            results = filter(lambda item: text.lower().replace(" ", "") in item.get_song().get("search", ""), self.cache_items)
             self.current_item.song_view.items = results
             self.current_item.song_view.update_item_index()
             self.current_item.song_view.update_vadjustment()        

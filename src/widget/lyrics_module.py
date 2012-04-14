@@ -447,7 +447,6 @@ class LyricsModule(object):
         rect = gtk.gdk.Rectangle(int(l_x), int(l_y), int(l_w), int(l_h))
         self.adjust_toolbar_rect(None, rect)
         self.toolbar.show_all()
-
         
     def hide_all(self):    
         x, y = self.desktop_lyrics.lyrics_win.get_position()

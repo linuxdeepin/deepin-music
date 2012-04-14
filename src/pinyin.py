@@ -40,7 +40,6 @@ class Transfer(object):
         try:
             self.dict_objs = load_db(self.PINYIN_DICT_FILE)
         except:    
-            self.logexception("Failed to load Library")
             self.dict_objs = {}
         
     def get_spliter(self):    

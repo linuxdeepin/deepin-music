@@ -325,11 +325,14 @@ class Song(dict, Logger):
         
     def load_sort_object(self):    
         for tag in ["artist", "title", "album", "genre"]:
-            self["sort_%s" % tag ] = TransforDB.convert(self.get_str(tag).title())
+            self["sort_%s" % tag ] = TransforDB.convert_first(self.get_str(tag).title())
             
-        tmp_pinyin = self.get("sort_title", "")  + self.get("sort_artist", "")
+        first_pinyin = self.get("sort_title", "")  + self.get("sort_artist", "")
+        first_pinyin = first_pinyin.lower().strip().replace(" ", "")
         tmp_text = self.get_str("title") + self.get_str("artist")
-        self["search"] = "%s%s" % (tmp_pinyin.lower().strip(), tmp_text.lower().strip())
+        tmp_text = tmp_text.lower().strip().replace(" ", "")
+        full_pinyin = TransforDB.convert_full(tmp_text)
+        self["search"] = "%s%s%s" % (first_pinyin, full_pinyin, tmp_text)
         
 
         

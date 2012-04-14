@@ -33,14 +33,12 @@ from render_lyrics import RenderContextNew
 from utils import color_hex_to_cairo
 from dtk.ui.window import Window
 
-
 # drag state.
 DRAG_NONE = 1
 DRAG_MOVE = 2
 DRAG_EAST = 3
 DRAG_WEST = 4
 MIN_WIDTH = 400
-
 
 class LyricsWindow(gobject.GObject):
     __gsignals__ = {
