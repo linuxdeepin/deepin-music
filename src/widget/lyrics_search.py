@@ -109,16 +109,13 @@ class SearchUI(NormalWindow):
         
     def search_engine(self, artist, title):    
         ttplayer_result = TTPlayer().request(artist, title)
-        if ttplayer_result:
-            self.render_lyrics(ttplayer_result)
+        self.render_lyrics(ttplayer_result)
         
         duomi_result = DUOMI().request(artist, title)
-        if duomi_result:    
-            self.render_lyrics(duomi_result)
+        self.render_lyrics(duomi_result)
         
         soso_result = SOSO().request(artist, title)
-        if soso_result:    
-            self.render_lyrics(soso_result)
+        self.render_lyrics(soso_result)
 
         
     def search_lyric_cb(self, widget):
