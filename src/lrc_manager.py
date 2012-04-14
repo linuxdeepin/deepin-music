@@ -110,6 +110,7 @@ class LrcManager(object):
             if os.path.exists(local_lrc):
                 return local_lrc
             
+        print lrc_path    
         if not config.getboolean("setting", "offline") and try_web:    
             
             trust_a = song.get_str("artist")
