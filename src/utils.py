@@ -506,7 +506,7 @@ def download(remote_uri, local_uri, net_encode=None, buffer_len=4096, timeout=DE
     try:
         logger.loginfo("download %s starting...", remote_uri)
         handle_read = urlopen(remote_uri, timeout=timeout)
-        handle_write = file(get_path_from_uri(local_uri), "w")
+        handle_write = file(local_uri, "w")
         
         data = handle_read.read(buffer_len)
         if net_encode:
