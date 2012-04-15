@@ -126,6 +126,8 @@ class LrcParser(object):
         for key, value in self.time_dict.iteritems():
             self.lyrics_dict[key] = self.tmp_lyrics_dict.get(value, "").strip()
         self.sort_keys = sorted(self.lyrics_dict)    
+        del self.tmp_lyrics_dict
+        del self.time_dict
             
     def get_lyric_by_time(self, timestamp, duration):        
         if not self.lyrics_dict or not timestamp or not duration:
