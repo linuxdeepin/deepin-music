@@ -388,7 +388,7 @@ class LyricsModule(object):
         self.lrc_id = -1
         self.lrc_next_id = -1
         
-    def set_message(self, message, duration_ms):    
+    def set_message(self, message, duration_ms=None):    
         if not message:
             return
         self.desktop_lyrics.set_current_line(0)
@@ -398,7 +398,9 @@ class LyricsModule(object):
         
         if self.message_source != None:
             gobject.source_remove(self.message_source)
-        self.message_source = gobject.timeout_add(duration_ms, self.hide_message)
+            
+        if duration_ms:    
+            self.message_source = gobject.timeout_add(duration_ms, self.hide_message)
             
     def hide_message(self):    
         self.desktop_lyrics.set_lyric(0, "")
@@ -522,16 +524,29 @@ class LyricsModule(object):
             if config.getboolean("lyrics", "status"):
                 self.time_source = gobject.timeout_add(100, self.real_show_lyrics)
         else:    
+            if self.current_song != force_song:
+                return 
             if self.time_source != None:
                 gobject.source_remove(self.time_source)
                 self.time_source = None
                 self.clear_lyrics()
             if try_web:    
-                self.set_search_fail_message("没有搜索到歌词!")
+                # self.set_search_fail_message("没有搜索到歌词!")
+                self.set_message(self.get_default_message(force_song) + " 没有搜索到歌词!")
             else:    
                 self.set_search_fail_message("正在搜索歌词......")
             self.__find_flag = False    
         return ret    
         
     def instant_update_lrc(self, widget, song):    
+        self.set_message(self.get_default_message(song))
         self.update_lrc(widget, song)
+        
+    def get_default_message(self, song):    
+        artist = song.get_str("artist")
+        title = song.get_str("title")
+        if artist:
+            return "%s-%s" % (artist, title)
+        else:
+            return "%s" % title
+

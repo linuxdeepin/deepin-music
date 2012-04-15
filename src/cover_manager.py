@@ -221,9 +221,10 @@ class DeepinCoverManager(Logger):
                         return image_path
                     
                 cover_img_url = download_album_cover(album)    
-                ret = utils.download(cover_img_url, image_path)
-                if ret and self.cleanup_cover(song, image_path):
-                    return image_path
+                if cover_img_url:
+                    ret = utils.download(cover_img_url, image_path)
+                    if ret and self.cleanup_cover(song, image_path):
+                        return image_path
                 
             except:        
                 pass

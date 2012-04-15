@@ -37,7 +37,6 @@ import mimetypes
 mimetypes.init()
 
 from urllib import pathname2url, quote, unquote
-from urllib import urlopen as urlopen1
 from urlparse import urlparse
 from urllib2 import urlopen
 
@@ -468,8 +467,6 @@ def download_iterator(remote_uri, local_uri, buffer_len=4096, timeout=DEFAULT_TI
     try:
         logger.loginfo("download %s starting...", remote_uri)
         handle_read = urlopen(remote_uri, timeout=timeout)
-        # handle_read = urlopen(remote_uri)
-        
         handle_write = file(get_path_from_uri(local_uri), "w")
         info = handle_read.info()
         try:
@@ -508,7 +505,6 @@ def download(remote_uri, local_uri, net_encode=None, buffer_len=4096, timeout=DE
     try:
         logger.loginfo("download %s starting...", remote_uri)
         handle_read = urlopen(remote_uri, timeout=timeout)
-        # handle_read = urlopen1(remote_uri)
         handle_write = file(local_uri, "w")
         
         data = handle_read.read(buffer_len)
