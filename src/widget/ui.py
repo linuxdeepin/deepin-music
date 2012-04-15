@@ -44,6 +44,7 @@ from player import Player
 from findfile import get_config_file
 from library import MediaDB
 from logger import Logger
+from widget.dialog import WinFile, WinDir
 from widget.song_item import SongItem
 
 app_theme = Theme(os.path.join((os.path.dirname(os.path.realpath(__file__))), "../../app_theme"))
@@ -324,22 +325,7 @@ class SongView(ListView):
             self.queue_draw()
         
     def popup_menu(self, widget, x, y, item, select_items):    
-        mode_dict = utils.OrderDict()
-        mode_dict["single_mode"] = "单曲循环"
-        mode_dict["order_mode"] = "顺序播放"
-        mode_dict["list_mode"] = "列表循环"
-        mode_dict["random_mode"] = "随机循环"
-        
-        mode_items = []
-        
-        for key, value in mode_dict.iteritems():
-            if self.get_loop_mode() == key:
-                tick = app_theme.get_pixbuf("equalizer/tick1.png")
-            else:    
-                tick = None
-            mode_items.append((tick, value, self.set_loop_mode, key))    
-        play_mode_menu = Menu(mode_items, MENU_POS_TOP_LEFT)
-        
+        play_mode_menu = self.get_playmode_menu(align=True)
         sort_dict = utils.OrderDict()
         sort_dict["sort_album"] = "按专辑" 
         sort_dict["sort_genre"] = "按流派"
@@ -347,26 +333,75 @@ class SongView(ListView):
         sort_dict["sort_title"] = "按歌曲名"
         sort_dict["#playcount"] = "按播放次数"
         sort_dict["#added"] = "按添加时间"
-        
         sort_items = [(None, value, self.set_sort_keyword, key) for key, value in sort_dict.iteritems()]
         sort_items.append(None)
         sort_items.append((None, "随机排序", self.random_reorder))
         sub_sort_menu = Menu(sort_items, MENU_POS_TOP_LEFT)
         
-        return Menu([(None, "播放歌曲",  self.play_select_item),
+        return Menu([(app_theme.get_pixbuf("playlist/play_song.png"), "播放歌曲",  self.play_select_item),
                      (None, "添加到列表", None),
                      (None, "移动到列表", None),
                      (None, "发送到移动盘", None),
                      None,
                      (None, "删除", self.remove_select_items),
-                     (None, "从本地删除", self.move_to_trash),
+                     (app_theme.get_pixbuf("playlist/delete_song.png"), "从本地删除", self.move_to_trash),
                      (None, "清空列表", self.__clear_items),
                      None,
                      (None, "播放模式", play_mode_menu),
                      (None, "歌曲排序", sub_sort_menu),
-                     (None, "打开文件目录", self.open_song_dir),
+                     (app_theme.get_pixbuf("playlist/open_dir.png"), "打开文件目录", self.open_song_dir),
                      (None, "编辑歌曲信息", None),
                      ], opacity=1.0, menu_pos=1).show((x, y))
     
+    def get_playmode_menu(self, pos=[], align=False):
+        mode_dict = {}
+        mode_dict["random_mode"] = "随机循环"        
+        mode_dict["single_mode"] = "单曲循环"
+        mode_dict["order_mode"] = "顺序播放"
+        mode_dict["list_mode"] = "列表循环"
         
+        mode_items = []
+        for key, value in mode_dict.iteritems():
+            if self.get_loop_mode() == key:
+                tick = app_theme.get_pixbuf("equalizer/tick1.png")
+            else:    
+                tick = None
+            mode_items.append((tick, value, self.set_loop_mode, key))    
+        if align:    
+            play_mode_menu = Menu(mode_items, MENU_POS_TOP_LEFT)
+        else:    
+            play_mode_menu = Menu(mode_items)
+        if pos:
+            play_mode_menu.show((pos[0], pos[1]))
+        else:    
+            return play_mode_menu
+
+    def popup_delete_menu(self, x, y):    
+        items = [(None, "删除", self.remove_select_items),
+                 (None, "从本地删除", self.move_to_trash),
+                 (None, "清空列表", self.__clear_items)]
+        Menu(items).show((int(x), int(y)))
+        
+    def popup_add_menu(self, x, y):
+        menu_items = [
+            (app_theme.get_pixbuf("playlist/add_file.png"), "添加文件", self.__add_file),
+            (app_theme.get_pixbuf("playlist/add_dir.png"), "添加目录", self.__add_dir),
+            ]
+        return Menu(menu_items).show((x, y))
+
     
+    def __add_file(self):
+        uri = WinFile().run()        
+        if uri and utils.file_is_supported(utils.get_path_from_uri(uri)):
+            tags = {"uri": uri}
+            try:
+                song = MediaDB.get_or_create_song(tags, "local", read_from_file=True)
+            except:    
+                pass
+            else:
+                self.add_songs(song)
+                
+    def __add_dir(self):            
+        select_dir = WinDir().run()
+        if select_dir:
+            utils.async_parse_uris([select_dir], True, True, self.add_uris)

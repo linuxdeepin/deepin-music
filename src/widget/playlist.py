@@ -68,9 +68,9 @@ class PlaylistUI(gtk.VBox):
         
         self.toolbar_box = gtk.HBox(spacing=75)
         self.search_button = self.__create_simple_toggle_button("search", self.show_text_entry)
-        self.__create_simple_button("add", None)
-        self.__create_simple_button("sort", None)
-        self.__create_simple_button("delete", None)
+        self.__create_simple_button("add", self.popup_add_menu)
+        self.__create_simple_button("sort", self.popup_sort_menu)
+        self.__create_simple_button("delete", self.popup_delete_menu)
         toolbar_align = gtk.Alignment()
         toolbar_align.set_padding(2, 4, 10, 5)
         toolbar_align.add(self.toolbar_box)
@@ -78,15 +78,8 @@ class PlaylistUI(gtk.VBox):
         category_scrolled_window = ScrolledWindow()
         category_scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
         
-        # add_entry = TextEntry()
-        # add_entry.set_size(100, 24)
-        
-        # list_align = ListView(background_pixbuf=app_theme.get_pixbuf("skin/main.png"))
-                
         self.category_vbox = gtk.VBox()
         self.category_vbox.pack_start(self.category_list)
-        # self.category_vbox.pack_start(add_entry, False, True)
-        # self.category_vbox.pack_start(list_align, True, True)
         category_scrolled_window.add_child(self.category_vbox)
         
         self.right_box = gtk.VBox()
@@ -192,17 +185,21 @@ class PlaylistUI(gtk.VBox):
             app_theme.get_pixbuf("toolbar/%s_hover.png" % name),
             app_theme.get_pixbuf("toolbar/%s_press.png" % name),
             )
+        button.connect("button-press-event", callback)
         self.toolbar_box.pack_start(button, False, False)
         return button
+                                                        
+    def popup_add_menu(self, widget, event):
+        self.current_item.song_view.popup_add_menu(int(event.x_root), int(event.y_root))
+    
+    def popup_sort_menu(self, widget, event):
+        self.current_item.song_view.get_playmode_menu([int(event.x_root), int(event.y_root)])
+    
+    def popup_delete_menu(self, widget, event):
+        self.current_item.song_view.popup_delete_menu(int(event.x_root), int(event.y_root))
         
     def get_current_pname(self):    
         return config.get("playlist", "current_name")
-    
-    def __add_playlist(self, db, p_type, pls):    
-        pass
-            
-    def __removed_playlist(self, db, p_type, pls):
-        pass
         
     def list_button_press(self, widget, item, column, x, y):        
         self.reset_search_entry()

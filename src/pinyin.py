@@ -84,3 +84,4 @@ class Transfer(object):
                 return self.dict_objs.get(unicode_char, unicode_char)
 
 TransforDB = Transfer()        
+ 

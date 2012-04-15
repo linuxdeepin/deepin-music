@@ -303,8 +303,16 @@ class DUOMI(Engine):
         return parser_list        
             
     def request(self, artist, title):
-        artist_quote = urllib.quote_plus(unicode(artist, self.locale).encode(self.net_encoder))
-        title_quote = urllib.quote_plus(unicode(title, self.locale).encode(self.net_encoder))
+        if isinstance(artist, unicode): artist = artist.encode(self.locale)
+        if isinstance(title, unicode): title = title.encode(self.locale)
+        
+        try:
+            artist_quote = urllib.quote_plus(unicode(artist, self.locale).encode(self.net_encoder))
+            title_quote = urllib.quote_plus(unicode(title, self.locale).encode(self.net_encoder))
+        except:    
+            artist_quote = urllib.quote_plus(artist)
+            title_quote = urllib.quote_plus(title)
+            
         url = self.DUOMI_SEARCH_URL % (title_quote, artist_quote)
         
         try:

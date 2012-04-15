@@ -312,10 +312,9 @@ class LyricsModule(object):
         self.song_duration = duration
         
     def set_lrc_file(self, filename):    
-        if not filename and self.message_source == None:
-            self.clear_lyrics()
         if filename and self.message_source != None:
             self.clear_message()
+        self.clear_lyrics()    
         self.lrc.set_filename(filename)
 
     def set_played_time(self, played_time):    

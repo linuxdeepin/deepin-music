@@ -467,7 +467,9 @@ def download_iterator(remote_uri, local_uri, buffer_len=4096, timeout=DEFAULT_TI
     
     try:
         logger.loginfo("download %s starting...", remote_uri)
-        handle_read = urlopen(remote_uri, timeout=timeout)
+        # handle_read = urlopen(remote_uri, timeout=timeout)
+        handle_read = urlopen(remote_uri)
+        
         handle_write = file(get_path_from_uri(local_uri), "w")
         info = handle_read.info()
         try:

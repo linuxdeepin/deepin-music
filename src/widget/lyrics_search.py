@@ -115,7 +115,7 @@ class SearchUI(NormalWindow):
         self.render_lyrics(duomi_result)
         
         soso_result = SOSO().request(artist, title)
-        self.render_lyrics(soso_result)
+        self.render_lyrics(soso_result, True)
         
     def search_lyric_cb(self, widget):
         self.result_view.clear()
@@ -128,7 +128,7 @@ class SearchUI(NormalWindow):
         utils.ThreadLoad(self.search_engine, artist, title).start()
         
     @post_gui
-    def render_lyrics(self, result):
+    def render_lyrics(self, result, last=False):
         '''docs'''
         if result != None:
             try:
@@ -140,14 +140,18 @@ class SearchUI(NormalWindow):
 
             self.prompt_label.set_markup("<span color=\"white\">   %s</span>" % "找到%d个歌词 :)" % len(self.result_view.items))
         else:    
-            self.prompt_label.set_markup("<span color=\"white\">   %s</span>" % "囧!没有找到!")
+            if last:
+                if len(self.result_view.items) > 0:
+                    self.prompt_label.set_markup("<span color=\"white\">   %s</span>" % "找到%d个歌词 :)" % len(self.result_view.items))
+                else:
+                    self.prompt_label.set_markup("<span color=\"white\">   %s</span>" % "囧!没有找到!")
         
 
     def download_lyric_cb(self, widget):
-        self.prompt_label.set_markup("<span color=\"white\">   %s</span>" % "正在下载歌词文件")
         select_items = self.result_view.select_rows
         save_filepath = self.lrc_manager.get_lrc_filepath(Player.song)
         if len(select_items) > 0:
+            self.prompt_label.set_markup("<span color=\"white\">   %s</span>" % "正在下载歌词文件")
             item = self.result_view.items[select_items[0]]
             url = item.get_url()
             net_encode = item.get_netcode()
