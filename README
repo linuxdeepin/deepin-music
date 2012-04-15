@@ -1,2 +1,10 @@
-Deepin-Music-Player is an audio player written in Python. Thanks to it, you can easily organize your music collections.
-Use of the Listen-music-player play kernel, to thank its author Mehdi ABAAKOUK <theli48@gmail.com>
+Music-Player for linux deepin.
+
+* Install:
+  sudo apt-get install git
+  sudo apt-get install python-setuptools libglib2.0-dev python-gtk2-dev python-cairo-dev libwebkit-dev 
+  git clone git://github.com/manateelazycat/deepin-ui
+  cd deepin-ui && sudo python setup.py install
+  
+* Use:
+  python ./deepin-music-player/src/deepin-music.py
