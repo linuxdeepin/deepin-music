@@ -64,7 +64,7 @@ class DeepinMusic(gobject.GObject):
             self.window.move(int(config.get("window", "x"), int(config.get("window", "y"))))
         
         self.playlist_ui = PlaylistUI()    
-        # self.dbus_service = DeepinMusicDBus()
+        self.dbus_service = DeepinMusicDBus()
         self.main_box.pack_start(HeaderBar(), False)
         self.main_box.pack_start(self.playlist_ui, True, True)
         gobject.idle_add(self.ready)

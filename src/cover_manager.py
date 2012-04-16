@@ -64,7 +64,7 @@ class DeepinCoverManager(Logger):
     def __init__(self):
         gobject.timeout_add(REINIT_COVER_TO_SKIP_TIME, self.reinit_skip_cover)
         
-        self.DEFAULT_COVER = app_theme.get_image_path("skin/default_cover.png")
+        self.DEFAULT_COVER = app_theme.get_image_path("cover/default_cover.png")
         self.DEFAULT_COVER_PIXBUF = {
             (40, 40) : gtk.gdk.pixbuf_new_from_file_at_size(self.DEFAULT_COVER, 40, 40),
             (COVER_SIZE["x"], COVER_SIZE["y"]) : gtk.gdk.pixbuf_new_from_file_at_size(self.DEFAULT_COVER, COVER_SIZE["x"], COVER_SIZE["y"]),

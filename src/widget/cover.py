@@ -24,6 +24,8 @@ import os
 import gobject
 import gtk
 import threading
+from dtk.ui.box import ImageBox
+
 
 from song import Song
 from player import Player
@@ -37,13 +39,12 @@ class CoverButton(gtk.EventBox):
         super(CoverButton, self).__init__()
         
         self.set_visible_window(False)
-        image = gtk.image_new_from_pixbuf(app_theme.get_pixbuf("skin/default_cover.png").get_pixbuf())
+        image = gtk.image_new_from_pixbuf(app_theme.get_pixbuf("cover/default_cover.png").get_pixbuf())
         image.set_size_request(COVER_SIZE["x"], COVER_SIZE["y"])
         image.set_alignment(0.5, 0.5)
         
-        f = gtk.Frame()
+        f = ImageBox(app_theme.get_pixbuf("cover/side.png"))
         f.add(image)
-        f.set_shadow_type(gtk.SHADOW_IN)
         self.add(f)
         
         MediaDB.connect("simple-changed", self.update_cover)

@@ -53,7 +53,6 @@ class LyricsWindow(gobject.GObject):
         self.lyrics_win = gtk.Window(gtk.WINDOW_POPUP)
         self.lyrics_win.set_property("allow-shrink", True)
         self.lyrics_win.set_skip_taskbar_hint(True)
-        # self.lyrics_win.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DOCK)
 
         self.lyrics_win.set_decorated(False)
         self.lyrics_win.set_app_paintable(True)
@@ -61,7 +60,7 @@ class LyricsWindow(gobject.GObject):
         self.lyrics_win.set_colormap(gtk.gdk.Screen().get_rgba_colormap())
         
         self.render_lyrics = RenderContextNew()
-        self.bg_pixbuf = app_theme.get_pixbuf("skin/desktop_lrc.png").get_pixbuf()
+        self.bg_pixbuf = app_theme.get_pixbuf("lyric/bg.png").get_pixbuf()
         self.line_padding = 0.0
         self.is_composited  = self.lyrics_win.is_composited()
         self.dock_drag_state = DRAG_NONE
