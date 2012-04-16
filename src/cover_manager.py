@@ -286,5 +286,5 @@ def download_album_cover(keywords):
         return douban_cover_addr.format(match.groups()[0], match.groups()[1])
     else:
         return False
-                    
-CoverManager = DeepinCoverManager()            
+
+CoverManager =  DeepinCoverManager()
