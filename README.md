@@ -5,7 +5,7 @@ How to Install
 --------------
 	$ sudo apt-get install git
 	
-  	$ sudo apt-get install python-setuptools libglib2.0-dev 
+  	$ sudo apt-get install python-setuptools libglib2.0-dev python-mutagen gstreamer0.10-plugins-ugly
 	
   	$ sudo apt-get install python-gtk2-dev python-cairo-dev libwebkit-dev 
 	
