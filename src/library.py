@@ -314,7 +314,7 @@ class MediaDatebase(gobject.GObject, Logger):
             return []
         
     def get_songs_from_uris(self, uris):    
-        return [ self.__songs[utils.realuri(uri)] for uri in uris ]
+        return [ self.get_song(uri) for uri in uris if uri ]
     
     def create_playlist(self, pl_type, name, items=[]):
         '''create playlist with name '''
