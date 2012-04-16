@@ -75,7 +75,7 @@ class PlaylistUI(gtk.VBox):
         toolbar_align.set_padding(2, 4, 10, 5)
         toolbar_align.add(self.toolbar_box)
                 
-        category_scrolled_window = ScrolledWindow()
+        category_scrolled_window = ScrolledWindow(app_theme.get_pixbuf("skin/main.png"))
         category_scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
         
         self.category_vbox = gtk.VBox()
