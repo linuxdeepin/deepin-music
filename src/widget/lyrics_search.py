@@ -73,7 +73,7 @@ class SearchUI(NormalWindow):
         info_box.pack_start(right_align, True, True)
         info_box.pack_start(search_button, False, False)
         
-        scrolled_window = ScrolledWindow()
+        scrolled_window = ScrolledWindow(app_theme.get_pixbuf("skin/main.png"))
         scrolled_window.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
         sort_items = [(lambda item: item.title, cmp), (lambda item: item.artist, cmp)]
         self.result_view = ListView(sort_items, app_theme.get_pixbuf("skin/main.png"))
