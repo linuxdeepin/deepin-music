@@ -36,10 +36,10 @@ class PlaylistItem(gobject.GObject):
     __gsignals__ = {"active" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),
                     "right-press-item" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (int, int,)),}
     
-    def __init__(self, playlist):
+    def __init__(self, playlist, editable=True):
         '''Init song item.'''
         gobject.GObject.__init__(self)
-        self.editable = True
+        self.editable = editable
         self.update(playlist)
         
     def set_text(self, text):    

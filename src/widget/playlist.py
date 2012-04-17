@@ -20,6 +20,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import gtk
 import gobject
 from collections import OrderedDict
@@ -35,7 +36,7 @@ from library import MediaDB, Playlist
 from widget.ui import SongView, app_theme
 from widget.song_item import SongItem
 from widget.list_item import PlaylistItem
-from widget.dialog import WindowLoadPlaylist, WindowExportPlaylist
+from widget.dialog import WindowLoadPlaylist, WindowExportPlaylist, WinDir
 from config import config
 from player import Player
 import utils
@@ -48,7 +49,7 @@ class PlaylistUI(gtk.VBox):
         super(PlaylistUI, self).__init__()
         self.list_paned = HPaned(80)
         self.category_list = EditableList(background_pixbuf=app_theme.get_pixbuf("skin/main.png"))
-        self.category_list.connect("active", self.list_button_press)
+        self.category_list.connect("active", self.category_button_press)
         self.search_time_source = 0
         
         entry_button = ImageButton(
@@ -83,17 +84,7 @@ class PlaylistUI(gtk.VBox):
         category_scrolled_window = ScrolledWindow(app_theme.get_pixbuf("skin/main.png"))
         category_scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
         
-        self.new_entry = TextEntry("")
-        self.new_entry.connect("focus-out-event", self.__focus_out_entry)
-        self.new_entry.set_size(100, 25)
-        self.new_entry.set_no_show_all(True)
-        new_align = gtk.Alignment()
-        new_align.set_padding(2, 2, 8, 8)
-                
-        self.category_vbox = gtk.VBox()
-        self.category_vbox.pack_start(self.category_list, True, True)
-        self.category_vbox.pack_start(self.new_entry, False, False)
-        category_scrolled_window.add_child(self.category_vbox)
+        category_scrolled_window.add_child(self.category_list)
         self.right_box = gtk.VBox()
         self.list_paned.pack1(category_scrolled_window)
         self.list_paned.pack2(self.right_box)
@@ -123,9 +114,15 @@ class PlaylistUI(gtk.VBox):
             MediaDB.create_playlist("local", "[流行歌曲]")            
             MediaDB.create_playlist("local", "[我的最爱]")
             
-        init_items = [ PlaylistItem(pl) for pl in MediaDB.get_playlists()]
+        init_items = []    
+        for index, pl in enumerate(MediaDB.get_playlists()):    
+            if index == 0:
+                p_item = PlaylistItem(pl, False)
+            else:    
+                p_item = PlaylistItem(pl)
+            init_items.append(p_item)    
         self.category_list.add_items(init_items)
-        self.current_item = self.category_list.items[self.get_current_index()]
+        self.current_item = self.category_list.items[self.get_save_item_index()]
         self.delete_source_id = self.current_item.song_view.connect("delete-select-items", self.parser_delete_items)
         self.drag_source_id = self.current_item.song_view.connect("drag_data_received", self.parser_drag_event)
         if self.current_item in self.category_list.items:
@@ -204,10 +201,6 @@ class PlaylistUI(gtk.VBox):
                                                         
     def popup_add_menu(self, widget, event):
         self.current_item.song_view.popup_add_menu(int(event.x_root), int(event.y_root))
-
-    def __focus_out_entry(self, widget, event):
-        '''focus out entry'''
-        pass
         
     def popup_list_menu(self, widget, event):    
         menu_items = [(None, "新建列表", self.new_list),
@@ -216,7 +209,7 @@ class PlaylistUI(gtk.VBox):
                       (None, "导出列表", self.leading_out_list),
                       (None, "删除列表", self.delete_current_list),
                       None,
-                      (None, "保存所有列表", None)]
+                      (None, "保存所有列表", self.save_all_list)]
         Menu(menu_items).show((int(event.x_root), int(event.y_root)))
         
     def new_list(self):    
@@ -246,8 +239,38 @@ class PlaylistUI(gtk.VBox):
     
     
     def delete_current_list(self):
-        pass
+        if self.get_current_item_index() == 0:
+            return
+        self.category_list.delete_item(self.current_item)
+        self.reset_default_item()
         
+    def save_all_list(self):    
+        uri = WinDir().run()
+        
+        if uri:
+            try:
+                save_name_dict = {}
+                dir_name = utils.get_path_from_uri(uri)
+                for item in self.category_list.items:
+                    item_name = item.get_name()
+                    save_name_dict[item_name] = save_name_dict.get(item_name, -1) + 1
+                    if save_name_dict.get(item_name) > 0:
+                        filename = "%s%d.%s" % (os.path.join(dir_name, item_name), save_name_dict.get(item_name), "m3u")
+                    else:    
+                        filename = "%s.%s" % (os.path.join(dir_name, item_name), "m3u")
+                    utils.export_playlist(item.get_songs(), filename, "m3u")
+            except:        
+                pass
+        
+    def reset_default_item(self):    
+        self.category_button_press(None, self.category_list.items[0])
+        self.category_list.highlight_item(self.current_item)        
+        
+    def get_current_item_index(self):    
+        try:
+            index = self.category_list.items.index(self.current_item)
+        except: index = 0    
+        return index
     
     def popup_sort_menu(self, widget, event):
         self.current_item.song_view.get_playmode_menu([int(event.x_root), int(event.y_root)])
@@ -255,15 +278,14 @@ class PlaylistUI(gtk.VBox):
     def popup_delete_menu(self, widget, event):
         self.current_item.song_view.popup_delete_menu(int(event.x_root), int(event.y_root))
         
-    def get_current_index(self):    
+    def get_save_item_index(self):    
         index = config.getint("playlist", "current_index")
         if index <= len(self.category_list.items) - 1:
             return index
         return 0
         
-    def list_button_press(self, widget, item):        
+    def category_button_press(self, widget, item):        
         self.reset_search_entry()
-
         if self.current_item == item:
             return 
         if self.drag_source_id != None or self.delete_source_id != None:
