@@ -133,7 +133,7 @@ class Config(gobject.GObject, Logger):
                 },
             
             "playlist" : {
-                "current_name" : "[默认列表]",
+                "current_index" : "0",
                 },
             
             }

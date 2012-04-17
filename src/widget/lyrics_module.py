@@ -25,6 +25,8 @@ import threading
 import gtk
 import os
 import pango
+
+from collections import OrderedDict
 from dtk.ui.window import Window
 from dtk.ui.button import ImageButton, ToggleButton
 from dtk.ui.box import ImageBox
@@ -38,7 +40,6 @@ from lrc_parser import LrcParser
 from config import config
 from player import Player
 from lrc_manager import LrcManager
-import utils
 
 
 MESSAGE_DURATION_MS = 3000
@@ -273,7 +274,7 @@ class LyricsModule(object):
             self.desktop_lyrics.set_line_count(2)
         
     def popup_predefine_menu(self, widget, event):    
-        menu_dict = utils.OrderDict()
+        menu_dict = OrderedDict()
         menu_dict["default"] = "默认"
         menu_dict["vitality_yellow"] = "活力黄"
         menu_dict["fresh_green"]  = "清新绿"

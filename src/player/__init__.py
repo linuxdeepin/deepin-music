@@ -78,7 +78,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
     def __on_eos(self, bin, uri):    
         self.loginfo("received eos for %s", uri)
         
-        if uri == self.song.get("uri") and not self.__next_already_called:        
+        if uri == self.song.get("uri") and not self.__next_already_called and not config.get("setting", "loop_mode") == "single_mode":
             self.loginfo("request new song: eos and play-end not emit")
             self.emit("play-end")
             self.next() # todo
@@ -94,7 +94,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         if uri == self.song.get("uri") and not self.__next_already_called:
             self.loginfo("request new song: error and play-end not emit")
             self.emit("play-end")
-            self.next()
+            self.next(True)
         self.__next_already_called = False    
         
     def __on_tag(self, bin, taglist):    
@@ -234,7 +234,6 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         
     def play_new(self, song, crossfade=None, seek=None):
         '''add new song and try to play it'''
-
         self.set_song(song, True, crossfade, seek)
         
     def play(self, crossfade=-1, seek=None):    

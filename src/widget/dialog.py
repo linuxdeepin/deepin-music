@@ -22,7 +22,9 @@
 
 import gtk
 import os
+
 from findfile import get_music_dir
+import utils
 
 
 class WinDir(gtk.FileChooserDialog):
@@ -63,6 +65,82 @@ class WinFile(gtk.FileChooserDialog):
         self.destroy()
         return folder
     
+class WindowExportPlaylist(gtk.FileChooserDialog):
+    def __init__(self,songs):
+        self.songs = songs
+        gtk.FileChooserDialog.__init__(self, "Export playlist", None,
+             gtk.FILE_CHOOSER_ACTION_SAVE,
+             (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,gtk.STOCK_SAVE, gtk.RESPONSE_OK))
+             
+        self.set_modal(True)
+        self.set_current_name("playlist.m3u")
+        self.set_current_folder(os.path.expanduser("~/"))
+        
+        option_menu = gtk.OptionMenu()
+        option_menu.set_size_request(155, -1)
+        self.menu = gtk.Menu()
+        self.menu.set_size_request(155, -1)
+        self.make_menu_item("M3U (*.m3u)", "m3u")
+        self.make_menu_item("pls (*.pls)", "pls")
+        self.make_menu_item("xspf (*.xspf)", "xspf")
+        option_menu.set_menu(self.menu)
+        hbox = gtk.HBox()
+        hbox.pack_end(option_menu, False, False)
+        self.vbox.pack_start(hbox, False, False)
+        hbox.show_all()
+        
+    def make_menu_item(self, name, data):    
+        item = gtk.MenuItem(name)
+        item.connect("activate", self.set_save_filetype, data)
+        item.show()
+        self.menu.append(item)
+        
+    def set_save_filetype(self, item, filetype):
+        self.set_current_name("%s.%s" % ("playlist", filetype))
+
+    def run(self):
+        response = gtk.FileChooserDialog.run(self)
+        self.set_modal(True)
+        if response == gtk.RESPONSE_OK:
+            filename = self.get_filename()
+            if utils.get_ext(filename) in [".m3u",".pls",".xspf"]:
+                utils.export_playlist(self.songs,filename,utils.get_ext(filename,False))
+            else:
+                pl_type = ".m3u"
+                filename = filename+"."+pl_type
+                utils.export_playlist(self.songs,filename,pl_type)
+        self.destroy()
+        
+class WindowLoadPlaylist(gtk.FileChooserDialog):
+    def __init__(self):
+        
+        gtk.FileChooserDialog.__init__(self, "Load playlist", None,
+             gtk.FILE_CHOOSER_ACTION_OPEN,
+             (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,gtk.STOCK_OPEN, gtk.RESPONSE_OK))
+             
+        self.set_modal(True)
+        ffilter = gtk.FileFilter()
+        ffilter.set_name("Playlist files")
+        ffilter.add_mime_type("audio/mpegurl")
+        ffilter.add_mime_type("audio/x-mpegurl")
+        ffilter.add_mime_type("audio/m3u")
+        ffilter.add_mime_type("audio/x-scpls")
+        ffilter.add_mime_type("application/xspf+xml")
+        ffilter.add_pattern("*.m3u")
+        ffilter.add_pattern("*.pls")
+        ffilter.add_pattern("*.xspf")
+        self.add_filter(ffilter)
+        
+        self.set_current_folder(os.path.expanduser("~/"))
+
+    def run(self):
+        uri = None
+        response = gtk.FileChooserDialog.run(self)
+        self.set_modal(True)
+        if response == gtk.RESPONSE_OK:
+            uri =  self.get_uri()
+        self.destroy()
+        return uri
     
 
     

@@ -325,8 +325,7 @@ class MediaDatebase(gobject.GObject, Logger):
         return pl
     
     def add_playlist(self, pl_type, pl):
-        pl_name = pl.get_name()
-        self.__playlists[pl_type][pl_name] = pl
+        self.__playlists[pl_type].append(pl)
         self.__condition.acquire()
         self.__queued_signal["playlist-added"].setdefault(pl_type, [])
         self.__queued_signal["playlist-added"][pl_type].append(pl)
@@ -337,14 +336,10 @@ class MediaDatebase(gobject.GObject, Logger):
         return self.__playlists[pl_type]
     
     def full_erase_playlists(self, pl_type="local"):
-        self.__playlists[pl_type].clear()
-        
-    def get_playlist_by_name(self, name, pl_type="local"):
-        if name in self.__playlists[pl_type]:
-            return self.__playlists[pl_type][name]
+        del self.__playlists[pl_type][:]
         
     def del_playlist(self, pl_type, pl):    
-        self.__playlists[pl_type].discard(pl)
+        self.__playlists[pl_type].remove(pl)
         self.__condition.acquire()
         self.__queued_signal["playlist-removed"].setdefault(pl_type, [])
         self.__queued_signal["playlist-removed"][pl_name].append(pl)
@@ -377,7 +372,7 @@ class MediaDatebase(gobject.GObject, Logger):
     def register_playlist_type(self, name):        
         if name not in self.__playlist_types:
             self.__playlist_types.append(name)
-            self.__playlists[name] = dict()
+            self.__playlists[name] = []
             
     def unregister_playlist_type(self, name):        
         if name in self.__playlist_types:
@@ -460,13 +455,13 @@ class MediaDatebase(gobject.GObject, Logger):
         # Quickly copy obj before pickle it
         self.__db_operation_lock.acquire()
         songs = self.__songs.values()
-        playlists = self.__playlists["local"].copy()
+        playlists = self.__playlists["local"][:]
         self.__db_operation_lock.release()
         objs = [ song.get_dict() for song in songs if song.get_type() in self.__save_song_type ]
         
         # save
         utils.save_db(objs, get_config_file("songs.db"))
-        utils.save_db([pl.get_pickle_obj() for pl in playlists.values()], get_config_file("playlists.db"))
+        utils.save_db([pl.get_pickle_obj() for pl in playlists ], get_config_file("playlists.db"))
         self.loginfo("%d songs saved and %d playlists saved", len(objs), len(playlists))
         self.__dirty = False
         
@@ -957,4 +952,5 @@ if __name__ == "__main__":
     # a = "artist =/^%s$/" %"李"
     # a = "&(artist = %s, album = %s)" % ("小邪兽", "邪恶家族")
     # a = "&(artist = %s, album = %s)" % ("小", "邪恶家族")
-    print MediaDB.request(a)
+    db_query = DBQuery("")
+    print db_query.get_songs()

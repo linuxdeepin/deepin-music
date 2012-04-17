@@ -28,6 +28,7 @@ import cairo
 import random
 import time
 
+from collections import OrderedDict
 from dtk.ui.window import Window
 from dtk.ui.theme import Theme
 from dtk.ui.utils import move_window, is_double_click
@@ -326,11 +327,11 @@ class SongView(ListView):
         
     def popup_menu(self, widget, x, y, item, select_items):    
         play_mode_menu = self.get_playmode_menu(align=True)
-        sort_dict = utils.OrderDict()
+        sort_dict = OrderedDict()
+        sort_dict["sort_title"] = "按歌曲名"
+        sort_dict["sort_artist"] = "按艺术家"        
         sort_dict["sort_album"] = "按专辑" 
         sort_dict["sort_genre"] = "按流派"
-        sort_dict["sort_artist"] = "按艺术家"
-        sort_dict["sort_title"] = "按歌曲名"
         sort_dict["#playcount"] = "按播放次数"
         sort_dict["#added"] = "按添加时间"
         sort_items = [(None, value, self.set_sort_keyword, key) for key, value in sort_dict.iteritems()]
@@ -354,11 +355,12 @@ class SongView(ListView):
                      ], opacity=1.0, menu_pos=1).show((x, y))
     
     def get_playmode_menu(self, pos=[], align=False):
-        mode_dict = {}
-        mode_dict["random_mode"] = "随机循环"        
+        mode_dict = OrderedDict()
+
         mode_dict["single_mode"] = "单曲循环"
         mode_dict["order_mode"] = "顺序播放"
         mode_dict["list_mode"] = "列表循环"
+        mode_dict["random_mode"] = "随机循环"        
         
         mode_items = []
         for key, value in mode_dict.iteritems():
@@ -384,8 +386,8 @@ class SongView(ListView):
         
     def popup_add_menu(self, x, y):
         menu_items = [
-            (app_theme.get_pixbuf("playlist/add_file.png"), "添加文件", self.__add_file),
-            (app_theme.get_pixbuf("playlist/add_dir.png"), "添加目录", self.__add_dir),
+            (None, "添加文件", self.__add_file),
+            (None, "添加目录", self.__add_dir),
             ]
         return Menu(menu_items).show((x, y))
 
@@ -404,4 +406,9 @@ class SongView(ListView):
     def __add_dir(self):            
         select_dir = WinDir().run()
         if select_dir:
-            utils.async_parse_uris([select_dir], True, True, self.add_uris)
+            utils.async_parse_uris([select_dir], True, False, self.add_uris)
+            
+    def async_add_uris(self, uris, follow_folder=False):        
+        if not isinstance(uris, (list, tuple, set)):
+            uris = [ uris ]
+        utils.async_parse_uris(uris, follow_folder, True, self.add_uris)

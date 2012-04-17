@@ -177,6 +177,11 @@ def get_name(uri):
     # return os.path.basename(get_path_from_uri(uri))
     return get_path_from_uri(uri).split("/")[-1]
 
+def get_filename(uri):
+    name = get_name(uri)
+    return os.path.splitext(name)[0]
+        
+
 def is_local_dir(uri):    
     return os.path.isdir(get_path_from_uri(uri))
 
@@ -297,13 +302,12 @@ class XSPFParser(handler.ContentHandler):
         self.content = ""
 
     def characters(self, content):
-        self.content = content
+        self.content = self.content + content
 
     def endElement(self, name):
         if name == "location":
             self.uris.append(self.content)
 
-""" Return uri in a xspf playlist """
 def get_uris_from_xspf(uri):
     try: 
         handler = XSPFParser()
@@ -346,7 +350,9 @@ def parse_uris(uris, follow_folder=True, follow_playlist=True, callback=None, *a
     valid_uris = []
     for uri in uris:
         #check file exists only is file is local to speed parsing of shared/remote file
-        uri = fix_charset(unquote(uri))
+        if isinstance(uri, unicode):
+            uri = uri.encode("utf-8")
+        uri = unquote(uri)
         if uri and uri.strip() != "" and exists(uri):
             ext = get_ext(uri)
             try:

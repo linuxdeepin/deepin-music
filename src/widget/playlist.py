@@ -22,16 +22,19 @@
 
 import gtk
 import gobject
+from collections import OrderedDict
 from dtk.ui.scrolled_window import ScrolledWindow
 from dtk.ui.paned import HPaned
 from dtk.ui.listview import ListView
 from dtk.ui.entry import TextEntry
 from dtk.ui.button import ImageButton, ToggleButton
+from dtk.ui.menu import Menu
 
 from library import MediaDB
 from widget.ui import SongView, app_theme
 from widget.song_item import SongItem
 from widget.list_item import PlaylistItem
+from widget.dialog import WindowLoadPlaylist, WindowExportPlaylist
 from config import config
 from player import Player
 import utils
@@ -66,8 +69,9 @@ class PlaylistUI(gtk.VBox):
         paned_align.set(0, 0, 1, 1)
         paned_align.add(self.list_paned)
         
-        self.toolbar_box = gtk.HBox(spacing=75)
+        self.toolbar_box = gtk.HBox(spacing=60)
         self.search_button = self.__create_simple_toggle_button("search", self.show_text_entry)
+        self.__create_simple_button("list", self.popup_list_menu)
         self.__create_simple_button("add", self.popup_add_menu)
         self.__create_simple_button("sort", self.popup_sort_menu)
         self.__create_simple_button("delete", self.popup_delete_menu)
@@ -78,16 +82,17 @@ class PlaylistUI(gtk.VBox):
         category_scrolled_window = ScrolledWindow(app_theme.get_pixbuf("skin/main.png"))
         category_scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
         
-        # self.new_entry = TextEntry("")
-        # self.new_entry.set_size(100, 25)
-        # new_align = gtk.Alignment()
-        # new_align.set_padding(2, 2, 8, 8)
+        self.new_entry = TextEntry("")
+        self.new_entry.connect("focus-out-event", self.__focus_out_entry)
+        self.new_entry.set_size(100, 25)
+        self.new_entry.set_no_show_all(True)
+        new_align = gtk.Alignment()
+        new_align.set_padding(2, 2, 8, 8)
                 
         self.category_vbox = gtk.VBox()
-        self.category_vbox.pack_start(self.category_list, False, False)
-        # self.category_vbox.pack_start(self.new_entry, False, False)
+        self.category_vbox.pack_start(self.category_list, True, True)
+        self.category_vbox.pack_start(self.new_entry, False, False)
         category_scrolled_window.add_child(self.category_vbox)
-        
         self.right_box = gtk.VBox()
         self.list_paned.pack1(category_scrolled_window)
         self.list_paned.pack2(self.right_box)
@@ -114,11 +119,10 @@ class PlaylistUI(gtk.VBox):
             MediaDB.create_playlist("local", "[默认列表]")            
             MediaDB.create_playlist("local", "[流行歌曲]")            
             MediaDB.create_playlist("local", "[我的最爱]")
-
-        self.items_dict = {name : PlaylistItem(pl) for name,  pl in MediaDB.get_playlists().iteritems()} 
-        init_items = [ item for __, item in  self.items_dict.iteritems()]
+            
+        init_items = [ PlaylistItem(pl) for pl in MediaDB.get_playlists()]
         self.category_list.add_items(init_items)
-        self.current_item = self.items_dict[self.get_current_pname()]
+        self.current_item = self.category_list.items[self.get_current_index()]
         self.current_item.song_view.connect("delete-select-items", self.parser_delete_items)
         self.current_item.song_view.connect("drag_data_received", self.parser_drag_event)
         if self.current_item in self.category_list.items:
@@ -197,6 +201,47 @@ class PlaylistUI(gtk.VBox):
                                                         
     def popup_add_menu(self, widget, event):
         self.current_item.song_view.popup_add_menu(int(event.x_root), int(event.y_root))
+
+    def __focus_out_entry(self, widget, event):
+        '''focus out entry'''
+        pass
+        
+    def popup_list_menu(self, widget, event):    
+        menu_items = [(None, "新建列表", None),
+                      (None, "导入列表", self.leading_in_list),
+                      (None, "打开列表", self.add_to_list),
+                      (None, "导出列表", self.leading_out_list),
+                      (None, "删除列表", self.delete_current_list),
+                      None,
+                      (None, "保存所有列表", None)]
+        Menu(menu_items).show((int(event.x_root), int(event.y_root)))
+        
+    def leading_in_list(self):    
+        uri = WindowLoadPlaylist().run()
+        try:
+            p_name = utils.get_filename(uri)
+            pl = MediaDB.create_playlist("local", p_name, [])
+            new_item = PlaylistItem(pl)
+            self.category_list.add_items([new_item])
+            new_item.song_view.async_add_uris(uri)
+        except:    
+            pass
+        
+    def leading_out_list(self):    
+        if self.current_item:
+            WindowExportPlaylist(self.current_item.get_songs()).run()
+        
+    def add_to_list(self):    
+        uri = WindowLoadPlaylist().run()
+        if uri:
+            try:
+                self.current_item.song_view.async_add_uris(uri)
+            except: pass    
+    
+    
+    def delete_current_list(self):
+        pass
+        
     
     def popup_sort_menu(self, widget, event):
         self.current_item.song_view.get_playmode_menu([int(event.x_root), int(event.y_root)])
@@ -204,8 +249,11 @@ class PlaylistUI(gtk.VBox):
     def popup_delete_menu(self, widget, event):
         self.current_item.song_view.popup_delete_menu(int(event.x_root), int(event.y_root))
         
-    def get_current_pname(self):    
-        return config.get("playlist", "current_name")
+    def get_current_index(self):    
+        index = config.getint("playlist", "current_index")
+        if index <= len(self.category_list.items) - 1:
+            return index
+        return 0
         
     def list_button_press(self, widget, item, column, x, y):        
         self.reset_search_entry()
@@ -231,7 +279,14 @@ class PlaylistUI(gtk.VBox):
     def save_to_library(self):    
         if self.search_flag:
             self.reset_search_entry()
-        config.set("playlist","current_name", self.current_item.get_name())
+            
+        try:    
+            index = self.category_list.items.index(self.current_item)
+        except:    
+            index = 0
+            
+        config.set("playlist","current_index", str(index))
+                  
         MediaDB.full_erase_playlists()
         for item in self.category_list.items:
             songs = item.get_songs()

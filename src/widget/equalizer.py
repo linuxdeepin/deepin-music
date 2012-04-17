@@ -23,8 +23,8 @@
 import gst
 import gtk
 import copy
+from collections import OrderedDict
 
-import utils
 from config import config
 from player import Player
 from logger import Logger
@@ -133,7 +133,7 @@ class SlipperScalebar(gtk.VBox):
         self.pack_start(hear_box, False, False)
         self.pack_start(num_align, False, False)
         
-MANDATORY = utils.OrderDict()
+MANDATORY = OrderedDict()
 MANDATORY_CUSTOM = "Custom"
 
 MANDATORY[MANDATORY_CUSTOM] = "1.0:0.0:0.0:0.0:0.0:0.0:0.0:0.0:0.0:0.0"
@@ -260,7 +260,7 @@ class EqualizerWindow(Logger):
         
     def __select_name(self):
         
-        self.menu_dict = utils.OrderDict()
+        self.menu_dict = OrderedDict()
         for  name in MANDATORY.keys():
             self.menu_dict[name] = [None, name, self.__change, name]
         
