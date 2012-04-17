@@ -78,8 +78,14 @@ class PlaylistUI(gtk.VBox):
         category_scrolled_window = ScrolledWindow()
         category_scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
         
+        # self.new_entry = TextEntry("")
+        # self.new_entry.set_size(100, 25)
+        # new_align = gtk.Alignment()
+        # new_align.set_padding(2, 2, 8, 8)
+                
         self.category_vbox = gtk.VBox()
-        self.category_vbox.pack_start(self.category_list)
+        self.category_vbox.pack_start(self.category_list, False, False)
+        # self.category_vbox.pack_start(self.new_entry, False, False)
         category_scrolled_window.add_child(self.category_vbox)
         
         self.right_box = gtk.VBox()
