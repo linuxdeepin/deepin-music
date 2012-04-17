@@ -31,7 +31,7 @@ from dtk.ui.button import ImageButton, ToggleButton
 from dtk.ui.menu import Menu
 from dtk.ui.editable_list import EditableList
 
-from library import MediaDB
+from library import MediaDB, Playlist
 from widget.ui import SongView, app_theme
 from widget.song_item import SongItem
 from widget.list_item import PlaylistItem
@@ -48,6 +48,7 @@ class PlaylistUI(gtk.VBox):
         super(PlaylistUI, self).__init__()
         self.list_paned = HPaned(80)
         self.category_list = EditableList(background_pixbuf=app_theme.get_pixbuf("skin/main.png"))
+        self.category_list.connect("active", self.list_button_press)
         self.search_time_source = 0
         
         entry_button = ImageButton(
@@ -105,6 +106,8 @@ class PlaylistUI(gtk.VBox):
         self.current_item = None
         self.search_flag = False
         self.cache_items = None
+        self.delete_source_id = None
+        self.drag_source_id = None
         
         if MediaDB.isloaded():
             self.__on_db_loaded(MediaDB)
@@ -123,13 +126,13 @@ class PlaylistUI(gtk.VBox):
         init_items = [ PlaylistItem(pl) for pl in MediaDB.get_playlists()]
         self.category_list.add_items(init_items)
         self.current_item = self.category_list.items[self.get_current_index()]
-        self.current_item.song_view.connect("delete-select-items", self.parser_delete_items)
-        self.current_item.song_view.connect("drag_data_received", self.parser_drag_event)
+        self.delete_source_id = self.current_item.song_view.connect("delete-select-items", self.parser_delete_items)
+        self.drag_source_id = self.current_item.song_view.connect("drag_data_received", self.parser_drag_event)
         if self.current_item in self.category_list.items:
             index = self.category_list.items.index(self.current_item)
         else:    
             index = 0
-        # self.category_list.select_rows.append(index)    
+        self.category_list.highlight_item(self.category_list.items[index])
         Player.set_source(self.current_item.song_view)
         self.right_box.pack_start(self.current_item.get_list_widget(), True, True)
         self.list_paned.show_all()
@@ -207,7 +210,7 @@ class PlaylistUI(gtk.VBox):
         pass
         
     def popup_list_menu(self, widget, event):    
-        menu_items = [(None, "新建列表", None),
+        menu_items = [(None, "新建列表", self.new_list),
                       (None, "导入列表", self.leading_in_list),
                       (None, "打开列表", self.add_to_list),
                       (None, "导出列表", self.leading_out_list),
@@ -215,6 +218,9 @@ class PlaylistUI(gtk.VBox):
                       None,
                       (None, "保存所有列表", None)]
         Menu(menu_items).show((int(event.x_root), int(event.y_root)))
+        
+    def new_list(self):    
+        self.category_list.new_item(PlaylistItem(Playlist("local", "新建列表", [])))
         
     def leading_in_list(self):    
         uri = WindowLoadPlaylist().run()
@@ -255,12 +261,18 @@ class PlaylistUI(gtk.VBox):
             return index
         return 0
         
-    def list_button_press(self, widget, item, column, x, y):        
+    def list_button_press(self, widget, item):        
         self.reset_search_entry()
 
+        if self.current_item == item:
+            return 
+        if self.drag_source_id != None or self.delete_source_id != None:
+            gobject.source_remove(self.drag_source_id)
+            gobject.source_remove(self.delete_source_id)
+
         self.current_item = item
-        self.current_item.song_view.connect("delete-select-items", self.parser_delete_items)
-        self.current_item.song_view.connect("drag_data_received", self.parser_drag_event)
+        self.delete_source_id = self.current_item.song_view.connect("delete-select-items", self.parser_delete_items)
+        self.drag_source_id = self.current_item.song_view.connect("drag_data_received", self.parser_drag_event)
 
         utils.container_remove_all(self.right_box)
         self.right_box.pack_start(item.get_list_widget(), True, True)
