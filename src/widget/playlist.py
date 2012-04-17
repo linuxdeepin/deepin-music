@@ -111,8 +111,6 @@ class PlaylistUI(gtk.VBox):
     def __on_db_loaded(self, db):        
         if not MediaDB.get_playlists():
             MediaDB.create_playlist("local", "[默认列表]")            
-            MediaDB.create_playlist("local", "[流行歌曲]")            
-            MediaDB.create_playlist("local", "[我的最爱]")
             
         init_items = []    
         for index, pl in enumerate(MediaDB.get_playlists()):    
@@ -236,17 +234,21 @@ class PlaylistUI(gtk.VBox):
             try:
                 self.current_item.song_view.async_add_uris(uri)
             except: pass    
-    
-    
+        
     def delete_current_list(self):
-        if self.get_current_item_index() == 0:
+        index = self.get_current_item_index()
+        if index == 0:
             return
         self.category_list.delete_item(self.current_item)
-        self.reset_default_item()
+        max_index = len(self.category_list.items) - 1
+        if index <= max_index: 
+            new_item = self.category_list.items[index]
+        else:    
+            new_item = self.category_list.items[index - 1]
+        self.reset_highlight_item(new_item)
         
     def save_all_list(self):    
         uri = WinDir().run()
-        
         if uri:
             try:
                 save_name_dict = {}
@@ -262,9 +264,9 @@ class PlaylistUI(gtk.VBox):
             except:        
                 pass
         
-    def reset_default_item(self):    
-        self.category_button_press(None, self.category_list.items[0])
-        self.category_list.highlight_item(self.current_item)        
+    def reset_highlight_item(self, item):    
+        self.category_button_press(None, item)
+        self.category_list.highlight_item(item)        
         
     def get_current_item_index(self):    
         try:
