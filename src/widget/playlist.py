@@ -29,6 +29,7 @@ from dtk.ui.listview import ListView
 from dtk.ui.entry import TextEntry
 from dtk.ui.button import ImageButton, ToggleButton
 from dtk.ui.menu import Menu
+from dtk.ui.editable_list import EditableList
 
 from library import MediaDB
 from widget.ui import SongView, app_theme
@@ -46,8 +47,7 @@ class PlaylistUI(gtk.VBox):
         '''Init.'''
         super(PlaylistUI, self).__init__()
         self.list_paned = HPaned(80)
-        self.category_list = ListView(background_pixbuf=app_theme.get_pixbuf("skin/main.png"))
-        self.category_list.connect("button-press-item", self.list_button_press)
+        self.category_list = EditableList(background_pixbuf=app_theme.get_pixbuf("skin/main.png"))
         self.search_time_source = 0
         
         entry_button = ImageButton(
@@ -129,7 +129,7 @@ class PlaylistUI(gtk.VBox):
             index = self.category_list.items.index(self.current_item)
         else:    
             index = 0
-        self.category_list.select_rows.append(index)    
+        # self.category_list.select_rows.append(index)    
         Player.set_source(self.current_item.song_view)
         self.right_box.pack_start(self.current_item.get_list_widget(), True, True)
         self.list_paned.show_all()
@@ -290,5 +290,5 @@ class PlaylistUI(gtk.VBox):
         MediaDB.full_erase_playlists()
         for item in self.category_list.items:
             songs = item.get_songs()
-            name = item.title
+            name = item.get_name()
             MediaDB.create_playlist("local", name, songs)

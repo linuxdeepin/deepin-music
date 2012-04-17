@@ -27,26 +27,32 @@ from dtk.ui.listview import render_text
 from dtk.ui.constant import ALIGN_END
 from dtk.ui.scrolled_window import ScrolledWindow
 
+
 from constant import DEFAULT_FONT_SIZE
 from widget.ui import SongView, app_theme
 
 class PlaylistItem(gobject.GObject):
-    '''song items for deepin-ui listview'''
-    __gsignals__ = {"redraw-request" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()), }
+
+    __gsignals__ = {"active" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),
+                    "right-press-item" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (int, int,)),}
     
     def __init__(self, playlist):
         '''Init song item.'''
         gobject.GObject.__init__(self)
+        self.editable = True
         self.update(playlist)
         
-    def set_index(self, index):    
-        self.index = index
+    def set_text(self, text):    
+        self.text = text
         
-    def get_index(self):    
-        return self.index
+    def get_text(self):    
+        return self.text
     
-    def emit_redraw_request(self):
-        self.emit("redraw-request")
+    def get_editable(self):
+        return self.editable
+    
+    def set_editable(self, value):
+        self.editable = value
         
     def update(self, playlist):
         '''update'''
@@ -57,29 +63,7 @@ class PlaylistItem(gobject.GObject):
         self.scrolled_window = ScrolledWindow(app_theme.get_pixbuf("skin/main.png"))
         self.scrolled_window.add_child(self.song_view)
         self.scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
-        self.title = playlist.get_name()
-        
-        # Calculate item size.
-        self.title_padding_x = 10
-        self.title_padding_y = 5
-        (self.title_width, self.title_height) = get_content_size(self.title, DEFAULT_FONT_SIZE)
-        
-    def render_title(self, cr, rect):
-        '''Render title.'''
-        rect.x += self.title_padding_x
-        rect.width -= self.title_padding_x * 2
-        render_text(cr, rect, self.title, font_size=DEFAULT_FONT_SIZE)
-    
-        
-    def get_column_sizes(self):
-        '''Get sizes.'''
-        return [(min(self.title_width + self.title_padding_x * 2, 120),
-                 self.title_height + self.title_padding_y * 2),
-                ]    
-    
-    def get_renders(self):
-        '''Get render callbacks.'''
-        return [self.render_title]
+        self.text = playlist.get_name()
     
     def get_list_widget(self):
         return self.scrolled_window
@@ -89,4 +73,4 @@ class PlaylistItem(gobject.GObject):
             return self.song_view.get_songs()
         
     def get_name(self):
-        return self.title
+        return self.text
