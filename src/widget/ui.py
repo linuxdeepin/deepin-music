@@ -98,7 +98,6 @@ class SongView(ListView):
         self.sort_reverse = {key : False for key in sort_key }
         self.connect_after("drag-data-received", self.on_drag_data_received)
         self.connect("double-click-item", self.double_click_item_cb)
-        # self.connect("right-press-items", self.popup_menu)
         
     def double_click_item_cb(self, widget, item, colume, x, y):    
         if item:

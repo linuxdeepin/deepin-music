@@ -213,17 +213,32 @@ class PlaylistUI(gtk.VBox):
                       (None, "保存所有列表", self.save_all_list)]
         Menu(menu_items).show((int(event.x_root), int(event.y_root)))
         
-    def new_list(self):    
+    def new_list(self, items=[]):    
         index = len(self.category_list.items)
-        self.category_list.new_item(PlaylistItem(Playlist("local", "%s%d" %  ("新建列表", index), [])))
+        self.category_list.new_item(PlaylistItem(Playlist("local", "%s%d" %  ("新建列表", index), items)))
         
-    def get_copy_menu_items(self):    
-        copy_menu_items = []
+        
+    def get_edit_sub_menu(self, select_items, move=False):    
+        sub_menu_items = []
         if len(self.category_list.items) > 1:
             other_obj = OrderedDict({index: item.get_name() for index, item in enumerate(self.category_list.items) if index != self.get_current_item_index()})
-            copy_menu_items = [(None, value, None) for key, value in other_obj.items()]
-        copy_menu_items.extend([None, (app_theme.get_pixbuf("toolbar/add_normal.png"), "新建列表", None)])
-        return Menu(copy_menu_items ,MENU_POS_TOP_LEFT)
+            sub_menu_items = [(None, value, self.edit_list_item, key, select_items ,move) for key, value in other_obj.items()]
+        sub_menu_items.extend([None, (app_theme.get_pixbuf("toolbar/add_normal.png"), "新建列表", self.edit_new_list_item, select_items, move)])
+        return Menu(sub_menu_items ,MENU_POS_TOP_LEFT)
+    
+    def edit_list_item(self, index, select_items, move):
+        try:
+            other_item = self.category_list.items[index]
+            other_item.song_view.add_items(select_items)
+            if move:
+                self.current_item.song_view.remove_select_items()
+        except:        
+            pass
+        
+    def edit_new_list_item(self, select_items, move):    
+        self.new_list([item.get_song().get("uri") for item in select_items])
+        if move:
+            self.current_item.song_view.remove_select_items()
         
     def leading_in_list(self):    
         uri = WindowLoadPlaylist().run()
@@ -339,11 +354,12 @@ class PlaylistUI(gtk.VBox):
         sort_items.append(None)
         sort_items.append((None, "随机排序", self.current_item.song_view.random_reorder))
         sub_sort_menu = Menu(sort_items, MENU_POS_TOP_LEFT)
-        add_to_list_menu = self.get_copy_menu_items()
+        add_to_list_menu = self.get_edit_sub_menu(select_items)
+        move_to_list_menu = self.get_edit_sub_menu(select_items, True)
         
         Menu([(app_theme.get_pixbuf("playlist/play_song.png"), "播放歌曲",  self.current_item.song_view.play_select_item),
               (None, "添加到列表", add_to_list_menu),
-              (None, "移动到列表", None),
+              (None, "移动到列表", move_to_list_menu),
               (None, "发送到移动盘", None),
               None,
               (None, "删除", self.current_item.song_view.remove_select_items),
