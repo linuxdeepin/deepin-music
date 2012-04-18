@@ -98,7 +98,7 @@ class SongView(ListView):
         self.sort_reverse = {key : False for key in sort_key }
         self.connect_after("drag-data-received", self.on_drag_data_received)
         self.connect("double-click-item", self.double_click_item_cb)
-        self.connect("right-press-items", self.popup_menu)
+        # self.connect("right-press-items", self.popup_menu)
         
     def double_click_item_cb(self, widget, item, colume, x, y):    
         if item:
@@ -271,7 +271,7 @@ class SongView(ListView):
         self.delete_select_items()
         return True
     
-    def __clear_items(self):
+    def erase_items(self):
         self.clear()
         return True
     
@@ -324,35 +324,6 @@ class SongView(ListView):
             if self.highlight_item != None:
                 self.visible_highlight()
             self.queue_draw()
-        
-    def popup_menu(self, widget, x, y, item, select_items):    
-        play_mode_menu = self.get_playmode_menu(align=True)
-        sort_dict = OrderedDict()
-        sort_dict["sort_title"] = "按歌曲名"
-        sort_dict["sort_artist"] = "按艺术家"        
-        sort_dict["sort_album"] = "按专辑" 
-        sort_dict["sort_genre"] = "按流派"
-        sort_dict["#playcount"] = "按播放次数"
-        sort_dict["#added"] = "按添加时间"
-        sort_items = [(None, value, self.set_sort_keyword, key) for key, value in sort_dict.iteritems()]
-        sort_items.append(None)
-        sort_items.append((None, "随机排序", self.random_reorder))
-        sub_sort_menu = Menu(sort_items, MENU_POS_TOP_LEFT)
-        
-        return Menu([(app_theme.get_pixbuf("playlist/play_song.png"), "播放歌曲",  self.play_select_item),
-                     (None, "添加到列表", None),
-                     (None, "移动到列表", None),
-                     (None, "发送到移动盘", None),
-                     None,
-                     (None, "删除", self.remove_select_items),
-                     (app_theme.get_pixbuf("playlist/delete_song.png"), "从本地删除", self.move_to_trash),
-                     (None, "清空列表", self.__clear_items),
-                     None,
-                     (None, "播放模式", play_mode_menu),
-                     (None, "歌曲排序", sub_sort_menu),
-                     (app_theme.get_pixbuf("playlist/open_dir.png"), "打开文件目录", self.open_song_dir),
-                     (None, "编辑歌曲信息", None),
-                     ], opacity=1.0, menu_pos=1).show((x, y))
     
     def get_playmode_menu(self, pos=[], align=False):
         mode_dict = OrderedDict()
@@ -386,8 +357,8 @@ class SongView(ListView):
         
     def popup_add_menu(self, x, y):
         menu_items = [
-            (None, "添加文件", self.__add_file),
-            (None, "添加目录", self.__add_dir),
+            (None, "添加歌曲", self.__add_file),
+            (None, "添加歌曲目录", self.__add_dir),
             ]
         return Menu(menu_items).show((x, y))
 

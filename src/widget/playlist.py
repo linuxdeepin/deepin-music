@@ -23,13 +23,13 @@
 import os
 import gtk
 import gobject
-from collections import OrderedDict
+from collections import OrderedDict, namedtuple
 from dtk.ui.scrolled_window import ScrolledWindow
 from dtk.ui.paned import HPaned
 from dtk.ui.listview import ListView
 from dtk.ui.entry import TextEntry
 from dtk.ui.button import ImageButton, ToggleButton
-from dtk.ui.menu import Menu
+from dtk.ui.menu import Menu,MENU_POS_TOP_LEFT
 from dtk.ui.editable_list import EditableList
 
 from library import MediaDB, Playlist
@@ -50,6 +50,7 @@ class PlaylistUI(gtk.VBox):
         self.list_paned = HPaned(80)
         self.category_list = EditableList(background_pixbuf=app_theme.get_pixbuf("skin/main.png"))
         self.category_list.connect("active", self.category_button_press)
+        self.category_list.connect("right-press", self.category_right_press)
         self.search_time_source = 0
         
         entry_button = ImageButton(
@@ -99,6 +100,7 @@ class PlaylistUI(gtk.VBox):
         self.cache_items = None
         self.delete_source_id = None
         self.drag_source_id = None
+        self.menu_source_id = None
         
         if MediaDB.isloaded():
             self.__on_db_loaded(MediaDB)
@@ -112,17 +114,13 @@ class PlaylistUI(gtk.VBox):
         if not MediaDB.get_playlists():
             MediaDB.create_playlist("local", "[默认列表]")            
             
-        init_items = []    
-        for index, pl in enumerate(MediaDB.get_playlists()):    
-            if index == 0:
-                p_item = PlaylistItem(pl, False)
-            else:    
-                p_item = PlaylistItem(pl)
-            init_items.append(p_item)    
+        init_items = [PlaylistItem(pl) for pl in MediaDB.get_playlists()]    
         self.category_list.add_items(init_items)
         self.current_item = self.category_list.items[self.get_save_item_index()]
         self.delete_source_id = self.current_item.song_view.connect("delete-select-items", self.parser_delete_items)
-        self.drag_source_id = self.current_item.song_view.connect("drag_data_received", self.parser_drag_event)
+        self.drag_source_id = self.current_item.song_view.connect("drag-data-received", self.parser_drag_event)
+        self.menu_source_id = self.current_item.song_view.connect("right-press-items", self.popup_detail_menu)
+        
         if self.current_item in self.category_list.items:
             index = self.category_list.items.index(self.current_item)
         else:    
@@ -200,6 +198,11 @@ class PlaylistUI(gtk.VBox):
     def popup_add_menu(self, widget, event):
         self.current_item.song_view.popup_add_menu(int(event.x_root), int(event.y_root))
         
+    def category_right_press(self, widget, item, x, y):    
+        new_event = namedtuple("event", "x_root y_root")
+        event = new_event(int(x), int(y))
+        self.popup_list_menu(widget, event)
+        
     def popup_list_menu(self, widget, event):    
         menu_items = [(None, "新建列表", self.new_list),
                       (None, "导入列表", self.leading_in_list),
@@ -211,7 +214,16 @@ class PlaylistUI(gtk.VBox):
         Menu(menu_items).show((int(event.x_root), int(event.y_root)))
         
     def new_list(self):    
-        self.category_list.new_item(PlaylistItem(Playlist("local", "新建列表", [])))
+        index = len(self.category_list.items)
+        self.category_list.new_item(PlaylistItem(Playlist("local", "%s%d" %  ("新建列表", index), [])))
+        
+    def get_copy_menu_items(self):    
+        copy_menu_items = []
+        if len(self.category_list.items) > 1:
+            other_obj = OrderedDict({index: item.get_name() for index, item in enumerate(self.category_list.items) if index != self.get_current_item_index()})
+            copy_menu_items = [(None, value, None) for key, value in other_obj.items()]
+        copy_menu_items.extend([None, (app_theme.get_pixbuf("toolbar/add_normal.png"), "新建列表", None)])
+        return Menu(copy_menu_items ,MENU_POS_TOP_LEFT)
         
     def leading_in_list(self):    
         uri = WindowLoadPlaylist().run()
@@ -236,9 +248,9 @@ class PlaylistUI(gtk.VBox):
             except: pass    
         
     def delete_current_list(self):
-        index = self.get_current_item_index()
-        if index == 0:
+        if len(self.category_list.items) == 1:
             return
+        index = self.get_current_item_index()
         self.category_list.delete_item(self.current_item)
         max_index = len(self.category_list.items) - 1
         if index <= max_index: 
@@ -290,13 +302,14 @@ class PlaylistUI(gtk.VBox):
         self.reset_search_entry()
         if self.current_item == item:
             return 
-        if self.drag_source_id != None or self.delete_source_id != None:
+        if self.drag_source_id != None or self.delete_source_id != None or self.menu_source_id !=None:
             gobject.source_remove(self.drag_source_id)
             gobject.source_remove(self.delete_source_id)
 
         self.current_item = item
         self.delete_source_id = self.current_item.song_view.connect("delete-select-items", self.parser_delete_items)
-        self.drag_source_id = self.current_item.song_view.connect("drag_data_received", self.parser_drag_event)
+        self.drag_source_id = self.current_item.song_view.connect("drag-data-received", self.parser_drag_event)
+        self.menu_source_id = self.current_item.song_view.connect("right-press-items", self.popup_detail_menu)
 
         utils.container_remove_all(self.right_box)
         self.right_box.pack_start(item.get_list_widget(), True, True)
@@ -311,6 +324,38 @@ class PlaylistUI(gtk.VBox):
             self.entry_box.entry.set_text("")
             self.entry_box.hide_all()
             self.entry_box.set_no_show_all(True)            
+              
+            
+    def popup_detail_menu(self, widget, x, y, item, select_items):        
+        play_mode_menu = self.current_item.song_view.get_playmode_menu(align=True)
+        sort_dict = OrderedDict()
+        sort_dict["sort_title"] = "按歌曲名"
+        sort_dict["sort_artist"] = "按艺术家"        
+        sort_dict["sort_album"] = "按专辑" 
+        sort_dict["sort_genre"] = "按流派"
+        sort_dict["#playcount"] = "按播放次数"
+        sort_dict["#added"] = "按添加时间"
+        sort_items = [(None, value, self.current_item.song_view.set_sort_keyword, key) for key, value in sort_dict.iteritems()]
+        sort_items.append(None)
+        sort_items.append((None, "随机排序", self.current_item.song_view.random_reorder))
+        sub_sort_menu = Menu(sort_items, MENU_POS_TOP_LEFT)
+        add_to_list_menu = self.get_copy_menu_items()
+        
+        Menu([(app_theme.get_pixbuf("playlist/play_song.png"), "播放歌曲",  self.current_item.song_view.play_select_item),
+              (None, "添加到列表", add_to_list_menu),
+              (None, "移动到列表", None),
+              (None, "发送到移动盘", None),
+              None,
+              (None, "删除", self.current_item.song_view.remove_select_items),
+              (app_theme.get_pixbuf("playlist/delete_song.png"), "从本地删除", self.current_item.song_view.move_to_trash),
+              (None, "清空列表", self.current_item.song_view.erase_items),
+              None,
+              (None, "播放模式", play_mode_menu),
+              (None, "歌曲排序", sub_sort_menu),
+              (app_theme.get_pixbuf("playlist/open_dir.png"), "打开文件目录", self.current_item.song_view.open_song_dir),
+              (None, "编辑歌曲信息", None),
+              ], opacity=1.0, menu_pos=1).show((x, y))
+        
         
     def save_to_library(self):    
         if self.search_flag:
