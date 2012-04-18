@@ -29,14 +29,21 @@ class LrcParser(object):
     def __init__(self, filename=""):
         self.filename = ""
         self.lyrics_dict = {}
-                
-    def set_filename(self, filename):    
         self.parser_offset = 0
         self.nlyrics = 0
         self.tmp_lyrics_dict = {}
         self.time_dict = {}
         self.attr_dict = {"offset" : 0}
+        self.current_id = 0
+                
+    def set_filename(self, filename):    
+        self.filename = ""
         self.lyrics_dict = {}
+        self.parser_offset = 0
+        self.nlyrics = 0
+        self.tmp_lyrics_dict = {}
+        self.time_dict = {}
+        self.attr_dict = {"offset" : 0}
         self.current_id = 0
         self.parser_from_file(filename)
         

@@ -101,6 +101,7 @@ class PlaylistUI(gtk.VBox):
         self.delete_source_id = None
         self.drag_source_id = None
         self.menu_source_id = None
+        self.detail_menu = None
         
         if MediaDB.isloaded():
             self.__on_db_loaded(MediaDB)
@@ -356,21 +357,24 @@ class PlaylistUI(gtk.VBox):
         sub_sort_menu = Menu(sort_items, MENU_POS_TOP_LEFT)
         add_to_list_menu = self.get_edit_sub_menu(select_items)
         move_to_list_menu = self.get_edit_sub_menu(select_items, True)
+        if self.detail_menu != None:
+            del self.detail_menu
         
-        Menu([(app_theme.get_pixbuf("playlist/play_song.png"), "播放歌曲",  self.current_item.song_view.play_select_item),
-              (None, "添加到列表", add_to_list_menu),
-              (None, "移动到列表", move_to_list_menu),
-              (None, "发送到移动盘", None),
-              None,
-              (None, "删除", self.current_item.song_view.remove_select_items),
-              (app_theme.get_pixbuf("playlist/delete_song.png"), "从本地删除", self.current_item.song_view.move_to_trash),
-              (None, "清空列表", self.current_item.song_view.erase_items),
-              None,
-              (None, "播放模式", play_mode_menu),
-              (None, "歌曲排序", sub_sort_menu),
-              (app_theme.get_pixbuf("playlist/open_dir.png"), "打开文件目录", self.current_item.song_view.open_song_dir),
-              (None, "编辑歌曲信息", None),
-              ], opacity=1.0, menu_pos=1).show((x, y))
+        self.detail_menu = Menu([(app_theme.get_pixbuf("playlist/play_song.png"), "播放歌曲",  self.current_item.song_view.play_select_item),
+                                 (None, "添加到列表", add_to_list_menu),
+                                 (None, "移动到列表", move_to_list_menu),
+                                 (None, "发送到移动盘", None),
+                                 None,
+                                 (None, "删除", self.current_item.song_view.remove_select_items),
+                                 (app_theme.get_pixbuf("playlist/delete_song.png"), "从本地删除", self.current_item.song_view.move_to_trash),
+                                 (None, "清空列表", self.current_item.song_view.erase_items),
+                                 None,
+                                 (None, "播放模式", play_mode_menu),
+                                 (None, "歌曲排序", sub_sort_menu),
+                                 (app_theme.get_pixbuf("playlist/open_dir.png"), "打开文件目录", self.current_item.song_view.open_song_dir),
+                                 (None, "编辑歌曲信息", None),
+                                 ], opacity=1.0, menu_pos=1)
+        self.detail_menu.show((int(x), int(y)))
         
         
     def save_to_library(self):    

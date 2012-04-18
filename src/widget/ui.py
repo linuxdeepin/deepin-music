@@ -351,7 +351,7 @@ class SongView(ListView):
     def popup_delete_menu(self, x, y):    
         items = [(None, "删除", self.remove_select_items),
                  (None, "从本地删除", self.move_to_trash),
-                 (None, "清空列表", self.__clear_items)]
+                 (None, "清空列表", self.erase_items)]
         Menu(items).show((int(x), int(y)))
         
     def popup_add_menu(self, x, y):
