@@ -26,6 +26,11 @@ import gobject
 from dtk.ui.window import Window
 from dtk.ui.titlebar import Titlebar
 from dtk.ui.utils import move_window
+from dtk.ui.application import Application
+from dtk.ui.notebook import Notebook
+from dtk.ui.browser_client import BrowserClient
+from dtk.ui.frame import HorizontalFrame
+
 
 import utils
 from widget.ui import app_theme
@@ -34,6 +39,7 @@ from widget.playlist import PlaylistUI
 
 from config import config
 from player import Player
+from findfile import get_cache_file
 from library import MediaDB
 from dbus_manager import DeepinMusicDBus
 
@@ -42,21 +48,21 @@ class DeepinMusic(gobject.GObject):
     
     def __init__(self):
         gobject.GObject.__init__(self)
-        gtk.window_set_default_icon_from_file(app_theme.get_image_path("skin/logo1.png"))
+        gtk.window_set_default_icon_from_file(app_theme.get_image_path("skin/logo.png"))
         
-        self.window = Window()
-        utils.set_main_window(self.window)
-        self.window.change_background(app_theme.get_pixbuf("skin/main.png"))
-        self.window.set_default_size(280, 500)
-        self.titlebar = Titlebar(["min", "max", "close"], app_theme.get_pixbuf("skin/logo1.png"), "深度音乐")
-        self.titlebar.min_button.connect("clicked", lambda w: self.window.min_window())
-        self.titlebar.max_button.connect("clicked", lambda w: self.window.toggle_max_window())         
-        self.titlebar.close_button.connect("clicked", self.force_quit)       
-        self.titlebar.drag_box.connect('button-press-event', lambda w, e: move_window(w, e, self.window))
+        application = Application("DMuisc")
+        application.close_callback = self.force_quit
+        application.set_default_size(830, 500)
+        application.set_icon(app_theme.get_pixbuf("skin/logo.png"))
+        application.add_titlebar(
+            ["max", "min", "close"],
+            app_theme.get_pixbuf("skin/logo1.png"),
+            "深度音乐"
+            )
 
-        
-        self.main_box = self.window.window_frame
-        self.main_box.pack_start(self.titlebar.box, False)
+        self.window = application.window
+        utils.set_main_window(self.window)
+        application.window.change_background(app_theme.get_pixbuf("skin/main.png"))
         
         if config.get("window", "x") == "-1":
             self.window.set_position(gtk.WIN_POS_CENTER)
@@ -65,8 +71,39 @@ class DeepinMusic(gobject.GObject):
         
         self.playlist_ui = PlaylistUI()    
         self.dbus_service = DeepinMusicDBus()
-        self.main_box.pack_start(HeaderBar(), False)
-        self.main_box.pack_start(self.playlist_ui, True, True)
+        
+        
+        notebook = Notebook([(app_theme.get_pixbuf("web.png"), "虾米音乐", None),])
+        notebook_frame = HorizontalFrame(20)
+        notebook_frame.add(notebook)
+        
+        notebook_box = gtk.VBox()
+        horizontal_frame = HorizontalFrame()
+        browser_client = BrowserClient("http://www.xiami.com", get_cache_file("cookie"),
+                                      application.app_bus_name, application.app_dbus_name,)
+        horizontal_frame.add(browser_client)
+        notebook_box.pack_start(horizontal_frame, True, True)
+        
+        right_box = gtk.VBox()
+        right_box.pack_start(notebook_frame, False, False)
+        browser_align = gtk.Alignment()
+        browser_align.set_padding(0, 25, 10, 10)
+        browser_align.set(0.5, 0.5, 1, 1)
+        browser_align.add(notebook_box)
+        right_box.pack_start(browser_align, True, True)
+        
+        
+        left_box = gtk.VBox()
+        left_box.pack_start(HeaderBar(), False)
+        left_box.pack_start(self.playlist_ui, True, True)
+        left_align = gtk.Alignment()
+        left_align.set(0.5, 0.5, 1, 1)
+        left_align.add(left_box)
+        
+        main_box = gtk.HBox()
+        main_box.pack_start(left_align, False)
+        main_box.pack_start(right_box, True)
+        application.main_box.pack_start(main_box)
         gobject.idle_add(self.ready)
         
     def ready(self):    

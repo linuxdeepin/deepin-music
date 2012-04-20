@@ -72,7 +72,7 @@ class PlaylistUI(gtk.VBox):
         paned_align.set(0, 0, 1, 1)
         paned_align.add(self.list_paned)
         
-        self.toolbar_box = gtk.HBox(spacing=60)
+        self.toolbar_box = gtk.HBox(spacing=55)
         self.search_button = self.__create_simple_toggle_button("search", self.show_text_entry)
         self.__create_simple_button("list", self.popup_list_menu)
         self.__create_simple_button("add", self.popup_add_menu)
@@ -321,6 +321,7 @@ class PlaylistUI(gtk.VBox):
         if self.drag_source_id != None or self.delete_source_id != None or self.menu_source_id !=None:
             gobject.source_remove(self.drag_source_id)
             gobject.source_remove(self.delete_source_id)
+            gobject.source_remove(self.menu_source_id)
 
         self.current_item = item
         self.delete_source_id = self.current_item.song_view.connect("delete-select-items", self.parser_delete_items)
@@ -343,6 +344,8 @@ class PlaylistUI(gtk.VBox):
               
             
     def popup_detail_menu(self, widget, x, y, item, select_items):        
+        if self.detail_menu != None:
+            self.detail_menu.menu_window.destroy()
         play_mode_menu = self.current_item.song_view.get_playmode_menu(align=True)
         sort_dict = OrderedDict()
         sort_dict["sort_title"] = "按歌曲名"
@@ -357,9 +360,6 @@ class PlaylistUI(gtk.VBox):
         sub_sort_menu = Menu(sort_items, MENU_POS_TOP_LEFT)
         add_to_list_menu = self.get_edit_sub_menu(select_items)
         move_to_list_menu = self.get_edit_sub_menu(select_items, True)
-        if self.detail_menu != None:
-            del self.detail_menu
-        
         self.detail_menu = Menu([(app_theme.get_pixbuf("playlist/play_song.png"), "播放歌曲",  self.current_item.song_view.play_select_item),
                                  (None, "添加到列表", add_to_list_menu),
                                  (None, "移动到列表", move_to_list_menu),

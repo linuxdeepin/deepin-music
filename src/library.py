@@ -948,9 +948,16 @@ MediaDB.register_playlist_type("local")
 
 if __name__ == "__main__":
     import gtk
-    MediaDB.load()
+    from widget.songs_manager import SongsManager
+    # MediaDB.load()
     # a = "artist =/^%s$/" %"李"
     # a = "&(artist = %s, album = %s)" % ("小邪兽", "邪恶家族")
     # a = "&(artist = %s, album = %s)" % ("小", "邪恶家族")
-    db_query = DBQuery("")
-    print db_query.get_songs()
+    # db_query = DBQuery("")
+    # print db_query.get_songs()
+    window = gtk.Window()
+    window.set_size_request(120, 150)
+    window.add(SongsManager())
+    window.show_all()
+    gtk.main()
+
