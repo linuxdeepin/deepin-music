@@ -22,16 +22,12 @@
 
 import gtk
 import cairo
-import pango
-import pangocairo
-import math
 from widget.ui import app_theme
-import copy
+
 import gobject
 from config import config
 from render_lyrics import RenderContextNew
 from utils import color_hex_to_cairo
-from dtk.ui.window import Window
 
 # drag state.
 DRAG_NONE = 1
@@ -427,7 +423,6 @@ class LyricsWindow(gobject.GObject):
     
     def button_release(self, widget, event):
         x, y = widget.get_position()
-        rect = widget.allocation
         self.dock_drag_state = DRAG_NONE    
         return False
 
@@ -480,7 +475,7 @@ class LyricsWindow(gobject.GObject):
         width, _ = self.get_lyrics_size()
         text_width = self.active_lyric_surfaces[line].get_width()
         if self.fade_in_size * 2 > width:
-            fade_in_size = width / 2
+            self.fade_in_size = width / 2
         if self.is_composited:    
             pattern = cairo.LinearGradient(self.padding_x, 0.0, self.padding_x + width, 0.0)
             

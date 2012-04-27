@@ -22,10 +22,6 @@
 
 import gtk
 import gobject
-
-from dtk.ui.window import Window
-from dtk.ui.titlebar import Titlebar
-from dtk.ui.utils import move_window
 from dtk.ui.application import Application
 from dtk.ui.notebook import Notebook
 from dtk.ui.browser_client import BrowserClient
@@ -52,7 +48,7 @@ class DeepinMusic(gobject.GObject):
         
         application = Application("DMuisc")
         application.close_callback = self.force_quit
-        application.set_default_size(830, 500)
+        application.set_default_size(820, 500)
         application.set_icon(app_theme.get_pixbuf("skin/logo.png"))
         application.add_titlebar(
             ["max", "min", "close"],

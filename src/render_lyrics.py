@@ -29,7 +29,7 @@ import gobject
 import dtk_cairo_blur
 from config import config
 
-OUTLINE_WIDTH = 5
+OUTLINE_WIDTH = 3
 LINEAR_POS = [0.0, 0.5, 1.0]
 LINEAR_COLOR_COUNT = 3
 BLACK_COLOR = (0.0, 0.0, 0.0)
