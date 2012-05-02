@@ -344,7 +344,7 @@ class PlaylistUI(gtk.VBox):
             
     def popup_detail_menu(self, widget, x, y, item, select_items):        
         if self.detail_menu != None:
-            self.detail_menu.menu_window.destroy()
+            self.detail_menu.destroy()
         play_mode_menu = self.current_item.song_view.get_playmode_menu(align=True)
         sort_dict = OrderedDict()
         sort_dict["sort_title"] = "按歌曲名"
@@ -372,7 +372,7 @@ class PlaylistUI(gtk.VBox):
                                  (None, "歌曲排序", sub_sort_menu),
                                  (app_theme.get_pixbuf("playlist/open_dir.png"), "打开文件目录", self.current_item.song_view.open_song_dir),
                                  (None, "编辑歌曲信息", None),
-                                 ], opacity=1.0, menu_pos=1)
+                                 ])
         self.detail_menu.show((int(x), int(y)))
         
         
