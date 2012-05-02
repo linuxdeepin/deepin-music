@@ -74,7 +74,7 @@ class DeepinMusic(gobject.GObject):
         
         notebook_box = gtk.VBox()
         horizontal_frame = HorizontalFrame()
-        browser_client = BrowserClient("http://www.xiami.com", get_cache_file("cookie"),
+        browser_client = BrowserClient("http://mp3.baidu.com/", get_cache_file("cookie"),
                                       application.app_bus_name, application.app_dbus_name,)
         horizontal_frame.add(browser_client)
         notebook_box.pack_start(horizontal_frame, True, True)

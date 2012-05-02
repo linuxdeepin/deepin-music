@@ -282,8 +282,7 @@ class LyricsModule(object):
         menu_dict["cool_blue"] = "清爽蓝"
         menu_items = [(None, value, self.set_predefine_color, key) for key, value in menu_dict.iteritems()]
         menu_win = Menu(menu_items)
-        menu_win.menu_window.set_keep_above(True)
-        width, height = menu_win.menu_window.get_size()
+        width, height = menu_win.get_size()
         y = event.y_root - height + 40
         menu_win.show((int(event.x_root), int(y)))
         

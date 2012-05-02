@@ -22,7 +22,6 @@
 
 import gst
 import gtk
-import copy
 from collections import OrderedDict
 
 from config import config
@@ -118,7 +117,6 @@ class SlipperScalebar(gtk.VBox):
         preamp_align = gtk.Alignment()
         preamp_align.set_padding(8, 8, 0, 0)
         preamp_align.add(scale_image)
-        scale_align = gtk.Alignment()
         
         hear_box = gtk.HBox()
         hear_box.pack_start(self.scalebar, False, False)
@@ -211,7 +209,7 @@ class EqualizerWindow(Logger):
             config.connect("config-changed", self.__on_config_change)
             
         self.active_button = Button("关闭", 70, 20)
-        self.active_button.connect("clicked", self.active_or_inactive)
+        self.active_button.connect("clicked", self.hide_win)
         self.reset_button = Button("重置", 70, 20)
         self.reset_button.connect("clicked", lambda w : self.__change("Default"))
         self.predefine_button = Button("预设", 70, 20)
@@ -253,7 +251,7 @@ class EqualizerWindow(Logger):
             band_name = option.replace("equalizer-", "")
             self.__equalizer.set_property(band_name, float(value))
             
-    def active_or_inactive(self, widget):    
+    def hide_win(self, widget):    
         config.set("equalizer", "win_x", self.equalizer_win.get_position()[0])
         config.set("equalizer", "win_y", self.equalizer_win.get_position()[1])
         self.equalizer_win.hide_all()

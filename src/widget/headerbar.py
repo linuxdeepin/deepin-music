@@ -24,11 +24,8 @@
 import gtk
 import gobject
 from dtk.ui.button import ToggleButton, ImageButton
-from dtk.ui.utils import foreach_recursive, is_left_button
 from dtk.ui.menu import Menu
 
-
-import utils
 from player import Player
 from widget.information import PlayInfo
 from widget.timer import SongTimer, VolumeSlider
@@ -36,8 +33,6 @@ from widget.equalizer import EqualizerWindow
 from widget.cover import PlayerCoverButton
 from widget.lyrics_module import LyricsModule
 from widget.ui import app_theme
-from source.local import ImportFolderJob
-from library import MediaDB
 from config import config
 from helper import Dispatcher
 
@@ -50,6 +45,7 @@ class HeaderBar(gtk.HBox):
         # init.
         self.cover_box = PlayerCoverButton()
         self.equalizer_win = EqualizerWindow()
+        self.equalizer_win.equalizer_win.connect("hide", self.__set_equalizer_status)
         self.lyrics_display = LyricsModule()
         
         # swap played status handler
@@ -98,14 +94,14 @@ class HeaderBar(gtk.HBox):
         
         # test
         self.lyrics_button = self.__create_simple_toggle_button("lyrics", self.start_lyrics)
-        musicbox_button = self.__create_simple_toggle_button("musicbox", self.open_dir)
+        self.musicbox_button = self.__create_simple_toggle_button("musicbox", self.open_dir)
         media_button = self.__create_simple_toggle_button("media", self.save_db)
         playlist_button = self.__create_simple_toggle_button("playlist", self.start_playlist)
         
         
         more_box.pack_start(playlist_button)
         more_box.pack_start(self.lyrics_button)
-        more_box.pack_start(musicbox_button)
+        more_box.pack_start(self.musicbox_button)
         more_box.pack_start(media_button)
         more_align.add(more_box)        
         
@@ -134,7 +130,10 @@ class HeaderBar(gtk.HBox):
             self.lyrics_button.set_active(False)
         
     def open_dir(self, widget):    
-        pass
+        if widget.get_active():
+            self.equalizer_win.run()
+        else:    
+            self.equalizer_win.hide_win(None)
             
     def __create_simple_toggle_button(self, name, callback):
         toggle_button = ToggleButton(
@@ -157,6 +156,10 @@ class HeaderBar(gtk.HBox):
             
     def save_db(self, widget):    
         pass
+    
+    def __set_equalizer_status(self, widget):
+        config.set("equalizer", "status", "false")
+        self.musicbox_button.set_active(False)
         
     def right_click_cb(self, widget, event):    
         if event.button == 3:

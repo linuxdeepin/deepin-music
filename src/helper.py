@@ -47,10 +47,10 @@ class EventDispatcher(gobject.GObject):
         self.__update_source_id = None
         
     def config_change(self, section, option, value):    
-        self.emit("config-changed", selction, option, value)
+        self.emit("config-changed", section, option, value)
         
     def show_playlists(self, value):    
-        self.emit("show-playlist", vaule)
+        self.emit("show-playlist", value)
         
     def close_lyrics(self):    
         self.emit("close-lyrics")
@@ -63,4 +63,85 @@ class EventDispatcher(gobject.GObject):
         
 Dispatcher = EventDispatcher()
 
+class SignalContainer(object):    
     
+    def __init__(self):
+        self.signals_dict = {}
+        
+    def autoconnect_object(self, obj, signal, func, obj_dest, *args):
+        try:
+            conns = self.signals_dict[obj]
+        except KeyError:    
+            conns = self.signals_dict[obj] = []
+        conns.append(obj.connect_after(signal, func, obj_dest, *args))    
+        
+    def autoconnect_after(self, obj, signal, func, *args):    
+        try:
+            conns = self.signals_dict[obj]
+        except KeyError:    
+            conns = self.signals_dict[obj] = []
+        conns.append(obj.connect_after(signal, func, *args))    
+        
+    def autoconnect(self, obj, signal, func, *args):    
+        try:
+            conns = self.signals_dict[obj]
+        except KeyError:    
+            conns = self.signals_dict[obj] = []
+        conns.append(obj.connect(signal, func, *args))    
+        
+    def autodisconnect_object(self, obj):    
+        conns = self.signals_dict.get(obj, None)
+        if conns:
+            for conn in conns:
+                obj.disconnect(conn)
+            del self.signals_dict.dict[obj]    
+            
+    def autodisconnect_all(self, obj):        
+        for obj, conns in self.signals_dict.iteritems():
+            for conn in conns:
+                obj.disconnect(conn)
+        self.signals_dict = {}        
+        
+class _SignalCollector(object):        
+    
+    def __init__(self):
+        self.signals_dict = {}
+        
+    def connect(self, sid, obj, signal, func, *args):    
+        self.signals_dict.setdefault(sid, {})
+        try:
+            conns = self.signals_dict[sid][obj]
+        except KeyError:    
+            conns = self.signals_dict[sid][obj] = []
+        conns.append(obj.connect(signal, func, *args))    
+        
+    def disconnect_object(self, sid, obj):    
+        if self.signals_dict.has_key(sid):
+            conns = self.signals_dict[sid].get(obj, None)
+            if conns:
+                for conn in conns:
+                    obj.disconnect(conn)
+                del self.signals_dict[sid][obj]    
+                
+    def disconnect_all(self, sid):            
+        if self.signals_dict.has_key(sid):
+            for obj, conns in self.signals_dict[sid].iteritems():
+                for conn in conns:
+                    obj.disconnect(conn)
+            self.signals_dict[sid] = {}        
+            
+SignalCollector = _SignalCollector()            
+                    
+                
+                
+                    
+            
+        
+            
+                
+            
+                
+        
+            
+
+            
