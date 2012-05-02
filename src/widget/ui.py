@@ -23,28 +23,22 @@
 import os
 import gtk
 import gobject
-import pango
-import cairo
 import random
 import time
 
 from collections import OrderedDict
 from dtk.ui.window import Window
 from dtk.ui.theme import Theme
-from dtk.ui.utils import move_window, is_double_click
 from dtk.ui.titlebar import Titlebar
 from dtk.ui.listview import ListView
-from dtk.ui.menu import Menu, MENU_POS_TOP_LEFT
-from dtk.ui.button import Button
+from dtk.ui.utils import move_window
+from dtk.ui.menu import Menu
 from dtk.ui.threads import post_gui
-from dtk.ui.draw import propagate_expose
 
 import utils
 from config import config
 from player import Player
-from findfile import get_config_file
 from library import MediaDB
-from logger import Logger
 from widget.dialog import WinFile, WinDir
 from widget.song_item import SongItem
 
@@ -69,7 +63,7 @@ class NormalWindow(object):
         self.main_box = gtk.VBox(spacing=5)
         main_align.add(self.main_box)
 
-        self.window.window_frame.pack_start(self.titlebar.box, False, False)
+        self.window.window_frame.pack_start(self.titlebar, False, False)
         self.window.window_frame.pack_start(main_align)
         
     def show_window(self):    
@@ -340,7 +334,7 @@ class SongView(ListView):
                 tick = None
             mode_items.append((tick, value, self.set_loop_mode, key))    
         if align:    
-            play_mode_menu = Menu(mode_items, MENU_POS_TOP_LEFT)
+            play_mode_menu = Menu(mode_items)
         else:    
             play_mode_menu = Menu(mode_items)
         if pos:

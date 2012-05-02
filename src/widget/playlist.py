@@ -26,14 +26,13 @@ import gobject
 from collections import OrderedDict, namedtuple
 from dtk.ui.scrolled_window import ScrolledWindow
 from dtk.ui.paned import HPaned
-from dtk.ui.listview import ListView
 from dtk.ui.entry import TextEntry
 from dtk.ui.button import ImageButton, ToggleButton
-from dtk.ui.menu import Menu,MENU_POS_TOP_LEFT
+from dtk.ui.menu import Menu
 from dtk.ui.editable_list import EditableList
 
 from library import MediaDB, Playlist
-from widget.ui import SongView, app_theme
+from widget.ui import app_theme
 from widget.song_item import SongItem
 from widget.list_item import PlaylistItem
 from widget.dialog import WindowLoadPlaylist, WindowExportPlaylist, WinDir
@@ -225,7 +224,7 @@ class PlaylistUI(gtk.VBox):
             other_obj = OrderedDict({index: item.get_name() for index, item in enumerate(self.category_list.items) if index != self.get_current_item_index()})
             sub_menu_items = [(None, value, self.edit_list_item, key, select_items ,move) for key, value in other_obj.items()]
         sub_menu_items.extend([None, (app_theme.get_pixbuf("toolbar/add_normal.png"), "新建列表", self.edit_new_list_item, select_items, move)])
-        return Menu(sub_menu_items ,MENU_POS_TOP_LEFT)
+        return Menu(sub_menu_items)
     
     def edit_list_item(self, index, select_items, move):
         try:
@@ -357,7 +356,7 @@ class PlaylistUI(gtk.VBox):
         sort_items = [(None, value, self.current_item.song_view.set_sort_keyword, key) for key, value in sort_dict.iteritems()]
         sort_items.append(None)
         sort_items.append((None, "随机排序", self.current_item.song_view.random_reorder))
-        sub_sort_menu = Menu(sort_items, MENU_POS_TOP_LEFT)
+        sub_sort_menu = Menu(sort_items)
         add_to_list_menu = self.get_edit_sub_menu(select_items)
         move_to_list_menu = self.get_edit_sub_menu(select_items, True)
         self.detail_menu = Menu([(app_theme.get_pixbuf("playlist/play_song.png"), "播放歌曲",  self.current_item.song_view.play_select_item),

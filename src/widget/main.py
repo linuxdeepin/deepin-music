@@ -27,7 +27,6 @@ from dtk.ui.notebook import Notebook
 from dtk.ui.browser_client import BrowserClient
 from dtk.ui.frame import HorizontalFrame
 
-
 import utils
 from widget.ui import app_theme
 from widget.headerbar import HeaderBar
@@ -119,6 +118,6 @@ class DeepinMusic(gobject.GObject):
         self.playlist_ui.save_to_library()
         MediaDB.save()
         config.write()
+        self.window.destroy()        
         gtk.main_quit()
         print "Exit successful."
-        
