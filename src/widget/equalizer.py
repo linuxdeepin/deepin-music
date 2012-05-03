@@ -285,7 +285,7 @@ class EqualizerWindow(Logger):
         self.__select_name()
         menu_items = self.menu_dict.values()
         menu_items.insert(2, None)
-        return Menu(menu_items).show(get_widget_root_coordinate(widget))
+        Menu(menu_items, True).show(get_widget_root_coordinate(widget))
     
     def __on_adjust_change(self, adjust, i):    
         config.set("equalizer", "equalizer-band%s" % str(i), str(adjust.get_value()))

@@ -333,27 +333,27 @@ class SongView(ListView):
             else:    
                 tick = None
             mode_items.append((tick, value, self.set_loop_mode, key))    
-        if align:    
-            play_mode_menu = Menu(mode_items)
-        else:    
-            play_mode_menu = Menu(mode_items)
+        # if align:    
+        #     play_mode_menu = Menu(mode_items)
+        # else:    
+        #     play_mode_menu = Menu(mode_items)
         if pos:
-            play_mode_menu.show((pos[0], pos[1]))
+            Menu(mode_items, True).show((pos[0], pos[1]))
         else:    
-            return play_mode_menu
+            return Menu(mode_items)
 
     def popup_delete_menu(self, x, y):    
         items = [(None, "删除", self.remove_select_items),
                  (None, "从本地删除", self.move_to_trash),
                  (None, "清空列表", self.erase_items)]
-        Menu(items).show((int(x), int(y)))
+        Menu(items, True).show((int(x), int(y)))
         
     def popup_add_menu(self, x, y):
         menu_items = [
             (None, "添加歌曲", self.__add_file),
             (None, "添加歌曲目录", self.__add_dir),
             ]
-        return Menu(menu_items).show((x, y))
+        Menu(menu_items, True).show((x, y))
 
     
     def __add_file(self):

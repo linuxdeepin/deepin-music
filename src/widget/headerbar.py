@@ -25,6 +25,7 @@ import gtk
 import gobject
 from dtk.ui.button import ToggleButton, ImageButton
 from dtk.ui.menu import Menu
+from dtk.ui.utils import foreach_recursive
 
 from player import Player
 from widget.information import PlayInfo
@@ -37,10 +38,11 @@ from config import config
 from helper import Dispatcher
 
 
-class HeaderBar(gtk.HBox):
+class HeaderBar(gtk.EventBox):
     def __init__(self):
         super(HeaderBar, self).__init__()
         self.set_border_width(5)
+        self.set_visible_window(False)
         
         # init.
         self.cover_box = PlayerCoverButton()
@@ -115,13 +117,14 @@ class HeaderBar(gtk.HBox):
         information = gtk.HBox(spacing=6)
         information.pack_start(self.cover_box, False, False)
         information.pack_start(control_box, True, True)
-        self.pack_start(information, True, True)
+        # self.pack_start(information, True, True)
+        self.add(information)
         
         Dispatcher.connect("close-lyrics", self.sync_lyrics_status)
         gobject.idle_add(self.load_config)
                 
         # right click
-        # foreach_recursive(self, lambda w: w.connect("button-press-event", self.right_click_cb))
+        foreach_recursive(self, lambda w: w.connect("button-press-event", self.right_click_cb))
         
     def load_config(self):    
         if config.getboolean("lyrics", "status"):
@@ -163,7 +166,7 @@ class HeaderBar(gtk.HBox):
         
     def right_click_cb(self, widget, event):    
         if event.button == 3:
-            Menu([(None, "均衡器", lambda : self.equalizer_win.run())]).show((int(event.x_root), int(event.y_root)))
+            Menu([(None, "均衡器", lambda : self.equalizer_win.run())], True).show((int(event.x_root), int(event.y_root)))
                 
                     
     def __swap_play_status(self, obj, active):    

@@ -211,7 +211,7 @@ class PlaylistUI(gtk.VBox):
                       (None, "删除列表", self.delete_current_list),
                       None,
                       (None, "保存所有列表", self.save_all_list)]
-        Menu(menu_items).show((int(event.x_root), int(event.y_root)))
+        Menu(menu_items, True).show((int(event.x_root), int(event.y_root)))
         
     def new_list(self, items=[]):    
         index = len(self.category_list.items)
@@ -372,7 +372,7 @@ class PlaylistUI(gtk.VBox):
                                  (None, "歌曲排序", sub_sort_menu),
                                  (app_theme.get_pixbuf("playlist/open_dir.png"), "打开文件目录", self.current_item.song_view.open_song_dir),
                                  (None, "编辑歌曲信息", None),
-                                 ])
+                                 ], True)
         self.detail_menu.show((int(x), int(y)))
         
         

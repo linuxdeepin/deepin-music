@@ -68,13 +68,13 @@ class DeepinMusic(gobject.GObject):
         self.dbus_service = DeepinMusicDBus()
         
         
-        notebook = Notebook([(app_theme.get_pixbuf("web.png"), "虾米音乐", None),])
-        notebook_frame = HorizontalFrame(20)
+        notebook = Notebook([(app_theme.get_pixbuf("web.png"), "百度ting", None),])
+        notebook_frame = HorizontalFrame(10)
         notebook_frame.add(notebook)
         
         notebook_box = gtk.VBox()
         horizontal_frame = HorizontalFrame()
-        browser_client = BrowserClient("http://mp3.baidu.com/", get_cache_file("cookie"),
+        browser_client = BrowserClient("http://ting.baidu.com", get_cache_file("cookie"),
                                       application.app_bus_name, application.app_dbus_name,)
         horizontal_frame.add(browser_client)
         notebook_box.pack_start(horizontal_frame, True, True)
