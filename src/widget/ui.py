@@ -44,6 +44,7 @@ from widget.song_item import SongItem
 
 app_theme = Theme(os.path.join((os.path.dirname(os.path.realpath(__file__))), "../../app_theme"))
 
+
 class NormalWindow(object):
     
     def __init__(self, parent=None):
@@ -211,6 +212,7 @@ class SongView(ListView):
             return
         if not isinstance(uris, (tuple, list)):
             uris = [ uris ]
+        uris = [ utils.get_uri_from_path(uri) for uri in uris ]    
         utils.ThreadLoad(self.load_taginfo, uris, pos, sort).start()
     
     def load_taginfo(self, uris, pos=None, sort=True):
@@ -219,6 +221,8 @@ class SongView(ListView):
             pos = len(self.items)
         for uri in uris:    
             song = MediaDB.get_song(uri)
+            if not song:
+                continue
             self.add_song_cache.append(song)
             end = time.time()
             if end - start > 0.2:
@@ -333,10 +337,7 @@ class SongView(ListView):
             else:    
                 tick = None
             mode_items.append((tick, value, self.set_loop_mode, key))    
-        # if align:    
-        #     play_mode_menu = Menu(mode_items)
-        # else:    
-        #     play_mode_menu = Menu(mode_items)
+
         if pos:
             Menu(mode_items, True).show((pos[0], pos[1]))
         else:    
@@ -376,3 +377,5 @@ class SongView(ListView):
         if not isinstance(uris, (list, tuple, set)):
             uris = [ uris ]
         utils.async_parse_uris(uris, follow_folder, True, self.add_uris)
+
+        

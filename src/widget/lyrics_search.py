@@ -21,14 +21,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import gtk
-import os
 import gobject
-import threading
 from dtk.ui.button import Button
-from dtk.ui.entry import Entry, TextEntry
+from dtk.ui.entry import TextEntry
 from dtk.ui.utils import get_content_size
 from dtk.ui.threads import post_gui
-from dtk.ui.constant import ALIGN_END
 
 from constant import DEFAULT_FONT_SIZE
 from dtk.ui.listview import ListView, render_text

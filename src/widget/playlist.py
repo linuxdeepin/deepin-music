@@ -36,6 +36,7 @@ from widget.ui import app_theme
 from widget.song_item import SongItem
 from widget.list_item import PlaylistItem
 from widget.dialog import WindowLoadPlaylist, WindowExportPlaylist, WinDir
+from widget.ui_utils import container_remove_all
 from config import config
 from player import Player
 import utils
@@ -327,7 +328,7 @@ class PlaylistUI(gtk.VBox):
         self.drag_source_id = self.current_item.song_view.connect("drag-data-received", self.parser_drag_event)
         self.menu_source_id = self.current_item.song_view.connect("right-press-items", self.popup_detail_menu)
 
-        utils.container_remove_all(self.right_box)
+        container_remove_all(self.right_box)
         self.right_box.pack_start(item.get_list_widget(), True, True)
         self.list_paned.show_all()
         

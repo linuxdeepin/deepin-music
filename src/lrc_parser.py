@@ -20,8 +20,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import chardet
-import os
 
 
 class LrcParser(object):
@@ -101,7 +99,6 @@ class LrcParser(object):
         
     def parse_tag(self, lrc_buffer, begin, end):
         istime = True
-        timepar = [0.0, 0.0, 0.0]
         begin += 1
         end -= 1
         for i in range(begin, end):

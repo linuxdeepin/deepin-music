@@ -158,11 +158,3 @@ class Transcoder(Logger):
             self.logerror("failed decode (error: %s,%s)", err, debug)
             self.eos()
             #raise GstTagReadingError
-            
-if __name__ == "__main__":            
-    import sys
-    import gtk
-    from widget.song_editor import SongEditor
-    a = SongEditor()
-    a.window.show_all()
-    gtk.main()

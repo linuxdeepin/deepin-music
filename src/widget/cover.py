@@ -20,18 +20,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
 import gobject
 import gtk
 import threading
 from dtk.ui.box import ImageBox
 
 
-from song import Song
 from player import Player
 from library import MediaDB
-from logger import Logger
-from cover_manager import CoverManager, COVER_SIZE, COVER_SAVE_SIZE
+from cover_manager import CoverManager, COVER_SIZE
 from widget.ui import app_theme
 
 class CoverButton(gtk.EventBox):

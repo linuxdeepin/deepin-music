@@ -235,9 +235,9 @@ class Song(dict, Logger):
         return "<Song %s>" % self.get("uri")
     
     def __cmp__(self, other_song):
-        if not other: return -1
+        if not other_song: return -1
         try:
-            return cmp(self.sort_key, other.sort_key)
+            return cmp(self.sort_key, other_song.sort_key)
         except AttributeError: return -1
 
     
@@ -371,6 +371,7 @@ class Song(dict, Logger):
                             value = taglist[key]
                         self[GST_IDS[key]] = utils.fix_charset(value)
                         print key,":", utils.fix_charset(value)
+                        
                 is_tagged = True        
                 
             elif message.type == gst.MESSAGE_ERROR:    

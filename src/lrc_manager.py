@@ -23,8 +23,6 @@
 import os
 import re
 
-from song import Song
-from player import Player
 from config import config
 from lrc_download import TTPlayer, DUOMI, SOSO
 import utils

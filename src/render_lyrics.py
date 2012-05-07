@@ -25,7 +25,6 @@ import pango
 import pangocairo
 import math
 import gtk
-import gobject
 import dtk_cairo_blur
 from config import config
 

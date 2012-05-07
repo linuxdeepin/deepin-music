@@ -21,7 +21,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import gobject
-import time
 from threading import Condition
 from random import shuffle
 
@@ -342,7 +341,7 @@ class MediaDatebase(gobject.GObject, Logger):
         self.__playlists[pl_type].remove(pl)
         self.__condition.acquire()
         self.__queued_signal["playlist-removed"].setdefault(pl_type, [])
-        self.__queued_signal["playlist-removed"][pl_name].append(pl)
+        self.__queued_signal["playlist-removed"][pl_type].append(pl)
         self.set_dirty()
         self.__condition.release()
         
@@ -631,7 +630,6 @@ class DBQuery(gobject.GObject, Logger):
             string = string.decode("utf-8")
         string = string.strip()    
         
-        deb = time.time()
         self.loginfo("Begin query %s", string)
         
         if string:
@@ -707,16 +705,16 @@ class DBQuery(gobject.GObject, Logger):
             if not use_quick_update_change:    
                 use_quick_update_change = True
                 for tag, old_value in old_keys_values.iteritems():
-                    new_value = song.get_sortable(tag)
+                    new_value = song.get(tag)
                     if old_value != new_value:    
                         use_quick_update_change = False
                         break
                     
-            if not old_keys_values.has_key("genre"): genre = song.get_sortable("genre")        
+            if not old_keys_values.has_key("genre"): genre = song.get("genre")        
             else: genre = old_keys_values.get("genre")
-            if not old_keys_values.has_key("artist"): artist = song.get_sortable("artist")
+            if not old_keys_values.has_key("artist"): artist = song.get("artist")
             else: artist = old_keys_values.get("artist")
-            if not old_keys_values.has_key("album"): album = song.get_sortable("album")
+            if not old_keys_values.has_key("album"): album = song.get("album")
             else: album = old_keys_values.get("album")
                 
             if song in self.__tree[1]:
@@ -806,7 +804,6 @@ class DBQuery(gobject.GObject, Logger):
     
     def __get_info(self, song):
         return song.get_str("genre"), song.get_str("artist"), song.get_str("album")
-        # return song.get_sortable("genre"), song.get_sortable("artist"), song.get_sortable("album")
     
     def get_random_song(self):
         songs = list(self.__tree[1])
@@ -880,7 +877,7 @@ class DBQuery(gobject.GObject, Logger):
             except KeyError:                
                 pass
         else:    
-            tmp_genres = set(genres) & set(self.__tree[0].keys)
+            tmp_genres = set(genres) & set(self.__tree[0].keys())
             if not tmp_genres:
                 tmp_genres = ["###ALL###"]
             for genre in tmp_genres:    
@@ -937,6 +934,7 @@ class DBQuery(gobject.GObject, Logger):
             [ infos.update({key:None}) for key in key_values if not infos.has_key(key) ]
 
         return infos
+    
 
 MediaDB = MediaDatebase()        
 MediaDB.register_type("local")
@@ -944,20 +942,3 @@ MediaDB.register_type("xiami")
 MediaDB.register_type("unknown")
 MediaDB.register_type("unknown_local")
 MediaDB.register_playlist_type("local")
-
-
-if __name__ == "__main__":
-    import gtk
-    from widget.songs_manager import SongsManager
-    # MediaDB.load()
-    # a = "artist =/^%s$/" %"李"
-    # a = "&(artist = %s, album = %s)" % ("小邪兽", "邪恶家族")
-    # a = "&(artist = %s, album = %s)" % ("小", "邪恶家族")
-    # db_query = DBQuery("")
-    # print db_query.get_songs()
-    window = gtk.Window()
-    window.set_size_request(120, 150)
-    window.add(SongsManager())
-    window.show_all()
-    gtk.main()
-

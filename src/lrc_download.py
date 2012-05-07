@@ -22,14 +22,8 @@
 
 import urllib
 import random
-import os
 import re
-import gobject
-import gtk
-import threading
-import codecs
 
-import utils
 
 class ttpClient(object):
     '''

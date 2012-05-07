@@ -36,7 +36,7 @@ import subprocess
 import mimetypes
 mimetypes.init()
 
-from urllib import pathname2url, quote, unquote
+from urllib import quote, unquote
 from urlparse import urlparse
 from urllib2 import urlopen
 
@@ -220,7 +220,7 @@ def fix_charset(s):
     '''Fix the charset. unicode error'''
     if not s: return ""
     try:
-        charset.detect(s)
+        chardet.detect(s)
         return s.encode("utf-8")
     except:
         repr_char = repr(s) 
@@ -480,7 +480,7 @@ def download_iterator(remote_uri, local_uri, buffer_len=4096, timeout=DEFAULT_TI
         except:    
             total_size = 20000000
         current_size = 0    
-        date = handle_read.read(buffer_len)
+        data = handle_read.read(buffer_len)
         handle_write.write(data)
         current_size += len(data)
         
@@ -833,10 +833,6 @@ def export_playlist(list_song, filename, p_type="m3u"):
     else:
         raise TypeError, "Unknow playlist type"
 
-    
-def container_remove_all(container):
-    ''' Removee all child widgets for container. '''
-    container.foreach(lambda widget: container.remove(widget))
     
 global MAIN_WINDOW            
 MAIN_WINDOW = None

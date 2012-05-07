@@ -25,7 +25,6 @@ import re
 import gobject
 import gtk
 import fnmatch
-import time
 
 from urllib import quote, urlopen
 from mutagen.id3 import ID3

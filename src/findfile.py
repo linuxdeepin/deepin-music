@@ -22,7 +22,7 @@
 
 import os
 from subprocess import Popen,PIPE
-from xdg.BaseDirectory import load_data_paths, xdg_cache_home, save_config_path
+from xdg.BaseDirectory import xdg_cache_home, save_config_path
 
 from constant import PROGRAM_NAME
     
