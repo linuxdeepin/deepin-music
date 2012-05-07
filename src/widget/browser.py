@@ -33,7 +33,8 @@ from dtk.ui.iconview import IconView
 
 from library import MediaDB, DBQuery
 from helper import SignalContainer 
-from widget.ui import app_theme
+from widget.ui import app_theme, MultiDragListview
+from widget.ui_utils import switch_tab
 from cover_manager import CoverManager
 
 
@@ -143,14 +144,14 @@ class Browser(gtk.HBox, SignalContainer):
         self.filter_view.connect("double-click-item", self.__on_double_click_item)
        
         
-        filter_scrolled_window = ScrolledWindow(app_theme.get_pixbuf("skin/main.png"))
-        filter_scrolled_window.add_child(self.filter_view)
+        self.filter_scrolled_window = ScrolledWindow(app_theme.get_pixbuf("skin/main.png"))
+        self.filter_scrolled_window.add_child(self.filter_view)
         
         
-        self.songs_view = ListView(background_pixbuf=app_theme.get_pixbuf("skin/main.png"))
-        self.songs_view.add_titles(["歌名", "艺术家", "时间"])
-        songs_scrolled_window = ScrolledWindow(app_theme.get_pixbuf("skin/main.png"))
-        songs_scrolled_window.add_child(self.songs_view)
+        self.songs_view = MultiDragListview(background_pixbuf=app_theme.get_pixbuf("skin/main.png"))
+        self.songs_view.add_titles(["歌名", "艺术家", "专辑", "添加时间"])
+        self.songs_scrolled_window = ScrolledWindow(app_theme.get_pixbuf("skin/main.png"))
+        self.songs_scrolled_window.add_child(self.songs_view)
         
         align = gtk.Alignment()
         align.set(0, 1, 0, 0)
@@ -158,11 +159,11 @@ class Browser(gtk.HBox, SignalContainer):
         left_box.pack_start(self.filter_categorybar, False, False)
         left_box.pack_start(align, True, True)
         
-        right_box = gtk.VBox()
-        right_box.add(filter_scrolled_window)
+        self.right_box = gtk.VBox()
+        self.right_box.add(self.filter_scrolled_window)
                 
         self.pack_start(left_box,  False, False)
-        self.pack_start(right_box, True, True)
+        self.pack_start(self.right_box, True, True)
         
     def reload_filter_view(self, tag="album"):    
         
@@ -170,6 +171,7 @@ class Browser(gtk.HBox, SignalContainer):
         keys = _dict.keys()
         keys.sort()
         items = []
+
         for key in keys:
             value, nb = _dict[key]
             items.append(IconItem((value, nb, tag)))
@@ -227,7 +229,9 @@ class Browser(gtk.HBox, SignalContainer):
     
     def __on_double_click_item(self, filter_view,  item, x, y):
         self.__selected_tag[item.tag] = [item.name]
-        print self.__get_selected_songs(item.tag)
+        songs = self.__get_selected_songs(item.tag)
+        self.songs_view.add_songs(songs)
+        switch_tab(self.right_box, self.songs_scrolled_window)
     
 class SimpleBrowser(Browser):    
     _type = "local"

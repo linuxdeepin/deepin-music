@@ -30,10 +30,11 @@ from constant import DEFAULT_FONT_SIZE
 class SongItem(gobject.GObject):
     '''song items for deepin-ui listview'''
     __gsignals__ = {"redraw-request" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()), }
-    def __init__(self, song):
+    def __init__(self, song, extend=False):
         '''Init song item.'''
         gobject.GObject.__init__(self)
         self.update(song)
+        self.extend = extend
         
     def set_index(self, index):    
         self.index = index
@@ -51,6 +52,8 @@ class SongItem(gobject.GObject):
         self.title = song.get_str("title")
         self.artist = song.get_str("artist")
         self.length = song.get_str("#duration")
+        self.add_time = song.get_str("#added")
+        self.album = song.get_str("album")
         
         # Calculate item size.
         self.title_padding_x = 10
@@ -64,6 +67,14 @@ class SongItem(gobject.GObject):
         self.length_padding_x = 10
         self.length_padding_y = 5
         (self.length_width, self.length_height) = get_content_size(self.length, DEFAULT_FONT_SIZE)
+        
+        self.add_time_padding_x = 10
+        self.add_time_padding_y = 5
+        (self.add_time_width, self.add_time_height) = get_content_size(self.add_time, DEFAULT_FONT_SIZE)
+        
+        self.album_padding_x = 10
+        self.album_padding_y = 5
+        (self.album_width, self.album_height) = get_content_size(self.album, DEFAULT_FONT_SIZE)
         
     def render_title(self, cr, rect):
         '''Render title.'''
@@ -82,22 +93,49 @@ class SongItem(gobject.GObject):
         rect.width -= self.length_padding_x * 2
         render_text(cr, rect, self.length, ALIGN_END, font_size=DEFAULT_FONT_SIZE)
         
+    def render_add_time(self, cr, rect):
+        '''Render add_time.'''
+        rect.width -= self.add_time_padding_x * 2
+        render_text(cr, rect, self.add_time, font_size=DEFAULT_FONT_SIZE)
+        
+    def render_album(self, cr, rect):
+        '''Render album.'''
+        rect.width -= self.album_padding_x * 2
+        render_text(cr, rect, self.album, font_size=DEFAULT_FONT_SIZE)
+        
     def get_column_sizes(self):
         '''Get sizes.'''
-        return [(min(self.title_width + self.title_padding_x * 2, 80),
-                 self.title_height + self.title_padding_y * 2),
-                (min(self.artist_width + self.artist_padding_x * 2, 60),
-                 self.artist_height + self.artist_padding_y * 2),
-                (min(self.length_width + self.length_padding_x * 2, 60),
-                 self.length_height + self.length_padding_y * 2),
-                ]    
+        if self.extend:
+            return [
+                (min(self.title_width + self.title_padding_x * 2, 80), self.title_height + self.title_padding_y * 2),
+                (min(self.artist_width + self.artist_padding_x * 2, 80), self.artist_height + self.artist_padding_y * 2),
+                (min(self.album_width + self.artist_padding_x * 2, 80), self.album_height + self.album_padding_y * 2),
+                (min(self.add_time_width + self.add_time_padding_x * 2, 80), self.add_time_height + self.add_time_padding_y * 2)
+                ]
+        else:
+            return [(min(self.title_width + self.title_padding_x * 2, 80),
+                     self.title_height + self.title_padding_y * 2),
+                    (min(self.artist_width + self.artist_padding_x * 2, 60),
+                     self.artist_height + self.artist_padding_y * 2),
+                    (min(self.length_width + self.length_padding_x * 2, 60),
+                     self.length_height + self.length_padding_y * 2),
+                    ]    
     
     def get_renders(self):
         '''Get render callbacks.'''
-        return [self.render_title,
-                self.render_artist,
-                self.render_length]
         
+        if self.extend:
+            return [
+                self.render_title,
+                self.render_artist,
+                self.render_album,
+                self.render_add_time
+                ]
+        else:
+            return [self.render_title,
+                    self.render_artist,
+                    self.render_length]
+            
     def get_song(self):
         return self.song
     

@@ -38,6 +38,7 @@ class EventDispatcher(gobject.GObject):
         "select-source-id" :SIGNAL_SIMPLE,
         "volume" : (gobject.SIGNAL_RUN_LAST,gobject.TYPE_NONE, (gobject.TYPE_FLOAT,)),
         "play-device" :  (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_STRING,)),    
+        "play-song" : SIGNAL_SIMPLE,
         "quit": SIGNAL_SIMPLE,
         "reload-lrc" : SIGNAL_SIMPLE,
         }
@@ -57,6 +58,9 @@ class EventDispatcher(gobject.GObject):
         
     def reload_lrc(self, value):
         self.emit("reload-lrc", value)
+        
+    def play_and_add_song(self, song):
+        self.emit("play-song", song)
 
     def quit(self):    
         self.emit("quit", None)

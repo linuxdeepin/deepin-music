@@ -38,6 +38,7 @@ from dtk.ui.threads import post_gui
 import utils
 from config import config
 from player import Player
+from helper import Dispatcher
 from library import MediaDB
 from widget.dialog import WinFile, WinDir
 from widget.song_item import SongItem
@@ -378,4 +379,49 @@ class SongView(ListView):
             uris = [ uris ]
         utils.async_parse_uris(uris, follow_folder, True, self.add_uris)
 
+class MultiDragListview(ListView):        
+    def __init__(self, *args, **kward):
+        ListView.__init__(self, *args, **kward)
+        targets = [("text/deepin-songs", gtk.TARGET_SAME_APP, 1), ("text/uri-list", 0, 2)]
+        self.drag_source_set(gtk.gdk.BUTTON1_MASK, targets, gtk.gdk.ACTION_COPY)
+        self.connect("drag-data-get", self.__on_drag_data_get) 
+        self.connect("double-click-item", self.__on_double_click_item)
         
+    def get_selected_songs(self):    
+        songs = []
+        if len(self.select_rows) > 0:
+            songs = [ self.items[index].get_song() for index in self.select_rows ]
+        return songs
+            
+    def __on_drag_data_get(self, widget, context, selection, info, timestamp):    
+        songs = self.get_selected_songs()
+        if not songs:
+            return
+        songs.sort()
+        list_uris = list([ song.get("uri") for song in songs])
+        selection.set("text/deepin-songs", 8, "\n".join(list_uris))
+        selection.set_uris(list_uris)
+        
+    def __on_double_click_item(self, widget, item, colume, x, y):    
+        if item:
+            Dispatcher.play_and_add_song(item.get_song())
+        
+    def add_songs(self, songs, pos=None, sort=False):        
+        if not songs:
+            return 
+        if not isinstance(songs, (list, tuple, set)):
+            songs = [ songs ]
+        song_items = [ SongItem(song, True) for song in songs if song not in self.get_songs() ]    
+        
+        if song_items:
+            self.add_items(song_items, pos, sort)
+
+    def get_songs(self):        
+        songs = []
+        for song_item in self.items:
+            songs.append(song_item.get_song())
+        return songs    
+            
+    def is_empty(self):        
+        return len(self.items) == 0
+    

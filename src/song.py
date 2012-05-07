@@ -129,7 +129,7 @@ class Song(dict, Logger):
         elif key in ["#date", "#added"]:
             value = self.get(key)
             if value:
-                value = datetime.fromtimestamp(int(value)).strftime("%x %X")
+                value = datetime.fromtimestamp(int(value)).strftime("%Y-%m-%d")
         elif key == "#rate":        
             rate = self.get("rate")
             if rate in [0,1,2,3,4,5,"0","1","2","3","4","5"]:
