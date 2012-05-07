@@ -164,7 +164,7 @@ class Browser(gtk.HBox, SignalContainer):
         self.pack_start(left_box,  False, False)
         self.pack_start(right_box, True, True)
         
-    def reload_filter_view(self, tag="artist"):    
+    def reload_filter_view(self, tag="album"):    
         
         _dict = self.get_infos_from_db(tag)
         keys = _dict.keys()
