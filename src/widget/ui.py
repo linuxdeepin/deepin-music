@@ -34,6 +34,8 @@ from dtk.ui.listview import ListView
 from dtk.ui.utils import move_window
 from dtk.ui.menu import Menu
 from dtk.ui.threads import post_gui
+from dtk.ui.entry import TextEntry
+from dtk.ui.button import ImageButton
 
 import utils
 from config import config
@@ -77,6 +79,24 @@ class NormalWindow(object):
             
     def hide_window(self):        
         self.window.hide_all()
+        
+class SearchEntry(TextEntry):
+    
+    def __init__(self, *args, **kwargs):
+
+
+        entry_button = ImageButton(
+            app_theme.get_pixbuf("entry/search_normal.png"),
+            app_theme.get_pixbuf("entry/search_hover.png"),
+            app_theme.get_pixbuf("entry/search_press.png")
+            )
+        super(SearchEntry, self).__init__(action_button=entry_button, *args, **kwargs)        
+        
+        self.action_button = entry_button
+        self.set_size(300, 25)
+        
+gobject.type_register(SearchEntry)        
+
         
 class SongView(ListView):
     ''' song view. '''
@@ -205,7 +225,7 @@ class SongView(ListView):
             self.add_items(song_items, pos, sort)
         
         if len(songs) == 1 and play:
-            self.highlight_item = song_items[0]
+            self.set_highlight_song(songs[0])
             gobject.idle_add(Player.play_new, self.highlight_item.get_song())
             
     def add_uris(self, uris, pos=None, sort=True):

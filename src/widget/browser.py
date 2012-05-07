@@ -33,7 +33,7 @@ from dtk.ui.iconview import IconView
 
 from library import MediaDB, DBQuery
 from helper import SignalContainer 
-from widget.ui import app_theme, MultiDragListview
+from widget.ui import app_theme, MultiDragListview, SearchEntry
 from widget.ui_utils import switch_tab
 from cover_manager import CoverManager
 
@@ -56,6 +56,7 @@ class IconItem(gobject.GObject):
         self.padding_x = 10
         self.padding_y = 15
         self.hover_flag = False
+        self.highlight_flag = False
         
        
     def emit_redraw_request(self):    
@@ -72,6 +73,8 @@ class IconItem(gobject.GObject):
         
         if self.hover_flag:
             cr.set_source_rgb(1, 0, 0)
+        elif self.highlight_flag:
+            cr.set_source_rgb(0, 1, 0)
         else:    
             cr.set_source_rgb(1, 1, 1)
             
@@ -104,13 +107,21 @@ class IconItem(gobject.GObject):
         self.hover_flag = False
         self.emit_redraw_request()
         
+    def icon_item_highlight(self):    
+        self.highlight_flag = True
+        self.emit_redraw_request()
+        
+    def icon_item_normal(self):    
+        self.highlight_flag = False
+        self.emit_redraw_request()
+        
 gobject.type_register(IconItem)        
 
-class Browser(gtk.HBox, SignalContainer):
+class Browser(gtk.VBox, SignalContainer):
     
     def __init__(self, db_query):
         
-        gtk.HBox.__init__(self)
+        gtk.VBox.__init__(self)
         SignalContainer.__init__(self)
         self.__db_query = db_query
         self._tree = {}
@@ -127,6 +138,17 @@ class Browser(gtk.HBox, SignalContainer):
             }
         
         # init widget.
+        self.entry_box = SearchEntry("")
+        self.entry_box.set_size(155, 25)
+        entry_align = gtk.Alignment()
+        entry_align.set_padding(10, 10, 5, 5)
+        entry_align.add(self.entry_box)
+        upper_align = gtk.Alignment()
+        upper_align.set(0, 0, 0, 1)
+        self.upper_box = gtk.HBox(spacing=5)
+        self.upper_box.pack_start(upper_align, True, True)
+        self.upper_box.pack_start(entry_align, False, False)
+        
         self.filter_categorybar = Categorybar([
                 (app_theme.get_pixbuf("filter/artist_normal.png"), "按歌手", None),
                 (app_theme.get_pixbuf("filter/album_normal.png"), "按专辑", None),
@@ -142,16 +164,15 @@ class Browser(gtk.HBox, SignalContainer):
         self.filter_view.drag_source_set(gtk.gdk.BUTTON1_MASK, targets, gtk.gdk.ACTION_COPY)
         self.filter_view.connect("drag-data-get", self.__on_drag_data_get) 
         self.filter_view.connect("double-click-item", self.__on_double_click_item)
-       
-        
         self.filter_scrolled_window = ScrolledWindow(app_theme.get_pixbuf("skin/main.png"))
         self.filter_scrolled_window.add_child(self.filter_view)
-        
         
         self.songs_view = MultiDragListview(background_pixbuf=app_theme.get_pixbuf("skin/main.png"))
         self.songs_view.add_titles(["歌名", "艺术家", "专辑", "添加时间"])
         self.songs_scrolled_window = ScrolledWindow(app_theme.get_pixbuf("skin/main.png"))
         self.songs_scrolled_window.add_child(self.songs_view)
+        
+        
         
         align = gtk.Alignment()
         align.set(0, 1, 0, 0)
@@ -161,11 +182,14 @@ class Browser(gtk.HBox, SignalContainer):
         
         self.right_box = gtk.VBox()
         self.right_box.add(self.filter_scrolled_window)
-                
-        self.pack_start(left_box,  False, False)
-        self.pack_start(self.right_box, True, True)
+        body_box = gtk.HBox()
+
+        body_box.pack_start(left_box,  False, False)
+        body_box.pack_start(self.right_box, True, True)
+        self.pack_start(self.upper_box, False, False)
+        self.pack_start(body_box, True, True)
         
-    def reload_filter_view(self, tag="album"):    
+    def reload_filter_view(self, tag="artist"):    
         
         _dict = self.get_infos_from_db(tag)
         keys = _dict.keys()
@@ -220,14 +244,22 @@ class Browser(gtk.HBox, SignalContainer):
             
         return self.__db_query.get_songs(genres, artists, albums)    
     
-    def __on_drag_data_get(self, filter_view, context, selection, info, timestamp):
-        # songs.sort()
-        # list_uris = list([ song.get("uri") for song in songs])
-        # selection.set("text/deepin-songs", 8, "\n".join(list_uris))
-        # selection.set_uris(list_uris)
-        pass
+    def __on_drag_data_get(self, widget, context, selection, info, timestamp):
+        item = self.filter_view.highlight_item
+        if not item:
+            return 
+        self.__selected_tag[item.tag] = [item.name]
+        songs = self.__get_selected_songs(item.tag)
+        if not songs:
+            return 
+        songs = list(songs)
+        songs.sort()
+        list_uris = list([ song.get("uri") for song in songs])
+        selection.set("text/deepin-songs", 8, "\n".join(list_uris))
+        selection.set_uris(list_uris)
+
     
-    def __on_double_click_item(self, filter_view,  item, x, y):
+    def __on_double_click_item(self, widget,  item, x, y):
         self.__selected_tag[item.tag] = [item.name]
         songs = self.__get_selected_songs(item.tag)
         self.songs_view.add_songs(songs)

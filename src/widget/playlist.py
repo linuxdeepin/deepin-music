@@ -32,7 +32,8 @@ from dtk.ui.menu import Menu
 from dtk.ui.editable_list import EditableList
 
 from library import MediaDB, Playlist
-from widget.ui import app_theme
+from helper import Dispatcher
+from widget.ui import app_theme, SearchEntry
 from widget.song_item import SongItem
 from widget.list_item import PlaylistItem
 from widget.dialog import WindowLoadPlaylist, WindowExportPlaylist, WinDir
@@ -53,15 +54,9 @@ class PlaylistUI(gtk.VBox):
         self.category_list.connect("right-press", self.category_right_press)
         self.search_time_source = 0
         
-        entry_button = ImageButton(
-            app_theme.get_pixbuf("entry/search_normal.png"),
-            app_theme.get_pixbuf("entry/search_hover.png"),
-            app_theme.get_pixbuf("entry/search_press.png")
-            )
         
-        self.entry_box = TextEntry("", entry_button)
+        self.entry_box = SearchEntry("")
         self.entry_box.entry.connect("changed", self.search_cb)
-        self.entry_box.set_size(300, 25)
         self.entry_box.set_no_show_all(True)
         entry_align = gtk.Alignment()
         entry_align.set_padding(0, 4, 5, 5)
@@ -109,6 +104,7 @@ class PlaylistUI(gtk.VBox):
             MediaDB.connect("loaded", self.__on_db_loaded)
             
         Player.connect("loaded", self.__on_player_loaded)    
+        Dispatcher.connect("play-song", self.__play_and_add)
             
             
     def __on_db_loaded(self, db):        
@@ -133,6 +129,10 @@ class PlaylistUI(gtk.VBox):
         
     def __on_player_loaded(self, player):   
         self.current_item.song_view.set_highlight_song(Player.song)
+        
+    def __play_and_add(self, widget, song):    
+        self.current_item.song_view.add_songs(song, play=True)
+        
             
     def search_cb(self, widget, text):        
         if not self.search_flag:
