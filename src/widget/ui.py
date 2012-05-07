@@ -110,7 +110,7 @@ class SongView(ListView):
         self.background_pixbuf = app_theme.get_pixbuf("skin/main.png")
         self.pl = None
         self.add_song_cache = []
-        sort_key = ["sort_album", "sort_genre", "sort_artist", "sort_title", "#playcount", "#added"]
+        sort_key = ["album", "genre", "artist", "title", "#playcount", "#added"]
         self.sort_reverse = {key : False for key in sort_key }
         self.connect_after("drag-data-received", self.on_drag_data_received)
         self.connect("double-click-item", self.double_click_item_cb)
@@ -335,7 +335,7 @@ class SongView(ListView):
         with self.keep_select_status():
             reverse = self.sort_reverse[keyword]
             self.items = sorted(self.items, 
-                                key=lambda item: item.get_song().get(keyword),
+                                key=lambda item: item.get_song().get_sortable(keyword),
                                 reverse=reverse)
             self.sort_reverse[keyword] = not reverse
             self.update_item_index()
@@ -399,11 +399,21 @@ class SongView(ListView):
             uris = [ uris ]
         utils.async_parse_uris(uris, follow_folder, True, self.add_uris)
 
-class MultiDragListview(ListView):        
+class MultiDragSongView(ListView):        
     def __init__(self, *args, **kward):
         ListView.__init__(self, *args, **kward)
         targets = [("text/deepin-songs", gtk.TARGET_SAME_APP, 1), ("text/uri-list", 0, 2)]
         self.drag_source_set(gtk.gdk.BUTTON1_MASK, targets, gtk.gdk.ACTION_COPY)
+        self.sorts = [
+            (lambda item: item.get_song().get_sortable("title"), cmp),
+            (lambda item: item.get_song().get_sortable("artist"), cmp),
+            (lambda item: item.get_song().get_sortable("album"), cmp),
+            (lambda item: item.get_song().get_sortable("#added"), cmp),
+            ]
+        
+        sort_key = ["album", "genre", "artist", "title", "#playcount", "#added"]
+        self.sort_reverse = {key : False for key in sort_key }
+        
         self.connect("drag-data-get", self.__on_drag_data_get) 
         self.connect("double-click-item", self.__on_double_click_item)
         
@@ -444,4 +454,16 @@ class MultiDragListview(ListView):
             
     def is_empty(self):        
         return len(self.items) == 0
+    
+    def set_sort_keyword(self, keyword, reverse_able=False):
+        with self.keep_select_status():
+            reverse = self.sort_reverse[keyword]
+            self.items = sorted(self.items, 
+                                key=lambda item: item.get_song().get_sortable(keyword),
+                                reverse=reverse)
+            if reverse_able:
+                self.sort_reverse[keyword] = not reverse
+            self.update_item_index()
+            self.queue_draw()
+    
     

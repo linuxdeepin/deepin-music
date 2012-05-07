@@ -348,10 +348,10 @@ class PlaylistUI(gtk.VBox):
             self.detail_menu.destroy()
         play_mode_menu = self.current_item.song_view.get_playmode_menu(align=True)
         sort_dict = OrderedDict()
-        sort_dict["sort_title"] = "按歌曲名"
-        sort_dict["sort_artist"] = "按艺术家"        
-        sort_dict["sort_album"] = "按专辑" 
-        sort_dict["sort_genre"] = "按流派"
+        sort_dict["title"] = "按歌曲名"
+        sort_dict["artist"] = "按艺术家"        
+        sort_dict["album"] = "按专辑" 
+        sort_dict["genre"] = "按流派"
         sort_dict["#playcount"] = "按播放次数"
         sort_dict["#added"] = "按添加时间"
         sort_items = [(None, value, self.current_item.song_view.set_sort_keyword, key) for key, value in sort_dict.iteritems()]
