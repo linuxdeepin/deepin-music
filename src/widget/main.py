@@ -49,7 +49,7 @@ class DeepinMusic(gobject.GObject):
         
         application = Application("DMuisc")
         application.close_callback = self.force_quit
-        application.set_default_size(900, 540)
+        application.set_default_size(936, 540)
         application.set_icon(app_theme.get_pixbuf("skin/logo.png"))
         application.add_titlebar(
             ["max", "min", "close"],

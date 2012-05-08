@@ -132,7 +132,6 @@ class PlaylistUI(gtk.VBox):
         
     def __play_and_add(self, widget, song):    
         self.current_item.song_view.add_songs(song, play=True)
-        
             
     def search_cb(self, widget, text):        
         if not self.search_flag:

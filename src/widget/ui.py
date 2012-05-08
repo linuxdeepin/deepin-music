@@ -224,7 +224,7 @@ class SongView(ListView):
         if song_items:
             self.add_items(song_items, pos, sort)
         
-        if len(songs) == 1 and play:
+        if len(songs) >= 1 and play:
             self.set_highlight_song(songs[0])
             gobject.idle_add(Player.play_new, self.highlight_item.get_song())
             

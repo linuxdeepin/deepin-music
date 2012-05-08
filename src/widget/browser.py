@@ -31,7 +31,7 @@ from dtk.ui.button import ImageButton
 from dtk.ui.iconview import IconView
 
 from library import MediaDB, DBQuery
-from helper import SignalContainer 
+from helper import SignalContainer, Dispatcher
 from widget.ui import app_theme, MultiDragSongView, SearchEntry
 from widget.ui_utils import switch_tab
 from cover_manager import CoverManager
@@ -52,59 +52,90 @@ class IconItem(gobject.GObject):
             self.name_label = self.name
             
         self.labels = "%d首歌曲" % nums
-        self.cell_width = 80
+        self.cell_width = 100
         self.pixbuf = CoverManager.get_pixbuf_from_album(self.name_label, self.cell_width, self.cell_width)
-        self.padding_x = 10
-        self.padding_y = 15
+        self.padding_x = 4
+        self.padding_y = 4
         self.hover_flag = False
         self.highlight_flag = False
+        self.__draw_play_hover_flag = False
+        self.__draw_play_press_flag = False
+        self.__normal_side_pixbuf =  app_theme.get_pixbuf("filter/side_normal.png").get_pixbuf()
+        self.__normal_play_pixbuf =  app_theme.get_pixbuf("filter/play_normal.png").get_pixbuf()
         
-       
+        self.play_rect = gtk.gdk.Rectangle(
+            self.__normal_side_pixbuf.get_width() - self.__normal_play_pixbuf.get_width() - 2 - 4,
+            self.__normal_side_pixbuf.get_height() - self.__normal_play_pixbuf.get_height() - 2 - 4,
+            self.__normal_play_pixbuf.get_width(),
+            self.__normal_play_pixbuf.get_height()
+            )
+        
+    def pointer_in_play_rect(self, x, y):    
+        if self.play_rect.x < x < self.play_rect.x + self.play_rect.width and self.play_rect.y < y < self.play_rect.y + self.play_rect.height:
+            return True
+        else:
+            return False
+        
     def emit_redraw_request(self):    
         self.emit("redraw-request")
        
     def get_width(self):    
-        return self.pixbuf.get_width() + self.padding_x * 2
+        return self.__normal_side_pixbuf.get_width() + self.padding_x * 2
     
     def get_height(self):
-        return self.pixbuf.get_height() + self.padding_y * 2 + 20
+        return self.__normal_side_pixbuf.get_height() + self.padding_y * 2 + 20
     
     def render(self, cr, rect):
-        border_size = 2
         
         if self.hover_flag:
-            cr.set_source_rgb(1, 0, 0)
-        elif self.highlight_flag:
-            cr.set_source_rgb(0, 1, 0)
-        else:    
-            cr.set_source_rgb(1, 1, 1)
+            side_pixbuf = app_theme.get_pixbuf("filter/side_hover.png").get_pixbuf()
+
             
-        cr.rectangle(
-            rect.x + (rect.width - self.pixbuf.get_width()) / 2  - border_size,
-            rect.y + (rect.height - self.pixbuf.get_height()) / 2 - 10 - border_size,
-            self.pixbuf.get_width() + border_size * 2,
-            self.pixbuf.get_height() + border_size * 2)
-        cr.fill()
-        
-        # Draw cover
-        
-        # side_pixbuf = app_theme.get_pixbuf("cover/side.png").get_pixbuf()
-        # draw_pixbuf(cr, side_pixbuf, rect.x + self.padding_x, rect.y + self.padding_y)
-                
+        elif self.highlight_flag:
+            side_pixbuf = app_theme.get_pixbuf("filter/side_hover.png").get_pixbuf()
+            
+        else:    
+            side_pixbuf = self.__normal_side_pixbuf
+            
+        # Draw cover.
         draw_pixbuf(cr, self.pixbuf, 
                     rect.x + self.padding_x,
                     rect.y + self.padding_y)
-        name_rect = gtk.gdk.Rectangle(rect.x + self.padding_x , rect.y + self.pixbuf.get_height() + self.padding_y + 8 , self.cell_width, 10)
+
+        draw_pixbuf(cr, side_pixbuf, rect.x, rect.y )       
+        
+        if self.hover_flag:
+            if self.__draw_play_hover_flag:
+                play_pixbuf = app_theme.get_pixbuf("filter/play_hover.png").get_pixbuf()
+            elif self.__draw_play_press_flag:    
+                play_pixbuf = app_theme.get_pixbuf("filter/play_press.png").get_pixbuf()
+            else:    
+                play_pixbuf = self.__normal_play_pixbuf
+                
+            draw_pixbuf(cr, play_pixbuf, rect.x + self.play_rect.x, rect.y + self.play_rect.y)        
+            
+        # Draw text.    
+        name_rect = gtk.gdk.Rectangle(rect.x + self.padding_x , 
+                                      rect.y + self.__normal_side_pixbuf.get_height() + 2,
+                                      self.cell_width, 10)
         num_rect = gtk.gdk.Rectangle(name_rect.x, name_rect.y + 14, name_rect.width, name_rect.height)
+        
         render_text(cr, name_rect, self.name_label, 2, font_size=12)
         render_text(cr, num_rect, self.labels, 2, font_size=9)
         
-        
     def icon_item_motion_notify(self, x, y):    
         self.hover_flag = True
+        if self.pointer_in_play_rect(x, y):
+            if self.__draw_play_press_flag:
+                self.__draw_play_hover_flag =  False
+            else:    
+                self.__draw_play_hover_flag = True
+        else:    
+            self.__draw_play_hover_flag = False
         self.emit_redraw_request()
         
     def icon_item_lost_focus(self):    
+        self.__draw_play_flag = False
         self.hover_flag = False
         self.emit_redraw_request()
         
@@ -116,7 +147,27 @@ class IconItem(gobject.GObject):
         self.highlight_flag = False
         self.emit_redraw_request()
         
+    def icon_item_button_press(self, x, y):    
+        if self.pointer_in_play_rect(x, y):
+            self.__draw_play_hover_flag =  False
+            self.__draw_play_press_flag = True
+        else:    
+            self.__draw_play_press_flag = False
+        self.emit_redraw_request()
+    
+    def icon_item_button_release(self, x, y):
+        self.__draw_play_press_flag = False
+        self.emit_redraw_request()
+    
+    def icon_item_single_click(self, x, y):
+        pass
+    
+    def icon_item_double_click(self, x, y):
+        pass
+        
 gobject.type_register(IconItem)        
+
+FILTER_VIEW, SONG_VIEW = 1, 2
 
 class Browser(gtk.VBox, SignalContainer):
     
@@ -127,7 +178,9 @@ class Browser(gtk.VBox, SignalContainer):
         self.__db_query = db_query
         self._tree = {}
         self.__selected_tag = {"album": [], "artist": [], "genre": []}
-        # self.connect("destroy", self.on_destroy)
+        self.view_mode = FILTER_VIEW
+        self.__search_flag = False
+        self.__song_cache_items = []
         
         self.__labels = {
             "genre" : "流派",
@@ -141,6 +194,7 @@ class Browser(gtk.VBox, SignalContainer):
         # init widget.
         self.entry_box = SearchEntry("")
         self.entry_box.set_size(155, 25)
+        self.entry_box.entry.connect("changed", self.__search_cb)
         entry_align = gtk.Alignment()
         entry_align.set_padding(5, 5, 5, 5)
         entry_align.set(0, 0, 1, 1)
@@ -161,8 +215,6 @@ class Browser(gtk.VBox, SignalContainer):
                 (app_theme.get_pixbuf("filter/artist_normal.png"), "按歌手", lambda : self.reload_filter_view("artist", True)),
                 (app_theme.get_pixbuf("filter/album_normal.png"), "按专辑", lambda : self.reload_filter_view("album", True)),
                 (app_theme.get_pixbuf("filter/genre_normal.png"), "按流派", lambda : self.reload_filter_view("genre", True)),
-                # (app_theme.get_pixbuf("filter/customer_normal.png"), "自定义", None),
-                # (app_theme.get_pixbuf("filter/all_normal.png"), "所有歌曲", None)
                 ])
         self.filter_categorybar.set_size_request(-1, 200)
         self.filter_view = IconView(background_pixbuf=app_theme.get_pixbuf("skin/main.png"))
@@ -170,6 +222,7 @@ class Browser(gtk.VBox, SignalContainer):
         self.filter_view.drag_source_set(gtk.gdk.BUTTON1_MASK, targets, gtk.gdk.ACTION_COPY)
         self.filter_view.connect("drag-data-get", self.__on_drag_data_get) 
         self.filter_view.connect("double-click-item", self.__on_double_click_item)
+        self.filter_view.connect("single-click-item", self.__on_single_click_item)
         self.filter_scrolled_window = ScrolledWindow(app_theme.get_pixbuf("skin/main.png"))
         self.filter_scrolled_window.add_child(self.filter_view)
         
@@ -205,6 +258,7 @@ class Browser(gtk.VBox, SignalContainer):
     
     def __switch_to_filter_view(self, widget):
         self.switch_box(self.right_box, self.filter_scrolled_window)
+        self.view_mode = FILTER_VIEW
         
     def reload_filter_view(self, tag="artist", switch=False):    
         if switch:
@@ -223,6 +277,7 @@ class Browser(gtk.VBox, SignalContainer):
         self.filter_view.add_items(items)    
         if switch:
             self.switch_box(self.right_box, self.filter_scrolled_window)
+            self.view_mode = FILTER_VIEW
             
     def get_infos_from_db(self, tag, values=None):
         genres = []
@@ -278,9 +333,13 @@ class Browser(gtk.VBox, SignalContainer):
         item = self.filter_view.highlight_item
         if not item:
             return 
-        del self.__selected_tag[item.tag]
-        self.__selected_tag[item.tag] = [item.name]
-        songs = self.__get_selected_songs(item.tag)
+        
+        if item.name == "deepin-all-songs":
+            songs = self.__db_query.get_all_songs()
+        else:    
+            del self.__selected_tag[item.tag]
+            self.__selected_tag[item.tag] = [item.name]
+            songs = self.__get_selected_songs(item.tag)
         if not songs:
             return 
         songs = list(songs)
@@ -291,6 +350,7 @@ class Browser(gtk.VBox, SignalContainer):
     
     def __on_double_click_item(self, widget,  item, x, y):
         self.songs_view.clear()
+        self.entry_box.entry.set_text("")
         
         if item.name == "deepin-all-songs":
             songs = self.__db_query.get_all_songs()
@@ -301,6 +361,44 @@ class Browser(gtk.VBox, SignalContainer):
         self.songs_view.add_songs(songs)
         self.songs_view.set_sort_keyword(item.tag)
         self.switch_box(self.right_box, self.songs_scrolled_window)
+        self.view_mode = SONG_VIEW
+        
+    def __on_single_click_item(self, widget, item, x, y):    
+        if item.pointer_in_play_rect(x, y):
+            if item.name == "deepin-all-songs":
+                songs = self.__db_query.get_all_songs()
+            else:    
+                del self.__selected_tag[item.tag]
+                self.__selected_tag[item.tag] = [item.name]
+                songs = self.__get_selected_songs(item.tag)
+            if not songs:
+                return 
+            songs = list(songs)
+            songs.sort()
+            if not songs:
+                return 
+            Dispatcher.play_and_add_song(songs)
+        
+        
+    def __search_cb(self, widget, text):    
+        if self.view_mode == SONG_VIEW:
+            if not self.__search_flag:
+                self.__song_cache_items = self.songs_view.items[:]
+                
+            # Clear song_view select status    
+            self.songs_view.select_rows = []    
+            if text != "":
+                self.__search_flag = True
+                results = filter(lambda item: text.lower().replace(" ", "") in item.get_song().get("search", ""), self.__song_cache_items)
+                self.songs_view.items = results
+                self.songs_view.update_item_index()
+                self.songs_view.update_vadjustment()
+            else:    
+                self.__search_flag = False
+                self.songs_view.items = self.__song_cache_items
+                self.songs_view.update_item_index()
+                self.songs_view.update_vadjustment()
+            self.songs_view.queue_draw()    
         
     def switch_box(self, parent, child):    
         switch_tab(parent, child)
