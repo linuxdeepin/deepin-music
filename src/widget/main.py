@@ -23,22 +23,22 @@
 import gtk
 import gobject
 from dtk.ui.application import Application
-from dtk.ui.notebook import Notebook
-from dtk.ui.browser_client import BrowserClient
-from dtk.ui.frame import HorizontalFrame
+# from dtk.ui.notebook import Notebook
+# from dtk.ui.browser_client import BrowserClient
+# from dtk.ui.frame import HorizontalFrame
 
 import utils
 from widget.ui import app_theme
 from widget.headerbar import HeaderBar
 from widget.playlist import PlaylistUI
-from widget.ui_utils import switch_tab
+# from widget.ui_utils import switch_tab
 from widget.browser import SimpleBrowser
 
 from config import config
 from player import Player
-from findfile import get_cache_file
+# from findfile import get_cache_file
 from library import MediaDB
-from dbus_manager import DeepinMusicDBus
+# from dbus_manager import DeepinMusicDBus
 
 class DeepinMusic(gobject.GObject):
     __gsignals__ = {"ready" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ())}
@@ -67,38 +67,15 @@ class DeepinMusic(gobject.GObject):
             self.window.move(int(config.get("window", "x"), int(config.get("window", "y"))))
         
         self.playlist_ui = PlaylistUI()    
-        self.dbus_service = DeepinMusicDBus()
+        # self.dbus_service = DeepinMusicDBus()
         
-        notebook_box = gtk.VBox()
-        web_music_box = gtk.VBox()
-        local_music_box = gtk.VBox()
-        
-        
-        notebook = Notebook([
-                (app_theme.get_pixbuf("web.png"), "百度ting", lambda : switch_tab(notebook_box, web_music_box)),
-                (app_theme.get_pixbuf("web.png"), "音乐管理", lambda : switch_tab(notebook_box, local_music_box)),
-                ])
-        
-        notebook_frame = HorizontalFrame(10)
-        notebook_frame.add(notebook)
-        horizontal_frame = HorizontalFrame()
-        browser_client = BrowserClient("http://ting.baidu.com", get_cache_file("cookie"),
-                                      application.app_bus_name, application.app_dbus_name,)
-        horizontal_frame.add(browser_client)
-        
-        # init box 
-        web_music_box.pack_start(horizontal_frame, True, True)
-        local_music_box.pack_start(SimpleBrowser(), True, True)
-        notebook_box.add(web_music_box)
-        
+
         right_box = gtk.VBox()
-        right_box.pack_start(notebook_frame, False, False)
         browser_align = gtk.Alignment()
         browser_align.set_padding(0, 25, 10, 10)
         browser_align.set(0.5, 0.5, 1, 1)
-        browser_align.add(notebook_box)
+        browser_align.add(SimpleBrowser())
         right_box.pack_start(browser_align, True, True)
-        
         
         left_box = gtk.VBox()
         left_box.pack_start(HeaderBar(), False)

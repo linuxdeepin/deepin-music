@@ -24,8 +24,8 @@ import gtk
 import gobject
 
 from dtk.ui.categorybar import Categorybar
-from dtk.ui.listview import ListView, render_text
-from dtk.ui.draw import draw_pixbuf, draw_font
+from dtk.ui.listview import  render_text
+from dtk.ui.draw import draw_pixbuf
 from dtk.ui.scrolled_window import ScrolledWindow
 from dtk.ui.button import ImageButton
 from dtk.ui.iconview import IconView
@@ -192,6 +192,7 @@ class Browser(gtk.VBox, SignalContainer):
             }
         
         # init widget.
+
         self.entry_box = SearchEntry("")
         self.entry_box.set_size(155, 25)
         self.entry_box.entry.connect("changed", self.__search_cb)

@@ -25,8 +25,10 @@ import gtk
 import pango
 import gobject
 import threading
+from dtk.ui.button import ImageButton, ToggleButton
 
 from logger import Logger
+from widget.ui import app_theme
 
 class JobsManager(gtk.HBox):
     __jobs = []
@@ -43,25 +45,12 @@ class JobsManager(gtk.HBox):
         
         self.label = gtk.Label("0 operation(s) pending")
 
-        self.__btn_size = gtk.ICON_SIZE_BUTTON
-        size = (28,28)
         
         self.__paused = False
-
-        self.__btn_pause= gtk.Button()
-        self.__btn_pause.connect("clicked",self.pause)
-        image = gtk.image_new_from_stock(gtk.STOCK_MEDIA_PAUSE,self.__btn_size)
-        self.__btn_pause.add(image)
-        self.__btn_pause.set_relief(gtk.RELIEF_NONE)
-        self.__btn_pause.set_size_request(*size)
- 
-        btn_cancel= gtk.Button()
-        btn_cancel.connect("clicked",self.stop)
         
-        image = gtk.image_new_from_stock(gtk.STOCK_MEDIA_STOP,self.__btn_size)
-        btn_cancel.add(image)
-        btn_cancel.set_relief(gtk.RELIEF_NONE)
-        btn_cancel.set_size_request(*size)
+        btn_cancel = self.__create_simple_button("stop", self.stop)
+        
+        self._btn_puase = self.__create_begin_button(self.pause)
         
         self.pack_start(self.label,False,False)
         self.pack_start(self.progress,True,True)
@@ -73,6 +62,26 @@ class JobsManager(gtk.HBox):
         
         self.label.hide_all()
         
+    def __create_simple_button(self, name, callback):    
+        button = ImageButton(
+            app_theme.get_pixbuf("%s_normal.png" % name),
+            app_theme.get_pixbuf("%s_hover.png" % name),
+            app_theme.get_pixbuf("%s_hover.png" % name),
+            )
+        if callback:
+            button.connect("clicked", callback)
+        return button    
+        
+    def __create_begin_button(self, callback):    
+        toggle_button = ToggleButton(
+            app_theme.get_pixbuf("jobs/begin_normal.png"),
+            app_theme.get_pixbuf("jobs/begin_hover.png"),
+            app_theme.get_pixbuf("jobs/pause_normal.png"),
+            app_theme.get_pixbuf("jobs/pause_hover.png")
+            )
+        if callback:
+            toggle_button.connect("toggled", callback)
+        return toggle_button    
 
     def add(self,job):
         id = job.connect("end",self.__job_end)
@@ -106,14 +115,13 @@ class JobsManager(gtk.HBox):
             self.__update()
         del job
 
-    def pause(self,btn):
+    def pause(self, btn):
         if self.__jobs:
-            if not self.__paused:
-                btn.child.set_from_stock(gtk.STOCK_MEDIA_PLAY,self.__btn_size)
+            # if not self.__paused:
+            if not btn.get_active():
                 self.__jobs[0][0].pause()
                 self.__paused = True
             else:
-                btn.child.set_from_stock(gtk.STOCK_MEDIA_PAUSE,self.__btn_size)
                 self.__jobs[0][0].unpause()
                 self.__paused = False
 
