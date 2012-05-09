@@ -942,3 +942,23 @@ MediaDB.register_type("xiami")
 MediaDB.register_type("unknown")
 MediaDB.register_type("unknown_local")
 MediaDB.register_playlist_type("local")
+
+
+if __name__ == "__main__":
+    import gtk
+    import gobject
+    gobject.threads_init()
+    from player import Player
+    MediaDB.load()
+    
+    def play_song():
+        song = MediaDB.get_songs("local")[0]
+        Player.play_new(song)
+        
+    
+    if MediaDB.isloaded():
+        play_song(None)
+    else:    
+        MediaDB.connect("loaded", lambda w : play_song())
+    
+    gtk.main()    

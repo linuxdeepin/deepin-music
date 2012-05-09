@@ -21,10 +21,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import gobject
-from time import time, sleep
-import gst
-import gst.interfaces
-import sys
+from time import time
 
 from config import config
 from library import MediaDB
@@ -481,3 +478,4 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
             
 
 Player = DeepinMusicPlayer()            
+
