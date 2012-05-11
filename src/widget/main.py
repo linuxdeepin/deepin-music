@@ -38,7 +38,7 @@ from config import config
 from player import Player
 # from findfile import get_cache_file
 from library import MediaDB
-# from dbus_manager import DeepinMusicDBus
+from dbus_manager import DeepinMusicDBus
 
 class DeepinMusic(gobject.GObject):
     __gsignals__ = {"ready" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ())}
@@ -67,7 +67,8 @@ class DeepinMusic(gobject.GObject):
             self.window.move(int(config.get("window", "x"), int(config.get("window", "y"))))
         
         self.playlist_ui = PlaylistUI()    
-        # self.dbus_service = DeepinMusicDBus()
+        self.header_bar = HeaderBar()
+        self.dbus_service = DeepinMusicDBus()
         
 
         right_box = gtk.VBox()
@@ -78,7 +79,7 @@ class DeepinMusic(gobject.GObject):
         right_box.pack_start(browser_align, True, True)
         
         left_box = gtk.VBox()
-        left_box.pack_start(HeaderBar(), False)
+        left_box.pack_start(self.header_bar, False)
         left_box.pack_start(self.playlist_ui, True, True)
         left_align = gtk.Alignment()
         left_align.set(0.5, 0.5, 1, 1)
@@ -96,6 +97,7 @@ class DeepinMusic(gobject.GObject):
         
     def force_quit(self, *args):    
         print "Start quit..."
+        self.header_bar.hide_lyrics()
         self.window.hide_all()
         Player.save_state()
         if not Player.is_paused(): Player.pause()

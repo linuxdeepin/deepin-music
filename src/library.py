@@ -560,6 +560,7 @@ class DBQuery(gobject.GObject, Logger):
         self.__query_string = ""
         self.__cache_func_song_tuple = None
         self.__cache_song_tuple = {}
+        self.__attr_songs = {}
         
         MediaDB.connect("added", self.db_entry_added)
         MediaDB.connect("removed", self.db_entry_removed)
@@ -776,6 +777,22 @@ class DBQuery(gobject.GObject, Logger):
                 self.__tree[0][genre][0][artist][0].setdefault(album, ({}, set(), salbum))
                 self.__tree[0][genre][0][artist][0][album][1].add(song)
                 
+        self.__add_song_attr(song)        
+                
+    def __add_song_attr(self, song):            
+        song_dir = song.get_dir()
+        if song_dir:
+            self.__attr_songs.setdefault(song_dir, set())
+            self.__attr_songs[song_dir].add(song)
+            
+    def __delete_song_attr(self, song):        
+        song_dir = song.get_dir()
+        if song_dir:
+            try:
+                self.__attr_songs[song_dir].remove(song)
+            except (KeyError, ValueError):    
+                return
+                
     def __delete_cache(self, song, old_values=False):            
         if old_values:
             genre2, artist2, album = old_values
@@ -798,6 +815,8 @@ class DBQuery(gobject.GObject, Logger):
                         del self.__tree[0][genre][0][artist]
             if len(self.__tree[0][genre][1]) == 0:            
                 del self.__tree[0][genre]
+                
+        self.__delete_song_attr(song)        
                 
     def __get_str_info(self, song):            
         return song.get_str("genre"), song.get_str("artist"), song.get_str("album")
@@ -942,23 +961,3 @@ MediaDB.register_type("xiami")
 MediaDB.register_type("unknown")
 MediaDB.register_type("unknown_local")
 MediaDB.register_playlist_type("local")
-
-
-if __name__ == "__main__":
-    import gtk
-    import gobject
-    gobject.threads_init()
-    from player import Player
-    MediaDB.load()
-    
-    def play_song():
-        song = MediaDB.get_songs("local")[0]
-        Player.play_new(song)
-        
-    
-    if MediaDB.isloaded():
-        play_song(None)
-    else:    
-        MediaDB.connect("loaded", lambda w : play_song())
-    
-    gtk.main()    

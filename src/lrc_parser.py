@@ -21,7 +21,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-
 class LrcParser(object):
     
     def __init__(self, filename=""):
@@ -37,6 +36,7 @@ class LrcParser(object):
     def set_filename(self, filename):    
         self.filename = ""
         self.lyrics_dict = {}
+        self.scroll_lyrics = []        
         self.parser_offset = 0
         self.nlyrics = 0
         self.tmp_lyrics_dict = {}
@@ -92,7 +92,6 @@ class LrcParser(object):
                 self.parser_offset += 1
             self.parse_text(convert_buffer, start, end)    
             
-            
     def parse_text(self, lrc_buffer, start, end):        
         self.tmp_lyrics_dict[self.nlyrics] = lrc_buffer[start:end]
         self.nlyrics += 1
@@ -130,6 +129,7 @@ class LrcParser(object):
         for key, value in self.time_dict.iteritems():
             self.lyrics_dict[key] = self.tmp_lyrics_dict.get(value, "").strip()
         self.sort_keys = sorted(self.lyrics_dict)    
+        self.scroll_lyrics = [self.lyrics_dict[key] for key in self.sort_keys]
         del self.tmp_lyrics_dict
         del self.time_dict
             

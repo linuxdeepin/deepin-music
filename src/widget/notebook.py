@@ -20,13 +20,25 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-CONFIG_FILENAME = "config"
-PROGRAM_NAME = "deepin-music-player"
 
-DEFAULT_TIMEOUT = 10
-DEFAULT_FONT_SIZE = 9
-AUTOSAVE_TIMEOUT = 1000 * 60 * 5  # 5min
+import gtk
+from dtk.ui.box import EventBox
 
-# Lyric mode
-LRC_DESKTOP_MODE = 1
-LRC_WINDOW_MODE = 2
+
+class NoteBook(object):
+    
+    def __init__(self):
+        pass
+    
+    def append_page(self, child, tab_label=None):
+        pass
+    
+    def prepend_page(self, child, tab_label=None):
+        pass
+    
+    
+    
+    
+    
+    
+    

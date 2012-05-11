@@ -48,37 +48,32 @@ from widget.song_item import SongItem
 app_theme = Theme(os.path.join((os.path.dirname(os.path.realpath(__file__))), "../../app_theme"))
 
 
-class NormalWindow(object):
+class NormalWindow(Window):
     
-    def __init__(self, parent=None):
+    def __init__(self):
+        super(NormalWindow, self).__init__(True)
         
         # Init Window
-        self.window = Window()
-        self.window.set_position(gtk.WIN_POS_CENTER)
-        # self.window.set_modal(True)
+        self.background_dpixbuf = app_theme.get_pixbuf("skin/main.png")
+        self.set_position(gtk.WIN_POS_CENTER)
         self.titlebar = Titlebar(["close"])
-        self.titlebar.close_button.connect("clicked", lambda w: self.hide_window())
+        self.titlebar.close_button.connect_after("clicked", self.hide_window)
         self.titlebar.drag_box.connect('button-press-event', lambda w, e: move_window(w, e, self.window))
-        self.parent = parent
         
         main_align = gtk.Alignment()
         main_align.set(0.0, 0.0, 1.0, 1.0)
-        main_align.set_padding(5, 5, 10, 10)
+        main_align.set_padding(5, 10, 10, 10)
         self.main_box = gtk.VBox(spacing=5)
         main_align.add(self.main_box)
-
-        self.window.window_frame.pack_start(self.titlebar, False, False)
-        self.window.window_frame.pack_start(main_align)
+        self.window_frame.pack_start(self.titlebar, False, False)
+        self.window_frame.pack_start(main_align, True, True)
         
     def show_window(self):    
-        if self.parent:
-            parent_rect = self.parent.get_toplevel().get_allocation()
-            self.window.move(parent_rect.x + parent_rect.width / 2, parent_rect.y + parent_rect.height / 2)
-        else:    
-            self.window.show_all()
+        self.show_all()
             
-    def hide_window(self):        
-        self.window.hide_all()
+    def hide_window(self, widget):        
+        self.hide_all()
+        
         
 class SearchEntry(TextEntry):
     

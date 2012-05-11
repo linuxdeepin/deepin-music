@@ -24,7 +24,7 @@ import gobject
 import threading
 import gtk
 import os
-import pango
+import time
 
 from collections import OrderedDict
 from dtk.ui.window import Window
@@ -33,13 +33,14 @@ from dtk.ui.box import ImageBox
 from dtk.ui.menu import Menu
 
 from helper import Dispatcher
-from widget.lyrics import LyricsWindow
+from widget.lyrics import LyricsWindow, LyricsScroll
 from widget.ui import app_theme
 from widget.lyrics_search import SearchUI
 from lrc_parser import LrcParser
 from config import config
 from player import Player
 from lrc_manager import LrcManager
+from constant import LRC_DESKTOP_MODE, LRC_WINDOW_MODE
 
 
 MESSAGE_DURATION_MS = 3000
@@ -60,6 +61,11 @@ class LyricsModule(object):
         self.desktop_lyrics.connect("hide-bg", self.hide_toolbar)
         self.desktop_lyrics.connect("show-bg", self.show_toolbar)
         
+        self.scroll_lyrics = LyricsScroll()
+        self.scroll_lyrics.connect("seek", self.seek_cb)
+        self.scroll_lyrics.connect("close", lambda w : self.hide_all())
+        self.scroll_lyrics.connect("right-press", self.scroll_right_press_cb)
+        
         Player.connect("instant-new-song", self.instant_update_lrc)
         Player.connect("played", self.play_time_source)
         Player.connect("paused", self.pause_time_source)
@@ -67,6 +73,7 @@ class LyricsModule(object):
         
         self.lrc_manager = LrcManager()
         self.lrc = LrcParser()
+        
         self.search_ui = SearchUI()
         self.lrc_id = -1
         self.lrc_next_id = -1
@@ -75,6 +82,7 @@ class LyricsModule(object):
         self.time_source = None
         self.song_duration = 0
         self.__find_flag = False
+        self.__lyrics_mode = config.getint("lyrics", "mode")
         
         self.init_toolbar()
         
@@ -84,8 +92,6 @@ class LyricsModule(object):
         self.thread = threading.Thread(target=self.func_thread)
         self.thread.setDaemon(True)
         self.thread.start()
-        
-        
         
     def init_toolbar(self):    
         self.toolbar = Window(window_type=gtk.WINDOW_POPUP) 
@@ -136,6 +142,7 @@ class LyricsModule(object):
         close_align = self.__create_simple_button("close", self.close_lyric_window)
         before_align = self.__create_simple_button("before", self.before_offset)
         after_align = self.__create_simple_button("after", self.after_offset)
+        lrc_align = self.__create_simple_button("lrc", self.switch_to_scroll_lyrics)
 
         play_box.pack_start(prev_align, False, False)
         play_box.pack_start(play_align, False, False)
@@ -150,6 +157,7 @@ class LyricsModule(object):
         play_box.pack_start(line_align, False, False)
         play_box.pack_start(lock_align, False, False)        
         play_box.pack_start(setting_align, False, False)
+        play_box.pack_start(lrc_align, False, False)
         play_box.pack_start(search_align, False, False)
         play_box.pack_start(close_align, False, False)
         
@@ -160,6 +168,43 @@ class LyricsModule(object):
         self.toolbar.window_frame.pack_start(main_align)
         
         self.load_button_status()
+        
+    def scroll_right_press_cb(self, widget, event):    
+        menu_items = [
+            (app_theme.get_pixbuf("lyric/lrc_normal.png"), "桌面歌词模式", self.switch_to_desktop_lyrics),
+            None,
+            (app_theme.get_pixbuf("lyric/before_normal.png"), "提前歌词", lambda : self.before_offset(None)),
+            (app_theme.get_pixbuf("lyric/after_normal.png"), "退后歌词", lambda : self.after_offset(None)),
+            None,
+            (app_theme.get_pixbuf("lyric/search_normal.png"), "搜索", lambda :self.open_search_window(None)),
+            (app_theme.get_pixbuf("lyric/setting_normal.png"), "选项", None),
+                      ]
+        Menu(menu_items, True).show((int(event.x_root), int(event.y_root)))
+        
+    def switch_to_scroll_lyrics(self, widget):    
+        config.set("lyrics", "mode", str(LRC_WINDOW_MODE))
+        self.__lyrics_mode = LRC_WINDOW_MODE
+        self.hide_desktop_lyrics()
+        self.show_scroll_lyrics()
+        
+    def switch_to_desktop_lyrics(self):    
+        config.set("lyrics", "mode", str(LRC_DESKTOP_MODE))
+        self.__lyrics_mode = LRC_DESKTOP_MODE
+        self.hide_scroll_lyrics()
+        self.show_desktop_lyrics()
+        
+    
+    def seek_cb(self, widget, lyric_id, percentage):
+        item_time = self.lrc.get_item_time(lyric_id)
+        # if lyric_id == self.lrc.get_item_count() - 1:
+        #     next_time = self.song_duration
+        # else:    
+        #     next_time = self.lrc.get_item_time(self.lrc.get_next_id(lyric_id))
+        # new_time = (item_time + (next_time - item_time) * percentage) / 1000
+        new_time = item_time / 1000
+        Player.seek(new_time)        
+        self.scroll_lyrics.set_progress(lyric_id, percentage)
+        time.sleep(0.1)
         
     def load_button_status(self):    
         if not config.getboolean("lyrics","karaoke_mode"):
@@ -314,8 +359,17 @@ class LyricsModule(object):
     def set_lrc_file(self, filename):    
         if filename and self.message_source != None:
             self.clear_message()
-        self.clear_lyrics()    
+        # self.clear_lyrics()    
         self.lrc.set_filename(filename)
+        
+        self.scroll_lyrics.set_whole_lyrics(self.lrc.scroll_lyrics)
+        
+    def set_scroll_played_time(self, played_time):    
+        info = self.lrc.get_lyric_by_time(played_time, self.song_duration)
+        if not info:
+            return
+        text, percentage, lyric_id = info
+        self.scroll_lyrics.set_progress(lyric_id, percentage)
 
     def set_played_time(self, played_time):    
         info = self.lrc.get_lyric_by_time(played_time, self.song_duration)
@@ -323,7 +377,6 @@ class LyricsModule(object):
             return
         text, percentage, lyric_id = info
         real_id, real_lyric = self.get_real_lyric(lyric_id)
-
         if real_lyric == None:
             nid = -1
         else: 
@@ -373,7 +426,7 @@ class LyricsModule(object):
                 self.desktop_lyrics.set_lyric(1 - self.current_line, real_lyric)
         self.desktop_lyrics.set_line_percentage(1 - self.current_line, 0.0)        
         
-                
+        
     def get_real_lyric(self, item_id):             
         while True:
             if self.lrc.get_item_lyric(item_id) != "":
@@ -392,7 +445,7 @@ class LyricsModule(object):
         if not message:
             return
         self.desktop_lyrics.set_current_line(0)
-        self.desktop_lyrics.set_current_percentage(1.0)
+        self.desktop_lyrics.set_current_percentage(0.0)
         self.desktop_lyrics.set_lyric(0, message)
         self.desktop_lyrics.set_lyric(1, "")
         
@@ -422,21 +475,13 @@ class LyricsModule(object):
         self.set_message(message, MESSAGE_DURATION_MS)
         
     def run(self):
-        config.set("lyrics", "status", "true")
+        config.set("lyrics", "status", "true")                    
         self.play_time_source()
-        screen_w, screen_h = gtk.gdk.get_default_root_window().get_size()
-        w , h = self.desktop_lyrics.lyrics_win.get_size()
-        try:
-            x = config.getint("lyrics", "x")
-            y = config.getint("lyrics", "y")
-        except:    
-            x = screen_w / 2 - w / 2
-            y = screen_h - h
+        if self.__lyrics_mode == LRC_WINDOW_MODE:
+            self.show_scroll_lyrics()
+        else:    
+            self.show_desktop_lyrics()
 
-        self.desktop_lyrics.lyrics_win.move(x, y) 
-        self.desktop_lyrics.lyrics_win.show_all()           
-
-        
     def hide_toolbar(self, widget):    
         self.toolbar.hide_all()
         
@@ -450,13 +495,61 @@ class LyricsModule(object):
         self.toolbar.show_all()
         
     def hide_all(self):    
+        config.set("lyrics", "status", "false")
+        self.hide_scroll_lyrics()
+        self.hide_desktop_lyrics()
+        self.pause_time_source()
+        
+    def hide_without_config(self):    
+        self.hide_scroll_lyrics()
+        self.hide_desktop_lyrics()
+        self.pause_time_source()
+        
+    def hide_scroll_lyrics(self):    
+        x, y = self.scroll_lyrics.scroll_window.get_position()
+        w, h = self.scroll_lyrics.scroll_window.get_size()
+        config.set("lyrics", "scroll_x", str(x))
+        config.set("lyrics", "scroll_y", str(y))
+        config.set("lyrics", "scroll_w", str(w))
+        config.set("lyrics", "scroll_h", str(h))
+        self.scroll_lyrics.scroll_window.hide_all()
+        
+    def show_scroll_lyrics(self):    
+        self.scroll_lyrics.scroll_window.set_default_size(310, 400)            
+        try:
+            x = config.getint("lyrics", "scroll_x")
+            y = config.getint("lyrics", "scroll_y")
+            w = config.getint("lyrics", "scroll_w")
+            h = config.getint("lyrics", "scroll_H")
+        except:    
+            pass
+        else:
+            try:
+                self.scroll_lyrics.scroll_window.move(x, y)
+                self.scroll_lyrics.scroll_window.resize(w, h)
+            except:    
+                pass
+        self.scroll_lyrics.scroll_window.show_all()
+        
+    def hide_desktop_lyrics(self):    
         x, y = self.desktop_lyrics.lyrics_win.get_position()
-        config.set("lyrics", "x", str(x))
-        config.set("lyrics", "y", str(y))
+        config.set("lyrics", "desktop_x", str(x))
+        config.set("lyrics", "desktop_y", str(y))
         self.desktop_lyrics.lyrics_win.hide_all()
         self.toolbar.hide_all()
-        config.set("lyrics", "status", "false")
-        self.pause_time_source()
+        
+    def show_desktop_lyrics(self):    
+        screen_w, screen_h = gtk.gdk.get_default_root_window().get_size()
+        w , h = self.desktop_lyrics.lyrics_win.get_size()
+        try:
+            x = config.getint("lyrics", "desktop_x")
+            y = config.getint("lyrics", "desktop_y")
+        except:    
+            x = screen_w / 2 - w / 2
+            y = screen_h - h
+
+        self.desktop_lyrics.lyrics_win.move(x, y) 
+        self.desktop_lyrics.lyrics_win.show_all()           
         
     def adjust_toolbar_rect(self, widget, rect):    
         screen_w, screen_h = gtk.gdk.get_default_root_window().get_size()
@@ -487,7 +580,10 @@ class LyricsModule(object):
                 
     def real_show_lyrics(self):            
         played_timed = Player.get_lyrics_position()
-        self.set_played_time(played_timed)
+        if self.__lyrics_mode == LRC_WINDOW_MODE:
+            self.set_scroll_played_time(played_timed)
+        else:
+            self.set_played_time(played_timed)
         return True
     
     def pause_time_source(self, *args):
@@ -531,7 +627,6 @@ class LyricsModule(object):
                 self.time_source = None
                 self.clear_lyrics()
             if try_web:    
-                # self.set_search_fail_message("没有搜索到歌词!")
                 self.set_message(self.get_default_message(force_song) + " 没有搜索到歌词!")
             else:    
                 self.set_search_fail_message("正在搜索歌词......")
@@ -539,6 +634,7 @@ class LyricsModule(object):
         return ret    
         
     def instant_update_lrc(self, widget, song):    
+        self.scroll_lyrics.set_whole_lyrics([])
         self.set_message(self.get_default_message(song))
         self.update_lrc(widget, song)
         
@@ -549,4 +645,3 @@ class LyricsModule(object):
             return "%s-%s" % (artist, title)
         else:
             return "%s" % title
-

@@ -154,6 +154,9 @@ class HeaderBar(gtk.EventBox):
         else:    
             self.lyrics_display.hide_all()
             
+    def hide_lyrics(self):        
+        self.lyrics_display.hide_without_config()
+            
     def start_playlist(self, widget):        
         pass
             

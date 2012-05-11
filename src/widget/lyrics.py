@@ -22,12 +22,13 @@
 
 import gtk
 import cairo
-from widget.ui import app_theme
-
 import gobject
+
+from widget.ui import app_theme
 from config import config
 from render_lyrics import RenderContextNew
 from utils import color_hex_to_cairo
+from helper import Dispatcher
 
 # drag state.
 DRAG_NONE = 1
@@ -76,6 +77,7 @@ class LyricsWindow(gobject.GObject):
         self.line_alignment = [0.0, 1.0]
         self.line_percentage = [0.0, 0.0]
         self.current_line = 0
+        self.time_source = 0
         
         for i in range(self.get_line_count()):
             self.update_lyric_surface(i)
@@ -96,7 +98,7 @@ class LyricsWindow(gobject.GObject):
         self.lyrics_win.connect("leave-notify-event", self.leave_notify)
         self.lyrics_win.connect("expose-event", self.expose_before)     
         config.connect("config-changed", self.update_render_color)
-        gobject.timeout_add(100, self.check_mouse_leave)        
+        self.time_source = gobject.timeout_add(500, self.check_mouse_leave)        
         
     def update_render_color(self, config, selection, option, value):    
         color_option  = ["inactive_color_upper", " inactive_color_middle", "inactive_color_bottom",
@@ -104,6 +106,26 @@ class LyricsWindow(gobject.GObject):
         if selection == "lyrics" and option in color_option:
             for i in range(self.get_line_count()):
                 self.update_lyric_surface(i)
+                
+        if selection == "lyrics" and option == "status":        
+            status = config.getboolean("lyrics", "status")
+            if not status:
+                if self.time_source != 0:
+                    gobject.source_remove(self.time_source)
+            else:    
+                lrc_mode = config.getint("lyrics", "mode")
+                if lrc_mode == 1:
+                    self.time_source = gobject.timeout_add(500, self.check_mouse_leave)        
+                    
+        if selection == "lyrics" and option == "mode":            
+            lrc_mode = config.getint("lyrics", "mode")
+            if lrc_mode != 1:
+                if self.time_source != 0:
+                    gobject.source_remove(self.time_source)
+            else:        
+                status = config.getboolean("lyrics", "status")
+                if status:
+                    self.time_source = gobject.timeout_add(500, self.check_mouse_leave)
             
     def get_render_color(self, active=False):        
         if active:
@@ -115,7 +137,6 @@ class LyricsWindow(gobject.GObject):
                     color_hex_to_cairo(config.get("lyrics", "inactive_color_middle")),
                     color_hex_to_cairo(config.get("lyrics", "inactive_color_bottom"))]
             
-        
     def set_locked(self):    
         if config.getboolean("lyrics", "locked"):
             config.set("lyrics", "locked", "false")
@@ -637,3 +658,276 @@ class LyricsWindow(gobject.GObject):
         
     def get_font_size(self):    
         return self.render_lyrics.get_font_size()
+
+SCROLL_ALWAYS, SCROLL_BY_LINES = 0, 1
+LINE_ALIGN_LEFT, LINE_ALIGN_MIDDLE, LINE_ALIGN_RIGHT = range(3)
+
+import pango
+import pangocairo
+from dtk.ui.draw import draw_vlinear, draw_round_rectangle
+from widget.ui import NormalWindow
+    
+class LyricsScroll(gobject.GObject):
+    __gsignals__ = {
+        "seek" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_INT, gobject.TYPE_FLOAT)),
+        "close" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),
+        "right-press" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,))
+        }
+    
+    def __init__(self):
+        super(LyricsScroll, self).__init__()
+        
+        self.percentage = 0.0
+        self.whole_lyrics = []
+        self.current_lyric_id = -1
+        self.line_count = 20
+        self.active_color = (0, 0.68, 1)
+        self.inactive_color = (0, 0, 0)
+        self.bg_color = (1, 1, 1)
+        self.font_name = "文泉驿微米黑 10"
+        self.alignment = LINE_ALIGN_MIDDLE
+        self.line_margin = 1
+        self.padding_x = 20
+        self.padding_y = 10
+        self.bg_opacity= 0.9
+        self.frame_width = 7
+        self.text = ""
+        self.scroll_mode = SCROLL_ALWAYS
+        self.can_seek = True
+        self.seeking = False
+        self.current_pointer_y = 0
+        self.saved_lyric_id = -1
+        self.saved_seek_offset = 0
+        self.saved_pointer_y = 0 
+        
+        self.drawing = gtk.EventBox()
+        self.drawing.set_visible_window(False)
+        self.drawing.set_app_paintable(True)
+        self.drawing.connect("expose-event", self.expose_cb)
+        self.drawing.connect("button-press-event", self.button_press_cb)
+        self.drawing.connect("button-release-event", self.button_release_cb)
+        self.drawing.connect("motion-notify-event", self.motion_notify_cb)
+        self.scroll_window = NormalWindow()
+        self.scroll_window.titlebar.close_button.connect("clicked", self.hide_all)
+        self.scroll_window.main_box.add(self.drawing)
+        
+    def record_seek(self, event):    
+        self.current_pointer_y = event.y_root
+        self.drawing.queue_draw()
+        
+    def begin_seek(self, event):    
+        self.seeking = True
+        self.saved_seek_offset = self.saved_lrc_y
+        self.saved_pointer_y = event.y_root
+        self.saved_lyric_id = self.current_lyric_id
+        
+    def end_seek(self, event):    
+        self.seeking = False
+        
+    def button_press_cb(self, widget, event):    
+        if event.button == 1:
+            if self.whole_lyrics and self.can_seek:
+                self.begin_seek(event)
+        elif event.button == 3:        
+            self.emit("right-press", event)
+            
+
+                
+    def button_release_cb(self, widget, event):            
+        if self.seeking:
+            line_height = self.get_line_height()
+            current_lyric_id, lrc_y = self.calc_paint_pos()
+            percentage = float(lrc_y) / float(line_height)
+            self.end_seek(event)
+            self.emit("seek", int(current_lyric_id), percentage)
+    
+    def motion_notify_cb(self, widget, event):
+        if self.seeking:
+            self.record_seek(event)
+        
+    def expose_cb(self, widget, event):    
+        cr = widget.window.cairo_create()
+        rect = widget.allocation
+        cr.save()
+        draw_round_rectangle(cr, rect.x, rect.y, rect.width, rect.height, 3)
+        cr.clip()
+        draw_vlinear(cr, rect.x, rect.y, rect.width, rect.height, app_theme.get_shadow_color("linearBackground").get_color_info())
+        cr.restore()        
+        
+        if self.whole_lyrics:
+            self.paint_lyrics(cr)
+        return False    
+    
+    def get_pango(self, cr): 
+        layout = pangocairo.CairoContext(cr).create_layout()
+        font_desc = pango.FontDescription(self.font_name)
+        layout.set_font_description(font_desc)
+        return layout
+    
+    def get_line_height(self):
+        pango_context = gtk.gdk.pango_context_get()
+        pango_layout = pango.Layout(pango_context)
+        font_desc = pango.FontDescription(self.font_name)
+        pango_layout.set_font_description(font_desc)
+        
+        metrics = pango_context.get_metrics(pango_layout.get_font_description())
+        ascent = metrics.get_ascent()
+        descent = metrics.get_descent()
+        line_height = (ascent + descent) / pango.SCALE + self.line_margin
+        return line_height
+        
+    def calc_lrc_ypos(self, percentage):
+        line_height = self.get_line_height()
+        if self.scroll_mode == SCROLL_BY_LINES:
+            if percentage < 0.15:
+                percentage = percentage / 0.15
+            else:    
+                percentage = 1
+        return line_height * percentage        
+    
+    def calc_paint_pos(self):
+        if self.seeking:
+            line_height = self.get_line_height()
+            lyric_id = self.saved_lyric_id
+            y = self.saved_seek_offset - self.current_pointer_y + self.saved_pointer_y
+            lyric_id += y / line_height
+            y %= line_height
+            
+            if y < 0:
+                y += line_height
+                lyric_id -= 1
+            if lyric_id < 0:    
+                lyric_id = 0
+                y = 0
+            elif lyric_id >= len(self.whole_lyrics):
+                lyric_id = len(self.whole_lyrics) - 1
+                y = line_height
+                
+            return int(lyric_id), int(y) 
+        
+        else:
+            lyric_id = self.current_lyric_id
+            self.saved_lrc_y = self.calc_lrc_ypos(self.percentage)
+            return (lyric_id, self.saved_lrc_y)
+        
+    def get_drawing_size(self):    
+        width, height = self.scroll_window.get_size()
+        return width ,height
+        
+    def adjust_line_count(self):    
+        line_height = self.get_line_height()
+        width, height = self.get_drawing_size()
+        line_count = height - self.padding_y * 2 / line_height
+        return line_count
+    
+    def get_active_color_ratio(self, line):
+        line_height = self.get_line_height()
+        current_lyric_id, lrc_y = self.calc_paint_pos()
+        ratio = 0.0
+        percentage = lrc_y / line_height
+        if line == current_lyric_id:
+            ratio = (1.0 - percentage) / 0.1
+            if ratio > 1.0: ratio = 1.0
+            if ratio < 0.0: ratio = 0.0
+
+        elif line == current_lyric_id + 1:
+            ratio = (percentage - 0.9) / 0.1
+            if ratio > 1.0: ratio = 1.0
+            if ratio < 0.0: ratio = 0.0
+        return ratio    
+        
+    def paint_lyrics(self, cr):    
+        line_height = self.get_line_height()
+        count = self.adjust_line_count()
+        width , height = self.get_drawing_size()
+        layout = self.get_pango(cr)
+        
+        cr.save()
+        # cr.new_path()
+        cr.rectangle(self.padding_x, 0, width - self.padding_x * 2, height - self.padding_y * 2)
+        cr.clip()
+        current_lyric_id, lrc_y = self.calc_paint_pos()
+        begin = current_lyric_id - count / 2
+        end = current_lyric_id + count / 2 + 1
+        ypos = height / 2 - lrc_y - (count / 2 + 1) * line_height
+        cr.set_source_rgb(*self.inactive_color)
+        
+        if self.whole_lyrics:
+            for i in range(begin, end):
+                ypos += line_height
+                if i < 0: continue
+                if i > len(self.whole_lyrics) - 1:
+                    break                
+                layout.set_text(self.whole_lyrics[i])
+                layout.set_alignment(pango.ALIGN_CENTER)        
+                extent = layout.get_pixel_extents()[0]
+                if self.alignment == LINE_ALIGN_LEFT:
+                    x = self.padding_x
+                elif self.alignment == LINE_ALIGN_MIDDLE:    
+                    x = (width - extent[2]) / 2
+                elif self.alignment == LINE_ALIGN_RIGHT:    
+                    x = width - extent[2] - self.padding_x
+                    
+                cr.save()
+                ratio = self.get_active_color_ratio(i)
+                alpha = 1.0
+                
+                if ypos < line_height / 2.0 + 30:
+                    alpha = 1.0 - (line_height / 2.0 + 30 - ypos) * 1.0 / line_height * 2
+                elif ypos > height - line_height * 1.5 - self.padding_y:    
+                    alpha = (height - line_height - self.padding_y - ypos) * 1.0 / line_height * 2
+                if alpha < 0.0: alpha = 0.0    
+                cr.set_source_rgba(
+                    self.active_color[0] * ratio + self.inactive_color[0] * (1 - ratio),
+                    self.active_color[1] * ratio + self.inactive_color[1] * (1 - ratio),
+                    self.active_color[2] * ratio + self.inactive_color[2] * (1 - ratio),
+                    alpha
+                    )
+                cr.move_to(x, ypos)
+                cr.update_layout(layout)
+                cr.show_layout(layout)
+                cr.restore()
+        cr.restore()        
+        
+    def paint_text(self, cr):    
+        width, height = self.get_drawing_size()
+        
+        cr.save()
+        cr.set_source_rgb(*self.inactive_color)
+        layout = self.get_pango(cr)
+        layout.set_text(self.text)
+        layout.set_alignment(pango.ALIGN_CENTER)        
+        extent = layout.get_pixel_extents()
+        x = (width - extent[2]) / 2
+        y = (height - extent[3]) / 2
+        if x < 0: x = 0
+        if y < 0: y = 0
+        cr.move_to(x, y)
+        cr.update_layout(layout)
+        cr.show_layout(layout)
+        
+    def set_progress(self, lyric_id, percentage):    
+        saved_lyric_id = self.current_lyric_id
+        self.current_lyric_id = lyric_id
+        self.percentage = percentage
+        if saved_lyric_id != lyric_id or self.saved_lrc_y != self.calc_lrc_ypos(percentage):
+            self.drawing.queue_draw()
+            
+    def set_whole_lyrics(self, whole_lyrics):        
+        self.whole_lyrics = whole_lyrics
+        self.saved_lrc_y = -1
+            
+        self.drawing.queue_draw()
+        if self.seeking:    
+            self.seeking = False
+            
+    def get_current_lyric_id(self):        
+        return self.current_lyric_id
+    
+    def set_font_name(self, font_name):
+        self.font_name = font_name
+        self.drawing.queue_draw()
+        
+    def hide_all(self, widget):    
+        self.emit("close")
+        Dispatcher.close_lyrics()

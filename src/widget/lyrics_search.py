@@ -42,7 +42,6 @@ import utils
 class SearchUI(NormalWindow):
     def __init__(self):
         NormalWindow.__init__(self)
-        self.window.background_dpixbuf = app_theme.get_pixbuf("skin/main.png")
         self.artist_entry = TextEntry()
         self.artist_entry.set_size(120, 25)
         self.title_entry = TextEntry()
@@ -93,7 +92,7 @@ class SearchUI(NormalWindow):
         bottom_box.pack_start(left_align, True, True)
         bottom_box.pack_start(download_button, False, False)
         bottom_box.pack_start(cancel_button, False, False)
-        self.window.set_size_request(460, 300)
+        self.set_size_request(460, 300)
         
         self.main_box.pack_start(info_box, False, False)
         self.main_box.pack_start(scrolled_window, True, True)
