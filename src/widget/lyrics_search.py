@@ -85,9 +85,8 @@ class SearchUI(NormalWindow):
         bottom_box = gtk.HBox(spacing=10)
         download_button = Button("下载")
         download_button.connect("clicked", self.download_lyric_cb)
-        cancel_button = Button("取消")
-        cancel_button.connect("clicked", lambda w: self.hide_window())
-
+        cancel_button = Button("关闭")
+        cancel_button.connect("clicked", self.hide_window)
         bottom_box.pack_start(self.prompt_label, False, False)
         bottom_box.pack_start(left_align, True, True)
         bottom_box.pack_start(download_button, False, False)

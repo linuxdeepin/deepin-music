@@ -516,6 +516,7 @@ class LyricsModule(object):
         
     def show_scroll_lyrics(self):    
         self.scroll_lyrics.scroll_window.set_default_size(310, 400)            
+        self.scroll_lyrics.scroll_window.show_all()        
         try:
             x = config.getint("lyrics", "scroll_x")
             y = config.getint("lyrics", "scroll_y")
@@ -524,12 +525,9 @@ class LyricsModule(object):
         except:    
             pass
         else:
-            try:
-                self.scroll_lyrics.scroll_window.move(x, y)
-                self.scroll_lyrics.scroll_window.resize(w, h)
-            except:    
-                pass
-        self.scroll_lyrics.scroll_window.show_all()
+            self.scroll_lyrics.scroll_window.move(int(x), int(y))
+            self.scroll_lyrics.scroll_window.resize(int(w), int(h))
+
         
     def hide_desktop_lyrics(self):    
         x, y = self.desktop_lyrics.lyrics_win.get_position()
@@ -541,15 +539,19 @@ class LyricsModule(object):
     def show_desktop_lyrics(self):    
         screen_w, screen_h = gtk.gdk.get_default_root_window().get_size()
         w , h = self.desktop_lyrics.lyrics_win.get_size()
-        try:
-            x = config.getint("lyrics", "desktop_x")
-            y = config.getint("lyrics", "desktop_y")
-        except:    
-            x = screen_w / 2 - w / 2
-            y = screen_h - h
-
+        # try:
+        #     x = config.getint("lyrics", "desktop_x")
+        #     y = config.getint("lyrics", "desktop_y")
+        # except:    
+        x = screen_w / 2 - w / 2
+        y = screen_h - h
+            
+        self.desktop_lyrics.lyrics_win.show_all()           
+        self.desktop_lyrics.lyrics_win.hide_all()
         self.desktop_lyrics.lyrics_win.move(x, y) 
         self.desktop_lyrics.lyrics_win.show_all()           
+        
+
         
     def adjust_toolbar_rect(self, widget, rect):    
         screen_w, screen_h = gtk.gdk.get_default_root_window().get_size()

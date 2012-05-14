@@ -661,7 +661,6 @@ class LyricsWindow(gobject.GObject):
 
 SCROLL_ALWAYS, SCROLL_BY_LINES = 0, 1
 LINE_ALIGN_LEFT, LINE_ALIGN_MIDDLE, LINE_ALIGN_RIGHT = range(3)
-
 import pango
 import pangocairo
 from dtk.ui.draw import draw_vlinear, draw_round_rectangle
@@ -693,6 +692,7 @@ class LyricsScroll(gobject.GObject):
         self.frame_width = 7
         self.text = ""
         self.scroll_mode = SCROLL_ALWAYS
+        # self.scroll_mode = SCROLL_BY_LINES
         self.can_seek = True
         self.seeking = False
         self.current_pointer_y = 0
@@ -703,7 +703,7 @@ class LyricsScroll(gobject.GObject):
         self.drawing = gtk.EventBox()
         self.drawing.set_visible_window(False)
         self.drawing.set_app_paintable(True)
-        self.drawing.connect("expose-event", self.expose_cb)
+        self.drawing.connect_after("expose-event", self.expose_cb)
         self.drawing.connect("button-press-event", self.button_press_cb)
         self.drawing.connect("button-release-event", self.button_release_cb)
         self.drawing.connect("motion-notify-event", self.motion_notify_cb)
@@ -843,7 +843,7 @@ class LyricsScroll(gobject.GObject):
         layout = self.get_pango(cr)
         
         cr.save()
-        # cr.new_path()
+        cr.new_path()
         cr.rectangle(self.padding_x, 0, width - self.padding_x * 2, height - self.padding_y * 2)
         cr.clip()
         current_lyric_id, lrc_y = self.calc_paint_pos()
