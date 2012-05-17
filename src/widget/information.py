@@ -23,24 +23,28 @@
 
 import gtk
 import pango
+from dtk.ui.label import Label
+from dtk.ui.utils import get_content_size
 
+from widget.ui import app_theme
 from library import MediaDB
 from player import Player
 
 
-class PlayInfo(gtk.Label):
+class PlayInfo(gtk.VBox):
     def __init__(self):
-        super(PlayInfo,self).__init__("")
+        super(PlayInfo, self).__init__()
 
-        self.set_ellipsize(pango.ELLIPSIZE_END)
-        self.set_alignment(0,0.5)
-
-        self.set_label("<span color=\"black\"> 深度音乐 Music</span>")
-        self.set_use_markup(True)
+        self.title_label = self.create_simple_label("深度音乐 Music", 10)
+        self.artist_label = self.create_simple_label(" ", 9)
 
         Player.connect("instant-new-song",self.__new_song)
         MediaDB.connect("simple-changed",self.__on_change)
         Player.bin.connect("buffering", self.__on_buffering)
+        
+        self.set_spacing(5)
+        self.pack_start(self.title_label, False, False)
+        self.pack_start(self.artist_label, False, False)
         
         self.song = None
         
@@ -58,7 +62,14 @@ class PlayInfo(gtk.Label):
     def update(self, song , buffering = None):
         if not song: return
         self.song = song
-        content = song.get_str("title") + " - " + song.get_str("artist")
-        if "&" in content: content = content.replace("&", " ")
-        self.set_label("<span color=\"black\"> %s</span>" % content)
+        self.title_label.set_text(song.get_str("title"))
+        self.artist_label.set_text(song.get_str("artist"))
+        
+    def create_simple_label(self, content, text_size):    
+        label = Label(content, app_theme.get_color("labelText"), text_size=text_size)
+        width, height = get_content_size(content, text_size)
+        label.set_size_request(130, height)
+        return label
+    
+        
         

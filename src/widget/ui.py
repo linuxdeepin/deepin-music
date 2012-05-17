@@ -31,11 +31,13 @@ from dtk.ui.window import Window
 from dtk.ui.theme import Theme
 from dtk.ui.titlebar import Titlebar
 from dtk.ui.listview import ListView
-from dtk.ui.utils import move_window
+from dtk.ui.utils import move_window, alpha_color_hex_to_cairo
+
 from dtk.ui.menu import Menu
 from dtk.ui.threads import post_gui
 from dtk.ui.entry import TextEntry
 from dtk.ui.button import ImageButton
+from dtk.ui.draw import draw_vlinear
 
 import utils
 from config import config
@@ -88,7 +90,7 @@ class SearchEntry(TextEntry):
         super(SearchEntry, self).__init__(action_button=entry_button, *args, **kwargs)        
         
         self.action_button = entry_button
-        self.set_size(300, 25)
+        self.set_size(250, 24)
         
 gobject.type_register(SearchEntry)        
 
@@ -116,6 +118,12 @@ class SongView(ListView):
             Player.play_new(item.get_song())
             if Player.get_source() != self:
                 Player.set_source(self)
+                
+    def draw_mask(self, cr, x, y, width, height):            
+        color_info = app_theme.get_alpha_color("playlistMiddle").get_color_info()
+        cr.set_source_rgba(*alpha_color_hex_to_cairo(color_info))
+        cr.rectangle(x, y, width, height)
+        cr.fill()
         
     def get_songs(self):        
         songs = []
@@ -461,4 +469,70 @@ class MultiDragSongView(ListView):
             self.update_item_index()
             self.queue_draw()
     
+class MaskHBox(gtk.HBox):    
     
+    def __init__(self, color_info, **kwargs):
+        super(MaskHBox, self).__init__(**kwargs)
+        
+        # self.set_size_request(width, height)
+        self.color_info = color_info
+        self.connect("expose-event", self.draw_mask)
+        
+    def draw_mask(self, widget, event):    
+        cr = widget.window.cairo_create()
+        rect = widget.allocation
+        draw_vlinear(cr, rect.x , rect.y, rect.width, rect.height,
+                     self.color_info)
+        return False
+    
+class MaskVBox(gtk.VBox):    
+    
+    def __init__(self, width, height, color_info):
+        super(MaskVBox, self).__init__()
+        
+        self.set_size_request(width, height)
+        self.color_info = color_info
+        self.connect("expose-event", self.draw_mask)
+        
+    def draw_mask(self, widget, event):    
+        cr = widget.window.cairo_create()
+        rect = widget.allocation
+        draw_vlinear(cr, rect.x, rect.y, rect.width, rect.height,
+                     self.color_info)
+        return False
+    
+    
+class ProgressBox(gtk.VBox):
+    
+    def __init__(self, scalebar):
+        super(ProgressBox, self).__init__()
+        scalebar_align = gtk.Alignment()
+        scalebar_align.set_padding(0, 0, 2, 2)
+        scalebar_align.set(0, 0, 1, 1)
+        scalebar_align.add(scalebar)
+        
+        self.set_size_request(-1, 17)
+        self.rect_list = [
+            (83, app_theme.get_shadow_color("playlistLeft").get_color_info()),
+            (220, app_theme.get_shadow_color("playlistMiddle").get_color_info()),
+            (150, app_theme.get_shadow_color("playlistRight").get_color_info()),
+            ]
+        
+        self.pack_start(scalebar_align, False, True)
+
+        self.connect("expose-event", self.draw_mask)
+        
+    def draw_mask(self, widget, event):    
+        cr = widget.window.cairo_create()
+        rect = widget.allocation
+        start_x = rect.x + 2
+        start_y = rect.y + 8
+
+        for size, color_info in self.rect_list:
+            draw_vlinear(cr, start_x, start_y, size, rect.height - 8, color_info)
+            start_x += size
+            
+        last_width = rect.width - (start_x - rect.x)    
+        draw_vlinear(cr, start_x, start_y, last_width, rect.height - 8,
+                     app_theme.get_shadow_color("playlistLast").get_color_info())
+        return False

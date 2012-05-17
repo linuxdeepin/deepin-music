@@ -25,11 +25,12 @@ import gtk
 import gobject
 from collections import OrderedDict, namedtuple
 from dtk.ui.scrolled_window import ScrolledWindow
-from dtk.ui.paned import HPaned
-from dtk.ui.entry import TextEntry
 from dtk.ui.button import ImageButton, ToggleButton
 from dtk.ui.menu import Menu
+from dtk.ui.line import VSeparator
 from dtk.ui.editable_list import EditableList
+from dtk.ui.draw import draw_vlinear
+from dtk.ui.utils import alpha_color_hex_to_cairo
 
 from library import MediaDB, Playlist
 from helper import Dispatcher
@@ -48,24 +49,21 @@ class PlaylistUI(gtk.VBox):
     def __init__(self):
         '''Init.'''
         super(PlaylistUI, self).__init__()
-        self.list_paned = HPaned(80)
+
         self.category_list = EditableList(background_pixbuf=app_theme.get_pixbuf("skin/main.png"))
+        self.category_list.background_box.draw_mask = self.draw_single_mask
         self.category_list.connect("active", self.category_button_press)
         self.category_list.connect("right-press", self.category_right_press)
+        self.category_list.set_size_request(75, -1)
         self.search_time_source = 0
-        
-        
         self.entry_box = SearchEntry("")
         self.entry_box.entry.connect("changed", self.search_cb)
         self.entry_box.set_no_show_all(True)
         entry_align = gtk.Alignment()
-        entry_align.set_padding(0, 4, 5, 5)
+        entry_align.set(0, 0, 1, 1)
+        entry_align.set_padding(2, 0, 10, 10)
         entry_align.add(self.entry_box)
-        
-        paned_align = gtk.Alignment()
-        paned_align.set_padding(2, 4, 5, 5)
-        paned_align.set(0, 0, 1, 1)
-        paned_align.add(self.list_paned)
+        entry_align.connect("expose-event", self.expose_entry_mask)
         
         self.toolbar_box = gtk.HBox(spacing=55)
         self.search_button = self.__create_simple_toggle_button("search", self.show_text_entry)
@@ -74,19 +72,34 @@ class PlaylistUI(gtk.VBox):
         self.__create_simple_button("sort", self.popup_sort_menu)
         self.__create_simple_button("delete", self.popup_delete_menu)
         toolbar_align = gtk.Alignment()
-        toolbar_align.set_padding(2, 4, 10, 5)
+        toolbar_align.set_padding(6, 6, 10, 5)
         toolbar_align.add(self.toolbar_box)
+        toolbar_align.connect("expose-event", self.expose_toolbar_mask)
                 
         category_scrolled_window = ScrolledWindow(app_theme.get_pixbuf("skin/main.png"))
         category_scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
-        
         category_scrolled_window.add_child(self.category_list)
+        
         self.right_box = gtk.VBox()
-        self.list_paned.pack1(category_scrolled_window)
-        self.list_paned.pack2(self.right_box)
-        self.pack_start(paned_align, True, True)            
+        vseparator = VSeparator(app_theme.get_shadow_color("vSeparator").get_color_info(), 0, 0)
+        vseparator.set_size_request(2, -1)
+        
+        self.list_box = gtk.HBox()
+        self.list_box.pack_start(category_scrolled_window, False, False)
+        self.list_box.pack_start(self.right_box, True, True)
+        
+        list_align = gtk.Alignment()
+        list_align.set_padding(0, 0, 2, 0)
+        list_align.set(0, 0, 1, 1)
+        list_align.add(self.list_box)
+        
+        bottom_box = gtk.VBox()
+        bottom_box.set_size_request(-1, 22)
+        
+        self.pack_start(list_align, True, True)            
         self.pack_start(entry_align, False, False)            
-        self.pack_start(toolbar_align, False, False)            
+        self.pack_start(toolbar_align, False, True)            
+        self.pack_start(bottom_box, False, True)
         
         # Current
         self.current_playlist = None
@@ -105,8 +118,29 @@ class PlaylistUI(gtk.VBox):
             
         Player.connect("loaded", self.__on_player_loaded)    
         Dispatcher.connect("play-song", self.__play_and_add)
-            
-            
+        
+    def expose_toolbar_mask(self, widget, event):    
+        cr = widget.window.cairo_create()
+        rect = widget.allocation
+        draw_vlinear(cr, rect.x + 2, rect.y, rect.width - 2, rect.height,
+                     app_theme.get_shadow_color("playlistToolbar").get_color_info()
+                     )
+        return False
+    
+    def expose_entry_mask(self, widget, event):
+        cr = widget.window.cairo_create()
+        rect = widget.allocation
+        color_info = app_theme.get_alpha_color("toolbarEntry").get_color_info()
+        cr.set_source_rgba(*alpha_color_hex_to_cairo(color_info))
+        cr.rectangle(rect.x, rect.y, rect.width, rect.height)
+        cr.fill()
+        
+    def draw_single_mask(self, cr, x, y, width, height):
+        color_info = app_theme.get_alpha_color("playlistLeft").get_color_info()
+        cr.set_source_rgba(*alpha_color_hex_to_cairo(color_info))
+        cr.rectangle(x, y, width, height)
+        cr.fill()
+        
     def __on_db_loaded(self, db):        
         if not MediaDB.get_playlists():
             MediaDB.create_playlist("local", "[默认列表]")            
@@ -125,7 +159,7 @@ class PlaylistUI(gtk.VBox):
         self.category_list.highlight_item(self.category_list.items[index])
         Player.set_source(self.current_item.song_view)
         self.right_box.pack_start(self.current_item.get_list_widget(), True, True)
-        self.list_paned.show_all()
+        self.list_box.show_all()
         
     def __on_player_loaded(self, player):   
         self.current_item.song_view.set_highlight_song(Player.song)
@@ -329,7 +363,7 @@ class PlaylistUI(gtk.VBox):
 
         container_remove_all(self.right_box)
         self.right_box.pack_start(item.get_list_widget(), True, True)
-        self.list_paned.show_all()
+        self.list_box.show_all()
         
     def show_text_entry(self, widget):        
         if widget.get_active():

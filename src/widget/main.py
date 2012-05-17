@@ -49,7 +49,7 @@ class DeepinMusic(gobject.GObject):
         
         application = Application("DMuisc")
         application.close_callback = self.force_quit
-        application.set_default_size(936, 540)
+        application.set_default_size(936, 595)
         application.set_icon(app_theme.get_pixbuf("skin/logo.png"))
         application.add_titlebar(
             ["max", "min", "close"],
@@ -71,23 +71,17 @@ class DeepinMusic(gobject.GObject):
         self.dbus_service = DeepinMusicDBus()
         
 
-        right_box = gtk.VBox()
+        bottom_box = gtk.HBox()
         browser_align = gtk.Alignment()
-        browser_align.set_padding(0, 25, 10, 10)
+        browser_align.set_padding(0, 22, 0, 0)
         browser_align.set(0.5, 0.5, 1, 1)
         browser_align.add(SimpleBrowser())
-        right_box.pack_start(browser_align, True, True)
+        bottom_box.pack_start(self.playlist_ui, False, False)        
+        bottom_box.pack_start(browser_align, True, True)
         
-        left_box = gtk.VBox()
-        left_box.pack_start(self.header_bar, False)
-        left_box.pack_start(self.playlist_ui, True, True)
-        left_align = gtk.Alignment()
-        left_align.set(0.5, 0.5, 1, 1)
-        left_align.add(left_box)
-        
-        main_box = gtk.HBox()
-        main_box.pack_start(left_align, False)
-        main_box.pack_start(right_box, True)
+        main_box = gtk.VBox()
+        main_box.pack_start(self.header_bar, False)
+        main_box.pack_start(bottom_box, True)
         application.main_box.pack_start(main_box)
         gobject.idle_add(self.ready)
         

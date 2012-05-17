@@ -23,17 +23,19 @@
 import gtk
 import gobject
 
-from dtk.ui.categorybar import Categorybar
 from dtk.ui.listview import  render_text
 from dtk.ui.draw import draw_pixbuf
 from dtk.ui.scrolled_window import ScrolledWindow
 from dtk.ui.button import ImageButton
 from dtk.ui.iconview import IconView
+from dtk.ui.utils import alpha_color_hex_to_cairo
+from dtk.ui.line import HSeparator
 
 from library import MediaDB, DBQuery
 from helper import SignalContainer, Dispatcher
 from widget.ui import app_theme, MultiDragSongView, SearchEntry
 from widget.ui_utils import switch_tab
+from widget.outlookbar import OptionBar, OptionTitleBar
 from cover_manager import CoverManager
 
 
@@ -169,11 +171,11 @@ gobject.type_register(IconItem)
 
 FILTER_VIEW, SONG_VIEW = 1, 2
 
-class Browser(gtk.VBox, SignalContainer):
+class Browser(gtk.HBox, SignalContainer):
     
     def __init__(self, db_query):
         
-        gtk.VBox.__init__(self)
+        gtk.HBox.__init__(self)
         SignalContainer.__init__(self)
         self.__db_query = db_query
         self._tree = {}
@@ -212,12 +214,28 @@ class Browser(gtk.VBox, SignalContainer):
         self.upper_box.pack_start(self.entry_box, False, False)
         entry_align.add(self.upper_box)
         
-        self.filter_categorybar = Categorybar([
-                (app_theme.get_pixbuf("filter/artist_normal.png"), "按歌手", lambda : self.reload_filter_view("artist", True)),
-                (app_theme.get_pixbuf("filter/album_normal.png"), "按专辑", lambda : self.reload_filter_view("album", True)),
-                (app_theme.get_pixbuf("filter/genre_normal.png"), "按流派", lambda : self.reload_filter_view("genre", True)),
-                ])
-        self.filter_categorybar.set_size_request(-1, 200)
+        self.filter_categorybar = OptionBar(
+            [(app_theme.get_pixbuf("filter/artist_normal.png"), app_theme.get_pixbuf("filter/artist_press.png"),
+              "按歌手", lambda : self.reload_filter_view("artist", True)),
+             (app_theme.get_pixbuf("filter/album_normal.png"), app_theme.get_pixbuf("filter/album_press.png"),
+              "按专辑", lambda : self.reload_filter_view("album", True)),
+             (app_theme.get_pixbuf("filter/genre_normal.png"), app_theme.get_pixbuf("filter/genre_press.png"),
+              "按流派", lambda : self.reload_filter_view("genre", True)),]
+                                            )
+        
+        # song path.
+        self.path_categorybar = OptionTitleBar(
+            (app_theme.get_pixbuf("filter/local_normal.png"), app_theme.get_pixbuf("filter/local_press.png"),
+              "本地歌曲", None),
+            [(app_theme.get_pixbuf("filter/artist_normal.png"), app_theme.get_pixbuf("filter/artist_press.png"),
+              "按歌手", lambda : self.reload_filter_view("artist", True)),
+             (app_theme.get_pixbuf("filter/album_normal.png"), app_theme.get_pixbuf("filter/album_press.png"),
+              "按专辑", lambda : self.reload_filter_view("album", True)),
+             (app_theme.get_pixbuf("filter/genre_normal.png"), app_theme.get_pixbuf("filter/genre_press.png"),
+              "按流派", lambda : self.reload_filter_view("genre", True)),] 
+            )
+        
+        # iconview.
         self.filter_view = IconView(background_pixbuf=app_theme.get_pixbuf("skin/main.png"))
         targets = [("text/deepin-songs", gtk.TARGET_SAME_APP, 1), ("text/uri-list", 0, 2)]
         self.filter_view.drag_source_set(gtk.gdk.BUTTON1_MASK, targets, gtk.gdk.ACTION_COPY)
@@ -234,17 +252,21 @@ class Browser(gtk.VBox, SignalContainer):
         
         align = gtk.Alignment()
         align.set(0, 1, 0, 0)
-        left_box = gtk.VBox()
+        left_box = gtk.VBox(spacing=20)
         left_box.pack_start(self.filter_categorybar, False, False)
-        left_box.pack_start(align, True, True)
+        left_box.pack_start(self.create_separator_box(), False, False)
+        left_box.pack_start(self.path_categorybar, False, False)
+        left_box.pack_start(self.create_separator_box(), False, False)
         
+        left_box.pack_start(align, True, True)
+        left_box.connect("expose-event", self.expose_left_box_mask)
         self.right_box = gtk.VBox()
         self.right_box.add(self.filter_scrolled_window)
-        body_box = gtk.HBox()
+        body_box = gtk.VBox()
 
-        body_box.pack_start(left_box,  False, False)
+        body_box.pack_start(entry_align,  False, False)
         body_box.pack_start(self.right_box, True, True)
-        self.pack_start(entry_align, False, False)
+        self.pack_start(left_box, False, False)
         self.pack_start(body_box, True, True)
         
     def __create_simple_button(self, name, callback):    
@@ -256,6 +278,21 @@ class Browser(gtk.VBox, SignalContainer):
         if callback:
             button.connect("clicked", callback)
         return button    
+    
+    def expose_left_box_mask(self, widget, event):
+        cr = widget.window.cairo_create()
+        rect = widget.allocation
+        color_info = app_theme.get_alpha_color("playlistRight").get_color_info()
+        cr.set_source_rgba(*alpha_color_hex_to_cairo(color_info))
+        cr.rectangle(rect.x, rect.y, rect.width, rect.height)
+        cr.fill()
+        return False
+    
+    def create_separator_box(self, padding_x=0, padding_y=0):
+        separator_box = HSeparator(
+            app_theme.get_shadow_color("hSeparator").get_color_info(),
+            padding_x, padding_y)
+        return separator_box
     
     def __switch_to_filter_view(self, widget):
         self.switch_box(self.right_box, self.filter_scrolled_window)
@@ -308,6 +345,7 @@ class Browser(gtk.VBox, SignalContainer):
         
     def __full_update(self, db_query):    
         self.reload_filter_view()
+        # self.__db_query.get_attr_info()
     
     def __get_selected_songs(self, tag="artist"):
         artists = []

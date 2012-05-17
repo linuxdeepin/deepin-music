@@ -33,7 +33,7 @@ from dtk.ui.box import ImageBox
 from dtk.ui.menu import Menu
 
 from helper import Dispatcher
-from widget.lyrics import LyricsWindow, LyricsScroll
+from widget.lyrics import LyricsWindow, LyricsScroll, BaseScrollLyrics
 from widget.ui import app_theme
 from widget.lyrics_search import SearchUI
 from lrc_parser import LrcParser
@@ -206,6 +206,7 @@ class LyricsModule(object):
         self.scroll_lyrics.set_progress(lyric_id, percentage)
         time.sleep(0.1)
         
+        
     def load_button_status(self):    
         if not config.getboolean("lyrics","karaoke_mode"):
             self.karaoke_button.set_active(True)
@@ -361,7 +362,6 @@ class LyricsModule(object):
             self.clear_message()
         # self.clear_lyrics()    
         self.lrc.set_filename(filename)
-        
         self.scroll_lyrics.set_whole_lyrics(self.lrc.scroll_lyrics)
         
     def set_scroll_played_time(self, played_time):    
@@ -522,11 +522,10 @@ class LyricsModule(object):
             y = config.getint("lyrics", "scroll_y")
             w = config.getint("lyrics", "scroll_w")
             h = config.getint("lyrics", "scroll_H")
-        except:    
-            pass
-        else:
             self.scroll_lyrics.scroll_window.move(int(x), int(y))
             self.scroll_lyrics.scroll_window.resize(int(w), int(h))
+
+        except: pass    
 
         
     def hide_desktop_lyrics(self):    
@@ -550,8 +549,6 @@ class LyricsModule(object):
         self.desktop_lyrics.lyrics_win.hide_all()
         self.desktop_lyrics.lyrics_win.move(x, y) 
         self.desktop_lyrics.lyrics_win.show_all()           
-        
-
         
     def adjust_toolbar_rect(self, widget, rect):    
         screen_w, screen_h = gtk.gdk.get_default_root_window().get_size()

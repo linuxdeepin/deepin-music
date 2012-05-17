@@ -14,6 +14,7 @@
  "buttonBorderPrelight" : "#b18ecf",
  "buttonBorderActive" : "#9372c9",
  "buttonFont" : "#000000",
+ "labelText" : "#4D5154",
  },	
  "alpha_colors" : {
      "frame" : ("#000000", 0.5),
@@ -23,6 +24,10 @@
 	 "scrollbarBackground" : ("#FFFFFF", 0.5),
 	 "menuMask" : ("#FFFFFF", 0.9),
 	 "progressbarFrame" : ("#EF12AB", 1.0),
+	 "playlistLeft" : ("#FFFFFF", 0.8),
+	 "playlistMiddle" : ("#FFFFFF", 0.65),
+	 "playlistRight" : ("#FFFFFF", 1.0),
+	 "toolbarEntry" : ("#888072", 1.0),
  },
  "shadow_colors" : {
      "linearBackground" : [
@@ -30,6 +35,36 @@
 		(0.05,	("#EFEFEF", 0.75)),
 		(0.95,	("#EFEFEF", 0.75)),
 		(1,		("#EFEFEF", 0.6)),
+	 ],
+     "playlistLeft" : [
+	    (0,		("#FFFFFF", 0.7)),
+		(0.05,	("#FFFFFF", 0.75)),
+		(0.95,	("#FFFFFF", 0.8)),
+		(1,		("#FFFFFF", 0.8)),
+	 ],
+     "playlistMiddle" : [
+	    (0,		("#FFFFFF", 0.5)),
+		(0.05,	("#FFFFFF", 0.55)),
+		(0.65,	("#FFFFFF", 0.65)),
+		(1,		("#FFFFFF", 0.65)),
+	 ],
+     "playlistRight" : [
+	    (0,		("#FFFFFF", 0.75)),
+		(0.05,	("#FFFFFF", 0.8)),
+		(0.55,	("#FFFFFF", 0.9)),
+		(1,		("#FFFFFF", 1.0)),
+	 ],
+     "playlistLast" : [
+	    (0,		("#FFFFFF", 0.0)),
+		(0.05,	("#FFFFFF", 0)),
+		(0.65,	("#FFFFFF", 0)),
+		(1,		("#FFFFFF", 0)),
+	 ],
+     "playlistToolbar" : [
+	    (0,		("#FFFFFF", 0.5)),
+		(0.05,	("#FFFFFF", 0.55)),
+		(0.65,	("#FFFFFF", 0.65)),
+		(1,		("#FFFFFF", 0.65)),
 	 ],
 	 "categoryItemPress" : [
 		(0, ("#53ABDE", 0.8)),
@@ -75,6 +110,17 @@
 		(0.5,	("#000000", 0.5)),
 		(1,		("#777777", 0))
 	 ],
+	 "vSeparator" : [
+		(0,		("#000000", 0)),
+		(0.5,	("#000000", 0.5)),
+		(1,		("#000000", 0))
+	 ],
+	 "vScalebar" : [
+		(0,		("#FFFFFF", 1)),
+		(0.5,	("#FFFFFF", 1)),
+		(1,		("#FFFFFF", 1))
+	 ],
+
 	 "progressbarForeground" : [
 		(0, ("#EF12AB", 0.7)),
 		(0.5, ("#EF12AB", 0.9)),

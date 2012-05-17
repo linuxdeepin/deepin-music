@@ -22,13 +22,9 @@
 
 import gtk
 import gobject
-from dtk.ui.utils import get_content_size
-from dtk.ui.listview import render_text
-from dtk.ui.constant import ALIGN_END
 from dtk.ui.scrolled_window import ScrolledWindow
 
 
-from constant import DEFAULT_FONT_SIZE
 from widget.ui import SongView, app_theme
 
 class PlaylistItem(gobject.GObject):
@@ -60,7 +56,7 @@ class PlaylistItem(gobject.GObject):
         songs = self.playlist.get_songs()
         self.song_view = SongView()
         self.song_view.add_songs(songs)
-        self.scrolled_window = ScrolledWindow(app_theme.get_pixbuf("skin/main.png"))
+        self.scrolled_window = ScrolledWindow(app_theme.get_pixbuf("skin/main.png"), 3)
         self.scrolled_window.add_child(self.song_view)
         self.scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
         self.text = playlist.get_name()

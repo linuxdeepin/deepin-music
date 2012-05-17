@@ -785,6 +785,9 @@ class DBQuery(gobject.GObject, Logger):
             self.__attr_songs.setdefault(song_dir, set())
             self.__attr_songs[song_dir].add(song)
             
+    def get_attr_info(self):        
+        print self.__attr_songs
+            
     def __delete_song_attr(self, song):        
         song_dir = song.get_dir()
         if song_dir:

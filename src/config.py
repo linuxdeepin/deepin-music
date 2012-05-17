@@ -22,7 +22,6 @@
 
 
 import gobject    
-
 from findfile import get_config_file
 from ConfigParser import RawConfigParser as ConfigParser
 from logger import Logger
@@ -65,8 +64,6 @@ class Config(gobject.GObject, Logger):
                 return self._config.get(section, option)
             except:
                 return default
-			
-																												
             
     def set(self, section, option, value):        
         if not self._config.has_section(section):
@@ -74,8 +71,6 @@ class Config(gobject.GObject, Logger):
             self.add_section(section)
         self._config.set(section, option, value)    
         self.emit("config-changed", section, option, value)
-		
-		
         
     def write(self):    
         ''' write configure to file. '''
@@ -83,9 +78,6 @@ class Config(gobject.GObject, Logger):
         f = file(filename, "w")
         self._config.write(f)
         f.close()
-		
-		
-		
         
     def __get_default(self):    
         return {

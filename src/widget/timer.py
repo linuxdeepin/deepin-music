@@ -22,14 +22,17 @@
 
 import  gtk
 import gobject
-from dtk.ui.scalebar import HScalebar
+
 from dtk.ui.volume_button import VolumeButton
 from dtk.ui.frame import HorizontalFrame
+from dtk.ui.label import Label
+from dtk.ui.utils import get_content_size
 
 import utils
+from widget.scalebar import HScalebar
+from widget.ui import app_theme
 from player import Player
 from config import config
-
 
 class SongTimer(gtk.HBox):
     __gsignals__ = {
@@ -38,9 +41,8 @@ class SongTimer(gtk.HBox):
     def __init__(self):
         super(SongTimer, self).__init__()
 
-        self.label_time = gtk.Label("<span size=\"small\" color=\"#A7A8A7\">00:00</span>")
-        self.label_time.set_alignment(1, 1)
-        self.label_time.set_use_markup(True)
+        self.label_time = Label("00:00/00:00", app_theme.get_color("labelText"), 9)
+        self.label_time.set_size_request(*get_content_size("00:00/00:00", 9))
 
         self.bar = HScalebar()
         self.bar.set_draw_value(False)
@@ -50,9 +52,7 @@ class SongTimer(gtk.HBox):
         self.bar.connect("button_release_event", self.on_bar_release)
         self.__value_changed_id = self.bar.connect("value-changed", self.on_bar_value_changed)
         self.bar.handler_block(self.__value_changed_id)
-        self.bar.set_size_request(200, -1)
         self.pack_start(self.bar, True, True)
-        self.pack_start(self.label_time,False, False)
         self.update_bar = 1
         self.duration = 0
         self.__idle_release_id = None
@@ -82,7 +82,6 @@ class SongTimer(gtk.HBox):
         
         self.duration = song.get("#duration", 0) / 1000
         self.set_current_time(0, self.duration)
-
         
     def on_tick(self, bin, pos, duration):
         self.duration = duration
@@ -101,12 +100,20 @@ class SongTimer(gtk.HBox):
                 self.bar.set_range(0, duration)
                 self.bar.set_value(pos)
 
+        total = utils.duration_to_string(duration * 1000, "00:00")                
         if pos > 0 and pos < duration:
-            text = utils.duration_to_string(pos, "00:00", 1) 
+            current = utils.duration_to_string(pos, "00:00", 1) 
         else:    
-            text = "00:00"
-        self.label_time.set_label("<span size=\"small\" color=\"#A7A8A7\">" + text + "</span>")
+            current = "00:00"
+            
+        text = "%s/%s" % (current, total)
+        self.label_time.set_text(text)
+        
+        # if pos >= duration:        
+        #     text = utils.duration_to_string(pos, "00:00", 1)
+        # else:    
 
+        #     current = utils.duration_to_string(pos, "00:00", 1)
 
     def on_seek(self, *args, **kwargs):
         self.__need_report = False
@@ -129,7 +136,6 @@ class SongTimer(gtk.HBox):
         self.__idle_release_id = None
 
     def on_bar_release(self, widget, event):
-
         self.bar.handler_block(self.__value_changed_id)
         
         s = Player.song
