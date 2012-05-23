@@ -23,6 +23,7 @@
 import gtk
 import gobject
 from dtk.ui.scrolled_window import ScrolledWindow
+from dtk.ui.line import draw_vlinear
 
 
 from widget.ui import SongView, app_theme
@@ -70,3 +71,4 @@ class PlaylistItem(gobject.GObject):
         
     def get_name(self):
         return self.text
+

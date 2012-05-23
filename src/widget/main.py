@@ -36,7 +36,6 @@ from widget.browser import SimpleBrowser
 
 from config import config
 from player import Player
-# from findfile import get_cache_file
 from library import MediaDB
 from dbus_manager import DeepinMusicDBus
 
@@ -83,7 +82,9 @@ class DeepinMusic(gobject.GObject):
         main_box.pack_start(self.header_bar, False)
         main_box.pack_start(bottom_box, True)
         application.main_box.pack_start(main_box)
+        
         gobject.idle_add(self.ready)
+        
         
     def ready(self):    
         self.window.show_all()

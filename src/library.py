@@ -20,6 +20,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import gobject
 from threading import Condition
 from random import shuffle
@@ -777,25 +778,112 @@ class DBQuery(gobject.GObject, Logger):
                 self.__tree[0][genre][0][artist][0].setdefault(album, ({}, set(), salbum))
                 self.__tree[0][genre][0][artist][0][album][1].add(song)
                 
-        self.__add_song_attr(song)        
+        self.__add_song_attr(song, (genre2, artist2, album))        
                 
-    def __add_song_attr(self, song):            
+    def __add_song_attr(self, song, info):            
         song_dir = song.get_dir()
+        genre, artist, album = info
         if song_dir:
-            self.__attr_songs.setdefault(song_dir, set())
-            self.__attr_songs[song_dir].add(song)
+            self.__attr_songs.setdefault(song_dir, ({}, {}, {}, set()))
+            self.__attr_songs[song_dir][3].add(song)
+            self.__attr_songs[song_dir][0].setdefault(genre, set())
+            self.__attr_songs[song_dir][0][genre].add(song)
+            self.__attr_songs[song_dir][1].setdefault(artist, set())
+            self.__attr_songs[song_dir][1][artist].add(song)
+            self.__attr_songs[song_dir][2].setdefault(album, set())
+            self.__attr_songs[song_dir][2][album].add(song)
             
-    def get_attr_info(self):        
-        print self.__attr_songs
             
-    def __delete_song_attr(self, song):        
+    def get_attr_infos(self, info_type="###ALL###", song_dir=None):        
+
+        if not self.__attr_songs:
+            return []
+        
+        attr_list = []        
+        
+        if info_type == "###ALL###":
+            for key, value in self.__attr_songs.iteritems():
+                name = os.path.split(key)[1]
+                num = len(value[3])
+                attr_list.append(("%s(%d)" % (name, num), key))
+            return attr_list        
+        
+        if info_type == "genre":
+            if song_dir not in self.__attr_songs:
+                return []
+            for genre, value in self.__attr_songs[song_dir][0].iteritems():
+                num = len(value)
+                attr_list.append((key, num, "genre"))
+            return attr_list    
+        
+        if info_type == "artist":
+            if song_dir not in self.__attr_songs:
+                return []
+            for genre, value in self.__attr_songs[song_dir][1].iteritems():
+                num = len(value)
+                attr_list.append((key, num, "artist"))
+            return attr_list    
+        
+        if info_type == "album":
+            if song_dir not in self.__attr_songs:
+                return []
+            for genre, value in self.__attr_songs[song_dir][2].iteritems():
+                num = len(value)
+                attr_list.append((key, num, "album"))
+            return attr_list    
+        
+    def get_attr_songs(self,song_dir=None, info_type="###ALL###", info_key=None):
+        if not self.__attr_songs:
+            return []
+        if info_type == "###ALL###":
+            try:
+                return self.__attr_songs[song_dir][3]
+            except:
+                return []
+            
+        if info_type == "genre":
+            try:
+                return self.__attr_songs[song_dir][0][info_key]
+            except:
+                return []
+            
+        if info_type == "artist":
+            try:
+                return self.__attr_songs[song_dir][1][info_key]
+            except:
+                return []
+
+        if info_type == "album":
+            try:
+                return self.__attr_songs[song_dir][2][info_key]
+            except:
+                return []
+        
+    def __delete_song_attr(self, song, info):        
         song_dir = song.get_dir()
+        genre, artist, album = info
         if song_dir:
             try:
-                self.__attr_songs[song_dir].remove(song)
+                self.__attr_songs[song_dir][3].remove(song)
             except (KeyError, ValueError):    
                 return
+            
+            self.__attr_songs[song_dir][0][genre].remove(song)
+            self.__attr_songs[song_dir][1][artist].remove(song)
+            self.__attr_songs[song_dir][2][album].remove(song)
+            
+            if len(self.__attr_songs[song_dir][0][genre]) == 0:
+                del self.__attr_songs[song_dir][0][genre]
                 
+            if len(self.__attr_songs[song_dir][1][artist]) == 0:
+                del self.__attr_songs[song_dir][1][artist]
+            
+            if len(self.__attr_songs[song_dir][2][album]) == 0:
+                del self.__attr_songs[song_dir][2][album] 
+                
+            if len(self.attr_songs[song_dir][3]) == 0:    
+                del self.__attr_songs[song_dir]
+            
     def __delete_cache(self, song, old_values=False):            
         if old_values:
             genre2, artist2, album = old_values
@@ -819,7 +907,7 @@ class DBQuery(gobject.GObject, Logger):
             if len(self.__tree[0][genre][1]) == 0:            
                 del self.__tree[0][genre]
                 
-        self.__delete_song_attr(song)        
+        self.__delete_song_attr(song, (genre2, artist2, album))        
                 
     def __get_str_info(self, song):            
         return song.get_str("genre"), song.get_str("artist"), song.get_str("album")

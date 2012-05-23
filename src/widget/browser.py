@@ -24,7 +24,7 @@ import gtk
 import gobject
 
 from dtk.ui.listview import  render_text
-from dtk.ui.draw import draw_pixbuf
+from dtk.ui.draw import draw_pixbuf, draw_vlinear
 from dtk.ui.scrolled_window import ScrolledWindow
 from dtk.ui.button import ImageButton
 from dtk.ui.iconview import IconView
@@ -35,7 +35,8 @@ from library import MediaDB, DBQuery
 from helper import SignalContainer, Dispatcher
 from widget.ui import app_theme, MultiDragSongView, SearchEntry
 from widget.ui_utils import switch_tab
-from widget.outlookbar import OptionBar, OptionTitleBar
+from widget.outlookbar import OptionBar, SongPathBar, SongImportBar
+from widget.combo import ComboMenuButton
 from cover_manager import CoverManager
 
 
@@ -194,25 +195,40 @@ class Browser(gtk.HBox, SignalContainer):
             }
         
         # init widget.
-
         self.entry_box = SearchEntry("")
         self.entry_box.set_size(155, 25)
         self.entry_box.entry.connect("changed", self.__search_cb)
         entry_align = gtk.Alignment()
-        entry_align.set_padding(5, 5, 5, 5)
-        entry_align.set(0, 0, 1, 1)
+        entry_align.set_padding(0, 0, 0, 10)
+        entry_align.set(0.5, 0.5, 1, 1)
+        entry_align.connect("expose-event", self.expose_align_mask)
+        
+        # upper box.
         upper_align = gtk.Alignment()
         upper_align.set(0, 0, 0, 1)
         self.back_button = self.__create_simple_button("back", self.__switch_to_filter_view)
         back_align = gtk.Alignment()
         back_align.set(0.5, 0.5, 0, 0)
-        back_align.set_padding(0, 0, 0, 20)
+        back_align.set_padding(0, 0, 0, 10)
         back_align.add(self.back_button)
-        self.upper_box = gtk.HBox(spacing=5)
-        self.upper_box.pack_start(upper_align, True, True)
-        self.upper_box.pack_start(back_align, False, False)
-        self.upper_box.pack_start(self.entry_box, False, False)
-        entry_align.add(self.upper_box)
+        
+        # path control
+        self.path_combo_box = ComboMenuButton()
+        # self.path_combo_box.connect("list-actived")
+        # self.path_combo_box.connect("combo-actived")
+        path_combo_align = gtk.Alignment()
+        path_combo_align.set_padding(0, 0, 10, 0)
+        path_combo_align.add(self.path_combo_box)
+        self.path_combo_box.set_no_show_all(True)
+       
+        
+        upper_box = gtk.HBox(spacing=5)
+        upper_box.pack_start(path_combo_align, False, False)
+        upper_box.pack_start(upper_align, True, True)
+        upper_box.pack_start(back_align, False, False)
+        upper_box.pack_start(self.entry_box, False, False)
+        entry_align.add(upper_box)
+        
         
         self.filter_categorybar = OptionBar(
             [(app_theme.get_pixbuf("filter/artist_normal.png"), app_theme.get_pixbuf("filter/artist_press.png"),
@@ -224,16 +240,16 @@ class Browser(gtk.HBox, SignalContainer):
                                             )
         
         # song path.
-        self.path_categorybar = OptionTitleBar(
-            (app_theme.get_pixbuf("filter/local_normal.png"), app_theme.get_pixbuf("filter/local_press.png"),
-              "本地歌曲", None),
-            [(app_theme.get_pixbuf("filter/artist_normal.png"), app_theme.get_pixbuf("filter/artist_press.png"),
-              "按歌手", lambda : self.reload_filter_view("artist", True)),
-             (app_theme.get_pixbuf("filter/album_normal.png"), app_theme.get_pixbuf("filter/album_press.png"),
-              "按专辑", lambda : self.reload_filter_view("album", True)),
-             (app_theme.get_pixbuf("filter/genre_normal.png"), app_theme.get_pixbuf("filter/genre_press.png"),
-              "按流派", lambda : self.reload_filter_view("genre", True)),] 
-            )
+        self.path_categorybar = SongPathBar("本地歌曲", self.update_path_all_songs)
+        
+        # song import.
+        self.import_categorybar = SongImportBar("导入歌曲", None)
+        self.import_categorybar.reload_items([
+                ("导入本地歌曲", None),
+                ("导入歌曲文件夹", None),
+                ("扫描家目录", None),
+                ("扫描指定文件夹", None)
+                ])
         
         # iconview.
         self.filter_view = IconView(background_pixbuf=app_theme.get_pixbuf("skin/main.png"))
@@ -243,29 +259,41 @@ class Browser(gtk.HBox, SignalContainer):
         self.filter_view.connect("double-click-item", self.__on_double_click_item)
         self.filter_view.connect("single-click-item", self.__on_single_click_item)
         self.filter_scrolled_window = ScrolledWindow(app_theme.get_pixbuf("skin/main.png"))
+        self.filter_scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
         self.filter_scrolled_window.add_child(self.filter_view)
         
+        # songs_view
         self.songs_view = MultiDragSongView(background_pixbuf=app_theme.get_pixbuf("skin/main.png"))
         self.songs_view.add_titles(["歌名", "艺术家", "专辑", "添加时间"])
         self.songs_scrolled_window = ScrolledWindow(app_theme.get_pixbuf("skin/main.png"))
+        self.songs_scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
         self.songs_scrolled_window.add_child(self.songs_view)
         
+        # left_vbox
         align = gtk.Alignment()
         align.set(0, 1, 0, 0)
         left_box = gtk.VBox(spacing=20)
         left_box.pack_start(self.filter_categorybar, False, False)
         left_box.pack_start(self.create_separator_box(), False, False)
-        left_box.pack_start(self.path_categorybar, False, False)
+        left_box.pack_start(self.path_categorybar, True, True)
         left_box.pack_start(self.create_separator_box(), False, False)
+        left_box.pack_start(self.import_categorybar, False, False)
         
         left_box.pack_start(align, True, True)
         left_box.connect("expose-event", self.expose_left_box_mask)
         self.right_box = gtk.VBox()
         self.right_box.add(self.filter_scrolled_window)
+        
+        # swith_box
+        right_box_align = gtk.Alignment()
+        right_box_align.set_padding(0, 0, 0, 2)
+        right_box_align.set(1, 1, 1, 1)
+        right_box_align.add(self.right_box)
         body_box = gtk.VBox()
 
         body_box.pack_start(entry_align,  False, False)
-        body_box.pack_start(self.right_box, True, True)
+        body_box.pack_start(right_box_align, True, True)
+        
         self.pack_start(left_box, False, False)
         self.pack_start(body_box, True, True)
         
@@ -288,6 +316,13 @@ class Browser(gtk.HBox, SignalContainer):
         cr.fill()
         return False
     
+    def expose_align_mask(self, widget, event):
+        cr = widget.window.cairo_create()
+        rect = widget.allocation
+        color_info = app_theme.get_shadow_color("playlistLast").get_color_info()
+        draw_vlinear(cr, rect.x, rect.y, rect.width - 2, rect.height, color_info)
+        return False
+    
     def create_separator_box(self, padding_x=0, padding_y=0):
         separator_box = HSeparator(
             app_theme.get_shadow_color("hSeparator").get_color_info(),
@@ -301,6 +336,8 @@ class Browser(gtk.HBox, SignalContainer):
     def reload_filter_view(self, tag="artist", switch=False):    
         if switch:
             self.filter_view.clear()
+            
+        self.path_categorybar.set_index(-1)    
         
         _dict = self.get_infos_from_db(tag)
         keys = _dict.keys()
@@ -310,26 +347,56 @@ class Browser(gtk.HBox, SignalContainer):
         items.append(IconItem(("deepin-all-songs", all_nb, tag)))
                 
         for key in keys:
-            value, nb = _dict[key]
+            value, nb = _dict[key] 
             items.append(IconItem((value, nb, tag)))
         self.filter_view.add_items(items)    
+        
         if switch:
             self.switch_box(self.right_box, self.filter_scrolled_window)
             self.view_mode = FILTER_VIEW
+            self.change_combo_box_status(True)
             
     def get_infos_from_db(self, tag, values=None):
         genres = []
         artists = []
         extened = False
         return self.__db_query.get_info(tag, genres, artists, values, extened)
+    
+    def get_attr_infos_from_db(self):
+        return self.__db_query.get_attr_infos()
+    
+    def change_combo_box_status(self, hide=False):    
+        if not hide:
+            self.path_combo_box.set_no_show_all(False)
+            self.path_combo_box.show_all()
+        else:    
+            self.path_combo_box.hide_all()
+            self.path_combo_box.set_no_show_all(True)
+    
+    def update_path_songs(self, key):
+        songs = self.__db_query.get_attr_songs(key)
+        self.filter_categorybar.set_index(-1)
+        self.update_songs_view(songs)
+        self.change_combo_box_status()
+        
+    def update_path_all_songs(self):    
+        songs = self.__db_query.get_all_songs()
+        self.filter_categorybar.set_index(-1)
+        self.update_songs_view(songs)
+        self.change_combo_box_status()
                 
+    def reload_song_path(self):
+        path_infos = self.get_attr_infos_from_db()
+        if path_infos:
+            self.path_categorybar.update_items([(name[0], self.update_path_songs, name[1]) for name in path_infos])
+    
     def connect_to_db(self):    
         self.autoconnect(self.__db_query, "added", self.__added_song_cb)
         self.autoconnect(self.__db_query, "removed", self.__removed_song_cb)
         self.autoconnect(self.__db_query, "update-tag", self.__update_tag_view)
         self.autoconnect(self.__db_query, "full-update", self.__full_update)
         self.autoconnect(self.__db_query, "quick-update", self.__quick_update)
-        self.__db_query.set_query("")
+        self.__db_query.set_query("")                
         
     def __added_song_cb(self, db_query, songs):
         pass
@@ -345,7 +412,7 @@ class Browser(gtk.HBox, SignalContainer):
         
     def __full_update(self, db_query):    
         self.reload_filter_view()
-        # self.__db_query.get_attr_info()
+        self.reload_song_path()
     
     def __get_selected_songs(self, tag="artist"):
         artists = []
@@ -388,19 +455,23 @@ class Browser(gtk.HBox, SignalContainer):
         selection.set_uris(list_uris)
     
     def __on_double_click_item(self, widget,  item, x, y):
-        self.songs_view.clear()
-        self.entry_box.entry.set_text("")
-        
         if item.name == "deepin-all-songs":
             songs = self.__db_query.get_all_songs()
         else:    
             self.__selected_tag[item.tag] = [item.name]
             songs = self.__get_selected_songs(item.tag)
             
-        self.songs_view.add_songs(songs)
-        self.songs_view.set_sort_keyword(item.tag)
-        self.switch_box(self.right_box, self.songs_scrolled_window)
-        self.view_mode = SONG_VIEW
+        self.update_songs_view(songs, item.tag)    
+
+        
+    def update_songs_view(self, items, sort_key="title"):    
+        self.songs_view.clear()
+        self.entry_box.entry.set_text("")
+        self.songs_view.add_songs(items)
+        self.songs_view.set_sort_keyword(sort_key)
+        if self.view_mode != SONG_VIEW:
+            self.switch_box(self.right_box, self.songs_scrolled_window)
+            self.view_mode= SONG_VIEW
         
     def __on_single_click_item(self, widget, item, x, y):    
         if item.pointer_in_play_rect(x, y):

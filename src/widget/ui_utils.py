@@ -21,6 +21,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from dtk.ui.utils import alpha_color_hex_to_cairo
+from dtk.ui.line import draw_vlinear
 from widget.ui import app_theme
 
 def container_remove_all(container):
@@ -38,3 +39,7 @@ def draw_single_mask(cr, x, y, width, height, color_name):
     cr.set_source_rgba(*alpha_color_hex_to_cairo(color_info))
     cr.rectangle(x, y, width, height)
     cr.fill()
+
+def draw_item_mask(cr, x, y, width, height, name):    
+    draw_vlinear(cr, x, y, width, height,
+                 app_theme.get_shadow_color(name).get_color_info())

@@ -27,9 +27,9 @@ from collections import OrderedDict, namedtuple
 from dtk.ui.scrolled_window import ScrolledWindow
 from dtk.ui.button import ImageButton, ToggleButton
 from dtk.ui.menu import Menu
-from dtk.ui.line import VSeparator
 from dtk.ui.editable_list import EditableList
 from dtk.ui.draw import draw_vlinear
+from dtk.ui.threads import post_gui
 from dtk.ui.utils import alpha_color_hex_to_cairo
 
 from library import MediaDB, Playlist
@@ -52,6 +52,7 @@ class PlaylistUI(gtk.VBox):
 
         self.category_list = EditableList(background_pixbuf=app_theme.get_pixbuf("skin/main.png"))
         self.category_list.background_box.draw_mask = self.draw_single_mask
+        self.category_list.draw_item_select = self.draw_item_mask
         self.category_list.connect("active", self.category_button_press)
         self.category_list.connect("right-press", self.category_right_press)
         self.category_list.set_size_request(75, -1)
@@ -59,6 +60,7 @@ class PlaylistUI(gtk.VBox):
         self.entry_box = SearchEntry("")
         self.entry_box.entry.connect("changed", self.search_cb)
         self.entry_box.set_no_show_all(True)
+        
         entry_align = gtk.Alignment()
         entry_align.set(0, 0, 1, 1)
         entry_align.set_padding(2, 0, 10, 10)
@@ -81,8 +83,7 @@ class PlaylistUI(gtk.VBox):
         category_scrolled_window.add_child(self.category_list)
         
         self.right_box = gtk.VBox()
-        vseparator = VSeparator(app_theme.get_shadow_color("vSeparator").get_color_info(), 0, 0)
-        vseparator.set_size_request(2, -1)
+
         
         self.list_box = gtk.HBox()
         self.list_box.pack_start(category_scrolled_window, False, False)
@@ -141,6 +142,10 @@ class PlaylistUI(gtk.VBox):
         cr.rectangle(x, y, width, height)
         cr.fill()
         
+    def draw_item_mask(self, cr, x, y, width, height):    
+        draw_vlinear(cr, x, y, width, height,
+                     app_theme.get_shadow_color("editlistItemPress").get_color_info())        
+        
     def __on_db_loaded(self, db):        
         if not MediaDB.get_playlists():
             MediaDB.create_playlist("local", "[默认列表]")            
@@ -156,7 +161,9 @@ class PlaylistUI(gtk.VBox):
             index = self.category_list.items.index(self.current_item)
         else:    
             index = 0
-        self.category_list.highlight_item(self.category_list.items[index])
+
+        # self.category_list.highlight_item(self.category_list.items[index])                        
+
         Player.set_source(self.current_item.song_view)
         self.right_box.pack_start(self.current_item.get_list_widget(), True, True)
         self.list_box.show_all()

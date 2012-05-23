@@ -15,6 +15,8 @@
  "buttonBorderActive" : "#9372c9",
  "buttonFont" : "#000000",
  "labelText" : "#4D5154",
+ "simpleItem" : "#000000",
+ "simpleSelectItem" : "#FFFFFF"
  },	
  "alpha_colors" : {
      "frame" : ("#000000", 0.5),
@@ -36,6 +38,30 @@
 		(0.95,	("#EFEFEF", 0.75)),
 		(1,		("#EFEFEF", 0.6)),
 	 ],
+	 "simpleItemPress" : [
+        (0, ("#5BAED0", 0.8)),
+        (1, ("#5BAED0", 0.5))
+	 ],
+     "simpleItemHover" : [
+        (0, ("#CCE5EC", 0.8)),
+        (1, ("#CCE5EC", 0.5)),
+	 ],
+     "songviewHover" : [
+        (0, ("#CCE5EC", 0.8)),
+        (1, ("#CCE5EC", 0.5)),
+	 ],
+	 "songviewSelect" : [
+        (0, ("#5BAED0", 0.8)),
+        (1, ("#5BAED0", 0.5))
+	 ],
+	 "songviewHighlight" : [
+        (0, ("#5BAED0", 0.8)),
+        (1, ("#5BAED0", 0.5))
+	 ],
+	 "editlistItemPress" : [
+        (0, ("#5BAED0", 0.8)),
+        (1, ("#5BAED0", 0.5))
+     ],
      "playlistLeft" : [
 	    (0,		("#FFFFFF", 0.7)),
 		(0.05,	("#FFFFFF", 0.75)),
@@ -55,11 +81,12 @@
 		(1,		("#FFFFFF", 1.0)),
 	 ],
      "playlistLast" : [
-	    (0,		("#FFFFFF", 0.0)),
-		(0.05,	("#FFFFFF", 0)),
-		(0.65,	("#FFFFFF", 0)),
-		(1,		("#FFFFFF", 0)),
+	    (0,		("#EFEFEF", 0.6)),
+		(0.05,	("#EFEFEF", 0.75)),
+		(0.95,	("#EFEFEF", 0.75)),
+		(1,		("#EFEFEF", 0.6)),
 	 ],
+	 
      "playlistToolbar" : [
 	    (0,		("#FFFFFF", 0.5)),
 		(0.05,	("#FFFFFF", 0.55)),

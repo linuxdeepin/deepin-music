@@ -33,7 +33,7 @@ from dtk.ui.box import ImageBox
 from dtk.ui.menu import Menu
 
 from helper import Dispatcher
-from widget.lyrics import LyricsWindow, LyricsScroll, BaseScrollLyrics
+from widget.lyrics import LyricsWindow, LyricsScroll
 from widget.ui import app_theme
 from widget.lyrics_search import SearchUI
 from lrc_parser import LrcParser

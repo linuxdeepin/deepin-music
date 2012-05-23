@@ -105,15 +105,8 @@ class SongTimer(gtk.HBox):
             current = utils.duration_to_string(pos, "00:00", 1) 
         else:    
             current = "00:00"
-            
         text = "%s/%s" % (current, total)
         self.label_time.set_text(text)
-        
-        # if pos >= duration:        
-        #     text = utils.duration_to_string(pos, "00:00", 1)
-        # else:    
-
-        #     current = utils.duration_to_string(pos, "00:00", 1)
 
     def on_seek(self, *args, **kwargs):
         self.__need_report = False
@@ -145,6 +138,7 @@ class SongTimer(gtk.HBox):
 
         # wait a bit that the player are really seek to update the progress bar
         if not self.__idle_release_id:
+            self.__idle_release()
             self.__idle_release_id = gobject.idle_add(self.__idle_release)
 
 class VolumeSlider(gtk.HBox):

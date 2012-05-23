@@ -29,9 +29,10 @@ import time
 from collections import OrderedDict
 from dtk.ui.window import Window
 from dtk.ui.theme import Theme
+from dtk.ui.draw import draw_pixbuf
 from dtk.ui.titlebar import Titlebar
 from dtk.ui.listview import ListView
-from dtk.ui.utils import move_window, alpha_color_hex_to_cairo
+from dtk.ui.utils import move_window, alpha_color_hex_to_cairo, propagate_expose
 
 from dtk.ui.menu import Menu
 from dtk.ui.threads import post_gui
@@ -124,6 +125,15 @@ class SongView(ListView):
         cr.set_source_rgba(*alpha_color_hex_to_cairo(color_info))
         cr.rectangle(x, y, width, height)
         cr.fill()
+        
+    def draw_item_hover(self, cr, x, y, w, h):
+        draw_vlinear(cr, x, y, w, h, app_theme.get_shadow_color("songviewHover").get_color_info())
+        
+    def draw_item_select(self, cr, x, y, w, h):    
+        draw_vlinear(cr, x, y, w, h, app_theme.get_shadow_color("songviewSelect").get_color_info())
+        
+    def draw_item_highlight(self, cr, x, y, w, h):    
+        draw_vlinear(cr, x, y, w, h, app_theme.get_shadow_color("songviewHighlight").get_color_info())
         
     def get_songs(self):        
         songs = []
@@ -533,6 +543,7 @@ class ProgressBox(gtk.VBox):
             start_x += size
             
         last_width = rect.width - (start_x - rect.x)    
-        draw_vlinear(cr, start_x, start_y, last_width, rect.height - 8,
+        draw_vlinear(cr, start_x, start_y, last_width - 2, rect.height - 8,
                      app_theme.get_shadow_color("playlistLast").get_color_info())
         return False
+    
