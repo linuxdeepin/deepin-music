@@ -248,3 +248,6 @@ class ComboMenuButton(gtk.HBox):
     
     def emit_list_signal(self):    
         self.emit("list-actived")
+        
+    def get_combo_active(self):    
+        return self.current_index == 1

@@ -811,7 +811,7 @@ class DBQuery(gobject.GObject, Logger):
         if info_type == "genre":
             if song_dir not in self.__attr_songs:
                 return []
-            for genre, value in self.__attr_songs[song_dir][0].iteritems():
+            for key, value in self.__attr_songs[song_dir][0].iteritems():
                 num = len(value)
                 attr_list.append((key, num, "genre"))
             return attr_list    
@@ -819,7 +819,7 @@ class DBQuery(gobject.GObject, Logger):
         if info_type == "artist":
             if song_dir not in self.__attr_songs:
                 return []
-            for genre, value in self.__attr_songs[song_dir][1].iteritems():
+            for key, value in self.__attr_songs[song_dir][1].iteritems():
                 num = len(value)
                 attr_list.append((key, num, "artist"))
             return attr_list    
@@ -827,7 +827,7 @@ class DBQuery(gobject.GObject, Logger):
         if info_type == "album":
             if song_dir not in self.__attr_songs:
                 return []
-            for genre, value in self.__attr_songs[song_dir][2].iteritems():
+            for key, value in self.__attr_songs[song_dir][2].iteritems():
                 num = len(value)
                 attr_list.append((key, num, "album"))
             return attr_list    

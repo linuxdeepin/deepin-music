@@ -23,7 +23,7 @@
 import  gtk
 import gobject
 
-from dtk.ui.volume_button import VolumeButton
+# from dtk.ui.volume_button import VolumeButton
 from dtk.ui.frame import HorizontalFrame
 from dtk.ui.label import Label
 from dtk.ui.utils import get_content_size
@@ -31,6 +31,7 @@ from dtk.ui.utils import get_content_size
 import utils
 from widget.scalebar import HScalebar
 from widget.ui import app_theme
+from widget.volume import VolumeButton
 from player import Player
 from config import config
 
@@ -144,16 +145,16 @@ class SongTimer(gtk.HBox):
 class VolumeSlider(gtk.HBox):
     def __init__(self):
         super(VolumeSlider, self).__init__()
-        volume_button = VolumeButton(1.0, 0.0, 1.0, 2)
-        volume_frame = HorizontalFrame(10, 0, 0, 0, 0)
-        volume_frame.add(volume_button)
+        volume_button = VolumeButton(1.0, 0.0, 1.0)
+        # volume_frame = HorizontalFrame(10, 0, 0, 0, 0)
+        # volume_frame.add(volume_button)
         self.volume_progressbar = volume_button.volume_progressbar
         self.mute_button = volume_button.volume_button
         self.mute_button.connect("toggled", self.toggled_volume)
         self.volume_progressbar.connect("value-changed",self.__volume_changed)
         volume = float(config.get("player","volume"))
         self.change_volume(None,volume)
-        self.pack_start(volume_frame, False, False)
+        self.pack_start(volume_button, False, False)
 
     def change_volume(self,helper,value):
         self.volume_progressbar.set_value(value)
@@ -162,7 +163,7 @@ class VolumeSlider(gtk.HBox):
     def toggled_volume(self, widget):    
         val = self.volume_progressbar.get_value()
         val = (2 ** val) - 1
-        if widget.get_active():
+        if not widget.get_active():
             Player.volume = val
         else:    
             Player.volume = 0.0
@@ -172,7 +173,3 @@ class VolumeSlider(gtk.HBox):
         val = (2 ** val) - 1
         config.set("player","volume","%f" % val)
         Player.volume = val
-        if val == 0.0:
-            self.mute_button.set_active(False)
-        else:    
-            self.mute_button.set_active(True)

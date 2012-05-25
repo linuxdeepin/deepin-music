@@ -97,14 +97,15 @@ class HeaderBar(gtk.EventBox):
         time_align = gtk.Alignment()
         time_align.set(0, 0, 0, 1)
         time_box = gtk.HBox()       
-        time_box.pack_start(self.vol, False, False)
+
         time_box.pack_start(self.lyrics_button, False, False)
+        time_box.pack_start(self.vol, False, False)        
         time_box.pack_start(time_align, True, True)
         time_box.pack_start(song_timer.get_label(), False, False)
         
         # playinfo box.
         playinfo_box = gtk.HBox()
-        playinfo_box.set_spacing(80)
+        # playinfo_box.set_spacing(80)
         playinfo_box.pack_start(PlayInfo(), False, False)
         playinfo_box.pack_start(mainbtn, False, False)
         
@@ -148,8 +149,10 @@ class HeaderBar(gtk.EventBox):
             
     def __create_simple_toggle_button(self, name, callback):
         toggle_button = ToggleButton(
-            app_theme.get_pixbuf("control/%s_normal.png" % name),
-            app_theme.get_pixbuf("control/%s_hover.png" % name))
+            app_theme.get_pixbuf("header/%s_normal.png" % name),
+            app_theme.get_pixbuf("header/%s_press.png" % name),
+            app_theme.get_pixbuf("header/%s_hover.png" % name),
+            )
         toggle_button.connect("toggled", callback)
         return toggle_button
 

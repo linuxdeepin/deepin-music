@@ -23,10 +23,9 @@
 import gtk
 import gobject
 from dtk.ui.scrolled_window import ScrolledWindow
-from dtk.ui.line import draw_vlinear
 
-
-from widget.ui import SongView, app_theme
+from widget.song_view import SongView
+from widget.ui import app_theme
 
 class PlaylistItem(gobject.GObject):
 

@@ -22,7 +22,6 @@
 
 
 import gtk
-import pango
 from dtk.ui.label import Label
 from dtk.ui.utils import get_content_size
 
@@ -68,7 +67,7 @@ class PlayInfo(gtk.VBox):
     def create_simple_label(self, content, text_size):    
         label = Label(content, app_theme.get_color("labelText"), text_size=text_size)
         width, height = get_content_size(content, text_size)
-        label.set_size_request(130, height)
+        label.set_size_request(110, height)
         return label
     
         

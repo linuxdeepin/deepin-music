@@ -60,8 +60,8 @@ class HScalebar(gtk.HScale):
         fg_pixbuf = self.fg_dpixbuf.get_pixbuf()
         bg_pixbuf = self.bg_dpixbuf.get_pixbuf()
         point_normal_pixbuf = self.point_normal_dpixbuf.get_pixbuf()
-        point_hover_pixbuf = self.point_hover_dpixbuf.get_pixbuf()
-        point_press_pixbuf = self.point_press_dpixbuf.get_pixbuf()
+        # point_hover_pixbuf = self.point_hover_dpixbuf.get_pixbuf()
+        # point_press_pixbuf = self.point_press_dpixbuf.get_pixbuf()
         
         # Init value.
         upper = self.get_adjustment().get_upper()
@@ -71,8 +71,6 @@ class HScalebar(gtk.HScale):
         point_width = point_normal_pixbuf.get_width()
         point_height = point_normal_pixbuf.get_height()
         x, y, w, h = rect.x + point_width / 2, rect.y, rect.width - point_width, rect.height
-        
-
         
         line_height = bg_pixbuf.get_height()
 
@@ -107,3 +105,5 @@ class HScalebar(gtk.HScale):
         return False    
             
 gobject.type_register(HScalebar)
+
+        

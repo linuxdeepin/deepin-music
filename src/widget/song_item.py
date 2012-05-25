@@ -22,9 +22,12 @@
 
 import gobject
 from dtk.ui.utils import get_content_size
-from dtk.ui.listview import render_text
-from dtk.ui.constant import ALIGN_END
-from constant import DEFAULT_FONT_SIZE
+from dtk.ui.constant import ALIGN_START, ALIGN_END
+
+from widget.ui_utils import render_text
+from widget.ui import app_theme
+
+DEFAULT_FONT_SIZE = 8
 
 
 class SongItem(gobject.GObject):
@@ -80,28 +83,40 @@ class SongItem(gobject.GObject):
         '''Render title.'''
         rect.x += self.title_padding_x
         rect.width -= self.title_padding_x * 2
-        render_text(cr, rect, self.title, font_size=DEFAULT_FONT_SIZE)
+        render_text(cr, self.title, rect, 
+                    app_theme.get_color("labelText").get_color(),
+                    DEFAULT_FONT_SIZE, ALIGN_START)
+        
     
     def render_artist(self, cr, rect):
         '''Render artist.'''
         rect.x += self.artist_padding_x
         rect.width -= self.title_padding_x * 2
-        render_text(cr, rect, self.artist, font_size = DEFAULT_FONT_SIZE)
+        render_text(cr, self.artist, rect, 
+                    app_theme.get_color("labelText").get_color(),
+                    DEFAULT_FONT_SIZE, ALIGN_START)
+
     
     def render_length(self, cr, rect):
         '''Render length.'''
         rect.width -= self.length_padding_x * 2
-        render_text(cr, rect, self.length, ALIGN_END, font_size=DEFAULT_FONT_SIZE)
+        render_text(cr, self.length, rect, 
+                    app_theme.get_color("labelText").get_color(),
+                    DEFAULT_FONT_SIZE, ALIGN_END)
         
     def render_add_time(self, cr, rect):
         '''Render add_time.'''
         rect.width -= self.add_time_padding_x * 2
-        render_text(cr, rect, self.add_time, font_size=DEFAULT_FONT_SIZE)
+        render_text(cr, self.add_time, rect, 
+                    app_theme.get_color("labelText").get_color(),
+                    DEFAULT_FONT_SIZE, ALIGN_END)
         
     def render_album(self, cr, rect):
         '''Render album.'''
-        rect.width -= self.album_padding_x * 2
-        render_text(cr, rect, self.album, font_size=DEFAULT_FONT_SIZE)
+        rect.width -= self.album_padding_x * 2 
+        render_text(cr, self.album, rect, 
+                    app_theme.get_color("labelText").get_color(),
+                    DEFAULT_FONT_SIZE, ALIGN_START)
         
     def get_column_sizes(self):
         '''Get sizes.'''
@@ -113,7 +128,7 @@ class SongItem(gobject.GObject):
                 (min(self.add_time_width + self.add_time_padding_x * 2, 80), self.add_time_height + self.add_time_padding_y * 2)
                 ]
         else:
-            return [(min(self.title_width + self.title_padding_x * 2, 80),
+            return [(min(self.title_width + self.title_padding_x * 2, 100),
                      self.title_height + self.title_padding_y * 2),
                     (min(self.artist_width + self.artist_padding_x * 2, 60),
                      self.artist_height + self.artist_padding_y * 2),

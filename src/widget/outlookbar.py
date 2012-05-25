@@ -157,7 +157,7 @@ class SongPathBar(BaseBar):
                     self.child_box.pack_start(self.create_block_box(), False, True)
                 
             self.show_all()        
-            self.get_toplevel().queue_draw()
+
             
     def size_change_cb(self, widget, rect):        
         if rect.height > 0:
@@ -302,7 +302,7 @@ class SimpleItem(gtk.Button):
         # Init.
         cr = widget.window.cairo_create()
         rect = widget.allocation
-        font_color = app_theme.get_color("simpleItem").get_color()
+        font_color = app_theme.get_color("labelText").get_color()
         item_pixbuf = self.normal_dpixbuf.get_pixbuf()
         select_index = self.get_index()
         

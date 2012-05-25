@@ -22,6 +22,8 @@
 
 from dtk.ui.utils import alpha_color_hex_to_cairo
 from dtk.ui.line import draw_vlinear
+from dtk.ui.draw import draw_font
+from dtk.ui.constant import  ALIGN_MIDDLE
 from widget.ui import app_theme
 
 def container_remove_all(container):
@@ -43,3 +45,6 @@ def draw_single_mask(cr, x, y, width, height, color_name):
 def draw_item_mask(cr, x, y, width, height, name):    
     draw_vlinear(cr, x, y, width, height,
                  app_theme.get_shadow_color(name).get_color_info())
+    
+def render_text(cr, content, rect, color, font_size, align=ALIGN_MIDDLE):    
+    draw_font(cr, content, font_size, color, rect.x, rect.y, rect.width, rect.height, align)

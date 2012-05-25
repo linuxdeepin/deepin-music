@@ -23,7 +23,6 @@
 import gtk
 import gobject
 
-from dtk.ui.listview import  render_text
 from dtk.ui.draw import draw_pixbuf, draw_vlinear
 from dtk.ui.scrolled_window import ScrolledWindow
 from dtk.ui.button import ImageButton
@@ -33,8 +32,9 @@ from dtk.ui.line import HSeparator
 
 from library import MediaDB, DBQuery
 from helper import SignalContainer, Dispatcher
-from widget.ui import app_theme, MultiDragSongView, SearchEntry
-from widget.ui_utils import switch_tab
+from widget.ui import app_theme, SearchEntry
+from widget.song_view import MultiDragSongView
+from widget.ui_utils import switch_tab, render_text
 from widget.outlookbar import OptionBar, SongPathBar, SongImportBar
 from widget.combo import ComboMenuButton
 from cover_manager import CoverManager
@@ -55,7 +55,7 @@ class IconItem(gobject.GObject):
             self.name_label = self.name
             
         self.labels = "%d首歌曲" % nums
-        self.cell_width = 100
+        self.cell_width = 94
         self.pixbuf = CoverManager.get_pixbuf_from_album(self.name_label, self.cell_width, self.cell_width)
         self.padding_x = 4
         self.padding_y = 4
@@ -67,8 +67,8 @@ class IconItem(gobject.GObject):
         self.__normal_play_pixbuf =  app_theme.get_pixbuf("filter/play_normal.png").get_pixbuf()
         
         self.play_rect = gtk.gdk.Rectangle(
-            self.__normal_side_pixbuf.get_width() - self.__normal_play_pixbuf.get_width() - 2 - 4,
-            self.__normal_side_pixbuf.get_height() - self.__normal_play_pixbuf.get_height() - 2 - 4,
+            self.__normal_side_pixbuf.get_width() - self.__normal_play_pixbuf.get_width() - 2 - 6,
+            self.__normal_side_pixbuf.get_height() - self.__normal_play_pixbuf.get_height() - 2 - 6,
             self.__normal_play_pixbuf.get_width(),
             self.__normal_play_pixbuf.get_height()
             )
@@ -79,24 +79,36 @@ class IconItem(gobject.GObject):
         else:
             return False
         
+    def pointer_in_pixbuf_rect(self, x, y):    
+        pixbuf_rect = gtk.gdk.Rectangle(
+            0, 0,
+            self.__normal_side_pixbuf.get_width(),
+            self.__normal_side_pixbuf.get_height(),
+            )
+        if pixbuf_rect.x < x < pixbuf_rect.x + pixbuf_rect.width and pixbuf_rect.y < y < pixbuf_rect.y + pixbuf_rect.height:
+            return True
+        else:
+            return False
+                
+        
     def emit_redraw_request(self):    
         self.emit("redraw-request")
        
     def get_width(self):    
-        return self.__normal_side_pixbuf.get_width() + self.padding_x * 2
+        # return self.__normal_side_pixbuf.get_width() + self.padding_x * 2
+        return 110
     
     def get_height(self):
-        return self.__normal_side_pixbuf.get_height() + self.padding_y * 2 + 20
+        # return self.__normal_side_pixbuf.get_height() + self.padding_y * 2 + 20
+        return 150
     
     def render(self, cr, rect):
         
         if self.hover_flag:
             side_pixbuf = app_theme.get_pixbuf("filter/side_hover.png").get_pixbuf()
-
             
         elif self.highlight_flag:
             side_pixbuf = app_theme.get_pixbuf("filter/side_hover.png").get_pixbuf()
-            
         else:    
             side_pixbuf = self.__normal_side_pixbuf
             
@@ -119,12 +131,16 @@ class IconItem(gobject.GObject):
             
         # Draw text.    
         name_rect = gtk.gdk.Rectangle(rect.x + self.padding_x , 
-                                      rect.y + self.__normal_side_pixbuf.get_height() + 2,
-                                      self.cell_width, 10)
-        num_rect = gtk.gdk.Rectangle(name_rect.x, name_rect.y + 14, name_rect.width, name_rect.height)
+                                      rect.y + self.__normal_side_pixbuf.get_height() + 5,
+                                      self.cell_width, 11)
+        num_rect = gtk.gdk.Rectangle(name_rect.x, name_rect.y + 16, name_rect.width, 9)
         
-        render_text(cr, name_rect, self.name_label, 2, font_size=12)
-        render_text(cr, num_rect, self.labels, 2, font_size=9)
+        render_text(cr, self.name_label, name_rect, 
+                    app_theme.get_color("labelText").get_color(),
+                    10)
+        render_text(cr, self.labels, num_rect, 
+                    app_theme.get_color("labelText").get_color(),
+                    8)
         
     def icon_item_motion_notify(self, x, y):    
         self.hover_flag = True
@@ -135,6 +151,12 @@ class IconItem(gobject.GObject):
                 self.__draw_play_hover_flag = True
         else:    
             self.__draw_play_hover_flag = False
+            
+        if self.pointer_in_pixbuf_rect(x, y):    
+            self.hover_flag = True
+        else:    
+            self.hover_flag = False
+            
         self.emit_redraw_request()
         
     def icon_item_lost_focus(self):    
@@ -214,8 +236,8 @@ class Browser(gtk.HBox, SignalContainer):
         
         # path control
         self.path_combo_box = ComboMenuButton()
-        # self.path_combo_box.connect("list-actived")
-        # self.path_combo_box.connect("combo-actived")
+        self.path_combo_box.connect("list-actived", lambda w: self.update_path_list_view())
+        self.path_combo_box.connect("combo-actived", lambda w, k : self.update_path_filter_view(k))
         path_combo_align = gtk.Alignment()
         path_combo_align.set_padding(0, 0, 10, 0)
         path_combo_align.add(self.path_combo_box)
@@ -240,6 +262,7 @@ class Browser(gtk.HBox, SignalContainer):
                                             )
         
         # song path.
+        self.__current_path = None
         self.path_categorybar = SongPathBar("本地歌曲", self.update_path_all_songs)
         
         # song import.
@@ -333,11 +356,12 @@ class Browser(gtk.HBox, SignalContainer):
         self.switch_box(self.right_box, self.filter_scrolled_window)
         self.view_mode = FILTER_VIEW
         
-    def reload_filter_view(self, tag="artist", switch=False):    
+    def reload_filter_view(self, tag="artist", switch=False, use_path=False):    
         if switch:
             self.filter_view.clear()
             
-        self.path_categorybar.set_index(-1)    
+        if not use_path:    
+            self.path_categorybar.set_index(-1)    
         
         _dict = self.get_infos_from_db(tag)
         keys = _dict.keys()
@@ -354,7 +378,8 @@ class Browser(gtk.HBox, SignalContainer):
         if switch:
             self.switch_box(self.right_box, self.filter_scrolled_window)
             self.view_mode = FILTER_VIEW
-            self.change_combo_box_status(True)
+            if not use_path:
+                self.change_combo_box_status(True)
             
     def get_infos_from_db(self, tag, values=None):
         genres = []
@@ -362,8 +387,8 @@ class Browser(gtk.HBox, SignalContainer):
         extened = False
         return self.__db_query.get_info(tag, genres, artists, values, extened)
     
-    def get_attr_infos_from_db(self):
-        return self.__db_query.get_attr_infos()
+    def get_attr_infos_from_db(self, info_type="###ALL###", song_dir=None):
+        return self.__db_query.get_attr_infos(info_type, song_dir)
     
     def change_combo_box_status(self, hide=False):    
         if not hide:
@@ -374,16 +399,49 @@ class Browser(gtk.HBox, SignalContainer):
             self.path_combo_box.set_no_show_all(True)
     
     def update_path_songs(self, key):
-        songs = self.__db_query.get_attr_songs(key)
-        self.filter_categorybar.set_index(-1)
-        self.update_songs_view(songs)
-        self.change_combo_box_status()
+        self.filter_categorybar.set_index(-1)        
+        self.__current_path = key        
+        self.change_combo_box_status()        
+        
+        if self.path_combo_box.get_combo_active():
+            self.update_path_filter_view(self.path_combo_box.current_status)
+        else:    
+            songs = self.__db_query.get_attr_songs(key)
+            self.update_songs_view(songs)
+            
+    def update_path_list_view(self):        
+        if self.__current_path == "###ALL###":
+            songs = self.__db_query.get_all_songs()
+        else:    
+            songs = self.__db_query.get_attr_songs(self.__current_path)
+        self.update_songs_view(songs)    
         
     def update_path_all_songs(self):    
-        songs = self.__db_query.get_all_songs()
-        self.filter_categorybar.set_index(-1)
-        self.update_songs_view(songs)
         self.change_combo_box_status()
+        self.__current_path = "###ALL###"
+        self.filter_categorybar.set_index(-1)        
+        
+        if self.path_combo_box.get_combo_active():
+            self.update_path_filter_view(self.path_combo_box.current_status)
+        else:    
+            songs = self.__db_query.get_all_songs()
+            self.update_songs_view(songs)
+            
+    def update_path_filter_view(self, name):
+        self.filter_view.clear()
+        if self.__current_path == "###ALL###":
+            self.reload_filter_view(name, True, True)
+        else:    
+            attr_infos = self.get_attr_infos_from_db(name, self.__current_path)
+            items = []
+            for info in attr_infos:
+                key, nb, tag = info
+                items.append(IconItem((key, nb, tag)))
+            self.filter_view.add_items(items)    
+            
+            if self.view_mode != FILTER_VIEW:
+                self.switch_box(self.right_box, self.filter_scrolled_window)
+                self.view_mode = FILTER_VIEW
                 
     def reload_song_path(self):
         path_infos = self.get_attr_infos_from_db()
@@ -418,13 +476,6 @@ class Browser(gtk.HBox, SignalContainer):
         artists = []
         albums = []
         genres = []
-        
-        # if tag in ["genre", "artist", "album"]:
-        #     genres = self.__selected_tag["genre"]
-        # if tag in ["artist", "album"]:
-        #     artists = self.__selected_tag["artist"]
-        # if tag in ["album"]:
-        #     albums = self.__selected_tag["album"]
         
         if tag == "artist":
             artists = self.__selected_tag["artist"]
