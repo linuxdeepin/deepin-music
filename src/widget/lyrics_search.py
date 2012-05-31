@@ -30,7 +30,7 @@ from dtk.ui.threads import post_gui
 from constant import DEFAULT_FONT_SIZE
 from dtk.ui.listview import ListView, render_text
 from dtk.ui.scrolled_window import ScrolledWindow
-from widget.ui import NormalWindow, app_theme
+from widget.ui import NormalWindow
 from lrc_download import TTPlayer, DUOMI, SOSO
 from helper import Dispatcher
 from lrc_manager import LrcManager
@@ -69,10 +69,10 @@ class SearchUI(NormalWindow):
         info_box.pack_start(right_align, True, True)
         info_box.pack_start(search_button, False, False)
         
-        scrolled_window = ScrolledWindow(app_theme.get_pixbuf("skin/main.png"))
+        scrolled_window = ScrolledWindow()
         scrolled_window.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
         sort_items = [(lambda item: item.title, cmp), (lambda item: item.artist, cmp)]
-        self.result_view = ListView(sort_items, app_theme.get_pixbuf("skin/main.png"))
+        self.result_view = ListView(sort_items)
         self.result_view.connect("double-click-item", self.double_click_cb)
         self.result_view.add_titles(["歌曲名", "艺术家"])
         scrolled_window.add_child(self.result_view)

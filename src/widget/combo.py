@@ -27,7 +27,7 @@ from dtk.ui.draw import draw_pixbuf
 from dtk.ui.utils import propagate_expose
 from dtk.ui.constant import BUTTON_PRESS, BUTTON_NORMAL, BUTTON_HOVER
 
-from widget.ui import app_theme
+from widget.skin import app_theme
 
 class ComboItem(gtk.Button):
     def __init__(self, bg_image_group, icon_group, index, set_index, get_index):

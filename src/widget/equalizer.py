@@ -32,7 +32,7 @@ from dtk.ui.box import ImageBox
 from dtk.ui.window import Window
 from dtk.ui.button import Button
 from dtk.ui.menu import Menu
-from widget.ui import app_theme
+from widget.skin import app_theme
 from dtk.ui.utils import get_widget_root_coordinate, move_window
 
 class PreampScalebar(gtk.VBox):
@@ -225,7 +225,6 @@ class EqualizerWindow(Logger):
         
         self.equalizer_win.window_frame.pack_start(align, False, False)    
         self.equalizer_win.window_frame.pack_start(button_align,False, False)
-        self.equalizer_win.change_background(app_theme.get_pixbuf("skin/main.png"))
         self.add_move_window_event(self.equalizer_win)
 
         

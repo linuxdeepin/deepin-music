@@ -39,7 +39,7 @@ from helper import Dispatcher
 from library import MediaDB
 from widget.dialog import WinFile, WinDir
 from widget.song_item import SongItem
-from widget.ui import app_theme
+from widget.skin import app_theme
 from source.local import ImportPlaylistJob
 
 class SongView(ListView):
@@ -51,7 +51,6 @@ class SongView(ListView):
         self.drag_dest_set(gtk.DEST_DEFAULT_MOTION | gtk.DEST_DEFAULT_HIGHLIGHT | gtk.DEST_DEFAULT_DROP,
                            targets, gtk.gdk.ACTION_COPY)
         
-        self.background_pixbuf = app_theme.get_pixbuf("skin/main.png")
         self.pl = None
         self.add_song_cache = []
         sort_key = ["album", "genre", "artist", "title", "#playcount", "#added"]

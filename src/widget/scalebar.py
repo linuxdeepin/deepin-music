@@ -25,7 +25,7 @@ import gobject
 from dtk.ui.draw import draw_pixbuf
 from dtk.ui.utils import is_left_button
 
-from widget.ui import app_theme
+from widget.skin import app_theme
 
 class HScalebar(gtk.HScale):
     

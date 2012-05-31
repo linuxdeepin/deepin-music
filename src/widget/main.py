@@ -25,7 +25,7 @@ import gobject
 from dtk.ui.application import Application
 
 import utils
-from widget.ui import app_theme
+from widget.skin import app_theme
 from widget.headerbar import HeaderBar
 from widget.playlist import PlaylistUI
 from widget.browser import SimpleBrowser
@@ -41,21 +41,20 @@ class DeepinMusic(gobject.GObject):
     
     def __init__(self):
         gobject.GObject.__init__(self)
-        gtk.window_set_default_icon_from_file(app_theme.get_image_path("skin/logo.png"))
+        gtk.window_set_default_icon_from_file(app_theme.get_theme_file_path("image/skin/logo.png"))
         
         application = Application("DMuisc")
         application.close_callback = self.force_quit
         application.set_default_size(950, 595)
         application.set_icon(app_theme.get_pixbuf("skin/logo.png"))
         application.add_titlebar(
-            ["max", "min", "close"],
+            ["theme", "max", "min", "close"],
             app_theme.get_pixbuf("skin/logo1.png"),
             "深度音乐"
             )
 
         self.window = application.window
         utils.set_main_window(self.window)
-        application.window.change_background(app_theme.get_pixbuf("skin/main.png"))
         
         if config.get("window", "x") == "-1":
             self.window.set_position(gtk.WIN_POS_CENTER)

@@ -34,7 +34,7 @@ from dtk.ui.menu import Menu
 
 from helper import Dispatcher
 from widget.lyrics import LyricsWindow, LyricsScroll
-from widget.ui import app_theme
+from widget.skin import app_theme
 from widget.lyrics_search import SearchUI
 from lrc_parser import LrcParser
 from config import config

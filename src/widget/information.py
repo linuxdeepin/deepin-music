@@ -25,7 +25,7 @@ import gtk
 from dtk.ui.label import Label
 from dtk.ui.utils import get_content_size
 
-from widget.ui import app_theme
+from widget.skin import app_theme
 from library import MediaDB
 from player import Player
 

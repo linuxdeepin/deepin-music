@@ -25,7 +25,7 @@ from dtk.ui.utils import get_content_size
 from dtk.ui.constant import ALIGN_START, ALIGN_END
 
 from widget.ui_utils import render_text
-from widget.ui import app_theme
+from widget.skin import app_theme
 
 DEFAULT_FONT_SIZE = 8
 

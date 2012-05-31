@@ -30,7 +30,7 @@ from dtk.ui.utils import get_content_size
 
 import utils
 from widget.scalebar import HScalebar
-from widget.ui import app_theme
+from widget.skin import app_theme
 from widget.volume import VolumeButton
 from player import Player
 from config import config

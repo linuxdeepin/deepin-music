@@ -27,7 +27,7 @@ import gobject
 from dtk.ui.label import Label
 from dtk.ui.draw import draw_hlinear
 from dtk.ui.navigatebar import Navigatebar
-from widget.ui import NormalWindow, app_theme
+from widget.skin import NormalWindow, app_theme
 
 class SongInfo(gtk.VBox):
     def __init__(self, *args):

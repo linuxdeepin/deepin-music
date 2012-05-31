@@ -33,7 +33,8 @@ from widget.timer import SongTimer, VolumeSlider
 from widget.equalizer import EqualizerWindow
 from widget.cover import PlayerCoverButton
 from widget.lyrics_module import LyricsModule
-from widget.ui import app_theme, ProgressBox
+from widget.skin import app_theme
+from widget.ui import ProgressBox
 from config import config
 from helper import Dispatcher
 

@@ -29,7 +29,7 @@ from dtk.ui.box import ImageBox
 from player import Player
 from library import MediaDB
 from cover_manager import CoverManager, COVER_SIZE
-from widget.ui import app_theme
+from widget.skin import app_theme
 
 class CoverButton(gtk.EventBox):
     def __init__(self):

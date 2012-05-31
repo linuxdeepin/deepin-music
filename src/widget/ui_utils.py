@@ -24,7 +24,7 @@ from dtk.ui.utils import alpha_color_hex_to_cairo
 from dtk.ui.line import draw_vlinear
 from dtk.ui.draw import draw_font
 from dtk.ui.constant import  ALIGN_MIDDLE
-from widget.ui import app_theme
+from widget.skin import app_theme
 
 def container_remove_all(container):
     ''' Removee all child widgets for container. '''

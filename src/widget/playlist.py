@@ -34,7 +34,8 @@ from dtk.ui.utils import alpha_color_hex_to_cairo
 
 from library import MediaDB, Playlist
 from helper import Dispatcher
-from widget.ui import app_theme, SearchEntry
+from widget.skin import app_theme
+from widget.ui import SearchEntry
 from widget.song_item import SongItem
 from widget.list_item import PlaylistItem
 from widget.dialog import WindowLoadPlaylist, WindowExportPlaylist, WinDir
@@ -50,7 +51,7 @@ class PlaylistUI(gtk.VBox):
         '''Init.'''
         super(PlaylistUI, self).__init__()
 
-        self.category_list = EditableList(background_pixbuf=app_theme.get_pixbuf("skin/main.png"))
+        self.category_list = EditableList()
         self.category_list.background_box.draw_mask = self.draw_single_mask
         self.category_list.draw_item_select = self.draw_item_mask
         self.category_list.connect("active", self.category_button_press)
@@ -78,7 +79,7 @@ class PlaylistUI(gtk.VBox):
         toolbar_align.add(self.toolbar_box)
         toolbar_align.connect("expose-event", self.expose_toolbar_mask)
                 
-        category_scrolled_window = ScrolledWindow(app_theme.get_pixbuf("skin/main.png"))
+        category_scrolled_window = ScrolledWindow()
         category_scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
         category_scrolled_window.add_child(self.category_list)
         

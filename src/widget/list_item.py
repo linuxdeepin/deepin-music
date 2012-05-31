@@ -25,7 +25,7 @@ import gobject
 from dtk.ui.scrolled_window import ScrolledWindow
 
 from widget.song_view import SongView
-from widget.ui import app_theme
+from widget.skin import app_theme
 
 class PlaylistItem(gobject.GObject):
 
@@ -56,7 +56,7 @@ class PlaylistItem(gobject.GObject):
         songs = self.playlist.get_songs()
         self.song_view = SongView()
         self.song_view.add_songs(songs)
-        self.scrolled_window = ScrolledWindow(app_theme.get_pixbuf("skin/main.png"))
+        self.scrolled_window = ScrolledWindow()
         self.scrolled_window.add_child(self.song_view)
         self.scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
         self.scrolled_window.set_size_request(220, -1)

@@ -43,12 +43,14 @@ import mutagen
 if mutagen.version < (1, 8):
     raise ImportError,"Need mutagen >= 1.8"
 
+from widget.skin import app_theme
 from config import config
 from library import MediaDB
 from player import Player
 from pinyin import TransforDB
 
 from widget.main import DeepinMusic
+
 
 class DeepinMusicApp(object):
     app_instance = None

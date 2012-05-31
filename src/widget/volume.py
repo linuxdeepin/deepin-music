@@ -24,7 +24,7 @@ import gtk
 from dtk.ui.button import ToggleButton
 
 from widget.scalebar import HScalebar
-from widget.ui import app_theme
+from widget.skin import app_theme
 
 
 class VolumeButton(gtk.HBox):

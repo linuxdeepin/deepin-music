@@ -29,7 +29,7 @@ from dtk.ui.label import Label
 from dtk.ui.draw import draw_vlinear, draw_pixbuf, draw_font
 from dtk.ui.utils import propagate_expose, container_remove_all, get_content_size
 from dtk.ui.constant import ALIGN_START, ALIGN_MIDDLE
-from widget.ui import app_theme
+from widget.skin import app_theme
 
 class BaseBar(gtk.VBox):
         

@@ -32,7 +32,8 @@ from dtk.ui.line import HSeparator
 
 from library import MediaDB, DBQuery
 from helper import SignalContainer, Dispatcher
-from widget.ui import app_theme, SearchEntry
+from widget.skin import app_theme
+from widget.ui import SearchEntry
 from widget.song_view import MultiDragSongView
 from widget.ui_utils import switch_tab, render_text
 from widget.outlookbar import OptionBar, SongPathBar, SongImportBar, CategoryBar
@@ -276,20 +277,20 @@ class Browser(gtk.VBox, SignalContainer):
             )
         
         # iconview.
-        self.filter_view = IconView(background_pixbuf=app_theme.get_pixbuf("skin/main.png"))
+        self.filter_view = IconView()
         targets = [("text/deepin-songs", gtk.TARGET_SAME_APP, 1), ("text/uri-list", 0, 2)]
         self.filter_view.drag_source_set(gtk.gdk.BUTTON1_MASK, targets, gtk.gdk.ACTION_COPY)
         self.filter_view.connect("drag-data-get", self.__on_drag_data_get) 
         self.filter_view.connect("double-click-item", self.__on_double_click_item)
         self.filter_view.connect("single-click-item", self.__on_single_click_item)
-        self.filter_scrolled_window = ScrolledWindow(app_theme.get_pixbuf("skin/main.png"))
+        self.filter_scrolled_window = ScrolledWindow()
         self.filter_scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
         self.filter_scrolled_window.add_child(self.filter_view)
         
         # songs_view
-        self.songs_view = MultiDragSongView(background_pixbuf=app_theme.get_pixbuf("skin/main.png"))
+        self.songs_view = MultiDragSongView()
         self.songs_view.add_titles(["歌名", "艺术家", "专辑", "添加时间"])
-        self.songs_scrolled_window = ScrolledWindow(app_theme.get_pixbuf("skin/main.png"))
+        self.songs_scrolled_window = ScrolledWindow()
         self.songs_scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
         self.songs_scrolled_window.add_child(self.songs_view)
         

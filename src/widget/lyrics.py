@@ -24,7 +24,7 @@ import gtk
 import cairo
 import gobject
 
-from widget.ui import app_theme
+from widget.skin import app_theme
 from config import config
 from render_lyrics import RenderContextNew
 from utils import color_hex_to_cairo

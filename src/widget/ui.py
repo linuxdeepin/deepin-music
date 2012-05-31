@@ -31,9 +31,9 @@ from dtk.ui.utils import move_window
 from dtk.ui.entry import TextEntry
 from dtk.ui.button import ImageButton
 from dtk.ui.draw import draw_vlinear
+from skin import app_theme
 
-
-app_theme = Theme(os.path.join((os.path.dirname(os.path.realpath(__file__))), "../../app_theme"))
+# app_theme = Theme(os.path.join((os.path.dirname(os.path.realpath(__file__))), "../../app_theme"))
 
 class NormalWindow(Window):
     
@@ -41,7 +41,6 @@ class NormalWindow(Window):
         super(NormalWindow, self).__init__(True)
         
         # Init Window
-        self.background_dpixbuf = app_theme.get_pixbuf("skin/main.png")
         self.set_position(gtk.WIN_POS_CENTER)
         self.titlebar = Titlebar(["close"])
         self.titlebar.close_button.connect_after("clicked", self.hide_window)

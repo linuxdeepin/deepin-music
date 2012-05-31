@@ -29,7 +29,7 @@ from dtk.ui.label import Label
 from dtk.ui.throbber import Throbber
 
 from logger import Logger
-from widget.ui import app_theme
+from widget.skin import app_theme
 
 class JobsManager(gtk.HBox):
     __jobs = []
