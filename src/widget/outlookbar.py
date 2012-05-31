@@ -27,7 +27,7 @@ from dtk.ui.constant import BUTTON_PRESS, BUTTON_NORMAL, BUTTON_HOVER
 from dtk.ui.button import ImageButton
 from dtk.ui.label import Label
 from dtk.ui.draw import draw_vlinear, draw_pixbuf, draw_font
-from dtk.ui.utils import widget_fix_cycle_destroy_bug, propagate_expose, container_remove_all
+from dtk.ui.utils import propagate_expose, container_remove_all, get_content_size
 from dtk.ui.constant import ALIGN_START, ALIGN_MIDDLE
 from widget.ui import app_theme
 
@@ -155,8 +155,9 @@ class SongPathBar(BaseBar):
                 block_num = self.page_items_num - len(child_items)
                 for i in range(block_num):
                     self.child_box.pack_start(self.create_block_box(), False, True)
-                
             self.show_all()        
+            self.queue_draw()
+            self.get_toplevel().queue_draw()
 
             
     def size_change_cb(self, widget, rect):        
@@ -280,7 +281,7 @@ class SimpleItem(gtk.Button):
             self.normal_dpixbuf, self.press_dpixbuf, self.content, self.clicked_callback = element[:4]
             self.args = element[4:]
             
-        widget_fix_cycle_destroy_bug(self)
+        # widget_fix_cycle_destroy_bug(self)
         pixbuf_width = self.normal_dpixbuf.get_pixbuf().get_width()
         self.font_offset += pixbuf_width
         self.x_align = x_align
@@ -313,7 +314,7 @@ class SimpleItem(gtk.Button):
                 select_status = BUTTON_NORMAL
                 
         elif widget.state == gtk.STATE_PRELIGHT:        
-            if select_index == self.index:
+            if select_index == self.index: 
                 select_status = BUTTON_PRESS
             else:    
                 select_status = BUTTON_HOVER
@@ -347,3 +348,153 @@ class SimpleItem(gtk.Button):
         return True
     
 gobject.type_register(SimpleItem)    
+
+
+
+        
+class CategoryBar(BaseBar):            
+    def __init__(self,   items, font_size=10, item_height=30, padding_left=20, 
+                 padding_middle=10, padding_right=25, x_align=ALIGN_MIDDLE):
+        BaseBar.__init__(self, init_index=0)
+        for index, item in enumerate(items):
+            category_item = CategoryItem(
+                (item[0], item[1]), index , font_size, item_height, 
+                padding_left, padding_middle, padding_right, self.set_index, self.get_index, x_align)
+            self.pack_start(category_item, False, False)
+            if category_item.get_child_item():
+                self.pack_start(category_item.get_child_item(), False, False)
+
+gobject.type_register(CategoryBar)                
+                
+                
+class CategoryItem(gtk.Button):
+    '''Simple item.'''
+	
+    def __init__(self, element, index, font_size, item_height, 
+                 padding_left, padding_middle, padding_right,
+                 set_index, get_index, x_align=ALIGN_MIDDLE):
+        
+        # Init.
+        super(CategoryItem, self).__init__()
+        self.font_size = font_size
+        self.index = index
+        self.set_index = set_index
+        self.get_index = get_index
+        self.padding_left = padding_left
+        self.padding_right = padding_right
+        self.args = None
+        self.child_category = None
+        self.child_status = False
+        self.clicked_callback = None
+        
+        if len(element) == 2:
+            self.content, self.node = element
+        else:    
+            self.content, self.node = element[:2]
+            self.args = element[2:]
+            
+        self.arrow_dpixbuf = app_theme.get_pixbuf("preference/arrow_right.png")
+        self.arrow_width = self.arrow_dpixbuf.get_pixbuf().get_width()
+        content_width, _height = get_content_size(self.content, font_size)
+        self.icon_offset = content_width + padding_middle
+        self.x_align = x_align
+        
+        if isinstance(self.node, CategoryBar):
+            self.child_category = self.node
+            self.change_child_status(True)
+            self.connect("clicked", self.wrap_node_show_action)
+        else:    
+            self.clicked_callback = self.node
+            self.connect("clicked", self.wrap_item_clicked_action)           
+        
+        self.set_size_request(150, item_height)
+        self.connect("expose-event", self.expose_category_item)
+        
+    def wrap_node_show_action(self, widget):    
+        self.change_child_status(self.child_status)
+        self.child_status = not self.child_status
+        
+    def change_child_status(self, hide=False):    
+        if not hide:
+            self.child_category.set_no_show_all(False)
+            self.child_category.show_all()
+        else:    
+            self.child_category.hide_all()
+            self.child_category.set_no_show_all(True)
+        
+    def wrap_item_clicked_action(self, widget):   
+        if self.clicked_callback:
+            if self.args:
+                self.clicked_callback(*self.args)
+            else:    
+                self.clicked_callback()
+        self.set_index(self.index)    
+        
+    def get_child_item(self):    
+        return self.child_category
+        
+    def expose_category_item(self, widget, event):    
+        
+        # Init.
+        cr = widget.window.cairo_create()
+        rect = widget.allocation
+        font_color = app_theme.get_color("labelText").get_color()
+        arrow_pixbuf = self.arrow_dpixbuf.get_pixbuf()
+        select_index = self.get_index()
+        
+        if widget.state == gtk.STATE_NORMAL:
+            if select_index == self.index:
+                select_status = BUTTON_PRESS
+            else:    
+                select_status = BUTTON_NORMAL
+                
+        elif widget.state == gtk.STATE_PRELIGHT:        
+            if select_index == self.index: 
+                select_status = BUTTON_PRESS
+            else:    
+                select_status = BUTTON_HOVER
+                
+        elif widget.state == gtk.STATE_ACTIVE:        
+            select_status = BUTTON_PRESS
+            
+        if select_status == BUTTON_PRESS:    
+            draw_vlinear(cr, rect.x, rect.y, rect.width, rect.height, 
+                         app_theme.get_shadow_color("simpleItemPress").get_color_info())
+            font_color = app_theme.get_color("simpleSelectItem").get_color()
+            
+        elif select_status == BUTTON_HOVER:    
+            draw_vlinear(cr, rect.x, rect.y, rect.width, rect.height, 
+                         app_theme.get_shadow_color("simpleItemHover").get_color_info())
+            
+        
+        # Draw content.
+        draw_font(cr, self.content, self.font_size, font_color,
+                  rect.x + self.padding_left, 
+                  rect.y,
+                  rect.width - self.padding_left - self.arrow_width - self.padding_right,
+                  rect.height, x_align=self.x_align)
+        
+        # Draw pixbuf.    
+        draw_pixbuf(cr, arrow_pixbuf, rect.x + rect.width - self.arrow_width - self.padding_right ,rect.y + (rect.height - arrow_pixbuf.get_height()) / 2)    
+        propagate_expose(widget, event)
+        
+        return True
+    
+gobject.type_register(CategoryItem)    
+                
+
+
+        # test_items = CategoryBar(
+        #     [("导入本地歌曲", None),
+        #      ("导入歌曲文件夹", lambda : ImportFolderJob()),
+        #      ("扫描家目录", None),
+        #      ("扫描指定文件夹", None)],
+        #     font_size=8, item_height = 20
+        #     )
+        # self.import_categorybar = CategoryBar(
+        #     [("导入本地歌曲", test_items),
+        #      ("导入歌曲文件夹", lambda : ImportFolderJob()),
+        #      ("扫描家目录", None),
+        #      ("扫描指定文件夹", None)]
+        #     )
+

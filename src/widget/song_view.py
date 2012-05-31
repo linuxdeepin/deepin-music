@@ -27,7 +27,7 @@ import time
 
 from collections import OrderedDict
 from dtk.ui.listview import ListView
-from dtk.ui.utils import alpha_color_hex_to_cairo
+from dtk.ui.utils import alpha_color_hex_to_cairo, print_exec_time, exec_time
 from dtk.ui.menu import Menu
 from dtk.ui.threads import post_gui
 from dtk.ui.draw import draw_vlinear
@@ -40,6 +40,7 @@ from library import MediaDB
 from widget.dialog import WinFile, WinDir
 from widget.song_item import SongItem
 from widget.ui import app_theme
+from source.local import ImportPlaylistJob
 
 class SongView(ListView):
     ''' song view. '''
@@ -179,6 +180,7 @@ class SongView(ListView):
             songs = [ songs ]
 
         song_items = [ SongItem(song) for song in songs if song not in self.get_songs()]
+            
         if song_items:
             self.add_items(song_items, pos, sort)
         
@@ -191,8 +193,10 @@ class SongView(ListView):
             return
         if not isinstance(uris, (tuple, list)):
             uris = [ uris ]
+
         uris = [ utils.get_uri_from_path(uri) for uri in uris ]    
-        utils.ThreadLoad(self.load_taginfo, uris, pos, sort).start()
+        # utils.ThreadLoad(self.load_taginfo, uris, pos, sort).start()
+        self.load_taginfo(uris, pos, sort)
     
     def load_taginfo(self, uris, pos=None, sort=True):
         start = time.time()
@@ -209,8 +213,6 @@ class SongView(ListView):
                 pos += len(self.add_song_cache)
                 del self.add_song_cache[:]
                 start = time.time()
-            else:    
-                end = time.time()
 
         if self.add_song_cache:
             self.render_song(self.add_song_cache, pos, sort)
@@ -272,18 +274,20 @@ class SongView(ListView):
         return True    
         
     def on_drag_data_received(self, widget, context, x, y, selection, info, timestamp):    
-        # self.get_toplevel().window.set_cursor(gtk.gdk.Cursor(gtk.gdk.WATCH))
         root_y = widget.allocation.y + y
         try:
             pos = self.get_coordinate_row(root_y)
         except:    
             pos = None
             
+        if pos == None:    
+            pos = len(self.items)
+            
         if selection.target in ["text/uri-list", "text/plain", "text/deepin-songs"]:
             if selection.target == "text/deepin-songs" and selection.data:
                 self.add_uris(selection.data.splitlines(), pos, False)
             elif selection.target == "text/uri-list":    
-                utils.async_parse_uris(selection.get_uris(), True, True, self.add_uris, pos)
+                utils.async_parse_uris(selection.get_uris(), True, False, self.add_uris, pos)
             elif selection.target == "text/plain":    
                 raw_path = selection.data
                 path = eval("u" + repr(raw_path).replace("\\\\", "\\"))
@@ -330,8 +334,9 @@ class SongView(ListView):
         
     def popup_add_menu(self, x, y):
         menu_items = [
-            (None, "添加歌曲", self.__add_file),
-            (None, "添加歌曲目录", self.__add_dir),
+            (None, "文件", self.__add_file),
+            (None, "文件夹(包含子目录)", self.recursion_add_dir),
+            (None, "文件夹", self.__add_dir),
             ]
         Menu(menu_items, True).show((x, y))
 
@@ -351,6 +356,10 @@ class SongView(ListView):
         select_dir = WinDir().run()
         if select_dir:
             utils.async_parse_uris([select_dir], True, False, self.add_uris)
+            
+    def recursion_add_dir(self):        
+        pos = len(self.items)
+        ImportPlaylistJob(None, self.add_songs, pos)
             
     def async_add_uris(self, uris, follow_folder=False):        
         if not isinstance(uris, (list, tuple, set)):

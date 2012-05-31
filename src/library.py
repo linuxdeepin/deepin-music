@@ -598,11 +598,10 @@ class DBQuery(gobject.GObject, Logger):
                 self.emit("update-tag", "album", self.__signal_to_fire["update-album"])
             if self.__signal_to_fire["removed-songs"]:    
                 self.emit("removed", self.__signal_to_fire["removed-songs"])
-            if self.__signal_to_fire["removed-songs"]:    
+            if self.__signal_to_fire["added-songs"]:    
                 self.emit("added", self.__signal_to_fire['added-songs'])
             if self.__signal_to_fire["quick-update-songs"]:    
                 self.emit("quick-update", self.__signal_to_fire["quick-update-songs"])
-                
         except:        
             self.logexception("Failed fire queued signal")
             

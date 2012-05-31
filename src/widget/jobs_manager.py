@@ -22,10 +22,11 @@
 
 
 import gtk
-import pango
 import gobject
 import threading
 from dtk.ui.button import ImageButton, ToggleButton
+from dtk.ui.label import Label
+from dtk.ui.throbber import Throbber
 
 from logger import Logger
 from widget.ui import app_theme
@@ -33,59 +34,59 @@ from widget.ui import app_theme
 class JobsManager(gtk.HBox):
     __jobs = []
     __id_updater = None
+    
     def __init__(self):
         super(JobsManager,self).__init__(spacing=6)
-
-        self.progress = gtk.ProgressBar()
-        self.progress.set_text("")
-        self.progress.set_fraction(0)
-        self.progress.set_pulse_step(0.1)
-        self.progress.set_ellipsize(pango.ELLIPSIZE_START)
-        self.progress.set_size_request(-1,22)
         
-        self.label = gtk.Label("0 operation(s) pending")
-
+        self.jobs_label = Label("0 " + "个任务在等待!")
         
+        self.jobs_label.set_size_request(150, 8)
+        
+        self.throbber = Throbber()
+        self.throbber.set_mode(1)
+        self.throbber.set_progress(0.3)
+        
+        self.progress_label = Label("", app_theme.get_color("labelText"), 8)
+        self.progress_label.set_size_request(500, 10)
         self.__paused = False
-        
         btn_cancel = self.__create_simple_button("stop", self.stop)
+        self.__btn_pause = self.__create_begin_button(self.pause)
         
-        self._btn_puase = self.__create_begin_button(self.pause)
-        
-        self.pack_start(self.label,False,False)
-        self.pack_start(self.progress,True,True)
+        self.pack_start(self.jobs_label, False, False)
+        self.pack_start(self.throbber, False, False)
+        self.pack_start(self.progress_label,True,True)
         self.pack_start(self.__btn_pause,False,False)
         self.pack_start(btn_cancel,False,False)
         self.show_all()
         self.set_no_show_all(True)
         self.hide()
         
-        self.label.hide_all()
+        self.jobs_label.hide_all()
         
     def __create_simple_button(self, name, callback):    
         button = ImageButton(
-            app_theme.get_pixbuf("%s_normal.png" % name),
-            app_theme.get_pixbuf("%s_hover.png" % name),
-            app_theme.get_pixbuf("%s_hover.png" % name),
+            app_theme.get_pixbuf("jobs/%s_normal.png" % name),
+            app_theme.get_pixbuf("jobs/%s_hover.png" % name),
+            app_theme.get_pixbuf("jobs/%s_hover.png" % name),
             )
         if callback:
-            button.connect("clicked", callback)
+            button.connect("clicked", callback) 
         return button    
         
     def __create_begin_button(self, callback):    
         toggle_button = ToggleButton(
+            app_theme.get_pixbuf("jobs/pause_normal.png"),            
             app_theme.get_pixbuf("jobs/begin_normal.png"),
-            app_theme.get_pixbuf("jobs/begin_hover.png"),
-            app_theme.get_pixbuf("jobs/pause_normal.png"),
-            app_theme.get_pixbuf("jobs/pause_hover.png")
+            app_theme.get_pixbuf("jobs/pause_hover.png"),
+            app_theme.get_pixbuf("jobs/begin_hover.png")            
             )
         if callback:
             toggle_button.connect("toggled", callback)
         return toggle_button    
 
-    def add(self,job):
-        id = job.connect("end",self.__job_end)
-        self.__jobs.append((job,id))
+    def add(self, job):
+        job_id = job.connect("end",self.__job_end)
+        self.__jobs.append((job, job_id))
         if len(self.__jobs) == 1:
             try: gobject.source_remove(self.__id_updater)
             except: pass
@@ -95,12 +96,12 @@ class JobsManager(gtk.HBox):
                 self.pause(self.__btn_pause)
             self.__update()
 
-    def __job_end(self,ajob):
-        gobject.idle_add(self.__job_end_cb,ajob)
+    def __job_end(self, ajob):
+        gobject.idle_add(self.__job_end_cb, ajob)
 
-    def __job_end_cb(self,ajob):
-        job, id = self.__jobs.pop(0)
-        job.disconnect(id)
+    def __job_end_cb(self, ajob):
+        job, job_id = self.__jobs.pop(0)
+        job.disconnect(job_id)
         if self.__paused:
             self.pause(self.__btn_pause)
         if self.__jobs:
@@ -117,8 +118,7 @@ class JobsManager(gtk.HBox):
 
     def pause(self, btn):
         if self.__jobs:
-            # if not self.__paused:
-            if not btn.get_active():
+            if not self.__paused:
                 self.__jobs[0][0].pause()
                 self.__paused = True
             else:
@@ -134,19 +134,14 @@ class JobsManager(gtk.HBox):
 
     def __update(self):
         if len(self.__jobs)-1 > 0 :
-            self.label.set_text("%d "% (len(self.__jobs)-1) + "operation(s) pending")
-            self.label.show_all()
-        else:
-            self.label.hide_all()
+            self.jobs_label.set_text("%d "% (len(self.__jobs)-1) + "个任务在等待")
+            self.jobs_label.show_all()
+        else:    
+            self.jobs_label.hide_all()
 
         if self.__jobs:
-            percent, message, pulse = self.__jobs[0][0].get_info()
-            if pulse:
-                """self.progress.set_pulse_step(0.1)"""
-                self.progress.pulse()
-            else:
-                self.progress.set_fraction(percent)
-            self.progress.set_text(message)
+            message = self.__jobs[0][0].get_info()
+            self.progress_label.set_text(message)
             self.show()
             return True
         else:
@@ -212,7 +207,7 @@ class Job(gobject.GObject,Logger):
 
     def get_info(self):
         self.__cond.acquire()
-        info = ( self.__percent , self.__message, self.__pulse)
+        info = self.__message
         self.__cond.release()
         return info
     
@@ -221,13 +216,12 @@ class Job(gobject.GObject,Logger):
         pass
 
     def __run(self):
-        for text, percent, pulse in self.job():
+        for text in self.job():
             self.__cond.acquire()
             while self.__pause:
                 self.__cond.wait()
             self.__message = text
-            self.__percent = percent
-            self.__pulse = pulse
+
             if self.__stop:
                 self.__cond.release()
                 break

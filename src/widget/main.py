@@ -29,6 +29,7 @@ from widget.ui import app_theme
 from widget.headerbar import HeaderBar
 from widget.playlist import PlaylistUI
 from widget.browser import SimpleBrowser
+from widget.jobs_manager import jobs_manager
 
 from config import config
 from player import Player
@@ -68,7 +69,7 @@ class DeepinMusic(gobject.GObject):
 
         bottom_box = gtk.HBox()
         browser_align = gtk.Alignment()
-        browser_align.set_padding(0, 22, 0, 0)
+        browser_align.set_padding(0, 0, 0, 0)
         browser_align.set(0.5, 0.5, 1, 1)
         browser_align.add(SimpleBrowser())
         bottom_box.pack_start(self.playlist_ui, False, False)        
@@ -77,7 +78,14 @@ class DeepinMusic(gobject.GObject):
         main_box = gtk.VBox()
         main_box.pack_start(self.header_bar, False)
         main_box.pack_start(bottom_box, True)
-        application.main_box.pack_start(main_box)
+
+        block_box = gtk.EventBox()
+        block_box.set_visible_window(False)
+        block_box.set_size_request(-1, 22)
+        block_box.add(jobs_manager)
+        
+        application.main_box.pack_start(main_box)        
+        application.main_box.pack_start(block_box, False, True)
         
         gobject.idle_add(self.ready)
         

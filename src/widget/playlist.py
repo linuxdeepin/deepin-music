@@ -100,7 +100,7 @@ class PlaylistUI(gtk.VBox):
         self.pack_start(list_align, True, True)            
         self.pack_start(entry_align, False, False)            
         self.pack_start(toolbar_align, False, True)            
-        self.pack_start(bottom_box, False, True)
+        # self.pack_start(bottom_box, False, True)
         
         # Current
         self.current_playlist = None
@@ -334,7 +334,7 @@ class PlaylistUI(gtk.VBox):
         
     def reset_highlight_item(self, item):    
         self.category_button_press(None, item)
-        self.category_list.highlight_item(item)        
+        # self.category_list.highlight_item(item)        
         
     def get_current_item_index(self):    
         try:

@@ -128,13 +128,14 @@ class SongItem(gobject.GObject):
                 (min(self.add_time_width + self.add_time_padding_x * 2, 80), self.add_time_height + self.add_time_padding_y * 2)
                 ]
         else:
-            return [(min(self.title_width + self.title_padding_x * 2, 100),
+            return [(100,
                      self.title_height + self.title_padding_y * 2),
-                    (min(self.artist_width + self.artist_padding_x * 2, 60),
+                    (60,
                      self.artist_height + self.artist_padding_y * 2),
-                    (min(self.length_width + self.length_padding_x * 2, 60),
+                    (60,
                      self.length_height + self.length_padding_y * 2),
                     ]    
+            
     
     def get_renders(self):
         '''Get render callbacks.'''

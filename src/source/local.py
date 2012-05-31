@@ -21,10 +21,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-from time import time
 import traceback
+import time
 
-from config import config
 import utils
 from widget.dialog import WinDir, WinFile
 from library import MediaDB
@@ -43,58 +42,87 @@ class ImportFolderJob(Job):
             self.dirs = dirs
             super(ImportFolderJob, self).__init__()
             
+    def add_to_library(self, uri):        
+        tags = {"uri" : uri}
+        try:
+            MediaDB.get_or_create_song(tags, "local", read_from_file=True)
+        except:    
+            self.logerror("Failed load %s", uri)
+            
     def job(self):        
         '''job'''
         dirs = self.dirs
-        message = self.message
-        start = time()
-        
-        added = []
         db_uris = set(MediaDB.get_all_uris())
         alldirs = [ utils.get_path_from_uri(each_dir) for each_dir in dirs ]
-        last_estimated = estimated = 0
         
-        total_dirs = len(alldirs)
-        parsed_dirs = 0
         for mdir in alldirs:
             for dirpath, dirs, names in os.walk(mdir):
-                [ dirs.remove(ignore_dir) for ignore_dir in dirs if ignore_dir[0] == "." ]
-                [ alldirs.append(os.path.realpath(os.path.join(dirpath, sub_dir))) for sub_dir in dirs if os.path.islink(os.path.join(dirpath, sub_dir)) ]
+                for name in names:
+                    if name[0] != "." and utils.file_is_supported(os.path.join(dirpath, name)):
+                        valid_file = os.path.join(dirpath, name)
+                        real_file = os.path.realpath(valid_file)
+                        uri = utils.get_uri_from_path(real_file)
+                        if uri not in db_uris:
+                            self.add_to_library(uri)
+                        elif os.path.getctime(real_file) > MediaDB.get_song(uri).get("#ctime"):     
+                            self.add_to_library(uri)
+                    yield os.path.join(dirpath, name)        
+                    
+class ImportPlaylistJob(Job):
+    def __init__(self, dirs=None, callback=None, pos=None):
+        if not dirs:
+            dirs = WinDir().run()
+            if dirs:
+                dirs = [ dirs ]
                 
-                total_dirs += len(dirs)
-                parsed_dirs += 1
-                valid_files = set([ os.path.join(dirpath, name) for name in names if name[0] != "." and utils.file_is_supported(os.path.join(dirpath, name)) ])
-                for each_file in valid_files:
-                    real_file = os.path.realpath(each_file)
-                    uri = utils.get_uri_from_path(real_file)
-                    if real_file not in db_uris:
-                        added.append(uri)
-                    elif os.path.getctime(real_file) > MediaDB.get_song(uri).get("#ctime"):
-                        added.append(uri)
-                        
-                estimated = float(parsed_dirs) / float(total_dirs)        
-                if max(estimated, last_estimated) == estimated:
-                    last_estimated = estimated
-                yield message + "(%d of %d)" % (parsed_dirs, total_dirs), last_estimated, False    
-
-                
-        i = 0        
-        total = len(added)
-        added = set(added)
-        for uri in added:
-            i += 1
-            tags = {"uri" : uri}
-            try:
-                MediaDB.get_or_create_song(tags, "local", read_from_file=True)
-            except:    
-                self.logerror("Failed load %s", uri)
-            yield ("Reading file") + "%d/%d..." % (i, total), float(i) / float(total), False    
-            # yield uri, float(i) / float(total), False  
+        if dirs:        
+            self.message = "Reading directories..."
+            self.dirs = dirs
+            super(ImportPlaylistJob, self).__init__()
             
-        end = time()    
-        self.loginfo("%d songs loaded in %d seconds", total, (end - start))
-        print "%d songs loaded in %d seconds" % ( total, (end - start))
-
+        self.add_song_cache = []    
+        self.pos = pos
+        self.callback = callback
+            
+    def __get_or_create_song(self, uri):        
+        tags = {"uri" : uri}
+        try:
+            song = MediaDB.get_or_create_song(tags, "local", read_from_file=True)
+            self.add_song_cache.append(song)
+        except:    
+            self.logerror("Failed load %s", uri)
+            
+    def job(self):        
+        '''job'''
+        dirs = self.dirs
+        db_uris = set(MediaDB.get_all_uris())
+        alldirs = [ utils.get_path_from_uri(each_dir) for each_dir in dirs ]
+        start = time.time()
+        
+        for mdir in alldirs:
+            for dirpath, dirs, names in os.walk(mdir):
+                for name in names:
+                    if name[0] != "." and utils.file_is_supported(os.path.join(dirpath, name)):
+                        valid_file = os.path.join(dirpath, name)
+                        real_file = os.path.realpath(valid_file)
+                        uri = utils.get_uri_from_path(real_file)
+                        if uri not in db_uris:
+                            self.__get_or_create_song(uri)
+                        elif os.path.getctime(real_file) > MediaDB.get_song(uri).get("#ctime"):     
+                            self.__get_or_create_song(uri)
+                        end = time.time()    
+                        if end - start > 0.2:
+                            self.callback(self.add_song_cache, self.pos)
+                            self.pos += len(self.add_song_cache)
+                            del self.add_song_cache[:]
+                            start = time.time()
+                        else:    
+                            end = time.time()
+                            
+                    yield os.path.join(dirpath, name)        
+                    
+        if self.add_song_cache:            
+            self.callback(self.add_song_cache, self.pos)
         
 class ImportFileJob(object):        
     '''import file to db'''
@@ -136,13 +164,3 @@ class ReloadDBJob(Job):
                     traceback.print_exc()
                     
             yield "Reload database %d/%s"%(i,total), float(i)/float(total), False
-            
-            
-def ReloadDB():
-    ReloadDBJob()
-    search_dir = config.get("library","location", get_xdg_music_dir())
-    search_dir = os.path.expanduser(search_dir)
-    monitored_folder = utils.get_uri_from_path(search_dir)
-    if monitored_folder:
-        ImportFolderJob([monitored_folder])
-            

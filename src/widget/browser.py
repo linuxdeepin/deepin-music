@@ -35,7 +35,8 @@ from helper import SignalContainer, Dispatcher
 from widget.ui import app_theme, SearchEntry
 from widget.song_view import MultiDragSongView
 from widget.ui_utils import switch_tab, render_text
-from widget.outlookbar import OptionBar, SongPathBar, SongImportBar
+from widget.outlookbar import OptionBar, SongPathBar, SongImportBar, CategoryBar
+from source.local import ImportFolderJob
 from widget.combo import ComboMenuButton
 from cover_manager import CoverManager
 
@@ -194,11 +195,11 @@ gobject.type_register(IconItem)
 
 FILTER_VIEW, SONG_VIEW = 1, 2
 
-class Browser(gtk.HBox, SignalContainer):
+class Browser(gtk.VBox, SignalContainer):
     
     def __init__(self, db_query):
         
-        gtk.HBox.__init__(self)
+        gtk.VBox.__init__(self)
         SignalContainer.__init__(self)
         self.__db_query = db_query
         self._tree = {}
@@ -267,12 +268,12 @@ class Browser(gtk.HBox, SignalContainer):
         
         # song import.
         self.import_categorybar = SongImportBar("导入歌曲", None)
-        self.import_categorybar.reload_items([
-                ("导入本地歌曲", None),
-                ("导入歌曲文件夹", None),
-                ("扫描家目录", None),
-                ("扫描指定文件夹", None)
-                ])
+        self.import_categorybar.reload_items(
+            [("导入本地歌曲", None),
+             ("导入歌曲文件夹", lambda : ImportFolderJob()),
+             ("扫描家目录", None),
+             ("扫描指定文件夹", None)]
+            )
         
         # iconview.
         self.filter_view = IconView(background_pixbuf=app_theme.get_pixbuf("skin/main.png"))
@@ -312,12 +313,15 @@ class Browser(gtk.HBox, SignalContainer):
         right_box_align.set_padding(0, 0, 0, 2)
         right_box_align.set(1, 1, 1, 1)
         right_box_align.add(self.right_box)
-        body_box = gtk.VBox()
-
-        body_box.pack_start(entry_align,  False, False)
-        body_box.pack_start(right_box_align, True, True)
+        browser_box = gtk.VBox()
+        browser_box.pack_start(entry_align,  False, False)
+        browser_box.pack_start(right_box_align, True, True)
         
-        self.pack_start(left_box, False, False)
+        
+        body_box = gtk.HBox()
+        body_box.pack_start(left_box, False, False)
+        body_box.pack_start(browser_box, True, True)
+        
         self.pack_start(body_box, True, True)
         
     def __create_simple_button(self, name, callback):    
@@ -457,7 +461,7 @@ class Browser(gtk.HBox, SignalContainer):
         self.__db_query.set_query("")                
         
     def __added_song_cb(self, db_query, songs):
-        pass
+        self.reload_song_path()
 
     def __removed_song_cb(self, db_query, songs):
         pass

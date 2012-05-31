@@ -63,6 +63,8 @@ from mutagen.monkeysaudio import MonkeysAudio
 from mutagen.optimfrog import OptimFROG
 from easymp3 import EasyMP3
 
+from dtk.ui.utils import print_exec_time
+
 FORMATS = [EasyMP3, TrueAudio, OggTheora, OggSpeex, OggVorbis, OggFLAC,
             FLAC, APEv2File, MP4, ID3FileType, WavPack, Musepack,
             MonkeysAudio, OptimFROG, ASF]
@@ -263,11 +265,12 @@ def duration_to_string(value, default="", i=1000):
         duration = "%d:" % (value/(60*i) % 60) + duration
     return duration    
 
+@print_exec_time
 def parse_folder(parent_dir):
     ''' return all uri in a folder excepted hidden one.'''
     new_dir  = get_path_from_uri(parent_dir)
     uris = [ get_uri_from_path(os.path.join(new_dir, name)) for name in os.listdir(new_dir) if name[0] != "." and os.path.isfile(os.path.join(new_dir,name))]
-    # uris = [ get_uri_from_path(os.path.join(new_dir, name)) for name in os.listdir(new_dir) if name[0] != "." ]
+    print "W:Utils:ParseFolder:", len(uris), "founds"
     return uris
 
 def get_uris_from_m3u(uri):
@@ -338,6 +341,16 @@ def get_uris_from_asx(uri):
                 uri_list.append(link)
     return uri_list
 
+def print_timeing(func):
+    def wrapper(*arg):
+        start_time = time.time()
+        res = func(*arg)
+        end_time   = time.time()
+        if hasattr(func, "im_class"):
+            class_name = func.im_class__name__ + ":"
+        print "%s took %0.3fms" % (class_name + func.func_name, (start_time - end_time) * 1000.0)    
+        return res
+    return wrapper
 
 def parse_uris(uris, follow_folder=True, follow_playlist=True, callback=None, *args_cb, **kwargs_cb):
     ''' Receive a list of uris ,expand it and check if exist.
@@ -364,7 +377,6 @@ def parse_uris(uris, follow_folder=True, follow_playlist=True, callback=None, *a
             is_pls  = False
             is_m3u  = False
             is_xspf = False
-            
             try:
                 is_pls = (mime_type == "audio/x-scpls")
                 is_m3u = (mime_type == "audio/x-mpegurl" or mime_type == "audio/mpegurl" or mime_type == "audio/m3u")
@@ -389,9 +401,10 @@ def parse_uris(uris, follow_folder=True, follow_playlist=True, callback=None, *a
                 
     logger.loginfo("parse uris found %s uris", len(valid_uris))            
     if callback:
-        def launch_callback(callback, uris, args, kwargs):
-            callback(uris, *args, **kwargs)
-        gobject.idle_add(launch_callback, callback, list(valid_uris), args_cb, kwargs_cb)    
+        # def launch_callback(callback, uris, args, kwargs):
+        #     callback(uris, *args, **kwargs)
+        # gobject.idle_add(launch_callback, callback, list(valid_uris), args_cb, kwargs_cb)    
+        callback(list(valid_uris), *args_cb, **kwargs_cb)
     else:    
         return valid_uris
     
@@ -583,16 +596,6 @@ class ThreadRun(threading.Thread):
             self.render_func(result)
 
 
-def print_timeing(func):
-    def wrapper(*arg):
-        start_time = time.time()
-        res = func(*arg)
-        end_time   = time.time()
-        if hasattr(func, "im_class"):
-            class_name = func.im_class__name__ + ":"
-        print "%s took %0.3fms" % (class_name + func.func_name, (start_time - end_time) * 1000.0)    
-        return res
-    return wrapper
 
 def dbus_service_available(bus, interface, try_start_service=False):
     ''' detect the dbus service is available. and try to start it.'''
@@ -652,8 +655,8 @@ def strdate_to_time(odate):
                 "%Y",#only years
                 "%y",#only years
                 ]
-    for format in formats:
-        try: new_date = strptime(date,format)
+    for str_format in formats:
+        try: new_date = strptime(date, str_format)
         except : continue
 
     locale.setlocale(locale.LC_TIME, '')

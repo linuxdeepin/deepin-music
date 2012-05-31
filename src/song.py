@@ -26,7 +26,7 @@ import gst
 import gobject
 from time import time
 from datetime import datetime
-import traceback
+# import traceback
 
 
 import utils
@@ -317,7 +317,7 @@ class Song(dict, Logger):
                 raise "W:Song:MutagenTag:No audio found"
             self.load_sort_object()    
         except Exception, e:    
-            print "W: Error while Loading (" + self.get_path() + ")\nTracback :", e
+            # print "W: Error while Loading (" + self.get_path() + ")\nTracback :", e
             self.last_error = "Error while reading" + ":" + self.get_filename()
             return False
         else:
@@ -463,7 +463,7 @@ class Song(dict, Logger):
                 raise "w:Song:MutagenTag:No audio found"
                 
         except Exception, e:    
-            print traceback.format_exc()
+            # print traceback.format_exc()
             print "W: Error while writting ("+self.get("uri")+")\nTracback :",e
             self.last_error = "Error while writting" + ": " + self.get_filename()
             return False

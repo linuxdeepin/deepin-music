@@ -21,7 +21,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-from subprocess import Popen,PIPE
+import glib
+# from subprocess import Popen,PIPE
 from xdg.BaseDirectory import xdg_cache_home, save_config_path
 
 from constant import PROGRAM_NAME
@@ -58,18 +59,16 @@ def get_tmp_file(filename):
 
 def get_music_dir():
     ''' get user music dir. '''
-    musicdir = os.path.expanduser("~/Music")
-    try:
-        p = Popen(["xdg-user-dir", "MUSIC"], stdout=PIPE)
-    except OSError:    
-        return musicdir
-    else:
-        musicpath = p.communicate()[0].strip()
-        if p.returncode == 0 and musicpath and musicpath != os.path.expanduser("~"):
-            return musicpath    
+    # musicdir = os.path.expanduser("~/Music")
+    # try:
+    #     p = Popen(["xdg-user-dir", "MUSIC"], stdout=PIPE)
+    # except OSError:    
+    #     return musicdir
+    # else:
+    #     musicpath = p.communicate()[0].strip()
+    #     if p.returncode == 0 and musicpath and musicpath != os.path.expanduser("~"):
+    #         return musicpath    
                 
-        else:
-            return musicdir
-        
-if __name__ == "__main__":       
-    print get_cache_file("media.db")
+    #     else:
+    #         return musicdir
+    return glib.get_user_special_dir(3)

@@ -48,22 +48,17 @@ class VolumeButton(gtk.HBox):
             )
         
         # Init widget.
-        hbox = gtk.HBox()        
-        event_box = gtk.EventBox()
-        event_box.add_events(gtk.gdk.ALL_EVENTS_MASK)
-        event_box.set_visible_window(False)
-        
         self.volume_progressbar.set_size_request(42, 8)
         self.volume_progressbar.set_range(min_value, max_value)
         self.volume_progressbar.set_value(init_value)
         
         # Signals.
-        # self.volume_button.connect("enter-notify-event", self.enter_volume_button)
-        # event_box.connect("leave-notify-event", self.leave_volume_button)
+        self.volume_button.connect("enter-notify-event", self.enter_volume_button)
+        self.volume_progressbar.connect("leave-notify-event", self.leave_volume_progressbar)
         self.volume_progressbar.get_adjustment().connect("value-changed", self.moniter_volume_change)
         
         # hide.
-        # self.volume_progressbar.set_no_show_all(True)        
+        self.volume_progressbar.set_no_show_all(True)        
         
         # Pack.
         volume_align = gtk.Alignment()
@@ -73,18 +68,14 @@ class VolumeButton(gtk.HBox):
         button_align = gtk.Alignment()
         button_align.set(0.5, 0.5, 0, 0)
         button_align.add(self.volume_button)
-        self.add(event_box)
-        event_box.add(hbox)
 
-        hbox.pack_start(button_align, False, False)
-        hbox.pack_start(volume_align, False, False)
+        self.pack_start(button_align, False, False)
+        self.pack_start(volume_align, False, False)
         
     def enter_volume_button(self, widget, event):
-        print "enter"
         self.change_progressbar_status()
     
-    def leave_volume_button(self, widget, event):
-        print "leave"
+    def leave_volume_progressbar(self, widget, event):
         self.change_progressbar_status(True)
     
     def change_progressbar_status(self, hide=False):
