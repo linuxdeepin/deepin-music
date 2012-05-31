@@ -26,7 +26,7 @@ import gobject
 import threading
 from dtk.ui.button import ImageButton, ToggleButton
 from dtk.ui.label import Label
-from dtk.ui.throbber import Throbber
+from dtk.ui.throbber import Throbber, MODE_SPINNING
 
 from logger import Logger
 from widget.skin import app_theme
@@ -42,8 +42,8 @@ class JobsManager(gtk.HBox):
         
         self.jobs_label.set_size_request(150, 8)
         
-        self.throbber = Throbber()
-        self.throbber.set_mode(1)
+        self.throbber = Throbber(16, 16)
+        self.throbber.set_mode(MODE_SPINNING)
         self.throbber.set_progress(0.3)
         
         self.progress_label = Label("", app_theme.get_color("labelText"), 8)
@@ -90,7 +90,7 @@ class JobsManager(gtk.HBox):
         if len(self.__jobs) == 1:
             try: gobject.source_remove(self.__id_updater)
             except: pass
-            self.__id_updater = gobject.timeout_add(500,self.__update)
+            self.__id_updater = gobject.timeout_add(250,self.__update)
             self.__jobs[0][0].start()
             if self.__paused:
                 self.pause(self.__btn_pause)
