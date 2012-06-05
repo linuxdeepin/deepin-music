@@ -273,7 +273,7 @@ class Browser(gtk.VBox, SignalContainer):
         self.import_categorybar.reload_items(
             [("导入本地歌曲", lambda : ImportFileJob()),
              ("导入歌曲文件夹", lambda : ImportFolderJob()),
-             ("扫描家目录", lambda : ImportFolderJob(os.path.expanduser("~"))),
+             ("扫描家目录", lambda : ImportFolderJob([os.path.expanduser("~")])),
              ("刷新歌曲库", lambda : ReloadDBJob())]
             )
         
