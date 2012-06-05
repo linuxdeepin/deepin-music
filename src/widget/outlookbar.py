@@ -49,6 +49,7 @@ class OptionBar(BaseBar):
     
     def __init__(self, items, init_index=0, font_size=10, padding_left=20, padding_middle=0, padding_right=25):
         BaseBar.__init__(self, init_index)
+        self.set_spacing(5)
         
         if items:
             for index, item in enumerate(items):
@@ -87,7 +88,7 @@ class SongPathBar(BaseBar):
         BaseBar.__init__(self, init_index=-1)
         self.child_box = gtk.VBox()
         
-        self.child_item_height = 20
+        self.child_item_height = 21
         self.current_page = 1
         self.page_items_num = 0        
         self.items = []
@@ -99,7 +100,10 @@ class SongPathBar(BaseBar):
         self.pack_start(title_item, False, False)
         self.pack_start(self.child_box, True, True)
         self.child_box.connect("size-allocate", self.size_change_cb)
+        self.child_box.set_spacing(1)
+
         self.control_box = gtk.HBox()
+        self.control_box.set_spacing(15)        
         previous_align = self.create_simple_button("previous", self.update_current_page, "previous")
         next_align = self.create_simple_button("next", self.update_current_page, "next")
         self.info_label = Label("0/0", app_theme.get_color("labelText"), text_x_align=ALIGN_MIDDLE)
@@ -245,6 +249,7 @@ class SongImportBar(BaseBar):
              title_name, callback), 0, 10, 25, 20, 10, 25, self.set_index, self.get_index, ALIGN_START)
         self.pack_start(title_item, False, True)
         self.pack_start(self.child_box)
+        self.child_box.set_spacing(1)
         
     def reload_items(self, child_items):    
         if child_items:
