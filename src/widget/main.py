@@ -41,12 +41,12 @@ class DeepinMusic(gobject.GObject):
     
     def __init__(self):
         gobject.GObject.__init__(self)
-        gtk.window_set_default_icon_from_file(app_theme.get_theme_file_path("image/skin/logo.png"))
+        # gtk.window_set_default_icon_from_file(app_theme.get_theme_file_path("image/skin/logo.ico"))
         
         application = Application("DMuisc")
         application.close_callback = self.force_quit
         application.set_default_size(941, 695)
-        application.set_icon(app_theme.get_pixbuf("skin/logo.png"))
+        application.set_icon(app_theme.get_pixbuf("skin/logo.ico"))
         application.set_skin_preview(app_theme.get_pixbuf("frame.png"))
         application.add_titlebar(
             ["theme", "max", "min", "close"],

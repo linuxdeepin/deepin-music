@@ -58,7 +58,7 @@ class IconItem(gobject.GObject):
             self.name_label = self.name
             
         self.labels = "%d首歌曲" % nums
-        self.cell_width = 94
+        self.cell_width = 92
         self.pixbuf = CoverManager.get_pixbuf_from_album(self.name_label, self.cell_width, self.cell_width)
         self.padding_x = 4
         self.padding_y = 4
