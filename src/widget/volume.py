@@ -53,12 +53,12 @@ class VolumeButton(gtk.HBox):
         self.volume_progressbar.set_value(init_value)
         
         # Signals.
-        self.volume_button.connect("enter-notify-event", self.enter_volume_button)
-        self.volume_progressbar.connect("leave-notify-event", self.leave_volume_progressbar)
+        # self.volume_button.connect("enter-notify-event", self.enter_volume_button)
+        # self.volume_progressbar.connect("leave-notify-event", self.leave_volume_progressbar)
         self.volume_progressbar.get_adjustment().connect("value-changed", self.moniter_volume_change)
         
         # hide.
-        self.volume_progressbar.set_no_show_all(True)        
+        # self.volume_progressbar.set_no_show_all(True)        
         
         # Pack.
         volume_align = gtk.Alignment()

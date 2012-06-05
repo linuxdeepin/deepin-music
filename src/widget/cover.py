@@ -35,7 +35,8 @@ class CoverButton(gtk.Button):
     def __init__(self):
         super(CoverButton, self).__init__()
 
-        self.current_cover_pixbuf = app_theme.get_pixbuf("cover/default_cover.png").get_pixbuf()
+        
+        self.current_cover_pixbuf = CoverManager.get_pixbuf_from_album("", COVER_SIZE["x"], COVER_SIZE["y"])
         self.cover_side_pixbuf = app_theme.get_pixbuf("cover/side.png").get_pixbuf()
         self.set_size_request(self.cover_side_pixbuf.get_width(), self.cover_side_pixbuf.get_height())
 
@@ -74,7 +75,7 @@ class CoverButton(gtk.Button):
 
     def update_default_cover(self, widget, song):            
         if not self.current_song or CoverManager.get_cover_search_str(self.current_song) != CoverManager.get_cover_search_str(song):
-            pixbuf = CoverManager.get_pixbuf_from_album("")
+            pixbuf = CoverManager.get_pixbuf_from_album("", COVER_SIZE["x"], COVER_SIZE["y"])
             self.current_cover_pixbuf = pixbuf
             self.queue_draw()
             

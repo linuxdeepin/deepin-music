@@ -271,15 +271,15 @@ class Browser(gtk.VBox, SignalContainer):
         # song import.
         self.import_categorybar = SongImportBar("导入歌曲", None)
         self.import_categorybar.reload_items(
-            [("导入本地歌曲", lambda : ImportFileJob()),
-             ("导入歌曲文件夹", lambda : ImportFolderJob()),
+            [("导入歌曲", lambda : ImportFileJob()),
+             ("导入文件夹", lambda : ImportFolderJob()),
              ("扫描家目录", lambda : ImportFolderJob([os.path.expanduser("~")])),
              ("刷新歌曲库", lambda : ReloadDBJob())]
             )
         
         # iconview.
         icon_view_align = gtk.Alignment()
-        icon_view_align.set(1, 1, 1, 1)
+        icon_view_align.set(0, 0, 0.5, 0.5)
         icon_view_align.set_padding(5, 0, 10, 0)
         self.filter_view = IconView()
         targets = [("text/deepin-songs", gtk.TARGET_SAME_APP, 1), ("text/uri-list", 0, 2)]
@@ -322,6 +322,7 @@ class Browser(gtk.VBox, SignalContainer):
         browser_box = gtk.VBox()
         browser_box.pack_start(entry_align,  False, False)
         browser_box.pack_start(right_box_align, True, True)
+
         
         
         body_box = gtk.HBox()
