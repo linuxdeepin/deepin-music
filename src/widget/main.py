@@ -45,8 +45,9 @@ class DeepinMusic(gobject.GObject):
         
         application = Application("DMuisc")
         application.close_callback = self.force_quit
-        application.set_default_size(950, 595)
+        application.set_default_size(941, 612)
         application.set_icon(app_theme.get_pixbuf("skin/logo.png"))
+        application.set_skin_preview(app_theme.get_pixbuf("frame.png"))
         application.add_titlebar(
             ["theme", "max", "min", "close"],
             app_theme.get_pixbuf("skin/logo1.png"),
@@ -77,6 +78,7 @@ class DeepinMusic(gobject.GObject):
         main_box = gtk.VBox()
         main_box.pack_start(self.header_bar, False)
         main_box.pack_start(bottom_box, True)
+
 
         block_box = gtk.EventBox()
         block_box.set_visible_window(False)

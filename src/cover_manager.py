@@ -21,12 +21,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import re
 import gobject
 import gtk
 import fnmatch
 
-from urllib import quote, urlopen
 from mutagen.id3 import ID3
 
 import utils
@@ -35,11 +33,12 @@ from logger import Logger
 from library import MediaDB
 from findfile import get_cache_file
 from widget.skin import app_theme
+from cover_download import download_album_cover
 
 
 REINIT_COVER_TO_SKIP_TIME = 100 * 60 * 30
 
-COVER_SIZE = {"x": 68, "y": 68}
+COVER_SIZE = {"x": 70, "y": 70}
 COVER_SAVE_SIZE = {"x": 300, "y": 300}
 BROWSER_COVER_SIZE = {"x": 40, "y": 40}
 
@@ -74,8 +73,9 @@ class DeepinCoverManager(Logger):
         self.COVER_TO_SKIP = []
         
     def get_cover_search_str(self, song):
-        if not song.get_str("album"):
-            return song.get_str("artist") + " " + song.get_str("title")
+        artist = song.get_str("artist")
+        if artist:
+            return song.get_str("artist")
         else:
             return song.get_str("album")
     
@@ -212,7 +212,6 @@ class DeepinCoverManager(Logger):
         if not config.getboolean("setting", "offline") and try_web:                
             try:
                 ret = False
-                
                 # try url cover tag
                 if song.get("album_cover_url"):
                     ret = utils.download(song.get("album_cover_url"), utils.get_uri_from_path(image_path))
@@ -224,7 +223,6 @@ class DeepinCoverManager(Logger):
                     ret = utils.download(cover_img_url, image_path)
                     if ret and self.cleanup_cover(song, image_path):
                         return image_path
-                
             except:        
                 pass
             self.COVER_TO_SKIP.append(image_path)
@@ -267,23 +265,5 @@ class DeepinCoverManager(Logger):
                 # Change property album to update UI
                 MediaDB.set_property(song, {"album" : song.get("album")})
                 return True
-            
-            
-            
-def download_album_cover(keywords):            
-    douban_search_api = 'http://api.douban.com/music/subjects?q={0}&start-index=1&max-results=2'
-    douban_cover_pattern = '<link href="http://img(\d).douban.com/spic/s(\d+).jpg" rel="image'
-    douban_cover_addr = 'http://img{0}.douban.com/spic/s{1}.jpg'
-    
-    request = douban_search_api.format(quote(keywords))
-    result = urlopen(request).read()
-    if not len(result):
-        return False
-    
-    match = re.compile(douban_cover_pattern, re.IGNORECASE).search(result)
-    if match:
-        return douban_cover_addr.format(match.groups()[0], match.groups()[1])
-    else:
-        return False
 
 CoverManager =  DeepinCoverManager()

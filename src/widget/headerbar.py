@@ -58,12 +58,12 @@ class HeaderBar(gtk.EventBox):
         Player.connect("play-end", self.__swap_play_status, False)
         
         # play button
-        play_normal_pixbuf = app_theme.get_pixbuf("action/play_normal.png")
-        pause_normal_pixbuf = app_theme.get_pixbuf("action/pause_normal.png")
-        play_hover_pixbuf = app_theme.get_pixbuf("action/play_hover.png")
-        pause_hover_pixbuf = app_theme.get_pixbuf("action/pause_hover.png")
-        play_press_pixbuf = app_theme.get_pixbuf("action/play_press.png")
-        pause_press_pixbuf = app_theme.get_pixbuf("action/pause_press.png")
+        play_normal_pixbuf = app_theme.get_pixbuf("action/play_large_normal.png")
+        pause_normal_pixbuf = app_theme.get_pixbuf("action/pause_large_normal.png")
+        play_hover_pixbuf = app_theme.get_pixbuf("action/play_large_hover.png")
+        pause_hover_pixbuf = app_theme.get_pixbuf("action/pause_large_hover.png")
+        play_press_pixbuf = app_theme.get_pixbuf("action/play_large_press.png")
+        pause_press_pixbuf = app_theme.get_pixbuf("action/pause_large_press.png")
        
         self.__play = ToggleButton(play_normal_pixbuf, pause_normal_pixbuf,
                                    play_hover_pixbuf, pause_hover_pixbuf,
@@ -73,19 +73,19 @@ class HeaderBar(gtk.EventBox):
 
         self.__id_signal_play = self.__play.connect("toggled", lambda w: Player.playpause())
         
-        prev_button = self.__create_button("previous")
-        next_button = self.__create_button("next")
+        prev_button = self.__create_button("previous_large")
+        next_button = self.__create_button("next_large")
         
         self.vol = VolumeSlider()
         song_timer = SongTimer()
         
         mainbtn = gtk.HBox(spacing=3)
         prev_align = gtk.Alignment()
-        prev_align.set(0.6, 0.4, 0, 0)
+        prev_align.set(0.5, 0.5, 0, 0)
         prev_align.add(prev_button)
         
         next_align = gtk.Alignment()
-        next_align.set(0.6, 0.4, 0, 0)
+        next_align.set(0.5, 0.5, 0, 0)
         next_align.add(next_button)
         
         # button group.
@@ -93,6 +93,10 @@ class HeaderBar(gtk.EventBox):
         mainbtn.pack_start(self.__play, False, False)
         mainbtn.pack_start(next_align, False, False)
          
+        mainbtn_align = gtk.Alignment()
+        mainbtn_align.set_padding(5, 0, 0, 0)
+        mainbtn_align.add(mainbtn)
+        
         # time box.
         self.lyrics_button = self.__create_simple_toggle_button("lyrics", self.start_lyrics)        
         time_align = gtk.Alignment()
@@ -108,7 +112,7 @@ class HeaderBar(gtk.EventBox):
         playinfo_box = gtk.HBox()
         # playinfo_box.set_spacing(80)
         playinfo_box.pack_start(PlayInfo(), False, False)
-        playinfo_box.pack_start(mainbtn, False, False)
+        playinfo_box.pack_start(mainbtn_align, False, False)
         
         cover_right_box = gtk.VBox()
         cover_right_box.pack_start(playinfo_box, True, True)
@@ -199,6 +203,7 @@ class HeaderBar(gtk.EventBox):
         return button
     
     def player_control(self, button, name):
+        name = name.strip("_large")
         if name == "next":
             getattr(Player, name)(True)
         else:    

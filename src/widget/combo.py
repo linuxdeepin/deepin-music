@@ -29,6 +29,8 @@ from dtk.ui.constant import BUTTON_PRESS, BUTTON_NORMAL, BUTTON_HOVER
 
 from widget.skin import app_theme
 
+    
+
 class ComboItem(gtk.Button):
     def __init__(self, bg_image_group, icon_group, index, set_index, get_index):
         gtk.Button.__init__(self)
@@ -173,7 +175,7 @@ class ComboMenuButton(gtk.HBox):
         super(ComboMenuButton, self).__init__()
         self.current_index = init_index
         self.current_status = "artist"
-        self.set_spacing(5)
+        self.set_spacing(0)
         
         self.list_button = ComboItem(
             (app_theme.get_pixbuf("combo/left_normal.png"),

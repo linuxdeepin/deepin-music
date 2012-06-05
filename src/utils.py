@@ -82,6 +82,8 @@ def file_is_supported(filename):
     try:
         header = fileobj.read(128)
         results = [Kind.score(filename, fileobj, header) for Kind in FORMATS]
+    except:    
+        return False
     finally:
         fileobj.close()
     results = zip(results, FORMATS)

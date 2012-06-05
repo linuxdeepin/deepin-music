@@ -22,6 +22,7 @@
 
 import gtk
 import gobject
+import os
 
 from dtk.ui.draw import draw_pixbuf, draw_vlinear
 from dtk.ui.scrolled_window import ScrolledWindow
@@ -36,8 +37,8 @@ from widget.skin import app_theme
 from widget.ui import SearchEntry
 from widget.song_view import MultiDragSongView
 from widget.ui_utils import switch_tab, render_text
-from widget.outlookbar import OptionBar, SongPathBar, SongImportBar, CategoryBar
-from source.local import ImportFolderJob
+from widget.outlookbar import OptionBar, SongPathBar, SongImportBar
+from source.local import ImportFolderJob, ReloadDBJob, ImportFileJob
 from widget.combo import ComboMenuButton
 from cover_manager import CoverManager
 
@@ -154,10 +155,10 @@ class IconItem(gobject.GObject):
         else:    
             self.__draw_play_hover_flag = False
             
-        if self.pointer_in_pixbuf_rect(x, y):    
-            self.hover_flag = True
-        else:    
-            self.hover_flag = False
+        # if self.pointer_in_pixbuf_rect(x, y):    
+        #     self.hover_flag = True
+        # else:    
+        #     self.hover_flag = False
             
         self.emit_redraw_request()
         
@@ -270,13 +271,16 @@ class Browser(gtk.VBox, SignalContainer):
         # song import.
         self.import_categorybar = SongImportBar("导入歌曲", None)
         self.import_categorybar.reload_items(
-            [("导入本地歌曲", None),
+            [("导入本地歌曲", lambda : ImportFileJob()),
              ("导入歌曲文件夹", lambda : ImportFolderJob()),
-             ("扫描家目录", None),
-             ("扫描指定文件夹", None)]
+             ("扫描家目录", lambda : ImportFolderJob(os.path.expanduser("~"))),
+             ("刷新歌曲库", lambda : ReloadDBJob())]
             )
         
         # iconview.
+        icon_view_align = gtk.Alignment()
+        icon_view_align.set(1, 1, 1, 1)
+        icon_view_align.set_padding(5, 0, 10, 0)
         self.filter_view = IconView()
         targets = [("text/deepin-songs", gtk.TARGET_SAME_APP, 1), ("text/uri-list", 0, 2)]
         self.filter_view.drag_source_set(gtk.gdk.BUTTON1_MASK, targets, gtk.gdk.ACTION_COPY)
@@ -285,7 +289,8 @@ class Browser(gtk.VBox, SignalContainer):
         self.filter_view.connect("single-click-item", self.__on_single_click_item)
         self.filter_scrolled_window = ScrolledWindow()
         self.filter_scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
-        self.filter_scrolled_window.add_child(self.filter_view)
+        icon_view_align.add(self.filter_view)
+        self.filter_scrolled_window.add_child(icon_view_align)
         
         # songs_view
         self.songs_view = MultiDragSongView()

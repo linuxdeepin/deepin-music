@@ -23,32 +23,41 @@
 import gtk
 import gobject
 from dtk.ui.scrolled_window import ScrolledWindow
+from dtk.ui.constant import ALIGN_START
+from dtk.ui.utils import get_content_size
 
 from widget.song_view import SongView
+from widget.ui_utils import render_text
+
+
 from widget.skin import app_theme
+DEFAULT_FONT_SIZE = 8
+
 
 class PlaylistItem(gobject.GObject):
-
-    __gsignals__ = {"active" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),
-                    "right-press-item" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (int, int,)),}
     
-    def __init__(self, playlist, editable=True):
+    def __init__(self, playlist):
         '''Init song item.'''
-        gobject.GObject.__init__(self)
-        self.editable = editable
+        self.item_id = None
         self.update(playlist)
         
-    def set_text(self, text):    
-        self.text = text
+    def set_title(self, value):    
+        self.title = value
         
-    def get_text(self):    
-        return self.text
+    def get_title(self):    
+        return self.title
     
-    def get_editable(self):
-        return self.editable
+    def get_left_image(self):
+        return None
     
-    def set_editable(self, value):
-        self.editable = value
+    def get_has_arrow(self):
+        return None
+    
+    def set_item_id(self, index):
+        self.item_id = index
+        
+    def get_item_id(self):    
+        return self.item_id
         
     def update(self, playlist):
         '''update'''
@@ -60,15 +69,11 @@ class PlaylistItem(gobject.GObject):
         self.scrolled_window.add_child(self.song_view)
         self.scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
         self.scrolled_window.set_size_request(220, -1)
-        self.text = playlist.get_name()
-    
+        self.title = playlist.get_name()
+        
     def get_list_widget(self):
         return self.scrolled_window
     
     def get_songs(self):
         if self.song_view:
             return self.song_view.get_songs()
-        
-    def get_name(self):
-        return self.text
-

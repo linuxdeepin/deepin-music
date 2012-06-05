@@ -20,20 +20,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
 import gtk
 import gobject
 
 from dtk.ui.window import Window
-from dtk.ui.theme import Theme
 from dtk.ui.titlebar import Titlebar
 from dtk.ui.utils import move_window
 from dtk.ui.entry import TextEntry
 from dtk.ui.button import ImageButton
 from dtk.ui.draw import draw_vlinear
-from skin import app_theme
 
-# app_theme = Theme(os.path.join((os.path.dirname(os.path.realpath(__file__))), "../../app_theme"))
+from widget.skin import app_theme
 
 class NormalWindow(Window):
     

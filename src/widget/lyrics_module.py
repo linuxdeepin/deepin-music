@@ -644,3 +644,5 @@ class LyricsModule(object):
             return "%s-%s" % (artist, title)
         else:
             return "%s" % title
+        
+        

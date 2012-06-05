@@ -130,6 +130,7 @@ class Config(gobject.GObject, Logger):
                 "empty_random" : "false",
                 "loop_mode" : "list_mode",
                 "offline" : "false",                
+                
                 },
             
             "playlist" : {

@@ -23,7 +23,7 @@
 import gobject
 import gtk
 import threading
-from dtk.ui.box import ImageBox
+from dtk.ui.draw import draw_pixbuf
 
 
 from player import Player
@@ -31,19 +31,15 @@ from library import MediaDB
 from cover_manager import CoverManager, COVER_SIZE
 from widget.skin import app_theme
 
-class CoverButton(gtk.EventBox):
+class CoverButton(gtk.Button):
     def __init__(self):
         super(CoverButton, self).__init__()
-        
-        self.set_visible_window(False)
-        image = gtk.image_new_from_pixbuf(app_theme.get_pixbuf("cover/default_cover.png").get_pixbuf())
-        image.set_size_request(COVER_SIZE["x"], COVER_SIZE["y"])
-        image.set_alignment(0.5, 0.5)
-        
-        f = ImageBox(app_theme.get_pixbuf("cover/side.png"))
-        f.add(image)
-        self.add(f)
-        
+
+        self.current_cover_pixbuf = app_theme.get_pixbuf("cover/default_cover.png").get_pixbuf()
+        self.cover_side_pixbuf = app_theme.get_pixbuf("cover/side.png").get_pixbuf()
+        self.set_size_request(self.cover_side_pixbuf.get_width(), self.cover_side_pixbuf.get_height())
+
+        self.connect("expose-event", self.expose_button_cb)
         MediaDB.connect("simple-changed", self.update_cover)
         self.current_song = None
         self.next_cover_to_download = None
@@ -52,6 +48,18 @@ class CoverButton(gtk.EventBox):
         self.thread = threading.Thread(target=self.func_thread)
         self.thread.setDaemon(True)
         self.thread.start()
+        
+    def expose_button_cb(self, widget, event):    
+        cr = widget.window.cairo_create()
+        rect = widget.allocation
+        
+        # Draw cover side.
+        draw_pixbuf(cr, self.cover_side_pixbuf, rect.x, rect.y)
+        
+        draw_pixbuf(cr, self.current_cover_pixbuf, rect.x + 2, rect.y + 3)
+        
+        return True
+        
         
     def func_thread(self):    
         while True:
@@ -63,11 +71,12 @@ class CoverButton(gtk.EventBox):
             self.condition.release()
             self.set_current_cover(True, next_cover_to_download)
                 
-        
+
     def update_default_cover(self, widget, song):            
         if not self.current_song or CoverManager.get_cover_search_str(self.current_song) != CoverManager.get_cover_search_str(song):
             pixbuf = CoverManager.get_pixbuf_from_album("")
-            self.child.child.set_from_pixbuf(pixbuf)
+            self.current_cover_pixbuf = pixbuf
+            self.queue_draw()
             
     def update_cover(self, widget, songs):        
         if isinstance(songs, list):
@@ -89,16 +98,19 @@ class CoverButton(gtk.EventBox):
         filename = CoverManager.get_cover(force_song, try_web)    
         try:
             pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(filename, COVER_SIZE["x"], COVER_SIZE["y"])
+            self.current_cover_pixbuf = pixbuf
+            self.queue_draw()
         except gobject.GError:    
             pass
         else:
             if try_web:
-                gobject.idle_add(self.child.child.set_from_pixbuf, pixbuf)
+                self.current_cover_pixbuf = pixbuf
                 del pixbuf
             else:    
-                self.child.child.set_from_pixbuf(pixbuf)
+                self.current_cover_pixbuf = pixbuf
                 del pixbuf
                 return CoverManager.DEFAULT_COVER != filename
+            self.queue_draw()
             
 class PlayerCoverButton(CoverButton):    
     def __init__(self):

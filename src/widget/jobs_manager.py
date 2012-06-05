@@ -38,9 +38,12 @@ class JobsManager(gtk.HBox):
     def __init__(self):
         super(JobsManager,self).__init__(spacing=6)
         
-        self.jobs_label = Label("0 " + "个任务在等待!")
-        
+        self.jobs_label = Label("0 " + "个任务在等待!", app_theme.get_color("labelText"), 8)
         self.jobs_label.set_size_request(150, 8)
+        label_align = gtk.Alignment()
+        label_align.set(0.5, 0.5, 0, 0)
+        label_align.set_padding(0, 0, 10, 0)
+        label_align.add(self.jobs_label)
         
         self.throbber = Throbber(16, 16)
         self.throbber.set_mode(MODE_SPINNING)
@@ -52,11 +55,20 @@ class JobsManager(gtk.HBox):
         btn_cancel = self.__create_simple_button("stop", self.stop)
         self.__btn_pause = self.__create_begin_button(self.pause)
         
-        self.pack_start(self.jobs_label, False, False)
+        btn_pause_align = gtk.Alignment()
+        btn_pause_align.set(0.5, 0.5, 0, 0)
+        btn_pause_align.add(self.__btn_pause)
+        
+        btn_cancel_align = gtk.Alignment()
+        btn_cancel_align.set(0.5, 0.5, 0, 0)
+        btn_cancel_align.set_padding(0, 0, 0, 10)
+        btn_cancel_align.add(btn_cancel)
+        
+        self.pack_start(label_align, False, False)
         self.pack_start(self.throbber, False, False)
         self.pack_start(self.progress_label,True,True)
-        self.pack_start(self.__btn_pause,False,False)
-        self.pack_start(btn_cancel,False,False)
+        self.pack_start(btn_pause_align,False,False)
+        self.pack_start(btn_cancel_align,False,False)
         self.show_all()
         self.set_no_show_all(True)
         self.hide()

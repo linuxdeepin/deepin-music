@@ -163,4 +163,4 @@ class ReloadDBJob(Job):
                 except:
                     traceback.print_exc()
                     
-            yield "Reload database %d/%s"%(i,total), float(i)/float(total), False
+            yield "重新的加载数据库 %d/%s"%(i,total)

@@ -34,6 +34,7 @@ class PlayInfo(gtk.VBox):
     def __init__(self):
         super(PlayInfo, self).__init__()
 
+        self.set_size_request(140, -1)
         self.title_label = self.create_simple_label("深度音乐 Music", 10)
         self.artist_label = self.create_simple_label(" ", 9)
 
@@ -41,7 +42,13 @@ class PlayInfo(gtk.VBox):
         MediaDB.connect("simple-changed",self.__on_change)
         Player.bin.connect("buffering", self.__on_buffering)
         
+        # block
+        block_box = gtk.EventBox()
+        block_box.set_visible_window(False)
+        block_box.set_size_request(-1, 5)
+        
         self.set_spacing(5)
+        self.pack_start(block_box, False, False)
         self.pack_start(self.title_label, False, False)
         self.pack_start(self.artist_label, False, False)
         

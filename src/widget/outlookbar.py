@@ -206,9 +206,14 @@ class SongPathBar(BaseBar):
             return total_num / self.page_items_num + 1
         else:
             return total_num / self.page_items_num
+        
+    def adjust_current_page(self, total_page):    
+        if self.current_page > total_page:
+            self.current_page = total_page
 
     def update_label(self):    
         total_page = self.adjust_page()
+        self.adjust_current_page(total_page)
         self.set_label("%d/%d" % (self.current_page, total_page))
             
     def create_simple_button(self, name, callback, *args):        
@@ -483,18 +488,4 @@ class CategoryItem(gtk.Button):
 gobject.type_register(CategoryItem)    
                 
 
-
-        # test_items = CategoryBar(
-        #     [("导入本地歌曲", None),
-        #      ("导入歌曲文件夹", lambda : ImportFolderJob()),
-        #      ("扫描家目录", None),
-        #      ("扫描指定文件夹", None)],
-        #     font_size=8, item_height = 20
-        #     )
-        # self.import_categorybar = CategoryBar(
-        #     [("导入本地歌曲", test_items),
-        #      ("导入歌曲文件夹", lambda : ImportFolderJob()),
-        #      ("扫描家目录", None),
-        #      ("扫描指定文件夹", None)]
-        #     )
 

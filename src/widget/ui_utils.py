@@ -20,6 +20,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+
+import pangocairo
+
 from dtk.ui.utils import alpha_color_hex_to_cairo
 from dtk.ui.line import draw_vlinear
 from dtk.ui.draw import draw_font
@@ -41,6 +44,11 @@ def draw_single_mask(cr, x, y, width, height, color_name):
     cr.set_source_rgba(*alpha_color_hex_to_cairo(color_info))
     cr.rectangle(x, y, width, height)
     cr.fill()
+    
+def get_font_families():
+    '''Get all font families in system.'''
+    fontmap = pangocairo.cairo_font_map_get_default()
+    return map(lambda f: f.get_name(), fontmap.list_families())
 
 def draw_item_mask(cr, x, y, width, height, name):    
     draw_vlinear(cr, x, y, width, height,
