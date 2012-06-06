@@ -84,19 +84,18 @@ class OptionTitleBar(BaseBar):
                 
 class SongPathBar(BaseBar):                
     
-    def __init__(self, title_name, callback):
+    def __init__(self, title_name):
         BaseBar.__init__(self, init_index=-1)
+        self.set_spacing(5)
         self.child_box = gtk.VBox()
-        
         self.child_item_height = 21
         self.current_page = 1
         self.page_items_num = 0        
         self.items = []
         
-        title_item = SimpleItem(
-            (app_theme.get_pixbuf("filter/local_normal.png"),
-             app_theme.get_pixbuf("filter/local_press.png"),
-             title_name, callback), 0, 10, 25, 20, 10, 25, self.set_index, self.get_index, ALIGN_START)
+        title_item = SimpleLabel(
+            app_theme.get_pixbuf("filter/local_normal.png"),
+            title_name, 10, 25, 20, 10, 25, ALIGN_START)
         self.pack_start(title_item, False, False)
         self.pack_start(self.child_box, True, True)
         self.child_box.connect("size-allocate", self.size_change_cb)
@@ -240,13 +239,12 @@ class SongPathBar(BaseBar):
         return box
             
 class SongImportBar(BaseBar):            
-    def __init__(self, title_name, callback):
+    def __init__(self, title_name):
         BaseBar.__init__(self, init_index=-1)
         self.child_box = gtk.VBox()
-        title_item = SimpleItem(
-            (app_theme.get_pixbuf("filter/import_normal.png"),
-             app_theme.get_pixbuf("filter/import_press.png"),
-             title_name, callback), 0, 10, 25, 20, 10, 25, self.set_index, self.get_index, ALIGN_START)
+        title_item = SimpleLabel(
+            app_theme.get_pixbuf("filter/import_normal.png"),
+            title_name, 10, 25, 20, 10, 25, ALIGN_START)
         self.pack_start(title_item, False, True)
         self.pack_start(self.child_box)
         self.child_box.set_spacing(1)
@@ -359,6 +357,54 @@ class SimpleItem(gtk.Button):
     
 gobject.type_register(SimpleItem)    
 
+
+class SimpleLabel(gtk.Button):
+    '''Simple item.'''
+	
+    def __init__(self, normal_dpixbuf, content, font_size, item_height,
+                 padding_left, padding_middle, padding_right,
+                 x_align=ALIGN_MIDDLE):
+        
+        # Init.
+        super(SimpleLabel, self).__init__()
+        self.font_size = font_size
+        self.padding_left = padding_left
+        self.padding_right = padding_right
+        self.font_offset = padding_middle
+        self.args = None
+        self.normal_dpixbuf = normal_dpixbuf
+        self.content = content
+            
+        pixbuf_width = self.normal_dpixbuf.get_pixbuf().get_width()
+        self.font_offset += pixbuf_width
+        self.x_align = x_align
+        
+        self.set_size_request(150, item_height)
+        self.connect("expose-event", self.expose_simple_item)
+        
+    def expose_simple_item(self, widget, event):    
+        
+        # Init.
+        cr = widget.window.cairo_create()
+        rect = widget.allocation
+        font_color = app_theme.get_color("labelText").get_color()
+        item_pixbuf = self.normal_dpixbuf.get_pixbuf()
+        # Draw pixbuf.    
+        draw_pixbuf(cr, item_pixbuf, rect.x + self.padding_left, rect.y + (rect.height - item_pixbuf.get_height()) / 2)    
+        
+        
+        # Draw content.
+        draw_font(cr, self.content, self.font_size, font_color,
+                  rect.x + self.padding_left + self.font_offset , 
+                  rect.y,
+                  rect.width - self.padding_left - self.font_offset - self.padding_right,
+                  rect.height, x_align=self.x_align)
+        
+        propagate_expose(widget, event)
+        
+        return True
+    
+gobject.type_register(SimpleLabel)    
 
 
         

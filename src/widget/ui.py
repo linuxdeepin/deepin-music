@@ -143,4 +143,3 @@ class ProgressBox(gtk.VBox):
         draw_vlinear(cr, start_x, start_y, last_width - 2, rect.height - 8,
                      app_theme.get_shadow_color("playlistLast").get_color_info())
         return False
-    

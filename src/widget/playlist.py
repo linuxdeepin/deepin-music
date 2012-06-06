@@ -262,7 +262,7 @@ class PlaylistUI(gtk.VBox):
     def get_edit_sub_menu(self, select_items, move=False):    
         sub_menu_items = []
         if len(self.category_list.get_items(None)) > 1:
-            other_category_items = self.category_items.get_other_items(self.category_items.get_highlight_index())
+            other_category_items = self.category_list.get_other_item(self.category_list.get_highlight_index())
             sub_menu_items = [(None, category_item.get_title(), self.edit_list_item, category_item, select_items ,move) for category_item in other_category_items]
         sub_menu_items.extend([None, (app_theme.get_pixbuf("toolbar/add_normal.png"), "新建列表", self.edit_new_list_item, select_items, move)])
         return Menu(sub_menu_items)

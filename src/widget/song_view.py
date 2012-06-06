@@ -194,8 +194,8 @@ class SongView(ListView):
             uris = [ uris ]
 
         uris = [ utils.get_uri_from_path(uri) for uri in uris ]    
-        # utils.ThreadLoad(self.load_taginfo, uris, pos, sort).start()
-        self.load_taginfo(uris, pos, sort)
+        utils.ThreadLoad(self.load_taginfo, uris, pos, sort).start()
+        # self.load_taginfo(uris, pos, sort)
     
     def load_taginfo(self, uris, pos=None, sort=True):
         start = time.time()
@@ -380,6 +380,7 @@ class MultiDragSongView(ListView):
         sort_key = ["album", "genre", "artist", "title", "#playcount", "#added"]
         self.sort_reverse = {key : False for key in sort_key }
         
+        self.set_expand_column(0)
         self.connect("drag-data-get", self.__on_drag_data_get) 
         self.connect("double-click-item", self.__on_double_click_item)
         
@@ -388,6 +389,7 @@ class MultiDragSongView(ListView):
         if len(self.select_rows) > 0:
             songs = [ self.items[index].get_song() for index in self.select_rows ]
         return songs
+    
             
     def __on_drag_data_get(self, widget, context, selection, info, timestamp):    
         songs = self.get_selected_songs()

@@ -880,7 +880,7 @@ class DBQuery(gobject.GObject, Logger):
             if len(self.__attr_songs[song_dir][2][album]) == 0:
                 del self.__attr_songs[song_dir][2][album] 
                 
-            if len(self.attr_songs[song_dir][3]) == 0:    
+            if len(self.__attr_songs[song_dir][3]) == 0:    
                 del self.__attr_songs[song_dir]
             
     def __delete_cache(self, song, old_values=False):            

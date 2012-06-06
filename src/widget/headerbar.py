@@ -181,7 +181,6 @@ class HeaderBar(gtk.EventBox):
     
     def __set_equalizer_status(self, widget):
         config.set("equalizer", "status", "false")
-        self.musicbox_button.set_active(False)
         
     def right_click_cb(self, widget, event):    
         if event.button == 3:

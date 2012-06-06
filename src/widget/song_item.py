@@ -122,10 +122,10 @@ class SongItem(gobject.GObject):
         '''Get sizes.'''
         if self.extend:
             return [
-                (min(self.title_width + self.title_padding_x * 2, 80), self.title_height + self.title_padding_y * 2),
-                (min(self.artist_width + self.artist_padding_x * 2, 80), self.artist_height + self.artist_padding_y * 2),
-                (min(self.album_width + self.artist_padding_x * 2, 80), self.album_height + self.album_padding_y * 2),
-                (min(self.add_time_width + self.add_time_padding_x * 2, 80), self.add_time_height + self.add_time_padding_y * 2)
+                (80, self.title_height + self.title_padding_y * 2),
+                (70, self.artist_height + self.artist_padding_y * 2),
+                (70, self.album_height + self.album_padding_y * 2),
+                (80, self.add_time_height + self.add_time_padding_y * 2)
                 ]
         else:
             return [(100,
