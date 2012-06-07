@@ -45,9 +45,9 @@ class JobsManager(gtk.HBox):
         label_align.set_padding(0, 0, 10, 0)
         label_align.add(self.jobs_label)
         
-        self.throbber = Throbber(16, 16)
-        self.throbber.set_mode(MODE_SPINNING)
-        self.throbber.set_progress(0.3)
+        # self.throbber = Throbber(16, 16)
+        # self.throbber.set_mode(MODE_SPINNING)
+        # self.throbber.set_progress(0.3)
         
         self.progress_label = Label("", app_theme.get_color("labelText"), 8)
         self.progress_label.set_size_request(500, 10)
@@ -65,7 +65,7 @@ class JobsManager(gtk.HBox):
         btn_cancel_align.add(btn_cancel)
         
         self.pack_start(label_align, False, False)
-        self.pack_start(self.throbber, False, False)
+        # self.pack_start(self.throbber, False, False)
         self.pack_start(self.progress_label,True,True)
         self.pack_start(btn_pause_align,False,False)
         self.pack_start(btn_cancel_align,False,False)
