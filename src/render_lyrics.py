@@ -118,7 +118,7 @@ class RenderContextNew(object):
     def paint_text(self, cr, text, xpos, ypos):   
         self.set_text(text)
         xpos += self.outline_width / 2 + self.blur_radius
-        ypos += self.outline_width / 2 + self.blur_radius
+        ypos += self.outline_width  + self.blur_radius
         cr = pangocairo.CairoContext(cr)
         width, height = self.get_pixel_size(text)
         # Draw the outline of the text.
