@@ -274,7 +274,7 @@ class Browser(gtk.VBox, SignalContainer):
         # Song import bar.
         self.import_categorybar = SongImportBar("导入歌曲")
         self.import_categorybar.reload_items(
-            [("导入歌曲", lambda : ImportFileJob()),
+            [("导入文件", lambda : ImportFileJob()),
              ("导入文件夹", lambda : ImportFolderJob()),
              ("扫描家目录", lambda : ImportFolderJob([os.path.expanduser("~")])),
              ("刷新歌曲库", lambda : ReloadDBJob())]
@@ -375,8 +375,7 @@ class Browser(gtk.VBox, SignalContainer):
         
     def reload_filter_view(self, tag="artist", switch=False, use_path=False):    
         self.categorybar_status = tag
-        if switch:
-            self.filter_view.clear()
+        self.filter_view.clear()
             
         if not use_path:    
             self.path_categorybar.set_index(-1)    

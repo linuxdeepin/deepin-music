@@ -27,7 +27,7 @@ import fcntl
 import cPickle
 import shutil
 import gtk
-import gobject
+import gio
 import locale
 import time
 from time import mktime, strptime
@@ -73,26 +73,50 @@ FORMATS = [EasyMP3, TrueAudio, OggTheora, OggSpeex, OggVorbis, OggFLAC,
 logger = newLogger("utils")
 fscoding = sys.getfilesystemencoding()
 
-def file_is_supported(filename):
+UNTRUST_MEDIA_EXT = [
+    "669", "ac3", "aif", "aiff", "ape", "amf", "au",
+    "dsm", "far", "it", "med", "mka", "mpc", "mid", 
+    "mod", "mtm", "midi", "oga", "ogx", "okt", "ra",
+    "ram", "s3m", "sid", "shn", "snd", "spc", "spx",
+    "stm", "tta", "ult", "wv", "xm"
+             ]
+
+TRUST_MEDIA_EXT = [
+    "wav", "wma", "mp2", "mp3", "mp4", "m4a", "flac", "ogg"
+    ]
+
+
+def file_is_supported(filename, strict=False):
     ''' whther file is supported. '''
-    try:
-        fileobj = file(filename, "rb")
-    except:
+    
+    results = gio.File(filename).get_basename().split(".")
+    if len(results) < 2:
         return False
-    try:
-        header = fileobj.read(128)
-        results = [Kind.score(filename, fileobj, header) for Kind in FORMATS]
-    except:    
-        return False
-    finally:
-        fileobj.close()
-    results = zip(results, FORMATS)
-    results.sort()
-    score, Kind = results[-1]
-    if score > 0: return True
-    else: return False
+    else:
+        extension = results[-1].lower()
+        if extension in TRUST_MEDIA_EXT:
+            return True
+        elif extension in UNTRUST_MEDIA_EXT:
+            try:
+                fileobj = file(filename, "rb")
+            except:
+                return False
+            try:
+                header = fileobj.read(128)
+                results = [Kind.score(filename, fileobj, header) for Kind in FORMATS]
+            except:    
+                return False
+            finally:
+                fileobj.close()
+            results = zip(results, FORMATS)
+            results.sort()
+            score, Kind = results[-1]
+            if score > 0: return True
+            else: return False
+        else:    
+            return False
 
-
+        
 def get_scheme(uri):
     ''' get uri type, such as 'file://', return 'file'. '''
     if not uri:
@@ -702,7 +726,6 @@ def load_db(fn):
 def run_command(command):
     '''Run command.'''
     subprocess.Popen("nohup %s > /dev/null 2>&1" % (command), shell=True)
-
     
 class OrderDict(dict):
 
