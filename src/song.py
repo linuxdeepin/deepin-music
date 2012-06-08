@@ -113,6 +113,9 @@ class Song(dict, Logger):
             value = self.get("title")
             if not value:
                 value = self.get_filename()
+                
+        elif key == "#size":        
+            value = utils.str_size(self.get("#size"))
         elif key == "#bitrate":
             value = self.get("#bitrate")
             if value: value = "%dk" % value
@@ -121,7 +124,7 @@ class Song(dict, Logger):
         elif key == "#lastplayed":    
             value = self.get(key)
             if value:
-                value = datetime.fromtimestamp(int(value)).strftime("%x %X")
+                value = datetime.fromtimestamp(int(value)).strftime("%Y-%m-%d")
             else:    
                 value = "Never"
         elif key == "#playcount":        

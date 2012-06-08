@@ -124,6 +124,6 @@ class LrcManager(object):
                 return trust_result
             else:
                 return self.multiple_engine(song, lrc_path, untrust_a, untrust_t)
-        return None    
+        return ""
 
         

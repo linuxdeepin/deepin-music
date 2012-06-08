@@ -415,7 +415,7 @@ class PlaylistUI(gtk.VBox):
                                  (None, "播放模式", play_mode_menu),
                                  (None, "歌曲排序", sub_sort_menu),
                                  (app_theme.get_pixbuf("playlist/open_dir.png"), "打开文件目录", self.current_item.song_view.open_song_dir),
-                                 (None, "编辑歌曲信息", None),
+                                 (None, "编辑歌曲信息", self.current_item.song_view.open_song_editor),
                                  ], True)
         self.detail_menu.show((int(x), int(y)))
         

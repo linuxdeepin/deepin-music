@@ -73,7 +73,7 @@ FORMATS = [EasyMP3, TrueAudio, OggTheora, OggSpeex, OggVorbis, OggFLAC,
 logger = newLogger("utils")
 fscoding = sys.getfilesystemencoding()
 
-UNTRUST_MEDIA_EXT = [
+UNTRUST_AUDIO_EXT = [
     "669", "ac3", "aif", "aiff", "ape", "amf", "au",
     "dsm", "far", "it", "med", "mka", "mpc", "mid", 
     "mod", "mtm", "midi", "oga", "ogx", "okt", "ra",
@@ -81,7 +81,7 @@ UNTRUST_MEDIA_EXT = [
     "stm", "tta", "ult", "wv", "xm"
              ]
 
-TRUST_MEDIA_EXT = [
+TRUST_AUDIO_EXT = [
     "wav", "wma", "mp2", "mp3", "mp4", "m4a", "flac", "ogg"
     ]
 
@@ -94,9 +94,9 @@ def file_is_supported(filename, strict=False):
         return False
     else:
         extension = results[-1].lower()
-        if extension in TRUST_MEDIA_EXT:
+        if extension in TRUST_AUDIO_EXT:
             return True
-        elif extension in UNTRUST_MEDIA_EXT:
+        elif extension in UNTRUST_AUDIO_EXT:
             try:
                 fileobj = file(filename, "rb")
             except:
@@ -816,10 +816,7 @@ def str_size(nb, average=0, base=1024):
         average += 1
     nb = float(nb)    
     size_format = ""
-    if base == 1024:
-        units = ("B KiB MiB GiB").split()
-    else:    
-        units = ("B KB MB GB").split()
+    units = ("B KB MB GB").split()
         
     for size_format in units:    
         if len("%d" % int(nb)) <= 3:

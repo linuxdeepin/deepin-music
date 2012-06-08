@@ -27,7 +27,7 @@ import time
 
 from collections import OrderedDict
 from dtk.ui.listview import ListView
-from dtk.ui.utils import alpha_color_hex_to_cairo, print_exec_time, exec_time
+from dtk.ui.utils import alpha_color_hex_to_cairo
 from dtk.ui.menu import Menu
 from dtk.ui.threads import post_gui
 from dtk.ui.draw import draw_vlinear
@@ -40,7 +40,9 @@ from library import MediaDB
 from widget.dialog import WinFile, WinDir
 from widget.song_item import SongItem
 from widget.skin import app_theme
+from widget.song_editor import SongEditor
 from source.local import ImportPlaylistJob
+
 
 class SongView(ListView):
     ''' song view. '''
@@ -257,6 +259,11 @@ class SongView(ListView):
             song = self.items[self.select_rows[0]].get_song()
             utils.run_command("xdg-open %s" % song.get_dir())
         return True    
+    
+    def open_song_editor(self):
+        if len(self.select_rows) > 0:
+            song = self.items[self.select_rows[0]].get_song()
+            SongEditor(song).show_all()
     
     def move_to_trash(self):
         flag = False
