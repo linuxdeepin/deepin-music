@@ -52,8 +52,7 @@ class PlaylistUI(gtk.VBox):
         '''Init.'''
         super(PlaylistUI, self).__init__()
 
-        self.category_list = TreeView(font_color=app_theme.get_color("labelText").get_color(),
-                                      font_size=9, height=25, font_x_padding=10)
+        self.category_list = TreeView(font_size=9, height=25, font_x_padding=10)
         self.category_list.draw_mask = self.draw_single_mask
         self.category_list.connect("single-click-item", self.category_single_click_cb)
         self.category_list.connect("right-press-item", self.category_right_press_cb)

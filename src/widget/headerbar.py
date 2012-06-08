@@ -38,6 +38,7 @@ from widget.ui import ProgressBox
 from config import config
 from helper import Dispatcher
 from widget.preference import PreferenceDialog
+from widget.song_editor import SongEditor
 
 
 class HeaderBar(gtk.EventBox):
@@ -187,7 +188,8 @@ class HeaderBar(gtk.EventBox):
         if event.button == 3:
             menu_items = [
                 (None, "均衡器", lambda : self.equalizer_win.run()),
-                (None, "设置", lambda : PreferenceDialog().show_all())
+                (None, "设置", lambda : PreferenceDialog().show_all()),
+                (None, "歌曲编辑", lambda : SongEditor().show_all())
                 ]
             Menu(menu_items, True).show((int(event.x_root), int(event.y_root)))
             

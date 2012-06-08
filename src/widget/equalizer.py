@@ -208,11 +208,11 @@ class EqualizerWindow(Logger):
             Player.bin.connect("tee-removed", self.__on_remove)    
             config.connect("config-changed", self.__on_config_change)
             
-        self.active_button = Button("关闭", 70, 20)
+        self.active_button = Button("关闭")
         self.active_button.connect("clicked", self.hide_win)
-        self.reset_button = Button("重置", 70, 20)
+        self.reset_button = Button("重置")
         self.reset_button.connect("clicked", lambda w : self.__change("Default"))
-        self.predefine_button = Button("预设", 70, 20)
+        self.predefine_button = Button("预设")
         self.predefine_button.connect("clicked", self.show_predefine)
             
         button_box = gtk.HBox(spacing=30)

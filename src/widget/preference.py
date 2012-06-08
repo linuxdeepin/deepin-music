@@ -26,7 +26,6 @@ import cairo
 
 from dtk.ui.window import Window
 from dtk.ui.label import Label
-from dtk.ui.line import HSeparator
 from dtk.ui.button import CheckButton, RadioButton
 from dtk.ui.spin import SpinBox
 from dtk.ui.line import draw_vlinear
@@ -40,20 +39,10 @@ from dtk.ui.scrolled_window import ScrolledWindow
 
 from utils import color_hex_to_cairo
 from widget.skin import app_theme
-from widget.ui_utils import get_font_families, switch_tab
+from widget.ui_utils import get_font_families, switch_tab, create_separator_box, create_right_align
 from render_lyrics import RenderContextNew
 from config import config
 
-def create_separator_box(padding_x=0, padding_y=0):    
-    separator_box = HSeparator(
-        app_theme.get_shadow_color("hSeparator").get_color_info(),
-        padding_x, padding_y)
-    return separator_box
-
-def create_right_align():    
-    align = gtk.Alignment()
-    align.set(0, 0, 0, 1)
-    return align
 
 
 class GeneralSetting(gtk.VBox):
