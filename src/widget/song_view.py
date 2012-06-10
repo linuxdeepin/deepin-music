@@ -262,8 +262,8 @@ class SongView(ListView):
     
     def open_song_editor(self):
         if len(self.select_rows) > 0:
-            song = self.items[self.select_rows[0]].get_song()
-            SongEditor(song).show_all()
+            index = self.select_rows[0]
+            SongEditor(self.get_songs(), index).show_all()
     
     def move_to_trash(self):
         flag = False
@@ -273,6 +273,7 @@ class SongView(ListView):
                 Player.stop()
                 self.highlight_item = None
                 flag = True
+            MediaDB.remove(songs)    
             [ utils.move_to_trash(song.get("uri")) for song in songs ]
             self.delete_select_items()            
             if flag:

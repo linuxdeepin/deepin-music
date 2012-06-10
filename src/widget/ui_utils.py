@@ -70,3 +70,9 @@ def create_right_align():
     align.set(0, 0, 0, 1)
     return align
     
+def create_left_align():
+    align = gtk.Alignment()
+    align.set(0, 0, 1, 0)
+    return align
+    
+    

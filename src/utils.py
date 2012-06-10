@@ -291,12 +291,10 @@ def duration_to_string(value, default="", i=1000):
         duration = "%d:" % (value/(60*i) % 60) + duration
     return duration    
 
-@print_exec_time
 def parse_folder(parent_dir):
     ''' return all uri in a folder excepted hidden one.'''
     new_dir  = get_path_from_uri(parent_dir)
     uris = [ get_uri_from_path(os.path.join(new_dir, name)) for name in os.listdir(new_dir) if name[0] != "." and os.path.isfile(os.path.join(new_dir,name))]
-    print "W:Utils:ParseFolder:", len(uris), "founds"
     return uris
 
 def get_uris_from_m3u(uri):

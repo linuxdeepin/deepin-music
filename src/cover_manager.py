@@ -78,6 +78,9 @@ class DeepinCoverManager(Logger):
             return song.get_str("artist")
         else:
             return song.get_str("album")
+        
+    def get_default_cover(self, x, y):    
+        return gtk.gdk.pixbuf_new_from_file_at_size(self.DEFAULT_COVER, x, y)
     
     def get_pixbuf_from_album(self, album, x=None, y=None):
         x = (x or BROWSER_COVER_SIZE["x"])

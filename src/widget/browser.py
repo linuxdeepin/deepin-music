@@ -478,7 +478,19 @@ class Browser(gtk.VBox, SignalContainer):
                     self.update_path_songs_view(self.current_icon_item)
 
     def __removed_song_cb(self, db_query, songs):
-        pass
+        self.reload_song_path()
+        if self.view_mode == ICON_VIEW_MODE:
+            if self.path_categorybar.get_index() == -1:
+                self.reload_filter_view(self.categorybar_status)
+            else:    
+                self.update_path_filter_view(self.path_combo_box.current_status)
+        else:        
+            if self.path_categorybar.get_index() == -1:
+                if self.current_icon_item:
+                    self.update_category_songs_view(self.current_icon_item)
+            else:        
+                if self.current_icon_item:
+                    self.update_path_songs_view(self.current_icon_item)
     
     def __update_tag_view(self, db_query, tag, values):
         pass
@@ -518,7 +530,6 @@ class Browser(gtk.VBox, SignalContainer):
         if not songs:
             return 
         songs = list(songs)
-        print songs
         songs.sort()
         list_uris = list([ song.get("uri") for song in songs])
         selection.set("text/deepin-songs", 8, "\n".join(list_uris))

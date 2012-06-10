@@ -34,9 +34,8 @@ from widget.skin import app_theme
 class CoverButton(gtk.Button):
     def __init__(self):
         super(CoverButton, self).__init__()
-
         
-        self.current_cover_pixbuf = CoverManager.get_pixbuf_from_album("", COVER_SIZE["x"], COVER_SIZE["y"])
+        self.current_cover_pixbuf = CoverManager.get_default_cover(COVER_SIZE["x"], COVER_SIZE["y"])
         self.cover_side_pixbuf = app_theme.get_pixbuf("cover/side.png").get_pixbuf()
         self.set_size_request(self.cover_side_pixbuf.get_width(), self.cover_side_pixbuf.get_height())
 

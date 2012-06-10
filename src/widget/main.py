@@ -30,6 +30,7 @@ from widget.headerbar import HeaderBar
 from widget.playlist import PlaylistUI
 from widget.browser import SimpleBrowser
 from widget.jobs_manager import jobs_manager
+from widget.tray import TrayIcon
 
 from config import config
 from player import Player
@@ -65,7 +66,7 @@ class DeepinMusic(gobject.GObject):
         self.playlist_ui = PlaylistUI()    
         self.header_bar = HeaderBar()
         self.dbus_service = DeepinMusicDBus()
-        
+
 
         bottom_box = gtk.HBox()
         browser_align = gtk.Alignment()
@@ -93,6 +94,7 @@ class DeepinMusic(gobject.GObject):
         
     def ready(self):    
         self.window.show_all()
+        self.tray_icon = TrayIcon()        
         self.emit("ready")
         
     def force_quit(self, *args):    

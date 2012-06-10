@@ -28,13 +28,49 @@ from dtk.ui.menu import Menu
 import utils
 from config import config
 from player import Player
-
+from widget.skin import app_theme
 
 class BaseTrayIcon(object):
     '''Trayicon base, needs to be derived from.'''
     
-    def __init__(self, main):
-        pass
+    def __init__(self):
+        self.update_icon()
+        self.setup_menu()
+        self.connect_events()
     
+    def update_icon(self):
+        self.set_from_pixbuf(app_theme.get_pixbuf("skin/logo.ico").get_pixbuf())
+    
+    def setup_menu(self):    
+        menu_items = [
+            (None, "播放", None),
+            (None, "解锁桌面歌词", None),
+            (None, "显示", None),
+            None,
+            (None, "最小化", None)
+            ]
+        self.menu = Menu(menu_items, True)
+        
+    def connect_events(self):    
+        self.connect("button-press-event", self.on_button_press_event)
+    
+    def on_button_press_event(self, widget, event):    
+        if event.button == 1:
+            pass
+        if event.button == 2:
+            pass
+        if event.button == 3:
+            pass
+        
+        
+    
+class TrayIcon(gtk.StatusIcon, BaseTrayIcon):    
+    
+    def __init__(self):
+        gtk.StatusIcon.__init__(self)
+        BaseTrayIcon.__init__(self)
+        
+    def get_menu_position(self, menu, icon):    
+        return gtk.status_icon_position_menu(menu, icon)
         
 

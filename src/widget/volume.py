@@ -48,17 +48,12 @@ class VolumeButton(gtk.HBox):
             )
         
         # Init widget.
-        self.volume_progressbar.set_size_request(42, 8)
+        self.volume_progressbar.set_size_request(50, 8)
         self.volume_progressbar.set_range(min_value, max_value)
         self.volume_progressbar.set_value(init_value)
         
         # Signals.
-        # self.volume_button.connect("enter-notify-event", self.enter_volume_button)
-        # self.volume_progressbar.connect("leave-notify-event", self.leave_volume_progressbar)
         self.volume_progressbar.get_adjustment().connect("value-changed", self.moniter_volume_change)
-        
-        # hide.
-        # self.volume_progressbar.set_no_show_all(True)        
         
         # Pack.
         volume_align = gtk.Alignment()
@@ -71,20 +66,6 @@ class VolumeButton(gtk.HBox):
 
         self.pack_start(button_align, False, False)
         self.pack_start(volume_align, False, False)
-        
-    def enter_volume_button(self, widget, event):
-        self.change_progressbar_status()
-    
-    def leave_volume_progressbar(self, widget, event):
-        self.change_progressbar_status(True)
-    
-    def change_progressbar_status(self, hide=False):
-        if not hide:
-            self.volume_progressbar.set_no_show_all(False)
-            self.volume_progressbar.show_all()
-        else:    
-            self.volume_progressbar.hide_all()
-            self.volume_progressbar.set_no_show_all(True)
             
     def update_volume_button_pixbuf(self, name):
         group = (
@@ -93,6 +74,7 @@ class VolumeButton(gtk.HBox):
             app_theme.get_pixbuf("volume/%s_press.png" % name)
             )
         self.volume_button.set_inactive_pixbuf_group(group)
+        self.queue_draw()
         
     
     def moniter_volume_change(self, adjustment):
