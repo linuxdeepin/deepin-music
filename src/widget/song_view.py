@@ -60,6 +60,9 @@ class SongView(ListView):
         self.connect_after("drag-data-received", self.on_drag_data_received)
         self.connect("double-click-item", self.double_click_item_cb)
         
+        MediaDB.connect("removed", self.__remove_songs)
+        
+        
     def double_click_item_cb(self, widget, item, colume, x, y):    
         if item:
             self.set_highlight(item)
@@ -372,6 +375,32 @@ class SongView(ListView):
         if not isinstance(uris, (list, tuple, set)):
             uris = [ uris ]
         utils.async_parse_uris(uris, follow_folder, True, self.add_uris)
+        
+    def __remove_songs(self, db, song_type, songs):    
+        indexs = []
+        flag = False
+        view_songs = self.get_songs()
+        
+        if self.highlight_item and self.highlight_item.get_song() in songs:
+            Player.stop()
+            self.highlight_item = None
+            flag = True
+        
+        for song in songs:
+            if song in view_songs:
+                indexs.append(view_songs.index(song))
+        if indexs:        
+            for index in indexs:
+                del self.items[index]
+            self.update_item_index()
+            self.update_vadjustment()        
+            self.queue_draw()    
+            
+        if flag:    
+            if len(self.items) > 0:
+                item = self.items[0]
+                self.set_highlight(item)
+                Player.play_new(item.get_song())
 
 class MultiDragSongView(ListView):        
     def __init__(self, *args, **kward):
@@ -391,13 +420,13 @@ class MultiDragSongView(ListView):
         self.set_expand_column(0)
         self.connect("drag-data-get", self.__on_drag_data_get) 
         self.connect("double-click-item", self.__on_double_click_item)
+        self.connect("right-press-items", self.popup_right_menu)
         
     def get_selected_songs(self):    
         songs = []
         if len(self.select_rows) > 0:
             songs = [ self.items[index].get_song() for index in self.select_rows ]
         return songs
-    
             
     def __on_drag_data_get(self, widget, context, selection, info, timestamp):    
         songs = self.get_selected_songs()
@@ -441,4 +470,42 @@ class MultiDragSongView(ListView):
                 self.sort_reverse[keyword] = not reverse
             self.update_item_index()
             self.queue_draw()
+            
+    def open_song_dir(self):
+        if len(self.select_rows) > 0:
+            song = self.items[self.select_rows[0]].get_song()
+            utils.run_command("xdg-open %s" % song.get_dir())
+        return True    
+    
+    def play_song(self):
+        if len(self.select_rows) > 0:
+            song = self.items[self.select_rows[0]].get_song()
+            Dispatcher.play_and_add_song(song)
+        return True    
+    
+    def open_song_editor(self):
+        if len(self.select_rows) > 0:
+            index = self.select_rows[0]
+            SongEditor(self.get_songs(), index).show_all()
+            
+    def remove_songs(self, fully=False):
+        if len(self.select_rows) > 0:
+            songs = [ self.items[self.select_rows[index]].get_song() for index in range(0, len(self.select_rows))]
+            MediaDB.remove(songs)    
+            if fully:
+                [ utils.move_to_trash(song.get("uri")) for song in songs ]
+            self.delete_select_items()            
+        return True    
 
+    def popup_right_menu(self, widget, x, y, item, select_items):
+        menu_items = [
+            (None, "播放", self.play_song),
+            (None, "添加到播放列表", None),
+            None,
+            (None, "从歌曲库删除", self.remove_songs),
+            (None, "从磁盘删除", self.remove_songs, True),
+            None,
+            (None, "打开歌曲所在目录", self.open_song_dir),
+            (None, "属性", self.open_song_editor)
+            ]
+        Menu(menu_items, True).show((int(x), int(y)))
