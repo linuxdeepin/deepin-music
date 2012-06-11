@@ -94,12 +94,13 @@ class DeepinMusic(gobject.GObject):
         
     def ready(self):    
         self.window.show_all()
-        self.tray_icon = TrayIcon()        
+        self.tray_icon = TrayIcon(self.window)
         self.emit("ready")
         
     def force_quit(self, *args):    
         print "Start quit..."
         self.header_bar.hide_lyrics()
+        self.tray_icon.destroy()
         self.window.hide_all()
         Player.save_state()
         if not Player.is_paused(): Player.pause()

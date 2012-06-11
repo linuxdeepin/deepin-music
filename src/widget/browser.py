@@ -281,9 +281,6 @@ class Browser(gtk.VBox, SignalContainer):
             )
         
         # iconview.
-        icon_view_align = gtk.Alignment()
-        icon_view_align.set(0, 0, 0.5, 0.5)
-        icon_view_align.set_padding(5, 0, 10, 0)
         self.filter_view = IconView()
         targets = [("text/deepin-songs", gtk.TARGET_SAME_APP, 1), ("text/uri-list", 0, 2)]
         self.filter_view.drag_source_set(gtk.gdk.BUTTON1_MASK, targets, gtk.gdk.ACTION_COPY)
@@ -292,8 +289,7 @@ class Browser(gtk.VBox, SignalContainer):
         self.filter_view.connect("single-click-item", self.__on_single_click_item)
         self.filter_scrolled_window = ScrolledWindow()
         self.filter_scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
-        icon_view_align.add(self.filter_view)
-        self.filter_scrolled_window.add_child(icon_view_align)
+        self.filter_scrolled_window.add_child(self.filter_view)
         
         # songs_view
         self.songs_view = MultiDragSongView()
