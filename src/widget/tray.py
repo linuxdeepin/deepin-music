@@ -88,17 +88,17 @@ class BaseTrayIcon(object):
     
     def on_button_press_event(self, widget, event):    
         if event.button == 1:
-            self.toggle_visible()
+            self.main.toggle_visible()
         if event.button == 2:
             pass
         if event.button == 3:
             self.menu.show((int(event.x_root), int(event.y_root)))
             
-    def toggle_visible(self):    
-        if self.main.get_property("visible"):
-            self.main.hide()
-        else:    
-            self.main.present()
+    # def toggle_visible(self):    
+    #     if self.main.get_property("visible"):
+    #         self.main.hide()
+    #     else:    
+    #         self.main.present()
             
     def destroy(self):        
         if not self.main.get_property("visible"):
