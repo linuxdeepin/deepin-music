@@ -20,21 +20,19 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
 import gtk
-import gobject
 from dtk.ui.menu import Menu
 
 import utils
 from config import config
 from player import Player
 from widget.skin import app_theme
+from helper import Dispatcher
 
 class BaseTrayIcon(object):
     '''Trayicon base, needs to be derived from.'''
     
-    def __init__(self, main):
-        self.main = main
+    def __init__(self):
         self.update_icon()
         self.setup_menu()
         self.connect_events()
@@ -79,7 +77,7 @@ class BaseTrayIcon(object):
             (None, "关闭歌词", None),
             None,
             (None, "选项设置", None),
-            (None, "退出", None)
+            (None, "退出", lambda : Dispatcher.quit())
             ]
         self.menu = Menu(menu_items, True)
         
@@ -88,31 +86,62 @@ class BaseTrayIcon(object):
     
     def on_button_press_event(self, widget, event):    
         if event.button == 1:
-            self.main.toggle_visible()
-        if event.button == 2:
-            pass
-        if event.button == 3:
-            self.menu.show((int(event.x_root), int(event.y_root)))
-            
-    # def toggle_visible(self):    
-    #     if self.main.get_property("visible"):
-    #         self.main.hide()
-    #     else:    
-    #         self.main.present()
+            if event.state == gtk.gdk.CONTROL_MASK:
+                Player.previous()
+            else:
+                win = utils.get_main_window()
+                if win.get_property('visible'):
+                    if win.is_active():
+                        self.cacher()
+                    else:
+                        win.present()
+                else:
+                    self.montrer()
+                    
+        elif event.button == 2:
+            Player.playpause()
+
+        elif event.button == 3:
+            if event.state == gtk.gdk.CONTROL_MASK:
+                Player.next()
+            else:
+                # self.menu.show((int(event.x_root), int(event.y_root)))
+                menu = gtk.Menu()
+                (x, y, z) =  self.get_menu_position(menu, self)
+                self.menu.show((int(x), int(y)))                
             
     def destroy(self):        
-        if not self.main.get_property("visible"):
-            self.main.deiconify()
-            self.main.present()
+        win = utils.get_main_window()
+        if not win.get_property("visible"):
+            win.deiconify()
+            win.present()
         self.set_visible(False)    
-    
+        
+    def cacher(self):
+        win = utils.get_main_window()
+        if win.window:
+            event = win.window.get_state()
+            if event == gtk.gdk.WINDOW_STATE_MAXIMIZED:
+                config.set("window", "state", "maximized")
+            else:
+                config.set("window", "state", "normal")
+            win.hide_all()
+
+    def montrer(self):
+        win = utils.get_main_window()
+        win.move(int(config.get("window", "x")), int(config.get("window", "y")))
+        window_state = config.get("window", "state")
+        if window_state == "maximized" :
+            win.maximize()
+        if window_state == "normal":
+            win.unmaximize()
+        win.show_all()
+
 class TrayIcon(gtk.StatusIcon, BaseTrayIcon):    
     
-    def __init__(self, main):
+    def __init__(self):
         gtk.StatusIcon.__init__(self)
-        BaseTrayIcon.__init__(self, main)
+        BaseTrayIcon.__init__(self)
         
     def get_menu_position(self, menu, icon):    
         return gtk.status_icon_position_menu(menu, icon)
-        
-

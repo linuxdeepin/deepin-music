@@ -36,16 +36,15 @@ from config import config
 from player import Player
 from library import MediaDB
 from dbus_manager import DeepinMusicDBus
+from helper import Dispatcher
 
 class DeepinMusic(gobject.GObject):
     __gsignals__ = {"ready" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ())}
     
     def __init__(self):
         gobject.GObject.__init__(self)
-        # gtk.window_set_default_icon_from_file(app_theme.get_theme_file_path("image/skin/logo.ico"))
-        
         application = Application("DMuisc")
-        application.close_callback = self.force_quit
+        application.close_callback = self.quit
         application.set_default_size(941, 695)
         application.set_icon(app_theme.get_pixbuf("skin/logo.ico"))
         application.set_skin_preview(app_theme.get_pixbuf("frame.png"))
@@ -61,7 +60,18 @@ class DeepinMusic(gobject.GObject):
         if config.get("window", "x") == "-1":
             self.window.set_position(gtk.WIN_POS_CENTER)
         else:    
-            self.window.move(int(config.get("window", "x"), int(config.get("window", "y"))))
+            self.window.move(int(config.get("window","x")),int(config.get("window","y")))
+            
+        try:    
+            self.window.resize(int(config.get("window","width")),int(config.get("window","height")))
+        except:    
+            pass
+        
+        window_state = config.get("window", "state")
+        if window_state == "maximized":
+            self.window.maximize()
+        elif window_state == "normal":    
+            self.window.unmaximize()
         
         self.playlist_ui = PlaylistUI()    
         self.header_bar = HeaderBar()
@@ -89,18 +99,31 @@ class DeepinMusic(gobject.GObject):
         application.main_box.pack_start(main_box)        
         application.main_box.pack_start(block_box, False, True)
         
+        self.window.connect("delete-event", self.quit)
+        self.window.connect("configure-event", self.on_configure_event)
+        Dispatcher.connect("quit",self.force_quit)
+        config.connect("config-changed", self.__on_config_set)
+        
+        self.tray_icon = None
         gobject.idle_add(self.ready)
         
+    def quit(self, *param):    
+        self.__save_configure()
+        if config.get("setting", "close_to_tray") == "false" or self.tray_icon == None:
+            self.force_quit()
         
-    def ready(self):    
-        self.window.show_all()
-        self.tray_icon = TrayIcon(self.window)
+    def ready(self, show=True):    
+        if show:
+            self.window.show_all()
+            
+        if config.getboolean("setting", "use_tray"):    
+            self.tray_icon = TrayIcon()
+            
         self.emit("ready")
         
     def force_quit(self, *args):    
         print "Start quit..."
         self.header_bar.hide_lyrics()
-        self.tray_icon.destroy()
         self.window.hide_all()
         Player.save_state()
         if not Player.is_paused(): Player.pause()
@@ -115,3 +138,28 @@ class DeepinMusic(gobject.GObject):
         self.window.destroy()        
         gtk.main_quit()
         print "Exit successful."
+        
+    def on_configure_event(self,widget=None,event=None):
+        if widget.get_property("visible"):
+            if widget.get_resizable():
+                config.set("window","width","%d"%event.width)
+                config.set("window","height","%d"%event.height)
+            config.set("window","x","%d"%event.x)
+            config.set("window","y","%d"%event.y)
+            
+    def __on_config_set(self, ob, section, option, value):        
+        if section == "setting" and option == "use_tray":
+            use_tray = config.getboolean(section, option)
+            if self.tray_icon and not use_tray:
+                self.tray_icon.destroy()
+                self.tray_icon = None
+            elif not self.tray_icon and use_tray:    
+                self.tray_icon = TrayIcon()
+
+    def __save_configure(self):            
+        event = self.window.get_state()
+        if event == gtk.gdk.WINDOW_STATE_MAXIMIZED:
+            config.set("window", "state", "maximized")
+        else:
+            config.set("window", "state", "normal")
+        self.window.hide_all()

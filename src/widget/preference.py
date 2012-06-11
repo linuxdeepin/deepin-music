@@ -61,10 +61,20 @@ class GeneralSetting(gtk.VBox):
     def load_status(self):    
         self.open_lyrics_check_button.set_active(config.getboolean("lyrics", "status"))
         self.auto_play_check_button.set_active(config.getboolean("player", "play_on_startup"))
+        
+        close_to_tray = config.getboolean("setting", "close_to_tray")
+        if close_to_tray:
+            self.tray_radio_button.set_active(True)
+        else:    
+            self.tray_radio_button.set_active(True)
+        
         self.fade_check_button.set_active(config.getboolean("player", "crossfade"))
         self.album_check_button.set_active(config.getboolean("player", "crossfade_gapless_album"))
+        
+        
         new_value = int(float(config.get("player", "crossfade_time")) * 100)
         self.fade_spin.set_value(new_value)
+        
         
     def create_start_box(self):    
         main_table = gtk.Table(3, 2)
@@ -101,13 +111,13 @@ class GeneralSetting(gtk.VBox):
         
         # mini_check_button
 
-        mini_radio_button = RadioButton("最小化至托盘")        
-        quit_radio_button = RadioButton("退出程序")
+        self.tray_radio_button = RadioButton("最小化至托盘")        
+        self.quit_radio_button = RadioButton("退出程序")
         
         main_table.attach(close_title_label, 0, 2, 0, 1, yoptions=gtk.FILL, xpadding=8)
         main_table.attach(create_separator_box(), 0, 2, 1, 2, yoptions=gtk.FILL)
-        main_table.attach(mini_radio_button, 0, 1, 2, 3, yoptions=gtk.FILL)
-        main_table.attach(quit_radio_button, 1, 2, 2, 3)
+        main_table.attach(self.tray_radio_button, 0, 1, 2, 3, yoptions=gtk.FILL)
+        main_table.attach(self.quit_radio_button, 1, 2, 2, 3)
         
         return main_table
         

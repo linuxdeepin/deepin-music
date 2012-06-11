@@ -84,8 +84,9 @@ class Config(gobject.GObject, Logger):
             "window" : {
                 "x" : "-1",
                 "y" : "-1",
-                "width"  : "300",
-                "height" : "600"
+                "width"  : "941",
+                "height" : "695",
+                "state"  : "normal",
                 },
             "player" : {
                 "uri"  : "",
@@ -96,7 +97,7 @@ class Config(gobject.GObject, Logger):
                 "crossfade" : "true",
                 "crossfade_time" : "2.0",
                 "crossfade_gapless_album" : "false",
-                "play_on_startup" : "false",
+                "play_on_startup" : "true",
                 "enqueue":"false",
                 "click_enqueue":"false",
                 "queuewholealbum":"false",
@@ -130,7 +131,8 @@ class Config(gobject.GObject, Logger):
                 "empty_random" : "false",
                 "loop_mode" : "list_mode",
                 "offline" : "false",                
-                
+                "use_tray" : "true",
+                "close_to_tray" : "true",
                 },
             
             "playlist" : {
