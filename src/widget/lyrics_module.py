@@ -60,8 +60,10 @@ class LyricsModule(object):
         self.desktop_lyrics.connect("resized", self.adjust_toolbar_rect)
         self.desktop_lyrics.connect("hide-bg", self.hide_toolbar)
         self.desktop_lyrics.connect("show-bg", self.show_toolbar)
+        self.desktop_lyrics.lyrics_win.connect("configure-event", self.lyrics_desktop_configure_event)
         
         self.scroll_lyrics = LyricsScroll()
+        self.scroll_lyrics.scroll_window.connect("configure-event", self.lyrcis_scroll_configure_event)
         self.scroll_lyrics.connect("seek", self.seek_cb)
         self.scroll_lyrics.connect("close", lambda w : self.hide_all())
         self.scroll_lyrics.connect("right-press", self.scroll_right_press_cb)
@@ -506,48 +508,59 @@ class LyricsModule(object):
         self.pause_time_source()
         
     def hide_scroll_lyrics(self):    
-        x, y = self.scroll_lyrics.scroll_window.get_position()
-        w, h = self.scroll_lyrics.scroll_window.get_size()
-        config.set("lyrics", "scroll_x", str(x))
-        config.set("lyrics", "scroll_y", str(y))
-        config.set("lyrics", "scroll_w", str(w))
-        config.set("lyrics", "scroll_h", str(h))
         self.scroll_lyrics.scroll_window.hide_all()
         
+    def lyrcis_scroll_configure_event(self, widget, event):    
+        if widget.get_property("visible"):
+            if widget.get_resizable():
+                config.set("lyrics","scroll_w","%d"%event.width)
+                config.set("lyrics","scroll_h","%d"%event.height)
+            config.set("lyrics","scroll_x","%d"%event.x)
+            config.set("lyrics","scroll_y","%d"%event.y)
+            
     def show_scroll_lyrics(self):    
-        self.scroll_lyrics.scroll_window.set_default_size(310, 400)            
-        self.scroll_lyrics.scroll_window.show_all()        
-        try:
+
+        if config.get("lyrics", "scroll_x") != "-1":
             x = config.getint("lyrics", "scroll_x")
             y = config.getint("lyrics", "scroll_y")
-            w = config.getint("lyrics", "scroll_w")
-            h = config.getint("lyrics", "scroll_H")
             self.scroll_lyrics.scroll_window.move(int(x), int(y))
+        try:    
+            w = config.getint("lyrics", "scroll_w")
+            h = config.getint("lyrics", "scroll_h")
             self.scroll_lyrics.scroll_window.resize(int(w), int(h))
-
         except: pass    
 
+        self.scroll_lyrics.scroll_window.show_all()        
         
     def hide_desktop_lyrics(self):    
-        x, y = self.desktop_lyrics.lyrics_win.get_position()
-        config.set("lyrics", "desktop_x", str(x))
-        config.set("lyrics", "desktop_y", str(y))
         self.desktop_lyrics.lyrics_win.hide_all()
         self.toolbar.hide_all()
         
-    def show_desktop_lyrics(self):    
-        screen_w, screen_h = gtk.gdk.get_default_root_window().get_size()
-        w , h = self.desktop_lyrics.lyrics_win.get_size()
-        # try:
-        #     x = config.getint("lyrics", "desktop_x")
-        #     y = config.getint("lyrics", "desktop_y")
-        # except:    
-        x = screen_w / 2 - w / 2
-        y = screen_h - h
+    def lyrics_desktop_configure_event(self, widget, event):    
+        if widget.get_property("visible"):
+            if widget.get_resizable():
+                config.set("lyrics","desktop_h","%d"%event.height)
+                config.set("lyrics","desktop_w","%d"%event.width)
+            config.set("lyrics","desktop_y","%d"%event.y)
+            config.set("lyrics","desktop_x","%d"%event.x)
             
-        self.desktop_lyrics.lyrics_win.show_all()           
-        self.desktop_lyrics.lyrics_win.hide_all()
-        self.desktop_lyrics.lyrics_win.move(x, y) 
+    def show_desktop_lyrics(self):    
+        if config.get("lyrics", "desktop_x") == -1:
+            screen_w, screen_h = gtk.gdk.get_default_root_window().get_size()
+            w , h = self.desktop_lyrics.lyrics_win.get_size()
+            x = screen_w / 2 - w / 2
+            y = screen_h - h
+        else:    
+            x = config.getint("lyrics", "desktop_x")
+            y = config.getint("lyrics", "desktop_y")
+            
+        self.desktop_lyrics.lyrics_win.move(x, y)    
+        try:
+            d_w = config.getint("lyrics", "desktop_w")
+            d_h = config.getint("lyrics", "desktop_h")
+            self.desktop_lyrics.lyrics_win.resize(d_w, d_h)          
+        except: pass    
+
         self.desktop_lyrics.lyrics_win.show_all()           
         
     def adjust_toolbar_rect(self, widget, rect):    

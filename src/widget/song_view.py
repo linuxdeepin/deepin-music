@@ -192,6 +192,20 @@ class SongView(ListView):
             self.set_highlight_song(songs[0])
             gobject.idle_add(Player.play_new, self.highlight_item.get_song())
             
+    def play_uris(self, uris, pos=None, sort=True):        
+        self.get_toplevel().window.set_cursor(None)
+        songs = []
+        
+        for uri in uris:
+            song = MediaDB.get_song(uri)
+            if song:
+                songs.append(song)
+                
+        if not songs:        
+            return
+        if sort: songs.sort()
+        self.add_songs(song, pos, sort, True)
+            
     def add_uris(self, uris, pos=None, sort=True):
         if uris == None:
             return

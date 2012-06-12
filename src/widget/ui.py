@@ -120,8 +120,8 @@ class ProgressBox(gtk.VBox):
         
         self.set_size_request(-1, 17)
         self.rect_list = [
-            (83, app_theme.get_shadow_color("playlistLeft").get_color_info()),
-            (220, app_theme.get_shadow_color("playlistMiddle").get_color_info()),
+            (75, app_theme.get_shadow_color("playlistLeft").get_color_info()),
+            (228, app_theme.get_shadow_color("playlistMiddle").get_color_info()),
             (150, app_theme.get_shadow_color("playlistRight").get_color_info()),
             ]
         

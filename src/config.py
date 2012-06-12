@@ -125,6 +125,9 @@ class Config(gobject.GObject, Logger):
                 "active_color_bottom" : "#FF8000",
                 "translucent_on_mouse_over" : "false",
                 "karaoke_mode" : "true",
+                "scroll_x" : "-1",
+                "scroll_y" : "-1",
+                "desktop_x" : "-1"
                 },
             
             "setting" : {

@@ -124,11 +124,11 @@ class MediaDatebase(gobject.GObject, Logger):
         try:
             filter_func = Query(string).search
         except Query.error:    
-            self.loginfo("Request: Query error %s", string)
+            self.logdebug("Request: Query error %s", string)
             return None
         else:
             if not self.__songs_by_type.has_key(song_type):
-                self.loginfo("Request: type %s not exist", song_type)
+                self.logdebug("Request: type %s not exist", song_type)
                 return None
             return [ song for song in self.__songs_by_type[song_type] if filter_func(song) ]
         
@@ -168,7 +168,7 @@ class MediaDatebase(gobject.GObject, Logger):
         self.__songs[uri] = song
         self.__songs_by_type.setdefault(song_type, set())
         self.__songs_by_type[song_type].add(song)
-        self.loginfo("add %s by %s", uri, song_type)
+        self.logdebug("add %s by %s", uri, song_type)
         
         # add type, song to added signal.
         self.__condition.acquire()
@@ -193,7 +193,7 @@ class MediaDatebase(gobject.GObject, Logger):
         except KeyError:    
             pass
         self.__songs_by_type[song_type].remove(song)
-        self.loginfo("remove the %s success", song)
+        self.logdebug("remove the %s success", song)
         
         # add signal.
         self.__condition.acquire()
@@ -244,7 +244,7 @@ class MediaDatebase(gobject.GObject, Logger):
         old_keys_values = {}
         [ old_keys_values.update({key:song.get_sortable(key)}) for key in song.keys() if key in keys]
         for key in keys: del song[key]
-        self.loginfo("from %s delete property %s", song, keys)
+        self.logdebug("from %s delete property %s", song, keys)
         self.__condition.acquire()
         self.__queued_signal["changed"].setdefault(song_type, [])
         self.__queued_signal["changed"][song_type].append((song, old_keys_values))
@@ -384,7 +384,7 @@ class MediaDatebase(gobject.GObject, Logger):
             
     def load(self):        
         '''load songs and playlists from db file'''
-        self.loginfo("Loading library...")
+        self.logdebug("Loading library...")
         
         # Load songs
         try:
@@ -436,8 +436,8 @@ class MediaDatebase(gobject.GObject, Logger):
         gobject.timeout_add(AUTOSAVE_TIMEOUT, self.async_save)
         gobject.timeout_add(SIGNAL_DB_QUERY_FIRED * 20, self.__fire_queued_signal)
         
-        self.loginfo("%s songs loaded in %s types", len(self.__songs), len(self.__song_types))
-        self.loginfo("Finish loading library")
+        self.logdebug("%s songs loaded in %s types", len(self.__songs), len(self.__song_types))
+        self.logdebug("Finish loading library")
         gobject.idle_add(self.__delay_post_load)
         
         
@@ -462,7 +462,7 @@ class MediaDatebase(gobject.GObject, Logger):
         # save
         utils.save_db(objs, get_config_file("songs.db"))
         utils.save_db([pl.get_pickle_obj() for pl in playlists ], get_config_file("playlists.db"))
-        self.loginfo("%d songs saved and %d playlists saved", len(objs), len(playlists))
+        self.logdebug("%d songs saved and %d playlists saved", len(objs), len(playlists))
         self.__dirty = False
         
     @utils.threaded
@@ -631,7 +631,7 @@ class DBQuery(gobject.GObject, Logger):
             string = string.decode("utf-8")
         string = string.strip()    
         
-        self.loginfo("Begin query %s", string)
+        self.logdebug("Begin query %s", string)
         
         if string:
             try:

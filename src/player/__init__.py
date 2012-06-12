@@ -73,10 +73,10 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
             self.song = songs[songs.index(self.song)]
         
     def __on_eos(self, bin, uri):    
-        self.loginfo("received eos for %s", uri)
+        self.logdebug("received eos for %s", uri)
         
         if uri == self.song.get("uri") and not self.__next_already_called and not config.get("setting", "loop_mode") == "single_mode":
-            self.loginfo("request new song: eos and play-end not emit")
+            self.logdebug("request new song: eos and play-end not emit")
             self.emit("play-end")
             self.next() # todo
             
@@ -89,7 +89,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         self.emit("paused")
 
         if uri == self.song.get("uri") and not self.__next_already_called:
-            self.loginfo("request new song: error and play-end not emit")
+            self.logdebug("request new song: error and play-end not emit")
             self.emit("play-end")
             self.next(True)
         self.__next_already_called = False    
@@ -97,7 +97,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
     def __on_tag(self, bin, taglist):    
         ''' The playbin found the tag information'''
         if self.song and not self.song.get("title"):
-            self.loginfo("tag found %s", taglist)
+            self.logdebug("tag found %s", taglist)
             IDS = {
                 "title": "artist",
                 #"genre": "genre",
@@ -135,7 +135,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         if crossfade:
             if remaining < crossfade:
                 if not self.__next_already_called and remaining > 0:
-                    self.loginfo("request new song: on tick and play-end not emit")
+                    self.logdebug("request new song: on tick and play-end not emit")
                     self.next()
                     self.emit("play-end")
                     self.__next_already_called = True
@@ -147,7 +147,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
     def __on_playing(self, bin, uri):
         '''Signal emitted by fadebin when a new stream previously queued start'''
         if uri == self.song.get("uri"):
-            self.loginfo("signal playing-stream receive by %s", uri)
+            self.logdebug("signal playing-stream receive by %s", uri)
             config.set("player", "play", "true")
             self.emit("played")
             self.__emit_signal_new_song()
@@ -188,7 +188,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
             crossfade = self.get_crossfade()
         
         uri = song.get('uri')    
-        self.loginfo("player try to load %s", uri)
+        self.logdebug("player try to load %s", uri)
         
         # if has xiami , then stop xiami of the previous song.
         
@@ -206,10 +206,10 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
                 if try_num > 3:
                     break
             if uris:        
-                self.loginfo("%s choosen in %s", uris[0], uri)
+                self.logdebug("%s choosen in %s", uris[0], uri)
                 uri = uris[0]
             else:    
-                self.loginfo("no playable uri found in %s", uri)
+                self.logdebug("no playable uri found in %s", uri)
                 uri = None
                 
         # remove old stream for pipeline excepted when need to fade
@@ -297,7 +297,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         '''rewind'''
         length = self.get_length()
         if not length:
-            self.loginfo("Can't rewind a stream with on duration")
+            self.logdebug("Can't rewind a stream with on duration")
             return
         jump = max(5, length * 0.05)
         pos = self.get_position()
@@ -309,12 +309,12 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         '''forward'''
         length = self.get_length()
         if not length:
-            self.loginfo("Can't forward a stream with on duration")
+            self.logdebug("Can't forward a stream with on duration")
             return
         jump = max(5, length * 0.05)
         pos = float(self.get_position())
         if pos >=0:
-            pos - float(min(pos+jump, length))
+            pos = float(min(pos+jump, length))
             self.logdebug("request seek to %d", pos)
             self.seek(pos)
             
@@ -434,7 +434,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         
         # Init player state
         play = False
-        self.loginfo("player load %s in state %s at %d", uri, state, seek)
+        self.logdebug("player load %s in state %s at %d", uri, state, seek)
         if config.getboolean("player", "play_on_startup") and state == "playing":
             play = True
             
@@ -458,7 +458,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
             else:    
                 state = "playing"
             config.set("player", "state", state)    
-            self.loginfo("player status saved, %s", state)
+            self.logdebug("player status saved, %s", state)
             
     def update_skipcount(self):        
         '''update skipcount.'''
@@ -474,7 +474,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         else:
             handler_id = self.bin.connect("eos", lambda * args: self.stop())
             gobject.timeout_add(remaining, lambda * args: self.bin.disconnect(handler_id) is not None, handler_id)
-        self.loginfo("playlist finished")
+        self.logdebug("playlist finished")
             
 
 Player = DeepinMusicPlayer()            

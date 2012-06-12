@@ -23,8 +23,6 @@
 import  gtk
 import gobject
 
-# from dtk.ui.volume_button import VolumeButton
-from dtk.ui.frame import HorizontalFrame
 from dtk.ui.label import Label
 from dtk.ui.utils import get_content_size
 
@@ -34,6 +32,7 @@ from widget.skin import app_theme
 from widget.volume import VolumeButton
 from player import Player
 from config import config
+from helper import Dispatcher
 
 class SongTimer(gtk.HBox):
     __gsignals__ = {
@@ -146,14 +145,13 @@ class VolumeSlider(gtk.HBox):
     def __init__(self):
         super(VolumeSlider, self).__init__()
         volume_button = VolumeButton(1.0, 0.0, 1.0)
-        # volume_frame = HorizontalFrame(10, 0, 0, 0, 0)
-        # volume_frame.add(volume_button)
         self.volume_progressbar = volume_button.volume_progressbar
         self.mute_button = volume_button.volume_button
         self.mute_button.connect("toggled", self.toggled_volume)
         self.volume_progressbar.connect("value-changed",self.__volume_changed)
         volume = float(config.get("player","volume"))
         self.change_volume(None,volume)
+        Dispatcher.connect("volume",self.change_volume)
         self.pack_start(volume_button, False, False)
 
     def change_volume(self,helper,value):

@@ -709,6 +709,7 @@ class LyricsScroll(gobject.GObject):
         self.drawing.connect("button-release-event", self.button_release_cb)
         self.drawing.connect("motion-notify-event", self.motion_notify_cb)
         self.scroll_window = NormalWindow()
+        self.scroll_window.set_size_request(300, 120)
         self.scroll_window.titlebar.close_button.connect("clicked", self.hide_all)
         self.scroll_window.main_box.add(self.drawing)
         

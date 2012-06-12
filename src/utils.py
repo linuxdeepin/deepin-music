@@ -36,7 +36,7 @@ import subprocess
 import mimetypes
 mimetypes.init()
 
-from urllib import quote, unquote
+from urllib import quote, unquote, pathname2url
 from urlparse import urlparse
 from urllib2 import urlopen
 
@@ -126,6 +126,13 @@ def get_scheme(uri):
         return ""
     scheme = uri[:uri.index("://")]
     return scheme.lower()
+
+def make_uri_from_shell_arg(arg):
+    scheme = get_scheme(arg)
+    if scheme: return arg
+    else: 
+        return "file://" + pathname2url(os.path.abspath(os.path.expanduser(arg)))
+
 
 def get_ext(uri, complete=True):
     ''' get uri extension, such as '123.mp3', return '.mp3|mp3'. '''
@@ -618,21 +625,6 @@ class ThreadRun(threading.Thread):
             self.render_func(result, *self.render_args)
         else:    
             self.render_func(result)
-
-
-
-def dbus_service_available(bus, interface, try_start_service=False):
-    ''' detect the dbus service is available. and try to start it.'''
-    try:
-        import dbus
-    except:    
-        return False
-    if try_start_service:
-        bus.start_service_by_name(interface)
-    obj = bus.get_object("org.freedesktop.DBus", "/org/freedesktop/DBus")    
-    dbus_interface = dbus.Interface(obj, "org.freedesktop.DBus")
-    avail = dbus_interface.ListNames()
-    return interface in avail
 
 def strdate_to_time(odate):
     date = odate

@@ -20,27 +20,34 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import gtk
+
+
 import utils
 from player import Player
+from helper import Dispatcher
 
-OBJECT_PATH = "/org/gnome/listen"
-SERVICE_NAME = "org.gnome.Listen"
 
-try: 
-    import dbus #@UnusedImport
-    import dbus.service
-    #Try connection du message bus
-    dbus_version = getattr(dbus, 'version', (0, 0, 0))
-    if dbus_version >= (0, 41, 0) and dbus_version < (0, 80, 0):
-        dbus.SessionBus()
-        import dbus.glib  #@UnusedImport
-    elif dbus_version >= (0, 80, 0):
-        from dbus.mainloop.glib import DBusGMainLoop
-        DBusGMainLoop(set_as_default=True)
-        dbus.SessionBus()
+OBJECT_PATH = "/com/deepin/deepinmusicplayer"
+SERVICE_NAME = "com.deepin.DMusic"
 
-except: dbus_imported = False
-else: dbus_imported = True
+# try: 
+#     import dbus #@UnusedImport
+#     import dbus.service
+#     #Try connection du message bus
+#     dbus_version = getattr(dbus, 'version', (0, 0, 0))
+#     if dbus_version >= (0, 41, 0) and dbus_version < (0, 80, 0):
+#         dbus.SessionBus()
+#         import dbus.glib  #@UnusedImport
+#     elif dbus_version >= (0, 80, 0):
+#         from dbus.mainloop.glib import DBusGMainLoop
+#         DBusGMainLoop(set_as_default=True)
+#         dbus.SessionBus()
+
+# except: dbus_imported = False
+# else: dbus_imported = True
+import dbus
+dbus_imported = True
 
 if not dbus_imported:
     class DeepinMusicDBus(object):
@@ -72,10 +79,10 @@ else:
         @dbus.service.method(SERVICE_NAME)
         def play(self, uris):
             print "DBUS: play()"
-            win = utils.get_main_window()
+            # win = utils.get_main_window()
             # win.window.set_cursor(gtk.gdk.Cursor(gtk.gdk.WATCH))
-            # async_parse_uris(uris, True, True,
-                    # self.win.playlist_ui.playlist.play_uris, pos=None, sort=True)
+            # utils.async_parse_uris(uris, True, False,
+            #         win.playlist_ui.playlist.current_item.song_view.play_uris, pos=None, sort=True)
             return "Successful command "
 
         @dbus.service.method(SERVICE_NAME)
@@ -86,7 +93,7 @@ else:
         @dbus.service.method(SERVICE_NAME)
         def enqueue(self, uris):
             print "DBUS: enqueue()"
-            win = utils.get_main_window()
+            # win = utils.get_main_window()
             # win.window.set_cursor(gtk.gdk.Cursor(gtk.gdk.WATCH))    
             # async_parse_uris(uris, True, True,
                     # self.win.playlist_ui.playlist.add_uris, pos=None, sort=True)
@@ -95,7 +102,7 @@ else:
     
         @dbus.service.method(SERVICE_NAME)
         def quit(self):
-            # Dispatcher.quit()
+            Dispatcher.quit()
             return "Successful command "
         
         @dbus.service.method(SERVICE_NAME)
@@ -132,9 +139,9 @@ else:
         def volume(self, value):
             try: value = float(value)
             except:
-                return _("Fail to set volume")
+                return "Fail to set volume"
             else:
-                # Dispatcher.volume(value)
+                Dispatcher.volume(value)
                 return "Successful command "
     
         @dbus.service.method(SERVICE_NAME)
@@ -184,14 +191,6 @@ else:
         @dbus.service.method(SERVICE_NAME)
         def current_song_length(self):
             return Player.get_length()
-
-        @dbus.service.method(SERVICE_NAME)
-        def get_cover_path(self):
-            if not Player.is_paused() and Player.song:
-                return ""
-                # return CoverManager.get_cover_path(Player.song)
-            else:
-                return ""
 
         @dbus.service.method(SERVICE_NAME)
         def playing(self):

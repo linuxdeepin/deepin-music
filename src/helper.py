@@ -62,8 +62,12 @@ class EventDispatcher(gobject.GObject):
     def play_and_add_song(self, song):
         self.emit("play-song", song)
 
+    def volume(self, value):        
+        self.emit("volume", value)
+        
     def quit(self):    
         self.emit("quit", None)
+        
         
 Dispatcher = EventDispatcher()
 

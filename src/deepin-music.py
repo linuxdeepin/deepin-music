@@ -20,6 +20,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import sys
+
+if "--help" in sys.argv or "-h" in sys.argv:
+    from option_parser import DMusicOptionParser
+    DMusicOptionParser()
+    sys.exit(0)
+
 
 import gobject
 gobject.threads_init()
@@ -43,6 +50,9 @@ import mutagen
 if mutagen.version < (1, 8):
     raise ImportError,"Need mutagen >= 1.8"
 
+from findfile import get_cache_file
+PIDFILE = get_cache_file("dmusic.pid")
+
 from widget.skin import app_theme
 from config import config
 from library import MediaDB
@@ -50,6 +60,8 @@ from player import Player
 from pinyin import TransforDB
 
 from widget.main import DeepinMusic
+from option_parser import DMusicOptionParser
+
 
 
 class DeepinMusicApp(object):
@@ -58,6 +70,8 @@ class DeepinMusicApp(object):
     db_ready = False
     
     def __init__(self):
+        self.option = DMusicOptionParser()
+        self.option.run_preload()
         config.load()
         MediaDB.connect("loaded", self.on_db_loaded)
         MediaDB.load()

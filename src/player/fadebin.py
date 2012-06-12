@@ -435,7 +435,7 @@ class PlayerBin(gobject.GObject, Logger):
         if not self.start_sink(): return False
         
         stream.lock.acquire()
-        self.loginfo("changing stream state of %s, crossfade %d, current state %s", stream.cutted_uri, crossfade, stream.get_str_state())
+        self.logdebug("changing stream state of %s, crossfade %d, current state %s", stream.cutted_uri, crossfade, stream.get_str_state())
         if stream.state in [ PREROLLING, PREROLL_PLAY ]:
             self.logdebug ("stream %s is prerolling; will start playback once prerolling is complete -> PREROLL_PLAY", stream.uri)
             stream.crossfade = crossfade
@@ -461,7 +461,7 @@ class PlayerBin(gobject.GObject, Logger):
             stream.crossfade = crossfade
             ret = stream.actually_start_stream()
 
-        self.loginfo("changing stream state of %s, new crossfade %d, new state %s", stream.cutted_uri, stream.crossfade, stream.get_str_state())
+        self.logdebug("changing stream state of %s, new crossfade %d, new state %s", stream.cutted_uri, stream.crossfade, stream.get_str_state())
 
         return ret
 
@@ -653,7 +653,7 @@ class PlayerBin(gobject.GObject, Logger):
     
     def maybe_stop_sink(self):
         if os.environ.get('LISTEN_NO_PIPELINE_STOP', False):
-            self.loginfo("LISTEN_NO_PIPELINE_STOP enable : don't really stop the pipeline")
+            self.logdebug("LISTEN_NO_PIPELINE_STOP enable : don't really stop the pipeline")
             return
         self.sink_lock.acquire()
         if not self.__stop_sink_id :
@@ -693,7 +693,7 @@ class PlayerBin(gobject.GObject, Logger):
                 stream.emitted_error = True
                 stream.emit_stream_error(message.parse_error())
         elif message.type == gst.MESSAGE_TAG:
-            #self.logdebug("Tag Found")
+            self.logdebug("Tag Found")
             self.emit("tags-found", message.parse_tag())
         elif message.type == gst.MESSAGE_DURATION:
             self.logdebug("duration: %s", message.parse_duration())
@@ -712,7 +712,7 @@ class PlayerBin(gobject.GObject, Logger):
                         self.logdebug("got fade-out-done for stream %s -> PENDING_REMOVE", stream.cutted_uri)
                         self.schedule_stream_reap()
                     elif stream.state == FADING_OUT_PAUSED:
-                        self.loginfo("fade out paused  done")
+                        # self.logdebug("fade out paused  done")
                         format = gst.FORMAT_TIME
                         try:
                             pos, format = stream.query_stream_position(format)
@@ -737,7 +737,7 @@ class PlayerBin(gobject.GObject, Logger):
                     stream.state = PENDING_REMOVE
                     stream.unlink_blocked_cb(True)
                 else:
-                    self.loginfo("got not managed message (%s) for stream %s", name, stream.cutted_uri)
+                    self.logdebug("got not managed message (%s) for stream %s", name, stream.cutted_uri)
 
         elif message.type == gst.MESSAGE_BUFFERING:
             s = message.structure
@@ -832,7 +832,7 @@ class PlayerBin(gobject.GObject, Logger):
     
     def start_sink_locked(self):
         messages = []
-        self.loginfo("start_sink %s", self.sink_state)
+        self.logdebug("start_sink %s", self.sink_state)
 
         st = self.__output.set_state(gst.STATE_PAUSED)
         if st == gst.STATE_CHANGE_FAILURE:
@@ -898,7 +898,7 @@ class PlayerBin(gobject.GObject, Logger):
             self.logerror("Failed playing output")
             return (False, messages)
         
-        self.loginfo("sink playing")
+        self.logdebug("sink playing")
 
         self.sink_state = "SINK_PLAYING"
         
@@ -906,7 +906,7 @@ class PlayerBin(gobject.GObject, Logger):
             ms_period = 1000 / XFADE_TICK_HZ
             self.tick_timeout_id = gobject.timeout_add(ms_period, self.tick_timeout)
 
-        self.loginfo("state: %s", self.sink_state)
+        self.logdebug("state: %s", self.sink_state)
         return (True, messages)
 
 
@@ -936,7 +936,7 @@ class PlayerBin(gobject.GObject, Logger):
     def stop_sink(self):
 
         if self.sink_state in [ "SINK_PLAYING" ]:
-            self.loginfo("stopping sink")
+            self.logdebug("stopping sink")
 
             if self.tick_timeout_id:
                 gobject.source_remove(self.tick_timeout_id)
@@ -972,10 +972,10 @@ class PlayerBin(gobject.GObject, Logger):
         return True
 
     def dump_state(self):
-        self.loginfo("Player state: %s", self.sink_state)
+        self.logdebug("Player state: %s", self.sink_state)
         #self.dump_stream_list_lock()
         self.dump_elements_state()
-        return "Read dump in listen console"
+        return "Read dump in DMusic console"
 
     def dump_stream_list_lock(self):
         self.stream_list_lock.acquire()
@@ -983,28 +983,28 @@ class PlayerBin(gobject.GObject, Logger):
         self.stream_list_lock.release()
 
     def dump_stream_list(self):
-        self.loginfo("")
+        self.logdebug("")
         if not self.streams:
-            self.loginfo("No streams")
+            self.logdebug("No streams")
         else:
-            self.loginfo("Stream list:")
+            self.logdebug("Stream list:")
             for stream in self.streams:
                 statename = stream.get_str_state()
-                self.loginfo("  - [%s] %s", statename, stream.cutted_uri)
+                self.logdebug("  - [%s] %s", statename, stream.cutted_uri)
     
     def dump_elementbin_state(self, bin):
         elems = bin.elements()
         while True:
             try:
                 elem = elems.next()
-                self.loginfo(" - %s : %s", elem.get_name(), elem.get_state(gst.SECOND)[1])
+                self.logdebug(" - %s : %s", elem.get_name(), elem.get_state(gst.SECOND)[1])
             except StopIteration:
                 break
 
     def dump_elements_state(self):
         # TODO: check self.__tee
         for bin in [ self.pipeline, self.__filterbin, self.__output ]: 
-            self.loginfo("Subelements of %s:", bin.get_name())
+            self.logdebug("Subelements of %s:", bin.get_name())
             self.dump_elementbin_state(bin)
         pads = self.__tee.sink_pads()
         try: pad = pads.next()
@@ -1020,22 +1020,22 @@ class PlayerBin(gobject.GObject, Logger):
 
         for stream in self.streams:
             statename = stream.get_str_state()
-            self.loginfo("Subelements of  [%s] %s:", statename, stream.cutted_uri)
+            self.logdebug("Subelements of  [%s] %s:", statename, stream.cutted_uri)
             decoder_linked, player_linked = stream.get_linkage()
-            self.loginfo("* player linked: %s", player_linked)
-            self.loginfo("* decoder linked: %s", decoder_linked)
-            self.loginfo("* blocked: %s", stream.src_blocked)
-            self.loginfo("* pas is blocked: %s", stream.is_blocked())
+            self.logdebug("* player linked: %s", player_linked)
+            self.logdebug("* decoder linked: %s", decoder_linked)
+            self.logdebug("* blocked: %s", stream.src_blocked)
+            self.logdebug("* pas is blocked: %s", stream.is_blocked())
             elems = stream.elements()
             while True:
                 try:
                     elem = elems.next()
-                    self.loginfo(" - %s : %s", elem.get_name(), elem.get_state()[1])
+                    self.logdebug(" - %s : %s", elem.get_name(), elem.get_state()[1])
                 except StopIteration:
                     break
 
         if not self.streams:
-            self.loginfo("No streams")
+            self.logdebug("No streams")
 
 
 
@@ -1069,7 +1069,7 @@ class PlayerBin(gobject.GObject, Logger):
         if blocked:
             bin.set_state(gst.STATE_PLAYING)
             self.__output.set_state(gst.STATE_PLAYING)
-            self.loginfo("tee_pad -> unblock stream cb:pipeline_op_done state:%s", self.sink_state)
+            self.logdebug("tee_pad -> unblock stream cb:pipeline_op_done state:%s", self.sink_state)
             pad.set_blocked_async(False, self.__pipeline_op_done, ghostpad, "tee-inserted", self.__tee, element)
         else:
             bin.set_state(gst.STATE_PAUSED)
@@ -1083,7 +1083,7 @@ class PlayerBin(gobject.GObject, Logger):
         bin.remove(element)
 
         if blocked:
-            self.loginfo("remove_tee -> unblock stream cb:pipeline_op_done state:%s", self.sink_state)
+            self.logdebug("remove_tee -> unblock stream cb:pipeline_op_done state:%s", self.sink_state)
             pad.set_blocked_async(False, self.__pipeline_op_done, None, "tee-removed", self.__tee, element)
         else:
             self.__pipeline_op_done(None, False, None, "tee-removed", self.__tee, element)
@@ -1098,7 +1098,7 @@ class PlayerBin(gobject.GObject, Logger):
     def __pipeline_op(self, element, previous_element, callback):
         block_pad = previous_element.get_pad("src")
         if self.sink_state == "SINK_PLAYING":
-            self.loginfo("pipeline_op -> block stream callback:%s state:%s", callback, self.sink_state)
+            self.logdebug("pipeline_op -> block stream callback:%s state:%s", callback, self.sink_state)
             can_blocked = block_pad.set_blocked_async(True, callback, element)
             if not can_blocked: self.logwarn("pad already blocked")
         else:
@@ -1152,7 +1152,7 @@ class PlayerBin(gobject.GObject, Logger):
 
         if blocked:
             bin.set_state(gst.STATE_PLAYING)
-            self.loginfo("filter_pad -> unblock stream cb:pipeline_op_done state:%s", self.sink_state)
+            self.logdebug("filter_pad -> unblock stream cb:pipeline_op_done state:%s", self.sink_state)
             pad.set_blocked_async(False, self.__pipeline_op_done, None, "filter-inserted", self.__filterbin, element)
         else:
             bin.set_state(gst.STATE_PAUSED)
@@ -1185,7 +1185,7 @@ class PlayerBin(gobject.GObject, Logger):
         self.__filterbin.remove(bin)
 
         if blocked:
-            self.loginfo("remove_filter -> unblock stream cb:pipeline_op_done state:%s", self.sink_state)
+            self.logdebug("remove_filter -> unblock stream cb:pipeline_op_done state:%s", self.sink_state)
             pad.set_blocked_async(False, self.__pipeline_op_done, None, "filter-removed", self.__filterbin, element)
         else:
             self.__pipeline_op_done(None, False, None, "filter-removed", self.__filterbin, element)
@@ -1382,7 +1382,6 @@ class StreamBin(gst.Bin, Logger):
                     message = "FADE_OUT_DONE_MESSAGE"
                     self.fading = False
             else:
-                #self.loginfo("fading %s out:%f, %f",self.cutted_uri,( float(pos) / gst.SECOND ),vol)
                 self.__volume.set_passthrough(False)
 
         self.lock.release()
@@ -1439,7 +1438,7 @@ class StreamBin(gst.Bin, Logger):
 
         if self.src_blocked: cb = "None"
         else: cb = "__unlink_blocked_cb"
-        self.loginfo("unlink_and_block_stream -> block (%s) stream %s __src_pad cb:%s state:%s", self.src_blocked, self.cutted_uri, cb, self.get_str_state())
+        self.logdebug("unlink_and_block_stream -> block (%s) stream %s __src_pad cb:%s state:%s", self.src_blocked, self.cutted_uri, cb, self.get_str_state())
 
         self.needs_unlink = True
         if self.src_blocked:
@@ -1480,7 +1479,7 @@ class StreamBin(gst.Bin, Logger):
 
         if self.src_blocked:
             state = self.get_str_state()
-            self.loginfo("link_and_unblock_stream -> stream %s __src_pad, cb:__link_unblocked_cb state:%s", self.cutted_uri, state)
+            self.logdebug("link_and_unblock_stream -> stream %s __src_pad, cb:__link_unblocked_cb state:%s", self.cutted_uri, state)
             can_unblock = self.__src_pad.set_blocked_async(False, self.__link_unblocked_cb)
 
             self.logdebug("link_and_unblock_stream, can_unblock: %s", can_unblock)
@@ -1530,7 +1529,7 @@ class StreamBin(gst.Bin, Logger):
         self.lock.acquire()
 
         if not self.needs_unlink or self.__adder_pad is None:
-            self.loginfo("stream is already unlinked.  huh? %s", self.cutted_uri)
+            self.logdebug("stream is already unlinked.  huh? %s", self.cutted_uri)
             self.lock.release()
             return 
         
@@ -1753,7 +1752,7 @@ class StreamBin(gst.Bin, Logger):
 
         self.fading = True
         self.__volume.set_passthrough(False)
-        #self.logdebug("New Volume data: %s",self.__fader.get_data("volume"))
+        self.logdebug("New Volume data: %s",self.__fader.get_data("volume"))
     
     def reuse(self):
         self.__player.emit("reuse-stream", self.new_uri, self.cutted_uri)
@@ -1771,7 +1770,7 @@ class StreamBin(gst.Bin, Logger):
 
         if self.crossfade > 0:
             to_fade = []
-            self.loginfo("searching stream to remove...")
+            self.logdebug("searching stream to remove...")
             self.__player.stream_list_lock.acquire()
             for pstream in self.__player.streams:
                 if pstream == self: continue
@@ -1785,7 +1784,7 @@ class StreamBin(gst.Bin, Logger):
                     need_reap = True
 
             self.__player.stream_list_lock.release()
-            self.loginfo("Finish searching stream to remove, %d need to fade out", len(to_fade))
+            self.logdebug("Finish searching stream to remove, %d need to fade out", len(to_fade))
             
             for pstream in to_fade:
                 fade_out_start = 1.0
@@ -1842,9 +1841,9 @@ class StreamBin(gst.Bin, Logger):
     def __src_blocked_cb(self, pad, blocked):
         start_stream = False
         self.lock.acquire()
-        self.loginfo("__src_blocked_cb -> stream %s state:%s", self.cutted_uri, self.get_str_state())
+        self.logdebug("__src_blocked_cb -> stream %s state:%s", self.cutted_uri, self.get_str_state())
         if self.src_blocked:
-            self.loginfo("stream %s already blocked", self.cutted_uri)
+            self.logdebug("stream %s already blocked", self.cutted_uri)
             self.lock.release()
             return
 
@@ -1876,7 +1875,7 @@ class StreamBin(gst.Bin, Logger):
     def preroll_stream(self):
         ret = True
         unblock = False
-        self.loginfo("preroll_stream -> block stream %s self.__src_pad  cb:self.__src_blocked_cb state:%s", self.cutted_uri , self.get_str_state())
+        self.logdebug("preroll_stream -> block stream %s self.__src_pad  cb:self.__src_blocked_cb state:%s", self.cutted_uri , self.get_str_state())
         self.__src_pad.set_blocked_async(True, self.__src_blocked_cb)
         self.emitted_playing = False
         self.state = PREROLLING
@@ -1905,7 +1904,7 @@ class StreamBin(gst.Bin, Logger):
             ret = False
 
         if unblock:
-            self.loginfo("preroll_stream -> unblock stream %s __src_pad cb:None state:%s", self.cutted_uri, self.get_str_state())
+            self.logdebug("preroll_stream -> unblock stream %s __src_pad cb:None state:%s", self.cutted_uri, self.get_str_state())
             self.__src_pad.set_blocked_async(False)
         
         if not ret:
