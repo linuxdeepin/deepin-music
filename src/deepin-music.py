@@ -28,6 +28,7 @@ class DeepinMusicApp(Logger):
     app_instance = None
     app_ready = False
     db_ready = False
+    splash = None
     
     def __init__(self):
         
@@ -128,12 +129,12 @@ class DeepinMusicApp(Logger):
         group.add_option("--version", dest="ShowVersion", action="store_true",
                 help="Show program's version number and exit.")
         group.add_option("--start-minimized", dest="StartMinimized",
-                action="store_true", default=False, help="Start minimized (to tray, if possible)")
+                action="store_true", default=False, help="Start minimized")
         group.add_option("--toggle-visible", dest="GuiToggleVisible",
                 action="store_true", default=False,
                 help="Toggle visibility of the GUI (if possible)")
         group.add_option("--start-anyway", dest="StartAnyway",
-                action="store_true", default=False, help="options like --play start DMusic if it is not running")
+                action="store_true", default=False, help="Options like --play start DMusic if it is not running")
         p.add_option_group(group)
         
         group = OptionGroup(p, 'Development/Debug Options')
@@ -172,6 +173,8 @@ class DeepinMusicApp(Logger):
         self.loginfo("Loading settings...")
         from config import config        
         config.load()
+        
+        self.__show_splash()
 
         # Loaded MediaDB.
         self.loginfo("Loading MediaDB...")
@@ -194,6 +197,9 @@ class DeepinMusicApp(Logger):
         
     def on_ready_cb(self, app):
         self.app_ready = True
+        import glib
+        if self.splash is not None:
+            glib.idle_add(self.splash.destroy)
         self.post_start()
         
     def on_db_loaded(self, *args, **kwargs):    
@@ -221,6 +227,12 @@ class DeepinMusicApp(Logger):
             if self.options.StartAnyway and self.check_result == "command":
                 import dbus_manager
                 dbus_manager.run_commands(self.options, self.dbus)
+                
+    def __show_splash(self):            
+        import widget
+        from config import config
+        self.splash = widget.show_splash(config.getboolean("setting", "use_splash"))
+        
                         
 
 if __name__ == "__main__":
