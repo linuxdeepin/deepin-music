@@ -392,7 +392,7 @@ class SongView(ListView):
     def async_add_uris(self, uris, follow_folder=True):        
         if not isinstance(uris, (list, tuple, set)):
             uris = [ uris ]
-        uris = [ utils.get_uri_from_path(uri) for uri in uris if not uri.startswith("file://")]    
+        print uris    
         utils.async_parse_uris(uris, follow_folder, True, self.add_uris)
         
     def __remove_songs(self, db, song_type, songs):    

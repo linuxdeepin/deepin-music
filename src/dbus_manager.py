@@ -52,7 +52,6 @@ def check_exit(options, args):
             if args:
                 if args[0] == "-":
                     args = sys.stdin.read().split("n")
-                
                 iface.Enqueue(args)
                 
     if not iface:            

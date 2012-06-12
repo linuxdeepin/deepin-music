@@ -519,7 +519,7 @@ def move_to_trash(uri):
 def download_iterator(remote_uri, local_uri, buffer_len=4096, timeout=DEFAULT_TIMEOUT):
     
     try:
-        logger.loginfo("download %s starting...", remote_uri)
+        logger.logdebug("download %s starting...", remote_uri)
         handle_read = urlopen(remote_uri, timeout=timeout)
         handle_write = file(get_path_from_uri(local_uri), "w")
         info = handle_read.info()
@@ -541,7 +541,7 @@ def download_iterator(remote_uri, local_uri, buffer_len=4096, timeout=DEFAULT_TI
             
         handle_read.close()    
         handle_write.close()
-        logger.loginfo("download %s finish" % remote_uri)
+        logger.logdebug("download %s finish" % remote_uri)
     except GeneratorExit:    
         try:
             unlink(local_uri)
@@ -557,7 +557,7 @@ def download_iterator(remote_uri, local_uri, buffer_len=4096, timeout=DEFAULT_TI
     
 def download(remote_uri, local_uri, net_encode=None, buffer_len=4096, timeout=DEFAULT_TIMEOUT):
     try:
-        logger.loginfo("download %s starting...", remote_uri)
+        logger.logdebug("download %s starting...", remote_uri)
         handle_read = urlopen(remote_uri, timeout=timeout)
         handle_write = file(local_uri, "w")
         
@@ -574,7 +574,7 @@ def download(remote_uri, local_uri, net_encode=None, buffer_len=4096, timeout=DE
             
         handle_read.close()    
         handle_write.close()
-        logger.loginfo("download %s finish." % remote_uri)
+        logger.logdebug("download %s finish." % remote_uri)
         
     except:
         logger.logexception("Error while downloading %s", remote_uri)
