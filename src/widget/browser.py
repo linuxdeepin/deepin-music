@@ -339,13 +339,6 @@ class Browser(gtk.VBox, SignalContainer):
         return button    
     
     def expose_left_box_mask(self, widget, event):
-        # cr = widget.window.cairo_create()
-        # rect = widget.allocation
-        # color_info = app_theme.get_alpha_color("playlistRight").get_color_info()
-        # cr.set_source_rgba(*alpha_color_hex_to_cairo(color_info))
-        # cr.rectangle(rect.x, rect.y, rect.width, rect.height)
-        # cr.fill()
-        # return False
         cr = widget.window.cairo_create()
         rect = widget.allocation
         color_info = app_theme.get_shadow_color("playlistRight").get_color_info()

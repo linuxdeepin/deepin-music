@@ -358,15 +358,19 @@ class SongView(ListView):
         
     def popup_add_menu(self, x, y):
         menu_items = [
-            (None, "文件", self.__add_file),
+            (None, "文件", self.add_file),
             (None, "文件夹(包含子目录)", self.recursion_add_dir),
-            (None, "文件夹", self.__add_dir),
+            (None, "文件夹", self.add_dir),
             ]
         Menu(menu_items, True).show((x, y))
 
     
-    def __add_file(self):
-        uri = WinFile().run()        
+    def add_file(self, filename=None, play=False):
+        if filename is None:
+            uri = WinFile().run()        
+        else:    
+            uri = utils.get_uri_from_path(filename)
+            
         if uri and utils.file_is_supported(utils.get_path_from_uri(uri)):
             tags = {"uri": uri}
             try:
@@ -374,9 +378,9 @@ class SongView(ListView):
             except:    
                 pass
             else:
-                self.add_songs(song)
+                self.add_songs(song, play)
                 
-    def __add_dir(self):            
+    def add_dir(self):            
         select_dir = WinDir().run()
         if select_dir:
             utils.async_parse_uris([select_dir], True, False, self.add_uris)

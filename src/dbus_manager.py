@@ -1,202 +1,232 @@
-#! /usr/bin/env python
 # -*- coding: utf-8 -*-
+#! /usr/bin/env python
 
-# Copyright (C) 2011~2012 Deepin, Inc.
-#               2011~2012 Hou Shaohui
-#
+# Copyright (C) 2011 ~ 2012 Deepin, Inc.
+#               2011 ~ 2012 Hou Shaohui
+# 
 # Author:     Hou Shaohui <houshao55@gmail.com>
-# Maintainer: Hou ShaoHui <houshao55@gmail.com>
-#
+# Maintainer: Hou Shaohui <houshao55@gmail.com>
+# 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # any later version.
-#
+# 
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-#
+# 
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import gtk
 
+import os
+import sys
 
-import utils
+import dbus
+import dbus.service
+
+from logger import Logger
 from player import Player
 from helper import Dispatcher
+import utils
 
+OBJECT_PATH = "/com/linuxdeepin/DMusic"
+SERVICE_NAME = "com.linuxdeepin.DMusic"
 
-OBJECT_PATH = "/com/deepin/deepinmusicplayer"
-SERVICE_NAME = "com.deepin.DMusic"
+def check_dbus(bus, interface):
+    obj = bus.get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
+    dbus_iface = dbus.Interface(obj, 'org.freedesktop.DBus')
+    avail = dbus_iface.ListNames()
+    return interface in avail
 
-# try: 
-#     import dbus #@UnusedImport
-#     import dbus.service
-#     #Try connection du message bus
-#     dbus_version = getattr(dbus, 'version', (0, 0, 0))
-#     if dbus_version >= (0, 41, 0) and dbus_version < (0, 80, 0):
-#         dbus.SessionBus()
-#         import dbus.glib  #@UnusedImport
-#     elif dbus_version >= (0, 80, 0):
-#         from dbus.mainloop.glib import DBusGMainLoop
-#         DBusGMainLoop(set_as_default=True)
-#         dbus.SessionBus()
+def check_exit(options, args):
+    iface = None
+    if not options.NewInstance:
+        bus = dbus.SessionBus()
+        if check_dbus(bus, SERVICE_NAME):
+            remote_object = bus.get_object(SERVICE_NAME, OBJECT_PATH)
+            iface = dbus.Interface(remote_object, SERVICE_NAME)
+            iface.TestService("testing dbus service")
+            if args:
+                if args[0] == "-":
+                    args = sys.stdin.read().split("n")
+                args = [ os.path.abspath(arg) for arg in args ]    
+                iface.Enqueue(args)
+                
+    if not iface:            
+        for command in [ "GetArtist", "GetTitle", "GetAlbum", "GetLength", "GetPath",
+                         "Next", "Prev", "PlayPause", "Forward", "Rewind",                         
+                         "CurrentPosition", "GuiToggleVisible",
+                         ]:
+            if getattr(options, command):
+                return "command"
+        return "continue"    
+    
+    run_commands(options, iface)
+    return "exit"
 
-# except: dbus_imported = False
-# else: dbus_imported = True
-import dbus
-dbus_imported = True
-
-if not dbus_imported:
-    class DeepinMusicDBus(object):
-        def __init__(self, object_path=OBJECT_PATH):
-            pass
-    print "No dbus support"
-else:    
-    class DeepinMusicDBus(dbus.service.Object):
-        def __init__(self, object_path=OBJECT_PATH):
-            self.bus = dbus.SessionBus()
-            bus_name = dbus.service.BusName(SERVICE_NAME, bus=self.bus)
-            dbus.service.Object.__init__(self, bus_name, object_path)
+def run_commands(options, iface):
+    '''
+        Actually invoke any commands passed in.
+    '''
+    comm = False
+    info_commands = [ "GetArtist", "GetTitle", "GetAlbum", "GetLength", "GetPath" ]
+    for command in info_commands:
+        if getattr(options, command):
+            value = getattr(iface, command)()
+            print value
+            comm = True    
             
-        @dbus.service.method(SERVICE_NAME)    
-        def hello(self):
-            win = utils.get_main_window()
-            if win.get_property("visible"):
-                win.present()
-            return "Running"
+    control_commands = [ "Next", "Prev", "PlayPause", "Forward", "Rewind", "GuiToggleVisible" ]       
+    for command in control_commands:
+        if getattr(options, command):
+            getattr(iface, command)()
+            comm = True
+            
+    status_commands = [ "CurrentPosition" ]
+    for command in status_commands:
+        if getattr(options, command):
+            print getattr(iface, command)()
+            comm = True
+            
+    if not comm:        
+        iface.GuiToggleVisible()
+    
+class DeepinMusicDBus(dbus.service.Object, Logger):
+    
+    def __init__(self):
+        self.bus = dbus.SessionBus()
+        self.bus_name = dbus.service.BusName(SERVICE_NAME, bus=self.bus)
+        dbus.service.Object.__init__(self, self.bus_name, OBJECT_PATH)
+
+    @dbus.service.method(SERVICE_NAME, "s")
+    def TestService(self, arg):
+        '''
+            Just test the dbus object.
+        '''
+        self.loginfo(arg)
         
-        @dbus.service.method(SERVICE_NAME)
-        def focus(self):
-            win = utils.get_main_window()
-            win.grab_focus()
-            if win.get_property("visible"):
-                win.present()
-            return "Running"    
-            
-        @dbus.service.method(SERVICE_NAME)
-        def play(self, uris):
-            print "DBUS: play()"
-            # win = utils.get_main_window()
-            # win.window.set_cursor(gtk.gdk.Cursor(gtk.gdk.WATCH))
-            # utils.async_parse_uris(uris, True, False,
-            #         win.playlist_ui.playlist.current_item.song_view.play_uris, pos=None, sort=True)
-            return "Successful command "
-
-        @dbus.service.method(SERVICE_NAME)
-        def play_device(self, value):
-            # Dispatcher.play_device(value)
-            return "Successful command "
-
-        @dbus.service.method(SERVICE_NAME)
-        def enqueue(self, uris):
-            print "DBUS: enqueue()"
-            # win = utils.get_main_window()
-            # win.window.set_cursor(gtk.gdk.Cursor(gtk.gdk.WATCH))    
-            # async_parse_uris(uris, True, True,
-                    # self.win.playlist_ui.playlist.add_uris, pos=None, sort=True)
-            return "Successful command "
-    
-    
-        @dbus.service.method(SERVICE_NAME)
-        def quit(self):
-            Dispatcher.quit()
-            return "Successful command "
+    @dbus.service.method(SERVICE_NAME)
+    def Quit(self):
+        Dispatcher.quit()
+        return "Successful command "
         
-        @dbus.service.method(SERVICE_NAME)
-        def previous(self):
-            Player.previous()
-            return "Successful command "
+    @dbus.service.method(SERVICE_NAME, None, "b")
+    def IsPlaying(self):    
+        return not Player.is_paused()
     
-        @dbus.service.method(SERVICE_NAME)
-        def forward(self):
-            Player.forward()
-            return "Successful command "
+    @dbus.service.method(SERVICE_NAME)
+    def Prev(self):
+        Player.previous()
+        return "Successful command "
     
-        @dbus.service.method(SERVICE_NAME)
-        def rewind(self):
-            Player.rewind()
-            return "Successful command "
+    @dbus.service.method(SERVICE_NAME)
+    def Forward(self):
+        Player.forward()
+        return "Successful command "
     
-        @dbus.service.method(SERVICE_NAME)
-        def next(self):
-            Player.next()
-            return "Successful command "
+    @dbus.service.method(SERVICE_NAME)
+    def Rewind(self):
+        Player.rewind()
+        return "Successful command "
     
-        @dbus.service.method(SERVICE_NAME)
-        def play_pause(self):
-            Player.playpause()
-            return "Successful command "
+    @dbus.service.method(SERVICE_NAME)
+    def Next(self):
+        Player.next()
+        return "Successful command "
+    
+    @dbus.service.method(SERVICE_NAME)
+    def PlayPause(self):
+        Player.playpause()
+        return "Successful command "
 
-        @dbus.service.method(SERVICE_NAME)
-        def stop(self):
-           Player.stop()
-           return "Successful command "
+    @dbus.service.method(SERVICE_NAME)
+    def Stop(self):
+        Player.stop()
+        return "Successful command "
+        
+    @dbus.service.method(SERVICE_NAME, None, "s")
+    def GetPath(self):
+        if not Player.is_paused():
+            song = Player.song    
+            return song.get_path()
+        else:
+            return ""
+        
+    @dbus.service.method(SERVICE_NAME, None, "s")
+    def GetTitle(self):
+        if not Player.is_paused():
+            song = Player.song
+            return song.get_str("title")
+        else:
+            return ""
+
+    @dbus.service.method(SERVICE_NAME, None, "s")
+    def GetArtist(self):
+        if not Player.is_paused():
+            song = Player.song
+            return song.get_str("artist")
+        else:
+            return ""
     
-        @dbus.service.method(SERVICE_NAME)
-        def volume(self, value):
-            try: value = float(value)
-            except:
-                return "Fail to set volume"
-            else:
-                Dispatcher.volume(value)
-                return "Successful command "
+    @dbus.service.method(SERVICE_NAME, None, "s")
+    def GetUri(self):
+        if not Player.is_paused():
+            song = Player.song
+            return song.get_str("uri")
+        else:
+            return ""
+
+    @dbus.service.method(SERVICE_NAME, None, "s")
+    def GetAlbum(self):
+        if not Player.is_paused():
+            song = Player.song
+            return song.get_str("album")
+        else:
+            return ""
+        
+    @dbus.service.method(SERVICE_NAME, None, "i")
+    def GetLength(self):
+        return Player.get_length()
+
+    @dbus.service.method(SERVICE_NAME, None, "i")
+    def CurrentPosition(self):
+        return Player.get_position()
     
-        @dbus.service.method(SERVICE_NAME)
-        def current_playing(self):
-            if not Player.is_paused():
-                song = Player.song    
-                return str(song.get_str("title") + " - (" + song.get_str("album") + " - " + song.get_str("artist") + ")")
-            else:
-                return ""
-
-        @dbus.service.method(SERVICE_NAME)
-        def get_title(self):
-            if not Player.is_paused():
-                song = Player.song
-                return song.get_str("title")
-            else:
-                return None
-
-        @dbus.service.method(SERVICE_NAME)
-        def get_artist(self):
-            if not Player.is_paused():
-                song = Player.song
-                return song.get_str("artist")
-            else:
-                return ""
-    
-        @dbus.service.method(SERVICE_NAME)
-        def get_uri(self):
-            if not Player.is_paused():
-                song = Player.song
-                return song.get_str("uri")
-            else:
-                return ""
-
-        @dbus.service.method(SERVICE_NAME)
-        def get_album(self):
-            if not Player.is_paused():
-                song = Player.song
-                return song.get_str("album")
-            else:
-                return ""
-
-        @dbus.service.method(SERVICE_NAME)
-        def current_position(self):
-            return Player.get_position()
+    @dbus.service.method(SERVICE_NAME, "d", "b")
+    def Changevolume(self, value):
+        try: value = float(value)
+        
+        except:
+            return False
+        else:
+            Dispatcher.volume(value)
+            return True
+        
+    @dbus.service.method(SERVICE_NAME, 's')
+    def PlayFile(self, filename):
+        """
+            Plays the specified file
+        """
+        app_instance = utils.get_main_window()
+        current_view = app_instance.playlist_ui.get_selected_song_view()
+        if current_view:
+            current_view.add_file(filename, True)
             
-        @dbus.service.method(SERVICE_NAME)
-        def current_song_length(self):
-            return Player.get_length()
+    @dbus.service.method(SERVICE_NAME, 'as')
+    def Enqueue(self, locations):        
+        app_instance = utils.get_main_window()
+        current_view = app_instance.playlist_ui.get_selected_song_view()
+        if current_view:
+            current_view.async_add_uris(locations)
 
-        @dbus.service.method(SERVICE_NAME)
-        def playing(self):
-            return not Player.is_paused()
-
-        @dbus.service.method(SERVICE_NAME)
-        def dump_gstplayer_state(self):
-            return Player.bin.dump_state()
+    @dbus.service.method(SERVICE_NAME, None, "s")
+    def DumpGstplayerState(self):
+        return Player.bin.dump_state()
     
+    @dbus.service.method(SERVICE_NAME)
+    def GuiToggleVisible(self):
+        app_instance = utils.get_main_window()
+        app_instance.toggle_visible(True)

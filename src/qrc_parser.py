@@ -173,16 +173,3 @@ if __name__ == "__main__":
     import sys
     a = LrcParser()
     a.parser_from_file(sys.argv[1])
-
-        
-                
-                
-        
-        
-                    
-                    
-                    
-            
-        
-        
-        

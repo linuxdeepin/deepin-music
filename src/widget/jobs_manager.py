@@ -26,7 +26,6 @@ import gobject
 import threading
 from dtk.ui.button import ImageButton, ToggleButton
 from dtk.ui.label import Label
-from dtk.ui.throbber import Throbber, MODE_SPINNING
 
 from logger import Logger
 from widget.skin import app_theme

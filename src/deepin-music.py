@@ -21,65 +21,131 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys
+from logger import Logger
 
-if "--help" in sys.argv or "-h" in sys.argv:
-    from option_parser import DMusicOptionParser
-    DMusicOptionParser()
-    sys.exit(0)
-
-
-import gobject
-gobject.threads_init()
-
-import pygtk
-pygtk.require("2.0")
-
-import gtk
-if gtk.pygtk_version < (2,6) or gtk.gtk_version < (2, 6):
-    raise ImportError,"Need GTK > 2.6.0"
-gtk.gdk.threads_init()
-
-import pygst
-pygst.require("0.10")
-
-import gst
-if gst.pygst_version < (0, 10, 1):
-    raise ImportError,"Need Gstreamer >= 0.10.1"
-
-import mutagen 
-if mutagen.version < (1, 8):
-    raise ImportError,"Need mutagen >= 1.8"
-
-from findfile import get_cache_file
-PIDFILE = get_cache_file("dmusic.pid")
-
-from widget.skin import app_theme
-from config import config
-from library import MediaDB
-from player import Player
-from pinyin import TransforDB
-
-from widget.main import DeepinMusic
-from option_parser import DMusicOptionParser
-
-
-
-class DeepinMusicApp(object):
+class DeepinMusicApp(Logger):
     app_instance = None
     app_ready = False
     db_ready = False
     
     def __init__(self):
-        self.option = DMusicOptionParser()
-        self.option.run_preload()
+        
+        (self.options, self.args) = self.get_options().parse_args()
+        
+        if self.options.ShowVersion:
+            self.version()
+            return
+        
+        # initial mainloop setup. The actual loop is started later,
+        self.mainloop_init()
+        
+        #initialize DbusManager
+        import dbus_manager
+        result = dbus_manager.check_exit(self.options, self.args)
+
+        if result == "exit":
+            sys.exit(0)
+        elif result == "command":    
+            sys.exit(0)
+            
+        self.dbus = dbus_manager.DeepinMusicDBus()    
+        
+        #load the rest.
+        self.__init()
+
+        
+    def get_options(self):    
+        
+        from optparse import OptionParser, OptionGroup, IndentedHelpFormatter
+        class OverrideHelpFormatter(IndentedHelpFormatter):
+            """
+                Merely for translation purposes
+            """
+            def format_usage(self, usage):
+                return '%s\n' % usage
+            
+        usage = "Usage: deepin-music-player [OPTION]... [URI]"    
+        p = OptionParser(usage=usage, add_help_option=False,
+            formatter=OverrideHelpFormatter())
+        
+        group = OptionGroup(p, 'Playback Options')
+        group.add_option("-n", "--next", dest="Next", action="store_true", default=False, help="Play the next track")
+        group.add_option("-p", "--prev", dest="Prev", action="store_true", default=False, help="Play the previous track")
+        group.add_option("-t", "--play-pause", dest="PlayPause", action="store_true", default=False, help="Pause or resume playback")        
+        group.add_option("-f", "--forward", dest="Forward", action="store_true", default=False, help="Forward playback")
+        group.add_option("-R", "--rewind", dest="Rewind", action="store_true", default=False, help="Rewind playback")
+        p.add_option_group(group)
+        
+        group = OptionGroup(p, 'Track Options')
+        group.add_option("--get-title", dest="GetTitle", action="store_true", default=False, help="Print the title of current track")
+        group.add_option("--get-album", dest="GetAlbum", action="store_true", default=False, help="Print the album of current track")
+        group.add_option("--get-artist", dest="GetArtist", action="store_true", default=False, help="Print the artist of current track")
+        group.add_option("--get-length", dest="GetLength", action="store_true", default=False, help="Print the length of current track")
+        group.add_option("--get-path", dest="GetPath", action="store_true", default=False, help="Print the path of current track")
+        group.add_option("--current-position", dest="CurrentPosition",
+                action="store_true", default=False, help="Print the current playback position as time")
+        p.add_option_group(group)
+        
+        group = OptionGroup(p, 'Other Options')
+        group.add_option("--new", dest="NewInstance", action="store_true",
+                default=False, help="Start new instance")
+        group.add_option("-h", "--help", action="help",
+                help="Show this help message and exit")
+        group.add_option("--version", dest="ShowVersion", action="store_true",
+                help="Show program's version number and exit.")
+        group.add_option("--toggle-visible", dest="GuiToggleVisible",
+                action="store_true", default=False,
+                help="Toggle visibility of the GUI (if possible)")
+        p.add_option_group(group)
+        
+        return p
+    
+    def version(self):
+        print "Deepin Music Player 1.0"
+        
+        
+    def mainloop_init(self):    
+        import gobject
+        gobject.threads_init()
+        
+        # dbus_init.
+        import dbus, dbus.mainloop.glib
+        dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
+        dbus.mainloop.glib.threads_init()
+        dbus.mainloop.glib.gthreads_init()
+        
+        # gtk_init.
+        import gtk
+        gtk.gdk.threads_init()
+        
+    def __init(self):        
+        # Loaded theme file.
+        self.loginfo("Loading application theme...")
+        from widget.skin import app_theme        
+        
+        # Loaded configure.
+        self.loginfo("Loading settings...")
+        from config import config        
         config.load()
+
+        # Loaded MediaDB.
+        self.loginfo("Loading MediaDB...")
+        from library import MediaDB
         MediaDB.connect("loaded", self.on_db_loaded)
         MediaDB.load()
-        TransforDB.load()
-        self.app_instance = DeepinMusic()
-        self.app_instance.connect("ready", self.on_ready_cb)
+        
+        # Loaded Chinese to Pinyin DB.
+        from pinyin import TransforDB        
+        TransforDB.load()        
+        
+        # initialize Gui
+        self.loginfo("Initialize Gui...")
+        from widget.main import DeepinMusic        
+        app_instance = DeepinMusic()
+        app_instance.connect("ready", self.on_ready_cb)
+        import gtk
         gtk.main()
-    
+
     def on_ready_cb(self, app):
         self.app_ready = True
         self.post_start()
@@ -90,7 +156,12 @@ class DeepinMusicApp(object):
         
     def post_start(self):    
         if self.db_ready and self.app_ready:
+            from player import Player            
             Player.load()
+        
 
 if __name__ == "__main__":
     DeepinMusicApp()
+    
+    
+    

@@ -25,11 +25,8 @@ import traceback
 import dbus
 
 from optparse import OptionParser
-
 import logger
-
 from library import MediaDB
-
 
 class DMusicOptionParser(object):
     usage = "usage: %prog [options] [FILE_TO_PLAY ...]"

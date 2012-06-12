@@ -35,10 +35,10 @@ from widget.tray import TrayIcon
 from config import config
 from player import Player
 from library import MediaDB
-from dbus_manager import DeepinMusicDBus
 from helper import Dispatcher
+from logger import Logger
 
-class DeepinMusic(gobject.GObject):
+class DeepinMusic(gobject.GObject, Logger):
     __gsignals__ = {"ready" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ())}
     
     def __init__(self):
@@ -55,7 +55,7 @@ class DeepinMusic(gobject.GObject):
             )
 
         self.window = application.window
-        utils.set_main_window(self.window)
+        utils.set_main_window(self)
         
         if config.get("window", "x") == "-1":
             self.window.set_position(gtk.WIN_POS_CENTER)
@@ -75,8 +75,6 @@ class DeepinMusic(gobject.GObject):
         
         self.playlist_ui = PlaylistUI()    
         self.header_bar = HeaderBar()
-        self.dbus_service = DeepinMusicDBus()
-
 
         bottom_box = gtk.HBox()
         browser_align = gtk.Alignment()
@@ -107,6 +105,7 @@ class DeepinMusic(gobject.GObject):
         self.tray_icon = None
         gobject.idle_add(self.ready)
         
+        
     def quit(self, *param):    
         self.__save_configure()
         if config.get("setting", "close_to_tray") == "false" or self.tray_icon == None:
@@ -115,14 +114,12 @@ class DeepinMusic(gobject.GObject):
     def ready(self, show=True):    
         if show:
             self.window.show_all()
-            
         if config.getboolean("setting", "use_tray"):    
-            self.tray_icon = TrayIcon()
-            
+            self.tray_icon = TrayIcon(self)
         self.emit("ready")
         
     def force_quit(self, *args):    
-        print "Start quit..."
+        self.loginfo("Start quit...")
         self.header_bar.hide_lyrics()
         self.window.hide_all()
         Player.save_state()
@@ -130,14 +127,14 @@ class DeepinMusic(gobject.GObject):
         gobject.timeout_add(500, self.__idle_quit)
         
     def __idle_quit(self, *args):    
-        print "Exiting..."
+        self.loginfo("Exiting...")
         Player.stop()
         self.playlist_ui.save_to_library()
         MediaDB.save()
         config.write()
         self.window.destroy()        
         gtk.main_quit()
-        print "Exit successful."
+        self.loginfo("Exit successful.")
         
     def on_configure_event(self,widget=None,event=None):
         if widget.get_property("visible"):
@@ -154,7 +151,7 @@ class DeepinMusic(gobject.GObject):
                 self.tray_icon.destroy()
                 self.tray_icon = None
             elif not self.tray_icon and use_tray:    
-                self.tray_icon = TrayIcon()
+                self.tray_icon = TrayIcon(self)
 
     def __save_configure(self):            
         event = self.window.get_state()
@@ -163,3 +160,30 @@ class DeepinMusic(gobject.GObject):
         else:
             config.set("window", "state", "normal")
         self.window.hide_all()
+        
+    def toggle_visible(self, bring_to_front=False):    
+        if self.window.get_property("visible"):
+            if self.window.is_active():
+                if not bring_to_front:
+                    self.hide_to_tray()
+            else:    
+                self.window.present()
+        else:        
+            self.show_from_tray()
+            
+    def hide_to_tray(self):
+        event = self.window.get_state()
+        if event == gtk.gdk.WINDOW_STATE_MAXIMIZED:
+            config.set("window", "state", "maximized")
+        else:
+            config.set("window", "state", "normal")
+        self.window.hide_all()
+
+    def show_from_tray(self):
+        self.window.move(int(config.get("window", "x")), int(config.get("window", "y")))
+        window_state = config.get("window", "state")
+        if window_state == "maximized" :
+            self.window.maximize()
+        if window_state == "normal":
+            self.window.unmaximize()
+        self.window.show_all()

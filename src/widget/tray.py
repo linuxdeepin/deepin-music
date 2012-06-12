@@ -32,10 +32,11 @@ from helper import Dispatcher
 class BaseTrayIcon(object):
     '''Trayicon base, needs to be derived from.'''
     
-    def __init__(self):
+    def __init__(self, instance):
         self.update_icon()
         self.setup_menu()
         self.connect_events()
+        self.instance = instance
     
     def update_icon(self):
         self.set_from_pixbuf(app_theme.get_pixbuf("skin/logo.ico").get_pixbuf())
@@ -89,15 +90,8 @@ class BaseTrayIcon(object):
             if event.state == gtk.gdk.CONTROL_MASK:
                 Player.previous()
             else:
-                win = utils.get_main_window()
-                if win.get_property('visible'):
-                    if win.is_active():
-                        self.cacher()
-                    else:
-                        win.present()
-                else:
-                    self.montrer()
-                    
+                self.instance.toggle_visible()
+                
         elif event.button == 2:
             Player.playpause()
 
@@ -111,37 +105,14 @@ class BaseTrayIcon(object):
                 self.menu.show((int(x), int(y)))                
             
     def destroy(self):        
-        win = utils.get_main_window()
-        if not win.get_property("visible"):
-            win.deiconify()
-            win.present()
+        self.instance.toggle_visible(True)
         self.set_visible(False)    
-        
-    def cacher(self):
-        win = utils.get_main_window()
-        if win.window:
-            event = win.window.get_state()
-            if event == gtk.gdk.WINDOW_STATE_MAXIMIZED:
-                config.set("window", "state", "maximized")
-            else:
-                config.set("window", "state", "normal")
-            win.hide_all()
-
-    def montrer(self):
-        win = utils.get_main_window()
-        win.move(int(config.get("window", "x")), int(config.get("window", "y")))
-        window_state = config.get("window", "state")
-        if window_state == "maximized" :
-            win.maximize()
-        if window_state == "normal":
-            win.unmaximize()
-        win.show_all()
 
 class TrayIcon(gtk.StatusIcon, BaseTrayIcon):    
     
-    def __init__(self):
+    def __init__(self, instance):
         gtk.StatusIcon.__init__(self)
-        BaseTrayIcon.__init__(self)
+        BaseTrayIcon.__init__(self, instance)
         
     def get_menu_position(self, menu, icon):    
         return gtk.status_icon_position_menu(menu, icon)

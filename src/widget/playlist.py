@@ -172,6 +172,9 @@ class PlaylistUI(gtk.VBox):
         
     def __play_and_add(self, widget, song):    
         self.current_item.song_view.add_songs(song, play=True)
+        
+    def get_selected_song_view(self):    
+        return self.current_item.song_view
             
     def search_cb(self, widget, text):        
         if not self.search_flag:
@@ -384,7 +387,6 @@ class PlaylistUI(gtk.VBox):
             self.entry_box.entry.set_text("")
             self.entry_box.hide_all()
             self.entry_box.set_no_show_all(True)            
-              
             
     def popup_detail_menu(self, widget, x, y, item, select_items):        
         if self.detail_menu != None:
@@ -418,7 +420,6 @@ class PlaylistUI(gtk.VBox):
                                  (None, "编辑歌曲信息", self.current_item.song_view.open_song_editor),
                                  ], True)
         self.detail_menu.show((int(x), int(y)))
-        
         
     def save_to_library(self):    
         if self.search_flag:
