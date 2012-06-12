@@ -20,6 +20,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import sys
 from logger import Logger
 
@@ -32,27 +33,49 @@ class DeepinMusicApp(Logger):
         
         (self.options, self.args) = self.get_options().parse_args()
         
-        if self.options.ShowVersion:
-            self.version()
-            return
+        # Run preload.
+        self.run_preload()
         
         # initial mainloop setup. The actual loop is started later,
         self.mainloop_init()
         
         #initialize DbusManager
         import dbus_manager
-        result = dbus_manager.check_exit(self.options, self.args)
+        self.check_result = dbus_manager.check_exit(self.options, self.args)
 
-        if result == "exit":
+        if self.check_result == "exit":
             sys.exit(0)
-        elif result == "command":    
-            sys.exit(0)
+        elif self.check_result == "command":    
+            if not self.options.StartAnyway:
+                sys.exit(0)
             
         self.dbus = dbus_manager.DeepinMusicDBus()    
         
         #load the rest.
         self.__init()
-
+        
+        from widget.main import mainloop    
+        mainloop()
+            
+        
+    def run_preload(self):  
+        if self.options.Debug is not None:
+            import logger
+            try: logger.setLevelNo(int(self.options.Debug))
+            except: 
+                print "Debug level incorrect"
+                sys.exit(0)
+            
+        if self.options.MimetypeSupport:
+            from utils import FORMATS
+            print "Mimetypes supported: ",
+            print ",".join([ ",".join(i._mimes) for i in FORMATS ])
+            print "Missing Gstreamer plugins for full support: N/A "
+            sys.exit(0)
+            
+        if self.options.ShowVersion:
+            self.version()
+            sys.exit(0)
         
     def get_options(self):    
         
@@ -73,7 +96,18 @@ class DeepinMusicApp(Logger):
         group.add_option("-p", "--prev", dest="Prev", action="store_true", default=False, help="Play the previous track")
         group.add_option("-t", "--play-pause", dest="PlayPause", action="store_true", default=False, help="Pause or resume playback")        
         group.add_option("-f", "--forward", dest="Forward", action="store_true", default=False, help="Forward playback")
-        group.add_option("-R", "--rewind", dest="Rewind", action="store_true", default=False, help="Rewind playback")
+        group.add_option("-r", "--rewind", dest="Rewind", action="store_true", default=False, help="Rewind playback")
+        group.add_option("-s", "--stop", dest="Stop", action="store_true", default=False, help="Stop playback")
+        
+        p.add_option_group(group)
+        
+        # group = OptionGroup(p, 'Collection Options')
+        # group.add_option("--add", dest="Add", action="store",
+        #         metavar="LOCATION", help="Add tracks from LOCATION(files or dirs) to the collection")
+        # p.add_option_group(group)
+        
+        group = OptionGroup(p, 'Volume Options')
+        group.add_option("-v", "--change-vol", dest="ChangeVolume", action="store", default=None, help="Change volume (VOLUME 0.0-1.0)")
         p.add_option_group(group)
         
         group = OptionGroup(p, 'Track Options')
@@ -93,16 +127,27 @@ class DeepinMusicApp(Logger):
                 help="Show this help message and exit")
         group.add_option("--version", dest="ShowVersion", action="store_true",
                 help="Show program's version number and exit.")
+        group.add_option("--start-minimized", dest="StartMinimized",
+                action="store_true", default=False, help="Start minimized (to tray, if possible)")
         group.add_option("--toggle-visible", dest="GuiToggleVisible",
                 action="store_true", default=False,
                 help="Toggle visibility of the GUI (if possible)")
+        group.add_option("--start-anyway", dest="StartAnyway",
+                action="store_true", default=False, help="options like --play start DMusic if it is not running")
+        p.add_option_group(group)
+        
+        group = OptionGroup(p, 'Development/Debug Options')
+        group.add_option("--debug", dest="Debug", action="store", default=None, help="Change debug level (0-9)")
+        # group.add_option('--startgui', dest='StartGui', action='store_true', default=False)
+        # group.add_option('--no-dbus', dest='Dbus', action='store_false', default=True, help="Disable D-Bus support")
+        group.add_option("--mimetype-support", action="store_true", dest="MimetypeSupport", default=False, 
+                         help="show information about supported audio file")
         p.add_option_group(group)
         
         return p
     
     def version(self):
         print "Deepin Music Player 1.0"
-        
         
     def mainloop_init(self):    
         import gobject
@@ -141,11 +186,12 @@ class DeepinMusicApp(Logger):
         # initialize Gui
         self.loginfo("Initialize Gui...")
         from widget.main import DeepinMusic        
-        app_instance = DeepinMusic()
-        app_instance.connect("ready", self.on_ready_cb)
-        import gtk
-        gtk.main()
+        self.app_instance = DeepinMusic()
+        self.app_instance.connect("ready", self.on_ready_cb)
 
+        if self.options.StartMinimized:
+            self.app_instance.window.iconify()
+        
     def on_ready_cb(self, app):
         self.app_ready = True
         self.post_start()
@@ -156,9 +202,26 @@ class DeepinMusicApp(Logger):
         
     def post_start(self):    
         if self.db_ready and self.app_ready:
-            from player import Player            
-            Player.load()
-        
+            restore = True
+            if self.app_instance:
+                current_view = self.app_instance.playlist_ui.get_selected_song_view()
+                from utils import convert_args_to_uris
+                args = convert_args_to_uris(self.args)
+                if len(args) > 0:
+                    if current_view:
+                        restore = False
+                        current_view.add_file(args[0], play=True)
+                if args[1:]:
+                    if current_view:
+                        current_view.async_add_uris(args[1:], False)
+            if restore:
+                from player import Player            
+                Player.load()
+                
+            if self.options.StartAnyway and self.check_result == "command":
+                import dbus_manager
+                dbus_manager.run_commands(self.options, self.dbus)
+                        
 
 if __name__ == "__main__":
     DeepinMusicApp()

@@ -21,9 +21,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import os
 import sys
-
 import dbus
 import dbus.service
 
@@ -41,6 +39,8 @@ def check_dbus(bus, interface):
     avail = dbus_iface.ListNames()
     return interface in avail
 
+
+
 def check_exit(options, args):
     iface = None
     if not options.NewInstance:
@@ -52,12 +52,12 @@ def check_exit(options, args):
             if args:
                 if args[0] == "-":
                     args = sys.stdin.read().split("n")
-                args = [ os.path.abspath(arg) for arg in args ]    
+                
                 iface.Enqueue(args)
                 
     if not iface:            
         for command in [ "GetArtist", "GetTitle", "GetAlbum", "GetLength", "GetPath",
-                         "Next", "Prev", "PlayPause", "Forward", "Rewind",                         
+                         "Next", "Prev", "PlayPause", "Forward", "Rewind", "Stop", "ChangeVolume",
                          "CurrentPosition", "GuiToggleVisible",
                          ]:
             if getattr(options, command):
@@ -79,11 +79,19 @@ def run_commands(options, iface):
             print value
             comm = True    
             
+            
     control_commands = [ "Next", "Prev", "PlayPause", "Forward", "Rewind", "GuiToggleVisible" ]       
     for command in control_commands:
         if getattr(options, command):
             getattr(iface, command)()
             comm = True
+            
+            
+    volume_commands = [ "ChangeVolume" ]        
+    for command in volume_commands:
+        value = getattr(options, command)
+        if value:
+           iface.ChangeVolume(value)
             
     status_commands = [ "CurrentPosition" ]
     for command in status_commands:
@@ -196,7 +204,7 @@ class DeepinMusicDBus(dbus.service.Object, Logger):
         return Player.get_position()
     
     @dbus.service.method(SERVICE_NAME, "d", "b")
-    def Changevolume(self, value):
+    def ChangeVolume(self, value):
         try: value = float(value)
         
         except:
@@ -220,7 +228,8 @@ class DeepinMusicDBus(dbus.service.Object, Logger):
         app_instance = utils.get_main_window()
         current_view = app_instance.playlist_ui.get_selected_song_view()
         if current_view:
-            current_view.async_add_uris(locations)
+            uris = utils.convert_args_to_uris(locations)                
+            current_view.async_add_uris(uris)
 
     @dbus.service.method(SERVICE_NAME, None, "s")
     def DumpGstplayerState(self):

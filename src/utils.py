@@ -29,6 +29,7 @@ import shutil
 import gtk
 import gio
 import locale
+import gobject
 import time
 from time import mktime, strptime
 import threading
@@ -132,6 +133,10 @@ def make_uri_from_shell_arg(arg):
     if scheme: return arg
     else: 
         return "file://" + pathname2url(os.path.abspath(os.path.expanduser(arg)))
+    
+def convert_args_to_uris(args):
+    uris = [ make_uri_from_shell_arg(arg) for arg in args if arg and arg.strip() ]
+    return uris
 
 
 def get_ext(uri, complete=True):
@@ -432,10 +437,9 @@ def parse_uris(uris, follow_folder=True, follow_playlist=True, callback=None, *a
                 
     logger.loginfo("parse uris found %s uris", len(valid_uris))            
     if callback:
-        # def launch_callback(callback, uris, args, kwargs):
-        #     callback(uris, *args, **kwargs)
-        # gobject.idle_add(launch_callback, callback, list(valid_uris), args_cb, kwargs_cb)    
-        callback(list(valid_uris), *args_cb, **kwargs_cb)
+        def launch_callback(callback, uris, args, kwargs):
+            callback(uris, *args, **kwargs)
+        gobject.idle_add(launch_callback, callback, list(valid_uris), args_cb, kwargs_cb)    
     else:    
         return valid_uris
     

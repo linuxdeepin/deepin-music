@@ -378,7 +378,7 @@ class SongView(ListView):
             except:    
                 pass
             else:
-                self.add_songs(song, play)
+                self.add_songs(song, play=play)
                 
     def add_dir(self):            
         select_dir = WinDir().run()
@@ -389,9 +389,10 @@ class SongView(ListView):
         pos = len(self.items)
         ImportPlaylistJob(None, self.add_songs, pos)
             
-    def async_add_uris(self, uris, follow_folder=False):        
+    def async_add_uris(self, uris, follow_folder=True):        
         if not isinstance(uris, (list, tuple, set)):
             uris = [ uris ]
+        uris = [ utils.get_uri_from_path(uri) for uri in uris if not uri.startswith("file://")]    
         utils.async_parse_uris(uris, follow_folder, True, self.add_uris)
         
     def __remove_songs(self, db, song_type, songs):    

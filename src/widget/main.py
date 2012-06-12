@@ -38,6 +38,10 @@ from library import MediaDB
 from helper import Dispatcher
 from logger import Logger
 
+def mainloop():    
+    gtk.main()
+
+
 class DeepinMusic(gobject.GObject, Logger):
     __gsignals__ = {"ready" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ())}
     
@@ -111,6 +115,7 @@ class DeepinMusic(gobject.GObject, Logger):
         if config.get("setting", "close_to_tray") == "false" or self.tray_icon == None:
             self.force_quit()
         
+            
     def ready(self, show=True):    
         if show:
             self.window.show_all()
