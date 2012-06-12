@@ -48,7 +48,6 @@ class HeaderBar(gtk.EventBox):
         self.cover_box = PlayerCoverButton()
         self.cover_box.show_all()
         self.equalizer_win = EqualizerWindow()
-        self.equalizer_win.equalizer_win.connect("hide", self.__set_equalizer_status)
         self.lyrics_display = LyricsModule()
         
         # swap played status handler
@@ -178,9 +177,6 @@ class HeaderBar(gtk.EventBox):
             
     def save_db(self, widget):    
         pass
-    
-    def __set_equalizer_status(self, widget):
-        config.set("equalizer", "status", "false")
         
     def right_click_cb(self, widget, event):    
         if event.button == 3:

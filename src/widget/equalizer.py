@@ -24,16 +24,18 @@ import gst
 import gtk
 from collections import OrderedDict
 
-from config import config
-from player import Player
-from logger import Logger
 from dtk.ui.scalebar import VScalebar
 from dtk.ui.box import ImageBox
 from dtk.ui.window import Window
 from dtk.ui.button import Button
+from dtk.ui.line import draw_vlinear
+from dtk.ui.titlebar import Titlebar
 from dtk.ui.menu import Menu
 from widget.skin import app_theme
-from dtk.ui.utils import get_widget_root_coordinate, move_window
+from dtk.ui.utils import get_widget_root_coordinate
+
+from config import config
+from player import Player
 
 class PreampScalebar(gtk.VBox):
     
@@ -155,8 +157,9 @@ MANDATORY["Soft Rock"] = "4:4:2.4:0.0:-4:-5.6:-3.2:0.0:2.4:8.8"
 MANDATORY["Techno"] = "8:5.6:0.0:-5.6:-4.8:0.0:8:9.6:9.6:8.8"
 
         
-class EqualizerWindow(Logger):        
-    def __init__(self, parent=""):
+class EqualizerWindow(Window):        
+    def __init__(self):
+        super(EqualizerWindow, self).__init__()
         
         try:
             pre_value = float(config.get("equalizer", "preamp"))
@@ -168,12 +171,9 @@ class EqualizerWindow(Logger):
         preamp_scale.scalebar.set_adjustment(pre_adjust)
         pre_adjust.connect("value-changed", self.preamp_change)
         
-        self.equalizer_win = Window()
-        # self.equalizer_win.set_transient_for(parent)
-        main_box = gtk.HBox(spacing=5)
-        main_box.pack_start(preamp_scale, False, False)
-        align = gtk.Alignment()
-        align.set_padding(5, 5, 10, 10)
+        self.connect("configure-event", self.equalizer_configure_event)
+        control_box = gtk.HBox(spacing=10)
+        control_box.pack_start(preamp_scale, False, False)
         self.__scales = {}
         
         for i, label in enumerate(["32", "64", "125", "250", "500", "1k", "2k", "4k", "8k", "16k"]):
@@ -187,8 +187,7 @@ class EqualizerWindow(Logger):
             adjust.changed_id = adjust.connect("value-changed", self.__on_adjust_change, i)
             slipper_scale.scalebar.set_adjustment(adjust)
             self.__scales[i] = slipper_scale.scalebar
-            main_box.pack_start(slipper_scale, False, False)
-        align.add(main_box)                    
+            control_box.pack_start(slipper_scale, False, False)
         
         try:
             self.__equalizer = gst.element_factory_make("equalizer-10bands")
@@ -215,21 +214,52 @@ class EqualizerWindow(Logger):
         self.predefine_button = Button("预设")
         self.predefine_button.connect("clicked", self.show_predefine)
             
-        button_box = gtk.HBox(spacing=30)
+        button_box = gtk.HBox(spacing=60)
         button_box.pack_start(self.active_button, False, False)
         button_box.pack_start(self.reset_button, False, False)
         button_box.pack_start(self.predefine_button, False, False)
         button_align = gtk.Alignment()
-        button_align.set_padding(5, 5, 10, 10)
+        button_align.set_padding(0, 10, 15, 10)
         button_align.add(button_box)
         
-        self.equalizer_win.window_frame.pack_start(align, False, False)    
-        self.equalizer_win.window_frame.pack_start(button_align,False, False)
-        self.add_move_window_event(self.equalizer_win)
+        
+
 
         
-    def add_move_window_event(self, widget):    
-        widget.connect("button-press-event", lambda w, e: move_window(w, e, widget))
+        self.titlebar = Titlebar(
+            ["close"],
+            None,
+            None,
+            "均衡器")
+        self.titlebar.set_size_request(-1, 30)        
+        
+        self.titlebar.close_button.connect("clicked", lambda w: self.hide_all())
+        self.add_move_event(self.titlebar)
+        
+        control_box_align = gtk.Alignment()
+        control_box_align.set(0.0, 0.0, 1.0, 1.0)
+        control_box_align.set_padding(10, 20, 15, 15)
+        control_box_align.add(control_box)
+        
+        main_align = gtk.Alignment()
+        main_align.set(0.0, 0.0, 1.0, 1.0)
+        main_align.set_padding(0, 5, 2, 2)
+        main_box = gtk.VBox(spacing=5)
+        main_align.add(main_box)
+        
+        main_box.add(control_box_align)
+        main_box.connect("expose-event", self.expose_mask_cb)
+        
+        self.window_frame.pack_start(self.titlebar, False, True)
+        self.window_frame.pack_start(main_align, False, True)    
+        self.window_frame.pack_start(button_align,False, False)
+
+        
+    def expose_mask_cb(self, widget, event):    
+        cr = widget.window.cairo_create()
+        rect = widget.allocation
+        draw_vlinear(cr, rect.x, rect.y, rect.width, rect.height, app_theme.get_shadow_color("linearBackground").get_color_info())
+        return False
         
     def db_to_percent(self, dB):    
         return 10 ** (dB / 10)
@@ -250,13 +280,19 @@ class EqualizerWindow(Logger):
             band_name = option.replace("equalizer-", "")
             self.__equalizer.set_property(band_name, float(value))
             
+            
+    def equalizer_configure_event(self, widget, event):        
+        if widget.get_property("visible"):
+            if widget.get_resizable():
+                config.set("equalizer","width","%d"%event.width)
+                config.set("equalizer","height","%d"%event.height)
+            config.set("equalizer","x","%d"%event.x)
+            config.set("equalizer","y","%d"%event.y)
+        
     def hide_win(self, widget):    
-        config.set("equalizer", "win_x", self.equalizer_win.get_position()[0])
-        config.set("equalizer", "win_y", self.equalizer_win.get_position()[1])
-        self.equalizer_win.hide_all()
+        self.hide_all()
         
     def __select_name(self):
-        
         self.menu_dict = OrderedDict()
         for  name in MANDATORY.keys():
             self.menu_dict[name] = [None, name, self.__change, name]
@@ -318,10 +354,8 @@ class EqualizerWindow(Logger):
         return True        
 
     def run(self):
-        self.equalizer_win.show_all()
-        try:
-            x = config.getint("equalizer", "win_x")
-            y = config.getint("equalizer", "win_y")
-            self.equalizer_win.move(x, y)
-        except: pass    
-
+        if config.get("equalizer", "x") == "-1":
+            self.set_position(gtk.WIN_POS_CENTER)
+        else:    
+            self.move(int(config.get("equalizer","x")),int(config.get("equalizer","y")))
+        self.show_all()

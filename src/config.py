@@ -55,15 +55,12 @@ class Config(gobject.GObject, Logger):
         ''' Load config items from the file. '''
         self._config.read(get_config_file(CONFIG_FILENAME))
     
-    def get(self, section, option, default=None):
+    def get(self, section, option, default=""):
         ''' specified the section for read the option value. '''
-        if default is None:
+        try:
             return self._config.get(section, option)
-        else:
-            try:
-                return self._config.get(section, option)
-            except:
-                return default
+        except:
+            return default
             
     def set(self, section, option, value):        
         if not self._config.has_section(section):
@@ -142,6 +139,10 @@ class Config(gobject.GObject, Logger):
             "playlist" : {
                 "current_index" : "0",
                 },
+            
+            "equalizer" : {
+                "x" : "-1",
+                }
             
             }
         
