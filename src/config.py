@@ -124,7 +124,8 @@ class Config(gobject.GObject, Logger):
                 "karaoke_mode" : "true",
                 "scroll_x" : "-1",
                 "scroll_y" : "-1",
-                "desktop_x" : "-1"
+                "desktop_x" : "-1",
+                "desktop_y" : "-1",
                 },
             
             "setting" : {

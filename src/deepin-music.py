@@ -20,7 +20,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
 import sys
 from logger import Logger
 
@@ -122,10 +121,10 @@ class DeepinMusicApp(Logger):
         p.add_option_group(group)
         
         group = OptionGroup(p, 'Other Options')
-        group.add_option("--new", dest="NewInstance", action="store_true",
-                default=False, help="Start new instance")
         group.add_option("-h", "--help", action="help",
                 help="Show this help message and exit")
+        group.add_option("--new", dest="NewInstance", action="store_true",
+                default=False, help="Start new instance")
         group.add_option("--version", dest="ShowVersion", action="store_true",
                 help="Show program's version number and exit.")
         group.add_option("--start-minimized", dest="StartMinimized",
@@ -142,7 +141,7 @@ class DeepinMusicApp(Logger):
         # group.add_option('--startgui', dest='StartGui', action='store_true', default=False)
         # group.add_option('--no-dbus', dest='Dbus', action='store_false', default=True, help="Disable D-Bus support")
         group.add_option("--mimetype-support", action="store_true", dest="MimetypeSupport", default=False, 
-                         help="show information about supported audio file")
+                         help="Show information about supported audio file")
         p.add_option_group(group)
         
         return p

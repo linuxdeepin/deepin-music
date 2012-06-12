@@ -545,7 +545,7 @@ class LyricsModule(object):
             config.set("lyrics","desktop_x","%d"%event.x)
             
     def show_desktop_lyrics(self):    
-        if config.get("lyrics", "desktop_x") == -1:
+        if config.get("lyrics", "desktop_x") == "-1":
             screen_w, screen_h = gtk.gdk.get_default_root_window().get_size()
             w , h = self.desktop_lyrics.lyrics_win.get_size()
             x = screen_w / 2 - w / 2

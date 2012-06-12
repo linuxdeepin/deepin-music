@@ -222,10 +222,6 @@ class EqualizerWindow(Window):
         button_align.set_padding(0, 10, 15, 10)
         button_align.add(button_box)
         
-        
-
-
-        
         self.titlebar = Titlebar(
             ["close"],
             None,
