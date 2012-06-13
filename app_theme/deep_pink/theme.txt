@@ -38,6 +38,19 @@
 		(0.95,	("#EFEFEF", 0.75)),
 		(1,		("#EFEFEF", 0.6)),
 	 ],
+     "settingMaskLeft" : [
+	    (0,		("#EFEFEF", 0.7)),
+		(0.05,	("#EFEFEF", 0.85)),
+		(0.95,	("#EFEFEF", 0.85)),
+		(1,		("#EFEFEF", 0.7)),
+	 ],
+     "settingMaskRight" : [
+	    (0,		("#EFEFEF", 0.8)),
+		(0.05,	("#EFEFEF", 0.95)),
+		(0.95,	("#EFEFEF", 0.95)),
+		(1,		("#EFEFEF", 0.8)),
+	 ],
+	 
 	 "simpleItemPress" : [
         (0, ("#5BAED0", 0.8)),
         (1, ("#5BAED0", 0.5))

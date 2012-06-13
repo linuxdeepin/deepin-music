@@ -328,14 +328,20 @@ class LyricsModule(object):
         menu_dict["fresh_green"]  = "清新绿"
         menu_dict["playful_pink"] = "俏皮粉"
         menu_dict["cool_blue"] = "清爽蓝"
-        menu_items = [(None, value, self.set_predefine_color, key) for key, value in menu_dict.iteritems()]
-        menu_win = Menu(menu_items, True)
-        width, height = menu_win.get_size()
-        y = event.y_root - height + 40
-        menu_win.show((int(event.x_root), int(y)))
+        
+        menu_items = []
+        save_predefine_color = config.get("lyrics", "predefine_color", "default")
+        for key, value in menu_dict.iteritems():
+            item_pixbuf = None
+            if key == save_predefine_color:
+                item_pixbuf = app_theme.get_pixbuf("menu/tick.png")
+            menu_items.append((item_pixbuf, value, self.set_predefine_color, key))    
+            
+        Menu(menu_items, True).show((int(event.x_root), int(event.y_root)))
         
     def set_predefine_color(self, key):    
         values = PREDEFINE_COLORS[key]
+        config.set("lyrics", "predefine_color", key)
         config.set("lyrics", "inactive_color_upper", values[0])
         config.set("lyrics", "inactive_color_middle", values[1])
         config.set("lyrics", "inactive_color_bottom", values[2])

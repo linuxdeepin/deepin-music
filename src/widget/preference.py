@@ -44,7 +44,6 @@ from render_lyrics import RenderContextNew
 from config import config
 
 
-
 class GeneralSetting(gtk.VBox):
     
     def __init__(self):
@@ -474,25 +473,24 @@ class PreferenceDialog(Window):
         # Pack widget.
         left_box = gtk.VBox()
         self.right_box = gtk.VBox()
-        
         left_box.add(category_align)
         self.right_box.add(self.general_category_item.get_allocated_widget())
         right_align = gtk.Alignment()
         right_align.set_padding(0, 0, 10, 0)
         right_align.add(self.right_box)
-        
+
         body_box = gtk.HBox()
         body_box.pack_start(left_box, False, True)
         body_box.pack_start(right_align, False, True)
-        
         self.main_box.add(body_box)
         
     def expose_mask_cb(self, widget, event):    
         cr = widget.window.cairo_create()
         rect = widget.allocation
-        draw_vlinear(cr, rect.x, rect.y, rect.width, rect.height, app_theme.get_shadow_color("linearBackground").get_color_info())
+        draw_vlinear(cr, rect.x, rect.y, 132, rect.height, app_theme.get_shadow_color("settingMaskLeft").get_color_info())
+        draw_vlinear(cr, rect.x + 132, rect.y, rect.width - 132, rect.height, app_theme.get_shadow_color("settingMaskRight").get_color_info())
         return False
-
+    
     def category_single_click_cb(self, widget, item):
         if item.get_allocated_widget():
             switch_tab(self.right_box, item.get_allocated_widget())

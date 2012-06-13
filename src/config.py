@@ -115,6 +115,7 @@ class Config(gobject.GObject, Logger):
                 "dock_mode" : "true",
                 "line_count" : "2",
                 "blur_radius" : "3",
+                "predefine_color" : "default",
                 "inactive_color_upper" : "#1CC8FA",
                 "inactive_color_middle" : "#2226E5",
                 "inactive_color_bottom" : "#51DEF1",

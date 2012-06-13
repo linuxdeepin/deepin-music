@@ -32,7 +32,7 @@ def show_splash(show=True):
     if not show: return
     
     splash_window = gtk.Window(gtk.WINDOW_POPUP)
-    splash_window.set_size_request(413, 163)
+    splash_window.set_size_request(391, 143)
     splash_window.set_position(gtk.WIN_POS_CENTER)
     splash_window.set_resizable(False)
     splash_window.set_transient_for(None)    
