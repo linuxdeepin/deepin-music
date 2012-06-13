@@ -26,7 +26,7 @@ from dtk.ui.application import Application
 
 import utils
 from widget.skin import app_theme
-from widget.headerbar import HeaderBar
+from widget.headerbar import FullHeaderBar
 from widget.playlist import PlaylistUI
 from widget.browser import SimpleBrowser
 from widget.jobs_manager import jobs_manager
@@ -49,7 +49,7 @@ class DeepinMusic(gobject.GObject, Logger):
         gobject.GObject.__init__(self)
         application = Application("DMuisc")
         application.close_callback = self.quit
-        application.set_default_size(941, 695)
+        application.set_default_size(858, 625)
         application.set_icon(app_theme.get_pixbuf("skin/logo.ico"))
         application.set_skin_preview(app_theme.get_pixbuf("frame.png"))
         application.add_titlebar(
@@ -57,7 +57,7 @@ class DeepinMusic(gobject.GObject, Logger):
             app_theme.get_pixbuf("skin/logo1.png"),
             "深度音乐"
             )
-
+        
         self.window = application.window
         utils.set_main_window(self)
         
@@ -78,7 +78,7 @@ class DeepinMusic(gobject.GObject, Logger):
             self.window.unmaximize()
         
         self.playlist_ui = PlaylistUI()    
-        self.header_bar = HeaderBar()
+        self.header_bar = FullHeaderBar()
 
         bottom_box = gtk.HBox()
         browser_align = gtk.Alignment()
@@ -192,3 +192,5 @@ class DeepinMusic(gobject.GObject, Logger):
         if window_state == "normal":
             self.window.unmaximize()
         self.window.show_all()
+        
+        

@@ -39,9 +39,9 @@ from config import config
 from helper import Dispatcher
 from widget.preference import PreferenceDialog
 
-class HeaderBar(gtk.EventBox):
+class FullHeaderBar(gtk.EventBox):
     def __init__(self):
-        super(HeaderBar, self).__init__()
+        super(FullHeaderBar, self).__init__()
         self.set_visible_window(False)
         
         # init.

@@ -135,6 +135,8 @@ class Config(gobject.GObject, Logger):
                 "use_tray" : "true",
                 "close_to_tray" : "true",
                 "use_splash" : "true",
+                "window_mode" : "simple",
+                "app_mode" : "normal",
                 },
             
             "playlist" : {

@@ -3,4 +3,4 @@ if [ -z "$PROGRAM_DIR" ]; then
     PROGRAM_DIR=`dirname "$0"`
 fi
 
-exec python -O ${PROGRAM_DIR}/src/main.py "$@"
+exec python ${PROGRAM_DIR}/src/main.py "$@"
