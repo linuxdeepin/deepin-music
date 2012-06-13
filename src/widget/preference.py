@@ -39,7 +39,7 @@ from dtk.ui.scrolled_window import ScrolledWindow
 
 from utils import color_hex_to_cairo
 from widget.skin import app_theme
-from widget.ui_utils import get_font_families, switch_tab, create_separator_box, create_right_align
+from widget.ui_utils import get_font_families, switch_tab, create_separator_box, create_right_align, draw_single_mask
 from render_lyrics import RenderContextNew
 from config import config
 
@@ -452,6 +452,7 @@ class PreferenceDialog(Window):
         
         # Category bar
         self.category_bar = TreeView(font_x_padding=20)
+        self.category_bar.draw_mask = self.draw_treeview_mask
         self.general_category_item = CategoryItem("常规设置", GeneralSetting())
         self.category_bar.add_item(None, self.general_category_item)
         self.category_bar.add_item(None, CategoryItem("热键设置", HotKeySetting()))
@@ -460,6 +461,7 @@ class PreferenceDialog(Window):
         self.category_bar.add_item(lyrics_node, CategoryItem("窗口歌词"))
         self.category_bar.add_item(None, CategoryItem("关于我们"))
         self.category_bar.connect("single-click-item", self.category_single_click_cb)
+        self.category_bar.set_highlight_index(0)
         
         category_align = gtk.Alignment()
         category_align.set_padding(11, 0, 0, 0)
@@ -484,12 +486,25 @@ class PreferenceDialog(Window):
         body_box.pack_start(right_align, False, True)
         self.main_box.add(body_box)
         
+        self.switch_to_lyrics()
+        
     def expose_mask_cb(self, widget, event):    
         cr = widget.window.cairo_create()
         rect = widget.allocation
-        draw_vlinear(cr, rect.x, rect.y, 132, rect.height, app_theme.get_shadow_color("settingMaskLeft").get_color_info())
-        draw_vlinear(cr, rect.x + 132, rect.y, rect.width - 132, rect.height, app_theme.get_shadow_color("settingMaskRight").get_color_info())
+        draw_single_mask(cr, rect.x, rect.y, 132, rect.height, "settingLeft")
+        draw_single_mask(cr, rect.x + 132, rect.y, rect.width - 132, rect.height, "settingRight")
         return False
+    
+    def switch_to_lyrics(self):
+        self.category_bar.tree_list[2].show_child_items_bool = True
+        self.category_bar.sort()
+        self.category_bar.queue_draw()
+        self.category_bar.set_highlight_index(3)
+        highlight_item  = self.category_bar.get_highlight_item()
+        self.category_single_click_cb(None, highlight_item)
+    
+    def draw_treeview_mask(self, cr, x, y, width, height):
+        draw_single_mask(cr, x, y, width, height, "settingLeft")
     
     def category_single_click_cb(self, widget, item):
         if item.get_allocated_widget():
