@@ -95,6 +95,7 @@ class Config(gobject.GObject, Logger):
                 "crossfade_time" : "2.0",
                 "crossfade_gapless_album" : "false",
                 "play_on_startup" : "true",
+                "resume_last_progress" : "true",
                 "enqueue":"false",
                 "click_enqueue":"false",
                 "queuewholealbum":"false",

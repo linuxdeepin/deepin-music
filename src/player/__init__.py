@@ -244,7 +244,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
             gobject.idle_add(self.emit, "play-end")
         else:    
             if seek:
-                self.seek(seek)
+                gobject.idle_add(self.seek, seek)
             self.emit("played")    
         return ret    
     
@@ -442,6 +442,8 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         if uri:    
             song = MediaDB.get_song(uri)
             if song:
+                if not config.getboolean("player", "resume_last_progress") or not play:
+                    seek = None
                 self.set_song(song, play, self.get_crossfade() * 2, seek)
                 
         self.emit("loaded")        
