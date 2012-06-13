@@ -40,7 +40,7 @@ from logger import Logger
 
 def mainloop():    
     gtk.main()
-
+    
 
 class DeepinMusic(gobject.GObject, Logger):
     __gsignals__ = {"ready" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ())}
@@ -103,6 +103,8 @@ class DeepinMusic(gobject.GObject, Logger):
         
         self.window.connect("delete-event", self.quit)
         self.window.connect("configure-event", self.on_configure_event)
+        self.window.connect("destroy", self.quit)
+        
         Dispatcher.connect("quit",self.force_quit)
         config.connect("config-changed", self.__on_config_set)
         
@@ -114,7 +116,7 @@ class DeepinMusic(gobject.GObject, Logger):
         self.__save_configure()
         if config.get("setting", "close_to_tray") == "false" or self.tray_icon == None:
             self.force_quit()
-        
+        return True
             
     def ready(self, show=True):    
         if show:
@@ -192,5 +194,3 @@ class DeepinMusic(gobject.GObject, Logger):
         if window_state == "normal":
             self.window.unmaximize()
         self.window.show_all()
-        
-        
