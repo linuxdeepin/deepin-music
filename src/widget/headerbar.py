@@ -38,6 +38,7 @@ from widget.ui import ProgressBox
 from config import config
 from helper import Dispatcher
 from widget.preference import PreferenceDialog
+from widget.ui_utils import create_left_align
 
 class FullHeaderBar(gtk.EventBox):
     def __init__(self):
@@ -49,6 +50,9 @@ class FullHeaderBar(gtk.EventBox):
         self.cover_box.show_all()
         self.equalizer_win = EqualizerWindow()
         self.lyrics_display = LyricsModule()
+        
+        # Main table
+        main_table = gtk.Table(2, 3)
         
         # swap played status handler
         Player.connect("played", self.__swap_play_status, True)
@@ -93,39 +97,40 @@ class FullHeaderBar(gtk.EventBox):
         mainbtn.pack_start(next_align, False, False)
          
         mainbtn_align = gtk.Alignment()
-        mainbtn_align.set_padding(5, 0, 0, 0)
+        mainbtn_align.set_padding(10, 0, 0, 0)
         mainbtn_align.add(mainbtn)
+        
+        mainbtn_box = gtk.HBox()
+        mainbtn_box.pack_start(mainbtn_align, False, False)
+        mainbtn_box.pack_start(create_left_align(), True, True)
         
         # time box.
         self.lyrics_button = self.__create_simple_toggle_button("lyrics", self.start_lyrics)        
-        time_align = gtk.Alignment()
-        time_align.set(0, 0, 0, 1)
-        time_box = gtk.HBox()       
-
-        time_box.pack_start(self.lyrics_button, False, False)
-        time_box.pack_start(self.vol, False, False)        
-        time_box.pack_start(time_align, True, True)
-        time_box.pack_start(song_timer.get_label(), False, False)
         
-        # playinfo box.
-        playinfo_box = gtk.HBox()
-        # playinfo_box.set_spacing(80)
-        playinfo_box.pack_start(PlayInfo(), False, False)
-        playinfo_box.pack_start(mainbtn_align, False, False)
+        plug_box = gtk.HBox(spacing=9)       
+        plug_box.pack_start(self.lyrics_button, False, False)
+        plug_box.pack_start(self.vol, False, False)        
         
-        cover_right_box = gtk.VBox()
-        cover_right_box.pack_start(playinfo_box, True, True)
-        cover_right_box.pack_start(time_box, False, False)
+        timer_align = gtk.Alignment()
+        timer_align.set(0, 0, 0, 1)
+        timer_box = gtk.HBox()
+        timer_box.pack_start(timer_align, True, True)
+        timer_box.pack_start(song_timer.get_label(), False, False)
+        
+        main_table.attach(PlayInfo(), 0, 1, 0, 1, xoptions=gtk.FILL)
+        main_table.attach(plug_box, 0, 1, 1, 2, xoptions=gtk.FILL, ypadding=5)
+        main_table.attach(mainbtn_box, 1, 2, 0, 2, xoptions=gtk.FILL, xpadding=25)
+        main_table.attach(timer_box, 2, 3, 1, 2, xpadding=17)
         
         cover_main_box = gtk.HBox(spacing=5)
         cover_main_box.pack_start(self.cover_box, False, False)
-        cover_main_box.pack_start(cover_right_box, True, True)
+        cover_main_box.pack_start(main_table, True, True)
         cover_main_align = gtk.Alignment()
-        cover_main_align.set_padding(5, 0, 6, 5)
+        cover_main_align.set_padding(5, 0, 12, 5)
         cover_main_align.set(1, 1, 1, 1)
         cover_main_align.add(cover_main_box)
         
-        main_box = gtk.VBox(spacing=4)
+        main_box = gtk.VBox(spacing=5)
         main_box.pack_start(cover_main_align, True, True)
         main_box.pack_start(ProgressBox(song_timer), True, True)
         

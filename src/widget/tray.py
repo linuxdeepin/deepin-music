@@ -23,8 +23,6 @@
 import gtk
 from dtk.ui.menu import Menu
 
-import utils
-from config import config
 from player import Player
 from widget.skin import app_theme
 from helper import Dispatcher

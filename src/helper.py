@@ -70,7 +70,7 @@ class EventDispatcher(gobject.GObject):
         self.emit("add-songs", songs)
         
     def quit(self):    
-        self.emit("quit", None)
+        self.emit("quit")
         
         
 Dispatcher = EventDispatcher()

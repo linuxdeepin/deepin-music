@@ -153,6 +153,7 @@ class Song(dict, Logger):
             value = None
         if not value: value = self.get(key, "")    
         if isinstance(value, int) or isinstance(value, float): value = "%d" % value
+        if value is None: value = ""
         return str(value)
         
     def get_filter(self):

@@ -52,11 +52,11 @@ class PlaylistUI(gtk.VBox):
         '''Init.'''
         super(PlaylistUI, self).__init__()
 
-        self.category_list = TreeView(font_size=9, height=25, font_x_padding=10)
+        self.category_list = TreeView(font_size=9, height=26, font_x_padding=15)
         self.category_list.draw_mask = self.draw_single_mask
         self.category_list.connect("single-click-item", self.category_single_click_cb)
         self.category_list.connect("right-press-item", self.category_right_press_cb)
-        self.category_list.set_size_request(75, -1)
+        self.category_list.set_size_request(98, -1)
         self.search_time_source = 0
         
         self.entry_box = SearchEntry("")
@@ -68,16 +68,15 @@ class PlaylistUI(gtk.VBox):
         entry_align.add(self.entry_box)
         entry_align.connect("expose-event", self.expose_entry_mask)
         
-        self.toolbar_box = gtk.HBox(spacing=55)
+        self.toolbar_box = gtk.HBox(spacing=50)
         self.search_button = self.__create_simple_toggle_button("search", self.show_text_entry)
-        
         self.__create_simple_button("list", self.popup_list_menu)
         self.__create_simple_button("add", self.popup_add_menu)
         self.__create_simple_button("sort", self.popup_sort_menu)
         self.__create_simple_button("delete", self.popup_delete_menu)
         
         toolbar_align = gtk.Alignment()
-        toolbar_align.set_padding(6, 6, 10, 5)
+        toolbar_align.set_padding(6, 6, 24, 24)
         toolbar_align.add(self.toolbar_box)
         toolbar_align.connect("expose-event", self.expose_toolbar_mask)
                 

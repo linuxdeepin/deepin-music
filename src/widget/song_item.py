@@ -59,15 +59,15 @@ class SongItem(gobject.GObject):
         self.album = song.get_str("album")
         
         # Calculate item size.
-        self.title_padding_x = 10
+        self.title_padding_x = 12
         self.title_padding_y = 5
         (self.title_width, self.title_height) = get_content_size(self.title, DEFAULT_FONT_SIZE)
         
-        self.artist_padding_x = 10
+        self.artist_padding_x = 5
         self.artist_padding_y = 5
         (self.artist_width, self.artist_height) = get_content_size(self.artist, DEFAULT_FONT_SIZE)
 
-        self.length_padding_x = 10
+        self.length_padding_x = 2
         self.length_padding_y = 5
         (self.length_width, self.length_height) = get_content_size(self.length, DEFAULT_FONT_SIZE)
         
@@ -91,7 +91,7 @@ class SongItem(gobject.GObject):
     def render_artist(self, cr, rect):
         '''Render artist.'''
         rect.x += self.artist_padding_x
-        rect.width -= self.title_padding_x * 2
+        rect.width -= self.artist_padding_x * 2
         render_text(cr, self.artist, rect, 
                     app_theme.get_color("labelText").get_color(),
                     DEFAULT_FONT_SIZE, ALIGN_START)
@@ -100,6 +100,7 @@ class SongItem(gobject.GObject):
     def render_length(self, cr, rect):
         '''Render length.'''
         rect.width -= self.length_padding_x * 2
+        rect.x -= 8
         render_text(cr, self.length, rect, 
                     app_theme.get_color("labelText").get_color(),
                     DEFAULT_FONT_SIZE, ALIGN_END)
@@ -128,13 +129,7 @@ class SongItem(gobject.GObject):
                 (80, self.add_time_height + self.add_time_padding_y * 2)
                 ]
         else:
-            return [(100,
-                     self.title_height + self.title_padding_y * 2),
-                    (60,
-                     self.artist_height + self.artist_padding_y * 2),
-                    (60,
-                     self.length_height + self.length_padding_y * 2),
-                    ]    
+            return [(95,26), (80,26), (40,26)]    
             
     
     def get_renders(self):

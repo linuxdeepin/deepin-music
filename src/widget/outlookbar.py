@@ -49,12 +49,11 @@ class OptionBar(BaseBar):
     
     def __init__(self, items, init_index=0, font_size=10, padding_left=20, padding_middle=0, padding_right=25):
         BaseBar.__init__(self, init_index)
-        self.set_spacing(5)
         
         if items:
             for index, item in enumerate(items):
                 simple_item = SimpleItem(
-                    item, index, font_size, 25, padding_left, padding_middle, padding_right, self.set_index, self.get_index)
+                    item, index, font_size, 26, padding_left, padding_middle, padding_right, self.set_index, self.get_index)
                 self.pack_start(simple_item)
         self.show_all()        
         
@@ -88,7 +87,7 @@ class SongPathBar(BaseBar):
         BaseBar.__init__(self, init_index=-1)
         self.set_spacing(5)
         self.child_box = gtk.VBox()
-        self.child_item_height = 21
+        self.child_item_height = 26
         self.current_page = 1
         self.page_items_num = 0        
         self.items = []
@@ -99,7 +98,6 @@ class SongPathBar(BaseBar):
         self.pack_start(title_item, False, False)
         self.pack_start(self.child_box, True, True)
         self.child_box.connect("size-allocate", self.size_change_cb)
-        self.child_box.set_spacing(1)
 
         self.control_box = gtk.HBox()
         self.control_box.set_spacing(15)        
@@ -239,15 +237,10 @@ class SongPathBar(BaseBar):
         return box
             
 class SongImportBar(BaseBar):            
-    def __init__(self, title_name):
+    def __init__(self):
         BaseBar.__init__(self, init_index=-1)
         self.child_box = gtk.VBox()
-        title_item = SimpleLabel(
-            app_theme.get_pixbuf("filter/import_normal.png"),
-            title_name, 10, 25, 20, 10, 25, ALIGN_START)
-        self.pack_start(title_item, False, True)
         self.pack_start(self.child_box)
-        self.child_box.set_spacing(1)
         
     def reload_items(self, child_items):    
         if child_items:
@@ -257,7 +250,7 @@ class SongImportBar(BaseBar):
                     (app_theme.get_pixbuf("filter/point_normal.png"),
                      app_theme.get_pixbuf("filter/point_press.png"),
                      item[0], item[1]),
-                    index + 1, 8, 20, 35, 10, 25, self.set_index, self.get_index, ALIGN_START)
+                    index + 1, 9, 20, 25, 10, 25, self.set_index, self.get_index, ALIGN_START)
                 self.child_box.pack_start(simple_item)
             self.show_all()        
             

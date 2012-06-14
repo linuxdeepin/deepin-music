@@ -48,7 +48,7 @@ class VolumeButton(gtk.HBox):
             )
         
         # Init widget.
-        self.volume_progressbar.set_size_request(50, 8)
+        self.volume_progressbar.set_size_request(58, 11)
         self.volume_progressbar.set_range(min_value, max_value)
         self.volume_progressbar.set_value(init_value)
         
@@ -61,7 +61,7 @@ class VolumeButton(gtk.HBox):
         volume_align.add(self.volume_progressbar)
         
         button_align = gtk.Alignment()
-        button_align.set(0.5, 0.5, 0, 0)
+        # button_align.set(0.5, 0.5, 0, 0)
         button_align.add(self.volume_button)
 
         self.pack_start(button_align, False, False)
@@ -71,6 +71,7 @@ class VolumeButton(gtk.HBox):
         group = (
             app_theme.get_pixbuf("volume/%s_normal.png" % name),
             app_theme.get_pixbuf("volume/%s_hover.png" % name),
+            app_theme.get_pixbuf("volume/%s_press.png" % name),
             app_theme.get_pixbuf("volume/%s_press.png" % name)
             )
         self.volume_button.set_inactive_pixbuf_group(group)

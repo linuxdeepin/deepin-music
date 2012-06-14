@@ -56,7 +56,7 @@ class CoverButton(gtk.Button):
         # Draw cover side.
         draw_pixbuf(cr, self.cover_side_pixbuf, rect.x, rect.y)
         
-        draw_pixbuf(cr, self.current_cover_pixbuf, rect.x + 2, rect.y + 3)
+        draw_pixbuf(cr, self.current_cover_pixbuf, rect.x + 4, rect.y + 4)
         
         return True
         

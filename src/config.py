@@ -81,8 +81,8 @@ class Config(gobject.GObject, Logger):
             "window" : {
                 "x" : "-1",
                 "y" : "-1",
-                "width"  : "941",
-                "height" : "695",
+                "width"  : "858",
+                "height" : "625",
                 "state"  : "normal",
                 },
             "player" : {

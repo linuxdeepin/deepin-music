@@ -118,11 +118,11 @@ class ProgressBox(gtk.VBox):
         scalebar_align.set(0, 0, 1, 1)
         scalebar_align.add(scalebar)
         
-        self.set_size_request(-1, 17)
+        self.set_size_request(-1, 20)
         self.rect_list = [
-            (75, app_theme.get_shadow_color("playlistLeft").get_color_info()),
-            (228, app_theme.get_shadow_color("playlistMiddle").get_color_info()),
-            (150, app_theme.get_shadow_color("playlistRight").get_color_info()),
+            (98, app_theme.get_shadow_color("playlistLeft").get_color_info()),
+            (220, app_theme.get_shadow_color("playlistMiddle").get_color_info()),
+            (140, app_theme.get_shadow_color("playlistRight").get_color_info()),
             ]
         
         self.pack_start(scalebar_align, False, True)

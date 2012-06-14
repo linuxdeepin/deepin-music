@@ -23,14 +23,9 @@
 import gtk
 import gobject
 from dtk.ui.scrolled_window import ScrolledWindow
-from dtk.ui.constant import ALIGN_START
-from dtk.ui.utils import get_content_size
 
 from widget.song_view import SongView
-from widget.ui_utils import render_text
 
-
-from widget.skin import app_theme
 DEFAULT_FONT_SIZE = 8
 
 
@@ -65,7 +60,7 @@ class PlaylistItem(gobject.GObject):
         songs = self.playlist.get_songs()
         self.song_view = SongView()
         self.song_view.add_songs(songs)
-        self.scrolled_window = ScrolledWindow()
+        self.scrolled_window = ScrolledWindow(0, 0)
         self.scrolled_window.add_child(self.song_view)
         self.scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
         self.scrolled_window.set_size_request(220, -1)

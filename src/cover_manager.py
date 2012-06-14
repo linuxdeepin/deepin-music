@@ -38,7 +38,7 @@ from cover_download import download_album_cover
 
 REINIT_COVER_TO_SKIP_TIME = 100 * 60 * 30
 
-COVER_SIZE = {"x": 70, "y": 70}
+COVER_SIZE = {"x": 58, "y": 58}
 COVER_SAVE_SIZE = {"x": 300, "y": 300}
 BROWSER_COVER_SIZE = {"x": 40, "y": 40}
 
