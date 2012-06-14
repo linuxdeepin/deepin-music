@@ -52,31 +52,71 @@ class GeneralSetting(gtk.VBox):
         self.pack_start(self.create_start_box(), False, True)
         self.pack_start(self.create_close_box(), False, True)
         self.pack_start(self.create_play_box(), False, True)
-        self.pack_start(self.create_link_box(), False, True)
+        # self.pack_start(self.create_link_box(), False, True)
         
         # Load.
         self.load_status()
         
     def load_status(self):    
+        self.splash_check_button.set_active(config.getboolean("setting", "use_splash"))
         self.open_lyrics_check_button.set_active(config.getboolean("lyrics", "status"))
         self.auto_play_check_button.set_active(config.getboolean("player", "play_on_startup"))
+        self.resume_last_check_button.set_active(config.getboolean("player", "resume_last_progress"))
         
         close_to_tray = config.getboolean("setting", "close_to_tray")
         if close_to_tray:
             self.tray_radio_button.set_active(True)
         else:    
-            self.tray_radio_button.set_active(True)
+            self.quit_radio_button.set_active(True)
         
         self.fade_check_button.set_active(config.getboolean("player", "crossfade"))
         self.album_check_button.set_active(config.getboolean("player", "crossfade_gapless_album"))
         
-        
         new_value = int(float(config.get("player", "crossfade_time")) * 100)
         self.fade_spin.set_value(new_value)
         
+    def save_status(self):    
+        if self.splash_check_button.get_active():
+            config.set("setting", "use_splash", "true")
+        else:    
+            config.set("setting", "use_splash", "false")
+            
+        if self.open_lyrics_check_button.get_active():    
+            config.set("lyrics", "status", "true")
+        else:    
+            config.set("lyrics", "status", "false")
+            
+        if self.auto_play_check_button.get_active():    
+            config.set("player", "play_on_startup", "true")            
+        else:    
+            config.set("player", "play_on_startup", "false")
+            
+        if self.resume_last_check_button.get_active():    
+            config.set("player", "resume_last_progress", "true")
+        else:    
+            config.set("player", "resume_last_progress", "false")
+        
+         
+        if self.tray_radio_button.get_active():   
+            config.set("setting", "close_to_tray", "true")
+        else:    
+            config.set("setting", "close_to_tray", "false")
+            
+        if self.fade_check_button.get_active():    
+            config.set("player", "crossfade", "true")
+        else:    
+            config.set("player", "crossfade", "false")
+            
+        if self.album_check_button.get_active():    
+            config.set("player", "crossfade_gapless_album", "true")
+        else:    
+            config.set("player", "crossfade_gapless_album", "false")
+            
+        new_value = self.fade_spin.get_value() / 100.0
+        config.set("player", "crossfade_time", str(new_value))        
         
     def create_start_box(self):    
-        main_table = gtk.Table(3, 2)
+        main_table = gtk.Table(4, 2)
         main_table.set_row_spacings(10)
         start_title_label = Label("启动时")
         start_title_label.set_size_request(350, 12)
@@ -84,22 +124,38 @@ class GeneralSetting(gtk.VBox):
         label_align.set_padding(20, 0, 0, 0)
         label_align.add(start_title_label)
         
-        # startup_check_button.
-        self.auto_play_check_button = CheckButton("启动时自动播放")
-        auto_play_hbox = gtk.HBox()
-        auto_play_hbox.pack_start(self.auto_play_check_button, False, False)
-        auto_play_hbox.pack_start(create_right_align(), True, True)
+        
+        # splash check_button
+        self.splash_check_button = CheckButton("显示启动画面")
+        splash_hbox = gtk.HBox()
+        splash_hbox.pack_start(self.splash_check_button, False, False)
+        splash_hbox.pack_start(create_right_align(), True, True)        
         
         # open_lyrics_check_button.
         open_lyrics_hbox = gtk.HBox()
         self.open_lyrics_check_button = CheckButton("打开桌面歌词")
+        # open_lyrics_hbox.pack_start(create_right_align(), True, True)        
         open_lyrics_hbox.pack_start(self.open_lyrics_check_button, False, False)
-        open_lyrics_hbox.pack_start(create_right_align(), True, True)
+
+        
+        # startup_check_button.
+        self.auto_play_check_button = CheckButton("启动时自动播放")
+        auto_play_hbox = gtk.HBox()
+        auto_play_hbox.pack_start(self.auto_play_check_button, False, False)
+        auto_play_hbox.pack_start(create_right_align(), True, True)                
+        
+        # resume last check_button.
+        self.resume_last_check_button = CheckButton("继续上次播放进度")
+        resume_hbox = gtk.HBox()
+        # resume_hbox.pack_start(create_right_align(), True, True)        
+        resume_hbox.pack_start(self.resume_last_check_button, False, False)
         
         main_table.attach(label_align, 0, 2, 0, 1, yoptions=gtk.FILL, xpadding=8)
         main_table.attach(create_separator_box(), 0, 2, 1, 2, gtk.FILL)
-        main_table.attach(auto_play_hbox, 0, 1, 2, 3)
+        main_table.attach(splash_hbox, 0, 1, 2, 3)
         main_table.attach(open_lyrics_hbox, 1, 2, 2, 3, yoptions=gtk.EXPAND)
+        main_table.attach(auto_play_hbox, 0, 1, 3, 4)
+        main_table.attach(resume_hbox, 1, 2, 3, 4, yoptions=gtk.EXPAND)
         return main_table
     
     def create_close_box(self):
@@ -450,14 +506,20 @@ class PreferenceDialog(Window):
         self.window_frame.pack_start(statusbar, False, True)
         self.main_box.connect("expose-event", self.expose_mask_cb)
         
+        
+        # Init widget.
+        self.general_setting = GeneralSetting()
+        self.hotkey_setting = HotKeySetting()
+        self.desktop_lyrics_setting = DesktopLyricsSetting()
+        
         # Category bar
         self.category_bar = TreeView(font_x_padding=20)
         self.category_bar.draw_mask = self.draw_treeview_mask
-        self.general_category_item = CategoryItem("常规设置", GeneralSetting())
+        self.general_category_item = CategoryItem("常规设置", self.general_setting)
         self.category_bar.add_item(None, self.general_category_item)
-        self.category_bar.add_item(None, CategoryItem("热键设置", HotKeySetting()))
+        self.category_bar.add_item(None, CategoryItem("热键设置", self.hotkey_setting))
         lyrics_node = self.category_bar.add_item(None, CategoryItem("歌词设置"))
-        self.category_bar.add_item(lyrics_node, CategoryItem("桌面歌词", DesktopLyricsSetting()))
+        self.category_bar.add_item(lyrics_node, CategoryItem("桌面歌词", self.desktop_lyrics_setting))
         self.category_bar.add_item(lyrics_node, CategoryItem("窗口歌词"))
         self.category_bar.add_item(None, CategoryItem("关于我们"))
         self.category_bar.connect("single-click-item", self.category_single_click_cb)
@@ -486,8 +548,6 @@ class PreferenceDialog(Window):
         body_box.pack_start(right_align, False, True)
         self.main_box.add(body_box)
         
-        self.switch_to_lyrics()
-        
     def expose_mask_cb(self, widget, event):    
         cr = widget.window.cairo_create()
         rect = widget.allocation
@@ -511,9 +571,12 @@ class PreferenceDialog(Window):
             switch_tab(self.right_box, item.get_allocated_widget())
             
     def click_save_button(self, widget):        
+        self.general_setting.save_status()
+        config.write()
         self.destroy()
         
     def click_cancel_button(self, widget):    
+        config.load()
         self.destroy()
     
 class CategoryItem(object):    

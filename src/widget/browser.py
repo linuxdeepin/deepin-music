@@ -27,7 +27,7 @@ import os
 from dtk.ui.draw import draw_pixbuf, draw_vlinear
 from dtk.ui.scrolled_window import ScrolledWindow
 from dtk.ui.button import ImageButton
-from dtk.ui.iconview import IconView
+from dtk.ui.iconview import IconViewBox
 from dtk.ui.line import HSeparator
 
 from library import MediaDB, DBQuery
@@ -211,15 +211,6 @@ class Browser(gtk.VBox, SignalContainer):
         self.__search_flag = False
         self.__song_cache_items = []
         
-        self.__labels = {
-            "genre" : "流派",
-            "artist" : "艺术家",
-            "album" : "专辑",
-            "genres" : "流派",
-            "artists" : "艺术家",
-            "albums" : "专辑"
-            }
-        
         # init widget.
         self.entry_box = SearchEntry("")
         self.entry_box.set_size(155, 25)
@@ -281,15 +272,15 @@ class Browser(gtk.VBox, SignalContainer):
             )
         
         # iconview.
-        self.filter_view = IconView()
+        self.filter_scrolled_window = IconViewBox()
+        self.filter_scrolled_window.icon_view_align.set_padding(10, 10, 20, 20)
+        self.filter_scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+        self.filter_view = self.filter_scrolled_window.icon_view
         targets = [("text/deepin-songs", gtk.TARGET_SAME_APP, 1), ("text/uri-list", 0, 2)]
         self.filter_view.drag_source_set(gtk.gdk.BUTTON1_MASK, targets, gtk.gdk.ACTION_COPY)
         self.filter_view.connect("drag-data-get", self.__on_drag_data_get) 
         self.filter_view.connect("double-click-item", self.__on_double_click_item)
         self.filter_view.connect("single-click-item", self.__on_single_click_item)
-        self.filter_scrolled_window = ScrolledWindow()
-        self.filter_scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
-        self.filter_scrolled_window.add_child(self.filter_view)
         
         # songs_view
         self.songs_view = MultiDragSongView()

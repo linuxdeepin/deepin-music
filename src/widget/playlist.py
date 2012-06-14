@@ -119,6 +119,7 @@ class PlaylistUI(gtk.VBox):
             
         Player.connect("loaded", self.__on_player_loaded)    
         Dispatcher.connect("play-song", self.__play_and_add)
+        Dispatcher.connect("add-songs", self.__add_songs_to_list)
         
     def expose_toolbar_mask(self, widget, event):    
         cr = widget.window.cairo_create()
@@ -172,6 +173,10 @@ class PlaylistUI(gtk.VBox):
         
     def __play_and_add(self, widget, song):    
         self.current_item.song_view.add_songs(song, play=True)
+        
+    def __add_songs_to_list(self, widget, songs):
+        if songs and self.current_item.song_view:
+            self.current_item.song_view.add_songs(songs)
         
     def get_selected_song_view(self):    
         return self.current_item.song_view

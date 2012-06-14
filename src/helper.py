@@ -39,7 +39,8 @@ class EventDispatcher(gobject.GObject):
         "volume" : (gobject.SIGNAL_RUN_LAST,gobject.TYPE_NONE, (gobject.TYPE_FLOAT,)),
         "play-device" :  (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_STRING,)),    
         "play-song" : SIGNAL_SIMPLE,
-        "quit": SIGNAL_SIMPLE,
+        "add-songs" : SIGNAL_SIMPLE,
+        "quit": SIGNAL_BASE,
         "reload-lrc" : SIGNAL_SIMPLE,
         }
     
@@ -64,6 +65,9 @@ class EventDispatcher(gobject.GObject):
 
     def volume(self, value):        
         self.emit("volume", value)
+        
+    def add_songs(self, songs):    
+        self.emit("add-songs", songs)
         
     def quit(self):    
         self.emit("quit", None)

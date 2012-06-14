@@ -496,6 +496,11 @@ class MultiDragSongView(ListView):
             utils.run_command("xdg-open %s" % song.get_dir())
         return True    
     
+    def emit_to_playlist(self):
+        if len(self.select_rows) > 0:
+            songs = [self.items[index].get_song() for index in self.select_rows]
+            Dispatcher.add_songs(songs)
+    
     def play_song(self):
         if len(self.select_rows) > 0:
             song = self.items[self.select_rows[0]].get_song()
@@ -519,7 +524,7 @@ class MultiDragSongView(ListView):
     def popup_right_menu(self, widget, x, y, item, select_items):
         menu_items = [
             (None, "播放", self.play_song),
-            (None, "添加到播放列表", None),
+            (None, "添加到播放列表", self.emit_to_playlist),
             None,
             (None, "从歌曲库删除", self.remove_songs),
             (None, "从磁盘删除", self.remove_songs, True),
