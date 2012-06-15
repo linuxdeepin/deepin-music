@@ -45,12 +45,20 @@ from constant import LRC_DESKTOP_MODE, LRC_WINDOW_MODE
 
 MESSAGE_DURATION_MS = 3000
 
+# PREDEFINE_COLORS = {
+#    "vitality_yellow" : ["#ffffff", "#7cbee8", "#3993d2", "#fff5c9", "#ffe888", "#ffcc00"],
+#    "fresh_green"     : ["#ffffff", "#9ce265", "#71ce2e", "#fff5c9", "#ffe888", "#ffcc00"],
+#    "playful_pink"    : ["#ffffff", "#7cbee8", "#3993d2", "#ffc9e1", "#ff3490", "#ff2586"],
+#    "cool_blue"       : ["#ffffff", "#66c3ff", "#23a2ff", "#f8f8f8", "#dedede", "#b4b4b4"],
+
+#     }
+
 PREDEFINE_COLORS = {
-   "vitality_yellow" : ["#ffffff", "#7cbee8", "#3993d2", "#fff5c9", "#ffe888", "#ffcc00"],
-   "fresh_green"     : ["#ffffff", "#9ce265", "#71ce2e", "#fff5c9", "#ffe888", "#ffcc00"],
-   "playful_pink"    : ["#ffffff", "#7cbee8", "#3993d2", "#ffc9e1", "#ff3490", "#ff2586"],
-   "cool_blue"       : ["#ffffff", "#66c3ff", "#23a2ff", "#f8f8f8", "#dedede", "#b4b4b4"],
-   "default"         : ["#1CC8FA", "#2226E5", "#51DEF1", "#662600", "#FFFF00", "#FF8000"],
+   "default"         : ["#99FFFF", "#0000FF", "#99FFFF", "#662600", "#FFFF00", "#FF8000"],   
+   "fresh_green"     : ["#e4dcb9", "#ffea93", "#ffd631", "#efede6", "#b3fc9c", "#77d035"],
+   "playful_pink"    : ["#ffffff", "#70b8e5", "#3788c0", "#ffe0ee", "#ffa1ca", "#ff2586"],
+   "cool_blue"       : ["#f8f8f8", "#dadada", "#bdbdbd", "#ffffff", "#60c0ff", "#19a1ff"],
+   "vitality_yellow" : ["#e4dcb9", "#ffea93", "#ffd631", "#f7f4ea", "#77d1ff", "#4199d5"],
     }
 
 class LyricsModule(object):

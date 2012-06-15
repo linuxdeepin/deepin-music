@@ -400,8 +400,7 @@ class DesktopLyricsSetting(gtk.VBox):
         font_name_hbox = self.create_combo_widget("字体:",
                                                   [(font_name, None) for font_name in get_font_families()]
                                                   )
-        font_size_hbox = self.create_combo_widget("字号:", 
-                                                  [(str(num), None) for num in range(20, 40, 2)])
+        font_size_hbox = self.create_combo_spin("字号:", 20, 10, 80, 1)
         
         line_number_hbox = self.create_combo_widget("行数:",
                                                     [(name, None) for name in ["单行", "双行"]])
@@ -409,8 +408,7 @@ class DesktopLyricsSetting(gtk.VBox):
         align_hbox = self.create_combo_widget("对齐:",
                                               [(name, None) for name in ["左对齐", "居中对齐", "右对齐"]])
         
-        outline_hbox = self.create_combo_widget("轮廓:",
-                                                [(str(num), None) for num in range(1, 10)])
+        outline_hbox = self.create_combo_spin("轮廓:", 3, 1, 5, 1)
         
         fuzzy_slipper = HScalebar(
             app_theme.get_pixbuf("slipper/left_fg.png"),
@@ -433,27 +431,42 @@ class DesktopLyricsSetting(gtk.VBox):
         fuzzy_hbox.pack_start(fuzzy_label, False, False)
         fuzzy_hbox.pack_start(slipper_align, False, False)
         
-        outline_fuzzy_box = gtk.HBox(spacing=80)
+        font_attr_box = gtk.HBox(spacing=10)
+        font_attr_box.pack_start(font_name_hbox, False, False)
+        font_attr_box.pack_start(font_size_hbox, False, False)
+        
+        line_and_align_box = gtk.HBox(spacing=120)
+        line_and_align_box.pack_start(line_number_hbox, False, False)
+        line_and_align_box.pack_start(align_hbox, False, False)
+        
+        outline_fuzzy_box = gtk.HBox(spacing=50)
         outline_fuzzy_box.pack_start(outline_hbox, False, False)
         outline_fuzzy_box.pack_start(fuzzy_hbox, False, False)
         
         main_table.attach(style_title_label, 0, 2, 0, 1, yoptions=gtk.FILL, xpadding=8)
         main_table.attach(create_separator_box(), 0, 2, 1, 2, yoptions=gtk.FILL)
-        main_table.attach(font_name_hbox, 0, 1, 2, 3, xpadding=20, xoptions=gtk.FILL)
-        main_table.attach(font_size_hbox, 1, 2, 2, 3, xoptions=gtk.FILL)
-        main_table.attach(line_number_hbox, 0, 1, 3, 4, xpadding=20, xoptions=gtk.FILL)
-        main_table.attach(align_hbox, 1, 2, 3, 4, xoptions=gtk.FILL)
+        main_table.attach(font_attr_box, 0, 2, 2, 3, xpadding=20, xoptions=gtk.FILL)
+        main_table.attach(line_and_align_box, 0, 2, 3, 4, xpadding=20, xoptions=gtk.FILL)
         main_table.attach(outline_fuzzy_box, 0, 2, 4, 5, xpadding=20, xoptions=gtk.FILL)
         return main_table
     
     def create_combo_widget(self, label_content, items):
         label = Label(label_content)
         label.set_size_request(30, 12)
-        
         combo_box = ComboBox(items, 200)
         hbox = gtk.HBox(spacing=5)
         hbox.pack_start(label, False, False)
         hbox.pack_start(combo_box, False, False)
+        return hbox
+    
+    def create_combo_spin(self, label_content, init_value, low, upper, step):
+        label = Label(label_content)
+        label.set_size_request(30, 12)
+        spinbox = SpinBox(init_value, low, upper, step)
+        
+        hbox = gtk.HBox(spacing=5)
+        hbox.pack_start(label, False, False)
+        hbox.pack_start(spinbox, False, False)
         return hbox
         
 

@@ -29,7 +29,7 @@ import dtk_cairo_blur
 from config import config
 
 OUTLINE_WIDTH = 3
-LINEAR_POS = [0.0, 0.5, 1.0]
+LINEAR_POS = [0.0, 0.3, 0.8]
 LINEAR_COLOR_COUNT = 3
 BLACK_COLOR = (0.0, 0.0, 0.0)
 LINEAR_COLORS = [BLACK_COLOR, BLACK_COLOR, BLACK_COLOR]
@@ -141,11 +141,13 @@ class RenderContextNew(object):
         cr.new_path()
         # Create the linear pattern.
         pattern = cairo.LinearGradient(xpos, ypos, xpos, ypos + height)
+
         for i, each_linear in enumerate(self.linear_colors):
-            pattern.add_color_stop_rgb(self.linear_pos[i-1],
+            pattern.add_color_stop_rgb(self.linear_pos[i],
                                        each_linear[0],
                                        each_linear[1],
                                        each_linear[2])
+            
         cr.set_source(pattern)    
         cr.set_operator(cairo.OPERATOR_OVER)
         
