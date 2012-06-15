@@ -37,7 +37,7 @@ DRAG_EAST = 3
 DRAG_WEST = 4
 MIN_WIDTH = 400
 
-class LyricsWindow(gobject.GObject):
+class DesktopLyrics(gtk.Window):
     __gsignals__ = {
         "moved" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,)),
         "resized" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,)),
@@ -45,26 +45,22 @@ class LyricsWindow(gobject.GObject):
         "show-bg" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),
         }
     def __init__(self):
-        super(LyricsWindow, self).__init__()
-        
-        self.lyrics_win = gtk.Window(gtk.WINDOW_POPUP)
-        self.lyrics_win.set_property("allow-shrink", True)
-        self.lyrics_win.set_skip_taskbar_hint(True)
-
-        self.lyrics_win.set_decorated(False)
-        self.lyrics_win.set_app_paintable(True)
-        self.lyrics_win.set_keep_above(True)
-        self.lyrics_win.set_colormap(gtk.gdk.Screen().get_rgba_colormap())
-        
+        gtk.Window.__init__(self, gtk.WINDOW_POPUP)
+        self.set_property("allow-shrink", True)
+        self.set_skip_taskbar_hint(True)
+        self.set_decorated(False)
+        self.set_skip_pager_hint(True)
+        self.set_app_paintable(True)
+        self.set_keep_above(True)
+        self.set_colormap(gtk.gdk.Screen().get_rgba_colormap())
         self.render_lyrics = RenderContextNew()
         self.bg_pixbuf = app_theme.get_pixbuf("lyric/bg.png").get_pixbuf()
         self.line_padding = 0.0
-        self.is_composited  = self.lyrics_win.is_composited()
         self.dock_drag_state = DRAG_NONE
         self.padding_x = self.padding_y = 10
         self.old_x = self.old_y = self.old_width = 0
         self.mouse_x = self.mouse_y = 0
-        self.raw_x, self.raw_y = self.lyrics_win.get_position()
+        self.raw_x, self.raw_y = self.get_position()
         self.mouse_over = False
         self.fade_in_size = 20.0
         self.max_line_count = 2
@@ -83,20 +79,20 @@ class LyricsWindow(gobject.GObject):
             self.update_lyric_surface(i)
          
         width = self.adjust_window_height()
-        self.lyrics_win.set_default_size(600, int( width))           
+        self.set_default_size(600, int( width))           
         # Add events.
-        self.lyrics_win.add_events(gtk.gdk.BUTTON_PRESS_MASK |
+        self.add_events(gtk.gdk.BUTTON_PRESS_MASK |
                                    gtk.gdk.BUTTON_RELEASE_MASK |
                                    gtk.gdk.POINTER_MOTION_MASK |
                                    gtk.gdk.ENTER_NOTIFY_MASK |
                                    gtk.gdk.LEAVE_NOTIFY_MASK)
         
-        self.lyrics_win.connect("button-press-event", self.button_press) # TRY
-        self.lyrics_win.connect("button_release_event", self.button_release) 
-        self.lyrics_win.connect("motion-notify-event", self.motion_notify)   
-        self.lyrics_win.connect("enter-notify-event", self.enter_notify)
-        self.lyrics_win.connect("leave-notify-event", self.leave_notify)
-        self.lyrics_win.connect("expose-event", self.expose_before)     
+        self.connect("button-press-event", self.button_press) # TRY
+        self.connect("button_release_event", self.button_release) 
+        self.connect("motion-notify-event", self.motion_notify)   
+        self.connect("enter-notify-event", self.enter_notify)
+        self.connect("leave-notify-event", self.leave_notify)
+        self.connect("expose-event", self.expose_before)     
         config.connect("config-changed", self.update_render_color)
         self.time_source = gobject.timeout_add(500, self.check_mouse_leave)        
         
@@ -148,11 +144,11 @@ class LyricsWindow(gobject.GObject):
     def update_font(self):        
         for i in range(self.get_line_count()):
             self.update_lyric_surface(i)
-        self.lyrics_win.queue_draw()        
-        x, y = self.lyrics_win.get_position()
-        w, h = self.lyrics_win.get_size()
+        self.queue_draw()        
+        x, y = self.get_position()
+        w, h = self.get_size()
         rect = gtk.gdk.Rectangle(int(x), int(y), int(w), int(h))
-        self.move_resize(self.lyrics_win, rect, DRAG_NONE)
+        self.move_resize(self, rect, DRAG_NONE)
             
     def get_locked(self):        
         return config.getboolean("lyrics", "locked")
@@ -160,10 +156,10 @@ class LyricsWindow(gobject.GObject):
     def set_dock_mode(self, value):
         if config.getboolean("lyrics", "dock_mode"):
             config.set("lyrics", "dock_mode", "false")
-            self.lyrics_win.set_type_hint(gtk.WINDOW_TYPE_HINT_NORMAL)
+            self.set_type_hint(gtk.WINDOW_TYPE_HINT_NORMAL)
         else:    
             config.set("lyrics", "dock_mode", "true")
-            self.lyrics_win.set_type_hint(gtk.WINDOW_TYPE_HINT_DOCK)
+            self.set_type_hint(gtk.WINDOW_TYPE_HINT_DOCK)
     
     def get_dock_mode(self):
         return config.getboolean("lyrics", "dock_mode")
@@ -187,7 +183,7 @@ class LyricsWindow(gobject.GObject):
             self.line_percentage = [0.0, 0.0]
             for i in range(self.get_line_count()):
                 self.update_lyric_surface(i)
-            self.lyrics_win.queue_draw()    
+            self.queue_draw()    
         
     def get_blur_radius(self):        
         return config.getint("lyrics", "blur_radius")
@@ -223,7 +219,7 @@ class LyricsWindow(gobject.GObject):
         ''' Paint window bg. '''
         w, h = widget.get_size()
         BORDER_WIDTH = self.padding_x
-        if self.is_composited:
+        if self.is_composited():
             cr.set_operator(cairo.OPERATOR_OVER)        
             sw = self.bg_pixbuf.get_width()
             sh = self.bg_pixbuf.get_height()
@@ -268,7 +264,7 @@ class LyricsWindow(gobject.GObject):
         rect = widget.allocation
         
         # Clear color to transparent window.
-        if self.is_composited:
+        if self.is_composited():
             cr.set_source_rgba(1.0, 1.0, 1.0, 0.0)
             cr.set_operator(cairo.OPERATOR_SOURCE)
             cr.paint()
@@ -300,7 +296,7 @@ class LyricsWindow(gobject.GObject):
         if w >= width:    
             xpos = (w - width) * self.line_alignment[line]
         else:    
-            if not self.is_composited: # self.get_dock_mode()
+            if not self.is_composited(): # self.get_dock_mode()
                 smooth = False
             if smooth:    
                 if percentage * width < w / 2.0:
@@ -328,7 +324,7 @@ class LyricsWindow(gobject.GObject):
         return self.adjust_lyrics_height() + self.padding_x * 2
     
     def get_lyrics_size(self):
-        width = self.lyrics_win.allocation.width - self.padding_x * 2
+        width = self.allocation.width - self.padding_x * 2
         height = self.adjust_lyrics_height()
         return (width, height)
             
@@ -497,7 +493,7 @@ class LyricsWindow(gobject.GObject):
         text_width = self.active_lyric_surfaces[line].get_width()
         if self.fade_in_size * 2 > width:
             self.fade_in_size = width / 2
-        if self.is_composited:    
+        if self.is_composited():    
             pattern = cairo.LinearGradient(self.padding_x, 0.0, self.padding_x + width, 0.0)
             
             # Set fade in on left edge.
@@ -531,7 +527,7 @@ class LyricsWindow(gobject.GObject):
     def draw_lyrics(self, cr):    
         alpha = 1.0
         font_height = self.render_lyrics.get_font_height()
-        if self.is_composited and self.get_locked() and self.mouse_over and self.get_translucent_on_mouse_over():
+        if self.is_composited() and self.get_locked() and self.mouse_over and self.get_translucent_on_mouse_over():
             alpha = 0.3
         w, h = self.get_lyrics_size()    
         ypos = self.adjust_lyric_ypos()
@@ -583,9 +579,9 @@ class LyricsWindow(gobject.GObject):
     def set_input_shape_mask(self, disable_input):    
         if disable_input:
             region = gtk.gdk.Region()
-            self.lyrics_win.window.input_shape_combine_region(region, 0, 0)
+            self.window.input_shape_combine_region(region, 0, 0)
         else:    
-            self.lyrics_win.window.input_shape_combine_region(self.lyrics_win.window.get_visible_region(), 0, 0)
+            self.window.input_shape_combine_region(self.window.get_visible_region(), 0, 0)
             
     def point_in_rect(self, x, y, rect):        
         return rect.x <= x < rect.x + rect.width and rect.y <= y < rect.y + rect.height
@@ -594,8 +590,8 @@ class LyricsWindow(gobject.GObject):
         root_window = gtk.gdk.get_default_root_window()
         screen_h , _ = root_window.get_size()
         rel_x, rel_y = root_window.get_pointer()[:2]
-        x, y = self.lyrics_win.get_position()
-        width, height = self.lyrics_win.get_size()        
+        x, y = self.get_position()
+        width, height = self.get_size()        
         if y < 40:
             height += 40
         else:
@@ -607,7 +603,7 @@ class LyricsWindow(gobject.GObject):
         if self.dock_drag_state == DRAG_NONE and not self.point_in_rect(rel_x, rel_y, rect):
             self.mouse_over = False
             self.emit("hide-bg")
-            self.lyrics_win.queue_draw()
+            self.queue_draw()
         return True    
             
     def set_line_percentage(self, line, percentage):        
@@ -620,17 +616,17 @@ class LyricsWindow(gobject.GObject):
         old_percentage = self.line_percentage[line]
         self.line_percentage[line] = percentage
 
-        if self.is_composited and percentage != old_percentage:
+        if self.is_composited() and percentage != old_percentage:
             old_x = self.adjust_lyric_xpos(line, old_percentage)
             new_x = self.adjust_lyric_xpos(line, percentage)
             if old_x != new_x:
                 pass
-        self.lyrics_win.queue_draw()    
+        self.queue_draw()    
         
     def set_current_line(self, line):    
         if 0 <= line <= self.get_line_count():
             self.current_line = line
-        self.lyrics_win.queue_draw()    
+        self.queue_draw()    
             
     def set_current_percentage(self, percentage):        
         self.set_line_percentage(self.current_line, percentage)
@@ -644,13 +640,13 @@ class LyricsWindow(gobject.GObject):
             alignment = 1.0
         self.line_alignment[line] = alignment    
         self.update_lyric_rect(line)
-        self.lyrics_win.queue_draw()
+        self.queue_draw()
         
     def set_lyric(self, line, lyric):    
         self.percentage = 0.0
         self.lyrics_text[line] = lyric
         self.update_lyric_surface(line)
-        self.lyrics_win.queue_draw()
+        self.queue_draw()
     
     def set_font_size(self, value):    
         self.render_lyrics.set_font_size(value)
@@ -667,16 +663,14 @@ from dtk.ui.draw import draw_vlinear
 from widget.ui import NormalWindow
     
 
-class LyricsScroll(gobject.GObject):
+class ScrollLyrics(NormalWindow):
     __gsignals__ = {
         "seek" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_INT, gobject.TYPE_FLOAT)),
-        "close" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),
         "right-press" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,))
         }
     
     def __init__(self):
-        super(LyricsScroll, self).__init__()
-        
+        super(ScrollLyrics, self).__init__()
         self.percentage = 0.0
         self.whole_lyrics = []
         self.current_lyric_id = -1
@@ -708,10 +702,9 @@ class LyricsScroll(gobject.GObject):
         self.drawing.connect("button-press-event", self.button_press_cb)
         self.drawing.connect("button-release-event", self.button_release_cb)
         self.drawing.connect("motion-notify-event", self.motion_notify_cb)
-        self.scroll_window = NormalWindow()
-        self.scroll_window.set_size_request(300, 120)
-        self.scroll_window.titlebar.close_button.connect("clicked", self.hide_all)
-        self.scroll_window.main_box.add(self.drawing)
+        self.set_size_request(300, 120)
+        self.titlebar.close_button.connect("clicked", lambda w: self.hide_and_emit())
+        self.main_box.add(self.drawing)
         self.__init_line_height()
         
         
@@ -808,7 +801,7 @@ class LyricsScroll(gobject.GObject):
             return (lyric_id, self.saved_lrc_y)
         
     def get_drawing_size(self):    
-        width, height = self.scroll_window.get_size()
+        width, height = self.get_size()
         return width ,height
         
     def adjust_line_count(self):    
@@ -922,7 +915,8 @@ class LyricsScroll(gobject.GObject):
         self.font_name = font_name
         self.drawing.queue_draw()
         
-    def hide_all(self, widget):    
-        self.emit("close")
+    def hide_and_emit(self):    
+        self.hide_all()
+        config.set("lyrics", "status", "false")        
         Dispatcher.close_lyrics()
 

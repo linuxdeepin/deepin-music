@@ -23,7 +23,6 @@
 import gtk
 import os
 
-from findfile import get_music_dir
 import utils
 
 
@@ -34,7 +33,6 @@ class WinDir(gtk.FileChooserDialog):
                                        (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
                                         gtk.STOCK_OPEN, gtk.RESPONSE_OK))
         self.set_modal(True)
-        self.set_current_folder(get_music_dir())
         
     def run(self):    
         response = gtk.FileChooserDialog.run(self)
@@ -53,7 +51,7 @@ class WinFile(gtk.FileChooserDialog):
                                         gtk.STOCK_OPEN, gtk.RESPONSE_OK))
              
         self.set_modal(True)
-        self.set_current_folder(get_music_dir())
+        # self.set_current_folder(get_music_dir())
 
     def run(self):
         response = gtk.FileChooserDialog.run(self)

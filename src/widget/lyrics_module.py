@@ -33,7 +33,7 @@ from dtk.ui.box import ImageBox
 from dtk.ui.menu import Menu
 
 from helper import Dispatcher
-from widget.lyrics import LyricsWindow, LyricsScroll
+from widget.lyrics import DesktopLyrics, ScrollLyrics
 from widget.skin import app_theme
 from widget.lyrics_search import SearchUI
 from lrc_parser import LrcParser
@@ -55,17 +55,16 @@ PREDEFINE_COLORS = {
 
 class LyricsModule(object):
     def __init__(self):
-        self.desktop_lyrics = LyricsWindow()
-        self.desktop_lyrics.connect("moved", self.adjust_toolbar_rect)
-        self.desktop_lyrics.connect("resized", self.adjust_toolbar_rect)
-        self.desktop_lyrics.connect("hide-bg", self.hide_toolbar)
-        self.desktop_lyrics.connect("show-bg", self.show_toolbar)
-        self.desktop_lyrics.lyrics_win.connect("configure-event", self.lyrics_desktop_configure_event)
+        self.desktop_lyrics_win = DesktopLyrics()
+        self.desktop_lyrics_win.connect("moved", self.adjust_toolbar_rect)
+        self.desktop_lyrics_win.connect("resized", self.adjust_toolbar_rect)
+        self.desktop_lyrics_win.connect("hide-bg", self.hide_toolbar)
+        self.desktop_lyrics_win.connect("show-bg", self.show_toolbar)
+        self.desktop_lyrics_win.connect("configure-event", self.lyrics_desktop_configure_event)
         
-        self.scroll_lyrics = LyricsScroll()
-        self.scroll_lyrics.scroll_window.connect("configure-event", self.lyrcis_scroll_configure_event)
+        self.scroll_lyrics = ScrollLyrics()
+        self.scroll_lyrics.connect("configure-event", self.lyrcis_scroll_configure_event)
         self.scroll_lyrics.connect("seek", self.seek_cb)
-        self.scroll_lyrics.connect("close", lambda w : self.hide_all())
         self.scroll_lyrics.connect("right-press", self.scroll_right_press_cb)
         
         Player.connect("instant-new-song", self.instant_update_lrc)
@@ -265,17 +264,17 @@ class LyricsModule(object):
         return align
     
     def change_font_size(self, widget, name):    
-        old_size= self.desktop_lyrics.get_font_size()
+        old_size= self.desktop_lyrics_win.get_font_size()
         if name == "zoom_in":
             new_size = old_size + 2
             if new_size > 70:
                 new_size = 70
-            self.desktop_lyrics.set_font_size(new_size)
+            self.desktop_lyrics_win.set_font_size(new_size)
         elif name == "zoom_out":    
             new_size = old_size - 2
             if new_size < 16:
                 new_size = 16
-            self.desktop_lyrics.set_font_size(new_size)
+            self.desktop_lyrics_win.set_font_size(new_size)
         
     def player_control(self, button, name):   
         if name == "next":
@@ -310,13 +309,13 @@ class LyricsModule(object):
         pass
     
     def change_karaoke_status(self, widget):
-        self.desktop_lyrics.set_karaoke_mode()
+        self.desktop_lyrics_win.set_karaoke_mode()
     
     def change_line_status(self, widget):
         if widget.get_active():
-            self.desktop_lyrics.set_line_count(1)
+            self.desktop_lyrics_win.set_line_count(1)
         else:    
-            self.desktop_lyrics.set_line_count(2)
+            self.desktop_lyrics_win.set_line_count(2)
         
     def popup_predefine_menu(self, widget, event):    
         menu_dict = OrderedDict()
@@ -394,25 +393,25 @@ class LyricsModule(object):
             if nid != self.lrc_next_id:
                 self.current_line = 0
                 if real_lyric:
-                    self.desktop_lyrics.set_lyric(self.current_line, real_lyric)
+                    self.desktop_lyrics_win.set_lyric(self.current_line, real_lyric)
                 if nid != lyric_id:
-                    self.desktop_lyrics.set_current_percentage(0.0)
+                    self.desktop_lyrics_win.set_current_percentage(0.0)
                 self.update_next_lyric(real_id)    
             else:    
-                self.desktop_lyrics.set_line_percentage(self.current_line, 1.0)
+                self.desktop_lyrics_win.set_line_percentage(self.current_line, 1.0)
                 self.current_line = 1 - self.current_line
                 
             self.lrc_id = nid    
-            self.desktop_lyrics.set_current_line(self.current_line)
+            self.desktop_lyrics_win.set_current_line(self.current_line)
             
         if nid == lyric_id and percentage > 0.5:    
             self.update_next_lyric(real_id)
             
         if nid == lyric_id:    
-            self.desktop_lyrics.set_current_percentage(percentage)
+            self.desktop_lyrics_win.set_current_percentage(percentage)
                 
     def update_next_lyric(self, item_id):            
-        if self.desktop_lyrics.get_line_count() == 1:
+        if self.desktop_lyrics_win.get_line_count() == 1:
             self.lrc_next_id = -1
             return
         item_id += 1
@@ -422,14 +421,14 @@ class LyricsModule(object):
                 return
             else:
                 self.lrc_next_id = -1
-                self.desktop_lyrics.set_lyric(1 - self.current_line, "")
+                self.desktop_lyrics_win.set_lyric(1 - self.current_line, "")
         else:        
             if self.lrc_next_id == real_id:
                 return
             if real_lyric:
                 self.lrc_next_id = real_id
-                self.desktop_lyrics.set_lyric(1 - self.current_line, real_lyric)
-        self.desktop_lyrics.set_line_percentage(1 - self.current_line, 0.0)        
+                self.desktop_lyrics_win.set_lyric(1 - self.current_line, real_lyric)
+        self.desktop_lyrics_win.set_line_percentage(1 - self.current_line, 0.0)        
         
         
     def get_real_lyric(self, item_id):             
@@ -440,8 +439,8 @@ class LyricsModule(object):
         return item_id, self.lrc.get_item_lyric(item_id)
     
     def clear_lyrics(self):
-        self.desktop_lyrics.set_lyric(0, "")
-        self.desktop_lyrics.set_lyric(1, "")
+        self.desktop_lyrics_win.set_lyric(0, "")
+        self.desktop_lyrics_win.set_lyric(1, "")
         self.current_line = 0
         self.lrc_id = -1
         self.lrc_next_id = -1
@@ -449,10 +448,10 @@ class LyricsModule(object):
     def set_message(self, message, duration_ms=None):    
         if not message:
             return
-        self.desktop_lyrics.set_current_line(0)
-        self.desktop_lyrics.set_current_percentage(0.0)
-        self.desktop_lyrics.set_lyric(0, message)
-        self.desktop_lyrics.set_lyric(1, "")
+        self.desktop_lyrics_win.set_current_line(0)
+        self.desktop_lyrics_win.set_current_percentage(0.0)
+        self.desktop_lyrics_win.set_lyric(0, message)
+        self.desktop_lyrics_win.set_lyric(1, "")
         
         if self.message_source != None:
             gobject.source_remove(self.message_source)
@@ -461,7 +460,7 @@ class LyricsModule(object):
             self.message_source = gobject.timeout_add(duration_ms, self.hide_message)
             
     def hide_message(self):    
-        self.desktop_lyrics.set_lyric(0, "")
+        self.desktop_lyrics_win.set_lyric(0, "")
         self.message_source = None
         return False
     
@@ -493,8 +492,8 @@ class LyricsModule(object):
     def show_toolbar(self, widget):    
         self.toolbar.show_all()
         self.toolbar.hide_all()
-        l_x, l_y = self.desktop_lyrics.lyrics_win.get_position()
-        l_w, l_h = self.desktop_lyrics.lyrics_win.get_size()
+        l_x, l_y = self.desktop_lyrics_win.get_position()
+        l_w, l_h = self.desktop_lyrics_win.get_size()
         rect = gtk.gdk.Rectangle(int(l_x), int(l_y), int(l_w), int(l_h))
         self.adjust_toolbar_rect(None, rect)
         self.toolbar.show_all()
@@ -511,7 +510,7 @@ class LyricsModule(object):
         self.pause_time_source()
         
     def hide_scroll_lyrics(self):    
-        self.scroll_lyrics.scroll_window.hide_all()
+        self.scroll_lyrics.hide_all()
         
     def lyrcis_scroll_configure_event(self, widget, event):    
         if widget.get_property("visible"):
@@ -525,17 +524,17 @@ class LyricsModule(object):
         if config.get("lyrics", "scroll_x") != "-1":
             x = config.getint("lyrics", "scroll_x")
             y = config.getint("lyrics", "scroll_y")
-            self.scroll_lyrics.scroll_window.move(int(x), int(y))
+            self.scroll_lyrics.move(int(x), int(y))
         try:    
             w = config.getint("lyrics", "scroll_w")
             h = config.getint("lyrics", "scroll_h")
-            self.scroll_lyrics.scroll_window.resize(int(w), int(h))
+            self.scroll_lyrics.resize(int(w), int(h))
         except: pass    
 
-        self.scroll_lyrics.scroll_window.show_all()        
+        self.scroll_lyrics.show_all()        
         
     def hide_desktop_lyrics(self):    
-        self.desktop_lyrics.lyrics_win.hide_all()
+        self.desktop_lyrics_win.hide_all()
         self.toolbar.hide_all()
         
     def lyrics_desktop_configure_event(self, widget, event):    
@@ -549,21 +548,21 @@ class LyricsModule(object):
     def show_desktop_lyrics(self):    
         if config.get("lyrics", "desktop_x") == "-1":
             screen_w, screen_h = gtk.gdk.get_default_root_window().get_size()
-            w , h = self.desktop_lyrics.lyrics_win.get_size()
+            w , h = self.desktop_lyrics_win.get_size()
             x = screen_w / 2 - w / 2
             y = screen_h - h
         else:    
             x = config.getint("lyrics", "desktop_x")
             y = config.getint("lyrics", "desktop_y")
             
-        self.desktop_lyrics.lyrics_win.move(x, y)    
+        self.desktop_lyrics_win.move(x, y)    
         try:
             d_w = config.getint("lyrics", "desktop_w")
             d_h = config.getint("lyrics", "desktop_h")
-            self.desktop_lyrics.lyrics_win.resize(d_w, d_h)          
+            self.desktop_lyrics_win.resize(d_w, d_h)          
         except: pass    
 
-        self.desktop_lyrics.lyrics_win.show_all()           
+        self.desktop_lyrics_win.show_all()           
         
     def adjust_toolbar_rect(self, widget, rect):    
         screen_w, screen_h = gtk.gdk.get_default_root_window().get_size()

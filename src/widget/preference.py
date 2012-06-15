@@ -28,13 +28,12 @@ from dtk.ui.window import Window
 from dtk.ui.label import Label
 from dtk.ui.button import CheckButton, RadioButton
 from dtk.ui.spin import SpinBox
-from dtk.ui.line import draw_vlinear
 from dtk.ui.utils import get_content_size, move_window
 from dtk.ui.scalebar import HScalebar
 from dtk.ui.entry import TextEntry
 from dtk.ui.treeview import TreeView
 from dtk.ui.button import Button
-from dtk.ui.combo import ComboBox, ComboBoxItem
+from dtk.ui.combo import ComboBox
 from dtk.ui.scrolled_window import ScrolledWindow
 
 from utils import color_hex_to_cairo
@@ -134,7 +133,6 @@ class GeneralSetting(gtk.VBox):
         # open_lyrics_check_button.
         open_lyrics_hbox = gtk.HBox()
         self.open_lyrics_check_button = CheckButton("打开桌面歌词")
-        # open_lyrics_hbox.pack_start(create_right_align(), True, True)        
         open_lyrics_hbox.pack_start(self.open_lyrics_check_button, False, False)
 
         
@@ -147,7 +145,6 @@ class GeneralSetting(gtk.VBox):
         # resume last check_button.
         self.resume_last_check_button = CheckButton("继续上次播放进度")
         resume_hbox = gtk.HBox()
-        # resume_hbox.pack_start(create_right_align(), True, True)        
         resume_hbox.pack_start(self.resume_last_check_button, False, False)
         
         main_table.attach(label_align, 0, 2, 0, 1, yoptions=gtk.FILL, xpadding=8)
@@ -294,7 +291,7 @@ class DesktopLyricsSetting(gtk.VBox):
         super(DesktopLyricsSetting, self).__init__()
         self.set_spacing(20)
         self.pack_start(self.create_lyrics_dir_table(), False, True)
-        self.pack_start(self.create_style_table(), False, True)
+        self.pack_start(self.create_style_table(), False, False)
         self.render_lyrics = RenderContextNew()
         
         self.preview = gtk.EventBox()
@@ -401,22 +398,19 @@ class DesktopLyricsSetting(gtk.VBox):
         style_title_label = Label("歌词样式")
         
         font_name_hbox = self.create_combo_widget("字体:",
-                                                  [ComboBoxItem(font_name) for font_name in get_font_families()[:10]]
+                                                  [(font_name, None) for font_name in get_font_families()]
                                                   )
         font_size_hbox = self.create_combo_widget("字号:", 
-                                                  [ComboBoxItem(str(num)) for num in range(20, 40, 2)],
-                                                  default_width=50)
+                                                  [(str(num), None) for num in range(20, 40, 2)])
         
         line_number_hbox = self.create_combo_widget("行数:",
-                                                    [ComboBoxItem(name) for name in ["单行", "双行"]])
+                                                    [(name, None) for name in ["单行", "双行"]])
         
         align_hbox = self.create_combo_widget("对齐:",
-                                              [ComboBoxItem(name) for name in ["左对齐", "居中对齐", "右对齐"]],
-                                              1)
+                                              [(name, None) for name in ["左对齐", "居中对齐", "右对齐"]])
         
         outline_hbox = self.create_combo_widget("轮廓:",
-                                                [ComboBoxItem(str(num)) for num in range(1, 10)],
-                                                default_width=50)
+                                                [(str(num), None) for num in range(1, 10)])
         
         fuzzy_slipper = HScalebar(
             app_theme.get_pixbuf("slipper/left_fg.png"),
@@ -452,16 +446,14 @@ class DesktopLyricsSetting(gtk.VBox):
         main_table.attach(outline_fuzzy_box, 0, 2, 4, 5, xpadding=20, xoptions=gtk.FILL)
         return main_table
     
-    def create_combo_widget(self, label_content, items, index=0, default_width=100):
+    def create_combo_widget(self, label_content, items):
         label = Label(label_content)
         label.set_size_request(30, 12)
         
-        combo_box = ComboBox(items, default_width)
-        combo_box.set_select_index(index)
-        
+        combo_box = ComboBox(items, 200)
         hbox = gtk.HBox(spacing=5)
         hbox.pack_start(label, False, False)
-        hbox.pack_start(combo_box, False, True)
+        hbox.pack_start(combo_box, False, False)
         return hbox
         
 
