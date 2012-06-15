@@ -187,25 +187,23 @@ class LyricsModule(object):
         config.set("lyrics", "mode", str(LRC_WINDOW_MODE))
         self.__lyrics_mode = LRC_WINDOW_MODE
         self.hide_desktop_lyrics()
-        self.pause_time_source()
-        self.play_time_source()
         self.show_scroll_lyrics()
+        self.play_time_source()
+        
         
     def switch_to_desktop_lyrics(self):    
         config.set("lyrics", "mode", str(LRC_DESKTOP_MODE))
         self.__lyrics_mode = LRC_DESKTOP_MODE
         self.hide_scroll_lyrics()
-        self.pause_time_source()
-        self.play_time_source()
         self.show_desktop_lyrics()
-        
+        self.play_time_source()
     
     def seek_cb(self, widget, lyric_id, percentage):
         item_time = self.lrc.get_item_time(lyric_id)
         new_time = item_time / 1000
         Player.seek(new_time)        
         self.scroll_lyrics.set_progress(lyric_id, percentage)
-        # time.sleep(0.1)
+        time.sleep(0.1)
         
         
     def load_button_status(self):    
@@ -615,11 +613,9 @@ class LyricsModule(object):
             return 
         
         if self.__lyrics_mode == LRC_WINDOW_MODE:
-            self.time_source = gobject.timeout_add(300, self.real_show_lyrics)
-            print 500
+            self.time_source = gobject.timeout_add(200, self.real_show_lyrics)
         else:    
             self.time_source = gobject.timeout_add(100, self.real_show_lyrics)
-            print 100
                 
     def set_current_lrc(self, try_web=True, force_song=None):        
         ret = False
@@ -639,10 +635,7 @@ class LyricsModule(object):
             self.set_duration(force_song.get("#duration"))    
             self.__find_flag = True
             if config.getboolean("lyrics", "status"):
-                if self.__lyrics_mode == LRC_WINDOW_MODE:
-                    self.time_source = gobject.timeout_add(500, self.real_show_lyrics)
-                else:    
-                    self.time_source = gobject.timeout_add(100, self.real_show_lyrics)
+                self.play_time_source()
         else:    
             if self.current_song != force_song:
                 return 
