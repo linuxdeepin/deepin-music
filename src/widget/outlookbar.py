@@ -282,7 +282,6 @@ class SimpleItem(gtk.Button):
             self.normal_dpixbuf, self.press_dpixbuf, self.content, self.clicked_callback = element[:4]
             self.args = element[4:]
             
-        # widget_fix_cycle_destroy_bug(self)
         pixbuf_width = self.normal_dpixbuf.get_pixbuf().get_width()
         self.font_offset += pixbuf_width
         self.x_align = x_align

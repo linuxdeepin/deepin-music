@@ -56,6 +56,7 @@ class PlaylistUI(gtk.VBox):
         self.category_list.draw_mask = self.draw_single_mask
         self.category_list.connect("single-click-item", self.category_single_click_cb)
         self.category_list.connect("right-press-item", self.category_right_press_cb)
+        self.category_list.connect("button-press-event", self.category_button_press_cb)
         self.category_list.set_size_request(98, -1)
         self.search_time_source = 0
         
@@ -362,9 +363,14 @@ class PlaylistUI(gtk.VBox):
         return 0
     
     def category_right_press_cb(self, widget, item, x, y):    
-        new_event = namedtuple("event", "x_root y_root")
-        event = new_event(int(x), int(y))
-        self.popup_list_menu(widget, event)
+        # new_event = namedtuple("event", "x_root y_root")
+        # event = new_event(int(x), int(y))
+        # self.popup_list_menu(widget, event)
+        pass
+        
+    def category_button_press_cb(self, widget, event):    
+        if event.button == 3:
+            self.popup_list_menu(widget, event)
         
     def category_single_click_cb(self, widget, item):        
         self.reset_search_entry()

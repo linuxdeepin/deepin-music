@@ -712,6 +712,20 @@ class LyricsScroll(gobject.GObject):
         self.scroll_window.set_size_request(300, 120)
         self.scroll_window.titlebar.close_button.connect("clicked", self.hide_all)
         self.scroll_window.main_box.add(self.drawing)
+        self.__init_line_height()
+        
+        
+    def __init_line_height(self):
+        pango_context = gtk.gdk.pango_context_get()
+        pango_layout = pango.Layout(pango_context)
+        font_desc = pango.FontDescription(self.font_name)
+        pango_layout.set_font_description(font_desc)
+        
+        metrics = pango_context.get_metrics(pango_layout.get_font_description())
+        ascent = metrics.get_ascent()
+        descent = metrics.get_descent()
+        line_height = (ascent + descent) / pango.SCALE + self.line_margin
+        self.__line_height = line_height
         
     def record_seek(self, event):    
         self.current_pointer_y = event.y_root
@@ -735,9 +749,8 @@ class LyricsScroll(gobject.GObject):
                 
     def button_release_cb(self, widget, event):            
         if self.seeking:
-            line_height = self.get_line_height()
             current_lyric_id, lrc_y = self.calc_paint_pos()
-            percentage = float(lrc_y) / float(line_height)
+            percentage = float(lrc_y) / float(self.__line_height)
             self.end_seek(event)
             self.emit("seek", int(current_lyric_id), percentage)
     
@@ -760,44 +773,32 @@ class LyricsScroll(gobject.GObject):
         layout.set_font_description(font_desc)
         return layout
     
-    def get_line_height(self):
-        pango_context = gtk.gdk.pango_context_get()
-        pango_layout = pango.Layout(pango_context)
-        font_desc = pango.FontDescription(self.font_name)
-        pango_layout.set_font_description(font_desc)
-        
-        metrics = pango_context.get_metrics(pango_layout.get_font_description())
-        ascent = metrics.get_ascent()
-        descent = metrics.get_descent()
-        line_height = (ascent + descent) / pango.SCALE + self.line_margin
-        return line_height
+    
         
     def calc_lrc_ypos(self, percentage):
-        line_height = self.get_line_height()
         if self.scroll_mode == SCROLL_BY_LINES:
             if percentage < 0.15:
                 percentage = percentage / 0.15
             else:    
                 percentage = 1
-        return line_height * percentage        
+        return self.__line_height * percentage        
     
     def calc_paint_pos(self):
         if self.seeking:
-            line_height = self.get_line_height()
             lyric_id = self.saved_lyric_id
             y = self.saved_seek_offset - self.current_pointer_y + self.saved_pointer_y
-            lyric_id += y / line_height
-            y %= line_height
+            lyric_id += y / self.__line_height
+            y %= self.__line_height
             
             if y < 0:
-                y += line_height
+                y += self.__line_height
                 lyric_id -= 1
             if lyric_id < 0:    
                 lyric_id = 0
                 y = 0
             elif lyric_id >= len(self.whole_lyrics):
                 lyric_id = len(self.whole_lyrics) - 1
-                y = line_height
+                y = self.__line_height
                 
             return int(lyric_id), int(y) 
         
@@ -811,16 +812,14 @@ class LyricsScroll(gobject.GObject):
         return width ,height
         
     def adjust_line_count(self):    
-        line_height = self.get_line_height()
         width, height = self.get_drawing_size()
-        line_count = height - self.padding_y * 2 / line_height
+        line_count = height - self.padding_y * 2 / self.__line_height
         return line_count
     
     def get_active_color_ratio(self, line):
-        line_height = self.get_line_height()
         current_lyric_id, lrc_y = self.calc_paint_pos()
         ratio = 0.0
-        percentage = lrc_y / line_height
+        percentage = lrc_y / self.__line_height
         if line == current_lyric_id:
             ratio = (1.0 - percentage) / 0.1
             if ratio > 1.0: ratio = 1.0
@@ -833,7 +832,6 @@ class LyricsScroll(gobject.GObject):
         return ratio    
         
     def paint_lyrics(self, cr):    
-        line_height = self.get_line_height()
         count = self.adjust_line_count()
         width , height = self.get_drawing_size()
         layout = self.get_pango(cr)
@@ -845,12 +843,12 @@ class LyricsScroll(gobject.GObject):
         current_lyric_id, lrc_y = self.calc_paint_pos()
         begin = current_lyric_id - count / 2
         end = current_lyric_id + count / 2 + 1
-        ypos = height / 2 - lrc_y - (count / 2 + 1) * line_height
+        ypos = height / 2 - lrc_y - (count / 2 + 1) * self.__line_height
         cr.set_source_rgb(*self.inactive_color)
         
         if self.whole_lyrics:
             for i in range(begin, end):
-                ypos += line_height
+                ypos += self.__line_height
                 if i < 0: continue
                 if i > len(self.whole_lyrics) - 1:
                     break                
@@ -868,10 +866,10 @@ class LyricsScroll(gobject.GObject):
                 ratio = self.get_active_color_ratio(i)
                 alpha = 1.0
                 
-                if ypos < line_height / 2.0 + 30:
-                    alpha = 1.0 - (line_height / 2.0 + 30 - ypos) * 1.0 / line_height * 2
-                elif ypos > height - line_height * 1.5 - self.padding_y:    
-                    alpha = (height - line_height - self.padding_y - ypos) * 1.0 / line_height * 2
+                if ypos < self.__line_height / 2.0 + 30:
+                    alpha = 1.0 - (self.__line_height / 2.0 + 30 - ypos) * 1.0 / self.__line_height * 2
+                elif ypos > height - self.__line_height * 1.5 - self.padding_y:    
+                    alpha = (height - self.__line_height - self.padding_y - ypos) * 1.0 / self.__line_height * 2
                 if alpha < 0.0: alpha = 0.0    
                 cr.set_source_rgba(
                     self.active_color[0] * ratio + self.inactive_color[0] * (1 - ratio),

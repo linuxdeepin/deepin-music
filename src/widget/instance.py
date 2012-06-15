@@ -106,7 +106,6 @@ class DeepinMusic(gobject.GObject, Logger):
         self.window.connect("destroy", self.quit)
         
         Dispatcher.connect("quit",self.force_quit)
-        config.connect("config-changed", self.__on_config_set)
         
         self.tray_icon = None
         gobject.idle_add(self.ready)

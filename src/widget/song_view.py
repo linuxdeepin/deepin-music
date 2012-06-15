@@ -59,6 +59,7 @@ class SongView(ListView):
         self.sort_reverse = {key : False for key in sort_key }
         self.connect_after("drag-data-received", self.on_drag_data_received)
         self.connect("double-click-item", self.double_click_item_cb)
+        self.connect("button-press-event", self.button_press_cb)
         
         MediaDB.connect("removed", self.__remove_songs)
         
@@ -349,6 +350,10 @@ class SongView(ListView):
             Menu(mode_items, True).show((pos[0], pos[1]))
         else:    
             return Menu(mode_items)
+        
+    def button_press_cb(self, widget, event):    
+        if event.button == 3 and not self.items:
+            self.popup_add_menu(int(event.x_root), int(event.y_root))
 
     def popup_delete_menu(self, x, y):    
         items = [(None, "删除", self.remove_select_items),
