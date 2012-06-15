@@ -69,8 +69,8 @@ class SearchUI(NormalWindow):
         info_box.pack_start(right_align, True, True)
         info_box.pack_start(search_button, False, False)
         
-        scrolled_window = ScrolledWindow()
-        scrolled_window.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        scrolled_window = ScrolledWindow(0, 0)
+        scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
         sort_items = [(lambda item: item.title, cmp), (lambda item: item.artist, cmp)]
         self.result_view = ListView(sort_items)
         self.result_view.connect("double-click-item", self.double_click_cb)
@@ -207,9 +207,8 @@ class SearchItem(gobject.GObject):
         
     def get_column_sizes(self):
         '''Get sizes.'''
-        return [(min(self.title_width + self.title_padding_x * 2, 200),
-                 self.title_height + self.title_padding_y * 2),
-                (min(self.artist_width + self.artist_padding_x * 2, 200),
+        return [(260, self.title_height + self.title_padding_y * 2),
+                (160,
                  self.artist_height + self.artist_padding_y * 2)
                 ]    
     

@@ -295,7 +295,7 @@ class Browser(gtk.VBox, SignalContainer):
         # songs_view
         self.songs_view = MultiDragSongView()
         self.songs_view.add_titles(["歌名", "艺术家", "专辑", "添加时间"])
-        self.songs_scrolled_window = ScrolledWindow()
+        self.songs_scrolled_window = ScrolledWindow(0, 0)
         self.songs_scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
         self.songs_scrolled_window.add_child(self.songs_view)
         
