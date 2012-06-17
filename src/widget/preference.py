@@ -38,7 +38,9 @@ from dtk.ui.scrolled_window import ScrolledWindow
 
 from utils import color_hex_to_cairo
 from widget.skin import app_theme
-from widget.ui_utils import get_font_families, switch_tab, create_separator_box, create_right_align, draw_single_mask
+from widget.ui_utils import (get_font_families, switch_tab,
+                             create_separator_box, create_right_align, draw_single_mask)
+from widget.ui import ColorButton
 from render_lyrics import RenderContextNew
 from config import config
 
@@ -392,7 +394,7 @@ class DesktopLyricsSetting(gtk.VBox):
         return main_table
     
     def create_style_table(self):
-        main_table = gtk.Table(5, 2)
+        main_table = gtk.Table(6, 2)
         main_table.set_row_spacings(10)
         
         style_title_label = Label("歌词样式")
@@ -443,11 +445,18 @@ class DesktopLyricsSetting(gtk.VBox):
         outline_fuzzy_box.pack_start(outline_hbox, False, False)
         outline_fuzzy_box.pack_start(fuzzy_hbox, False, False)
         
+        # test colorbutton.
+        colorbutton_box = gtk.HBox()
+        colorbutton_box.pack_start(ColorButton(), False, False)
+        colorbutton_box.pack_start(ColorButton(), False, False)
+        colorbutton_box.pack_start(ColorButton(), False, False)
+        
         main_table.attach(style_title_label, 0, 2, 0, 1, yoptions=gtk.FILL, xpadding=8)
         main_table.attach(create_separator_box(), 0, 2, 1, 2, yoptions=gtk.FILL)
         main_table.attach(font_attr_box, 0, 2, 2, 3, xpadding=20, xoptions=gtk.FILL)
         main_table.attach(line_and_align_box, 0, 2, 3, 4, xpadding=20, xoptions=gtk.FILL)
         main_table.attach(outline_fuzzy_box, 0, 2, 4, 5, xpadding=20, xoptions=gtk.FILL)
+        main_table.attach(colorbutton_box, 0, 2, 5, 6, xpadding=20, xoptions=gtk.FILL)
         return main_table
     
     def create_combo_widget(self, label_content, items):

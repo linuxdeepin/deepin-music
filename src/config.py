@@ -22,7 +22,7 @@
 
 
 import gobject    
-from findfile import get_config_file
+from xdg_support import get_config_file
 from ConfigParser import RawConfigParser as ConfigParser
 from logger import Logger
 from constant import CONFIG_FILENAME

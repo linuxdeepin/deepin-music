@@ -29,6 +29,7 @@ from dtk.ui.utils import move_window
 from dtk.ui.entry import TextEntry
 from dtk.ui.button import ImageButton
 from dtk.ui.draw import draw_vlinear
+from dtk.ui.button import Button
 
 from widget.skin import app_theme
 
@@ -143,3 +144,29 @@ class ProgressBox(gtk.VBox):
         draw_vlinear(cr, start_x, start_y, last_width - 2, rect.height - 8,
                      app_theme.get_shadow_color("playlistLast").get_color_info())
         return False
+    
+class ColorButton(gtk.EventBox):    
+    
+    def __init__(self):
+        super(ColorButton, self).__init__()
+        self.set_visible_window(False)
+        self.set_app_paintable(True)
+        self.set_size_request(60, 25)
+        self.connect("expose-event", self.draw_color_button_mask)
+        
+    def draw_color_button_mask(self, widget, event):    
+        cr = widget.window.cairo_create()
+        rect = widget.allocation
+        
+        draw_vlinear(cr, rect.x, rect.y, rect.width, rect.height,
+                     self.get_shadow_colors("#FF0000"), 3)
+        
+        return True
+        
+    def get_shadow_colors(self, html_color):    
+        return [
+            (0,    ("%s" % html_color, 0.8)),
+            (0.05, ("%s" % html_color, 1.0)),
+            (0.95, ("%s" % html_color, 1.0)),
+            (1,    ("%s" % html_color, 0.8)),
+            ]

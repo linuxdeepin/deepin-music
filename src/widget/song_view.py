@@ -33,6 +33,7 @@ from dtk.ui.threads import post_gui
 from dtk.ui.draw import draw_vlinear
 
 import utils
+import common
 from config import config
 from player import Player
 from helper import Dispatcher
@@ -275,7 +276,7 @@ class SongView(ListView):
     def open_song_dir(self):
         if len(self.select_rows) > 0:
             song = self.items[self.select_rows[0]].get_song()
-            utils.run_command("xdg-open %s" % song.get_dir())
+            common.open_file_directory(song.get_path())
         return True    
     
     def open_song_editor(self):
@@ -498,7 +499,7 @@ class MultiDragSongView(ListView):
     def open_song_dir(self):
         if len(self.select_rows) > 0:
             song = self.items[self.select_rows[0]].get_song()
-            utils.run_command("xdg-open %s" % song.get_dir())
+            common.open_file_directory(song.get_path())
         return True    
     
     def emit_to_playlist(self):

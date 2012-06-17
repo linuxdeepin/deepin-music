@@ -31,7 +31,7 @@ import utils
 from config import config
 from logger import Logger
 from library import MediaDB
-from findfile import get_cache_file
+from xdg_support import get_cache_file
 from widget.skin import app_theme
 from cover_download import download_album_cover
 

@@ -26,7 +26,7 @@ from threading import Condition
 from random import shuffle
 
 from song import Song, TAG_KEYS
-from findfile import get_config_file
+from xdg_support import get_config_file
 from parse import Query
 from logger import Logger
 import utils
