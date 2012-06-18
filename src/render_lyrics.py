@@ -74,7 +74,10 @@ class RenderContextNew(object):
         self.update_font_height()
         
     def get_font_size(self):    
-        return self.split_font()[1]
+        try:
+            return self.split_font()[1]
+        except:
+            return 30
     
     def split_font(self):
         font_des = self.pango_layout.get_font_description().to_string()

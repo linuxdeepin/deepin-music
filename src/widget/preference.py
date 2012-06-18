@@ -33,6 +33,7 @@ from dtk.ui.scalebar import HScalebar
 from dtk.ui.entry import TextEntry
 from dtk.ui.treeview import TreeView
 from dtk.ui.button import Button
+from dtk.ui.color_selection import ColorButton
 from dtk.ui.combo import ComboBox
 from dtk.ui.scrolled_window import ScrolledWindow
 
@@ -40,7 +41,6 @@ from utils import color_hex_to_cairo
 from widget.skin import app_theme
 from widget.ui_utils import (get_font_families, switch_tab,
                              create_separator_box, create_right_align, draw_single_mask)
-from widget.ui import ColorButton
 from render_lyrics import RenderContextNew
 from config import config
 
@@ -291,10 +291,10 @@ class DesktopLyricsSetting(gtk.VBox):
     
     def __init__(self):
         super(DesktopLyricsSetting, self).__init__()
+        self.render_lyrics = RenderContextNew()        
         self.set_spacing(20)
         self.pack_start(self.create_lyrics_dir_table(), False, True)
         self.pack_start(self.create_style_table(), False, False)
-        self.render_lyrics = RenderContextNew()
         
         self.preview = gtk.EventBox()
         self.preview.set_visible_window(False)
@@ -303,10 +303,13 @@ class DesktopLyricsSetting(gtk.VBox):
         preview_align.set(0.0, 0.0, 1.0, 1.0)
         preview_align.set_padding(0, 10, 5, 5)
         preview_align.add(self.preview)
-        
-        self.preview.connect("expose-event", self.draw_lyrics)
         self.pack_start(preview_align, False, True)
-        self.load_status()
+        
+        # Signals.
+        self.preview.connect("expose-event", self.draw_lyrics)        
+        self.font_name_combo_box.connect("item-selected", self.update_preview_font_name)
+        self.font_size_spin.connect("value-changed", self.update_preview_font_size)
+        
         
     def get_render_color(self, active=False):        
         if active:
@@ -330,6 +333,17 @@ class DesktopLyricsSetting(gtk.VBox):
         cr.paint()
         self.render_lyrics.paint_text(cr, lyrics, 0, 0)
         return surface
+    
+    def update_preview_font_name(self, widget, label, allocated_data, index):
+        font_size = self.render_lyrics.get_font_size()
+        self.render_lyrics.set_font_name("%s %d" % (label, font_size))
+        self.preview.queue_draw()
+        
+    def update_preview_font_size(self, widget, value):    
+        font_name = self.font_name_combo_box.get_current_item()
+        print font_name
+
+        # self.render_lyrics.set_font_name()
     
     def draw_lyrics(self, widget, event):
         cr = widget.window.cairo_create()
@@ -366,10 +380,6 @@ class DesktopLyricsSetting(gtk.VBox):
 
         return False
         
-    def load_status(self):    
-        self.dir_entry.set_text(config.get("lyrics", "save_lrc_path"))
-        self.dir_entry.set_size_request(300, 12)
-        
     def create_lyrics_dir_table(self):    
         main_table = gtk.Table(3, 2)
         main_table.set_row_spacings(5)
@@ -381,7 +391,8 @@ class DesktopLyricsSetting(gtk.VBox):
         label_align.add(dir_title_label)
         
         self.dir_entry = TextEntry("~/.lyrics")
-        self.dir_entry.set_size(290, 23)
+        self.dir_entry.set_text(config.get("lyrics", "save_lrc_path"))
+        self.dir_entry.set_size_request(300, 12)
         
         modify_button = Button("修改目录")
         hbox = gtk.HBox(spacing=5)
@@ -394,25 +405,34 @@ class DesktopLyricsSetting(gtk.VBox):
         return main_table
     
     def create_style_table(self):
-        main_table = gtk.Table(6, 2)
+        main_table = gtk.Table(7, 2)
         main_table.set_row_spacings(10)
         
         style_title_label = Label("歌词样式")
         
-        font_name_hbox = self.create_combo_widget("字体:",
-                                                  [(font_name, None) for font_name in get_font_families()]
-                                                  )
-        font_size_hbox = self.create_combo_spin("字号:", 20, 10, 80, 1)
+        # font_name
+        font_families = get_font_families()
+        font_name = self.render_lyrics.split_font()[0]
+        try:
+            font_item_index = font_families.index(font_name)
+        except:    
+            font_item_index = 0
+            
+        font_name_hbox, self.font_name_combo_box = self.create_combo_widget("字体:",
+                                                                            [(font_name, None) for font_name in font_families],
+                                                                            font_item_index)
+        font_size = int(self.render_lyrics.get_font_size())
+        font_size_hbox, self.font_size_spin = self.create_combo_spin("字号:", font_size, 16, 70, 1)
         
-        line_number_hbox = self.create_combo_widget("行数:",
+        line_number_hbox, self.line_number_combo_box = self.create_combo_widget("行数:",
                                                     [(name, None) for name in ["单行", "双行"]])
         
-        align_hbox = self.create_combo_widget("对齐:",
+        align_hbox, self.line_align_combo_box = self.create_combo_widget("对齐:",
                                               [(name, None) for name in ["左对齐", "居中对齐", "右对齐"]])
         
-        outline_hbox = self.create_combo_spin("轮廓:", 3, 1, 5, 1)
+        outline_hbox, self.outline_spin = self.create_combo_spin("轮廓:", 3, 1, 5, 1)
         
-        fuzzy_slipper = HScalebar(
+        self.fuzzy_slipper = HScalebar(
             app_theme.get_pixbuf("slipper/left_fg.png"),
             app_theme.get_pixbuf("slipper/left_bg.png"),
             app_theme.get_pixbuf("slipper/middle_fg.png"),
@@ -422,14 +442,14 @@ class DesktopLyricsSetting(gtk.VBox):
             app_theme.get_pixbuf("slipper/point.png"),
             )
         
-        fuzzy_slipper.set_size_request(177, -1)
+        self.fuzzy_slipper.set_size_request(177, -1)
         fuzzy_label = Label("模糊:")
         fuzzy_label.set_size_request(35, -1)
         fuzzy_hbox = gtk.HBox()
         slipper_align = gtk.Alignment()
         slipper_align.set(0.5, 0.5, 0.0, 0.0)
         slipper_align.set_padding(6, 0, 0, 0)
-        slipper_align.add(fuzzy_slipper)
+        slipper_align.add(self.fuzzy_slipper)
         fuzzy_hbox.pack_start(fuzzy_label, False, False)
         fuzzy_hbox.pack_start(slipper_align, False, False)
         
@@ -445,28 +465,47 @@ class DesktopLyricsSetting(gtk.VBox):
         outline_fuzzy_box.pack_start(outline_hbox, False, False)
         outline_fuzzy_box.pack_start(fuzzy_hbox, False, False)
         
-        # test colorbutton.
-        colorbutton_box = gtk.HBox()
-        colorbutton_box.pack_start(ColorButton(), False, False)
-        colorbutton_box.pack_start(ColorButton(), False, False)
-        colorbutton_box.pack_start(ColorButton(), False, False)
+        inactive_color_box = gtk.HBox(spacing=10)
+        inactive_color_label = Label("未播放:")
+        self.inactive_upper_color_button = ColorButton(config.get("lyrics", "inactive_color_upper"))
+        self.inactive_middle_color_button = ColorButton(config.get("lyrics", "inactive_color_middle"))
+        self.inactive_bottom_color_button = ColorButton(config.get("lyrics", "inactive_color_bottom"))
+        inactive_color_box.pack_start(inactive_color_label, False, False)
+        inactive_color_box.pack_start(self.inactive_upper_color_button, False, False)
+        inactive_color_box.pack_start(self.inactive_middle_color_button, False, False)
+        inactive_color_box.pack_start(self.inactive_bottom_color_button, False, False)
+        
+        active_color_box = gtk.HBox(spacing=10)
+        active_color_label = Label("已播放:")
+        self.active_upper_color_button = ColorButton(config.get("lyrics", "active_color_upper"))
+        self.active_middle_color_button = ColorButton(config.get("lyrics", "active_color_middle"))
+        self.active_bottom_color_button = ColorButton(config.get("lyrics", "active_color_bottom"))
+        active_color_box.pack_start(active_color_label, False, False)
+        active_color_box.pack_start(self.active_upper_color_button, False, False)
+        active_color_box.pack_start(self.active_middle_color_button, False, False)
+        active_color_box.pack_start(self.active_bottom_color_button, False, False)
         
         main_table.attach(style_title_label, 0, 2, 0, 1, yoptions=gtk.FILL, xpadding=8)
         main_table.attach(create_separator_box(), 0, 2, 1, 2, yoptions=gtk.FILL)
         main_table.attach(font_attr_box, 0, 2, 2, 3, xpadding=20, xoptions=gtk.FILL)
         main_table.attach(line_and_align_box, 0, 2, 3, 4, xpadding=20, xoptions=gtk.FILL)
         main_table.attach(outline_fuzzy_box, 0, 2, 4, 5, xpadding=20, xoptions=gtk.FILL)
-        main_table.attach(colorbutton_box, 0, 2, 5, 6, xpadding=20, xoptions=gtk.FILL)
+        main_table.attach(inactive_color_box, 0, 2, 5, 6, xpadding=20, xoptions=gtk.FILL)
+        main_table.attach(active_color_box, 0, 2, 6, 7, xpadding=20, xoptions=gtk.FILL)
         return main_table
     
-    def create_combo_widget(self, label_content, items):
+    def create_combo_widget(self, label_content, items, select_index=0):
         label = Label(label_content)
         label.set_size_request(30, 12)
-        combo_box = ComboBox(items, 200)
+        if len(items) > 10:
+            height = 200
+        else:    
+            height = 0
+        combo_box = ComboBox(items, height, select_index)
         hbox = gtk.HBox(spacing=5)
         hbox.pack_start(label, False, False)
         hbox.pack_start(combo_box, False, False)
-        return hbox
+        return hbox, combo_box
     
     def create_combo_spin(self, label_content, init_value, low, upper, step):
         label = Label(label_content)
@@ -476,7 +515,7 @@ class DesktopLyricsSetting(gtk.VBox):
         hbox = gtk.HBox(spacing=5)
         hbox.pack_start(label, False, False)
         hbox.pack_start(spinbox, False, False)
-        return hbox
+        return hbox, spinbox
         
 
 class PreferenceDialog(Window):
