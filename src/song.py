@@ -296,7 +296,7 @@ class Song(dict, Logger):
             self["#mtime"] = os.path.getmtime(path)
             self["#ctime"] = os.path.getctime(path)
             
-            audio = common.MutagenFile(self.get_path(), utils.FORMATS)
+            audio = common.MutagenFile(self.get_path(), common.FORMATS)
             tag_keys_override = None
 
             if audio is not None:
@@ -441,7 +441,7 @@ class Song(dict, Logger):
             return False
         
         try:
-            audio = utils.MutagenFile(self.get_path(), utils.FORMATS)
+            audio = common.MutagenFile(self.get_path(), common.FORMATS)
             tag_keys_override = None
             
             if audio is not None:

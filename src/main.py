@@ -67,7 +67,7 @@ class DeepinMusicApp(Logger):
                 sys.exit(0)
             
         if self.options.MimetypeSupport:
-            from utils import FORMATS
+            from common import FORMATS
             print "Mimetypes supported: ",
             print ",".join([ ",".join(i._mimes) for i in FORMATS ])
             print "Missing Gstreamer plugins for full support: N/A "
