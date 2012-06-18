@@ -23,13 +23,13 @@
 
 import gtk
 import cairo
+from collections import OrderedDict
 
 from dtk.ui.window import Window
 from dtk.ui.label import Label
 from dtk.ui.button import CheckButton, RadioButton
 from dtk.ui.spin import SpinBox
 from dtk.ui.utils import get_content_size, move_window
-from dtk.ui.scalebar import HScalebar
 from dtk.ui.entry import TextEntry
 from dtk.ui.treeview import TreeView
 from dtk.ui.button import Button
@@ -38,10 +38,10 @@ from dtk.ui.combo import ComboBox
 from dtk.ui.scrolled_window import ScrolledWindow
 
 from utils import color_hex_to_cairo
-from widget.skin import app_theme
 from widget.ui_utils import (get_font_families, switch_tab,
                              create_separator_box, create_right_align, draw_single_mask)
 from render_lyrics import RenderContextNew
+from constant import PREDEFINE_COLORS
 from config import config
 
 
@@ -53,10 +53,19 @@ class GeneralSetting(gtk.VBox):
         self.pack_start(self.create_start_box(), False, True)
         self.pack_start(self.create_close_box(), False, True)
         self.pack_start(self.create_play_box(), False, True)
-        # self.pack_start(self.create_link_box(), False, True)
         
         # Load.
         self.load_status()
+        
+        # Signals.
+        self.splash_check_button.connect("toggled", self.update_splash_status)
+        self.open_lyrics_check_button.connect("toggled", self.update_lyrics_status)
+        self.auto_play_check_button.connect("toggled", self.update_auto_play_status)
+        self.resume_last_check_button.connect("toggled", self.update_resume_status)
+        self.tray_radio_button.connect("toggled", self.update_close_to_tray_status)
+        self.fade_check_button.connect("toggled", self.update_fade_status)
+        self.album_check_button.connect("toggled", self.update_album_status)
+        self.fade_spin.connect("value-changed", self.update_fade_time_status)
         
     def load_status(self):    
         self.splash_check_button.set_active(config.getboolean("setting", "use_splash"))
@@ -76,46 +85,52 @@ class GeneralSetting(gtk.VBox):
         new_value = int(float(config.get("player", "crossfade_time")) * 100)
         self.fade_spin.set_value(new_value)
         
-    def save_status(self):    
-        if self.splash_check_button.get_active():
+    def update_splash_status(self, widget):    
+        if widget.get_active():
             config.set("setting", "use_splash", "true")
         else:    
             config.set("setting", "use_splash", "false")
             
-        if self.open_lyrics_check_button.get_active():    
+    def update_lyrics_status(self, widget):        
+        if widget.get_active():    
             config.set("lyrics", "status", "true")
         else:    
             config.set("lyrics", "status", "false")
             
-        if self.auto_play_check_button.get_active():    
+    def update_auto_play_status(self, widget):       
+        if widget.get_active():    
             config.set("player", "play_on_startup", "true")            
         else:    
             config.set("player", "play_on_startup", "false")
             
-        if self.resume_last_check_button.get_active():    
+    def update_resume_status(self, widget):        
+        if widget.get_active():
             config.set("player", "resume_last_progress", "true")
         else:    
             config.set("player", "resume_last_progress", "false")
-        
-         
-        if self.tray_radio_button.get_active():   
+            
+    def update_close_to_tray_status(self, widget):        
+        if widget.get_active():   
             config.set("setting", "close_to_tray", "true")
         else:    
             config.set("setting", "close_to_tray", "false")
             
-        if self.fade_check_button.get_active():    
+    def update_fade_status(self, widget):        
+        if widget.get_active():
             config.set("player", "crossfade", "true")
         else:    
             config.set("player", "crossfade", "false")
             
+    def update_album_status(self, widget):        
         if self.album_check_button.get_active():    
             config.set("player", "crossfade_gapless_album", "true")
         else:    
             config.set("player", "crossfade_gapless_album", "false")
             
-        new_value = self.fade_spin.get_value() / 100.0
+    def update_fade_time_status(self, widget, value):        
+        new_value = value / 100.0
         config.set("player", "crossfade_time", str(new_value))        
-        
+            
     def create_start_box(self):    
         main_table = gtk.Table(4, 2)
         main_table.set_row_spacings(10)
@@ -124,7 +139,6 @@ class GeneralSetting(gtk.VBox):
         label_align = gtk.Alignment()
         label_align.set_padding(20, 0, 0, 0)
         label_align.add(start_title_label)
-        
         
         # splash check_button
         self.splash_check_button = CheckButton("显示启动画面")
@@ -207,25 +221,6 @@ class GeneralSetting(gtk.VBox):
         
         return main_table
 
-    def create_link_box(self):    
-        
-        main_table = gtk.Table(3, 2, True)
-        main_table.set_row_spacings(3)
-        
-        link_title_label = Label("关联")
-        link_title_label.set_size_request(350, 12)
-        
-        link_check_box = gtk.HBox()
-        link_check_button = CheckButton("将深度音乐设置为默认播放器")
-        link_check_box.pack_start(link_check_button, False, False)
-        link_check_box.pack_start(create_right_align(), True, True)
-        
-        main_table.attach(link_title_label, 0, 2, 0, 1, yoptions=gtk.FILL, xpadding=8)
-        main_table.attach(create_separator_box(), 0, 2, 1, 2, yoptions=gtk.FILL)
-        main_table.attach(link_check_box, 0, 2, 2, 3, yoptions=gtk.FILL)
-        
-        return main_table
-    
     
 class HotKeySetting(gtk.VBox):        
     
@@ -308,8 +303,19 @@ class DesktopLyricsSetting(gtk.VBox):
         # Signals.
         self.preview.connect("expose-event", self.draw_lyrics)        
         self.font_name_combo_box.connect("item-selected", self.update_preview_font_name)
+        self.font_type_combo_box.connect("item-selected", self.update_preview_font_type)
         self.font_size_spin.connect("value-changed", self.update_preview_font_size)
-        
+        self.line_number_combo_box.connect("item-selected", self.update_preview_line_number)
+        self.single_align_combo_box.connect("item-selected", self.update_preview_single_align)
+        self.double_align_combo_box.connect("item-selected", self.update_preview_double_align)
+        self.outline_spin.connect("value-changed", self.update_preview_outline_width)
+        self.predefine_color_combo_box.connect("item-selected", self.update_preview_predefine_color)
+        self.inactive_upper_color_button.connect("color-select", self.update_inactive_upper_color)
+        self.inactive_middle_color_button.connect("color-select", self.update_inactive_middle_color)
+        self.inactive_bottom_color_button.connect("color-select", self.update_inactive_bottom_color)
+        self.active_upper_color_button.connect("color-select", self.update_active_upper_color)
+        self.active_middle_color_button.connect("color-select", self.update_active_middle_color)
+        self.active_bottom_color_button.connect("color-select", self.update_active_bottom_color)
         
     def get_render_color(self, active=False):        
         if active:
@@ -335,16 +341,66 @@ class DesktopLyricsSetting(gtk.VBox):
         return surface
     
     def update_preview_font_name(self, widget, label, allocated_data, index):
-        font_size = self.render_lyrics.get_font_size()
-        self.render_lyrics.set_font_name("%s %d" % (label, font_size))
-        self.preview.queue_draw()
+        config.set("lyrics", "font_name", label)
+        
+    def update_preview_font_type(self, widget, label, allocated_data, index):
+        config.set("lyrics", "font_type", allocated_data)
         
     def update_preview_font_size(self, widget, value):    
-        font_name = self.font_name_combo_box.get_current_item()
-        print font_name
-
-        # self.render_lyrics.set_font_name()
-    
+        config.set("lyrics", "font_size", str(value))
+        
+    def update_preview_line_number(self, widget, label, allocated_data, index):    
+        if allocated_data == 1:
+            switch_tab(self.line_align_hbox, self.single_align_combo_box)
+        else:    
+            switch_tab(self.line_align_hbox, self.double_align_combo_box)
+            
+        config.set("lyrics", "line_count", str(allocated_data))
+        
+    def update_preview_single_align(self, widget, label, allocated_data, index):    
+        config.set("lyrics", "single_line_align", allocated_data)
+        
+    def update_preview_double_align(self, widget, label, allocated_data, index):    
+        config.set("lyrics", "double_line_align", allocated_data)
+        
+    def update_preview_outline_width(self, widget, value):    
+        config.set("lyrics", "outline_width", str(value))
+        
+    def update_preview_predefine_color(self, widget, label, allocated_data, index):    
+        values = PREDEFINE_COLORS[allocated_data]
+        config.set("lyrics", "predefine_color", allocated_data)
+        config.set("lyrics", "inactive_color_upper", values[0])
+        config.set("lyrics", "inactive_color_middle", values[1])
+        config.set("lyrics", "inactive_color_bottom", values[2])
+        config.set("lyrics", "active_color_upper", values[3])
+        config.set("lyrics", "active_color_middle", values[4])
+        config.set("lyrics", "active_color_bottom", values[5])
+        
+        self.inactive_upper_color_button.set_color(values[0])
+        self.inactive_middle_color_button.set_color(values[1])
+        self.inactive_bottom_color_button.set_color(values[2])
+        self.active_upper_color_button.set_color(values[3])
+        self.active_middle_color_button.set_color(values[4])
+        self.active_bottom_color_button.set_color(values[5])
+        
+    def update_inactive_upper_color(self, widget, color):    
+        config.set("lyrics", "inactive_color_upper", color)
+        
+    def update_inactive_middle_color(self, widget, color):    
+        config.set("lyrics", "inactive_color_middle", color)
+        
+    def update_inactive_bottom_color(self, widget, color):    
+        config.set("lyrics", "inactive_color_bottom", color)
+        
+    def update_active_upper_color(self, widget, color):    
+        config.set("lyrics", "active_color_upper", color)
+        
+    def update_active_middle_color(self, widget, color):    
+        config.set("lyrics", "active_color_middle", color)
+        
+    def update_active_bottom_color(self, widget, color):    
+        config.set("lyrics", "active_color_bottom", color)
+        
     def draw_lyrics(self, widget, event):
         cr = widget.window.cairo_create()
         rect = widget.allocation
@@ -392,7 +448,7 @@ class DesktopLyricsSetting(gtk.VBox):
         
         self.dir_entry = TextEntry("~/.lyrics")
         self.dir_entry.set_text(config.get("lyrics", "save_lrc_path"))
-        self.dir_entry.set_size_request(300, 12)
+        self.dir_entry.set_size(300, 22)
         
         modify_button = Button("修改目录")
         hbox = gtk.HBox(spacing=5)
@@ -404,15 +460,88 @@ class DesktopLyricsSetting(gtk.VBox):
         main_table.attach(hbox, 0, 2, 2, 3, xpadding=18, xoptions=gtk.FILL)
         return main_table
     
+    
+    def create_single_line_box(self):
+        single_align_items = OrderedDict()
+        single_align_items["left"] = "左对齐"
+        single_align_items["centered"] = "居中对齐"
+        single_align_items["right"] = "右对齐"
+        try:
+            single_index = single_align_items.keys().index(config.get("lyrics", "single_line_align"))
+        except:    
+            single_index = 0
+        self.single_align_combo_box = ComboBox([(value, key) for key, value in single_align_items.items()],
+                                               select_index=single_index)
+        
+    def create_double_line_box(self):    
+        double_align_items = OrderedDict()
+        double_align_items["left"] = "左对齐"
+        double_align_items["centered"] = "居中对齐"
+        double_align_items["right"] = "右对齐"
+        double_align_items["justified"] = "左右分离"
+        try:
+            align_index = double_align_items.keys().index(config.get("lyrics", "double_line_align"))
+        except:    
+            align_index = 0
+        
+        self.double_align_combo_box = ComboBox([(value, key) for key, value in double_align_items.items()],
+                                               select_index=align_index)
+        
+    def create_predefine_box(self):    
+        predefine_color_items = OrderedDict()
+        predefine_color_items["default"] = "默认"
+        predefine_color_items["vitality_yellow"] = "活力黄"
+        predefine_color_items["fresh_green"]  = "清新绿"
+        predefine_color_items["playful_pink"] = "俏皮粉"
+        predefine_color_items["cool_blue"] = "清爽蓝"
+        save_predefine_color = config.get("lyrics", "predefine_color", "default")
+        
+        try:
+            predefine_color_index = predefine_color_items.keys().index(save_predefine_color)
+        except:    
+            predefine_color_index = 0
+            
+        self.predefine_color_combo_box = ComboBox(
+            [(value, key) for key, value in predefine_color_items.items()],
+            select_index=predefine_color_index)    
+        
+        predefine_color_label = Label("配色方案:")
+        predefine_color_hbox = gtk.HBox(spacing=5)
+        predefine_color_hbox.pack_start(predefine_color_label, False, False)
+        predefine_color_hbox.pack_start(self.predefine_color_combo_box, False, False)
+        return predefine_color_hbox
+    
+    def create_font_type_box(self):
+        font_type_items = OrderedDict()
+        font_type_items["Regular"] = "常规"
+        font_type_items["Italic"]  = "倾斜"
+        font_type_items["Bold"]    = "粗体"
+        font_type_items["Bold Italic"] = "粗体 倾斜"
+        
+        try:
+            font_type_index = font_type_items.keys().index(config.get("lyrics", "font_size", "Regular"))
+        except:    
+            font_type_index = 0
+            
+        self.font_type_combo_box = ComboBox([(value, key) for key, value in font_type_items.items()],
+                                            select_index=font_type_index)    
+        
+        font_type_label = Label("字型:")
+        font_type_hbox = gtk.HBox(spacing=5)
+        font_type_hbox.pack_start(font_type_label, False, False)
+        font_type_hbox.pack_start(self.font_type_combo_box, False, False)
+        return font_type_hbox
+    
     def create_style_table(self):
         main_table = gtk.Table(7, 2)
         main_table.set_row_spacings(10)
-        
+        self.create_single_line_box()
+        self.create_double_line_box()
         style_title_label = Label("歌词样式")
         
         # font_name
         font_families = get_font_families()
-        font_name = self.render_lyrics.split_font()[0]
+        font_name = config.get("lyrics", "font_name")
         try:
             font_item_index = font_families.index(font_name)
         except:    
@@ -421,49 +550,40 @@ class DesktopLyricsSetting(gtk.VBox):
         font_name_hbox, self.font_name_combo_box = self.create_combo_widget("字体:",
                                                                             [(font_name, None) for font_name in font_families],
                                                                             font_item_index)
-        font_size = int(self.render_lyrics.get_font_size())
+        font_type_hbox = self.create_font_type_box()
+        font_size = int(config.get("lyrics", "font_size", 30))
         font_size_hbox, self.font_size_spin = self.create_combo_spin("字号:", font_size, 16, 70, 1)
         
+        line_number = config.getint("lyrics", "line_count")
         line_number_hbox, self.line_number_combo_box = self.create_combo_widget("行数:",
-                                                    [(name, None) for name in ["单行", "双行"]])
+                                                    [(name, index + 1) for index, name in enumerate(["单行", "双行"])],
+                                                                                line_number - 1)
         
-        align_hbox, self.line_align_combo_box = self.create_combo_widget("对齐:",
-                                              [(name, None) for name in ["左对齐", "居中对齐", "右对齐"]])
+        self.line_align_hbox = gtk.HBox()
+        part_align_hbox = gtk.HBox(spacing=5) 
+        line_align_label = Label("对齐:")
         
-        outline_hbox, self.outline_spin = self.create_combo_spin("轮廓:", 3, 1, 5, 1)
+        if line_number == 2:
+            self.line_align_hbox.add(self.double_align_combo_box)
+        else:    
+            self.line_align_hbox.add(self.single_align_combo_box)
+            
+        part_align_hbox.pack_start(line_align_label, False, False)    
+        part_align_hbox.pack_start(self.line_align_hbox, False, False)    
         
-        self.fuzzy_slipper = HScalebar(
-            app_theme.get_pixbuf("slipper/left_fg.png"),
-            app_theme.get_pixbuf("slipper/left_bg.png"),
-            app_theme.get_pixbuf("slipper/middle_fg.png"),
-            app_theme.get_pixbuf("slipper/middle_bg.png"),
-            app_theme.get_pixbuf("slipper/right_fg.png"),
-            app_theme.get_pixbuf("slipper/right_bg.png"),
-            app_theme.get_pixbuf("slipper/point.png"),
-            )
-        
-        self.fuzzy_slipper.set_size_request(177, -1)
-        fuzzy_label = Label("模糊:")
-        fuzzy_label.set_size_request(35, -1)
-        fuzzy_hbox = gtk.HBox()
-        slipper_align = gtk.Alignment()
-        slipper_align.set(0.5, 0.5, 0.0, 0.0)
-        slipper_align.set_padding(6, 0, 0, 0)
-        slipper_align.add(self.fuzzy_slipper)
-        fuzzy_hbox.pack_start(fuzzy_label, False, False)
-        fuzzy_hbox.pack_start(slipper_align, False, False)
+        outline_hbox, self.outline_spin = self.create_combo_spin("轮廓:", int(config.get("lyrics", "outline_width", "3")), 0, 8, 1)
         
         font_attr_box = gtk.HBox(spacing=10)
         font_attr_box.pack_start(font_name_hbox, False, False)
+        font_attr_box.pack_start(font_type_hbox, False, False)        
         font_attr_box.pack_start(font_size_hbox, False, False)
         
-        line_and_align_box = gtk.HBox(spacing=120)
+        line_and_align_box = gtk.HBox(spacing=30)
         line_and_align_box.pack_start(line_number_hbox, False, False)
-        line_and_align_box.pack_start(align_hbox, False, False)
+        line_and_align_box.pack_start(part_align_hbox, False, False)
+        line_and_align_box.pack_start(outline_hbox, False, False)
         
-        outline_fuzzy_box = gtk.HBox(spacing=50)
-        outline_fuzzy_box.pack_start(outline_hbox, False, False)
-        outline_fuzzy_box.pack_start(fuzzy_hbox, False, False)
+        predefine_color_hbox = self.create_predefine_box()
         
         inactive_color_box = gtk.HBox(spacing=10)
         inactive_color_label = Label("未播放:")
@@ -489,7 +609,7 @@ class DesktopLyricsSetting(gtk.VBox):
         main_table.attach(create_separator_box(), 0, 2, 1, 2, yoptions=gtk.FILL)
         main_table.attach(font_attr_box, 0, 2, 2, 3, xpadding=20, xoptions=gtk.FILL)
         main_table.attach(line_and_align_box, 0, 2, 3, 4, xpadding=20, xoptions=gtk.FILL)
-        main_table.attach(outline_fuzzy_box, 0, 2, 4, 5, xpadding=20, xoptions=gtk.FILL)
+        main_table.attach(predefine_color_hbox, 0, 2, 4, 5, xpadding=20, xoptions=gtk.FILL)
         main_table.attach(inactive_color_box, 0, 2, 5, 6, xpadding=20, xoptions=gtk.FILL)
         main_table.attach(active_color_box, 0, 2, 6, 7, xpadding=20, xoptions=gtk.FILL)
         return main_table
@@ -499,9 +619,11 @@ class DesktopLyricsSetting(gtk.VBox):
         label.set_size_request(30, 12)
         if len(items) > 10:
             height = 200
+            max_width = 100
         else:    
             height = 0
-        combo_box = ComboBox(items, height, select_index)
+            max_width = None
+        combo_box = ComboBox(items, height, select_index, max_width)
         hbox = gtk.HBox(spacing=5)
         hbox.pack_start(label, False, False)
         hbox.pack_start(combo_box, False, False)
@@ -525,6 +647,8 @@ class PreferenceDialog(Window):
         
         self.set_position(gtk.WIN_POS_CENTER)
         self.set_size_request(575, 495)
+        self.set_modal(True)
+        self.set_keep_above(True)
         titlebar = gtk.EventBox()
         titlebar.set_visible_window(False)
         titlebar.set_size_request(-1, 32)
@@ -539,13 +663,10 @@ class PreferenceDialog(Window):
         button_box = gtk.HBox()
         
         button_align.add(button_box)
-        save_button = Button("保存")
-        save_button.connect("clicked", self.click_save_button)
-        cancel_button = Button("取消")
-        cancel_button.connect("clicked", self.click_cancel_button)
+        close_button = Button("关闭")
+        close_button.connect("clicked", self.click_close_button)
         
-        button_box.pack_start(save_button, False, True, 5)
-        button_box.pack_start(cancel_button, False, True, 5)
+        button_box.pack_start(close_button, False, True, 5)
         
         statusbar.add(button_align)
         
@@ -623,13 +744,7 @@ class PreferenceDialog(Window):
         if item.get_allocated_widget():
             switch_tab(self.right_box, item.get_allocated_widget())
             
-    def click_save_button(self, widget):        
-        self.general_setting.save_status()
-        config.write()
-        self.destroy()
-        
-    def click_cancel_button(self, widget):    
-        config.load()
+    def click_close_button(self, widget):    
         self.destroy()
     
 class CategoryItem(object):    

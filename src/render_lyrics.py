@@ -28,7 +28,6 @@ import gtk
 import dtk_cairo_blur
 from config import config
 
-OUTLINE_WIDTH = 3
 LINEAR_POS = [0.0, 0.3, 0.8]
 LINEAR_COLOR_COUNT = 3
 BLACK_COLOR = (0.0, 0.0, 0.0)
@@ -39,18 +38,16 @@ class RenderContextNew(object):
 	
     def __init__(self):
         ''' Init. '''
-        self.font_name = self.get_font_name()
+        self.font = self.get_font()
         self.linear_pos = LINEAR_POS
         self.pango_context = gtk.gdk.pango_context_get()
         self.pango_layout = pango.Layout(self.pango_context)
         self.text = ""
         self.linear_colors = LINEAR_COLORS
-        self.blur_radius = 3
-        self.outline_width = OUTLINE_WIDTH
         self.update_font()
         
     def update_font(self):    
-        font_desc = pango.FontDescription(self.font_name)
+        font_desc = pango.FontDescription(self.font)
         self.pango_layout.set_font_description(font_desc)
         self.update_font_height()
         
@@ -63,46 +60,54 @@ class RenderContextNew(object):
             descent = metrics.get_descent()
             self.font_height = (ascent + descent) / pango.SCALE
             
-    def set_font_name(self, new_font_name):        
-        self.font_name = new_font_name
-        config.set("lyrics", "font_name", str(self.font_name))
+    def set_font(self, new_font):        
+        self.font = new_font
         self.update_font()
         
-    def set_font_size(self, value):    
-        font_des = pango.FontDescription("%s %d" % (self.split_font()[0], value))
+    def get_font(self):    
+        font_name = self.get_font_name()
+        font_type = self.get_font_type()
+        font_size = self.get_font_size()
+        return "%s %s %d" % (font_name, font_type, font_size)
+    
+    def set_font_name(self, font_name):
+        font_type = self.get_font_type()
+        font_size = self.get_font_size()
+        font_des = pango.FontDescription("%s %s %d" % (font_name, font_type, font_size))
         self.pango_layout.set_font_description(font_des)
         self.update_font_height()
-        
-    def get_font_size(self):    
-        try:
-            return self.split_font()[1]
-        except:
-            return 30
-    
-    def split_font(self):
-        font_des = self.pango_layout.get_font_description().to_string()
-        font_size = int(font_des.split()[-1])
-        font_name = " ".join(font_des.split()[:-1])
-        return font_name, font_size
-        
         
     def get_font_name(self):    
         return config.get("lyrics", "font_name")
         
+    def set_font_size(self, value):    
+        font_name = self.get_font_name()
+        font_type = self.get_font_type()
+        font_des = pango.FontDescription("%s %s %d" % (font_name, font_type, value))
+        self.pango_layout.set_font_description(font_des)
+        self.update_font_height()
+        
+    def get_font_size(self):    
+        return int(config.get("lyrics", "font_size", 30))
+    
+    def set_font_type(self, value):
+        font_name = self.get_font_name()
+        font_size = self.get_font_size()
+        font_des = pango.FontDescription("%s %s %d" % (font_name, value, font_size))
+        self.pango_layout.set_font_description(font_des)
+        self.update_font_height()
+        
+    def get_font_type(self):    
+        return config.get("lyrics", "font_type", "Regular")
+    
     def get_font_height(self):    
         return self.font_height
-    
-    def set_outline_width(self, width):
-        self.outline_width = width
         
     def get_outline_width(self):    
-        return self.outline_width
+        return config.getint("lyrics", "outline_width")
     
-    def set_blur_radius(self, radius):
-        self.blur_radius = radius
-        
     def get_blur_radius(self):    
-        return self.blur_radius
+        return config.getint("lyrics", "blur_radius")
     
     def set_text(self, text):
         self.text = text
@@ -111,8 +116,8 @@ class RenderContextNew(object):
     def get_pixel_size(self, text):    
         self.set_text(text)
         w, h = self.pango_layout.get_pixel_size()
-        new_width = int(w + self.outline_width + self.blur_radius * 2)
-        new_height = int(h + self.outline_width + self.blur_radius * 2)
+        new_width = int(w + self.get_outline_width() + self.get_blur_radius() * 2)
+        new_height = int(h + self.get_outline_width() + self.get_blur_radius() * 2)
         return (new_width, new_height)    
     
     def set_linear_color(self, color):
@@ -120,8 +125,8 @@ class RenderContextNew(object):
         
     def paint_text(self, cr, text, xpos, ypos):   
         self.set_text(text)
-        xpos += self.outline_width / 2 + self.blur_radius
-        ypos += self.outline_width  + self.blur_radius
+        xpos += self.get_outline_width() / 2 + self.get_blur_radius()
+        ypos += self.get_outline_width()  + self.get_blur_radius()
         cr = pangocairo.CairoContext(cr)
         width, height = self.get_pixel_size(text)
         # Draw the outline of the text.
@@ -131,12 +136,12 @@ class RenderContextNew(object):
 
         cr.set_source_rgb(*BLACK_COLOR)
         
-        if self.outline_width > 0:
-            cr.set_line_width(self.outline_width)
-            if self.blur_radius > math.e - 4:
+        if self.get_outline_width() > 0:
+            cr.set_line_width(self.get_outline_width())
+            if self.get_blur_radius() > math.e - 4:
                 cr.stroke_preserve()
                 cr.fill()
-                dtk_cairo_blur.gaussian_blur(cr.get_target(), self.blur_radius)
+                dtk_cairo_blur.gaussian_blur(cr.get_target(), self.get_blur_radius())
             else:    
                 cr.stroke()
         cr.restore()            

@@ -37,6 +37,10 @@ DRAG_EAST = 3
 DRAG_WEST = 4
 MIN_WIDTH = 400
 
+
+LINE_ALIGNMENT = { "left"  : (0.0, 0.0),  "centered" : (0.5, 0.5),
+                      "right" : (1.0, 1.0), "justified" : (0.0, 1.0)}
+
 class DesktopLyrics(gtk.Window):
     __gsignals__ = {
         "moved" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,)),
@@ -71,7 +75,7 @@ class DesktopLyrics(gtk.Window):
         self.lyrics_text = ["深度音乐播放器 Linux Deepin", ""]
         self.lyric_rects = [gtk.gdk.Rectangle(0, 0, 0, 0), gtk.gdk.Rectangle(0, 0, 0, 0)]
         self.lyrics_xpos = [0, 0]
-        self.line_alignment = [0.0, 1.0]
+        self.line_alignment = LINE_ALIGNMENT[config.get("lyrics", "double_line_align")]
         self.line_percentage = [0.0, 0.0]
         self.current_line = 0
         self.time_source = 0
@@ -124,6 +128,30 @@ class DesktopLyrics(gtk.Window):
                 status = config.getboolean("lyrics", "status")
                 if status:
                     self.time_source = gobject.timeout_add(200, self.check_mouse_leave)
+                    
+        if selection == "lyrics" and option == "font_name":            
+            self.set_font_name(value)
+            
+        if selection == "lyrics" and option == "font_size":    
+            self.set_font_size(int(value))
+            
+        if selection == "lyrics" and option == "font_type":
+            self.set_font_type(value)
+            
+        if selection == "lyrics" and option == "line_count":    
+            if value == "1":
+                self.line_alignment = LINE_ALIGNMENT[config.get("lyrics", "single_line_align")]
+            elif value == "2":    
+                self.line_alignment = LINE_ALIGNMENT[config.get("lyrics", "double_line_align")]
+            self.line_count = int(value)    
+            self.update_font()
+            
+        if selection == "lyrics" and option in ["single_line_align", "double_line_align"]:    
+            self.line_alignment = LINE_ALIGNMENT[config.get("lyrics", option)]
+            self.update_font()
+            
+        if selection == "lyrics" and option == "outline_width":    
+            self.update_font()
             
     def get_render_color(self, active=False):        
         if active:
@@ -178,7 +206,6 @@ class DesktopLyrics(gtk.Window):
     def set_line_count(self, value):
         if value in [1, 2]:    
             config.set("lyrics", "line_count", str(value))
-        self.update_font()    
             
     def get_karaoke_mode(self):    
         return config.getboolean("lyrics", "karaoke_mode")
@@ -670,6 +697,14 @@ class DesktopLyrics(gtk.Window):
         
     def get_font_size(self):    
         return self.render_lyrics.get_font_size()
+    
+    def set_font_name(self, font_name):
+        self.render_lyrics.set_font_name(font_name)
+        self.update_font()
+        
+    def set_font_type(self, font_type):    
+        self.render_lyrics.set_font_type(font_type)
+        self.update_font()
 
 SCROLL_ALWAYS, SCROLL_BY_LINES = 0, 1
 LINE_ALIGN_LEFT, LINE_ALIGN_MIDDLE, LINE_ALIGN_RIGHT = range(3)
