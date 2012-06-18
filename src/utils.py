@@ -27,9 +27,9 @@ import fcntl
 import cPickle
 import shutil
 import gtk
-import gio
 import locale
 import gobject
+
 import time
 from time import mktime, strptime
 import threading
@@ -37,86 +37,65 @@ import subprocess
 import mimetypes
 mimetypes.init()
 
+
 from urllib import quote, unquote, pathname2url
 from urlparse import urlparse
 from urllib2 import urlopen
+from functools import wraps
 
 from logger import newLogger
 from constant import DEFAULT_TIMEOUT
 import socket
 socket.setdefaulttimeout(DEFAULT_TIMEOUT)
-
-from mutagen import File as MutagenFile
-from mutagen.asf import ASF
-from mutagen.apev2 import APEv2File
-from mutagen.flac import FLAC
-from mutagen.id3 import ID3FileType
-from mutagen.oggflac import OggFLAC
-from mutagen.oggspeex import OggSpeex
-from mutagen.oggtheora import OggTheora
-from mutagen.oggvorbis import OggVorbis
-from mutagen.trueaudio import TrueAudio
-from mutagen.wavpack import WavPack
-try: from mutagen.mp4 import MP4 #@UnusedImport
-except: from mutagen.m4a import M4A as MP4 #@Reimport
-from mutagen.musepack import Musepack
-from mutagen.monkeysaudio import MonkeysAudio
-from mutagen.optimfrog import OptimFROG
-from easymp3 import EasyMP3
-
-from dtk.ui.utils import print_exec_time
-
-FORMATS = [EasyMP3, TrueAudio, OggTheora, OggSpeex, OggVorbis, OggFLAC,
-            FLAC, APEv2File, MP4, ID3FileType, WavPack, Musepack,
-            MonkeysAudio, OptimFROG, ASF]
-
+import common
 
 logger = newLogger("utils")
 fscoding = sys.getfilesystemencoding()
 
-UNTRUST_AUDIO_EXT = [
-    "669", "ac3", "aif", "aiff", "ape", "amf", "au",
-    "dsm", "far", "it", "med", "mka", "mpc", "mid", 
-    "mod", "mtm", "midi", "oga", "ogx", "okt", "ra",
-    "ram", "s3m", "sid", "shn", "snd", "spc", "spx",
-    "stm", "tta", "ult", "wv", "xm"
-             ]
-
-TRUST_AUDIO_EXT = [
-    "wav", "wma", "mp2", "mp3", "mp4", "m4a", "flac", "ogg"
-    ]
-
-
-def file_is_supported(filename, strict=False):
-    ''' whther file is supported. '''
-    
-    results = gio.File(filename).get_basename().split(".")
-    if len(results) < 2:
-        return False
+def open_file(path):
+    """
+        Opens a file or folder using the system configured program
+    """
+    platform = sys.platform
+    if platform == 'win32':
+        os.startfile(path)
+    elif platform == 'darwin':
+        subprocess.Popen(["open", path])
     else:
-        extension = results[-1].lower()
-        if extension in TRUST_AUDIO_EXT:
-            return True
-        elif extension in UNTRUST_AUDIO_EXT:
-            try:
-                fileobj = file(filename, "rb")
-            except:
-                return False
-            try:
-                header = fileobj.read(128)
-                results = [Kind.score(filename, fileobj, header) for Kind in FORMATS]
-            except:    
-                return False
-            finally:
-                fileobj.close()
-            results = zip(results, FORMATS)
-            results.sort()
-            score, Kind = results[-1]
-            if score > 0: return True
-            else: return False
-        else:    
-            return False
+        subprocess.Popen(["xdg-open", path])
 
+def open_file_directory(path):
+    """
+        Opens the parent directory of a file, selecting the file if possible.
+    """
+    import gio
+    f = gio.File(path)
+    platform = sys.platform
+    if platform == 'win32':
+        subprocess.Popen(["explorer", "/select,", f.get_parse_name()])
+    elif platform == 'darwin':
+        subprocess.Popen(["open", f.get_parent().get_parse_name()])
+    else:
+        subprocess.Popen(["xdg-open", f.get_parent().get_parse_name()])
+
+def profileit(func):
+    """
+        Decorator to profile a function
+    """
+    import hotshot, hotshot.stats
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        prof = hotshot.Profile("profiling.data")
+        res = prof.runcall(func, *args, **kwargs)
+        prof.close()
+        stats = hotshot.stats.load("profiling.data")
+        stats.strip_dirs()
+        stats.sort_stats('time', 'calls')
+        print ">>>---- Begin profiling print"
+        stats.print_stats()
+        print ">>>---- End profiling print"
+        return res
+    return wrapper
         
 def get_scheme(uri):
     ''' get uri type, such as 'file://', return 'file'. '''
@@ -432,7 +411,7 @@ def parse_uris(uris, follow_folder=True, follow_playlist=True, callback=None, *a
                 valid_uris.extend(parse_uris(get_uris_from_m3u(uri), follow_folder, follow_playlist))    
             elif follow_playlist and is_xspf:    
                 valid_uris.extend(parse_uris(get_uris_from_xspf(uri), follow_folder, follow_playlist))
-            elif get_scheme(uri) != "file" or file_is_supported(get_path_from_uri(uri)):
+            elif get_scheme(uri) != "file" or common.file_is_supported(get_path_from_uri(uri)):
                 valid_uris.append(uri)
                 
     logger.loginfo("parse uris found %s uris", len(valid_uris))            

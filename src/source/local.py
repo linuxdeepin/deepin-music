@@ -25,6 +25,7 @@ import traceback
 import time
 
 import utils
+import common
 from widget.dialog import WinDir, WinFile
 from library import MediaDB
 from widget.jobs_manager import Job
@@ -58,7 +59,7 @@ class ImportFolderJob(Job):
         for mdir in alldirs:
             for dirpath, dirs, names in os.walk(mdir):
                 for name in names:
-                    if name[0] != "." and utils.file_is_supported(os.path.join(dirpath, name)):
+                    if name[0] != "." and common.file_is_supported(os.path.join(dirpath, name)):
                         valid_file = os.path.join(dirpath, name)
                         real_file = os.path.realpath(valid_file)
                         uri = utils.get_uri_from_path(real_file)
@@ -102,7 +103,7 @@ class ImportPlaylistJob(Job):
         for mdir in alldirs:
             for dirpath, dirs, names in os.walk(mdir):
                 for name in names:
-                    if name[0] != "." and utils.file_is_supported(os.path.join(dirpath, name)):
+                    if name[0] != "." and common.file_is_supported(os.path.join(dirpath, name)):
                         valid_file = os.path.join(dirpath, name)
                         real_file = os.path.realpath(valid_file)
                         uri = utils.get_uri_from_path(real_file)
@@ -128,7 +129,7 @@ class ImportFileJob(object):
     '''import file to db'''
     def __init__(self):
         uri =WinFile().run()
-        if uri and utils.file_is_supported(utils.get_path_from_uri(uri)):
+        if uri and common.file_is_supported(utils.get_path_from_uri(uri)):
             tags = {"uri":uri}
             try:
                 MediaDB.get_or_create_song(tags, "local", read_from_file=True)

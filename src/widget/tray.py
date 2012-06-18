@@ -72,7 +72,7 @@ class BaseTrayIcon(object):
             None,
             (None, "播放模式", None),
             None,
-            (None, "锁定歌词", None),
+            (None, "解锁歌词", lambda : Dispatcher.unlock_lyrics()),
             (None, "关闭歌词", None),
             None,
             (None, "选项设置", None),
@@ -97,7 +97,6 @@ class BaseTrayIcon(object):
             if event.state == gtk.gdk.CONTROL_MASK:
                 Player.next()
             else:
-                # self.menu.show((int(event.x_root), int(event.y_root)))
                 menu = gtk.Menu()
                 (x, y, z) =  self.get_menu_position(menu, self)
                 self.menu.show((int(x), int(y)))                

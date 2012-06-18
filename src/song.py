@@ -30,6 +30,7 @@ from datetime import datetime
 
 
 import utils
+import common
 from logger import Logger
 from pinyin import TransforDB
 
@@ -282,7 +283,7 @@ class Song(dict, Logger):
         ''' Read song infomation for file. '''
         if self.get_scheme() == "file" and not self.exists():
             ret = False
-        if self.get_scheme() == "file" and utils.file_is_supported(self.get_path()):
+        if self.get_scheme() == "file" and common.file_is_supported(self.get_path()):
             ret = self.__read_from_local_file()
         else:    
             ret = self.__read_from_remote_file()
@@ -295,7 +296,7 @@ class Song(dict, Logger):
             self["#mtime"] = os.path.getmtime(path)
             self["#ctime"] = os.path.getctime(path)
             
-            audio = utils.MutagenFile(self.get_path(), utils.FORMATS)
+            audio = common.MutagenFile(self.get_path(), utils.FORMATS)
             tag_keys_override = None
 
             if audio is not None:

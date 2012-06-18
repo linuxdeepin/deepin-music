@@ -44,7 +44,6 @@ from widget.skin import app_theme
 from widget.song_editor import SongEditor
 from source.local import ImportPlaylistJob
 
-
 class SongView(ListView):
     ''' song view. '''
     def __init__(self):
@@ -276,8 +275,7 @@ class SongView(ListView):
     def open_song_dir(self):
         if len(self.select_rows) > 0:
             song = self.items[self.select_rows[0]].get_song()
-            common.open_file_directory(song.get_path())
-        return True    
+            utils.open_file_directory(song.get_path())
     
     def open_song_editor(self):
         if len(self.select_rows) > 0:
@@ -377,7 +375,7 @@ class SongView(ListView):
         else:    
             uri = utils.get_uri_from_path(filename)
             
-        if uri and utils.file_is_supported(utils.get_path_from_uri(uri)):
+        if uri and common.file_is_supported(utils.get_path_from_uri(uri)):
             tags = {"uri": uri}
             try:
                 song = MediaDB.get_or_create_song(tags, "local", read_from_file=True)
@@ -499,7 +497,7 @@ class MultiDragSongView(ListView):
     def open_song_dir(self):
         if len(self.select_rows) > 0:
             song = self.items[self.select_rows[0]].get_song()
-            common.open_file_directory(song.get_path())
+            utils.open_file_directory(song.get_path())
         return True    
     
     def emit_to_playlist(self):

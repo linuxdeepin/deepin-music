@@ -44,15 +44,6 @@ from constant import LRC_DESKTOP_MODE, LRC_WINDOW_MODE
 
 
 MESSAGE_DURATION_MS = 3000
-
-# PREDEFINE_COLORS = {
-#    "vitality_yellow" : ["#ffffff", "#7cbee8", "#3993d2", "#fff5c9", "#ffe888", "#ffcc00"],
-#    "fresh_green"     : ["#ffffff", "#9ce265", "#71ce2e", "#fff5c9", "#ffe888", "#ffcc00"],
-#    "playful_pink"    : ["#ffffff", "#7cbee8", "#3993d2", "#ffc9e1", "#ff3490", "#ff2586"],
-#    "cool_blue"       : ["#ffffff", "#66c3ff", "#23a2ff", "#f8f8f8", "#dedede", "#b4b4b4"],
-
-#     }
-
 PREDEFINE_COLORS = {
    "default"         : ["#99FFFF", "#0000FF", "#99FFFF", "#662600", "#FFFF00", "#FF8000"],   
    "fresh_green"     : ["#e4dcb9", "#ffea93", "#ffd631", "#efede6", "#b3fc9c", "#77d035"],
@@ -79,6 +70,7 @@ class LyricsModule(object):
         Player.connect("played", self.play_time_source)
         Player.connect("paused", self.pause_time_source)
         Dispatcher.connect("reload-lrc", self.update_lrc)
+        Dispatcher.connect("unlock-lyrics", self.__unlock_lyrics)
         
         self.lrc_manager = LrcManager()
         self.lrc = LrcParser()
@@ -143,7 +135,7 @@ class LyricsModule(object):
         zoom_in_align = self.__create_zoom_button("zoom_in")
         zoom_out_align = self.__create_zoom_button("zoom_out")
         predefine_align = self.__create_simple_button("predefine_color", self.popup_predefine_menu , True)
-        lock_align, self.lock_button = self.__create_simple_toggle_button("lock", "unlock", self.change_lock_status)
+        lock_align, self.lock_button = self.__create_simple_toggle_button("lock", "unlock", self.__lock_lyrics)
         karaoke_align, self.karaoke_button = self.__create_simple_toggle_button("karaoke", "karaoke", self.change_karaoke_status)
         line_align, self.line_button = self.__create_simple_toggle_button("single_line", "double_line", self.change_line_status)
         setting_align = self.__create_simple_button("setting", self.open_setting_window)
@@ -196,7 +188,6 @@ class LyricsModule(object):
         self.hide_desktop_lyrics()
         self.show_scroll_lyrics()
         self.play_time_source()
-        
         
     def switch_to_desktop_lyrics(self):    
         config.set("lyrics", "mode", str(LRC_DESKTOP_MODE))
@@ -313,8 +304,12 @@ class LyricsModule(object):
     def open_setting_window(self, widget):
         pass
     
-    def change_lock_status(self, widget):        
-        pass
+    def __unlock_lyrics(self, *args):
+        self.desktop_lyrics_win.set_locked(False)
+    
+    def __lock_lyrics(self, widget):        
+        config.set("lyrics", "locked", "true")
+        self.desktop_lyrics_win.set_locked()
     
     def change_karaoke_status(self, widget):
         self.desktop_lyrics_win.set_karaoke_mode()

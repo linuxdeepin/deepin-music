@@ -62,6 +62,7 @@ class DesktopLyrics(gtk.Window):
         self.mouse_x = self.mouse_y = 0
         self.raw_x, self.raw_y = self.get_position()
         self.mouse_over = False
+        self.mouse_over_lyrics = False
         self.fade_in_size = 20.0
         self.max_line_count = 2
         
@@ -93,8 +94,9 @@ class DesktopLyrics(gtk.Window):
         self.connect("enter-notify-event", self.enter_notify)
         self.connect("leave-notify-event", self.leave_notify)
         self.connect("expose-event", self.expose_before)     
+        self.connect("realize", self.on_realize_event)
         config.connect("config-changed", self.update_render_color)
-        self.time_source = gobject.timeout_add(500, self.check_mouse_leave)        
+        self.time_source = gobject.timeout_add(200, self.check_mouse_leave)        
         
     def update_render_color(self, config, selection, option, value):    
         color_option  = ["inactive_color_upper", " inactive_color_middle", "inactive_color_bottom",
@@ -111,7 +113,7 @@ class DesktopLyrics(gtk.Window):
             else:    
                 lrc_mode = config.getint("lyrics", "mode")
                 if lrc_mode == 1:
-                    self.time_source = gobject.timeout_add(500, self.check_mouse_leave)        
+                    self.time_source = gobject.timeout_add(200, self.check_mouse_leave)        
                     
         if selection == "lyrics" and option == "mode":            
             lrc_mode = config.getint("lyrics", "mode")
@@ -121,7 +123,7 @@ class DesktopLyrics(gtk.Window):
             else:        
                 status = config.getboolean("lyrics", "status")
                 if status:
-                    self.time_source = gobject.timeout_add(500, self.check_mouse_leave)
+                    self.time_source = gobject.timeout_add(200, self.check_mouse_leave)
             
     def get_render_color(self, active=False):        
         if active:
@@ -133,12 +135,21 @@ class DesktopLyrics(gtk.Window):
                     color_hex_to_cairo(config.get("lyrics", "inactive_color_middle")),
                     color_hex_to_cairo(config.get("lyrics", "inactive_color_bottom"))]
             
-    def set_locked(self):    
-        if config.getboolean("lyrics", "locked"):
+    def get_locked(self):        
+        return config.getboolean("lyrics", "locked")
+        
+    def set_locked(self, locked=True):    
+        if locked:
+            config.set("lyrics", "locked", "true")
+            self.set_input_shape_mask(True)
+            self.emit("hide-bg")
+            self.queue_draw()
+        else:    
             config.set("lyrics", "locked", "false")
             self.set_input_shape_mask(False)
-        else:    
-            config.set("lyrics", "locked", "true")
+            
+    def on_realize_event(self, widget):
+        if self.get_locked():
             self.set_input_shape_mask(True)
             
     def update_font(self):        
@@ -149,9 +160,6 @@ class DesktopLyrics(gtk.Window):
         w, h = self.get_size()
         rect = gtk.gdk.Rectangle(int(x), int(y), int(w), int(h))
         self.move_resize(self, rect, DRAG_NONE)
-            
-    def get_locked(self):        
-        return config.getboolean("lyrics", "locked")
         
     def set_dock_mode(self, value):
         if config.getboolean("lyrics", "dock_mode"):
@@ -190,7 +198,6 @@ class DesktopLyrics(gtk.Window):
     
     def set_blur_radius(self, value):
         config.set("lyrics", "blur_radius", str(value))
-        
         
     def get_translucent_on_mouse_over(self):
         return config.getboolean("lyrics", "translucent_on_mouse_over")
@@ -274,7 +281,7 @@ class DesktopLyrics(gtk.Window):
             cr.rectangle(0, 0, rect.width, rect.height)
             cr.fill()
             
-        if self.mouse_over:    
+        if self.mouse_over and not self.get_locked():    
             self.draw_bg_pixbuf(widget, cr)
         return True
             
@@ -449,8 +456,7 @@ class DesktopLyrics(gtk.Window):
         widget.queue_draw()
         
     def leave_notify(self, widget, event):    
-        # self.check_mouse_leave()
-        widget.queue_draw()
+        pass
         
     def expose_before(self, widget, event):    
         cr = widget.window.cairo_create()
@@ -472,13 +478,14 @@ class DesktopLyrics(gtk.Window):
       
     def update_lyric_rect(self, line):
         w = h = 0
+        x, y = self.get_position()
         if self.active_lyric_surfaces[line] != None:
             w = self.active_lyric_surfaces[line].get_width()
             h = self.active_lyric_surfaces[line].get_height()
         font_height = self.render_lyrics.get_font_height()    
         self.lyric_rects[line] = gtk.gdk.Rectangle(
-            int(self.adjust_lyric_xpos(line, self.line_percentage[line])),
-            int(font_height * line * ( 1+ self.line_padding)), int(w), int(h))
+            int(x + self.adjust_lyric_xpos(line, self.line_percentage[line])),
+            int(y + font_height * line * ( 1+ self.line_padding)), int(w), int(h))
         
     def update_lyric_surface(self, line):    
         self.render_lyrics.set_linear_color(self.get_render_color())
@@ -527,7 +534,7 @@ class DesktopLyrics(gtk.Window):
     def draw_lyrics(self, cr):    
         alpha = 1.0
         font_height = self.render_lyrics.get_font_height()
-        if self.is_composited() and self.get_locked() and self.mouse_over and self.get_translucent_on_mouse_over():
+        if self.is_composited() and self.get_locked() and self.mouse_over_lyrics and self.get_translucent_on_mouse_over():
             alpha = 0.3
         w, h = self.get_lyrics_size()    
         ypos = self.adjust_lyric_ypos()
@@ -591,6 +598,7 @@ class DesktopLyrics(gtk.Window):
         screen_h , _ = root_window.get_size()
         rel_x, rel_y = root_window.get_pointer()[:2]
         x, y = self.get_position()
+        mouse_over_lyrics = False
         width, height = self.get_size()        
         if y < 40:
             height += 40
@@ -603,6 +611,14 @@ class DesktopLyrics(gtk.Window):
         if self.dock_drag_state == DRAG_NONE and not self.point_in_rect(rel_x, rel_y, rect):
             self.mouse_over = False
             self.emit("hide-bg")
+            self.queue_draw()
+            
+        for lyric_rect in self.lyric_rects:    
+            if self.point_in_rect(rel_x, rel_y, lyric_rect):
+                mouse_over_lyrics = True
+                break
+        if self.mouse_over_lyrics != mouse_over_lyrics:    
+            self.mouse_over_lyrics = mouse_over_lyrics
             self.queue_draw()
         return True    
             
