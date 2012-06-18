@@ -49,7 +49,7 @@ def draw_single_mask(cr, x, y, width, height, color_name):
 def get_font_families():
     '''Get all font families in system.'''
     fontmap = pangocairo.cairo_font_map_get_default()
-    return map(lambda f: f.get_name(), fontmap.list_families())
+    return sorted(map(lambda f: f.get_name(), fontmap.list_families()))
 
 def draw_item_mask(cr, x, y, width, height, name):    
     draw_vlinear(cr, x, y, width, height,

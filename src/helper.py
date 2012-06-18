@@ -43,6 +43,7 @@ class EventDispatcher(gobject.GObject):
         "quit": SIGNAL_BASE,
         "reload-lrc" : SIGNAL_SIMPLE,
         "unlock-lyrics" : SIGNAL_BASE,
+        "lock-lyrics" : SIGNAL_BASE,
         }
     
     def __init__(self):
@@ -76,6 +77,8 @@ class EventDispatcher(gobject.GObject):
     def unlock_lyrics(self):    
         self.emit("unlock-lyrics")
         
+    def lock_lyrics(self):
+        self.emit("lock-lyrics")
         
 Dispatcher = EventDispatcher()
 

@@ -307,10 +307,10 @@ class EqualizerWindow(Window):
             value = ":".join([str(int(float(v))) for v in value])
 
             if value == values:
-                self.menu_dict[name][0] = app_theme.get_pixbuf("equalizer/tick1.png")
+                self.menu_dict[name][0] = (app_theme.get_pixbuf("menu/tick.png"), None)
                 self.has_tick = True
         if not self.has_tick:        
-            self.menu_dict[MANDATORY_CUSTOM][0] = app_theme.get_pixbuf("equalizer/tick1.png")
+            self.menu_dict[MANDATORY_CUSTOM][0] = (app_theme.get_pixbuf("menu/tick.png"), None)
         
     def show_predefine(self, widget):    
         self.__select_name()

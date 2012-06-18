@@ -340,10 +340,12 @@ class SongView(ListView):
         mode_items = []
         for key, value in mode_dict.iteritems():
             if self.get_loop_mode() == key:
-                tick = app_theme.get_pixbuf("equalizer/tick1.png")
+                tick = app_theme.get_pixbuf("menu/tick.png")
+                mode_items.append(((tick, None), value, self.set_loop_mode, key))                    
             else:    
                 tick = None
-            mode_items.append((tick, value, self.set_loop_mode, key))    
+                mode_items.append((None, value, self.set_loop_mode, key))                    
+
 
         if pos:
             Menu(mode_items, True).show((pos[0], pos[1]))
@@ -535,5 +537,6 @@ class MultiDragSongView(ListView):
             None,
             (None, "打开歌曲所在目录", self.open_song_dir),
             (None, "属性", self.open_song_editor)
-            ]
+                        ]
+            
         Menu(menu_items, True).show((int(x), int(y)))

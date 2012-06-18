@@ -26,60 +26,53 @@ from dtk.ui.menu import Menu
 from player import Player
 from widget.skin import app_theme
 from helper import Dispatcher
+from config import config
 
 class BaseTrayIcon(object):
     '''Trayicon base, needs to be derived from.'''
     
     def __init__(self, instance):
         self.update_icon()
-        self.setup_menu()
         self.connect_events()
         self.instance = instance
+        self.menu = None
     
     def update_icon(self):
         self.set_from_pixbuf(app_theme.get_pixbuf("skin/logo.ico").get_pixbuf())
         
-    def set_from_icon_name(self, icon_name):
-        """
-            Updates the tray icon
-        """
-        pass
-
-    def set_tooltip(self, tooltip_text):
-        """
-            Updates the tray icon tooltip
-        """
-        pass
-
-    def set_visible(self, visible):
-        """
-            Shows or hides the tray icon
-        """
-        pass
-    
-    def get_menu_position(self, menu, icon):
-        """
-            Returns coordinates for
-            the best menu position
-        """
-        return (0, 0, False)
-    
-    def setup_menu(self):    
-        menu_items = [
-            (None, "播放/暂停", Player.playpause),
-            (None, "上一首", Player.previous),
-            (None, "下一首", Player.next),
-            None,
-            (None, "播放模式", None),
-            None,
-            (None, "解锁歌词", lambda : Dispatcher.unlock_lyrics()),
-            (None, "关闭歌词", None),
-            None,
-            (None, "选项设置", None),
-            (None, "退出", lambda : Dispatcher.quit())
-            ]
+    def update_menu(self):    
+        menu_items = []
+        if Player.is_paused():
+            pixbuf_group = self.get_pixbuf_group("play")
+            status_label = "播放"
+        else:    
+            pixbuf_group = self.get_pixbuf_group("pause")
+            status_label = "暂停"
+        menu_items.append((pixbuf_group, status_label, Player.playpause))
+        menu_items.append((self.get_pixbuf_group("previous"), "上一首", Player.previous))
+        menu_items.append((self.get_pixbuf_group("next"), "下一首", Player.next))
+        menu_items.append(None)
+        menu_items.append((self.get_pixbuf_group("volume"), "音量控制", None))
+        menu_items.append((self.get_pixbuf_group("playmode"), "播放模式", None))
+        menu_items.append(None)    
+        
+        if config.getboolean("lyrics", "locked"):
+            menu_items.append((self.get_pixbuf_group("unlock"), "解锁歌词", lambda : Dispatcher.unlock_lyrics()))
+        else:
+            menu_items.append((self.get_pixbuf_group("lock"), "锁定歌词", lambda : Dispatcher.lock_lyrics()))
+        
+        if config.getboolean("lyrics", "status"):
+            menu_items.append((None, "关闭歌词", None))
+        menu_items.append(None)    
+        menu_items.append((self.get_pixbuf_group("setting"), "选项设置", lambda : Dispatcher.quit()))
+        menu_items.append((self.get_pixbuf_group("close"), "退出", lambda : Dispatcher.quit()))
+        if self.menu is not None:
+            del self.menu
         self.menu = Menu(menu_items, True)
         
+    def get_pixbuf_group(self, name):    
+        return (app_theme.get_pixbuf("tray/%s_normal.png" % name), app_theme.get_pixbuf("tray/%s_press.png" % name))
+
     def connect_events(self):    
         self.connect("button-press-event", self.on_button_press_event)
     
@@ -99,6 +92,7 @@ class BaseTrayIcon(object):
             else:
                 menu = gtk.Menu()
                 (x, y, z) =  self.get_menu_position(menu, self)
+                self.update_menu()
                 self.menu.show((int(x), int(y)))                
             
     def destroy(self):        

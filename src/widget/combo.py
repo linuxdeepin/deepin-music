@@ -222,11 +222,14 @@ class ComboMenuButton(gtk.HBox):
     
     def show_right_menu(self, widget, event):
         menu_items = [
-            (app_theme.get_pixbuf("combo/artist_press.png"), "按艺术家", self.update_widget_icon, "artist"),
-            (app_theme.get_pixbuf("combo/genre_press.png"), "按流派", self.update_widget_icon, "genre"),
-            (app_theme.get_pixbuf("combo/album_press.png"), "按专辑", self.update_widget_icon, "album"),
+            (self.get_menu_pixbuf_group("artist"), "按艺术家", self.update_widget_icon, "artist"),
+            (self.get_menu_pixbuf_group("genre"), "按流派", self.update_widget_icon, "genre"),
+            (self.get_menu_pixbuf_group("album"), "按专辑", self.update_widget_icon, "album"),
             ]
         Menu(menu_items, True).show((int(event.x_root) - 10, int(event.y_root)))
+        
+    def get_menu_pixbuf_group(self, name):    
+        return (app_theme.get_pixbuf("combo/%s_press.png" % name), None)
         
     def update_widget_icon(self, name):    
         self.left_button.update_icon_group((

@@ -271,7 +271,7 @@ class PlaylistUI(gtk.VBox):
         if len(self.category_list.get_items(None)) > 1:
             other_category_items = self.category_list.get_other_item(self.category_list.get_highlight_index())
             sub_menu_items = [(None, category_item.get_title(), self.edit_list_item, category_item, select_items ,move) for category_item in other_category_items]
-        sub_menu_items.extend([None, (app_theme.get_pixbuf("toolbar/add_normal.png"), "新建列表", self.edit_new_list_item, select_items, move)])
+        sub_menu_items.extend([None, ((app_theme.get_pixbuf("toolbar/add_normal.png"), None), "新建列表", self.edit_new_list_item, select_items, move)])
         return Menu(sub_menu_items)
     
     def edit_list_item(self, category_item, select_items, move):
@@ -415,18 +415,18 @@ class PlaylistUI(gtk.VBox):
         sub_sort_menu = Menu(sort_items)
         add_to_list_menu = self.get_edit_sub_menu(select_items)
         move_to_list_menu = self.get_edit_sub_menu(select_items, True)
-        self.detail_menu = Menu([(app_theme.get_pixbuf("playlist/play_song.png"), "播放歌曲",  self.current_item.song_view.play_select_item),
+        self.detail_menu = Menu([(None, "播放歌曲",  self.current_item.song_view.play_select_item),
                                  (None, "添加到列表", add_to_list_menu),
                                  (None, "移动到列表", move_to_list_menu),
                                  (None, "发送到移动盘", None),
                                  None,
                                  (None, "删除", self.current_item.song_view.remove_select_items),
-                                 (app_theme.get_pixbuf("playlist/delete_song.png"), "从本地删除", self.current_item.song_view.move_to_trash),
+                                 (None, "从本地删除", self.current_item.song_view.move_to_trash),
                                  (None, "清空列表", self.current_item.song_view.erase_items),
                                  None,
                                  (None, "播放模式", play_mode_menu),
                                  (None, "歌曲排序", sub_sort_menu),
-                                 (app_theme.get_pixbuf("playlist/open_dir.png"), "打开文件目录", self.current_item.song_view.open_song_dir),
+                                 (None, "打开文件目录", self.current_item.song_view.open_song_dir),
                                  (None, "编辑歌曲信息", self.current_item.song_view.open_song_editor),
                                  ], True)
         self.detail_menu.show((int(x), int(y)))

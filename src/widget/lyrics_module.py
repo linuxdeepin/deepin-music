@@ -71,6 +71,7 @@ class LyricsModule(object):
         Player.connect("paused", self.pause_time_source)
         Dispatcher.connect("reload-lrc", self.update_lrc)
         Dispatcher.connect("unlock-lyrics", self.__unlock_lyrics)
+        Dispatcher.connect("lock-lyrics", self.__lock_lyrics)
         
         self.lrc_manager = LrcManager()
         self.lrc = LrcParser()
@@ -172,15 +173,20 @@ class LyricsModule(object):
         
     def scroll_right_press_cb(self, widget, event):    
         menu_items = [
-            (app_theme.get_pixbuf("lyric/lrc_normal.png"), "桌面歌词模式", self.switch_to_desktop_lyrics),
+            (self.get_scroll_menu_pixbufs("lrc"), "桌面歌词模式", self.switch_to_desktop_lyrics),
             None,
-            (app_theme.get_pixbuf("lyric/before_normal.png"), "提前歌词", lambda : self.before_offset(None)),
-            (app_theme.get_pixbuf("lyric/after_normal.png"), "退后歌词", lambda : self.after_offset(None)),
+            (self.get_scroll_menu_pixbufs("before"), "提前歌词", lambda : self.before_offset(None)),
+            (self.get_scroll_menu_pixbufs("after"), "退后歌词", lambda : self.after_offset(None)),
             None,
-            (app_theme.get_pixbuf("lyric/search_normal.png"), "搜索", lambda :self.open_search_window(None)),
-            (app_theme.get_pixbuf("lyric/setting_normal.png"), "选项", None),
+            (self.get_scroll_menu_pixbufs("search"), "搜索", lambda :self.open_search_window(None)),
+            (self.get_scroll_menu_pixbufs("setting"), "选项", None),
                       ]
         Menu(menu_items, True).show((int(event.x_root), int(event.y_root)))
+        
+    def get_scroll_menu_pixbufs(self, name):    
+        return (
+            app_theme.get_pixbuf("lyric/%s_normal.png" % name),
+            None)
         
     def switch_to_scroll_lyrics(self, widget):    
         config.set("lyrics", "mode", str(LRC_WINDOW_MODE))
@@ -307,8 +313,7 @@ class LyricsModule(object):
     def __unlock_lyrics(self, *args):
         self.desktop_lyrics_win.set_locked(False)
     
-    def __lock_lyrics(self, widget):        
-        config.set("lyrics", "locked", "true")
+    def __lock_lyrics(self, *args):        
         self.desktop_lyrics_win.set_locked()
     
     def change_karaoke_status(self, widget):
@@ -334,7 +339,7 @@ class LyricsModule(object):
             item_pixbuf = None
             if key == save_predefine_color:
                 item_pixbuf = app_theme.get_pixbuf("menu/tick.png")
-            menu_items.append((item_pixbuf, value, self.set_predefine_color, key))    
+            menu_items.append(((item_pixbuf, item_pixbuf), value, self.set_predefine_color, key))    
             
         Menu(menu_items, True).show((int(event.x_root), int(event.y_root)))
         
