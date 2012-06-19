@@ -27,6 +27,7 @@ import math
 import gtk
 import dtk_cairo_blur
 from config import config
+from utils import color_hex_to_cairo
 
 LINEAR_POS = [0.0, 0.3, 0.8]
 LINEAR_COLOR_COUNT = 3
@@ -109,6 +110,9 @@ class RenderContextNew(object):
     def get_blur_radius(self):    
         return config.getint("lyrics", "blur_radius")
     
+    def get_blur_color(self):
+        return color_hex_to_cairo(config.get("lyrics", "blur_color", "#000000"))
+    
     def set_text(self, text):
         self.text = text
         self.pango_layout.set_text(self.text)
@@ -134,7 +138,7 @@ class RenderContextNew(object):
         cr.save()
         cr.layout_path(self.pango_layout)
 
-        cr.set_source_rgb(*BLACK_COLOR)
+        cr.set_source_rgb(*self.get_blur_color())
         
         if self.get_outline_width() > 0:
             cr.set_line_width(self.get_outline_width())

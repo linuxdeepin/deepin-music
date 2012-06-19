@@ -118,6 +118,7 @@ class Config(gobject.GObject, Logger):
                 "line_count" : "2",
                 "blur_radius" : "3",
                 "outline_width" : "3",
+                "blur_color" : "#000000",
                 "single_line_align"  : "centered",
                 "double_line_align"  : "justified",
                 "predefine_color" : "default",

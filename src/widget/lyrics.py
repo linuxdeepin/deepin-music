@@ -152,7 +152,7 @@ class DesktopLyrics(gtk.Window):
             self.line_alignment = LINE_ALIGNMENT[config.get("lyrics", option)]
             self.update_font()
             
-        if selection == "lyrics" and option == "outline_width":    
+        if selection == "lyrics" and option in ["outline_width", "blur_color"]:    
             self.update_font()
             
     def get_render_color(self, active=False):        

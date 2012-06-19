@@ -53,6 +53,7 @@ class GeneralSetting(gtk.VBox):
         self.pack_start(self.create_start_box(), False, True)
         self.pack_start(self.create_close_box(), False, True)
         self.pack_start(self.create_play_box(), False, True)
+        self.pack_start(self.create_lyrics_dir_table(), False, False)
         
         # Load.
         self.load_status()
@@ -188,6 +189,8 @@ class GeneralSetting(gtk.VBox):
         main_table.attach(self.quit_radio_button, 1, 2, 2, 3)
         
         return main_table
+    
+    
         
     
     def create_play_box(self):
@@ -218,9 +221,32 @@ class GeneralSetting(gtk.VBox):
         main_table.attach(fade_check_hbox, 0, 1, 2, 3, yoptions=gtk.FILL)
         main_table.attach(self.album_check_button, 1, 2, 2, 3, yoptions=gtk.FILL)
         main_table.attach(spin_hbox, 0, 1, 3, 4, yoptions=gtk.FILL, xpadding=8)
-        
         return main_table
 
+    def create_lyrics_dir_table(self):    
+        main_table = gtk.Table(3, 2)
+        main_table.set_row_spacings(8)
+        
+        dir_title_label = Label("歌词保存目录")
+        dir_title_label.set_size_request(200, 12)
+        label_align = gtk.Alignment()
+        label_align.set_padding(0, 0, 0, 0)
+        label_align.add(dir_title_label)
+        
+        self.dir_entry = TextEntry("~/.lyrics")
+        self.dir_entry.set_text(config.get("lyrics", "save_lrc_path"))
+        self.dir_entry.set_size(250, 25)
+        
+        modify_button = Button("修改目录")
+        hbox = gtk.HBox(spacing=5)
+        hbox.pack_start(self.dir_entry, False, False)
+        hbox.pack_start(modify_button, False, False)
+        
+        main_table.attach(label_align, 0, 2, 0, 1, yoptions=gtk.FILL, xpadding=8)
+        main_table.attach(create_separator_box(), 0, 2, 1, 2, yoptions=gtk.FILL)
+        main_table.attach(hbox, 0, 2, 2, 3, xpadding=10, xoptions=gtk.FILL)
+        return main_table
+    
     
 class HotKeySetting(gtk.VBox):        
     
@@ -287,10 +313,11 @@ class DesktopLyricsSetting(gtk.VBox):
     def __init__(self):
         super(DesktopLyricsSetting, self).__init__()
         self.render_lyrics = RenderContextNew()        
-        self.set_spacing(20)
-        self.pack_start(self.create_lyrics_dir_table(), False, True)
-        self.pack_start(self.create_style_table(), False, False)
-        
+        main_align = gtk.Alignment()
+        main_align.set(1, 1, 0, 0)
+        main_align.set_padding(20, 0, 0, 0)
+        main_align.add(self.create_style_table())
+        self.pack_start(main_align, False, False)
         self.preview = gtk.EventBox()
         self.preview.set_visible_window(False)
         self.preview.set_size_request(-1, 135)
@@ -309,6 +336,7 @@ class DesktopLyricsSetting(gtk.VBox):
         self.single_align_combo_box.connect("item-selected", self.update_preview_single_align)
         self.double_align_combo_box.connect("item-selected", self.update_preview_double_align)
         self.outline_spin.connect("value-changed", self.update_preview_outline_width)
+        self.blur_color_button.connect("color-select", self.update_blur_color)
         self.predefine_color_combo_box.connect("item-selected", self.update_preview_predefine_color)
         self.inactive_upper_color_button.connect("color-select", self.update_inactive_upper_color)
         self.inactive_middle_color_button.connect("color-select", self.update_inactive_middle_color)
@@ -365,6 +393,9 @@ class DesktopLyricsSetting(gtk.VBox):
         
     def update_preview_outline_width(self, widget, value):    
         config.set("lyrics", "outline_width", str(value))
+        
+    def update_blur_color(self, widget, value):    
+        config.set("lyrics", "blur_color", str(value))
         
     def update_preview_predefine_color(self, widget, label, allocated_data, index):    
         values = PREDEFINE_COLORS[allocated_data]
@@ -436,31 +467,6 @@ class DesktopLyricsSetting(gtk.VBox):
 
         return False
         
-    def create_lyrics_dir_table(self):    
-        main_table = gtk.Table(3, 2)
-        main_table.set_row_spacings(5)
-        
-        dir_title_label = Label("歌词保存目录")
-        dir_title_label.set_size_request(300, 12)
-        label_align = gtk.Alignment()
-        label_align.set_padding(20, 0, 0, 0)
-        label_align.add(dir_title_label)
-        
-        self.dir_entry = TextEntry("~/.lyrics")
-        self.dir_entry.set_text(config.get("lyrics", "save_lrc_path"))
-        self.dir_entry.set_size(300, 22)
-        
-        modify_button = Button("修改目录")
-        hbox = gtk.HBox(spacing=5)
-        hbox.pack_start(self.dir_entry, False, False)
-        hbox.pack_start(modify_button, False, False)
-        
-        main_table.attach(label_align, 0, 2, 0, 1, yoptions=gtk.FILL, xpadding=8)
-        main_table.attach(create_separator_box(), 0, 2, 1, 2, yoptions=gtk.FILL)
-        main_table.attach(hbox, 0, 2, 2, 3, xpadding=18, xoptions=gtk.FILL)
-        return main_table
-    
-    
     def create_single_line_box(self):
         single_align_items = OrderedDict()
         single_align_items["left"] = "左对齐"
@@ -533,7 +539,7 @@ class DesktopLyricsSetting(gtk.VBox):
         return font_type_hbox
     
     def create_style_table(self):
-        main_table = gtk.Table(7, 2)
+        main_table = gtk.Table(9, 2)
         main_table.set_row_spacings(10)
         self.create_single_line_box()
         self.create_double_line_box()
@@ -573,18 +579,14 @@ class DesktopLyricsSetting(gtk.VBox):
         
         outline_hbox, self.outline_spin = self.create_combo_spin("轮廓:", int(config.get("lyrics", "outline_width", "3")), 0, 8, 1)
         
-        font_attr_box = gtk.HBox(spacing=10)
-        font_attr_box.pack_start(font_name_hbox, False, False)
-        font_attr_box.pack_start(font_type_hbox, False, False)        
-        font_attr_box.pack_start(font_size_hbox, False, False)
-        
-        line_and_align_box = gtk.HBox(spacing=30)
-        line_and_align_box.pack_start(line_number_hbox, False, False)
-        line_and_align_box.pack_start(part_align_hbox, False, False)
-        line_and_align_box.pack_start(outline_hbox, False, False)
+        # blur_color_button.
+        blur_color_hbox = gtk.HBox(spacing=5)
+        blur_color_label = Label("描边:")
+        self.blur_color_button = ColorButton(config.get("lyrics", "blur_color", "#000000"))
+        blur_color_hbox.pack_start(blur_color_label, False, False)
+        blur_color_hbox.pack_start(self.blur_color_button, False, False)
         
         predefine_color_hbox = self.create_predefine_box()
-        
         inactive_color_box = gtk.HBox(spacing=10)
         inactive_color_label = Label("未播放:")
         self.inactive_upper_color_button = ColorButton(config.get("lyrics", "inactive_color_upper"))
@@ -607,11 +609,16 @@ class DesktopLyricsSetting(gtk.VBox):
         
         main_table.attach(style_title_label, 0, 2, 0, 1, yoptions=gtk.FILL, xpadding=8)
         main_table.attach(create_separator_box(), 0, 2, 1, 2, yoptions=gtk.FILL)
-        main_table.attach(font_attr_box, 0, 2, 2, 3, xpadding=20, xoptions=gtk.FILL)
-        main_table.attach(line_and_align_box, 0, 2, 3, 4, xpadding=20, xoptions=gtk.FILL)
-        main_table.attach(predefine_color_hbox, 0, 2, 4, 5, xpadding=20, xoptions=gtk.FILL)
-        main_table.attach(inactive_color_box, 0, 2, 5, 6, xpadding=20, xoptions=gtk.FILL)
-        main_table.attach(active_color_box, 0, 2, 6, 7, xpadding=20, xoptions=gtk.FILL)
+        main_table.attach(font_name_hbox, 0, 2, 2, 3, xpadding=20, xoptions=gtk.FILL)
+        main_table.attach(font_type_hbox, 0, 1, 3, 4, xpadding=20)
+        main_table.attach(font_size_hbox, 1, 2, 3, 4)
+        main_table.attach(line_number_hbox, 0, 1, 4, 5, xpadding=20)
+        main_table.attach(part_align_hbox, 1, 2, 4, 5)
+        main_table.attach(outline_hbox, 0, 1, 5, 6, xpadding=20)
+        main_table.attach(blur_color_hbox, 1, 2, 5, 6)
+        main_table.attach(predefine_color_hbox, 0, 2, 6, 7, xpadding=20, xoptions=gtk.FILL)
+        main_table.attach(inactive_color_box, 0, 2, 7, 8, xpadding=35, xoptions=gtk.FILL)
+        main_table.attach(active_color_box, 0, 2, 8, 9, xpadding=35, xoptions=gtk.FILL)
         return main_table
     
     def create_combo_widget(self, label_content, items, select_index=0):
@@ -619,7 +626,7 @@ class DesktopLyricsSetting(gtk.VBox):
         label.set_size_request(30, 12)
         if len(items) > 10:
             height = 200
-            max_width = 100
+            max_width = 300
         else:    
             height = 0
             max_width = None
@@ -642,9 +649,11 @@ class DesktopLyricsSetting(gtk.VBox):
 class ScrollLyricsSetting(gtk.VBox):
     def __init__(self):
         gtk.VBox.__init__(self)
-        self.set_spacing(20)
-        self.pack_start(self.create_lyrics_dir_table(), False, False)
-        self.pack_start(self.create_style_table(), False, False)
+        main_align = gtk.Alignment()
+        main_align.set(1, 1, 0, 0)
+        main_align.set_padding(20, 0, 0, 0)
+        main_align.add(self.create_style_table())
+        self.pack_start(main_align, False, False)
         
         # Signals.
         self.font_name_combo_box.connect("item-selected", self.update_scroll_font_name)
@@ -676,30 +685,6 @@ class ScrollLyricsSetting(gtk.VBox):
     def update_scroll_active_color(self, widget, color):    
         config.set("scroll_lyrics", "active_color", color)
         
-    def create_lyrics_dir_table(self):    
-        main_table = gtk.Table(3, 2)
-        main_table.set_row_spacings(5)
-        
-        dir_title_label = Label("歌词保存目录")
-        dir_title_label.set_size_request(300, 12)
-        label_align = gtk.Alignment()
-        label_align.set_padding(20, 0, 0, 0)
-        label_align.add(dir_title_label)
-        
-        self.dir_entry = TextEntry("~/.lyrics")
-        self.dir_entry.set_text(config.get("lyrics", "save_lrc_path"))
-        self.dir_entry.set_size(300, 22)
-        
-        modify_button = Button("修改目录")
-        hbox = gtk.HBox(spacing=5)
-        hbox.pack_start(self.dir_entry, False, False)
-        hbox.pack_start(modify_button, False, False)
-        
-        main_table.attach(label_align, 0, 2, 0, 1, yoptions=gtk.FILL, xpadding=8)
-        main_table.attach(create_separator_box(), 0, 2, 1, 2, yoptions=gtk.FILL)
-        main_table.attach(hbox, 0, 2, 2, 3, xpadding=18, xoptions=gtk.FILL)
-        return main_table
-    
     def create_font_type_box(self):
         font_type_items = OrderedDict()
         font_type_items["Regular"] = "常规"
@@ -739,11 +724,6 @@ class ScrollLyricsSetting(gtk.VBox):
         font_size = int(config.get("scroll_lyrics", "font_size", 10))
         font_size_hbox, self.font_size_spin = self.create_combo_spin("字号:", font_size, 5, 30, 1)
         
-        font_attr_box = gtk.HBox(spacing=10)
-        font_attr_box.pack_start(font_name_hbox, False, False)
-        font_attr_box.pack_start(font_type_hbox, False, False)        
-        font_attr_box.pack_start(font_size_hbox, False, False)
-        
         # alignment.
         line_align_index = int(config.get("scroll_lyrics", "line_align", 1))
         line_align_hbox, self.line_align_combo_box = self.create_combo_widget("对齐:", 
@@ -756,10 +736,6 @@ class ScrollLyricsSetting(gtk.VBox):
                                                  [(value, index) for index, value in enumerate(["总是滚动", "按行滚动"])],
                                                                                 scroll_mode_index) 
         
-        
-        scroll_attr_hbox = gtk.HBox(spacing=10)
-        scroll_attr_hbox.pack_start(line_align_hbox, False, False)
-        scroll_attr_hbox.pack_start(scroll_mode_hbox, False, False)
         
         inactive_color_label = Label("未播放:")
         active_color_label = Label("已播放:")
@@ -774,22 +750,22 @@ class ScrollLyricsSetting(gtk.VBox):
         active_color_hbox.pack_start(active_color_label, False, False)
         active_color_hbox.pack_start(self.active_color_button, False, False)
         
-        color_hbox = gtk.HBox(spacing=20)
-        color_hbox.pack_start(inactive_color_hbox, False, False)
-        color_hbox.pack_start(active_color_hbox, False, False)
-        
         main_table.attach(style_title_label, 0, 2, 0, 1, yoptions=gtk.FILL, xpadding=8)
         main_table.attach(create_separator_box(), 0, 2, 1, 2, yoptions=gtk.FILL)
-        main_table.attach(font_attr_box, 0, 2, 2, 3, xpadding=20, xoptions=gtk.FILL)
-        main_table.attach(scroll_attr_hbox, 0, 2, 3, 4, xpadding=20, xoptions=gtk.FILL)
-        main_table.attach(color_hbox, 0, 2, 4, 5, xpadding=20, xoptions=gtk.FILL)
+        main_table.attach(font_name_hbox, 0, 2, 2, 3, xpadding=20, xoptions=gtk.FILL)
+        main_table.attach(font_type_hbox, 0, 1, 3, 4, xpadding=20)
+        main_table.attach(font_size_hbox, 1, 2, 3, 4)
+        main_table.attach(line_align_hbox, 0, 1, 4, 5, xpadding=20)
+        main_table.attach(scroll_mode_hbox, 1, 2, 4, 5)
+        main_table.attach(inactive_color_hbox, 0, 1, 5, 6, xpadding=20)
+        main_table.attach(active_color_hbox, 1, 2, 5, 6)
         return main_table
         
     def create_combo_widget(self, label_content, items, select_index=0):
         label = Label(label_content)
         if len(items) > 10:
             height = 200
-            max_width = 100
+            max_width = 300
         else:    
             height = 0
             max_width = None
