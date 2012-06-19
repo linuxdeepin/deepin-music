@@ -30,7 +30,7 @@ from dtk.ui.label import Label
 from dtk.ui.button import CheckButton, RadioButton
 from dtk.ui.spin import SpinBox
 from dtk.ui.utils import get_content_size, move_window
-from dtk.ui.entry import TextEntry
+from dtk.ui.entry import TextEntry, ShortcutKeyEntry
 from dtk.ui.treeview import TreeView
 from dtk.ui.button import Button
 from dtk.ui.color_selection import ColorButton
@@ -276,8 +276,8 @@ class HotKeySetting(gtk.VBox):
         combo_hbox.pack_start(hotkey_label, False, False)
         
         # Hotkey entry.
-        hotkey_entry = TextEntry(hotkey_content)
-        hotkey_entry.set_size(170, 23)
+        hotkey_entry = ShortcutKeyEntry(hotkey_content)
+        hotkey_entry.set_size(170, 24)
         
         self.main_table.attach(combo_hbox, 0, 1, top_attach, bottom_attach, xpadding=5)
         self.main_table.attach(hotkey_entry, 1, 2, top_attach, bottom_attach, xoptions=gtk.FILL)
@@ -518,11 +518,11 @@ class DesktopLyricsSetting(gtk.VBox):
         font_type_items["Bold"]    = "粗体"
         font_type_items["Bold Italic"] = "粗体 倾斜"
         
+        
         try:
-            font_type_index = font_type_items.keys().index(config.get("lyrics", "font_size", "Regular"))
+            font_type_index = font_type_items.keys().index(config.get("lyrics", "font_type", "Regular"))
         except:    
             font_type_index = 0
-            
         self.font_type_combo_box = ComboBox([(value, key) for key, value in font_type_items.items()],
                                             select_index=font_type_index)    
         
@@ -638,8 +638,113 @@ class DesktopLyricsSetting(gtk.VBox):
         hbox.pack_start(label, False, False)
         hbox.pack_start(spinbox, False, False)
         return hbox, spinbox
+    
+class ScrollLyricsSetting(gtk.VBox):
+    def __init__(self):
+        gtk.VBox.__init__(self)
+        self.set_spacing(20)
+        self.pack_start(self.create_lyrics_dir_table(), False, False)
+        self.pack_start(self.create_style_table(), False, False)
         
-
+    def create_lyrics_dir_table(self):    
+        main_table = gtk.Table(3, 2)
+        main_table.set_row_spacings(5)
+        
+        dir_title_label = Label("歌词保存目录")
+        dir_title_label.set_size_request(300, 12)
+        label_align = gtk.Alignment()
+        label_align.set_padding(20, 0, 0, 0)
+        label_align.add(dir_title_label)
+        
+        self.dir_entry = TextEntry("~/.lyrics")
+        self.dir_entry.set_text(config.get("lyrics", "save_lrc_path"))
+        self.dir_entry.set_size(300, 22)
+        
+        modify_button = Button("修改目录")
+        hbox = gtk.HBox(spacing=5)
+        hbox.pack_start(self.dir_entry, False, False)
+        hbox.pack_start(modify_button, False, False)
+        
+        main_table.attach(label_align, 0, 2, 0, 1, yoptions=gtk.FILL, xpadding=8)
+        main_table.attach(create_separator_box(), 0, 2, 1, 2, yoptions=gtk.FILL)
+        main_table.attach(hbox, 0, 2, 2, 3, xpadding=18, xoptions=gtk.FILL)
+        return main_table
+    
+    def create_font_type_box(self):
+        font_type_items = OrderedDict()
+        font_type_items["Regular"] = "常规"
+        font_type_items["Italic"]  = "倾斜"
+        font_type_items["Bold"]    = "粗体"
+        font_type_items["Bold Italic"] = "粗体 倾斜"
+        try:
+            font_type_index = font_type_items.keys().index(config.get("lyrics", "font_type", "Regular"))
+        except:    
+            font_type_index = 0
+        self.font_type_combo_box = ComboBox([(value, key) for key, value in font_type_items.items()],
+                                            select_index=font_type_index)    
+        
+        font_type_label = Label("字型:")
+        font_type_hbox = gtk.HBox(spacing=5)
+        font_type_hbox.pack_start(font_type_label, False, False)
+        font_type_hbox.pack_start(self.font_type_combo_box, False, False)
+        return font_type_hbox
+    
+    def create_style_table(self):
+        main_table = gtk.Table(3, 2)
+        main_table.set_row_spacings(10)
+        style_title_label = Label("歌词样式")
+        # font_name
+        font_families = get_font_families()
+        font_name = config.get("scroll_lyrics", "font_name")
+        try:
+            font_item_index = font_families.index(font_name)
+        except:    
+            font_item_index = 0
+            
+        font_name_hbox, self.font_name_combo_box = self.create_combo_widget("字体:",
+                                                                            [(font_name, None) for font_name in font_families],
+                                                                            font_item_index)
+        font_type_hbox = self.create_font_type_box()
+        
+        font_size = int(config.get("scroll_lyrics", "font_size", 30))
+        font_size_hbox, self.font_size_spin = self.create_combo_spin("字号:", font_size, 16, 70, 1)
+        
+        font_attr_box = gtk.HBox(spacing=10)
+        font_attr_box.pack_start(font_name_hbox, False, False)
+        font_attr_box.pack_start(font_type_hbox, False, False)        
+        font_attr_box.pack_start(font_size_hbox, False, False)
+        
+        main_table.attach(style_title_label, 0, 2, 0, 1, yoptions=gtk.FILL, xpadding=8)
+        main_table.attach(create_separator_box(), 0, 2, 1, 2, yoptions=gtk.FILL)
+        main_table.attach(font_attr_box, 0, 2, 2, 3, xpadding=20, xoptions=gtk.FILL)
+        
+        return main_table
+        
+    def create_combo_widget(self, label_content, items, select_index=0):
+        label = Label(label_content)
+        label.set_size_request(30, 12)
+        if len(items) > 10:
+            height = 200
+            max_width = 100
+        else:    
+            height = 0
+            max_width = None
+        combo_box = ComboBox(items, height, select_index, max_width)
+        hbox = gtk.HBox(spacing=5)
+        hbox.pack_start(label, False, False)
+        hbox.pack_start(combo_box, False, False)
+        return hbox, combo_box
+    
+    def create_combo_spin(self, label_content, init_value, low, upper, step):
+        label = Label(label_content)
+        label.set_size_request(30, 12)
+        spinbox = SpinBox(init_value, low, upper, step)
+        
+        hbox = gtk.HBox(spacing=5)
+        hbox.pack_start(label, False, False)
+        hbox.pack_start(spinbox, False, False)
+        return hbox, spinbox
+    
 class PreferenceDialog(Window):
     
     def __init__(self):
@@ -647,6 +752,7 @@ class PreferenceDialog(Window):
         
         self.set_position(gtk.WIN_POS_CENTER)
         self.set_size_request(575, 495)
+        self.set_resizable(False)
         self.set_modal(True)
         self.set_keep_above(True)
         titlebar = gtk.EventBox()
@@ -685,6 +791,7 @@ class PreferenceDialog(Window):
         self.general_setting = GeneralSetting()
         self.hotkey_setting = HotKeySetting()
         self.desktop_lyrics_setting = DesktopLyricsSetting()
+        self.scroll_lyrics_setting = ScrollLyricsSetting()
         
         # Category bar
         self.category_bar = TreeView(font_x_padding=20)
@@ -694,7 +801,7 @@ class PreferenceDialog(Window):
         self.category_bar.add_item(None, CategoryItem("热键设置", self.hotkey_setting))
         lyrics_node = self.category_bar.add_item(None, CategoryItem("歌词设置"))
         self.category_bar.add_item(lyrics_node, CategoryItem("桌面歌词", self.desktop_lyrics_setting))
-        self.category_bar.add_item(lyrics_node, CategoryItem("窗口歌词"))
+        self.category_bar.add_item(lyrics_node, CategoryItem("窗口歌词", self.scroll_lyrics_setting))
         self.category_bar.add_item(None, CategoryItem("关于我们"))
         self.category_bar.connect("single-click-item", self.category_single_click_cb)
         self.category_bar.set_highlight_index(0)
@@ -736,6 +843,10 @@ class PreferenceDialog(Window):
         self.category_bar.set_highlight_index(3)
         highlight_item  = self.category_bar.get_highlight_item()
         self.category_single_click_cb(None, highlight_item)
+        
+    def show_lyrics_page(self):    
+        self.switch_to_lyrics()
+        self.show_all()
     
     def draw_treeview_mask(self, cr, x, y, width, height):
         draw_single_mask(cr, x, y, width, height, "settingLeft")

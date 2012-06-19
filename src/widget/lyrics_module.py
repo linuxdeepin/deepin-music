@@ -41,6 +41,7 @@ from config import config
 from player import Player
 from lrc_manager import LrcManager
 from constant import LRC_DESKTOP_MODE, LRC_WINDOW_MODE, PREDEFINE_COLORS
+from widget.preference import PreferenceDialog
 
 
 MESSAGE_DURATION_MS = 3000
@@ -301,7 +302,7 @@ class LyricsModule(object):
         Dispatcher.close_lyrics()
         
     def open_setting_window(self, widget):
-        pass
+        PreferenceDialog().show_lyrics_page()
     
     def __unlock_lyrics(self, *args):
         self.desktop_lyrics_win.set_locked(False)

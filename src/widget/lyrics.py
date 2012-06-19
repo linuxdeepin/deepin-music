@@ -30,6 +30,7 @@ from render_lyrics import RenderContextNew
 from utils import color_hex_to_cairo
 from helper import Dispatcher
 
+
 # drag state.
 DRAG_NONE = 1
 DRAG_MOVE = 2
@@ -55,7 +56,7 @@ class DesktopLyrics(gtk.Window):
         self.set_decorated(False)
         self.set_skip_pager_hint(True)
         self.set_app_paintable(True)
-        self.set_keep_above(True)
+        # self.set_keep_above(True)
         self.set_colormap(gtk.gdk.Screen().get_rgba_colormap())
         self.render_lyrics = RenderContextNew()
         self.bg_pixbuf = app_theme.get_pixbuf("lyric/bg.png").get_pixbuf()
@@ -106,8 +107,7 @@ class DesktopLyrics(gtk.Window):
         color_option  = ["inactive_color_upper", " inactive_color_middle", "inactive_color_bottom",
                          "active_color_upper", "active_color_middle", "active_color_bottom"]
         if selection == "lyrics" and option in color_option:
-            for i in range(self.get_line_count()):
-                self.update_lyric_surface(i)
+            self.update_font()
                 
         if selection == "lyrics" and option == "status":        
             status = config.getboolean("lyrics", "status")
@@ -706,6 +706,7 @@ class DesktopLyrics(gtk.Window):
         self.render_lyrics.set_font_type(font_type)
         self.update_font()
 
+        
 SCROLL_ALWAYS, SCROLL_BY_LINES = 0, 1
 LINE_ALIGN_LEFT, LINE_ALIGN_MIDDLE, LINE_ALIGN_RIGHT = range(3)
 import pango
@@ -756,13 +757,24 @@ class ScrollLyrics(NormalWindow):
         self.set_size_request(300, 120)
         self.titlebar.close_button.connect("clicked", lambda w: self.hide_and_emit())
         self.main_box.add(self.drawing)
-        self.__init_line_height()
+        self.update_line_height()
         
-        
-    def __init_line_height(self):
+    def get_font(self):    
+        font_name = config.get("scroll_lyrics", "font_name")
+        font_type = config.get("scroll_lyrics", "font_type", "Regular")
+        font_size = config.get("scroll_lyrics", "font_size", "10")
+        return "%s %s %s" % (font_name, font_type, font_size)
+    
+    def get_scroll_mode(self):
+        return int(config.get("scroll_lyrics", "scroll_mode", SCROLL_ALWAYS))
+    
+    def get_alignment(self):
+        return int(config.get("scroll_lyrics", "line_align", LINE_ALIGN_MIDDLE))
+            
+    def update_line_height(self):
         pango_context = gtk.gdk.pango_context_get()
         pango_layout = pango.Layout(pango_context)
-        font_desc = pango.FontDescription(self.font_name)
+        font_desc = pango.FontDescription(self.get_font())
         pango_layout.set_font_description(font_desc)
         
         metrics = pango_context.get_metrics(pango_layout.get_font_description())

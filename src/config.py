@@ -135,6 +135,15 @@ class Config(gobject.GObject, Logger):
                 "desktop_y" : "-1",
                 },
             
+            "scroll_lyrics" : {
+                "font_name" : "文泉驿微米黑",
+                "font_type" : "Regular",
+                "font_size" : "10",
+                "line_margin" : "1",
+                "scroll_mode" : "0",
+                "align_mode" : "1",
+                },
+            
             "setting" : {
                 "empty_random" : "false",
                 "loop_mode" : "list_mode",
