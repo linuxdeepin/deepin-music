@@ -64,7 +64,7 @@ class BaseTrayIcon(object):
         if config.getboolean("lyrics", "status"):
             menu_items.append((None, "关闭歌词", None))
         menu_items.append(None)    
-        menu_items.append((self.get_pixbuf_group("setting"), "选项设置", lambda : Dispatcher.quit()))
+        menu_items.append((self.get_pixbuf_group("setting"), "选项设置", lambda : Dispatcher.show_setting()))
         menu_items.append((self.get_pixbuf_group("close"), "退出", lambda : Dispatcher.quit()))
         if self.menu is not None:
             del self.menu

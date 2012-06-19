@@ -24,6 +24,8 @@ import gtk
 import cairo
 import gobject
 
+from dtk.ui.button import ImageButton
+
 from widget.skin import app_theme
 from config import config
 from render_lyrics import RenderContextNew
@@ -723,6 +725,15 @@ class ScrollLyrics(NormalWindow):
     
     def __init__(self):
         super(ScrollLyrics, self).__init__()
+        
+        self.revert_button = ImageButton(
+            app_theme.get_pixbuf("scroll_lyrics/revert_normal.png"),
+            app_theme.get_pixbuf("scroll_lyrics/revert_hover.png"),
+            app_theme.get_pixbuf("scroll_lyrics/revert_press.png"),
+            )
+        self.titlebar.button_box.pack_start(self.revert_button, False, False)
+        self.titlebar.button_box.reorder_child(self.revert_button, 0)
+        
         self.percentage = 0.0
         self.whole_lyrics = []
         self.current_lyric_id = -1
@@ -755,7 +766,6 @@ class ScrollLyrics(NormalWindow):
         self.titlebar.close_button.connect("clicked", lambda w: self.hide_and_emit())
         self.main_box.add(self.drawing)
         self.update_line_height()
-        
         config.connect("config-changed", self.changed_scroll_status)
         
     def changed_scroll_status(self, obj, selection, option, value):

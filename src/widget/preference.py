@@ -815,7 +815,6 @@ class PreferenceDialog(Window):
         self.set_position(gtk.WIN_POS_CENTER)
         self.set_size_request(575, 495)
         self.set_resizable(False)
-        self.set_modal(True)
         self.set_keep_above(True)
         titlebar = gtk.EventBox()
         titlebar.set_visible_window(False)
@@ -898,16 +897,20 @@ class PreferenceDialog(Window):
         draw_single_mask(cr, rect.x + 132, rect.y, rect.width - 132, rect.height, "settingRight")
         return False
     
-    def switch_to_lyrics(self):
+    def switch_lyrics_page(self, index=3):
         self.category_bar.tree_list[2].show_child_items_bool = True
         self.category_bar.sort()
         self.category_bar.queue_draw()
-        self.category_bar.set_highlight_index(3)
+        self.category_bar.set_highlight_index(index)
         highlight_item  = self.category_bar.get_highlight_item()
         self.category_single_click_cb(None, highlight_item)
         
-    def show_lyrics_page(self):    
-        self.switch_to_lyrics()
+    def show_scroll_lyrics_page(self):
+        self.switch_lyrics_page(4)
+        self.show_all()
+        
+    def show_desktop_lyrics_page(self):    
+        self.switch_lyrics_page(3)
         self.show_all()
     
     def draw_treeview_mask(self, cr, x, y, width, height):
@@ -918,7 +921,7 @@ class PreferenceDialog(Window):
             switch_tab(self.right_box, item.get_allocated_widget())
             
     def click_close_button(self, widget):    
-        self.destroy()
+        self.hide_all()
     
 class CategoryItem(object):    
     

@@ -60,6 +60,8 @@ class FullHeaderBar(gtk.EventBox):
         Player.connect("stopped", self.__swap_play_status, False)
         Player.connect("play-end", self.__swap_play_status, False)
         
+        self.preference_dialog = PreferenceDialog()
+        
         # play button
         play_normal_pixbuf = app_theme.get_pixbuf("action/play_large_normal.png")
         pause_normal_pixbuf = app_theme.get_pixbuf("action/pause_large_normal.png")
@@ -137,6 +139,9 @@ class FullHeaderBar(gtk.EventBox):
         self.add(main_box)
         
         Dispatcher.connect("close-lyrics", self.sync_lyrics_status)
+        Dispatcher.connect("show-setting", lambda w : self.preference_dialog.show_all())
+        Dispatcher.connect("show-desktop-page", lambda w: self.preference_dialog.show_desktop_lyrics_page())
+        Dispatcher.connect("show-scroll-page", lambda w: self.preference_dialog.show_scroll_lyrics_page())
         gobject.idle_add(self.load_config)
                 
         # right click
@@ -190,7 +195,7 @@ class FullHeaderBar(gtk.EventBox):
         if event.button == 3:
             menu_items = [
                 (None, "均衡器", lambda : self.equalizer_win.run()),
-                (None, "设置", lambda : PreferenceDialog().show_all()),
+                (None, "设置", lambda : self.preference_dialog.show_all()),
                 ]
             Menu(menu_items, True).show((int(event.x_root), int(event.y_root)))
             

@@ -41,7 +41,6 @@ from config import config
 from player import Player
 from lrc_manager import LrcManager
 from constant import LRC_DESKTOP_MODE, LRC_WINDOW_MODE, PREDEFINE_COLORS
-from widget.preference import PreferenceDialog
 
 
 MESSAGE_DURATION_MS = 3000
@@ -53,10 +52,12 @@ class LyricsModule(object):
         self.desktop_lyrics_win.connect("resized", self.adjust_toolbar_rect)
         self.desktop_lyrics_win.connect("hide-bg", self.hide_toolbar)
         self.desktop_lyrics_win.connect("show-bg", self.show_toolbar)
+
         self.desktop_lyrics_win.connect("configure-event", self.lyrics_desktop_configure_event)
         
         self.scroll_lyrics = ScrollLyrics()
         self.scroll_lyrics.connect("configure-event", self.lyrcis_scroll_configure_event)
+        self.scroll_lyrics.revert_button.connect("clicked", lambda w: self.switch_to_desktop_lyrics())        
         self.scroll_lyrics.connect("seek", self.seek_cb)
         self.scroll_lyrics.connect("right-press", self.scroll_right_press_cb)
         
@@ -173,7 +174,7 @@ class LyricsModule(object):
             (self.get_scroll_menu_pixbufs("after"), "退后歌词", lambda : self.after_offset(None)),
             None,
             (self.get_scroll_menu_pixbufs("search"), "搜索", lambda :self.open_search_window(None)),
-            (self.get_scroll_menu_pixbufs("setting"), "选项", None),
+            (self.get_scroll_menu_pixbufs("setting"), "选项", lambda : Dispatcher.show_scroll_page()),
                       ]
         Menu(menu_items, True).show((int(event.x_root), int(event.y_root)))
         
@@ -302,7 +303,7 @@ class LyricsModule(object):
         Dispatcher.close_lyrics()
         
     def open_setting_window(self, widget):
-        PreferenceDialog().show_lyrics_page()
+        Dispatcher.show_desktop_page()
     
     def __unlock_lyrics(self, *args):
         self.desktop_lyrics_win.set_locked(False)

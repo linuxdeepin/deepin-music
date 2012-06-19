@@ -44,6 +44,9 @@ class EventDispatcher(gobject.GObject):
         "reload-lrc" : SIGNAL_SIMPLE,
         "unlock-lyrics" : SIGNAL_BASE,
         "lock-lyrics" : SIGNAL_BASE,
+        "show-desktop-page": SIGNAL_BASE,
+        "show-scroll-page" : SIGNAL_BASE,
+        "show-setting" : SIGNAL_BASE
         }
     
     def __init__(self):
@@ -79,6 +82,15 @@ class EventDispatcher(gobject.GObject):
         
     def lock_lyrics(self):
         self.emit("lock-lyrics")
+        
+    def show_setting(self):    
+        self.emit("show-setting")
+        
+    def show_desktop_page(self):    
+        self.emit("show-desktop-page")
+        
+    def show_scroll_page(self):    
+        self.emit("show-scroll-page")
         
 Dispatcher = EventDispatcher()
 
