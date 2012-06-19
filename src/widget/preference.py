@@ -646,6 +646,28 @@ class ScrollLyricsSetting(gtk.VBox):
         self.pack_start(self.create_lyrics_dir_table(), False, False)
         self.pack_start(self.create_style_table(), False, False)
         
+        # Signals.
+        self.font_name_combo_box.connect("item-selected", self.update_scroll_font_name)
+        self.font_type_combo_box.connect("item-selected", self.update_scroll_font_type)
+        self.font_size_spin.connect("value-changed", self.update_scroll_font_size)
+        self.line_align_combo_box.connect("item-selected", self.update_scroll_line_align)
+        self.scroll_mode_combo_box.connect("item-selected", self.update_scroll_mode)
+        
+    def update_scroll_font_name(self, widget, label, allocated_data, index):    
+        config.set("scroll_lyrics", "font_name", label)
+        
+    def update_scroll_font_type(self, widget, label, allocated_data, index):    
+        config.set("scroll_lyrics", "font_type", allocated_data)
+        
+    def update_scroll_font_size(self, widget, value):
+        config.set("scroll_lyrics", "font_size", str(value))
+        
+    def update_scroll_line_align(self, widget, label, allocated_data, index):    
+        config.set("scroll_lyrics", "line_align", str(allocated_data))
+        
+    def update_scroll_mode(self, widget, label, allocated_data, index):    
+        config.set("scroll_lyrics", "scroll_mode", str(allocated_data))
+        
     def create_lyrics_dir_table(self):    
         main_table = gtk.Table(3, 2)
         main_table.set_row_spacings(5)
@@ -690,7 +712,7 @@ class ScrollLyricsSetting(gtk.VBox):
         return font_type_hbox
     
     def create_style_table(self):
-        main_table = gtk.Table(3, 2)
+        main_table = gtk.Table(4, 2)
         main_table.set_row_spacings(10)
         style_title_label = Label("歌词样式")
         # font_name
@@ -706,23 +728,39 @@ class ScrollLyricsSetting(gtk.VBox):
                                                                             font_item_index)
         font_type_hbox = self.create_font_type_box()
         
-        font_size = int(config.get("scroll_lyrics", "font_size", 30))
-        font_size_hbox, self.font_size_spin = self.create_combo_spin("字号:", font_size, 16, 70, 1)
+        font_size = int(config.get("scroll_lyrics", "font_size", 10))
+        font_size_hbox, self.font_size_spin = self.create_combo_spin("字号:", font_size, 5, 30, 1)
         
         font_attr_box = gtk.HBox(spacing=10)
         font_attr_box.pack_start(font_name_hbox, False, False)
         font_attr_box.pack_start(font_type_hbox, False, False)        
         font_attr_box.pack_start(font_size_hbox, False, False)
         
+        # alignment.
+        line_align_index = int(config.get("scroll_lyrics", "line_align", 1))
+        line_align_hbox, self.line_align_combo_box = self.create_combo_widget("对齐:", 
+                                                [(value, index) for index, value in enumerate(["左对齐", "居中对齐", "右对齐"])],
+                                                                               line_align_index)
+        
+        # scroll mode.
+        scroll_mode_index = int(config.get("scroll_lyrics", "scroll_mode", 0))
+        scroll_mode_hbox, self.scroll_mode_combo_box = self.create_combo_widget("滚动方式:",
+                                                 [(value, index) for index, value in enumerate(["总是滚动", "按行滚动"])],
+                                                                                scroll_mode_index) 
+        
+        
+        scroll_attr_hbox = gtk.HBox(spacing=10)
+        scroll_attr_hbox.pack_start(line_align_hbox, False, False)
+        scroll_attr_hbox.pack_start(scroll_mode_hbox, False, False)
+        
         main_table.attach(style_title_label, 0, 2, 0, 1, yoptions=gtk.FILL, xpadding=8)
         main_table.attach(create_separator_box(), 0, 2, 1, 2, yoptions=gtk.FILL)
         main_table.attach(font_attr_box, 0, 2, 2, 3, xpadding=20, xoptions=gtk.FILL)
-        
+        main_table.attach(scroll_attr_hbox, 0, 2, 3, 4, xpadding=20, xoptions=gtk.FILL)
         return main_table
         
     def create_combo_widget(self, label_content, items, select_index=0):
         label = Label(label_content)
-        label.set_size_request(30, 12)
         if len(items) > 10:
             height = 200
             max_width = 100
@@ -737,9 +775,7 @@ class ScrollLyricsSetting(gtk.VBox):
     
     def create_combo_spin(self, label_content, init_value, low, upper, step):
         label = Label(label_content)
-        label.set_size_request(30, 12)
         spinbox = SpinBox(init_value, low, upper, step)
-        
         hbox = gtk.HBox(spacing=5)
         hbox.pack_start(label, False, False)
         hbox.pack_start(spinbox, False, False)

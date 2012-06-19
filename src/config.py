@@ -141,7 +141,7 @@ class Config(gobject.GObject, Logger):
                 "font_size" : "10",
                 "line_margin" : "1",
                 "scroll_mode" : "0",
-                "align_mode" : "1",
+                "line_align" : "1",
                 },
             
             "setting" : {

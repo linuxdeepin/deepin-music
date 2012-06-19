@@ -103,7 +103,7 @@ class DesktopLyrics(gtk.Window):
         config.connect("config-changed", self.update_render_color)
         self.time_source = gobject.timeout_add(200, self.check_mouse_leave)        
         
-    def update_render_color(self, config, selection, option, value):    
+    def update_render_color(self, obj, selection, option, value):    
         color_option  = ["inactive_color_upper", " inactive_color_middle", "inactive_color_bottom",
                          "active_color_upper", "active_color_middle", "active_color_bottom"]
         if selection == "lyrics" and option in color_option:
@@ -731,15 +731,12 @@ class ScrollLyrics(NormalWindow):
         self.inactive_color = (0, 0, 0)
         self.bg_color = (1, 1, 1)
         self.font_name = "文泉驿微米黑 10"
-        self.alignment = LINE_ALIGN_MIDDLE
         self.line_margin = 1
         self.padding_x = 20
         self.padding_y = 10
         self.bg_opacity= 0.9
         self.frame_width = 7
         self.text = ""
-        self.scroll_mode = SCROLL_ALWAYS
-        # self.scroll_mode = SCROLL_BY_LINES
         self.can_seek = True
         self.seeking = False
         self.current_pointer_y = 0
@@ -758,6 +755,13 @@ class ScrollLyrics(NormalWindow):
         self.titlebar.close_button.connect("clicked", lambda w: self.hide_and_emit())
         self.main_box.add(self.drawing)
         self.update_line_height()
+        
+        config.connect("config-changed", self.changed_scroll_status)
+        
+    def changed_scroll_status(self, obj, selection, option, value):
+        if selection == "scroll_lyrics" and option in ["font_name", "font_size", "font_type", "scroll_mode", "line_align"]:
+            self.update_line_height()
+            self.drawing.queue_draw()
         
     def get_font(self):    
         font_name = config.get("scroll_lyrics", "font_name")
@@ -825,18 +829,16 @@ class ScrollLyrics(NormalWindow):
     
     def get_pango(self, cr): 
         layout = pangocairo.CairoContext(cr).create_layout()
-        font_desc = pango.FontDescription(self.font_name)
+        font_desc = pango.FontDescription(self.get_font())
         layout.set_font_description(font_desc)
         return layout
     
-    
-        
     def calc_lrc_ypos(self, percentage):
-        if self.scroll_mode == SCROLL_BY_LINES:
+        if self.get_scroll_mode() == SCROLL_BY_LINES:
             if percentage < 0.15:
                 percentage = percentage / 0.15
             else:    
-                percentage = 1
+                percentage = 1.0
         return self.__line_height * percentage        
     
     def calc_paint_pos(self):
@@ -911,11 +913,11 @@ class ScrollLyrics(NormalWindow):
                 layout.set_text(self.whole_lyrics[i])
                 layout.set_alignment(pango.ALIGN_CENTER)        
                 extent = layout.get_pixel_extents()[0]
-                if self.alignment == LINE_ALIGN_LEFT:
+                if self.get_alignment() == LINE_ALIGN_LEFT:
                     x = self.padding_x
-                elif self.alignment == LINE_ALIGN_MIDDLE:    
+                elif self.get_alignment() == LINE_ALIGN_MIDDLE:    
                     x = (width - extent[2]) / 2
-                elif self.alignment == LINE_ALIGN_RIGHT:    
+                elif self.get_alignment() == LINE_ALIGN_RIGHT:    
                     x = width - extent[2] - self.padding_x
                     
                 cr.save()
@@ -974,10 +976,6 @@ class ScrollLyrics(NormalWindow):
     def get_current_lyric_id(self):        
         return self.current_lyric_id
     
-    def set_font_name(self, font_name):
-        self.font_name = font_name
-        self.drawing.queue_draw()
-        
     def hide_and_emit(self):    
         self.hide_all()
         config.set("lyrics", "status", "false")        
