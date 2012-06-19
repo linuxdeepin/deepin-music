@@ -151,7 +151,7 @@ class VolumeSlider(gtk.HBox):
         self.volume_progressbar.connect("value-changed",self.__volume_changed)
         volume = float(config.get("player","volume"))
         self.change_volume(None,volume)
-        Dispatcher.connect("volume",self.change_volume)
+        Dispatcher.connect("volume", self.change_volume)
         self.pack_start(volume_button, False, False)
 
     def change_volume(self,helper,value):

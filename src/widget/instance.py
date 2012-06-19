@@ -23,6 +23,7 @@
 import gtk
 import gobject
 from dtk.ui.application import Application
+from dtk.ui.menu import Menu
 
 import utils
 from widget.skin import app_theme
@@ -31,6 +32,8 @@ from widget.playlist import PlaylistUI
 from widget.browser import SimpleBrowser
 from widget.jobs_manager import jobs_manager
 from widget.tray import TrayIcon
+from widget.equalizer import EqualizerWindow
+from widget.preference import PreferenceDialog
 
 from config import config
 from player import Player
@@ -79,6 +82,8 @@ class DeepinMusic(gobject.GObject, Logger):
         
         self.playlist_ui = PlaylistUI()    
         self.header_bar = FullHeaderBar()
+        self.preference_dialog = PreferenceDialog()
+        self.equalizer_win = EqualizerWindow()
         self.window.add_move_event(self.header_bar)
 
         bottom_box = gtk.HBox()
@@ -107,6 +112,10 @@ class DeepinMusic(gobject.GObject, Logger):
         self.window.connect("destroy", self.quit)
         
         Dispatcher.connect("quit",self.force_quit)
+        Dispatcher.connect("show-main-menu", self.show_instance_menu)
+        Dispatcher.connect("show-setting", lambda w : self.preference_dialog.show_all())
+        Dispatcher.connect("show-desktop-page", lambda w: self.preference_dialog.show_desktop_lyrics_page())
+        Dispatcher.connect("show-scroll-page", lambda w: self.preference_dialog.show_scroll_lyrics_page())
         
         self.tray_icon = None
         gobject.idle_add(self.ready)
@@ -194,3 +203,24 @@ class DeepinMusic(gobject.GObject, Logger):
         if window_state == "normal":
             self.window.unmaximize()
         self.window.show_all()
+        
+    def show_instance_menu(self, obj, x, y):
+        curren_view = self.playlist_ui.get_selected_song_view()
+        menu_items = [
+            (None, "文件添加", curren_view.get_add_menu()),
+            (None, "播放控制", None),
+            (None, "播放模式", curren_view.get_playmode_menu()),
+            None,
+            (None, "均衡器", lambda : self.equalizer_win.run()),
+            (None, "总在最前", None),
+            None,
+            (None, "桌面歌词", None),
+            (None, "窗口歌词", None),
+            None,
+            (None, "选项设置", lambda : self.preference_dialog.show_all()),
+            (None, "关于软件", None),
+            None,
+            (None, "退出", None),
+            ]
+        Menu(menu_items, True).show((x, y))
+    

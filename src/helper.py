@@ -30,10 +30,12 @@ class EventDispatcher(gobject.GObject):
     SIGNAL_COMP2 = (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,gobject.TYPE_PYOBJECT,gobject.TYPE_PYOBJECT))
     SIGNAL_CONFIG = (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_STRING,gobject.TYPE_STRING,gobject.TYPE_STRING))
     SIGNAL_BASE = (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ())
+    SIGNAL_TUPLE = (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_INT, gobject.TYPE_INT))
     __gsignals__ = {
         "config-changed" : SIGNAL_CONFIG,
         "source-updated" : SIGNAL_SIMPLE,
         "close-lyrics" :  SIGNAL_BASE,
+        "show-lyrics" : SIGNAL_BASE,
         "show-playlist" :SIGNAL_SIMPLE,
         "select-source-id" :SIGNAL_SIMPLE,
         "volume" : (gobject.SIGNAL_RUN_LAST,gobject.TYPE_NONE, (gobject.TYPE_FLOAT,)),
@@ -46,7 +48,8 @@ class EventDispatcher(gobject.GObject):
         "lock-lyrics" : SIGNAL_BASE,
         "show-desktop-page": SIGNAL_BASE,
         "show-scroll-page" : SIGNAL_BASE,
-        "show-setting" : SIGNAL_BASE
+        "show-setting" : SIGNAL_BASE,
+        "show-main-menu" : SIGNAL_TUPLE,
         }
     
     def __init__(self):
@@ -83,6 +86,9 @@ class EventDispatcher(gobject.GObject):
     def lock_lyrics(self):
         self.emit("lock-lyrics")
         
+    def show_lyrics(self):    
+        self.emit("show-lyrics")
+        
     def show_setting(self):    
         self.emit("show-setting")
         
@@ -91,6 +97,9 @@ class EventDispatcher(gobject.GObject):
         
     def show_scroll_page(self):    
         self.emit("show-scroll-page")
+        
+    def show_main_menu(self, x, y):    
+        self.emit("show-main-menu", x, y)
         
 Dispatcher = EventDispatcher()
 

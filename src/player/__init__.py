@@ -29,6 +29,7 @@ from logger import Logger
 from player.fadebin import PlayerBin
 from utils import get_mime_type, get_uris_from_pls, get_uris_from_m3u
 
+from helper import Dispatcher
 
 DEBUG = False
 
@@ -354,6 +355,26 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
     def get_volume(self):    
         return self.bin.get_volume()
     volume = property(get_volume, set_volume)
+    
+    def increase_volume(self):        
+        current_volume = self.get_volume()
+        current_volume += 0.1
+        if current_volume > 1.0:
+            current_volume = 1.0
+        self.set_volume(current_volume)    
+        Dispatcher.volume(current_volume)
+        
+    def decrease_volume(self):   
+        current_volume = self.get_volume()
+        current_volume -= 0.1
+        if current_volume < 0:
+            current_volume = 0.0
+        self.set_volume(current_volume)    
+        Dispatcher.volume(current_volume)
+        
+    def mute_volume(self):    
+        self.set_volume(0.0)
+        Dispatcher.volume(0.0)
         
     def is_paused(self):                
         '''whether the current song is paused.'''

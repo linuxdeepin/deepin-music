@@ -24,20 +24,19 @@
 import gtk
 import gobject
 from dtk.ui.button import ToggleButton, ImageButton
-from dtk.ui.menu import Menu
 from dtk.ui.utils import foreach_recursive
 
 from player import Player
 from widget.information import PlayInfo
 from widget.timer import SongTimer, VolumeSlider
-from widget.equalizer import EqualizerWindow
+
 from widget.cover import PlayerCoverButton
 from widget.lyrics_module import LyricsModule
 from widget.skin import app_theme
 from widget.ui import ProgressBox
 from config import config
 from helper import Dispatcher
-from widget.preference import PreferenceDialog
+
 from widget.ui_utils import create_left_align
 
 class FullHeaderBar(gtk.EventBox):
@@ -48,7 +47,6 @@ class FullHeaderBar(gtk.EventBox):
         # init.
         self.cover_box = PlayerCoverButton()
         self.cover_box.show_all()
-        self.equalizer_win = EqualizerWindow()
         self.lyrics_display = LyricsModule()
         
         # Main table
@@ -59,8 +57,6 @@ class FullHeaderBar(gtk.EventBox):
         Player.connect("paused", self.__swap_play_status, False)
         Player.connect("stopped", self.__swap_play_status, False)
         Player.connect("play-end", self.__swap_play_status, False)
-        
-        self.preference_dialog = PreferenceDialog()
         
         # play button
         play_normal_pixbuf = app_theme.get_pixbuf("action/play_large_normal.png")
@@ -138,10 +134,8 @@ class FullHeaderBar(gtk.EventBox):
         
         self.add(main_box)
         
-        Dispatcher.connect("close-lyrics", self.sync_lyrics_status)
-        Dispatcher.connect("show-setting", lambda w : self.preference_dialog.show_all())
-        Dispatcher.connect("show-desktop-page", lambda w: self.preference_dialog.show_desktop_lyrics_page())
-        Dispatcher.connect("show-scroll-page", lambda w: self.preference_dialog.show_scroll_lyrics_page())
+        Dispatcher.connect("close-lyrics", lambda w: self.lyrics_button.set_active(False))
+        Dispatcher.connect("show-lyrics", lambda w: self.lyrics_button.set_active(True))
         gobject.idle_add(self.load_config)
                 
         # right click
@@ -173,9 +167,6 @@ class FullHeaderBar(gtk.EventBox):
         toggle_button.connect("toggled", callback)
         return toggle_button
 
-    def sync_lyrics_status(self, obj):
-        self.lyrics_button.set_active(False)
-    
     def start_lyrics(self, widget):        
         if widget.get_active():
             self.lyrics_display.run()
@@ -193,12 +184,7 @@ class FullHeaderBar(gtk.EventBox):
         
     def right_click_cb(self, widget, event):    
         if event.button == 3:
-            menu_items = [
-                (None, "均衡器", lambda : self.equalizer_win.run()),
-                (None, "设置", lambda : self.preference_dialog.show_all()),
-                ]
-            Menu(menu_items, True).show((int(event.x_root), int(event.y_root)))
-            
+            Dispatcher.show_main_menu(int(event.x_root), int(event.y_root))
                     
     def __swap_play_status(self, obj, active):    
         self.__play.handler_block(self.__id_signal_play)

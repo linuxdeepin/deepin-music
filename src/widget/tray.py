@@ -40,6 +40,14 @@ class BaseTrayIcon(object):
     def update_icon(self):
         self.set_from_pixbuf(app_theme.get_pixbuf("skin/logo.ico").get_pixbuf())
         
+    def get_volume_menu(self):    
+        menu_items = [
+            (None, "增加音量", Player.increase_volume),
+            (None, "减小音量", Player.decrease_volume),
+            (None, "静音", Player.mute_volume),
+            ]
+        return Menu(menu_items)
+        
     def update_menu(self):    
         menu_items = []
         if Player.is_paused():
@@ -52,8 +60,8 @@ class BaseTrayIcon(object):
         menu_items.append((self.get_pixbuf_group("previous"), "上一首", Player.previous))
         menu_items.append((self.get_pixbuf_group("next"), "下一首", Player.next))
         menu_items.append(None)
-        menu_items.append((self.get_pixbuf_group("volume"), "音量控制", None))
-        menu_items.append((self.get_pixbuf_group("playmode"), "播放模式", None))
+        menu_items.append((self.get_pixbuf_group("volume"), "音量控制", self.get_volume_menu()))
+        # menu_items.append((self.get_pixbuf_group("playmode"), "播放模式", None))
         menu_items.append(None)    
         
         if config.getboolean("lyrics", "locked"):
@@ -62,7 +70,9 @@ class BaseTrayIcon(object):
             menu_items.append((self.get_pixbuf_group("lock"), "锁定歌词", lambda : Dispatcher.lock_lyrics()))
         
         if config.getboolean("lyrics", "status"):
-            menu_items.append((None, "关闭歌词", None))
+            menu_items.append((None, "关闭歌词", lambda : Dispatcher.close_lyrics()))
+        else:    
+            menu_items.append((None, "打开歌词", lambda : Dispatcher.show_lyrics()))
         menu_items.append(None)    
         menu_items.append((self.get_pixbuf_group("setting"), "选项设置", lambda : Dispatcher.show_setting()))
         menu_items.append((self.get_pixbuf_group("close"), "退出", lambda : Dispatcher.quit()))

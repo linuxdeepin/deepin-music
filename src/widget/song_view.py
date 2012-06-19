@@ -346,7 +346,6 @@ class SongView(ListView):
                 tick = None
                 mode_items.append((None, value, self.set_loop_mode, key))                    
 
-
         if pos:
             Menu(mode_items, True).show((pos[0], pos[1]))
         else:    
@@ -369,7 +368,14 @@ class SongView(ListView):
             (None, "文件夹", self.add_dir),
             ]
         Menu(menu_items, True).show((x, y))
-
+        
+    def get_add_menu(self):    
+        menu_items = [
+            (None, "文件", self.add_file),
+            (None, "文件夹(包含子目录)", self.recursion_add_dir),
+            (None, "文件夹", self.add_dir),
+            ]
+        return Menu(menu_items)
     
     def add_file(self, filename=None, play=False):
         if filename is None:
