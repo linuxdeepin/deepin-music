@@ -30,6 +30,7 @@ from dtk.ui.draw import draw_vlinear, draw_pixbuf, draw_text
 from dtk.ui.utils import propagate_expose, container_remove_all, get_content_size
 from dtk.ui.constant import ALIGN_START, ALIGN_MIDDLE
 from widget.skin import app_theme
+from widget.ui_utils import draw_single_mask
 
 class BaseBar(gtk.VBox):
         
@@ -323,14 +324,12 @@ class SimpleItem(gtk.Button):
             select_status = BUTTON_PRESS
             
         if select_status == BUTTON_PRESS:    
-            draw_vlinear(cr, rect.x, rect.y, rect.width, rect.height, 
-                         app_theme.get_shadow_color("simpleItemPress").get_color_info())
+            draw_single_mask(cr, rect.x, rect.y, rect.width, rect.height, "simpleItemHighlight")
             font_color = app_theme.get_color("simpleSelectItem").get_color()
             item_pixbuf = self.press_dpixbuf.get_pixbuf()
             
         elif select_status == BUTTON_HOVER:    
-            draw_vlinear(cr, rect.x, rect.y, rect.width, rect.height, 
-                         app_theme.get_shadow_color("simpleItemHover").get_color_info())
+            draw_single_mask(cr, rect.x, rect.y, rect.width, rect.height, "simpleItemHover")
             
         # Draw pixbuf.    
         draw_pixbuf(cr, item_pixbuf, rect.x + self.padding_left, rect.y + (rect.height - item_pixbuf.get_height()) / 2)    

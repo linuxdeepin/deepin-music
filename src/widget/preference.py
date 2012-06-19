@@ -39,7 +39,7 @@ from dtk.ui.scrolled_window import ScrolledWindow
 
 from utils import color_hex_to_cairo
 from widget.ui_utils import (get_font_families, switch_tab,
-                             create_separator_box, create_right_align, draw_single_mask)
+                             create_separator_box, create_right_align, draw_alpha_mask)
 from render_lyrics import RenderContextNew
 from constant import PREDEFINE_COLORS
 from config import config
@@ -869,8 +869,8 @@ class PreferenceDialog(Window):
     def expose_mask_cb(self, widget, event):    
         cr = widget.window.cairo_create()
         rect = widget.allocation
-        draw_single_mask(cr, rect.x, rect.y, 132, rect.height, "settingLeft")
-        draw_single_mask(cr, rect.x + 132, rect.y, rect.width - 132, rect.height, "settingRight")
+        draw_alpha_mask(cr, rect.x, rect.y, 132, rect.height, "settingLeft")
+        draw_alpha_mask(cr, rect.x + 132, rect.y, rect.width - 132, rect.height, "settingRight")
         return False
     
     def switch_lyrics_page(self, index=3):
@@ -890,7 +890,7 @@ class PreferenceDialog(Window):
         self.show_all()
     
     def draw_treeview_mask(self, cr, x, y, width, height):
-        draw_single_mask(cr, x, y, width, height, "settingLeft")
+        draw_alpha_mask(cr, x, y, width, height, "settingLeft")
     
     def category_single_click_cb(self, widget, item):
         if item.get_allocated_widget():

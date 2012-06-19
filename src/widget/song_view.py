@@ -30,7 +30,6 @@ from dtk.ui.listview import ListView
 from dtk.ui.utils import alpha_color_hex_to_cairo
 from dtk.ui.menu import Menu
 from dtk.ui.threads import post_gui
-from dtk.ui.draw import draw_vlinear
 
 import utils
 import common
@@ -43,6 +42,7 @@ from widget.song_item import SongItem
 from widget.skin import app_theme
 from widget.song_editor import SongEditor
 from source.local import ImportPlaylistJob
+from widget.ui_utils import draw_single_mask
 
 class SongView(ListView):
     ''' song view. '''
@@ -78,13 +78,13 @@ class SongView(ListView):
         cr.fill()
         
     def draw_item_hover(self, cr, x, y, w, h):
-        draw_vlinear(cr, x, y, w, h, app_theme.get_shadow_color("songviewHover").get_color_info())
+        draw_single_mask(cr, x, y, w, h, "simpleItemHover")
         
     def draw_item_select(self, cr, x, y, w, h):    
-        draw_vlinear(cr, x, y, w, h, app_theme.get_shadow_color("songviewSelect").get_color_info())
+        draw_single_mask(cr, x, y, w, h, "simpleItemHighlight")
         
     def draw_item_highlight(self, cr, x, y, w, h):    
-        draw_vlinear(cr, x, y, w, h, app_theme.get_shadow_color("songviewHighlight").get_color_info())
+        draw_single_mask(cr, x, y, w, h, "simpleItemSelect")
         
     def get_songs(self):        
         songs = []

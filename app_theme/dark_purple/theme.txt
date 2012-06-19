@@ -16,7 +16,10 @@
  "buttonFont" : "#000000",
  "labelText" : "#4D5154",
  "simpleItem" : "#000000",
- "simpleSelectItem" : "#FFFFFF"
+ "simpleSelectItem" : "#FFFFFF",
+ "simpleItemHover" : "#d7baff",
+ "simpleItemSelect" : "#8247d6",
+ "simpleItemHighlight" : "#ac79f2",
  },	
  "alpha_colors" : {
      "frame" : ("#000000", 0.5),

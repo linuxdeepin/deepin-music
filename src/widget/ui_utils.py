@@ -28,8 +28,8 @@ from dtk.ui.utils import alpha_color_hex_to_cairo
 from dtk.ui.line import draw_vlinear
 from dtk.ui.draw import draw_text
 from dtk.ui.line import HSeparator
-from dtk.ui.constant import  ALIGN_MIDDLE
 from widget.skin import app_theme
+from utils import color_hex_to_cairo
 
 def container_remove_all(container):
     ''' Removee all child widgets for container. '''
@@ -41,9 +41,15 @@ def switch_tab(notebook_box, tab_box):
     notebook_box.add(tab_box)
     notebook_box.show_all()
 
-def draw_single_mask(cr, x, y, width, height, color_name):
+def draw_alpha_mask(cr, x, y, width, height, color_name):
     color_info = app_theme.get_alpha_color(color_name).get_color_info()
     cr.set_source_rgba(*alpha_color_hex_to_cairo(color_info))
+    cr.rectangle(x, y, width, height)
+    cr.fill()
+    
+def draw_single_mask(cr, x, y, width, height, color_name):
+    cairo_color = color_hex_to_cairo(app_theme.get_color(color_name).get_color())
+    cr.set_source_rgb(*cairo_color)
     cr.rectangle(x, y, width, height)
     cr.fill()
     
