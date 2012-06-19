@@ -29,8 +29,6 @@ from dtk.ui.utils import move_window
 from dtk.ui.entry import TextEntry
 from dtk.ui.button import ImageButton
 from dtk.ui.draw import draw_vlinear
-from dtk.ui.button import Button
-
 from widget.skin import app_theme
 
 class NormalWindow(Window):

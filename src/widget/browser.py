@@ -421,6 +421,8 @@ class Browser(gtk.VBox, SignalContainer):
             self.update_songs_view(songs)
             
     def update_path_list_view(self):        
+        self.back_button.set_no_show_all(True)
+        self.back_button.hide()
         if self.__current_path == "###ALL###":
             songs = self.__db_query.get_all_songs()
         else:    
@@ -428,6 +430,9 @@ class Browser(gtk.VBox, SignalContainer):
         self.update_songs_view(songs)    
             
     def update_path_filter_view(self, name):
+        self.back_button.set_no_show_all(True)
+        self.back_button.hide()
+        
         self.filter_view.clear()
         if self.__current_path == "###ALL###":
             self.reload_filter_view(name, True, True)

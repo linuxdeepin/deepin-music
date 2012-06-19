@@ -221,6 +221,3 @@ class FullHeaderBar(gtk.EventBox):
             getattr(Player, name)(True)
         else:    
             getattr(Player, name)()
-
-            
-            
