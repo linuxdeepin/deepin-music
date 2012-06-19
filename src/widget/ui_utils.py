@@ -20,12 +20,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import pango
 import gtk
 import pangocairo
 
 from dtk.ui.utils import alpha_color_hex_to_cairo
 from dtk.ui.line import draw_vlinear
-from dtk.ui.draw import draw_font
+from dtk.ui.draw import draw_text
 from dtk.ui.line import HSeparator
 from dtk.ui.constant import  ALIGN_MIDDLE
 from widget.skin import app_theme
@@ -55,9 +56,8 @@ def draw_item_mask(cr, x, y, width, height, name):
     draw_vlinear(cr, x, y, width, height,
                  app_theme.get_shadow_color(name).get_color_info())
     
-def render_text(cr, content, rect, color, font_size, align=ALIGN_MIDDLE):    
-    draw_font(cr, content, font_size, color, rect.x, rect.y, rect.width, rect.height, align)
-
+def render_text(cr, content, rect, color, font_size, align=pango.ALIGN_CENTER):    
+    draw_text(cr, content, rect.x, rect.y, rect.width, rect.height, font_size, color, alignment=align)
     
 def create_separator_box(padding_x=0, padding_y=0):    
     separator_box = HSeparator(

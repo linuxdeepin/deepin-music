@@ -20,6 +20,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import chardet
 
 class LrcParser(object):
     
@@ -56,12 +57,32 @@ class LrcParser(object):
         except:
             pass
         else:
-            try:
-                while self.parser_buffer(raw_buffer) != "over":
-                    self.parser_buffer(raw_buffer)
-                self.parse_lyrics()    
-            except:    
-                return 
+            convert_buffer = self.parser_code(raw_buffer)
+            if convert_buffer:
+                try:
+                    while self.parser_buffer(convert_buffer) != "over":
+                        self.parser_buffer(convert_buffer)
+                    self.parse_lyrics()    
+                except:    
+                    return 
+            
+    def parser_code(self, raw_buffer):        
+        try:
+            raw_encoding = chardet.detect(raw_buffer)["encoding"]
+        except:    
+            return ""
+        else:
+            if raw_encoding.strip().lower() in ["utf8", "utf-8"]:
+                return raw_buffer
+            else:
+                try:
+                    return raw_buffer.decode(raw_encoding).encode("utf-8")
+                except:
+                    return ""
+            
+        
+
+        
                 
     def parser_buffer(self, convert_buffer):            
         if self.parser_offset == len(convert_buffer):

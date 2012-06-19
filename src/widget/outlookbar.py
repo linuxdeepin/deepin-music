@@ -26,7 +26,7 @@ import gobject
 from dtk.ui.constant import BUTTON_PRESS, BUTTON_NORMAL, BUTTON_HOVER
 from dtk.ui.button import ImageButton
 from dtk.ui.label import Label
-from dtk.ui.draw import draw_vlinear, draw_pixbuf, draw_font
+from dtk.ui.draw import draw_vlinear, draw_pixbuf, draw_text
 from dtk.ui.utils import propagate_expose, container_remove_all, get_content_size
 from dtk.ui.constant import ALIGN_START, ALIGN_MIDDLE
 from widget.skin import app_theme
@@ -47,7 +47,7 @@ class BaseBar(gtk.VBox):
     
 class OptionBar(BaseBar):    
     
-    def __init__(self, items, init_index=0, font_size=10, padding_left=20, padding_middle=0, padding_right=25):
+    def __init__(self, items, init_index=0, font_size=10, padding_left=22, padding_middle=0, padding_right=50):
         BaseBar.__init__(self, init_index)
         
         if items:
@@ -337,11 +337,13 @@ class SimpleItem(gtk.Button):
         
         
         # Draw content.
-        draw_font(cr, self.content, self.font_size, font_color,
+        draw_text(cr, self.content, 
                   rect.x + self.padding_left + self.font_offset , 
                   rect.y,
                   rect.width - self.padding_left - self.font_offset - self.padding_right,
-                  rect.height, x_align=self.x_align)
+                  rect.height, 
+                  self.font_size, font_color,
+                  alignment=self.x_align)
         
         propagate_expose(widget, event)
         
@@ -386,11 +388,13 @@ class SimpleLabel(gtk.Button):
         
         
         # Draw content.
-        draw_font(cr, self.content, self.font_size, font_color,
+        draw_text(cr, self.content, 
                   rect.x + self.padding_left + self.font_offset , 
                   rect.y,
                   rect.width - self.padding_left - self.font_offset - self.padding_right,
-                  rect.height, x_align=self.x_align)
+                  rect.height, 
+                  self.font_size, font_color,
+                  alignment=self.x_align)
         
         propagate_expose(widget, event)
         
@@ -516,11 +520,13 @@ class CategoryItem(gtk.Button):
             
         
         # Draw content.
-        draw_font(cr, self.content, self.font_size, font_color,
+        draw_text(cr, self.content, 
                   rect.x + self.padding_left, 
                   rect.y,
                   rect.width - self.padding_left - self.arrow_width - self.padding_right,
-                  rect.height, x_align=self.x_align)
+                  rect.height, 
+                  self.font_size, font_color,
+                  alignment=self.x_align)
         
         # Draw pixbuf.    
         draw_pixbuf(cr, arrow_pixbuf, rect.x + rect.width - self.arrow_width - self.padding_right ,rect.y + (rect.height - arrow_pixbuf.get_height()) / 2)    

@@ -129,7 +129,7 @@ class SongItem(gobject.GObject):
                 (80, self.add_time_height + self.add_time_padding_y * 2)
                 ]
         else:
-            return [(95,26), (80,26), (40,26)]    
+            return [(95,26), (80,26), (46,26)]    
             
     
     def get_renders(self):
