@@ -97,12 +97,10 @@ class IconItem(gobject.GObject):
         self.emit("redraw-request")
        
     def get_width(self):    
-        # return self.__normal_side_pixbuf.get_width() + self.padding_x * 2
-        return 110
+        return self.__normal_side_pixbuf.get_width() + self.padding_x * 2
     
     def get_height(self):
-        # return self.__normal_side_pixbuf.get_height() + self.padding_y * 2 + 20
-        return 150
+        return self.__normal_side_pixbuf.get_height() + self.padding_y * 2 + 30
     
     def render(self, cr, rect):
         
@@ -225,7 +223,7 @@ class Browser(gtk.VBox, SignalContainer):
         self.entry_box.set_size(155, 22)
         self.entry_box.entry.connect("changed", self.__search_cb)
         entry_align = gtk.Alignment()
-        entry_align.set_padding(0, 0, 0, 10)
+        entry_align.set_padding(0, 10, 0, 10)
         entry_align.set(0.5, 0.5, 1, 1)
         entry_align.connect("expose-event", self.expose_align_mask)
         
@@ -233,6 +231,7 @@ class Browser(gtk.VBox, SignalContainer):
         upper_align = gtk.Alignment()
         upper_align.set(0, 0, 0, 1)
         self.back_button = self.__create_simple_button("back", self.__switch_to_filter_view)
+        self.back_button.set_no_show_all(True)
         back_align = gtk.Alignment()
         back_align.set(0.5, 0.5, 0, 0)
         back_align.set_padding(0, 0, 0, 10)
@@ -246,7 +245,6 @@ class Browser(gtk.VBox, SignalContainer):
         path_combo_align.set_padding(0, 0, 10, 0)
         path_combo_align.add(self.path_combo_box)
         self.path_combo_box.set_no_show_all(True)
-       
         
         upper_box = gtk.HBox(spacing=5)
         upper_box.pack_start(path_combo_align, False, False)
@@ -254,7 +252,6 @@ class Browser(gtk.VBox, SignalContainer):
         upper_box.pack_start(back_align, False, False)
         upper_box.pack_start(self.entry_box, False, False)
         entry_align.add(upper_box)
-        
         
         self.categorybar_status = "artist"
         self.filter_categorybar = OptionBar(
@@ -282,7 +279,7 @@ class Browser(gtk.VBox, SignalContainer):
             )
         
         # iconview.
-        self.filter_view = IconView()
+        self.filter_view = IconView(10, 10)
         targets = [("text/deepin-songs", gtk.TARGET_SAME_APP, 1), ("text/uri-list", 0, 2)]
         self.filter_view.drag_source_set(gtk.gdk.BUTTON1_MASK, targets, gtk.gdk.ACTION_COPY)
         self.filter_view.connect("drag-data-get", self.__on_drag_data_get) 
@@ -321,7 +318,7 @@ class Browser(gtk.VBox, SignalContainer):
         right_box_align.set_padding(0, 0, 0, 2)
         right_box_align.set(1, 1, 1, 1)
         right_box_align.add(self.right_box)
-        browser_box = gtk.VBox(spacing=10)
+        browser_box = gtk.VBox()
         browser_box.pack_start(entry_align,  False, False)
         browser_box.pack_start(right_box_align, True, True)
         
@@ -361,10 +358,14 @@ class Browser(gtk.VBox, SignalContainer):
         return separator_box
     
     def __switch_to_filter_view(self, widget):
+        self.back_button.set_no_show_all(True)
+        self.back_button.hide()
         self.switch_box(self.right_box, self.filter_scrolled_window)
         self.view_mode = ICON_VIEW_MODE
         
     def reload_filter_view(self, tag="artist", switch=False, use_path=False):    
+        self.back_button.set_no_show_all(True)
+        self.back_button.hide()
         self.categorybar_status = tag
         self.filter_view.clear()
             
@@ -407,6 +408,8 @@ class Browser(gtk.VBox, SignalContainer):
             self.path_combo_box.set_no_show_all(True)
     
     def update_path_songs(self, key):
+        self.back_button.set_no_show_all(True)
+        self.back_button.hide()
         self.filter_categorybar.set_index(-1)        
         self.__current_path = key        
         self.change_combo_box_status()        
@@ -528,6 +531,8 @@ class Browser(gtk.VBox, SignalContainer):
     
     def __on_double_click_item(self, widget,  item, x, y):
         self.current_icon_item = item
+        self.back_button.set_no_show_all(False)
+        self.back_button.show()
         if self.path_categorybar.get_index() == -1:
             self.update_category_songs_view(item)
         else:    
