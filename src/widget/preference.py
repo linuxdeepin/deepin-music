@@ -652,6 +652,8 @@ class ScrollLyricsSetting(gtk.VBox):
         self.font_size_spin.connect("value-changed", self.update_scroll_font_size)
         self.line_align_combo_box.connect("item-selected", self.update_scroll_line_align)
         self.scroll_mode_combo_box.connect("item-selected", self.update_scroll_mode)
+        self.inactive_color_button.connect("color-select", self.update_scroll_inative_color)
+        self.active_color_button.connect("color-select", self.update_scroll_active_color)
         
     def update_scroll_font_name(self, widget, label, allocated_data, index):    
         config.set("scroll_lyrics", "font_name", label)
@@ -667,6 +669,12 @@ class ScrollLyricsSetting(gtk.VBox):
         
     def update_scroll_mode(self, widget, label, allocated_data, index):    
         config.set("scroll_lyrics", "scroll_mode", str(allocated_data))
+        
+    def update_scroll_inative_color(self, widget, color):    
+        config.set("scroll_lyrics", "inactive_color", color)
+        
+    def update_scroll_active_color(self, widget, color):    
+        config.set("scroll_lyrics", "active_color", color)
         
     def create_lyrics_dir_table(self):    
         main_table = gtk.Table(3, 2)
@@ -699,7 +707,7 @@ class ScrollLyricsSetting(gtk.VBox):
         font_type_items["Bold"]    = "粗体"
         font_type_items["Bold Italic"] = "粗体 倾斜"
         try:
-            font_type_index = font_type_items.keys().index(config.get("lyrics", "font_type", "Regular"))
+            font_type_index = font_type_items.keys().index(config.get("scroll_lyrics", "font_type", "Regular"))
         except:    
             font_type_index = 0
         self.font_type_combo_box = ComboBox([(value, key) for key, value in font_type_items.items()],
@@ -712,7 +720,7 @@ class ScrollLyricsSetting(gtk.VBox):
         return font_type_hbox
     
     def create_style_table(self):
-        main_table = gtk.Table(4, 2)
+        main_table = gtk.Table(5, 2)
         main_table.set_row_spacings(10)
         style_title_label = Label("歌词样式")
         # font_name
@@ -753,10 +761,28 @@ class ScrollLyricsSetting(gtk.VBox):
         scroll_attr_hbox.pack_start(line_align_hbox, False, False)
         scroll_attr_hbox.pack_start(scroll_mode_hbox, False, False)
         
+        inactive_color_label = Label("未播放:")
+        active_color_label = Label("已播放:")
+        self.inactive_color_button = ColorButton(config.get("scroll_lyrics", "inactive_color"))
+        self.active_color_button = ColorButton(config.get("scroll_lyrics", "active_color"))
+        
+        inactive_color_hbox = gtk.HBox(spacing=5)
+        inactive_color_hbox.pack_start(inactive_color_label, False, False)
+        inactive_color_hbox.pack_start(self.inactive_color_button, False, False)
+        
+        active_color_hbox = gtk.HBox(spacing=5)
+        active_color_hbox.pack_start(active_color_label, False, False)
+        active_color_hbox.pack_start(self.active_color_button, False, False)
+        
+        color_hbox = gtk.HBox(spacing=20)
+        color_hbox.pack_start(inactive_color_hbox, False, False)
+        color_hbox.pack_start(active_color_hbox, False, False)
+        
         main_table.attach(style_title_label, 0, 2, 0, 1, yoptions=gtk.FILL, xpadding=8)
         main_table.attach(create_separator_box(), 0, 2, 1, 2, yoptions=gtk.FILL)
         main_table.attach(font_attr_box, 0, 2, 2, 3, xpadding=20, xoptions=gtk.FILL)
         main_table.attach(scroll_attr_hbox, 0, 2, 3, 4, xpadding=20, xoptions=gtk.FILL)
+        main_table.attach(color_hbox, 0, 2, 4, 5, xpadding=20, xoptions=gtk.FILL)
         return main_table
         
     def create_combo_widget(self, label_content, items, select_index=0):

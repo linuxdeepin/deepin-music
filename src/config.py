@@ -142,6 +142,8 @@ class Config(gobject.GObject, Logger):
                 "line_margin" : "1",
                 "scroll_mode" : "0",
                 "line_align" : "1",
+                "inactive_color" : "#000000",
+                "active_color" : "#00AEFF"
                 },
             
             "setting" : {

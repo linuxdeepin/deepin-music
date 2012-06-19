@@ -727,8 +727,8 @@ class ScrollLyrics(NormalWindow):
         self.whole_lyrics = []
         self.current_lyric_id = -1
         self.line_count = 20
-        self.active_color = (0, 0.68, 1)
-        self.inactive_color = (0, 0, 0)
+        self.active_color = self.get_render_color(True)
+        self.inactive_color = self.get_render_color()
         self.bg_color = (1, 1, 1)
         self.font_name = "文泉驿微米黑 10"
         self.line_margin = 1
@@ -762,7 +762,17 @@ class ScrollLyrics(NormalWindow):
         if selection == "scroll_lyrics" and option in ["font_name", "font_size", "font_type", "scroll_mode", "line_align"]:
             self.update_line_height()
             self.drawing.queue_draw()
+            
+        if selection == "scroll_lyrics" and option in ["inactive_color", "active_color"]:    
+            self.active_color = self.get_render_color(True)
+            self.inactive_color = self.get_render_color()
+            self.drawing.queue_draw()
         
+    def get_render_color(self, active=False):        
+        if active:
+            return color_hex_to_cairo(config.get("scroll_lyrics", "active_color"))
+        return color_hex_to_cairo(config.get("scroll_lyrics", "inactive_color"))
+            
     def get_font(self):    
         font_name = config.get("scroll_lyrics", "font_name")
         font_type = config.get("scroll_lyrics", "font_type", "Regular")

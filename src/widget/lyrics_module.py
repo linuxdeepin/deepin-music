@@ -268,12 +268,12 @@ class LyricsModule(object):
             new_size = old_size + 2
             if new_size > 70:
                 new_size = 70
-            self.desktop_lyrics_win.set_font_size(new_size)
+            config.set("lyrics", "font_size", str(new_size))
         elif name == "zoom_out":    
             new_size = old_size - 2
             if new_size < 16:
                 new_size = 16
-            self.desktop_lyrics_win.set_font_size(new_size)
+            config.set("lyrics", "font_size", str(new_size))
         
     def player_control(self, button, name):   
         if name == "next":
