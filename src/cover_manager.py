@@ -61,15 +61,9 @@ class DeepinCoverManager(Logger):
     COVER_TO_SKIP = []
     
     def __init__(self):
-        gobject.timeout_add(REINIT_COVER_TO_SKIP_TIME, self.reinit_skip_cover)
-        
-        self.DEFAULT_COVER = app_theme.get_theme_file_path("image/cover/default_cover1.png")
+        self.default_cover = app_theme.get_theme_file_path("image/cover/default_cover1.png")
         self.all_song_cover = app_theme.get_theme_file_path("image/cover/all_song.png")
-        self.DEFAULT_COVER_PIXBUF = {
-            (40, 40) : gtk.gdk.pixbuf_new_from_file_at_size(self.DEFAULT_COVER, 40, 40),
-            (COVER_SIZE["x"], COVER_SIZE["y"]) : gtk.gdk.pixbuf_new_from_file_at_size(self.DEFAULT_COVER, COVER_SIZE["x"], COVER_SIZE["y"]),
-            (BROWSER_COVER_SIZE["x"], BROWSER_COVER_SIZE["y"]) : gtk.gdk.pixbuf_new_from_file_at_size(self.DEFAULT_COVER, BROWSER_COVER_SIZE["x"], BROWSER_COVER_SIZE["y"])
-            }
+        
     def get_cover_search_str(self, song):
         artist = song.get_str("artist")
         if artist:
@@ -78,11 +72,8 @@ class DeepinCoverManager(Logger):
             result = song.get_str("album")
         return result.replace("/", "")    
     
-    def reinit_skip_cover(self):
-        COVER_TO_SKIP = []
-        
     def get_default_cover(self, x, y):    
-        return gtk.gdk.pixbuf_new_from_file_at_size(self.DEFAULT_COVER, x, y)
+        return gtk.gdk.pixbuf_new_from_file_at_size(self.default_cover, x, y)
     
     def get_all_song_cover(self, x, y):
         return gtk.gdk.pixbuf_new_from_file_at_size(self.all_song_cover, x, y)
@@ -93,80 +84,30 @@ class DeepinCoverManager(Logger):
         
         filename = get_cache_file("cover/%s.jpg" % album.replace("/", ""))
         if not os.path.exists(filename):
-            filename = self.DEFAULT_COVER
-            
-        if not self.COVER_PIXBUF.has_key((filename, x, y)):
-            try:
-                # pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(filename, x, y)
-                pixbuf = get_optimum_pixbuf_from_file(filename, x, y)
-            except gobject.GError:    
-                self.logwarn("failed to load %s, try deleted it...", filename)
-                try:
-                    os.unlink(filename)
-                except:    
-                    pass
-                pixbuf = None
-        elif KEEP_COVER_IN_MEMORY:        
-            pixbuf = self.COVER_PIXBUF[(filename, x, y)]
+            filename = self.default_cover
         else:    
-            pixbuf = None
+            try:
+                gtk.gdk.pixbuf_new_from_file_at_size(filename, COVER_SIZE["x"], COVER_SIZE["y"])
+            except gobject.GError:    
+                os.unlink(filename)
+            else:    
+                filename = self.default_cover
             
-        if not pixbuf:    
-            if not self.DEFAULT_COVER_PIXBUF.has_key((x, y)):
-                self.DEFAULT_COVER_PIXBUF[(x, y)] = gtk.gdk.pixbuf_new_from_file_at_size(self.DEFAULT_COVER, x, y)
-            pixbuf = self.DEFAULT_COVER_PIXBUF[(x, y)]    
-            
-        if KEEP_COVER_IN_MEMORY:    
-            self.COVER_PIXBUF[(filename, x, y)] = pixbuf
-            
-        return pixbuf    
+        return get_optimum_pixbuf_from_file(filename, x, y)
     
-    def remove_pixbuf_from_cache(self, album, x=None, y=None):
-        filename = get_cache_file("cover/%s.jpg" % album)
-        
-        for info in self.COVER_PIXBUF.keys():
-            if filename == info[0]:
-                del self.COVER_PIXBUF[info]
-                
     def has_cover(self, song):            
         cover = self.get_cover(song, False) # todo
-        return cover != self.DEFAULT_COVER and os.path.exists(cover)
+        return cover != self.default_cover and os.path.exists(cover)
     
     def get_cover_path(self, song):
         return get_cache_file("cover/" + self.get_cover_search_str(song) + ".jpg")
     
-    def get_pixbuf_from_song(self, song, x, y, try_web=True):
-        
+    def get_pixbuf_from_song(self, song, x, y, try_web=False):
         filename = self.get_cover(song, try_web)
-        if not self.COVER_PIXBUF.has_key((filename, x, y)):
-            try:
-                pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(filename, x, y)
-            except gobject.GError:    
-                self.logwarn("failed to load %s in a pixbuf", filename)
-                try:
-                    os.unlink(filename)
-                except:
-                    pass
-                pixbuf = None
-                
-        elif KEEP_COVER_IN_MEMORY:        
-            pixbuf = self.COVER_PIXBUF[(filename, x, y)]
-                
-        else:    
-            pixbuf = None
-            
-        if not pixbuf:    
-            if not self.DEFAULT_COVER_PIXBUF.has_key((x, y)):
-                self.DEFAULT_COVER_PIXBUF[(x, y)] = gtk.gdk.pixbuf_new_from_file_at_size(self.DEFAULT_COVER, x, y)
-            pixbuf = self.DEFAULT_COVER_PIXBUF[(x, y)]    
-            
-        if KEEP_COVER_IN_MEMORY:    
-            self.COVER_PIXBUF[(filename, x, y)] = pixbuf
-            
-        return pixbuf    
+        return get_optimum_pixbuf_from_file(filename, x, y)
     
     def get_cover(self, song, try_web=True):
-        default_image_path = self.DEFAULT_COVER
+        default_image_path = self.default_cover
         album = self.get_cover_search_str(song)
         image_path = get_cache_file("cover/%s.jpg" % album)
         image_path_disable = get_cache_file("cover/%s.jpg.#disable#" % album)
@@ -177,7 +118,7 @@ class DeepinCoverManager(Logger):
         # Cover already exist.
         if os.path.exists(image_path):
             try:
-                _pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(image_path, COVER_SIZE["x"], COVER_SIZE["y"])
+                gtk.gdk.pixbuf_new_from_file_at_size(image_path, COVER_SIZE["x"], COVER_SIZE["y"])
             except gobject.GError:    
                 os.unlink(image_path)
             else:    
@@ -244,10 +185,8 @@ class DeepinCoverManager(Logger):
         image_path = self.get_cover_path(song)
         if image_path in self.COVER_TO_SKIP:
             del self.COVER_TO_SKIP[self.COVER_TO_SKIP.index(image_path)]
-            
         if os.path.exists(image_path):    
             os.unlink(image_path)
-        self.remove_pixbuf_from_cache(song.get_str("album"))    
         
     def cleanup_cover(self, song, old_path, path=None):    
         if not path:

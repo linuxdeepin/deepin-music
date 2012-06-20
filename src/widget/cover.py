@@ -24,6 +24,7 @@ import gobject
 import gtk
 import threading
 from dtk.ui.draw import draw_pixbuf
+from dtk.ui.utils import get_optimum_pixbuf_from_file
 
 
 from player import Player
@@ -97,7 +98,7 @@ class CoverButton(gtk.Button):
             force_song = self.current_song
         filename = CoverManager.get_cover(force_song, try_web)    
         try:
-            pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(filename, COVER_SIZE["x"], COVER_SIZE["y"])
+            pixbuf = get_optimum_pixbuf_from_file(filename, COVER_SIZE["x"], COVER_SIZE["y"])
             self.current_cover_pixbuf = pixbuf
             self.queue_draw()
         except gobject.GError:    
@@ -109,7 +110,7 @@ class CoverButton(gtk.Button):
             else:    
                 self.current_cover_pixbuf = pixbuf
                 del pixbuf
-                return CoverManager.DEFAULT_COVER != filename
+                return CoverManager.default_cover != filename
             self.queue_draw()
             
 class PlayerCoverButton(CoverButton):    
