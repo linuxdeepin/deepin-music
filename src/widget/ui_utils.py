@@ -65,6 +65,13 @@ def draw_item_mask(cr, x, y, width, height, name):
 def render_text(cr, content, rect, color, font_size, align=pango.ALIGN_CENTER):    
     draw_text(cr, content, rect.x, rect.y, rect.width, rect.height, font_size, color, alignment=align)
     
+def render_item_text(cr, content, rect, in_select, in_highlight, align=pango.ALIGN_LEFT, font_size=8):
+    if in_select or in_highlight:
+        color = app_theme.get_color("simpleSelectItem").get_color()
+    else:    
+        color = app_theme.get_color("labelText").get_color()
+    draw_text(cr, content, rect.x, rect.y, rect.width, rect.height, font_size, color, alignment=align)
+    
 def create_separator_box(padding_x=0, padding_y=0):    
     separator_box = HSeparator(
         app_theme.get_shadow_color("hSeparator").get_color_info(),

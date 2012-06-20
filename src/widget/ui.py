@@ -65,9 +65,9 @@ class SearchEntry(TextEntry):
 
 
         entry_button = ImageButton(
-            app_theme.get_pixbuf("entry/search_normal.png"),
-            app_theme.get_pixbuf("entry/search_hover.png"),
-            app_theme.get_pixbuf("entry/search_press.png")
+            app_theme.get_pixbuf("toolbar/search_normal.png"),
+            app_theme.get_pixbuf("toolbar/search_hover.png"),
+            app_theme.get_pixbuf("toolbar/search_press.png")
             )
         super(SearchEntry, self).__init__(action_button=entry_button, *args, **kwargs)        
         

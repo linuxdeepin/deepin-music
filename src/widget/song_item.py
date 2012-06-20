@@ -24,8 +24,7 @@ import gobject
 from dtk.ui.utils import get_content_size
 from dtk.ui.constant import ALIGN_START, ALIGN_END
 
-from widget.ui_utils import render_text
-from widget.skin import app_theme
+from widget.ui_utils import render_item_text
 
 DEFAULT_FONT_SIZE = 8
 
@@ -79,45 +78,35 @@ class SongItem(gobject.GObject):
         self.album_padding_y = 5
         (self.album_width, self.album_height) = get_content_size(self.album, DEFAULT_FONT_SIZE)
         
-    def render_title(self, cr, rect):
+    def render_title(self, cr, rect, in_select, in_highlight):
         '''Render title.'''
         rect.x += self.title_padding_x
         rect.width -= self.title_padding_x * 2
-        render_text(cr, self.title, rect, 
-                    app_theme.get_color("labelText").get_color(),
-                    DEFAULT_FONT_SIZE, ALIGN_START)
+        render_item_text(cr, self.title, rect, in_select, in_highlight)
         
     
-    def render_artist(self, cr, rect):
+    def render_artist(self, cr, rect, in_select, in_highlight):
         '''Render artist.'''
         rect.x += self.artist_padding_x
         rect.width -= self.artist_padding_x * 2
-        render_text(cr, self.artist, rect, 
-                    app_theme.get_color("labelText").get_color(),
-                    DEFAULT_FONT_SIZE, ALIGN_START)
+        render_item_text(cr, self.artist, rect, in_select, in_highlight)
 
     
-    def render_length(self, cr, rect):
+    def render_length(self, cr, rect, in_select, in_highlight):
         '''Render length.'''
         rect.width -= self.length_padding_x * 2
         rect.x -= 8
-        render_text(cr, self.length, rect, 
-                    app_theme.get_color("labelText").get_color(),
-                    DEFAULT_FONT_SIZE, ALIGN_END)
+        render_item_text(cr, self.length, rect, in_select, in_highlight, align=ALIGN_END)
         
-    def render_add_time(self, cr, rect):
+    def render_add_time(self, cr, rect, in_select, in_highlight):
         '''Render add_time.'''
         rect.width -= self.add_time_padding_x * 2
-        render_text(cr, self.add_time, rect, 
-                    app_theme.get_color("labelText").get_color(),
-                    DEFAULT_FONT_SIZE, ALIGN_END)
+        render_item_text(cr, self.add_time, rect, in_select, in_highlight, align=ALIGN_END)
         
-    def render_album(self, cr, rect):
+    def render_album(self, cr, rect, in_select, in_highlight):
         '''Render album.'''
         rect.width -= self.album_padding_x * 2 
-        render_text(cr, self.album, rect, 
-                    app_theme.get_color("labelText").get_color(),
-                    DEFAULT_FONT_SIZE, ALIGN_START)
+        render_item_text(cr, self.album, rect, in_select, in_highlight)
         
     def get_column_sizes(self):
         '''Get sizes.'''
