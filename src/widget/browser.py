@@ -48,17 +48,19 @@ class IconItem(gobject.GObject):
     
     def __init__(self, _tuple):
         super(IconItem, self).__init__()
+        self.cell_width = 83        
         self.name, nums, self.tag = _tuple
         if not self.name:
             self.name_label= "其它"
+            self.pixbuf = CoverManager.get_pixbuf_from_album(self.name_label, self.cell_width, self.cell_width)            
         elif self.name == "deepin-all-songs":    
+            self.pixbuf = CoverManager.get_all_song_cover(self.cell_width, self.cell_width)
             self.name_label = "所有歌曲"
         else:    
             self.name_label = self.name
+            self.pixbuf = CoverManager.get_pixbuf_from_album(self.name_label, self.cell_width, self.cell_width)            
             
         self.labels = "%d首歌曲" % nums
-        self.cell_width = 83
-        self.pixbuf = CoverManager.get_pixbuf_from_album(self.name_label, self.cell_width, self.cell_width)
         self.padding_x = 4
         self.padding_y = 4
         self.hover_flag = False
