@@ -27,7 +27,6 @@ import time
 
 from collections import OrderedDict
 from dtk.ui.listview import ListView
-from dtk.ui.utils import alpha_color_hex_to_cairo
 from dtk.ui.menu import Menu
 from dtk.ui.threads import post_gui
 
@@ -42,7 +41,7 @@ from widget.song_item import SongItem
 from widget.skin import app_theme
 from widget.song_editor import SongEditor
 from source.local import ImportPlaylistJob
-from widget.ui_utils import draw_single_mask
+from widget.ui_utils import draw_single_mask, draw_alpha_mask
 
 class SongView(ListView):
     ''' song view. '''
@@ -72,10 +71,7 @@ class SongView(ListView):
                 Player.set_source(self)
                 
     def draw_mask(self, cr, x, y, width, height):            
-        color_info = app_theme.get_alpha_color("playlistMiddle").get_color_info()
-        cr.set_source_rgba(*alpha_color_hex_to_cairo(color_info))
-        cr.rectangle(x, y, width, height)
-        cr.fill()
+        draw_alpha_mask(cr, x, y, width, height, "layoutMiddle")
         
     def draw_item_hover(self, cr, x, y, w, h):
         draw_single_mask(cr, x, y, w, h, "simpleItemHover")

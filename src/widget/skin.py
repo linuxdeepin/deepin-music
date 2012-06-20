@@ -5,7 +5,7 @@ from dtk.ui.utils import get_parent_dir
 
 # Init skin config.
 skin_config.init_skin(
-    "14",
+    "blue",
     os.path.join(get_parent_dir(__file__, 3), "skin"),
     os.path.expanduser("~/.config/deepin-music-player/skin"),
     os.path.expanduser("~/.config/deepin-music-player/skin_config.ini"),

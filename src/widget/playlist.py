@@ -23,7 +23,7 @@
 import os
 import gtk
 import gobject
-from collections import OrderedDict, namedtuple
+from collections import OrderedDict
 from dtk.ui.scrolled_window import ScrolledWindow
 from dtk.ui.button import ImageButton, ToggleButton
 from dtk.ui.menu import Menu
@@ -39,7 +39,7 @@ from widget.ui import SearchEntry
 from widget.song_item import SongItem
 from widget.list_item import PlaylistItem
 from widget.dialog import WindowLoadPlaylist, WindowExportPlaylist, WinDir
-from widget.ui_utils import container_remove_all
+from widget.ui_utils import container_remove_all, draw_alpha_mask
 from config import config
 from player import Player
 import utils
@@ -53,7 +53,7 @@ class PlaylistUI(gtk.VBox):
         super(PlaylistUI, self).__init__()
 
         self.category_list = TreeView(font_size=9, height=26, font_x_padding=15)
-        self.category_list.draw_mask = self.draw_single_mask
+        self.category_list.draw_mask = self.draw_category_list_mask
         self.category_list.connect("single-click-item", self.category_single_click_cb)
         self.category_list.connect("right-press-item", self.category_right_press_cb)
         self.category_list.connect("button-press-event", self.category_button_press_cb)
@@ -132,16 +132,10 @@ class PlaylistUI(gtk.VBox):
     def expose_entry_mask(self, widget, event):
         cr = widget.window.cairo_create()
         rect = widget.allocation
-        color_info = app_theme.get_alpha_color("toolbarEntry").get_color_info()
-        cr.set_source_rgba(*alpha_color_hex_to_cairo(color_info))
-        cr.rectangle(rect.x, rect.y, rect.width, rect.height)
-        cr.fill()
+        draw_alpha_mask(cr, rect.x, rect.y, rect.width, rect.height, "toolbarEntry")
         
-    def draw_single_mask(self, cr, x, y, width, height):
-        color_info = app_theme.get_alpha_color("playlistLeft").get_color_info()
-        cr.set_source_rgba(*alpha_color_hex_to_cairo(color_info))
-        cr.rectangle(x, y, width, height)
-        cr.fill()
+    def draw_category_list_mask(self, cr, x, y, width, height):
+        draw_alpha_mask(cr, x, y, width, height, "layoutLeft")
         
     def draw_item_mask(self, cr, x, y, width, height):    
         draw_vlinear(cr, x, y, width, height,

@@ -111,14 +111,14 @@ class DeepinCoverManager(Logger):
         y = (y or BROWSER_COVER_SIZE["y"])
         
         filename = get_cache_file("cover/%s.jpg" % album.replace("/", ""))
-        if not os.path.exists(filename):
-            filename = self.default_cover
-        else:    
+        if os.path.exists(filename):
             try:
                 gtk.gdk.pixbuf_new_from_file_at_size(filename, COVER_SIZE["x"], COVER_SIZE["y"])
             except gobject.GError:    
                 os.unlink(filename)
                 filename = self.default_cover
+        else:        
+            filename = self.default_cover
         return get_optimum_pixbuf_from_file(filename, x, y)
     
     def has_cover(self, song):            

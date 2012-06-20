@@ -86,7 +86,10 @@ class HScalebar(gtk.HScale):
         if value > 0:
             draw_pixbuf(cr, fg_pixbuf.scale_simple(value + point_width, line_height, gtk.gdk.INTERP_BILINEAR), rect.x, line_y)
             
-        draw_pixbuf(cr, point_normal_pixbuf, x + value - point_width / 2, y)    
+        if value > 0:    
+            draw_pixbuf(cr, point_normal_pixbuf, x + value - point_width / 2 + 2, y)    
+        else:    
+            draw_pixbuf(cr, point_normal_pixbuf, x + value - point_width / 2 - 1, y)
         
         return True
     

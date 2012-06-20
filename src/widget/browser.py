@@ -35,7 +35,7 @@ from helper import SignalContainer, Dispatcher
 from widget.skin import app_theme
 from widget.ui import SearchEntry
 from widget.song_view import MultiDragSongView
-from widget.ui_utils import switch_tab, render_text
+from widget.ui_utils import switch_tab, render_text, draw_alpha_mask
 from widget.outlookbar import OptionBar, SongPathBar, SongImportBar
 from source.local import ImportFolderJob, ReloadDBJob, ImportFileJob
 from widget.combo import ComboMenuButton
@@ -96,11 +96,10 @@ class IconItem(gobject.GObject):
             return True
         else:
             return False
-                
         
     def emit_redraw_request(self):    
         self.emit("redraw-request")
-       
+        
     def get_width(self):    
         return self.__normal_side_pixbuf.get_width() + self.padding_x * 2 + 8
     
@@ -290,6 +289,7 @@ class Browser(gtk.VBox, SignalContainer):
         self.filter_view.connect("drag-data-get", self.__on_drag_data_get) 
         self.filter_view.connect("double-click-item", self.__on_double_click_item)
         self.filter_view.connect("single-click-item", self.__on_single_click_item)
+        self.filter_view.draw_mask  = self.draw_filter_view_mask
         self.filter_scrolled_window = ScrolledWindow()
         self.filter_scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
         self.filter_scrolled_window.add_child(self.filter_view)
@@ -335,7 +335,7 @@ class Browser(gtk.VBox, SignalContainer):
     def __create_simple_button(self, name, callback):    
         button = ImageButton(
             app_theme.get_pixbuf("filter/%s_normal.png" % name),
-            app_theme.get_pixbuf("filter/%s_normal.png" % name),
+            app_theme.get_pixbuf("filter/%s_hover.png" % name),
             app_theme.get_pixbuf("filter/%s_press.png" % name),
             )
         if callback:
@@ -345,16 +345,17 @@ class Browser(gtk.VBox, SignalContainer):
     def expose_left_box_mask(self, widget, event):
         cr = widget.window.cairo_create()
         rect = widget.allocation
-        color_info = app_theme.get_shadow_color("playlistRight").get_color_info()
-        draw_vlinear(cr, rect.x, rect.y, rect.width, rect.height, color_info)
+        draw_alpha_mask(cr, rect.x, rect.y, rect.width, rect.height, "layoutRight")
         return False
     
     def expose_align_mask(self, widget, event):
         cr = widget.window.cairo_create()
         rect = widget.allocation
-        color_info = app_theme.get_shadow_color("playlistLast").get_color_info()
-        draw_vlinear(cr, rect.x, rect.y, rect.width - 2, rect.height, color_info)
+        draw_alpha_mask(cr, rect.x, rect.y, rect.width - 2, rect.height, "layoutLast")
         return False
+    
+    def draw_filter_view_mask(self, cr, x, y, width, height):
+        draw_alpha_mask(cr, x, y, width, height, "layoutLast")
     
     def create_separator_box(self, padding_x=0, padding_y=0):
         separator_box = HSeparator(
@@ -497,7 +498,11 @@ class Browser(gtk.VBox, SignalContainer):
                     self.update_path_songs_view(self.current_icon_item)
     
     def __update_tag_view(self, db_query, tag, values):
-        pass
+        if self.view_mode == ICON_VIEW_MODE:
+            if self.path_categorybar.get_index() == -1:
+                self.reload_filter_view(self.categorybar_status)
+            else:    
+                self.update_path_filter_view(self.path_combo_box.current_status)
     
     def __quick_update(self, db_query, songs):
         pass

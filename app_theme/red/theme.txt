@@ -29,12 +29,14 @@
 	 "scrollbarBackground" : ("#FFFFFF", 0.5),
 	 "menuMask" : ("#FFFFFF", 0.9),
 	 "progressbarFrame" : ("#EF12AB", 1.0),
-	 "playlistLeft" : ("#FFFFFF", 0.88),
-	 "playlistMiddle" : ("#FFFFFF", 0.68),
-	 "playlistRight" : ("#FFFFFF", 0.88),
 	 "toolbarEntry" : ("#888072", 1.0),
 	 "settingLeft"  : ("#EFEFEF", 0.85),
 	 "settingRight"  : ("#EFEFEF", 0.95),
+	 "layoutLeft" : ("#ffffff", 0.95),
+     "layoutMiddle" : ("#fffafa", 0.85),
+     "layoutRight" : ("#ffffff", 0.95),
+     "layoutLast" : ("#fffafa", 0.85),
+	 "lyricsMask" : ("#ffffff", 0.60),
  },
  "shadow_colors" : {
      "linearBackground" : [

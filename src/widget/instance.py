@@ -52,15 +52,16 @@ class DeepinMusic(gobject.GObject, Logger):
         gobject.GObject.__init__(self)
         application = Application("DMuisc")
         application.close_callback = self.quit
-        application.set_default_size(858, 625)
+        application.set_default_size(816, 625)
         application.set_icon(app_theme.get_pixbuf("skin/logo.ico"))
         application.set_skin_preview(app_theme.get_pixbuf("frame.png"))
         application.add_titlebar(
-            ["theme", "max", "min", "close"],
+            ["theme", "menu", "max", "min", "close"],
             app_theme.get_pixbuf("skin/logo1.png"),
             "深度音乐"
             )
         
+        application.titlebar.menu_button.connect("button-press-event", self.menu_button_press)
         self.window = application.window
         utils.set_main_window(self)
         
@@ -219,6 +220,9 @@ class DeepinMusic(gobject.GObject, Logger):
             ]
         menu_items.extend(control_items)
         return Menu(menu_items)
+    
+    def menu_button_press(self, widget, event):
+        self.show_instance_menu(None, int(event.x_root), int(event.y_root))
         
     def show_instance_menu(self, obj, x, y):
         curren_view = self.playlist_ui.get_selected_song_view()

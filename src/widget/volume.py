@@ -32,6 +32,7 @@ class VolumeButton(gtk.HBox):
     def __init__(self, init_value=100, min_value=0, max_value=100):
         
         super(VolumeButton, self).__init__()
+        self.set_spacing(2)
         self.volume_progressbar = HScalebar(
             app_theme.get_pixbuf("volume/fg.png"),
             app_theme.get_pixbuf("volume/bg.png"),

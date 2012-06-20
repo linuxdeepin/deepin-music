@@ -33,6 +33,7 @@ from dtk.ui.utils import get_content_size, move_window
 from dtk.ui.entry import TextEntry, ShortcutKeyEntry
 from dtk.ui.treeview import TreeView
 from dtk.ui.button import Button
+from dtk.ui.titlebar import Titlebar
 from dtk.ui.color_selection import ColorButton
 from dtk.ui.combo import ComboBox
 from dtk.ui.scrolled_window import ScrolledWindow
@@ -190,9 +191,6 @@ class GeneralSetting(gtk.VBox):
         
         return main_table
     
-    
-        
-    
     def create_play_box(self):
         main_table = gtk.Table(4, 2)
         main_table.set_row_spacings(10)
@@ -325,7 +323,7 @@ class DesktopLyricsSetting(gtk.VBox):
         preview_align.set(0.0, 0.0, 1.0, 1.0)
         preview_align.set_padding(0, 10, 5, 5)
         preview_align.add(self.preview)
-        self.pack_start(preview_align, False, True)
+        # self.pack_start(preview_align, False, True)
         
         # Signals.
         self.preview.connect("expose-event", self.draw_lyrics)        
@@ -792,10 +790,8 @@ class PreferenceDialog(Window):
         self.set_size_request(575, 495)
         self.set_resizable(False)
         self.set_keep_above(True)
-        titlebar = gtk.EventBox()
-        titlebar.set_visible_window(False)
-        titlebar.set_size_request(-1, 32)
-        titlebar.connect("button-press-event", lambda w, e: move_window(w, e, self))
+        titlebar = Titlebar(["close"], app_name="  选项设置")
+        titlebar.close_button.connect_after("clicked", lambda w: self.hide_all())
         statusbar = gtk.EventBox()
         statusbar.set_visible_window(False)
         statusbar.set_size_request(-1, 50)
@@ -822,6 +818,7 @@ class PreferenceDialog(Window):
         self.window_frame.pack_start(main_align, True, True)
         self.window_frame.pack_start(statusbar, False, True)
         self.main_box.connect("expose-event", self.expose_mask_cb)
+        self.add_move_event(titlebar)
         
         
         # Init widget.
