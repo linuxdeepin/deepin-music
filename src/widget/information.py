@@ -70,7 +70,7 @@ class PlayInfo(gtk.VBox):
         self.artist_label.set_text(song.get_str("artist"))
         
     def create_simple_label(self, content, text_size):    
-        label = Label(content, app_theme.get_color("labelText"), text_size=text_size)
+        label = Label(content, app_theme.get_color("labelText"), text_size=text_size, enable_gaussian=True)
         width, height = get_content_size(content, text_size)
         label.set_size_request(110, height)
         return label

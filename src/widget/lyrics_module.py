@@ -36,6 +36,7 @@ from helper import Dispatcher
 from widget.lyrics import DesktopLyrics, ScrollLyrics
 from widget.skin import app_theme
 from widget.lyrics_search import SearchUI
+from widget.ui_utils import draw_alpha_mask
 from lrc_parser import LrcParser
 from config import config
 from player import Player
@@ -95,9 +96,9 @@ class LyricsModule(object):
         self.toolbar = Window(window_type=gtk.WINDOW_POPUP) 
         self.toolbar.background_dpixbuf = app_theme.get_pixbuf("lyric/background.png")
         self.toolbar.set_size_request(-1, 41)
-
         padding_x, padding_y = 10, 5
         play_box = gtk.HBox(spacing=2)
+        play_box.connect("expose-event", self.expose_toolbar_mask)
         
         # swap played status handler
         Player.connect("played", self.__swap_play_status, True)
@@ -166,6 +167,12 @@ class LyricsModule(object):
         self.toolbar.window_frame.pack_start(main_align)
         
         self.load_button_status()
+        
+    def expose_toolbar_mask(self, widget, event):    
+        cr = widget.window.cairo_create()
+        rect = widget.allocation
+        draw_alpha_mask(cr, rect.x - 9, rect.y - 2, rect.width + 18, rect.height + 4, "playlistMiddle")
+        return False
         
     def scroll_right_press_cb(self, widget, event):    
         menu_items = [

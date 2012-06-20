@@ -97,10 +97,10 @@ class IconItem(gobject.GObject):
         self.emit("redraw-request")
        
     def get_width(self):    
-        return self.__normal_side_pixbuf.get_width() + self.padding_x * 2
+        return self.__normal_side_pixbuf.get_width() + self.padding_x * 2 + 8
     
     def get_height(self):
-        return self.__normal_side_pixbuf.get_height() + self.padding_y * 2 + 30
+        return self.__normal_side_pixbuf.get_height() + self.padding_y * 2 + 40
     
     def render(self, cr, rect):
         

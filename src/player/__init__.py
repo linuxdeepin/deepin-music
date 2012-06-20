@@ -358,22 +358,22 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
     
     def increase_volume(self):        
         current_volume = self.get_volume()
-        current_volume += 0.1
+        current_volume += 0.2
         if current_volume > 1.0:
             current_volume = 1.0
-        self.set_volume(current_volume)    
+        # self.set_volume(current_volume)    
         Dispatcher.volume(current_volume)
         
     def decrease_volume(self):   
         current_volume = self.get_volume()
-        current_volume -= 0.1
+        current_volume -= 0.2
         if current_volume < 0:
             current_volume = 0.0
-        self.set_volume(current_volume)    
+        # self.set_volume(current_volume)    
         Dispatcher.volume(current_volume)
         
     def mute_volume(self):    
-        self.set_volume(0.0)
+        # self.set_volume(0.0)
         Dispatcher.volume(0.0)
         
     def is_paused(self):                

@@ -81,10 +81,10 @@ class SongView(ListView):
         draw_single_mask(cr, x, y, w, h, "simpleItemHover")
         
     def draw_item_select(self, cr, x, y, w, h):    
-        draw_single_mask(cr, x, y, w, h, "simpleItemHighlight")
+        draw_single_mask(cr, x, y, w, h, "simpleItemSelect")
         
     def draw_item_highlight(self, cr, x, y, w, h):    
-        draw_single_mask(cr, x, y, w, h, "simpleItemSelect")
+        draw_single_mask(cr, x, y, w, h, "simpleItemHighlight")
         
     def get_songs(self):        
         songs = []

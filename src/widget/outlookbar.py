@@ -324,7 +324,7 @@ class SimpleItem(gtk.Button):
             select_status = BUTTON_PRESS
             
         if select_status == BUTTON_PRESS:    
-            draw_single_mask(cr, rect.x, rect.y, rect.width, rect.height, "simpleItemHighlight")
+            draw_single_mask(cr, rect.x, rect.y, rect.width, rect.height, "simpleItemSelect")
             font_color = app_theme.get_color("simpleSelectItem").get_color()
             item_pixbuf = self.press_dpixbuf.get_pixbuf()
             

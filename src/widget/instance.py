@@ -228,7 +228,6 @@ class DeepinMusic(gobject.GObject, Logger):
             (None, "播放模式", curren_view.get_playmode_menu()),
             None,
             (None, "均衡器", lambda : self.equalizer_win.run()),
-            (None, "总在最前", None),
             None,
             self.get_lyrics_menu_items(),
             None,
