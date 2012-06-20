@@ -28,15 +28,17 @@ from dtk.ui.utils import get_content_size
 from dtk.ui.threads import post_gui
 
 from constant import DEFAULT_FONT_SIZE
-from dtk.ui.listview import ListView, render_text
+from dtk.ui.listview import ListView
 from dtk.ui.scrolled_window import ScrolledWindow
 from widget.ui import NormalWindow
+from widget.ui_utils import render_item_text
 from lrc_download import TTPlayer, DUOMI, SOSO
 from helper import Dispatcher
 from lrc_manager import LrcManager
 from player import Player
 from config import config
 import utils
+
 
 
 class SearchUI(NormalWindow):
@@ -193,17 +195,17 @@ class SearchItem(gobject.GObject):
         self.artist_padding_y = 5
         (self.artist_width, self.artist_height) = get_content_size(self.artist, DEFAULT_FONT_SIZE)
         
-    def render_title(self, cr, rect):
+    def render_title(self, cr, rect, in_select, in_highlight):
         '''Render title.'''
         rect.x += self.title_padding_x
         rect.width -= self.title_padding_x * 2
-        render_text(cr, rect, self.title, font_size=DEFAULT_FONT_SIZE)
+        render_item_text(cr, self.title, rect, in_select, in_highlight)
     
-    def render_artist(self, cr, rect):
+    def render_artist(self, cr, rect, in_select, in_highlight):
         '''Render artist.'''
         rect.x += self.artist_padding_x
         rect.width -= self.title_padding_x * 2
-        render_text(cr, rect, self.artist, font_size = DEFAULT_FONT_SIZE)
+        render_item_text(cr, self.artist, rect, in_select, in_highlight)
         
     def get_column_sizes(self):
         '''Get sizes.'''
