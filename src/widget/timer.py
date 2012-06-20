@@ -24,7 +24,6 @@ import  gtk
 import gobject
 
 from dtk.ui.label import Label
-from dtk.ui.utils import get_content_size
 
 import utils
 from widget.scalebar import HScalebar
@@ -42,7 +41,6 @@ class SongTimer(gtk.HBox):
         super(SongTimer, self).__init__()
 
         self.label_time = Label("00:00/00:00", app_theme.get_color("labelText"), 9, enable_gaussian=True)
-        self.label_time.set_size_request(*get_content_size("00:00/00:00", 9))
 
         self.bar = HScalebar()
         self.bar.set_draw_value(False)

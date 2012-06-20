@@ -37,14 +37,14 @@ class JobsManager(gtk.HBox):
     def __init__(self):
         super(JobsManager,self).__init__(spacing=6)
         
-        self.jobs_label = Label("0 " + "个任务在等待!", app_theme.get_color("labelText"), 8, enable_gaussian=True)
+        self.jobs_label = Label("0 " + "个任务在等待!", app_theme.get_color("labelText"), 8)
         self.jobs_label.set_size_request(150, 12)
         label_align = gtk.Alignment()
         label_align.set(0.5, 0.5, 0, 0)
         label_align.set_padding(0, 0, 10, 0)
         label_align.add(self.jobs_label)
         
-        self.progress_label = Label("", app_theme.get_color("labelText"), 8, enable_gaussian=True)
+        self.progress_label = Label("", app_theme.get_color("labelText"), 8)
         self.progress_label.set_size_request(500, 10)
         self.__paused = False
         btn_cancel = self.__create_simple_button("stop", self.stop)

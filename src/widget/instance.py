@@ -85,7 +85,7 @@ class DeepinMusic(gobject.GObject, Logger):
         self.header_bar = FullHeaderBar()
         self.preference_dialog = PreferenceDialog()
         self.equalizer_win = EqualizerWindow()
-        self.window.add_move_event(self.header_bar)
+        self.window.add_move_event(self.header_bar.move_box)
 
         bottom_box = gtk.HBox()
         browser_align = gtk.Alignment()

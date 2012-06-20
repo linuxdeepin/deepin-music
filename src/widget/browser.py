@@ -24,7 +24,7 @@ import gtk
 import gobject
 import os
 
-from dtk.ui.draw import draw_pixbuf, draw_vlinear
+from dtk.ui.draw import draw_pixbuf
 from dtk.ui.scrolled_window import ScrolledWindow
 from dtk.ui.button import ImageButton
 from dtk.ui.iconview import IconView

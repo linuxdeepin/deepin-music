@@ -109,4 +109,3 @@ class HScalebar(gtk.HScale):
             
 gobject.type_register(HScalebar)
 
-        

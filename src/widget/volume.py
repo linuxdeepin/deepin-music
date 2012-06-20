@@ -52,6 +52,7 @@ class VolumeButton(gtk.HBox):
         self.volume_progressbar.set_size_request(58, 11)
         self.volume_progressbar.set_range(min_value, max_value)
         self.volume_progressbar.set_value(init_value)
+        self.volume_progressbar.connect("button-release-event", self.release_event)
         
         # Signals.
         self.volume_progressbar.get_adjustment().connect("value-changed", self.moniter_volume_change)
@@ -68,6 +69,9 @@ class VolumeButton(gtk.HBox):
         self.pack_start(button_align, False, False)
         self.pack_start(volume_align, False, False)
             
+    def release_event(self, widget, event):    
+        pass
+        
     def update_volume_button_pixbuf(self, name):
         group = (
             app_theme.get_pixbuf("volume/%s_normal.png" % name),
