@@ -204,23 +204,44 @@ class DeepinMusic(gobject.GObject, Logger):
             self.window.unmaximize()
         self.window.show_all()
         
+    def get_play_control_menu(self):    
+        menu_items = []
+        if Player.is_paused():
+            state_label = "播放"
+        else:    
+            state_label = "暂停"
+        menu_items.append((None, state_label, Player.playpause))    
+        control_items = [
+            (None, "上一首", Player.previous),
+            (None, "下一首", Player.next),
+            (None, "快进", Player.forward),
+            (None, "后退", Player.rewind)
+            ]
+        menu_items.extend(control_items)
+        return Menu(menu_items)
+        
     def show_instance_menu(self, obj, x, y):
         curren_view = self.playlist_ui.get_selected_song_view()
         menu_items = [
             (None, "文件添加", curren_view.get_add_menu()),
-            (None, "播放控制", None),
+            (None, "播放控制", self.get_play_control_menu()),
             (None, "播放模式", curren_view.get_playmode_menu()),
             None,
             (None, "均衡器", lambda : self.equalizer_win.run()),
             (None, "总在最前", None),
             None,
-            (None, "桌面歌词", None),
-            (None, "窗口歌词", None),
+            self.get_lyrics_menu_items(),
             None,
             (None, "选项设置", lambda : self.preference_dialog.show_all()),
             (None, "关于软件", None),
             None,
-            (None, "退出", None),
+            (None, "退出", self.force_quit),
             ]
         Menu(menu_items, True).show((x, y))
-    
+        
+    def get_lyrics_menu_items(self):    
+        if config.getboolean("lyrics", "status"):
+            return (None, "关闭歌词", lambda : Dispatcher.close_lyrics())
+        else:    
+            return (None, "打开歌词", lambda : Dispatcher.show_lyrics())
+        

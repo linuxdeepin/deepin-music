@@ -251,7 +251,7 @@ class SongImportBar(BaseBar):
                     (app_theme.get_pixbuf("filter/point_normal.png"),
                      app_theme.get_pixbuf("filter/point_press.png"),
                      item[0], item[1]),
-                    index + 1, 9, 20, 25, 10, 25, self.set_index, self.get_index, ALIGN_START)
+                    index + 1, 9, 25, 25, 10, 25, self.set_index, self.get_index, ALIGN_START)
                 self.child_box.pack_start(simple_item)
             self.show_all()        
             

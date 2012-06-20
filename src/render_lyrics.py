@@ -120,7 +120,7 @@ class RenderContextNew(object):
     def get_pixel_size(self, text):    
         self.set_text(text)
         w, h = self.pango_layout.get_pixel_size()
-        new_width = int(w + self.get_outline_width() + self.get_blur_radius() * 2)
+        new_width = int(w + self.get_outline_width() + self.get_blur_radius() * 2 + 5)
         new_height = int(h + self.get_outline_width() + self.get_blur_radius() * 2)
         return (new_width, new_height)    
     

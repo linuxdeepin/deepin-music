@@ -64,6 +64,7 @@ class LyricsModule(object):
         Player.connect("instant-new-song", self.instant_update_lrc)
         Player.connect("played", self.play_time_source)
         Player.connect("paused", self.pause_time_source)
+        Player.connect("play-end", self.pause_time_source)
         Dispatcher.connect("reload-lrc", self.update_lrc)
         Dispatcher.connect("unlock-lyrics", self.__unlock_lyrics)
         Dispatcher.connect("lock-lyrics", self.__lock_lyrics)

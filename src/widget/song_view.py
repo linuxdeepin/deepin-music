@@ -453,6 +453,15 @@ class MultiDragSongView(ListView):
         self.connect("double-click-item", self.__on_double_click_item)
         self.connect("right-press-items", self.popup_right_menu)
         
+    def draw_item_hover(self, cr, x, y, w, h):
+        draw_single_mask(cr, x, y, w, h, "simpleItemHover")
+        
+    def draw_item_select(self, cr, x, y, w, h):    
+        draw_single_mask(cr, x, y, w, h, "simpleItemHighlight")
+        
+    def draw_item_highlight(self, cr, x, y, w, h):    
+        draw_single_mask(cr, x, y, w, h, "simpleItemSelect")
+        
     def get_selected_songs(self):    
         songs = []
         if len(self.select_rows) > 0:
