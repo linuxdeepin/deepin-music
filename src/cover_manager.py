@@ -90,9 +90,7 @@ class DeepinCoverManager(Logger):
                 gtk.gdk.pixbuf_new_from_file_at_size(filename, COVER_SIZE["x"], COVER_SIZE["y"])
             except gobject.GError:    
                 os.unlink(filename)
-            else:    
                 filename = self.default_cover
-            
         return get_optimum_pixbuf_from_file(filename, x, y)
     
     def has_cover(self, song):            
@@ -102,7 +100,7 @@ class DeepinCoverManager(Logger):
     def get_cover_path(self, song):
         return get_cache_file("cover/" + self.get_cover_search_str(song) + ".jpg")
     
-    def get_pixbuf_from_song(self, song, x, y, try_web=False):
+    def get_pixbuf_from_song(self, song, x, y, try_web=True):
         filename = self.get_cover(song, try_web)
         return get_optimum_pixbuf_from_file(filename, x, y)
     

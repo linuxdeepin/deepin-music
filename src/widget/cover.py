@@ -100,7 +100,6 @@ class CoverButton(gtk.Button):
         try:
             pixbuf = get_optimum_pixbuf_from_file(filename, COVER_SIZE["x"], COVER_SIZE["y"])
             self.current_cover_pixbuf = pixbuf
-            self.queue_draw()
         except gobject.GError:    
             pass
         else:
