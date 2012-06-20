@@ -28,7 +28,6 @@ from dtk.ui.scrolled_window import ScrolledWindow
 from dtk.ui.button import ImageButton, ToggleButton
 from dtk.ui.menu import Menu
 from dtk.ui.draw import draw_vlinear
-from dtk.ui.utils import alpha_color_hex_to_cairo
 from dtk.ui.treeview import TreeView
 from dtk.ui.dialog import InputDialog
 
@@ -132,7 +131,7 @@ class PlaylistUI(gtk.VBox):
     def expose_entry_mask(self, widget, event):
         cr = widget.window.cairo_create()
         rect = widget.allocation
-        draw_alpha_mask(cr, rect.x, rect.y, rect.width, rect.height, "toolbarEntry")
+        draw_alpha_mask(cr, rect.x + 2, rect.y, rect.width - 1, rect.height, "toolbarEntry")
         
     def draw_category_list_mask(self, cr, x, y, width, height):
         draw_alpha_mask(cr, x, y, width, height, "layoutLeft")
