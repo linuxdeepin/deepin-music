@@ -56,6 +56,34 @@ COVER_PATTERNS = [
     "*.jpg","*.png",
     ]
 
+GENRE_PATTERNS  = {
+    "blue" : "blues.png", "布鲁"   : "blues.png",
+    "class" : "classical.png", "古典"   : "classical.png",
+    "country" : "country.png", "乡村" : "country.png",
+    "easy" : "easy_listen.png", "listen" : "easy_listen.png",
+    "轻" : "easy_listen.png",  "electonic" : "electonic.png",
+    "电子" : "electonic.png",    "folk" : "folk.png",
+    "民谣" : "folk.png",    "interna" : "international.png",
+    "国际" : "international.png",    "jazz" : "jazz.png",
+    "爵士" : "jazz.png",    "latin" : "latin.png",
+    "拉丁" : "latin.png", 
+    "new" : "new_age.png",
+    "age" : "new_age.png",
+    "pop" : "pop_rock.png",
+    "rock" : "pop_rock.png",
+    "流行" : "pop_rock.png",
+    "摇滚" : "pop_rock.png",
+    "rap" : "rap.png",
+    "说唱" : "rap.png",
+    "r&b" : "r_b.png",
+    "节奏" : "r_b.png",
+    "reggae" : "reggae.png",
+    "雷鬼" : "reggae.png",
+    "stage" : "stage_screen.png",
+    "screen" : "stage_screen.png",
+    "舞台" : "stage_screen.png",
+    "影视" : "stage_screen.png",}
+
 class DeepinCoverManager(Logger):
     COVER_PIXBUF = {}
     COVER_TO_SKIP = []
@@ -103,6 +131,13 @@ class DeepinCoverManager(Logger):
     def get_pixbuf_from_song(self, song, x, y, try_web=True):
         filename = self.get_cover(song, try_web)
         return get_optimum_pixbuf_from_file(filename, x, y)
+    
+    def get_pixbuf_from_genre(self, genre):
+        genre_name = genre.lower()
+        for key, value in GENRE_PATTERNS.iteritems():
+            if key in genre_name:
+                return app_theme.get_pixbuf("genre/%s" % value).get_pixbuf()
+        return gtk.gdk.pixbuf_new_from_file_at_size(self.default_cover, 83, 83)
     
     def get_cover(self, song, try_web=True):
         default_image_path = self.default_cover

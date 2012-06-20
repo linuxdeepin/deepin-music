@@ -58,7 +58,10 @@ class IconItem(gobject.GObject):
             self.name_label = "所有歌曲"
         else:    
             self.name_label = self.name
-            self.pixbuf = CoverManager.get_pixbuf_from_album(self.name_label, self.cell_width, self.cell_width)            
+            if self.tag == "genre":
+                self.pixbuf = CoverManager.get_pixbuf_from_genre(self.name_label)
+            else:    
+                self.pixbuf = CoverManager.get_pixbuf_from_album(self.name_label, self.cell_width, self.cell_width)            
             
         self.labels = "%d首歌曲" % nums
         self.padding_x = 4
