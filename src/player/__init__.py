@@ -228,7 +228,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
             self.next()
         elif play:    
             self.play(crossfade, seek)
-            self.loginfo("play %s", song.get_path())
+            self.logdebug("play %s", song.get_path())
         
     def play_new(self, song, crossfade=None, seek=None):
         '''add new song and try to play it'''

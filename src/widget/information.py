@@ -42,14 +42,13 @@ class PlayInfo(gtk.VBox):
         MediaDB.connect("simple-changed",self.__on_change)
         Player.bin.connect("buffering", self.__on_buffering)
         
-        self.set_spacing(6)
+        self.set_spacing(0)
         artist_label_align = gtk.Alignment()
         artist_label_align.set_padding(7, 0, 0, 0)
         artist_label_align.set(0, 0, 1, 1)
         artist_label_align.add(self.artist_label)
         self.pack_start(artist_label_align, False, False)
         self.pack_start(self.title_label, False, False)
-        
         self.song = None
         
     def __on_buffering(self, playbin, progress):
@@ -70,7 +69,7 @@ class PlayInfo(gtk.VBox):
         self.artist_label.set_text(song.get_str("artist"))
         
     def create_simple_label(self, content, text_size):    
-        label = Label(content, app_theme.get_color("labelText"), text_size=text_size, enable_gaussian=True, label_size=(127, -1))
+        label = Label(content, app_theme.get_color("labelText"), text_size=text_size, enable_gaussian=True, label_width=127)
         width, height = get_content_size(content, text_size)
         label.set_size_request(110, height)
         return label
