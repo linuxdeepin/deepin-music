@@ -395,7 +395,7 @@ class SongView(ListView):
             
     def recursion_add_dir(self):        
         pos = len(self.items)
-        ImportPlaylistJob(None, self.add_songs, pos)
+        ImportPlaylistJob(None, self.render_song, pos, False)
             
     def async_add_uris(self, uris, follow_folder=True):        
         if not isinstance(uris, (list, tuple, set)):

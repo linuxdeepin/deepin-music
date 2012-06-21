@@ -70,7 +70,7 @@ class ImportFolderJob(Job):
                     yield os.path.join(dirpath, name)        
                     
 class ImportPlaylistJob(Job):
-    def __init__(self, dirs=None, callback=None, pos=None):
+    def __init__(self, dirs=None, callback=None, pos=None, sort=False):
         if not dirs:
             dirs = WinDir().run()
             if dirs:
@@ -83,6 +83,7 @@ class ImportPlaylistJob(Job):
             
         self.add_song_cache = []    
         self.pos = pos
+        self.sort = sort
         self.callback = callback
             
     def __get_or_create_song(self, uri):        
@@ -113,7 +114,7 @@ class ImportPlaylistJob(Job):
                             self.__get_or_create_song(uri)
                         end = time.time()    
                         if end - start > 0.2:
-                            self.callback(self.add_song_cache, self.pos)
+                            self.callback(self.add_song_cache, self.pos, self.sort)
                             self.pos += len(self.add_song_cache)
                             del self.add_song_cache[:]
                             start = time.time()
@@ -123,7 +124,7 @@ class ImportPlaylistJob(Job):
                     yield os.path.join(dirpath, name)        
                     
         if self.add_song_cache:            
-            self.callback(self.add_song_cache, self.pos)
+            self.callback(self.add_song_cache, self.pos, self.sort)
         
 class ImportFileJob(object):        
     '''import file to db'''
