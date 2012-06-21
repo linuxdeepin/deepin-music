@@ -500,11 +500,12 @@ class Browser(gtk.VBox, SignalContainer):
                     self.update_path_songs_view(self.current_icon_item)
     
     def __update_tag_view(self, db_query, tag, values):
-        if self.view_mode == ICON_VIEW_MODE:
-            if self.path_categorybar.get_index() == -1:
-                self.reload_filter_view(self.categorybar_status)
-            else:    
-                self.update_path_filter_view(self.path_combo_box.current_status)
+        pass
+        # if self.view_mode == ICON_VIEW_MODE:
+        #     if self.path_categorybar.get_index() == -1:
+        #         self.reload_filter_view(self.categorybar_status)
+        #     else:    
+        #         self.update_path_filter_view(self.path_combo_box.current_status)
     
     def __quick_update(self, db_query, songs):
         pass
