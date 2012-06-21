@@ -69,6 +69,8 @@ class LyricsModule(object):
         Dispatcher.connect("reload-lrc", self.update_lrc)
         Dispatcher.connect("unlock-lyrics", self.__unlock_lyrics)
         Dispatcher.connect("lock-lyrics", self.__lock_lyrics)
+        Dispatcher.connect("show-lyrics", lambda w : self.run())
+        Dispatcher.connect("close-lyrics", lambda w: self.hide_all())
         
         self.lrc_manager = LrcManager()
         self.lrc = LrcParser()
@@ -307,7 +309,6 @@ class LyricsModule(object):
         self.search_ui.show_window()
     
     def close_lyric_window(self, widget):
-        self.hide_all()
         Dispatcher.close_lyrics()
         
     def open_setting_window(self, widget):

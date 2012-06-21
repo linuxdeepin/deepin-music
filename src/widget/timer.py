@@ -166,6 +166,6 @@ class VolumeSlider(gtk.HBox):
 
     def __volume_changed(self,*args):
         val = self.volume_progressbar.get_value()
-        val = (2 ** val) - 1
+        # val = (2 ** val) - 1
         config.set("player","volume","%f" % val)
         Player.volume = val

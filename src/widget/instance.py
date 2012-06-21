@@ -24,16 +24,19 @@ import gtk
 import gobject
 from dtk.ui.application import Application
 from dtk.ui.menu import Menu
+from dtk.ui.button import ToggleButton
 
 import utils
 from widget.skin import app_theme
-from widget.headerbar import FullHeaderBar
+from widget.headerbar import FullHeaderBar, SimpleHeadber
 from widget.playlist import PlaylistUI
+from widget.lyrics_module import LyricsModule
 from widget.browser import SimpleBrowser
 from widget.jobs_manager import jobs_manager
 from widget.tray import TrayIcon
 from widget.equalizer import EqualizerWindow
 from widget.preference import PreferenceDialog
+from widget.ui_utils import switch_tab
 
 from config import config
 from player import Player
@@ -52,19 +55,62 @@ class DeepinMusic(gobject.GObject, Logger):
         gobject.GObject.__init__(self)
         application = Application("DMuisc")
         application.close_callback = self.quit
-        application.set_default_size(816, 625)
         application.set_icon(app_theme.get_pixbuf("skin/logo.ico"))
         application.set_skin_preview(app_theme.get_pixbuf("frame.png"))
         application.add_titlebar(
-            ["theme", "menu", "max", "min", "close"],
+            ["theme", "menu", "min", "close"],
             app_theme.get_pixbuf("skin/logo1.png"),
             "深度音乐"
             )
+        application.titlebar.menu_button.connect("button-press-event", self.menu_button_press)        
         
-        application.titlebar.menu_button.connect("button-press-event", self.menu_button_press)
+        # Window mode change.
+        self.revert_toggle_button = self.create_revert_button()
+        self.revert_toggle_button.connect("toggled", self.change_view)
+
+        application.titlebar.button_box.pack_start(self.revert_toggle_button)
+        application.titlebar.button_box.reorder_child(self.revert_toggle_button, 1)
         self.window = application.window
         utils.set_main_window(self)
         
+        self.lyrics_display = LyricsModule()
+        self.playlist_ui = PlaylistUI()    
+        self.full_header_bar = FullHeaderBar()
+        self.simple_header_bar = SimpleHeadber()
+        self.preference_dialog = PreferenceDialog()
+        self.simple_browser = SimpleBrowser()
+        self.equalizer_win = EqualizerWindow()
+            
+        bottom_box = gtk.HBox()
+        self.browser_align = gtk.Alignment()
+        self.browser_align.set_padding(0, 0, 0, 0)
+        self.browser_align.set(0.5, 0.5, 1, 1)
+        self.browser_align.add(self.simple_browser)
+        bottom_box.pack_start(self.playlist_ui, False, False)        
+        bottom_box.pack_start(self.browser_align, True, True)
+        self.browser_align.set_no_show_all(True)
+        
+        main_box = gtk.VBox()
+        self.header_box = gtk.VBox()
+        self.header_box.add(self.simple_header_bar)
+        main_box.pack_start(self.header_box, False)
+        main_box.pack_start(bottom_box, True)
+
+        block_box = gtk.EventBox()
+        block_box.set_visible_window(False)
+        block_box.set_size_request(-1, 22)
+        block_box.add(jobs_manager)
+        
+        application.main_box.pack_start(main_box)        
+        application.main_box.pack_start(block_box, False, True)
+        
+        if config.get("setting", "window_mode") == "simple":
+            self.revert_toggle_button.set_active(False)
+        else:    
+            self.revert_toggle_button.set_active(True)
+                
+        self.change_view(self.revert_toggle_button)    
+            
         if config.get("window", "x") == "-1":
             self.window.set_position(gtk.WIN_POS_CENTER)
         else:    
@@ -81,33 +127,6 @@ class DeepinMusic(gobject.GObject, Logger):
         elif window_state == "normal":    
             self.window.unmaximize()
         
-        self.playlist_ui = PlaylistUI()    
-        self.header_bar = FullHeaderBar()
-        self.preference_dialog = PreferenceDialog()
-        self.equalizer_win = EqualizerWindow()
-        self.window.add_move_event(self.header_bar.move_box)
-
-        bottom_box = gtk.HBox()
-        browser_align = gtk.Alignment()
-        browser_align.set_padding(0, 0, 0, 0)
-        browser_align.set(0.5, 0.5, 1, 1)
-        browser_align.add(SimpleBrowser())
-        bottom_box.pack_start(self.playlist_ui, False, False)        
-        bottom_box.pack_start(browser_align, True, True)
-        
-        main_box = gtk.VBox()
-        main_box.pack_start(self.header_bar, False)
-        main_box.pack_start(bottom_box, True)
-
-
-        block_box = gtk.EventBox()
-        block_box.set_visible_window(False)
-        block_box.set_size_request(-1, 22)
-        block_box.add(jobs_manager)
-        
-        application.main_box.pack_start(main_box)        
-        application.main_box.pack_start(block_box, False, True)
-        
         self.window.connect("delete-event", self.quit)
         self.window.connect("configure-event", self.on_configure_event)
         self.window.connect("destroy", self.quit)
@@ -119,11 +138,14 @@ class DeepinMusic(gobject.GObject, Logger):
         Dispatcher.connect("show-scroll-page", lambda w: self.preference_dialog.show_scroll_lyrics_page())
         
         self.tray_icon = None
+        if config.get("setting", "use_tray", "true") == "true":    
+            self.tray_icon = TrayIcon(self)
+        
         gobject.idle_add(self.ready)
         
         
     def quit(self, *param):    
-        self.__save_configure()
+        self.hide_to_tray()
         if config.get("setting", "close_to_tray") == "false" or self.tray_icon == None:
             self.force_quit()
         return True
@@ -131,13 +153,12 @@ class DeepinMusic(gobject.GObject, Logger):
     def ready(self, show=True):    
         if show:
             self.window.show_all()
-        if config.getboolean("setting", "use_tray"):    
-            self.tray_icon = TrayIcon(self)
+            if config.getboolean("lyrics", "status"):
+                self.lyrics_display.run()
         self.emit("ready")
         
     def force_quit(self, *args):    
         self.loginfo("Start quit...")
-        self.header_bar.hide_lyrics()
         self.window.hide_all()
         Player.save_state()
         if not Player.is_paused(): Player.pause()
@@ -169,14 +190,6 @@ class DeepinMusic(gobject.GObject, Logger):
                 self.tray_icon = None
             elif not self.tray_icon and use_tray:    
                 self.tray_icon = TrayIcon(self)
-
-    def __save_configure(self):            
-        event = self.window.get_state()
-        if event == gtk.gdk.WINDOW_STATE_MAXIMIZED:
-            config.set("window", "state", "maximized")
-        else:
-            config.set("window", "state", "normal")
-        self.window.hide_all()
         
     def toggle_visible(self, bring_to_front=False):    
         if self.window.get_property("visible"):
@@ -190,19 +203,21 @@ class DeepinMusic(gobject.GObject, Logger):
             
     def hide_to_tray(self):
         event = self.window.get_state()
-        if event == gtk.gdk.WINDOW_STATE_MAXIMIZED:
-            config.set("window", "state", "maximized")
-        else:
-            config.set("window", "state", "normal")
+        if config.get("setting", "window_mode") == "full":
+            if event == gtk.gdk.WINDOW_STATE_MAXIMIZED:
+                config.set("window", "state", "maximized")
+            else:
+                config.set("window", "state", "normal")
         self.window.hide_all()
 
     def show_from_tray(self):
         self.window.move(int(config.get("window", "x")), int(config.get("window", "y")))
-        window_state = config.get("window", "state")
-        if window_state == "maximized" :
-            self.window.maximize()
-        if window_state == "normal":
-            self.window.unmaximize()
+        if config.get("setting", "window_mode") == "full":
+            window_state = config.get("window", "state")
+            if window_state == "maximized" :
+                self.window.maximize()
+            if window_state == "normal":
+                self.window.unmaximize()
         self.window.show_all()
         
     def get_play_control_menu(self):    
@@ -248,3 +263,36 @@ class DeepinMusic(gobject.GObject, Logger):
         else:    
             return (None, "打开歌词", lambda : Dispatcher.show_lyrics())
         
+    def change_view(self, widget):    
+
+        if not widget.get_active():
+            Dispatcher.change_window_mode("simple")
+            config.set("setting", "window_mode", "simple")
+            switch_tab(self.header_box, self.simple_header_bar)
+            self.browser_align.hide_all()
+            self.browser_align.set_no_show_all(True)
+            self.window.set_default_size(330, 625)
+            self.window.set_geometry_hints(None, 330, 300, 330, 700, -1, -1, -1, -1, -1, -1)
+            self.window.resize(330, 600)
+            self.window.queue_draw()
+        else:
+            Dispatcher.change_window_mode("full")
+            config.set("setting", "window_mode", "full")
+            switch_tab(self.header_box, self.full_header_bar)
+            self.browser_align.set_no_show_all(False)
+            self.browser_align.show_all()
+            self.window.set_default_size(816, 625)            
+            self.window.set_geometry_hints(None, 816, 625, -1, -1,  -1, -1, -1, -1, -1, -1)
+            self.window.resize(816, 625)
+        Dispatcher.volume(float(config.get("player", "volume", "1.0")))        
+        
+    def create_revert_button(self):    
+        button = ToggleButton(
+            app_theme.get_pixbuf("mode/simple_normal.png"),
+            app_theme.get_pixbuf("mode/full_normal.png"),
+            app_theme.get_pixbuf("mode/simple_hover.png"),
+            app_theme.get_pixbuf("mode/full_hover.png"),
+            app_theme.get_pixbuf("mode/simple_press.png"),
+            app_theme.get_pixbuf("mode/full_press.png"),
+            )
+        return button

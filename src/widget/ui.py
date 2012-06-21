@@ -31,6 +31,7 @@ from dtk.ui.button import ImageButton
 from dtk.ui.draw import draw_vlinear
 from widget.skin import app_theme
 from widget.ui_utils import draw_alpha_mask
+from helper import Dispatcher
 
 class NormalWindow(Window):
     
@@ -78,38 +79,6 @@ gobject.type_register(SearchEntry)
 
         
     
-class MaskHBox(gtk.HBox):    
-    
-    def __init__(self, color_info, **kwargs):
-        super(MaskHBox, self).__init__(**kwargs)
-        
-        self.color_info = color_info
-        self.connect("expose-event", self.draw_mask)
-        
-    def draw_mask(self, widget, event):    
-        cr = widget.window.cairo_create()
-        rect = widget.allocation
-        draw_vlinear(cr, rect.x , rect.y, rect.width, rect.height,
-                     self.color_info)
-        return False
-    
-class MaskVBox(gtk.VBox):    
-    
-    def __init__(self, width, height, color_info):
-        super(MaskVBox, self).__init__()
-        
-        self.set_size_request(width, height)
-        self.color_info = color_info
-        self.connect("expose-event", self.draw_mask)
-        
-    def draw_mask(self, widget, event):    
-        cr = widget.window.cairo_create()
-        rect = widget.allocation
-        draw_vlinear(cr, rect.x, rect.y, rect.width, rect.height,
-                     self.color_info)
-        return False
-    
-    
 class ProgressBox(gtk.VBox):
     
     def __init__(self, scalebar):
@@ -119,16 +88,22 @@ class ProgressBox(gtk.VBox):
         scalebar_align.set(0, 0, 1, 1)
         scalebar_align.add(scalebar)
         
+        self.draw_right_mask_flag = True
         self.set_size_request(-1, 20)
-        self.rect_list = [
+        self.rect_left_list = [
             (98, "layoutLeft"),
-            (220, "layoutMiddle"),
-            (140, "layoutRight"),
+            (220, "layoutMiddle")
             ]
         
         self.pack_start(scalebar_align, False, True)
-
         self.connect("expose-event", self.draw_mask)
+        Dispatcher.connect("window-mode", self.window_mode_changed)
+        
+    def window_mode_changed(self, obj, status):    
+        if status == "simple":
+            self.draw_right_mask_flag = False
+        else:    
+            self.draw_right_mask_flag = True
         
     def draw_mask(self, widget, event):    
         cr = widget.window.cairo_create()
@@ -136,11 +111,12 @@ class ProgressBox(gtk.VBox):
         start_x = rect.x + 2
         start_y = rect.y + 8
 
-        for size, color_info in self.rect_list:
+        for size, color_info in self.rect_left_list:
             draw_alpha_mask(cr, start_x, start_y, size, rect.height - 8, color_info)
             start_x += size
-            
-        last_width = rect.width - (start_x - rect.x)    
-        draw_alpha_mask(cr, start_x, start_y, last_width - 2, rect.height - 8, "layoutLast")
+        if self.draw_right_mask_flag:    
+            draw_alpha_mask(cr, start_x, start_y, 140, rect.height - 8, "layoutRight")
+            start_x += 140
+            last_width = rect.width - (start_x - rect.x)    
+            draw_alpha_mask(cr, start_x, start_y, last_width - 2, rect.height - 8, "layoutLast")
         return False
-    

@@ -213,6 +213,8 @@ class Browser(gtk.VBox, SignalContainer):
         self.__search_flag = False
         self.__song_cache_items = []
         
+        self.draw_left_mask_flag = True
+        
         self.__labels = {
             "genre" : "流派",
             "artist" : "艺术家",

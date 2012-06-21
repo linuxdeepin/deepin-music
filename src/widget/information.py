@@ -31,18 +31,19 @@ from player import Player
 
 
 class PlayInfo(gtk.VBox):
-    def __init__(self):
+    def __init__(self, default_width=127):
         super(PlayInfo, self).__init__()
 
-        self.set_size_request(127, 44)
-        self.artist_label = self.create_simple_label("深度音乐 Music", 9.5)
-        self.title_label = self.create_simple_label(" ", 9.5)
+        self.set_size_request(default_width, 44)
+        self.default_width = default_width
+        self.artist_label = self.create_simple_label("深度音乐", 9.5)
+        self.title_label = self.create_simple_label("Linux Deepin ", 9.5)
 
         Player.connect("instant-new-song",self.__new_song)
         MediaDB.connect("simple-changed",self.__on_change)
         Player.bin.connect("buffering", self.__on_buffering)
         
-        self.set_spacing(0)
+        self.set_spacing(3)
         artist_label_align = gtk.Alignment()
         artist_label_align.set_padding(7, 0, 0, 0)
         artist_label_align.set(0, 0, 1, 1)
@@ -69,7 +70,7 @@ class PlayInfo(gtk.VBox):
         self.artist_label.set_text(song.get_str("artist"))
         
     def create_simple_label(self, content, text_size):    
-        label = Label(content, app_theme.get_color("labelText"), text_size=text_size, enable_gaussian=True, label_width=127)
+        label = Label(content, app_theme.get_color("labelText"), text_size=text_size, enable_gaussian=True, label_width=self.default_width)
         width, height = get_content_size(content, text_size)
         label.set_size_request(110, height)
         return label

@@ -50,6 +50,7 @@ class EventDispatcher(gobject.GObject):
         "show-scroll-page" : SIGNAL_BASE,
         "show-setting" : SIGNAL_BASE,
         "show-main-menu" : SIGNAL_TUPLE,
+        "window-mode" :  (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_STRING,)),    
         }
     
     def __init__(self):
@@ -100,6 +101,9 @@ class EventDispatcher(gobject.GObject):
         
     def show_main_menu(self, x, y):    
         self.emit("show-main-menu", x, y)
+        
+    def change_window_mode(self, status):    
+        self.emit("window-mode", status)
         
 Dispatcher = EventDispatcher()
 
