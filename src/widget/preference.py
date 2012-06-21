@@ -29,8 +29,8 @@ from dtk.ui.window import Window
 from dtk.ui.label import Label
 from dtk.ui.button import CheckButton, RadioButton
 from dtk.ui.spin import SpinBox
-from dtk.ui.utils import get_content_size, move_window
-from dtk.ui.entry import TextEntry, ShortcutKeyEntry
+from dtk.ui.utils import get_content_size
+from dtk.ui.entry import InputEntry, ShortcutKeyEntry
 from dtk.ui.treeview import TreeView
 from dtk.ui.button import Button
 from dtk.ui.titlebar import Titlebar
@@ -231,7 +231,7 @@ class GeneralSetting(gtk.VBox):
         label_align.set_padding(0, 0, 0, 0)
         label_align.add(dir_title_label)
         
-        self.dir_entry = TextEntry("~/.lyrics")
+        self.dir_entry = InputEntry("~/.lyrics")
         self.dir_entry.set_text(config.get("lyrics", "save_lrc_path"))
         self.dir_entry.set_size(250, 25)
         

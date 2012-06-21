@@ -276,7 +276,7 @@ class DeepinMusic(gobject.GObject, Logger):
             self.browser_align.set_no_show_all(True)
             self.window.set_default_size(330, 625)
             self.window.set_geometry_hints(None, 330, 300, 330, 700, -1, -1, -1, -1, -1, -1)
-            self.window.resize(330, 600)
+            self.window.resize(330, 625)
             self.window.queue_draw()
         else:
             Dispatcher.change_window_mode("full")
