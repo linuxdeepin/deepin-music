@@ -81,7 +81,7 @@ class BaseTrayIcon(object):
         self.menu = Menu(menu_items, True)
         
     def get_pixbuf_group(self, name):    
-        return (app_theme.get_pixbuf("tray/%s_normal.png" % name), app_theme.get_pixbuf("tray/%s_press.png" % name))
+        return (app_theme.get_pixbuf("tray/%s_normal.png" % name), app_theme.get_pixbuf("tray/%s_hover.png" % name))
 
     def connect_events(self):    
         self.connect("button-press-event", self.on_button_press_event)

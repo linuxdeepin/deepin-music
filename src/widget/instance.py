@@ -227,14 +227,16 @@ class DeepinMusic(gobject.GObject, Logger):
         menu_items = []
         if Player.is_paused():
             state_label = "播放"
+            state_pixbuf = self.get_pixbuf_group("play")
         else:    
             state_label = "暂停"
-        menu_items.append((None, state_label, Player.playpause))    
+            state_pixbuf = self.get_pixbuf_group("pause")
+        menu_items.append((state_pixbuf, state_label, Player.playpause))    
         control_items = [
-            (None, "上一首", Player.previous),
-            (None, "下一首", Player.next),
-            (None, "快进", Player.forward),
-            (None, "后退", Player.rewind)
+            (self.get_pixbuf_group("forward"), "快进", Player.forward),
+            (self.get_pixbuf_group("rewind"), "后退", Player.rewind),
+            (self.get_pixbuf_group("previous"), "上一首", Player.previous),
+            (self.get_pixbuf_group("next"), "下一首", Player.next),
             ]
         menu_items.extend(control_items)
         return Menu(menu_items)
@@ -247,7 +249,7 @@ class DeepinMusic(gobject.GObject, Logger):
         menu_items = [
             (None, "文件添加", curren_view.get_add_menu()),
             (None, "播放控制", self.get_play_control_menu()),
-            (None, "播放模式", curren_view.get_playmode_menu()),
+            (self.get_pixbuf_group("playmode"), "播放模式", curren_view.get_playmode_menu()),
             None,
             (None, "均衡器", lambda : self.equalizer_win.run()),
             None,
@@ -274,7 +276,7 @@ class DeepinMusic(gobject.GObject, Logger):
             return (self.get_pixbuf_group("lock"), "锁定歌词", lambda : Dispatcher.lock_lyrics())
             
     def get_pixbuf_group(self, name):    
-        return (app_theme.get_pixbuf("tray/%s_normal.png" % name), app_theme.get_pixbuf("tray/%s_press.png" % name))
+        return (app_theme.get_pixbuf("tray/%s_normal.png" % name), app_theme.get_pixbuf("tray/%s_hover.png" % name))
     
     def change_view(self, widget):    
 

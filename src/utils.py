@@ -108,6 +108,8 @@ def get_scheme(uri):
     return scheme.lower()
 
 def make_uri_from_shell_arg(arg):
+    if isinstance(arg, unicode):
+        arg = arg.encode("utf-8")
     scheme = get_scheme(arg)
     if scheme: return arg
     else: 
@@ -378,6 +380,8 @@ def parse_uris(uris, follow_folder=True, follow_playlist=True, callback=None, *a
     valid_uris = []
     for uri in uris:
         #check file exists only is file is local to speed parsing of shared/remote file
+        if not uri:
+            continue
         if isinstance(uri, unicode):
             uri = uri.encode("utf-8")
         uri = unquote(uri)

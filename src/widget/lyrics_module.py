@@ -135,7 +135,7 @@ class LyricsModule(object):
         zoom_in_align = self.__create_zoom_button("zoom_in")
         zoom_out_align = self.__create_zoom_button("zoom_out")
         predefine_align = self.__create_simple_button("predefine_color", self.popup_predefine_menu , True)
-        lock_align, self.lock_button = self.__create_simple_toggle_button("lock", "unlock", self.__lock_lyrics)
+        lock_align = self.__create_simple_button("lock", self.__lock_lyrics)
         karaoke_align, self.karaoke_button = self.__create_simple_toggle_button("karaoke", "karaoke", self.change_karaoke_status)
         line_align, self.line_button = self.__create_simple_toggle_button("single_line", "double_line", self.change_line_status)
         setting_align = self.__create_simple_button("setting", self.open_setting_window)

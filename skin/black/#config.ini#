@@ -6,7 +6,7 @@ app_id = demo
 app_version = 0.1
 
 [background]
-image = 黑色-音乐.jpg
+image = black_backgrond.jpg
 x = 0
 y = -156.090962099
 scale_x = 0.538288288288
@@ -14,7 +14,7 @@ scale_y = 0.538461538462
 dominant_color = #010201
 
 [action]
-deletable = True
+deletable = False
 editable = True
 vertical_mirror = False
 horizontal_mirror = False
