@@ -252,11 +252,12 @@ class DeepinMusic(gobject.GObject, Logger):
             (None, "均衡器", lambda : self.equalizer_win.run()),
             None,
             self.get_lyrics_menu_items(),
+            self.get_locked_menu_items(),
             None,
-            (None, "选项设置", lambda : self.preference_dialog.show_all()),
+            (self.get_pixbuf_group("setting"), "选项设置", lambda : self.preference_dialog.show_all()),
             (None, "关于软件", None),
             None,
-            (None, "退出", self.force_quit),
+            (self.get_pixbuf_group("close"), "退出", self.force_quit),
             ]
         Menu(menu_items, True).show((x, y))
         
@@ -266,6 +267,15 @@ class DeepinMusic(gobject.GObject, Logger):
         else:    
             return (None, "打开歌词", lambda : Dispatcher.show_lyrics())
         
+    def get_locked_menu_items(self):    
+        if config.getboolean("lyrics", "locked"):    
+            return (self.get_pixbuf_group("unlock"), "解锁歌词", lambda : Dispatcher.unlock_lyrics())
+        else:
+            return (self.get_pixbuf_group("lock"), "锁定歌词", lambda : Dispatcher.lock_lyrics())
+            
+    def get_pixbuf_group(self, name):    
+        return (app_theme.get_pixbuf("tray/%s_normal.png" % name), app_theme.get_pixbuf("tray/%s_press.png" % name))
+    
     def change_view(self, widget):    
 
         if not widget.get_active():
