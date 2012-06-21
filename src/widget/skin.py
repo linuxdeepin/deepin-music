@@ -19,3 +19,5 @@ app_theme = Theme(
 
 # Set theme.
 skin_config.load_themes(ui_theme, app_theme)
+skin_config.set_application_window_size(816, 625)
+

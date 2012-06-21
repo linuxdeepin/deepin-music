@@ -270,6 +270,8 @@ class PlaylistUI(gtk.VBox):
     def edit_list_item(self, category_item, select_items, move):
         try:
             category_item.song_view.add_items(select_items)
+            category_item.song_view.update_item_index()
+            category_item.song_view.update_vadjustment()        
             if move:
                 self.current_item.song_view.remove_select_items()
         except:        
