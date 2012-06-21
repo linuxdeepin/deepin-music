@@ -66,11 +66,12 @@ class DeepinMusic(gobject.GObject, Logger):
         
         # Window mode change.
         self.revert_toggle_button = self.create_revert_button()
-        self.revert_toggle_button.connect("toggled", self.change_view)
+        self.revert_toggle_button.connect("toggled", self.change_view) 
 
         application.titlebar.button_box.pack_start(self.revert_toggle_button)
         application.titlebar.button_box.reorder_child(self.revert_toggle_button, 1)
         self.window = application.window
+        self.window.is_disable_window_maximized = self.is_disable_window_maximized
         utils.set_main_window(self)
         
         self.lyrics_display = LyricsModule()
@@ -81,6 +82,8 @@ class DeepinMusic(gobject.GObject, Logger):
         self.simple_browser = SimpleBrowser()
         self.equalizer_win = EqualizerWindow()
             
+        self.window.add_move_event(self.full_header_bar.move_box)
+
         bottom_box = gtk.HBox()
         self.browser_align = gtk.Alignment()
         self.browser_align.set_padding(0, 0, 0, 0)
@@ -285,6 +288,12 @@ class DeepinMusic(gobject.GObject, Logger):
             self.window.set_geometry_hints(None, 816, 625, -1, -1,  -1, -1, -1, -1, -1, -1)
             self.window.resize(816, 625)
         Dispatcher.volume(float(config.get("player", "volume", "1.0")))        
+        
+    def is_disable_window_maximized(self):    
+        if config.get("setting", "window_mode") == "simple":
+            return True
+        else:
+            return False
         
     def create_revert_button(self):    
         button = ToggleButton(
