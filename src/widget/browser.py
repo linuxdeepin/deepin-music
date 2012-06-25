@@ -50,9 +50,11 @@ class IconItem(gobject.GObject):
         super(IconItem, self).__init__()
         self.cell_width = 83        
         self.name, nums, self.tag = _tuple
+        
         if not self.name:
             self.name_label= "其它"
             self.pixbuf = CoverManager.get_pixbuf_from_album(self.name_label, self.cell_width, self.cell_width)            
+            
         elif self.name == "deepin-all-songs":    
             self.pixbuf = CoverManager.get_all_song_cover(self.cell_width, self.cell_width)
             self.name_label = "所有歌曲"
@@ -156,11 +158,6 @@ class IconItem(gobject.GObject):
         else:    
             self.__draw_play_hover_flag = False
             
-        # if self.pointer_in_pixbuf_rect(x, y):    
-        #     self.hover_flag = True
-        # else:    
-        #     self.hover_flag = False
-            
         self.emit_redraw_request()
         
     def icon_item_lost_focus(self):    
@@ -198,7 +195,6 @@ gobject.type_register(IconItem)
 
 ICON_VIEW_MODE, LIST_VIEW_MODE = 1, 2
 
-
 class Browser(gtk.VBox, SignalContainer):
     
     def __init__(self, db_query):
@@ -215,14 +211,6 @@ class Browser(gtk.VBox, SignalContainer):
         
         self.draw_left_mask_flag = True
         
-        self.__labels = {
-            "genre" : "流派",
-            "artist" : "艺术家",
-            "album" : "专辑",
-            "genres" : "流派",
-            "artists" : "艺术家",
-            "albums" : "专辑"
-            }
         
         # init widget.
         self.entry_box = SearchEntry("")

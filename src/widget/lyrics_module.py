@@ -31,6 +31,7 @@ from dtk.ui.window import Window
 from dtk.ui.button import ImageButton, ToggleButton
 from dtk.ui.box import ImageBox
 from dtk.ui.menu import Menu
+import dtk.ui.tooltip as Tooltip
 
 from helper import Dispatcher
 from widget.lyrics import DesktopLyrics, ScrollLyrics
@@ -234,6 +235,7 @@ class LyricsModule(object):
         button_align = gtk.Alignment()
         button_align.set(0.5, 0.5, 0, 0)
         button_align.add(button)
+        Tooltip.text(button, "控制桌面歌词")
         return button_align
         
     def __create_simple_toggle_button(self, normal_name, active_name, callback):

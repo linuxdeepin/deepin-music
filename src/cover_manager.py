@@ -24,6 +24,7 @@ import os
 import gobject
 import gtk
 import fnmatch
+import random
 from dtk.ui.utils import get_optimum_pixbuf_from_file
 
 from mutagen.id3 import ID3
@@ -84,6 +85,22 @@ GENRE_PATTERNS  = {
     "舞台" : "stage_screen.png",
     "影视" : "stage_screen.png",}
 
+GENRE_PATH = ['pop_rock.png',
+     'jazz.png',
+     'international.png',
+     'easy_listen.png',
+     'classical.png',
+     'latin.png',
+     'reggae.png',
+     'electonic.png',
+     'country.png',
+     'blues.png',
+     'stage_screen.png',
+     'rap.png',
+     'r_b.png',
+     'new_age.png',
+     'folk.png']
+
 class DeepinCoverManager(Logger):
     COVER_PIXBUF = {}
     COVER_TO_SKIP = []
@@ -138,6 +155,10 @@ class DeepinCoverManager(Logger):
             if key in genre_name:
                 return app_theme.get_pixbuf("genre/%s" % value).get_pixbuf()
         return gtk.gdk.pixbuf_new_from_file_at_size(self.default_cover, 83, 83)
+    
+    def get_random_pixbuf_from_genre(self):
+        random.shuffle(GENRE_PATH)
+        return app_theme.get_pixbuf("genre/%s" % GENRE_PATH[1]).get_pixbuf()
     
     def get_cover(self, song, try_web=True):
         default_image_path = self.default_cover
