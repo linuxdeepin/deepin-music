@@ -22,6 +22,7 @@
 
 CONFIG_FILENAME = "config"
 PROGRAM_NAME = "deepin-music-player"
+PROGRAM_VERSION = "1.0"
 
 DEFAULT_TIMEOUT = 10
 DEFAULT_FONT_SIZE = 9

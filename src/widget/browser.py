@@ -35,7 +35,7 @@ from helper import SignalContainer, Dispatcher
 from widget.skin import app_theme
 from widget.ui import SearchEntry
 from widget.song_view import MultiDragSongView
-from widget.ui_utils import switch_tab, render_text, draw_alpha_mask
+from widget.ui_utils import switch_tab, render_text, draw_alpha_mask, create_right_align
 from widget.outlookbar import OptionBar, SongPathBar, SongImportBar
 from source.local import ImportFolderJob, ReloadDBJob, ImportFileJob
 from widget.combo import ComboMenuButton
@@ -209,21 +209,13 @@ class Browser(gtk.VBox, SignalContainer):
         self.__search_flag = False
         self.__song_cache_items = []
         
-        self.draw_left_mask_flag = True
-        
         
         # init widget.
         self.entry_box = SearchEntry("")
         self.entry_box.set_size(155, 22)
         self.entry_box.entry.connect("changed", self.__search_cb)
-        entry_align = gtk.Alignment()
-        entry_align.set_padding(0, 10, 0, 10)
-        entry_align.set(0.5, 0.5, 1, 1)
-        entry_align.connect("expose-event", self.expose_align_mask)
         
         # upper box.
-        upper_align = gtk.Alignment()
-        upper_align.set(0, 0, 0, 1)
         self.back_button = self.__create_simple_button("back", self.__switch_to_filter_view)
         self.back_button.set_no_show_all(True)
         back_align = gtk.Alignment()
@@ -242,10 +234,15 @@ class Browser(gtk.VBox, SignalContainer):
         
         upper_box = gtk.HBox(spacing=5)
         upper_box.pack_start(path_combo_align, False, False)
-        upper_box.pack_start(upper_align, True, True)
+        upper_box.pack_start(create_right_align(), True, True)
         upper_box.pack_start(back_align, False, False)
         upper_box.pack_start(self.entry_box, False, False)
-        entry_align.add(upper_box)
+        
+        upper_box_align = gtk.Alignment()
+        upper_box_align.set_padding(0, 10, 0, 10)
+        upper_box_align.set(0.5, 0.5, 1, 1)
+        upper_box_align.connect("expose-event", self.expose_upper_box_mask)
+        upper_box_align.add(upper_box)
         
         self.categorybar_status = "artist"
         self.filter_categorybar = OptionBar(
@@ -314,7 +311,7 @@ class Browser(gtk.VBox, SignalContainer):
         right_box_align.set(1, 1, 1, 1)
         right_box_align.add(self.right_box)
         browser_box = gtk.VBox()
-        browser_box.pack_start(entry_align,  False, False)
+        browser_box.pack_start(upper_box_align,  False, False)
         browser_box.pack_start(right_box_align, True, True)
         
         body_box = gtk.HBox()
@@ -338,7 +335,7 @@ class Browser(gtk.VBox, SignalContainer):
         draw_alpha_mask(cr, rect.x, rect.y, rect.width, rect.height, "layoutRight")
         return False
     
-    def expose_align_mask(self, widget, event):
+    def expose_upper_box_mask(self, widget, event):
         cr = widget.window.cairo_create()
         rect = widget.allocation
         draw_alpha_mask(cr, rect.x, rect.y, rect.width - 2, rect.height, "layoutLast")

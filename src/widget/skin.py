@@ -2,6 +2,7 @@ from dtk.ui.theme import Theme, ui_theme
 from dtk.ui.skin_config import skin_config
 import os
 from dtk.ui.utils import get_parent_dir
+from constant import PROGRAM_NAME, PROGRAM_VERSION
 
 # Init skin config.
 skin_config.init_skin(
@@ -9,6 +10,8 @@ skin_config.init_skin(
     os.path.join(get_parent_dir(__file__, 3), "skin"),
     os.path.expanduser("~/.config/deepin-music-player/skin"),
     os.path.expanduser("~/.config/deepin-music-player/skin_config.ini"),
+    PROGRAM_NAME,
+    PROGRAM_VERSION
     )
 
 # Create application theme.
