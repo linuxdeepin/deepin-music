@@ -61,7 +61,7 @@ class SongView(ListView):
         self.connect("button-press-event", self.button_press_cb)
         
         MediaDB.connect("removed", self.__remove_songs)
-        MediaDB.connect("changed", self.__songs_changed)
+        MediaDB.connect("simple-changed", self.__songs_changed)
         
         
     def double_click_item_cb(self, widget, item, colume, x, y):    
@@ -407,12 +407,12 @@ class SongView(ListView):
             uris = [ uris ]
         utils.async_parse_uris(uris, follow_folder, True, self.add_uris)
         
-    def __songs_changed(self, db, song_type, infos):    
+    def __songs_changed(self, db, infos):    
         indexs = []
         view_songs = self.get_songs()
-        for each_info in infos:
-            if each_info[0] in view_songs:
-                indexs.append(view_songs.index(each_info[0]))
+        for each_song in infos:
+            if each_song in view_songs:
+                indexs.append(view_songs.index(each_song))
                 
         if indexs:        
             for index in indexs:

@@ -312,7 +312,7 @@ class CoverSetting(gtk.VBox):
         
     def update_song(self, song):    
         self.song = song
-        song_cover_pixbuf = CoverManager.get_pixbuf_from_song(song, 300, 180)
+        song_cover_pixbuf = CoverManager.get_pixbuf_from_song(song, 300, 180, optimum=False)
         self.cover_image.set_from_pixbuf(song_cover_pixbuf)
         
     def expose_mask_cb(self, widget, event):
