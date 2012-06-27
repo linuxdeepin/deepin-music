@@ -65,10 +65,14 @@ class SongView(ListView):
         
     def double_click_item_cb(self, widget, item, colume, x, y):    
         if item:
-            self.set_highlight(item)
-            Player.play_new(item.get_song())
-            if Player.get_source() != self:
-                Player.set_source(self)
+            song = item.get_song()
+            if song.exists():
+                self.set_highlight(item)                
+                Player.play_new(item.get_song())
+                if Player.get_source() != self:
+                    Player.set_source(self)
+            else:        
+                pass
                 
     def draw_mask(self, cr, x, y, width, height):            
         draw_alpha_mask(cr, x, y, width, height, "layoutMiddle")

@@ -24,11 +24,12 @@ import  gtk
 import gobject
 
 from dtk.ui.label import Label
+from dtk.ui.volume_button import VolumeButton
 
 import utils
 from widget.scalebar import HScalebar
 from widget.skin import app_theme
-from widget.volume import VolumeButton
+# from widget.volume import VolumeButton
 from player import Player
 from config import config
 from helper import Dispatcher
@@ -139,33 +140,27 @@ class SongTimer(gtk.HBox):
             self.__idle_release()
             self.__idle_release_id = gobject.idle_add(self.__idle_release)
 
-class VolumeSlider(gtk.HBox):
+class VolumeSlider(gtk.VBox):
     def __init__(self):
         super(VolumeSlider, self).__init__()
-        volume_button = VolumeButton(1.0, 0.0, 1.0)
-        self.volume_progressbar = volume_button.volume_progressbar
-        self.mute_button = volume_button.volume_button
-        self.mute_button.connect("toggled", self.toggled_volume)
-        self.volume_progressbar.connect("value-changed",self.__volume_changed)
-        volume = float(config.get("player","volume"))
-        self.change_volume(None,volume)
+        self.volume_progressbar = VolumeButton(volume_y=2, scroll_bool=True)
+        self.volume_progressbar.set_size_request(92, 30)
+        self.volume_progressbar.connect("volume-state-changed",self.__volume_changed)
+        save_volume = float(config.get("player","volume"))
+        self.volume_progressbar.value =  int(save_volume * 100)
         Dispatcher.connect("volume", self.change_volume)
-        self.pack_start(volume_button, False, False)
+        self.add(self.volume_progressbar)
+        self.set_size_request(92, 30)
 
     def change_volume(self,helper,value):
-        self.volume_progressbar.set_value(value)
-        self.__volume_changed()
-        
-    def toggled_volume(self, widget):    
-        val = self.volume_progressbar.get_value()
-        val = (2 ** val) - 1
-        if not widget.get_active():
-            Player.volume = val
-        else:    
-            Player.volume = 0.0
+        val = value * 100
+        self.volume_progressbar.value = int(val)
 
-    def __volume_changed(self,*args):
-        val = self.volume_progressbar.get_value()
-        # val = (2 ** val) - 1
-        config.set("player","volume","%f" % val)
-        Player.volume = val
+    def __volume_changed(self, widget, value, status):
+        val = value / 100.0
+        if status == -1:
+            config.set("player", "volume", "0.0")
+            Player.volume = 0.0
+        else:    
+            config.set("player","volume","%f" % val)
+            Player.volume = val

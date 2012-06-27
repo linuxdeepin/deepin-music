@@ -462,11 +462,10 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         # load uri
         if uri:    
             song = MediaDB.get_song(uri)
-            if song:
+            if song and song.exists():
                 if not config.getboolean("player", "resume_last_progress") or not play:
                     seek = None
                 self.set_song(song, play, self.get_crossfade() * 2, seek)
-                
         self.emit("loaded")        
         
     def save_state(self):            
