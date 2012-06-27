@@ -89,7 +89,7 @@ class ProgressBox(gtk.VBox):
         scalebar_align.add(scalebar)
         
         self.draw_right_mask_flag = True
-        self.set_size_request(-1, 20)
+        self.set_size_request(-1, 17)
         self.rect_left_list = [
             (98, "layoutLeft"),
             (220, "layoutMiddle")

@@ -47,7 +47,7 @@ class SongItem(gobject.GObject):
     def emit_redraw_request(self):
         self.emit("redraw-request")
         
-    def update(self, song):
+    def update(self, song, redraw=False):
         '''update'''
         self.song = song
         
@@ -78,12 +78,14 @@ class SongItem(gobject.GObject):
         self.album_padding_y = 5
         (self.album_width, self.album_height) = get_content_size(self.album, DEFAULT_FONT_SIZE)
         
+        if redraw:
+            self.emit_redraw_request()
+        
     def render_title(self, cr, rect, in_select, in_highlight):
         '''Render title.'''
         rect.x += self.title_padding_x
         rect.width -= self.title_padding_x * 2
         render_item_text(cr, self.title, rect, in_select, in_highlight)
-        
     
     def render_artist(self, cr, rect, in_select, in_highlight):
         '''Render artist.'''

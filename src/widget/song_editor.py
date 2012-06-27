@@ -26,16 +26,16 @@ import gio
 from dtk.ui.label import Label
 from dtk.ui.window import Window
 from dtk.ui.button import Button
-from dtk.ui.utils import move_window
 from dtk.ui.line import draw_vlinear
 from dtk.ui.entry import TextEntry
 from dtk.ui.tab_window import TabBox
+from dtk.ui.titlebar import Titlebar
 
 
 from widget.ui_utils import create_separator_box, create_right_align
 from widget.skin import app_theme
 from cover_manager import CoverManager
-from lrc_manager import LrcManager
+from library import MediaDB
 
 class SongInfo(gtk.VBox):
     def __init__(self, song=None):
@@ -190,7 +190,7 @@ class InfoSetting(gtk.VBox):
         super(InfoSetting, self).__init__()
         self.song = song
         main_align = gtk.Alignment()
-        main_align.set_padding(20, 0, 50, 0)
+        main_align.set_padding(40, 0, 100, 0)
         main_align.set(0, 0, 0.5, 0.5)
         self.main_table = gtk.Table(6, 3)
         self.main_table.set_col_spacings(10)
@@ -201,7 +201,6 @@ class InfoSetting(gtk.VBox):
         self.album_entry  = self.create_combo_entry(2, 3, "专辑:")
         self.genre_entry  = self.create_combo_entry(3, 4, "流派:")
         self.date_entry   = self.create_combo_entry(4, 5, "年代:")
-        self.lyrics_entry = self.create_combo_entry(5, 6, "歌词:", "", Button("更改"))
         
         self.connect("expose-event", self.expose_mask_cb)
         main_align.add(self.main_table)
@@ -209,10 +208,20 @@ class InfoSetting(gtk.VBox):
         # Update song
         if song:
             self.update_song(song)
-        
+            
+        save_button = Button("保存")    
+        save_button.connect("clicked", self.save_taginfo)
+        block_box = gtk.EventBox()
+        block_box.set_visible_window(False)
+        block_box.set_size_request(90, -1)
+        button_box = gtk.HBox()
+        button_box.pack_start(create_right_align(), True, True)
+        button_box.pack_start(save_button, False, False)
+        button_box.pack_start(block_box, False, False)
         self.pack_start(main_align, False, True)
+        self.pack_start(button_box, False, False)
         
-    def create_combo_entry(self, top_attach, bottom_attach, label_text, content_text="", button=False):   
+    def create_combo_entry(self, top_attach, bottom_attach, label_text, content_text=""):   
         title_label_box = gtk.HBox()
         title_label = Label(label_text)
         title_label_box.pack_start(create_right_align(), False, True)
@@ -222,9 +231,6 @@ class InfoSetting(gtk.VBox):
         content_entry.set_size(260, 25)
         self.main_table.attach(title_label_box, 0, 1, top_attach, bottom_attach, xoptions=gtk.FILL)
         self.main_table.attach(content_entry, 1, 2, top_attach, bottom_attach, xoptions=gtk.FILL)
-        
-        if button:
-            self.main_table.attach(button, 2, 3, top_attach, bottom_attach, xoptions=gtk.FILL)
         return content_entry
     
     def update_song(self, song):
@@ -234,7 +240,30 @@ class InfoSetting(gtk.VBox):
         self.album_entry.set_text(song.get_str("album"))
         self.genre_entry.set_text(song.get_str("genre"))
         self.date_entry.set_text(song.get_str("date"))
-        self.lyrics_entry.set_text(LrcManager().get_lrc(song))
+        
+    def save_taginfo(self, widget):    
+        tags_modifiable = {}
+        new_title = self.title_entry.get_text()
+        new_artist = self.artist_entry.get_text()
+        new_album = self.album_entry.get_text()
+        new_genre = self.genre_entry.get_text()
+        new_date = self.date_entry.get_text()
+        
+        db_song = MediaDB.get_song(self.song.get("uri"))
+        
+        if new_title != db_song.get_str("title"):
+            tags_modifiable.update({"title" : new_title})
+        if new_artist != db_song.get_str("artist"):
+            tags_modifiable.update({"artist" : new_artist})
+        if new_album != db_song.get_str("album"):
+            tags_modifiable.update({"album" : new_album})
+        if new_genre != db_song.get_str("genre"):
+            tags_modifiable.update({"genre" : new_genre})
+        if new_date != db_song.get_str("date"):    
+            tags_modifiable.update({"date" : new_date})
+            
+        if tags_modifiable:    
+            MediaDB.set_property(db_song, tags_modifiable, write_to_file=True)
         
     def expose_mask_cb(self, widget, event):
         cr = widget.window.cairo_create()
@@ -302,18 +331,16 @@ class SongEditor(Window):
         self.set_position(gtk.WIN_POS_CENTER)
         self.set_size_request(500, 430)
         
-        titlebar = gtk.EventBox()
-        titlebar.set_visible_window(False)
-        titlebar.set_size_request(-1, 32)
-        titlebar.connect("button-press-event", lambda w, e: move_window(w, e, self))
+        titlebar = Titlebar(["close"], app_name="  歌曲属性")
+        titlebar.close_button.connect_after("clicked", lambda w: self.destroy())
+        self.add_move_event(titlebar)
         statusbar = gtk.EventBox()
         statusbar.set_visible_window(False)
         statusbar.set_size_request(-1, 50)
         
-        save_button = Button("保存")
-        save_button.connect("clicked", self.click_save_button)
-        cancel_button = Button("取消")
-        cancel_button.connect("clicked", self.click_cancel_button)
+
+        close_button = Button("关闭")
+        close_button.connect("clicked", self.click_close_button)
         
         previous_button = Button("上一首")
         previous_button.connect("clicked", lambda w : self.update_previous_song())
@@ -330,8 +357,7 @@ class SongEditor(Window):
         button_box = gtk.HBox()        
         button_box.pack_start(action_box, False, True)
         button_box.pack_start(create_right_align(), True, True)
-        button_box.pack_start(save_button, False, True, 5)
-        button_box.pack_start(cancel_button, False, True, 5)
+        button_box.pack_start(close_button, False, True, 5)
         
         button_box_align = gtk.Alignment()
         button_box_align.set(1.0, 0.5, 1.0, 1.0)
@@ -402,8 +428,5 @@ class SongEditor(Window):
         draw_vlinear(cr, rect.x, rect.y, rect.width, rect.height, app_theme.get_shadow_color("linearBackground").get_color_info())
         return False
     
-    def click_save_button(self, widget):        
-        self.destroy()
-        
-    def click_cancel_button(self, widget):    
+    def click_close_button(self, widget):    
         self.destroy()
