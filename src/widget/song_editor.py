@@ -61,31 +61,35 @@ class SongInfo(gtk.VBox):
         self.connect("expose-event", self.expose_mask_cb)
         
     def create_simpler_box(self):    
-        simpler_box = gtk.HBox(spacing=10)
+        simpler_box = gtk.HBox(spacing=30)
+        cover_image_align = gtk.Alignment()
+        cover_image_align.set_padding(0, 0, 50, 0)
         self.cover_image = gtk.Image()
         self.cover_image.set_size_request(92, 92)
+        cover_image_align.add(self.cover_image)
         
+        content_box_align = gtk.Alignment()
+        content_box_align.set_padding(20, 0, 0, 0)
         content_box = gtk.VBox(spacing=5)
-        content_box_align = gtk.Alignment()        
-        content_box_align.set(0.5, 0.5, 1.0, 0.0)
-        content_box_align.add(content_box)
-        
         title_box, self.title_label = self.create_combo_label("歌名:")
         artist_box, self.artist_label = self.create_combo_label("歌手:")
         album_box, self.album_label  = self.create_combo_label("专辑:")        
+        content_box_align.add(content_box)
         
         content_box.pack_start(title_box, False, False)        
         content_box.pack_start(artist_box, False, False)
         content_box.pack_start(album_box, False, False)        
 
-        simpler_box.pack_start(self.cover_image)
-        simpler_box.pack_start(content_box_align)
+        simpler_box.pack_start(cover_image_align, False, False)
+        simpler_box.pack_start(content_box_align, False, False)
+
         return simpler_box
 
     def create_combo_label(self, title, content=""):   
         hbox = gtk.HBox(spacing=5)
         title_label  = Label(title)
         content_label = Label(content)
+        content_label.set_size_request(200, -1)
         hbox.pack_start(title_label, False, False)
         hbox.pack_start(content_label, False, False)
         return hbox, content_label
