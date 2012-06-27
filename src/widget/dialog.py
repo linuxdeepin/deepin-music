@@ -45,12 +45,13 @@ class WinDir(gtk.FileChooserDialog):
     
 class WinFile(gtk.FileChooserDialog):    
     '''Open chooser file dialog'''
-    def __init__(self,title="Import a file in the library"):    
+    def __init__(self, get_uri=True, title="Import a file in the library"):    
         gtk.FileChooserDialog.__init__(self,title, None, gtk.FILE_CHOOSER_ACTION_OPEN,
                                        (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
                                         gtk.STOCK_OPEN, gtk.RESPONSE_OK))
              
         self.set_modal(True)
+        self.get_uri = get_uri
         # self.set_current_folder(get_music_dir())
 
     def run(self):
@@ -58,8 +59,10 @@ class WinFile(gtk.FileChooserDialog):
         folder = None
         self.set_modal(True)
         if response == gtk.RESPONSE_OK:
-            folder = self.get_filename()
-            folder = self.get_uri()
+            if self.get_uri:
+                folder = self.get_uri()                
+            else:    
+                folder = self.get_filename()                
         self.destroy()
         return folder
     

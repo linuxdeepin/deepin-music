@@ -36,6 +36,7 @@ from widget.ui_utils import create_separator_box, create_right_align
 from widget.skin import app_theme
 from cover_manager import CoverManager
 from library import MediaDB
+from widget.dialog import WinFile
 
 class SongInfo(gtk.VBox):
     def __init__(self, song=None):
@@ -299,10 +300,9 @@ class CoverSetting(gtk.VBox):
         button_box_align.set(0, 0, 1.0, 1.0)
         button_box_align.add(button_box)
         self.change_button = Button("更改")
-        self.delete_button = Button("删除")
+        self.change_button.connect("clicked", self.change_cover_image)
         button_box.pack_start(create_right_align(), True, True)
         button_box.pack_start(self.change_button, False, False)
-        button_box.pack_start(self.delete_button, False, False)
         
         self.pack_start(cover_box_align, False, True)
         self.pack_start(button_box_align, False, True)
@@ -320,7 +320,11 @@ class CoverSetting(gtk.VBox):
         rect = widget.allocation
         draw_vlinear(cr, rect.x, rect.y, rect.width, rect.height, app_theme.get_shadow_color("linearBackground").get_color_info())
         return False
-        
+    
+    def change_cover_image(self, widget):
+        new_cover_path = WinFile(False, "选择图片").run()
+        if new_cover_path:
+            CoverManager.change_cover(self.song, new_cover_path)
     
 class SongEditor(Window):    
     
@@ -338,7 +342,6 @@ class SongEditor(Window):
         statusbar.set_visible_window(False)
         statusbar.set_size_request(-1, 50)
         
-
         close_button = Button("关闭")
         close_button.connect("clicked", self.click_close_button)
         
@@ -375,6 +378,8 @@ class SongEditor(Window):
         self.window_frame.pack_start(main_align, True, True)
         self.window_frame.pack_start(statusbar, False, True)
         self.main_box.connect("expose-event", self.expose_mask_cb)
+        
+        MediaDB.connect("simple-changed", self.db_simple_changed)
         
         # action_box.
         if len(songs) <= 1:
@@ -421,6 +426,13 @@ class SongEditor(Window):
         self.song_info.update_song(song)
         self.info_setting.update_song(song)
         self.cover_setting.update_song(song)
+        
+    def db_simple_changed(self, widget, songs):    
+        current_song = self.songs[self.current_index]
+        if isinstance(songs, list):
+            if self.songs[self.current_index] in songs:
+                self.update_song(songs[songs.index(current_song)])
+                
         
     def expose_mask_cb(self, widget, event):    
         cr = widget.window.cairo_create()

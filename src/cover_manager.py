@@ -268,5 +268,26 @@ class DeepinCoverManager(Logger):
                 # Change property album to update UI
                 MediaDB.set_property(song, {"album" : song.get("album")})
                 return True
+            
+    def change_cover(self, song, new_cover):        
+        save_path = self.get_cover_path(song)
+        if not os.path.exists(new_cover):
+            return False
+        try:
+            pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(new_cover, COVER_SAVE_SIZE["x"], COVER_SAVE_SIZE["y"])
+        except gobject.GError:    
+            return False
+        else:
+            str_pixbuf = pixbuf.get_pixels()
+            if str_pixbuf.count("\x00") > len(str_pixbuf)/2 or str_pixbuf.count("\xff") > len(str_pixbuf)/2 : 
+                return False
+            else:
+                if os.path.exists(save_path): os.unlink(save_path)
+                pixbuf.save(save_path, "jpeg", {"quality":"85"})
+                del pixbuf  
+                
+                # Change property album to update UI
+                MediaDB.set_property(song, {"album" : song.get("album")})
+                return True
 
 CoverManager =  DeepinCoverManager()
