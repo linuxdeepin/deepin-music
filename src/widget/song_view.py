@@ -65,6 +65,7 @@ class SongView(ListView):
         
         
     def double_click_item_cb(self, widget, item, colume, x, y):    
+        self.reset_error_items()
         if item:
             song = item.get_song()
             if song.exists():
@@ -103,25 +104,32 @@ class SongView(ListView):
         config.set("setting", "loop_mode", value)
         
     def get_previous_song(self):
+        self.reset_error_items()
+        
         if self.is_empty():
             if config.get("setting", "empty_random") == "true":
                 return MediaDB.get_random_song("local")
         else:    
+            valid_items = self.get_valid_items()
+            if not valid_items: return None
+            
             if config.get("setting", "loop_mode") == "random_mode":
                 return self.get_random_song()
+            
             if self.highlight_item != None:
-                if self.highlight_item in self.items:
-                    current_index = self.items.index(self.highlight_item)
+                if self.highlight_item in valid_items:
+                    current_index = valid_items.index(self.highlight_item)
                     prev_index = current_index - 1
                     if prev_index < 0:
-                        prev_index = len(self.items) - 1
-                    highlight_item = self.items[prev_index]    
+                        prev_index = len(valid_items) - 1
+                    highlight_item = valid_items[prev_index]    
             else:        
-                highlight_item = self.items[0]
+                highlight_item = valid_items[0]
             self.set_highlight(highlight_item)    
             return highlight_item.get_song()
     
     def get_next_song(self, manual=False):
+        self.reset_error_items()
         
         if self.is_empty():
             if config.getboolean("setting", "empty_random"):
@@ -137,15 +145,7 @@ class SongView(ListView):
                 return self.get_manual_song()
             
             elif config.get("setting", "loop_mode") == "order_mode":            
-                if self.highlight_item != None:
-                    if self.highlight_item in self.items:
-                        current_index = self.items.index(self.highlight_item)
-                        next_index = current_index + 1
-                        if next_index <= len(self.items) -1:
-                            highlight_item = self.items[next_index]    
-                            self.set_highlight(highlight_item)
-                            return highlight_item.get_song()
-                return None        
+                return self.get_order_song()
             
             elif config.get("setting", "loop_mode") == "single_mode":
                 if self.highlight_item != None:
@@ -153,30 +153,59 @@ class SongView(ListView):
                 
             elif config.get("setting", "loop_mode") == "random_mode":    
                 return self.get_random_song()
+            
+    def get_order_song(self):        
+        valid_items = self.get_valid_items()
+        if not valid_items: return None
+        
+        if self.highlight_item != None:
+            if self.highlight_item in valid_items:
+                current_index = valid_items.index(self.highlight_item)
+                next_index = current_index + 1
+                if next_index <= len(valid_items) -1:
+                    highlight_item = valid_items[next_index]    
+                    self.set_highlight(highlight_item)
+                    return highlight_item.get_song()
+        return None        
+            
+    def reset_error_items(self):        
+        for each_item in self.items:
+            if each_item.exists():
+                each_item.clear_error()
+            else:    
+                each_item.set_error()
                         
     def get_manual_song(self):                    
+        valid_items = self.get_valid_items()
+        if not valid_items: return None
         if self.highlight_item != None:
-            if self.highlight_item in self.items:
-                current_index = self.items.index(self.highlight_item)
+            if self.highlight_item in valid_items:
+                current_index = valid_items.index(self.highlight_item)
                 next_index = current_index + 1
-                if next_index > len(self.items) - 1:
+                if next_index > len(valid_items) - 1:
                     next_index = 0
-                highlight_item = self.items[next_index]    
+                highlight_item = valid_items[next_index]    
         else:        
-            highlight_item = self.items[0]
+            highlight_item = valid_items[0]
         self.set_highlight(highlight_item)    
         return highlight_item.get_song()
     
     def get_random_song(self):
-        if self.highlight_item in self.items:
-            current_index = [self.items.index(self.highlight_item)]
+        valid_items = self.get_valid_items()
+        if not valid_items: return None
+        
+        if self.highlight_item in valid_items:
+            current_index = [valid_items.index(self.highlight_item)]
         else:    
             current_index = [-1]
-        items_index = set(range(len(self.items)))
+        items_index = set(range(len(valid_items)))
         remaining = items_index.difference(current_index)
-        highlight_item = self.items[random.choice(list(remaining))]
+        highlight_item = valid_items[random.choice(list(remaining))]
         self.set_highlight(highlight_item)
         return highlight_item.get_song()
+    
+    def get_valid_items(self):
+        return [item for item in self.items if not item.is_error()]
 
     def add_songs(self, songs, pos=None, sort=False, play=False):    
         '''Add song to songlist.'''
@@ -358,9 +387,17 @@ class SongView(ListView):
 
     def popup_delete_menu(self, x, y):    
         items = [(None, "删除", self.remove_select_items),
+                 (None, "删除错误歌曲", self.delete_error_items),
                  (None, "从本地删除", self.move_to_trash),
                  (None, "清空列表", self.erase_items)]
         Menu(items, True).show((int(x), int(y)))
+        
+    def delete_error_items(self):    
+        self.reset_error_items()
+        self.items = self.get_valid_items()
+        self.update_item_index()
+        self.update_vadjustment()
+        self.queue_draw()
         
     def popup_add_menu(self, x, y):
         menu_items = [

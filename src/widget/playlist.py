@@ -413,7 +413,6 @@ class PlaylistUI(gtk.VBox):
         self.detail_menu = Menu([(None, "播放歌曲",  self.current_item.song_view.play_select_item),
                                  (None, "添加到列表", add_to_list_menu),
                                  (None, "移动到列表", move_to_list_menu),
-                                 (None, "发送到移动盘", None),
                                  None,
                                  (None, "删除", self.current_item.song_view.remove_select_items),
                                  (None, "从本地删除", self.current_item.song_view.move_to_trash),
@@ -422,7 +421,7 @@ class PlaylistUI(gtk.VBox):
                                  (None, "播放模式", play_mode_menu),
                                  (None, "歌曲排序", sub_sort_menu),
                                  (None, "打开文件目录", self.current_item.song_view.open_song_dir),
-                                 (None, "编辑歌曲信息", self.current_item.song_view.open_song_editor),
+                                 (None, "歌曲信息", self.current_item.song_view.open_song_editor),
                                  ], True)
         self.detail_menu.show((int(x), int(y)))
         

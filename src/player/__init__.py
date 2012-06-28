@@ -85,14 +85,14 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         
     def __on_error(self, bin, uri):   
         self.logdebug("gst error received for %s", uri)
-        # self.bin.xfade_close()
+        self.bin.xfade_close()
         config.set("player", "play", "false")
         self.emit("paused")
 
         if uri == self.song.get("uri") and not self.__next_already_called:
             self.logdebug("request new song: error and play-end not emit")
             self.emit("play-end")
-            # self.next(True)
+            self.next(True)
         self.__next_already_called = False    
         
     def __on_tag(self, bin, taglist):    

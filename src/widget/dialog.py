@@ -130,7 +130,7 @@ class WindowLoadPlaylist(gtk.FileChooserDialog):
         ffilter.add_pattern("*.m3u")
         ffilter.add_pattern("*.pls")
         ffilter.add_pattern("*.xspf")
-        self.add_filter(ffilter)
+        # self.add_filter(ffilter)
         
         self.set_current_folder(os.path.expanduser("~/"))
 

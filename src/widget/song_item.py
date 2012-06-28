@@ -35,6 +35,7 @@ class SongItem(gobject.GObject):
     def __init__(self, song, extend=False):
         '''Init song item.'''
         gobject.GObject.__init__(self)
+        self.song_error = False
         self.update(song)
         self.extend = extend
         
@@ -80,35 +81,49 @@ class SongItem(gobject.GObject):
         
         if redraw:
             self.emit_redraw_request()
+            
+    def set_error(self):        
+        self.song_error = True
+        self.emit_redraw_request()
+        
+    def clear_error(self):    
+        self.song_error = False
+        self.emit_redraw_request()
+        
+    def exists(self):    
+        return self.song.exists()
+        
+    def is_error(self):    
+        return self.song_error == True
         
     def render_title(self, cr, rect, in_select, in_highlight):
         '''Render title.'''
         rect.x += self.title_padding_x
         rect.width -= self.title_padding_x * 2
-        render_item_text(cr, self.title, rect, in_select, in_highlight)
+        render_item_text(cr, self.title, rect, in_select, in_highlight, error=self.song_error)
     
     def render_artist(self, cr, rect, in_select, in_highlight):
         '''Render artist.'''
         rect.x += self.artist_padding_x
         rect.width -= self.artist_padding_x * 2
-        render_item_text(cr, self.artist, rect, in_select, in_highlight)
+        render_item_text(cr, self.artist, rect, in_select, in_highlight, error=self.song_error)
 
     
     def render_length(self, cr, rect, in_select, in_highlight):
         '''Render length.'''
         rect.width -= self.length_padding_x * 2
         rect.x -= 8
-        render_item_text(cr, self.length, rect, in_select, in_highlight, align=ALIGN_END)
+        render_item_text(cr, self.length, rect, in_select, in_highlight, align=ALIGN_END, error=self.song_error)
         
     def render_add_time(self, cr, rect, in_select, in_highlight):
         '''Render add_time.'''
         rect.width -= self.add_time_padding_x * 2
-        render_item_text(cr, self.add_time, rect, in_select, in_highlight, align=ALIGN_END)
+        render_item_text(cr, self.add_time, rect, in_select, in_highlight, align=ALIGN_END, error=self.song_error)
         
     def render_album(self, cr, rect, in_select, in_highlight):
         '''Render album.'''
         rect.width -= self.album_padding_x * 2 
-        render_item_text(cr, self.album, rect, in_select, in_highlight)
+        render_item_text(cr, self.album, rect, in_select, in_highlight, error=self.song_error)
         
     def get_column_sizes(self):
         '''Get sizes.'''

@@ -238,15 +238,16 @@ class DeepinCoverManager(Logger):
             self.logdebug("cover not found %s (web: %s)", image_path, try_web)
         return default_image_path    
     
-    def remove_cover(self, song):
+    def remove_cover(self, song, emit=False):
         image_path = self.get_cover_path(song)
-        if image_path in self.COVER_TO_SKIP:
-            del self.COVER_TO_SKIP[self.COVER_TO_SKIP.index(image_path)]
         if os.path.exists(image_path):    
             try:
                 os.unlink(image_path)
             except:    
                 pass
+        if emit:    
+            MediaDB.set_property(song, {"album" : song.get("album")})
+            
             
     def cleanup_cover(self, song, old_path, path=None):    
         if not path:

@@ -299,10 +299,13 @@ class CoverSetting(gtk.VBox):
         button_box_align.set_padding(0, 0, 0, 30)
         button_box_align.set(0, 0, 1.0, 1.0)
         button_box_align.add(button_box)
-        self.change_button = Button("更改")
-        self.change_button.connect("clicked", self.change_cover_image)
+        change_button = Button("更改")
+        change_button.connect("clicked", self.change_cover_image)
+        delete_button = Button("默认")
+        delete_button.connect("clicked", self.delete_cover_image)
         button_box.pack_start(create_right_align(), True, True)
-        button_box.pack_start(self.change_button, False, False)
+        button_box.pack_start(change_button, False, False)
+        button_box.pack_start(delete_button, False, False)
         
         self.pack_start(cover_box_align, False, True)
         self.pack_start(button_box_align, False, True)
@@ -325,6 +328,9 @@ class CoverSetting(gtk.VBox):
         new_cover_path = WinFile(False, "选择图片").run()
         if new_cover_path:
             CoverManager.change_cover(self.song, new_cover_path)
+            
+    def delete_cover_image(self, widget):        
+        CoverManager.remove_cover(self.song, True)
     
 class SongEditor(Window):    
     
@@ -431,8 +437,8 @@ class SongEditor(Window):
         current_song = self.songs[self.current_index]
         if isinstance(songs, list):
             if self.songs[self.current_index] in songs:
-                self.update_song(songs[songs.index(current_song)])
-                
+                self.song_info.update_song(songs[songs.index(current_song)])
+                self.cover_setting.update_song(songs[songs.index(current_song)])
         
     def expose_mask_cb(self, widget, event):    
         cr = widget.window.cairo_create()
