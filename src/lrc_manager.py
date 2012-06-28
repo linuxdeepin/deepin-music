@@ -25,6 +25,7 @@ import re
 
 from config import config
 from lrc_download import TTPlayer, DUOMI, SOSO
+from helper import Dispatcher
 import utils
 
 class LrcManager(object):
@@ -82,7 +83,14 @@ class LrcManager(object):
                         os.unlink(lrc_path)
         except:
             return None
-
+        
+    def allocation_lrc_file(self, song, lrc_path):    
+        if os.path.exists(lrc_path):
+            if self.vaild_lrc(lrc_path):
+                save_lrc_path = self.get_lrc_filepath(song)
+                if os.path.exists(save_lrc_path): os.unlink(save_lrc_path)
+                utils.run_command("cp %s %s" % (lrc_path, save_lrc_path))
+                Dispatcher.reload_lrc(song)
         
     def get_lrc_filepath(self, song):    
         save_path = os.path.expanduser(config.get("lyrics", "save_lrc_path"))
@@ -125,5 +133,3 @@ class LrcManager(object):
             else:
                 return self.multiple_engine(song, lrc_path, untrust_a, untrust_t)
         return ""
-
-        

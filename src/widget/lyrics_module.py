@@ -38,11 +38,13 @@ from widget.lyrics import DesktopLyrics, ScrollLyrics
 from widget.skin import app_theme
 from widget.lyrics_search import SearchUI
 from widget.ui_utils import draw_alpha_mask
+from widget.dialog import WinFile
 from lrc_parser import LrcParser
 from config import config
 from player import Player
 from lrc_manager import LrcManager
 from constant import LRC_DESKTOP_MODE, LRC_WINDOW_MODE, PREDEFINE_COLORS
+import utils
 
 
 MESSAGE_DURATION_MS = 3000
@@ -54,6 +56,7 @@ class LyricsModule(object):
         self.desktop_lyrics_win.connect("resized", self.adjust_toolbar_rect)
         self.desktop_lyrics_win.connect("hide-bg", self.hide_toolbar)
         self.desktop_lyrics_win.connect("show-bg", self.show_toolbar)
+        self.desktop_lyrics_win.connect("button-press-event", self.popup_desktop_right_menu)
 
         self.desktop_lyrics_win.connect("configure-event", self.lyrics_desktop_configure_event)
         
@@ -181,13 +184,38 @@ class LyricsModule(object):
         menu_items = [
             (self.get_scroll_menu_pixbufs("lrc"), "桌面歌词模式", self.switch_to_desktop_lyrics),
             None,
-            (self.get_scroll_menu_pixbufs("before"), "提前歌词", lambda : self.before_offset(None)),
-            (self.get_scroll_menu_pixbufs("after"), "退后歌词", lambda : self.after_offset(None)),
+            (self.get_scroll_menu_pixbufs("before"), "后退歌词", lambda : self.before_offset(None)),
+            (self.get_scroll_menu_pixbufs("after"), "前进歌词", lambda : self.after_offset(None)),
             None,
             (self.get_scroll_menu_pixbufs("search"), "搜索", lambda :self.open_search_window(None)),
             (self.get_scroll_menu_pixbufs("setting"), "选项", lambda : Dispatcher.show_scroll_page()),
                       ]
         Menu(menu_items, True).show((int(event.x_root), int(event.y_root)))
+        
+    def popup_desktop_right_menu(self, widget, event):    
+        if event.button == 3 and Player.song:
+            adjust_menu_item = [(None, "前进0.5秒", lambda : self.after_offset(None)), 
+                                (None, "后退0.5秒", lambda : self.before_offset(None))]
+            menu_items = [
+                (None, "搜索", lambda : self.open_search_window(None)),
+                (None, "调整歌词", Menu(adjust_menu_item)),
+                None,
+                (None, "关联本地歌词", self.allocation_lrc),
+                (None, "打开歌词文件夹", self.open_lrc_dir),
+                None,
+                (None, "设置面板", lambda : self.open_setting_window(None)),
+                (None, "切换到桌面歌词", lambda : self.switch_to_scroll_lyrics(None))
+                ]
+            Menu(menu_items, True).show((int(event.x_root), int(event.y_root)))
+            
+    def allocation_lrc(self):        
+        lrc_path = WinFile(False).run()
+        if lrc_path:
+            self.lrc_manager.allocation_lrc_file(Player.song, lrc_path)
+            
+    def open_lrc_dir(self):        
+        save_dir = os.path.expanduser(config.get("lyrics", "save_lrc_path", "~/.lyrics"))
+        utils.run_command("xdg-open %s" % save_dir)
         
     def get_scroll_menu_pixbufs(self, name):    
         return (
