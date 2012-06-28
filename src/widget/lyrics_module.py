@@ -689,8 +689,10 @@ class LyricsModule(object):
                 self.clear_lyrics()
             if try_web:    
                 self.set_message(self.get_default_message(force_song) + " 没有搜索到歌词!")
+                self.scroll_lyrics.set_message(self.get_default_message(force_song) + " 没有搜索到歌词!")
             else:    
                 self.set_search_fail_message("正在搜索歌词......")
+                self.scroll_lyrics.set_message("正在搜索歌词......")
             self.__find_flag = False    
         return ret    
         

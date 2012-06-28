@@ -736,6 +736,7 @@ class ScrollLyrics(NormalWindow):
         
         self.percentage = 0.0
         self.whole_lyrics = []
+        self.message_text = ""
         self.current_lyric_id = -1
         self.line_count = 20
         self.active_color = self.get_render_color(True)
@@ -845,6 +846,8 @@ class ScrollLyrics(NormalWindow):
         
         if self.whole_lyrics:
             self.paint_lyrics(cr)
+        elif self.message_text:    
+            self.paint_text(cr)
         return False    
     
     def get_pango(self, cr): 
@@ -963,13 +966,12 @@ class ScrollLyrics(NormalWindow):
         
     def paint_text(self, cr):    
         width, height = self.get_drawing_size()
-        
-        cr.save()
-        cr.set_source_rgb(*self.inactive_color)
+
+        cr.set_source_rgb(*self.active_color)
         layout = self.get_pango(cr)
-        layout.set_text(self.text)
+        layout.set_text(self.message_text)
         layout.set_alignment(pango.ALIGN_CENTER)        
-        extent = layout.get_pixel_extents()
+        extent = layout.get_pixel_extents()[0]
         x = (width - extent[2]) / 2
         y = (height - extent[3]) / 2
         if x < 0: x = 0
@@ -986,12 +988,19 @@ class ScrollLyrics(NormalWindow):
             self.drawing.queue_draw()
             
     def set_whole_lyrics(self, whole_lyrics):        
+        self.message_text = ""
         self.whole_lyrics = whole_lyrics
         self.saved_lrc_y = -1
-            
+        self.can_seek = True
         self.drawing.queue_draw()
         if self.seeking:    
             self.seeking = False
+            
+    def set_message(self, message):        
+        del self.whole_lyrics[:]
+        self.message_text = message
+        self.can_seek = False
+        self.drawing.queue_draw()
             
     def get_current_lyric_id(self):        
         return self.current_lyric_id
