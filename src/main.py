@@ -22,6 +22,7 @@
 
 import sys
 from logger import Logger
+from cover_download import SimpleFetchManager
 
 class DeepinMusicApp(Logger):
     app_instance = None
@@ -226,6 +227,8 @@ class DeepinMusicApp(Logger):
             if self.options.StartAnyway and self.check_result == "command":
                 import dbus_manager
                 dbus_manager.run_commands(self.options, self.dbus)
+                
+            SimpleFetchManager()
                 
     def __show_splash(self):            
         import widget

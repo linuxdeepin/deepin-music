@@ -261,7 +261,7 @@ class Browser(gtk.VBox, SignalContainer):
         self.__current_path = None
         self.current_icon_item = None
         self.path_categorybar = SongPathBar("本地歌曲")
-        self.path_categorybar.set_size_request(-1, 220)
+        self.path_categorybar.set_size_request(-1, 200)
         
         # Song import bar.
         self.import_categorybar = SongImportBar()
