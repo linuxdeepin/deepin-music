@@ -24,16 +24,12 @@ import gtk
 import gio
 
 from dtk.ui.label import Label
-from dtk.ui.window import Window
 from dtk.ui.button import Button
-from dtk.ui.line import draw_vlinear
-from dtk.ui.entry import TextEntry
+from dtk.ui.entry import InputEntry
 from dtk.ui.tab_window import TabBox
-from dtk.ui.titlebar import Titlebar
-
+from dtk.ui.dialog import DialogBox, DIALOG_MASK_TAB_PAGE
 
 from widget.ui_utils import create_separator_box, create_right_align
-from widget.skin import app_theme
 from cover_manager import CoverManager
 from library import MediaDB
 from widget.dialog import WinFile
@@ -59,8 +55,6 @@ class SongInfo(gtk.VBox):
         if song:
             self.update_song(song)
             
-        self.connect("expose-event", self.expose_mask_cb)
-        
     def create_simpler_box(self):    
         simpler_box = gtk.HBox(spacing=30)
         cover_image_align = gtk.Alignment()
@@ -145,7 +139,7 @@ class SongInfo(gtk.VBox):
         location_align.set(1.0, 1.0, 0.5, 0.5)
         location_box = gtk.HBox(spacing=5)
         location_label = Label("文件位置:")
-        self.location_entry = TextEntry("")
+        self.location_entry = InputEntry("")
         self.location_entry.set_size(250, 25)
         open_button = Button("打开目录")
         location_box.pack_start(location_label, False, True)
@@ -178,13 +172,6 @@ class SongInfo(gtk.VBox):
         # Update location.
         self.location_entry.set_text(song.get_path())
     
-    def expose_mask_cb(self, widget, event):
-        cr = widget.window.cairo_create()
-        rect = widget.allocation
-        draw_vlinear(cr, rect.x, rect.y, rect.width, rect.height, app_theme.get_shadow_color("linearBackground").get_color_info())
-        return False
-    
-    
 class InfoSetting(gtk.VBox):    
     
     def __init__(self, song=None):
@@ -203,7 +190,6 @@ class InfoSetting(gtk.VBox):
         self.genre_entry  = self.create_combo_entry(3, 4, "流派:")
         self.date_entry   = self.create_combo_entry(4, 5, "年代:")
         
-        self.connect("expose-event", self.expose_mask_cb)
         main_align.add(self.main_table)
         
         # Update song
@@ -228,7 +214,7 @@ class InfoSetting(gtk.VBox):
         title_label_box.pack_start(create_right_align(), False, True)
         title_label_box.pack_start(title_label, False, True)
         
-        content_entry = TextEntry(content_text)
+        content_entry = InputEntry(content_text)
         content_entry.set_size(260, 25)
         self.main_table.attach(title_label_box, 0, 1, top_attach, bottom_attach, xoptions=gtk.FILL)
         self.main_table.attach(content_entry, 1, 2, top_attach, bottom_attach, xoptions=gtk.FILL)
@@ -266,12 +252,6 @@ class InfoSetting(gtk.VBox):
         if tags_modifiable:    
             MediaDB.set_property(db_song, tags_modifiable, write_to_file=True)
         
-    def expose_mask_cb(self, widget, event):
-        cr = widget.window.cairo_create()
-        rect = widget.allocation
-        draw_vlinear(cr, rect.x, rect.y, rect.width, rect.height, app_theme.get_shadow_color("linearBackground").get_color_info())
-        return False
-    
 class CoverSetting(gtk.VBox):
     
     def __init__(self, song=None):
@@ -287,7 +267,6 @@ class CoverSetting(gtk.VBox):
         cover_image_align.add(self.cover_image)
         cover_box.add(cover_image_align)
         cover_box.set_size_request(400, 220)
-        cover_box.connect("expose-event", self.expose_mask_cb)
         
         cover_box_align = gtk.Alignment()
         cover_box_align.set_padding(20, 20, 10, 10)
@@ -318,11 +297,6 @@ class CoverSetting(gtk.VBox):
         song_cover_pixbuf = CoverManager.get_pixbuf_from_song(song, 300, 180, optimum=False)
         self.cover_image.set_from_pixbuf(song_cover_pixbuf)
         
-    def expose_mask_cb(self, widget, event):
-        cr = widget.window.cairo_create()
-        rect = widget.allocation
-        draw_vlinear(cr, rect.x, rect.y, rect.width, rect.height, app_theme.get_shadow_color("linearBackground").get_color_info())
-        return False
     
     def change_cover_image(self, widget):
         new_cover_path = WinFile(False, "选择图片").run()
@@ -332,21 +306,11 @@ class CoverSetting(gtk.VBox):
     def delete_cover_image(self, widget):        
         CoverManager.remove_cover(self.song, True)
     
-class SongEditor(Window):    
+class SongEditor(DialogBox):    
     
     def __init__(self, songs, init_index=0):
-        super(SongEditor, self).__init__()
-        self.set_modal(True)
-        self.set_keep_above(True)
+        super(SongEditor, self).__init__("歌曲属性", 500, 400, mask_type=DIALOG_MASK_TAB_PAGE)
         self.set_position(gtk.WIN_POS_CENTER)
-        self.set_size_request(500, 430)
-        
-        titlebar = Titlebar(["close"], app_name="  歌曲属性")
-        titlebar.close_button.connect_after("clicked", lambda w: self.destroy())
-        self.add_move_event(titlebar)
-        statusbar = gtk.EventBox()
-        statusbar.set_visible_window(False)
-        statusbar.set_size_request(-1, 50)
         
         close_button = Button("关闭")
         close_button.connect("clicked", self.click_close_button)
@@ -363,28 +327,6 @@ class SongEditor(Window):
         action_box.pack_start(self.record_label, False, False)
         action_box.pack_start(next_button, False, False)
         
-        button_box = gtk.HBox()        
-        button_box.pack_start(action_box, False, True)
-        button_box.pack_start(create_right_align(), True, True)
-        button_box.pack_start(close_button, False, True, 5)
-        
-        button_box_align = gtk.Alignment()
-        button_box_align.set(1.0, 0.5, 1.0, 1.0)
-        button_box_align.set_padding(10, 10, 10, 10)
-        button_box_align.add(button_box)
-        statusbar.add(button_box_align)
-        
-        main_align = gtk.Alignment()
-        main_align.set(0.0, 0.0, 1.0, 1.0)
-        main_align.set_padding(0, 0, 2, 2)
-        self.main_box = gtk.VBox(spacing=5)
-        main_align.add(self.main_box)
-        
-        self.window_frame.pack_start(titlebar, False, True)
-        self.window_frame.pack_start(main_align, True, True)
-        self.window_frame.pack_start(statusbar, False, True)
-        self.main_box.connect("expose-event", self.expose_mask_cb)
-        
         MediaDB.connect("simple-changed", self.db_simple_changed)
         
         # action_box.
@@ -400,7 +342,15 @@ class SongEditor(Window):
         
         self.tab_box = TabBox()
         self.tab_box.add_items([("歌曲信息", self.song_info), ("信息设置", self.info_setting), ("封面设置", self.cover_setting)])
-        self.main_box.pack_start(self.tab_box)
+        self.tab_align = gtk.Alignment()
+        self.tab_align.set(0.5, 0.5, 1, 1)
+        self.tab_align.set_padding(0, 0, 2, 2)
+        self.tab_align.add(self.tab_box)
+        
+        # DialogBox code, simple, ah? :)
+        self.left_button_box.set_buttons([action_box])
+        self.right_button_box.set_buttons([close_button])
+        self.body_box.pack_start(self.tab_align, True, True)
         
         # Constants.
         self.current_index = init_index
@@ -440,11 +390,5 @@ class SongEditor(Window):
                 self.song_info.update_song(songs[songs.index(current_song)])
                 self.cover_setting.update_song(songs[songs.index(current_song)])
         
-    def expose_mask_cb(self, widget, event):    
-        cr = widget.window.cairo_create()
-        rect = widget.allocation
-        draw_vlinear(cr, rect.x, rect.y, rect.width, rect.height, app_theme.get_shadow_color("linearBackground").get_color_info())
-        return False
-    
     def click_close_button(self, widget):    
         self.destroy()

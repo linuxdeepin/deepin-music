@@ -118,7 +118,7 @@ class Song(dict, Logger):
         elif key == "#size":        
             value = utils.str_size(self.get("#size"))
         elif key == "#bitrate":
-            value = self.get("#bitrate")
+            value = self.get("#bitrate") / 1000
             if value: value = "%dk" % value
         elif key == "#duration":    
             value = utils.duration_to_string(self.get(key))
