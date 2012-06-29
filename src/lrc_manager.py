@@ -37,9 +37,10 @@ class LrcManager(object):
         artist = song.get_str("artist")
         title = song.get_str("title")
         if artist:
-            return "%s-%s.lrc" % (artist, title)
+            result = "%s-%s.lrc" % (artist, title)
         else:
-            return "%s.lrc" % title
+            result = "%s.lrc" % title
+        return result.replace("/", "")    
         
     def vaild_lrc(self, filepath):    
         try:

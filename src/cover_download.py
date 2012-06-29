@@ -73,7 +73,7 @@ class FetchArtistCover(MissionThread):
                     cleanup_cover(get_tmp_save_path(self.artist_name), get_cover_save_path(self.artist_name))
                 
     def get_mission_result(self):    
-        return None
+        return self.artist_name
     
 class FetchAlbumCover(MissionThread):    
     
@@ -95,7 +95,7 @@ class FetchAlbumCover(MissionThread):
         return get_tmp_save_path("%s-%s" % (self.artist_name, self.album_name))
     
     def get_mission_result(self):
-        return None
+        return "%s-%s" % (self.artist_name, self.album_name)
 
 class FetchManager(SignalContainer):    
     
@@ -120,7 +120,7 @@ class FetchManager(SignalContainer):
         if tag == "artist":
             all_artist_keys = infos_dict.keys()
             if all_artist_keys:
-                return [artist for artist in all_artist_keys if not os.path.exists(get_cover_save_path(artist))]
+                return [artist.replace("/", "") for artist in all_artist_keys if not os.path.exists(get_cover_save_path(artist.replace("/", "")))]
             return []
             
         elif tag == "album":
@@ -149,6 +149,9 @@ class FetchManager(SignalContainer):
             for album_info in albums:
                 album_missions.append(FetchAlbumCover(album_info))
             MissionThreadPool(album_missions, 5).start()    
+            
+    def callback(self):        
+        pass
                 
 class SimpleFetchManager(FetchManager):            
     def __init__(self):
