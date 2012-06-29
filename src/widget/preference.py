@@ -25,22 +25,23 @@ import gtk
 import cairo
 from collections import OrderedDict
 
-from dtk.ui.window import Window
 from dtk.ui.label import Label
+from dtk.ui.box import BackgroundBox
+from dtk.ui.draw import draw_vlinear
 from dtk.ui.button import CheckButton, RadioButton
 from dtk.ui.spin import SpinBox
 from dtk.ui.utils import get_content_size
 from dtk.ui.entry import InputEntry, ShortcutKeyEntry
 from dtk.ui.treeview import TreeView
 from dtk.ui.button import Button
-from dtk.ui.titlebar import Titlebar
+from dtk.ui.dialog import DialogBox, DIALOG_MASK_MULTIPLE_PAGE
 from dtk.ui.color_selection import ColorButton
 from dtk.ui.combo import ComboBox
 from dtk.ui.scrolled_window import ScrolledWindow
 
 from utils import color_hex_to_cairo
 from widget.ui_utils import (get_font_families, switch_tab,
-                             create_separator_box, create_right_align, draw_alpha_mask)
+                             create_separator_box, create_right_align)
 from render_lyrics import RenderContextNew
 from constant import PREDEFINE_COLORS
 from config import config
@@ -781,45 +782,18 @@ class ScrollLyricsSetting(gtk.VBox):
         hbox.pack_start(spinbox, False, False)
         return hbox, spinbox
     
-class PreferenceDialog(Window):
+class PreferenceDialog(DialogBox):
     
     def __init__(self):
-        super(PreferenceDialog, self).__init__()
+        super(PreferenceDialog, self).__init__("选项设置", 575, 495, 
+                                               mask_type=DIALOG_MASK_MULTIPLE_PAGE,
+                                               close_callback=self.hide_all)
         
         self.set_position(gtk.WIN_POS_CENTER)
-        self.set_size_request(575, 495)
-        self.set_resizable(False)
-        self.set_keep_above(True)
-        titlebar = Titlebar(["close"], app_name="  选项设置")
-        titlebar.close_button.connect_after("clicked", lambda w: self.hide_all())
-        statusbar = gtk.EventBox()
-        statusbar.set_visible_window(False)
-        statusbar.set_size_request(-1, 50)
         
-        button_align = gtk.Alignment()
-        button_align.set(1.0, 0.5, 0, 0)
-        button_align.set_padding(10, 10, 5, 10)
-        button_box = gtk.HBox()
-        
-        button_align.add(button_box)
+        self.main_box = gtk.VBox()
         close_button = Button("关闭")
-        close_button.connect("clicked", self.click_close_button)
-        
-        button_box.pack_start(close_button, False, True, 5)
-        
-        statusbar.add(button_align)
-        
-        main_align = gtk.Alignment()
-        main_align.set(0.0, 0.0, 1.0, 1.0)
-        main_align.set_padding(0, 0, 2, 2)
-        self.main_box = gtk.VBox(spacing=5)
-        main_align.add(self.main_box)
-        self.window_frame.pack_start(titlebar, False, True)
-        self.window_frame.pack_start(main_align, True, True)
-        self.window_frame.pack_start(statusbar, False, True)
-        self.main_box.connect("expose-event", self.expose_mask_cb)
-        self.add_move_event(titlebar)
-        
+        close_button.connect("clicked", lambda w: self.hide_all())
         
         # Init widget.
         self.general_setting = GeneralSetting()
@@ -840,36 +814,37 @@ class PreferenceDialog(Window):
         self.category_bar.connect("single-click-item", self.category_single_click_cb)
         self.category_bar.set_highlight_index(0)
         
-        category_align = gtk.Alignment()
-        category_align.set_padding(11, 0, 0, 0)
-
+        category_box = gtk.VBox()
+        background_box = BackgroundBox()
+        background_box.set_size_request(132, 11)
+        background_box.draw_mask = self.draw_treeview_mask
+        category_box.pack_start(background_box, False, False)
+        
         category_scrolled_window = ScrolledWindow()
         category_scrolled_window.add_child(self.category_bar)
         category_scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_NEVER)
         category_scrolled_window.set_size_request(132, 516)
-        category_align.add(category_scrolled_window)
+        
+        category_box.pack_start(category_scrolled_window, True, True)
         
         # Pack widget.
         left_box = gtk.VBox()
         self.right_box = gtk.VBox()
-        left_box.add(category_align)
+        left_box.add(category_box)
         self.right_box.add(self.general_category_item.get_allocated_widget())
         right_align = gtk.Alignment()
         right_align.set_padding(0, 0, 10, 0)
         right_align.add(self.right_box)
 
         body_box = gtk.HBox()
-        body_box.pack_start(left_box, False, True)
-        body_box.pack_start(right_align, False, True)
+        body_box.pack_start(left_box, False, False)
+        body_box.pack_start(right_align, False, False)
         self.main_box.add(body_box)
         
-    def expose_mask_cb(self, widget, event):    
-        cr = widget.window.cairo_create()
-        rect = widget.allocation
-        draw_alpha_mask(cr, rect.x, rect.y, 132, rect.height, "settingLeft")
-        draw_alpha_mask(cr, rect.x + 132, rect.y, rect.width - 132, rect.height, "settingRight")
-        return False
-    
+        # DialogBox code.
+        self.body_box.pack_start(self.main_box, True, True)
+        self.right_button_box.set_buttons([close_button])        
+        
     def switch_lyrics_page(self, index=3):
         self.category_bar.tree_list[2].show_child_items_bool = True
         self.category_bar.sort()
@@ -887,15 +862,15 @@ class PreferenceDialog(Window):
         self.show_all()
     
     def draw_treeview_mask(self, cr, x, y, width, height):
-        draw_alpha_mask(cr, x, y, width, height, "settingLeft")
+        draw_vlinear(
+            cr, x, y, width, height,
+            [(0, ("#FFFFFF", 0.9)),
+             (1, ("#FFFFFF", 0.9))])
     
     def category_single_click_cb(self, widget, item):
         if item.get_allocated_widget():
             switch_tab(self.right_box, item.get_allocated_widget())
             
-    def click_close_button(self, widget):    
-        self.hide_all()
-    
 class CategoryItem(object):    
     
     def __init__(self, item_title, allocated_widget=None, has_arrow=True, item_left_image=None):

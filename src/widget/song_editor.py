@@ -342,15 +342,11 @@ class SongEditor(DialogBox):
         
         self.tab_box = TabBox()
         self.tab_box.add_items([("歌曲信息", self.song_info), ("信息设置", self.info_setting), ("封面设置", self.cover_setting)])
-        self.tab_align = gtk.Alignment()
-        self.tab_align.set(0.5, 0.5, 1, 1)
-        self.tab_align.set_padding(0, 0, 2, 2)
-        self.tab_align.add(self.tab_box)
         
         # DialogBox code, simple, ah? :)
         self.left_button_box.set_buttons([action_box])
         self.right_button_box.set_buttons([close_button])
-        self.body_box.pack_start(self.tab_align, True, True)
+        self.body_box.pack_start(self.tab_box, True, True)
         
         # Constants.
         self.current_index = init_index
