@@ -35,7 +35,10 @@ import utils
 def get_cover_save_path(name):
     return get_cache_file("cover/%s.jpg" % name)
 
-def cleanup_cover(old_path):    
+def get_tmp_save_path(name):
+    return get_cache_file("tmp/%s.jpg" % name)
+
+def cleanup_cover(old_path, new_path):    
     if not os.path.exists(old_path):    
         return False
     try:
@@ -48,10 +51,10 @@ def cleanup_cover(old_path):
         if str_pixbuf.count("\x00") > len(str_pixbuf)/2 or str_pixbuf.count("\xff") > len(str_pixbuf)/2 : 
             return False
         else:
-            if os.path.exists(old_path): os.unlink(old_path)
-            pixbuf.save(old_path, "jpeg", {"quality":"85"})
+            if os.path.exists(new_path): os.unlink(new_path)
+            if os.path.exists(old_path): os.unlink(old_path)            
+            pixbuf.save(new_path, "jpeg", {"quality":"85"})
             del pixbuf  
-            
             # Change property album to update UI
             # MediaDB.set_property(song, {"album" : song.get("album")})
             return True
@@ -65,8 +68,8 @@ class FetchArtistCover(MissionThread):
         if self.artist_name:
             query_result = multi_query_artist_engine(self.artist_name)
             if query_result:
-                if utils.direct_download(query_result, get_cover_save_path(self.artist_name)):
-                    cleanup_cover(get_cover_save_path(self.artist_name))
+                if utils.download(query_result, get_tmp_save_path(self.artist_name)):
+                    cleanup_cover(get_tmp_save_path(self.artist_name), get_cover_save_path(self.artist_name))
                 
     def get_mission_result(self):    
         return None
@@ -81,11 +84,14 @@ class FetchAlbumCover(MissionThread):
         if self.artist_name or self.album_name:
             query_result = multi_query_album_engine(self.artist_name, self.album_name)
             if query_result:
-                if utils.direct_download(query_result, self.get_save_path()):
-                    cleanup_cover(self.get_save_path())
+                if utils.download(query_result, self.get_tmp_path()):
+                    cleanup_cover(self.get_tmp_path(), self.get_save_path())
                     
     def get_save_path(self):                
         return get_cover_save_path("%s-%s" % (self.artist_name, self.album_name))
+    
+    def get_tmp_path(self):
+        return get_tmp_save_path("%s-%s" % (self.artist_name, self.album_name))
     
     def get_mission_result(self):
         return None
