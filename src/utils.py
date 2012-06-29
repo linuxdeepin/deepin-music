@@ -538,6 +538,26 @@ def download_iterator(remote_uri, local_uri, buffer_len=4096, timeout=DEFAULT_TI
             pass
         raise IOError
     
+    
+def direct_download(remote_uri, local_uri, timeout=DEFAULT_TIMEOUT):    
+    try:
+        handle_read = urlopen(remote_uri, timeout=timeout)
+        data_buffer = handle_read.read()
+        handle_write = open(local_uri, "w")
+        handle_write.write(data_buffer)
+        handle_read.close()        
+        handle_write.close()
+    except:    
+        try:
+            unlink(local_uri)
+        except:    
+            pass
+        return False
+    if not exists(local_uri):
+        return False
+    return True
+    
+    
 def download(remote_uri, local_uri, net_encode=None, buffer_len=4096, timeout=DEFAULT_TIMEOUT):
     try:
         logger.logdebug("download %s starting...", remote_uri)
@@ -558,9 +578,8 @@ def download(remote_uri, local_uri, net_encode=None, buffer_len=4096, timeout=DE
         handle_read.close()    
         handle_write.close()
         logger.logdebug("download %s finish." % remote_uri)
-        
     except:
-        logger.logexception("Error while downloading %s", remote_uri)
+        logger.loginfo("Error while downloading %s", remote_uri)
         try:
             unlink(local_uri)
         except:    

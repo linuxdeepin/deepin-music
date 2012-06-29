@@ -47,6 +47,7 @@ def query_artist_cover_from_xiami(artist_name):
     try:
         artist_div_block = search_query("div.artistBlock_list div.artist_item100_block p.buddy a.artist100")
         artist_href = artist_div_block.attr("href")
+        if not artist_href: return False
         artist_url = "%s%s" % (xiami_domain, artist_href)
         artist_query = PyQuery(url=artist_url)
         cover_url = artist_query("a#cover_lightbox").attr("href").encode("utf-8", "ingnore")
@@ -59,7 +60,9 @@ def query_artist_cover_from_ting(artist_name):
     try:
         search_result_object = PyQuery(url=ting_artist_search_url)
         artist_info_element = search_result_object('div#target_artist a.avatar')
-        artist_info_url = 'http://ting.baidu.com' + artist_info_element.attr('href')
+        info_href_attr = artist_info_element.attr('href')
+        if not info_href_attr: return False
+        artist_info_url = 'http://ting.baidu.com' + info_href_attr
         artist_info_object = PyQuery(url=artist_info_url)
         artist_picture_element = artist_info_object('div.mod-info-up img')
         artist_picture_url = artist_picture_element.attr('src').encode('utf-8', 'ignore')
@@ -68,31 +71,43 @@ def query_artist_cover_from_ting(artist_name):
         return False
     
 def query_album_cover_from_xiami(artist_name, album_name):    
+    if not artist_name and not album_name:
+        return False
     xiami_album_search_url = 'http://www.xiami.com/search/album?key=' + artist_name + '+' + album_name
     try:
         search_result_object = PyQuery(url=xiami_album_search_url)
         album_info_element = search_result_object('div.albumBlock_list div.album_item100_block p.cover a.CDcover100')
-        album_info_url = 'http://www.xiami.com' + album_info_element.attr('href')
+        info_href_attr = album_info_element.attr('href')
+        if not info_href_attr: return False
+        album_info_url = 'http://www.xiami.com' + info_href_attr
         album_info_object = PyQuery(url=album_info_url)
         album_picture_element = album_info_object('a#cover_lightbox')
         album_picture_url = album_picture_element.attr('href').encode('utf-8', 'ignore')
         return album_picture_url
-    except Exception, e:
-        print e
+    except:
         return False
     
 def query_album_cover_from_ting(artist_name, album_name):    
+    if not artist_name and not album_name:
+        return False
     ting_album_search_url = 'http://ting.baidu.com/search?key=' + artist_name + '+' + album_name
     try:
         search_result_object = PyQuery(url=ting_album_search_url)
-        album_info_element = search_result_object.find('div.song-item').eq(0).find('span.album-title a')
-        album_info_url = 'http://ting.baidu.com' + album_info_element.attr('href')
+        album_info_element = search_result_object.find('div.song-item').eq(0).find('span.album-title a') 
+        info_href_attr = album_info_element.attr("href")
+        if not info_href_attr: return False
+        album_info_url = 'http://ting.baidu.com' + info_href_attr
         album_info_object = PyQuery(url=album_info_url)
+        
         album_picture_element = album_info_object('div.album-cover img')
-        album_picture_url = 'http:' + album_picture_element.attr('src').encode('utf-8', 'ignore')
+        temp_picture_url = album_picture_element.attr('src').encode('utf-8', 'ignore')
+        temp_picture_url = temp_picture_url.strip()
+        if temp_picture_url.startswitch("http:"):    
+            album_picture_url = temp_picture_url
+        else:    
+            album_picture_url = "http:" + temp_picture_url
         return album_picture_url
-    except Exception, e:
-        print e
+    except:
         return False
     
 def query_album_cover_from_douban(keywords):            

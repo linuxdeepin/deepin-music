@@ -52,7 +52,7 @@ def cleanup_cover(old_path):
             pixbuf.save(old_path, "jpeg", {"quality":"85"})
             del pixbuf  
             
-            # # Change property album to update UI
+            # Change property album to update UI
             # MediaDB.set_property(song, {"album" : song.get("album")})
             return True
 
@@ -65,7 +65,7 @@ class FetchArtistCover(MissionThread):
         if self.artist_name:
             query_result = multi_query_artist_engine(self.artist_name)
             if query_result:
-                if utils.download(query_result, get_cover_save_path(self.artist_name)):
+                if utils.direct_download(query_result, get_cover_save_path(self.artist_name)):
                     cleanup_cover(get_cover_save_path(self.artist_name))
                 
     def get_mission_result(self):    
@@ -81,7 +81,7 @@ class FetchAlbumCover(MissionThread):
         if self.artist_name or self.album_name:
             query_result = multi_query_album_engine(self.artist_name, self.album_name)
             if query_result:
-                if utils.download(query_result, self.get_save_path()):
+                if utils.direct_download(query_result, self.get_save_path()):
                     cleanup_cover(self.get_save_path())
                     
     def get_save_path(self):                
@@ -89,7 +89,6 @@ class FetchAlbumCover(MissionThread):
     
     def get_mission_result(self):
         return None
-        
 
 class FetchManager(SignalContainer):    
     
@@ -124,7 +123,6 @@ class FetchManager(SignalContainer):
                 album_name = key.replace("/", "")
                 if not os.path.exists(get_cover_save_path("%s-%s" % (artist_name, album_name))):
                     results.append((artist_name, album_name))
-            print len(results)        
             return results        
         else:
             return []
