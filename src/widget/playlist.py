@@ -162,6 +162,7 @@ class PlaylistUI(gtk.VBox):
         
     def __on_player_loaded(self, player):   
         if self.current_item:
+            self.current_item.song_view.reset_error_items()
             self.current_item.song_view.set_highlight_song(Player.song)
         
     def __play_and_add(self, widget, song):    

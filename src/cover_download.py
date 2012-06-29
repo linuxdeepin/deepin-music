@@ -20,56 +20,139 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import re
-import urllib
+import os
+import gtk
+import gobject
 
-from pyquery import PyQuery
+from dtk.ui.thread_pool import MissionThreadPool, MissionThread
+from cover_query import multi_query_artist_engine, multi_query_album_engine
+from library import DBQuery, MediaDB
+from helper import SignalContainer
+from xdg_support import get_cache_file
+import utils
 
 
+def get_cover_save_path(name):
+    return get_cache_file("cover/%s.jpg" % name)
 
-XIMMI_SEARCH_URL = "http://www.xiami.com/search?key={0}&pos=1"
-XIMMI_DOMAIN = "http://www.xiami.com"
-
-def download_artist_cover(artist_name):
-    quote_artist_name = urllib.quote(artist_name)
-    search_url = XIMMI_SEARCH_URL.format(quote_artist_name)
-    search_query = PyQuery(url=search_url)
+def cleanup_cover(old_path):    
+    if not os.path.exists(old_path):    
+        return False
     try:
-        artist_div_block = search_query("div.artistBlock_list div.artist_item100_block p.buddy a.artist100")
-        artist_href = artist_div_block.attr("href")
-        artist_url = "%s%s" % (XIMMI_DOMAIN, artist_href)
-        artist_query = PyQuery(url=artist_url)
-        cover_url = artist_query("a#cover_lightbox").attr("href").encode("utf-8", "ingnore")
-        return cover_url
-    except Exception, e:
+        pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(old_path, 300, 300)
+    except gobject.GError:    
         return False
-    
-def download_album_cover(artist_name):
-    quote_artist_name = urllib.quote(artist_name)
-    search_url = XIMMI_SEARCH_URL.format(quote_artist_name)
-    search_query = PyQuery(url=search_url)
-    try:
-        artist_div_block = search_query("div.artistBlock_list div.artist_item100_block p.buddy a.artist100")
-        artist_href = artist_div_block.attr("href")
-        artist_url = "%s%s" % (XIMMI_DOMAIN, artist_href)
-        artist_query = PyQuery(url=artist_url)
-        cover_url = artist_query("a#cover_lightbox").attr("href").encode("utf-8", "ingnore")
-        return cover_url
-    except Exception, e:
-        return False
-
-def download_album_cover_from_douban(keywords):            
-    douban_search_api = 'http://api.douban.com/music/subjects?q={0}&start-index=1&max-results=2'
-    douban_cover_pattern = '<link href="http://img(\d).douban.com/spic/s(\d+).jpg" rel="image'
-    douban_cover_addr = 'http://img{0}.douban.com/spic/s{1}.jpg'
-    
-    request = douban_search_api.format(urllib.quote(keywords))
-    result = urllib.urlopen(request).read()
-    if not len(result):
-        return False
-    
-    match = re.compile(douban_cover_pattern, re.IGNORECASE).search(result)
-    if match:
-        return douban_cover_addr.format(match.groups()[0], match.groups()[1])
     else:
-        return False
+        # Check cover is not a big black image
+        str_pixbuf = pixbuf.get_pixels()
+        if str_pixbuf.count("\x00") > len(str_pixbuf)/2 or str_pixbuf.count("\xff") > len(str_pixbuf)/2 : 
+            return False
+        else:
+            if os.path.exists(old_path): os.unlink(old_path)
+            pixbuf.save(old_path, "jpeg", {"quality":"85"})
+            del pixbuf  
+            
+            # # Change property album to update UI
+            # MediaDB.set_property(song, {"album" : song.get("album")})
+            return True
+
+class FetchArtistCover(MissionThread):
+    def __init__(self, artist_name):
+        MissionThread.__init__(self)
+        self.artist_name = artist_name
+        
+    def start_mission(self):    
+        if self.artist_name:
+            query_result = multi_query_artist_engine(self.artist_name)
+            if query_result:
+                if utils.download(query_result, get_cover_save_path(self.artist_name)):
+                    cleanup_cover(get_cover_save_path(self.artist_name))
+                
+    def get_mission_result(self):    
+        return None
+    
+class FetchAlbumCover(MissionThread):    
+    
+    def __init__(self, infos):
+        MissionThread.__init__(self)
+        self.artist_name, self.album_name = infos
+        
+    def start_mission(self):    
+        if self.artist_name or self.album_name:
+            query_result = multi_query_album_engine(self.artist_name, self.album_name)
+            if query_result:
+                if utils.download(query_result, self.get_save_path()):
+                    cleanup_cover(self.get_save_path())
+                    
+    def get_save_path(self):                
+        return get_cover_save_path("%s-%s" % (self.artist_name, self.album_name))
+    
+    def get_mission_result(self):
+        return None
+        
+
+class FetchManager(SignalContainer):    
+    
+    def __init__(self, db_query):
+        SignalContainer.__init__(self)
+        self.__db_query = db_query
+        
+    def connect_to_db(self):    
+        self.autoconnect(self.__db_query, "full-update", self.__full_update)
+        self.__db_query.set_query("")
+    
+    def __full_update(self, db_query):    
+        self.start_artist_missions()
+        self.start_album_missions()
+    
+    def get_infos_from_db(self, tag, values=None):
+        genres = []
+        artists = []
+        extened = False
+        infos_dict =  self.__db_query.get_info(tag, genres, artists, values, extened)
+        
+        if tag == "artist":
+            all_artist_keys = infos_dict.keys()
+            if all_artist_keys:
+                return [artist for artist in all_artist_keys if not os.path.exists(get_cover_save_path(artist))]
+            return []
+            
+        elif tag == "album":
+            results = []
+            for key, values in infos_dict.iteritems():
+                artist_name = values[0].replace("/", "")
+                album_name = key.replace("/", "")
+                if not os.path.exists(get_cover_save_path("%s-%s" % (artist_name, album_name))):
+                    results.append((artist_name, album_name))
+            print len(results)        
+            return results        
+        else:
+            return []
+        
+    def start_artist_missions(self):    
+        artists = self.get_infos_from_db("artist")
+        if artists:
+            artist_missions = []
+            for artist_name in artists:
+                artist_missions.append(FetchArtistCover(artist_name.replace("/", "")))
+            MissionThreadPool(artist_missions, 5).start()    
+            
+    def start_album_missions(self):        
+        albums = self.get_infos_from_db("album")
+        if albums:
+            album_missions = []
+            for album_info in albums:
+                album_missions.append(FetchAlbumCover(album_info))
+            MissionThreadPool(album_missions, 5).start()    
+                
+class SimpleFetchManager(FetchManager):            
+    def __init__(self):
+        FetchManager.__init__(self, DBQuery("local"))
+        
+        if MediaDB.isloaded():
+            self.__on_db_loaded(MediaDB)
+        else:    
+            self.autoconnect(MediaDB, "loaded", self.__on_db_loaded)
+            
+    def __on_db_loaded(self, db):        
+        self.connect_to_db()

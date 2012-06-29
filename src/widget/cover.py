@@ -58,7 +58,6 @@ class CoverButton(gtk.Button):
         draw_pixbuf(cr, self.cover_side_pixbuf, rect.x, rect.y)
         
         draw_pixbuf(cr, self.current_cover_pixbuf, rect.x + 4, rect.y + 4)
-        
         return True
         
         
@@ -99,19 +98,15 @@ class CoverButton(gtk.Button):
         filename = CoverManager.get_cover(force_song, try_web)    
         try:
             pixbuf = get_optimum_pixbuf_from_file(filename, COVER_SIZE["x"], COVER_SIZE["y"])
-            self.current_cover_pixbuf = pixbuf
-            self.queue_draw()
         except gobject.GError:    
             pass
         else:
-            if try_web:
-                self.current_cover_pixbuf = pixbuf
-                del pixbuf
-            else:    
-                self.current_cover_pixbuf = pixbuf
-                del pixbuf
+            self.current_cover_pixbuf = pixbuf
+            self.queue_draw()            
+            del pixbuf
+            if not try_web:
                 return CoverManager.default_cover != filename
-            self.queue_draw()
+
             
 class PlayerCoverButton(CoverButton):    
     def __init__(self):

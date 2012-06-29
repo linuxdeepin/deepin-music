@@ -41,6 +41,7 @@ from widget.ui_utils import switch_tab
 from config import config
 from player import Player
 from library import MediaDB
+from cover_download import SimpleFetchManager
 from helper import Dispatcher
 from logger import Logger
 
@@ -159,6 +160,7 @@ class DeepinMusic(gobject.GObject, Logger):
             if config.getboolean("lyrics", "status"):
                 self.lyrics_display.run()
         self.emit("ready")
+        SimpleFetchManager()
         
     def force_quit(self, *args):    
         self.loginfo("Start quit...")

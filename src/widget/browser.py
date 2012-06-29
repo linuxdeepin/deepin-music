@@ -49,21 +49,24 @@ class IconItem(gobject.GObject):
     def __init__(self, _tuple):
         super(IconItem, self).__init__()
         self.cell_width = 83        
-        self.name, nums, self.tag = _tuple
+        self.key_name, value_name, nums, self.tag = _tuple
         
-        if not self.name:
+        if not self.key_name:
             self.name_label= "其它"
-            self.pixbuf = CoverManager.get_pixbuf_from_album(self.name_label, self.cell_width, self.cell_width)            
+            self.pixbuf = CoverManager.get_pixbuf_from_name(self.name_label, self.cell_width, self.cell_width)            
             
-        elif self.name == "deepin-all-songs":    
+        elif self.key_name == "deepin-all-songs":    
             self.pixbuf = CoverManager.get_all_song_cover(self.cell_width, self.cell_width)
             self.name_label = "所有歌曲"
         else:    
-            self.name_label = self.name
+            self.name_label = self.key_name
             if self.tag == "genre":
                 self.pixbuf = CoverManager.get_pixbuf_from_genre(self.name_label)
+            elif self.tag == "album":    
+                self.pixbuf = CoverManager.get_pixbuf_from_name("%s-%s" % (value_name, self.key_name), 
+                                                                self.cell_width, self.cell_width)            
             else:    
-                self.pixbuf = CoverManager.get_pixbuf_from_album(self.name_label, self.cell_width, self.cell_width)            
+                self.pixbuf = CoverManager.get_pixbuf_from_name(self.key_name, self.cell_width, self.cell_width)
             
         self.labels = "%d首歌曲" % nums
         self.padding_x = 4
@@ -368,13 +371,14 @@ class Browser(gtk.VBox, SignalContainer):
         _dict = self.get_infos_from_db(tag)
         keys = _dict.keys()
         keys.sort()
+        keys.reverse()
         items = []
         all_nb = len(self.__db_query.get_all_songs())
-        items.append(IconItem(("deepin-all-songs", all_nb, tag)))
-                
+        items.append(IconItem(("deepin-all-songs", "deepin-all-songs", all_nb, tag)))
+
         for key in keys:
             value, nb = _dict[key] 
-            items.append(IconItem((value, nb, tag)))
+            items.append(IconItem((key, value, nb, tag)))
         self.filter_view.add_items(items)    
         
         if switch:
@@ -433,8 +437,8 @@ class Browser(gtk.VBox, SignalContainer):
             attr_infos = self.get_attr_infos_from_db(name, self.__current_path)
             items = []
             for info in attr_infos:
-                key, nb, tag = info
-                items.append(IconItem((key, nb, tag)))
+                key, value, nb, tag = info
+                items.append(IconItem((key, value, nb, tag)))
             self.filter_view.add_items(items)    
             
             if self.view_mode != ICON_VIEW_MODE:
@@ -518,11 +522,11 @@ class Browser(gtk.VBox, SignalContainer):
         if not item:
             return 
         
-        if item.name == "deepin-all-songs":
+        if item.key_name == "deepin-all-songs":
             songs = self.__db_query.get_all_songs()
         else:    
             del self.__selected_tag[item.tag]
-            self.__selected_tag[item.tag] = [item.name]
+            self.__selected_tag[item.tag] = [item.key_name]
             songs = self.__get_selected_songs(item.tag)
         if not songs:
             return 
@@ -542,15 +546,15 @@ class Browser(gtk.VBox, SignalContainer):
             self.update_path_songs_view(item)
         
     def update_category_songs_view(self, item):    
-        if item.name == "deepin-all-songs":
+        if item.key_name == "deepin-all-songs":
             songs = self.__db_query.get_all_songs()
         else:    
-            self.__selected_tag[item.tag] = [item.name]
+            self.__selected_tag[item.tag] = [item.key_name]
             songs = self.__get_selected_songs(item.tag)
         self.update_songs_view(songs, item.tag)    
         
     def update_path_songs_view(self, item):    
-        songs = self.__db_query.get_attr_songs(self.__current_path, item.tag, item.name)
+        songs = self.__db_query.get_attr_songs(self.__current_path, item.tag, item.key_name)
         if songs:
             self.update_songs_view(songs, item.tag)
         
@@ -565,11 +569,11 @@ class Browser(gtk.VBox, SignalContainer):
         
     def __on_single_click_item(self, widget, item, x, y):    
         if item.pointer_in_play_rect(x, y):
-            if item.name == "deepin-all-songs":
+            if item.key_name == "deepin-all-songs":
                 songs = self.__db_query.get_all_songs()
             else:    
                 del self.__selected_tag[item.tag]
-                self.__selected_tag[item.tag] = [item.name]
+                self.__selected_tag[item.tag] = [item.key_name]
                 songs = self.__get_selected_songs(item.tag)
             if not songs:
                 return 

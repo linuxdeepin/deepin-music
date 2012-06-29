@@ -35,7 +35,7 @@ from logger import Logger
 from library import MediaDB
 from xdg_support import get_cache_file
 from widget.skin import app_theme
-from cover_download import download_album_cover
+from cover_query import multi_query_artist_engine
 
 
 REINIT_COVER_TO_SKIP_TIME = 100 * 60 * 30
@@ -114,7 +114,7 @@ class DeepinCoverManager(Logger):
         if artist:
             result =  song.get_str("artist")
         else:
-            result = song.get_str("album")
+            result = "%s-%s" % (song.get_str("artist"), song.get_str("album"))
         return result.replace("/", "")    
     
     def get_default_cover(self, x, y):    
@@ -123,11 +123,11 @@ class DeepinCoverManager(Logger):
     def get_all_song_cover(self, x, y):
         return gtk.gdk.pixbuf_new_from_file_at_size(self.all_song_cover, x, y)
     
-    def get_pixbuf_from_album(self, album, x=None, y=None):
+    def get_pixbuf_from_name(self, query_name, x=None, y=None):
         x = (x or BROWSER_COVER_SIZE["x"])
         y = (y or BROWSER_COVER_SIZE["y"])
         
-        filename = get_cache_file("cover/%s.jpg" % album.replace("/", ""))
+        filename = get_cache_file("cover/%s.jpg" % query_name.replace("/", ""))
         if os.path.exists(filename):
             try:
                 gtk.gdk.pixbuf_new_from_file_at_size(filename, COVER_SIZE["x"], COVER_SIZE["y"])
@@ -180,7 +180,7 @@ class DeepinCoverManager(Logger):
                 os.unlink(image_path)
             else:    
                 return image_path
-        
+
         # Retrieve cover from mp3 tag
         if song.get_scheme() == "file" and song.get_ext() in [".mp3", ".tta"]:
             found = False
@@ -223,15 +223,14 @@ class DeepinCoverManager(Logger):
                     if ret and self.cleanup_cover(song, image_path):
                         return image_path
                     
-                cover_img_url = download_album_cover(album)    
+                cover_img_url = multi_query_artist_engine(album)    
                 if cover_img_url:
                     ret = utils.download(cover_img_url, image_path)
                     if ret and self.cleanup_cover(song, image_path):
                         return image_path
             except:        
                 pass
-            self.COVER_TO_SKIP.append(image_path)
-            
+
         # No cover found    
         self.remove_cover(song)    
         if try_web:

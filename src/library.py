@@ -812,7 +812,7 @@ class DBQuery(gobject.GObject, Logger):
                 return []
             for key, value in self.__attr_songs[song_dir][0].iteritems():
                 num = len(value)
-                attr_list.append((key, num, "genre"))
+                attr_list.append((key, key, num, "genre"))
             return attr_list    
         
         if info_type == "artist":
@@ -820,7 +820,7 @@ class DBQuery(gobject.GObject, Logger):
                 return []
             for key, value in self.__attr_songs[song_dir][1].iteritems():
                 num = len(value)
-                attr_list.append((key, num, "artist"))
+                attr_list.append((key, key, num, "artist"))
             return attr_list    
         
         if info_type == "album":
@@ -828,7 +828,11 @@ class DBQuery(gobject.GObject, Logger):
                 return []
             for key, value in self.__attr_songs[song_dir][2].iteritems():
                 num = len(value)
-                attr_list.append((key, num, "album"))
+                try:
+                    artist_name = list[value][0].get_str("artist")
+                except:    
+                    artist_name = ""
+                attr_list.append((key, artist_name,  num, "album"))
             return attr_list    
         
     def get_attr_songs(self,song_dir=None, info_type="###ALL###", info_key=None):
@@ -1036,7 +1040,9 @@ class DBQuery(gobject.GObject, Logger):
                                         infos[key] = (info[2], playcount, duration, songs)
                                     else:
                                         nb = len(info[1])
-                                        if nb > 0: infos[key] = (info[2], infos.setdefault(key,(info[2], 0))[1] + nb)
+                                        if nb > 0:
+                                            infos[key] = (list(info[1])[0].get_str("artist"), 
+                                                          infos.setdefault(key,(info[2], 0))[1] + nb)
                             except KeyError: pass
 
         if key_values:
