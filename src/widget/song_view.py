@@ -227,8 +227,9 @@ class SongView(ListView):
             self.add_items(song_items, pos, sort)
         
         if len(songs) >= 1 and play:
-            self.set_highlight_song(songs[0])
-            gobject.idle_add(Player.play_new, self.highlight_item.get_song())
+            if songs[0].exists():
+                self.set_highlight_song(songs[0])
+                gobject.idle_add(Player.play_new, self.highlight_item.get_song())
             
     def play_uris(self, uris, pos=None, sort=True):        
         self.get_toplevel().window.set_cursor(None)
@@ -297,9 +298,10 @@ class SongView(ListView):
         
     def play_select_item(self):    
         if len(self.select_rows) > 0:
-            self.highlight_item = self.items[self.select_rows[0]]
-            Player.play_new(self.highlight_item.get_song())
-        return True    
+            select_item = self.items[self.select_rows[0]]
+            if select_item.exists():
+                self.highlight_item = self.items[self.select_rows[0]]
+                Player.play_new(self.highlight_item.get_song())
     
     def remove_select_items(self):
         self.delete_select_items()
@@ -488,8 +490,8 @@ class SongView(ListView):
             self.queue_draw()    
             
         if flag:    
-            if len(self.items) > 0:
-                item = self.items[0]
+            if len(self.get_valid_items()) > 0:
+                item = self.get_valid_items()[0]
                 self.set_highlight(item)
                 Player.play_new(item.get_song())
 
