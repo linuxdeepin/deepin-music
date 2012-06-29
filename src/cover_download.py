@@ -49,6 +49,7 @@ def cleanup_cover(old_path, new_path):
         # Check cover is not a big black image
         str_pixbuf = pixbuf.get_pixels()
         if str_pixbuf.count("\x00") > len(str_pixbuf)/2 or str_pixbuf.count("\xff") > len(str_pixbuf)/2 : 
+            if os.path.exists(old_path): os.unlink(old_path)            
             return False
         else:
             if os.path.exists(new_path): os.unlink(new_path)

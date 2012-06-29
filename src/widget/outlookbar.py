@@ -88,7 +88,7 @@ class SongPathBar(BaseBar):
         BaseBar.__init__(self, init_index=-1)
         self.set_spacing(5)
         self.child_box = gtk.VBox()
-        self.child_item_height = 26
+        self.child_item_height = 20
         self.current_page = 1
         self.page_items_num = 0        
         self.items = []
@@ -105,10 +105,10 @@ class SongPathBar(BaseBar):
         previous_align = self.create_simple_button("previous", self.update_current_page, "previous")
         next_align = self.create_simple_button("next", self.update_current_page, "next")
         self.info_label = Label("0/0", app_theme.get_color("labelText"), text_x_align=ALIGN_MIDDLE)
-        self.info_label.set_size_request(50, 20)
         self.control_box.pack_start(previous_align, False, False)
         self.control_box.pack_start(self.info_label, False, False)
         self.control_box.pack_start(next_align, False, False)
+        self.control_box.set_no_show_all(True)
         control_align = gtk.Alignment()
         control_align.set(1, 1, 0.5, 0.5)
         control_align.add(self.control_box)
@@ -157,6 +157,8 @@ class SongPathBar(BaseBar):
                 block_num = self.page_items_num - len(child_items)
                 for i in range(block_num):
                     self.child_box.pack_start(self.create_block_box(), False, True)
+            self.control_box.set_no_show_all(False)        
+            self.control_box.show_all()
             self.show_all()        
             self.queue_draw()
             self.get_toplevel().queue_draw()
