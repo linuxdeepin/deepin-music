@@ -606,7 +606,7 @@ class ThreadLoad(threading.Thread):
         
     def run(self):    
         self.fetch_func(*self.args)
-
+        
 class ThreadRun(threading.Thread):
     '''class docs'''
 	

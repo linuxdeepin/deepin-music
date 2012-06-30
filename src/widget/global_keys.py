@@ -31,21 +31,31 @@ import utils
 
 def toggle_window():
     instance = utils.get_main_window()
-    instance.toggle_visible()
+    instance.toggle_window()
     
 def change_lyrics_lock_status():    
     if config.getboolean("lyrics", "locked"):
         Dispatcher.unlock_lyrics()
     else:    
         Dispatcher.lock_lyrics()
+        
+def change_lyrics_status():        
+    if config.getboolean("lyrics", "status"):
+        Dispatcher.close_lyrics()
+    else:    
+        Dispatcher.show_lyrics()
 
 class GlobalKeys(Logger):
     
     func = {
         "previous" : Player.previous,
         "next" : Player.next,
+        "playpause" : Player.playpause,
+        "increase_vol" : Player.increase_volume,
+        "decrease_vol" : Player.decrease_volume,
         "toggle_window" : toggle_window,
-        "toggle_lyrics_lock" : change_lyrics_lock_status
+        "toggle_lyrics_lock" : change_lyrics_lock_status,
+        "toggle_lyrics_status" : change_lyrics_status,
         }
     
     def __init__(self):
@@ -56,7 +66,7 @@ class GlobalKeys(Logger):
             if keystr:
                 self.__bind(keystr, field)
             config.set("globalkey", "%s_last" % field, keystr)    
-    
+            
     def __handle_callback(self, text, callback):
         self.logdebug(text)
         callback()

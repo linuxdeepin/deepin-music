@@ -167,10 +167,14 @@ class Config(gobject.GObject, Logger):
                 },
             
             "globalkey" : {
-                "previous" : "<Ctrl><Alt>P",
-                "next"     : "<Ctrl><Alt>N",
-                "toggle_window" : "<Ctrl><Alt>W",
-                "toggle_lyrics_lock" : "<Ctrl><Alt>L"
+                "previous"           : "<Alt>Left",
+                "next"               : "<Alt>Right",
+                "playpause"          : "<Alt>F5",
+                "increase_vol"        : "<Alt>Up",
+                "decrease_vol"        : "<Alt>Down",
+                "toggle_window"      : "<Ctrl><Alt>W",
+                "toggle_lyrics_lock" : "<Ctrl><Alt>L",
+                "toggle_lyrics_status" : "<Ctrl><Alt>H",
                 }
             
             

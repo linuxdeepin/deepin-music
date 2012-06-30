@@ -201,6 +201,12 @@ class DeepinMusic(gobject.GObject, Logger):
                 self.tray_icon = None
             elif not self.tray_icon and use_tray:    
                 self.tray_icon = TrayIcon(self)
+                
+    def toggle_window(self):            
+        if self.window.get_property("visible"):
+            self.hide_to_tray()
+        else:    
+            self.show_from_tray()
         
     def toggle_visible(self, bring_to_front=False):    
         if self.window.get_property("visible"):

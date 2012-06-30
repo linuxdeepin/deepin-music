@@ -194,7 +194,7 @@ class SearchItem(gobject.GObject):
     def render_artist(self, cr, rect, in_select, in_highlight):
         '''Render artist.'''
         rect.x += self.artist_padding_x
-        rect.width -= self.title_padding_x * 2
+        rect.width -= self.artist_padding_x * 2
         render_item_text(cr, self.artist, rect, in_select, in_highlight)
         
     def get_column_sizes(self):

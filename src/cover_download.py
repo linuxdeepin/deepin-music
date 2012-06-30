@@ -120,7 +120,7 @@ class FetchManager(SignalContainer):
         if tag == "artist":
             all_artist_keys = infos_dict.keys()
             if all_artist_keys:
-                return [artist.replace("/", "") for artist in all_artist_keys if not os.path.exists(get_cover_save_path(artist.replace("/", "")))]
+                return [artist.replace("/", "") for artist in all_artist_keys if not os.path.exists(get_cover_save_path(artist.replace("/", ""))) and artist]
             return []
             
         elif tag == "album":
@@ -141,6 +141,11 @@ class FetchManager(SignalContainer):
             for artist_name in artists:
                 artist_missions.append(FetchArtistCover(artist_name.replace("/", "")))
             MissionThreadPool(artist_missions, 5).start()    
+            
+            
+            
+            
+            
             
     def start_album_missions(self):        
         albums = self.get_infos_from_db("album")
