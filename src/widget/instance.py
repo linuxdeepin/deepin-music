@@ -37,6 +37,7 @@ from widget.tray import TrayIcon
 from widget.equalizer import EqualizerWindow
 from widget.preference import PreferenceDialog
 from widget.ui_utils import switch_tab
+from widget.global_keys import GlobalKeys
 
 from config import config
 from player import Player
@@ -83,6 +84,7 @@ class DeepinMusic(gobject.GObject, Logger):
         self.preference_dialog = PreferenceDialog()
         self.simple_browser = SimpleBrowser()
         self.equalizer_win = EqualizerWindow()
+        self.global_keys = GlobalKeys()
             
         self.window.add_move_event(self.full_header_bar)
         self.window.add_move_event(self.simple_header_bar)

@@ -95,7 +95,7 @@ class Config(gobject.GObject, Logger):
                 "crossfade_time" : "2.0",
                 "crossfade_gapless_album" : "false",
                 "play_on_startup" : "true",
-                "resume_last_progress" : "true",
+                "resume_last_progress" : "false",
                 "enqueue":"false",
                 "click_enqueue":"false",
                 "queuewholealbum":"false",
@@ -164,7 +164,15 @@ class Config(gobject.GObject, Logger):
             
             "equalizer" : {
                 "x" : "-1",
+                },
+            
+            "globalkey" : {
+                "previous" : "<Ctrl><Alt>P",
+                "next"     : "<Ctrl><Alt>N",
+                "toggle_window" : "<Ctrl><Alt>W",
+                "toggle_lyrics_lock" : "<Ctrl><Alt>L"
                 }
+            
             
             }
         
