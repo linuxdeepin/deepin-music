@@ -25,11 +25,9 @@ import gtk
 from collections import OrderedDict
 
 from dtk.ui.scalebar import VScalebar
+from dtk.ui.dialog import DialogBox, DIALOG_MASK_SINGLE_PAGE
 from dtk.ui.box import ImageBox
-from dtk.ui.window import Window
 from dtk.ui.button import Button
-from dtk.ui.line import draw_vlinear
-from dtk.ui.titlebar import Titlebar
 from dtk.ui.menu import Menu
 from widget.skin import app_theme
 from dtk.ui.utils import get_widget_root_coordinate
@@ -157,9 +155,11 @@ MANDATORY["Soft Rock"] = "4:4:2.4:0.0:-4:-5.6:-3.2:0.0:2.4:8.8"
 MANDATORY["Techno"] = "8:5.6:0.0:-5.6:-4.8:0.0:8:9.6:9.6:8.8"
 
         
-class EqualizerWindow(Window):        
+class EqualizerWindow(DialogBox):        
     def __init__(self):
-        super(EqualizerWindow, self).__init__()
+        super(EqualizerWindow, self).__init__(
+            "均衡器", 372, 168, DIALOG_MASK_SINGLE_PAGE, close_callback=self.hide_all, 
+            modal=False, window_hint=None)
         
         try:
             pre_value = float(config.get("equalizer", "preamp"))
@@ -214,24 +214,6 @@ class EqualizerWindow(Window):
         self.predefine_button = Button("预设")
         self.predefine_button.connect("clicked", self.show_predefine)
             
-        button_box = gtk.HBox(spacing=60)
-        button_box.pack_start(self.active_button, False, False)
-        button_box.pack_start(self.reset_button, False, False)
-        button_box.pack_start(self.predefine_button, False, False)
-        button_align = gtk.Alignment()
-        button_align.set_padding(0, 10, 15, 10)
-        button_align.add(button_box)
-        
-        self.titlebar = Titlebar(
-            ["close"],
-            None,
-            None,
-            "均衡器")
-        self.titlebar.set_size_request(-1, 30)        
-        
-        self.titlebar.close_button.connect("clicked", lambda w: self.hide_all())
-        self.add_move_event(self.titlebar)
-        
         control_box_align = gtk.Alignment()
         control_box_align.set(0.0, 0.0, 1.0, 1.0)
         control_box_align.set_padding(10, 20, 15, 15)
@@ -244,18 +226,10 @@ class EqualizerWindow(Window):
         main_align.add(main_box)
         
         main_box.add(control_box_align)
-        main_box.connect("expose-event", self.expose_mask_cb)
         
-        self.window_frame.pack_start(self.titlebar, False, True)
-        self.window_frame.pack_start(main_align, False, True)    
-        self.window_frame.pack_start(button_align,False, False)
-
-        
-    def expose_mask_cb(self, widget, event):    
-        cr = widget.window.cairo_create()
-        rect = widget.allocation
-        draw_vlinear(cr, rect.x, rect.y, rect.width, rect.height, app_theme.get_shadow_color("linearBackground").get_color_info())
-        return False
+        self.body_box.pack_start(main_align, True, True)
+        self.left_button_box.set_buttons([self.predefine_button])
+        self.right_button_box.set_buttons([self.reset_button, self.active_button])
         
     def db_to_percent(self, dB):    
         return 10 ** (dB / 10)

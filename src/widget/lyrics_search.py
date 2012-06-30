@@ -30,7 +30,6 @@ from dtk.ui.threads import post_gui
 from constant import DEFAULT_FONT_SIZE
 from dtk.ui.listview import ListView
 from dtk.ui.scrolled_window import ScrolledWindow
-from widget.ui import NormalWindow
 from widget.ui_utils import render_item_text
 from lrc_download import TTPlayer, DUOMI, SOSO
 from helper import Dispatcher
@@ -38,20 +37,20 @@ from lrc_manager import LrcManager
 from player import Player
 from config import config
 import utils
+from dtk.ui.dialog import DialogBox, DIALOG_MASK_SINGLE_PAGE
+from dtk.ui.label import Label
 
-
-
-class SearchUI(NormalWindow):
+class SearchUI(DialogBox):
     def __init__(self):
-        NormalWindow.__init__(self)
+        DialogBox.__init__(
+            self, "均衡器", 460, 300, DIALOG_MASK_SINGLE_PAGE, close_callback=self.hide_all, 
+            modal=False, window_hint=None)
         self.artist_entry = TextEntry()
         self.artist_entry.set_size(120, 25)
         self.title_entry = TextEntry()
         self.title_entry.set_size(120, 25)
-        artist_label = gtk.Label()
-        artist_label.set_markup("<span color=\"black\">%s</span>" % "艺术家:")
-        title_label = gtk.Label()
-        title_label.set_markup("<span color=\"black\">%s</span>" % "歌曲:")
+        artist_label = Label("艺术家:")
+        title_label = Label("歌曲:")
         right_align = gtk.Alignment()
         right_align.set(0, 0, 0, 1)
         
@@ -77,29 +76,20 @@ class SearchUI(NormalWindow):
         self.result_view = ListView(sort_items)
         self.result_view.connect("double-click-item", self.double_click_cb)
         self.result_view.add_titles(["歌曲名", "艺术家"])
+        self.result_view.draw_mask = self.get_mask_func(self.result_view)
         scrolled_window.add_child(self.result_view)
         
-        self.prompt_label = gtk.Label()
-        self.prompt_label.set_alignment(0.0, 0.5)
-        self.prompt_label.set_size_request(-1, -1)
-        left_align = gtk.Alignment()
-        left_align.set(0, 0, 0, 1)
-        bottom_box = gtk.HBox(spacing=10)
+        self.prompt_label = Label("")
         download_button = Button("下载")
         download_button.connect("clicked", self.download_lyric_cb)
         cancel_button = Button("关闭")
-        cancel_button.connect("clicked", self.hide_window)
-        bottom_box.pack_start(self.prompt_label, False, False)
-        bottom_box.pack_start(left_align, True, True)
-        bottom_box.pack_start(download_button, False, False)
-        bottom_box.pack_start(cancel_button, False, False)
-        self.set_size_request(460, 300)
+        cancel_button.connect("clicked", lambda w: self.hide_all())
         
-        self.main_box.pack_start(info_box, False, False)
-        self.main_box.pack_start(scrolled_window, True, True)
-        self.main_box.pack_start(bottom_box, False, False)
+        self.body_box.pack_start(info_box, False, False)
+        self.body_box.pack_start(scrolled_window, True, True)
+        self.left_button_box.set_buttons([self.prompt_label])
+        self.right_button_box.set_buttons([download_button, cancel_button])
         self.lrc_manager = LrcManager()
-
         
     def double_click_cb(self, widget, item, colume, x, y):   
         self.download_lyric_cb(widget)
@@ -118,9 +108,9 @@ class SearchUI(NormalWindow):
         self.result_view.clear()
         artist = self.artist_entry.entry.get_text()
         title = self.title_entry.entry.get_text()
-        self.prompt_label.set_markup("<span color=\"white\">   %s</span>" % "正在搜索歌词文件")
+        self.prompt_label.set_text("正在搜索歌词文件")
         if artist == "" and title == "":
-            self.prompt_label.set_markup("<span color=\"white\">   %s</span>" % "囧!没有找到!")
+            self.prompt_label.set_text("囧!没有找到!")
             return
         utils.ThreadLoad(self.search_engine, artist, title).start()
         
@@ -135,20 +125,20 @@ class SearchUI(NormalWindow):
             else:
                 self.result_view.add_items(items)
 
-            self.prompt_label.set_markup("<span color=\"white\">   %s</span>" % "找到%d个歌词 :)" % len(self.result_view.items))
+            self.prompt_label.set_text("找到%d个歌词 :)" % len(self.result_view.items))
         else:    
             if last:
                 if len(self.result_view.items) > 0:
-                    self.prompt_label.set_markup("<span color=\"white\">   %s</span>" % "找到%d个歌词 :)" % len(self.result_view.items))
+                    self.prompt_label.set_text("找到%d个歌词 :)" % len(self.result_view.items))
                 else:
-                    self.prompt_label.set_markup("<span color=\"white\">   %s</span>" % "囧!没有找到!")
+                    self.prompt_label.set_text("囧!没有找到!")
         
 
     def download_lyric_cb(self, widget):
         select_items = self.result_view.select_rows
         save_filepath = self.lrc_manager.get_lrc_filepath(Player.song)
         if len(select_items) > 0:
-            self.prompt_label.set_markup("<span color=\"white\">   %s</span>" % "正在下载歌词文件")
+            self.prompt_label.set_text("正在下载歌词文件")
             item = self.result_view.items[select_items[0]]
             url = item.get_url()
             net_encode = item.get_netcode()
@@ -158,9 +148,9 @@ class SearchUI(NormalWindow):
     def render_download(self, result):
         if result:
             Dispatcher.reload_lrc(Player.song)
-            self.prompt_label.set_markup("<span color=\"white\">   %s</span>" % "文件已保存到 %s" % config.get("lyrics", "save_lrc_path"))
+            self.prompt_label.set_text("文件已保存到 %s" % config.get("lyrics", "save_lrc_path"))
         else:    
-            self.prompt_label.set_markup("<span color=\"white\">   %s</span>" % "囧! 下载失败!")
+            self.prompt_label.set_text("囧! 下载失败!")
         
         
 class SearchItem(gobject.GObject):        

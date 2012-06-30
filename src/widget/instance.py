@@ -64,6 +64,7 @@ class DeepinMusic(gobject.GObject, Logger):
             "深度音乐"
             )
         application.titlebar.menu_button.connect("button-press-event", self.menu_button_press)        
+        application.titlebar.connect("button-press-event", self.right_click_cb)
         
         # Window mode change.
         self.revert_toggle_button = self.create_revert_button()
@@ -83,7 +84,8 @@ class DeepinMusic(gobject.GObject, Logger):
         self.simple_browser = SimpleBrowser()
         self.equalizer_win = EqualizerWindow()
             
-        self.window.add_move_event(self.full_header_bar.move_box)
+        self.window.add_move_event(self.full_header_bar)
+        self.window.add_move_event(self.simple_header_bar)
 
         bottom_box = gtk.HBox()
         self.browser_align = gtk.Alignment()
@@ -147,6 +149,9 @@ class DeepinMusic(gobject.GObject, Logger):
         
         gobject.idle_add(self.ready)
         
+    def right_click_cb(self, widget, event):    
+        if event.button == 3:
+            Dispatcher.show_main_menu(int(event.x_root), int(event.y_root))
         
     def quit(self, *param):    
         self.hide_to_tray()
