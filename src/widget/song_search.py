@@ -46,13 +46,13 @@ class SongSearchUI(DialogBox):
         title_label = Label("   歌曲名称:")
         self.title_entry = TextEntry("那一夜")
         self.title_entry.set_size(300, 25)
-        search_button = Button("搜索")
-        search_button.connect("clicked", self.search_song)
+        self.search_button = Button("搜索")
+        self.search_button.connect("clicked", self.search_song)
         
         control_box = gtk.HBox(spacing=5)
         control_box.pack_start(title_label, False, False)
         control_box.pack_start(self.title_entry, False, False)
-        control_box.pack_start(search_button, False, False)
+        control_box.pack_start(self.search_button, False, False)
         
         scrolled_window = ScrolledWindow(0, 0)
         scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
@@ -79,9 +79,9 @@ class SongSearchUI(DialogBox):
         title = self.title_entry.entry.get_text()
         if not title.strip():
             return 
-        self.prompt_label.set_text("正在搜索歌词文件")        
+        self.prompt_label.set_text("正在搜索...")        
+        # widget.set_sensitive(False)
         utils.ThreadRun(multi_ways_query_song, self.render_song_infos, [title]).start()
-        self.prompt_label.set_text("结束")
         
     @post_gui    
     def render_song_infos(self, song_infos):
@@ -92,6 +92,8 @@ class SongSearchUI(DialogBox):
                 print e
             else:    
                 self.result_view.add_items(items)
+        self.prompt_label.set_text("搜索完成!")        
+                
         
     def download_song(self, widget):    
         pass

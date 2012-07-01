@@ -57,6 +57,7 @@ def search_song_from_ting(song_name):
         
     except Exception, e:        
         print e
+        
     else:    
         title_contents = map(convert_encoding, [ element.text_content() for element in title_elements ])
         artist_contents = map(convert_encoding, [ element.text_content() for element in artist_elements ])
