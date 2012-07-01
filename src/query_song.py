@@ -22,6 +22,7 @@
 
 import sys
 import urllib
+import re
 
 from pyquery import PyQuery as pq
 
@@ -33,6 +34,14 @@ def convert_encoding(content):
     else:
         return content.encode("utf-8", "ingnore")
 
+def repair_url(invaild_url):    
+    first_repair = invaild_url.replace("+", "").replace("'", "").replace('"', "").replace(" ", "")
+    return first_repair.replace("zhangmenshiting.","zhangmenshiting2.")
+    
+def filter_url(vaild_url):
+    if "zhangmenshiting2" in vaild_url and "xcode" in vaild_url:
+        return True
+    return False
 
 def search_song_from_ting(song_name):
     quote_song_name = urllib.quote(song_name.decode("utf-8").encode("gbk"))
@@ -94,23 +103,25 @@ def search_song_from_baidu(song_name):
         down_contents = map(convert_encoding, [ element.get("href") for element in down_elements])
         for i, title in enumerate(title_contents): 
             if ",,," in down_contents[i]:
-                continue
-            else:
-                results.append(
-                    {
-                        "title" : title,
-                        "artist": artist_contents[i],
-                        "album" : album_contents[i],
-                        "type"  : type_contents[i],
-                        "size"  : size_contents[i],
-                        "down"  : down_contents[i],
-                        "from"  : "baiduMp3"
-                        }
-                    )
+                from_type = "any"
+            else:    
+                from_type = "baidu"
+                
+            results.append(
+                {
+                    "title" : title,
+                    "artist": artist_contents[i],
+                    "album" : album_contents[i],
+                    "type"  : type_contents[i],
+                    "size"  : size_contents[i],
+                    "down"  : down_contents[i],
+                    "from"  : from_type
+                    }
+                )
         return results    
     
     
-def fetch_downinfo_from_ting(query_url):   
+def fetch_downlink_from_ting(query_url):   
     d = pq(url=query_url)
     try:
         d = pq(url=query_url)    
@@ -122,7 +133,7 @@ def fetch_downinfo_from_ting(query_url):
     else:    
         return song_url
     
-def fetch_downinfo_from_baidu(query_url):    
+def fetch_downlink_from_baidu(query_url):    
     d = pq(url=query_url)
     try:
         d = pq(url=query_url)    
@@ -133,9 +144,18 @@ def fetch_downinfo_from_baidu(query_url):
         return ""
     else:    
         return song_url
-    
+
+def fetch_downlink_from_any(query_url):    
+    web_contents = urllib.urlopen(query_url).read()
+    filter_pattern = re.compile(r"urlM\((.*?)\)")
+    results = filter_pattern.findall(web_contents)
+    if results:
+        filter_results = filter(filter_url, map(repair_url, results))
+        if len(filter_results) > 0:
+            return filter_results[0]
+    return ""    
+
 def multi_ways_query_song(query_name):    
-    print "start..."
     query_url_list = search_song_from_ting(query_name)
     if query_url_list:
         return query_url_list
