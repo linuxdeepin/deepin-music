@@ -29,22 +29,23 @@ from dtk.ui.entry import TextEntry
 from dtk.ui.button import Button
 from dtk.ui.listview import ListView
 from dtk.ui.scrolled_window import ScrolledWindow
-from dtk.ui.thread_pool import MissionThreadPool, MissionThread
 from dtk.ui.utils import get_content_size
+from dtk.ui.threads import post_gui
 
 from constant import DEFAULT_FONT_SIZE
-from query_song import search_song_urls, query_down_info 
+from query_song import multi_ways_query_song
 from widget.ui_utils import render_item_text
+import utils
 
 
 class SongSearchUI(DialogBox):
     
     def __init__(self):
-        DialogBox.__init__(self, "歌曲搜索", 600, 400, DIALOG_MASK_SINGLE_PAGE,
+        DialogBox.__init__(self, "歌曲搜索", 460, 300, DIALOG_MASK_SINGLE_PAGE,
                            modal=False, window_hint=None, close_callback=self.hide_all)
-        title_label = Label("歌曲名称:")
+        title_label = Label("   歌曲名称:")
         self.title_entry = TextEntry("那一夜")
-        self.title_entry.set_size(400, 25)
+        self.title_entry.set_size(300, 25)
         search_button = Button("搜索")
         search_button.connect("clicked", self.search_song)
         
@@ -58,7 +59,7 @@ class SongSearchUI(DialogBox):
         self.result_view = ListView()
         self.result_view.connect("double-click-item", self.double_click_cb)
         self.result_view.draw_mask = self.get_mask_func(self.result_view)
-        self.result_view.add_titles(["标题", "歌手", "专辑", "类型(大小)"])
+        self.result_view.add_titles(["标题", "歌手", "专辑", "类型", "大小"])
         scrolled_window.add_child(self.result_view)
         
         self.prompt_label = Label("")
@@ -67,6 +68,7 @@ class SongSearchUI(DialogBox):
         cancel_button = Button("关闭")
         cancel_button.connect("clicked", lambda w: self.hide_all())
         
+        self.body_box.set_spacing(5)
         self.body_box.pack_start(control_box, False, False)
         self.body_box.pack_start(scrolled_window, True, True)
         self.left_button_box.set_buttons([self.prompt_label])
@@ -78,30 +80,25 @@ class SongSearchUI(DialogBox):
         if not title.strip():
             return 
         self.prompt_label.set_text("正在搜索歌词文件")        
-        print search_song_urls(title)
+        utils.ThreadRun(multi_ways_query_song, self.render_song_infos, [title]).start()
+        self.prompt_label.set_text("结束")
+        
+    @post_gui    
+    def render_song_infos(self, song_infos):
+        if song_infos:
+            try:
+                items = [QueryInfoItem(song_info) for song_info in song_infos]
+            except Exception, e:    
+                print e
+            else:    
+                self.result_view.add_items(items)
         
     def download_song(self, widget):    
         pass
     
     
-    
     def double_click_cb(self):
         pass
-    
-    
-class FetchDownInfo(MissionThread):    
-    
-    def __init__(self, url):
-        MissionThread.__init__(self)
-        self.query_url = url
-        self.query_result = None 
-        
-    def start_mission(self):    
-        if self.query_url:
-            self.query_result = query_down_info(self.query_url)
-        
-    def get_mission_result(self):        
-        return self.query_result
     
         
 class QueryInfoItem(gobject.GObject):       
@@ -110,6 +107,7 @@ class QueryInfoItem(gobject.GObject):
     
     def __init__(self, query_info):
         super(QueryInfoItem, self).__init__()
+        self.update(query_info)
         
     def set_index(self, index):    
         self.index = index
@@ -124,8 +122,10 @@ class QueryInfoItem(gobject.GObject):
         self.title = query_info["title"]
         self.artist = query_info["artist"]
         self.album = query_info["album"]
-        self.song_attr = query_info["attr"]
-        self.downlink  = query_info["downlink"]
+        self.song_type = query_info["type"]
+        self.song_size = query_info["size"]
+        self.downlink  = query_info["down"]
+        self.song_from = query_info["from"]
     
         # Calculate item size.
         self.title_padding_x = 10
@@ -140,9 +140,14 @@ class QueryInfoItem(gobject.GObject):
         self.album_padding_y = 5
         (self.album_width, self.album_height) = get_content_size(self.album, DEFAULT_FONT_SIZE)
         
-        self.song_attr_padding_x = 10
-        self.song_attr_padding_y = 5
-        (self.song_attr_width, self.song_attr_height) = get_content_size(self.song_attr, DEFAULT_FONT_SIZE)
+        self.song_type_padding_x = 10
+        self.song_type_padding_y = 5
+        (self.song_type_width, self.song_type_height) = get_content_size(self.song_type, DEFAULT_FONT_SIZE)
+        
+        self.song_size_padding_x = 10
+        self.song_size_padding_y = 5
+        (self.song_size_width, self.song_size_height) = get_content_size(self.song_size, DEFAULT_FONT_SIZE)
+        
         
     def render_title(self, cr, rect, in_select, in_highlight):
         '''Render title.'''
@@ -162,18 +167,26 @@ class QueryInfoItem(gobject.GObject):
         rect.width -= self.album_padding_x * 2
         render_item_text(cr, self.album, rect, in_select, in_highlight)
         
-    def render_song_attr(self, cr, rect, in_select, in_highlight):
-        '''Render song_attr.'''
-        rect.x += self.song_attr_padding_x
-        rect.width -= self.song_attr_padding_x * 2
-        render_item_text(cr, self.song_attr, rect, in_select, in_highlight)
+    def render_song_type(self, cr, rect, in_select, in_highlight):
+        '''Render song_type.'''
+        rect.x += self.song_type_padding_x
+        rect.width -= self.song_type_padding_x * 2
+        render_item_text(cr, self.song_type, rect, in_select, in_highlight)
+        
+    def render_song_size(self, cr, rect, in_select, in_highlight):
+        '''Render song_size.'''
+        rect.x += self.song_size_padding_x
+        rect.width -= self.song_size_padding_x * 2
+        render_item_text(cr, self.song_size, rect, in_select, in_highlight)
+        
         
     def get_column_sizes(self):
         '''Get sizes.'''
         return [(100, self.title_height + self.title_padding_y * 2),
                 (100, self.artist_height + self.artist_padding_y * 2),
                 (100, self.album_height + self.album_padding_y * 2),
-                (100, self.song_attr_height + self.song_attr_padding_y * 2),
+                (30, self.song_type_height + self.song_type_padding_y * 2),
+                (30, self.song_size_height + self.song_size_padding_y * 2),
                 ]    
     
     def get_renders(self):
@@ -182,10 +195,12 @@ class QueryInfoItem(gobject.GObject):
             self.render_title,
             self.render_artist,
             self.render_album,
-            self.render_song_attr
+            self.render_song_type,
+            self.render_song_size,
             ]
     
     def get_downlink(self):
         return self.downlink
-
     
+    def get_from(self):
+        return self.song_from
