@@ -116,7 +116,7 @@ class FullHeaderBar(gtk.EventBox):
         timer_box.pack_start(song_timer.get_label(), False, False)
         
         main_table.attach(PlayInfo(), 0, 1, 0, 1, xoptions=gtk.FILL)
-        main_table.attach(plug_box, 0, 1, 1, 2, xoptions=gtk.FILL, ypadding=5)
+        main_table.attach(plug_box, 0, 1, 1, 2, xoptions=gtk.FILL, ypadding=3)
         main_table.attach(mainbtn_box, 1, 2, 0, 2, xoptions=gtk.FILL, xpadding=25)
         main_table.attach(self.move_box, 2, 3, 0, 2)
         main_table.attach(timer_box, 3, 4, 1, 2, xpadding=17, xoptions=gtk.FILL)
@@ -129,7 +129,7 @@ class FullHeaderBar(gtk.EventBox):
         cover_main_align.set(1, 1, 1, 1)
         cover_main_align.add(cover_main_box)
         
-        main_box = gtk.VBox(spacing=5)
+        main_box = gtk.VBox()
         main_box.pack_start(cover_main_align, True, True)
         main_box.pack_start(ProgressBox(song_timer), True, True)
         
@@ -272,7 +272,7 @@ class SimpleHeadber(gtk.EventBox):
         
         main_table.attach(PlayInfo(110), 0, 1, 0, 1, xoptions=gtk.FILL)
         main_table.attach(mainbtn_box, 1, 2, 0, 1, xpadding=15)        
-        main_table.attach(plug_box, 0, 1, 1, 2, xoptions=gtk.FILL, ypadding=2)
+        main_table.attach(plug_box, 0, 1, 1, 2, xoptions=gtk.FILL)
         main_table.attach(timer_box, 1, 2, 1, 2, xpadding=15)
         
         cover_main_box = gtk.HBox(spacing=5)
@@ -283,11 +283,10 @@ class SimpleHeadber(gtk.EventBox):
         cover_main_align.set(1, 1, 1, 1)
         cover_main_align.add(cover_main_box)
         
-        main_box = gtk.VBox(spacing=5)
+        main_box = gtk.VBox()
         main_box.pack_start(cover_main_align, True, True)
         main_box.pack_start(ProgressBox(song_timer), True, True)
         self.add(main_box)
-        
 
         # right click
         self.connect("button-press-event", self.right_click_cb)

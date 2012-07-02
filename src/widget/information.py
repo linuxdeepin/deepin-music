@@ -45,7 +45,7 @@ class PlayInfo(gtk.VBox):
         
         self.set_spacing(3)
         artist_label_align = gtk.Alignment()
-        artist_label_align.set_padding(4, 0, 0, 0)
+        artist_label_align.set_padding(1, 0, 0, 0)
         artist_label_align.set(0, 0, 1, 1)
         artist_label_align.add(self.artist_label)
         self.pack_start(artist_label_align, False, False)
