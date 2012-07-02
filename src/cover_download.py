@@ -29,6 +29,7 @@ from cover_query import multi_query_artist_engine, multi_query_album_engine
 from library import DBQuery, MediaDB
 from helper import SignalContainer
 from xdg_support import get_cache_file
+from helper import Dispatcher
 import utils
 
 
@@ -142,21 +143,16 @@ class FetchManager(SignalContainer):
                 artist_missions.append(FetchArtistCover(artist_name.replace("/", "")))
             MissionThreadPool(artist_missions, 5).start()    
             
-            
-            
-            
-            
-            
     def start_album_missions(self):        
         albums = self.get_infos_from_db("album")
         if albums:
             album_missions = []
             for album_info in albums:
                 album_missions.append(FetchAlbumCover(album_info))
-            MissionThreadPool(album_missions, 5).start()    
+            MissionThreadPool(album_missions, 5, 2000, self.feedback).start()    
             
-    def callback(self):        
-        pass
+    def feedback(self, infos):        
+        Dispatcher.reload_browser(infos)
                 
 class SimpleFetchManager(FetchManager):            
     def __init__(self):

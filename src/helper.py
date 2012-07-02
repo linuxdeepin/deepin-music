@@ -44,6 +44,7 @@ class EventDispatcher(gobject.GObject):
         "add-songs" : SIGNAL_SIMPLE,
         "quit": SIGNAL_BASE,
         "reload-lrc" : SIGNAL_SIMPLE,
+        "reload-browser" : SIGNAL_SIMPLE,
         "unlock-lyrics" : SIGNAL_BASE,
         "lock-lyrics" : SIGNAL_BASE,
         "show-desktop-page": SIGNAL_BASE,
@@ -104,6 +105,9 @@ class EventDispatcher(gobject.GObject):
         
     def change_window_mode(self, status):    
         self.emit("window-mode", status)
+        
+    def reload_browser(self, infos):    
+        self.emit("reload-browser", infos)
         
 Dispatcher = EventDispatcher()
 

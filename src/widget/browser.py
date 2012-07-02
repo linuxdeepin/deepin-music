@@ -322,6 +322,8 @@ class Browser(gtk.VBox, SignalContainer):
         body_box.pack_start(browser_box, True, True)
         self.pack_start(body_box, True, True)
         
+        Dispatcher.connect("reload-browser", self.reload_browser)
+        
     def __create_simple_button(self, name, callback):    
         button = ImageButton(
             app_theme.get_pixbuf("filter/%s_normal.png" % name),
@@ -459,21 +461,18 @@ class Browser(gtk.VBox, SignalContainer):
         self.__db_query.set_query("")                
         
     def __added_song_cb(self, db_query, songs):
-        self.reload_song_path()
-        if self.view_mode == ICON_VIEW_MODE:
-            if self.path_categorybar.get_index() == -1:
-                self.reload_filter_view(self.categorybar_status)
-            else:    
-                self.update_path_filter_view(self.path_combo_box.current_status)
-        else:        
-            if self.path_categorybar.get_index() == -1:
-                if self.current_icon_item:
-                    self.update_category_songs_view(self.current_icon_item)
-            else:        
-                if self.current_icon_item:
-                    self.update_path_songs_view(self.current_icon_item)
+        if songs:
+            self.reload_all_items()
 
     def __removed_song_cb(self, db_query, songs):
+        if songs:
+            self.reload_all_items()
+            
+    def reload_browser(self,  obj, infos):
+        if infos:
+            self.reload_all_items()
+                    
+    def reload_all_items(self):                
         self.reload_song_path()
         if self.view_mode == ICON_VIEW_MODE:
             if self.path_categorybar.get_index() == -1:
@@ -487,6 +486,7 @@ class Browser(gtk.VBox, SignalContainer):
             else:        
                 if self.current_icon_item:
                     self.update_path_songs_view(self.current_icon_item)
+                    
     
     def __update_tag_view(self, db_query, tag, values):
         pass
@@ -495,6 +495,7 @@ class Browser(gtk.VBox, SignalContainer):
         #         self.reload_filter_view(self.categorybar_status)
         #     else:    
         #         self.update_path_filter_view(self.path_combo_box.current_status)
+    
     
     def __quick_update(self, db_query, songs):
         pass
