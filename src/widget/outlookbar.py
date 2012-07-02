@@ -40,8 +40,8 @@ class BaseBar(gtk.VBox):
     
         
     def set_index(self, index):    
+        self.current_index = index        
         self.queue_draw()
-        self.current_index = index
         
     def get_index(self):    
         return self.current_index
@@ -294,12 +294,12 @@ class SimpleItem(gtk.Button):
         self.connect("clicked", lambda w: self.wrap_item_clicked_action())
         
     def wrap_item_clicked_action(self):   
+        self.set_index(self.index)            
         if self.clicked_callback:
             if self.args:
                 self.clicked_callback(*self.args)
             else:    
                 self.clicked_callback()
-        self.set_index(self.index)    
         
     def expose_simple_item(self, widget, event):    
         

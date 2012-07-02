@@ -470,10 +470,11 @@ class Browser(gtk.VBox, SignalContainer):
             
     def reload_browser(self,  obj, infos):
         if infos:
-            self.reload_all_items()
+            self.reload_all_items(False)
                     
-    def reload_all_items(self):                
-        self.reload_song_path()
+    def reload_all_items(self, reload_path=True):                
+        if reload_path:
+            self.reload_song_path()
         if self.view_mode == ICON_VIEW_MODE:
             if self.path_categorybar.get_index() == -1:
                 self.reload_filter_view(self.categorybar_status)

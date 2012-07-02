@@ -578,8 +578,8 @@ def download(remote_uri, local_uri, net_encode=None, buffer_len=4096, timeout=DE
         handle_read.close()    
         handle_write.close()
         logger.logdebug("download %s finish." % remote_uri)
-    except:
-        logger.loginfo("Error while downloading %s", remote_uri)
+    except Exception, e:
+        logger.loginfo("Error while downloading %s, %s", remote_uri, e)
         try:
             unlink(local_uri)
         except:    
