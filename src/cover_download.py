@@ -24,7 +24,9 @@ import os
 import gtk
 import gobject
 
+from dtk.ui.threads import post_gui
 from dtk.ui.thread_pool import MissionThreadPool, MissionThread
+
 from cover_query import multi_query_artist_engine, multi_query_album_engine
 from library import DBQuery, MediaDB
 from helper import SignalContainer
@@ -151,6 +153,7 @@ class FetchManager(SignalContainer):
                 album_missions.append(FetchAlbumCover(album_info))
             MissionThreadPool(album_missions, 5, 2000, self.feedback).start()    
             
+    @post_gui        
     def feedback(self, infos):        
         Dispatcher.reload_browser(infos)
                 

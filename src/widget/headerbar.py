@@ -155,12 +155,12 @@ class FullHeaderBar(gtk.EventBox):
             
     def __create_simple_toggle_button(self, name, callback):
         toggle_button = ToggleButton(
-            app_theme.get_pixbuf("header/%s_inactive_normal.png" % name),
-            app_theme.get_pixbuf("header/%s_active_normal.png" % name),
-            app_theme.get_pixbuf("header/%s_inactive_hover.png" % name),
-            app_theme.get_pixbuf("header/%s_active_hover.png" % name),
-            app_theme.get_pixbuf("header/%s_inactive_press.png" % name),
-            app_theme.get_pixbuf("header/%s_active_press.png" % name),
+            app_theme.get_pixbuf("header/cn_%s_inactive_normal.png" % name),
+            app_theme.get_pixbuf("header/cn_%s_active_normal.png" % name),
+            app_theme.get_pixbuf("header/cn_%s_inactive_hover.png" % name),
+            app_theme.get_pixbuf("header/cn_%s_active_hover.png" % name),
+            app_theme.get_pixbuf("header/cn_%s_inactive_press.png" % name),
+            app_theme.get_pixbuf("header/cn_%s_active_press.png" % name),
             )
         if callback:
             toggle_button.connect("toggled", callback)
@@ -309,12 +309,12 @@ class SimpleHeadber(gtk.EventBox):
         
     def __create_simple_toggle_button(self, name, callback):
         toggle_button = ToggleButton(
-            app_theme.get_pixbuf("header/%s_inactive_normal.png" % name),
-            app_theme.get_pixbuf("header/%s_active_normal.png" % name),
-            app_theme.get_pixbuf("header/%s_inactive_hover.png" % name),
-            app_theme.get_pixbuf("header/%s_active_hover.png" % name),
-            app_theme.get_pixbuf("header/%s_inactive_press.png" % name),
-            app_theme.get_pixbuf("header/%s_active_press.png" % name),
+            app_theme.get_pixbuf("header/cn_%s_inactive_normal.png" % name),
+            app_theme.get_pixbuf("header/cn_%s_active_normal.png" % name),
+            app_theme.get_pixbuf("header/cn_%s_inactive_hover.png" % name),
+            app_theme.get_pixbuf("header/cn_%s_active_hover.png" % name),
+            app_theme.get_pixbuf("header/cn_%s_inactive_press.png" % name),
+            app_theme.get_pixbuf("header/cn_%s_active_press.png" % name),
             )
         if callback:
             toggle_button.connect("toggled", callback)
