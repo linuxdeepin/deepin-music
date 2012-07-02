@@ -44,7 +44,7 @@ def show_splash(show=True):
 
     splash_image = gtk.Image()
     splash_image.set_visible(True)
-    splash_image.set_from_pixbuf(app_theme.get_pixbuf("skin/splash.png").get_pixbuf())
+    splash_image.set_from_pixbuf(app_theme.get_pixbuf("splash/cn_splash.png").get_pixbuf())
     splash_window.add(splash_image)
     
     # Show the splash screen without causing startup notification.
