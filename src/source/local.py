@@ -51,23 +51,39 @@ class ImportFolderJob(Job):
             self.logerror("Failed load %s", uri)
             
     def job(self):        
-        '''job'''
         dirs = self.dirs
+        added = []
         db_uris = set(MediaDB.get_all_uris())
         alldirs = [ utils.get_path_from_uri(each_dir) for each_dir in dirs ]
         
         for mdir in alldirs:
             for dirpath, dirs, names in os.walk(mdir):
-                for name in names:
-                    if name[0] != "." and common.file_is_supported(os.path.join(dirpath, name)):
-                        valid_file = os.path.join(dirpath, name)
-                        real_file = os.path.realpath(valid_file)
-                        uri = utils.get_uri_from_path(real_file)
-                        if uri not in db_uris:
-                            self.add_to_library(uri)
-                        elif os.path.getctime(real_file) > MediaDB.get_song(uri).get("#ctime"):     
-                            self.add_to_library(uri)
-                    yield os.path.join(dirpath, name)        
+                [ dirs.remove(each_dir) for each_dir in dirs if each_dir[0] == "." ]
+                for each_dir in dirs:
+                    full_path_dir  = os.path.join(dirpath, each_dir)
+                    if os.path.islink(full_path_dir):
+                        alldirs.append(os.path.realpath(full_path_dir))
+
+                valid_files = []    
+                for name in names:    
+                    full_path_file = os.path.join(dirpath, name)
+                    if name[0] != "." and common.file_is_supported(full_path_file):
+                        valid_files.append(full_path_file)
+                    yield full_path_file    
+                        
+                valid_files = set(valid_files)    
+                for each_file in valid_files:
+                    real_file = os.path.realpath(each_file)
+                    uri = utils.get_uri_from_path(real_file)
+                    if real_file not in db_uris:
+                        added.append(uri)
+                    elif os.path.getctime(real_file) > MediaDB.get_song(uri).get("#ctime"):
+                        added.append(uri)
+
+        added = set(added)
+        for uri in added:
+            self.add_to_library(uri)
+            yield utils.get_path_from_uri(uri)
                     
 class ImportPlaylistJob(Job):
     def __init__(self, dirs=None, callback=None, pos=None, sort=False):
@@ -78,6 +94,8 @@ class ImportPlaylistJob(Job):
                 
         if dirs:        
             self.message = "Reading directories..."
+            if not isinstance(dirs, list):
+                dirs = [ dirs ]
             self.dirs = dirs
             super(ImportPlaylistJob, self).__init__()
             
@@ -97,34 +115,52 @@ class ImportPlaylistJob(Job):
     def job(self):        
         '''job'''
         dirs = self.dirs
+        added = []
         db_uris = set(MediaDB.get_all_uris())
         alldirs = [ utils.get_path_from_uri(each_dir) for each_dir in dirs ]
-        start = time.time()
         
         for mdir in alldirs:
             for dirpath, dirs, names in os.walk(mdir):
-                for name in names:
-                    if name[0] != "." and common.file_is_supported(os.path.join(dirpath, name)):
-                        valid_file = os.path.join(dirpath, name)
-                        real_file = os.path.realpath(valid_file)
-                        uri = utils.get_uri_from_path(real_file)
-                        if uri not in db_uris:
-                            self.__get_or_create_song(uri)
-                        elif os.path.getctime(real_file) > MediaDB.get_song(uri).get("#ctime"):     
-                            self.__get_or_create_song(uri)
-                        end = time.time()    
-                        if end - start > 0.2:
-                            self.callback(self.add_song_cache, self.pos, self.sort)
-                            self.pos += len(self.add_song_cache)
-                            del self.add_song_cache[:]
-                            start = time.time()
-                        else:    
-                            end = time.time()
-                            
-                    yield os.path.join(dirpath, name)        
-                    
+                [ dirs.remove(each_dir) for each_dir in dirs if each_dir[0] == "." ]
+                for each_dir in dirs:
+                    full_path_dir  = os.path.join(dirpath, each_dir)
+                    if os.path.islink(full_path_dir):
+                        alldirs.append(os.path.realpath(full_path_dir))
+
+                valid_files = []    
+                for name in names:    
+                    full_path_file = os.path.join(dirpath, name)
+                    if name[0] != "." and common.file_is_supported(full_path_file):
+                        valid_files.append(full_path_file)
+                    yield full_path_file    
+                        
+                valid_files = set(valid_files)    
+                for each_file in valid_files:
+                    real_file = os.path.realpath(each_file)
+                    uri = utils.get_uri_from_path(real_file)
+                    if real_file not in db_uris:
+                        added.append(uri)
+                    elif os.path.getctime(real_file) > MediaDB.get_song(uri).get("#ctime"):
+                        added.append(uri)
+        
+        added = set(added)
+        start = time.time()                
+        for uri in added:
+            self.__get_or_create_song(uri)
+            end = time.time()
+            if end - start > 0.5:
+               self.callback(self.add_song_cache, self.pos, self.sort)
+               self.pos += len(self.add_song_cache)
+               del self.add_song_cache[:]
+               start = time.time()
+            else:    
+               end = time.time()
+               
+            yield utils.get_path_from_uri(uri)
+ 
         if self.add_song_cache:            
             self.callback(self.add_song_cache, self.pos, self.sort)
+        
         
 class ImportFileJob(object):        
     '''import file to db'''

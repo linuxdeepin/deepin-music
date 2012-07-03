@@ -79,6 +79,7 @@ class DeepinMusic(gobject.GObject, Logger):
         self.window.is_disable_window_maximized = self.is_disable_window_maximized
         utils.set_main_window(self)
         
+        self.tray_icon = TrayIcon(self)        
         self.lyrics_display = LyricsModule()
         self.playlist_ui = PlaylistUI()    
         self.full_header_bar = FullHeaderBar()
@@ -146,10 +147,6 @@ class DeepinMusic(gobject.GObject, Logger):
         Dispatcher.connect("show-setting", lambda w : self.preference_dialog.show_all())
         Dispatcher.connect("show-desktop-page", lambda w: self.preference_dialog.show_desktop_lyrics_page())
         Dispatcher.connect("show-scroll-page", lambda w: self.preference_dialog.show_scroll_lyrics_page())
-        
-        self.tray_icon = None
-        if config.get("setting", "use_tray", "true") == "true":    
-            self.tray_icon = TrayIcon(self)
         
         gobject.idle_add(self.ready)
         

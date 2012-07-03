@@ -24,6 +24,7 @@ import gtk
 import gobject
 import random
 import time
+import os
 
 from collections import OrderedDict
 from dtk.ui.listview import ListView
@@ -354,7 +355,11 @@ class SongView(ListView):
             if selection.target == "text/deepin-songs" and selection.data:
                 self.add_uris(selection.data.splitlines(), pos, False)
             elif selection.target == "text/uri-list":    
-                utils.async_parse_uris(selection.get_uris(), True, False, self.add_uris, pos)
+                selected_uris = selection.get_uris()
+                if len(selected_uris) == 1 and os.path.isdir(utils.get_path_from_uri(selected_uris[0])):
+                    self.recursion_add_dir(utils.get_path_from_uri(selected_uris[0]))
+                else:
+                    utils.async_parse_uris(selection.get_uris(), True, False, self.add_uris, pos)
             elif selection.target == "text/plain":    
                 raw_path = selection.data
                 path = eval("u" + repr(raw_path).replace("\\\\", "\\"))
@@ -448,9 +453,9 @@ class SongView(ListView):
         if select_dir:
             utils.async_parse_uris([select_dir], True, False, self.add_uris)
             
-    def recursion_add_dir(self):        
+    def recursion_add_dir(self, init_dir=None):        
         pos = len(self.items)
-        ImportPlaylistJob(None, self.render_song, pos, False)
+        ImportPlaylistJob(init_dir, self.render_song, pos, False)
             
     def async_add_uris(self, uris, follow_folder=True):        
         if not isinstance(uris, (list, tuple, set)):
