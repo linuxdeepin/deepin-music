@@ -461,8 +461,9 @@ class Browser(gtk.VBox, SignalContainer):
         self.__db_query.set_query("")                
         
     def __added_song_cb(self, db_query, songs):
-        if songs:
-            self.reload_all_items()
+        pass
+        # if songs:
+        #     self.reload_all_items()
 
     def __removed_song_cb(self, db_query, songs):
         if songs:

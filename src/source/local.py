@@ -23,6 +23,7 @@
 import os
 import traceback
 import time
+import gobject
 
 import utils
 import common
@@ -145,22 +146,23 @@ class ImportPlaylistJob(Job):
         
         added = set(added)
         start = time.time()                
-        for uri in added:
-            self.__get_or_create_song(uri)
-            end = time.time()
-            if end - start > 0.5:
-               self.callback(self.add_song_cache, self.pos, self.sort)
-               self.pos += len(self.add_song_cache)
-               del self.add_song_cache[:]
-               start = time.time()
-            else:    
-               end = time.time()
+        # for uri in added:
+            # self.__get_or_create_song(uri)
+            # end = time.time()
+            # if (end - start) * 1000 > 1000:
+            #     self.callback(self.add_song_cache, self.pos, self.sort)
+            #     self.pos += len(self.add_song_cache)
+            #     del self.add_song_cache[:]
+            #     start = time.time()
+            # else:    
+            #     end = time.time()
                
-            yield utils.get_path_from_uri(uri)
+            # yield utils.get_path_from_uri(uri)
  
-        if self.add_song_cache:            
-            self.callback(self.add_song_cache, self.pos, self.sort)
-        
+        # if self.add_song_cache:            
+        if added:
+            gobject.idle_add(self.callback, added, self.pos, self.sort)
+            # self.callback(self.add_song_cache, self.pos, self.sort)
         
 class ImportFileJob(object):        
     '''import file to db'''

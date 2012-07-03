@@ -29,6 +29,7 @@ from dtk.ui.label import Label
 
 from logger import Logger
 from widget.skin import app_theme
+from widget.ui_utils import draw_alpha_mask
 
 class JobsManager(gtk.HBox):
     __jobs = []
@@ -36,6 +37,7 @@ class JobsManager(gtk.HBox):
     
     def __init__(self):
         super(JobsManager,self).__init__(spacing=6)
+        self.connect("expose-event", self.draw_bg_mask)
         
         self.jobs_label = Label("0 " + "个任务在等待!", app_theme.get_color("labelText"), 8)
         self.jobs_label.set_size_request(150, 12)
@@ -69,6 +71,11 @@ class JobsManager(gtk.HBox):
         self.hide()
         
         self.jobs_label.hide_all()
+        
+    def draw_bg_mask(self, widget, event):    
+        cr = widget.window.cairo_create()
+        rect = widget.allocation
+        draw_alpha_mask(cr, rect.x, rect.y, rect.width, rect.height, "frameLight")
         
     def __create_simple_button(self, name, callback):    
         button = ImageButton(
