@@ -322,7 +322,9 @@ class Browser(gtk.VBox, SignalContainer):
         body_box.pack_start(browser_box, True, True)
         self.pack_start(body_box, True, True)
         
+        self.reload_flag = False
         Dispatcher.connect("reload-browser", self.reload_browser)
+        gobject.timeout_add(5000, self.interval_reload_browser)
         
     def __create_simple_button(self, name, callback):    
         button = ImageButton(
@@ -461,17 +463,21 @@ class Browser(gtk.VBox, SignalContainer):
         self.__db_query.set_query("")                
         
     def __added_song_cb(self, db_query, songs):
-        pass
-        # if songs:
-        #     self.reload_all_items()
+        self.reload_flag = True
 
     def __removed_song_cb(self, db_query, songs):
         if songs:
-            self.reload_all_items()
+            self.reload_flag = True
             
     def reload_browser(self,  obj, infos):
         if infos:
-            self.reload_all_items(False)
+            self.reload_flag = True
+            
+    def interval_reload_browser(self):        
+        if self.reload_flag:
+            self.reload_all_items()
+            self.reload_flag = False    
+        return True    
                     
     def reload_all_items(self, reload_path=True):                
         if reload_path:
@@ -488,16 +494,10 @@ class Browser(gtk.VBox, SignalContainer):
             else:        
                 if self.current_icon_item:
                     self.update_path_songs_view(self.current_icon_item)
-                    
     
     def __update_tag_view(self, db_query, tag, values):
-        pass
-        # if self.view_mode == ICON_VIEW_MODE:
-        #     if self.path_categorybar.get_index() == -1:
-        #         self.reload_filter_view(self.categorybar_status)
-        #     else:    
-        #         self.update_path_filter_view(self.path_combo_box.current_status)
-    
+        if values:
+            self.reload_flag = True
     
     def __quick_update(self, db_query, songs):
         pass

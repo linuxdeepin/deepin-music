@@ -572,7 +572,7 @@ class DBQuery(gobject.GObject, Logger):
         self.__condition_query = Condition()
         self.__query_id = 0
         self.__reset_signal_queue()
-        gobject.timeout_add(SIGNAL_DB_QUERY_FIRED, self.__fire_queued_signal)
+        gobject.timeout_add(SIGNAL_DB_QUERY_FIRED * 20 * 2, self.__fire_queued_signal)
         
     def get_type(self):   
         return self.__type

@@ -123,7 +123,10 @@ class FetchManager(SignalContainer):
         if tag == "artist":
             all_artist_keys = infos_dict.keys()
             if all_artist_keys:
-                return [artist.replace("/", "") for artist in all_artist_keys if not os.path.exists(get_cover_save_path(artist.replace("/", ""))) and artist]
+                artist_results = [artist.replace("/", "") for artist in all_artist_keys if not os.path.exists(get_cover_save_path(artist.replace("/", ""))) and artist]
+                artist_results.sort()
+                artist_results.reverse()
+                return artist_results
             return []
             
         elif tag == "album":
@@ -133,6 +136,8 @@ class FetchManager(SignalContainer):
                 album_name = key.replace("/", "")
                 if not os.path.exists(get_cover_save_path("%s-%s" % (artist_name, album_name))):
                     results.append((artist_name, album_name))
+            results.sort()        
+            results.reverse()
             return results        
         else:
             return []
