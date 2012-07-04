@@ -29,6 +29,8 @@ from dtk.ui.label import Label
 from dtk.ui.draw import draw_vlinear, draw_pixbuf, draw_text
 from dtk.ui.utils import propagate_expose, container_remove_all, get_content_size
 from dtk.ui.constant import ALIGN_START, ALIGN_MIDDLE
+import dtk.ui.tooltip as Tooltip
+
 from widget.skin import app_theme
 from widget.ui_utils import draw_single_mask
 
@@ -286,6 +288,8 @@ class SimpleItem(gtk.Button):
             self.args = element[4:]
             
         pixbuf_width = self.normal_dpixbuf.get_pixbuf().get_width()
+        if self.content:
+            Tooltip.text(self, self.content)
         self.font_offset += pixbuf_width
         self.x_align = x_align
         

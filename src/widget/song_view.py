@@ -159,7 +159,7 @@ class SongView(ListView):
         valid_items = self.get_valid_items()
         if not valid_items: return None
         
-        if self.highlight_item != None:
+        if self.highlight_item:
             if self.highlight_item in valid_items:
                 current_index = valid_items.index(self.highlight_item)
                 next_index = current_index + 1
@@ -179,13 +179,15 @@ class SongView(ListView):
     def get_manual_song(self):                    
         valid_items = self.get_valid_items()
         if not valid_items: return None
-        if self.highlight_item != None:
+        if self.highlight_item:
             if self.highlight_item in valid_items:
                 current_index = valid_items.index(self.highlight_item)
                 next_index = current_index + 1
                 if next_index > len(valid_items) - 1:
                     next_index = 0
                 highlight_item = valid_items[next_index]    
+            else:    
+                highlight_item = valid_items[0]
         else:        
             highlight_item = valid_items[0]
         self.set_highlight(highlight_item)    

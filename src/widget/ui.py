@@ -28,7 +28,7 @@ from dtk.ui.titlebar import Titlebar
 from dtk.ui.utils import move_window
 from dtk.ui.entry import TextEntry
 from dtk.ui.button import ImageButton
-from dtk.ui.draw import draw_vlinear
+from dtk.ui.draw import draw_pixbuf, draw_text
 from widget.skin import app_theme
 from widget.ui_utils import draw_alpha_mask
 from helper import Dispatcher
@@ -120,3 +120,55 @@ class ProgressBox(gtk.VBox):
             last_width = rect.width - (start_x - rect.x)    
             draw_alpha_mask(cr, start_x, start_y, last_width - 2, rect.height - 8, "layoutLast")
         return False
+
+    
+class ComplexButton(gtk.Button):    
+    
+    def __init__(self, bg_group, icon, content, left_padding=20, label_padding=10, font_size=9):
+        super(ComplexButton, self).__init__()
+        
+        # Init.
+        self.normal_bg, self.hover_bg, self.press_bg = bg_group
+        self.button_icon = icon
+        self.content = content
+        self.font_size = font_size
+        self.left_padding = left_padding
+        self.label_padding = label_padding
+        
+        # Set size.
+        self.set_button_size()
+        self.connect("expose-event", self.expose_button)
+        
+    def set_button_size(self):    
+        request_width  = self.normal_bg.get_pixbuf().get_width()
+        request_height = self.normal_bg.get_pixbuf().get_height()
+        self.set_size_request(request_width, request_height)
+        
+    def expose_button(self, widget, event):    
+        
+        cr = widget.window.cairo_create()
+        rect = widget.allocation
+        
+        if widget.state == gtk.STATE_NORMAL:
+            bg_pixbuf = self.normal_bg.get_pixbuf()
+        elif widget.state == gtk.STATE_PRELIGHT:    
+            bg_pixbuf = self.hover_bg.get_pixbuf()
+        elif widget.state == gtk.STATE_ACTIVE:    
+            bg_pixbuf = self.press_bg.get_pixbuf()
+            
+        icon_pixbuf = self.button_icon.get_pixbuf()    
+            
+        icon_y = rect.y + (rect.height - icon_pixbuf.get_height()) / 2    
+        
+        # Draw bg.
+        draw_pixbuf(cr, bg_pixbuf, rect.x, rect.y)
+        
+        # Draw icon.
+        draw_pixbuf(cr, icon_pixbuf, rect.x + self.left_padding, icon_y)
+        
+        # Draw label.
+        draw_text(cr, self.content, rect.x + self.left_padding + self.label_padding + icon_pixbuf.get_width(),
+                  rect.y, rect.width - self.left_padding - self.label_padding - icon_pixbuf.get_width(), rect.height,
+                  self.font_size)
+        
+        return True

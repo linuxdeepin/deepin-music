@@ -23,6 +23,7 @@
 
 import gtk
 from dtk.ui.button import ToggleButton, ImageButton
+import dtk.ui.tooltip as Tooltip
 # from dtk.ui.utils import foreach_recursive
 
 from player import Player
@@ -70,12 +71,14 @@ class FullHeaderBar(gtk.EventBox):
                                    play_hover_pixbuf, pause_hover_pixbuf,
                                    play_press_pixbuf, pause_press_pixbuf,
                                    )
+        Tooltip.text(self.__play, "播放/暂停")
+        
         self.__play.show_all()
 
         self.__id_signal_play = self.__play.connect("toggled", lambda w: Player.playpause())
         
-        prev_button = self.__create_button("previous_large")
-        next_button = self.__create_button("next_large")
+        prev_button = self.__create_button("previous_large", "上一首")
+        next_button = self.__create_button("next_large", "下一首")
         
         self.vol = VolumeSlider()
         song_timer = SongTimer()
@@ -104,8 +107,9 @@ class FullHeaderBar(gtk.EventBox):
         
         # time box.
         self.lyrics_button = self.__create_simple_toggle_button("lyrics", self.change_lyrics_status)        
+        Tooltip.text(self.lyrics_button, "打开/关闭歌词")
         
-        plug_box = gtk.HBox(spacing=9)       
+        plug_box = gtk.HBox(spacing=12)       
         plug_box.pack_start(self.lyrics_button, False, False)
         plug_box.pack_start(self.vol, False, False)        
         
@@ -182,6 +186,8 @@ class FullHeaderBar(gtk.EventBox):
             app_theme.get_pixbuf("action/%s_press.png" % name),
             )
         button.connect("clicked", self.player_control, name)
+        if tip_msg:
+            Tooltip.text(button, tip_msg)
         # todo tip
         return button
     
@@ -225,12 +231,13 @@ class SimpleHeadber(gtk.EventBox):
                                    play_hover_pixbuf, pause_hover_pixbuf,
                                    play_press_pixbuf, pause_press_pixbuf,
                                    )
+        Tooltip.text(self.__play, "播放/暂停")
         self.__play.show_all()
 
         self.__id_signal_play = self.__play.connect("toggled", lambda w: Player.playpause())
         
-        prev_button = self.__create_button("previous")
-        next_button = self.__create_button("next")
+        prev_button = self.__create_button("previous", "上一首")
+        next_button = self.__create_button("next", "下一首")
         
         self.vol = VolumeSlider()
         song_timer = SongTimer()
@@ -259,8 +266,9 @@ class SimpleHeadber(gtk.EventBox):
         
         # time box.
         self.lyrics_button = self.__create_simple_toggle_button("lyrics", self.change_lyrics_status)        
+        Tooltip.text(self.lyrics_button, "打开/关闭歌词")
         
-        plug_box = gtk.HBox(spacing=9)       
+        plug_box = gtk.HBox(spacing=12)       
         plug_box.pack_start(self.lyrics_button, False, False)
         plug_box.pack_start(self.vol, False, False)        
         
@@ -335,7 +343,8 @@ class SimpleHeadber(gtk.EventBox):
             app_theme.get_pixbuf("action/%s_press.png" % name),
             )
         button.connect("clicked", self.player_control, name)
-        # todo tip
+        if tip_msg:
+            Tooltip.text(button, tip_msg)
         return button
     
     def player_control(self, button, name):

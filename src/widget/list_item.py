@@ -25,6 +25,9 @@ import gobject
 from dtk.ui.scrolled_window import ScrolledWindow
 
 from widget.song_view import SongView
+from widget.ui_utils import switch_tab as switch_box
+from widget.ui import ComplexButton
+from widget.skin import app_theme
 
 DEFAULT_FONT_SIZE = 8
 
@@ -34,7 +37,31 @@ class PlaylistItem(gobject.GObject):
     def __init__(self, playlist):
         '''Init song item.'''
         self.item_id = None
+        self.main_box = gtk.HBox()        
+        self.create_jobs_box()
         self.update(playlist)
+
+    def create_jobs_box(self):    
+        jobs_box = gtk.VBox(spacing=5)
+        self.file_job_button = self.create_job_button("add_file", "添加文件")
+        self.dir_job_button = self.create_job_button("add_dir", "添加文件夹")
+        jobs_box.pack_start(self.file_job_button, False, False)
+        jobs_box.pack_start(self.dir_job_button, False, False)
+        self.jobs_align = gtk.Alignment()
+        self.jobs_align.set(1.0, 1.0, 0.5, 0.5)
+        self.jobs_align.add(jobs_box)
+        
+    def create_job_button(self, icon_name, content, callback=None):    
+        button = ComplexButton(
+            [app_theme.get_pixbuf("jobs/small_normal.png"),
+             app_theme.get_pixbuf("jobs/small_hover.png"),
+             app_theme.get_pixbuf("jobs/small_press.png")],
+            app_theme.get_pixbuf("jobs/%s.png" % icon_name),
+            content
+            )
+        if callback:
+            button.connect("clicked", callback)
+        return button    
         
     def set_title(self, value):    
         self.title = value
@@ -67,7 +94,11 @@ class PlaylistItem(gobject.GObject):
         self.title = playlist.get_name()
         
     def get_list_widget(self):
-        return self.scrolled_window
+        if self.get_songs():
+            switch_box(self.main_box, self.scrolled_window)
+        else:    
+            switch_box(self.main_box, self.jobs_align)
+        return self.main_box    
     
     def get_songs(self):
         if self.song_view:

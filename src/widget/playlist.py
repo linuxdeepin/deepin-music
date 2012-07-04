@@ -30,6 +30,7 @@ from dtk.ui.menu import Menu
 from dtk.ui.draw import draw_vlinear
 from dtk.ui.treeview import TreeView
 from dtk.ui.dialog import InputDialog
+import dtk.ui.tooltip as Tooltip
 
 from library import MediaDB, Playlist
 from helper import Dispatcher
@@ -69,11 +70,11 @@ class PlaylistUI(gtk.VBox):
         entry_align.connect("expose-event", self.expose_entry_mask)
         
         self.toolbar_box = gtk.HBox(spacing=50)
-        self.search_button = self.__create_simple_toggle_button("search", self.show_text_entry)
-        self.__create_simple_button("list", self.popup_list_menu)
-        self.__create_simple_button("add", self.popup_add_menu)
-        self.__create_simple_button("sort", self.popup_sort_menu)
-        self.__create_simple_button("delete", self.popup_delete_menu)
+        self.search_button = self.__create_simple_toggle_button("search", self.show_text_entry, "搜索歌曲")
+        self.__create_simple_button("list", self.popup_list_menu, "列表操作")
+        self.__create_simple_button("add", self.popup_add_menu, "添加文件")
+        self.__create_simple_button("sort", self.popup_sort_menu, "播放模式")
+        self.__create_simple_button("delete", self.popup_delete_menu, "删除")
         
         toolbar_align = gtk.Alignment()
         toolbar_align.set_padding(6, 6, 24, 24)
@@ -173,7 +174,8 @@ class PlaylistUI(gtk.VBox):
             self.current_item.song_view.add_songs(songs)
         
     def get_selected_song_view(self):    
-        return self.current_item.song_view
+        pass
+        # return self.current_item.song_view
             
     def search_cb(self, widget, text):        
         if not self.search_flag:
@@ -218,22 +220,29 @@ class PlaylistUI(gtk.VBox):
     def reset_search_entry(self):        
         self.search_button.set_active(False)
             
-    def __create_simple_toggle_button(self, name, callback):        
+    def __create_simple_toggle_button(self, name, callback, tip_msg=""):        
         toggle_button = ToggleButton(
             app_theme.get_pixbuf("toolbar/%s_normal.png" % name),
             app_theme.get_pixbuf("toolbar/%s_press.png" % name),
             )
         toggle_button.connect("toggled", callback)
+        
+        if tip_msg:
+            Tooltip.text(toggle_button, tip_msg)
+            
         self.toolbar_box.pack_start(toggle_button, False, False)
         return toggle_button
             
-    def __create_simple_button(self, name, callback):        
+    def __create_simple_button(self, name, callback, tip_msg=""):        
         button = ImageButton(
             app_theme.get_pixbuf("toolbar/%s_normal.png" % name),
             app_theme.get_pixbuf("toolbar/%s_hover.png" % name),
             app_theme.get_pixbuf("toolbar/%s_press.png" % name),
             )
         button.connect("button-press-event", callback)
+        if tip_msg:
+            Tooltip.text(button, tip_msg)
+            
         self.toolbar_box.pack_start(button, False, False)
         return button
                                                         

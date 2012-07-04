@@ -57,33 +57,45 @@ COVER_PATTERNS = [
     "*.jpg","*.png",
     ]
 
-GENRE_PATTERNS  = {
-    "blue" : "blues.png", "布鲁"   : "blues.png",
-    "class" : "classical.png", "古典"   : "classical.png",
-    "country" : "country.png", "乡村" : "country.png",
-    "easy" : "easy_listen.png", "listen" : "easy_listen.png",
-    "轻" : "easy_listen.png",  "electonic" : "electonic.png",
-    "电子" : "electonic.png",    "folk" : "folk.png",
-    "民谣" : "folk.png",    "interna" : "international.png",
-    "国际" : "international.png",    "jazz" : "jazz.png",
-    "爵士" : "jazz.png",    "latin" : "latin.png",
-    "拉丁" : "latin.png", 
-    "new" : "new_age.png",
-    "age" : "new_age.png",
-    "pop" : "pop_rock.png",
-    "rock" : "pop_rock.png",
-    "流行" : "pop_rock.png",
-    "摇滚" : "pop_rock.png",
-    "rap" : "rap.png",
-    "说唱" : "rap.png",
-    "r&b" : "r_b.png",
-    "节奏" : "r_b.png",
-    "reggae" : "reggae.png",
-    "雷鬼" : "reggae.png",
-    "stage" : "stage_screen.png",
-    "screen" : "stage_screen.png",
-    "舞台" : "stage_screen.png",
-    "影视" : "stage_screen.png",}
+GENRE_DICT = {
+	"blues.png" : ["蓝调", "布鲁斯", "blue"],
+	"classical.png" : ["古典", "classical"],
+	"country.png" : ["乡村", "兰草", "牛仔", "小酒馆", 
+			 "country", "americana", "bluegrass", "cowboy"],
+	"easy_listen.png" : ["轻音乐", "异域", "沙发", "管弦乐", 
+			     "orchestral", "lounge", "exotica", "easy"],
+	"electonic.png" : ["电子", "大节拍", "迪斯科", 
+			   "缓拍", "迷幻", "科技",
+			   "techno", "trance", "electronic"
+			   "disco", "beat"],
+	"folk.png" : ["民谣", "政治", "传统", "城市",
+		      "political", "traditional", "folk", "chanson"],
+	"international.png" : ["国际", "凯尔特", "夏威夷", "印度古典", "戏曲", "世界",
+			       "曲艺", "民乐", "民歌", "岛呗", "同人", "演歌",
+			       "shima", "enka", 
+			       "hawaiian", "celtic", "international"],
+	"jazz.png" : ["爵士", "布基伍基", "波普", "摇摆乐", 
+		      "swing", "bop", "boogie-woogie", "jazz"],
+	"latin.png" : ["拉丁", "巴萨诺瓦", "恰朗加", "伦巴", "萨尔萨", "热带",
+		       "bossa", "charanga", "latin", "rumba", "salsa", "tropical"],
+	"new_age.png" : ["新世纪", "氛围", "冥想", "放松", "新原音", "器乐独奏", "太空乐",
+			 "精神", "部落",
+			 "acoustic", "instrumental", "space",
+			 "spiritual", "tribal",
+			 "meditation", "relaxation", "age", "ambient"],
+	"pop_rock.png" : ["摇滚", "流行", "金属", "哥特", "朋克", "rock", "pop", "metal",
+			  "britpop", "dance-pop",
+			  "folk-rock", "grunge", "nu-metal", "punk", 
+			  "post-punk", "post-rock", "psychedelic", 
+			  "shoegaze"],
+	"rap.png" : ["说唱", "rap"],
+	"r_b.png" : ["节奏布鲁斯", "放克", "灵魂", "嘻哈", "r&b", "drum", "doo", "funk", "dotown", 
+		     "soul", "urban", "hip-hop"],
+	"reggae.png" : ["雷鬼", "雷嘎", "洛克丝黛蒂", "Ska", "大伯", "蒙托", 
+			"ska", "rocksteady", "mento", "dub", "reggae"],
+	"stage_screen.png" : ["舞台", "电影原声", "原声带", "音乐剧", "舞曲", "脱口秀",
+                              "film", "stage", "musicals", "soundtrack"],
+	}
 
 GENRE_PATH = ['pop_rock.png',
      'jazz.png',
@@ -152,12 +164,21 @@ class DeepinCoverManager(Logger):
         else:
             return gtk.gdk.pixbuf_new_from_file_at_size(filename, x, y)
     
+    def get_cover_from_genre(self, genre_info):
+        '''Get cover from genre.'''
+        for (genre_cover, genre_keywords) in GENRE_DICT.items():
+            for genre_keyword in genre_keywords:
+                if genre_keyword in genre_info.lower():
+                    return genre_cover
+    	    
+        return None
+
     def get_pixbuf_from_genre(self, genre):
-        genre_name = genre.lower()
-        for key, value in GENRE_PATTERNS.iteritems():
-            if key in genre_name:
-                return app_theme.get_pixbuf("genre/%s" % value).get_pixbuf()
-        return gtk.gdk.pixbuf_new_from_file_at_size(self.default_cover, 83, 83)
+        cover_file = self.get_cover_from_genre(genre)
+        if cover_file:
+            return app_theme.get_pixbuf("genre/%s" % cover_file).get_pixbuf()
+        else:
+            return gtk.gdk.pixbuf_new_from_file_at_size(self.default_cover, 83, 83)
     
     def get_random_pixbuf_from_genre(self):
         random.shuffle(GENRE_PATH)

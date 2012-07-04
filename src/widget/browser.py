@@ -50,6 +50,7 @@ class IconItem(gobject.GObject):
         super(IconItem, self).__init__()
         self.cell_width = 83        
         self.key_name, value_name, nums, self.tag = _tuple
+        self.draw_side_flag = True
         
         if not self.key_name:
             self.name_label= "其它"
@@ -58,6 +59,7 @@ class IconItem(gobject.GObject):
         elif self.key_name == "deepin-all-songs":    
             self.pixbuf = CoverManager.get_all_song_cover(self.cell_width, self.cell_width)
             self.name_label = "所有歌曲"
+            self.draw_side_flag = False
         else:    
             self.name_label = self.key_name
             if self.tag == "genre":
@@ -113,20 +115,19 @@ class IconItem(gobject.GObject):
     
     def render(self, cr, rect):
         
-        if self.hover_flag:
-            side_pixbuf = app_theme.get_pixbuf("filter/side_hover.png").get_pixbuf()
-            
-        elif self.highlight_flag:
-            side_pixbuf = app_theme.get_pixbuf("filter/side_hover.png").get_pixbuf()
-        else:    
-            side_pixbuf = self.__normal_side_pixbuf
             
         # Draw cover.
         draw_pixbuf(cr, self.pixbuf, 
                     rect.x + self.padding_x,
                     rect.y + self.padding_y)
-
-        draw_pixbuf(cr, side_pixbuf, rect.x, rect.y )       
+        
+        if self.hover_flag or self.highlight_flag:
+            side_pixbuf = app_theme.get_pixbuf("filter/side_hover.png").get_pixbuf()
+            draw_pixbuf(cr, side_pixbuf, rect.x, rect.y )            
+        else:    
+            if self.draw_side_flag:
+                side_pixbuf = self.__normal_side_pixbuf
+                draw_pixbuf(cr, side_pixbuf, rect.x, rect.y )            
         
         if self.hover_flag:
             if self.__draw_play_hover_flag:
@@ -268,7 +269,7 @@ class Browser(gtk.VBox, SignalContainer):
         self.import_categorybar.reload_items(
             [("导入文件", lambda : ImportFileJob()),
              ("导入文件夹", lambda : ImportFolderJob()),
-             ("扫描家目录", lambda : ImportFolderJob([os.path.expanduser("~")])),
+             ("扫描主目录", lambda : ImportFolderJob([os.path.expanduser("~")])),
              ("刷新歌曲库", lambda : ReloadDBJob())]
             )
         

@@ -25,6 +25,7 @@ import gobject
 
 from dtk.ui.label import Label
 from dtk.ui.volume_button import VolumeButton
+import dtk.ui.tooltip as Tooltip
 
 import utils
 from widget.scalebar import HScalebar
@@ -144,6 +145,7 @@ class VolumeSlider(gtk.VBox):
     def __init__(self):
         super(VolumeSlider, self).__init__()
         self.volume_progressbar = VolumeButton(volume_y=2, scroll_bool=True)
+        Tooltip.custom(self.volume_progressbar, self.get_tip_label).always_update(self.volume_progressbar, True)
         self.volume_progressbar.set_size_request(92, 30)
         self.volume_progressbar.connect("volume-state-changed",self.__volume_changed)
         save_volume = float(config.get("player","volume"))
@@ -151,7 +153,11 @@ class VolumeSlider(gtk.VBox):
         Dispatcher.connect("volume", self.change_volume)
         self.add(self.volume_progressbar)
         self.set_size_request(92, 30)
-
+        
+        
+    def get_tip_label(self):    
+        return Label(str(int(self.volume_progressbar.value)))
+        
     def change_volume(self,helper,value):
         val = value * 100
         self.volume_progressbar.value = int(val)
