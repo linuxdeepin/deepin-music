@@ -65,10 +65,10 @@ class SearchUI(DialogBox):
         artist_box.pack_start(artist_label, False, False)
         artist_box.pack_start(self.artist_entry)
         
-        info_box.pack_start(title_box, False, False)
+        info_box.pack_start(title_box, False, False, 5)
         info_box.pack_start(artist_box, False, False)
         info_box.pack_start(right_align, True, True)
-        info_box.pack_start(search_button, False, False)
+        info_box.pack_start(search_button, False, False, 5)
         
         scrolled_window = ScrolledWindow(0, 0)
         scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
@@ -85,6 +85,7 @@ class SearchUI(DialogBox):
         cancel_button = Button("关闭")
         cancel_button.connect("clicked", lambda w: self.hide_all())
         
+        self.body_box.set_spacing(5)
         self.body_box.pack_start(info_box, False, False)
         self.body_box.pack_start(scrolled_window, True, True)
         self.left_button_box.set_buttons([self.prompt_label])

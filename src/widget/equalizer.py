@@ -54,7 +54,15 @@ class PreampScalebar(gtk.VBox):
         blank_image = ImageBox(app_theme.get_pixbuf("equalizer/blank.png"))
         blank_image1 = ImageBox(app_theme.get_pixbuf("equalizer/blank.png"))
         
-        self.scalebar = VScalebar()
+        self.scalebar = VScalebar(
+            app_theme.get_pixbuf("vscalebar/upper_fg.png"),
+            app_theme.get_pixbuf("vscalebar/upper_bg.png"),
+            app_theme.get_pixbuf("vscalebar/middle_fg.png"),
+            app_theme.get_pixbuf("vscalebar/middle_bg.png"),
+            app_theme.get_pixbuf("vscalebar/bottom_fg.png"),
+            app_theme.get_pixbuf("vscalebar/bottom_bg.png"),
+            app_theme.get_pixbuf("vscalebar/point.png"),
+            )
         self.scalebar.set_value(50)
         preamp_align = gtk.Alignment()
         preamp_align.set_padding(8, 8, 0, 0)
@@ -111,7 +119,15 @@ class SlipperScalebar(gtk.VBox):
     def __init__(self, num_string="29"):
         gtk.VBox.__init__(self)
         scale_image = ImageBox(app_theme.get_pixbuf("equalizer/scale.png"))
-        self.scalebar = VScalebar()
+        self.scalebar = VScalebar(
+            app_theme.get_pixbuf("vscalebar/upper_fg.png"),
+            app_theme.get_pixbuf("vscalebar/upper_bg.png"),
+            app_theme.get_pixbuf("vscalebar/middle_fg.png"),
+            app_theme.get_pixbuf("vscalebar/middle_bg.png"),
+            app_theme.get_pixbuf("vscalebar/bottom_fg.png"),
+            app_theme.get_pixbuf("vscalebar/bottom_bg.png"),
+            app_theme.get_pixbuf("vscalebar/point.png"),
+            )
         self.scalebar.set_value(50)
         self.scalebar.set_has_point(False)
         preamp_align = gtk.Alignment()
