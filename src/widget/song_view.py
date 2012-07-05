@@ -54,9 +54,10 @@ class SongView(ListView):
     
     def __init__(self):
         
+        ListView.__init__(self)        
         targets = [("text/deepin-songs", gtk.TARGET_SAME_APP, 1), ("text/uri-list", 0, 2), ("text/plain", 0, 3)]        
-        ListView.__init__(self, drag_data=(targets, gtk.gdk.ACTION_COPY, 1))
-
+        self.drag_dest_set(gtk.DEST_DEFAULT_MOTION | gtk.DEST_DEFAULT_DROP,
+                           targets, gtk.gdk.ACTION_COPY)
         self.pl = None
         self.add_song_cache = []
         sort_key = ["album", "genre", "artist", "title", "#playcount", "#added"]

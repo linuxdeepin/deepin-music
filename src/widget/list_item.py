@@ -58,7 +58,7 @@ class PlaylistItem(gobject.GObject):
 
         self.job_box = gtk.EventBox()
         targets = [("text/deepin-songs", gtk.TARGET_SAME_APP, 1), ("text/uri-list", 0, 2), ("text/plain", 0, 3)]
-        self.job_box.drag_dest_set(gtk.DEST_DEFAULT_MOTION | gtk.DEST_DEFAULT_HIGHLIGHT | gtk.DEST_DEFAULT_DROP,
+        self.job_box.drag_dest_set(gtk.DEST_DEFAULT_MOTION | gtk.DEST_DEFAULT_DROP,
                            targets, gtk.gdk.ACTION_COPY)
         self.job_box.set_visible_window(False)
         self.job_box.connect("drag-data-received", self.song_view.on_drag_data_received)

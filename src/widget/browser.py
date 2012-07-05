@@ -213,7 +213,6 @@ class Browser(gtk.VBox, SignalContainer):
         self.__search_flag = False
         self.__song_cache_items = []
         
-        
         # init widget.
         self.entry_box = SearchEntry("")
         self.entry_box.set_size(155, 22)
