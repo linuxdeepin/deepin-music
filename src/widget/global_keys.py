@@ -20,8 +20,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import keybinder
 
+from dtk.ui.global_key import GlobalKey
 
 from helper import Dispatcher
 from player import Player
@@ -45,7 +45,7 @@ def change_lyrics_status():
     else:    
         Dispatcher.show_lyrics()
 
-class GlobalKeys(Logger):
+class GlobalHotKeys(Logger):
     
     func = {
         "previous" : Player.previous,
@@ -60,12 +60,15 @@ class GlobalKeys(Logger):
     
     def __init__(self):
         config.connect("config-changed", self.__on_config_changed)
+        self.keybinder = GlobalKey()
         
         for field in self.func.keys():
             keystr = config.get("globalkey", field)
             if keystr:
                 self.__bind(keystr, field)
             config.set("globalkey", "%s_last" % field, keystr)    
+            
+        self.keybinder.start()    
             
     def __handle_callback(self, text, callback):
         self.logdebug(text)
@@ -77,16 +80,15 @@ class GlobalKeys(Logger):
         except:    
             pass
         
-        keybinder.bind(key, lambda(text): self.__handle_callback(text, 
-                                                             self.func[field]),
-                       "Global binding for %s pressed (%s)" % (field, key))
+        self.keybinder.bind(key, lambda : self.__handle_callback(key, 
+                                                             self.func[field]))
         
         self.logdebug("Bound %s" % key)
         
     def __try_unbind(self, key):
         try:
             self.logdebug("Unbinding %s" % key)
-            keybinder.unbind(key)
+            self.keybinder.unbind(key)
             self.logdebug("Unbound %s" % key)
         except:    
             self.logdebug("Did not unbind %s" % key)
@@ -98,3 +100,19 @@ class GlobalKeys(Logger):
             if value:
                 self.__bind(config.get(section, option, value), option)
                 config.set(section, option + "_last", value)
+                
+        if section == "globalkey" and option == "enable":        
+            if value == "true":
+                self.play()
+            else:    
+                self.pause()
+                
+    def play(self):            
+        self.keybinder.runing = True
+        
+    def pause(self):    
+        self.keybinder.runing = False
+        
+    def stop(self):    
+        self.keybinder.stop = True
+        

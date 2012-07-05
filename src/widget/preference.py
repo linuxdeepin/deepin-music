@@ -255,6 +255,46 @@ class HotKeySetting(gtk.VBox):
         self.main_table.set_row_spacings(10)
         self.pack_start(self.main_table, False, True)
         self.create_hotkey_box()
+        self.using_check_button.connect("toggled", self.change_enbale_status)
+        self.using_check_button.set_active(config.getboolean("globalkey", "enable"))        
+        self.toggle_window_entry.connect("shortcut-key-change", self.change_toggle_window_key)
+        self.toggle_lyrics_status_entry.connect("shortcut-key-change", self.change_lyrics_status_key)
+        self.toggle_lyrics_lock_entry.connect("shortcut-key-change", self.change_lyrics_lock_key)
+        self.playpause_entry.connect("shortcut-key-change", self.change_playpause_key)
+        self.previous_entry.connect("shortcut-key-change", self.change_previous_key)
+        self.next_entry.connect("shortcut-key-change", self.change_next_key)
+        self.increase_vol_entry.connect("shortcut-key-change", self.change_increase_vol_key)
+        self.decrease_vol_entry.connect("shortcut-key-change", self.change_decrease_vol_key)
+        
+    def change_enbale_status(self, widget):    
+        if widget.get_active():
+            config.set("globalkey", "enable", "true")
+        else:    
+            config.set("globalkey", "enable", "false")
+            
+    def change_toggle_window_key(self, widget, value):    
+        config.set("globalkey", "toggle_window", value)
+        
+    def change_lyrics_status_key(self, widget, value):    
+        config.set("globalkey", "toggle_lyrics_status", value)
+        
+    def change_lyrics_lock_key(self, widget, value):    
+        config.set("globalkey", "toggle_lyrics_lock", value)
+        
+    def change_playpause_key(self, widget, value):    
+        config.set("globalkey", "playpause", value)
+        
+    def change_previous_key(self, widget, value):    
+        config.set("globalkey", "previous", value)
+        
+    def change_next_key(self, widget, value):    
+        config.set("globalkey", "next", value)
+        
+    def change_increase_vol_key(self, widget, value):    
+        config.set("globalkey", "increase_vol", value)
+        
+    def change_decrease_vol_key(self, widget, value):    
+        config.set("globalkey", "decrease_vol", value)
         
     def create_hotkey_box(self):    
         hotkey_title_label = Label("热键设置")
@@ -267,28 +307,29 @@ class HotKeySetting(gtk.VBox):
         
         # using check button.
         using_hbox = gtk.HBox()
-        using_check_button = CheckButton("启用快捷键")
-        using_hbox.pack_start(using_check_button, False, False)
+        self.using_check_button = CheckButton("启用快捷键")
+        using_hbox.pack_start(self.using_check_button, False, False)
         using_hbox.pack_start(create_right_align(), False, True)
         self.main_table.attach(using_hbox, 0, 2, 2, 3, yoptions=gtk.FILL)
         
-        self.create_combo_entry(3, 4, "最小化/正常模式", "Ctrl + Alt + Q")
-        self.create_combo_entry(4, 5, "显示/隐藏桌面歌词", "Ctrl + Alt + D")
-        self.create_combo_entry(5, 6, "锁定/解锁桌面歌词", "Ctrl + Alt + E")
-        self.create_combo_entry(6, 7, "播放/暂停", "Ctrl + Alt + F5")
-        self.create_combo_entry(7, 8, "上一首", "Ctrl + Alt + Left")
-        self.create_combo_entry(8, 9, "下一首", "Ctrl + Alt + Right")
-        self.create_combo_entry(9, 10, "增大音量", "Ctrl + Alt + Up")
-        self.create_combo_entry(10, 11, "减小音量", "Ctrl + Alt + Down")
+        self.toggle_window_entry = self.create_combo_entry(3, 4, "最小化/正常模式", 
+                                                           config.get("globalkey", "toggle_window"))
+        self.toggle_lyrics_status_entry = self.create_combo_entry(4, 5, "显示/隐藏桌面歌词",
+                                                                  config.get("globalkey", "toggle_lyrics_status"))
+        self.toggle_lyrics_lock_entry = self.create_combo_entry(5, 6, "锁定/解锁桌面歌词",
+                                                                config.get("globalkey", "toggle_lyrics_lock"))
+        self.playpause_entry = self.create_combo_entry(6, 7, "播放/暂停", config.get("globalkey", "playpause"))
+        self.next_entry = self.create_combo_entry(7, 8, "上一首", config.get("globalkey", "next"))
+        self.previous_entry = self.create_combo_entry(8, 9, "下一首", config.get("globalkey", "previous"))
+        self.increase_vol_entry = self.create_combo_entry(9, 10, "增大音量", config.get("globalkey", "increase_vol"))
+        self.decrease_vol_entry = self.create_combo_entry(10, 11, "减小音量", config.get("globalkey", "decrease_vol"))
         
         # Button.
         default_button = Button("恢复默认")
         button_hbox = gtk.HBox()
         button_hbox.pack_start(create_right_align(), True, True)
         button_hbox.pack_start(default_button, False, False)
-        
         self.main_table.attach(button_hbox, 0, 2, 11, 12)
-        
         
     def create_combo_entry(self, top_attach, bottom_attach, label_content, hotkey_content):    
         combo_hbox = gtk.HBox()
@@ -306,6 +347,8 @@ class HotKeySetting(gtk.VBox):
         
         self.main_table.attach(combo_hbox, 0, 1, top_attach, bottom_attach, xpadding=5)
         self.main_table.attach(hotkey_entry, 1, 2, top_attach, bottom_attach, xoptions=gtk.FILL)
+        
+        return hotkey_entry
         
 class DesktopLyricsSetting(gtk.VBox):
     

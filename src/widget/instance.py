@@ -37,7 +37,7 @@ from widget.tray import TrayIcon
 from widget.equalizer import EqualizerWindow
 from widget.preference import PreferenceDialog
 from widget.ui_utils import switch_tab
-from widget.global_keys import GlobalKeys
+from widget.global_keys import GlobalHotKeys
 
 from widget.song_search import SongSearchUI
 
@@ -87,7 +87,7 @@ class DeepinMusic(gobject.GObject, Logger):
         self.preference_dialog = PreferenceDialog()
         self.simple_browser = SimpleBrowser()
         self.equalizer_win = EqualizerWindow()
-        self.global_keys = GlobalKeys()
+        self.global_keys = GlobalHotKeys()
             
         self.window.add_move_event(self.full_header_bar)
         self.window.add_move_event(self.simple_header_bar)
@@ -114,6 +114,9 @@ class DeepinMusic(gobject.GObject, Logger):
         
         application.main_box.pack_start(main_box)        
         application.main_box.pack_start(block_box, False, True)
+        
+        if config.get("globalkey", "enable", "false") == "false":
+            self.global_keys.pause()
         
         if config.get("setting", "window_mode") == "simple":
             self.revert_toggle_button.set_active(False)
@@ -180,6 +183,7 @@ class DeepinMusic(gobject.GObject, Logger):
         self.playlist_ui.save_to_library()
         MediaDB.save()
         config.write()
+        self.global_keys.stop()
         self.window.destroy()        
         gtk.main_quit()
         self.loginfo("Exit successful.")
