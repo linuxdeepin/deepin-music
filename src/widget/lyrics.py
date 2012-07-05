@@ -25,7 +25,7 @@ import cairo
 import gobject
 
 from dtk.ui.button import ImageButton
-from dtk.ui.dialog import DialogBox, DIALOG_MASK_SINGLE_PAGE
+from dtk.ui.dialog import DialogBox, DIALOG_MASK_GLASS_PAGE
 
 from widget.skin import app_theme
 from config import config
@@ -714,9 +714,6 @@ SCROLL_ALWAYS, SCROLL_BY_LINES = 0, 1
 LINE_ALIGN_LEFT, LINE_ALIGN_MIDDLE, LINE_ALIGN_RIGHT = range(3)
 import pango
 import pangocairo
-from dtk.ui.draw import draw_vlinear
-from widget.ui import NormalWindow
-    
 
 class ScrollLyrics(DialogBox):
     __gsignals__ = {
@@ -725,7 +722,7 @@ class ScrollLyrics(DialogBox):
         }
     
     def __init__(self):
-        super(ScrollLyrics, self).__init__("窗口歌词", 300, 200, DIALOG_MASK_SINGLE_PAGE,
+        super(ScrollLyrics, self).__init__("窗口歌词", 300, 200, DIALOG_MASK_GLASS_PAGE,
                                            self.hide_all, False,  gtk.gdk.WINDOW_TYPE_HINT_NORMAL,
                                            gtk.WIN_POS_CENTER, False, True
                                            )
