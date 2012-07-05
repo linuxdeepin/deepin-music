@@ -21,7 +21,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from dtk.ui.global_key import GlobalKey
+from dtk.ui.global_key import GlobalKey, enable_global_key, disable_global_key
 
 from helper import Dispatcher
 from player import Player
@@ -108,11 +108,11 @@ class GlobalHotKeys(Logger):
                 self.pause()
                 
     def play(self):            
-        self.keybinder.runing = True
+        enable_global_key()
         
     def pause(self):    
-        self.keybinder.runing = False
+        disable_global_key()
         
     def stop(self):    
-        self.keybinder.stop = True
+        self.keybinder.exit()
         
