@@ -25,6 +25,7 @@ import cairo
 import gobject
 
 from dtk.ui.button import ImageButton
+from dtk.ui.dialog import DialogBox, DIALOG_MASK_SINGLE_PAGE
 
 from widget.skin import app_theme
 from config import config
@@ -717,14 +718,17 @@ from dtk.ui.draw import draw_vlinear
 from widget.ui import NormalWindow
     
 
-class ScrollLyrics(NormalWindow):
+class ScrollLyrics(DialogBox):
     __gsignals__ = {
         "seek" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_INT, gobject.TYPE_FLOAT)),
         "right-press" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,))
         }
     
     def __init__(self):
-        super(ScrollLyrics, self).__init__()
+        super(ScrollLyrics, self).__init__("窗口歌词", 300, 200, DIALOG_MASK_SINGLE_PAGE,
+                                           self.hide_all, False,  gtk.gdk.WINDOW_TYPE_HINT_NORMAL,
+                                           gtk.WIN_POS_CENTER, False, True
+                                           )
         
         self.revert_button = ImageButton(
             app_theme.get_pixbuf("scroll_lyrics/revert_normal.png"),
@@ -763,9 +767,8 @@ class ScrollLyrics(NormalWindow):
         self.drawing.connect("button-press-event", self.button_press_cb)
         self.drawing.connect("button-release-event", self.button_release_cb)
         self.drawing.connect("motion-notify-event", self.motion_notify_cb)
-        self.set_size_request(300, 120)
         self.titlebar.close_button.connect("clicked", lambda w: self.hide_and_emit())
-        self.main_box.add(self.drawing)
+        self.body_box.add(self.drawing)
         self.update_line_height()
         config.connect("config-changed", self.changed_scroll_status)
         
@@ -841,8 +844,8 @@ class ScrollLyrics(NormalWindow):
         
     def expose_cb(self, widget, event):    
         cr = widget.window.cairo_create()
-        rect = widget.allocation
-        draw_vlinear(cr, rect.x, rect.y, rect.width, rect.height, app_theme.get_shadow_color("linearBackground").get_color_info(), 4)
+        # rect = widget.allocation
+        # draw_vlinear(cr, rect.x, rect.y, rect.width, rect.height, app_theme.get_shadow_color("linearBackground").get_color_info(), 4)
         
         if self.whole_lyrics:
             self.paint_lyrics(cr)
