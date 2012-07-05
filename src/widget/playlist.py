@@ -174,8 +174,8 @@ class PlaylistUI(gtk.VBox):
             self.current_item.song_view.add_songs(songs)
         
     def get_selected_song_view(self):    
-        pass
-        # return self.current_item.song_view
+        if self.current_item:
+            return self.current_item.song_view
             
     def search_cb(self, widget, text):        
         if not self.search_flag:

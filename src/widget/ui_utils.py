@@ -91,4 +91,14 @@ def create_left_align():
     align.set(0, 0, 1, 0)
     return align
     
+def create_upper_align():
+    align = gtk.Alignment()
+    align.set(1, 0, 0, 0)
+    return align
+
+def create_bottom_align():
+    align = gtk.Alignment()
+    align.set(0, 1, 0, 0)
+    return align
+
     

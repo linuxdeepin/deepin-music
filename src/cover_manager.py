@@ -93,8 +93,10 @@ GENRE_DICT = {
 		     "soul", "urban", "hip-hop"],
 	"reggae.png" : ["雷鬼", "雷嘎", "洛克丝黛蒂", "Ska", "大伯", "蒙托", 
 			"ska", "rocksteady", "mento", "dub", "reggae"],
-	"stage_screen.png" : ["舞台", "电影原声", "原声带", "音乐剧", "舞曲", "脱口秀",
-                              "film", "stage", "musicals", "soundtrack"],
+	"stage_screen.png" : ["舞台", "电影原声", "原声带", "音乐剧", "舞曲", "脱口秀", "游戏",                              
+                              "game", "film", "stage", "musicals", "soundtrack"],
+        "vocal.png" : ["声乐", "vocal", "合唱", "人声", "演出", 
+                       "harmony", "show"]
 	}
 
 GENRE_PATH = ['pop_rock.png',

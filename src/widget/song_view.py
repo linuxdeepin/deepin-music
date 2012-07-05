@@ -46,6 +46,12 @@ from widget.ui_utils import draw_single_mask, draw_alpha_mask
 
 class SongView(ListView):
     ''' song view. '''
+    __gsignals__ = {
+        "begin-add-items" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),
+        "empty-items" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ())
+        }
+    
+    
     def __init__(self):
         
         ListView.__init__(self)
@@ -60,10 +66,14 @@ class SongView(ListView):
         self.connect_after("drag-data-received", self.on_drag_data_received)
         self.connect("double-click-item", self.double_click_item_cb)
         self.connect("button-press-event", self.button_press_cb)
+        self.connect("delete-select-items", self.try_emit_empty_signal)
         
         MediaDB.connect("removed", self.__remove_songs)
         MediaDB.connect("simple-changed", self.__songs_changed)
         
+    def try_emit_empty_signal(self, widget, items):    
+        if len(self.items) <= 0:
+            self.emit("empty-items")
         
     def double_click_item_cb(self, widget, item, colume, x, y):    
         self.reset_error_items()
@@ -227,6 +237,8 @@ class SongView(ListView):
         song_items = [ SongItem(song) for song in songs if song not in self.get_songs()]
             
         if song_items:
+            if not self.items:
+                self.emit_add_signal()
             self.add_items(song_items, pos, sort)
         
         if len(songs) >= 1 and play:
@@ -234,6 +246,9 @@ class SongView(ListView):
                 self.set_highlight_song(songs[0])
                 gobject.idle_add(Player.play_new, self.highlight_item.get_song())
             
+    def emit_add_signal(self):
+        self.emit("begin-add-items")
+    
     def play_uris(self, uris, pos=None, sort=True):        
         self.get_toplevel().window.set_cursor(None)
         songs = []

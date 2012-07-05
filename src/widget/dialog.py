@@ -28,6 +28,7 @@ import utils
 
 class WinDir(gtk.FileChooserDialog):
     '''Open chooser dir dialog'''
+
     def __init__(self, title="Import a folder in the library"):
         gtk.FileChooserDialog.__init__(self, title, None, gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER,
                                        (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
@@ -119,7 +120,7 @@ class WindowLoadPlaylist(gtk.FileChooserDialog):
              gtk.FILE_CHOOSER_ACTION_OPEN,
              (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,gtk.STOCK_OPEN, gtk.RESPONSE_OK))
              
-        self.set_modal(True)
+
         ffilter = gtk.FileFilter()
         ffilter.set_name("Playlist files")
         ffilter.add_mime_type("audio/mpegurl")
@@ -143,5 +144,4 @@ class WindowLoadPlaylist(gtk.FileChooserDialog):
         self.destroy()
         return uri
     
-
     

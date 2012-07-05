@@ -172,3 +172,5 @@ class ComplexButton(gtk.Button):
                   self.font_size)
         
         return True
+
+gobject.type_register(ComplexButton)    
