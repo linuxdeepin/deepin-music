@@ -152,7 +152,7 @@ class SongInfo(gtk.VBox):
         self.song = song
         
         # Update simpler.
-        self.cover_image.set_from_pixbuf(CoverManager.get_pixbuf_from_song(song, 92, 92))
+        self.cover_image.set_from_pixbuf(CoverManager.get_pixbuf_from_song(song, 92, 92, False, False))
         self.title_label.set_text(song.get_str("title"))
         self.artist_label.set_text(song.get_str("artist"))
         self.album_label.set_text(song.get_str("album"))
@@ -294,9 +294,8 @@ class CoverSetting(gtk.VBox):
         
     def update_song(self, song):    
         self.song = song
-        song_cover_pixbuf = CoverManager.get_pixbuf_from_song(song, 300, 180, optimum=False)
+        song_cover_pixbuf = CoverManager.get_pixbuf_from_song(song, 300, 180, False, optimum=False)
         self.cover_image.set_from_pixbuf(song_cover_pixbuf)
-        
     
     def change_cover_image(self, widget):
         new_cover_path = WinFile(False, "选择图片").run()

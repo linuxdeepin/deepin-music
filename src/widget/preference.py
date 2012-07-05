@@ -665,7 +665,6 @@ class DesktopLyricsSetting(gtk.VBox):
     
     def create_combo_widget(self, label_content, items, select_index=0):
         label = Label(label_content)
-        label.set_size_request(30, 12)
         if len(items) > 10:
             height = 200
             max_width = 300
@@ -680,7 +679,6 @@ class DesktopLyricsSetting(gtk.VBox):
     
     def create_combo_spin(self, label_content, init_value, low, upper, step):
         label = Label(label_content)
-        label.set_size_request(30, 12)
         spinbox = SpinBox(init_value, low, upper, step)
         
         hbox = gtk.HBox(spacing=5)
