@@ -94,7 +94,7 @@ class GlobalHotKeys(Logger):
             self.logdebug("Did not unbind %s" % key)
 
     def __on_config_changed(self, obj, section, option, value):        
-        if section == "globalkey" and option.find("_last") == -1:
+        if section == "globalkey" and option.find("_last") == -1 and option != "enable":
             self.__try_unbind(config.get(section, option + "_last", value))
             
             if value:

@@ -339,9 +339,7 @@ class SongView(ListView):
             index = self.select_rows[0]
             select_item = self.items[index]
             if select_item.exists():
-                valid_songs = self.get_valid_songs()
-                SongEditor(valid_songs, valid_songs.index(select_item.get_song())).show_all()
-        
+                SongEditor([select_item.get_song()]).show_all()
     
     def move_to_trash(self):
         flag = False
@@ -615,8 +613,10 @@ class MultiDragSongView(ListView):
     def open_song_editor(self):
         if len(self.select_rows) > 0:
             index = self.select_rows[0]
-            if self.items[index].exists():
-                SongEditor(self.get_songs(), index).show_all()
+            select_item = self.items[index]
+            if select_item.exists():
+                SongEditor([select_item.get_song()]).show_all()
+                
             
     def remove_songs(self, fully=False):
         if len(self.select_rows) > 0:
