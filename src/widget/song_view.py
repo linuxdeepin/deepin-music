@@ -54,11 +54,9 @@ class SongView(ListView):
     
     def __init__(self):
         
-        ListView.__init__(self)
-        targets = [("text/deepin-songs", gtk.TARGET_SAME_APP, 1), ("text/uri-list", 0, 2), ("text/plain", 0, 3)]
-        self.drag_dest_set(gtk.DEST_DEFAULT_MOTION | gtk.DEST_DEFAULT_HIGHLIGHT | gtk.DEST_DEFAULT_DROP,
-                           targets, gtk.gdk.ACTION_COPY)
-        
+        targets = [("text/deepin-songs", gtk.TARGET_SAME_APP, 1), ("text/uri-list", 0, 2), ("text/plain", 0, 3)]        
+        ListView.__init__(self, drag_data=(targets, gtk.gdk.ACTION_COPY, 1))
+
         self.pl = None
         self.add_song_cache = []
         sort_key = ["album", "genre", "artist", "title", "#playcount", "#added"]
@@ -516,10 +514,10 @@ class SongView(ListView):
                 Player.play_new(item.get_song())
 
 class MultiDragSongView(ListView):        
-    def __init__(self, *args, **kward):
-        ListView.__init__(self, *args, **kward)
-        targets = [("text/deepin-songs", gtk.TARGET_SAME_APP, 1), ("text/uri-list", 0, 2)]
-        self.drag_source_set(gtk.gdk.BUTTON1_MASK, targets, gtk.gdk.ACTION_COPY)
+    def __init__(self):
+        targets = [("text/deepin-songs", gtk.TARGET_SAME_APP, 1), ("text/uri-list", 0, 2), ("text/plain", 0, 3)]        
+        ListView.__init__(self, drag_data=(targets, gtk.gdk.ACTION_COPY, 1))
+        
         self.sorts = [
             (lambda item: item.get_song().get_sortable("title"), cmp),
             (lambda item: item.get_song().get_sortable("artist"), cmp),
