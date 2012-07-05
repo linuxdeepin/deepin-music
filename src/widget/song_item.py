@@ -59,11 +59,11 @@ class SongItem(gobject.GObject):
         self.album = song.get_str("album")
         
         # Calculate item size.
-        self.title_padding_x = 12
+        self.title_padding_x = 10
         self.title_padding_y = 5
         (self.title_width, self.title_height) = get_content_size(self.title, DEFAULT_FONT_SIZE)
         
-        self.artist_padding_x = 5
+        self.artist_padding_x = 2
         self.artist_padding_y = 5
         (self.artist_width, self.artist_height) = get_content_size(self.artist, DEFAULT_FONT_SIZE)
 
@@ -107,13 +107,13 @@ class SongItem(gobject.GObject):
         rect.x += self.artist_padding_x
         rect.width -= self.artist_padding_x * 2
         render_item_text(cr, self.artist, rect, in_select, in_highlight, error=self.song_error)
-
     
     def render_length(self, cr, rect, in_select, in_highlight):
         '''Render length.'''
         rect.width -= self.length_padding_x * 2
-        rect.x -= 8
-        render_item_text(cr, self.length, rect, in_select, in_highlight, align=ALIGN_END, error=self.song_error)
+        rect.x += self.length_padding_x * 2
+        # render_item_text(cr, self.length, rect, in_select, in_highlight, align=ALIGN_END, error=self.song_error)
+        render_item_text(cr, self.length, rect, in_select, in_highlight, error=self.song_error)
         
     def render_add_time(self, cr, rect, in_select, in_highlight):
         '''Render add_time.'''
@@ -135,8 +135,10 @@ class SongItem(gobject.GObject):
                 (80, self.add_time_height + self.add_time_padding_y * 2)
                 ]
         else:
-            return [(95,26), (80,26), (46,26)]    
-            
+            return [
+                (110, 26),
+                (50, 26), 
+                (self.length_width + self.length_padding_x * 2,26)]    
     
     def get_renders(self):
         '''Get render callbacks.'''
