@@ -260,6 +260,7 @@ class Browser(gtk.VBox, SignalContainer):
         # Song path bar.
         self.__current_path = None
         self.current_icon_item = None
+        self.reload_path_flag = True
         self.path_categorybar = SongPathBar("本地歌曲")
         self.path_categorybar.set_size_request(-1, 200)
         
@@ -464,19 +465,23 @@ class Browser(gtk.VBox, SignalContainer):
         
     def __added_song_cb(self, db_query, songs):
         self.reload_flag = True
+        self.reload_path_flag = True
 
     def __removed_song_cb(self, db_query, songs):
         if songs:
             self.reload_flag = True
+            self.reload_path_flag = True
             
     def reload_browser(self,  obj, infos):
         if infos:
             self.reload_flag = True
+            self.reload_path_flag = False
             
     def interval_reload_browser(self):        
         if self.reload_flag:
-            self.reload_all_items()
+            self.reload_all_items(self.reload_path_flag)
             self.reload_flag = False    
+            self.reload_path_flag = True
         return True    
                     
     def reload_all_items(self, reload_path=True):                
@@ -498,6 +503,7 @@ class Browser(gtk.VBox, SignalContainer):
     def __update_tag_view(self, db_query, tag, values):
         if values:
             self.reload_flag = True
+            self.reload_path_flag = False
     
     def __quick_update(self, db_query, songs):
         pass

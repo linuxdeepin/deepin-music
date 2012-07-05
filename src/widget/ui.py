@@ -26,7 +26,7 @@ import gobject
 from dtk.ui.window import Window
 from dtk.ui.titlebar import Titlebar
 from dtk.ui.utils import move_window
-from dtk.ui.entry import TextEntry
+from dtk.ui.entry import InputEntry
 from dtk.ui.button import ImageButton
 from dtk.ui.draw import draw_pixbuf, draw_text
 from widget.skin import app_theme
@@ -60,7 +60,7 @@ class NormalWindow(Window):
         self.hide_all()
         
         
-class SearchEntry(TextEntry):
+class SearchEntry(InputEntry):
     
     def __init__(self, *args, **kwargs):
 
