@@ -29,18 +29,21 @@ import utils
 class WinDir(gtk.FileChooserDialog):
     '''Open chooser dir dialog'''
 
-    def __init__(self, title="Import a folder in the library"):
+    def __init__(self, return_uri=True, title="Import a folder in the library"):
         gtk.FileChooserDialog.__init__(self, title, None, gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER,
                                        (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
                                         gtk.STOCK_OPEN, gtk.RESPONSE_OK))
+        self.return_uri = return_uri
         self.set_modal(True)
         
     def run(self):    
         response = gtk.FileChooserDialog.run(self)
         folder = None
         if response == gtk.RESPONSE_OK:
-            folder = self.get_filename()
-            folder = self.get_uri()
+            if self.return_uri:
+                folder = self.get_uri()
+            else:
+                folder = self.get_filename()
         self.destroy()    
         return folder
     

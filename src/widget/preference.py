@@ -20,7 +20,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
+import os
 import gtk
 import cairo
 from collections import OrderedDict
@@ -42,6 +42,7 @@ from dtk.ui.scrolled_window import ScrolledWindow
 from utils import color_hex_to_cairo
 from widget.ui_utils import (get_font_families, switch_tab,
                              create_separator_box, create_right_align)
+from widget.dialog import WinDir
 from render_lyrics import RenderContextNew
 from constant import PREDEFINE_COLORS
 from config import config
@@ -232,11 +233,13 @@ class GeneralSetting(gtk.VBox):
         label_align.set_padding(0, 0, 0, 0)
         label_align.add(dir_title_label)
         
-        self.dir_entry = InputEntry("~/.lyrics")
-        self.dir_entry.set_text(config.get("lyrics", "save_lrc_path"))
+        self.dir_entry = InputEntry()
+        self.dir_entry.set_text(os.path.expanduser(config.get("lyrics", "save_lrc_path", "~/.lyrics")))
+        self.dir_entry.set_editable(False)        
         self.dir_entry.set_size(250, 25)
         
         modify_button = Button("修改目录")
+        modify_button.connect("clicked", self.change_lyrics_save_dir)
         hbox = gtk.HBox(spacing=5)
         hbox.pack_start(self.dir_entry, False, False)
         hbox.pack_start(modify_button, False, False)
@@ -246,6 +249,13 @@ class GeneralSetting(gtk.VBox):
         main_table.attach(hbox, 0, 2, 2, 3, xpadding=10, xoptions=gtk.FILL)
         return main_table
     
+    def change_lyrics_save_dir(self, widget):
+        local_dir = WinDir(False).run()
+        if local_dir:
+            config.set("lyrics", "save_lrc_path", local_dir)
+            self.dir_entry.set_editable(True)        
+            self.dir_entry.set_text(os.path.expanduser(local_dir))
+            self.dir_entry.set_editable(False)
     
 class HotKeySetting(gtk.VBox):        
     
