@@ -53,8 +53,11 @@ class IconItem(gobject.GObject):
         self.draw_side_flag = True
         
         if not self.key_name:
-            self.name_label= "其它"
-            self.pixbuf = CoverManager.get_pixbuf_from_name(self.name_label, self.cell_width, self.cell_width)            
+            self.name_label= "未知"
+            if self.tag == "genre":
+                self.pixbuf = CoverManager.get_pixbuf_from_genre(self.name_label)
+            else:    
+                self.pixbuf = CoverManager.get_pixbuf_from_name(self.name_label, self.cell_width, self.cell_width)            
             
         elif self.key_name == "deepin-all-songs":    
             self.pixbuf = CoverManager.get_all_song_cover(self.cell_width, self.cell_width)

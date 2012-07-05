@@ -180,7 +180,7 @@ class DeepinCoverManager(Logger):
         if cover_file:
             return app_theme.get_pixbuf("genre/%s" % cover_file).get_pixbuf()
         else:
-            return gtk.gdk.pixbuf_new_from_file_at_size(self.default_cover, 83, 83)
+            return app_theme.get_pixbuf("genre/other.png").get_pixbuf()
     
     def get_random_pixbuf_from_genre(self):
         random.shuffle(GENRE_PATH)

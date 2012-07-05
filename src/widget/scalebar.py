@@ -24,6 +24,7 @@ import gtk
 import gobject
 from dtk.ui.draw import draw_pixbuf
 from dtk.ui.utils import is_left_button
+from dtk.ui.cache_pixbuf import CachePixbuf
 
 from widget.skin import app_theme
 
@@ -46,6 +47,9 @@ class HScalebar(gtk.HScale):
         self.point_hover_dpixbuf = point_hover_dpixbuf
         self.point_press_dpixbuf = point_press_dpixbuf
         self.bottom_side = 0
+        self.fg_cache_pixbuf = CachePixbuf()
+        self.bg_cache_pixbuf = CachePixbuf()
+        self.side_cache_pixbuf = CachePixbuf()
         
         self.set_size_request(-1, self.point_normal_dpixbuf.get_pixbuf().get_height())
         
@@ -79,12 +83,28 @@ class HScalebar(gtk.HScale):
         
         
         # Draw background.
-        draw_pixbuf(cr, bg_pixbuf.scale_simple(w + point_width , line_height, gtk.gdk.INTERP_BILINEAR), rect.x, line_y)
-        draw_pixbuf(cr, fg_pixbuf.scale_simple(point_width / 2, line_height, gtk.gdk.INTERP_BILINEAR), rect.x, line_y)
+        self.fg_cache_pixbuf.scale(
+            bg_pixbuf, w + point_width, line_height)
+        draw_pixbuf(
+            cr,
+            self.fg_cache_pixbuf.get_cache(),
+            rect.x, line_y)
+        
+        self.bg_cache_pixbuf.scale(
+            fg_pixbuf, point_width / 2, line_height)
+        draw_pixbuf(
+            cr,
+            self.bg_cache_pixbuf.get_cache(),
+            rect.x, line_y)
 
         
         if value > 0:
-            draw_pixbuf(cr, fg_pixbuf.scale_simple(value + point_width, line_height, gtk.gdk.INTERP_BILINEAR), rect.x, line_y)
+            self.side_cache_pixbuf.scale(
+                fg_pixbuf, value + point_width, line_height)
+            draw_pixbuf(
+                cr, 
+                self.side_cache_pixbuf.get_cache(),
+                rect.x, line_y)
             
         if value > 0:    
             draw_pixbuf(cr, point_normal_pixbuf, x + value - point_width / 2 + 2, y)    
