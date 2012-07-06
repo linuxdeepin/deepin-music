@@ -877,7 +877,12 @@ class PreferenceDialog(DialogBox):
         category_scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_NEVER)
         category_scrolled_window.set_size_request(132, 516)
         
-        category_box.pack_start(category_scrolled_window, True, True)
+        category_scrolled_window_align = gtk.Alignment()
+        category_scrolled_window_align.set(0, 0, 1, 1,)
+        category_scrolled_window_align.set_padding(0, 1, 0, 0)
+        category_scrolled_window_align.add(category_scrolled_window)
+        
+        category_box.pack_start(category_scrolled_window_align, True, True)
         
         # Pack widget.
         left_box = gtk.VBox()
