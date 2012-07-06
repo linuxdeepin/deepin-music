@@ -242,7 +242,11 @@ class Browser(gtk.VBox, SignalContainer):
         upper_box.pack_start(path_combo_align, False, False)
         upper_box.pack_start(create_right_align(), True, True)
         upper_box.pack_start(back_align, False, False)
-        upper_box.pack_start(self.entry_box, False, False)
+        entry_box_align = gtk.Alignment()
+        entry_box_align.set(0.5, 0.5, 0, 0)
+        entry_box_align.set_padding(1, 0, 0, 0)
+        entry_box_align.add(self.entry_box)
+        upper_box.pack_start(entry_box_align, False, False)
         
         upper_box_align = gtk.Alignment()
         upper_box_align.set_padding(0, 10, 0, 10)
