@@ -42,7 +42,10 @@ def switch_tab(notebook_box, tab_box):
     notebook_box.show_all()
 
 def draw_alpha_mask(cr, x, y, width, height, color_name):
-    color_info = app_theme.get_alpha_color(color_name).get_color_info()
+    if not isinstance(color_name, tuple):
+        color_info = app_theme.get_alpha_color(color_name).get_color_info()
+    else:    
+        color_info = color_name
     cr.set_source_rgba(*alpha_color_hex_to_cairo(color_info))
     cr.rectangle(x, y, width, height)
     cr.fill()

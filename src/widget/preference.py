@@ -41,7 +41,8 @@ from dtk.ui.scrolled_window import ScrolledWindow
 
 from utils import color_hex_to_cairo
 from widget.ui_utils import (get_font_families, switch_tab,
-                             create_separator_box, create_right_align)
+                             create_separator_box, create_right_align,
+                             draw_alpha_mask)
 from widget.dialog import WinDir
 from render_lyrics import RenderContextNew
 from constant import PREDEFINE_COLORS
@@ -913,10 +914,7 @@ class PreferenceDialog(DialogBox):
         self.show_all()
     
     def draw_treeview_mask(self, cr, x, y, width, height):
-        draw_vlinear(
-            cr, x, y, width, height,
-            [(0, ("#FFFFFF", 0.9)),
-             (1, ("#FFFFFF", 0.9))])
+        draw_alpha_mask(cr, x, y, width, height, ("#FFFFFF", 0.9))
     
     def category_single_click_cb(self, widget, item):
         if item.get_allocated_widget():

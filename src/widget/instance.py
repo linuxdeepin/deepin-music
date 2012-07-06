@@ -38,8 +38,7 @@ from widget.equalizer import EqualizerWindow
 from widget.preference import PreferenceDialog
 from widget.ui_utils import switch_tab
 from widget.global_keys import GlobalHotKeys
-
-from widget.song_search import SongSearchUI
+# from widget.song_search import SongSearchUI
 
 from config import config
 from player import Player
@@ -269,7 +268,7 @@ class DeepinMusic(gobject.GObject, Logger):
             (self.get_pixbuf_group("playmode"), "播放模式", curren_view.get_playmode_menu()),
             None,
             (None, "均衡器", lambda : self.equalizer_win.run()),
-            (None, "歌曲搜索", lambda : SongSearchUI().show_window()),
+            # (None, "歌曲搜索", lambda : SongSearchUI().show_window()),
             None,
             self.get_lyrics_menu_items(),
             self.get_locked_menu_items(),

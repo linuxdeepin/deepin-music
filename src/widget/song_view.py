@@ -243,7 +243,8 @@ class SongView(ListView):
             if not self.items:
                 self.emit_add_signal()
             self.add_items(song_items, pos, sort)
-        
+            
+            
         if len(songs) >= 1 and play:
             if songs[0].exists():
                 self.set_highlight_song(songs[0])
