@@ -406,8 +406,9 @@ class SongView(ListView):
         mode_items = []
         for key, value in mode_dict.iteritems():
             if self.get_loop_mode() == key:
-                tick = app_theme.get_pixbuf("menu/tick.png")
-                mode_items.append(((tick, None), value, self.set_loop_mode, key))                    
+                tick = (app_theme.get_pixbuf("menu/tick.png"),
+                        app_theme.get_pixbuf("menu/tick_press.png"))
+                mode_items.append((tick, value, self.set_loop_mode, key))                    
             else:    
                 tick = None
                 mode_items.append((None, value, self.set_loop_mode, key))                    

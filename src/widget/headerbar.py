@@ -46,13 +46,9 @@ class FullHeaderBar(gtk.EventBox):
         # init.
         self.cover_box = PlayerCoverButton()
         self.cover_box.show_all()
-
         
         # Main table
-        main_table = gtk.Table(2, 4)
-        self.move_box = gtk.EventBox()
-        self.move_box.set_visible_window(False)
-                
+        main_table = gtk.Table(2, 3)
         # swap played status handler
         Player.connect("played", self.__swap_play_status, True)
         Player.connect("paused", self.__swap_play_status, False)
@@ -110,8 +106,14 @@ class FullHeaderBar(gtk.EventBox):
         Tooltip.text(self.lyrics_button, "打开/关闭歌词")
         
         plug_box = gtk.HBox(spacing=12)       
-        plug_box.pack_start(self.lyrics_button, False, False)
-        plug_box.pack_start(self.vol, False, False)        
+        lyrics_button_align = gtk.Alignment()
+        lyrics_button_align.set_padding(1, 0, 0, 0)
+        lyrics_button_align.add(self.lyrics_button)
+        plug_box.pack_start(lyrics_button_align, False, False)
+        vol_align = gtk.Alignment()
+        vol_align.set_padding(2, 0, 0, 0)
+        vol_align.add(self.vol)
+        plug_box.pack_start(vol_align, False, False)        
         
         timer_align = gtk.Alignment()
         timer_align.set(0, 0, 0, 1)
@@ -120,10 +122,9 @@ class FullHeaderBar(gtk.EventBox):
         timer_box.pack_start(song_timer.get_label(), False, False)
         
         main_table.attach(PlayInfo(), 0, 1, 0, 1, xoptions=gtk.FILL)
-        main_table.attach(plug_box, 0, 1, 1, 2, xoptions=gtk.FILL, ypadding=3)
+        main_table.attach(plug_box, 0, 1, 1, 2, xoptions=gtk.FILL)
         main_table.attach(mainbtn_box, 1, 2, 0, 2, xoptions=gtk.FILL, xpadding=25)
-        main_table.attach(self.move_box, 2, 3, 0, 2)
-        main_table.attach(timer_box, 3, 4, 1, 2, xpadding=17, xoptions=gtk.FILL)
+        main_table.attach(timer_box, 2, 3, 1, 2, xpadding=17)
         
         cover_main_box = gtk.HBox(spacing=5)
         cover_main_box.pack_start(self.cover_box, False, False)
@@ -133,7 +134,7 @@ class FullHeaderBar(gtk.EventBox):
         cover_main_align.set(1, 1, 1, 1)
         cover_main_align.add(cover_main_box)
         
-        main_box = gtk.VBox()
+        main_box = gtk.VBox(spacing=9)
         main_box.pack_start(cover_main_align, True, True)
         main_box.pack_start(ProgressBox(song_timer), True, True)
         
@@ -257,7 +258,7 @@ class SimpleHeadber(gtk.EventBox):
         mainbtn.pack_start(next_align, False, False)
          
         mainbtn_align = gtk.Alignment()
-        mainbtn_align.set_padding(10, 0, 0, 0)
+        mainbtn_align.set_padding(0, 0, 0, 10)
         mainbtn_align.add(mainbtn)
         
         mainbtn_box = gtk.HBox()
@@ -269,19 +270,29 @@ class SimpleHeadber(gtk.EventBox):
         Tooltip.text(self.lyrics_button, "打开/关闭歌词")
         
         plug_box = gtk.HBox(spacing=12)       
-        plug_box.pack_start(self.lyrics_button, False, False)
-        plug_box.pack_start(self.vol, False, False)        
+        vol_align = gtk.Alignment()
+        vol_align.set_padding(2, 0, 0, 0)
+        vol_align.add(self.vol)
+        
+        lyrics_button_align = gtk.Alignment()
+        lyrics_button_align.set_padding(1, 0, 0, 0)
+        lyrics_button_align.add(self.lyrics_button)
+        plug_box.pack_start(lyrics_button_align, False, False)
+        plug_box.pack_start(vol_align, False, False)        
         
         timer_align = gtk.Alignment()
         timer_align.set(0, 0, 0, 1)
         timer_box = gtk.HBox()
         timer_box.pack_start(timer_align, True, True)
-        timer_box.pack_start(song_timer.get_label(), False, False)
+        timer_label_align = gtk.Alignment()
+        timer_label_align.set_padding(2, 0, 0, 0)
+        timer_label_align.add(song_timer.get_label())
+        timer_box.pack_start(timer_label_align, False, False)
         
         main_table.attach(PlayInfo(110), 0, 1, 0, 1, xoptions=gtk.FILL)
-        main_table.attach(mainbtn_box, 1, 2, 0, 1, xpadding=15)        
+        main_table.attach(mainbtn_box, 1, 2, 0, 1,xoptions=gtk.FILL, xpadding=5)        
         main_table.attach(plug_box, 0, 1, 1, 2, xoptions=gtk.FILL)
-        main_table.attach(timer_box, 1, 2, 1, 2, xpadding=15)
+        main_table.attach(timer_box, 1, 2, 1, 2, xoptions=gtk.FILL, xpadding=15)
         
         cover_main_box = gtk.HBox(spacing=5)
         cover_main_box.pack_start(self.cover_box, False, False)
@@ -291,8 +302,8 @@ class SimpleHeadber(gtk.EventBox):
         cover_main_align.set(1, 1, 1, 1)
         cover_main_align.add(cover_main_box)
         
-        main_box = gtk.VBox()
-        main_box.pack_start(cover_main_align, True, True)
+        main_box = gtk.VBox(spacing=9)
+        main_box.pack_start(cover_main_align, False, False)
         main_box.pack_start(ProgressBox(song_timer), True, True)
         self.add(main_box)
 

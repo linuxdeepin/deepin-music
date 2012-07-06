@@ -372,12 +372,13 @@ class LyricsModule(object):
         for key, value in menu_dict.iteritems():
             item_pixbuf = None
             if key == save_predefine_color:
-                item_pixbuf = app_theme.get_pixbuf("menu/tick.png")
+                item_pixbuf = (app_theme.get_pixbuf("menu/tick.png"),
+                               app_theme.get_pixbuf("menu/tick_press.png"))
                 
             if item_pixbuf is None:    
                 menu_items.append((None, value, self.set_predefine_color, key))    
             else:    
-                menu_items.append(((item_pixbuf, None), value, self.set_predefine_color, key))    
+                menu_items.append((item_pixbuf, value, self.set_predefine_color, key))    
         Menu(menu_items, True).show((int(event.x_root), int(event.y_root)))
         
     def set_predefine_color(self, key):    

@@ -42,7 +42,7 @@ class SongTimer(gtk.HBox):
     def __init__(self):
         super(SongTimer, self).__init__()
 
-        self.label_time = Label("00:00/00:00", app_theme.get_color("labelText"), 9, enable_gaussian=True)
+        self.label_time = Label("00:00/00:00", app_theme.get_color("labelText"), 8, enable_gaussian=True)
 
         self.bar = HScalebar()
         self.bar.set_draw_value(False)
@@ -152,8 +152,7 @@ class VolumeSlider(gtk.VBox):
         self.volume_progressbar.value =  int(save_volume * 100)
         Dispatcher.connect("volume", self.change_volume)
         self.add(self.volume_progressbar)
-        self.set_size_request(92, 30)
-        
+        self.set_size_request(92, 17)
         
     def get_tip_label(self):    
         return Label(str(int(self.volume_progressbar.value)))
