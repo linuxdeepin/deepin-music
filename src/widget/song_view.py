@@ -114,6 +114,8 @@ class SongView(ListView):
         config.set("setting", "loop_mode", value)
         
     def get_previous_song(self):
+        del self.select_rows[:]
+        self.queue_draw()
         self.reset_error_items()
         
         if self.is_empty():
@@ -139,6 +141,8 @@ class SongView(ListView):
             return highlight_item.get_song()
     
     def get_next_song(self, manual=False):
+        del self.select_rows[:]
+        self.queue_draw()
         self.reset_error_items()
         
         if self.is_empty():
