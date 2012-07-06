@@ -88,9 +88,9 @@ class SongPathBar(BaseBar):
     
     def __init__(self, title_name):
         BaseBar.__init__(self, init_index=-1)
-        self.set_spacing(5)
+        self.set_spacing(3)
         self.child_box = gtk.VBox()
-        self.child_item_height = 20
+        self.child_item_height = 22
         self.current_page = 1
         self.page_items_num = 0        
         self.items = []

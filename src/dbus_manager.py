@@ -228,7 +228,8 @@ class DeepinMusicDBus(dbus.service.Object, Logger):
         current_view = app_instance.playlist_ui.get_selected_song_view()
         if current_view:
             uris = utils.convert_args_to_uris(locations)                
-            current_view.async_add_uris(uris)
+            current_view.play_uris(uris)
+            # current_view.async_add_uris(uris)
 
     @dbus.service.method(SERVICE_NAME, None, "s")
     def DumpGstplayerState(self):

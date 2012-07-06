@@ -265,14 +265,14 @@ class Browser(gtk.VBox, SignalContainer):
         self.current_icon_item = None
         self.reload_path_flag = True
         self.path_categorybar = SongPathBar("本地歌曲")
-        self.path_categorybar.set_size_request(-1, 200)
+        self.path_categorybar.set_size_request(-1, 205)
         
         # Song import bar.
         self.import_categorybar = SongImportBar()
         self.import_categorybar.reload_items(
-            [("导入文件", lambda : ImportFileJob()),
-             ("导入文件夹", lambda : ImportFolderJob()),
-             ("扫描主目录", lambda : ImportFolderJob([os.path.expanduser("~")])),
+            [
+             ("扫描主目录", lambda : ImportFolderJob([os.path.expanduser("~")])),                
+             ("扫描指定目录", lambda : ImportFolderJob()),
              ("刷新歌曲库", lambda : ReloadDBJob())]
             )
         
