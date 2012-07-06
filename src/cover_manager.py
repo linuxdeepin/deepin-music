@@ -125,10 +125,11 @@ class DeepinCoverManager(Logger):
         
     def get_cover_search_str(self, song):
         artist = song.get_str("artist")
+        title  = song.get_str("title")
         if artist:
-            result =  song.get_str("artist")
-        else:
-            result = "%s-%s" % (song.get_str("artist"), song.get_str("album"))
+            result =  artist
+        else:    
+            result = title
         return result.replace("/", "")    
     
     def get_default_cover(self, x, y):    
