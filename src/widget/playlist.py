@@ -56,7 +56,7 @@ class PlaylistUI(gtk.VBox):
         self.category_list.draw_mask = self.draw_category_list_mask
         self.category_list.connect("single-click-item", self.category_single_click_cb)
         self.category_list.connect("right-press-item", self.category_right_press_cb)
-        self.category_list.connect("button-press-event", self.category_button_press_cb)
+        # self.category_list.connect("button-press-event", self.category_button_press_cb)
         self.category_list.set_size_request(98, -1)
         self.search_time_source = 0
         
@@ -255,7 +255,7 @@ class PlaylistUI(gtk.VBox):
                       (None, "导入列表", self.leading_in_list),
                       (None, "打开列表", self.add_to_list),
                       (None, "导出列表", self.leading_out_list),
-                      (None, "删除列表", self.delete_current_list),
+                      (None, "删除列表", self.delete_item_list),
                       None,
                       (None, "保存所有列表", self.save_all_list)]
         Menu(menu_items, True).show((int(event.x_root), int(event.y_root)))
@@ -303,21 +303,25 @@ class PlaylistUI(gtk.VBox):
         except:    
             pass
         
-    def leading_out_list(self):    
-        if self.current_item:
-            WindowExportPlaylist(self.current_item.get_songs()).run()
+    def leading_out_list(self, item):    
+        if not item:
+            item = self.current_item
+        WindowExportPlaylist(item.get_songs()).run()
         
-    def add_to_list(self):    
+    def add_to_list(self, item=None):    
         uri = WindowLoadPlaylist().run()
         if uri:
             try:
-                self.current_item.song_view.async_add_uris(uri)
+                if not item:
+                    item = self.current_item
+                item.song_view.async_add_uris(uri)
             except: pass    
-    def delete_current_list(self):
+    def delete_item_list(self, index=None):
         if len(self.category_list.get_items(None)) == 1:
             return
-        index = self.get_current_item_index()
         
+        if not index:
+            index = self.get_current_item_index()
         self.category_list.del_item_from_index(index)
         
         max_index = len(self.category_list.get_items(None)) - 1
@@ -367,11 +371,35 @@ class PlaylistUI(gtk.VBox):
             return index
         return 0
     
-    def category_right_press_cb(self, widget, item, x, y):    
+    def category_right_press_cb(self, widget, item, x, y, index):    
         # new_event = namedtuple("event", "x_root y_root")
         # event = new_event(int(x), int(y))
         # self.popup_list_menu(widget, event)
-        pass
+        if index == -1:
+            menu_items = [
+                (None, "新建列表", self.new_list),
+                (None, "导入列表", self.leading_in_list),
+                None,
+                (None, "保存所有列表", self.save_all_list)
+                ]
+        else:    
+            menu_items = [
+                (None, "重命名", self.rename_item_list, item, index),
+                (None, "删除列表", self.delete_item_list, index),
+                (None, "打开列表", self.add_to_list, item),
+                None,
+                (None, "保存所有列表", self.save_all_list)
+                ]
+            
+        Menu(menu_items, True).show((x, y))    
+            
+    def rename_item_list(self, item, index):        
+        def rename_spec_list(name, spec_item, spec_index):
+            self.category_list.set_index_text(spec_index, name)
+            spec_item.set_title(name)
+        input_dialog = InputDialog("重命名", item.get_title(), 300, 100,
+                                   lambda name: rename_spec_list(name, item, index))    
+        input_dialog.show_all()
         
     def category_button_press_cb(self, widget, event):    
         if event.button == 3:
