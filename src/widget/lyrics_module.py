@@ -182,7 +182,7 @@ class LyricsModule(object):
     def expose_toolbar_mask(self, widget, event):    
         cr = widget.window.cairo_create()
         rect = widget.allocation
-        draw_alpha_mask(cr, rect.x - 9, rect.y - 2, rect.width + 18, rect.height + 4, "lyricsMask")
+        draw_alpha_mask(cr, rect.x - 9, rect.y, rect.width + 18, rect.height, "lyricsMask")
         return False
         
     def scroll_right_press_cb(self, widget, event):    

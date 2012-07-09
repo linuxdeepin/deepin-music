@@ -247,6 +247,8 @@ class SongView(ListView):
             
         if len(songs) >= 1 and play:
             if songs[0].exists():
+                del self.select_rows[:]
+                self.queue_draw()
                 self.set_highlight_song(songs[0])
                 gobject.idle_add(Player.play_new, self.highlight_item.get_song())
             

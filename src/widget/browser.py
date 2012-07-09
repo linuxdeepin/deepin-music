@@ -37,9 +37,10 @@ from widget.ui import SearchEntry
 from widget.song_view import MultiDragSongView
 from widget.ui_utils import switch_tab, render_text, draw_alpha_mask, create_right_align
 from widget.outlookbar import OptionBar, SongPathBar, SongImportBar
-from source.local import ImportFolderJob, ReloadDBJob, ImportFileJob
+from source.local import ImportFolderJob, ReloadDBJob
 from widget.combo import ComboMenuButton
 from cover_manager import CoverManager
+from pinyin import TransforDB
 
 
 class IconItem(gobject.GObject):
@@ -89,6 +90,8 @@ class IconItem(gobject.GObject):
             self.__normal_play_pixbuf.get_width(),
             self.__normal_play_pixbuf.get_height()
             )
+        
+        self.retrieve = TransforDB.convert(self.name_label)
         
     def pointer_in_play_rect(self, x, y):    
         if self.play_rect.x < x < self.play_rect.x + self.play_rect.width and self.play_rect.y < y < self.play_rect.y + self.play_rect.height:
@@ -215,6 +218,7 @@ class Browser(gtk.VBox, SignalContainer):
         self.view_mode = ICON_VIEW_MODE
         self.__search_flag = False
         self.__song_cache_items = []
+        self.__cover_cache_items = []
         
         # init widget.
         self.entry_box = SearchEntry("")
@@ -485,7 +489,7 @@ class Browser(gtk.VBox, SignalContainer):
             self.reload_path_flag = False
             
     def interval_reload_browser(self):        
-        if self.reload_flag:
+        if self.reload_flag and not self.__search_flag:
             self.reload_all_items(self.reload_path_flag)
             self.reload_flag = False    
             self.reload_path_flag = True
@@ -619,6 +623,17 @@ class Browser(gtk.VBox, SignalContainer):
                 self.songs_view.update_item_index()
                 self.songs_view.update_vadjustment()
             self.songs_view.queue_draw()    
+        elif self.view_mode == ICON_VIEW_MODE:    
+            if not self.__search_flag:
+                self.__cover_cache_items = self.filter_view.items[:]
+            if text != "":    
+                self.__search_flag = True
+                results = filter(lambda item: text.lower().replace(" ", "") in item.retrieve, self.__cover_cache_items)
+                self.filter_view.items = results
+            else:    
+                self.__search_flag = False
+                self.filter_view.items = self.__cover_cache_items
+            self.filter_view.queue_draw()    
         
     def switch_box(self, parent, child):    
         switch_tab(parent, child)
