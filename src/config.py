@@ -53,11 +53,8 @@ class Config(gobject.GObject, Logger):
                 
     def load(self):            
         ''' Load config items from the file. '''
-        version = config.get("setting", "version", "")
-        if version:
-            self._config.read(get_config_file(CONFIG_FILENAME))
-        else:    
-            config.set("setting", "version", "1.0")
+        self._config.read(get_config_file(CONFIG_FILENAME))
+        
     
     def get(self, section, option, default=""):
         ''' specified the section for read the option value. '''
