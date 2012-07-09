@@ -22,6 +22,7 @@
 
 
 from dtk.ui.global_key import GlobalKey, enable_global_key, disable_global_key
+from dtk.ui.threads import post_gui
 
 from helper import Dispatcher
 from player import Player
@@ -70,6 +71,7 @@ class GlobalHotKeys(Logger):
             
         self.keybinder.start()    
             
+    @post_gui    
     def __handle_callback(self, text, callback):
         self.logdebug(text)
         callback()
