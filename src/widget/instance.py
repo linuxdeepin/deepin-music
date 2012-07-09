@@ -28,6 +28,7 @@ from dtk.ui.menu import Menu
 from dtk.ui.button import ToggleButton
 from dtk.ui.slider import Wizard
 from dtk.ui.utils import get_parent_dir
+from dtk.ui.button import LinkButton
 
 import utils
 from widget.skin import app_theme
@@ -39,7 +40,7 @@ from widget.jobs_manager import jobs_manager
 from widget.tray import TrayIcon
 from widget.equalizer import EqualizerWindow
 from widget.preference import PreferenceDialog
-from widget.ui_utils import switch_tab
+from widget.ui_utils import switch_tab, create_right_align
 from widget.global_keys import GlobalHotKeys
 
 
@@ -109,14 +110,22 @@ class DeepinMusic(gobject.GObject, Logger):
         self.header_box.add(self.simple_header_bar)
         main_box.pack_start(self.header_box, False)
         main_box.pack_start(bottom_box, True)
-
-        block_box = gtk.EventBox()
-        block_box.set_visible_window(False)
-        block_box.set_size_request(-1, 22)
-        block_box.add(jobs_manager)
+        
+        self.link_box = gtk.HBox()
+        self.link_box.pack_start(create_right_align(), True, True)
+        self.link_box.pack_start(LinkButton("加入我们", "http://www.linuxdeepin.com/joinus/job"), False, False)
+        
+        status_box = gtk.HBox(spacing=5)
+        status_box.pack_start(jobs_manager)
+        status_box.pack_start(self.link_box, padding=5)
+        
+        status_bar = gtk.EventBox()
+        status_bar.set_visible_window(False)
+        status_bar.set_size_request(-1, 22)
+        status_bar.add(status_box)
         
         application.main_box.pack_start(main_box)        
-        application.main_box.pack_start(block_box, False, True)
+        application.main_box.pack_start(status_bar, False, True)
         
         if config.get("globalkey", "enable", "false") == "false":
             self.global_keys.pause()
@@ -153,6 +162,8 @@ class DeepinMusic(gobject.GObject, Logger):
         Dispatcher.connect("show-setting", lambda w : self.preference_dialog.show_all())
         Dispatcher.connect("show-desktop-page", lambda w: self.preference_dialog.show_desktop_lyrics_page())
         Dispatcher.connect("show-scroll-page", lambda w: self.preference_dialog.show_scroll_lyrics_page())
+        Dispatcher.connect("show-job", self.hide_link_box)
+        Dispatcher.connect("hide-job", self.show_link_box)
         
         gobject.idle_add(self.ready)
         
@@ -353,3 +364,11 @@ class DeepinMusic(gobject.GObject, Logger):
             app_theme.get_pixbuf("mode/full_press.png"),
             )
         return button
+
+    def hide_link_box(self, obj):
+        self.link_box.hide_all()
+        self.link_box.set_no_show_all(True)
+        
+    def show_link_box(self, obj):    
+        self.link_box.set_no_show_all(False)
+        self.link_box.show_all()

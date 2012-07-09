@@ -52,6 +52,8 @@ class EventDispatcher(gobject.GObject):
         "show-setting" : SIGNAL_BASE,
         "show-main-menu" : SIGNAL_TUPLE,
         "window-mode" :  (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_STRING,)),    
+        "show-job" : SIGNAL_BASE,
+        "hide-job" : SIGNAL_BASE,
         }
     
     def __init__(self):
@@ -108,6 +110,12 @@ class EventDispatcher(gobject.GObject):
         
     def reload_browser(self, infos):    
         self.emit("reload-browser", infos)
+        
+    def show_jobs(self):    
+        self.emit("show-job")
+        
+    def hide_jobs(self):    
+        self.emit("hide_job")
         
 Dispatcher = EventDispatcher()
 

@@ -30,6 +30,7 @@ from dtk.ui.label import Label
 from logger import Logger
 from widget.skin import app_theme
 from widget.ui_utils import draw_alpha_mask
+from helper import Dispatcher
 
 class JobsManager(gtk.HBox):
     __jobs = []
@@ -154,11 +155,13 @@ class JobsManager(gtk.HBox):
             self.jobs_label.hide_all()
 
         if self.__jobs:
+            Dispatcher.show_jobs()            
             message = self.__jobs[0][0].get_info()
             self.progress_label.set_text(message)
             self.show()
             return True
         else:
+            Dispatcher.hide_jobs()            
             self.hide()
             self.__id_updater = None
             return False
