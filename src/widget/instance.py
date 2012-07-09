@@ -22,9 +22,12 @@
 
 import gtk
 import gobject
+import os
 from dtk.ui.application import Application
 from dtk.ui.menu import Menu
 from dtk.ui.button import ToggleButton
+from dtk.ui.slider import Wizard
+from dtk.ui.utils import get_parent_dir
 
 import utils
 from widget.skin import app_theme
@@ -38,7 +41,7 @@ from widget.equalizer import EqualizerWindow
 from widget.preference import PreferenceDialog
 from widget.ui_utils import switch_tab
 from widget.global_keys import GlobalHotKeys
-# from widget.song_search import SongSearchUI
+
 
 from config import config
 from player import Player
@@ -49,8 +52,10 @@ from logger import Logger
 
 def mainloop():    
     gtk.main()
-    
 
+wizard_dir = os.path.join(get_parent_dir(__file__, 3), "wizard/cn")    
+print wizard_dir
+    
 class DeepinMusic(gobject.GObject, Logger):
     __gsignals__ = {"ready" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ())}
     
@@ -168,6 +173,16 @@ class DeepinMusic(gobject.GObject, Logger):
             if config.getboolean("lyrics", "status"):
                 self.lyrics_display.run()
         self.emit("ready")
+        Wizard(
+            [os.path.join(wizard_dir, "first_content.png"),
+             os.path.join(wizard_dir, "second_content.png"),
+             os.path.join(wizard_dir, "three_content.png"),
+             os.path.join(wizard_dir, "four_content.png")],
+            [(os.path.join(wizard_dir, "first_press.png"), os.path.join(wizard_dir, "first_normal.png")),
+             (os.path.join(wizard_dir, "second_press.png"), os.path.join(wizard_dir, "second_normal.png")),
+             (os.path.join(wizard_dir, "three_press.png"), os.path.join(wizard_dir, "three_normal.png")),
+             (os.path.join(wizard_dir, "four_press.png"), os.path.join(wizard_dir, "four_normal.png"))]
+            ).show_all()
         
     def force_quit(self, *args):    
         self.loginfo("Start quit...")
