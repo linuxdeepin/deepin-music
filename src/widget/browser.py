@@ -91,7 +91,7 @@ class IconItem(gobject.GObject):
             self.__normal_play_pixbuf.get_height()
             )
         
-        self.retrieve = TransforDB.convert(self.name_label)
+        self.retrieve = TransforDB.convert(self.name_label.lower().replace(" ", ""))
         
     def pointer_in_play_rect(self, x, y):    
         if self.play_rect.x < x < self.play_rect.x + self.play_rect.width and self.play_rect.y < y < self.play_rect.y + self.play_rect.height:
