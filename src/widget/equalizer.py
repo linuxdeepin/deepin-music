@@ -29,9 +29,10 @@ from dtk.ui.dialog import DialogBox, DIALOG_MASK_SINGLE_PAGE
 from dtk.ui.box import ImageBox
 from dtk.ui.button import Button
 from dtk.ui.menu import Menu
-from widget.skin import app_theme
+from dtk.ui.combo import ComboBox
 from dtk.ui.utils import get_widget_root_coordinate
 
+from widget.skin import app_theme
 from config import config
 from player import Player
 
@@ -170,12 +171,34 @@ MANDATORY["Soft"] = "4.8:1.6:0.0:-2.4:0.0:4:8:9.6:11.2:12"
 MANDATORY["Soft Rock"] = "4:4:2.4:0.0:-4:-5.6:-3.2:0.0:2.4:8.8"
 MANDATORY["Techno"] = "8:5.6:0.0:-5.6:-4.8:0.0:8:9.6:9.6:8.8"
 
-        
+mandatory_i18n = OrderedDict()
+mandatory_i18n["Custom"]  = "自定义"
+mandatory_i18n["Default"] = "默认"
+mandatory_i18n["Classical"] = "古典"
+mandatory_i18n["Club"] = "俱乐部"
+mandatory_i18n["Dance"] = "舞曲"
+mandatory_i18n["Full Bass"] = "增强低音"
+mandatory_i18n["Full Bass and Treble"] = "增强低音和高音"
+mandatory_i18n["Full Treble"] = "增强高音"
+mandatory_i18n["Laptop Speakers/Headphones"] = "耳机"
+mandatory_i18n["Large Hall"] = "大厅"
+mandatory_i18n["Live"] = "现场"
+mandatory_i18n["Party"] = "派对"
+mandatory_i18n["Pop"] = "流行"
+mandatory_i18n["Reggae"] = "瑞格"
+mandatory_i18n["Rock"] = "摇滚"
+mandatory_i18n["Ska"] = "斯卡"
+mandatory_i18n["Soft"] = "温和"
+mandatory_i18n["Soft Rock"] = "温和摇滚"
+mandatory_i18n["Techno"] = "电子"
+
 class EqualizerWindow(DialogBox):        
     def __init__(self):
         super(EqualizerWindow, self).__init__(
             "均衡器", 372, 168, DIALOG_MASK_SINGLE_PAGE, close_callback=self.hide_all, 
-            modal=False, window_hint=None)
+            modal=False, window_hint=None, skip_taskbar_hint=False)
+        
+        self.manual_flag = False
         
         try:
             pre_value = float(config.get("equalizer", "preamp"))
@@ -183,13 +206,13 @@ class EqualizerWindow(DialogBox):
             pre_value = 0.6
             
         pre_adjust = gtk.Adjustment(value=pre_value, lower= -10 , upper=10, step_incr=0.1, page_incr=1, page_size=0)
-        preamp_scale = PreampScalebar()
-        preamp_scale.scalebar.set_adjustment(pre_adjust)
+        self.preamp_scale = PreampScalebar()
+        self.preamp_scale.scalebar.set_adjustment(pre_adjust)
         pre_adjust.connect("value-changed", self.preamp_change)
         
         self.connect("configure-event", self.equalizer_configure_event)
         control_box = gtk.HBox(spacing=10)
-        control_box.pack_start(preamp_scale, False, False)
+        control_box.pack_start(self.preamp_scale, False, False)
         self.__scales = {}
         
         for i, label in enumerate(["32", "64", "125", "250", "500", "1k", "2k", "4k", "8k", "16k"]):
@@ -226,9 +249,13 @@ class EqualizerWindow(DialogBox):
         self.active_button = Button("关闭")
         self.active_button.connect("clicked", self.hide_win)
         self.reset_button = Button("重置")
-        self.reset_button.connect("clicked", lambda w : self.__change("Default"))
+        self.reset_button.connect("clicked", self.set_default_value)
         self.predefine_button = Button("预设")
         self.predefine_button.connect("clicked", self.show_predefine)
+        
+        self.predefine_combo_box = ComboBox([(value, key) for key, value in mandatory_i18n.items()],
+                                            250, select_index=self.get_selected_index())
+        self.predefine_combo_box.connect("item-selected", self.set_predefine_value)
             
         control_box_align = gtk.Alignment()
         control_box_align.set(0.0, 0.0, 1.0, 1.0)
@@ -244,8 +271,13 @@ class EqualizerWindow(DialogBox):
         main_box.add(control_box_align)
         
         self.body_box.pack_start(main_align, True, True)
-        self.left_button_box.set_buttons([self.predefine_button])
+        self.left_button_box.set_buttons([self.predefine_combo_box])
         self.right_button_box.set_buttons([self.reset_button, self.active_button])
+        
+    def set_default_value(self, widget):    
+        self.predefine_combo_box.set_select_index(1)
+        self.__change("Default")
+        self.preamp_scale.scalebar.set_value(0.6)
         
     def db_to_percent(self, dB):    
         return 10 ** (dB / 10)
@@ -303,6 +335,25 @@ class EqualizerWindow(DialogBox):
         if not self.has_tick:        
             self.menu_dict[MANDATORY_CUSTOM][0] = (app_theme.get_pixbuf("menu/tick.png"),
                                                    app_theme.get_pixbuf("menu/tick_press.png"))
+    def get_selected_index(self):        
+        values = []
+        for i in range(0, 10):
+            try:
+                value = int(float(config.get("equalizer", "equalizer-band%s" % str(i))))
+            except: value = 0    
+            values.append(str(value))
+        values = ":".join(values)    
+        
+        for index, value in enumerate(MANDATORY.values()):
+            value = value.split(":")            
+            value = ":".join([str(int(float(v))) for v in value])
+
+            if value == values:
+                return index
+        return 0    
+    
+    def set_predefine_value(self, widget, label, allocated_data, index):
+        self.__change(allocated_data)
         
     def show_predefine(self, widget):    
         self.__select_name()
@@ -311,7 +362,10 @@ class EqualizerWindow(DialogBox):
         Menu(menu_items, True).show(get_widget_root_coordinate(widget))
     
     def __on_adjust_change(self, adjust, i):    
+        if not self.manual_flag:
+            self.predefine_combo_box.set_select_index(0)
         config.set("equalizer", "equalizer-band%s" % str(i), str(adjust.get_value()))
+        self.manual_flag = False        
         
     def __save(self, *args):    
         text = self.predefine_button.get_label()
@@ -328,8 +382,10 @@ class EqualizerWindow(DialogBox):
             
     def __change(self, name):        
         if name == MANDATORY_CUSTOM:
+            self.predefine_combo_box.set_select_index(0)
             return True
         
+        self.manual_flag = True
         if name in MANDATORY.keys():
             values = MANDATORY[name].split(":")
 
