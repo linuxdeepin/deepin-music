@@ -122,8 +122,10 @@ class GeneralSetting(gtk.VBox):
     def update_fade_status(self, widget):        
         if widget.get_active():
             config.set("player", "crossfade", "true")
+            self.fade_spin.set_sensitive(True)
         else:    
             config.set("player", "crossfade", "false")
+            self.fade_spin.set_sensitive(False)
             
     def update_album_status(self, widget):        
         if self.album_check_button.get_active():    
@@ -265,6 +267,17 @@ class HotKeySetting(gtk.VBox):
         self.main_table.set_row_spacings(10)
         self.pack_start(self.main_table, False, True)
         self.create_hotkey_box()
+        
+        self.control_entrys = [
+            self.toggle_window_entry,
+            self.toggle_lyrics_status_entry,
+            self.toggle_lyrics_lock_entry,
+            self.playpause_entry,
+            self.previous_entry,
+            self.next_entry,
+            self.increase_vol_entry,
+            self.decrease_vol_entry]
+        
         self.using_check_button.connect("toggled", self.change_enbale_status)
         self.using_check_button.set_active(config.getboolean("globalkey", "enable"))        
         self.toggle_window_entry.connect("shortcut-key-change", self.change_toggle_window_key)
@@ -276,11 +289,19 @@ class HotKeySetting(gtk.VBox):
         self.increase_vol_entry.connect("shortcut-key-change", self.change_increase_vol_key)
         self.decrease_vol_entry.connect("shortcut-key-change", self.change_decrease_vol_key)
         
+        if not config.getboolean("globalkey", "enable"):
+            for each_entry in self.control_entrys:
+                each_entry.set_sensitive(False)
+        
     def change_enbale_status(self, widget):    
         if widget.get_active():
             config.set("globalkey", "enable", "true")
+            for each_entry in self.control_entrys:
+                each_entry.set_sensitive(True)
         else:    
             config.set("globalkey", "enable", "false")
+            for each_entry in self.control_entrys:
+                each_entry.set_sensitive(False)
             
     def change_toggle_window_key(self, widget, value):    
         config.set("globalkey", "toggle_window", value)
@@ -318,6 +339,7 @@ class HotKeySetting(gtk.VBox):
         # using check button.
         using_hbox = gtk.HBox()
         self.using_check_button = CheckButton("启用快捷键")
+
         using_hbox.pack_start(self.using_check_button, False, False)
         using_hbox.pack_start(create_right_align(), False, True)
         self.main_table.attach(using_hbox, 0, 2, 2, 3, yoptions=gtk.FILL)
@@ -336,19 +358,43 @@ class HotKeySetting(gtk.VBox):
         
         # Button.
         default_button = Button("恢复默认")
+        default_button.connect("clicked", self.restore_to_default)
         button_hbox = gtk.HBox()
         button_hbox.pack_start(create_right_align(), True, True)
         button_hbox.pack_start(default_button, False, False)
         self.main_table.attach(button_hbox, 0, 2, 11, 12, xpadding=10)
         
+    def restore_to_default(self, widget):    
+        self.toggle_window_entry.set_shortcut_key("Ctrl + Alt + W")        
+        self.change_toggle_window_key(None, "Ctrl + Alt + w")
+        
+        self.toggle_lyrics_status_entry.set_shortcut_key("Ctrl + Alt + H")
+        self.change_lyrics_status_key(None, "Ctrl + Alt + H")
+        
+        self.toggle_lyrics_lock_entry.set_shortcut_key("Ctrl + Alt + D")
+        self.change_lyrics_lock_key(None, "Ctrl + Alt + D")
+        
+        self.playpause_entry.set_shortcut_key("Alt + F5")
+        self.change_playpause_key(None, "Alt + F5")        
+        
+        self.previous_entry.set_shortcut_key("Alt + Left")
+        self.change_previous_key(None, "Alt + Left")
+        
+        self.next_entry.set_shortcut_key("Alt + Right")
+        self.change_next_key(None, "Alt + Right")
+        
+        self.increase_vol_entry.set_shortcut_key("Alt + Up")
+        self.change_increase_vol_key(None, "Alt + Up")
+        
+        self.decrease_vol_entry.set_shortcut_key("Alt + Down")
+        self.change_decrease_vol_key(None, "Alt + Down")
+        
     def create_combo_entry(self, top_attach, bottom_attach, label_content, hotkey_content):    
-        combo_hbox = gtk.HBox()
+        combo_hbox = gtk.HBox(spacing=5)
         combo_hbox.pack_start(create_right_align(), True, True)
         
         # single_hotkey_label
-        width, _ = get_content_size(label_content, 10)
         hotkey_label = Label(label_content)
-        hotkey_label.set_size_request(width, 20)
         combo_hbox.pack_start(hotkey_label, False, False)
         
         # Hotkey entry.
