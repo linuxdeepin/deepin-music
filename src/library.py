@@ -913,10 +913,22 @@ class DBQuery(gobject.GObject, Logger):
         self.__delete_song_attr(song, (genre2, artist2, album))        
                 
     def __get_str_info(self, song):            
-        return song.get_str("genre"), song.get_str("artist"), song.get_str("album")
+        genre = song.get_str("genre")
+        artist = song.get_str("artist")
+        album = song.get_str("album")
+        if not genre.strip(): genre = "未知"
+        if not artist.strip(): artist = "未知"
+        if not album.strip(): album = "未知"
+        return genre, artist, album
     
     def __get_info(self, song):
-        return song.get_str("genre"), song.get_str("artist"), song.get_str("album")
+        genre = song.get_str("genre")
+        artist = song.get_str("artist")
+        album = song.get_str("album")
+        if not genre.strip(): genre = "未知"
+        if not artist.strip(): artist = "未知"
+        if not album.strip(): album = "未知"
+        return genre, artist, album
     
     def get_random_song(self):
         songs = list(self.__tree[1])

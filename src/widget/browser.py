@@ -91,7 +91,7 @@ class IconItem(gobject.GObject):
             self.__normal_play_pixbuf.get_height()
             )
         
-        self.retrieve = TransforDB.convert(self.name_label.lower().replace(" ", ""))
+        self.retrieve = TransforDB.convert(self.name_label.lower().replace(" ", "")) + self.name_label.lower().replace(" ", "")
         
     def pointer_in_play_rect(self, x, y):    
         if self.play_rect.x < x < self.play_rect.x + self.play_rect.width and self.play_rect.y < y < self.play_rect.y + self.play_rect.height:
@@ -387,7 +387,6 @@ class Browser(gtk.VBox, SignalContainer):
         _dict = self.get_infos_from_db(tag)
         keys = _dict.keys()
         keys.sort()
-        keys.reverse()
         items = []
         all_nb = len(self.__db_query.get_all_songs())
         items.append(IconItem(("deepin-all-songs", "deepin-all-songs", all_nb, tag)))
