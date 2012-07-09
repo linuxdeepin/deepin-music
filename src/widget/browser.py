@@ -376,6 +376,7 @@ class Browser(gtk.VBox, SignalContainer):
         self.view_mode = ICON_VIEW_MODE
         
     def reload_filter_view(self, tag="artist", switch=False, use_path=False):    
+        self.entry_box.entry.set_text("")
         self.back_button.set_no_show_all(True)
         self.back_button.hide()
         self.categorybar_status = tag
@@ -444,6 +445,7 @@ class Browser(gtk.VBox, SignalContainer):
     def update_path_filter_view(self, name):
         self.back_button.set_no_show_all(True)
         self.back_button.hide()
+        self.entry_box.entry.set_text("")
         
         self.filter_view.clear()
         if self.__current_path == "###ALL###":
@@ -557,6 +559,7 @@ class Browser(gtk.VBox, SignalContainer):
     
     def __on_double_click_item(self, widget,  item, x, y):
         self.current_icon_item = item
+        self.entry_box.entry.set_text("")
         self.back_button.set_no_show_all(False)
         self.back_button.show()
         if self.path_categorybar.get_index() == -1:

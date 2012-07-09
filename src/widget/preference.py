@@ -339,7 +339,7 @@ class HotKeySetting(gtk.VBox):
         button_hbox = gtk.HBox()
         button_hbox.pack_start(create_right_align(), True, True)
         button_hbox.pack_start(default_button, False, False)
-        self.main_table.attach(button_hbox, 0, 2, 11, 12)
+        self.main_table.attach(button_hbox, 0, 2, 11, 12, xpadding=10)
         
     def create_combo_entry(self, top_attach, bottom_attach, label_content, hotkey_content):    
         combo_hbox = gtk.HBox()
@@ -354,9 +354,14 @@ class HotKeySetting(gtk.VBox):
         # Hotkey entry.
         hotkey_entry = ShortcutKeyEntry(hotkey_content)
         hotkey_entry.set_size(170, 24)
+        hotkey_entry_align = gtk.Alignment()
+        hotkey_entry_align.set_padding(0, 0, 0, 50)
+        hotkey_entry_align.add(hotkey_entry)
+        combo_hbox.pack_start(hotkey_entry_align, False, False)
         
-        self.main_table.attach(combo_hbox, 0, 1, top_attach, bottom_attach, xpadding=5)
-        self.main_table.attach(hotkey_entry, 1, 2, top_attach, bottom_attach, xoptions=gtk.FILL)
+        self.main_table.attach(combo_hbox, 0, 2, top_attach, bottom_attach, xpadding=5)
+        # self.main_table.attach(combo_hbox, 0, 1, top_attach, bottom_attach, xpadding=5)
+        # self.main_table.attach(hotkey_entry, 1, 2, top_attach, bottom_attach, xoptions=gtk.FILL)
         
         return hotkey_entry
         
