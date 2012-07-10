@@ -59,7 +59,6 @@ class DesktopLyrics(gtk.Window):
         self.set_decorated(False)
         self.set_skip_pager_hint(True)
         self.set_app_paintable(True)
-        # self.set_keep_above(True)
         self.set_colormap(gtk.gdk.Screen().get_rgba_colormap())
         self.render_lyrics = RenderContextNew()
         self.bg_pixbuf = app_theme.get_pixbuf("lyric/bg.png").get_pixbuf()

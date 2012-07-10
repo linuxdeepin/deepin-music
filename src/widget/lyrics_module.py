@@ -100,7 +100,6 @@ class LyricsModule(object):
         
     def init_toolbar(self):    
         self.toolbar = Window(window_type=gtk.WINDOW_POPUP) 
-        self.toolbar.background_dpixbuf = app_theme.get_pixbuf("lyric/background.png")
         self.toolbar.set_size_request(-1, 41)
         padding_x, padding_y = 10, 5
         play_box = gtk.HBox(spacing=2)
@@ -384,7 +383,8 @@ class LyricsModule(object):
                 menu_items.append((None, value, self.set_predefine_color, key))    
             else:    
                 menu_items.append((item_pixbuf, value, self.set_predefine_color, key))    
-        Menu(menu_items, True).show((int(event.x_root), int(event.y_root)))
+        predefine_menu = Menu(menu_items, True)
+        predefine_menu.show((int(event.x_root), int(event.y_root)))
         
     def set_predefine_color(self, key):    
         values = PREDEFINE_COLORS[key]
