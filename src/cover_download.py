@@ -105,15 +105,44 @@ class FetchManager(SignalContainer):
     def __init__(self, db_query):
         SignalContainer.__init__(self)
         self.__db_query = db_query
+        self.artist_missions_threadpool = MissionThreadPool(5, 1000, self.feedback)
+        self.album_missions_threadpool = MissionThreadPool(5, 1000, self.feedback)
         
     def connect_to_db(self):    
         self.autoconnect(self.__db_query, "full-update", self.__full_update)
+        self.autoconnect(self.__db_query, "added", self.add_new_missions)
         self.__db_query.set_query("")
     
     def __full_update(self, db_query):    
-        self.start_artist_missions()
-        self.start_album_missions()
-    
+        self.init_artist_missions()
+        self.init_album_missions()
+        
+        self.artist_missions_threadpool.start()
+        self.album_missions_threadpool.start()
+        
+    def add_new_missions(self, db_query, songs):    
+        artist_keys = self.filter_artists([song.get_str("artist") for song in songs])
+        album_infos = self.filter_albums([(song.get_str("artist"), song.get_str("album")) for song in songs])
+        if artist_keys:
+            self.artist_missions_threadpool.add_missions([FetchArtistCover(artist) for artist in artist_keys])
+        if album_infos:    
+            self.album_missions_threadpool.add_missions([FetchAlbumCover(album_info) for album_info in album_infos])
+        
+    def filter_artists(self, artist_keys):    
+        artist_results = [artist.replace("/", "") for artist in artist_keys if not os.path.exists(get_cover_save_path(artist.replace("/", ""))) and artist]
+        artist_results.sort()
+        return artist_results
+        
+    def filter_albums(self, infos):
+        results = []
+        for key, value in infos:
+            artist_name = key.replace("/", "")
+            album_name = value.replace("/", "")
+            if not os.path.exists(get_cover_save_path("%s-%s" % (artist_name, album_name))):
+                results.append((artist_name, album_name))
+        results.sort()        
+        return results        
+        
     def get_infos_from_db(self, tag, values=None):
         genres = []
         artists = []
@@ -140,21 +169,23 @@ class FetchManager(SignalContainer):
         else:
             return []
         
-    def start_artist_missions(self):    
+    def init_artist_missions(self):    
         artists = self.get_infos_from_db("artist")
+        artist_missions = []
         if artists:
-            artist_missions = []
-            for artist_name in artists:
-                artist_missions.append(FetchArtistCover(artist_name.replace("/", "")))
-            MissionThreadPool(artist_missions, 5).start()    
+            artist_missions = [FetchArtistCover(artist_name.replace("/", "")) for artist_name in artists]
             
-    def start_album_missions(self):        
+        if artist_missions:    
+            self.artist_missions_threadpool.add_missions(artist_missions)
+            
+    def init_album_missions(self):        
         albums = self.get_infos_from_db("album")
+        album_missions = []
         if albums:
-            album_missions = []
-            for album_info in albums:
-                album_missions.append(FetchAlbumCover(album_info))
-            MissionThreadPool(album_missions, 5, 2000, self.feedback).start()    
+            album_missions = [FetchAlbumCover(album_info) for album_info in albums]
+            
+        if album_missions:    
+            self.album_missions_threadpool.add_missions(album_missions)
             
     @post_gui        
     def feedback(self, infos):        

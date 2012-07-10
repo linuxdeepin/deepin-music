@@ -118,3 +118,4 @@ class GlobalHotKeys(Logger):
     def stop(self):    
         self.keybinder.exit()
         
+global_hotkeys = GlobalHotKeys()        
