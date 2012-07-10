@@ -925,14 +925,9 @@ class AboutBox(gtk.VBox):
         title_box.pack_start(logo_box, False, False)
         title_box.pack_start(info_box, False, False)
         
-        describe = '''   ﻿深度音乐播放器是Linux Deepin团队为广大linux用户量身开发的一款音乐软件.
-具有歌词搜索下载、桌面歌词显示、专辑封面下载、歌曲记忆播放、独创音乐管理、
-自定义换肤等几大特点.
-
-深度音乐播放器是自由软件,遵循自由软件基金会发布的 GNU 通用公共许可证第三版.'''
-        print describe
+        describe = '''   ﻿深度音乐播放器是Linux Deepin团队为广大linux用户量身开发的一款音乐软件.具有歌词搜索下载,桌面歌词显示,专辑封面下载,歌曲记忆播放,独创音乐管理,自定义换肤等几大特点.深度音乐播放器是自由软件,遵循自由软件基金会发布的 GNU 通用公共许可证第三版.'''
         
-        describe_label = Label(describe)
+        describe_label = Label(describe, enable_select=False, wrap_width=370)
         main_box.pack_start(title_box, False, False)
         main_box.pack_start(create_separator_box(), False, True)
         main_box.pack_start(describe_label, False, False)
