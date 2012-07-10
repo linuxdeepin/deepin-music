@@ -26,7 +26,7 @@ import cairo
 from collections import OrderedDict
 
 from dtk.ui.label import Label
-from dtk.ui.box import BackgroundBox
+from dtk.ui.box import BackgroundBox, ImageBox
 from dtk.ui.button import CheckButton, RadioButton
 from dtk.ui.spin import SpinBox
 from dtk.ui.entry import InputEntry, ShortcutKeyEntry
@@ -43,6 +43,7 @@ from widget.ui_utils import (get_font_families, switch_tab,
                              draw_alpha_mask)
 from widget.dialog import WinDir
 from widget.global_keys import global_hotkeys
+from widget.skin import app_theme
 from render_lyrics import RenderContextNew
 from constant import PREDEFINE_COLORS
 from config import config
@@ -898,6 +899,52 @@ class ScrollLyricsSetting(gtk.VBox):
         hbox.pack_start(spinbox, False, False)
         return hbox, spinbox
     
+class AboutBox(gtk.VBox):    
+    
+    def __init__(self):
+        gtk.VBox.__init__(self)
+        main_box = gtk.VBox(spacing=15)
+        logo_image = ImageBox(app_theme.get_pixbuf("skin/logo1.png"))
+        light_color = app_theme.get_color("labelText")
+        logo_name = Label("深度音乐", text_size=10)
+        logo_box = gtk.HBox(spacing=2)
+        logo_box.pack_start(logo_image, False, False)
+        logo_box.pack_start(logo_name, False, False)
+        
+        version_label = Label("版本: ")
+        version_content = Label("V1.0", light_color)
+        publish_label = Label("  发布时间: ")
+        publish_content = Label("2012.07.12    ", light_color)
+        info_box = gtk.HBox(spacing=5)
+        info_box.pack_start(version_label, False, False)
+        info_box.pack_start(version_content, False, False)
+        info_box.pack_start(publish_label, False, False)
+        info_box.pack_start(publish_content, False, False)
+        
+        title_box = gtk.HBox(spacing=140)
+        title_box.pack_start(logo_box, False, False)
+        title_box.pack_start(info_box, False, False)
+        
+        describe = '''   ﻿深度音乐播放器是Linux Deepin团队为广大linux用户量身开发的一款音乐软件.
+具有歌词搜索下载、桌面歌词显示、专辑封面下载、歌曲记忆播放、独创音乐管理、
+自定义换肤等几大特点.
+
+深度音乐播放器是自由软件,遵循自由软件基金会发布的 GNU 通用公共许可证第三版.'''
+        print describe
+        
+        describe_label = Label(describe)
+        main_box.pack_start(title_box, False, False)
+        main_box.pack_start(create_separator_box(), False, True)
+        main_box.pack_start(describe_label, False, False)
+        
+        main_align = gtk.Alignment()
+        main_align.set_padding(25, 0, 0, 0)
+        main_align.set(0, 0, 1, 1)
+        main_align.add(main_box)
+        
+        self.add(main_align)
+        
+    
 class PreferenceDialog(DialogBox):
     
     def __init__(self):
@@ -926,7 +973,7 @@ class PreferenceDialog(DialogBox):
         lyrics_node = self.category_bar.add_item(None, CategoryItem("歌词设置"))
         self.category_bar.add_item(lyrics_node, CategoryItem("桌面歌词", self.desktop_lyrics_setting))
         self.category_bar.add_item(lyrics_node, CategoryItem("窗口歌词", self.scroll_lyrics_setting))
-        self.category_bar.add_item(None, CategoryItem("关于我们"))
+        self.category_bar.add_item(None, CategoryItem("关于我们", AboutBox()))
         self.category_bar.connect("single-click-item", self.category_single_click_cb)
         self.category_bar.set_highlight_index(0)
         
