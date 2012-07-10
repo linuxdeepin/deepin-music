@@ -91,6 +91,7 @@ class DeepinMusic(gobject.GObject, Logger):
         self.preference_dialog = PreferenceDialog()
         self.simple_browser = SimpleBrowser()
         self.equalizer_win = EqualizerWindow()
+
             
         self.window.add_move_event(self.full_header_bar)
         self.window.add_move_event(self.simple_header_bar)
@@ -186,16 +187,7 @@ class DeepinMusic(gobject.GObject, Logger):
         # wizard
         first_started =  config.get("setting", "first_started", "")
         if not first_started:
-            Wizard(
-                [os.path.join(wizard_dir, "first_content.png"),
-                 os.path.join(wizard_dir, "second_content.png"),
-                 os.path.join(wizard_dir, "three_content.png"),
-                 os.path.join(wizard_dir, "four_content.png")],
-                [(os.path.join(wizard_dir, "first_press.png"), os.path.join(wizard_dir, "first_normal.png")),
-                 (os.path.join(wizard_dir, "second_press.png"), os.path.join(wizard_dir, "second_normal.png")),
-                 (os.path.join(wizard_dir, "three_press.png"), os.path.join(wizard_dir, "three_normal.png")),
-                 (os.path.join(wizard_dir, "four_press.png"), os.path.join(wizard_dir, "four_normal.png"))]
-                ).show_all()
+            self.show_wizard_win()
             config.set("setting", "first_started", "false")
         
     def force_quit(self, *args):    
@@ -297,17 +289,29 @@ class DeepinMusic(gobject.GObject, Logger):
             (self.get_pixbuf_group("playmode"), "播放模式", curren_view.get_playmode_menu()),
             None,
             (None, "均衡器", lambda : self.equalizer_win.run()),
-            # (None, "歌曲搜索", lambda : SongSearchUI().show_window()),
             None,
             self.get_lyrics_menu_items(),
             self.get_locked_menu_items(),
             None,
             (self.get_pixbuf_group("setting"), "选项设置", lambda : self.preference_dialog.show_all()),
+            (None, "查看新特性", self.show_wizard_win),
             (None, "关于软件", None),
             None,
             (self.get_pixbuf_group("close"), "退出", self.force_quit),
             ]
         Menu(menu_items, True).show((x, y))
+        
+    def show_wizard_win(self):    
+        Wizard(
+            [os.path.join(wizard_dir, "first_content.png"),
+             os.path.join(wizard_dir, "second_content.png"),
+             os.path.join(wizard_dir, "three_content.png"),
+             os.path.join(wizard_dir, "four_content.png")],
+            [(os.path.join(wizard_dir, "first_press.png"), os.path.join(wizard_dir, "first_normal.png")),
+             (os.path.join(wizard_dir, "second_press.png"), os.path.join(wizard_dir, "second_normal.png")),
+             (os.path.join(wizard_dir, "three_press.png"), os.path.join(wizard_dir, "three_normal.png")),
+             (os.path.join(wizard_dir, "four_press.png"), os.path.join(wizard_dir, "four_normal.png"))]
+            ).show_all()
         
     def get_lyrics_menu_items(self):    
         if config.getboolean("lyrics", "status"):

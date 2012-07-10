@@ -55,8 +55,16 @@ def cleanup_cover(old_path, new_path):
             if os.path.exists(old_path): os.unlink(old_path)            
             return False
         else:
-            if os.path.exists(new_path): os.unlink(new_path)
-            if os.path.exists(old_path): os.unlink(old_path)            
+            try:
+                if os.path.exists(new_path): os.unlink(new_path)
+
+            except:    
+                pass
+            try:
+                if os.path.exists(old_path): os.unlink(old_path)                            
+            except:    
+                pass
+            
             pixbuf.save(new_path, "jpeg", {"quality":"85"})
             del pixbuf  
             # Change property album to update UI
