@@ -23,32 +23,34 @@
 import gtk
 import gobject
 from dtk.ui.button import Button
-from dtk.ui.entry import TextEntry
+from dtk.ui.entry import InputEntry
 from dtk.ui.utils import get_content_size
+from dtk.ui.dialog import DialogBox, DIALOG_MASK_MULTIPLE_PAGE
 from dtk.ui.threads import post_gui
+from dtk.ui.label import Label
 
-from constant import DEFAULT_FONT_SIZE
+
 from dtk.ui.listview import ListView
 from dtk.ui.scrolled_window import ScrolledWindow
 from widget.ui_utils import render_item_text
 from lrc_download import TTPlayer, DUOMI, SOSO
 from helper import Dispatcher
+from constant import DEFAULT_FONT_SIZE
 from lrc_manager import LrcManager
 from player import Player
 from config import config
 import utils
-from dtk.ui.dialog import DialogBox, DIALOG_MASK_SINGLE_PAGE
-from dtk.ui.label import Label
+
 
 class SearchUI(DialogBox):
     def __init__(self):
         DialogBox.__init__(
-            self, "均衡器", 460, 300, DIALOG_MASK_SINGLE_PAGE, close_callback=self.hide_all, 
-            modal=False, window_hint=None)
-        self.artist_entry = TextEntry()
-        self.artist_entry.set_size(120, 25)
-        self.title_entry = TextEntry()
-        self.title_entry.set_size(120, 25)
+            self, "歌词搜索", 460, 300, DIALOG_MASK_MULTIPLE_PAGE, close_callback=self.hide_all, 
+            modal=False, window_hint=None, skip_taskbar_hint=False)
+        self.artist_entry = InputEntry()
+        self.artist_entry.set_size(130, 23)
+        self.title_entry = InputEntry()
+        self.title_entry.set_size(130, 23)
         artist_label = Label("艺术家:")
         title_label = Label("歌曲:")
         right_align = gtk.Alignment()
@@ -57,18 +59,20 @@ class SearchUI(DialogBox):
         search_button = Button("搜索")
         search_button.connect("clicked", self.search_lyric_cb)
         
-        info_box = gtk.HBox(spacing=10)
+        info_box = gtk.HBox(spacing=25)
+        
+        control_box = gtk.HBox(spacing=5)
         title_box = gtk.HBox(spacing=5)        
         title_box.pack_start(title_label, False, False)
         title_box.pack_start(self.title_entry)
         artist_box = gtk.HBox(spacing=5)
         artist_box.pack_start(artist_label, False, False)
         artist_box.pack_start(self.artist_entry)
+        control_box.pack_start(title_box, False, False)
+        control_box.pack_start(artist_box, False, False)
         
-        info_box.pack_start(title_box, False, False, 5)
-        info_box.pack_start(artist_box, False, False)
-        info_box.pack_start(right_align, True, True)
-        info_box.pack_start(search_button, False, False, 5)
+        info_box.pack_start(control_box, False, False)
+        info_box.pack_start(search_button, False, False)
         
         scrolled_window = ScrolledWindow(0, 0)
         scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
@@ -85,8 +89,12 @@ class SearchUI(DialogBox):
         cancel_button = Button("关闭")
         cancel_button.connect("clicked", lambda w: self.hide_all())
         
+        info_box_align = gtk.Alignment()
+        info_box_align.set_padding(5, 0, 5, 0)
+        info_box_align.add(info_box)
+        
         self.body_box.set_spacing(5)
-        self.body_box.pack_start(info_box, False, False)
+        self.body_box.pack_start(info_box_align, False, False)
         self.body_box.pack_start(scrolled_window, True, True)
         self.left_button_box.set_buttons([self.prompt_label])
         self.right_button_box.set_buttons([download_button, cancel_button])

@@ -29,7 +29,6 @@ from dtk.ui.label import Label
 from dtk.ui.box import BackgroundBox
 from dtk.ui.button import CheckButton, RadioButton
 from dtk.ui.spin import SpinBox
-from dtk.ui.utils import get_content_size
 from dtk.ui.entry import InputEntry, ShortcutKeyEntry
 from dtk.ui.treeview import TreeView
 from dtk.ui.button import Button
