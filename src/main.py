@@ -228,7 +228,10 @@ class DeepinMusicApp(Logger):
                 import dbus_manager
                 dbus_manager.run_commands(self.options, self.dbus)
                 
-            SimpleFetchManager()
+            self.start_fetch_manager()
+            
+    def start_fetch_manager(self):
+        SimpleFetchManager()
                 
     def __show_splash(self):            
         import widget

@@ -25,6 +25,7 @@ import gobject
 import gtk
 import fnmatch
 import random
+
 from dtk.ui.utils import get_optimum_pixbuf_from_file
 
 from mutagen.id3 import ID3
@@ -238,7 +239,7 @@ class DeepinCoverManager(Logger):
                         if self.cleanup_cover(song, song_dir + "/" + matches[0], image_path):
                             return image_path
 
-        if not config.getboolean("setting", "offline") and try_web:                
+        if not config.getboolean("setting", "offline") and try_web:
             try:
                 ret = False
                 # try url cover tag
