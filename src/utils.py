@@ -281,7 +281,7 @@ def duration_to_string(value, default="", i=1000):
     if not value: return default
     duration = "%02d:%02d" % ((value/(60*i)) % 60, (value/i) % 60)
     if value/(60*i) / 60 >= 1:
-        duration = "%d:" % (value/(60*i) % 60) + duration
+        duration = "%d:" % (value/(60*i) / 60) + duration
     return duration    
 
 def parse_folder(parent_dir):
