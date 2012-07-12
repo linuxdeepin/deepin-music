@@ -38,59 +38,9 @@ LOCALE_DIR=os.path.join(get_parent_dir(__file__, 2), "locale")
 if not os.path.exists(LOCALE_DIR):
     LOCALE_DIR="/usr/share/locale"
     
-gettext.textdomain("deepin-music-player")    
-gettext.bindtextdomain("deepin-music-player", LOCALE_DIR)
-_ = gettext.gettext
-
-# import locale
-# import os.path
-
-# def get_parent_dir(filepath, level=1):
-#     '''Get parent dir.'''
-#     parent_dir = os.path.realpath(filepath)
-    
-#     while(level > 0):
-#         parent_dir = os.path.dirname(parent_dir)
-#         level -= 1
-    
-#     return parent_dir
-
-# LOCALE_DIR=os.path.join(get_parent_dir(__file__, 2), "locale")
+# gettext.textdomain("deepin-music-player")    
+# gettext.bindtextdomain("deepin-music-player", LOCALE_DIR)
+# _ = gettext.gettext
+_ = gettext.translation("deepin-music-player", LOCALE_DIR).gettext
 
 
-# try:
-#     # Set to user default, gracefully fallback on C otherwise
-#     locale.setlocale(locale.LC_ALL, '')
-# except locale.Error:
-#     pass
-
-# try:
-#     print "true"
-#     import gettext as gettextmod
-
-#     gettextmod.textdomain('deepin-music-player')
-#     gettextmod.bindtextdomain('deepin-music-player', LOCALE_DIR)
-
-#     gettextfunc = gettextmod.gettext
-
-#     def gettext(text):
-#         return gettextfunc(text).decode("utf-8")
-
-#     ngettextfunc = gettextmod.ngettext
-
-#     def ngettext(singular, plural, n):
-#         return ngettextfunc(singular, plural, n).decode('utf-8')
-
-# except ImportError:
-#     # gettext is not available.  Provide a dummy function instead
-#     print "error"
-#     def gettext(text):
-#         return text
-
-#     def ngettext(singular, plural, n):
-#         if n == 1:
-#             return singular
-#         else:
-#             return plural
-
-# _ = gettext        
