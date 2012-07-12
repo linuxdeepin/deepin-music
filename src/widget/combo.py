@@ -234,7 +234,7 @@ class ComboMenuButton(gtk.HBox):
         Menu(menu_items, True).show((int(event.x_root) - 10, int(event.y_root)))
         
     def get_menu_pixbuf_group(self, name):    
-        return (app_theme.get_pixbuf("combo/%s_press.png" % name), None)
+        return (app_theme.get_pixbuf("combo/%s_press.png" % name), app_theme.get_pixbuf("combo/%s_hover.png" % name))
         
     def update_widget_icon(self, name, tip_msg):    
         self.left_button.update_icon_group((

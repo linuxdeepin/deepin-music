@@ -146,7 +146,7 @@ class LyricsModule(object):
         predefine_align = self.__create_simple_button("predefine_color", self.popup_predefine_menu, 
                                                       _("predefined color schemes"), True)
         lock_align = self.__create_simple_button("lock", self.__lock_lyrics, _("Lock/unlock lyrics"))
-        karaoke_align, self.karaoke_button = self.__create_simple_toggle_button("karaoke", "karaoke", 
+        karaoke_align, self.karaoke_button = self.__create_single_toggle_button("karaoke", 
                                                                                 self.change_karaoke_status,
                                                                                 _("karaoke on/off"))
         line_align, self.line_button = self.__create_simple_toggle_button("single_line", "double_line",
@@ -282,7 +282,11 @@ class LyricsModule(object):
     def __create_simple_toggle_button(self, normal_name, active_name, callback, tip_msg=None):
         toggle_button = ToggleButton(
             app_theme.get_pixbuf("lyric/%s_normal.png" % normal_name),
-            app_theme.get_pixbuf("lyric/%s_press.png" % active_name)
+            app_theme.get_pixbuf("lyric/%s_normal.png" % active_name),
+            app_theme.get_pixbuf("lyric/%s_hover.png" % normal_name),
+            app_theme.get_pixbuf("lyric/%s_hover.png" % active_name),
+            app_theme.get_pixbuf("lyric/%s_press.png" % normal_name),
+            app_theme.get_pixbuf("lyric/%s_press.png" % active_name),
             )
         toggle_button.connect("toggled", callback)
         toggle_align = gtk.Alignment()
@@ -292,7 +296,22 @@ class LyricsModule(object):
         if tip_msg:
             Tooltip.text(toggle_button, tip_msg)
         return toggle_align, toggle_button
+    
+    def __create_single_toggle_button(self, normal_name, callback, tip_msg=None):
+        toggle_button = ToggleButton(
+            app_theme.get_pixbuf("lyric/%s_normal.png" % normal_name),
+            app_theme.get_pixbuf("lyric/%s_press.png" % normal_name),            
+            app_theme.get_pixbuf("lyric/%s_hover.png" % normal_name),
+            )
+        toggle_button.connect("toggled", callback)
+        toggle_align = gtk.Alignment()
+        toggle_align.set(0.5, 0.5, 0, 0)
+        toggle_align.add(toggle_button)
         
+        if tip_msg:
+            Tooltip.text(toggle_button, tip_msg)
+        return toggle_align, toggle_button
+    
     def __create_button(self, name, tip_msg=None):   
         button = ImageButton(
             app_theme.get_pixbuf("lyric/%s_normal.png" % name),
