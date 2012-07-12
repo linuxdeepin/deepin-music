@@ -30,7 +30,7 @@ from dtk.ui.constant import BUTTON_PRESS, BUTTON_NORMAL, BUTTON_HOVER
 import dtk.ui.tooltip as Tooltip
 
 from widget.skin import app_theme
-
+from nls import _
     
 
 class ComboItem(gtk.Button):
@@ -178,7 +178,7 @@ class ComboMenuButton(gtk.HBox):
         self.current_index = init_index
         self.current_status = "artist"
         self.set_spacing(0)
-        self.msg_content = "按艺术家"
+        self.msg_content = _("By artist")
         
         self.list_button = ComboItem(
             (app_theme.get_pixbuf("combo/left_normal.png"),
@@ -189,7 +189,7 @@ class ComboMenuButton(gtk.HBox):
              app_theme.get_pixbuf("combo/list_press.png")
              ), 0, self.set_index, self.get_index)
         
-        Tooltip.text(self.list_button, "列表显示")
+        Tooltip.text(self.list_button, _("List view"))
         
         # draw left_button.
         self.left_button = gtk.Button()
@@ -227,9 +227,9 @@ class ComboMenuButton(gtk.HBox):
     
     def show_right_menu(self, widget, event):
         menu_items = [
-            (self.get_menu_pixbuf_group("artist"), "按艺术家", self.update_widget_icon, "artist", "按艺术家"),
-            (self.get_menu_pixbuf_group("genre"), "按流派", self.update_widget_icon, "genre", "按流派"),
-            (self.get_menu_pixbuf_group("album"), "按专辑", self.update_widget_icon, "album", "按专辑"),
+            (self.get_menu_pixbuf_group("artist"), _("by artist"), self.update_widget_icon, "artist", _("by artist")),
+            (self.get_menu_pixbuf_group("genre"), _("by genre"), self.update_widget_icon, "genre", _("by genre")),
+            (self.get_menu_pixbuf_group("album"), _("by album"), self.update_widget_icon, "album", _("by album")),
             ]
         Menu(menu_items, True).show((int(event.x_root) - 10, int(event.y_root)))
         

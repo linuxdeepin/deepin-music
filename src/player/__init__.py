@@ -65,7 +65,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         self.bin = PlayerBin()
         self.bin.connect("eos",   self.__on_eos)
         self.bin.connect("error", self.__on_error)
-        self.bin.connect("tags-found", self.__on_tag)
+        # self.bin.connect("tags-found", self.__on_tag)
         self.bin.connect("tick", self.__on_tick)
         self.bin.connect("playing-stream", self.__on_playing)
         

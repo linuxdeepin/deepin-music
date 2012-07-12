@@ -28,6 +28,7 @@ from dtk.ui.utils import get_content_size
 from widget.skin import app_theme
 from library import MediaDB
 from player import Player
+from nls import _
 
 
 class PlayInfo(gtk.VBox):
@@ -36,7 +37,7 @@ class PlayInfo(gtk.VBox):
 
         self.set_size_request(default_width, 44)
         self.default_width = default_width
-        self.artist_label = self.create_simple_label("深度音乐", 9.5)
+        self.artist_label = self.create_simple_label(_("Deepin Music"), 9.5)
         self.title_label = self.create_simple_label("Linux Deepin ", 9.5)
 
         Player.connect("instant-new-song",self.__new_song)

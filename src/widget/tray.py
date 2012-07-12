@@ -27,6 +27,7 @@ from player import Player
 from widget.skin import app_theme
 from helper import Dispatcher
 from config import config
+from nls import _
 
 class BaseTrayIcon(object):
     '''Trayicon base, needs to be derived from.'''
@@ -42,9 +43,9 @@ class BaseTrayIcon(object):
         
     def get_volume_menu(self):    
         menu_items = [
-            (None, "增加音量", Player.increase_volume),
-            (None, "减小音量", Player.decrease_volume),
-            (None, "静音", Player.mute_volume),
+            (None, _("Increase volume"), Player.increase_volume),
+            (None, _("Decrease volume"), Player.decrease_volume),
+            (None, _("Mute"), Player.mute_volume),
             ]
         return Menu(menu_items)
         
@@ -52,30 +53,29 @@ class BaseTrayIcon(object):
         menu_items = []
         if Player.is_paused():
             pixbuf_group = self.get_pixbuf_group("play")
-            status_label = "播放"
+            status_label = _("Play")
         else:    
             pixbuf_group = self.get_pixbuf_group("pause")
-            status_label = "暂停"
+            status_label = _("Pause")
         menu_items.append((pixbuf_group, status_label, Player.playpause))
-        menu_items.append((self.get_pixbuf_group("previous"), "上一首", Player.previous))
-        menu_items.append((self.get_pixbuf_group("next"), "下一首", Player.next))
+        menu_items.append((self.get_pixbuf_group("previous"), _("Previous"), Player.previous))
+        menu_items.append((self.get_pixbuf_group("next"), _("Next"), Player.next))
         menu_items.append(None)
-        menu_items.append((self.get_pixbuf_group("volume"), "音量控制", self.get_volume_menu()))
-        # menu_items.append((self.get_pixbuf_group("playmode"), "播放模式", None))
+        menu_items.append((self.get_pixbuf_group("volume"), _("Volume"), self.get_volume_menu()))
         menu_items.append(None)    
         
         if config.getboolean("lyrics", "locked"):
-            menu_items.append((self.get_pixbuf_group("unlock"), "解锁歌词", lambda : Dispatcher.unlock_lyrics()))
+            menu_items.append((self.get_pixbuf_group("unlock"), _("Unlock lyrics"), lambda : Dispatcher.unlock_lyrics()))
         else:
-            menu_items.append((self.get_pixbuf_group("lock"), "锁定歌词", lambda : Dispatcher.lock_lyrics()))
+            menu_items.append((self.get_pixbuf_group("lock"), _("Lock lyrics"), lambda : Dispatcher.lock_lyrics()))
         
         if config.getboolean("lyrics", "status"):
-            menu_items.append((None, "关闭歌词", lambda : Dispatcher.close_lyrics()))
+            menu_items.append((None, _("Lyrics on"), lambda : Dispatcher.close_lyrics()))
         else:    
-            menu_items.append((None, "打开歌词", lambda : Dispatcher.show_lyrics()))
+            menu_items.append((None, _("Lyrics off"), lambda : Dispatcher.show_lyrics()))
         menu_items.append(None)    
-        menu_items.append((self.get_pixbuf_group("setting"), "选项设置", lambda : Dispatcher.show_setting()))
-        menu_items.append((self.get_pixbuf_group("close"), "退出", lambda : Dispatcher.quit()))
+        menu_items.append((self.get_pixbuf_group("setting"), _("Preference"), lambda : Dispatcher.show_setting()))
+        menu_items.append((self.get_pixbuf_group("close"), _("Quit"), lambda : Dispatcher.quit()))
         if self.menu is not None:
             del self.menu
         self.menu = Menu(menu_items, True)

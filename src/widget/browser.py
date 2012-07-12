@@ -41,6 +41,7 @@ from source.local import ImportFolderJob, ReloadDBJob
 from widget.combo import ComboMenuButton
 from cover_manager import CoverManager
 from pinyin import TransforDB
+from nls import _
 
 
 class IconItem(gobject.GObject):
@@ -54,7 +55,7 @@ class IconItem(gobject.GObject):
         self.draw_side_flag = True
         
         if not self.key_name:
-            self.name_label= "未知"
+            self.name_label= _("Unknown")
             if self.tag == "genre":
                 self.pixbuf = CoverManager.get_pixbuf_from_genre(self.name_label)
             else:    
@@ -62,7 +63,7 @@ class IconItem(gobject.GObject):
             
         elif self.key_name == "deepin-all-songs":    
             self.pixbuf = CoverManager.get_all_song_cover(self.cell_width, self.cell_width)
-            self.name_label = "所有歌曲"
+            self.name_label = _("All tracks")
             self.draw_side_flag = False
         else:    
             self.name_label = self.key_name
@@ -74,7 +75,7 @@ class IconItem(gobject.GObject):
             else:    
                 self.pixbuf = CoverManager.get_pixbuf_from_name(self.key_name, self.cell_width, self.cell_width)
             
-        self.labels = "%d首歌曲" % nums
+        self.labels = _("%d tracks") % nums
         self.padding_x = 4
         self.padding_y = 4
         self.hover_flag = False
@@ -261,27 +262,27 @@ class Browser(gtk.VBox, SignalContainer):
         self.categorybar_status = "artist"
         self.filter_categorybar = OptionBar(
             [(app_theme.get_pixbuf("filter/artist_normal.png"), app_theme.get_pixbuf("filter/artist_press.png"),
-              "按歌手", lambda : self.reload_filter_view("artist", True)),
+              _("By artist"), lambda : self.reload_filter_view("artist", True)),
              (app_theme.get_pixbuf("filter/album_normal.png"), app_theme.get_pixbuf("filter/album_press.png"),
-              "按专辑", lambda : self.reload_filter_view("album", True)),
+              _("By album"), lambda : self.reload_filter_view("album", True)),
              (app_theme.get_pixbuf("filter/genre_normal.png"), app_theme.get_pixbuf("filter/genre_press.png"),
-              "按流派", lambda : self.reload_filter_view("genre", True)),]
+              _("By genre"), lambda : self.reload_filter_view("genre", True)),]
                                             )
         
         # Song path bar.
         self.__current_path = None
         self.current_icon_item = None
         self.reload_path_flag = True
-        self.path_categorybar = SongPathBar("本地歌曲")
+        self.path_categorybar = SongPathBar(_("Local"))
         self.path_categorybar.set_size_request(-1, 205)
         
         # Song import bar.
         self.import_categorybar = SongImportBar()
         self.import_categorybar.reload_items(
             [
-             ("扫描主目录", lambda : ImportFolderJob([os.path.expanduser("~")])),                
-             ("扫描指定目录", lambda : ImportFolderJob()),
-             ("刷新歌曲库", lambda : ReloadDBJob())]
+             (_("Scan Home dir"), lambda : ImportFolderJob([os.path.expanduser("~")])),                
+             (_("Select dir to scan"), lambda : ImportFolderJob()),
+             (_("Refresh library"), lambda : ReloadDBJob())]
             )
         
         # iconview.
@@ -298,7 +299,7 @@ class Browser(gtk.VBox, SignalContainer):
         
         # songs_view
         self.songs_view = MultiDragSongView()
-        self.songs_view.add_titles(["歌名", "艺术家", "专辑", "添加时间"])
+        self.songs_view.add_titles([_("Title"), _("Artist"), _("Album"), _("Added time")])
         self.songs_scrolled_window = ScrolledWindow(0, 0)
         self.songs_scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
         self.songs_scrolled_window.add_child(self.songs_view)
@@ -476,29 +477,24 @@ class Browser(gtk.VBox, SignalContainer):
         self.__db_query.set_query("")                
         
     def __added_song_cb(self, db_query, songs):
+        self.reload_song_path()        
         self.reload_flag = True
-        self.reload_path_flag = True
 
     def __removed_song_cb(self, db_query, songs):
-        if songs:
-            self.reload_flag = True
-            self.reload_path_flag = True
+        self.reload_song_path()        
+        self.reload_flag = True
             
     def reload_browser(self,  obj, infos):
         if infos:
             self.reload_flag = True
-            self.reload_path_flag = False
             
     def interval_reload_browser(self):        
         if self.reload_flag and not self.__search_flag:
-            self.reload_all_items(self.reload_path_flag)
+            self.reload_all_items()
             self.reload_flag = False    
-            self.reload_path_flag = True
         return True    
                     
-    def reload_all_items(self, reload_path=True):                
-        if reload_path:
-            self.reload_song_path()
+    def reload_all_items(self):                
         if self.view_mode == ICON_VIEW_MODE:
             if self.path_categorybar.get_index() == -1:
                 self.reload_filter_view(self.categorybar_status)
@@ -515,7 +511,6 @@ class Browser(gtk.VBox, SignalContainer):
     def __update_tag_view(self, db_query, tag, values):
         if values:
             self.reload_flag = True
-            self.reload_path_flag = False
     
     def __quick_update(self, db_query, songs):
         pass

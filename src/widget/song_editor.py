@@ -33,6 +33,8 @@ from widget.ui_utils import create_separator_box, create_right_align
 from cover_manager import CoverManager
 from library import MediaDB
 from widget.dialog import WinFile
+from nls import _
+import utils
 
 class SongInfo(gtk.VBox):
     def __init__(self, song=None):
@@ -66,9 +68,9 @@ class SongInfo(gtk.VBox):
         content_box_align = gtk.Alignment()
         content_box_align.set_padding(20, 0, 0, 0)
         content_box = gtk.VBox(spacing=5)
-        title_box, self.title_label = self.create_combo_label("歌名:")
-        artist_box, self.artist_label = self.create_combo_label("歌手:")
-        album_box, self.album_label  = self.create_combo_label("专辑:")        
+        title_box, self.title_label = self.create_combo_label(_("Title:"))
+        artist_box, self.artist_label = self.create_combo_label(_("Artist:"))
+        album_box, self.album_label  = self.create_combo_label(_("Album:"))        
         content_box_align.add(content_box)
         
         content_box.pack_start(title_box, False, False)        
@@ -90,11 +92,11 @@ class SongInfo(gtk.VBox):
         return hbox, content_label
     
     def create_detail_box(self):
-        self.file_type_label, self.file_format_label = self.create_double_combo_label(0, 1, "文件类型:", "文件格式:")
-        self.file_size_label, self.song_duration_label = self.create_double_combo_label(1, 2, "文件大小:", "歌曲时长:")
-        self.song_bitrate_label, self.song_rate_label = self.create_double_combo_label(2, 3, "比特率:", "采样速率:")
-        self.song_added_label, self.song_lasted_label = self.create_double_combo_label(3, 4, "添加时间:", "最近播放时间:")
-        self.song_playcount_label, self.song_date_label = self.create_double_combo_label(4, 5, "播放次数:", "年代:")
+        self.file_type_label, self.file_format_label = self.create_double_combo_label(0, 1, _("Type:"), _("Format:"))
+        self.file_size_label, self.song_duration_label = self.create_double_combo_label(1, 2, _("Size:"), _("Duration:"))
+        self.song_bitrate_label, self.song_rate_label = self.create_double_combo_label(2, 3, _("Bitrate:"), _("Rate:"))
+        self.song_added_label, self.song_lasted_label = self.create_double_combo_label(3, 4, _("Added:"), _("Recently:"))
+        self.song_playcount_label, self.song_date_label = self.create_double_combo_label(4, 5, _("Playcount:"), _("Date:"))
         
     def get_song_attr(self, song, song_type=True):    
         gio_file = gio.File(self.song.get_path())
@@ -138,15 +140,19 @@ class SongInfo(gtk.VBox):
         location_align = gtk.Alignment()
         location_align.set(1.0, 1.0, 0.5, 0.5)
         location_box = gtk.HBox(spacing=5)
-        location_label = Label("文件位置:")
+        location_label = Label(_("Location:"))
         self.location_entry = InputEntry("")
         self.location_entry.set_size(250, 25)
-        open_button = Button("打开目录")
+        open_button = Button(_("Open directory"))
+        open_button.connect("clicked", self.open_song_location)
         location_box.pack_start(location_label, False, True)
         location_box.pack_start(self.location_entry, False, True)
         location_box.pack_start(open_button, False, True)
         location_align.add(location_box)
         return location_align
+    
+    def open_song_location(self, widget):
+        utils.open_file_directory(self.song.get_path())
     
     def update_song(self, song):
         self.song = song
@@ -184,11 +190,11 @@ class InfoSetting(gtk.VBox):
         self.main_table.set_col_spacings(10)
         self.main_table.set_row_spacings(10)
         
-        self.title_entry  = self.create_combo_entry(0, 1, "歌名:")
-        self.artist_entry = self.create_combo_entry(1, 2, "歌手:")
-        self.album_entry  = self.create_combo_entry(2, 3, "专辑:")
-        self.genre_entry  = self.create_combo_entry(3, 4, "流派:")
-        self.date_entry   = self.create_combo_entry(4, 5, "年代:")
+        self.title_entry  = self.create_combo_entry(0, 1, _("Title:"))
+        self.artist_entry = self.create_combo_entry(1, 2, _("Artist:"))
+        self.album_entry  = self.create_combo_entry(2, 3, _("Album:"))
+        self.genre_entry  = self.create_combo_entry(3, 4, _("Genre:"))
+        self.date_entry   = self.create_combo_entry(4, 5, _("Date:"))
         
         main_align.add(self.main_table)
         
@@ -196,7 +202,7 @@ class InfoSetting(gtk.VBox):
         if song:
             self.update_song(song)
             
-        save_button = Button("保存")    
+        save_button = Button(_("Save"))    
         save_button.connect("clicked", self.save_taginfo)
         block_box = gtk.EventBox()
         block_box.set_visible_window(False)
@@ -278,9 +284,9 @@ class CoverSetting(gtk.VBox):
         button_box_align.set_padding(0, 0, 0, 30)
         button_box_align.set(0, 0, 1.0, 1.0)
         button_box_align.add(button_box)
-        change_button = Button("更改")
+        change_button = Button(_("Change"))
         change_button.connect("clicked", self.change_cover_image)
-        delete_button = Button("默认")
+        delete_button = Button(_("Default"))
         delete_button.connect("clicked", self.delete_cover_image)
         button_box.pack_start(create_right_align(), True, True)
         button_box.pack_start(change_button, False, False)
@@ -298,7 +304,7 @@ class CoverSetting(gtk.VBox):
         self.cover_image.set_from_pixbuf(song_cover_pixbuf)
     
     def change_cover_image(self, widget):
-        new_cover_path = WinFile(False, "选择图片").run()
+        new_cover_path = WinFile(False, _("Select image")).run()
         if new_cover_path:
             CoverManager.change_cover(self.song, new_cover_path)
             
@@ -308,15 +314,15 @@ class CoverSetting(gtk.VBox):
 class SongEditor(DialogBox):    
     
     def __init__(self, songs, init_index=0):
-        super(SongEditor, self).__init__("歌曲属性", 500, 400, mask_type=DIALOG_MASK_TAB_PAGE)
+        super(SongEditor, self).__init__(_("Property"), 500, 400, mask_type=DIALOG_MASK_TAB_PAGE)
         self.set_position(gtk.WIN_POS_CENTER)
         
-        close_button = Button("关闭")
+        close_button = Button(_("Close"))
         close_button.connect("clicked", self.click_close_button)
         
-        previous_button = Button("上一首")
+        previous_button = Button(_("Previous"))
         previous_button.connect("clicked", lambda w : self.update_previous_song())
-        next_button = Button("下一首")
+        next_button = Button(_("Next"))
         next_button.connect("clicked", lambda w : self.update_next_song())
         
         self.record_label = Label("0/0")
@@ -340,7 +346,9 @@ class SongEditor(DialogBox):
         self.cover_setting = CoverSetting(songs[init_index])
         
         self.tab_box = TabBox()
-        self.tab_box.add_items([("歌曲信息", self.song_info), ("信息设置", self.info_setting), ("封面设置", self.cover_setting)])
+        self.tab_box.add_items([(_("Track Infomation"), self.song_info),
+                                (_("Edit tags"), self.info_setting),
+                                (_("Edit cover"), self.cover_setting)])
         
         # DialogBox code, simple, ah? :)
         self.left_button_box.set_buttons([action_box])

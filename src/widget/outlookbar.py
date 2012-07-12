@@ -50,7 +50,7 @@ class BaseBar(gtk.VBox):
     
 class OptionBar(BaseBar):    
     
-    def __init__(self, items, init_index=0, font_size=10, padding_left=22, padding_middle=0, padding_right=50):
+    def __init__(self, items, init_index=0, font_size=10, padding_left=15, padding_middle=10, padding_right=20):
         BaseBar.__init__(self, init_index)
         
         if items:
@@ -97,7 +97,7 @@ class SongPathBar(BaseBar):
         
         title_item = SimpleLabel(
             app_theme.get_pixbuf("filter/local_normal.png"),
-            title_name, 10, 25, 20, 10, 25, ALIGN_START)
+            title_name, 10, 25, 15, 10, 25, ALIGN_START)
         self.pack_start(title_item, False, False)
         self.pack_start(self.child_box, True, True)
         self.child_box.connect("size-allocate", self.size_change_cb)
@@ -152,7 +152,7 @@ class SongPathBar(BaseBar):
                     (app_theme.get_pixbuf("filter/folder_normal.png"),
                      app_theme.get_pixbuf("filter/folder_press.png"),
                      item[0], item[1], item[2]),
-                    index + 1,   9, self.child_item_height, 35, 10, 25, self.set_index, self.get_index, ALIGN_START)
+                    index + 1,   9, self.child_item_height, 25, 10, 15, self.set_index, self.get_index, ALIGN_START)
                 self.child_box.pack_start(simple_item, False, False)
                 
             if len(child_items) < self.page_items_num:    
@@ -255,7 +255,7 @@ class SongImportBar(BaseBar):
                     (app_theme.get_pixbuf("filter/point_normal.png"),
                      app_theme.get_pixbuf("filter/point_press.png"),
                      item[0], item[1]),
-                    index + 1, 9, 25, 25, 10, 25, self.set_index, self.get_index, ALIGN_START)
+                    index + 1, 9, 25, 15, 10, 10, self.set_index, self.get_index, ALIGN_START)
                 self.child_box.pack_start(simple_item)
             self.show_all()        
             
@@ -269,7 +269,7 @@ class SimpleItem(gtk.Button):
 	
     def __init__(self, element, index, font_size, item_height,
                  padding_left, padding_middle, padding_right,
-                 set_index, get_index, x_align=ALIGN_MIDDLE):
+                 set_index, get_index, x_align=ALIGN_START):
         
         # Init.
         super(SimpleItem, self).__init__()

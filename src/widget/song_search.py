@@ -35,18 +35,19 @@ from dtk.ui.threads import post_gui
 from constant import DEFAULT_FONT_SIZE
 from query_song import multi_ways_query_song
 from widget.ui_utils import render_item_text
+from nls import _
 import utils
 
 
 class SongSearchUI(DialogBox):
     
     def __init__(self):
-        DialogBox.__init__(self, "歌曲搜索", 460, 300, DIALOG_MASK_SINGLE_PAGE,
+        DialogBox.__init__(self, _("Search"), 460, 300, DIALOG_MASK_SINGLE_PAGE,
                            modal=False, window_hint=None, close_callback=self.hide_all)
-        title_label = Label("   歌曲名称:")
-        self.title_entry = TextEntry("那一夜")
+        title_label = Label(_("Title:"))
+        self.title_entry = TextEntry("")
         self.title_entry.set_size(300, 25)
-        self.search_button = Button("搜索")
+        self.search_button = Button(_("Search"))
         self.search_button.connect("clicked", self.search_song)
         
         control_box = gtk.HBox(spacing=5)
@@ -59,13 +60,13 @@ class SongSearchUI(DialogBox):
         self.result_view = ListView()
         self.result_view.connect("double-click-item", self.double_click_cb)
         self.result_view.draw_mask = self.get_mask_func(self.result_view)
-        self.result_view.add_titles(["标题", "歌手", "专辑", "类型", "大小"])
+        self.result_view.add_titles([_("Title"), _("Artist"), _("Album"), _("Type"), _("Size")])
         scrolled_window.add_child(self.result_view)
         
         self.prompt_label = Label("")
-        download_button = Button("下载")
+        download_button = Button(_("Download"))
         download_button.connect("clicked", self.download_song)
-        cancel_button = Button("关闭")
+        cancel_button = Button(_("Close"))
         cancel_button.connect("clicked", lambda w: self.hide_all())
         
         self.body_box.set_spacing(5)
@@ -79,7 +80,7 @@ class SongSearchUI(DialogBox):
         title = self.title_entry.entry.get_text()
         if not title.strip():
             return 
-        self.prompt_label.set_text("正在搜索...")        
+        self.prompt_label.set_text(_("Now searching"))        
         # widget.set_sensitive(False)
         utils.ThreadRun(multi_ways_query_song, self.render_song_infos, [title]).start()
         
@@ -92,7 +93,7 @@ class SongSearchUI(DialogBox):
                 print e
             else:    
                 self.result_view.add_items(items)
-        self.prompt_label.set_text("搜索完成!")        
+        self.prompt_label.set_text(_("Finish!"))        
                 
         
     def download_song(self, widget):    

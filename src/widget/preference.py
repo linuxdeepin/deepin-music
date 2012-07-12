@@ -47,7 +47,7 @@ from widget.skin import app_theme
 from render_lyrics import RenderContextNew
 from constant import PREDEFINE_COLORS
 from config import config
-
+from nls import _
 
 class GeneralSetting(gtk.VBox):
     
@@ -141,32 +141,32 @@ class GeneralSetting(gtk.VBox):
     def create_start_box(self):    
         main_table = gtk.Table(4, 2)
         main_table.set_row_spacings(10)
-        start_title_label = Label("启动时")
+        start_title_label = Label(_("Starting"))
         start_title_label.set_size_request(350, 12)
         label_align = gtk.Alignment()
         label_align.set_padding(20, 0, 0, 0)
         label_align.add(start_title_label)
         
         # splash check_button
-        self.splash_check_button = CheckButton("显示启动画面")
+        self.splash_check_button = CheckButton(_("Display splash"))
         splash_hbox = gtk.HBox()
         splash_hbox.pack_start(self.splash_check_button, False, False)
         splash_hbox.pack_start(create_right_align(), True, True)        
         
         # open_lyrics_check_button.
         open_lyrics_hbox = gtk.HBox()
-        self.open_lyrics_check_button = CheckButton("打开桌面歌词")
+        self.open_lyrics_check_button = CheckButton(_("Lyrics on"))
         open_lyrics_hbox.pack_start(self.open_lyrics_check_button, False, False)
 
         
         # startup_check_button.
-        self.auto_play_check_button = CheckButton("启动时自动播放")
+        self.auto_play_check_button = CheckButton(_("Auto play"))
         auto_play_hbox = gtk.HBox()
         auto_play_hbox.pack_start(self.auto_play_check_button, False, False)
         auto_play_hbox.pack_start(create_right_align(), True, True)                
         
         # resume last check_button.
-        self.resume_last_check_button = CheckButton("继续上次播放进度")
+        self.resume_last_check_button = CheckButton(_("Resume last played"))
         resume_hbox = gtk.HBox()
         resume_hbox.pack_start(self.resume_last_check_button, False, False)
         
@@ -181,13 +181,13 @@ class GeneralSetting(gtk.VBox):
     def create_close_box(self):
         main_table = gtk.Table(3, 2)
         main_table.set_row_spacings(10)
-        close_title_label = Label("关闭时")
+        close_title_label = Label(_("Closing"))
         close_title_label.set_size_request(350, 12)
         
         # mini_check_button
 
-        self.tray_radio_button = RadioButton("最小化至托盘")        
-        self.quit_radio_button = RadioButton("退出程序")
+        self.tray_radio_button = RadioButton(_("Minimize to trayicon"))        
+        self.quit_radio_button = RadioButton(_("Quit"))
         
         main_table.attach(close_title_label, 0, 2, 0, 1, yoptions=gtk.FILL, xpadding=8)
         main_table.attach(create_separator_box(), 0, 2, 1, 2, yoptions=gtk.FILL)
@@ -200,21 +200,20 @@ class GeneralSetting(gtk.VBox):
         main_table = gtk.Table(4, 2)
         main_table.set_row_spacings(10)
         
-        play_title_label = Label("播放时")
+        play_title_label = Label(_("Playing"))
         play_title_label.set_size_request(350, 12)
         
         fade_check_hbox = gtk.HBox()
-        self.fade_check_button = CheckButton("启用淡入淡出功能")        
+        self.fade_check_button = CheckButton(_("Crossfade"))        
         fade_check_hbox.pack_start(self.fade_check_button, False, False)
         fade_check_hbox.pack_start(create_right_align(), True, True)
-        self.album_check_button = CheckButton("相同专辑间无缝切换")
+        self.album_check_button = CheckButton(_("Crossfade gapless album"))
         
-        fade_label = Label("淡入淡出:")
-        fade_label.set_size_request(60, 12)
+        fade_label = Label(_("Fade timeout:"))
         self.fade_spin = SpinBox(300, 1, 1000, 100)
-        millisecond_lablel = Label(" 毫秒")        
+        millisecond_lablel = Label(_(" ms"))        
         millisecond_lablel.set_size_request(50, 12)
-        spin_hbox = gtk.HBox()
+        spin_hbox = gtk.HBox(spacing=3)
         spin_hbox.pack_start(fade_label, False, False)
         spin_hbox.pack_start(self.fade_spin, False, False)
         spin_hbox.pack_start(millisecond_lablel, False, False)
@@ -230,7 +229,7 @@ class GeneralSetting(gtk.VBox):
         main_table = gtk.Table(3, 2)
         main_table.set_row_spacings(8)
         
-        dir_title_label = Label("歌词保存目录")
+        dir_title_label = Label(_("Lyrics directory"))
         dir_title_label.set_size_request(200, 12)
         label_align = gtk.Alignment()
         label_align.set_padding(0, 0, 0, 0)
@@ -241,7 +240,7 @@ class GeneralSetting(gtk.VBox):
         self.dir_entry.set_editable(False)        
         self.dir_entry.set_size(250, 25)
         
-        modify_button = Button("修改目录")
+        modify_button = Button(_("Change"))
         modify_button.connect("clicked", self.change_lyrics_save_dir)
         hbox = gtk.HBox(spacing=5)
         hbox.pack_start(self.dir_entry, False, False)
@@ -343,7 +342,7 @@ class HotKeySetting(gtk.VBox):
         global_hotkeys.play()
         
     def create_hotkey_box(self):    
-        hotkey_title_label = Label("热键设置")
+        hotkey_title_label = Label(_("Hotkeys"))
         hotkey_title_label.set_size_request(350, 12)
         label_align = gtk.Alignment()
         label_align.set_padding(20, 0, 0, 0)
@@ -353,26 +352,26 @@ class HotKeySetting(gtk.VBox):
         
         # using check button.
         using_hbox = gtk.HBox()
-        self.using_check_button = CheckButton("启用快捷键")
+        self.using_check_button = CheckButton(_("Activate hotkeys"))
 
         using_hbox.pack_start(self.using_check_button, False, False)
         using_hbox.pack_start(create_right_align(), False, True)
         self.main_table.attach(using_hbox, 0, 2, 2, 3, yoptions=gtk.FILL)
         
-        self.toggle_window_entry = self.create_combo_entry(3, 4, "最小化/正常模式", 
+        self.toggle_window_entry = self.create_combo_entry(3, 4, _("Minimized/Show window"), 
                                                            config.get("globalkey", "toggle_window"))
-        self.toggle_lyrics_status_entry = self.create_combo_entry(4, 5, "显示/隐藏桌面歌词",
+        self.toggle_lyrics_status_entry = self.create_combo_entry(4, 5, _("Lyrics on/off"),
                                                                   config.get("globalkey", "toggle_lyrics_status"))
-        self.toggle_lyrics_lock_entry = self.create_combo_entry(5, 6, "锁定/解锁桌面歌词",
+        self.toggle_lyrics_lock_entry = self.create_combo_entry(5, 6, _("Lock/unlock lyrics"),
                                                                 config.get("globalkey", "toggle_lyrics_lock"))
-        self.playpause_entry = self.create_combo_entry(6, 7, "播放/暂停", config.get("globalkey", "playpause"))
-        self.next_entry = self.create_combo_entry(7, 8, "上一首", config.get("globalkey", "next"))
-        self.previous_entry = self.create_combo_entry(8, 9, "下一首", config.get("globalkey", "previous"))
-        self.increase_vol_entry = self.create_combo_entry(9, 10, "增大音量", config.get("globalkey", "increase_vol"))
-        self.decrease_vol_entry = self.create_combo_entry(10, 11, "减小音量", config.get("globalkey", "decrease_vol"))
+        self.playpause_entry = self.create_combo_entry(6, 7, _("Play/Pause"), config.get("globalkey", "playpause"))
+        self.next_entry = self.create_combo_entry(7, 8, _("Previous"), config.get("globalkey", "next"))
+        self.previous_entry = self.create_combo_entry(8, 9, _("Next"), config.get("globalkey", "previous"))
+        self.increase_vol_entry = self.create_combo_entry(9, 10, _("Increase volume"), config.get("globalkey", "increase_vol"))
+        self.decrease_vol_entry = self.create_combo_entry(10, 11, _("Decrease volume"), config.get("globalkey", "decrease_vol"))
         
         # Button.
-        default_button = Button("恢复默认")
+        default_button = Button(_("Default"))
         default_button.connect("clicked", self.restore_to_default)
         button_hbox = gtk.HBox()
         button_hbox.pack_start(create_right_align(), True, True)
@@ -565,7 +564,7 @@ class DesktopLyricsSetting(gtk.VBox):
         cr.save()
         cr.rectangle(xpos, ypos, rect.width * 0.5, rect.height)
         cr.clip()
-        active_surface = self.draw_lyric_surface("深度音乐播放器", True)
+        active_surface = self.draw_lyric_surface(_("Deepin Music Player"), True)
         if active_surface:
             cr.set_source_surface(active_surface, xpos, ypos)
             cr.paint()
@@ -575,7 +574,7 @@ class DesktopLyricsSetting(gtk.VBox):
         cr.save()
         cr.rectangle(xpos + rect.width * 0.5, ypos, rect.width*0.5, rect.height)
         cr.clip()
-        inactive_surface = self.draw_lyric_surface("深度音乐播放器")
+        inactive_surface = self.draw_lyric_surface(_("Deepin Music Player"))
         if inactive_surface:
             cr.set_source_surface(inactive_surface, xpos, ypos)
             cr.paint()
@@ -587,9 +586,9 @@ class DesktopLyricsSetting(gtk.VBox):
         
     def create_single_line_box(self):
         single_align_items = OrderedDict()
-        single_align_items["left"] = "左对齐"
-        single_align_items["centered"] = "居中对齐"
-        single_align_items["right"] = "右对齐"
+        single_align_items["left"] = _("Left-aligned")
+        single_align_items["centered"] = _("Centered")
+        single_align_items["right"] = _("Right-aligned")
         try:
             single_index = single_align_items.keys().index(config.get("lyrics", "single_line_align"))
         except:    
@@ -599,10 +598,10 @@ class DesktopLyricsSetting(gtk.VBox):
         
     def create_double_line_box(self):    
         double_align_items = OrderedDict()
-        double_align_items["left"] = "左对齐"
-        double_align_items["centered"] = "居中对齐"
-        double_align_items["right"] = "右对齐"
-        double_align_items["justified"] = "左右分离"
+        double_align_items["left"] = _("Left-aligned")
+        double_align_items["centered"] = _("Centered")
+        double_align_items["right"] = _("Right-aligned")
+        double_align_items["justified"] = _("Justified")
         try:
             align_index = double_align_items.keys().index(config.get("lyrics", "double_line_align"))
         except:    
@@ -613,11 +612,11 @@ class DesktopLyricsSetting(gtk.VBox):
         
     def create_predefine_box(self):    
         predefine_color_items = OrderedDict()
-        predefine_color_items["default"] = "默认"
-        predefine_color_items["vitality_yellow"] = "活力黄"
-        predefine_color_items["fresh_green"]  = "清新绿"
-        predefine_color_items["playful_pink"] = "俏皮粉"
-        predefine_color_items["cool_blue"] = "清爽蓝"
+        predefine_color_items["default"] = _("Default")
+        predefine_color_items["vitality_yellow"] = _("Vitality yellow")
+        predefine_color_items["fresh_green"]  = _("Fresh green")
+        predefine_color_items["playful_pink"] = _("Playful pink")
+        predefine_color_items["cool_blue"] = _("Cool blue")
         save_predefine_color = config.get("lyrics", "predefine_color", "default")
         
         try:
@@ -629,7 +628,7 @@ class DesktopLyricsSetting(gtk.VBox):
             [(value, key) for key, value in predefine_color_items.items()],
             select_index=predefine_color_index)    
         
-        predefine_color_label = Label("配色方案:")
+        predefine_color_label = Label(_("Color scheme:"))
         predefine_color_hbox = gtk.HBox(spacing=5)
         predefine_color_hbox.pack_start(predefine_color_label, False, False)
         predefine_color_hbox.pack_start(self.predefine_color_combo_box, False, False)
@@ -637,10 +636,10 @@ class DesktopLyricsSetting(gtk.VBox):
     
     def create_font_type_box(self):
         font_type_items = OrderedDict()
-        font_type_items["Regular"] = "常规"
-        font_type_items["Italic"]  = "倾斜"
-        font_type_items["Bold"]    = "粗体"
-        font_type_items["Bold Italic"] = "粗体 倾斜"
+        font_type_items["Regular"] = _("Regular")
+        font_type_items["Italic"]  = _("Italic")
+        font_type_items["Bold"]    = _("Bold")
+        font_type_items["Bold Italic"] = _("Bold Italic")
         
         
         try:
@@ -650,7 +649,7 @@ class DesktopLyricsSetting(gtk.VBox):
         self.font_type_combo_box = ComboBox([(value, key) for key, value in font_type_items.items()],
                                             select_index=font_type_index)    
         
-        font_type_label = Label("字型:")
+        font_type_label = Label(_("Style:"))
         font_type_hbox = gtk.HBox(spacing=5)
         font_type_hbox.pack_start(font_type_label, False, False)
         font_type_hbox.pack_start(self.font_type_combo_box, False, False)
@@ -661,7 +660,7 @@ class DesktopLyricsSetting(gtk.VBox):
         main_table.set_row_spacings(10)
         self.create_single_line_box()
         self.create_double_line_box()
-        style_title_label = Label("歌词样式")
+        style_title_label = Label(_("Lyrics style"))
         
         # font_name
         font_families = get_font_families()
@@ -671,21 +670,21 @@ class DesktopLyricsSetting(gtk.VBox):
         except:    
             font_item_index = 0
             
-        font_name_hbox, self.font_name_combo_box = self.create_combo_widget("字体:",
+        font_name_hbox, self.font_name_combo_box = self.create_combo_widget(_("Font:"),
                                                                             [(font_name, None) for font_name in font_families],
                                                                             font_item_index)
         font_type_hbox = self.create_font_type_box()
         font_size = int(config.get("lyrics", "font_size", 30))
-        font_size_hbox, self.font_size_spin = self.create_combo_spin("字号:", font_size, 16, 70, 1)
+        font_size_hbox, self.font_size_spin = self.create_combo_spin(_("Size:"), font_size, 16, 70, 1)
         
         line_number = config.getint("lyrics", "line_count")
-        line_number_hbox, self.line_number_combo_box = self.create_combo_widget("行数:",
-                                                    [(name, index + 1) for index, name in enumerate(["单行", "双行"])],
+        line_number_hbox, self.line_number_combo_box = self.create_combo_widget(_("Lines:"),
+                                                    [(name, index + 1) for index, name in enumerate([_("Single"), _("Double")])],
                                                                                 line_number - 1)
         
         self.line_align_hbox = gtk.HBox()
         part_align_hbox = gtk.HBox(spacing=5) 
-        line_align_label = Label("对齐:")
+        line_align_label = Label(_("Alignment:"))
         
         if line_number == 2:
             self.line_align_hbox.add(self.double_align_combo_box)
@@ -695,18 +694,19 @@ class DesktopLyricsSetting(gtk.VBox):
         part_align_hbox.pack_start(line_align_label, False, False)    
         part_align_hbox.pack_start(self.line_align_hbox, False, False)    
         
-        outline_hbox, self.outline_spin = self.create_combo_spin("轮廓:", int(config.get("lyrics", "outline_width", "3")), 0, 8, 1)
+        outline_hbox, self.outline_spin = self.create_combo_spin(_("Outline:"), 
+                                                                 int(config.get("lyrics", "outline_width", "3")), 0, 8, 1)
         
         # blur_color_button.
         blur_color_hbox = gtk.HBox(spacing=5)
-        blur_color_label = Label("描边:")
+        blur_color_label = Label(_("Stroke:"))
         self.blur_color_button = ColorButton(config.get("lyrics", "blur_color", "#000000"))
         blur_color_hbox.pack_start(blur_color_label, False, False)
         blur_color_hbox.pack_start(self.blur_color_button, False, False)
         
         predefine_color_hbox = self.create_predefine_box()
         inactive_color_box = gtk.HBox(spacing=10)
-        inactive_color_label = Label("未播放:")
+        inactive_color_label = Label(_("Coming:"))
         self.inactive_upper_color_button = ColorButton(config.get("lyrics", "inactive_color_upper"))
         self.inactive_middle_color_button = ColorButton(config.get("lyrics", "inactive_color_middle"))
         self.inactive_bottom_color_button = ColorButton(config.get("lyrics", "inactive_color_bottom"))
@@ -716,7 +716,7 @@ class DesktopLyricsSetting(gtk.VBox):
         inactive_color_box.pack_start(self.inactive_bottom_color_button, False, False)
         
         active_color_box = gtk.HBox(spacing=10)
-        active_color_label = Label("已播放:")
+        active_color_label = Label(_("Played:"))
         self.active_upper_color_button = ColorButton(config.get("lyrics", "active_color_upper"))
         self.active_middle_color_button = ColorButton(config.get("lyrics", "active_color_middle"))
         self.active_bottom_color_button = ColorButton(config.get("lyrics", "active_color_bottom"))
@@ -803,10 +803,10 @@ class ScrollLyricsSetting(gtk.VBox):
         
     def create_font_type_box(self):
         font_type_items = OrderedDict()
-        font_type_items["Regular"] = "常规"
-        font_type_items["Italic"]  = "倾斜"
-        font_type_items["Bold"]    = "粗体"
-        font_type_items["Bold Italic"] = "粗体 倾斜"
+        font_type_items["Regular"] = _("Regular")
+        font_type_items["Italic"]  = _("Italic")
+        font_type_items["Bold"]    = _("Bold")
+        font_type_items["Bold Italic"] = _("Bold Italic")
         try:
             font_type_index = font_type_items.keys().index(config.get("scroll_lyrics", "font_type", "Regular"))
         except:    
@@ -814,7 +814,7 @@ class ScrollLyricsSetting(gtk.VBox):
         self.font_type_combo_box = ComboBox([(value, key) for key, value in font_type_items.items()],
                                             select_index=font_type_index)    
         
-        font_type_label = Label("字型:")
+        font_type_label = Label(_("Style:"))
         font_type_hbox = gtk.HBox(spacing=5)
         font_type_hbox.pack_start(font_type_label, False, False)
         font_type_hbox.pack_start(self.font_type_combo_box, False, False)
@@ -823,7 +823,7 @@ class ScrollLyricsSetting(gtk.VBox):
     def create_style_table(self):
         main_table = gtk.Table(5, 2)
         main_table.set_row_spacings(10)
-        style_title_label = Label("歌词样式")
+        style_title_label = Label(_("Lyrics style"))
         # font_name
         font_families = get_font_families()
         font_name = config.get("scroll_lyrics", "font_name")
@@ -832,29 +832,29 @@ class ScrollLyricsSetting(gtk.VBox):
         except:    
             font_item_index = 0
             
-        font_name_hbox, self.font_name_combo_box = self.create_combo_widget("字体:",
+        font_name_hbox, self.font_name_combo_box = self.create_combo_widget(_("Font:"),
                                                                             [(font_name, None) for font_name in font_families],
                                                                             font_item_index)
         font_type_hbox = self.create_font_type_box()
         
         font_size = int(config.get("scroll_lyrics", "font_size", 10))
-        font_size_hbox, self.font_size_spin = self.create_combo_spin("字号:", font_size, 5, 30, 1)
+        font_size_hbox, self.font_size_spin = self.create_combo_spin(_("Size:"), font_size, 5, 30, 1)
         
         # alignment.
         line_align_index = int(config.get("scroll_lyrics", "line_align", 1))
-        line_align_hbox, self.line_align_combo_box = self.create_combo_widget("对齐:", 
-                                                [(value, index) for index, value in enumerate(["左对齐", "居中对齐", "右对齐"])],
+        line_align_hbox, self.line_align_combo_box = self.create_combo_widget(_("Alignment:"), 
+                                                [(value, index) for index, value in enumerate([_("Left-aligned"), _("Centered"), _("Right-aligned")])],
                                                                                line_align_index)
         
         # scroll mode.
         scroll_mode_index = int(config.get("scroll_lyrics", "scroll_mode", 0))
-        scroll_mode_hbox, self.scroll_mode_combo_box = self.create_combo_widget("滚动方式:",
-                                                 [(value, index) for index, value in enumerate(["总是滚动", "按行滚动"])],
+        scroll_mode_hbox, self.scroll_mode_combo_box = self.create_combo_widget(_("Rolling:"),
+                                                 [(value, index) for index, value in enumerate([_("Always"), _("By line")])],
                                                                                 scroll_mode_index) 
         
         
-        inactive_color_label = Label("未播放:")
-        active_color_label = Label("已播放:")
+        inactive_color_label = Label(_("Coming:"))
+        active_color_label = Label(_("Played:"))
         self.inactive_color_button = ColorButton(config.get("scroll_lyrics", "inactive_color"))
         self.active_color_button = ColorButton(config.get("scroll_lyrics", "active_color"))
         
@@ -906,26 +906,27 @@ class AboutBox(gtk.VBox):
         main_box = gtk.VBox(spacing=15)
         logo_image = ImageBox(app_theme.get_pixbuf("skin/logo1.png"))
         light_color = app_theme.get_color("labelText")
-        logo_name = Label("深度音乐", text_size=10)
+        logo_name = Label(_("Deepin Music Player"), text_size=10)
         logo_box = gtk.HBox(spacing=2)
         logo_box.pack_start(logo_image, False, False)
         logo_box.pack_start(logo_name, False, False)
         
-        version_label = Label("版本: ")
+        version_label = Label(_("Version:"))
         version_content = Label("V1.0", light_color)
-        publish_label = Label("  发布时间: ")
-        publish_content = Label("2012.07.12    ", light_color)
+        publish_label = Label(_("Release date:"))
+        publish_content = Label("2012.07.12", light_color)
         info_box = gtk.HBox(spacing=5)
         info_box.pack_start(version_label, False, False)
         info_box.pack_start(version_content, False, False)
         info_box.pack_start(publish_label, False, False)
         info_box.pack_start(publish_content, False, False)
         
-        title_box = gtk.HBox(spacing=140)
+        title_box = gtk.HBox()
         title_box.pack_start(logo_box, False, False)
+        title_box.pack_start(create_right_align(), True, True)
         title_box.pack_start(info_box, False, False)
         
-        describe = '''       ﻿深度音乐播放器是Linux Deepin团队为广大linux用户量身开发的一款音乐软件.具有歌词搜索下载,桌面歌词显示,专辑封面下载,歌曲记忆播放,独创音乐管理,自定义换肤等几大特点.\n\n深度音乐播放器是自由软件,遵循自由软件基金会发布的 GNU 通用公共许可证第三版.'''
+        describe = _('''       ﻿深度音乐播放器是Linux Deepin团队为广大linux用户量身开发的一款音乐软件.具有歌词搜索下载,桌面歌词显示,专辑封面下载,歌曲记忆播放,独创音乐管理,自定义换肤等几大特点.\n\n深度音乐播放器是自由软件,遵循自由软件基金会发布的 GNU 通用公共许可证第三版.''')
         
         describe_label = Label(describe, enable_select=False, wrap_width=400)
         main_box.pack_start(title_box, False, False)
@@ -943,14 +944,14 @@ class AboutBox(gtk.VBox):
 class PreferenceDialog(DialogBox):
     
     def __init__(self):
-        super(PreferenceDialog, self).__init__("选项设置", 575, 495, 
+        super(PreferenceDialog, self).__init__(_("Preference"), 575, 495, 
                                                mask_type=DIALOG_MASK_MULTIPLE_PAGE,
                                                close_callback=self.hide_all)
         
         self.set_position(gtk.WIN_POS_CENTER)
         
         self.main_box = gtk.VBox()
-        close_button = Button("关闭")
+        close_button = Button(_("Close"))
         close_button.connect("clicked", lambda w: self.hide_all())
         
         # Init widget.
@@ -962,13 +963,13 @@ class PreferenceDialog(DialogBox):
         # Category bar
         self.category_bar = TreeView(font_x_padding=20)
         self.category_bar.draw_mask = self.draw_treeview_mask
-        self.general_category_item = CategoryItem("常规设置", self.general_setting)
+        self.general_category_item = CategoryItem(_("General"), self.general_setting)
         self.category_bar.add_item(None, self.general_category_item)
-        self.category_bar.add_item(None, CategoryItem("热键设置", self.hotkey_setting))
-        lyrics_node = self.category_bar.add_item(None, CategoryItem("歌词设置"))
-        self.category_bar.add_item(lyrics_node, CategoryItem("桌面歌词", self.desktop_lyrics_setting))
-        self.category_bar.add_item(lyrics_node, CategoryItem("窗口歌词", self.scroll_lyrics_setting))
-        self.category_bar.add_item(None, CategoryItem("关于我们", AboutBox()))
+        self.category_bar.add_item(None, CategoryItem(_("Hotkeys"), self.hotkey_setting))
+        lyrics_node = self.category_bar.add_item(None, CategoryItem(_("Lyrics")))
+        self.category_bar.add_item(lyrics_node, CategoryItem(_("Desktop"), self.desktop_lyrics_setting))
+        self.category_bar.add_item(lyrics_node, CategoryItem(_("Window"), self.scroll_lyrics_setting))
+        self.category_bar.add_item(None, CategoryItem(_("About us"), AboutBox()))
         self.category_bar.connect("single-click-item", self.category_single_click_cb)
         self.category_bar.set_highlight_index(0)
         

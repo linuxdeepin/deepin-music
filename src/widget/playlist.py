@@ -42,6 +42,7 @@ from widget.dialog import WindowLoadPlaylist, WindowExportPlaylist, WinDir
 from widget.ui_utils import container_remove_all, draw_alpha_mask
 from config import config
 from player import Player
+from nls import _
 import utils
 
 
@@ -70,11 +71,11 @@ class PlaylistUI(gtk.VBox):
         entry_align.connect("expose-event", self.expose_entry_mask)
         
         self.toolbar_box = gtk.HBox(spacing=50)
-        self.search_button = self.__create_simple_toggle_button("search", self.show_text_entry, "搜索歌曲")
-        self.__create_simple_button("list", self.popup_list_menu, "列表操作")
-        self.__create_simple_button("add", self.popup_add_menu, "添加文件")
-        self.__create_simple_button("sort", self.popup_sort_menu, "播放模式")
-        self.__create_simple_button("delete", self.popup_delete_menu, "删除")
+        self.search_button = self.__create_simple_toggle_button("search", self.show_text_entry, _("Search for tracks"))
+        self.__create_simple_button("list", self.popup_list_menu, _("Playlist operations"))
+        self.__create_simple_button("add", self.popup_add_menu, _("Add track"))
+        self.__create_simple_button("sort", self.popup_sort_menu, _("Play mode"))
+        self.__create_simple_button("delete", self.popup_delete_menu, _("Delete"))
         
         toolbar_align = gtk.Alignment()
         toolbar_align.set_padding(6, 6, 24, 24)
@@ -143,7 +144,7 @@ class PlaylistUI(gtk.VBox):
         
     def __on_db_loaded(self, db):        
         if not MediaDB.get_playlists():
-            MediaDB.create_playlist("local", "[默认列表]")            
+            MediaDB.create_playlist("local", _("[Default list]"))            
             
         # From MediaDB loaded playlists.    
         init_items = [PlaylistItem(pl) for pl in MediaDB.get_playlists()]    
@@ -251,19 +252,19 @@ class PlaylistUI(gtk.VBox):
         
         
     def popup_list_menu(self, widget, event):    
-        menu_items = [(None, "新建列表", self.new_list),
-                      (None, "导入列表", self.leading_in_list),
-                      (None, "打开列表", self.add_to_list),
-                      (None, "导出列表", self.leading_out_list),
-                      (None, "删除列表", self.delete_item_list),
+        menu_items = [(None, _("New list"), self.new_list),
+                      (None, _("Import list"), self.leading_in_list),
+                      (None, _("Open list"), self.add_to_list),
+                      (None, _("Export list"), self.leading_out_list),
+                      (None, _("Remove list"), self.delete_item_list),
                       None,
-                      (None, "保存所有列表", self.save_all_list)]
+                      (None, _("Save all lists"), self.save_all_list)]
         Menu(menu_items, True).show((int(event.x_root), int(event.y_root)))
         
     def new_list(self, items=[]):    
         index = len(self.category_list.get_items(None))
-        name = "%s%d" % ("新建列表", index)
-        input_dialog = InputDialog("新建列表", name, 300, 100, lambda name : self.create_new_playlist(name, items))
+        name = "%s%d" % (_("New list"), index)
+        input_dialog = InputDialog(_("New list"), name, 300, 100, lambda name : self.create_new_playlist(name, items))
         input_dialog.show_all()
         
     def create_new_playlist(self, name, items):    
@@ -273,11 +274,14 @@ class PlaylistUI(gtk.VBox):
         sub_menu_items = []
         if len(self.category_list.get_items(None)) > 1:
             other_category_items = self.category_list.get_other_item(self.category_list.get_highlight_index())
-            sub_menu_items = [(None, category_item.get_title(), self.edit_list_item, category_item, select_items ,move) for category_item in other_category_items]
+            sub_menu_items = [(None, category_item.get_title(), 
+                               self.edit_list_item, category_item, select_items ,move) for category_item in other_category_items]
         if sub_menu_items:    
-            sub_menu_items.extend([None, ((app_theme.get_pixbuf("toolbar/add_normal.png"), None), "新建列表", self.edit_new_list_item, select_items, move)])
+            sub_menu_items.extend([None, ((app_theme.get_pixbuf("toolbar/add_normal.png"), None),
+                                          _("New list"), self.edit_new_list_item, select_items, move)])
         else:    
-            sub_menu_items.extend([((app_theme.get_pixbuf("toolbar/add_normal.png"), None), "新建列表", self.edit_new_list_item, select_items, move)])
+            sub_menu_items.extend([((app_theme.get_pixbuf("toolbar/add_normal.png"), None),
+                                    _("New list"), self.edit_new_list_item, select_items, move)])
         return Menu(sub_menu_items)
     
     def edit_list_item(self, category_item, select_items, move):
@@ -289,11 +293,16 @@ class PlaylistUI(gtk.VBox):
                 self.current_item.song_view.remove_select_items()
         except:        
             pass
+        else:
+            self.current_item.song_view.update_item_index()
+            self.current_item.song_view.update_vadjustment()
         
     def edit_new_list_item(self, select_items, move):    
         self.new_list([item.get_song().get("uri") for item in select_items])
         if move:
             self.current_item.song_view.remove_select_items()
+        self.current_item.song_view.update_item_index()    
+        self.current_item.song_view.update_vadjustment()
         
     def leading_in_list(self):    
         uri = WindowLoadPlaylist().run()
@@ -380,18 +389,18 @@ class PlaylistUI(gtk.VBox):
         # self.popup_list_menu(widget, event)
         if index == -1:
             menu_items = [
-                (None, "新建列表", self.new_list),
-                (None, "导入列表", self.leading_in_list),
+                (None, _("New list"), self.new_list),
+                (None, _("Import list"), self.leading_in_list),
                 None,
-                (None, "保存所有列表", self.save_all_list)
+                (None, _("Save all lists"), self.save_all_list)
                 ]
         else:    
             menu_items = [
-                (None, "重命名", self.rename_item_list, item, index),
-                (None, "删除列表", self.delete_item_list, index),
-                (None, "打开列表", self.add_to_list, item),
+                (None, _("Rename"), self.rename_item_list, item, index),
+                (None, _("Remove list"), self.delete_item_list, index),
+                (None, _("Open list"), self.add_to_list, item),
                 None,
-                (None, "保存所有列表", self.save_all_list)
+                (None, _("Save all lists"), self.save_all_list)
                 ]
             
         Menu(menu_items, True).show((x, y))    
@@ -400,7 +409,7 @@ class PlaylistUI(gtk.VBox):
         def rename_spec_list(name, spec_item, spec_index):
             self.category_list.set_index_text(spec_index, name)
             spec_item.set_title(name)
-        input_dialog = InputDialog("重命名", item.get_title(), 300, 100,
+        input_dialog = InputDialog(_("Rename"), item.get_title(), 300, 100,
                                    lambda name: rename_spec_list(name, item, index))    
         input_dialog.show_all()
         
@@ -439,30 +448,30 @@ class PlaylistUI(gtk.VBox):
             self.detail_menu.destroy()
         play_mode_menu = self.current_item.song_view.get_playmode_menu(align=True)
         sort_dict = OrderedDict()
-        sort_dict["title"] = "按歌曲名"
-        sort_dict["artist"] = "按艺术家"        
-        sort_dict["album"] = "按专辑" 
-        sort_dict["genre"] = "按流派"
-        sort_dict["#playcount"] = "按播放次数"
-        sort_dict["#added"] = "按添加时间"
+        sort_dict["title"] = _("by title")
+        sort_dict["artist"] = _("by artist")        
+        sort_dict["album"] = _("by album") 
+        sort_dict["genre"] = _("by genre")
+        sort_dict["#playcount"] = _("by playcount")
+        sort_dict["#added"] = _("by added")
         sort_items = [(None, value, self.current_item.song_view.set_sort_keyword, key) for key, value in sort_dict.iteritems()]
         sort_items.append(None)
-        sort_items.append((None, "随机排序", self.current_item.song_view.random_reorder))
+        sort_items.append((None, _("Random order"), self.current_item.song_view.random_reorder))
         sub_sort_menu = Menu(sort_items)
         add_to_list_menu = self.get_edit_sub_menu(select_items)
         move_to_list_menu = self.get_edit_sub_menu(select_items, True)
-        self.detail_menu = Menu([(None, "播放歌曲",  self.current_item.song_view.play_select_item),
-                                 (None, "添加到列表", add_to_list_menu),
-                                 (None, "移动到列表", move_to_list_menu),
+        self.detail_menu = Menu([(None, _("Play track"),  self.current_item.song_view.play_select_item),
+                                 (None, _("Add to list"), add_to_list_menu),
+                                 (None, _("move to list"), move_to_list_menu),
                                  None,
-                                 (None, "删除", self.current_item.song_view.remove_select_items),
-                                 (None, "从本地删除", self.current_item.song_view.move_to_trash),
-                                 (None, "清空列表", self.current_item.song_view.erase_items),
+                                 (None, _("Remove track"), self.current_item.song_view.remove_select_items),
+                                 (None, _("Move to trash"), self.current_item.song_view.move_to_trash),
+                                 (None, _("Clear list"), self.current_item.song_view.erase_items),
                                  None,
-                                 (None, "播放模式", play_mode_menu),
-                                 (None, "歌曲排序", sub_sort_menu),
-                                 (None, "打开文件目录", self.current_item.song_view.open_song_dir),
-                                 (None, "歌曲信息", self.current_item.song_view.open_song_editor),
+                                 (None, _("Play mode"), play_mode_menu),
+                                 (None, _("Sort tracks"), sub_sort_menu),
+                                 (None, _("Open directory"), self.current_item.song_view.open_song_dir),
+                                 (None, _("Property"), self.current_item.song_view.open_song_editor),
                                  ], True)
         self.detail_menu.show((int(x), int(y)))
         

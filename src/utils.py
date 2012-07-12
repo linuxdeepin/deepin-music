@@ -27,7 +27,7 @@ import fcntl
 import cPickle
 import shutil
 import gtk
-import locale
+import nls
 import gobject
 
 import time
@@ -773,6 +773,7 @@ def export_playlist(list_song, filename, p_type="m3u"):
         fileout.close()
     else:
         raise TypeError, "Unknow playlist type"
+    
 
     
 global MAIN_WINDOW            

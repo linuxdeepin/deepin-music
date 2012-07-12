@@ -23,7 +23,6 @@
 import gtk
 import gobject
 from dtk.ui.scrolled_window import ScrolledWindow
-from dtk.ui.box import ImageBox
 
 from widget.song_view import SongView
 from widget.ui_utils import switch_tab as switch_box
@@ -32,6 +31,8 @@ from widget.skin import app_theme
 from widget.ui_utils import (
     draw_alpha_mask, create_upper_align, create_bottom_align,
     create_left_align, create_right_align)
+from nls import _
+
 
 DEFAULT_FONT_SIZE = 8
 
@@ -53,7 +54,7 @@ class PlaylistItem(gobject.GObject):
         
     def create_jobs_box(self):    
         
-        self.file_job_button = self.create_job_button("add_dir", "添加目录", self.song_view.recursion_add_dir)
+        self.file_job_button = self.create_job_button("add_dir", _("Add directory"), self.song_view.recursion_add_dir)
         # self.file_job_button.connect("clicked", self.open_file_or_dir)
 
         self.job_box = gtk.EventBox()

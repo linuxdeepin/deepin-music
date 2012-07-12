@@ -44,6 +44,7 @@ from config import config
 from player import Player
 from lrc_manager import LrcManager
 from constant import LRC_DESKTOP_MODE, LRC_WINDOW_MODE, PREDEFINE_COLORS
+from nls import _
 import utils
 
 
@@ -140,18 +141,23 @@ class LyricsModule(object):
         sep_align.set(0.5, 0.5, 0, 0)
         sep_align.add(separate_line)
         
-        zoom_in_align = self.__create_zoom_button("zoom_in")
-        zoom_out_align = self.__create_zoom_button("zoom_out")
-        predefine_align = self.__create_simple_button("predefine_color", self.popup_predefine_menu , True)
-        lock_align = self.__create_simple_button("lock", self.__lock_lyrics)
-        karaoke_align, self.karaoke_button = self.__create_simple_toggle_button("karaoke", "karaoke", self.change_karaoke_status)
-        line_align, self.line_button = self.__create_simple_toggle_button("single_line", "double_line", self.change_line_status)
-        setting_align = self.__create_simple_button("setting", self.open_setting_window)
-        search_align = self.__create_simple_button("search", self.open_search_window)
-        close_align = self.__create_simple_button("close", self.close_lyric_window)
-        before_align = self.__create_simple_button("before", self.before_offset)
-        after_align = self.__create_simple_button("after", self.after_offset)
-        lrc_align = self.__create_simple_button("lrc", self.switch_to_scroll_lyrics)
+        zoom_in_align = self.__create_zoom_button("zoom_in", _("increase the lyrics size"))
+        zoom_out_align = self.__create_zoom_button("zoom_out", _("decrease the lyrics size"))
+        predefine_align = self.__create_simple_button("predefine_color", self.popup_predefine_menu, 
+                                                      _("predefined color schemes"), True)
+        lock_align = self.__create_simple_button("lock", self.__lock_lyrics, _("Lock/unlock lyrics"))
+        karaoke_align, self.karaoke_button = self.__create_simple_toggle_button("karaoke", "karaoke", 
+                                                                                self.change_karaoke_status,
+                                                                                _("karaoke on/off"))
+        line_align, self.line_button = self.__create_simple_toggle_button("single_line", "double_line",
+                                                                          self.change_line_status,
+                                                                          _("Switch lines"))
+        setting_align = self.__create_simple_button("setting", self.open_setting_window, _("open setting panel"))
+        search_align = self.__create_simple_button("search", self.open_search_window, _("search lrc file for current track"))
+        close_align = self.__create_simple_button("close", self.close_lyric_window, _("Close lyrics"))
+        before_align = self.__create_simple_button("before", self.before_offset, _("Lyrics rewind"))
+        after_align = self.__create_simple_button("after", self.after_offset, _("Lyrics forward"))
+        lrc_align = self.__create_simple_button("lrc", self.switch_to_scroll_lyrics, _("Switch to window mode"))
 
         play_box.pack_start(prev_align, False, False)
         play_box.pack_start(play_align, False, False)
@@ -186,29 +192,29 @@ class LyricsModule(object):
         
     def scroll_right_press_cb(self, widget, event):    
         menu_items = [
-            (self.get_scroll_menu_pixbufs("lrc"), "桌面歌词模式", self.switch_to_desktop_lyrics),
+            (self.get_scroll_menu_pixbufs("lrc"), _("Desktop lyrics mode"), self.switch_to_desktop_lyrics),
             None,
-            (self.get_scroll_menu_pixbufs("before"), "后退歌词", lambda : self.before_offset(None)),
-            (self.get_scroll_menu_pixbufs("after"), "前进歌词", lambda : self.after_offset(None)),
+            (self.get_scroll_menu_pixbufs("before"), _("Lyrics rewind"), lambda : self.before_offset(None)),
+            (self.get_scroll_menu_pixbufs("after"), _("Lyrics forward"), lambda : self.after_offset(None)),
             None,
-            (self.get_scroll_menu_pixbufs("search"), "搜索", lambda :self.open_search_window(None)),
-            (self.get_scroll_menu_pixbufs("setting"), "选项", lambda : Dispatcher.show_scroll_page()),
+            (self.get_scroll_menu_pixbufs("search"), _("Search"), lambda :self.open_search_window(None)),
+            (self.get_scroll_menu_pixbufs("setting"), _("Setting"), lambda : Dispatcher.show_scroll_page()),
                       ]
         Menu(menu_items, True).show((int(event.x_root), int(event.y_root)))
         
     def popup_desktop_right_menu(self, widget, event):    
         if event.button == 3 and Player.song:
-            adjust_menu_item = [(None, "前进0.5秒", lambda : self.after_offset(None)), 
-                                (None, "后退0.5秒", lambda : self.before_offset(None))]
+            adjust_menu_item = [(None, _("Forward 0.5 seconds"), lambda : self.after_offset(None)), 
+                                (None, _("Rewind 0.5 seconds"), lambda : self.before_offset(None))]
             menu_items = [
-                (None, "搜索", lambda : self.open_search_window(None)),
-                (None, "调整歌词", Menu(adjust_menu_item)),
+                (None, _("Search"), lambda : self.open_search_window(None)),
+                (None, _("Adjust lyrics"), Menu(adjust_menu_item)),
                 None,
-                (None, "关联本地歌词", self.allocation_lrc),
-                (None, "打开歌词文件夹", self.open_lrc_dir),
+                (None, _("Choose local lrc"), self.allocation_lrc),
+                (None, _("Open directory"), self.open_lrc_dir),
                 None,
-                (None, "设置面板", lambda : self.open_setting_window(None)),
-                (None, "切换到桌面歌词", lambda : self.switch_to_scroll_lyrics(None))
+                (None, _("Setting"), lambda : self.open_setting_window(None)),
+                (None, _("Desktop lyrics mode"), lambda : self.switch_to_scroll_lyrics(None))
                 ]
             Menu(menu_items, True).show((int(event.x_root), int(event.y_root)))
             
@@ -254,7 +260,7 @@ class LyricsModule(object):
         if config.getint("lyrics", "line_count") == 1:
             self.line_button.set_active(True)
         
-    def __create_simple_button(self, name, callback, has_event=False):    
+    def __create_simple_button(self, name, callback, tip_msg=None, has_event=False):    
         button = ImageButton(
             app_theme.get_pixbuf("lyric/%s_normal.png" % name),
             app_theme.get_pixbuf("lyric/%s_hover.png" % name),
@@ -264,13 +270,16 @@ class LyricsModule(object):
             button.connect("button-press-event", callback)
         else:    
             button.connect("clicked", callback)
+            
+        if tip_msg:    
+            Tooltip.text(button, tip_msg)
+            
         button_align = gtk.Alignment()
         button_align.set(0.5, 0.5, 0, 0)
         button_align.add(button)
-        Tooltip.text(button, "控制桌面歌词")
         return button_align
         
-    def __create_simple_toggle_button(self, normal_name, active_name, callback):
+    def __create_simple_toggle_button(self, normal_name, active_name, callback, tip_msg=None):
         toggle_button = ToggleButton(
             app_theme.get_pixbuf("lyric/%s_normal.png" % normal_name),
             app_theme.get_pixbuf("lyric/%s_press.png" % active_name)
@@ -279,6 +288,9 @@ class LyricsModule(object):
         toggle_align = gtk.Alignment()
         toggle_align.set(0.5, 0.5, 0, 0)
         toggle_align.add(toggle_button)
+        
+        if tip_msg:
+            Tooltip.text(toggle_button, tip_msg)
         return toggle_align, toggle_button
         
     def __create_button(self, name, tip_msg=None):   
@@ -302,6 +314,8 @@ class LyricsModule(object):
             app_theme.get_pixbuf("lyric/%s_press.png" % name)
             )
         button.connect("clicked", self.change_font_size, name)
+        if msg:
+            Tooltip.text(button, msg)
         align = gtk.Alignment()
         align.set(0.5, 0.5, 0, 0)
         align.add(button)
@@ -365,11 +379,11 @@ class LyricsModule(object):
         
     def popup_predefine_menu(self, widget, event):    
         menu_dict = OrderedDict()
-        menu_dict["default"] = "默认"
-        menu_dict["vitality_yellow"] = "活力黄"
-        menu_dict["fresh_green"]  = "清新绿"
-        menu_dict["playful_pink"] = "俏皮粉"
-        menu_dict["cool_blue"] = "清爽蓝"
+        menu_dict["default"] = _("Default")
+        menu_dict["vitality_yellow"] = _("Vitality yellow")
+        menu_dict["fresh_green"]  = _("Fresh green")
+        menu_dict["playful_pink"] = _("Playful pink")
+        menu_dict["cool_blue"] = _("Cool blue")
         
         menu_items = []
         save_predefine_color = config.get("lyrics", "predefine_color", "default")
@@ -694,11 +708,11 @@ class LyricsModule(object):
                 self.time_source = None
                 self.clear_lyrics()
             if try_web:    
-                self.set_message(self.get_default_message(force_song) + " 没有搜索到歌词!")
-                self.scroll_lyrics.set_message(self.get_default_message(force_song) + " 没有搜索到歌词!")
+                self.set_message(self.get_default_message(force_song) + " "+ _("No lyrics found!"))
+                self.scroll_lyrics.set_message(self.get_default_message(force_song) + " " +  _("No lyrics found!"))
             else:    
-                self.set_search_fail_message("正在搜索歌词......")
-                self.scroll_lyrics.set_message("正在搜索歌词......")
+                self.set_search_fail_message(_("Searching for lyrics"))
+                self.scroll_lyrics.set_message(_("Searching for lyrics"))
             self.__find_flag = False    
         return ret    
         

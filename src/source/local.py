@@ -30,7 +30,7 @@ import common
 from widget.dialog import WinDir, WinFile
 from library import MediaDB
 from widget.jobs_manager import Job
-
+from nls import _
 
 class ImportFolderJob(Job):
     def __init__(self, dirs=None):
@@ -40,7 +40,7 @@ class ImportFolderJob(Job):
                 dirs = [ dirs ]
                 
         if dirs:        
-            self.message = "Reading directories..."
+            self.message = _("Reading directories...")
             self.dirs = dirs
             super(ImportFolderJob, self).__init__()
             
@@ -145,7 +145,6 @@ class ImportPlaylistJob(Job):
                         added.append(uri)
         
         added = set(added)
-        start = time.time()                
         # for uri in added:
             # self.__get_or_create_song(uri)
             # end = time.time()
@@ -176,7 +175,7 @@ class ImportFileJob(object):
                 traceback.print_exc()
               
 class CheckDeletedDBJob(Job):                
-    __message = "Check deleted files"
+    __message = _("Check deleted files")
     def job(self):
         songs = MediaDB.get_songs("local")
         total = len(songs)
@@ -203,4 +202,4 @@ class ReloadDBJob(Job):
                 except:
                     traceback.print_exc()
                     
-            yield "重新的加载数据库 %d/%s"%(i,total)
+            yield "%s %d/%s" % (_("Reload database"),i,total)

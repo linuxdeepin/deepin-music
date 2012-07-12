@@ -43,6 +43,7 @@ from widget.skin import app_theme
 from widget.song_editor import SongEditor
 from source.local import ImportPlaylistJob
 from widget.ui_utils import draw_single_mask, draw_alpha_mask
+from nls import _
 
 class SongView(ListView):
     ''' song view. '''
@@ -333,6 +334,7 @@ class SongView(ListView):
     
     def erase_items(self):
         self.clear()
+        self.emit_empty_signal(None, None)
         return True
     
     def open_song_dir(self):
@@ -401,10 +403,10 @@ class SongView(ListView):
     def get_playmode_menu(self, pos=[], align=False):
         mode_dict = OrderedDict()
 
-        mode_dict["single_mode"] = "单曲循环"
-        mode_dict["order_mode"] = "顺序播放"
-        mode_dict["list_mode"] = "列表循环"
-        mode_dict["random_mode"] = "随机循环"        
+        mode_dict["single_mode"] = _("Repeat")
+        mode_dict["order_mode"] = _("Play(ordered)")
+        mode_dict["list_mode"] = _("Repeat list")
+        mode_dict["random_mode"] = _("Shuffle")        
         
         mode_items = []
         for key, value in mode_dict.iteritems():
@@ -426,10 +428,10 @@ class SongView(ListView):
             self.popup_add_menu(int(event.x_root), int(event.y_root))
 
     def popup_delete_menu(self, x, y):    
-        items = [(None, "删除", self.remove_select_items),
-                 (None, "删除错误歌曲", self.delete_error_items),
-                 (None, "从本地删除", self.move_to_trash),
-                 (None, "清空列表", self.erase_items)]
+        items = [(None, _("Remove track this list"), self.remove_select_items),
+                 (None, _("Remove unavailable track"), self.delete_error_items),
+                 (None, _("Move to trash"), self.move_to_trash),
+                 (None, _("Clear list"), self.erase_items)]
         Menu(items, True).show((int(x), int(y)))
         
     def delete_error_items(self):    
@@ -441,17 +443,17 @@ class SongView(ListView):
         
     def popup_add_menu(self, x, y):
         menu_items = [
-            (None, "文件", self.add_file),
-            (None, "文件夹(包含子目录)", self.recursion_add_dir),
-            (None, "文件夹", self.add_dir),
+            (None, _("File"), self.add_file),
+            (None, _("Directory(recursion)"), self.recursion_add_dir),
+            (None, _("Directory"), self.add_dir),
             ]
         Menu(menu_items, True).show((x, y))
         
     def get_add_menu(self):    
         menu_items = [
-            (None, "文件", self.add_file),
-            (None, "文件夹(包含子目录)", self.recursion_add_dir),
-            (None, "文件夹", self.add_dir),
+            (None, _("File"), self.add_file),
+            (None, _("Directory(recursion)"), self.recursion_add_dir),
+            (None, _("Directory"), self.add_dir),
             ]
         return Menu(menu_items)
     
@@ -636,14 +638,14 @@ class MultiDragSongView(ListView):
 
     def popup_right_menu(self, widget, x, y, item, select_items):
         menu_items = [
-            (None, "播放", self.play_song),
-            (None, "添加到播放列表", self.emit_to_playlist),
+            (None, _("Play track"), self.play_song),
+            (None, _("Add to playlist"), self.emit_to_playlist),
             None,
-            (None, "从歌曲库删除", self.remove_songs),
-            (None, "从磁盘删除", self.remove_songs, True),
+            (None, _("Remove from library"), self.remove_songs),
+            (None, _("Move to trash"), self.remove_songs, True),
             None,
-            (None, "打开歌曲所在目录", self.open_song_dir),
-            (None, "属性", self.open_song_editor)
+            (None, _("Open directory"), self.open_song_dir),
+            (None, _("Property"), self.open_song_editor)
                         ]
             
         Menu(menu_items, True).show((int(x), int(y)))

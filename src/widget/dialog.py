@@ -24,12 +24,13 @@ import gtk
 import os
 
 import utils
+from nls import _
 
 
 class WinDir(gtk.FileChooserDialog):
     '''Open chooser dir dialog'''
 
-    def __init__(self, return_uri=True, title="Import a folder in the library"):
+    def __init__(self, return_uri=True, title=_("Select directory")):
         gtk.FileChooserDialog.__init__(self, title, None, gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER,
                                        (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
                                         gtk.STOCK_OPEN, gtk.RESPONSE_OK))
@@ -49,7 +50,7 @@ class WinDir(gtk.FileChooserDialog):
     
 class WinFile(gtk.FileChooserDialog):    
     '''Open chooser file dialog'''
-    def __init__(self, return_uri=True, title="Import a file in the library"):    
+    def __init__(self, return_uri=True, title=_("Select file")):    
         gtk.FileChooserDialog.__init__(self,title, None, gtk.FILE_CHOOSER_ACTION_OPEN,
                                        (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
                                         gtk.STOCK_OPEN, gtk.RESPONSE_OK))
@@ -73,7 +74,7 @@ class WinFile(gtk.FileChooserDialog):
 class WindowExportPlaylist(gtk.FileChooserDialog):
     def __init__(self,songs):
         self.songs = songs
-        gtk.FileChooserDialog.__init__(self, "Export playlist", None,
+        gtk.FileChooserDialog.__init__(self, _("Export playlist"), None,
              gtk.FILE_CHOOSER_ACTION_SAVE,
              (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,gtk.STOCK_SAVE, gtk.RESPONSE_OK))
              
@@ -119,7 +120,7 @@ class WindowExportPlaylist(gtk.FileChooserDialog):
 class WindowLoadPlaylist(gtk.FileChooserDialog):
     def __init__(self):
         
-        gtk.FileChooserDialog.__init__(self, "Load playlist", None,
+        gtk.FileChooserDialog.__init__(self, _("Load playlist"), None,
              gtk.FILE_CHOOSER_ACTION_OPEN,
              (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,gtk.STOCK_OPEN, gtk.RESPONSE_OK))
              

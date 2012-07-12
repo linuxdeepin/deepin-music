@@ -1,0 +1,1040 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-07-12 03:45+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../src/main.py:92
+msgid "Usage: deepin-music-player [OPTION]... [URI]"
+msgstr ""
+
+#: ../src/main.py:93
+msgid "Options"
+msgstr ""
+
+#: ../src/main.py:97
+msgid "Control Options"
+msgstr ""
+
+#: ../src/main.py:98
+msgid "Play the next track"
+msgstr ""
+
+#: ../src/main.py:99
+msgid "Play the previous track"
+msgstr ""
+
+#: ../src/main.py:100
+msgid "Pause or resume playback"
+msgstr ""
+
+#: ../src/main.py:101
+msgid "Forward playback"
+msgstr ""
+
+#: ../src/main.py:102
+msgid "Rewind playback"
+msgstr ""
+
+#: ../src/main.py:103
+msgid "Stop playback"
+msgstr ""
+
+#: ../src/main.py:112
+msgid "Volume Options"
+msgstr ""
+
+#: ../src/main.py:113
+msgid "Change volume (VOLUME 0.0-1.0)"
+msgstr ""
+
+#: ../src/main.py:116
+msgid "Track information Options"
+msgstr ""
+
+#: ../src/main.py:117
+msgid "Print the title of current track"
+msgstr ""
+
+#: ../src/main.py:118
+msgid "Print the album of current track"
+msgstr ""
+
+#: ../src/main.py:119
+msgid "Print the artist of current track"
+msgstr ""
+
+#: ../src/main.py:120
+msgid "Print the length of current track"
+msgstr ""
+
+#: ../src/main.py:121
+msgid "Print the path of current track"
+msgstr ""
+
+#: ../src/main.py:123
+msgid "Print the current playback position as time"
+msgstr ""
+
+#: ../src/main.py:126
+msgid "Other Options"
+msgstr ""
+
+#: ../src/main.py:128
+msgid "Show this help message and exit"
+msgstr ""
+
+#: ../src/main.py:130
+msgid "Start new instance"
+msgstr ""
+
+#: ../src/main.py:132
+msgid "Show program's version number and exit."
+msgstr ""
+
+#: ../src/main.py:134
+msgid "Start minimized"
+msgstr ""
+
+#: ../src/main.py:137
+msgid "Toggle visibility of the GUI (if possible)"
+msgstr ""
+
+#: ../src/main.py:140
+msgid "Make control options like --play start program if it is not running"
+msgstr ""
+
+#: ../src/main.py:143
+msgid "Development/Debug Options"
+msgstr ""
+
+#: ../src/main.py:144
+msgid "Change debug level (0-9)"
+msgstr ""
+
+#: ../src/main.py:148
+msgid "Show information about supported audio file"
+msgstr ""
+
+#: ../src/main.py:154
+msgid "Deepin Music Player 1.0"
+msgstr ""
+
+#: ../src/source/local.py:43
+msgid "Reading directories..."
+msgstr ""
+
+#: ../src/source/local.py:178
+msgid "Check deleted files"
+msgstr ""
+
+#: ../src/source/local.py:205
+msgid "Reload database"
+msgstr ""
+
+#: ../src/widget/playlist.py:74
+msgid "Search for tracks"
+msgstr ""
+
+#: ../src/widget/playlist.py:75
+msgid "Playlist operations"
+msgstr ""
+
+#: ../src/widget/playlist.py:76
+msgid "Add track"
+msgstr ""
+
+#: ../src/widget/playlist.py:77 ../src/widget/playlist.py:471
+#: ../src/widget/instance.py:289
+msgid "Play mode"
+msgstr ""
+
+#: ../src/widget/playlist.py:78
+msgid "Delete"
+msgstr ""
+
+#: ../src/widget/playlist.py:147
+msgid "[Default list]"
+msgstr ""
+
+#: ../src/widget/playlist.py:255 ../src/widget/playlist.py:266
+#: ../src/widget/playlist.py:267 ../src/widget/playlist.py:281
+#: ../src/widget/playlist.py:284 ../src/widget/playlist.py:392
+msgid "New list"
+msgstr ""
+
+#: ../src/widget/playlist.py:256 ../src/widget/playlist.py:393
+msgid "Import list"
+msgstr ""
+
+#: ../src/widget/playlist.py:257 ../src/widget/playlist.py:401
+msgid "Open list"
+msgstr ""
+
+#: ../src/widget/playlist.py:258
+msgid "Export list"
+msgstr ""
+
+#: ../src/widget/playlist.py:259 ../src/widget/playlist.py:400
+msgid "Remove list"
+msgstr ""
+
+#: ../src/widget/playlist.py:261 ../src/widget/playlist.py:395
+#: ../src/widget/playlist.py:403
+msgid "Save all lists"
+msgstr ""
+
+#: ../src/widget/playlist.py:399 ../src/widget/playlist.py:412
+msgid "Rename"
+msgstr ""
+
+#: ../src/widget/playlist.py:451
+msgid "by title"
+msgstr ""
+
+#: ../src/widget/playlist.py:452 ../src/widget/combo.py:230
+msgid "by artist"
+msgstr ""
+
+#: ../src/widget/playlist.py:453 ../src/widget/combo.py:232
+msgid "by album"
+msgstr ""
+
+#: ../src/widget/playlist.py:454 ../src/widget/combo.py:231
+msgid "by genre"
+msgstr ""
+
+#: ../src/widget/playlist.py:455
+msgid "by playcount"
+msgstr ""
+
+#: ../src/widget/playlist.py:456
+msgid "by added"
+msgstr ""
+
+#: ../src/widget/playlist.py:459
+msgid "Random order"
+msgstr ""
+
+#: ../src/widget/playlist.py:463 ../src/widget/song_view.py:641
+msgid "Play track"
+msgstr ""
+
+#: ../src/widget/playlist.py:464
+msgid "Add to list"
+msgstr ""
+
+#: ../src/widget/playlist.py:465
+msgid "move to list"
+msgstr ""
+
+#: ../src/widget/playlist.py:467
+msgid "Remove track"
+msgstr ""
+
+#: ../src/widget/playlist.py:468 ../src/widget/song_view.py:433
+#: ../src/widget/song_view.py:645
+msgid "Move to trash"
+msgstr ""
+
+#: ../src/widget/playlist.py:469 ../src/widget/song_view.py:434
+msgid "Clear list"
+msgstr ""
+
+#: ../src/widget/playlist.py:472
+msgid "Sort tracks"
+msgstr ""
+
+#: ../src/widget/playlist.py:473 ../src/widget/lyrics_module.py:214
+#: ../src/widget/song_view.py:647 ../src/widget/song_editor.py:146
+msgid "Open directory"
+msgstr ""
+
+#: ../src/widget/playlist.py:474 ../src/widget/song_view.py:648
+#: ../src/widget/song_editor.py:317
+msgid "Property"
+msgstr ""
+
+#: ../src/widget/lyrics.py:78 ../src/widget/lyrics.py:739
+#: ../src/widget/preference.py:567 ../src/widget/preference.py:577
+#: ../src/widget/preference.py:909
+msgid "Deepin Music Player"
+msgstr ""
+
+#: ../src/widget/lyrics.py:724
+msgid "Lyrics window"
+msgstr ""
+
+#: ../src/widget/lyrics_module.py:144
+msgid "increase the lyrics size"
+msgstr ""
+
+#: ../src/widget/lyrics_module.py:145
+msgid "decrease the lyrics size"
+msgstr ""
+
+#: ../src/widget/lyrics_module.py:147
+msgid "predefined color schemes"
+msgstr ""
+
+#: ../src/widget/lyrics_module.py:148 ../src/widget/preference.py:365
+msgid "Lock/unlock lyrics"
+msgstr ""
+
+#: ../src/widget/lyrics_module.py:151
+msgid "karaoke on/off"
+msgstr ""
+
+#: ../src/widget/lyrics_module.py:154
+msgid "Switch lines"
+msgstr ""
+
+#: ../src/widget/lyrics_module.py:155
+msgid "open setting panel"
+msgstr ""
+
+#: ../src/widget/lyrics_module.py:156
+msgid "search lrc file for current track"
+msgstr ""
+
+#: ../src/widget/lyrics_module.py:157
+msgid "Close lyrics"
+msgstr ""
+
+#: ../src/widget/lyrics_module.py:158 ../src/widget/lyrics_module.py:197
+msgid "Lyrics rewind"
+msgstr ""
+
+#: ../src/widget/lyrics_module.py:159 ../src/widget/lyrics_module.py:198
+msgid "Lyrics forward"
+msgstr ""
+
+#: ../src/widget/lyrics_module.py:160
+msgid "Switch to window mode"
+msgstr ""
+
+#: ../src/widget/lyrics_module.py:195 ../src/widget/lyrics_module.py:217
+msgid "Desktop lyrics mode"
+msgstr ""
+
+#: ../src/widget/lyrics_module.py:200 ../src/widget/lyrics_module.py:210
+#: ../src/widget/song_search.py:45 ../src/widget/song_search.py:50
+#: ../src/widget/lyrics_search.py:60
+msgid "Search"
+msgstr ""
+
+#: ../src/widget/lyrics_module.py:201 ../src/widget/lyrics_module.py:216
+msgid "Setting"
+msgstr ""
+
+#: ../src/widget/lyrics_module.py:207
+msgid "Forward 0.5 seconds"
+msgstr ""
+
+#: ../src/widget/lyrics_module.py:208
+msgid "Rewind 0.5 seconds"
+msgstr ""
+
+#: ../src/widget/lyrics_module.py:211
+msgid "Adjust lyrics"
+msgstr ""
+
+#: ../src/widget/lyrics_module.py:213
+msgid "Choose local lrc"
+msgstr ""
+
+#: ../src/widget/lyrics_module.py:382 ../src/widget/song_editor.py:289
+#: ../src/widget/preference.py:374 ../src/widget/preference.py:615
+#: ../src/widget/equalizer.py:177
+msgid "Default"
+msgstr ""
+
+#: ../src/widget/lyrics_module.py:383 ../src/widget/preference.py:616
+msgid "Vitality yellow"
+msgstr ""
+
+#: ../src/widget/lyrics_module.py:384 ../src/widget/preference.py:617
+msgid "Fresh green"
+msgstr ""
+
+#: ../src/widget/lyrics_module.py:385 ../src/widget/preference.py:618
+msgid "Playful pink"
+msgstr ""
+
+#: ../src/widget/lyrics_module.py:386 ../src/widget/preference.py:619
+msgid "Cool blue"
+msgstr ""
+
+#: ../src/widget/lyrics_module.py:711 ../src/widget/lyrics_module.py:712
+msgid "No lyrics found!"
+msgstr ""
+
+#: ../src/widget/lyrics_module.py:714 ../src/widget/lyrics_module.py:715
+msgid "Searching for lyrics"
+msgstr ""
+
+#: ../src/widget/headerbar.py:70 ../src/widget/headerbar.py:235
+#: ../src/widget/preference.py:367
+msgid "Play/Pause"
+msgstr ""
+
+#: ../src/widget/headerbar.py:76 ../src/widget/headerbar.py:240
+msgid "Previous track"
+msgstr ""
+
+#: ../src/widget/headerbar.py:77 ../src/widget/headerbar.py:241
+msgid "Next track"
+msgstr ""
+
+#: ../src/widget/headerbar.py:106 ../src/widget/headerbar.py:270
+#: ../src/widget/preference.py:363
+msgid "Lyrics on/off"
+msgstr ""
+
+#: ../src/widget/song_view.py:406
+msgid "Repeat"
+msgstr ""
+
+#: ../src/widget/song_view.py:407
+msgid "Play(ordered)"
+msgstr ""
+
+#: ../src/widget/song_view.py:408
+msgid "Repeat list"
+msgstr ""
+
+#: ../src/widget/song_view.py:409
+msgid "Shuffle"
+msgstr ""
+
+#: ../src/widget/song_view.py:431
+msgid "Remove track this list"
+msgstr ""
+
+#: ../src/widget/song_view.py:432
+msgid "Remove unavailable track"
+msgstr ""
+
+#: ../src/widget/song_view.py:446 ../src/widget/song_view.py:454
+msgid "File"
+msgstr ""
+
+#: ../src/widget/song_view.py:447 ../src/widget/song_view.py:455
+msgid "Directory(recursion)"
+msgstr ""
+
+#: ../src/widget/song_view.py:448 ../src/widget/song_view.py:456
+msgid "Directory"
+msgstr ""
+
+#: ../src/widget/song_view.py:642
+msgid "Add to playlist"
+msgstr ""
+
+#: ../src/widget/song_view.py:644
+msgid "Remove from library"
+msgstr ""
+
+#: ../src/widget/dialog.py:33
+msgid "Select directory"
+msgstr ""
+
+#: ../src/widget/dialog.py:53
+msgid "Select file"
+msgstr ""
+
+#: ../src/widget/dialog.py:77
+msgid "Export playlist"
+msgstr ""
+
+#: ../src/widget/dialog.py:123
+msgid "Load playlist"
+msgstr ""
+
+#: ../src/widget/jobs_manager.py:44 ../src/widget/jobs_manager.py:153
+msgid "jobs waiting!"
+msgstr ""
+
+#: ../src/widget/information.py:40 ../src/widget/instance.py:71
+msgid "Deepin Music"
+msgstr ""
+
+#: ../src/widget/instance.py:116
+msgid "Join us"
+msgstr ""
+
+#: ../src/widget/instance.py:266 ../src/widget/tray.py:56
+msgid "Play"
+msgstr ""
+
+#: ../src/widget/instance.py:269 ../src/widget/tray.py:59
+msgid "Pause"
+msgstr ""
+
+#: ../src/widget/instance.py:273
+msgid "Forward"
+msgstr ""
+
+#: ../src/widget/instance.py:274
+msgid "Rewind"
+msgstr ""
+
+#: ../src/widget/instance.py:275 ../src/widget/song_editor.py:323
+#: ../src/widget/preference.py:368 ../src/widget/tray.py:61
+msgid "Previous"
+msgstr ""
+
+#: ../src/widget/instance.py:276 ../src/widget/song_editor.py:325
+#: ../src/widget/preference.py:369 ../src/widget/tray.py:62
+msgid "Next"
+msgstr ""
+
+#: ../src/widget/instance.py:287
+msgid "Add files"
+msgstr ""
+
+#: ../src/widget/instance.py:288
+msgid "Control"
+msgstr ""
+
+#: ../src/widget/instance.py:291 ../src/widget/equalizer.py:199
+msgid "Equalizer"
+msgstr ""
+
+#: ../src/widget/instance.py:296 ../src/widget/preference.py:947
+#: ../src/widget/tray.py:77
+msgid "Preference"
+msgstr ""
+
+#: ../src/widget/instance.py:297
+msgid "New features"
+msgstr ""
+
+#: ../src/widget/instance.py:299 ../src/widget/preference.py:190
+#: ../src/widget/tray.py:78
+msgid "Quit"
+msgstr ""
+
+#: ../src/widget/instance.py:317 ../src/widget/tray.py:75
+msgid "Lyrics off"
+msgstr ""
+
+#: ../src/widget/instance.py:319 ../src/widget/preference.py:158
+#: ../src/widget/tray.py:73
+msgid "Lyrics on"
+msgstr ""
+
+#: ../src/widget/instance.py:323 ../src/widget/tray.py:68
+msgid "Unlock lyrics"
+msgstr ""
+
+#: ../src/widget/instance.py:325 ../src/widget/tray.py:70
+msgid "Lock lyrics"
+msgstr ""
+
+#: ../src/widget/song_editor.py:71 ../src/widget/song_editor.py:193
+#: ../src/widget/song_search.py:47 ../src/widget/lyrics_search.py:56
+msgid "Title:"
+msgstr ""
+
+#: ../src/widget/song_editor.py:72 ../src/widget/song_editor.py:194
+#: ../src/widget/lyrics_search.py:55
+msgid "Artist:"
+msgstr ""
+
+#: ../src/widget/song_editor.py:73 ../src/widget/song_editor.py:195
+msgid "Album:"
+msgstr ""
+
+#: ../src/widget/song_editor.py:95
+msgid "Type:"
+msgstr ""
+
+#: ../src/widget/song_editor.py:95
+msgid "Format:"
+msgstr ""
+
+#: ../src/widget/song_editor.py:96 ../src/widget/preference.py:678
+#: ../src/widget/preference.py:841
+msgid "Size:"
+msgstr ""
+
+#: ../src/widget/song_editor.py:96
+msgid "Duration:"
+msgstr ""
+
+#: ../src/widget/song_editor.py:97
+msgid "Bitrate:"
+msgstr ""
+
+#: ../src/widget/song_editor.py:97
+msgid "Rate:"
+msgstr ""
+
+#: ../src/widget/song_editor.py:98
+msgid "Added:"
+msgstr ""
+
+#: ../src/widget/song_editor.py:98
+msgid "Recently:"
+msgstr ""
+
+#: ../src/widget/song_editor.py:99
+msgid "Playcount:"
+msgstr ""
+
+#: ../src/widget/song_editor.py:99 ../src/widget/song_editor.py:197
+msgid "Date:"
+msgstr ""
+
+#: ../src/widget/song_editor.py:143
+msgid "Location:"
+msgstr ""
+
+#: ../src/widget/song_editor.py:196
+msgid "Genre:"
+msgstr ""
+
+#: ../src/widget/song_editor.py:205
+msgid "Save"
+msgstr ""
+
+#: ../src/widget/song_editor.py:287 ../src/widget/preference.py:243
+msgid "Change"
+msgstr ""
+
+#: ../src/widget/song_editor.py:307
+msgid "Select image"
+msgstr ""
+
+#: ../src/widget/song_editor.py:320 ../src/widget/preference.py:954
+#: ../src/widget/song_search.py:69 ../src/widget/equalizer.py:250
+#: ../src/widget/lyrics_search.py:90
+msgid "Close"
+msgstr ""
+
+#: ../src/widget/song_editor.py:349
+msgid "Track Infomation"
+msgstr ""
+
+#: ../src/widget/song_editor.py:350
+msgid "Edit tags"
+msgstr ""
+
+#: ../src/widget/song_editor.py:351
+msgid "Edit cover"
+msgstr ""
+
+#: ../src/widget/preference.py:144
+msgid "Starting"
+msgstr ""
+
+#: ../src/widget/preference.py:151
+msgid "Display splash"
+msgstr ""
+
+#: ../src/widget/preference.py:163
+msgid "Auto play"
+msgstr ""
+
+#: ../src/widget/preference.py:169
+msgid "Resume last played"
+msgstr ""
+
+#: ../src/widget/preference.py:184
+msgid "Closing"
+msgstr ""
+
+#: ../src/widget/preference.py:189
+msgid "Minimize to trayicon"
+msgstr ""
+
+#: ../src/widget/preference.py:203
+msgid "Playing"
+msgstr ""
+
+#: ../src/widget/preference.py:207
+msgid "Crossfade"
+msgstr ""
+
+#: ../src/widget/preference.py:210
+msgid "Crossfade gapless album"
+msgstr ""
+
+#: ../src/widget/preference.py:212
+msgid "Fade timeout:"
+msgstr ""
+
+#: ../src/widget/preference.py:214
+msgid " ms"
+msgstr ""
+
+#: ../src/widget/preference.py:232
+msgid "Lyrics directory"
+msgstr ""
+
+#: ../src/widget/preference.py:345 ../src/widget/preference.py:968
+msgid "Hotkeys"
+msgstr ""
+
+#: ../src/widget/preference.py:355
+msgid "Activate hotkeys"
+msgstr ""
+
+#: ../src/widget/preference.py:361
+msgid "Minimized/Show window"
+msgstr ""
+
+#: ../src/widget/preference.py:370 ../src/widget/tray.py:46
+msgid "Increase volume"
+msgstr ""
+
+#: ../src/widget/preference.py:371 ../src/widget/tray.py:47
+msgid "Decrease volume"
+msgstr ""
+
+#: ../src/widget/preference.py:589 ../src/widget/preference.py:601
+#: ../src/widget/preference.py:846
+msgid "Left-aligned"
+msgstr ""
+
+#: ../src/widget/preference.py:590 ../src/widget/preference.py:602
+#: ../src/widget/preference.py:846
+msgid "Centered"
+msgstr ""
+
+#: ../src/widget/preference.py:591 ../src/widget/preference.py:603
+#: ../src/widget/preference.py:846
+msgid "Right-aligned"
+msgstr ""
+
+#: ../src/widget/preference.py:604
+msgid "Justified"
+msgstr ""
+
+#: ../src/widget/preference.py:631
+msgid "Color scheme:"
+msgstr ""
+
+#: ../src/widget/preference.py:639 ../src/widget/preference.py:806
+msgid "Regular"
+msgstr ""
+
+#: ../src/widget/preference.py:640 ../src/widget/preference.py:807
+msgid "Italic"
+msgstr ""
+
+#: ../src/widget/preference.py:641 ../src/widget/preference.py:808
+msgid "Bold"
+msgstr ""
+
+#: ../src/widget/preference.py:642 ../src/widget/preference.py:809
+msgid "Bold Italic"
+msgstr ""
+
+#: ../src/widget/preference.py:652 ../src/widget/preference.py:817
+msgid "Style:"
+msgstr ""
+
+#: ../src/widget/preference.py:663 ../src/widget/preference.py:826
+msgid "Lyrics style"
+msgstr ""
+
+#: ../src/widget/preference.py:673 ../src/widget/preference.py:835
+msgid "Font:"
+msgstr ""
+
+#: ../src/widget/preference.py:681
+msgid "Lines:"
+msgstr ""
+
+#: ../src/widget/preference.py:682
+msgid "Single"
+msgstr ""
+
+#: ../src/widget/preference.py:682
+msgid "Double"
+msgstr ""
+
+#: ../src/widget/preference.py:687 ../src/widget/preference.py:845
+msgid "Alignment:"
+msgstr ""
+
+#: ../src/widget/preference.py:697
+msgid "Outline:"
+msgstr ""
+
+#: ../src/widget/preference.py:702
+msgid "Stroke:"
+msgstr ""
+
+#: ../src/widget/preference.py:709 ../src/widget/preference.py:856
+msgid "Coming:"
+msgstr ""
+
+#: ../src/widget/preference.py:719 ../src/widget/preference.py:857
+msgid "Played:"
+msgstr ""
+
+#: ../src/widget/preference.py:851
+msgid "Rolling:"
+msgstr ""
+
+#: ../src/widget/preference.py:852
+msgid "Always"
+msgstr ""
+
+#: ../src/widget/preference.py:852
+msgid "By line"
+msgstr ""
+
+#: ../src/widget/preference.py:914
+msgid "Version:"
+msgstr ""
+
+#: ../src/widget/preference.py:916
+msgid "Release date:"
+msgstr ""
+
+#: ../src/widget/preference.py:929
+msgid ""
+"       ﻿深度音乐播放器是Linux Deepin团队为广大linux用户量身开发的一款音乐软件."
+"具有歌词搜索下载,桌面歌词显示,专辑封面下载,歌曲记忆播放,独创音乐管理,自定义换"
+"肤等几大特点.\n"
+"\n"
+"深度音乐播放器是自由软件,遵循自由软件基金会发布的 GNU 通用公共许可证第三版."
+msgstr ""
+
+#: ../src/widget/preference.py:966
+msgid "General"
+msgstr ""
+
+#: ../src/widget/preference.py:969
+msgid "Lyrics"
+msgstr ""
+
+#: ../src/widget/preference.py:970
+msgid "Desktop"
+msgstr ""
+
+#: ../src/widget/preference.py:971
+msgid "Window"
+msgstr ""
+
+#: ../src/widget/preference.py:972
+msgid "About us"
+msgstr ""
+
+#: ../src/widget/tray.py:48
+msgid "Mute"
+msgstr ""
+
+#: ../src/widget/tray.py:64
+msgid "Volume"
+msgstr ""
+
+#: ../src/widget/song_search.py:63 ../src/widget/lyrics_search.py:83
+#: ../src/widget/browser.py:302
+msgid "Title"
+msgstr ""
+
+#: ../src/widget/song_search.py:63 ../src/widget/lyrics_search.py:83
+#: ../src/widget/browser.py:302
+msgid "Artist"
+msgstr ""
+
+#: ../src/widget/song_search.py:63 ../src/widget/browser.py:302
+msgid "Album"
+msgstr ""
+
+#: ../src/widget/song_search.py:63
+msgid "Type"
+msgstr ""
+
+#: ../src/widget/song_search.py:63
+msgid "Size"
+msgstr ""
+
+#: ../src/widget/song_search.py:67 ../src/widget/lyrics_search.py:88
+msgid "Download"
+msgstr ""
+
+#: ../src/widget/song_search.py:83 ../src/widget/lyrics_search.py:121
+msgid "Now searching"
+msgstr ""
+
+#: ../src/widget/song_search.py:96
+msgid "Finish!"
+msgstr ""
+
+#: ../src/widget/equalizer.py:176
+msgid "Custom"
+msgstr ""
+
+#: ../src/widget/equalizer.py:178
+msgid "Classical"
+msgstr ""
+
+#: ../src/widget/equalizer.py:179
+msgid "Club"
+msgstr ""
+
+#: ../src/widget/equalizer.py:180
+msgid "Dance"
+msgstr ""
+
+#: ../src/widget/equalizer.py:181
+msgid "Full Bass"
+msgstr ""
+
+#: ../src/widget/equalizer.py:182
+msgid "Full Bass and Treble"
+msgstr ""
+
+#: ../src/widget/equalizer.py:183
+msgid "Full Treble"
+msgstr ""
+
+#: ../src/widget/equalizer.py:184
+msgid "Headphones"
+msgstr ""
+
+#: ../src/widget/equalizer.py:185
+msgid "Large Hall"
+msgstr ""
+
+#: ../src/widget/equalizer.py:186
+msgid "Live"
+msgstr ""
+
+#: ../src/widget/equalizer.py:187
+msgid "Party"
+msgstr ""
+
+#: ../src/widget/equalizer.py:188
+msgid "Pop"
+msgstr ""
+
+#: ../src/widget/equalizer.py:189
+msgid "Reggae"
+msgstr ""
+
+#: ../src/widget/equalizer.py:190
+msgid "Rock"
+msgstr ""
+
+#: ../src/widget/equalizer.py:191
+msgid "Ska"
+msgstr ""
+
+#: ../src/widget/equalizer.py:192
+msgid "Soft"
+msgstr ""
+
+#: ../src/widget/equalizer.py:193
+msgid "Soft Rock"
+msgstr ""
+
+#: ../src/widget/equalizer.py:194
+msgid "Techno"
+msgstr ""
+
+#: ../src/widget/equalizer.py:252
+msgid "Reset"
+msgstr ""
+
+#: ../src/widget/equalizer.py:254
+msgid "Predefined"
+msgstr ""
+
+#: ../src/widget/lyrics_search.py:49
+msgid "Lyrics search"
+msgstr ""
+
+#: ../src/widget/lyrics_search.py:123 ../src/widget/lyrics_search.py:144
+msgid "Not found!"
+msgstr ""
+
+#: ../src/widget/lyrics_search.py:138 ../src/widget/lyrics_search.py:142
+#, python-format
+msgid "%d lyrics found"
+msgstr ""
+
+#: ../src/widget/lyrics_search.py:151
+msgid "Downloading lyrics"
+msgstr ""
+
+#: ../src/widget/lyrics_search.py:161
+#, python-format
+msgid "File save to %s"
+msgstr ""
+
+#: ../src/widget/lyrics_search.py:163
+msgid "Fail to download!"
+msgstr ""
+
+#: ../src/widget/browser.py:58
+msgid "Unknown"
+msgstr ""
+
+#: ../src/widget/browser.py:66
+msgid "All tracks"
+msgstr ""
+
+#: ../src/widget/browser.py:78
+#, python-format
+msgid "%d tracks"
+msgstr ""
+
+#: ../src/widget/browser.py:265 ../src/widget/combo.py:181
+msgid "By artist"
+msgstr ""
+
+#: ../src/widget/browser.py:267
+msgid "By album"
+msgstr ""
+
+#: ../src/widget/browser.py:269
+msgid "By genre"
+msgstr ""
+
+#: ../src/widget/browser.py:276
+msgid "Local"
+msgstr ""
+
+#: ../src/widget/browser.py:283
+msgid "Scan Home dir"
+msgstr ""
+
+#: ../src/widget/browser.py:284
+msgid "Select dir to scan"
+msgstr ""
+
+#: ../src/widget/browser.py:285
+msgid "Refresh library"
+msgstr ""
+
+#: ../src/widget/browser.py:302
+msgid "Added time"
+msgstr ""
+
+#: ../src/widget/combo.py:192
+msgid "List view"
+msgstr ""
+
+#: ../src/widget/list_item.py:57
+msgid "Add directory"
+msgstr ""

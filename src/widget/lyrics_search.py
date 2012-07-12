@@ -39,24 +39,25 @@ from constant import DEFAULT_FONT_SIZE
 from lrc_manager import LrcManager
 from player import Player
 from config import config
+from nls import _
 import utils
 
 
 class SearchUI(DialogBox):
     def __init__(self):
         DialogBox.__init__(
-            self, "歌词搜索", 460, 300, DIALOG_MASK_MULTIPLE_PAGE, close_callback=self.hide_all, 
+            self, _("Lyrics search"), 460, 300, DIALOG_MASK_MULTIPLE_PAGE, close_callback=self.hide_all, 
             modal=False, window_hint=None, skip_taskbar_hint=False)
         self.artist_entry = InputEntry()
         self.artist_entry.set_size(130, 23)
         self.title_entry = InputEntry()
         self.title_entry.set_size(130, 23)
-        artist_label = Label("艺术家:")
-        title_label = Label("歌曲:")
+        artist_label = Label(_("Artist:"))
+        title_label = Label(_("Title:"))
         right_align = gtk.Alignment()
         right_align.set(0, 0, 0, 1)
         
-        search_button = Button("搜索")
+        search_button = Button(_("Search"))
         search_button.connect("clicked", self.search_lyric_cb)
         
         info_box = gtk.HBox(spacing=25)
@@ -79,14 +80,14 @@ class SearchUI(DialogBox):
         sort_items = [(lambda item: item.title, cmp), (lambda item: item.artist, cmp)]
         self.result_view = ListView(sort_items)
         self.result_view.connect("double-click-item", self.double_click_cb)
-        self.result_view.add_titles(["歌曲名", "艺术家"])
+        self.result_view.add_titles([_("Title"), _("Artist")])
         self.result_view.draw_mask = self.get_mask_func(self.result_view)
         scrolled_window.add_child(self.result_view)
         
         self.prompt_label = Label("")
-        download_button = Button("下载")
+        download_button = Button(_("Download"))
         download_button.connect("clicked", self.download_lyric_cb)
-        cancel_button = Button("关闭")
+        cancel_button = Button(_("Close"))
         cancel_button.connect("clicked", lambda w: self.hide_all())
         
         info_box_align = gtk.Alignment()
@@ -117,9 +118,9 @@ class SearchUI(DialogBox):
         self.result_view.clear()
         artist = self.artist_entry.entry.get_text()
         title = self.title_entry.entry.get_text()
-        self.prompt_label.set_text("正在搜索歌词文件")
+        self.prompt_label.set_text(_("Now searching"))
         if artist == "" and title == "":
-            self.prompt_label.set_text("囧!没有找到!")
+            self.prompt_label.set_text(_("Not found!"))
             return
         utils.ThreadLoad(self.search_engine, artist, title).start()
         
@@ -134,20 +135,20 @@ class SearchUI(DialogBox):
             else:
                 self.result_view.add_items(items)
 
-            self.prompt_label.set_text("找到%d个歌词 :)" % len(self.result_view.items))
+            self.prompt_label.set_text(_("%d lyrics found") % len(self.result_view.items))
         else:    
             if last:
                 if len(self.result_view.items) > 0:
-                    self.prompt_label.set_text("找到%d个歌词 :)" % len(self.result_view.items))
+                    self.prompt_label.set_text(_("%d lyrics found") % len(self.result_view.items))
                 else:
-                    self.prompt_label.set_text("囧!没有找到!")
+                    self.prompt_label.set_text(_("Not found!"))
         
 
     def download_lyric_cb(self, widget):
         select_items = self.result_view.select_rows
         save_filepath = self.lrc_manager.get_lrc_filepath(Player.song)
         if len(select_items) > 0:
-            self.prompt_label.set_text("正在下载歌词文件")
+            self.prompt_label.set_text(_("Downloading lyrics"))
             item = self.result_view.items[select_items[0]]
             url = item.get_url()
             net_encode = item.get_netcode()
@@ -157,9 +158,9 @@ class SearchUI(DialogBox):
     def render_download(self, result):
         if result:
             Dispatcher.reload_lrc(Player.song)
-            self.prompt_label.set_text("文件已保存到 %s" % config.get("lyrics", "save_lrc_path"))
+            self.prompt_label.set_text(_("File save to %s") % config.get("lyrics", "save_lrc_path"))
         else:    
-            self.prompt_label.set_text("囧! 下载失败!")
+            self.prompt_label.set_text(_("Fail to download!"))
         
         
 class SearchItem(gobject.GObject):        

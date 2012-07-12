@@ -43,7 +43,7 @@ from widget.preference import PreferenceDialog
 from widget.ui_utils import switch_tab, create_right_align
 from widget.global_keys import global_hotkeys
 
-
+from nls import _
 from config import config
 from player import Player
 from library import MediaDB
@@ -68,7 +68,7 @@ class DeepinMusic(gobject.GObject, Logger):
         application.add_titlebar(
             ["theme", "menu", "min", "close"],
             app_theme.get_pixbuf("skin/logo1.png"),
-            "深度音乐"
+            _("Deepin Music")
             )
         application.titlebar.menu_button.connect("button-press-event", self.menu_button_press)        
         application.titlebar.connect("button-press-event", self.right_click_cb)
@@ -113,7 +113,7 @@ class DeepinMusic(gobject.GObject, Logger):
         
         self.link_box = gtk.HBox()
         self.link_box.pack_start(create_right_align(), True, True)
-        self.link_box.pack_start(LinkButton("加入我们", "http://www.linuxdeepin.com/joinus/job"), False, False)
+        self.link_box.pack_start(LinkButton(_("Join us"), "http://www.linuxdeepin.com/joinus/job"), False, False)
         
         status_box = gtk.HBox(spacing=5)
         status_box.pack_start(jobs_manager)
@@ -263,17 +263,17 @@ class DeepinMusic(gobject.GObject, Logger):
     def get_play_control_menu(self):    
         menu_items = []
         if Player.is_paused():
-            state_label = "播放"
+            state_label = _("Play")
             state_pixbuf = self.get_pixbuf_group("play")
         else:    
-            state_label = "暂停"
+            state_label = _("Pause")
             state_pixbuf = self.get_pixbuf_group("pause")
         menu_items.append((state_pixbuf, state_label, Player.playpause))    
         control_items = [
-            (self.get_pixbuf_group("forward"), "快进", Player.forward),
-            (self.get_pixbuf_group("rewind"), "后退", Player.rewind),
-            (self.get_pixbuf_group("previous"), "上一首", Player.previous),
-            (self.get_pixbuf_group("next"), "下一首", Player.next),
+            (self.get_pixbuf_group("forward"), _("Forward"), Player.forward),
+            (self.get_pixbuf_group("rewind"), _("Rewind"), Player.rewind),
+            (self.get_pixbuf_group("previous"), _("Previous"), Player.previous),
+            (self.get_pixbuf_group("next"), _("Next"), Player.next),
             ]
         menu_items.extend(control_items)
         return Menu(menu_items)
@@ -284,20 +284,19 @@ class DeepinMusic(gobject.GObject, Logger):
     def show_instance_menu(self, obj, x, y):
         curren_view = self.playlist_ui.get_selected_song_view()
         menu_items = [
-            (None, "文件添加", curren_view.get_add_menu()),
-            (None, "播放控制", self.get_play_control_menu()),
-            (self.get_pixbuf_group("playmode"), "播放模式", curren_view.get_playmode_menu()),
+            (None, _("Add files"), curren_view.get_add_menu()),
+            (None, _("Control"), self.get_play_control_menu()),
+            (self.get_pixbuf_group("playmode"), _("Play mode"), curren_view.get_playmode_menu()),
             None,
-            (None, "均衡器", lambda : self.equalizer_win.run()),
+            (None, _("Equalizer"), lambda : self.equalizer_win.run()),
             None,
             self.get_lyrics_menu_items(),
             self.get_locked_menu_items(),
             None,
-            (self.get_pixbuf_group("setting"), "选项设置", lambda : self.preference_dialog.show_all()),
-            (None, "查看新特性", self.show_wizard_win),
-            (None, "关于软件", None),
+            (self.get_pixbuf_group("setting"), _("Preference"), lambda : self.preference_dialog.show_all()),
+            (None, _("New features"), self.show_wizard_win),
             None,
-            (self.get_pixbuf_group("close"), "退出", self.force_quit),
+            (self.get_pixbuf_group("close"), _("Quit"), self.force_quit),
             ]
         Menu(menu_items, True).show((x, y))
         
@@ -315,15 +314,15 @@ class DeepinMusic(gobject.GObject, Logger):
         
     def get_lyrics_menu_items(self):    
         if config.getboolean("lyrics", "status"):
-            return (None, "关闭歌词", lambda : Dispatcher.close_lyrics())
+            return (None, _("Lyrics off"), lambda : Dispatcher.close_lyrics())
         else:    
-            return (None, "打开歌词", lambda : Dispatcher.show_lyrics())
+            return (None, _("Lyrics on"), lambda : Dispatcher.show_lyrics())
         
     def get_locked_menu_items(self):    
         if config.getboolean("lyrics", "locked"):    
-            return (self.get_pixbuf_group("unlock"), "解锁歌词", lambda : Dispatcher.unlock_lyrics())
+            return (self.get_pixbuf_group("unlock"), _("Unlock lyrics"), lambda : Dispatcher.unlock_lyrics())
         else:
-            return (self.get_pixbuf_group("lock"), "锁定歌词", lambda : Dispatcher.lock_lyrics())
+            return (self.get_pixbuf_group("lock"), _("Lock lyrics"), lambda : Dispatcher.lock_lyrics())
             
     def get_pixbuf_group(self, name):    
         return (app_theme.get_pixbuf("tray/%s_normal.png" % name), app_theme.get_pixbuf("tray/%s_hover.png" % name))

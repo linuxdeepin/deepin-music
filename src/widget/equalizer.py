@@ -35,6 +35,7 @@ from dtk.ui.utils import get_widget_root_coordinate
 from widget.skin import app_theme
 from config import config
 from player import Player
+from nls import _
 
 class PreampScalebar(gtk.VBox):
     
@@ -172,30 +173,30 @@ MANDATORY["Soft Rock"] = "4:4:2.4:0.0:-4:-5.6:-3.2:0.0:2.4:8.8"
 MANDATORY["Techno"] = "8:5.6:0.0:-5.6:-4.8:0.0:8:9.6:9.6:8.8"
 
 mandatory_i18n = OrderedDict()
-mandatory_i18n["Custom"]  = "自定义"
-mandatory_i18n["Default"] = "默认"
-mandatory_i18n["Classical"] = "古典"
-mandatory_i18n["Club"] = "俱乐部"
-mandatory_i18n["Dance"] = "舞曲"
-mandatory_i18n["Full Bass"] = "增强低音"
-mandatory_i18n["Full Bass and Treble"] = "增强低音和高音"
-mandatory_i18n["Full Treble"] = "增强高音"
-mandatory_i18n["Laptop Speakers/Headphones"] = "耳机"
-mandatory_i18n["Large Hall"] = "大厅"
-mandatory_i18n["Live"] = "现场"
-mandatory_i18n["Party"] = "派对"
-mandatory_i18n["Pop"] = "流行"
-mandatory_i18n["Reggae"] = "瑞格"
-mandatory_i18n["Rock"] = "摇滚"
-mandatory_i18n["Ska"] = "斯卡"
-mandatory_i18n["Soft"] = "温和"
-mandatory_i18n["Soft Rock"] = "温和摇滚"
-mandatory_i18n["Techno"] = "电子"
+mandatory_i18n["Custom"]  = _("Custom")
+mandatory_i18n["Default"] = _("Default")
+mandatory_i18n["Classical"] = _("Classical")
+mandatory_i18n["Club"] = _("Club")
+mandatory_i18n["Dance"] = _("Dance")
+mandatory_i18n["Full Bass"] = _("Full Bass")
+mandatory_i18n["Full Bass and Treble"] = _("Full Bass and Treble")
+mandatory_i18n["Full Treble"] = _("Full Treble")
+mandatory_i18n["Laptop Speakers/Headphones"] = _("Headphones")
+mandatory_i18n["Large Hall"] = _("Large Hall")
+mandatory_i18n["Live"] = _("Live")
+mandatory_i18n["Party"] = _("Party")
+mandatory_i18n["Pop"] = _("Pop")
+mandatory_i18n["Reggae"] = _("Reggae")
+mandatory_i18n["Rock"] = _("Rock")
+mandatory_i18n["Ska"] = _("Ska")
+mandatory_i18n["Soft"] = _("Soft")
+mandatory_i18n["Soft Rock"] = _("Soft Rock")
+mandatory_i18n["Techno"] = _("Techno")
 
 class EqualizerWindow(DialogBox):        
     def __init__(self):
         super(EqualizerWindow, self).__init__(
-            "均衡器", 372, 168, DIALOG_MASK_SINGLE_PAGE, close_callback=self.hide_all, 
+            _("Equalizer"), 372, 168, DIALOG_MASK_SINGLE_PAGE, close_callback=self.hide_all, 
             modal=False, window_hint=None, skip_taskbar_hint=False)
         
         self.manual_flag = False
@@ -246,11 +247,11 @@ class EqualizerWindow(DialogBox):
             Player.bin.connect("tee-removed", self.__on_remove)    
             config.connect("config-changed", self.__on_config_change)
             
-        self.active_button = Button("关闭")
+        self.active_button = Button(_("Close"))
         self.active_button.connect("clicked", self.hide_win)
-        self.reset_button = Button("重置")
+        self.reset_button = Button(_("Reset"))
         self.reset_button.connect("clicked", self.set_default_value)
-        self.predefine_button = Button("预设")
+        self.predefine_button = Button(_("Predefined"))
         self.predefine_button.connect("clicked", self.show_predefine)
         
         self.predefine_combo_box = ComboBox([(value, key) for key, value in mandatory_i18n.items()],

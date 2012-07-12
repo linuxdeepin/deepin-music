@@ -35,7 +35,7 @@ from widget.skin import app_theme
 from widget.ui import ProgressBox
 from config import config
 from helper import Dispatcher
-
+from nls import _
 from widget.ui_utils import create_left_align, create_right_align
 
 class FullHeaderBar(gtk.EventBox):
@@ -67,14 +67,14 @@ class FullHeaderBar(gtk.EventBox):
                                    play_hover_pixbuf, pause_hover_pixbuf,
                                    play_press_pixbuf, pause_press_pixbuf,
                                    )
-        Tooltip.text(self.__play, "播放/暂停")
+        Tooltip.text(self.__play, _("Play/Pause"))
         
         self.__play.show_all()
 
         self.__id_signal_play = self.__play.connect("toggled", lambda w: Player.playpause())
         
-        prev_button = self.__create_button("previous_large", "上一首")
-        next_button = self.__create_button("next_large", "下一首")
+        prev_button = self.__create_button("previous_large", _("Previous track"))
+        next_button = self.__create_button("next_large", _("Next track"))
         
         self.vol = VolumeSlider()
         song_timer = SongTimer()
@@ -103,7 +103,7 @@ class FullHeaderBar(gtk.EventBox):
         
         # time box.
         self.lyrics_button = self.__create_simple_toggle_button("lyrics", self.change_lyrics_status)        
-        Tooltip.text(self.lyrics_button, "打开/关闭歌词")
+        Tooltip.text(self.lyrics_button, _("Lyrics on/off"))
         
         plug_box = gtk.HBox(spacing=12)       
         lyrics_button_align = gtk.Alignment()
@@ -232,13 +232,13 @@ class SimpleHeadber(gtk.EventBox):
                                    play_hover_pixbuf, pause_hover_pixbuf,
                                    play_press_pixbuf, pause_press_pixbuf,
                                    )
-        Tooltip.text(self.__play, "播放/暂停")
+        Tooltip.text(self.__play, _("Play/Pause"))
         self.__play.show_all()
 
         self.__id_signal_play = self.__play.connect("toggled", lambda w: Player.playpause())
         
-        prev_button = self.__create_button("previous", "上一首")
-        next_button = self.__create_button("next", "下一首")
+        prev_button = self.__create_button("previous", _("Previous track"))
+        next_button = self.__create_button("next", _("Next track"))
         
         self.vol = VolumeSlider()
         song_timer = SongTimer()
@@ -267,7 +267,7 @@ class SimpleHeadber(gtk.EventBox):
         
         # time box.
         self.lyrics_button = self.__create_simple_toggle_button("lyrics", self.change_lyrics_status)        
-        Tooltip.text(self.lyrics_button, "打开/关闭歌词")
+        Tooltip.text(self.lyrics_button, _("Lyrics on/off"))
         
         plug_box = gtk.HBox(spacing=12)       
         vol_align = gtk.Alignment()

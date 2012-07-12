@@ -23,6 +23,7 @@
 import sys
 from logger import Logger
 from cover_download import SimpleFetchManager
+from nls import _
 
 class DeepinMusicApp(Logger):
     app_instance = None
@@ -88,17 +89,18 @@ class DeepinMusicApp(Logger):
             def format_usage(self, usage):
                 return '%s\n' % usage
             
-        usage = "Usage: deepin-music-player [OPTION]... [URI]"    
+        usage = _("Usage: deepin-music-player [OPTION]... [URI]")    
+        optionlabel = _('Options') # Merely for translation purposes
         p = OptionParser(usage=usage, add_help_option=False,
             formatter=OverrideHelpFormatter())
         
-        group = OptionGroup(p, 'Playback Options')
-        group.add_option("-n", "--next", dest="Next", action="store_true", default=False, help="Play the next track")
-        group.add_option("-p", "--prev", dest="Prev", action="store_true", default=False, help="Play the previous track")
-        group.add_option("-t", "--play-pause", dest="PlayPause", action="store_true", default=False, help="Pause or resume playback")        
-        group.add_option("-f", "--forward", dest="Forward", action="store_true", default=False, help="Forward playback")
-        group.add_option("-r", "--rewind", dest="Rewind", action="store_true", default=False, help="Rewind playback")
-        group.add_option("-s", "--stop", dest="Stop", action="store_true", default=False, help="Stop playback")
+        group = OptionGroup(p, _('Control Options'))
+        group.add_option("-n", "--next", dest="Next", action="store_true", default=False, help=_("Play the next track"))
+        group.add_option("-p", "--prev", dest="Prev", action="store_true", default=False, help=_("Play the previous track"))
+        group.add_option("-t", "--play-pause", dest="PlayPause", action="store_true", default=False, help=_("Pause or resume playback"))        
+        group.add_option("-f", "--forward", dest="Forward", action="store_true", default=False, help=_("Forward playback"))
+        group.add_option("-r", "--rewind", dest="Rewind", action="store_true", default=False, help=_("Rewind playback"))
+        group.add_option("-s", "--stop", dest="Stop", action="store_true", default=False, help=_("Stop playback"))
         
         p.add_option_group(group)
         
@@ -107,48 +109,49 @@ class DeepinMusicApp(Logger):
         #         metavar="LOCATION", help="Add tracks from LOCATION(files or dirs) to the collection")
         # p.add_option_group(group)
         
-        group = OptionGroup(p, 'Volume Options')
-        group.add_option("-v", "--change-vol", dest="ChangeVolume", action="store", default=None, help="Change volume (VOLUME 0.0-1.0)")
+        group = OptionGroup(p, _('Volume Options'))
+        group.add_option("-v", "--change-vol", dest="ChangeVolume", action="store", default=None, help=_("Change volume (VOLUME 0.0-1.0)"))
         p.add_option_group(group)
         
-        group = OptionGroup(p, 'Track Options')
-        group.add_option("--get-title", dest="GetTitle", action="store_true", default=False, help="Print the title of current track")
-        group.add_option("--get-album", dest="GetAlbum", action="store_true", default=False, help="Print the album of current track")
-        group.add_option("--get-artist", dest="GetArtist", action="store_true", default=False, help="Print the artist of current track")
-        group.add_option("--get-length", dest="GetLength", action="store_true", default=False, help="Print the length of current track")
-        group.add_option("--get-path", dest="GetPath", action="store_true", default=False, help="Print the path of current track")
+        group = OptionGroup(p, _('Track information Options'))
+        group.add_option("--get-title", dest="GetTitle", action="store_true", default=False, help=_("Print the title of current track"))
+        group.add_option("--get-album", dest="GetAlbum", action="store_true", default=False, help=_("Print the album of current track"))
+        group.add_option("--get-artist", dest="GetArtist", action="store_true", default=False, help=_("Print the artist of current track"))
+        group.add_option("--get-length", dest="GetLength", action="store_true", default=False, help=_("Print the length of current track"))
+        group.add_option("--get-path", dest="GetPath", action="store_true", default=False, help=_("Print the path of current track"))
         group.add_option("--current-position", dest="CurrentPosition",
-                action="store_true", default=False, help="Print the current playback position as time")
+                action="store_true", default=False, help=_("Print the current playback position as time"))
         p.add_option_group(group)
         
-        group = OptionGroup(p, 'Other Options')
+        group = OptionGroup(p, _('Other Options'))
         group.add_option("-h", "--help", action="help",
-                help="Show this help message and exit")
+                help=_("Show this help message and exit"))
         group.add_option("--new", dest="NewInstance", action="store_true",
-                default=False, help="Start new instance")
+                default=False, help=_("Start new instance"))
         group.add_option("--version", dest="ShowVersion", action="store_true",
-                help="Show program's version number and exit.")
+                help=_("Show program's version number and exit."))
         group.add_option("--start-minimized", dest="StartMinimized",
-                action="store_true", default=False, help="Start minimized")
+                action="store_true", default=False, help=_("Start minimized"))
         group.add_option("--toggle-visible", dest="GuiToggleVisible",
                 action="store_true", default=False,
-                help="Toggle visibility of the GUI (if possible)")
+                help=_("Toggle visibility of the GUI (if possible)"))
         group.add_option("--start-anyway", dest="StartAnyway",
-                action="store_true", default=False, help="Options like --play start DMusic if it is not running")
+                action="store_true", default=False, 
+                         help=_("Make control options like --play start program if it is not running"))
         p.add_option_group(group)
         
-        group = OptionGroup(p, 'Development/Debug Options')
-        group.add_option("--debug", dest="Debug", action="store", default=None, help="Change debug level (0-9)")
+        group = OptionGroup(p, _('Development/Debug Options'))
+        group.add_option("--debug", dest="Debug", action="store", default=None, help=_("Change debug level (0-9)"))
         # group.add_option('--startgui', dest='StartGui', action='store_true', default=False)
         # group.add_option('--no-dbus', dest='Dbus', action='store_false', default=True, help="Disable D-Bus support")
         group.add_option("--mimetype-support", action="store_true", dest="MimetypeSupport", default=False, 
-                         help="Show information about supported audio file")
+                         help=_("Show information about supported audio file"))
         p.add_option_group(group)
         
         return p
     
     def version(self):
-        print "Deepin Music Player 1.0"
+        print _("Deepin Music Player 1.0")
         
     def mainloop_init(self):    
         import gobject

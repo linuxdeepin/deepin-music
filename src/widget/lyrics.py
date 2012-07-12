@@ -32,7 +32,7 @@ from config import config
 from render_lyrics import RenderContextNew
 from utils import color_hex_to_cairo
 from helper import Dispatcher
-
+from nls import _
 
 # drag state.
 DRAG_NONE = 1
@@ -75,7 +75,7 @@ class DesktopLyrics(gtk.Window):
         
         self.active_lyric_surfaces = [None, None]
         self.inactive_lyric_surfaces = [None, None]
-        self.lyrics_text = ["深度音乐播放器 Linux Deepin", ""]
+        self.lyrics_text = ["%s for %s" % (_("Deepin Music Player"), "Linux Deepin"), ""]
         self.lyric_rects = [gtk.gdk.Rectangle(0, 0, 0, 0), gtk.gdk.Rectangle(0, 0, 0, 0)]
         self.lyrics_xpos = [0, 0]
         self.line_alignment = LINE_ALIGNMENT[config.get("lyrics", "double_line_align")]
@@ -721,7 +721,7 @@ class ScrollLyrics(DialogBox):
         }
     
     def __init__(self):
-        super(ScrollLyrics, self).__init__("窗口歌词", 300, 200, DIALOG_MASK_GLASS_PAGE,
+        super(ScrollLyrics, self).__init__(_("Lyrics window"), 300, 200, DIALOG_MASK_GLASS_PAGE,
                                            self.hide_all, False,  gtk.gdk.WINDOW_TYPE_HINT_NORMAL,
                                            gtk.WIN_POS_CENTER, False, True
                                            )
@@ -736,7 +736,7 @@ class ScrollLyrics(DialogBox):
         
         self.percentage = 0.0
         self.whole_lyrics = []
-        self.message_text = ""
+        self.message_text = "%s for %s" % (_("Deepin Music Player"), "Linux Deepin")
         self.current_lyric_id = -1
         self.line_count = 20
         self.active_color = self.get_render_color(True)
@@ -973,8 +973,8 @@ class ScrollLyrics(DialogBox):
         extent = layout.get_pixel_extents()[0]
         x = (width - extent[2]) / 2
         y = (height - extent[3]) / 2
-        if x < 0: x = 0
-        if y < 0: y = 0
+        if x < 0: x = 3
+        if y < 0: y = 3
         cr.move_to(x, y)
         cr.update_layout(layout)
         cr.show_layout(layout)

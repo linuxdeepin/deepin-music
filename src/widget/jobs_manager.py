@@ -31,6 +31,7 @@ from logger import Logger
 from widget.skin import app_theme
 from widget.ui_utils import draw_alpha_mask
 from helper import Dispatcher
+from nls import _
 
 class JobsManager(gtk.HBox):
     __jobs = []
@@ -40,7 +41,7 @@ class JobsManager(gtk.HBox):
         super(JobsManager,self).__init__(spacing=6)
         self.connect("expose-event", self.draw_bg_mask)
         
-        self.jobs_label = Label("0 " + "个任务在等待!", app_theme.get_color("labelText"), 8)
+        self.jobs_label = Label("0 " + _("jobs waiting!"), app_theme.get_color("labelText"), 8)
         self.jobs_label.set_size_request(150, 12)
         label_align = gtk.Alignment()
         label_align.set(0.5, 0.5, 0, 0)
@@ -149,7 +150,7 @@ class JobsManager(gtk.HBox):
 
     def __update(self):
         if len(self.__jobs)-1 > 0 :
-            self.jobs_label.set_text("%d "% (len(self.__jobs)-1) + "个任务在等待")
+            self.jobs_label.set_text("%d "% (len(self.__jobs)-1) + _("jobs waiting!"))
             self.jobs_label.show_all()
         else:    
             self.jobs_label.hide_all()
