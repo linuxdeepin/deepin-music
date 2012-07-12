@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-12 03:45+0800\n"
+"POT-Creation-Date: 2012-07-12 15:52+0800\n"
 "PO-Revision-Date: 2012-07-12 03:23+0800\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -159,7 +159,7 @@ msgid "Add track"
 msgstr "添加歌曲"
 
 #: ../src/widget/playlist.py:77 ../src/widget/playlist.py:471
-#: ../src/widget/instance.py:289
+#: ../src/widget/instance.py:298
 msgid "Play mode"
 msgstr "播放模式"
 
@@ -387,20 +387,20 @@ msgstr "沒有找到歌詞檔案!"
 msgid "Searching for lyrics"
 msgstr "正在搜索歌詞..."
 
-#: ../src/widget/headerbar.py:70 ../src/widget/headerbar.py:235
+#: ../src/widget/headerbar.py:82 ../src/widget/headerbar.py:248
 #: ../src/widget/preference.py:367
 msgid "Play/Pause"
 msgstr "暫停/繼續"
 
-#: ../src/widget/headerbar.py:76 ../src/widget/headerbar.py:240
+#: ../src/widget/headerbar.py:88 ../src/widget/headerbar.py:253
 msgid "Previous track"
 msgstr "上一首"
 
-#: ../src/widget/headerbar.py:77 ../src/widget/headerbar.py:241
+#: ../src/widget/headerbar.py:89 ../src/widget/headerbar.py:254
 msgid "Next track"
 msgstr "下一首"
 
-#: ../src/widget/headerbar.py:106 ../src/widget/headerbar.py:270
+#: ../src/widget/headerbar.py:118 ../src/widget/headerbar.py:283
 #: ../src/widget/preference.py:363
 msgid "Lyrics on/off"
 msgstr "打開/關閉歌詞"
@@ -469,80 +469,80 @@ msgstr "加載播放列表"
 msgid "jobs waiting!"
 msgstr "個任務在等待!"
 
-#: ../src/widget/information.py:40 ../src/widget/instance.py:71
+#: ../src/widget/information.py:40 ../src/widget/instance.py:77
 msgid "Deepin Music"
 msgstr "深度音樂"
 
-#: ../src/widget/instance.py:116
+#: ../src/widget/instance.py:122
 msgid "Join us"
 msgstr "加入我們"
 
-#: ../src/widget/instance.py:266 ../src/widget/tray.py:56
+#: ../src/widget/instance.py:275 ../src/widget/tray.py:56
 msgid "Play"
 msgstr "播放"
 
-#: ../src/widget/instance.py:269 ../src/widget/tray.py:59
+#: ../src/widget/instance.py:278 ../src/widget/tray.py:59
 msgid "Pause"
 msgstr "暫停"
 
-#: ../src/widget/instance.py:273
+#: ../src/widget/instance.py:282
 msgid "Forward"
 msgstr "快進"
 
-#: ../src/widget/instance.py:274
+#: ../src/widget/instance.py:283
 msgid "Rewind"
 msgstr "後退"
 
-#: ../src/widget/instance.py:275 ../src/widget/song_editor.py:323
+#: ../src/widget/instance.py:284 ../src/widget/song_editor.py:323
 #: ../src/widget/preference.py:368 ../src/widget/tray.py:61
 msgid "Previous"
 msgstr "上一首"
 
-#: ../src/widget/instance.py:276 ../src/widget/song_editor.py:325
+#: ../src/widget/instance.py:285 ../src/widget/song_editor.py:325
 #: ../src/widget/preference.py:369 ../src/widget/tray.py:62
 msgid "Next"
 msgstr "下一首"
 
-#: ../src/widget/instance.py:287
+#: ../src/widget/instance.py:296
 msgid "Add files"
 msgstr "添加檔案"
 
-#: ../src/widget/instance.py:288
+#: ../src/widget/instance.py:297
 msgid "Control"
 msgstr "播放控制"
 
-#: ../src/widget/instance.py:291 ../src/widget/equalizer.py:199
+#: ../src/widget/instance.py:300 ../src/widget/equalizer.py:199
 msgid "Equalizer"
 msgstr "均衡器"
 
-#: ../src/widget/instance.py:296 ../src/widget/preference.py:947
+#: ../src/widget/instance.py:305 ../src/widget/preference.py:947
 #: ../src/widget/tray.py:77
 msgid "Preference"
 msgstr "選項設置"
 
-#: ../src/widget/instance.py:297
+#: ../src/widget/instance.py:306
 msgid "New features"
 msgstr "查看新特性"
 
-#: ../src/widget/instance.py:299 ../src/widget/preference.py:190
+#: ../src/widget/instance.py:308 ../src/widget/preference.py:190
 #: ../src/widget/tray.py:78
 msgid "Quit"
 msgstr "退出"
 
-#: ../src/widget/instance.py:317 ../src/widget/tray.py:75
+#: ../src/widget/instance.py:328 ../src/widget/tray.py:75
 msgid "Lyrics off"
 msgstr "關閉歌詞"
 
-#: ../src/widget/instance.py:319 ../src/widget/preference.py:158
+#: ../src/widget/instance.py:330 ../src/widget/preference.py:158
 #: ../src/widget/tray.py:73
 msgid "Lyrics on"
 msgstr "打開歌詞"
 
-#: ../src/widget/instance.py:323 ../src/widget/tray.py:68
+#: ../src/widget/instance.py:334 ../src/widget/tray.py:68
 msgid "Unlock lyrics"
 msgstr "解鎖歌詞"
 
-#: ../src/widget/instance.py:325 ../src/widget/tray.py:70
+#: ../src/widget/instance.py:336 ../src/widget/tray.py:70
 msgid "Lock lyrics"
 msgstr "鎖定歌詞"
 
@@ -812,12 +812,16 @@ msgstr "發佈時間:"
 
 #: ../src/widget/preference.py:929
 msgid ""
-"       ﻿深度音樂播放器是Linux Deepin團隊爲廣大linux用戶量身開發的一款音樂軟件."
-"具有歌詞搜索下載,桌面歌詞顯示,專輯封面下載,歌曲記憶播放,獨創音樂管理,自定義換"
-"膚等幾大特點.\n"
+"        Deepin Music Player is a music application designed for Linux users."
+"It features lyrics searching and downloading, desktop lyrics display,album "
+"cover downloading, resume playing, music management and skin selection.\n"
 "\n"
-"深度音樂播放器是自由軟件,遵循自由軟件基金會發佈的 GNU 通用公共許可證第三版."
+"Deepin Music Player is free software licensed under GNU GPLv3."
 msgstr ""
+"﻿        深度音樂播放器是LinuxDeepin團隊爲廣大linux用戶量身開發的一款音樂軟件."
+"具有歌詞搜索下載,桌面歌詞顯示,專輯封面下載,歌曲記憶播放,獨創音樂管理,自定"
+"義換膚等幾大特點.\n\n"
+"深度音樂播放器是自由軟件,遵循自由軟件基金會發佈的 GNU 通用公共許可證第三版."
 
 #: ../src/widget/preference.py:966
 msgid "General"

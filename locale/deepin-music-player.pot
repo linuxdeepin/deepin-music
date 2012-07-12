@@ -8,13 +8,13 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-12 12:57+0800\n"
+"POT-Creation-Date: 2012-07-12 15:52+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: ../src/main.py:92
@@ -158,7 +158,7 @@ msgid "Add track"
 msgstr ""
 
 #: ../src/widget/playlist.py:77 ../src/widget/playlist.py:471
-#: ../src/widget/instance.py:295
+#: ../src/widget/instance.py:298
 msgid "Play mode"
 msgstr ""
 
@@ -476,72 +476,72 @@ msgstr ""
 msgid "Join us"
 msgstr ""
 
-#: ../src/widget/instance.py:272 ../src/widget/tray.py:56
+#: ../src/widget/instance.py:275 ../src/widget/tray.py:56
 msgid "Play"
 msgstr ""
 
-#: ../src/widget/instance.py:275 ../src/widget/tray.py:59
+#: ../src/widget/instance.py:278 ../src/widget/tray.py:59
 msgid "Pause"
 msgstr ""
 
-#: ../src/widget/instance.py:279
+#: ../src/widget/instance.py:282
 msgid "Forward"
 msgstr ""
 
-#: ../src/widget/instance.py:280
+#: ../src/widget/instance.py:283
 msgid "Rewind"
 msgstr ""
 
-#: ../src/widget/instance.py:281 ../src/widget/song_editor.py:323
+#: ../src/widget/instance.py:284 ../src/widget/song_editor.py:323
 #: ../src/widget/preference.py:368 ../src/widget/tray.py:61
 msgid "Previous"
 msgstr ""
 
-#: ../src/widget/instance.py:282 ../src/widget/song_editor.py:325
+#: ../src/widget/instance.py:285 ../src/widget/song_editor.py:325
 #: ../src/widget/preference.py:369 ../src/widget/tray.py:62
 msgid "Next"
 msgstr ""
 
-#: ../src/widget/instance.py:293
+#: ../src/widget/instance.py:296
 msgid "Add files"
 msgstr ""
 
-#: ../src/widget/instance.py:294
+#: ../src/widget/instance.py:297
 msgid "Control"
 msgstr ""
 
-#: ../src/widget/instance.py:297 ../src/widget/equalizer.py:199
+#: ../src/widget/instance.py:300 ../src/widget/equalizer.py:199
 msgid "Equalizer"
 msgstr ""
 
-#: ../src/widget/instance.py:302 ../src/widget/preference.py:947
+#: ../src/widget/instance.py:305 ../src/widget/preference.py:947
 #: ../src/widget/tray.py:77
 msgid "Preference"
 msgstr ""
 
-#: ../src/widget/instance.py:303
+#: ../src/widget/instance.py:306
 msgid "New features"
 msgstr ""
 
-#: ../src/widget/instance.py:305 ../src/widget/preference.py:190
+#: ../src/widget/instance.py:308 ../src/widget/preference.py:190
 #: ../src/widget/tray.py:78
 msgid "Quit"
 msgstr ""
 
-#: ../src/widget/instance.py:323 ../src/widget/tray.py:75
+#: ../src/widget/instance.py:328 ../src/widget/tray.py:75
 msgid "Lyrics off"
 msgstr ""
 
-#: ../src/widget/instance.py:325 ../src/widget/preference.py:158
+#: ../src/widget/instance.py:330 ../src/widget/preference.py:158
 #: ../src/widget/tray.py:73
 msgid "Lyrics on"
 msgstr ""
 
-#: ../src/widget/instance.py:329 ../src/widget/tray.py:68
+#: ../src/widget/instance.py:334 ../src/widget/tray.py:68
 msgid "Unlock lyrics"
 msgstr ""
 
-#: ../src/widget/instance.py:331 ../src/widget/tray.py:70
+#: ../src/widget/instance.py:336 ../src/widget/tray.py:70
 msgid "Lock lyrics"
 msgstr ""
 
@@ -811,11 +811,11 @@ msgstr ""
 
 #: ../src/widget/preference.py:929
 msgid ""
-"       ﻿深度音乐播放器是Linux Deepin团队为广大linux用户量身开发的一款音乐软件."
-"具有歌词搜索下载,桌面歌词显示,专辑封面下载,歌曲记忆播放,独创音乐管理,自定义换"
-"肤等几大特点.\n"
+"        Deepin Music Player is a music application designed for Linux users."
+"It features lyrics searching and downloading, desktop lyrics display,album "
+"cover downloading, resume playing, music management and skin selection.\n"
 "\n"
-"深度音乐播放器是自由软件,遵循自由软件基金会发布的 GNU 通用公共许可证第三版."
+"Deepin Music Player is free software licensed under GNU GPLv3."
 msgstr ""
 
 #: ../src/widget/preference.py:966

@@ -926,9 +926,9 @@ class AboutBox(gtk.VBox):
         title_box.pack_start(create_right_align(), True, True)
         title_box.pack_start(info_box, False, False)
         
-        describe = _('''       ﻿深度音乐播放器是Linux Deepin团队为广大linux用户量身开发的一款音乐软件.具有歌词搜索下载,桌面歌词显示,专辑封面下载,歌曲记忆播放,独创音乐管理,自定义换肤等几大特点.\n\n深度音乐播放器是自由软件,遵循自由软件基金会发布的 GNU 通用公共许可证第三版.''')
+        describe = _("        Deepin Music Player is a music application designed for Linux users.It features lyrics searching and downloading, desktop lyrics display,album cover downloading, resume playing, music management and skin selection.\n\nDeepin Music Player is free software licensed under GNU GPLv3.")
         
-        describe_label = Label(describe, enable_select=False, wrap_width=400)
+        describe_label = Label(describe, light_color, enable_select=False, wrap_width=400, text_size=10)
         main_box.pack_start(title_box, False, False)
         main_box.pack_start(create_separator_box(), False, True)
         main_box.pack_start(describe_label, False, False)
