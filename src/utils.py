@@ -240,10 +240,6 @@ def auto_decode(s):
 def fix_charset(s):    
     '''Fix the charset. unicode error'''
     if not s: return ""
-    # try:
-    #     chardet.detect(s)
-    #     return s.encode("utf-8")
-    # except:
     repr_char = repr(s) 
     if repr_char.startswith("u"):
         if repr_char.find("\u") != -1:

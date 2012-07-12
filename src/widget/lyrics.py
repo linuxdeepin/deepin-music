@@ -75,7 +75,7 @@ class DesktopLyrics(gtk.Window):
         
         self.active_lyric_surfaces = [None, None]
         self.inactive_lyric_surfaces = [None, None]
-        self.lyrics_text = ["%s for %s" % (_("Deepin Music Player"), "Linux Deepin"), ""]
+        self.lyrics_text = [_("Deepin Music Player"), "for Linux Deepin"]
         self.lyric_rects = [gtk.gdk.Rectangle(0, 0, 0, 0), gtk.gdk.Rectangle(0, 0, 0, 0)]
         self.lyrics_xpos = [0, 0]
         self.line_alignment = LINE_ALIGNMENT[config.get("lyrics", "double_line_align")]
