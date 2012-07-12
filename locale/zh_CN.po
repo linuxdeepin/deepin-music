@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-12 03:45+0800\n"
+"POT-Creation-Date: 2012-07-12 12:57+0800\n"
 "PO-Revision-Date: 2012-07-12 03:23+0800\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -158,7 +158,7 @@ msgid "Add track"
 msgstr "添加歌曲"
 
 #: ../src/widget/playlist.py:77 ../src/widget/playlist.py:471
-#: ../src/widget/instance.py:289
+#: ../src/widget/instance.py:295
 msgid "Play mode"
 msgstr "播放模式"
 
@@ -386,20 +386,20 @@ msgstr "没有找到歌词文件!"
 msgid "Searching for lyrics"
 msgstr "正在搜索歌词..."
 
-#: ../src/widget/headerbar.py:70 ../src/widget/headerbar.py:235
+#: ../src/widget/headerbar.py:82 ../src/widget/headerbar.py:248
 #: ../src/widget/preference.py:367
 msgid "Play/Pause"
 msgstr "暂停/继续"
 
-#: ../src/widget/headerbar.py:76 ../src/widget/headerbar.py:240
+#: ../src/widget/headerbar.py:88 ../src/widget/headerbar.py:253
 msgid "Previous track"
 msgstr "上一首"
 
-#: ../src/widget/headerbar.py:77 ../src/widget/headerbar.py:241
+#: ../src/widget/headerbar.py:89 ../src/widget/headerbar.py:254
 msgid "Next track"
 msgstr "下一首"
 
-#: ../src/widget/headerbar.py:106 ../src/widget/headerbar.py:270
+#: ../src/widget/headerbar.py:118 ../src/widget/headerbar.py:283
 #: ../src/widget/preference.py:363
 msgid "Lyrics on/off"
 msgstr "打开/关闭歌词"
@@ -468,80 +468,80 @@ msgstr "加载播放列表"
 msgid "jobs waiting!"
 msgstr "个任务在等待!"
 
-#: ../src/widget/information.py:40 ../src/widget/instance.py:71
+#: ../src/widget/information.py:40 ../src/widget/instance.py:77
 msgid "Deepin Music"
 msgstr "深度音乐"
 
-#: ../src/widget/instance.py:116
+#: ../src/widget/instance.py:122
 msgid "Join us"
 msgstr "加入我们"
 
-#: ../src/widget/instance.py:266 ../src/widget/tray.py:56
+#: ../src/widget/instance.py:272 ../src/widget/tray.py:56
 msgid "Play"
 msgstr "播放"
 
-#: ../src/widget/instance.py:269 ../src/widget/tray.py:59
+#: ../src/widget/instance.py:275 ../src/widget/tray.py:59
 msgid "Pause"
 msgstr "暂停"
 
-#: ../src/widget/instance.py:273
+#: ../src/widget/instance.py:279
 msgid "Forward"
 msgstr "快进"
 
-#: ../src/widget/instance.py:274
+#: ../src/widget/instance.py:280
 msgid "Rewind"
 msgstr "后退"
 
-#: ../src/widget/instance.py:275 ../src/widget/song_editor.py:323
+#: ../src/widget/instance.py:281 ../src/widget/song_editor.py:323
 #: ../src/widget/preference.py:368 ../src/widget/tray.py:61
 msgid "Previous"
 msgstr "上一首"
 
-#: ../src/widget/instance.py:276 ../src/widget/song_editor.py:325
+#: ../src/widget/instance.py:282 ../src/widget/song_editor.py:325
 #: ../src/widget/preference.py:369 ../src/widget/tray.py:62
 msgid "Next"
 msgstr "下一首"
 
-#: ../src/widget/instance.py:287
+#: ../src/widget/instance.py:293
 msgid "Add files"
 msgstr "添加文件"
 
-#: ../src/widget/instance.py:288
+#: ../src/widget/instance.py:294
 msgid "Control"
 msgstr "播放控制"
 
-#: ../src/widget/instance.py:291 ../src/widget/equalizer.py:199
+#: ../src/widget/instance.py:297 ../src/widget/equalizer.py:199
 msgid "Equalizer"
 msgstr "均衡器"
 
-#: ../src/widget/instance.py:296 ../src/widget/preference.py:947
+#: ../src/widget/instance.py:302 ../src/widget/preference.py:947
 #: ../src/widget/tray.py:77
 msgid "Preference"
 msgstr "选项设置"
 
-#: ../src/widget/instance.py:297
+#: ../src/widget/instance.py:303
 msgid "New features"
 msgstr "查看新特性"
 
-#: ../src/widget/instance.py:299 ../src/widget/preference.py:190
+#: ../src/widget/instance.py:305 ../src/widget/preference.py:190
 #: ../src/widget/tray.py:78
 msgid "Quit"
 msgstr "退出"
 
-#: ../src/widget/instance.py:317 ../src/widget/tray.py:75
+#: ../src/widget/instance.py:323 ../src/widget/tray.py:75
 msgid "Lyrics off"
 msgstr "关闭歌词"
 
-#: ../src/widget/instance.py:319 ../src/widget/preference.py:158
+#: ../src/widget/instance.py:325 ../src/widget/preference.py:158
 #: ../src/widget/tray.py:73
 msgid "Lyrics on"
 msgstr "打开歌词"
 
-#: ../src/widget/instance.py:323 ../src/widget/tray.py:68
+#: ../src/widget/instance.py:329 ../src/widget/tray.py:68
 msgid "Unlock lyrics"
 msgstr "解锁歌词"
 
-#: ../src/widget/instance.py:325 ../src/widget/tray.py:70
+#: ../src/widget/instance.py:331 ../src/widget/tray.py:70
 msgid "Lock lyrics"
 msgstr "锁定歌词"
 
@@ -1036,5 +1036,5 @@ msgid "List view"
 msgstr "列表显示"
 
 #: ../src/widget/list_item.py:57
-msgid "Add directory"
-msgstr "添加目录"
+msgid "Add Music"
+msgstr "添加音乐"

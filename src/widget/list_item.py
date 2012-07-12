@@ -54,7 +54,7 @@ class PlaylistItem(gobject.GObject):
         
     def create_jobs_box(self):    
         
-        self.file_job_button = self.create_job_button("add_dir", _("Add directory"), self.song_view.recursion_add_dir)
+        self.file_job_button = self.create_job_button("plus", _("Add Music"), self.song_view.recursion_add_dir)
         # self.file_job_button.connect("clicked", self.open_file_or_dir)
 
         self.job_box = gtk.EventBox()
