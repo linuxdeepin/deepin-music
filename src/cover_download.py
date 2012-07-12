@@ -26,6 +26,7 @@ import gobject
 
 from dtk.ui.threads import post_gui
 from dtk.ui.thread_pool import MissionThreadPool, MissionThread
+from dtk.ui.utils import is_network_connected
 
 from cover_query import multi_query_artist_engine, multi_query_album_engine
 from library import DBQuery, MediaDB
@@ -132,9 +133,11 @@ class FetchManager(SignalContainer):
         artist_keys = self.filter_artists([song.get_str("artist") for song in songs])
         album_infos = self.filter_albums([(song.get_str("artist"), song.get_str("album")) for song in songs])
         if artist_keys:
-            self.artist_missions_threadpool.add_missions([FetchArtistCover(artist) for artist in artist_keys])
+            if is_network_connected():
+                self.artist_missions_threadpool.add_missions([FetchArtistCover(artist) for artist in artist_keys])
         if album_infos:    
-            self.album_missions_threadpool.add_missions([FetchAlbumCover(album_info) for album_info in album_infos])
+            if is_network_connected():
+                self.album_missions_threadpool.add_missions([FetchAlbumCover(album_info) for album_info in album_infos])
         
     def filter_artists(self, artist_keys):    
         artist_results = [artist.replace("/", "") for artist in artist_keys if not os.path.exists(get_cover_save_path(artist.replace("/", ""))) and artist]
@@ -181,10 +184,12 @@ class FetchManager(SignalContainer):
         artists = self.get_infos_from_db("artist")
         artist_missions = []
         if artists:
-            artist_missions = [FetchArtistCover(artist_name.replace("/", "")) for artist_name in artists]
+            if is_network_connected():
+                artist_missions = [FetchArtistCover(artist_name.replace("/", "")) for artist_name in artists]
             
         if artist_missions:    
-            self.artist_missions_threadpool.add_missions(artist_missions)
+            if is_network_connected():
+                self.artist_missions_threadpool.add_missions(artist_missions)
             
     def init_album_missions(self):        
         albums = self.get_infos_from_db("album")

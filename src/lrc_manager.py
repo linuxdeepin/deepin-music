@@ -22,6 +22,7 @@
 
 import os
 import re
+from dtk.ui.utils import is_network_connected
 
 from config import config
 from lrc_download import TTPlayer, DUOMI, SOSO
@@ -117,7 +118,7 @@ class LrcManager(object):
             if os.path.exists(local_lrc):
                 return local_lrc
                     
-        if not config.getboolean("setting", "offline") and try_web:
+        if not config.getboolean("setting", "offline") and try_web and is_network_connected():
             
             trust_a = song.get_str("artist")
             trust_t = song.get_str("title")
