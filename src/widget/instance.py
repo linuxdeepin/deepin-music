@@ -184,16 +184,17 @@ class DeepinMusic(gobject.GObject, Logger):
         return True
             
     def ready(self, show=True):    
-        if show:
+        first_started =  config.get("setting", "first_started", "")        
+        if show and first_started:
             self.window.show_all()
             if config.getboolean("lyrics", "status"):
                 self.lyrics_display.run()
         self.emit("ready")
         
         # wizard
-        first_started =  config.get("setting", "first_started", "")
+
         if not first_started:
-            self.show_wizard_win()
+            self.show_wizard_win(self.window.show_all)
             config.set("setting", "first_started", "false")
         
     def force_quit(self, *args):    
@@ -306,7 +307,7 @@ class DeepinMusic(gobject.GObject, Logger):
             ]
         Menu(menu_items, True).show((x, y))
         
-    def show_wizard_win(self):    
+    def show_wizard_win(self, callback=None):    
         Wizard(
             [os.path.join(wizard_dir, "first_content.png"),
              os.path.join(wizard_dir, "second_content.png"),
@@ -315,7 +316,9 @@ class DeepinMusic(gobject.GObject, Logger):
             [(os.path.join(wizard_dir, "first_press.png"), os.path.join(wizard_dir, "first_normal.png")),
              (os.path.join(wizard_dir, "second_press.png"), os.path.join(wizard_dir, "second_normal.png")),
              (os.path.join(wizard_dir, "three_press.png"), os.path.join(wizard_dir, "three_normal.png")),
-             (os.path.join(wizard_dir, "four_press.png"), os.path.join(wizard_dir, "four_normal.png"))]
+             (os.path.join(wizard_dir, "four_press.png"), os.path.join(wizard_dir, "four_normal.png")),
+             ], 
+            callback
             ).show_all()
         
     def get_lyrics_menu_items(self):    
