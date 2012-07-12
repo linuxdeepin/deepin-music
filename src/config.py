@@ -82,7 +82,7 @@ class Config(gobject.GObject, Logger):
             "window" : {
                 "x" : "-1",
                 "y" : "-1",
-                "width"  : "816",
+                "width"  : "832",
                 "height" : "625",
                 "state"  : "normal",
                 },
