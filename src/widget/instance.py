@@ -50,11 +50,17 @@ from library import MediaDB
 
 from helper import Dispatcher
 from logger import Logger
+import locale
 
 def mainloop():    
     gtk.main()
 
-wizard_dir = os.path.join(get_parent_dir(__file__, 3), "wizard/cn")    
+(lang, encode) = locale.getdefaultlocale()
+wizard_dir = os.path.join(get_parent_dir(__file__, 3), "wizard/en")    
+if lang == "zh_CN":
+    wizard_dir = os.path.join(get_parent_dir(__file__, 3), "wizard/zh_CN")    
+elif lang in ["zh_HK", "zh_TW"]:
+    wizard_dir = os.path.join(get_parent_dir(__file__, 3), "wizard/zh_HK")    
     
 class DeepinMusic(gobject.GObject, Logger):
     __gsignals__ = {"ready" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ())}
