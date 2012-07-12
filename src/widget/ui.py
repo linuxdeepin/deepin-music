@@ -169,7 +169,7 @@ class ComplexButton(gtk.Button):
         # Draw label.
         draw_text(cr, self.content, rect.x + self.left_padding + self.label_padding + icon_pixbuf.get_width(),
                   rect.y, rect.width - self.left_padding - self.label_padding - icon_pixbuf.get_width(), rect.height,
-                  self.font_size)
+                  self.font_size, text_color="#FFFFFF")
         
         return True
 
