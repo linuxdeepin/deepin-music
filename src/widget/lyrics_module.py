@@ -114,10 +114,10 @@ class LyricsModule(object):
         self.playpause_button = ToggleButton(
             app_theme.get_pixbuf("lyric/play_normal.png"),
             app_theme.get_pixbuf("lyric/pause_normal.png"),
-            # app_theme.get_pixbuf("lyric/play_hover.png"),
-            # app_theme.get_pixbuf("lyric/pause_hover.png"),
-            # app_theme.get_pixbuf("lyric/play_press.png"),
-            # app_theme.get_pixbuf("lyric/pause_press.png"),
+            app_theme.get_pixbuf("lyric/play_hover.png"),
+            app_theme.get_pixbuf("lyric/pause_hover.png"),
+            app_theme.get_pixbuf("lyric/play_press.png"),
+            app_theme.get_pixbuf("lyric/pause_press.png"),
             )
         self.__id_signal_play = self.playpause_button.connect("toggled", lambda w: Player.playpause())
         prev = self.__create_button("previous")
