@@ -37,6 +37,7 @@ from config import config
 from helper import Dispatcher
 from nls import _
 from widget.ui_utils import create_left_align, create_right_align
+import locale
 
 class FullHeaderBar(gtk.EventBox):
     def __init__(self):
@@ -158,14 +159,21 @@ class FullHeaderBar(gtk.EventBox):
             else:    
                 Dispatcher.close_lyrics()
             
-    def __create_simple_toggle_button(self, name, callback):
+    def __create_simple_toggle_button(self, name, callback): 
+        (lang, encode) = locale.getdefaultlocale()
+        if lang == "zh_CN":
+            prefix = "cn"
+        elif lang in ["zh_HK", "zh_TW"]:
+            prefix = "tw"
+        else:    
+            prefix = "en"
         toggle_button = ToggleButton(
-            app_theme.get_pixbuf("header/cn_%s_inactive_normal.png" % name),
-            app_theme.get_pixbuf("header/cn_%s_active_normal.png" % name),
-            app_theme.get_pixbuf("header/cn_%s_inactive_hover.png" % name),
-            app_theme.get_pixbuf("header/cn_%s_active_hover.png" % name),
-            app_theme.get_pixbuf("header/cn_%s_inactive_press.png" % name),
-            app_theme.get_pixbuf("header/cn_%s_active_press.png" % name),
+            app_theme.get_pixbuf("header/%s_%s_inactive_normal.png" % (prefix, name)),
+            app_theme.get_pixbuf("header/%s_%s_active_normal.png" % (prefix, name)),
+            app_theme.get_pixbuf("header/%s_%s_inactive_hover.png" % (prefix, name)),
+            app_theme.get_pixbuf("header/%s_%s_active_hover.png" % (prefix, name)),
+            app_theme.get_pixbuf("header/%s_%s_inactive_press.png" % (prefix, name)),
+            app_theme.get_pixbuf("header/%s_%s_active_press.png" % (prefix, name)),
             )
         if callback:
             toggle_button.connect("toggled", callback)

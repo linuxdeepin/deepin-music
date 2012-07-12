@@ -22,6 +22,17 @@
 
 import gtk
 from widget.skin import app_theme
+import locale
+
+def get_prefix():
+    (lang, encode) = locale.getdefaultlocale()
+    if lang == "zh_CN":
+        prefix = "cn"
+    elif lang in ["zh_HK", "zh_TW"]:
+        prefix = "tw"
+    else:    
+        prefix = "en"
+    return prefix
 
 def show_splash(show=True):
     """
@@ -44,7 +55,7 @@ def show_splash(show=True):
 
     splash_image = gtk.Image()
     splash_image.set_visible(True)
-    splash_image.set_from_pixbuf(app_theme.get_pixbuf("splash/cn_splash.png").get_pixbuf())
+    splash_image.set_from_pixbuf(app_theme.get_pixbuf("splash/%s_splash.png" % get_prefix()).get_pixbuf())
     splash_window.add(splash_image)
     
     # Show the splash screen without causing startup notification.
