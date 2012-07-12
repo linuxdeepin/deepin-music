@@ -23,7 +23,6 @@
 import gettext
 import os
 
-
 def get_parent_dir(filepath, level=1):
     '''Get parent dir.'''
     parent_dir = os.path.realpath(filepath)
@@ -38,9 +37,9 @@ LOCALE_DIR=os.path.join(get_parent_dir(__file__, 2), "locale")
 if not os.path.exists(LOCALE_DIR):
     LOCALE_DIR="/usr/share/locale"
     
-# gettext.textdomain("deepin-music-player")    
-# gettext.bindtextdomain("deepin-music-player", LOCALE_DIR)
-# _ = gettext.gettext
-_ = gettext.translation("deepin-music-player", LOCALE_DIR).gettext
-
+_ = None    
+try:
+    _ = gettext.translation("deepin-music-player", LOCALE_DIR).gettext
+except Exception, e:
+    _ = lambda i : i
 
