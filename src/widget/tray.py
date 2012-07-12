@@ -103,7 +103,7 @@ class BaseTrayIcon(object):
                 menu = gtk.Menu()
                 (x, y, z) =  self.get_menu_position(menu, self)
                 self.update_menu()
-                self.menu.show((int(x), int(y)))                
+                self.menu.show((int(x), int(y)), (0, -32))                
             
     def destroy(self):        
         self.instance.toggle_visible(True)
