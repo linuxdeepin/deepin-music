@@ -302,8 +302,8 @@ class DeepinMusic(gobject.GObject, Logger):
             self.get_lyrics_menu_items(),
             self.get_locked_menu_items(),
             None,
+            (None, _("New features"), self.show_wizard_win),            
             (self.get_pixbuf_group("setting"), _("Preference"), lambda : self.preference_dialog.show_all()),
-            (None, _("New features"), self.show_wizard_win),
             None,
             (self.get_pixbuf_group("close"), _("Quit"), self.force_quit),
             ]
