@@ -186,16 +186,18 @@ class DeepinMusic(gobject.GObject, Logger):
     def ready(self, show=True):    
         first_started =  config.get("setting", "first_started", "")        
         if show and first_started:
-            self.window.show_all()
-            if config.getboolean("lyrics", "status"):
-                self.lyrics_display.run()
+            self.ready_show()
         self.emit("ready")
         
         # wizard
-
         if not first_started:
-            self.show_wizard_win(self.window.show_all)
+            self.show_wizard_win(self.ready_show)
             config.set("setting", "first_started", "false")
+            
+    def ready_show(self):    
+        self.window.show_all()
+        if config.getboolean("lyrics", "status"):
+            self.lyrics_display.run()
         
     def force_quit(self, *args):    
         self.loginfo("Start quit...")
