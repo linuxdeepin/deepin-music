@@ -30,6 +30,7 @@ from collections import OrderedDict
 from dtk.ui.listview import ListView
 from dtk.ui.menu import Menu
 from dtk.ui.threads import post_gui
+from dtk.ui.dialog import InputDialog
 
 import utils
 import common
@@ -259,12 +260,10 @@ class SongView(ListView):
     def play_uris(self, uris, pos=None, sort=True):        
         self.get_toplevel().window.set_cursor(None)
         songs = []
-        
         for uri in uris:
             song = MediaDB.get_song(uri)
             if song:
                 songs.append(song)
-                
         if not songs:        
             return
         if sort: songs.sort()
@@ -443,6 +442,7 @@ class SongView(ListView):
         
     def popup_add_menu(self, x, y):
         menu_items = [
+            # (None, _("URI"), self.add_unknow_uri),            
             (None, _("File"), self.add_file),
             (None, _("Directory(recursion)"), self.recursion_add_dir),
             (None, _("Directory"), self.add_dir),
@@ -456,6 +456,17 @@ class SongView(ListView):
             (None, _("Directory"), self.add_dir),
             ]
         return Menu(menu_items)
+    
+    def add_unknow_uri(self, uri=None):
+        def play_or_add_uri(uri):
+            MediaDB.get_or_create_song({"uri": uri}, "unknown")
+            self.play_uris([uri])
+            
+        if not uri:
+            input_dialog = InputDialog(_("Add URI"), "", 300, 100, lambda name : play_or_add_uri(name))
+            input_dialog.show_all()
+        else:    
+            play_or_add_uri(uri)    
     
     def add_file(self, filename=None, play=False):
         if filename is None:

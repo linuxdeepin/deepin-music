@@ -913,13 +913,13 @@ class AboutBox(gtk.VBox):
         
         version_label = Label(_("Version:"))
         version_content = Label("V1.0", light_color)
-        publish_label = Label(_("Release date:"))
-        publish_content = Label("2012.07.12", light_color)
+        # publish_label = Label(_("Release date:"))
+        # publish_content = Label("2012.07.12", light_color)
         info_box = gtk.HBox(spacing=5)
         info_box.pack_start(version_label, False, False)
         info_box.pack_start(version_content, False, False)
-        info_box.pack_start(publish_label, False, False)
-        info_box.pack_start(publish_content, False, False)
+        # info_box.pack_start(publish_label, False, False)
+        # info_box.pack_start(publish_content, False, False)
         
         title_box = gtk.HBox()
         title_box.pack_start(logo_box, False, False)

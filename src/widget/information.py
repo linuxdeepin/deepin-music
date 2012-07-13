@@ -68,7 +68,12 @@ class PlayInfo(gtk.VBox):
         if not song: return
         self.song = song
         self.title_label.set_text(song.get_str("title"))
-        self.artist_label.set_text(song.get_str("artist"))
+        if song.get_str("artist"):
+            self.artist_label.set_text(song.get_str("artist"))
+        elif buffering is not None and buffering <= 100:    
+            self.artist_label.set_text("%s %d%%" % (_("buffering"), buffering))
+        else:    
+            self.artist_label.set_text("")
         
     def create_simple_label(self, content, text_size):    
         label = Label(content, app_theme.get_color("labelText"), text_size=text_size, enable_gaussian=True, label_width=self.default_width)

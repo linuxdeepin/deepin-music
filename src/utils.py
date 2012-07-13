@@ -156,6 +156,8 @@ def realuri(uri):
     '''Return the canonical path of the specified filename.'''
     if get_scheme(uri) == "file":
         return get_uri_from_path(os.path.realpath(get_path_from_uri(uri)))
+    else:
+        return uri
     
 def unescape_string_for_display(value):    
     ''' display of file name for users. '''
