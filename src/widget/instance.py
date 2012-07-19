@@ -47,6 +47,7 @@ from nls import _
 from config import config
 from player import Player
 from library import MediaDB
+from mmkeys_wrap import MMKeys
 
 from helper import Dispatcher
 from logger import Logger
@@ -97,6 +98,7 @@ class DeepinMusic(gobject.GObject, Logger):
         self.preference_dialog = PreferenceDialog()
         self.simple_browser = SimpleBrowser()
         self.equalizer_win = EqualizerWindow()
+        self.mmkeys = MMKeys()
 
             
         self.window.add_move_event(self.full_header_bar)
@@ -209,6 +211,7 @@ class DeepinMusic(gobject.GObject, Logger):
     def __idle_quit(self, *args):    
         self.loginfo("Exiting...")
         Player.stop()
+        self.mmkeys.release()
         self.playlist_ui.save_to_library()
         MediaDB.save()
         config.write()
