@@ -442,7 +442,7 @@ class SongView(ListView):
         
     def popup_add_menu(self, x, y):
         menu_items = [
-            # (None, _("URI"), self.add_unknow_uri),            
+            (None, _("URI"), self.add_unknow_uri),            
             (None, _("File"), self.add_file),
             (None, _("Directory(recursion)"), self.recursion_add_dir),
             (None, _("Directory"), self.add_dir),

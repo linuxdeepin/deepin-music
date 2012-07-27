@@ -27,7 +27,7 @@ from config import config
 from library import MediaDB
 from logger import Logger
 from player.fadebin import PlayerBin
-from utils import get_mime_type, get_uris_from_pls, get_uris_from_m3u
+from utils import get_mime_type, get_uris_from_pls, get_uris_from_m3u, fix_charset
 
 from helper import Dispatcher
 
@@ -65,7 +65,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         self.bin = PlayerBin()
         self.bin.connect("eos",   self.__on_eos)
         self.bin.connect("error", self.__on_error)
-        # self.bin.connect("tags-found", self.__on_tag)
+        self.bin.connect("tags-found", self.__on_tag)
         self.bin.connect("tick", self.__on_tick)
         self.bin.connect("playing-stream", self.__on_playing)
         
@@ -100,12 +100,12 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         if self.song and not self.song.get("title"):
             self.logdebug("tag found %s", taglist)
             IDS = {
-                "title": "artist",
-                #"genre": "genre",
-                #"artist": "artist",
-                #"album": "album",
-                #"bitrate": "#bitrate",
-                #'track-number':"#track"
+                "title": "title",
+                "genre": "genre",
+                "artist": "artist",
+                "album": "album",
+                "bitrate": "#bitrate",
+                'track-number':"#track"
             }
             mod = {}
             for key in taglist.keys():
@@ -117,8 +117,8 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
                     elif isinstance(taglist[key], long):
                         value = int(taglist[key])
                     else:    
-                        value = taglist[key]
-                    mod[IDS[key]] = value    
+                        value = fix_charset(taglist[key])
+                    mod[IDS[key]] = value
             MediaDB.set_property(self.song, mod)        
             
     def __on_tick(self, bin, pos, duration):        

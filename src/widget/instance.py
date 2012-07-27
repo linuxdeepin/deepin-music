@@ -42,6 +42,7 @@ from widget.equalizer import EqualizerWindow
 from widget.preference import PreferenceDialog
 from widget.ui_utils import switch_tab, create_right_align
 from widget.global_keys import global_hotkeys
+from widget.song_search import SongSearchUI
 
 from nls import _
 from config import config
@@ -301,6 +302,7 @@ class DeepinMusic(gobject.GObject, Logger):
             (self.get_pixbuf_group("playmode"), _("Play mode"), curren_view.get_playmode_menu()),
             None,
             (None, _("Equalizer"), lambda : self.equalizer_win.run()),
+            (None, _("Search"), lambda : SongSearchUI().show_all()),
             None,
             self.get_lyrics_menu_items(),
             self.get_locked_menu_items(),
