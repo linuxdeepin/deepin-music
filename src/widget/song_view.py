@@ -510,24 +510,20 @@ class SongView(ListView):
                 item.update(MediaDB.get_song(item.get_song().get("uri")), True)
         
     def __remove_songs(self, db, song_type, songs):    
-        indexs = []
         flag = False
-        view_songs = self.get_songs()
-        
         if self.highlight_item and self.highlight_item.get_song() in songs:
             Player.stop()
             self.highlight_item = None
             flag = True
         
         for song in songs:
-            if song in view_songs:
-                indexs.append(view_songs.index(song))
-        if indexs:        
-            for index in indexs:
-                del self.items[index]
-            self.update_item_index()
-            self.update_vadjustment()        
-            self.queue_draw()    
+            try:
+                self.items.remove(SongItem(song))
+            except:    
+                pass
+        self.update_item_index()
+        self.update_vadjustment()        
+        self.queue_draw()    
             
         if flag:    
             if len(self.get_valid_items()) > 0:
@@ -595,6 +591,7 @@ class MultiDragSongView(ListView):
 
     def get_songs(self):        
         songs = []
+        self.update_item_index()
         for song_item in self.items:
             songs.append(song_item.get_song())
         return songs    

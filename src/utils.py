@@ -607,7 +607,6 @@ class ThreadLoad(threading.Thread):
         
 class ThreadRun(threading.Thread):
     '''class docs'''
-	
     def __init__(self, fetch_func, render_func, args=[], render_args=[]):
         '''init docs'''
         super(ThreadRun, self).__init__()
@@ -616,7 +615,6 @@ class ThreadRun(threading.Thread):
         self.render_func = render_func
         self.args = args
         self.render_args = render_args
-
 
     def run(self):
         '''docs'''

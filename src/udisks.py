@@ -140,3 +140,5 @@ class UDisks(gobject.GObject, Logger):
         dev_obj = self.bus.get_object("org.freedesktop.UDisks", udi)
         device_props = dbus.Interface(dev_obj, dbus.PROPERTIES_IFACE)        
         return device_props.Get('org.freedesktop.UDisks.Device', name)        
+
+udisks = UDisks()    

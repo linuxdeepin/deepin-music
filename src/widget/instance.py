@@ -50,7 +50,7 @@ from config import config
 from player import Player
 from library import MediaDB
 from mmkeys_wrap import MMKeys
-from udisks import UDisks
+from source.audiocd import AudioCDSource
 
 from helper import Dispatcher
 from logger import Logger
@@ -102,7 +102,7 @@ class DeepinMusic(gobject.GObject, Logger):
         self.simple_browser = SimpleBrowser()
         self.equalizer_win = EqualizerWindow()
         self.mmkeys = MMKeys()
-        self.udisks = UDisks()
+        self.audiocd = AudioCDSource()
 
             
         self.window.add_move_event(self.full_header_bar)
