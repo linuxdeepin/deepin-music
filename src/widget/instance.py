@@ -43,12 +43,14 @@ from widget.preference import PreferenceDialog
 from widget.ui_utils import switch_tab, create_right_align
 from widget.global_keys import global_hotkeys
 from widget.song_search import SongSearchUI
+from widget.converter import Attributes
 
 from nls import _
 from config import config
 from player import Player
 from library import MediaDB
 from mmkeys_wrap import MMKeys
+from udisks import UDisks
 
 from helper import Dispatcher
 from logger import Logger
@@ -100,6 +102,7 @@ class DeepinMusic(gobject.GObject, Logger):
         self.simple_browser = SimpleBrowser()
         self.equalizer_win = EqualizerWindow()
         self.mmkeys = MMKeys()
+        self.udisks = UDisks()
 
             
         self.window.add_move_event(self.full_header_bar)
@@ -303,6 +306,7 @@ class DeepinMusic(gobject.GObject, Logger):
             None,
             (None, _("Equalizer"), lambda : self.equalizer_win.run()),
             (None, _("Search"), lambda : SongSearchUI().show_all()),
+            (None, _("Transcoder"), lambda : Attributes().show_all()),
             None,
             self.get_lyrics_menu_items(),
             self.get_locked_menu_items(),

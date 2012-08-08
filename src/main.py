@@ -25,6 +25,7 @@ from logger import Logger
 from cover_download import SimpleFetchManager
 from nls import _
 
+
 class DeepinMusicApp(Logger):
     app_instance = None
     app_ready = False

@@ -82,10 +82,13 @@ class GlobalHotKeys(Logger):
         except:    
             pass
         
-        self.keybinder.bind(key, lambda : self.__handle_callback(key, 
-                                                             self.func[field]))
-        
-        self.logdebug("Bound %s" % key)
+        try:
+            self.keybinder.bind(key, lambda : self.__handle_callback(key, 
+                                                                 self.func[field]))
+        except:    
+            self.logdebug("Bound %s failed!" % key)
+        else:    
+            self.logdebug("Bound %s" % key)
         
     def __try_unbind(self, key):
         try:
@@ -100,8 +103,12 @@ class GlobalHotKeys(Logger):
             self.__try_unbind(config.get(section, option + "_last", value))
             
             if value:
-                self.__bind(config.get(section, option, value), option)
-                config.set(section, option + "_last", value)
+                try:
+                    self.__bind(config.get(section, option, value), option)
+                except:    
+                    pass
+                else:
+                    config.set(section, option + "_last", value)
                 
         if section == "globalkey" and option == "enable":        
             if value == "true":

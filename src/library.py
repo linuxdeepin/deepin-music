@@ -62,6 +62,8 @@ class MediaDatebase(gobject.GObject, Logger):
         self.__db_operation_lock = Condition()
         
         # songs
+        self.__hiddens = set()        
+        self.__song_types_capability = {}
         self.__songs = {}
         self.__song_types = []
         self.__songs_by_type = {}
@@ -70,11 +72,12 @@ class MediaDatebase(gobject.GObject, Logger):
         self.__playlists = {}
         self.__playlist_types = []
 
+
         
         # init constant
         self.__is_loaded = False
         self.__force_check = False
-        self.__save_song_type = ["local", "webradio"]
+        self.__save_song_type = ["local", "webradio", "doubanfm"]
         self.__dirty = False
         
         # Init queued signal.

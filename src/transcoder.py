@@ -21,8 +21,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import pygst
-pygst.require("0.10")
+# import pygst
+# pygst.require("0.10")
 import gst
 
 from nls import _
@@ -43,6 +43,7 @@ from nls import _
 FORMATS = {
     "Ogg_Vorbis": {
         "default" : 0.5,
+        "default_index" : 5,
         "raw_steps" : [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9],
         "kbs_steps" : [64, 80, 96, 112, 128, 160, 192, 224, 256, 320],
         "command"   : "vorbisenc quality=%1.1f ! oggmux",
@@ -54,6 +55,7 @@ FORMATS = {
     
     "FLAC" : {
         "default" : 5,
+        "default_index" : 5,
         "raw_steps" : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
         "kbs_steps" : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
         "command"   : "flacenc quality=%i",
@@ -66,6 +68,7 @@ FORMATS = {
     
     "AAC"       : {
         "default"   : 160000,
+        "default_index" : 5,
         "raw_steps" : [32000, 48000, 64000, 96000, 128000, 160000,
                        192000, 224000, 256000, 320000],
         "kbs_steps" : [32, 48, 64, 96, 128, 160, 192, 224, 256, 320],
@@ -79,6 +82,7 @@ FORMATS = {
     
     "MP3 (VBR)" : {
         "default"   : 160,
+        "default_index" : 5,
         "raw_steps" : [32, 48, 64, 96, 128, 160, 192, 224, 256, 320],
         "kbs_steps" : [32, 48, 64, 96, 128, 160, 192, 224, 256, 320],
         "command"   : "lame vbr=4 vbr-mean-bitrate=%i",
@@ -91,6 +95,7 @@ FORMATS = {
     
     "MP3 (CBR)" : {
         "default"   : 160,
+        "default_index" : 5,
         "raw_steps" : [32, 48, 64, 96, 128, 160, 192, 224, 256, 320],
         "kbs_steps" : [32, 48, 64, 96, 128, 160, 192, 224, 256, 320],
         "command"   : "lame bitrate=%i",
@@ -102,6 +107,7 @@ FORMATS = {
             },
     "WavPack" : {
         "default"   : 2,
+        "default_index" : 1,
         "raw_steps" : [1,2,3,4],
         "kbs_steps" : [1,2,3,4],
         "command"   : "wavpackenc mode=%i",

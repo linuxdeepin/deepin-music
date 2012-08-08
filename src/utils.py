@@ -695,7 +695,7 @@ def strdate_to_time(odate):
 
 def save_db(objs, fn):
     '''Save object to db file.'''
-    f = file(fn + ".tmp", "w")
+    f = open(fn + ".tmp", "w")
     fcntl.flock(f.fileno(), fcntl.LOCK_EX)
     cPickle.dump(objs, f, cPickle.HIGHEST_PROTOCOL)
     f.close()
@@ -705,7 +705,7 @@ def load_db(fn):
     '''Load object from db file.'''
     objs = None
     if os.path.exists(fn):
-        f = file(fn, "rb")
+        f = open(fn, "rb")
         try:
             objs = cPickle.load(f)
         except:    
