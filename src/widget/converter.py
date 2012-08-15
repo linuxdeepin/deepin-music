@@ -20,21 +20,29 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import gtk
 import gobject
 import threading
+import Queue
 
 from dtk.ui.combo import ComboBox
 from dtk.ui.dialog import DialogBox, DIALOG_MASK_SINGLE_PAGE
 from dtk.ui.listview import ListView
 from dtk.ui.label import Label
 from dtk.ui.button import Button, CheckButton
+from dtk.ui.utils import get_content_size
 from dtk.ui.entry import InputEntry
+from dtk.ui.draw import draw_pixbuf, cairo_disable_antialias
+from dtk.ui.scrolled_window import ScrolledWindow
 
 from transcoder import Transcoder, FORMATS
 from nls import _
-from widget.ui_utils import (create_separator_box,
-                             create_right_align)
+from widget.skin import app_theme
+from widget.ui_utils import (set_widget_left, render_item_text)
+from constant import DEFAULT_FONT_SIZE
+from helper import Dispatcher
+from player import Player
 
 class TranscoderJob(gobject.GObject):
     
@@ -48,64 +56,61 @@ class TranscoderJob(gobject.GObject):
     __is_alive = True
     priority   = 0
     
-    def __init__(self):
-        super(TranscoderJob, self).__init__(self)
+    def __init__(self, trans_data):
+        gobject.GObject.__init__(self)
+        self.__updater_id = None
         
-        # Audio converter thread.
-        self.__thread = threading.Thread(target=self.__run)
-        self.__thread.setDaemon(True)
-        self.__condition = threading.Condition()
-        self.transcoder = Transcoder()
+        # Init data.
+        self.status_icon = app_theme.get_pixbuf("transcoder/wait.png").get_pixbuf()
+        self.progress_ratio = 0.0
+        self.trans_data = trans_data
+        self.init_transcoder(trans_data)   
+        self.__update()        
         
-    def __run(self):    
-        for p in self.job():
-            self.__condition.acquire()
-            while self.__pause:
-                self.__condition.wait()
-            
-            if self.__stop:    
-                self.__condition.release()
-                break
-            self.__condition.release()
-            
-        self.__condition.acquire()    
-        self.on_stop()
-        self.__is_alive = False
+    def start(self):    
+        self.transcoder.start_transcode()
+        self.__set_status_icon("working")
+        self.__updater_id = gobject.timeout_add(500, self.update_progress)
+        
+    def update_progress(self):    
+        self.set_progress_ratio(self.transcoder.get_ratio())
+        return True
+        
+    def __update(self):    
+        self.title = self.trans_data["song"].get_str("title")
+        
+        self.status_icon_padding_x = 10
+        self.status_icon_padding_y = 5
+        self.status_icon_w, self.status_icon_h = (self.status_icon.get_width(), self.status_icon.get_height())
+        
+        self.title_padding_x = 5
+        self.title_padding_y = 5
+        self.title_w, self.title_h = get_content_size(self.title, DEFAULT_FONT_SIZE)
+        
+        self.progress_padding_x = 10
+        self.progress_padding_y = 5
+        self.progress_w, self.progress_h = 110, 15
+        
+    def init_transcoder(self, attr):
+        self.transcoder = Transcoder()        
+        self.transcoder.set_format(attr["format"])
+        self.transcoder.set_quality(attr["quality"])
+        self.transcoder.set_input(attr["song"].get_path())
+        self.transcoder.set_output(attr["output"])
+        self.transcoder.end_cb = self.__end
+        
+    def __end(self):    
         self.emit("end")
-        self.__condition.release()
-    
-    def job(self):
-        self.transcoder.set_format()
-        self.transcoder.set_quality()
-    
-    def on_start(self):
-        pass
-    
-    def start(self):
-        self.on_start()
-        self.__thread.start()
+        self.__set_status_icon("success")
+        self.set_progress_ratio(1.0)
+        try:
+            gobject.source_remove(self.__updater_id)
+        except: pass
         
-    def pause(self):    
-        self.__condition.acquire()
-        self.__pause = False
-        self.__condition.notify()
-        self.__condition.release()
+    def set_progress_ratio(self, value):    
+        self.progress_ratio = value
+        self.emit_redraw_request()
         
-    def unpuase(self):    
-        self.__condition.acquire()
-        self.__pause = True
-        self.__condition.notify()
-        self.__condition.release()
-
-    def on_stop(self):    
-        pass
-    
-    def stop(self):
-        self.condition.acquire()
-        self.__stop = True
-        self.condition.release()
-        
-    # widget.    
     def set_index(self, index):
         '''Update index.'''
         self.index = index
@@ -113,100 +118,166 @@ class TranscoderJob(gobject.GObject):
     def get_index(self):
         '''Get index.'''
         return self.index
+    
+    def __set_status_icon(self, name):
+        self.status_icon = app_theme.get_pixbuf("transcoder/%s.png" % name).get_pixbuf()
+        self.emit_redraw_request()
         
     def emit_redraw_request(self):
         '''Emit redraw-request signal.'''
         self.emit("redraw-request")
-
-
-class JobsView(ListView):        
+        
+    def render_icon(self, cr, rect, in_select, in_highlight):    
+        icon_x = rect.x + self.status_icon_padding_x
+        icon_y = rect.y + (rect.height - self.status_icon_h) / 2
+        draw_pixbuf(cr, self.status_icon, icon_x, icon_y)
     
-    def __init__(self):
-        super(ListView, self).__init__()
-        self.__job_id = None
-        self.active_job = None
-        
-    def add_jobs(self, jobs):    
-        self.add_items(jobs)
-        if not self.active_job:
-            self.start_new_job()
-        
-    def __job_end(self, ajob):    
-        self.active_job.disconnect(self.__job_id)
-        self.start_new_job()
-        
-    def start_new_job(self):                    
-        unfinished_jobs = self.get_unfinished_jobs()
-        if unfinished_jobs:
-            new_job = unfinished_jobs[0]
-            self.__job_id = new_job.connect("end", self.__job_end)
-            new_job.start()
-            self.active_job = new_job
-
-    def get_unfinished_jobs(self):
+    def render_title(self, cr, rect, in_select, in_highlight):
+        rect.x += self.title_padding_x
+        rect.width -= self.title_padding_x * 2
+        render_item_text(cr, self.title, rect, in_select, in_highlight)
+    
+    def render_progress(self, cr, rect, in_select, in_highlight):
+        progress_x = rect.x + self.progress_padding_x
+        progress_y = rect.y + (rect.height - self.progress_h) / 2
+        with cairo_disable_antialias(cr):
+            cr.set_line_width(1)
+            cr.set_source_rgb(1, 1, 1)
+            cr.rectangle(progress_x, progress_y, self.progress_w, self.progress_h)
+            cr.stroke()
+            
+            cr.set_source_rgb(0.4, 0.8, 0.2)
+            cr.rectangle(progress_x + 1, progress_y + 1, (self.progress_w - 2) * self.progress_ratio, self.progress_h - 2)
+            cr.fill()
+    
+    def render_pause(self, cr, rect, in_select, in_highlight):
         pass
     
+    def render_close(self, cr, rect, in_select, in_highlight):
+        pass
+    
+    def get_column_sizes(self):
+        return [
+            (36, self.status_icon_h + self.status_icon_padding_y * 2),
+            (180, self.title_h + self.title_padding_y * 2),
+            (130, self.progress_h + self.progress_padding_y * 2)
+            ]
+    
+    def get_renders(self):
+        return [ self.render_icon, self.render_title, self.render_progress]
+    
+    
+class JobsView(ListView):    
+    
+    def __init__(self, *args, **kwargs):
+        ListView.__init__(self, *args, **kwargs)
+        self.__jobs = []
+        
+    def add_job(self, job):    
+        job_id = job.connect("end", self.__job_end)
+        
+        self.__jobs.append((job, job_id))
+        self.add_items([job])
+        
+        if len(self.__jobs) == 1:
+            self.__jobs[0][0].start()
+        
+    def __job_end(self, ajob):        
+        gobject.idle_add(self.__job_end_cb, ajob)
+        
+    def __job_end_cb(self, ajob):    
+        job, job_id = self.__jobs.pop(0)
+        job.disconnect(job_id)
+        if self.__jobs:
+            jobs = [(job[0].priority, job) for job in self.__jobs]
+            jobs.sort()
+            self.__jobs = [ job[1] for job in jobs ]
+            self.__jobs[0][0].start()
+        del job    
+        
+class TranscoderJobManager(DialogBox):    
+    def __init__(self):
+        DialogBox.__init__(self, _("转换任务列表"), 405, 450, DIALOG_MASK_SINGLE_PAGE,
+                           modal=False, close_callback=self.hide_all)
+        
+        scrolled_window = ScrolledWindow(0, 0)
+        scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+        self.jobs_view = JobsView()
+        scrolled_window.add_child(self.jobs_view)
+        self.body_box.add(scrolled_window)
+        
+        Dispatcher.connect("transfor-job", self.add_new_job)
+        
+    def add_new_job(self, obj, job):    
+        if self.get_property("visible"):
+            if not self.is_active():
+                self.present()
+        else:        
+            self.show_window()
+        self.jobs_view.add_job(job)    
+            
     
 class Attributes(DialogBox):
     
-    def __init__(self):
-        DialogBox.__init__(self, _("Transcoder"), 460, 300, DIALOG_MASK_SINGLE_PAGE,
+    def __init__(self, song=None):
+        DialogBox.__init__(self, _("转换格式"), 385, 200, DIALOG_MASK_SINGLE_PAGE,
                            modal=True)
-        self.body_box.set_spacing(10)
-        self.body_box.pack_start(self.create_format_box(), False, True)
-        self.body_box.pack_start(self.create_option_box(), False, True)
         
-    def create_format_box(self):    
-        title_label = Label(_("编码格式"))
-        default_format = FORMATS.keys()[0]
-        format_box, self.format_combo_box = self.create_combo_widget(_("输出格式:"), 
-                                                                     [(key, None) for key in FORMATS.keys()],
-                                                                     0)
-        quality_box, self.quality_combo_box = self.create_combo_widget(_("质量:"),
-                                                                       self.get_items_from_name(default_format),
-                                                                       FORMATS[default_format]["default_index"])
-        # desc_label = Label(FORMATS[default_format]["desc"], enable_select=False, wrap_width=420, text_size=9)
+        self.song = song or Player.song
+        default_format = "MP3 (VBR)"
+        default_index = FORMATS.keys().index(default_format)
+        format_box, self.format_combo_box = self.create_combo_widget(_("输出格式:"),
+                                                                [(key, None) for key in FORMATS.keys()],
+                                                                default_index)
+        quality_box, self.quality_combo_box = self.create_combo_widget(_("输出质量:"),
+                                                                       self.get_quality_items(default_format),
+                                                                       self.get_quality_index(default_format))
+        format_quality_box = gtk.HBox(spacing=68)
+        format_quality_box.pack_start(format_box, False, False)
+        format_quality_box.pack_start(quality_box, False, False)
         
-        main_table = gtk.Table(3, 2)
-        main_table.set_row_spacings(8)
-        main_table.attach(title_label, 0, 2, 0, 1, yoptions=gtk.FILL, xpadding=20)
-        main_table.attach(create_separator_box(), 0, 2, 1, 2, yoptions=gtk.FILL)
-        main_table.attach(format_box, 0, 1, 2, 3, yoptions=gtk.FILL, xpadding=30)
-        main_table.attach(quality_box, 1, 2, 2, 3, yoptions=gtk.FILL)
-        return main_table
-    
-    def create_option_box(self):
-        title_label = Label(_("选项设置"))
-        output_label = Label(_("目标文件夹:"))
-        output_entry = InputEntry("~/")
-        output_entry.set_size(250, 26)
+        exists_box, exists_combo_box = self.create_combo_widget(_("已存在时:"),
+                                                                [(key, None) for key in "询问 覆盖".split()],
+                                                                0)
+        
+        start_button = Button(_("开始转换"))
+        
+        main_table = gtk.Table()
+        main_table.set_row_spacings(10)
+        main_table.attach(format_quality_box, 0, 2, 0, 1, yoptions=gtk.FILL)
+        main_table.attach(set_widget_left(exists_box), 0, 2, 1, 2, yoptions=gtk.FILL)
+        main_table.attach(self.create_output_box(), 0, 2, 2, 3, yoptions=gtk.FILL)
+        
+        main_align = gtk.Alignment()
+        main_align.set_padding(10, 10, 15, 10)
+        main_align.add(main_table)
+        
+        # Init data.
+        self.trans_data = {}
+        
+        # Connect signals.
+        self.format_combo_box.connect("item-selected", self.reset_quality_items)
+        start_button.connect("clicked", self.add_and_close)
+        
+        self.body_box.pack_start(main_align, False, True)
+        self.right_button_box.set_buttons([start_button])
+        
+    def create_output_box(self):
+        output_label = Label(_("输出目录:"))
+        self.output_entry = InputEntry(os.path.expanduser("~/"))
+        self.output_entry.set_size(210, 24)
         change_button = Button(_("更改"))
         output_box = gtk.HBox(spacing=5)
         output_box.pack_start(output_label, False, False)
-        output_box.pack_start(output_entry, False, False)
+        output_box.pack_start(self.output_entry, False, False)
         output_box.pack_start(change_button, False, False)
+        return output_box
         
-        priority_box, priority_combo_box = self.create_combo_widget("优先级:",
-                                                                    [(key, None) for key in "low middle heigh".split()],
-                                                                    1)
-        exist_box, exist_combo_box = self.create_combo_widget("当目标文件存在时:",
-                                                              [(key, None) for key in "ask cover".split()],
-                                                              0)
-        finish_check_button = CheckButton(_("Add to playlist"))
-        
-        main_table = gtk.Table(4, 2)
-        main_table.set_row_spacings(8)
-        main_table.attach(title_label, 0, 2, 0, 1, yoptions=gtk.FILL, xpadding=20)
-        main_table.attach(create_separator_box(), 0, 2, 1, 2, yoptions=gtk.FILL)
-
-        main_table.attach(priority_box, 0, 1, 2, 3, yoptions=gtk.FILL, xpadding=30)
-        main_table.attach(exist_box, 1, 2, 2, 3, yoptions=gtk.FILL)
-        main_table.attach(output_box, 0, 2, 3, 4, yoptions=gtk.FILL, xpadding=30)        
-        main_table.attach(finish_check_button, 0, 1, 4, 5, yoptions=gtk.FILL, xpadding=28)
-        return main_table
-        
-    def get_items_from_name(self, name):    
+    def get_quality_items(self, name):    
         return [(str(key), None) for key in FORMATS[name]["raw_steps"]]
+    
+    def get_quality_index(self, name):
+        return FORMATS[name]["default_index"]
         
     def create_combo_widget(self, label_content, items, select_index=0):    
         label = Label(label_content)
@@ -216,3 +287,24 @@ class Attributes(DialogBox):
         hbox.pack_start(label, False, False)
         hbox.pack_start(combo_box, False, False)
         return hbox, combo_box
+    
+    def reset_quality_items(self, widget, label, allocated_data, index):
+        self.quality_combo_box.set_items(self.get_quality_items(label))
+        self.quality_combo_box.set_select_index(self.get_quality_index(label))
+        self.quality_combo_box.queue_draw()
+        
+    def get_output_location(self):    
+        ext = FORMATS[self.format_combo_box.get_current_item()[0]]["extension"]
+        filename = "%s.%s" % (self.song.get_filename(), ext)
+        return os.path.join(self.output_entry.get_text(), filename)
+    
+    def add_and_close(self, widget):
+        self.trans_data["format"] = self.format_combo_box.get_current_item()[0]
+        self.trans_data["quality"] = self.quality_combo_box.get_current_item()[0]
+        self.trans_data["priority"] = 0
+        self.trans_data["song"] = self.song
+        self.trans_data["output"] = self.get_output_location()
+        Dispatcher.transfor_job(TranscoderJob(self.trans_data))
+        self.destroy()
+        
+transcoder_job_manager =TranscoderJobManager()

@@ -64,6 +64,7 @@ class MSCDDBParser(handler.ContentHandler):
             
 class MSCDDB(object):            
     QUERY_API = "http://toc.music.metaservices.microsoft.com/cdinfo/GetMDRCD.aspx?CD=%s"
+    
     @classmethod
     def parse_disc_id(cls, disc_id):
         if isinstance(disc_id, list):

@@ -139,7 +139,7 @@ def fetch_downlink_from_baidu(query_url):
     try:
         d = pq(url=query_url)    
         down_field = d("a#downlink")
-        song_url = 'http://ting.baidu.com' + down_field.attr('href').encode("utf-8","ingnore")
+        song_url = 'http://mp3.baidu.com' + down_field.attr('href').encode("utf-8","ingnore")
     except Exception, e:    
         print e
         return ""

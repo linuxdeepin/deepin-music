@@ -24,7 +24,9 @@
 # import pygst
 # pygst.require("0.10")
 import gst
+import gobject
 
+from logger import Logger
 from nls import _
 
 """
@@ -46,7 +48,7 @@ FORMATS = {
         "default_index" : 5,
         "raw_steps" : [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9],
         "kbs_steps" : [64, 80, 96, 112, 128, 160, 192, 224, 256, 320],
-        "command"   : "vorbisenc quality=%1.1f ! oggmux",
+        "command"   : "vorbisenc quality=%1.1f name=encoder ! oggmux",
         "extension" : "ogg",
         "plugins"   : ["vorbisenc", "oggmux"],
         "desc"      : _("Vorbis is an open source, lossy audio codec with"
@@ -58,7 +60,7 @@ FORMATS = {
         "default_index" : 5,
         "raw_steps" : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
         "kbs_steps" : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-        "command"   : "flacenc quality=%i",
+        "command"   : "flacenc quality=%i name=encoder",
         "extension" : "flac",
         "plugins"   : ["flacenc"],
         "desc"      : _("Free Lossless Audio Codec (FLAC) is an open "
@@ -72,7 +74,7 @@ FORMATS = {
         "raw_steps" : [32000, 48000, 64000, 96000, 128000, 160000,
                        192000, 224000, 256000, 320000],
         "kbs_steps" : [32, 48, 64, 96, 128, 160, 192, 224, 256, 320],
-        "command"   : "faac bitrate=%i ! ffmux_mp4",
+        "command"   : "faac bitrate=%i name=encoder ! ffmux_mp4",
         "extension" : "m4a",
         "plugins"   : ["faac", "ffmux_mp4"],
         "desc"      : _("Apple's proprietary lossy audio format that "
@@ -85,7 +87,7 @@ FORMATS = {
         "default_index" : 5,
         "raw_steps" : [32, 48, 64, 96, 128, 160, 192, 224, 256, 320],
         "kbs_steps" : [32, 48, 64, 96, 128, 160, 192, 224, 256, 320],
-        "command"   : "lame vbr=4 vbr-mean-bitrate=%i",
+        "command"   : "lame vbr=4 vbr-mean-bitrate=%i name=encoder",
         "extension" : "mp3",
         "plugins"   : ["lame"],
         "desc"      : _("A proprietary and older, but also popular, lossy "
@@ -98,7 +100,7 @@ FORMATS = {
         "default_index" : 5,
         "raw_steps" : [32, 48, 64, 96, 128, 160, 192, 224, 256, 320],
         "kbs_steps" : [32, 48, 64, 96, 128, 160, 192, 224, 256, 320],
-        "command"   : "lame bitrate=%i",
+        "command"   : "lame bitrate=%i name=encoder",
         "extension" : "mp3",
         "plugins"   : ["lame"],
         "desc"      : _("A proprietary and older, but also popular, "
@@ -110,7 +112,7 @@ FORMATS = {
         "default_index" : 1,
         "raw_steps" : [1,2,3,4],
         "kbs_steps" : [1,2,3,4],
-        "command"   : "wavpackenc mode=%i",
+        "command"   : "wavpackenc mode=%i name=encoder",
         "extension" : "wv",
         "plugins"   : ["wavpackenc"],
         "desc"      : _("A very fast Free lossless audio format with "
@@ -137,8 +139,8 @@ def get_formats():
 class TranscodeError(Exception):
     pass
                 
-class Transcoder(object):
-    
+class Transcoder(Logger):
+    is_eos = False
     def __init__(self):
         self.src = None
         self.sink = None
@@ -147,7 +149,7 @@ class Transcoder(object):
         self.input = None
         self.output = None
         self.encoder = None
-        self.pipe = None
+        self.pipeline = None
         self.bus = None
         self.running = False
         self.__last_time = 0.0
@@ -163,52 +165,72 @@ class Transcoder(object):
         if value in FORMATS[self.dest_format]["raw_steps"]:
             self.quality = value
             
-    def _construct_encoder(self):        
+    def get_construct_encoder(self):        
         fmt = FORMATS[self.dest_format]
         quality = self.quality
-        self.encoder = fmt["command"] % quality
+        return fmt["command"] % quality
         
     def set_input(self, uri):    
-        self.input = """filesrc location="%s" """ % uri
+        self.input = "filesrc location=\"%s\"" % uri
         
     def set_raw_input(self, raw):    
         self.input = raw
         
     def set_output(self, uri):    
-        self.output = """filesink location="%s" """ % uri
+        self.output ="filesink location=\"%s\"" % uri
         
     def set_output_raw(self, raw):    
         self.output = raw
         
     def start_transcode(self):    
-        self._construct_encoder()
-        elements = [ self.input, "decodebin name=\"decoder\"", "audioconvert",
-                self.encoder, self.output ]
-        pipestr = " ! ".join( elements )
-        pipe = gst.parse_launch(pipestr)
-        self.pipe = pipe
-        self.bus = pipe.get_bus()
-        self.bus.add_signal_watch()
+        elements = [ self.input, "decodebin name=decoder", "audioconvert",
+                self.get_construct_encoder(), self.output ]
+        pipestr = " ! ".join(elements)
+        
+        try:
+            self.pipeline = gst.parse_launch(pipestr)
+        except gobject.GError:
+            raise TranscodeError
+        
+        self.encoder = self.pipeline.get_by_name("encoder")
+        decoder = self.pipeline.get_by_name("decoder")
+        decoder.connect("unknown-type", self.unknown_type)
+        
+        self.bus = self.pipeline.get_bus()        
         self.bus.connect('message::error', self.on_error)
         self.bus.connect('message::eos', self.on_eof)
+        self.bus.add_signal_watch()        
+        state_ret = self.pipeline.set_state(gst.STATE_PLAYING)
 
-        pipe.set_state(gst.STATE_PLAYING)
-        self.running = True
-        self.duration = self.get_duration()
+        timeout = 10
+        while state_ret == gst.STATE_CHANGE_ASYNC and not self.is_eos and timeout > 0:
+            state_ret, __state, __pending_state = self.pipeline.get_state(1 * gst.SECOND);
+            timeout -= 1
+            
+        if state_ret != gst.STATE_CHANGE_SUCCESS:    
+            raise TranscodeError("Failed change to playing")
+        else:    
+            self.loginfo("starting encoding")
+        self.duration = self.get_duration()    
         
-        return pipe
-    
     def stop(self):
-        self.pipe.set_state(gst.STATE_NULL)
+        state_ret = self.pipeline.set_state(gst.STATE_NULL)
+        if state_ret != gst.STATE_CHANGE_SUCCESS:
+            self.logwarn("failed stop pipeline")
+            
         self.running = False
-        self.__last_time = 0.0
+        self.is_eos = True
         try:
             self.end_cb()
         except:    
             pass
         
+    def unknown_type(self, *param):
+        self.logwarn("input file type unknown")
+        raise TranscodeError
+        
     def on_error(self, *args):    
-        self.pipe.set_state(gst.STATE_NULL)
+        self.pipeline.set_state(gst.STATE_NULL)
         self.running = False
         try:
             self.error_cb()
@@ -218,29 +240,36 @@ class Transcoder(object):
     def on_eof(self, *args):
         self.stop()
 
-    def get_time(self):
-        if not self.running:
-            return 0.0
-        try:
-            tim = self.pipe.query_position(gst.FORMAT_TIME)[0]
-            tim = tim/gst.MSECOND
-            self.__last_time = tim
-            return tim
-        except:
-            return self.__last_time
-
-    def is_running(self):
-        return self.running
-    
+    def get_position(self):
+        if gst.STATE_NULL != self.get_state():
+            """ Use a encoder instead of pipeline because filesink and gnomevfs sink return wrong value in gstreamer 0.10.5"""
+            try: p = self.encoder.query_position(gst.FORMAT_TIME)[0]
+            except gst.QueryError: p = 0
+            p //= gst.MSECOND
+            return p
+        return 0
+        
     def get_state(self):
-        __state_ret, state, __pending_state = self.pipe.get_state();
+        __state_ret, state, __pending_state = self.pipeline.get_state();
         return state
+    
+    def set_state(self, status):
+        if self.pipeline:
+            self.pipeline.set_state(status)
+            
+    def pause(self):        
+        if self.pipeline:
+            self.pipeline.set_state(gst.STATE_PAUSE)
+            
+    def playing(self):        
+        if self.pipeline:
+            self.pipeline.set_state(gst.STATE_PLAYING)
     
     def get_duration(self):
         if self.get_state() != gst.STATE_NULL:
             try:
                 query = gst.query_new_duration(gst.FORMAT_TIME)
-                encoder = self.pipe.get_by_name("encoder")
+                encoder = self.pipeline.get_by_name("encoder")
                 if encoder.query(query):
                     total = query.parse_duration()[1]
                 else: return 0
@@ -251,5 +280,5 @@ class Transcoder(object):
             return 0
         
     def get_ratio(self):
-        ratio = float(self.get_time()) / float(self.duration) * float(100)
+        ratio = float(self.get_position()) / float(self.duration)
         return  ratio

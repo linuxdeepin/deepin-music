@@ -104,4 +104,29 @@ def create_bottom_align():
     align.set(0, 1, 0, 0)
     return align
 
+def set_widget_gravity(widget, gravity=(0, 0, 0, 0), paddings=(0, 0, 0, 0)):
+    align = gtk.Alignment()
+    align.set(*gravity)
+    align.set_padding(*paddings)
+    align.add(widget)
+    return align
     
+def set_widget_center(widget):
+    hbox = gtk.HBox()
+    hbox.pack_start(create_right_align(), False, True)
+    hbox.pack_start(widget, False, False)
+    hbox.pack_start(create_left_align(), False, True)
+    return hbox
+
+def set_widget_left(widget):
+    hbox = gtk.HBox()
+    hbox.pack_start(widget, False, False)
+    hbox.pack_start(create_left_align(), False, True)
+    return hbox
+
+
+def set_widget_right(widget):
+    hbox = gtk.HBox()
+    hbox.pack_start(create_right_align(), False, True)
+    hbox.pack_start(widget, False, False)    
+    return hbox

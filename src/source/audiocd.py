@@ -24,7 +24,6 @@ import gobject
 import threading
 
 from udisks import udisks
-from logger import Logger
 from library import MediaDB
 from mscddb import MSCDDB
 from nls import _

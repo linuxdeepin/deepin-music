@@ -54,6 +54,7 @@ class EventDispatcher(gobject.GObject):
         "window-mode" :  (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_STRING,)),    
         "show-job" : SIGNAL_BASE,
         "hide-job" : SIGNAL_BASE,
+        "transfor-job" : SIGNAL_SIMPLE,
         }
     
     def __init__(self):
@@ -107,6 +108,9 @@ class EventDispatcher(gobject.GObject):
         
     def change_window_mode(self, status):    
         self.emit("window-mode", status)
+        
+    def transfor_job(self, job):
+        self.emit("transfor-job", job)
         
     def reload_browser(self, infos):    
         self.emit("reload-browser", infos)
