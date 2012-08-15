@@ -130,7 +130,7 @@ def get_formats():
             for plug in value["plugins"]:
                 x = gst.element_factory_find(plug)
                 if not x:
-                    raise
+                    raise TranscodeError("don't support this format")
             ret[name] = value
         except:    
             pass
@@ -152,6 +152,7 @@ class Transcoder(Logger):
         self.pipeline = None
         self.bus = None
         self.running = False
+        self.is_pause = False
         self.__last_time = 0.0
         
         self.error_cb = None
@@ -189,8 +190,10 @@ class Transcoder(Logger):
         
         try:
             self.pipeline = gst.parse_launch(pipestr)
-        except gobject.GError:
-            raise TranscodeError
+        except gobject.GError, e:
+            if "faac" in e:
+                e = e + "install gstreamer0.10-plugins-bad-multiverse package"
+            raise TranscodeError(e)
         
         self.encoder = self.pipeline.get_by_name("encoder")
         decoder = self.pipeline.get_by_name("decoder")
@@ -201,6 +204,7 @@ class Transcoder(Logger):
         self.bus.connect('message::eos', self.on_eof)
         self.bus.add_signal_watch()        
         state_ret = self.pipeline.set_state(gst.STATE_PLAYING)
+        self.running = True
 
         timeout = 10
         while state_ret == gst.STATE_CHANGE_ASYNC and not self.is_eos and timeout > 0:
@@ -227,7 +231,7 @@ class Transcoder(Logger):
         
     def unknown_type(self, *param):
         self.logwarn("input file type unknown")
-        raise TranscodeError
+        raise TranscodeError("input file type unknown")
         
     def on_error(self, *args):    
         self.pipeline.set_state(gst.STATE_NULL)
@@ -259,11 +263,13 @@ class Transcoder(Logger):
             
     def pause(self):        
         if self.pipeline:
-            self.pipeline.set_state(gst.STATE_PAUSE)
+            self.pipeline.set_state(gst.STATE_PAUSED)
+            self.is_pause = True
             
     def playing(self):        
         if self.pipeline:
             self.pipeline.set_state(gst.STATE_PLAYING)
+            self.is_pause = False
     
     def get_duration(self):
         if self.get_state() != gst.STATE_NULL:

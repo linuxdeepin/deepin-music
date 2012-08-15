@@ -23,8 +23,8 @@
 import os
 import gtk
 import gobject
-import threading
-import Queue
+import pango
+import math
 
 from dtk.ui.combo import ComboBox
 from dtk.ui.dialog import DialogBox, DIALOG_MASK_SINGLE_PAGE
@@ -33,10 +33,10 @@ from dtk.ui.label import Label
 from dtk.ui.button import Button, CheckButton
 from dtk.ui.utils import get_content_size
 from dtk.ui.entry import InputEntry
-from dtk.ui.draw import draw_pixbuf, cairo_disable_antialias
+from dtk.ui.draw import draw_pixbuf, cairo_disable_antialias, draw_text
 from dtk.ui.scrolled_window import ScrolledWindow
 
-from transcoder import Transcoder, FORMATS
+from transcoder import Transcoder, FORMATS, TranscodeError
 from nls import _
 from widget.skin import app_theme
 from widget.ui_utils import (set_widget_left, render_item_text)
@@ -61,6 +61,7 @@ class TranscoderJob(gobject.GObject):
         self.__updater_id = None
         
         # Init data.
+        self.angle = 0
         self.status_icon = app_theme.get_pixbuf("transcoder/wait.png").get_pixbuf()
         self.progress_ratio = 0.0
         self.trans_data = trans_data
@@ -75,7 +76,7 @@ class TranscoderJob(gobject.GObject):
     def update_progress(self):    
         self.set_progress_ratio(self.transcoder.get_ratio())
         return True
-        
+    
     def __update(self):    
         self.title = self.trans_data["song"].get_str("title")
         
@@ -92,11 +93,12 @@ class TranscoderJob(gobject.GObject):
         self.progress_w, self.progress_h = 110, 15
         
     def init_transcoder(self, attr):
+        self.output_path = attr["output"]
         self.transcoder = Transcoder()        
         self.transcoder.set_format(attr["format"])
         self.transcoder.set_quality(attr["quality"])
         self.transcoder.set_input(attr["song"].get_path())
-        self.transcoder.set_output(attr["output"])
+        self.transcoder.set_output(self.output_path)
         self.transcoder.end_cb = self.__end
         
     def __end(self):    
@@ -106,6 +108,31 @@ class TranscoderJob(gobject.GObject):
         try:
             gobject.source_remove(self.__updater_id)
         except: pass
+        
+        
+    def force_stop(self):    
+        try:
+            gobject.source_remove(self.__updater_id)
+        except: pass    
+        
+        if self.transcoder.running:
+            self.transcoder.pause()
+        try:    
+            os.unlink(self.output_path)
+        except: pass
+
+        
+    def playpause(self):    
+        if self.transcoder.running:
+            if self.transcoder.is_pause:
+                self.transcoder.playing()
+                self.__updater_id = gobject.timeout_add(500, self.update_progress)
+            else:    
+                try:
+                    gobject.source_remove(self.__updater_id)
+                except:    
+                    pass
+                self.transcoder.pause()
         
     def set_progress_ratio(self, value):    
         self.progress_ratio = value
@@ -122,6 +149,9 @@ class TranscoderJob(gobject.GObject):
     def __set_status_icon(self, name):
         self.status_icon = app_theme.get_pixbuf("transcoder/%s.png" % name).get_pixbuf()
         self.emit_redraw_request()
+        
+    def set_error_status(self):    
+        self.__set_status_icon("error")
         
     def emit_redraw_request(self):
         '''Emit redraw-request signal.'''
@@ -142,13 +172,20 @@ class TranscoderJob(gobject.GObject):
         progress_y = rect.y + (rect.height - self.progress_h) / 2
         with cairo_disable_antialias(cr):
             cr.set_line_width(1)
-            cr.set_source_rgb(1, 1, 1)
+            if in_select:
+                cr.set_source_rgb(1, 1, 1)
+            else:    
+                cr.set_source_rgb(0, 0, 0)
+                
             cr.rectangle(progress_x, progress_y, self.progress_w, self.progress_h)
             cr.stroke()
             
             cr.set_source_rgb(0.4, 0.8, 0.2)
-            cr.rectangle(progress_x + 1, progress_y + 1, (self.progress_w - 2) * self.progress_ratio, self.progress_h - 2)
+            cr.rectangle(progress_x , progress_y ,(self.progress_w - 1) * self.progress_ratio, self.progress_h - 1)
             cr.fill()
+            
+        draw_text(cr, "%1.1f" % self.progress_ratio + "%", rect.x, rect.y, rect.width, rect.height,
+                  7, alignment=pango.ALIGN_CENTER)    
     
     def render_pause(self, cr, rect, in_select, in_highlight):
         pass
@@ -180,7 +217,11 @@ class JobsView(ListView):
         self.add_items([job])
         
         if len(self.__jobs) == 1:
-            self.__jobs[0][0].start()
+            try:
+                self.__jobs[0][0].start()
+            except TranscodeError:    
+                self.__jobs[0][0].set_error_status()
+                self.__job_end_cb(self.__jobs[0][0])
         
     def __job_end(self, ajob):        
         gobject.idle_add(self.__job_end_cb, ajob)
@@ -192,8 +233,19 @@ class JobsView(ListView):
             jobs = [(job[0].priority, job) for job in self.__jobs]
             jobs.sort()
             self.__jobs = [ job[1] for job in jobs ]
-            self.__jobs[0][0].start()
+            try:
+                self.__jobs[0][0].start()
+            except TranscodeError:    
+                self.__jobs[0][0].set_error_status()
+                self.__job_end_cb(self.__jobs[0][0])
         del job    
+        
+    def delete_job(self, ajob):    
+        pass
+    
+    def playpause_jobs(self):
+        if len(self.__jobs) > 0:
+            self.__jobs[0][0].playpause()
         
 class TranscoderJobManager(DialogBox):    
     def __init__(self):
@@ -202,9 +254,22 @@ class TranscoderJobManager(DialogBox):
         
         scrolled_window = ScrolledWindow(0, 0)
         scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+        
+        scrolled_align = gtk.Alignment()
+        scrolled_align.set(1, 1, 1, 1)
+        scrolled_align.set_padding(10, 0, 0, 0)
+        scrolled_align.add(scrolled_window)
+        
         self.jobs_view = JobsView()
+        self.jobs_view.draw_mask = self.get_mask_func(self.jobs_view)
         scrolled_window.add_child(self.jobs_view)
-        self.body_box.add(scrolled_window)
+        
+        pause_button = Button("暂停转换")
+        pause_button.connect("clicked", self.pause_job)
+        stop_button = Button("终止转换")
+        
+        self.body_box.add(scrolled_align)
+        self.right_button_box.set_buttons([pause_button, stop_button])
         
         Dispatcher.connect("transfor-job", self.add_new_job)
         
@@ -215,6 +280,9 @@ class TranscoderJobManager(DialogBox):
         else:        
             self.show_window()
         self.jobs_view.add_job(job)    
+        
+    def pause_job(self, widget):    
+        self.jobs_view.playpause_jobs()
             
     
 class Attributes(DialogBox):
@@ -231,7 +299,8 @@ class Attributes(DialogBox):
                                                                 default_index)
         quality_box, self.quality_combo_box = self.create_combo_widget(_("输出质量:"),
                                                                        self.get_quality_items(default_format),
-                                                                       self.get_quality_index(default_format))
+                                                                       self.get_quality_index(default_format),
+                                                                       65)
         format_quality_box = gtk.HBox(spacing=68)
         format_quality_box.pack_start(format_box, False, False)
         format_quality_box.pack_start(quality_box, False, False)
@@ -274,14 +343,15 @@ class Attributes(DialogBox):
         return output_box
         
     def get_quality_items(self, name):    
-        return [(str(key), None) for key in FORMATS[name]["raw_steps"]]
+        kbs_steps = [str(key) for key in FORMATS[name]["kbs_steps"]]
+        return zip(kbs_steps, FORMATS[name]["raw_steps"])
     
     def get_quality_index(self, name):
         return FORMATS[name]["default_index"]
         
-    def create_combo_widget(self, label_content, items, select_index=0):    
+    def create_combo_widget(self, label_content, items, select_index=0, max_width=None):    
         label = Label(label_content)
-        combo_box = ComboBox(items, select_index=select_index)
+        combo_box = ComboBox(items, select_index=select_index, max_width=max_width)
         
         hbox = gtk.HBox(spacing=5)
         hbox.pack_start(label, False, False)
@@ -300,7 +370,7 @@ class Attributes(DialogBox):
     
     def add_and_close(self, widget):
         self.trans_data["format"] = self.format_combo_box.get_current_item()[0]
-        self.trans_data["quality"] = self.quality_combo_box.get_current_item()[0]
+        self.trans_data["quality"] = self.quality_combo_box.get_current_item()[1]
         self.trans_data["priority"] = 0
         self.trans_data["song"] = self.song
         self.trans_data["output"] = self.get_output_location()
