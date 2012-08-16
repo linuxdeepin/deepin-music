@@ -51,29 +51,18 @@ class IconItem(gobject.GObject):
     def __init__(self, _tuple):
         super(IconItem, self).__init__()
         self.cell_width = 83        
-        self.key_name, value_name, nums, self.tag = _tuple
+        self.key_name, self.value_name, nums, self.tag = _tuple
         self.draw_side_flag = True
-        
+
         if not self.key_name:
             self.name_label= _("Unknown")
-            if self.tag == "genre":
-                self.pixbuf = CoverManager.get_pixbuf_from_genre(self.name_label)
-            else:    
-                self.pixbuf = CoverManager.get_pixbuf_from_name(self.name_label, self.cell_width, self.cell_width)            
-            
         elif self.key_name == "deepin-all-songs":    
-            self.pixbuf = CoverManager.get_all_song_cover(self.cell_width, self.cell_width)
             self.name_label = _("All tracks")
-            self.draw_side_flag = False
         else:    
             self.name_label = self.key_name
-            if self.tag == "genre":
-                self.pixbuf = CoverManager.get_pixbuf_from_genre(self.name_label)
-            elif self.tag == "album":    
-                self.pixbuf = CoverManager.get_pixbuf_from_name("%s-%s" % (value_name, self.key_name), 
-                                                                self.cell_width, self.cell_width)            
-            else:    
-                self.pixbuf = CoverManager.get_pixbuf_from_name(self.key_name, self.cell_width, self.cell_width)
+        
+        # Just create pixbuf when need render it to save memory.
+        self.pixbuf = None
             
         self.labels = _("%d tracks") % nums
         self.padding_x = 4
@@ -93,6 +82,25 @@ class IconItem(gobject.GObject):
             )
         
         self.retrieve = TransforDB.convert(self.name_label.lower().replace(" ", "")) + self.name_label.lower().replace(" ", "")
+        
+    def create_pixbuf(self):
+        if not self.key_name:
+            if self.tag == "genre":
+                self.pixbuf = CoverManager.get_pixbuf_from_genre(self.name_label)
+            else:    
+                self.pixbuf = CoverManager.get_pixbuf_from_name(self.name_label, self.cell_width, self.cell_width)            
+            
+        elif self.key_name == "deepin-all-songs":    
+            self.pixbuf = CoverManager.get_all_song_cover(self.cell_width, self.cell_width)
+            self.draw_side_flag = False
+        else:    
+            if self.tag == "genre":
+                self.pixbuf = CoverManager.get_pixbuf_from_genre(self.name_label)
+            elif self.tag == "album":    
+                self.pixbuf = CoverManager.get_pixbuf_from_name("%s-%s" % (self.value_name, self.key_name), 
+                                                                self.cell_width, self.cell_width)            
+            else:    
+                self.pixbuf = CoverManager.get_pixbuf_from_name(self.key_name, self.cell_width, self.cell_width)
         
     def pointer_in_play_rect(self, x, y):    
         if self.play_rect.x < x < self.play_rect.x + self.play_rect.width and self.play_rect.y < y < self.play_rect.y + self.play_rect.height:
@@ -121,8 +129,10 @@ class IconItem(gobject.GObject):
         return self.__normal_side_pixbuf.get_height() + self.padding_y * 2 + 40
     
     def render(self, cr, rect):
+        # Create pixbuf resource if self.pixbuf is None.
+        if not self.pixbuf:
+            self.create_pixbuf()
         
-            
         # Draw cover.
         draw_pixbuf(cr, self.pixbuf, 
                     rect.x + self.padding_x,
@@ -201,6 +211,14 @@ class IconItem(gobject.GObject):
     
     def icon_item_double_click(self, x, y):
         pass
+    
+    def icon_item_release_resource(self):
+        # Release pixbuf resource.
+        del self.pixbuf
+        self.pixbuf = None
+        
+        # Return True to tell IconView call gc.collect() to release memory resource.
+        return True
         
 gobject.type_register(IconItem)        
 
