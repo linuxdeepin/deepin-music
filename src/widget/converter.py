@@ -63,6 +63,9 @@ class TranscoderJob(gobject.GObject):
         # Init data.
         self.angle = 0
         self.status_icon = app_theme.get_pixbuf("transcoder/wait.png").get_pixbuf()
+        self.status_icon_press = app_theme.get_pixbuf("transcoder/wait_press.png").get_pixbuf()
+        self.stop_icon = app_theme.get_pixbuf("transcoder/stop.png").get_pixbuf()
+        # self.stop_icon_press = app_theme.get_pixbuf("transcoder/stop_press.png").get_pixbuf()
         self.progress_ratio = 0.0
         self.trans_data = trans_data
         self.init_transcoder(trans_data)   
@@ -90,7 +93,11 @@ class TranscoderJob(gobject.GObject):
         
         self.progress_padding_x = 10
         self.progress_padding_y = 5
-        self.progress_w, self.progress_h = 110, 15
+        self.progress_w, self.progress_h = 100, 10
+        
+        self.stop_icon_padding_x = 5
+        self.stop_icon_padding_y = 5
+        self.stop_icon_w, self.stop_icon_h = (self.stop_icon.get_width(), self.stop_icon.get_height())
         
     def init_transcoder(self, attr):
         self.output_path = attr["output"]
@@ -148,6 +155,7 @@ class TranscoderJob(gobject.GObject):
     
     def __set_status_icon(self, name):
         self.status_icon = app_theme.get_pixbuf("transcoder/%s.png" % name).get_pixbuf()
+        self.status_icon_press = app_theme.get_pixbuf("transcoder/%s_press.png" % name).get_pixbuf()
         self.emit_redraw_request()
         
     def set_error_status(self):    
@@ -160,7 +168,10 @@ class TranscoderJob(gobject.GObject):
     def render_icon(self, cr, rect, in_select, in_highlight):    
         icon_x = rect.x + self.status_icon_padding_x
         icon_y = rect.y + (rect.height - self.status_icon_h) / 2
-        draw_pixbuf(cr, self.status_icon, icon_x, icon_y)
+        if in_select:
+            draw_pixbuf(cr, self.status_icon_press, icon_x, icon_y)
+        else:    
+            draw_pixbuf(cr, self.status_icon, icon_x, icon_y)
     
     def render_title(self, cr, rect, in_select, in_highlight):
         rect.x += self.title_padding_x
@@ -172,42 +183,53 @@ class TranscoderJob(gobject.GObject):
         progress_y = rect.y + (rect.height - self.progress_h) / 2
         with cairo_disable_antialias(cr):
             cr.set_line_width(1)
-            if in_select:
-                cr.set_source_rgb(1, 1, 1)
-            else:    
-                cr.set_source_rgb(0, 0, 0)
-                
+            # if in_select:
+            #     cr.set_source_rgb(1, 1, 1)
+            # else:    
+            cr.set_source_rgb(0.4, 0.4, 0.4)
             cr.rectangle(progress_x, progress_y, self.progress_w, self.progress_h)
             cr.stroke()
+            
+            cr.set_source_rgb(1, 1, 1)
+            cr.rectangle(progress_x, progress_y, self.progress_w - 1, self.progress_h - 1)
+            cr.fill()
             
             cr.set_source_rgb(0.4, 0.8, 0.2)
             cr.rectangle(progress_x , progress_y ,(self.progress_w - 1) * self.progress_ratio, self.progress_h - 1)
             cr.fill()
             
-        draw_text(cr, "%1.1f" % self.progress_ratio + "%", rect.x, rect.y, rect.width, rect.height,
+        # if in_select:    
+        #     text_color = "#ffffff"
+        # else:    
+        #     text_color = "#000000"
+        draw_text(cr, str(int(self.progress_ratio * 100)) + "%", progress_x, progress_y, self.progress_w, self.progress_h,
                   7, alignment=pango.ALIGN_CENTER)    
     
-    def render_pause(self, cr, rect, in_select, in_highlight):
-        pass
-    
-    def render_close(self, cr, rect, in_select, in_highlight):
-        pass
+    def render_stop(self, cr, rect, in_select, in_highlight):
+        icon_x = rect.x + self.stop_icon_padding_x
+        icon_y = rect.y + (rect.height - self.stop_icon_h) / 2
+        # if in_select:
+        #     draw_pixbuf(cr, self.stop_icon_press, icon_x, icon_y)
+        # else:    
+        draw_pixbuf(cr, self.stop_icon, icon_x, icon_y)
     
     def get_column_sizes(self):
         return [
             (36, self.status_icon_h + self.status_icon_padding_y * 2),
-            (180, self.title_h + self.title_padding_y * 2),
-            (130, self.progress_h + self.progress_padding_y * 2)
+            (120, self.title_h + self.title_padding_y * 2),
+            (155, self.progress_h + self.progress_padding_y * 2),
+            (26, self.stop_icon_h + self.stop_icon_padding_y * 2)
             ]
     
     def get_renders(self):
-        return [ self.render_icon, self.render_title, self.render_progress]
+        return [ self.render_icon, self.render_title, self.render_progress, self.render_stop]
     
     
 class JobsView(ListView):    
     
     def __init__(self, *args, **kwargs):
         ListView.__init__(self, *args, **kwargs)
+        del self.keymap["Delete"]
         self.__jobs = []
         
     def add_job(self, job):    
@@ -249,7 +271,7 @@ class JobsView(ListView):
         
 class TranscoderJobManager(DialogBox):    
     def __init__(self):
-        DialogBox.__init__(self, _("转换任务列表"), 405, 450, DIALOG_MASK_SINGLE_PAGE,
+        DialogBox.__init__(self, _("转换任务列表"), 350, 450, DIALOG_MASK_SINGLE_PAGE,
                            modal=False, close_callback=self.hide_all)
         
         scrolled_window = ScrolledWindow(0, 0)
