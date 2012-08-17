@@ -470,6 +470,7 @@ class PlaylistUI(gtk.VBox):
                                  None,
                                  (None, _("Play mode"), play_mode_menu),
                                  (None, _("Sort tracks"), sub_sort_menu),
+                                 (None, _("Format conversion"), self.current_item.song_view.songs_convert),
                                  (None, _("Open directory"), self.current_item.song_view.open_song_dir),
                                  (None, _("Property"), self.current_item.song_view.open_song_editor),
                                  ], True)

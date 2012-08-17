@@ -30,7 +30,7 @@ from dtk.ui.slider import Wizard
 from dtk.ui.utils import get_parent_dir
 from dtk.ui.button import LinkButton
 
-import utils
+
 from widget.skin import app_theme
 from widget.headerbar import FullHeaderBar, SimpleHeadber
 from widget.playlist import PlaylistUI
@@ -43,14 +43,18 @@ from widget.preference import PreferenceDialog
 from widget.ui_utils import switch_tab, create_right_align
 from widget.global_keys import global_hotkeys
 from widget.song_search import SongSearchUI
-from widget.converter import Attributes
+from widget.dialog import WinFile
+from widget.converter import AttributesUI, convert_task_manager
 
 from nls import _
 from config import config
 from player import Player
 from library import MediaDB
 from mmkeys_wrap import MMKeys
-from source.audiocd import AudioCDSource
+from song import Song
+import common
+import utils
+# from source.audiocd import AudioCDSource
 
 from helper import Dispatcher
 from logger import Logger
@@ -102,7 +106,7 @@ class DeepinMusic(gobject.GObject, Logger):
         self.simple_browser = SimpleBrowser()
         self.equalizer_win = EqualizerWindow()
         self.mmkeys = MMKeys()
-        self.audiocd = AudioCDSource()
+        # self.audiocd = AudioCDSource()
 
             
         self.window.add_move_event(self.full_header_bar)
@@ -297,6 +301,22 @@ class DeepinMusic(gobject.GObject, Logger):
     def menu_button_press(self, widget, event):
         self.show_instance_menu(None, int(event.x_root), int(event.y_root))
         
+    def get_convert_sub_menu(self):    
+        menu_items = [
+            (None, _("Format converter"), self.choose_file_and_convert),
+            (None, _("Convert manager"), lambda : convert_task_manager.visible_it()),
+            ]
+        return Menu(menu_items)
+    
+    def choose_file_and_convert(self):
+        filename = WinFile(False).run()
+        if filename and common.file_is_supported(filename):
+            tags = {"uri" : utils.get_uri_from_path(filename)}
+            s = Song()
+            s.init_from_dict(tags)
+            s.read_from_file()
+            AttributesUI([s]).show_window()
+        
     def show_instance_menu(self, obj, x, y):
         curren_view = self.playlist_ui.get_selected_song_view()
         menu_items = [
@@ -305,8 +325,8 @@ class DeepinMusic(gobject.GObject, Logger):
             (self.get_pixbuf_group("playmode"), _("Play mode"), curren_view.get_playmode_menu()),
             None,
             (None, _("Equalizer"), lambda : self.equalizer_win.run()),
-            (None, _("Search"), lambda : SongSearchUI().show_all()),
-            (None, _("Transcoder"), lambda : Attributes().show_all()),
+            # (None, _("Search"), lambda : SongSearchUI().show_all()),
+            (None, _("Converter"), self.get_convert_sub_menu()),
             None,
             self.get_lyrics_menu_items(),
             self.get_locked_menu_items(),

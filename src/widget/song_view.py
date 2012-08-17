@@ -44,6 +44,7 @@ from widget.skin import app_theme
 from widget.song_editor import SongEditor
 from source.local import ImportPlaylistJob
 from widget.ui_utils import draw_single_mask, draw_alpha_mask
+from widget.converter import AttributesUI
 from nls import _
 
 class SongView(ListView):
@@ -335,6 +336,14 @@ class SongView(ListView):
         self.clear()
         self.emit_empty_signal(None, None)
         return True
+    
+    def songs_convert(self):
+        if len(self.select_rows) > 0:
+            songs = [ self.items[self.select_rows[index]].get_song() for index in range(0, len(self.select_rows))]
+            try:
+                AttributesUI(songs).show_window()
+            except:    
+                pass
     
     def open_song_dir(self):
         if len(self.select_rows) > 0:
@@ -634,6 +643,13 @@ class MultiDragSongView(ListView):
             if select_item.exists():
                 SongEditor([select_item.get_song()]).show_all()
                 
+    def songs_convert(self):
+        if len(self.select_rows) > 0:
+            songs = [ self.items[self.select_rows[index]].get_song() for index in range(0, len(self.select_rows))]
+            try:
+                AttributesUI(songs).show_window()
+            except:    
+                pass
             
     def remove_songs(self, fully=False):
         if len(self.select_rows) > 0:
@@ -653,6 +669,7 @@ class MultiDragSongView(ListView):
             (None, _("Move to trash"), self.remove_songs, True),
             None,
             (None, _("Open directory"), self.open_song_dir),
+            (None, _("Format conversion"), self.songs_convert),
             (None, _("Property"), self.open_song_editor)
                         ]
             
