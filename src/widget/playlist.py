@@ -277,10 +277,10 @@ class PlaylistUI(gtk.VBox):
             sub_menu_items = [(None, category_item.get_title(), 
                                self.edit_list_item, category_item, select_items ,move) for category_item in other_category_items]
         if sub_menu_items:    
-            sub_menu_items.extend([None, ((app_theme.get_pixbuf("toolbar/add_normal.png"), None),
+            sub_menu_items.extend([None, ((app_theme.get_pixbuf("toolbar/add_normal.png"), None, None),
                                           _("New list"), self.edit_new_list_item, select_items, move)])
         else:    
-            sub_menu_items.extend([((app_theme.get_pixbuf("toolbar/add_normal.png"), None),
+            sub_menu_items.extend([((app_theme.get_pixbuf("toolbar/add_normal.png"), None, None),
                                     _("New list"), self.edit_new_list_item, select_items, move)])
         return Menu(sub_menu_items)
     

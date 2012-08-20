@@ -230,7 +230,7 @@ class LyricsModule(object):
     def get_scroll_menu_pixbufs(self, name):    
         return (
             app_theme.get_pixbuf("lyric/%s_normal.png" % name),
-            None)
+            None, None)
         
     def switch_to_scroll_lyrics(self, widget):    
         config.set("lyrics", "mode", str(LRC_WINDOW_MODE))

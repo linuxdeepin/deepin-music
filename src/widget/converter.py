@@ -328,6 +328,7 @@ class JobsView(ListView):
         except:
             pass
         
+        
     def delete_finish_jobs(self):    
         new_jobs = filter(attrgetter("is_finish"), self.items)
         if new_jobs:

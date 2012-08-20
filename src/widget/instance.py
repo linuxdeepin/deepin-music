@@ -365,7 +365,10 @@ class DeepinMusic(gobject.GObject, Logger):
             return (self.get_pixbuf_group("lock"), _("Lock lyrics"), lambda : Dispatcher.lock_lyrics())
             
     def get_pixbuf_group(self, name):    
-        return (app_theme.get_pixbuf("tray/%s_normal.png" % name), app_theme.get_pixbuf("tray/%s_hover.png" % name))
+        return (app_theme.get_pixbuf("tray/%s_normal.png" % name),
+                app_theme.get_pixbuf("tray/%s_hover.png" % name),
+                app_theme.get_pixbuf("tray/%s_disable.png" % name),
+                )
     
     def change_view(self, widget):    
 
