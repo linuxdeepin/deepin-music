@@ -423,7 +423,7 @@ class AttributesUI(DialogBox):
         
         start_button = Button(_("Start"))
         close_button = Button(_("Close"))
-        self.add_check_button = CheckButton(_("Add to Playlist finished"), padding_x=2)
+        self.add_check_button = CheckButton(_("Add to Playlist when finished"), padding_x=2)
         
         main_table = gtk.Table()
         main_table.set_row_spacings(10)
