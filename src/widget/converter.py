@@ -377,7 +377,10 @@ class TranscoderJobManager(DialogBox):
         
     def add_new_job(self, obj, job):    
         self.visible_it()
-        self.jobs_view.add_job(job)    
+        self.idle_add_job(job)
+        
+    def idle_add_job(self, job):
+        gobject.idle_add(self.jobs_view.add_job, job)
         
     def pause_job(self, widget):    
         value = self.jobs_view.playpause_jobs()
