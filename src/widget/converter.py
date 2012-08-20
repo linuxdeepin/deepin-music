@@ -289,13 +289,17 @@ class JobsView(ListView):
         if ajob.exists_prompt:
             ConfirmDialog(_("Prompt"), _("The target file already exists overwrite?"),
                           confirm_callback=lambda : ajob.start(),
-                          cancel_callback=lambda :self.delete_job(ajob)
+                          cancel_callback=lambda :self.start_new_job(ajob)
                           ).show_window()
         else:    
             ajob.start()
+            
+    def start_new_job(self, ajob):        
+        self.__job_end(ajob)        
+        self.delete_job(ajob)
         
     def __job_end(self, ajob):        
-        gobject.idle_add(self.__job_end_cb, ajob)
+        self.__job_end_cb(ajob)
         
     def __job_end_cb(self, ajob):    
         job, job_id = self.__jobs.pop(0)
