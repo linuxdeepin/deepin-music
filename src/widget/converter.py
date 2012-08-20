@@ -24,10 +24,8 @@ import os
 import gtk
 import gobject
 import pango
-import math
 from operator import attrgetter
 from copy import deepcopy
-
 
 from dtk.ui.combo import ComboBox
 from dtk.ui.dialog import ConfirmDialog, DialogBox, DIALOG_MASK_SINGLE_PAGE
@@ -43,18 +41,20 @@ from dtk.ui.scrolled_window import ScrolledWindow
 from transcoder import Transcoder, FORMATS, TranscodeError
 from nls import _
 from widget.skin import app_theme
+from widget.dialog import WinDir
 from widget.ui_utils import (set_widget_left, render_item_text)
 from constant import DEFAULT_FONT_SIZE
 from helper import Dispatcher
 from player import Player
 from song import Song
 from library import MediaDB
+
 import utils
 
 class TranscoderJob(gobject.GObject):
     
     __gsignals__ = {
-        "end"            : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, tuple()),
+        "end"            : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),
         "redraw-request" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),
         }
     
@@ -301,9 +301,6 @@ class JobsView(ListView):
         job, job_id = self.__jobs.pop(0)
         job.disconnect(job_id)
         if self.__jobs:
-            jobs = [(job[0].priority, job) for job in self.__jobs]
-            jobs.sort()
-            self.__jobs = [ job[1] for job in jobs ]
             try:
                 self.__run_check(self.__jobs[0][0])
             except TranscodeError:    
@@ -449,11 +446,17 @@ class AttributesUI(DialogBox):
         self.output_entry = InputEntry(os.path.expanduser("~/"))
         self.output_entry.set_size(210, 24)
         change_button = Button(_("Change"))
+        change_button.connect("clicked", self.set_output_directory)
         output_box = gtk.HBox(spacing=5)
         output_box.pack_start(output_label, False, False)
         output_box.pack_start(self.output_entry, False, False)
         output_box.pack_start(change_button, False, False)
         return output_box
+    
+    def set_output_directory(self, widget): 
+        directory = WinDir(False).run()
+        if directory:
+            self.output_entry.set_text(directory)
         
     def get_quality_items(self, name):    
         kbs_steps = [str(key) for key in FORMATS[name]["kbs_steps"]]

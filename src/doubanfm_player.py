@@ -50,9 +50,3 @@ class DoubanFmPlayerWrapper(gobject.GObject, Logger):
     def __fail_fetch(self, *args):
         self.__metadata_lock = False
         self.loginfo("fail retrieve url %s", self.download_thread.last_url_fail)
-        
-        <
-
-
-
-

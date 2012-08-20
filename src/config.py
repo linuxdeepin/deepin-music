@@ -177,10 +177,6 @@ class Config(gobject.GObject, Logger):
                 "toggle_window"      : "Ctrl + Alt + W",
                 "toggle_lyrics_lock" : "Ctrl + Alt + D",
                 "toggle_lyrics_status" : "Ctrl + Alt + H",
-                }
-            
-            
+                },
             }
-        
-    
 config = Config()    
