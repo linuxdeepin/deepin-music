@@ -410,7 +410,8 @@ class LyricsModule(object):
             item_pixbuf = None
             if key == save_predefine_color:
                 item_pixbuf = (app_theme.get_pixbuf("menu/tick.png"),
-                               app_theme.get_pixbuf("menu/tick_press.png"))
+                               app_theme.get_pixbuf("menu/tick_press.png"),
+                               app_theme.get_pixbuf("menu/tick_disable.png"))
                 
             if item_pixbuf is None:    
                 menu_items.append((None, value, self.set_predefine_color, key))    
