@@ -24,6 +24,7 @@ import os
 import gtk
 import gobject
 import pango
+import gio
 from operator import attrgetter
 from copy import deepcopy
 
@@ -223,6 +224,7 @@ class TranscoderJob(gobject.GObject):
     def render_progress(self, cr, rect, in_select, in_highlight):
         progress_x = rect.x + self.progress_padding_x
         progress_y = rect.y + (rect.height - self.progress_h) / 2
+        
         with cairo_disable_antialias(cr):
             cr.set_line_width(1)
             cr.set_source_rgb(0.4, 0.4, 0.4)
@@ -248,7 +250,21 @@ class TranscoderJob(gobject.GObject):
     def render_ext(self, cr, rect, in_select, in_highlight):    
         rect.x += self.ext_padding_x
         rect.width -= self.ext_padding_x * 2
-        render_item_text(cr, self.output_ext, rect, in_select, in_highlight)
+        render_item_text(cr, self.output_ext.upper(), rect, in_select, in_highlight)
+        
+    def get_ext_type(self):    
+        gio_file = gio.File(self.output_path)
+        gio_file_info = gio_file.query_info(",".join([gio.FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,
+                                                      gio.FILE_ATTRIBUTE_STANDARD_TYPE, 
+                                                      gio.FILE_ATTRIBUTE_STANDARD_NAME,
+                                                      gio.FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME,
+                                                      gio.FILE_ATTRIBUTE_STANDARD_SIZE,
+                                                      gio.FILE_ATTRIBUTE_STANDARD_ICON,
+                                                      gio.FILE_ATTRIBUTE_TIME_MODIFIED,
+                                                      gio.FILE_ATTRIBUTE_TIME_CHANGED,]))
+        
+        info_attr = gio_file_info.get_attribute_as_string(gio.FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE)                
+        return gio.content_type_get_description(info_attr)
     
     def get_column_sizes(self):
         return [
@@ -274,6 +290,7 @@ class JobsView(ListView):
         
     def add_job(self, job):    
         job_id = job.connect("end", self.__job_end)
+        
         
         self.__jobs.append((job, job_id))
         self.add_items([job])
