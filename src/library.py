@@ -746,9 +746,9 @@ class DBQuery(gobject.GObject, Logger):
                 if self.__cache_func_song_tuple:
                     self.__cache_song_tuple[song.get("uri")]= self.__cache_func_song_tuple(song)
 
-                genre, artist, album = self.__get_info(song)
+                je, artist, album = self.__get_info(song)
 
-                self.__condition.acquire()
+N                self.__condition.acquire()
 
                 if old_keys_values.has_key("genre"):
                     self.__signal_to_fire["update-genre"].add(genre)
@@ -807,36 +807,36 @@ class DBQuery(gobject.GObject, Logger):
             for key, value in self.__attr_songs.iteritems():
                 name = os.path.split(key)[1]
                 num = len(value[3])
-                attr_list.append(("%s(%d)" % (name, num), key))
+                attr_list.append((name, key, num, "folder"))
             return attr_list        
+
+        # if info_type == "genre":
+        #     if song_dir not in self.__attr_songs:
+        #         return []
+        #     for key, value in self.__attr_songs[song_dir][0].iteritems():
+        #         num = len(value)
+        #         attr_list.append((key, key, num, "genre"))
+        #     return attr_list    
         
-        if info_type == "genre":
-            if song_dir not in self.__attr_songs:
-                return []
-            for key, value in self.__attr_songs[song_dir][0].iteritems():
-                num = len(value)
-                attr_list.append((key, key, num, "genre"))
-            return attr_list    
+        # if info_type == "artist":
+        #     if song_dir not in self.__attr_songs:
+        #         return []
+        #     for key, value in self.__attr_songs[song_dir][1].iteritems():
+        #         num = len(value)
+        #         attr_list.append((key, key, num, "artist"))
+        #     return attr_list    
         
-        if info_type == "artist":
-            if song_dir not in self.__attr_songs:
-                return []
-            for key, value in self.__attr_songs[song_dir][1].iteritems():
-                num = len(value)
-                attr_list.append((key, key, num, "artist"))
-            return attr_list    
-        
-        if info_type == "album":
-            if song_dir not in self.__attr_songs:
-                return []
-            for key, value in self.__attr_songs[song_dir][2].iteritems():
-                num = len(value)
-                try:
-                    artist_name = list[value][0].get_str("artist")
-                except:    
-                    artist_name = ""
-                attr_list.append((key, artist_name,  num, "album"))
-            return attr_list    
+        # if info_type == "album":
+        #     if song_dir not in self.__attr_songs:
+        #         return []
+        #     for key, value in self.__attr_songs[song_dir][2].iteritems():
+        #         num = len(value)
+        #         try:
+        #             artist_name = list[value][0].get_str("artist")
+        #         except:    
+        #             artist_name = ""
+        #         attr_list.append((key, artist_name,  num, "album"))
+        #     return attr_list    
         
     def get_attr_songs(self,song_dir=None, info_type="###ALL###", info_key=None):
         if not self.__attr_songs:

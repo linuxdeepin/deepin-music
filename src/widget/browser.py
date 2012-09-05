@@ -35,7 +35,8 @@ from helper import SignalContainer, Dispatcher
 from widget.skin import app_theme
 from widget.ui import SearchEntry
 from widget.song_view import MultiDragSongView
-from widget.ui_utils import switch_tab, render_text, draw_alpha_mask, create_right_align
+from widget.ui_utils import (switch_tab, render_text, draw_alpha_mask, create_right_align,
+                             create_separator_box)
 from widget.outlookbar import OptionBar, SongPathBar, SongImportBar
 from source.local import ImportFolderJob, ReloadDBJob
 from widget.combo import ComboMenuButton
@@ -286,7 +287,7 @@ class Browser(gtk.VBox, SignalContainer):
              (app_theme.get_pixbuf("filter/genre_normal.png"), app_theme.get_pixbuf("filter/genre_press.png"),
               _("By genre"), lambda : self.reload_filter_view("genre", True)),]
                                             )
-        
+         
         # Song path bar.
         self.__current_path = None
         self.current_icon_item = None
@@ -653,11 +654,152 @@ class Browser(gtk.VBox, SignalContainer):
     def switch_box(self, parent, child):    
         switch_tab(parent, child)
     
-class SimpleBrowser(Browser):    
+
+class NewBrowser(gtk.VBox, SignalContainer):        
+    
+    def __init__(self, db_query):
+        
+        # Init.
+        gtk.VBox.__init__(self)
+        SignalContainer.__init__(self)
+        
+        self.__db_query = db_query
+        self.update_interval = 5000 # 5000 millisecond.
+        self.reload_flag = False
+        
+        # The saving song Classification presented to the user.
+        self.artists_view, self.artists_sw  = self.get_icon_view()
+        self.albums_view,  self.albums_sw   = self.get_icon_view()
+        self.genres_view,  self.genres_sw   = self.get_icon_view()
+        
+        # Classification navigation bar.
+        self.filterbar = OptionBar(
+            [(app_theme.get_pixbuf("filter/artist_normal.png"), app_theme.get_pixbuf("filter/artist_press.png"),
+              _("By artist"), lambda : self.switch_filter_view("artist")),
+             (app_theme.get_pixbuf("filter/album_normal.png"), app_theme.get_pixbuf("filter/album_press.png"),
+              _("By album"), lambda : self.switch_filter_view("album")),
+             (app_theme.get_pixbuf("filter/genre_normal.png"), app_theme.get_pixbuf("filter/genre_press.png"),
+              _("By genre"), lambda : self.switch_filter_view("genre")),
+             (app_theme.get_pixbuf("filter/local_normal.png"), app_theme.get_pixbuf("filter/local_press.png"),
+              _("By folder"), None)
+             ])
+        
+        # Manage the media library (import, refresh)
+        self.importbar = SongImportBar()
+        self.importbar.reload_items(
+            [
+             (_("Scan Home dir"), lambda : ImportFolderJob([os.path.expanduser("~")])),                
+             (_("Select dir to scan"), lambda : ImportFolderJob()),
+             (_("Refresh library"), lambda : ReloadDBJob())])
+        
+        # Left box
+        left_vbox = gtk.VBox(spacing=10)
+        left_vbox.set_size_request(140, -1)
+        left_vbox.pack_start(self.filterbar, False, False)
+        left_vbox.pack_start(create_separator_box(), False, False)
+        left_vbox.pack_start(self.importbar, False, False)
+        
+        # Used to switch songs category view, in the right side of the layout.
+        self.switch_view_box = gtk.VBox()
+        self.switch_view_box.add(self.artists_sw)
+        
+        # Combination widget.
+        switch_view_align = gtk.Alignment()
+        switch_view_align.set_padding(0, 0, 0, 2)
+        switch_view_align.set(1, 1, 1, 1)
+        switch_view_align.add(self.switch_view_box)
+        
+        content_box = gtk.HBox()
+        content_box.pack_start(left_vbox, False, False)
+        content_box.pack_start(switch_view_align, True, True)
+        
+        body_box = gtk.VBox()
+        body_box.pack_start(content_box, True, True)
+        self.pack_start(body_box, True, True)
+        
+    def get_icon_view(self):    
+        ''' Draggable IconView '''
+        icon_view = IconView(10, 10)
+        targets = [("text/deepin-songs", gtk.TARGET_SAME_APP, 1), ("text/uri-list", 0, 2)]
+        icon_view.drag_source_set(gtk.gdk.BUTTON1_MASK, targets, gtk.gdk.ACTION_COPY)
+        # icon_view.connect("drag-data-get", self.__on_drag_data_get) 
+        # icon_view.connect("double-click-item", self.__on_double_click_item)
+        # icon_view.connect("single-click-item", self.__on_single_click_item)
+        # icon_view.draw_mask  = self.draw_filter_view_mask
+        scrolled_window = ScrolledWindow()
+        scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+        scrolled_window.add_child(icon_view)
+        return icon_view, scrolled_window
+        
+    def get_song_view(self):
+        song_view = MultiDragSongView()
+        song_view.add_titles([_("Title"), _("Artist"), _("Album"), _("Added time")])
+        scrolled_window = ScrolledWindow(0, 0)
+        scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+        scrolled_window.add_child(song_view)
+        return song_view, scrolled_window
+    
+    def connect_to_db(self):
+        self.autoconnect(self.__db_query, "added", self.__on_added_songs)
+        self.autoconnect(self.__db_query, "removed", self.__on_removed_songs)
+        self.autoconnect(self.__db_query, "update-tag", self.__on_update_tags)
+        self.autoconnect(self.__db_query, "full-update", self.__on_full_update)
+        self.autoconnect(self.__db_query, "quick-update", self.__on_quick_update)
+        self.__db_query.set_query("")
+        
+    def __on_added_songs(self, db_query, songs):    
+        pass
+    
+    def __on_removed_songs(self, db_query, songs):
+        pass
+    
+    def __on_update_tags(self, db_query, songs):
+        pass
+    
+    def __on_full_update(self, db_query):
+        for tag in ["artist", "album", "genre"]:
+            self.load_view(tag)
+    
+    def __on_quick_update(self, db_query):
+        pass
+    
+    def get_infos_from_db(self, tag, values=None):
+        genres = []
+        artists = []
+        extened = False
+        return self.__db_query.get_info(tag, genres, artists, values, extened)
+    
+    def load_view(self, tag="artist", switch=False):
+        _dict = self.get_infos_from_db(tag)
+        keys = _dict.keys()
+        keys.sort()
+        items = []
+        all_nb = len(self.__db_query.get_all_songs())
+        items.append(IconItem(("deepin-all-songs", "deepin-all-songs", all_nb, tag)))
+        
+        for key in keys:
+            value, nb = _dict[key]
+            items.append(IconItem((key, value, nb, tag)))
+            
+        if   tag == "artist": self.artists_view.add_items(items)    
+        elif tag == "album" : self.albums_view.add_items(items)
+        elif tag == "genre" : self.genres_view.add_items(items)
+        elif tag == "folder": self.folders_view.add_items(items)
+        
+    def switch_filter_view(self, tag):    
+        widget = None
+        if tag == "artist" : widget = self.artists_sw
+        elif tag == "album": widget = self.albums_sw
+        elif tag == "genre": widget = self.genres_sw
+            
+        if widget:    
+            switch_tab(self.switch_view_box, widget)
+            
+class SimpleBrowser(NewBrowser):    
     _type = "local"
     
     def __init__(self):
-        Browser.__init__(self, DBQuery(self._type))
+        NewBrowser.__init__(self, DBQuery(self._type))
         
         if MediaDB.isloaded():
             self.__on_db_loaded(MediaDB)

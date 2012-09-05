@@ -130,3 +130,4 @@ def set_widget_right(widget):
     hbox.pack_start(create_right_align(), False, True)
     hbox.pack_start(widget, False, False)    
     return hbox
+
