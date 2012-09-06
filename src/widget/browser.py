@@ -53,6 +53,7 @@ class IconItem(gobject.GObject):
         super(IconItem, self).__init__()
         self.cell_width = 83        
         self.key_name, self.value_name, nums, self.tag = _tuple
+        if self.tag == "folder": self.cell_width = 65
         self.draw_side_flag = True
 
         if not self.key_name:
@@ -72,7 +73,10 @@ class IconItem(gobject.GObject):
         self.highlight_flag = False
         self.__draw_play_hover_flag = False
         self.__draw_play_press_flag = False
-        self.__normal_side_pixbuf =  app_theme.get_pixbuf("filter/side_normal.png").get_pixbuf()
+        if self.tag == "folder":
+            self.__normal_side_pixbuf = app_theme.get_pixbuf("iconset/side_normal.png").get_pixbuf()
+        else:    
+            self.__normal_side_pixbuf =  app_theme.get_pixbuf("filter/side_normal.png").get_pixbuf()
         self.__normal_play_pixbuf =  app_theme.get_pixbuf("filter/play_normal.png").get_pixbuf()
         
         self.play_rect = gtk.gdk.Rectangle(
@@ -100,6 +104,11 @@ class IconItem(gobject.GObject):
             elif self.tag == "album":    
                 self.pixbuf = CoverManager.get_pixbuf_from_name("%s-%s" % (self.value_name, self.key_name), 
                                                                 self.cell_width, self.cell_width)            
+            elif self.tag == "folder":
+                # folder_music = app_theme.get_theme_file_path("image/iconset/music.png")
+                # self.pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(folder_music, self.cell_width, self.cell_width)
+                self.pixbuf = app_theme.get_pixbuf("iconset/music.png").get_pixbuf()
+                # self.draw_side_flag = False
             else:    
                 self.pixbuf = CoverManager.get_pixbuf_from_name(self.key_name, self.cell_width, self.cell_width)
         
@@ -140,7 +149,10 @@ class IconItem(gobject.GObject):
                     rect.y + self.padding_y)
         
         if self.hover_flag or self.highlight_flag:
-            side_pixbuf = app_theme.get_pixbuf("filter/side_hover.png").get_pixbuf()
+            if self.tag == "folder":
+                side_pixbuf = app_theme.get_pixbuf("iconset/side_hover.png").get_pixbuf()
+            else:    
+                side_pixbuf = app_theme.get_pixbuf("filter/side_hover.png").get_pixbuf()
             draw_pixbuf(cr, side_pixbuf, rect.x, rect.y )            
         else:    
             if self.draw_side_flag:
@@ -666,11 +678,20 @@ class NewBrowser(gtk.VBox, SignalContainer):
         self.__db_query = db_query
         self.update_interval = 5000 # 5000 millisecond.
         self.reload_flag = False
+        self.__selected_tag = {"album": [], "artist": [], "genre": []}
         
         # The saving song Classification presented to the user.
         self.artists_view, self.artists_sw  = self.get_icon_view()
         self.albums_view,  self.albums_sw   = self.get_icon_view()
         self.genres_view,  self.genres_sw   = self.get_icon_view()
+        self.folders_view, self.folders_sw  = self.get_icon_view()
+        
+        # Song list for temporarily storing
+        self.songs_view = MultiDragSongView()
+        self.songs_view.add_titles([_("Title"), _("Artist"), _("Album"), _("Added time")])
+        self.songs_view_sw = ScrolledWindow(0, 0)
+        self.songs_view_sw.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+        self.songs_view_sw.add_child(self.songs_view)
         
         # Classification navigation bar.
         self.filterbar = OptionBar(
@@ -681,7 +702,7 @@ class NewBrowser(gtk.VBox, SignalContainer):
              (app_theme.get_pixbuf("filter/genre_normal.png"), app_theme.get_pixbuf("filter/genre_press.png"),
               _("By genre"), lambda : self.switch_filter_view("genre")),
              (app_theme.get_pixbuf("filter/local_normal.png"), app_theme.get_pixbuf("filter/local_press.png"),
-              _("By folder"), None)
+              _("By folder"), lambda : self.switch_filter_view("folder"))
              ])
         
         # Manage the media library (import, refresh)
@@ -698,6 +719,7 @@ class NewBrowser(gtk.VBox, SignalContainer):
         left_vbox.pack_start(self.filterbar, False, False)
         left_vbox.pack_start(create_separator_box(), False, False)
         left_vbox.pack_start(self.importbar, False, False)
+        left_vbox.connect("expose-event", self.on_left_vbox_expose)
         
         # Used to switch songs category view, in the right side of the layout.
         self.switch_view_box = gtk.VBox()
@@ -722,10 +744,10 @@ class NewBrowser(gtk.VBox, SignalContainer):
         icon_view = IconView(10, 10)
         targets = [("text/deepin-songs", gtk.TARGET_SAME_APP, 1), ("text/uri-list", 0, 2)]
         icon_view.drag_source_set(gtk.gdk.BUTTON1_MASK, targets, gtk.gdk.ACTION_COPY)
-        # icon_view.connect("drag-data-get", self.__on_drag_data_get) 
-        # icon_view.connect("double-click-item", self.__on_double_click_item)
-        # icon_view.connect("single-click-item", self.__on_single_click_item)
-        # icon_view.draw_mask  = self.draw_filter_view_mask
+        icon_view.connect("drag-data-get", self.__on_drag_data_get) 
+        icon_view.connect("double-click-item", self.__on_double_click_item)
+        icon_view.connect("single-click-item", self.__on_single_click_item)
+        icon_view.draw_mask  = self.on_iconview_draw_mask
         scrolled_window = ScrolledWindow()
         scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
         scrolled_window.add_child(icon_view)
@@ -753,23 +775,88 @@ class NewBrowser(gtk.VBox, SignalContainer):
     def __on_removed_songs(self, db_query, songs):
         pass
     
-    def __on_update_tags(self, db_query, songs):
+    def __on_update_tags(self, db_query, infos, songs):
         pass
     
     def __on_full_update(self, db_query):
-        for tag in ["artist", "album", "genre"]:
+        for tag in ["artist", "album", "genre", "folder"]:
             self.load_view(tag)
     
-    def __on_quick_update(self, db_query):
+    def __on_quick_update(self, db_query, songs):
         pass
+    
+    def __on_drag_data_get(self, widget, context, selection, info, timestamp):
+        item = widget.highlight_item
+        if not item: return
+        
+        songs = self.get_item_songs(item)
+        songs = list(songs)
+        songs.sort()
+        song_uris = [song.get("uri") for song in songs ]
+        selection.set("text/deepin-songs", 8, "\n".join(song_uris))
+        selection.set_uris(song_uris)
+    
+    def __on_double_click_item(self, widget, item, x, y):
+        songs = self.get_item_songs(item)
+        self.songs_view.clear()        
+        self.songs_view.add_songs(songs)
+        
+        # todo: switch view mode fixed the back.
+        switch_tab(self.switch_view_box, self.songs_view_sw)
+        
+    def __on_single_click_item(self, widget, item, x, y):    
+        if item.pointer_in_play_rect(x, y):
+            songs = self.get_item_songs(item)
+            songs = list(songs)
+            songs.sort()
+            Dispatcher.play_and_add_song(songs)
+        
+    def get_item_songs(self, item):    
+        if item.tag == "folder":
+            songs = self.__db_query.get_attr_songs(item.value_name)
+        else:    
+            if item.key_name == "deepin-all-songs":
+                songs = self.__db_query.get_all_songs()
+            else:    
+                self.__selected_tag[item.tag] = [item.key_name]
+                songs = self.__get_selected_songs(item.tag)
+        return songs        
+
+                
+    def __get_selected_songs(self, tag="artist"):
+        artists = []
+        albums = []
+        genres = []
+        
+        if tag == "artist":
+            artists = self.__selected_tag["artist"]
+        elif tag == "album":    
+            albums = self.__selected_tag["album"]
+        elif tag == "genre":    
+            genres = self.__selected_tag["genre"]
+            
+        return self.__db_query.get_songs(genres, artists, albums)    
     
     def get_infos_from_db(self, tag, values=None):
         genres = []
         artists = []
         extened = False
+        
         return self.__db_query.get_info(tag, genres, artists, values, extened)
     
     def load_view(self, tag="artist", switch=False):
+        items = self.get_info_items(tag)
+        
+        if   tag == "artist": self.artists_view.add_items(items)    
+        elif tag == "album" : self.albums_view.add_items(items)
+        elif tag == "genre" : self.genres_view.add_items(items)
+        elif tag == "folder": self.folders_view.add_items(items)
+        
+    def get_info_items(self, tag):    
+        if tag == "folder":
+            infos = self.__db_query.get_attr_infos()
+            return [ IconItem(info) for info in infos ]
+        
         _dict = self.get_infos_from_db(tag)
         keys = _dict.keys()
         keys.sort()
@@ -780,20 +867,26 @@ class NewBrowser(gtk.VBox, SignalContainer):
         for key in keys:
             value, nb = _dict[key]
             items.append(IconItem((key, value, nb, tag)))
-            
-        if   tag == "artist": self.artists_view.add_items(items)    
-        elif tag == "album" : self.albums_view.add_items(items)
-        elif tag == "genre" : self.genres_view.add_items(items)
-        elif tag == "folder": self.folders_view.add_items(items)
+        return items    
         
     def switch_filter_view(self, tag):    
         widget = None
         if tag == "artist" : widget = self.artists_sw
         elif tag == "album": widget = self.albums_sw
         elif tag == "genre": widget = self.genres_sw
+        elif tag == "folder" : widget = self.folders_sw
             
         if widget:    
             switch_tab(self.switch_view_box, widget)
+            
+    def on_left_vbox_expose(self, widget, event):        
+        cr = widget.window.cairo_create()
+        rect = widget.allocation
+        draw_alpha_mask(cr, rect.x, rect.y, rect.width, rect.height, "layoutRight")
+        return False
+    
+    def on_iconview_draw_mask(self, cr, x, y, width, height):
+        draw_alpha_mask(cr, x, y, width, height, "layoutLast")
             
 class SimpleBrowser(NewBrowser):    
     _type = "local"

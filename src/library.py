@@ -29,6 +29,7 @@ from song import Song, TAG_KEYS
 from xdg_support import get_config_file
 from parse import Query
 from logger import Logger
+from nls import _
 import utils
 
 
@@ -748,7 +749,7 @@ class DBQuery(gobject.GObject, Logger):
 
                 je, artist, album = self.__get_info(song)
 
-N                self.__condition.acquire()
+                self.__condition.acquire()
 
                 if old_keys_values.has_key("genre"):
                     self.__signal_to_fire["update-genre"].add(genre)
@@ -919,18 +920,18 @@ N                self.__condition.acquire()
         genre = song.get_str("genre")
         artist = song.get_str("artist")
         album = song.get_str("album")
-        if not genre.strip(): genre = "未知"
-        if not artist.strip(): artist = "未知"
-        if not album.strip(): album = "未知"
+        if not genre.strip(): genre = _("Unknown")
+        if not artist.strip(): artist = _("Unknown")
+        if not album.strip(): album = _("Unknown")
         return genre, artist, album
     
     def __get_info(self, song):
         genre = song.get_str("genre")
         artist = song.get_str("artist")
         album = song.get_str("album")
-        if not genre.strip(): genre = "未知"
-        if not artist.strip(): artist = "未知"
-        if not album.strip(): album = "未知"
+        if not genre.strip(): genre = _("Unknown")
+        if not artist.strip(): artist = _("Unknown")
+        if not album.strip(): album = _("Unknown")
         return genre, artist, album
     
     def get_random_song(self):

@@ -23,6 +23,7 @@
 import pango
 import gtk
 import pangocairo
+import glib
 
 from dtk.ui.utils import alpha_color_hex_to_cairo
 from dtk.ui.line import draw_vlinear
@@ -131,3 +132,7 @@ def set_widget_right(widget):
     hbox.pack_start(widget, False, False)    
     return hbox
 
+def get_folder_pixbuf(size=16):
+    default_theme = gtk.icon_theme_get_default()    
+    pixbuf = default_theme.load_icon("inode/directory", size, gtk.ICON_LOOKUP_USE_BUILTIN)    
+    return pixbuf
