@@ -676,9 +676,10 @@ class NewBrowser(gtk.VBox, SignalContainer):
         SignalContainer.__init__(self)
         
         self.__db_query = db_query
-        self.update_interval = 5000 # 5000 millisecond.
+        self.update_interval = 1000 # 1000 millisecond.
         self.reload_flag = False
         self.__selected_tag = {"album": [], "artist": [], "genre": []}
+        gobject.timeout_add(self.update_interval, self.on_interval_loaded_view)
         
         # The saving song Classification presented to the user.
         self.artists_view, self.artists_sw  = self.get_icon_view()
@@ -787,13 +788,13 @@ class NewBrowser(gtk.VBox, SignalContainer):
         self.__db_query.set_query("")
         
     def __on_added_songs(self, db_query, songs):    
-        pass
+        self.reload_flag = True
     
     def __on_removed_songs(self, db_query, songs):
-        pass
+        self.reload_flag = True
     
     def __on_update_tags(self, db_query, infos, songs):
-        pass
+        self.reload_flag = True
     
     def __on_full_update(self, db_query):
         for tag in ["artist", "album", "genre", "folder"]:
@@ -801,6 +802,13 @@ class NewBrowser(gtk.VBox, SignalContainer):
     
     def __on_quick_update(self, db_query, songs):
         pass
+    
+    def on_interval_loaded_view(self):
+        if self.reload_flag:
+            for tag in ["artist", "album", "genre", "folder"]:
+                self.load_view(tag)
+            self.reload_flag = False    
+        return True    
     
     def __on_drag_data_get(self, widget, context, selection, info, timestamp):
         item = widget.highlight_item
@@ -822,7 +830,7 @@ class NewBrowser(gtk.VBox, SignalContainer):
         switch_tab(self.switch_view_box, self.songs_view_sw)
         
         # show back button.
-        self.prompt_button.set_data((item.pixbuf, item.key_name))
+        self.prompt_button.set_data((item.pixbuf, item.name_label))
         self.back_hbox.set_no_show_all(False)
         self.back_hbox.show_all()
         
@@ -883,10 +891,18 @@ class NewBrowser(gtk.VBox, SignalContainer):
     def load_view(self, tag="artist", switch=False):
         items = self.get_info_items(tag)
         
-        if   tag == "artist": self.artists_view.add_items(items)    
-        elif tag == "album" : self.albums_view.add_items(items)
-        elif tag == "genre" : self.genres_view.add_items(items)
-        elif tag == "folder": self.folders_view.add_items(items)
+        if  tag == "artist": 
+            self.artists_view.clear()
+            self.artists_view.add_items(items)    
+        elif tag == "album" :
+            self.albums_view.clear()
+            self.albums_view.add_items(items)
+        elif tag == "genre" :
+            self.genres_view.clear()
+            self.genres_view.add_items(items)
+        elif tag == "folder":
+            self.folders_view.clear()
+            self.folders_view.add_items(items)
         
     def get_info_items(self, tag):    
         if tag == "folder":
