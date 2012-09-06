@@ -23,7 +23,6 @@
 import pango
 import gtk
 import pangocairo
-import glib
 
 from dtk.ui.utils import alpha_color_hex_to_cairo
 from dtk.ui.line import draw_vlinear
@@ -112,12 +111,20 @@ def set_widget_gravity(widget, gravity=(0, 0, 0, 0), paddings=(0, 0, 0, 0)):
     align.add(widget)
     return align
     
-def set_widget_center(widget):
+def set_widget_hcenter(widget):
     hbox = gtk.HBox()
     hbox.pack_start(create_right_align(), False, True)
     hbox.pack_start(widget, False, False)
     hbox.pack_start(create_left_align(), False, True)
     return hbox
+
+def set_widget_vcenter(widget):
+    vbox = gtk.VBox()
+    vbox.pack_start(create_bottom_align(), False, True)
+    vbox.pack_start(widget, False, False)
+    vbox.pack_start(create_upper_align(), False, True)
+    return vbox
+    
 
 def set_widget_left(widget):
     hbox = gtk.HBox()
@@ -131,8 +138,3 @@ def set_widget_right(widget):
     hbox.pack_start(create_right_align(), False, True)
     hbox.pack_start(widget, False, False)    
     return hbox
-
-def get_folder_pixbuf(size=16):
-    default_theme = gtk.icon_theme_get_default()    
-    pixbuf = default_theme.load_icon("inode/directory", size, gtk.ICON_LOOKUP_USE_BUILTIN)    
-    return pixbuf

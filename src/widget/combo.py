@@ -25,11 +25,13 @@ import gobject
 from dtk.ui.menu import Menu
 from dtk.ui.draw import draw_pixbuf
 from dtk.ui.label import Label
-from dtk.ui.utils import propagate_expose
+from dtk.ui.utils import propagate_expose, get_content_size
 from dtk.ui.constant import BUTTON_PRESS, BUTTON_NORMAL, BUTTON_HOVER
+from dtk.ui.cache_pixbuf import CachePixbuf
 import dtk.ui.tooltip as Tooltip
 
 from widget.skin import app_theme
+from widget.ui_utils import render_text
 from nls import _
     
 
@@ -265,3 +267,63 @@ class ComboMenuButton(gtk.HBox):
         
     def get_combo_active(self):    
         return self.current_index == 1
+
+class PromptButton(gtk.Button):    
+    
+    def __init__(self, pixbuf=None, text=None, max_width=200):
+        
+        # Init.
+        gtk.Button.__init__(self)
+        
+        self.padding_x = 5
+        self.max_width = max_width
+        self.prompt_pixbuf = pixbuf
+        self.prompt_text = text
+        self.font_size = 9
+        self.widget_h = 26
+        
+        self.bg_left = app_theme.get_pixbuf("combo/prompt_left.png").get_pixbuf()
+        self.bg_middle = app_theme.get_pixbuf("combo/prompt_middle.png").get_pixbuf()
+        self.bg_right = app_theme.get_pixbuf("combo/prompt_right.png").get_pixbuf()
+        self.cache_bg_pixbuf = CachePixbuf()
+        self.update_size()
+        
+        self.connect("expose-event", self.on_expose_event)
+        
+    def update_size(self):    
+        if not self.prompt_pixbuf: return
+        pixbuf_w = self.prompt_pixbuf.get_width()
+        text_w, text_h = get_content_size(self.prompt_text, self.font_size)
+        widget_w  = pixbuf_w + text_w + self.padding_x * 3
+        if widget_w > self.max_width:
+            widget_w = self.max_width
+        self.set_size_request(widget_w, self.widget_h)
+        self.queue_draw()
+        
+    def on_expose_event(self, widget, event):    
+        if not self.prompt_pixbuf: return
+        cr = widget.window.cairo_create()
+        rect = widget.allocation
+        pixbuf_y = rect.y + (rect.height - self.prompt_pixbuf.get_height()) / 2
+        draw_pixbuf(cr, self.bg_left, rect.x, rect.y)
+        bg_left_w = self.bg_left.get_width()
+        self.cache_bg_pixbuf.scale(self.bg_middle,  rect.width - bg_left_w * 2, self.bg_middle.get_height())
+        draw_pixbuf(cr, self.cache_bg_pixbuf.get_cache(), rect.x + bg_left_w, rect.y)
+        draw_pixbuf(cr, self.bg_right, rect.x + rect.width - bg_left_w, rect.y)
+        
+        draw_pixbuf(cr, self.prompt_pixbuf, rect.x + self.padding_x, pixbuf_y)
+        
+        # draw text.
+        text_rect = gtk.gdk.Rectangle(rect.x + self.prompt_pixbuf.get_width() +  self.padding_x * 2, rect.y, 
+                                      rect.width - self.prompt_pixbuf.get_width() - self.padding_x * 3,
+                                      rect.height)
+        render_text(cr, self.prompt_text, text_rect,
+                    app_theme.get_color("labelText").get_color(),
+                    8)
+        
+        return True
+    
+    def set_data(self, data):
+        temp_pixbuf, self.prompt_text = data
+        self.prompt_pixbuf = temp_pixbuf.scale_simple(16, 16, gtk.gdk.INTERP_BILINEAR)
+        self.update_size()

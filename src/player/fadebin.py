@@ -1,30 +1,24 @@
+#! /usr/bin/env python
 # -*- coding: utf-8 -*-
-# vim: ts=4
-###
-#
-# Listen is the legal property of mehdi abaakouk <theli48@gmail.com>
-# Copyright (c) 2006 Mehdi Abaakouk
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License version 2 as
-# published by the Free Software Foundation
-#
+
+# Copyright (C) 2011 ~ 2012 Deepin, Inc.
+#               2011 ~ 2012 Hou Shaohui
+# 
+# Author:     Hou Shaohui <houshao55@gmail.com>
+# Maintainer: Hou Shaohui <houshao55@gmail.com>
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+# 
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-#
+# 
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
-#
-###
-#
-# Python version of rb-player-gst-xfade.c from rhythmbox
-# Copyright (C) 2006   Jonathan Matthew  <jonathan@kaolin.wh9.net>
-# sync with rev 6273 without missing plugin, reuse stream feature, volume_handler
-#
-###
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ###
 #

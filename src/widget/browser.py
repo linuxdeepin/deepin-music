@@ -36,10 +36,10 @@ from widget.skin import app_theme
 from widget.ui import SearchEntry
 from widget.song_view import MultiDragSongView
 from widget.ui_utils import (switch_tab, render_text, draw_alpha_mask, create_right_align,
-                             create_separator_box)
+                             create_separator_box, set_widget_vcenter, set_widget_hcenter)
 from widget.outlookbar import OptionBar, SongPathBar, SongImportBar
 from source.local import ImportFolderJob, ReloadDBJob
-from widget.combo import ComboMenuButton
+from widget.combo import ComboMenuButton, PromptButton
 from cover_manager import CoverManager
 from pinyin import TransforDB
 from nls import _
@@ -731,11 +731,28 @@ class NewBrowser(gtk.VBox, SignalContainer):
         switch_view_align.set(1, 1, 1, 1)
         switch_view_align.add(self.switch_view_box)
         
-        content_box = gtk.HBox()
-        content_box.pack_start(left_vbox, False, False)
-        content_box.pack_start(switch_view_align, True, True)
+        # Control back on a view.
+        self.back_hbox = gtk.HBox()
+        self.back_hbox.set_size_request(-1, 26)
+        self.back_hbox.set_no_show_all(True)
+        self.back_button = ImageButton(
+            app_theme.get_pixbuf("filter/back_normal.png"),
+            app_theme.get_pixbuf("filter/back_hover.png"),
+            app_theme.get_pixbuf("filter/back_press.png")
+            )
+        self.back_button.connect("clicked", self.on_back_button_clicked)
+        self.prompt_button = PromptButton()
+        self.back_hbox.pack_start(self.back_button, False, False, 5)
+        self.back_hbox.pack_start(self.prompt_button, False, False)
         
-        body_box = gtk.VBox()
+        # Layout on the right.
+        content_box = gtk.VBox(spacing=5)
+        content_box.pack_start(self.back_hbox, False, False)
+        content_box.pack_start(switch_view_align, True, True)
+        content_box.connect("expose-event", self.on_contentbox_expose_event)
+        
+        body_box = gtk.HBox()
+        body_box.pack_start(left_vbox, False, False)
         body_box.pack_start(content_box, True, True)
         self.pack_start(body_box, True, True)
         
@@ -803,6 +820,25 @@ class NewBrowser(gtk.VBox, SignalContainer):
         
         # todo: switch view mode fixed the back.
         switch_tab(self.switch_view_box, self.songs_view_sw)
+        
+        # show back button.
+        self.prompt_button.set_data((item.pixbuf, item.key_name))
+        self.back_hbox.set_no_show_all(False)
+        self.back_hbox.show_all()
+        
+    def on_back_button_clicked(self, widget):    
+        index = self.filterbar.get_index()
+        widget = None
+        if index   == 0: widget = self.artists_sw
+        elif index == 1: widget = self.albums_sw   
+        elif index == 2: widget = self.genres_sw
+        elif index == 3: widget = self.folders_sw
+        
+        if widget: switch_tab(self.switch_view_box, widget)
+        
+        # hide backhbox.
+        self.back_hbox.hide_all()
+        self.back_hbox.set_no_show_all(True)
         
     def __on_single_click_item(self, widget, item, x, y):    
         if item.pointer_in_play_rect(x, y):
@@ -877,6 +913,8 @@ class NewBrowser(gtk.VBox, SignalContainer):
         elif tag == "folder" : widget = self.folders_sw
             
         if widget:    
+            self.back_hbox.hide_all()
+            self.back_hbox.set_no_show_all(True)
             switch_tab(self.switch_view_box, widget)
             
     def on_left_vbox_expose(self, widget, event):        
@@ -887,7 +925,12 @@ class NewBrowser(gtk.VBox, SignalContainer):
     
     def on_iconview_draw_mask(self, cr, x, y, width, height):
         draw_alpha_mask(cr, x, y, width, height, "layoutLast")
-            
+        
+    def on_contentbox_expose_event(self, widget, event):    
+        cr = widget.window.cairo_create()
+        rect = widget.allocation
+        draw_alpha_mask(cr, rect.x, rect.y, rect.width- 2, rect.height, "layoutLast")
+        
 class SimpleBrowser(NewBrowser):    
     _type = "local"
     
