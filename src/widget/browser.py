@@ -899,7 +899,7 @@ class NewBrowser(gtk.VBox, SignalContainer):
         switch_tab(self.switch_view_box, self.songs_view_sw)
         
         # show back button.
-        self.prompt_button.set_data((item.pixbuf, item.name_label))
+        self.prompt_button.set_infos((item.pixbuf, item.name_label))
         self.back_hbox.set_no_show_all(False)
         self.back_hbox.show_all()
         

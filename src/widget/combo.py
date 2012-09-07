@@ -287,7 +287,6 @@ class PromptButton(gtk.Button):
         self.bg_right = app_theme.get_pixbuf("combo/prompt_right.png").get_pixbuf()
         self.cache_bg_pixbuf = CachePixbuf()
         self.update_size()
-        
         self.connect("expose-event", self.on_expose_event)
         
     def update_size(self):    
@@ -323,7 +322,10 @@ class PromptButton(gtk.Button):
         
         return True
     
-    def set_data(self, data):
-        temp_pixbuf, self.prompt_text = data
+    def set_infos(self, infos):
+        temp_pixbuf, self.prompt_text = infos
+        Tooltip.text(self, self.prompt_text)
         self.prompt_pixbuf = temp_pixbuf.scale_simple(16, 16, gtk.gdk.INTERP_BILINEAR)
         self.update_size()
+
+gobject.type_register(PromptButton)
