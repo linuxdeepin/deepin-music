@@ -585,6 +585,8 @@ class Browser(gtk.VBox, SignalContainer):
         selection.set_uris(list_uris)
     
     def __on_double_click_item(self, widget,  item, x, y):
+
+        
         self.current_icon_item = item
         self.entry_box.entry.set_text("")
         self.back_button.set_no_show_all(False)
@@ -632,7 +634,6 @@ class Browser(gtk.VBox, SignalContainer):
                 return 
             Dispatcher.play_and_add_song(songs)
         
-        
     def __search_cb(self, widget, text):    
         if self.view_mode == LIST_VIEW_MODE:
             if not self.__search_flag:
@@ -642,7 +643,8 @@ class Browser(gtk.VBox, SignalContainer):
             self.songs_view.select_rows = []    
             if text != "":
                 self.__search_flag = True
-                results = filter(lambda item: text.lower().replace(" ", "") in item.get_song().get("search", ""), self.__song_cache_items)
+                results = filter(lambda item: text.lower().replace(" ", "") in item.get_song().get("search", ""),
+                                 self.__song_cache_items)
                 self.songs_view.items = results
                 self.songs_view.update_item_index()
                 self.songs_view.update_vadjustment()
@@ -679,6 +681,9 @@ class NewBrowser(gtk.VBox, SignalContainer):
         self.__db_query = db_query
         self.update_interval = 3000 # 3000 millisecond.
         self.reload_flag = False
+        self.search_flag = False
+        self.cache_search_list = []
+        self.cache_search_view = []
         self.__selected_tag = {"album": [], "artist": [], "genre": []}
         Dispatcher.connect("reload-browser", self.on_dispatcher_reload_browser)
         gobject.timeout_add(self.update_interval, self.on_interval_loaded_view)
@@ -745,9 +750,16 @@ class NewBrowser(gtk.VBox, SignalContainer):
         self.back_hbox.pack_start(self.back_button, False, False, 5)
         self.back_hbox.pack_start(self.prompt_button, False, False)
         
+        # searchbar 
+        self.search_entry, search_align = self.get_search_entry()
+        search_hbox = gtk.HBox()
+        search_hbox.pack_start(self.back_hbox, False, False)
+        search_hbox.pack_start(create_right_align(), True, True)
+        search_hbox.pack_start(search_align, False, False)
+        
         # Layout on the right.
         content_box = gtk.VBox(spacing=5)
-        content_box.pack_start(self.back_hbox, False, False)
+        content_box.pack_start(search_hbox, False, False)
         content_box.pack_start(switch_view_align, True, True)
         content_box.connect("expose-event", self.on_contentbox_expose_event)
         
@@ -755,6 +767,18 @@ class NewBrowser(gtk.VBox, SignalContainer):
         body_box.pack_start(left_vbox, False, False)
         body_box.pack_start(content_box, True, True)
         self.pack_start(body_box, True, True)
+        
+        
+    def get_search_entry(self):    
+        search_entry = SearchEntry("")
+        search_entry.set_size(155, 22)
+        
+        align = gtk.Alignment()
+        # align.set(0.5, 0.5, 0, 0)
+        align.set_padding(2, 0, 0, 10)
+        align.add(search_entry)
+        search_entry.entry.connect("changed", self.on_search_entry_changed)
+        return search_entry, align
         
     def get_icon_view(self):    
         ''' Draggable IconView '''
@@ -804,7 +828,7 @@ class NewBrowser(gtk.VBox, SignalContainer):
         pass
     
     def on_interval_loaded_view(self):
-        if self.reload_flag:
+        if self.reload_flag and not self.search_flag:
             for tag in ["artist", "album", "genre", "folder"]:
                 self.load_view(tag)
             self.reload_flag = False    
@@ -818,6 +842,40 @@ class NewBrowser(gtk.VBox, SignalContainer):
         
     def on_songview_backspace_press(self):    
         self.on_back_button_clicked(None)
+        
+    def on_search_entry_changed(self, widget, text):    
+        songs_view_mode = self.back_hbox.get_visible()
+        if songs_view_mode:
+            if not self.search_flag:
+                self.cache_search_list = self.songs_view.items[:]
+            # Clear songs view select status.    
+            self.songs_view.select_rows = []
+            if text != "":
+                self.search_flag = True
+                results = filter(lambda item: text.lower().replace(" ", "") in item.get_song().get("search", ""), 
+                                 self.cache_search_list)
+                self.songs_view.items = results
+                self.songs_view.update_item_index()
+                self.songs_view.update_vadjustment()
+            else:    
+                self.search_flag = False
+                self.songs_view.items = self.cache_search_list
+                self.songs_view.update_item_index()
+                self.songs_view.update_vadjustment()
+            self.songs_view.queue_draw()    
+        else:    
+            view_widget = self.get_current_view()
+            if not view_widget: return 
+            if not self.search_flag:
+                self.cache_search_view = view_widget.items[:]
+            if text != "":    
+                self.search_flag = True
+                results = filter(lambda item: text.lower().replace(" ", "") in item.retrieve, self.cache_search_view)
+                view_widget.items = results
+            else:    
+                self.search_flag = False
+                view_widget.items = self.cache_search_view
+            view_widget.queue_draw()    
     
     def __on_drag_data_get(self, widget, context, selection, info, timestamp):
         item = widget.highlight_item
@@ -831,6 +889,8 @@ class NewBrowser(gtk.VBox, SignalContainer):
         selection.set_uris(song_uris)
     
     def __on_double_click_item(self, widget, item, x, y):
+        self.search_entry.entry.set_text("")        
+        
         songs = self.get_item_songs(item)
         self.songs_view.clear()        
         self.songs_view.add_songs(songs)
@@ -843,14 +903,29 @@ class NewBrowser(gtk.VBox, SignalContainer):
         self.back_hbox.set_no_show_all(False)
         self.back_hbox.show_all()
         
-    def on_back_button_clicked(self, obj):    
+    def get_current_view(self):    
+        index = self.filterbar.get_index()
+        widget = None
+        if index   == 0: widget = self.artists_view
+        elif index == 1: widget = self.albums_view   
+        elif index == 2: widget = self.genres_view
+        elif index == 3: widget = self.folders_view
+        return widget
+    
+    def get_current_view_sw(self):
         index = self.filterbar.get_index()
         widget = None
         if index   == 0: widget = self.artists_sw
-        elif index == 1: widget = self.albums_sw   
+        elif index == 1: widget = self.albums_sw
         elif index == 2: widget = self.genres_sw
         elif index == 3: widget = self.folders_sw
+        return widget
+    
+    def on_back_button_clicked(self, obj):    
+        # clear entry text.
+        self.search_entry.entry.set_text("")
         
+        widget = self.get_current_view_sw()
         if widget: switch_tab(self.switch_view_box, widget)
         
         # hide backhbox.
@@ -926,6 +1001,10 @@ class NewBrowser(gtk.VBox, SignalContainer):
         return items    
         
     def switch_filter_view(self, tag):    
+        
+        # clear search entry
+        self.search_entry.entry.set_text("")
+        
         widget = None
         if tag == "artist" : widget = self.artists_sw
         elif tag == "album": widget = self.albums_sw
