@@ -555,6 +555,7 @@ class MultiDragSongView(ListView):
         
         sort_key = ["album", "genre", "artist", "title", "#playcount", "#added"]
         self.sort_reverse = {key : False for key in sort_key }
+        del self.keymap["Delete"]
         
         self.set_expand_column(0)
         self.connect("drag-data-get", self.__on_drag_data_get) 

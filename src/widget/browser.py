@@ -24,6 +24,7 @@ import gtk
 import gobject
 import os
 
+import dtk.ui.tooltip as Tooltip
 from dtk.ui.draw import draw_pixbuf
 from dtk.ui.scrolled_window import ScrolledWindow
 from dtk.ui.button import ImageButton
@@ -36,7 +37,7 @@ from widget.skin import app_theme
 from widget.ui import SearchEntry
 from widget.song_view import MultiDragSongView
 from widget.ui_utils import (switch_tab, render_text, draw_alpha_mask, create_right_align,
-                             create_separator_box, set_widget_vcenter, set_widget_hcenter)
+                             create_separator_box)
 from widget.outlookbar import OptionBar, SongPathBar, SongImportBar
 from source.local import ImportFolderJob, ReloadDBJob
 from widget.combo import ComboMenuButton, PromptButton
@@ -676,9 +677,10 @@ class NewBrowser(gtk.VBox, SignalContainer):
         SignalContainer.__init__(self)
         
         self.__db_query = db_query
-        self.update_interval = 1000 # 1000 millisecond.
+        self.update_interval = 3000 # 3000 millisecond.
         self.reload_flag = False
         self.__selected_tag = {"album": [], "artist": [], "genre": []}
+        Dispatcher.connect("reload-browser", self.on_dispatcher_reload_browser)
         gobject.timeout_add(self.update_interval, self.on_interval_loaded_view)
         
         # The saving song Classification presented to the user.
@@ -686,13 +688,10 @@ class NewBrowser(gtk.VBox, SignalContainer):
         self.albums_view,  self.albums_sw   = self.get_icon_view()
         self.genres_view,  self.genres_sw   = self.get_icon_view()
         self.folders_view, self.folders_sw  = self.get_icon_view()
+        self.folders_view.connect("motion-notify-item", self.on_folders_view_motion_notify)
         
         # Song list for temporarily storing
-        self.songs_view = MultiDragSongView()
-        self.songs_view.add_titles([_("Title"), _("Artist"), _("Album"), _("Added time")])
-        self.songs_view_sw = ScrolledWindow(0, 0)
-        self.songs_view_sw.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
-        self.songs_view_sw.add_child(self.songs_view)
+        self.songs_view, self.songs_view_sw = self.get_song_view()
         
         # Classification navigation bar.
         self.filterbar = OptionBar(
@@ -773,6 +772,7 @@ class NewBrowser(gtk.VBox, SignalContainer):
         
     def get_song_view(self):
         song_view = MultiDragSongView()
+        song_view.keymap.update({"BackSpace" : self.on_songview_backspace_press})        
         song_view.add_titles([_("Title"), _("Artist"), _("Album"), _("Added time")])
         scrolled_window = ScrolledWindow(0, 0)
         scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
@@ -810,6 +810,15 @@ class NewBrowser(gtk.VBox, SignalContainer):
             self.reload_flag = False    
         return True    
     
+    def on_dispatcher_reload_browser(self, obj, infos):
+        if infos: self.reload_flag = True
+    
+    def on_folders_view_motion_notify(self, widget, item, x, y):
+        Tooltip.text(widget, item.value_name)
+        
+    def on_songview_backspace_press(self):    
+        self.on_back_button_clicked(None)
+    
     def __on_drag_data_get(self, widget, context, selection, info, timestamp):
         item = widget.highlight_item
         if not item: return
@@ -834,7 +843,7 @@ class NewBrowser(gtk.VBox, SignalContainer):
         self.back_hbox.set_no_show_all(False)
         self.back_hbox.show_all()
         
-    def on_back_button_clicked(self, widget):    
+    def on_back_button_clicked(self, obj):    
         index = self.filterbar.get_index()
         widget = None
         if index   == 0: widget = self.artists_sw
@@ -871,14 +880,9 @@ class NewBrowser(gtk.VBox, SignalContainer):
         artists = []
         albums = []
         genres = []
-        
-        if tag == "artist":
-            artists = self.__selected_tag["artist"]
-        elif tag == "album":    
-            albums = self.__selected_tag["album"]
-        elif tag == "genre":    
-            genres = self.__selected_tag["genre"]
-            
+        if   tag == "artist": artists = self.__selected_tag["artist"]
+        elif tag == "album": albums = self.__selected_tag["album"]
+        elif tag == "genre": genres = self.__selected_tag["genre"]
         return self.__db_query.get_songs(genres, artists, albums)    
     
     def get_infos_from_db(self, tag, values=None):

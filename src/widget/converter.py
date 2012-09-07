@@ -38,6 +38,7 @@ from dtk.ui.menu import Menu
 from dtk.ui.entry import InputEntry
 from dtk.ui.draw import draw_pixbuf, cairo_disable_antialias, draw_text
 from dtk.ui.scrolled_window import ScrolledWindow
+from dtk.ui.progressbar import ProgressBuffer
 
 from transcoder import Transcoder, FORMATS, TranscodeError
 from nls import _
@@ -77,6 +78,7 @@ class TranscoderJob(gobject.GObject):
         self.trans_data = trans_data
         self.init_transcoder(trans_data)   
         self.__update()        
+        self.progress_buffer = ProgressBuffer()
         
     def start(self):    
         self.transcoder.start_transcode()
@@ -222,25 +224,11 @@ class TranscoderJob(gobject.GObject):
         render_item_text(cr, self.title, rect, in_select, in_highlight)
     
     def render_progress(self, cr, rect, in_select, in_highlight):
+        self.progress_buffer.progress = self.progress_ratio * 100
         progress_x = rect.x + self.progress_padding_x
         progress_y = rect.y + (rect.height - self.progress_h) / 2
-        
-        with cairo_disable_antialias(cr):
-            cr.set_line_width(1)
-            cr.set_source_rgb(0.4, 0.4, 0.4)
-            cr.rectangle(progress_x, progress_y, self.progress_w, self.progress_h)
-            cr.stroke()
-            
-            cr.set_source_rgb(1, 1, 1)
-            cr.rectangle(progress_x, progress_y, self.progress_w - 1, self.progress_h - 1)
-            cr.fill()
-            
-            cr.set_source_rgb(0.4, 0.8, 0.2)
-            cr.rectangle(progress_x , progress_y ,(self.progress_w - 1) * self.progress_ratio, self.progress_h - 1)
-            cr.fill()
-
-        draw_text(cr, str(int(self.progress_ratio * 100)) + "%", progress_x, progress_y, self.progress_w, self.progress_h,
-                  7, alignment=pango.ALIGN_CENTER)    
+        progress_rect = gtk.gdk.Rectangle(progress_x, progress_y, self.progress_w, self.progress_h)
+        self.progress_buffer.render(cr, progress_rect)        
     
     def render_stop(self, cr, rect, in_select, in_highlight):
         icon_x = rect.x + self.stop_icon_padding_x
