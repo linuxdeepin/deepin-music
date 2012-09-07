@@ -912,7 +912,7 @@ class AboutBox(gtk.VBox):
         logo_box.pack_start(logo_name, False, False)
         
         version_label = Label(_("Version:"))
-        version_content = Label("V1.0", light_color)
+        version_content = Label("V1.0.1", light_color)
         # publish_label = Label(_("Release date:"))
         # publish_content = Label("2012.07.12", light_color)
         info_box = gtk.HBox(spacing=5)

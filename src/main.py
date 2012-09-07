@@ -152,7 +152,7 @@ class DeepinMusicApp(Logger):
         return p
     
     def version(self):
-        print _("Deepin Music Player 1.0")
+        print _("Deepin Music Player 1.0.1")
         
     def mainloop_init(self):    
         import gobject
