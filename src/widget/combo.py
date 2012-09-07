@@ -270,7 +270,7 @@ class ComboMenuButton(gtk.HBox):
 
 class PromptButton(gtk.Button):    
     
-    def __init__(self, pixbuf=None, text=None, max_width=200):
+    def __init__(self, pixbuf=None, text=None, max_width=135):
         
         # Init.
         gtk.Button.__init__(self)
