@@ -388,9 +388,9 @@ class DeepinMusic(gobject.GObject, Logger):
             switch_tab(self.header_box, self.full_header_bar)
             self.browser_align.set_no_show_all(False)
             self.browser_align.show_all()
-            self.window.set_default_size(816, 625)            
-            self.window.set_geometry_hints(None, 816, 625, -1, -1,  -1, -1, -1, -1, -1, -1)
-            self.window.resize(816, 625)
+            self.window.set_default_size(900, 625)            
+            self.window.set_geometry_hints(None, 900, 625, -1, -1,  -1, -1, -1, -1, -1, -1)
+            self.window.resize(900, 625)
         Dispatcher.volume(float(config.get("player", "volume", "1.0")))        
         
     def is_disable_window_maximized(self):    
