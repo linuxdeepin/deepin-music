@@ -57,8 +57,8 @@ class SearchUI(DialogBox):
         right_align = gtk.Alignment()
         right_align.set(0, 0, 0, 1)
         
-        search_button = Button(_("Search"))
-        search_button.connect("clicked", self.search_lyric_cb)
+        self.search_button = Button(_("Search"))
+        self.search_button.connect("clicked", self.search_lyric_cb)
         
         info_box = gtk.HBox(spacing=25)
         
@@ -73,7 +73,7 @@ class SearchUI(DialogBox):
         control_box.pack_start(artist_box, False, False)
         
         info_box.pack_start(control_box, False, False)
-        info_box.pack_start(search_button, False, False)
+        info_box.pack_start(self.search_button, False, False)
         
         scrolled_window = ScrolledWindow(0, 0)
         scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
@@ -118,6 +118,7 @@ class SearchUI(DialogBox):
         self.result_view.clear()
         artist = self.artist_entry.entry.get_text()
         title = self.title_entry.entry.get_text()
+        widget.set_sensitive(False)
         self.prompt_label.set_text(_("Now searching"))
         if artist == "" and title == "":
             self.prompt_label.set_text(_("Not found!"))
@@ -142,7 +143,10 @@ class SearchUI(DialogBox):
                     self.prompt_label.set_text(_("%d lyrics found") % len(self.result_view.items))
                 else:
                     self.prompt_label.set_text(_("Not found!"))
-        
+                    
+        if last:            
+            self.search_button.set_sensitive(True)            
+                    
 
     def download_lyric_cb(self, widget):
         select_items = self.result_view.select_rows

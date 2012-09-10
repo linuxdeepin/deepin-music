@@ -105,10 +105,7 @@ class IconItem(gobject.GObject):
                 self.pixbuf = CoverManager.get_pixbuf_from_name("%s-%s" % (self.value_name, self.key_name), 
                                                                 self.cell_width, self.cell_width)            
             elif self.tag == "folder":
-                # folder_music = app_theme.get_theme_file_path("image/iconset/music.png")
-                # self.pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(folder_music, self.cell_width, self.cell_width)
-                self.pixbuf = app_theme.get_pixbuf("iconset/music.png").get_pixbuf()
-                # self.draw_side_flag = False
+                   self.pixbuf = app_theme.get_pixbuf("iconset/music.png").get_pixbuf()
             else:    
                 self.pixbuf = CoverManager.get_pixbuf_from_name(self.key_name, self.cell_width, self.cell_width)
         
@@ -145,26 +142,27 @@ class IconItem(gobject.GObject):
         # Create pixbuf resource if self.pixbuf is None.
         if not self.pixbuf:
             self.create_pixbuf()
-        
-        max_width = self.get_width()    
-        width_offset = (max_width - self.__normal_side_pixbuf.get_width()) / 2
             
+        # max_width = self.get_width()    
+        # width_offset = (max_width - self.__normal_side_pixbuf.get_width()) / 2
+        
         # Draw cover.
         draw_pixbuf(cr, self.pixbuf, 
-                    rect.x + width_offset + self.padding_x,
+                    rect.x + self.padding_x,
                     rect.y + self.padding_y)
         
         if self.hover_flag or self.highlight_flag:
+            
             if self.tag == "folder":
                 side_pixbuf = app_theme.get_pixbuf("iconset/side_hover.png").get_pixbuf()
             else:    
                 side_pixbuf = app_theme.get_pixbuf("filter/side_hover.png").get_pixbuf()
                 
-            draw_pixbuf(cr, side_pixbuf, rect.x + width_offset, rect.y )            
+            draw_pixbuf(cr, side_pixbuf, rect.x, rect.y )            
         else:    
             if self.draw_side_flag:
                 side_pixbuf = self.__normal_side_pixbuf
-                draw_pixbuf(cr, side_pixbuf, rect.x + width_offset, rect.y )            
+                draw_pixbuf(cr, side_pixbuf, rect.x, rect.y )            
         
         if self.hover_flag:
             if self.__draw_play_hover_flag:
@@ -174,10 +172,10 @@ class IconItem(gobject.GObject):
             else:    
                 play_pixbuf = self.__normal_play_pixbuf
                 
-            draw_pixbuf(cr, play_pixbuf, rect.x + width_offset + self.play_rect.x, rect.y + self.play_rect.y)        
+            draw_pixbuf(cr, play_pixbuf, rect.x + self.play_rect.x, rect.y + self.play_rect.y)        
             
         # Draw text.    
-        name_rect = gtk.gdk.Rectangle(rect.x + width_offset + self.padding_x , 
+        name_rect = gtk.gdk.Rectangle(rect.x + self.padding_x , 
                                       rect.y + self.__normal_side_pixbuf.get_height() + 5,
                                       self.cell_width, 11)
         num_rect = gtk.gdk.Rectangle(name_rect.x, name_rect.y + 16, name_rect.width, 9)
