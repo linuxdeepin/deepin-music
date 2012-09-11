@@ -81,8 +81,8 @@ class MSCDDB(object):
             return []
         else:
             xml_info = fp.read()
+            handler = MSCDDBParser()            
             try:
-                handler = MSCDDBParser()
                 parseString(xml_info, handler)
             except:    
                 return []
