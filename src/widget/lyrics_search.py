@@ -59,6 +59,7 @@ class SearchUI(DialogBox):
         
         self.search_button = Button(_("Search"))
         self.search_button.connect("clicked", self.search_lyric_cb)
+        self.process_id = 0
         
         info_box = gtk.HBox(spacing=25)
         
@@ -104,30 +105,34 @@ class SearchUI(DialogBox):
     def double_click_cb(self, widget, item, colume, x, y):   
         self.download_lyric_cb(widget)
         
-    def search_engine(self, artist, title):    
+    def search_engine(self, artist, title, pid):    
         ttplayer_result = TTPlayer().request(artist, title)
-        self.render_lyrics(ttplayer_result)
+        self.render_lyrics(ttplayer_result, pid=pid)
         
         duomi_result = DUOMI().request(artist, title)
-        self.render_lyrics(duomi_result)
+        self.render_lyrics(duomi_result, pid=pid)
         
         soso_result = SOSO().request(artist, title)
-        self.render_lyrics(soso_result, True)
+        self.render_lyrics(soso_result, True, pid=pid)
         
     def search_lyric_cb(self, widget):
         self.result_view.clear()
         artist = self.artist_entry.entry.get_text()
         title = self.title_entry.entry.get_text()
-        widget.set_sensitive(False)
+        # widget.set_sensitive(False)
         self.prompt_label.set_text(_("Now searching"))
         if artist == "" and title == "":
             self.prompt_label.set_text(_("Not found!"))
             return
-        utils.ThreadLoad(self.search_engine, artist, title).start()
+        self.process_id += 1
+        utils.ThreadLoad(self.search_engine, artist, title, self.process_id).start()
         
     @post_gui
-    def render_lyrics(self, result, last=False):
+    def render_lyrics(self, result, last=False, pid=1):
         '''docs'''
+        if pid != self.process_id:
+            return
+        
         if result != None:
             try:
                 items = [SearchItem(each_info) for each_info in result]
@@ -143,9 +148,6 @@ class SearchUI(DialogBox):
                     self.prompt_label.set_text(_("%d lyrics found") % len(self.result_view.items))
                 else:
                     self.prompt_label.set_text(_("Not found!"))
-                    
-        if last:            
-            self.search_button.set_sensitive(True)            
                     
 
     def download_lyric_cb(self, widget):
