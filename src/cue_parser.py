@@ -51,20 +51,22 @@ def tokens(cuedata):
     line is a line number integer"""
     
     full_length = len(cuedata)
-    cuedata = cuedata.lstrip("efbbbf".decoce("hex"))
+    cuedata = cuedata.lstrip("efbbbf".decode("hex"))
     line_number = 1
     
-    TOKENS = [
-        (re.compile("^(%)" % s), element) for s, element in 
-        [(r'[A-Z]{2}[A-Za-z0-9]{3}[0-9]{7}', ISRC),
-         (r'[0-9]{1,3}:[0-9]{1,2}:[0-9]{1,2}', TIMESTAMP),
-         (r'[0-9]+', NUMBER),
-         (r'[\r\n]+', EOL),
-         (r'".+?"', STRING),
-         (r'\S+', STRING),
-         (r'[ ]+', SPACE)]]
+    #This isn't completely accurate since the whitespace requirements
+    #between tokens aren't enforced.
+    TOKENS = [(re.compile("^(%s)" % (s)), element) for (s, element) in
+              [(r'[A-Z]{2}[A-Za-z0-9]{3}[0-9]{7}', ISRC),
+               (r'[0-9]{1,3}:[0-9]{1,2}:[0-9]{1,2}', TIMESTAMP),
+               (r'[0-9]+', NUMBER),
+               (r'[\r\n]+', EOL),
+               (r'".+?"', STRING),
+               (r'\S+', STRING),
+               (r'[ ]+', SPACE)]]
     
     TAGMATCH = re.compile(r"^[A-Z]+$")
+    
     while True:
         for token, element in TOKENS:
             t = token.search(cuedata)
@@ -94,9 +96,9 @@ def tokens(cuedata):
             break
         
     if len(cuedata) > 0:    
-        raise CueException(full_length - len(cuedata))
-    
-                    
+         raise CueException(full_length - len(cuedata))
+     
+                     
 def get_value(tokens, accept, error):    
     """retrieves a specific token from the stream of tokens
 
@@ -122,7 +124,7 @@ def __attrib_str__(attrib):
         return "\"%s\"" % (attrib)
 
 
-class Cuesheet:
+class Cuesheet(object):
     """an object representing a cuesheet file"""
 
     def __init__(self):
@@ -233,7 +235,7 @@ class Cuesheet:
         return data.getvalue()
 
 
-class Track:
+class Track(object):
     """a track inside a Cuesheet object"""
 
     def __init__(self, number, type):
@@ -291,16 +293,16 @@ def parse(tokens):
                     skip_to_eol(tokens)
                     
                 # we're moving to a new track.
-                elif token == "track":    
+                elif token == "TRACK":    
                     if track is not None:
                         cuesheet.tracks[track.number] = track
                         
                     track = Track(get_value(tokens, NUMBER, "invaild track number"),
                                   get_value(tokens, TAG | STRING, "invaild track type"))    
+                    
                     get_value(tokens, EOL, "Excess data")
                     
-                # if we haven't started on track data yet,
-                # add attributes to the main cue sheet
+                # if we haven't started on track data yet, add attributes to the main cue sheet
                 elif track is None:    
                     if (token in ('CATALOG', 'CDTEXTFILE',
                                   'PERFORMER', 'SONGWRITER',
@@ -315,7 +317,7 @@ def parse(tokens):
                         filename = get_value(tokens, STRING, "missing filename")
                         filetype = get_value(tokens, STRING | TAG, "missing filetype")
                         cuesheet.attribs[token] = (filename, filetype)
-                        get_value(token, EOL, "excess data")
+                        get_value(tokens, EOL, "excess data")
                     else:    
                         raise CueException("invaild tag %s at %d" % (token, line_number))
                     
@@ -380,3 +382,11 @@ def read_cuesheet(filename):
             return sheet
     finally:
         f.close()
+
+        
+if __name__ == "__main__":        
+    import sys
+    cuesheet = read_cuesheet(sys.argv[1])
+    print cuesheet.attribs
+    print cuesheet.tracks
+    
