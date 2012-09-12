@@ -23,6 +23,8 @@
 import re
 import cStringIO
 
+from song import Song
+
 SPACE = 0x0
 TAG = 0x1
 NUMBER = 0x2
@@ -41,7 +43,7 @@ def build_timestamp(i):
     each CD frame is 1/75th of a second
     """
 
-    return "%2.2d:%2.2d:%2.2d" % ((i / 75) / 60, (i / 75) % 60, i % 75)
+    return "%2.2d:%2.2d:%2.2d" % ((i / 1000) / 60, (i / 1000) % 60, i % 1000)
 
 def tokens(cuedata):
     """yields (text, token, line) tuples from cuedata stream
@@ -86,7 +88,7 @@ def tokens(cuedata):
                         yield (t.group().strip('"'), element, line_number)
                 elif element == TIMESTAMP:        
                     m, s, f = map(int, t.group().split(":"))
-                    yield (((m * 60 * 75) + (s * 75) + f),
+                    yield (((m * 60 * 1000) + (s * 1000) + f),
                            element, line_number)
                 else:
                     yield (t.group(), element, line_number)
@@ -185,7 +187,7 @@ class Cuesheet(object):
                 previous = current
             else:
                 track_length = (current[max(current.keys())] -
-                                previous[max(previous.keys())]) * (44100 / 75)
+                                previous[max(previous.keys())]) * (44100 / 1000)
                 total_length -= track_length
                 yield track_length
                 previous = current
@@ -207,8 +209,6 @@ class Cuesheet(object):
         although we don't care whether the filename points to a real file,
         other tools sometimes do
         """
-
-
 
         catalog = sheet.catalog()        # a catalog string, or None
         indexes = list(sheet.indexes())  # a list of index tuples
@@ -233,6 +233,26 @@ class Cuesheet(object):
                                                        build_timestamp(index)))
 
         return data.getvalue()
+    
+    def get_songs(self):
+        songs = []
+        for key, track in self.tracks.items():
+            other = {}
+            other["album"]  = self.attribs["TITLE"]
+            other["uri"]    = self.attribs["FILE"][0]
+            other["type"]   = self.attribs["FILE"][1]
+            other["artist"] = track.attribs["PERFORMER"]
+            other["title"]  = track.attribs["TITLE"]
+            other["track"]  = key
+            # song["length"] = self.get_track_length(key)
+            other["seek"]   = track.indexes[1]
+            s = Song()
+            s.init_from_dict(other)
+            songs.append(s)
+        return songs    
+            
+    def get_track_length(self, index):    
+        return self.tracks[index + 1].indexes[1] - self.tracks[index].indexes[1]
 
 
 class Track(object):
@@ -259,7 +279,7 @@ class Track(object):
             "\r\n".join(["    %s %s" % (key, __attrib_str__(value))
                          for key, value in self.attribs.items()] + \
                         ["    INDEX %2.2d %2.2d:%2.2d:%2.2d" % \
-                             (k, v / 75 / 60, v / 75 % 60, v % 75)
+                             (k, v / 1000 / 60, v / 1000 % 60, v % 1000)
                          for (k, v) in sorted(self.indexes.items())])
 
     def ISRC(self):
@@ -312,7 +332,6 @@ def parse(tokens):
                                                             "missing value")
                         
                         get_value(tokens, EOL, "excess data")
-                        
                     elif token == "FILE":        
                         filename = get_value(tokens, STRING, "missing filename")
                         filetype = get_value(tokens, STRING | TAG, "missing filetype")
@@ -387,6 +406,4 @@ def read_cuesheet(filename):
 if __name__ == "__main__":        
     import sys
     cuesheet = read_cuesheet(sys.argv[1])
-    print cuesheet.attribs
-    print cuesheet.tracks
-    
+    print cuesheet.get_songs()

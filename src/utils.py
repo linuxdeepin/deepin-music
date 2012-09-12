@@ -782,3 +782,6 @@ def get_main_window():
 def set_main_window(win):
     global MAIN_WINDOW
     MAIN_WINDOW = win
+
+if __name__ == "__main__":    
+    print duration_to_string(252049)
