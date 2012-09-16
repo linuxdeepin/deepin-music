@@ -47,7 +47,7 @@ class MMKeys(Logger):
             if key == "Stop":    
                 Player.stop()
             if key == "Next":    
-                Player.next()
+                Player.next(True)
             if key == "Previous":    
                 Player.previous()
                 
@@ -94,7 +94,7 @@ class MMKeys(Logger):
         Player.play()
         
     def mm_next(self,a,b):
-        Player.next()
+        Player.next(True)
         
     def mm_previous(self,a,b):
         Player.previous()

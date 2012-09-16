@@ -46,6 +46,7 @@ from source.local import ImportPlaylistJob
 from widget.ui_utils import draw_single_mask, draw_alpha_mask
 from widget.converter import AttributesUI
 from nls import _
+from cue_parser import find_cuefile
 
 class SongView(ListView):
     ''' song view. '''
@@ -83,7 +84,7 @@ class SongView(ListView):
             song = item.get_song()
             if song.exists():
                 self.set_highlight(item)                
-                Player.play_new(item.get_song())
+                Player.play_new(item.get_song(), seek=item.get_song().get("seek", None))
                 if Player.get_source() != self:
                     Player.set_source(self)
             else:        
@@ -240,7 +241,7 @@ class SongView(ListView):
         if not isinstance(songs, (list, tuple)):
             songs = [ songs ]
 
-        song_items = [ SongItem(song) for song in songs if song not in self.get_songs()]
+        song_items = [ SongItem(song) for song in songs if song not in self.get_songs() or song.get_type() != "local"]
             
         if song_items:
             if not self.items:
@@ -253,7 +254,8 @@ class SongView(ListView):
                 del self.select_rows[:]
                 self.queue_draw()
                 self.set_highlight_song(songs[0])
-                gobject.idle_add(Player.play_new, self.highlight_item.get_song())
+                gobject.idle_add(Player.play_new, self.highlight_item.get_song(), None, 
+                                 self.highlight_item.get_song().get("seek", None))
             
     def emit_add_signal(self):
         self.emit("begin-add-items")
@@ -326,7 +328,8 @@ class SongView(ListView):
             select_item = self.items[self.select_rows[0]]
             if select_item.exists():
                 self.highlight_item = self.items[self.select_rows[0]]
-                Player.play_new(self.highlight_item.get_song())
+                Player.play_new(self.highlight_item.get_song(), 
+                                seek=self.highlight_item.get_song().get("seek", None))
     
     def remove_select_items(self):
         self.delete_select_items()
@@ -394,7 +397,9 @@ class SongView(ListView):
             elif selection.target == "text/plain":    
                 raw_path = selection.data
                 path = eval("u" + repr(raw_path).replace("\\\\", "\\"))
-                utils.async_get_uris_from_plain_text(path, self.add_uris, pos)
+                # utils.async_get_uris_from_plain_text(path, self.add_uris, pos)
+                self.add_songs(find_cuefile(path))
+                
     
     def set_sort_keyword(self, keyword, reverse=False):
         with self.keep_select_status():
@@ -539,7 +544,7 @@ class SongView(ListView):
             if len(self.get_valid_items()) > 0:
                 item = self.get_valid_items()[0]
                 self.set_highlight(item)
-                Player.play_new(item.get_song())
+                Player.play_new(item.get_song(), seek=item.get_song().get("seek", None))
 
 class MultiDragSongView(ListView):        
     def __init__(self):

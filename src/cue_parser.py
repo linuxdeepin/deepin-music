@@ -21,9 +21,14 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import re
+import os
 import cStringIO
 
+import utils
 from song import Song
+from common import get_audio_length
+from library import MediaDB
+
 
 SPACE = 0x0
 TAG = 0x1
@@ -40,7 +45,7 @@ class CueException(ValueError):
 def build_timestamp(i):
     """returns a timestamp string from an integer number of CD frames
 
-    each CD frame is 1/75th of a second
+    each CD frame is 1/1000th of a second
     """
 
     return "%2.2d:%2.2d:%2.2d" % ((i / 1000) / 60, (i / 1000) % 60, i % 1000)
@@ -129,9 +134,10 @@ def __attrib_str__(attrib):
 class Cuesheet(object):
     """an object representing a cuesheet file"""
 
-    def __init__(self):
+    def __init__(self, audio_file):
         self.attribs = {}
         self.tracks = {}
+        self.audio_file = audio_file
 
     def __repr__(self):
         return "Cuesheet(attribs=%s,tracks=%s)" % \
@@ -237,23 +243,31 @@ class Cuesheet(object):
     def get_songs(self):
         songs = []
         for key, track in self.tracks.items():
-            other = {}
-            other["album"]  = self.attribs["TITLE"]
-            other["uri"]    = self.attribs["FILE"][0]
-            other["type"]   = self.attribs["FILE"][1]
-            other["artist"] = track.attribs["PERFORMER"]
-            other["title"]  = track.attribs["TITLE"]
-            other["track"]  = key
-            # song["length"] = self.get_track_length(key)
-            other["seek"]   = track.indexes[1]
-            s = Song()
-            s.init_from_dict(other)
+            other_tags = {}
+            audio_file_prefix, audio_file_ext = os.path.splitext(self.audio_file)
+            audio_file_bad = "%s%d%s" % (audio_file_prefix, key, audio_file_ext)
+            other_tags["album"]  = self.attribs["TITLE"]
+            other_tags["uri"]    = utils.get_uri_from_path(audio_file_bad)
+            other_tags["real_uri"] = utils.get_uri_from_path(self.audio_file)
+            other_tags["song_type"]   = "cue"
+            other_tags["artist"] = track.attribs["PERFORMER"]
+            other_tags["title"]  = track.attribs["TITLE"]
+            other_tags["track"]  = key
+            other_tags["#duration"] = self.get_track_length(key)
+            other_tags["seek"]   = track.indexes[1] / 1000
+            other_tags["#size"]  = os.path.getsize(self.audio_file)
+            other_tags["#mtime"] = os.path.getmtime(self.audio_file)
+            other_tags["#ctime"] = os.path.getctime(self.audio_file)
+            
+            s = MediaDB.get_or_create_song(other_tags, "cue", read_from_file=False)
             songs.append(s)
         return songs    
             
     def get_track_length(self, index):    
+        total_length = get_audio_length(self.audio_file)
+        if index == max(self.tracks.keys()):
+            return total_length - self.tracks[index].indexes[1]
         return self.tracks[index + 1].indexes[1] - self.tracks[index].indexes[1]
-
 
 class Track(object):
     """a track inside a Cuesheet object"""
@@ -290,7 +304,7 @@ class Track(object):
         else:
             return None
     
-def parse(tokens):    
+def parse(tokens, audio_file):    
     """returns a Cuesheet object from the token iterator stream
 
     raises CueException if a parsing error occurs
@@ -300,7 +314,7 @@ def parse(tokens):
         while element != EOL:
             token, element, line_number = tokens.next()
             
-    cuesheet = Cuesheet()        
+    cuesheet = Cuesheet(audio_file)        
     track = None
     
     try:
@@ -383,27 +397,40 @@ def parse(tokens):
             cuesheet.tracks[track.number] = track
         return cuesheet    
     
-def read_cuesheet(filename):
+def read_cuesheet(filename, cuefile):
     """returns a Cuesheet from a cuesheet filename on disk
 
     raises CueException if some error occurs reading or parsing the file
     """
 
     try:
-        f = open(filename, 'r')
+        f = open(cuefile, 'r')
     except IOError, msg:
         raise CueException(msg)
     try:
-        sheet = parse(tokens(f.read()))
+        sheet = parse(tokens(f.read()), filename)
         if (not sheet.single_file_type()):
             raise CueException("invaild format")
         else:
             return sheet
     finally:
         f.close()
-
+        
+def find_cuefile(filename):        
+    prefix = os.path.splitext(filename)[0]
+    cue_file = "%s.%s" % (prefix, "cue")
+    if os.path.exists(cue_file):
+        try:
+            cuesheet = read_cuesheet(filename, cue_file)
+        except CueException:    
+            return MediaDB.get_or_create_song({"uri": utils.get_uri_from_path(filename)},
+                                              "local", read_from_file=True)
+        else:
+            return cuesheet.get_songs()
+    return MediaDB.get_or_create_song({"uri": utils.get_uri_from_path(filename)},
+                                      "local", read_from_file=True)
         
 if __name__ == "__main__":        
     import sys
-    cuesheet = read_cuesheet(sys.argv[1])
-    print cuesheet.get_songs()
+    songs = find_cuefile(sys.argv[1])
+    print songs

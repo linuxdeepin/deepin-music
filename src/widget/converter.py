@@ -23,7 +23,6 @@
 import os
 import gtk
 import gobject
-import pango
 import gio
 from operator import attrgetter
 from copy import deepcopy

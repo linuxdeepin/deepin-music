@@ -72,8 +72,8 @@ uri title artist album genre data year
 description hidden album_colver_url station info_supp station_track_url
 #track #duration #progress #disc 
 #playcount #skipcount 
-#lastplayed #added #date #mtime #ctime #rate #progress #bitrate #size #stream_offset
-sort_title sort_artist sort_album sort_genre search
+#lastplayed #added #date #mtime #ctime #rate #progress #bitrate #size #stream_offset seek
+sort_title sort_artist sort_album sort_genre search real_uri
 """.split()
 
 class Song(dict, Logger):
@@ -256,10 +256,14 @@ class Song(dict, Logger):
             return False
         
     def exists(self):    
+        if self.get_type() == "cue":
+            return utils.exists(self.get("real_uri"))
         return utils.exists(self.get("uri"))
     
     def get_path(self):
         try:
+            if self.get_type() == "cue":
+                return utils.get_path_from_uri(self.get("real_uri"))
             return utils.get_path_from_uri(self.get("uri"))
         except:
             return ""

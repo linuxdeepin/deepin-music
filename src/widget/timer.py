@@ -84,6 +84,10 @@ class SongTimer(gtk.HBox):
         self.set_current_time(0, self.duration)
         
     def on_tick(self, bin, pos, duration):
+        
+        if Player.song and Player.song.get_type() == "cue":
+            duration = Player.song.get("#duration") / 1000
+            pos = pos - Player.song.get("seek", 0)
         self.duration = duration
         if self.update_bar == 1:
             self.set_current_time(pos, duration)
@@ -134,7 +138,12 @@ class SongTimer(gtk.HBox):
         s = Player.song
         if s is not None and s.get_type() in [ "webradio", "volatile_webradio"]:
             return
-        Player.seek(self.bar.get_value())
+        
+        if s.get_type() == "cue":
+            Player.seek(s.get("seek", 0) + self.bar.get_value())
+            print self.bar.get_value()
+        else:    
+            Player.seek(self.bar.get_value())
 
         # wait a bit that the player are really seek to update the progress bar
         if not self.__idle_release_id:

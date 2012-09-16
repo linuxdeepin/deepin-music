@@ -97,7 +97,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         
     def __on_tag(self, bin, taglist):    
         ''' The playbin found the tag information'''
-        if self.song and not self.song.get("title"):
+        if self.song and not self.song.get("title") and self.song.get_type() != "cue":
             self.logdebug("tag found %s", taglist)
             IDS = {
                 "title": "title",
@@ -126,7 +126,12 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
             return
         else:
             if not self.song.get("#duration") or self.song.get("#duration") != duration * 1000:
-                MediaDB.set_property(self.song, {"#duration": duration * 1000})
+                if self.song.get_type() != "cue":
+                    MediaDB.set_property(self.song, {"#duration": duration * 1000})
+                    
+        if self.song.get_type() == "cue":            
+            duration = self.song.get("#duration") / 1000
+            pos = pos - self.song.get("seek", 0)
                 
         self.perhap_report(pos, duration)        # todo
         crossfade = self.get_crossfade()
@@ -188,30 +193,32 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         if crossfade is None:    
             crossfade = self.get_crossfade()
         
-        uri = song.get('uri')    
+        if song.get_type() == "cue":    
+            uri = song.get("real_uri")
+        else:    
+            uri = song.get('uri')    
+            
         self.logdebug("player try to load %s", uri)
         
-        # if has xiami , then stop xiami of the previous song.
-        
-        mime_type = get_mime_type(uri)
+        # mime_type = get_mime_type(uri)
 
-        if mime_type in [ "audio/x-scpls", "audio/x-mpegurl"]:
-            try_num = 2
-            uris = None
-            while not uris:
-                if mime_type == "audio/x-scpls":
-                    uris = get_uris_from_pls(uri)
-                elif mime_type == "audio/x-mpegurl":    
-                    uris = get_uris_from_m3u(uri)
-                try_num += 1    
-                if try_num > 3:
-                    break
-            if uris:        
-                self.logdebug("%s choosen in %s", uris[0], uri)
-                uri = uris[0]
-            else:    
-                self.logdebug("no playable uri found in %s", uri)
-                uri = None
+        # if mime_type in [ "audio/x-scpls", "audio/x-mpegurl"]:
+        #     try_num = 2
+        #     uris = None
+        #     while not uris:
+        #         if mime_type == "audio/x-scpls":
+        #             uris = get_uris_from_pls(uri)
+        #         elif mime_type == "audio/x-mpegurl":    
+        #             uris = get_uris_from_m3u(uri)
+        #         try_num += 1    
+        #         if try_num > 3:
+        #             break
+        #     if uris:        
+        #         self.logdebug("%s choosen in %s", uris[0], uri)
+        #         uri = uris[0]
+        #     else:    
+        #         self.logdebug("no playable uri found in %s", uri)
+        #         uri = None
                 
         # remove old stream for pipeline excepted when need to fade
         if self.song and (crossfade == -1 or self.is_paused() or not self.is_playable()):        
@@ -245,6 +252,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
             gobject.idle_add(self.emit, "play-end")
         else:    
             if seek:
+                print "gobject_:", seek
                 gobject.idle_add(self.seek, seek)
             self.emit("played")    
         return ret    
@@ -273,7 +281,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         if self.__source:
             song = self.__source.get_previous_song()
             if song:
-                self.play_new(song)
+                self.play_new(song, seek=song.get("seek", None))
                 return
         self.stop()    
         
@@ -283,16 +291,25 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         if not self.__source:
             return
         song = self.__source.get_next_song(maunal)
+
+            
         if song:
             if config.getboolean("player", "crossfade") and config.getboolean("player", "crossfade_gapless_album") and self.song and song.get("album") == self.song.get("album"):        
                 self.logdebug("request gapless to the backend")
-                self.play_new(song, 0)
+                self.play_new(song, seek=song.get("seek", None))
             else:    
-                self.play_new(song)
+                self.play_new(song, seek=song.get("seek", None))
             return 
         else:
             # stop the current song
             self.fadeout_and_stop()
+            
+    def get_song_seek(self, song):        
+        seek = None
+        if song.has_key("seek"):            
+            seek = song.get("seek")
+        return seek
+        
                 
     def rewind(self):            
         '''rewind'''
@@ -332,7 +349,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
                 self.logdebug("have song %s", self.song)
                 if self.song:
                     # Reload the current song
-                    self.play_new(self.song)
+                    self.play_new(self.song, seek=self.song.get("seek", None))
                 elif self.__source != None:    
                     self.next(True)
                 else:    
@@ -390,6 +407,8 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         # todo xiami
         
         # return value
+        if self.song and self.song.get_type() == "cue":
+            return int(pos) - self.song.get("seek", 0)
         return int(pos)
     
     def get_lyrics_position(self):
@@ -401,6 +420,9 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
     def get_length(self):
         '''get lenght'''
         if self.song is not None:
+            if self.song.get_type() == "cue":
+                return self.song.get("#duration")
+            
             duration = self.bin.xfade_get_duration()
             if duration != -1:
                 # if current song_dict not have '#duration' and set it
@@ -450,6 +472,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         # get seek
         seek = int(config.get("player", "seek"))
         
+        
         # get state 
         state = config.get("player", "state")
         
@@ -462,6 +485,8 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         # load uri
         if uri:    
             song = MediaDB.get_song(uri)
+            if song.get_type() == "cue":
+                seek = seek + song.get("seek", 0)
             if song and song.exists():
                 if not config.getboolean("player", "resume_last_progress") or not play:
                     seek = None

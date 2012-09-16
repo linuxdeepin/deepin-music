@@ -87,3 +87,11 @@ def file_is_supported(filename, strict=False):
         else:    
             return False
 
+def get_audio_length(path):        
+    try:
+        audio = MutagenFile(path, FORMATS)
+        if audio is not None:
+            return int(audio.info.length) * 1000
+        return 0
+    except:
+        return 0

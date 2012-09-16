@@ -54,7 +54,7 @@ from mmkeys_wrap import MMKeys
 from song import Song
 import common
 import utils
-from source.audiocd import AudioCDSource
+# from source.audiocd import AudioCDSource
 
 from helper import Dispatcher
 from logger import Logger
