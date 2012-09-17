@@ -30,6 +30,7 @@ from xdg_support import get_config_file
 from parse import Query
 from logger import Logger
 from nls import _
+from cue_parser import read_cuesheet, CueException
 import utils
 
 
@@ -269,6 +270,30 @@ class MediaDatebase(gobject.GObject, Logger):
                 new_tags[key] = s.get(key)
         self.set_property(song, new_tags)        
         
+    def get_songs_by_uri(self, uri):    
+        songs = []
+        path = utils.get_path_from_uri(uri)
+        prefix = os.path.splitext(path)[0]
+        cue_file = "%s.%s" % (prefix, "cue")
+        if os.path.exists(cue_file):
+            try:
+                cuesheet = read_cuesheet(path, cue_file)
+            except CueException:    
+                song = [self.get_or_create_song({"uri":uri}, "local", read_from_file=True)]
+                if song: return [ song ]
+                else:
+                    return []
+            else:
+                for tag in cuesheet.get_tags():
+                    s = self.get_or_create_song(tag, "cue", read_from_file=False)
+                    songs.append(s)
+                return songs    
+            
+        song = self.get_or_create_song({"uri":uri}, "local", read_from_file=True)
+        if song: return [ song ]
+        else:
+            return []
+        
     def get_or_create_song(self, tags, song_type, read_from_file=False):    
         self.set_dirty()
         try:
@@ -310,7 +335,7 @@ class MediaDatebase(gobject.GObject, Logger):
             else:
                 return self.get_or_create_song({"uri":uri}, "unknown", read_from_file=True)
             
-    def get_songs(self, song_type):        
+    def get_songs_by_type(self, song_type):        
         if not isinstance(song_type, (tuple, list)):
             song_type = [ song_type ]
             
@@ -623,7 +648,7 @@ class DBQuery(gobject.GObject, Logger):
         return True
     
     def get_all_songs(self):
-        return MediaDB.get_songs(self.__type)
+        return MediaDB.get_songs_by_type(self.__type)
     
     def __filter(self, song, query_func=None):
         if query_func is None:

@@ -45,9 +45,8 @@ class ImportFolderJob(Job):
             super(ImportFolderJob, self).__init__()
             
     def add_to_library(self, uri):        
-        tags = {"uri" : uri}
         try:
-            MediaDB.get_or_create_song(tags, "local", read_from_file=True)
+            MediaDB.get_songs_by_uri(uri)
         except:    
             self.logerror("Failed load %s", uri)
             
@@ -106,10 +105,9 @@ class ImportPlaylistJob(Job):
         self.callback = callback
             
     def __get_or_create_song(self, uri):        
-        tags = {"uri" : uri}
         try:
-            song = MediaDB.get_or_create_song(tags, "local", read_from_file=True)
-            self.add_song_cache.append(song)
+            songs = MediaDB.get_songs_by_uri(uri)
+            self.add_song_cache.extend(songs)
         except:    
             self.logerror("Failed load %s", uri)
             
@@ -168,9 +166,8 @@ class ImportFileJob(object):
     def __init__(self):
         uri =WinFile().run()
         if uri and common.file_is_supported(utils.get_path_from_uri(uri)):
-            tags = {"uri":uri}
             try:
-                MediaDB.get_or_create_song(tags, "local", read_from_file=True)
+                MediaDB.get_songs_by_uri(uri)
             except:    
                 traceback.print_exc()
               

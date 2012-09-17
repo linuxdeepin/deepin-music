@@ -46,7 +46,6 @@ from source.local import ImportPlaylistJob
 from widget.ui_utils import draw_single_mask, draw_alpha_mask
 from widget.converter import AttributesUI
 from nls import _
-from cue_parser import find_cuefile
 
 class SongView(ListView):
     ''' song view. '''
@@ -262,13 +261,13 @@ class SongView(ListView):
         self.get_toplevel().window.set_cursor(None)
         songs = []
         for uri in uris:
-            song = MediaDB.get_song(uri)
-            if song:
-                songs.append(song)
+            db_songs = MediaDB.get_songs_by_uri(uri)
+            if db_songs:
+                songs.extend(db_songs)
         if not songs:        
             return
         if sort: songs.sort()
-        self.add_songs(song, pos, sort, True)
+        self.add_songs(songs, pos, sort, True)
             
     def add_uris(self, uris, pos=None, sort=True):
         if uris == None:
@@ -285,10 +284,10 @@ class SongView(ListView):
         if pos is None:
             pos = len(self.items)
         for uri in uris:    
-            song = MediaDB.get_song(uri)
-            if not song:
+            songs = MediaDB.get_songs_by_uri(uri)
+            if not songs:
                 continue
-            self.add_song_cache.append(song)
+            self.add_song_cache.extend(songs)
             end = time.time()
             if end - start > 0.2:
                 self.render_song(self.add_song_cache, pos, sort)
@@ -395,8 +394,7 @@ class SongView(ListView):
             elif selection.target == "text/plain":    
                 raw_path = selection.data
                 path = eval("u" + repr(raw_path).replace("\\\\", "\\"))
-                # utils.async_get_uris_from_plain_text(path, self.add_uris, pos)
-                self.add_songs(find_cuefile(path))
+                utils.async_get_uris_from_plain_text(path, self.add_uris, pos)
                 
     
     def set_sort_keyword(self, keyword, reverse=False):
@@ -488,13 +486,12 @@ class SongView(ListView):
             uri = utils.get_uri_from_path(filename)
             
         if uri and common.file_is_supported(utils.get_path_from_uri(uri)):
-            tags = {"uri": uri}
             try:
-                song = MediaDB.get_or_create_song(tags, "local", read_from_file=True)
+                songs = MediaDB.get_songs_by_uri(uri)
             except:    
                 pass
             else:
-                self.add_songs(song, play=play)
+                self.add_songs(songs, play=play)
                 
     def add_dir(self):            
         select_dir = WinDir().run()
@@ -679,7 +676,7 @@ class MultiDragSongView(ListView):
                         ]
 
         right_menu = Menu(menu_items, True)
-        # if item.song.get_type() == "cue":
-        right_menu.set_menu_item_sensitive_by_index(4, False)
-        right_menu.set_menu_item_sensitive_by_index(7, False)
+        if item.song.get_type() == "cue":
+            right_menu.set_menu_item_sensitive_by_index(4, False)
+            right_menu.set_menu_item_sensitive_by_index(7, False)
         right_menu.show((int(x), int(y)))    

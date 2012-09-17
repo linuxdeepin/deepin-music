@@ -26,8 +26,6 @@ import cStringIO
 
 import utils
 from common import get_audio_length
-from library import MediaDB
-
 
 SPACE = 0x0
 TAG = 0x1
@@ -239,8 +237,8 @@ class Cuesheet(object):
 
         return data.getvalue()
     
-    def get_songs(self):
-        songs = []
+    def get_tags(self):
+        tag_list = []
         for key, track in self.tracks.items():
             other_tags = {}
             audio_file_prefix, audio_file_ext = os.path.splitext(self.audio_file)
@@ -257,10 +255,8 @@ class Cuesheet(object):
             other_tags["#size"]  = os.path.getsize(self.audio_file)
             other_tags["#mtime"] = os.path.getmtime(self.audio_file)
             other_tags["#ctime"] = os.path.getctime(self.audio_file)
-            
-            s = MediaDB.get_or_create_song(other_tags, "cue", read_from_file=False)
-            songs.append(s)
-        return songs    
+            tag_list.append(other_tags)
+        return tag_list
             
     def get_track_length(self, index):    
         total_length = get_audio_length(self.audio_file)
@@ -415,21 +411,3 @@ def read_cuesheet(filename, cuefile):
     finally:
         f.close()
         
-def find_cuefile(filename):        
-    prefix = os.path.splitext(filename)[0]
-    cue_file = "%s.%s" % (prefix, "cue")
-    if os.path.exists(cue_file):
-        try:
-            cuesheet = read_cuesheet(filename, cue_file)
-        except CueException:    
-            return MediaDB.get_or_create_song({"uri": utils.get_uri_from_path(filename)},
-                                              "local", read_from_file=True)
-        else:
-            return cuesheet.get_songs()
-    return MediaDB.get_or_create_song({"uri": utils.get_uri_from_path(filename)},
-                                      "local", read_from_file=True)
-        
-if __name__ == "__main__":        
-    import sys
-    songs = find_cuefile(sys.argv[1])
-    print songs
