@@ -249,6 +249,8 @@ class LyricsModule(object):
     def seek_cb(self, widget, lyric_id, percentage):
         item_time = self.lrc.get_item_time(lyric_id)
         new_time = item_time / 1000
+        if Player.song.get_type() == "cue":
+            new_time += Player.song.get("seek", 0)
         Player.seek(new_time)        
         self.scroll_lyrics.set_progress(lyric_id, percentage)
         time.sleep(0.1)

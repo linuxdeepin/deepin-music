@@ -187,7 +187,7 @@ class CheckDeletedDBJob(Job):
 class ReloadDBJob(Job):
     __message = "Reload database"
     def job(self):
-        songs = MediaDB.get_songs("local")
+        songs = MediaDB.get_songs_by_type("local")
         total = len(songs)
         i = 0
         for song in songs:

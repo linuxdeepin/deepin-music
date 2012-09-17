@@ -411,9 +411,14 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         return int(pos)
     
     def get_lyrics_position(self):
-        return self.bin.xfade_get_lrc_time()
+        pos = self.bin.xfade_get_lrc_time()
+        if self.song and self.song.get_type() == "cue":
+            return pos - self.song.get("seek", 0) * 1000
+        return pos
     
     def get_lyrics_length(self):
+        if self.song and self.song.get_type() == "cue":
+            return self.song.get("#duration") * 1000
         return self.bin.xfade_get_lrc_duration()
     
     def get_length(self):
