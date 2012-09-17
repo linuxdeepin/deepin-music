@@ -1246,13 +1246,8 @@ class StreamBin(gst.Bin, Logger):
                 self.__src = gst.element_make_from_uri("src", uri)
 
             if uri[:7] == "http://":
-                print "**********************************************"
-                print uri
-                print "**********************************************"
                 try:self.__src.set_property("iradio-mode", True)
                 except : pass
-				
-
             
             self.__audioconvert1 = gst.element_factory_make ("audioconvert", None)
             self.__replaygain_volume = gst.element_factory_make ("rgvolume", None)

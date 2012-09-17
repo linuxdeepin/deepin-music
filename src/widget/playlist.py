@@ -474,6 +474,10 @@ class PlaylistUI(gtk.VBox):
                                  (None, _("Open directory"), self.current_item.song_view.open_song_dir),
                                  (None, _("Property"), self.current_item.song_view.open_song_editor),
                                  ], True)
+        
+        if item.song.get_type() == "cue":
+            self.detail_menu.set_menu_item_sensitive_by_index(5, False)
+            self.detail_menu.set_menu_item_sensitive_by_index(10, False)
         self.detail_menu.show((int(x), int(y)))
         
     def save_to_library(self):    

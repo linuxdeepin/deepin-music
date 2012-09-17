@@ -25,7 +25,6 @@ import os
 import cStringIO
 
 import utils
-from song import Song
 from common import get_audio_length
 from library import MediaDB
 

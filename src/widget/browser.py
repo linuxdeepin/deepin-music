@@ -601,7 +601,7 @@ class Browser(gtk.VBox, SignalContainer):
         draw_alpha_mask(cr, rect.x, rect.y, rect.width- 2, rect.height, "layoutLast")
         
 class SimpleBrowser(Browser):    
-    _type = "local"
+    _type = ["local", "cue"]
     
     def __init__(self):
         Browser.__init__(self, DBQuery(self._type))

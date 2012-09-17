@@ -311,11 +311,18 @@ class MediaDatebase(gobject.GObject, Logger):
                 return self.get_or_create_song({"uri":uri}, "unknown", read_from_file=True)
             
     def get_songs(self, song_type):        
+        if not isinstance(song_type, (tuple, list)):
+            song_type = [ song_type ]
+            
+        songs = []    
+        
         try:
-            return list(set(self.__songs_by_type[song_type]))
+            for s_type in song_type:
+                songs.extend(list(set(self.__songs_by_type[s_type])))
+            return songs    
         except KeyError:
             self.logwarn("get_songs: type %s unknown return empty set()", song_type)
-            return []
+            return songs
         
     def get_songs_from_uris(self, uris):    
         return [ self.get_song(uri) for uri in uris if uri ]
@@ -560,6 +567,8 @@ class DBQuery(gobject.GObject, Logger):
     def __init__(self, song_type):
         gobject.GObject.__init__(self)
         self.__tree = ({}, set())
+        if not isinstance(song_type, (tuple, list)):
+            song_type = [ song_type ]
         self.__type = song_type
         self.__query_func = None
         self.__query_string = ""
@@ -662,7 +671,7 @@ class DBQuery(gobject.GObject, Logger):
         self.__tree = ({}, set())
         
     def db_entry_added(self, db, song_type, songs):    
-        if song_type != self.__type: return
+        if song_type not in self.__type: return
         
         for song in songs:
             if self.__filter(song):
@@ -681,7 +690,7 @@ class DBQuery(gobject.GObject, Logger):
                 self.__condition.release()    
                 
     def db_entry_removed(self, db, song_type, songs):            
-        if song_type != self.__type: return
+        if song_type not in self.__type: return
         
         for song in songs:
             if self.__filter(song) and song in self.__tree[1]:
@@ -700,7 +709,7 @@ class DBQuery(gobject.GObject, Logger):
 
                     
     def db_entry_changed(self, db, song_type, infos, use_quick_update_change=False):                
-        if song_type != self.__type: return
+        if song_type not in self.__type: return
         
         for info in infos:
             song, old_keys_values = info

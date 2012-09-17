@@ -241,21 +241,19 @@ class SongView(ListView):
         if not isinstance(songs, (list, tuple)):
             songs = [ songs ]
 
-        song_items = [ SongItem(song) for song in songs if song not in self.get_songs() or song.get_type() != "local"]
+        song_items = [ SongItem(song) for song in songs if song not in self.get_songs()]
             
         if song_items:
             if not self.items:
                 self.emit_add_signal()
             self.add_items(song_items, pos, sort)
             
-            
         if len(songs) >= 1 and play:
             if songs[0].exists():
                 del self.select_rows[:]
                 self.queue_draw()
                 self.set_highlight_song(songs[0])
-                gobject.idle_add(Player.play_new, self.highlight_item.get_song(), None, 
-                                 self.highlight_item.get_song().get("seek", None))
+                Player.play_new(self.highlight_item.get_song(), seek=self.highlight_item.get_song().get("seek", 0))
             
     def emit_add_signal(self):
         self.emit("begin-add-items")
@@ -369,7 +367,7 @@ class SongView(ListView):
                 self.highlight_item = None
                 flag = True
             MediaDB.remove(songs)    
-            [ utils.move_to_trash(song.get("uri")) for song in songs ]
+            [ utils.move_to_trash(song.get("uri")) for song in songs if song.get_type() != "cue"]
             self.delete_select_items()            
             if flag:
                 Player.next()
@@ -663,7 +661,7 @@ class MultiDragSongView(ListView):
             songs = [ self.items[self.select_rows[index]].get_song() for index in range(0, len(self.select_rows))]
             MediaDB.remove(songs)    
             if fully:
-                [ utils.move_to_trash(song.get("uri")) for song in songs ]
+                [ utils.move_to_trash(song.get("uri")) for song in songs if song.get_type() != "cue" ]
             self.delete_select_items()            
         return True    
 
@@ -679,5 +677,9 @@ class MultiDragSongView(ListView):
             (None, _("Format conversion"), self.songs_convert),
             (None, _("Property"), self.open_song_editor)
                         ]
-            
-        Menu(menu_items, True).show((int(x), int(y)))
+
+        right_menu = Menu(menu_items, True)
+        # if item.song.get_type() == "cue":
+        right_menu.set_menu_item_sensitive_by_index(4, False)
+        right_menu.set_menu_item_sensitive_by_index(7, False)
+        right_menu.show((int(x), int(y)))    

@@ -252,7 +252,6 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
             gobject.idle_add(self.emit, "play-end")
         else:    
             if seek:
-                print "gobject_:", seek
                 gobject.idle_add(self.seek, seek)
             self.emit("played")    
         return ret    
