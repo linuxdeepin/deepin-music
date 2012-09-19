@@ -43,18 +43,22 @@ def query_artist_cover_from_xiami(artist_name):
     xiami_search_url = "http://www.xiami.com/search?key={0}&pos=1"
     xiami_domain = "http://www.xiami.com"
     search_url = xiami_search_url.format(artist_name)
-    search_query = PyQuery(url=search_url)
     try:
-        artist_div_block = search_query("div.artistBlock_list div.artist_item100_block p.buddy a.artist100")
-        artist_href = artist_div_block.attr("href")
-        if not artist_href: return False
-        artist_url = "%s%s" % (xiami_domain, artist_href)
-        artist_query = PyQuery(url=artist_url)
-        cover_url = artist_query("a#cover_lightbox").attr("href").encode("utf-8", "ingnore")
-        return cover_url
-    except:
+        search_query = PyQuery(url=search_url)
+    except:    
         return False
-    
+    else:
+        try:
+            artist_div_block = search_query("div.artistBlock_list div.artist_item100_block p.buddy a.artist100")
+            artist_href = artist_div_block.attr("href")
+            if not artist_href: return False
+            artist_url = "%s%s" % (xiami_domain, artist_href)
+            artist_query = PyQuery(url=artist_url)
+            cover_url = artist_query("a#cover_lightbox").attr("href").encode("utf-8", "ingnore")
+            return cover_url
+        except:
+            return False
+        
 def query_artist_cover_from_ting(artist_name):
     ting_artist_search_url = 'http://ting.baidu.com/search?key=' + artist_name
     try:

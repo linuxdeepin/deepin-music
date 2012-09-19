@@ -262,7 +262,7 @@ class Browser(gtk.VBox, SignalContainer):
         self.artists_view, self.artists_sw  = self.get_icon_view()
         self.albums_view,  self.albums_sw   = self.get_icon_view()
         self.genres_view,  self.genres_sw   = self.get_icon_view()
-        self.folders_view, self.folders_sw  = self.get_icon_view(28)
+        self.folders_view, self.folders_sw  = self.get_icon_view(20)
         self.folders_view.connect("motion-notify-item", self.on_folders_view_motion_notify)
         
         # Song list for temporarily storing
