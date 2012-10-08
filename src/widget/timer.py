@@ -141,7 +141,6 @@ class SongTimer(gtk.HBox):
         
         if s.get_type() == "cue":
             Player.seek(s.get("seek", 0) + self.bar.get_value())
-            print self.bar.get_value()
         else:    
             Player.seek(self.bar.get_value())
 

@@ -54,11 +54,11 @@ class NormalWindow(Window):
         
     def show_window(self):    
         self.show_all()
-        print ""
             
     def hide_window(self, widget):        
         self.hide_all()
         
+
         
 class SearchEntry(InputEntry):
     

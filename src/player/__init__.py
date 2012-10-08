@@ -493,13 +493,17 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
                 seek = seek + song.get("seek", 0)
             if song and song.exists():
                 if not config.getboolean("player", "resume_last_progress") or not play:
-                    seek = None
+                    if song.get_type() == "cue":
+                        seek = song.get("seek", 0)
+                    else:    
+                        seek = None
                 self.set_song(song, play, self.get_crossfade() * 2, seek)
         self.emit("loaded")        
         
     def save_state(self):            
         '''save current song's state'''
         if self.song:
+            config.set("player", "song_type", self.song.get_type())
             config.set("player", "uri", self.song.get("uri"))
             config.set("player", "seek", str(self.get_position()))
             if not self.is_playable():

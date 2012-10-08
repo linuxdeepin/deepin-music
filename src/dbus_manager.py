@@ -141,7 +141,7 @@ class DeepinMusicDBus(dbus.service.Object, Logger):
     
     @dbus.service.method(SERVICE_NAME)
     def Next(self):
-        Player.next()
+        Player.next(True)
         return "Successful command "
     
     @dbus.service.method(SERVICE_NAME)

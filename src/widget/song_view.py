@@ -258,7 +258,7 @@ class SongView(ListView):
         self.emit("begin-add-items")
     
     def play_uris(self, uris, pos=None, sort=True):        
-        self.get_toplevel().window.set_cursor(None)
+        # self.get_toplevel().window.set_cursor(None)
         songs = []
         for uri in uris:
             db_songs = MediaDB.get_songs_by_uri(uri)
@@ -453,7 +453,7 @@ class SongView(ListView):
         
     def popup_add_menu(self, x, y):
         menu_items = [
-            # (None, "uri" , self.add_unknow_uri),            
+            (None, "uri" , self.add_unknow_uri),            
             (None, _("File"), self.add_file),
             (None, _("Directory(recursion)"), self.recursion_add_dir),
             (None, _("Directory"), self.add_dir),
@@ -470,7 +470,7 @@ class SongView(ListView):
     
     def add_unknow_uri(self, uri=None):
         def play_or_add_uri(uri):
-            MediaDB.get_or_create_song({"uri": uri}, "unknown")
+            # MediaDB.get_or_create_song({"uri": uri}, "unknown")
             self.play_uris([uri])
             
         if not uri:

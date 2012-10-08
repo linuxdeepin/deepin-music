@@ -1292,28 +1292,34 @@ class StreamBin(gst.Bin, Logger):
                     "max-size-time", long(0))
 
             self.__underrun_id = self.__queue.connect("underrun", self.__queue_underrun_cb)
-
-            self.add(self.__src, self.__queue, self.__decoder, self.__audioconvert1, self.__replaygain_volume, self.__audioconvert2, \
-                    self.__audioresample, self.__capsfilter, self.__preroll, self.__volume)
+            self.add(self.__src, self.__queue, self.__decoder, 
+                     self.__audioconvert1, self.__replaygain_volume,
+                     self.__audioconvert2, self.__audioresample, self.__capsfilter,
+                     self.__preroll, self.__volume)
+            
             gst.element_link_many(self.__src, self.__queue, self.__decoder)
-            gst.element_link_many(self.__audioconvert1, self.__replaygain_volume, self.__audioconvert2, self.__audioresample, self.__capsfilter, \
-                    self.__preroll, self.__volume)
+            gst.element_link_many(self.__audioconvert1, self.__replaygain_volume, 
+                                  self.__audioconvert2, self.__audioresample, self.__capsfilter,
+                                  self.__preroll, self.__volume)
         else:
             self.logdebug("Create a local stream bin")
             self.__queue = None
 
-            self.add(self.__src, self.__decoder, self.__audioconvert1, self.__replaygain_volume, self.__audioconvert2, \
-                    self.__audioresample, self.__capsfilter, self.__preroll, self.__volume)
+            self.add(self.__src, self.__decoder, self.__audioconvert1, 
+                     self.__replaygain_volume, self.__audioconvert2, 
+                     self.__audioresample, self.__capsfilter, self.__preroll, self.__volume)
             gst.element_link_many(self.__src, self.__decoder)
-            gst.element_link_many(self.__audioconvert1, self.__replaygain_volume, self.__audioconvert2, self.__audioresample, self.__capsfilter, \
-                    self.__preroll, self.__volume)
+            gst.element_link_many(self.__audioconvert1, self.__replaygain_volume, 
+                                  self.__audioconvert2, self.__audioresample, 
+                                  self.__capsfilter, self.__preroll, self.__volume)
 
-        #identity = gst.element_factory_make("identity")
-        #self.add(identity)
-        #self.__volume.link( identity )
-        #identity.set_property("check-imperfect-timestamp",True)
-        #identity.set_property("check-imperfect-offset",True)
-        #self.__src_pad = identity.get_pad("src")
+        # identity = gst.element_factory_make("identity")
+        # self.add(identity)
+        # self.__volume.link( identity )
+        # identity.set_property("check-imperfect-timestamp",True)
+        # identity.set_property("check-imperfect-offset",True)
+        # self.__src_pad = identity.get_pad("src")
+        
         self.__src_pad = self.__volume.get_pad("src")
         self.__ghost_pad = gst.GhostPad("src", self.__src_pad)
         self.add_pad(self.__ghost_pad)

@@ -202,7 +202,10 @@ class DeepinCoverManager(Logger):
             try:
                 gtk.gdk.pixbuf_new_from_file_at_size(image_path, COVER_SIZE["x"], COVER_SIZE["y"])
             except gobject.GError:    
-                os.unlink(image_path)
+                try:
+                    os.unlink(image_path)
+                except:    
+                    pass
             else:    
                 return image_path
 

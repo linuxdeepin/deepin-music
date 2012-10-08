@@ -79,7 +79,7 @@ class MediaDatebase(gobject.GObject, Logger):
         # init constant
         self.__is_loaded = False
         self.__force_check = False
-        self.__save_song_type = ["local", "cue"]
+        self.__save_song_type = ["local", "cue", "webradio"]
         self.__dirty = False
         
         # Init queued signal.
@@ -271,27 +271,36 @@ class MediaDatebase(gobject.GObject, Logger):
         self.set_property(song, new_tags)        
         
     def get_songs_by_uri(self, uri):    
+        if not uri: return
         songs = []
-        path = utils.get_path_from_uri(uri)
-        prefix = os.path.splitext(path)[0]
-        cue_file = "%s.%s" % (prefix, "cue")
-        if os.path.exists(cue_file):
-            try:
-                cuesheet = read_cuesheet(path, cue_file)
-            except CueException:    
-                song = [self.get_or_create_song({"uri":uri}, "local", read_from_file=True)]
-                if song: return [ song ]
+        uri_scheme = utils.get_scheme(uri)
+        if uri_scheme == "file":
+            path = utils.get_path_from_uri(uri)
+            prefix = os.path.splitext(path)[0]
+            cue_file = "%s.%s" % (prefix, "cue")
+            if os.path.exists(cue_file):
+                try:
+                    cuesheet = read_cuesheet(path, cue_file)
+                except CueException:    
+                    song = [self.get_or_create_song({"uri":uri}, "local", read_from_file=True)]
+                    if song: return [ song ]
+                    else:
+                        return []
                 else:
-                    return []
+                    for tag in cuesheet.get_tags():
+                        s = self.get_or_create_song(tag, "cue", read_from_file=False)
+                        songs.append(s)
+                    return songs    
+                
+            song = self.get_or_create_song({"uri":uri}, "local", read_from_file=True)
+            if song: return [ song ]
             else:
-                for tag in cuesheet.get_tags():
-                    s = self.get_or_create_song(tag, "cue", read_from_file=False)
-                    songs.append(s)
-                return songs    
+                return []
             
-        song = self.get_or_create_song({"uri":uri}, "local", read_from_file=True)
-        if song: return [ song ]
-        else:
+        else:    
+            song = self.get_or_create_song({"uri": uri}, "unknown", read_from_file=False)
+            if song:
+                return [ song ]
             return []
         
     def get_or_create_song(self, tags, song_type, read_from_file=False):    
