@@ -152,7 +152,8 @@ from threading import Lock
 from logger import Logger
 
 
-STREAM_URI = [ "http://", "mms://", "mmsh://", "mmsu://", "mmst://", "rtsp://" ]
+# STREAM_URI = [ "http://", "mms://", "mmsh://", "mmsu://", "mmst://", "rtsp://" ]
+STREAM_URI = [ "http://", "mms://", "mmsh://", "mmsu://", "mmst://"]
 
 EPSILON = 0.001
 XFADE_TICK_HZ = 5
@@ -244,7 +245,7 @@ class PlayerBin(gobject.GObject, Logger):
 
         caps = gst.caps_from_string("audio/x-raw-int, channels=2, rate=44100, width=16, depth=16")
         
-        self.pipeline = gst.Pipeline("ListenPlayer")
+        self.pipeline = gst.Pipeline("DeepinPlayer")
         self.add_bus_watch()
         
         try:
@@ -262,7 +263,7 @@ class PlayerBin(gobject.GObject, Logger):
             self.__volume = gst.element_factory_make ("volume", "outputvolume")
             self.__filterbin = gst.Bin("filterbin")
             
-            customsink = os.environ.get("LISTEN_GST_SINK", "gconfaudiosink")
+            customsink = os.environ.get("DEEPIN_GST_SINK", "gconfaudiosink")
             try: self.__sink = gst.element_factory_make (customsink)
             except :
                 self.__sink = gst.element_factory_make ("autoaudiosink")
@@ -1222,6 +1223,7 @@ class StreamBin(gst.Bin, Logger):
         self.emitted_fake_playing = False
         self.base_time = 0.0
         self.src_blocked = False
+        self.rtsp_mode = False
 
         # Only keep it for debug
         self.uri = uri
@@ -1296,11 +1298,37 @@ class StreamBin(gst.Bin, Logger):
                      self.__audioconvert1, self.__replaygain_volume,
                      self.__audioconvert2, self.__audioresample, self.__capsfilter,
                      self.__preroll, self.__volume)
-            
+
             gst.element_link_many(self.__src, self.__queue, self.__decoder)
             gst.element_link_many(self.__audioconvert1, self.__replaygain_volume, 
                                   self.__audioconvert2, self.__audioresample, self.__capsfilter,
                                   self.__preroll, self.__volume)
+            
+        elif uri.startswith("rtsp://"):    
+            self.rtsp_mode = True
+            self.__src.connect("pad-added", self.on_rtsp_pad_added)               
+            self.__src.connect("pad-removed", self.on_rtsp_pad_removed)
+            self.logdebug("Create a remote stream bin")
+            self.__queue_threshold = self.__player.buffer_size * 1024;
+            self.__queue.set_properties(
+                    "min-threshold-bytes",
+                    self.__queue_threshold,
+                    "max-size-bytes",
+                    MAX_NETWORK_BUFFER_SIZE * 2 * 1024,
+                    "max-size-buffers", 0,
+                    "max-size-time", long(0))
+
+            self.__underrun_id = self.__queue.connect("underrun", self.__queue_underrun_cb)
+            self.add(self.__src, self.__queue, self.__decoder, 
+                     self.__audioconvert1, self.__replaygain_volume,
+                     self.__audioconvert2, self.__audioresample, self.__capsfilter,
+                     self.__preroll, self.__volume)
+
+            gst.element_link_many(self.__queue, self.__decoder)
+            gst.element_link_many(self.__audioconvert1, self.__replaygain_volume, 
+                                  self.__audioconvert2, self.__audioresample, self.__capsfilter,
+                                  self.__preroll, self.__volume)
+            
         else:
             self.logdebug("Create a local stream bin")
             self.__queue = None
@@ -1313,13 +1341,6 @@ class StreamBin(gst.Bin, Logger):
                                   self.__audioconvert2, self.__audioresample, 
                                   self.__capsfilter, self.__preroll, self.__volume)
 
-        # identity = gst.element_factory_make("identity")
-        # self.add(identity)
-        # self.__volume.link( identity )
-        # identity.set_property("check-imperfect-timestamp",True)
-        # identity.set_property("check-imperfect-offset",True)
-        # self.__src_pad = identity.get_pad("src")
-        
         self.__src_pad = self.__volume.get_pad("src")
         self.__ghost_pad = gst.GhostPad("src", self.__src_pad)
         self.add_pad(self.__ghost_pad)
@@ -1327,6 +1348,12 @@ class StreamBin(gst.Bin, Logger):
         self.__src_pad.add_event_probe(self.__src_event_cb)
 
         self.set_bus(self.__player.pipeline.get_bus())
+        
+    def on_rtsp_pad_added(self, rtspsrc, pad):    
+        pad.link(self.__queue.get_pad("sink"))
+        
+    def on_rtsp_pad_removed(self, rtspsrc, pad):    
+        pad.unlink(self.__queue.get_pad("sink"))
 
     def get_str_state(self):
         if self.state == WAITING:       statename = "waiting"
@@ -1462,7 +1489,8 @@ class StreamBin(gst.Bin, Logger):
             return False
         try:
             self.__ghost_pad.link(self.__adder_pad)
-        except:
+        except Exception , e:
+            print e
             try: self.__adder_pad.get_parent().release_request_pad(self.__adder_pad)
             except: pass
             self.logwarn("Failed to link stream to pipeline")
@@ -1874,7 +1902,11 @@ class StreamBin(gst.Bin, Logger):
         self.__src_pad.set_blocked_async(True, self.__src_blocked_cb)
         self.emitted_playing = False
         self.state = PREROLLING
-        state = self.set_state(gst.STATE_PAUSED)
+        if self.rtsp_mode:
+            state = self.set_state(gst.STATE_PLAYING)
+        else:    
+            state = self.set_state(gst.STATE_PAUSED)
+            
         if state == gst.STATE_CHANGE_FAILURE:
             self.logdebug ("preroll for stream %s failed (state change failed)", self.cutted_uri)
             ret = False
@@ -1900,8 +1932,11 @@ class StreamBin(gst.Bin, Logger):
 
         if unblock:
             self.logdebug("preroll_stream -> unblock stream %s __src_pad cb:None state:%s", self.cutted_uri, self.get_str_state())
-            self.__src_pad.set_blocked_async(False)
-        
+            try:
+                self.__src_pad.set_blocked_async(False)
+            except Exception, e:    
+                self.logdebug(e)
+                
         if not ret:
             self.logerror("Failed to preroll stream")
         return ret

@@ -42,7 +42,7 @@ from widget.equalizer import EqualizerWindow
 from widget.preference import PreferenceDialog
 from widget.ui_utils import switch_tab, create_right_align
 from widget.global_keys import global_hotkeys
-from widget.song_search import SongSearchUI
+# from widget.song_search import SongSearchUI
 from widget.dialog import WinFile
 from widget.converter import AttributesUI, convert_task_manager
 
@@ -54,7 +54,7 @@ from mmkeys_wrap import MMKeys
 from song import Song
 import common
 import utils
-# from source.audiocd import AudioCDSource
+from source.audiocd import AudioCDSource
 
 from helper import Dispatcher
 from logger import Logger
@@ -106,7 +106,7 @@ class DeepinMusic(gobject.GObject, Logger):
         self.simple_browser = SimpleBrowser()
         self.equalizer_win = EqualizerWindow()
         self.mmkeys = MMKeys()
-        # self.audiocd = AudioCDSource()
+        self.audiocd = AudioCDSource()
 
             
         self.window.add_move_event(self.full_header_bar)

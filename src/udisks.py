@@ -75,7 +75,7 @@ class UDisks(gobject.GObject, Logger):
     def __connect_to_db(self, *args, **kwargs):        
         gobject.timeout_add(DIFFERD_UDISKS_STARTUP_TIME, self.__post_load)
         
-    @utils.threaded    
+    # @utils.threaded    
     def __post_load(self):
         self.udisks_interface.connect_to_signal("DeviceAdded", self.__device_added)
         self.udisks_interface.connect_to_signal("DeviceRemoved", self.__device_removed)
