@@ -169,26 +169,32 @@ class DeepinMusicApp(Logger):
         gtk.gdk.threads_init()
         
     def __init(self):        
-        # Loaded theme file.
-        self.loginfo("Loading application theme...")
-        from widget.skin import app_theme        
-        
-        # Loaded configure.
+        # Loading configure.
         self.loginfo("Loading settings...")
         from config import config        
         config.load()
         
+        # Show splash.
         self.__show_splash()
+        
+        # Loading theme file.
+        self.loginfo("Loading application theme...")
+        from widget.skin import app_theme        
+        
 
-        # Loaded MediaDB.
+        # Loading MediaDB.
         self.loginfo("Loading MediaDB...")
         from library import MediaDB
         MediaDB.connect("loaded", self.on_db_loaded)
         MediaDB.load()
         
-        # Loaded Chinese to Pinyin DB.
+        # Loading Chinese to Pinyin DB.
         from pinyin import TransforDB        
         TransforDB.load()        
+        
+        # Loading radios DB.
+        from webcasts import WebcastsDB
+        WebcastsDB.load()
         
         # initialize Gui
         self.loginfo("Initialize Gui...")

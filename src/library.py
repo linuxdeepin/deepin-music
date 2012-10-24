@@ -445,6 +445,7 @@ class MediaDatebase(gobject.GObject, Logger):
             self.logexception("Failed load playlists")
             pls_objs = []
             
+            
         if db_objs:    
             for obj in db_objs:
                 try:
@@ -1112,7 +1113,7 @@ class DBQuery(gobject.GObject, Logger):
 
 MediaDB = MediaDatebase()        
 MediaDB.register_type("local")
-MediaDB.register_type("webradio")
+MediaDB.register_type("webcast")
 MediaDB.register_type("unknown")
 MediaDB.register_type("unknown_local")
 MediaDB.register_type("cue")

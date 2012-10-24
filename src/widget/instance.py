@@ -36,6 +36,7 @@ from widget.headerbar import FullHeaderBar, SimpleHeadber
 from widget.playlist import PlaylistUI
 from widget.lyrics_module import LyricsModule
 from widget.browser import SimpleBrowser
+from widget.webcasts_manager import WebcastsManager
 from widget.jobs_manager import jobs_manager
 from widget.tray import TrayIcon
 from widget.equalizer import EqualizerWindow
@@ -116,7 +117,8 @@ class DeepinMusic(gobject.GObject, Logger):
         self.browser_align = gtk.Alignment()
         self.browser_align.set_padding(0, 0, 0, 0)
         self.browser_align.set(0.5, 0.5, 1, 1)
-        self.browser_align.add(self.simple_browser)
+        # self.browser_align.add(self.simple_browser)
+        self.browser_align.add(WebcastsManager())
         bottom_box.pack_start(self.playlist_ui, False, False)        
         bottom_box.pack_start(self.browser_align, True, True)
         self.browser_align.set_no_show_all(True)

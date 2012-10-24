@@ -95,7 +95,7 @@ class SongPathBar(BaseBar):
         self.page_items_num = 0        
         self.items = []
         
-        title_item = SimpleLabel(
+        title_item = StaticLabel(
             app_theme.get_pixbuf("filter/local_normal.png"),
             title_name, 10, 25, 15, 10, 25, ALIGN_START)
         self.pack_start(title_item, False, False)
@@ -357,7 +357,7 @@ class SimpleItem(gtk.Button):
 gobject.type_register(SimpleItem)    
 
 
-class SimpleLabel(gtk.Button):
+class StaticLabel(gtk.Button):
     '''Simple item.'''
 	
     def __init__(self, normal_dpixbuf, content, font_size, item_height,
@@ -365,7 +365,7 @@ class SimpleLabel(gtk.Button):
                  x_align=ALIGN_MIDDLE):
         
         # Init.
-        super(SimpleLabel, self).__init__()
+        super(StaticLabel, self).__init__()
         self.font_size = font_size
         self.padding_left = padding_left
         self.padding_right = padding_right
@@ -405,7 +405,7 @@ class SimpleLabel(gtk.Button):
         
         return True
     
-gobject.type_register(SimpleLabel)    
+gobject.type_register(StaticLabel)    
 
 
         
@@ -543,3 +543,99 @@ gobject.type_register(CategoryItem)
                 
 
 
+class SimpleLabel(gtk.Button):
+    '''Simple item.'''
+	
+    def __init__(self, element, index, font_size, item_height,
+                 padding_left, padding_middle, padding_right,
+                 set_index, get_index, x_align=ALIGN_START):
+        
+        # Init.
+        super(SimpleLabel, self).__init__()
+        self.font_size = font_size
+        self.index = index
+        self.set_index = set_index
+        self.get_index = get_index
+        self.padding_left = padding_left
+        self.padding_right = padding_right
+        self.font_offset = padding_middle
+        self.args = None
+        if len(element) == 2:
+            self.content, self.clicked_callback = element
+        else:    
+            self.content, self.clicked_callback = element[:2]
+            self.args = element[2:]
+
+        if self.content:
+            Tooltip.text(self, self.content)
+        self.x_align = x_align
+        self.set_size_request(120, item_height)
+        self.connect("expose-event", self.expose_simple_item)
+        self.connect("clicked", lambda w: self.wrap_item_clicked_action())
+        
+    def wrap_item_clicked_action(self):   
+        self.set_index(self.index)            
+        if self.clicked_callback:
+            if self.args:
+                self.clicked_callback(*self.args)
+            else:    
+                self.clicked_callback()
+        
+    def expose_simple_item(self, widget, event):    
+        
+        # Init.
+        cr = widget.window.cairo_create()
+        rect = widget.allocation
+        font_color = app_theme.get_color("labelText").get_color()
+        select_index = self.get_index()
+        
+        if widget.state == gtk.STATE_NORMAL:
+            if select_index == self.index:
+                select_status = BUTTON_PRESS
+            else:    
+                select_status = BUTTON_NORMAL
+                
+        elif widget.state == gtk.STATE_PRELIGHT:        
+            if select_index == self.index: 
+                select_status = BUTTON_PRESS
+            else:    
+                select_status = BUTTON_HOVER
+                
+        elif widget.state == gtk.STATE_ACTIVE:        
+            select_status = BUTTON_PRESS
+            
+        if select_status == BUTTON_PRESS:    
+            draw_single_mask(cr, rect.x, rect.y, rect.width, rect.height, "simpleItemSelect")
+            font_color = app_theme.get_color("simpleSelectItem").get_color()
+            
+        elif select_status == BUTTON_HOVER:    
+            draw_single_mask(cr, rect.x, rect.y, rect.width, rect.height, "simpleItemHover")
+        
+        
+        # Draw content.
+        draw_text(cr, self.content, 
+                  rect.x + self.padding_left + self.font_offset , 
+                  rect.y,
+                  rect.width - self.padding_left - self.font_offset - self.padding_right,
+                  rect.height, 
+                  self.font_size, font_color,
+                  alignment=self.x_align)
+        
+        propagate_expose(widget, event)
+        
+        return True
+    
+gobject.type_register(SimpleLabel)    
+
+
+class WebcastsBar(BaseBar):    
+    
+    def __init__(self, items, init_index=0, font_size=10, padding_left=15, padding_middle=10, padding_right=20):
+        BaseBar.__init__(self, init_index)
+        
+        if items:
+            for index, item in enumerate(items):
+                simple_item = SimpleLabel(
+                    item, index, font_size, 32, padding_left, padding_middle, padding_right, self.set_index, self.get_index)
+                self.pack_start(simple_item, False, True)
+        self.show_all()        
