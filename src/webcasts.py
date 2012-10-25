@@ -22,15 +22,19 @@
 
 
 import os
+import gobject
 from utils import load_db
 from xdg_support import get_config_file
 
-class WebcastsDatabase(object):
+class WebcastsDatabase(gobject.GObject):
+    __gsignals__ = {"loaded" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ())}
     
     def __init__(self):
+        gobject.GObject.__init__(self)
         self.raw_db_file = os.path.join((os.path.dirname(os.path.realpath(__file__))), "data", "webcasts.db")
         self.collect_db_file = get_config_file("collect_webcasts.db")
         self.custom_db_file = get_config_file("custom_webcasts.db")
+        self.__is_loaded = False
     
     def load(self):
         try:
@@ -47,6 +51,16 @@ class WebcastsDatabase(object):
             self.custom_db_objs = load_db(self.custom_db_file)
         except:    
             self.custom_db_objs = None
+            
+        gobject.idle_add(self.__delay_post_load)    
+
+        
+    def isloaded(self):    
+        return self.__is_loaded
+        
+    def __delay_post_load(self):    
+        self.__is_loaded = True
+        self.emit("loaded")
             
     def get_keys_from_categroy(self, categroy):        
         if not self.raw_db_objs:
@@ -74,10 +88,11 @@ class WebcastsDatabase(object):
     def is_collect(self, uri):    
         if not self.collect_db_objs:
             return False
-        for item  in self.collect_db_objs:
-            if uri == item.get("uri", ""):
+        for obj in self.collect_db_objs:
+            if obj.get("uri", "") == uri:
                 return True
-            return False
+        return False    
+
         
     def save(self):    
         pass

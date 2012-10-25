@@ -22,6 +22,7 @@
 
 import gtk
 import gobject
+import copy
 import os 
 
 from dtk.ui.scrolled_window import ScrolledWindow
@@ -30,6 +31,8 @@ from dtk.ui.new_treeview import TreeView, TreeItem
 from dtk.ui.draw import draw_vlinear, draw_pixbuf, draw_text
 from dtk.ui.utils import get_content_size
 
+
+import utils
 from widget.outlookbar import WebcastsBar
 from widget.ui_utils import draw_single_mask, draw_alpha_mask, render_item_text, switch_tab
 from widget.skin import app_theme
@@ -37,6 +40,7 @@ from widget.webcast_view import WebcastView
 from collections import OrderedDict
 from constant import DEFAULT_FONT_SIZE
 from webcasts import WebcastsDB
+from xdg_support import get_config_file
 from song import Song
 from nls import _
 
@@ -85,13 +89,18 @@ class WebcastListItem(gobject.GObject):
     
     __gsignals__ = {"redraw-request" : ( gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),}
     
-    def __init__(self, tags):
+    def __init__(self, tags, draw_collect=True):
         gobject.GObject.__init__(self)
         
         self.webcast = Song()
         self.webcast.init_from_dict(tags)
         self.webcast.set_type("webcast")
+        if draw_collect:
+            self.is_collect = WebcastsDB.is_collect(tags["uri"])        
+        else:    
+            self.is_collect = False
         self.index = None
+        self.draw_collect_flag = draw_collect
         self.webcast_normal_pixbuf = app_theme.get_pixbuf("webcast/webcast_normal.png").get_pixbuf()
         self.webcast_press_pixbuf = app_theme.get_pixbuf("webcast/webcast_press.png").get_pixbuf()
         self.collect_normal_pixbuf = app_theme.get_pixbuf("webcast/collect_normal.png").get_pixbuf()
@@ -110,7 +119,6 @@ class WebcastListItem(gobject.GObject):
         
     def __update_size(self):    
         self.title = self.webcast.get_str("title")
-        self.is_collect = WebcastsDB.is_collect(self.webcast.get("uri"))
         
         self.webcast_icon_padding_x = 10
         self.webcast_icon_padding_y = 5
@@ -141,13 +149,14 @@ class WebcastListItem(gobject.GObject):
         render_item_text(cr, self.title, rect, in_select, in_highlight)
         
     def render_collect_icon(self, cr, rect, in_select, in_highlight):    
-        icon_y = rect.y + (rect.height - self.collect_icon_h) / 2
-        rect.x += self.collect_icon_padding_x
-        if self.is_collect:
-            pixbuf = self.collect_press_pixbuf
-        else:    
-            pixbuf = self.collect_normal_pixbuf
-        draw_pixbuf(cr, pixbuf, rect.x , icon_y)
+        if self.draw_collect_flag:
+            icon_y = rect.y + (rect.height - self.collect_icon_h) / 2
+            rect.x += self.collect_icon_padding_x
+            if self.is_collect:
+                pixbuf = self.collect_press_pixbuf
+            else:    
+                pixbuf = self.collect_normal_pixbuf
+            draw_pixbuf(cr, pixbuf, rect.x , icon_y)
         
     def render_block(self, cr, rect, in_select, in_highlight):    
         pass
@@ -170,6 +179,31 @@ class WebcastListItem(gobject.GObject):
             self.is_collect = True
         self.emit_redraw_request()
         
+    def set_draw_collect(self, value):    
+        self.draw_collect_flag = value
+        self.emit_redraw_request()
+        
+    def get_tags(self):    
+        return self.webcast.get_dict()
+        
+    def __hash__(self):    
+        return hash(self.webcast.get("uri"))
+    
+    def __cmp__(self, other_item):
+        if not other_item: return -1
+        try:
+            return cmp(self.webcast.get("search"), other_item.webcast.get("search"))
+        except AttributeError: return -1
+        
+    def __eq__(self, other_item):    
+        try:
+            return self.webcast.get("uri") == other_item.webcast.get("uri")
+        except:
+            return False
+        
+    def __repr__(self):    
+        return "<Webcast %s>" % self.webcast.get("uri")
+    
         
 class WebcastsManager(gtk.VBox):
     
@@ -196,9 +230,10 @@ class WebcastsManager(gtk.VBox):
         
         self.source_view.connect("single-click-item", self.on_source_view_single_click_item)
         
-        items = WebcastsDB.get_items("internal", "网络电台")
-        self.source_view.add_items([WebcastListItem(tag) for tag in items])        
-        
+        if WebcastsDB.isloaded():
+            self.on_webcastsdb_loaded()
+        else:    
+            self.connect_to_webcastsdb()
         
         # Used to switch categroy view.
         self.switch_view_box = gtk.VBox()
@@ -215,10 +250,22 @@ class WebcastsManager(gtk.VBox):
         self.add(body_box)
         self.show_all()
         
+    def connect_to_webcastsdb(self):    
+        WebcastsDB.connect("loaded", self.on_webcastsdb_loaded)
+        
+    def on_webcastsdb_loaded(self, *args):    
+        items = WebcastsDB.get_items("internal", "网络电台")
+        self.source_view.add_items([WebcastListItem(tag) for tag in items])        
+        
+        # load collect webcasts.
+        collect_taglist = WebcastsDB.get_collect_items()
+        if collect_taglist:
+            self.collect_view.add_items([WebcastListItem(tag, False) for tag in collect_taglist])
+        
     def __init_sourcebar(self):
         items = []
         for key, value in self.source_data.items():
-            items.append((value, None))
+            items.append((value, lambda : switch_tab(self.switch_view_box, self.source_sw)))
         items.append((_("我的收藏"), lambda : switch_tab(self.switch_view_box, self.collect_sw)))    
         items.append((_("自定义"), None))    
             
@@ -241,7 +288,19 @@ class WebcastsManager(gtk.VBox):
     def on_source_view_single_click_item(self, widget, item, column, x, y):
         if column == 2:
             item.toggle_is_collect()
-            
-        # add item to collect_view.    
-        if item.is_collect:    
-            self.collect_view.add_items([item])
+            if item.is_collect:
+                tags = item.webcast.get_dict()
+                self.collect_view.add_items([WebcastListItem(tags, False)])                
+            else:    
+                for c_item in self.collect_view.items:
+                    if c_item == item:
+                        self.collect_view.delete_items([c_item])
+                        del c_item
+                        
+    def save(self):                    
+        if not self.collect_view.items:
+            return
+        items = []
+        for item in self.collect_view.items:
+            items.append(item.get_tags())
+        utils.save_db(items, get_config_file("collect_webcasts.db"))    
