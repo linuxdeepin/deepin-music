@@ -244,7 +244,6 @@ class CategroyItem(TreeItem):
     def select(self):        
         self.is_select = True
         self.emit_redraw_request()
-        self.popup_panel.show_all()                
         
     def render_title(self, cr, rect):        
         # Draw select background.
@@ -267,11 +266,13 @@ class CategroyItem(TreeItem):
     def unhover(self, column, offset_x, offset_y):
         self.is_hover = False
         self.emit_redraw_request()
+        popup_grab_window.popup_grab_window_focus_out()
     
     def hover(self, column, offset_x, offset_y):
         self.is_hover = True
         self.emit_redraw_request()
-
+        self.popup_panel.show_all()                
+        popup_grab_window.popup_grab_window_focus_in()
     
     def button_press(self, column, offset_x, offset_y):
         pass        
@@ -335,6 +336,7 @@ class PopupPanel(Window):
         
         self.set_size_request(300, 400)
         self.panel = gtk.Button()
+        self.panel.tag_by_poup_panel_grab_window = True
         self.panel.add_events(gtk.gdk.POINTER_MOTION_MASK |
                               gtk.gdk.BUTTON_PRESS_MASK |
                               gtk.gdk.BUTTON_RELEASE_MASK)
@@ -470,7 +472,32 @@ class PopupPanel(Window):
             
 gobject.type_register(PopupPanel)        
 
-popup_grab_window = PopupGrabWindow(PopupPanel)
+class PopupPanelGrabWindow(PopupGrabWindow):
+    '''
+    class docs
+    '''
+	
+    def __init__(self):
+        '''
+        init docs
+        '''
+        PopupGrabWindow.__init__(self, PopupPanel)
+        
+    def popup_grab_window_motion_notify(self, widget, event):
+        '''
+        Handle `motion-notify` signal of popup_grab_window.
+    
+        @param widget: Popup_Window widget.
+        @param event: Motion notify signal.
+        '''
+        if event and event.window:
+            event_widget = event.window.get_user_data()
+            if isinstance(event_widget, gtk.DrawingArea) and hasattr(event_widget, "tag_by_poup_panel_grab_window"):
+                event_widget.event(event)
+            elif isinstance(event_widget, gtk.Button) and hasattr(event_widget, "tag_by_poup_panel_grab_window"):
+                event_widget.event(event)
+
+popup_grab_window = PopupPanelGrabWindow()
 
 class WebcastsManager(gtk.VBox):
     
@@ -551,7 +578,7 @@ class WebcastsManager(gtk.VBox):
         self.sourcebar = TreeView([CategroyItem(value, key) for key, value in self.source_data.items()])
         self.sourcebar.set_size_request(121, -1)
         self.sourcebar.draw_mask = self.on_sourcebar_draw_mask        
-        
+        self.sourcebar.draw_area.tag_by_poup_panel_grab_window = True
 
         
     def get_webcasts_view(self):    
