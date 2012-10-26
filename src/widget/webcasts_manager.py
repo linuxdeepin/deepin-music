@@ -31,7 +31,8 @@ from dtk.ui.scrolled_window import ScrolledWindow
 from dtk.ui.listview import ListView
 from dtk.ui.new_treeview import TreeView, TreeItem
 from dtk.ui.draw import draw_vlinear, draw_pixbuf, draw_text
-from dtk.ui.utils import get_content_size
+from dtk.ui.utils import get_content_size, get_widget_root_coordinate
+from dtk.ui.constant import WIDGET_POS_TOP_RIGHT
 from dtk.ui.popup_grab_window import PopupGrabWindow, wrap_grab_window
 from dtk.ui.window import Window
 from dtk.ui.iconview import IconView
@@ -211,7 +212,7 @@ class WebcastListItem(gobject.GObject):
     
     
 class CategroyItem(TreeItem):    
-    def __init__(self, title, webcast_key):
+    def __init__(self, title, webcast_key, sourcebar, index):
         TreeItem.__init__(self)
         self.column_index = 0
         self.side_padding = 5
@@ -223,6 +224,8 @@ class CategroyItem(TreeItem):
         panel_items = [PanelItem(webcast_key, key) for key in owner_keys]
         self.popup_panel = PopupPanel()
         self.popup_panel.add_items(panel_items)
+        self.parent_widget = sourcebar
+        self.item_index = index
         
     def get_height(self):    
         return self.item_height
@@ -271,11 +274,16 @@ class CategroyItem(TreeItem):
     def hover(self, column, offset_x, offset_y):
         self.is_hover = True
         self.emit_redraw_request()
-        self.popup_panel.show_all()                
+        self.popup_panel.show(*self.adjust_popup_coord())                
         popup_grab_window.popup_grab_window_focus_in()
+        
+    def adjust_popup_coord(self):    
+        origin_x, origin_y = get_widget_root_coordinate(self.parent_widget, WIDGET_POS_TOP_RIGHT)        
+        origin_y += self.item_height * self.item_index
+        return origin_x, origin_y
     
     def button_press(self, column, offset_x, offset_y):
-        pass        
+        pass
     
     def single_click(self, column, offset_x, offset_y):
         pass        
@@ -322,7 +330,7 @@ class PanelItem(gobject.GObject):
         self.emit_redraw_request()
         
     def button_press(self):    
-        print self.title
+        self.lost_focus()
         
     
 class PopupPanel(Window):
@@ -340,8 +348,6 @@ class PopupPanel(Window):
         self.panel.add_events(gtk.gdk.POINTER_MOTION_MASK |
                               gtk.gdk.BUTTON_PRESS_MASK |
                               gtk.gdk.BUTTON_RELEASE_MASK)
-        
-        # self.connect("realize", self.on_popup_panel_realiz)
         
         self.panel.connect("expose-event", self.on_panel_expose_event)
         self.panel.connect("motion-notify-event", self.on_panel_motion_notify_event)
@@ -439,6 +445,7 @@ class PopupPanel(Window):
             
     def on_panel_button_press_event(self, widget, event):        
         if self.hover_item:
+            self.hover_item.button_press()
             Dispatcher.emit_webcast_info(self.hover_item.parent_key, self.hover_item.owner_key)
     
     def on_panel_button_release_event(self, widget, event):
@@ -540,7 +547,6 @@ class WebcastsManager(gtk.VBox):
         switch_view_align.set(1, 1, 1, 1)
         switch_view_align.add(self.switch_view_box)
         
-
         body_box = gtk.HBox()
         body_box.pack_start(self.sourcebar, False, True)
         body_box.pack_start(switch_view_align, True, True)
@@ -550,6 +556,7 @@ class WebcastsManager(gtk.VBox):
         
     def on_dispatcher_webcast_info(self, obj, parent, key):    
         items = WebcastsDB.get_items(parent, key)
+
         self.source_view.clear()
         if items:
             self.source_view.add_items([WebcastListItem(tag) for tag in items])        
@@ -567,19 +574,17 @@ class WebcastsManager(gtk.VBox):
             self.collect_view.add_items([WebcastListItem(tag, False) for tag in collect_taglist])
         
     def __init_sourcebar(self):
-        items = []
-        for key, value in self.source_data.items():
-            items.append((value, lambda : switch_tab(self.switch_view_box, self.source_sw)))
-        items.append((_("我的收藏"), lambda : switch_tab(self.switch_view_box, self.collect_sw)))    
-        items.append((_("自定义"), None))    
-            
-        # self.sourcebar = WebcastsBar(items)
-        # self.sourcebar.connect("expose-event", self.on_sourcebar_draw_mask)
-        self.sourcebar = TreeView([CategroyItem(value, key) for key, value in self.source_data.items()])
+        # items = []
+        # for key, value in self.source_data.items():
+        #     items.append((value, lambda : switch_tab(self.switch_view_box, self.source_sw)))
+        # items.append((_("我的收藏"), lambda : switch_tab(self.switch_view_box, self.collect_sw)))    
+        # items.append((_("自定义"), None))    
+        self.sourcebar = TreeView()
+        self.sourcebar.add_items([CategroyItem(value, key, self.sourcebar, index) for 
+                                  index, (key, value) in enumerate(self.source_data.items())])
         self.sourcebar.set_size_request(121, -1)
         self.sourcebar.draw_mask = self.on_sourcebar_draw_mask        
         self.sourcebar.draw_area.tag_by_poup_panel_grab_window = True
-
         
     def get_webcasts_view(self):    
         webcast_view = WebcastView()
