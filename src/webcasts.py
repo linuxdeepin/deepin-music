@@ -32,7 +32,7 @@ class WebcastsDatabase(gobject.GObject):
     def __init__(self):
         gobject.GObject.__init__(self)
         self.raw_db_file = os.path.join((os.path.dirname(os.path.realpath(__file__))), "data", "webcasts.db")
-        self.collect_db_file = get_config_file("collect_webcasts.db")
+        self.favorite_db_file = get_config_file("favorite_webcasts.db")
         self.custom_db_file = get_config_file("custom_webcasts.db")
         self.__is_loaded = False
     
@@ -43,9 +43,9 @@ class WebcastsDatabase(gobject.GObject):
             self.raw_db_objs = None
             
         try:    
-            self.collect_db_objs = load_db(self.collect_db_file)
+            self.favorite_db_objs = load_db(self.favorite_db_file)
         except:    
-            self.collect_db_objs =None
+            self.favorite_db_objs =None
             
         try:    
             self.custom_db_objs = load_db(self.custom_db_file)
@@ -79,16 +79,16 @@ class WebcastsDatabase(gobject.GObject):
             return []
         return self.custom_db_objs
     
-    def get_collect_items(self):
-        if not self.collect_db_objs:
+    def get_favorite_items(self):
+        if not self.favorite_db_objs:
             return []
         else:
-            return self.collect_db_objs
+            return self.favorite_db_objs
         
-    def is_collect(self, uri):    
-        if not self.collect_db_objs:
+    def is_collected(self, uri):    
+        if not self.favorite_db_objs:
             return False
-        for obj in self.collect_db_objs:
+        for obj in self.favorite_db_objs:
             if obj.get("uri", "") == uri:
                 return True
         return False    

@@ -55,6 +55,7 @@ class EventDispatcher(gobject.GObject):
         "show-job" : SIGNAL_BASE,
         "hide-job" : SIGNAL_BASE,
         "transfor-job" : SIGNAL_SIMPLE,
+        "webcast-info" : SIGNAL,
         }
     
     def __init__(self):
@@ -120,6 +121,9 @@ class EventDispatcher(gobject.GObject):
         
     def hide_jobs(self):    
         self.emit("hide_job")
+        
+    def emit_webcast_info(self, parent, key):    
+        self.emit("webcast-info", parent, key)
         
 Dispatcher = EventDispatcher()
 

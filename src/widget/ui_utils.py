@@ -24,7 +24,7 @@ import pango
 import gtk
 import pangocairo
 
-from dtk.ui.utils import alpha_color_hex_to_cairo
+from dtk.ui.utils import alpha_color_hex_to_cairo, cairo_disable_antialias
 from dtk.ui.line import draw_vlinear
 from dtk.ui.draw import draw_text
 from dtk.ui.line import HSeparator
@@ -51,7 +51,11 @@ def draw_alpha_mask(cr, x, y, width, height, color_name):
     cr.fill()
     
 def draw_single_mask(cr, x, y, width, height, color_name):
-    cairo_color = color_hex_to_cairo(app_theme.get_color(color_name).get_color())
+    if color_name.startswith("#"):
+        color = color_name
+    else:    
+        color = app_theme.get_color(color_name).get_color()
+    cairo_color = color_hex_to_cairo(color)
     cr.set_source_rgb(*cairo_color)
     cr.rectangle(x, y, width, height)
     cr.fill()
@@ -138,3 +142,15 @@ def set_widget_right(widget):
     hbox.pack_start(create_right_align(), False, True)
     hbox.pack_start(widget, False, False)    
     return hbox
+
+def draw_range(cr, x, y, width, height, color_name):
+    if color_name.startswith("#"):
+        color = color_name
+    else:    
+        color = app_theme.get_color(color_name).get_color()
+    cairo_color = color_hex_to_cairo(color)        
+    with cairo_disable_antialias(cr):
+        cr.set_line_width(1)
+        cr.set_source_rgb(*cairo_color)
+        cr.rectangle(x, y, width, height)
+        cr.stroke()
