@@ -244,6 +244,7 @@ class CategroyItem(TreeItem):
     def select(self):        
         self.is_select = True
         self.emit_redraw_request()
+        self.popup_panel.show_all()                
         
     def render_title(self, cr, rect):        
         # Draw select background.
@@ -266,12 +267,11 @@ class CategroyItem(TreeItem):
     def unhover(self, column, offset_x, offset_y):
         self.is_hover = False
         self.emit_redraw_request()
-        self.popup_panel.hide_all()
     
     def hover(self, column, offset_x, offset_y):
         self.is_hover = True
         self.emit_redraw_request()
-        self.popup_panel.show_all()
+
     
     def button_press(self, column, offset_x, offset_y):
         pass        
@@ -437,7 +437,7 @@ class PopupPanel(Window):
             
     def on_panel_button_press_event(self, widget, event):        
         if self.hover_item:
-            self.hover_item.button_press()
+            Dispatcher.emit_webcast_info(self.hover_item.parent_key, self.hover_item.owner_key)
     
     def on_panel_button_release_event(self, widget, event):
         pass
@@ -501,6 +501,9 @@ class WebcastsManager(gtk.VBox):
             self.on_webcastsdb_loaded()
         else:    
             self.connect_to_webcastsdb()
+            
+        # Dispatcher
+        Dispatcher.connect("webcast-info", self.on_dispatcher_webcast_info)    
         
         # Used to switch categroy view.
         self.switch_view_box = gtk.VBox()
@@ -517,6 +520,11 @@ class WebcastsManager(gtk.VBox):
         
         self.add(body_box)
         self.show_all()
+        
+    def on_dispatcher_webcast_info(self, obj, parent, key):    
+        items = WebcastsDB.get_items(parent, key)
+        self.source_view.clear()
+        self.source_view.add_items([WebcastListItem(tag) for tag in items])        
         
     def connect_to_webcastsdb(self):    
         WebcastsDB.connect("loaded", self.on_webcastsdb_loaded)
