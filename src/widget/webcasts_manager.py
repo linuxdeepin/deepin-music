@@ -524,7 +524,8 @@ class WebcastsManager(gtk.VBox):
     def on_dispatcher_webcast_info(self, obj, parent, key):    
         items = WebcastsDB.get_items(parent, key)
         self.source_view.clear()
-        self.source_view.add_items([WebcastListItem(tag) for tag in items])        
+        if items:
+            self.source_view.add_items([WebcastListItem(tag) for tag in items])        
         
     def connect_to_webcastsdb(self):    
         WebcastsDB.connect("loaded", self.on_webcastsdb_loaded)
