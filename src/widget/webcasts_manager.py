@@ -565,7 +565,7 @@ class WebcastsManager(gtk.VBox):
         WebcastsDB.connect("loaded", self.on_webcastsdb_loaded)
         
     def on_webcastsdb_loaded(self, *args):    
-        items = WebcastsDB.get_items("internal", "网络电台")
+        items = WebcastsDB.get_items("internal", "中央电台")
         self.source_view.add_items([WebcastListItem(tag) for tag in items])        
         
         # load collect webcasts.
