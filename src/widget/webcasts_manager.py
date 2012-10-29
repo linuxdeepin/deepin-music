@@ -341,7 +341,8 @@ class PopupPanel(Window):
                         shadow_visible=False,
                         shadow_radius=0,
                         shape_frame_function=self.shape_panel_frame,
-                        expose_frame_function=self.expose_panel_frame)
+                        expose_frame_function=self.expose_panel_frame,
+                        window_type=gtk.WINDOW_POPUP)
         
         self.set_size_request(300, 400)
         self.panel = gtk.Button()
@@ -528,7 +529,6 @@ class PopupPanelGrabWindow(PopupGrabWindow):
         
         if event and event.window:
             event_widget = event.window.get_user_data()
-            print (event_widget)
             if self.is_press_on_popup_grab_window(event.window):
                 self.popup_grab_window_focus_out()
             elif isinstance(event_widget, ScrolledWindow) and hasattr(event_widget, "tag_by_popup_grab_window"):
@@ -620,11 +620,6 @@ class WebcastsManager(gtk.VBox):
             self.collect_view.add_items([WebcastListItem(tag, False) for tag in collect_taglist])
         
     def __init_sourcebar(self):
-        # items = []
-        # for key, value in self.source_data.items():
-        #     items.append((value, lambda : switch_tab(self.switch_view_box, self.source_sw)))
-        # items.append((_("我的收藏"), lambda : switch_tab(self.switch_view_box, self.collect_sw)))    
-        # items.append((_("自定义"), None))    
         self.sourcebar = TreeView()
         self.sourcebar.add_items([CategroyItem(value, key, self.sourcebar, index) for 
                                   index, (key, value) in enumerate(self.source_data.items())])
