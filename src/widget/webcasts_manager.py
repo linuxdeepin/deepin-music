@@ -433,6 +433,13 @@ class PopupPanel(Window):
             start_x += self.separate_width
         return start_y + item_height + self.padding_y
     
+    def is_visible_area(self, event):
+        for key, coord in self.coords.iteritems():
+            if coord.start_x < event.x < coord.end_x and coord.start_y < event.y < coord.end_y:
+                return True
+        return False    
+        
+    
     def on_panel_motion_notify_event(self, widget, event):
         if not self.coords:
             return 
@@ -535,7 +542,10 @@ class PopupPanelGrabWindow(PopupGrabWindow):
                     event_widget.event(event)
                     self.popup_grab_window_focus_out()
             elif isinstance(event_widget, gtk.Button) and hasattr(event_widget, "tag_by_poup_panel_grab_window"):
-                pass
+                popup_panel_widget = get_match_parent(event_widget, "PopupPanel")
+                if popup_panel_widget.is_visible_area(event):
+                    event_widget.event(event)
+                    self.popup_grab_window_focus_out()
             else:
                 event_widget.event(event)
                 self.popup_grab_window_focus_out()
