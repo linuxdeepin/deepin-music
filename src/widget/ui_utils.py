@@ -154,3 +154,17 @@ def draw_range(cr, x, y, width, height, color_name):
         cr.set_source_rgb(*cairo_color)
         cr.rectangle(x, y, width, height)
         cr.stroke()
+
+def draw_line(cr, start, end, color_name):
+    if color_name.startswith("#"):
+        color = color_name
+    else:    
+        color = app_theme.get_color(color_name).get_color()
+    cairo_color = color_hex_to_cairo(color)        
+    with cairo_disable_antialias(cr):
+        cr.set_line_width(1)
+        cr.set_source_rgb(*cairo_color)
+        cr.move_to(*start)
+        cr.line_to(*end)
+        cr.stroke()
+        

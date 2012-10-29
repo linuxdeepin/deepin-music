@@ -39,7 +39,7 @@ from dtk.ui.iconview import IconView
 
 import utils
 from widget.outlookbar import WebcastsBar
-from widget.ui_utils import draw_single_mask, draw_alpha_mask, render_item_text, switch_tab, draw_range
+from widget.ui_utils import draw_single_mask, draw_alpha_mask, render_item_text, switch_tab, draw_range, draw_line
 from widget.skin import app_theme
 from widget.webcast_view import WebcastView
 from collections import OrderedDict
@@ -312,7 +312,7 @@ class PanelItem(gobject.GObject):
         self.emit("redraw-request")
     
     def render(self, cr, rect):    
-        if self.hover_flag:
+        if not self.hover_flag:
             color = "#333333"
         else:    
             color = app_theme.get_color("simpleItemSelect").get_color()
@@ -393,6 +393,10 @@ class PopupPanel(Window):
             return 
         cr = widget.window.cairo_create()
         rect = widget.allocation
+        
+        draw_line(cr, (rect.x, rect.y + 1), (rect.x + rect.width, rect.y + 1), "#c7c7c7")
+        draw_line(cr, (rect.x + rect.width, rect.y), (rect.x + rect.width, rect.y + rect.height), "#c7c7c7")
+        draw_line(cr, (rect.x, rect.y + rect.height), (rect.x + rect.width, rect.y + rect.height), "#c7c7c7")
         
         start_x, start_y = self.padding_x, self.padding_y
         
