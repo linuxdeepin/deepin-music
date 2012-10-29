@@ -31,7 +31,7 @@ from dtk.ui.scrolled_window import ScrolledWindow
 from dtk.ui.listview import ListView
 from dtk.ui.new_treeview import TreeView, TreeItem
 from dtk.ui.draw import draw_vlinear, draw_pixbuf, draw_text
-from dtk.ui.utils import get_content_size, get_widget_root_coordinate
+from dtk.ui.utils import get_content_size, get_widget_root_coordinate, get_match_parent
 from dtk.ui.constant import WIDGET_POS_TOP_RIGHT
 from dtk.ui.popup_grab_window import PopupGrabWindow, wrap_grab_window
 from dtk.ui.window import Window
@@ -510,6 +510,36 @@ class PopupPanelGrabWindow(PopupGrabWindow):
             elif isinstance(event_widget, gtk.Button) and hasattr(event_widget, "tag_by_poup_panel_grab_window"):
                 event_widget.event(event)
 
+    def popup_grab_window_button_press(self, widget, event):
+        '''
+        Handle `button-press-event` signal of popup_grab_window.
+    
+        @param widget: Popup_Window widget.
+        @param event: Button press event.
+        '''
+        self.press_flag = True
+        
+        if event and event.window:
+            event_widget = event.window.get_user_data()
+            print (event_widget)
+            if self.is_press_on_popup_grab_window(event.window):
+                self.popup_grab_window_focus_out()
+            elif isinstance(event_widget, ScrolledWindow) and hasattr(event_widget, "tag_by_popup_grab_window"):
+                event_widget.event(event)
+            elif isinstance(event_widget, self.wrap_window_type):
+                event_widget.event(event)
+            elif isinstance(event_widget, gtk.DrawingArea) and hasattr(event_widget, "tag_by_poup_panel_grab_window"):
+                treeview = get_match_parent(event_widget, "TreeView")
+                cell = treeview.get_cell_with_event(event)
+                if cell == None:
+                    event_widget.event(event)
+                    self.popup_grab_window_focus_out()
+            elif isinstance(event_widget, gtk.Button) and hasattr(event_widget, "tag_by_poup_panel_grab_window"):
+                pass
+            else:
+                event_widget.event(event)
+                self.popup_grab_window_focus_out()
+                
 popup_grab_window = PopupPanelGrabWindow()
 
 class WebcastsManager(gtk.VBox):
