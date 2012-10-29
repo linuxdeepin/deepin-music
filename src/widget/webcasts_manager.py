@@ -330,7 +330,8 @@ class PanelItem(gobject.GObject):
         self.emit_redraw_request()
         
     def button_press(self):    
-        self.lost_focus()
+        pass
+        # self.lost_focus()
         
     
 class PopupPanel(Window):
@@ -421,6 +422,7 @@ class PopupPanel(Window):
     
     def adjust_window_height(self):
         start_x, start_y = self.padding_x, self.padding_y
+        item_height = 0
         for item in self.items:
             item_width, item_height = item.get_size()
             if self.default_width - start_x < item_width + self.separate_width:
