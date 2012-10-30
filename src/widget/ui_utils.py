@@ -24,12 +24,14 @@ import pango
 import gtk
 import pangocairo
 
-from dtk.ui.utils import alpha_color_hex_to_cairo, cairo_disable_antialias
+from dtk.ui.utils import alpha_color_hex_to_cairo, cairo_disable_antialias, layout_set_markup
 from dtk.ui.line import draw_vlinear
 from dtk.ui.draw import draw_text
 from dtk.ui.line import HSeparator
+from dtk.ui.constant import DEFAULT_FONT
 from widget.skin import app_theme
 from utils import color_hex_to_cairo
+from constant import DEFAULT_FONT_SIZE
 
 def container_remove_all(container):
     ''' Removee all child widgets for container. '''
@@ -167,4 +169,3 @@ def draw_line(cr, start, end, color_name):
         cr.move_to(*start)
         cr.line_to(*end)
         cr.stroke()
-        

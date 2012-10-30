@@ -39,9 +39,9 @@ from dtk.ui.iconview import IconView
 
 import utils
 from widget.outlookbar import WebcastsBar
-from widget.ui_utils import draw_single_mask, draw_alpha_mask, render_item_text, switch_tab, draw_range, draw_line
+from widget.ui_utils import (draw_single_mask, draw_alpha_mask, render_item_text,
+                             switch_tab, draw_range, draw_line)
 from widget.skin import app_theme
-from widget.webcast_view import WebcastView
 from collections import OrderedDict
 from constant import DEFAULT_FONT_SIZE
 from webcasts import WebcastsDB
@@ -212,20 +212,23 @@ class WebcastListItem(gobject.GObject):
     
     
 class CategroyItem(TreeItem):    
-    def __init__(self, title, webcast_key, sourcebar, index):
+    def __init__(self, title, webcast_key, sourcebar, index, show_icon=False):
         TreeItem.__init__(self)
         self.column_index = 0
         self.side_padding = 5
         self.item_height = 37
         self.title = title
         self.item_width = 121
+        self.webcast_key = webcast_key
         self.hover_bg = app_theme.get_pixbuf("webcast/categroy_bg.png").get_pixbuf()
+        self.selected_pixbuf = app_theme.get_pixbuf("webcast/source_sselect.png").get_pixbuf()
         owner_keys = WebcastsDB.get_keys_from_categroy(webcast_key)
-        panel_items = [PanelItem(webcast_key, key) for key in owner_keys]
+        panel_items = [PanelItem(webcast_key, key, sourcebar) for key in owner_keys]
         self.popup_panel = PopupPanel()
         self.popup_panel.add_items(panel_items)
         self.parent_widget = sourcebar
         self.item_index = index
+        self.has_icon = show_icon
         
     def get_height(self):    
         return self.item_height
@@ -259,6 +262,18 @@ class CategroyItem(TreeItem):
         draw_text(cr, self.title, rect.x, rect.y, rect.width, rect.height, text_size=11, 
                   text_color = text_color,
                   alignment=pango.ALIGN_CENTER)    
+        
+        if self.has_icon:
+            draw_pixbuf(cr, self.selected_pixbuf, rect.x + 10,
+                        rect.y + (rect.height - self.selected_pixbuf.get_height()) / 2)
+        
+    def hide_icon(self):
+        self.has_icon = False
+        self.emit_redraw_request()
+        
+    def show_icon(self):    
+        self.has_icon = True
+        self.emit_redraw_request()
         
     def expand(self):
         pass
@@ -298,12 +313,14 @@ class PanelItem(gobject.GObject):
     
     __gsignals__ = { "redraw-request" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()), }
     
-    def __init__(self, parent, title):
+    def __init__(self, parent, title, allocation_widget):
         gobject.GObject.__init__(self)
         self.hover_flag = False
+        self.allocation_widget = allocation_widget
         self.highlight_flag = False
         self.owner_key = self.title = title
         self.parent_key = parent
+        self.has_underline = True
         
     def get_title(self):    
         return self.title
@@ -314,14 +331,18 @@ class PanelItem(gobject.GObject):
     def render(self, cr, rect):    
         if not self.hover_flag:
             color = "#333333"
+            self.underline = False
         else:    
+            if self.has_underline:            
+                self.underline = True
             color = app_theme.get_color("simpleItemSelect").get_color()
-        draw_text(cr, self.title, rect.x, rect.y, rect.width, rect.height, text_color=color)
+        draw_text(cr, self.title, rect.x, rect.y, rect.width, rect.height, text_color=color, underline=self.underline)
         
     def get_size(self):    
         return get_content_size(self.title, DEFAULT_FONT_SIZE)
         
     def motion_notify(self, x, y):    
+        self.has_underline =True
         self.hover_flag = True
         self.emit_redraw_request()
         
@@ -330,9 +351,18 @@ class PanelItem(gobject.GObject):
         self.emit_redraw_request()
         
     def button_press(self):    
-        pass
-        # self.lost_focus()
+        self.underline = False
+        self.has_underline = False
+        self.emit_redraw_request()
+        self.show_selected_icon()
         
+    def show_selected_icon(self):    
+        items = self.allocation_widget.visible_items
+        for item in items:
+            if item.webcast_key != self.parent_key:
+                item.hide_icon()
+            else:    
+                item.show_icon()
     
 class PopupPanel(Window):
     
@@ -366,6 +396,8 @@ class PopupPanel(Window):
         self.range = namedtuple("coord", "start_x end_x start_y end_y")
         self.hover_item = None
         self.items = []
+        self.block_height = 17
+        self.item_interval_height = 12
         
         # Redraw.
         self.redraw_delay = 100 # 100 milliseconds should be enough for redraw
@@ -400,12 +432,14 @@ class PopupPanel(Window):
         draw_line(cr, (rect.x + rect.width, rect.y), (rect.x + rect.width, rect.y + rect.height), "#c7c7c7")
         draw_line(cr, (rect.x, rect.y + rect.height), (rect.x + rect.width, rect.y + rect.height), "#c7c7c7")
         
+        rect.y += self.block_height        
+        
         start_x, start_y = self.padding_x, self.padding_y
         
         for index, item in enumerate(self.items):
             item_width, item_height = item.get_size()
             if rect.width - start_x < item_width + self.separate_width:
-                start_y += item_height + self.padding_y
+                start_y += item_height + self.item_interval_height
                 start_x = self.padding_x
                 
             item.render(cr, gtk.gdk.Rectangle(rect.x + start_x, rect.y + start_y,
@@ -415,8 +449,9 @@ class PopupPanel(Window):
                                             rect.y + start_y, rect.y + start_y + item_height)
             start_x += item_width            
             
+            
             draw_text(cr, self.separate_text, rect.x + start_x, rect.y + start_y, self.separate_width, 
-                      self.separate_height, text_color=app_theme.get_color("simpleItemSelect").get_color())
+                      self.separate_height, text_color=app_theme.get_color("labelText").get_color())
             start_x += self.separate_width
             
         return True    
@@ -427,12 +462,12 @@ class PopupPanel(Window):
         for item in self.items:
             item_width, item_height = item.get_size()
             if self.default_width - start_x < item_width + self.separate_width:
-                start_y += item_height + self.padding_y
+                start_y += item_height + self.item_interval_height
                 start_x = self.padding_x
                 
             start_x += item_width        
             start_x += self.separate_width
-        return start_y + item_height + self.padding_y
+        return start_y + item_height + self.block_height * 2
     
     def is_visible_area(self, event):
         for key, coord in self.coords.iteritems():
@@ -632,8 +667,13 @@ class WebcastsManager(gtk.VBox):
         
     def __init_sourcebar(self):
         self.sourcebar = TreeView()
-        self.sourcebar.add_items([CategroyItem(value, key, self.sourcebar, index) for 
-                                  index, (key, value) in enumerate(self.source_data.items())])
+        items = []
+        for index, (key, value) in enumerate(self.source_data.items()):
+            if index == 0: show_icon = True
+            else: show_icon = False
+            items.append(CategroyItem(value, key, self.sourcebar, index, show_icon))
+                
+        self.sourcebar.add_items(items)
         self.sourcebar.set_size_request(121, -1)
         self.sourcebar.draw_mask = self.on_sourcebar_draw_mask        
         self.sourcebar.draw_area.tag_by_poup_panel_grab_window = True
@@ -644,7 +684,7 @@ class WebcastsManager(gtk.VBox):
         self.sourcebar.unhover_row()
         
     def get_webcasts_view(self):    
-        webcast_view = WebcastView()
+        webcast_view = ListView()
         scrolled_window = ScrolledWindow(0, 0)
         scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
         scrolled_window.add_child(webcast_view)

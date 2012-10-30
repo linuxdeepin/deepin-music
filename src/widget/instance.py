@@ -33,7 +33,7 @@ from dtk.ui.button import LinkButton
 
 from widget.skin import app_theme
 from widget.headerbar import FullHeaderBar, SimpleHeadber
-from widget.playlist import PlaylistUI
+from widget.list_manager import ListManager
 from widget.lyrics_module import LyricsModule
 from widget.browser import SimpleBrowser
 from widget.webcasts_manager import WebcastsManager
@@ -100,7 +100,8 @@ class DeepinMusic(gobject.GObject, Logger):
         
         self.tray_icon = TrayIcon(self)        
         self.lyrics_display = LyricsModule()
-        self.playlist_ui = PlaylistUI()    
+        self.list_manager = ListManager()
+        self.playlist_ui =  self.list_manager.playlist_ui
         self.full_header_bar = FullHeaderBar()
         self.simple_header_bar = SimpleHeadber()
         self.preference_dialog = PreferenceDialog()
@@ -121,7 +122,7 @@ class DeepinMusic(gobject.GObject, Logger):
         # self.browser_align.add(self.simple_browser)
         self.webcasts_manager = WebcastsManager()
         self.browser_align.add(self.webcasts_manager)
-        bottom_box.pack_start(self.playlist_ui, False, False)        
+        bottom_box.pack_start(self.list_manager, False, False)        
         bottom_box.pack_start(self.browser_align, True, True)
         self.browser_align.set_no_show_all(True)
         
