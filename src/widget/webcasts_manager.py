@@ -30,15 +30,13 @@ from collections import namedtuple
 from dtk.ui.scrolled_window import ScrolledWindow
 from dtk.ui.listview import ListView
 from dtk.ui.new_treeview import TreeView, TreeItem
-from dtk.ui.draw import draw_vlinear, draw_pixbuf, draw_text
+from dtk.ui.draw import draw_pixbuf, draw_text
 from dtk.ui.utils import get_content_size, get_widget_root_coordinate, get_match_parent
 from dtk.ui.constant import WIDGET_POS_TOP_RIGHT
 from dtk.ui.popup_grab_window import PopupGrabWindow, wrap_grab_window
 from dtk.ui.window import Window
-from dtk.ui.iconview import IconView
 
 import utils
-from widget.outlookbar import WebcastsBar
 from widget.ui_utils import (draw_single_mask, draw_alpha_mask, render_item_text,
                              switch_tab, draw_range, draw_line)
 from widget.skin import app_theme
@@ -685,11 +683,14 @@ class WebcastsManager(gtk.VBox):
         
     def get_webcasts_view(self):    
         webcast_view = ListView()
+        webcast_view.connect("double-click-item", self.on_webcast_view_double_click)
         scrolled_window = ScrolledWindow(0, 0)
         scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
         scrolled_window.add_child(webcast_view)
         return webcast_view, scrolled_window
 
+    def on_webcast_view_double_click(self, widget, item, column, x, y):
+        Dispatcher.play_webcast(item.webcast)
     
     def on_sourcebar_draw_mask(self, cr, x, y, w, h):    
         draw_alpha_mask(cr, x, y, w, h ,"layoutRight")

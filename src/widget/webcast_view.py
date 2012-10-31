@@ -28,7 +28,6 @@ from dtk.ui.draw import draw_pixbuf, draw_text
 from widget.ui_utils import draw_single_mask
 from widget.skin import app_theme
 import pango
-
     
 class WebcastItem(TreeItem):    
     def __init__(self, webcast):
@@ -43,10 +42,10 @@ class WebcastItem(TreeItem):
         return self.item_height
     
     def get_column_widths(self):
-        return (50, -1)
+        return (-1,)
     
     def get_column_renders(self):
-        return (self.render_icon, self.render_title)
+        return (self.render_content,)
     
     def unselect(self):
         self.is_select = False
@@ -60,26 +59,29 @@ class WebcastItem(TreeItem):
         self.is_select = True
         self.emit_redraw_request()
         
-    def render_icon(self, cr, rect):        
-        # Draw select background.
-        if self.is_select:
-            icon_pixbuf = app_theme.get_pixbuf("webcast/webcast_large_press.png".get_pixbuf())
-        else:    
-            icon_pixbuf = app_theme.get_pixbuf("webcast/webcast_large_normal.png".get_pixbuf())
+    def render_content(self, cr, rect):    
+        if self.is_hover:
+            draw_single_mask(cr, rect.x, rect.y, rect.width, rect.height, "simpleItemHover")
             
-        icon_y = (rect.y - icon_pixbuf.get_height())  / 2 
-        padding_x = 10
-        draw_pixbuf(cr, icon_pixbuf, rect.x + padding_x, icon_y)    
+        if self.is_select:    
+            draw_single_mask(cr, rect.x, rect.y, rect.width, rect.height, "simpleItemSelect")
         
-    def render_title(self, cr, rect):    
         if self.is_select:
-            text_color = app_theme.get_color("simpleItemSelect").get_color()
+            # text_color = app_theme.get_color("simpleItemSelect").get_color()
+            text_color = "#ffffff"
+            icon_pixbuf = app_theme.get_pixbuf("webcast/webcast_large_press.png").get_pixbuf()            
         else:    
             text_color = app_theme.get_color("labelText").get_color()
+            icon_pixbuf = app_theme.get_pixbuf("webcast/webcast_large_normal.png").get_pixbuf()            
             
-        draw_text(cr, self.webcast.get_str("title"), rect.x, rect.y, rect.width, rect.height, 
+        icon_y = rect.y + (rect.height - icon_pixbuf.get_height())  / 2 
+        padding_x = 10
+        draw_pixbuf(cr, icon_pixbuf, rect.x + padding_x, icon_y)    
+            
+        draw_text(cr, self.webcast.get_str("title"), rect.x + icon_pixbuf.get_width() + padding_x * 2, 
+                  rect.y, rect.width - icon_pixbuf.get_width() - padding_x * 2, rect.height, 
                   text_color = text_color,
-                  alignment=pango.ALIGN_CENTER)    
+                  alignment=pango.ALIGN_LEFT, text_size=11)    
         
     def expand(self):
         pass
@@ -107,7 +109,3 @@ class WebcastItem(TreeItem):
     def draw_drag_line(self, drag_line, drag_line_at_bottom=False):
         pass
 
-    
-class WebcastView(TreeView):
-    def __init__(self):
-        TreeView.__init__(*)

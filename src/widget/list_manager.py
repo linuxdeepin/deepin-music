@@ -24,8 +24,11 @@ import gtk
 
 from dtk.ui.tab_window import TabBox
 from dtk.ui.new_treeview import TreeView
+from webcast_view import WebcastItem
 
 from playlist import PlaylistUI
+from helper import Dispatcher
+from player import Player
 
 class ListManager(gtk.VBox):
     
@@ -47,7 +50,13 @@ class ListManager(gtk.VBox):
         
         self.add(self.tab_box)
         
+        Dispatcher.connect("play-webcast", self.on_dispatcher_play_webcast)
+        
     def get_webcast_view(self):    
         view = TreeView()
         view.set_size_request(324, -1)
         return view
+    
+    def on_dispatcher_play_webcast(self, obj, webcast):
+        self.webcast_view.add_items([WebcastItem(webcast)])
+        Player.play_new(webcast)

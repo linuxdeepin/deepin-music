@@ -27,9 +27,10 @@ from config import config
 from library import MediaDB
 from logger import Logger
 from player.fadebin import PlayerBin
-from utils import get_mime_type, get_uris_from_pls, get_uris_from_m3u, fix_charset
+from utils import get_mime_type, get_uris_from_pls, get_uris_from_m3u, fix_charset, threaded
 
 from helper import Dispatcher
+
 
 DEBUG = False
 
@@ -174,6 +175,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
     def get_source(self):    
         return self.__source
         
+    @threaded
     def set_song(self, song, play=False, crossfade=None, seek=None):
         '''set song'''
         if not song:
