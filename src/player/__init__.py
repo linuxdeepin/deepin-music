@@ -22,7 +22,6 @@
 
 import gobject
 from time import time
-
 from config import config
 from library import MediaDB
 from logger import Logger
@@ -174,8 +173,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         
     def get_source(self):    
         return self.__source
-        
-    @threaded
+
     def set_song(self, song, play=False, crossfade=None, seek=None):
         '''set song'''
         if not song:
@@ -202,26 +200,6 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
             
         self.logdebug("player try to load %s", uri)
         
-        # mime_type = get_mime_type(uri)
-
-        # if mime_type in [ "audio/x-scpls", "audio/x-mpegurl"]:
-        #     try_num = 2
-        #     uris = None
-        #     while not uris:
-        #         if mime_type == "audio/x-scpls":
-        #             uris = get_uris_from_pls(uri)
-        #         elif mime_type == "audio/x-mpegurl":    
-        #             uris = get_uris_from_m3u(uri)
-        #         try_num += 1    
-        #         if try_num > 3:
-        #             break
-        #     if uris:        
-        #         self.logdebug("%s choosen in %s", uris[0], uri)
-        #         uri = uris[0]
-        #     else:    
-        #         self.logdebug("no playable uri found in %s", uri)
-        #         uri = None
-                
         # remove old stream for pipeline excepted when need to fade
         if self.song and (crossfade == -1 or self.is_paused() or not self.is_playable()):        
             self.logdebug("force remove stream:%s", self.song.get("uri"))
@@ -231,6 +209,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         self.song = song    
         self.__current_song_reported = False
         self.emit("instant-new-song", self.song)
+
         ret = uri and self.bin.xfade_open(uri)
         if not ret:
             gobject.idle_add(self.emit, "play-end")
@@ -238,7 +217,8 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         elif play:    
             self.play(crossfade, seek)
             self.logdebug("play %s", song.get_path())
-        
+            
+            
     def play_new(self, song, crossfade=None, seek=None):
         '''add new song and try to play it'''
         self.set_song(song, True, crossfade, seek)

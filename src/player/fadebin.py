@@ -143,14 +143,13 @@
 # - block completes -> link, unblock, -> PLAYING
 # - rb_player_pause() -> SEEKING_PAUSED
 
-
-import os
 import gobject
+import os
+
 import gst
 from threading import Lock
 
 from logger import Logger
-
 
 # STREAM_URI = [ "http://", "mms://", "mmsh://", "mmsu://", "mmst://", "rtsp://" ]
 STREAM_URI = [ "http://", "mms://", "mmsh://", "mmsu://", "mmst://"]
@@ -1207,6 +1206,7 @@ class StreamBin(gst.Bin, Logger):
 
         self.stream_data = None
         self.stream_data_desktroy = None
+        
 
         self.fading = False
         self.fade_end = 0
@@ -1894,7 +1894,7 @@ class StreamBin(gst.Bin, Logger):
     def get_linkage(self):
         """ For debug purpose """
         return self.__decoder_linked, self.__adder_pad is not None
-
+    
     def preroll_stream(self):
         ret = True
         unblock = False
@@ -1939,6 +1939,7 @@ class StreamBin(gst.Bin, Logger):
                 
         if not ret:
             self.logerror("Failed to preroll stream")
+        
         return ret
 
     def query_stream_position(self, format):
