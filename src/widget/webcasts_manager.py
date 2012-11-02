@@ -287,8 +287,6 @@ class CategroyItem(TreeItem):
     def hover(self, column, offset_x, offset_y):
         self.is_hover = True
         self.emit_redraw_request()
-        self.popup_panel.show(*self.adjust_popup_coord())                
-        popup_grab_window.popup_grab_window_focus_in()
         
     def adjust_popup_coord(self):    
         origin_x, origin_y = get_widget_root_coordinate(self.parent_widget, WIDGET_POS_TOP_RIGHT)        
@@ -296,7 +294,8 @@ class CategroyItem(TreeItem):
         return origin_x, origin_y
     
     def button_press(self, column, offset_x, offset_y):
-        pass
+        self.popup_panel.show(*self.adjust_popup_coord())                
+        popup_grab_window.popup_grab_window_focus_in()
     
     def single_click(self, column, offset_x, offset_y):
         pass        

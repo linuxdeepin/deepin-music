@@ -27,7 +27,7 @@ from config import config
 from library import MediaDB
 from logger import Logger
 from player.fadebin import PlayerBin
-from utils import get_mime_type, get_uris_from_pls, get_uris_from_m3u, fix_charset, threaded, ThreadRun
+from utils import fix_charset, ThreadRun
 
 from helper import Dispatcher
 
@@ -209,17 +209,17 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
             
         if song and song.get_type() not in ["local", "cue"]:
             try:
-                self.bin.xfade_close(self.song.get("uri"))
-            except:    
-                pass
+                threading.Thread(target=self.bin.xfade_close, args=(self.song.get("uri"),)).start()
+                # self.bin.xfade_close(self.song.get("uri"))
+            except Exception, e:    
+                print e
             
         # set current song and try play it.
         self.song = song    
         self.__current_song_reported = False
         self.emit("instant-new-song", self.song)
 
-        if song.get_type() not in ["local", "cue"]:
-            print "thread"
+        if song.get_type() == "webcast" and song.get_scheme() in ["mms", "rtsp"]:
             self.thread_play(uri, crossfade, seek, song, play, self.play_thread_id)
         else:    
             ret = uri and self.bin.xfade_open(uri)
@@ -508,7 +508,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         
     def save_state(self):            
         '''save current song's state'''
-        if self.song:
+        if self.song.get_type() == "local":
             config.set("player", "song_type", self.song.get_type())
             config.set("player", "uri", self.song.get("uri"))
             config.set("player", "seek", str(self.get_position()))
