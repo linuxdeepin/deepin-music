@@ -204,15 +204,14 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         self.logdebug("player try to load %s", uri)
         
         # remove old stream for pipeline excepted when need to fade
-        if self.song and (crossfade == -1 or self.is_paused() or not self.is_playable()):        
-            self.logdebug("force remove stream:%s", self.song.get("uri"))
+        
             
         if song and song.get_type() not in ["local", "cue"]:
-            try:
-                threading.Thread(target=self.bin.xfade_close, args=(self.song.get("uri"),)).start()
-                # self.bin.xfade_close(self.song.get("uri"))
-            except Exception, e:    
-                print e
+            self.force_fade_close()
+            
+        if self.song and (crossfade == -1 or self.is_paused() or not self.is_playable()):        
+
+            self.force_fade_close()
             
         # set current song and try play it.
         self.song = song    
@@ -229,6 +228,17 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
             elif play:    
                 self.play(crossfade, seek)
                 self.logdebug("play %s", song.get_path())
+                
+    def force_fade_close(self):            
+        if not self.song: return 
+        self.logdebug("Force remove stream: %s", self.song.get("uri"))        
+        if self.song.get_type() not in ["local", "cue"]:
+            try:
+                threading.Thread(target=self.bin.xfade_close, args=(self.song.get("uri"),)).start()
+            except Exception, e:    
+                self.logdebug("Force stop song:%s failed! error: %s", self.song.get("uri"),  e)
+        else:        
+            self.bin.xfade_close(self.song.get("uri"))
             
     def thread_play(self, uri, crossfade, seek, song, play, thread_id):        
         ThreadRun(self.bin.xfade_open, self.emit_and_play, (uri,), (crossfade, seek, song, play, thread_id)).start()

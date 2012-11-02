@@ -1457,7 +1457,10 @@ class StreamBin(gst.Bin, Logger):
 
         
         self.__player.stream_list_lock.acquire()
-        self.__player.streams.remove(self)
+        try:
+            self.__player.streams.remove(self)
+        except:    
+            pass
         self.__player.dump_stream_list()
         self.__player.stream_list_lock.release()
 
