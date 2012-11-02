@@ -123,6 +123,7 @@ class DeepinCoverManager(Logger):
     def __init__(self):
         self.default_cover = app_theme.get_theme_file_path("image/cover/default_cover1.png")
         self.all_song_cover = app_theme.get_theme_file_path("image/cover/all_song.png")
+        self.webcast_cover = app_theme.get_theme_file_path("image/cover/webcast.png")
         
     def get_cover_search_str(self, song):
         artist = song.get_str("artist")
@@ -189,6 +190,8 @@ class DeepinCoverManager(Logger):
         return app_theme.get_pixbuf("genre/%s" % GENRE_PATH[1]).get_pixbuf()
     
     def get_cover(self, song, try_web=True):
+        if song.get_type() == "webcast":
+            return self.webcast_cover
         default_image_path = self.default_cover
         album = self.get_cover_search_str(song)
         image_path = get_cache_file("cover/%s.jpg" % album)

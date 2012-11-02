@@ -96,6 +96,9 @@ class CoverButton(gtk.Button):
         if not force_song:
             force_song = self.current_song
         filename = CoverManager.get_cover(force_song, try_web)    
+        
+        if Player.song != force_song:
+            return
         try:
             pixbuf = get_optimum_pixbuf_from_file(filename, COVER_SIZE["x"], COVER_SIZE["y"])
         except gobject.GError:    
