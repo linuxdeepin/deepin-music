@@ -587,13 +587,18 @@ def download(remote_uri, local_uri, net_encode=None, buffer_len=4096, timeout=DE
         return False
     return True
     
-def threaded(func):
-    ''' the func threaded. '''
-    def wrapper(*args):
-        t = threading.Thread(target=func, args=args)
+def threaded(f):
+    """
+        A decorator that will make any function run in a new thread
+    """
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        t = threading.Thread(target=f, args=args, kwargs=kwargs)
         t.setDaemon(True)
         t.start()
-    return wrapper    
+
+    return wrapper
+
 
 class ThreadLoad(threading.Thread):
     def __init__(self, fetch_func, *args):

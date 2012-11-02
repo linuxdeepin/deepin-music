@@ -21,12 +21,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import gobject
+import threading
 from time import time
 from config import config
 from library import MediaDB
 from logger import Logger
 from player.fadebin import PlayerBin
-from utils import get_mime_type, get_uris_from_pls, get_uris_from_m3u, fix_charset, threaded
+from utils import get_mime_type, get_uris_from_pls, get_uris_from_m3u, fix_charset, threaded, ThreadRun
 
 from helper import Dispatcher
 
@@ -59,6 +60,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         self.stop_after_this_track = False
         self.__current_song_reported = False
         self.__current_duration = None
+        self.play_thread_id = 0
         
         MediaDB.connect("simple-changed", self.__on_change_songs)
         
@@ -72,7 +74,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
     def __on_change_songs(self, db, songs):    
         if self.song in songs:
             self.song = songs[songs.index(self.song)]
-        
+            
     def __on_eos(self, bin, uri):    
         self.logdebug("received eos for %s", uri)
         
@@ -179,6 +181,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         if not song:
             return
         # report playcount
+        self.play_thread_id += 1
         self.perhap_report()
         
         self.stop_after_this_track = False
@@ -203,22 +206,43 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         # remove old stream for pipeline excepted when need to fade
         if self.song and (crossfade == -1 or self.is_paused() or not self.is_playable()):        
             self.logdebug("force remove stream:%s", self.song.get("uri"))
-            self.bin.xfade_close(self.song.get("uri"))
+            
+        if song and song.get_type() not in ["local", "cue"]:
+            try:
+                self.bin.xfade_close(self.song.get("uri"))
+            except:    
+                pass
             
         # set current song and try play it.
         self.song = song    
         self.__current_song_reported = False
         self.emit("instant-new-song", self.song)
 
-        ret = uri and self.bin.xfade_open(uri)
+        if song.get_type() not in ["local", "cue"]:
+            print "thread"
+            self.thread_play(uri, crossfade, seek, song, play, self.play_thread_id)
+        else:    
+            ret = uri and self.bin.xfade_open(uri)
+            if not ret:
+                gobject.idle_add(self.emit, "play-end")
+                self.next()
+            elif play:    
+                self.play(crossfade, seek)
+                self.logdebug("play %s", song.get_path())
+            
+    def thread_play(self, uri, crossfade, seek, song, play, thread_id):        
+        ThreadRun(self.bin.xfade_open, self.emit_and_play, (uri,), (crossfade, seek, song, play, thread_id)).start()
+            
+    def emit_and_play(self, ret, crossfade, seek, song, play, thread_id):    
+        if thread_id != self.play_thread_id:
+            return
         if not ret:
             gobject.idle_add(self.emit, "play-end")
             self.next()
         elif play:    
             self.play(crossfade, seek)
             self.logdebug("play %s", song.get_path())
-            
-            
+        
     def play_new(self, song, crossfade=None, seek=None):
         '''add new song and try to play it'''
         self.set_song(song, True, crossfade, seek)

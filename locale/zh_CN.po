@@ -535,7 +535,7 @@ msgstr "深度音乐"
 
 #: ../src/widget/information.py:74
 msgid "buffering"
-msgstr ""
+msgstr "正在缓冲"
 
 #: ../src/widget/instance.py:132
 msgid "Join us"

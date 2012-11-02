@@ -226,6 +226,7 @@ class PlayerBin(gobject.GObject, Logger):
                 gobject.TYPE_NONE,
                 (gobject.TYPE_OBJECT, gobject.TYPE_OBJECT)),
         }
+    
     def __init__(self):
         gobject.GObject.__init__(self)
 
@@ -276,6 +277,7 @@ class PlayerBin(gobject.GObject, Logger):
         except TypeError: pass
         self.__capsfilter.set_property("caps", caps)
 
+        # Build filter bin, and add sink, src GhostPad.
         audioconvert2 = gst.element_factory_make("audioconvert")
         self.__filterbin.add(audioconvert2)
         pad = audioconvert2.get_pad("sink")
@@ -285,13 +287,13 @@ class PlayerBin(gobject.GObject, Logger):
 
         queue.set_property("max-size-buffers", 10)
 
+        # Build Output bin.
         self.__output.add(self.__capsfilter, audioconvert , audioresample , \
                 self.__tee , self.__volume, self.__filterbin, postaudioconvert, postaudioresample, queue, self.__sink)
         gst.element_link_many(self.__capsfilter, audioconvert, audioresample, \
                 self.__tee, self.__volume, self.__filterbin, postaudioconvert, postaudioresample, queue, self.__sink)
-
-
         
+        # Output bin  add sink GhostPad.
         filterpad = self.__capsfilter.get_pad("sink")
         outputghostpad = gst.GhostPad("sink", filterpad)
         self.__output.add_pad(outputghostpad)
@@ -310,8 +312,8 @@ class PlayerBin(gobject.GObject, Logger):
         gst.element_link_many(audiotestsrc, audioconvert, capsfilter)
 
         filterpad = capsfilter.get_pad("src")
-        ghostpad = gst.GhostPad("src", filterpad)
-        self.__silence.add_pad(ghostpad)
+        silence_src_ghostpad = gst.GhostPad("src", filterpad)
+        self.__silence.add_pad(silence_src_ghostpad)
 
         # assembe stuff:
         # - add everything to the pipeline
@@ -323,7 +325,7 @@ class PlayerBin(gobject.GObject, Logger):
         addersrcpad.link(outputghostpad)
 
         reqpad = self.__adder.get_request_pad("sink%d")
-        ghostpad.link(reqpad)
+        silence_src_ghostpad.link(reqpad)
         
         # set element need to be blocked to tee other element
         self.__blocker = self.__adder
@@ -380,7 +382,6 @@ class PlayerBin(gobject.GObject, Logger):
         if not stream.preroll_stream():
             self.logwarn("Unable to preroll pipeline for %s", uri)
             return False
-
         return True
 
     def xfade_close(self, uri=None):
@@ -1237,7 +1238,7 @@ class StreamBin(gst.Bin, Logger):
 
         self.__adder_pad = None
         self.__decoder_linked = False
-
+        
         try :
             if uri[:7] == "cdda://":
                 device = uri[uri.find("#") + 1:]
@@ -1246,6 +1247,7 @@ class StreamBin(gst.Bin, Logger):
                 self.__src.set_property("device", device)
             else:
                 self.__src = gst.element_make_from_uri("src", uri)
+                
 
             if uri[:7] == "http://":
                 try:self.__src.set_property("iradio-mode", True)
@@ -1354,7 +1356,13 @@ class StreamBin(gst.Bin, Logger):
         
     def on_rtsp_pad_removed(self, rtspsrc, pad):    
         pad.unlink(self.__queue.get_pad("sink"))
-
+        
+    def on_src_no_more_pads(self, dec, v):    
+        try:
+            dec.link(v)
+        except Exception, e:    
+            print e
+        
     def get_str_state(self):
         if self.state == WAITING:       statename = "waiting"
         elif self.state == PLAYING:       statename = "playing"
@@ -1902,6 +1910,7 @@ class StreamBin(gst.Bin, Logger):
         self.__src_pad.set_blocked_async(True, self.__src_blocked_cb)
         self.emitted_playing = False
         self.state = PREROLLING
+        
         if self.rtsp_mode:
             state = self.set_state(gst.STATE_PLAYING)
         else:    

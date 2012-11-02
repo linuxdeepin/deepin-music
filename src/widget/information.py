@@ -70,8 +70,11 @@ class PlayInfo(gtk.VBox):
         self.title_label.set_text(song.get_str("title"))
         if song.get_str("artist"):
             self.artist_label.set_text(song.get_str("artist"))
-        elif buffering is not None and buffering <= 100:    
-            self.artist_label.set_text("%s %d%%" % (_("buffering"), buffering))
+        elif buffering is not None:    
+            if buffering >= 0 and buffering <= 98:
+                self.artist_label.set_text("%s %d%%" % (_("buffering"), buffering))
+            elif buffering >= 99:    
+                self.artist_label.set_text("")
         else:    
             self.artist_label.set_text("")
         
