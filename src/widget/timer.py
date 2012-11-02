@@ -84,10 +84,10 @@ class SongTimer(gtk.HBox):
         self.set_current_time(0, self.duration)
         
     def on_tick(self, bin, pos, duration):
-        
         if Player.song and Player.song.get_type() == "cue":
             duration = Player.song.get("#duration") / 1000
             pos = pos - Player.song.get("seek", 0)
+            
         self.duration = duration
         if self.update_bar == 1:
             self.set_current_time(pos, duration)
@@ -109,6 +109,10 @@ class SongTimer(gtk.HBox):
             current = utils.duration_to_string(pos, "00:00", 1) 
         else:    
             current = "00:00"
+            
+        if pos >0 and Player.song and Player.song.get_type() == "webcast":    
+            current = utils.duration_to_string(pos, "00:00", 1) 
+            total = "--:--"
         text = "%s/%s" % (current, total)
         self.label_time.set_text(text)
 

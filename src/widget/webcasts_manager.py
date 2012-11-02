@@ -282,7 +282,6 @@ class CategroyItem(TreeItem):
     def unhover(self, column, offset_x, offset_y):
         self.is_hover = False
         self.emit_redraw_request()
-        popup_grab_window.popup_grab_window_focus_out()
     
     def hover(self, column, offset_x, offset_y):
         self.is_hover = True
@@ -294,6 +293,7 @@ class CategroyItem(TreeItem):
         return origin_x, origin_y
     
     def button_press(self, column, offset_x, offset_y):
+        popup_grab_window.popup_grab_window_focus_out()
         self.popup_panel.show(*self.adjust_popup_coord())                
         popup_grab_window.popup_grab_window_focus_in()
     
@@ -574,12 +574,13 @@ class PopupPanelGrabWindow(PopupGrabWindow):
                 event_widget.event(event)
             elif isinstance(event_widget, gtk.DrawingArea) and hasattr(event_widget, "tag_by_poup_panel_grab_window"):
                 treeview = get_match_parent(event_widget, "TreeView")
-                cell = treeview.get_cell_with_event(event)
-                if cell == None:
-                    event_widget.event(event)
-                    if self.button_press_callback:
-                        self.button_press_callback()
-                    self.popup_grab_window_focus_out()
+                event_widget.event(event)
+                # cell = treeview.get_cell_with_event(event)
+                # if cell == None:
+                #     event_widget.event(event)
+                #     if self.button_press_callback:
+                #         self.button_press_callback()
+                self.popup_grab_window_focus_out()
             elif isinstance(event_widget, gtk.Button) and hasattr(event_widget, "tag_by_poup_panel_grab_window"):
                 popup_panel_widget = get_match_parent(event_widget, "PopupPanel")
                 if popup_panel_widget.is_visible_area(event):
@@ -675,7 +676,7 @@ class WebcastsManager(gtk.VBox):
         self.sourcebar.draw_mask = self.on_sourcebar_draw_mask        
         self.sourcebar.draw_area.tag_by_poup_panel_grab_window = True
         
-        popup_grab_window.button_press_callback = lambda : self.reset_sourcebar_row()
+        # popup_grab_window.button_press_callback = lambda : self.reset_sourcebar_row()
         
     def reset_sourcebar_row(self):
         self.sourcebar.unhover_row()
