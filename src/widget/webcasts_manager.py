@@ -246,14 +246,13 @@ class CategroyItem(TreeItem):
             self.redraw_request_callback(self)
             
     def select(self):        
-        print self.title
         self.is_select = True
         self.emit_redraw_request()
         
     def render_title(self, cr, rect):        
         # Draw select background.
         if self.is_select:
-            # draw_pixbuf(cr, self.hover_bg, rect.x, rect.y)
+            draw_pixbuf(cr, self.hover_bg, rect.x, rect.y)
             text_color = app_theme.get_color("simpleItemSelect").get_color()
         else:    
             text_color = app_theme.get_color("labelText").get_color()
@@ -660,7 +659,7 @@ class WebcastsManager(gtk.VBox):
             self.collect_view.add_items([WebcastListItem(tag, False) for tag in collect_taglist])
         
     def __init_sourcebar(self):
-        self.sourcebar = TreeView(enable_drag_drop=False)
+        self.sourcebar = TreeView(enable_drag_drop=False, enable_multiple_select=False)
         items = []
         for index, (key, value) in enumerate(self.source_data.items()):
             if index == 0: show_icon = True
