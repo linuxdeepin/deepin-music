@@ -174,3 +174,8 @@ class ComplexButton(gtk.Button):
         return True
 
 gobject.type_register(ComplexButton)    
+
+class TabBox(gtk.VBox):
+    
+    def __init__(self):
+        pass

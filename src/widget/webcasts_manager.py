@@ -246,13 +246,14 @@ class CategroyItem(TreeItem):
             self.redraw_request_callback(self)
             
     def select(self):        
+        print self.title
         self.is_select = True
         self.emit_redraw_request()
         
     def render_title(self, cr, rect):        
         # Draw select background.
-        if self.is_hover:
-            draw_pixbuf(cr, self.hover_bg, rect.x, rect.y)
+        if self.is_select:
+            # draw_pixbuf(cr, self.hover_bg, rect.x, rect.y)
             text_color = app_theme.get_color("simpleItemSelect").get_color()
         else:    
             text_color = app_theme.get_color("labelText").get_color()
