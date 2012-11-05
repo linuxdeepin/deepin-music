@@ -254,6 +254,8 @@ class CategroyItem(TreeItem):
         if self.is_select:
             draw_pixbuf(cr, self.hover_bg, rect.x, rect.y)
             text_color = app_theme.get_color("simpleItemSelect").get_color()
+        elif self.is_hover:    
+            text_color = app_theme.get_color("simpleItemSelect").get_color()
         else:    
             text_color = app_theme.get_color("labelText").get_color()
             
@@ -561,8 +563,8 @@ class PopupPanelGrabWindow(PopupGrabWindow):
         
         if event and event.window:
             event_widget = event.window.get_user_data()
-            print "-------------"
-            print "%s\n" % (event_widget)
+            # print "-------------"
+            # print "%s\n" % (event_widget)
             if self.is_press_on_popup_grab_window(event.window):
                 if self.button_press_callback:
                     self.button_press_callback()
@@ -574,8 +576,13 @@ class PopupPanelGrabWindow(PopupGrabWindow):
                     self.button_press_callback()
                 event_widget.event(event)
             elif isinstance(event_widget, gtk.DrawingArea) and hasattr(event_widget, "tag_by_poup_panel_grab_window"):
+                parent_widget = get_match_parent(event_widget, "TreeView")
+                if parent_widget.is_in_visible_area(event):
+                    if self.button_press_callback:
+                        self.button_press_callback()
                 self.popup_grab_window_focus_out()
                 event_widget.event(event)
+                
             elif isinstance(event_widget, gtk.Button) and hasattr(event_widget, "tag_by_poup_panel_grab_window"):
                 popup_panel_widget = get_match_parent(event_widget, "PopupPanel")
                 if popup_panel_widget.is_visible_area(event):
@@ -589,7 +596,8 @@ class PopupPanelGrabWindow(PopupGrabWindow):
                 event_widget.event(event)
                 self.popup_grab_window_focus_out()
                 
-popup_grab_window = PopupPanelGrabWindow()
+popup_grab_window = PopupPanelGrabWindow()                
+popup_grab_window.button_press_callback = Dispatcher.clear_sourcebar_status
 
 class WebcastsManager(gtk.VBox):
     
@@ -623,6 +631,7 @@ class WebcastsManager(gtk.VBox):
             
         # Dispatcher
         Dispatcher.connect("webcast-info", self.on_dispatcher_webcast_info)    
+        Dispatcher.connect("clear-sourcebar-status", lambda obj: self.clear_sourcebar_status())
         
         # Used to switch categroy view.
         self.switch_view_box = gtk.VBox()
@@ -706,6 +715,11 @@ class WebcastsManager(gtk.VBox):
         for item in self.collect_view.items:
             items.append(item.get_tags())
         utils.save_db(items, get_config_file("favorite_webcasts.db"))    
-
+        
+    def clear_sourcebar_status(self):    
+        items = self.sourcebar.visible_items
+        if items:
+            [item.unselect() for item in items]
+            
 
 

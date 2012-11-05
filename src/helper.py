@@ -57,6 +57,7 @@ class EventDispatcher(gobject.GObject):
         "transfor-job" : SIGNAL_SIMPLE,
         "webcast-info" : SIGNAL,
         "play-webcast" : SIGNAL_SIMPLE,
+        "clear-sourcebar-status" : SIGNAL_BASE,
         }
     
     def __init__(self):
@@ -128,6 +129,9 @@ class EventDispatcher(gobject.GObject):
         
     def emit_webcast_info(self, parent, key):    
         self.emit("webcast-info", parent, key)
+        
+    def clear_sourcebar_status(self):    
+        self.emit("clear-sourcebar-status")
         
 Dispatcher = EventDispatcher()
 
