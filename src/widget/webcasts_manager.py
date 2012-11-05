@@ -293,7 +293,6 @@ class CategroyItem(TreeItem):
         return origin_x, origin_y
     
     def button_press(self, column, offset_x, offset_y):
-        popup_grab_window.popup_grab_window_focus_out()
         self.popup_panel.show(*self.adjust_popup_coord())                
         popup_grab_window.popup_grab_window_focus_in()
     
@@ -562,6 +561,8 @@ class PopupPanelGrabWindow(PopupGrabWindow):
         
         if event and event.window:
             event_widget = event.window.get_user_data()
+            print "-------------"
+            print "%s\n" % (event_widget)
             if self.is_press_on_popup_grab_window(event.window):
                 if self.button_press_callback:
                     self.button_press_callback()
@@ -573,14 +574,8 @@ class PopupPanelGrabWindow(PopupGrabWindow):
                     self.button_press_callback()
                 event_widget.event(event)
             elif isinstance(event_widget, gtk.DrawingArea) and hasattr(event_widget, "tag_by_poup_panel_grab_window"):
-                treeview = get_match_parent(event_widget, "TreeView")
-                event_widget.event(event)
-                # cell = treeview.get_cell_with_event(event)
-                # if cell == None:
-                #     event_widget.event(event)
-                #     if self.button_press_callback:
-                #         self.button_press_callback()
                 self.popup_grab_window_focus_out()
+                event_widget.event(event)
             elif isinstance(event_widget, gtk.Button) and hasattr(event_widget, "tag_by_poup_panel_grab_window"):
                 popup_panel_widget = get_match_parent(event_widget, "PopupPanel")
                 if popup_panel_widget.is_visible_area(event):
@@ -664,7 +659,7 @@ class WebcastsManager(gtk.VBox):
             self.collect_view.add_items([WebcastListItem(tag, False) for tag in collect_taglist])
         
     def __init_sourcebar(self):
-        self.sourcebar = TreeView()
+        self.sourcebar = TreeView(enable_drag_drop=False)
         items = []
         for index, (key, value) in enumerate(self.source_data.items()):
             if index == 0: show_icon = True
@@ -675,11 +670,6 @@ class WebcastsManager(gtk.VBox):
         self.sourcebar.set_size_request(121, -1)
         self.sourcebar.draw_mask = self.on_sourcebar_draw_mask        
         self.sourcebar.draw_area.tag_by_poup_panel_grab_window = True
-        
-        # popup_grab_window.button_press_callback = lambda : self.reset_sourcebar_row()
-        
-    def reset_sourcebar_row(self):
-        self.sourcebar.unhover_row()
         
     def get_webcasts_view(self):    
         webcast_view = ListView()
