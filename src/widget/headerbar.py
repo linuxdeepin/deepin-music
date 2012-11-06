@@ -148,7 +148,7 @@ class FullHeaderBar(gtk.EventBox):
         
         main_box = gtk.VBox(spacing=9)
         main_box.pack_start(cover_main_align, True, True)
-        main_box.pack_start(ProgressBox(song_timer), True, True)
+        main_box.pack_start(song_timer, True, True)
         
         self.add(main_box)
         
@@ -317,7 +317,7 @@ class SimpleHeadber(gtk.EventBox):
         
         main_box = gtk.VBox(spacing=9)
         main_box.pack_start(cover_main_align, False, False)
-        main_box.pack_start(ProgressBox(song_timer), True, True)
+        main_box.pack_start(song_timer, True, True)
         self.add(main_box)
 
         # right click

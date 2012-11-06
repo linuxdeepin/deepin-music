@@ -51,7 +51,7 @@ class HScalebar(gtk.HScale):
         self.bg_cache_pixbuf = CachePixbuf()
         self.side_cache_pixbuf = CachePixbuf()
         
-        self.set_size_request(-1, self.point_normal_dpixbuf.get_pixbuf().get_height())
+        self.set_size_request(-1, self.bg_dpixbuf.get_pixbuf().get_height())
         
         self.connect("expose-event", self.expose_h_scalebar)
         self.connect("button-press-event", self.press_volume_progressbar)

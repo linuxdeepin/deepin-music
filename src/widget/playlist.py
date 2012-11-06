@@ -30,6 +30,7 @@ from dtk.ui.menu import Menu
 from dtk.ui.draw import draw_vlinear
 from dtk.ui.treeview import TreeView
 from dtk.ui.dialog import InputDialog
+from dtk.ui.paned import HPaned
 import dtk.ui.tooltip as Tooltip
 
 from library import MediaDB, Playlist
@@ -87,14 +88,17 @@ class PlaylistUI(gtk.VBox):
         category_scrolled_window.add_child(self.category_list)
         
         self.right_box = gtk.VBox()
-        self.list_box = gtk.HBox()
-        self.list_box.pack_start(category_scrolled_window, False, False)
-        self.list_box.pack_start(self.right_box, True, True)
+        # self.list_box = gtk.HBox()
+        self.list_paned = HPaned()
+        self.list_paned.add1(category_scrolled_window)
+        self.list_paned.add2(self.right_box)
+        # self.list_box.pack_start(category_scrolled_window, False, False)
+        # self.list_box.pack_start(self.right_box, True, True)
         
         list_align = gtk.Alignment()
         list_align.set_padding(0, 0, 2, 0)
         list_align.set(0, 0, 1, 1)
-        list_align.add(self.list_box)
+        list_align.add(self.list_paned)
         
         bottom_box = gtk.VBox()
         bottom_box.set_size_request(-1, 22)
@@ -160,7 +164,7 @@ class PlaylistUI(gtk.VBox):
 
         Player.set_source(self.current_item.song_view)
         self.right_box.pack_start(self.current_item.get_list_widget(), True, True)
-        self.list_box.show_all()
+        self.list_paned.show_all()
         
     def __on_player_loaded(self, player):   
         if self.current_item:

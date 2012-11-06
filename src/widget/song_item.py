@@ -138,7 +138,7 @@ class SongItem(gobject.GObject):
             return [
                 (110, 26),
                 (50, 26), 
-                (self.length_width + self.length_padding_x * 2,26)]    
+                (self.length_width + self.length_padding_x * 2 + 10, 26)]    
     
     def get_renders(self):
         '''Get render callbacks.'''
