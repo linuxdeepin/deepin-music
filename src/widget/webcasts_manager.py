@@ -552,6 +552,20 @@ class PopupPanelGrabWindow(PopupGrabWindow):
             elif isinstance(event_widget, gtk.Button) and hasattr(event_widget, "tag_by_poup_panel_grab_window"):
                 event_widget.event(event)
 
+    def popup_grab_window_leave_notify(self, widget, event):
+        '''
+        Handle `motion-notify` signal of popup_grab_window.
+    
+        @param widget: Popup_Window widget.
+        @param event: Motion notify signal.
+        '''
+        if event and event.window:
+            event_widget = event.window.get_user_data()
+            if isinstance(event_widget, gtk.DrawingArea) and hasattr(event_widget, "tag_by_poup_panel_grab_window"):
+                event_widget.event(event)
+            elif isinstance(event_widget, gtk.Button) and hasattr(event_widget, "tag_by_poup_panel_grab_window"):
+                event_widget.event(event)
+
     def popup_grab_window_button_press(self, widget, event):
         '''
         Handle `button-press-event` signal of popup_grab_window.
@@ -679,6 +693,12 @@ class WebcastsManager(gtk.VBox):
         self.sourcebar.set_size_request(121, -1)
         self.sourcebar.draw_mask = self.on_sourcebar_draw_mask        
         self.sourcebar.draw_area.tag_by_poup_panel_grab_window = True
+        
+        popup_grab_window.focus_out_callback = self.handle_focus_out
+        
+    def handle_focus_out(self):
+        self.sourcebar.unhover_row()
+        self.sourcebar.left_button_press = False
         
     def get_webcasts_view(self):    
         webcast_view = ListView()
