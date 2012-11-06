@@ -41,7 +41,7 @@ class ListManager(gtk.VBox):
         # webcastlist
         self.webcast_view = self.get_webcast_view()
         
-        self.tab_box = TabBox()
+        self.tab_box = TabBox(dockfill=True)
         self.tab_box.add_items(
             [("本地音乐", self.playlist_ui),
              ("网络广播", self.webcast_view)
@@ -54,7 +54,7 @@ class ListManager(gtk.VBox):
         
     def get_webcast_view(self):    
         view = TreeView()
-        view.set_size_request(324, -1)
+        view.set_size_request(318, -1)
         return view
     
     def on_dispatcher_play_webcast(self, obj, webcast):

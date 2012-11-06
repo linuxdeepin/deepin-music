@@ -119,10 +119,15 @@ class DeepinMusic(gobject.GObject, Logger):
         self.browser_align.set_padding(0, 0, 0, 0)
         self.browser_align.set(0.5, 0.5, 1, 1)
         
+        list_manager_align = gtk.Alignment()
+        list_manager_align.set_padding(0, 0, 2, 0)
+        list_manager_align.set(1, 1, 1, 1)
+        list_manager_align.add(self.list_manager)
+        
         # self.browser_align.add(self.simple_browser)
         self.webcasts_manager = WebcastsManager()
         self.browser_align.add(self.webcasts_manager)
-        bottom_box.pack_start(self.list_manager, False, False)        
+        bottom_box.pack_start(list_manager_align, False, False)        
         bottom_box.pack_start(self.browser_align, True, True)
         self.browser_align.set_no_show_all(True)
         

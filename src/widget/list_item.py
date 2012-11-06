@@ -126,7 +126,7 @@ class PlaylistItem(gobject.GObject):
         self.scrolled_window = ScrolledWindow(0, 0)
         self.scrolled_window.add_child(self.song_view)
         self.scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
-        self.scrolled_window.set_size_request(220, -1)
+        self.scrolled_window.set_size_request(180, -1)
         self.title = playlist.get_name()
         
     def get_list_widget(self):

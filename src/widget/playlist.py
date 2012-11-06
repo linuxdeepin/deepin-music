@@ -435,7 +435,7 @@ class PlaylistUI(gtk.VBox):
 
         container_remove_all(self.right_box)
         self.right_box.pack_start(item.get_list_widget(), True, True)
-        self.list_box.show_all()
+        self.list_paned.show_all()
         
     def show_text_entry(self, widget):        
         if widget.get_active():
