@@ -48,11 +48,15 @@ class SongTimer(gtk.HBox):
         self.bar.set_draw_value(False)
         self.bar.set_range(0, 1000)
         self.bar.set_value(0)
+        bar_align = gtk.Alignment()
+        bar_align.set_padding(0, 0, 2, 2)
+        bar_align.set(1, 1, 1, 1)
+        bar_align.add(self.bar)
         self.bar.connect("button_press_event", self.on_bar_press)
         self.bar.connect("button_release_event", self.on_bar_release)
         self.__value_changed_id = self.bar.connect("value-changed", self.on_bar_value_changed)
         self.bar.handler_block(self.__value_changed_id)
-        self.pack_start(self.bar, True, True)
+        self.pack_start(bar_align, True, True)
         self.update_bar = 1
         self.duration = 0
         self.__idle_release_id = None

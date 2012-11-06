@@ -70,6 +70,7 @@ class SongView(ListView):
         self.connect("button-press-event", self.button_press_cb)
         self.connect("delete-select-items", self.try_emit_empty_signal)
         
+        self.set_expand_column(0)
         MediaDB.connect("removed", self.__remove_songs)
         MediaDB.connect("simple-changed", self.__songs_changed)
         

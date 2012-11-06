@@ -178,4 +178,5 @@ gobject.type_register(ComplexButton)
 class TabBox(gtk.VBox):
     
     def __init__(self):
+        
         pass
