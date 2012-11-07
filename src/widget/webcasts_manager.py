@@ -307,6 +307,91 @@ class CategroyItem(TreeItem):
     def draw_drag_line(self, drag_line, drag_line_at_bottom=False):
         pass
     
+class CustomItem(TreeItem):    
+    def __init__(self, title, callback=None):
+        TreeItem.__init__(self)
+        self.column_index = 0
+        self.side_padding = 5
+        self.item_height = 37
+        self.title = title
+        self.item_width = 121
+        self.hover_bg = app_theme.get_pixbuf("webcast/categroy_bg.png").get_pixbuf()
+        self.press_callback = callback
+        
+        self.parent_widget = None
+        self.item_index = -1
+        self.has_icon = False
+        self.webcast_key = ""
+        
+        
+    def get_height(self):    
+        return self.item_height
+    
+    def get_column_widths(self):
+        return (self.item_width,)
+    
+    def get_column_renders(self):
+        return (self.render_title,)
+    
+    def unselect(self):
+        self.is_select = False
+        self.emit_redraw_request()
+        
+    def emit_redraw_request(self):    
+        if self.redraw_request_callback:
+            self.redraw_request_callback(self)
+            
+    def select(self):        
+        self.is_select = True
+        self.emit_redraw_request()
+        
+    def render_title(self, cr, rect):        
+        # Draw select background.
+        # if self.is_select:
+        #     draw_pixbuf(cr, self.hover_bg, rect.x, rect.y)
+        #     text_color = app_theme.get_color("simpleItemSelect").get_color()
+        if self.is_hover:    
+            text_color = app_theme.get_color("simpleItemSelect").get_color()
+        else:    
+            text_color = app_theme.get_color("labelText").get_color()
+            
+        draw_text(cr, self.title, rect.x, rect.y, rect.width, rect.height, text_size=11, 
+                  text_color = text_color,
+                  alignment=pango.ALIGN_CENTER)    
+        
+    def expand(self):
+        pass
+    
+    def unexpand(self):
+        pass
+    
+    def unhover(self, column, offset_x, offset_y):
+        self.is_hover = False
+        self.emit_redraw_request()
+    
+    def hover(self, column, offset_x, offset_y):
+        self.is_hover = True
+        self.emit_redraw_request()
+        
+    def button_press(self, column, offset_x, offset_y):
+        if self.press_callback:
+            self.press_callback()
+    
+    def single_click(self, column, offset_x, offset_y):
+        pass        
+
+    def double_click(self, column, offset_x, offset_y):
+        pass        
+    
+    def draw_drag_line(self, drag_line, drag_line_at_bottom=False):
+        pass
+    
+    def hide_icon(self):
+        pass
+    
+    def show_icon(self):
+        pass
+    
 class PanelItem(gobject.GObject):    
     
     __gsignals__ = { "redraw-request" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()), }
@@ -664,10 +749,10 @@ class WebcastsManager(gtk.VBox):
         
     def on_dispatcher_webcast_info(self, obj, parent, key):    
         items = WebcastsDB.get_items(parent, key)
-
         self.source_view.clear()
         if items:
             self.source_view.add_items([WebcastListItem(tag) for tag in items])        
+            switch_tab(self.switch_view_box, self.source_sw)
         
     def connect_to_webcastsdb(self):    
         WebcastsDB.connect("loaded", self.on_webcastsdb_loaded)
@@ -688,6 +773,7 @@ class WebcastsManager(gtk.VBox):
             if index == 0: show_icon = True
             else: show_icon = False
             items.append(CategroyItem(value, key, self.sourcebar, index, show_icon))
+        items.append(CustomItem(_("我的收藏"), lambda : switch_tab(self.switch_view_box, self.collect_sw)))    
                 
         self.sourcebar.add_items(items)
         self.sourcebar.set_size_request(121, -1)

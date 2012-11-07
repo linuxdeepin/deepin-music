@@ -286,7 +286,6 @@ class Song(dict, Logger):
         
     def read_from_file(self):    
         ''' Read song infomation for file. '''
-        print self.get_type()
         if self.get_scheme() == "file" and not self.exists():
             ret = False
         if self.get_scheme() == "file" and common.file_is_supported(self.get_path()):
