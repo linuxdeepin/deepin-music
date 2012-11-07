@@ -394,9 +394,8 @@ class SongView(ListView):
                     utils.async_parse_uris(selection.get_uris(), True, False, self.add_uris, pos)
             elif selection.target == "text/plain":    
                 raw_path = selection.data
-                print repr(raw_path)
                 path = eval("u" + repr(raw_path).replace("\\\\", "\\"))
-                # utils.async_get_uris_from_plain_text(path, self.add_uris, pos)
+                utils.async_get_uris_from_plain_text(path, self.add_uris, pos)
                 
     
     def set_sort_keyword(self, keyword, reverse=False):

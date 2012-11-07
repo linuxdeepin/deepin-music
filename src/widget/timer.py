@@ -64,12 +64,16 @@ class SongTimer(gtk.HBox):
         self.__need_report = False
 
         Player.connect("instant-new-song", self.set_duration)
+        Player.connect("init-status", self.on_player_init_status)
 
         Player.bin.connect("tick", self.on_tick)
         Player.connect("seeked", self.on_seek)
         Player.connect("stopped", self.set_duration)
         if not Player.song:
             self.bar.set_sensitive(False)
+            
+    def on_player_init_status(self, player):        
+        self.label_time.set_text("00:00/00:00")
 
     def get_label(self):
         return self.label_time

@@ -43,6 +43,7 @@ class PlayInfo(gtk.VBox):
         Player.connect("instant-new-song",self.__new_song)
         MediaDB.connect("simple-changed",self.__on_change)
         Player.bin.connect("buffering", self.__on_buffering)
+        Player.connect("init-status", self.__on_player_init_status)
         
         self.set_spacing(3)
         artist_label_align = gtk.Alignment()
@@ -52,6 +53,10 @@ class PlayInfo(gtk.VBox):
         self.pack_start(artist_label_align, False, False)
         self.pack_start(self.title_label, False, False)
         self.song = None
+        
+    def __on_player_init_status(self, player):    
+        self.artist_label.set_text(_("Deepin Music"))
+        self.title_label.set_text("Linux Deepin")
         
     def __on_buffering(self, playbin, progress):
         if self.song:

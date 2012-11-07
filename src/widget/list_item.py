@@ -39,13 +39,13 @@ DEFAULT_FONT_SIZE = 8
 
 class PlaylistItem(gobject.GObject):
     
-    def __init__(self, playlist):
+    def __init__(self, playlist, udi=None):
         '''Init song item.'''
         self.item_id = None
         self.main_box = gtk.VBox()
         self.update(playlist)        
         self.create_jobs_box()
-
+        self.udi = udi
 
     def draw_mask(self, widget, event):            
         cr = widget.window.cairo_create()

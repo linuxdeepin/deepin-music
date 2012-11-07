@@ -74,9 +74,14 @@ class CoverButton(gtk.Button):
 
     def update_default_cover(self, widget, song):            
         if not self.current_song or CoverManager.get_cover_search_str(self.current_song) != CoverManager.get_cover_search_str(song):
-            pixbuf = CoverManager.get_pixbuf_from_album("", COVER_SIZE["x"], COVER_SIZE["y"])
+            pixbuf = CoverManager.get_pixbuf_from_name("", COVER_SIZE["x"], COVER_SIZE["y"])
             self.current_cover_pixbuf = pixbuf
             self.queue_draw()
+            
+    def init_default_cover(self):        
+        pixbuf = CoverManager.get_pixbuf_from_name("", COVER_SIZE["x"], COVER_SIZE["y"])
+        self.current_cover_pixbuf = pixbuf
+        self.queue_draw()
             
     def update_cover(self, widget, songs):        
         if isinstance(songs, list):
@@ -115,6 +120,7 @@ class PlayerCoverButton(CoverButton):
     def __init__(self):
         super(PlayerCoverButton, self).__init__()
         Player.connect("new-song", self.update_cover)
+        Player.connect("init-status", lambda w : self.init_default_cover())
         Player.connect("instant-new-song", self.instant_update_cover)
         
     def instant_update_cover(self, widget, song):    

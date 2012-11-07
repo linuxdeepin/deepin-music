@@ -32,7 +32,7 @@ from dtk.ui.button import LinkButton
 
 
 from widget.skin import app_theme
-from widget.headerbar import FullHeaderBar, SimpleHeadber
+from widget.headerbar import FullHeaderBar, SimpleHeadber, HeaderBer
 from widget.list_manager import ListManager
 from widget.lyrics_module import LyricsModule
 from widget.browser import SimpleBrowser
@@ -103,7 +103,8 @@ class DeepinMusic(gobject.GObject, Logger):
         self.list_manager = ListManager()
         self.playlist_ui =  self.list_manager.playlist_ui
         self.full_header_bar = FullHeaderBar()
-        self.simple_header_bar = SimpleHeadber()
+        # self.simple_header_bar = SimpleHeadber()
+        self.simple_header_bar = HeaderBer()
         self.preference_dialog = PreferenceDialog()
         self.simple_browser = SimpleBrowser()
         self.equalizer_win = EqualizerWindow()

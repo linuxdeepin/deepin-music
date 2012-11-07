@@ -44,6 +44,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         "stopped"  : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),
         "seeked"   : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),
         "loaded"   : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),
+        "init-status" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),
         }
     
     def __init__(self):
@@ -72,6 +73,8 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         self.bin.connect("playing-stream", self.__on_playing)
         
     def __on_change_songs(self, db, songs):    
+        if self.song.get_type() in ("cue", "audiocd"):
+            return
         if self.song in songs:
             self.song = songs[songs.index(self.song)]
             
@@ -91,6 +94,11 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         config.set("player", "play", "false")
         self.emit("paused")
 
+        if self.song.get_type() == "audiocd":
+            self.emit("init-status")
+            self.song = None
+            return 
+        
         if uri == self.song.get("uri") and not self.__next_already_called:
             self.logdebug("request new song: error and play-end not emit")
             self.emit("play-end")
@@ -99,7 +107,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         
     def __on_tag(self, bin, taglist):    
         ''' The playbin found the tag information'''
-        if self.song and not self.song.get("title") and self.song.get_type() != "cue":
+        if self.song and not self.song.get("title") and self.song.get_type() not in ["cue", "audiocd"]:
             self.logdebug("tag found %s", taglist)
             IDS = {
                 "title": "title",
@@ -206,7 +214,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         # remove old stream for pipeline excepted when need to fade
         
             
-        if song and song.get_type() not in ["local", "cue"]:
+        if song and song.get_type() not in ["local", "cue", "audiocd"]:
             self.force_fade_close()
             
         if self.song and (crossfade == -1 or self.is_paused() or not self.is_playable()):        
@@ -518,6 +526,8 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         
     def save_state(self):            
         '''save current song's state'''
+        if not self.song:
+            return
         if self.song.get_type() == "local":
             config.set("player", "song_type", self.song.get_type())
             config.set("player", "uri", self.song.get("uri"))

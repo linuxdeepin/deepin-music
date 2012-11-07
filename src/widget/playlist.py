@@ -33,7 +33,7 @@ from dtk.ui.dialog import InputDialog
 from dtk.ui.paned import HPaned
 import dtk.ui.tooltip as Tooltip
 
-from library import MediaDB, Playlist
+from library import MediaDB, Playlist, CDPlaylist
 from helper import Dispatcher
 from widget.skin import app_theme
 from widget.ui import SearchEntry
@@ -125,6 +125,8 @@ class PlaylistUI(gtk.VBox):
         Player.connect("loaded", self.__on_player_loaded)    
         Dispatcher.connect("play-song", self.__play_and_add)
         Dispatcher.connect("add-songs", self.__add_songs_to_list)
+        Dispatcher.connect("new-cd-playlist", self.__new_audiocd_playlist)
+        Dispatcher.connect("del-cd-playlist", self.delete_audiocd_list)
         
     def expose_toolbar_mask(self, widget, event):    
         cr = widget.window.cairo_create()
@@ -265,14 +267,18 @@ class PlaylistUI(gtk.VBox):
                       (None, _("Save all lists"), self.save_all_list)]
         Menu(menu_items, True).show((int(event.x_root), int(event.y_root)))
         
-    def new_list(self, items=[]):    
+    def new_list(self, items=[], name=None):    
         index = len(self.category_list.get_items(None))
-        name = "%s%d" % (_("New list"), index)
+        if name is None:
+            name = "%s%d" % (_("New list"), index)
         input_dialog = InputDialog(_("New list"), name, 300, 100, lambda name : self.create_new_playlist(name, items))
         input_dialog.show_all()
         
     def create_new_playlist(self, name, items):    
         self.category_list.add_items(None, [PlaylistItem(Playlist("local", name, items))])
+        
+    def __new_audiocd_playlist(self, obj, songs, udi):
+        self.category_list.add_items(None, [PlaylistItem(CDPlaylist("audiocd", _("CD List"), songs), udi=udi)]) 
         
     def get_edit_sub_menu(self, select_items, move=False):    
         sub_menu_items = []
@@ -332,6 +338,19 @@ class PlaylistUI(gtk.VBox):
                     item = self.current_item
                 item.song_view.async_add_uris(uri)
             except: pass    
+            
+    def delete_audiocd_list(self, obj, udi):
+        reset = False
+        items = self.category_list.get_items(None)
+        for index, item in enumerate(items):
+            if item.udi == udi:
+                reset = True
+                self.category_list.del_item_from_index(index)
+                
+        if reset:        
+            max_index = len(self.category_list.get_items(None)) - 1
+            self.reset_highlight_item(max_index)    
+            
     def delete_item_list(self, index=None):
         if len(self.category_list.get_items(None)) == 1:
             return
@@ -493,6 +512,8 @@ class PlaylistUI(gtk.VBox):
                   
         MediaDB.full_erase_playlists()
         for item in self.category_list.get_items(None):
+            if item.udi is not None:
+                continue
             songs = item.get_songs()
             name = item.get_title()
             MediaDB.create_playlist("local", name, songs)

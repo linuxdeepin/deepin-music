@@ -24,10 +24,12 @@ import gobject
 import threading
 
 from udisks import udisks
-from library import MediaDB
 from mscddb import MSCDDB
 from nls import _
 from helper import Dispatcher
+
+from player import Player
+from song import Song
 
 import DiscID
 
@@ -103,16 +105,23 @@ class AudioCDSource(object):
             
     def umount(self, udisks, udi):        
         if udi and self.audiocd_items.has_key(udi):
-            MediaDB.remove(self.audiocd_items[udi])
+            if Player.song and Player.song.get_type() == "audiocd":
+                Player.stop()
             del self.audiocd_items[udi]
+            Dispatcher.delete_audiocd_playlist(udi)
             
     def post_mount_thread(self, device_path, udi):        
         gobject.idle_add(self.post_mount_cb, CDDBInfo(device_path).get_tracks(), device_path, udi)
         
     def post_mount_cb(self, track_tags, device_path, udi):    
         if len(track_tags) > 0:
-            songs = [ MediaDB.get_or_create_song(track, "audiocdtrack") for track in track_tags]
-            Dispatcher.add_songs(songs)
+            songs = [] 
+            for tag in track_tags:
+                cd_song = Song()
+                cd_song.init_from_dict(tag)
+                cd_song.set_type("audiocd")
+                songs.append(cd_song)
+            Dispatcher.new_audiocd_playlist(songs, udi)
             self.audiocd_items[udi] = songs
         
     def check(self, udi):    

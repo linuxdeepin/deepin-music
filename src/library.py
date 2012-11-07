@@ -209,6 +209,8 @@ class MediaDatebase(gobject.GObject, Logger):
         
     def set_property(self, song, keys_values, write_to_file=False, use_quick_update=False):    
         '''Set song property'''
+        if song.get_type() in ["cue", "audiocd"]:
+            return
         if not song: return False
         ret = True
         self.set_dirty()
@@ -591,6 +593,25 @@ class Playlist(gobject.GObject, Logger):
     def append(self, song):    
         self.extend([song])
         
+        
+class CDPlaylist(object):        
+    def __init__(self, pl_type, name, songs):
+        self.name = name
+        self.songs = songs
+        self.__type = pl_type
+        
+    def get_type(self):
+        return self.__type
+    
+    def set_name(self, name):
+        self.name = name
+        
+    def get_name(self):    
+        return self.name
+    
+    def get_songs(self):
+        return self.songs
+    
 class DBQuery(gobject.GObject, Logger):        
     __gsignals__ = {
         "full-update"  : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),
@@ -1117,4 +1138,5 @@ MediaDB.register_type("webcast")
 MediaDB.register_type("unknown")
 MediaDB.register_type("unknown_local")
 MediaDB.register_type("cue")
+MediaDB.register_type("audiocd")
 MediaDB.register_playlist_type("local")

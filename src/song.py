@@ -67,8 +67,7 @@ TAGS_KEYS_OVERRIDE['ASF'] = {
         }
 
 USED_KEYS="""
-song_type
-uri title artist album genre data year 
+song_type uri title artist album genre data year 
 description hidden album_colver_url station info_supp station_track_url
 #track #duration #progress #disc 
 #playcount #skipcount 
@@ -97,10 +96,7 @@ class Song(dict, Logger):
     
     def get_type(self):
         ''' return the song type. '''
-        if self.has_key("song_type"):
-            return self["song_type"]
-        else:
-            return "unknown"
+        return self.get("song_type", "unknown")
         
     def set_type(self, song_type):
         ''' Set the song type. '''
@@ -258,6 +254,8 @@ class Song(dict, Logger):
     def exists(self):    
         if self.get_type() == "cue":
             return utils.exists(self.get("real_uri"))
+        elif self.get_type() == "audiocd":
+            return os.path.exists(self.get("uri").split("#")[1])
         return utils.exists(self.get("uri"))
     
     def get_path(self):
@@ -288,6 +286,7 @@ class Song(dict, Logger):
         
     def read_from_file(self):    
         ''' Read song infomation for file. '''
+        print self.get_type()
         if self.get_scheme() == "file" and not self.exists():
             ret = False
         if self.get_scheme() == "file" and common.file_is_supported(self.get_path()):
@@ -393,7 +392,6 @@ class Song(dict, Logger):
         try:    
             try:
                 url = utils.get_uri_from_path(self.get("uri").encode("utf-8"))
-                print url
                 pipeline = gst.parse_launch("gnomevfssrc location="+url+" ! decodebin name=decoder ! fakesink")
             except gobject.GError:    
                 raise "W:Song:GstTag:Failed to build pipeline to read metadata of",self.get("uri")

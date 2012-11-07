@@ -58,6 +58,8 @@ class EventDispatcher(gobject.GObject):
         "webcast-info" : SIGNAL,
         "play-webcast" : SIGNAL_SIMPLE,
         "clear-sourcebar-status" : SIGNAL_BASE,
+        "new-cd-playlist" : SIGNAL,
+        "del-cd-playlist" : SIGNAL_SIMPLE,
         }
     
     def __init__(self):
@@ -132,6 +134,12 @@ class EventDispatcher(gobject.GObject):
         
     def clear_sourcebar_status(self):    
         self.emit("clear-sourcebar-status")
+        
+    def new_audiocd_playlist(self, songs, udi):    
+        self.emit("new-cd-playlist", songs, udi)
+        
+    def delete_audiocd_playlist(self, udi):    
+        self.emit("del-cd-playlist", udi)
         
 Dispatcher = EventDispatcher()
 
