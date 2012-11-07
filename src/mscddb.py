@@ -22,9 +22,13 @@
 
 from xml.sax import parseString, handler
 
+import os
 import urllib2
 import socket    
 socket.setdefaulttimeout(30) # 30s
+
+from logger import Logger
+from xdg_support import get_cache_file
 
 class MSCDDBParser(handler.ContentHandler):
     CD_KEKS = {
@@ -42,6 +46,7 @@ class MSCDDBParser(handler.ContentHandler):
         self.cd_infos = {}
         self.track_infos = []
         self.__temp_info = {}
+        self.cd_label = ""
         
     def startElement(self, name, attrs):
         self.content = ""
@@ -61,32 +66,57 @@ class MSCDDBParser(handler.ContentHandler):
             self.__temp_info.update(self.cd_infos)
             self.track_infos.append(self.__temp_info)
             self.__temp_info = {}
+        elif name == "label":    
+            self.cd_label = self.content
             
-class MSCDDB(object):            
+class MSCDDB(Logger):            
     QUERY_API = "http://toc.music.metaservices.microsoft.com/cdinfo/GetMDRCD.aspx?CD=%s"
     
-    @classmethod
-    def parse_disc_id(cls, disc_id):
+    def parse_disc_id(self, disc_id):
         if isinstance(disc_id, list):
             return "+".join(["%X" % key for key in disc_id])
         return disc_id
     
-    @classmethod
-    def query(cls, disc_id):
-        ms_disc = cls.parse_disc_id(disc_id)
-        url = cls.QUERY_API % ms_disc
-        try:
-            fp = urllib2.urlopen(url)
-        except:    
-            return []
-        else:
-            xml_info = fp.read()
-            handler = MSCDDBParser()            
-            try:
-                parseString(xml_info, handler)
-            except:    
-                return []
+    def query(self, disc_id):
+        disc_hash = "".join(["%d" % key for key in disc_id])
+        local_xml_file = self.get_save_file(disc_hash)
+        if os.path.exists(local_xml_file):
+            self.loginfo("Read cd info from local..")
+            xml_fp = open(local_xml_file, "r")
+            xml_info = xml_fp.read()
+            xml_fp.close()
+            result = self.handle_info(xml_info)
+            if result is not None: 
+                return result
             else:
-                return handler.track_infos
-        finally:    
-            fp.close()
+                os.unlink(local_xml_file)
+                self.query(disc_id)
+        else:    
+            self.loginfo("Read cd info fromo remote..")
+            ms_disc = self.parse_disc_id(disc_id)
+            url = self.QUERY_API % ms_disc
+            try:
+                req = urllib2.Request(url)
+                remote_fp = urllib2.urlopen(req)
+                remote_infos = remote_fp.read()
+                remote_fp.close()
+            except:    
+                return None
+            else:
+                with open(local_xml_file, "w") as local_fp:
+                    local_fp.write(remote_infos)
+                return self.handle_info(remote_infos)
+            
+    def handle_info(self, xml_info):       
+        handler = MSCDDBParser()            
+        try:
+            parseString(xml_info, handler)
+        except:    
+            return None
+        else:
+            return handler.track_infos, handler.cd_label
+            
+    def get_save_file(self, disc_hash):        
+        return get_cache_file("cddb/%s" % disc_hash)
+
+mscddb = MSCDDB()

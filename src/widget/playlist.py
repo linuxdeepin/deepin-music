@@ -277,8 +277,8 @@ class PlaylistUI(gtk.VBox):
     def create_new_playlist(self, name, items):    
         self.category_list.add_items(None, [PlaylistItem(Playlist("local", name, items))])
         
-    def __new_audiocd_playlist(self, obj, songs, udi):
-        self.category_list.add_items(None, [PlaylistItem(CDPlaylist("audiocd", _("CD List"), songs), udi=udi)]) 
+    def __new_audiocd_playlist(self, obj, name, songs, udi):
+        self.category_list.add_items(None, [PlaylistItem(CDPlaylist("audiocd", name, songs), udi=udi)]) 
         
     def get_edit_sub_menu(self, select_items, move=False):    
         sub_menu_items = []

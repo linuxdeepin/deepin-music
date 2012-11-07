@@ -24,7 +24,7 @@ import gobject
 import threading
 
 from udisks import udisks
-from mscddb import MSCDDB
+from mscddb import mscddb
 from nls import _
 from helper import Dispatcher
 
@@ -32,6 +32,7 @@ from player import Player
 from song import Song
 
 import DiscID
+
 
 class CDDBInfo(object):
     def __init__(self, device_path):
@@ -64,10 +65,10 @@ class CDDBInfo(object):
         if not self.disc_info:
             print "W:DiscID:No disk id"
             return []
-        query_infos = MSCDDB.query(self.disc_info[1:])
+        query_infos = mscddb.query(self.disc_info[1:])
         lengths = self.get_track_lengths()
 
-        if not query_infos:
+        if query_infos is None:
             track_tags = []
             for i in range(0, self.disc_info[1]):
                 tags = {
@@ -79,12 +80,13 @@ class CDDBInfo(object):
                     "#duration" : lengths[i]
                     }
                 track_tags.append(tags)
-            return track_tags    
+            return track_tags, _("Audio CD")
         
+        query_tags, query_label = query_infos
         [info.update({"uri" : "cdda://%d#%s" % (info["#track"], self.device_path),
-                      "#duration" : lengths[info["#track"] - 1]}) for info in query_infos]
+                      "#duration" : lengths[info["#track"] - 1]}) for info in query_tags]
         
-        return query_infos
+        return query_tags, query_label
     
 class AudioCDSource(object):        
     
@@ -113,7 +115,8 @@ class AudioCDSource(object):
     def post_mount_thread(self, device_path, udi):        
         gobject.idle_add(self.post_mount_cb, CDDBInfo(device_path).get_tracks(), device_path, udi)
         
-    def post_mount_cb(self, track_tags, device_path, udi):    
+    def post_mount_cb(self, track_infos, device_path, udi):    
+        track_tags, cd_label = track_infos
         if len(track_tags) > 0:
             songs = [] 
             for tag in track_tags:
@@ -121,7 +124,7 @@ class AudioCDSource(object):
                 cd_song.init_from_dict(tag)
                 cd_song.set_type("audiocd")
                 songs.append(cd_song)
-            Dispatcher.new_audiocd_playlist(songs, udi)
+            Dispatcher.new_audiocd_playlist(cd_label, songs, udi)
             self.audiocd_items[udi] = songs
         
     def check(self, udi):    
