@@ -174,6 +174,12 @@ class Transcoder(Logger):
     def set_input(self, uri):    
         self.input = "filesrc location=\"%s\"" % uri
         
+    def set_cd_input(self, uri):    
+        device = uri[uri.find("#") + 1:]
+        uri = uri[:uri.find("#")]
+        track = uri[7:]
+        self.input = "cdparanoiasrc device=\"%s\" track=%s" % (device, track)
+        
     def set_raw_input(self, raw):    
         self.input = raw
         

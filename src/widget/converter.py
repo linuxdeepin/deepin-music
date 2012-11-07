@@ -122,7 +122,10 @@ class TranscoderJob(gobject.GObject):
         self.transcoder = Transcoder()        
         self.transcoder.set_format(attr["format"])
         self.transcoder.set_quality(attr["quality"])
-        self.transcoder.set_input(attr["song"].get_path())
+        if self.raw_song.get_type() == "audiocd":
+            self.transcoder.set_cd_input(self.raw_song.get("uri"))
+        else:    
+            self.transcoder.set_input(attr["song"].get_path())
         self.transcoder.set_output(self.output_path)
         self.transcoder.end_cb = self.__end
         
@@ -492,8 +495,11 @@ class AttributesUI(DialogBox):
         self.quality_combo_box.queue_draw()
         
     def get_output_location(self, song):    
-        ext = FORMATS[self.format_combo_box.get_current_item()[0]]["extension"]
-        filename = "%s.%s" % (song.get_filename(), ext)
+        ext = FORMATS[self.format_combo_box.get_current_item()[0]]["extension"]        
+        if song.get_type() == "audiocd":
+            filename = "%s.%s" % (song.get("title"), ext)
+        else:
+            filename = "%s.%s" % (song.get_filename(), ext)
         return os.path.join(self.output_entry.get_text(), filename)
     
     def add_and_close(self, widget):
