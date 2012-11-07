@@ -83,7 +83,7 @@ class FullHeaderBar(gtk.EventBox):
         
         self.__play.show_all()
 
-        self.__id_signal_play = self.__play.connect("toggled", lambda w: Player.playpause())
+        self.__id_signal_play = self.__play.connect("toggled", self.on_player_playpause)
         
         prev_button = self.__create_button("previous_large", _("Previous track"))
         next_button = self.__create_button("next_large", _("Next track"))
@@ -162,6 +162,10 @@ class FullHeaderBar(gtk.EventBox):
         if config.getboolean("lyrics", "status"):
             self.lyrics_button.set_active(True)
         self.signal_auto = True    
+        
+    def on_player_playpause(self, widget):    
+        if Player.song:
+            Player.playpause()
         
     def change_lyrics_status(self, widget):    
         if self.signal_auto:
@@ -248,7 +252,7 @@ class SimpleHeadber(gtk.EventBox):
         Tooltip.text(self.__play, _("Play/Pause"))
         self.__play.show_all()
 
-        self.__id_signal_play = self.__play.connect("toggled", lambda w: Player.playpause())
+        self.__id_signal_play = self.__play.connect("toggled", self.on_player_playpause)
         
         prev_button = self.__create_button("previous", _("Previous track"))
         next_button = self.__create_button("next", _("Next track"))
@@ -330,6 +334,10 @@ class SimpleHeadber(gtk.EventBox):
         if config.getboolean("lyrics", "status"):
             self.lyrics_button.set_active(True)
         self.signal_auto = True    
+        
+    def on_player_playpause(self, widget):    
+        if Player.song:
+            Player.playpause()
         
     def change_lyrics_status(self, widget):    
         if self.signal_auto:
@@ -415,9 +423,9 @@ class HeaderBer(gtk.EventBox):
         Tooltip.text(self.__play, _("Play/Pause"))
         self.__play.show_all()
 
-        self.__id_signal_play = self.__play.connect("toggled", lambda w: Player.playpause())
+        self.__id_signal_play = self.__play.connect("toggled", self.on_player_playpause)
         
-        prev_button = self.__create_button("previous", _("Previous track"))
+        prev_button = self.__create_button("prev", _("Previous track"))
         next_button = self.__create_button("next", _("Next track"))
         
         self.vol = VolumeSlider()
@@ -498,6 +506,10 @@ class HeaderBer(gtk.EventBox):
             self.lyrics_button.set_active(True)
         self.signal_auto = True    
         
+    def on_player_playpause(self, widget):    
+        if Player.song:
+            Player.playpause()
+            
     def change_lyrics_status(self, widget):    
         if self.signal_auto:
             if widget.get_active():
@@ -506,14 +518,13 @@ class HeaderBer(gtk.EventBox):
                 Dispatcher.close_lyrics()
         
     def __create_simple_toggle_button(self, name, callback): 
-        prefix = get_prefix()
         toggle_button = ToggleButton(
-            app_theme.get_pixbuf("header/%s_%s_inactive_normal.png" % (prefix, name)),
-            app_theme.get_pixbuf("header/%s_%s_active_normal.png" % (prefix, name)),
-            app_theme.get_pixbuf("header/%s_%s_inactive_hover.png" % (prefix, name)),
-            app_theme.get_pixbuf("header/%s_%s_active_hover.png" % (prefix, name)),
-            app_theme.get_pixbuf("header/%s_%s_inactive_press.png" % (prefix, name)),
-            app_theme.get_pixbuf("header/%s_%s_active_press.png" % (prefix, name)),
+            app_theme.get_pixbuf("new_header/%s_inactive_normal.png" % name),
+            app_theme.get_pixbuf("new_header/%s_active_normal.png" % name),
+            app_theme.get_pixbuf("new_header/%s_inactive_hover.png" % name),
+            app_theme.get_pixbuf("new_header/%s_active_hover.png" % name),
+            app_theme.get_pixbuf("new_header/%s_inactive_press.png" % name),
+            app_theme.get_pixbuf("new_header/%s_active_press.png" % name),
             ) 
         if callback:
             toggle_button.connect("toggled", callback)
@@ -530,9 +541,9 @@ class HeaderBer(gtk.EventBox):
         
     def __create_button(self, name, tip_msg=None):    
         button = ImageButton(
-            app_theme.get_pixbuf("action/%s_normal.png" % name),
-            app_theme.get_pixbuf("action/%s_hover.png" % name),
-            app_theme.get_pixbuf("action/%s_press.png" % name),
+            app_theme.get_pixbuf("new_header/%s_normal.png" % name),
+            app_theme.get_pixbuf("new_header/%s_hover.png" % name),
+            app_theme.get_pixbuf("new_header/%s_press.png" % name),
             )
         button.connect("clicked", self.player_control, name)
         if tip_msg:
@@ -541,6 +552,8 @@ class HeaderBer(gtk.EventBox):
     
     def player_control(self, button, name):
         name = name.strip("_large")
+        if name == "prev":
+            name = "previous"
         if name == "next":
             getattr(Player, name)(True)
         else:    

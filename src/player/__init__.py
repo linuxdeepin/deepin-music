@@ -90,7 +90,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         
     def __on_error(self, bin, uri):   
         self.logdebug("gst error received for %s", uri)
-        self.bin.xfade_close()
+        self.bin.xfade_close(uri)
         config.set("player", "play", "false")
         self.emit("paused")
 
@@ -267,6 +267,8 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         
     def play(self, crossfade=-1, seek=None):    
         '''play currnet song'''
+        if self.song is None:
+            return 
         if seek:
             crossfade = -1
         ret = self.bin.xfade_play(crossfade)    
@@ -282,6 +284,8 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
     
     def pause(self):
         '''pause'''
+        if self.song is None :
+            return 
         self.bin.xfade_pause()
         config.set("player", "play", "false")
         self.emit("paused")
@@ -362,6 +366,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
     def playpause(self):        
         '''play or pause'''
         self.logdebug("is paused %s ?", self.is_paused())
+        if self.song is None: return False
         if not self.is_paused():
             self.pause()
         else:    
@@ -377,6 +382,9 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
                     self.next(True)
                 else:    
                     self.stop()
+        return True            
+                    
+                    
                     
     def seek(self, pos):
         '''seek'''

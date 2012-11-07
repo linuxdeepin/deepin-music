@@ -356,7 +356,7 @@ class PlayerBin(gobject.GObject, Logger):
             if (stream.state & state_mask) != 0:
                 return stream
         return None
-
+    
     # caller must hold stream lock
     def find_stream_by_element(self, element):
         for stream in self.streams:
@@ -1899,7 +1899,7 @@ class StreamBin(gst.Bin, Logger):
                 self.emit_stream_error("actually_start_stream")
                 self.logerror("Failed start Stream %s", self.cutted_uri)
 
-    def is_blocked(self):
+    def blocked(self):
         return self.__src_pad.is_blocked()
 
     def get_linkage(self):

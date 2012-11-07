@@ -74,6 +74,8 @@ class SongTimer(gtk.HBox):
             
     def on_player_init_status(self, player):        
         self.label_time.set_text("00:00/00:00")
+        self.bar.set_value(0)
+        self.bar.set_sensitive(True)
 
     def get_label(self):
         return self.label_time
@@ -148,7 +150,9 @@ class SongTimer(gtk.HBox):
         self.bar.handler_block(self.__value_changed_id)
         
         s = Player.song
-        if s is not None and s.get_type() in [ "webradio", "volatile_webradio"]:
+        if not s :
+            return
+        if s.get_type() in [ "webcast",]:
             return
         
         if s.get_type() == "cue":
