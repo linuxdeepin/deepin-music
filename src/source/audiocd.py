@@ -86,7 +86,7 @@ class CDDBInfo(object):
         [info.update({"uri" : "cdda://%d#%s" % (info["#track"], self.device_path),
                       "#duration" : lengths[info["#track"] - 1]}) for info in query_tags]
         
-        return query_tags, query_label
+        return query_tags, query_label or _("Audio CD")
     
 class AudioCDSource(object):        
     

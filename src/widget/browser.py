@@ -36,7 +36,7 @@ from widget.skin import app_theme
 from widget.ui import SearchEntry
 from widget.song_view import MultiDragSongView
 from widget.ui_utils import (switch_tab, render_text, draw_alpha_mask, create_right_align,
-                             create_separator_box)
+                             create_separator_box, draw_range)
 from widget.outlookbar import OptionBar, SongImportBar
 from source.local import ImportFolderJob, ReloadDBJob
 from widget.combo import  PromptButton
@@ -590,6 +590,7 @@ class Browser(gtk.VBox, SignalContainer):
         cr = widget.window.cairo_create()
         rect = widget.allocation
         draw_alpha_mask(cr, rect.x, rect.y, rect.width, rect.height, "layoutRight")
+        draw_range(cr, rect.x + 1, rect.y + 1, rect.width - 1, rect.height - 1, "#c7c7c7")        
         return False
     
     def on_iconview_draw_mask(self, cr, x, y, width, height):

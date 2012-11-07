@@ -127,7 +127,9 @@ class DeepinMusic(gobject.GObject, Logger):
         
         # self.browser_align.add(self.simple_browser)
         self.webcasts_manager = WebcastsManager()
-        self.browser_align.add(self.webcasts_manager)
+        self.switch_browser_box = gtk.VBox()
+        self.switch_browser_box.add(self.simple_browser)
+        self.browser_align.add(self.switch_browser_box)
         bottom_box.pack_start(list_manager_align, False, False)        
         bottom_box.pack_start(self.browser_align, True, True)
         self.browser_align.set_no_show_all(True)
@@ -191,6 +193,7 @@ class DeepinMusic(gobject.GObject, Logger):
         Dispatcher.connect("show-scroll-page", lambda w: self.preference_dialog.show_scroll_lyrics_page())
         Dispatcher.connect("show-job", self.hide_link_box)
         Dispatcher.connect("hide-job", self.show_link_box)
+        Dispatcher.connect("switch-browser", self.on_dispatcher_switch_browser)
         
         gobject.idle_add(self.ready)
         
@@ -429,3 +432,9 @@ class DeepinMusic(gobject.GObject, Logger):
     def show_link_box(self, obj):    
         self.link_box.set_no_show_all(False)
         self.link_box.show_all()
+        
+    def on_dispatcher_switch_browser(self, obj, index):    
+        if index == 0:
+            switch_tab(self.switch_browser_box, self.simple_browser)
+        elif index == 1:    
+            switch_tab(self.switch_browser_box, self.webcasts_manager)

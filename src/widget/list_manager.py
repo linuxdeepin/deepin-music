@@ -42,6 +42,7 @@ class ListManager(gtk.VBox):
         self.webcast_view = self.get_webcast_view()
         
         self.tab_box = TabBox(dockfill=True)
+        self.tab_box.connect("switch-tab", self.on_tab_box_switch_tab)
         self.tab_box.add_items(
             [("本地音乐", self.playlist_ui),
              ("网络广播", self.webcast_view)
@@ -60,3 +61,8 @@ class ListManager(gtk.VBox):
     def on_dispatcher_play_webcast(self, obj, webcast):
         self.webcast_view.add_items([WebcastItem(webcast)])
         Player.play_new(webcast)
+
+    def on_tab_box_switch_tab(self, widget, index):    
+        Dispatcher.emit("switch-browser", index)
+        
+        
