@@ -32,7 +32,7 @@ from dtk.ui.button import LinkButton
 
 
 from widget.skin import app_theme
-from widget.headerbar import FullHeaderBar, SimpleHeadber, HeaderBer
+from widget.headerbar import SimpleHeadbar
 from widget.list_manager import ListManager
 from widget.lyrics_module import LyricsModule
 from widget.browser import SimpleBrowser
@@ -102,9 +102,7 @@ class DeepinMusic(gobject.GObject, Logger):
         self.lyrics_display = LyricsModule()
         self.list_manager = ListManager()
         self.playlist_ui =  self.list_manager.playlist_ui
-        self.full_header_bar = FullHeaderBar()
-        # self.simple_header_bar = SimpleHeadber()
-        self.simple_header_bar = HeaderBer()
+        self.simple_header_bar = SimpleHeadbar()
         self.preference_dialog = PreferenceDialog()
         self.simple_browser = SimpleBrowser()
         self.equalizer_win = EqualizerWindow()
@@ -112,7 +110,6 @@ class DeepinMusic(gobject.GObject, Logger):
         self.audiocd = AudioCDSource()
 
             
-        self.window.add_move_event(self.full_header_bar)
         self.window.add_move_event(self.simple_header_bar)
 
         bottom_box = gtk.HBox()
@@ -388,9 +385,8 @@ class DeepinMusic(gobject.GObject, Logger):
     def change_view(self, widget):    
 
         if not widget.get_active():
-            Dispatcher.change_window_mode("simple")
             config.set("setting", "window_mode", "simple")
-            switch_tab(self.header_box, self.simple_header_bar)
+            # switch_tab(self.header_box, self.simple_header_bar)
             self.browser_align.hide_all()
             self.browser_align.set_no_show_all(True)
             self.window.set_default_size(330, 625)
@@ -398,9 +394,8 @@ class DeepinMusic(gobject.GObject, Logger):
             self.window.resize(330, 625)
             self.window.queue_draw()
         else:
-            Dispatcher.change_window_mode("full")
             config.set("setting", "window_mode", "full")
-            switch_tab(self.header_box, self.full_header_bar)
+            # switch_tab(self.header_box, self.full_header_bar)
             self.browser_align.set_no_show_all(False)
             self.browser_align.show_all()
             self.window.set_default_size(900, 625)            

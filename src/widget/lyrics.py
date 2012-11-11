@@ -96,7 +96,7 @@ class DesktopLyrics(gtk.Window):
                                    gtk.gdk.LEAVE_NOTIFY_MASK)
         
         self.connect("button-press-event", self.button_press) # TRY
-        self.connect("button_release_event", self.button_release) 
+        self.connect("button-release-event", self.button_release) 
         self.connect("motion-notify-event", self.motion_notify)   
         self.connect("enter-notify-event", self.enter_notify)
         self.connect("leave-notify-event", self.leave_notify)

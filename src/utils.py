@@ -30,6 +30,13 @@ import gtk
 import nls
 import gobject
 
+import hashlib
+
+try:
+    import simplejson as json
+except ImportError:    
+    import json
+
 import time
 from time import mktime, strptime
 import threading
@@ -48,6 +55,8 @@ from constant import DEFAULT_TIMEOUT
 import socket
 socket.setdefaulttimeout(DEFAULT_TIMEOUT)
 import common
+
+from xdg_support import get_cache_file
 
 logger = newLogger("utils")
 fscoding = sys.getfilesystemencoding()
@@ -775,7 +784,65 @@ def export_playlist(list_song, filename, p_type="m3u"):
     else:
         raise TypeError, "Unknow playlist type"
     
+    
+class RGBTuple(tuple):
+    """ Tuple for RGB values """
+    @classmethod
+    def from_hexstring(cls, value):
+        """ Returns a RGB tuple from hexstring ('#RRGGBB') """
+        value = value.lstrip('#')
+        return cls(int(value[i:i+2], 16) for i in (0, 2, 4))
 
+    def to_string(self):
+        """ Returns the hexstring representation ('#RRGGBB') of ``self``"""
+        def _exp(v):
+            return v if len(v) == 2 else '0'+v
+        return '#' + ''.join(map(lambda x:_exp(hex(x)[2:]).upper(), self))
+
+    def __str__(self):
+        return self.to_string()
+    
+def get_cookie_file(username):
+    return get_cache_file(hashlib.md5(username).hexdigest())
+
+def parser_json(raw):
+    try:
+        data = json.loads(raw)
+    except:    
+        try:
+            data = eval(raw, type("Dummy", (dict,), dict(__getitem__=lambda s,n: n))())
+        except:    
+            data = {}
+    return data    
+    
+def encode_multipart(fields, files):
+    """
+    fields is a sequence of (name, value) elements for regular form fields.
+    files is a sequence of (name, filename, value) elements for data to be uploaded as files
+    Return (content_type, body) ready for httplib.HTTP instance
+    """
+    def get_mime_type(filename):
+        return mimetypes.guess_type(filename)[0] or 'application/octet-stream'    
+    
+    BOUNDARY = '----------ThIs_Is_tHe_bouNdaRY_$'
+    CRLF = '\r\n'
+    L = []
+    for (key, value) in fields:
+        L.append('--' + BOUNDARY)
+        L.append('Content-Disposition: form-data; name="%s"' % key)
+        L.append('')
+        L.append(value)
+    for (key, filename, value) in files:
+        L.append('--' + BOUNDARY)
+        L.append('Content-Disposition: form-data; name="%s"; filename="%s"' % (key, filename))
+        L.append('Content-Type: %s' % get_mime_type(filename))
+        L.append('')
+        L.append(value)
+        L.append('--' + BOUNDARY + '--')
+        L.append('')
+    body = CRLF.join(L)
+    content_type = 'multipart/form-data; boundary=%s' % BOUNDARY
+    return content_type, body
     
 global MAIN_WINDOW            
 MAIN_WINDOW = None

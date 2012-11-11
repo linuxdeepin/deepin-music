@@ -32,31 +32,27 @@ from nls import _
 
 
 class PlayInfo(gtk.VBox):
-    def __init__(self, default_width=127):
+    def __init__(self, default_width=110):
         super(PlayInfo, self).__init__()
 
-        self.set_size_request(default_width, 44)
+        self.set_size_request(default_width, -1)
         self.default_width = default_width
-        self.artist_label = self.create_simple_label(_("Deepin Music"), 9.5)
-        self.title_label = self.create_simple_label("Linux Deepin ", 9.5)
+        self.artist_label = self.create_simple_label(_("Deepin Music") + " for Linux Deepin", 9.5)
 
         Player.connect("instant-new-song",self.__new_song)
         MediaDB.connect("simple-changed",self.__on_change)
         Player.bin.connect("buffering", self.__on_buffering)
         Player.connect("init-status", self.__on_player_init_status)
         
-        self.set_spacing(3)
         artist_label_align = gtk.Alignment()
         artist_label_align.set_padding(1, 0, 0, 0)
         artist_label_align.set(0, 0, 1, 1)
         artist_label_align.add(self.artist_label)
-        self.pack_start(artist_label_align, False, False)
-        self.pack_start(self.title_label, False, False)
+        self.pack_start(artist_label_align, False, True)
         self.song = None
         
     def __on_player_init_status(self, player):    
-        self.artist_label.set_text(_("Deepin Music"))
-        self.title_label.set_text("Linux Deepin")
+        self.artist_label.set_text(_("Deepin Music") + " for Linux Deepin")
         
     def __on_buffering(self, playbin, progress):
         if self.song:
@@ -72,16 +68,19 @@ class PlayInfo(gtk.VBox):
     def update(self, song , buffering = None):
         if not song: return
         self.song = song
-        self.title_label.set_text(song.get_str("title"))
+        title = song.get_str("title")
         if song.get_str("artist"):
-            self.artist_label.set_text(song.get_str("artist"))
+            self.artist_label.set_text("%s - %s" % (song.get_str("artist"), title))
         elif buffering is not None:    
             if buffering >= 0 and buffering <= 98:
-                self.artist_label.set_text("%s %d%%" % (_("buffering"), buffering))
+                self.artist_label.set_text("%s(%d%%) - %s" % (_("buffering"), buffering, title))
             elif buffering >= 99:    
-                self.artist_label.set_text("")
+                if song.get_str("artist"):
+                    self.artist_label.set_text("%s - %s" % (song.get_str("artist"), title))
+                else:
+                    self.artist_label.set_text(title)
         else:    
-            self.artist_label.set_text("")
+            self.artist_label.set_text(title)
         
     def create_simple_label(self, content, text_size):    
         label = Label(content, app_theme.get_color("labelText"), text_size=text_size, enable_gaussian=True, label_width=self.default_width)

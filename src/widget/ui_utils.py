@@ -125,13 +125,11 @@ def set_widget_hcenter(widget):
     return hbox
 
 def set_widget_vcenter(widget):
-    vbox = gtk.VBox()
-    vbox.pack_start(create_bottom_align(), False, True)
-    vbox.pack_start(widget, False, False)
-    vbox.pack_start(create_upper_align(), False, True)
-    return vbox
+    align = gtk.Alignment()
+    align.set(0.5, 0.5, 0, 0)
+    align.add(widget)
+    return align
     
-
 def set_widget_left(widget):
     hbox = gtk.HBox()
     hbox.pack_start(widget, False, False)

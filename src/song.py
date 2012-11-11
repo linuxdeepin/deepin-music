@@ -67,12 +67,13 @@ TAGS_KEYS_OVERRIDE['ASF'] = {
         }
 
 USED_KEYS="""
-song_type uri title artist album genre data year 
-description hidden album_colver_url station info_supp station_track_url
+song_type uri title artist album genre date year 
+description hidden album_cover_url station info_supp station_track_url
 #track #duration #progress #disc 
 #playcount #skipcount 
 #lastplayed #added #date #mtime #ctime #rate #progress #bitrate #size #stream_offset seek
 sort_title sort_artist sort_album sort_genre search real_uri id collect
+ssid company rating_avg subtype aid sid like
 """.split()
 
 class Song(dict, Logger):
