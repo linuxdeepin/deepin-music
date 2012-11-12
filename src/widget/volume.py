@@ -21,82 +21,183 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import gtk
-from dtk.ui.button import ToggleButton
+import gobject
+from dtk.ui.draw import draw_pixbuf
+from dtk.ui.utils import is_left_button, get_match_parent, get_widget_root_coordinate
+from dtk.ui.window import Window
+from dtk.ui.constant import WIDGET_POS_BOTTOM_LEFT
+from dtk.ui.popup_grab_window import PopupGrabWindow, wrap_grab_window
 
-from widget.scalebar import HScalebar
 from widget.skin import app_theme
+from widget.scalebar import VScalebar
 
-
-class VolumeButton(gtk.HBox):
+class PopupVolume(Window):
     
-    def __init__(self, init_value=100, min_value=0, max_value=100):
+    def __init__(self, default_width=27):
+        Window.__init__(self, window_type=gtk.WINDOW_POPUP)
+        self.set_size_request(default_width, 100)
         
-        super(VolumeButton, self).__init__()
-        self.set_spacing(2)
-        self.volume_progressbar = HScalebar(
-            app_theme.get_pixbuf("volume/fg.png"),
-            app_theme.get_pixbuf("volume/bg.png"),
-            app_theme.get_pixbuf("volume/point_normal.png"),
-            )
+        self.volume_slider = VScalebar(default_height=80)
+        self.volume_slider.tag_by_popup_volume_grab_window = True
         
-        self.volume_button = ToggleButton(
-            app_theme.get_pixbuf("volume/high_normal.png"),
-            app_theme.get_pixbuf("volume/mute_normal.png"),
-            app_theme.get_pixbuf("volume/high_hover.png"),
-            app_theme.get_pixbuf("volume/mute_hover.png"),
-            app_theme.get_pixbuf("volume/high_press.png"),
-            app_theme.get_pixbuf("volume/mute_press.png"),
-            )
+        main_align = gtk.Alignment()
+        main_align.set_padding(5, 5, 5, 5)
+        main_align.add(self.volume_slider)
+        self.window_frame.pack_start(main_align)
         
-        # Init widget.
-        self.volume_progressbar.set_size_request(58, 11)
-        self.volume_progressbar.set_range(min_value, max_value)
-        self.volume_progressbar.set_value(init_value)
-        self.volume_progressbar.connect("button-release-event", self.release_event)
+        wrap_grab_window(volume_grab_window, self)
         
-        # Signals.
-        self.volume_progressbar.get_adjustment().connect("value-changed", self.moniter_volume_change)
+    def show(self, x, y):    
+        self.move(x, y)
+        self.show_all()
         
-        # Pack.
-        volume_align = gtk.Alignment()
-        volume_align.set(0.5, 0.5, 0, 0)
-        volume_align.add(self.volume_progressbar)
+gobject.type_register(PopupVolume)        
         
-        button_align = gtk.Alignment()
-        # button_align.set(0.5, 0.5, 0, 0)
-        button_align.add(self.volume_button)
+class PopupVolumeGrabWindow(PopupGrabWindow):
+    '''
+    class docs
+    '''
+	
+    def __init__(self):
+        '''
+        init docs
+        '''
+        PopupGrabWindow.__init__(self, PopupVolume)
+        self.button_press_callback = None
+        
+    def popup_grab_window_motion_notify(self, widget, event):
+        '''
+        Handle `motion-notify` signal of popup_grab_window.
+    
+        @param widget: Popup_Window widget.
+        @param event: Motion notify signal.
+        '''
+        if event and event.window:
+            event_widget = event.window.get_user_data()
+        
+            if isinstance(event_widget, VScalebar) and hasattr(event_widget, "tag_by_popup_volume_grab_window"):
+                if self.press_flag:
+                    if self.button_press_callback:
+                        self.button_press_callback()
+                    event_widget.event(event)
+        
+    def popup_grab_window_button_release(self, widget, event):            
+        if event and event.window:
+            event_widget = event.window.get_user_data()
+            if isinstance(event_widget, VScalebar) and hasattr(event_widget, "tag_by_popup_volume_grab_window"):
+                self.press_flag = False
+                if self.button_press_callback:
+                    self.button_press_callback()
+                event_widget.event(event)
+                
+    def popup_grab_window_scroll_event(self, widget, event):            
+        if event and event.window:
+            event_widget = event.window.get_user_data()
+            if isinstance(event_widget, VScalebar) and hasattr(event_widget, "tag_by_popup_volume_grab_window"):
+                if self.button_press_callback:
+                    self.button_press_callback()
+                event_widget.event(event)
+                
+    def popup_grab_window_enter_notify(self, widget, event):            
+        if event and event.window:
+            event_widget = event.window.get_user_data()
+            if isinstance(event_widget, VScalebar) and hasattr(event_widget, "tag_by_popup_volume_grab_window"):
+                if self.button_press_callback:
+                    self.button_press_callback()
+                event_widget.event(event)
+                
+    def popup_grab_window_leave_notify(self, widget, event):            
+        if event and event.window:
+            event_widget = event.window.get_user_data()
+            if isinstance(event_widget, VScalebar) and hasattr(event_widget, "tag_by_popup_volume_grab_window"):
+                if self.button_press_callback:
+                    self.button_press_callback()
+                event_widget.event(event)
+                
+    def popup_grab_window_button_press(self, widget, event):
+        '''
+        Handle `button-press-event` signal of popup_grab_window.
+    
+        @param widget: Popup_Window widget.
+        @param event: Button press event.
+        '''
+        
+        if event and event.window:
+            event_widget = event.window.get_user_data()
+            if self.is_press_on_popup_grab_window(event.window):
+                if self.button_press_callback:
+                    self.button_press_callback()
+                self.popup_grab_window_focus_out()
+            elif isinstance(event_widget, self.wrap_window_type):
+                if self.button_press_callback:
+                    self.button_press_callback()
+                event_widget.event(event)
+            elif isinstance(event_widget, VScalebar) and hasattr(event_widget, "tag_by_popup_volume_grab_window"):
+                self.press_flag = True                
+                if self.button_press_callback:
+                    self.button_press_callback()
+                event_widget.event(event)
+            else:
+                if self.button_press_callback:
+                    self.button_press_callback()
+                event_widget.event(event)
+                self.popup_grab_window_focus_out()
+                
+volume_grab_window = PopupVolumeGrabWindow()
+        
 
-        self.pack_start(button_align, False, False)
-        self.pack_start(volume_align, False, False)
+class VolumeButton(gtk.Button):
+    
+    def __init__(self):
+        gtk.Button.__init__(self)
+        
+        # Init signals.
+        self.add_events(gtk.gdk.ALL_EVENTS_MASK)
+        self.connect("expose-event", self.on_expose_event)
+        self.connect("button-press-event", self.on_button_press)
+        
+        # Init app_theme DPixbuf.
+        self.update_status_icons("high")
+        
+        # Init sizes.
+        width = self.normal_dpixbuf.get_pixbuf().get_width()
+        height = self.normal_dpixbuf.get_pixbuf().get_height()
+        self.set_size_request(width, height)
+        
+        # Init popup volume
+        self.popup_volume = PopupVolume()
+        self.volumebar = self.popup_volume.volume_slider 
+        self.volumebar.connect("value-changed", self.on_volumebar_value_changed)
+        
+    def update_status_icons(self, name):
+        self.normal_dpixbuf = app_theme.get_pixbuf("volume/volume_%s_normal.png" % name)
+        self.hover_dpixbuf = app_theme.get_pixbuf("volume/volume_%s_hover.png" % name)
+        self.press_dpixbuf = app_theme.get_pixbuf("volume/volume_%s_press.png" % name)        
+        
+    def on_volumebar_value_changed(self, widget, value):    
+        print value
+        
+    def on_expose_event(self, widget, event):    
+        cr = widget.window.cairo_create()
+        rect = widget.allocation
+        
+        pixbuf = None
+        
+        if widget.state == gtk.STATE_NORMAL:
+            pixbuf = self.normal_dpixbuf.get_pixbuf()
+        elif widget.state == gtk.STATE_PRELIGHT:
+            pixbuf = self.hover_dpixbuf.get_pixbuf()
+        elif widget.state == gtk.STATE_ACTIVE:    
+            pixbuf = self.press_dpixbuf.get_pixbuf()
             
-    def release_event(self, widget, event):    
-        pass
+        if pixbuf is None:    
+            pixbuf = self.normal_dpixbuf.get_pixbuf()
+            
+        draw_pixbuf(cr, pixbuf, rect.x, rect.y)    
         
-    def update_volume_button_pixbuf(self, name):
-        group = (
-            app_theme.get_pixbuf("volume/%s_normal.png" % name),
-            app_theme.get_pixbuf("volume/%s_hover.png" % name),
-            app_theme.get_pixbuf("volume/%s_press.png" % name),
-            app_theme.get_pixbuf("volume/%s_press.png" % name)
-            )
-        self.volume_button.set_inactive_pixbuf_group(group)
-        self.queue_draw()
+        return True
         
-    
-    def moniter_volume_change(self, adjustment):
-        high_value = adjustment.get_upper()
-        lower_value = adjustment.get_lower()
-        total_value = high_value - lower_value
-        current_value = adjustment.get_value() - lower_value
-        
-        if current_value > 0:
-            if self.volume_button.get_active():
-                self.volume_button.set_active(False)
-        if current_value == 0:
-            self.update_volume_button_pixbuf("zero")
-        elif 0 < current_value  <= total_value * 0.3: 
-            self.update_volume_button_pixbuf("lower")
-        elif total_value * 0.3 < current_value <= total_value * 0.6:
-            self.update_volume_button_pixbuf("middle")
-        elif total_value * 0.6 < current_value <= total_value:
-            self.update_volume_button_pixbuf("high")
+    def on_button_press(self, widget, event):    
+        x, y =  get_widget_root_coordinate(widget, WIDGET_POS_BOTTOM_LEFT)
+        self.popup_volume.show(x, y)
+        volume_grab_window.popup_grab_window_focus_in()        

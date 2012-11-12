@@ -27,6 +27,7 @@ from dtk.ui.utils import is_left_button
 from dtk.ui.cache_pixbuf import CachePixbuf
 
 from widget.skin import app_theme
+from utils import color_hex_to_cairo
 
 class HScalebar(gtk.HScale):
     
@@ -129,3 +130,157 @@ class HScalebar(gtk.HScale):
             
 gobject.type_register(HScalebar)
 
+class VScalebar(gtk.Button):
+    '''
+    Volume button.
+    '''
+    __gtype_name__ = "VScalebar"
+    __gsignals__ = {"value-changed" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (float,)),
+        }
+    
+    def __init__(self, value=100, lower=0, upper=100, step=5, default_height=100):
+        gtk.Button.__init__(self)
+        
+        # Init default data.
+        self.__value = value
+        self.__lower = lower
+        self.__upper = upper
+        self.__step  = step
+        self.default_height = default_height
+        self.current_y = 0
+        
+        # Init DPixbuf.
+        self.bg_bottom_dpixbuf = app_theme.get_pixbuf("volume/bg_bottom.png")
+        self.bg_middle_dpixbuf = app_theme.get_pixbuf("volume/bg_middle.png")
+        self.bg_top_dpixbuf = app_theme.get_pixbuf("volume/bg_top.png")
+        self.point_dpixbuf = app_theme.get_pixbuf("volume/point.png")
+        
+        # Init sizes.
+        self.fg_width = self.bg_width = self.bg_middle_dpixbuf.get_pixbuf().get_width()
+        self.bg_top_height = self.bg_top_dpixbuf.get_pixbuf().get_height()
+        self.bg_bottom_height = self.bg_bottom_dpixbuf.get_pixbuf().get_height()
+        self.point_width = self.point_dpixbuf.get_pixbuf().get_width()
+        self.point_height = self.point_dpixbuf.get_pixbuf().get_height()
+        self.bg_x_offset = (self.point_width - self.bg_width) / 2
+        self.set_size_request(self.point_width, self.default_height)
+        self.real_height = self.default_height - self.point_height        
+        
+        # Init CachePixbuf.
+        self.__bg_cache_pixbuf = CachePixbuf()
+        
+        # Init events.
+        self.add_events(gtk.gdk.ALL_EVENTS_MASK)
+        self.connect("button-press-event", self.on_button_press)
+        self.connect("motion-notify-event", self.on_motion_notify)
+        self.connect("button-release-event", self.on_button_release)
+        self.connect("expose-event", self.on_expose_event)
+        self.connect("scroll-event", self.on_scroll_event)
+        
+        # Init flags
+        self.__button_press_flag = False
+        
+    def value_to_height(self, value):    
+        return self.__upper / float(self.real_height)* value
+    
+    def height_to_value(self, height):
+        return height / float(self.real_height) * self.__upper 
+    
+    def on_scroll_event(self, widget, event):
+        if event.direction == gtk.gdk.SCROLL_UP:
+            self.increase_value()
+        elif event.direction == gtk.gdk.SCROLL_DOWN:
+            self.decrease_value()
+            
+    def on_expose_event(self, widget, event):    
+        cr = widget.window.cairo_create()
+        rect = widget.allocation
+        x, y, w, h = rect.x + self.bg_x_offset, rect.y + self.point_height / 2, rect.width, rect.height - self.point_height
+
+        fg_x = bg_x = rect.x + self.bg_x_offset        
+        # Draw background.
+        draw_pixbuf(cr, self.bg_top_dpixbuf.get_pixbuf(), bg_x, y)
+        
+        middle_height = h - self.bg_top_height - self.bg_bottom_height
+        self.__bg_cache_pixbuf.scale(self.bg_middle_dpixbuf.get_pixbuf(), 
+                                     self.bg_width, middle_height)
+        draw_pixbuf(cr, self.__bg_cache_pixbuf.get_cache(), bg_x, y + self.bg_top_height)
+        draw_pixbuf(cr, self.bg_bottom_dpixbuf.get_pixbuf(), bg_x, y + h - self.bg_top_height)
+        
+        # Draw foreground.
+        cr.set_source_rgb(*color_hex_to_cairo("#2868c7"))
+        cr.rectangle(fg_x, y + self.current_y, self.fg_width, h - self.current_y)
+        cr.fill()
+        
+        # # Draw point.
+        draw_pixbuf(cr, self.point_dpixbuf.get_pixbuf(), rect.x, rect.y + self.current_y)
+        return True
+    
+    def on_button_press(self, widget, event):
+        if is_left_button(event):
+            rect = widget.allocation
+            if event.y < self.point_height / 2:
+                motion_y = self.point_height / 2
+            elif event.y > rect.height - self.point_height:
+                motion_y = rect.height - self.point_height
+            else:    
+                motion_y = event.y
+                
+            if self.current_y != motion_y:    
+                self.current_y = motion_y
+                self.emit("value-changed", self.get_value())
+                
+                self.queue_draw()            
+            self.__button_press_flag = True        
+    
+    def on_motion_notify(self, widget, event):
+        if self.__button_press_flag:
+            rect = widget.allocation
+            if event.y < 0:
+                motion_y = 0
+            elif event.y > rect.height - self.point_height:
+                motion_y = rect.height - self.point_height
+            else:    
+                motion_y = event.y
+                
+            if self.current_y != motion_y:    
+                self.current_y = motion_y
+                self.emit("value-changed", self.get_value())
+                self.queue_draw()
+    
+    def on_button_release(self, widget, event):
+        self.__button_press_flag = False
+        
+    def get_value(self):
+        self.__value = self.height_to_value(self.real_height - self.current_y)
+        return round(self.__value, 1)
+    
+    def set_value(self, value):
+        self.current_y = self.real_height - self.value_to_height(value)
+        self.queue_draw()
+        
+    def set_range(self, lower, upper):    
+        self.__lower = lower
+        self.__upper = upper
+        
+    def increase_value(self):    
+        temp_y = self.current_y
+        temp_y += self.value_to_height(self.__step)
+        if temp_y > self.real_height:
+            temp_y = self.real_height
+        if temp_y != self.current_y:    
+            self.current_y = temp_y
+            self.emit("value-changed", self.get_value())
+            self.queue_draw()
+            
+    def decrease_value(self):        
+        temp_y = self.current_y
+        temp_y -= self.value_to_height(self.__step)
+        if temp_y < 0:
+            temp_y = 0
+        if temp_y != self.current_y:    
+            self.current_y = temp_y
+            self.emit("value-changed", self.get_value())
+            self.queue_draw()
+
+gobject.type_register(VScalebar)
+            
