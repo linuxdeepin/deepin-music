@@ -25,6 +25,7 @@ import gtk
 from dtk.ui.tab_window import TabBox
 from dtk.ui.new_treeview import TreeView
 from webcast_view import WebcastItem
+from widget.ui_utils import draw_single_mask, draw_alpha_mask
 
 from playlist import PlaylistUI
 from helper import Dispatcher
@@ -40,6 +41,7 @@ class ListManager(gtk.VBox):
         
         # webcastlist
         self.webcast_view = self.get_webcast_view()
+        self.webcast_view.draw_mask = self.on_webcast_draw_mask
         
         self.tab_box = TabBox(dockfill=True)
         self.tab_box.connect("switch-tab", self.on_tab_box_switch_tab)
@@ -52,6 +54,9 @@ class ListManager(gtk.VBox):
         self.add(self.tab_box)
         
         Dispatcher.connect("play-webcast", self.on_dispatcher_play_webcast)
+        
+    def on_webcast_draw_mask(self, cr, x, y, width, height):    
+        draw_alpha_mask(cr, x, y, width, height, "layoutLeft")
         
     def get_webcast_view(self):    
         view = TreeView()

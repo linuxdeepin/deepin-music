@@ -788,18 +788,25 @@ class WebcastsManager(gtk.VBox):
         
     def get_webcasts_view(self):    
         webcast_view = ListView()
+        webcast_view.draw_mask = self.webcast_draw_mask
         webcast_view.connect("double-click-item", self.on_webcast_view_double_click)
         scrolled_window = ScrolledWindow(0, 0)
         scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
         scrolled_window.add_child(webcast_view)
         return webcast_view, scrolled_window
+    
+    def webcast_draw_mask(self, cr, x, y, width, height):
+        draw_alpha_mask(cr, x, y, width, height, "layoutLast")
 
     def on_webcast_view_double_click(self, widget, item, column, x, y):
         Dispatcher.play_webcast(item.webcast)
     
     def on_sourcebar_draw_mask(self, cr, x, y, w, h):    
         draw_alpha_mask(cr, x, y, w, h ,"layoutRight")
-        draw_range(cr, x + 1, y + 1, w-1, h-1, "#c7c7c7")        
+        draw_line(cr, (x + w - 1, y), (x + w - 1, y + h), "#dfe0e0")
+        draw_line(cr, (x + 1, y), 
+                  (x + 1, y + h), "#b0b0b0")
+        # draw_range(cr, x + 1, y + 1, w-1, h-1, "#c7c7c7")        
         return False
     
     def on_source_view_single_click_item(self, widget, item, column, x, y):

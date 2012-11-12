@@ -94,7 +94,7 @@ class DoubanFM(Logger):
         if stage >= 2:
             self.loginfo("Login check failed!")
             return False
-8        
+        
         params = {}
         params["source"] = "simple"
         params["form_email"] = self.username
@@ -379,4 +379,5 @@ class DoubanFM(Logger):
         
 if __name__ == "__main__":    
     douban = DoubanFM()
-
+    douban.set_login_info("username", "password")
+    douban.check_fm_login()
