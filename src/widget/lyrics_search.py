@@ -220,7 +220,7 @@ class SearchItem(gobject.GObject):
                  self.artist_height + self.artist_padding_y * 2)
                 ]    
     
-    def get_renders(self):
+    def get_renders(self, hide_column):
         '''Get render callbacks.'''
         return [self.render_title,
                 self.render_artist]

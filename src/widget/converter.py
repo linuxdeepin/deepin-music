@@ -265,7 +265,7 @@ class TranscoderJob(gobject.GObject):
             (50, self.ext_h + self.ext_padding_y),
             ]
     
-    def get_renders(self):
+    def get_renders(self, hide_column):
         return [ self.render_icon, self.render_title, self.render_progress, self.render_ext]
     
     
