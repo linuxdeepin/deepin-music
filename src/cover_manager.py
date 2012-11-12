@@ -41,7 +41,7 @@ from cover_query import multi_query_artist_engine
 
 REINIT_COVER_TO_SKIP_TIME = 100 * 60 * 30
 
-COVER_SIZE = {"x": 58, "y": 58}
+COVER_SIZE = {"x": 69, "y": 69}
 COVER_SAVE_SIZE = {"x": 300, "y": 300}
 BROWSER_COVER_SIZE = {"x": 40, "y": 40}
 

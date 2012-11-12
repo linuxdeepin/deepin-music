@@ -23,6 +23,7 @@
 
 import gtk
 from dtk.ui.button import ToggleButton, ImageButton
+from dtk.ui.draw import draw_text
 import dtk.ui.tooltip as Tooltip
 
 from player import Player
@@ -45,9 +46,6 @@ class SimpleHeadbar(gtk.EventBox):
         self.cover_box = PlayerCoverButton()
         self.cover_box.show_all()
         
-        # Main table
-        main_table = gtk.Table(2, 2)
-                
         # swap played status handler
         Player.connect("played", self.__swap_play_status, True)
         Player.connect("paused", self.__swap_play_status, False)
@@ -73,33 +71,52 @@ class SimpleHeadbar(gtk.EventBox):
         next_button = self.__create_button("next", _("Next track"))
         
         self.vol = VolumeSlider()
-        song_timer = SongTimer()
         
         # lyrics button
         self.lyrics_button = self.__create_simple_toggle_button("lyrics", self.change_lyrics_status)        
         Tooltip.text(self.lyrics_button, _("Lyrics on/off"))
         
         
+        lyrics_button_align = gtk.Alignment()
+        lyrics_button_align.set_padding(0, 0, 0, 9)
+        lyrics_button_align.set(0.5, 0.5, 0, 0)
+        lyrics_button_align.add(self.lyrics_button)
         
         # action_box
         action_box = gtk.HBox()
-        action_box.pack_start(set_widget_vcenter(self.lyrics_button), False, False)
+        action_box.pack_start(lyrics_button_align, False, False)
         action_box.pack_start(set_widget_vcenter(prev_button), False, False)
         action_box.pack_start(set_widget_vcenter(self.__play), False, False)
         action_box.pack_start(set_widget_vcenter(next_button), False, False)
          
         # combo_box
-        combo_vbox = gtk.VBox()
-        combo_vbox.pack_start(PlayInfo(200), False, False)
-        combo_vbox.pack_start(action_box, False, False)
+        playinfo_align = gtk.Alignment()
+        playinfo_align.set_padding(0, 0, 12, 0)
+        playinfo_align.add(PlayInfo(200))
         
-        cover_main_box = gtk.HBox(spacing=5)
-        cover_main_box.pack_start(self.cover_box, False, False)
+        self.action_box_align = gtk.Alignment()
+        self.action_box_align.set_padding(6, 0, 10, 0)
+        self.action_box_align.add(action_box)
+        self.action_box_align.connect("expose_event", self.on_expose_event)
+        
+        self.timer_label = "00:00"
+        self.song_timer = SongTimer(self.draw_timer_label)
+        
+        combo_vbox = gtk.VBox()
+        combo_vbox.pack_start(playinfo_align, False, False)
+        combo_vbox.pack_start(self.action_box_align, False, False)
+        
+        cover_box_align = gtk.Alignment()
+        cover_box_align.set_padding(0, 0, 10, 0)
+        cover_box_align.add(self.cover_box)
+        
+        cover_main_box = gtk.HBox()
+        cover_main_box.pack_start(cover_box_align, False, False)
         cover_main_box.pack_start(combo_vbox, False, False)
         
-        body_vbox = gtk.VBox(spacing=5)
+        body_vbox = gtk.VBox(spacing=6)
         body_vbox.pack_start(cover_main_box, False, True)
-        body_vbox.pack_start(song_timer, False, True)
+        body_vbox.pack_start(self.song_timer, False, True)
         
         self.add(body_vbox)
 
@@ -112,6 +129,27 @@ class SimpleHeadbar(gtk.EventBox):
         if config.getboolean("lyrics", "status"):
             self.lyrics_button.set_active(True)
         self.signal_auto = True    
+        
+        
+    def draw_timer_label(self, timer_text):    
+        self.timer_text = timer_text
+        self.action_box_align.queue_draw()
+        
+    def on_expose_event(self, widget, event):    
+        cr = widget.window.cairo_create()
+        rect = widget.allocation
+        rect.x += 12
+        rect.width  = 68
+        rect.height = 15
+        
+        draw_text(cr, self.timer_text, rect.x, rect.y, rect.width, rect.height, text_size=8,
+                  gaussian_radious=2,
+                  gaussian_color="#000000",
+                  border_radious=1,
+                  border_color="#000000",
+                  text_color = "#FFFFFF"
+                  )
+
         
     def on_player_playpause(self, widget):    
         if Player.song:

@@ -33,9 +33,9 @@
 	 "settingLeft"  : ("#EFEFEF", 0.85),
 	 "settingRight"  : ("#EFEFEF", 0.95),
 	 "layoutLeft" : ("#ffffff", 0.90),
-     "layoutMiddle" : ("#f2faff", 0.85),
+     "layoutMiddle" : ("#ffffff", 0.90),
      "layoutRight" : ("#ffffff", 0.90),
-     "layoutLast" : ("#f2faff", 0.85),
+     "layoutLast" : ("#ffffff", 0.90),
 	 "lyricsMask" : ("#ffffff", 0.60),
  },
  "shadow_colors" : {

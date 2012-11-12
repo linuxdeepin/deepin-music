@@ -39,11 +39,14 @@ class SongTimer(gtk.HBox):
     __gsignals__ = {
         "play-end" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ())
     }
-    def __init__(self):
+    def __init__(self, draw_time_callback=None):
         super(SongTimer, self).__init__()
 
-        self.label_time = Label("00:00/00:00", app_theme.get_color("labelText"), 8, enable_gaussian=True)
-
+        self.label_time = Label("00:00", app_theme.get_color("labelText"), 8, enable_gaussian=True)
+        self.draw_time_callback = draw_time_callback
+        if draw_time_callback:
+            draw_time_callback(self.label_time.get_text())
+            
         self.bar = HScalebar()
         self.bar.set_draw_value(False)
         self.bar.set_range(0, 1000)
@@ -73,9 +76,12 @@ class SongTimer(gtk.HBox):
             self.bar.set_sensitive(False)
             
     def on_player_init_status(self, player):        
-        self.label_time.set_text("00:00/00:00")
+        self.label_time.set_text("00:00")
         self.bar.set_value(0)
         self.bar.set_sensitive(True)
+        if self.draw_time_callback:
+            self.draw_time_callback(self.label_time.get_text())
+            
 
     def get_label(self):
         return self.label_time
@@ -114,7 +120,7 @@ class SongTimer(gtk.HBox):
                 self.bar.set_range(0, duration)
                 self.bar.set_value(pos)
 
-        total = utils.duration_to_string(duration * 1000, "00:00")                
+        # total = utils.duration_to_string(duration * 1000, "00:00")                
         if pos > 0 and pos < duration:
             current = utils.duration_to_string(pos, "00:00", 1) 
         else:    
@@ -122,9 +128,12 @@ class SongTimer(gtk.HBox):
             
         if pos >0 and Player.song and Player.song.get_type() == "webcast":    
             current = utils.duration_to_string(pos, "00:00", 1) 
-            total = "--:--"
-        text = "%s/%s" % (current, total)
+            # total = "--:--"
+        # text = "%s/%s" % (current, total)
+        text = current
         self.label_time.set_text(text)
+        if self.draw_time_callback:
+            self.draw_time_callback(text)
 
     def on_seek(self, *args, **kwargs):
         self.__need_report = False
