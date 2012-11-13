@@ -38,7 +38,7 @@ class ListManager(gtk.VBox):
         gtk.VBox.__init__(self)
         
         main_align = gtk.Alignment()
-        main_align.set_padding(0, 0, 2, 0)
+        main_align.set_padding(0, 0, 1, 0)
         main_align.set(1, 1, 1, 1)
         # playlist
         self.playlist_ui = PlaylistUI()

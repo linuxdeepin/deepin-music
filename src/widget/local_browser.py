@@ -29,6 +29,7 @@ from dtk.ui.draw import draw_pixbuf
 from dtk.ui.scrolled_window import ScrolledWindow
 from dtk.ui.button import ImageButton
 from dtk.ui.iconview import IconView
+from dtk.ui.paned import HPaned
 
 from library import MediaDB, DBQuery
 from helper import SignalContainer, Dispatcher
@@ -337,10 +338,15 @@ class Browser(gtk.VBox, SignalContainer):
         content_box.pack_start(switch_view_align, True, True)
         content_box.connect("expose-event", self.on_contentbox_expose_event)
         
-        body_box = gtk.HBox()
-        body_box.pack_start(left_vbox, False, False)
-        body_box.pack_start(content_box, True, True)
-        self.pack_start(body_box, True, True)
+        # body_box = gtk.HBox()
+        # body_box.pack_start(left_vbox, False, False)
+        # body_box.pack_start(content_box, True, True)
+        
+        body_paned = HPaned()
+        body_paned.add1(left_vbox)
+        body_paned.add2(content_box)
+        
+        self.pack_start(body_paned, True, True)
         
         
     def get_search_entry(self):    

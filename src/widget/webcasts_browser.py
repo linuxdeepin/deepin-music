@@ -35,6 +35,7 @@ from dtk.ui.utils import get_content_size, get_widget_root_coordinate, get_match
 from dtk.ui.constant import WIDGET_POS_TOP_RIGHT
 from dtk.ui.popup_grab_window import PopupGrabWindow, wrap_grab_window
 from dtk.ui.window import Window
+from dtk.ui.paned import HPaned
 
 import utils
 from widget.ui_utils import (draw_single_mask, draw_alpha_mask, render_item_text,
@@ -740,11 +741,15 @@ class WebcastsBrowser(gtk.VBox):
         switch_view_align.set(1, 1, 1, 1)
         switch_view_align.add(self.switch_view_box)
         
-        body_box = gtk.HBox()
-        body_box.pack_start(self.sourcebar, False, True)
-        body_box.pack_start(switch_view_align, True, True)
+        # body_box = gtk.HBox()
+        # body_box.pack_start(self.sourcebar, False, True)
+        # body_box.pack_start(switch_view_align, True, True)
         
-        self.add(body_box)
+        body_paned = HPaned()
+        body_paned.add1(self.sourcebar)
+        body_paned.add2(switch_view_align)
+        
+        self.add(body_paned)
         self.show_all()
         
     def on_dispatcher_webcast_info(self, obj, parent, key):    
@@ -788,6 +793,7 @@ class WebcastsBrowser(gtk.VBox):
         
     def get_webcasts_view(self):    
         webcast_view = ListView()
+        webcast_view.set_expand_column(1)
         webcast_view.draw_mask = self.webcast_draw_mask
         webcast_view.connect("double-click-item", self.on_webcast_view_double_click)
         scrolled_window = ScrolledWindow(0, 0)

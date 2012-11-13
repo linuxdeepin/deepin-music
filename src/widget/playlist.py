@@ -58,13 +58,13 @@ class PlaylistUI(gtk.VBox):
         self.category_list.draw_mask = self.draw_category_list_mask
         self.category_list.connect("single-click-item", self.category_single_click_cb)
         self.category_list.connect("right-press-item", self.category_right_press_cb)
-        # self.category_list.connect("button-press-event", self.category_button_press_cb)
         self.category_list.set_size_request(98, -1)
         self.search_time_source = 0
         
         self.entry_box = SearchEntry("")
         self.entry_box.entry.connect("changed", self.search_cb)
         self.entry_box.set_no_show_all(True)
+        
         entry_align = gtk.Alignment()
         entry_align.set(0, 0, 1, 1)
         entry_align.set_padding(2, 0, 10, 10)
@@ -90,7 +90,6 @@ class PlaylistUI(gtk.VBox):
         self.right_box = gtk.VBox()
         self.right_box.connect("size-allocate", self.on_right_box_size_allocate)
         
-
         self.list_paned = HPaned()
         self.list_paned.pack1(category_scrolled_window)
         self.list_paned.pack2(self.right_box, True, False)
@@ -137,7 +136,7 @@ class PlaylistUI(gtk.VBox):
     def expose_entry_mask(self, widget, event):
         cr = widget.window.cairo_create()
         rect = widget.allocation
-        draw_alpha_mask(cr, rect.x + 2, rect.y, rect.width - 1, rect.height, "toolbarEntry")
+        draw_alpha_mask(cr, rect.x , rect.y, rect.width, rect.height, "toolbarEntry")
         
     def draw_category_list_mask(self, cr, x, y, width, height):
         draw_alpha_mask(cr, x, y, width, height, "layoutLeft")
@@ -163,7 +162,7 @@ class PlaylistUI(gtk.VBox):
         self.menu_source_id = self.current_item.song_view.connect("right-press-items", self.popup_detail_menu)
 
         Player.set_source(self.current_item.song_view)
-        self.right_box.pack_start(self.current_item.get_list_widget(), True, True)
+        self.right_box.add(self.current_item.get_list_widget())
         self.list_paned.show_all()
         
     def __on_player_loaded(self, player):   
@@ -451,7 +450,7 @@ class PlaylistUI(gtk.VBox):
         self.menu_source_id = self.current_item.song_view.connect("right-press-items", self.popup_detail_menu)
 
         container_remove_all(self.right_box)
-        self.right_box.pack_start(item.get_list_widget(), True, True)
+        self.right_box.add(item.get_list_widget())
         self.list_paned.show_all()
         
     def show_text_entry(self, widget):        
