@@ -166,16 +166,25 @@ class VolumeButton(gtk.Button):
         
         # Init popup volume
         self.popup_volume = PopupVolume()
+        self.max_value = 100
         self.volumebar = self.popup_volume.volume_slider 
         self.volumebar.connect("value-changed", self.on_volumebar_value_changed)
         
-    def update_status_icons(self, name):
+    def update_status_icons(self, name, redraw=False):
         self.normal_dpixbuf = app_theme.get_pixbuf("volume/volume_%s_normal.png" % name)
         self.hover_dpixbuf = app_theme.get_pixbuf("volume/volume_%s_hover.png" % name)
         self.press_dpixbuf = app_theme.get_pixbuf("volume/volume_%s_press.png" % name)        
+        if redraw: self.queue_draw()
         
     def on_volumebar_value_changed(self, widget, value):    
-        print value
+        if value == 0:
+            self.update_status_icons("zero", True)
+        elif 0 < value <= self.max_value * (1.0/3):
+            self.update_status_icons("low", True)
+        elif self.max_value * (1.0/3) < value <= self.max_value * (2.0 / 3):    
+            self.update_status_icons("medium", True)
+        else:    
+            self.update_status_icons("high", True)
         
     def on_expose_event(self, widget, event):    
         cr = widget.window.cairo_create()

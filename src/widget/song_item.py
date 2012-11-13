@@ -140,20 +140,14 @@ class SongItem(gobject.GObject):
                 (50, 26), 
                 (self.length_width + self.length_padding_x * 2 + 20, 26)]    
     
-    def get_renders(self, hide_columns):
+    def get_renders(self):
         '''Get render callbacks.'''
         
         if self.extend:
             render_list = [ self.render_title, self.render_artist, self.render_album, self.render_add_time]
-            for index, item in enumerate(render_list):
-                if index in hide_columns:
-                    render_list.remove(item)
             return render_list
         else:
             render_list =  [self.render_title, self.render_artist, self.render_length]
-            for index, item in enumerate(render_list):
-                if index in hide_columns:
-                    render_list.remove(item)
             return render_list
 
         

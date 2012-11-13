@@ -281,6 +281,6 @@ class VScalebar(gtk.Button):
             self.current_y = temp_y
             self.emit("value-changed", self.get_value())
             self.queue_draw()
-
+            
 gobject.type_register(VScalebar)
             

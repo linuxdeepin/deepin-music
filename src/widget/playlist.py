@@ -88,12 +88,12 @@ class PlaylistUI(gtk.VBox):
         category_scrolled_window.add_child(self.category_list)
         
         self.right_box = gtk.VBox()
-        # self.list_box = gtk.HBox()
+        self.right_box.connect("size-allocate", self.on_right_box_size_allocate)
+        
+
         self.list_paned = HPaned()
-        self.list_paned.add1(category_scrolled_window)
-        self.list_paned.add2(self.right_box)
-        # self.list_box.pack_start(category_scrolled_window, False, False)
-        # self.list_box.pack_start(self.right_box, True, True)
+        self.list_paned.pack1(category_scrolled_window)
+        self.list_paned.pack2(self.right_box, True, False)
         
         list_align = gtk.Alignment()
         list_align.set_padding(0, 0, 2, 0)
@@ -127,6 +127,9 @@ class PlaylistUI(gtk.VBox):
         Dispatcher.connect("add-songs", self.__add_songs_to_list)
         Dispatcher.connect("new-cd-playlist", self.__new_audiocd_playlist)
         Dispatcher.connect("del-cd-playlist", self.delete_audiocd_list)
+        
+    def on_right_box_size_allocate(self, widget, rect):    
+        print rect
         
     def expose_toolbar_mask(self, widget, event):    
         cr = widget.window.cairo_create()

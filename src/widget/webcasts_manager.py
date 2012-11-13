@@ -173,12 +173,8 @@ class WebcastListItem(gobject.GObject):
             (50, 1)
             ]
     
-    def get_renders(self, hide_columns):
-        render_list = [self.render_webcast_icon, self.render_title, self.render_collect_icon, self.render_block]
-        for index, item in enumerate(render_list):
-            if index in hide_columns:
-                render_list.remove(item)
-        return render_list
+    def get_renders(self):
+        return [self.render_webcast_icon, self.render_title, self.render_collect_icon, self.render_block]
     
     def toggle_is_collected(self):
         if self.is_collected:
