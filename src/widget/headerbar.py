@@ -141,7 +141,11 @@ class SimpleHeadbar(gtk.EventBox):
         
     def draw_timer_label(self, timer_text):    
         self.timer_text = timer_text
-        self.action_box_align.queue_draw()
+        rect = self.action_box_align.allocation
+        rect.x += 12
+        rect.width  = 68
+        rect.height = 15
+        self.action_box_align.queue_draw_area(rect.x, rect.y, rect.width, rect.height)
         
     def on_expose_event(self, widget, event):    
         cr = widget.window.cairo_create()
@@ -157,7 +161,6 @@ class SimpleHeadbar(gtk.EventBox):
                   border_color="#000000",
                   text_color = "#FFFFFF"
                   )
-
         
     def on_player_playpause(self, widget):    
         if Player.song:
