@@ -144,11 +144,9 @@ class SongItem(gobject.GObject):
         '''Get render callbacks.'''
         
         if self.extend:
-            render_list = [ self.render_title, self.render_artist, self.render_album, self.render_add_time]
-            return render_list
+            return [ self.render_title, self.render_artist, self.render_album, self.render_add_time]
         else:
-            render_list =  [self.render_title, self.render_artist, self.render_length]
-            return render_list
+            return [self.render_title, self.render_artist, self.render_length]
 
         
             
