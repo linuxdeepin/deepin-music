@@ -325,11 +325,15 @@ class Browser(gtk.VBox, SignalContainer):
         search_hbox = gtk.HBox()
         search_hbox.pack_start(self.back_hbox, False, False)
         search_hbox.pack_start(create_right_align(), True, True)
-        search_hbox.pack_start(search_align, False, False)
+        # search_hbox.pack_start(search_align, False, False)
+        search_hbox_align = gtk.Alignment()
+        search_hbox_align.set_padding(5, 0, 0, 0)
+        search_hbox_align.set(0, 0, 1, 1)
+        search_hbox_align.add(search_hbox)
         
         # Layout on the right.
         content_box = gtk.VBox(spacing=5)
-        content_box.pack_start(search_hbox, False, False)
+        content_box.pack_start(search_hbox_align, False, False)
         content_box.pack_start(switch_view_align, True, True)
         content_box.connect("expose-event", self.on_contentbox_expose_event)
         

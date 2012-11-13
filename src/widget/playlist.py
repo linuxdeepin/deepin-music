@@ -95,15 +95,10 @@ class PlaylistUI(gtk.VBox):
         self.list_paned.pack1(category_scrolled_window)
         self.list_paned.pack2(self.right_box, True, False)
         
-        list_align = gtk.Alignment()
-        list_align.set_padding(0, 0, 2, 0)
-        list_align.set(0, 0, 1, 1)
-        list_align.add(self.list_paned)
-        
         bottom_box = gtk.VBox()
         bottom_box.set_size_request(-1, 22)
         
-        self.pack_start(list_align, True, True)            
+        self.pack_start(self.list_paned, True, True)            
         self.pack_start(entry_align, False, False)            
         self.pack_start(toolbar_align, False, True)            
         
@@ -129,12 +124,12 @@ class PlaylistUI(gtk.VBox):
         Dispatcher.connect("del-cd-playlist", self.delete_audiocd_list)
         
     def on_right_box_size_allocate(self, widget, rect):    
-        print rect
+        pass
         
     def expose_toolbar_mask(self, widget, event):    
         cr = widget.window.cairo_create()
         rect = widget.allocation
-        draw_vlinear(cr, rect.x + 2, rect.y, rect.width - 2, rect.height,
+        draw_vlinear(cr, rect.x, rect.y, rect.width, rect.height,
                      app_theme.get_shadow_color("playlistToolbar").get_color_info()
                      )
         return False

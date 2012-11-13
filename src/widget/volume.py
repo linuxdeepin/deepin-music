@@ -74,12 +74,15 @@ class PopupVolumeGrabWindow(PopupGrabWindow):
         '''
         if event and event.window:
             event_widget = event.window.get_user_data()
-        
             if isinstance(event_widget, VScalebar) and hasattr(event_widget, "tag_by_popup_volume_grab_window"):
                 if self.press_flag:
                     if self.button_press_callback:
                         self.button_press_callback()
                     event_widget.event(event)
+            elif isinstance(event_widget, PopupVolume):    
+                if self.button_press_callback:
+                    self.button_press_callback()
+                event_widget.event(event)
         
     def popup_grab_window_button_release(self, widget, event):            
         if event and event.window:
@@ -90,10 +93,21 @@ class PopupVolumeGrabWindow(PopupGrabWindow):
                     self.button_press_callback()
                 event_widget.event(event)
                 
+            elif isinstance(event_widget, PopupVolume):    
+                if self.button_press_callback:
+                    self.button_press_callback()
+                event_widget.event(event)
+                
+                
     def popup_grab_window_scroll_event(self, widget, event):            
         if event and event.window:
             event_widget = event.window.get_user_data()
             if isinstance(event_widget, VScalebar) and hasattr(event_widget, "tag_by_popup_volume_grab_window"):
+                if self.button_press_callback:
+                    self.button_press_callback()
+                event_widget.event(event)
+                    
+            elif isinstance(event_widget, PopupVolume):    
                 if self.button_press_callback:
                     self.button_press_callback()
                 event_widget.event(event)
@@ -106,6 +120,12 @@ class PopupVolumeGrabWindow(PopupGrabWindow):
                     self.button_press_callback()
                 event_widget.event(event)
                 
+            elif isinstance(event_widget, PopupVolume):    
+                if self.button_press_callback:
+                    self.button_press_callback()
+                event_widget.event(event)
+               
+                
     def popup_grab_window_leave_notify(self, widget, event):            
         if event and event.window:
             event_widget = event.window.get_user_data()
@@ -113,6 +133,12 @@ class PopupVolumeGrabWindow(PopupGrabWindow):
                 if self.button_press_callback:
                     self.button_press_callback()
                 event_widget.event(event)
+                 
+            elif isinstance(event_widget, PopupVolume):    
+                if self.button_press_callback:
+                    self.button_press_callback()
+                event_widget.event(event)
+                 
                 
     def popup_grab_window_button_press(self, widget, event):
         '''
@@ -132,6 +158,10 @@ class PopupVolumeGrabWindow(PopupGrabWindow):
                 if self.button_press_callback:
                     self.button_press_callback()
                 event_widget.event(event)
+            # elif isinstance(event_widget, PopupVolume):    
+            #     if self.button_press_callback:
+            #         self.button_press_callback()
+            #     event_widget.event(event)
             elif isinstance(event_widget, VScalebar) and hasattr(event_widget, "tag_by_popup_volume_grab_window"):
                 self.press_flag = True                
                 if self.button_press_callback:

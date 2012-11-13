@@ -21,6 +21,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import gtk
+import gobject
 from dtk.ui.listview import ListView
 from dtk.ui.new_treeview import TreeView, TreeItem
 from dtk.ui.draw import draw_pixbuf, draw_text
@@ -108,4 +109,4 @@ class WebcastItem(TreeItem):
     
     def draw_drag_line(self, drag_line, drag_line_at_bottom=False):
         pass
-
+    

@@ -35,8 +35,7 @@ from widget.skin import app_theme
 from widget.headerbar import SimpleHeadbar
 from widget.list_manager import ListManager
 from widget.lyrics_module import LyricsModule
-from widget.browser import SimpleBrowser
-from widget.webcasts_manager import WebcastsManager
+from widget.browser_manager import BrowserMananger
 from widget.jobs_manager import jobs_manager
 from widget.tray import TrayIcon
 from widget.equalizer import EqualizerWindow
@@ -104,10 +103,10 @@ class DeepinMusic(gobject.GObject, Logger):
         self.playlist_ui =  self.list_manager.playlist_ui
         self.simple_header_bar = SimpleHeadbar()
         self.preference_dialog = PreferenceDialog()
-        self.simple_browser = SimpleBrowser()
         self.equalizer_win = EqualizerWindow()
         self.mmkeys = MMKeys()
         self.audiocd = AudioCDSource()
+        self.browser_manager = BrowserMananger()
 
             
         self.window.add_move_event(self.simple_header_bar)
@@ -118,15 +117,11 @@ class DeepinMusic(gobject.GObject, Logger):
         self.browser_align.set(0.5, 0.5, 1, 1)
         
         list_manager_align = gtk.Alignment()
-        list_manager_align.set_padding(0, 0, 2, 0)
+        list_manager_align.set_padding(0, 0, 0, 0)
         list_manager_align.set(1, 1, 1, 1)
         list_manager_align.add(self.list_manager)
         
-        # self.browser_align.add(self.simple_browser)
-        self.webcasts_manager = WebcastsManager()
-        self.switch_browser_box = gtk.VBox()
-        self.switch_browser_box.add(self.simple_browser)
-        self.browser_align.add(self.switch_browser_box)
+        self.browser_align.add(self.browser_manager)
         bottom_box.pack_start(list_manager_align, False, False)        
         bottom_box.pack_start(self.browser_align, True, True)
         self.browser_align.set_no_show_all(True)
@@ -190,7 +185,7 @@ class DeepinMusic(gobject.GObject, Logger):
         Dispatcher.connect("show-scroll-page", lambda w: self.preference_dialog.show_scroll_lyrics_page())
         Dispatcher.connect("show-job", self.hide_link_box)
         Dispatcher.connect("hide-job", self.show_link_box)
-        Dispatcher.connect("switch-browser", self.on_dispatcher_switch_browser)
+
         
         gobject.idle_add(self.ready)
         
@@ -232,7 +227,7 @@ class DeepinMusic(gobject.GObject, Logger):
         Player.stop()
         self.mmkeys.release()
         self.playlist_ui.save_to_library()
-        self.webcasts_manager.save()
+        self.browser_manager.save() 
         MediaDB.save()
         config.write()
         global_hotkeys.stop()
@@ -428,8 +423,3 @@ class DeepinMusic(gobject.GObject, Logger):
         self.link_box.set_no_show_all(False)
         self.link_box.show_all()
         
-    def on_dispatcher_switch_browser(self, obj, index):    
-        if index == 0:
-            switch_tab(self.switch_browser_box, self.simple_browser)
-        elif index == 1:    
-            switch_tab(self.switch_browser_box, self.webcasts_manager)

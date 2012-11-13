@@ -25,8 +25,10 @@ import gobject
 
 from dtk.ui.window import Window
 from dtk.ui.titlebar import Titlebar
-from dtk.ui.utils import move_window
-from dtk.ui.entry import InputEntry
+from dtk.ui.utils import (move_window, alpha_color_hex_to_cairo, 
+                          color_hex_to_cairo, cairo_disable_antialias,
+                          propagate_expose)
+from dtk.ui.entry import InputEntry, Entry
 from dtk.ui.button import ImageButton
 from dtk.ui.draw import draw_pixbuf, draw_text
 from widget.skin import app_theme
@@ -78,50 +80,6 @@ class SearchEntry(InputEntry):
 gobject.type_register(SearchEntry)        
 
         
-    
-class ProgressBox(gtk.VBox):
-    
-    def __init__(self, scalebar):
-        super(ProgressBox, self).__init__()
-        scalebar_align = gtk.Alignment()
-        scalebar_align.set_padding(0, 0, 2, 2)
-        scalebar_align.set(0, 0, 1, 1)
-        scalebar_align.add(scalebar)
-        
-        self.draw_right_mask_flag = True
-        self.set_size_request(-1, 17)
-        self.rect_left_list = [
-            (98, "layoutLeft"),
-            (220, "layoutMiddle")
-            ]
-        
-        self.pack_start(scalebar_align, False, True)
-        self.connect("expose-event", self.draw_mask)
-        Dispatcher.connect("window-mode", self.window_mode_changed)
-        
-    def window_mode_changed(self, obj, status):    
-        if status == "simple":
-            self.draw_right_mask_flag = False
-        else:    
-            self.draw_right_mask_flag = True
-        
-    def draw_mask(self, widget, event):    
-        cr = widget.window.cairo_create()
-        rect = widget.allocation
-        start_x = rect.x + 2
-        start_y = rect.y + 8
-
-        for size, color_info in self.rect_left_list:
-            draw_alpha_mask(cr, start_x, start_y, size, rect.height - 8, color_info)
-            start_x += size
-        if self.draw_right_mask_flag:    
-            draw_alpha_mask(cr, start_x, start_y, 140, rect.height - 8, "layoutRight")
-            start_x += 140
-            last_width = rect.width - (start_x - rect.x)    
-            draw_alpha_mask(cr, start_x, start_y, last_width - 2, rect.height - 8, "layoutLast")
-        return False
-
-    
 class ComplexButton(gtk.Button):    
     
     def __init__(self, bg_group, icon, content, left_padding=20, label_padding=10, font_size=9):
@@ -175,8 +133,139 @@ class ComplexButton(gtk.Button):
 
 gobject.type_register(ComplexButton)    
 
-class TabBox(gtk.VBox):
+class SearchBox(gtk.EventBox):
     
     def __init__(self):
+        gtk.EventBox.__init__(self)
+        self.set_visible_window(False)
         
-        pass
+        # Init signals.
+        self.connect("expose-event", self.on_expose_event)
+        
+        # Init DPixbufs.
+        self.normal_dpixbuf = app_theme.get_pixbuf("toolbar/search_normal.png")
+        self.hover_dpixbuf = app_theme.get_pixbuf("toolbar/search_hover.png")
+        self.press_dpixbuf = app_theme.get_pixbuf("toolbar/search_press.png")
+        
+    def on_expose_event(self, widget, event):    
+        cr = widget.window.cairo_create()
+        rect = widget.allocation
+        
+        # Draw Background.
+        cr.rectangle(rect.x, rect.y, rect.width, rect.height)
+        cr.set_source_rgb(*color_hex_to_cairo("#D7D7D7"))
+        cr.fill()
+        
+        pixbuf  = None
+        if widget.state == gtk.STATE_NORMAL:
+            pixbuf = self.normal_dpixbuf.get_pixbuf()
+        elif widget.state == gtk.STATE_PRELIGHT:    
+            pixbuf = self.hover_dpixbuf.get_pixbuf()
+        elif widget.state == gtk.STATE_ACTIVE:    
+            pixbuf = self.press_dpixbuf.get_pixbuf()
+            
+        if pixbuf is None:    
+            pixbuf = self.normal_dpixbuf.get_pixbuf()
+            
+        icon_x = rect.x + (rect.width - pixbuf.get_width()) / 2
+        icon_y = rect.y + (rect.height - pixbuf.get_height()) / 2
+        draw_pixbuf(cr, pixbuf, icon_x, icon_y)    
+        return True
+
+class CustomEntry(gtk.VBox):
+    __gsignals__ = {
+        
+        "action-active" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (str,)),
+    }
+    
+    def __init__(self,  content=""):
+        '''
+        Initialize InputEntry class.
+        '''
+        # Init.
+        gtk.VBox.__init__(self)
+        self.entry = Entry(content)
+        self.add(self.entry)
+        self.connect("expose-event", self.expose_input_entry)
+            
+    def set_sensitive(self, sensitive):
+        '''
+        Internal function to wrap function `set_sensitive`.
+        '''
+        super(InputEntry, self).set_sensitive(sensitive)
+        self.entry.set_sensitive(sensitive)
+            
+    def emit_action_active_signal(self):
+        '''
+        Internal callback for `action-active` signal.
+        '''
+        self.emit("action-active", self.get_text())                
+        
+    def expose_input_entry(self, widget, event):
+        '''
+        Internal callback for `expose-event` signal.
+        '''
+        # Init.
+        cr = widget.window.cairo_create()
+        rect = widget.allocation
+        x, y, w, h = rect.x, rect.y, rect.width, rect.height
+
+        
+        cr.set_source_rgba(*alpha_color_hex_to_cairo(("#FFFFFF", 0.9)))
+        cr.rectangle(rect.x, rect.y, rect.width, rect.height)
+        cr.fill()
+        
+        # Draw frame.
+        with cairo_disable_antialias(cr):
+            cr.set_line_width(1)
+            cr.set_source_rgba(*color_hex_to_cairo("#C3C4C5"))
+            cr.move_to(rect.x + rect.width, rect.y)
+            cr.rel_line_to(0, rect.height)
+            cr.stroke()
+        
+        propagate_expose(widget, event)
+        
+        # return True
+    
+    def set_size(self, width, height):
+        '''
+        Set input entry size with given value.
+        
+        @param width: New width of input entry.
+        @param height: New height of input entry.
+        '''
+        # self.set_size_request(width, height)    
+        self.entry.set_size_request(width - 2, height - 2)
+        
+    def set_editable(self, editable):
+        '''
+        Set editable status of input entry.
+        
+        @param editable: input entry can editable if option is True, else can't edit.
+        '''
+        self.entry.set_editable(editable)
+        
+    def set_text(self, text):
+        '''
+        Set text of input entry.
+        
+        @param text: input entry string.
+        '''
+        self.entry.set_text(text)
+        
+    def get_text(self):
+        '''
+        Get text of input entry.
+        
+        @return: Return text of input entry.
+        '''
+        return self.entry.get_text()
+    
+    def focus_input(self):
+        '''
+        Focus input cursor.
+        '''
+        self.entry.grab_focus()
+        
+gobject.type_register(InputEntry)
+    

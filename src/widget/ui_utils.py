@@ -24,7 +24,7 @@ import pango
 import gtk
 import pangocairo
 
-from dtk.ui.utils import alpha_color_hex_to_cairo, cairo_disable_antialias, layout_set_markup
+from dtk.ui.utils import (alpha_color_hex_to_cairo, cairo_disable_antialias, layout_set_markup)
 from dtk.ui.line import draw_vlinear
 from dtk.ui.draw import draw_text
 from dtk.ui.line import HSeparator
@@ -48,6 +48,7 @@ def draw_alpha_mask(cr, x, y, width, height, color_name):
         color_info = app_theme.get_alpha_color(color_name).get_color_info()
     else:    
         color_info = color_name
+
     cr.set_source_rgba(*alpha_color_hex_to_cairo(color_info))
     cr.rectangle(x, y, width, height)
     cr.fill()

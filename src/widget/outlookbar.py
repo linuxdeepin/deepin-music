@@ -310,6 +310,8 @@ class SimpleItem(gtk.Button):
         # Init.
         cr = widget.window.cairo_create()
         rect = widget.allocation
+        rect.x += 2
+        rect.width -= 4
         font_color = app_theme.get_color("labelText").get_color()
         item_pixbuf = self.normal_dpixbuf.get_pixbuf()
         select_index = self.get_index()

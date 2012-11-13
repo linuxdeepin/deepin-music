@@ -22,7 +22,6 @@
 
 import gtk
 
-from dtk.ui.tab_window import TabBox
 from dtk.ui.new_treeview import TreeView
 from webcast_view import WebcastItem
 from widget.ui_utils import draw_single_mask, draw_alpha_mask
@@ -31,11 +30,16 @@ from playlist import PlaylistUI
 from helper import Dispatcher
 from player import Player
 
+from widget.tab_box import TabManager, Tab
+
 class ListManager(gtk.VBox):
     
     def __init__(self):
         gtk.VBox.__init__(self)
         
+        main_align = gtk.Alignment()
+        main_align.set_padding(0, 0, 2, 0)
+        main_align.set(1, 1, 1, 1)
         # playlist
         self.playlist_ui = PlaylistUI()
         
@@ -43,15 +47,12 @@ class ListManager(gtk.VBox):
         self.webcast_view = self.get_webcast_view()
         self.webcast_view.draw_mask = self.on_webcast_draw_mask
         
-        self.tab_box = TabBox(dockfill=True)
-        self.tab_box.connect("switch-tab", self.on_tab_box_switch_tab)
-        self.tab_box.add_items(
-            [("本地音乐", self.playlist_ui),
-             ("网络广播", self.webcast_view)
-             ]
-            )
+        self.tab_box = TabManager([Tab("本地音乐", self.playlist_ui, 0),
+                                  Tab("网络广播", self.webcast_view, 1)])
         
-        self.add(self.tab_box)
+        self.tab_box.connect("switch-tab", self.on_tab_box_switch_tab)
+        main_align.add(self.tab_box)
+        self.add(main_align)
         
         Dispatcher.connect("play-webcast", self.on_dispatcher_play_webcast)
         
@@ -67,7 +68,7 @@ class ListManager(gtk.VBox):
         self.webcast_view.add_items([WebcastItem(webcast)])
         Player.play_new(webcast)
 
-    def on_tab_box_switch_tab(self, widget, index):    
-        Dispatcher.emit("switch-browser", index)
+    def on_tab_box_switch_tab(self, widget, item):    
+        Dispatcher.emit("switch-browser", item.index)
         
         

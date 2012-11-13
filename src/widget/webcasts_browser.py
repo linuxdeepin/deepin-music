@@ -255,7 +255,7 @@ class CategroyItem(TreeItem):
             draw_pixbuf(cr, self.hover_bg, rect.x, rect.y)
             text_color = app_theme.get_color("simpleItemSelect").get_color()
         elif self.is_hover:    
-            text_color = app_theme.get_color("simpleItemSelect").get_color()
+            text_color = app_theme.get_color("simpleItemHover").get_color()
         else:    
             text_color = app_theme.get_color("labelText").get_color()
             
@@ -698,7 +698,7 @@ class PopupPanelGrabWindow(PopupGrabWindow):
 popup_grab_window = PopupPanelGrabWindow()                
 popup_grab_window.button_press_callback = Dispatcher.clear_sourcebar_status
 
-class WebcastsManager(gtk.VBox):
+class WebcastsBrowser(gtk.VBox):
     
     def __init__(self):
         gtk.VBox.__init__(self)

@@ -324,8 +324,9 @@ class PromptButton(gtk.Button):
     
     def set_infos(self, infos):
         temp_pixbuf, self.prompt_text = infos
-        Tooltip.text(self, self.prompt_text)
-        self.prompt_pixbuf = temp_pixbuf.scale_simple(16, 16, gtk.gdk.INTERP_BILINEAR)
-        self.update_size()
+        if temp_pixbuf:
+            Tooltip.text(self, self.prompt_text)
+            self.prompt_pixbuf = temp_pixbuf.scale_simple(16, 16, gtk.gdk.INTERP_BILINEAR)
+            self.update_size()
 
 gobject.type_register(PromptButton)
