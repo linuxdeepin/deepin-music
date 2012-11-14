@@ -73,6 +73,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         self.bin.connect("playing-stream", self.__on_playing)
         
     def __on_change_songs(self, db, songs):    
+        if not self.song: return
         if self.song.get_type() in ("cue", "audiocd"):
             return
         if self.song in songs:
