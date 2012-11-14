@@ -94,7 +94,7 @@ class Tab(gtk.EventBox):
         cr.stroke()
         
         if self.index == 0 and self.is_select:
-            dashed = [4.0, 10.0, 4.0]
+            dashed = [4.0, 4.0]
             cr.move_to(rect.x, rect.y + rect.height)
             cr.line_to(rect.x + rect.width, rect.y + rect.height)
             cr.set_dash(dashed)
