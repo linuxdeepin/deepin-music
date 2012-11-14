@@ -35,7 +35,7 @@ class WebcastItem(TreeItem):
         TreeItem.__init__(self)
         self.column_index = 0
         self.side_padding = 5
-        self.item_height = 37
+        self.item_height = 31
         self.webcast = webcast
         self.item_width = 121
         
@@ -82,7 +82,7 @@ class WebcastItem(TreeItem):
         draw_text(cr, self.webcast.get_str("title"), rect.x + icon_pixbuf.get_width() + padding_x * 2, 
                   rect.y, rect.width - icon_pixbuf.get_width() - padding_x * 2, rect.height, 
                   text_color = text_color,
-                  alignment=pango.ALIGN_LEFT, text_size=11)    
+                  alignment=pango.ALIGN_LEFT, text_size=9)    
         
     def expand(self):
         pass
