@@ -71,12 +71,17 @@ class SongView(ListView):
         self.connect("delete-select-items", self.try_emit_empty_signal)
         
         self.set_expand_column(0)
+        self.hide_column([1])
         MediaDB.connect("removed", self.__remove_songs)
         MediaDB.connect("simple-changed", self.__songs_changed)
         
     def try_emit_empty_signal(self, widget, items):    
         if len(self.items) <= 0:
             self.emit("empty-items")
+            
+    def set_hide_column(self, value):        
+        self.hide_column_flag = value
+        self.queue_draw()
         
     def double_click_item_cb(self, widget, item, colume, x, y):    
         self.reset_error_items()

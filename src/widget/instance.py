@@ -381,7 +381,6 @@ class DeepinMusic(gobject.GObject, Logger):
 
         if not widget.get_active():
             config.set("setting", "window_mode", "simple")
-            # switch_tab(self.header_box, self.simple_header_bar)
             self.browser_align.hide_all()
             self.browser_align.set_no_show_all(True)
             self.window.set_default_size(330, 625)
@@ -390,7 +389,6 @@ class DeepinMusic(gobject.GObject, Logger):
             self.window.queue_draw()
         else:
             config.set("setting", "window_mode", "full")
-            # switch_tab(self.header_box, self.full_header_bar)
             self.browser_align.set_no_show_all(False)
             self.browser_align.show_all()
             self.window.set_default_size(900, 625)            

@@ -61,7 +61,7 @@ class ListManager(gtk.VBox):
         
     def get_webcast_view(self):    
         view = TreeView()
-        view.set_size_request(318, -1)
+        view.set_size_request(302, -1)
         return view
     
     def on_dispatcher_play_webcast(self, obj, webcast):

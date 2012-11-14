@@ -23,6 +23,7 @@
 import gtk
 import gobject
 from dtk.ui.scrolled_window import ScrolledWindow
+from dtk.ui.utils import propagate_expose
 
 from widget.song_view import SongView
 from widget.ui_utils import switch_tab as switch_box
@@ -47,7 +48,7 @@ class PlaylistItem(gobject.GObject):
         self.create_jobs_box()
         self.udi = udi
 
-    def draw_mask(self, widget, event):            
+    def on_jobs_expose_event(self, widget, event):            
         cr = widget.window.cairo_create()
         rect = widget.allocation
         draw_alpha_mask(cr, rect.x, rect.y, rect.width, rect.height, "layoutMiddle")
@@ -55,10 +56,9 @@ class PlaylistItem(gobject.GObject):
     def create_jobs_box(self):    
         
         self.file_job_button = self.create_job_button("plus", _("Add Music"), self.song_view.recursion_add_dir)
-        # self.file_job_button.connect("clicked", self.open_file_or_dir)
 
         self.job_box = gtk.EventBox()
-        self.job_box.set_size_request(220, -1)
+        self.job_box.set_size_request(195, -1)
         targets = [("text/deepin-songs", gtk.TARGET_SAME_APP, 1), ("text/uri-list", 0, 2), ("text/plain", 0, 3)]
         self.job_box.drag_dest_set(gtk.DEST_DEFAULT_MOTION | gtk.DEST_DEFAULT_DROP,
                            targets, gtk.gdk.ACTION_COPY)
@@ -66,10 +66,8 @@ class PlaylistItem(gobject.GObject):
         self.job_box.connect("drag-data-received", self.song_view.on_drag_data_received)
         
         # Content box. 
-        
         content_box = gtk.VBox()
         content_box.pack_start(create_bottom_align(), True, True)
-        # content_box.pack_start(ImageBox(app_theme.get_pixbuf("jobs/scan_tip.png")), False, False)
         content_box.pack_start(self.file_job_button, False, False)
         content_box.pack_start(create_upper_align(), True, True)
         
@@ -80,10 +78,14 @@ class PlaylistItem(gobject.GObject):
         rind_box.pack_start(create_left_align(), True, True)
         
         self.job_box.add(rind_box)
-        self.jobs_align = gtk.Alignment()
-        self.jobs_align.set(0.5, 0.5, 1, 1)
-        self.jobs_align.add(self.job_box)
-        self.jobs_align.connect("expose-event", self.draw_mask)
+        jobs_align = gtk.Alignment()
+        jobs_align.set(0.5, 0.5, 1, 1)
+        jobs_align.add(self.job_box)
+
+        
+        self.jobs_main_box = gtk.VBox()
+        self.jobs_main_box.add(jobs_align)
+        self.jobs_main_box.connect("expose-event", self.on_jobs_expose_event)        
         
     def create_job_button(self, icon_name, content, callback=None):    
         button = ComplexButton(
@@ -126,21 +128,21 @@ class PlaylistItem(gobject.GObject):
         self.scrolled_window = ScrolledWindow(0, 0)
         self.scrolled_window.add_child(self.song_view)
         self.scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
-        self.scrolled_window.set_size_request(180, -1)
+        self.scrolled_window.set_size_request(195, -1)
         self.title = playlist.get_name()
         
     def get_list_widget(self):
         if self.get_songs():
             switch_box(self.main_box, self.scrolled_window)
         else:    
-            switch_box(self.main_box, self.jobs_align)
+            switch_box(self.main_box, self.jobs_main_box)
         return self.main_box    
     
     def switch_it(self, scrolled_window=True):
         if scrolled_window:
             switch_box(self.main_box, self.scrolled_window)
         else:    
-            switch_box(self.main_box, self.jobs_align)
+            switch_box(self.main_box, self.jobs_main_box)
     
     def get_songs(self):
         if self.song_view:

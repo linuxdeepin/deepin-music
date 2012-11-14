@@ -71,7 +71,7 @@ class PlaylistUI(gtk.VBox):
         entry_align.add(self.entry_box)
         entry_align.connect("expose-event", self.expose_entry_mask)
         
-        self.toolbar_box = gtk.HBox(spacing=50)
+        self.toolbar_box = gtk.HBox(spacing=40)
         self.search_button = self.__create_simple_toggle_button("search", self.show_text_entry, _("Search for tracks"))
         self.__create_simple_button("list", self.popup_list_menu, _("Playlist operations"))
         self.__create_simple_button("add", self.popup_add_menu, _("Add track"))
@@ -123,7 +123,10 @@ class PlaylistUI(gtk.VBox):
         Dispatcher.connect("del-cd-playlist", self.delete_audiocd_list)
         
     def on_right_box_size_allocate(self, widget, rect):    
-        pass
+        if rect.width > 205:
+            self.current_item.song_view.set_hide_column(False)
+        else:    
+            self.current_item.song_view.set_hide_column(True)
         
     def expose_toolbar_mask(self, widget, event):    
         cr = widget.window.cairo_create()
