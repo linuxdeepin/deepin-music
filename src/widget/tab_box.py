@@ -81,7 +81,7 @@ class Tab(gtk.EventBox):
         cr.fill()
         
         cr.set_line_width(1)
-        cr.set_source_rgba(*alpha_color_hex_to_cairo(("#C3C4C5", 0.90)))        
+        cr.set_source_rgba(*alpha_color_hex_to_cairo(("#ABABAB", 0.90)))        
         if self.index == 0:
             cr.move_to(rect.x + rect.width, rect.y)
             cr.rel_line_to(0, rect.height)
