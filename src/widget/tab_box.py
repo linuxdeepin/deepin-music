@@ -115,7 +115,7 @@ class Tab(gtk.EventBox):
                   rect.width - (self.icon_size + self.padding_x * 3), rect.height,
                   text_color= color,
                   alignment=pango.ALIGN_CENTER,
-                  text_size=11)
+                  text_size=10)
         
         
     def clear_selected_status(self):

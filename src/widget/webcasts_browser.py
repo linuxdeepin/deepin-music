@@ -260,7 +260,7 @@ class CategroyItem(TreeItem):
         else:    
             text_color = app_theme.get_color("labelText").get_color()
             
-        draw_text(cr, self.title, rect.x, rect.y, rect.width, rect.height, text_size=11, 
+        draw_text(cr, self.title, rect.x, rect.y, rect.width, rect.height, text_size=10, 
                   text_color = text_color,
                   alignment=pango.ALIGN_CENTER)    
         
@@ -356,7 +356,7 @@ class CustomItem(TreeItem):
         else:    
             text_color = app_theme.get_color("labelText").get_color()
             
-        draw_text(cr, self.title, rect.x, rect.y, rect.width, rect.height, text_size=11, 
+        draw_text(cr, self.title, rect.x, rect.y, rect.width, rect.height, text_size=10, 
                   text_color = text_color,
                   alignment=pango.ALIGN_CENTER)    
         
@@ -480,7 +480,7 @@ class PopupPanel(Window):
         self.range = namedtuple("coord", "start_x end_x start_y end_y")
         self.hover_item = None
         self.items = []
-        self.block_height = 17
+        self.block_height = 5
         self.item_interval_height = 12
         
         # Redraw.
@@ -515,7 +515,7 @@ class PopupPanel(Window):
         draw_line(cr, (rect.x, rect.y + 1), (rect.x + rect.width, rect.y + 1), "#c7c7c7")
         draw_line(cr, (rect.x + rect.width, rect.y), (rect.x + rect.width, rect.y + rect.height), "#c7c7c7")
         draw_line(cr, (rect.x, rect.y + rect.height), (rect.x + rect.width, rect.y + rect.height), "#c7c7c7")
-        
+        draw_line(cr, (rect.x + 1, rect.y + 32), (rect.x + 1, rect.y + rect.height), "#c7c7c7")
         rect.y += self.block_height        
         
         start_x, start_y = self.padding_x, self.padding_y
