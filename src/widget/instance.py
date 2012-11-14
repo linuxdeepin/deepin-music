@@ -45,7 +45,8 @@ from widget.global_keys import global_hotkeys
 # from widget.song_search import SongSearchUI
 from widget.dialog import WinFile
 from widget.converter import AttributesUI, convert_task_manager
-
+from constant import (FULL_DEFAULT_WIDTH, FULL_DEFAULT_HEIGHT,
+                      SIMPLE_DEFAULT_WIDTH, SIMPLE_DEFAULT_HEIGHT)
 from nls import _
 from config import config
 from player import Player
@@ -383,17 +384,17 @@ class DeepinMusic(gobject.GObject, Logger):
             config.set("setting", "window_mode", "simple")
             self.browser_align.hide_all()
             self.browser_align.set_no_show_all(True)
-            self.window.set_default_size(330, 625)
-            self.window.set_geometry_hints(None, 314, 300, 310, 700, -1, -1, -1, -1, -1, -1)
-            self.window.resize(330, 625)
+            self.window.set_default_size(SIMPLE_DEFAULT_WIDTH, SIMPLE_DEFAULT_HEIGHT)
+            self.window.set_geometry_hints(None, SIMPLE_DEFAULT_WIDTH, 300, 310, 700, -1, -1, -1, -1, -1, -1)
+            self.window.resize(SIMPLE_DEFAULT_WIDTH, SIMPLE_DEFAULT_HEIGHT)
             self.window.queue_draw()
         else:
             config.set("setting", "window_mode", "full")
             self.browser_align.set_no_show_all(False)
             self.browser_align.show_all()
-            self.window.set_default_size(900, 625)            
-            self.window.set_geometry_hints(None, 900, 625, -1, -1,  -1, -1, -1, -1, -1, -1)
-            self.window.resize(900, 625)
+            self.window.set_default_size(FULL_DEFAULT_WIDTH, FULL_DEFAULT_HEIGHT)            
+            self.window.set_geometry_hints(None, FULL_DEFAULT_WIDTH, FULL_DEFAULT_HEIGHT, -1, -1,  -1, -1, -1, -1, -1, -1)
+            self.window.resize(FULL_DEFAULT_WIDTH, FULL_DEFAULT_HEIGHT)
         Dispatcher.volume(float(config.get("player", "volume", "1.0")))        
         
     def is_disable_window_maximized(self):    

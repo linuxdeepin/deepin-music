@@ -2,6 +2,7 @@ from dtk.ui.theme import Theme, ui_theme
 from dtk.ui.skin_config import skin_config
 import os
 from dtk.ui.utils import get_parent_dir
+from constant import FULL_DEFAULT_WIDTH, FULL_DEFAULT_HEIGHT
 
 # Init skin config.
 skin_config.init_skin(
@@ -21,5 +22,5 @@ app_theme = Theme(
 
 # Set theme.
 skin_config.load_themes(ui_theme, app_theme)
-skin_config.set_application_window_size(900, 625)
+skin_config.set_application_window_size(FULL_DEFAULT_WIDTH, FULL_DEFAULT_HEIGHT)
 

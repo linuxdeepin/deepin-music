@@ -25,7 +25,7 @@ import gobject
 from xdg_support import get_config_file
 from ConfigParser import RawConfigParser as ConfigParser
 from logger import Logger
-from constant import CONFIG_FILENAME
+from constant import CONFIG_FILENAME, FULL_DEFAULT_WIDTH, FULL_DEFAULT_HEIGHT
 
 
 class Config(gobject.GObject, Logger):
@@ -82,8 +82,8 @@ class Config(gobject.GObject, Logger):
             "window" : {
                 "x" : "-1",
                 "y" : "-1",
-                "width"  : "900",
-                "height" : "625",
+                "width"  : str(FULL_DEFAULT_WIDTH),
+                "height" : str(FULL_DEFAULT_HEIGHT),
                 "state"  : "normal",
                 },
             "player" : {

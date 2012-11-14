@@ -39,3 +39,8 @@ PREDEFINE_COLORS = {
    "cool_blue"       : ["#f8f8f8", "#dadada", "#bdbdbd", "#ffffff", "#60c0ff", "#19a1ff"],
    "vitality_yellow" : ["#e4dcb9", "#ffea93", "#ffd631", "#f7f4ea", "#77d1ff", "#4199d5"],
     }
+
+FULL_DEFAULT_WIDTH = 888
+FULL_DEFAULT_HEIGHT = 625
+SIMPLE_DEFAULT_WIDTH = 314
+SIMPLE_DEFAULT_HEIGHT = 625
