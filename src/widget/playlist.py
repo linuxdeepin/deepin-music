@@ -123,10 +123,11 @@ class PlaylistUI(gtk.VBox):
         Dispatcher.connect("del-cd-playlist", self.delete_audiocd_list)
         
     def on_right_box_size_allocate(self, widget, rect):    
-        if rect.width > 205:
-            self.current_item.song_view.set_hide_column(False)
-        else:    
-            self.current_item.song_view.set_hide_column(True)
+        if self.current_item:
+            if rect.width > 205:
+                self.current_item.song_view.set_hide_column(False)
+            else:    
+                self.current_item.song_view.set_hide_column(True)
         
     def expose_toolbar_mask(self, widget, event):    
         cr = widget.window.cairo_create()
