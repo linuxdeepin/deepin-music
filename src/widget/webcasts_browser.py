@@ -745,7 +745,7 @@ class WebcastsBrowser(gtk.VBox):
         # body_box.pack_start(self.sourcebar, False, True)
         # body_box.pack_start(switch_view_align, True, True)
         
-        body_paned = HPaned()
+        body_paned = HPaned(handle_color=app_theme.get_color("panedHandler"))
         body_paned.add1(self.sourcebar)
         body_paned.add2(switch_view_align)
         
@@ -809,7 +809,7 @@ class WebcastsBrowser(gtk.VBox):
     
     def on_sourcebar_draw_mask(self, cr, x, y, w, h):    
         draw_alpha_mask(cr, x, y, w, h ,"layoutRight")
-        draw_line(cr, (x + w - 1, y), (x + w - 1, y + h), "#dfe0e0")
+        # draw_line(cr, (x + w - 1, y), (x + w - 1, y + h), "#dfe0e0")
         draw_line(cr, (x + 1, y), 
                   (x + 1, y + h), "#b0b0b0")
         # draw_range(cr, x + 1, y + 1, w-1, h-1, "#c7c7c7")        

@@ -20,6 +20,7 @@
  "simpleItemHover" : "#ffb2e8",
  "simpleItemSelect" : "#d962b5",
  "simpleItemHighlight" : "#f57ad0",
+ "panedHandler" : "#d6d6d6",
  },	
  "alpha_colors" : {
      "frame" : ("#000000", 0.5),
@@ -33,9 +34,9 @@
 	 "settingLeft"  : ("#EFEFEF", 0.85),
 	 "settingRight"  : ("#EFEFEF", 0.95),
 	 "layoutLeft" : ("#ffffff", 0.90),
-     "layoutMiddle" : ("#fffafe", 0.85),
+     "layoutMiddle" : ("#ffffff", 0.90),
      "layoutRight" : ("#ffffff", 0.90),
-     "layoutLast" : ("#fffafe", 0.85),
+     "layoutLast" : ("#ffffff", 0.90),
 	 "lyricsMask" : ("#ffffff", 0.60),
  },
  "shadow_colors" : {

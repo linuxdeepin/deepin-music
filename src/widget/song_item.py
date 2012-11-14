@@ -63,7 +63,7 @@ class SongItem(gobject.GObject):
         self.title_padding_y = 5
         (self.title_width, self.title_height) = get_content_size(self.title, DEFAULT_FONT_SIZE)
         
-        self.artist_padding_x = 2
+        self.artist_padding_x = 10
         self.artist_padding_y = 5
         (self.artist_width, self.artist_height) = get_content_size(self.artist, DEFAULT_FONT_SIZE)
 
@@ -137,7 +137,7 @@ class SongItem(gobject.GObject):
         else:
             return [
                 (100, 26),
-                (50, 26), 
+                (100, 26), 
                 (self.length_width + self.length_padding_x * 2 + 20, 26)]    
     
     def get_renders(self):

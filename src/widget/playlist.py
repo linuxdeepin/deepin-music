@@ -90,10 +90,9 @@ class PlaylistUI(gtk.VBox):
         self.right_box = gtk.VBox()
         self.right_box.connect("size-allocate", self.on_right_box_size_allocate)
         
-        self.list_paned = HPaned()
+        self.list_paned = HPaned(handle_color=app_theme.get_color("panedHandler"))
         self.list_paned.pack1(category_scrolled_window)
         self.list_paned.pack2(self.right_box, True, False)
-        
         bottom_box = gtk.VBox()
         bottom_box.set_size_request(-1, 22)
         

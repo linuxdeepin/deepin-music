@@ -66,7 +66,6 @@ class IconItem(gobject.GObject):
         
         # Just create pixbuf when need render it to save memory.
         self.pixbuf = None
-            
         self.labels = _("%d tracks") % nums
         self.padding_x = 4
         self.padding_y = 4
@@ -74,10 +73,14 @@ class IconItem(gobject.GObject):
         self.highlight_flag = False
         self.__draw_play_hover_flag = False
         self.__draw_play_press_flag = False
+        
+        # normal side pixbuf
         if self.tag == "folder":
             self.__normal_side_pixbuf = app_theme.get_pixbuf("local/side_normal.png").get_pixbuf()
         else:    
             self.__normal_side_pixbuf =  app_theme.get_pixbuf("filter/side_normal.png").get_pixbuf()
+            
+        # normal play pixbuf
         self.__normal_play_pixbuf =  app_theme.get_pixbuf("filter/play_normal.png").get_pixbuf()
         
         self.play_rect = gtk.gdk.Rectangle(
@@ -131,7 +134,6 @@ class IconItem(gobject.GObject):
         self.emit("redraw-request")
         
     def get_width(self):    
-        # return self.__normal_side_pixbuf.get_width() + self.padding_x * 2 + 8
         if self.tag == "folder":
             return self.cell_width + self.padding_x * 2 + 5
         return self.cell_width + self.padding_x * 2 + 8
@@ -159,15 +161,14 @@ class IconItem(gobject.GObject):
         if self.hover_flag or self.highlight_flag:
             
             if self.tag == "folder":
-                side_pixbuf = app_theme.get_pixbuf("local/side_hover.png").get_pixbuf()
+                hover_side_pixbuf = app_theme.get_pixbuf("local/side_hover.png").get_pixbuf()
             else:    
-                side_pixbuf = app_theme.get_pixbuf("filter/side_hover.png").get_pixbuf()
+                hover_side_pixbuf = app_theme.get_pixbuf("filter/side_hover.png").get_pixbuf()
                 
-            draw_pixbuf(cr, side_pixbuf, pixbuf_x, rect.y )            
+            draw_pixbuf(cr, hover_side_pixbuf, pixbuf_x, rect.y )            
         else:    
             if self.draw_side_flag:
-                side_pixbuf = self.__normal_side_pixbuf
-                draw_pixbuf(cr, side_pixbuf, pixbuf_x, rect.y )            
+                draw_pixbuf(cr, self.__normal_side_pixbuf, pixbuf_x, rect.y )            
         
         if self.hover_flag:
             if self.__draw_play_hover_flag:
@@ -176,7 +177,6 @@ class IconItem(gobject.GObject):
                 play_pixbuf = app_theme.get_pixbuf("filter/play_press.png").get_pixbuf()
             else:    
                 play_pixbuf = self.__normal_play_pixbuf
-                
             draw_pixbuf(cr, play_pixbuf, pixbuf_x + self.play_rect.x, rect.y + self.play_rect.y)        
             
         # Draw text.    
@@ -349,7 +349,7 @@ class Browser(gtk.VBox, SignalContainer):
         # body_box.pack_start(left_vbox, False, False)
         # body_box.pack_start(content_box, True, True)
         
-        body_paned = HPaned()
+        body_paned = HPaned(handle_color=app_theme.get_color("panedHandler"))
         body_paned.add1(left_vbox)
         body_paned.add2(content_box)
         
@@ -607,11 +607,10 @@ class Browser(gtk.VBox, SignalContainer):
         cr = widget.window.cairo_create()
         rect = widget.allocation
         draw_alpha_mask(cr, rect.x, rect.y, rect.width, rect.height, "layoutRight")
-        draw_line(cr, (rect.x + rect.width, rect.y), 
-                  (rect.x + rect.width, rect.y + rect.height), "#dfe0e0")
+        # draw_line(cr, (rect.x + rect.width, rect.y), 
+        #           (rect.x + rect.width, rect.y + rect.height), "#dfe0e0")
         draw_line(cr, (rect.x + 1, rect.y), 
                   (rect.x + 1, rect.y + rect.height), "#b0b0b0")
-        # draw_range(cr, rect.x + 1, rect.y + 1, rect.width - 1, rect.height - 1, "#c7c7c7")        
         
         return False
     

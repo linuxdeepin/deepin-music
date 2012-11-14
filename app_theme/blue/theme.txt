@@ -1,4 +1,4 @@
-{"colors" : {
+"colors" : {
  "recommend" : "#FF0000",
  "windowMask" : "#FFFFFF",
  "menuFont" : "#000000",
@@ -20,6 +20,7 @@
  "simpleItemHover" : "#99c3ff",
  "simpleItemSelect" : "#2874de",
  "simpleItemHighlight" : "#6295da",
+ "panedHandler" : "#d6d6d6",
  },	
  "alpha_colors" : {
      "frame" : ("#000000", 0.5),
@@ -33,9 +34,9 @@
 	 "settingLeft"  : ("#EFEFEF", 0.85),
 	 "settingRight"  : ("#EFEFEF", 0.95),
 	 "layoutLeft" : ("#ffffff", 0.90),
-     "layoutMiddle" : ("#fafcff", 0.85),
+     "layoutMiddle" : ("#ffffff", 0.90),
      "layoutRight" : ("#ffffff", 0.90),
-     "layoutLast" : ("#fafcff", 0.85),
+     "layoutLast" : ("#ffffff", 0.90),
 	 "lyricsMask" : ("#ffffff", 0.60),
  },
  "shadow_colors" : {
