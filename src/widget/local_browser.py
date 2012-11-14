@@ -54,7 +54,7 @@ class IconItem(gobject.GObject):
         super(IconItem, self).__init__()
         self.cell_width = 83        
         self.key_name, self.value_name, nums, self.tag = _tuple
-        if self.tag == "folder": self.cell_width = 65
+        if self.tag == "folder": self.cell_width = 67
         self.draw_side_flag = True
 
         if not self.key_name:
@@ -75,7 +75,7 @@ class IconItem(gobject.GObject):
         self.__draw_play_hover_flag = False
         self.__draw_play_press_flag = False
         if self.tag == "folder":
-            self.__normal_side_pixbuf = app_theme.get_pixbuf("iconset/side_normal.png").get_pixbuf()
+            self.__normal_side_pixbuf = app_theme.get_pixbuf("local/side_normal.png").get_pixbuf()
         else:    
             self.__normal_side_pixbuf =  app_theme.get_pixbuf("filter/side_normal.png").get_pixbuf()
         self.__normal_play_pixbuf =  app_theme.get_pixbuf("filter/play_normal.png").get_pixbuf()
@@ -106,7 +106,7 @@ class IconItem(gobject.GObject):
                 self.pixbuf = CoverManager.get_pixbuf_from_name("%s-%s" % (self.value_name, self.key_name), 
                                                                 self.cell_width, self.cell_width)            
             elif self.tag == "folder":
-                   self.pixbuf = app_theme.get_pixbuf("iconset/music.png").get_pixbuf()
+                   self.pixbuf = app_theme.get_pixbuf("local/music.png").get_pixbuf()
             else:    
                 self.pixbuf = CoverManager.get_pixbuf_from_name(self.key_name, self.cell_width, self.cell_width)
         
@@ -133,7 +133,7 @@ class IconItem(gobject.GObject):
     def get_width(self):    
         # return self.__normal_side_pixbuf.get_width() + self.padding_x * 2 + 8
         if self.tag == "folder":
-            return self.cell_width + self.padding_x * 2 + 20
+            return self.cell_width + self.padding_x * 2 + 5
         return self.cell_width + self.padding_x * 2 + 8
     
     def get_height(self):
@@ -144,26 +144,30 @@ class IconItem(gobject.GObject):
         if not self.pixbuf:
             self.create_pixbuf()
             
-        # max_width = self.get_width()    
-        # width_offset = (max_width - self.__normal_side_pixbuf.get_width()) / 2
-        
+        pixbuf_x =  rect.x + (rect.width - self.__normal_side_pixbuf.get_width()) / 2    
+            
         # Draw cover.
-        draw_pixbuf(cr, self.pixbuf, 
-                    rect.x + self.padding_x,
-                    rect.y + self.padding_y)
+        if self.tag == "folder":    
+            draw_pixbuf(cr, self.pixbuf, 
+                        pixbuf_x,
+                        rect.y)
+        else:    
+            draw_pixbuf(cr, self.pixbuf, 
+                        pixbuf_x + self.padding_x,
+                        rect.y + self.padding_y)
         
         if self.hover_flag or self.highlight_flag:
             
             if self.tag == "folder":
-                side_pixbuf = app_theme.get_pixbuf("iconset/side_hover.png").get_pixbuf()
+                side_pixbuf = app_theme.get_pixbuf("local/side_hover.png").get_pixbuf()
             else:    
                 side_pixbuf = app_theme.get_pixbuf("filter/side_hover.png").get_pixbuf()
                 
-            draw_pixbuf(cr, side_pixbuf, rect.x, rect.y )            
+            draw_pixbuf(cr, side_pixbuf, pixbuf_x, rect.y )            
         else:    
             if self.draw_side_flag:
                 side_pixbuf = self.__normal_side_pixbuf
-                draw_pixbuf(cr, side_pixbuf, rect.x, rect.y )            
+                draw_pixbuf(cr, side_pixbuf, pixbuf_x, rect.y )            
         
         if self.hover_flag:
             if self.__draw_play_hover_flag:
@@ -173,7 +177,7 @@ class IconItem(gobject.GObject):
             else:    
                 play_pixbuf = self.__normal_play_pixbuf
                 
-            draw_pixbuf(cr, play_pixbuf, rect.x + self.play_rect.x, rect.y + self.play_rect.y)        
+            draw_pixbuf(cr, play_pixbuf, pixbuf_x + self.play_rect.x, rect.y + self.play_rect.y)        
             
         # Draw text.    
         name_rect = gtk.gdk.Rectangle(rect.x + self.padding_x , 
@@ -260,9 +264,9 @@ class Browser(gtk.VBox, SignalContainer):
         gobject.timeout_add(self.update_interval, self.on_interval_loaded_view)
         
         # The saving song Classification presented to the user.
-        self.artists_view, self.artists_sw  = self.get_icon_view()
-        self.albums_view,  self.albums_sw   = self.get_icon_view()
-        self.genres_view,  self.genres_sw   = self.get_icon_view()
+        self.artists_view, self.artists_sw  = self.get_icon_view(20)
+        self.albums_view,  self.albums_sw   = self.get_icon_view(20)
+        self.genres_view,  self.genres_sw   = self.get_icon_view(20)
         self.folders_view, self.folders_sw  = self.get_icon_view(20)
         self.folders_view.connect("motion-notify-item", self.on_folders_view_motion_notify)
         
