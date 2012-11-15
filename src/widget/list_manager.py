@@ -28,6 +28,7 @@ from dtk.ui.scrolled_window import ScrolledWindow
 from webcast_view import WebcastItem
 from widget.ui_utils import draw_single_mask, draw_alpha_mask
 
+
 from playlist import PlaylistUI
 from castlist import WebcastList
 from helper import Dispatcher
@@ -57,5 +58,3 @@ class ListManager(gtk.VBox):
         
     def on_tab_box_switch_tab(self, widget, item):    
         Dispatcher.emit("switch-browser", item.index)
-        
-        

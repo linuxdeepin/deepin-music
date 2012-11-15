@@ -30,7 +30,7 @@ from widget.webcasts_browser import WebcastsBrowser
 from widget.skin import app_theme
 from widget.ui import SearchBox, CustomEntry
 from widget.ui_utils import switch_tab
-
+from widget.slide_switcher import SlideSwitcher
 from helper import Dispatcher
 
 class BrowserMananger(gtk.VBox):
@@ -70,7 +70,13 @@ class BrowserMananger(gtk.VBox):
         if index == 0:
             switch_tab(self.bottom_box, self.local_browser)
         elif index == 1:    
-            switch_tab(self.bottom_box, self.webcasts_browser)
+            switch_tab(self.bottom_box, self.get_slide_box())
+            
+            
+    def get_slide_box(self):        
+        box = gtk.VBox()
+        box.pack_start(SlideSwitcher(), True, True)
+        return box
             
     def save(self):        
         self.webcasts_browser.save()
