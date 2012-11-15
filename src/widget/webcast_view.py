@@ -269,7 +269,7 @@ class MultiDragWebcastView(ListView):
     def __init__(self):
         targets = [("text/deepin-webcasts", gtk.TARGET_SAME_APP, 1),]        
         ListView.__init__(self, drag_data=(targets, gtk.gdk.ACTION_COPY, 1))
-        self.set_expand_column(0)
+        self.set_expand_column(1)
     
         self.connect("drag-data-get", self.__on_drag_data_get) 
         self.connect("double-click-item", self.__on_double_click_item)

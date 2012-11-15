@@ -382,10 +382,11 @@ class DeepinMusic(gobject.GObject, Logger):
 
         if not widget.get_active():
             config.set("setting", "window_mode", "simple")
+            self.window.unmaximize()
             self.browser_align.hide_all()
             self.browser_align.set_no_show_all(True)
             self.window.set_default_size(SIMPLE_DEFAULT_WIDTH, SIMPLE_DEFAULT_HEIGHT)
-            self.window.set_geometry_hints(None, SIMPLE_DEFAULT_WIDTH, 300, 310, 700, -1, -1, -1, -1, -1, -1)
+            self.window.set_geometry_hints(None, SIMPLE_DEFAULT_WIDTH, 515, 310, 700, -1, -1, -1, -1, -1, -1)
             self.window.resize(SIMPLE_DEFAULT_WIDTH, SIMPLE_DEFAULT_HEIGHT)
             self.window.queue_draw()
         else:

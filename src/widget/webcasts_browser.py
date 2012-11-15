@@ -257,7 +257,7 @@ class CategroyItem(TreeItem):
             draw_pixbuf(cr, self.hover_bg, rect.x, rect.y)
             text_color = app_theme.get_color("simpleItemSelect").get_color()
         elif self.is_hover:    
-            text_color = app_theme.get_color("simpleItemHover").get_color()
+            text_color = app_theme.get_color("simpleItemSelect").get_color()
         else:    
             text_color = app_theme.get_color("labelText").get_color()
             

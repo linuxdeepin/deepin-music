@@ -290,8 +290,8 @@ class EmptyWebcast(gtk.EventBox):
         
         draw_alpha_mask(cr, rect.x, rect.y, rect.width, rect.height, "layoutLeft")
         
-        icon_x = rect.x + (rect.width - self.empty_pixbuf.get_width()) / 2
-        icon_y = rect.y + (rect.height - self.empty_pixbuf.get_height()) / 2
+        icon_x = rect.x + (rect.width - self.empty_pixbuf.get_width()) / 2 
+        icon_y = rect.y + (rect.height - self.empty_pixbuf.get_height()) / 2 - 50
         
         draw_pixbuf(cr, self.empty_pixbuf, icon_x, icon_y)
         
