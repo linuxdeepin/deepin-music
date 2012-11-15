@@ -136,7 +136,7 @@ class SongItem(gobject.GObject):
                 ]
         else:
             return [
-                (100, 26),
+                (150, 26),
                 (100, 26), 
                 (self.length_width + self.length_padding_x * 2 + 20, 26)]    
     

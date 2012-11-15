@@ -122,7 +122,6 @@ class PlaylistUI(gtk.VBox):
         Dispatcher.connect("del-cd-playlist", self.delete_audiocd_list)
         
     def on_right_box_size_allocate(self, widget, rect):    
-        print self.current_item.song_view.allocation
         if self.current_item:
             if rect.width > 205:
                 self.current_item.song_view.set_hide_column(False)
