@@ -251,7 +251,6 @@ class SlideSwitcher(gtk.EventBox):
         # self.queue_draw()
         
     def handle_animation(self, widget, event):    
-        # Init.
         for index, rect in self.pointer_coords.items():
             if rect.x <= event.x <= rect.x + rect.width and rect.y <= event.y <= rect.y + rect.height:
                 set_cursor(widget, gtk.gdk.HAND2)
