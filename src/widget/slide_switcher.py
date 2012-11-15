@@ -27,7 +27,9 @@ import pango
 import gobject
 import math
 
-from dtk.ui.utils import color_hex_to_cairo, get_content_size, alpha_color_hex_to_cairo
+from dtk.ui.utils import (color_hex_to_cairo, get_content_size, 
+                          alpha_color_hex_to_cairo, set_cursor,
+                          is_in_rect)
 from dtk.ui.draw import render_text
 from dtk.ui.timeline import Timeline, CURVE_SINE
 
@@ -60,9 +62,9 @@ class SlideSwitcher(gtk.EventBox):
         
         # Init signals.
         self.add_events(gtk.gdk.ALL_EVENTS_MASK)
-        # self.connect("motion-notify-event", self.on_motion_notify)
-        # self.connect("leave-notify-event", self.on_leave_notify)
-        # self.connect("enter-notify-event", self.on_enter_notify)
+        self.connect("motion-notify-event", self.on_motion_notify)
+        self.connect("leave-notify-event", self.on_leave_notify)
+        self.connect("enter-notify-event", self.on_enter_notify)
         self.connect("expose-event", self.on_expose_event)        
         self.connect("size-allocate", self.on_size_allocate)
         
@@ -74,13 +76,14 @@ class SlideSwitcher(gtk.EventBox):
         self.target_alpha = 0.0
         self.target_index = None
         self.in_animiation = False
-        self.animiation_time = 3000
-        self.auto_slide_timeout = 4500
+        self.animiation_time = 1000
+        self.auto_slide_timeout = 4000
         self.auto_slide_timeout_id = None
-        self.pointer_radious = 5
+        self.pointer_radious = 8
         self.pointer_padding = 20
         self.pointer_offset_x = -105
         self.pointer_offset_y = 20
+        self.pointer_coords = {}
         self.start_auto_slide()
             
     def generate_image_surfaces(self):
@@ -145,7 +148,9 @@ class SlideSwitcher(gtk.EventBox):
     def on_expose_event(self, widget, event):    
         cr = widget.window.cairo_create()
         rect = widget.allocation
+        record_pointer_coord = False
         if self.content_surfaces == None:        
+            record_pointer_coord = True
             self.generate_content_surfaces(rect)
         
         cr.set_source_rgb(1, 1, 1)
@@ -182,31 +187,49 @@ class SlideSwitcher(gtk.EventBox):
                 else:
                     cr.set_source_rgba(*alpha_color_hex_to_cairo(("#D4E1DC", 0.9)))
 
-            cr.arc(rect.x + rect.width + self.pointer_offset_x + index * self.pointer_padding,
-                   rect.y + self.pointer_offset_y,
+            p_x =  rect.x + rect.width + self.pointer_offset_x + index * self.pointer_padding       
+            p_y =  rect.y + self.pointer_offset_y
+            cr.arc(p_x, p_y,
                    self.pointer_radious,
                    0, 
                    2 * math.pi)
+            
             cr.fill()
-        
+            
+            pointer_rect = gtk.gdk.Rectangle(p_x - self.pointer_radious,
+                                             p_y - self.pointer_radious,
+                                             self.pointer_radious * 2,
+                                             self.pointer_radious * 2)
+            # Draw index number.
+            render_text(cr, str(index + 1), pointer_rect.x, pointer_rect.y,
+                        pointer_rect.width, pointer_rect.height, text_size=9, text_color="#444444",
+                        alignment=pango.ALIGN_CENTER
+                        )
+            if record_pointer_coord:
+                pointer_rect.x -= rect.x
+                pointer_rect.y -= rect.y
+                self.pointer_coords[index] = pointer_rect
         return True
             
-    def start_animation(self, index=None):        
-        
-        if index == None:
+    def start_animation(self, target_index=None):        
+        if target_index == None:
             if self.active_index >= self.slide_number - 1:
-                index = 0
+                target_index = 0
             else:    
-                index = self.active_index + 1
+                target_index = self.active_index + 1
                 
-        if not self.in_animiation:        
-            self.in_animiation = True
-            self.target_index = index
+        # if not self.in_animiation:        
+        #     self.in_animiation = False
+        self.target_index = target_index
+        try:
+            self.timeline.stop()
+        except:    
+            pass
             
-            timeline = Timeline(self.animiation_time, CURVE_SINE)
-            timeline.connect("update", self.update_animation)
-            timeline.connect("completed", lambda source: self.completed_animation(source, index))
-            timeline.run()
+        self.timeline = Timeline(self.animiation_time, CURVE_SINE)
+        self.timeline.connect("update", self.update_animation)
+        self.timeline.connect("completed", lambda source: self.completed_animation(source, target_index))
+        self.timeline.run()
             
         return True    
     
@@ -221,8 +244,36 @@ class SlideSwitcher(gtk.EventBox):
         
     def completed_animation(self, source, index):    
         self.active_index = index
-        self.active_alpha = 1.0
-        self.target_index = None
-        self.target_alpha = 0.0
-        self.in_animiation = False
-        self.queue_draw()
+        # self.active_alpha = 1.0
+        # self.target_index = None
+        # self.target_alpha = 0.0
+        # self.in_animiation = False
+        # self.queue_draw()
+        
+    def handle_animation(self, widget, event):    
+        # Init.
+        for index, rect in self.pointer_coords.items():
+            if rect.x <= event.x <= rect.x + rect.width and rect.y <= event.y <= rect.y + rect.height:
+                set_cursor(widget, gtk.gdk.HAND2)
+                if self.target_index != index:
+                    self.start_animation(index)
+                break    
+        else:    
+            set_cursor(widget, None)
+            
+            
+    def on_motion_notify(self, widget, event):        
+        self.handle_animation(widget, event)
+
+    def on_leave_notify(self, widget, event):    
+        rect = widget.allocation
+        if is_in_rect((event.x, event.y), (0, 0, rect.width, rect.height)):
+            self.handle_animation(widget, event)
+        else:
+            self.start_auto_slide()
+        set_cursor(widget, None)    
+    
+    def on_enter_notify(self, widget, event):
+        if self.auto_slide_timeout_id:
+            gobject.source_remove(self.auto_slide_timeout_id)
+    
