@@ -25,8 +25,9 @@ import cairo
 import pangocairo
 import pango
 import gobject
+import math
 
-from dtk.ui.utils import color_hex_to_cairo, get_content_size
+from dtk.ui.utils import color_hex_to_cairo, get_content_size, alpha_color_hex_to_cairo
 from dtk.ui.draw import render_text
 from dtk.ui.timeline import Timeline, CURVE_SINE
 
@@ -74,8 +75,12 @@ class SlideSwitcher(gtk.EventBox):
         self.target_index = None
         self.in_animiation = False
         self.animiation_time = 3000
-        self.auto_slide_timeout = 4000
+        self.auto_slide_timeout = 4500
         self.auto_slide_timeout_id = None
+        self.pointer_radious = 5
+        self.pointer_padding = 20
+        self.pointer_offset_x = -105
+        self.pointer_offset_y = 20
         self.start_auto_slide()
             
     def generate_image_surfaces(self):
@@ -89,7 +94,8 @@ class SlideSwitcher(gtk.EventBox):
             self.content_surfaces.append(self.get_draw_surface(image_surface, self.text_contents[i], rect.width, 200))
             
     def on_size_allocate(self, widget, rect):        
-        del self.content_surfaces[:]
+        if self.content_surfaces:
+            del self.content_surfaces[:]
         self.content_surfaces = None
         
     def get_draw_surface(self, image_surface, text_contents, width, height):    
@@ -137,8 +143,6 @@ class SlideSwitcher(gtk.EventBox):
         return surface        
         
     def on_expose_event(self, widget, event):    
-
-            
         cr = widget.window.cairo_create()
         rect = widget.allocation
         if self.content_surfaces == None:        
@@ -163,7 +167,29 @@ class SlideSwitcher(gtk.EventBox):
             cr.paint_with_alpha(self.target_alpha)
             cr.restore()
         cr.restore()    
-        return True    
+        
+        
+        # Draw select pointer.
+        for index in range(0, self.slide_number):
+            if self.target_index == None:
+                if self.active_index == index:
+                    cr.set_source_rgba(*alpha_color_hex_to_cairo(("#9DD6C5", 0.9)))                    
+                else:
+                    cr.set_source_rgba(*alpha_color_hex_to_cairo(("#D4E1DC", 0.9)))
+            else:
+                if self.target_index == index:
+                    cr.set_source_rgba(*alpha_color_hex_to_cairo(("#9DD6C5", 0.9)))                    
+                else:
+                    cr.set_source_rgba(*alpha_color_hex_to_cairo(("#D4E1DC", 0.9)))
+
+            cr.arc(rect.x + rect.width + self.pointer_offset_x + index * self.pointer_padding,
+                   rect.y + self.pointer_offset_y,
+                   self.pointer_radious,
+                   0, 
+                   2 * math.pi)
+            cr.fill()
+        
+        return True
             
     def start_animation(self, index=None):        
         
