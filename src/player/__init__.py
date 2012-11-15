@@ -95,7 +95,12 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         config.set("player", "play", "false")
         self.emit("paused")
 
-        if self.song.get_type() == "audiocd":
+        if not self.song:
+            self.emit("init-status")
+            self.song = None
+            return 
+        
+        if self.song.get_type() in [ "audiocd", "webcast"]:
             self.emit("init-status")
             self.song = None
             return 
@@ -163,6 +168,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
             
     def __on_playing(self, bin, uri):
         '''Signal emitted by fadebin when a new stream previously queued start'''
+        if not self.song: return 
         if uri == self.song.get("uri"):
             self.logdebug("signal playing-stream receive by %s", uri)
             config.set("player", "play", "true")
