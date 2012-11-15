@@ -147,7 +147,6 @@ class SongItem(gobject.GObject):
             return [ self.render_title, self.render_artist, self.render_album, self.render_add_time]
         else:
             return [self.render_title, self.render_artist, self.render_length]
-
         
             
     def get_song(self):

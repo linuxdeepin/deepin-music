@@ -92,7 +92,6 @@ class WebcastsDatabase(gobject.GObject):
             if obj.get("uri", "") == uri:
                 return True
         return False    
-
         
     def save(self):    
         pass

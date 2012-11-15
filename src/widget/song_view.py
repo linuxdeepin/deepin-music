@@ -568,6 +568,9 @@ class MultiDragSongView(ListView):
         self.connect("double-click-item", self.__on_double_click_item)
         self.connect("right-press-items", self.popup_right_menu)
         
+    def draw_mask(self, cr, x, y, width, height):            
+        draw_alpha_mask(cr, x, y, width, height, "layoutMiddle")
+        
     def draw_item_hover(self, cr, x, y, w, h):
         draw_single_mask(cr, x, y, w, h, "simpleItemHover")
         

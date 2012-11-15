@@ -267,5 +267,32 @@ class CustomEntry(gtk.VBox):
         '''
         self.entry.grab_focus()
         
-gobject.type_register(InputEntry)
+gobject.type_register(CustomEntry)
+
+
+class EmptyWebcast(gtk.EventBox):
     
+    def __init__(self, drag_data_received_cb):
+        gtk.EventBox.__init__(self)
+        self.set_visible_window(False)
+        self.connect("expose-event", self.on_expose_event)
+        
+        targets = [("text/deepin-webcasts", gtk.TARGET_SAME_APP, 1),]
+        self.drag_dest_set(gtk.DEST_DEFAULT_MOTION | gtk.DEST_DEFAULT_DROP,
+                           targets, gtk.gdk.ACTION_COPY)
+        self.connect("drag-data-received", drag_data_received_cb)
+        
+        self.empty_pixbuf = app_theme.get_pixbuf("webcast/empty_cn.png").get_pixbuf()
+        
+    def on_expose_event(self, widget, event):    
+        cr = widget.window.cairo_create()
+        rect = widget.allocation
+        
+        draw_alpha_mask(cr, rect.x, rect.y, rect.width, rect.height, "layoutLeft")
+        
+        icon_x = rect.x + (rect.width - self.empty_pixbuf.get_width()) / 2
+        icon_y = rect.y + (rect.height - self.empty_pixbuf.get_height()) / 2
+        
+        draw_pixbuf(cr, self.empty_pixbuf, icon_x, icon_y)
+        
+        return True
