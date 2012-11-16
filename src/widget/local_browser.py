@@ -67,7 +67,7 @@ class IconItem(gobject.GObject):
         # Just create pixbuf when need render it to save memory.
         self.pixbuf = None
         self.labels = _("%d tracks") % nums
-        self.pixbuf_offset_x = 6
+        self.pixbuf_offset_x = 4
         self.pixbuf_offset_y = 4
         self.padding_x = 6
         self.border_size = 4
