@@ -21,28 +21,30 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from dtk.ui.timeline import Timeline, CURVE_SINE
-from dtk.ui.box import EventBox
+# from dtk.ui.box import EventBox
 from dtk.ui.utils import get_content_size, color_hex_to_cairo
 from dtk.ui.draw import draw_text
 import pango
 import gobject
 import gtk
 
-class TabSwitcher(EventBox):
+class TabSwitcher(gtk.EventBox):
     '''
     class docs
     '''
 	
     __gsignals__ = {
-        "tab_switch" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (int,)),
-        "click_current_tab" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (int,)),
+        "tab-switch-start" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (int,)),
+        "tab-switch-complete" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (int,)),
+        "click-current-tab" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (int,)),
     }
     
     def __init__(self, tab_names):
         '''
         init docs
         '''
-        EventBox.__init__(self)
+        gtk.EventBox.__init__(self)
+        self.set_visible_window(False)
         self.add_events(gtk.gdk.ALL_EVENTS_MASK)
         self.tab_names = tab_names
         self.tab_name_size = 11
@@ -73,7 +75,7 @@ class TabSwitcher(EventBox):
         rect = widget.allocation
 
         # Draw tab line.
-        cr.set_source_rgb(*color_hex_to_cairo("#8BBEA2"))
+        cr.set_source_rgb(*color_hex_to_cairo("#8CBDA0"))
         cr.rectangle(rect.x + self.padding_x, 
                      rect.y + self.tab_height,
                      rect.width - self.padding_x * 2, 
@@ -116,12 +118,12 @@ class TabSwitcher(EventBox):
     def button_press_tab_switcher(self, widget, event):
         # Init.
         rect = widget.allocation
-        tab_start_x = rect.x + (rect.width - self.tab_width * self.tab_number) / 2
-        
+        # tab_start_x = rect.x + (rect.width - self.tab_width * self.tab_number) / 2
+        tab_start_x = (rect.width - self.tab_width * self.tab_number) / 2
         for tab_index in range(0, self.tab_number):
             if tab_start_x + tab_index * self.tab_width < event.x < tab_start_x + (tab_index + 1) * self.tab_width:
                 if self.tab_index != tab_index:
-                    self.start_animation(tab_index, tab_start_x)
+                    self.start_animation(tab_index, tab_start_x + rect.x)
                 else:
                     self.emit("click_current_tab", self.tab_index)
                 break
@@ -137,6 +139,8 @@ class TabSwitcher(EventBox):
             timeline.connect('update', lambda source, status: self.update_animation(source, status, source_tab_x, (target_tab_x - source_tab_x)))
             timeline.connect("completed", lambda source: self.completed_animation(source, index))
             timeline.run()
+            
+            self.emit("tab_switch_start", index)
     
     def update_animation(self, source, status, animation_start_x, animation_move_offset):
         self.tab_animation_x = animation_start_x + animation_move_offset * status
@@ -147,7 +151,7 @@ class TabSwitcher(EventBox):
         self.tab_index = index
         self.in_animiation = False
         
-        self.emit("tab_switch", self.tab_index)
+        self.emit("tab_switch_complete", self.tab_index)
         
         self.queue_draw()
         

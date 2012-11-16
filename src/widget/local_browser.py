@@ -71,7 +71,7 @@ class IconItem(gobject.GObject):
         self.pixbuf_offset_y = 4
         self.padding_x = 6
         self.border_size = 4
-        self.padding_y = 22
+        self.padding_y = 20
         self.hover_flag = False
         self.highlight_flag = False
         self.__draw_play_hover_flag = False
@@ -136,10 +136,6 @@ class IconItem(gobject.GObject):
         if not self.pixbuf:
             self.create_pixbuf()
             
-        cr.set_source_rgb(0, 0, 0)    
-        cr.rectangle(rect.x, rect.y, rect.width, rect.height)
-        cr.stroke()
-            
         pixbuf_x =  rect.x + (rect.width - self.__normal_side_pixbuf.get_width()) / 2
             
         # Draw cover.
@@ -186,7 +182,6 @@ class IconItem(gobject.GObject):
                     8)
         
     def icon_item_motion_notify(self, x, y):    
-        print x, y
         self.hover_flag = True
         if self.pointer_in_play_rect(x, y):
             if self.__draw_play_press_flag:
@@ -261,7 +256,7 @@ class Browser(gtk.VBox, SignalContainer):
         self.artists_view, self.artists_sw  = self.get_icon_view(20)
         self.albums_view,  self.albums_sw   = self.get_icon_view(20)
         self.genres_view,  self.genres_sw   = self.get_icon_view(20)
-        self.folders_view, self.folders_sw  = self.get_icon_view(20)
+        self.folders_view, self.folders_sw  = self.get_icon_view(22)
         self.folders_view.connect("motion-notify-item", self.on_folders_view_motion_notify)
         
         # Song list for temporarily storing

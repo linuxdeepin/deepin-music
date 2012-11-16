@@ -1,3 +1,25 @@
+#! /usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# Copyright (C) 2011 ~ 2012 Deepin, Inc.
+#               2011 ~ 2012 Hou Shaohui
+# 
+# Author:     Hou Shaohui <houshao55@gmail.com>
+# Maintainer: Hou Shaohui <houshao55@gmail.com>
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 import gtk
 import gobject
 import copy
@@ -17,7 +39,7 @@ from dtk.ui.paned import HPaned
 
 import utils
 from widget.ui_utils import (draw_single_mask, draw_alpha_mask, render_item_text,
-                             switch_tab, draw_range, draw_line)
+                             switch_tab, draw_range, draw_line, render_text)
 from widget.skin import app_theme
 from collections import OrderedDict
 from constant import DEFAULT_FONT_SIZE
@@ -101,21 +123,24 @@ class RecommendItem(gobject.GObject):
     
     __gsignals__ = { "redraw-request" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),}
     
-    def __init__(self, pixbuf_path, image_width, image_height):
+    def __init__(self, title, description, pixbuf):
         '''
         Initialize ItemIcon class.
         
         @param pixbuf: Icon pixbuf.
         '''
         gobject.GObject.__init__(self)
-        self.pixbuf_path = pixbuf_path
-        self.image_width = image_width
-        self.image_height = image_height
-        self.pixbuf = None
-        self.padding_x = 21
-        self.padding_y = 21
+        self.pixbuf_path = None
+        self.pixbuf = pixbuf
+        self.padding_x = 10
+        self.padding_y = 10
+        self.default_width = 110
+        self.default_height = 100
         self.hover_flag = False
         self.highlight_flag = False
+        
+        self.title = title
+        self.description = description
         
     def emit_redraw_request(self):
         '''
@@ -131,7 +156,7 @@ class RecommendItem(gobject.GObject):
         
         This is IconView interface, you should implement it.
         '''
-        return self.image_width + self.padding_x * 2
+        return self.default_width
         
     def get_height(self):
         '''
@@ -139,7 +164,7 @@ class RecommendItem(gobject.GObject):
         
         This is IconView interface, you should implement it.
         '''
-        return self.image_height + self.padding_y * 2
+        return self.default_height
     
     def render(self, cr, rect):
         '''
@@ -147,31 +172,24 @@ class RecommendItem(gobject.GObject):
         
         This is IconView interface, you should implement it.
         '''
-        # Draw cover border.
-        border_size = 4
-        
-        if self.hover_flag:
-            cr.set_source_rgb(1, 0, 0)
-        elif self.highlight_flag:
-            cr.set_source_rgb(0, 1, 0)
-        else:
-            cr.set_source_rgb(1, 1, 1)
-        cr.rectangle(
-            rect.x + (rect.width - self.image_width) / 2 - border_size,
-            rect.y + (rect.height - self.image_height) / 2 - border_size,
-            self.image_width + border_size * 2,
-            self.image_height + border_size * 2)
-        cr.fill()
-        
         # Draw cover.
         if not self.pixbuf:
             self.pixbuf = gtk.gdk.pixbuf_new_from_file(self.pixbuf_path)
-            
-        draw_pixbuf(
-            cr, 
-            self.pixbuf, 
-            rect.x + self.padding_x,
-            rect.y + self.padding_y)
+        
+        pixbuf_x = rect.x + (rect.width - self.pixbuf.get_width()) / 2
+        draw_pixbuf(cr, self.pixbuf, pixbuf_x, rect.y)
+        
+        title_rect = gtk.gdk.Rectangle(rect.x + self.padding_x, 
+                                       rect.y + self.pixbuf.get_height() + 5,
+                                       rect.width - self.padding_x * 2, 11)
+        total_rect = gtk.gdk.Rectangle(title_rect.x, title_rect.y + 16, title_rect.width, 9)
+        
+        render_text(cr, self.title, title_rect, 
+                    app_theme.get_color("labelText").get_color(),
+                    10)
+        render_text(cr, self.description, total_rect,
+                    app_theme.get_color("labelText").get_color(),
+                    8)
         
     def icon_item_motion_notify(self, x, y):
         '''
