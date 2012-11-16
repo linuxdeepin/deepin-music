@@ -53,6 +53,7 @@ class PlaylistUI(gtk.VBox):
     def __init__(self):
         '''Init.'''
         super(PlaylistUI, self).__init__()
+        self.set_size_request(303, -1)
 
         self.category_list = TreeView(font_size=9, height=26, font_x_padding=15)
         self.category_list.draw_mask = self.draw_category_list_mask

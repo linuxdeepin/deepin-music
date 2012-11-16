@@ -33,7 +33,7 @@ from widget.skin import app_theme
 class Tab(gtk.EventBox):
     __gtype_name__ = "DtkTab"
     
-    def __init__(self, title, allocate_widget, index, icon=None):
+    def __init__(self, title, allocate_widget, index, last=False, icon=None):
         gtk.EventBox.__init__(self)
         self.set_visible_window(False)
         self.add_events(gtk.gdk.ALL_EVENTS_MASK)
@@ -50,6 +50,7 @@ class Tab(gtk.EventBox):
         self.press_callback = None
         self.__allocate_widget = allocate_widget
         self.index = index
+        self.is_last = last
         
         # Init data.
         self.is_select = False
@@ -82,11 +83,11 @@ class Tab(gtk.EventBox):
         
         cr.set_line_width(1)
         cr.set_source_rgba(*alpha_color_hex_to_cairo(("#ABABAB", 0.90)))        
-        if self.index == 0:
+        if self.is_last:
+            cr.move_to(rect.x + rect.width, rect.y + rect.height)            
+        else:    
             cr.move_to(rect.x + rect.width, rect.y)
             cr.rel_line_to(0, rect.height)
-        else:    
-            cr.move_to(rect.x + rect.width, rect.y + rect.height)
         
         if not self.is_select:
             cr.rel_line_to(-rect.width, 0)
@@ -95,10 +96,12 @@ class Tab(gtk.EventBox):
         
         if self.index == 0 and self.is_select:
             dashed = [4.0, 4.0]
+            cr.save()
             cr.move_to(rect.x, rect.y + rect.height)
             cr.line_to(rect.x + rect.width, rect.y + rect.height)
             cr.set_dash(dashed)
             cr.stroke()
+            cr.restore()
         
         if self.icon_pixbuf:
             icon_y = rect.y + (rect.height - self.icon_size) / 2
@@ -166,6 +169,7 @@ class TabManager(gtk.VBox):
         
         self.__topbar = gtk.HBox()
         self.__topbar.connect("realize", self.on_topbar_realize)
+        self.__topbar.connect("size-allocate", self.on_topbar_size_allocate)
         self.__container = gtk.VBox()
         
         self.pack_start(self.__topbar, False, True)
@@ -190,6 +194,9 @@ class TabManager(gtk.VBox):
                 item.set_size_request(average_width, self.default_height)
                 self.__topbar.pack_start(item, False, False)
             self.__topbar.show_all()
+            
+    def on_topbar_size_allocate(self, widget, rect):        
+        pass
                 
     def on_item_press(self, widget):            
         for item in self.items:

@@ -4,7 +4,9 @@
 # Copyright (C) 2011 ~ 2012 Deepin, Inc.
 #               2011 ~ 2012 Hou Shaohui
 # 
-# Author:     Hou Shaohui <houshao55@gmail.com>
+# Author:     Wang Yong <lazycat.manatee@gmail.com>
+#             Hou Shaohui <houshao55@gmail.com>
+#
 # Maintainer: Hou Shaohui <houshao55@gmail.com>
 # 
 # This program is free software: you can redistribute it and/or modify
@@ -76,8 +78,8 @@ class SlideSwitcher(gtk.EventBox):
         self.target_alpha = 0.0
         self.target_index = None
         self.in_animiation = False
-        self.animiation_time = 1000
-        self.auto_slide_timeout = 4000
+        self.animiation_time = 2000
+        self.auto_slide_timeout = 4500
         self.auto_slide_timeout_id = None
         self.pointer_radious = 8
         self.pointer_padding = 20
@@ -265,14 +267,15 @@ class SlideSwitcher(gtk.EventBox):
         self.handle_animation(widget, event)
 
     def on_leave_notify(self, widget, event):    
-        rect = widget.allocation
-        if is_in_rect((event.x, event.y), (0, 0, rect.width, rect.height)):
-            self.handle_animation(widget, event)
-        else:
-            self.start_auto_slide()
+        # rect = widget.allocation
+        # if is_in_rect((event.x, event.y), (0, 0, rect.width, rect.height)):
+        #     self.handle_animation(widget, event)
+        # else:
+        self.start_auto_slide()
         set_cursor(widget, None)    
     
     def on_enter_notify(self, widget, event):
-        if self.auto_slide_timeout_id:
+        if self.auto_slide_timeout_id is not None:
             gobject.source_remove(self.auto_slide_timeout_id)
+            self.auto_slide_timeout_id = None
     

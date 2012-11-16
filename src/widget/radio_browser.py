@@ -22,104 +22,46 @@
 
 import gtk
 import gobject
-import copy
-import os 
-import pango
 
-from collections import namedtuple
-from dtk.ui.scrolled_window import ScrolledWindow
-from dtk.ui.listview import ListView
-from dtk.ui.new_treeview import TreeView, TreeItem
-from dtk.ui.draw import draw_pixbuf, draw_text
-from dtk.ui.utils import get_content_size, get_widget_root_coordinate, get_match_parent
-from dtk.ui.constant import WIDGET_POS_TOP_RIGHT
-from dtk.ui.popup_grab_window import PopupGrabWindow, wrap_grab_window
-from dtk.ui.window import Window
+from dtk.ui.new_treeview import TreeView
 from dtk.ui.paned import HPaned
 
-import utils
-from widget.ui_utils import (draw_single_mask, draw_alpha_mask, render_item_text,
-                             switch_tab, draw_range, draw_line)
+from widget.radio_item import CategroyRaidoItem
 from widget.skin import app_theme
-from collections import OrderedDict
-from constant import DEFAULT_FONT_SIZE
-from webcasts import WebcastsDB
-from xdg_support import get_config_file
-from helper import Dispatcher
-from song import Song
+from widget.radio_home_page import HomePage
+from widget.ui_utils import draw_line, draw_alpha_mask
 from nls import _
 
-class CategroyItem(TreeItem):    
-    def __init__(self, title):
-        TreeItem.__init__(self)
-        self.column_index = 0
-        self.side_padding = 5
-        self.item_height = 37
-        self.title = title
-        self.item_width = 121
+class RadioBrowser(gtk.VBox):
+    
+    def __init__(self):
+        gtk.VBox.__init__(self)
         
-    def get_height(self):    
-        return self.item_height
-    
-    def get_column_widths(self):
-        return (self.item_width,)
-    
-    def get_column_renders(self):
-        return (self.render_title,)
-    
-    def unselect(self):
-        self.is_select = False
-        self.emit_redraw_request()
+        # Init radiobar.
+        self.__init_radiobar()
         
-    def emit_redraw_request(self):    
-        if self.redraw_request_callback:
-            self.redraw_request_callback(self)
-            
-    def select(self):        
-        self.is_select = True
-        self.emit_redraw_request()
+        self.page_box = gtk.VBox()
+        self.page_box.add(HomePage())
+        page_box_align = gtk.Alignment()
+        page_box_align.set_padding(0, 0, 0, 2)
+        page_box_align.set(1, 1, 1, 1)
+        page_box_align.add(self.page_box)
         
-    def render_title(self, cr, rect):        
-        # Draw select background.
-        if self.is_select:
-            draw_pixbuf(cr, self.hover_bg, rect.x, rect.y)
-            text_color = app_theme.get_color("simpleItemSelect").get_color()
-        elif self.is_hover:    
-            text_color = app_theme.get_color("simpleItemHover").get_color()
-        else:    
-            text_color = app_theme.get_color("labelText").get_color()
-            
-        draw_text(cr, self.title, rect.x, rect.y, rect.width, rect.height, text_size=11, 
-                  text_color = text_color,
-                  alignment=pango.ALIGN_CENTER)    
+        body_paned = HPaned(handle_color=app_theme.get_color("panedHandler"))
+        body_paned.add1(self.radiobar)
+        body_paned.add2(page_box_align)
+        self.add(body_paned)
         
-        if self.has_icon:
-            draw_pixbuf(cr, self.selected_pixbuf, rect.x + 10,
-                        rect.y + (rect.height - self.selected_pixbuf.get_height()) / 2)
+    def __init_radiobar(self):    
+        self.radiobar = TreeView(enable_drag_drop=False, enable_multiple_select=False)
+        items = [CategroyRaidoItem(title) for title in "推荐首页 热门兆赫 人气兆赫 流派兆赫".split()]
+        self.radiobar.add_items(items)
+        self.radiobar.set_size_request(121, -1)
+        self.radiobar.draw_mask = self.on_radiobar_draw_mask        
         
-    def expand(self):
-        pass
-    
-    def unexpand(self):
-        pass
-    
-    def unhover(self, column, offset_x, offset_y):
-        self.is_hover = False
-        self.emit_redraw_request()
-    
-    def hover(self, column, offset_x, offset_y):
-        self.is_hover = True
-        self.emit_redraw_request()
+    def on_radiobar_draw_mask(self, cr, x, y, w, h):    
+        draw_alpha_mask(cr, x, y, w, h ,"layoutRight")
+        draw_line(cr, (x + 1, y), 
+                  (x + 1, y + h), "#b0b0b0")
+        return False
         
-    def button_press(self, column, offset_x, offset_y):
-        pass
-    
-    def single_click(self, column, offset_x, offset_y):
-        pass        
-
-    def double_click(self, column, offset_x, offset_y):
-        pass        
-    
-    def draw_drag_line(self, drag_line, drag_line_at_bottom=False):
-        pass
-

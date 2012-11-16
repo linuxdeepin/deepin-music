@@ -20,3 +20,43 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import gtk
+import gobject
+import pango
+from dtk.ui.listview import ListView
+from dtk.ui.draw import draw_pixbuf, draw_text
+
+from widget.ui_utils import draw_single_mask, draw_alpha_mask
+from widget.skin import app_theme
+from helper import Dispatcher
+from player import Player
+from song import Song
+
+class RadioView(ListView):    
+    __gsignals__ = {
+        "begin-add-items" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),
+        "empty-items" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),
+        }
+    
+    def __init__(self, *args, **kwargs):
+        ListView.__init__(self, *args, **kwargs)
+        targets = [("text/deepin-webcasts", gtk.TARGET_SAME_APP, 1),]        
+        self.drag_dest_set(gtk.DEST_DEFAULT_MOTION | gtk.DEST_DEFAULT_DROP, targets, gtk.gdk.ACTION_COPY)
+        
+        # self.connect_after("drag-data-received", self.on_drag_data_received)
+        # self.connect("double-click-item", self.on_double_click_item)
+        # self.connect("button-press-event", self.on_button_press_event)
+        # self.connect("delete-select-items", self.try_emit_empty_signal)
+        
+        self.set_expand_column(0)
+        
+        
+    def draw_mask(self, cr, x, y, width, height):    
+        draw_alpha_mask(cr, x, y, width, height, "layoutLeft")
+        
+    def try_emit_empty_signal(self, widget, items):    
+        if len(self.items) <= 0:
+            self.emit("empty-items")
+            
+    def emit_add_signal(self):            
+        self.emit("begin-add-items")

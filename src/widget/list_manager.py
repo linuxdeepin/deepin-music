@@ -22,17 +22,12 @@
 
 import gtk
 
-from dtk.ui.new_treeview import TreeView
-from dtk.ui.listview import ListView
 from dtk.ui.scrolled_window import ScrolledWindow
-from webcast_view import WebcastItem
-from widget.ui_utils import draw_single_mask, draw_alpha_mask
+from widget.playlist import PlaylistUI
+from widget.castlist import WebcastList
+from widget.radio_view import RadioView
 
-
-from playlist import PlaylistUI
-from castlist import WebcastList
 from helper import Dispatcher
-from player import Player
 from nls import _
 
 from widget.tab_box import TabManager, Tab
@@ -49,8 +44,10 @@ class ListManager(gtk.VBox):
         self.playlist_ui = PlaylistUI()
         
         # webcastlist
-        self.tab_box = TabManager([Tab(_("本地音乐"), self.playlist_ui, 0),
-                                  Tab(_("网络广播"), WebcastList(), 1)])
+        self.tab_box = TabManager([
+                Tab(_("本地音乐"), self.playlist_ui, 0),
+                Tab(_("网络广播"), WebcastList(), 1),
+                Tab(_("豆瓣电台"), self.get_radio_box(), 2, True)])
         
         self.tab_box.connect("switch-tab", self.on_tab_box_switch_tab)
         main_align.add(self.tab_box)
@@ -58,3 +55,11 @@ class ListManager(gtk.VBox):
         
     def on_tab_box_switch_tab(self, widget, item):    
         Dispatcher.emit("switch-browser", item.index)
+        
+    def get_radio_box(self):   
+        view = RadioView()
+        scrolled_window = ScrolledWindow(0, 0) 
+        scrolled_window.add_child(view)
+        scrolled_window.set_size_request(303, -1)
+        return scrolled_window
+        

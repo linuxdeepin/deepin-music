@@ -29,6 +29,8 @@ import shutil
 import gtk
 import nls
 import gobject
+import cairo
+import math
 
 import hashlib
 
@@ -843,6 +845,18 @@ def encode_multipart(fields, files):
     body = CRLF.join(L)
     content_type = 'multipart/form-data; boundary=%s' % BOUNDARY
     return content_type, body
+
+def clip_surface(image_file):    
+    image_surface = cairo.ImageSurface.create_from_png(image_file)
+    w , h = image_surface.get_width(), image_surface.get_height()
+    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
+    cr = cairo.Context(surface)
+    cr.arc(w / 2, h / 2, w / 2 , 0,  2  * math.pi)
+    cr.clip()
+    cr.set_source_surface(image_surface, 0, 0)
+    cr.set_operator(cairo.OPERATOR_SOURCE)
+    cr.paint()
+    return surface
     
 global MAIN_WINDOW            
 MAIN_WINDOW = None

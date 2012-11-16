@@ -67,8 +67,11 @@ class IconItem(gobject.GObject):
         # Just create pixbuf when need render it to save memory.
         self.pixbuf = None
         self.labels = _("%d tracks") % nums
-        self.padding_x = 4
-        self.padding_y = 4
+        self.pixbuf_offset_x = 6
+        self.pixbuf_offset_y = 4
+        self.padding_x = 6
+        self.border_size = 4
+        self.padding_y = 22
         self.hover_flag = False
         self.highlight_flag = False
         self.__draw_play_hover_flag = False
@@ -119,34 +122,25 @@ class IconItem(gobject.GObject):
         else:
             return False
         
-    def pointer_in_pixbuf_rect(self, x, y):    
-        pixbuf_rect = gtk.gdk.Rectangle(
-            0, 0,
-            self.__normal_side_pixbuf.get_width(),
-            self.__normal_side_pixbuf.get_height(),
-            )
-        if pixbuf_rect.x < x < pixbuf_rect.x + pixbuf_rect.width and pixbuf_rect.y < y < pixbuf_rect.y + pixbuf_rect.height:
-            return True
-        else:
-            return False
-        
     def emit_redraw_request(self):    
         self.emit("redraw-request")
         
     def get_width(self):    
-        if self.tag == "folder":
-            return self.cell_width + self.padding_x * 2 + 5
-        return self.cell_width + self.padding_x * 2 + 8
+        return self.__normal_side_pixbuf.get_width() + self.padding_x * 2
     
     def get_height(self):
-        return self.__normal_side_pixbuf.get_height() + self.padding_y * 2 + 40
+        return self.__normal_side_pixbuf.get_height() + self.padding_y * 2
     
     def render(self, cr, rect):
         # Create pixbuf resource if self.pixbuf is None.
         if not self.pixbuf:
             self.create_pixbuf()
             
-        pixbuf_x =  rect.x + (rect.width - self.__normal_side_pixbuf.get_width()) / 2    
+        cr.set_source_rgb(0, 0, 0)    
+        cr.rectangle(rect.x, rect.y, rect.width, rect.height)
+        cr.stroke()
+            
+        pixbuf_x =  rect.x + (rect.width - self.__normal_side_pixbuf.get_width()) / 2
             
         # Draw cover.
         if self.tag == "folder":    
@@ -155,11 +149,10 @@ class IconItem(gobject.GObject):
                         rect.y)
         else:    
             draw_pixbuf(cr, self.pixbuf, 
-                        pixbuf_x + self.padding_x,
-                        rect.y + self.padding_y)
+                        pixbuf_x + self.pixbuf_offset_x,
+                        rect.y + self.pixbuf_offset_y)
         
         if self.hover_flag or self.highlight_flag:
-            
             if self.tag == "folder":
                 hover_side_pixbuf = app_theme.get_pixbuf("local/side_hover.png").get_pixbuf()
             else:    
@@ -193,12 +186,13 @@ class IconItem(gobject.GObject):
                     8)
         
     def icon_item_motion_notify(self, x, y):    
+        print x, y
         self.hover_flag = True
         if self.pointer_in_play_rect(x, y):
             if self.__draw_play_press_flag:
                 self.__draw_play_hover_flag =  False
             else:    
-                self.__draw_play_hover_flag = True
+                self.__draw_play_hover_flag= True
         else:    
             self.__draw_play_hover_flag = False
             
@@ -367,7 +361,7 @@ class Browser(gtk.VBox, SignalContainer):
         search_entry.entry.connect("changed", self.on_search_entry_changed)
         return search_entry, align
         
-    def get_icon_view(self, padding_x=10, padding_y=10):    
+    def get_icon_view(self, padding_x=0, padding_y=10):    
         ''' Draggable IconView '''
         icon_view = IconView(padding_x, padding_y)
         targets = [("text/deepin-songs", gtk.TARGET_SAME_APP, 1), ("text/uri-list", 0, 2)]

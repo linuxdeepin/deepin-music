@@ -27,10 +27,10 @@ from dtk.ui.utils import (alpha_color_hex_to_cairo, cairo_disable_antialias,
                           color_hex_to_cairo, propagate_expose)
 from widget.local_browser import SimpleBrowser
 from widget.webcasts_browser import WebcastsBrowser
+from widget.radio_browser import RadioBrowser
 from widget.skin import app_theme
 from widget.ui import SearchBox, CustomEntry
 from widget.ui_utils import switch_tab
-from widget.slide_switcher import SlideSwitcher
 from helper import Dispatcher
 
 class BrowserMananger(gtk.VBox):
@@ -58,6 +58,7 @@ class BrowserMananger(gtk.VBox):
         # Bottom widgets and is switchable.
         self.local_browser = SimpleBrowser()
         self.webcasts_browser = WebcastsBrowser()
+        self.radio_browser = RadioBrowser()
         self.bottom_box = gtk.VBox()
         self.bottom_box.add(self.local_browser)
         
@@ -70,13 +71,9 @@ class BrowserMananger(gtk.VBox):
         if index == 0:
             switch_tab(self.bottom_box, self.local_browser)
         elif index == 1:    
-            switch_tab(self.bottom_box, self.get_slide_box())
-            
-            
-    def get_slide_box(self):        
-        box = gtk.VBox()
-        box.pack_start(SlideSwitcher(), True, True)
-        return box
+            switch_tab(self.bottom_box, self.webcasts_browser)
+        elif index == 2:    
+            switch_tab(self.bottom_box, self.radio_browser)
             
     def save(self):        
         self.webcasts_browser.save()
