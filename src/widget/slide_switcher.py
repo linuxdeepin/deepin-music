@@ -118,7 +118,7 @@ class SlideSwitcher(gtk.EventBox):
         t_x, t_y = image_w + 18, 0
         t_w = width - image_w - 18 * 2
         
-        t_y += 16
+        t_y += 22
         for index, content in enumerate(text_contents):
             if index == 0:
                 c_w, c_h = get_content_size(content, 12)                
