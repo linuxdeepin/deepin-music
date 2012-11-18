@@ -110,7 +110,7 @@ class SimpleHeadbar(gtk.EventBox):
         self.timer_label = "00:00"
         self.song_timer = SongTimer(self.draw_timer_label)
         
-        combo_vbox = gtk.VBox()
+        combo_vbox = gtk.VBox(spacing=5)
         combo_vbox.pack_start(playinfo_align, False, False)
         combo_vbox.pack_start(self.action_box_align, False, False)
         

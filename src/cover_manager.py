@@ -325,3 +325,11 @@ class DeepinCoverManager(Logger):
                 return True
 
 CoverManager =  DeepinCoverManager()
+
+
+class DoubanCoverManager(object):
+    
+    def __init__(self):
+        pass
+    
+    

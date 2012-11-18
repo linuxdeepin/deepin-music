@@ -35,7 +35,8 @@ class PlayInfo(gtk.VBox):
     def __init__(self, default_width=110):
         super(PlayInfo, self).__init__()
 
-        self.set_size_request(default_width, -1)
+        self.default_height = 20
+        self.set_size_request(default_width, self.default_height)
         self.default_width = default_width
         self.artist_label = self.create_simple_label(_("Deepin Music") + " for Linux Deepin", 9.5)
 
@@ -84,6 +85,6 @@ class PlayInfo(gtk.VBox):
         
     def create_simple_label(self, content, text_size):    
         label = Label(content, app_theme.get_color("labelText"), text_size=text_size, enable_gaussian=True, label_width=self.default_width)
-        width, height = get_content_size(content, text_size)
-        label.set_size_request(110, height)
+        # width, height = get_content_size(content, text_size)
+        label.set_size_request(110, self.default_height)
         return label

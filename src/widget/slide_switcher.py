@@ -69,16 +69,17 @@ class SlideSwitcher(gtk.EventBox):
         self.connect("enter-notify-event", self.on_enter_notify)
         self.connect("expose-event", self.on_expose_event)        
         self.connect("size-allocate", self.on_size_allocate)
-        
-        
+             
         # Init data.
         self.slide_number = 5
         self.active_index = 0
         self.active_alpha = 1.0
         self.target_alpha = 0.0
         self.target_index = None
+        self.motion_index = None
         self.in_animiation = False
-        self.animiation_time = 2000
+        self.auto_animiation_time = 2000
+        self.hover_animation_time = 500
         self.auto_slide_timeout = 4500
         self.auto_slide_timeout_id = None
         self.pointer_radious = 8
@@ -213,30 +214,25 @@ class SlideSwitcher(gtk.EventBox):
                 self.pointer_coords[index] = pointer_rect
         return True
             
-    def start_animation(self, target_index=None):        
+    def start_animation(self, animiation_time, target_index=None):        
         if target_index == None:
             if self.active_index >= self.slide_number - 1:
                 target_index = 0
             else:    
                 target_index = self.active_index + 1
                 
-        # if not self.in_animiation:        
-        #     self.in_animiation = False
-        self.target_index = target_index
-        try:
-            self.timeline.stop()
-        except:    
-            pass
-            
-        self.timeline = Timeline(self.animiation_time, CURVE_SINE)
-        self.timeline.connect("update", self.update_animation)
-        self.timeline.connect("completed", lambda source: self.completed_animation(source, target_index))
-        self.timeline.run()
+        if not self.in_animiation:        
+            self.in_animiation = True
+            self.target_index = target_index
+            self.timeline = Timeline(animiation_time, CURVE_SINE)
+            self.timeline.connect("update", self.update_animation)
+            self.timeline.connect("completed", lambda source: self.completed_animation(source, target_index))
+            self.timeline.run()
             
         return True    
     
     def start_auto_slide(self):
-        self.auto_slide_timeout_id = gtk.timeout_add(self.auto_slide_timeout, lambda : self.start_animation())
+        self.auto_slide_timeout_id = gtk.timeout_add(self.auto_slide_timeout, lambda : self.start_animation(self.auto_slide_timeout))
         
     def update_animation(self, source, status):    
         self.active_alpha = 1.0 - status
@@ -246,18 +242,27 @@ class SlideSwitcher(gtk.EventBox):
         
     def completed_animation(self, source, index):    
         self.active_index = index
-        # self.active_alpha = 1.0
-        # self.target_index = None
-        # self.target_alpha = 0.0
-        # self.in_animiation = False
-        # self.queue_draw()
+        self.active_alpha = 1.0
+        self.target_index = None
+        self.target_alpha = 0.0
+        self.in_animiation = False
+        
+        self.queue_draw()
+        
+        # Start new animiation when cursor at new index when animiation completed.
+        if self.motion_index:
+            if self.active_index != self.motion_index:
+                self.start_animation(self.hover_animation_time, self.motion_index)
         
     def handle_animation(self, widget, event):    
+        self.motion_index = None
+        
         for index, rect in self.pointer_coords.items():
             if rect.x <= event.x <= rect.x + rect.width and rect.y <= event.y <= rect.y + rect.height:
                 set_cursor(widget, gtk.gdk.HAND2)
-                if self.target_index != index:
-                    self.start_animation(index)
+                self.motion_index = index
+                if self.active_index != index:
+                    self.start_animation(self.hover_animation_time, index)
                 break    
         else:    
             set_cursor(widget, None)
@@ -267,10 +272,11 @@ class SlideSwitcher(gtk.EventBox):
         self.handle_animation(widget, event)
 
     def on_leave_notify(self, widget, event):    
-        # rect = widget.allocation
+        rect = widget.allocation
         # if is_in_rect((event.x, event.y), (0, 0, rect.width, rect.height)):
         #     self.handle_animation(widget, event)
         # else:
+        #     print "start.."
         self.start_auto_slide()
         set_cursor(widget, None)    
     
@@ -278,4 +284,21 @@ class SlideSwitcher(gtk.EventBox):
         if self.auto_slide_timeout_id is not None:
             gobject.source_remove(self.auto_slide_timeout_id)
             self.auto_slide_timeout_id = None
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
     

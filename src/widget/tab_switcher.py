@@ -20,13 +20,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from dtk.ui.timeline import Timeline, CURVE_SINE
-# from dtk.ui.box import EventBox
-from dtk.ui.utils import get_content_size, color_hex_to_cairo
-from dtk.ui.draw import draw_text
+
 import pango
 import gobject
 import gtk
+
+from dtk.ui.timeline import Timeline, CURVE_SINE
+from dtk.ui.utils import get_content_size, color_hex_to_cairo
+from dtk.ui.draw import draw_text
+
+from widget.skin import app_theme
 
 class TabSwitcher(gtk.EventBox):
     '''
@@ -47,7 +50,7 @@ class TabSwitcher(gtk.EventBox):
         self.set_visible_window(False)
         self.add_events(gtk.gdk.ALL_EVENTS_MASK)
         self.tab_names = tab_names
-        self.tab_name_size = 11
+        self.tab_name_size = 10
         self.tab_number = len(self.tab_names)
         tab_sizes = map(lambda tab_name: get_content_size(tab_name, self.tab_name_size), self.tab_names)
         self.tab_name_padding_x = 10
@@ -99,11 +102,11 @@ class TabSwitcher(gtk.EventBox):
         # Draw tab name.
         for (tab_index, tab_name) in enumerate(self.tab_names):
             if self.in_animiation:
-                tab_name_color = "#000000"
+                tab_name_color = app_theme.get_color("labelText").get_color()
             elif tab_index == self.tab_index:
                 tab_name_color = "#FFFFFF"
             else:
-                tab_name_color = "#000000"
+                tab_name_color = app_theme.get_color("labelText").get_color()
             draw_text(cr,
                       tab_name,
                       draw_start_x + tab_index * self.tab_width,
