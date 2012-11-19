@@ -326,10 +326,80 @@ class DeepinCoverManager(Logger):
 
 CoverManager =  DeepinCoverManager()
 
+DOUBAN_BANNER_SIZE = {"x" : 200, "y" : 200}
+DOUBAN_COVER_SIZE = {"x" : 45, "y": 45}
 
-class DoubanCoverManager(object):
+class DoubanCoverManager(Logger):
     
     def __init__(self):
         pass
     
+    def get_banner_path(self, channel_id):
+        return get_cache_file(os.path.join("douban", "banner", "%s.png" % channel_id))
     
+    def get_cover_path(self, channel_id):
+        return get_cache_file(os.path.join("douban", "cover", "%s.png" % channel_id))
+    
+    def get_banner(self, channel_info, try_web=True):
+        banner_path = self.get_banner_path(channel_info.get("id"))
+        
+        # Banner image already exist.
+        if os.path.exists(banner_path):
+            try:
+                gtk.gdk.pixbuf_new_from_file_at_size(banner_path, DOUBAN_BANNER_SIZE["x"], DOUBAN_BANNER_SIZE["y"])
+            except gobject.GError:    
+                try:
+                    os.unlink(banner_path)
+                except: pass    
+            else:    
+                return banner_path
+            
+        # Download from remote    
+        if not config.getboolean("setting", "offline") and try_web and is_network_connected():
+            banner_url = channel_info.get("banner")
+            if banner_url:
+                ret = utils.download(banner_url, banner_path)
+                if ret and self.cleanup_cover(banner_path, DOUBAN_BANNER_SIZE["x"], DOUBAN_BANNER_SIZE["y"]):
+                    return banner_path
+                
+        return None        
+    
+    def get_cover(self, channel_info, try_web=True):
+        cover_path = self.get_cover_path(channel_info.get("id"))
+        
+        # Banner image already exist.
+        if os.path.exists(cover_path):
+            try:
+                gtk.gdk.pixbuf_new_from_file_at_size(cover_path, DOUBAN_COVER_SIZE["x"], DOUBAN_COVER_SIZE["y"])
+            except gobject.GError:    
+                try:
+                    os.unlink(cover_path)
+                except: pass    
+            else:    
+                return cover_path
+            
+        # Download from remote    
+        if not config.getboolean("setting", "offline") and try_web and is_network_connected():
+            cover_url = channel_info.get("cover")
+            if cover_url:
+                ret = utils.download(cover_url, cover_path)
+                if ret and self.cleanup_cover(cover_path, DOUBAN_COVER_SIZE["x"], DOUBAN_COVER_SIZE["y"]):
+                    return cover_path
+                
+        return None        
+                
+    def cleanup_cover(self, old_path, x, y, path=None):    
+        if not path:
+            path = old_path
+        if not os.path.exists(old_path):    
+            return False
+        
+        try:
+            pixbuf = get_optimum_pixbuf_from_file(old_path, x, y)
+        except gobject.GError:    
+            return False
+        else:
+            if os.path.exists(path): os.unlink(path)
+            pixbuf.save(path, "jpeg", {"quality":"85"})
+            del pixbuf  
+            return True
