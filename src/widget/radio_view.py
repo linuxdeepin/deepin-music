@@ -54,6 +54,9 @@ class RadioView(ListView):
         Dispatcher.connect("play-radio", self.on_dispatcher_play_radio)
         self.set_expand_column(0)
         
+        self.current_index = 0
+        self.current_cid = None
+        
     def draw_mask(self, cr, x, y, width, height):    
         draw_alpha_mask(cr, x, y, width, height, "layoutLeft")
         
@@ -69,12 +72,31 @@ class RadioView(ListView):
         
     def on_double_click_item(self, widget, item, column, x, y):    
         if item:
-            self.fetch_playlist(item.channel_info.get("id"))
+            self.current_cid = item.channel_info.get("id")
+            self.fetch_playlist(self.current_cid, True)
             
     @utils.threaded       
-    def fetch_playlist(self, channel_id):
+    def fetch_playlist(self, channel_id, play=False):
         songs = fmlib.new_playlist_no_user(channel_id)
-        if songs:
+        self.playlist = songs
+        if songs and play:
             Player.play_new(songs[0])
+            self.current_index = 0
+            Player.set_source(self)
             
-            
+    def get_next_song(self, maunal=False):        
+        self.current_index += 1
+        current_index = self.current_index        
+        
+        if self.current_index == len(self.playlist) - 1:
+            self.current_index = -1
+            self.fetch_playlist()
+                
+        return self.playlist[current_index]
+    
+    
+    def get_previous_song(self):
+        self.current_index -= 1
+        if self.current_index < 0:
+            self.current_index = 0
+        return self.playlist[self.current_index]    

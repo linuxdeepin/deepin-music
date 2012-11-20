@@ -221,7 +221,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         # remove old stream for pipeline excepted when need to fade
         
             
-        if song and song.get_type() not in ["local", "cue", "audiocd"]:
+        if song and song.get_type() == "webcast":
             self.force_fade_close()
             
         if self.song and (crossfade == -1 or self.is_paused() or not self.is_playable()):        
