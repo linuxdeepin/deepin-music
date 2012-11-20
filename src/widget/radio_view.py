@@ -89,9 +89,9 @@ class RadioView(ListView):
         current_index = self.current_index        
         
         if self.current_index == len(self.playlist) - 1:
+            print "next"
             self.current_index = -1
-            self.fetch_playlist()
-                
+            self.fetch_playlist(self.current_cid)
         return self.playlist[current_index]
     
     
