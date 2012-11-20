@@ -33,8 +33,10 @@ from widget.tab_switcher import TabSwitcher
 from widget.ui_utils  import  draw_alpha_mask, switch_tab
 from widget.radio_item import RecommendItem
 from widget.skin import app_theme
+
 from nls import _
 from doubanfm import fmlib
+from helper import Dispatcher
 
 import utils
 
@@ -140,7 +142,7 @@ class HomePage(gtk.VBox):
         # targets = [("text/deepin-songs", gtk.TARGET_SAME_APP, 1), ("text/uri-list", 0, 2)]
         # icon_view.drag_source_set(gtk.gdk.BUTTON1_MASK, targets, gtk.gdk.ACTION_COPY)
         # icon_view.connect("drag-data-get", self.__on_drag_data_get) 
-        # icon_view.connect("double-click-item", self.__on_double_click_item)
+        icon_view.connect("double-click-item", self.on_iconview_double_click_item)
         # icon_view.connect("single-click-item", self.__on_single_click_item)
         icon_view.draw_mask  = self.on_iconview_draw_mask
         scrolled_window = ScrolledWindow()
@@ -150,3 +152,6 @@ class HomePage(gtk.VBox):
     
     def on_iconview_draw_mask(self, cr, x, y, width, height):
         draw_alpha_mask(cr, x, y, width, height, "layoutLast")
+
+    def on_iconview_double_click_item(self,  widget, item, x, y):    
+        Dispatcher.emit("play-radio", item.chl)

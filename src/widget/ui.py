@@ -28,12 +28,12 @@ from dtk.ui.window import Window
 from dtk.ui.titlebar import Titlebar
 from dtk.ui.utils import (move_window, alpha_color_hex_to_cairo, 
                           color_hex_to_cairo, cairo_disable_antialias,
-                          propagate_expose)
+                          propagate_expose, get_content_size)
 from dtk.ui.entry import InputEntry, Entry
 from dtk.ui.button import ImageButton
 from dtk.ui.draw import draw_pixbuf, draw_text, draw_round_rectangle, draw_vlinear
 from widget.skin import app_theme
-from widget.ui_utils import draw_alpha_mask
+from widget.ui_utils import draw_alpha_mask, draw_line
 from helper import Dispatcher
 
 class NormalWindow(Window):
@@ -418,3 +418,111 @@ class WaitProgress(gtk.EventBox):
         pass
     
     
+class CoverPopupNotify(Window):    
+    
+    def __init__(self, channel_info, default_width=300):
+        Window.__init__(self, 
+                        shadow_visible=False,
+                        shadow_radius=0,
+                        shape_frame_function=self.shape_panel_frame,
+                        expose_frame_function=self.expose_panel_frame,
+                        window_type=gtk.WINDOW_POPUP)
+        
+        self.info_panel = gtk.EventBox()
+        self.info_panel.set_visible_window(False)
+        self.info_panel.connect("expose-event", self.on_panel_expose_event)
+        self.window_frame.add(self.info_panel)
+        
+        self.channel_info = channel_info
+        self.padding_y = 15
+        self.padding_x = 10
+        self.line_height = 15
+        self.default_width = default_width
+        
+        self.init_size()
+        
+    def init_size(self):    
+        tw = self.default_width - self.padding_x * 2
+        intro = self.channel_info.get("intro", "").strip()
+        intro_text = "%s: %s" % ("简介", intro)
+        intro_th = 0
+        if intro:
+            intro_tw, intro_th = get_content_size(intro_text, wrap_width=tw,text_size=9)
+            if intro_th > self.line_height * 2:
+                intro_th = self.line_height * 2
+                
+        hotsongs =  " / ".join(self.channel_info.get("hot_songs", []))
+        hotsongs_text = "%s: %s" % ("热门歌曲", hotsongs)
+        hotsongs_tw, hotsongs_th = get_content_size(hotsongs_text, wrap_width=tw,text_size=9)
+        if hotsongs_th > self.line_height * 2:
+            hotsongs_th = self.line_height * 2
+        
+        if intro_th == 0:    
+            height = hotsongs_th + self.line_height * 2
+        else:    
+            height = hotsongs_th + intro_th + self.line_height * 4
+        self.set_size_request(self.default_width, height)    
+        
+    def shape_panel_frame(self, widget, event):    
+        pass
+        
+    def expose_panel_frame(self, widget, event):
+        cr  = widget.window.cairo_create()
+        rect = widget.allocation
+        cr.set_source_rgb(1,1,1)
+        cr.rectangle(rect.x, rect.y, rect.width, rect.height)
+        cr.fill()
+        
+    def on_panel_expose_event(self, widget, event):    
+        cr = widget.window.cairo_create()
+        rect = widget.allocation
+        
+        draw_line(cr, (rect.x, rect.y + 1), (rect.x + rect.width, rect.y + 1), "#c7c7c7")
+        draw_line(cr, (rect.x + rect.width, rect.y), (rect.x + rect.width, rect.y + rect.height), "#c7c7c7")
+        draw_line(cr, (rect.x, rect.y + rect.height), (rect.x + rect.width, rect.y + rect.height), "#c7c7c7")
+        draw_line(cr, (rect.x + 1, rect.y), (rect.x + 1, rect.y + rect.height), "#c7c7c7")
+        
+        tx = rect.x + self.padding_x        
+        ty = rect.y + self.padding_y
+        tw = rect.width - self.padding_x * 2
+        intro = self.channel_info.get("intro", "")
+        if intro:
+            intro_text = "%s: %s" % ("简介", intro)
+            intro_tw, intro_th = get_content_size(intro_text, wrap_width=tw,text_size=9)
+            if intro_th > self.line_height * 2:
+                intro_th = self.line_height * 2
+            cr.save()
+            cr.rectangle(tx, ty, intro_tw, intro_th)
+            cr.clip()
+            draw_text(cr, intro_text, tx, ty, intro_tw, intro_th, text_size=9,
+                      text_color="#878787", wrap_width=tw)
+            cr.restore()
+
+            with cairo_disable_antialias(cr):
+                cr.save()
+                cr.move_to(tx, ty + intro_th + self.line_height)
+                cr.rel_line_to(tw, 0)
+                cr.set_dash([2.0, 2.0])
+                cr.stroke()
+                cr.restore()
+            
+        hotsongs =  " / ".join(self.channel_info.get("hot_songs", []))
+        hotsongs_text = "%s: %s" % ("热门歌曲", hotsongs)
+        if intro:
+            new_ty = ty + intro_th + self.line_height * 2
+        else:    
+            new_ty = ty
+            
+        hotsongs_tw, hotsongs_th = get_content_size(hotsongs_text, wrap_width=tw,text_size=9)
+        if hotsongs_th > self.line_height * 2:
+            hotsongs_th = self.line_height * 2
+        cr.save()
+        cr.rectangle(tx, new_ty, hotsongs_tw, hotsongs_th)
+        cr.clip()
+        draw_text(cr, hotsongs_text, tx, new_ty, hotsongs_tw, hotsongs_th, text_size=9,
+                  text_color="#878787", wrap_width=tw)
+        return True
+    
+    def show(self, x, y):
+        self.move(x, y)
+        self.show_all()

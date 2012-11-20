@@ -62,4 +62,3 @@ class ListManager(gtk.VBox):
         scrolled_window.add_child(view)
         scrolled_window.set_size_request(303, -1)
         return scrolled_window
-        

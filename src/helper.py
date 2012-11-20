@@ -61,6 +61,7 @@ class EventDispatcher(gobject.GObject):
         "new-cd-playlist" : SIGNAL_COMP2,
         "del-cd-playlist" : SIGNAL_SIMPLE,
         "switch-browser" : SIGNAL_SIMPLE,
+        "play-radio" : SIGNAL_SIMPLE,
         }
     
     def __init__(self):

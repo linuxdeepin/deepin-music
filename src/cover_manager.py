@@ -250,7 +250,7 @@ class DeepinCoverManager(Logger):
                 ret = False
                 # try url cover tag
                 if song.get("album_cover_url"):
-                    ret = utils.download(song.get("album_cover_url"), utils.get_uri_from_path(image_path))
+                    ret = utils.download(song.get("album_cover_url"), image_path)
                     if ret and self.cleanup_cover(song, image_path):
                         return image_path
                     

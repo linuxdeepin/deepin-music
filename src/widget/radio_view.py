@@ -28,9 +28,13 @@ from dtk.ui.draw import draw_pixbuf, draw_text
 
 from widget.ui_utils import draw_single_mask, draw_alpha_mask
 from widget.skin import app_theme
+from widget.radio_item import RadioItem
 from helper import Dispatcher
 from player import Player
 from song import Song
+from doubanfm import fmlib
+
+import utils
 
 class RadioView(ListView):    
     __gsignals__ = {
@@ -44,12 +48,11 @@ class RadioView(ListView):
         self.drag_dest_set(gtk.DEST_DEFAULT_MOTION | gtk.DEST_DEFAULT_DROP, targets, gtk.gdk.ACTION_COPY)
         
         # self.connect_after("drag-data-received", self.on_drag_data_received)
-        # self.connect("double-click-item", self.on_double_click_item)
+        self.connect("double-click-item", self.on_double_click_item)
         # self.connect("button-press-event", self.on_button_press_event)
         # self.connect("delete-select-items", self.try_emit_empty_signal)
-        
+        Dispatcher.connect("play-radio", self.on_dispatcher_play_radio)
         self.set_expand_column(0)
-        
         
     def draw_mask(self, cr, x, y, width, height):    
         draw_alpha_mask(cr, x, y, width, height, "layoutLeft")
@@ -60,3 +63,18 @@ class RadioView(ListView):
             
     def emit_add_signal(self):            
         self.emit("begin-add-items")
+        
+    def on_dispatcher_play_radio(self, obj, channel_info):    
+        self.add_items([RadioItem(channel_info)])
+        
+    def on_double_click_item(self, widget, item, column, x, y):    
+        if item:
+            self.fetch_playlist(item.channel_info.get("id"))
+            
+    @utils.threaded       
+    def fetch_playlist(self, channel_id):
+        songs = fmlib.new_playlist_no_user(channel_id)
+        if songs:
+            Player.play_new(songs[0])
+            
+            

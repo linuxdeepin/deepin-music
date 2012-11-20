@@ -60,6 +60,7 @@ class RadioBrowser(gtk.VBox):
         self.radiobar = TreeView(enable_drag_drop=False, enable_multiple_select=False)
         items = [CategroyRaidoItem(title) for title in "推荐首页 热门兆赫 人气兆赫 流派兆赫".split()]
         self.radiobar.add_items(items)
+        self.radiobar.select_items([self.radiobar.visible_items[0]])
         self.radiobar.set_size_request(121, -1)
         self.radiobar.draw_mask = self.on_radiobar_draw_mask        
         
