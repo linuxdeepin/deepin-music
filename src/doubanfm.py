@@ -263,8 +263,7 @@ class DoubanFM(Logger):
         return None    
     
     def load_channels(self):
-        req = urllib.Request('http://www.douban.com/j/app/radio/channels')
-        ret = self.opener.open(req)
+        ret = self.mycurl.get('http://www.douban.com/j/app/radio/channels')
         return utils.parser_json(ret)
         
     def parser_song(self, douban_song):    
@@ -377,7 +376,4 @@ class DoubanFM(Logger):
         ret = self.mine_request(extra_data=params)
         return self.json_to_deepin_songs(ret)
         
-if __name__ == "__main__":    
-    douban = DoubanFM()
-    douban.set_login_info("username", "password")
-    douban.check_fm_login()
+fmlib = DoubanFM()

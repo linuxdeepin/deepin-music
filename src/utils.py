@@ -643,6 +643,24 @@ class ThreadRun(threading.Thread):
             self.render_func(result, *self.render_args)
         else:    
             self.render_func(result)
+            
+class ThreadFetch(threading.Thread):            
+    
+    def __init__(self, fetch_funcs, success_funcs=None, fail_funcs=None):
+        threading.Thread.__init__(self)
+        self.setDaemon(True)
+        self.fetch_funcs = fetch_funcs
+        self.success_funcs = success_funcs
+        self.fail_funcs = fail_funcs
+        
+    def run(self):    
+        result = self.fetch_funcs[0](*self.fetch_funcs[1])
+        if result:
+            if self.success_funcs:
+                self.success_funcs[0](result, *self.success_funcs[1])
+        else:        
+            if self.fail_funcs:
+                self.fail_funcs[0](*self.fail_funcs[1])
 
 def strdate_to_time(odate):
     date = odate
@@ -856,7 +874,10 @@ def clip_surface(image_file):
     cr.set_source_surface(image_surface, 0, 0)
     cr.set_operator(cairo.OPERATOR_SOURCE)
     cr.paint()
-    return surface
+    surface.write_to_png(image_file)
+
+    del image_surface
+    del surface
     
 global MAIN_WINDOW            
 MAIN_WINDOW = None

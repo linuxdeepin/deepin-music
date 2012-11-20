@@ -359,7 +359,7 @@ class DoubanCoverManager(Logger):
             banner_url = channel_info.get("banner")
             if banner_url:
                 ret = utils.download(banner_url, banner_path)
-                if ret and self.cleanup_cover(banner_path, DOUBAN_BANNER_SIZE["x"], DOUBAN_BANNER_SIZE["y"]):
+                if ret and self.cleanup_banner(banner_path, DOUBAN_BANNER_SIZE["x"], DOUBAN_BANNER_SIZE["y"]):
                     return banner_path
                 
         return None        
@@ -375,7 +375,7 @@ class DoubanCoverManager(Logger):
                 try:
                     os.unlink(cover_path)
                 except: pass    
-            else:    
+            else:  
                 return cover_path
             
         # Download from remote    
@@ -388,7 +388,7 @@ class DoubanCoverManager(Logger):
                 
         return None        
                 
-    def cleanup_cover(self, old_path, x, y, path=None):    
+    def cleanup_banner(self, old_path, x, y, path=None):    
         if not path:
             path = old_path
         if not os.path.exists(old_path):    
@@ -400,6 +400,25 @@ class DoubanCoverManager(Logger):
             return False
         else:
             if os.path.exists(path): os.unlink(path)
-            pixbuf.save(path, "jpeg", {"quality":"85"})
+            pixbuf.save(path, "png")
             del pixbuf  
             return True
+        
+    def cleanup_cover(self, old_path, x, y, path=None):
+        if not path:
+            path = old_path
+        if not os.path.exists(old_path):    
+            return False
+        
+        try:
+            pixbuf = get_optimum_pixbuf_from_file(old_path, x, y)
+        except gobject.GError:    
+            return False
+        else:
+            if os.path.exists(path): os.unlink(path)
+            pixbuf.save(path, "png")
+            del pixbuf  
+            utils.clip_surface(path)
+            return True
+
+DoubanCover = DoubanCoverManager()        

@@ -25,12 +25,21 @@ import gobject
 
 from dtk.ui.scrolled_window import ScrolledWindow
 from dtk.ui.iconview import IconView
+from dtk.ui.threads import post_gui
+from dtk.ui.thread_pool import MissionThreadPool
 
 from widget.slide_switcher import SlideSwitcher
 from widget.tab_switcher import TabSwitcher
 from widget.ui_utils  import  draw_alpha_mask, switch_tab
 from widget.radio_item import RecommendItem
 from widget.skin import app_theme
+from nls import _
+from doubanfm import fmlib
+
+import utils
+
+cover_thread_pool = MissionThreadPool(5)
+cover_thread_pool.start()
 
 class HomePage(gtk.VBox):
     
@@ -44,23 +53,13 @@ class HomePage(gtk.VBox):
         self.home_slider.set_size_request(-1, 200)
         
         # recommmend tab switcher.
-        self.recommend_tab = TabSwitcher(["热门兆赫", "人气兆赫"])
+        self.recommend_tab = TabSwitcher([_("热门兆赫"), _("人气兆赫")])
         self.recommend_tab.connect("tab-switch-start", lambda switcher, tab_index: self.switch_recommend_view(tab_index))
         self.recommend_tab.connect("click-current-tab", lambda switcher, tab_index: self.on_click_recommend_tab(tab_index))
 
         # Init recommend view.
         self.hot_recommend_view, self.hot_recommend_sw = self.get_icon_view(padding_y=5)
         self.fast_recommend_view, self.fast_recommend_sw = self.get_icon_view(padding_y=5)
-        
-        items = []
-        for i in range(8):
-            items.append(RecommendItem("中国好声音", "88%d首歌曲" % i, app_theme.get_pixbuf("slide/recommand_hot.png").get_pixbuf()))
-        self.hot_recommend_view.add_items(items)    
-        
-        items = []
-        for i in range(8):
-            items.append(RecommendItem("九零MHz", "77%d首歌曲" % i, app_theme.get_pixbuf("slide/recommand_fast.png").get_pixbuf()))
-        self.fast_recommend_view.add_items(items)    
         
         # Use switch recommend view.
         self.recommend_view_box = gtk.VBox()        
@@ -69,6 +68,58 @@ class HomePage(gtk.VBox):
         self.pack_start(self.home_slider, False, True)
         self.pack_start(self.recommend_tab, False, True)
         self.pack_start(self.recommend_view_box, True, True)
+        
+        # load fm data
+        self.load_fm_data()
+        
+    def load_fm_data(self):    
+        utils.ThreadFetch(
+            fetch_funcs=(self.fetch_hot_channels, ()),
+            success_funcs=(self.load_hot_channels, ())).start()
+        
+        utils.ThreadFetch(
+            fetch_funcs=(self.fetch_fast_channels, ()),
+            success_funcs=(self.load_fast_channels, ())).start()
+        
+    def fetch_hot_channels(self):    
+        ret = fmlib.get_hot_chls(limit=8)
+        return  ret.get("data", {}).get("channels", [])
+    
+    def fetch_fast_channels(self):
+        ret = fmlib.get_uptrending_chls(limit=8)
+        return  ret.get("data", {}).get("channels", [])
+        
+    @post_gui
+    def load_hot_channels(self, hot_channels):
+        hot_items = []
+        thread_items = []
+        for hot_chl in hot_channels:
+            recommend_item = RecommendItem(hot_chl)
+            if not recommend_item.is_loaded_cover:
+                thread_items.append(recommend_item)
+            hot_items.append(recommend_item)    
+            
+        if thread_items:    
+            cover_thread_pool.add_missions(thread_items)
+        self.hot_recommend_view.clear()    
+        self.hot_recommend_view.add_items(hot_items)    
+        
+    @post_gui    
+    def load_fast_channels(self, fast_channels):    
+        hot_items = []
+        thread_items = []
+        for fast_chl in fast_channels:
+            recommend_item = RecommendItem(fast_chl)
+            if not recommend_item.is_loaded_cover:
+                thread_items.append(recommend_item)
+            hot_items.append(recommend_item)    
+            
+        if thread_items:    
+            cover_thread_pool.add_missions(thread_items)
+            
+        self.fast_recommend_view.clear()    
+        self.fast_recommend_view.add_items(hot_items)    
+        
         
     def switch_recommend_view(self, tab_index):
         if tab_index == 0:

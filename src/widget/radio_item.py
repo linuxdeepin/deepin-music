@@ -29,12 +29,14 @@ import pango
 from collections import namedtuple
 from dtk.ui.scrolled_window import ScrolledWindow
 from dtk.ui.listview import ListView
+from dtk.ui.threads import post_gui
 from dtk.ui.new_treeview import TreeView, TreeItem
 from dtk.ui.draw import draw_pixbuf, draw_text
 from dtk.ui.utils import get_content_size, get_widget_root_coordinate, get_match_parent
 from dtk.ui.constant import WIDGET_POS_TOP_RIGHT
 from dtk.ui.popup_grab_window import PopupGrabWindow, wrap_grab_window
 from dtk.ui.window import Window
+from dtk.ui.thread_pool import MissionThread
 from dtk.ui.paned import HPaned
 
 import utils
@@ -48,6 +50,7 @@ from xdg_support import get_config_file
 from helper import Dispatcher
 from song import Song
 from nls import _
+from cover_manager import DoubanCover
 
 class CategroyRaidoItem(TreeItem):    
     def __init__(self, title):
@@ -119,28 +122,47 @@ class CategroyRaidoItem(TreeItem):
         pass
 
     
-class RecommendItem(gobject.GObject):    
+class RecommendItem(gobject.GObject, MissionThread):    
     
     __gsignals__ = { "redraw-request" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),}
     
-    def __init__(self, title, description, pixbuf):
+    def __init__(self, chl):
         '''
         Initialize ItemIcon class.
         
         @param pixbuf: Icon pixbuf.
         '''
         gobject.GObject.__init__(self)
-        self.pixbuf_path = None
-        self.pixbuf = pixbuf
+        MissionThread.__init__(self)
         self.padding_x = 10
         self.padding_y = 10
         self.default_width = 110
         self.default_height = 100
         self.hover_flag = False
         self.highlight_flag = False
-        
-        self.title = title
-        self.description = description
+        self.chl = chl
+        self.title = chl.get("name", "")
+        self.description = "%s首歌曲" % chl.get("song_num")
+        self.init_cover_pixbuf()
+
+    def init_cover_pixbuf(self):    
+        cover_path = DoubanCover.get_cover(self.chl, try_web=False)
+        if cover_path:
+            self.pixbuf = gtk.gdk.pixbuf_new_from_file(cover_path)
+            self.is_loaded_cover = True
+        else:    
+            self.pixbuf = app_theme.get_pixbuf("slide/default_cover.png").get_pixbuf()
+            self.is_loaded_cover = False
+            
+    def start_mission(self):    
+        cover_path = DoubanCover.get_cover(self.chl,try_web=True)
+        if cover_path:
+            self.render_cover(cover_path)
+            
+    @post_gui    
+    def render_cover(self,cover_path):
+        self.pixbuf = gtk.gdk.pixbuf_new_from_file(cover_path)
+        self.emit_redraw_request()
         
     def emit_redraw_request(self):
         '''

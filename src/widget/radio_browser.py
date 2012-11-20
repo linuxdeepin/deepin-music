@@ -30,6 +30,7 @@ from widget.radio_item import CategroyRaidoItem
 from widget.skin import app_theme
 from widget.radio_home_page import HomePage
 from widget.ui_utils import draw_line, draw_alpha_mask
+from widget.ui import WaitProgress
 from nls import _
 
 class RadioBrowser(gtk.VBox):
@@ -40,6 +41,9 @@ class RadioBrowser(gtk.VBox):
         # Init radiobar.
         self.__init_radiobar()
         
+        
+        # is loaded.
+        self.homepage_load_flag = False
         self.page_box = gtk.VBox()
         self.page_box.add(HomePage())
         page_box_align = gtk.Alignment()
@@ -65,3 +69,5 @@ class RadioBrowser(gtk.VBox):
                   (x + 1, y + h), "#b0b0b0")
         return False
         
+    
+    

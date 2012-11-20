@@ -22,6 +22,7 @@
 
 import gtk
 import gobject
+import cairo
 
 from dtk.ui.window import Window
 from dtk.ui.titlebar import Titlebar
@@ -30,7 +31,7 @@ from dtk.ui.utils import (move_window, alpha_color_hex_to_cairo,
                           propagate_expose)
 from dtk.ui.entry import InputEntry, Entry
 from dtk.ui.button import ImageButton
-from dtk.ui.draw import draw_pixbuf, draw_text
+from dtk.ui.draw import draw_pixbuf, draw_text, draw_round_rectangle, draw_vlinear
 from widget.skin import app_theme
 from widget.ui_utils import draw_alpha_mask
 from helper import Dispatcher
@@ -296,3 +297,124 @@ class EmptyWebcast(gtk.EventBox):
         draw_pixbuf(cr, self.empty_pixbuf, icon_x, icon_y)
         
         return True
+
+    
+
+class WaitBox(gtk.EventBox):
+    
+    def __init__(self):
+        gtk.EventBox.__init__(self)
+        self.set_visible_window(False)
+        
+        self.max_number = 10
+        self.item_width = self.item_height = 20
+        self.padding_x = 8
+        self.padding_y = 5
+        self.auto_animiation_time = 500
+        self.active_color = "#33CCFF"
+        self.inactive_color = "#999999"        
+        self.active_color_info = [(0.2, (self.active_color, 0.8)), 
+                                  (0.8, (self.active_color, 0.95)), (1.0, (self.active_color, 0.8))]
+
+        self.inactive_color_info = [(0.2, (self.inactive_color, 0.9)), 
+                                  (0.8, (self.inactive_color, 0.95)), (1.0, (self.inactive_color, 0.9))]
+        self.active_number = 1
+        
+        self.__init_size()
+        self.connect("expose-event", self.on_expose_event)
+        
+        gobject.timeout_add(self.auto_animiation_time, self.loop_animiation)
+        
+    def __init_size(self):    
+        width = self.max_number * self.item_width  + self.padding_x * (self.max_number + 1)
+        height = self.item_height + self.padding_y * 2
+        self.set_size_request(width, height)
+        
+    def on_expose_event(self, widget, event):    
+        cr = widget.window.cairo_create()
+        rect = widget.allocation
+        item_x = rect.x + self.padding_x
+        item_y = rect.y + self.padding_y
+        
+        for i in range(1, self.max_number + 1):
+
+            if i <= self.active_number:
+                color_info = self.active_color_info
+            else:    
+                color_info = self.inactive_color_info
+            cr.save()                
+            draw_vlinear(cr, item_x, item_y, self.item_width, self.item_height, color_info, 3)                                
+            cr.restore()
+            item_x += self.padding_x + self.item_width
+        
+            
+    def loop_animiation(self):        
+        self.active_number += 1
+        if self.active_number > self.max_number:
+            self.active_number = 1
+        self.queue_draw()    
+        
+        return True
+            
+        
+class WaitProgress(gtk.EventBox):
+    
+    def __init__(self):
+        
+        gtk.EventBox.__init__(self)
+        self.connect("expose-event", self.on_expose_event)
+        self.padding_x = 10
+        self.padding_y = 5        
+        self.default_height = 22
+        self.item_width = 18
+        self.item_height = 22
+        self.max_number = 18
+        self.move_x = 0
+        
+        self.init_size()
+        
+        gobject.timeout_add(500, self.loop_animiation)
+        
+    def init_size(self):
+        width = self.max_number * self.item_width + self.padding_x * 2
+        height = self.item_height * self.padding_y * 2
+        self.set_size_request(width, height)
+        
+    def on_expose_event(self, widget, event):
+        cr = widget.window.cairo_create()
+        rect = widget.allocation
+        
+        # Draw left arc.
+        cr.save()
+        cr.translate(self.padding_x, self.padding_y)
+        cr.rectangle(rect.x, rect.y, rect.width - self.padding_x * 2, rect.height - self.padding_y * 2)
+        cr.set_line_width(1)
+        cr.set_source_rgb(*color_hex_to_cairo("#999999"))
+        cr.stroke()
+        cr.restore()    
+        
+        cr.save()    
+        for  i in range(1, self.max_number + 1):
+            if i % 2 == 0:
+                first_upper_x = self.move_x + rect.x + self.padding_y + self.item_width * i
+                cr.move_to(first_upper_x, rect.y + self.padding_y)
+                cr.rel_line_to(-self.item_width, self.item_height)
+                cr.rel_line_to(self.item_width, 0)
+                cr.rel_line_to(self.item_width, -self.item_height)
+                cr.set_source_rgb(*color_hex_to_cairo("#3E89CF"))
+                cr.fill()
+            else:
+                second_upper_x = self.move_x + rect.x + self.padding_y + self.item_width * i
+                cr.move_to(second_upper_x, rect.y + self.padding_y)
+                cr.rel_line_to(-self.item_width, self.item_height)
+                cr.rel_line_to(self.item_width, 0)
+                cr.rel_line_to(self.item_width, -self.item_height)
+                cr.set_source_rgb(*color_hex_to_cairo("#FFFFFF"))
+                cr.fill()
+        cr.restore()
+        return True
+    
+    def loop_animiation(self):
+        pass
+    
+    
