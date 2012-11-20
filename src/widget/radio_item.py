@@ -188,9 +188,10 @@ class RecommendItem(gobject.GObject, MissionThread):
         '''
         # Draw cover.
             
-        pixbuf_x = rect.x + (rect.width - self.pixbuf.get_width()) / 2
         if self.pixbuf is None:
             self.create_cover_pixbuf()
+             
+        pixbuf_x = rect.x + (rect.width - self.pixbuf.get_width()) / 2
             
         draw_pixbuf(cr, self.pixbuf, pixbuf_x, rect.y)
         

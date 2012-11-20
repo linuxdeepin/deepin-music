@@ -71,15 +71,15 @@ class PlayInfo(gtk.VBox):
         self.song = song
         title = song.get_str("title")
         if song.get_str("artist"):
-            self.artist_label.set_text("%s - %s" % (title, song.get_str("artist")))
-        elif buffering is not None:    
+            title = "%s - %s" % (title, song.get_str("artist"))
+            
+        if buffering is not None:    
             if buffering >= 0 and buffering <= 98:
-                self.artist_label.set_text("%s(%d%%) - %s" % (_("buffering"), buffering, title))
-            elif buffering >= 99:    
-                if song.get_str("artist"):
-                    self.artist_label.set_text("%s - %s" % (title, song.get_str("artist")))
-                else:
-                    self.artist_label.set_text(title)
+                buffering_title = "%s(%d%%) - %s" % (_("buffering"), buffering, title)
+            else:    
+                buffering_title = title
+            self.artist_label.set_text(buffering_title)    
+            
         else:    
             self.artist_label.set_text(title)
         

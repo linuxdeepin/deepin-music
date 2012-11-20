@@ -56,6 +56,7 @@ class RadioView(ListView):
         
         self.current_index = 0
         self.current_cid = None
+        self.playlist = None
         
     def draw_mask(self, cr, x, y, width, height):    
         draw_alpha_mask(cr, x, y, width, height, "layoutLeft")
@@ -85,6 +86,9 @@ class RadioView(ListView):
             Player.set_source(self)
             
     def get_next_song(self, maunal=False):        
+        if self.playlist is None:
+            self.fetch_playlist(self.current_cid)
+            return     
         self.current_index += 1
         current_index = self.current_index        
         
