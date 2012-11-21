@@ -45,6 +45,7 @@ from cover_manager import CoverManager
 from pinyin import TransforDB
 from nls import _
 
+import utils
 
 class IconItem(gobject.GObject):
     
@@ -62,7 +63,7 @@ class IconItem(gobject.GObject):
         elif self.key_name == "deepin-all-songs":    
             self.name_label = _("All tracks")
         else:    
-            self.name_label = self.key_name
+            self.name_label = utils.xmlescape(self.key_name)
         
         # Just create pixbuf when need render it to save memory.
         self.pixbuf = None

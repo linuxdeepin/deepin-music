@@ -23,6 +23,7 @@
 import gtk
 import gobject
 import pango
+import os
 
 from dtk.ui.threads import post_gui
 from dtk.ui.new_treeview import TreeItem
@@ -146,8 +147,12 @@ class CommonIconItem(gobject.GObject, MissionThread):
     def create_cover_pixbuf(self):    
         cover_path = DoubanCover.get_cover(self.chl, try_web=False)
         if cover_path:
-            self.pixbuf = gtk.gdk.pixbuf_new_from_file(cover_path)
-            self.is_loaded_cover = True
+            try:
+                self.pixbuf = gtk.gdk.pixbuf_new_from_file(cover_path)
+                self.is_loaded_cover = True                
+            except gobject.GError:    
+                self.pixbuf = app_theme.get_pixbuf("slide/default_cover.png").get_pixbuf()
+                self.is_loaded_cover = False
         else:    
             self.pixbuf = app_theme.get_pixbuf("slide/default_cover.png").get_pixbuf()
             self.is_loaded_cover = False
@@ -164,7 +169,7 @@ class CommonIconItem(gobject.GObject, MissionThread):
     @post_gui    
     def render_cover(self,cover_path):
         self.pixbuf = gtk.gdk.pixbuf_new_from_file(cover_path)
-        self.emit_redraw_request()
+        # self.emit_redraw_request()
         
     def emit_redraw_request(self):
         '''

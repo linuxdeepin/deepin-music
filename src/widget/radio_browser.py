@@ -43,13 +43,12 @@ class RadioBrowser(gtk.VBox):
         # Init radiobar.
         self.__init_radiobar()
         
-        
         # is loaded.
         self.homepage_load_flag = False
         self.home_page = HomePage()
         
-        self.hot_page_view, self.hot_page_sw = self.get_radio_icon_view(TAG_HOT, 0, 10)
-        self.fast_page_view, self.fast_page_sw = self.get_radio_icon_view(TAG_FAST, 0, 10)
+        self.hot_page_view, self.hot_page_sw = self.get_radio_icon_view(TAG_HOT)
+        self.fast_page_view, self.fast_page_sw = self.get_radio_icon_view(TAG_FAST)
         
         self.hot_page_view.start_fetch_channels()
         self.fast_page_view.start_fetch_channels()
@@ -87,13 +86,9 @@ class RadioBrowser(gtk.VBox):
                   (x + 1, y + h), "#b0b0b0")
         return False
     
-    def get_radio_icon_view(self, tag, padding_x=0, padding_y=0):
-        icon_view = RadioIconView(tag, padding_x, padding_y)
+    def get_radio_icon_view(self, tag, limit=10, padding_x=0, padding_y=10):
+        icon_view = RadioIconView(tag=tag, limit=limit, padding_x=padding_x, padding_y=padding_y)
         scrolled_window = ScrolledWindow()
         scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
         scrolled_window.add_child(icon_view)
         return icon_view, scrolled_window
-        
-        
-    
-    

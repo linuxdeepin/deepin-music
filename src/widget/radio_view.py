@@ -72,7 +72,7 @@ class RadioView(ListView):
         self.emit("begin-add-items")
         
     def on_dispatcher_play_radio(self, obj, channel_info):    
-        self.add_items([RadioListItem(channel_info)])
+        self.add_items([RadioListItem(channel_info)], insert_pos=0)
         self.fetch_playlist(channel_info.get("id"), True)
         
     def on_double_click_item(self, widget, item, column, x, y):    
@@ -115,8 +115,8 @@ TAG_GENRE = 3
 
 class RadioIconView(IconView):    
     
-    def __init__(self, tag, *args, **kwargs):
-        IconView.__init__(self, *args, **kwargs)
+    def __init__(self, tag, limit=10, has_add=True, padding_x=0, padding_y=0):
+        IconView.__init__(self, padding_x=padding_x, padding_y=padding_y)
         
         # targets = [("text/deepin-songs", gtk.TARGET_SAME_APP, 1), ("text/uri-list", 0, 2)]
         # icon_view.drag_source_set(gtk.gdk.BUTTON1_MASK, targets, gtk.gdk.ACTION_COPY)
@@ -124,13 +124,14 @@ class RadioIconView(IconView):
         # icon_view.connect("double-click-item", self.on_iconview_double_click_item)
         self.tag = tag
         self.__start = 0
-        self.__limit = 10
+        self.__limit = limit
         self.__fetch_thread_id = 0
         self.__render_id = 0
         self.__genre_id = "335"
         
         self.connect("single-click-item", self.on_iconview_single_click_item)
-        self.add_items([MoreIconItem()])
+        if has_add:
+            self.add_items([MoreIconItem()])
         
     def set_genre_id(self, genre_id):    
         self.__genre_id = genre_id
