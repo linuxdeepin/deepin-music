@@ -24,7 +24,7 @@ import pango
 import gtk
 import pangocairo
 
-from dtk.ui.utils import (alpha_color_hex_to_cairo, cairo_disable_antialias, layout_set_markup)
+from dtk.ui.utils import (alpha_color_hex_to_cairo, cairo_disable_antialias)
 from dtk.ui.line import draw_vlinear
 from dtk.ui.draw import draw_text
 from dtk.ui.line import HSeparator
