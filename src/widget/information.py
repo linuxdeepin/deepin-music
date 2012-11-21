@@ -29,6 +29,7 @@ from widget.skin import app_theme
 from library import MediaDB
 from player import Player
 from nls import _
+import utils
 
 
 class PlayInfo(gtk.VBox):
@@ -72,6 +73,7 @@ class PlayInfo(gtk.VBox):
         title = song.get_str("title")
         if song.get_str("artist"):
             title = "%s - %s" % (title, song.get_str("artist"))
+        title = utils.xmlescape(title)    
             
         if buffering is not None:    
             if buffering >= 0 and buffering <= 98:

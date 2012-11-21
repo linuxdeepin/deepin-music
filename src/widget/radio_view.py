@@ -127,26 +127,37 @@ class RadioIconView(IconView):
         self.__limit = 10
         self.__fetch_thread_id = 0
         self.__render_id = 0
+        self.__genre_id = "335"
         
         self.connect("single-click-item", self.on_iconview_single_click_item)
         self.add_items([MoreIconItem()])
         
+    def set_genre_id(self, genre_id):    
+        self.__genre_id = genre_id
+        self.__start = 0
+        
     def on_iconview_single_click_item(self, widget, item, x, y):    
         if item:
             if hasattr(item, "is_more") and item.mask_flag:
-                self.__fetch_thread_id += 1
-                utils.ThreadFetch(
-                    fetch_funcs=(self.fetch_channels, (self.__start,)),
-                    success_funcs=(self.load_channels, (self.__fetch_thread_id, self.__start))).start()
+                self.start_fetch_channels()
             else:    
                 if item.mask_flag:
                     Dispatcher.emit("play-radio", item.chl)
+                    
+    def start_fetch_channels(self):                
+        self.__fetch_thread_id += 1
+        utils.ThreadFetch(
+            fetch_funcs=(self.fetch_channels, (self.__start,)),
+            success_funcs=(self.load_channels, (self.__fetch_thread_id, self.__start))).start()
+        
                 
     def fetch_channels(self, start):    
         if self.tag == TAG_HOT:
             ret = fmlib.get_hot_chls(start=start, limit=self.__limit)
         elif self.tag == TAG_FAST:    
             ret = fmlib.get_uptrending_chls(start=start, limit=self.__limit)
+        elif self.tag == TAG_GENRE:    
+            ret = fmlib.get_genre_chls(genre_id=self.__genre_id, start=start, limit=self.__limit)
         return  ret.get("data", {}).get("channels", [])
             
     @post_gui
@@ -155,6 +166,8 @@ class RadioIconView(IconView):
         thread_items = []
         if thread_id != self.__fetch_thread_id:
             return
+        if not channels:
+            return 
         for hot_chl in channels:
             common_item = CommonIconItem(hot_chl)
             if not common_item.is_loaded_cover:
@@ -175,3 +188,6 @@ class RadioIconView(IconView):
                   (x + 1, y + h), "#b0b0b0")
         return False
     
+    def clear_items(self):
+        self.clear()
+        self.add_items([MoreIconItem()])

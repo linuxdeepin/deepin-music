@@ -30,9 +30,9 @@ from dtk.ui.scrolled_window import ScrolledWindow
 from widget.radio_item import CategroyTreeItem
 from widget.skin import app_theme
 from widget.radio_home_page import HomePage
-from widget.radio_view import RadioIconView, TAG_HOT, TAG_FAST, TAG_GENRE
+from widget.radio_genre_page import GenrePage
+from widget.radio_view import RadioIconView, TAG_HOT, TAG_FAST
 from widget.ui_utils import draw_line, draw_alpha_mask, switch_tab
-from widget.ui import WaitProgress
 from nls import _
 
 class RadioBrowser(gtk.VBox):
@@ -48,9 +48,14 @@ class RadioBrowser(gtk.VBox):
         self.homepage_load_flag = False
         self.home_page = HomePage()
         
-        self.hot_page_view, self.hot_page_sw = self.get_raido_icon_view(TAG_HOT, 0, 10)
-        self.fast_page_view, self.fast_page_sw = self.get_raido_icon_view(TAG_FAST, 0, 10)
-        self.genre_page_view, self.genre_page_sw = self.get_raido_icon_view(TAG_GENRE, 0, 10)
+        self.hot_page_view, self.hot_page_sw = self.get_radio_icon_view(TAG_HOT, 0, 10)
+        self.fast_page_view, self.fast_page_sw = self.get_radio_icon_view(TAG_FAST, 0, 10)
+        
+        self.hot_page_view.start_fetch_channels()
+        self.fast_page_view.start_fetch_channels()
+        
+        # Genres page
+        self.genre_page = GenrePage()
         
         self.page_box = gtk.VBox()
         self.page_box.add(self.home_page)
@@ -70,7 +75,7 @@ class RadioBrowser(gtk.VBox):
         items.append(CategroyTreeItem(_("推荐首页"), lambda : switch_tab(self.page_box, self.home_page)))
         items.append(CategroyTreeItem(_("热门兆赫"), lambda : switch_tab(self.page_box, self.hot_page_sw)))
         items.append(CategroyTreeItem(_("人气兆赫"), lambda : switch_tab(self.page_box, self.fast_page_sw)))
-        items.append(CategroyTreeItem(_("流派兆赫"), lambda : switch_tab(self.page_box, self.genre_page_sw)))
+        items.append(CategroyTreeItem(_("流派兆赫"), lambda : switch_tab(self.page_box, self.genre_page)))
         self.radiobar.add_items(items)
         self.radiobar.select_items([self.radiobar.visible_items[0]])
         self.radiobar.set_size_request(121, -1)
@@ -82,7 +87,7 @@ class RadioBrowser(gtk.VBox):
                   (x + 1, y + h), "#b0b0b0")
         return False
     
-    def get_raido_icon_view(self, tag, padding_x=0, padding_y=0):
+    def get_radio_icon_view(self, tag, padding_x=0, padding_y=0):
         icon_view = RadioIconView(tag, padding_x, padding_y)
         scrolled_window = ScrolledWindow()
         scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)

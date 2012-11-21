@@ -238,7 +238,7 @@ class DoubanFM(Logger):
         return self.explore_request("recent_chls")
     
     def get_genre_chls(self, genre_id, start=0, limit=20):
-        params = {"query" : "genre_id:%d" % genre_id, 
+        params = {"query" : "genre_id:%s" % genre_id, 
                   "start" : start, "limit" : limit}
         return self.explore_request("search", extra_data=params)
     

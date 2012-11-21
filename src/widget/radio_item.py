@@ -83,7 +83,7 @@ class CategroyTreeItem(TreeItem):
         else:    
             text_color = app_theme.get_color("labelText").get_color()
             
-        draw_text(cr, utils.xmlescape(self.title), rect.x, rect.y, rect.width, rect.height, text_size=10, 
+        draw_text(cr, self.title, rect.x, rect.y, rect.width, rect.height, text_size=10, 
                   text_color = text_color,
                   alignment=pango.ALIGN_CENTER)    
         
@@ -220,10 +220,11 @@ class CommonIconItem(gobject.GObject, MissionThread):
                                        rect.width - self.padding_x * 2, 11)
         total_rect = gtk.gdk.Rectangle(title_rect.x, title_rect.y + 16, title_rect.width, 9)
         
-        render_text(cr, self.title, title_rect, 
-                    app_theme.get_color("labelText").get_color(),
+        render_text(cr, utils.xmlescape(self.title), title_rect, 
+                    # app_theme.get_color("labelText").get_color(),
+                    "#444444",
                     10)
-        render_text(cr, self.description, total_rect,
+        render_text(cr, utils.xmlescape(self.description), total_rect,
                     app_theme.get_color("labelText").get_color(),
                     8)
         

@@ -476,6 +476,7 @@ class PopupPanel(Window):
         self.padding_x = 10
         self.padding_y = 5
         self.separate_text = separate_text
+        
         self.default_width = default_width
         self.separate_width, self.separate_height = get_content_size(self.separate_text)
         self.coords = {}

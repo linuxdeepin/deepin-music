@@ -37,6 +37,8 @@ from dtk.ui.timeline import Timeline, CURVE_SINE
 
 from widget.skin import app_theme
 
+import utils
+
 class SlideSwitcher(gtk.EventBox):
     
     def __init__(self):
@@ -121,6 +123,7 @@ class SlideSwitcher(gtk.EventBox):
         
         t_y += 22
         for index, content in enumerate(text_contents):
+            content = utils.xmlescape(content)
             if index == 0:
                 c_w, c_h = get_content_size(content, 12)                
                 render_text(cr, content, t_x, t_y, t_w, t_y + c_h, text_size=12, 
