@@ -386,19 +386,42 @@ class MoreIconItem(gobject.GObject):
         '''
         return self.default_height
     
+    def create_pixbuf(self):        
+        if self.pixbuf is None:
+            self.pixbuf = app_theme.get_pixbuf("slide/default_cover.png").get_pixbuf()
+            
+    def create_mask_pixbuf(self):       
+        if self.mask_pixbuf is None:
+            self.mask_pixbuf = app_theme.get_pixbuf("radio/covermask_play.png").get_pixbuf()
+    
     def render(self, cr, rect):
         '''
         Render item.
         
         This is IconView interface, you should implement it.
         '''
-        # if self.pixbuf_rect is None:
-        #     self.pixbuf_rect = gtk.gdk.Rectangle((rect.width - self.pixbuf.get_width()) / 2, 
-        #                                          0, self.pixbuf.get_width(), self.pixbuf.get_height())
-        cr.rectangle(rect.x, rect.y, rect.width, rect.height)
-        cr.set_source_rgba(*alpha_color_hex_to_cairo(("#364553", 0.8)))
-        cr.fill()
+        if self.pixbuf is None:
+            self.create_pixbuf()
+             
+        pixbuf_x = rect.x + (rect.width - self.pixbuf.get_width()) / 2
+        draw_pixbuf(cr, self.pixbuf, pixbuf_x, rect.y)
         
+        if self.pixbuf_rect is None:
+            self.pixbuf_rect = gtk.gdk.Rectangle((rect.width - self.pixbuf.get_width()) / 2, 
+                                                 0, self.pixbuf.get_width(), self.pixbuf.get_height())
+        if self.mask_flag:    
+            if self.mask_pixbuf is None:
+                self.create_mask_pixbuf()
+            draw_pixbuf(cr, self.mask_pixbuf, pixbuf_x, rect.y)    
+        
+            
+        title_rect = gtk.gdk.Rectangle(rect.x + self.padding_x, 
+                                       rect.y + self.pixbuf.get_height() + 5,
+                                       rect.width - self.padding_x * 2, 11)
+        
+        render_text(cr, _("更多"), title_rect, 
+                    app_theme.get_color("labelText").get_color(),
+                    10)
         
     def icon_item_motion_notify(self, x, y):
         '''
@@ -406,10 +429,10 @@ class MoreIconItem(gobject.GObject):
         
         This is IconView interface, you should implement it.
         '''
-        # if self.pointer_in_pixbuf(x, y):
-        #     self.mask_flag = True
-        # else:    
-        #     self.mask_flag = False
+        if self.pointer_in_pixbuf(x, y):
+            self.mask_flag = True
+        else:    
+            self.mask_flag = False
         
         self.hover_flag = True
         self.emit_redraw_request()
@@ -503,7 +526,14 @@ class MoreIconItem(gobject.GObject):
         
         When this function return True, IconView will call function gc.collect() to release object to release memory.
         '''
-        return False
+        if self.pixbuf:
+            del self.pixbuf
+            self.pixbuf = None
+        if self.mask_pixbuf:    
+            del self.mask_pixbuf
+            self.mask_pixbuf = None
+            
+        return True
 
 class RadioListItem(gobject.GObject):
     

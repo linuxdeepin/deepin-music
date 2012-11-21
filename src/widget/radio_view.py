@@ -124,7 +124,7 @@ class RadioIconView(IconView):
         # icon_view.connect("double-click-item", self.on_iconview_double_click_item)
         self.tag = tag
         self.__start = 0
-        self.__limit = 20
+        self.__limit = 10
         self.__fetch_thread_id = 0
         self.__render_id = 0
         
@@ -133,7 +133,7 @@ class RadioIconView(IconView):
         
     def on_iconview_single_click_item(self, widget, item, x, y):    
         if item:
-            if hasattr(item, "is_more"):
+            if hasattr(item, "is_more") and item.mask_flag:
                 self.__fetch_thread_id += 1
                 utils.ThreadFetch(
                     fetch_funcs=(self.fetch_channels, (self.__start,)),
@@ -142,11 +142,11 @@ class RadioIconView(IconView):
                 if item.mask_flag:
                     Dispatcher.emit("play-radio", item.chl)
                 
-    def fetch_channels(self, start=0, limit=20):    
+    def fetch_channels(self, start):    
         if self.tag == TAG_HOT:
-            ret = fmlib.get_hot_chls(start, limit)
+            ret = fmlib.get_hot_chls(start=start, limit=self.__limit)
         elif self.tag == TAG_FAST:    
-            ret = fmlib.get_uptrending_chls(start, limit)
+            ret = fmlib.get_uptrending_chls(start=start, limit=self.__limit)
         return  ret.get("data", {}).get("channels", [])
             
     @post_gui
@@ -168,7 +168,6 @@ class RadioIconView(IconView):
         
     def add_radios(self, items):    
         pass
-    
             
     def draw_mask(self, cr, x, y, w, h):    
         draw_alpha_mask(cr, x, y, w, h ,"layoutRight")
