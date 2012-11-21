@@ -127,7 +127,7 @@ class RecommendItem(gobject.GObject, MissionThread):
         self.padding_x = 10
         self.padding_y = 10
         self.default_width = 110
-        self.default_height = 100
+        self.default_height = 95
         self.pixbuf_rect = None
         self.hover_flag = False
         self.highlight_flag = False
@@ -354,7 +354,7 @@ class RadioItem(gobject.GObject):
         self.channel_name = self.channel_info.get("name", "")
         __, self.name_h = get_content_size(self.channel_name, text_size=9)
         
-        self.detail_info = "%s首歌曲 %s" % (self.channel_info.get("song_num"),
+        self.detail_info = "%s首歌曲 %s制作" % (self.channel_info.get("song_num"),
                                        self.channel_info.get("creator", {}).get("name", ""))
         __, self.detail_h = get_content_size(self.detail_info, text_size=8)
     
@@ -369,7 +369,7 @@ class RadioItem(gobject.GObject):
             
         icon_y = rect.y + (rect.height - icon_pixbuf.get_height()) / 2    
         padding_x = 10
-        padding_y = 5
+        padding_y = 10
         draw_pixbuf(cr, self.normal_pixbuf, rect.x + padding_x, icon_y)
         
         draw_text(cr, self.channel_name, rect.x + icon_pixbuf.get_width() + padding_x * 2, 

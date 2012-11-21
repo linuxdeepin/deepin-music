@@ -22,15 +22,19 @@
 
 import os
 import urllib
-import time
+import urllib2
 import urlparse
+import cookielib
+import time
 import random
-import re
+    
+import socket    
+socket.setdefaulttimeout(40) # 40s
 
 import utils
 from logger import Logger
 from song import Song
-from mycurl import MyCurl, CurlException
+from config import config
 
 TAGS_DOUBAN_KEYS = {
     "album"       : "album_url",
@@ -42,12 +46,18 @@ TAGS_DOUBAN_KEYS = {
     }
 
 class DoubanFM(Logger):
-    
     def __init__(self):
-        headers = ['User-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.4 ' \
-                       '(KHTML, like Gecko) Chrome/22.0.1229.94 Safari/537.4',]
-        
-        self.mycurl = MyCurl(header=headers)
+        cookie_file = utils.get_cookie_file("anonymous")
+        cj = cookielib.LWPCookieJar(cookie_file)
+        cookie_handler = urllib2.HTTPCookieProcessor(cj)
+        opener = urllib2.build_opener(cookie_handler)
+        opener.addheaders = [
+            ('User-agent', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.4 ' \
+             '(KHTML, like Gecko) Chrome/22.0.1229.94 Safari/537.4'),]
+        self.cookiejar = cj
+        if os.path.isfile(cookie_file):
+            self.cookiejar.load(ignore_discard=True, ignore_expires=True)
+        self.opener = opener
         self.explore_data = {}
         self.mine_data = {}                
         self.username = ""
@@ -74,66 +84,30 @@ class DoubanFM(Logger):
         
     def load_user_cookie(self):    
         cookie_file = utils.get_cookie_file(self.username)
-        self.mycurl.set_cookie_file(cookie_file)
-            
-    def get_user_info(self):        
-        ret = self.mycurl.get("https://api.douban.com/v2/user/~me")
-        return utils.parser_json(ret)
+        if os.path.isfile(cookie_file):
+            self.cookiejar.clear()
+            self.cookiejar.filename = cookie_file
+            self.cookiejar.load(ignore_discard=True, ignore_expires=True)
         
     def check_login(self, load_cookie=True, stage=0):
         # load cookie.
         if load_cookie:
             self.load_user_cookie()
+        req = urllib2.Request("http://douban.fm/")
+        ret = self.opener.open(req)
+        ret.read() # Fix
         
-        ret = self.get_user_info()
-        print ret
-        if ret.get("uid", 0):
-            self.__uid = ret.get("uid")            
+        ret = self.get_recent_chls()
+        if ret.get("status", False):
+            self.__uid = config.get("douban", "uid", "")
+            self.cookiejar.save()
             self.loginfo("Login check success!")
             return True
             
         if stage >= 2:
             self.loginfo("Login check failed!")
             return False
-        
-        params = {}
-        params["source"] = "simple"
-        params["form_email"] = self.username
-        params["form_password"] = self.password
-        params["remember"] = "on"
-        ret = self.mycurl.post("http://www.douban.com/accounts/login", urllib.urlencode(params))
-        filter_ret = re.search(r"error=(\d+)", ret)
-        if filter_ret:
-            if filter_ret.group(1) == "1011":
-                captcha_id = self.new_captcha()
-                params["captcha-id"] = captcha_id
-                params["captcha-solution"] = self.get_login_captcha(captcha_id, "s")
-                ret = self.mycurl.post("http://www.douban.com/accounts/login", urllib.urlencode(params))
-                filter_ret = re.search(r"error=(\d+)", ret)
-                
-        if not filter_ret:
-            self.parser_cookie_file()
-        
-        self.loginfo("login info: %s", ret)
-        # Begin second login check..
-        
-        if stage == 0:
-            self.loginfo("Begin second login check..")
-        elif stage == 1:    
-            self.loginfo("Begin three login check..")
-        return self.check_login(load_cookie=False, stage=stage+1)
-    
-    def check_fm_login(self, load_cookie=True, stage=0):
-        # load cookie.
-        if load_cookie:
-            self.load_user_cookie()
-            
-        ret = self.get_user_info()
-        if ret.get("uid", 0):
-            self.__uid = ret.get("uid")
-            self.loginfo("Login check success!")
-            return True
-            
+
         captcha_id = self.new_captcha()
         params = {}        
         params["captcha_id"] = captcha_id
@@ -142,52 +116,41 @@ class DoubanFM(Logger):
         params["alias"] = self.username
         params["form_password"] = self.password
         params["remember"] = "on"
-        ret = self.mycurl.post("http://douban.fm/j/login", urllib.urlencode(params))
+        # params["task"] = "sync_channel_list"
+        req = urllib2.Request("http://douban.fm/j/login",
+                              data=urllib.urlencode(params))
+        ret = self.opener.open(req).read()
         ret_data =  utils.parser_json(ret)
-        print ret_data
-        if  ret_data.get("r", -1) == 0:
-            self.parser_cookie_file(replace=(".fm", ".com"))
-            # self.__uid = ret_data["user_info"]["uid"]
+        user_info = ret_data.get("user_info", None)
+        if user_info:
+            self.__uid = user_info["id"]
+            self.cookiejar.save()
+            config.set("douban", "uid", self.__uid)
+            config.write()
             self.loginfo("Login check success!")
             return True
-            
-        if stage >= 2:
-            self.loginfo("Login check failed!")
-            return False
-        
         self.loginfo("login info: %s", ret)
+        
         # Begin second login check..
         if stage == 0:
             self.loginfo("Begin second login check..")
         elif stage == 1:    
             self.loginfo("Begin three login check..")
-        return self.check_fm_login(load_cookie=False, stage=stage+1)
+        return self.check_login(load_cookie=False, stage=stage+1)
     
-    def parser_cookie_file(self, replace=(".com", ".fm")):
-        cookie_file = utils.get_cookie_file(self.username)
-        if os.path.exists(cookie_file):
-            with open(cookie_file, "rw+") as fp:
-                new_line = None
-                for line in fp:
-                    if line.startswith("#HttpOnly_.douban"):
-                        new_line = line.replace(replace[0], replace[1])
-                        break
-                if new_line is not None:    
-                    fp.write(new_line)
-    
-    def get_login_captcha(self, captcha_id, size="m"):
-        url = "http://www.douban.com/misc/captcha?size=%s&id=%s" % (size, captcha_id)
+    def get_login_captcha(self, captcha_id):
+        url = "http://douban.fm/misc/captcha?size=m&id=%s" % captcha_id
         pic_image = utils.get_cache_file("pic")
         if utils.download(url, pic_image):
             self.loginfo("Verify code pic download ok!")
             return raw_input("piz input code > ").strip()    
     
     def new_captcha(self):
-        ret = self.mycurl.get("http://www.douban.com/j/new_captcha")
+        req = urllib2.Request("http://douban.fm/j/new_captcha")
+        ret = self.opener.open(req).read()
         return ret.strip("\"")
     
     def api_request(self, url, method="GET", extra_data=dict(), retry_limit=2,  **params):
-        ret = None
         data = {}
         data.update(extra_data)
         data.update(params)
@@ -199,17 +162,20 @@ class DoubanFM(Logger):
             if isinstance(data[key], unicode):    
                 data[key] = data[key].encode("utf-8")
                 
-        start = time.time()        
-        try:        
-            if method == "GET":        
-                if data:
-                    query = urllib.urlencode(data)
-                    url = "%s?%s" % (url, query)
-                ret = self.mycurl.get(url)
-            elif method == "POST":
-                body = urllib.urlencode(data)
-                ret = self.mycurl.post(url, body)
-        except CurlException, e:        
+        if method == "GET":        
+            if data:
+                query = urllib.urlencode(data)
+                url = "%s?%s" % (url, query)
+            req = urllib2.Request(url)
+        elif method == "POST":
+            body = urllib.urlencode(data)
+            req = urllib2.Request(url, data=body)
+            
+        self.logdebug("API request url: %s", url)    
+        start = time.time()    
+        try:
+            ret = self.opener.open(req)
+        except Exception, e:    
             if retry_limit == 0:
                 self.logdebug("API request error: url=%s error=%s",  url, e)
                 return dict(result="network_error")
@@ -217,8 +183,9 @@ class DoubanFM(Logger):
                 retry_limit -= 1
                 return self.api_request(url, method, extra_data, retry_limit, **params)
             
-        data = utils.parser_json(ret)       
-        self.loginfo("API response %s: TT=%.3fs", url,  time.time() - start )
+        raw = ret.read()    
+        data = utils.parser_json(raw)       
+        self.loginfo("API response: %s TT=%.3fs", url, time.time() - start )
         return data
     
     def explore_request(self, api, method="GET", extra_data=dict(), retry_limit=2,  **params):    
@@ -248,9 +215,6 @@ class DoubanFM(Logger):
     def get_hot_chls(self, start=0, limit=20):
         return self.explore_request("hot_channels", start=start, limit=limit)
     
-    def get_channel_detail(self, channel_id):
-        return self.explore_request("channel_detail", channel_id=channel_id)
-    
     def get_search_chls(self, name, start=0, limit=20):
         params = {"query" : urllib.quote(name), 
                   "start" : start, "limit" : limit}
@@ -269,7 +233,8 @@ class DoubanFM(Logger):
         return None    
     
     def load_channels(self):
-        ret = self.mycurl.get('http://www.douban.com/j/app/radio/channels')
+        req = urllib.Request('http://www.douban.com/j/app/radio/channels')
+        ret = self.opener.open(req)
         return utils.parser_json(ret)
         
     def parser_song(self, douban_song):    
@@ -368,7 +333,6 @@ class DoubanFM(Logger):
         params['aid'] = aid
         params['du'] = du
         self.mine_request(extra_data=params)
-        
 
     def played_list(self, sid, history=[]):
         """
@@ -381,5 +345,5 @@ class DoubanFM(Logger):
         
         ret = self.mine_request(extra_data=params)
         return self.json_to_deepin_songs(ret)
-        
-fmlib = DoubanFM()
+
+fmlib = DoubanFM()    

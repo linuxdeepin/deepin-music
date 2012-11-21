@@ -84,11 +84,11 @@ class HomePage(gtk.VBox):
             success_funcs=(self.load_fast_channels, ())).start()
         
     def fetch_hot_channels(self):    
-        ret = fmlib.get_hot_chls(limit=200)
+        ret = fmlib.get_hot_chls(limit=8)
         return  ret.get("data", {}).get("channels", [])
     
     def fetch_fast_channels(self):
-        ret = fmlib.get_uptrending_chls(limit=200)
+        ret = fmlib.get_uptrending_chls(limit=8)
         return  ret.get("data", {}).get("channels", [])
         
     @post_gui
