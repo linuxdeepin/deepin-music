@@ -26,22 +26,19 @@ import gobject
 from dtk.ui.scrolled_window import ScrolledWindow
 from dtk.ui.iconview import IconView
 from dtk.ui.threads import post_gui
-from dtk.ui.thread_pool import MissionThreadPool
 
 from widget.slide_switcher import SlideSwitcher
 from widget.tab_switcher import TabSwitcher
 from widget.ui_utils  import  draw_alpha_mask, switch_tab
-from widget.radio_item import RecommendItem
+from widget.radio_item import CommonIconItem
 from widget.skin import app_theme
+from cover_manager import cover_thread_pool
 
 from nls import _
 from doubanfm import fmlib
 from helper import Dispatcher
 
 import utils
-
-cover_thread_pool = MissionThreadPool(5)
-cover_thread_pool.start()
 
 class HomePage(gtk.VBox):
     
@@ -96,7 +93,7 @@ class HomePage(gtk.VBox):
         hot_items = []
         thread_items = []
         for hot_chl in hot_channels:
-            recommend_item = RecommendItem(hot_chl)
+            recommend_item = CommonIconItem(hot_chl)
             if not recommend_item.is_loaded_cover:
                 thread_items.append(recommend_item)
             hot_items.append(recommend_item)    
@@ -111,7 +108,7 @@ class HomePage(gtk.VBox):
         hot_items = []
         thread_items = []
         for fast_chl in fast_channels:
-            recommend_item = RecommendItem(fast_chl)
+            recommend_item = CommonIconItem(fast_chl)
             if not recommend_item.is_loaded_cover:
                 thread_items.append(recommend_item)
             hot_items.append(recommend_item)    
@@ -143,7 +140,7 @@ class HomePage(gtk.VBox):
         # icon_view.drag_source_set(gtk.gdk.BUTTON1_MASK, targets, gtk.gdk.ACTION_COPY)
         # icon_view.connect("drag-data-get", self.__on_drag_data_get) 
         icon_view.connect("double-click-item", self.on_iconview_double_click_item)
-        # icon_view.connect("single-click-item", self.__on_single_click_item)
+        icon_view.connect("single-click-item", self.on_iconview_single_click_item)
         icon_view.draw_mask  = self.on_iconview_draw_mask
         scrolled_window = ScrolledWindow()
         scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
@@ -154,4 +151,9 @@ class HomePage(gtk.VBox):
         draw_alpha_mask(cr, x, y, width, height, "layoutLast")
 
     def on_iconview_double_click_item(self,  widget, item, x, y):    
-        Dispatcher.emit("play-radio", item.chl)
+        pass
+        
+    def on_iconview_single_click_item(self, widget, item, x, y):    
+        if item is not None:
+            if item.mask_flag:
+                Dispatcher.emit("play-radio", item.chl)

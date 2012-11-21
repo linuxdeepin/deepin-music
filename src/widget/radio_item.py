@@ -27,7 +27,8 @@ import pango
 from dtk.ui.threads import post_gui
 from dtk.ui.new_treeview import TreeItem
 from dtk.ui.draw import draw_pixbuf, draw_text
-from dtk.ui.utils import get_content_size, get_widget_root_coordinate, get_match_parent
+from dtk.ui.utils import (get_content_size, get_widget_root_coordinate, get_match_parent,
+                          alpha_color_hex_to_cairo)
 from dtk.ui.thread_pool import MissionThread
 
 import utils
@@ -38,14 +39,15 @@ from widget.skin import app_theme
 from nls import _
 from cover_manager import DoubanCover
 
-class CategroyRaidoItem(TreeItem):    
-    def __init__(self, title):
+class CategroyTreeItem(TreeItem):    
+    def __init__(self, title, callback=None):
         TreeItem.__init__(self)
         self.column_index = 0
         self.side_padding = 5
         self.item_height = 37
         self.title = title
         self.item_width = 121
+        self.press_callback = callback
         
     def get_height(self):    
         return self.item_height
@@ -81,7 +83,7 @@ class CategroyRaidoItem(TreeItem):
         else:    
             text_color = app_theme.get_color("labelText").get_color()
             
-        draw_text(cr, self.title, rect.x, rect.y, rect.width, rect.height, text_size=10, 
+        draw_text(cr, utils.xmlescape(self.title), rect.x, rect.y, rect.width, rect.height, text_size=10, 
                   text_color = text_color,
                   alignment=pango.ALIGN_CENTER)    
         
@@ -103,7 +105,8 @@ class CategroyRaidoItem(TreeItem):
         pass
     
     def single_click(self, column, offset_x, offset_y):
-        pass        
+        if self.press_callback:
+            self.press_callback()
 
     def double_click(self, column, offset_x, offset_y):
         pass        
@@ -112,7 +115,7 @@ class CategroyRaidoItem(TreeItem):
         pass
 
     
-class RecommendItem(gobject.GObject, MissionThread):    
+class CommonIconItem(gobject.GObject, MissionThread):    
     
     __gsignals__ = { "redraw-request" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),}
     
@@ -130,7 +133,10 @@ class RecommendItem(gobject.GObject, MissionThread):
         self.default_height = 95
         self.pixbuf_rect = None
         self.hover_flag = False
+        self.mask_flag = False
         self.highlight_flag = False
+        self.pixbuf = None
+        self.mask_pixbuf = None
         self.chl = chl
         self.title = chl.get("name", "")
         self.description = "%s首歌曲" % chl.get("song_num")
@@ -145,6 +151,10 @@ class RecommendItem(gobject.GObject, MissionThread):
         else:    
             self.pixbuf = app_theme.get_pixbuf("slide/default_cover.png").get_pixbuf()
             self.is_loaded_cover = False
+            
+    def create_mask_pixbuf(self):        
+        if self.mask_pixbuf is None:
+            self.mask_pixbuf = app_theme.get_pixbuf("radio/covermask_play.png").get_pixbuf()
             
     def start_mission(self):    
         cover_path = DoubanCover.get_cover(self.chl,try_web=True)
@@ -199,7 +209,12 @@ class RecommendItem(gobject.GObject, MissionThread):
             self.pixbuf_rect = gtk.gdk.Rectangle((rect.width - self.pixbuf.get_width()) / 2, 
                                                  0, self.pixbuf.get_width(), self.pixbuf.get_height())
             
+        if self.mask_flag:    
+            if self.mask_pixbuf is None:
+                self.create_mask_pixbuf()
+            draw_pixbuf(cr, self.mask_pixbuf, pixbuf_x, rect.y)    
         
+            
         title_rect = gtk.gdk.Rectangle(rect.x + self.padding_x, 
                                        rect.y + self.pixbuf.get_height() + 5,
                                        rect.width - self.padding_x * 2, 11)
@@ -218,13 +233,12 @@ class RecommendItem(gobject.GObject, MissionThread):
         
         This is IconView interface, you should implement it.
         '''
-        # if self.pointer_in_pixbuf(x, y):
-        #     self.notify.show(500, 400)            
-        # else:
-        #     self.notify.hide_all()
+        if self.pointer_in_pixbuf(x, y):
+            self.mask_flag = True
+        else:    
+            self.mask_flag = False
         
         self.hover_flag = True
-
         self.emit_redraw_request()
         
     def pointer_in_pixbuf(self, x, y):    
@@ -242,6 +256,7 @@ class RecommendItem(gobject.GObject, MissionThread):
         This is IconView interface, you should implement it.
         '''
         self.hover_flag = False
+        self.mask_flag = False
         
         self.emit_redraw_request()
         
@@ -318,11 +333,179 @@ class RecommendItem(gobject.GObject, MissionThread):
         if self.pixbuf:
             del self.pixbuf
             self.pixbuf = None
+        if self.mask_pixbuf:    
+            del self.mask_pixbuf
+            self.mask_pixbuf = None
             
         return True
     
+class MoreIconItem(gobject.GObject):    
+    
+    __gsignals__ = { "redraw-request" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),}
+    
+    def __init__(self):
+        '''
+        Initialize ItemIcon class.
+        
+        @param pixbuf: Icon pixbuf.
+        '''
+        gobject.GObject.__init__(self)
+        self.padding_x = 10
+        self.padding_y = 10
+        self.default_width = 110
+        self.default_height = 95
+        self.pixbuf_rect = None
+        self.hover_flag = False
+        self.mask_flag = False
+        self.highlight_flag = False
+        self.pixbuf = None
+        self.mask_pixbuf = None
+        self.is_more = True
+        
+    def emit_redraw_request(self):
+        '''
+        Emit `redraw-request` signal.
+        
+        This is IconView interface, you should implement it.
+        '''
+        self.emit("redraw-request")
+        
+    def get_width(self):
+        '''
+        Get item width.
+        
+        This is IconView interface, you should implement it.
+        '''
+        return self.default_width
+        
+    def get_height(self):
+        '''
+        Get item height.
+        
+        This is IconView interface, you should implement it.
+        '''
+        return self.default_height
+    
+    def render(self, cr, rect):
+        '''
+        Render item.
+        
+        This is IconView interface, you should implement it.
+        '''
+        # if self.pixbuf_rect is None:
+        #     self.pixbuf_rect = gtk.gdk.Rectangle((rect.width - self.pixbuf.get_width()) / 2, 
+        #                                          0, self.pixbuf.get_width(), self.pixbuf.get_height())
+        cr.rectangle(rect.x, rect.y, rect.width, rect.height)
+        cr.set_source_rgba(*alpha_color_hex_to_cairo(("#364553", 0.8)))
+        cr.fill()
+        
+        
+    def icon_item_motion_notify(self, x, y):
+        '''
+        Handle `motion-notify-event` signal.
+        
+        This is IconView interface, you should implement it.
+        '''
+        # if self.pointer_in_pixbuf(x, y):
+        #     self.mask_flag = True
+        # else:    
+        #     self.mask_flag = False
+        
+        self.hover_flag = True
+        self.emit_redraw_request()
+        
+    def pointer_in_pixbuf(self, x, y):    
+        if self.pixbuf_rect is None: return False
+        if self.pixbuf_rect.x <= x <= self.pixbuf_rect.x + self.pixbuf_rect.width and \
+              self.pixbuf_rect.y <= y <= self.pixbuf_rect.y + self.pixbuf_rect.height:  
+            return True
+        else:
+            return False
+        
+    def icon_item_lost_focus(self):
+        '''
+        Lost focus.
+        
+        This is IconView interface, you should implement it.
+        '''
+        self.hover_flag = False
+        self.mask_flag = False
+        
+        self.emit_redraw_request()
+        
+    def icon_item_highlight(self):
+        '''
+        Highlight item.
+        
+        This is IconView interface, you should implement it.
+        '''
+        self.highlight_flag = True
 
-class RadioItem(gobject.GObject):
+        self.emit_redraw_request()
+        
+    def icon_item_normal(self):
+        '''
+        Set item with normal status.
+        
+        This is IconView interface, you should implement it.
+        '''
+        self.highlight_flag = False
+        
+        self.emit_redraw_request()
+    
+    def icon_item_button_press(self, x, y):
+        '''
+        Handle button-press event.
+        
+        This is IconView interface, you should implement it.
+        '''
+        pass        
+    
+    def icon_item_button_release(self, x, y):
+        '''
+        Handle button-release event.
+        
+        This is IconView interface, you should implement it.
+        '''
+        pass
+    
+    def icon_item_single_click(self, x, y):
+        '''
+        Handle single click event.
+        
+        This is IconView interface, you should implement it.
+        '''
+        pass
+
+    def icon_item_double_click(self, x, y):
+        '''
+        Handle double click event.
+        
+        This is IconView interface, you should implement it.
+        '''
+        pass
+    
+    def icon_item_release_resource(self):
+        '''
+        Release item resource.
+
+        If you have pixbuf in item, you should release memory resource like below code:
+
+        >>> if self.pixbuf:
+        >>>     del self.pixbuf
+        >>>     self.pixbuf = None
+        >>>
+        >>> return True
+
+        This is IconView interface, you should implement it.
+        
+        @return: Return True if do release work, otherwise return False.
+        
+        When this function return True, IconView will call function gc.collect() to release object to release memory.
+        '''
+        return False
+
+class RadioListItem(gobject.GObject):
     
     __gsignals__ = {"redraw-request" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()), }
     
@@ -372,12 +555,12 @@ class RadioItem(gobject.GObject):
         padding_y = 10
         draw_pixbuf(cr, self.normal_pixbuf, rect.x + padding_x, icon_y)
         
-        draw_text(cr, self.channel_name, rect.x + icon_pixbuf.get_width() + padding_x * 2, 
+        draw_text(cr, utils.xmlescape(self.channel_name), rect.x + icon_pixbuf.get_width() + padding_x * 2, 
                   rect.y + padding_y, rect.width - icon_pixbuf.get_width() - padding_x * 2, self.name_h, 
                   text_color = text_color,
                   alignment=pango.ALIGN_LEFT, text_size=9)    
         
-        draw_text(cr, self.detail_info, rect.x + icon_pixbuf.get_width() + padding_x * 2, 
+        draw_text(cr, utils.xmlescape(self.detail_info), rect.x + icon_pixbuf.get_width() + padding_x * 2, 
                   rect.y + (rect.height - self.detail_h - padding_y), 
                   rect.width - icon_pixbuf.get_width() - padding_x * 2, self.detail_h, 
                   text_color = text_color,
@@ -393,7 +576,7 @@ class RadioItem(gobject.GObject):
         return hash(self.channel_info.get("id"))
     
     def __repr__(self):
-        return "<RaidoItem %s>" % self.channel_info.get("id")
+        return "<RadioItem %s>" % self.channel_info.get("id")
     
     def __cmp__(self, other_item):
         if not other_item:

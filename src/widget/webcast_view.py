@@ -33,6 +33,7 @@ from helper import Dispatcher
 from player import Player
 from song import Song
 
+import utils
     
 class WebcastItem(gobject.GObject):    
     
@@ -82,7 +83,7 @@ class WebcastItem(gobject.GObject):
         padding_x = 10
         draw_pixbuf(cr, icon_pixbuf, rect.x + padding_x, icon_y)    
             
-        draw_text(cr, self.webcast.get_str("title"), rect.x + icon_pixbuf.get_width() + padding_x * 2, 
+        draw_text(cr, utils.xmlescape(self.webcast.get_str("title")), rect.x + icon_pixbuf.get_width() + padding_x * 2, 
                   rect.y, rect.width - icon_pixbuf.get_width() - padding_x * 2, rect.height, 
                   text_color = text_color,
                   alignment=pango.ALIGN_LEFT, text_size=9)    

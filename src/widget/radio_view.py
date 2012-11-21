@@ -25,14 +25,17 @@ import gobject
 import pango
 from dtk.ui.listview import ListView
 from dtk.ui.draw import draw_pixbuf, draw_text
+from dtk.ui.iconview import IconView
+from dtk.ui.threads import post_gui
 
-from widget.ui_utils import draw_single_mask, draw_alpha_mask
+from widget.ui_utils import draw_single_mask, draw_alpha_mask, draw_line
 from widget.skin import app_theme
-from widget.radio_item import RadioItem
+from widget.radio_item import RadioListItem, MoreIconItem, CommonIconItem
 from helper import Dispatcher
 from player import Player
 from song import Song
 from doubanfm import fmlib
+from cover_manager import cover_thread_pool
 
 import utils
 
@@ -69,7 +72,8 @@ class RadioView(ListView):
         self.emit("begin-add-items")
         
     def on_dispatcher_play_radio(self, obj, channel_info):    
-        self.add_items([RadioItem(channel_info)])
+        self.add_items([RadioListItem(channel_info)])
+        self.fetch_playlist(channel_info.get("id"), True)
         
     def on_double_click_item(self, widget, item, column, x, y):    
         if item:
@@ -104,3 +108,71 @@ class RadioView(ListView):
         if self.current_index < 0:
             self.current_index = 0
         return self.playlist[self.current_index]    
+    
+TAG_HOT = 1    
+TAG_FAST = 2
+TAG_GENRE = 3
+
+class RadioIconView(IconView):    
+    
+    def __init__(self, tag, *args, **kwargs):
+        IconView.__init__(self, *args, **kwargs)
+        
+        # targets = [("text/deepin-songs", gtk.TARGET_SAME_APP, 1), ("text/uri-list", 0, 2)]
+        # icon_view.drag_source_set(gtk.gdk.BUTTON1_MASK, targets, gtk.gdk.ACTION_COPY)
+        # icon_view.connect("drag-data-get", self.__on_drag_data_get) 
+        # icon_view.connect("double-click-item", self.on_iconview_double_click_item)
+        self.tag = tag
+        self.__start = 0
+        self.__limit = 20
+        self.__fetch_thread_id = 0
+        self.__render_id = 0
+        
+        self.connect("single-click-item", self.on_iconview_single_click_item)
+        self.add_items([MoreIconItem()])
+        
+    def on_iconview_single_click_item(self, widget, item, x, y):    
+        if item:
+            if hasattr(item, "is_more"):
+                self.__fetch_thread_id += 1
+                utils.ThreadFetch(
+                    fetch_funcs=(self.fetch_channels, (self.__start,)),
+                    success_funcs=(self.load_channels, (self.__fetch_thread_id, self.__start))).start()
+            else:    
+                if item.mask_flag:
+                    Dispatcher.emit("play-radio", item.chl)
+                
+    def fetch_channels(self, start=0, limit=20):    
+        if self.tag == TAG_HOT:
+            ret = fmlib.get_hot_chls(start, limit)
+        elif self.tag == TAG_FAST:    
+            ret = fmlib.get_uptrending_chls(start, limit)
+        return  ret.get("data", {}).get("channels", [])
+            
+    @post_gui
+    def load_channels(self, channels, thread_id, start):
+        channel_items = []
+        thread_items = []
+        if thread_id != self.__fetch_thread_id:
+            return
+        for hot_chl in channels:
+            common_item = CommonIconItem(hot_chl)
+            if not common_item.is_loaded_cover:
+                thread_items.append(common_item)
+            channel_items.append(common_item)    
+            
+        if thread_items:    
+            cover_thread_pool.add_missions(thread_items)
+        self.add_items(channel_items, -1)    
+        self.__start = start + self.__limit
+        
+    def add_radios(self, items):    
+        pass
+    
+            
+    def draw_mask(self, cr, x, y, w, h):    
+        draw_alpha_mask(cr, x, y, w, h ,"layoutRight")
+        draw_line(cr, (x + 1, y), 
+                  (x + 1, y + h), "#b0b0b0")
+        return False
+    

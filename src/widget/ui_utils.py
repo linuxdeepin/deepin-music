@@ -33,6 +33,9 @@ from widget.skin import app_theme
 from utils import color_hex_to_cairo
 from constant import DEFAULT_FONT_SIZE
 
+import utils
+
+
 def container_remove_all(container):
     ''' Removee all child widgets for container. '''
     container.foreach(lambda widget: container.remove(widget))
@@ -73,7 +76,7 @@ def draw_item_mask(cr, x, y, width, height, name):
                  app_theme.get_shadow_color(name).get_color_info())
     
 def render_text(cr, content, rect, color, font_size, align=pango.ALIGN_CENTER):    
-    draw_text(cr, content, rect.x, rect.y, rect.width, rect.height, font_size, color, alignment=align)
+    draw_text(cr, utils.xmlescape(content), rect.x, rect.y, rect.width, rect.height, font_size, color, alignment=align)
     
 def render_item_text(cr, content, rect, in_select, in_highlight, align=pango.ALIGN_LEFT, font_size=8, error=False):
     if in_select or in_highlight:
@@ -83,7 +86,7 @@ def render_item_text(cr, content, rect, in_select, in_highlight, align=pango.ALI
 
     if error:    
         color = "#ff0000"        
-    draw_text(cr, content, rect.x, rect.y, rect.width, rect.height, font_size, color, alignment=align)
+    draw_text(cr, utils.xmlescape(content), rect.x, rect.y, rect.width, rect.height, font_size, color, alignment=align)
     
 def create_separator_box(padding_x=0, padding_y=0):    
     separator_box = HSeparator(

@@ -88,7 +88,8 @@ class WebcastTreeItem(TreeItem):
         if self.is_select:
             draw_single_mask(cr, rect.x, rect.y, rect.w, rect.h, "simpleItemSelect")
             
-        draw_text(cr, self.name, rect.x, rect.y, rect.w, rect.h)    
+        draw_text(cr, utils.xmlescape(self.name), rect.x, rect.y, rect.w, rect.h)    
+        
         
 class WebcastListItem(gobject.GObject):
     
@@ -261,7 +262,7 @@ class CategroyItem(TreeItem):
         else:    
             text_color = app_theme.get_color("labelText").get_color()
             
-        draw_text(cr, self.title, rect.x, rect.y, rect.width, rect.height, text_size=10, 
+        draw_text(cr, utils.xmlescape(self.title), rect.x, rect.y, rect.width, rect.height, text_size=10, 
                   text_color = text_color,
                   alignment=pango.ALIGN_CENTER)    
         
@@ -357,7 +358,7 @@ class CustomItem(TreeItem):
         else:    
             text_color = app_theme.get_color("labelText").get_color()
             
-        draw_text(cr, self.title, rect.x, rect.y, rect.width, rect.height, text_size=10, 
+        draw_text(cr, utils.xmlescape(self.title), rect.x, rect.y, rect.width, rect.height, text_size=10, 
                   text_color = text_color,
                   alignment=pango.ALIGN_CENTER)    
         
@@ -421,7 +422,7 @@ class PanelItem(gobject.GObject):
             if self.has_underline:            
                 self.underline = True
             color = app_theme.get_color("simpleItemSelect").get_color()
-        draw_text(cr, self.title, rect.x, rect.y, rect.width, rect.height, text_color=color, underline=self.underline)
+        draw_text(cr, utils.xmlescape(self.title), rect.x, rect.y, rect.width, rect.height, text_color=color, underline=self.underline)
         
     def get_size(self):    
         return get_content_size(self.title, DEFAULT_FONT_SIZE)

@@ -36,6 +36,8 @@ from widget.skin import app_theme
 from widget.ui_utils import draw_alpha_mask, draw_line
 from helper import Dispatcher
 
+import utils
+
 class NormalWindow(Window):
     
     def __init__(self):
@@ -126,7 +128,7 @@ class ComplexButton(gtk.Button):
         draw_pixbuf(cr, icon_pixbuf, rect.x + self.left_padding, icon_y)
         
         # Draw label.
-        draw_text(cr, self.content, rect.x + self.left_padding + self.label_padding + icon_pixbuf.get_width(),
+        draw_text(cr, utils.xmlescape(self.content), rect.x + self.left_padding + self.label_padding + icon_pixbuf.get_width(),
                   rect.y, rect.width - self.left_padding - self.label_padding - icon_pixbuf.get_width(), rect.height,
                   self.font_size, text_color="#FFFFFF")
         
@@ -494,7 +496,7 @@ class CoverPopupNotify(Window):
             cr.save()
             cr.rectangle(tx, ty, intro_tw, intro_th)
             cr.clip()
-            draw_text(cr, intro_text, tx, ty, intro_tw, intro_th, text_size=9,
+            draw_text(cr, utils.xmlescape(intro_text), tx, ty, intro_tw, intro_th, text_size=9,
                       text_color="#878787", wrap_width=tw)
             cr.restore()
 
@@ -519,7 +521,7 @@ class CoverPopupNotify(Window):
         cr.save()
         cr.rectangle(tx, new_ty, hotsongs_tw, hotsongs_th)
         cr.clip()
-        draw_text(cr, hotsongs_text, tx, new_ty, hotsongs_tw, hotsongs_th, text_size=9,
+        draw_text(cr, utils.xmlescape(hotsongs_text), tx, new_ty, hotsongs_tw, hotsongs_th, text_size=9,
                   text_color="#878787", wrap_width=tw)
         return True
     
