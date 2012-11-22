@@ -46,7 +46,7 @@ class GenreItem(object):
     def __init__(self, title, is_select=False):
         self.hover_flag = False
         self.highlight_flag = False
-        self.title = title
+        self.title = utils.xmlescape(title)
         self.underline_flag = False
         self.redraw_request_callback = None
         self.is_select = is_select
@@ -63,7 +63,7 @@ class GenreItem(object):
             color = app_theme.get_color("simpleItemSelect").get_color()            
         else:    
             color = "#333333"
-        draw_text(cr, utils.xmlescape(self.title), rect.x, rect.y, rect.width, rect.height,
+        draw_text(cr, self.title, rect.x, rect.y, rect.width, rect.height,
                   text_color=color, underline=self.underline_flag)
         
     def get_size(self):    

@@ -136,19 +136,17 @@ class ComplexButton(gtk.Button):
 
 gobject.type_register(ComplexButton)    
 
-class SearchButton(gtk.EventBox):
+class SearchButton(gtk.Button):
     
     def __init__(self):
-        gtk.EventBox.__init__(self)
-        self.set_visible_window(False)
-        
+        gtk.Button.__init__(self)
         # Init signals.
         self.connect("expose-event", self.on_expose_event)
-        
+
         # Init DPixbufs.
-        self.normal_dpixbuf = app_theme.get_pixbuf("toolbar/search_normal.png")
-        self.hover_dpixbuf = app_theme.get_pixbuf("toolbar/search_hover.png")
-        self.press_dpixbuf = app_theme.get_pixbuf("toolbar/search_press.png")
+        self.normal_dpixbuf = app_theme.get_pixbuf("search/search_normal.png")
+        self.hover_dpixbuf = app_theme.get_pixbuf("search/search_hover.png")
+        self.press_dpixbuf = app_theme.get_pixbuf("search/search_press.png")
         
     def on_expose_event(self, widget, event):    
         cr = widget.window.cairo_create()
@@ -447,15 +445,17 @@ class CoverPopupNotify(Window):
     def init_size(self):    
         tw = self.default_width - self.padding_x * 2
         intro = self.channel_info.get("intro", "").strip()
-        intro_text = "%s: %s" % ("简介", intro)
+        intro = utils.xmlescape(intro)
+        intro_text = "<b>%s:</b> %s" % ("简介", intro)
         intro_th = 0
         if intro:
             intro_tw, intro_th = get_content_size(intro_text, wrap_width=tw,text_size=9)
             if intro_th > self.line_height * 2:
                 intro_th = self.line_height * 2
                 
-        hotsongs =  " / ".join(self.channel_info.get("hot_songs", []))
-        hotsongs_text = "%s: %s" % ("热门歌曲", hotsongs)
+        hotsongs =  " / ".join(self.channel_info.get("hot_songs", [])).strip()
+        hotsongs = utils.xmlescape(hotsongs)
+        hotsongs_text = "<b>%s:</b> %s" % ("热门歌曲", hotsongs)
         hotsongs_tw, hotsongs_th = get_content_size(hotsongs_text, wrap_width=tw,text_size=9)
         if hotsongs_th > self.line_height * 2:
             hotsongs_th = self.line_height * 2
@@ -488,16 +488,17 @@ class CoverPopupNotify(Window):
         tx = rect.x + self.padding_x        
         ty = rect.y + self.padding_y
         tw = rect.width - self.padding_x * 2
-        intro = self.channel_info.get("intro", "")
+        intro = self.channel_info.get("intro", "").strip()
+        intro = utils.xmlescape(intro)
         if intro:
-            intro_text = "%s: %s" % ("简介", intro)
+            intro_text = "<b>%s:</b> %s" % ("简介", intro)
             intro_tw, intro_th = get_content_size(intro_text, wrap_width=tw,text_size=9)
             if intro_th > self.line_height * 2:
                 intro_th = self.line_height * 2
             cr.save()
             cr.rectangle(tx, ty, intro_tw, intro_th)
             cr.clip()
-            draw_text(cr, utils.xmlescape(intro_text), tx, ty, intro_tw, intro_th, text_size=9,
+            draw_text(cr, intro_text, tx, ty, intro_tw, intro_th, text_size=9,
                       text_color="#878787", wrap_width=tw)
             cr.restore()
 
@@ -509,8 +510,9 @@ class CoverPopupNotify(Window):
                 cr.stroke()
                 cr.restore()
             
-        hotsongs =  " / ".join(self.channel_info.get("hot_songs", []))
-        hotsongs_text = "%s: %s" % ("热门歌曲", hotsongs)
+        hotsongs =  " / ".join(self.channel_info.get("hot_songs", [])).strip()
+        hotsongs = utils.xmlescape(hotsongs)
+        hotsongs_text = "<b>%s:</b> %s" % ("热门歌曲", hotsongs)
         if intro:
             new_ty = ty + intro_th + self.line_height * 2
         else:    
@@ -522,7 +524,7 @@ class CoverPopupNotify(Window):
         cr.save()
         cr.rectangle(tx, new_ty, hotsongs_tw, hotsongs_th)
         cr.clip()
-        draw_text(cr, utils.xmlescape(hotsongs_text), tx, new_ty, hotsongs_tw, hotsongs_th, text_size=9,
+        draw_text(cr, hotsongs_text, tx, new_ty, hotsongs_tw, hotsongs_th, text_size=9,
                   text_color="#878787", wrap_width=tw)
         return True
     

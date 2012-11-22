@@ -25,6 +25,7 @@ from dtk.ui.utils import get_content_size
 from dtk.ui.constant import ALIGN_START, ALIGN_END
 
 from widget.ui_utils import render_item_text
+import utils
 
 DEFAULT_FONT_SIZE = 8
 
@@ -53,11 +54,11 @@ class SongItem(gobject.GObject):
         '''update'''
         self.song = song
         
-        self.title = song.get_str("title")
-        self.artist = song.get_str("artist")
-        self.length = song.get_str("#duration")
-        self.add_time = song.get_str("#added")
-        self.album = song.get_str("album")
+        self.title = utils.xmlescape(song.get_str("title"))
+        self.artist = utils.xmlescape(song.get_str("artist"))
+        self.length = utils.xmlescape(song.get_str("#duration"))
+        self.add_time = utils.xmlescape(song.get_str("#added"))
+        self.album = utils.xmlescape(song.get_str("album"))
         
         # Calculate item size.
         self.title_padding_x = 10

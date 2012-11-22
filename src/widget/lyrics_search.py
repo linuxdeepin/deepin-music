@@ -188,8 +188,8 @@ class SearchItem(gobject.GObject):
     
     def update(self, lrc_list):    
         self.__url = lrc_list[2]
-        self.title  = lrc_list[1]
-        self.artist = lrc_list[0]
+        self.title  = utils.xmlescape(lrc_list[1])
+        self.artist = utils.xmlescape(lrc_list[0])
         self.netcode = lrc_list[3]
         
         # Calculate item size.

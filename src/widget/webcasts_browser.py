@@ -88,7 +88,7 @@ class WebcastTreeItem(TreeItem):
         if self.is_select:
             draw_single_mask(cr, rect.x, rect.y, rect.w, rect.h, "simpleItemSelect")
             
-        draw_text(cr, utils.xmlescape(self.name), rect.x, rect.y, rect.w, rect.h)    
+        draw_text(cr, self.name, rect.x, rect.y, rect.w, rect.h)    
         
         
 class WebcastListItem(gobject.GObject):
@@ -218,7 +218,7 @@ class CategroyItem(TreeItem):
         self.column_index = 0
         self.side_padding = 5
         self.item_height = 37
-        self.title = title
+        self.title = utils.xmlescape(title)
         self.item_width = 121
         self.webcast_key = webcast_key
         self.hover_bg = app_theme.get_pixbuf("webcast/categroy_bg.png").get_pixbuf()
@@ -262,7 +262,7 @@ class CategroyItem(TreeItem):
         else:    
             text_color = app_theme.get_color("labelText").get_color()
             
-        draw_text(cr, utils.xmlescape(self.title), rect.x, rect.y, rect.width, rect.height, text_size=10, 
+        draw_text(cr, self.title, rect.x, rect.y, rect.width, rect.height, text_size=10, 
                   text_color = text_color,
                   alignment=pango.ALIGN_CENTER)    
         
@@ -316,7 +316,7 @@ class CustomItem(TreeItem):
         self.column_index = 0
         self.side_padding = 5
         self.item_height = 37
-        self.title = title
+        self.title = utils.xmlescape(title)
         self.item_width = 121
         self.hover_bg = app_theme.get_pixbuf("webcast/categroy_bg.png").get_pixbuf()
         self.press_callback = callback
@@ -358,7 +358,7 @@ class CustomItem(TreeItem):
         else:    
             text_color = app_theme.get_color("labelText").get_color()
             
-        draw_text(cr, utils.xmlescape(self.title), rect.x, rect.y, rect.width, rect.height, text_size=10, 
+        draw_text(cr, self.title, rect.x, rect.y, rect.width, rect.height, text_size=10, 
                   text_color = text_color,
                   alignment=pango.ALIGN_CENTER)    
         
@@ -404,7 +404,7 @@ class PanelItem(gobject.GObject):
         self.hover_flag = False
         self.allocation_widget = allocation_widget
         self.highlight_flag = False
-        self.owner_key = self.title = title
+        self.owner_key = self.title = utils.xmlescape(title)
         self.parent_key = parent
         self.has_underline = True
         
@@ -422,7 +422,7 @@ class PanelItem(gobject.GObject):
             if self.has_underline:            
                 self.underline = True
             color = app_theme.get_color("simpleItemSelect").get_color()
-        draw_text(cr, utils.xmlescape(self.title), rect.x, rect.y, rect.width, rect.height, text_color=color, underline=self.underline)
+        draw_text(cr, self.title, rect.x, rect.y, rect.width, rect.height, text_color=color, underline=self.underline)
         
     def get_size(self):    
         return get_content_size(self.title, DEFAULT_FONT_SIZE)

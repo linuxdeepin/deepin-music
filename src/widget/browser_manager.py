@@ -55,8 +55,8 @@ class BrowserMananger(gtk.VBox):
         self.bottom_box = gtk.VBox()
         self.global_search = GlobalSearch()
         
-        # self.bottom_box.add(self.local_browser)
-        self.bottom_box.add(self.global_search)
+        self.bottom_box.add(self.local_browser)
+        # self.bottom_box.add(self.global_search)
         self.bottom_box_align = gtk.Alignment()
         self.bottom_box_align.set_padding(0, 0, 1, 2)
         self.bottom_box_align.set(1, 1, 1, 1)

@@ -86,7 +86,7 @@ def render_item_text(cr, content, rect, in_select, in_highlight, align=pango.ALI
 
     if error:    
         color = "#ff0000"        
-    draw_text(cr, utils.xmlescape(content), rect.x, rect.y, rect.width, rect.height, font_size, color, alignment=align)
+    draw_text(cr, content, rect.x, rect.y, rect.width, rect.height, font_size, color, alignment=align)
     
 def create_separator_box(padding_x=0, padding_y=0):    
     separator_box = HSeparator(

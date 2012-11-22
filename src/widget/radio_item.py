@@ -580,11 +580,11 @@ class RadioListItem(gobject.GObject):
         self.emit("redraw-request")
         
     def update_size(self):    
-        self.channel_name = self.channel_info.get("name", "")
+        self.channel_name = utils.xmlescape(self.channel_info.get("name", ""))
         __, self.name_h = get_content_size(self.channel_name, text_size=9)
         
         self.detail_info = "%s首歌曲 %s制作" % (self.channel_info.get("song_num"),
-                                       self.channel_info.get("creator", {}).get("name", ""))
+                                       utils.xmlescape(self.channel_info.get("creator", {}).get("name", "")))
         __, self.detail_h = get_content_size(self.detail_info, text_size=8)
     
     
@@ -601,12 +601,12 @@ class RadioListItem(gobject.GObject):
         padding_y = 10
         draw_pixbuf(cr, self.normal_pixbuf, rect.x + padding_x, icon_y)
         
-        draw_text(cr, utils.xmlescape(self.channel_name), rect.x + icon_pixbuf.get_width() + padding_x * 2, 
+        draw_text(cr, self.channel_name, rect.x + icon_pixbuf.get_width() + padding_x * 2, 
                   rect.y + padding_y, rect.width - icon_pixbuf.get_width() - padding_x * 2, self.name_h, 
                   text_color = text_color,
                   alignment=pango.ALIGN_LEFT, text_size=9)    
         
-        draw_text(cr, utils.xmlescape(self.detail_info), rect.x + icon_pixbuf.get_width() + padding_x * 2, 
+        draw_text(cr, self.detail_info, rect.x + icon_pixbuf.get_width() + padding_x * 2, 
                   rect.y + (rect.height - self.detail_h - padding_y), 
                   rect.width - icon_pixbuf.get_width() - padding_x * 2, self.detail_h, 
                   text_color = text_color,
