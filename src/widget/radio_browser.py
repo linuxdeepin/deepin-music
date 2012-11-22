@@ -25,7 +25,6 @@ import gobject
 
 from dtk.ui.new_treeview import TreeView
 from dtk.ui.paned import HPaned
-from dtk.ui.scrolled_window import ScrolledWindow
 
 from widget.radio_item import CategroyTreeItem
 from widget.skin import app_theme
@@ -58,14 +57,10 @@ class RadioBrowser(gtk.VBox):
         
         self.page_box = gtk.VBox()
         self.page_box.add(self.home_page)
-        page_box_align = gtk.Alignment()
-        page_box_align.set_padding(0, 0, 0, 2)
-        page_box_align.set(1, 1, 1, 1)
-        page_box_align.add(self.page_box)
         
         body_paned = HPaned(handle_color=app_theme.get_color("panedHandler"))
         body_paned.add1(self.radiobar)
-        body_paned.add2(page_box_align)
+        body_paned.add2(self.page_box)
         self.add(body_paned)
         
     def __init_radiobar(self):    
@@ -82,13 +77,8 @@ class RadioBrowser(gtk.VBox):
         
     def on_radiobar_draw_mask(self, cr, x, y, w, h):    
         draw_alpha_mask(cr, x, y, w, h ,"layoutRight")
-        draw_line(cr, (x + 1, y), 
-                  (x + 1, y + h), "#b0b0b0")
-        return False
     
     def get_radio_icon_view(self, tag, limit=10, padding_x=0, padding_y=10):
         icon_view = RadioIconView(tag=tag, limit=limit, padding_x=padding_x, padding_y=padding_y)
-        scrolled_window = ScrolledWindow()
-        scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
-        scrolled_window.add_child(icon_view)
+        scrolled_window = icon_view.get_scrolled_window()
         return icon_view, scrolled_window

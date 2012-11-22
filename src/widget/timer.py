@@ -177,7 +177,24 @@ class SongTimer(gtk.HBox):
 class VolumeSlider(gtk.VBox):
     def __init__(self):
         super(VolumeSlider, self).__init__()
-        self.volume_progressbar = VolumeButton(volume_y=2, scroll_bool=True)
+        self.volume_progressbar = VolumeButton(
+            zero_volume_normal_pixbuf = app_theme.get_pixbuf("volume/zero_normal.png"),
+            zero_volume_hover_pixbuf = app_theme.get_pixbuf("volume/zero_hover.png"),
+            zero_volume_press_pixbuf = app_theme.get_pixbuf("volume/zero_press.png"),
+            min_volume_normal_pixbuf = app_theme.get_pixbuf("volume/low_normal.png"),
+            min_volume_hover_pixbuf = app_theme.get_pixbuf("volume/low_hover.png"),
+            min_volume_press_pixbuf = app_theme.get_pixbuf("volume/low_press.png"),
+            mid_volume_normal_pixbuf = app_theme.get_pixbuf("volume/medium_normal.png"),
+            mid_volume_hover_pixbuf = app_theme.get_pixbuf("volume/medium_hover.png"),
+            mid_volume_press_pixbuf = app_theme.get_pixbuf("volume/medium_press.png"),
+            max_volume_normal_pixbuf = app_theme.get_pixbuf("volume/high_normal.png"),
+            max_volume_hover_pixbuf = app_theme.get_pixbuf("volume/high_hover.png"),
+            max_volume_press_pixbuf = app_theme.get_pixbuf("volume/high_press.png"),
+            mute_volume_normal_pixbuf = app_theme.get_pixbuf("volume/mute_normal.png"),
+            mute_volume_hover_pixbuf = app_theme.get_pixbuf("volume/mute_hover.png"),
+            mute_volume_press_pixbuf = app_theme.get_pixbuf("volume/mute_press.png"),
+            point_volume_pixbuf = app_theme.get_pixbuf("volume/point.png"),
+            volume_y=2, scroll_bool=True)
         Tooltip.custom(self.volume_progressbar, self.get_tip_label).always_update(self.volume_progressbar, True)
         self.volume_progressbar.set_size_request(92, 30)
         self.volume_progressbar.connect("volume-state-changed",self.__volume_changed)

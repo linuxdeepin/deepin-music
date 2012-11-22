@@ -201,9 +201,9 @@ class VolumeButton(gtk.Button):
         self.volumebar.connect("value-changed", self.on_volumebar_value_changed)
         
     def update_status_icons(self, name, redraw=False):
-        self.normal_dpixbuf = app_theme.get_pixbuf("volume/volume_%s_normal.png" % name)
-        self.hover_dpixbuf = app_theme.get_pixbuf("volume/volume_%s_hover.png" % name)
-        self.press_dpixbuf = app_theme.get_pixbuf("volume/volume_%s_press.png" % name)        
+        self.normal_dpixbuf = app_theme.get_pixbuf("volume/%s_normal.png" % name)
+        self.hover_dpixbuf = app_theme.get_pixbuf("volume/%s_hover.png" % name)
+        self.press_dpixbuf = app_theme.get_pixbuf("volume/%s_press.png" % name)        
         if redraw: self.queue_draw()
         
     def on_volumebar_value_changed(self, widget, value):    

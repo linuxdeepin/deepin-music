@@ -125,9 +125,7 @@ class PlaylistItem(gobject.GObject):
         self.song_view.add_songs(songs)
         self.song_view.connect("begin-add-items", lambda w: self.switch_it())
         self.song_view.connect("empty-items", lambda w: self.switch_it(False))
-        self.scrolled_window = ScrolledWindow(0, 0)
-        self.scrolled_window.add_child(self.song_view)
-        self.scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+        self.scrolled_window = self.song_view.get_scrolled_window()
         self.scrolled_window.set_size_request(195, -1)
         self.title = playlist.get_name()
         

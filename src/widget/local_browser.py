@@ -254,9 +254,9 @@ class Browser(gtk.VBox, SignalContainer):
         gobject.timeout_add(self.update_interval, self.on_interval_loaded_view)
         
         # The saving song Classification presented to the user.
-        self.artists_view, self.artists_sw  = self.get_icon_view(20)
-        self.albums_view,  self.albums_sw   = self.get_icon_view(20)
-        self.genres_view,  self.genres_sw   = self.get_icon_view(20)
+        self.artists_view, self.artists_sw  = self.get_icon_view(16)
+        self.albums_view,  self.albums_sw   = self.get_icon_view(16)
+        self.genres_view,  self.genres_sw   = self.get_icon_view(16)
         self.folders_view, self.folders_sw  = self.get_icon_view(22)
         self.folders_view.connect("motion-notify-item", self.on_folders_view_motion_notify)
         
@@ -292,17 +292,10 @@ class Browser(gtk.VBox, SignalContainer):
         left_vbox.pack_start(self.filterbar, False, False)
         left_vbox.pack_start(create_separator_box(), False, False)
         left_vbox.pack_start(self.importbar, False, False)
-        left_vbox.connect("expose-event", self.on_left_vbox_expose)
         
         # Used to switch songs category view, in the right side of the layout.
         self.switch_view_box = gtk.VBox()
         self.switch_view_box.add(self.artists_sw)
-        
-        # Combination widget.
-        switch_view_align = gtk.Alignment()
-        switch_view_align.set_padding(0, 0, 0, 2)
-        switch_view_align.set(1, 1, 1, 1)
-        switch_view_align.add(self.switch_view_box)
         
         # Control back on a view.
         self.back_hbox = gtk.HBox()
@@ -332,12 +325,7 @@ class Browser(gtk.VBox, SignalContainer):
         # Layout on the right.
         content_box = gtk.VBox(spacing=5)
         content_box.pack_start(search_hbox_align, False, False)
-        content_box.pack_start(switch_view_align, True, True)
-        content_box.connect("expose-event", self.on_contentbox_expose_event)
-        
-        # body_box = gtk.HBox()
-        # body_box.pack_start(left_vbox, False, False)
-        # body_box.pack_start(content_box, True, True)
+        content_box.pack_start(self.switch_view_box, True, True)
         
         body_paned = HPaned(handle_color=app_theme.get_color("panedHandler"))
         body_paned.add1(left_vbox)
@@ -375,9 +363,7 @@ class Browser(gtk.VBox, SignalContainer):
         song_view = MultiDragSongView()
         song_view.keymap.update({"BackSpace" : self.on_songview_backspace_press})        
         song_view.add_titles([_("Title"), _("Artist"), _("Album"), _("Added time")])
-        scrolled_window = ScrolledWindow(0, 0)
-        scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
-        scrolled_window.add_child(song_view)
+        scrolled_window = song_view.get_scrolled_window()
         return song_view, scrolled_window
     
     def connect_to_db(self):
@@ -592,25 +578,9 @@ class Browser(gtk.VBox, SignalContainer):
             self.back_hbox.hide_all()
             self.back_hbox.set_no_show_all(True)
             switch_tab(self.switch_view_box, widget)
-            
-    def on_left_vbox_expose(self, widget, event):        
-        cr = widget.window.cairo_create()
-        rect = widget.allocation
-        draw_alpha_mask(cr, rect.x, rect.y, rect.width, rect.height, "layoutRight")
-        # draw_line(cr, (rect.x + rect.width, rect.y), 
-        #           (rect.x + rect.width, rect.y + rect.height), "#dfe0e0")
-        draw_line(cr, (rect.x + 1, rect.y), 
-                  (rect.x + 1, rect.y + rect.height), "#b0b0b0")
-        
-        return False
     
     def on_iconview_draw_mask(self, cr, x, y, width, height):
         draw_alpha_mask(cr, x, y, width, height, "layoutLast")
-        
-    def on_contentbox_expose_event(self, widget, event):    
-        cr = widget.window.cairo_create()
-        rect = widget.allocation
-        draw_alpha_mask(cr, rect.x, rect.y, rect.width- 2, rect.height, "layoutLast")
         
 class SimpleBrowser(Browser):    
     _type = ["local", "cue"]

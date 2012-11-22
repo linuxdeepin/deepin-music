@@ -166,7 +166,7 @@ class GenreSideBox(gtk.EventBox):
         cr = widget.window.cairo_create()
         rect = widget.allocation
         
-        draw_alpha_mask(cr, rect.x, rect.y, rect.width, rect.height ,"layoutRight")
+        # draw_alpha_mask(cr, rect.x, rect.y, rect.width, rect.height ,"layoutRight")
         
         with cairo_disable_antialias(cr):
             cr.set_source_rgb(*color_hex_to_cairo("#444444"))            
@@ -265,9 +265,7 @@ class GenrePage(gtk.VBox):
         
     def get_radio_icon_view(self):
         icon_view = RadioIconView(tag=TAG_GENRE, padding_x=0, padding_y=10)
-        scrolled_window = ScrolledWindow()
-        scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
-        scrolled_window.add_child(icon_view)
+        scrolled_window = icon_view.get_scrolled_window()
         return icon_view, scrolled_window
     
     def on_genreside_press_item(self, widget, key):

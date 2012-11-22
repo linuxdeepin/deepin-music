@@ -28,9 +28,10 @@ from dtk.ui.utils import (alpha_color_hex_to_cairo, cairo_disable_antialias,
 from widget.local_browser import SimpleBrowser
 from widget.webcasts_browser import WebcastsBrowser
 from widget.radio_browser import RadioBrowser
+from widget.global_search import GlobalSearch
 from widget.skin import app_theme
-from widget.ui import SearchBox, CustomEntry
-from widget.ui_utils import switch_tab
+from widget.ui import SearchBox
+from widget.ui_utils import switch_tab, draw_line, draw_alpha_mask
 from helper import Dispatcher
 
 class BrowserMananger(gtk.VBox):
@@ -39,33 +40,46 @@ class BrowserMananger(gtk.VBox):
         gtk.VBox.__init__(self)
         
         # Search Widgets at top.
-        self.search_entry = CustomEntry()
-        search_button = SearchBox()
-        search_button.set_size_request(85, 32)
-        top_hbox = gtk.HBox()        
-        top_hbox.pack_start(self.search_entry, False, True)
-        top_hbox.pack_start(search_button, False, False)
-        top_hbox.connect("realize", self.on_top_hbox_realize, 85)
-        top_hbox.connect("size-allocate", self.on_top_hbox_size_allocate, 85)
-
-        
-        top_hbox_align = gtk.Alignment()
-        top_hbox_align.connect("expose-event", self.on_top_hbox_expose)        
-        top_hbox_align.set_padding(0, 1, 1, 0)
-        top_hbox_align.set(0, 0, 1, 1)
-        top_hbox_align.add(top_hbox)
+        self.search_box = SearchBox()
+        self.search_box.connect("search", self.on_searchbox_search)
+        search_box_align = gtk.Alignment()
+        search_box_align.connect("expose-event", self.on_top_hbox_expose)        
+        search_box_align.set_padding(0, 1, 1, 0)
+        search_box_align.set(0, 0, 1, 1)
+        search_box_align.add(self.search_box)
         
         # Bottom widgets and is switchable.
         self.local_browser = SimpleBrowser()
         self.webcasts_browser = WebcastsBrowser()
         self.radio_browser = RadioBrowser()
         self.bottom_box = gtk.VBox()
-        self.bottom_box.add(self.local_browser)
+        self.global_search = GlobalSearch()
         
-        self.pack_start(top_hbox_align, False, True)
-        self.pack_start(self.bottom_box, True, True)
+        # self.bottom_box.add(self.local_browser)
+        self.bottom_box.add(self.global_search)
+        self.bottom_box_align = gtk.Alignment()
+        self.bottom_box_align.set_padding(0, 0, 1, 2)
+        self.bottom_box_align.set(1, 1, 1, 1)
+        self.bottom_box_align.add(self.bottom_box)
         
+        self.pack_start(search_box_align, False, True)
+        self.pack_start(self.bottom_box_align, True, True)
+        
+        self.connect("expose-event", self.on_expose_event)
         Dispatcher.connect("switch-browser", self.on_dispatcher_switch_browser)
+        
+        
+    def on_searchbox_search(self, widget, keyword):    
+        self.global_search.begin_search(keyword)    
+        
+    def on_expose_event(self, widget, event):    
+        cr = widget.window.cairo_create()
+        rect = widget.allocation
+        draw_alpha_mask(cr, rect.x, rect.y, rect.width - 2, rect.height ,"layoutRight")
+        
+        draw_line(cr, (rect.x + 1, rect.y), 
+                  (rect.x + 1, rect.y + rect.height), "#b0b0b0")
+        return False
         
     def on_dispatcher_switch_browser(self, obj, index):    
         if index == 0:

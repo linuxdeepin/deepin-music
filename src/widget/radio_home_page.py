@@ -23,7 +23,6 @@
 import gtk
 import gobject
 
-from dtk.ui.scrolled_window import ScrolledWindow
 from dtk.ui.threads import post_gui
 
 from widget.slide_switcher import SlideSwitcher
@@ -43,7 +42,6 @@ class HomePage(gtk.VBox):
     
     def __init__(self):
         gtk.VBox.__init__(self)
-        self.connect("expose-event", self.on_expose_event)
         self.set_spacing(5)        
         
         # home slider.
@@ -78,14 +76,7 @@ class HomePage(gtk.VBox):
         if tab_index == 1:    
             switch_tab(self.recommend_view_box, self.fast_recommend_sw)
         
-    def on_expose_event(self, widget, event):    
-        cr = widget.window.cairo_create()
-        rect = widget.allocation
-        draw_alpha_mask(cr, rect.x, rect.y, rect.width, rect.height, "layoutLast")
-        
     def get_icon_view(self, tag, padding_x=0, padding_y=0):    
         icon_view =RadioIconView(tag=tag, limit=8, has_add=False, padding_x=padding_x, padding_y=padding_y)
-        scrolled_window = ScrolledWindow()
-        scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
-        scrolled_window.add_child(icon_view)
+        scrolled_window = icon_view.get_scrolled_window()
         return icon_view, scrolled_window

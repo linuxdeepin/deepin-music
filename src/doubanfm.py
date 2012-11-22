@@ -251,8 +251,8 @@ class DoubanFM(Logger):
     def get_channel_detail(self, channel_id):
         return self.explore_request("channel_detail", channel_id=channel_id)
     
-    def get_search_chls(self, name, start=0, limit=20):
-        params = {"query" : urllib.quote(name), 
+    def get_search_chls(self, keyword, start=0, limit=20):
+        params = {"query" : keyword, 
                   "start" : start, "limit" : limit}
         return self.explore_request("search", extra_data=params)
     

@@ -28,6 +28,7 @@ from widget.ui_utils import render_item_text
 
 DEFAULT_FONT_SIZE = 8
 
+import utils
 
 class SongItem(gobject.GObject):
     '''song items for deepin-ui listview'''

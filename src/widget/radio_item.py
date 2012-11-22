@@ -243,9 +243,18 @@ class CommonIconItem(gobject.GObject, MissionThread):
             self.mask_flag = True
         else:    
             self.mask_flag = False
+            self.notify.hide_all()
         
         self.hover_flag = True
         self.emit_redraw_request()
+        
+    def try_show_notify(self, x, y):    
+        if self.mask_flag:
+            show_x = self.pixbuf_rect.x + self.pixbuf_rect.width + x
+            show_y = self.pixbuf_rect.y + self.pixbuf_rect.height + y
+            self.notify.show(show_x, show_y)
+        else:    
+            self.notify.hide_all()
         
     def pointer_in_pixbuf(self, x, y):    
         if self.pixbuf_rect is None: return False
@@ -263,6 +272,7 @@ class CommonIconItem(gobject.GObject, MissionThread):
         '''
         self.hover_flag = False
         self.mask_flag = False
+        self.notify.hide_all()
         
         self.emit_redraw_request()
         

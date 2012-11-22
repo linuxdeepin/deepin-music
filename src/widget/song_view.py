@@ -31,6 +31,7 @@ from dtk.ui.listview import ListView
 from dtk.ui.menu import Menu
 from dtk.ui.threads import post_gui
 from dtk.ui.dialog import InputDialog
+from dtk.ui.scrolled_window import ScrolledWindow
 
 import utils
 import common
@@ -546,6 +547,12 @@ class SongView(ListView):
                 item = self.get_valid_items()[0]
                 self.set_highlight(item)
                 Player.play_new(item.get_song(), seek=item.get_song().get("seek", None))
+                
+    def get_scrolled_window(self):   
+        scrolled_window = ScrolledWindow(0, 0)
+        scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+        scrolled_window.add_child(self)
+        return scrolled_window
 
 class MultiDragSongView(ListView):        
     def __init__(self):
@@ -689,3 +696,17 @@ class MultiDragSongView(ListView):
             right_menu.set_menu_item_sensitive_by_index(4, False)
             right_menu.set_menu_item_sensitive_by_index(7, False)
         right_menu.show((int(x), int(y)))    
+                
+    def get_scrolled_window(self):   
+        scrolled_window = ScrolledWindow(0, 0)
+        scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+        scrolled_window.add_child(self)
+        return scrolled_window
+    
+    def start_search_songs(self, keyword):
+        self.clear()
+        all_songs = MediaDB.get_songs_by_type("local")
+        result_songs = filter(lambda song: keyword.lower().replace(" ", "") in song.get("search", ""), all_songs)
+        
+        if result_songs:
+            self.add_songs(result_songs[:5])

@@ -29,7 +29,7 @@ from dtk.ui.titlebar import Titlebar
 from dtk.ui.utils import (move_window, alpha_color_hex_to_cairo, 
                           color_hex_to_cairo, cairo_disable_antialias,
                           propagate_expose, get_content_size)
-from dtk.ui.entry import InputEntry, Entry
+from dtk.ui.new_entry import InputEntry, Entry
 from dtk.ui.button import ImageButton
 from dtk.ui.draw import draw_pixbuf, draw_text, draw_round_rectangle, draw_vlinear
 from widget.skin import app_theme
@@ -136,7 +136,7 @@ class ComplexButton(gtk.Button):
 
 gobject.type_register(ComplexButton)    
 
-class SearchBox(gtk.EventBox):
+class SearchButton(gtk.EventBox):
     
     def __init__(self):
         gtk.EventBox.__init__(self)
@@ -188,7 +188,10 @@ class CustomEntry(gtk.VBox):
         # Init.
         gtk.VBox.__init__(self)
         self.entry = Entry(content)
-        self.add(self.entry)
+        entry_align = gtk.Alignment()
+        entry_align.set(0.5, 0.5, 1, 1)
+        entry_align.add(self.entry)
+        self.add(entry_align)
         self.connect("expose-event", self.expose_input_entry)
             
     def set_sensitive(self, sensitive):
@@ -211,8 +214,6 @@ class CustomEntry(gtk.VBox):
         # Init.
         cr = widget.window.cairo_create()
         rect = widget.allocation
-        x, y, w, h = rect.x, rect.y, rect.width, rect.height
-
         
         cr.set_source_rgba(*alpha_color_hex_to_cairo(("#FFFFFF", 0.9)))
         cr.rectangle(rect.x, rect.y, rect.width, rect.height)
@@ -528,3 +529,34 @@ class CoverPopupNotify(Window):
     def show(self, x, y):
         self.move(x, y)
         self.show_all()
+        
+class SearchBox(gtk.HBox):        
+    
+    __gsignals__ = {"search" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,))}
+    
+    def __init__(self):
+        gtk.HBox.__init__(self)
+        self.entry_box = CustomEntry()
+        self.search_button = SearchButton()
+        self.search_button.set_size_request(85, 32)
+        self.search_button.connect("button-press-event", self.on_search_button_press_event)
+        
+        self.pack_start(self.entry_box, False, True)
+        self.pack_start(self.search_button, False, False)
+        
+        self.connect("realize", self.on_realize, 85)
+        self.connect("size-allocate", self.on_size_allocate, 85)
+        
+    def on_realize(self, widget, size):    
+        rect = widget.allocation
+        self.entry_box.set_size(rect.width - size, 32)
+        widget.show_all()
+        
+    def on_size_allocate(self, widget, rect, size):
+        self.entry_box.set_size(rect.width - size, 32)
+        widget.show_all()
+        
+    def on_search_button_press_event(self, widget, event):    
+        keyword =  self.entry_box.get_text().strip()
+        if keyword:
+            self.emit("search", keyword)

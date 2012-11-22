@@ -27,6 +27,7 @@ from dtk.ui.listview import ListView
 from dtk.ui.draw import draw_pixbuf, draw_text
 from dtk.ui.iconview import IconView
 from dtk.ui.threads import post_gui
+from dtk.ui.scrolled_window import ScrolledWindow
 
 from widget.ui_utils import draw_single_mask, draw_alpha_mask, draw_line
 from widget.skin import app_theme
@@ -52,6 +53,7 @@ class RadioView(ListView):
         
         # self.connect_after("drag-data-received", self.on_drag_data_received)
         self.connect("double-click-item", self.on_double_click_item)
+
         # self.connect("button-press-event", self.on_button_press_event)
         # self.connect("delete-select-items", self.try_emit_empty_signal)
         Dispatcher.connect("play-radio", self.on_dispatcher_play_radio)
@@ -112,6 +114,7 @@ class RadioView(ListView):
 TAG_HOT = 1    
 TAG_FAST = 2
 TAG_GENRE = 3
+TAG_SEARCH = 4
 
 class RadioIconView(IconView):    
     
@@ -128,13 +131,19 @@ class RadioIconView(IconView):
         self.__fetch_thread_id = 0
         self.__render_id = 0
         self.__genre_id = "335"
+        self.__keyword = ""
         
         self.connect("single-click-item", self.on_iconview_single_click_item)
+        self.connect("motion-item", self.on_motion_item)        
         if has_add:
             self.add_items([MoreIconItem()])
         
     def set_genre_id(self, genre_id):    
         self.__genre_id = genre_id
+        self.__start = 0
+        
+    def set_keyword(self, keyword):    
+        self.__keyword = keyword
         self.__start = 0
         
     def on_iconview_single_click_item(self, widget, item, x, y):    
@@ -150,7 +159,6 @@ class RadioIconView(IconView):
         utils.ThreadFetch(
             fetch_funcs=(self.fetch_channels, (self.__start,)),
             success_funcs=(self.load_channels, (self.__fetch_thread_id, self.__start))).start()
-        
                 
     def fetch_channels(self, start):    
         if self.tag == TAG_HOT:
@@ -159,6 +167,8 @@ class RadioIconView(IconView):
             ret = fmlib.get_uptrending_chls(start=start, limit=self.__limit)
         elif self.tag == TAG_GENRE:    
             ret = fmlib.get_genre_chls(genre_id=self.__genre_id, start=start, limit=self.__limit)
+        elif self.tag == TAG_SEARCH:    
+            ret = fmlib.get_search_chls(keyword=self.__keyword, start=start, limit=self.__limit)
         return  ret.get("data", {}).get("channels", [])
             
     @post_gui
@@ -185,10 +195,18 @@ class RadioIconView(IconView):
             
     def draw_mask(self, cr, x, y, w, h):    
         draw_alpha_mask(cr, x, y, w, h ,"layoutRight")
-        draw_line(cr, (x + 1, y), 
-                  (x + 1, y + h), "#b0b0b0")
         return False
     
     def clear_items(self):
         self.clear()
         self.add_items([MoreIconItem()])
+        
+    def get_scrolled_window(self):   
+        scrolled_window = ScrolledWindow(0, 0)
+        scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+        scrolled_window.add_child(self)
+        return scrolled_window
+    
+    def on_motion_item(self, widget, item, x, y):
+        if not hasattr(item, "is_more"):
+            item.try_show_notify(x, y)
