@@ -58,7 +58,7 @@ class PlaylistItem(gobject.GObject):
         self.file_job_button = self.create_job_button("plus", _("Add Music"), self.song_view.recursion_add_dir)
 
         self.job_box = gtk.EventBox()
-        self.job_box.set_size_request(195, -1)
+        self.job_box.set_size_request(190, -1)
         targets = [("text/deepin-songs", gtk.TARGET_SAME_APP, 1), ("text/uri-list", 0, 2), ("text/plain", 0, 3)]
         self.job_box.drag_dest_set(gtk.DEST_DEFAULT_MOTION | gtk.DEST_DEFAULT_DROP,
                            targets, gtk.gdk.ACTION_COPY)
@@ -126,7 +126,7 @@ class PlaylistItem(gobject.GObject):
         self.song_view.connect("begin-add-items", lambda w: self.switch_it())
         self.song_view.connect("empty-items", lambda w: self.switch_it(False))
         self.scrolled_window = self.song_view.get_scrolled_window()
-        self.scrolled_window.set_size_request(195, -1)
+        self.scrolled_window.set_size_request(190, -1)
         self.title = playlist.get_name()
         
     def get_list_widget(self):

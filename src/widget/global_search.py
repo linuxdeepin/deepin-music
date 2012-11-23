@@ -31,12 +31,11 @@ from nls import _
 from library import MediaDB
 
 
-class GlobalSearch(ScrolledWindow):
+class GlobalSearch(gtk.VBox):
     
     def __init__(self):
-        ScrolledWindow.__init__(self, 0, 0)
-        self.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
-        
+        gtk.VBox.__init__(self)
+        self.set_spacing(5)
         local_box = gtk.VBox()
         local_label = Label("<b>%s</b>" % _("本地资源"))
         local_label.set_size_request(200, 25)
@@ -56,12 +55,10 @@ class GlobalSearch(ScrolledWindow):
         radio_label_align.add(radio_label)
         self.radio_view, self.radio_sw = self.get_radio_view()
         radio_box.pack_start(radio_label_align, False, True)
-        radio_box.pack_start(self.radio_sw, False, True)
+        radio_box.pack_start(self.radio_sw, True, True)
         
-        body_box = gtk.VBox(spacing=5)
-        body_box.pack_start(local_box, True, True)
-        body_box.pack_start(radio_box, True, True)
-        self.add_child(body_box)
+        self.pack_start(local_box, True, True)
+        self.pack_start(radio_box, True, True)
         
     def get_local_view(self):    
         song_view = MultiDragSongView()

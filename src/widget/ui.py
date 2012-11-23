@@ -429,6 +429,8 @@ class CoverPopupNotify(Window):
                         expose_frame_function=self.expose_panel_frame,
                         window_type=gtk.WINDOW_POPUP)
         
+        self.set_can_focus(False)
+        self.set_accept_focus(False)
         self.info_panel = gtk.EventBox()
         self.info_panel.set_visible_window(False)
         self.info_panel.connect("expose-event", self.on_panel_expose_event)

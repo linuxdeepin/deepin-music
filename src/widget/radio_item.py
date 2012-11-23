@@ -272,10 +272,12 @@ class CommonIconItem(gobject.GObject, MissionThread):
         '''
         self.hover_flag = False
         self.mask_flag = False
+        self.emit_redraw_request()        
         self.notify.hide_all()
         
-        self.emit_redraw_request()
-        
+    def hide_notify(self):    
+        self.notify.hide_all()
+                
     def icon_item_highlight(self):
         '''
         Highlight item.
