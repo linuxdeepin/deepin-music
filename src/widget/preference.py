@@ -404,7 +404,6 @@ class HotKeySetting(gtk.VBox):
         self.change_decrease_vol_key(None, "Alt + Down")
         
     def create_combo_entry(self, top_attach, bottom_attach, label_content, hotkey_content):    
-        print hotkey_content
         combo_hbox = gtk.HBox(spacing=5)
         combo_hbox.pack_start(create_right_align(), True, True)
         

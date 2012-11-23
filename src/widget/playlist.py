@@ -56,13 +56,11 @@ class PlaylistUI(gtk.VBox):
         self.set_size_request(303, -1)
 
         # Init catagory list.
-        self.category_list = TreeView()
+        self.category_list = EntryTreeView()
         self.category_list.draw_mask = self.draw_category_list_mask
         self.category_list.connect("single-click-item", self.on_category_single_click)
         self.category_list.connect("right-press-items", self.on_category_right_press)
         self.category_list.set_size_request(100, -1)
-        
-
         
         # Init SearchEntry.
         self.entry_box = SearchEntry("")
