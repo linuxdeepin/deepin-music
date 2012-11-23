@@ -142,17 +142,22 @@ class SearchButton(gtk.Button):
         gtk.Button.__init__(self)
         # Init signals.
         self.connect("expose-event", self.on_expose_event)
+        
+        self.bg_pixbuf = app_theme.get_pixbuf("search/bg.png").get_pixbuf()
 
         # Init DPixbufs.
         self.normal_dpixbuf = app_theme.get_pixbuf("search/search_normal.png")
         self.hover_dpixbuf = app_theme.get_pixbuf("search/search_hover.png")
         self.press_dpixbuf = app_theme.get_pixbuf("search/search_press.png")
         
+        self.set_size_request(self.bg_pixbuf.get_width(), self.bg_pixbuf.get_height())
+        
     def on_expose_event(self, widget, event):    
         cr = widget.window.cairo_create()
         rect = widget.allocation
         
         # Draw Background.
+        # draw_pixbuf(cr, self.bg_pixbuf, rect.x, rect.y)
         cr.rectangle(rect.x, rect.y, rect.width, rect.height)
         cr.set_source_rgb(*color_hex_to_cairo("#D7D7D7"))
         cr.fill()
