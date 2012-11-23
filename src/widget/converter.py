@@ -34,7 +34,7 @@ from dtk.ui.label import Label
 from dtk.ui.button import Button, CheckButton
 from dtk.ui.utils import get_content_size
 from dtk.ui.menu import Menu
-from dtk.ui.entry import InputEntry
+from dtk.ui.new_entry import InputEntry
 from dtk.ui.draw import draw_pixbuf, cairo_disable_antialias, draw_text
 from dtk.ui.scrolled_window import ScrolledWindow
 from dtk.ui.progressbar import ProgressBuffer

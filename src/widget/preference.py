@@ -29,7 +29,7 @@ from dtk.ui.label import Label
 from dtk.ui.box import BackgroundBox, ImageBox
 from dtk.ui.button import CheckButton, RadioButton
 from dtk.ui.spin import SpinBox
-from dtk.ui.entry import InputEntry, ShortcutKeyEntry
+from dtk.ui.new_entry import InputEntry, ShortcutKeyEntry
 from dtk.ui.treeview import TreeView
 from dtk.ui.button import Button
 from dtk.ui.dialog import DialogBox, DIALOG_MASK_MULTIPLE_PAGE
@@ -404,6 +404,7 @@ class HotKeySetting(gtk.VBox):
         self.change_decrease_vol_key(None, "Alt + Down")
         
     def create_combo_entry(self, top_attach, bottom_attach, label_content, hotkey_content):    
+        print hotkey_content
         combo_hbox = gtk.HBox(spacing=5)
         combo_hbox.pack_start(create_right_align(), True, True)
         

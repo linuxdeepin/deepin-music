@@ -426,7 +426,7 @@ class PlaylistUI(gtk.VBox):
             return index
         return 0
     
-    def on_category_right_press(self, widget, item, column, x, y):    
+    def on_category_right_press(self, widget, x, y, item, column):    
         if not item:
             menu_items = [
                 (None, _("New list"), self.new_list),
@@ -445,7 +445,7 @@ class PlaylistUI(gtk.VBox):
             
         Menu(menu_items, True).show((x, y))    
             
-    def rename_item_list(self, item, index):        
+    def rename_item_list(self, item):        
         input_dialog = InputDialog(_("Rename"), item.get_title(), 300, 100,
                                    lambda name: item.set_title(name))    
         input_dialog.show_all()

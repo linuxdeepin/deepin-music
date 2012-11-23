@@ -23,7 +23,7 @@
 import gtk
 import gobject
 from dtk.ui.button import Button
-from dtk.ui.entry import InputEntry
+from dtk.ui.new_entry import InputEntry
 from dtk.ui.utils import get_content_size
 from dtk.ui.dialog import DialogBox, DIALOG_MASK_MULTIPLE_PAGE
 from dtk.ui.threads import post_gui
