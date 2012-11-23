@@ -24,12 +24,11 @@ import os
 import gtk
 import gobject
 from collections import OrderedDict
-from dtk.ui.scrolled_window import ScrolledWindow
 from dtk.ui.entry_treeview import EntryTreeView
 from dtk.ui.button import ImageButton, ToggleButton
 from dtk.ui.menu import Menu
 from dtk.ui.draw import draw_vlinear
-from dtk.ui.treeview import TreeView
+from dtk.ui.new_treeview import TreeView
 from dtk.ui.dialog import InputDialog
 from dtk.ui.paned import HPaned
 import dtk.ui.tooltip as Tooltip
@@ -39,7 +38,7 @@ from helper import Dispatcher
 from widget.skin import app_theme
 from widget.ui import SearchEntry
 from widget.song_item import SongItem
-from widget.list_item import PlaylistItem, ListTreeItem
+from widget.list_item import ListTreeItem
 from widget.dialog import WindowLoadPlaylist, WindowExportPlaylist, WinDir
 from widget.ui_utils import container_remove_all, draw_alpha_mask
 from config import config
@@ -53,33 +52,35 @@ class PlaylistUI(gtk.VBox):
 	
     def __init__(self):
         '''Init.'''
-        super(PlaylistUI, self).__init__()
+        gtk.VBox.__init__(self)
         self.set_size_request(303, -1)
 
-        self.category_list = EntryTreeView()
+        # Init catagory list.
+        self.category_list = TreeView()
         self.category_list.draw_mask = self.draw_category_list_mask
         self.category_list.connect("single-click-item", self.on_category_single_click)
         self.category_list.connect("right-press-items", self.on_category_right_press)
         self.category_list.set_size_request(100, -1)
-        self.search_time_source = 0
         
+
+        
+        # Init SearchEntry.
         self.entry_box = SearchEntry("")
         self.entry_box.entry.connect("changed", self.search_cb)
         self.entry_box.set_no_show_all(True)
-        
         entry_align = gtk.Alignment()
         entry_align.set(0, 0, 1, 1)
         entry_align.set_padding(2, 0, 10, 10)
         entry_align.add(self.entry_box)
         entry_align.connect("expose-event", self.expose_entry_mask)
         
+        # Init toolbar.
         self.toolbar_box = gtk.HBox(spacing=40)
         self.search_button = self.__create_simple_toggle_button("search", self.show_text_entry, _("Search for tracks"))
         self.__create_simple_button("list", self.popup_list_menu, _("Playlist operations"))
         self.__create_simple_button("add", self.popup_add_menu, _("Add track"))
         self.__create_simple_button("sort", self.popup_sort_menu, _("Play mode"))
         self.__create_simple_button("delete", self.popup_delete_menu, _("Delete"))
-        
         toolbar_align = gtk.Alignment()
         toolbar_align.set_padding(6, 6, 24, 24)
         toolbar_align.add(self.toolbar_box)
@@ -87,19 +88,18 @@ class PlaylistUI(gtk.VBox):
                 
         self.right_box = gtk.VBox()
         self.right_box.connect("size-allocate", self.on_right_box_size_allocate)
-        
         self.list_paned = HPaned(handle_color=app_theme.get_color("panedHandler"))
         self.list_paned.pack1(self.category_list)
         self.list_paned.pack2(self.right_box, True, False)
         bottom_box = gtk.VBox()
         bottom_box.set_size_request(-1, 22)
-        
         self.pack_start(self.list_paned, True, True)            
         self.pack_start(entry_align, False, False)            
         self.pack_start(toolbar_align, False, True)            
         
         # Current
         self.current_playlist = None
+        self.search_time_source = 0        
         self.current_item = None
         self.search_flag = False
         self.cache_items = None
@@ -152,16 +152,12 @@ class PlaylistUI(gtk.VBox):
         if not MediaDB.get_playlists():
             MediaDB.create_playlist("local", _("[Default list]"))            
             
-        MediaDB.create_playlist("local", _("[Default list]"))            
-        MediaDB.create_playlist("local", _("[Default list]"))            
-        MediaDB.create_playlist("local", _("[Default list]"))            
-            
         # From MediaDB loaded playlists.    
         init_items = [ListTreeItem(pl) for pl in MediaDB.get_playlists()]    
         self.category_list.add_items(init_items)
         
         # Init Category_list.
-        self.category_list.set_highlight_index(self.get_save_item_index())
+        self.category_list.set_highlight_item(self.get_categroy_item_by_index(self.get_save_item_index()))
         self.current_item = self.category_list.get_highlight_item()
         
         self.delete_source_id = self.current_item.song_view.connect("delete-select-items", self.parser_delete_items)
@@ -286,9 +282,9 @@ class PlaylistUI(gtk.VBox):
         
     def get_categroy_other_items(self):    
         other_items = []
-        highlight_index = self.category_list.get_highlight_index()
-        for each_index, item in enumerate(self.category_list.get_items()):
-            if each_index == highlight_index:
+        highlight_item = self.category_list.get_highlight_item()
+        for item in self.category_list.get_items():
+            if highlight_item == item:
                 continue
             other_items.append(item)
         return other_items    
@@ -300,6 +296,12 @@ class PlaylistUI(gtk.VBox):
                 index = each_index
                 break
         return index    
+    
+    def get_categroy_item_by_index(self, index):
+        try:
+            return self.category_list.get_items()[index]
+        except:
+            return None
         
     def get_edit_sub_menu(self, select_items, move=False):    
         sub_menu_items = []
@@ -362,15 +364,12 @@ class PlaylistUI(gtk.VBox):
             
     def delete_audiocd_list(self, obj, udi):
         reset = False
-        items = self.category_list.get_items()
-        for index, item in enumerate(items):
+        for item in self.category_list.get_items():
             if item.udi == udi:
                 reset = True
-                self.category_list.delete_item_by_index(index)
-                
+                self.category_list.delete_items([item])
         if reset:        
-            max_index = len(self.category_list.get_items()) - 1
-            self.reset_highlight_item(max_index)    
+            self.reset_highlight_item(self.category_list.get_items()[-1])    
             
     def delete_item_list(self, item):
         if len(self.category_list.get_items()) == 1:
@@ -384,7 +383,7 @@ class PlaylistUI(gtk.VBox):
             new_index = index
         else:    
             new_index = index- 1
-        self.reset_highlight_item(new_index)    
+        self.reset_highlight_item(self.category_list.get_items()[new_index])    
         
     def save_all_list(self):    
         uri = WinDir().run()
@@ -403,12 +402,13 @@ class PlaylistUI(gtk.VBox):
             except:        
                 pass
         
-    def reset_highlight_item(self, index):    
-        self.category_list.set_highlight_index(index)
-        self.category_single_click_cb(None, self.category_list.get_item_by_index(index))
+    def reset_highlight_item(self, item):    
+        self.category_list.set_highlight_item(item)
+        self.category_single_click_cb(None, item)
         
     def get_current_item_index(self):    
-        index = self.category_list.get_highlight_index()
+        item = self.category_list.get_highlight_item()
+        index = self.get_categroy_index_by_item(item)
         if index is None:
             return 0
         else:
@@ -462,6 +462,8 @@ class PlaylistUI(gtk.VBox):
             gobject.source_remove(self.menu_source_id)
 
         self.current_item = item
+        self.category_list.set_highlight_item(item)
+        
         self.delete_source_id = self.current_item.song_view.connect("delete-select-items", self.parser_delete_items)
         self.drag_source_id = self.current_item.song_view.connect("drag-data-received", self.parser_drag_event)
         self.menu_source_id = self.current_item.song_view.connect("right-press-items", self.popup_detail_menu)
