@@ -39,6 +39,8 @@ class CoverButton(gtk.Button):
         self.current_cover_pixbuf = CoverManager.get_default_cover(COVER_SIZE["x"], COVER_SIZE["y"])
         self.cover_side_pixbuf = app_theme.get_pixbuf("cover/side.png").get_pixbuf()
         self.set_size_request(self.cover_side_pixbuf.get_width(), self.cover_side_pixbuf.get_height())
+        
+        self.webcast_dpixbuf = app_theme.get_pixbuf("cover/webcast.png")
 
         self.connect("expose-event", self.expose_button_cb)
         MediaDB.connect("simple-changed", self.update_cover)
@@ -56,6 +58,10 @@ class CoverButton(gtk.Button):
         
         # Draw cover side.
         draw_pixbuf(cr, self.cover_side_pixbuf, rect.x, rect.y)
+        
+        if Player.song:
+            if Player.song.get_type() == "webcast":
+                self.current_cover_pixbuf = self.webcast_dpixbuf.get_pixbuf()
         
         draw_pixbuf(cr, self.current_cover_pixbuf, rect.x + 4, rect.y + 4)
         return True

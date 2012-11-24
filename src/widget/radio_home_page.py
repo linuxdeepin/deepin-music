@@ -51,7 +51,6 @@ class HomePage(gtk.VBox):
         # recommmend tab switcher.
         self.recommend_tab = TabSwitcher([_("热门兆赫"), _("人气兆赫")])
         self.recommend_tab.connect("tab-switch-start", lambda switcher, tab_index: self.switch_recommend_view(tab_index))
-        self.recommend_tab.connect("click-current-tab", lambda switcher, tab_index: self.on_click_recommend_tab(tab_index))
 
         # Init recommend view.
         self.hot_recommend_view, self.hot_recommend_sw = self.get_icon_view(tag=TAG_HOT, padding_y=5)

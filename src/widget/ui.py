@@ -157,10 +157,10 @@ class SearchButton(gtk.Button):
         rect = widget.allocation
         
         # Draw Background.
-        # draw_pixbuf(cr, self.bg_pixbuf, rect.x, rect.y)
-        cr.rectangle(rect.x, rect.y, rect.width, rect.height)
-        cr.set_source_rgb(*color_hex_to_cairo("#D7D7D7"))
-        cr.fill()
+        draw_pixbuf(cr, self.bg_pixbuf, rect.x, rect.y)
+        # cr.rectangle(rect.x, rect.y, rect.width, rect.height)
+        # cr.set_source_rgb(*color_hex_to_cairo("#D7D7D7"))
+        # cr.fill()
         
         pixbuf  = None
         if widget.state == gtk.STATE_NORMAL:
@@ -439,6 +439,7 @@ class CoverPopupNotify(Window):
         self.info_panel = gtk.EventBox()
         self.info_panel.set_visible_window(False)
         self.info_panel.connect("expose-event", self.on_panel_expose_event)
+        self.connect("enter-notify-event", self.on_enter_notify_event)
         self.window_frame.add(self.info_panel)
         
         self.channel_info = channel_info
@@ -448,6 +449,9 @@ class CoverPopupNotify(Window):
         self.default_width = default_width
         
         self.init_size()
+        
+    def on_enter_notify_event(self, widget, event):    
+        self.hide_all()
         
     def init_size(self):    
         tw = self.default_width - self.padding_x * 2
@@ -547,22 +551,21 @@ class SearchBox(gtk.HBox):
         gtk.HBox.__init__(self)
         self.entry_box = CustomEntry()
         self.search_button = SearchButton()
-        self.search_button.set_size_request(85, 32)
         self.search_button.connect("button-press-event", self.on_search_button_press_event)
         
         self.pack_start(self.entry_box, False, True)
         self.pack_start(self.search_button, False, False)
         
-        self.connect("realize", self.on_realize, 85)
-        self.connect("size-allocate", self.on_size_allocate, 85)
+        self.connect("realize", self.on_realize, 74)
+        self.connect("size-allocate", self.on_size_allocate, 74)
         
     def on_realize(self, widget, size):    
         rect = widget.allocation
-        self.entry_box.set_size(rect.width - size, 32)
+        self.entry_box.set_size(rect.width - size, 30)
         widget.show_all()
         
     def on_size_allocate(self, widget, rect, size):
-        self.entry_box.set_size(rect.width - size, 32)
+        self.entry_box.set_size(rect.width - size, 30)
         widget.show_all()
         
     def on_search_button_press_event(self, widget, event):    

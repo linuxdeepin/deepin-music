@@ -26,7 +26,7 @@ from dtk.ui.button import ToggleButton, ImageButton
 from dtk.ui.draw import draw_text
 import dtk.ui.tooltip as Tooltip
 
-from widget.volume import VolumeButton
+from widget.volume_button import VolumeButton
 
 from player import Player
 from widget.information import PlayInfo
@@ -72,7 +72,6 @@ class SimpleHeadbar(gtk.EventBox):
         prev_button = self.__create_button("previous", _("Previous track"))
         next_button = self.__create_button("next", _("Next track"))
         
-        self.vol = VolumeSlider()
         
         # lyrics button
         self.lyrics_button = self.__create_simple_toggle_button("lyrics", self.change_lyrics_status)        
@@ -88,6 +87,7 @@ class SimpleHeadbar(gtk.EventBox):
         volume_button_align.set_padding(0, 0, 5, 0)
         volume_button_align.set(0.5, 0.5, 0, 0)
         volume_button_align.add(VolumeSlider())
+        # volume_button_align.add(VolumeButton())
         
         # action_box
         action_box = gtk.HBox()
@@ -103,7 +103,7 @@ class SimpleHeadbar(gtk.EventBox):
         playinfo_align.add(PlayInfo(200))
         
         self.action_box_align = gtk.Alignment()
-        self.action_box_align.set_padding(6, 0, 10, 0)
+        self.action_box_align.set_padding(6, 0, 6, 0)
         self.action_box_align.add(action_box)
         self.action_box_align.connect("expose_event", self.on_expose_event)
         

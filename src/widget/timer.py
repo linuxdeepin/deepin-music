@@ -24,13 +24,13 @@ import  gtk
 import gobject
 
 from dtk.ui.label import Label
-from dtk.ui.volume_button import VolumeButton
+
 import dtk.ui.tooltip as Tooltip
 
 import utils
 from widget.scalebar import HScalebar
 from widget.skin import app_theme
-# from widget.volume import VolumeButton
+from widget.volume_button import VolumeButton
 from player import Player
 from config import config
 from helper import Dispatcher
@@ -177,32 +177,13 @@ class SongTimer(gtk.HBox):
 class VolumeSlider(gtk.VBox):
     def __init__(self):
         super(VolumeSlider, self).__init__()
-        self.volume_progressbar = VolumeButton(
-            zero_volume_normal_pixbuf = app_theme.get_pixbuf("volume/zero_normal.png"),
-            zero_volume_hover_pixbuf = app_theme.get_pixbuf("volume/zero_hover.png"),
-            zero_volume_press_pixbuf = app_theme.get_pixbuf("volume/zero_press.png"),
-            min_volume_normal_pixbuf = app_theme.get_pixbuf("volume/low_normal.png"),
-            min_volume_hover_pixbuf = app_theme.get_pixbuf("volume/low_hover.png"),
-            min_volume_press_pixbuf = app_theme.get_pixbuf("volume/low_press.png"),
-            mid_volume_normal_pixbuf = app_theme.get_pixbuf("volume/medium_normal.png"),
-            mid_volume_hover_pixbuf = app_theme.get_pixbuf("volume/medium_hover.png"),
-            mid_volume_press_pixbuf = app_theme.get_pixbuf("volume/medium_press.png"),
-            max_volume_normal_pixbuf = app_theme.get_pixbuf("volume/high_normal.png"),
-            max_volume_hover_pixbuf = app_theme.get_pixbuf("volume/high_hover.png"),
-            max_volume_press_pixbuf = app_theme.get_pixbuf("volume/high_press.png"),
-            mute_volume_normal_pixbuf = app_theme.get_pixbuf("volume/mute_normal.png"),
-            mute_volume_hover_pixbuf = app_theme.get_pixbuf("volume/mute_hover.png"),
-            mute_volume_press_pixbuf = app_theme.get_pixbuf("volume/mute_press.png"),
-            point_volume_pixbuf = app_theme.get_pixbuf("volume/point.png"),
-            volume_y=2, scroll_bool=True)
+        self.volume_progressbar = VolumeButton()
         Tooltip.custom(self.volume_progressbar, self.get_tip_label).always_update(self.volume_progressbar, True)
-        self.volume_progressbar.set_size_request(92, 30)
         self.volume_progressbar.connect("volume-state-changed",self.__volume_changed)
         save_volume = float(config.get("player","volume"))
         self.volume_progressbar.value =  int(save_volume * 100)
         Dispatcher.connect("volume", self.change_volume)
         self.add(self.volume_progressbar)
-        self.set_size_request(92, 17)
         
     def get_tip_label(self):    
         return Label(str(int(self.volume_progressbar.value)))
@@ -211,9 +192,9 @@ class VolumeSlider(gtk.VBox):
         val = value * 100
         self.volume_progressbar.value = int(val)
 
-    def __volume_changed(self, widget, value, status):
+    def __volume_changed(self, widget, value, mute_status):
         val = value / 100.0
-        if status == -1:
+        if mute_status:
             config.set("player", "volume", "0.0")
             Player.volume = 0.0
         else:    

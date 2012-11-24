@@ -110,7 +110,7 @@ class SlideSwitcher(gtk.EventBox):
         surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, int(width), int(height))
         cr = cairo.Context(surface)
         cr.set_source_surface(image_surface, 0, 0)
-        cr.set_operator(cairo.OPERATOR_SOURCE)
+        cr.set_opesetrator(cairo.OPERATOR_SOURCE)
         cr.paint()
         
         image_w, image_h = image_surface.get_width(), image_surface.get_height()

@@ -164,7 +164,7 @@ class TabManager(gtk.VBox):
     __gtype_name__ = 'DtkTabManager'
     __gsignals__ = { 'switch-tab': (gobject.SIGNAL_RUN_LAST, None, (gtk.Widget,)),}
     
-    def __init__(self, items, default_height=32):
+    def __init__(self, items, default_height=31):
         gtk.VBox.__init__(self)
         
         self.__topbar = gtk.HBox()
