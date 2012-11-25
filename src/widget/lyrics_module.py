@@ -631,6 +631,7 @@ class LyricsModule(object):
                 config.set("lyrics","desktop_w","%d"%event.width)
             config.set("lyrics","desktop_y","%d"%event.y)
             config.set("lyrics","desktop_x","%d"%event.x)
+            widget.update_lyric_rects()
             
     def show_desktop_lyrics(self):    
         if config.get("lyrics", "desktop_x") == "-1":

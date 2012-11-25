@@ -81,11 +81,14 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
             
     def __on_eos(self, bin, uri):    
         self.logdebug("received eos for %s", uri)
-        
-        if uri == self.song.get("uri") and not self.__next_already_called and not config.get("setting", "loop_mode") == "single_mode":
-            self.logdebug("request new song: eos and play-end not emit")
-            self.emit("play-end")
-            self.next() # todo
+        if uri == self.song.get("uri") and not self.__next_already_called:
+            if config.get("setting", "loop_mode") == "single_mode" and \
+                    config.getboolean("player", "crossfade"):
+                pass
+            else:
+                self.logdebug("request new song: eos and play-end not emit")
+                self.emit("play-end")
+                self.next() # todo
             
         self.__next_already_called = False    
         
@@ -391,11 +394,8 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
                     self.stop()
         return True            
                     
-                    
-                    
     def seek(self, pos):
         '''seek'''
-        # print pos
         if self.bin.xfade_seekable():
             self.__current_stream_seeked = True
             self.bin.xfade_set_time(pos)

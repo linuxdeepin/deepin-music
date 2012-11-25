@@ -21,7 +21,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import gtk
-import gobject
 import pango
 
 from dtk.ui.entry_treeview import TreeItem

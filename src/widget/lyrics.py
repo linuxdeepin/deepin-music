@@ -104,6 +104,7 @@ class DesktopLyrics(gtk.Window):
         self.connect("realize", self.on_realize_event)
         config.connect("config-changed", self.update_render_color)
         self.time_source = gobject.timeout_add(200, self.check_mouse_leave)        
+
         
     def update_render_color(self, obj, selection, option, value):    
         color_option  = ["inactive_color_upper", " inactive_color_middle", "inactive_color_bottom",
@@ -422,6 +423,7 @@ class DesktopLyrics(gtk.Window):
         self.emit("resized", rect)
         widget.resize(int(new_width), int(new_height))
         widget.move(int(new_x), int(new_y))           
+        
         widget.queue_draw()
             
     def button_press(self, widget, event):        
@@ -504,6 +506,10 @@ class DesktopLyrics(gtk.Window):
         cr.paint()
         self.render_lyrics.paint_text(cr, lyrics, 0, 0)
         return surface
+    
+    def update_lyric_rects(self):
+        for i in range(self.get_line_count()):
+            self.update_lyric_rect(i)
       
     def update_lyric_rect(self, line):
         w = h = 0
@@ -514,7 +520,7 @@ class DesktopLyrics(gtk.Window):
         font_height = self.render_lyrics.get_font_height()    
         self.lyric_rects[line] = gtk.gdk.Rectangle(
             int(x + self.adjust_lyric_xpos(line, self.line_percentage[line])),
-            int(y + font_height * line * ( 1+ self.line_padding)), int(w), int(h))
+            int(y + font_height * line + (line + 1) * self.line_padding), int(w), int(h))
         
     def update_lyric_surface(self, line):    
         self.render_lyrics.set_linear_color(self.get_render_color())
@@ -646,6 +652,7 @@ class DesktopLyrics(gtk.Window):
             if self.point_in_rect(rel_x, rel_y, lyric_rect):
                 mouse_over_lyrics = True
                 break
+            
         if self.mouse_over_lyrics != mouse_over_lyrics:    
             self.mouse_over_lyrics = mouse_over_lyrics
             self.queue_draw()

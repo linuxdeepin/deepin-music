@@ -247,7 +247,7 @@ def auto_decode(s):
             codedetect = chardet.detect(s)["encoding"]
             return s.decode(codedetect)
         except:    
-            return s.decode(codedetect, "replace") + " " + ("[Invalid Encoding]")    
+            return "[Invalid Encoding]"    
 
     
 def fix_charset(s):    

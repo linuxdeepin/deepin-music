@@ -373,11 +373,11 @@ msgstr "关闭歌词"
 
 #: ../src/widget/lyrics_module.py:158 ../src/widget/lyrics_module.py:197
 msgid "Lyrics rewind"
-msgstr "前进歌词"
+msgstr "后退歌词"
 
 #: ../src/widget/lyrics_module.py:159 ../src/widget/lyrics_module.py:198
 msgid "Lyrics forward"
-msgstr "后退歌词"
+msgstr "前进歌词"
 
 #: ../src/widget/lyrics_module.py:160
 msgid "Switch to window mode"

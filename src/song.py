@@ -314,7 +314,14 @@ class Song(dict, Logger):
                         value = audio[file_tag]
                         if isinstance(value, list) or isinstance(value, tuple):
                             value = value[0]
-                        self[tag] = utils.fix_charset(value)
+                        fix_value = utils.fix_charset(value)    
+                        if fix_value == "[Invalid Encoding]":
+                            if tag == "title":
+                                fix_value = self.get_filename()
+                            else:    
+                                fix_value = ""
+                        self[tag] = fix_value
+                        
                         # self[tag] = value
 
                             

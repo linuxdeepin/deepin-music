@@ -178,13 +178,5 @@ class Config(gobject.GObject, Logger):
                 "toggle_lyrics_lock" : "Ctrl + Alt + D",
                 "toggle_lyrics_status" : "Ctrl + Alt + H",
                 },
-            
-            "douban" : {
-                "remember" : "true",
-                "username" : "",
-                "password" : "",
-                "uid"      : "",
-                },
-            
             }
 config = Config()    

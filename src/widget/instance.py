@@ -40,9 +40,8 @@ from widget.jobs_manager import jobs_manager
 from widget.tray import TrayIcon
 from widget.equalizer import EqualizerWindow
 from widget.preference import PreferenceDialog
-from widget.ui_utils import switch_tab, create_right_align
+from widget.ui_utils import  create_right_align
 from widget.global_keys import global_hotkeys
-# from widget.song_search import SongSearchUI
 from widget.dialog import WinFile
 from widget.converter import AttributesUI, convert_task_manager
 from constant import (FULL_DEFAULT_WIDTH, FULL_DEFAULT_HEIGHT,
