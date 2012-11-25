@@ -181,7 +181,7 @@ class VolumeSlider(gtk.VBox):
         Tooltip.custom(self.volume_progressbar, self.get_tip_label).always_update(self.volume_progressbar, True)
         self.volume_progressbar.connect("volume-state-changed",self.__volume_changed)
         save_volume = float(config.get("player","volume"))
-        self.volume_progressbar.value =  int(save_volume * 100)
+        self.volume_progressbar.set_value(int(save_volume * 100))
         Dispatcher.connect("volume", self.change_volume)
         self.add(self.volume_progressbar)
         
