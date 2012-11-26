@@ -248,7 +248,6 @@ def auto_decode(s):
             return s.decode(codedetect)
         except:    
             return "[Invalid Encoding]"    
-
     
 def fix_charset(s):    
     '''Fix the charset. unicode error'''

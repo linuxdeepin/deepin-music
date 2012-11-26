@@ -179,28 +179,34 @@ class ListTreeItem(TreeItem):
                   alignment=pango.ALIGN_CENTER)    
         
     def render_content(self, cr, rect):
-        if self.is_select:
-            text_color = "#FFFFFF"
-            bg_color = "#3399FF"
+        if self.is_highlight:    
             if not self.is_double_click:
-                cr.set_source_rgb(*color_hex_to_cairo(bg_color))
-                cr.rectangle(rect.x, rect.y, rect.width, rect.height)
-                cr.paint()
-        else:
-            text_color = "#000000"
+                draw_single_mask(cr, rect.x + 1, rect.y, rect.width, rect.height, "simpleItemSelect")
+                text_color = "#FFFFFF"
+            else:    
+                text_color = app_theme.get_color("labelText").get_color()
+                
+        elif self.is_hover:
+            text_color = app_theme.get_color("labelText").get_color()
+            draw_single_mask(cr, rect.x + 1, rect.y, rect.width, rect.height, "simpleItemHover")
+        else:    
+            text_color = app_theme.get_color("labelText").get_color()
+
+            
+        if not self.is_highlight:    
             self.entry_buffer.move_to_start()
+            
         self.entry_buffer.set_text_color(text_color)
-        height = self.entry_buffer.get_pixel_size()[1]
-        offset = (self.item_height - height)/2
-        if offset < 0 :
-            offset = 0
-        rect.y += offset
+        width, height = self.entry_buffer.get_pixel_size()[:2]
+        offset_y = abs(self.item_height - height) / 2
+        offset_x = abs(self.item_height - width) / 2
+        rect.y += offset_y
+        rect.x += offset_x
+        
         if self.entry and self.entry.allocation.width == self.get_column_widths()[0]-4:
             self.entry.calculate()
-            rect.x += 2
-            rect.width -= 4
             self.entry_buffer.set_text_color("#000000")
-            self.entry_buffer.render(cr, rect, self.entry.im, self.entry.offset_x)
+            self.entry_buffer.render(cr, rect, self.entry.im)
         else:
             self.entry_buffer.render(cr, rect)
         

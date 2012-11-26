@@ -321,9 +321,6 @@ class Song(dict, Logger):
                             else:    
                                 fix_value = ""
                         self[tag] = fix_value
-                        
-                        # self[tag] = value
-
                             
                 self["#duration"] = int(audio.info.length) * 1000        
                 try:
