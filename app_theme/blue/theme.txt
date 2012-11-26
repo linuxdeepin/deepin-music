@@ -1,4 +1,4 @@
-"colors" : {
+{"colors" : {
  "recommend" : "#FF0000",
  "windowMask" : "#FFFFFF",
  "menuFont" : "#000000",

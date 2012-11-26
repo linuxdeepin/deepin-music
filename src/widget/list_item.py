@@ -31,6 +31,7 @@ from dtk.ui.utils import color_hex_to_cairo
 from widget.song_view import SongView
 from widget.ui_utils import switch_tab as switch_box
 from widget.ui import ComplexButton
+from constant import PLAYLIST_WIDTH, CATEGROYLIST_WIDTH
 from widget.skin import app_theme
 from widget.ui_utils import (draw_alpha_mask, create_upper_align, create_bottom_align,
                              create_left_align, create_right_align, draw_single_mask)
@@ -54,7 +55,7 @@ class ListTreeItem(TreeItem):
         self.song_view.connect("begin-add-items", lambda w: self.switch_it())
         self.song_view.connect("empty-items", lambda w: self.switch_it(False))
         self.scrolled_window = self.song_view.get_scrolled_window()
-        self.scrolled_window.set_size_request(190, -1)
+        self.scrolled_window.set_size_request(PLAYLIST_WIDTH, -1)
         
         # Init params.
         self.entry = None
@@ -65,7 +66,7 @@ class ListTreeItem(TreeItem):
         self.entry_buffer.connect("selection-pos-changed", self.on_entry_buffer_changed)
         
         self.item_height = 25
-        self.item_width = 100
+        self.item_width = CATEGROYLIST_WIDTH
         self.ENTRY_COLUMN = 0
         self.is_double_click = False
         self.is_highlight = False
@@ -79,7 +80,6 @@ class ListTreeItem(TreeItem):
         self.file_job_button = self.create_job_button("plus", _("Add Music"), self.song_view.recursion_add_dir)
 
         self.job_box = gtk.EventBox()
-        self.job_box.set_size_request(190, -1)
         targets = [("text/deepin-songs", gtk.TARGET_SAME_APP, 1), ("text/uri-list", 0, 2), ("text/plain", 0, 3)]
         self.job_box.drag_dest_set(gtk.DEST_DEFAULT_MOTION | gtk.DEST_DEFAULT_DROP,
                            targets, gtk.gdk.ACTION_COPY)
@@ -106,6 +106,7 @@ class ListTreeItem(TreeItem):
         self.jobs_main_box = gtk.VBox()
         self.jobs_main_box.add(jobs_align)
         self.jobs_main_box.connect("expose-event", self.on_jobs_expose_event)        
+        self.jobs_main_box.set_size_request(PLAYLIST_WIDTH, -1)
         
     def on_jobs_expose_event(self, widget, event):            
         cr = widget.window.cairo_create()

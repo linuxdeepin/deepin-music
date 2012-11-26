@@ -31,9 +31,9 @@ from helper import Dispatcher
 from nls import _
 
 from widget.tab_box import TabManager, Tab
+from constant import LIST_WIDTH
 
 class ListManager(gtk.VBox):
-    
     def __init__(self):
         gtk.VBox.__init__(self)
         
@@ -60,5 +60,5 @@ class ListManager(gtk.VBox):
         view = RadioView()
         scrolled_window = ScrolledWindow(0, 0) 
         scrolled_window.add_child(view)
-        scrolled_window.set_size_request(303, -1)
+        scrolled_window.set_size_request(LIST_WIDTH, -1)
         return scrolled_window

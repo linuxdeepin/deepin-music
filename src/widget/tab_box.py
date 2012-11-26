@@ -24,12 +24,13 @@ import gtk
 import gobject
 import pango
 
-from dtk.ui.draw import draw_text, draw_pixbuf, draw_round_rectangle
-from dtk.ui.utils import color_hex_to_cairo, alpha_color_hex_to_cairo, cairo_disable_antialias
+from dtk.ui.draw import draw_text, draw_pixbuf
+from dtk.ui.utils import  alpha_color_hex_to_cairo
 
 from widget.ui_utils import switch_tab
 from widget.skin import app_theme
-
+from constant import LIST_WIDTH
+ 
 class Tab(gtk.EventBox):
     __gtype_name__ = "DtkTab"
     
@@ -166,6 +167,7 @@ class TabManager(gtk.VBox):
     
     def __init__(self, items, default_height=31):
         gtk.VBox.__init__(self)
+        self.set_size_request(LIST_WIDTH, -1)
         
         self.__topbar = gtk.HBox()
         self.__topbar.connect("realize", self.on_topbar_realize)
@@ -206,4 +208,3 @@ class TabManager(gtk.VBox):
             
         switch_tab(self.__container, widget.get_allocate_widget())    
         self.emit("switch-tab", widget)    
-            

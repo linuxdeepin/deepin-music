@@ -21,14 +21,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import gtk
-
 from dtk.ui.scrolled_window import ScrolledWindow
 
 from widget.webcast_view import WebcastView
 from widget.ui import EmptyWebcast
 from widget.ui_utils import switch_tab
-
-from helper import Dispatcher
 
 class WebcastList(gtk.VBox):
     def __init__(self):

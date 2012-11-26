@@ -44,6 +44,7 @@ from widget.ui_utils import container_remove_all, draw_alpha_mask
 from config import config
 from player import Player
 from nls import _
+from constant import CATEGROYLIST_WIDTH
 import utils
 
 
@@ -53,14 +54,13 @@ class PlaylistUI(gtk.VBox):
     def __init__(self):
         '''Init.'''
         gtk.VBox.__init__(self)
-        self.set_size_request(303, -1)
 
         # Init catagory list.
         self.category_list = EntryTreeView()
         self.category_list.draw_mask = self.draw_category_list_mask
         self.category_list.connect("single-click-item", self.on_category_single_click)
         self.category_list.connect("right-press-items", self.on_category_right_press)
-        self.category_list.set_size_request(100, -1)
+        self.category_list.set_size_request(CATEGROYLIST_WIDTH, -1)
         
         # Init SearchEntry.
         self.entry_box = SearchEntry("")
