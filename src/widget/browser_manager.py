@@ -33,6 +33,8 @@ from widget.skin import app_theme
 from widget.ui import SearchBox
 from widget.ui_utils import switch_tab, draw_line, draw_alpha_mask
 from helper import Dispatcher
+from constant import TAB_LOCAL, TAB_WEBCAST, TAB_RADIO
+
 
 class BrowserMananger(gtk.VBox):
     
@@ -81,12 +83,12 @@ class BrowserMananger(gtk.VBox):
                   (rect.x + 1, rect.y + rect.height), "#b0b0b0")
         return False
         
-    def on_dispatcher_switch_browser(self, obj, index):    
-        if index == 0:
+    def on_dispatcher_switch_browser(self, obj, tab_type):    
+        if tab_type == TAB_LOCAL:
             switch_tab(self.bottom_box, self.local_browser)
-        elif index == 1:    
+        elif tab_type == TAB_WEBCAST:    
             switch_tab(self.bottom_box, self.webcasts_browser)
-        elif index == 2:    
+        elif tab_type == TAB_RADIO:    
             switch_tab(self.bottom_box, self.radio_browser)
             
     def save(self):        

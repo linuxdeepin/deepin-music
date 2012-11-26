@@ -1951,7 +1951,8 @@ class StreamBin(gst.Bin, Logger):
                 
         if not ret:
             self.logerror("Failed to preroll stream")
-            self.emit_stream_error("Failed to preroll stream")
+            if self.rtsp_mode:
+                self.emit_stream_error("Failed to preroll stream")
         
         return ret
 

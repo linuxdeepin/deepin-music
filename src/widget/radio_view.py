@@ -34,11 +34,12 @@ from widget.skin import app_theme
 from widget.radio_item import RadioListItem, MoreIconItem, CommonIconItem
 from helper import Dispatcher
 from player import Player
-from song import Song
 from doubanfm import fmlib
 from cover_manager import cover_thread_pool
 
 import utils
+from xdg_support import get_config_file
+from library import MediaDB
 
 class RadioView(ListView):    
     __gsignals__ = {
@@ -48,23 +49,36 @@ class RadioView(ListView):
     
     def __init__(self, *args, **kwargs):
         ListView.__init__(self, *args, **kwargs)
-        targets = [("text/deepin-webcasts", gtk.TARGET_SAME_APP, 1),]        
+        targets = [("text/deepin-radios", gtk.TARGET_SAME_APP, 1),]        
         self.drag_dest_set(gtk.DEST_DEFAULT_MOTION | gtk.DEST_DEFAULT_DROP, targets, gtk.gdk.ACTION_COPY)
         
-        # self.connect_after("drag-data-received", self.on_drag_data_received)
+        self.connect_after("drag-data-received", self.on_drag_data_received)
         self.connect("double-click-item", self.on_double_click_item)
-
-        # self.connect("button-press-event", self.on_button_press_event)
-        # self.connect("delete-select-items", self.try_emit_empty_signal)
+        self.connect("button-press-event", self.on_button_press_event)
+        self.connect("delete-select-items", self.try_emit_empty_signal)
         Dispatcher.connect("play-radio", self.on_dispatcher_play_radio)
         self.set_expand_column(0)
         
         self.current_index = 0
-        self.current_cid = None
         self.playlist = None
+        self.limit_number = 25
+        self.preview_db_file = get_config_file("preview_radios.db")
+        
+        Dispatcher.connect("being-quit", lambda obj: self.save())
+
+        if MediaDB.isloaded():
+            self.__on_db_loaded(MediaDB)
+        else:    
+            MediaDB.connect("loaded", self.__on_db_loaded)
+        
+    def __on_db_loaded(self, db):        
+        self.load()
         
     def draw_mask(self, cr, x, y, width, height):    
         draw_alpha_mask(cr, x, y, width, height, "layoutLeft")
+        
+    def is_empty(self):
+        return len(self.items) == 0        
         
     def try_emit_empty_signal(self, widget, items):    
         if len(self.items) <= 0:
@@ -74,17 +88,17 @@ class RadioView(ListView):
         self.emit("begin-add-items")
         
     def on_dispatcher_play_radio(self, obj, channel_info):    
-        self.add_items([RadioListItem(channel_info)], insert_pos=0)
-        self.fetch_playlist(channel_info.get("id"), True)
+        self.add_channels([channel_info], pos=0, play=True)
         
     def on_double_click_item(self, widget, item, column, x, y):    
         if item:
-            self.current_cid = item.channel_info.get("id")
-            self.fetch_playlist(self.current_cid, True)
+            self.set_highlight(item)
+            self.fetch_playlist(play=True)
             
     @utils.threaded       
-    def fetch_playlist(self, channel_id, play=False):
-        songs = fmlib.new_playlist_no_user(channel_id)
+    def fetch_playlist(self, play=False):
+        if not self.highlight_item: return
+        songs = fmlib.new_playlist_no_user(self.highlight_item.channel_id)
         self.playlist = songs
         if songs and play:
             Player.play_new(songs[0])
@@ -101,7 +115,7 @@ class RadioView(ListView):
         if self.current_index == len(self.playlist) - 1:
             print "next"
             self.current_index = -1
-            self.fetch_playlist(self.current_cid)
+            self.fetch_playlist()
         return self.playlist[current_index]
     
     
@@ -111,6 +125,74 @@ class RadioView(ListView):
             self.current_index = 0
         return self.playlist[self.current_index]    
     
+    def on_drag_data_received(self, widget, context, x, y, selection, info, timestamp):
+        root_y = widget.allocation.y + y
+        try:
+            pos = self.get_coordinate_row(root_y)
+        except: pos = None
+        
+        if pos == None:
+            pos = len(self.items)
+            
+        if selection.target == "text/deepin-radios":    
+            channels_data =  selection.data
+            channel_infos =  eval(channels_data)
+            self.add_channels(channel_infos, pos)    
+            
+    def add_channels(self, channels, pos=None, sort=False, play=False):        
+        if not channels:
+            return
+        if not isinstance(channels, (list, tuple, set)):
+            channels = [ channels ]
+            
+        channel_items = [ RadioListItem(info) for info in channels ]    
+        channel_items = filter(lambda item : item not in self.items, channel_items)
+        if channel_items:
+            if not self.items:
+                self.emit_add_signal()
+            self.add_items(channel_items, pos, sort)    
+            
+            if len(self.items) > self.limit_number:
+                self.delete_items(self.items[self.limit_number:])
+            
+        if len(channels) >= 1 and play:
+            del self.select_rows[:]
+            self.queue_draw()
+            self.set_highlight_channel(channels[0])
+            self.fetch_playlist(play=True)
+            
+                        
+    def set_highlight_channel(self, channel):        
+        if not channel: return 
+        item_index = None
+        for index, item in enumerate(self.items):
+            if channel.get("id") == item.channel_id:
+                item_index = index
+                break
+        if item_index is not None:    
+            self.set_highlight(self.items[item_index])
+            self.visible_highlight()
+            self.queue_draw()
+            
+    def on_button_press_event(self, widget, event):        
+        pass
+    
+    
+    def save(self):
+        if not self.items:
+            return 
+        channel_infos = [ item.channel_info for item in self.items ]
+        utils.save_db(channel_infos, self.preview_db_file)
+        
+    def load(self):    
+        try:
+            channel_infos = utils.load_db(self.preview_db_file)
+        except:    
+            channel_infos = None
+            
+        if channel_infos is not None:    
+            self.add_channels(channel_infos)
+            
 TAG_HOT = 1    
 TAG_FAST = 2
 TAG_GENRE = 3

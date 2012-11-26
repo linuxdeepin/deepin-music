@@ -24,14 +24,16 @@ import gtk
 from dtk.ui.scrolled_window import ScrolledWindow
 
 from widget.webcast_view import WebcastView
-from widget.ui import EmptyWebcast
+from widget.ui import EmptyListItem
 from widget.ui_utils import switch_tab
+from constant import EMPTY_WEBCAST_ITEM
 
 class WebcastList(gtk.VBox):
     def __init__(self):
         gtk.VBox.__init__(self)
         self.webcast_sw, self.webcast_view = self.get_webcast_view()
-        self.empty_webcast_box = EmptyWebcast(self.webcast_view.on_drag_data_received)
+        self.empty_webcast_box = EmptyListItem(self.webcast_view.on_drag_data_received,
+                                               EMPTY_WEBCAST_ITEM)
         self.add(self.empty_webcast_box)
         
         self.webcast_view.connect("empty-items", self.on_webcast_view_empty_items)

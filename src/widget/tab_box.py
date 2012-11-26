@@ -34,13 +34,13 @@ from constant import LIST_WIDTH
 class Tab(gtk.EventBox):
     __gtype_name__ = "DtkTab"
     
-    def __init__(self, title, allocate_widget, index,  total_number, icon=None):
+    def __init__(self, title, allocate_widget,  tab_type, index,  total_number, icon=None):
         gtk.EventBox.__init__(self)
         self.set_visible_window(False)
         self.add_events(gtk.gdk.ALL_EVENTS_MASK)
         self.unset_flags(gtk.CAN_FOCUS)
-        # self.connect("set-focus-child", self.on_grab_focus)
-        # self.connect("grab-focus", self.on_grab_focus)
+        self.connect("set-focus-child", self.on_grab_focus)
+        self.connect("grab-focus", self.on_grab_focus)
         self.connect("button-press-event", self.on_tab_button_press)
         self.connect("motion-notify-event", self.on_tab_motion_notify)
         self.connect("button-release-event", self.on_tab_button_release)
@@ -52,6 +52,7 @@ class Tab(gtk.EventBox):
         self.__allocate_widget = allocate_widget
         self.index = index
         self.total = total_number
+        self.tab_type = tab_type
         
         # init data.
         self.is_select = False
@@ -76,7 +77,7 @@ class Tab(gtk.EventBox):
         color = "#EDF3FA"
         if self.is_select:    
             color = "#FFFFFF"
-        alpha_color = (color, 1.0)    
+        alpha_color = (color, 0.95)    
         
         with cairo_disable_antialias(cr):
             cr.set_source_rgba(*alpha_color_hex_to_cairo(alpha_color))
@@ -84,8 +85,7 @@ class Tab(gtk.EventBox):
             cr.fill()
             
             cr.set_line_width(1)
-            cr.set_source_rgba(*alpha_color_hex_to_cairo(("#D6D6D6", 1.0)))        
-            # cr.set_source_rgba(*alpha_color_hex_to_cairo(("#FF0000", 1.0)))        
+            cr.set_source_rgba(*alpha_color_hex_to_cairo(("#D6D6D6", 0.95)))        
             
             if self.index == 0:
                 if self.is_select:
@@ -219,8 +219,8 @@ class TabManager(gtk.VBox):
         if clear:
             self.clear_items()
         self.total_number += len(items)
-        for index, (title, allocate_widget) in enumerate(items):        
-            self.items.append(Tab(title, allocate_widget, index, self.total_number))
+        for index, (title, allocate_widget, tab_type) in enumerate(items):        
+            self.items.append(Tab(title, allocate_widget, tab_type, index, self.total_number))
         self.resize_items()    
             
     def clear_items(self):        

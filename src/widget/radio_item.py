@@ -577,6 +577,10 @@ class RadioListItem(gobject.GObject):
         
     def get_index(self):    
         return self.index
+    
+    @property
+    def channel_id(self):
+        return self.channel_info.get("id", "")
         
     def emit_redraw_request(self):
         self.emit("redraw-request")

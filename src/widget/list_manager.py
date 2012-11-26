@@ -24,14 +24,15 @@ import gtk
 
 from dtk.ui.scrolled_window import ScrolledWindow
 from widget.playlist import PlaylistUI
-from widget.castlist import WebcastList
-from widget.radio_view import RadioView
+from widget.webcast_list import WebcastList
+from widget.radio_list import RadioList
 
 from helper import Dispatcher
 from nls import _
 
-from widget.tab_box import TabManager, Tab
-from constant import LIST_WIDTH
+from widget.tab_box import TabManager
+from constant import LIST_WIDTH, TAB_LOCAL, TAB_WEBCAST, TAB_RADIO
+
 
 class ListManager(gtk.VBox):
     def __init__(self):
@@ -45,20 +46,14 @@ class ListManager(gtk.VBox):
         
         # webcastlist
         self.tab_box = TabManager([
-                (_("本地音乐"), self.playlist_ui),
-                (_("网络广播"), WebcastList()),
-                (_("豆瓣电台"), self.get_radio_box())])
+                (_("本地音乐"), self.playlist_ui, TAB_LOCAL),
+                (_("网络广播"), WebcastList(), TAB_WEBCAST),
+                (_("豆瓣电台"), RadioList(), TAB_RADIO)
+                ])
         
         self.tab_box.connect("switch-tab", self.on_tab_box_switch_tab)
         main_align.add(self.tab_box)
         self.add(main_align)
         
     def on_tab_box_switch_tab(self, widget, item):    
-        Dispatcher.emit("switch-browser", item.index)
-        
-    def get_radio_box(self):   
-        view = RadioView()
-        scrolled_window = ScrolledWindow(0, 0) 
-        scrolled_window.add_child(view)
-        scrolled_window.set_size_request(LIST_WIDTH, -1)
-        return scrolled_window
+        Dispatcher.emit("switch-browser", item.tab_type)

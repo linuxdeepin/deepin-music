@@ -34,7 +34,9 @@ from dtk.ui.button import ImageButton
 from dtk.ui.draw import draw_pixbuf, draw_text, draw_round_rectangle, draw_vlinear
 from widget.skin import app_theme
 from widget.ui_utils import draw_alpha_mask, draw_line
+
 from helper import Dispatcher
+from constant import EMPTY_WEBCAST_ITEM, EMPTY_RADIO_ITEM
 
 import utils
 
@@ -277,19 +279,25 @@ class CustomEntry(gtk.VBox):
 gobject.type_register(CustomEntry)
 
 
-class EmptyWebcast(gtk.EventBox):
+class EmptyListItem(gtk.EventBox):
     
-    def __init__(self, drag_data_received_cb):
+    def __init__(self, drag_data_received_cb, item_type):
         gtk.EventBox.__init__(self)
         self.set_visible_window(False)
         self.connect("expose-event", self.on_expose_event)
         
-        targets = [("text/deepin-webcasts", gtk.TARGET_SAME_APP, 1),]
+        if item_type == EMPTY_WEBCAST_ITEM:
+            targets = [("text/deepin-webcasts", gtk.TARGET_SAME_APP, 1),]
+            self.empty_pixbuf = app_theme.get_pixbuf("webcast/empty_cn.png").get_pixbuf()            
+        elif item_type == EMPTY_RADIO_ITEM:    
+            targets = [("text/deepin-radios", gtk.TARGET_SAME_APP, 1),]
+            self.empty_pixbuf = app_theme.get_pixbuf("webcast/empty_cn.png").get_pixbuf()            
+            
         self.drag_dest_set(gtk.DEST_DEFAULT_MOTION | gtk.DEST_DEFAULT_DROP,
                            targets, gtk.gdk.ACTION_COPY)
         self.connect("drag-data-received", drag_data_received_cb)
         
-        self.empty_pixbuf = app_theme.get_pixbuf("webcast/empty_cn.png").get_pixbuf()
+
         
     def on_expose_event(self, widget, event):    
         cr = widget.window.cairo_create()

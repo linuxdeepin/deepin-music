@@ -226,6 +226,7 @@ class DeepinMusic(gobject.GObject, Logger):
         self.loginfo("Exiting...")
         Player.stop()
         self.mmkeys.release()
+        Dispatcher.emit("being-quit")
         self.playlist_ui.save_to_library()
         self.browser_manager.save() 
         MediaDB.save()

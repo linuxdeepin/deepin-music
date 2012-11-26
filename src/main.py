@@ -96,30 +96,37 @@ class DeepinMusicApp(Logger):
             formatter=OverrideHelpFormatter())
         
         group = OptionGroup(p, _('Control Options'))
-        group.add_option("-n", "--next", dest="Next", action="store_true", default=False, help=_("Play the next track"))
-        group.add_option("-p", "--prev", dest="Prev", action="store_true", default=False, help=_("Play the previous track"))
-        group.add_option("-t", "--play-pause", dest="PlayPause", action="store_true", default=False, help=_("Pause or resume playback"))        
-        group.add_option("-f", "--forward", dest="Forward", action="store_true", default=False, help=_("Forward playback"))
-        group.add_option("-r", "--rewind", dest="Rewind", action="store_true", default=False, help=_("Rewind playback"))
-        group.add_option("-s", "--stop", dest="Stop", action="store_true", default=False, help=_("Stop playback"))
+        group.add_option("-n", "--next", dest="Next", 
+                         action="store_true", default=False, help=_("Play the next track"))
+        group.add_option("-p", "--prev", dest="Prev",
+                         action="store_true", default=False, help=_("Play the previous track"))
+        group.add_option("-t", "--play-pause", dest="PlayPause", 
+                         action="store_true", default=False, help=_("Pause or resume playback"))        
+        group.add_option("-f", "--forward", dest="Forward", 
+                         action="store_true", default=False, help=_("Forward playback"))
+        group.add_option("-r", "--rewind", dest="Rewind", 
+                         action="store_true", default=False, help=_("Rewind playback"))
+        group.add_option("-s", "--stop", dest="Stop", 
+                         action="store_true", default=False, help=_("Stop playback"))
         
         p.add_option_group(group)
         
-        # group = OptionGroup(p, 'Collection Options')
-        # group.add_option("--add", dest="Add", action="store",
-        #         metavar="LOCATION", help="Add tracks from LOCATION(files or dirs) to the collection")
-        # p.add_option_group(group)
-        
         group = OptionGroup(p, _('Volume Options'))
-        group.add_option("-v", "--change-vol", dest="ChangeVolume", action="store", default=None, help=_("Change volume (VOLUME 0.0-1.0)"))
+        group.add_option("-v", "--change-vol", dest="ChangeVolume",
+                         action="store", default=None, help=_("Change volume (VOLUME 0.0-1.0)"))
         p.add_option_group(group)
         
         group = OptionGroup(p, _('Track information Options'))
-        group.add_option("--get-title", dest="GetTitle", action="store_true", default=False, help=_("Print the title of current track"))
-        group.add_option("--get-album", dest="GetAlbum", action="store_true", default=False, help=_("Print the album of current track"))
-        group.add_option("--get-artist", dest="GetArtist", action="store_true", default=False, help=_("Print the artist of current track"))
-        group.add_option("--get-length", dest="GetLength", action="store_true", default=False, help=_("Print the length of current track"))
-        group.add_option("--get-path", dest="GetPath", action="store_true", default=False, help=_("Print the path of current track"))
+        group.add_option("--get-title", dest="GetTitle", 
+                         action="store_true", default=False, help=_("Print the title of current track"))
+        group.add_option("--get-album", dest="GetAlbum",
+                         action="store_true", default=False, help=_("Print the album of current track"))
+        group.add_option("--get-artist", dest="GetArtist", 
+                         action="store_true", default=False, help=_("Print the artist of current track"))
+        group.add_option("--get-length", dest="GetLength", 
+                         action="store_true", default=False, help=_("Print the length of current track"))
+        group.add_option("--get-path", dest="GetPath", 
+                         action="store_true", default=False, help=_("Print the path of current track"))
         group.add_option("--current-position", dest="CurrentPosition",
                 action="store_true", default=False, help=_("Print the current playback position as time"))
         p.add_option_group(group)
