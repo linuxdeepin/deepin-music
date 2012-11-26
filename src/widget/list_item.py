@@ -166,7 +166,7 @@ class ListTreeItem(TreeItem):
     
     def render_title(self, cr, rect):
         if self.is_highlight:    
-            draw_single_mask(cr, rect.x + 1, rect.y, rect.width, rect.height, "simpleItemSelect")
+            draw_single_mask(cr, rect.x + 1, rect.y, rect.width, rect.height, "simpleItemHighlight")
         elif self.is_hover:
             draw_single_mask(cr, rect.x + 1, rect.y, rect.width, rect.height, "simpleItemHover")
         
@@ -182,7 +182,7 @@ class ListTreeItem(TreeItem):
     def render_content(self, cr, rect):
         if self.is_highlight:    
             if not self.is_double_click:
-                draw_single_mask(cr, rect.x + 1, rect.y, rect.width, rect.height, "simpleItemSelect")
+                draw_single_mask(cr, rect.x + 1, rect.y, rect.width, rect.height, "simpleItemHighlight")
                 text_color = "#FFFFFF"
             else:    
                 text_color = app_theme.get_color("labelText").get_color()

@@ -79,14 +79,14 @@ class WebcastTreeItem(TreeItem):
     def render_webcast_icon(self, cr, rect):        
         # Draw select background.
         if self.is_select:
-            draw_single_mask(cr, rect.x, rect.y, rect.w, rect.h, "simpleItemSelect")
+            draw_single_mask(cr, rect.x, rect.y, rect.w, rect.h, "simpleItemHighlight")
             
         draw_pixbuf(cr, self.webcast_icon, rect.x + self.side_padding, 
                     rect.y + (rect.height - self.webcast_icon.get_height()) / 2)
         
     def render_webcast_name(self, cr, rect):    
         if self.is_select:
-            draw_single_mask(cr, rect.x, rect.y, rect.w, rect.h, "simpleItemSelect")
+            draw_single_mask(cr, rect.x, rect.y, rect.w, rect.h, "simpleItemHighlight")
             
         draw_text(cr, self.name, rect.x, rect.y, rect.w, rect.h)    
         
@@ -256,9 +256,9 @@ class CategroyItem(TreeItem):
         # Draw select background.
         if self.is_select:
             draw_pixbuf(cr, self.hover_bg, rect.x, rect.y)
-            text_color = app_theme.get_color("simpleItemSelect").get_color()
+            text_color = app_theme.get_color("simpleItemHighlight").get_color()
         elif self.is_hover:    
-            text_color = app_theme.get_color("simpleItemSelect").get_color()
+            text_color = app_theme.get_color("simpleItemHighlight").get_color()
         else:    
             text_color = app_theme.get_color("labelText").get_color()
             
@@ -354,7 +354,7 @@ class CustomItem(TreeItem):
         #     draw_pixbuf(cr, self.hover_bg, rect.x, rect.y)
         #     text_color = app_theme.get_color("simpleItemSelect").get_color()
         if self.is_hover:    
-            text_color = app_theme.get_color("simpleItemSelect").get_color()
+            text_color = app_theme.get_color("simpleItemHighlight").get_color()
         else:    
             text_color = app_theme.get_color("labelText").get_color()
             
@@ -421,7 +421,7 @@ class PanelItem(gobject.GObject):
         else:    
             if self.has_underline:            
                 self.underline = True
-            color = app_theme.get_color("simpleItemSelect").get_color()
+            color = app_theme.get_color("simpleItemHighlight").get_color()
         draw_text(cr, self.title, rect.x, rect.y, rect.width, rect.height, text_color=color, underline=self.underline)
         
     def get_size(self):    

@@ -60,7 +60,7 @@ class GenreItem(object):
     
     def render(self, cr, rect):    
         if self.hover_flag or self.is_select:
-            color = app_theme.get_color("simpleItemSelect").get_color()            
+            color = app_theme.get_color("simpleItemHighlight").get_color()            
         else:    
             color = "#333333"
         draw_text(cr, self.title, rect.x, rect.y, rect.width, rect.height,
