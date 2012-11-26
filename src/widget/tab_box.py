@@ -174,11 +174,17 @@ class TabManager(gtk.VBox):
         self.__topbar.connect("size-allocate", self.on_topbar_size_allocate)
         self.__container = gtk.VBox()
         
-        self.pack_start(self.__topbar, False, True)
-        self.pack_start(self.__container, True, True)
         
         self.default_height = default_height
         self.items = items
+        allocate_align = gtk.Alignment()
+        allocate_align.set(1, 1, 1, 1)
+        allocate_align.set_padding(0, 0, 0, 0)
+        allocate_align.add(self.__container)
+        
+        self.pack_start(self.__topbar, False, True)
+        self.pack_start(allocate_align, True, True)
+        
         
         # Init Status.
         if self.items:
