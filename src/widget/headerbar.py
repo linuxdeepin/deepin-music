@@ -79,12 +79,12 @@ class SimpleHeadbar(gtk.EventBox):
         
         
         lyrics_button_align = gtk.Alignment()
-        lyrics_button_align.set_padding(0, 0, 0, 5)
+        lyrics_button_align.set_padding(0, 0, 0, 10)
         lyrics_button_align.set(0.5, 0.5, 0, 0)
         lyrics_button_align.add(self.lyrics_button)
         
         volume_button_align = gtk.Alignment()
-        volume_button_align.set_padding(0, 0, 5, 0)
+        volume_button_align.set_padding(0, 0, 10, 0)
         volume_button_align.set(0.5, 0.5, 0, 0)
         volume_button_align.add(VolumeSlider())
         # volume_button_align.add(VolumeButton())
