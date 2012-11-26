@@ -25,7 +25,7 @@ import gobject
 import pango
 
 from dtk.ui.draw import draw_text, draw_pixbuf
-from dtk.ui.utils import  alpha_color_hex_to_cairo
+from dtk.ui.utils import  alpha_color_hex_to_cairo, container_remove_all, cairo_disable_antialias
 
 from widget.ui_utils import switch_tab
 from widget.skin import app_theme
@@ -34,13 +34,13 @@ from constant import LIST_WIDTH
 class Tab(gtk.EventBox):
     __gtype_name__ = "DtkTab"
     
-    def __init__(self, title, allocate_widget, index, last=False, icon=None):
+    def __init__(self, title, allocate_widget, index,  total_number, icon=None):
         gtk.EventBox.__init__(self)
         self.set_visible_window(False)
         self.add_events(gtk.gdk.ALL_EVENTS_MASK)
         self.unset_flags(gtk.CAN_FOCUS)
-        self.connect("set-focus-child", self.on_grab_focus)
-        self.connect("grab-focus", self.on_grab_focus)
+        # self.connect("set-focus-child", self.on_grab_focus)
+        # self.connect("grab-focus", self.on_grab_focus)
         self.connect("button-press-event", self.on_tab_button_press)
         self.connect("motion-notify-event", self.on_tab_motion_notify)
         self.connect("button-release-event", self.on_tab_button_release)
@@ -51,9 +51,9 @@ class Tab(gtk.EventBox):
         self.press_callback = None
         self.__allocate_widget = allocate_widget
         self.index = index
-        self.is_last = last
+        self.total = total_number
         
-        # Init data.
+        # init data.
         self.is_select = False
         self.is_hover = False
         self.title = title 
@@ -76,33 +76,57 @@ class Tab(gtk.EventBox):
         color = "#EDF3FA"
         if self.is_select:    
             color = "#FFFFFF"
+        alpha_color = (color, 1.0)    
+        
+        with cairo_disable_antialias(cr):
+            cr.set_source_rgba(*alpha_color_hex_to_cairo(alpha_color))
+            cr.rectangle(rect.x, rect.y, rect.width, rect.height)
+            cr.fill()
             
-        alpha_color = (color, 0.90)    
-        cr.set_source_rgba(*alpha_color_hex_to_cairo(alpha_color))
-        cr.rectangle(rect.x, rect.y, rect.width, rect.height)
-        cr.fill()
-        
-        cr.set_line_width(1)
-        cr.set_source_rgba(*alpha_color_hex_to_cairo(("#ABABAB", 0.90)))        
-        if self.is_last:
-            cr.move_to(rect.x + rect.width, rect.y + rect.height)            
-        else:    
-            cr.move_to(rect.x + rect.width, rect.y)
-            cr.rel_line_to(0, rect.height)
-        
-        if not self.is_select:
-            cr.rel_line_to(-rect.width, 0)
-
-        cr.stroke()
-        
-        if self.index == 0 and self.is_select:
-            dashed = [4.0, 4.0]
-            cr.save()
-            cr.move_to(rect.x, rect.y + rect.height)
-            cr.line_to(rect.x + rect.width, rect.y + rect.height)
-            cr.set_dash(dashed)
-            cr.stroke()
-            cr.restore()
+            cr.set_line_width(1)
+            cr.set_source_rgba(*alpha_color_hex_to_cairo(("#D6D6D6", 1.0)))        
+            # cr.set_source_rgba(*alpha_color_hex_to_cairo(("#FF0000", 1.0)))        
+            
+            if self.index == 0:
+                if self.is_select:
+                    cr.move_to(rect.x + rect.width, rect.y)
+                    cr.rel_line_to(0, rect.height)
+                else:    
+                    cr.move_to(rect.x, rect.y + rect.height)
+                    cr.rel_line_to(rect.width, 0)
+                cr.stroke()                                
+                    # dashed = [4.0, 4.0]
+                    # cr.save()
+                    # cr.move_to(rect.x, rect.y + rect.height)
+                    # cr.line_to(rect.x + rect.width, rect.y + rect.height)
+                    # cr.set_dash(dashed)
+                    # cr.stroke()
+                    # cr.restore()
+            
+            elif self.index == self.total - 1:
+                if self.is_select:
+                    cr.move_to(rect.x + 1, rect.y)
+                    cr.rel_line_to(0, rect.height)
+                else:    
+                    cr.move_to(rect.x, rect.y + rect.height)
+                    cr.rel_line_to(rect.width, 0)
+                cr.stroke()    
+                
+            else:    
+                if self.is_select:
+                    cr.move_to(rect.x + 1, rect.y)
+                    cr.rel_line_to(0, rect.height)
+                    cr.stroke()
+                    
+                    cr.save()
+                    cr.move_to(rect.x + rect.width, rect.y)
+                    cr.rel_line_to(0, rect.height)
+                    cr.stroke()
+            
+                else:    
+                    cr.move_to(rect.x, rect.y + rect.height)
+                    cr.rel_line_to(rect.width, 0)
+                    cr.stroke()
         
         if self.icon_pixbuf:
             icon_y = rect.y + (rect.height - self.icon_size) / 2
@@ -124,7 +148,6 @@ class Tab(gtk.EventBox):
         
     def clear_selected_status(self):
         self.is_select = False
-        self.queue_draw()
         
     def manual_select(self):
         self.is_select = True
@@ -135,7 +158,6 @@ class Tab(gtk.EventBox):
         
     def on_tab_expose(self, widget, event):    
         rect = widget.allocation
-        # rect.x += 1
         cr = widget.window.cairo_create()
         self.render(cr, rect)
         return True
@@ -173,10 +195,10 @@ class TabManager(gtk.VBox):
         self.__topbar.connect("realize", self.on_topbar_realize)
         self.__topbar.connect("size-allocate", self.on_topbar_size_allocate)
         self.__container = gtk.VBox()
-        
+        self.total_number = 0
         
         self.default_height = default_height
-        self.items = items
+        self.items = []
         allocate_align = gtk.Alignment()
         allocate_align.set(1, 1, 1, 1)
         allocate_align.set_padding(0, 0, 0, 0)
@@ -185,14 +207,35 @@ class TabManager(gtk.VBox):
         self.pack_start(self.__topbar, False, True)
         self.pack_start(allocate_align, True, True)
         
+        self.add_items(items)
         
         # Init Status.
         if self.items:
             item = self.items[0]
             item.manual_select()
             self.__container.add(item.get_allocate_widget())
+            
+    def add_items(self, items, clear=True):        
+        if clear:
+            self.clear_items()
+        self.total_number += len(items)
+        for index, (title, allocate_widget) in enumerate(items):        
+            self.items.append(Tab(title, allocate_widget, index, self.total_number))
+        self.resize_items()    
+            
+    def clear_items(self):        
+        del self.items[:]
+        self.total_number = 0
         
+    def repack_items(self):    
+        self.resize_item()
+            
     def on_topbar_realize(self, widget):   
+        self.resize_items(widget)
+            
+    def resize_items(self, widget=None):        
+        if not widget: widget = self.__topbar
+        container_remove_all(widget)        
         total = len(self.items)
         if total > 0:
             rect = widget.allocation
@@ -201,7 +244,7 @@ class TabManager(gtk.VBox):
                 item.press_callback = self.on_item_press
                 item.set_size_request(average_width, self.default_height)
                 self.__topbar.pack_start(item, False, False)
-            self.__topbar.show_all()
+            widget.show_all()
             
     def on_topbar_size_allocate(self, widget, rect):        
         pass

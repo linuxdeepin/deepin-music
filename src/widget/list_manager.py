@@ -45,9 +45,9 @@ class ListManager(gtk.VBox):
         
         # webcastlist
         self.tab_box = TabManager([
-                Tab(_("本地音乐"), self.playlist_ui, 0),
-                Tab(_("网络广播"), WebcastList(), 1),
-                Tab(_("豆瓣电台"), self.get_radio_box(), 2, True)])
+                (_("本地音乐"), self.playlist_ui),
+                (_("网络广播"), WebcastList()),
+                (_("豆瓣电台"), self.get_radio_box())])
         
         self.tab_box.connect("switch-tab", self.on_tab_box_switch_tab)
         main_align.add(self.tab_box)
