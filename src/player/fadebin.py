@@ -177,6 +177,9 @@ FADING_OUT = 2048
 FADING_OUT_PAUSED = 4096
 PENDING_REMOVE = 8192
 
+SOURCE_CD = 1
+SOURCE_RTSP = 2
+SOURCE_NORMAL = 3
 
 class FailedBuildGstElement(Exception):
     pass
@@ -1225,6 +1228,7 @@ class StreamBin(gst.Bin, Logger):
         self.base_time = 0.0
         self.src_blocked = False
         self.rtsp_mode = False
+        self.source_type = SOURCE_NORMAL
 
         # Only keep it for debug
         self.uri = uri
@@ -1245,6 +1249,7 @@ class StreamBin(gst.Bin, Logger):
                 uri = uri[:uri.find("#")]
                 self.__src = gst.element_make_from_uri("src", uri)
                 self.__src.set_property("device", device)
+                self.source_type = SOURCE_CD
             else:
                 self.__src = gst.element_make_from_uri("src", uri)
                 
@@ -1308,6 +1313,7 @@ class StreamBin(gst.Bin, Logger):
             
         elif uri.startswith("rtsp://"):    
             self.rtsp_mode = True
+            self.source_type = SOURCE_RTSP
             self.__src.connect("pad-added", self.on_rtsp_pad_added)               
             self.__src.connect("pad-removed", self.on_rtsp_pad_removed)
             self.logdebug("Create a remote stream bin")
@@ -1951,7 +1957,7 @@ class StreamBin(gst.Bin, Logger):
                 
         if not ret:
             self.logerror("Failed to preroll stream")
-            if self.rtsp_mode:
+            if self.source_type != SOURCE_NORMAL:
                 self.emit_stream_error("Failed to preroll stream")
         
         return ret

@@ -22,7 +22,6 @@
 
 import gtk
 import gobject
-import cairo
 
 from dtk.ui.window import Window
 from dtk.ui.titlebar import Titlebar
@@ -31,11 +30,10 @@ from dtk.ui.utils import (move_window, alpha_color_hex_to_cairo,
                           propagate_expose, get_content_size)
 from dtk.ui.new_entry import InputEntry, Entry
 from dtk.ui.button import ImageButton
-from dtk.ui.draw import draw_pixbuf, draw_text, draw_round_rectangle, draw_vlinear
+from dtk.ui.draw import draw_pixbuf, draw_text, draw_vlinear
 from widget.skin import app_theme
 from widget.ui_utils import draw_alpha_mask, draw_line
 
-from helper import Dispatcher
 from constant import EMPTY_WEBCAST_ITEM, EMPTY_RADIO_ITEM
 
 import utils

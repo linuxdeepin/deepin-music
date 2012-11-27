@@ -34,6 +34,7 @@ class WebcastsDatabase(gobject.GObject):
         self.raw_db_file = os.path.join((os.path.dirname(os.path.realpath(__file__))), "data", "webcasts.db")
         self.favorite_db_file = get_config_file("favorite_webcasts.db")
         self.custom_db_file = get_config_file("custom_webcasts.db")
+        self.preview_db_file = get_config_file("preview_webcasts.db")
         self.__is_loaded = False
     
     def load(self):
@@ -51,6 +52,11 @@ class WebcastsDatabase(gobject.GObject):
             self.custom_db_objs = load_db(self.custom_db_file)
         except:    
             self.custom_db_objs = None
+            
+        try:    
+            self.preview_db_objs = load_db(self.preview_db_file)
+        except:    
+            self.preview_db_objs = None
             
         gobject.idle_add(self.__delay_post_load)    
 
@@ -84,6 +90,12 @@ class WebcastsDatabase(gobject.GObject):
             return []
         else:
             return self.favorite_db_objs
+        
+    def get_preview_items(self):    
+        if not self.preview_db_objs:
+            return []
+        else:
+            return self.preview_db_objs
         
     def is_collected(self, uri):    
         if not self.favorite_db_objs:

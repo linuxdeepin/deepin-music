@@ -231,7 +231,7 @@ class WebcastView(ListView):
         return highlight_item.get_webcast()
     
     def on_dispatcher_play_webcast(self, obj, webcast):
-        self.add_webcasts([webcast], play=True)
+        self.add_webcasts([webcast], pos=-1, play=True)
         
     def add_webcasts(self, webcasts, pos=None, sort=False, play=False):    
         if not webcasts:

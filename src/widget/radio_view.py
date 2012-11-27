@@ -22,15 +22,12 @@
 
 import gtk
 import gobject
-import pango
 from dtk.ui.listview import ListView
-from dtk.ui.draw import draw_pixbuf, draw_text
 from dtk.ui.iconview import IconView
 from dtk.ui.threads import post_gui
 from dtk.ui.scrolled_window import ScrolledWindow
 
-from widget.ui_utils import draw_single_mask, draw_alpha_mask, draw_line
-from widget.skin import app_theme
+from widget.ui_utils import draw_alpha_mask
 from widget.radio_item import RadioListItem, MoreIconItem, CommonIconItem
 from helper import Dispatcher
 from player import Player
@@ -107,7 +104,7 @@ class RadioView(ListView):
             
     def get_next_song(self, maunal=False):        
         if self.playlist is None:
-            self.fetch_playlist(self.current_cid)
+            self.fetch_playlist()
             return     
         self.current_index += 1
         current_index = self.current_index        
@@ -153,7 +150,10 @@ class RadioView(ListView):
             self.add_items(channel_items, pos, sort)    
             
             if len(self.items) > self.limit_number:
-                self.delete_items(self.items[self.limit_number:])
+                being_delete_items = self.items[self.limit_number:]
+                if self.highlight_item in being_delete_items:
+                    being_delete_items.remove(self.highlight_item)
+                self.delete_items(being_delete_items)
             
         if len(channels) >= 1 and play:
             del self.select_rows[:]
@@ -173,6 +173,9 @@ class RadioView(ListView):
             self.set_highlight(self.items[item_index])
             self.visible_highlight()
             self.queue_draw()
+        else:    
+            self.add_channels([channel], pos=0)
+            self.set_highlight(self.items[0])
             
     def on_button_press_event(self, widget, event):        
         pass
