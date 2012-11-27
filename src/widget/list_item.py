@@ -38,6 +38,7 @@ from widget.ui_utils import (draw_alpha_mask, create_upper_align, create_bottom_
 from nls import _
 
 
+
 DEFAULT_FONT_SIZE = 8
 
 

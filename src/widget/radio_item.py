@@ -28,17 +28,17 @@ import os
 from dtk.ui.threads import post_gui
 from dtk.ui.new_treeview import TreeItem
 from dtk.ui.draw import draw_pixbuf, draw_text
-from dtk.ui.utils import (get_content_size, get_widget_root_coordinate, get_match_parent,
-                          alpha_color_hex_to_cairo)
+from dtk.ui.utils import (get_content_size)
+
 from dtk.ui.thread_pool import MissionThread
 
 import utils
-from widget.ui_utils import (draw_single_mask, draw_alpha_mask, render_item_text,
-                             switch_tab, draw_range, draw_line, render_text)
+from widget.ui_utils import (draw_single_mask, render_text)
 from widget.ui import CoverPopupNotify
 from widget.skin import app_theme
 from nls import _
 from cover_manager import DoubanCover
+from constant import LIST_WIDTH
 
 class CategroyTreeItem(TreeItem):    
     def __init__(self, title, callback=None):
@@ -552,38 +552,32 @@ class MoreIconItem(gobject.GObject):
             self.mask_pixbuf = None
             
         return True
-
-class RadioListItem(gobject.GObject):
     
-    __gsignals__ = {"redraw-request" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()), }
+class RadioListItem(TreeItem):
     
     def __init__(self, channel_info):
-        gobject.GObject.__init__(self)
+        TreeItem.__init__(self)
         self.index = 0
+        self.column_index = 0
         self.side_padding = 5
         self.item_height = 55
-        self.item_width = 121
+        self.item_width = LIST_WIDTH
+        self.is_highlight = False
         self.channel_info = channel_info
         cover_path = DoubanCover.get_cover(channel_info, try_web=False)
         if cover_path:
             self.normal_pixbuf = gtk.gdk.pixbuf_new_from_file(cover_path)
         else:    
             self.normal_pixbuf = app_theme.get_pixbuf("slide/default_cover.png").get_pixbuf()
-            
         self.update_size()    
-        
-    def set_index(self, index):    
-        self.index = index
-        
-    def get_index(self):    
-        return self.index
     
     @property
     def channel_id(self):
         return self.channel_info.get("id", "")
         
     def emit_redraw_request(self):
-        self.emit("redraw-request")
+        if self.redraw_request_callback:
+            self.redraw_request_callback(self)
         
     def update_size(self):    
         self.channel_name = utils.xmlescape(self.channel_info.get("name", ""))
@@ -594,8 +588,15 @@ class RadioListItem(gobject.GObject):
         __, self.detail_h = get_content_size(self.detail_info, text_size=8)
     
     
-    def render_content(self, cr, rect, in_select, in_highlight):
-        if in_select or in_highlight:
+    def render_content(self, cr, rect):
+        if self.is_highlight:    
+            draw_single_mask(cr, rect.x + 1, rect.y, rect.width, rect.height, "simpleItemHighlight")
+        elif self.is_select:    
+            draw_single_mask(cr, rect.x + 1, rect.y, rect.width, rect.height, "simpleItemSelect")
+        elif self.is_hover:
+            draw_single_mask(cr, rect.x + 1, rect.y, rect.width, rect.height, "simpleItemHover")
+        
+        if self.is_select or self.is_highlight:
             text_color = "#ffffff"
         else:    
             text_color = app_theme.get_color("labelText").get_color()
@@ -618,11 +619,39 @@ class RadioListItem(gobject.GObject):
                   text_color = text_color,
                   alignment=pango.ALIGN_LEFT, text_size=8)    
         
-    def get_column_sizes(self):    
-        return [(self.item_width, self.item_height),]
+    def get_height(self):    
+        return self.item_height
     
-    def get_renders(self):
-        return [self.render_content]
+    def get_column_widths(self):
+        return (self.item_width,)
+    
+    def unhover(self, column, offset_x, offset_y):
+        self.is_hover = False
+        self.emit_redraw_request()
+    
+    def hover(self, column, offset_x, offset_y):
+        self.is_hover = True
+        self.emit_redraw_request()
+    
+    def unselect(self):
+        self.is_select = False
+        self.emit_redraw_request()
+    
+    def select(self):    
+        self.is_select = True
+        self.emit_redraw_request()
+        
+    def highlight(self):    
+        self.is_highlight = True
+        # self.is_select = False
+        self.emit_redraw_request()
+        
+    def unhighlight(self):    
+        self.is_highlight = False
+        self.emit_redraw_request()
+        
+    def get_column_renders(self):
+        return (self.render_content,)
         
     def __hash__(self):
         return hash(self.channel_info.get("id"))
@@ -642,4 +671,3 @@ class RadioListItem(gobject.GObject):
             return self.channel_info == other_item.channel_info
         except:
             return False
-

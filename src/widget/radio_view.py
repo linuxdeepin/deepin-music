@@ -23,6 +23,7 @@
 import gtk
 import gobject
 from dtk.ui.listview import ListView
+from dtk.ui.new_treeview import TreeView
 from dtk.ui.iconview import IconView
 from dtk.ui.threads import post_gui
 from dtk.ui.scrolled_window import ScrolledWindow
@@ -38,14 +39,14 @@ import utils
 from xdg_support import get_config_file
 from library import MediaDB
 
-class RadioView(ListView):    
+class RadioView(TreeView):    
     __gsignals__ = {
         "begin-add-items" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),
         "empty-items" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),
         }
     
     def __init__(self, *args, **kwargs):
-        ListView.__init__(self, *args, **kwargs)
+        TreeView.__init__(self, *args, **kwargs)
         targets = [("text/deepin-radios", gtk.TARGET_SAME_APP, 1),]        
         self.drag_dest_set(gtk.DEST_DEFAULT_MOTION | gtk.DEST_DEFAULT_DROP, targets, gtk.gdk.ACTION_COPY)
         
@@ -54,7 +55,6 @@ class RadioView(ListView):
         self.connect("button-press-event", self.on_button_press_event)
         self.connect("delete-select-items", self.try_emit_empty_signal)
         Dispatcher.connect("play-radio", self.on_dispatcher_play_radio)
-        self.set_expand_column(0)
         
         self.current_index = 0
         self.playlist = None
@@ -75,10 +75,10 @@ class RadioView(ListView):
         draw_alpha_mask(cr, x, y, width, height, "layoutLeft")
         
     def is_empty(self):
-        return len(self.items) == 0        
+        return len(self.get_items()) == 0        
         
     def try_emit_empty_signal(self, widget, items):    
-        if len(self.items) <= 0:
+        if len(self.get_items()) <= 0:
             self.emit("empty-items")
             
     def emit_add_signal(self):            
@@ -89,7 +89,7 @@ class RadioView(ListView):
         
     def on_double_click_item(self, widget, item, column, x, y):    
         if item:
-            self.set_highlight(item)
+            self.set_highlight_item(item)
             self.fetch_playlist(play=True)
             
     @utils.threaded       
@@ -129,7 +129,7 @@ class RadioView(ListView):
         except: pos = None
         
         if pos == None:
-            pos = len(self.items)
+            pos = len(self.get_items())
             
         if selection.target == "text/deepin-radios":    
             channels_data =  selection.data
@@ -143,14 +143,14 @@ class RadioView(ListView):
             channels = [ channels ]
             
         channel_items = [ RadioListItem(info) for info in channels ]    
-        channel_items = filter(lambda item : item not in self.items, channel_items)
+        channel_items = filter(lambda item : item not in self.get_items(), channel_items)
         if channel_items:
-            if not self.items:
+            if not self.get_items():
                 self.emit_add_signal()
             self.add_items(channel_items, pos, sort)    
             
-            if len(self.items) > self.limit_number:
-                being_delete_items = self.items[self.limit_number:]
+            if len(self.get_items()) > self.limit_number:
+                being_delete_items = self.get_items()[self.limit_number:]
                 if self.highlight_item in being_delete_items:
                     being_delete_items.remove(self.highlight_item)
                 self.delete_items(being_delete_items)
@@ -165,26 +165,28 @@ class RadioView(ListView):
     def set_highlight_channel(self, channel):        
         if not channel: return 
         item_index = None
-        for index, item in enumerate(self.items):
+        for index, item in enumerate(self.get_items()):
             if channel.get("id") == item.channel_id:
                 item_index = index
                 break
         if item_index is not None:    
-            self.set_highlight(self.items[item_index])
+            self.set_highlight_item(self.get_items()[item_index])
             self.visible_highlight()
             self.queue_draw()
         else:    
             self.add_channels([channel], pos=0)
-            self.set_highlight(self.items[0])
+            self.set_highlight_item(self.get_items()[0])
+            self.visible_highlight()
+            self.queue_draw()
             
     def on_button_press_event(self, widget, event):        
         pass
     
     
     def save(self):
-        if not self.items:
+        if not self.get_items():
             return 
-        channel_infos = [ item.channel_info for item in self.items ]
+        channel_infos = [ item.channel_info for item in self.get_items() ]
         utils.save_db(channel_infos, self.preview_db_file)
         
     def load(self):    

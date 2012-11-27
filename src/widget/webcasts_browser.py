@@ -821,6 +821,3 @@ class WebcastsBrowser(gtk.VBox):
         items = self.sourcebar.visible_items
         if items:
             [item.unselect() for item in items]
-            
-
-
