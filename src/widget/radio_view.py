@@ -203,10 +203,10 @@ class RadioIconView(IconView):
     def __init__(self, tag, limit=10, has_add=True, padding_x=0, padding_y=0):
         IconView.__init__(self, padding_x=padding_x, padding_y=padding_y)
         
-        # targets = [("text/deepin-songs", gtk.TARGET_SAME_APP, 1), ("text/uri-list", 0, 2)]
-        # icon_view.drag_source_set(gtk.gdk.BUTTON1_MASK, targets, gtk.gdk.ACTION_COPY)
-        # icon_view.connect("drag-data-get", self.__on_drag_data_get) 
-        # icon_view.connect("double-click-item", self.on_iconview_double_click_item)
+        targets = [("text/deepin-radios", gtk.TARGET_SAME_APP, 1), ("text/uri-list", 0, 2)]
+        self.drag_source_set(gtk.gdk.BUTTON1_MASK, targets, gtk.gdk.ACTION_COPY)
+        self.connect("drag-data-get", self.__on_drag_data_get) 
+
         self.tag = tag
         self.__start = 0
         self.__limit = limit
@@ -220,6 +220,12 @@ class RadioIconView(IconView):
         if has_add:
             self.add_items([MoreIconItem()])
         
+    def __on_drag_data_get(self, widget, context, selection, info, timestamp):        
+        item = widget.highlight_item
+        if not item: return
+        channel_info = str([ item.chl ])
+        selection.set("text/deepin-radios", 8, channel_info)
+    
     def set_genre_id(self, genre_id):    
         self.__genre_id = genre_id
         self.__start = 0
