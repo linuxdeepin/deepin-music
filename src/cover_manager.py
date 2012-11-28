@@ -459,7 +459,7 @@ class DoubanCoverManager(Logger):
             pixbuf.save(new_path, "png")
             del pixbuf  
             
-            utils.clip_surface(new_path)
+            # utils.clip_surface(new_path)
             return True
 
 DoubanCover = DoubanCoverManager()        

@@ -32,7 +32,7 @@ from constant import EMPTY_RADIO_ITEM
 class RadioList(gtk.VBox):
     def __init__(self):
         gtk.VBox.__init__(self)
-        self.radio_sw, self.radio_view = self.get_radio_view()
+        self.radio_view = RadioView()
         self.empty_radio_box = EmptyListItem(self.radio_view.on_drag_data_received,
                                                EMPTY_RADIO_ITEM)
         self.add(self.empty_radio_box)
@@ -44,10 +44,4 @@ class RadioList(gtk.VBox):
         switch_tab(self, self.empty_radio_box)
         
     def on_radio_view_begin_add(self, widget):    
-        switch_tab(self, self.radio_sw)
-        
-    def get_radio_view(self):    
-        view = RadioView()
-        scrolled_window = ScrolledWindow(0, 0)
-        scrolled_window.add_child(view)
-        return scrolled_window, view
+        switch_tab(self, self.radio_view)

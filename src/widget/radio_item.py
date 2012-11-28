@@ -23,9 +23,10 @@
 import gtk
 import gobject
 import pango
-import os
+import math
 
 from dtk.ui.threads import post_gui
+from dtk.ui.cache_pixbuf import CachePixbuf
 from dtk.ui.new_treeview import TreeItem
 from dtk.ui.draw import draw_pixbuf, draw_text
 from dtk.ui.utils import (get_content_size)
@@ -75,9 +76,9 @@ class CategroyTreeItem(TreeItem):
         # Draw select background.
             
         if self.is_select:    
-            draw_single_mask(cr, rect.x + 1, rect.y, rect.width, rect.height, "simpleItemSelect")
+            draw_single_mask(cr, rect.x + 1, rect.y, rect.width, rect.height, "globalItemSelect")
         elif self.is_hover:
-            draw_single_mask(cr, rect.x + 1, rect.y, rect.width, rect.height, "simpleItemHover")
+            draw_single_mask(cr, rect.x + 1, rect.y, rect.width, rect.height, "globalItemHover")
         
         if self.is_select:
             text_color = "#FFFFFF"
@@ -208,7 +209,14 @@ class CommonIconItem(gobject.GObject, MissionThread):
              
         pixbuf_x = rect.x + (rect.width - self.pixbuf.get_width()) / 2
             
-        draw_pixbuf(cr, self.pixbuf, pixbuf_x, rect.y)
+        cr.save()    
+        cr.arc(pixbuf_x + self.pixbuf.get_width() / 2,
+               rect.y + self.pixbuf.get_height() / 2,
+               self.pixbuf.get_width() / 2,
+               0, 2 * math.pi)
+        cr.clip()
+        draw_pixbuf(cr, self.pixbuf, pixbuf_x, rect.y)        
+        cr.restore()
         
         if self.pixbuf_rect is None:
             self.pixbuf_rect = gtk.gdk.Rectangle((rect.width - self.pixbuf.get_width()) / 2, 
@@ -217,8 +225,7 @@ class CommonIconItem(gobject.GObject, MissionThread):
         if self.mask_flag:    
             if self.mask_pixbuf is None:
                 self.create_mask_pixbuf()
-            draw_pixbuf(cr, self.mask_pixbuf, pixbuf_x, rect.y)    
-        
+            draw_pixbuf(cr, self.mask_pixbuf, pixbuf_x, rect.y)                
             
         title_rect = gtk.gdk.Rectangle(rect.x + self.padding_x, 
                                        rect.y + self.pixbuf.get_height() + 5,
@@ -560,17 +567,49 @@ class RadioListItem(TreeItem):
         self.index = 0
         self.column_index = 0
         self.side_padding = 5
-        self.item_height = 55
+        self.normal_item_height = 55
+        self.highlight_item_height = 80
+        self.item_height = self.normal_item_height
         self.item_width = LIST_WIDTH
         self.is_highlight = False
         self.channel_info = channel_info
+        self.icon_width = self.icon_height = 45
         cover_path = DoubanCover.get_cover(channel_info, try_web=False)
         if cover_path:
             self.normal_pixbuf = gtk.gdk.pixbuf_new_from_file(cover_path)
         else:    
             self.normal_pixbuf = app_theme.get_pixbuf("slide/default_cover.png").get_pixbuf()
         self.update_size()    
+        
+        self.animation_cache_pixbuf = CachePixbuf()
+        self.animation_timeout = 100 # s
+        self.animation_id = None
+        self.active_size = 45
+        
+    def render_animation(self, cr, rect):    
+        self.animation_cache_pixbuf.scale(self.normal_pixbuf, self.active_size, self.active_size)
+        animation_pixbuf = self.animation_cache_pixbuf.get_cache()
+        icon_x = rect.x + (rect.width - self.active_size) / 2
+        icon_y = rect.y + (rect.height - self.active_size) / 2
+        draw_pixbuf(cr, animation_pixbuf, icon_x, icon_y)
+        
+    def update_animation(self):    
+        if self.is_hover:
+            self.active_size += 2
+            if self.active_size >= 55:
+                self.active_size = 55
+                return False
+        else:    
+            self.active_size -= 2
+            if self.active_size < 45:
+                self.active_size = 45
+                return False
+        self.emit_redraw_request()    
+        return True
     
+    def start_animation(self):
+        gobject.timeout_add(self.animation_timeout, self.update_animation)
+        
     @property
     def channel_id(self):
         return self.channel_info.get("id", "")
@@ -586,41 +625,67 @@ class RadioListItem(TreeItem):
         self.detail_info = "%s首歌曲 %s制作" % (self.channel_info.get("song_num"),
                                        utils.xmlescape(self.channel_info.get("creator", {}).get("name", "")))
         __, self.detail_h = get_content_size(self.detail_info, text_size=8)
-    
+        
+        intro = utils.xmlescape(self.channel_info.get("intro", "").strip())
+        hotsongs = utils.xmlescape(" ".join(self.channel_info.get("hot_songs")))
+        self.channel_intro = intro or hotsongs               
+        __, self.intro_h = get_content_size(self.channel_intro, text_size=8)
     
     def render_content(self, cr, rect):
         if self.is_highlight:    
-            draw_single_mask(cr, rect.x + 1, rect.y, rect.width, rect.height, "simpleItemHighlight")
+            draw_single_mask(cr, rect.x + 1, rect.y, rect.width, rect.height, "globalItemHighlight")
         elif self.is_select:    
-            draw_single_mask(cr, rect.x + 1, rect.y, rect.width, rect.height, "simpleItemSelect")
+            draw_single_mask(cr, rect.x + 1, rect.y, rect.width, rect.height, "globalItemSelect")
         elif self.is_hover:
-            draw_single_mask(cr, rect.x + 1, rect.y, rect.width, rect.height, "simpleItemHover")
+            draw_single_mask(cr, rect.x + 1, rect.y, rect.width, rect.height, "globalItemHover")
         
-        if self.is_select or self.is_highlight:
-            text_color = "#ffffff"
-        else:    
-            text_color = app_theme.get_color("labelText").get_color()
+        # if self.is_select or self.is_highlight:
+        #     text_color = "#ffffff"
+        # else:    
+        text_color = app_theme.get_color("labelText").get_color()
             
         icon_pixbuf = self.normal_pixbuf    
-            
-        icon_y = rect.y + (rect.height - icon_pixbuf.get_height()) / 2    
+        icon_y = rect.y + (rect.height - self.icon_height) / 2    
         padding_x = 10
         padding_y = 10
-        draw_pixbuf(cr, self.normal_pixbuf, rect.x + padding_x, icon_y)
+        
+        animation_rect = gtk.gdk.Rectangle(rect.x + padding_x,  icon_y, self.icon_width, self.icon_height)                
+        cr.save()
+        cr.arc(animation_rect.x + animation_rect.width / 2,
+               animation_rect.y + animation_rect.height / 2,
+               animation_rect.width / 2,
+               0, 2 * math.pi)
+        # cr.rectangle(animation_rect.x, animation_rect.y, animation_rect.width, animation_rect.height)
+        cr.clip()
+        # self.render_animation(cr, animation_rect)
+        draw_pixbuf(cr, self.normal_pixbuf, rect.x + padding_x, icon_y)        
+        cr.restore()
         
         draw_text(cr, self.channel_name, rect.x + icon_pixbuf.get_width() + padding_x * 2, 
-                  rect.y + padding_y, rect.width - icon_pixbuf.get_width() - padding_x * 2, self.name_h, 
+                  rect.y + padding_y, rect.width - icon_pixbuf.get_width() - padding_x * 3, self.name_h, 
                   text_color = text_color,
                   alignment=pango.ALIGN_LEFT, text_size=9)    
         
+        if self.is_highlight:
+            draw_text(cr, self.channel_intro, rect.x + icon_pixbuf.get_width() + padding_x * 2,
+                      rect.y + padding_y  * 2 + self.name_h, 
+                      rect.width - icon_pixbuf.get_width() - padding_x * 3,
+                      self.intro_h,
+                      text_color = text_color,
+                      alignment=pango.ALIGN_LEFT, text_size=8)
+        
         draw_text(cr, self.detail_info, rect.x + icon_pixbuf.get_width() + padding_x * 2, 
                   rect.y + (rect.height - self.detail_h - padding_y), 
-                  rect.width - icon_pixbuf.get_width() - padding_x * 2, self.detail_h, 
+                  rect.width - icon_pixbuf.get_width() - padding_x * 3, self.detail_h, 
                   text_color = text_color,
                   alignment=pango.ALIGN_LEFT, text_size=8)    
         
     def get_height(self):    
-        return self.item_height
+        if self.is_highlight:
+            return self.highlight_item_height            
+        else:
+            return self.normal_item_height            
+    
     
     def get_column_widths(self):
         return (self.item_width,)
@@ -643,7 +708,7 @@ class RadioListItem(TreeItem):
         
     def highlight(self):    
         self.is_highlight = True
-        # self.is_select = False
+        self.is_select = False
         self.emit_redraw_request()
         
     def unhighlight(self):    

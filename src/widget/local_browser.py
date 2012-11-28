@@ -316,7 +316,7 @@ class Browser(gtk.VBox, SignalContainer):
         search_hbox = gtk.HBox()
         search_hbox.pack_start(self.back_hbox, False, False)
         search_hbox.pack_start(create_right_align(), True, True)
-        # search_hbox.pack_start(search_align, False, False)
+        search_hbox.pack_start(search_align, False, False)
         search_hbox_align = gtk.Alignment()
         search_hbox_align.set_padding(5, 0, 0, 0)
         search_hbox_align.set(0, 0, 1, 1)

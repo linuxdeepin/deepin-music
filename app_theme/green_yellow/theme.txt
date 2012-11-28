@@ -20,6 +20,9 @@
  "simpleItemHover" : "#d1e67e",
  "simpleItemSelect" : "#74a102",
  "simpleItemHighlight" : "#a5cc41",
+ "globalItemHover" : "#d1d9b3",
+ "globalItemSelect" : "#b2c08e",
+ "globalItemHighlight" : "#8b9c62",
  "panedHandler" : "#d6d6d6",
  },	
  "alpha_colors" : {

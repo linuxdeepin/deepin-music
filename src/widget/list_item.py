@@ -167,14 +167,14 @@ class ListTreeItem(TreeItem):
     
     def render_title(self, cr, rect):
         if self.is_highlight:    
-            draw_single_mask(cr, rect.x + 1, rect.y, rect.width, rect.height, "simpleItemHighlight")
+            draw_single_mask(cr, rect.x + 1, rect.y, rect.width, rect.height, "globalItemHighlight")
         elif self.is_hover:
-            draw_single_mask(cr, rect.x + 1, rect.y, rect.width, rect.height, "simpleItemHover")
+            draw_single_mask(cr, rect.x + 1, rect.y, rect.width, rect.height, "globalItemHover")
         
-        if self.is_highlight:
-            text_color = "#FFFFFF"
-        else:    
-            text_color = app_theme.get_color("labelText").get_color()
+        # if self.is_highlight:
+        #     text_color = "#FFFFFF"
+        # else:    
+        text_color = app_theme.get_color("labelText").get_color()
             
         draw_text(cr, self.title, rect.x, rect.y, rect.width, rect.height, text_size=10, 
                   text_color = text_color,
@@ -183,14 +183,14 @@ class ListTreeItem(TreeItem):
     def render_content(self, cr, rect):
         if self.is_highlight:    
             if not self.is_double_click:
-                draw_single_mask(cr, rect.x + 1, rect.y, rect.width, rect.height, "simpleItemHighlight")
+                draw_single_mask(cr, rect.x + 1, rect.y, rect.width, rect.height, "globalItemHighlight")
                 text_color = "#FFFFFF"
             else:    
                 text_color = app_theme.get_color("labelText").get_color()
                 
         elif self.is_hover:
             text_color = app_theme.get_color("labelText").get_color()
-            draw_single_mask(cr, rect.x + 1, rect.y, rect.width, rect.height, "simpleItemHover")
+            draw_single_mask(cr, rect.x + 1, rect.y, rect.width, rect.height, "globalItemHover")
         else:    
             text_color = app_theme.get_color("labelText").get_color()
 

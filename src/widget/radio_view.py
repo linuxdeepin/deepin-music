@@ -22,7 +22,6 @@
 
 import gtk
 import gobject
-from dtk.ui.listview import ListView
 from dtk.ui.new_treeview import TreeView
 from dtk.ui.iconview import IconView
 from dtk.ui.threads import post_gui
