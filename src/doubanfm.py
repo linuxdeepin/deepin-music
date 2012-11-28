@@ -45,7 +45,9 @@ class DoubanFM(Logger):
     
     def __init__(self):
         headers = ['User-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.4 ' \
-                       '(KHTML, like Gecko) Chrome/22.0.1229.94 Safari/537.4',]
+                       '(KHTML, like Gecko) Chrome/22.0.1229.94 Safari/537.4',
+                   '''Cookie:openExpPan=Y; flag="ok"; bid="HuEFNfKgpww"; ac="1354084152"; __utma=58778424.1040803309.1352479103.1354081739.1354084147.56; __utmb=58778424.9.9.1354085068568; __utmc=58778424; __utmz=58778424.1352677629.15.3.utmcsr=douban.com|utmccn=(referral)|utmcmd=referral|utmcct=/; __utmv=58778424.5144'''
+                   ]
         
         self.mycurl = MyCurl(header=headers)
         self.explore_data = {}
@@ -68,7 +70,7 @@ class DoubanFM(Logger):
             params['type'] = type_name
         return params
     
-    def set_login_info(self, username, password):    
+    def set_login_info(self, username, password=""):    
         self.username = username
         self.password = password
         

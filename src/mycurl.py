@@ -52,6 +52,8 @@ class MyCurl(Logger):
         crl.setopt(pycurl.NOSIGNAL, 1)
 
         # set proxy
+        # crl.setopt(pycurl.PROXYTYPE, pycurl.PROXYTYPE_SOCKS5)         
+        
         rel_proxy_host = proxy_host or self.proxy_host
         if rel_proxy_host:
             crl.setopt(pycurl.PROXY, rel_proxy_host)
@@ -59,6 +61,7 @@ class MyCurl(Logger):
         rel_proxy_port = proxy_port or self.proxy_port
         if rel_proxy_port:
             crl.setopt(pycurl.PROXYPORT, rel_proxy_port)
+            
             
         # set cookie    
         rel_cookie_file = cookie_file or self.cookie_file

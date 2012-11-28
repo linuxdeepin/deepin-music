@@ -163,7 +163,7 @@ class ListTreeItem(TreeItem):
         return (self.item_width, )
     
     def get_column_renders(self):
-        return (self.render_title,)
+        return (self.render_content,)
     
     def render_title(self, cr, rect):
         if self.is_highlight:    
@@ -199,11 +199,12 @@ class ListTreeItem(TreeItem):
             self.entry_buffer.move_to_start()
             
         self.entry_buffer.set_text_color(text_color)
-        width, height = self.entry_buffer.get_pixel_size()[:2]
-        offset_y = abs(self.item_height - height) / 2
-        offset_x = abs(self.item_height - width) / 2
+        width, height = self.entry_buffer.get_content_size()
+        offset_y = (self.item_height - height) / 2
+        # offset_x = (self.item_height - width) / 2
         rect.y += offset_y
-        rect.x += offset_x
+        rect.x += 10
+        # rect.x += offset_x
         
         if self.entry and self.entry.allocation.width == self.get_column_widths()[0]-4:
             self.entry.calculate()
