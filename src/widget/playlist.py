@@ -56,7 +56,7 @@ class PlaylistUI(gtk.VBox):
         gtk.VBox.__init__(self)
 
         # Init catagory list.
-        self.category_list = EntryTreeView()
+        self.category_list = TreeView()
         self.category_list.draw_mask = self.draw_category_list_mask
         self.category_list.connect("single-click-item", self.on_category_single_click)
         self.category_list.connect("right-press-items", self.on_category_right_press)

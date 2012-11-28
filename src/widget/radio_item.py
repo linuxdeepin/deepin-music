@@ -692,10 +692,12 @@ class RadioListItem(TreeItem):
     
     def unhover(self, column, offset_x, offset_y):
         self.is_hover = False
+        # self.start_animation()
         self.emit_redraw_request()
     
     def hover(self, column, offset_x, offset_y):
         self.is_hover = True
+        # self.start_animation()
         self.emit_redraw_request()
     
     def unselect(self):
