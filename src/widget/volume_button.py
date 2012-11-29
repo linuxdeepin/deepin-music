@@ -39,7 +39,7 @@ class VolumeButton(gtk.Button):
         "volume-state-changed" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT)),
                      }
     
-    def __init__(self, value=100, lower=0, upper=100, step=5, progress_width=45):
+    def __init__(self, value=100, lower=0, upper=100, step=5, progress_width=45, auto_hide=True):
         gtk.Button.__init__(self)
         
         # Init data.
@@ -55,6 +55,7 @@ class VolumeButton(gtk.Button):
         self.hide_progress_flag = True
         self.current_progress_width = self.value_to_width(self.__value)
         self.icon_state = STATE_NORMAL
+        self.auto_hide = auto_hide
         
         # Init DPixbufs.
         self.bg_dpixbuf = app_theme.get_pixbuf("volume/bg.png")
@@ -92,9 +93,12 @@ class VolumeButton(gtk.Button):
         self.connect("motion-notify-event", self.on_motion_notify_event)
         self.connect("button-release-event", self.on_button_release_event)
         
-        if self.hide_progress_flag:
-            self.set_size_request(self.base_width, self.default_height)
-        else:    
+        if self.auto_hide:
+            if self.hide_progress_flag:
+                self.set_size_request(self.base_width, self.default_height)
+            else:    
+                self.set_size_request(self.expand_width, self.default_height)
+        else:        
             self.set_size_request(self.expand_width, self.default_height)
             
     def value_to_width(self, value):    
@@ -151,7 +155,10 @@ class VolumeButton(gtk.Button):
             pixbuf = self.normal_dpixbuf.get_pixbuf()
         draw_pixbuf(cr, pixbuf, rect.x + self.padding_x, rect.y + self.padding_y)    
         
-        if not self.hide_progress_flag:
+        if self.auto_hide:
+            if not self.hide_progress_flag:
+                self.draw_progress_bar(cr, rect)
+        else:        
             self.draw_progress_bar(cr, rect)
         return True    
         
@@ -183,9 +190,10 @@ class VolumeButton(gtk.Button):
                     point_y)
             
     def on_enter_notify_event(self, widget, event):
-        self.hide_progress_flag = False
-        self.set_size_request(self.expand_width, self.default_height)
-        self.queue_draw()
+        if self.auto_hide:
+            self.hide_progress_flag = False
+            self.set_size_request(self.expand_width, self.default_height)
+            self.queue_draw()
         
     def hide_progressbar(self):    
         self.hide_progress_flag = True
@@ -198,7 +206,10 @@ class VolumeButton(gtk.Button):
         if self.drag_flag:
             self.drag_out_area = True
         else:    
-            self.hide_progressbar()
+            if self.auto_hide:
+                self.hide_progressbar()
+                
+        set_cursor(widget, None)        
     
     def pointer_in_state_icon(self, event):    
         if self.state_icon_rect.x <= event.x <= self.state_icon_rect.x + self.state_icon_rect.width  and \
@@ -231,7 +242,8 @@ class VolumeButton(gtk.Button):
 
     def on_button_release_event(self, widget, event):
         if self.drag_out_area:
-            self.hide_progressbar()
+            if self.auto_hide:
+                self.hide_progressbar()
         self.drag_out_area = False    
         
         if self.state_press_flag:

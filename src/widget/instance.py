@@ -464,8 +464,3 @@ class DeepinMusic(gobject.GObject, Logger):
         else:    
             self.hide_to_tray()
             self.mini_window.show_from_tray()
-
-
-        
-        
-    

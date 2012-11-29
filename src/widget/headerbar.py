@@ -35,7 +35,7 @@ from widget.skin import app_theme
 from config import config
 from helper import Dispatcher
 from nls import _
-from widget.ui_utils import create_left_align, create_right_align, set_widget_vcenter
+from widget.ui_utils import set_widget_vcenter
 
 class SimpleHeadbar(gtk.EventBox):            
     def __init__(self):
@@ -46,11 +46,6 @@ class SimpleHeadbar(gtk.EventBox):
         self.cover_box = PlayerCoverButton()
         self.cover_box.show_all()
         
-        # swap played status handler
-        Player.connect("played", self.__swap_play_status, True)
-        Player.connect("paused", self.__swap_play_status, False)
-        Player.connect("stopped", self.__swap_play_status, False)
-        Player.connect("play-end", self.__swap_play_status, False)
         
         # play button
         play_normal_pixbuf = app_theme.get_pixbuf("action/play_normal.png")
@@ -65,7 +60,12 @@ class SimpleHeadbar(gtk.EventBox):
                                    play_press_pixbuf, pause_press_pixbuf,
                                    )
         Tooltip.text(self.__play, _("Play/Pause"))
-        self.__play.show_all()
+        # swap played status handler
+        Player.connect("played", self.__swap_play_status, True)
+        Player.connect("paused", self.__swap_play_status, False)
+        Player.connect("stopped", self.__swap_play_status, False)
+        Player.connect("play-end", self.__swap_play_status, False)
+        
         self.__id_signal_play = self.__play.connect("toggled", self.on_player_playpause)
         prev_button = self.__create_button("previous", _("Previous track"))
         next_button = self.__create_button("next", _("Next track"))
@@ -103,7 +103,7 @@ class SimpleHeadbar(gtk.EventBox):
         self.action_box_align = gtk.Alignment()
         self.action_box_align.set_padding(6, 0, 6, 0)
         self.action_box_align.add(action_box)
-        self.action_box_align.connect("expose_event", self.on_expose_event)
+        self.action_box_align.connect("expose-event", self.on_expose_event)
         
         self.timer_label = "00:00"
         self.song_timer = SongTimer(self.draw_timer_label)

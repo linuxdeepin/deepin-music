@@ -35,6 +35,12 @@ from constant import DEFAULT_FONT_SIZE
 
 import utils
 
+def is_in_rect((tx, ty), rect):
+    if rect.x <= tx <= rect.x + rect.width and \
+            rect.y <= ty <= rect.y + rect.height:
+        return True
+    else:
+        return False
 
 def container_remove_all(container):
     ''' Removee all child widgets for container. '''

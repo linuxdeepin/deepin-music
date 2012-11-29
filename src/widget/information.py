@@ -23,6 +23,7 @@
 
 import gtk
 from dtk.ui.label import Label
+from dtk.ui.draw import draw_text
 from dtk.ui.utils import get_content_size
 
 from widget.skin import app_theme
@@ -39,22 +40,33 @@ class PlayInfo(gtk.VBox):
         self.default_height = 20
         self.set_size_request(default_width, self.default_height)
         self.default_width = default_width
-        self.artist_label = self.create_simple_label(_("Deepin Music") + " for Linux Deepin", 9.5)
+        self.artist_label = _("Deepin Music") + " for Linux Deepin"
 
         Player.connect("instant-new-song",self.__new_song)
         MediaDB.connect("simple-changed",self.__on_change)
         Player.bin.connect("buffering", self.__on_buffering)
         Player.connect("init-status", self.__on_player_init_status)
         
-        artist_label_align = gtk.Alignment()
-        artist_label_align.set_padding(1, 0, 0, 0)
-        artist_label_align.set(0, 0, 1, 1)
-        artist_label_align.add(self.artist_label)
-        self.pack_start(artist_label_align, False, True)
+        self.connect("expose-event", self.on_expose_event)
+        self.padding_x = 0
+        self.set_size_request(self.default_width, self.default_height)
         self.song = None
         
+    def on_expose_event(self, widget, event):    
+        cr = widget.window.cairo_create()
+        rect = widget.allocation
+        
+        draw_text(cr, self.artist_label, rect.x + self.padding_x, rect.y, rect.width - self.padding_x * 2,
+                  rect.height, text_size=9.5,
+                  gaussian_radious=2,
+                  gaussian_color="#000000",
+                  border_radious=1,
+                  border_color="#000000",
+                  text_color = "#FFFFFF"
+                  ) 
+        
     def __on_player_init_status(self, player):    
-        self.artist_label.set_text(_("Deepin Music") + " for Linux Deepin")
+        self.set_text(_("Deepin Music") + " for Linux Deepin")
         
     def __on_buffering(self, playbin, progress):
         if self.song:
@@ -80,13 +92,11 @@ class PlayInfo(gtk.VBox):
                 buffering_title = "%s(%d%%) - %s" % (_("buffering"), buffering, title)
             else:    
                 buffering_title = title
-            self.artist_label.set_text(buffering_title)    
+            self.set_text(buffering_title)    
             
         else:    
-            self.artist_label.set_text(title)
+            self.set_text(title)
         
-    def create_simple_label(self, content, text_size):    
-        label = Label(content, app_theme.get_color("labelText"), text_size=text_size, enable_gaussian=True, label_width=self.default_width)
-        # width, height = get_content_size(content, text_size)
-        label.set_size_request(110, self.default_height)
-        return label
+    def set_text(self, title):        
+        self.artist_label = title
+        self.queue_draw()

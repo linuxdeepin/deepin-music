@@ -29,7 +29,8 @@ import dtk.ui.tooltip as Tooltip
 from helper import Dispatcher
 from config import config
 from widget.skin import app_theme
-from widget.ui_utils import set_widget_gravity, set_widget_vcenter
+from widget.information import PlayInfo
+from widget.ui_utils import set_widget_gravity, set_widget_vcenter, switch_tab, is_in_rect
 from player import Player
 from widget.timer import VolumeSlider
 
@@ -38,12 +39,20 @@ class MiniWindow(Window):
     def __init__(self):
         Window.__init__(self)
         
+        self.set_property("skip-pager-hint", True)
+        self.set_property("skip-taskbar-hint", True)
+        
         self.body_box = gtk.VBox()
         
         self.control_box = gtk.HBox()
         self.action_box = gtk.HBox()
         self.event_box = gtk.HBox()
         self.info_box = gtk.HBox()
+        
+        # Build info box
+        playinfo_align = set_widget_gravity(PlayInfo(200), (0.5, 0.5, 0, 0),
+                                            (0, 0, 5, 5))
+        self.info_box.pack_start(playinfo_align, False, True)
         
         # Build control box
         self.lyrics_button = self.create_lyrics_button()
@@ -52,13 +61,19 @@ class MiniWindow(Window):
             self.lyrics_button.set_active(True)
         self.signal_auto = True    
         
-        
         lyrics_button_align = set_widget_gravity(self.lyrics_button, (0.5, 0.5, 0, 0),
                                                  (0, 0, 10, 8))
         previous_button = self.create_button("previous")
         next_button = self.create_button("next")
         self.playpause_button = self.create_playpause_button()
-        self.volume_button = VolumeSlider()
+        # swap played status handler
+        self.__id_signal_play = self.playpause_button.connect("toggled", self.on_player_playpause)        
+        Player.connect("played", self.__swap_play_status, True)
+        Player.connect("paused", self.__swap_play_status, False)
+        Player.connect("stopped", self.__swap_play_status, False)
+        Player.connect("play-end", self.__swap_play_status, False)
+        
+        self.volume_button = VolumeSlider(auto_hide=False)
         volume_button_align = set_widget_gravity(self.volume_button, (0.5, 0.5, 0, 0),
                                                  (0, 0, 8, 0))
         self.action_box.pack_start(lyrics_button_align, False, False)
@@ -83,13 +98,17 @@ class MiniWindow(Window):
         self.control_box.pack_end(event_box_align, False, True)
         
         self.connect("configure-event", self.on_configure_event)
+        self.connect("enter-notify-event", self.on_enter_notify_event)
+        self.connect("leave-notify-event", self.on_leave_notify_event)
+        Dispatcher.connect("close-lyrics", lambda w : self.lyrics_button.set_active(False))
+        Dispatcher.connect("show-lyrics", lambda w: self.lyrics_button.set_active(True))
         
         if config.get("mini", "x") == "-1":
             self.set_position(gtk.WIN_POS_CENTER)
         else:    
             self.move(int(config.get("mini","x")),int(config.get("mini","y")))
         
-        self.body_box.add(self.control_box)
+        self.body_box.add(self.info_box)    
         self.add_move_event(self)
         self.window_frame.add(self.body_box)
         self.set_size_request(300, 55)
@@ -117,19 +136,35 @@ class MiniWindow(Window):
             else:    
                 Dispatcher.close_lyrics()
     
-    def create_button(self, name, callback=None, tip_msg=None):
+    def create_button(self, name, tip_msg=None):
         button = ImageButton(
             app_theme.get_pixbuf("action/%s_normal.png" % name),
             app_theme.get_pixbuf("action/%s_hover.png" % name),
             app_theme.get_pixbuf("action/%s_press.png" % name),
             )
         
-        if callback:
-            self.connect("clicked", callback)
+        button.connect("clicked", self.player_control, name)
 
         if tip_msg:
             Tooltip.text(button, tip_msg)
         return button
+    
+    def player_control(self, button, name):
+        if name == "next":
+            getattr(Player, name)(True)
+        else:    
+            getattr(Player, name)()
+            
+    def is_in_window(self):        
+        root_window = gtk.gdk.get_default_root_window()
+        r_x, r_y = root_window.get_pointer()[:2]
+        o_x, o_y = self.get_position()
+        rect = self.allocation
+        rect.x = o_x + 1
+        rect.y = o_y + 1
+        rect.width -= 2
+        rect.height -= 2
+        return is_in_rect((r_x, r_y), rect)
     
     def create_playpause_button(self):
         play_normal_pixbuf = app_theme.get_pixbuf("action/play_normal.png")
@@ -143,17 +178,31 @@ class MiniWindow(Window):
                      play_hover_pixbuf, pause_hover_pixbuf,
                      play_press_pixbuf, pause_press_pixbuf)
         
-        playpause_button.connect("toggled", self.on_player_playpause)
+
         return playpause_button    
     
     def on_player_playpause(self, widget):    
         if Player.song:
             Player.playpause()
             
+    def __swap_play_status(self, obj, active):    
+        self.playpause_button.handler_block(self.__id_signal_play)
+        self.playpause_button.set_active(active)
+        self.playpause_button.handler_unblock(self.__id_signal_play)
+            
     def on_configure_event(self, widget, event):        
         if widget.get_property("visible"):
             config.set("mini","x","%d" % event.x)
             config.set("mini","y","%d" % event.y)
+            
+    def on_enter_notify_event(self, widget, event):        
+        child = self.body_box.get_children()[0]
+        if child != self.control_box:
+            switch_tab(self.body_box, self.control_box)
+        
+    def on_leave_notify_event(self, widget, event):    
+        if not self.is_in_window():
+            switch_tab(self.body_box, self.info_box)
             
     def toggle_visible(self, bring_to_front=False):        
         if self.get_property("visible"):

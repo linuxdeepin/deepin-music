@@ -175,9 +175,9 @@ class SongTimer(gtk.HBox):
             self.__idle_release_id = gobject.idle_add(self.__idle_release)
 
 class VolumeSlider(gtk.VBox):
-    def __init__(self):
+    def __init__(self, auto_hide=True):
         super(VolumeSlider, self).__init__()
-        self.volume_progressbar = VolumeButton()
+        self.volume_progressbar = VolumeButton(auto_hide=auto_hide)
         Tooltip.custom(self.volume_progressbar, self.get_tip_label).always_update(self.volume_progressbar, True)
         self.volume_progressbar.connect("volume-state-changed",self.__volume_changed)
         save_volume = float(config.get("player","volume"))
