@@ -86,6 +86,12 @@ class Config(gobject.GObject, Logger):
                 "height" : str(FULL_DEFAULT_HEIGHT),
                 "state"  : "normal",
                 },
+            
+            "mini" : {
+                "x" : "-1",
+                "y" : "-1",
+                },
+            
             "player" : {
                 "uri"  : "",
                 "play" : "false",

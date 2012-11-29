@@ -26,8 +26,6 @@ from dtk.ui.button import ToggleButton, ImageButton
 from dtk.ui.draw import draw_text
 import dtk.ui.tooltip as Tooltip
 
-from widget.volume_button import VolumeButton
-
 from player import Player
 from widget.information import PlayInfo
 from widget.timer import SongTimer, VolumeSlider

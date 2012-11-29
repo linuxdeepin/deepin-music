@@ -44,6 +44,7 @@ from widget.ui_utils import  create_right_align
 from widget.global_keys import global_hotkeys
 from widget.dialog import WinFile
 from widget.converter import AttributesUI, convert_task_manager
+from widget.mini import MiniWindow
 from constant import (FULL_DEFAULT_WIDTH, FULL_DEFAULT_HEIGHT,
                       SIMPLE_DEFAULT_WIDTH, SIMPLE_DEFAULT_HEIGHT)
 from nls import _
@@ -107,6 +108,7 @@ class DeepinMusic(gobject.GObject, Logger):
         self.mmkeys = MMKeys()
         self.audiocd = AudioCDSource()
         self.browser_manager = BrowserMananger()
+        self.mini_window = MiniWindow()
 
             
         self.window.add_move_event(self.simple_header_bar)
@@ -211,13 +213,13 @@ class DeepinMusic(gobject.GObject, Logger):
             config.set("setting", "first_started", "false")
             
     def ready_show(self):    
-        self.window.show_all()
+        self.app_show_all()
         if config.getboolean("lyrics", "status"):
             self.lyrics_display.run()
         
     def force_quit(self, *args):    
         self.loginfo("Start quit...")
-        self.window.hide_all()
+        self.app_hide_all()
         Player.save_state()
         if not Player.is_paused(): Player.pause()
         gobject.timeout_add(500, self.__idle_quit)
@@ -232,7 +234,8 @@ class DeepinMusic(gobject.GObject, Logger):
         MediaDB.save()
         config.write()
         global_hotkeys.stop()
-        self.window.destroy()        
+
+        self.app_destroy()
         gtk.main_quit()
         self.loginfo("Exit successful.")
         
@@ -254,20 +257,26 @@ class DeepinMusic(gobject.GObject, Logger):
                 self.tray_icon = TrayIcon(self)
                 
     def toggle_window(self):            
-        if self.window.get_property("visible"):
-            self.hide_to_tray()
-        else:    
-            self.show_from_tray()
+        if self.get_app_mode() == "normal":
+            if self.window.get_property("visible"):
+                self.hide_to_tray()
+            else:    
+                self.show_from_tray()
+        else:        
+            self.mini_window.toggle_window()
         
     def toggle_visible(self, bring_to_front=False):    
-        if self.window.get_property("visible"):
-            if self.window.is_active():
-                if not bring_to_front:
-                    self.hide_to_tray()
-            else:    
-                self.window.present()
+        if self.get_app_mode() == "normal":
+            if self.window.get_property("visible"):
+                if self.window.is_active():
+                    if not bring_to_front:
+                        self.hide_to_tray()
+                else:    
+                    self.window.present()
+            else:        
+                self.show_from_tray()
         else:        
-            self.show_from_tray()
+            self.mini_window.toggle_visible()
             
     def hide_to_tray(self):
         event = self.window.get_state()
@@ -333,8 +342,9 @@ class DeepinMusic(gobject.GObject, Logger):
             (self.get_pixbuf_group("playmode"), _("Play mode"), curren_view.get_playmode_menu()),
             None,
             (None, _("Equalizer"), lambda : self.equalizer_win.run()),
-            # (None, _("Search"), lambda : SongSearchUI().show_all()),
             (None, _("Converter"), self.get_convert_sub_menu()),
+            None,
+            self.get_app_mode_menu(),
             None,
             self.get_lyrics_menu_items(),
             self.get_locked_menu_items(),
@@ -423,3 +433,39 @@ class DeepinMusic(gobject.GObject, Logger):
         self.link_box.set_no_show_all(False)
         self.link_box.show_all()
         
+    def app_show_all(self):    
+        if self.get_app_mode() == "normal":
+            self.window.show_all()
+        else:    
+            self.mini_window.show_all()
+            
+    def app_hide_all(self):        
+        self.mini_window.hide_all()        
+        self.window.hide_all()
+            
+    def app_destroy(self):
+        self.mini_window.destroy()        
+        self.window.destroy()
+        
+    def get_app_mode(self):    
+        return config.get("setting", "app_mode", "normal")
+    
+    def get_app_mode_menu(self):
+        if self.get_app_mode() == "normal":
+            return (None, _("Mini Mode"), lambda : self.change_app_mode("mini"))
+        else:    
+            return (None, _("Normal Mode"), lambda : self.change_app_mode("normal"))
+            
+    def change_app_mode(self, mode):        
+        config.set("setting", "app_mode", mode)        
+        if mode == "normal":
+            self.mini_window.hide_to_tray()
+            self.show_from_tray()
+        else:    
+            self.hide_to_tray()
+            self.mini_window.show_from_tray()
+
+
+        
+        
+    
