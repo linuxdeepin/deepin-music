@@ -27,10 +27,11 @@ import fcntl
 import cPickle
 import shutil
 import gtk
-import nls
 import gobject
 import cairo
 import math
+import locale
+
 
 import hashlib
 
@@ -573,13 +574,20 @@ def download(remote_uri, local_uri, net_encode=None, buffer_len=4096, timeout=DE
         handle_write = file(local_uri, "w")
         
         data = handle_read.read(buffer_len)
+        net_encode_status = False
         if net_encode:
-            data = unicode(data, net_encode).encode("utf-8")
+            try:
+                 net_data = unicode(data, net_encode).encode("utf-8")
+            except:    
+                net_encode_status = False
+            else:
+                net_encode_status = True
+                data = net_data
         handle_write.write(data)
         
         while data:
             data = handle_read.read(buffer_len)
-            if net_encode:
+            if net_encode and net_encode_status:
                 data = unicode(data, net_encode).encode("utf-8")
             handle_write.write(data)
             

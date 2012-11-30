@@ -37,7 +37,9 @@ from widget.timer import VolumeSlider
 class MiniWindow(Window):
     
     def __init__(self):
-        Window.__init__(self)
+        Window.__init__(self,
+                        shape_frame_function=self.shape_mini_frame,
+                        expose_frame_function=self.expose_mini_frame)
         
         self.set_property("skip-pager-hint", True)
         self.set_property("skip-taskbar-hint", True)
@@ -48,11 +50,10 @@ class MiniWindow(Window):
         self.action_box = gtk.HBox()
         self.event_box = gtk.HBox()
         self.info_box = gtk.HBox()
-        
         # Build info box
         playinfo_align = set_widget_gravity(PlayInfo(200), (0.5, 0.5, 0, 0),
                                             (0, 0, 5, 5))
-        self.info_box.pack_start(playinfo_align, False, True)
+        self.info_box.add(playinfo_align)
         
         # Build control box
         self.lyrics_button = self.create_lyrics_button()
@@ -100,6 +101,7 @@ class MiniWindow(Window):
         self.connect("configure-event", self.on_configure_event)
         self.connect("enter-notify-event", self.on_enter_notify_event)
         self.connect("leave-notify-event", self.on_leave_notify_event)
+        
         Dispatcher.connect("close-lyrics", lambda w : self.lyrics_button.set_active(False))
         Dispatcher.connect("show-lyrics", lambda w: self.lyrics_button.set_active(True))
         
@@ -107,11 +109,15 @@ class MiniWindow(Window):
             self.set_position(gtk.WIN_POS_CENTER)
         else:    
             self.move(int(config.get("mini","x")),int(config.get("mini","y")))
-        
+            
+        # pixbufs    
+        self.info_pixbuf = None
+        self.control_pixbuf = None
+
         self.body_box.add(self.info_box)    
         self.add_move_event(self)
         self.window_frame.add(self.body_box)
-        self.set_size_request(300, 55)
+        self.set_size_request(305, 55)
         
     def on_menu_button_press(self, widget, event):    
         Dispatcher.show_main_menu(int(event.x_root), int(event.y_root))
@@ -227,3 +233,24 @@ class MiniWindow(Window):
         
     def hide_to_tray(self):    
         self.hide_all()
+        
+    def get_widget_pixbuf(self, widget=None):    
+        if widget is None:
+            widget = self
+        drawable = widget.window
+        x, y, width, height = widget.allocation
+        pixbuf = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, width, height)
+        pixbuf.get_from_drawable(drawable, drawable.get_colormap(), x, y, 0, 0, width, height)
+        return pixbuf
+    
+    def shape_mini_frame(self, widget, event):    
+        pass
+        
+    def expose_mini_frame(self, widget, event):
+        cr  = widget.window.cairo_create()
+        rect = widget.allocation
+        cr.set_source_rgba(1,1,1, 0.8)
+        cr.rectangle(rect.x, rect.y, rect.width, rect.height)
+        cr.fill()
+
+    
