@@ -578,3 +578,12 @@ class SearchBox(gtk.HBox):
         keyword =  self.entry_box.get_text().strip()
         if keyword:
             self.emit("search", keyword)
+            
+class QuellButton(ImageButton):            
+    
+    def __init__(self):
+        ImageButton.__init__(self,
+                             app_theme.get_pixbuf("mode/quell_normal.png"),
+                             app_theme.get_pixbuf("mode/quell_hover.png"),
+                             app_theme.get_pixbuf("mode/quell_press.png"),
+                             )

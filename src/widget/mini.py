@@ -27,7 +27,7 @@ from dtk.ui.draw import draw_pixbuf
 from dtk.ui.utils import container_remove_all
 from dtk.ui.timeline import Timeline, CURVE_SINE
 from dtk.ui.theme import ui_theme
-from dtk.ui.button import ToggleButton, ImageButton, MenuButton, MinButton, CloseButton
+from dtk.ui.button import ToggleButton, ImageButton, MinButton, CloseButton
 import dtk.ui.tooltip as Tooltip
 
 from helper import Dispatcher
@@ -35,8 +35,10 @@ from config import config
 from widget.skin import app_theme
 from widget.information import PlayInfo
 from widget.ui_utils import set_widget_gravity, set_widget_vcenter, switch_tab, is_in_rect
+from widget.ui import QuellButton 
 from player import Player
 from widget.timer import VolumeSlider
+from utils import get_main_window
 
 class MiniWindow(Window):
     
@@ -98,13 +100,14 @@ class MiniWindow(Window):
         self.action_box.pack_start(volume_slider_align, False, False)
         
         # Build event box.
-        menu_button = MenuButton()
-        menu_button.connect("button-press-event", self.on_menu_button_press)
+        quell_button = QuellButton()
+        quell_button.connect("clicked", self.on_quell_button_clicked)
+        
         min_button = MinButton()
         min_button.connect("clicked", lambda w: self.min_window())
         close_button = CloseButton()
         close_button.connect("clicked", lambda w: self.hide_all())
-        self.event_box.pack_start(menu_button, False, False)
+        self.event_box.pack_start(quell_button, False, False)
         self.event_box.pack_start(min_button, False, False)
         self.event_box.pack_start(close_button, False, False)
         event_box_align = set_widget_gravity(self.event_box, paddings=(0, 0, 8, 0))
@@ -144,8 +147,10 @@ class MiniWindow(Window):
         self.active_draw_func = None
         self.target_draw_func = None
         
-    def on_menu_button_press(self, widget, event):    
-        Dispatcher.show_main_menu(int(event.x_root), int(event.y_root))
+    def on_quell_button_clicked(self, widget):    
+        main_window = get_main_window()
+        main_window.change_app_mode("normal")
+        switch_tab(self.body_box, self.info_box)
         
     def create_lyrics_button(self):    
         toggle_button = ToggleButton(
@@ -343,10 +348,10 @@ class MiniWindow(Window):
         event_box_x -= min_pixbuf.get_width()
         draw_pixbuf(cr, min_pixbuf, event_box_x, rect.y)
         
-        # draw menu button.
-        menu_pixbuf = ui_theme.get_pixbuf('button/window_menu_normal.png').get_pixbuf()
-        event_box_x -= menu_pixbuf.get_width()
-        draw_pixbuf(cr, menu_pixbuf, event_box_x, rect.y)
+        # draw quell button.
+        quell_pixbuf = app_theme.get_pixbuf('mode/quell_normal.png').get_pixbuf()
+        event_box_x -= quell_pixbuf.get_width()
+        draw_pixbuf(cr, quell_pixbuf, event_box_x, rect.y)
         
         cr.pop_group_to_source()
         cr.paint_with_alpha(alpha)
