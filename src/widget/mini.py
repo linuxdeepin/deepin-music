@@ -26,6 +26,7 @@ from dtk.ui.window import Window
 from dtk.ui.draw import draw_pixbuf
 from dtk.ui.utils import container_remove_all
 from dtk.ui.timeline import Timeline, CURVE_SINE
+from dtk.ui.theme import ui_theme
 from dtk.ui.button import ToggleButton, ImageButton, MenuButton, MinButton, CloseButton
 import dtk.ui.tooltip as Tooltip
 
@@ -55,10 +56,10 @@ class MiniWindow(Window):
         self.info_box = gtk.HBox()
         
         # Build info box
-        self.playinfo = PlayInfo(200)
-        playinfo_align = set_widget_gravity(self.playinfo, (0.5, 0.5, 0, 0),
-                                            (0, 0, 5, 5))
-        self.info_box.add(playinfo_align)
+        self.playinfo = PlayInfo(200, None, 0, "#000000")
+        # playinfo_align = set_widget_gravity(self.playinfo, (0.5, 0.5, 0, 0),
+        #                                     (0, 0, 0, 0))
+        self.info_box.add(self.playinfo)
         
         # Build control box
         self.lyrics_button = self.create_lyrics_button()
@@ -86,11 +87,13 @@ class MiniWindow(Window):
         Player.connect("play-end", self.__swap_play_status, False)
         
         self.volume_slider = VolumeSlider(auto_hide=False)
+        self.volume_padding_left = 8
         volume_slider_align = set_widget_gravity(self.volume_slider, (0.5, 0.5, 0, 0),
-                                                 (0, 0, 8, 0))
+                                                 (0, 0, self.volume_padding_left, 0))
+        
         self.action_box.pack_start(lyrics_button_align, False, False)
         self.action_box.pack_start(set_widget_vcenter(self.previous_button), False, False)
-        self.action_box.pack_start(set_widget_vcenter(self.playpause_button), False, False)
+        self.action_box.pack_start(self.playpause_button, False, True)
         self.action_box.pack_start(set_widget_vcenter(self.next_button), False, False)
         self.action_box.pack_start(volume_slider_align, False, False)
         
@@ -135,7 +138,7 @@ class MiniWindow(Window):
         self.active_alpha = 1.0
         self.target_alpha = 0.0
         self.in_animation = False
-        self.animation_time = 2000
+        self.animation_time = 1000
         self.animation_timeout_id = None
         self.draw_animation = False
         self.active_draw_func = None
@@ -221,8 +224,16 @@ class MiniWindow(Window):
             config.set("mini","y","%d" % event.y)
             
     def on_enter_notify_event(self, widget, event):        
-        child = self.body_box.get_children()[0]
-        if child != self.control_box:
+        childs = self.body_box.get_children()
+        if len(childs) > 0:
+            child = childs[0]
+            if child != self.control_box:
+                self.draw_animation = True
+                container_remove_all(self.body_box)
+                self.active_draw_func = self.draw_info
+                self.target_draw_func = self.draw_control
+                self.start_animation(self.control_box)
+        else:
             self.draw_animation = True
             container_remove_all(self.body_box)
             self.active_draw_func = self.draw_info
@@ -279,50 +290,63 @@ class MiniWindow(Window):
         cr.pop_group_to_source()
         cr.paint_with_alpha(alpha)
     
-    def draw_control(self, cr, rect, alpha):
-        
+    def draw_control(self, cr, allocation, alpha):
+        rect = gtk.gdk.Rectangle(allocation.x, allocation.y, allocation.width, allocation.height)
         cr.push_group()
-        # Draw lyrics.
+        
+        # Draw lyrics button
         rect.x += self.lyrics_padding_left
-        enable_lyrics = config.getboolean("lyrics", "status")
+        enable_lyrics = config.getboolean('lyrics', 'status')
         if enable_lyrics:
-            lyrics_pixbuf = app_theme.get_pixbuf("lyrics_button/lyrics_active_normal.png").get_pixbuf()
-        else:    
-            lyrics_pixbuf = app_theme.get_pixbuf("lyrics_button/lyrics_inactive_normal.png").get_pixbuf()
-            
+            lyrics_pixbuf = app_theme.get_pixbuf('lyrics_button/lyrics_active_normal.png').get_pixbuf()
+        else:
+            lyrics_pixbuf = app_theme.get_pixbuf('lyrics_button/lyrics_inactive_normal.png').get_pixbuf()
         icon_y = rect.y + (rect.height - lyrics_pixbuf.get_height()) / 2
-        draw_pixbuf(cr, lyrics_pixbuf, rect.x, icon_y)    
+        draw_pixbuf(cr, lyrics_pixbuf, rect.x, icon_y)
         
         # Draw previous button.
         rect.x += lyrics_pixbuf.get_width() + self.lyrics_padding_right
-        previous_pixbuf = app_theme.get_pixbuf("action/previous_normal.png").get_pixbuf()
+        previous_pixbuf = app_theme.get_pixbuf('action/previous_normal.png').get_pixbuf()
         icon_y = rect.y + (rect.height - previous_pixbuf.get_height()) / 2
         draw_pixbuf(cr, previous_pixbuf, rect.x, icon_y)
         
-        # Draw playpuase button. 
+        # Draw playpause button.
         rect.x += previous_pixbuf.get_width()
-        is_played = config.getboolean("player", "play")
+        is_played = config.getboolean('player', 'play')
         if is_played:
-            playpause_pixbuf = app_theme.get_pixbuf("action/pause_normal.png").get_pixbuf()
-        else:    
-            playpause_pixbuf = app_theme.get_pixbuf("action/play_normal.png").get_pixbuf() 
-            
+            playpause_pixbuf = app_theme.get_pixbuf('action/pause_normal.png').get_pixbuf()
+        else:
+            playpause_pixbuf = app_theme.get_pixbuf('action/play_normal.png').get_pixbuf()
         icon_y = rect.y + (rect.height - playpause_pixbuf.get_height()) / 2
-        draw_pixbuf(cr, playpause_pixbuf, rect.x, icon_y)    
+        draw_pixbuf(cr, playpause_pixbuf, rect.x, icon_y)
         
         # Draw next button.
         rect.x += playpause_pixbuf.get_width()
-        next_pixbuf = app_theme.get_pixbuf("action/next_normal.png").get_pixbuf()
+        next_pixbuf = app_theme.get_pixbuf('action/next_normal.png').get_pixbuf()
         icon_y = rect.y + (rect.height - next_pixbuf.get_height()) / 2
         draw_pixbuf(cr, next_pixbuf, rect.x, icon_y)
         
         # Draw volume button.
-        volume_button_rect = self.volume_slider.volume_button.allocation        
-        if volume_button_rect.x != -1:
-            volume_button_rect.x = rect.x 
-            volume_button_rect.x = rect.y
-            volume_button_rect = self.volume_slider.volume_button.allocation
-            self.volume_slider.volume_button.draw_volume(cr, volume_button_rect)
+        (v_w, v_h,) = self.volume_slider.volume_button.get_size()
+        v_y = rect.y + (rect.height - v_h) / 2
+        rect.x += self.volume_padding_left + next_pixbuf.get_width()
+        volume_button_rect = gtk.gdk.Rectangle(rect.x, v_y, v_w, v_h)
+        self.volume_slider.volume_button.draw_volume(cr, volume_button_rect)
+        
+        # Draw event box, draw close button.
+        close_pixbuf = ui_theme.get_pixbuf('button/window_close_normal.png').get_pixbuf()
+        event_box_x = rect.width - close_pixbuf.get_width() + 4
+        draw_pixbuf(cr, close_pixbuf, event_box_x, rect.y)
+        
+        # Draw min button.
+        min_pixbuf = ui_theme.get_pixbuf('button/window_min_normal.png').get_pixbuf()
+        event_box_x -= min_pixbuf.get_width()
+        draw_pixbuf(cr, min_pixbuf, event_box_x, rect.y)
+        
+        # draw menu button.
+        menu_pixbuf = ui_theme.get_pixbuf('button/window_menu_normal.png').get_pixbuf()
+        event_box_x -= menu_pixbuf.get_width()
+        draw_pixbuf(cr, menu_pixbuf, event_box_x, rect.y)
         
         cr.pop_group_to_source()
         cr.paint_with_alpha(alpha)
@@ -342,7 +366,11 @@ class MiniWindow(Window):
         
     def start_animation(self, widget):    
         if not self.in_animation:
-            self.in_animation = True
+            self.in_animation = False
+            try:
+                self.timeline.stop()
+            except:    
+                pass
             self.timeline = Timeline(self.animation_time, CURVE_SINE)
             self.timeline.connect("update", self.update_animation)
             self.timeline.connect("completed", lambda source: self.completed_animation(source, widget))

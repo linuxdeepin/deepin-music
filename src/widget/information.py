@@ -33,9 +33,10 @@ from nls import _
 import utils
 
 
-class PlayInfo(gtk.VBox):
-    def __init__(self, default_width=110):
+class PlayInfo(gtk.EventBox):
+    def __init__(self, default_width=110, gaussian_radious=2, border_radious=1, text_color="#FFFFFF"):
         super(PlayInfo, self).__init__()
+        self.set_visible_window(False)
 
         self.default_height = 20
         self.set_size_request(default_width, self.default_height)
@@ -49,6 +50,9 @@ class PlayInfo(gtk.VBox):
         
         self.connect("expose-event", self.on_expose_event)
         self.padding_x = 0
+        self.gaussian_radious = gaussian_radious
+        self.border_radious = border_radious
+        self.text_color = text_color
         self.set_size_request(self.default_width, self.default_height)
         self.song = None
         
@@ -57,15 +61,16 @@ class PlayInfo(gtk.VBox):
         rect = widget.allocation
         
         self.draw_content(cr, rect)
+        return True
         
     def draw_content(self, cr, rect):    
         draw_text(cr, self.artist_label, rect.x + self.padding_x, rect.y, rect.width - self.padding_x * 2,
                   rect.height, text_size=9.5,
-                  gaussian_radious=2,
+                  gaussian_radious=self.gaussian_radious,
                   gaussian_color="#000000",
-                  border_radious=1,
+                  border_radious=self.border_radious,
                   border_color="#000000",
-                  text_color = "#FFFFFF"
+                  text_color = self.text_color,
                   ) 
         
     def __on_player_init_status(self, player):    

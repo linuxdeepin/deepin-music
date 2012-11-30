@@ -104,6 +104,12 @@ class VolumeButton(gtk.Button):
     def value_to_width(self, value):    
         return value / float(self.__upper) * self.progress_width
     
+    def get_size(self):
+        if self.auto_hide:
+            if self.hide_progress_flag:
+                return (self.base_width, self.default_height)
+        return (self.expand_width, self.default_height)    
+    
     def width_to_value(self, width):
         return width / float(self.progress_width) * self.__upper 
     
