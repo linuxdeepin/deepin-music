@@ -23,6 +23,9 @@
 
 import gtk
 from dtk.ui.window import Window
+from dtk.ui.draw import draw_pixbuf
+from dtk.ui.utils import container_remove_all
+from dtk.ui.timeline import Timeline, CURVE_SINE
 from dtk.ui.button import ToggleButton, ImageButton, MenuButton, MinButton, CloseButton
 import dtk.ui.tooltip as Tooltip
 
@@ -50,8 +53,10 @@ class MiniWindow(Window):
         self.action_box = gtk.HBox()
         self.event_box = gtk.HBox()
         self.info_box = gtk.HBox()
+        
         # Build info box
-        playinfo_align = set_widget_gravity(PlayInfo(200), (0.5, 0.5, 0, 0),
+        self.playinfo = PlayInfo(200)
+        playinfo_align = set_widget_gravity(self.playinfo, (0.5, 0.5, 0, 0),
                                             (0, 0, 5, 5))
         self.info_box.add(playinfo_align)
         
@@ -62,11 +67,17 @@ class MiniWindow(Window):
             self.lyrics_button.set_active(True)
         self.signal_auto = True    
         
+        
+        self.lyrics_padding_left = 10
+        self.lyrics_padding_right = 8
         lyrics_button_align = set_widget_gravity(self.lyrics_button, (0.5, 0.5, 0, 0),
-                                                 (0, 0, 10, 8))
-        previous_button = self.create_button("previous")
-        next_button = self.create_button("next")
+                                                 (0, 0, self.lyrics_padding_left,
+                                                  self.lyrics_padding_right))
+        
+        self.previous_button = self.create_button("previous")
+        self.next_button = self.create_button("next")
         self.playpause_button = self.create_playpause_button()
+        
         # swap played status handler
         self.__id_signal_play = self.playpause_button.connect("toggled", self.on_player_playpause)        
         Player.connect("played", self.__swap_play_status, True)
@@ -74,14 +85,14 @@ class MiniWindow(Window):
         Player.connect("stopped", self.__swap_play_status, False)
         Player.connect("play-end", self.__swap_play_status, False)
         
-        self.volume_button = VolumeSlider(auto_hide=False)
-        volume_button_align = set_widget_gravity(self.volume_button, (0.5, 0.5, 0, 0),
+        self.volume_slider = VolumeSlider(auto_hide=False)
+        volume_slider_align = set_widget_gravity(self.volume_slider, (0.5, 0.5, 0, 0),
                                                  (0, 0, 8, 0))
         self.action_box.pack_start(lyrics_button_align, False, False)
-        self.action_box.pack_start(set_widget_vcenter(previous_button), False, False)
+        self.action_box.pack_start(set_widget_vcenter(self.previous_button), False, False)
         self.action_box.pack_start(set_widget_vcenter(self.playpause_button), False, False)
-        self.action_box.pack_start(set_widget_vcenter(next_button), False, False)
-        self.action_box.pack_start(volume_button_align, False, False)
+        self.action_box.pack_start(set_widget_vcenter(self.next_button), False, False)
+        self.action_box.pack_start(volume_slider_align, False, False)
         
         # Build event box.
         menu_button = MenuButton()
@@ -118,6 +129,17 @@ class MiniWindow(Window):
         self.add_move_event(self)
         self.window_frame.add(self.body_box)
         self.set_size_request(305, 55)
+        
+        
+        # animation params.
+        self.active_alpha = 1.0
+        self.target_alpha = 0.0
+        self.in_animation = False
+        self.animation_time = 2000
+        self.animation_timeout_id = None
+        self.draw_animation = False
+        self.active_draw_func = None
+        self.target_draw_func = None
         
     def on_menu_button_press(self, widget, event):    
         Dispatcher.show_main_menu(int(event.x_root), int(event.y_root))
@@ -179,12 +201,9 @@ class MiniWindow(Window):
         pause_hover_pixbuf = app_theme.get_pixbuf("action/pause_hover.png")
         play_press_pixbuf = app_theme.get_pixbuf("action/play_press.png")
         pause_press_pixbuf = app_theme.get_pixbuf("action/pause_press.png")
-       
         playpause_button = ToggleButton(play_normal_pixbuf, pause_normal_pixbuf,
                      play_hover_pixbuf, pause_hover_pixbuf,
                      play_press_pixbuf, pause_press_pixbuf)
-        
-
         return playpause_button    
     
     def on_player_playpause(self, widget):    
@@ -204,11 +223,19 @@ class MiniWindow(Window):
     def on_enter_notify_event(self, widget, event):        
         child = self.body_box.get_children()[0]
         if child != self.control_box:
-            switch_tab(self.body_box, self.control_box)
+            self.draw_animation = True
+            container_remove_all(self.body_box)
+            self.active_draw_func = self.draw_info
+            self.target_draw_func = self.draw_control
+            self.start_animation(self.control_box)
         
     def on_leave_notify_event(self, widget, event):    
         if not self.is_in_window():
-            switch_tab(self.body_box, self.info_box)
+            self.draw_animation = True
+            container_remove_all(self.body_box)
+            self.active_draw_func = self.draw_control
+            self.target_draw_func = self.draw_info
+            self.start_animation(self.info_box)
             
     def toggle_visible(self, bring_to_front=False):        
         if self.get_property("visible"):
@@ -245,6 +272,60 @@ class MiniWindow(Window):
     
     def shape_mini_frame(self, widget, event):    
         pass
+    
+    def draw_info(self, cr, rect, alpha):
+        cr.push_group()
+        self.playinfo.draw_content(cr, rect)
+        cr.pop_group_to_source()
+        cr.paint_with_alpha(alpha)
+    
+    def draw_control(self, cr, rect, alpha):
+        
+        cr.push_group()
+        # Draw lyrics.
+        rect.x += self.lyrics_padding_left
+        enable_lyrics = config.getboolean("lyrics", "status")
+        if enable_lyrics:
+            lyrics_pixbuf = app_theme.get_pixbuf("lyrics_button/lyrics_active_normal.png").get_pixbuf()
+        else:    
+            lyrics_pixbuf = app_theme.get_pixbuf("lyrics_button/lyrics_inactive_normal.png").get_pixbuf()
+            
+        icon_y = rect.y + (rect.height - lyrics_pixbuf.get_height()) / 2
+        draw_pixbuf(cr, lyrics_pixbuf, rect.x, icon_y)    
+        
+        # Draw previous button.
+        rect.x += lyrics_pixbuf.get_width() + self.lyrics_padding_right
+        previous_pixbuf = app_theme.get_pixbuf("action/previous_normal.png").get_pixbuf()
+        icon_y = rect.y + (rect.height - previous_pixbuf.get_height()) / 2
+        draw_pixbuf(cr, previous_pixbuf, rect.x, icon_y)
+        
+        # Draw playpuase button. 
+        rect.x += previous_pixbuf.get_width()
+        is_played = config.getboolean("player", "play")
+        if is_played:
+            playpause_pixbuf = app_theme.get_pixbuf("action/pause_normal.png").get_pixbuf()
+        else:    
+            playpause_pixbuf = app_theme.get_pixbuf("action/play_normal.png").get_pixbuf() 
+            
+        icon_y = rect.y + (rect.height - playpause_pixbuf.get_height()) / 2
+        draw_pixbuf(cr, playpause_pixbuf, rect.x, icon_y)    
+        
+        # Draw next button.
+        rect.x += playpause_pixbuf.get_width()
+        next_pixbuf = app_theme.get_pixbuf("action/next_normal.png").get_pixbuf()
+        icon_y = rect.y + (rect.height - next_pixbuf.get_height()) / 2
+        draw_pixbuf(cr, next_pixbuf, rect.x, icon_y)
+        
+        # Draw volume button.
+        volume_button_rect = self.volume_slider.volume_button.allocation        
+        if volume_button_rect.x != -1:
+            volume_button_rect.x = rect.x 
+            volume_button_rect.x = rect.y
+            volume_button_rect = self.volume_slider.volume_button.allocation
+            self.volume_slider.volume_button.draw_volume(cr, volume_button_rect)
+        
+        cr.pop_group_to_source()
+        cr.paint_with_alpha(alpha)
         
     def expose_mini_frame(self, widget, event):
         cr  = widget.window.cairo_create()
@@ -252,5 +333,30 @@ class MiniWindow(Window):
         cr.set_source_rgba(1,1,1, 0.8)
         cr.rectangle(rect.x, rect.y, rect.width, rect.height)
         cr.fill()
-
+        
+        if self.draw_animation:
+            if self.active_draw_func:
+                self.active_draw_func(cr, rect, self.active_alpha)
+            if self.target_draw_func:    
+                self.target_draw_func(cr, rect, self.target_alpha)
+        
+    def start_animation(self, widget):    
+        if not self.in_animation:
+            self.in_animation = True
+            self.timeline = Timeline(self.animation_time, CURVE_SINE)
+            self.timeline.connect("update", self.update_animation)
+            self.timeline.connect("completed", lambda source: self.completed_animation(source, widget))
+            self.timeline.run()
     
+    def update_animation(self, source, status):
+        self.active_alpha = 1.0 - status
+        self.target_alpha = status
+        self.queue_draw()
+    
+    def completed_animation(self, source, widget):    
+        self.draw_animation = False        
+        self.active_alpha = 1.0
+        self.target_alpha = 0.0
+        self.in_animation = False
+        self.queue_draw()
+        switch_tab(self.body_box, widget)

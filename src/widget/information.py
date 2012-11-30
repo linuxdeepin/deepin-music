@@ -56,6 +56,9 @@ class PlayInfo(gtk.VBox):
         cr = widget.window.cairo_create()
         rect = widget.allocation
         
+        self.draw_content(cr, rect)
+        
+    def draw_content(self, cr, rect):    
         draw_text(cr, self.artist_label, rect.x + self.padding_x, rect.y, rect.width - self.padding_x * 2,
                   rect.height, text_size=9.5,
                   gaussian_radious=2,

@@ -177,20 +177,20 @@ class SongTimer(gtk.HBox):
 class VolumeSlider(gtk.VBox):
     def __init__(self, auto_hide=True):
         super(VolumeSlider, self).__init__()
-        self.volume_progressbar = VolumeButton(auto_hide=auto_hide)
-        Tooltip.custom(self.volume_progressbar, self.get_tip_label).always_update(self.volume_progressbar, True)
-        self.volume_progressbar.connect("volume-state-changed",self.__volume_changed)
+        self.volume_button = VolumeButton(auto_hide=auto_hide)
+        Tooltip.custom(self.volume_button, self.get_tip_label).always_update(self.volume_button, True)
+        self.volume_button.connect("volume-state-changed",self.__volume_changed)
         save_volume = float(config.get("player","volume"))
-        self.volume_progressbar.set_value(int(save_volume * 100))
+        self.volume_button.set_value(int(save_volume * 100))
         Dispatcher.connect("volume", self.change_volume)
-        self.add(self.volume_progressbar)
+        self.add(self.volume_button)
         
     def get_tip_label(self):    
-        return Label(str(int(self.volume_progressbar.value)))
+        return Label(str(int(self.volume_button.get_value())))
         
     def change_volume(self,helper,value):
         val = value * 100
-        self.volume_progressbar.value = int(val)
+        self.volume_button.set_value(int(val))
 
     def __volume_changed(self, widget, value, mute_status):
         val = value / 100.0

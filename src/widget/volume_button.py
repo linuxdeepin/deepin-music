@@ -146,6 +146,10 @@ class VolumeButton(gtk.Button):
         cr = widget.window.cairo_create()
         rect = widget.allocation
         
+        self.draw_volume(cr, rect)
+        return True
+        
+    def draw_volume(self, cr, rect):    
         # Draw state icon.
         if self.icon_state == STATE_HOVER:
             pixbuf = self.hover_dpixbuf.get_pixbuf()
@@ -160,7 +164,6 @@ class VolumeButton(gtk.Button):
                 self.draw_progress_bar(cr, rect)
         else:        
             self.draw_progress_bar(cr, rect)
-        return True    
         
     def draw_progress_bar(self, cr, rect):                    
         
