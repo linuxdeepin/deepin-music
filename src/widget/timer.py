@@ -175,16 +175,21 @@ class SongTimer(gtk.HBox):
             self.__idle_release_id = gobject.idle_add(self.__idle_release)
 
 class VolumeSlider(gtk.VBox):
-    def __init__(self, auto_hide=True):
+    def __init__(self, auto_hide=True, mini_mode=False):
         super(VolumeSlider, self).__init__()
-        self.volume_button = VolumeButton(auto_hide=auto_hide)
+        self.volume_button = VolumeButton(auto_hide=auto_hide, mini_mode=mini_mode)
         Tooltip.custom(self.volume_button, self.get_tip_label).always_update(self.volume_button, True)
         self.volume_button.connect("volume-state-changed",self.__volume_changed)
         save_volume = float(config.get("player","volume"))
         self.volume_button.set_value(int(save_volume * 100))
         Dispatcher.connect("volume", self.change_volume)
+        config.connect("config-changed", self.on_config_changed)
         self.add(self.volume_button)
         
+    def on_config_changed(self, config, section, option, value):
+        if section == "player" and option == "volume":
+            self.volume_button.set_value(int(float(value) * 100), emit=False)
+                    
     def get_tip_label(self):    
         return Label(str(int(self.volume_button.get_value())))
         
@@ -198,5 +203,5 @@ class VolumeSlider(gtk.VBox):
             config.set("player", "volume", "0.0")
             Player.volume = 0.0
         else:    
-            config.set("player","volume","%f" % val)
+            config.set("player","volume","%0.1f" % val)
             Player.volume = val

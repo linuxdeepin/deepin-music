@@ -27,6 +27,7 @@ from dtk.ui.draw import draw_pixbuf
 from dtk.ui.utils import container_remove_all
 from dtk.ui.timeline import Timeline, CURVE_SINE
 from dtk.ui.theme import ui_theme
+from dtk.ui.box import ImageBox
 from dtk.ui.button import ToggleButton, ImageButton, MinButton, CloseButton
 import dtk.ui.tooltip as Tooltip
 
@@ -54,14 +55,19 @@ class MiniWindow(Window):
         
         self.control_box = gtk.HBox()
         self.action_box = gtk.HBox()
-        self.event_box = gtk.HBox()
-        self.info_box = gtk.HBox()
-        
+        self.event_box = gtk.HBox()  
+        self.info_box = gtk.HBox()              
+
         # Build info box
+        self.logo_padding_left = 10
+        self.logo_padding_right = 10
+        logo_box = self.create_logo_box()
+        logo_box_align = set_widget_gravity(logo_box, (0.5, 0.5, 0, 0),
+                                            (0, 0, self.logo_padding_left,
+                                             self.logo_padding_right))
         self.playinfo = PlayInfo(200, None, 0, "#000000")
-        # playinfo_align = set_widget_gravity(self.playinfo, (0.5, 0.5, 0, 0),
-        #                                     (0, 0, 0, 0))
-        self.info_box.add(self.playinfo)
+        self.info_box.pack_start(logo_box_align, False, False)
+        self.info_box.pack_start(self.playinfo, False, False)
         
         # Build control box
         self.lyrics_button = self.create_lyrics_button()
@@ -88,14 +94,14 @@ class MiniWindow(Window):
         Player.connect("stopped", self.__swap_play_status, False)
         Player.connect("play-end", self.__swap_play_status, False)
         
-        self.volume_slider = VolumeSlider(auto_hide=False)
+        self.volume_slider = VolumeSlider(auto_hide=False, mini_mode=True)
         self.volume_padding_left = 8
         volume_slider_align = set_widget_gravity(self.volume_slider, (0.5, 0.5, 0, 0),
                                                  (0, 0, self.volume_padding_left, 0))
         
         self.action_box.pack_start(lyrics_button_align, False, False)
         self.action_box.pack_start(set_widget_vcenter(self.previous_button), False, False)
-        self.action_box.pack_start(self.playpause_button, False, True)
+        self.action_box.pack_start(set_widget_vcenter(self.playpause_button), False, True)
         self.action_box.pack_start(set_widget_vcenter(self.next_button), False, False)
         self.action_box.pack_start(volume_slider_align, False, False)
         
@@ -134,7 +140,7 @@ class MiniWindow(Window):
         self.body_box.add(self.info_box)    
         self.add_move_event(self)
         self.window_frame.add(self.body_box)
-        self.set_size_request(305, 55)
+        self.set_size_request(305, 40)
         
         
         # animation params.
@@ -154,12 +160,12 @@ class MiniWindow(Window):
         
     def create_lyrics_button(self):    
         toggle_button = ToggleButton(
-            app_theme.get_pixbuf("lyrics_button/lyrics_inactive_normal.png"),
-            app_theme.get_pixbuf("lyrics_button/lyrics_active_normal.png"),
-            app_theme.get_pixbuf("lyrics_button/lyrics_inactive_hover.png"),
-            app_theme.get_pixbuf("lyrics_button/lyrics_active_hover.png"),
-            app_theme.get_pixbuf("lyrics_button/lyrics_inactive_press.png"),
-            app_theme.get_pixbuf("lyrics_button/lyrics_active_press.png"),
+            app_theme.get_pixbuf("mini/lyrics_inactive_normal.png"),
+            app_theme.get_pixbuf("mini/lyrics_active_normal.png"),
+            app_theme.get_pixbuf("mini/lyrics_inactive_hover.png"),
+            app_theme.get_pixbuf("mini/lyrics_active_hover.png"),
+            app_theme.get_pixbuf("mini/lyrics_inactive_press.png"),
+            app_theme.get_pixbuf("mini/lyrics_active_press.png"),
             ) 
         
         toggle_button.connect("toggled", self.change_lyrics_status)
@@ -174,9 +180,9 @@ class MiniWindow(Window):
     
     def create_button(self, name, tip_msg=None):
         button = ImageButton(
-            app_theme.get_pixbuf("action/%s_normal.png" % name),
-            app_theme.get_pixbuf("action/%s_hover.png" % name),
-            app_theme.get_pixbuf("action/%s_press.png" % name),
+            app_theme.get_pixbuf("mini/%s_normal.png" % name),
+            app_theme.get_pixbuf("mini/%s_hover.png" % name),
+            app_theme.get_pixbuf("mini/%s_press.png" % name),
             )
         
         button.connect("clicked", self.player_control, name)
@@ -184,6 +190,9 @@ class MiniWindow(Window):
         if tip_msg:
             Tooltip.text(button, tip_msg)
         return button
+    
+    def create_logo_box(self):
+        return ImageBox(app_theme.get_pixbuf("mini/logo.png"))
     
     def player_control(self, button, name):
         if name == "next":
@@ -203,12 +212,12 @@ class MiniWindow(Window):
         return is_in_rect((r_x, r_y), rect)
     
     def create_playpause_button(self):
-        play_normal_pixbuf = app_theme.get_pixbuf("action/play_normal.png")
-        pause_normal_pixbuf = app_theme.get_pixbuf("action/pause_normal.png")
-        play_hover_pixbuf = app_theme.get_pixbuf("action/play_hover.png")
-        pause_hover_pixbuf = app_theme.get_pixbuf("action/pause_hover.png")
-        play_press_pixbuf = app_theme.get_pixbuf("action/play_press.png")
-        pause_press_pixbuf = app_theme.get_pixbuf("action/pause_press.png")
+        play_normal_pixbuf = app_theme.get_pixbuf("mini/play_normal.png")
+        pause_normal_pixbuf = app_theme.get_pixbuf("mini/pause_normal.png")
+        play_hover_pixbuf = app_theme.get_pixbuf("mini/play_hover.png")
+        pause_hover_pixbuf = app_theme.get_pixbuf("mini/pause_hover.png")
+        play_press_pixbuf = app_theme.get_pixbuf("mini/play_press.png")
+        pause_press_pixbuf = app_theme.get_pixbuf("mini/pause_press.png")
         playpause_button = ToggleButton(play_normal_pixbuf, pause_normal_pixbuf,
                      play_hover_pixbuf, pause_hover_pixbuf,
                      play_press_pixbuf, pause_press_pixbuf)
@@ -289,9 +298,21 @@ class MiniWindow(Window):
     def shape_mini_frame(self, widget, event):    
         pass
     
-    def draw_info(self, cr, rect, alpha):
+    def draw_info(self, cr, allocation, alpha):
+        rect = gtk.gdk.Rectangle(allocation.x, allocation.y, allocation.width, allocation.height)
         cr.push_group()
+        
+        # Draw logo.
+        rect.x += self.logo_padding_left
+        logo_pixbuf = app_theme.get_pixbuf("mini/logo.png").get_pixbuf()
+        icon_y = rect.y + (rect.height - logo_pixbuf.get_height()) / 2
+        draw_pixbuf(cr, logo_pixbuf, rect.x, icon_y)
+        
+        # Draw playinfo.
+        rect.x += logo_pixbuf.get_width() + self.logo_padding_right
         self.playinfo.draw_content(cr, rect)
+        
+        # set source to paint with alpha.
         cr.pop_group_to_source()
         cr.paint_with_alpha(alpha)
     
@@ -303,15 +324,15 @@ class MiniWindow(Window):
         rect.x += self.lyrics_padding_left
         enable_lyrics = config.getboolean('lyrics', 'status')
         if enable_lyrics:
-            lyrics_pixbuf = app_theme.get_pixbuf('lyrics_button/lyrics_active_normal.png').get_pixbuf()
+            lyrics_pixbuf = app_theme.get_pixbuf('mini/lyrics_active_normal.png').get_pixbuf()
         else:
-            lyrics_pixbuf = app_theme.get_pixbuf('lyrics_button/lyrics_inactive_normal.png').get_pixbuf()
+            lyrics_pixbuf = app_theme.get_pixbuf('mini/lyrics_inactive_normal.png').get_pixbuf()
         icon_y = rect.y + (rect.height - lyrics_pixbuf.get_height()) / 2
         draw_pixbuf(cr, lyrics_pixbuf, rect.x, icon_y)
         
         # Draw previous button.
         rect.x += lyrics_pixbuf.get_width() + self.lyrics_padding_right
-        previous_pixbuf = app_theme.get_pixbuf('action/previous_normal.png').get_pixbuf()
+        previous_pixbuf = app_theme.get_pixbuf('mini/previous_normal.png').get_pixbuf()
         icon_y = rect.y + (rect.height - previous_pixbuf.get_height()) / 2
         draw_pixbuf(cr, previous_pixbuf, rect.x, icon_y)
         
@@ -319,15 +340,15 @@ class MiniWindow(Window):
         rect.x += previous_pixbuf.get_width()
         is_played = config.getboolean('player', 'play')
         if is_played:
-            playpause_pixbuf = app_theme.get_pixbuf('action/pause_normal.png').get_pixbuf()
+            playpause_pixbuf = app_theme.get_pixbuf('mini/pause_normal.png').get_pixbuf()
         else:
-            playpause_pixbuf = app_theme.get_pixbuf('action/play_normal.png').get_pixbuf()
+            playpause_pixbuf = app_theme.get_pixbuf('mini/play_normal.png').get_pixbuf()
         icon_y = rect.y + (rect.height - playpause_pixbuf.get_height()) / 2
         draw_pixbuf(cr, playpause_pixbuf, rect.x, icon_y)
         
         # Draw next button.
         rect.x += playpause_pixbuf.get_width()
-        next_pixbuf = app_theme.get_pixbuf('action/next_normal.png').get_pixbuf()
+        next_pixbuf = app_theme.get_pixbuf('mini/next_normal.png').get_pixbuf()
         icon_y = rect.y + (rect.height - next_pixbuf.get_height()) / 2
         draw_pixbuf(cr, next_pixbuf, rect.x, icon_y)
         

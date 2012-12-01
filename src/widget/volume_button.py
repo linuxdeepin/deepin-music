@@ -39,7 +39,7 @@ class VolumeButton(gtk.Button):
         "volume-state-changed" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT)),
                      }
     
-    def __init__(self, value=100, lower=0, upper=100, step=5, progress_width=45, auto_hide=True):
+    def __init__(self, value=100, lower=0, upper=100, step=5, progress_width=45, auto_hide=True, mini_mode=False):
         gtk.Button.__init__(self)
         
         # Init data.
@@ -58,9 +58,13 @@ class VolumeButton(gtk.Button):
         self.auto_hide = auto_hide
         
         # Init DPixbufs.
-        self.bg_dpixbuf = app_theme.get_pixbuf("volume/bg.png")
-        self.fg_dpixbuf = app_theme.get_pixbuf("volume/fg.png")
-        self.point_dpixbuf = app_theme.get_pixbuf("volume/point.png")
+        if mini_mode:
+            self.volume_prefix = "mini_volume"
+        else:    
+            self.volume_prefix = "volume"
+        self.bg_dpixbuf = app_theme.get_pixbuf("%s/bg.png" % self.volume_prefix)
+        self.fg_dpixbuf = app_theme.get_pixbuf("%s/fg.png" % self.volume_prefix)
+        self.point_dpixbuf = app_theme.get_pixbuf("%s/point.png" % self.volume_prefix)
         self.update_state_dpixbufs(self.get_state_name(self.__value))
         
         # Init Sizes.
@@ -130,9 +134,9 @@ class VolumeButton(gtk.Button):
         self.queue_draw()
         
     def update_state_dpixbufs(self, name, queue_draw=False):    
-        self.normal_dpixbuf = app_theme.get_pixbuf("volume/%s_normal.png" % name)
-        self.hover_dpixbuf = app_theme.get_pixbuf("volume/%s_hover.png" % name)
-        self.press_dpixbuf = app_theme.get_pixbuf("volume/%s_press.png" % name)
+        self.normal_dpixbuf = app_theme.get_pixbuf("%s/%s_normal.png" % (self.volume_prefix, name))
+        self.hover_dpixbuf = app_theme.get_pixbuf("%s/%s_hover.png" % (self.volume_prefix, name))
+        self.press_dpixbuf = app_theme.get_pixbuf("%s/%s_press.png" % (self.volume_prefix, name))
         
         if queue_draw:
             self.queue_draw()
@@ -272,9 +276,9 @@ class VolumeButton(gtk.Button):
     def get_value(self):    
         return self.width_to_value(self.current_progress_width)
     
-    def set_value(self, value):
+    def set_value(self, value, emit=True):
         self.current_progress_width = self.value_to_width(value)
-        self.update_state_by_value(emit=True)
+        self.update_state_by_value(emit=emit)
         self.queue_draw()
         
     def on_scroll_event(self, widget, event):
