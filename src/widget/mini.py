@@ -45,6 +45,7 @@ class MiniWindow(Window):
     
     def __init__(self):
         Window.__init__(self,
+                        window_type=gtk.WINDOW_POPUP,
                         shape_frame_function=self.shape_mini_frame,
                         expose_frame_function=self.expose_mini_frame)
         
@@ -124,6 +125,9 @@ class MiniWindow(Window):
         self.connect("configure-event", self.on_configure_event)
         self.connect("enter-notify-event", self.on_enter_notify_event)
         self.connect("leave-notify-event", self.on_leave_notify_event)
+        self.connect("button-press-event", self.on_button_press_event)
+        self.connect("motion-notify-event", self.on_motion_notify_event)
+        self.connect("button-release-event", self.on_button_release_event)
         
         Dispatcher.connect("close-lyrics", lambda w : self.lyrics_button.set_active(False))
         Dispatcher.connect("show-lyrics", lambda w: self.lyrics_button.set_active(True))
@@ -138,7 +142,6 @@ class MiniWindow(Window):
         self.control_pixbuf = None
 
         self.body_box.add(self.info_box)    
-        self.add_move_event(self)
         self.window_frame.add(self.body_box)
         self.set_size_request(305, 40)
         
@@ -152,6 +155,10 @@ class MiniWindow(Window):
         self.draw_animation = False
         self.active_draw_func = None
         self.target_draw_func = None
+        
+        # drag params.
+        self.drag_move = False
+        self.old_x = self.old_y = self.mouse_x = self.mouse_y = 0
         
     def on_quell_button_clicked(self, widget):    
         main_window = get_main_window()
@@ -211,6 +218,21 @@ class MiniWindow(Window):
         rect.height -= 2
         return is_in_rect((r_x, r_y), rect)
     
+    def adjust_move_coordinate(self, widget, x, y):
+        x = max(x, 0)
+        y = max(y, 0)
+        screen = widget.get_screen()
+        w, h = widget.get_size()
+        screen_w, screen_h = screen.get_width(), screen.get_height()
+        
+        if x + w > screen_w:
+            x = screen_w - w
+           
+        if y + h > screen_h:    
+            y = screen_h - h
+        return (int(x), int(y))
+    
+    
     def create_playpause_button(self):
         play_normal_pixbuf = app_theme.get_pixbuf("mini/play_normal.png")
         pause_normal_pixbuf = app_theme.get_pixbuf("mini/pause_normal.png")
@@ -238,6 +260,8 @@ class MiniWindow(Window):
             config.set("mini","y","%d" % event.y)
             
     def on_enter_notify_event(self, widget, event):        
+        if self.drag_move: return
+        
         childs = self.body_box.get_children()
         if len(childs) > 0:
             child = childs[0]
@@ -255,12 +279,29 @@ class MiniWindow(Window):
             self.start_animation(self.control_box)
         
     def on_leave_notify_event(self, widget, event):    
+        if self.drag_move: return
+        
         if not self.is_in_window():
             self.draw_animation = True
             container_remove_all(self.body_box)
             self.active_draw_func = self.draw_control
             self.target_draw_func = self.draw_info
             self.start_animation(self.info_box)
+            
+    def on_button_press_event(self, widget, event):        
+        if event.button == 1:
+            self.old_x, self.old_y = widget.get_position()
+            self.mouse_x, self.mouse_y = event.x_root, event.y_root
+            self.drag_move = True
+            
+    def on_motion_notify_event(self, widget, event):        
+        if self.drag_move:
+            x = int(self.old_x + (event.x_root - self.mouse_x))
+            y = int(self.old_y + (event.y_root - self.mouse_y))
+            widget.move(*self.adjust_move_coordinate(widget, x, y))
+            
+    def on_button_release_event(self, widget, event):        
+        self.drag_move = False
             
     def toggle_visible(self, bring_to_front=False):        
         if self.get_property("visible"):
