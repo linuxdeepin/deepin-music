@@ -96,6 +96,7 @@ class Config(gobject.GObject, Logger):
                 "uri"  : "",
                 "play" : "false",
                 "volume" : "1.0",
+                "volume_mute" : "false",
                 "seek" : "0",
                 "state" : "stop",
                 "crossfade" : "true",

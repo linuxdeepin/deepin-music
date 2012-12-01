@@ -113,7 +113,7 @@ class MiniWindow(Window):
         min_button = MinButton()
         min_button.connect("clicked", lambda w: self.min_window())
         close_button = CloseButton()
-        close_button.connect("clicked", lambda w: self.hide_all())
+        close_button.connect("clicked", self.try_to_quit)
         self.event_box.pack_start(quell_button, False, False)
         self.event_box.pack_start(min_button, False, False)
         self.event_box.pack_start(close_button, False, False)
@@ -164,6 +164,11 @@ class MiniWindow(Window):
         main_window = get_main_window()
         main_window.change_app_mode("normal")
         switch_tab(self.body_box, self.info_box)
+        
+    def try_to_quit(self, widget):
+        self.hide_all()
+        main_window = get_main_window()
+        main_window.quit()
         
     def create_lyrics_button(self):    
         toggle_button = ToggleButton(

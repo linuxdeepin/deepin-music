@@ -180,15 +180,27 @@ class VolumeSlider(gtk.VBox):
         self.volume_button = VolumeButton(auto_hide=auto_hide, mini_mode=mini_mode)
         Tooltip.custom(self.volume_button, self.get_tip_label).always_update(self.volume_button, True)
         self.volume_button.connect("volume-state-changed",self.__volume_changed)
-        save_volume = float(config.get("player","volume"))
-        self.volume_button.set_value(int(save_volume * 100))
+        self.load_volume_config()
         Dispatcher.connect("volume", self.change_volume)
         config.connect("config-changed", self.on_config_changed)
         self.add(self.volume_button)
         
+    def load_volume_config(self):    
+        save_volume = float(config.get("player","volume"))        
+        if config.getboolean("player", "volume_mute"):
+            Player.vol = 0
+            self.volume_button.set_value(int(save_volume * 100))
+            self.volume_button.set_mute()
+        else:    
+            self.volume_button.set_value(int(save_volume * 100))
+        
     def on_config_changed(self, config, section, option, value):
-        if section == "player" and option == "volume":
-            self.volume_button.set_value(int(float(value) * 100), emit=False)
+        if section == "player":
+            if option == "volume":
+                self.volume_button.set_value(int(float(value) * 100), emit=False)
+            elif option == "volume_mute":    
+                if value == "true":
+                    self.volume_button.set_mute()
                     
     def get_tip_label(self):    
         return Label(str(int(self.volume_button.get_value())))
@@ -200,8 +212,9 @@ class VolumeSlider(gtk.VBox):
     def __volume_changed(self, widget, value, mute_status):
         val = value / 100.0
         if mute_status:
-            config.set("player", "volume", "0.0")
+            config.set("player", "volume_mute", "true")
             Player.volume = 0.0
         else:    
+            config.set("player", "volume_mute", "false")
             config.set("player","volume","%0.1f" % val)
             Player.volume = val

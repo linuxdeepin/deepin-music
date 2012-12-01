@@ -281,6 +281,11 @@ class VolumeButton(gtk.Button):
         self.update_state_by_value(emit=emit)
         self.queue_draw()
         
+    def set_mute(self):
+        self.update_state_dpixbufs("mute")
+        self.mute_flag = True
+        self.queue_draw()
+        
     def on_scroll_event(self, widget, event):
         self.mute_flag = False
         if event.direction == gtk.gdk.SCROLL_UP:
