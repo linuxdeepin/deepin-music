@@ -63,6 +63,7 @@ class EventDispatcher(gobject.GObject):
         "switch-browser" : SIGNAL_SIMPLE,
         "play-radio" : SIGNAL_SIMPLE,
         "being-quit" : SIGNAL_BASE,
+        "album-changed" : SIGNAL_SIMPLE,
         }
     
     def __init__(self):

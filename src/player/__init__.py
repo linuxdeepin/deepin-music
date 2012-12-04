@@ -27,7 +27,7 @@ from config import config
 from library import MediaDB
 from logger import Logger
 from player.fadebin import PlayerBin
-from utils import fix_charset, ThreadRun, post_gui
+from utils import fix_charset, ThreadRun
 
 from helper import Dispatcher
 
@@ -305,9 +305,6 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
     def stop(self):    
         self.stop_after_this_track = False
         self.update_skipcount()
-        
-        # whether is xiami, try to stop it.
-        # TODO
         
         # stop local player
         # self.bin.xfade_close()

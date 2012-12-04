@@ -38,6 +38,7 @@ from library import MediaDB
 from xdg_support import get_cache_file
 from widget.skin import app_theme
 from cover_query import multi_query_artist_engine
+from helper import Dispatcher
 
 
 REINIT_COVER_TO_SKIP_TIME = 100 * 60 * 30
@@ -277,6 +278,7 @@ class DeepinCoverManager(Logger):
             except:    
                 pass
         if emit:    
+            Dispatcher.emit("album-changed", song)
             MediaDB.set_property(song, {"album" : song.get("album")})
             
             
@@ -322,6 +324,7 @@ class DeepinCoverManager(Logger):
                 del pixbuf  
                 
                 # Change property album to update UI
+                Dispatcher.emit("album-changed", song)
                 MediaDB.set_property(song, {"album" : song.get("album")})
                 return True
 

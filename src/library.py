@@ -79,7 +79,7 @@ class MediaDatebase(gobject.GObject, Logger):
         # init constant
         self.__is_loaded = False
         self.__force_check = False
-        self.__save_song_type = ["local", "cue", "webradio"]
+        self.__save_song_type = ["local", "cue",]
         self.__dirty = False
         
         # Init queued signal.

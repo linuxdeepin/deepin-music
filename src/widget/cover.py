@@ -25,12 +25,14 @@ import gtk
 import threading
 from dtk.ui.draw import draw_pixbuf
 from dtk.ui.utils import get_optimum_pixbuf_from_file
+from dtk.ui.timeline import Timeline, CURVE_SINE
 
 
 from player import Player
-from library import MediaDB
 from cover_manager import CoverManager, COVER_SIZE
 from widget.skin import app_theme
+from helper import Dispatcher
+
 
 class CoverButton(gtk.Button):
     def __init__(self):
@@ -43,7 +45,10 @@ class CoverButton(gtk.Button):
         self.webcast_dpixbuf = app_theme.get_pixbuf("cover/webcast.png")
 
         self.connect("expose-event", self.expose_button_cb)
-        MediaDB.connect("simple-changed", self.update_cover)
+        # MediaDB.connect("simple-changed", self.update_cover)
+        Dispatcher.connect("album-changed", self.on_album_changed)
+        
+        
         self.current_song = None
         self.next_cover_to_download = None
         
@@ -51,6 +56,39 @@ class CoverButton(gtk.Button):
         self.thread = threading.Thread(target=self.func_thread)
         self.thread.setDaemon(True)
         self.thread.start()
+        
+        # animation params.
+        self.active_alpha = 1.0
+        self.target_alpha = 0.0
+        self.in_animation = False
+        self.animation_time = 1500
+        self.active_pixbuf = self.current_cover_pixbuf
+        self.target_pixbuf = None
+        
+    def start_animation(self, target_pixbuf):    
+        self.target_pixbuf = target_pixbuf
+        if not self.in_animation:
+            self.in_animation = False
+            try:
+                self.timeline.stop()
+            except:    
+                pass
+            self.timeline = Timeline(self.animation_time, CURVE_SINE)
+            self.timeline.connect("update", self.update_animation)
+            self.timeline.connect("completed", lambda source: self.completed_animation(source, target_pixbuf))
+            self.timeline.run()
+    
+    def update_animation(self, source, status):
+        self.active_alpha = 1.0 - status
+        self.target_alpha = status
+        self.queue_draw()
+    
+    def completed_animation(self, source, target_pixbuf):    
+        self.active_pixbuf = target_pixbuf
+        self.active_alpha = 1.0
+        self.target_alpha = 0.0
+        self.in_animation = False
+        self.queue_draw()
         
     def expose_button_cb(self, widget, event):    
         cr = widget.window.cairo_create()
@@ -61,9 +99,13 @@ class CoverButton(gtk.Button):
         
         if Player.song:
             if Player.song.get_type() == "webcast":
-                self.current_cover_pixbuf = self.webcast_dpixbuf.get_pixbuf()
+                self.active_pixbuf = self.webcast_dpixbuf.get_pixbuf()
         
-        draw_pixbuf(cr, self.current_cover_pixbuf, rect.x + 4, rect.y + 4)
+        draw_pixbuf(cr, self.active_pixbuf, rect.x + 4, rect.y + 4,
+                    self.active_alpha)
+        
+        if self.target_pixbuf:
+            draw_pixbuf(cr, self.target_pixbuf, rect.x + 4, rect.y + 4, self.target_alpha)
         return True
         
         
@@ -76,26 +118,26 @@ class CoverButton(gtk.Button):
             self.next_cover_to_download = None
             self.condition.release()
             self.set_current_cover(True, next_cover_to_download)
-                
 
     def update_default_cover(self, widget, song):            
         if not self.current_song or CoverManager.get_cover_search_str(self.current_song) != CoverManager.get_cover_search_str(song):
             pixbuf = CoverManager.get_pixbuf_from_name("", COVER_SIZE["x"], COVER_SIZE["y"])
-            self.current_cover_pixbuf = pixbuf
+            self.active_pixbuf = pixbuf
             self.queue_draw()
+            self.start_animation(pixbuf)
             
     def init_default_cover(self):        
         pixbuf = CoverManager.get_pixbuf_from_name("", COVER_SIZE["x"], COVER_SIZE["y"])
-        self.current_cover_pixbuf = pixbuf
-        self.queue_draw()
+        self.start_animation(pixbuf)
+        
+    def on_album_changed(self, obj, song):    
+        if song == self.current_song:
+            self.update_cover(None, song)
             
-    def update_cover(self, widget, songs):        
-        if isinstance(songs, list):
-            if self.current_song in songs:
-                self.current_song  = songs[songs.index(self.current_song)]
-        else:        
-            self.current_song = songs
             
+    def update_cover(self, widget, song):        
+        self.current_song = song
+        
         if self.current_song is not None:        
             if not self.set_current_cover(False):
                 self.condition.acquire()
@@ -115,9 +157,7 @@ class CoverButton(gtk.Button):
         except gobject.GError:    
             pass
         else:
-            self.current_cover_pixbuf = pixbuf
-            self.queue_draw()            
-            del pixbuf
+            self.start_animation(pixbuf)
             if not try_web:
                 return CoverManager.default_cover != filename
 
