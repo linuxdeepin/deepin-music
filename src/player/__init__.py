@@ -251,7 +251,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
     def force_fade_close(self):            
         if not self.song: return 
         self.logdebug("Force remove stream: %s", self.song.get("uri"))        
-        if self.song.get_type() not in ["local", "cue"]:
+        if self.song.get_type() == "webcast":
             try:
                 threading.Thread(target=self.bin.xfade_close, args=(self.song.get("uri"),)).start()
             except Exception, e:    
@@ -310,7 +310,8 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         # TODO
         
         # stop local player
-        self.bin.xfade_close()
+        # self.bin.xfade_close()
+        self.force_fade_close()
         config.set("player", "play", "false")
         self.emit("stopped")
         
