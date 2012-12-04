@@ -72,7 +72,7 @@ class Config(gobject.GObject, Logger):
         
     def write(self):    
         ''' write configure to file. '''
-        filename = get_config_file("config")
+        filename = get_config_file(CONFIG_FILENAME)
         f = file(filename, "w")
         self._config.write(f)
         f.close()
@@ -185,5 +185,9 @@ class Config(gobject.GObject, Logger):
                 "toggle_lyrics_lock" : "Ctrl + Alt + D",
                 "toggle_lyrics_status" : "Ctrl + Alt + H",
                 },
+            
+            "plugins" : {
+                "enable" : "",
+                }
             }
 config = Config()    

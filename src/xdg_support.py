@@ -32,6 +32,7 @@ xdg_data_home = os.environ.get('XDG_DATA_HOME') or \
 xdg_data_dirs = [xdg_data_home] + \
     (os.environ.get('XDG_DATA_DIRS') or '/usr/local/share:/usr/share').split(':')
 
+
 xdg_config_home = os.environ.get('XDG_CONFIG_HOME') or \
             os.path.join(_home, '.config')
 
@@ -43,6 +44,9 @@ xdg_cache_home = os.environ.get('XDG_CACHE_HOME') or \
 
 xdg_data_dirs = filter(lambda x: x, xdg_data_dirs)
 xdg_config_dirs = filter(lambda x: x, xdg_config_dirs)
+
+dmusic_data_dir = os.path.join(xdg_data_home, PROGRAM_NAME)
+dmusic_dir = os.path.dirname(os.path.realpath(__file__))
 
 def save_config_path(*resource):
     """Ensure $XDG_CONFIG_HOME/<resource>/ exists, and return its path.
@@ -82,6 +86,9 @@ def get_cache_dir(dir_name):
         os.makedirs(cachedir)
     return cachedir    
 
+def get_plugin_dirs():
+    return [ os.path.join(p, "plugins") for p in [dmusic_data_dir, dmusic_dir]]
+
 def get_tmp_file(filename):
     ''' get temp file. '''
     return os.path.join(os.environ.get("TMPDIR", "/tmp"), filename)
@@ -100,3 +107,8 @@ def get_music_dir():
                 
         else:
             return musicdir
+
+        
+if __name__ == "__main__":
+    print get_plugin_dirs()
+    

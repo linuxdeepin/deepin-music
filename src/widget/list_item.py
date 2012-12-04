@@ -163,7 +163,7 @@ class ListTreeItem(TreeItem):
         return (self.item_width, )
     
     def get_column_renders(self):
-        return (self.render_content,)
+        return (self.render_title,)
     
     def render_title(self, cr, rect):
         if self.is_highlight:    

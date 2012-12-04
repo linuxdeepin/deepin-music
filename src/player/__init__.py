@@ -27,7 +27,7 @@ from config import config
 from library import MediaDB
 from logger import Logger
 from player.fadebin import PlayerBin
-from utils import fix_charset, ThreadRun
+from utils import fix_charset, ThreadRun, post_gui
 
 from helper import Dispatcher
 
@@ -116,7 +116,8 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         
     def __on_tag(self, bin, taglist):    
         ''' The playbin found the tag information'''
-        if self.song and not self.song.get("title") and self.song.get_type() not in ["cue", "audiocd"]:
+        if not self.song: return 
+        if not self.song.get("title") and self.song.get_type() not in ["cue", "audiocd", "webcast"]:
             self.logdebug("tag found %s", taglist)
             IDS = {
                 "title": "title",
@@ -237,7 +238,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         self.emit("instant-new-song", self.song)
 
         if song.get_type() == "webcast" and song.get_scheme() in ["mms", "rtsp"]:
-            self.thread_play(uri, crossfade, seek, song, play, self.play_thread_id)
+            self.thread_play(uri, song, play, self.play_thread_id)
         else:    
             ret = uri and self.bin.xfade_open(uri)
             if not ret:
@@ -258,39 +259,40 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         else:        
             self.bin.xfade_close(self.song.get("uri"))
             
-    def thread_play(self, uri, crossfade, seek, song, play, thread_id):        
-        ThreadRun(self.bin.xfade_open, self.emit_and_play, (uri,), (crossfade, seek, song, play, thread_id)).start()
+    def thread_play(self, uri, song, play, thread_id):        
+        ThreadRun(self.bin.xfade_open, self.emit_and_play, (uri,), (song, play, thread_id)).start()
             
-    def emit_and_play(self, ret, crossfade, seek, song, play, thread_id):    
+    def emit_and_play(self, ret, song, play, thread_id):    
         if thread_id != self.play_thread_id:
             return
-        if not ret:
-            gobject.idle_add(self.emit, "play-end")
-            self.next()
-        elif play:    
-            self.play(crossfade, seek)
+        if song != self.song:
+            return 
+        if ret and play:
+            self.play(0, play_emit=False)
             self.logdebug("play %s", song.get_path())
         
     def play_new(self, song, crossfade=None, seek=None):
         '''add new song and try to play it'''
         self.set_song(song, True, crossfade, seek)
         
-    def play(self, crossfade=-1, seek=None):    
+    def play(self, crossfade=-1, seek=None, play_emit=True):    
         '''play currnet song'''
         if self.song is None:
             return 
         if seek:
             crossfade = -1
         ret = self.bin.xfade_play(crossfade)    
-        if not ret:
-            self.emit("paused")
-            config.set("player", "play", "false")
-            gobject.idle_add(self.emit, "play-end")
-        else:    
-            if seek:
-                gobject.idle_add(self.seek, seek)
-            self.emit("played")    
-        return ret    
+        
+        if play_emit:
+            if not ret:
+                self.emit("paused")
+                config.set("player", "play", "false")
+                gobject.idle_add(self.emit, "play-end")
+            else:    
+                if seek:
+                    gobject.idle_add(self.seek, seek)
+                self.emit("played")    
+            return ret    
     
     def pause(self):
         '''pause'''

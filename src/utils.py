@@ -456,6 +456,24 @@ def get_uris_from_plain_text(content, callback=None, *args_cb, **kwargs_cb):
     uris = [ line.strip() for line in content.splitlines() if line.strip() ]
     return parse_uris(uris, True, True, callback, *args_cb, **kwargs_cb)
     
+def synchronized(func):
+    """
+        A decorator to make a function synchronized - which means only one
+        thread is allowed to access it at a time
+    """
+    @wraps(func)
+    def wrapper(self, *__args, **__kw):
+        try:
+            rlock = self._sync_lock
+        except AttributeError:
+            from threading import RLock
+            rlock = self.__dict__.setdefault('_sync_lock', RLock())
+        rlock.acquire()
+        try:
+            return func(self, *__args, **__kw)
+        finally:
+            rlock.release()
+    return wrapper
     
 def move_to_trash(uri):    
     ''' move uri to trash. '''
@@ -630,7 +648,7 @@ class ThreadLoad(threading.Thread):
         
 class ThreadRun(threading.Thread):
     '''class docs'''
-    def __init__(self, fetch_func, render_func, args=[], render_args=[]):
+    def __init__(self,fetch_func, render_func, args=[], render_args=[]):
         '''init docs'''
         super(ThreadRun, self).__init__()
         self.setDaemon(True)
@@ -640,7 +658,6 @@ class ThreadRun(threading.Thread):
         self.render_args = render_args
 
     def run(self):
-        '''docs'''
         if self.args:
             result = self.fetch_func(*self.args)
         else:    
@@ -885,6 +902,25 @@ def clip_surface(image_file):
 
     del image_surface
     del surface
+    
+def post_gui(func):
+    '''
+    Post GUI code in main thread.
+
+    You should use post_gui wrap graphics function if function call from other threads.
+    
+    Usage:
+
+    >>> @post_gui
+    >>> def graphics_fun():
+    >>>     ....
+    '''
+    def wrap(*a, **kw):
+        gtk.gdk.threads_enter()
+        ret = func(*a, **kw)
+        gtk.gdk.threads_leave()
+        return ret
+    return wrap
     
 global MAIN_WINDOW            
 MAIN_WINDOW = None
