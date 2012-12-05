@@ -20,139 +20,135 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-###
-#
-# * PlayerBin pipeline * 
-# adder : 
-#   adder
-# filterbin : 
-#   (sink pad ghosted) audioconvert (src pad ghosted)
-# outputbin : 
-#   capsfilter ! identity(blocker element) ! audioconvert ! audioresample ! tee ! audioconvert ! volume ! filterbin ! audioconvert ! audioresample ! queue ! sink
-# silencebin :
-#   audiotestsrc ! audioconvert ! capsfilter (src pad ghosted)
+# * PlayerBin pipeline *
 # 
-# final pipeline :
-#   silencebin ! adder ! outputbin 
-# 
-# * StreamBin *
-#   src [ ! queue ] ! decoder ! audioconvert ! rgvolume ! audioresample ! capsfilter ! queue (preroll) ! volume (src pad ghosted)
+#     Adder : 
+#         adder 
+#         
+#     Filterbin :    
+#         (sink pad ghosted) audioconvert (src pad ghosted)
+#         
+#     Outputbin :    
+#         capsfilter ! identity(blocker element) ! audioconvert ! audioresample ! tee ! audioconvert ! volume !
+#         filterbin ! audioconvert ! audioresample ! queue ! sink
+#         
+#     Silencebin :    
+#         audiotestsrc ! audioconvert ! capsfilter (src pad ghosted)
+#         
+#     Final pipeline:     
+#         Silencebin ! Adder ! Outputbin
+#     
+# * StreamBin *    
+#     src [ ! queue(remote)] ! decoder ! audioconvert ! rgvolume ! audioresample ! capsfilter ! 
+#     queue(preroll) ! volume(src pad ghosted)
 #
-#
-# basic design (from rb code):
+     
+# ************************************************************************
+# Basic design (from rb code):
 #
 # we have a single output bin, beginning with an adder.
 # connected to this are a number of stream bins, consisting of a
 # source, decodebin, audio convert/resample, and a volume element used
-# for fading in and out.  (might be interesting to replace those with
-# high/low pass filter elements?)
+# for fading in and out. (might be interesting to replace those with 
+# high/low pass filter element?)
 #
 # stream bins only stay connected to the adder while actually playing.
-# when not playing (prerolling or paused), the stream bin's source pad
+# when not playing (prerolling or paused), the stream bin's source pad 
 # is blocked so no data can flow.
-#
-# streams go through a number of states:
-#
-# when a stream is created (in rb_player_open()), it starts in PREROLLING
-# state.  from there:
-#
-# - rb_player_play():  -> PREROLL_PLAY
-# - preroll finishes:  -> WAITING
-#
-# from WAITING:
-#
-# - rb_player_play(), crossfade == 0, other stream playing:  -> WAITING_EOS
-# - rb_player_play(), crossfade > 0, other stream playing:   -> FADING IN, link to adder, unblock
-#      + fade out existing stream
-# - rb_player_play(), crossfade < 0, other stream playing:   -> PLAYING, link to adder, unblock
-#      + stop existing stream
-# - rb_player_play(), existing stream paused:  -> PLAYING, link to adder, unblock
-#      + stop existing stream
-# - rb_player_play(), nothing already playing:  -> PLAYING, link to adder, unblock
-#
-# from PREROLL_PLAY:
-#
-# - preroll finishes, crossfade == 0, other stream playing:  -> WAITING_EOS
-# - preroll finishes, crossfade > 0, other stream playing:  -> FADING_IN, link to adder, unblock
-#      + fade out existing stream
-# - preroll finishes, crossfade < 0, other stream playing:  -> PLAYING, link to adder, unblock
-#      + stop existing stream
-# - preroll finishes, existing stream paused:  -> PLAYING, link to adder, unblock
-#      + stop existing stream
-# - preroll finishes, nothing already playing:  -> PLAYING, link to adder, unblock
-#
-# from WAITING_EOS:
-#
-# - EOS received for another stream:  -> PLAYING, link to adder, unblock
-#
-# from FADING_IN:
-#
-# - fade in completes:  -> PLAYING
-# - another stream starts fading in:  -> FADING_OUT
-# - rb_player_pause():  -> PAUSED, block, unlink from adder
-# - stopped for another stream:  -> PENDING_REMOVE
-# - rb_player_set_time():  -> SEEKING, block, unlink
-# - reused for another stream:  -> REUSING; block, unlink
-#
-# from PLAYING:
-#
-# - rb_player_pause(): -> FADING_OUT_PAUSE, fade out (short fade)
-# - EOS:  -> PENDING_REMOVE
-# - another stream starts fading in:  -> FADING_OUT
-# - stopped for another stream:  -> PENDING_REMOVE
-# - rb_player_set_time():  -> SEEKING, block, unlink
-# - reused for another stream:  -> REUSING; block, unlink
-#
-# from SEEKING:
-# - rb_player_pause():  -> SEEKING_PAUSED
-# - blocked:  perform seek, link, unblock -> PLAYING | FADING_IN
-#
-# from SEEKING_PAUSED:
-# - blocked:  perform seek, -> PAUSED
-# - rb_player_play():   -> SEEKING
-#
-# from PAUSED:
-#
-# - rb_player_play():    -> FADING IN, link to adder, unblock (short fade)
-# - stopped for another stream:  -> PENDING_REMOVE
-# - rb_player_set_time(): -> perform seek
-#
-# from FADING_OUT:
-#
-# - fade out finishes:  -> PENDING_REMOVE
-# - EOS:  -> PENDING_REMOVE
-# - reused for another stream:  -> REUSING; block, unlink
-#
-# from FADING_OUT_PAUSED:
-#
-# - fade out finishes: -> SEEKING_PAUSED, block, unlink
-# - EOS: -> PENDING_REMOVE
-# - reused for another stream: -> REUSING, block, unlink
-# - rb_player_set_time():  -> SEEKING_PAUSED, block, unlink
-#
-# from PENDING_REMOVE:
-#
-# - rb_player_set_time():  -> block, seek, -> SEEKING_EOS
-# - reap_streams idle handler called:  -> unlink from adder, stream destroyed
-#
-# from REUSING:
-#
-#  - blocked:  emit reuse-stream, -> PLAYING
-#
-# from SEEKING_EOS:
-# - block completes -> link, unblock, -> PLAYING
-# - rb_player_pause() -> SEEKING_PAUSED
 
-import gobject
+# ************************************************************************
+# streams go through a number of states.
+# When a stream is created (in xfade_open()), it starts in PREROLLING
+# state, from there:
+
+# - xfade_open():      -> PREROLL_PLAY
+# - preroll finishs:   -> WAITING 
+
+# From WAITING:
+# - xfade_play(), crossfade == 0, other stream playing:   -> WAITING_EOS
+# - xfade_play(), crossfade >  0, other stream playing:   -> FADEING_IN (link to adder, unblock + fade out existing stream)
+# - xfade_play(), crossfade <  0, other stream playing:   -> PLAYING (link to adder, unblock + stop existing stream)
+# - xfade_play(),               existing stream paused:   -> PLAYING (link to adder, unblock + stop existing stream)
+# - xfade_play(),              nothing already playing:   -> PLAYING (link to adder, unblock)
+
+
+# From PREROLL_PLAY:  
+# - preroll finishs, crossfade == 0, other stream playing: -> WAITING_EOS
+# - preroll finishs, crossfade  > 0, other stream playing: -> FADING_IN (link to adder, unblock)
+# - preroll finishs, crossfade  < 0, other stream playing: -> PLAYING (link to adder, unblock + stop existing stream)
+# - preroll finishs,               existing stream paused: -> PLAYING (link to adder, unblock)
+# - preroll finishs,              nothing already playing: -> PLAYING (link to adder, unblock)
+
+# From WAITING_EOS:
+# - EOS received for another stream: -> PLAYING (link to adder, unblock)
+
+# From FADING_IN: 
+# - fade in completes:               -> PLAYING
+# - another stream starts fading in: -> FADING_OUT
+# - xfade_pause():                   -> PAUSE (block, unlink from adder)
+# - stopped for another stream:      -> PENDING_REMOVE
+# - set_time():                      -> SEEKING (block, unlink)
+# - reused for another stream:       -> REUSING (block, unlink)
+
+# From PLAYING:
+# - xfade_pause()                    -> FADING_OUT_PAUSE (short fade out)
+# - EOS:                             -> PENDING_REMOVE
+# - another stream starts fading in: -> FADING_OUT
+# - stopped for another stream:      -> PENDING_REMOVE
+# - set_time()                       -> SEEKING (block, unlink)
+# - reused for another stream:       -> REUSING (block, unlink)
+
+# From SEEKING:
+# - xfade_pause()                       -> SEEKING_PAUSED
+# - blocked perform seek, link, unblock -> PLAYING | FADING_IN
+
+# From SEEKING_PAUSED:
+# - blocked perform seek             -> PAUSED
+# - xfade_play()                     -> SEEKING
+
+# From PAUSED:
+# - xfade_play()                     -> FADING_IN (link to adder, unblock short fade)
+# - stopped for another stream:      -> PENDING_REMOVE
+# - set_time()                       -> perform seek
+
+# From FADING_OUT:
+# - fade out finishs:                -> PENDING_REMOVE
+# - EOS:                             -> PENDING_REMOVE
+# - reused for another stream:       -> REUSING (block, unlink)
+
+# From FADING_OUT_PAUSED: 
+# - fade out finishs:                -> SEEKING_PAUSED (block, unlink)
+# - EOS:                             -> PENDING_REMOVE
+# - reused for another stream        -> REUSING (block, unlink)
+# - set_time()                       -> SEEKING_PAUSED (block unlink)
+
+# From PENDING_REMOVE:
+# - set_time()                        -> SEEKING_EOS (block, seek)
+# - reap_streams idle handler called: -> unlink from adder, stream destroyed
+
+# From REUSING:
+# - blocked:    emit reuse-stream     ->  PLAYING
+
+# From SEEKING_EOS:
+# - block completes(link, unblock)    -> PLAYING
+# - xfade_pause()                     -> SEEKING_PAUSED
+
 import os
-
+import gobject
 import gst
-from threading import Lock
+import time
+from threading import Lock, Thread
 
 from logger import Logger
 
-# STREAM_URI = [ "http://", "mms://", "mmsh://", "mmsu://", "mmst://", "rtsp://" ]
-STREAM_URI = [ "http://", "mms://", "mmsh://", "mmsu://", "mmst://"]
+
+MMS_STREAM_SCHEMES = [ "mms", "mmsh", "mmsu", "mmst" ]
+HTTP_STREAM_SCHEME = "http"
+RTSP_STREAM_SCHEMES = [ "rtspu", "rtspt", "rtsph", "rtsp" ]
+CDDB_STREAM_SCHEME = "cddb"
+FILE_STREAM_SCHEME = "file"
+BAD_STREAM_SCHEMES = MMS_STREAM_SCHEMES + RTSP_STREAM_SCHEMES
+NETWORK_SCHEMES = [HTTP_STREAM_SCHEME] + MMS_STREAM_SCHEMES + RTSP_STREAM_SCHEMES
 
 EPSILON = 0.001
 XFADE_TICK_HZ = 5
@@ -177,9 +173,6 @@ FADING_OUT = 2048
 FADING_OUT_PAUSED = 4096
 PENDING_REMOVE = 8192
 
-SOURCE_CD = 1
-SOURCE_RTSP = 2
-SOURCE_NORMAL = 3
 
 class FailedBuildGstElement(Exception):
     pass
@@ -229,7 +222,6 @@ class PlayerBin(gobject.GObject, Logger):
                 gobject.TYPE_NONE,
                 (gobject.TYPE_OBJECT, gobject.TYPE_OBJECT)),
         }
-    
     def __init__(self):
         gobject.GObject.__init__(self)
 
@@ -248,7 +240,7 @@ class PlayerBin(gobject.GObject, Logger):
 
         caps = gst.caps_from_string("audio/x-raw-int, channels=2, rate=44100, width=16, depth=16")
         
-        self.pipeline = gst.Pipeline("DeepinPlayer")
+        self.pipeline = gst.Pipeline("ListenPlayer")
         self.add_bus_watch()
         
         try:
@@ -266,7 +258,7 @@ class PlayerBin(gobject.GObject, Logger):
             self.__volume = gst.element_factory_make ("volume", "outputvolume")
             self.__filterbin = gst.Bin("filterbin")
             
-            customsink = os.environ.get("DEEPIN_GST_SINK", "gconfaudiosink")
+            customsink = os.environ.get("LISTEN_GST_SINK", "gconfaudiosink")
             try: self.__sink = gst.element_factory_make (customsink)
             except :
                 self.__sink = gst.element_factory_make ("autoaudiosink")
@@ -280,7 +272,6 @@ class PlayerBin(gobject.GObject, Logger):
         except TypeError: pass
         self.__capsfilter.set_property("caps", caps)
 
-        # Build filter bin, and add sink, src GhostPad.
         audioconvert2 = gst.element_factory_make("audioconvert")
         self.__filterbin.add(audioconvert2)
         pad = audioconvert2.get_pad("sink")
@@ -290,13 +281,13 @@ class PlayerBin(gobject.GObject, Logger):
 
         queue.set_property("max-size-buffers", 10)
 
-        # Build Output bin.
         self.__output.add(self.__capsfilter, audioconvert , audioresample , \
                 self.__tee , self.__volume, self.__filterbin, postaudioconvert, postaudioresample, queue, self.__sink)
         gst.element_link_many(self.__capsfilter, audioconvert, audioresample, \
                 self.__tee, self.__volume, self.__filterbin, postaudioconvert, postaudioresample, queue, self.__sink)
+
+
         
-        # Output bin  add sink GhostPad.
         filterpad = self.__capsfilter.get_pad("sink")
         outputghostpad = gst.GhostPad("sink", filterpad)
         self.__output.add_pad(outputghostpad)
@@ -315,8 +306,8 @@ class PlayerBin(gobject.GObject, Logger):
         gst.element_link_many(audiotestsrc, audioconvert, capsfilter)
 
         filterpad = capsfilter.get_pad("src")
-        silence_src_ghostpad = gst.GhostPad("src", filterpad)
-        self.__silence.add_pad(silence_src_ghostpad)
+        ghostpad = gst.GhostPad("src", filterpad)
+        self.__silence.add_pad(ghostpad)
 
         # assembe stuff:
         # - add everything to the pipeline
@@ -328,7 +319,7 @@ class PlayerBin(gobject.GObject, Logger):
         addersrcpad.link(outputghostpad)
 
         reqpad = self.__adder.get_request_pad("sink%d")
-        silence_src_ghostpad.link(reqpad)
+        ghostpad.link(reqpad)
         
         # set element need to be blocked to tee other element
         self.__blocker = self.__adder
@@ -359,7 +350,7 @@ class PlayerBin(gobject.GObject, Logger):
             if (stream.state & state_mask) != 0:
                 return stream
         return None
-    
+
     # caller must hold stream lock
     def find_stream_by_element(self, element):
         for stream in self.streams:
@@ -368,6 +359,15 @@ class PlayerBin(gobject.GObject, Logger):
                 if e == stream: return stream
                 e = e.get_parent()
         return None
+    
+    
+    def dispose_streams(self):
+        self.stream_list_lock.acquire()
+        streams = self.streams[:]
+        self.stream_list_lock.release()
+        
+        for stream in streams:
+            stream.unlink_and_dispose_stream()
 
     def xfade_open(self, uri):
 
@@ -385,6 +385,7 @@ class PlayerBin(gobject.GObject, Logger):
         if not stream.preroll_stream():
             self.logwarn("Unable to preroll pipeline for %s", uri)
             return False
+
         return True
 
     def xfade_close(self, uri=None):
@@ -568,12 +569,11 @@ class PlayerBin(gobject.GObject, Logger):
         return can_seek
 
     def xfade_set_time(self, time):
-        
+
         self.stream_list_lock.acquire()
         stream = self.find_stream_by_state(FADING_IN | PLAYING | PAUSED | FADING_OUT_PAUSED | PENDING_REMOVE)
-        self.stream_list_lock.release()        
+        self.stream_list_lock.release()
 
-        
         if not stream: 
             self.logdebug("got seek while no playing streams exist") 
             return
@@ -599,11 +599,10 @@ class PlayerBin(gobject.GObject, Logger):
         else:
             self.logerror("xfade_set_time: invalid stream state")
 
-
     def xfade_get_time(self):
         ret = self.get_times_and_stream()
         if ret:
-            _stream, pos, _duration, _lrc_pos, _lrc_duration = ret
+            _stream, pos, _duration = ret
         else:
             pos = 0.0
         return pos
@@ -611,31 +610,15 @@ class PlayerBin(gobject.GObject, Logger):
     def xfade_get_duration(self):
         ret = self.get_times_and_stream()
         if ret:
-            _stream, _pos, duration, _lrc_pos, _lrc_duration = ret
+            _stream, _pos, duration = ret
         else:
             duration = 0.0
         return duration
-    
-    def xfade_get_lrc_time(self):
-        ret = self.get_times_and_stream()
-        if ret:
-            _stream, _pos, _duration, lrc_pos, _lrc_duration = ret
-        else:    
-            lrc_pos = 0.0
-        return lrc_pos    
-    
-    def xfade_get_lrc_duration(self):
-        ret = self.get_times_and_stream()
-        if ret:
-            _stream, _pos, _duration, _lrc_pos, lrc_duration = ret
-        else:    
-            lrc_duration = 0.0
-        return lrc_duration
 
     def xfade_get_current_uri(self):
         ret = self.get_times_and_stream()
         if ret:
-            stream, _pos, _duration, _lrc_pos, _lrc_duation = ret
+            stream, _pos, _duration = ret
             return stream.uri
         else:
             return None
@@ -691,7 +674,7 @@ class PlayerBin(gobject.GObject, Logger):
                 stream.emitted_error = True
                 stream.emit_stream_error(message.parse_error())
         elif message.type == gst.MESSAGE_TAG:
-            self.logdebug("Tag Found")
+            #self.logdebug("Tag Found")
             self.emit("tags-found", message.parse_tag())
         elif message.type == gst.MESSAGE_DURATION:
             self.logdebug("duration: %s", message.parse_duration())
@@ -710,7 +693,7 @@ class PlayerBin(gobject.GObject, Logger):
                         self.logdebug("got fade-out-done for stream %s -> PENDING_REMOVE", stream.cutted_uri)
                         self.schedule_stream_reap()
                     elif stream.state == FADING_OUT_PAUSED:
-                        # self.logdebug("fade out paused  done")
+                        self.logdebug("fade out paused  done")
                         format = gst.FORMAT_TIME
                         try:
                             pos, format = stream.query_stream_position(format)
@@ -761,8 +744,6 @@ class PlayerBin(gobject.GObject, Logger):
     def get_times_and_stream(self):
         pos = 0.0
         duration = 0.0
-        lrc_duration = 0.0
-        lrc_pos = 0.0
         buffering = False
 
         if not self.pipeline:
@@ -784,7 +765,6 @@ class PlayerBin(gobject.GObject, Logger):
         if stream:
             if buffering:
                 pos = 0.0
-                lrc_pos = 0.0
             elif stream.state == PAUSED:
                 try: 
                     res = stream.query_stream_position(gst.FORMAT_TIME)
@@ -793,9 +773,7 @@ class PlayerBin(gobject.GObject, Logger):
                     res = None
                 if res:
                     pos, format = res
-                    lrc_pos = pos / gst.MSECOND
-                    # lrc_pos += 300
-                    pos /= gst.SECOND
+                    pos /= gst.MSECOND
             else:
                 try: 
                     res = self.pipeline.query_position(gst.FORMAT_TIME)
@@ -805,8 +783,7 @@ class PlayerBin(gobject.GObject, Logger):
                 if res:
                     pos, format = res
                     pos -= stream.base_time
-                    lrc_pos = pos / gst.MSECOND
-                    pos /= gst.SECOND
+                    pos /= gst.MSECOND
 
             try: 
                 res = stream.query_stream_duration(gst.FORMAT_TIME)
@@ -814,17 +791,16 @@ class PlayerBin(gobject.GObject, Logger):
                 res = None
             if res:
                 duration, format = res
-                lrc_duration = duration / gst.MSECOND
-                duration /= gst.SECOND
+                duration /= gst.MSECOND
         else:
             return None
 
-        return stream, pos, duration, lrc_pos, lrc_duration
+        return stream, pos, duration
 
     def tick_timeout(self):
         res = self.get_times_and_stream()
         if res:
-            _stream, pos, duration, _lrc_pos, _lrc_duration = res
+            _stream, pos, duration = res
             self.emit("tick", pos, duration)
         return True
     
@@ -973,7 +949,7 @@ class PlayerBin(gobject.GObject, Logger):
         self.logdebug("Player state: %s", self.sink_state)
         #self.dump_stream_list_lock()
         self.dump_elements_state()
-        return "Read dump in DMusic console"
+        return "Read dump in listen console"
 
     def dump_stream_list_lock(self):
         self.stream_list_lock.acquire()
@@ -1210,7 +1186,6 @@ class StreamBin(gst.Bin, Logger):
 
         self.stream_data = None
         self.stream_data_desktroy = None
-        
 
         self.fading = False
         self.fade_end = 0
@@ -1227,8 +1202,11 @@ class StreamBin(gst.Bin, Logger):
         self.emitted_fake_playing = False
         self.base_time = 0.0
         self.src_blocked = False
-        self.rtsp_mode = False
-        self.source_type = SOURCE_NORMAL
+        
+        self.bad_stream_timeout = 3
+        
+        # get uri scheme
+        self.uri_scheme = self.get_uri_scheme(uri)
 
         # Only keep it for debug
         self.uri = uri
@@ -1242,21 +1220,23 @@ class StreamBin(gst.Bin, Logger):
 
         self.__adder_pad = None
         self.__decoder_linked = False
-        
-        try :
-            if uri[:7] == "cdda://":
+
+        try:
+            if self.uri_scheme == CDDB_STREAM_SCHEME:
+                # Set cddb stream params.
                 device = uri[uri.find("#") + 1:]
                 uri = uri[:uri.find("#")]
                 self.__src = gst.element_make_from_uri("src", uri)
                 self.__src.set_property("device", device)
-                self.source_type = SOURCE_CD
-            else:
+            else:    
+                # other stream.
                 self.__src = gst.element_make_from_uri("src", uri)
-                
-
-            if uri[:7] == "http://":
-                try:self.__src.set_property("iradio-mode", True)
-                except : pass
+            
+            if self.uri_scheme == HTTP_STREAM_SCHEME:    
+                try:
+                    self.__src.set_property("iradio-mode", True)
+                except:    
+                    pass
             
             self.__audioconvert1 = gst.element_factory_make ("audioconvert", None)
             self.__replaygain_volume = gst.element_factory_make ("rgvolume", None)
@@ -1276,7 +1256,6 @@ class StreamBin(gst.Bin, Logger):
 
         except (gobject.GError, gst.PluginNotFoundError), err:
             raise FailedBuildGstElement(err)
-
        
         self.__decoder.connect("new-decoded-pad", self.__new_decoded_pad_cb)
         self.__decoder.connect("pad-removed", self.__pad_removed_cb)
@@ -1289,7 +1268,7 @@ class StreamBin(gst.Bin, Logger):
         self.__preroll.set_property("min-threshold-time", gst.SECOND)
         self.__preroll.set_property("max-size-buffers", 1000)
 
-        if [ proto for proto in STREAM_URI if uri.startswith(proto) ]:
+        if self.uri_scheme in NETWORK_SCHEMES:
             self.logdebug("Create a remote stream bin")
             self.__queue_threshold = self.__player.buffer_size * 1024;
             self.__queue.set_properties(
@@ -1301,52 +1280,33 @@ class StreamBin(gst.Bin, Logger):
                     "max-size-time", long(0))
 
             self.__underrun_id = self.__queue.connect("underrun", self.__queue_underrun_cb)
-            self.add(self.__src, self.__queue, self.__decoder, 
-                     self.__audioconvert1, self.__replaygain_volume,
-                     self.__audioconvert2, self.__audioresample, self.__capsfilter,
-                     self.__preroll, self.__volume)
-
-            gst.element_link_many(self.__src, self.__queue, self.__decoder)
-            gst.element_link_many(self.__audioconvert1, self.__replaygain_volume, 
-                                  self.__audioconvert2, self.__audioresample, self.__capsfilter,
-                                  self.__preroll, self.__volume)
+            self.add(self.__src, self.__queue, self.__decoder, self.__audioconvert1, 
+                     self.__replaygain_volume, self.__audioconvert2, self.__audioresample, 
+                     self.__capsfilter, self.__preroll, self.__volume)
             
-        elif uri.startswith("rtsp://"):    
-            self.rtsp_mode = True
-            self.source_type = SOURCE_RTSP
-            self.__src.connect("pad-added", self.on_rtsp_pad_added)               
-            self.__src.connect("pad-removed", self.on_rtsp_pad_removed)
-            self.logdebug("Create a remote stream bin")
-            self.__queue_threshold = self.__player.buffer_size * 1024;
-            self.__queue.set_properties(
-                    "min-threshold-bytes",
-                    self.__queue_threshold,
-                    "max-size-bytes",
-                    MAX_NETWORK_BUFFER_SIZE * 2 * 1024,
-                    "max-size-buffers", 0,
-                    "max-size-time", long(0))
-
-            self.__underrun_id = self.__queue.connect("underrun", self.__queue_underrun_cb)
-            self.add(self.__src, self.__queue, self.__decoder, 
-                     self.__audioconvert1, self.__replaygain_volume,
-                     self.__audioconvert2, self.__audioresample, self.__capsfilter,
-                     self.__preroll, self.__volume)
-
-            gst.element_link_many(self.__queue, self.__decoder)
-            gst.element_link_many(self.__audioconvert1, self.__replaygain_volume, 
-                                  self.__audioconvert2, self.__audioresample, self.__capsfilter,
-                                  self.__preroll, self.__volume)
+            if self.uri_scheme in RTSP_STREAM_SCHEMES:
+                self.__src.connect("pad-added", self.__on_rtspsrc_pad_added)
+                self.__src.connect("pad-removed", self.__on_rtspsrc_pad_removed)
+                gst.element_link_many(self.__queue, self.__decoder)
+                gst.element_link_many(self.__audioconvert1, self.__replaygain_volume, 
+                                      self.__audioconvert2, self.__audioresample, self.__capsfilter,
+                                      self.__preroll, self.__volume)
             
+            else:    
+                gst.element_link_many(self.__src, self.__queue, self.__decoder)
+                gst.element_link_many(self.__audioconvert1, self.__replaygain_volume, 
+                                      self.__audioconvert2, self.__audioresample, self.__capsfilter, 
+                                      self.__preroll, self.__volume)
         else:
             self.logdebug("Create a local stream bin")
             self.__queue = None
 
             self.add(self.__src, self.__decoder, self.__audioconvert1, 
-                     self.__replaygain_volume, self.__audioconvert2, 
+                     self.__replaygain_volume, self.__audioconvert2,
                      self.__audioresample, self.__capsfilter, self.__preroll, self.__volume)
             gst.element_link_many(self.__src, self.__decoder)
             gst.element_link_many(self.__audioconvert1, self.__replaygain_volume, 
-                                  self.__audioconvert2, self.__audioresample, 
+                                  self.__audioconvert2, self.__audioresample,
                                   self.__capsfilter, self.__preroll, self.__volume)
 
         self.__src_pad = self.__volume.get_pad("src")
@@ -1357,18 +1317,19 @@ class StreamBin(gst.Bin, Logger):
 
         self.set_bus(self.__player.pipeline.get_bus())
         
-    def on_rtsp_pad_added(self, rtspsrc, pad):    
+    def __on_rtspsrc_pad_added(self, rtspsrc, pad):    
         pad.link(self.__queue.get_pad("sink"))
         
-    def on_rtsp_pad_removed(self, rtspsrc, pad):    
+    def __on_rtspsrc_pad_removed(self, rtspsrc, pad):    
         pad.unlink(self.__queue.get_pad("sink"))
         
-    def on_src_no_more_pads(self, dec, v):    
-        try:
-            dec.link(v)
-        except Exception, e:    
-            print e
-        
+    def get_uri_scheme(self, uri):    
+        colon_index = uri.find(":")
+        if colon_index == -1:
+            return ""
+        else:
+            return uri[:colon_index]
+
     def get_str_state(self):
         if self.state == WAITING:       statename = "waiting"
         elif self.state == PLAYING:       statename = "playing"
@@ -1418,6 +1379,7 @@ class StreamBin(gst.Bin, Logger):
                     message = "FADE_OUT_DONE_MESSAGE"
                     self.fading = False
             else:
+                #self.logdebug("fading %s out:%f, %f",self.cutted_uri,( float(pos) / gst.SECOND ),vol)
                 self.__volume.set_passthrough(False)
 
         self.lock.release()
@@ -1463,10 +1425,7 @@ class StreamBin(gst.Bin, Logger):
 
         
         self.__player.stream_list_lock.acquire()
-        try:
-            self.__player.streams.remove(self)
-        except:    
-            pass
+        self.__player.streams.remove(self)
         self.__player.dump_stream_list()
         self.__player.stream_list_lock.release()
 
@@ -1506,8 +1465,7 @@ class StreamBin(gst.Bin, Logger):
             return False
         try:
             self.__ghost_pad.link(self.__adder_pad)
-        except Exception , e:
-            print e
+        except:
             try: self.__adder_pad.get_parent().release_request_pad(self.__adder_pad)
             except: pass
             self.logwarn("Failed to link stream to pipeline")
@@ -1569,7 +1527,7 @@ class StreamBin(gst.Bin, Logger):
         self.lock.acquire()
 
         if not self.needs_unlink or self.__adder_pad is None:
-            self.logdebug("stream is already unlinked.  huh? %s", self.cutted_uri)
+            self.logwarn("stream is already unlinked.  huh? %s", self.cutted_uri)
             self.lock.release()
             return 
         
@@ -1792,7 +1750,7 @@ class StreamBin(gst.Bin, Logger):
 
         self.fading = True
         self.__volume.set_passthrough(False)
-        self.logdebug("New Volume data: %s",self.__fader.get_data("volume"))
+        #self.logdebug("New Volume data: %s",self.__fader.get_data("volume"))
     
     def reuse(self):
         self.__player.emit("reuse-stream", self.new_uri, self.cutted_uri)
@@ -1883,7 +1841,7 @@ class StreamBin(gst.Bin, Logger):
         self.lock.acquire()
         self.logdebug("__src_blocked_cb -> stream %s state:%s", self.cutted_uri, self.get_str_state())
         if self.src_blocked:
-            self.logdebug("stream %s already blocked", self.cutted_uri)
+            self.logwarn("stream %s already blocked", self.cutted_uri)
             self.lock.release()
             return
 
@@ -1905,26 +1863,47 @@ class StreamBin(gst.Bin, Logger):
                 self.emit_stream_error("actually_start_stream")
                 self.logerror("Failed start Stream %s", self.cutted_uri)
 
-    def blocked(self):
+    def is_blocked(self):
         return self.__src_pad.is_blocked()
 
     def get_linkage(self):
         """ For debug purpose """
         return self.__decoder_linked, self.__adder_pad is not None
-    
+
     def preroll_stream(self):
         ret = True
         unblock = False
-        self.logdebug("preroll_stream -> block stream %s self.__src_pad  cb:self.__src_blocked_cb state:%s", self.cutted_uri , self.get_str_state())
+        self.logdebug("preroll_stream -> block stream %s self.__src_pad  cb:self.__src_blocked_cb state:%s", 
+                      self.cutted_uri , self.get_str_state())
         self.__src_pad.set_blocked_async(True, self.__src_blocked_cb)
         self.emitted_playing = False
         self.state = PREROLLING
-        
-        if self.rtsp_mode:
-            state = self.set_state(gst.STATE_PLAYING)
-        else:    
-            state = self.set_state(gst.STATE_PAUSED)
+        if self.uri_scheme in BAD_STREAM_SCHEMES:
+            self.fake_state = None
             
+            def fake_set_state():
+                if self.uri_scheme in RTSP_STREAM_SCHEMES:
+                    self.fake_state = self.set_state(gst.STATE_PLAYING)
+                else:    
+                    self.fake_state = self.set_state(gst.STATE_PAUSED)
+                    
+            start = time.time()        
+            fake_thread = Thread(target=fake_set_state, args=())
+            fake_thread.setDaemon(True)
+            fake_thread.start()
+            
+            while time.time() - start < self.bad_stream_timeout and fake_thread.isAlive():
+                time.sleep(0.1)
+                
+            if self.fake_state is None:    
+                return False
+            else:
+                state = self.fake_state
+        # if self.uri_scheme in RTSP_STREAM_SCHEMES:
+        #     state = self.set_state(gst.STATE_PAUSED)
+        else:        
+            state = self.set_state(gst.STATE_PAUSED)
+
         if state == gst.STATE_CHANGE_FAILURE:
             self.logdebug ("preroll for stream %s failed (state change failed)", self.cutted_uri)
             ret = False
@@ -1950,16 +1929,12 @@ class StreamBin(gst.Bin, Logger):
 
         if unblock:
             self.logdebug("preroll_stream -> unblock stream %s __src_pad cb:None state:%s", self.cutted_uri, self.get_str_state())
-            try:
-                self.__src_pad.set_blocked_async(False)
-            except Exception, e:    
-                self.logdebug(e)
-                
-        if not ret:
-            self.logerror("Failed to preroll stream")
-            if self.source_type != SOURCE_NORMAL:
-                self.emit_stream_error("Failed to preroll stream")
+            self.__src_pad.set_blocked_async(False)
         
+        if not ret:
+            if self.uri_scheme == CDDB_STREAM_SCHEME:
+                self.emit_stream_error("Failed to preroll stream")
+            self.logerror("Failed to preroll stream")
         return ret
 
     def query_stream_position(self, format):
@@ -2014,3 +1989,5 @@ class StreamBin(gst.Bin, Logger):
             self.stream_data_desktroy(self.stream_data)
         self.stream_data = None
         self.stream_data_desktroy = None
+
+

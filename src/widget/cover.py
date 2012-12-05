@@ -165,7 +165,7 @@ class CoverButton(gtk.Button):
 class PlayerCoverButton(CoverButton):    
     def __init__(self):
         super(PlayerCoverButton, self).__init__()
-        Player.connect("new-song", self.update_cover)
+        # Player.connect("new-song", self.update_cover)
         Player.connect("init-status", lambda w : self.init_default_cover())
         Player.connect("instant-new-song", self.instant_update_cover)
         

@@ -100,6 +100,12 @@ class SongTimer(gtk.HBox):
         self.set_current_time(0, self.duration)
         
     def on_tick(self, bin, pos, duration):
+        if Player.song:
+            if Player.song.get_type() == "webcast":
+                duration = 0
+        
+        pos /= 1000
+        duration /= 1000
         if Player.song and Player.song.get_type() == "cue":
             duration = Player.song.get("#duration") / 1000
             pos = pos - Player.song.get("seek", 0)
