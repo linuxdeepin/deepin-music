@@ -53,10 +53,12 @@ class RadioView(TreeView):
         self.connect("double-click-item", self.on_double_click_item)
         self.connect("button-press-event", self.on_button_press_event)
         self.connect("delete-select-items", self.try_emit_empty_signal)
+        
         Dispatcher.connect("play-radio", self.on_dispatcher_play_radio)
+        Player.connect("play-end", self.on_play_end)
         
         self.current_index = 0
-        self.playlist = None
+        self.playlist = []
         self.limit_number = 25
         self.preview_db_file = get_config_file("preview_radios.db")
         
@@ -88,13 +90,27 @@ class RadioView(TreeView):
         
     def on_double_click_item(self, widget, item, column, x, y):    
         if item:
+            self.reset_playlist()
             self.set_highlight_item(item)
             self.fetch_playlist(play=True)
+            
+    def reset_playlist(self):        
+        self.playlist = []
+        self.current_index = 0
+            
+    @utils.threaded        
+    def on_play_end(self, player):        
+        song = player.song
+        if song:
+            if song.get_type() == "douban":
+                fmlib.played_song(self.highlight_item.channel_id, 
+                                  song.get("sid"), song.get("aid"))
+                
             
     @utils.threaded       
     def fetch_playlist(self, play=False):
         if not self.highlight_item: return
-        songs = fmlib.new_playlist_no_user(self.highlight_item.channel_id)
+        songs = fmlib.new_playlist(self.highlight_item.channel_id, map(lambda song: song.get("sid"), self.playlist))
         self.playlist = songs
         if songs and play:
             Player.play_new(songs[0])
@@ -102,6 +118,9 @@ class RadioView(TreeView):
             Player.set_source(self)
             
     def get_next_song(self, maunal=False):        
+        if maunal:
+            self.mark_as_skip()
+        
         if self.playlist is None:
             self.fetch_playlist()
             return     
@@ -109,12 +128,37 @@ class RadioView(TreeView):
         current_index = self.current_index        
         
         if self.current_index == len(self.playlist) - 1:
-            print "next"
             self.current_index = -1
             self.fetch_playlist()
         return self.playlist[current_index]
     
+    @utils.threaded
+    def mark_as_skip(self):
+        if Player.song:
+            try:
+                songs = fmlib.skip_song(self.highlight_item.channel_id, 
+                                        Player.song.get("sid"), Player.song.get("aid"), 
+                                        self.get_history_sids())
+                self.load_more_songs(songs)
+            except:    
+                pass
+            
+    def songs_to_sids(self, songs):        
+        return map(lambda song: song.get("sid"), songs)
+            
+    def get_history_sids(self):        
+        history_sids = self.songs_to_sids(self.playlist[:self.current_index])
+        return history_sids
     
+    def get_rest_sids(self):
+        rest_songs = self.playlist[self.current_index + 1:]
+        rest_sids = self.songs_to_sids(rest_songs)
+        return rest_sids
+    
+    def load_more_songs(self, songs):
+        if len(self.playlist) - self.current_index - 1 < 5:
+            self.playlist.extend(songs)
+            
     def get_previous_song(self):
         self.current_index -= 1
         if self.current_index < 0:
@@ -158,6 +202,7 @@ class RadioView(TreeView):
             del self.select_rows[:]
             self.queue_draw()
             self.set_highlight_channel(channels[0])
+            self.reset_playlist()
             self.fetch_playlist(play=True)
             
                         

@@ -107,7 +107,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
             self.emit("init-status")
             self.song = None
             return 
-        if self.song.get_type() in [ "audiocd", "webcast", "radio"]:
+        if self.song.get_type() in [ "audiocd", "webcast", "douban"]:
             self.emit("init-status")
             self.song = None
             return 
@@ -172,8 +172,8 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
             if remaining < crossfade:
                 if not self.__next_already_called and remaining > 0:
                     self.logdebug("request new song: on tick and play-end not emit")
+                    self.emit("play-end")                    
                     self.next()
-                    self.emit("play-end")
                     self.__next_already_called = True
             else:        
                 self.__next_already_called = False

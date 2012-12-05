@@ -62,7 +62,6 @@ class DoubanFM(Logger):
             
         params['r'] = random.random
         params['uid'] = self.__uid
-        params['channel'] = self.__channel
 
         if type_name is not None:
             params['type'] = type_name
@@ -299,13 +298,14 @@ class DoubanFM(Logger):
             else:
                 return ''.join(map(lambda s: '|'+str(s), sidlist))
             
-    def new_playlist(self, history=[]):        
+    def new_playlist(self, channel_id, history=[]):        
         params = self.get_public_params(type_name='n')
         params['h'] = self.__format_list(history, True)
+        params["channel"] = channel_id
         ret = self.mine_request(extra_data=params)
         return self.json_to_deepin_songs(ret)
     
-    def del_song(self, sid, aid, rest=[]):
+    def del_song(self, channel_id, sid, aid, rest=[]):
         """
         delete a song from your playlist
         * sid - song id
@@ -315,12 +315,13 @@ class DoubanFM(Logger):
         params = self.get_public_params(type_name="b")
         params['sid'] = sid
         params['aid'] = aid
+        params["channel"] = channel_id
         params['rest'] = self.__format_list(rest)
         
         ret = self.mine_request(extra_data=params)
         return self.json_to_deepin_songs(ret)
     
-    def fav_song(self, sid, aid):
+    def fav_song(self, channel_id, sid, aid):
         """
         mark a song as favorite
         * sid - song id
@@ -329,9 +330,10 @@ class DoubanFM(Logger):
         params = self.get_public_params(type_name='r')
         params['sid'] = sid
         params['aid'] = aid
+        params["channel"] = channel_id
         self.mine_request(extra_data=params)
         
-    def unfav_song(self, sid, aid):
+    def unfav_song(self, channel_id,  sid, aid):
         """
         unmark a favorite song
         * sid - song id
@@ -340,9 +342,11 @@ class DoubanFM(Logger):
         params = self.get_public_params('u')
         params['sid'] = sid
         params['aid'] = aid
+        params["channel"] = channel_id
+        
         self.mine_request(extra_data=params)
         
-    def skip_song(self, sid, aid, history=[]):
+    def skip_song(self, channel_id, sid, aid, history=[]):
         """
         skip a song, tell douban that you have skipped the song.
         * sid - song id
@@ -353,10 +357,11 @@ class DoubanFM(Logger):
         params['h'] = self.__format_list(history[:50])
         params['sid'] = sid
         params['aid'] = aid
+        params["channel"] = channel_id
         ret = self.mine_request(extra_data=params)
         return self.json_to_deepin_songs(ret)
         
-    def played_song(self, sid, aid, du=0):
+    def played_song(self, channel_id, sid, aid, du=0):
         """
         tell douban that you have finished a song
         * sid - song id
@@ -367,10 +372,11 @@ class DoubanFM(Logger):
         params['sid'] = sid
         params['aid'] = aid
         params['du'] = du
+        params['channel'] = channel_id
         self.mine_request(extra_data=params)
         
 
-    def played_list(self, sid, history=[]):
+    def played_list(self, channel_id, sid, history=[]):
         """
         request more playlist items
         * history - your playlist history(played songs and skipped songs)
@@ -378,6 +384,7 @@ class DoubanFM(Logger):
         params = self.get_public_params('p')
         params['h'] = self.__format_list(history[:50])
         params['sid'] = sid
+        params["channel"] = channel_id
         
         ret = self.mine_request(extra_data=params)
         return self.json_to_deepin_songs(ret)
