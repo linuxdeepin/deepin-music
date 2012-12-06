@@ -145,7 +145,7 @@ from logger import Logger
 MMS_STREAM_SCHEMES = [ "mms", "mmsh", "mmsu", "mmst" ]
 HTTP_STREAM_SCHEME = "http"
 RTSP_STREAM_SCHEMES = [ "rtspu", "rtspt", "rtsph", "rtsp" ]
-CDDB_STREAM_SCHEME = "cddb"
+CDDA_STREAM_SCHEME = "cdda"
 FILE_STREAM_SCHEME = "file"
 BAD_STREAM_SCHEMES = MMS_STREAM_SCHEMES + RTSP_STREAM_SCHEMES
 NETWORK_SCHEMES = [HTTP_STREAM_SCHEME] + MMS_STREAM_SCHEMES + RTSP_STREAM_SCHEMES
@@ -240,7 +240,7 @@ class PlayerBin(gobject.GObject, Logger):
 
         caps = gst.caps_from_string("audio/x-raw-int, channels=2, rate=44100, width=16, depth=16")
         
-        self.pipeline = gst.Pipeline("ListenPlayer")
+        self.pipeline = gst.Pipeline("DMusicPlayer")
         self.add_bus_watch()
         
         try:
@@ -258,7 +258,7 @@ class PlayerBin(gobject.GObject, Logger):
             self.__volume = gst.element_factory_make ("volume", "outputvolume")
             self.__filterbin = gst.Bin("filterbin")
             
-            customsink = os.environ.get("LISTEN_GST_SINK", "gconfaudiosink")
+            customsink = os.environ.get("DMUSIC_GST_SINK", "gconfaudiosink")
             try: self.__sink = gst.element_factory_make (customsink)
             except :
                 self.__sink = gst.element_factory_make ("autoaudiosink")
@@ -633,8 +633,8 @@ class PlayerBin(gobject.GObject, Logger):
         return False
     
     def maybe_stop_sink(self):
-        if os.environ.get('LISTEN_NO_PIPELINE_STOP', False):
-            self.logdebug("LISTEN_NO_PIPELINE_STOP enable : don't really stop the pipeline")
+        if os.environ.get('DMUSIC_NO_PIPELINE_STOP', False):
+            self.logdebug("DMUSIC_NO_PIPELINE_STOP enable : don't really stop the pipeline")
             return
         self.sink_lock.acquire()
         if not self.__stop_sink_id :
@@ -949,7 +949,7 @@ class PlayerBin(gobject.GObject, Logger):
         self.logdebug("Player state: %s", self.sink_state)
         #self.dump_stream_list_lock()
         self.dump_elements_state()
-        return "Read dump in listen console"
+        return "Read dump in deepin-music console"
 
     def dump_stream_list_lock(self):
         self.stream_list_lock.acquire()
@@ -1222,7 +1222,7 @@ class StreamBin(gst.Bin, Logger):
         self.__decoder_linked = False
 
         try:
-            if self.uri_scheme == CDDB_STREAM_SCHEME:
+            if self.uri_scheme == CDDA_STREAM_SCHEME:
                 # Set cddb stream params.
                 device = uri[uri.find("#") + 1:]
                 uri = uri[:uri.find("#")]
@@ -1423,11 +1423,14 @@ class StreamBin(gst.Bin, Logger):
             if last:
                 self.__player.maybe_stop_sink()
 
+        try:        
+        # self.__player.stream_list_lock.acquire()
+            self.__player.streams.remove(self)
+            self.__player.dump_stream_list()
+        except:    
+            pass
         
-        self.__player.stream_list_lock.acquire()
-        self.__player.streams.remove(self)
-        self.__player.dump_stream_list()
-        self.__player.stream_list_lock.release()
+        # self.__player.stream_list_lock.release()
 
     def unlink_and_block_stream(self):
         if self.__adder_pad is None:
@@ -1878,29 +1881,29 @@ class StreamBin(gst.Bin, Logger):
         self.__src_pad.set_blocked_async(True, self.__src_blocked_cb)
         self.emitted_playing = False
         self.state = PREROLLING
-        if self.uri_scheme in BAD_STREAM_SCHEMES:
-            self.fake_state = None
+        # if self.uri_scheme in BAD_STREAM_SCHEMES:
+        #     self.fake_state = None
             
-            def fake_set_state():
-                if self.uri_scheme in RTSP_STREAM_SCHEMES:
-                    self.fake_state = self.set_state(gst.STATE_PLAYING)
-                else:    
-                    self.fake_state = self.set_state(gst.STATE_PAUSED)
+        #     def fake_set_state():
+        #         if self.uri_scheme in RTSP_STREAM_SCHEMES:
+        #             self.fake_state = self.set_state(gst.STATE_PLAYING)
+        #         else:    
+        #             self.fake_state = self.set_state(gst.STATE_PAUSED)
                     
-            start = time.time()        
-            fake_thread = Thread(target=fake_set_state, args=())
-            fake_thread.setDaemon(True)
-            fake_thread.start()
+        #     start = time.time()        
+        #     fake_thread = Thread(target=fake_set_state, args=())
+        #     fake_thread.setDaemon(True)
+        #     fake_thread.start()
             
-            while time.time() - start < self.bad_stream_timeout and fake_thread.isAlive():
-                time.sleep(0.1)
+        #     while time.time() - start < self.bad_stream_timeout and fake_thread.isAlive():
+        #         time.sleep(0.2)
                 
-            if self.fake_state is None:    
-                return False
-            else:
-                state = self.fake_state
-        # if self.uri_scheme in RTSP_STREAM_SCHEMES:
-        #     state = self.set_state(gst.STATE_PAUSED)
+        #     if self.fake_state is None:    
+        #         return False
+        #     else:
+        #         state = self.fake_state
+        if self.uri_scheme in RTSP_STREAM_SCHEMES:
+            state = self.set_state(gst.STATE_PLAYING)
         else:        
             state = self.set_state(gst.STATE_PAUSED)
 
@@ -1932,7 +1935,7 @@ class StreamBin(gst.Bin, Logger):
             self.__src_pad.set_blocked_async(False)
         
         if not ret:
-            if self.uri_scheme == CDDB_STREAM_SCHEME:
+            if self.uri_scheme == CDDA_STREAM_SCHEME:
                 self.emit_stream_error("Failed to preroll stream")
             self.logerror("Failed to preroll stream")
         return ret

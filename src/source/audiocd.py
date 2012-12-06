@@ -122,7 +122,7 @@ class AudioCDSource(object):
             for tag in track_tags:
                 cd_song = Song()
                 cd_song.init_from_dict(tag)
-                cd_song.set_type("audiocd")
+                cd_song.set_type("cdda")
                 songs.append(cd_song)
             Dispatcher.new_audiocd_playlist(cd_label, songs, udi)
             self.audiocd_items[udi] = songs

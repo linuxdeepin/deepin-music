@@ -79,7 +79,7 @@ class PlaylistUI(gtk.VBox):
         self.__create_simple_button("list", self.popup_list_menu, _("Playlist operations"))
         self.__create_simple_button("add", self.popup_add_menu, _("Add track"))
         
-        self.playmode_button = PlaymodeButton(config.get("player", "loop_mode", "list_mode").split("_")[0])
+        self.playmode_button = PlaymodeButton(config.get("setting", "loop_mode", "list_mode").split("_")[0])
         Tooltip.text(self.playmode_button, _("Play mode"))
         self.playmode_button.connect("button-press-event", self.popup_sort_menu)
         self.toolbar_box.pack_start(self.playmode_button, False, False)
@@ -416,7 +416,8 @@ class PlaylistUI(gtk.VBox):
         
     def reset_highlight_item(self, item):    
         self.category_list.set_highlight_item(item)
-        self.category_single_click_cb(None, item)
+        self.on_category_single_click(None, item, None, None, None)
+        
         
     def get_current_item_index(self):    
         item = self.category_list.get_highlight_item()

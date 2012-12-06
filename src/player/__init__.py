@@ -77,7 +77,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         
     def __on_change_songs(self, db, songs):    
         if not self.song: return
-        if self.song.get_type() in ("cue", "audiocd"):
+        if self.song.get_type() in ("cue", "cdda"):
             return
         if self.song in songs:
             self.song = songs[songs.index(self.song)]
@@ -107,7 +107,11 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
             self.emit("init-status")
             self.song = None
             return 
-        if self.song.get_type() in [ "audiocd", "webcast", "douban"]:
+        
+        if self.song.get_type() == "douban":
+            return
+        
+        if self.song.get_type() in [ "cdda", "webcast"]:
             self.emit("init-status")
             self.song = None
             return 
@@ -120,7 +124,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
     def __on_tag(self, bin, taglist):    
         ''' The playbin found the tag information'''
         if not self.song: return 
-        if not self.song.get("title") and self.song.get_type() not in ["cue", "audiocd", "webcast"]:
+        if not self.song.get("title") and self.song.get_type() not in ["cue", "cdda", "webcast"]:
             self.logdebug("tag found %s", taglist)
             IDS = {
                 "title": "title",
@@ -244,8 +248,8 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         #     if not is_stop:
         #         self.force_fade_close()
         
-        if song.get_type() == "webcast":
-            self.bin.dispose_streams()
+        # if song.get_scheme() in BAD_STREAM_SCHEMES:
+        #     self.bin.dispose_streams()
             
         if self.song and (crossfade == -1 or self.is_paused() or not self.is_playable()):        
             self.bin.xfade_close(self.song.get("uri"))
@@ -267,15 +271,16 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
                 self.play(crossfade, seek)
                 
     def force_fade_close(self):            
-        # if not self.song: return 
-        # self.logdebug("Force remove stream: %s", self.song.get("uri"))        
-        # if self.song.get_type() == "webcast":
-        #     try:
-        #         threading.Thread(target=self.bin.xfade_close, args=(self.song.get("uri"),)).start()
-        #     except Exception, e:    
-        #         self.logdebug("Force stop song:%s failed! error: %s", self.song.get("uri"),  e)
-        # else:        
-        self.bin.xfade_close(self.song.get("uri"))
+        if not self.song: return 
+        
+        self.logdebug("Force remove stream: %s", self.song.get("uri"))        
+        if self.song.get_scheme() in BAD_STREAM_SCHEMES:
+            try:
+                threading.Thread(target=self.bin.xfade_close, args=(self.song.get("uri"),)).start()
+            except Exception, e:    
+                self.logdebug("Force stop song:%s failed! error: %s", self.song.get("uri"),  e)
+        else:        
+            self.bin.xfade_close(self.song.get("uri"))
             
     def thread_play(self, uri, song, play, thread_id):        
         ThreadRun(self.bin.xfade_open, self.emit_and_play, (uri,), (song, play, thread_id)).start()

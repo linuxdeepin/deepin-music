@@ -153,6 +153,9 @@ def get_path_from_uri(uri):
         uri = uri.replace("#", "%23")
     return unquote(urlparse(uri)[2])    
 
+def get_unquote_uri(self, uri):
+    return unquote(uri)
+
 def get_uri_from_path(path, is_quote=True):
     ''' get uri from filepath. '''
     if get_scheme(path): 
@@ -782,6 +785,7 @@ def color_hex_to_cairo(color):
     return (gdk_color.red / 65535.0, gdk_color.green / 65535.0, gdk_color.blue / 65535.0)
 
 def str_size(nb, average=0, base=1024):
+    return "unknow"
     if average != 0:
         average += 1
     nb = float(nb)    

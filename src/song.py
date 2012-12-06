@@ -261,9 +261,16 @@ class Song(dict, Logger):
     
     def get_path(self):
         try:
+            
             if self.get_type() == "cue":
                 return utils.get_path_from_uri(self.get("real_uri"))
-            return utils.get_path_from_uri(self.get("uri"))
+            elif self.get_type() == "local":
+                return utils.get_path_from_uri(self.get("uri"))
+            elif self.get_type() == "cdda":
+                uri = self.get("uri")
+                return utils.unquote(uri[uri.find("#") + 1:])
+            else:
+                return utils.unquote(self.get("uri"))
         except:
             return ""
     def get_dir(self):    

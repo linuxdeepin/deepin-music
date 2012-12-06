@@ -100,8 +100,9 @@ class SongInfo(gtk.VBox):
         self.song_playcount_label, self.song_date_label = self.create_double_combo_label(4, 5, _("Playcount:"), _("Date:"))
         
     def get_song_attr(self, song, song_type=True):    
-        gio_file = gio.File(self.song.get_path())
-        gio_file_info = gio_file.query_info(",".join([gio.FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,
+        try:
+            gio_file = gio.File(self.song.get_path())
+            gio_file_info = gio_file.query_info(",".join([gio.FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,
                                                       gio.FILE_ATTRIBUTE_STANDARD_TYPE, 
                                                       gio.FILE_ATTRIBUTE_STANDARD_NAME,
                                                       gio.FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME,
@@ -110,12 +111,14 @@ class SongInfo(gtk.VBox):
                                                       gio.FILE_ATTRIBUTE_TIME_MODIFIED,
                                                       gio.FILE_ATTRIBUTE_TIME_CHANGED,]))
         
-        info_attr = gio_file_info.get_attribute_as_string(gio.FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE)                
-        
-        if song_type:
-            return gio.content_type_get_description(info_attr)
-        else:
-            return info_attr
+            info_attr = gio_file_info.get_attribute_as_string(gio.FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE)                
+            
+            if song_type:
+                return gio.content_type_get_description(info_attr)
+            else:
+                return info_attr
+        except:    
+            return ""
         
     def create_double_combo_label(self, top_attach, bottom_attach, first_label, second_label, first_content="", second_content=""):
         first_label_box = gtk.HBox()
@@ -165,8 +168,13 @@ class SongInfo(gtk.VBox):
         self.album_label.set_text(song.get_str("album"))
         
         # Update detail.
-        self.file_type_label.set_text(self.get_song_attr(song, True))
-        self.file_format_label.set_text(self.get_song_attr(song, False))        
+        if self.song.get_type() not in ["cue", "local", "cdda"]:
+            utils.ThreadRun(self.get_song_attr, self.file_type_label.set_text, (song, True)).start()
+            utils.ThreadRun(self.get_song_attr, self.file_format_label.set_text, (song, False)).start()
+        else:    
+            self.file_type_label.set_text(self.get_song_attr(song, True))
+            self.file_format_label.set_text(self.get_song_attr(song, False))        
+
         self.file_size_label.set_text(song.get_str("#size"))
         self.song_duration_label.set_text(song.get_str("#duration"))        
         self.song_bitrate_label.set_text(song.get_str("#bitrate"))
