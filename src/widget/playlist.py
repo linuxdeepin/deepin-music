@@ -37,6 +37,7 @@ from library import MediaDB, Playlist, CDPlaylist
 from helper import Dispatcher
 from widget.skin import app_theme
 from widget.ui import SearchEntry, PlaymodeButton
+from widget.ui_utils import draw_line
 from widget.song_item import SongItem
 from widget.list_item import ListTreeItem
 from widget.dialog import WindowLoadPlaylist, WindowExportPlaylist, WinDir
@@ -139,9 +140,12 @@ class PlaylistUI(gtk.VBox):
     def expose_toolbar_mask(self, widget, event):    
         cr = widget.window.cairo_create()
         rect = widget.allocation
-        draw_vlinear(cr, rect.x, rect.y, rect.width, rect.height,
-                     app_theme.get_shadow_color("playlistToolbar").get_color_info()
-                     )
+        cr.set_source_rgba(1, 1, 1, 0.95)
+        cr.rectangle(rect.x, rect.y, rect.width, rect.height)
+        cr.fill()
+        
+        draw_line(cr, (rect.x, rect.y + 1), 
+                  (rect.x + rect.width, rect.y + 1), "#b0b0b0")
         return False
     
     def expose_entry_mask(self, widget, event):
