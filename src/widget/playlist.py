@@ -36,7 +36,7 @@ import dtk.ui.tooltip as Tooltip
 from library import MediaDB, Playlist, CDPlaylist
 from helper import Dispatcher
 from widget.skin import app_theme
-from widget.ui import SearchEntry
+from widget.ui import SearchEntry, PlaymodeButton
 from widget.song_item import SongItem
 from widget.list_item import ListTreeItem
 from widget.dialog import WindowLoadPlaylist, WindowExportPlaylist, WinDir
@@ -77,7 +77,11 @@ class PlaylistUI(gtk.VBox):
         self.search_button = self.__create_simple_toggle_button("search", self.show_text_entry, _("Search for tracks"))
         self.__create_simple_button("list", self.popup_list_menu, _("Playlist operations"))
         self.__create_simple_button("add", self.popup_add_menu, _("Add track"))
-        self.__create_simple_button("sort", self.popup_sort_menu, _("Play mode"))
+        
+        self.playmode_button = PlaymodeButton(config.get("player", "loop_mode", "list_mode").split("_")[0])
+        Tooltip.text(self.playmode_button, _("Play mode"))
+        self.playmode_button.connect("button-press-event", self.popup_sort_menu)
+        self.toolbar_box.pack_start(self.playmode_button, False, False)
         self.__create_simple_button("delete", self.popup_delete_menu, _("Delete"))
         toolbar_align = gtk.Alignment()
         toolbar_align.set_padding(6, 6, 24, 24)
@@ -116,6 +120,12 @@ class PlaylistUI(gtk.VBox):
         Dispatcher.connect("add-songs", self.__add_songs_to_list)
         Dispatcher.connect("new-cd-playlist", self.__new_audiocd_playlist)
         Dispatcher.connect("del-cd-playlist", self.delete_audiocd_list)
+        config.connect("config-changed", self.on_config_changed)
+        
+    def on_config_changed(self, config, section, option, value):    
+        if section == "setting" and option == "loop_mode":
+            icon_name = value.split("_")[0]
+            self.playmode_button.update_dpixbufs(icon_name, True)
         
     def on_right_box_size_allocate(self, widget, rect):    
         if self.current_item:
