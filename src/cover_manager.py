@@ -175,6 +175,8 @@ class DeepinCoverManager(Logger):
     
     def get_pixbuf_from_song(self, song, x, y, try_web=True, optimum=True):
         filename = self.get_cover(song, try_web)
+        if not filename:
+           filename = self.default_cover
         if optimum:
             return get_optimum_pixbuf_from_file(filename, x, y)
         else:

@@ -310,7 +310,7 @@ class SimpleItem(gtk.Button):
         # Init.
         cr = widget.window.cairo_create()
         rect = widget.allocation
-        rect.x += 2
+        rect.x += 1
         rect.width -= 2
         font_color = app_theme.get_color("labelText").get_color()
         item_pixbuf = self.normal_dpixbuf.get_pixbuf()
@@ -332,12 +332,13 @@ class SimpleItem(gtk.Button):
             select_status = BUTTON_PRESS
             
         if select_status == BUTTON_PRESS:    
-            draw_single_mask(cr, rect.x, rect.y, rect.width, rect.height, "simpleItemHighlight")
-            font_color = app_theme.get_color("simpleSelectItem").get_color()
+            draw_single_mask(cr, rect.x, rect.y, rect.width, rect.height, "globalItemHighlight")
+            # font_color = app_theme.get_color("simpleSelectItem").get_color()
+            font_color = "#FFFFFF"
             item_pixbuf = self.press_dpixbuf.get_pixbuf()
             
         elif select_status == BUTTON_HOVER:    
-            draw_single_mask(cr, rect.x, rect.y, rect.width, rect.height, "simpleItemHover")
+            draw_single_mask(cr, rect.x, rect.y, rect.width, rect.height, "globalItemHover")
             
         # Draw pixbuf.    
         draw_pixbuf(cr, item_pixbuf, rect.x + self.padding_left, rect.y + (rect.height - item_pixbuf.get_height()) / 2)    

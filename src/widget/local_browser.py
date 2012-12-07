@@ -298,7 +298,7 @@ class Browser(gtk.VBox, SignalContainer):
         invailed_box.set_size_request(-1, 10)
         left_vbox = gtk.VBox(spacing=10)
         left_vbox.set_size_request(121, -1)
-        left_vbox.pack_start(invailed_box, False, True)
+        # left_vbox.pack_start(invailed_box, False, True)
         left_vbox.pack_start(self.filterbar, False, False)
         left_vbox.pack_start(create_separator_box(), False, False)
         left_vbox.pack_start(self.importbar, False, False)

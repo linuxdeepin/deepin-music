@@ -230,9 +230,12 @@ class SongView(ListView):
         if self.highlight_item in valid_items:
             current_index = [valid_items.index(self.highlight_item)]
         else:    
-            current_index = [-1]
+            current_index = [0]
         items_index = set(range(len(valid_items)))
         remaining = items_index.difference(current_index)
+        if len(remaining) <= 0:
+            remaining = [0]
+            
         highlight_item = valid_items[random.choice(list(remaining))]
         self.set_highlight(highlight_item)
         return highlight_item.get_song()
