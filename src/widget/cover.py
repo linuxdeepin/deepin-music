@@ -97,7 +97,7 @@ class CoverButton(gtk.Button):
         
         # Draw cover side.
         if self.is_default:
-            self.active_pixbuf = self.get_default_pixbuf()
+            self.active_pixbuf = self.get_default_pixbuf(self.current_song)
             
         draw_pixbuf(cr, self.cover_side_pixbuf, rect.x, rect.y)
         draw_pixbuf(cr, self.active_pixbuf, rect.x + 4, rect.y + 4,
@@ -123,15 +123,20 @@ class CoverButton(gtk.Button):
             
     def get_default_pixbuf(self, song=None):        
         if not song:
+            song = Player.song
+            
+        if not song:    
             pixbuf = self.local_dpixbuf.get_pixbuf()
+            return utils.get_optimum_pixbuf(pixbuf, COVER_SIZE["x"], COVER_SIZE["y"])
+            
+        if song.get_type() == "webcast":
+            pixbuf = self.webcast_dpixbuf.get_pixbuf()
         else:    
-            if song.get_type() == "webcast":
-                pixbuf = self.webcast_dpixbuf.get_pixbuf()
+            pixbuf = self.local_dpixbuf.get_pixbuf()
         return utils.get_optimum_pixbuf(pixbuf, COVER_SIZE["x"], COVER_SIZE["y"])            
             
     def init_default_cover(self):        
-        pixbuf = self.local_dpixbuf.get_pixbuf()
-        pixbuf =  utils.get_optimum_pixbuf(pixbuf, COVER_SIZE["x"], COVER_SIZE["y"])
+        pixbuf = self.get_default_pixbuf()
         self.start_animation(pixbuf, is_default=True)
         
     def on_album_changed(self, obj, song):    
@@ -179,7 +184,6 @@ class CoverButton(gtk.Button):
 class PlayerCoverButton(CoverButton):    
     def __init__(self):
         super(PlayerCoverButton, self).__init__()
-        # Player.connect("new-song", self.update_cover)
         Player.connect("init-status", lambda w : self.init_default_cover())
         Player.connect("instant-new-song", self.instant_update_cover)
         
