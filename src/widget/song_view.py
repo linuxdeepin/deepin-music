@@ -100,13 +100,13 @@ class SongView(ListView):
         draw_alpha_mask(cr, x, y, width, height, "layoutMiddle")
         
     def draw_item_hover(self, cr, x, y, w, h):
-        draw_single_mask(cr, x, y, w, h, "globalItemHover")
+        draw_single_mask(cr, x + 1, y, w - 2, h, "globalItemHover")
         
     def draw_item_select(self, cr, x, y, w, h):    
-        draw_single_mask(cr, x, y, w, h, "globalItemSelect")
+        draw_single_mask(cr, x + 1, y, w - 2, h, "globalItemSelect")
         
     def draw_item_highlight(self, cr, x, y, w, h):    
-        draw_single_mask(cr, x, y, w, h, "globalItemHighlight")
+        draw_single_mask(cr, x + 1, y, w - 2, h, "globalItemHighlight")
         
     def get_songs(self):        
         songs = []
