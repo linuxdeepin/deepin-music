@@ -34,13 +34,12 @@ from logger import Logger
 from nls import _
 from config import config
 
-
-
 class InvalidPluginError(Exception):
     def __str__(self):
         return str(self.args[0])
 
 class PluginsManager(Logger):
+    
     def __init__(self, dmusic, load=True):
         
         self.plugindirs = xdg_support.get_plugin_dirs()

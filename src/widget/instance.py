@@ -45,6 +45,8 @@ from widget.global_keys import global_hotkeys
 from widget.dialog import WinFile
 from widget.converter import AttributesUI, convert_task_manager
 from widget.mini import MiniWindow
+
+import plugins
 from constant import (FULL_DEFAULT_WIDTH, FULL_DEFAULT_HEIGHT,
                       SIMPLE_DEFAULT_WIDTH, SIMPLE_DEFAULT_HEIGHT)
 from nls import _
@@ -109,8 +111,9 @@ class DeepinMusic(gobject.GObject, Logger):
         self.audiocd = AudioCDSource()
         self.browser_manager = BrowserMananger()
         self.mini_window = MiniWindow()
-
-            
+        
+        self.plugins = plugins.PluginsManager(self)
+        
         self.window.add_move_event(self.simple_header_bar)
 
         bottom_box = gtk.HBox()

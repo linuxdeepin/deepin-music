@@ -1,30 +1,39 @@
+# Copyright (C) 2009-2010 Abhishek Mukherjee <abhishek.mukher.g@gmail.com>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 1, or (at your option)
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-
-import gobject
-import gtk
+import gobject, gtk
 
 import dbus #@UnusedImport
 import dbus.glib #@UnusedImport
 
-
+from helper import SignalCollector
 from player import Player
 from logger import Logger
 
-OBJ_PATH = '/im/pidgin/purple/PurpleObject'
-INTERFACE = 'im.pidgin.purple.PurpleInterface2'
-SERVICE = 'im.pidgin.purple.PurpleService'
+from nls import _
+
+PIDGIN_OBJ_PATH = '/im/pidgin/purple/PurpleObject'
+PIDGIN_INTERFACE = 'im.pidgin.purple.PurpleInterface2'
+PIDGIN_SERVICE = 'im.pidgin.purple.PurpleService'
 
 class PidginStatusPlugin(Logger):
-    PLUGIN_NAME = "PidginStatus"
-    PLUGIN_DESC = "Plugin to show Current player track in pidgin"
-    PLUGIN_VERSION = "0.1"
-    PLUGIN_AUTHOR = "RDeAngelis"
-    PLUGIN_WEBSITE = ""
     
     def __init__(self):
         self.__lastsong = None
         self.sbus = dbus.SessionBus()
-        Player.connect("instant-new-song", self.on_new_song)
         self.__connected_to_pidgin = False
         self.__check_pidgin_presence()
         self.on_new_song(Player, Player.song)
@@ -41,13 +50,13 @@ class PidginStatusPlugin(Logger):
 
     def __check_pidgin_presence(self):
         try: 
-            obj = self.sbus.get_object(SERVICE, OBJ_PATH)
+            obj = self.sbus.get_object(PIDGIN_SERVICE, PIDGIN_OBJ_PATH)
         except:
             if self.__connected_to_pidgin:
                 self.__connected_to_pidgin = False
                 self.loginfo("disconnect from pidgin")
         else:
-            interface = dbus.Interface(obj, INTERFACE)
+            interface = dbus.Interface(obj, PIDGIN_INTERFACE)
             self.change_meth = interface.__getattr__("PurpleSavedstatusSetMessage")
             self.get_meth = interface.__getattr__("PurpleSavedstatusGetCurrent")
             if not self.__connected_to_pidgin:
@@ -78,6 +87,14 @@ class PidginStatusPlugin(Logger):
         if song.get_str("album"):
             album = song.get_str("album")
         
-        status_msg = "\xe2\x99\xaa %s: %s (%s) \xe2\x99\xaa" %(artist, title, album)
+        status_msg = "\xe2\x99\xaa %s: %s (%s) \xe2\x99\xaa" %(artist, title, _("Deepin Music"))
         self.loginfo("Change pidgin status to \"%s\"",status_msg)
         self.change_meth(status, status_msg)
+            
+pidgin_status_notification = PidginStatusPlugin()            
+            
+def enable(exaile):
+    SignalCollector.connect("pidgin", Player, "instant-new-song", pidgin_status_notification.on_new_song)
+
+def disable(exaile):
+    SignalCollector.disconnect_all("pidgin")

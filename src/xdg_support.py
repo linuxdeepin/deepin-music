@@ -46,7 +46,8 @@ xdg_data_dirs = filter(lambda x: x, xdg_data_dirs)
 xdg_config_dirs = filter(lambda x: x, xdg_config_dirs)
 
 dmusic_data_dir = os.path.join(xdg_data_home, PROGRAM_NAME)
-dmusic_dir = os.path.dirname(os.path.realpath(__file__))
+# dmusic_dir = os.path.dirname(os.path.realpath(__file__))
+dmusic_dir = os.path.split(os.path.dirname(os.path.realpath(__file__)))[0]
 
 def save_config_path(*resource):
     """Ensure $XDG_CONFIG_HOME/<resource>/ exists, and return its path.
