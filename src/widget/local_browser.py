@@ -78,6 +78,8 @@ class IconItem(gobject.GObject):
         self.__draw_play_hover_flag = False
         self.__draw_play_press_flag = False
         
+        self.cover_dpixbuf = app_theme.get_pixbuf("cover/default_cover.png")
+        
         # normal side pixbuf
         if self.tag == "folder":
             self.__normal_side_pixbuf = app_theme.get_pixbuf("local/side_normal.png").get_pixbuf()
@@ -97,11 +99,15 @@ class IconItem(gobject.GObject):
         self.retrieve = TransforDB.convert(self.name_label.lower().replace(" ", "")) + self.name_label.lower().replace(" ", "")
         
     def create_pixbuf(self):
+        if self.pixbuf:
+            del self.pixbuf
+            
         if not self.key_name:
             if self.tag == "genre":
                 self.pixbuf = CoverManager.get_pixbuf_from_genre(self.name_label)
             else:    
-                self.pixbuf = CoverManager.get_pixbuf_from_name(self.name_label, self.cell_width, self.cell_width)            
+                self.pixbuf = CoverManager.get_pixbuf_from_name(self.name_label, self.cell_width, self.cell_width,
+                                                                return_default=False)            
             
         elif self.key_name == "deepin-all-songs":    
             self.pixbuf = CoverManager.get_all_song_cover(self.cell_width, self.cell_width)
@@ -111,11 +117,13 @@ class IconItem(gobject.GObject):
                 self.pixbuf = CoverManager.get_pixbuf_from_genre(self.name_label)
             elif self.tag == "album":    
                 self.pixbuf = CoverManager.get_pixbuf_from_name("%s-%s" % (self.value_name, self.key_name), 
-                                                                self.cell_width, self.cell_width)            
+                                                                self.cell_width, self.cell_width,
+                                                                return_default=False)            
             elif self.tag == "folder":
                    self.pixbuf = app_theme.get_pixbuf("local/music.png").get_pixbuf()
             else:    
-                self.pixbuf = CoverManager.get_pixbuf_from_name(self.key_name, self.cell_width, self.cell_width)
+                self.pixbuf = CoverManager.get_pixbuf_from_name(self.key_name, self.cell_width, self.cell_width,
+                                                                return_default=False)
         
     def pointer_in_play_rect(self, x, y):    
         if self.play_rect.x < x < self.play_rect.x + self.play_rect.width and self.play_rect.y < y < self.play_rect.y + self.play_rect.height:
@@ -134,8 +142,10 @@ class IconItem(gobject.GObject):
     
     def render(self, cr, rect):
         # Create pixbuf resource if self.pixbuf is None.
+        self.create_pixbuf()
+            
         if not self.pixbuf:
-            self.create_pixbuf()
+            self.pixbuf = self.cover_dpixbuf.get_pixbuf()
             
         pixbuf_x =  rect.x + (rect.width - self.__normal_side_pixbuf.get_width()) / 2
             

@@ -22,8 +22,6 @@
 
 import gtk
 import gobject
-import copy
-import os 
 import pango
 
 from collections import namedtuple
@@ -764,7 +762,7 @@ class WebcastsBrowser(gtk.VBox):
         # load collect webcasts.
         collect_taglist = WebcastsDB.get_favorite_items()
         if collect_taglist:
-            self.collect_view.add_items([WebcastListItem(tag, False) for tag in collect_taglist])
+            self.collect_view.add_items([WebcastListItem(tag) for tag in collect_taglist])
         
     def __init_sourcebar(self):
         self.sourcebar = TreeView(enable_drag_drop=False, enable_multiple_select=False)

@@ -123,7 +123,6 @@ class DeepinCoverManager(Logger):
     COVER_TO_SKIP = []
     
     def __init__(self):
-        self.default_cover = app_theme.get_theme_file_path("image/cover/default_cover1.png")
         self.all_song_cover = app_theme.get_theme_file_path("image/cover/all_song.png")
         self.webcast_cover = app_theme.get_theme_file_path("image/cover/webcast.png")
         
@@ -136,13 +135,17 @@ class DeepinCoverManager(Logger):
             result = title
         return result.replace("/", "")    
     
+    @property
+    def default_cover(self):
+        return app_theme.get_theme_file_path("image/cover/default_cover.png")
+    
     def get_default_cover(self, x, y):    
         return gtk.gdk.pixbuf_new_from_file_at_size(self.default_cover, x, y)
     
     def get_all_song_cover(self, x, y):
         return gtk.gdk.pixbuf_new_from_file_at_size(self.all_song_cover, x, y)
     
-    def get_pixbuf_from_name(self, query_name, x=None, y=None):
+    def get_pixbuf_from_name(self, query_name, x=None, y=None, return_default=True):
         x = (x or BROWSER_COVER_SIZE["x"])
         y = (y or BROWSER_COVER_SIZE["y"])
         
@@ -152,10 +155,16 @@ class DeepinCoverManager(Logger):
                 gtk.gdk.pixbuf_new_from_file_at_size(filename, COVER_SIZE["x"], COVER_SIZE["y"])
             except gobject.GError:    
                 os.unlink(filename)
-                filename = self.default_cover
+                filename = None
         else:        
-            filename = self.default_cover
-        return get_optimum_pixbuf_from_file(filename, x, y)
+            filename = None
+            
+        if filename is None:    
+            if return_default:
+                return get_optimum_pixbuf_from_file(self.default_cover)
+            return None
+        else:
+            return get_optimum_pixbuf_from_file(filename, x, y)
     
     def has_cover(self, song):            
         cover = self.get_cover(song, False) # todo
@@ -192,15 +201,12 @@ class DeepinCoverManager(Logger):
         return app_theme.get_pixbuf("genre/%s" % GENRE_PATH[1]).get_pixbuf()
     
     def get_cover(self, song, try_web=True):
-        if song.get_type() == "webcast":
-            return self.webcast_cover
-        default_image_path = self.default_cover
         album = self.get_cover_search_str(song)
         image_path = get_cache_file("cover/%s.jpg" % album)
         image_path_disable = get_cache_file("cover/%s.jpg.#disable#" % album)
 
         if  (not song.get_str("title") and not song.get_str("album")) or os.path.exists(image_path_disable) or image_path in self.COVER_TO_SKIP:
-            return default_image_path
+            return None
                         
         # Cover already exist.
         if os.path.exists(image_path):
@@ -268,7 +274,8 @@ class DeepinCoverManager(Logger):
         self.remove_cover(song)    
         if try_web:
             self.logdebug("cover not found %s (web: %s)", image_path, try_web)
-        return default_image_path    
+            
+        return None
     
     def remove_cover(self, song, emit=False):
         image_path = self.get_cover_path(song)

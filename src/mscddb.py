@@ -23,7 +23,6 @@
 from xml.sax import parseString, handler
 
 import os
-import urllib2
 import socket    
 socket.setdefaulttimeout(30) # 30s
 

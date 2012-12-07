@@ -785,7 +785,8 @@ def color_hex_to_cairo(color):
     return (gdk_color.red / 65535.0, gdk_color.green / 65535.0, gdk_color.blue / 65535.0)
 
 def str_size(nb, average=0, base=1024):
-    return "unknow"
+    if not nb:
+        return "unknow"
     if average != 0:
         average += 1
     nb = float(nb)    
@@ -925,6 +926,72 @@ def post_gui(func):
         gtk.gdk.threads_leave()
         return ret
     return wrap
+
+def get_optimum_pixbuf(pixbuf, expect_width, expect_height, cut_middle_area=True):
+    pixbuf_width, pixbuf_height = pixbuf.get_width(), pixbuf.get_height()
+    if pixbuf_width >= expect_width and pixbuf_height >= expect_height:
+        if float(pixbuf_width) / pixbuf_height == float(expect_width) / expect_height:
+            scale_width, scale_height = expect_width, expect_height
+        elif float(pixbuf_width) / pixbuf_height > float(expect_width) / expect_height:
+            scale_height = expect_height
+            scale_width = int(float(pixbuf_width) * expect_height / pixbuf_height)
+        else:
+            scale_width = expect_width
+            scale_height = int(float(pixbuf_height) * expect_width / pixbuf_width)
+            
+        if cut_middle_area:
+            subpixbuf_x = (scale_width - expect_width) / 2
+            subpixbuf_y = (scale_height - expect_height) / 2
+        else:
+            subpixbuf_x = 0
+            subpixbuf_y = 0
+            
+        return pixbuf.scale_simple(
+            scale_width, 
+            scale_height, 
+            gtk.gdk.INTERP_BILINEAR).subpixbuf(subpixbuf_x,
+                                               subpixbuf_y,
+                                               expect_width, 
+                                               expect_height)
+    elif pixbuf_width >= expect_width:
+        scale_width = expect_width
+        scale_height = int(float(expect_width) * pixbuf_height / pixbuf_width)
+        
+        if cut_middle_area:
+            subpixbuf_x = (scale_width - expect_width) / 2
+            subpixbuf_y = max((scale_height - expect_height) / 2, 0)
+        else:
+            subpixbuf_x = 0
+            subpixbuf_y = 0
+            
+        return pixbuf.scale_simple(
+            scale_width,
+            scale_height,
+            gtk.gdk.INTERP_BILINEAR).subpixbuf(subpixbuf_x,
+                                               subpixbuf_y,
+                                               expect_width, 
+                                               min(expect_height, scale_height))
+    elif pixbuf_height >= expect_height:
+        scale_width = int(float(expect_height) * pixbuf_width / pixbuf_height)
+        scale_height = expect_height
+        
+        if cut_middle_area:
+            subpixbuf_x = max((scale_width - expect_width) / 2, 0)
+            subpixbuf_y = (scale_height - expect_height) / 2
+        else:
+            subpixbuf_x = 0
+            subpixbuf_y = 0
+        
+        return pixbuf.scale_simple(
+            scale_width,
+            scale_height,
+            gtk.gdk.INTERP_BILINEAR).subpixbuf(subpixbuf_x,
+                                               subpixbuf_y,
+                                               min(expect_width, scale_width), 
+                                               expect_height)
+    else:
+        return pixbuf
+
     
 global MAIN_WINDOW            
 MAIN_WINDOW = None

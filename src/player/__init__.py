@@ -278,11 +278,11 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         self.logdebug("Force remove stream: %s", self.song.get("uri"))        
         if self.song.get_scheme() in BAD_STREAM_SCHEMES:
             try:
-                threading.Thread(target=self.bin.xfade_close, args=()).start()
+                threading.Thread(target=self.bin.xfade_close, args=((self.song.get("uri"),))).start()
             except Exception, e:    
                 self.logdebug("Force stop song:%s failed! error: %s", self.song.get("uri"),  e)
         else:        
-            self.bin.xfade_close()
+            self.bin.xfade_close(self.song.get("uri"))
             
     def thread_play(self, uri, song, play, thread_id):        
         ThreadRun(self.bin.xfade_open, self.emit_and_play, (uri,), (song, play, thread_id)).start()

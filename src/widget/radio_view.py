@@ -105,12 +105,11 @@ class RadioView(TreeView):
             if song.get_type() == "douban":
                 fmlib.played_song(self.highlight_item.channel_id, 
                                   song.get("sid"), song.get("aid"))
-                
             
     @utils.threaded       
     def fetch_playlist(self, play=False):
         if not self.highlight_item: return
-        songs = fmlib.new_playlist(self.highlight_item.channel_id, map(lambda song: song.get("sid"), self.playlist))
+        songs = fmlib.new_playlist(self.highlight_item.channel_id, self.get_history_sids())
         self.playlist = songs
         if songs and play:
             Player.play_new(songs[0])
@@ -126,10 +125,8 @@ class RadioView(TreeView):
             return     
         self.current_index += 1
         current_index = self.current_index        
+        self.extent_playlist()
         
-        if self.current_index == len(self.playlist) - 1:
-            self.current_index = -1
-            self.fetch_playlist()
         return self.playlist[current_index]
     
     @utils.threaded
@@ -144,6 +141,8 @@ class RadioView(TreeView):
                 pass
             
     def songs_to_sids(self, songs):        
+        if not songs:
+            return []
         return map(lambda song: song.get("sid"), songs)
             
     def get_history_sids(self):        
@@ -154,6 +153,13 @@ class RadioView(TreeView):
         rest_songs = self.playlist[self.current_index + 1:]
         rest_sids = self.songs_to_sids(rest_songs)
         return rest_sids
+    
+    @utils.threaded
+    def extent_playlist(self):
+        if len(self.playlist) - self.current_index - 1 < 5:
+            songs = fmlib.new_playlist(self.highlight_item.channel_id, self.get_history_sids())            
+            if songs:
+                self.playlist.extend(songs)
     
     def load_more_songs(self, songs):
         if len(self.playlist) - self.current_index - 1 < 5:
