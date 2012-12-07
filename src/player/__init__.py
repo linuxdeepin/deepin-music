@@ -239,20 +239,22 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         self.logdebug("player try to load %s", uri)
         
         # remove old stream for pipeline excepted when need to fade
-        # if self.song:
-        #     if self.song.get_type() == "webcast":
-        #         self.force_fade_close()
-        #         is_stop = True
+        if self.song:
+            if self.song.get_type() == "webcast":
+                self.force_fade_close()
+                is_stop = True
             
-        # if song and song.get_type() == "webcast":
-        #     if not is_stop:
-        #         self.force_fade_close()
-        
-        # if song.get_scheme() in BAD_STREAM_SCHEMES:
-        #     self.bin.dispose_streams()
+        if song and song.get_type() == "webcast":
+            if not is_stop:
+                self.force_fade_close()
+                is_stop = True
             
         if self.song and (crossfade == -1 or self.is_paused() or not self.is_playable()):        
-            self.bin.xfade_close(self.song.get("uri"))
+            if not is_stop:
+                self.force_fade_close()
+                
+        # if song.get_scheme() in BAD_STREAM_SCHEMES:
+        #     self.bin.dispose_streams()
             
         # set current song and try play it.
         self.song = song    
@@ -276,11 +278,11 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         self.logdebug("Force remove stream: %s", self.song.get("uri"))        
         if self.song.get_scheme() in BAD_STREAM_SCHEMES:
             try:
-                threading.Thread(target=self.bin.xfade_close, args=(self.song.get("uri"),)).start()
+                threading.Thread(target=self.bin.xfade_close, args=()).start()
             except Exception, e:    
                 self.logdebug("Force stop song:%s failed! error: %s", self.song.get("uri"),  e)
         else:        
-            self.bin.xfade_close(self.song.get("uri"))
+            self.bin.xfade_close()
             
     def thread_play(self, uri, song, play, thread_id):        
         ThreadRun(self.bin.xfade_open, self.emit_and_play, (uri,), (song, play, thread_id)).start()

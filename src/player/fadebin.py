@@ -138,7 +138,6 @@ import gobject
 import gst
 import time
 from threading import Lock, Thread
-
 from logger import Logger
 
 
@@ -365,9 +364,9 @@ class PlayerBin(gobject.GObject, Logger):
         self.stream_list_lock.acquire()
         streams = self.streams[:]
         self.stream_list_lock.release()
-        
         for stream in streams:
             stream.unlink_and_dispose_stream()
+        
 
     def xfade_open(self, uri):
 
@@ -1203,7 +1202,7 @@ class StreamBin(gst.Bin, Logger):
         self.base_time = 0.0
         self.src_blocked = False
         
-        self.bad_stream_timeout = 3
+        self.bad_stream_timeout = 2
         
         # get uri scheme
         self.uri_scheme = self.get_uri_scheme(uri)
@@ -1881,29 +1880,28 @@ class StreamBin(gst.Bin, Logger):
         self.__src_pad.set_blocked_async(True, self.__src_blocked_cb)
         self.emitted_playing = False
         self.state = PREROLLING
-        # if self.uri_scheme in BAD_STREAM_SCHEMES:
-        #     self.fake_state = None
-            
-        #     def fake_set_state():
-        #         if self.uri_scheme in RTSP_STREAM_SCHEMES:
-        #             self.fake_state = self.set_state(gst.STATE_PLAYING)
-        #         else:    
-        #             self.fake_state = self.set_state(gst.STATE_PAUSED)
+        if self.uri_scheme in BAD_STREAM_SCHEMES:
+            self.fake_state = None
+            def fake_set_state():
+                if self.uri_scheme in RTSP_STREAM_SCHEMES:
+                    self.fake_state = self.set_state(gst.STATE_PLAYING)
+                else:    
+                    self.fake_state = self.set_state(gst.STATE_PAUSED)
                     
-        #     start = time.time()        
-        #     fake_thread = Thread(target=fake_set_state, args=())
-        #     fake_thread.setDaemon(True)
-        #     fake_thread.start()
+            start = time.time()        
+            fake_thread = Thread(target=fake_set_state, args=())
+            fake_thread.setDaemon(True)
+            fake_thread.start()
             
-        #     while time.time() - start < self.bad_stream_timeout and fake_thread.isAlive():
-        #         time.sleep(0.2)
+            while time.time() - start < self.bad_stream_timeout and fake_thread.isAlive():
+                time.sleep(0.3)
                 
-        #     if self.fake_state is None:    
-        #         return False
-        #     else:
-        #         state = self.fake_state
-        if self.uri_scheme in RTSP_STREAM_SCHEMES:
-            state = self.set_state(gst.STATE_PLAYING)
+            if self.fake_state is None:    
+                return False
+            else:
+                state = self.fake_state
+        # if self.uri_scheme in RTSP_STREAM_SCHEMES:
+        #     state = self.set_state(gst.STATE_PLAYING)
         else:        
             state = self.set_state(gst.STATE_PAUSED)
 
