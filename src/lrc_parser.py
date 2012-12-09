@@ -79,10 +79,6 @@ class LrcParser(object):
                     return raw_buffer.decode(raw_encoding).encode("utf-8")
                 except:
                     return ""
-            
-        
-
-        
                 
     def parser_buffer(self, convert_buffer):            
         if self.parser_offset == len(convert_buffer):
@@ -92,6 +88,7 @@ class LrcParser(object):
         if convert_buffer[self.parser_offset] == "[":
             tag = 1
             self.parser_offset += 1
+            
         while self.parser_offset < len(convert_buffer):    
             if tag and convert_buffer[self.parser_offset] == "]":
                 # A tag found
@@ -105,12 +102,17 @@ class LrcParser(object):
             
         if tag == 2:        
             self.parse_tag(convert_buffer, start, self.parser_offset)
+            
         else:    
             end = self.parser_offset
             if convert_buffer[end - 1] in ['\r', '\n']:
                 end -= 1
-            if self.parser_offset < len(convert_buffer) and self.parser_offset > 0 and convert_buffer[self.parser_offset - 1] == '\r' and convert_buffer[self.parser_offset] == '\n':
+            if self.parser_offset < len(convert_buffer) \
+                    and self.parser_offset > 0  \
+                    and convert_buffer[self.parser_offset - 1] == '\r' \
+                    and convert_buffer[self.parser_offset] == '\n':
                 self.parser_offset += 1
+                
             self.parse_text(convert_buffer, start, end)    
             
     def parse_text(self, lrc_buffer, start, end):        

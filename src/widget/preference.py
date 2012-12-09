@@ -30,12 +30,13 @@ from dtk.ui.box import BackgroundBox, ImageBox
 from dtk.ui.button import CheckButton, RadioButton
 from dtk.ui.spin import SpinBox
 from dtk.ui.new_entry import InputEntry, ShortcutKeyEntry
-from dtk.ui.treeview import TreeView
+
+from dtk.ui.new_treeview import TreeView
 from dtk.ui.button import Button
 from dtk.ui.dialog import DialogBox, DIALOG_MASK_MULTIPLE_PAGE
 from dtk.ui.color_selection import ColorButton
 from dtk.ui.combo import ComboBox
-from dtk.ui.scrolled_window import ScrolledWindow
+
 
 from utils import color_hex_to_cairo
 from widget.ui_utils import (get_font_families, switch_tab,
@@ -43,6 +44,7 @@ from widget.ui_utils import (get_font_families, switch_tab,
                              draw_alpha_mask)
 from widget.dialog import WinDir
 from widget.global_keys import global_hotkeys
+from widget.prefer_item import NormalItem, ExpandItem
 from widget.skin import app_theme
 from render_lyrics import RenderContextNew
 from constant import PREDEFINE_COLORS
@@ -961,17 +963,13 @@ class PreferenceDialog(DialogBox):
         self.scroll_lyrics_setting = ScrollLyricsSetting()
         
         # Category bar
-        self.category_bar = TreeView(font_x_padding=20)
+        self.category_bar = TreeView()
         self.category_bar.draw_mask = self.draw_treeview_mask
-        self.general_category_item = CategoryItem(_("General"), self.general_setting)
-        self.category_bar.add_item(None, self.general_category_item)
-        self.category_bar.add_item(None, CategoryItem(_("Hotkeys"), self.hotkey_setting))
-        lyrics_node = self.category_bar.add_item(None, CategoryItem(_("Lyrics")))
-        self.category_bar.add_item(lyrics_node, CategoryItem(_("Desktop"), self.desktop_lyrics_setting))
-        self.category_bar.add_item(lyrics_node, CategoryItem(_("Window"), self.scroll_lyrics_setting))
-        self.category_bar.add_item(None, CategoryItem(_("About us"), AboutBox()))
-        self.category_bar.connect("single-click-item", self.category_single_click_cb)
-        self.category_bar.set_highlight_index(0)
+        self.category_bar.set_size_request(132, 516)
+        self.category_bar.connect("single-click-item", self.on_categorybar_single_click)
+
+        # Init catagory bar.
+        self.__init_category_bar()
         
         category_box = gtk.VBox()
         background_box = BackgroundBox()
@@ -979,23 +977,17 @@ class PreferenceDialog(DialogBox):
         background_box.draw_mask = self.draw_treeview_mask
         category_box.pack_start(background_box, False, False)
         
-        category_scrolled_window = ScrolledWindow()
-        category_scrolled_window.add_child(self.category_bar)
-        category_scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_NEVER)
-        category_scrolled_window.set_size_request(132, 516)
-        
-        category_scrolled_window_align = gtk.Alignment()
-        category_scrolled_window_align.set(0, 0, 1, 1,)
-        category_scrolled_window_align.set_padding(0, 1, 0, 0)
-        category_scrolled_window_align.add(category_scrolled_window)
-        
-        category_box.pack_start(category_scrolled_window_align, True, True)
+        category_bar_align = gtk.Alignment()
+        category_bar_align.set(0, 0, 1, 1,)
+        category_bar_align.set_padding(0, 1, 0, 0)
+        category_bar_align.add(self.category_bar)
+        category_box.pack_start(category_bar_align, True, True)
         
         # Pack widget.
         left_box = gtk.VBox()
         self.right_box = gtk.VBox()
         left_box.add(category_box)
-        self.right_box.add(self.general_category_item.get_allocated_widget())
+        self.right_box.add(self.general_setting)
         right_align = gtk.Alignment()
         right_align.set_padding(0, 0, 10, 0)
         right_align.add(self.right_box)
@@ -1009,13 +1001,27 @@ class PreferenceDialog(DialogBox):
         self.body_box.pack_start(self.main_box, True, True)
         self.right_button_box.set_buttons([close_button])        
         
+    def __init_category_bar(self):    
+        general_normal_item = NormalItem(_("General"), self.general_setting)
+        hotkey_normal_item = NormalItem(_("Hotkeys"), self.hotkey_setting)
+        self.lyrics_expand_item = ExpandItem(_("Lyrics"), None)
+        self.lyrics_expand_item.add_childs([(_("Desktop"), self.desktop_lyrics_setting),
+                                       (_("Window"), self.scroll_lyrics_setting)])
+        # self.plugins_expand_item = ExpandItem(_("Plugins"), None)
+        about_normal_item = NormalItem(_("About us"), AboutBox())
+        
+        items = [general_normal_item,
+                 hotkey_normal_item,
+                 self.lyrics_expand_item,
+                 about_normal_item]
+        self.category_bar.add_items(items)
+        self.category_bar.select_items([general_normal_item])
+        
     def switch_lyrics_page(self, index=3):
-        self.category_bar.tree_list[2].show_child_items_bool = True
-        self.category_bar.sort()
-        self.category_bar.queue_draw()
-        self.category_bar.set_highlight_index(index)
-        highlight_item  = self.category_bar.get_highlight_item()
-        self.category_single_click_cb(None, highlight_item)
+        self.lyrics_expand_item.try_to_expand()
+        show_item = self.category_bar.visible_items[index]
+        self.category_bar.select_items([show_item])
+        self.on_categorybar_single_click(self.category_bar, show_item, None, None, None)
         
     def show_scroll_lyrics_page(self):
         self.switch_lyrics_page(4)
@@ -1028,30 +1034,6 @@ class PreferenceDialog(DialogBox):
     def draw_treeview_mask(self, cr, x, y, width, height):
         draw_alpha_mask(cr, x, y, width, height, ("#FFFFFF", 0.9))
     
-    def category_single_click_cb(self, widget, item):
-        if item.get_allocated_widget():
-            switch_tab(self.right_box, item.get_allocated_widget())
-            
-class CategoryItem(object):    
-    
-    def __init__(self, item_title, allocated_widget=None, has_arrow=True, item_left_image=None):
-        self.item_title = item_title
-        self.allocated_widget = allocated_widget
-        self.has_arrow= has_arrow
-        self.item_left_image = item_left_image
-        self.item_id = None
-        
-    def get_title(self):    
-        return self.item_title
-    
-    def get_has_arrow(self):
-        return self.has_arrow
-    
-    def set_item_id(self, new_id):
-        self.item_id = new_id
-        
-    def get_item_id(self):    
-        return self.item_id
-    
-    def get_allocated_widget(self):
-        return self.allocated_widget
+    def on_categorybar_single_click(self, widget, item, column, x, y):
+        if item.allocate_widget:
+            switch_tab(self.right_box, item.allocate_widget)

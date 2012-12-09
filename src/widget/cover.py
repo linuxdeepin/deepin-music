@@ -75,7 +75,8 @@ class CoverButton(gtk.Button):
                 pass
             self.timeline = Timeline(self.animation_time, CURVE_SINE)
             self.timeline.connect("update", self.update_animation)
-            self.timeline.connect("completed", lambda source: self.completed_animation(source, target_pixbuf, is_default))
+            self.timeline.connect("completed", 
+                                  lambda source: self.completed_animation(source, target_pixbuf, is_default))
             self.timeline.run()
     
     def update_animation(self, source, status):
@@ -163,17 +164,20 @@ class CoverButton(gtk.Button):
         if not filename:
             if not try_web:
                 if force_song.get_type() == "webcast":
-                    pixbuf = utils.get_optimum_pixbuf(self.webcast_dpixbuf.get_pixbuf(), COVER_SIZE["x"], COVER_SIZE["y"])
+                    pixbuf = utils.get_optimum_pixbuf(self.webcast_dpixbuf.get_pixbuf(), 
+                                                      COVER_SIZE["x"], COVER_SIZE["y"])
                     self.start_animation(pixbuf, is_default=True)
                     return True
                 else:    
-                    pixbuf = utils.get_optimum_pixbuf(self.local_dpixbuf.get_pixbuf(), COVER_SIZE["x"], COVER_SIZE["y"])
+                    pixbuf = utils.get_optimum_pixbuf(self.local_dpixbuf.get_pixbuf(), 
+                                                      COVER_SIZE["x"], COVER_SIZE["y"])
                     self.start_animation(pixbuf, is_default=True)
                     return False
             return False    
         else:
             try:
-                pixbuf = get_optimum_pixbuf_from_file(filename, COVER_SIZE["x"], COVER_SIZE["y"])
+                pixbuf = get_optimum_pixbuf_from_file(filename, 
+                                                      COVER_SIZE["x"], COVER_SIZE["y"])
             except gobject.GError:    
                 return False
             else:

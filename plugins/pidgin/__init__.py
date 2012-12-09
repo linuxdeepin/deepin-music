@@ -42,7 +42,6 @@ class PidginStatusPlugin(Logger):
         self.sbus = dbus.SessionBus()
         self.__connected_to_pidgin = False
         self.__check_pidgin_presence()
-        self.on_new_song(Player, Player.song)
         gobject.timeout_add(10000, self.__check_pidgin_presence)
         gtk.quit_add(0,self.reset_status)
 
@@ -64,6 +63,7 @@ class PidginStatusPlugin(Logger):
         else:
             interface = dbus.Interface(obj, PIDGIN_INTERFACE)
             self.change_meth = interface.__getattr__("PurpleSavedstatusSetMessage")
+            self.set_active_meth = interface.__getattr__("PurpleSavedstatusActivate")
             self.get_meth = interface.__getattr__("PurpleSavedstatusGetCurrent")
             if not self.__connected_to_pidgin:
                 self.__connected_to_pidgin = True
@@ -96,6 +96,7 @@ class PidginStatusPlugin(Logger):
         status_msg = "\xe2\x99\xaa %s: %s (%s) \xe2\x99\xaa" %(artist, title, _("Deepin Music"))
         self.loginfo("Change pidgin status to \"%s\"",status_msg)
         self.change_meth(status, status_msg)
+        self.set_active_meth(status)
             
 pidgin_status_notification = PidginStatusPlugin()            
             
