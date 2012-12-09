@@ -61,6 +61,8 @@ class PluginsManager(Logger):
             self.load_enabled()
 
     def __find_plugin(self, plugin_name):
+        if not plugin_name:
+            return None
         for plugin_dir in self.plugindirs:
             path = os.path.join(plugin_dir, plugin_name)
             if os.path.exists(path):
@@ -120,7 +122,7 @@ class PluginsManager(Logger):
             self.logdebug("Loaded plugin %s", plugin_name)
             self.save_enabled()
         except Exception, e:
-            traceback.print_exc()
+            # traceback.print_exc()
             self.logwarn("Unable to enable plugin %s", plugin_name)
             raise e
 
@@ -153,16 +155,17 @@ class PluginsManager(Logger):
         pass
 
     def get_plugin_info(self, pluginname):
-        path = os.path.join(self.__findplugin(pluginname), 'PLUGININFO')
+        path = os.path.join(self.__find_plugin(pluginname), 'PLUGININFO')
         f = open(path)
         infodict = {}
         for line in f:
             try:
-                key, val = line.split("=",1)
+                key, val = line.split("=", 1)
                 # restricted eval - no bult-in funcs. marginally more secure.
                 infodict[key] = eval(val, {'__builtins__': None, '_': _}, {})
             except ValueError:
                 pass # this happens on blank lines
+            
         return infodict
 
     def get_plugin_default_preferences(self, plugin_name):
@@ -191,8 +194,9 @@ class PluginsManager(Logger):
 
     def load_enabled(self):
         to_enable = config.get("plugins", "enabled").split("\n")
-        for plugin in to_enable:
-            try:
-                self.enable_plugin(plugin)
-            except:
-                pass
+        if to_enable:
+            for plugin in to_enable:
+                try:
+                    self.enable_plugin(plugin)
+                except:
+                    pass

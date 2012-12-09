@@ -36,7 +36,7 @@ class ExpandItem(TreeItem):
         self.side_padding = 5
         self.item_height = 37
         self.title = title
-        self.item_width = 121
+        self.item_width = -1
         self.allocate_widget = allocate_widget
         self.child_items = []
         
@@ -75,9 +75,9 @@ class ExpandItem(TreeItem):
         # Draw select background.
             
         if self.is_select:    
-            draw_single_mask(cr, rect.x + 1, rect.y, rect.width - 2, rect.height, "globalItemSelect")
+            draw_single_mask(cr, rect.x, rect.y, rect.width, rect.height, "globalItemSelect")
         elif self.is_hover:
-            draw_single_mask(cr, rect.x + 1, rect.y, rect.width - 2, rect.height, "globalItemHover")
+            draw_single_mask(cr, rect.x, rect.y, rect.width, rect.height, "globalItemHover")
         
         if self.is_select:
             text_color = "#FFFFFF"
@@ -170,12 +170,16 @@ class NormalItem(TreeItem):
         TreeItem.__init__(self)
         self.column_index = column_index
         self.side_padding = 5
-        self.item_height = 37
+        if column_index > 0:
+            self.item_height = 30
+        else:    
+            self.item_height = 37
+            
         self.title = title
-        self.item_width = 121
+        self.item_width = -1
         self.allocate_widget = allocate_widget
-        
         self.title_padding_x = 30
+        self.column_offset = 15
         
     def get_height(self):    
         return self.item_height
@@ -202,17 +206,19 @@ class NormalItem(TreeItem):
         # Draw select background.
             
         if self.is_select:    
-            draw_single_mask(cr, rect.x + 1, rect.y, rect.width - 2, rect.height, "globalItemSelect")
+            draw_single_mask(cr, rect.x, rect.y, rect.width, rect.height, "globalItemSelect")
         elif self.is_hover:
-            draw_single_mask(cr, rect.x + 1, rect.y, rect.width - 2, rect.height, "globalItemHover")
+            draw_single_mask(cr, rect.x, rect.y, rect.width, rect.height, "globalItemHover")
         
         if self.is_select:
             text_color = "#FFFFFF"
         else:    
             text_color = app_theme.get_color("labelText").get_color()
             
-        draw_text(cr, self.title, rect.x + self.title_padding_x, 
-                  rect.y, rect.width - self.title_padding_x,
+            
+        column_offset = self.column_offset * self.column_index    
+        draw_text(cr, self.title, rect.x + self.title_padding_x + column_offset,
+                  rect.y, rect.width - self.title_padding_x - column_offset ,
                   rect.height, text_size=10, 
                   text_color = text_color,
                   alignment=pango.ALIGN_LEFT)    

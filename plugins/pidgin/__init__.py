@@ -52,6 +52,7 @@ class PidginStatusPlugin(Logger):
         except:
             return
         self.change_meth(status, "")
+        self.set_active_meth(status)
 
     def __check_pidgin_presence(self):
         try: 
@@ -104,4 +105,5 @@ def enable(exaile):
     SignalCollector.connect("pidgin", Player, "instant-new-song", pidgin_status_notification.on_new_song)
 
 def disable(exaile):
+    pidgin_status_notification.reset_status()
     SignalCollector.disconnect_all("pidgin")

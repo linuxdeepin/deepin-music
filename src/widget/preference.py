@@ -46,6 +46,7 @@ from widget.dialog import WinDir
 from widget.global_keys import global_hotkeys
 from widget.prefer_item import NormalItem, ExpandItem
 from widget.skin import app_theme
+from widget.plugins_view import PluginsManager
 from render_lyrics import RenderContextNew
 from constant import PREDEFINE_COLORS
 from config import config
@@ -961,6 +962,7 @@ class PreferenceDialog(DialogBox):
         self.hotkey_setting = HotKeySetting()
         self.desktop_lyrics_setting = DesktopLyricsSetting()
         self.scroll_lyrics_setting = ScrollLyricsSetting()
+        self.plugins_manager = PluginsManager()
         
         # Category bar
         self.category_bar = TreeView()
@@ -1007,12 +1009,13 @@ class PreferenceDialog(DialogBox):
         self.lyrics_expand_item = ExpandItem(_("Lyrics"), None)
         self.lyrics_expand_item.add_childs([(_("Desktop"), self.desktop_lyrics_setting),
                                        (_("Window"), self.scroll_lyrics_setting)])
-        # self.plugins_expand_item = ExpandItem(_("Plugins"), None)
+        self.plugins_expand_item = ExpandItem(_("Plugins"), self.plugins_manager)
         about_normal_item = NormalItem(_("About us"), AboutBox())
         
         items = [general_normal_item,
                  hotkey_normal_item,
                  self.lyrics_expand_item,
+                 self.plugins_expand_item,
                  about_normal_item]
         self.category_bar.add_items(items)
         self.category_bar.select_items([general_normal_item])

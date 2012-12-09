@@ -100,6 +100,8 @@ class DeepinMusic(gobject.GObject, Logger):
         self.window.is_disable_window_maximized = self.is_disable_window_maximized
         utils.set_main_window(self)
         
+        self.plugins = plugins.PluginsManager(self)        
+        
         self.tray_icon = TrayIcon(self)        
         self.lyrics_display = LyricsModule()
         self.list_manager = ListManager()
@@ -111,8 +113,6 @@ class DeepinMusic(gobject.GObject, Logger):
         self.audiocd = AudioCDSource()
         self.browser_manager = BrowserMananger()
         self.mini_window = MiniWindow()
-        
-        self.plugins = plugins.PluginsManager(self)
         
         self.window.add_move_event(self.simple_header_bar)
 

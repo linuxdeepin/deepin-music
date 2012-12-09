@@ -107,4 +107,5 @@ def enable(exaile):
     SignalCollector.connect("gajim", Player, "instant-new-song", gajim_status_notification.on_new_song)
 
 def disable(exaile):
+    gajim_status_notification.reset_status()
     SignalCollector.disconnect_all("gajim")
