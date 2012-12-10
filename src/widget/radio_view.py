@@ -22,6 +22,9 @@
 
 import gtk
 import gobject
+import threading
+
+from contextlib import contextmanager 
 from dtk.ui.new_treeview import TreeView
 from dtk.ui.iconview import IconView
 from dtk.ui.threads import post_gui
@@ -37,6 +40,7 @@ from cover_manager import cover_thread_pool
 import utils
 from xdg_support import get_config_file
 from library import MediaDB
+
 
 class RadioView(TreeView):    
     __gsignals__ = {
@@ -57,6 +61,8 @@ class RadioView(TreeView):
         Dispatcher.connect("play-radio", self.on_dispatcher_play_radio)
         Player.connect("play-end", self.on_play_end)
         
+        self.lock = threading.Lock()
+        
         self.current_index = 0
         self.playlist = []
         self.limit_number = 25
@@ -68,6 +74,17 @@ class RadioView(TreeView):
             self.__on_db_loaded(MediaDB)
         else:    
             MediaDB.connect("loaded", self.__on_db_loaded)
+            
+    @contextmanager        
+    def keep_list_lock(self):
+        self.lock.acquire()
+        try:
+            yield
+        except Exception, e:    
+            self.logwarn("keep stream state lock failed %s", e)
+            
+        else:    
+            self.lock.release()
         
     def __on_db_loaded(self, db):        
         self.load()
@@ -95,8 +112,9 @@ class RadioView(TreeView):
             self.fetch_playlist(play=True)
             
     def reset_playlist(self):        
-        self.playlist = []
-        self.current_index = 0
+        with self.keep_list_lock():
+            self.playlist = []
+            self.current_index = 0
             
     @utils.threaded        
     def on_play_end(self, player):        
@@ -110,11 +128,13 @@ class RadioView(TreeView):
     def fetch_playlist(self, play=False):
         if not self.highlight_item: return
         songs = fmlib.new_playlist(self.highlight_item.channel_id, self.get_history_sids())
-        self.playlist = songs
-        if songs and play:
-            Player.play_new(songs[0])
-            self.current_index = 0
-            Player.set_source(self)
+        
+        with self.keep_list_lock():
+            self.playlist = songs
+            if songs and play:
+                Player.play_new(songs[0])
+                self.current_index = 0
+                Player.set_source(self)
             
     def get_next_song(self, maunal=False):        
         if maunal:
@@ -123,11 +143,12 @@ class RadioView(TreeView):
         if self.playlist is None:
             self.fetch_playlist()
             return     
-        self.current_index += 1
-        current_index = self.current_index        
-        self.extent_playlist()
         
-        return self.playlist[current_index]
+        with self.keep_list_lock():
+            self.current_index += 1
+            current_index = self.current_index        
+            self.extent_playlist()
+            return self.playlist[current_index]
     
     @utils.threaded
     def mark_as_skip(self):

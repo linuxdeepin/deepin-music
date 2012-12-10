@@ -735,6 +735,6 @@ class RadioListItem(TreeItem):
         
     def __eq__(self, other_item):    
         try:
-            return self.channel_info == other_item.channel_info
+            return self.channel_info.get("id") == other_item.channel_info.get("id")
         except:
             return False

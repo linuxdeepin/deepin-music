@@ -326,6 +326,8 @@ def get_uris_from_pls(uri):
     return uris
 
 from xml.sax import parseString, handler
+from xml.dom.minidom import parseString as dom_parseString
+
 class XSPFParser(handler.ContentHandler):
     def __init__(self):
         self.uris = []
@@ -356,7 +358,7 @@ def get_uris_from_asx(uri):
     while len(uri_asx_list) > 0:
         uri = uri_asx_list.pop()
         text = read_entire_file(uri)
-        d = parseString(text)
+        d = dom_parseString(text)
         links = [ ref.getAttribute('HREF')
                 for ref in d.getElementsByTagName('REF')
                 if ref.hasAttribute('HREF') ]

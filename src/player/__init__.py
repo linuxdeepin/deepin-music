@@ -27,7 +27,12 @@ from config import config
 from library import MediaDB
 from logger import Logger
 from player.fadebin import PlayerBin, BAD_STREAM_SCHEMES
-from utils import fix_charset, ThreadRun
+
+from utils import (fix_charset, ThreadRun, get_uris_from_asx,
+                   get_uris_from_pls, get_uris_from_m3u,
+                   get_uris_from_xspf, get_mime_type, get_scheme)
+
+
 
 from helper import Dispatcher
 
@@ -52,6 +57,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         
         # Init.
         self.song = None       
+        self.fetch_song = None
         self.__source = None 
         self.__need_load_prefs = True 
         self.__current_stream_seeked = False 
@@ -208,8 +214,56 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         
     def get_source(self):    
         return self.__source
+    
+    def async_fetch(self, song):    
+        uri = song.get("uri")
+        ntry = 2
+        uris = None
+        mime_type = get_mime_type(uri)
+        while not uris:
+            if mime_type == "audio/x-scpls":
+                uris = get_uris_from_pls(uri)
+            elif mime_type == "audio/x-mpegurl":
+                uris = get_uris_from_m3u(uri)
+            elif mime_type == "video/x-ms-asf":
+                uris = get_uris_from_asx(uri)
+            elif mime_type == "application/xspf+xml":
+                uris = get_uris_from_xspf(uri)
+            ntry += 1
+            if ntry > 3: break
 
+        # TODO: Improve multiple webradio url
+        if uris:
+            self.loginfo("%s choosen in %s", uris[0], uri)
+            uri = uris[0]
+        else:
+            self.loginfo("no playable uri found in %s", uri)
+            uri = None
+        return song, uri    
+    
+    def play_radio(self, fetch_result, play=False, crossfade=None, seek=None):
+        song, uri = fetch_result
+        if self.fetch_song:
+            if self.fetch_song == song:
+                if uri:
+                    song["uri"] = uri
+                    self.__set_song(song, play, crossfade, seek)
+            
     def set_song(self, song, play=False, crossfade=None, seek=None):
+        uri = song.get("uri")
+        mime_type = get_mime_type(uri)
+        if mime_type in [ "audio/x-scpls", "audio/x-mpegurl", "video/x-ms-asf", "application/xspf+xml" ]:
+            if get_scheme(song.get("uri")) != "file":
+                self.fetch_song = song
+                ThreadRun(self.async_fetch, self.play_radio, (song,), (play, crossfade, seek)).start()
+            else:    
+                self.fetch_song = None
+                self.__set_song(song, play, crossfade, seek)
+        else:    
+            self.fetch_song = None
+            self.__set_song(song, play, crossfade, seek)
+    
+    def __set_song(self, song, play=False, crossfade=None, seek=None):
         '''set song'''
         if not song:
             return
@@ -260,6 +314,31 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         self.song = song    
         self.__current_song_reported = False
         self.emit("instant-new-song", self.song)
+        
+        mime_type = get_mime_type(uri)
+        if mime_type in [ "audio/x-scpls", "audio/x-mpegurl", "video/x-ms-asf", "application/xspf+xml" ]:
+            # TODO: Read playlist need to be async
+            ntry = 2
+            uris = None
+            while not uris:
+                if mime_type == "audio/x-scpls":
+                    uris = get_uris_from_pls(uri)
+                elif mime_type == "audio/x-mpegurl":
+                    uris = get_uris_from_m3u(uri)
+                elif mime_type == "video/x-ms-asf":
+                    uris = get_uris_from_asx(uri)
+                elif mime_type == "application/xspf+xml":
+                    uris = get_uris_from_xspf(uri)
+                ntry += 1
+                if ntry > 3: break
+
+            # TODO: Improve multiple webradio url
+            if uris:
+                self.loginfo("%s choosen in %s", uris[0], uri)
+                uri = uris[0]
+            else:
+                self.loginfo("no playable uri found in %s", uri)
+                uri = None
 
         if song.get_scheme() in BAD_STREAM_SCHEMES:
             self.play_thread_id += 1            
@@ -593,6 +672,6 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
             handler_id = self.bin.connect("eos", lambda * args: self.stop())
             gobject.timeout_add(remaining, lambda * args: self.bin.disconnect(handler_id) is not None, handler_id)
         self.logdebug("playlist finished")
-
+        
 Player = DeepinMusicPlayer()            
 

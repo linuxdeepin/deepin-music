@@ -24,6 +24,7 @@ import gobject
 import pango
 from dtk.ui.draw import draw_pixbuf, draw_text
 from widget.skin import app_theme
+from webcasts import WebcastsDB
 
 import utils
 
@@ -37,6 +38,7 @@ class WebcastItem(gobject.GObject):
         self.side_padding = 5
         self.item_height = 31
         self.webcast = webcast
+        self.is_collected = WebcastsDB.is_collected(webcast.get("uri"))         
         self.item_width = 121
         self.star_normal_pixbuf = app_theme.get_pixbuf("webcast/collect_normal.png").get_pixbuf()
         self.star_press_pixbuf = app_theme.get_pixbuf("webcast/collect_press.png").get_pixbuf()
@@ -83,7 +85,8 @@ class WebcastItem(gobject.GObject):
     def render_star(self, cr, rect, in_select, in_highlight):
         icon_y = rect.y + (rect.height - self.star_icon_h) / 2
         rect.x += self.star_icon_padding_x
-        if self.webcast.get("collect", False):
+        
+        if self.is_collected or self.webcast.get("collect"):
             pixbuf = self.star_press_pixbuf
         else:    
             pixbuf = self.star_normal_pixbuf

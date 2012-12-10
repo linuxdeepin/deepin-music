@@ -23,7 +23,7 @@
 
 import os
 import gobject
-from utils import load_db
+from utils import load_db, save_db
 from xdg_support import get_config_file
 
 class WebcastsDatabase(gobject.GObject):
@@ -96,6 +96,9 @@ class WebcastsDatabase(gobject.GObject):
             return []
         else:
             return self.preview_db_objs
+        
+    def save_preview_db(self, objs):    
+        save_db(objs, self.preview_db_file)
         
     def is_collected(self, uri):    
         if not self.favorite_db_objs:

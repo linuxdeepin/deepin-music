@@ -30,6 +30,7 @@ from widget.webcast_item import WebcastItem
 from helper import Dispatcher
 from player import Player
 from song import Song
+from webcasts import WebcastsDB
     
 class WebcastView(ListView):    
     __gsignals__ = {
@@ -49,7 +50,17 @@ class WebcastView(ListView):
         
         self.set_expand_column(0)
         Dispatcher.connect("play-webcast", self.on_dispatcher_play_webcast)
+        Dispatcher.connect("being-quit", lambda obj: self.save())
         
+        self.limit_number = 25
+        
+        if WebcastsDB.isloaded():
+            self.__on_db_loaded(WebcastsDB)
+        else:    
+            WebcastsDB.connect("loaded", self.__on_db_loaded)
+            
+    def __on_db_loaded(self, db):
+        self.load()
         
     def draw_mask(self, cr, x, y, width, height):    
         draw_alpha_mask(cr, x, y, width, height, "layoutLeft")
@@ -137,7 +148,7 @@ class WebcastView(ListView):
         return highlight_item.get_webcast()
     
     def on_dispatcher_play_webcast(self, obj, webcast):
-        self.add_webcasts([webcast], play=True)
+        self.add_webcasts([webcast], play=True, pos=0)
         
     def add_webcasts(self, webcasts, pos=None, sort=False, play=False):    
         if not webcasts:
@@ -151,6 +162,12 @@ class WebcastView(ListView):
             if not self.items:
                 self.emit_add_signal()
             self.add_items(webcast_items, pos, sort)    
+            
+            if len(self.items) > self.limit_number:
+                being_delete_items = self.items[self.limit_number:]
+                if self.highlight_item in being_delete_items:
+                    being_delete_items.remove(self.highlight_item)
+                self.delete_items(being_delete_items)
             
         if len(webcasts) >= 1 and play:
             del self.select_rows[:]
@@ -166,9 +183,27 @@ class WebcastView(ListView):
             self.set_highlight(self.items[self.items.index(WebcastItem(webcast))])
             self.visible_highlight()
             self.queue_draw()
+        else:    
+            self.add_webcasts(webcast, pos=0)
+            self.set_highlight(self.items[0])
+            self.visible_highlight()
+            self.queue_draw()
             
     def emit_add_signal(self):            
         self.emit("begin-add-items")
+        
+    def load(self):
+        webcast_infos = WebcastsDB.get_preview_items()
+        if webcast_infos:
+            self.add_webcasts(webcast_infos)
+            
+    def save(self):        
+        if not self.items:
+            return
+        
+        webcast_infos = [ item.webcast for item in self.items]
+        WebcastsDB.save_preview_db(webcast_infos)
+        
 
         
 class MultiDragWebcastView(ListView):        
@@ -202,3 +237,5 @@ class MultiDragWebcastView(ListView):
     
     def __on_right_press_items(self, widget, x, y, item, select_items):
         pass
+    
+        

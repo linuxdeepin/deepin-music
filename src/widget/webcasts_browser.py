@@ -93,19 +93,19 @@ class WebcastListItem(gobject.GObject):
     
     __gsignals__ = {"redraw-request" : ( gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),}
     
-    def __init__(self, tags, draw_collect=True):
+    def __init__(self, tags, draw_collect=False):
         gobject.GObject.__init__(self)
         
         self.webcast = Song()
         self.webcast.init_from_dict(tags)
         self.webcast.set_type("webcast")
         if draw_collect:
-            self.is_collected = WebcastsDB.is_collected(tags["uri"])        
+            self.is_collected = True
         else:    
-            self.is_collected = False
+            self.is_collected = WebcastsDB.is_collected(tags["uri"])        
+
         self.webcast["collect"] = self.is_collected
         self.index = None
-        self.draw_collect_flag = draw_collect
         self.webcast_normal_pixbuf = app_theme.get_pixbuf("webcast/webcast_normal.png").get_pixbuf()
         self.webcast_press_pixbuf = app_theme.get_pixbuf("webcast/webcast_press.png").get_pixbuf()
         self.collect_normal_pixbuf = app_theme.get_pixbuf("webcast/collect_normal.png").get_pixbuf()
@@ -154,14 +154,13 @@ class WebcastListItem(gobject.GObject):
         render_item_text(cr, self.title, rect, in_select, in_highlight)
         
     def render_collect_icon(self, cr, rect, in_select, in_highlight):    
-        if self.draw_collect_flag:
-            icon_y = rect.y + (rect.height - self.collect_icon_h) / 2
-            rect.x += self.collect_icon_padding_x
-            if self.is_collected:
-                pixbuf = self.collect_press_pixbuf
-            else:    
-                pixbuf = self.collect_normal_pixbuf
-            draw_pixbuf(cr, pixbuf, rect.x , icon_y)
+        icon_y = rect.y + (rect.height - self.collect_icon_h) / 2
+        rect.x += self.collect_icon_padding_x
+        if self.is_collected:
+            pixbuf = self.collect_press_pixbuf
+        else:    
+            pixbuf = self.collect_normal_pixbuf
+        draw_pixbuf(cr, pixbuf, rect.x , icon_y)
         
     def render_block(self, cr, rect, in_select, in_highlight):    
         pass
@@ -182,6 +181,7 @@ class WebcastListItem(gobject.GObject):
             self.is_collected = False
         else:    
             self.is_collected = True
+        self.webcast["collect"] = self.is_collected
         self.emit_redraw_request()
         
     def set_draw_collect(self, value):    
@@ -800,7 +800,7 @@ class WebcastsBrowser(gtk.VBox):
             item.toggle_is_collected()
             if item.is_collected:
                 tags = item.webcast.get_dict()
-                self.collect_view.add_items([WebcastListItem(tags, False)])                
+                self.collect_view.add_items([WebcastListItem(tags, True)])                
             else:    
                 for c_item in self.collect_view.items:
                     if c_item == item:

@@ -43,4 +43,3 @@ def enable(exaile):
 
 def disable(exaile):
     audio_karaoke.release()
-
