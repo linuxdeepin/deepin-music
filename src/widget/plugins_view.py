@@ -231,9 +231,9 @@ class PluginsManager(gtk.VBox):
                     return
             item.toggle_enabled()    
             
-        plugin_name = "<b>%s: </b>%s" % (_("插件"), item.pluginfo["Name"])    
+        plugin_name = "<b>%s: </b>%s" % (_("插件"), utils.xmlescape(item.pluginfo["Name"]))    
         plugin_authors = "<b>%s: </b>%s" % (_("插件作者"), 
-                                                         " ".join(item.pluginfo["Authors"]))
+                                                         utils.xmlescape(" ".join(item.pluginfo["Authors"])))
         plugin_des = item.pluginfo["Description"]        
         self.plugin_name.set_text(plugin_name)
         self.plugin_authors.set_text(plugin_authors)

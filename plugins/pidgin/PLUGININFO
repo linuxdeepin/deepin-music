@@ -1,4 +1,4 @@
 Version='0.0.1'
-Authors=['houshao55@gmail.com']
+Authors=["SmallEvilbeast <houshao55@gmail.com>"]
 Name=_('Pidgin Notify')
 Description=_('Pops up a notification when playback of a track starts')

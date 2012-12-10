@@ -1,0 +1,4 @@
+Version='0.0.1'
+Authors=["SmallEvilBeast <houshao55@gmail.com>"]
+Name=_('Karaoke')
+Description=_('Removes voice from audio')
