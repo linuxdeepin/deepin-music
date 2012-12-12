@@ -49,13 +49,11 @@ class WebcastsBrowser(gtk.VBox, SignalContainer):
         self.__init_webcastbar()
         
         # Init iconview.
-        self.region_view = self.get_icon_view("region_en")
-        self.region_view_sw = self.region_view.get_scrolled_window()
-        self.genre_view = self.get_icon_view("region")
-        self.genre_view_sw = self.genre_view.get_scrolled_window()
+        self.metro_view = self.get_icon_view()
+        self.metro_view_sw = self.metro_view.get_scrolled_window()
         
         self.page_box = gtk.VBox()
-        self.page_box.add(self.region_view_sw)
+        self.page_box.add(self.metro_view_sw)
         
         # webcasts view
         self.webcast_view = self.get_webcast_view()
@@ -63,6 +61,9 @@ class WebcastsBrowser(gtk.VBox, SignalContainer):
         
         # init listview page.
         self.init_listview_page()
+        
+        
+        self.current_category = "region"
         
         body_paned = HPaned(handle_color=app_theme.get_color("panedHandler"))
         body_paned.add1(self.webcastbar)
@@ -96,18 +97,13 @@ class WebcastsBrowser(gtk.VBox, SignalContainer):
         self.load_view_data()
         
     def __init_webcastbar(self):    
-        self.source_data = OrderedDict()
-        self.source_data["region"] = _("国内广播")
-        self.source_data["genre"] = _("流派广播")        
-        # self.source_data["foreign"]  = _("国外广播")
-        # self.source_data["network"] = _("网络广播")
-        # self.source_data["music"]  = _("音乐广播")
-        # self.source_data["finance"] = _("财经广播")
-        # self.source_data["sports"] = _("体育广播")
         self.webcastbar = TreeView(enable_drag_drop=False, enable_multiple_select=False)
+        self.webcastbar.connect("single-click-item", self.on_webcastbar_single_click_item)
         items = []
-        items.append(CategroyTreeItem(self.source_data["region"], lambda : switch_tab(self.page_box, self.region_view_sw)))
-        items.append(CategroyTreeItem(self.source_data["genre"], lambda : switch_tab(self.page_box, self.genre_view_sw)))
+        items.append(CategroyTreeItem("按地域", category="region"))
+        items.append(CategroyTreeItem("按流派", category="genre" ))
+        items.append(CategroyTreeItem("按地域(EN)", category="region_en"))
+        items.append(CategroyTreeItem("按流派(EN)", category="genre_en"))
         self.webcastbar.add_items(items)
         self.webcastbar.select_items([self.webcastbar.visible_items[0]])
         self.webcastbar.set_size_request(121, -1)
@@ -115,6 +111,16 @@ class WebcastsBrowser(gtk.VBox, SignalContainer):
         
     def on_webcastbar_draw_mask(self, cr, x, y, w, h):    
         draw_alpha_mask(cr, x, y, w, h ,"layoutRight")
+        
+    def on_webcastbar_single_click_item(self, widget, item, column, x, y):    
+        widget = self.page_box.get_children()[0]
+        if widget != self.metro_view_sw:
+            switch_tab(self.page_box, self.metro_view_sw)            
+        
+        if self.current_category != item.category:
+            self.current_category = item.category
+            self.load_view_data()
+
         
     def init_listview_page(self):    
         self.listview_page = gtk.VBox()
@@ -140,23 +146,20 @@ class WebcastsBrowser(gtk.VBox, SignalContainer):
         switch_tab(self.page_box, self.listview_page)
         
     def load_view_data(self):    
-        region_child_datas = self.__db_query.get_info("region_en")[0]
-        genre_child_datas = self.__db_query.get_info("region")[0]
+        child_datas = self.__db_query.get_info(self.current_category)[0]
+        self.metro_view.clear()
+        self.metro_view.add_webcast_items(child_datas)
         
-        self.region_view.add_webcast_items(region_child_datas)
-        self.genre_view.add_webcast_items(genre_child_datas)
-        
-    def get_icon_view(self, category):
-        icon_view = WebcastIconView(category)
+    def get_icon_view(self):
+        icon_view = WebcastIconView()
         icon_view.connect("single-click-item", self.on_iconview_single_click_item)
         return icon_view
     
     
     def on_iconview_single_click_item(self, widget, item, x, y):
-        category = widget.category
+        category = self.current_category
         title = item.title
         self.switch_to_listview(category, title)
-    
         
     def get_webcast_view(self):    
         return MultiDragWebcastView()

@@ -253,13 +253,12 @@ class MultiDragWebcastView(ListView):
             
 class WebcastIconView(IconView):    
     
-    def __init__(self, category, padding_x=18, padding_y=18):
+    def __init__(self, padding_x=18, padding_y=18):
         IconView.__init__(self, padding_x=padding_x, padding_y=padding_y)
         
         targets = [("text/deepin-webcasts", gtk.TARGET_SAME_APP, 1), ("text/uri-list", 0, 2)]
         self.drag_source_set(gtk.gdk.BUTTON1_MASK, targets, gtk.gdk.ACTION_COPY)
         self.connect("drag-data-get", self.__on_drag_data_get) 
-        self.category = category
         
     def __on_drag_data_get(self, widget, context, selection, info, timestamp):        
         # item = widget.highlight_item

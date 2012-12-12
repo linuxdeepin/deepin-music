@@ -35,14 +35,14 @@ from constant import DEFAULT_FONT_SIZE, LIST_WIDTH
 
         
 class CategroyTreeItem(TreeItem):    
-    def __init__(self, title, callback=None):
+    def __init__(self, title, category):
         TreeItem.__init__(self)
         self.column_index = 0
         self.side_padding = 5
         self.item_height = 37
         self.title = title
         self.item_width = 121
-        self.press_callback = callback
+        self.category = category
         
     def get_height(self):    
         return self.item_height
@@ -100,8 +100,7 @@ class CategroyTreeItem(TreeItem):
         pass
     
     def single_click(self, column, offset_x, offset_y):
-        if self.press_callback:
-            self.press_callback()
+        pass
 
     def double_click(self, column, offset_x, offset_y):
         pass        
