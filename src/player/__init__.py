@@ -33,7 +33,6 @@ from utils import (fix_charset, ThreadRun, get_uris_from_asx,
                    get_uris_from_xspf, get_mime_type, get_scheme)
 
 
-
 from helper import Dispatcher
 
 
@@ -50,6 +49,8 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         "seeked"   : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),
         "loaded"   : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),
         "init-status" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),
+        "fetch-start" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,)),
+        "fetch-end" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,)),
         }
     
     def __init__(self):
@@ -248,6 +249,8 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
                 if uri:
                     song["uri"] = uri
                     self.__set_song(song, play, crossfade, seek)
+                self.emit("fetch-end", uri)    
+            self.fetch_song = None            
             
     def set_song(self, song, play=False, crossfade=None, seek=None):
         uri = song.get("uri")
@@ -255,6 +258,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         if mime_type in [ "audio/x-scpls", "audio/x-mpegurl", "video/x-ms-asf", "application/xspf+xml" ]:
             if get_scheme(song.get("uri")) != "file":
                 self.fetch_song = song
+                self.emit("fetch-start", song)
                 ThreadRun(self.async_fetch, self.play_radio, (song,), (play, crossfade, seek)).start()
             else:    
                 self.fetch_song = None

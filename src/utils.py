@@ -60,6 +60,8 @@ socket.setdefaulttimeout(DEFAULT_TIMEOUT)
 import common
 
 from xdg_support import get_cache_file
+from mycurl import public_curl, CurlException
+
 
 logger = newLogger("utils")
 fscoding = sys.getfilesystemencoding()
@@ -232,11 +234,9 @@ def read_entire_file(uri):
         f.close()
     else:    
         try:
-            f = urlopen(uri)
-            data = f.read()
-            f.close()
-        except:    
-            logger.logexception("failed read %s", uri)
+            data = public_curl.get(uri)
+        except CurlException, e:    
+            logger.logexception("failed read %s, %s", uri, e)
             data = ""
     return data        
     
@@ -340,7 +340,10 @@ class XSPFParser(handler.ContentHandler):
 
     def endElement(self, name):
         if name == "location":
-            self.uris.append(self.content)
+            if self.content.startswith("http"):
+                self.uris.insert(0, self.content)
+            else:    
+                self.uris.append(self.content)
 
 def get_uris_from_xspf(uri):
     try: 
@@ -365,11 +368,20 @@ def get_uris_from_asx(uri):
         links.extend([ ref.getAttribute('href')
                 for ref in d.getElementsByTagName('ref')
                 if ref.hasAttribute('href') ])
+        
+        links.extend([ref.getAttribute("href")
+                       for ref in d.getElementsByTagName("Ref")
+                       if ref.hasAttribute("href")])
+        
         for link in links:
             if link[-4:] == ".asx" or (link.find("?") != -1 and link[link.find("?") - 4:link.find("?")] == ".asx"):
                 uri_asx_list.append(link)
             else:
-                uri_list.append(link)
+                if link.startswith("http"):
+                    uri_list.insert(0, link)
+                else:    
+                    uri_list.append(link)
+                
     return uri_list
 
 def print_timeing(func):

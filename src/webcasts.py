@@ -27,7 +27,9 @@ from utils import load_db, save_db
 from xdg_support import get_config_file
 
 class WebcastsDatabase(gobject.GObject):
-    __gsignals__ = {"loaded" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ())}
+    __gsignals__ = {
+        "loaded" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),
+        }
     
     def __init__(self):
         gobject.GObject.__init__(self)
@@ -110,5 +112,6 @@ class WebcastsDatabase(gobject.GObject):
         
     def save(self):    
         pass
+    
         
 WebcastsDB = WebcastsDatabase()        

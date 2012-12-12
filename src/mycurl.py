@@ -204,3 +204,6 @@ class MyCurl(Logger):
             raise CurlException(e)
         crl.close()
         return crl.fp.getvalue()
+    
+public_curl = MyCurl(header=['User-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.4 ' \
+                                 '(KHTML, like Gecko) Chrome/22.0.1229.94 Safari/537.4',])    

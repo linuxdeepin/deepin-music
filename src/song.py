@@ -74,6 +74,7 @@ description hidden album_cover_url station info_supp station_track_url
 #lastplayed #added #date #mtime #ctime #rate #progress #bitrate #size #stream_offset seek
 sort_title sort_artist sort_album sort_genre search real_uri id collect
 ssid company rating_avg subtype aid sid like
+tag categroys genres country location comment
 """.split()
 
 class Song(dict, Logger):

@@ -22,11 +22,7 @@
 
 
 import gtk
-from dtk.ui.label import Label
 from dtk.ui.draw import draw_text
-from dtk.ui.utils import get_content_size
-
-from widget.skin import app_theme
 from library import MediaDB
 from player import Player
 from nls import _
@@ -47,6 +43,8 @@ class PlayInfo(gtk.EventBox):
         MediaDB.connect("simple-changed",self.__on_change)
         Player.bin.connect("buffering", self.__on_buffering)
         Player.connect("init-status", self.__on_player_init_status)
+        Player.connect("fetch-start", self.on_player_fetch_start)
+        Player.connect("fetch-end", self.on_player_fetch_end)
         
         self.connect("expose-event", self.on_expose_event)
         self.padding_x = 0
@@ -72,6 +70,13 @@ class PlayInfo(gtk.EventBox):
                   border_color="#000000",
                   text_color = self.text_color,
                   ) 
+        
+    def on_player_fetch_start(self, player, song):    
+        self.set_text("获取网络地址... %s" % song.get("title"))
+        
+    def on_player_fetch_end(self, player, uri):    
+        if not uri:
+            self.update(player.song)
         
     def __on_player_init_status(self, player):    
         self.set_text(_("Deepin Music") + " for Linux Deepin")

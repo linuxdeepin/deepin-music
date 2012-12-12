@@ -243,7 +243,7 @@ class MediaDatebase(gobject.GObject, Logger):
     def del_property(self, song, keys):        
         '''delete song property'''
         if not song: return False
-        self.set_dirty()
+        self.set_dirty(), 
         
         if not isinstance(keys, (list, tuple)):
             keys = [ keys ]
