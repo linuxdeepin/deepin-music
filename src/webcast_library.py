@@ -20,6 +20,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import gobject
 from threading import Condition
 from contextlib import contextmanager 
@@ -29,10 +30,12 @@ from song import Song
 from xdg_support import get_config_file
 
 import utils
+from nls import _
 
 
 AUTOSAVE_TIMEOUT = 1000 * 60 * 5 # 5min
 SIGNAL_DB_QUERY_FIRED = 50
+DEFAULT_DB = os.path.join((os.path.dirname(os.path.realpath(__file__))), "data", "all_webcasts.db")
 
 class WebcastDatebase(gobject.GObject, Logger):
     
@@ -63,8 +66,8 @@ class WebcastDatebase(gobject.GObject, Logger):
         self.__dirty = False
         self.__reset_queued_signal()
         
-        self.__user_save_db = ""
-        self.__default_db = ""
+        self.__user_save_db = get_config_file("all_webcasts.db")
+        self.__default_db = DEFAULT_DB
         
     @contextmanager
     def keep_operation(self):
@@ -104,14 +107,14 @@ class WebcastDatebase(gobject.GObject, Logger):
         
         with self.keep_signal():
             try:
-                if self.__signal_to_fire["added"]:
-                    self.emit("added", self.__signal_to_fire["added"])
-                elif self.__signal_to_fire["removed"]:    
-                    self.emit("removed", self.__signal_to_fire["removed"])
-                elif self.__signal_to_fire["changed"]:
-                    self.emit("changed", self.__signal_to_fire["changed"])
-                elif self.__signal_to_fire["quick-changed"]:    
-                    self.emit("quick-changed", self.__signal_to_fire["quick-changed"])
+                if self.__queued_signal["added"]:
+                    self.emit("added", self.__queued_signal["added"])
+                elif self.__queued_signal["removed"]:    
+                    self.emit("removed", self.__queued_signal["removed"])
+                elif self.__queued_signal["changed"]:
+                    self.emit("changed", self.__queued_signal["changed"])
+                elif self.__queued_signal["quick-changed"]:    
+                    self.emit("quick-changed", self.__queued_signal["quick-changed"])
             except:        
                 self.logexception("Failed fire queued signal.")
                 
@@ -268,7 +271,7 @@ class WebcastDatebase(gobject.GObject, Logger):
         with self.keep_operation():
             songs = self.__songs.values()
             
-        objs = [ song.get_dict() for song in songs if song not in self.__hidden ]    
+        objs = [ song.get_dict() for song in songs if song not in self.__hiddens ]    
         utils.save_db(objs, get_config_file(self.__user_save_db))
         self.__dirty = False
         
@@ -283,6 +286,10 @@ class WebcastDatebase(gobject.GObject, Logger):
         try:
             db_objs = utils.load_db(self.__user_save_db)
         except:    
+            db_objs = None
+
+            
+        if db_objs is None:    
             save_flag = True
             self.logexception("Faild load user db, will to load default db")
             try:
@@ -295,11 +302,12 @@ class WebcastDatebase(gobject.GObject, Logger):
                 s = Song(obj)
                 s.set_type(self.__type)
                 if not self.__songs.has_key(s.get("uri")):
+                    self.logdebug("load webcast %s" % s)
                     self.add(s)
                     
         if save_flag:            
             self.set_dirty()
-            self.save()
+            self.asyc_save()
             
         self.__dirty = False            
 
@@ -328,7 +336,6 @@ class WebcastQuery(gobject.GObject, Logger):
         "added" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,)),
         "removed" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,)),
         "update-songs" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,)),
-        "quick-update-song" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,))
         }
     
     def __init__(self):
@@ -376,17 +383,27 @@ class WebcastQuery(gobject.GObject, Logger):
             
     def __reset_signal_queue(self):
         self.__signal_to_fire = {
-            "added-songs" : set(),
-            "removed-songs" : set(),
+            "added" : set(),
+            "removed" : set(),
             "update-songs" : set(),
-            "quick-update-songs" : set()
             }
         
     def __fire_queued_signal(self):    
         with self.keep_signal():
             try:
-                if self.__signal_to_fire["added"]
-        
+                if self.__signal_to_fire["added"]:
+                    self.emit("added", self.__signal_to_fire["added"])
+                if self.__signal_to_fire["removed"]:
+                    self.emit("removed", self.__signal_to_fire["removed"])
+                if self.__signal_to_fire["update-songs"]:
+                    self.emit("update-songs", self.__signal_to_fire["update-songs"])
+            except:        
+                self.logexception("Failed fire queued signal")
+                
+            self.__reset_signal_queue()    
+            
+        return True    
+            
     def get_all_songs(self):    
         return WebcastDB.get_all_songs()
     
@@ -424,21 +441,25 @@ class WebcastQuery(gobject.GObject, Logger):
         
         for category in categorys:
             self.__tree.setdefault(category, ({}, set()))
-            self.__tree.setdefault[category][1].add(song)
+            self.__tree[category][1].add(song)
             
             if category in self.multiple_category.keys():
                 child_key = self.multiple_category[category]
                 
                 if child_key == "location":
-                    self.__tree[category][0].setdefault(location, set())
-                    self.__tree[category][0][location].add(song)
+                    if location:
+                        self.__tree[category][0].setdefault(location, set())
+                        self.__tree[category][0][location].add(song)
                     
                 elif child_key == "country":    
-                    self.__tree[category][0].setdefault(country, set())
-                    self.__tree[category][0][country].add(song)
+                    if country:
+                        self.__tree[category][0].setdefault(country, set())
+                        self.__tree[category][0][country].add(song)
     
                 elif child_key == "genres":    
                     for genre in genres:
+                        if not genre:
+                            continue
                         self.__tree[category][0].setdefault(genre, set())
                         self.__tree[category][0][genre].add(song)
                     
@@ -507,34 +528,55 @@ class WebcastQuery(gobject.GObject, Logger):
                         use_quick_update = False
                         break
                     
+                    
+            will_removed = False        
             if not old_keys_values.has_key("categorys"): categorys = song.get("categorys")
             else: categorys = song.get("categorys")
             
-            if not old_keys_values.has_key("genres"): genres = song.get("genres")
-            else: genres = song.get("genres")
+            if not old_keys_values.has_key("genres"): 
+                genres = song.get("genres")
+            else:
+                genres = old_keys_values.get("genres")
+                will_removed = True
             
-            if not old_keys_values.has_key("country"): country = song.get("country")
-            else: country = song.get("country")
+            if not old_keys_values.has_key("country"): 
+                country = song.get("country")
+            else:
+                country = old_keys_values.get("country")
+                will_removed = True
             
-            if not old_keys_values.has_key("location"): location = song.get("location")
-            else: location = song.get("location")
-            
+            if not old_keys_values.has_key("location"): 
+                location = song.get("location")
+            else:
+                location = old_keys_values.get("location")
+                will_removed = True
             
             for category in categorys:
-                if song in self.__tree[category][1]:
-                    with self.keep_signal():
-                        self.signal_to_fire["remove-songs"].add(song)
-                        
-            try:            
-                self.__delete_cache(song, (categorys, genres, country, location))
-            except:    
-                pass
-            
-            
-            self.__add_cache(song)
+                if category in self.multiple_category.keys():
+                    if will_removed:
+                        if song in self.__tree[category][1]:
+                            try:            
+                                self.__delete_cache(song, (categorys, genres, country, location))
+                            except:    
+                                pass
+                            
+                            self.__add_cache(song)                            
+                            
             
             with self.keep_signal():
-                if use_quick_update:
-                    self.__signal_to_fire["quick-update-songs"].add(song)
-                else:    
-                    self.__signal_to_fire["added-songs"].add(song)
+                self.signal_to_fire["update-songs"].add(song)
+                
+                 
+    def get_info(self, category, child_category=None):                    
+        my_data = self.__tree[category]
+        if child_category is None:
+            return my_data[0].keys(), len(my_data[1])
+        else:
+            return ([], len(my_data[0][child_category]))
+        
+    def get_songs(self, category, child_category=None):    
+        my_data = self.__tree[category]
+        if child_category is None:
+            return my_data[1]
+        else:
+            return my_data[0][child_category]

@@ -23,14 +23,15 @@
 import gtk
 import gobject
 from dtk.ui.listview import ListView
+from dtk.ui.iconview import IconView
+from dtk.ui.scrolled_window import ScrolledWindow
 
 
-from widget.ui_utils import draw_alpha_mask
-from widget.webcast_item import WebcastItem
+from widget.ui_utils import draw_alpha_mask, draw_single_mask
+from widget.webcast_item import WebcastIconItem, WebcastListItem
 from helper import Dispatcher
 from player import Player
 from song import Song
-from webcasts import WebcastsDB
     
 class WebcastView(ListView):    
     __gsignals__ = {
@@ -48,22 +49,25 @@ class WebcastView(ListView):
         self.connect("button-press-event", self.on_button_press_event)
         self.connect("delete-select-items", self.try_emit_empty_signal)
         
-        self.set_expand_column(0)
+        self.set_expand_column(1)
         Dispatcher.connect("play-webcast", self.on_dispatcher_play_webcast)
-        Dispatcher.connect("being-quit", lambda obj: self.save())
-        
+        # Dispatcher.connect("being-quit", lambda obj: self.save())
         self.limit_number = 25
+
         
-        if WebcastsDB.isloaded():
-            self.__on_db_loaded(WebcastsDB)
-        else:    
-            WebcastsDB.connect("loaded", self.__on_db_loaded)
-            
-    def __on_db_loaded(self, db):
-        self.load()
         
-    def draw_mask(self, cr, x, y, width, height):    
-        draw_alpha_mask(cr, x, y, width, height, "layoutLeft")
+    def draw_mask(self, cr, x, y, width, height):            
+        draw_alpha_mask(cr, x, y, width, height, "layoutMiddle")
+        
+    def draw_item_hover(self, cr, x, y, w, h):
+        draw_single_mask(cr, x + 1, y, w - 2, h, "globalItemHover")
+        
+    def draw_item_select(self, cr, x, y, w, h):    
+        draw_single_mask(cr, x + 1, y, w - 2, h, "globalItemSelect")
+        
+    def draw_item_highlight(self, cr, x, y, w, h):    
+        draw_single_mask(cr, x + 1, y, w - 2, h, "globalItemHighlight")
+        
         
     def try_emit_empty_signal(self, widget, items):    
         if len(self.items) <= 0:
@@ -156,7 +160,7 @@ class WebcastView(ListView):
         if not isinstance(webcasts, (list, tuple, set)):
             webcasts = [ webcasts ]
             
-        webcast_items = [ WebcastItem(webcast) for webcast in webcasts if webcast not in self.get_webcasts()]    
+        webcast_items = [ WebcastListItem(webcast) for webcast in webcasts if webcast not in self.get_webcasts()]    
         
         if webcast_items:
             if not self.items:
@@ -179,8 +183,9 @@ class WebcastView(ListView):
             
     def set_highlight_webcast(self, webcast):        
         if not webcast: return 
-        if WebcastItem(webcast) in self.items:
-            self.set_highlight(self.items[self.items.index(WebcastItem(webcast))])
+        webcast_item = WebcastListItem(webcast)
+        if webcast_item in self.items:
+            self.set_highlight(self.items[self.items.index(webcast_item)])
             self.visible_highlight()
             self.queue_draw()
         else:    
@@ -191,18 +196,6 @@ class WebcastView(ListView):
             
     def emit_add_signal(self):            
         self.emit("begin-add-items")
-        
-    def load(self):
-        webcast_infos = WebcastsDB.get_preview_items()
-        if webcast_infos:
-            self.add_webcasts(webcast_infos)
-            
-    def save(self):        
-        if not self.items:
-            return
-        
-        webcast_infos = [ item.webcast for item in self.items]
-        WebcastsDB.save_preview_db(webcast_infos)
         
 
         
@@ -219,6 +212,15 @@ class MultiDragWebcastView(ListView):
         
     def draw_mask(self, cr, x, y, width, height):            
         draw_alpha_mask(cr, x, y, width, height, "layoutMiddle")
+        
+    def draw_item_hover(self, cr, x, y, w, h):
+        draw_single_mask(cr, x + 1, y, w - 2, h, "globalItemHover")
+        
+    def draw_item_select(self, cr, x, y, w, h):    
+        draw_single_mask(cr, x + 1, y, w - 2, h, "globalItemSelect")
+        
+    def draw_item_highlight(self, cr, x, y, w, h):    
+        draw_single_mask(cr, x + 1, y, w - 2, h, "globalItemHighlight")
         
     def get_selected_webcasts(self):    
         webcasts = None
@@ -238,4 +240,47 @@ class MultiDragWebcastView(ListView):
     def __on_right_press_items(self, widget, x, y, item, select_items):
         pass
     
+    def get_scrolled_window(self):
+        scrolled_window = ScrolledWindow(0, 0)
+        scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+        scrolled_window.add_child(self)
+        return scrolled_window
+    
+    def add_webcasts(self, songs):
+        items = [ WebcastListItem(song) for song in songs]
+        self.add_items(items)
+    
+            
+class WebcastIconView(IconView):    
+    
+    def __init__(self, category, padding_x=18, padding_y=18):
+        IconView.__init__(self, padding_x=padding_x, padding_y=padding_y)
         
+        targets = [("text/deepin-webcasts", gtk.TARGET_SAME_APP, 1), ("text/uri-list", 0, 2)]
+        self.drag_source_set(gtk.gdk.BUTTON1_MASK, targets, gtk.gdk.ACTION_COPY)
+        self.connect("drag-data-get", self.__on_drag_data_get) 
+        self.category = category
+        
+    def __on_drag_data_get(self, widget, context, selection, info, timestamp):        
+        # item = widget.highlight_item
+        # if not item: return
+        # channel_info = str([ item.chl ])
+        # selection.set("text/deepin-radios", 8, channel_info)
+        pass
+        
+    def add_webcast_items(self, items):    
+        webcast_items = [ WebcastIconItem(item) for item in items]
+        if webcast_items:
+            self.add_items(webcast_items)
+            
+    def draw_mask(self, cr, x, y, w, h):    
+        draw_alpha_mask(cr, x, y, w, h ,"layoutRight")
+        return False
+        
+    def get_scrolled_window(self):   
+        scrolled_window = ScrolledWindow(0, 0)
+        scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+        scrolled_window.add_child(self)
+        return scrolled_window
+    
+    

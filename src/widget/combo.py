@@ -21,6 +21,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import gtk
+import pango
 import gobject
 from dtk.ui.menu import Menu
 from dtk.ui.draw import draw_pixbuf
@@ -328,5 +329,60 @@ class PromptButton(gtk.Button):
             Tooltip.text(self, self.prompt_text)
             self.prompt_pixbuf = temp_pixbuf.scale_simple(16, 16, gtk.gdk.INTERP_BILINEAR)
             self.update_size()
+
+gobject.type_register(PromptButton)
+
+
+class TextPrompt(gtk.Button):    
+    
+    def __init__(self, text="", max_width=135):
+        
+        # Init.
+        gtk.Button.__init__(self)
+        
+        self.padding_x = 5
+        self.max_width = max_width
+        self.prompt_text = text
+        self.font_size = 9
+        self.widget_h = 26
+        
+        self.bg_left = app_theme.get_pixbuf("combo/prompt_left.png").get_pixbuf()
+        self.bg_middle = app_theme.get_pixbuf("combo/prompt_middle.png").get_pixbuf()
+        self.bg_right = app_theme.get_pixbuf("combo/prompt_right.png").get_pixbuf()
+        self.cache_bg_pixbuf = CachePixbuf()
+        self.update_size()
+        self.connect("expose-event", self.on_expose_event)
+        
+    def update_size(self):    
+        text_w, text_h = get_content_size(self.prompt_text, self.font_size)
+        widget_w  = text_w + self.padding_x * 2
+        if widget_w > self.max_width:
+            widget_w = self.max_width
+        self.set_size_request(widget_w, self.widget_h)
+        self.queue_draw()
+        
+    def on_expose_event(self, widget, event):    
+        cr = widget.window.cairo_create()
+        rect = widget.allocation
+        draw_pixbuf(cr, self.bg_left, rect.x, rect.y)
+        bg_left_w = self.bg_left.get_width()
+        self.cache_bg_pixbuf.scale(self.bg_middle,  rect.width - bg_left_w * 2, self.bg_middle.get_height())
+        draw_pixbuf(cr, self.cache_bg_pixbuf.get_cache(), rect.x + bg_left_w, rect.y)
+        draw_pixbuf(cr, self.bg_right, rect.x + rect.width - bg_left_w, rect.y)
+        
+        # draw text.
+        text_rect = gtk.gdk.Rectangle(rect.x + self.padding_x, rect.y, 
+                                      rect.width  - self.padding_x * 2,
+                                      rect.height)
+        render_text(cr, self.prompt_text, text_rect,
+                    app_theme.get_color("labelText").get_color(),
+                    8)
+        
+        return True
+    
+    def set_text(self, text):
+        self.prompt_text = text
+        Tooltip.text(self, self.prompt_text)
+        self.update_size()
 
 gobject.type_register(PromptButton)

@@ -23,13 +23,12 @@
 
 import gtk
 
-from dtk.ui.utils import (alpha_color_hex_to_cairo, cairo_disable_antialias,
+from dtk.ui.utils import (cairo_disable_antialias,
                           color_hex_to_cairo, propagate_expose)
 from widget.local_browser import SimpleBrowser
 from widget.webcasts_browser import WebcastsBrowser
 from widget.radio_browser import RadioBrowser
 from widget.global_search import GlobalSearch
-from widget.skin import app_theme
 from widget.ui import SearchBox
 from widget.ui_utils import switch_tab, draw_line, draw_alpha_mask
 from helper import Dispatcher

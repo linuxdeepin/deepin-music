@@ -195,6 +195,10 @@ class DeepinMusicApp(Logger):
         MediaDB.connect("loaded", self.on_db_loaded)
         MediaDB.load()
         
+        # Loading WebcastDB
+        from webcast_library import WebcastDB
+        WebcastDB.load()
+        
         # Loading Chinese to Pinyin DB.
         from pinyin import TransforDB        
         TransforDB.load()        

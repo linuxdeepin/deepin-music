@@ -107,7 +107,7 @@ class SongView(ListView):
         
     def draw_item_highlight(self, cr, x, y, w, h):    
         draw_single_mask(cr, x + 1, y, w - 2, h, "globalItemHighlight")
-        
+         
     def get_songs(self):        
         songs = []
         for song_item in self.items:

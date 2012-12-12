@@ -34,7 +34,7 @@ from dtk.ui.paned import HPaned
 from library import MediaDB, DBQuery
 from helper import SignalContainer, Dispatcher
 from widget.skin import app_theme
-from widget.ui import SearchEntry
+from widget.ui import SearchEntry, BackButton
 from widget.song_view import MultiDragSongView
 from widget.ui_utils import (switch_tab, render_text, draw_alpha_mask, create_right_align,
                              create_separator_box, draw_range, draw_line)
@@ -311,11 +311,7 @@ class Browser(gtk.VBox, SignalContainer):
         self.back_hbox = gtk.HBox()
         self.back_hbox.set_size_request(-1, 26)
         self.back_hbox.set_no_show_all(True)
-        self.back_button = ImageButton(
-            app_theme.get_pixbuf("filter/back_normal.png"),
-            app_theme.get_pixbuf("filter/back_hover.png"),
-            app_theme.get_pixbuf("filter/back_press.png")
-            )
+        self.back_button = BackButton()
         self.back_button.connect("clicked", self.on_back_button_clicked)
         self.prompt_button = PromptButton()
         self.back_hbox.pack_start(self.back_button, False, False, 5)

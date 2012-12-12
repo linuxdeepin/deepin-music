@@ -31,6 +31,7 @@ import gobject
 import cairo
 import math
 import locale
+import md5
 
 
 import hashlib
@@ -1005,6 +1006,11 @@ def get_optimum_pixbuf(pixbuf, expect_width, expect_height, cut_middle_area=True
                                                expect_height)
     else:
         return pixbuf
+    
+    
+def get_fixed_value(string, num):    
+    md5_string = md5.md5(string).hexdigest()
+    return int(md5_string[0:5], 16) % 10
 
     
 global MAIN_WINDOW            

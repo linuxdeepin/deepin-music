@@ -631,3 +631,12 @@ class PlaymodeButton(gtk.Button):
         draw_pixbuf(cr, pixbuf, rect.x, rect.y)
         return True
         
+    
+class BackButton(ImageButton):    
+    
+    def __init__(self):
+        ImageButton.__init__(self,
+                             app_theme.get_pixbuf("filter/back_normal.png"),
+                             app_theme.get_pixbuf("filter/back_hover.png"),
+                             app_theme.get_pixbuf("filter/back_press.png")
+                             )
