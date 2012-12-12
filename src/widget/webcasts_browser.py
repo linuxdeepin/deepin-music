@@ -129,6 +129,7 @@ class WebcastsBrowser(gtk.VBox, SignalContainer):
                                           paddings=(10, 10, 0, 0))
         prompt_box = gtk.HBox()
         back_button = BackButton()
+        back_button.connect("clicked", self.on_backbutton_clicked)
         back_button_align = set_widget_gravity(back_button, gravity=(0.5, 0.5, 0, 0),
                                                paddings=(0, 0, 10, 5))
         prompt_box.pack_start(back_button_align, False, True)
@@ -136,6 +137,9 @@ class WebcastsBrowser(gtk.VBox, SignalContainer):
         
         self.listview_page.pack_start(prompt_box, False, True)
         self.listview_page.pack_start(self.webcast_view_sw, True, True)
+        
+    def on_backbutton_clicked(self, widget):    
+        switch_tab(self.page_box, self.metro_view_sw)
         
     def switch_to_listview(self, category, title):    
         self.text_prompt.set_text(title)
