@@ -25,6 +25,7 @@ import os
 import cStringIO
 
 import utils
+import chardet
 from common import get_audio_length
 
 SPACE = 0x0
@@ -402,12 +403,26 @@ def read_cuesheet(filename, cuefile):
         f = open(cuefile, 'r')
     except IOError, msg:
         raise CueException(msg)
+    else:
+        content = f.read()
+        try:
+            encoding = chardet.detect(content)["encoding"]
+        except Exception, e:    
+            raise CueException(e)
+        else:
+            try:
+                content = content.decode(encoding).encode("utf-8")
+            except Exception, e:    
+                raise CueException(e)
+    
     try:
-        sheet = parse(tokens(f.read()), filename)
+        sheet = parse(tokens(content), filename)
         if (not sheet.single_file_type()):
             raise CueException("invaild format")
         else:
             return sheet
+    except Exception, e:    
+        raise CueException(e)
     finally:
         f.close()
         

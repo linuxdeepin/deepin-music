@@ -280,6 +280,7 @@ class WebcastListItem(gobject.GObject):
     def render_title(self, cr, rect, in_select, in_highlight):    
         rect.x += self.title_padding_x
         rect.width -= self.title_padding_x * 2
+        
         render_item_text(cr, self.title, rect, in_select, in_highlight)
         
     def render_collect_icon(self, cr, rect, in_select, in_highlight):    

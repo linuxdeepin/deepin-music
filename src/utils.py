@@ -823,7 +823,9 @@ XML simple un/escape caracter
 def xmlescape(stri):
     """Escape a string in a manner suitable for XML/Pango."""
     stri = str(stri)
-    return stri.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+    stri = stri.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+    return stri.replace("'", "&apos;").replace('\"', "&quot;")
+
 
 def xmlunescape(stri):
     """Unescape a string in a manner suitable for XML/Pango."""

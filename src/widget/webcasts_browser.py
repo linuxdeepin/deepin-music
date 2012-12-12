@@ -161,3 +161,5 @@ class WebcastsBrowser(gtk.VBox, SignalContainer):
     def get_webcast_view(self):    
         return MultiDragWebcastView()
         
+    def save(self):
+        pass

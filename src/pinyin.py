@@ -49,9 +49,14 @@ class Transfer(object):
         self.spliter = value
         
     def to_unicode(self, chars):    
-        if not isinstance(chars, unicode):
-            return unicode(chars, "utf-8")
-        return chars
+        try:
+            if not isinstance(chars, unicode):
+                return unicode(chars, "utf-8")
+            else:
+                return chars
+        except:    
+            return chars
+        
             
     def convert_full(self, chars):
         unicode_chars = self.to_unicode(chars)

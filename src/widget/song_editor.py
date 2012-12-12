@@ -163,9 +163,9 @@ class SongInfo(gtk.VBox):
         
         # Update simpler.
         self.cover_image.set_from_pixbuf(CoverManager.get_pixbuf_from_song(song, 92, 92, False, False))
-        self.title_label.set_text(song.get_str("title"))
-        self.artist_label.set_text(song.get_str("artist"))
-        self.album_label.set_text(song.get_str("album"))
+        self.title_label.set_text(utils.xmlescape(song.get_str("title")))
+        self.artist_label.set_text(utils.xmlescape(song.get_str("artist")))
+        self.album_label.set_text(utils.xmlescape(song.get_str("album")))
         
         # Update detail.
         if self.song.get_type() not in ["cue", "local", "cdda"]:

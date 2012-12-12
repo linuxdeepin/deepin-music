@@ -283,9 +283,10 @@ class MediaDatebase(gobject.GObject, Logger):
             if os.path.exists(cue_file):
                 try:
                     cuesheet = read_cuesheet(path, cue_file)
-                except CueException:    
-                    song = [self.get_or_create_song({"uri":uri}, "local", read_from_file=True)]
-                    if song: return [ song ]
+                except CueException, e:    
+                    print e
+                    song = self.get_or_create_song({"uri":uri}, "local", read_from_file=True)
+                    if song: return [song]
                     else:
                         return []
                 else:

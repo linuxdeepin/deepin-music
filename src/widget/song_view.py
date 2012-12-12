@@ -245,9 +245,9 @@ class SongView(ListView):
 
     def add_songs(self, songs, pos=None, sort=False, play=False):    
         '''Add song to songlist.'''
-        if songs == None:
+        if not songs:
             return
-        if not isinstance(songs, (list, tuple)):
+        if not isinstance(songs, (list, tuple, set)):
             songs = [ songs ]
 
         song_items = [ SongItem(song) for song in songs if song not in self.get_songs()]
