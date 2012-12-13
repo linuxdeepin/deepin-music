@@ -179,7 +179,7 @@ class WebcastDatebase(gobject.GObject, Logger):
             with self.keep_signal():
                 self.__queued_signal["removed"].add(song)
                 
-    def set_property(self, song, key_values, use_quick_update=False):            
+    def set_property(self, song, key_values, use_quick_update=False, emit_update=True):            
         
         ret = True
         
@@ -201,11 +201,12 @@ class WebcastDatebase(gobject.GObject, Logger):
             except KeyError:    
                 pass
             
-        with self.keep_signal():    
-            if use_quick_update:
-                self.__queued_signal["quick-changed"].append((song, old_keys_values))
-            else:    
-                self.__queued_signal["changed"].append((song, old_keys_values))
+        if emit_update:    
+            with self.keep_signal():    
+                if use_quick_update:
+                    self.__queued_signal["quick-changed"].append((song, old_keys_values, key_values))
+                else:    
+                    self.__queued_signal["changed"].append((song, old_keys_values, key_values))
                 
         return ret        
     
@@ -232,7 +233,7 @@ class WebcastDatebase(gobject.GObject, Logger):
         self.logdebug("from %s delete property %s", song, keys)
         
         with self.keep_signal():
-            self.__queued_signal["changed"].append((song, old_keys_values))
+            self.__queued_signal["changed"].append((song, old_keys_values, {}))
                 
             
     def get_or_create_song(self, tags):        
@@ -513,7 +514,7 @@ class WebcastQuery(gobject.GObject, Logger):
             
     def on_db_changed(self, db, infos, use_quick_update=False):
         
-        for song, old_keys_values in infos:
+        for song, old_keys_values, new_key_values in infos:
             if old_keys_values.has_key("genres") \
                     or old_keys_values.has_key("location") \
                     or old_keys_values.has_key("country"):

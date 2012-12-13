@@ -363,17 +363,26 @@ def get_uris_from_asx(uri):
     while len(uri_asx_list) > 0:
         uri = uri_asx_list.pop()
         text = read_entire_file(uri)
-        d = dom_parseString(text)
-        links = [ ref.getAttribute('HREF')
-                for ref in d.getElementsByTagName('REF')
-                if ref.hasAttribute('HREF') ]
-        links.extend([ ref.getAttribute('href')
-                for ref in d.getElementsByTagName('ref')
-                if ref.hasAttribute('href') ])
-        
-        links.extend([ref.getAttribute("href")
-                       for ref in d.getElementsByTagName("Ref")
-                       if ref.hasAttribute("href")])
+        try:
+            d = dom_parseString(text)
+        except Exception, e:    
+            links = []
+        else:    
+            
+            links = [ ref.getAttribute('HREF')
+                      for ref in d.getElementsByTagName('REF')
+                      if ref.hasAttribute('HREF') ]
+            links.extend([ ref.getAttribute('href')
+                           for ref in d.getElementsByTagName('ref')
+                           if ref.hasAttribute('href') ])
+            
+            links.extend([ref.getAttribute("href")
+                          for ref in d.getElementsByTagName("Ref")
+                          if ref.hasAttribute("href")])
+            
+            links.extend([ref.getAttribute("href")
+                          for ref in d.getElementsByTagName("REF")
+                          if ref.hasAttribute("href")])
         
         for link in links:
             if link[-4:] == ".asx" or (link.find("?") != -1 and link[link.find("?") - 4:link.find("?")] == ".asx"):

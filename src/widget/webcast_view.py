@@ -60,7 +60,7 @@ class WebcastView(ListView):
         
     def on_db_update_songs(self, db, infos):    
         all_items = self.items
-        for song, tags in infos:
+        for song, tags, new_tags in infos:
             webcast_item = WebcastListItem(song)
             if webcast_item in all_items:
                 all_items[all_items.index(webcast_item)].update_webcast(song)

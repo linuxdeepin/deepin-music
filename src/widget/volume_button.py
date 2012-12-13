@@ -22,10 +22,13 @@
 
 import gtk
 import gobject
+import cairo
 
 from dtk.ui.cache_pixbuf import CachePixbuf
 from dtk.ui.draw import draw_pixbuf
-from dtk.ui.utils import set_cursor
+from dtk.ui.utils import set_cursor, cairo_disable_antialias, color_hex_to_cairo
+
+
 
 from widget.skin import app_theme
 
@@ -66,6 +69,11 @@ class VolumeButton(gtk.Button):
         self.fg_dpixbuf = app_theme.get_pixbuf("%s/fg.png" % self.volume_prefix)
         self.point_dpixbuf = app_theme.get_pixbuf("%s/point.png" % self.volume_prefix)
         self.update_state_dpixbufs(self.get_state_name(self.__value))
+        
+        # Init Dcolors.
+        self.fg_left_dcolor = app_theme.get_color("progressBarLeft")
+        self.fg_right_dcolor = app_theme.get_color("progressBarRight")
+        
         
         # Init Sizes.
         self.padding_x = 0
@@ -189,12 +197,27 @@ class VolumeButton(gtk.Button):
         # Draw progressbar foreground.
         if self.current_progress_width > 0:
             fg_height = self.fg_dpixbuf.get_pixbuf().get_height()
-            self.fg_cache_pixbuf.scale(self.fg_dpixbuf.get_pixbuf(), 
-                                       int(self.current_progress_width),
-                                       fg_height)
+            # self.fg_cache_pixbuf.scale(self.fg_dpixbuf.get_pixbuf(), 
+            #                            int(self.current_progress_width),
+            #                            fg_height)
         
             fg_y = rect.y + (rect.height - fg_height) / 2
-            draw_pixbuf(cr, self.fg_cache_pixbuf.get_cache(),  rect.x + self.fg_offset, fg_y)
+            # draw_pixbuf(cr, self.fg_cache_pixbuf.get_cache(),  rect.x + self.fg_offset, fg_y)
+            
+            lg_width = int(self.current_progress_width)
+            pat = cairo.LinearGradient(rect.x + self.fg_offset, fg_y, rect.x + self.fg_offset + lg_width, fg_y)
+            pat.add_color_stop_rgb(0.6, *color_hex_to_cairo(self.fg_left_dcolor.get_color()))
+            pat.add_color_stop_rgb(1.0, *color_hex_to_cairo(self.fg_right_dcolor.get_color()))
+            cr.set_operator(cairo.OPERATOR_OVER)
+            cr.set_source(pat)
+            cr.rectangle(rect.x + self.fg_offset, fg_y, lg_width, fg_height)
+            cr.fill()
+            
+            with cairo_disable_antialias(cr):
+                cr.set_line_width(1)
+                cr.set_source_rgba(1, 1, 1, 0.3)
+                cr.rectangle(rect.x + self.fg_offset, fg_y, lg_width, fg_height)
+                cr.stroke()
         
         # Draw point.
         point_y = rect.y + (rect.height - self.point_dpixbuf.get_pixbuf().get_height()) / 2

@@ -278,7 +278,7 @@ class WebcastListItem(gobject.GObject):
     def render_webcast_icon(self, cr, rect, in_select, in_highlight):    
         icon_x = rect.x + self.webcast_icon_padding_x 
         icon_y = rect.y + (rect.height - self.webcast_icon_h) / 2
-        if in_select:
+        if in_select or in_highlight:
             pixbuf = self.webcast_press_pixbuf
         else:    
             pixbuf = self.webcast_normal_pixbuf
