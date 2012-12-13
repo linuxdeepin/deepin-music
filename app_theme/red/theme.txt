@@ -24,6 +24,8 @@
  "globalItemSelect" : "#da9d9d",
  "globalItemHighlight" : "#c58a8a",
  "panedHandler" : "#d6d6d6",
+ "progressBarLeft" : "#9E0000",
+ "progressBarRight" : "#F14947",
  },	
  "alpha_colors" : {
      "frame" : ("#000000", 0.5),

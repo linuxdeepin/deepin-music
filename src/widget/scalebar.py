@@ -22,8 +22,10 @@
 
 import gtk
 import gobject
+import cairo
+
 from dtk.ui.draw import draw_pixbuf
-from dtk.ui.utils import is_left_button
+from dtk.ui.utils import is_left_button, cairo_disable_antialias
 from dtk.ui.cache_pixbuf import CachePixbuf
 
 from widget.skin import app_theme
@@ -51,6 +53,10 @@ class HScalebar(gtk.HScale):
         self.fg_cache_pixbuf = CachePixbuf()
         self.bg_cache_pixbuf = CachePixbuf()
         self.side_cache_pixbuf = CachePixbuf()
+        
+        # Colors
+        self.fg_left_dcolor = app_theme.get_color("progressBarLeft")
+        self.fg_right_dcolor = app_theme.get_color("progressBarRight")
         
         self.set_size_request(-1, self.bg_dpixbuf.get_pixbuf().get_height())
         
@@ -100,12 +106,35 @@ class HScalebar(gtk.HScale):
 
         
         if value > 0:
-            self.side_cache_pixbuf.scale(
-                fg_pixbuf, value + point_width, line_height)
-            draw_pixbuf(
-                cr, 
-                self.side_cache_pixbuf.get_cache(),
-                rect.x, line_y)
+            pat = cairo.LinearGradient(0, 0, value + point_width, 0)
+            pat.add_color_stop_rgb(0.7, *color_hex_to_cairo(self.fg_left_dcolor.get_color()))
+            pat.add_color_stop_rgb(1.0, *color_hex_to_cairo(self.fg_right_dcolor.get_color()))
+            cr.set_operator(cairo.OPERATOR_OVER)
+            cr.set_source(pat)
+            # cr.fill()
+            
+            # cr.set_source_rgb(*color_hex_to_cairo(self.fg_left_dcolor.get_color()))
+            cr.rectangle(rect.x, line_y, value + point_width, line_height)
+            cr.fill()
+            
+            with cairo_disable_antialias(cr):
+                cr.set_line_width(1)
+                cr.set_source_rgba(1, 1, 1, 0.7)
+                cr.move_to(rect.x, line_y + 1)
+                cr.rel_line_to(value + point_width, 0)
+                cr.stroke()
+                
+                cr.set_source_rgba(1, 1, 1, 0.3)
+                cr.move_to(rect.x, line_y + line_height)
+                cr.rel_line_to(value + point_width, 0)
+                cr.stroke()
+                
+            # self.side_cache_pixbuf.scale(
+            #     fg_pixbuf, value + point_width, line_height)
+            # draw_pixbuf(
+            #     cr, 
+            #     self.side_cache_pixbuf.get_cache(),
+            #     rect.x, line_y)
             
         if value > 0:    
             draw_pixbuf(cr, point_normal_pixbuf, x + value - point_width / 2 + 2, y)    
