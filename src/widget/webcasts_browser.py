@@ -100,8 +100,8 @@ class WebcastsBrowser(gtk.VBox, SignalContainer):
         self.webcastbar = TreeView(enable_drag_drop=False, enable_multiple_select=False)
         self.webcastbar.connect("single-click-item", self.on_webcastbar_single_click_item)
         items = []
-        items.append(CategroyTreeItem("按地域", category="region"))
-        items.append(CategroyTreeItem("按流派", category="genre" ))
+        items.append(CategroyTreeItem("按地域(CN)", category="region"))
+        items.append(CategroyTreeItem("按流派(CN)", category="genre" ))
         items.append(CategroyTreeItem("按地域(EN)", category="region_en"))
         items.append(CategroyTreeItem("按流派(EN)", category="genre_en"))
         self.webcastbar.add_items(items)
@@ -157,6 +157,7 @@ class WebcastsBrowser(gtk.VBox, SignalContainer):
     def get_icon_view(self):
         icon_view = WebcastIconView()
         icon_view.connect("single-click-item", self.on_iconview_single_click_item)
+        icon_view.connect("double-click-item", self.on_iconview_single_click_item)
         return icon_view
     
     
@@ -166,7 +167,10 @@ class WebcastsBrowser(gtk.VBox, SignalContainer):
         self.switch_to_listview(category, title)
         
     def get_webcast_view(self):    
-        return MultiDragWebcastView()
+        webcast_view = MultiDragWebcastView()
+        webcast_view.keymap.update({"BackSpace" : lambda : self.on_backbutton_clicked(None)})        
+        return webcast_view
+
         
     def save(self):
         pass

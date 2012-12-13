@@ -431,7 +431,8 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         if not self.__source:
             return
         song = self.__source.get_next_song(maunal)
-
+        
+        # self.fadeout_and_stop()
             
         if song:
             if config.getboolean("player", "crossfade") and  \

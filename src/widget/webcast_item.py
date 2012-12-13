@@ -112,6 +112,8 @@ class CategroyTreeItem(TreeItem):
 ITEM_COLORS = ["#98B54A", "#AA41B2", "#C9493B", "#4EA549",
                "#CB8D2A", "#54A9B4", "#A0428B", "#4965A3",
                "#5C94E7", "#9F415D"]         
+
+distance_random = utils.DistanceRandom(range(len(ITEM_COLORS)))
         
 class WebcastIconItem(gobject.GObject):
     
@@ -126,12 +128,13 @@ class WebcastIconItem(gobject.GObject):
         self.hover_padding_x = self.padding_x / 2        
         self.hover_padding_y = self.padding_y / 2
 
-        color_index = utils.get_fixed_value(title, len(ITEM_COLORS))
+        # color_index = utils.get_fixed_value(title, len(ITEM_COLORS))
+        color_index = distance_random.get()
         self.bg_color = ITEM_COLORS[color_index]
         self.title_padding_x = 10
         self.title_padding_y = 5
         self.title = title
-        
+        self.hover_color = "#34C0FE"
         self.hover_flag = False
         
     def emit_redraw_request(self):    
@@ -144,12 +147,12 @@ class WebcastIconItem(gobject.GObject):
         return self.cell_width + self.padding_y * 2
     
     def render(self, cr, rect):
-        if self.hover_flag:
-            padding_x = self.hover_padding_x
-            padding_y = self.hover_padding_y
-        else:    
-            padding_x = self.padding_x
-            padding_y = self.padding_y
+        # if self.hover_flag:
+        #     padding_x = self.hover_padding_x
+        #     padding_y = self.hover_padding_y
+        # else:    
+        padding_x = self.padding_x
+        padding_y = self.padding_y
         
         rect.x += padding_x
         rect.y += padding_y
@@ -182,7 +185,11 @@ class WebcastIconItem(gobject.GObject):
         cr.restore()
         
         cr.rectangle(*rect)
-        cr.set_source_rgb(*color_hex_to_cairo("#D6D6D6"))
+        if self.hover_flag:
+            side_color = self.hover_color
+        else:    
+            side_color = "#D6D6D6"
+        cr.set_source_rgb(*color_hex_to_cairo(side_color))
         cr.stroke()
         
         
@@ -260,7 +267,6 @@ class WebcastListItem(gobject.GObject):
         
         self.title_padding_x = 5
         self.title_padding_y = 5
-        self.title_w, self.title_h = get_content_size(self.title, DEFAULT_FONT_SIZE)
         
         self.collect_icon_padding_x = 2
         self.collect_icon_padding_y = 5
@@ -285,7 +291,7 @@ class WebcastListItem(gobject.GObject):
     def render_collect_icon(self, cr, rect, in_select, in_highlight):    
         icon_y = rect.y + (rect.height - self.collect_icon_h) / 2
         rect.x += self.collect_icon_padding_x
-        if self.is_collected:
+        if self.webcast.get("collected", False):
             pixbuf = self.collect_press_pixbuf
         else:    
             pixbuf = self.collect_normal_pixbuf
@@ -297,7 +303,7 @@ class WebcastListItem(gobject.GObject):
     def get_column_sizes(self):
         return [
             (self.webcast_icon_w + self.webcast_icon_padding_x * 2, self.webcast_icon_h + self.webcast_icon_padding_y * 2),
-            (100, self.title_h + self.title_padding_y * 2),
+            (100, 30),
             (self.collect_icon_w + self.collect_icon_padding_x * 2, 30),
             (50, 1)
             ]
@@ -319,6 +325,12 @@ class WebcastListItem(gobject.GObject):
         
     def get_webcast(self):    
         return self.webcast
+    
+    def update_webcast(self, webcast):
+        self.webcast = webcast
+        self.title = webcast.get("title")
+        self.emit_redraw_request()
+        
         
     def __hash__(self):    
         return hash(self.webcast.get("uri"))

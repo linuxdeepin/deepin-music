@@ -32,6 +32,7 @@ import cairo
 import math
 import locale
 import md5
+import random
 
 
 import hashlib
@@ -1013,6 +1014,31 @@ def get_optimum_pixbuf(pixbuf, expect_width, expect_height, cut_middle_area=True
 def get_fixed_value(string, num):    
     md5_string = md5.md5(string).hexdigest()
     return int(md5_string[0:5], 16) % 10
+
+class DistanceRandom(object):
+    '''
+    >>> r = DistanceRandom(range(10))
+    >>> for i in range(200):
+    >>>     print r.get()
+    '''
+    def __init__(self, v_range, v_distance=None):
+        if v_distance == None:
+            v_distance = len(v_range)
+        assert(len(v_range) >= v_distance >= 1)
+        self.freshed = v_range
+        self.dist = v_distance
+        self.used = []
+
+    def get(self):
+        if len(self.used) >= self.dist:
+            t = self.used.pop()
+            self.freshed.append(t)
+
+        v = self.freshed.pop(random.randint(0, len(self.freshed) - 1))
+        self.used.insert(0, v)
+
+        return v
+
 
     
 global MAIN_WINDOW            

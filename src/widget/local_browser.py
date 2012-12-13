@@ -27,7 +27,6 @@ import os
 import dtk.ui.tooltip as Tooltip
 from dtk.ui.draw import draw_pixbuf
 from dtk.ui.scrolled_window import ScrolledWindow
-from dtk.ui.button import ImageButton
 from dtk.ui.iconview import IconView
 from dtk.ui.paned import HPaned
 
@@ -37,7 +36,7 @@ from widget.skin import app_theme
 from widget.ui import SearchEntry, BackButton
 from widget.song_view import MultiDragSongView
 from widget.ui_utils import (switch_tab, render_text, draw_alpha_mask, create_right_align,
-                             create_separator_box, draw_range, draw_line)
+                             create_separator_box)
 from widget.outlookbar import OptionBar, SongImportBar
 from source.local import ImportFolderJob, ReloadDBJob
 from widget.combo import  PromptButton
@@ -330,7 +329,7 @@ class Browser(gtk.VBox, SignalContainer):
         
         # Layout on the right.
         content_box = gtk.VBox(spacing=5)
-        content_box.pack_start(search_hbox_align, False, False)
+        # content_box.pack_start(search_hbox_align, False, False)
         content_box.pack_start(self.switch_view_box, True, True)
         
         body_paned = HPaned(handle_color=app_theme.get_color("panedHandler"))

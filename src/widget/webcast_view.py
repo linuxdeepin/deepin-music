@@ -32,6 +32,7 @@ from widget.webcast_item import WebcastIconItem, WebcastListItem
 from helper import Dispatcher
 from player import Player
 from song import Song
+from webcast_library import WebcastDB
     
 class WebcastView(ListView):    
     __gsignals__ = {
@@ -53,7 +54,16 @@ class WebcastView(ListView):
         Dispatcher.connect("play-webcast", self.on_dispatcher_play_webcast)
         # Dispatcher.connect("being-quit", lambda obj: self.save())
         self.limit_number = 25
+        
+        WebcastDB.connect("changed", self.on_db_update_songs)
 
+        
+    def on_db_update_songs(self, db, infos):    
+        all_items = self.items
+        for song, tags in infos:
+            webcast_item = WebcastListItem(song)
+            if webcast_item in all_items:
+                all_items[all_items.index(webcast_item)].update_webcast(song)
         
         
     def draw_mask(self, cr, x, y, width, height):            
@@ -208,6 +218,7 @@ class MultiDragWebcastView(ListView):
     
         self.connect("drag-data-get", self.__on_drag_data_get) 
         self.connect("double-click-item", self.__on_double_click_item)
+        self.connect("single-click-item", self.__on_single_click_item)
         self.connect("right-press-items", self.__on_right_press_items)
         
     def draw_mask(self, cr, x, y, width, height):            
@@ -239,6 +250,16 @@ class MultiDragWebcastView(ListView):
     
     def __on_right_press_items(self, widget, x, y, item, select_items):
         pass
+    
+    def __on_single_click_item(self, widget, item, column, x, y):
+        if column == 2:
+            song = item.webcast
+            if song.get("collected", False):
+                collected = False
+            else:    
+                collected = True
+            WebcastDB.set_property(song, {"collected": collected})
+            item.update_webcast(song)
     
     def get_scrolled_window(self):
         scrolled_window = ScrolledWindow(0, 0)

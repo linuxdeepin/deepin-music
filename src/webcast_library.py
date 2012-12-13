@@ -564,7 +564,7 @@ class WebcastQuery(gobject.GObject, Logger):
                             
             
             with self.keep_signal():
-                self.signal_to_fire["update-songs"].add(song)
+                self.__signal_to_fire["update-songs"].add(song)
                 
                  
     def get_info(self, category, child_category=None):                    
