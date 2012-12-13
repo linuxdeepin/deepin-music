@@ -128,8 +128,8 @@ class WebcastIconItem(gobject.GObject):
         self.hover_padding_x = self.padding_x / 2        
         self.hover_padding_y = self.padding_y / 2
 
-        # color_index = utils.get_fixed_value(title, len(ITEM_COLORS))
-        color_index = distance_random.get()
+        color_index = utils.get_fixed_value(title, len(ITEM_COLORS))
+        # color_index = distance_random.get()
         self.bg_color = ITEM_COLORS[color_index]
         self.title_padding_x = 10
         self.title_padding_y = 5
