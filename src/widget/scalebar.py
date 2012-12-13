@@ -119,7 +119,7 @@ class HScalebar(gtk.HScale):
             
             with cairo_disable_antialias(cr):
                 cr.set_line_width(1)
-                cr.set_source_rgba(1, 1, 1, 0.7)
+                cr.set_source_rgba(1, 1, 1, 0.5)
                 cr.move_to(rect.x, line_y + 1)
                 cr.rel_line_to(value + point_width, 0)
                 cr.stroke()
