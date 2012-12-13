@@ -95,7 +95,11 @@ class IconItem(gobject.GObject):
             self.__normal_play_pixbuf.get_height()
             )
         
-        self.retrieve = TransforDB.convert(self.name_label.lower().replace(" ", "")) + self.name_label.lower().replace(" ", "")
+        try:
+            self.retrieve = TransforDB.convert(self.name_label.lower().replace(" ", "")) \
+                + self.name_label.lower().replace(" ", "")
+        except:    
+            self.retrieve = ""
         
     def create_pixbuf(self):
         if self.pixbuf:
@@ -154,9 +158,16 @@ class IconItem(gobject.GObject):
                         pixbuf_x,
                         rect.y)
         else:    
+            pixbuf_rect = gtk.gdk.Rectangle(
+                pixbuf_x + self.pixbuf_offset_x,
+                rect.y + self.pixbuf_offset_y, 
+                self.pixbuf.get_width(),
+                self.pixbuf.get_height())
+            
             draw_pixbuf(cr, self.pixbuf, 
                         pixbuf_x + self.pixbuf_offset_x,
                         rect.y + self.pixbuf_offset_y)
+            
         
         if self.hover_flag or self.highlight_flag:
             if self.tag == "folder":
@@ -168,8 +179,14 @@ class IconItem(gobject.GObject):
         else:    
             if self.draw_side_flag:
                 draw_pixbuf(cr, self.__normal_side_pixbuf, pixbuf_x, rect.y )            
+                
         
         if self.hover_flag:
+            # if self.tag != "folder" and self.draw_side_flag:
+            #     cr.set_source_rgba(0, 0, 0, 0.3)
+            #     cr.rectangle(*pixbuf_rect)
+            #     cr.fill()
+            
             if self.__draw_play_hover_flag:
                 play_pixbuf = app_theme.get_pixbuf("filter/play_hover.png").get_pixbuf()
             elif self.__draw_play_press_flag:    
@@ -177,6 +194,7 @@ class IconItem(gobject.GObject):
             else:    
                 play_pixbuf = self.__normal_play_pixbuf
             draw_pixbuf(cr, play_pixbuf, pixbuf_x + self.play_rect.x, rect.y + self.play_rect.y)        
+            
             
         # Draw text.    
         name_rect = gtk.gdk.Rectangle(rect.x + self.padding_x , 

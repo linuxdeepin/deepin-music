@@ -210,11 +210,11 @@ class CommonIconItem(gobject.GObject, MissionThread):
         pixbuf_x = rect.x + (rect.width - self.pixbuf.get_width()) / 2
             
         cr.save()    
-        cr.arc(pixbuf_x + self.pixbuf.get_width() / 2,
-               rect.y + self.pixbuf.get_height() / 2,
-               self.pixbuf.get_width() / 2,
-               0, 2 * math.pi)
-        cr.clip()
+        # cr.arc(pixbuf_x + self.pixbuf.get_width() / 2,
+        #        rect.y + self.pixbuf.get_height() / 2,
+        #        self.pixbuf.get_width() / 2,
+        #        0, 2 * math.pi)
+        # cr.clip()
         draw_pixbuf(cr, self.pixbuf, pixbuf_x, rect.y)        
         cr.restore()
         
@@ -651,11 +651,11 @@ class RadioListItem(TreeItem):
         
         animation_rect = gtk.gdk.Rectangle(rect.x + padding_x,  icon_y, self.icon_width, self.icon_height)                
         cr.save()
-        cr.arc(animation_rect.x + animation_rect.width / 2,
-               animation_rect.y + animation_rect.height / 2,
-               animation_rect.width / 2,
-               0, 2 * math.pi)
-        # cr.rectangle(animation_rect.x, animation_rect.y, animation_rect.width, animation_rect.height)
+        # cr.arc(animation_rect.x + animation_rect.width / 2,
+        #        animation_rect.y + animation_rect.height / 2,
+        #        animation_rect.width / 2,
+        #        0, 2 * math.pi)
+        cr.rectangle(animation_rect.x, animation_rect.y, animation_rect.width, animation_rect.height)
         cr.clip()
         # self.render_animation(cr, animation_rect)
         draw_pixbuf(cr, self.normal_pixbuf, rect.x + padding_x, icon_y)        
