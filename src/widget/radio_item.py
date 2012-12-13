@@ -152,10 +152,10 @@ class CommonIconItem(gobject.GObject, MissionThread):
                 self.pixbuf = gtk.gdk.pixbuf_new_from_file(cover_path)
                 self.is_loaded_cover = True                
             except gobject.GError:    
-                self.pixbuf = app_theme.get_pixbuf("slide/default_cover.png").get_pixbuf()
+                self.pixbuf = app_theme.get_pixbuf("radio/default_cover.png").get_pixbuf()
                 self.is_loaded_cover = False
         else:    
-            self.pixbuf = app_theme.get_pixbuf("slide/default_cover.png").get_pixbuf()
+            self.pixbuf = app_theme.get_pixbuf("radio/default_cover.png").get_pixbuf()
             self.is_loaded_cover = False
             
     def create_mask_pixbuf(self):        
@@ -225,7 +225,14 @@ class CommonIconItem(gobject.GObject, MissionThread):
         if self.mask_flag:    
             if self.mask_pixbuf is None:
                 self.create_mask_pixbuf()
-            draw_pixbuf(cr, self.mask_pixbuf, pixbuf_x, rect.y)                
+            cr.save()    
+            cr.arc(pixbuf_x + self.pixbuf.get_width() / 2,
+                   rect.y + self.pixbuf.get_height() / 2,
+                   self.pixbuf.get_width() / 2,
+                   0, 2 * math.pi)
+            cr.clip()
+            draw_pixbuf(cr, self.mask_pixbuf, pixbuf_x, rect.y)                                
+            cr.restore()
             
         title_rect = gtk.gdk.Rectangle(rect.x + self.padding_x, 
                                        rect.y + self.pixbuf.get_height() + 5,
@@ -413,7 +420,7 @@ class MoreIconItem(gobject.GObject):
     
     def create_pixbuf(self):        
         if self.pixbuf is None:
-            self.pixbuf = app_theme.get_pixbuf("slide/default_cover.png").get_pixbuf()
+            self.pixbuf = app_theme.get_pixbuf("radio/default_cover.png").get_pixbuf()
             
     def create_mask_pixbuf(self):       
         if self.mask_pixbuf is None:
@@ -578,7 +585,7 @@ class RadioListItem(TreeItem):
         if cover_path:
             self.normal_pixbuf = gtk.gdk.pixbuf_new_from_file(cover_path)
         else:    
-            self.normal_pixbuf = app_theme.get_pixbuf("slide/default_cover.png").get_pixbuf()
+            self.normal_pixbuf = app_theme.get_pixbuf("radio/default_cover.png").get_pixbuf()
         self.update_size()    
         
         self.animation_cache_pixbuf = CachePixbuf()

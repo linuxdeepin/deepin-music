@@ -57,7 +57,7 @@ class PlaylistUI(gtk.VBox):
         gtk.VBox.__init__(self)
 
         # Init catagory list.
-        self.category_list = EntryTreeView()
+        self.category_list = TreeView()
         self.category_list.draw_mask = self.draw_category_list_mask
         self.category_list.connect("single-click-item", self.on_category_single_click)
         self.category_list.connect("right-press-items", self.on_category_right_press)
@@ -92,7 +92,7 @@ class PlaylistUI(gtk.VBox):
         self.right_box = gtk.VBox()
         self.right_box.connect("size-allocate", self.on_right_box_size_allocate)
         self.list_paned = HPaned(handle_color=app_theme.get_color("panedHandler"))
-        self.list_paned.pack1(self.category_list)
+        self.list_paned.pack1(self.category_list, True, True)
         self.list_paned.pack2(self.right_box, True, False)
         bottom_box = gtk.VBox()
         bottom_box.set_size_request(-1, 22)

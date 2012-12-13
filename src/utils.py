@@ -1013,7 +1013,7 @@ def get_optimum_pixbuf(pixbuf, expect_width, expect_height, cut_middle_area=True
     
 def get_fixed_value(string, num):    
     md5_string = md5.md5(string).hexdigest()
-    return int(md5_string[0:5], 16) % 10
+    return int(md5_string[0:5], 16) % num
 
 class DistanceRandom(object):
     '''

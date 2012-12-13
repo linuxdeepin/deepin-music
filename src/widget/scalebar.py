@@ -111,9 +111,6 @@ class HScalebar(gtk.HScale):
             pat.add_color_stop_rgb(1.0, *color_hex_to_cairo(self.fg_right_dcolor.get_color()))
             cr.set_operator(cairo.OPERATOR_OVER)
             cr.set_source(pat)
-            # cr.fill()
-            
-            # cr.set_source_rgb(*color_hex_to_cairo(self.fg_left_dcolor.get_color()))
             cr.rectangle(rect.x, line_y, value + point_width, line_height)
             cr.fill()
             
