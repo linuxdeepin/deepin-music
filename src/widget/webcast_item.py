@@ -34,7 +34,7 @@ from constant import DEFAULT_FONT_SIZE, LIST_WIDTH
 
 
         
-class CategroyTreeItem(TreeItem):    
+class CategoryTreeItem(TreeItem):    
     def __init__(self, title, category):
         TreeItem.__init__(self)
         self.column_index = 0
@@ -121,7 +121,7 @@ class WebcastIconItem(gobject.GObject):
     
     __gsignals__ = { "redraw-request" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),}
     
-    def __init__(self, title):
+    def __init__(self, title, is_composited=False):
         gobject.GObject.__init__(self)
         
         self.cell_width = 83
@@ -139,6 +139,8 @@ class WebcastIconItem(gobject.GObject):
         self.hover_color = "#34C0FE"
         self.hover_flag = False
         
+        self.is_composited = is_composited
+        
     def emit_redraw_request(self):    
         self.emit("redraw-request")
         
@@ -153,6 +155,7 @@ class WebcastIconItem(gobject.GObject):
         #     padding_x = self.hover_padding_x
         #     padding_y = self.hover_padding_y
         # else:    
+        
         padding_x = self.padding_x
         padding_y = self.padding_y
         
@@ -193,8 +196,123 @@ class WebcastIconItem(gobject.GObject):
             side_color = "#D6D6D6"
         cr.set_source_rgb(*color_hex_to_cairo(side_color))
         cr.stroke()
+                
+    def icon_item_motion_notify(self, x, y):    
+        self.hover_flag = True
+        self.emit_redraw_request()
         
+    def icon_item_lost_focus(self):    
+        self.hover_flag = False
+        self.emit_redraw_request()
         
+    def icon_item_highlight(self):    
+        self.highlight_flag = True
+        self.emit_redraw_request()
+        
+    def icon_item_normal(self):    
+        self.highlight_flag = False
+        self.emit_redraw_request()
+        
+    def icon_item_button_press(self, x, y):    
+        pass
+    
+    def icon_item_button_release(self, x, y):
+        pass
+    
+    def icon_item_single_click(self, x, y):
+        pass
+    
+    def icon_item_double_click(self, x, y):
+        pass
+    
+    def icon_item_release_resource(self):
+        # Release pixbuf resource.
+        # del self.pixbuf
+        # self.pixbuf = None
+        
+        # Return True to tell IconView call gc.collect() to release memory resource.
+        return False
+    
+class CompositeIconItem(gobject.GObject):
+    
+    __gsignals__ = { "redraw-request" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),}
+    
+    def __init__(self, title, category, is_composited=False):
+        gobject.GObject.__init__(self)
+        
+        self.cell_width = 83
+        self.padding_x = 10
+        self.padding_y = 5
+        self.hover_padding_x = self.padding_x / 2        
+        self.hover_padding_y = self.padding_y / 2
+
+        color_index = utils.get_fixed_value(title, len(ITEM_COLORS))
+        # color_index = distance_random.get()
+        self.bg_color = ITEM_COLORS[color_index]
+        self.title_padding_x = 10
+        self.title_padding_y = 5
+        self.title = title
+        self.category = category
+        self.hover_color = "#34C0FE"
+        self.hover_flag = False
+        
+        self.is_composited = is_composited
+        
+    def emit_redraw_request(self):    
+        self.emit("redraw-request")
+        
+    def get_width(self):    
+        return self.cell_width + self.padding_x * 2
+    
+    def get_height(self):
+        return self.cell_width + self.padding_y * 2
+    
+    def render(self, cr, rect):
+        # if self.hover_flag:
+        #     padding_x = self.hover_padding_x
+        #     padding_y = self.hover_padding_y
+        # else:    
+        
+        padding_x = self.padding_x
+        padding_y = self.padding_y
+        
+        rect.x += padding_x
+        rect.y += padding_y
+        rect.width -= padding_x * 2
+        rect.height -= padding_y * 2
+        
+        cr.set_source_rgb(*color_hex_to_cairo(self.bg_color))
+        cr.rectangle(rect.x, rect.y, rect.width, rect.height)
+        cr.fill()
+        
+        text_rect = gtk.gdk.Rectangle(*rect)
+        text_rect.x += self.title_padding_x
+        text_rect.y += self.title_padding_y
+        text_rect.width -= self.title_padding_x * 2
+        text_rect.height -= self.title_padding_y * 2
+        
+        if self.hover_flag:
+            cr.set_source_rgba(0, 0, 0, 0.3)
+            cr.rectangle(*rect)
+            cr.fill()
+            
+        
+        cr.save()
+        cr.rectangle(text_rect.x, text_rect.y, text_rect.width, text_rect.height)
+        cr.clip()
+        
+        draw_text(cr, self.title, text_rect.x, text_rect.y, text_rect.width, text_rect.height, 
+                  text_color="#FFFFFF", wrap_width=text_rect.width,
+                  text_size=12, alignment=pango.ALIGN_LEFT)
+        cr.restore()
+        
+        cr.rectangle(*rect)
+        if self.hover_flag:
+            side_color = self.hover_color
+        else:    
+            side_color = "#D6D6D6"
+        cr.set_source_rgb(*color_hex_to_cairo(side_color))
+        cr.stroke()
                 
     def icon_item_motion_notify(self, x, y):    
         self.hover_flag = True

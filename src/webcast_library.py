@@ -345,7 +345,8 @@ class WebcastQuery(gobject.GObject, Logger):
         self.tree = {}
         
         self.multiple_category = {"region" : "location", "region_en" : "country",
-                              "genre" : "genres", "genre_en" : "genres"}
+                                  "genre" : "genres", "genre_en" : "genres", "foreign" : "country"}
+        
         
         WebcastDB.connect("added", self.on_db_added)
         WebcastDB.connect("removed", self.on_db_removed)
@@ -580,4 +581,15 @@ class WebcastQuery(gobject.GObject, Logger):
         if child_category is None:
             return my_data[1]
         else:
-            return my_data[0][child_category]
+            if child_category not in my_data[0].keys():
+                return my_data[1]
+            else:
+                return my_data[0][child_category]
+        
+    def get_categorys(self):    
+        return self.__tree.keys()
+    
+    def get_composite_categorys(self):
+        filter_categorys = ["foreign", "region_en", "region",
+                            "genre", "genre_en"]
+        return filter(lambda key: key not in filter_categorys, self.get_categorys())

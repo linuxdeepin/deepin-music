@@ -25,7 +25,8 @@ from collections import OrderedDict
 from dtk.ui.new_treeview import TreeView
 from dtk.ui.paned import HPaned
 
-from widget.webcast_item import CategroyTreeItem
+import utils
+from widget.webcast_item import CategoryTreeItem
 from widget.skin import app_theme
 from widget.combo import TextPrompt
 from widget.webcast_view import WebcastIconView, MultiDragWebcastView
@@ -42,6 +43,9 @@ class WebcastsBrowser(gtk.VBox, SignalContainer):
         gtk.VBox.__init__(self)
         SignalContainer.__init__(self)
 
+        # Init categorys.
+        self.get_categorys()
+        
         # load data.
         self.__load_webcast_query()
         
@@ -55,6 +59,7 @@ class WebcastsBrowser(gtk.VBox, SignalContainer):
         self.page_box = gtk.VBox()
         self.page_box.add(self.metro_view_sw)
         
+        
         # webcasts view
         self.webcast_view = self.get_webcast_view()
         self.webcast_view_sw = self.webcast_view.get_scrolled_window()
@@ -62,13 +67,33 @@ class WebcastsBrowser(gtk.VBox, SignalContainer):
         # init listview page.
         self.init_listview_page()
         
-        
         self.current_category = "region"
         
         body_paned = HPaned(handle_color=app_theme.get_color("panedHandler"))
         body_paned.add1(self.webcastbar)
         body_paned.add2(self.page_box)
         self.add(body_paned)
+        
+        
+    def get_categorys(self):    
+        lang = utils.get_system_lang()
+        if lang.startswith("zh"):
+            self.__categorys = ["region", "genre", "composite"]
+        else:    
+            self.__categorys = ["region_en", "genre_en"]
+            
+        self.__category_gettexts = {
+            "region" : _("按地域"),
+            "genre"  : _("按流派"),
+            "region_en" : _("按地域"),
+            "genre_en"  : _("按流派"),
+            "composite"  : _("综合"),
+            "finance" : _("财经"),
+            "sports"  : _("体育"),
+            "music"   : _("音乐"),
+            "news"    : _("新闻"),
+            "network" : _("网络"),
+            }    
         
     def __load_webcast_query(self):    
         self.__db_query = WebcastQuery()        
@@ -100,10 +125,8 @@ class WebcastsBrowser(gtk.VBox, SignalContainer):
         self.webcastbar = TreeView(enable_drag_drop=False, enable_multiple_select=False)
         self.webcastbar.connect("single-click-item", self.on_webcastbar_single_click_item)
         items = []
-        items.append(CategroyTreeItem("按地域(CN)", category="region"))
-        items.append(CategroyTreeItem("按流派(CN)", category="genre" ))
-        items.append(CategroyTreeItem("按地域(EN)", category="region_en"))
-        items.append(CategroyTreeItem("按流派(EN)", category="genre_en"))
+        for category in self.__categorys:
+            items.append(CategoryTreeItem(self.__category_gettexts[category], category=category))
         self.webcastbar.add_items(items)
         self.webcastbar.select_items([self.webcastbar.visible_items[0]])
         self.webcastbar.set_size_request(121, -1)
@@ -120,7 +143,6 @@ class WebcastsBrowser(gtk.VBox, SignalContainer):
         if self.current_category != item.category:
             self.current_category = item.category
             self.load_view_data()
-
         
     def init_listview_page(self):    
         self.listview_page = gtk.VBox()
@@ -149,10 +171,20 @@ class WebcastsBrowser(gtk.VBox, SignalContainer):
         self.webcast_view.add_webcasts(songs)
         switch_tab(self.page_box, self.listview_page)
         
+        
     def load_view_data(self):    
-        child_datas = self.__db_query.get_info(self.current_category)[0]
-        self.metro_view.clear()
-        self.metro_view.add_webcast_items(child_datas)
+        self.metro_view.clear()                    
+        if self.current_category == "composite":
+            child_datas = self.__db_query.get_composite_categorys()
+            gettext_datas = []
+            for child in child_datas:
+                gettext_datas.append((self.__category_gettexts[child], child))
+            self.metro_view.add_composite_items(gettext_datas)    
+                
+        else:    
+            child_datas = self.__db_query.get_info(self.current_category)[0]
+            self.metro_view.add_webcast_items(child_datas)            
+
         
     def get_icon_view(self):
         icon_view = WebcastIconView()
@@ -162,9 +194,16 @@ class WebcastsBrowser(gtk.VBox, SignalContainer):
     
     
     def on_iconview_single_click_item(self, widget, item, x, y):
-        category = self.current_category
+        if item.is_composited:
+            category = item.category
+        else:    
+            category = self.current_category
+            
         title = item.title
-        self.switch_to_listview(category, title)
+        if item.is_composited:
+            self.switch_to_listview(category, title)
+        else:    
+            self.switch_to_listview(category, title)
         
     def get_webcast_view(self):    
         webcast_view = MultiDragWebcastView()
