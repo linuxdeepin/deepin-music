@@ -324,8 +324,8 @@ class DeepinMusic(gobject.GObject, Logger):
         
     def get_convert_sub_menu(self):    
         menu_items = [
-            (None, _("Format converter"), self.choose_file_and_convert),
-            (None, _("Convert manager"), lambda : convert_task_manager.visible_it()),
+            (None, _("Convert"), self.choose_file_and_convert),
+            (None, _("Task Manager"), lambda : convert_task_manager.visible_it()),
             ]
         return Menu(menu_items)
     
@@ -341,20 +341,20 @@ class DeepinMusic(gobject.GObject, Logger):
     def show_instance_menu(self, obj, x, y):
         curren_view = self.playlist_ui.get_selected_song_view()
         menu_items = [
-            (None, _("Add files"), curren_view.get_add_menu()),
-            (None, _("Control"), self.get_play_control_menu()),
-            (self.get_pixbuf_group("playmode"), _("Play mode"), curren_view.get_playmode_menu()),
+            (None, _("Add"), curren_view.get_add_menu()),
+            (None, _("Controls"), self.get_play_control_menu()),
+            (self.get_pixbuf_group("playmode"), _("Playback Order"), curren_view.get_playmode_menu()),
             None,
             (None, _("Equalizer"), lambda : self.equalizer_win.run()),
-            (None, _("Converter"), self.get_convert_sub_menu()),
+            (None, _("Convert"), self.get_convert_sub_menu()),
             None,
             self.get_app_mode_menu(),
             None,
             self.get_lyrics_menu_items(),
             self.get_locked_menu_items(),
             None,
-            (None, _("New features"), self.show_wizard_win),            
-            (self.get_pixbuf_group("setting"), _("Preference"), lambda : self.preference_dialog.show_all()),
+            (None, _("View New Features"), self.show_wizard_win),            
+            (self.get_pixbuf_group("setting"), _("Preferences"), lambda : self.preference_dialog.show_all()),
             None,
             (self.get_pixbuf_group("close"), _("Quit"), self.force_quit),
             ]
@@ -376,9 +376,9 @@ class DeepinMusic(gobject.GObject, Logger):
         
     def get_lyrics_menu_items(self):    
         if config.getboolean("lyrics", "status"):
-            return (None, _("Lyrics off"), lambda : Dispatcher.close_lyrics())
+            return (None, _("Hide Lyrics"), lambda : Dispatcher.close_lyrics())
         else:    
-            return (None, _("Lyrics on"), lambda : Dispatcher.show_lyrics())
+            return (None, _("Show Lyrics"), lambda : Dispatcher.show_lyrics())
         
     def get_locked_menu_items(self):    
         if config.getboolean("lyrics", "locked"):    

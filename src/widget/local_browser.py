@@ -60,13 +60,13 @@ class IconItem(gobject.GObject):
         if not self.key_name:
             self.name_label= _("Unknown")
         elif self.key_name == "deepin-all-songs":    
-            self.name_label = _("All tracks")
+            self.name_label = _("All Tracks")
         else:    
             self.name_label = utils.xmlescape(self.key_name)
         
         # Just create pixbuf when need render it to save memory.
         self.pixbuf = None
-        self.labels = _("%d tracks") % nums
+        self.labels = "%d %s" % (nums, _("Track(s)"))
         self.pixbuf_offset_x = 4
         self.pixbuf_offset_y = 4
         self.padding_x = 6
@@ -293,22 +293,22 @@ class Browser(gtk.VBox, SignalContainer):
         # Classification navigation bar.
         self.filterbar = OptionBar(
             [(app_theme.get_pixbuf("filter/artist_normal.png"), app_theme.get_pixbuf("filter/artist_press.png"),
-              _("By artist"), lambda : self.switch_filter_view("artist")),
+              _("Artist"), lambda : self.switch_filter_view("artist")),
              (app_theme.get_pixbuf("filter/album_normal.png"), app_theme.get_pixbuf("filter/album_press.png"),
-              _("By album"), lambda : self.switch_filter_view("album")),
+              _("Album"), lambda : self.switch_filter_view("album")),
              (app_theme.get_pixbuf("filter/genre_normal.png"), app_theme.get_pixbuf("filter/genre_press.png"),
-              _("By genre"), lambda : self.switch_filter_view("genre")),
+              _("Genre"), lambda : self.switch_filter_view("genre")),
              (app_theme.get_pixbuf("filter/local_normal.png"), app_theme.get_pixbuf("filter/local_press.png"),
-              _("By folder"), lambda : self.switch_filter_view("folder"))
+              _("Folder"), lambda : self.switch_filter_view("folder"))
              ])
         
         # Manage the media library (import, refresh)
         self.importbar = SongImportBar()
         self.importbar.reload_items(
             [
-             (_("Scan Home dir"), lambda : ImportFolderJob([os.path.expanduser("~")])),                
-             (_("Select dir to scan"), lambda : ImportFolderJob()),
-             (_("Refresh library"), lambda : ReloadDBJob())])
+             (_("Scan Home Directory"), lambda : ImportFolderJob([os.path.expanduser("~")])),                
+             (_("Select Directory to Scan"), lambda : ImportFolderJob()),
+             (_("Refresh Library"), lambda : ReloadDBJob())])
         
         # Left box
         invailed_box = gtk.VBox()

@@ -65,10 +65,10 @@ class RadioBrowser(gtk.VBox):
     def __init_radiobar(self):    
         self.radiobar = TreeView(enable_drag_drop=False, enable_multiple_select=False)
         items = []
-        items.append(CategroyTreeItem(_("推荐首页"), lambda : switch_tab(self.page_box, self.home_page)))
-        items.append(CategroyTreeItem(_("热门兆赫"), lambda : switch_tab(self.page_box, self.hot_page_sw)))
-        items.append(CategroyTreeItem(_("人气兆赫"), lambda : switch_tab(self.page_box, self.fast_page_sw)))
-        items.append(CategroyTreeItem(_("流派兆赫"), lambda : switch_tab(self.page_box, self.genre_page)))
+        items.append(CategroyTreeItem(_("Home"), lambda : switch_tab(self.page_box, self.home_page)))
+        items.append(CategroyTreeItem(_("Hot MHz"), lambda : switch_tab(self.page_box, self.hot_page_sw)))
+        items.append(CategroyTreeItem(_("Genre MHz"), lambda : switch_tab(self.page_box, self.genre_page)))
+        items.append(CategroyTreeItem(_("Uptrending MHz"), lambda : switch_tab(self.page_box, self.fast_page_sw)))        
         self.radiobar.add_items(items)
         self.radiobar.select_items([self.radiobar.visible_items[0]])
         self.radiobar.set_size_request(121, -1)

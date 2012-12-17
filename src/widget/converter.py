@@ -412,7 +412,7 @@ class TranscoderJobManager(DialogBox):
 class AttributesUI(DialogBox):
     
     def __init__(self, songs=None):
-        DialogBox.__init__(self, _("Converter"), 385, 200, DIALOG_MASK_SINGLE_PAGE,
+        DialogBox.__init__(self, _("Convert"), 385, 200, DIALOG_MASK_SINGLE_PAGE,
                            modal=True)
         
         self.songs = songs or [Player.song]

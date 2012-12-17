@@ -70,11 +70,11 @@ class BaseTrayIcon(object):
             menu_items.append((self.get_pixbuf_group("lock"), _("Lock lyrics"), lambda : Dispatcher.lock_lyrics()))
         
         if config.getboolean("lyrics", "status"):
-            menu_items.append((None, _("Lyrics off"), lambda : Dispatcher.close_lyrics()))
+            menu_items.append((None, _("Hide Lyrics"), lambda : Dispatcher.close_lyrics()))
         else:    
-            menu_items.append((None, _("Lyrics on"), lambda : Dispatcher.show_lyrics()))
+            menu_items.append((None, _("Show Lyrics"), lambda : Dispatcher.show_lyrics()))
         menu_items.append(None)    
-        menu_items.append((self.get_pixbuf_group("setting"), _("Preference"), lambda : Dispatcher.show_setting()))
+        menu_items.append((self.get_pixbuf_group("setting"), _("Preferences"), lambda : Dispatcher.show_setting()))
         menu_items.append((self.get_pixbuf_group("close"), _("Quit"), lambda : Dispatcher.quit()))
         if self.menu is not None:
             del self.menu

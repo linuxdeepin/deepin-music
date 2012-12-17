@@ -181,7 +181,7 @@ class ComboMenuButton(gtk.HBox):
         self.current_index = init_index
         self.current_status = "artist"
         self.set_spacing(0)
-        self.msg_content = _("By artist")
+        self.msg_content = _("By Artist")
         
         self.list_button = ComboItem(
             (app_theme.get_pixbuf("combo/left_normal.png"),
@@ -230,9 +230,9 @@ class ComboMenuButton(gtk.HBox):
     
     def show_right_menu(self, widget, event):
         menu_items = [
-            (self.get_menu_pixbuf_group("artist"), _("by artist"), self.update_widget_icon, "artist", _("by artist")),
-            (self.get_menu_pixbuf_group("genre"), _("by genre"), self.update_widget_icon, "genre", _("by genre")),
-            (self.get_menu_pixbuf_group("album"), _("by album"), self.update_widget_icon, "album", _("by album")),
+            (self.get_menu_pixbuf_group("artist"), _("By Artist"), self.update_widget_icon, "artist", _("By Artist")),
+            (self.get_menu_pixbuf_group("genre"), _("By Genre"), self.update_widget_icon, "genre", _("By Genre")),
+            (self.get_menu_pixbuf_group("album"), _("By Album"), self.update_widget_icon, "album", _("By Album")),
             ]
         Menu(menu_items, True).show((int(event.x_root) - 10, int(event.y_root)))
         

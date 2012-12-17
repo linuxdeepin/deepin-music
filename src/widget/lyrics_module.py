@@ -145,7 +145,7 @@ class LyricsModule(object):
         zoom_out_align = self.__create_zoom_button("zoom_out", _("decrease the lyrics size"))
         predefine_align = self.__create_simple_button("predefine_color", self.popup_predefine_menu, 
                                                       _("predefined color schemes"), True)
-        lock_align = self.__create_simple_button("lock", self.__lock_lyrics, _("Lock/unlock lyrics"))
+        lock_align = self.__create_simple_button("lock", self.__lock_lyrics, _("Lock/Unlock lyrics"))
         karaoke_align, self.karaoke_button = self.__create_single_toggle_button("karaoke", 
                                                                                 self.change_karaoke_status,
                                                                                 _("karaoke on/off"))

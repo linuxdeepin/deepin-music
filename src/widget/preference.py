@@ -144,32 +144,32 @@ class GeneralSetting(gtk.VBox):
     def create_start_box(self):    
         main_table = gtk.Table(4, 2)
         main_table.set_row_spacings(10)
-        start_title_label = Label(_("Starting"))
+        start_title_label = Label(_("Startup"))
         start_title_label.set_size_request(350, 12)
         label_align = gtk.Alignment()
         label_align.set_padding(20, 0, 0, 0)
         label_align.add(start_title_label)
         
         # splash check_button
-        self.splash_check_button = CheckButton(_("Display splash"))
+        self.splash_check_button = CheckButton(_("Display splash-screen"))
         splash_hbox = gtk.HBox()
         splash_hbox.pack_start(self.splash_check_button, False, False)
         splash_hbox.pack_start(create_right_align(), True, True)        
         
         # open_lyrics_check_button.
         open_lyrics_hbox = gtk.HBox()
-        self.open_lyrics_check_button = CheckButton(_("Lyrics on"))
+        self.open_lyrics_check_button = CheckButton(_("Show Lyrics"))
         open_lyrics_hbox.pack_start(self.open_lyrics_check_button, False, False)
 
         
         # startup_check_button.
-        self.auto_play_check_button = CheckButton(_("Auto play"))
+        self.auto_play_check_button = CheckButton(_("Start playback automatically"))
         auto_play_hbox = gtk.HBox()
         auto_play_hbox.pack_start(self.auto_play_check_button, False, False)
         auto_play_hbox.pack_start(create_right_align(), True, True)                
         
         # resume last check_button.
-        self.resume_last_check_button = CheckButton(_("Resume last played"))
+        self.resume_last_check_button = CheckButton(_("Resume playback"))
         resume_hbox = gtk.HBox()
         resume_hbox.pack_start(self.resume_last_check_button, False, False)
         
@@ -184,12 +184,12 @@ class GeneralSetting(gtk.VBox):
     def create_close_box(self):
         main_table = gtk.Table(3, 2)
         main_table.set_row_spacings(10)
-        close_title_label = Label(_("Closing"))
+        close_title_label = Label(_("On pressing the close button"))
         close_title_label.set_size_request(350, 12)
         
         # mini_check_button
 
-        self.tray_radio_button = RadioButton(_("Minimize to trayicon"))        
+        self.tray_radio_button = RadioButton(_("Minimize to tray icon"))
         self.quit_radio_button = RadioButton(_("Quit"))
         
         main_table.attach(close_title_label, 0, 2, 0, 1, yoptions=gtk.FILL, xpadding=8)
@@ -200,17 +200,20 @@ class GeneralSetting(gtk.VBox):
         return main_table
     
     def create_play_box(self):
-        main_table = gtk.Table(4, 2)
+        main_table = gtk.Table(5, 2)
         main_table.set_row_spacings(10)
         
-        play_title_label = Label(_("Playing"))
+        play_title_label = Label(_("Playback settings"))
         play_title_label.set_size_request(350, 12)
         
         fade_check_hbox = gtk.HBox()
-        self.fade_check_button = CheckButton(_("Crossfade"))        
+        self.fade_check_button = CheckButton(_("Enable Crossfade"))        
         fade_check_hbox.pack_start(self.fade_check_button, False, False)
         fade_check_hbox.pack_start(create_right_align(), True, True)
-        self.album_check_button = CheckButton(_("Crossfade gapless album"))
+        self.album_check_button = CheckButton(_("Disable crossfade between tracks in the same album"))
+        album_check_hbox = gtk.HBox()
+        album_check_hbox.pack_start(self.album_check_button, False, False)
+        album_check_hbox.pack_start(create_right_align(), True, True)
         
         fade_label = Label(_("Fade timeout:"))
         self.fade_spin = SpinBox(300, 1, 1000, 100)
@@ -223,9 +226,9 @@ class GeneralSetting(gtk.VBox):
         
         main_table.attach(play_title_label, 0, 2, 0, 1, yoptions=gtk.FILL, xpadding=8)
         main_table.attach(create_separator_box(), 0, 2, 1, 2, yoptions=gtk.FILL)
-        main_table.attach(fade_check_hbox, 0, 1, 2, 3, yoptions=gtk.FILL)
-        main_table.attach(self.album_check_button, 1, 2, 2, 3, yoptions=gtk.FILL)
-        main_table.attach(spin_hbox, 0, 1, 3, 4, yoptions=gtk.FILL, xpadding=8)
+        main_table.attach(fade_check_hbox, 0, 2, 2, 3, yoptions=gtk.FILL)
+        main_table.attach(album_check_hbox, 0, 2, 3, 4, yoptions=gtk.FILL)
+        main_table.attach(spin_hbox, 0, 1, 4, 5, yoptions=gtk.FILL, xpadding=8)
         return main_table
 
     def create_lyrics_dir_table(self):    
@@ -355,17 +358,17 @@ class HotKeySetting(gtk.VBox):
         
         # using check button.
         using_hbox = gtk.HBox()
-        self.using_check_button = CheckButton(_("Activate hotkeys"))
+        self.using_check_button = CheckButton(_("Enable hotkeys"))
 
         using_hbox.pack_start(self.using_check_button, False, False)
         using_hbox.pack_start(create_right_align(), False, True)
         self.main_table.attach(using_hbox, 0, 2, 2, 3, yoptions=gtk.FILL)
         
-        self.toggle_window_entry = self.create_combo_entry(3, 4, _("Minimized/Show window"), 
+        self.toggle_window_entry = self.create_combo_entry(3, 4, _("Minimize/Show window"),
                                                            config.get("globalkey", "toggle_window"))
-        self.toggle_lyrics_status_entry = self.create_combo_entry(4, 5, _("Lyrics on/off"),
+        self.toggle_lyrics_status_entry = self.create_combo_entry(4, 5, _("Show/Hide Lyrics"),
                                                                   config.get("globalkey", "toggle_lyrics_status"))
-        self.toggle_lyrics_lock_entry = self.create_combo_entry(5, 6, _("Lock/unlock lyrics"),
+        self.toggle_lyrics_lock_entry = self.create_combo_entry(5, 6, _("Lock/Unlock lyrics"),
                                                                 config.get("globalkey", "toggle_lyrics_lock"))
         self.playpause_entry = self.create_combo_entry(6, 7, _("Play/Pause"), config.get("globalkey", "playpause"))
         self.next_entry = self.create_combo_entry(7, 8, _("Previous"), config.get("globalkey", "next"))
@@ -374,7 +377,7 @@ class HotKeySetting(gtk.VBox):
         self.decrease_vol_entry = self.create_combo_entry(10, 11, _("Decrease volume"), config.get("globalkey", "decrease_vol"))
         
         # Button.
-        default_button = Button(_("Default"))
+        default_button = Button(_("Reset"))
         default_button.connect("clicked", self.restore_to_default)
         button_hbox = gtk.HBox()
         button_hbox.pack_start(create_right_align(), True, True)
@@ -589,9 +592,9 @@ class DesktopLyricsSetting(gtk.VBox):
         
     def create_single_line_box(self):
         single_align_items = OrderedDict()
-        single_align_items["left"] = _("Left-aligned")
+        single_align_items["left"] = _("Left")
         single_align_items["centered"] = _("Centered")
-        single_align_items["right"] = _("Right-aligned")
+        single_align_items["right"] = _("Right")
         try:
             single_index = single_align_items.keys().index(config.get("lyrics", "single_line_align"))
         except:    
@@ -601,9 +604,9 @@ class DesktopLyricsSetting(gtk.VBox):
         
     def create_double_line_box(self):    
         double_align_items = OrderedDict()
-        double_align_items["left"] = _("Left-aligned")
+        double_align_items["left"] = _("Left")
         double_align_items["centered"] = _("Centered")
-        double_align_items["right"] = _("Right-aligned")
+        double_align_items["right"] = _("Right")
         double_align_items["justified"] = _("Justified")
         try:
             align_index = double_align_items.keys().index(config.get("lyrics", "double_line_align"))
@@ -947,7 +950,7 @@ class AboutBox(gtk.VBox):
 class PreferenceDialog(DialogBox):
     
     def __init__(self):
-        super(PreferenceDialog, self).__init__(_("Preference"), 575, 495, 
+        super(PreferenceDialog, self).__init__(_("Preferences"), 575, 495, 
                                                mask_type=DIALOG_MASK_MULTIPLE_PAGE,
                                                close_callback=self.hide_all)
         
@@ -1010,7 +1013,7 @@ class PreferenceDialog(DialogBox):
         self.lyrics_expand_item.add_childs([(_("Desktop"), self.desktop_lyrics_setting),
                                        (_("Window"), self.scroll_lyrics_setting)])
         self.plugins_expand_item = ExpandItem(_("Plugins"), self.plugins_manager)
-        about_normal_item = NormalItem(_("About us"), AboutBox())
+        about_normal_item = NormalItem(_("About"), AboutBox())
         
         items = [general_normal_item,
                  hotkey_normal_item,

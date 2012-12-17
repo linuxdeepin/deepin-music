@@ -49,6 +49,7 @@ class CategroyTreeItem(TreeItem):
         self.item_height = 37
         self.title = title
         self.item_width = 121
+        self.padding_x = 10
         self.press_callback = callback
         
     def get_height(self):    
@@ -85,9 +86,11 @@ class CategroyTreeItem(TreeItem):
         else:    
             text_color = app_theme.get_color("labelText").get_color()
             
-        draw_text(cr, self.title, rect.x, rect.y, rect.width, rect.height, text_size=10, 
+        draw_text(cr, self.title, rect.x + self.padding_x,
+                  rect.y, rect.width - self.padding_x * 2,
+                  rect.height, text_size=10, 
                   text_color = text_color,
-                  alignment=pango.ALIGN_CENTER)    
+                  alignment=pango.ALIGN_LEFT)    
         
     def expand(self):
         pass

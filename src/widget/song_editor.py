@@ -295,7 +295,7 @@ class CoverSetting(gtk.VBox):
         button_box_align.add(button_box)
         change_button = Button(_("Change"))
         change_button.connect("clicked", self.change_cover_image)
-        delete_button = Button(_("Default"))
+        delete_button = Button(_("Reset"))
         delete_button.connect("clicked", self.delete_cover_image)
         button_box.pack_start(create_right_align(), True, True)
         button_box.pack_start(change_button, False, False)
@@ -323,7 +323,7 @@ class CoverSetting(gtk.VBox):
 class SongEditor(DialogBox):    
     
     def __init__(self, songs, init_index=0):
-        super(SongEditor, self).__init__(_("Property"), 500, 400, mask_type=DIALOG_MASK_TAB_PAGE)
+        super(SongEditor, self).__init__(_("Properties"), 500, 400, mask_type=DIALOG_MASK_TAB_PAGE)
         self.set_position(gtk.WIN_POS_CENTER)
         
         close_button = Button(_("Close"))

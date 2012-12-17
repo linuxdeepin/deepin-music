@@ -75,12 +75,14 @@ class PlaylistUI(gtk.VBox):
         
         # Init toolbar.
         self.toolbar_box = gtk.HBox(spacing=40)
-        self.search_button = self.__create_simple_toggle_button("search", self.show_text_entry, _("Search for tracks"))
-        self.__create_simple_button("list", self.popup_list_menu, _("Playlist operations"))
+        self.search_button = self.__create_simple_toggle_button("search", self.show_text_entry, 
+                                                                _("Search in Current Playlist"))
+        
+        self.__create_simple_button("list", self.popup_list_menu, _("Playlist Operations"))
         self.__create_simple_button("add", self.popup_add_menu, _("Add track"))
         
         self.playmode_button = PlaymodeButton(config.get("setting", "loop_mode", "list_mode").split("_")[0])
-        Tooltip.text(self.playmode_button, _("Play mode"))
+        Tooltip.text(self.playmode_button, _("Playback Order"))
         self.playmode_button.connect("button-press-event", self.popup_sort_menu)
         self.toolbar_box.pack_start(self.playmode_button, False, False)
         self.__create_simple_button("delete", self.popup_delete_menu, _("Delete"))
@@ -162,7 +164,7 @@ class PlaylistUI(gtk.VBox):
         
     def __on_db_loaded(self, db):        
         if not MediaDB.get_playlists():
-            MediaDB.create_playlist("local", _("[Default list]"))            
+            MediaDB.create_playlist("local", "[%s]" % _("Default List"))            
             
         # From MediaDB loaded playlists.    
         init_items = [ListTreeItem(pl) for pl in MediaDB.get_playlists()]    
@@ -270,20 +272,20 @@ class PlaylistUI(gtk.VBox):
         
         
     def popup_list_menu(self, widget, event):    
-        menu_items = [(None, _("New list"), self.new_list),
-                      (None, _("Import list"), self.leading_in_list),
-                      (None, _("Open list"), self.add_to_list),
-                      (None, _("Export list"), self.leading_out_list),
-                      (None, _("Remove list"), self.delete_item_list),
+        menu_items = [(None, _("New List"), self.new_list),
+                      (None, _("Import List"), self.leading_in_list),
+                      (None, _("Open List"), self.add_to_list),
+                      (None, _("Export List"), self.leading_out_list),
+                      (None, _("Remove List"), self.delete_item_list),
                       None,
-                      (None, _("Save all lists"), self.save_all_list)]
+                      (None, _("Save all Lists"), self.save_all_list)]
         Menu(menu_items, True).show((int(event.x_root), int(event.y_root)))
         
     def new_list(self, items=[], name=None):    
         index = len(self.category_list.get_items())
         if name is None:
-            name = "%s%d" % (_("New list"), index)
-        input_dialog = InputDialog(_("New list"), name, 300, 100, lambda name : self.create_new_playlist(name, items))
+            name = "%s%d" % (_("New List"), index)
+        input_dialog = InputDialog(_("New List"), name, 300, 100, lambda name : self.create_new_playlist(name, items))
         input_dialog.show_all()
         
     def create_new_playlist(self, name, items):    
@@ -323,10 +325,10 @@ class PlaylistUI(gtk.VBox):
                                self.edit_list_item, category_item, select_items ,move) for category_item in other_category_items]
         if sub_menu_items:    
             sub_menu_items.extend([None, ((app_theme.get_pixbuf("toolbar/add_normal.png"), None, None),
-                                          _("New list"), self.edit_new_list_item, select_items, move)])
+                                          _("New List"), self.edit_new_list_item, select_items, move)])
         else:    
             sub_menu_items.extend([((app_theme.get_pixbuf("toolbar/add_normal.png"), None, None),
-                                    _("New list"), self.edit_new_list_item, select_items, move)])
+                                    _("New List"), self.edit_new_list_item, select_items, move)])
         return Menu(sub_menu_items)
     
     def edit_list_item(self, category_item, select_items, move):
@@ -442,18 +444,18 @@ class PlaylistUI(gtk.VBox):
     def on_category_right_press(self, widget, x, y, item, column):    
         if not item:
             menu_items = [
-                (None, _("New list"), self.new_list),
-                (None, _("Import list"), self.leading_in_list),
+                (None, _("New List"), self.new_list),
+                (None, _("Import List"), self.leading_in_list),
                 None,
-                (None, _("Save all lists"), self.save_all_list)
+                (None, _("Save all Lists"), self.save_all_list)
                 ]
         else:    
             menu_items = [
                 (None, _("Rename"), lambda : self.rename_item_list(item)),
-                (None, _("Remove list"), self.delete_item_list),
-                (None, _("Open list"), lambda : self.add_to_list(item)),
+                (None, _("Remove List"), self.delete_item_list),
+                (None, _("Open List"), lambda : self.add_to_list(item)),
                 None,
-                (None, _("Save all lists"), self.save_all_list)
+                (None, _("Save all Lists"), self.save_all_list)
                 ]
             
         Menu(menu_items, True).show((x, y))    
@@ -500,31 +502,31 @@ class PlaylistUI(gtk.VBox):
             self.detail_menu.destroy()
         play_mode_menu = self.current_item.song_view.get_playmode_menu(align=True)
         sort_dict = OrderedDict()
-        sort_dict["title"] = _("by title")
-        sort_dict["artist"] = _("by artist")        
-        sort_dict["album"] = _("by album") 
-        sort_dict["genre"] = _("by genre")
-        sort_dict["#playcount"] = _("by playcount")
-        sort_dict["#added"] = _("by added")
+        sort_dict["title"] = _("By Title")
+        sort_dict["artist"] = _("By Artist")        
+        sort_dict["album"] = _("By Album") 
+        sort_dict["genre"] = _("By Genre")
+        sort_dict["#playcount"] = _("By Play Count")
+        sort_dict["#added"] = _("By Date Added")
         sort_items = [(None, value, self.current_item.song_view.set_sort_keyword, key) for key, value in sort_dict.iteritems()]
         sort_items.append(None)
-        sort_items.append((None, _("Random order"), self.current_item.song_view.random_reorder))
+        sort_items.append((None, _("Randomize"), self.current_item.song_view.random_reorder))
         sub_sort_menu = Menu(sort_items)
         add_to_list_menu = self.get_edit_sub_menu(select_items)
         move_to_list_menu = self.get_edit_sub_menu(select_items, True)
-        self.detail_menu = Menu([(None, _("Play track"),  self.current_item.song_view.play_select_item),
-                                 (None, _("Add to list"), add_to_list_menu),
-                                 (None, _("move to list"), move_to_list_menu),
+        self.detail_menu = Menu([(None, _("Play"),  self.current_item.song_view.play_select_item),
+                                 (None, _("Add to List"), add_to_list_menu),
+                                 (None, _("move to List"), move_to_list_menu),
                                  None,
-                                 (None, _("Remove track"), self.current_item.song_view.remove_select_items),
-                                 (None, _("Move to trash"), self.current_item.song_view.move_to_trash),
-                                 (None, _("Clear list"), self.current_item.song_view.erase_items),
+                                 (None, _("Remove Track"), self.current_item.song_view.remove_select_items),
+                                 (None, _("Move to Trash"), self.current_item.song_view.move_to_trash),
+                                 (None, _("Clear List"), self.current_item.song_view.erase_items),
                                  None,
-                                 (None, _("Play mode"), play_mode_menu),
-                                 (None, _("Sort tracks"), sub_sort_menu),
-                                 (None, _("Format conversion"), self.current_item.song_view.songs_convert),
+                                 (None, _("Playback Order"), play_mode_menu),
+                                 (None, _("Sort"), sub_sort_menu),
+                                 (None, _("Convert"), self.current_item.song_view.songs_convert),
                                  (None, _("Open directory"), self.current_item.song_view.open_song_dir),
-                                 (None, _("Property"), self.current_item.song_view.open_song_editor),
+                                 (None, _("Properties"), self.current_item.song_view.open_song_editor),
                                  ], True)
         
         if item and item.song.get_type() == "cue":

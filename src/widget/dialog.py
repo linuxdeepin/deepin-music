@@ -30,7 +30,7 @@ from nls import _
 class WinDir(gtk.FileChooserDialog):
     '''Open chooser dir dialog'''
 
-    def __init__(self, return_uri=True, title=_("Select directory")):
+    def __init__(self, return_uri=True, title=_("Select Directory")):
         gtk.FileChooserDialog.__init__(self, title, None, gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER,
                                        (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
                                         gtk.STOCK_OPEN, gtk.RESPONSE_OK))

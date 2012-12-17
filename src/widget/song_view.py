@@ -422,10 +422,10 @@ class SongView(ListView):
     def get_playmode_menu(self, pos=[], align=False):
         mode_dict = OrderedDict()
 
-        mode_dict["single_mode"] = _("Repeat")
+        mode_dict["single_mode"] = _("Repeat(single)")
         mode_dict["order_mode"] = _("Play(ordered)")
-        mode_dict["list_mode"] = _("Repeat list")
-        mode_dict["random_mode"] = _("Shuffle")        
+        mode_dict["list_mode"] = _("Repeat(list)")
+        mode_dict["random_mode"] = _("Random")        
         
         mode_items = []
         for key, value in mode_dict.iteritems():
@@ -448,9 +448,9 @@ class SongView(ListView):
             self.popup_add_menu(int(event.x_root), int(event.y_root))
 
     def popup_delete_menu(self, x, y):    
-        items = [(None, _("Remove track this list"), self.remove_select_items),
-                 (None, _("Remove unavailable track"), self.delete_error_items),
-                 (None, _("Move to trash"), self.move_to_trash),
+        items = [(None, _("Remove Track from this List"), self.remove_select_items),
+                 (None, _("Remove Unavailable Tracks"), self.delete_error_items),
+                 (None, _("Move to Trash"), self.move_to_trash),
                  (None, _("Clear list"), self.erase_items)]
         Menu(items, True).show((int(x), int(y)))
         
@@ -465,7 +465,7 @@ class SongView(ListView):
         menu_items = [
             (None, "uri" , self.add_unknow_uri),            
             (None, _("File"), self.add_file),
-            (None, _("Directory(recursion)"), self.recursion_add_dir),
+            (None, _("Directory(include subdirectories)"), self.recursion_add_dir),
             (None, _("Directory"), self.add_dir),
             ]
         Menu(menu_items, True).show((x, y))
@@ -473,7 +473,7 @@ class SongView(ListView):
     def get_add_menu(self):    
         menu_items = [
             (None, _("File"), self.add_file),
-            (None, _("Directory(recursion)"), self.recursion_add_dir),
+            (None, _("Directory(include subdirectories)"), self.recursion_add_dir),
             (None, _("Directory"), self.add_dir),
             ]
         return Menu(menu_items)
@@ -683,15 +683,15 @@ class MultiDragSongView(ListView):
 
     def popup_right_menu(self, widget, x, y, item, select_items):
         menu_items = [
-            (None, _("Play track"), self.play_song),
+            (None, _("Play"), self.play_song),
             (None, _("Add to playlist"), self.emit_to_playlist),
             None,
             (None, _("Remove from library"), self.remove_songs),
-            (None, _("Move to trash"), self.remove_songs, True),
+            (None, _("Move to Trash"), self.remove_songs, True),
             None,
             (None, _("Open directory"), self.open_song_dir),
-            (None, _("Format conversion"), self.songs_convert),
-            (None, _("Property"), self.open_song_editor)
+            (None, _("Convert"), self.songs_convert),
+            (None, _("Properties"), self.open_song_editor)
                         ]
 
         right_menu = Menu(menu_items, True)

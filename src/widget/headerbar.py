@@ -67,13 +67,13 @@ class SimpleHeadbar(gtk.EventBox):
         Player.connect("play-end", self.__swap_play_status, False)
         
         self.__id_signal_play = self.__play.connect("toggled", self.on_player_playpause)
-        prev_button = self.__create_button("previous", _("Previous track"))
-        next_button = self.__create_button("next", _("Next track"))
+        prev_button = self.__create_button("previous", _("Previous"))
+        next_button = self.__create_button("next", _("Next"))
         
         
         # lyrics button
         self.lyrics_button = self.__create_simple_toggle_button("lyrics", self.change_lyrics_status)        
-        Tooltip.text(self.lyrics_button, _("Lyrics on/off"))
+        Tooltip.text(self.lyrics_button, _("Show/Hide Lyrics"))
         
         
         lyrics_button_align = gtk.Alignment()
