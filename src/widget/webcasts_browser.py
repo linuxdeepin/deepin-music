@@ -67,7 +67,7 @@ class WebcastsBrowser(gtk.VBox, SignalContainer):
         # init listview page.
         self.init_listview_page()
         
-        self.current_category = "region"
+
         
         body_paned = HPaned(handle_color=app_theme.get_color("panedHandler"))
         body_paned.add1(self.webcastbar)
@@ -79,8 +79,10 @@ class WebcastsBrowser(gtk.VBox, SignalContainer):
         lang = utils.get_system_lang()
         if lang.startswith("zh"):
             self.__categorys = ["region", "genre", "composite"]
+            self.current_category = "region"            
         else:    
             self.__categorys = ["region_en", "genre_en"]
+            self.current_category = "region_en"            
             
         self.__category_gettexts = {
             "region" : _("按地域"),
