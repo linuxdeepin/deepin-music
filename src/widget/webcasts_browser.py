@@ -26,15 +26,16 @@ from dtk.ui.new_treeview import TreeView
 from dtk.ui.paned import HPaned
 
 import utils
-from widget.webcast_item import CategoryTreeItem
+from widget.webcast_item import CategoryTreeItem, CollectTreeItem
 from widget.skin import app_theme
 from widget.combo import TextPrompt
 from widget.webcast_view import WebcastIconView, MultiDragWebcastView
-from widget.ui_utils import draw_alpha_mask, switch_tab, set_widget_gravity
+from widget.ui_utils import draw_alpha_mask, switch_tab, set_widget_gravity, create_separator_box
 from webcast_library import WebcastDB, WebcastQuery
 from widget.ui import BackButton
 from helper import SignalContainer, Dispatcher
 from nls import _
+from xdg_support import get_config_file
 
 
 class WebcastsBrowser(gtk.VBox, SignalContainer):
@@ -64,16 +65,22 @@ class WebcastsBrowser(gtk.VBox, SignalContainer):
         self.webcast_view = self.get_webcast_view()
         self.webcast_view_sw = self.webcast_view.get_scrolled_window()
         
+        # collect view
+        self.collected_db_file = get_config_file("favorite_webcasts.db")
+        self.collected_view = self.get_webcast_view()
+        self.collected_view_sw = self.collected_view.get_scrolled_window()
+        
+        # Init collect view.
+        
         # init listview page.
         self.init_listview_page()
-        
-
+        Dispatcher.connect("change-webcast", self.on_dispatcher_change_webcast)
+        WebcastDB.connect("changed", self.on_db_update_songs)
         
         body_paned = HPaned(handle_color=app_theme.get_color("panedHandler"))
         body_paned.add1(self.webcastbar)
         body_paned.add2(self.page_box)
         self.add(body_paned)
-        
         
     def get_categorys(self):    
         lang = utils.get_system_lang()
@@ -90,11 +97,11 @@ class WebcastsBrowser(gtk.VBox, SignalContainer):
             "region_en" : _("Region"),
             "genre_en"  : _("Genre"),
             "composite"  : _("Miscellaneous"),
-            "finance" : _("财经"),
-            "sports"  : _("体育"),
-            "music"   : _("音乐"),
-            "news"    : _("新闻"),
-            "network" : _("网络"),
+            "finance" : "财经",
+            "sports"  : "体育",
+            "music"   : "音乐",
+            "news"    : "新闻",
+            "network" : "网络",
             }    
         
     def __load_webcast_query(self):    
@@ -122,6 +129,7 @@ class WebcastsBrowser(gtk.VBox, SignalContainer):
     
     def __on_full_update(self, db_query):
         self.load_view_data()
+        self.load_collect_data()
         
     def __init_webcastbar(self):    
         self.webcastbar = TreeView(enable_drag_drop=False, enable_multiple_select=False)
@@ -129,6 +137,7 @@ class WebcastsBrowser(gtk.VBox, SignalContainer):
         items = []
         for category in self.__categorys:
             items.append(CategoryTreeItem(self.__category_gettexts[category], category=category))
+        items.append(CollectTreeItem(_("My Favorites")))    
         self.webcastbar.add_items(items)
         self.webcastbar.select_items([self.webcastbar.visible_items[0]])
         self.webcastbar.set_size_request(121, -1)
@@ -138,13 +147,16 @@ class WebcastsBrowser(gtk.VBox, SignalContainer):
         draw_alpha_mask(cr, x, y, w, h ,"layoutRight")
         
     def on_webcastbar_single_click_item(self, widget, item, column, x, y):    
-        widget = self.page_box.get_children()[0]
-        if widget != self.metro_view_sw:
-            switch_tab(self.page_box, self.metro_view_sw)            
-        
-        if self.current_category != item.category:
-            self.current_category = item.category
-            self.load_view_data()
+        if hasattr(item, "collect_flag"):
+            switch_tab(self.page_box, self.collected_view_sw)
+        else:    
+            widget = self.page_box.get_children()[0]
+            if widget != self.metro_view_sw:
+                switch_tab(self.page_box, self.metro_view_sw)            
+            
+            if self.current_category != item.category:
+                self.current_category = item.category
+                self.load_view_data()
         
     def init_listview_page(self):    
         self.listview_page = gtk.VBox()
@@ -186,7 +198,20 @@ class WebcastsBrowser(gtk.VBox, SignalContainer):
         else:    
             child_datas = self.__db_query.get_info(self.current_category)[0]
             self.metro_view.add_webcast_items(child_datas)            
+            
+    def load_collect_data(self):        
+        try:
+            collected_objs = utils.load_db(self.collected_db_file)
+        except:    
+            collected_objs = None
 
+        if collected_objs:    
+            songs = [ WebcastDB.get_song(uri) for uri in collected_objs]
+        else:    
+            songs = None
+            
+        if songs:    
+            self.collected_view.add_webcasts(songs)
         
     def get_icon_view(self):
         icon_view = WebcastIconView()
@@ -212,6 +237,25 @@ class WebcastsBrowser(gtk.VBox, SignalContainer):
         webcast_view.keymap.update({"BackSpace" : lambda : self.on_backbutton_clicked(None)})        
         return webcast_view
 
+    
+    def on_dispatcher_change_webcast(self, widget, song):
+        item = self.collected_view.get_webcast_item(song)
+        if item:
+            self.collected_view.delete_items([item])
+        else:    
+            self.collected_view.add_webcasts([song])
+        
+    
+    def on_db_update_songs(self, db, infos):
+        for song, tags, new_tags in infos:
+            if new_tags.has_key("collected"):
+                item = self.collected_view.get_webcast_item(song)
+                if item:
+                    self.collected_view.delete_items([item])
+                else:    
+                    self.collected_view.add_webcasts([song])
         
     def save(self):
-        pass
+        songs = self.collected_view.get_webcasts()
+        uris = [ song.get("uri") for song in songs if song.get("uri")]
+        utils.save_db(uris, self.collected_db_file)

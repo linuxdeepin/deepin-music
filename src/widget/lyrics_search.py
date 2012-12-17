@@ -164,7 +164,7 @@ class SearchUI(DialogBox):
     def render_download(self, result):
         if result:
             Dispatcher.reload_lrc(Player.song)
-            self.prompt_label.set_text(_("File save to %s") % config.get("lyrics", "save_lrc_path"))
+            self.prompt_label.set_text("%s %s" % (_("File save to"), config.get("lyrics", "save_lrc_path")))
         else:    
             self.prompt_label.set_text(_("Fail to download!"))
         

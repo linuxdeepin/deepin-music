@@ -160,7 +160,7 @@ class PluginsManager(gtk.VBox):
         self.plugins_view.set_size_request(420, 300)        
         self.plugins_view.connect("single-click-item", self.on_plugins_view_single_click)
                 
-        self.plugins_view.set_column_titles([_("插件"), _("版本"), _("启用"), ""],
+        self.plugins_view.set_column_titles([_("Plugin"), _("Version"), _("Enable"), ""],
                                             (self.sort_by_title, self.sort_by_title,
                                              self.sort_by_title, self.sort_by_title))
         plugins_view_align = set_widget_gravity(self.plugins_view, gravity=(1, 1, 1, 1),
@@ -231,8 +231,8 @@ class PluginsManager(gtk.VBox):
                     return
             item.toggle_enabled()    
             
-        plugin_name = "<b>%s: </b>%s" % (_("插件"), utils.xmlescape(item.pluginfo["Name"]))    
-        plugin_authors = "<b>%s: </b>%s" % (_("插件作者"), 
+        plugin_name = "<b>%s: </b>%s" % (_("Plugin"), utils.xmlescape(item.pluginfo["Name"]))    
+        plugin_authors = "<b>%s: </b>%s" % (_("Author(s)"), 
                                                          utils.xmlescape(" ".join(item.pluginfo["Authors"])))
         plugin_des = item.pluginfo["Description"]        
         self.plugin_name.set_text(plugin_name)

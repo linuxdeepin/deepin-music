@@ -29,7 +29,7 @@ from dtk.ui.utils import get_content_size
 
 import utils
 from widget.skin import app_theme
-from widget.ui_utils import (draw_single_mask, render_item_text)
+from widget.ui_utils import (draw_single_mask, render_item_text, draw_separator)
 from constant import DEFAULT_FONT_SIZE, LIST_WIDTH
 
 
@@ -69,6 +69,95 @@ class CategoryTreeItem(TreeItem):
     def render_title(self, cr, rect):        
         # Draw select background.
             
+        if self.is_select:    
+            draw_single_mask(cr, rect.x + 1, rect.y, rect.width - 2, rect.height, "globalItemSelect")
+        elif self.is_hover:
+            draw_single_mask(cr, rect.x + 1, rect.y, rect.width - 2, rect.height, "globalItemHover")
+        
+        if self.is_select:
+            text_color = "#FFFFFF"
+        else:    
+            text_color = app_theme.get_color("labelText").get_color()
+            
+        draw_text(cr, self.title, rect.x + self.padding_x, 
+                  rect.y, rect.width - self.padding_x * 2, 
+                  rect.height, text_size=10, 
+                  text_color = text_color,
+                  alignment=pango.ALIGN_LEFT)    
+        
+    def expand(self):
+        pass
+    
+    def unexpand(self):
+        pass
+    
+    def unhover(self, column, offset_x, offset_y):
+        self.is_hover = False
+        self.emit_redraw_request()
+    
+    def hover(self, column, offset_x, offset_y):
+        self.is_hover = True
+        self.emit_redraw_request()
+        
+    def button_press(self, column, offset_x, offset_y):
+        pass
+    
+    def single_click(self, column, offset_x, offset_y):
+        pass
+
+    def double_click(self, column, offset_x, offset_y):
+        pass        
+    
+    def draw_drag_line(self, drag_line, drag_line_at_bottom=False):
+        pass
+    
+    
+class CollectTreeItem(TreeItem):    
+    def __init__(self, title):
+        TreeItem.__init__(self)
+        self.column_index = 0
+        self.side_padding = 5
+
+        self.title = title
+        self.item_width = 121
+        self.padding_x = 10
+        self.padding_y = 5
+        self.item_height = 37 + self.padding_y * 2 + 1
+        self.collect_flag = True
+        
+    def get_height(self):    
+        return self.item_height
+    
+    def get_column_widths(self):
+        return (self.item_width,)
+    
+    def get_column_renders(self):
+        return (self.render_title,)
+    
+    def unselect(self):
+        self.is_select = False
+        self.emit_redraw_request()
+        
+    def emit_redraw_request(self):    
+        if self.redraw_request_callback:
+            self.redraw_request_callback(self)
+            
+    def select(self):        
+        self.is_select = True
+        self.emit_redraw_request()
+        
+    def render_title(self, cr, rect):        
+        # Draw select background.
+        
+        rect.y += self.padding_y
+        # draw separator.
+        draw_separator(cr, rect.x, 
+                       rect.y,
+                       rect.width, 1
+                       )
+        rect.y += self.padding_y + 1
+        rect.height -= self.padding_y * 2 - 1
+                    
         if self.is_select:    
             draw_single_mask(cr, rect.x + 1, rect.y, rect.width - 2, rect.height, "globalItemSelect")
         elif self.is_hover:

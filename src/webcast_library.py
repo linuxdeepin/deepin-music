@@ -553,7 +553,9 @@ class WebcastQuery(gobject.GObject, Logger):
                 location = old_keys_values.get("location")
                 will_removed = True
             
+                
             for category in categorys:
+                if not category: continue
                 if category in self.multiple_category.keys():
                     if will_removed:
                         if song in self.__tree[category][1]:

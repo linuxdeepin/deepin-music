@@ -484,7 +484,7 @@ class SongView(ListView):
             self.play_uris([uri])
             
         if not uri:
-            input_dialog = InputDialog(_("Add URI"), "", 300, 100, lambda name : play_or_add_uri(name))
+            input_dialog = InputDialog(_("Add URL"), "", 300, 100, lambda name : play_or_add_uri(name))
             input_dialog.show_all()
         else:    
             play_or_add_uri(uri)    

@@ -46,6 +46,7 @@ class WebcastView(ListView):
         self.drag_dest_set(gtk.DEST_DEFAULT_MOTION | gtk.DEST_DEFAULT_DROP, targets, gtk.gdk.ACTION_COPY)
 
         self.connect_after("drag-data-received", self.on_drag_data_received)
+        self.connect("single-click-item", self.__on_single_click_item)
         self.connect("double-click-item", self.on_double_click_item)
         self.connect("button-press-event", self.on_button_press_event)
         self.connect("delete-select-items", self.try_emit_empty_signal)
@@ -163,6 +164,17 @@ class WebcastView(ListView):
 
     def on_dispatcher_play_webcast(self, obj, webcast):
         self.add_webcasts([webcast], play=True, pos=0)
+        
+    def __on_single_click_item(self, widget, item, column, x, y):
+        if column == 2:
+            song = item.webcast
+            if song.get("collected", False):
+                collected = False
+            else:
+                collected = True
+            WebcastDB.set_property(song, {"collected": collected}, emit_update=False)
+            item.update_webcast(song)
+            Dispatcher.emit("change-webcast", song)
 
     def add_webcasts(self, webcasts, pos=None, sort=False, play=False):
         if not webcasts:
@@ -270,7 +282,17 @@ class MultiDragWebcastView(ListView):
     def add_webcasts(self, songs):
         items = [ WebcastListItem(song) for song in songs]
         self.add_items(items)
-
+        
+    def get_webcasts(self):    
+        songs = [item.webcast for item in self.items ]
+        return songs
+    
+    def get_webcast_item(self, song):
+        for item in self.items:
+            if song == item.webcast:
+                return item
+        return None    
+            
 
 class WebcastIconView(IconView):
 

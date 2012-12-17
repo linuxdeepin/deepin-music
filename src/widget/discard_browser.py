@@ -707,13 +707,13 @@ class WebcastsBrowser(gtk.VBox):
         
         # Init data.
         self.source_data = OrderedDict()
-        self.source_data["internal"] = _("国内广播")
-        self.source_data["foreign"]  = _("国外广播")
-        self.source_data["network"] = _("网络广播")
-        self.source_data["genres"] = _("流派广播")
-        self.source_data["music"]  = _("音乐广播")
-        self.source_data["finance"] = _("财经广播")
-        self.source_data["sports"] = _("体育广播")
+        self.source_data["internal"] = "国内广播"
+        self.source_data["foreign"]  = "国外广播"
+        self.source_data["network"] = "网络广播"
+        self.source_data["genres"] = "流派广播"
+        self.source_data["music"]  = "音乐广播"
+        self.source_data["finance"] = "财经广播"
+        self.source_data["sports"] = "体育广播"
         
         # Init sourcebar
         self.__init_sourcebar()
@@ -771,7 +771,7 @@ class WebcastsBrowser(gtk.VBox):
             if index == 0: show_icon = True
             else: show_icon = False
             items.append(CategroyItem(value, key, self.sourcebar, index, show_icon))
-        items.append(CustomItem(_("我的收藏"), lambda : switch_tab(self.switch_view_box, self.collect_sw)))    
+        items.append(CustomItem("我的收藏", lambda : switch_tab(self.switch_view_box, self.collect_sw)))    
                 
         self.sourcebar.add_items(items)
         self.sourcebar.set_size_request(121, -1)

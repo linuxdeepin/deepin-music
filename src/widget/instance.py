@@ -54,6 +54,7 @@ from nls import _
 from config import config
 from player import Player
 from library import MediaDB
+from webcast_library import WebcastDB
 from mmkeys_wrap import MMKeys
 from song import Song
 import common
@@ -236,6 +237,7 @@ class DeepinMusic(gobject.GObject, Logger):
         self.playlist_ui.save_to_library()
         self.browser_manager.save() 
         MediaDB.save()
+        WebcastDB.save()
         config.write()
         global_hotkeys.stop()
 

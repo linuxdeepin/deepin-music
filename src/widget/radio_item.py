@@ -454,7 +454,7 @@ class MoreIconItem(gobject.GObject):
                                        rect.y + self.pixbuf.get_height() + 5,
                                        rect.width - self.padding_x * 2, 11)
         
-        render_text(cr, _("更多"), title_rect, 
+        render_text(cr, _("More"), title_rect, 
                     app_theme.get_color("labelText").get_color(),
                     10)
         

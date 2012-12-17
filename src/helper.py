@@ -64,6 +64,7 @@ class EventDispatcher(gobject.GObject):
         "play-radio" : SIGNAL_SIMPLE,
         "being-quit" : SIGNAL_BASE,
         "album-changed" : SIGNAL_SIMPLE,
+        "change-webcast" : SIGNAL_SIMPLE,
         }
     
     def __init__(self):

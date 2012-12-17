@@ -25,7 +25,7 @@ import gtk
 import pangocairo
 
 from dtk.ui.utils import (alpha_color_hex_to_cairo, cairo_disable_antialias)
-from dtk.ui.line import draw_vlinear
+from dtk.ui.line import draw_vlinear, draw_hlinear
 from dtk.ui.draw import draw_text
 from dtk.ui.line import HSeparator
 from dtk.ui.constant import DEFAULT_FONT
@@ -94,14 +94,17 @@ def render_item_text(cr, content, rect, in_select, in_highlight, align=pango.ALI
         color = "#ff0000"        
         
     content = utils.xmlescape(content)    
-    draw_text(cr, content, rect.x, rect.y, rect.width, rect.height, font_size, color, alignment=align)
-    
+    draw_text(cr, content, rect.x, rect.y, rect.width, rect.height, font_size, color, alignment=align)    
 def create_separator_box(padding_x=0, padding_y=0):    
     separator_box = HSeparator(
         app_theme.get_shadow_color("hSeparator").get_color_info(),
         padding_x, padding_y)
     return separator_box
 
+def draw_separator(cr, x, y, width, height):
+    draw_hlinear(cr, x, y, width, height, 
+                 app_theme.get_shadow_color("hSeparator").get_color_info())
+    
 def create_right_align():    
     align = gtk.Alignment()
     align.set(0, 0, 0, 1)

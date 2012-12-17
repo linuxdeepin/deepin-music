@@ -37,7 +37,7 @@ class GlobalSearch(gtk.VBox):
         gtk.VBox.__init__(self)
         self.set_spacing(5)
         local_box = gtk.VBox()
-        local_label = Label("<b>%s</b>" % _("本地资源"))
+        local_label = Label("<b>%s</b>" % "本地资源")
         local_label.set_size_request(200, 25)
         local_label_align = gtk.Alignment()
         local_label_align.set_padding(5, 0, 10, 0)
@@ -48,7 +48,7 @@ class GlobalSearch(gtk.VBox):
         local_box.pack_start(self.local_sw, False, True)
         
         radio_box = gtk.VBox()
-        radio_label = Label("<b>%s</b>" % _("电台资源"))
+        radio_label = Label("<b>%s</b>" % "电台资源")
         radio_label.set_size_request(200, 25)
         radio_label_align = gtk.Alignment()
         radio_label_align.set_padding(5, 0, 10, 0)

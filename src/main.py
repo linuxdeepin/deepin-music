@@ -24,6 +24,7 @@ import sys
 from logger import Logger
 from cover_download import SimpleFetchManager
 from nls import _
+from constant import PROGRAM_VERSION
 
 
 class DeepinMusicApp(Logger):
@@ -159,7 +160,7 @@ class DeepinMusicApp(Logger):
         return p
     
     def version(self):
-        print _("Deepin Music Player 1.0.1")
+        print "%s %s" % (_("Deepin Music Player"), PROGRAM_VERSION)
         
     def mainloop_init(self):    
         import gobject

@@ -48,7 +48,7 @@ from widget.prefer_item import NormalItem, ExpandItem
 from widget.skin import app_theme
 from widget.plugins_view import PluginsManager
 from render_lyrics import RenderContextNew
-from constant import PREDEFINE_COLORS
+from constant import PREDEFINE_COLORS, PROGRAM_VERSION
 from config import config
 from nls import _
 
@@ -849,7 +849,8 @@ class ScrollLyricsSetting(gtk.VBox):
         # alignment.
         line_align_index = int(config.get("scroll_lyrics", "line_align", 1))
         line_align_hbox, self.line_align_combo_box = self.create_combo_widget(_("Alignment:"), 
-                                                [(value, index) for index, value in enumerate([_("Left-aligned"), _("Centered"), _("Right-aligned")])],
+                                                [(value, index) for index, value 
+                                                 in enumerate([_("Left"), _("Centered"), _("Right")])],
                                                                                line_align_index)
         
         # scroll mode.
@@ -918,7 +919,7 @@ class AboutBox(gtk.VBox):
         logo_box.pack_start(logo_name, False, False)
         
         version_label = Label(_("Version:"))
-        version_content = Label("V1.0.1", light_color)
+        version_content = Label(PROGRAM_VERSION, light_color)
         # publish_label = Label(_("Release date:"))
         # publish_content = Label("2012.07.12", light_color)
         info_box = gtk.HBox(spacing=5)
@@ -968,7 +969,7 @@ class PreferenceDialog(DialogBox):
         self.plugins_manager = PluginsManager()
         
         # Category bar
-        self.category_bar = TreeView()
+        self.category_bar = TreeView(enable_drag_drop=False, enable_multiple_select=False)
         self.category_bar.draw_mask = self.draw_treeview_mask
         self.category_bar.set_size_request(132, 516)
         self.category_bar.connect("single-click-item", self.on_categorybar_single_click)
