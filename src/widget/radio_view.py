@@ -41,6 +41,7 @@ from cover_manager import cover_thread_pool
 import utils
 from xdg_support import get_config_file
 from library import MediaDB
+from nls import _
 
 
 class RadioView(TreeView):    
@@ -396,7 +397,7 @@ class RadioSearchView(gtk.VBox):
         self.radio_view.fetch_failed = self.switch_to_search_prompt
         self.radio_view.fetch_successed = self.switch_to_radio_view
         
-        self.search_prompt = SearchPrompt()
+        self.search_prompt = SearchPrompt(_("MusicFM"))
         self.add(self.radio_view_sw)
         self.keyword = ""
         

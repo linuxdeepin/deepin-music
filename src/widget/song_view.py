@@ -722,7 +722,7 @@ class LocalSearchView(gtk.VBox):
         
         self.song_view = MultiDragSongView()
         self.song_view_sw = self.song_view.get_scrolled_window()
-        self.search_prompt = SearchPrompt()
+        self.search_prompt = SearchPrompt(_("Library"))
         self.add(self.song_view_sw)
         
     def start_search_songs(self, keyword):    

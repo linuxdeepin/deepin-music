@@ -48,7 +48,7 @@ class GlobalSearch(gtk.VBox):
                                                 paddings=(0, 0, 5, 10))
         close_button_align.connect("expose-event",  self.on_close_button_expose_event)
         
-        self.tab_switcher = TabSwitcher(["本地资源", "电台资源", "广播资源"])
+        self.tab_switcher = TabSwitcher([_("Library"), _("MusicFM"), _("Radio")])
         self.tab_switcher.connect("tab-switch-start", lambda switcher, tab_index: self.switch_result_view(tab_index))
         tab_switcher_align = set_widget_gravity(self.tab_switcher, gravity=(0, 0, 1, 1),
                                                 paddings=(10, 0, 0, 0))

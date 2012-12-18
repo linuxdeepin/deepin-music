@@ -712,19 +712,21 @@ class SearchCloseButton(ImageButton):
         
 class SearchPrompt(gtk.EventBox):        
     
-    def __init__(self):
+    def __init__(self, from_keyword=""):
         gtk.EventBox.__init__(self)
         self.set_visible_window(False)
         
         self.connect("expose-event", self.on_expose_event)
         self.keyword = ""
-        self.from_keyword = ""
+        self.from_keyword = from_keyword
         self.padding_x = 10
         self.padding_y = 8
-        self.prompt_format_text  = "没有找到与\"<span foreground=\"red\">{0}</span>\"相关的内容." 
-        self.suggest_title = "<span foreground=\"black\"><b>深度音乐建议您:</b></span>"
-        self.suggest_first_line = "· 看看输入文字是否有误"
-        self.suggest_second_line = "· 尽量输入艺术家或专辑名称"
+        self.red_span = "\"<span foreground=\"red\">%s</span>\""
+        self.black_span = "<span foreground=\"black\">%s</span>"
+        self.prompt_format_text  = "在%s中没有找到与%s相关的内容." 
+        self.suggest_title = "<span foreground=\"black\"><b>%s:</b></span>" % "深度音乐建议您"
+        self.suggest_first_line = "· %s" % "看看输入文字是否有误"
+        self.suggest_second_line = "· %s" % "尽量输入艺术家或专辑名称"
         
         
     def on_expose_event(self, widget, event):    
@@ -733,7 +735,9 @@ class SearchPrompt(gtk.EventBox):
         rect.x += self.padding_x
         rect.width -= self.padding_x * 2
         
-        self.prompt_text = self.prompt_format_text.format(self.keyword)
+        keyword_span = self.red_span % self.keyword
+        from_keyword_span = self.black_span % self.from_keyword
+        self.prompt_text = self.prompt_format_text % (from_keyword_span, keyword_span)
         _width, _height = get_content_size(self.prompt_text)
 
         draw_text(cr, self.prompt_text, rect.x, rect.y, rect.width, _height, 

@@ -34,6 +34,7 @@ from helper import Dispatcher
 from player import Player
 from song import Song
 from webcast_library import WebcastDB
+from nls import _
 
 class WebcastView(ListView):
     __gsignals__ = {
@@ -347,7 +348,7 @@ class WebcastSearchView(gtk.VBox):
         self.webcast_view = MultiDragWebcastView()
         self.webcast_view_sw = self.webcast_view.get_scrolled_window()
         
-        self.search_prompt = SearchPrompt()
+        self.search_prompt = SearchPrompt(_("Radio"))
         self.add(self.webcast_view_sw)
         
     def start_search_webcasts(self, keyword):    
