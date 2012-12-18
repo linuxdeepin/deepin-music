@@ -25,9 +25,10 @@ import gtk
 from widget.song_view import LocalSearchView
 from widget.radio_view import RadioSearchView
 from widget.webcast_view import WebcastSearchView
-from widget.ui_utils import switch_tab, set_widget_gravity
+from widget.ui_utils import switch_tab, set_widget_gravity, color_hex_to_cairo
 from widget.ui import SearchCloseButton
 from widget.tab_switcher import TabSwitcher
+from widget.skin import app_theme
 from nls import _
 
 class GlobalSearch(gtk.VBox):
@@ -42,8 +43,10 @@ class GlobalSearch(gtk.VBox):
         self.webcast_view_page = WebcastSearchView()
         
         self.close_button = SearchCloseButton()
+        self.line_dcolor = app_theme.get_color("globalItemHighlight")
         close_button_align = set_widget_gravity(self.close_button, gravity=(0.5, 0.5, 0, 0),
                                                 paddings=(0, 0, 5, 10))
+        close_button_align.connect("expose-event",  self.on_close_button_expose_event)
         
         self.tab_switcher = TabSwitcher(["本地资源", "电台资源", "广播资源"])
         self.tab_switcher.connect("tab-switch-start", lambda switcher, tab_index: self.switch_result_view(tab_index))
@@ -71,3 +74,10 @@ class GlobalSearch(gtk.VBox):
         self.radio_view_page.start_search_radios(keyword)
         self.local_view_page.start_search_songs(keyword)
         self.webcast_view_page.start_search_webcasts(keyword)
+        
+    def on_close_button_expose_event(self, widget, event):    
+        cr = widget.window.cairo_create()
+        rect = widget.allocation
+        cr.set_source_rgb(*color_hex_to_cairo(self.line_dcolor.get_color()))
+        cr.rectangle(rect.x, rect.y + rect.height - 1, rect.width, 1)
+        cr.fill()

@@ -226,6 +226,7 @@ class CustomEntry(gtk.VBox):
         
         
     def __emit_enter_signal(self, widget):    
+        self.hide_clean_button()
         self.emit("enter-press", self.get_text())
         
     def __on_entry_changed(self, widget, string):    
@@ -604,6 +605,10 @@ class SearchBox(gtk.HBox):
         
         self.connect("realize", self.on_realize, 74)
         self.connect("size-allocate", self.on_size_allocate, 74)
+        
+    def clear(self):    
+        if self.entry_box.get_text():
+            self.entry_box.set_text("")
         
     def on_realize(self, widget, size):    
         rect = widget.allocation

@@ -68,6 +68,7 @@ class TabSwitcher(gtk.EventBox):
         self.in_animiation = False
         
         self.set_size_request(-1, self.tab_height + self.tab_line_height)
+        self.line_dcolor = app_theme.get_color("globalItemHighlight")
 
         self.connect("expose-event", self.expose_tab_switcher)
         self.connect("button-press-event", self.button_press_tab_switcher)
@@ -78,7 +79,7 @@ class TabSwitcher(gtk.EventBox):
         rect = widget.allocation
 
         # Draw tab line.
-        cr.set_source_rgb(*color_hex_to_cairo("#8CBDA0"))
+        cr.set_source_rgb(*color_hex_to_cairo(self.line_dcolor.get_color()))
         cr.rectangle(rect.x + self.padding_x, 
                      rect.y + self.tab_height,
                      rect.width - self.padding_x * 2, 

@@ -79,6 +79,7 @@ class BrowserMananger(gtk.VBox):
             switch_tab(self.bottom_box, self.global_search)
             
     def on_global_search_close(self, widget):        
+        self.search_box.clear()
         switch_tab(self.bottom_box, self.last_browser)
         
     def on_expose_event(self, widget, event):    
@@ -91,6 +92,7 @@ class BrowserMananger(gtk.VBox):
         return False
         
     def on_dispatcher_switch_browser(self, obj, tab_type):    
+        self.search_box.clear()
         if tab_type == TAB_LOCAL:
             switch_tab(self.bottom_box, self.local_browser)
             self.last_browser = self.local_browser            
