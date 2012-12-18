@@ -220,7 +220,6 @@ class CustomEntry(gtk.VBox):
         return self.clean_button_align.get_visible()
     
     def hide_clean_button(self):
-        
         self.clean_button_align.hide_all()
         self.clean_button_align.set_no_show_all(True)
         
@@ -602,9 +601,13 @@ class SearchBox(gtk.HBox):
         
         self.pack_start(self.entry_box, False, True)
         self.pack_start(self.search_button, False, False)
+        self.entry = self.entry_box.entry
         
         self.connect("realize", self.on_realize, 74)
         self.connect("size-allocate", self.on_size_allocate, 74)
+        
+        self.get_text = self.entry_box.get_text
+        self.set_text = self.entry_box.set_text
         
     def clear(self):    
         if self.entry_box.get_text():

@@ -22,6 +22,7 @@
 
 
 import gtk
+import copy
 
 from dtk.ui.utils import (cairo_disable_antialias,
                           color_hex_to_cairo, propagate_expose)
@@ -29,10 +30,11 @@ from widget.local_browser import SimpleBrowser
 from widget.webcasts_browser import WebcastsBrowser
 from widget.radio_browser import RadioBrowser
 from widget.global_search import GlobalSearch
-from widget.ui import SearchBox
 from widget.ui_utils import switch_tab, draw_line, draw_alpha_mask
 from helper import Dispatcher
 from constant import TAB_LOCAL, TAB_WEBCAST, TAB_RADIO
+
+from widget.completion_window import search_entry, completion_grab_window, completion_window
 
 
 class BrowserMananger(gtk.VBox):
@@ -41,15 +43,15 @@ class BrowserMananger(gtk.VBox):
         gtk.VBox.__init__(self)
         
         # Search Widgets at top.
-        self.search_box = SearchBox()
-        self.search_box.entry_box.connect("enter-press", self.on_searchbox_search)
-        self.search_box.connect("search", self.on_searchbox_search)
+        # self.search_box = SearchBox()
+        search_entry.entry_box.connect("enter-press", self.on_searchbox_search)
+        search_entry.connect("search", self.on_searchbox_search)
         
         search_box_align = gtk.Alignment()
         search_box_align.connect("expose-event", self.on_top_hbox_expose)        
         search_box_align.set_padding(0, 1, 1, 0)
         search_box_align.set(0, 0, 1, 1)
-        search_box_align.add(self.search_box)
+        search_box_align.add(search_entry)
         
         # Bottom widgets and is switchable.
         self.local_browser = SimpleBrowser()
@@ -73,13 +75,47 @@ class BrowserMananger(gtk.VBox):
         Dispatcher.connect("switch-browser", self.on_dispatcher_switch_browser)
         
         
+        # Connect entry
+        # search_entry.entry.connect("changed", self.on_search_entry_changed)
+        # search_entry.entry.connect_after("key-press-event", self.on_search_entry_key_press)
+        # search_entry.entry.connect_after("key-release-event", self.on_search_entry_key_release)
+        
+        self.in_press = False
+        self.press_id = 0
+        self.entry_changed = False
+
+        
+    def on_search_entry_changed(self, widget, string):    
+        print "dddd"
+        self.press_id += 1
+        self.entry_changed = True
+        
+    def on_search_entry_key_press(self, widget, event):    
+        self.in_press = True
+        self.press_id += 1
+    
+    def on_search_entry_key_release(self, widget, event):
+        self.in_press = False
+        press_id = copy.deepcopy(self.press_id)
+        self.popup_completion(press_id)
+        
+    def popup_completion(self, press_id):    
+        if (not self.in_press) and press_id == self.press_id and self.entry_changed:
+            search_keyword = search_entry.get_text()
+            if search_keyword:
+                completion_window.show(search_keyword)
+            else:    
+                completion_grab_window.popup_grab_window_focus_out()
+            self.entry_changed = False    
+            
     def on_searchbox_search(self, widget, keyword):    
+        completion_grab_window.popup_grab_window_focus_out()
         if keyword:
             self.global_search.begin_search(keyword)    
             switch_tab(self.bottom_box, self.global_search)
             
     def on_global_search_close(self, widget):        
-        self.search_box.clear()
+        search_entry.clear()
         switch_tab(self.bottom_box, self.last_browser)
         
     def on_expose_event(self, widget, event):    
@@ -92,7 +128,7 @@ class BrowserMananger(gtk.VBox):
         return False
         
     def on_dispatcher_switch_browser(self, obj, tab_type):    
-        self.search_box.clear()
+        search_entry.clear()
         if tab_type == TAB_LOCAL:
             switch_tab(self.bottom_box, self.local_browser)
             self.last_browser = self.local_browser            
@@ -106,14 +142,6 @@ class BrowserMananger(gtk.VBox):
     def save(self):        
         self.webcasts_browser.save()
         
-    def on_top_hbox_realize(self, widget, size):    
-        rect = widget.allocation
-        self.search_entry.set_size(rect.width - size, 32)
-        widget.show_all()
-        
-    def on_top_hbox_size_allocate(self, widget, rect, size):
-        self.search_entry.set_size(rect.width - size, 32)
-        widget.show_all()
         
     def on_top_hbox_expose(self, widget, event):    
         cr = widget.window.cairo_create()

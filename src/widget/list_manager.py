@@ -22,7 +22,6 @@
 
 import gtk
 
-from dtk.ui.scrolled_window import ScrolledWindow
 from widget.playlist import PlaylistUI
 from widget.webcast_list import WebcastList
 from widget.radio_list import RadioList
@@ -31,7 +30,7 @@ from helper import Dispatcher
 from nls import _
 
 from widget.tab_box import TabManager
-from constant import LIST_WIDTH, TAB_LOCAL, TAB_WEBCAST, TAB_RADIO
+from constant import TAB_LOCAL, TAB_WEBCAST, TAB_RADIO
 
 
 class ListManager(gtk.VBox):
