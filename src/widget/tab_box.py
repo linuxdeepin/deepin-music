@@ -213,6 +213,7 @@ class TabManager(gtk.VBox):
         if self.items:
             item = self.items[0]
             item.manual_select()
+            self.current_tab_type = item.tab_type
             self.__container.add(item.get_allocate_widget())
             
     def add_items(self, items, clear=True):        
@@ -250,6 +251,9 @@ class TabManager(gtk.VBox):
         pass
                 
     def on_item_press(self, widget):            
+        if widget.tab_type == self.current_tab_type:
+            return
+        self.current_tab_type = widget.tab_type
         for item in self.items:
             if item == widget:
                 continue
@@ -257,3 +261,17 @@ class TabManager(gtk.VBox):
             
         switch_tab(self.__container, widget.get_allocate_widget())    
         self.emit("switch-tab", widget)    
+        
+    def active_tab(self, tab_type):    
+        if tab_type == self.current_tab_type:
+            return
+        self.current_tab_type = tab_type
+        choose_item = None
+        for item in self.items:
+            if item.tab_type == tab_type:
+                choose_item = item
+            item.clear_selected_status()
+                
+        if choose_item is not None:
+            choose_item.manual_select()
+            switch_tab(self.__container, choose_item.get_allocate_widget())                

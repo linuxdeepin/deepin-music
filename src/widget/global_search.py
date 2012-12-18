@@ -26,6 +26,7 @@ from widget.song_view import LocalSearchView
 from widget.radio_view import RadioSearchView
 from widget.webcast_view import WebcastSearchView
 from widget.ui_utils import switch_tab, set_widget_gravity
+from widget.ui import SearchCloseButton
 from widget.tab_switcher import TabSwitcher
 from nls import _
 
@@ -40,15 +41,22 @@ class GlobalSearch(gtk.VBox):
         self.radio_view_page = RadioSearchView()
         self.webcast_view_page = WebcastSearchView()
         
+        self.close_button = SearchCloseButton()
+        close_button_align = set_widget_gravity(self.close_button, gravity=(0.5, 0.5, 0, 0),
+                                                paddings=(0, 0, 5, 10))
+        
         self.tab_switcher = TabSwitcher(["本地资源", "电台资源", "广播资源"])
         self.tab_switcher.connect("tab-switch-start", lambda switcher, tab_index: self.switch_result_view(tab_index))
         tab_switcher_align = set_widget_gravity(self.tab_switcher, gravity=(0, 0, 1, 1),
                                                 paddings=(10, 0, 0, 0))
+        tab_switcher_box = gtk.HBox()
+        tab_switcher_box.pack_start(tab_switcher_align, True, True)
+        tab_switcher_box.pack_start(close_button_align, False, False)
         
         self.result_page = gtk.VBox()
         self.result_page.add(self.local_view_page)
         
-        self.pack_start(tab_switcher_align, False, True)
+        self.pack_start(tab_switcher_box, False, True)
         self.pack_start(self.result_page, True, True)
         
     def switch_result_view(self, index):    

@@ -439,7 +439,15 @@ class MoreIconItem(gobject.GObject):
             self.create_pixbuf()
              
         pixbuf_x = rect.x + (rect.width - self.pixbuf.get_width()) / 2
+        # cr.save()
+        # cr.arc(pixbuf_x + self.pixbuf.get_width() / 2 + 1,
+        #        rect.y + self.pixbuf.get_height() / 2 + 1,
+        #        self.pixbuf.get_width() / 2,
+        #        0, 2 * math.pi)
+        # cr.clip()
         draw_pixbuf(cr, self.pixbuf, pixbuf_x, rect.y)
+        # cr.restore()
+
         
         if self.pixbuf_rect is None:
             self.pixbuf_rect = gtk.gdk.Rectangle((rect.width - self.pixbuf.get_width()) / 2, 
@@ -447,8 +455,14 @@ class MoreIconItem(gobject.GObject):
         if self.mask_flag:    
             if self.mask_pixbuf is None:
                 self.create_mask_pixbuf()
-            draw_pixbuf(cr, self.mask_pixbuf, pixbuf_x, rect.y)    
-        
+            # cr.save()
+            # cr.arc(pixbuf_x + self.pixbuf.get_width() / 2,
+            #        rect.y + self.pixbuf.get_height() / 2,
+            #        self.pixbuf.get_width() / 2,
+            #        0, 2 * math.pi)
+            # cr.clip()
+            draw_pixbuf(cr, self.mask_pixbuf, pixbuf_x, rect.y)                
+            # cr.restore()
             
         title_rect = gtk.gdk.Rectangle(rect.x + self.padding_x, 
                                        rect.y + self.pixbuf.get_height() + 5,

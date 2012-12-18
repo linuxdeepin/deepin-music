@@ -218,6 +218,12 @@ class CustomEntry(gtk.VBox):
         
     def get_clean_visible(self):    
         return self.clean_button_align.get_visible()
+    
+    def hide_clean_button(self):
+        
+        self.clean_button_align.hide_all()
+        self.clean_button_align.set_no_show_all(True)
+        
         
     def __emit_enter_signal(self, widget):    
         self.emit("enter-press", self.get_text())
@@ -615,6 +621,7 @@ class SearchBox(gtk.HBox):
         
     def on_search_button_press_event(self, widget, event):    
         keyword =  self.entry_box.get_text().strip()
+        self.entry_box.hide_clean_button()
         if keyword:
             self.emit("search", keyword)
             
@@ -688,6 +695,14 @@ class CleanButton(ImageButton):
                              app_theme.get_pixbuf("entry/clean_press.png")
                              )
     
+class SearchCloseButton(ImageButton):
+    def __init__(self):
+        ImageButton.__init__(self,
+                             app_theme.get_pixbuf("entry/close_normal.png"),
+                             app_theme.get_pixbuf("entry/close_hover.png"),
+                             app_theme.get_pixbuf("entry/close_press.png")
+                             )
+
     
         
 class SearchPrompt(gtk.EventBox):        

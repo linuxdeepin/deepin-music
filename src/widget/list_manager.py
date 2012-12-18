@@ -56,5 +56,12 @@ class ListManager(gtk.VBox):
         main_align.add(self.tab_box)
         self.add(main_align)
         
+        Dispatcher.connect_after("play-song", self.manual_active_tab, TAB_LOCAL)
+        Dispatcher.connect_after("play-webcast", self.manual_active_tab, TAB_WEBCAST)
+        Dispatcher.connect_after("play-radio", self.manual_active_tab, TAB_RADIO)
+        
     def on_tab_box_switch_tab(self, widget, item):    
         Dispatcher.emit("switch-browser", item.tab_type)
+        
+    def manual_active_tab(self, widget, songs, tab_type):    
+        self.tab_box.active_tab(tab_type)
