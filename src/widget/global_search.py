@@ -21,58 +21,45 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import gtk
-from dtk.ui.scrolled_window import ScrolledWindow
-from dtk.ui.label import Label
 
-from widget.song_view import MultiDragSongView
-from widget.radio_view import RadioIconView, TAG_SEARCH
-from widget.ui_utils import draw_alpha_mask
+from widget.song_view import LocalSearchView
+from widget.radio_view import RadioSearchView
+from widget.webcast_view import WebcastSearchView
+from widget.ui_utils import switch_tab, set_widget_gravity
+from widget.tab_switcher import TabSwitcher
 from nls import _
-from library import MediaDB
-
 
 class GlobalSearch(gtk.VBox):
     
     def __init__(self):
         gtk.VBox.__init__(self)
-        self.set_spacing(5)
-        local_box = gtk.VBox()
-        local_label = Label("<b>%s</b>" % "本地资源")
-        local_label.set_size_request(200, 25)
-        local_label_align = gtk.Alignment()
-        local_label_align.set_padding(5, 0, 10, 0)
-        local_label_align.add(local_label)
         
-        self.local_view, self.local_sw = self.get_local_view()
-        local_box.pack_start(local_label_align, False, True)
-        local_box.pack_start(self.local_sw, False, True)
+        self.set_spacing(10)
         
-        radio_box = gtk.VBox()
-        radio_label = Label("<b>%s</b>" % "电台资源")
-        radio_label.set_size_request(200, 25)
-        radio_label_align = gtk.Alignment()
-        radio_label_align.set_padding(5, 0, 10, 0)
-        radio_label_align.add(radio_label)
-        self.radio_view, self.radio_sw = self.get_radio_view()
-        radio_box.pack_start(radio_label_align, False, True)
-        radio_box.pack_start(self.radio_sw, True, True)
+        self.local_view_page = LocalSearchView()
+        self.radio_view_page = RadioSearchView()
+        self.webcast_view_page = WebcastSearchView()
         
-        self.pack_start(local_box, True, True)
-        self.pack_start(radio_box, True, True)
+        self.tab_switcher = TabSwitcher(["本地资源", "电台资源", "广播资源"])
+        self.tab_switcher.connect("tab-switch-start", lambda switcher, tab_index: self.switch_result_view(tab_index))
+        tab_switcher_align = set_widget_gravity(self.tab_switcher, gravity=(0, 0, 1, 1),
+                                                paddings=(10, 0, 0, 0))
         
-    def get_local_view(self):    
-        song_view = MultiDragSongView()
-        song_view.add_titles([_("Title"), _("Artist"), _("Album"), _("Added time")])
-        scrolled_window = song_view.get_scrolled_window()
-        return song_view, scrolled_window
-    
-    def get_radio_view(self):
-        radio_view = RadioIconView(tag=TAG_SEARCH, padding_y=10)
-        scrolled_window = radio_view.get_scrolled_window()
-        return radio_view, scrolled_window
+        self.result_page = gtk.VBox()
+        self.result_page.add(self.local_view_page)
+        
+        self.pack_start(tab_switcher_align, False, True)
+        self.pack_start(self.result_page, True, True)
+        
+    def switch_result_view(self, index):    
+        if index == 0:
+            switch_tab(self.result_page, self.local_view_page)
+        elif index == 1:    
+            switch_tab(self.result_page, self.radio_view_page)
+        elif index == 2:    
+            switch_tab(self.result_page, self.webcast_view_page)
     
     def begin_search(self, keyword):
-        self.radio_view.clear_items()
-        self.radio_view.set_keyword(keyword)
-        self.radio_view.start_fetch_channels()
-        self.local_view.start_search_songs(keyword)
+        self.radio_view_page.start_search_radios(keyword)
+        self.local_view_page.start_search_songs(keyword)
+        self.webcast_view_page.start_search_webcasts(keyword)

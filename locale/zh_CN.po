@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-17 15:11+0800\n"
+"POT-Creation-Date: 2012-12-18 08:58+0800\n"
 "PO-Revision-Date: 2012-07-12 03:23+0800\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -229,7 +229,7 @@ msgid "Add track"
 msgstr "添加歌曲"
 
 #: ../src/widget/playlist.py:85 ../src/widget/playlist.py:525
-#: ../src/widget/instance.py:346
+#: ../src/widget/instance.py:348
 msgid "Playback Order"
 msgstr "播放模式"
 
@@ -302,7 +302,7 @@ msgid "Randomize"
 msgstr "随机排序"
 
 #: ../src/widget/playlist.py:517 ../src/widget/song_view.py:686
-#: ../src/widget/instance.py:307 ../src/widget/tray.py:56
+#: ../src/widget/instance.py:309 ../src/widget/tray.py:56
 msgid "Play"
 msgstr "播放"
 
@@ -332,7 +332,7 @@ msgid "Sort"
 msgstr "排序"
 
 #: ../src/widget/playlist.py:527 ../src/widget/song_view.py:693
-#: ../src/widget/instance.py:327 ../src/widget/instance.py:349
+#: ../src/widget/instance.py:329 ../src/widget/instance.py:351
 #: ../src/widget/converter.py:415
 msgid "Convert"
 msgstr "格式转换器"
@@ -476,8 +476,8 @@ msgstr "艺术家"
 msgid "Album"
 msgstr "专辑"
 
-#: ../src/widget/local_browser.py:300 ../src/widget/webcasts_browser.py:89
-#: ../src/widget/webcasts_browser.py:91
+#: ../src/widget/local_browser.py:300 ../src/widget/webcasts_browser.py:96
+#: ../src/widget/webcasts_browser.py:98
 msgid "Genre"
 msgstr "流派"
 
@@ -510,13 +510,13 @@ msgstr "添加时间"
 msgid "Play/Pause"
 msgstr "暂停/继续"
 
-#: ../src/widget/headerbar.py:70 ../src/widget/instance.py:316
+#: ../src/widget/headerbar.py:70 ../src/widget/instance.py:318
 #: ../src/widget/song_editor.py:332 ../src/widget/preference.py:374
 #: ../src/widget/tray.py:61
 msgid "Previous"
 msgstr "上一首"
 
-#: ../src/widget/headerbar.py:71 ../src/widget/instance.py:317
+#: ../src/widget/headerbar.py:71 ../src/widget/instance.py:319
 #: ../src/widget/song_editor.py:334 ../src/widget/preference.py:375
 #: ../src/widget/tray.py:62
 msgid "Next"
@@ -631,7 +631,7 @@ msgid "jobs waiting!"
 msgstr "个任务在等待!"
 
 #: ../src/widget/information.py:40 ../src/widget/information.py:82
-#: ../src/widget/instance.py:89
+#: ../src/widget/instance.py:90
 msgid "Deepin Music"
 msgstr "深度音乐"
 
@@ -639,76 +639,76 @@ msgstr "深度音乐"
 msgid "buffering"
 msgstr "正在缓冲"
 
-#: ../src/widget/instance.py:143
+#: ../src/widget/instance.py:144
 msgid "Join us"
 msgstr "加入我们"
 
-#: ../src/widget/instance.py:310 ../src/widget/converter.py:380
+#: ../src/widget/instance.py:312 ../src/widget/converter.py:380
 #: ../src/widget/converter.py:400 ../src/widget/converter.py:403
 #: ../src/widget/tray.py:59
 msgid "Pause"
 msgstr "暂停"
 
-#: ../src/widget/instance.py:314
+#: ../src/widget/instance.py:316
 msgid "Forward"
 msgstr "快进"
 
-#: ../src/widget/instance.py:315
+#: ../src/widget/instance.py:317
 msgid "Rewind"
 msgstr "后退"
 
-#: ../src/widget/instance.py:328 ../src/widget/converter.py:364
+#: ../src/widget/instance.py:330 ../src/widget/converter.py:364
 msgid "Task Manager"
 msgstr "任务管理器"
 
-#: ../src/widget/instance.py:344
+#: ../src/widget/instance.py:346
 msgid "Add"
 msgstr "添加音乐"
 
-#: ../src/widget/instance.py:345
+#: ../src/widget/instance.py:347
 msgid "Controls"
 msgstr "播放控制"
 
-#: ../src/widget/instance.py:348 ../src/widget/equalizer.py:199
+#: ../src/widget/instance.py:350 ../src/widget/equalizer.py:199
 msgid "Equalizer"
 msgstr "均衡器"
 
-#: ../src/widget/instance.py:356
+#: ../src/widget/instance.py:358
 msgid "View New Features"
 msgstr "查看新特性"
 
-#: ../src/widget/instance.py:357 ../src/widget/preference.py:954
+#: ../src/widget/instance.py:359 ../src/widget/preference.py:954
 #: ../src/widget/tray.py:77
 msgid "Preferences"
 msgstr "选项设置"
 
-#: ../src/widget/instance.py:359 ../src/widget/preference.py:193
+#: ../src/widget/instance.py:361 ../src/widget/preference.py:193
 #: ../src/widget/tray.py:78
 msgid "Quit"
 msgstr "退出"
 
-#: ../src/widget/instance.py:379 ../src/widget/tray.py:73
+#: ../src/widget/instance.py:381 ../src/widget/tray.py:73
 msgid "Hide Lyrics"
 msgstr "关闭歌词"
 
-#: ../src/widget/instance.py:381 ../src/widget/preference.py:161
+#: ../src/widget/instance.py:383 ../src/widget/preference.py:161
 #: ../src/widget/tray.py:75
 msgid "Show Lyrics"
 msgstr "打开歌词"
 
-#: ../src/widget/instance.py:385 ../src/widget/tray.py:68
+#: ../src/widget/instance.py:387 ../src/widget/tray.py:68
 msgid "Unlock lyrics"
 msgstr "解锁歌词"
 
-#: ../src/widget/instance.py:387 ../src/widget/tray.py:70
+#: ../src/widget/instance.py:389 ../src/widget/tray.py:70
 msgid "Lock lyrics"
 msgstr "锁定歌词"
 
-#: ../src/widget/instance.py:459
+#: ../src/widget/instance.py:461
 msgid "Mini Mode"
 msgstr "迷你模式"
 
-#: ../src/widget/instance.py:461
+#: ../src/widget/instance.py:463
 msgid "Normal Mode"
 msgstr "普通模式"
 
@@ -1072,13 +1072,17 @@ msgstr "当转换完成后添加到播放列表"
 msgid "Output:"
 msgstr "输出目录:"
 
-#: ../src/widget/webcasts_browser.py:88 ../src/widget/webcasts_browser.py:90
+#: ../src/widget/webcasts_browser.py:95 ../src/widget/webcasts_browser.py:97
 msgid "Region"
 msgstr "地域"
 
-#: ../src/widget/webcasts_browser.py:92
+#: ../src/widget/webcasts_browser.py:99
 msgid "Miscellaneous"
 msgstr "综合"
+
+#: ../src/widget/webcasts_browser.py:140
+msgid "My Favorites"
+msgstr "我的收藏"
 
 #: ../src/widget/tray.py:48
 msgid "Mute"

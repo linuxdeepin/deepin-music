@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-17 15:19+0800\n"
+"POT-Creation-Date: 2012-12-18 08:58+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -229,7 +229,7 @@ msgid "Add track"
 msgstr ""
 
 #: ../src/widget/playlist.py:85 ../src/widget/playlist.py:525
-#: ../src/widget/instance.py:346
+#: ../src/widget/instance.py:348
 msgid "Playback Order"
 msgstr ""
 
@@ -302,7 +302,7 @@ msgid "Randomize"
 msgstr ""
 
 #: ../src/widget/playlist.py:517 ../src/widget/song_view.py:686
-#: ../src/widget/instance.py:307 ../src/widget/tray.py:56
+#: ../src/widget/instance.py:309 ../src/widget/tray.py:56
 msgid "Play"
 msgstr ""
 
@@ -332,7 +332,7 @@ msgid "Sort"
 msgstr ""
 
 #: ../src/widget/playlist.py:527 ../src/widget/song_view.py:693
-#: ../src/widget/instance.py:327 ../src/widget/instance.py:349
+#: ../src/widget/instance.py:329 ../src/widget/instance.py:351
 #: ../src/widget/converter.py:415
 msgid "Convert"
 msgstr ""
@@ -476,8 +476,8 @@ msgstr ""
 msgid "Album"
 msgstr ""
 
-#: ../src/widget/local_browser.py:300 ../src/widget/webcasts_browser.py:89
-#: ../src/widget/webcasts_browser.py:91
+#: ../src/widget/local_browser.py:300 ../src/widget/webcasts_browser.py:96
+#: ../src/widget/webcasts_browser.py:98
 msgid "Genre"
 msgstr ""
 
@@ -510,13 +510,13 @@ msgstr ""
 msgid "Play/Pause"
 msgstr ""
 
-#: ../src/widget/headerbar.py:70 ../src/widget/instance.py:316
+#: ../src/widget/headerbar.py:70 ../src/widget/instance.py:318
 #: ../src/widget/song_editor.py:332 ../src/widget/preference.py:374
 #: ../src/widget/tray.py:61
 msgid "Previous"
 msgstr ""
 
-#: ../src/widget/headerbar.py:71 ../src/widget/instance.py:317
+#: ../src/widget/headerbar.py:71 ../src/widget/instance.py:319
 #: ../src/widget/song_editor.py:334 ../src/widget/preference.py:375
 #: ../src/widget/tray.py:62
 msgid "Next"
@@ -631,7 +631,7 @@ msgid "jobs waiting!"
 msgstr ""
 
 #: ../src/widget/information.py:40 ../src/widget/information.py:82
-#: ../src/widget/instance.py:89
+#: ../src/widget/instance.py:90
 msgid "Deepin Music"
 msgstr ""
 
@@ -639,76 +639,76 @@ msgstr ""
 msgid "buffering"
 msgstr ""
 
-#: ../src/widget/instance.py:143
+#: ../src/widget/instance.py:144
 msgid "Join us"
 msgstr ""
 
-#: ../src/widget/instance.py:310 ../src/widget/converter.py:380
+#: ../src/widget/instance.py:312 ../src/widget/converter.py:380
 #: ../src/widget/converter.py:400 ../src/widget/converter.py:403
 #: ../src/widget/tray.py:59
 msgid "Pause"
 msgstr ""
 
-#: ../src/widget/instance.py:314
+#: ../src/widget/instance.py:316
 msgid "Forward"
 msgstr ""
 
-#: ../src/widget/instance.py:315
+#: ../src/widget/instance.py:317
 msgid "Rewind"
 msgstr ""
 
-#: ../src/widget/instance.py:328 ../src/widget/converter.py:364
+#: ../src/widget/instance.py:330 ../src/widget/converter.py:364
 msgid "Task Manager"
 msgstr ""
 
-#: ../src/widget/instance.py:344
+#: ../src/widget/instance.py:346
 msgid "Add"
 msgstr ""
 
-#: ../src/widget/instance.py:345
+#: ../src/widget/instance.py:347
 msgid "Controls"
 msgstr ""
 
-#: ../src/widget/instance.py:348 ../src/widget/equalizer.py:199
+#: ../src/widget/instance.py:350 ../src/widget/equalizer.py:199
 msgid "Equalizer"
 msgstr ""
 
-#: ../src/widget/instance.py:356
+#: ../src/widget/instance.py:358
 msgid "View New Features"
 msgstr ""
 
-#: ../src/widget/instance.py:357 ../src/widget/preference.py:954
+#: ../src/widget/instance.py:359 ../src/widget/preference.py:954
 #: ../src/widget/tray.py:77
 msgid "Preferences"
 msgstr ""
 
-#: ../src/widget/instance.py:359 ../src/widget/preference.py:193
+#: ../src/widget/instance.py:361 ../src/widget/preference.py:193
 #: ../src/widget/tray.py:78
 msgid "Quit"
 msgstr ""
 
-#: ../src/widget/instance.py:379 ../src/widget/tray.py:73
+#: ../src/widget/instance.py:381 ../src/widget/tray.py:73
 msgid "Hide Lyrics"
 msgstr ""
 
-#: ../src/widget/instance.py:381 ../src/widget/preference.py:161
+#: ../src/widget/instance.py:383 ../src/widget/preference.py:161
 #: ../src/widget/tray.py:75
 msgid "Show Lyrics"
 msgstr ""
 
-#: ../src/widget/instance.py:385 ../src/widget/tray.py:68
+#: ../src/widget/instance.py:387 ../src/widget/tray.py:68
 msgid "Unlock lyrics"
 msgstr ""
 
-#: ../src/widget/instance.py:387 ../src/widget/tray.py:70
+#: ../src/widget/instance.py:389 ../src/widget/tray.py:70
 msgid "Lock lyrics"
 msgstr ""
 
-#: ../src/widget/instance.py:459
+#: ../src/widget/instance.py:461
 msgid "Mini Mode"
 msgstr ""
 
-#: ../src/widget/instance.py:461
+#: ../src/widget/instance.py:463
 msgid "Normal Mode"
 msgstr ""
 
@@ -1067,12 +1067,16 @@ msgstr ""
 msgid "Output:"
 msgstr ""
 
-#: ../src/widget/webcasts_browser.py:88 ../src/widget/webcasts_browser.py:90
+#: ../src/widget/webcasts_browser.py:95 ../src/widget/webcasts_browser.py:97
 msgid "Region"
 msgstr ""
 
-#: ../src/widget/webcasts_browser.py:92
+#: ../src/widget/webcasts_browser.py:99
 msgid "Miscellaneous"
+msgstr ""
+
+#: ../src/widget/webcasts_browser.py:140
+msgid "My Favorites"
 msgstr ""
 
 #: ../src/widget/tray.py:48

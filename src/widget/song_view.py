@@ -44,7 +44,8 @@ from widget.song_item import SongItem
 from widget.skin import app_theme
 from widget.song_editor import SongEditor
 from source.local import ImportPlaylistJob
-from widget.ui_utils import draw_single_mask, draw_alpha_mask
+from widget.ui_utils import draw_single_mask, draw_alpha_mask, switch_tab
+from widget.ui import SearchPrompt
 from widget.converter import AttributesUI
 from nls import _
 
@@ -706,10 +707,29 @@ class MultiDragSongView(ListView):
         scrolled_window.add_child(self)
         return scrolled_window
     
-    def start_search_songs(self, keyword):
+    def get_search_songs(self, keyword):
         self.clear()
         all_songs = MediaDB.get_songs_by_type("local")
         result_songs = filter(lambda song: keyword.lower().replace(" ", "") in song.get("search", ""), all_songs)
         
-        if result_songs:
-            self.add_songs(result_songs[:5])
+        return result_songs
+
+
+class LocalSearchView(gtk.VBox):            
+    
+    def __init__(self):
+        gtk.VBox.__init__(self)
+        
+        self.song_view = MultiDragSongView()
+        self.song_view_sw = self.song_view.get_scrolled_window()
+        self.search_prompt = SearchPrompt()
+        self.add(self.song_view_sw)
+        
+    def start_search_songs(self, keyword):    
+        songs = self.song_view.get_search_songs(keyword)
+        if songs:
+            self.song_view.add_songs(songs)
+            switch_tab(self, self.song_view_sw)
+        else:    
+            self.search_prompt.update_keyword(keyword)
+            switch_tab(self, self.search_prompt)

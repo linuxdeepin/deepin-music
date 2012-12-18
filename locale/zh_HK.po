@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-17 15:11+0800\n"
+"POT-Creation-Date: 2012-12-18 08:58+0800\n"
 "PO-Revision-Date: 2012-07-12 03:23+0800\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -234,7 +234,7 @@ msgid "Add track"
 msgstr "添加歌曲"
 
 #: ../src/widget/playlist.py:85 ../src/widget/playlist.py:525
-#: ../src/widget/instance.py:346
+#: ../src/widget/instance.py:348
 #, fuzzy
 msgid "Playback Order"
 msgstr "播放模式"
@@ -322,7 +322,7 @@ msgid "Randomize"
 msgstr "隨機排序"
 
 #: ../src/widget/playlist.py:517 ../src/widget/song_view.py:686
-#: ../src/widget/instance.py:307 ../src/widget/tray.py:56
+#: ../src/widget/instance.py:309 ../src/widget/tray.py:56
 msgid "Play"
 msgstr "播放"
 
@@ -357,7 +357,7 @@ msgid "Sort"
 msgstr ""
 
 #: ../src/widget/playlist.py:527 ../src/widget/song_view.py:693
-#: ../src/widget/instance.py:327 ../src/widget/instance.py:349
+#: ../src/widget/instance.py:329 ../src/widget/instance.py:351
 #: ../src/widget/converter.py:415
 #, fuzzy
 msgid "Convert"
@@ -505,8 +505,8 @@ msgstr "藝術家"
 msgid "Album"
 msgstr "專輯"
 
-#: ../src/widget/local_browser.py:300 ../src/widget/webcasts_browser.py:89
-#: ../src/widget/webcasts_browser.py:91
+#: ../src/widget/local_browser.py:300 ../src/widget/webcasts_browser.py:96
+#: ../src/widget/webcasts_browser.py:98
 #, fuzzy
 msgid "Genre"
 msgstr "流派:"
@@ -544,13 +544,13 @@ msgstr "添加時間"
 msgid "Play/Pause"
 msgstr "暫停/繼續"
 
-#: ../src/widget/headerbar.py:70 ../src/widget/instance.py:316
+#: ../src/widget/headerbar.py:70 ../src/widget/instance.py:318
 #: ../src/widget/song_editor.py:332 ../src/widget/preference.py:374
 #: ../src/widget/tray.py:61
 msgid "Previous"
 msgstr "上一首"
 
-#: ../src/widget/headerbar.py:71 ../src/widget/instance.py:317
+#: ../src/widget/headerbar.py:71 ../src/widget/instance.py:319
 #: ../src/widget/song_editor.py:334 ../src/widget/preference.py:375
 #: ../src/widget/tray.py:62
 msgid "Next"
@@ -675,7 +675,7 @@ msgid "jobs waiting!"
 msgstr "個任務在等待!"
 
 #: ../src/widget/information.py:40 ../src/widget/information.py:82
-#: ../src/widget/instance.py:89
+#: ../src/widget/instance.py:90
 msgid "Deepin Music"
 msgstr "深度音樂"
 
@@ -683,82 +683,82 @@ msgstr "深度音樂"
 msgid "buffering"
 msgstr "正在緩沖"
 
-#: ../src/widget/instance.py:143
+#: ../src/widget/instance.py:144
 msgid "Join us"
 msgstr "加入我們"
 
-#: ../src/widget/instance.py:310 ../src/widget/converter.py:380
+#: ../src/widget/instance.py:312 ../src/widget/converter.py:380
 #: ../src/widget/converter.py:400 ../src/widget/converter.py:403
 #: ../src/widget/tray.py:59
 msgid "Pause"
 msgstr "暫停"
 
-#: ../src/widget/instance.py:314
+#: ../src/widget/instance.py:316
 msgid "Forward"
 msgstr "快進"
 
-#: ../src/widget/instance.py:315
+#: ../src/widget/instance.py:317
 msgid "Rewind"
 msgstr "後退"
 
-#: ../src/widget/instance.py:328 ../src/widget/converter.py:364
+#: ../src/widget/instance.py:330 ../src/widget/converter.py:364
 msgid "Task Manager"
 msgstr "任務琯理器"
 
-#: ../src/widget/instance.py:344
+#: ../src/widget/instance.py:346
 #, fuzzy
 msgid "Add"
 msgstr "添加時間:"
 
-#: ../src/widget/instance.py:345
+#: ../src/widget/instance.py:347
 #, fuzzy
 msgid "Controls"
 msgstr "播放控制"
 
-#: ../src/widget/instance.py:348 ../src/widget/equalizer.py:199
+#: ../src/widget/instance.py:350 ../src/widget/equalizer.py:199
 msgid "Equalizer"
 msgstr "均衡器"
 
-#: ../src/widget/instance.py:356
+#: ../src/widget/instance.py:358
 #, fuzzy
 msgid "View New Features"
 msgstr "查看新特性"
 
-#: ../src/widget/instance.py:357 ../src/widget/preference.py:954
+#: ../src/widget/instance.py:359 ../src/widget/preference.py:954
 #: ../src/widget/tray.py:77
 #, fuzzy
 msgid "Preferences"
 msgstr "選項設置"
 
-#: ../src/widget/instance.py:359 ../src/widget/preference.py:193
+#: ../src/widget/instance.py:361 ../src/widget/preference.py:193
 #: ../src/widget/tray.py:78
 msgid "Quit"
 msgstr "退出"
 
-#: ../src/widget/instance.py:379 ../src/widget/tray.py:73
+#: ../src/widget/instance.py:381 ../src/widget/tray.py:73
 #, fuzzy
 msgid "Hide Lyrics"
 msgstr "歌詞設置"
 
-#: ../src/widget/instance.py:381 ../src/widget/preference.py:161
+#: ../src/widget/instance.py:383 ../src/widget/preference.py:161
 #: ../src/widget/tray.py:75
 #, fuzzy
 msgid "Show Lyrics"
 msgstr "歌詞設置"
 
-#: ../src/widget/instance.py:385 ../src/widget/tray.py:68
+#: ../src/widget/instance.py:387 ../src/widget/tray.py:68
 msgid "Unlock lyrics"
 msgstr "解鎖歌詞"
 
-#: ../src/widget/instance.py:387 ../src/widget/tray.py:70
+#: ../src/widget/instance.py:389 ../src/widget/tray.py:70
 msgid "Lock lyrics"
 msgstr "鎖定歌詞"
 
-#: ../src/widget/instance.py:459
+#: ../src/widget/instance.py:461
 msgid "Mini Mode"
 msgstr ""
 
-#: ../src/widget/instance.py:461
+#: ../src/widget/instance.py:463
 msgid "Normal Mode"
 msgstr ""
 
@@ -1134,12 +1134,16 @@ msgstr "當任務完成後添加到播放列錶"
 msgid "Output:"
 msgstr "輸齣目录:"
 
-#: ../src/widget/webcasts_browser.py:88 ../src/widget/webcasts_browser.py:90
+#: ../src/widget/webcasts_browser.py:95 ../src/widget/webcasts_browser.py:97
 msgid "Region"
 msgstr ""
 
-#: ../src/widget/webcasts_browser.py:92
+#: ../src/widget/webcasts_browser.py:99
 msgid "Miscellaneous"
+msgstr ""
+
+#: ../src/widget/webcasts_browser.py:140
+msgid "My Favorites"
 msgstr ""
 
 #: ../src/widget/tray.py:48

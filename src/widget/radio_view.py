@@ -30,7 +30,8 @@ from dtk.ui.iconview import IconView
 from dtk.ui.threads import post_gui
 from dtk.ui.scrolled_window import ScrolledWindow
 
-from widget.ui_utils import draw_alpha_mask
+from widget.ui_utils import draw_alpha_mask, switch_tab
+from widget.ui import SearchPrompt
 from widget.radio_item import RadioListItem, MoreIconItem, CommonIconItem
 from helper import Dispatcher
 from player import Player
@@ -310,6 +311,12 @@ class RadioIconView(IconView):
         self.__keyword = keyword
         self.__start = 0
         
+    def fetch_failed(self):
+        pass
+    
+    def fetch_successed(self):
+        pass
+        
     def on_iconview_single_click_item(self, widget, item, x, y):    
         if item:
             if hasattr(item, "is_more") and item.mask_flag:
@@ -322,7 +329,8 @@ class RadioIconView(IconView):
         self.__fetch_thread_id += 1
         utils.ThreadFetch(
             fetch_funcs=(self.fetch_channels, (self.__start,)),
-            success_funcs=(self.load_channels, (self.__fetch_thread_id, self.__start))).start()
+            success_funcs=(self.load_channels, (self.__fetch_thread_id, self.__start)),
+            fail_funcs=(self.fetch_failed, ())).start()
                 
     def fetch_channels(self, start):    
         if self.tag == TAG_HOT:
@@ -354,6 +362,8 @@ class RadioIconView(IconView):
         self.add_items(channel_items, -1)    
         self.__start = start + self.__limit
         
+        self.fetch_successed()
+        
     def add_radios(self, items):    
         pass
             
@@ -374,3 +384,34 @@ class RadioIconView(IconView):
     def on_motion_item(self, widget, item, x, y):
         if not hasattr(item, "is_more"):
             item.try_show_notify(x, y)
+
+            
+class RadioSearchView(gtk.VBox):            
+    
+    def __init__(self):
+        gtk.VBox.__init__(self)
+        
+        self.radio_view = RadioIconView(tag=TAG_SEARCH, padding_y=10)
+        self.radio_view_sw = self.radio_view.get_scrolled_window()
+        self.radio_view.fetch_failed = self.switch_to_search_prompt
+        self.radio_view.fetch_successed = self.switch_to_radio_view
+        
+        self.search_prompt = SearchPrompt()
+        self.add(self.radio_view_sw)
+        self.keyword = ""
+        
+    def start_search_radios(self, keyword):    
+        self.radio_view.clear_items()
+        self.radio_view.set_keyword(keyword)
+        self.radio_view.start_fetch_channels()
+        self.keyword = keyword
+        
+    def switch_to_radio_view(self):   
+        switch_tab(self, self.radio_view_sw)
+        
+    def switch_to_search_prompt(self):    
+        self.search_prompt.update_keyword(self.keyword)
+        switch_tab(self, self.search_prompt)
+        
+        
+            

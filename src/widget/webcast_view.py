@@ -27,7 +27,8 @@ from dtk.ui.iconview import IconView
 from dtk.ui.scrolled_window import ScrolledWindow
 
 
-from widget.ui_utils import draw_alpha_mask, draw_single_mask
+from widget.ui_utils import draw_alpha_mask, draw_single_mask, switch_tab
+from widget.ui import SearchPrompt
 from widget.webcast_item import WebcastIconItem, WebcastListItem, CompositeIconItem
 from helper import Dispatcher
 from player import Player
@@ -292,7 +293,15 @@ class MultiDragWebcastView(ListView):
             if song == item.webcast:
                 return item
         return None    
-            
+    
+    def get_search_songs(self, keyword):
+        self.clear()
+        all_songs = WebcastDB.get_all_songs()
+        result_songs = filter(lambda song: keyword.lower().replace(" ", "") in song.get("title", ""),
+                              all_songs)
+        
+        return result_songs
+
 
 class WebcastIconView(IconView):
 
@@ -329,3 +338,25 @@ class WebcastIconView(IconView):
         scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
         scrolled_window.add_child(self)
         return scrolled_window
+
+    
+class WebcastSearchView(gtk.VBox):    
+    
+    def __init__(self):
+        gtk.VBox.__init__(self)
+        self.webcast_view = MultiDragWebcastView()
+        self.webcast_view_sw = self.webcast_view.get_scrolled_window()
+        
+        self.search_prompt = SearchPrompt()
+        self.add(self.webcast_view_sw)
+        
+    def start_search_webcasts(self, keyword):    
+        songs = self.webcast_view.get_search_songs(keyword)
+        if songs:
+            self.webcast_view.add_webcasts(songs)
+            switch_tab(self, self.webcast_view_sw)
+        else:    
+            self.search_prompt.update_keyword(keyword)
+            switch_tab(self, self.search_prompt)
+            
+    

@@ -32,7 +32,7 @@ from dtk.ui.new_entry import InputEntry, Entry
 from dtk.ui.button import ImageButton
 from dtk.ui.draw import draw_pixbuf, draw_text, draw_vlinear
 from widget.skin import app_theme
-from widget.ui_utils import draw_alpha_mask, draw_line
+from widget.ui_utils import draw_alpha_mask, draw_line, set_widget_gravity
 
 from constant import EMPTY_WEBCAST_ITEM, EMPTY_RADIO_ITEM
 
@@ -181,7 +181,8 @@ class SearchButton(gtk.Button):
 class CustomEntry(gtk.VBox):
     __gsignals__ = {
         
-        "action-active" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (str,)),
+        "clear" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),
+        "enter-press" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,))
     }
     
     def __init__(self,  content=""):
@@ -190,13 +191,46 @@ class CustomEntry(gtk.VBox):
         '''
         # Init.
         gtk.VBox.__init__(self)
+        clean_button = CleanButton()
+        clean_button.connect("clicked", self.on_clean_clicked)
+        
         self.entry = Entry(content)
         entry_align = gtk.Alignment()
         entry_align.set(0.5, 0.5, 1, 1)
         entry_align.add(self.entry)
-        self.add(entry_align)
+        
+        clean_box = gtk.HBox(spacing=5)
+        clean_box.pack_start(entry_align, True, True)
+        self.clean_button_align = set_widget_gravity(clean_button, gravity=(0.5, 0.5, 0, 0),
+                                                paddings=(0, 0, 0, 5))
+        self.clean_button_align.set_no_show_all(True)
+        
+        clean_box.pack_start(self.clean_button_align, False, False)
+        self.add(clean_box)
+        
+        self.entry.connect("press-return", self.__emit_enter_signal)
+        self.entry.connect("changed", self.__on_entry_changed)
         self.connect("expose-event", self.expose_input_entry)
-            
+        
+    def on_clean_clicked(self, widget):    
+        # self.emit("clear")
+        self.set_text("")
+        
+    def get_clean_visible(self):    
+        return self.clean_button_align.get_visible()
+        
+    def __emit_enter_signal(self, widget):    
+        self.emit("enter-press", self.get_text())
+        
+    def __on_entry_changed(self, widget, string):    
+        if string:
+            self.clean_button_align.set_no_show_all(False)
+            self.clean_button_align.show_all()
+        else:    
+            self.clean_button_align.hide_all()
+            self.clean_button_align.set_no_show_all(True)
+
+        
     def set_sensitive(self, sensitive):
         '''
         Internal function to wrap function `set_sensitive`.
@@ -567,11 +601,16 @@ class SearchBox(gtk.HBox):
         
     def on_realize(self, widget, size):    
         rect = widget.allocation
+        if self.entry_box.get_clean_visible():
+            size += 21
         self.entry_box.set_size(rect.width - size, 30)
         widget.show_all()
         
     def on_size_allocate(self, widget, rect, size):
-        self.entry_box.set_size(rect.width - size, 30)
+
+        if self.entry_box.get_clean_visible():
+            size += 21
+        self.entry_box.set_size(rect.width - size, 30)            
         widget.show_all()
         
     def on_search_button_press_event(self, widget, event):    
@@ -640,3 +679,81 @@ class BackButton(ImageButton):
                              app_theme.get_pixbuf("filter/back_hover.png"),
                              app_theme.get_pixbuf("filter/back_press.png")
                              )
+
+class CleanButton(ImageButton):        
+    def __init__(self):
+        ImageButton.__init__(self,
+                             app_theme.get_pixbuf("entry/clean_normal.png"),
+                             app_theme.get_pixbuf("entry/clean_hover.png"),
+                             app_theme.get_pixbuf("entry/clean_press.png")
+                             )
+    
+    
+        
+class SearchPrompt(gtk.EventBox):        
+    
+    def __init__(self):
+        gtk.EventBox.__init__(self)
+        self.set_visible_window(False)
+        
+        self.connect("expose-event", self.on_expose_event)
+        self.keyword = ""
+        self.from_keyword = ""
+        self.padding_x = 10
+        self.padding_y = 8
+        self.prompt_format_text  = "没有找到与\"<span foreground=\"red\">{0}</span>\"相关的内容." 
+        self.suggest_title = "<span foreground=\"black\"><b>深度音乐建议您:</b></span>"
+        self.suggest_first_line = "· 看看输入文字是否有误"
+        self.suggest_second_line = "· 尽量输入艺术家或专辑名称"
+        
+        
+    def on_expose_event(self, widget, event):    
+        cr = widget.window.cairo_create()
+        rect = widget.allocation
+        rect.x += self.padding_x
+        rect.width -= self.padding_x * 2
+        
+        self.prompt_text = self.prompt_format_text.format(self.keyword)
+        _width, _height = get_content_size(self.prompt_text)
+
+        draw_text(cr, self.prompt_text, rect.x, rect.y, rect.width, _height, 
+                  text_color=app_theme.get_color("labelText").get_color())
+        
+        
+        # draw dash
+        rect.y += _height + self.padding_y
+        dash_line_width = 1
+        with cairo_disable_antialias(cr):
+            cr.set_source_rgb(*color_hex_to_cairo("#D6D6D6"))            
+            cr.set_line_width(dash_line_width)
+            cr.set_dash([4.0, 4.0])
+            cr.move_to(rect.x, rect.y)
+            cr.rel_line_to(rect.width, 0)
+            cr.stroke()
+            
+        rect.y += self.padding_y + dash_line_width
+        
+        _width, _height = get_content_size(self.suggest_title)
+        draw_text(cr, self.suggest_title, rect.x, rect.y, rect.width, _height)
+        
+        rect.y += _height + self.padding_y
+        _width, _height = get_content_size(self.suggest_first_line)
+        draw_text(cr, self.suggest_first_line, rect.x, rect.y, rect.width, _height,
+                  text_color=app_theme.get_color("labelText").get_color())
+
+        rect.y += _height + self.padding_y
+        _width, _height = get_content_size(self.suggest_second_line)
+        draw_text(cr, self.suggest_second_line, rect.x, rect.y, rect.width, _height,
+                  text_color=app_theme.get_color("labelText").get_color())
+        return True
+        
+    
+    def update_keyword(self, keyword):
+        
+        unicode_keyword = keyword.decode("utf-8")
+        if len(unicode_keyword) > 30:
+            new_keyword = "%s..." % unicode_keyword[:30].encode("utf-8")
+        else:    
+            new_keyword = keyword
+        self.keyword = new_keyword
+        self.queue_draw()

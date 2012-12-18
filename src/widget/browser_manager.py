@@ -42,7 +42,10 @@ class BrowserMananger(gtk.VBox):
         
         # Search Widgets at top.
         self.search_box = SearchBox()
+        self.search_box.entry_box.connect("enter-press", self.on_searchbox_search)
         self.search_box.connect("search", self.on_searchbox_search)
+        
+        
         search_box_align = gtk.Alignment()
         search_box_align.connect("expose-event", self.on_top_hbox_expose)        
         search_box_align.set_padding(0, 1, 1, 0)
@@ -57,7 +60,6 @@ class BrowserMananger(gtk.VBox):
         self.global_search = GlobalSearch()
         
         self.bottom_box.add(self.local_browser)
-        # self.bottom_box.add(self.global_search)
         self.bottom_box_align = gtk.Alignment()
         self.bottom_box_align.set_padding(0, 0, 1, 2)
         self.bottom_box_align.set(1, 1, 1, 1)
@@ -71,7 +73,9 @@ class BrowserMananger(gtk.VBox):
         
         
     def on_searchbox_search(self, widget, keyword):    
-        self.global_search.begin_search(keyword)    
+        if keyword:
+            self.global_search.begin_search(keyword)    
+            switch_tab(self.bottom_box, self.global_search)
         
     def on_expose_event(self, widget, event):    
         cr = widget.window.cairo_create()
