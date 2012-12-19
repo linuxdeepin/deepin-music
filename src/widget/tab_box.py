@@ -89,19 +89,25 @@ class ListTab(gtk.EventBox):
             
             if self.index == 0:
                 if self.is_select:
-                    cr.move_to(rect.x + rect.width, rect.y)
-                    cr.rel_line_to(0, rect.height)
+                    if self.total == 1:
+                        pass
+                    else:
+                        cr.move_to(rect.x + rect.width, rect.y)
+                        cr.rel_line_to(0, rect.height)
+                        cr.stroke()
                 else:    
                     cr.move_to(rect.x, rect.y + rect.height)
                     cr.rel_line_to(rect.width, 0)
-                cr.stroke()                                
-                    # dashed = [4.0, 4.0]
-                    # cr.save()
-                    # cr.move_to(rect.x, rect.y + rect.height)
-                    # cr.line_to(rect.x + rect.width, rect.y + rect.height)
-                    # cr.set_dash(dashed)
-                    # cr.stroke()
-                    # cr.restore()
+                    cr.stroke()                         
+                
+                if self.total <= 2:
+                    dashed = [4.0, 4.0]
+                    cr.save()
+                    cr.move_to(rect.x, rect.y + rect.height)
+                    cr.line_to(rect.x + rect.width, rect.y + rect.height)
+                    cr.set_dash(dashed)
+                    cr.stroke()
+                    cr.restore()
             
             elif self.index == self.total - 1:
                 if self.is_select:
@@ -187,7 +193,7 @@ class ListTab(gtk.EventBox):
         
     def update_index(self, index, total):    
         self.index = index
-        self.total_number = total
+        self.total = total
         self.queue_draw()
 
         
