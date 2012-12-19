@@ -75,18 +75,18 @@ class Transfer(object):
         
     def filter_char(self, unicode_char, first_spell=True):    
         if not self.dict_objs:
-            return unicode_char
+            return unicode_char.encode("utf-8", "ignore")
         
         if unicode_char == ' ': return self.spliter
         if set(unicode_char).issubset(self.SINGLE_CHARS): return self.spliter
         if set(unicode_char).issubset(self.WIDTH_CHARS): return ""    
             
-        if not self.dict_objs.has_key(unicode_char): return unicode_char
+        if not self.dict_objs.has_key(unicode_char): return unicode_char.encode("utf-8", "ignore")
         else:
             if first_spell:
-                return self.dict_objs.get(unicode_char, unicode_char)[:1]
+                return self.dict_objs.get(unicode_char, unicode_char)[:1].encode("utf-8", "ignore")
             else: 
-                return self.dict_objs.get(unicode_char, unicode_char)
+                return self.dict_objs.get(unicode_char, unicode_char).encode("utf-8", "ignore")
 
 TransforDB = Transfer()        
  

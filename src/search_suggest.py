@@ -23,9 +23,3 @@
 
 from webcast_library import WebcastDB
 from library import MediaDB
-
-class SuggestQuery(object):
-    
-    def __init__(self):
-        pass
-    

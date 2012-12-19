@@ -298,7 +298,7 @@ class MultiDragWebcastView(ListView):
     def get_search_songs(self, keyword):
         self.clear()
         all_songs = WebcastDB.get_all_songs()
-        result_songs = filter(lambda song: keyword.lower().replace(" ", "") in song.get("title", ""),
+        result_songs = filter(lambda song: keyword.lower().replace(" ", "") in song.get("search", ""),
                               all_songs)
         
         return result_songs
