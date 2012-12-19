@@ -23,6 +23,7 @@
 import gtk
 import gobject
 import threading
+import copy
 
 from contextlib import contextmanager 
 from dtk.ui.new_treeview import TreeView
@@ -30,19 +31,19 @@ from dtk.ui.iconview import IconView
 from dtk.ui.threads import post_gui
 from dtk.ui.scrolled_window import ScrolledWindow
 
+from radio_item import RadioListItem, MoreIconItem, CommonIconItem
+
 from widget.ui_utils import draw_alpha_mask, switch_tab
 from widget.ui import SearchPrompt
-from widget.radio_item import RadioListItem, MoreIconItem, CommonIconItem
+
 from helper import Dispatcher
 from player import Player
-from doubanfm import fmlib
+from posterlib import fmlib
 from cover_manager import cover_thread_pool
 
 import utils
 from xdg_support import get_config_file
-from library import MediaDB
 from nls import _
-
 
 class RadioView(TreeView):    
     __gsignals__ = {
@@ -70,13 +71,12 @@ class RadioView(TreeView):
         self.limit_number = 25
         self.preview_db_file = get_config_file("preview_radios.db")
         
-        Dispatcher.connect("being-quit", lambda obj: self.save())
+        # Dispatcher.connect("being-quit", lambda obj: self.save())
 
-        if MediaDB.isloaded():
-            self.__on_db_loaded(MediaDB)
-        else:    
-            MediaDB.connect("loaded", self.__on_db_loaded)
-            
+        # if MediaDB.isloaded():
+        #     self.__on_db_loaded(MediaDB)
+        # else:    
+        #     MediaDB.connect("loaded", self.__on_db_loaded)
     @contextmanager        
     def keep_list_lock(self):
         self.lock.acquire()
@@ -255,7 +255,6 @@ class RadioView(TreeView):
     def on_button_press_event(self, widget, event):        
         pass
     
-    
     def save(self):
         if not self.get_items():
             return 
@@ -328,9 +327,10 @@ class RadioIconView(IconView):
                     
     def start_fetch_channels(self):                
         self.__fetch_thread_id += 1
+        fetch_thread_id = copy.deepcopy(self.__fetch_thread_id)
         utils.ThreadFetch(
             fetch_funcs=(self.fetch_channels, (self.__start,)),
-            success_funcs=(self.load_channels, (self.__fetch_thread_id, self.__start)),
+            success_funcs=(self.load_channels, (fetch_thread_id, self.__start)),
             fail_funcs=(self.fetch_failed, ())).start()
                 
     def fetch_channels(self, start):    
@@ -372,9 +372,11 @@ class RadioIconView(IconView):
         draw_alpha_mask(cr, x, y, w, h ,"layoutRight")
         return False
     
-    def clear_items(self):
+    def clear_items(self, add_more=True):
+        self.__start = 0
         self.clear()
-        self.add_items([MoreIconItem()])
+        if add_more:
+            self.add_items([MoreIconItem()])
         
     def get_scrolled_window(self):   
         scrolled_window = ScrolledWindow(0, 0)
@@ -413,6 +415,3 @@ class RadioSearchView(gtk.VBox):
     def switch_to_search_prompt(self):    
         self.search_prompt.update_keyword(self.keyword)
         switch_tab(self, self.search_prompt)
-        
-        
-            

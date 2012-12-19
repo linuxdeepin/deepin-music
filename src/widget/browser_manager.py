@@ -26,15 +26,11 @@ import copy
 
 from dtk.ui.utils import (cairo_disable_antialias,
                           color_hex_to_cairo, propagate_expose)
-from widget.local_browser import SimpleBrowser
-from widget.webcasts_browser import WebcastsBrowser
-from widget.radio_browser import RadioBrowser
 from widget.global_search import GlobalSearch
 from widget.ui_utils import switch_tab, draw_line, draw_alpha_mask
 from helper import Dispatcher
-from constant import TAB_LOCAL, TAB_WEBCAST, TAB_RADIO
-
 from widget.completion_window import search_entry, completion_grab_window, completion_window
+from widget.local_browser import local_browser
 
 
 class BrowserMananger(gtk.VBox):
@@ -54,15 +50,11 @@ class BrowserMananger(gtk.VBox):
         search_box_align.add(search_entry)
         
         # Bottom widgets and is switchable.
-        self.local_browser = SimpleBrowser()
-        self.webcasts_browser = WebcastsBrowser()
-        self.radio_browser = RadioBrowser()
         self.bottom_box = gtk.VBox()
         self.global_search = GlobalSearch()
         self.global_search.close_button.connect("clicked", self.on_global_search_close)
-        
-        self.last_browser = self.local_browser
-        self.bottom_box.add(self.local_browser)
+
+        self.bottom_box.add(local_browser)
         self.bottom_box_align = gtk.Alignment()
         self.bottom_box_align.set_padding(0, 0, 1, 2)
         self.bottom_box_align.set(1, 1, 1, 1)
@@ -86,7 +78,6 @@ class BrowserMananger(gtk.VBox):
 
         
     def on_search_entry_changed(self, widget, string):    
-        print "dddd"
         self.press_id += 1
         self.entry_changed = True
         
@@ -109,7 +100,7 @@ class BrowserMananger(gtk.VBox):
             self.entry_changed = False    
             
     def on_searchbox_search(self, widget, keyword):    
-        completion_grab_window.popup_grab_window_focus_out()
+        # completion_grab_window.popup_grab_window_focus_out()
         if keyword:
             self.global_search.begin_search(keyword)    
             switch_tab(self.bottom_box, self.global_search)
@@ -127,22 +118,11 @@ class BrowserMananger(gtk.VBox):
                   (rect.x + 1, rect.y + rect.height), "#b0b0b0")
         return False
         
-    def on_dispatcher_switch_browser(self, obj, tab_type):    
+    def on_dispatcher_switch_browser(self, obj, item):    
         search_entry.clear()
-        if tab_type == TAB_LOCAL:
-            switch_tab(self.bottom_box, self.local_browser)
-            self.last_browser = self.local_browser            
-        elif tab_type == TAB_WEBCAST:    
-            switch_tab(self.bottom_box, self.webcasts_browser)
-            self.last_browser = self.webcasts_browser
-        elif tab_type == TAB_RADIO:    
-            self.last_browser = self.radio_browser
-            switch_tab(self.bottom_box, self.radio_browser)
+        self.last_browser = item.browser_widget
+        switch_tab(self.bottom_box, item.browser_widget)
             
-    def save(self):        
-        self.webcasts_browser.save()
-        
-        
     def on_top_hbox_expose(self, widget, event):    
         cr = widget.window.cairo_create()
         rect = widget.allocation

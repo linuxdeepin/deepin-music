@@ -21,22 +21,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import gtk
-import gobject
-
-from dtk.ui.threads import post_gui
 
 from widget.slide_switcher import SlideSwitcher
 from widget.tab_switcher import TabSwitcher
-from widget.ui_utils  import  draw_alpha_mask, switch_tab
-from widget.radio_item import CommonIconItem
-from widget.radio_view import RadioIconView, TAG_HOT, TAG_FAST
-from widget.skin import app_theme
-from cover_manager import cover_thread_pool
+from widget.ui_utils  import switch_tab
 
+from radio_view import RadioIconView, TAG_HOT, TAG_FAST
 from nls import _
-from doubanfm import fmlib
-
-import utils
 
 class HomePage(gtk.VBox):
     
@@ -63,10 +54,7 @@ class HomePage(gtk.VBox):
         self.pack_start(self.home_slider, False, True)
         self.pack_start(self.recommend_tab, False, True)
         self.pack_start(self.recommend_view_box, True, True)
-        
         # Init data
-        self.hot_recommend_view.start_fetch_channels()
-        self.fast_recommend_view.start_fetch_channels()
         
         
     def switch_recommend_view(self, tab_index):
@@ -79,3 +67,9 @@ class HomePage(gtk.VBox):
         icon_view =RadioIconView(tag=tag, limit=8, has_add=False, padding_x=padding_x, padding_y=padding_y)
         scrolled_window = icon_view.get_scrolled_window()
         return icon_view, scrolled_window
+    
+    def start_fetch_channels(self):
+        self.hot_recommend_view.clear_items(False)
+        self.fast_recommend_view.clear_items(False)
+        self.hot_recommend_view.start_fetch_channels()
+        self.fast_recommend_view.start_fetch_channels()

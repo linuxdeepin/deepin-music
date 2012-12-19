@@ -26,11 +26,9 @@ from collections import OrderedDict, namedtuple
 from dtk.ui.draw import draw_text
 from dtk.ui.utils import (get_content_size, color_hex_to_cairo,
                           cairo_disable_antialias, set_cursor)
-from dtk.ui.scrolled_window import ScrolledWindow
 
+from radio_view import RadioIconView, TAG_GENRE
 from widget.skin import app_theme
-from widget.radio_view import RadioIconView, TAG_GENRE
-from widget.ui_utils import draw_alpha_mask
 from constant import DEFAULT_FONT_SIZE
 import utils
 
@@ -257,7 +255,6 @@ class GenrePage(gtk.VBox):
         # Genres view
         self.channels_view, self.channels_sw = self.get_radio_icon_view()
         self.channels_view.set_genre_id(GENRE_DATA.get(init_genre_id, "335"))
-        self.channels_view.start_fetch_channels()
         self.channels_box.add(self.channels_sw)
 
         self.pack_start(self.genre_side, False, True)
@@ -272,3 +269,7 @@ class GenrePage(gtk.VBox):
         self.channels_view.clear_items()
         self.channels_view.set_genre_id(GENRE_DATA.get(key, "335"))
         self.channels_view.start_fetch_channels()
+
+    def start_fetch_channels(self):    
+        self.channels_view.clear_items()
+        self.channels_view.start_fetch_channels()        

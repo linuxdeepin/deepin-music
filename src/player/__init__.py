@@ -22,6 +22,7 @@
 
 import gobject
 import threading
+import copy
 from time import time
 from config import config
 from library import MediaDB
@@ -346,7 +347,8 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
 
         if song.get_scheme() in BAD_STREAM_SCHEMES:
             self.play_thread_id += 1            
-            self.thread_play(uri, song, play, self.play_thread_id)
+            play_thread_id = copy.deepcopy(self.play_thread_id)
+            self.thread_play(uri, song, play, play_thread_id)
         else:    
             ret = uri and self.bin.xfade_open(uri)
             if not ret:

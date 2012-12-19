@@ -65,6 +65,8 @@ class EventDispatcher(gobject.GObject):
         "being-quit" : SIGNAL_BASE,
         "album-changed" : SIGNAL_SIMPLE,
         "change-webcast" : SIGNAL_SIMPLE,
+        "add-source" : SIGNAL_SIMPLE,
+        "remove-source" : SIGNAL_SIMPLE,
         }
     
     def __init__(self):

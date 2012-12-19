@@ -23,8 +23,6 @@
 import gtk
 
 from widget.song_view import LocalSearchView
-from widget.radio_view import RadioSearchView
-from widget.webcast_view import WebcastSearchView
 from widget.ui_utils import switch_tab, set_widget_gravity, color_hex_to_cairo
 from widget.ui import SearchCloseButton
 from widget.tab_switcher import TabSwitcher
@@ -39,8 +37,6 @@ class GlobalSearch(gtk.VBox):
         self.set_spacing(10)
         
         self.local_view_page = LocalSearchView()
-        self.radio_view_page = RadioSearchView()
-        self.webcast_view_page = WebcastSearchView()
         
         self.close_button = SearchCloseButton()
         self.line_dcolor = app_theme.get_color("globalItemHighlight")
@@ -48,7 +44,7 @@ class GlobalSearch(gtk.VBox):
                                                 paddings=(0, 0, 5, 10))
         close_button_align.connect("expose-event",  self.on_close_button_expose_event)
         
-        self.tab_switcher = TabSwitcher([_("Library"), _("MusicFM"), _("Radio")])
+        self.tab_switcher = TabSwitcher([_("Library")])
         self.tab_switcher.connect("tab-switch-start", lambda switcher, tab_index: self.switch_result_view(tab_index))
         tab_switcher_align = set_widget_gravity(self.tab_switcher, gravity=(0, 0, 1, 1),
                                                 paddings=(10, 0, 0, 0))
@@ -65,15 +61,9 @@ class GlobalSearch(gtk.VBox):
     def switch_result_view(self, index):    
         if index == 0:
             switch_tab(self.result_page, self.local_view_page)
-        elif index == 1:    
-            switch_tab(self.result_page, self.radio_view_page)
-        elif index == 2:    
-            switch_tab(self.result_page, self.webcast_view_page)
-    
+            
     def begin_search(self, keyword):
-        self.radio_view_page.start_search_radios(keyword)
         self.local_view_page.start_search_songs(keyword)
-        self.webcast_view_page.start_search_webcasts(keyword)
         
     def on_close_button_expose_event(self, widget, event):    
         cr = widget.window.cairo_create()

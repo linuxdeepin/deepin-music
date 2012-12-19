@@ -617,3 +617,5 @@ class SimpleBrowser(Browser):
             
     def __on_db_loaded(self, db):        
         self.connect_to_db()
+
+local_browser = SimpleBrowser()        

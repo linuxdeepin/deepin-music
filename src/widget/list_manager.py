@@ -23,15 +23,12 @@
 import gtk
 
 from widget.playlist import PlaylistUI
-from widget.webcast_list import WebcastList
-from widget.radio_list import RadioList
+from widget.local_browser import local_browser
 
 from helper import Dispatcher
 from nls import _
 
-from widget.tab_box import TabManager
-from constant import TAB_LOCAL, TAB_WEBCAST, TAB_RADIO
-
+from widget.tab_box import TabManager, ListTab
 
 class ListManager(gtk.VBox):
     def __init__(self):
@@ -40,27 +37,27 @@ class ListManager(gtk.VBox):
         main_align = gtk.Alignment()
         main_align.set_padding(0, 0, 1, 0)
         main_align.set(1, 1, 1, 1)
+        
         # playlist
         self.playlist_ui = PlaylistUI()
+        self.local_tab = ListTab(_("Library"), self.playlist_ui, local_browser)
         
-        # webcastlist
-        self.tab_box = TabManager([
-                (_("Library"), self.playlist_ui, TAB_LOCAL),
-                (_("Radio"), WebcastList(), TAB_WEBCAST),
-
-                (_("MusicFM"), RadioList(), TAB_RADIO)
-                ])
-        
+        self.tab_box = TabManager([self.local_tab])
         self.tab_box.connect("switch-tab", self.on_tab_box_switch_tab)
         main_align.add(self.tab_box)
         self.add(main_align)
         
-        Dispatcher.connect_after("play-song", self.manual_active_tab, TAB_LOCAL)
-        Dispatcher.connect_after("play-webcast", self.manual_active_tab, TAB_WEBCAST)
-        Dispatcher.connect_after("play-radio", self.manual_active_tab, TAB_RADIO)
+        Dispatcher.connect("add-source", self.on_dispatcher_add_source)
+        Dispatcher.connect("remove-source", self.on_dispatcher_remove_source)
         
     def on_tab_box_switch_tab(self, widget, item):    
-        Dispatcher.emit("switch-browser", item.tab_type)
+        Dispatcher.emit("switch-browser", item)
         
     def manual_active_tab(self, widget, songs, tab_type):    
         self.tab_box.active_tab(tab_type)
+        
+    def on_dispatcher_add_source(self, widget, data):    
+        self.tab_box.add_items([data], False)
+
+    def on_dispatcher_remove_source(self, widget, data):    
+        self.tab_box.remove_items([data])

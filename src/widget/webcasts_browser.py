@@ -30,7 +30,7 @@ from widget.webcast_item import CategoryTreeItem, CollectTreeItem
 from widget.skin import app_theme
 from widget.combo import TextPrompt
 from widget.webcast_view import WebcastIconView, MultiDragWebcastView
-from widget.ui_utils import draw_alpha_mask, switch_tab, set_widget_gravity, create_separator_box
+from widget.ui_utils import draw_alpha_mask, switch_tab, set_widget_gravity
 from webcast_library import WebcastDB, WebcastQuery
 from widget.ui import BackButton
 from helper import SignalContainer, Dispatcher
@@ -210,8 +210,10 @@ class WebcastsBrowser(gtk.VBox, SignalContainer):
         else:    
             songs = None
             
-        if songs:    
-            self.collected_view.add_webcasts(songs)
+        if songs:
+            songs = [ song for song in songs if song.get("collected", False)]            
+            if songs:
+                self.collected_view.add_webcasts(songs)
         
     def get_icon_view(self):
         icon_view = WebcastIconView()

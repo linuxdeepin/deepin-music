@@ -34,7 +34,9 @@ from helper import Dispatcher
 from player import Player
 from song import Song
 from webcast_library import WebcastDB
+from xdg_support import get_config_file
 from nls import _
+import utils
 
 class WebcastView(ListView):
     __gsignals__ = {
@@ -55,10 +57,10 @@ class WebcastView(ListView):
 
         self.set_expand_column(1)
         Dispatcher.connect("play-webcast", self.on_dispatcher_play_webcast)
-        # Dispatcher.connect("being-quit", lambda obj: self.save())
         self.limit_number = 25
-
         WebcastDB.connect("changed", self.on_db_update_songs)
+        
+        self.preview_db_file = get_config_file("preview_webcasts.db")
 
 
     def on_db_update_songs(self, db, infos):
@@ -221,7 +223,24 @@ class WebcastView(ListView):
     def emit_add_signal(self):
         self.emit("begin-add-items")
 
-
+    def load(self):    
+        try:
+            webcast_uris = utils.load_db(self.preview_db_file)
+        except:    
+            webcast_uris = None
+            
+        if webcast_uris:    
+            webcasts = [ WebcastDB.get_song(uri) for uri in webcast_uris]
+        else:    
+            webcasts = None
+            
+        if webcasts:    
+            self.add_webcasts(webcasts)
+            
+    def save(self):        
+        songs = self.get_webcasts()
+        uris = [ song.get("uri") for song in songs if song.get("uri")]
+        utils.save_db(uris, self.preview_db_file)
 
 class MultiDragWebcastView(ListView):
 

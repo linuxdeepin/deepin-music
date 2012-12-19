@@ -1,0 +1,4 @@
+Version='1.0'
+Authors=["SmallEvilbeast <houshao55@gmail.com>"]
+Name=_('MusicFM')
+Description=_('Listen FM from douban.fm')

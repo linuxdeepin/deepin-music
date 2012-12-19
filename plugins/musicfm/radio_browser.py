@@ -25,11 +25,12 @@ import gtk
 from dtk.ui.new_treeview import TreeView
 from dtk.ui.paned import HPaned
 
-from widget.radio_item import CategroyTreeItem
+from radio_item import CategroyTreeItem
+from radio_home_page import HomePage
+from radio_genre_page import GenrePage
+from radio_view import RadioIconView, TAG_HOT, TAG_FAST
+
 from widget.skin import app_theme
-from widget.radio_home_page import HomePage
-from widget.radio_genre_page import GenrePage
-from widget.radio_view import RadioIconView, TAG_HOT, TAG_FAST
 from widget.ui_utils import draw_alpha_mask, switch_tab
 from nls import _
 
@@ -48,8 +49,6 @@ class RadioBrowser(gtk.VBox):
         self.hot_page_view, self.hot_page_sw = self.get_radio_icon_view(TAG_HOT)
         self.fast_page_view, self.fast_page_sw = self.get_radio_icon_view(TAG_FAST)
         
-        self.hot_page_view.start_fetch_channels()
-        self.fast_page_view.start_fetch_channels()
         
         # Genres page
         self.genre_page = GenrePage()
@@ -81,3 +80,11 @@ class RadioBrowser(gtk.VBox):
         icon_view = RadioIconView(tag=tag, limit=limit, padding_x=padding_x, padding_y=padding_y)
         scrolled_window = icon_view.get_scrolled_window()
         return icon_view, scrolled_window
+    
+    def start_fetch_channels(self):
+        self.fast_page_view.clear_items()
+        self.hot_page_view.clear_items()
+        self.home_page.start_fetch_channels()
+        self.hot_page_view.start_fetch_channels()
+        self.fast_page_view.start_fetch_channels()
+        self.genre_page.start_fetch_channels()

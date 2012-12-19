@@ -39,6 +39,8 @@ class WebcastList(gtk.VBox):
         self.webcast_view.connect("empty-items", self.on_webcast_view_empty_items)
         self.webcast_view.connect("begin-add-items", self.on_webcast_view_begin_add)
         
+        self.webcast_view.load()
+        
     def on_webcast_view_empty_items(self, widget):    
         switch_tab(self, self.empty_webcast_box)
         
@@ -50,3 +52,6 @@ class WebcastList(gtk.VBox):
         scrolled_window = ScrolledWindow(0, 0)
         scrolled_window.add_child(view)
         return scrolled_window, view
+    
+    def save(self):
+        self.webcast_view.save()

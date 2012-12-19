@@ -23,16 +23,12 @@
 import gobject
 import pango
 import gtk
-from dtk.ui.draw import draw_pixbuf, draw_text, color_hex_to_cairo, alpha_color_hex_to_cairo
+from dtk.ui.draw import draw_pixbuf, draw_text, color_hex_to_cairo
 from dtk.ui.new_treeview import TreeItem
-from dtk.ui.utils import get_content_size
 
 import utils
 from widget.skin import app_theme
 from widget.ui_utils import (draw_single_mask, render_item_text, draw_separator)
-from constant import DEFAULT_FONT_SIZE, LIST_WIDTH
-
-
         
 class CategoryTreeItem(TreeItem):    
     def __init__(self, title, category):

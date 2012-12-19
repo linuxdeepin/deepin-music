@@ -30,8 +30,6 @@ from dtk.ui.slider import Wizard
 from dtk.ui.utils import get_parent_dir
 from dtk.ui.button import LinkButton
 
-
-
 from widget.skin import app_theme
 from widget.headerbar import SimpleHeadbar
 from widget.list_manager import ListManager
@@ -102,8 +100,8 @@ class DeepinMusic(gobject.GObject, Logger):
         self.window.is_disable_window_maximized = self.is_disable_window_maximized
         utils.set_main_window(self)
         
-        self.plugins = plugins.PluginsManager(self)        
-        
+        self.plugins = plugins.PluginsManager(self, False)        
+        self.browser_manager = BrowserMananger()        
         self.tray_icon = TrayIcon(self)        
         self.lyrics_display = LyricsModule()
         self.list_manager = ListManager()
@@ -113,7 +111,7 @@ class DeepinMusic(gobject.GObject, Logger):
         self.equalizer_win = EqualizerWindow()
         self.mmkeys = MMKeys()
         self.audiocd = AudioCDSource()
-        self.browser_manager = BrowserMananger()
+
         self.mini_window = MiniWindow()
         
         self.window.add_move_event(self.simple_header_bar)
@@ -210,6 +208,8 @@ class DeepinMusic(gobject.GObject, Logger):
         first_started =  config.get("setting", "first_started", "")        
         if show and first_started:
             self.ready_show()
+            
+
         self.emit("ready")
         
         # wizard
@@ -218,9 +218,11 @@ class DeepinMusic(gobject.GObject, Logger):
             config.set("setting", "first_started", "false")
             
     def ready_show(self):    
+        self.plugins.load_enabled()        
         self.app_show_all()
         if config.getboolean("lyrics", "status"):
             self.lyrics_display.run()
+
         
     def force_quit(self, *args):    
         self.loginfo("Start quit...")
@@ -235,7 +237,6 @@ class DeepinMusic(gobject.GObject, Logger):
         self.mmkeys.release()
         Dispatcher.emit("being-quit")
         self.playlist_ui.save_to_library()
-        self.browser_manager.save() 
         MediaDB.save()
         WebcastDB.save()
         config.write()

@@ -31,10 +31,10 @@ from widget.ui_utils import switch_tab
 from widget.skin import app_theme
 from constant import LIST_WIDTH
  
-class Tab(gtk.EventBox):
+class ListTab(gtk.EventBox):
     __gtype_name__ = "DtkTab"
     
-    def __init__(self, title, allocate_widget,  tab_type, index,  total_number, icon=None):
+    def __init__(self, title, list_widget, browser_widget, icon=None):
         gtk.EventBox.__init__(self)
         self.set_visible_window(False)
         self.add_events(gtk.gdk.ALL_EVENTS_MASK)
@@ -49,10 +49,10 @@ class Tab(gtk.EventBox):
         self.connect("expose-event", self.on_tab_expose)     
         self.is_in_move= False
         self.press_callback = None
-        self.__allocate_widget = allocate_widget
-        self.index = index
-        self.total = total_number
-        self.tab_type = tab_type
+        self.list_widget = list_widget
+        self.browser_widget = browser_widget
+        self.index = -1
+        self.total = -1
         
         # init data.
         self.is_select = False
@@ -153,8 +153,11 @@ class Tab(gtk.EventBox):
         self.is_select = True
         self.queue_draw()
         
-    def get_allocate_widget(self):    
-        return self.__allocate_widget
+    def get_list_widget(self):    
+        return self.list_widget
+    
+    def get_browser_widget(self):
+        return self.browser_widget
         
     def on_tab_expose(self, widget, event):    
         rect = widget.allocation
@@ -181,6 +184,11 @@ class Tab(gtk.EventBox):
         
     def close(self, *args):    
         self.destroy()
+        
+    def update_index(self, index, total):    
+        self.index = index
+        self.total_number = total
+        self.queue_draw()
 
         
 class TabManager(gtk.VBox):        
@@ -206,22 +214,39 @@ class TabManager(gtk.VBox):
         
         self.pack_start(self.__topbar, False, True)
         self.pack_start(allocate_align, True, True)
-        
         self.add_items(items)
+        self.current_index = -2
         
         # Init Status.
         if self.items:
             item = self.items[0]
             item.manual_select()
-            self.current_tab_type = item.tab_type
-            self.__container.add(item.get_allocate_widget())
+            self.on_item_press(item)
             
     def add_items(self, items, clear=True):        
         if clear:
             self.clear_items()
-        self.total_number += len(items)
-        for index, (title, allocate_widget, tab_type) in enumerate(items):        
-            self.items.append(Tab(title, allocate_widget, tab_type, index, self.total_number))
+            
+        self.items.extend(items)    
+        self.adjust_items_index()
+        
+    def remove_items(self, items):    
+        for item in items:
+            item.clear_selected_status()
+            try:
+                self.items.remove(item)
+            except:    
+                continue
+        self.adjust_items_index()    
+        
+        item = self.items[0]
+        item.manual_select()
+        self.on_item_press(item)
+            
+    def adjust_items_index(self):        
+        self.total_number = len(self.items)            
+        for index, item in enumerate(self.items):    
+            item.update_index(index, self.total_number)
         self.resize_items()    
             
     def clear_items(self):        
@@ -250,28 +275,16 @@ class TabManager(gtk.VBox):
     def on_topbar_size_allocate(self, widget, rect):        
         pass
                 
-    def on_item_press(self, widget):            
-        if widget.tab_type == self.current_tab_type:
+    def on_item_press(self, press_item):            
+        if press_item.index == self.current_index:
             return
-        self.current_tab_type = widget.tab_type
+        self.current_index = press_item.index 
         for item in self.items:
-            if item == widget:
+            if item == press_item:
                 continue
             item.clear_selected_status()
-            
-        switch_tab(self.__container, widget.get_allocate_widget())    
-        self.emit("switch-tab", widget)    
+        switch_tab(self.__container, press_item.list_widget)    
+        self.emit("switch-tab", press_item)    
         
     def active_tab(self, tab_type):    
-        if tab_type == self.current_tab_type:
-            return
-        self.current_tab_type = tab_type
-        choose_item = None
-        for item in self.items:
-            if item.tab_type == tab_type:
-                choose_item = item
-            item.clear_selected_status()
-                
-        if choose_item is not None:
-            choose_item.manual_select()
-            switch_tab(self.__container, choose_item.get_allocate_widget())                
+        pass

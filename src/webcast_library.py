@@ -30,7 +30,6 @@ from song import Song
 from xdg_support import get_config_file
 
 import utils
-from nls import _
 
 
 AUTOSAVE_TIMEOUT = 1000 * 60 * 5 # 5min

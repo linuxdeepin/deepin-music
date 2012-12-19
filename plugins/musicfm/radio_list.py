@@ -22,9 +22,8 @@
 
 
 import gtk
-from dtk.ui.scrolled_window import ScrolledWindow
 
-from widget.radio_view import RadioView
+from radio_view import RadioView
 from widget.ui import EmptyListItem
 from widget.ui_utils import switch_tab
 from constant import EMPTY_RADIO_ITEM
@@ -40,8 +39,13 @@ class RadioList(gtk.VBox):
         self.radio_view.connect("empty-items", self.on_radio_view_empty_items)
         self.radio_view.connect("begin-add-items", self.on_radio_view_begin_add)
         
+        self.radio_view.load()
+        
     def on_radio_view_empty_items(self, widget):    
         switch_tab(self, self.empty_radio_box)
         
     def on_radio_view_begin_add(self, widget):    
         switch_tab(self, self.radio_view)
+        
+    def save(self):    
+        self.radio_view.save()

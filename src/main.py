@@ -204,10 +204,6 @@ class DeepinMusicApp(Logger):
         from pinyin import TransforDB        
         TransforDB.load()        
         
-        # Loading radios DB.
-        from webcasts import WebcastsDB
-        WebcastsDB.load()
-        
         # initialize Gui
         self.loginfo("Initialize Gui...")
         from widget.instance import DeepinMusic        

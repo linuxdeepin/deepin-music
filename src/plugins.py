@@ -197,6 +197,8 @@ class PluginsManager(Logger):
         if to_enable:
             for plugin in to_enable:
                 try:
-                    self.enable_plugin(plugin)
+                    if plugin:
+                        self.enable_plugin(plugin)
                 except:
                     pass
+        self.load = True        
