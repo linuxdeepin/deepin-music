@@ -1044,3 +1044,7 @@ class PreferenceDialog(DialogBox):
     def on_categorybar_single_click(self, widget, item, column, x, y):
         if item.allocate_widget:
             switch_tab(self.right_box, item.allocate_widget)
+
+    def load_plugins(self):        
+        self.plugins_manager.flush_plugins()
+            

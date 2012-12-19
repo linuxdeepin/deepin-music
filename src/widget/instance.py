@@ -218,7 +218,8 @@ class DeepinMusic(gobject.GObject, Logger):
             config.set("setting", "first_started", "false")
             
     def ready_show(self):    
-        self.plugins.load_enabled()        
+        self.plugins.load_enabled()
+        self.preference_dialog.load_plugins()
         self.app_show_all()
         if config.getboolean("lyrics", "status"):
             self.lyrics_display.run()

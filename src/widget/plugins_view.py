@@ -165,9 +165,6 @@ class PluginsManager(gtk.VBox):
                                              self.sort_by_title, self.sort_by_title))
         plugins_view_align = set_widget_gravity(self.plugins_view, gravity=(1, 1, 1, 1),
                                                 paddings=(10, 0, 0, 0))
-
-        self.__load_plugin_list()
-        
         
         # plugin info
         self.plugin_name = Label("")
@@ -189,6 +186,9 @@ class PluginsManager(gtk.VBox):
     
     def plugins_view_draw_mask(self, cr, x, y, width, height):
         draw_alpha_mask(cr, x, y, width, height, "layoutLeft")
+        
+    def flush_plugins(self):
+        self.__load_plugin_list()
         
     def __load_plugin_list(self):    
         
