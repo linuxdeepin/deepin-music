@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-20 14:01+0800\n"
+"POT-Creation-Date: 2012-12-20 17:30+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -169,16 +169,16 @@ msgstr ""
 msgid "A very fast Free lossless audio format with good compression."
 msgstr ""
 
-#: ../src/plugins.py:90
+#: ../src/plugins.py:91
 msgid "Plugin archive is not in the correct format."
 msgstr ""
 
-#: ../src/plugins.py:97
+#: ../src/plugins.py:98
 #, python-format
 msgid "A plugin with the name \"%s\" is already installed."
 msgstr ""
 
-#: ../src/plugins.py:102
+#: ../src/plugins.py:103
 msgid "Plugin archive contains an unsafe path."
 msgstr ""
 
@@ -597,20 +597,16 @@ msgstr ""
 msgid "Load playlist"
 msgstr ""
 
-#: ../src/widget/plugins_view.py:163 ../src/widget/plugins_view.py:234
+#: ../src/widget/plugins_view.py:162 ../src/widget/ui.py:830
 msgid "Plugin"
 msgstr ""
 
-#: ../src/widget/plugins_view.py:163
+#: ../src/widget/plugins_view.py:162
 msgid "Version"
 msgstr ""
 
-#: ../src/widget/plugins_view.py:163
+#: ../src/widget/plugins_view.py:162
 msgid "Enable"
-msgstr ""
-
-#: ../src/widget/plugins_view.py:235
-msgid "Author(s)"
 msgstr ""
 
 #: ../src/widget/webcast_view.py:374 ../plugins/webcast/__init__.py:34
@@ -1180,6 +1176,28 @@ msgstr ""
 msgid "Fail to download!"
 msgstr ""
 
+#: ../src/widget/ui.py:730
+msgid "Your search {keyword} did not match any items in {from}"
+msgstr ""
+
+#: ../src/widget/ui.py:731
+msgid "Suggestions"
+msgstr ""
+
+#: ../src/widget/ui.py:732
+msgid "Make sure all words are spelled correctly."
+msgstr ""
+
+#: ../src/widget/ui.py:733
+msgid ""
+"Try more general keywords, such as a title, an artist or the name of an "
+"album."
+msgstr ""
+
+#: ../src/widget/ui.py:838
+msgid "Author(s)"
+msgstr ""
+
 #: ../src/widget/combo.py:195
 msgid "List view"
 msgstr ""
@@ -1198,19 +1216,19 @@ msgid "More"
 msgstr ""
 
 #: ../plugins/musicfm/radio_home_page.py:43
-#: ../plugins/musicfm/radio_browser.py:68
+#: ../plugins/musicfm/radio_browser.py:67
 msgid "Hot MHz"
 msgstr ""
 
 #: ../plugins/musicfm/radio_home_page.py:43
-#: ../plugins/musicfm/radio_browser.py:70
+#: ../plugins/musicfm/radio_browser.py:69
 msgid "Uptrending MHz"
 msgstr ""
 
-#: ../plugins/musicfm/radio_browser.py:67
+#: ../plugins/musicfm/radio_browser.py:66
 msgid "Home"
 msgstr ""
 
-#: ../plugins/musicfm/radio_browser.py:69
+#: ../plugins/musicfm/radio_browser.py:68
 msgid "Genre MHz"
 msgstr ""

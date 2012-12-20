@@ -727,10 +727,10 @@ class SearchPrompt(gtk.EventBox):
         self.padding_y = 8
         self.red_span = "\"<span foreground=\"red\">%s</span>\""
         self.black_span = "<span foreground=\"black\">%s</span>"
-        self.prompt_format_text  = "在%s中没有找到与%s相关的内容." 
-        self.suggest_title = "<span foreground=\"black\"><b>%s:</b></span>" % "深度音乐建议您"
-        self.suggest_first_line = "· %s" % "看看输入文字是否有误"
-        self.suggest_second_line = "· %s" % "尽量输入艺术家或专辑名称"
+        self.prompt_format_text  = _("Your search {keyword} did not match any items in {from}")
+        self.suggest_title = "<span foreground=\"black\"><b>%s:</b></span>" % _("Suggestions")
+        self.suggest_first_line = "· %s" % _("Make sure all words are spelled correctly.")
+        self.suggest_second_line = "· %s" % _("Try more general keywords, such as a title, an artist or the name of an album.")
         
         
     def on_expose_event(self, widget, event):    
@@ -741,7 +741,8 @@ class SearchPrompt(gtk.EventBox):
         
         keyword_span = self.red_span % self.keyword
         from_keyword_span = self.black_span % self.from_keyword
-        self.prompt_text = self.prompt_format_text % (from_keyword_span, keyword_span)
+        from_keyword_dict = {"keyword" : keyword_span, "from" : from_keyword_span}
+        self.prompt_text = self.prompt_format_text.format(**from_keyword_dict)
         _width, _height = get_content_size(self.prompt_text)
 
         draw_text(cr, self.prompt_text, rect.x, rect.y, rect.width, _height, 

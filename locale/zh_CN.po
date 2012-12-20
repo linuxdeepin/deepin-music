@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-20 13:54+0800\n"
+"POT-Creation-Date: 2012-12-20 17:30+0800\n"
 "PO-Revision-Date: 2012-07-12 03:23+0800\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -169,16 +169,16 @@ msgstr ""
 msgid "A very fast Free lossless audio format with good compression."
 msgstr ""
 
-#: ../src/plugins.py:90
+#: ../src/plugins.py:91
 msgid "Plugin archive is not in the correct format."
 msgstr ""
 
-#: ../src/plugins.py:97
+#: ../src/plugins.py:98
 #, python-format
 msgid "A plugin with the name \"%s\" is already installed."
 msgstr ""
 
-#: ../src/plugins.py:102
+#: ../src/plugins.py:103
 msgid "Plugin archive contains an unsafe path."
 msgstr ""
 
@@ -597,21 +597,17 @@ msgstr "导出播放列表"
 msgid "Load playlist"
 msgstr "加载播放列表"
 
-#: ../src/widget/plugins_view.py:163 ../src/widget/plugins_view.py:234
+#: ../src/widget/plugins_view.py:162 ../src/widget/ui.py:830
 msgid "Plugin"
 msgstr "插件"
 
-#: ../src/widget/plugins_view.py:163
+#: ../src/widget/plugins_view.py:162
 msgid "Version"
 msgstr "版本"
 
-#: ../src/widget/plugins_view.py:163
+#: ../src/widget/plugins_view.py:162
 msgid "Enable"
 msgstr "启用"
-
-#: ../src/widget/plugins_view.py:235
-msgid "Author(s)"
-msgstr "作者"
 
 #: ../src/widget/webcast_view.py:374 ../plugins/webcast/__init__.py:34
 #: ../plugins/webcast/__init__.py:36
@@ -1185,6 +1181,28 @@ msgstr "文件保存到"
 msgid "Fail to download!"
 msgstr "下载失败!"
 
+#: ../src/widget/ui.py:730
+msgid "Your search {keyword} did not match any items in {from}"
+msgstr "在{from}中没有找到与{keyword}相关的内容"
+
+#: ../src/widget/ui.py:731
+msgid "Suggestions"
+msgstr "深度音乐建议您"
+
+#: ../src/widget/ui.py:732
+msgid "Make sure all words are spelled correctly."
+msgstr "看看输入文字是否有误"
+
+#: ../src/widget/ui.py:733
+msgid ""
+"Try more general keywords, such as a title, an artist or the name of an "
+"album."
+msgstr "尽量输入标题、艺术家或专辑名称"
+
+#: ../src/widget/ui.py:838
+msgid "Author(s)"
+msgstr "作者"
+
 #: ../src/widget/combo.py:195
 msgid "List view"
 msgstr "列表显示"
@@ -1203,19 +1221,19 @@ msgid "More"
 msgstr "更多"
 
 #: ../plugins/musicfm/radio_home_page.py:43
-#: ../plugins/musicfm/radio_browser.py:68
+#: ../plugins/musicfm/radio_browser.py:67
 msgid "Hot MHz"
 msgstr "热门兆赫"
 
 #: ../plugins/musicfm/radio_home_page.py:43
-#: ../plugins/musicfm/radio_browser.py:70
+#: ../plugins/musicfm/radio_browser.py:69
 msgid "Uptrending MHz"
 msgstr "人气兆赫"
 
-#: ../plugins/musicfm/radio_browser.py:67
+#: ../plugins/musicfm/radio_browser.py:66
 msgid "Home"
 msgstr "推荐首页"
 
-#: ../plugins/musicfm/radio_browser.py:69
+#: ../plugins/musicfm/radio_browser.py:68
 msgid "Genre MHz"
 msgstr "流派兆赫"
