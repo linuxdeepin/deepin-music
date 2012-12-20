@@ -41,6 +41,19 @@ class CategoryTreeItem(TreeItem):
         self.padding_x = 10
         self.category = category
         
+        if self.category.startswith("region"):
+            self.init_icon_dpixbuf("region")
+        elif self.category.startswith("genre"):    
+            self.init_icon_dpixbuf("genre")
+        else:    
+            self.init_icon_dpixbuf("composite")
+            
+        self.icon_width = self.normal_dpixbuf.get_pixbuf().get_width()
+            
+    def init_icon_dpixbuf(self, name):        
+        self.normal_dpixbuf = app_theme.get_pixbuf("webcast/%s_normal.png" % name)
+        self.press_dpixbuf = app_theme.get_pixbuf("webcast/%s_press.png" % name)
+        
     def get_height(self):    
         return self.item_height
     
@@ -75,8 +88,20 @@ class CategoryTreeItem(TreeItem):
         else:    
             text_color = app_theme.get_color("labelText").get_color()
             
-        draw_text(cr, self.title, rect.x + self.padding_x, 
-                  rect.y, rect.width - self.padding_x * 2, 
+        if self.is_select:    
+            icon_pixbuf = self.press_dpixbuf.get_pixbuf()
+        else:    
+            icon_pixbuf = self.normal_dpixbuf.get_pixbuf()
+            
+        rect.x += self.padding_x    
+        rect.width -= self.padding_x * 2
+        icon_y = rect.y + (rect.height - icon_pixbuf.get_height()) / 2
+        draw_pixbuf(cr,icon_pixbuf, rect.x, icon_y)    
+        rect.x += self.icon_width + self.padding_x
+        rect.width -= self.icon_width - self.padding_x
+        
+        draw_text(cr, self.title, rect.x,
+                  rect.y, rect.width,
                   rect.height, text_size=10, 
                   text_color = text_color,
                   alignment=pango.ALIGN_LEFT)    
@@ -120,6 +145,12 @@ class CollectTreeItem(TreeItem):
         self.padding_y = 5
         self.item_height = 37 + self.padding_y * 2 + 1
         self.collect_flag = True
+        self.init_icon_dpixbuf()
+        self.icon_width = self.normal_dpixbuf.get_pixbuf().get_width()
+        
+    def init_icon_dpixbuf(self):        
+        self.normal_dpixbuf = app_theme.get_pixbuf("webcast/favorite_normal.png")
+        self.press_dpixbuf = app_theme.get_pixbuf("webcast/favorite_press.png")
         
     def get_height(self):    
         return self.item_height
@@ -164,8 +195,20 @@ class CollectTreeItem(TreeItem):
         else:    
             text_color = app_theme.get_color("labelText").get_color()
             
-        draw_text(cr, self.title, rect.x + self.padding_x, 
-                  rect.y, rect.width - self.padding_x * 2, 
+        if self.is_select:    
+            icon_pixbuf = self.press_dpixbuf.get_pixbuf()
+        else:    
+            icon_pixbuf = self.normal_dpixbuf.get_pixbuf()
+            
+        rect.x += self.padding_x    
+        rect.width -= self.padding_x * 2
+        icon_y = rect.y + (rect.height - icon_pixbuf.get_height()) / 2
+        draw_pixbuf(cr,icon_pixbuf, rect.x, icon_y)    
+        rect.x += self.icon_width + self.padding_x
+        rect.width -= self.icon_width - self.padding_x
+        
+        draw_text(cr, self.title, rect.x,
+                  rect.y, rect.width,
                   rect.height, text_size=10, 
                   text_color = text_color,
                   alignment=pango.ALIGN_LEFT)    
