@@ -837,7 +837,7 @@ def xmlescape(stri):
     """Escape a string in a manner suitable for XML/Pango."""
     stri = str(stri)
     stri = stri.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-    return stri.replace("'", "&apos;").replace('\"', "&quot;")
+    return stri
 
 
 def xmlunescape(stri):

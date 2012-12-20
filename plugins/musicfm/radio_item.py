@@ -24,6 +24,7 @@ import gtk
 import gobject
 import pango
 import math
+import random
 
 from dtk.ui.threads import post_gui
 from dtk.ui.cache_pixbuf import CachePixbuf
@@ -168,12 +169,21 @@ class CommonIconItem(gobject.GObject, MissionThread):
     def start_mission(self):    
         cover_path = DoubanCover.get_cover(self.chl,try_web=True)
         if cover_path:
-            self.render_cover(cover_path)
+            self.delay_render_cover(cover_path)
+            
+    def delay_render_cover(self, cover_path):        
+        gobject.timeout_add(200 + random.randint(1, 10),  self.render_cover, cover_path)
             
     @post_gui    
     def render_cover(self,cover_path):
-        self.pixbuf = gtk.gdk.pixbuf_new_from_file(cover_path)
-        # self.emit_redraw_request()
+        try:
+            pixbuf = gtk.gdk.pixbuf_new_from_file(cover_path)
+        except:    
+            pass
+        else:
+            self.pixbuf = pixbuf
+            self.emit_redraw_request()
+        return False
         
     def emit_redraw_request(self):
         '''

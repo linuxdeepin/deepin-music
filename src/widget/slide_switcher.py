@@ -23,53 +23,36 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import gtk
-import cairo
 import pango
 import gobject
 import math
+import copy
+import threading
+import Queue
+import time
 
 from dtk.ui.utils import (color_hex_to_cairo, get_content_size, 
                           alpha_color_hex_to_cairo, set_cursor)
 
-from dtk.ui.draw import render_text
+from dtk.ui.draw import render_text, draw_pixbuf
 from dtk.ui.timeline import Timeline, CURVE_SINE
 
 from widget.skin import app_theme
-
+from cover_manager import DoubanCover
 import utils
 
 class SlideSwitcher(gtk.EventBox):
     
-    def __init__(self):
+    def __init__(self, channels=None):
         gtk.EventBox.__init__(self)
         self.set_visible_window(False)
         self.set_size_request(-1, 200)
-        
-        # Generate image and surfaces.
-        self.text_contents = [("中国好声音", 
-                               "曾经我暗恋着一个人，挣扎了许久后告白，却还是被拒绝。也是我的心情吧，谁知道接下来会发生什么", 
-                               "热门歌曲：我的歌声里 / 洋葱 / 爱要坦荡荡", "210首歌曲 豆瓣FM制作"),
-                              ("心灵后花园MHz", "在我的心灵后花园里，寻找属于你自己的心灵奇葩。每天更新，挺舒服的歌",
-                               "热门歌曲：Halo / Lemon Tree (中文版) / Way Back Into Love", "432首歌曲 拯救予逍遥制作"),
-                              ("偷偷塞进耳朵里MHz", "还记得那些年，在课堂上偷偷将耳机塞进耳朵里听得歌么？",
-                               "热门歌曲：Right Here Waiting / Kiss The Rain / Hotel California", "168首歌曲 lancelot制作"),
-                              ("聽說 Hear MeMHz", "握住你的心 紧紧紧紧的", "热门歌曲：寂寞寂寞就好 / 原谅 / 还是会", "392首歌曲 绿制作"),
-                              ("正·能·量MHz", "無聊了就來聽聽歌吧。", 
-                               "热门歌曲：Love The Way You Lie (Part II) feat. Eminem / Nothin' On You / Whistle",
-                               "748首歌曲 绿绿桑制作")]    
-        self.images = []
-        for i in range(5):
-            self.images.append(app_theme.get_theme_file_path("image/slide/%d.png" % i))
-        self.generate_image_surfaces()     
-        self.content_surfaces = None
-        
-        # Init signals.
+        self.channel_infos =[]        # Init signals.
         self.add_events(gtk.gdk.ALL_EVENTS_MASK)
         self.connect("motion-notify-event", self.on_motion_notify)
         self.connect("leave-notify-event", self.on_leave_notify)
         self.connect("enter-notify-event", self.on_enter_notify)
         self.connect("expose-event", self.on_expose_event)        
-        self.connect("size-allocate", self.on_size_allocate)
              
         # Init data.
         self.slide_number = 5
@@ -89,94 +72,146 @@ class SlideSwitcher(gtk.EventBox):
         self.pointer_offset_y = 20
         self.pointer_coords = {}
         self.start_auto_slide()
-            
-    def generate_image_surfaces(self):
-        self.image_surfaces = []
-        for image_file in self.images:
-            self.image_surfaces.append(cairo.ImageSurface.create_from_png(image_file))
-            
-    def generate_content_surfaces(self, rect):        
-        self.content_surfaces = []
-        for i, image_surface in enumerate(self.image_surfaces):
-            self.content_surfaces.append(self.get_draw_surface(image_surface, self.text_contents[i], rect.width, 200))
-            
-    def on_size_allocate(self, widget, rect):        
-        if self.content_surfaces:
-            del self.content_surfaces[:]
-        self.content_surfaces = None
+        self.default_cover = app_theme.get_pixbuf("radio/default_banner.png").get_pixbuf()
+        self.prompt_text = "正在加载数据..."
         
-    def get_draw_surface(self, image_surface, text_contents, width, height):    
-        surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, int(width), int(height))
-        cr = cairo.Context(surface)
-        cr.set_source_surface(image_surface, 0, 0)
-        cr.set_operator(cairo.OPERATOR_SOURCE)
-        cr.paint()
+        self.text_padding_x = 18
+        self.text_start_y = 30
+        self.text_interval_y = 16
+        self.cover_pixbufs = {}
         
-        image_w, image_h = image_surface.get_width(), image_surface.get_height()
+        
+    def __init_cover_pixbufs(self):
+        for channel in self.channel_infos:
+            self.cover_pixbufs[channel.get("id")] = self.get_channel_cover(channel)
+            
+    def update_channel_cover(self, channel):        
+        self.cover_pixbufs[channel.get("id")] = self.get_channel_cover(channel, emit_fetch=False)
+                
+    def get_channel_cover(self, channel_info, emit_fetch=True):
+        cover_path = DoubanCover.get_banner(channel_info, try_web=False)
+        if cover_path:
+            try:
+                pixbuf = gtk.gdk.pixbuf_new_from_file(cover_path)
+            except:    
+                return self.default_cover
+            else:
+                return pixbuf
+        else:
+            if emit_fetch:
+                self.start_fetch_cover(channel_info)
+            return self.default_cover
+        
+    def fetch_channel_cover(self, channel_info):    
+        cover_path = DoubanCover.get_banner(channel_info, try_web=True)
+        if cover_path:
+            self.update_channel_cover(channel_info)
+        
+    def start_fetch_cover(self, channel_info):    
+        utils.ThreadFetch(
+            fetch_funcs=(self.fetch_channel_cover, (channel_info,))
+            ).start()
+        
+    def get_channel_pixbuf(self, channel_info):    
+        channel_id = channel_info.get("id")
+        if channel_id in self.cover_pixbufs.keys():
+            return self.cover_pixbufs[channel_id]
+        return self.default_cover
+        
+    def get_channel_contents(self, channel_info):    
+        name = utils.xmlescape(channel_info.get("name", ""))
+        intro = utils.xmlescape(channel_info.get("intro", ""))
+        hot_songs = "%s: %s" % ("热门歌曲", utils.xmlescape(" / ".join(channel_info.get("hot_songs", []))))
+        songs = "%s%s" % (str(channel_info.get("song_num", "0")), "首歌曲")
+        return (name, intro, hot_songs, songs)
+        
+    def draw_channel_info(self, cr, allocation, index, alpha):    
+        rect = gtk.gdk.Rectangle(*allocation)
+        cr.push_group()
+        
+        # get channel_info
+        channel_info = self.channel_infos[index]
+        
+        # get_pixbuf
+        pixbuf = self.get_channel_pixbuf(channel_info)
+        draw_pixbuf(cr, pixbuf, rect.x, rect.y)
+        
+        # get_contents
+        text_contents = self.get_channel_contents(channel_info)
+        
+        pixbuf_width, pixbuf_height = pixbuf.get_width(), pixbuf.get_height()
         cr.set_source_rgb(*color_hex_to_cairo("#EFF5F2"))
-        cr.rectangle(image_w, 0, width, height)
+        cr.rectangle(rect.x + pixbuf_width, rect.y, rect.width - pixbuf_width, rect.height)
         cr.fill()
         
-        t_x, t_y = image_w + 18, 0
-        t_w = width - image_w - 18 * 2
+        text_x = rect.x + pixbuf_width + self.text_padding_x 
+        text_y = rect.y + self.text_start_y
+        text_width = rect.width - pixbuf_width - self.text_padding_x * 2
         
-        t_y += 22
         for index, content in enumerate(text_contents):
-            content = utils.xmlescape(content)
             if index == 0:
-                c_w, c_h = get_content_size(content, 12)                
-                render_text(cr, content, t_x, t_y, t_w, t_y + c_h, text_size=12, 
+                _width, _height = get_content_size(content, 12)                
+                render_text(cr, content, text_x, text_y, text_width, _height, text_size=12, 
                             text_color="#2cc96f")
-                t_y += c_h * 2
-                t_y += 16
+                text_y += _height + self.text_interval_y
+                
             elif index == 1 and content:
-                c_w, c_h = get_content_size(content, 8)                
-                render_text(cr, content, t_x, t_y, t_w, c_h * 2, text_size=8, 
-                            text_color="#444444", wrap_width=t_w)
-                t_y += c_h * 2
-                t_y += 16
+                _width, _height = get_content_size(content, 8)                
+                _height = _height * 2
+                cr.save()
+                cr.rectangle(text_x, text_y, text_width, _height)
+                cr.clip()
+                render_text(cr, content, text_x, text_y, text_width, _height, text_size=8, 
+                            text_color="#444444", wrap_width=text_width)
+                cr.restore()
+                
+                text_y += _height + self.text_interval_y
                 
             elif index == 2 and content:    
-                c_w, c_h = get_content_size(content, 8)                
-                render_text(cr, content, t_x, t_y, t_w, c_h * 2, text_size=8, 
-                            text_color="#878787", wrap_width=t_w)
-                t_y += c_h * 2
-                t_y += 5
+                _width, _height = get_content_size(content, 8)                
+                _height = _height * 2
+                cr.save()
+                cr.rectangle(text_x, text_y, text_width, _height)
+                cr.clip()
+                render_text(cr, content, text_x, text_y, text_width, _height, text_size=8, 
+                            text_color="#878787", wrap_width=text_width)
+                cr.restore()
+
+                text_y += _height + self.text_interval_y
                 
             elif index == 3 and content:    
-                c_w, c_h = get_content_size(content, 8)                
-                render_text(cr, content, t_x, t_y, t_w, c_h * 2, text_size=8, 
-                            text_color="#878787", wrap_width=t_w)
-                t_y += c_h * 2
-        return surface        
+                _width, _height = get_content_size(content, 8)                
+                _height = _height * 2
+                cr.save()
+                cr.rectangle(text_x, text_y, text_width, _height)
+                cr.clip()
+                render_text(cr, content, text_x, text_y, text_width, _height, text_size=8, 
+                            text_color="#878787", wrap_width=text_width)
+                cr.restore()
+                
+        cr.pop_group_to_source()
+        cr.paint_with_alpha(alpha)
         
     def on_expose_event(self, widget, event):    
         cr = widget.window.cairo_create()
         rect = widget.allocation
-        record_pointer_coord = False
-        if self.content_surfaces == None:        
-            record_pointer_coord = True
-            self.generate_content_surfaces(rect)
         
         cr.set_source_rgb(1, 1, 1)
         cr.rectangle(rect.x, rect.y, rect.width,rect.height)
         cr.fill()
         
-        cr.save()
-        cr.set_operator(cairo.OPERATOR_OVER)
+        if not self.channel_infos:
+            render_text(cr, self.prompt_text, rect.x, rect.y, rect.width, rect.height,
+                        text_color=app_theme.get_color("labelText").get_color(),
+                        alignment=pango.ALIGN_CENTER)
+            return True
+            
         
         if self.active_alpha > 0.0:
-            cr.save()
-            cr.set_source_surface(self.content_surfaces[self.active_index], rect.x ,rect.y)
-            cr.paint_with_alpha(self.active_alpha)
-            cr.restore()
+            self.draw_channel_info(cr, rect, self.active_index, self.active_alpha)
             
         if self.target_index != None and self.target_alpha > 0.0:    
-            cr.save()
-            cr.set_source_surface(self.content_surfaces[self.target_index], rect.x, rect.y)
-            cr.paint_with_alpha(self.target_alpha)
-            cr.restore()
-        cr.restore()    
+            self.draw_channel_info(cr, rect, self.target_index, self.target_alpha)
         
         
         # Draw select pointer.
@@ -210,10 +245,9 @@ class SlideSwitcher(gtk.EventBox):
                         pointer_rect.width, pointer_rect.height, text_size=9, text_color="#444444",
                         alignment=pango.ALIGN_CENTER
                         )
-            if record_pointer_coord:
-                pointer_rect.x -= rect.x
-                pointer_rect.y -= rect.y
-                self.pointer_coords[index] = pointer_rect
+            pointer_rect.x -= rect.x
+            pointer_rect.y -= rect.y
+            self.pointer_coords[index] = pointer_rect
         return True
             
     def start_animation(self, animiation_time, target_index=None):        
@@ -288,19 +322,7 @@ class SlideSwitcher(gtk.EventBox):
             self.auto_slide_timeout_id = None
             
             
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-    
+    def set_infos(self, channel_infos):        
+        self.channel_infos = channel_infos
+        self.__init_cover_pixbufs()
+        self.queue_draw()

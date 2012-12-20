@@ -24,6 +24,7 @@ import gtk
 
 from dtk.ui.new_treeview import TreeView
 from dtk.ui.paned import HPaned
+from dtk.ui.utils import is_network_connected
 
 from radio_item import CategroyTreeItem
 from radio_home_page import HomePage
@@ -31,6 +32,7 @@ from radio_genre_page import GenrePage
 from radio_view import RadioIconView, TAG_HOT, TAG_FAST
 
 from widget.skin import app_theme
+from widget.ui import NetworkConnectFailed
 from widget.ui_utils import draw_alpha_mask, switch_tab
 from nls import _
 
@@ -55,11 +57,20 @@ class RadioBrowser(gtk.VBox):
         self.page_box = gtk.VBox()
         self.page_box.add(self.home_page)
         
-        body_paned = HPaned(handle_color=app_theme.get_color("panedHandler"))
-        body_paned.add1(self.radiobar)
-        body_paned.add2(self.page_box)
-        self.add(body_paned)
+        self.body_paned = HPaned(handle_color=app_theme.get_color("panedHandler"))
+        self.body_paned.add1(self.radiobar)
+        self.body_paned.add2(self.page_box)
+        self.network_failed_box = NetworkConnectFailed(self.check_network_connection)
+        self.check_network_connection(auto=True)
         
+    def check_network_connection(self, auto=False):    
+        if is_network_connected():
+            switch_tab(self, self.body_paned)
+            if not auto:
+                self.start_fetch_channels()
+        else:    
+            switch_tab(self, self.network_failed_box)
+            
     def __init_radiobar(self):    
         self.radiobar = TreeView(enable_drag_drop=False, enable_multiple_select=False)
         items = []

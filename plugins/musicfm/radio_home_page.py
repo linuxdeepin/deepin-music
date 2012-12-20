@@ -21,6 +21,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import gtk
+import copy
+import random
+
+from dtk.ui.threads import post_gui
+
 
 from widget.slide_switcher import SlideSwitcher
 from widget.page_switcher import PageSwitcher
@@ -28,6 +33,8 @@ from widget.ui_utils  import switch_tab
 
 from radio_view import RadioIconView, TAG_HOT, TAG_FAST
 from nls import _
+from posterlib import fmlib
+import utils
 
 class HomePage(gtk.VBox):
     
@@ -37,6 +44,7 @@ class HomePage(gtk.VBox):
         
         # home slider.
         self.home_slider = SlideSwitcher()
+        # self.home_slider= gtk.Button()
         self.home_slider.set_size_request(-1, 200)
         
         # recommmend tab switcher.
@@ -54,7 +62,10 @@ class HomePage(gtk.VBox):
         self.pack_start(self.home_slider, False, True)
         self.pack_start(self.recommend_tab, False, True)
         self.pack_start(self.recommend_view_box, True, True)
+        
         # Init data
+        self.banner_thread_id = 0
+        
         
         
     def switch_recommend_view(self, tab_index):
@@ -69,7 +80,30 @@ class HomePage(gtk.VBox):
         return icon_view, scrolled_window
     
     def start_fetch_channels(self):
+        self.set_banner_channels()
         self.hot_recommend_view.clear_items(False)
         self.fast_recommend_view.clear_items(False)
         self.hot_recommend_view.start_fetch_channels()
         self.fast_recommend_view.start_fetch_channels()
+        
+    def set_banner_channels(self):    
+        self.banner_thread_id += 1
+        banner_thread_id = copy.deepcopy(self.banner_thread_id)
+        utils.ThreadFetch(
+            fetch_funcs=(self.fetch_banner_channels, ()),
+            success_funcs=(self.load_banner_channels, (banner_thread_id,)),
+            ).start()
+        
+    def fetch_banner_channels(self):    
+        ret = fmlib.get_hot_chls(start=random.randrange(100, 1500, 5), limit=5)
+        return ret.get("data", {}).get("channels", [])
+    
+    @post_gui
+    def load_banner_channels(self, channels, thread_id):
+        if thread_id != self.banner_thread_id:
+            return 
+        if not channels:
+            return
+        self.home_slider.set_infos(channels)
+        
+        

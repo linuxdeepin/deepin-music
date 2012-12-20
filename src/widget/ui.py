@@ -22,6 +22,7 @@
 
 import gtk
 import gobject
+import pango
 
 from dtk.ui.window import Window
 from dtk.ui.titlebar import Titlebar
@@ -404,7 +405,6 @@ class LocalEmpty(gtk.EventBox):
         draw_pixbuf(cr, empty_pixbuf, icon_x, icon_y)
         
         add_pixbuf = self.add_dpixbuf.get_pixbuf()
-        
 
         
         text_y = icon_y + empty_pixbuf.get_height() + self.text_padding_y
@@ -424,6 +424,89 @@ class LocalEmpty(gtk.EventBox):
         draw_pixbuf(cr, add_pixbuf, icon_x, text_y)            
         draw_text(cr, _("Add Music"), text_x, text_y, self.text_rect.width, _height,
                   text_color=text_color, underline=True)
+        return True
+    
+    def on_motion_notify(self, widget, event):
+        if self.text_rect is not None:
+            if is_in_rect((event.x, event.y), self.text_rect):
+                self.is_hover = True
+            else:    
+                self.is_hover = False
+            self.queue_draw()        
+            
+    def on_button_press(self, widget, event):        
+        if self.is_hover:
+            if self.press_callback:
+                self.press_callback()
+                self.is_hover = False
+                self.queue_draw()
+                
+                
+class NetworkConnectFailed(gtk.EventBox):
+    
+    def __init__(self, callback=None):
+        gtk.EventBox.__init__(self)
+        self.set_visible_window(False)
+        self.add_events(gtk.gdk.BUTTON_PRESS_MASK |
+                        gtk.gdk.BUTTON_RELEASE_MASK |
+                        gtk.gdk.POINTER_MOTION_MASK |
+                        gtk.gdk.ENTER_NOTIFY_MASK |
+                        gtk.gdk.LEAVE_NOTIFY_MASK
+                        )
+
+        
+        self.connect("expose-event", self.on_expose_event)
+        
+        lang = utils.get_system_lang()
+        if lang == "zh_CN":
+            prefix = "cn"
+        elif lang in ["zh_HK", "zh_TW"]:    
+            prefix = "tw"
+        else:    
+            prefix = "en"
+            
+        self.failed_dpixbuf = app_theme.get_pixbuf("network/failed_%s.png" % prefix)
+        self.connect("motion-notify-event", self.on_motion_notify)
+        self.connect("button-press-event", self.on_button_press)
+        
+        self.normal_text_dcolor = app_theme.get_color("labelText")
+        self.hover_text_dcolor = app_theme.get_color("globalItemHighlight")
+        self.prompt_text = "点击此处刷新"
+        self.text_padding_y = 5
+        self.text_padding_x = 5
+        self.text_rect = None
+        self.is_hover = False
+        self.press_callback = callback
+        
+    def on_expose_event(self, widget, event):    
+        cr = widget.window.cairo_create()
+        rect = widget.allocation
+        failed_pixbuf = self.failed_dpixbuf.get_pixbuf()
+        draw_alpha_mask(cr, rect.x, rect.y, rect.width, rect.height, "layoutLeft")
+        pixbuf_offset_x = (rect.width - failed_pixbuf.get_width()) / 2 
+        pixbuf_offset_y = (rect.height - failed_pixbuf.get_height()) / 2 - 50
+        icon_x = rect.x + pixbuf_offset_x
+        icon_y = rect.y + pixbuf_offset_y
+        draw_pixbuf(cr, failed_pixbuf, icon_x, icon_y)
+        
+        text_y = icon_y + failed_pixbuf.get_height() + self.text_padding_y
+        text_x = icon_x + self.text_padding_x
+        
+        _width, _height = get_content_size(self.prompt_text)
+        
+        self.text_rect = gtk.gdk.Rectangle(text_x - rect.x, text_y - rect.y,
+                                           rect.x + rect.width -  text_x - pixbuf_offset_x,
+                                           _height)
+        
+        if self.is_hover:        
+            text_color = self.hover_text_dcolor.get_color()
+        else:    
+            text_color = self.normal_text_dcolor.get_color()
+            
+        draw_text(cr, self.prompt_text, text_x, text_y, self.text_rect.width, _height,
+                  text_color=text_color, 
+                  # underline=True, 
+                  alignment=pango.ALIGN_CENTER)
         return True
     
     def on_motion_notify(self, widget, event):
