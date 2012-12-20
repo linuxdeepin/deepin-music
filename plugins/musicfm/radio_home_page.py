@@ -23,7 +23,7 @@
 import gtk
 
 from widget.slide_switcher import SlideSwitcher
-from widget.tab_switcher import TabSwitcher
+from widget.page_switcher import PageSwitcher
 from widget.ui_utils  import switch_tab
 
 from radio_view import RadioIconView, TAG_HOT, TAG_FAST
@@ -40,7 +40,7 @@ class HomePage(gtk.VBox):
         self.home_slider.set_size_request(-1, 200)
         
         # recommmend tab switcher.
-        self.recommend_tab = TabSwitcher([_("Hot MHz"), _("Uptrending MHz")])
+        self.recommend_tab = PageSwitcher([_("Hot MHz"), _("Uptrending MHz")])
         self.recommend_tab.connect("tab-switch-start", lambda switcher, tab_index: self.switch_recommend_view(tab_index))
 
         # Init recommend view.

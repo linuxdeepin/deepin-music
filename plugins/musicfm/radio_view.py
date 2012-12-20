@@ -391,19 +391,20 @@ class RadioIconView(IconView):
             
 class RadioSearchView(gtk.VBox):            
     
-    def __init__(self):
+    def __init__(self, source_tab):
         gtk.VBox.__init__(self)
+        self.source_tab = source_tab        
         
         self.radio_view = RadioIconView(tag=TAG_SEARCH, padding_y=10)
         self.radio_view_sw = self.radio_view.get_scrolled_window()
         self.radio_view.fetch_failed = self.switch_to_search_prompt
         self.radio_view.fetch_successed = self.switch_to_radio_view
-        
+        self.radio_view.connect_after("single-click-item", self.on_radio_view_click_item)
         self.search_prompt = SearchPrompt(_("MusicFM"))
         self.add(self.radio_view_sw)
         self.keyword = ""
         
-    def start_search_radios(self, keyword):    
+    def start_search_songs(self, keyword):    
         self.radio_view.clear_items()
         self.radio_view.set_keyword(keyword)
         self.radio_view.start_fetch_channels()
@@ -415,3 +416,6 @@ class RadioSearchView(gtk.VBox):
     def switch_to_search_prompt(self):    
         self.search_prompt.update_keyword(self.keyword)
         switch_tab(self, self.search_prompt)
+        
+    def on_radio_view_click_item(self, *args):
+        Dispatcher.emit("switch-source", self.source_tab)

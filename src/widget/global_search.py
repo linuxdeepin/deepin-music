@@ -25,8 +25,10 @@ import gtk
 from widget.song_view import LocalSearchView
 from widget.ui_utils import switch_tab, set_widget_gravity, color_hex_to_cairo
 from widget.ui import SearchCloseButton
-from widget.tab_switcher import TabSwitcher
+from widget.tab_switcher import TabSwitcher, TabItem
 from widget.skin import app_theme
+from helper import Dispatcher
+from widget.local_tab import local_search_tab
 from nls import _
 
 class GlobalSearch(gtk.VBox):
@@ -35,8 +37,7 @@ class GlobalSearch(gtk.VBox):
         gtk.VBox.__init__(self)
         
         self.set_spacing(10)
-        
-        self.local_view_page = LocalSearchView()
+        self.local_view_page = LocalSearchView(local_search_tab)
         
         self.close_button = SearchCloseButton()
         self.line_dcolor = app_theme.get_color("globalItemHighlight")
@@ -44,7 +45,7 @@ class GlobalSearch(gtk.VBox):
                                                 paddings=(0, 0, 5, 10))
         close_button_align.connect("expose-event",  self.on_close_button_expose_event)
         
-        self.tab_switcher = TabSwitcher([_("Library")])
+        self.tab_switcher = TabSwitcher([TabItem(_("Library"), self.local_view_page)])
         self.tab_switcher.connect("tab-switch-start", lambda switcher, tab_index: self.switch_result_view(tab_index))
         tab_switcher_align = set_widget_gravity(self.tab_switcher, gravity=(0, 0, 1, 1),
                                                 paddings=(10, 0, 0, 0))
@@ -58,12 +59,22 @@ class GlobalSearch(gtk.VBox):
         self.pack_start(tab_switcher_box, False, True)
         self.pack_start(self.result_page, True, True)
         
-    def switch_result_view(self, index):    
-        if index == 0:
-            switch_tab(self.result_page, self.local_view_page)
+        Dispatcher.connect("add-search-view", self.on_dispatcher_add_search_view)
+        Dispatcher.connect("remove-search-view", self.on_dispatcher_remove_search_view)
+        
+    def on_dispatcher_add_search_view(self, widget, tab_item):    
+        self.tab_switcher.add_item(tab_item)
+        
+    def on_dispatcher_remove_search_view(self, widget, tab_item):
+        self.tab_switcher.remove_item(tab_item)
+        
+    def switch_result_view(self, item):    
+        switch_tab(self.result_page, item.search_view)
             
     def begin_search(self, keyword):
-        self.local_view_page.start_search_songs(keyword)
+        for item in self.tab_switcher.items:
+            if hasattr(item.search_view, "start_search_songs"):
+                item.search_view.start_search_songs(keyword)
         
     def on_close_button_expose_event(self, widget, event):    
         cr = widget.window.cairo_create()

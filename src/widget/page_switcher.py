@@ -31,34 +31,28 @@ from dtk.ui.draw import draw_text
 
 from widget.skin import app_theme
 
-class TabItem(object):
-    
-    def __init__(self, title, search_view):
-        self.title = title
-        self.search_view = search_view
-
-class TabSwitcher(gtk.EventBox):
+class PageSwitcher(gtk.EventBox):
     '''
     class docs
     '''
 	
     __gsignals__ = {
-        "tab-switch-start" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,)),
+        "tab-switch-start" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (int,)),
         "tab-switch-complete" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (int,)),
         "click-current-tab" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (int,)),
     }
     
-    def __init__(self, items):
+    def __init__(self, tab_names):
         '''
         init docs
         '''
         gtk.EventBox.__init__(self)
         self.set_visible_window(False)
         self.add_events(gtk.gdk.ALL_EVENTS_MASK)
-        self.items = items
+        self.tab_names = tab_names
         self.tab_name_size = 10
-        self.tab_number = len(self.items)
-        tab_sizes = map(lambda item: get_content_size(item.title, self.tab_name_size), self.items)
+        self.tab_number = len(self.tab_names)
+        tab_sizes = map(lambda tab_name: get_content_size(tab_name, self.tab_name_size), self.tab_names)
         self.tab_name_padding_x = 10
         self.tab_name_padding_y = 2
         self.tab_width = max(map(lambda (width, height): width, tab_sizes)) + self.tab_name_padding_x * 2
@@ -78,30 +72,6 @@ class TabSwitcher(gtk.EventBox):
 
         self.connect("expose-event", self.expose_tab_switcher)
         self.connect("button-press-event", self.button_press_tab_switcher)
-        
-    def add_item(self, item):    
-        if item not in self.items:
-            self.items.append(item)
-        self.repack_items()    
-        
-    def remove_item(self, item):    
-        try:
-            self.items.remove(item)
-        except:    
-            pass
-        
-        self.repack_items()
-        
-        self.tab_index = 0
-        self.emit("tab_switch_start", self.items[0])
-        self.queue_draw()
-            
-    def repack_items(self):        
-        self.tab_number = len(self.items)
-        tab_sizes = map(lambda item: get_content_size(item.title, self.tab_name_size), self.items)
-        self.tab_width = max(map(lambda (width, height): width, tab_sizes)) + self.tab_name_padding_x * 2
-        self.tab_height = tab_sizes[0][1] + self.tab_name_padding_y * 2
-        self.set_size_request(-1, self.tab_height + self.tab_line_height)
         
     def expose_tab_switcher(self, widget, event):
         # Init.
@@ -131,7 +101,7 @@ class TabSwitcher(gtk.EventBox):
         cr.fill()
         
         # Draw tab name.
-        for (tab_index, tab_item) in enumerate(self.items):
+        for (tab_index, tab_name) in enumerate(self.tab_names):
             if self.in_animiation:
                 tab_name_color = app_theme.get_color("labelText").get_color()
             elif tab_index == self.tab_index:
@@ -139,7 +109,7 @@ class TabSwitcher(gtk.EventBox):
             else:
                 tab_name_color = app_theme.get_color("labelText").get_color()
             draw_text(cr,
-                      tab_item.title,
+                      tab_name,
                       draw_start_x + tab_index * self.tab_width,
                       rect.y,
                       self.tab_width,
@@ -174,7 +144,7 @@ class TabSwitcher(gtk.EventBox):
             timeline.connect("completed", lambda source: self.completed_animation(source, index))
             timeline.run()
             
-            self.emit("tab_switch_start", self.items[index])
+            self.emit("tab_switch_start", index)
     
     def update_animation(self, source, status, animation_start_x, animation_move_offset):
         self.tab_animation_x = animation_start_x + animation_move_offset * status
@@ -189,5 +159,4 @@ class TabSwitcher(gtk.EventBox):
         
         self.queue_draw()
         
-gobject.type_register(TabSwitcher)
-        
+gobject.type_register(PageSwitcher)

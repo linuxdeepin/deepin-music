@@ -548,3 +548,5 @@ class PlaylistUI(gtk.VBox):
             songs = item.get_songs()
             name = item.get_title()
             MediaDB.create_playlist("local", name, songs)
+            
+playlist_ui = PlaylistUI()            

@@ -233,7 +233,9 @@ class TabManager(gtk.VBox):
         if clear:
             self.clear_items()
             
-        self.items.extend(items)    
+        for item in items:    
+            if item not in self.items:
+                self.items.append(item)
         self.adjust_items_index()
         
     def remove_items(self, items):    
@@ -292,5 +294,13 @@ class TabManager(gtk.VBox):
         switch_tab(self.__container, press_item.list_widget)    
         self.emit("switch-tab", press_item)    
         
-    def active_tab(self, tab_type):    
-        pass
+    def active_item(self, active_item):    
+        if active_item in self.items:
+            if active_item.index == self.current_index:
+                return 
+                
+            for item in self.items:
+                item.clear_selected_status()
+            active_item.manual_select()    
+            switch_tab(self.__container, active_item.list_widget)
+        

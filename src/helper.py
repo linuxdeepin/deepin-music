@@ -67,6 +67,9 @@ class EventDispatcher(gobject.GObject):
         "change-webcast" : SIGNAL_SIMPLE,
         "add-source" : SIGNAL_SIMPLE,
         "remove-source" : SIGNAL_SIMPLE,
+        "switch-source" : SIGNAL_SIMPLE,        
+        "add-search-view" : SIGNAL_SIMPLE, 
+        "remove-search-view" : SIGNAL_SIMPLE,
         }
     
     def __init__(self):

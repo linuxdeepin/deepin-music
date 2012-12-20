@@ -22,19 +22,26 @@
 
 from radio_browser import RadioBrowser
 from radio_list import RadioList
+from radio_view import RadioSearchView
 from nls import _
 from helper import Dispatcher, SignalCollector
 from widget.tab_box import  ListTab
+from widget.tab_switcher import TabItem
 
 radio_browser = RadioBrowser()
 radio_list = RadioList()
 radio_list_tab = ListTab(_("MusicFM"), radio_list, radio_browser)
+radio_search_view = RadioSearchView(radio_list_tab)
+radio_search_tab = TabItem(_("MusicFM"), radio_search_view)
 
 def enable(dmusic):
     SignalCollector.connect("musicfm", Dispatcher, "being-quit", lambda w: radio_list.save())
     radio_browser.start_fetch_channels()    
     Dispatcher.emit("add-source", radio_list_tab)
+    Dispatcher.emit("add-search-view", radio_search_tab)
     
 def disable(dmusic):    
     SignalCollector.disconnect_all("musicfm")
     Dispatcher.emit("remove-source", radio_list_tab)
+    Dispatcher.emit("remove-search-view", radio_search_tab)
+

@@ -22,13 +22,9 @@
 
 import gtk
 
-from widget.playlist import PlaylistUI
-from widget.local_browser import local_browser
-
 from helper import Dispatcher
-from nls import _
-
-from widget.tab_box import TabManager, ListTab
+from widget.tab_box import TabManager
+from widget.local_tab import local_search_tab
 
 class ListManager(gtk.VBox):
     def __init__(self):
@@ -39,16 +35,14 @@ class ListManager(gtk.VBox):
         main_align.set(1, 1, 1, 1)
         
         # playlist
-        self.playlist_ui = PlaylistUI()
-        self.local_tab = ListTab(_("Library"), self.playlist_ui, local_browser)
-        
-        self.tab_box = TabManager([self.local_tab])
+        self.tab_box = TabManager([local_search_tab])
         self.tab_box.connect("switch-tab", self.on_tab_box_switch_tab)
         main_align.add(self.tab_box)
         self.add(main_align)
         
         Dispatcher.connect("add-source", self.on_dispatcher_add_source)
         Dispatcher.connect("remove-source", self.on_dispatcher_remove_source)
+        Dispatcher.connect("switch-source", self.on_dispatcher_switch_source)
         
     def on_tab_box_switch_tab(self, widget, item):    
         Dispatcher.emit("switch-browser", item)
@@ -61,3 +55,6 @@ class ListManager(gtk.VBox):
 
     def on_dispatcher_remove_source(self, widget, data):    
         self.tab_box.remove_items([data])
+        
+    def on_dispatcher_switch_source(self, widget, data):    
+        self.tab_box.active_item(data)

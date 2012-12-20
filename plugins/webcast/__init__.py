@@ -26,10 +26,14 @@ from helper import Dispatcher, SignalCollector
 from widget.tab_box import  ListTab
 from widget.webcast_list import WebcastList
 from widget.webcasts_browser import WebcastsBrowser
+from widget.webcast_view import WebcastSearchView
+from widget.tab_switcher import TabItem
 
 webcast_list = WebcastList()
 webcast_browser = WebcastsBrowser()
 webcast_list_tab = ListTab(_("Radio"), webcast_list, webcast_browser)
+webcast_search_view = WebcastSearchView(webcast_list_tab)
+webcast_search_item = TabItem(_("Radio"), webcast_search_view)
 
 def _save_db():
     webcast_list.save()
@@ -38,7 +42,9 @@ def _save_db():
 def enable(dmusic):
     SignalCollector.connect("webcast", Dispatcher, "being-quit", lambda w: _save_db())
     Dispatcher.emit("add-source", webcast_list_tab)
+    Dispatcher.emit("add-search-view", webcast_search_item)
     
 def disable(dmusic):    
     SignalCollector.disconnect_all("webcast")
     Dispatcher.emit("remove-source", webcast_list_tab)
+    Dispatcher.emit("remove-search-view", webcast_search_item)

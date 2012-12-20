@@ -44,6 +44,7 @@ from widget.global_keys import global_hotkeys
 from widget.dialog import WinFile
 from widget.converter import AttributesUI, convert_task_manager
 from widget.mini import MiniWindow
+from widget.playlist import playlist_ui
 
 import plugins
 from constant import (FULL_DEFAULT_WIDTH, FULL_DEFAULT_HEIGHT,
@@ -105,12 +106,12 @@ class DeepinMusic(gobject.GObject, Logger):
         self.tray_icon = TrayIcon(self)        
         self.lyrics_display = LyricsModule()
         self.list_manager = ListManager()
-        self.playlist_ui =  self.list_manager.playlist_ui
         self.simple_header_bar = SimpleHeadbar()
         self.preference_dialog = PreferenceDialog()
         self.equalizer_win = EqualizerWindow()
         self.mmkeys = MMKeys()
         self.audiocd = AudioCDSource()
+        self.playlist_ui = playlist_ui
 
         self.mini_window = MiniWindow()
         
@@ -237,7 +238,7 @@ class DeepinMusic(gobject.GObject, Logger):
         Player.stop()
         self.mmkeys.release()
         Dispatcher.emit("being-quit")
-        self.playlist_ui.save_to_library()
+        playlist_ui.save_to_library()
         MediaDB.save()
         WebcastDB.save()
         config.write()

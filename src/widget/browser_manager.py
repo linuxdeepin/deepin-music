@@ -54,6 +54,7 @@ class BrowserMananger(gtk.VBox):
         self.global_search = GlobalSearch()
         self.global_search.close_button.connect("clicked", self.on_global_search_close)
 
+        self.last_browser = local_browser
         self.bottom_box.add(local_browser)
         self.bottom_box_align = gtk.Alignment()
         self.bottom_box_align.set_padding(0, 0, 1, 2)

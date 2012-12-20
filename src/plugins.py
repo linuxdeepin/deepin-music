@@ -122,7 +122,7 @@ class PluginsManager(Logger):
             self.logdebug("Loaded plugin %s", plugin_name)
             self.save_enabled()
         except Exception, e:
-            # traceback.print_exc()
+            traceback.print_exc()
             self.logwarn("Unable to enable plugin %s", plugin_name)
             raise e
 

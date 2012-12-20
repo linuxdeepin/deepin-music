@@ -362,15 +362,19 @@ class WebcastIconView(IconView):
     
 class WebcastSearchView(gtk.VBox):    
     
-    def __init__(self):
+    def __init__(self, source_tab):
         gtk.VBox.__init__(self)
+        
+        self.source_tab = source_tab
+        
         self.webcast_view = MultiDragWebcastView()
+        self.webcast_view.connect_after("double-click-item", self.__on_double_click_item) 
         self.webcast_view_sw = self.webcast_view.get_scrolled_window()
         
         self.search_prompt = SearchPrompt(_("Radio"))
         self.add(self.webcast_view_sw)
         
-    def start_search_webcasts(self, keyword):    
+    def start_search_songs(self, keyword):    
         songs = self.webcast_view.get_search_songs(keyword)
         if songs:
             self.webcast_view.add_webcasts(songs)
@@ -378,5 +382,8 @@ class WebcastSearchView(gtk.VBox):
         else:    
             self.search_prompt.update_keyword(keyword)
             switch_tab(self, self.search_prompt)
+            
+    def __on_double_click_item(self, *args):        
+        Dispatcher.emit("switch-source", self.source_tab)
             
     
