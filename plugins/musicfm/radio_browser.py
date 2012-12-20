@@ -49,7 +49,6 @@ class RadioBrowser(gtk.VBox):
         self.hot_page_view, self.hot_page_sw = self.get_radio_icon_view(TAG_HOT)
         self.fast_page_view, self.fast_page_sw = self.get_radio_icon_view(TAG_FAST)
         
-        
         # Genres page
         self.genre_page = GenrePage()
         

@@ -24,14 +24,13 @@
 
 import gtk
 import cairo
-import pangocairo
 import pango
 import gobject
 import math
 
 from dtk.ui.utils import (color_hex_to_cairo, get_content_size, 
-                          alpha_color_hex_to_cairo, set_cursor,
-                          is_in_rect)
+                          alpha_color_hex_to_cairo, set_cursor)
+
 from dtk.ui.draw import render_text
 from dtk.ui.timeline import Timeline, CURVE_SINE
 

@@ -798,6 +798,7 @@ class PluginInfos(gtk.EventBox):
         self.plugin_info = None
         self.padding_x = 5
         self.padding_y = 5
+        # self.custom_span = "<span foreground=\"#4D5154\">%s</span>"
         
     def on_expose_event(self, widget, event):    
         cr = widget.window.cairo_create()
@@ -825,7 +826,7 @@ class PluginInfos(gtk.EventBox):
         
         # Draw plugin name.
         if self.plugin_info:
-            plugin_name = "<b>%s: </b>%s" % (_("Plugin"), utils.xmlescape(self.plugin_info.get("Name", "")))    
+            plugin_name = "%s: %s" % (_("Plugin"), utils.xmlescape(self.plugin_info.get("Name", "")))    
             _width, _height = get_content_size(plugin_name)
             draw_text(cr, plugin_name, rect.x, rect.y, rect.width, _height)        
             
@@ -833,7 +834,7 @@ class PluginInfos(gtk.EventBox):
             
 
             # Draw plugin Authors.
-            plugin_authors = plugin_authors = "<b>%s: </b>%s" % (_("Author(s)"), 
+            plugin_authors = plugin_authors = "%s: %s" % (_("Author(s)"), 
                                                          utils.xmlescape(self.plugin_info.get("Authors", "")))
             _width, _height = get_content_size(plugin_authors)            
             draw_text(cr, plugin_authors, rect.x, rect.y, rect.width, _height)
