@@ -26,12 +26,11 @@ import locale
 
 from dtk.ui.new_treeview import TreeItem, TreeView
 from dtk.ui.draw import draw_text, draw_pixbuf
-from dtk.ui.utils import get_content_size
-from dtk.ui.label import Label
 
 
 from widget.ui_utils import (draw_single_mask, draw_alpha_mask,
                              set_widget_gravity)
+from widget.ui import PluginInfos
 from widget.skin import app_theme
 from nls import _
 import utils
@@ -157,7 +156,7 @@ class PluginsManager(gtk.VBox):
         self.plugins = utils.get_main_window().plugins
         self.plugins_view = TreeView()
         self.plugins_view.draw_mask = self.plugins_view_draw_mask
-        self.plugins_view.set_size_request(420, 300)        
+        self.plugins_view.set_size_request(420, 330)        
         self.plugins_view.connect("single-click-item", self.on_plugins_view_single_click)
                 
         self.plugins_view.set_column_titles([_("Plugin"), _("Version"), _("Enable"), ""],
@@ -166,20 +165,12 @@ class PluginsManager(gtk.VBox):
         plugins_view_align = set_widget_gravity(self.plugins_view, gravity=(1, 1, 1, 1),
                                                 paddings=(10, 0, 0, 0))
         
+        self.plugin_infos = PluginInfos()
+        self.plugin_infos.set_size_request(420, 90)
+        
         # plugin info
-        self.plugin_name = Label("")
-        self.plugin_name.set_size_request(410, 25)
-        self.plugin_authors = Label("")
-        self.plugin_authors.set_size_request(410, 25)
-        self.plugin_description = Label("")
-        self.plugin_description.set_size_request(410, 60)
-        
         self.pack_start(plugins_view_align, False, True)
-        
-        self.pack_start(self.plugin_name, False, True)
-        self.pack_start(self.plugin_authors, False, True)
-        self.pack_start(self.plugin_description, False, True)
-        
+        self.pack_start(self.plugin_infos, False, True)
         
     def sort_by_title(self, items, reverse):    
         return sorted(items, key=lambda item: item.plugin, reverse=reverse)
@@ -231,11 +222,4 @@ class PluginsManager(gtk.VBox):
                     return
             item.toggle_enabled()    
             
-        plugin_name = "<b>%s: </b>%s" % (_("Plugin"), utils.xmlescape(item.pluginfo["Name"]))    
-        plugin_authors = "<b>%s: </b>%s" % (_("Author(s)"), 
-                                                         utils.xmlescape(item.pluginfo["Authors"]))
-        plugin_des = item.pluginfo["Description"]        
-        self.plugin_name.set_text(plugin_name)
-        self.plugin_authors.set_text(plugin_authors)
-        self.plugin_description.set_text(plugin_des)
-
+        self.plugin_infos.update_info(item.pluginfo)    

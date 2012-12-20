@@ -35,6 +35,7 @@ from widget.skin import app_theme
 from widget.ui_utils import draw_alpha_mask, draw_line, set_widget_gravity
 
 from constant import EMPTY_WEBCAST_ITEM, EMPTY_RADIO_ITEM
+from nls import _
 
 import utils
 
@@ -783,4 +784,69 @@ class SearchPrompt(gtk.EventBox):
         else:    
             new_keyword = keyword
         self.keyword = new_keyword
+        self.queue_draw()
+
+        
+class PluginInfos(gtk.EventBox):        
+    
+    def __init__(self):
+        gtk.EventBox.__init__(self)
+        self.set_visible_window(False)
+        
+        self.connect("expose-event", self.on_expose_event)
+        # self.title = "插件信息"
+        self.plugin_info = None
+        self.padding_x = 5
+        self.padding_y = 5
+        
+    def on_expose_event(self, widget, event):    
+        cr = widget.window.cairo_create()
+        rect = widget.allocation
+        
+        rect.x += self.padding_x
+        rect.width -= self.padding_x * 2
+        
+        # Draw title.
+        # _width, _height = get_content_size(self.title)
+        # draw_text(cr, self.title, rect.x, rect.y, rect.width, _height)
+        # rect.y += self.padding_y + _height
+        
+        # Draw dashed.
+        dash_line_width = 1
+        with cairo_disable_antialias(cr):
+            cr.set_source_rgb(*color_hex_to_cairo("#D6D6D6"))            
+            cr.set_line_width(dash_line_width)
+            cr.set_dash([4.0, 4.0])
+            cr.move_to(rect.x, rect.y)
+            cr.rel_line_to(rect.width, 0)
+            cr.stroke()
+            
+        rect.y += self.padding_y + dash_line_width    
+        
+        # Draw plugin name.
+        if self.plugin_info:
+            plugin_name = "<b>%s: </b>%s" % (_("Plugin"), utils.xmlescape(self.plugin_info.get("Name", "")))    
+            _width, _height = get_content_size(plugin_name)
+            draw_text(cr, plugin_name, rect.x, rect.y, rect.width, _height)        
+            
+            rect.y += self.padding_y + _height
+            
+
+            # Draw plugin Authors.
+            plugin_authors = plugin_authors = "<b>%s: </b>%s" % (_("Author(s)"), 
+                                                         utils.xmlescape(self.plugin_info.get("Authors", "")))
+            _width, _height = get_content_size(plugin_authors)            
+            draw_text(cr, plugin_authors, rect.x, rect.y, rect.width, _height)
+            
+            rect.y += self.padding_y + _height
+            
+            # Draw plugin description
+            plugin_description = self.plugin_info.get("Description", "")            
+            _width, _height = get_content_size(plugin_description)            
+            draw_text(cr, plugin_description, rect.x, rect.y, rect.width, _height)
+            
+        return True    
+    
+    def update_info(self, plugin_info):
+        self.plugin_info = plugin_info
         self.queue_draw()
