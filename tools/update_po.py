@@ -43,7 +43,7 @@ if __name__ == "__main__":
                 
     for root, dirs, files in os.walk(plugins_dir):            
         for each_file in files:
-            if each_file.endswith(".py") and not each_file.startswith(".") or each_file == "PLUGININFO":
+            if each_file.endswith(".py") and not each_file.startswith("."):
                 source_files.append(os.path.join(root, each_file))
     
     pot_filepath = os.path.join(locale_dir, project_name + ".pot")
