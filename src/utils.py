@@ -63,7 +63,7 @@ import common
 
 from xdg_support import get_cache_file
 from mycurl import public_curl, CurlException
-
+from ConfigParser import ConfigParser
 
 logger = newLogger("utils")
 fscoding = sys.getfilesystemencoding()
@@ -1056,6 +1056,26 @@ def get_system_lang():
     (lang, encode) = locale.getdefaultlocale()
     return lang
 
+def parser_plugin_infos(plugin_path):
+    vaild_keys = ["Version", "Authors", "Name", "Description"]
+    plugin_infos = { key:"" for key in vaild_keys }
+    section_name = "Plugin Info"
+    lang = get_system_lang()
+    
+    plugin_parser = ConfigParser()
+    try:
+        plugin_parser.read(plugin_path)
+    except Exception, e:    
+        print e
+        return plugin_infos
+    else:    
+        for key in vaild_keys:
+            lang_key = "%s[%s]" % (key, lang)
+            if plugin_parser.has_option(section_name, lang_key):
+                plugin_infos[key] = plugin_parser.get(section_name, lang_key)
+            elif plugin_parser.has_option(section_name, key):    
+                plugin_infos[key] = plugin_parser.get(section_name, key)
+        return plugin_infos        
     
 global MAIN_WINDOW            
 MAIN_WINDOW = None

@@ -30,6 +30,7 @@ if __name__ == "__main__":
     config_parser.read("locale_config.ini")
     project_name = config_parser.get("locale", "project_name")
     source_dir = config_parser.get("locale", "source_dir")
+    plugins_dir = config_parser.get("locale", "plugins_dir")
     locale_dir = os.path.abspath(config_parser.get("locale", "locale_dir"))
     langs = eval(config_parser.get("locale", "langs"))
     
@@ -38,6 +39,11 @@ if __name__ == "__main__":
     for root, dirs, files in os.walk(source_dir):
         for each_file in files:
             if each_file.endswith(".py") and not each_file.startswith("."):
+                source_files.append(os.path.join(root, each_file))
+                
+    for root, dirs, files in os.walk(plugins_dir):            
+        for each_file in files:
+            if each_file.endswith(".py") and not each_file.startswith(".") or each_file == "PLUGININFO":
                 source_files.append(os.path.join(root, each_file))
     
     pot_filepath = os.path.join(locale_dir, project_name + ".pot")

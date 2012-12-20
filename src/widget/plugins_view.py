@@ -233,7 +233,7 @@ class PluginsManager(gtk.VBox):
             
         plugin_name = "<b>%s: </b>%s" % (_("Plugin"), utils.xmlescape(item.pluginfo["Name"]))    
         plugin_authors = "<b>%s: </b>%s" % (_("Author(s)"), 
-                                                         utils.xmlescape(" ".join(item.pluginfo["Authors"])))
+                                                         utils.xmlescape(item.pluginfo["Authors"]))
         plugin_des = item.pluginfo["Description"]        
         self.plugin_name.set_text(plugin_name)
         self.plugin_authors.set_text(plugin_authors)

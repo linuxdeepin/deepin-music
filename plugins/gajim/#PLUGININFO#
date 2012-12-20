@@ -1,0 +1,4 @@
+Version='1.0'
+Authors=["SmallEvilbeast <houshao55@gmail.com>"]
+Name=_('Gajim Status')
+Description=_('Sets the currently playing status in gajim')

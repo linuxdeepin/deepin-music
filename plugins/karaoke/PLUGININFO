@@ -1,4 +1,11 @@
-Version='0.0.1'
-Authors=["SmallEvilBeast <houshao55@gmail.com>"]
-Name=_('Karaoke')
-Description=_('Removes voice from audio')
+[Plugin Info]
+Version=1.0
+Authors=SmallEvilbeast <houshao55@gmail.com>
+Name=Karaoke
+Name[zh_CN]=伴奏模式
+Name[zh_HK]=伴奏模式
+Name[zh_TW]=伴奏模式
+Description=Removes vocals from audio
+Description[zh_CN]=从音频中过滤掉人声演唱, 只播放伴奏音乐
+Description[zh_HK]=從音頻中過濾掉人聲演唱, 只播放伴奏音樂
+Description[zh_TW]=從音頻中過濾掉人聲演唱, 只播放伴奏音樂

@@ -33,6 +33,7 @@ import xdg_support
 from logger import Logger
 from nls import _
 from config import config
+import utils
 
 class InvalidPluginError(Exception):
     def __str__(self):
@@ -156,16 +157,7 @@ class PluginsManager(Logger):
 
     def get_plugin_info(self, pluginname):
         path = os.path.join(self.__find_plugin(pluginname), 'PLUGININFO')
-        f = open(path)
-        infodict = {}
-        for line in f:
-            try:
-                key, val = line.split("=", 1)
-                # restricted eval - no bult-in funcs. marginally more secure.
-                infodict[key] = eval(val, {'__builtins__': None, '_': _}, {})
-            except ValueError:
-                pass # this happens on blank lines
-            
+        infodict = utils.parser_plugin_infos(path)
         return infodict
 
     def get_plugin_default_preferences(self, plugin_name):
