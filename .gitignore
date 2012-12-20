@@ -3,3 +3,5 @@
 *.mo
 *.pyo
 *.py#
+*po~
+*INFO#
