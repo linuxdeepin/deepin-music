@@ -256,8 +256,6 @@ class RadioView(TreeView):
         pass
     
     def save(self):
-        if not self.get_items():
-            return 
         channel_infos = [ item.channel_info for item in self.get_items() ]
         utils.save_db(channel_infos, self.preview_db_file)
         

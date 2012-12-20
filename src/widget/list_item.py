@@ -26,11 +26,10 @@ import pango
 from dtk.ui.entry_treeview import TreeItem
 from dtk.ui.new_entry import EntryBuffer
 from dtk.ui.draw import draw_text
-from dtk.ui.utils import color_hex_to_cairo
 
 from widget.song_view import SongView
 from widget.ui_utils import switch_tab as switch_box
-from widget.ui import ComplexButton
+from widget.ui import LocalEmpty
 from constant import PLAYLIST_WIDTH, CATEGROYLIST_WIDTH
 from widget.skin import app_theme
 from widget.ui_utils import (draw_alpha_mask, create_upper_align, create_bottom_align,
@@ -74,57 +73,10 @@ class ListTreeItem(TreeItem):
         
         # create jobs box.
         self.main_box = gtk.VBox()
-        self.create_jobs_box()
         
-    def create_jobs_box(self):    
-        
-        self.file_job_button = self.create_job_button("plus", _("Add Music"), self.song_view.recursion_add_dir)
-
-        self.job_box = gtk.EventBox()
-        targets = [("text/deepin-songs", gtk.TARGET_SAME_APP, 1), ("text/uri-list", 0, 2), ("text/plain", 0, 3)]
-        self.job_box.drag_dest_set(gtk.DEST_DEFAULT_MOTION | gtk.DEST_DEFAULT_DROP,
-                           targets, gtk.gdk.ACTION_COPY)
-        self.job_box.set_visible_window(False)
-        self.job_box.connect("drag-data-received", self.song_view.on_drag_data_received)
-        
-        # Content box. 
-        content_box = gtk.VBox()
-        content_box.pack_start(create_bottom_align(), True, True)
-        content_box.pack_start(self.file_job_button, False, False)
-        content_box.pack_start(create_upper_align(), True, True)
-        
-        # Rind box.
-        rind_box = gtk.HBox()
-        rind_box.pack_start(create_right_align(), True, True)
-        rind_box.pack_start(content_box, False, False)
-        rind_box.pack_start(create_left_align(), True, True)
-        
-        self.job_box.add(rind_box)
-        jobs_align = gtk.Alignment()
-        jobs_align.set(0.5, 0.5, 1, 1)
-        jobs_align.add(self.job_box)
-
-        self.jobs_main_box = gtk.VBox()
-        self.jobs_main_box.add(jobs_align)
-        self.jobs_main_box.connect("expose-event", self.on_jobs_expose_event)        
+        self.jobs_main_box = LocalEmpty(self.song_view.on_drag_data_received,
+                                        self.song_view.recursion_add_dir)
         self.jobs_main_box.set_size_request(PLAYLIST_WIDTH, -1)
-        
-    def on_jobs_expose_event(self, widget, event):            
-        cr = widget.window.cairo_create()
-        rect = widget.allocation
-        draw_alpha_mask(cr, rect.x, rect.y, rect.width, rect.height, "layoutMiddle")
-        
-    def create_job_button(self, icon_name, content, callback=None):    
-        button = ComplexButton(
-            [app_theme.get_pixbuf("jobs/complex_normal.png"),
-             app_theme.get_pixbuf("jobs/complex_hover.png"),
-             app_theme.get_pixbuf("jobs/complex_press.png")],
-            app_theme.get_pixbuf("jobs/%s.png" % icon_name),
-            content
-            )
-        if callback:
-            button.connect("clicked", lambda w : callback())
-        return button    
         
     def get_list_widget(self):
         if self.get_songs():
