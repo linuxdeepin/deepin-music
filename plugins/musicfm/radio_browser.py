@@ -63,6 +63,7 @@ class RadioBrowser(gtk.VBox):
         self.network_failed_box = NetworkConnectFailed(self.check_network_connection)
         self.check_network_connection(auto=True)
         
+        
     def check_network_connection(self, auto=False):    
         if is_network_connected():
             switch_tab(self, self.body_paned)

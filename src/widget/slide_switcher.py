@@ -26,10 +26,6 @@ import gtk
 import pango
 import gobject
 import math
-import copy
-import threading
-import Queue
-import time
 
 from dtk.ui.utils import (color_hex_to_cairo, get_content_size, 
                           alpha_color_hex_to_cairo, set_cursor)
@@ -45,14 +41,20 @@ class SlideSwitcher(gtk.EventBox):
     
     def __init__(self, channels=None):
         gtk.EventBox.__init__(self)
-        self.set_visible_window(False)
+        # self.set_visible_window(False)
         self.set_size_request(-1, 200)
         self.channel_infos =[]        # Init signals.
-        self.add_events(gtk.gdk.ALL_EVENTS_MASK)
+        self.add_events(gtk.gdk.BUTTON_PRESS_MASK |
+                        gtk.gdk.BUTTON_RELEASE_MASK |
+                        gtk.gdk.POINTER_MOTION_MASK |
+                        gtk.gdk.ENTER_NOTIFY_MASK |
+                        gtk.gdk.LEAVE_NOTIFY_MASK
+                        )
+        
+        self.connect("expose-event", self.on_expose_event)                
         self.connect("motion-notify-event", self.on_motion_notify)
         self.connect("leave-notify-event", self.on_leave_notify)
         self.connect("enter-notify-event", self.on_enter_notify)
-        self.connect("expose-event", self.on_expose_event)        
              
         # Init data.
         self.slide_number = 5
@@ -71,7 +73,7 @@ class SlideSwitcher(gtk.EventBox):
         self.pointer_offset_x = -105
         self.pointer_offset_y = 20
         self.pointer_coords = {}
-        self.start_auto_slide()
+
         self.default_cover = app_theme.get_pixbuf("radio/default_banner.png").get_pixbuf()
         self.prompt_text = "正在加载数据..."
         
@@ -79,7 +81,6 @@ class SlideSwitcher(gtk.EventBox):
         self.text_start_y = 30
         self.text_interval_y = 16
         self.cover_pixbufs = {}
-        
         
     def __init_cover_pixbufs(self):
         for channel in self.channel_infos:
@@ -195,6 +196,7 @@ class SlideSwitcher(gtk.EventBox):
     def on_expose_event(self, widget, event):    
         cr = widget.window.cairo_create()
         rect = widget.allocation
+        rect.x = rect.y = 0
         
         cr.set_source_rgb(1, 1, 1)
         cr.rectangle(rect.x, rect.y, rect.width,rect.height)
@@ -248,6 +250,7 @@ class SlideSwitcher(gtk.EventBox):
             pointer_rect.x -= rect.x
             pointer_rect.y -= rect.y
             self.pointer_coords[index] = pointer_rect
+            
         return True
             
     def start_animation(self, animiation_time, target_index=None):        
@@ -260,11 +263,10 @@ class SlideSwitcher(gtk.EventBox):
         if not self.in_animiation:        
             self.in_animiation = True
             self.target_index = target_index
-            self.timeline = Timeline(animiation_time, CURVE_SINE)
-            self.timeline.connect("update", self.update_animation)
-            self.timeline.connect("completed", lambda source: self.completed_animation(source, target_index))
-            self.timeline.run()
-            
+            timeline = Timeline(animiation_time, CURVE_SINE)
+            timeline.connect("update", self.update_animation)
+            timeline.connect("completed", lambda source: self.completed_animation(source, target_index))
+            timeline.run()
         return True    
     
     def start_auto_slide(self):
@@ -273,7 +275,6 @@ class SlideSwitcher(gtk.EventBox):
     def update_animation(self, source, status):    
         self.active_alpha = 1.0 - status
         self.target_alpha = status
-        
         self.queue_draw()
         
     def completed_animation(self, source, index):    
@@ -282,7 +283,6 @@ class SlideSwitcher(gtk.EventBox):
         self.target_index = None
         self.target_alpha = 0.0
         self.in_animiation = False
-        
         self.queue_draw()
         
         # Start new animiation when cursor at new index when animiation completed.
@@ -308,11 +308,6 @@ class SlideSwitcher(gtk.EventBox):
         self.handle_animation(widget, event)
 
     def on_leave_notify(self, widget, event):    
-        rect = widget.allocation
-        # if is_in_rect((event.x, event.y), (0, 0, rect.width, rect.height)):
-        #     self.handle_animation(widget, event)
-        # else:
-        #     print "start.."
         self.start_auto_slide()
         set_cursor(widget, None)    
     
@@ -325,4 +320,7 @@ class SlideSwitcher(gtk.EventBox):
     def set_infos(self, channel_infos):        
         self.channel_infos = channel_infos
         self.__init_cover_pixbufs()
-        self.queue_draw()
+        self.start_auto_slide()
+        
+gobject.type_register(SlideSwitcher)
+        

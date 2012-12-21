@@ -23,6 +23,7 @@
 import gtk
 import gobject
 import os
+import time
 from dtk.ui.application import Application
 from dtk.ui.menu import Menu
 from dtk.ui.button import ToggleButton

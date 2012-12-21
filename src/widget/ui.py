@@ -515,7 +515,7 @@ class NetworkConnectFailed(gtk.EventBox):
                 self.is_hover = True
             else:    
                 self.is_hover = False
-            self.queue_draw()        
+            self.queue_draw()  
             
     def on_button_press(self, widget, event):        
         if self.is_hover:

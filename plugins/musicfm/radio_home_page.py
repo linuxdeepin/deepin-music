@@ -30,7 +30,6 @@ from dtk.ui.threads import post_gui
 from widget.slide_switcher import SlideSwitcher
 from widget.page_switcher import PageSwitcher
 from widget.ui_utils  import switch_tab
-
 from radio_view import RadioIconView, TAG_HOT, TAG_FAST
 from nls import _
 from posterlib import fmlib
@@ -44,7 +43,6 @@ class HomePage(gtk.VBox):
         
         # home slider.
         self.home_slider = SlideSwitcher()
-        # self.home_slider= gtk.Button()
         self.home_slider.set_size_request(-1, 200)
         
         # recommmend tab switcher.
@@ -65,8 +63,6 @@ class HomePage(gtk.VBox):
         
         # Init data
         self.banner_thread_id = 0
-        
-        
         
     def switch_recommend_view(self, tab_index):
         if tab_index == 0:

@@ -71,12 +71,6 @@ class RadioView(TreeView):
         self.limit_number = 25
         self.preview_db_file = get_config_file("preview_radios.db")
         
-        # Dispatcher.connect("being-quit", lambda obj: self.save())
-
-        # if MediaDB.isloaded():
-        #     self.__on_db_loaded(MediaDB)
-        # else:    
-        #     MediaDB.connect("loaded", self.__on_db_loaded)
     @contextmanager        
     def keep_list_lock(self):
         self.lock.acquire()
@@ -289,11 +283,13 @@ class RadioIconView(IconView):
         self.__render_id = 0
         self.__genre_id = "335"
         self.__keyword = ""
+        self.__total = None
+        self.more_item = MoreIconItem()
         
         self.connect("single-click-item", self.on_iconview_single_click_item)
         self.connect("motion-item", self.on_motion_item)        
         if has_add:
-            self.add_items([MoreIconItem()])
+            self.add_items([self.more_item])
         
     def __on_drag_data_get(self, widget, context, selection, info, timestamp):        
         item = widget.highlight_item
@@ -332,6 +328,7 @@ class RadioIconView(IconView):
             fail_funcs=(self.fetch_failed, ())).start()
                 
     def fetch_channels(self, start):    
+        ret = {}
         if self.tag == TAG_HOT:
             ret = fmlib.get_hot_chls(start=start, limit=self.__limit)
         elif self.tag == TAG_FAST:    
@@ -340,12 +337,16 @@ class RadioIconView(IconView):
             ret = fmlib.get_genre_chls(genre_id=self.__genre_id, start=start, limit=self.__limit)
         elif self.tag == TAG_SEARCH:    
             ret = fmlib.get_search_chls(keyword=self.__keyword, start=start, limit=self.__limit)
-        return  ret.get("data", {}).get("channels", [])
+        return  ret
             
     @post_gui
-    def load_channels(self, channels, thread_id, start):
+    def load_channels(self, ret, thread_id, start):
         channel_items = []
         thread_items = []
+        channel_data = ret.get("data", {})
+        channels = channel_data.get("channels", [])
+        total = int(channel_data.get("total", 0))
+        
         if thread_id != self.__fetch_thread_id:
             return
         if not channels:
@@ -360,7 +361,9 @@ class RadioIconView(IconView):
             cover_thread_pool.add_missions(thread_items)
         self.add_items(channel_items, -1)    
         self.__start = start + self.__limit
-        
+        if self.__start / self.__limit >= total:
+            print "ddfdf"
+            self.delete_items([self.more_item])
         self.fetch_successed()
         
     def add_radios(self, items):    
@@ -374,7 +377,7 @@ class RadioIconView(IconView):
         self.__start = 0
         self.clear()
         if add_more:
-            self.add_items([MoreIconItem()])
+            self.add_items([self.more_item])
         
     def get_scrolled_window(self):   
         scrolled_window = ScrolledWindow(0, 0)
