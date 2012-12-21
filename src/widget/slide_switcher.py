@@ -34,7 +34,9 @@ from dtk.ui.draw import render_text, draw_pixbuf
 from dtk.ui.timeline import Timeline, CURVE_SINE
 
 from widget.skin import app_theme
+from widget.ui_utils import is_in_rect
 from cover_manager import DoubanCover
+from helper import Dispatcher
 import utils
 
 class SlideSwitcher(gtk.EventBox):
@@ -55,6 +57,7 @@ class SlideSwitcher(gtk.EventBox):
         self.connect("motion-notify-event", self.on_motion_notify)
         self.connect("leave-notify-event", self.on_leave_notify)
         self.connect("enter-notify-event", self.on_enter_notify)
+        self.connect("button-press-event", self.on_button_press)
              
         # Init data.
         self.slide_number = 5
@@ -73,14 +76,17 @@ class SlideSwitcher(gtk.EventBox):
         self.pointer_offset_x = -105
         self.pointer_offset_y = 20
         self.pointer_coords = {}
+        self.cover_size = 200
 
         self.default_cover = app_theme.get_pixbuf("radio/default_banner.png").get_pixbuf()
+        self.mask_pixbuf = app_theme.get_pixbuf("radio/play_mask.png").get_pixbuf()
         self.prompt_text = "正在加载数据..."
         
         self.text_padding_x = 18
         self.text_start_y = 30
         self.text_interval_y = 16
         self.cover_pixbufs = {}
+        self.mask_flag = False
         
     def __init_cover_pixbufs(self):
         for channel in self.channel_infos:
@@ -135,12 +141,15 @@ class SlideSwitcher(gtk.EventBox):
         
         # get_pixbuf
         pixbuf = self.get_channel_pixbuf(channel_info)
-        draw_pixbuf(cr, pixbuf, rect.x, rect.y)
+        pixbuf_x = rect.x + (self.cover_size - pixbuf.get_width()) / 2
+        pixbuf_y = rect.y + (self.cover_size - pixbuf.get_height()) / 2
+        
+        draw_pixbuf(cr, pixbuf, pixbuf_x, pixbuf_y)
         
         # get_contents
         text_contents = self.get_channel_contents(channel_info)
         
-        pixbuf_width, pixbuf_height = pixbuf.get_width(), pixbuf.get_height()
+        pixbuf_width = pixbuf_height = self.cover_size
         cr.set_source_rgb(*color_hex_to_cairo("#EFF5F2"))
         cr.rectangle(rect.x + pixbuf_width, rect.y, rect.width - pixbuf_width, rect.height)
         cr.fill()
@@ -214,6 +223,9 @@ class SlideSwitcher(gtk.EventBox):
             
         if self.target_index != None and self.target_alpha > 0.0:    
             self.draw_channel_info(cr, rect, self.target_index, self.target_alpha)
+            
+        if self.mask_flag:    
+            draw_pixbuf(cr, self.mask_pixbuf, rect.x, rect.y)
         
         
         # Draw select pointer.
@@ -295,26 +307,47 @@ class SlideSwitcher(gtk.EventBox):
         
         for index, rect in self.pointer_coords.items():
             if rect.x <= event.x <= rect.x + rect.width and rect.y <= event.y <= rect.y + rect.height:
-                set_cursor(widget, gtk.gdk.HAND2)
+                # set_cursor(widget, gtk.gdk.HAND2)
                 self.motion_index = index
                 if self.active_index != index:
                     self.start_animation(self.hover_animation_time, index)
                 break    
-        else:    
-            set_cursor(widget, None)
+        # else:    
+        #     set_cursor(widget, None)
             
             
     def on_motion_notify(self, widget, event):        
         self.handle_animation(widget, event)
+        
+        pixbuf_rect = gtk.gdk.Rectangle(15, 15, 170, 170)
+        
+        if self.channel_infos:
+            if is_in_rect((event.x, event.y), pixbuf_rect):
+                new_mask_flag = True
+                set_cursor(widget, gtk.gdk.HAND2)
+            else:    
+                new_mask_flag = False
+                set_cursor(widget, None)
+                
+            if new_mask_flag != self.mask_flag:    
+                self.mask_flag = new_mask_flag
+                self.queue_draw()    
+        
 
     def on_leave_notify(self, widget, event):    
         self.start_auto_slide()
+        self.mask_flag = False
+        self.queue_draw()
         set_cursor(widget, None)    
     
     def on_enter_notify(self, widget, event):
         if self.auto_slide_timeout_id is not None:
             gobject.source_remove(self.auto_slide_timeout_id)
             self.auto_slide_timeout_id = None
+            
+    def on_button_press(self, widget, event):        
+        if self.mask_flag:
+            Dispatcher.emit("play-radio", self.channel_infos[self.active_index])
             
             
     def set_infos(self, channel_infos):        
@@ -323,4 +356,3 @@ class SlideSwitcher(gtk.EventBox):
         self.start_auto_slide()
         
 gobject.type_register(SlideSwitcher)
-        

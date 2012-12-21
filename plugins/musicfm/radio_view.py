@@ -44,8 +44,9 @@ from cover_manager import cover_thread_pool
 import utils
 from xdg_support import get_config_file
 from nls import _
+from logger import Logger
 
-class RadioView(TreeView):    
+class RadioView(TreeView, Logger):    
     __gsignals__ = {
         "begin-add-items" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),
         "empty-items" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),

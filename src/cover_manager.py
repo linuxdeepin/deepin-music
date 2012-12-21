@@ -388,7 +388,9 @@ class DoubanCoverManager(Logger):
         cover_path = self.get_cover_path(channel_info.get("id", 0))
         temp_path = self.get_temp_cover_path(channel_info.get("id", 0))
         
-        # Banner image already exist.
+        banner_path = self.get_banner_path(channel_info.get("id", 0))
+        
+        # cover image already exist.
         if os.path.exists(cover_path):
             try:
                 gtk.gdk.pixbuf_new_from_file(cover_path)
@@ -398,6 +400,19 @@ class DoubanCoverManager(Logger):
                 except: pass    
             else:  
                 return cover_path
+            
+        # get cover from banner.    
+        if os.path.exists(banner_path):
+            try:
+                pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(banner_path, 
+                                                              DOUBAN_COVER_SIZE["x"],
+                                                              DOUBAN_COVER_SIZE["y"])
+            except:    
+                pass
+            else:
+                pixbuf.save(cover_path, "png")
+                return cover_path
+            
             
         # Download from remote    
         if not config.getboolean("setting", "offline") and try_web and is_network_connected():
