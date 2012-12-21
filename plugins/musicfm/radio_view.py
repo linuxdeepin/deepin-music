@@ -362,7 +362,6 @@ class RadioIconView(IconView):
         self.add_items(channel_items, -1)    
         self.__start = start + self.__limit
         if self.__start / self.__limit >= total:
-            print "ddfdf"
             self.delete_items([self.more_item])
         self.fetch_successed()
         

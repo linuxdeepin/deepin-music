@@ -26,14 +26,37 @@ import random
 
 from dtk.ui.threads import post_gui
 
-
 from widget.slide_switcher import SlideSwitcher
 from widget.page_switcher import PageSwitcher
 from widget.ui_utils  import switch_tab
+from widget.ui import NetworkConnectTimeout, AutoLabel
 from radio_view import RadioIconView, TAG_HOT, TAG_FAST
 from nls import _
 from posterlib import fmlib
 import utils
+
+
+class NetworkRadioView(gtk.VBox):
+    
+    def __init__(self, tag, padding_x=0, padding_y=0):
+        gtk.VBox.__init__(self)
+        
+        self.radio_view, self.radio_view_sw = self.get_icon_view(tag=tag, padding_x=padding_x, padding_y=padding_y)
+        self.network_connect_timeout = NetworkConnectTimeout(self.radio_view.start_fetch_channels)
+        prompt_label = AutoLabel("正在加载数据...")
+        self.radio_view.fetch_failed = lambda : switch_tab(self, self.network_connect_timeout)
+        self.radio_view.fetch_successed = lambda : switch_tab(self, self.radio_view_sw)
+        self.add(prompt_label)
+            
+    def get_icon_view(self, tag, padding_x=0, padding_y=0):    
+        icon_view =RadioIconView(tag=tag, limit=8, has_add=False, padding_x=padding_x, padding_y=padding_y)
+        scrolled_window = icon_view.get_scrolled_window()
+        return icon_view, scrolled_window
+    
+    def start_fetch_channels(self):
+        self.radio_view.clear_items(False)
+        self.radio_view.start_fetch_channels()
+        
 
 class HomePage(gtk.VBox):
     
@@ -50,37 +73,31 @@ class HomePage(gtk.VBox):
         self.recommend_tab.connect("tab-switch-start", lambda switcher, tab_index: self.switch_recommend_view(tab_index))
 
         # Init recommend view.
-        self.hot_recommend_view, self.hot_recommend_sw = self.get_icon_view(tag=TAG_HOT, padding_y=5)
-        self.fast_recommend_view, self.fast_recommend_sw = self.get_icon_view(tag=TAG_FAST, padding_y=5)
+        self.hot_recommend_box = NetworkRadioView(tag=TAG_HOT, padding_y=5)
+        self.fast_recommend_box = NetworkRadioView(tag=TAG_FAST, padding_y=5)
         
         # Use switch recommend view.
-        self.recommend_view_box = gtk.VBox()        
-        self.recommend_view_box.add(self.hot_recommend_sw)
+        self.recommend_page_box = gtk.VBox()        
+        self.recommend_page_box.add(self.hot_recommend_box)
         
         self.pack_start(self.home_slider, False, True)
         self.pack_start(self.recommend_tab, False, True)
-        self.pack_start(self.recommend_view_box, True, True)
+        self.pack_start(self.recommend_page_box, True, True)
         
         # Init data
         self.banner_thread_id = 0
         
     def switch_recommend_view(self, tab_index):
         if tab_index == 0:
-            switch_tab(self.recommend_view_box, self.hot_recommend_sw)
+            switch_tab(self.recommend_page_box, self.hot_recommend_box)
         if tab_index == 1:    
-            switch_tab(self.recommend_view_box, self.fast_recommend_sw)
+            switch_tab(self.recommend_page_box, self.fast_recommend_box)
         
-    def get_icon_view(self, tag, padding_x=0, padding_y=0):    
-        icon_view =RadioIconView(tag=tag, limit=8, has_add=False, padding_x=padding_x, padding_y=padding_y)
-        scrolled_window = icon_view.get_scrolled_window()
-        return icon_view, scrolled_window
     
     def start_fetch_channels(self):
         self.set_banner_channels()
-        self.hot_recommend_view.clear_items(False)
-        self.fast_recommend_view.clear_items(False)
-        self.hot_recommend_view.start_fetch_channels()
-        self.fast_recommend_view.start_fetch_channels()
+        self.hot_recommend_box.start_fetch_channels()
+        self.fast_recommend_box.start_fetch_channels()
         
     def set_banner_channels(self):    
         self.banner_thread_id += 1
