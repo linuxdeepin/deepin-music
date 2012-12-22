@@ -383,15 +383,18 @@ class LocalEmpty(gtk.EventBox):
         self.connect("motion-notify-event", self.on_motion_notify)
         self.connect("button-press-event", self.on_button_press)
         
-        self.add_dpixbuf = app_theme.get_pixbuf("toolbar/add_normal.png")
+        self.add_normal_dpixbuf = app_theme.get_pixbuf("empty/add_normal.png")
+        self.add_hover_dpixbuf = app_theme.get_pixbuf("empty/add_hover.png")
         
         self.normal_text_dcolor = app_theme.get_color("labelText")
         self.hover_text_dcolor = app_theme.get_color("globalItemHighlight")
         self.text_padding_y = 5
         self.text_padding_x = 5
+        self.prompt_offset = 15
         self.text_rect = None
         self.is_hover = False
         self.press_callback = callback
+        self.prompt_text = "添加本地音乐"
         
     def on_expose_event(self, widget, event):    
         cr = widget.window.cairo_create()
@@ -404,26 +407,30 @@ class LocalEmpty(gtk.EventBox):
         icon_y = rect.y + pixbuf_offset_y
         draw_pixbuf(cr, empty_pixbuf, icon_x, icon_y)
         
-        add_pixbuf = self.add_dpixbuf.get_pixbuf()
+        add_pixbuf = self.add_normal_dpixbuf.get_pixbuf()                
+        if self.is_hover:        
+            text_color = self.hover_text_dcolor.get_color()
+            add_pixbuf = self.add_hover_dpixbuf.get_pixbuf()
+        else:    
+            text_color = self.normal_text_dcolor.get_color()
+        
+        _width, _height = get_content_size(self.prompt_text)
+        text_y = icon_y + empty_pixbuf.get_height() + self.text_padding_y        
+            
+        add_icon_x = icon_x + self.prompt_offset    
+        add_icon_y = text_y + (_height - add_pixbuf.get_height()) / 2
 
+        text_x = add_icon_x + add_pixbuf.get_width() + self.text_padding_x
         
-        text_y = icon_y + empty_pixbuf.get_height() + self.text_padding_y
-        text_x = icon_x + add_pixbuf.get_width() + self.text_padding_x
-        
-        _width, _height = get_content_size(_("Add Music"))
         
         self.text_rect = gtk.gdk.Rectangle(text_x - rect.x, text_y - rect.y,
                                            rect.x + rect.width -  text_x - pixbuf_offset_x,
                                            _height)
-        
-        if self.is_hover:        
-            text_color = self.hover_text_dcolor.get_color()
-        else:    
-            text_color = self.normal_text_dcolor.get_color()
             
-        draw_pixbuf(cr, add_pixbuf, icon_x, text_y)            
-        draw_text(cr, _("Add Music"), text_x, text_y, self.text_rect.width, _height,
-                  text_color=text_color, underline=True)
+        
+        draw_pixbuf(cr, add_pixbuf, add_icon_x, add_icon_y)            
+        draw_text(cr, self.prompt_text, text_x, text_y, self.text_rect.width, _height,
+                  text_color=text_color, underline=True, text_size=10)
         return True
     
     def on_motion_notify(self, widget, event):

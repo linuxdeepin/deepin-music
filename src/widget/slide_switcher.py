@@ -149,7 +149,7 @@ class SlideSwitcher(gtk.EventBox):
         # get_contents
         text_contents = self.get_channel_contents(channel_info)
         
-        pixbuf_width = pixbuf_height = self.cover_size
+        pixbuf_width = self.cover_size
         cr.set_source_rgb(*color_hex_to_cairo("#EFF5F2"))
         cr.rectangle(rect.x + pixbuf_width, rect.y, rect.width - pixbuf_width, rect.height)
         cr.fill()
