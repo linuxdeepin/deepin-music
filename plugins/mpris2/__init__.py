@@ -39,7 +39,7 @@ from mpris_adapter import ORG_MPRIS_MEDIAPLAYER2_PLAYER
 from mpris_adapter import MICROSECOND
 
 from player import Player
-from helper import SignalCollector
+from helper import SignalCollector, Dispatcher
 from library import MediaDB
 from config import config
 
@@ -88,14 +88,20 @@ class Mpris2Manager(object):
                 'CanPause', 'CanPlay')
 
     def register_events(self):
-        # SignalCollector.connect("mpris2", Player, "instant-new-song", self.on_player_new_song)
+        SignalCollector.connect("mpris2", Player, "instant-new-song", self.on_player_new_song)
         # SignalCollector.connect("mpris2", Player, "new-song", self.on_player_new_song)
-        SignalCollector.connect("mpris2", Player, "played", self.on_player_new_song)
+        SignalCollector.connect("mpris2", Player, "played", self.on_player_played)
         SignalCollector.connect("mpris2", Player, "paused", self.on_player_paused)
         SignalCollector.connect("mpris2", Player, "stopped", self.on_player_stopped)
         SignalCollector.connect("mpris2", Player, "seeked", self.on_player_seeked)
         SignalCollector.connect("mpris2", MediaDB, "simple-changed", self.on_songs_changed)
         SignalCollector.connect("mpris2", config, "config-changed", self.on_config_changed)
+        SignalCollector.connect("mpris2", Dispatcher, "being-quit", self.on_being_quit)
+        
+        
+    def on_being_quit(self, *args):    
+        self.release()
+        self.unregister_events()
 
     def release(self):
         if self.adapter is not None:
@@ -117,6 +123,10 @@ class Mpris2Manager(object):
                 'CanPause', 'CanPlay')
 
     def on_player_paused(self, *args):
+        self.adapter.populate(ORG_MPRIS_MEDIAPLAYER2_PLAYER,
+                'PlaybackStatus', 'CanPause', 'CanPlay')
+        
+    def on_player_played(self, *args):    
         self.adapter.populate(ORG_MPRIS_MEDIAPLAYER2_PLAYER,
                 'PlaybackStatus', 'CanPause', 'CanPlay')
 

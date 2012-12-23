@@ -210,7 +210,7 @@ class Mpris2Adapter(dbus.service.Object, Logger):
         pass
 
     def populate(self, interface, *prop_names):
-        self.loginfo("populate: %s", repr(prop_names))
+
         props = {}
         for p in prop_names:
             if type(p) is tuple:
@@ -220,6 +220,7 @@ class Mpris2Adapter(dbus.service.Object, Logger):
                 props[p] = v
             else:
                 props[p] = getattr(self, p)
+        self.logdebug("populate: %s", repr(props))                
         self.PropertiesChanged(interface, props, [])
 
     ## main methods
