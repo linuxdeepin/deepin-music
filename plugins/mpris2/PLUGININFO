@@ -1,0 +1,11 @@
+[Plugin Info]
+Version=1.0
+Authors=SmallEvilbeast <houshao55@gmail.com>
+Name=MPRISv2
+Name[zh_CN]=媒体播放器控制接口v2
+Name[zh_HK]=媒體播放器控制接口v2
+Name[zh_TW]=媒體播放器控制接口v2
+Description=Implements the MPRIS (org.freedesktop.MediaPlayer2) DBus interface for controlling DMusic.
+Description[zh_CN]=通过MPRIS DBus接口来控制深度音乐播放器.
+Description[zh_HK]=通過MPRIS DBus接口來控制深度音樂播放器.
+Description[zh_TW]=通過MPRIS DBus接口來控制深度音樂播放器.

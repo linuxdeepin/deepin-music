@@ -286,7 +286,7 @@ class DeepinMusic(gobject.GObject, Logger):
             else:        
                 self.show_from_tray()
         else:        
-            self.mini_window.toggle_visible()
+            self.mini_window.toggle_visible(bring_to_front)
             
     def hide_to_tray(self):
         event = self.window.get_state()

@@ -47,7 +47,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         "paused"   : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),
         "played"   : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),
         "stopped"  : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),
-        "seeked"   : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),
+        "seeked"   : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,)),
         "loaded"   : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),
         "init-status" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),
         "fetch-start" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,)),
@@ -502,12 +502,14 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
                     self.stop()
         return True            
                     
-    def seek(self, pos):
+    def seek(self, pos, emit_signal=True):
         '''seek'''
         if self.bin.xfade_seekable():
             self.__current_stream_seeked = True
             self.bin.xfade_set_time(pos)
-            self.emit("seeked")
+            if emit_signal:
+                gobject.idle_add(self.emit, "seeked", pos)
+                # self.emit("seeked", pos)
         else:                                
             self.logdebug("current song is not seekable")
             
