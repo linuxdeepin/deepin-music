@@ -21,6 +21,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import gtk
+import locale
+
 from dtk.ui.new_treeview import TreeView
 from dtk.ui.paned import HPaned
 
@@ -196,6 +198,7 @@ class WebcastsBrowser(gtk.VBox, SignalContainer):
                 
         else:    
             child_datas = self.__db_query.get_info(self.current_category)[0]
+            child_datas.sort(key=lambda x: locale.strxfrm(x))
             self.metro_view.add_webcast_items(child_datas)            
             
     def load_collect_data(self):        

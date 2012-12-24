@@ -246,7 +246,7 @@ OLD_ITEM_COLORS = ["#98B54A", "#AA41B2", "#C9493B", "#4EA549",
 ITEM_COLORS = ["#C4695F","#BF56A7","#A4BB6E","#C79C57",
                "#5DA053", "#6D7EAB","#79B0B9","#62BCDD","#D8BF53",]
 
-distance_random = utils.DistanceRandom(range(len(ITEM_COLORS))),
+distance_random = utils.DistanceRandom(range(len(ITEM_COLORS)))
         
 class WebcastIconItem(gobject.GObject):
     

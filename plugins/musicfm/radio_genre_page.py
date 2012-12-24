@@ -33,11 +33,21 @@ from constant import DEFAULT_FONT_SIZE
 import utils
 
 
-GENRE_DATA = OrderedDict({"摇滚" : "335", "古典" : "326", "爵士" : "327",
-                          "民谣/乡村" : "337", "流行" : "331", "电子" : "325",
-                          "原声配乐" : "328", "轻音乐" : "332", "说唱" : "334",
-                          "雷鬼" : "330", "拉丁" : "329", "世界音乐" : "333",
-                          "布鲁斯" : "324", "疯克/灵歌/R&B" : "336"})
+GENRE_DATA = OrderedDict()
+GENRE_DATA["摇滚"] = "335"
+GENRE_DATA["古典"] = "326"
+GENRE_DATA["爵士"] = "327"
+GENRE_DATA["民谣/乡村"] = "337"
+GENRE_DATA["流行"] = "331"
+GENRE_DATA["电子"] = "325"
+GENRE_DATA["原声配乐"] = "328"
+GENRE_DATA["轻音乐"] = "332"
+GENRE_DATA["说唱"] = "334"
+GENRE_DATA["雷鬼"] = "330"
+GENRE_DATA["拉丁"] = "329"
+GENRE_DATA["世界音乐"] = "333"
+GENRE_DATA["布鲁斯"] = "324"
+GENRE_DATA["疯克/灵歌/R&B"] = "336"
 
 class GenreItem(object):    
     
@@ -110,7 +120,7 @@ class GenreSideBox(gtk.EventBox):
         # Init.
         self.padding_x = 10
         self.padding_y = 5
-        self.default_height = 70
+        self.default_height = 58
         self.min_height = 40
         self.oneline_flag = False
         self.set_size_request(-1, self.default_height)
@@ -122,7 +132,7 @@ class GenreSideBox(gtk.EventBox):
         self.item_range = namedtuple("coord", "start_x end_x start_y end_y")
         self.items = []
         self.block_height = 5
-        self.item_interval_height = 12
+        self.item_interval_height = 8
         self.hover_item = None
         
         self.redraw_request_list = []
@@ -167,7 +177,7 @@ class GenreSideBox(gtk.EventBox):
         # draw_alpha_mask(cr, rect.x, rect.y, rect.width, rect.height ,"layoutRight")
         
         with cairo_disable_antialias(cr):
-            cr.set_source_rgb(*color_hex_to_cairo("#444444"))            
+            cr.set_source_rgb(*color_hex_to_cairo("#bcbcbc"))            
             cr.set_line_width(1)
             cr.set_dash([4.0, 4.0])
             if self.oneline_flag:

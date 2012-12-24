@@ -50,7 +50,7 @@ class CategroyTreeItem(TreeItem):
         self.item_height = 37
         self.title = title
         self.item_width = 121
-        self.padding_x = 10
+        self.padding_x = 15
         self.press_callback = callback
         
     def get_height(self):    
