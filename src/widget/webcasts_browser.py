@@ -241,9 +241,9 @@ class WebcastsBrowser(gtk.VBox, SignalContainer):
     
     def on_dispatcher_change_webcast(self, widget, song):
         item = self.collected_view.get_webcast_item(song)
-        if item:
+        if item and not song.get("collected", False):
             self.collected_view.delete_items([item])
-        else:    
+        elif song.get("collected", False):    
             self.collected_view.add_webcasts([song])
         
     
@@ -252,9 +252,11 @@ class WebcastsBrowser(gtk.VBox, SignalContainer):
             if new_tags.has_key("collected"):
                 item = self.collected_view.get_webcast_item(song)
                 if item:
-                    self.collected_view.delete_items([item])
+                    if not new_tags.get("collected", False):
+                        self.collected_view.delete_items([item])
                 else:    
-                    self.collected_view.add_webcasts([song])
+                    if new_tags.get("collected", False):
+                        self.collected_view.add_webcasts([song])
         
     def save(self):
         songs = self.collected_view.get_webcasts()

@@ -25,6 +25,8 @@ import gobject
 from dtk.ui.listview import ListView
 from dtk.ui.iconview import IconView
 from dtk.ui.scrolled_window import ScrolledWindow
+from dtk.ui.menu import Menu
+
 
 
 from widget.ui_utils import draw_alpha_mask, draw_single_mask, switch_tab
@@ -54,6 +56,7 @@ class WebcastView(ListView):
         self.connect("double-click-item", self.on_double_click_item)
         self.connect("button-press-event", self.on_button_press_event)
         self.connect("delete-select-items", self.try_emit_empty_signal)
+        self.connect("right-press-items", self.on_right_press_items)
 
         self.set_expand_column(1)
         Dispatcher.connect("play-webcast", self.on_dispatcher_play_webcast)
@@ -98,6 +101,25 @@ class WebcastView(ListView):
     def on_button_press_event(self, widget, event):
         ''' TODO: Popup Menu. '''
         pass
+    
+    def on_right_press_items(self, widget, x, y, current_item, select_items):
+        # if len(select_items) > 1:
+        if current_item and select_items:
+            if len(select_items) > 1:
+                items = [
+                    (None, _("Delete"), lambda : self.delete_items(select_items)),
+                    (None, _("Clear List"), lambda : self.clear()),
+                    ]
+            else:    
+                items = [
+                    (None, _("Play"), None),
+                    (None, _("Delete"), lambda : self.delete_items([current_item])),
+                    self.get_favorite_menu_item(current_item),
+                    None,
+                    (None, _("Clear List"), lambda : self.clear()),
+                    ]
+            Menu(items, True).show((int(x), int(y)))
+        
 
     def on_drag_data_received(self, widget, context, x, y, selection, info, timestamp):
         root_y = widget.allocation.y + y
@@ -171,15 +193,27 @@ class WebcastView(ListView):
         
     def __on_single_click_item(self, widget, item, column, x, y):
         if column == 2:
-            song = item.webcast
-            if song.get("collected", False):
-                collected = False
-            else:
-                collected = True
-            WebcastDB.set_property(song, {"collected": collected}, emit_update=False)
-            item.update_webcast(song)
-            Dispatcher.emit("change-webcast", song)
-
+            self.toggle_item_collected(item)
+            
+    def toggle_item_collected(self, item):        
+        if not item: return 
+        song = item.webcast
+        if song.get("collected", False):
+            collected = False
+        else:
+            collected = True
+        WebcastDB.set_property(song, {"collected": collected}, emit_update=False)
+        item.update_webcast(song)
+        Dispatcher.emit("change-webcast", song)
+        
+    def get_favorite_menu_item(self, item):
+        song = item.webcast        
+        if song.get("collected", False):
+            menu_name = _("Cancel Favorite")
+        else:
+            menu_name = _("Add to Favorite")
+        return (None, menu_name, lambda : self.toggle_item_collected(item))    
+        
     def add_webcasts(self, webcasts, pos=None, sort=False, play=False):
         if not webcasts:
             return

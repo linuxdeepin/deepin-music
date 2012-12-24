@@ -79,7 +79,7 @@ class CategoryTreeItem(TreeItem):
         # Draw select background.
             
         if self.is_select:    
-            draw_single_mask(cr, rect.x + 1, rect.y, rect.width - 2, rect.height, "globalItemSelect")
+            draw_single_mask(cr, rect.x + 1, rect.y, rect.width - 2, rect.height, "globalItemHighlight")
         elif self.is_hover:
             draw_single_mask(cr, rect.x + 1, rect.y, rect.width - 2, rect.height, "globalItemHover")
         
@@ -186,7 +186,7 @@ class CollectTreeItem(TreeItem):
         rect.height -= self.padding_y * 2 - 1
                     
         if self.is_select:    
-            draw_single_mask(cr, rect.x + 1, rect.y, rect.width - 2, rect.height, "globalItemSelect")
+            draw_single_mask(cr, rect.x + 1, rect.y, rect.width - 2, rect.height, "globalItemHighlight")
         elif self.is_hover:
             draw_single_mask(cr, rect.x + 1, rect.y, rect.width - 2, rect.height, "globalItemHover")
         
@@ -528,7 +528,7 @@ class WebcastListItem(gobject.GObject):
     def render_webcast_icon(self, cr, rect, in_select, in_highlight):    
         icon_x = rect.x + self.webcast_icon_padding_x 
         icon_y = rect.y + (rect.height - self.webcast_icon_h) / 2
-        if in_select or in_highlight:
+        if in_highlight:
             pixbuf = self.webcast_press_pixbuf
         else:    
             pixbuf = self.webcast_normal_pixbuf
@@ -538,7 +538,17 @@ class WebcastListItem(gobject.GObject):
         rect.x += self.title_padding_x
         rect.width -= self.title_padding_x * 2
         
-        render_item_text(cr, self.title, rect, in_select, in_highlight)
+        if in_highlight:
+            color = app_theme.get_color("simpleSelectItem").get_color()
+        else:    
+            color = app_theme.get_color("labelText").get_color()
+        
+        # if error:    
+        #     color = "#ff0000"        
+            
+        content = utils.xmlescape(self.title)    
+        draw_text(cr, content, rect.x, rect.y, rect.width, rect.height, 
+                  text_size=9, text_color=color, alignment=pango.ALIGN_LEFT)    
         
     def render_collect_icon(self, cr, rect, in_select, in_highlight):    
         icon_y = rect.y + (rect.height - self.collect_icon_h) / 2
@@ -546,7 +556,7 @@ class WebcastListItem(gobject.GObject):
         if self.webcast.get("collected", False):
             pixbuf = self.collect_press_pixbuf
         else:    
-            if in_select or in_highlight:
+            if in_highlight:
                 pixbuf = self.collect_hover_pixbuf
             else:    
                 pixbuf = self.collect_normal_pixbuf
@@ -559,7 +569,7 @@ class WebcastListItem(gobject.GObject):
     def get_column_sizes(self):
         return [
             (self.webcast_icon_w + self.webcast_icon_padding_x * 2, self.webcast_icon_h + self.webcast_icon_padding_y * 2),
-            (100, 30),
+            (100, 37),
             (self.collect_icon_w + self.collect_icon_padding_x * 2, 30),
             (25, 1)
             ]

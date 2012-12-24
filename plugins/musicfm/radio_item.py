@@ -673,7 +673,7 @@ class RadioListItem(TreeItem):
         elif self.is_hover:
             draw_single_mask(cr, rect.x + 1, rect.y, rect.width, rect.height, "globalItemHover")
         
-        if self.is_select or self.is_highlight:
+        if self.is_highlight:
             text_color = "#ffffff"
         else:    
             text_color = app_theme.get_color("labelText").get_color()
