@@ -70,6 +70,7 @@ class ListTreeItem(TreeItem):
         self.ENTRY_COLUMN = 0
         self.is_double_click = False
         self.is_highlight = False
+        self.text_padding = 15
         
         # create jobs box.
         self.main_box = gtk.VBox()
@@ -128,9 +129,13 @@ class ListTreeItem(TreeItem):
         else:    
             text_color = app_theme.get_color("labelText").get_color()
             
-        draw_text(cr, self.title, rect.x, rect.y, rect.width, rect.height, text_size=10, 
+        rect.x += self.text_padding    
+        rect.width -= self.text_padding * 2
+        
+            
+        draw_text(cr, self.title, rect.x, rect.y, rect.width, rect.height, text_size=9, 
                   text_color = text_color,
-                  alignment=pango.ALIGN_CENTER)    
+                  alignment=pango.ALIGN_LEFT)    
         
     def render_content(self, cr, rect):
         if self.is_highlight:    

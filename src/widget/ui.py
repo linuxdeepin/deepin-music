@@ -176,7 +176,8 @@ class SearchButton(gtk.Button):
             pixbuf = self.normal_dpixbuf.get_pixbuf()
             
         icon_x = rect.x + (rect.width - pixbuf.get_width()) / 2
-        icon_y = rect.y + (rect.height - pixbuf.get_height()) / 2
+        icon_y = rect.y + (rect.height - pixbuf.get_height()) / 2 + 2
+        
         draw_pixbuf(cr, pixbuf, icon_x, icon_y)    
         return True
 

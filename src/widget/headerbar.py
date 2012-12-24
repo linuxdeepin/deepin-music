@@ -148,6 +148,7 @@ class SimpleHeadbar(gtk.EventBox):
     def on_expose_event(self, widget, event):    
         cr = widget.window.cairo_create()
         rect = widget.allocation
+        
         rect.x += 12
         rect.width  = 68
         rect.height = 15

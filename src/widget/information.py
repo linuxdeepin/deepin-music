@@ -34,10 +34,10 @@ class PlayInfo(gtk.EventBox):
         super(PlayInfo, self).__init__()
         self.set_visible_window(False)
 
-        self.default_height = 20
+        self.default_height = 18
         self.set_size_request(default_width, self.default_height)
         self.default_width = default_width
-        self.artist_label = _("Deepin Music") + " for Linux Deepin"
+        self.artist_label = _("Deepin Music Player")
 
         Player.connect("instant-new-song",self.__new_song)
         MediaDB.connect("simple-changed",self.__on_change)
@@ -72,14 +72,14 @@ class PlayInfo(gtk.EventBox):
                   ) 
         
     def on_player_fetch_start(self, player, song):    
-        self.set_text("获取网络地址... %s" % song.get("title"))
+        self.set_text("%s %s" % (_("Connection..."), song.get("title")))
         
     def on_player_fetch_end(self, player, uri):    
         if not uri:
             self.update(player.song)
         
     def __on_player_init_status(self, player):    
-        self.set_text(_("Deepin Music") + " for Linux Deepin")
+        self.set_text(_("Deepin Music Player"))
         
     def __on_buffering(self, playbin, progress):
         if self.song:

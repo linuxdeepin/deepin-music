@@ -376,6 +376,7 @@ class Browser(gtk.VBox, SignalContainer):
         icon_view.connect("drag-data-get", self.__on_drag_data_get) 
         icon_view.connect("double-click-item", self.__on_double_click_item)
         icon_view.connect("single-click-item", self.__on_single_click_item)
+        
         icon_view.draw_mask  = self.on_iconview_draw_mask
         scrolled_window = ScrolledWindow()
         scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)

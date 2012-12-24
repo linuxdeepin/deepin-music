@@ -24,7 +24,6 @@ import os
 import gtk
 import gobject
 from collections import OrderedDict
-from dtk.ui.entry_treeview import EntryTreeView
 from dtk.ui.button import ImageButton, ToggleButton
 from dtk.ui.menu import Menu
 from dtk.ui.draw import draw_vlinear
@@ -74,7 +73,7 @@ class PlaylistUI(gtk.VBox):
         entry_align.connect("expose-event", self.expose_entry_mask)
         
         # Init toolbar.
-        self.toolbar_box = gtk.HBox(spacing=40)
+        self.toolbar_box = gtk.HBox(spacing=45)
         self.search_button = self.__create_simple_toggle_button("search", self.show_text_entry, 
                                                                 _("Search in Current Playlist"))
         
@@ -87,7 +86,7 @@ class PlaylistUI(gtk.VBox):
         self.toolbar_box.pack_start(self.playmode_button, False, False)
         self.__create_simple_button("delete", self.popup_delete_menu, _("Delete"))
         toolbar_align = gtk.Alignment()
-        toolbar_align.set_padding(6, 6, 24, 24)
+        toolbar_align.set_padding(6, 6, 28, 0)
         toolbar_align.add(self.toolbar_box)
         toolbar_align.connect("expose-event", self.expose_toolbar_mask)
                 
@@ -164,7 +163,7 @@ class PlaylistUI(gtk.VBox):
         
     def __on_db_loaded(self, db):        
         if not MediaDB.get_playlists():
-            MediaDB.create_playlist("local", "[%s]" % _("Default List"))            
+            MediaDB.create_playlist("local", _("Default List"))            
             
         # From MediaDB loaded playlists.    
         init_items = [ListTreeItem(pl) for pl in MediaDB.get_playlists()]    
