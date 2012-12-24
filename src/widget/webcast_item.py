@@ -493,6 +493,7 @@ class WebcastListItem(gobject.GObject):
         self.webcast_press_pixbuf = app_theme.get_pixbuf("webcast/webcast_large_press.png").get_pixbuf()
         self.collect_normal_pixbuf = app_theme.get_pixbuf("webcast/collect_normal.png").get_pixbuf()
         self.collect_press_pixbuf = app_theme.get_pixbuf("webcast/collect_press.png").get_pixbuf()
+        self.collect_hover_pixbuf = app_theme.get_pixbuf("webcast/collect_hover.png").get_pixbuf()
         self.webcast = webcast
         self.title = webcast.get("title")
         self.is_collected = False
@@ -545,7 +546,11 @@ class WebcastListItem(gobject.GObject):
         if self.webcast.get("collected", False):
             pixbuf = self.collect_press_pixbuf
         else:    
-            pixbuf = self.collect_normal_pixbuf
+            if in_select or in_highlight:
+                pixbuf = self.collect_hover_pixbuf
+            else:    
+                pixbuf = self.collect_normal_pixbuf
+                
         draw_pixbuf(cr, pixbuf, rect.x , icon_y)
         
     def render_block(self, cr, rect, in_select, in_highlight):    
@@ -556,7 +561,7 @@ class WebcastListItem(gobject.GObject):
             (self.webcast_icon_w + self.webcast_icon_padding_x * 2, self.webcast_icon_h + self.webcast_icon_padding_y * 2),
             (100, 30),
             (self.collect_icon_w + self.collect_icon_padding_x * 2, 30),
-            (50, 1)
+            (25, 1)
             ]
     
     def get_renders(self):
