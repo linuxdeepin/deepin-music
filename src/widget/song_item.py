@@ -123,7 +123,8 @@ class SongItem(gobject.GObject):
     def render_add_time(self, cr, rect, in_select, in_highlight):
         '''Render add_time.'''
         rect.width -= self.add_time_padding_x * 2
-        render_item_text(cr, self.add_time, rect, in_select, in_highlight, align=ALIGN_END, error=self.song_error)
+        render_item_text(cr, self.add_time, rect, in_select, in_highlight, align=ALIGN_END,
+                         error=self.song_error, font_size=8)
         
     def render_album(self, cr, rect, in_select, in_highlight):
         '''Render album.'''
