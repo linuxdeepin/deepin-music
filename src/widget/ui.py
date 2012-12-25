@@ -756,12 +756,14 @@ class CoverPopupNotify(Window):
                         shadow_radius=0,
                         shape_frame_function=self.shape_panel_frame,
                         expose_frame_function=self.expose_panel_frame,
-                        window_type=gtk.WINDOW_POPUP)
+                        # window_type=gtk.WINDOW_POPUP,
+                        )
         
         self.set_can_focus(False)
         self.set_accept_focus(False)
         self.info_panel = gtk.EventBox()
         self.info_panel.set_visible_window(False)
+        self.set_keep_above(True)
         self.info_panel.connect("expose-event", self.on_panel_expose_event)
         self.connect("enter-notify-event", self.on_enter_notify_event)
         self.window_frame.add(self.info_panel)

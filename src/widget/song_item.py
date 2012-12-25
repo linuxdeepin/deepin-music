@@ -40,6 +40,7 @@ class SongItem(gobject.GObject):
         self.song_error = False
         self.update(song)
         self.extend = extend
+        self.height = 26
         
     def set_index(self, index):    
         self.index = index

@@ -110,6 +110,7 @@ class PlaylistUI(gtk.VBox):
         self.delete_source_id = None
         self.drag_source_id = None
         self.menu_source_id = None
+        self.song_notify_id = None
         self.detail_menu = None
         
         if MediaDB.isloaded():

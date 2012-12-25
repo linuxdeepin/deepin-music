@@ -1077,6 +1077,11 @@ def parser_plugin_infos(plugin_path):
                 plugin_infos[key] = plugin_parser.get(section_name, key)
         return plugin_infos        
     
+    
+def get_screen_size():    
+    root_window = gtk.gdk.get_default_root_window()
+    return root_window.get_size()
+    
 global MAIN_WINDOW            
 MAIN_WINDOW = None
 

@@ -32,6 +32,7 @@ from dtk.ui.menu import Menu
 from dtk.ui.threads import post_gui
 from dtk.ui.dialog import InputDialog
 from dtk.ui.scrolled_window import ScrolledWindow
+from dtk.ui.utils import (get_widget_root_coordinate, WIDGET_POS_TOP_LEFT, WIDGET_POS_TOP_RIGHT)
 
 import utils
 import common
@@ -47,6 +48,7 @@ from source.local import ImportPlaylistJob
 from widget.ui_utils import draw_single_mask, draw_alpha_mask, switch_tab
 from widget.ui import SearchPrompt
 from widget.converter import AttributesUI
+from widget.song_notify import SongNotify
 from nls import _
 
 class SongView(ListView):
@@ -71,11 +73,19 @@ class SongView(ListView):
         self.connect("double-click-item", self.double_click_item_cb)
         self.connect("button-press-event", self.button_press_cb)
         self.connect("delete-select-items", self.try_emit_empty_signal)
+        self.connect("motion-notify-item", self.on_motion_notify_item)
+        self.connect("leave-notify-event", self.on_leave_notify_event)
         
         self.set_expand_column(0)
         self.hide_column([1])
         MediaDB.connect("removed", self.__remove_songs)
         MediaDB.connect("simple-changed", self.__songs_changed)
+        
+        self.song_notify = SongNotify()
+        self.notify_timeout_id = None
+        self.notify_timeout = 800 # ms
+        self.delay_notify_item = None
+        self.notify_offset_x = 5
         
     def try_emit_empty_signal(self, widget, items):    
         if len(self.items) <= 0:
@@ -557,6 +567,53 @@ class SongView(ListView):
         scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
         scrolled_window.add_child(self)
         return scrolled_window
+    
+    def on_motion_notify_item(self, widget, item, column, item_x, item_y):
+        if item:
+            if self.delay_notify_item is None and self.notify_timeout_id is None:
+                self.delay_notify_item = item
+                self.notify_timeout_id = gobject.timeout_add(self.notify_timeout, self.delay_show_notify, item)
+            else:    
+                if self.delay_notify_item != item:    
+                    self.try_to_hide_notify(False)
+                    self.notify_timeout_id = gobject.timeout_add(self.notify_timeout, self.delay_show_notify, item)
+        else:    
+            self.try_to_hide_notify()
+        
+    def delay_show_notify(self, item):    
+        screen_width, screen_height = utils.get_screen_size()
+        view_x, view_y =  self.parent.get_view_window().get_size()
+        (origin_x, origin_y) = get_widget_root_coordinate(self, WIDGET_POS_TOP_LEFT, False)
+        notify_width = self.song_notify.default_width
+        
+        if origin_x + view_x + notify_width + self.notify_offset_x > screen_width:
+            x = origin_x - notify_width - self.notify_offset_x
+        else:    
+            x = origin_x + view_x + self.notify_offset_x
+        y = origin_y + self.get_item_offset_y(item)
+        self.song_notify.update_song(item.song)
+        self.song_notify.show(x, y)
+        
+        
+    def on_leave_notify_event(self, widget, event):    
+        self.try_to_hide_notify()
+        
+    def try_to_hide_notify(self, hide=True):    
+        if self.notify_timeout_id is not None:
+            gobject.source_remove(self.notify_timeout_id)
+            self.notify_timeout_id = None
+        if hide:    
+            self.delay_notify_item = None
+            self.song_notify.hide_notify()
+        
+    def get_item_offset_y(self, item):    
+        try:
+            index = self.items.index(item) 
+        except:
+            index = 0
+            
+        return item.height * index    
+            
 
 class MultiDragSongView(ListView):        
     def __init__(self):

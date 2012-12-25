@@ -109,9 +109,13 @@ class RadioView(TreeView, Logger):
             
     def play_item(self, item):        
         if item:
+            self.clear_selected_status()            
             self.reset_playlist()
             self.set_highlight_item(item)
             self.fetch_playlist(play=True)
+            
+    def clear_selected_status(self):        
+        self.select_items([])
             
     def reset_playlist(self):        
         with self.keep_list_lock():
