@@ -371,6 +371,7 @@ class RadioIconView(IconView):
         if thread_id != self.__fetch_thread_id:
             return
         if not channels:
+            self.fetch_failed()
             return 
         for hot_chl in channels:
             common_item = CommonIconItem(hot_chl)
@@ -380,7 +381,11 @@ class RadioIconView(IconView):
             
         if thread_items:    
             cover_thread_pool.add_missions(thread_items)
+        if self.more_item not in self.items:
+            self.add_items([self.more_item])
+        
         self.add_items(channel_items, -1)    
+
         self.__start = start + self.__limit
         if self.__start / self.__limit >= total:
             self.delete_items([self.more_item])
@@ -416,7 +421,7 @@ class RadioSearchView(gtk.VBox):
         gtk.VBox.__init__(self)
         self.source_tab = source_tab        
         
-        self.radio_view = RadioIconView(tag=TAG_SEARCH, padding_y=10)
+        self.radio_view = RadioIconView(tag=TAG_SEARCH, padding_y=10, has_add=False)
         self.radio_view_sw = self.radio_view.get_scrolled_window()
         self.radio_view.fetch_failed = self.switch_to_search_prompt
         self.radio_view.fetch_successed = self.switch_to_radio_view
@@ -426,7 +431,7 @@ class RadioSearchView(gtk.VBox):
         self.keyword = ""
         
     def start_search_songs(self, keyword):    
-        self.radio_view.clear_items()
+        self.radio_view.clear_items(False)
         self.radio_view.set_keyword(keyword)
         self.radio_view.start_fetch_channels()
         self.keyword = keyword
