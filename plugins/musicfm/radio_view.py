@@ -29,6 +29,7 @@ from contextlib import contextmanager
 from dtk.ui.new_treeview import TreeView
 from dtk.ui.iconview import IconView
 from dtk.ui.threads import post_gui
+from dtk.ui.menu import Menu
 from dtk.ui.scrolled_window import ScrolledWindow
 
 from radio_item import RadioListItem, MoreIconItem, CommonIconItem
@@ -61,6 +62,7 @@ class RadioView(TreeView, Logger):
         self.connect("double-click-item", self.on_double_click_item)
         self.connect("button-press-event", self.on_button_press_event)
         self.connect("delete-select-items", self.try_emit_empty_signal)
+        self.connect("right-press-items", self.on_right_press_items)
         
         Dispatcher.connect("play-radio", self.on_dispatcher_play_radio)
         Player.connect("play-end", self.on_play_end)
@@ -103,6 +105,9 @@ class RadioView(TreeView, Logger):
         self.add_channels([channel_info], pos=0, play=True)
         
     def on_double_click_item(self, widget, item, column, x, y):    
+        self.play_item(item)
+            
+    def play_item(self, item):        
         if item:
             self.reset_playlist()
             self.set_highlight_item(item)
@@ -112,6 +117,21 @@ class RadioView(TreeView, Logger):
         with self.keep_list_lock():
             self.playlist = []
             self.current_index = 0
+            
+    def on_right_press_items(self, widget, x, y, item, items):        
+        if item and items:
+            if len(items) > 1:
+                items = [
+                    (None, _("Delete"), lambda : self.delete_items(items)),
+                    (None, _("Clear List"), lambda : self.clear())
+                    ]
+            else:    
+                items = [
+                    (None, _("Play"), lambda : self.play_item(item)),
+                    (None, _("Delete"), lambda : self.delete_items([item])),
+                    (None, _("Clear List"), lambda : self.clear())
+                    ]
+            Menu(items, True).show((int(x), int(y)))    
             
     @utils.threaded        
     def on_play_end(self, player):        

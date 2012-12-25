@@ -698,7 +698,7 @@ class RadioListItem(TreeItem):
         draw_text(cr, self.channel_name, rect.x + icon_pixbuf.get_width() + padding_x * 2, 
                   rect.y + padding_y, rect.width - icon_pixbuf.get_width() - padding_x * 3, self.name_h, 
                   text_color = text_color,
-                  alignment=pango.ALIGN_LEFT, text_size=9)    
+                  alignment=pango.ALIGN_LEFT, text_size=10)    
         
         if self.is_highlight:
             draw_text(cr, self.channel_intro, rect.x + icon_pixbuf.get_width() + padding_x * 2,
@@ -706,13 +706,13 @@ class RadioListItem(TreeItem):
                       rect.width - icon_pixbuf.get_width() - padding_x * 3,
                       self.intro_h,
                       text_color = text_color,
-                      alignment=pango.ALIGN_LEFT, text_size=8)
+                      alignment=pango.ALIGN_LEFT, text_size=9)
         
         draw_text(cr, self.detail_info, rect.x + icon_pixbuf.get_width() + padding_x * 2, 
                   rect.y + (rect.height - self.detail_h - padding_y), 
                   rect.width - icon_pixbuf.get_width() - padding_x * 3, self.detail_h, 
                   text_color = text_color,
-                  alignment=pango.ALIGN_LEFT, text_size=8)    
+                  alignment=pango.ALIGN_LEFT, text_size=9)    
         
     def get_height(self):    
         if self.is_highlight:

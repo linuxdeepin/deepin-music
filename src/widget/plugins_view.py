@@ -184,7 +184,7 @@ class PluginsManager(gtk.VBox):
     def __load_plugin_list(self):    
         
         # clear plugins_view items.
-        # self.plugins_view.clear()
+        self.plugins_view.clear()
         
         plugins = self.plugins.list_installed_plugins()
         plugins_list = []
