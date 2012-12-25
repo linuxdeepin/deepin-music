@@ -74,7 +74,7 @@ class ListTab(gtk.EventBox):
         self.queue_draw()
         
     def render(self, cr, rect):    
-        color = "#EDF3FA"
+        color = "#EFEFEF"
         if self.is_select:    
             color = "#FFFFFF"
         alpha_color = (color, 0.95)    
@@ -138,10 +138,9 @@ class ListTab(gtk.EventBox):
             icon_y = rect.y + (rect.height - self.icon_size) / 2
             draw_pixbuf(cr, self.icon_pixbuf, rect.x + self.padding_x, rect.y + icon_y)
             
-        if self.is_select:    
+        if self.is_select or self.is_hover:    
             color = app_theme.get_color("simpleItemHighlight").get_color()
-        elif self.is_hover:    
-            color = app_theme.get_color("simpleItemHighlight").get_color()
+            # color = app_theme.get_color("simpleItemHighlight").get_color()
         else:    
             color = app_theme.get_color("labelText").get_color()
             

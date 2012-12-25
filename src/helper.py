@@ -57,6 +57,7 @@ class EventDispatcher(gobject.GObject):
         "transfor-job" : SIGNAL_SIMPLE,
         "webcast-info" : SIGNAL,
         "play-webcast" : SIGNAL_SIMPLE,
+        "add-webcasts" : SIGNAL_SIMPLE,
         "clear-sourcebar-status" : SIGNAL_BASE,
         "new-cd-playlist" : SIGNAL_COMP2,
         "del-cd-playlist" : SIGNAL_SIMPLE,

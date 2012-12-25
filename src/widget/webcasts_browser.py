@@ -93,11 +93,11 @@ class WebcastsBrowser(gtk.VBox, SignalContainer):
             self.current_category = "region_en"            
             
         self.__category_gettexts = {
-            "region" : _("Region"),
-            "genre"  : _("Genre"),
+            "region" : "地域分类",
+            "genre"  : "流派分类",
             "region_en" : _("Region"),
             "genre_en"  : _("Genre"),
-            "composite"  : _("Miscellaneous"),
+            "composite"  : "综合分类",
             "finance" : "财经",
             "sports"  : "体育",
             "music"   : "音乐",

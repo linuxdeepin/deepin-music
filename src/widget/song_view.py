@@ -685,12 +685,12 @@ class MultiDragSongView(ListView):
     def popup_right_menu(self, widget, x, y, item, select_items):
         menu_items = [
             (None, _("Play"), self.play_song),
-            (None, _("Add to playlist"), self.emit_to_playlist),
+            (None, _("Add to Playlist"), self.emit_to_playlist),
             None,
-            (None, _("Remove from library"), self.remove_songs),
+            (None, _("Remove from Library"), self.remove_songs),
             (None, _("Move to Trash"), self.remove_songs, True),
             None,
-            (None, _("Open directory"), self.open_song_dir),
+            (None, _("Open Directory"), self.open_song_dir),
             (None, _("Convert"), self.songs_convert),
             (None, _("Properties"), self.open_song_editor)
                         ]

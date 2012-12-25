@@ -60,6 +60,7 @@ class WebcastView(ListView):
 
         self.set_expand_column(1)
         Dispatcher.connect("play-webcast", self.on_dispatcher_play_webcast)
+        Dispatcher.connect("add-webcasts", self.on_dispatcher_add_webcasts)
         self.limit_number = 25
         WebcastDB.connect("changed", self.on_db_update_songs)
         
@@ -92,6 +93,9 @@ class WebcastView(ListView):
             self.emit("empty-items")
 
     def on_double_click_item(self, widget, item, column, x, y):
+        self.play_item(item)
+                
+    def play_item(self, item):            
         if item:
             self.set_highlight(item)
             Player.play_new(item.get_webcast(), seek=item.get_webcast().get("seek", 0))
@@ -112,7 +116,7 @@ class WebcastView(ListView):
                     ]
             else:    
                 items = [
-                    (None, _("Play"), None),
+                    (None, _("Play"), lambda : self.play_item(current_item)),
                     (None, _("Delete"), lambda : self.delete_items([current_item])),
                     self.get_favorite_menu_item(current_item),
                     None,
@@ -213,6 +217,10 @@ class WebcastView(ListView):
         else:
             menu_name = _("Add to Favorite")
         return (None, menu_name, lambda : self.toggle_item_collected(item))    
+    
+    def on_dispatcher_add_webcasts(self, widget, items):
+        if items:
+            self.add_webcasts(items)
         
     def add_webcasts(self, webcasts, pos=None, sort=False, play=False):
         if not webcasts:
@@ -315,11 +323,33 @@ class MultiDragWebcastView(ListView):
     def __on_double_click_item(self, widget, item, column, x, y):
         Dispatcher.play_webcast(item.webcast)
 
-    def __on_right_press_items(self, widget, x, y, item, select_items):
-        pass
+    def __on_right_press_items(self, widget, x, y, current_item, select_items):
+        if current_item and select_items:
+            if len(select_items) > 1:
+                items = [
+                    (None, _("Add to Playlist"), lambda : self.emit_to_playlist(select_items)),                    
+                    # (None, _("Delete"), None),
+                    ]
+            else:    
+                items = [
+                    (None, _("Play"), lambda : Dispatcher.play_webcast(current_item.webcast)),
+                    (None, _("Add to Playlist"), lambda : self.emit_to_playlist([current_item])),
+                    self.get_favorite_menu_item(current_item),
+                    # None,
+                    # (None, _("Clear List"), None),
+                    ]
+            Menu(items, True).show((int(x), int(y)))
+            
+    def emit_to_playlist(self, items):        
+        webcasts = [ item.webcast for item in items ]
+        Dispatcher.emit("add-webcasts", webcasts)
 
     def __on_single_click_item(self, widget, item, column, x, y):
         if column == 2:
+            self.toggle_item_collected(item)
+            
+    def toggle_item_collected(self, item):        
+        if item:
             song = item.webcast
             if song.get("collected", False):
                 collected = False
@@ -327,6 +357,15 @@ class MultiDragWebcastView(ListView):
                 collected = True
             WebcastDB.set_property(song, {"collected": collected})
             item.update_webcast(song)
+        
+            
+    def get_favorite_menu_item(self, item):        
+        song = item.webcast        
+        if song.get("collected", False):
+            menu_name = _("Cancel Favorite")
+        else:
+            menu_name = _("Add to Favorite")
+        return (None, menu_name, lambda : self.toggle_item_collected(item))    
 
     def get_scrolled_window(self):
         scrolled_window = ScrolledWindow(0, 0)
@@ -419,5 +458,3 @@ class WebcastSearchView(gtk.VBox):
             
     def __on_double_click_item(self, *args):        
         Dispatcher.emit("switch-source", self.source_tab)
-            
-    
