@@ -431,7 +431,8 @@ class RadioSearchView(gtk.VBox):
         self.keyword = ""
         
     def start_search_songs(self, keyword):    
-        self.radio_view.clear_items(False)
+        self.radio_view.clear_items(add_more=False)
+        switch_tab(self, self.radio_view_sw)
         self.radio_view.set_keyword(keyword)
         self.radio_view.start_fetch_channels()
         self.keyword = keyword
@@ -442,7 +443,6 @@ class RadioSearchView(gtk.VBox):
     def switch_to_search_prompt(self):    
         self.search_prompt.update_keyword(self.keyword)
         switch_tab(self, self.search_prompt)
-        
         
     def on_radio_view_click_item(self, widget, item, x, y):
         if item:
