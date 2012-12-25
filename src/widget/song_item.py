@@ -118,7 +118,7 @@ class SongItem(gobject.GObject):
         rect.width -= self.length_padding_x * 2
         rect.x += self.length_padding_x * 2
         # render_item_text(cr, self.length, rect, in_select, in_highlight, align=ALIGN_END, error=self.song_error)
-        render_item_text(cr, self.length, rect, in_select, in_highlight, error=self.song_error)
+        render_item_text(cr, self.length, rect, in_select, in_highlight, error=self.song_error, font_size=8)
         
     def render_add_time(self, cr, rect, in_select, in_highlight):
         '''Render add_time.'''
