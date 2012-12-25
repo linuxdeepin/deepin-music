@@ -38,6 +38,7 @@ from config import config
 
 
 MPRIS2 = None
+SERVER_INDICATOR = None
 
 def enable(dmusic):
     global MPRIS2
@@ -50,14 +51,16 @@ def disable(exaile):
     global MPRIS2
     MPRIS2.unregister_events()
     MPRIS2.release()
+    
 
 def init_indicate():
     ## for Maverick registration
+    global SERVER_INDICATOR
     try:
-        server = indicate.indicate_server_ref_default()
-        server.set_type('music.dmusic')
-        server.set_desktop_file('/usr/share/applications/deepin-music-player.desktop')
-        server.show()
+        SERVER_INDICATOR = indicate.indicate_server_ref_default()
+        SERVER_INDICATOR.set_type('music.dmusic')
+        SERVER_INDICATOR.set_desktop_file('/usr/share/applications/deepin-music-player.desktop')
+        SERVER_INDICATOR.show()
     except:
         pass
 
@@ -93,6 +96,11 @@ class Mpris2Manager(object):
         
         
     def on_being_quit(self, *args):    
+        global SERVER_INDICATOR
+        try:
+            SERVER_INDICATOR.hide()
+        except:    
+            pass
         self.release()
         self.unregister_events()
 
