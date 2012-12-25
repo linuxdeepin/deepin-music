@@ -89,7 +89,7 @@ def render_item_text(cr, content, rect, in_select, in_highlight, align=pango.ALI
         color = app_theme.get_color("simpleSelectItem").get_color()
     else:    
         # color = app_theme.get_color("labelText").get_color()
-        color = "#808080"
+        color = "#707070"
 
     if error:    
         color = "#ff0000"        
