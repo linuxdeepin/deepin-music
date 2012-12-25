@@ -144,8 +144,8 @@ class ListTab(gtk.EventBox):
         else:    
             color = app_theme.get_color("labelText").get_color()
             
-        draw_text(cr, self.title, rect.x + self.icon_size + self.padding_x * 2, rect.y, 
-                  rect.width - (self.icon_size + self.padding_x * 3), rect.height,
+        draw_text(cr, self.title, rect.x, rect.y, 
+                  rect.width, rect.height,
                   text_color= color,
                   alignment=pango.ALIGN_CENTER,
                   text_size=10)
