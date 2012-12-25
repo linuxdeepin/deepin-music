@@ -61,7 +61,7 @@ class EventDispatcher(gobject.GObject):
         "clear-sourcebar-status" : SIGNAL_BASE,
         "new-cd-playlist" : SIGNAL_COMP2,
         "del-cd-playlist" : SIGNAL_SIMPLE,
-        "switch-browser" : SIGNAL_SIMPLE,
+        "switch-browser" : SIGNAL,
         "play-radio" : SIGNAL_SIMPLE,
         "being-quit" : SIGNAL_BASE,
         "album-changed" : SIGNAL_SIMPLE,

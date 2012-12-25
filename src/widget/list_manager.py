@@ -45,7 +45,7 @@ class ListManager(gtk.VBox):
         Dispatcher.connect("switch-source", self.on_dispatcher_switch_source)
         
     def on_tab_box_switch_tab(self, widget, item):    
-        Dispatcher.emit("switch-browser", item)
+        Dispatcher.emit("switch-browser", item, True)
         
     def manual_active_tab(self, widget, songs, tab_type):    
         self.tab_box.active_tab(tab_type)
@@ -58,3 +58,4 @@ class ListManager(gtk.VBox):
         
     def on_dispatcher_switch_source(self, widget, data):    
         self.tab_box.active_item(data)
+        Dispatcher.emit("switch-browser", data, False)

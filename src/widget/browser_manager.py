@@ -119,10 +119,11 @@ class BrowserMananger(gtk.VBox):
                   (rect.x + 1, rect.y + rect.height), "#b0b0b0")
         return False
         
-    def on_dispatcher_switch_browser(self, obj, item):    
-        search_entry.clear()
+    def on_dispatcher_switch_browser(self, obj, item, is_switched):    
         self.last_browser = item.browser_widget
-        switch_tab(self.bottom_box, item.browser_widget)
+        if is_switched:
+            search_entry.clear()            
+            switch_tab(self.bottom_box, item.browser_widget)
             
     def on_top_hbox_expose(self, widget, event):    
         cr = widget.window.cairo_create()
