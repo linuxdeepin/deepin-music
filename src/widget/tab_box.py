@@ -139,7 +139,7 @@ class ListTab(gtk.EventBox):
             draw_pixbuf(cr, self.icon_pixbuf, rect.x + self.padding_x, rect.y + icon_y)
             
         if self.is_select or self.is_hover:    
-            color = app_theme.get_color("simpleItemHighlight").get_color()
+            color = app_theme.get_color("progressBarLeft").get_color()
             # color = app_theme.get_color("simpleItemHighlight").get_color()
         else:    
             color = app_theme.get_color("labelText").get_color()
