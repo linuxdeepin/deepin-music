@@ -49,7 +49,8 @@ class NetworkRadioView(gtk.VBox):
         self.add(prompt_label)
             
     def get_icon_view(self, tag, padding_x=0, padding_y=0):    
-        icon_view =RadioIconView(tag=tag, limit=8, has_add=False, padding_x=padding_x, padding_y=padding_y)
+        icon_view =RadioIconView(tag=tag, limit=8, has_add=False, fetch_add_item=False, 
+                                 padding_x=padding_x, padding_y=padding_y)
         scrolled_window = icon_view.get_scrolled_window()
         return icon_view, scrolled_window
     

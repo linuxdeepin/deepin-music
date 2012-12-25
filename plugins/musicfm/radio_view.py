@@ -298,7 +298,7 @@ TAG_SEARCH = 4
 
 class RadioIconView(IconView):    
     
-    def __init__(self, tag, limit=10, has_add=True, padding_x=0, padding_y=0):
+    def __init__(self, tag, limit=10, has_add=True, fetch_add_item=True, padding_x=0, padding_y=0):
         IconView.__init__(self, padding_x=padding_x, padding_y=padding_y)
         
         targets = [("text/deepin-radios", gtk.TARGET_SAME_APP, 1), ("text/uri-list", 0, 2)]
@@ -314,6 +314,7 @@ class RadioIconView(IconView):
         self.__keyword = ""
         self.__total = None
         self.more_item = MoreIconItem()
+        self.fetch_add_item = fetch_add_item
         
         self.connect("single-click-item", self.on_iconview_single_click_item)
         self.connect("motion-item", self.on_motion_item)        
@@ -390,7 +391,8 @@ class RadioIconView(IconView):
         if thread_items:    
             cover_thread_pool.add_missions(thread_items)
         if self.more_item not in self.items:
-            self.add_items([self.more_item])
+            if self.fetch_add_item:
+                self.add_items([self.more_item])
         
         self.add_items(channel_items, -1)    
 

@@ -452,7 +452,7 @@ class PlaylistUI(gtk.VBox):
         else:    
             menu_items = [
                 (None, _("Rename"), lambda : self.rename_item_list(item)),
-                (None, _("Remove List"), self.delete_item_list),
+                (None, _("Remove List"), self.delete_item_list(item)),
                 (None, _("Open List"), lambda : self.add_to_list(item)),
                 None,
                 (None, _("Save all Lists"), self.save_all_list)
