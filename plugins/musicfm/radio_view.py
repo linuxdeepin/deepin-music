@@ -118,20 +118,24 @@ class RadioView(TreeView, Logger):
             self.playlist = []
             self.current_index = 0
             
-    def on_right_press_items(self, widget, x, y, item, items):        
-        if item and items:
-            if len(items) > 1:
+    def on_right_press_items(self, widget, x, y, current_item, select_items):        
+        if current_item and select_items:
+            if len(select_items) > 1:
                 items = [
-                    (None, _("Delete"), lambda : self.delete_items(items)),
-                    (None, _("Clear List"), lambda : self.clear())
+                    (None, _("Delete"), lambda : self.delete_items(select_items)),
+                    (None, _("Clear List"), lambda : self.clear_items())
                     ]
             else:    
                 items = [
-                    (None, _("Play"), lambda : self.play_item(item)),
-                    (None, _("Delete"), lambda : self.delete_items([item])),
-                    (None, _("Clear List"), lambda : self.clear())
+                    (None, _("Play"), lambda : self.play_item(current_item)),
+                    (None, _("Delete"), lambda : self.delete_items([current_item])),
+                    (None, _("Clear List"), lambda : self.clear_items())
                     ]
             Menu(items, True).show((int(x), int(y)))    
+            
+    def clear_items(self):        
+        self.clear()
+        self.emit("empty-items")
             
     @utils.threaded        
     def on_play_end(self, player):        

@@ -345,7 +345,7 @@ class SongView(ListView):
     
     def erase_items(self):
         self.clear()
-        self.emit_empty_signal(None, None)
+        self.emit("empty-items")
         return True
     
     def songs_convert(self):

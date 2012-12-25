@@ -112,7 +112,7 @@ class WebcastView(ListView):
             if len(select_items) > 1:
                 items = [
                     (None, _("Delete"), lambda : self.delete_items(select_items)),
-                    (None, _("Clear List"), lambda : self.clear()),
+                    (None, _("Clear List"), lambda : self.clear_items()),
                     ]
             else:    
                 items = [
@@ -120,10 +120,13 @@ class WebcastView(ListView):
                     (None, _("Delete"), lambda : self.delete_items([current_item])),
                     self.get_favorite_menu_item(current_item),
                     None,
-                    (None, _("Clear List"), lambda : self.clear()),
+                    (None, _("Clear List"), lambda : self.clear_items()),
                     ]
             Menu(items, True).show((int(x), int(y)))
-        
+            
+    def clear_items(self):        
+        self.clear()
+        self.emit("empty-items")
 
     def on_drag_data_received(self, widget, context, x, y, selection, info, timestamp):
         root_y = widget.allocation.y + y
