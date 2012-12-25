@@ -22,7 +22,7 @@
  "simpleItemHighlight" : "#ebd152",
  "globalItemHover" : "#f1f0d9",
  "globalItemSelect" : "#dbd2a7",
- "globalItemHighlight" : "#c9bf88",
+ "globalItemHighlight" : "#b8af7c",
  "panedHandler" : "#d6d6d6",
  "progressBarLeft" : "#C1BC19",
  "progressBarRight" : "#F3FF69",
