@@ -239,12 +239,12 @@ class RadioView(TreeView, Logger):
                 break
         if item_index is not None:    
             self.set_highlight_item(self.get_items()[item_index])
-            # self.visible_highlight()
+            self.visible_highlight()
             self.queue_draw()
         else:    
             self.add_channels([channel], pos=0)
             self.set_highlight_item(self.get_items()[0])
-            # self.visible_highlight()
+            self.visible_highlight()
             self.queue_draw()
             
     def on_button_press_event(self, widget, event):        
