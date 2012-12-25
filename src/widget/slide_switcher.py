@@ -162,7 +162,7 @@ class SlideSwitcher(gtk.EventBox):
             if index == 0:
                 _width, _height = get_content_size(content, 12)                
                 render_text(cr, content, text_x, text_y, text_width, _height, text_size=12, 
-                            text_color="#8cbda0")
+                            text_color="#79af8e")
                 text_y += _height + self.text_interval_y
                 
             elif index == 1 and content:
