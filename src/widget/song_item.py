@@ -64,7 +64,7 @@ class SongItem(gobject.GObject):
         self.album = song.get_str("album")
         
         # Calculate item size.
-        self.title_padding_x = 10
+        self.title_padding_x = 15
         self.title_padding_y = 5
         (self.title_width, self.title_height) = get_content_size(self.title, DEFAULT_FONT_SIZE)
         
