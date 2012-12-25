@@ -20,7 +20,7 @@
  "simpleItemHover" : "#ffecb2",
  "simpleItemSelect" : "#d9b036",
  "simpleItemHighlight" : "#e6c667",
- "globalItemHover" : "#f6efd6",
+ "globalItemHover" : "#eae4cc",
  "globalItemSelect" : "#e1d3ac",
  "globalItemHighlight" : "#c3b284",
  "panedHandler" : "#d6d6d6",
