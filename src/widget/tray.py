@@ -112,7 +112,7 @@ class BaseTrayIcon(object):
         self.instance.toggle_visible(True)
         self.set_visible(False)    
 
-class GtkTrayIcon(gtk.StatusIcon, BaseTrayIcon):    
+class TrayIcon(gtk.StatusIcon, BaseTrayIcon):    
     
     def __init__(self, instance):
         gtk.StatusIcon.__init__(self)
@@ -121,7 +121,7 @@ class GtkTrayIcon(gtk.StatusIcon, BaseTrayIcon):
     def get_menu_position(self, menu, icon):    
         return gtk.status_icon_position_menu(menu, icon)
     
-class TrayIcon(object):
+class TestTrayIcon(object):
     
     def __init__(self, instance):
         self._statusicon = None        
