@@ -166,6 +166,8 @@ class CommonIconItem(gobject.GObject, MissionThread):
         self.description = "%s首歌曲" % chl.get("song_num")
         self.create_cover_pixbuf()
         self.notify = CoverPopupNotify(chl)
+        self.notify_timeout_id = None
+        self.notify_timeout = 600
 
     def create_cover_pixbuf(self):    
         cover_path = DoubanCover.get_cover(self.chl, try_web=False)
@@ -294,12 +296,16 @@ class CommonIconItem(gobject.GObject, MissionThread):
         self.emit_redraw_request()
         
     def try_show_notify(self, x, y):    
+        if not self.mask_flag:
+            self.notify.hide_all()
+        else:    
+            self.notify_timeout_id = gobject.timeout_add(self.notify_timeout, self.being_show_notify, x, y)
+            
+    def being_show_notify(self, x, y):
         if self.mask_flag:
             show_x = self.pixbuf_rect.x + self.pixbuf_rect.width + x
             show_y = self.pixbuf_rect.y + self.pixbuf_rect.height + y
             self.notify.show(show_x, show_y)
-        else:    
-            self.notify.hide_all()
         
     def pointer_in_pixbuf(self, x, y):    
         if self.pixbuf_rect is None: return False
@@ -318,6 +324,9 @@ class CommonIconItem(gobject.GObject, MissionThread):
         self.hover_flag = False
         self.mask_flag = False
         self.emit_redraw_request()        
+        if self.notify_timeout_id is not None:
+            gobject.source_remove(self.notify_timeout_id)
+            self.notify_timeout_id = None
         self.notify.hide_all()
         
     def hide_notify(self):    
