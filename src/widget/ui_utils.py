@@ -84,8 +84,8 @@ def draw_item_mask(cr, x, y, width, height, name):
 def render_text(cr, content, rect, color, font_size, align=pango.ALIGN_CENTER):    
     draw_text(cr, content, rect.x, rect.y, rect.width, rect.height, font_size, color, alignment=align)
     
-def render_item_text(cr, content, rect, in_select, in_highlight, align=pango.ALIGN_LEFT, font_size=8, error=False):
-    if in_select or in_highlight:
+def render_item_text(cr, content, rect, in_select, in_highlight, align=pango.ALIGN_LEFT, font_size=9, error=False):
+    if in_highlight:
         color = app_theme.get_color("simpleSelectItem").get_color()
     else:    
         color = app_theme.get_color("labelText").get_color()

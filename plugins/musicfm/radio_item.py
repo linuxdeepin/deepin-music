@@ -78,7 +78,7 @@ class CategroyTreeItem(TreeItem):
         # Draw select background.
             
         if self.is_select:    
-            draw_single_mask(cr, rect.x + 1, rect.y, rect.width - 2, rect.height, "globalItemSelect")
+            draw_single_mask(cr, rect.x + 1, rect.y, rect.width - 2, rect.height, "globalItemHighlight")
         elif self.is_hover:
             draw_single_mask(cr, rect.x + 1, rect.y, rect.width - 2, rect.height, "globalItemHover")
         
