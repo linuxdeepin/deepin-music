@@ -43,15 +43,21 @@ from cover_manager import DoubanCover
 from constant import LIST_WIDTH
 
 class CategroyTreeItem(TreeItem):    
-    def __init__(self, title, callback=None):
+    def __init__(self, title, icon_name, callback=None):
         TreeItem.__init__(self)
         self.column_index = 0
         self.side_padding = 5
         self.item_height = 37
         self.title = title
         self.item_width = 121
-        self.padding_x = 15
+        self.padding_x = 10
         self.press_callback = callback
+        self.init_pixbufs(icon_name)
+        
+    def init_pixbufs(self, name):    
+        self.normal_dpixbuf = app_theme.get_pixbuf("radio/%s_normal.png" % name)
+        self.press_dpixbuf = app_theme.get_pixbuf("radio/%s_press.png" % name)
+        self.icon_width = self.normal_dpixbuf.get_pixbuf().get_width()
         
     def get_height(self):    
         return self.item_height
@@ -87,8 +93,20 @@ class CategroyTreeItem(TreeItem):
         else:    
             text_color = app_theme.get_color("labelText").get_color()
             
-        draw_text(cr, self.title, rect.x + self.padding_x,
-                  rect.y, rect.width - self.padding_x * 2,
+        if self.is_select:    
+            icon_pixbuf = self.press_dpixbuf.get_pixbuf()
+        else:    
+            icon_pixbuf = self.normal_dpixbuf.get_pixbuf()
+            
+        rect.x += self.padding_x    
+        rect.width -= self.padding_x * 2
+        icon_y = rect.y + (rect.height - icon_pixbuf.get_height()) / 2
+        draw_pixbuf(cr,icon_pixbuf, rect.x, icon_y)    
+        rect.x += self.icon_width + self.padding_x
+        rect.width -= self.icon_width
+            
+        draw_text(cr, self.title, rect.x,
+                  rect.y, rect.width,
                   rect.height, text_size=10, 
                   text_color = text_color,
                   alignment=pango.ALIGN_LEFT)    

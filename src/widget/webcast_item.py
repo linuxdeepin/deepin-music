@@ -98,7 +98,7 @@ class CategoryTreeItem(TreeItem):
         icon_y = rect.y + (rect.height - icon_pixbuf.get_height()) / 2
         draw_pixbuf(cr,icon_pixbuf, rect.x, icon_y)    
         rect.x += self.icon_width + self.padding_x
-        rect.width -= self.icon_width
+        rect.width -= self.icon_width - self.padding_x
         
         draw_text(cr, self.title, rect.x,
                   rect.y, rect.width,
