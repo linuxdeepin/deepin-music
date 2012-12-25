@@ -112,7 +112,7 @@ class BaseTrayIcon(object):
         self.instance.toggle_visible(True)
         self.set_visible(False)    
 
-class TrayIcon(gtk.StatusIcon, BaseTrayIcon):    
+class GtkTrayIcon(gtk.StatusIcon, BaseTrayIcon):    
     
     def __init__(self, instance):
         gtk.StatusIcon.__init__(self)
@@ -120,3 +120,45 @@ class TrayIcon(gtk.StatusIcon, BaseTrayIcon):
         
     def get_menu_position(self, menu, icon):    
         return gtk.status_icon_position_menu(menu, icon)
+    
+class TrayIcon(object):
+    
+    def __init__(self, instance):
+        self._statusicon = None        
+        self.show_statusicon()
+    
+    def _setup_status_icon(self):
+        menu = gtk.Menu()
+    	try:
+    		import appindicator
+    	except ImportError:
+    		appindicator = None
+    	else:
+    		## make sure dbus is available, else appindicator crashes
+    		import dbus
+    		try:
+    			dbus.Bus()
+    		except dbus.DBusException:
+    			appindicator = None
+    	if appindicator:
+    		return self._setup_appindicator(menu)
+    	else:
+    		return self._setup_gtk_status_icon(menu)
+        
+
+    def _setup_appindicator(self, menu):
+    	import appindicator
+    	indicator = appindicator.Indicator(_("Deepin Music"),
+                                           "exaile",
+                                           appindicator.CATEGORY_APPLICATION_STATUS)
+    	indicator.set_status(appindicator.STATUS_ACTIVE)
+    	indicator.set_menu(menu)
+    	return indicator
+    
+    def show_statusicon(self):
+    	if not self._statusicon:
+    		self._statusicon = self._setup_status_icon()
+    	try:
+    		self._statusicon.set_visible(True)
+    	except AttributeError:
+    		pass
