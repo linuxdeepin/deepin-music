@@ -443,5 +443,8 @@ class RadioSearchView(gtk.VBox):
         self.search_prompt.update_keyword(self.keyword)
         switch_tab(self, self.search_prompt)
         
-    def on_radio_view_click_item(self, *args):
-        Dispatcher.emit("switch-source", self.source_tab)
+        
+    def on_radio_view_click_item(self, widget, item, x, y):
+        if item:
+            if not hasattr(item, "is_more") and item.mask_flag:
+                Dispatcher.emit("switch-source", self.source_tab)
