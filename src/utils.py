@@ -33,7 +33,7 @@ import math
 import locale
 import md5
 import random
-
+import gio
 
 import hashlib
 
@@ -1081,6 +1081,18 @@ def parser_plugin_infos(plugin_path):
 def get_screen_size():    
     root_window = gtk.gdk.get_default_root_window()
     return root_window.get_size()
+
+def get_song_attr(song):    
+    if song.get_type() in ["cue", "local", "cdda"]:
+        try:
+            gio_file = gio.File(song.get_path())
+            gio_file_info = gio_file.query_info(",".join([gio.FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,]))
+            info_attr = gio_file_info.get_attribute_as_string(gio.FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE)                
+            return gio.content_type_get_description(info_attr)
+        except:    
+            return song.get_ext(False).upper()
+    else:    
+        return song.get_ext(False).upper()
     
 global MAIN_WINDOW            
 MAIN_WINDOW = None

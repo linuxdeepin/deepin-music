@@ -130,7 +130,7 @@ class Song(dict, Logger):
             else:    
                 value = "Never"
         elif key == "#playcount":        
-            value = self.get(key) or "Never"
+            value = self.get(key) or "0"
         elif key in ["#date", "#added"]:
             value = self.get(key)
             if value:

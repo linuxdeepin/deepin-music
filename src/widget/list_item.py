@@ -65,7 +65,7 @@ class ListTreeItem(TreeItem):
         self.entry_buffer.connect("insert-pos-changed", self.on_entry_buffer_changed)
         self.entry_buffer.connect("selection-pos-changed", self.on_entry_buffer_changed)
         
-        self.item_height = 25
+        self.item_height = 26
         self.item_width = CATEGROYLIST_WIDTH
         self.ENTRY_COLUMN = 0
         self.is_double_click = False
