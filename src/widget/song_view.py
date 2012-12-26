@@ -32,7 +32,7 @@ from dtk.ui.menu import Menu
 from dtk.ui.threads import post_gui
 from dtk.ui.dialog import InputDialog
 from dtk.ui.scrolled_window import ScrolledWindow
-from dtk.ui.utils import (get_widget_root_coordinate, WIDGET_POS_TOP_LEFT, WIDGET_POS_TOP_RIGHT)
+from dtk.ui.utils import (get_widget_root_coordinate, WIDGET_POS_TOP_LEFT)
 
 import utils
 import common
@@ -575,8 +575,10 @@ class SongView(ListView):
                 self.notify_timeout_id = gobject.timeout_add(self.notify_timeout, self.delay_show_notify, item)
             else:    
                 if self.delay_notify_item != item:    
+                    self.delay_notify_item = item                    
                     self.try_to_hide_notify(False)
                     self.notify_timeout_id = gobject.timeout_add(self.notify_timeout, self.delay_show_notify, item)
+
         else:    
             self.try_to_hide_notify()
         
@@ -593,7 +595,6 @@ class SongView(ListView):
         y = origin_y + self.get_item_offset_y(item)
         self.song_notify.update_song(item.song)
         self.song_notify.show(x, y)
-        
         
     def on_leave_notify_event(self, widget, event):    
         self.try_to_hide_notify()

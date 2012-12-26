@@ -119,9 +119,6 @@ class SongNotify(gtk.Window):
             cr.set_operator(cairo.OPERATOR_SOURCE)
             cr.set_source_rgb(0.9, 0.9, 0.9)
             cr.fill()
-            
-            
-        
         
         cr  = widget.window.cairo_create()
         rect = widget.allocation
@@ -133,7 +130,7 @@ class SongNotify(gtk.Window):
             cr.stroke()
             
         if not self.song:
-            return
+            return True
         
         dash_y = rect.y + self.cover_height + self.cover_up_offset + self.cover_bottom_offset + 1
         dash_x = rect.x
