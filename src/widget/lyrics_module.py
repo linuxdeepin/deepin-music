@@ -149,7 +149,7 @@ class LyricsModule(object):
         karaoke_align, self.karaoke_button = self.__create_single_toggle_button("karaoke", 
                                                                                 self.change_karaoke_status,
                                                                                 _("karaoke on/off"))
-        line_align, self.line_button = self.__create_simple_toggle_button("single_line", "double_line",
+        line_align, self.line_button = self.__create_simple_toggle_button("double_line", "single_line",
                                                                           self.change_line_status,
                                                                           _("Switch lines"))
         setting_align = self.__create_simple_button("setting", self.open_setting_window, _("open setting panel"))
