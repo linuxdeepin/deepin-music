@@ -83,7 +83,7 @@ class SongView(ListView):
         
         self.song_notify = SongNotify()
         self.notify_timeout_id = None
-        self.notify_timeout = 800 # ms
+        self.notify_timeout = 400 # ms
         self.delay_notify_item = None
         self.notify_offset_x = 5
         
