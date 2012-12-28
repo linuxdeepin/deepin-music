@@ -27,9 +27,6 @@ import cairo
 from dtk.ui.cache_pixbuf import CachePixbuf
 from dtk.ui.draw import draw_pixbuf
 from dtk.ui.utils import set_cursor, cairo_disable_antialias, color_hex_to_cairo
-
-
-
 from widget.skin import app_theme
 
 STATE_NORMAL = 1
