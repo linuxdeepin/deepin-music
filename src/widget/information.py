@@ -72,7 +72,7 @@ class PlayInfo(gtk.EventBox):
                   ) 
         
     def on_player_fetch_start(self, player, song):    
-        self.set_text("%s %s" % (_("Connection..."), song.get("title")))
+        self.set_text("%s... %s" % (_("Connecting"), song.get("title")))
         
     def on_player_fetch_end(self, player, uri):    
         if not uri:

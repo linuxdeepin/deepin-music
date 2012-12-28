@@ -395,7 +395,7 @@ class LocalEmpty(gtk.EventBox):
         self.text_rect = None
         self.is_hover = False
         self.press_callback = callback
-        self.prompt_text = "添加本地音乐"
+        self.prompt_text = _("Add Music")
         
     def on_expose_event(self, widget, event):    
         cr = widget.window.cairo_create()

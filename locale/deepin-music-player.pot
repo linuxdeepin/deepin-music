@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-28 10:02+0800\n"
+"POT-Creation-Date: 2012-12-28 17:13+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -620,11 +620,11 @@ msgid "Enable"
 msgstr ""
 
 #: ../src/widget/webcast_view.py:219 ../src/widget/webcast_view.py:368
-msgid "Cancel Favorite"
+msgid "Remove from Favorites"
 msgstr ""
 
 #: ../src/widget/webcast_view.py:221 ../src/widget/webcast_view.py:370
-msgid "Add to Favorite"
+msgid "Add to Favorites"
 msgstr ""
 
 #: ../src/widget/webcast_view.py:450 ../plugins/webcast/__init__.py:34
@@ -637,7 +637,7 @@ msgid "jobs waiting!"
 msgstr ""
 
 #: ../src/widget/information.py:75
-msgid "Connection..."
+msgid "Connecting"
 msgstr ""
 
 #: ../src/widget/information.py:105
@@ -1192,6 +1192,10 @@ msgstr ""
 
 #: ../src/widget/lyrics_search.py:169
 msgid "Fail to download!"
+msgstr ""
+
+#: ../src/widget/ui.py:398
+msgid "Add Music"
 msgstr ""
 
 #: ../src/widget/ui.py:1009

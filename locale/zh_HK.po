@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-28 10:02+0800\n"
-"PO-Revision-Date: 2012-07-12 03:23+0800\n"
-"Last-Translator: Automatically generated\n"
+"POT-Creation-Date: 2012-12-28 17:13+0800\n"
+"PO-Revision-Date: 2012-12-28 10:30+0800\n"
+"Last-Translator: Wang Dianjin <wangdianjin@linuxdeepin.com>\n"
 "Language-Team: none\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
@@ -172,16 +172,16 @@ msgstr ""
 
 #: ../src/plugins.py:91
 msgid "Plugin archive is not in the correct format."
-msgstr ""
+msgstr "插件歸檔文件格式錯誤。"
 
 #: ../src/plugins.py:98
 #, python-format
 msgid "A plugin with the name \"%s\" is already installed."
-msgstr ""
+msgstr "插件“%s”已經安裝。"
 
 #: ../src/plugins.py:103
 msgid "Plugin archive contains an unsafe path."
-msgstr ""
+msgstr "插件歸檔文檔包含了一個不安全的路徑。"
 
 #: ../src/library.py:989 ../src/library.py:990 ../src/library.py:991
 #: ../src/library.py:998 ../src/library.py:999 ../src/library.py:1000
@@ -575,17 +575,14 @@ msgstr "添加指定URL"
 
 #: ../src/widget/song_view.py:746 ../src/widget/webcast_view.py:333
 #: ../src/widget/webcast_view.py:339
-#, fuzzy
 msgid "Add to Playlist"
 msgstr "添加到播放列表"
 
 #: ../src/widget/song_view.py:748
-#, fuzzy
 msgid "Remove from Library"
-msgstr "從歌曲庫中刪除"
+msgstr "從歌曲庫中移除"
 
 #: ../src/widget/song_view.py:751
-#, fuzzy
 msgid "Open Directory"
 msgstr "打開目錄"
 
@@ -623,14 +620,12 @@ msgid "Enable"
 msgstr "啟用"
 
 #: ../src/widget/webcast_view.py:219 ../src/widget/webcast_view.py:368
-#, fuzzy
-msgid "Cancel Favorite"
-msgstr "我的收藏"
+msgid "Remove from Favorites"
+msgstr "取消收藏"
 
 #: ../src/widget/webcast_view.py:221 ../src/widget/webcast_view.py:370
-#, fuzzy
-msgid "Add to Favorite"
-msgstr "添加到列表"
+msgid "Add to Favorites"
+msgstr "添加到收藏"
 
 #: ../src/widget/webcast_view.py:450 ../plugins/webcast/__init__.py:34
 #: ../plugins/webcast/__init__.py:36
@@ -642,8 +637,8 @@ msgid "jobs waiting!"
 msgstr "個任務在等待!"
 
 #: ../src/widget/information.py:75
-msgid "Connection..."
-msgstr ""
+msgid "Connecting"
+msgstr "連接中"
 
 #: ../src/widget/information.py:105
 msgid "buffering"
@@ -1204,23 +1199,27 @@ msgstr "檔保存到"
 msgid "Fail to download!"
 msgstr "下載失敗!"
 
+#: ../src/widget/ui.py:398
+msgid "Add Music"
+msgstr "添加本地音樂"
+
 #: ../src/widget/ui.py:1009
 msgid "Your search {keyword} did not match any items in {from}"
-msgstr ""
+msgstr "在{from}中未發現與{keyword}關聯的內容"
 
 #: ../src/widget/ui.py:1010
 msgid "Suggestions"
-msgstr ""
+msgstr "提請"
 
 #: ../src/widget/ui.py:1011
 msgid "Make sure all words are spelled correctly."
-msgstr ""
+msgstr "確保全部單詞拼寫正確。"
 
 #: ../src/widget/ui.py:1012
 msgid ""
 "Try more general keywords, such as a title, an artist or the name of an "
 "album."
-msgstr ""
+msgstr "請嘗試更多關鍵字搜索，如標題、藝人或專輯名稱。"
 
 #: ../src/widget/ui.py:1117
 msgid "Author(s)"
@@ -1256,9 +1255,3 @@ msgstr "推薦首頁"
 #: ../plugins/musicfm/radio_browser.py:80
 msgid "Genre MHz"
 msgstr "流派兆赫"
-
-#~ msgid "Miscellaneous"
-#~ msgstr "綜合"
-
-#~ msgid "Add Music"
-#~ msgstr "添加音樂"

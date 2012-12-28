@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-28 10:02+0800\n"
-"PO-Revision-Date: 2012-07-12 03:23+0800\n"
-"Last-Translator: Automatically generated\n"
+"POT-Creation-Date: 2012-12-28 17:13+0800\n"
+"PO-Revision-Date: 2012-12-28 10:30+0800\n"
+"Last-Translator: Wang Dianjin <wangdianjin@linuxdeepin.com>\n"
 "Language-Team: none\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
@@ -172,16 +172,16 @@ msgstr ""
 
 #: ../src/plugins.py:91
 msgid "Plugin archive is not in the correct format."
-msgstr ""
+msgstr "插件归档文件格式不正确。"
 
 #: ../src/plugins.py:98
 #, python-format
 msgid "A plugin with the name \"%s\" is already installed."
-msgstr ""
+msgstr "插件“%s”已经安装。"
 
 #: ../src/plugins.py:103
 msgid "Plugin archive contains an unsafe path."
-msgstr ""
+msgstr "插件归档文件包含一个不安全的路径。"
 
 #: ../src/library.py:989 ../src/library.py:990 ../src/library.py:991
 #: ../src/library.py:998 ../src/library.py:999 ../src/library.py:1000
@@ -575,17 +575,14 @@ msgstr "添加指定URL"
 
 #: ../src/widget/song_view.py:746 ../src/widget/webcast_view.py:333
 #: ../src/widget/webcast_view.py:339
-#, fuzzy
 msgid "Add to Playlist"
 msgstr "添加到播放列表"
 
 #: ../src/widget/song_view.py:748
-#, fuzzy
 msgid "Remove from Library"
-msgstr "从歌曲库中删除"
+msgstr "从歌曲库中移除"
 
 #: ../src/widget/song_view.py:751
-#, fuzzy
 msgid "Open Directory"
 msgstr "打开目录"
 
@@ -623,14 +620,12 @@ msgid "Enable"
 msgstr "启用"
 
 #: ../src/widget/webcast_view.py:219 ../src/widget/webcast_view.py:368
-#, fuzzy
-msgid "Cancel Favorite"
-msgstr "我的收藏"
+msgid "Remove from Favorites"
+msgstr "取消收藏"
 
 #: ../src/widget/webcast_view.py:221 ../src/widget/webcast_view.py:370
-#, fuzzy
-msgid "Add to Favorite"
-msgstr "添加到列表"
+msgid "Add to Favorites"
+msgstr "添加到收藏"
 
 #: ../src/widget/webcast_view.py:450 ../plugins/webcast/__init__.py:34
 #: ../plugins/webcast/__init__.py:36
@@ -642,8 +637,8 @@ msgid "jobs waiting!"
 msgstr "个任务在等待!"
 
 #: ../src/widget/information.py:75
-msgid "Connection..."
-msgstr ""
+msgid "Connecting"
+msgstr "正在连接"
 
 #: ../src/widget/information.py:105
 msgid "buffering"
@@ -1001,9 +996,9 @@ msgid ""
 "\n"
 "Deepin Music Player is free software licensed under GNU GPLv3."
 msgstr ""
-"        ﻿深度音乐播放器是Linux Deepin团队为广大linux用户量身开发的一款音乐软"
-"件.具有歌词搜索下载,桌面歌词显示,专辑封面下载,歌曲记忆播放,独创音乐管理,自定"
-"义换肤等几大特点.\n"
+"深度音乐播放器是Linux Deepin团队为广大linux用户量身开发的一款音乐软件.具有歌"
+"词搜索下载,桌面歌词显示,专辑封面下载,歌曲记忆播放,独创音乐管理,自定义换肤等几"
+"大特点.\n"
 "\n"
 "深度音乐播放器是自由软件,遵循自由软件基金会发布的 GNU 通用公共许可证第三版."
 
@@ -1204,6 +1199,10 @@ msgstr "文件保存到"
 msgid "Fail to download!"
 msgstr "下载失败!"
 
+#: ../src/widget/ui.py:398
+msgid "Add Music"
+msgstr "添加本地音乐"
+
 #: ../src/widget/ui.py:1009
 msgid "Your search {keyword} did not match any items in {from}"
 msgstr "在{from}中没有找到与{keyword}相关的内容"
@@ -1256,9 +1255,3 @@ msgstr "推荐首页"
 #: ../plugins/musicfm/radio_browser.py:80
 msgid "Genre MHz"
 msgstr "流派兆赫"
-
-#~ msgid "Miscellaneous"
-#~ msgstr "综合"
-
-#~ msgid "Add Music"
-#~ msgstr "添加音乐"

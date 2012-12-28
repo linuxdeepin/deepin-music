@@ -216,9 +216,9 @@ class WebcastView(ListView):
     def get_favorite_menu_item(self, item):
         song = item.webcast        
         if song.get("collected", False):
-            menu_name = _("Cancel Favorite")
+            menu_name = _("Remove from Favorites")
         else:
-            menu_name = _("Add to Favorite")
+            menu_name = _("Add to Favorites")
         return (None, menu_name, lambda : self.toggle_item_collected(item))    
     
     def on_dispatcher_add_webcasts(self, widget, items):
@@ -365,9 +365,9 @@ class MultiDragWebcastView(ListView):
     def get_favorite_menu_item(self, item):        
         song = item.webcast        
         if song.get("collected", False):
-            menu_name = _("Cancel Favorite")
+            menu_name = _("Remove from Favorites")
         else:
-            menu_name = _("Add to Favorite")
+            menu_name = _("Add to Favorites")
         return (None, menu_name, lambda : self.toggle_item_collected(item))    
 
     def get_scrolled_window(self):
