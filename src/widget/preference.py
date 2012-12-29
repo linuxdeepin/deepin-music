@@ -158,7 +158,7 @@ class GeneralSetting(gtk.VBox):
         
         # open_lyrics_check_button.
         open_lyrics_hbox = gtk.HBox()
-        self.open_lyrics_check_button = CheckButton(_("Show Lyrics"))
+        self.open_lyrics_check_button = CheckButton(_("Show lyrics"))
         open_lyrics_hbox.pack_start(self.open_lyrics_check_button, False, False)
 
         
@@ -207,7 +207,7 @@ class GeneralSetting(gtk.VBox):
         play_title_label.set_size_request(350, 12)
         
         fade_check_hbox = gtk.HBox()
-        self.fade_check_button = CheckButton(_("Enable Crossfade"))        
+        self.fade_check_button = CheckButton(_("Enable crossfade"))        
         fade_check_hbox.pack_start(self.fade_check_button, False, False)
         fade_check_hbox.pack_start(create_right_align(), True, True)
         self.album_check_button = CheckButton(_("Disable crossfade between tracks in the same album"))
@@ -216,7 +216,7 @@ class GeneralSetting(gtk.VBox):
         album_check_hbox.pack_start(create_right_align(), True, True)
         
         fade_label = Label(_("Fade timeout:"))
-        self.fade_spin = SpinBox(300, 1, 1000, 100)
+        self.fade_spin = SpinBox(200, 0, 900, 100)
         millisecond_lablel = Label(_(" ms"))        
         millisecond_lablel.set_size_request(50, 12)
         spin_hbox = gtk.HBox(spacing=3)
@@ -366,7 +366,7 @@ class HotKeySetting(gtk.VBox):
         
         self.toggle_window_entry = self.create_combo_entry(3, 4, _("Minimize/Show window"),
                                                            config.get("globalkey", "toggle_window"))
-        self.toggle_lyrics_status_entry = self.create_combo_entry(4, 5, _("Show/Hide Lyrics"),
+        self.toggle_lyrics_status_entry = self.create_combo_entry(4, 5, _("Show/Hide lyrics"),
                                                                   config.get("globalkey", "toggle_lyrics_status"))
         self.toggle_lyrics_lock_entry = self.create_combo_entry(5, 6, _("Lock/Unlock lyrics"),
                                                                 config.get("globalkey", "toggle_lyrics_lock"))
