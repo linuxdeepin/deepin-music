@@ -1013,7 +1013,7 @@ class PreferenceDialog(DialogBox):
         self.lyrics_expand_item = ExpandItem(_("Lyrics"), None)
         self.lyrics_expand_item.add_childs([(_("Desktop"), self.desktop_lyrics_setting),
                                        (_("Window"), self.scroll_lyrics_setting)])
-        self.plugins_expand_item = ExpandItem(_("Plugins"), self.plugins_manager)
+        self.plugins_expand_item = NormalItem(_("Plugins"), self.plugins_manager)
         about_normal_item = NormalItem(_("About"), AboutBox())
         
         items = [general_normal_item,

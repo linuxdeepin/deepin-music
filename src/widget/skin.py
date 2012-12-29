@@ -2,16 +2,16 @@ from dtk.ui.theme import Theme, ui_theme
 from dtk.ui.skin_config import skin_config
 import os
 from dtk.ui.utils import get_parent_dir
-from constant import FULL_DEFAULT_WIDTH, FULL_DEFAULT_HEIGHT
+from constant import FULL_DEFAULT_WIDTH, FULL_DEFAULT_HEIGHT, PROGRAM_VERSION
 
 # Init skin config.
 skin_config.init_skin(
-    "blue",
+    "fuzzy_flowers",
     os.path.join(get_parent_dir(__file__, 3), "skin"),
     os.path.expanduser("~/.config/deepin-music-player/skin"),
     os.path.expanduser("~/.config/deepin-music-player/skin_config.ini"),
     "dmusic",
-    "1.0"
+    PROGRAM_VERSION
     )
 
 # Create application theme.

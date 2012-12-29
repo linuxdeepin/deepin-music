@@ -75,7 +75,7 @@ class ExpandItem(TreeItem):
         # Draw select background.
             
         if self.is_select:    
-            draw_single_mask(cr, rect.x, rect.y, rect.width, rect.height, "globalItemSelect")
+            draw_single_mask(cr, rect.x, rect.y, rect.width, rect.height, "globalItemHighlight")
         elif self.is_hover:
             draw_single_mask(cr, rect.x, rect.y, rect.width, rect.height, "globalItemHover")
         
@@ -206,7 +206,7 @@ class NormalItem(TreeItem):
         # Draw select background.
             
         if self.is_select:    
-            draw_single_mask(cr, rect.x, rect.y, rect.width, rect.height, "globalItemSelect")
+            draw_single_mask(cr, rect.x, rect.y, rect.width, rect.height, "globalItemHighlight")
         elif self.is_hover:
             draw_single_mask(cr, rect.x, rect.y, rect.width, rect.height, "globalItemHover")
         
