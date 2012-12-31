@@ -20,23 +20,19 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
 import logging
 import re
 
-classfilter = []
-configfile = os.path.expanduser("~/.deepinlogfilter.conf")
-if os.path.exists(configfile):
-    fd = file(configfile)
-    classfilter = fd.read().split()
-    fd.close()
-
-# levelno = logging.DEBUG
 levelno = logging.INFO
+classfilter = []
 
 def setLevelNo(n):
     global levelno
     levelno = ( 100 - (n * 10) )
+    
+def setFilter(filter_list):    
+    global classfilter
+    classfilter = filter_list
 
 class MyFilter(logging.Filter):
     def __init__(self, name=""): pass
@@ -57,7 +53,6 @@ formatter = logging.Formatter('%(levelname)-8s %(message)s')
 handler = logging.StreamHandler()
 handler.setFormatter(formatter)
 handler.addFilter(MyFilter())
-
 logger.addHandler(handler)
 
 def objaddr(obj):
@@ -65,7 +60,6 @@ def objaddr(obj):
     m = re.search("at (0x\w+)",string)
     if m: return  m.group(1)[2:]
     return "       "
-
 
 class Logger(object):
 
