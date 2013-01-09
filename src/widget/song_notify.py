@@ -119,7 +119,7 @@ class SongNotify(gtk.Window):
             cr.set_operator(cairo.OPERATOR_SOURCE)
             cr.set_source_rgb(0.9, 0.9, 0.9)
             cr.fill()
-        
+         
         cr  = widget.window.cairo_create()
         rect = widget.allocation
         
