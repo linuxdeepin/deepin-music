@@ -79,6 +79,7 @@ class SongNotify(gtk.Window):
         self.animation_timeout_id = None
         self.last_x = None
         self.last_y = None
+        self.move_y = None
 
         
     def shape_panel_frame(self, widget, event):    
@@ -242,14 +243,20 @@ class SongNotify(gtk.Window):
                 pass
             
             self.timeline = Timeline(self.animation_time, CURVE_SINE)
+            self.timeline.connect("stop", self.stop_animation)
             self.timeline.connect("update", self.update_animation, x, y)
             self.timeline.connect("completed", self.completed_animation, x, y)
             self.timeline.run()
             
+    def stop_animation(self, source):        
+        if self.move_y is not None:
+            self.last_y = self.move_y
+            
     def update_animation(self, source, status, x, y):        
         height = y - self.last_y
         new_height = status * height
-        self.move(x, int(self.last_y + new_height))
+        self.move_y = int(self.last_y + new_height) 
+        self.move(x, self.move_y)
     
     def completed_animation(self, source, x, y):    
         self.last_x = x
