@@ -90,6 +90,7 @@ class SongView(ListView):
     def try_emit_empty_signal(self, widget, items):    
         if len(self.items) <= 0:
             self.emit("empty-items")
+            self.song_notify.hide_notify()
             
     def set_hide_column(self, value):        
         self.hide_column_flag = value
