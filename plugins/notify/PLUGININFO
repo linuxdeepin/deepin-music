@@ -1,0 +1,11 @@
+[Plugin Info]
+Version=1.0
+Authors=SmallEvilbeast <houshao55@gmail.com>
+Name=Notify
+Name[zh_CN]=歌曲播放通知
+Name[zh_HK]=歌曲播放通知
+Name[zh_TW]=歌曲播放通知
+Description=Pops up a notification when playback of a track starts
+Description[zh_CN]=当开始播放曲目时,弹出一个通知.
+Description[zh_HK]=當開始播放曲目時,彈出壹個通知.
+Description[zh_TW]=當開始播放曲目時,彈出壹個通知.

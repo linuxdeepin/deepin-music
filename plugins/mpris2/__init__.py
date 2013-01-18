@@ -46,7 +46,7 @@ def enable(dmusic):
     MPRIS2.register_events()
     init_indicate()
 
-def disable(exaile):
+def disable(dmusic):
     global MPRIS2
     MPRIS2.unregister_events()
     MPRIS2.release()

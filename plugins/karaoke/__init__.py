@@ -38,8 +38,8 @@ class Karaoke(Logger):
         
 audio_karaoke = Karaoke()
         
-def enable(exaile):
+def enable(dmusic):
     audio_karaoke.enable_karaoke()
 
-def disable(exaile):
+def disable(dmusic):
     audio_karaoke.release()

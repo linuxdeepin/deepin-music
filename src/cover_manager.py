@@ -190,6 +190,12 @@ class DeepinCoverManager(Logger):
                     return genre_cover
     	    
         return None
+    
+    def get_path_from_song(self, song):
+        filename = self.get_cover(song, try_web=False)
+        if not filename:
+           filename = self.default_cover
+        return filename    
 
     def get_pixbuf_from_genre(self, genre):
         cover_file = self.get_cover_from_genre(genre)

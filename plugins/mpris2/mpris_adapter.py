@@ -395,7 +395,7 @@ class Mpris2Adapter(dbus.service.Object, Logger):
     @Rate.setter
     def Rate(self, value):
         # Note: Ignore attempts to set.
-        # TODO: Does Exaile support setting rate?
+        # TODO: Does Dmusic support setting rate?
         pass
 
     @property

@@ -109,9 +109,9 @@ class GajimStatusPlugin(Logger):
             
 gajim_status_notification = GajimStatusPlugin()            
             
-def enable(exaile):
+def enable(dmusic):
     SignalCollector.connect("gajim", Player, "instant-new-song", gajim_status_notification.on_new_song)
 
-def disable(exaile):
+def disable(dmusic):
     gajim_status_notification.reset_status()
     SignalCollector.disconnect_all("gajim")

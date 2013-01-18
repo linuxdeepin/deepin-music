@@ -136,7 +136,7 @@ class Config(gobject.GObject, Logger):
                 "active_color_upper" : "#662600",
                 "active_color_middle" : "#FFFF00",
                 "active_color_bottom" : "#FF8000",
-                "translucent_on_mouse_over" : "false",
+                "translucent_on_mouse_over" : "true",
                 "karaoke_mode" : "true",
                 "scroll_x" : "-1",
                 "scroll_y" : "-1",
