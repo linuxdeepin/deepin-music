@@ -101,9 +101,9 @@ class PidginStatusPlugin(Logger):
             
 pidgin_status_notification = PidginStatusPlugin()            
             
-def enable(exaile):
+def enable(dmusic):
     SignalCollector.connect("pidgin", Player, "instant-new-song", pidgin_status_notification.on_new_song)
 
-def disable(exaile):
+def disable(dmusic):
     pidgin_status_notification.reset_status()
     SignalCollector.disconnect_all("pidgin")

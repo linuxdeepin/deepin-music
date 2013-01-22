@@ -222,6 +222,3 @@ class _SignalCollector(object):
             self.signals_dict[sid] = {}        
             
 SignalCollector = _SignalCollector()            
-                    
-                
-                
