@@ -400,14 +400,13 @@ class LyricsModule(object):
         
     def popup_predefine_menu(self, widget, event):    
         menu_dict = OrderedDict()
-        menu_dict["default"] = _("Default")
         menu_dict["vitality_yellow"] = _("Vitality yellow")
         menu_dict["fresh_green"]  = _("Fresh green")
         menu_dict["playful_pink"] = _("Playful pink")
         menu_dict["cool_blue"] = _("Cool blue")
         
         menu_items = []
-        save_predefine_color = config.get("lyrics", "predefine_color", "default")
+        save_predefine_color = config.get("lyrics", "predefine_color", "vitality_yellow")
         for key, value in menu_dict.iteritems():
             item_pixbuf = None
             if key == save_predefine_color:
@@ -423,14 +422,15 @@ class LyricsModule(object):
         predefine_menu.show((int(event.x_root), int(event.y_root)))
         
     def set_predefine_color(self, key):    
-        values = PREDEFINE_COLORS[key]
-        config.set("lyrics", "predefine_color", key)
-        config.set("lyrics", "inactive_color_upper", values[0])
-        config.set("lyrics", "inactive_color_middle", values[1])
-        config.set("lyrics", "inactive_color_bottom", values[2])
-        config.set("lyrics", "active_color_upper", values[3])
-        config.set("lyrics", "active_color_middle", values[4])
-        config.set("lyrics", "active_color_bottom", values[5])
+        if key in PREDEFINE_COLORS.keys():
+            values = PREDEFINE_COLORS[key]
+            config.set("lyrics", "predefine_color", key)
+            config.set("lyrics", "inactive_color_upper", values[0])
+            config.set("lyrics", "inactive_color_middle", values[1])
+            config.set("lyrics", "inactive_color_bottom", values[2])
+            config.set("lyrics", "active_color_upper", values[3])
+            config.set("lyrics", "active_color_middle", values[4])
+            config.set("lyrics", "active_color_bottom", values[5])
         
         
     def func_thread(self):    

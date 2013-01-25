@@ -1,7 +1,7 @@
 from dtk.ui.theme import Theme, ui_theme
 from dtk.ui.skin_config import skin_config
 import os
-from dtk.ui.utils import get_parent_dir
+from deepin_utils.file import get_parent_dir
 from constant import FULL_DEFAULT_WIDTH, FULL_DEFAULT_HEIGHT, PROGRAM_VERSION
 
 # Init skin config.
