@@ -26,6 +26,7 @@ from xdg_support import get_config_file
 from ConfigParser import RawConfigParser as ConfigParser
 from logger import Logger
 from constant import CONFIG_FILENAME, FULL_DEFAULT_WIDTH, FULL_DEFAULT_HEIGHT
+from utils import glib_wait_seconds
 
 
 class Config(gobject.GObject, Logger):
@@ -53,8 +54,16 @@ class Config(gobject.GObject, Logger):
                 
     def load(self):            
         ''' Load config items from the file. '''
-        self._config.read(get_config_file(CONFIG_FILENAME))
+        try:
+            self._config.read(get_config_file(CONFIG_FILENAME))
+            self._timeout_save()
+        except:    
+            pass
         
+    @glib_wait_seconds(30)    
+    def _timeout_save(self):    
+        self.write()
+        return True
     
     def get(self, section, option, default=""):
         ''' specified the section for read the option value. '''
