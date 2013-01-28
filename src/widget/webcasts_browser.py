@@ -138,7 +138,7 @@ class WebcastsBrowser(gtk.VBox, SignalContainer):
         items = []
         for category in self.__categorys:
             items.append(CategoryTreeItem(self.__category_gettexts[category], category=category))
-        items.append(CollectTreeItem(_("My Favorites")))    
+        items.append(CollectTreeItem(_("Favorites")))    
         self.webcastbar.add_items(items)
         self.webcastbar.select_items([self.webcastbar.visible_items[0]])
         self.webcastbar.set_size_request(121, -1)
