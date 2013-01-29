@@ -256,7 +256,7 @@ class DoubanFM(Logger):
         return self.explore_request("search", extra_data=params)
     
     def new_playlist_no_user(self, channel_id):
-        params = {"type" : "n", "sid" : "", "channel" : channel_id}
+        params = {"type" : "n", "sid" : "", "channel" : channel_id, "from" : "mainsite"}
         ret = self.mine_request(extra_data=params)
         return self.json_to_deepin_songs(ret)
     
@@ -302,6 +302,7 @@ class DoubanFM(Logger):
         params = self.get_public_params(type_name='n')
         params['h'] = self.__format_list(history, True)
         params["channel"] = channel_id
+        params["from"] = "mainsite"
         ret = self.mine_request(extra_data=params)
         return self.json_to_deepin_songs(ret)
     
