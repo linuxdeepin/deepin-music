@@ -20,24 +20,115 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import re
 import urllib
 from pyquery import PyQuery
 
+
+import time
+import utils
+from logger import Logger
+from mycurl import MyCurl, CurlException
+
+class PosterLib(Logger):
+    
+    def __init__(self):
+        headers = ['User-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.4 ' \
+                       '(KHTML, like Gecko) Chrome/22.0.1229.94 Safari/537.4',]
+        
+        self.mycurl = MyCurl(header=headers)
+        self.ting_public_data = {"format" : "json"}
+        
+    def api_request(self, url, method="GET", extra_data=dict(), retry_limit=2,  **params):
+        ret = None
+        data = {}
+        data.update(extra_data)
+        data.update(params)
+        for key in data:
+            if callable(data[key]):
+                data[key] = data[key]()
+            if isinstance(data[key], (list, tuple, set)):
+                data[key] = ",".join(map(str, list(data[key])))
+            if isinstance(data[key], unicode):    
+                data[key] = data[key].encode("utf-8")
+                
+        start = time.time()        
+        try:        
+            if method == "GET":        
+                if data:
+                    query = urllib.urlencode(data)
+                    url = "%s?%s" % (url, query)
+                ret = self.mycurl.get(url)
+            elif method == "POST":
+                body = urllib.urlencode(data)
+                ret = self.mycurl.post(url, body)
+                
+        except CurlException, e:        
+            if retry_limit == 0:
+                self.logdebug("API request error: url=%s error=%s",  url, e)
+                return dict(result="network_error")
+            else:
+                retry_limit -= 1
+                return self.api_request(url, method, extra_data, retry_limit, **params)
+            
+        data = utils.parser_json(ret)       
+        self.logdebug("API response %s: TT=%.3fs", url,  time.time() - start )
+        return data
+        
+    def ting_request(self, method="GET", extra_data=dict(), retry_limit=2, **params):    
+        
+        url = "http://tingapi.ting.baidu.com/v1/restserver/ting"
+        params_data = self.ting_public_data.copy()
+        params_data.update(extra_data)
+        return self.api_request(url, method, extra_data, retry_limit, **params)
+    
+    def search_common(self, query="", page_size=1, page_no=1):
+        params = {"method" : "baidu.ting.search.common",
+                  "query" : query,
+                  "page_size" : page_size, 
+                  "page_no" : page_no}
+        
+        return self.ting_request(extra_data=params)
+    
+    def get_album_info(self, album_id):              
+        params = {"method" : "baidu.ting.album.getAlbumInfo",
+                  "album_id" : album_id}
+        return self.ting_request(extra_data=params)
+    
+    def get_album_cover(self, keywords):
+        search_result = self.search_common(keywords)
+        try:
+            album_id = search_result.get("song_list", [{}])[0].get("album_id", None)
+        except:    
+            return False
+        if album_id is None:
+            return False
+        album_info = self.get_album_info(album_id)
+        return album_info.get("albumInfo", {}).get("pic_big", False)
+    
+    
+poster = PosterLib()    
+
+
 def multi_query_artist_engine(artist_name):
     quote_artist_name = urllib.quote(artist_name)
-    xiami_result = query_artist_cover_from_xiami(quote_artist_name)
-    if xiami_result:
-        return xiami_result
-    return query_artist_cover_from_ting(quote_artist_name)
+    ting_result = query_artist_cover_from_ting(artist_name)
+    if ting_result:
+        return ting_result
+    return query_artist_cover_from_xiami(quote_artist_name)
 
 def multi_query_album_engine(artist_name, album_name):
-    quote_artist_name = urllib.quote(artist_name)
-    quote_album_name = urllib.quote(album_name)
-    xiami_result = query_album_cover_from_xiami(quote_artist_name, quote_album_name)
-    if xiami_result:
-        return xiami_result
-    return query_album_cover_from_ting(quote_artist_name, quote_album_name)
+    # quote_artist_name = urllib.quote(artist_name)
+    # quote_album_name = urllib.quote(album_name)
+    ting_result = poster.get_album_cover("%s %s" % (artist_name, album_name))
+    return ting_result
+    # return query_album_cover_from_xiami(quote_artist_name, quote_album_name)
+    
+
+
+def query_artist_cover_from_ting(keywords):    
+    results = poster.search_common(keywords)
+    artist_cover = results.get("artist", {}).get("avatar", {}).get("big", False)
+    return artist_cover
 
 def query_artist_cover_from_xiami(artist_name):
     xiami_search_url = "http://www.xiami.com/search?key={0}&pos=1"
@@ -59,21 +150,6 @@ def query_artist_cover_from_xiami(artist_name):
         except:
             return False
         
-def query_artist_cover_from_ting(artist_name):
-    ting_artist_search_url = 'http://ting.baidu.com/search?key=' + artist_name
-    try:
-        search_result_object = PyQuery(url=ting_artist_search_url)
-        artist_info_element = search_result_object('div#target_artist a.avatar')
-        info_href_attr = artist_info_element.attr('href')
-        if not info_href_attr: return False
-        artist_info_url = 'http://ting.baidu.com' + info_href_attr
-        artist_info_object = PyQuery(url=artist_info_url)
-        artist_picture_element = artist_info_object('div.mod-info-up img')
-        artist_picture_url = artist_picture_element.attr('src').encode('utf-8', 'ignore')
-        return artist_picture_url
-    except:
-        return False
-    
 def query_album_cover_from_xiami(artist_name, album_name):    
     if not artist_name and not album_name:
         return False
@@ -89,43 +165,4 @@ def query_album_cover_from_xiami(artist_name, album_name):
         album_picture_url = album_picture_element.attr('href').encode('utf-8', 'ignore')
         return album_picture_url
     except:
-        return False
-    
-def query_album_cover_from_ting(artist_name, album_name):    
-    if not artist_name and not album_name:
-        return False
-    ting_album_search_url = 'http://ting.baidu.com/search?key=' + artist_name + '+' + album_name
-    try:
-        search_result_object = PyQuery(url=ting_album_search_url)
-        album_info_element = search_result_object.find('div.song-item').eq(0).find('span.album-title a') 
-        info_href_attr = album_info_element.attr("href")
-        if not info_href_attr: return False
-        album_info_url = 'http://ting.baidu.com' + info_href_attr
-        album_info_object = PyQuery(url=album_info_url)
-        
-        album_picture_element = album_info_object('div.album-cover img')
-        temp_picture_url = album_picture_element.attr('src').encode('utf-8', 'ignore')
-        temp_picture_url = temp_picture_url.strip()
-        if temp_picture_url.startswitch("http:"):    
-            album_picture_url = temp_picture_url
-        else:    
-            album_picture_url = "http:" + temp_picture_url
-        return album_picture_url
-    except:
-        return False
-    
-def query_album_cover_from_douban(keywords):            
-    douban_search_api = 'http://api.douban.com/music/subjects?q={0}&start-index=1&max-results=2'
-    douban_cover_pattern = '<link href="http://img(\d).douban.com/spic/s(\d+).jpg" rel="image'
-    douban_cover_addr = 'http://img{0}.douban.com/spic/s{1}.jpg'
-    
-    request = douban_search_api.format(urllib.quote(keywords))
-    result = urllib.urlopen(request).read()
-    if not len(result):
-        return False
-    
-    match = re.compile(douban_cover_pattern, re.IGNORECASE).search(result)
-    if match:
-        return douban_cover_addr.format(match.groups()[0], match.groups()[1])
-    else:
         return False

@@ -102,8 +102,10 @@ class LocalItem(gobject.GObject, MissionThread):
             self.retrieve = ""
         
     def create_pixbuf(self):
-        if self.pixbuf:
-            del self.pixbuf
+        try:
+            if self.pixbuf:
+                del self.pixbuf
+        except: pass        
             
         if not self.key_name:
             if self.tag == "genre":
