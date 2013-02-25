@@ -88,11 +88,11 @@ class DoubanFM(Logger):
         print ret
         if ret.get("uid", 0):
             self.__uid = ret.get("uid")            
-            self.loginfo("Login check success!")
+            self.logdebug("Login check success!")
             return True
             
         if stage >= 2:
-            self.loginfo("Login check failed!")
+            self.logdebug("Login check failed!")
             return False
         
         params = {}
@@ -113,13 +113,13 @@ class DoubanFM(Logger):
         if not filter_ret:
             self.parser_cookie_file()
         
-        self.loginfo("login info: %s", ret)
+        self.logdebug("login info: %s", ret)
         # Begin second login check..
         
         if stage == 0:
-            self.loginfo("Begin second login check..")
+            self.logdebug("Begin second login check..")
         elif stage == 1:    
-            self.loginfo("Begin three login check..")
+            self.logdebug("Begin three login check..")
         return self.check_login(load_cookie=False, stage=stage+1)
     
     def check_fm_login(self, load_cookie=True, stage=0):
@@ -130,7 +130,7 @@ class DoubanFM(Logger):
         ret = self.get_user_info()
         if ret.get("uid", 0):
             self.__uid = ret.get("uid")
-            self.loginfo("Login check success!")
+            self.logdebug("Login check success!")
             return True
             
         captcha_id = self.new_captcha()
@@ -147,19 +147,19 @@ class DoubanFM(Logger):
         if  ret_data.get("r", -1) == 0:
             self.parser_cookie_file(replace=(".fm", ".com"))
             # self.__uid = ret_data["user_info"]["uid"]
-            self.loginfo("Login check success!")
+            self.logdebug("Login check success!")
             return True
             
         if stage >= 2:
-            self.loginfo("Login check failed!")
+            self.logdebug("Login check failed!")
             return False
         
-        self.loginfo("login info: %s", ret)
+        self.logdebug("login info: %s", ret)
         # Begin second login check..
         if stage == 0:
-            self.loginfo("Begin second login check..")
+            self.logdebug("Begin second login check..")
         elif stage == 1:    
-            self.loginfo("Begin three login check..")
+            self.logdebug("Begin three login check..")
         return self.check_fm_login(load_cookie=False, stage=stage+1)
     
     def parser_cookie_file(self, replace=(".com", ".fm")):
@@ -178,7 +178,7 @@ class DoubanFM(Logger):
         url = "http://www.douban.com/misc/captcha?size=%s&id=%s" % (size, captcha_id)
         pic_image = utils.get_cache_file("pic")
         if utils.download(url, pic_image):
-            self.loginfo("Verify code pic download ok!")
+            self.logdebug("Verify code pic download ok!")
             return raw_input("piz input code > ").strip()    
     
     def new_captcha(self):
@@ -217,7 +217,7 @@ class DoubanFM(Logger):
                 return self.api_request(url, method, extra_data, retry_limit, **params)
             
         data = utils.parser_json(ret)       
-        self.loginfo("API response %s: TT=%.3fs", url,  time.time() - start )
+        self.logdebug("API response %s: TT=%.3fs", url,  time.time() - start )
         return data
     
     def explore_request(self, api, method="GET", extra_data=dict(), retry_limit=2,  **params):    
@@ -256,7 +256,7 @@ class DoubanFM(Logger):
         return self.explore_request("search", extra_data=params)
     
     def new_playlist_no_user(self, channel_id):
-        params = {"type" : "n", "sid" : "", "channel" : channel_id}
+        params = {"type" : "n", "sid" : "", "channel" : channel_id, "from" : "mainsite"}
         ret = self.mine_request(extra_data=params)
         return self.json_to_deepin_songs(ret)
     
@@ -302,6 +302,7 @@ class DoubanFM(Logger):
         params = self.get_public_params(type_name='n')
         params['h'] = self.__format_list(history, True)
         params["channel"] = channel_id
+        params["from"] = "mainsite"
         ret = self.mine_request(extra_data=params)
         return self.json_to_deepin_songs(ret)
     

@@ -25,7 +25,6 @@ import gobject
 import os
 
 import dtk.ui.tooltip as Tooltip
-from dtk.ui.draw import draw_pixbuf
 from dtk.ui.scrolled_window import ScrolledWindow
 from dtk.ui.iconview import IconView
 from dtk.ui.paned import HPaned
@@ -35,232 +34,14 @@ from helper import SignalContainer, Dispatcher
 from widget.skin import app_theme
 from widget.ui import SearchEntry, BackButton
 from widget.song_view import MultiDragSongView
-from widget.ui_utils import (switch_tab, render_text, draw_alpha_mask, create_right_align,
-                             create_separator_box)
+from widget.ui_utils import (switch_tab, draw_alpha_mask, 
+                             create_right_align, create_separator_box)
 from widget.outlookbar import OptionBar, SongImportBar
+from widget.local_item import LocalItem
+
 from source.local import ImportFolderJob, ReloadDBJob
 from widget.combo import  PromptButton
-from cover_manager import CoverManager
-from pinyin import TransforDB
 from nls import _
-
-import utils
-
-class IconItem(gobject.GObject):
-    
-    __gsignals__ = { "redraw-request" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),}
-    
-    def __init__(self, _tuple):
-        super(IconItem, self).__init__()
-        self.cell_width = 83        
-        self.key_name, self.value_name, nums, self.tag = _tuple
-        if self.tag == "folder": self.cell_width = 67
-        self.draw_side_flag = True
-
-        if not self.key_name:
-            self.name_label= _("Unknown")
-        elif self.key_name == "deepin-all-songs":    
-            self.name_label = _("All Tracks")
-        else:    
-            self.name_label = utils.xmlescape(self.key_name)
-        
-        # Just create pixbuf when need render it to save memory.
-        self.pixbuf = None
-        self.labels = "%d %s" % (nums, _("Track(s)"))
-        self.pixbuf_offset_x = 4
-        self.pixbuf_offset_y = 4
-        self.padding_x = 6
-        self.border_size = 4
-        self.padding_y = 20
-        self.hover_flag = False
-        self.highlight_flag = False
-        self.__draw_play_hover_flag = False
-        self.__draw_play_press_flag = False
-        
-        self.cover_dpixbuf = app_theme.get_pixbuf("cover/default_cover.png")
-        
-        # normal side pixbuf
-        if self.tag == "folder":
-            self.__normal_side_pixbuf = app_theme.get_pixbuf("local/side_normal.png").get_pixbuf()
-        else:    
-            self.__normal_side_pixbuf =  app_theme.get_pixbuf("filter/side_normal.png").get_pixbuf()
-            
-        # normal play pixbuf
-        self.__normal_play_pixbuf =  app_theme.get_pixbuf("filter/play_normal.png").get_pixbuf()
-        
-        self.play_rect = gtk.gdk.Rectangle(
-            self.__normal_side_pixbuf.get_width() - self.__normal_play_pixbuf.get_width() - 2 - 6,
-            self.__normal_side_pixbuf.get_height() - self.__normal_play_pixbuf.get_height() - 2 - 6,
-            self.__normal_play_pixbuf.get_width(),
-            self.__normal_play_pixbuf.get_height()
-            )
-        
-        try:
-            self.retrieve = TransforDB.convert(self.name_label.lower().replace(" ", "")) \
-                + self.name_label.lower().replace(" ", "")
-        except:    
-            self.retrieve = ""
-        
-    def create_pixbuf(self):
-        if self.pixbuf:
-            del self.pixbuf
-            
-        if not self.key_name:
-            if self.tag == "genre":
-                self.pixbuf = CoverManager.get_pixbuf_from_genre(self.name_label)
-            else:    
-                self.pixbuf = CoverManager.get_pixbuf_from_name(self.name_label, self.cell_width, self.cell_width,
-                                                                return_default=False)            
-            
-        elif self.key_name == "deepin-all-songs":    
-            self.pixbuf = CoverManager.get_all_song_cover(self.cell_width, self.cell_width)
-            self.draw_side_flag = False
-        else:    
-            if self.tag == "genre":
-                self.pixbuf = CoverManager.get_pixbuf_from_genre(self.name_label)
-            elif self.tag == "album":    
-                self.pixbuf = CoverManager.get_pixbuf_from_name("%s-%s" % (self.value_name, self.key_name), 
-                                                                self.cell_width, self.cell_width,
-                                                                return_default=False)            
-            elif self.tag == "folder":
-                   self.pixbuf = app_theme.get_pixbuf("local/music.png").get_pixbuf()
-            else:    
-                self.pixbuf = CoverManager.get_pixbuf_from_name(self.key_name, self.cell_width, self.cell_width,
-                                                                return_default=False)
-        
-    def pointer_in_play_rect(self, x, y):    
-        if self.play_rect.x < x < self.play_rect.x + self.play_rect.width and self.play_rect.y < y < self.play_rect.y + self.play_rect.height:
-            return True
-        else:
-            return False
-        
-    def emit_redraw_request(self):    
-        self.emit("redraw-request")
-        
-    def get_width(self):    
-        return self.__normal_side_pixbuf.get_width() + self.padding_x * 2
-    
-    def get_height(self):
-        return self.__normal_side_pixbuf.get_height() + self.padding_y * 2
-    
-    def render(self, cr, rect):
-        # Create pixbuf resource if self.pixbuf is None.
-        self.create_pixbuf()
-            
-        if not self.pixbuf:
-            self.pixbuf = self.cover_dpixbuf.get_pixbuf()
-            
-        pixbuf_x =  rect.x + (rect.width - self.__normal_side_pixbuf.get_width()) / 2
-            
-        # Draw cover.
-        if self.tag == "folder":    
-            draw_pixbuf(cr, self.pixbuf, 
-                        pixbuf_x,
-                        rect.y)
-        else:    
-            pixbuf_rect = gtk.gdk.Rectangle(
-                pixbuf_x + self.pixbuf_offset_x,
-                rect.y + self.pixbuf_offset_y, 
-                self.pixbuf.get_width(),
-                self.pixbuf.get_height())
-            
-            draw_pixbuf(cr, self.pixbuf, 
-                        pixbuf_x + self.pixbuf_offset_x,
-                        rect.y + self.pixbuf_offset_y)
-            
-        
-        if self.hover_flag or self.highlight_flag:
-            if self.tag == "folder":
-                hover_side_pixbuf = app_theme.get_pixbuf("local/side_hover.png").get_pixbuf()
-            else:    
-                hover_side_pixbuf = app_theme.get_pixbuf("filter/side_hover.png").get_pixbuf()
-                
-            draw_pixbuf(cr, hover_side_pixbuf, pixbuf_x, rect.y )            
-        else:    
-            if self.draw_side_flag:
-                draw_pixbuf(cr, self.__normal_side_pixbuf, pixbuf_x, rect.y )            
-                
-        
-        if self.hover_flag:
-            # if self.tag != "folder" and self.draw_side_flag:
-            #     cr.set_source_rgba(0, 0, 0, 0.3)
-            #     cr.rectangle(*pixbuf_rect)
-            #     cr.fill()
-            
-            if self.__draw_play_hover_flag:
-                play_pixbuf = app_theme.get_pixbuf("filter/play_hover.png").get_pixbuf()
-            elif self.__draw_play_press_flag:    
-                play_pixbuf = app_theme.get_pixbuf("filter/play_press.png").get_pixbuf()
-            else:    
-                play_pixbuf = self.__normal_play_pixbuf
-            draw_pixbuf(cr, play_pixbuf, pixbuf_x + self.play_rect.x, rect.y + self.play_rect.y)        
-            
-            
-        # Draw text.    
-        name_rect = gtk.gdk.Rectangle(rect.x + self.padding_x , 
-                                      rect.y + self.__normal_side_pixbuf.get_height() + 5,
-                                      self.cell_width, 11)
-        num_rect = gtk.gdk.Rectangle(name_rect.x, name_rect.y + 16, name_rect.width, 9)
-        
-        render_text(cr, self.name_label, name_rect, 
-                    app_theme.get_color("labelText").get_color(),
-                    10)
-        render_text(cr, self.labels, num_rect, 
-                    app_theme.get_color("labelText").get_color(),
-                    8)
-        
-    def icon_item_motion_notify(self, x, y):    
-        self.hover_flag = True
-        if self.pointer_in_play_rect(x, y):
-            if self.__draw_play_press_flag:
-                self.__draw_play_hover_flag =  False
-            else:    
-                self.__draw_play_hover_flag= True
-        else:    
-            self.__draw_play_hover_flag = False
-            
-        self.emit_redraw_request()
-        
-    def icon_item_lost_focus(self):    
-        self.__draw_play_flag = False
-        self.hover_flag = False
-        self.emit_redraw_request()
-        
-    def icon_item_highlight(self):    
-        self.highlight_flag = True
-        self.emit_redraw_request()
-        
-    def icon_item_normal(self):    
-        self.highlight_flag = False
-        self.emit_redraw_request()
-        
-    def icon_item_button_press(self, x, y):    
-        if self.pointer_in_play_rect(x, y):
-            self.__draw_play_hover_flag =  False
-            self.__draw_play_press_flag = True
-        else:    
-            self.__draw_play_press_flag = False
-        self.emit_redraw_request()
-    
-    def icon_item_button_release(self, x, y):
-        self.__draw_play_press_flag = False
-        self.emit_redraw_request()
-    
-    def icon_item_single_click(self, x, y):
-        pass
-    
-    def icon_item_double_click(self, x, y):
-        pass
-    
-    def icon_item_release_resource(self):
-        # Release pixbuf resource.
-        del self.pixbuf
-        self.pixbuf = None
-        
-        # Return True to tell IconView call gc.collect() to release memory resource.
-        return True
-        
-gobject.type_register(IconItem)        
 
 class Browser(gtk.VBox, SignalContainer):        
     
@@ -573,18 +354,18 @@ class Browser(gtk.VBox, SignalContainer):
     def get_info_items(self, tag):    
         if tag == "folder":
             infos = self.__db_query.get_attr_infos()
-            return [ IconItem(info) for info in infos ]
+            return [ LocalItem(info) for info in infos ]
         
         _dict = self.get_infos_from_db(tag)
         keys = _dict.keys()
         keys.sort()
         items = []
         all_nb = len(self.__db_query.get_all_songs())
-        items.append(IconItem(("deepin-all-songs", "deepin-all-songs", all_nb, tag)))
+        items.append(LocalItem(("deepin-all-songs", "deepin-all-songs", all_nb, tag)))
         
         for key in keys:
             value, nb = _dict[key]
-            items.append(IconItem((key, value, nb, tag)))
+            items.append(LocalItem((key, value, nb, tag)))
         return items    
         
     def switch_filter_view(self, tag):    

@@ -26,6 +26,7 @@ from xdg_support import get_config_file
 from ConfigParser import RawConfigParser as ConfigParser
 from logger import Logger
 from constant import CONFIG_FILENAME, FULL_DEFAULT_WIDTH, FULL_DEFAULT_HEIGHT
+from utils import glib_wait_seconds
 
 
 class Config(gobject.GObject, Logger):
@@ -53,8 +54,16 @@ class Config(gobject.GObject, Logger):
                 
     def load(self):            
         ''' Load config items from the file. '''
-        self._config.read(get_config_file(CONFIG_FILENAME))
+        try:
+            self._config.read(get_config_file(CONFIG_FILENAME))
+            self._timeout_save()
+        except:    
+            pass
         
+    @glib_wait_seconds(30)    
+    def _timeout_save(self):    
+        self.write()
+        return True
     
     def get(self, section, option, default=""):
         ''' specified the section for read the option value. '''
@@ -120,7 +129,7 @@ class Config(gobject.GObject, Logger):
                 "auto_download" : "true",
                 "font_name" : "文泉驿微米黑",
                 "font_type" : "Regular",
-                "font_size" : "30",
+                "font_size" : "25",
                 "locked" : "false",
                 "dock_mode" : "true",
                 "line_count" : "2",
@@ -129,13 +138,13 @@ class Config(gobject.GObject, Logger):
                 "blur_color" : "#000000",
                 "single_line_align"  : "centered",
                 "double_line_align"  : "justified",
-                "predefine_color" : "default",
-                "inactive_color_upper" : "#99FFFF",
-                "inactive_color_middle" : "#0000FF",
-                "inactive_color_bottom" : "#99FFFF",
-                "active_color_upper" : "#662600",
-                "active_color_middle" : "#FFFF00",
-                "active_color_bottom" : "#FF8000",
+                "predefine_color" : "vitality_yellow",
+                "inactive_color_upper" : "#e4dcb9",
+                "inactive_color_middle" : "#ffea93",
+                "inactive_color_bottom" : "#ffd631",
+                "active_color_upper" : "#f7f4ea",
+                "active_color_middle" : "#77d1ff",
+                "active_color_bottom" : "#4199d5",
                 "translucent_on_mouse_over" : "true",
                 "karaoke_mode" : "true",
                 "scroll_x" : "-1",

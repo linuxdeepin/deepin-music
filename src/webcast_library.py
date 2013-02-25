@@ -246,7 +246,7 @@ class WebcastDatebase(gobject.GObject, Logger):
         try:
             s = self.__songs[uri]
         except KeyError:    
-            s = self.__create_song(tags)
+            s = self.create_song(tags)
         else:    
             self.set_property(s, tags)
         return s    

@@ -26,7 +26,8 @@ import gtk
 import fnmatch
 import random
 
-from dtk.ui.utils import get_optimum_pixbuf_from_file, is_network_connected
+from deepin_utils.net import is_network_connected
+from dtk.ui.utils import get_optimum_pixbuf_from_file
 from dtk.ui.thread_pool import MissionThreadPool
 
 from mutagen.id3 import ID3

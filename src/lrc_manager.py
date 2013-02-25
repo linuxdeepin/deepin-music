@@ -22,7 +22,7 @@
 
 import os
 import re
-from dtk.ui.utils import is_network_connected
+from deepin_utils.net import is_network_connected
 
 from config import config
 from lrc_download import TTPlayer, DUOMI, SOSO

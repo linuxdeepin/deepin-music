@@ -618,7 +618,6 @@ class DesktopLyricsSetting(gtk.VBox):
         
     def create_predefine_box(self):    
         predefine_color_items = OrderedDict()
-        predefine_color_items["default"] = _("Default")
         predefine_color_items["vitality_yellow"] = _("Vitality yellow")
         predefine_color_items["fresh_green"]  = _("Fresh green")
         predefine_color_items["playful_pink"] = _("Playful pink")

@@ -33,7 +33,6 @@ LRC_DESKTOP_MODE = 1
 LRC_WINDOW_MODE = 2
 
 PREDEFINE_COLORS = {
-   "default"         : ["#99FFFF", "#0000FF", "#99FFFF", "#662600", "#FFFF00", "#FF8000"],   
    "fresh_green"     : ["#e4dcb9", "#ffea93", "#ffd631", "#efede6", "#b3fc9c", "#77d035"],
    "playful_pink"    : ["#ffffff", "#70b8e5", "#3788c0", "#ffe0ee", "#ffa1ca", "#ff2586"],
    "cool_blue"       : ["#f8f8f8", "#dadada", "#bdbdbd", "#ffffff", "#60c0ff", "#19a1ff"],

@@ -26,7 +26,7 @@ import gobject
 
 from dtk.ui.threads import post_gui
 from dtk.ui.thread_pool import MissionThreadPool, MissionThread
-from dtk.ui.utils import is_network_connected
+from deepin_utils.net import is_network_connected
 
 from cover_query import multi_query_artist_engine, multi_query_album_engine
 from library import DBQuery, MediaDB

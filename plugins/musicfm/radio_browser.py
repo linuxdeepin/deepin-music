@@ -24,7 +24,7 @@ import gtk
 
 from dtk.ui.new_treeview import TreeView
 from dtk.ui.paned import HPaned
-from dtk.ui.utils import is_network_connected
+from deepin_utils.net import is_network_connected
 
 from radio_item import CategroyTreeItem
 from radio_home_page import HomePage
