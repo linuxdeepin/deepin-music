@@ -27,7 +27,7 @@ from pyquery import PyQuery
 import time
 import utils
 from logger import Logger
-from mycurl import MyCurl, CurlException
+from mycurl import MyCurl, CurlException, public_curl
 
 class PosterLib(Logger):
     
@@ -100,16 +100,18 @@ class PosterLib(Logger):
             album_id = search_result.get("song_list", [{}])[0].get("album_id", None)
         except:    
             return False
+        
         if album_id is None:
             return False
+        
         album_info = self.get_album_info(album_id)
         return album_info.get("albumInfo", {}).get("pic_big", False)
     
-    
 poster = PosterLib()    
 
-
 def multi_query_artist_engine(artist_name):
+    if artist_name.find(",") != -1:
+        artist_name = artist_name.split(",")[0]
     quote_artist_name = urllib.quote(artist_name)
     ting_result = query_artist_cover_from_ting(artist_name)
     if ting_result:
@@ -117,13 +119,12 @@ def multi_query_artist_engine(artist_name):
     return query_artist_cover_from_xiami(quote_artist_name)
 
 def multi_query_album_engine(artist_name, album_name):
-    # quote_artist_name = urllib.quote(artist_name)
-    # quote_album_name = urllib.quote(album_name)
+    quote_artist_name = urllib.quote(artist_name)
+    quote_album_name = urllib.quote(album_name)
     ting_result = poster.get_album_cover("%s %s" % (artist_name, album_name))
-    return ting_result
-    # return query_album_cover_from_xiami(quote_artist_name, quote_album_name)
-    
-
+    if ting_result:
+        return ting_result
+    return query_album_cover_from_xiami(quote_artist_name, quote_album_name)
 
 def query_artist_cover_from_ting(keywords):    
     results = poster.search_common(keywords)
@@ -132,37 +133,35 @@ def query_artist_cover_from_ting(keywords):
 
 def query_artist_cover_from_xiami(artist_name):
     xiami_search_url = "http://www.xiami.com/search?key={0}&pos=1"
-    xiami_domain = "http://www.xiami.com"
     search_url = xiami_search_url.format(artist_name)
+    html = public_curl.get(search_url)
+    
     try:
-        search_query = PyQuery(url=search_url)
-    except:    
+        search_query = PyQuery(html)
+    except Exception, e:    
         return False
     else:
         try:
-            artist_div_block = search_query("div.artistBlock_list div.artist_item100_block p.buddy a.artist100")
-            artist_href = artist_div_block.attr("href")
+            artist_div_block = search_query("div.artistBlock_list div.artist_item100_block p.buddy a.artist100 img")
+            artist_href = artist_div_block.attr("src")
             if not artist_href: return False
-            artist_url = "%s%s" % (xiami_domain, artist_href)
-            artist_query = PyQuery(url=artist_url)
-            cover_url = artist_query("a#cover_lightbox").attr("href").encode("utf-8", "ingnore")
-            return cover_url
-        except:
+            # artist_url = "%s%s" % (xiami_domain, artist_href)
+            # artist_query = PyQuery(url=artist_url)
+            # cover_url = artist_query("a#cover_lightbox").attr("href").encode("utf-8", "ingnore")
+            return artist_href.replace("_1", "_2")
+        except Exception, e:
             return False
         
 def query_album_cover_from_xiami(artist_name, album_name):    
     if not artist_name and not album_name:
         return False
     xiami_album_search_url = 'http://www.xiami.com/search/album?key=' + artist_name + '+' + album_name
+    html = public_curl.get(xiami_album_search_url)
     try:
-        search_result_object = PyQuery(url=xiami_album_search_url)
-        album_info_element = search_result_object('div.albumBlock_list div.album_item100_block p.cover a.CDcover100')
-        info_href_attr = album_info_element.attr('href')
+        search_result_object = PyQuery(html)
+        album_info_element = search_result_object('div.albumBlock_list div.album_item100_block p.cover a.CDcover100 img')
+        info_href_attr = album_info_element.attr('src')
         if not info_href_attr: return False
-        album_info_url = 'http://www.xiami.com' + info_href_attr
-        album_info_object = PyQuery(url=album_info_url)
-        album_picture_element = album_info_object('a#cover_lightbox')
-        album_picture_url = album_picture_element.attr('href').encode('utf-8', 'ignore')
-        return album_picture_url
+        return info_href_attr.replace("_1", "_2")
     except:
         return False
