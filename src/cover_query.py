@@ -165,3 +165,9 @@ def query_album_cover_from_xiami(artist_name, album_name):
         return info_href_attr.replace("_1", "_2")
     except:
         return False
+    
+    
+    
+    
+    
+    
