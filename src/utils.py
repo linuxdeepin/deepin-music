@@ -53,7 +53,7 @@ mimetypes.init()
 
 from urllib import quote, unquote, pathname2url
 from urlparse import urlparse
-from urllib2 import urlopen
+from urllib2 import urlopen, Request
 from functools import wraps
 
 from logger import newLogger
@@ -616,11 +616,21 @@ def direct_download(remote_uri, local_uri, timeout=DEFAULT_TIMEOUT):
         return False
     return True
     
+
+std_headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows; U; Windows NT 6.1; '
+        'en-US; rv:1.9.2) Gecko/20100115 Firefox/3.6',
+    'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.7',
+    'Accept': 'text/xml,application/xml,application/xhtml+xml,'
+        'text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5',
+    'Accept-Language': 'en-us,en;q=0.5',
+}
     
 def download(remote_uri, local_uri, net_encode=None, buffer_len=4096, timeout=DEFAULT_TIMEOUT):
     try:
         logger.logdebug("download %s starting...", remote_uri)
-        handle_read = urlopen(remote_uri, timeout=timeout)
+        request = Request(remote_uri, headers=std_headers)
+        handle_read = urlopen(request, timeout=timeout)
         handle_write = file(local_uri, "w")
         
         data = handle_read.read(buffer_len)
