@@ -115,8 +115,9 @@ class LocalItem(gobject.GObject, MissionThread):
                                                                 return_default=False)            
             
         elif self.key_name == "deepin-all-songs":    
-            self.pixbuf = CoverManager.get_all_song_cover(self.cell_width, self.cell_width)
-            self.draw_side_flag = False
+            # self.pixbuf = CoverManager.get_all_song_cover(self.cell_width, self.cell_width)
+            self.pixbuf = app_theme.get_pixbuf("cover/all_song.png").get_pixbuf()
+            # self.draw_side_flag = False
         else:    
             if self.tag == "genre":
                 self.pixbuf = CoverManager.get_pixbuf_from_genre(self.name_label)

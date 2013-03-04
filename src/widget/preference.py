@@ -52,11 +52,14 @@ from constant import PREDEFINE_COLORS, PROGRAM_VERSION
 from config import config
 from nls import _
 
+TABLE_ROW_SPACING = 25
+CONTENT_ROW_SPACING = 8
+
 class GeneralSetting(gtk.VBox):
     
     def __init__(self):
         super(GeneralSetting, self).__init__()
-        self.set_spacing(30)
+        self.set_spacing(TABLE_ROW_SPACING)
         self.pack_start(self.create_start_box(), False, True)
         self.pack_start(self.create_close_box(), False, True)
         self.pack_start(self.create_play_box(), False, True)
@@ -143,7 +146,7 @@ class GeneralSetting(gtk.VBox):
             
     def create_start_box(self):    
         main_table = gtk.Table(4, 2)
-        main_table.set_row_spacings(10)
+        main_table.set_row_spacings(CONTENT_ROW_SPACING)
         start_title_label = Label(_("Startup"))
         start_title_label.set_size_request(350, 12)
         label_align = gtk.Alignment()
@@ -183,7 +186,7 @@ class GeneralSetting(gtk.VBox):
     
     def create_close_box(self):
         main_table = gtk.Table(3, 2)
-        main_table.set_row_spacings(10)
+        main_table.set_row_spacings(CONTENT_ROW_SPACING)
         close_title_label = Label(_("On pressing the close button"))
         close_title_label.set_size_request(350, 12)
         
@@ -201,7 +204,7 @@ class GeneralSetting(gtk.VBox):
     
     def create_play_box(self):
         main_table = gtk.Table(5, 2)
-        main_table.set_row_spacings(10)
+        main_table.set_row_spacings(CONTENT_ROW_SPACING)
         
         play_title_label = Label(_("Playback settings"))
         play_title_label.set_size_request(350, 12)
@@ -233,7 +236,7 @@ class GeneralSetting(gtk.VBox):
 
     def create_lyrics_dir_table(self):    
         main_table = gtk.Table(3, 2)
-        main_table.set_row_spacings(8)
+        main_table.set_row_spacings(CONTENT_ROW_SPACING)
         
         dir_title_label = Label(_("Lyrics directory"))
         dir_title_label.set_size_request(200, 12)
@@ -270,7 +273,7 @@ class HotKeySetting(gtk.VBox):
     def __init__(self):
         super(HotKeySetting, self).__init__()
         self.main_table = gtk.Table(12, 2)        
-        self.main_table.set_row_spacings(10)
+        self.main_table.set_row_spacings(CONTENT_ROW_SPACING)
         self.pack_start(self.main_table, False, True)
         self.create_hotkey_box()
         
@@ -662,7 +665,7 @@ class DesktopLyricsSetting(gtk.VBox):
     
     def create_style_table(self):
         main_table = gtk.Table(9, 2)
-        main_table.set_row_spacings(10)
+        main_table.set_row_spacings(CONTENT_ROW_SPACING)
         self.create_single_line_box()
         self.create_double_line_box()
         style_title_label = Label(_("Lyrics style"))
@@ -827,7 +830,7 @@ class ScrollLyricsSetting(gtk.VBox):
     
     def create_style_table(self):
         main_table = gtk.Table(5, 2)
-        main_table.set_row_spacings(10)
+        main_table.set_row_spacings(CONTENT_ROW_SPACING)
         style_title_label = Label(_("Lyrics style"))
         # font_name
         font_families = get_font_families()

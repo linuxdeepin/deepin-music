@@ -170,6 +170,7 @@ class Config(gobject.GObject, Logger):
                 "offline" : "false",                
                 "use_tray" : "true",
                 "close_to_tray" : "true",
+                "close_remember" : "false",
                 "use_splash" : "true",
                 "window_mode" : "simple",
                 "app_mode" : "normal",
@@ -197,6 +198,7 @@ class Config(gobject.GObject, Logger):
             
             "plugins" : {
                 "enable" : "",
-                }
+                },
             }
+    
 config = Config()    
