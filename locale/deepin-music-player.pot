@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-04 14:09+0800\n"
+"POT-Creation-Date: 2013-03-04 15:58+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -676,7 +676,7 @@ msgstr ""
 msgid "Show/Hide lyrics"
 msgstr ""
 
-#: ../src/widget/preference.py:374 ../src/widget/lyrics_module.py:148
+#: ../src/widget/preference.py:374
 msgid "Lock/Unlock lyrics"
 msgstr ""
 
@@ -887,7 +887,8 @@ msgstr ""
 msgid "Unlock lyrics"
 msgstr ""
 
-#: ../src/widget/instance.py:398 ../src/widget/tray.py:70
+#: ../src/widget/instance.py:398 ../src/widget/lyrics_module.py:148
+#: ../src/widget/tray.py:70
 msgid "Lock lyrics"
 msgstr ""
 

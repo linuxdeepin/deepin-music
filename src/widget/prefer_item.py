@@ -116,13 +116,17 @@ class ExpandItem(TreeItem):
         pass
     
     def single_click(self, column, offset_x, offset_y):
-        pass
-
-    def double_click(self, column, offset_x, offset_y):
         if self.is_expand:
             self.unexpand()
         else:
             self.expand()
+
+    def double_click(self, column, offset_x, offset_y):
+        # if self.is_expand:
+        #     self.unexpand()
+        # else:
+        #     self.expand()
+        pass
     
     def add_child_item(self):        
         self.add_items_callback(self.child_items, self.row_index + 1)

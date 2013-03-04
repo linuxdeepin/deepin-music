@@ -1145,12 +1145,10 @@ class QuitDialog(DialogBox):
                            )
         
         self.confirm_callback = confirm_callback
-        radio_group = gtk.VBox(spacing=5)
+        radio_group = gtk.HBox(spacing=50)
         self.minimize_radio = RadioButton(_("Minimize to tray"))
         self.minimize_radio.set_active(True)
-        # minimize_radio.connect("toggled", self.change_quit_status, "false")
         self.quit_radio = RadioButton(_("Quit"))
-        # quit_radio.connect("toggled", self.change_quit_status, "true")
         
         radio_group.pack_start(self.minimize_radio, False, True)
         radio_group.pack_start(self.quit_radio, False, True)
@@ -1158,7 +1156,7 @@ class QuitDialog(DialogBox):
         remembar_button.connect("toggled", self.on_remembar_button_toggled)
         
         radio_group_align = gtk.Alignment()
-        radio_group_align.set_padding(10, 0, 10, 0)
+        radio_group_align.set_padding(30, 0, 10, 0)
         radio_group_align.add(radio_group)
                 
         confirm_button = Button(_("OK"))

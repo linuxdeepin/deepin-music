@@ -129,7 +129,7 @@ class Config(gobject.GObject, Logger):
                 "auto_download" : "true",
                 "font_name" : "文泉驿微米黑",
                 "font_type" : "Regular",
-                "font_size" : "25",
+                "font_size" : "18",
                 "locked" : "false",
                 "dock_mode" : "true",
                 "line_count" : "2",

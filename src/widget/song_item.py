@@ -139,7 +139,7 @@ class SongItem(gobject.GObject):
                 (80, 26),
                 (100, 26),
                 (100, 26),
-                (80, 26)
+                (90, 26)
                 ]
         else:
             return [
