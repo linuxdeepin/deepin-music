@@ -40,6 +40,7 @@ from xdg_support import get_cache_file
 from widget.skin import app_theme
 from cover_query import multi_query_artist_engine
 from helper import Dispatcher
+from song import Song
 
 
 REINIT_COVER_TO_SKIP_TIME = 100 * 60 * 30
@@ -171,8 +172,10 @@ class DeepinCoverManager(Logger):
         cover = self.get_cover(song, False) # todo
         return cover != self.default_cover and os.path.exists(cover)
     
-    def get_cover_path(self, song):
-        return get_cache_file("cover/" + self.get_cover_search_str(song) + ".jpg")
+    def get_cover_path(self, song_or_name):
+        if isinstance(song_or_name, Song):
+            return get_cache_file("cover/" + self.get_cover_search_str(song_or_name) + ".jpg")
+        return get_cache_file("cover/%s.jpg" % song_or_name)
     
     def get_pixbuf_from_song(self, song, x, y, try_web=True, optimum=True):
         filename = self.get_cover(song, try_web)
@@ -214,7 +217,8 @@ class DeepinCoverManager(Logger):
         image_path = get_cache_file("cover/%s.jpg" % album)
         image_path_disable = get_cache_file("cover/%s.jpg.#disable#" % album)
 
-        if  (not song.get_str("title") and not song.get_str("album")) or os.path.exists(image_path_disable) or image_path in self.COVER_TO_SKIP:
+        if  (not song.get_str("title") and not song.get_str("album")) or \
+                os.path.exists(image_path_disable) or image_path in self.COVER_TO_SKIP:
             return None
                         
         # Cover already exist.
@@ -322,10 +326,11 @@ class DeepinCoverManager(Logger):
                 MediaDB.set_property(song, {"album" : song.get("album")})
                 return True
             
-    def change_cover(self, song, new_cover):        
-        save_path = self.get_cover_path(song)
+    def change_cover(self, song_or_name, new_cover):        
+        save_path = self.get_cover_path(song_or_name)
         if not os.path.exists(new_cover):
             return False
+        
         try:
             pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(new_cover, COVER_SAVE_SIZE["x"], COVER_SAVE_SIZE["y"])
         except gobject.GError:    
@@ -340,8 +345,9 @@ class DeepinCoverManager(Logger):
                 del pixbuf  
                 
                 # Change property album to update UI
-                Dispatcher.emit("album-changed", song)
-                MediaDB.set_property(song, {"album" : song.get("album")})
+                if isinstance(song_or_name, Song):
+                    Dispatcher.emit("album-changed", song_or_name)
+                    MediaDB.set_property(song_or_name, {"album" : song_or_name.get("album")})
                 return True
 
 CoverManager =  DeepinCoverManager()

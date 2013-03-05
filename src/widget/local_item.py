@@ -263,5 +263,15 @@ class LocalItem(gobject.GObject, MissionThread):
         
         # Return True to tell IconView call gc.collect() to release memory resource.
         return True
+    
+    def change_cover_pixbuf(self, new_path):
+        cover_name = None
+        if self.tag == "album":
+            cover_name = "%s-%s" % (self.value_name, self.key_name)
+        elif self.tag == "artist":    
+            cover_name = self.key_name
+        if cover_name:    
+            CoverManager.change_cover(cover_name, new_path)            
+            
         
 gobject.type_register(LocalItem)        

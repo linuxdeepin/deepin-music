@@ -30,7 +30,7 @@ from collections import OrderedDict
 from dtk.ui.listview import ListView
 from dtk.ui.menu import Menu
 from dtk.ui.threads import post_gui
-from dtk.ui.dialog import InputDialog
+from dtk.ui.dialog import InputDialog, ConfirmDialog
 from dtk.ui.scrolled_window import ScrolledWindow
 from dtk.ui.utils import (get_widget_root_coordinate, WIDGET_POS_TOP_LEFT)
 
@@ -378,6 +378,7 @@ class SongView(ListView):
             select_item = self.items[index]
             if select_item.exists():
                 SongEditor([select_item.get_song()]).show_all()
+                
     
     def move_to_trash(self):
         flag = False
@@ -393,6 +394,10 @@ class SongView(ListView):
             if flag:
                 Player.next()
         return True    
+    
+    def try_move_trash(self):
+        ConfirmDialog(_("Prompt"), _("Are you sure you want to delete them?"), 
+                      confirm_callback=lambda : self.move_to_trash()).show_all()
         
     def on_drag_data_received(self, widget, context, x, y, selection, info, timestamp):    
         root_y = widget.allocation.y + y
@@ -462,7 +467,7 @@ class SongView(ListView):
     def popup_delete_menu(self, x, y):    
         items = [(None, _("Remove Track from this List"), self.remove_select_items),
                  (None, _("Remove Unavailable Tracks"), self.delete_error_items),
-                 (None, _("Move to Trash"), self.move_to_trash),
+                 (None, _("Move to Trash"), lambda : self.try_move_trash()),
                  (None, _("Clear list"), self.erase_items)]
         Menu(items, True).show((int(x), int(y)))
         
@@ -740,6 +745,10 @@ class MultiDragSongView(ListView):
                 [ utils.move_to_trash(song.get("uri")) for song in songs if song.get_type() != "cue" ]
             self.delete_select_items()            
         return True    
+    
+    def try_move_trash(self):
+        ConfirmDialog(_("Prompt"), _("Are you sure you want to delete them?"), 
+                      confirm_callback=lambda : self.remove_songs(True)).show_all()
 
     def popup_right_menu(self, widget, x, y, item, select_items):
         menu_items = [
@@ -747,7 +756,7 @@ class MultiDragSongView(ListView):
             (None, _("Add to Playlist"), self.emit_to_playlist),
             None,
             (None, _("Remove from Library"), self.remove_songs),
-            (None, _("Move to Trash"), self.remove_songs, True),
+            (None, _("Move to Trash"), lambda : self.try_move_trash()),
             None,
             (None, _("Open Directory"), self.open_song_dir),
             (None, _("Convert"), self.songs_convert),

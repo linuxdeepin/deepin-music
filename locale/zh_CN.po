@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-04 15:58+0800\n"
+"POT-Creation-Date: 2013-03-05 15:42+0800\n"
 "PO-Revision-Date: 2012-12-29 11:33+0800\n"
 "Last-Translator: SmallEvilBeast <houshao55@gmail.com>\n"
 "Language-Team: none\n"
@@ -303,7 +303,7 @@ msgstr "重置"
 msgid "Select image"
 msgstr "选择图片"
 
-#: ../src/widget/song_editor.py:326 ../src/widget/song_view.py:754
+#: ../src/widget/song_editor.py:326 ../src/widget/song_view.py:763
 #: ../src/widget/playlist.py:529
 msgid "Properties"
 msgstr "属性"
@@ -452,7 +452,7 @@ msgid "Clear List"
 msgstr "清空列表"
 
 #: ../src/widget/webcast_view.py:119 ../src/widget/webcast_view.py:338
-#: ../src/widget/instance.py:318 ../src/widget/song_view.py:746
+#: ../src/widget/instance.py:318 ../src/widget/song_view.py:755
 #: ../src/widget/playlist.py:517 ../src/widget/tray.py:56
 #: ../plugins/musicfm/radio_view.py:134
 msgid "Play"
@@ -467,7 +467,7 @@ msgid "Add to Favorites"
 msgstr "添加到收藏"
 
 #: ../src/widget/webcast_view.py:333 ../src/widget/webcast_view.py:339
-#: ../src/widget/song_view.py:747
+#: ../src/widget/song_view.py:756
 msgid "Add to Playlist"
 msgstr "添加到播放列表"
 
@@ -476,7 +476,7 @@ msgstr "添加到播放列表"
 msgid "Radio"
 msgstr "网络广播"
 
-#: ../src/widget/global_search.py:48 ../src/widget/song_view.py:785
+#: ../src/widget/global_search.py:48 ../src/widget/song_view.py:794
 #: ../src/widget/local_tab.py:28
 msgid "Library"
 msgstr "本地音乐"
@@ -519,20 +519,20 @@ msgstr "作者"
 msgid "Minimize to tray"
 msgstr "最小化到托盘"
 
-#: ../src/widget/ui.py:1152 ../src/widget/preference.py:196
+#: ../src/widget/ui.py:1151 ../src/widget/preference.py:196
 #: ../src/widget/instance.py:370 ../src/widget/tray.py:78
 msgid "Quit"
 msgstr "退出"
 
-#: ../src/widget/ui.py:1157
+#: ../src/widget/ui.py:1155
 msgid "Don't prompted again"
 msgstr "下次不再提示"
 
-#: ../src/widget/ui.py:1164
+#: ../src/widget/ui.py:1162
 msgid "OK"
 msgstr "确定"
 
-#: ../src/widget/ui.py:1167
+#: ../src/widget/ui.py:1165
 msgid "Cancel"
 msgstr "取消"
 
@@ -544,7 +544,8 @@ msgstr "暂停/继续"
 msgid "Show/Hide Lyrics"
 msgstr "打开/关闭歌词"
 
-#: ../src/widget/converter.py:297
+#: ../src/widget/converter.py:297 ../src/widget/song_view.py:399
+#: ../src/widget/song_view.py:750 ../src/widget/local_browser.py:332
 msgid "Prompt"
 msgstr "提示"
 
@@ -575,7 +576,7 @@ msgid "Continue"
 msgstr "继续"
 
 #: ../src/widget/converter.py:415 ../src/widget/instance.py:338
-#: ../src/widget/instance.py:360 ../src/widget/song_view.py:753
+#: ../src/widget/instance.py:360 ../src/widget/song_view.py:762
 #: ../src/widget/playlist.py:527
 msgid "Convert"
 msgstr "格式转换器"
@@ -707,19 +708,19 @@ msgstr "右对齐"
 msgid "Justified"
 msgstr "两端对齐"
 
-#: ../src/widget/preference.py:624 ../src/widget/lyrics_module.py:403
+#: ../src/widget/preference.py:624 ../src/widget/lyrics_module.py:411
 msgid "Vitality yellow"
 msgstr "活力黄"
 
-#: ../src/widget/preference.py:625 ../src/widget/lyrics_module.py:404
+#: ../src/widget/preference.py:625 ../src/widget/lyrics_module.py:412
 msgid "Fresh green"
 msgstr "清新绿"
 
-#: ../src/widget/preference.py:626 ../src/widget/lyrics_module.py:405
+#: ../src/widget/preference.py:626 ../src/widget/lyrics_module.py:413
 msgid "Playful pink"
 msgstr "俏皮粉"
 
-#: ../src/widget/preference.py:627 ../src/widget/lyrics_module.py:406
+#: ../src/widget/preference.py:627 ../src/widget/lyrics_module.py:414
 msgid "Cool blue"
 msgstr "清爽蓝"
 
@@ -909,60 +910,65 @@ msgstr "普通模式"
 msgid "jobs waiting!"
 msgstr "个任务在等待!"
 
-#: ../src/widget/song_view.py:437
+#: ../src/widget/song_view.py:399 ../src/widget/song_view.py:750
+#: ../src/widget/local_browser.py:332
+msgid "Are you sure you want to delete them?"
+msgstr "您确定要删除吗?"
+
+#: ../src/widget/song_view.py:442
 msgid "Repeat(single)"
 msgstr "单曲循环"
 
-#: ../src/widget/song_view.py:438
+#: ../src/widget/song_view.py:443
 msgid "Play(ordered)"
 msgstr "顺序播放"
 
-#: ../src/widget/song_view.py:439
+#: ../src/widget/song_view.py:444
 msgid "Repeat(list)"
 msgstr "列表循环"
 
-#: ../src/widget/song_view.py:440
+#: ../src/widget/song_view.py:445
 msgid "Random"
 msgstr "随机排序"
 
-#: ../src/widget/song_view.py:463
+#: ../src/widget/song_view.py:468
 msgid "Remove Track from this List"
 msgstr "删除选中歌曲"
 
-#: ../src/widget/song_view.py:464
+#: ../src/widget/song_view.py:469
 msgid "Remove Unavailable Tracks"
 msgstr "删除错误歌曲"
 
-#: ../src/widget/song_view.py:465 ../src/widget/song_view.py:750
-#: ../src/widget/playlist.py:522
+#: ../src/widget/song_view.py:470 ../src/widget/song_view.py:759
+#: ../src/widget/local_browser.py:342 ../src/widget/playlist.py:522
 msgid "Move to Trash"
 msgstr "移动到回收站"
 
-#: ../src/widget/song_view.py:466
+#: ../src/widget/song_view.py:471
 msgid "Clear list"
 msgstr "清空列表"
 
-#: ../src/widget/song_view.py:479 ../src/widget/song_view.py:487
+#: ../src/widget/song_view.py:484 ../src/widget/song_view.py:492
 msgid "File"
 msgstr "文件"
 
-#: ../src/widget/song_view.py:480 ../src/widget/song_view.py:488
+#: ../src/widget/song_view.py:485 ../src/widget/song_view.py:493
 msgid "Directory(include subdirectories)"
 msgstr "文件夹(包含子目录)"
 
-#: ../src/widget/song_view.py:481 ../src/widget/song_view.py:489
+#: ../src/widget/song_view.py:486 ../src/widget/song_view.py:494
 msgid "Directory"
 msgstr "文件夹"
 
-#: ../src/widget/song_view.py:499
+#: ../src/widget/song_view.py:504
 msgid "Add URL"
 msgstr "添加指定URL"
 
-#: ../src/widget/song_view.py:749
+#: ../src/widget/song_view.py:758 ../src/widget/local_browser.py:341
 msgid "Remove from Library"
 msgstr "从歌曲库中移除"
 
-#: ../src/widget/song_view.py:752
+#: ../src/widget/song_view.py:761 ../src/widget/local_browser.py:347
 msgid "Open Directory"
 msgstr "打开目录"
 
@@ -974,43 +980,55 @@ msgstr "版本"
 msgid "Enable"
 msgstr "启用"
 
-#: ../src/widget/local_browser.py:77 ../src/widget/local_browser.py:170
+#: ../src/widget/local_browser.py:81 ../src/widget/local_browser.py:175
 #: ../src/widget/lyrics_search.py:84 ../plugins/notify/__init__.py:43
 msgid "Artist"
 msgstr "艺术家"
 
-#: ../src/widget/local_browser.py:79 ../src/widget/local_browser.py:170
+#: ../src/widget/local_browser.py:83 ../src/widget/local_browser.py:175
 #: ../plugins/notify/__init__.py:45
 msgid "Album"
 msgstr "专辑"
 
-#: ../src/widget/local_browser.py:81 ../src/widget/webcasts_browser.py:99
+#: ../src/widget/local_browser.py:85 ../src/widget/webcasts_browser.py:99
 msgid "Genre"
 msgstr "流派"
 
-#: ../src/widget/local_browser.py:83
+#: ../src/widget/local_browser.py:87
 msgid "Folder"
 msgstr "文件夹"
 
-#: ../src/widget/local_browser.py:90
+#: ../src/widget/local_browser.py:94
 msgid "Scan Home Directory"
 msgstr "扫描主目录"
 
-#: ../src/widget/local_browser.py:91
+#: ../src/widget/local_browser.py:95
 msgid "Select Directory to Scan"
 msgstr "扫描指定目录"
 
-#: ../src/widget/local_browser.py:92
+#: ../src/widget/local_browser.py:96
 msgid "Refresh Library"
 msgstr "刷新歌曲库"
 
-#: ../src/widget/local_browser.py:170 ../src/widget/lyrics_search.py:84
+#: ../src/widget/local_browser.py:175 ../src/widget/lyrics_search.py:84
 msgid "Title"
 msgstr "标题"
 
-#: ../src/widget/local_browser.py:170
+#: ../src/widget/local_browser.py:175
 msgid "Added time"
 msgstr "添加时间"
+
+#: ../src/widget/local_browser.py:338
+msgid "Play All"
+msgstr "播放全部"
+
+#: ../src/widget/local_browser.py:339 ../src/widget/playlist.py:518
+msgid "Add to List"
+msgstr "添加到列表"
+
+#: ../src/widget/local_browser.py:349
+msgid "Change Cover"
+msgstr "更改封面"
 
 #: ../src/widget/playlist.py:78
 msgid "Search in Current Playlist"
@@ -1087,10 +1105,6 @@ msgstr "按添加时间"
 #: ../src/widget/playlist.py:513
 msgid "Randomize"
 msgstr "随机排序"
-
-#: ../src/widget/playlist.py:518
-msgid "Add to List"
-msgstr "添加到列表"
 
 #: ../src/widget/playlist.py:519
 msgid "move to List"
@@ -1177,11 +1191,11 @@ msgstr "调整歌词"
 msgid "Choose local lrc"
 msgstr "关联本地歌词"
 
-#: ../src/widget/lyrics_module.py:734 ../src/widget/lyrics_module.py:735
+#: ../src/widget/lyrics_module.py:742 ../src/widget/lyrics_module.py:743
 msgid "No lyrics found!"
 msgstr "没有找到歌词文件!"
 
-#: ../src/widget/lyrics_module.py:737 ../src/widget/lyrics_module.py:738
+#: ../src/widget/lyrics_module.py:745 ../src/widget/lyrics_module.py:746
 msgid "Searching for lyrics"
 msgstr "正在搜索歌词..."
 

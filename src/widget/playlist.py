@@ -519,7 +519,7 @@ class PlaylistUI(gtk.VBox):
                                  (None, _("move to List"), move_to_list_menu),
                                  None,
                                  (None, _("Remove Track"), self.current_item.song_view.remove_select_items),
-                                 (None, _("Move to Trash"), self.current_item.song_view.move_to_trash),
+                                 (None, _("Move to Trash"), self.current_item.song_view.try_move_trash),
                                  (None, _("Clear List"), self.current_item.song_view.erase_items),
                                  None,
                                  (None, _("Playback Order"), play_mode_menu),
