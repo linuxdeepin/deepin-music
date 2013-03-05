@@ -350,7 +350,7 @@ class Browser(gtk.VBox, SignalContainer):
             ]
         
         if item.tag == "folder":
-            menu_items.append((None, _("Open Directory"), lambda : utils.open_file_directory(item.value_name)))
+            menu_items.append((None, _("Open Directory"), lambda : utils.open_directory(item.value_name)))
         elif item.tag in ["artist", "album"] and item.key_name != "deepin-all-songs":    
             menu_items.append((None, _("Change Cover"), lambda : self.change_item_cover(item)))
         else:    
