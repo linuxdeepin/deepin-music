@@ -175,7 +175,7 @@ class DeepinCoverManager(Logger):
     def get_cover_path(self, song_or_name):
         if isinstance(song_or_name, Song):
             return get_cache_file("cover/" + self.get_cover_search_str(song_or_name) + ".jpg")
-        return get_cache_file("cover/%s.jpg" % song_or_name)
+        return get_cache_file("cover/%s.jpg" % song_or_name.replace("/", ""))
     
     def get_pixbuf_from_song(self, song, x, y, try_web=True, optimum=True):
         filename = self.get_cover(song, try_web)
@@ -331,6 +331,7 @@ class DeepinCoverManager(Logger):
         if not os.path.exists(new_cover):
             return False
         
+        print save_path
         try:
             pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(new_cover, COVER_SAVE_SIZE["x"], COVER_SAVE_SIZE["y"])
         except gobject.GError:    
