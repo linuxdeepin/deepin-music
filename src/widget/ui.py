@@ -1152,8 +1152,8 @@ class QuitDialog(DialogBox):
         
         radio_group.pack_start(self.minimize_radio, False, True)
         radio_group.pack_start(self.quit_radio, False, True)
-        remembar_button = CheckButton(_("Don't prompted again"))
-        remembar_button.connect("toggled", self.on_remembar_button_toggled)
+        self.remembar_button = CheckButton(_("Don't prompted again"))
+        self.remembar_button.set_active(True)
         
         radio_group_align = gtk.Alignment()
         radio_group_align.set_padding(30, 0, 10, 0)
@@ -1167,7 +1167,7 @@ class QuitDialog(DialogBox):
         
         # Connect widgets.
         self.body_box.pack_start(radio_group_align, False, True)
-        self.left_button_box.set_buttons([remembar_button,])
+        self.left_button_box.set_buttons([self.remembar_button,])
         self.right_button_box.set_buttons([confirm_button, cancel_button])
         
     def on_confirm_button_clicked(self, widget):    
@@ -1186,9 +1186,8 @@ class QuitDialog(DialogBox):
         elif self.quit_radio.get_active():    
             status = "false"
         config.set("setting", "close_to_tray", status)
-            
-    def on_remembar_button_toggled(self, widget):    
-        if widget.get_active():
+        
+        if self.remembar_button.get_active():
             status = "true"
         else:    
             status = "false"

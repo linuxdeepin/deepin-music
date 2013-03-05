@@ -331,7 +331,6 @@ class DeepinCoverManager(Logger):
         if not os.path.exists(new_cover):
             return False
         
-        print save_path
         try:
             pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(new_cover, COVER_SAVE_SIZE["x"], COVER_SAVE_SIZE["y"])
         except gobject.GError:    
