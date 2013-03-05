@@ -129,7 +129,7 @@ class Config(gobject.GObject, Logger):
                 "auto_download" : "true",
                 "font_name" : "文泉驿微米黑",
                 "font_type" : "Regular",
-                "font_size" : "25",
+                "font_size" : "18",
                 "locked" : "false",
                 "dock_mode" : "true",
                 "line_count" : "2",
@@ -170,6 +170,7 @@ class Config(gobject.GObject, Logger):
                 "offline" : "false",                
                 "use_tray" : "true",
                 "close_to_tray" : "true",
+                "close_remember" : "false",
                 "use_splash" : "true",
                 "window_mode" : "simple",
                 "app_mode" : "normal",
@@ -197,6 +198,7 @@ class Config(gobject.GObject, Logger):
             
             "plugins" : {
                 "enable" : "",
-                }
+                },
             }
+    
 config = Config()    

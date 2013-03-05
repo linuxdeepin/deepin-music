@@ -28,6 +28,8 @@ import dtk.ui.tooltip as Tooltip
 from dtk.ui.scrolled_window import ScrolledWindow
 from dtk.ui.iconview import IconView
 from dtk.ui.paned import HPaned
+from dtk.ui.menu import Menu
+from dtk.ui.dialog import ConfirmDialog
 
 from library import MediaDB, DBQuery
 from helper import SignalContainer, Dispatcher
@@ -38,10 +40,13 @@ from widget.ui_utils import (switch_tab, draw_alpha_mask,
                              create_right_align, create_separator_box)
 from widget.outlookbar import OptionBar, SongImportBar
 from widget.local_item import LocalItem
+from widget.dialog import WinFile
 
 from source.local import ImportFolderJob, ReloadDBJob
 from widget.combo import  PromptButton
 from nls import _
+
+import utils
 
 class Browser(gtk.VBox, SignalContainer):        
     
@@ -157,6 +162,7 @@ class Browser(gtk.VBox, SignalContainer):
         icon_view.connect("drag-data-get", self.__on_drag_data_get) 
         icon_view.connect("double-click-item", self.__on_double_click_item)
         icon_view.connect("single-click-item", self.__on_single_click_item)
+        icon_view.connect("right-click-item", self.__on_right_click_item)
         
         icon_view.draw_mask  = self.on_iconview_draw_mask
         scrolled_window = ScrolledWindow()
@@ -302,10 +308,55 @@ class Browser(gtk.VBox, SignalContainer):
         
     def __on_single_click_item(self, widget, item, x, y):    
         if item.pointer_in_play_rect(x, y):
-            songs = self.get_item_songs(item)
-            songs = list(songs)
-            songs.sort()
-            Dispatcher.play_and_add_song(songs)
+            self.play_item(item)
+            
+    def play_item(self, item):        
+        songs = self.get_item_songs(item)
+        songs = list(songs)
+        songs.sort()
+        Dispatcher.play_and_add_song(songs)
+        
+    def emit_to_list(self, item):    
+        songs = self.get_item_songs(item)
+        Dispatcher.add_songs(songs)
+        
+    def real_remove_item(self, item, fully=False):    
+        songs = self.get_item_songs(item)
+        MediaDB.remove(songs)
+        
+        if fully:
+            try:
+                [ utils.move_to_trash(song.get("uri")) for song in songs if song.get_type() != "cue" ]
+            except: pass    
+           
+    def try_move_trash(self, item):        
+        ConfirmDialog(_("Prompt"), _("Are you sure you want to delete them?"), 
+                      confirm_callback=lambda : self.real_remove_item(item, True)).show_all()
+        
+    def change_item_cover(self, item):    
+        new_cover_path = WinFile(False, _("Select image")).run()
+        if new_cover_path:
+            item.change_cover_pixbuf(new_cover_path)
+            
+    def __on_right_click_item(self, widget, item, x, y):
+        if not item: return
+        menu_items = [
+            (None, _("Play All"), lambda : self.play_item(item)),
+            (None, _("Add to List"), lambda : self.emit_to_list(item)),
+            None,
+            (None, _("Remove from Library"), lambda : self.real_remove_item(item)),
+            (None, _("Move to Trash"), lambda : self.try_move_trash(item)),
+            None,
+            ]
+        
+        if item.tag == "folder":
+            menu_items.append((None, _("Open Directory"), lambda : utils.open_file_directory(item.value_name)))
+        elif item.tag in ["artist", "album"] and item.key_name != "deepin-all-songs":    
+            menu_items.append((None, _("Change Cover"), lambda : self.change_item_cover(item)))
+        else:    
+            menu_items.pop()
+            
+        Menu(menu_items, True).show((int(x), int(y)))    
         
     def get_item_songs(self, item):    
         if item.tag == "folder":

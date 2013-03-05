@@ -30,13 +30,15 @@ from dtk.ui.utils import (move_window, alpha_color_hex_to_cairo,
                           color_hex_to_cairo, cairo_disable_antialias,
                           propagate_expose, get_content_size)
 from dtk.ui.new_entry import InputEntry, Entry
-from dtk.ui.button import ImageButton
+from dtk.ui.button import ImageButton, RadioButton, CheckButton, Button
 from dtk.ui.draw import draw_pixbuf, draw_text, draw_vlinear
+from dtk.ui.dialog import DialogBox, DIALOG_MASK_SINGLE_PAGE
 from widget.skin import app_theme
 from widget.ui_utils import draw_alpha_mask, draw_line, set_widget_gravity, is_in_rect
 
 from constant import EMPTY_WEBCAST_ITEM, EMPTY_RADIO_ITEM
 from nls import _
+from config import config
 
 import utils
 
@@ -1131,3 +1133,62 @@ class PluginInfos(gtk.EventBox):
     def update_info(self, plugin_info):
         self.plugin_info = plugin_info
         self.queue_draw()
+        
+class QuitDialog(DialogBox):        
+    
+    def __init__(self, confirm_callback=None):
+        DialogBox.__init__(self, 
+                           title=_("Close"),
+                           default_width=360,
+                           default_height=145,
+                           mask_type=DIALOG_MASK_SINGLE_PAGE,
+                           )
+        
+        self.confirm_callback = confirm_callback
+        radio_group = gtk.HBox(spacing=50)
+        self.minimize_radio = RadioButton(_("Minimize to tray"))
+        self.minimize_radio.set_active(True)
+        self.quit_radio = RadioButton(_("Quit"))
+        
+        radio_group.pack_start(self.minimize_radio, False, True)
+        radio_group.pack_start(self.quit_radio, False, True)
+        self.remembar_button = CheckButton(_("Don't prompted again"))
+        self.remembar_button.set_active(True)
+        
+        radio_group_align = gtk.Alignment()
+        radio_group_align.set_padding(30, 0, 10, 0)
+        radio_group_align.add(radio_group)
+                
+        confirm_button = Button(_("OK"))
+        confirm_button.connect("clicked", self.on_confirm_button_clicked)
+
+        cancel_button = Button(_("Cancel"))
+        cancel_button.connect("clicked", self.on_cancel_button_clicked)        
+        
+        # Connect widgets.
+        self.body_box.pack_start(radio_group_align, False, True)
+        self.left_button_box.set_buttons([self.remembar_button,])
+        self.right_button_box.set_buttons([confirm_button, cancel_button])
+        
+    def on_confirm_button_clicked(self, widget):    
+        self.change_quit_status()
+        if self.confirm_callback != None:
+            self.confirm_callback()
+        self.destroy()    
+    
+    def on_cancel_button_clicked(self, widget):
+        self.destroy()
+        
+    def change_quit_status(self):    
+        status = "false"
+        if self.minimize_radio.get_active():
+            status = "true"
+        elif self.quit_radio.get_active():    
+            status = "false"
+        config.set("setting", "close_to_tray", status)
+        
+        if self.remembar_button.get_active():
+            status = "true"
+        else:    
+            status = "false"
+        config.set("setting", "close_remember", status)    

@@ -23,13 +23,13 @@
 import gtk
 import gobject
 import os
-import time
 from dtk.ui.application import Application
 from dtk.ui.menu import Menu
 from dtk.ui.button import ToggleButton
 from dtk.ui.slider import Wizard
 from deepin_utils.file import get_parent_dir
 from dtk.ui.button import LinkButton
+from dtk.ui.dialog import ConfirmDialog
 
 from widget.skin import app_theme
 from widget.headerbar import SimpleHeadbar
@@ -46,6 +46,7 @@ from widget.dialog import WinFile
 from widget.converter import AttributesUI, convert_task_manager
 from widget.mini import MiniWindow
 from widget.playlist import playlist_ui
+from widget.ui import QuitDialog
 
 import plugins
 from constant import (FULL_DEFAULT_WIDTH, FULL_DEFAULT_HEIGHT,
@@ -81,7 +82,7 @@ class DeepinMusic(gobject.GObject, Logger):
     def __init__(self):
         gobject.GObject.__init__(self)
         application = Application("DMuisc")
-        application.close_callback = self.quit
+        application.close_callback = self.prompt_quit
         application.set_icon(app_theme.get_pixbuf("skin/logo.ico"))
         application.set_skin_preview(app_theme.get_pixbuf("frame.png"))
         application.add_titlebar(
@@ -192,7 +193,6 @@ class DeepinMusic(gobject.GObject, Logger):
         Dispatcher.connect("show-scroll-page", lambda w: self.preference_dialog.show_scroll_lyrics_page())
         Dispatcher.connect("show-job", self.hide_link_box)
         Dispatcher.connect("hide-job", self.show_link_box)
-
         
         gobject.idle_add(self.ready)
         
@@ -205,6 +205,12 @@ class DeepinMusic(gobject.GObject, Logger):
         if config.get("setting", "close_to_tray") == "false" or self.tray_icon == None:
             self.force_quit()
         return True
+    
+    def prompt_quit(self, *param):
+        if config.get("setting", "close_remember") != "true":
+            QuitDialog(lambda : self.quit()).show_all()
+        else:    
+            self.quit()    
             
     def ready(self, show=True):    
         first_started =  config.get("setting", "first_started", "")        
@@ -213,7 +219,6 @@ class DeepinMusic(gobject.GObject, Logger):
             
 
         self.emit("ready")
-        
         # wizard
         if not first_started:
             self.show_wizard_win(self.ready_show)
