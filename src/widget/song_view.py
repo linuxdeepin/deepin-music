@@ -96,6 +96,12 @@ class SongView(ListView):
         self.hide_column_flag = value
         self.queue_draw()
         
+    def set_current_source(self):    
+        if Player.get_source() != self:
+            Player.set_source(self)
+            Dispatcher.emit("save_current_list")
+        
+        
     def double_click_item_cb(self, widget, item, colume, x, y):    
         self.reset_error_items()
         if item:
@@ -103,8 +109,7 @@ class SongView(ListView):
             if song.exists():
                 self.set_highlight(item)                
                 Player.play_new(item.get_song(), seek=item.get_song().get("seek", None))
-                if Player.get_source() != self:
-                    Player.set_source(self)
+                self.set_current_source()
             else:        
                 pass
                 
@@ -275,6 +280,7 @@ class SongView(ListView):
                 self.queue_draw()
                 self.set_highlight_song(songs[0])
                 Player.play_new(self.highlight_item.get_song(), seek=self.highlight_item.get_song().get("seek", 0))
+                self.set_current_source()
             
     def emit_add_signal(self):
         self.emit("begin-add-items")
@@ -349,6 +355,7 @@ class SongView(ListView):
                 self.highlight_item = self.items[self.select_rows[0]]
                 Player.play_new(self.highlight_item.get_song(), 
                                 seek=self.highlight_item.get_song().get("seek", None))
+                self.set_current_source()
     
     def remove_select_items(self):
         self.delete_select_items()
