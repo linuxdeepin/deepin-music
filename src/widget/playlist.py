@@ -123,6 +123,7 @@ class PlaylistUI(gtk.VBox):
         Dispatcher.connect("add-songs", self.__add_songs_to_list)
         Dispatcher.connect("new-cd-playlist", self.__new_audiocd_playlist)
         Dispatcher.connect("del-cd-playlist", self.delete_audiocd_list)
+        Dispatcher.connect("save-current-list", self.save_current_playlist)
         config.connect("config-changed", self.on_config_changed)
         
     def on_config_changed(self, config, section, option, value):    
@@ -534,12 +535,14 @@ class PlaylistUI(gtk.VBox):
             self.detail_menu.set_menu_item_sensitive_by_index(10, False)
         self.detail_menu.show((int(x), int(y)))
         
+        
+    def save_current_playlist(self, *args):    
+        index = self.get_current_item_index()        
+        config.set("playlist","current_index", str(index))
+        
     def save_to_library(self):    
         if self.search_flag:
             self.reset_search_entry()
-            
-        index = self.get_current_item_index()        
-        config.set("playlist","current_index", str(index))
                   
         MediaDB.full_erase_playlists()
         for item in self.category_list.get_items():
