@@ -656,7 +656,7 @@ class DesktopLyrics(gtk.Window):
         if self.mouse_over_lyrics != mouse_over_lyrics:    
             self.mouse_over_lyrics = mouse_over_lyrics
             self.queue_draw()
-        return True    
+        return True      
             
     def set_line_percentage(self, line, percentage):        
         if not self.get_karaoke_mode():

@@ -26,10 +26,9 @@ import os
 from dtk.ui.application import Application
 from dtk.ui.menu import Menu
 from dtk.ui.button import ToggleButton
-from dtk.ui.slider import Wizard
+from dtk.ui.new_slider import Wizard
 from deepin_utils.file import get_parent_dir
 from dtk.ui.button import LinkButton
-from dtk.ui.dialog import ConfirmDialog
 
 from widget.skin import app_theme
 from widget.headerbar import SimpleHeadbar
@@ -71,6 +70,7 @@ def mainloop():
 
 (lang, encode) = locale.getdefaultlocale()
 wizard_dir = os.path.join(get_parent_dir(__file__, 3), "wizard/en")    
+wizard_root_dir = os.path.dirname(wizard_dir)
 if lang == "zh_CN":
     wizard_dir = os.path.join(get_parent_dir(__file__, 3), "wizard/zh_CN")    
 elif lang in ["zh_HK", "zh_TW"]:
@@ -373,15 +373,10 @@ class DeepinMusic(gobject.GObject, Logger):
         
     def show_wizard_win(self, callback=None):    
         Wizard(
-            [os.path.join(wizard_dir, "first_content.png"),
-             os.path.join(wizard_dir, "second_content.png"),
-             os.path.join(wizard_dir, "three_content.png"),
-             os.path.join(wizard_dir, "four_content.png")],
-            [(os.path.join(wizard_dir, "first_press.png"), os.path.join(wizard_dir, "first_normal.png")),
-             (os.path.join(wizard_dir, "second_press.png"), os.path.join(wizard_dir, "second_normal.png")),
-             (os.path.join(wizard_dir, "three_press.png"), os.path.join(wizard_dir, "three_normal.png")),
-             (os.path.join(wizard_dir, "four_press.png"), os.path.join(wizard_dir, "four_normal.png")),
-             ], 
+            [os.path.join(wizard_dir, "%d.png" % i) for i in range(3)],
+            (os.path.join(wizard_root_dir, "dot_normal.png"),
+             os.path.join(wizard_root_dir, "dot_active.png"),             
+             ),
             callback
             ).show_all()
         
