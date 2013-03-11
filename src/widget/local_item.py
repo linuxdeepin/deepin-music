@@ -25,7 +25,7 @@ import gtk
 import gobject
 
 from dtk.ui.draw import draw_pixbuf
-from dtk.ui.thread_pool import MissionThread
+# from dtk.ui.thread_pool import MissionThread
 
 from widget.skin import app_theme
 from widget.ui_utils import (render_text)
@@ -35,7 +35,7 @@ from nls import _
 
 import utils
 
-class LocalItem(gobject.GObject, MissionThread):
+class LocalItem(gobject.GObject):
     
     __gsignals__ = { "redraw-request" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),}
     
@@ -43,7 +43,7 @@ class LocalItem(gobject.GObject, MissionThread):
         
         # Init gobject.
         gobject.GObject.__init__(self)
-        MissionThread.__init__(self)
+        # MissionThread.__init__(self)
         
         # Get tuple values.
         self.key_name, self.value_name, nums, self.tag = _tuple

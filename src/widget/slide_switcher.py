@@ -284,7 +284,7 @@ class SlideSwitcher(gtk.EventBox):
     def start_auto_slide(self):
         self.auto_slide_timeout_id = gtk.timeout_add(self.auto_slide_timeout, lambda : self.start_animation(self.auto_slide_timeout))
         
-    def update_animation(self, source, status):    
+    def update_animation(self, source, status):   
         self.active_alpha = 1.0 - status
         self.target_alpha = status
         self.queue_draw()

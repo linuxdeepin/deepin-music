@@ -418,7 +418,7 @@ class Browser(gtk.VBox, SignalContainer):
             value, nb = _dict[key]
             items.append(LocalItem((key, value, nb, tag)))
         return items    
-        
+    
     def switch_filter_view(self, tag):    
         
         # clear search entry
