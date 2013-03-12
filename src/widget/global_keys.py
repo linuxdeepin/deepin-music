@@ -1,11 +1,11 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2011 ~ 2012 Deepin, Inc.
-#               2011 ~ 2012 Hou Shaohui
+# Copyright (C) 2011 ~ 2013 Deepin, Inc.
+#               2011 ~ 2013 Hou ShaoHui
 # 
-# Author:     Hou Shaohui <houshao55@gmail.com>
-# Maintainer: Hou Shaohui <houshao55@gmail.com>
+# Author:     Hou ShaoHui <houshao55@gmail.com>
+# Maintainer: Hou ShaoHui <houshao55@gmail.com>
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -29,7 +29,10 @@ from helper import Dispatcher
 from player import Player
 from logger import Logger
 from config import config
+from dbus_notify import dbus_notify
+from nls import _
 import utils
+
 
 def toggle_window():
     instance = utils.get_main_window()
@@ -76,20 +79,23 @@ class GlobalHotKeys(Logger):
         self.logdebug(text)
         callback()
     
-    def __bind(self, key, field):
-        key = deepin_to_keybinder(key)
+    def __bind(self, raw_key, field):
+        key = deepin_to_keybinder(raw_key)
         try:
             self.__try_unbind(key)
         except:    
             pass
         
         try:
-            keybinder.bind(key, lambda : self.__handle_callback(key, 
-                                                                 self.func[field]))
+            result = keybinder.bind(key, lambda : self.__handle_callback(key, self.func[field]))
         except:    
-            self.logdebug("Bound %s failed!" % key)
+            result = False
         else:    
-            self.logdebug("Bound %s" % key)
+            if not result:
+                dbus_notify.set_summary(_("Deepin Music"))
+                dbus_notify.set_body(_("Binding %s failed!") % utils.xmlescape(raw_key))
+                dbus_notify.notify()
+        return result    
         
     def __try_unbind(self, key):
         key = deepin_to_keybinder(key)
