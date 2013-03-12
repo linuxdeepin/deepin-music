@@ -298,15 +298,15 @@ class HotKeySetting(gtk.VBox):
         self.increase_vol_entry.connect("shortcut-key-change", self.change_increase_vol_key)
         self.decrease_vol_entry.connect("shortcut-key-change", self.change_decrease_vol_key)
         
-        for each_entry in self.control_entrys:
-            each_entry.connect("wait-key-input", lambda w, d: self.pause_global_keys())
+        # for each_entry in self.control_entrys:
+        #     each_entry.connect("wait-key-input", lambda w, d: self.pause_global_keys())
         
         if not config.getboolean("globalkey", "enable"):
             for each_entry in self.control_entrys:
                 each_entry.set_sensitive(False)
                 
-    def pause_global_keys(self):            
-        global_hotkeys.pause()
+    # def pause_global_keys(self):            
+    #     global_hotkeys.stop_bind()
                 
     def change_enbale_status(self, widget):    
         if widget.get_active():
@@ -320,35 +320,27 @@ class HotKeySetting(gtk.VBox):
             
     def change_toggle_window_key(self, widget, value):    
         config.set("globalkey", "toggle_window", value)
-        global_hotkeys.play()
         
     def change_lyrics_status_key(self, widget, value):    
         config.set("globalkey", "toggle_lyrics_status", value) 
-        global_hotkeys.play()
        
     def change_lyrics_lock_key(self, widget, value):    
         config.set("globalkey", "toggle_lyrics_lock", value) 
-        global_hotkeys.play()
        
     def change_playpause_key(self, widget, value):    
         config.set("globalkey", "playpause", value)
-        global_hotkeys.play()
         
     def change_previous_key(self, widget, value):    
         config.set("globalkey", "previous", value)
-        global_hotkeys.play()
         
     def change_next_key(self, widget, value):    
         config.set("globalkey", "next", value)
-        global_hotkeys.play() 
        
     def change_increase_vol_key(self, widget, value):    
         config.set("globalkey", "increase_vol", value)
-        global_hotkeys.play()
         
     def change_decrease_vol_key(self, widget, value):    
         config.set("globalkey", "decrease_vol", value)
-        global_hotkeys.play()
         
     def create_hotkey_box(self):    
         hotkey_title_label = Label(_("Hotkeys"))
@@ -388,14 +380,14 @@ class HotKeySetting(gtk.VBox):
         self.main_table.attach(button_hbox, 0, 2, 11, 12, xpadding=10)
         
     def restore_to_default(self, widget):    
-        self.toggle_window_entry.set_shortcut_key("Ctrl + Alt + W")        
-        self.change_toggle_window_key(None, "Ctrl + Alt + w")
+        self.toggle_window_entry.set_shortcut_key("Alt + W")        
+        self.change_toggle_window_key(None, "Alt + W")
         
-        self.toggle_lyrics_status_entry.set_shortcut_key("Ctrl + Alt + H")
-        self.change_lyrics_status_key(None, "Ctrl + Alt + H")
+        self.toggle_lyrics_status_entry.set_shortcut_key("Alt + H")
+        self.change_lyrics_status_key(None, "Alt + H")
         
-        self.toggle_lyrics_lock_entry.set_shortcut_key("Ctrl + Alt + D")
-        self.change_lyrics_lock_key(None, "Ctrl + Alt + D")
+        self.toggle_lyrics_lock_entry.set_shortcut_key("Alt + U")
+        self.change_lyrics_lock_key(None, "Alt + U")
         
         self.playpause_entry.set_shortcut_key("Alt + F5")
         self.change_playpause_key(None, "Alt + F5")        

@@ -191,9 +191,9 @@ class Config(gobject.GObject, Logger):
                 "playpause"          : "Alt + F5",
                 "increase_vol"        : "Alt + Up",
                 "decrease_vol"        : "Alt + Down",
-                "toggle_window"      : "Ctrl + Alt + W",
-                "toggle_lyrics_lock" : "Ctrl + Alt + D",
-                "toggle_lyrics_status" : "Ctrl + Alt + H",
+                "toggle_window"      : "Alt + W",
+                "toggle_lyrics_lock" : "Alt + U",
+                "toggle_lyrics_status" : "Alt + H",
                 },
             
             "plugins" : {

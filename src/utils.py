@@ -1,11 +1,11 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2011 ~ 2012 Deepin, Inc.
-#               2011 ~ 2012 Hou Shaohui
+# Copyright (C) 2011 ~ 2013 Deepin, Inc.
+#               2011 ~ 2013 Hou ShaoHui
 # 
-# Author:     Hou Shaohui <houshao55@gmail.com>
-# Maintainer: Hou Shaohui <houshao55@gmail.com>
+# Author:     Hou ShaoHui <houshao55@gmail.com>
+# Maintainer: Hou ShaoHui <houshao55@gmail.com>
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
