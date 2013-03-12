@@ -32,7 +32,7 @@ from xdg_support import get_config_file
 import utils
 
 
-AUTOSAVE_TIMEOUT = 1000 * 60 * 5 # 5min
+AUTOSAVE_TIMEOUT = 1000 * 60 # 1min
 SIGNAL_DB_QUERY_FIRED = 50
 DEFAULT_DB = os.path.join((os.path.dirname(os.path.realpath(__file__))), "data", "all_webcasts.db")
 
