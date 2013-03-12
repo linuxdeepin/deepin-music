@@ -93,7 +93,7 @@ class GlobalHotKeys(Logger):
         else:    
             if not result:
                 dbus_notify.set_summary(_("Deepin Music"))
-                dbus_notify.set_body(_("Binding %s failed!") % utils.xmlescape(raw_key))
+                dbus_notify.set_body(_("Failed to bind %s !") % utils.xmlescape(raw_key))
                 dbus_notify.notify()
         return result    
         
