@@ -21,8 +21,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from dtk.ui.global_key import GlobalKey, enable_global_key, disable_global_key
-from dtk.ui.threads import post_gui
+import keybinder
+
+from dtk.ui.keymap import deepin_to_keybinder
 
 from helper import Dispatcher
 from player import Player
@@ -61,29 +62,29 @@ class GlobalHotKeys(Logger):
     
     def __init__(self):
         config.connect("config-changed", self.__on_config_changed)
-        self.keybinder = GlobalKey()
         
+        self.bind_flag = False
+            
+    def start_bind(self):        
         for field in self.func.keys():
             keystr = config.get("globalkey", field)
             if keystr:
                 self.__bind(keystr, field)
             config.set("globalkey", "%s_last" % field, keystr)    
-            
-        self.keybinder.start()    
-            
-    @post_gui    
+        
     def __handle_callback(self, text, callback):
         self.logdebug(text)
         callback()
     
     def __bind(self, key, field):
+        key = deepin_to_keybinder(key)
         try:
             self.__try_unbind(key)
         except:    
             pass
         
         try:
-            self.keybinder.bind(key, lambda : self.__handle_callback(key, 
+            keybinder.bind(key, lambda : self.__handle_callback(key, 
                                                                  self.func[field]))
         except:    
             self.logdebug("Bound %s failed!" % key)
@@ -91,9 +92,10 @@ class GlobalHotKeys(Logger):
             self.logdebug("Bound %s" % key)
         
     def __try_unbind(self, key):
+        key = deepin_to_keybinder(key)
         try:
             self.logdebug("Unbinding %s" % key)
-            self.keybinder.unbind(key)
+            keybinder.unbind(key)
             self.logdebug("Unbound %s" % key)
         except:    
             self.logdebug("Did not unbind %s" % key)
@@ -112,17 +114,14 @@ class GlobalHotKeys(Logger):
                 
         if section == "globalkey" and option == "enable":        
             if value == "true":
-                self.play()
+                self.start_bind()                
             else:    
-                self.pause()
+                self.stop_bind()
                 
-    def play(self):            
-        enable_global_key()
-        
-    def pause(self):    
-        disable_global_key()
-        
-    def stop(self):    
-        self.keybinder.exit()
+    def stop_bind(self):            
+        for field, _ in self.func.items():
+            key = config.get("globalkey", field, "")
+            if key:
+                self.__try_unbind(key)
         
 global_hotkeys = GlobalHotKeys()        

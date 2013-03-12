@@ -156,8 +156,8 @@ class DeepinMusic(gobject.GObject, Logger):
         application.main_box.pack_start(main_box)        
         application.main_box.pack_start(status_bar, False, True)
         
-        if config.get("globalkey", "enable", "false") == "false":
-            global_hotkeys.pause()
+        if config.get("globalkey", "enable", "false") == "true":
+            global_hotkeys.start_bind()
         
         if config.get("setting", "window_mode") == "simple":
             self.revert_toggle_button.set_active(False)
@@ -248,7 +248,7 @@ class DeepinMusic(gobject.GObject, Logger):
         MediaDB.save()
         WebcastDB.save()
         config.write()
-        global_hotkeys.stop()
+        global_hotkeys.stop_bind()
 
         self.app_destroy()
         gtk.main_quit()
@@ -416,7 +416,7 @@ class DeepinMusic(gobject.GObject, Logger):
             self.window.set_default_size(FULL_DEFAULT_WIDTH, FULL_DEFAULT_HEIGHT)            
             self.window.set_geometry_hints(None, FULL_DEFAULT_WIDTH, FULL_DEFAULT_HEIGHT, -1, -1,  -1, -1, -1, -1, -1, -1)
             self.window.resize(FULL_DEFAULT_WIDTH, FULL_DEFAULT_HEIGHT)
-        Dispatcher.volume(float(config.get("player", "volume", "1.0")))        
+        # Dispatcher.volume(float(config.get("player", "volume", "1.0")))        
         
     def is_disable_window_maximized(self):    
         if config.get("setting", "window_mode") == "simple":
