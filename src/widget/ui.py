@@ -763,6 +763,8 @@ class CoverPopupNotify(Window):
         
         self.set_can_focus(False)
         self.set_accept_focus(False)
+        self.set_skip_taskbar_hint(True)
+        self.set_skip_pager_hint(True)        
         self.info_panel = gtk.EventBox()
         self.info_panel.set_visible_window(False)
         self.set_keep_above(True)
