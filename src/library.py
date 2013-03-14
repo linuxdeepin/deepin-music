@@ -34,7 +34,7 @@ from cue_parser import read_cuesheet, CueException
 import utils
 
 
-AUTOSAVE_TIMEOUT = 1000 * 60 * 5 # 5min
+AUTOSAVE_TIMEOUT = 1000 * 60 # 1min
 SIGNAL_DB_QUERY_FIRED = 50
 
 
