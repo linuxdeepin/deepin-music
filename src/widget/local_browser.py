@@ -74,7 +74,8 @@ class Browser(gtk.VBox, SignalContainer):
         self.folders_view.connect("motion-notify-item", self.on_folders_view_motion_notify)
         
         # Song list for temporarily storing
-        self.songs_view, self.songs_view_sw = self.get_song_view()
+        # self.songs_view, self.songs_view_sw = self.get_song_view()
+        self.songs_view = self.get_song_view()
         
         # Classification navigation bar.
         self.filterbar = OptionBar(
@@ -171,11 +172,12 @@ class Browser(gtk.VBox, SignalContainer):
         return icon_view, scrolled_window
         
     def get_song_view(self):
-        song_view = MultiDragSongView()
+        song_view = MultiDragSongView(has_title=True)
         song_view.keymap.update({"BackSpace" : self.on_songview_backspace_press})        
-        song_view.add_titles([_("Title"), _("Artist"), _("Album"), _("Added time")])
-        scrolled_window = song_view.get_scrolled_window()
-        return song_view, scrolled_window
+        # song_view.add_titles([_("Title"), _("Artist"), _("Album"), _("Added time")])
+        # scrolled_window = song_view.get_scrolled_window()
+        return song_view
+        # return song_view, scrolled_window
     
     def connect_to_db(self):
         self.autoconnect(self.__db_query, "added", self.__on_added_songs)
@@ -270,7 +272,7 @@ class Browser(gtk.VBox, SignalContainer):
         self.songs_view.add_songs(songs)
         
         # todo: switch view mode fixed the back.
-        switch_tab(self.switch_view_box, self.songs_view_sw)
+        switch_tab(self.switch_view_box, self.songs_view)
         
         # show back button.
         self.prompt_button.set_infos((item.pixbuf, item.name_label))
