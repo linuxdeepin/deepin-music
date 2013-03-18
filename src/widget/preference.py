@@ -964,6 +964,7 @@ class PreferenceDialog(DialogBox):
         
         # Category bar
         self.category_bar = TreeView(enable_drag_drop=False, enable_multiple_select=False)
+        self.category_bar.set_expand_column(0)
         self.category_bar.draw_mask = self.draw_treeview_mask
         self.category_bar.set_size_request(132, 516)
         self.category_bar.connect("single-click-item", self.on_categorybar_single_click)
