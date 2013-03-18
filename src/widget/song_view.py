@@ -214,6 +214,11 @@ class SongView(TreeView):
                 each_item.clear_error()
             else:    
                 each_item.set_error()
+                
+    def set_song_items(self, items):            
+        self.add_items(items, clear_first=True)
+        self.update_item_index()
+        self.update_vadjustment()
                         
     def get_manual_song(self):                    
         self.reset_error_items()

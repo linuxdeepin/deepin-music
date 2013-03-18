@@ -37,7 +37,6 @@ from helper import Dispatcher
 from widget.skin import app_theme
 from widget.ui import SearchEntry, PlaymodeButton
 from widget.ui_utils import draw_line
-from widget.song_item import SongItem
 from widget.list_item import ListTreeItem
 from widget.dialog import WindowLoadPlaylist, WindowExportPlaylist, WinDir
 from widget.ui_utils import container_remove_all, draw_alpha_mask
@@ -199,7 +198,7 @@ class PlaylistUI(gtk.VBox):
             
     def search_cb(self, widget, text):        
         if not self.search_flag:
-            self.cache_items = self.current_item.song_view.items[:]
+            self.cache_items = self.current_item.song_view.get_items()
         
         # Clear song_view select status    
         self.current_item.song_view.clear_highlight()
@@ -207,26 +206,14 @@ class PlaylistUI(gtk.VBox):
         
         if text != "":
             self.search_flag = True
-            
             results = filter(lambda item: text.lower().replace(" ", "") in item.get_song().get("search", ""), self.cache_items)
-            self.current_item.song_view.visible_items = results
-            self.current_item.song_view.update_item_index()
-            self.current_item.song_view.update_vadjustment()        
-            
+            self.current_item.song_view.set_song_items(results)
         else:    
             self.search_flag = False
-            self.current_item.song_view.visible_items = self.cache_items
+            self.current_item.song_view.set_song_items(self.cache_items)
+            
             if Player.song:
-                played_item = SongItem(Player.song)
-                if played_item in self.current_item.song_view.items:
-                    index = self.current_item.song_view.items.index(played_item)
-                    self.current_item.song_view.set_highlight_item(self.current_item.song_view.items[index])
-            self.current_item.song_view.update_item_index()
-            self.current_item.song_view.update_vadjustment()        
-            if self.current_item.song_view.highlight_item != None:
-                self.current_item.song_view.visible_highlight()
-                
-        self.current_item.song_view.queue_draw()
+                self.current_item.song_view.set_highlight_song(Player.song)
         
     def parser_delete_items(self, widget, items):    
         if self.search_flag:
@@ -492,9 +479,9 @@ class PlaylistUI(gtk.VBox):
             self.entry_box.show_all()
             self.entry_box.focus_input()
         else:    
+            self.entry_box.hide_all()            
+            self.entry_box.set_no_show_all(True)                        
             self.entry_box.entry.set_text("")
-            self.entry_box.hide_all()
-            self.entry_box.set_no_show_all(True)            
             
     def popup_detail_menu(self, widget, x, y, item, select_items):        
         if self.detail_menu != None:
