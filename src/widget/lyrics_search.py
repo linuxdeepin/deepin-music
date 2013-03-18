@@ -21,7 +21,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import gtk
-import gobject
 from dtk.ui.button import Button
 from dtk.ui.new_entry import InputEntry
 from dtk.ui.utils import get_content_size
@@ -29,10 +28,8 @@ from dtk.ui.dialog import DialogBox, DIALOG_MASK_MULTIPLE_PAGE
 from dtk.ui.threads import post_gui
 from dtk.ui.label import Label
 
-
-from dtk.ui.listview import ListView
-from dtk.ui.scrolled_window import ScrolledWindow
-from widget.ui_utils import render_item_text
+from dtk.ui.new_treeview import TreeView, TreeItem
+from widget.ui_utils import render_item_text, draw_single_mask, draw_alpha_mask
 from lrc_download import TTPlayer, DUOMI, SOSO
 from helper import Dispatcher
 from constant import DEFAULT_FONT_SIZE
@@ -76,14 +73,12 @@ class SearchUI(DialogBox):
         info_box.pack_start(control_box, False, False)
         info_box.pack_start(self.search_button, False, False)
         
-        scrolled_window = ScrolledWindow(0, 0)
-        scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
-        sort_items = [(lambda item: item.title, cmp), (lambda item: item.artist, cmp)]
-        self.result_view = ListView(sort_items)
+        sort_items = [ lambda items, reverse : self.sort_by_key(items, reverse, "title"),
+                       lambda items, reverse : self.sort_by_key(items, reverse, "artist")]
+        self.result_view = TreeView()
         self.result_view.connect("double-click-item", self.double_click_cb)
-        self.result_view.add_titles([_("Title"), _("Artist")])
-        self.result_view.draw_mask = self.get_mask_func(self.result_view)
-        scrolled_window.add_child(self.result_view)
+        self.result_view.set_column_titles([_("Title"), _("Artist")], sort_items)
+        self.result_view.draw_mask = self.draw_view_mask
         
         self.prompt_label = Label("")
         download_button = Button(_("Download"))
@@ -97,10 +92,16 @@ class SearchUI(DialogBox):
         
         self.body_box.set_spacing(5)
         self.body_box.pack_start(info_box_align, False, False)
-        self.body_box.pack_start(scrolled_window, True, True)
+        self.body_box.pack_start(self.result_view, True, True)
         self.left_button_box.set_buttons([self.prompt_label])
         self.right_button_box.set_buttons([download_button, cancel_button])
         self.lrc_manager = LrcManager()
+        
+    def draw_view_mask(self, cr, x, y, width, height):            
+        draw_alpha_mask(cr, x, y, width, height, "layoutMiddle")
+        
+    def sort_by_key(self, items, sort_reverse, sort_key):    
+        return sorted(items, reverse=sort_reverse, key=lambda item: getattr(item, sort_key))
         
     def double_click_cb(self, widget, item, colume, x, y):   
         self.download_lyric_cb(widget)
@@ -141,11 +142,11 @@ class SearchUI(DialogBox):
             else:
                 self.result_view.add_items(items)
 
-            self.prompt_label.set_text(_("%d lyrics found") % len(self.result_view.items))
+            self.prompt_label.set_text(_("%d lyrics found") % len(self.result_view.get_items()))
         else:    
             if last:
-                if len(self.result_view.items) > 0:
-                    self.prompt_label.set_text(_("%d lyrics found") % len(self.result_view.items))
+                if len(self.result_view.get_items()) > 0:
+                    self.prompt_label.set_text(_("%d lyrics found") % len(self.result_view.get_items()))
                 else:
                     self.prompt_label.set_text(_("Not found!"))
                     
@@ -155,7 +156,7 @@ class SearchUI(DialogBox):
         save_filepath = self.lrc_manager.get_lrc_filepath(Player.song)
         if len(select_items) > 0:
             self.prompt_label.set_text(_("Downloading lyrics"))
-            item = self.result_view.items[select_items[0]]
+            item = self.result_view.get_items()[select_items[0]]
             url = item.get_url()
             net_encode = item.get_netcode()
             utils.ThreadRun(utils.download, self.render_download, [url, save_filepath, net_encode]).start()
@@ -169,23 +170,21 @@ class SearchUI(DialogBox):
             self.prompt_label.set_text(_("Fail to download!"))
         
         
-class SearchItem(gobject.GObject):        
-    
-    __gsignals__ = {"redraw-request" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()), }
+class SearchItem(TreeItem):        
 
     def __init__(self, lrc_list):
-        super(SearchItem, self).__init__()
+        TreeItem.__init__(self)
+        
         self.update(lrc_list)
         
-    def set_index(self, index):    
-        self.index = index
-        
-    def get_index(self):    
-        return self.index
+        self.is_highlight = False
+        self.column_index = 0
+        self.default_height = 26
     
     def emit_redraw_request(self):
-        self.emit("redraw-request")
-    
+        if self.redraw_request_callback:
+            self.redraw_request_callback(self)
+            
     def update(self, lrc_list):    
         self.__url = lrc_list[2]
         self.title  = utils.xmlescape(lrc_list[1])
@@ -201,29 +200,56 @@ class SearchItem(gobject.GObject):
         self.artist_padding_y = 5
         (self.artist_width, self.artist_height) = get_content_size(self.artist, DEFAULT_FONT_SIZE)
         
-    def render_title(self, cr, rect, in_select, in_highlight):
+    def render_title(self, cr, rect):
         '''Render title.'''
+        
+        if self.is_select:    
+            draw_single_mask(cr, rect.x, rect.y, rect.width, rect.height, "globalItemHighlight")
+        elif self.is_hover:
+            draw_single_mask(cr, rect.x, rect.y, rect.width, rect.height, "globalItemHover")
+            
         rect.x += self.title_padding_x
         rect.width -= self.title_padding_x * 2
-        render_item_text(cr, self.title, rect, in_select, in_highlight)
+        render_item_text(cr, self.title, rect, self.is_select, self.is_highlight)
     
-    def render_artist(self, cr, rect, in_select, in_highlight):
+    def render_artist(self, cr, rect):
         '''Render artist.'''
+        if self.is_select:    
+            draw_single_mask(cr, rect.x, rect.y, rect.width, rect.height, "globalItemHighlight")
+        elif self.is_hover:
+            draw_single_mask(cr, rect.x, rect.y, rect.width, rect.height, "globalItemHover")
+        
         rect.x += self.artist_padding_x
         rect.width -= self.artist_padding_x * 2
-        render_item_text(cr, self.artist, rect, in_select, in_highlight)
+        render_item_text(cr, self.artist, rect, self.is_select, self.is_highlight)
         
-    def get_column_sizes(self):
+        
+    def get_column_widths(self):
         '''Get sizes.'''
-        return [(260, self.title_height + self.title_padding_y * 2),
-                (160,
-                 self.artist_height + self.artist_padding_y * 2)
-                ]    
+        return (260, 160)
     
-    def get_renders(self):
+    def get_height(self):
+        return self.default_height
+    
+    def get_column_renders(self):
         '''Get render callbacks.'''
-        return [self.render_title,
-                self.render_artist]
+        return (self.render_title, self.render_artist)
+    
+    def unselect(self):
+        self.is_select = False
+        self.emit_redraw_request()
+    
+    def select(self):    
+        self.is_select = True
+        self.emit_redraw_request()
+        
+    def unhover(self, column, offset_x, offset_y):
+        self.is_hover = False
+        self.emit_redraw_request()
+    
+    def hover(self, column, offset_x, offset_y):
+        self.is_hover = True
+        self.emit_redraw_request()
     
     def get_url(self):
         return self.__url

@@ -33,6 +33,8 @@ from widget.completion_window import search_entry, completion_grab_window, compl
 from widget.local_browser import local_browser
 
 
+
+
 class BrowserMananger(gtk.VBox):
     
     def __init__(self):

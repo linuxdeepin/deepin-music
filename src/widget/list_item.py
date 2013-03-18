@@ -54,8 +54,7 @@ class ListTreeItem(TreeItem):
         self.song_view.add_songs(self.playlist.get_songs())
         self.song_view.connect("begin-add-items", lambda w: self.switch_it())
         self.song_view.connect("empty-items", lambda w: self.switch_it(False))
-        self.scrolled_window = self.song_view.get_scrolled_window()
-        self.scrolled_window.set_size_request(PLAYLIST_WIDTH, -1)
+        self.song_view.set_size_request(PLAYLIST_WIDTH, -1)
         
         # Init params.
         self.entry = None
@@ -81,14 +80,14 @@ class ListTreeItem(TreeItem):
         
     def get_list_widget(self):
         if self.get_songs():
-            switch_box(self.main_box, self.scrolled_window)
+            switch_box(self.main_box, self.song_view)
         else:    
             switch_box(self.main_box, self.jobs_main_box)
         return self.main_box    
         
     def switch_it(self, scrolled_window=True):
         if scrolled_window:
-            switch_box(self.main_box, self.scrolled_window)
+            switch_box(self.main_box, self.song_view)
         else:    
             switch_box(self.main_box, self.jobs_main_box)
             

@@ -1,11 +1,11 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2011 ~ 2012 Deepin, Inc.
-#               2011 ~ 2012 Hou Shaohui
+# Copyright (C) 2011 ~ 2013 Deepin, Inc.
+#               2011 ~ 2013 Hou ShaoHui
 # 
-# Author:     Hou Shaohui <houshao55@gmail.com>
-# Maintainer: Hou Shaohui <houshao55@gmail.com>
+# Author:     Hou ShaoHui <houshao55@gmail.com>
+# Maintainer: Hou ShaoHui <houshao55@gmail.com>
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+
 import gtk
 import gobject
 import random
@@ -27,11 +28,10 @@ import time
 import os
 
 from collections import OrderedDict
-from dtk.ui.listview import ListView
+from dtk.ui.new_treeview import TreeView
 from dtk.ui.menu import Menu
 from dtk.ui.threads import post_gui
 from dtk.ui.dialog import InputDialog, ConfirmDialog
-from dtk.ui.scrolled_window import ScrolledWindow
 from dtk.ui.utils import (get_widget_root_coordinate, WIDGET_POS_TOP_LEFT)
 
 import utils
@@ -45,13 +45,14 @@ from widget.song_item import SongItem
 from widget.skin import app_theme
 from widget.song_editor import SongEditor
 from source.local import ImportPlaylistJob
-from widget.ui_utils import draw_single_mask, draw_alpha_mask, switch_tab
+from widget.ui_utils import draw_alpha_mask, switch_tab
 from widget.ui import SearchPrompt
 from widget.converter import AttributesUI
 from widget.song_notify import SongNotify
 from nls import _
 
-class SongView(ListView):
+
+class SongView(TreeView):
     ''' song view. '''
     __gsignals__ = {
         "begin-add-items" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),
@@ -61,7 +62,7 @@ class SongView(ListView):
     
     def __init__(self):
         
-        ListView.__init__(self)        
+        TreeView.__init__(self)        
         targets = [("text/deepin-songs", gtk.TARGET_SAME_APP, 1), ("text/uri-list", 0, 2), ("text/plain", 0, 3)]        
         self.drag_dest_set(gtk.DEST_DEFAULT_MOTION | gtk.DEST_DEFAULT_DROP,
                            targets, gtk.gdk.ACTION_COPY)
@@ -74,10 +75,11 @@ class SongView(ListView):
         self.connect("button-press-event", self.button_press_cb)
         self.connect("delete-select-items", self.try_emit_empty_signal)
         self.connect("motion-notify-item", self.on_motion_notify_item)
-        self.connect("leave-notify-event", self.on_leave_notify_event)
+        self.connect("press-return", self.on_press_return)
+        self.draw_area.connect("leave-notify-event", self.on_leave_notify_event)
         
-        self.set_expand_column(0)
-        self.hide_column([1])
+        self.set_hide_columns([1])
+        self.set_expand_column(None)        
         MediaDB.connect("removed", self.__remove_songs)
         MediaDB.connect("simple-changed", self.__songs_changed)
         
@@ -87,27 +89,33 @@ class SongView(ListView):
         self.delay_notify_item = None
         self.notify_offset_x = 5
         
+
+        
+    @property    
+    def items(self):
+        return self.get_items()
+        
     def try_emit_empty_signal(self, widget, items):    
         if len(self.items) <= 0:
             self.emit("empty-items")
             self.song_notify.hide_notify()
             
-    def set_hide_column(self, value):        
-        self.hide_column_flag = value
-        self.queue_draw()
         
     def set_current_source(self):    
         if Player.get_source() != self:
             Player.set_source(self)
             Dispatcher.emit("save_current_list")
         
+    def on_press_return(self, widget, items):        
+        if items:
+            self.double_click_item_cb(widget, items[0], 0, 0, 0)
         
     def double_click_item_cb(self, widget, item, colume, x, y):    
         self.reset_error_items()
         if item:
             song = item.get_song()
             if song.exists():
-                self.set_highlight(item)                
+                self.set_highlight_item(item)                
                 Player.play_new(item.get_song(), seek=item.get_song().get("seek", None))
                 self.set_current_source()
             else:        
@@ -115,15 +123,6 @@ class SongView(ListView):
                 
     def draw_mask(self, cr, x, y, width, height):            
         draw_alpha_mask(cr, x, y, width, height, "layoutMiddle")
-        
-    def draw_item_hover(self, cr, x, y, w, h):
-        draw_single_mask(cr, x + 1, y, w - 2, h, "globalItemHover")
-        
-    def draw_item_select(self, cr, x, y, w, h):    
-        draw_single_mask(cr, x + 1, y, w - 2, h, "globalItemSelect")
-        
-    def draw_item_highlight(self, cr, x, y, w, h):    
-        draw_single_mask(cr, x + 1, y, w - 2, h, "globalItemHighlight")
          
     def get_songs(self):        
         songs = []
@@ -141,8 +140,6 @@ class SongView(ListView):
         config.set("setting", "loop_mode", value)
         
     def get_previous_song(self):
-        del self.select_rows[:]
-        self.queue_draw()
         self.reset_error_items()
         
         if self.is_empty():
@@ -164,12 +161,10 @@ class SongView(ListView):
                     highlight_item = valid_items[prev_index]    
             else:        
                 highlight_item = valid_items[0]
-            self.set_highlight(highlight_item)    
+            self.set_highlight_item(highlight_item)    
             return highlight_item.get_song()
     
     def get_next_song(self, manual=False):
-        del self.select_rows[:]
-        self.queue_draw()
         self.reset_error_items()
         
         if self.is_empty():
@@ -196,6 +191,7 @@ class SongView(ListView):
                 return self.get_random_song()
             
     def get_order_song(self):        
+        self.reset_error_items()
         valid_items = self.get_valid_items()
         if not valid_items: return None
         
@@ -205,11 +201,14 @@ class SongView(ListView):
                 next_index = current_index + 1
                 if next_index <= len(valid_items) -1:
                     highlight_item = valid_items[next_index]    
-                    self.set_highlight(highlight_item)
+                    self.set_highlight_item(highlight_item)
                     return highlight_item.get_song()
         return None        
             
     def reset_error_items(self):        
+        del self.select_rows[:]
+        self.queue_draw()
+        
         for each_item in self.items:
             if each_item.exists():
                 each_item.clear_error()
@@ -217,6 +216,7 @@ class SongView(ListView):
                 each_item.set_error()
                         
     def get_manual_song(self):                    
+        self.reset_error_items()
         valid_items = self.get_valid_items()
         if not valid_items: return None
         if self.highlight_item:
@@ -230,7 +230,7 @@ class SongView(ListView):
                 highlight_item = valid_items[0]
         else:        
             highlight_item = valid_items[0]
-        self.set_highlight(highlight_item)    
+        self.set_highlight_item(highlight_item)    
         return highlight_item.get_song()
     
     def get_valid_songs(self):
@@ -241,6 +241,8 @@ class SongView(ListView):
         return songs    
     
     def get_random_song(self):
+        self.reset_error_items()
+        
         valid_items = self.get_valid_items()
         if not valid_items: return None
         
@@ -254,7 +256,7 @@ class SongView(ListView):
             remaining = [0]
             
         highlight_item = valid_items[random.choice(list(remaining))]
-        self.set_highlight(highlight_item)
+        self.set_highlight_item(highlight_item)
         return highlight_item.get_song()
     
     def get_valid_items(self):
@@ -268,11 +270,11 @@ class SongView(ListView):
             songs = [ songs ]
 
         song_items = [ SongItem(song) for song in songs if song not in self.get_songs()]
-            
+        
         if song_items:
             if not self.items:
                 self.emit_add_signal()
-            self.add_items(song_items, pos, sort)
+            self.add_items(song_items, pos, False)
             
         if len(songs) >= 1 and play:
             if songs[0].exists():
@@ -344,7 +346,7 @@ class SongView(ListView):
     def set_highlight_song(self, song):        
         if not song: return 
         if SongItem(song) in self.items:
-            self.set_highlight(self.items[self.items.index(SongItem(song))])
+            self.set_highlight_item(self.items[self.items.index(SongItem(song))])
             self.visible_highlight()
             self.queue_draw()
         
@@ -572,14 +574,8 @@ class SongView(ListView):
         if flag:    
             if len(self.get_valid_items()) > 0:
                 item = self.get_valid_items()[0]
-                self.set_highlight(item)
+                self.set_highlight_item(item)
                 Player.play_new(item.get_song(), seek=item.get_song().get("seek", None))
-                
-    def get_scrolled_window(self):   
-        scrolled_window = ScrolledWindow(0, 0)
-        scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
-        scrolled_window.add_child(self)
-        return scrolled_window
     
     def on_motion_notify_item(self, widget, item, column, item_x, item_y):
         if item:
@@ -597,8 +593,8 @@ class SongView(ListView):
         
     def delay_show_notify(self, item):    
         screen_width, screen_height = utils.get_screen_size()
-        view_x, view_y =  self.parent.get_view_window().get_size()
-        (origin_x, origin_y) = get_widget_root_coordinate(self, WIDGET_POS_TOP_LEFT, False)
+        view_x, view_y =  self.scrolled_window.get_child().get_view_window().get_size()
+        (origin_x, origin_y) = get_widget_root_coordinate(self.draw_area, WIDGET_POS_TOP_LEFT, False)
         notify_width = self.song_notify.default_width
         
         if origin_x + view_x + notify_width + self.notify_offset_x > screen_width:
@@ -627,40 +623,44 @@ class SongView(ListView):
             index = 0
             
         return item.height * index    
-            
+    
+    
 
-class MultiDragSongView(ListView):        
-    def __init__(self):
+class MultiDragSongView(TreeView):        
+    
+    def __init__(self, has_title=False):
+        
         targets = [("text/deepin-songs", gtk.TARGET_SAME_APP, 1), ("text/uri-list", 0, 2), ("text/plain", 0, 3)]        
-        ListView.__init__(self, drag_data=(targets, gtk.gdk.ACTION_COPY, 1))
+        TreeView.__init__(self, drag_data=(targets, gtk.gdk.ACTION_COPY, 1))
         
         self.sorts = [
-            (lambda item: item.get_song().get_sortable("title"), cmp),
-            (lambda item: item.get_song().get_sortable("artist"), cmp),
-            (lambda item: item.get_song().get_sortable("album"), cmp),
-            (lambda item: item.get_song().get_sortable("#added"), cmp),
+            lambda items, reverse : self.sort_by_key(items, reverse, "title"),
+            lambda items, reverse : self.sort_by_key(items, reverse, "artist"),
+            lambda items, reverse : self.sort_by_key(items, reverse, "album"),
+            lambda items, reverse : self.sort_by_key(items, reverse, "#added"),
             ]
         
-        sort_key = ["album", "genre", "artist", "title", "#playcount", "#added"]
-        self.sort_reverse = {key : False for key in sort_key }
         del self.keymap["Delete"]
-        
-        self.set_expand_column(0)
         self.connect("drag-data-get", self.__on_drag_data_get) 
         self.connect("double-click-item", self.__on_double_click_item)
         self.connect("right-press-items", self.popup_right_menu)
+        self.connect("press-return", self.__on_press_return)
+        
+        
+        if has_title:
+            self.set_column_titles([_("Title"), _("Artist"), _("Album"), _("Added time")], self.sorts)
+            
+        self.set_expand_column(0)    
+            
+    def sort_by_key(self, items, sort_reverse, sort_key):
+        return sorted(items, reverse=sort_reverse, key=lambda item: item.get_song().get_sortable(sort_key))
+
+    @property    
+    def items(self):
+        return self.get_items()
         
     def draw_mask(self, cr, x, y, width, height):            
         draw_alpha_mask(cr, x, y, width, height, "layoutMiddle")
-        
-    def draw_item_hover(self, cr, x, y, w, h):
-        draw_single_mask(cr, x, y, w, h, "globalItemHover")
-        
-    def draw_item_select(self, cr, x, y, w, h):    
-        draw_single_mask(cr, x, y, w, h, "globalItemSelect")
-        
-    def draw_item_highlight(self, cr, x, y, w, h):    
-        draw_single_mask(cr, x, y, w, h, "globalItemHighlight")
         
     def get_selected_songs(self):    
         songs = []
@@ -677,6 +677,10 @@ class MultiDragSongView(ListView):
         selection.set("text/deepin-songs", 8, "\n".join(list_uris))
         selection.set_uris(list_uris)
         
+    def __on_press_return(self, widget, items):    
+        if items:
+            self.__on_double_click_item(widget, items[0], 0, 0, 0)
+        
     def __on_double_click_item(self, widget, item, colume, x, y):    
         if item:
             Dispatcher.play_and_add_song(item.get_song())
@@ -689,7 +693,7 @@ class MultiDragSongView(ListView):
         song_items = [ SongItem(song, True) for song in songs if song not in self.get_songs() ]    
         
         if song_items:
-            self.add_items(song_items, pos, sort)
+            self.add_items(song_items, pos, False)
 
     def get_songs(self):        
         songs = []
@@ -701,16 +705,6 @@ class MultiDragSongView(ListView):
     def is_empty(self):        
         return len(self.items) == 0
     
-    def set_sort_keyword(self, keyword, reverse_able=False):
-        with self.keep_select_status():
-            reverse = self.sort_reverse[keyword]
-            self.items = sorted(self.items, 
-                                key=lambda item: item.get_song().get_sortable(keyword),
-                                reverse=reverse)
-            if reverse_able:
-                self.sort_reverse[keyword] = not reverse
-            self.update_item_index()
-            self.queue_draw()
             
     def open_song_dir(self):
         if len(self.select_rows) > 0:
@@ -775,12 +769,6 @@ class MultiDragSongView(ListView):
             right_menu.set_menu_item_sensitive_by_index(4, False)
             right_menu.set_menu_item_sensitive_by_index(7, False)
         right_menu.show((int(x), int(y)))    
-                
-    def get_scrolled_window(self):   
-        scrolled_window = ScrolledWindow(0, 0)
-        scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
-        scrolled_window.add_child(self)
-        return scrolled_window
     
     def get_search_songs(self, keyword):
         self.clear()
@@ -789,7 +777,7 @@ class MultiDragSongView(ListView):
         
         return result_songs
 
-
+    
 class LocalSearchView(gtk.VBox):            
     
     def __init__(self, source_tab):
@@ -797,9 +785,8 @@ class LocalSearchView(gtk.VBox):
         
         self.source_tab = source_tab
         self.song_view = MultiDragSongView()
-        self.song_view_sw = self.song_view.get_scrolled_window()
         self.search_prompt = SearchPrompt(_("Library"))
-        self.add(self.song_view_sw)
+        self.add(self.song_view)
         self.song_view.connect("double-click-item", self.__on_double_click_item)
 
         
@@ -807,10 +794,11 @@ class LocalSearchView(gtk.VBox):
         songs = self.song_view.get_search_songs(keyword)
         if songs:
             self.song_view.add_songs(songs)
-            switch_tab(self, self.song_view_sw)
+            switch_tab(self, self.song_view)
         else:    
             self.search_prompt.update_keyword(keyword)
             switch_tab(self, self.search_prompt)
 
     def __on_double_click_item(self, *args):        
         Dispatcher.emit("switch-source", self.source_tab)
+    

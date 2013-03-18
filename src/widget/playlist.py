@@ -134,11 +134,9 @@ class PlaylistUI(gtk.VBox):
     def on_right_box_size_allocate(self, widget, rect):    
         if self.current_item:
             if rect.width > HIDE_PLAYLIST_WIDTH:
-                self.current_item.song_view.set_hide_column_resize(False)                
-                self.current_item.song_view.set_hide_column(False)
+                self.current_item.song_view.set_hide_columns(None)
             else:    
-                self.current_item.song_view.set_hide_column_resize(True)
-                self.current_item.song_view.set_hide_column(True)
+                self.current_item.song_view.set_hide_columns([1])
         
     def expose_toolbar_mask(self, widget, event):    
         cr = widget.window.cairo_create()
@@ -211,18 +209,18 @@ class PlaylistUI(gtk.VBox):
             self.search_flag = True
             
             results = filter(lambda item: text.lower().replace(" ", "") in item.get_song().get("search", ""), self.cache_items)
-            self.current_item.song_view.items = results
+            self.current_item.song_view.visible_items = results
             self.current_item.song_view.update_item_index()
             self.current_item.song_view.update_vadjustment()        
             
         else:    
             self.search_flag = False
-            self.current_item.song_view.items = self.cache_items
+            self.current_item.song_view.visible_items = self.cache_items
             if Player.song:
                 played_item = SongItem(Player.song)
                 if played_item in self.current_item.song_view.items:
                     index = self.current_item.song_view.items.index(played_item)
-                    self.current_item.song_view.set_highlight(self.current_item.song_view.items[index])
+                    self.current_item.song_view.set_highlight_item(self.current_item.song_view.items[index])
             self.current_item.song_view.update_item_index()
             self.current_item.song_view.update_vadjustment()        
             if self.current_item.song_view.highlight_item != None:
