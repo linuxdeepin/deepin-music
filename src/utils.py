@@ -170,7 +170,7 @@ def get_path_from_uri(uri):
 def get_unquote_uri(self, uri):
     return unquote(uri)
 
-def get_uri_from_path(path, is_quote=True):
+def get_uri_from_path(path, is_quote=False):
     ''' get uri from filepath. '''
     if get_scheme(path): 
         return path
