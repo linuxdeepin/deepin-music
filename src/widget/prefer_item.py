@@ -36,7 +36,7 @@ class ExpandItem(TreeItem):
         self.side_padding = 5
         self.item_height = 37
         self.title = title
-        self.item_width = -1
+        self.item_width = 36
         self.allocate_widget = allocate_widget
         self.child_items = []
         
@@ -180,7 +180,7 @@ class NormalItem(TreeItem):
             self.item_height = 37
             
         self.title = title
-        self.item_width = -1
+        self.item_width = 36
         self.allocate_widget = allocate_widget
         self.title_padding_x = 30
         self.column_offset = 15

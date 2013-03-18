@@ -45,7 +45,7 @@ class PluginItem(TreeItem):
         self.pluginfo = pluginfo
         self.version_width = 60
         self.enable_width = 60
-        self.name_width = -1
+        self.name_width = 100
         self.block_width = 10
         
         self.draw_padding_x = 5
@@ -155,6 +155,7 @@ class PluginsManager(gtk.VBox):
         self.set_spacing(5)
         self.plugins = utils.get_main_window().plugins
         self.plugins_view = TreeView()
+        self.plugins_view.set_expand_column(0)
         self.plugins_view.draw_mask = self.plugins_view_draw_mask
         self.plugins_view.set_size_request(420, 330)        
         self.plugins_view.connect("single-click-item", self.on_plugins_view_single_click)
