@@ -108,7 +108,13 @@ def get_music_dir():
                 
         else:
             return musicdir
-
+        
+def get_song_save_path(song):        
+    path = os.path.join(get_music_dir(), "deepin-music")
+    if not os.path.exists(path):
+        os.makedirs(path)
+    path = os.path.join(path, "%s.mp3" % song.get_str("title"))    
+    return path    
         
 if __name__ == "__main__":
     print get_plugin_dirs()

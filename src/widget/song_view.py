@@ -79,6 +79,7 @@ class SongView(TreeView):
         self.draw_area.connect("leave-notify-event", self.on_leave_notify_event)
         
         self.set_hide_columns([1])
+        self.set_expand_column(None)        
         MediaDB.connect("removed", self.__remove_songs)
         MediaDB.connect("simple-changed", self.__songs_changed)
         
@@ -88,7 +89,7 @@ class SongView(TreeView):
         self.delay_notify_item = None
         self.notify_offset_x = 5
         
-        self.set_expand_column(None)
+
         
     @property    
     def items(self):
@@ -269,11 +270,11 @@ class SongView(TreeView):
             songs = [ songs ]
 
         song_items = [ SongItem(song) for song in songs if song not in self.get_songs()]
-            
+        
         if song_items:
             if not self.items:
                 self.emit_add_signal()
-            self.add_items(song_items, pos, sort)
+            self.add_items(song_items, pos, False)
             
         if len(songs) >= 1 and play:
             if songs[0].exists():
@@ -649,6 +650,8 @@ class MultiDragSongView(TreeView):
         if has_title:
             self.set_column_titles([_("Title"), _("Artist"), _("Album"), _("Added time")], self.sorts)
             
+        self.set_expand_column(0)    
+            
     def sort_by_key(self, items, sort_reverse, sort_key):
         return sorted(items, reverse=sort_reverse, key=lambda item: item.get_song().get_sortable(sort_key))
 
@@ -690,7 +693,7 @@ class MultiDragSongView(TreeView):
         song_items = [ SongItem(song, True) for song in songs if song not in self.get_songs() ]    
         
         if song_items:
-            self.add_items(song_items, pos, sort)
+            self.add_items(song_items, pos, False)
 
     def get_songs(self):        
         songs = []

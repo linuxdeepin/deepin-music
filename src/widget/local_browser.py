@@ -30,7 +30,7 @@ from dtk.ui.iconview import IconView
 from dtk.ui.paned import HPaned
 from dtk.ui.menu import Menu
 from dtk.ui.dialog import ConfirmDialog
-
+ 
 from library import MediaDB, DBQuery
 from helper import SignalContainer, Dispatcher
 from widget.skin import app_theme
@@ -45,6 +45,8 @@ from widget.dialog import WinFile
 from source.local import ImportFolderJob, ReloadDBJob
 from widget.combo import  PromptButton
 from nls import _
+
+# from widget.download_view import TaskView
 
 import utils
 
@@ -110,6 +112,8 @@ class Browser(gtk.VBox, SignalContainer):
         # Used to switch songs category view, in the right side of the layout.
         self.switch_view_box = gtk.VBox()
         self.switch_view_box.add(self.artists_sw)
+        # self.switch_view_box.add(TaskView())
+
         
         # Control back on a view.
         self.back_hbox = gtk.HBox()

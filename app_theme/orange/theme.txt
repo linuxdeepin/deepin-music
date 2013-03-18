@@ -45,6 +45,11 @@
 	 "lyricsMask" : ("#ffffff", 0.60),
  },
  "shadow_colors" : {
+    "window_shadow" : [
+         (0, ("#000000", 0)),
+         (0.66, ("#000000", 0.2)),
+         (1, ("#000000", 0.5)),
+         ],	 
      "linearBackground" : [
 	    (0,		("#EFEFEF", 0.6)),
 		(0.05,	("#EFEFEF", 0.75)),
