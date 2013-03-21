@@ -271,7 +271,7 @@ class GenrePage(gtk.VBox):
         self.pack_start(self.channels_box, True, True)
         
     def get_radio_icon_view(self):
-        icon_view = RadioIconView(tag=TAG_GENRE, padding_x=0, padding_y=10)
+        icon_view = RadioIconView(tag=TAG_GENRE, limit=16, padding_x=0, padding_y=10)
         scrolled_window = icon_view.get_scrolled_window()
         return icon_view, scrolled_window
     

@@ -48,8 +48,8 @@ class RadioBrowser(gtk.VBox):
         self.homepage_load_flag = False
         self.home_page = HomePage()
         
-        self.hot_page_view, self.hot_page_sw = self.get_radio_icon_view(TAG_HOT)
-        self.fast_page_view, self.fast_page_sw = self.get_radio_icon_view(TAG_FAST)
+        self.hot_page_view, self.hot_page_sw = self.get_radio_icon_view(TAG_HOT, 20)
+        self.fast_page_view, self.fast_page_sw = self.get_radio_icon_view(TAG_FAST, 20)
         
         # Genres page
         self.genre_page = GenrePage()

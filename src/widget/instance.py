@@ -81,7 +81,7 @@ class DeepinMusic(gobject.GObject, Logger):
     
     def __init__(self):
         gobject.GObject.__init__(self)
-        application = Application("DMuisc")
+        application = Application("DMuisc", resizable=False)
         application.close_callback = self.prompt_quit
         application.set_icon(app_theme.get_pixbuf("skin/logo.ico"))
         application.set_skin_preview(app_theme.get_pixbuf("frame.png"))
@@ -171,16 +171,16 @@ class DeepinMusic(gobject.GObject, Logger):
         else:    
             self.window.move(int(config.get("window","x")),int(config.get("window","y")))
             
-        try:    
-            self.window.resize(int(config.get("window","width")),int(config.get("window","height")))
-        except:    
-            pass
+        # try:    
+        #     self.window.resize(int(config.get("window","width")),int(config.get("window","height")))
+        # except:    
+        #     pass
         
-        window_state = config.get("window", "state")
-        if window_state == "maximized":
-            self.window.maximize()
-        elif window_state == "normal":    
-            self.window.unmaximize()
+        # window_state = config.get("window", "state")
+        # if window_state == "maximized":
+        #     self.window.maximize()
+        # elif window_state == "normal":    
+        #     self.window.unmaximize()
         
         self.window.connect("delete-event", self.quit)
         self.window.connect("configure-event", self.on_configure_event)
@@ -406,7 +406,9 @@ class DeepinMusic(gobject.GObject, Logger):
             self.browser_align.hide_all()
             self.browser_align.set_no_show_all(True)
             self.window.set_default_size(SIMPLE_DEFAULT_WIDTH, SIMPLE_DEFAULT_HEIGHT)
-            self.window.set_geometry_hints(None, SIMPLE_DEFAULT_WIDTH, 515, 310, 700, -1, -1, -1, -1, -1, -1)
+            self.window.set_geometry_hints(None, SIMPLE_DEFAULT_WIDTH, SIMPLE_DEFAULT_HEIGHT, 
+                                           SIMPLE_DEFAULT_WIDTH, SIMPLE_DEFAULT_HEIGHT, # (310, 700)
+                                           -1, -1, -1, -1, -1, -1)
             self.window.resize(SIMPLE_DEFAULT_WIDTH, SIMPLE_DEFAULT_HEIGHT)
             self.window.queue_draw()
         else:
@@ -414,7 +416,8 @@ class DeepinMusic(gobject.GObject, Logger):
             self.browser_align.set_no_show_all(False)
             self.browser_align.show_all()
             self.window.set_default_size(FULL_DEFAULT_WIDTH, FULL_DEFAULT_HEIGHT)            
-            self.window.set_geometry_hints(None, FULL_DEFAULT_WIDTH, FULL_DEFAULT_HEIGHT, -1, -1,  -1, -1, -1, -1, -1, -1)
+            self.window.set_geometry_hints(None, FULL_DEFAULT_WIDTH, FULL_DEFAULT_HEIGHT, 
+                                           FULL_DEFAULT_WIDTH, FULL_DEFAULT_HEIGHT,  -1, -1, -1, -1, -1, -1)
             self.window.resize(FULL_DEFAULT_WIDTH, FULL_DEFAULT_HEIGHT)
         # Dispatcher.volume(float(config.get("player", "volume", "1.0")))        
         
