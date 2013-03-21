@@ -313,13 +313,14 @@ class RadioIconView(IconView):
         self.__genre_id = "335"
         self.__keyword = ""
         self.__total = None
-        self.more_item = MoreIconItem()
+        # self.more_item = MoreIconItem()
         self.fetch_add_item = fetch_add_item
         
         self.connect("single-click-item", self.on_iconview_single_click_item)
         self.connect("motion-item", self.on_motion_item)        
-        if has_add:
-            self.add_items([self.more_item])
+        # if has_add:
+        #     self.add_items([self.more_item])
+        self.is_finish = False
         
     def __on_drag_data_get(self, widget, context, selection, info, timestamp):        
         item = widget.highlight_item
@@ -350,6 +351,8 @@ class RadioIconView(IconView):
                     Dispatcher.emit("play-radio", item.chl)
                     
     def start_fetch_channels(self):                
+        if self.is_finish: return 
+        
         self.__fetch_thread_id += 1
         fetch_thread_id = copy.deepcopy(self.__fetch_thread_id)
         utils.ThreadFetch(
@@ -390,15 +393,16 @@ class RadioIconView(IconView):
             
         if thread_items:    
             cover_thread_pool.add_missions(thread_items)
-        if self.more_item not in self.items:
-            if self.fetch_add_item:
-                self.add_items([self.more_item])
+        # if self.more_item not in self.items:
+        #     if self.fetch_add_item:
+        #         self.add_items([self.more_item])
         
         self.add_items(channel_items, -1)    
 
         self.__start = start + self.__limit
         if self.__start / self.__limit >= total:
-            self.delete_items([self.more_item])
+            # self.delete_items([self.more_item])
+            self.is_finish = True
         self.fetch_successed()
         
     def add_radios(self, items):    
@@ -411,19 +415,23 @@ class RadioIconView(IconView):
     def clear_items(self, add_more=True):
         self.__start = 0
         self.clear()
-        if add_more:
-            self.add_items([self.more_item])
+        # if add_more:
+        #     self.add_items([self.more_item])
         
     def get_scrolled_window(self):   
         scrolled_window = ScrolledWindow(0, 0)
         scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+        scrolled_window.connect("vscrollbar-state-changed", self.__on_vscrollbar_state_changed)
         scrolled_window.add_child(self)
         return scrolled_window
     
     def on_motion_item(self, widget, item, x, y):
         if not hasattr(item, "is_more"):
             item.try_show_notify(x, y)
-
+            
+    def __on_vscrollbar_state_changed(self, widget, direction):        
+        if direction == "bottom":
+            self.start_fetch_channels()
             
 class RadioSearchView(gtk.VBox):            
     
@@ -431,7 +439,7 @@ class RadioSearchView(gtk.VBox):
         gtk.VBox.__init__(self)
         self.source_tab = source_tab        
         
-        self.radio_view = RadioIconView(tag=TAG_SEARCH, padding_y=10, has_add=False)
+        self.radio_view = RadioIconView(tag=TAG_SEARCH, limit=24, padding_y=10, has_add=False)
         self.radio_view_sw = self.radio_view.get_scrolled_window()
         self.radio_view.fetch_failed = self.switch_to_search_prompt
         self.radio_view.fetch_successed = self.switch_to_radio_view
