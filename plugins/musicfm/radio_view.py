@@ -396,8 +396,8 @@ class RadioIconView(IconView):
         # if self.more_item not in self.items:
         #     if self.fetch_add_item:
         #         self.add_items([self.more_item])
-        
-        self.add_items(channel_items, -1)    
+        # self.add_items(channel_items, -1)    
+        self.add_items(channel_items)    
 
         self.__start = start + self.__limit
         if self.__start / self.__limit >= total:
