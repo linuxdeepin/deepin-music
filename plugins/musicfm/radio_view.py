@@ -377,6 +377,8 @@ class RadioIconView(IconView):
         channel_items = []
         thread_items = []
         channel_data = ret.get("data", {})
+        
+        print "============== %d ===============" % start
         channels = channel_data.get("channels", [])
         total = int(channel_data.get("total", 0))
         
@@ -414,6 +416,7 @@ class RadioIconView(IconView):
     
     def clear_items(self, add_more=True):
         self.__start = 0
+        self.is_finish = False
         self.clear()
         # if add_more:
         #     self.add_items([self.more_item])
