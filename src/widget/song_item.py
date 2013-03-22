@@ -176,9 +176,10 @@ class SongItem(TreeItem):
     def get_column_widths(self):
         '''Get sizes.'''
         if self.extend:
-            return (-1, 100, 100, 90)
+            return (100, 100, 100, 90)
         else:
-            return (156, 102, self.length_width + self.length_padding_x * 2 + 15) 
+            return (156, 102, 51) 
+        
     
     def get_column_renders(self):
         '''Get render callbacks.'''

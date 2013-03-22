@@ -32,7 +32,7 @@ from dtk.ui.threads import post_gui
 from dtk.ui.menu import Menu
 from dtk.ui.scrolled_window import ScrolledWindow
 
-from radio_item import RadioListItem, MoreIconItem, CommonIconItem
+from radio_item import RadioListItem, CommonIconItem
 
 from widget.ui_utils import draw_alpha_mask, switch_tab
 from widget.ui import SearchPrompt
@@ -378,7 +378,6 @@ class RadioIconView(IconView):
         thread_items = []
         channel_data = ret.get("data", {})
         
-        print "============== %d ===============" % start
         channels = channel_data.get("channels", [])
         total = int(channel_data.get("total", 0))
         
