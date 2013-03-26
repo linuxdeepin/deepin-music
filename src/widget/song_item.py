@@ -84,12 +84,14 @@ class SongItem(TreeItem):
             self.emit_redraw_request()
             
     def set_error(self):        
-        self.song_error = True
-        self.emit_redraw_request()
+        if not self.song_error:
+            self.song_error = True
+            self.emit_redraw_request()
         
     def clear_error(self):    
-        self.song_error = False
-        self.emit_redraw_request()
+        if self.song_error:
+            self.song_error = False
+            self.emit_redraw_request()
         
     def exists(self):    
         return self.song.exists()

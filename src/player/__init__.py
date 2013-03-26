@@ -132,7 +132,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
     def __on_tag(self, bin, taglist):    
         ''' The playbin found the tag information'''
         if not self.song: return 
-        if not self.song.get("title") and self.song.get_type() not in ["cue", "cdda", "webcast"]:
+        if not self.song.get("title") and self.song.get_type() not in ["cue", "cdda", "webcast", "local"]:
             self.logdebug("tag found %s", taglist)
             IDS = {
                 "title": "title",

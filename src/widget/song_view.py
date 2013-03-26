@@ -234,7 +234,6 @@ class SongView(TreeView):
         return highlight_item.get_song()
     
     def get_valid_songs(self):
-        self.reset_error_items()
         songs = []
         for item in self.get_valid_items():
             songs.append(item.get_song())
