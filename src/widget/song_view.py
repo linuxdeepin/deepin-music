@@ -111,7 +111,6 @@ class SongView(TreeView):
             self.double_click_item_cb(widget, items[0], 0, 0, 0)
         
     def double_click_item_cb(self, widget, item, colume, x, y):    
-        self.reset_error_items()
         if item:
             song = item.get_song()
             if song.exists():
@@ -140,8 +139,6 @@ class SongView(TreeView):
         config.set("setting", "loop_mode", value)
         
     def get_previous_song(self):
-        self.reset_error_items()
-        
         if self.is_empty():
             if config.get("setting", "empty_random") == "true":
                 return MediaDB.get_random_song("local")
@@ -162,11 +159,10 @@ class SongView(TreeView):
             else:        
                 highlight_item = valid_items[0]
             self.set_highlight_item(highlight_item)    
+            self.visible_highlight()
             return highlight_item.get_song()
     
     def get_next_song(self, manual=False):
-        self.reset_error_items()
-        
         if self.is_empty():
             if config.getboolean("setting", "empty_random"):
                 return MediaDB.get_random_song("local")
@@ -191,7 +187,6 @@ class SongView(TreeView):
                 return self.get_random_song()
             
     def get_order_song(self):        
-        self.reset_error_items()
         valid_items = self.get_valid_items()
         if not valid_items: return None
         
@@ -221,7 +216,6 @@ class SongView(TreeView):
         self.update_vadjustment()
                         
     def get_manual_song(self):                    
-        self.reset_error_items()
         valid_items = self.get_valid_items()
         if not valid_items: return None
         if self.highlight_item:
@@ -236,6 +230,7 @@ class SongView(TreeView):
         else:        
             highlight_item = valid_items[0]
         self.set_highlight_item(highlight_item)    
+        self.visible_highlight()
         return highlight_item.get_song()
     
     def get_valid_songs(self):
@@ -246,8 +241,6 @@ class SongView(TreeView):
         return songs    
     
     def get_random_song(self):
-        self.reset_error_items()
-        
         valid_items = self.get_valid_items()
         if not valid_items: return None
         
@@ -265,6 +258,7 @@ class SongView(TreeView):
         return highlight_item.get_song()
     
     def get_valid_items(self):
+        self.reset_error_items()
         return [item for item in self.items if not item.is_error()]
 
     def add_songs(self, songs, pos=None, sort=False, play=False):    
@@ -486,7 +480,6 @@ class SongView(TreeView):
         Menu(items, True).show((int(x), int(y)))
         
     def delete_error_items(self):    
-        self.reset_error_items()
         self.items = self.get_valid_items()
         self.update_item_index()
         self.update_vadjustment()
