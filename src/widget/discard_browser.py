@@ -738,7 +738,7 @@ class WebcastsBrowser(gtk.VBox):
         self.switch_view_box = gtk.VBox()
         self.switch_view_box.add(self.source_sw)
         
-        body_paned = HPaned(handle_color=app_theme.get_color("panedHandler"))
+        body_paned = HPaned(handle_color=app_theme.get_color("panedHandler"), enable_drag=True)
         body_paned.add1(self.sourcebar)
         body_paned.add2(self.switch_view_box)
         

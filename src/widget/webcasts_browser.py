@@ -78,7 +78,7 @@ class WebcastsBrowser(gtk.VBox, SignalContainer):
         Dispatcher.connect("change-webcast", self.on_dispatcher_change_webcast)
         WebcastDB.connect("changed", self.on_db_update_songs)
         
-        body_paned = HPaned(handle_color=app_theme.get_color("panedHandler"))
+        body_paned = HPaned(handle_color=app_theme.get_color("panedHandler", enable_drag=True))
         body_paned.add1(self.webcastbar)
         body_paned.add2(self.page_box)
         self.add(body_paned)
