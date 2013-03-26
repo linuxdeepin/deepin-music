@@ -91,7 +91,7 @@ class PlaylistUI(gtk.VBox):
                 
         self.right_box = gtk.VBox()
         self.right_box.connect("size-allocate", self.on_right_box_size_allocate)
-        self.list_paned = HPaned(handle_color=app_theme.get_color("panedHandler"))
+        self.list_paned = HPaned(handle_color=app_theme.get_color("panedHandler"), enable_drag=True)
         self.list_paned.pack1(self.category_list, True, True)
         self.list_paned.pack2(self.right_box, True, False)
         bottom_box = gtk.VBox()

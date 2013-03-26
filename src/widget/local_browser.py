@@ -141,7 +141,7 @@ class Browser(gtk.VBox, SignalContainer):
         content_box.pack_start(search_hbox_align, False, False)
         content_box.pack_start(self.switch_view_box, True, True)
         
-        body_paned = HPaned(handle_color=app_theme.get_color("panedHandler"))
+        body_paned = HPaned(handle_color=app_theme.get_color("panedHandler"), enable_drag=True)
         body_paned.add1(left_vbox)
         body_paned.add2(content_box)
         
