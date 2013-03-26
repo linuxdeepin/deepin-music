@@ -35,7 +35,7 @@ from dtk.ui.new_treeview import TreeView
 from dtk.ui.button import Button
 from dtk.ui.dialog import DialogBox, DIALOG_MASK_MULTIPLE_PAGE
 from dtk.ui.color_selection import ColorButton
-from dtk.ui.combo import ComboBox
+from dtk.ui.new_combo import ComboBox
 
 
 from utils import color_hex_to_cairo
@@ -679,8 +679,7 @@ class DesktopLyricsSetting(gtk.VBox):
         
         line_number = config.getint("lyrics", "line_count")
         line_number_hbox, self.line_number_combo_box = self.create_combo_widget(_("Lines:"),
-                                                    [(name, index + 1) for index, name in enumerate([_("Single"), _("Double")])],
-                                                                                line_number - 1)
+                                                    [(_("Single"), 1), (_("Double"), 2)], select_index=line_number - 1)
         
         self.line_align_hbox = gtk.HBox()
         part_align_hbox = gtk.HBox(spacing=5) 
@@ -745,9 +744,9 @@ class DesktopLyricsSetting(gtk.VBox):
             height = 200
             max_width = 300
         else:    
-            height = 0
+            height = None
             max_width = None
-        combo_box = ComboBox(items, height, select_index, max_width)
+        combo_box = ComboBox(items, height, select_index=select_index, max_width=max_width)
         hbox = gtk.HBox(spacing=5)
         hbox.pack_start(label, False, False)
         hbox.pack_start(combo_box, False, False)
@@ -884,9 +883,9 @@ class ScrollLyricsSetting(gtk.VBox):
             height = 200
             max_width = 300
         else:    
-            height = 0
+            height = None
             max_width = None
-        combo_box = ComboBox(items, height, select_index, max_width)
+        combo_box = ComboBox(items, height, select_index=select_index, max_width=max_width)
         hbox = gtk.HBox(spacing=5)
         hbox.pack_start(label, False, False)
         hbox.pack_start(combo_box, False, False)
