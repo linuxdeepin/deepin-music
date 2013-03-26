@@ -35,7 +35,7 @@ from dtk.ui.new_treeview import TreeView
 from dtk.ui.button import Button
 from dtk.ui.dialog import DialogBox, DIALOG_MASK_MULTIPLE_PAGE
 from dtk.ui.color_selection import ColorButton
-from dtk.ui.new_combo import ComboBox
+from dtk.ui.combo import ComboBox
 
 
 from utils import color_hex_to_cairo
