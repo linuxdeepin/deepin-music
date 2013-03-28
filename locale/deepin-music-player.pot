@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-27 11:31+0800\n"
+"POT-Creation-Date: 2013-03-28 14:25+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -277,7 +277,7 @@ msgid "Location:"
 msgstr ""
 
 #: ../src/widget/song_editor.py:150 ../src/widget/converter.py:355
-#: ../src/widget/playlist.py:514 ../src/widget/lyrics_module.py:214
+#: ../src/widget/playlist.py:516 ../src/widget/lyrics_module.py:214
 msgid "Open directory"
 msgstr ""
 
@@ -303,8 +303,8 @@ msgstr ""
 msgid "Select image"
 msgstr ""
 
-#: ../src/widget/song_editor.py:326 ../src/widget/song_view.py:761
-#: ../src/widget/playlist.py:515
+#: ../src/widget/song_editor.py:326 ../src/widget/song_view.py:762
+#: ../src/widget/playlist.py:517
 msgid "Properties"
 msgstr ""
 
@@ -457,14 +457,14 @@ msgid "Delete"
 msgstr ""
 
 #: ../src/widget/webcast_view.py:115 ../src/widget/webcast_view.py:123
-#: ../src/widget/playlist.py:509 ../plugins/musicfm/radio_view.py:130
+#: ../src/widget/playlist.py:511 ../plugins/musicfm/radio_view.py:130
 #: ../plugins/musicfm/radio_view.py:136
 msgid "Clear List"
 msgstr ""
 
 #: ../src/widget/webcast_view.py:119 ../src/widget/webcast_view.py:338
-#: ../src/widget/instance.py:318 ../src/widget/song_view.py:753
-#: ../src/widget/playlist.py:503 ../src/widget/tray.py:56
+#: ../src/widget/instance.py:318 ../src/widget/song_view.py:754
+#: ../src/widget/playlist.py:505 ../src/widget/tray.py:56
 #: ../plugins/musicfm/radio_view.py:134
 msgid "Play"
 msgstr ""
@@ -478,7 +478,7 @@ msgid "Add to Favorites"
 msgstr ""
 
 #: ../src/widget/webcast_view.py:333 ../src/widget/webcast_view.py:339
-#: ../src/widget/song_view.py:754
+#: ../src/widget/song_view.py:755
 msgid "Add to Playlist"
 msgstr ""
 
@@ -487,7 +487,7 @@ msgstr ""
 msgid "Radio"
 msgstr ""
 
-#: ../src/widget/global_search.py:48 ../src/widget/song_view.py:785
+#: ../src/widget/global_search.py:48 ../src/widget/song_view.py:786
 #: ../src/widget/local_tab.py:28
 msgid "Library"
 msgstr ""
@@ -556,7 +556,7 @@ msgid "Show/Hide Lyrics"
 msgstr ""
 
 #: ../src/widget/converter.py:297 ../src/widget/song_view.py:406
-#: ../src/widget/song_view.py:748 ../src/widget/local_browser.py:339
+#: ../src/widget/song_view.py:749 ../src/widget/local_browser.py:339
 msgid "Prompt"
 msgstr ""
 
@@ -587,8 +587,8 @@ msgid "Continue"
 msgstr ""
 
 #: ../src/widget/converter.py:415 ../src/widget/instance.py:338
-#: ../src/widget/instance.py:360 ../src/widget/song_view.py:760
-#: ../src/widget/playlist.py:513
+#: ../src/widget/instance.py:360 ../src/widget/song_view.py:761
+#: ../src/widget/playlist.py:515
 msgid "Convert"
 msgstr ""
 
@@ -874,7 +874,7 @@ msgid "Controls"
 msgstr ""
 
 #: ../src/widget/instance.py:357 ../src/widget/playlist.py:83
-#: ../src/widget/playlist.py:511
+#: ../src/widget/playlist.py:513
 msgid "Playback Order"
 msgstr ""
 
@@ -911,83 +911,83 @@ msgstr ""
 msgid "jobs waiting!"
 msgstr ""
 
-#: ../src/widget/song_view.py:406 ../src/widget/song_view.py:748
+#: ../src/widget/song_view.py:406 ../src/widget/song_view.py:749
 #: ../src/widget/local_browser.py:339
 msgid "Are you sure you want to delete them?"
 msgstr ""
 
-#: ../src/widget/song_view.py:449
+#: ../src/widget/song_view.py:450
 msgid "Repeat(single)"
 msgstr ""
 
-#: ../src/widget/song_view.py:450
+#: ../src/widget/song_view.py:451
 msgid "Play(ordered)"
 msgstr ""
 
-#: ../src/widget/song_view.py:451
+#: ../src/widget/song_view.py:452
 msgid "Repeat(list)"
 msgstr ""
 
-#: ../src/widget/song_view.py:452
+#: ../src/widget/song_view.py:453
 msgid "Random"
 msgstr ""
 
-#: ../src/widget/song_view.py:475
+#: ../src/widget/song_view.py:476
 msgid "Remove Track from this List"
 msgstr ""
 
-#: ../src/widget/song_view.py:476
+#: ../src/widget/song_view.py:477
 msgid "Remove Unavailable Tracks"
 msgstr ""
 
-#: ../src/widget/song_view.py:477 ../src/widget/song_view.py:757
-#: ../src/widget/local_browser.py:354 ../src/widget/playlist.py:508
+#: ../src/widget/song_view.py:478 ../src/widget/song_view.py:758
+#: ../src/widget/local_browser.py:354 ../src/widget/playlist.py:510
 msgid "Move to Trash"
 msgstr ""
 
-#: ../src/widget/song_view.py:478
+#: ../src/widget/song_view.py:479
 msgid "Clear list"
 msgstr ""
 
-#: ../src/widget/song_view.py:489 ../src/widget/song_view.py:510
+#: ../src/widget/song_view.py:490 ../src/widget/song_view.py:511
 msgid "Add URL"
 msgstr ""
 
-#: ../src/widget/song_view.py:490 ../src/widget/song_view.py:498
+#: ../src/widget/song_view.py:491 ../src/widget/song_view.py:499
 msgid "File"
 msgstr ""
 
-#: ../src/widget/song_view.py:491 ../src/widget/song_view.py:499
+#: ../src/widget/song_view.py:492 ../src/widget/song_view.py:500
 msgid "Directory(include subdirectories)"
 msgstr ""
 
-#: ../src/widget/song_view.py:492 ../src/widget/song_view.py:500
+#: ../src/widget/song_view.py:493 ../src/widget/song_view.py:501
 msgid "Directory"
 msgstr ""
 
-#: ../src/widget/song_view.py:648 ../src/widget/lyrics_search.py:80
+#: ../src/widget/song_view.py:649 ../src/widget/lyrics_search.py:80
 msgid "Title"
 msgstr ""
 
-#: ../src/widget/song_view.py:648 ../src/widget/local_browser.py:85
+#: ../src/widget/song_view.py:649 ../src/widget/local_browser.py:85
 #: ../src/widget/lyrics_search.py:80 ../plugins/notify/__init__.py:43
 msgid "Artist"
 msgstr ""
 
-#: ../src/widget/song_view.py:648 ../src/widget/local_browser.py:87
+#: ../src/widget/song_view.py:649 ../src/widget/local_browser.py:87
 #: ../plugins/notify/__init__.py:45
 msgid "Album"
 msgstr ""
 
-#: ../src/widget/song_view.py:648
+#: ../src/widget/song_view.py:649
 msgid "Added time"
 msgstr ""
 
-#: ../src/widget/song_view.py:756 ../src/widget/local_browser.py:353
+#: ../src/widget/song_view.py:757 ../src/widget/local_browser.py:353
 msgid "Remove from Library"
 msgstr ""
 
-#: ../src/widget/song_view.py:759 ../src/widget/local_browser.py:359
+#: ../src/widget/song_view.py:760 ../src/widget/local_browser.py:359
 msgid "Open Directory"
 msgstr ""
 
@@ -1023,7 +1023,7 @@ msgstr ""
 msgid "Play All"
 msgstr ""
 
-#: ../src/widget/local_browser.py:351 ../src/widget/playlist.py:504
+#: ../src/widget/local_browser.py:351 ../src/widget/playlist.py:506
 msgid "Add to List"
 msgstr ""
 
@@ -1079,43 +1079,47 @@ msgid "Rename"
 msgstr ""
 
 #: ../src/widget/playlist.py:491
+msgid "By Filename"
+msgstr ""
+
+#: ../src/widget/playlist.py:492
 msgid "By Title"
 msgstr ""
 
-#: ../src/widget/playlist.py:492 ../src/widget/combo.py:184
+#: ../src/widget/playlist.py:493 ../src/widget/combo.py:184
 #: ../src/widget/combo.py:233
 msgid "By Artist"
 msgstr ""
 
-#: ../src/widget/playlist.py:493 ../src/widget/combo.py:235
+#: ../src/widget/playlist.py:494 ../src/widget/combo.py:235
 msgid "By Album"
 msgstr ""
 
-#: ../src/widget/playlist.py:494 ../src/widget/combo.py:234
+#: ../src/widget/playlist.py:495 ../src/widget/combo.py:234
 msgid "By Genre"
 msgstr ""
 
-#: ../src/widget/playlist.py:495
+#: ../src/widget/playlist.py:496
 msgid "By Play Count"
 msgstr ""
 
-#: ../src/widget/playlist.py:496
+#: ../src/widget/playlist.py:497
 msgid "By Date Added"
 msgstr ""
 
-#: ../src/widget/playlist.py:499
+#: ../src/widget/playlist.py:501
 msgid "Randomize"
 msgstr ""
 
-#: ../src/widget/playlist.py:505
+#: ../src/widget/playlist.py:507
 msgid "move to List"
 msgstr ""
 
-#: ../src/widget/playlist.py:507
+#: ../src/widget/playlist.py:509
 msgid "Remove Track"
 msgstr ""
 
-#: ../src/widget/playlist.py:512
+#: ../src/widget/playlist.py:514
 msgid "Sort"
 msgstr ""
 

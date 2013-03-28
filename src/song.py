@@ -31,6 +31,7 @@ from datetime import datetime
 
 import utils
 import common
+import locale
 from logger import Logger
 from pinyin import TransforDB
 
@@ -175,8 +176,13 @@ class Song(dict, Logger):
         elif key == "date":    
             value = self.get("#date")
             if not value: value = None
+        elif key == "file":    
+            try:
+                value = locale.strxfrm(self.get_filename())
+            except Exception:
+                value = self.get_filename()
         else:    
-            value = self.get(key)
+            value = self.get(key, None)
             
         if not value and key[0] == "#": value = 0    
         return value

@@ -21,6 +21,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import urllib
+import urlparse
 from pyquery import PyQuery
 
 
@@ -106,6 +107,23 @@ class PosterLib(Logger):
         
         album_info = self.get_album_info(album_id)
         return album_info.get("albumInfo", {}).get("pic_big", False)
+    
+    def query_lrc_info(self, artist, title):
+        query = "%s %s" % (artist, title)
+        search_result = self.search_common(query)
+        lrc_infos = []
+        if search_result:
+            song_lists = search_result.get("song_list", None)
+            if song_lists:
+                for song in song_lists:
+                    title = song.get("title", "").replace("<em>", "").replace("</em>", "") or title
+                    artist = song.get("author", "").replace("<em>", "").replace("</em>", "") or artist
+                    url = song.get("lrclink", None)
+                    if url:
+                        url = urlparse.urljoin("http://music.baidu.com/", url)
+                        lrc_infos.append((artist, title, url))
+        return lrc_infos                
+                        
     
 poster = PosterLib()    
 

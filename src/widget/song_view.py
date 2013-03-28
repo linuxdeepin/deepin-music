@@ -68,7 +68,7 @@ class SongView(TreeView):
                            targets, gtk.gdk.ACTION_COPY)
         self.pl = None
         self.add_song_cache = []
-        sort_key = ["album", "genre", "artist", "title", "#playcount", "#added"]
+        sort_key = ["file", "album", "genre", "artist", "title", "#playcount", "#added"]
         self.sort_reverse = {key : False for key in sort_key }
         self.connect_after("drag-data-received", self.on_drag_data_received)
         self.connect("double-click-item", self.double_click_item_cb)
@@ -434,9 +434,10 @@ class SongView(TreeView):
     def set_sort_keyword(self, keyword, reverse=False):
         with self.keep_select_status():
             reverse = self.sort_reverse[keyword]
-            self.items = sorted(self.items, 
-                                key=lambda item: item.get_song().get_sortable(keyword),
-                                reverse=reverse)
+            items = sorted(self.items, 
+                           key=lambda item: item.get_song().get_sortable(keyword),
+                           reverse=reverse)
+            self.add_items(items, clear_first=True)
             self.sort_reverse[keyword] = not reverse
             self.update_item_index()
             if self.highlight_item != None:

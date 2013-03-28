@@ -26,6 +26,7 @@ from deepin_utils.net import is_network_connected
 
 from config import config
 from lrc_download import TTPlayer, DUOMI, SOSO
+from cover_query import poster
 from helper import Dispatcher
 import utils
 
@@ -57,33 +58,48 @@ class LrcManager(object):
     def multiple_engine(self, song, lrc_path, artist, title):    
         try:
             ret = False
+            
+            ting_result = poster.query_lrc_info(artist, title)
+            if ting_result:
+                urls = [item[2] for item in ting_result]
+                for url in urls:
+                    ret = utils.download(url, lrc_path)
+                    if ret:
+                        return lrc_path
+            
             result = TTPlayer().request(artist, title)
+
             if result:
-                if config.getboolean("lyrics", "auto_download"):
-                    ret = utils.download(result[0][2], lrc_path)
+                urls = [item[2] for item in result]                
+                for url in urls:
+                    ret = utils.download(url, lrc_path)
                     if ret and self.vaild_lrc(lrc_path):
                         return lrc_path
-                    else:
-                        os.unlink(lrc_path)
                         
             duomi_result = DUOMI().request(artist, title)
             if duomi_result:
-                if config.getboolean("lyrics", "auto_download"):
-                    ret = utils.download(duomi_result[0][2], lrc_path, "gbk")
+                urls = [item[2] for item in duomi_result]                
+                for url in urls:
+                    ret = utils.download(url, lrc_path, "gbk")
                     if ret and self.vaild_lrc(lrc_path):
                         return lrc_path
-                    else:
-                        os.unlink(lrc_path)
                         
             soso_result =  SOSO().request(artist, title)
             if soso_result:
-                if config.getboolean("lyrics", "auto_download"):
-                    ret = utils.download(soso_result[0][2], lrc_path, "gb18030")
+                urls = [item[2] for item in soso_result]                
+                for url in urls:
+                    ret = utils.download(url, lrc_path, "gb18030")
                     if ret and self.vaild_lrc(lrc_path):
                         return lrc_path
-                    else:
-                        os.unlink(lrc_path)
-        except:
+            try:    
+                os.unlink(lrc_path)
+            except:    
+                pass
+                
+            return None
+                    
+        except Exception, e:
+            print e
             return None
         
     def allocation_lrc_file(self, song, lrc_path):    
@@ -110,7 +126,9 @@ class LrcManager(object):
             if self.vaild_lrc(lrc_path):
                 return lrc_path
             else:
-                os.unlink(lrc_path)
+                try:
+                    os.unlink(lrc_path)
+                except: pass    
         
         # Search in local directory of the file
         if song.get("uri") != None and song.get_scheme() == "file":
@@ -118,8 +136,7 @@ class LrcManager(object):
             if os.path.exists(local_lrc):
                 return local_lrc
                     
-        if not config.getboolean("setting", "offline") and try_web and is_network_connected():
-            
+        if try_web and is_network_connected():
             trust_a = song.get_str("artist")
             trust_t = song.get_str("title")
             filename = song.get_filename()
@@ -134,4 +151,4 @@ class LrcManager(object):
                 return trust_result
             else:
                 return self.multiple_engine(song, lrc_path, untrust_a, untrust_t)
-        return ""
+        return None
