@@ -488,12 +488,14 @@ class PlaylistUI(gtk.VBox):
             self.detail_menu.destroy()
         play_mode_menu = self.current_item.song_view.get_playmode_menu(align=True)
         sort_dict = OrderedDict()
+        sort_dict["file"] = _("By Filename")        
         sort_dict["title"] = _("By Title")
         sort_dict["artist"] = _("By Artist")        
         sort_dict["album"] = _("By Album") 
         sort_dict["genre"] = _("By Genre")
         sort_dict["#playcount"] = _("By Play Count")
         sort_dict["#added"] = _("By Date Added")
+
         sort_items = [(None, value, self.current_item.song_view.set_sort_keyword, key) for key, value in sort_dict.iteritems()]
         sort_items.append(None)
         sort_items.append((None, _("Randomize"), self.current_item.song_view.random_reorder))

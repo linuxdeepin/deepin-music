@@ -30,7 +30,8 @@ from dtk.ui.label import Label
 
 from dtk.ui.new_treeview import TreeView, TreeItem
 from widget.ui_utils import render_item_text, draw_single_mask, draw_alpha_mask
-from lrc_download import TTPlayer, DUOMI, SOSO
+from lrc_download import TTPlayer, DUOMI
+from cover_query import poster
 from helper import Dispatcher
 from constant import DEFAULT_FONT_SIZE
 from lrc_manager import LrcManager
@@ -76,6 +77,7 @@ class SearchUI(DialogBox):
         sort_items = [ lambda items, reverse : self.sort_by_key(items, reverse, "title"),
                        lambda items, reverse : self.sort_by_key(items, reverse, "artist")]
         self.result_view = TreeView()
+        self.result_view.set_expand_column(0)
         self.result_view.connect("double-click-item", self.double_click_cb)
         self.result_view.set_column_titles([_("Title"), _("Artist")], sort_items)
         self.result_view.draw_mask = self.draw_view_mask
@@ -107,14 +109,15 @@ class SearchUI(DialogBox):
         self.download_lyric_cb(widget)
         
     def search_engine(self, artist, title, pid):    
+        
+        ting_result = poster.query_lrc_info(artist, title)
+        self.render_lyrics(ting_result, pid=pid)
+        
         ttplayer_result = TTPlayer().request(artist, title)
         self.render_lyrics(ttplayer_result, pid=pid)
         
         duomi_result = DUOMI().request(artist, title)
-        self.render_lyrics(duomi_result, pid=pid)
-        
-        soso_result = SOSO().request(artist, title)
-        self.render_lyrics(soso_result, True, pid=pid)
+        self.render_lyrics(duomi_result, pid=pid, last=True)
         
     def search_lyric_cb(self, widget):
         self.result_view.clear()
@@ -189,7 +192,11 @@ class SearchItem(TreeItem):
         self.__url = lrc_list[2]
         self.title  = utils.xmlescape(lrc_list[1])
         self.artist = utils.xmlescape(lrc_list[0])
-        self.netcode = lrc_list[3]
+        
+        if len(lrc_list) > 3:
+            self.netcode = lrc_list[3]
+        else:    
+            self.netcode = "utf-8"
         
         # Calculate item size.
         self.title_padding_x = 10
