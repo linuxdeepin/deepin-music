@@ -776,6 +776,7 @@ class RadioListItem(TreeItem):
         
     def unhighlight(self):    
         self.is_highlight = False
+        self.is_select = False
         self.emit_redraw_request()
         
     def get_column_renders(self):
