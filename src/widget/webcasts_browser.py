@@ -23,7 +23,7 @@
 import gtk
 import locale
 
-from dtk.ui.new_treeview import TreeView
+from dtk.ui.treeview import TreeView
 from dtk.ui.paned import HPaned
 
 import utils

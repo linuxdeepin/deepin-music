@@ -24,7 +24,7 @@ import gtk
 import pango
 
 from dtk.ui.entry_treeview import TreeItem
-from dtk.ui.new_entry import EntryBuffer
+from dtk.ui.entry import EntryBuffer
 from dtk.ui.draw import draw_text
 
 from widget.song_view import SongView

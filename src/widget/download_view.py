@@ -20,7 +20,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from dtk.ui.new_treeview import TreeView
+from dtk.ui.treeview import TreeView
 
 from widget.download_item import TaskItem
 from player import Player

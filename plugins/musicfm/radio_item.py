@@ -28,7 +28,7 @@ import random
 
 from dtk.ui.threads import post_gui
 from dtk.ui.cache_pixbuf import CachePixbuf
-from dtk.ui.new_treeview import TreeItem
+from dtk.ui.treeview import TreeItem
 from dtk.ui.draw import draw_pixbuf, draw_text
 from dtk.ui.utils import (get_content_size)
 

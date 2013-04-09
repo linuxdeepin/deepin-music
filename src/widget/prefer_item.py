@@ -22,7 +22,7 @@
 
 import pango
 
-from dtk.ui.new_treeview import TreeItem
+from dtk.ui.treeview import TreeItem
 from dtk.ui.draw import draw_text, draw_pixbuf
 
 from widget.ui_utils import (draw_single_mask)

@@ -28,7 +28,7 @@ import time
 import os
 
 from collections import OrderedDict
-from dtk.ui.new_treeview import TreeView
+from dtk.ui.treeview import TreeView
 from dtk.ui.menu import Menu
 from dtk.ui.threads import post_gui
 from dtk.ui.dialog import InputDialog, ConfirmDialog

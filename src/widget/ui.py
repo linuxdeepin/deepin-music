@@ -29,7 +29,7 @@ from dtk.ui.titlebar import Titlebar
 from dtk.ui.utils import (move_window, alpha_color_hex_to_cairo, 
                           color_hex_to_cairo, cairo_disable_antialias,
                           propagate_expose, get_content_size)
-from dtk.ui.new_entry import InputEntry, Entry
+from dtk.ui.entry import InputEntry, Entry
 from dtk.ui.button import ImageButton, RadioButton, CheckButton, Button
 from dtk.ui.draw import draw_pixbuf, draw_text, draw_vlinear
 from dtk.ui.dialog import DialogBox, DIALOG_MASK_SINGLE_PAGE

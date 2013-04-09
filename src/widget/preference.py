@@ -29,9 +29,9 @@ from dtk.ui.label import Label
 from dtk.ui.box import BackgroundBox, ImageBox
 from dtk.ui.button import CheckButton, RadioButton
 from dtk.ui.spin import SpinBox
-from dtk.ui.new_entry import InputEntry, ShortcutKeyEntry
+from dtk.ui.entry import InputEntry, ShortcutKeyEntry
 
-from dtk.ui.new_treeview import TreeView
+from dtk.ui.treeview import TreeView
 from dtk.ui.button import Button
 from dtk.ui.dialog import DialogBox, DIALOG_MASK_MULTIPLE_PAGE
 from dtk.ui.color_selection import ColorButton

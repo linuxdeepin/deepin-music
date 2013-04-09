@@ -26,7 +26,7 @@ import os
 from dtk.ui.application import Application
 from dtk.ui.menu import Menu
 from dtk.ui.button import ToggleButton
-from dtk.ui.new_slider import Wizard
+from dtk.ui.slider import Wizard
 from deepin_utils.file import get_parent_dir
 from dtk.ui.button import LinkButton
 

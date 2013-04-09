@@ -26,7 +26,7 @@ import threading
 import copy
 
 from contextlib import contextmanager 
-from dtk.ui.new_treeview import TreeView
+from dtk.ui.treeview import TreeView
 from dtk.ui.iconview import IconView
 from dtk.ui.threads import post_gui
 from dtk.ui.menu import Menu
