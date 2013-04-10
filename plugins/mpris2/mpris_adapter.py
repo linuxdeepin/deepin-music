@@ -424,7 +424,7 @@ class Mpris2Adapter(dbus.service.Object, Logger):
 
     @Volume.setter
     def Volume(self, value):
-        Player.volume = value
+        Player.update_volume(value)
 
     ## Player signals
 

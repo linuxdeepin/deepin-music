@@ -24,7 +24,6 @@ import gtk
 import pango
 
 from dtk.ui.entry_treeview import TreeItem
-from dtk.ui.entry import EntryBuffer
 from dtk.ui.draw import draw_text
 
 from widget.song_view import SongView
@@ -58,12 +57,6 @@ class ListTreeItem(TreeItem):
         
         # Init params.
         self.entry = None
-        self.entry_buffer = EntryBuffer(self.title)
-        self.entry_buffer.set_property('cursor-visible', False)
-        self.entry_buffer.connect("changed", self.on_entry_buffer_changed)
-        self.entry_buffer.connect("insert-pos-changed", self.on_entry_buffer_changed)
-        self.entry_buffer.connect("selection-pos-changed", self.on_entry_buffer_changed)
-        
         self.item_height = 26
         self.item_width = CATEGROYLIST_WIDTH
         self.ENTRY_COLUMN = 0
@@ -104,9 +97,6 @@ class ListTreeItem(TreeItem):
     def emit_redraw_request(self):
         if self.redraw_request_callback:
             self.redraw_request_callback(self)
-        
-    def on_entry_buffer_changed(self, bf):    
-        self.emit_redraw_request()
         
     def get_height(self):    
         return self.item_height
