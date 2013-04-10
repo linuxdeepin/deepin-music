@@ -214,7 +214,7 @@ class LyricsModule(object):
                 (None, _("Open directory"), self.open_lrc_dir),
                 None,
                 (None, _("Setting"), lambda : self.open_setting_window(None)),
-                (None, _("Desktop lyrics mode"), lambda : self.switch_to_scroll_lyrics(None))
+                (None, _("Switch to window mode"), lambda : self.switch_to_scroll_lyrics(None))
                 ]
             Menu(menu_items, True).show((int(event.x_root), int(event.y_root)))
             
