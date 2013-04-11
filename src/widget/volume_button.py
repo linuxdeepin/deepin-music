@@ -320,21 +320,15 @@ class VolumeButton(gtk.Button):
             self.decrease_value()
             
     def increase_value(self):    
-        temp_width = self.current_progress_width
-        temp_width += self.value_to_width(self.__step)
-        if temp_width > self.progress_width:
-            temp_width = self.progress_width
-        if temp_width != self.current_progress_width:
-            self.current_progress_width = temp_width
-            self.update_state_by_value()
-            self.queue_draw()
+        self.current_progress_width += self.value_to_width(self.__step)
+        if self.current_progress_width > self.progress_width:
+            self.current_progress_width = self.progress_width
+        self.update_state_by_value()
+        self.queue_draw()
             
     def decrease_value(self):        
-        temp_width = self.current_progress_width
-        temp_width -= self.value_to_width(self.__step)
-        if temp_width < 0:
-            temp_width = 0
-        if temp_width != self.current_progress_width:
-            self.current_progress_width = temp_width
-            self.update_state_by_value()
-            self.queue_draw()
+        self.current_progress_width -= self.value_to_width(self.__step)
+        if self.current_progress_width < 0:
+            self.current_progress_width = 0
+        self.update_state_by_value()
+        self.queue_draw()
