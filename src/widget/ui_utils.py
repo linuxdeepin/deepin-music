@@ -184,3 +184,13 @@ def draw_line(cr, start, end, color_name):
         cr.move_to(*start)
         cr.line_to(*end)
         cr.stroke()
+
+def cairo_color_to_hex(cairo_color):
+    '''
+    Convert cairo color to hex color.
+    
+    @param rgb_color: (red, green, blue)
+    @return: Return hex color.
+    '''
+    return "#%02X%02X%02X" % (cairo_color[0] * 255, cairo_color[1] * 255, cairo_color[2] * 255)
+
