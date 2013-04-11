@@ -188,25 +188,19 @@ class VolumeSlider(gtk.VBox):
         self.volume_button.connect("volume-state-changed",self.__volume_changed)
         self.load_volume_config()
         Dispatcher.connect("volume", self.change_volume)
-        config.connect("config-changed", self.on_config_changed)
         self.add(self.volume_button)
         
     def load_volume_config(self):    
         save_volume = float(config.get("player","volume"))        
-        if config.getboolean("player", "volume_mute"):
-            Player.vol = 0
-            self.volume_button.set_value(int(save_volume * 100))
-            self.volume_button.set_mute()
+        volume_mute = config.getboolean("player", "volume_mute")
+        if volume_mute:
+            self.volume_button.set_value(int(save_volume * 100), False)            
+            self.volume_button.set_mute()            
+            Player.volume = 0
         else:    
-            self.volume_button.set_value(int(save_volume * 100))
-        
-    def on_config_changed(self, config, section, option, value):
-        if section == "player":
-            if option == "volume":
-                self.volume_button.set_value(int(float(value) * 100), emit=False)
-            elif option == "volume_mute":    
-                if value == "true":
-                    self.volume_button.set_mute()
+            self.volume_button.set_value(int(save_volume * 100), False)            
+            self.volume_button.unset_mute()
+            Player.volume = save_volume
                     
     def get_tip_label(self):    
         return Label(str(int(self.volume_button.get_value())))

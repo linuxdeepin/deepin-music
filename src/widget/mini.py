@@ -461,3 +461,6 @@ class MiniWindow(Window):
         self.in_animation = False
         self.queue_draw()
         switch_tab(self.body_box, widget)
+        
+    def sync_volume(self):    
+        self.volume_slider.load_volume_config()

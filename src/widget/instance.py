@@ -474,6 +474,8 @@ class DeepinMusic(gobject.GObject, Logger):
         if mode == "normal":
             self.mini_window.hide_to_tray()
             self.show_from_tray()
+            self.simple_header_bar.sync_volume()
         else:    
             self.hide_to_tray()
             self.mini_window.show_from_tray()
+            self.mini_window.sync_volume()
