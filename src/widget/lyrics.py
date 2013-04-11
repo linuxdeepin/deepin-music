@@ -975,7 +975,9 @@ class ScrollLyrics(DialogBox):
     def paint_text(self, cr):    
         width, height = self.get_drawing_size()
         cr.set_source_rgb(*self.active_color)
-        draw_text(cr, self.message_text, 20, 5, width - 40, height - 10, text_color=cairo_color_to_hex(self.active_color))
+        draw_text(cr, self.message_text, 10, 5, width - 20, height - 10, 
+                  text_color=cairo_color_to_hex(self.active_color),
+                  wrap_width=width-40)
         
     def set_progress(self, lyric_id, percentage):    
         saved_lyric_id = self.current_lyric_id
