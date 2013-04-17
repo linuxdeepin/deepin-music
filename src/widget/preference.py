@@ -366,8 +366,8 @@ class HotKeySetting(gtk.VBox):
         self.toggle_lyrics_lock_entry = self.create_combo_entry(5, 6, _("Lock/Unlock lyrics"),
                                                                 config.get("globalkey", "toggle_lyrics_lock"))
         self.playpause_entry = self.create_combo_entry(6, 7, _("Play/Pause"), config.get("globalkey", "playpause"))
-        self.next_entry = self.create_combo_entry(7, 8, _("Previous"), config.get("globalkey", "next"))
-        self.previous_entry = self.create_combo_entry(8, 9, _("Next"), config.get("globalkey", "previous"))
+        self.previous_entry = self.create_combo_entry(7, 8, _("Previous"), config.get("globalkey", "previous"))        
+        self.next_entry = self.create_combo_entry(8, 9, _("Next"), config.get("globalkey", "next"))
         self.increase_vol_entry = self.create_combo_entry(9, 10, _("Increase volume"), config.get("globalkey", "increase_vol"))
         self.decrease_vol_entry = self.create_combo_entry(10, 11, _("Decrease volume"), config.get("globalkey", "decrease_vol"))
         
