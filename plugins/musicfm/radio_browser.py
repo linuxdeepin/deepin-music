@@ -22,7 +22,7 @@
 
 import gtk
 
-from dtk.ui.new_treeview import TreeView
+from dtk.ui.treeview import TreeView
 from dtk.ui.paned import HPaned
 from deepin_utils.net import is_network_connected
 

@@ -67,7 +67,7 @@ class MiniWindow(Window):
         logo_box_align = set_widget_gravity(logo_box, (0.5, 0.5, 0, 0),
                                             (0, 0, self.logo_padding_left,
                                              self.logo_padding_right))
-        self.playinfo = PlayInfo(200, None, 0, "#000000")
+        self.playinfo = PlayInfo(239, None, 0, "#000000")
         self.info_box.pack_start(logo_box_align, False, False)
         self.info_box.pack_start(self.playinfo, False, False)
         
@@ -356,7 +356,9 @@ class MiniWindow(Window):
         draw_pixbuf(cr, logo_pixbuf, rect.x, icon_y)
         
         # Draw playinfo.
-        rect.x += logo_pixbuf.get_width() + self.logo_padding_right
+        left_width = logo_pixbuf.get_width() + self.logo_padding_right
+        rect.x += left_width
+        rect.width -= left_width * 2
         self.playinfo.draw_content(cr, rect)
         
         # set source to paint with alpha.
@@ -461,3 +463,6 @@ class MiniWindow(Window):
         self.in_animation = False
         self.queue_draw()
         switch_tab(self.body_box, widget)
+        
+    def sync_volume(self):    
+        self.volume_slider.load_volume_config()

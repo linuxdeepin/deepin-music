@@ -129,13 +129,13 @@ class VolumeButton(gtk.Button):
         if emit:
             self.emit("volume-state-changed", self.get_value(), self.mute_flag)        
     
-    def update_progress_width(self, event):
+    def update_progress_width(self, event, emit=False):
         self.current_progress_width = int(event.x - self.fg_offset)
         if self.current_progress_width < 0:
             self.current_progress_width = 0
         elif self.current_progress_width > self.progress_width:    
             self.current_progress_width = self.progress_width
-        self.update_state_by_value()    
+        self.update_state_by_value(emit=emit)    
         self.queue_draw()
         
     def update_state_dpixbufs(self, name, queue_draw=False):    
@@ -254,10 +254,11 @@ class VolumeButton(gtk.Button):
         if self.pointer_in_state_icon(event):
             self.state_press_flag = True
             self.icon_state = STATE_PRESS
+            self.drag_flag = False
         else:    
-            self.mute_flag = False
-            self.update_progress_width(event)
+            self.state_press_flag = False
             self.drag_flag = True
+            self.mute_flag = False
             
         self.queue_draw()
     
@@ -270,7 +271,7 @@ class VolumeButton(gtk.Button):
             set_cursor(widget, gtk.gdk.HAND2)
             
         if self.drag_flag:
-            self.update_progress_width(event)
+            self.update_progress_width(event, emit=True)
         self.queue_draw()
 
     def on_button_release_event(self, widget, event):
@@ -281,12 +282,13 @@ class VolumeButton(gtk.Button):
         
         if self.state_press_flag:
             if self.mute_flag:
-                self.update_state_by_value()
+                self.update_state_by_value(emit=False)
                 self.mute_flag = False
             else:    
                 self.update_state_dpixbufs("mute")
                 self.mute_flag = True
-            self.emit("volume-state-changed", self.get_value(), self.mute_flag)    
+            
+        self.emit("volume-state-changed", self.get_value(), self.mute_flag)    
                 
         self.icon_state = STATE_NORMAL        
         self.state_press_flag = False        
@@ -306,6 +308,10 @@ class VolumeButton(gtk.Button):
         self.mute_flag = True
         self.queue_draw()
         
+    def unset_mute(self):    
+        self.mute_flag = False
+        self.queue_draw()
+        
     def on_scroll_event(self, widget, event):
         self.mute_flag = False
         if event.direction == gtk.gdk.SCROLL_UP:
@@ -314,21 +320,15 @@ class VolumeButton(gtk.Button):
             self.decrease_value()
             
     def increase_value(self):    
-        temp_width = self.current_progress_width
-        temp_width += self.value_to_width(self.__step)
-        if temp_width > self.progress_width:
-            temp_width = self.progress_width
-        if temp_width != self.current_progress_width:
-            self.current_progress_width = temp_width
-            self.update_state_by_value()
-            self.queue_draw()
+        self.current_progress_width += self.value_to_width(self.__step)
+        if self.current_progress_width > self.progress_width:
+            self.current_progress_width = self.progress_width
+        self.update_state_by_value()
+        self.queue_draw()
             
     def decrease_value(self):        
-        temp_width = self.current_progress_width
-        temp_width -= self.value_to_width(self.__step)
-        if temp_width < 0:
-            temp_width = 0
-        if temp_width != self.current_progress_width:
-            self.current_progress_width = temp_width
-            self.update_state_by_value()
-            self.queue_draw()
+        self.current_progress_width -= self.value_to_width(self.__step)
+        if self.current_progress_width < 0:
+            self.current_progress_width = 0
+        self.update_state_by_value()
+        self.queue_draw()

@@ -24,7 +24,7 @@ import gobject
 import pango
 import gtk
 from dtk.ui.draw import draw_pixbuf, draw_text, color_hex_to_cairo
-from dtk.ui.new_treeview import TreeItem
+from dtk.ui.treeview import TreeItem
 
 import utils
 from widget.skin import app_theme

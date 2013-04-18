@@ -182,10 +182,10 @@ class PluginsManager(Logger):
 
     def save_enabled(self):
         if self.load:
-            config.set("plugins", "enabled", "\n".join(self.enabled_plugins.keys()))
+            config.set("plugins", "enabled", ",".join(self.enabled_plugins.keys()))
 
     def load_enabled(self):
-        to_enable = config.get("plugins", "enabled").split("\n")
+        to_enable = config.get("plugins", "enabled", "mpris2").replace("\n", ",").split(",")
         if to_enable:
             for plugin in to_enable:
                 try:

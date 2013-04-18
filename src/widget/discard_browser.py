@@ -26,7 +26,7 @@ import pango
 
 from collections import namedtuple
 from dtk.ui.scrolled_window import ScrolledWindow
-from dtk.ui.new_treeview import TreeView, TreeItem
+from dtk.ui.treeview import TreeView, TreeItem
 from dtk.ui.draw import draw_pixbuf, draw_text
 from dtk.ui.utils import get_content_size, get_widget_root_coordinate, get_match_parent
 from dtk.ui.constant import WIDGET_POS_TOP_RIGHT

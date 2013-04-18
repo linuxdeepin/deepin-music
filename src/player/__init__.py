@@ -541,6 +541,11 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         # self.set_volume(0.0)
         Dispatcher.volume(0.0)
         
+    def update_volume(self, volume):    
+        if volume > 1.0 : volume = 1.0
+        if volume < 0.0 : volume = 0.0
+        Dispatcher.volume(volume)
+        
     def is_paused(self):                
         '''whether the current song is paused.'''
         return not self.bin.xfade_playing()

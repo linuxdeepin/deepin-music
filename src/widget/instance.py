@@ -26,7 +26,7 @@ import os
 from dtk.ui.application import Application
 from dtk.ui.menu import Menu
 from dtk.ui.button import ToggleButton
-from dtk.ui.new_slider import Wizard
+from dtk.ui.slider import Wizard
 from deepin_utils.file import get_parent_dir
 from dtk.ui.button import LinkButton
 
@@ -474,6 +474,8 @@ class DeepinMusic(gobject.GObject, Logger):
         if mode == "normal":
             self.mini_window.hide_to_tray()
             self.show_from_tray()
+            self.simple_header_bar.sync_volume()
         else:    
             self.hide_to_tray()
             self.mini_window.show_from_tray()
+            self.mini_window.sync_volume()

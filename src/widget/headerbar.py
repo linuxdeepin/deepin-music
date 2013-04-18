@@ -84,7 +84,8 @@ class SimpleHeadbar(gtk.EventBox):
         volume_button_align = gtk.Alignment()
         volume_button_align.set_padding(0, 0, 10, 0)
         volume_button_align.set(0.5, 0.5, 0, 0)
-        volume_button_align.add(VolumeSlider())
+        self.volume_slider = VolumeSlider()
+        volume_button_align.add(self.volume_slider)
         # volume_button_align.add(VolumeButton())
         
         # action_box
@@ -210,5 +211,6 @@ class SimpleHeadbar(gtk.EventBox):
             getattr(Player, name)(True)
         else:    
             getattr(Player, name)()
-
             
+    def sync_volume(self):        
+        self.volume_slider.load_volume_config()

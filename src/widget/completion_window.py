@@ -22,7 +22,7 @@
 
 import gtk
 import gobject
-from dtk.ui.new_treeview import TreeView, TreeItem
+from dtk.ui.treeview import TreeView, TreeItem
 from dtk.ui.constant import DEFAULT_FONT_SIZE
 from dtk.ui.utils import (get_widget_root_coordinate, WIDGET_POS_BOTTOM_LEFT, cairo_disable_antialias, 
                           alpha_color_hex_to_cairo, get_content_size,

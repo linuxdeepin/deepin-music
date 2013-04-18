@@ -25,12 +25,14 @@ import cairo
 import gobject
 
 from dtk.ui.button import ImageButton
+from dtk.ui.draw import draw_text
 from dtk.ui.dialog import DialogBox, DIALOG_MASK_GLASS_PAGE
 
 from widget.skin import app_theme
 from config import config
 from render_lyrics import RenderContextNew
 from utils import color_hex_to_cairo
+from ui_utils import cairo_color_to_hex
 from helper import Dispatcher
 from nls import _
 
@@ -972,19 +974,10 @@ class ScrollLyrics(DialogBox):
         
     def paint_text(self, cr):    
         width, height = self.get_drawing_size()
-
         cr.set_source_rgb(*self.active_color)
-        layout = self.get_pango(cr)
-        layout.set_text(self.message_text)
-        layout.set_alignment(pango.ALIGN_CENTER)        
-        extent = layout.get_pixel_extents()[0]
-        x = (width - extent[2]) / 2
-        y = (height - extent[3]) / 2
-        if x < 0: x = 3
-        if y < 0: y = 3
-        cr.move_to(x, y)
-        cr.update_layout(layout)
-        cr.show_layout(layout)
+        draw_text(cr, self.message_text, 10, 5, width - 20, height - 10, 
+                  text_color=cairo_color_to_hex(self.active_color),
+                  wrap_width=width-40)
         
     def set_progress(self, lyric_id, percentage):    
         saved_lyric_id = self.current_lyric_id

@@ -24,7 +24,7 @@ import gtk
 import pango
 import locale
 
-from dtk.ui.new_treeview import TreeItem, TreeView
+from dtk.ui.treeview import TreeItem, TreeView
 from dtk.ui.draw import draw_text, draw_pixbuf
 
 

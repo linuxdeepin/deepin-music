@@ -29,9 +29,9 @@ from dtk.ui.label import Label
 from dtk.ui.box import BackgroundBox, ImageBox
 from dtk.ui.button import CheckButton, RadioButton
 from dtk.ui.spin import SpinBox
-from dtk.ui.new_entry import InputEntry, ShortcutKeyEntry
+from dtk.ui.entry import InputEntry, ShortcutKeyEntry
 
-from dtk.ui.new_treeview import TreeView
+from dtk.ui.treeview import TreeView
 from dtk.ui.button import Button
 from dtk.ui.dialog import DialogBox, DIALOG_MASK_MULTIPLE_PAGE
 from dtk.ui.color_selection import ColorButton
@@ -366,8 +366,8 @@ class HotKeySetting(gtk.VBox):
         self.toggle_lyrics_lock_entry = self.create_combo_entry(5, 6, _("Lock/Unlock lyrics"),
                                                                 config.get("globalkey", "toggle_lyrics_lock"))
         self.playpause_entry = self.create_combo_entry(6, 7, _("Play/Pause"), config.get("globalkey", "playpause"))
-        self.next_entry = self.create_combo_entry(7, 8, _("Previous"), config.get("globalkey", "next"))
-        self.previous_entry = self.create_combo_entry(8, 9, _("Next"), config.get("globalkey", "previous"))
+        self.previous_entry = self.create_combo_entry(7, 8, _("Previous"), config.get("globalkey", "previous"))        
+        self.next_entry = self.create_combo_entry(8, 9, _("Next"), config.get("globalkey", "next"))
         self.increase_vol_entry = self.create_combo_entry(9, 10, _("Increase volume"), config.get("globalkey", "increase_vol"))
         self.decrease_vol_entry = self.create_combo_entry(10, 11, _("Decrease volume"), config.get("globalkey", "decrease_vol"))
         

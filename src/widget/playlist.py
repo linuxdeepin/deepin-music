@@ -27,7 +27,7 @@ from collections import OrderedDict
 from dtk.ui.button import ImageButton, ToggleButton
 from dtk.ui.menu import Menu
 from dtk.ui.draw import draw_vlinear
-from dtk.ui.new_treeview import TreeView
+from dtk.ui.treeview import TreeView
 from dtk.ui.dialog import InputDialog
 from dtk.ui.paned import HPaned
 import dtk.ui.tooltip as Tooltip

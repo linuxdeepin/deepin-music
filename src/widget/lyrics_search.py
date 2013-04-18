@@ -22,13 +22,13 @@
 
 import gtk
 from dtk.ui.button import Button
-from dtk.ui.new_entry import InputEntry
+from dtk.ui.entry import InputEntry
 from dtk.ui.utils import get_content_size
 from dtk.ui.dialog import DialogBox, DIALOG_MASK_MULTIPLE_PAGE
 from dtk.ui.threads import post_gui
 from dtk.ui.label import Label
 
-from dtk.ui.new_treeview import TreeView, TreeItem
+from dtk.ui.treeview import TreeView, TreeItem
 from widget.ui_utils import render_item_text, draw_single_mask, draw_alpha_mask
 from lrc_download import TTPlayer, DUOMI
 from cover_query import poster

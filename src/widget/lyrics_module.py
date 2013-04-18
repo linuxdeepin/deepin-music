@@ -214,7 +214,7 @@ class LyricsModule(object):
                 (None, _("Open directory"), self.open_lrc_dir),
                 None,
                 (None, _("Setting"), lambda : self.open_setting_window(None)),
-                (None, _("Desktop lyrics mode"), lambda : self.switch_to_scroll_lyrics(None))
+                (None, _("Switch to window mode"), lambda : self.switch_to_scroll_lyrics(None))
                 ]
             Menu(menu_items, True).show((int(event.x_root), int(event.y_root)))
             
@@ -626,6 +626,8 @@ class LyricsModule(object):
             self.scroll_lyrics.resize(int(w), int(h))
         except: pass    
 
+        if not self.__find_flag:
+            self.update_lrc(None, Player.song)
         self.scroll_lyrics.show_all()        
         
     def hide_desktop_lyrics(self):    
@@ -658,7 +660,10 @@ class LyricsModule(object):
             self.desktop_lyrics_win.resize(d_w, d_h)          
         except: pass    
 
+        if not self.__find_flag:
+            self.update_lrc(None, Player.song)            
         self.desktop_lyrics_win.show_all()           
+
         
     def adjust_toolbar_rect(self, widget, rect):    
         screen_w, screen_h = gtk.gdk.get_default_root_window().get_size()
@@ -674,6 +679,8 @@ class LyricsModule(object):
         self.toolbar.move(l_x, l_y)    
         
     def update_lrc(self, widget, songs):
+        if not config.getboolean("lyrics", "status"):
+            return 
         if isinstance(songs, list):
             if self.current_song in songs:
                 self.current_song = songs[songs.index(self.current_song)]

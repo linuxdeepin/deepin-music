@@ -23,7 +23,7 @@
 
 from dtk.ui.utils import get_content_size
 from dtk.ui.constant import ALIGN_START
-from dtk.ui.new_treeview import TreeItem
+from dtk.ui.treeview import TreeItem
 
 from widget.ui_utils import render_item_text, draw_single_mask
 

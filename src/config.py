@@ -197,7 +197,7 @@ class Config(gobject.GObject, Logger):
                 },
             
             "plugins" : {
-                "enable" : "",
+                "enabled" : "mpris2",
                 },
             }
     

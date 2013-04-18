@@ -22,7 +22,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import gtk
-from dtk.ui.new_treeview import TreeItem
+from dtk.ui.treeview import TreeItem
 from dtk.ui.threads import post_gui
 from dtk.ui.utils import get_content_size
 from dtk.ui.draw import draw_text, draw_pixbuf, draw_shadow
