@@ -1880,29 +1880,9 @@ class StreamBin(gst.Bin, Logger):
         self.__src_pad.set_blocked_async(True, self.__src_blocked_cb)
         self.emitted_playing = False
         self.state = PREROLLING
-        if self.uri_scheme in BAD_STREAM_SCHEMES:
-            self.fake_state = None
-            def fake_set_state():
-                if self.uri_scheme in RTSP_STREAM_SCHEMES:
-                    self.fake_state = self.set_state(gst.STATE_PLAYING)
-                else:    
-                    self.fake_state = self.set_state(gst.STATE_PAUSED)
-                    
-            start = time.time()        
-            fake_thread = Thread(target=fake_set_state, args=())
-            fake_thread.setDaemon(True)
-            fake_thread.start()
-            
-            while time.time() - start < self.bad_stream_timeout and fake_thread.isAlive():
-                time.sleep(0.3)
-                
-            if self.fake_state is None:    
-                return False
-            else:
-                state = self.fake_state
-        # if self.uri_scheme in RTSP_STREAM_SCHEMES:
-        #     state = self.set_state(gst.STATE_PLAYING)
-        else:        
+        if self.uri_scheme in RTSP_STREAM_SCHEMES:
+            state = self.set_state(gst.STATE_PLAYING)
+        else:    
             state = self.set_state(gst.STATE_PAUSED)
 
         if state == gst.STATE_CHANGE_FAILURE:
