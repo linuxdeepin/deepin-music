@@ -22,6 +22,7 @@
 
 import os
 import gobject
+import cairo
 import gtk
 import fnmatch
 import random
@@ -36,7 +37,7 @@ import utils
 from config import config
 from logger import Logger
 from library import MediaDB
-from xdg_support import get_cache_file
+from xdg_support import get_cache_file, get_cache_dir
 from widget.skin import app_theme
 from cover_query import multi_query_artist_engine
 from helper import Dispatcher
@@ -45,7 +46,8 @@ from song import Song
 
 REINIT_COVER_TO_SKIP_TIME = 100 * 60 * 30
 
-COVER_SIZE = {"x": 69, "y": 69}
+COVER_SIZE = {"x": 70, "y": 70}
+SMALL_COVER_SIZE = {"x" : 17, "y" : 17}
 COVER_SAVE_SIZE = {"x": 300, "y": 300}
 BROWSER_COVER_SIZE = {"x": 40, "y": 40}
 
@@ -127,6 +129,8 @@ class DeepinCoverManager(Logger):
     def __init__(self):
         self.all_song_cover = app_theme.get_theme_file_path("image/cover/all_song.png")
         self.webcast_cover = app_theme.get_theme_file_path("image/cover/webcast.png")
+        self.album_all_cover = None
+        self.artist_all_cover = None
         
     def get_cover_search_str(self, song):
         artist = song.get_str("artist")
@@ -146,6 +150,40 @@ class DeepinCoverManager(Logger):
     
     def get_all_song_cover(self, x, y):
         return gtk.gdk.pixbuf_new_from_file_at_size(self.all_song_cover, x, y)
+    
+    def get_combo_all_cover(self, key="album"):
+        cover_cache_dir = get_cache_dir("cover")
+        if not os.path.isdir(cover_cache_dir):
+            return None
+       
+        if key == "album":
+            if self.album_all_cover != None:
+                return self.album_all_cover
+            cache_files = [f for f in os.listdir(cover_cache_dir) if "-" in f]        
+        elif key == "artist":    
+            if self.artist_all_cover != None:
+                return self.artist_all_cover
+            cache_files = [f for f in os.listdir(cover_cache_dir) if "-" not in f] 
+        else:    
+            return None
+            
+        if len(cache_files) < 4:
+            return None
+        
+        random.shuffle(cache_files)
+        
+        combo_image  = composite_images([os.path.join(cover_cache_dir, f) for f in cache_files[:4]],
+                                        84,  84,
+                                        get_cache_file("%s_all_cover.png" % key))
+        if combo_image:
+            if key == "album":
+                self.album_all_cover = gtk.gdk.pixbuf_new_from_file(combo_image)
+                return self.album_all_cover
+            else:
+                self.artist_all_cover = gtk.gdk.pixbuf_new_from_file(combo_image)
+                return self.artist_all_cover
+        return None
+        
     
     def get_pixbuf_from_name(self, query_name, x=None, y=None, return_default=True):
         x = (x or BROWSER_COVER_SIZE["x"])
@@ -501,6 +539,29 @@ class DoubanCoverManager(Logger):
             
             # utils.clip_surface(new_path)
             return True
+        
+def composite_images(files, width, height, write_file):
+    try:
+        surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
+        context = cairo.Context(surface)
+        cr = gtk.gdk.CairoContext(context)
+        cut_width = cut_height = width / 2
+        for index, f in enumerate(files):
+            pixbuf = get_optimum_pixbuf_from_file(f, cut_width, cut_height)
+            if index % 2 == 0:
+                start_x = 0
+            else:    
+                start_x = cut_width
+            if index <= 1:    
+                start_y = 0
+            else:    
+                start_y = cut_height
+            cr.set_source_pixbuf(pixbuf, start_x, start_y)
+            cr.paint()
+        surface.write_to_png(write_file)    
+        return write_file
+    except:    
+        return None
 
 DoubanCover = DoubanCoverManager()        
 cover_thread_pool = MissionThreadPool(5)

@@ -49,7 +49,7 @@ class LocalItem(gobject.GObject):
         self.key_name, self.value_name, nums, self.tag = _tuple
         
         # Set cell size.
-        self.cell_width = 83                
+        self.cell_width = 84                
         if self.tag == "folder": self.cell_width = 67
         
         # Set display label.
@@ -116,7 +116,11 @@ class LocalItem(gobject.GObject):
             
         elif self.key_name == "deepin-all-songs":    
             # self.pixbuf = CoverManager.get_all_song_cover(self.cell_width, self.cell_width)
-            self.pixbuf = app_theme.get_pixbuf("cover/all_song.png").get_pixbuf()
+            pixbuf = CoverManager.get_combo_all_cover(self.tag)
+            if pixbuf:
+                self.pixbuf = pixbuf
+            else:    
+                self.pixbuf = app_theme.get_pixbuf("cover/all_song.png").get_pixbuf()
             # self.draw_side_flag = False
         else:    
             if self.tag == "genre":
