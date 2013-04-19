@@ -51,10 +51,11 @@ GENRE_DATA["疯克/灵歌/R&B"] = "336"
 
 class GenreItem(object):    
     
-    def __init__(self, title, is_select=False):
+    def __init__(self, title, value, is_select=False):
         self.hover_flag = False
         self.highlight_flag = False
         self.title = utils.xmlescape(title)
+        self.genre_id = value
         self.underline_flag = False
         self.redraw_request_callback = None
         self.is_select = is_select
@@ -144,9 +145,9 @@ class GenreSideBox(gtk.EventBox):
         # Init Item.
         for index, key in enumerate(GENRE_DATA.keys()):
             if index == 0:
-                self.select_item = item = GenreItem(key, True)
+                self.select_item = item = GenreItem(key, GENRE_DATA[key], True)
             else:    
-                item = GenreItem(key)
+                item = GenreItem(key, GENRE_DATA[key])
             item.redraw_request_callback = self.redraw_request
             self.item_total_width += item.get_size()[0] + self.separate_width
             self.items.append(item)
@@ -234,7 +235,7 @@ class GenreSideBox(gtk.EventBox):
         if self.hover_item:
             if self.hover_item != self.select_item:
                 self.hover_item.button_press()
-                self.emit("press-item", self.hover_item.title)
+                self.emit("press-item", self.hover_item.genre_id)
                 self.select_item.clear_selected_status()
                 self.select_item = self.hover_item
                 
@@ -277,7 +278,7 @@ class GenrePage(gtk.VBox):
     
     def on_genreside_press_item(self, widget, key):
         self.channels_view.clear_items()
-        self.channels_view.set_genre_id(GENRE_DATA.get(key, "335"))
+        self.channels_view.set_genre_id(key)
         self.channels_view.start_fetch_channels()
 
     def start_fetch_channels(self):    
