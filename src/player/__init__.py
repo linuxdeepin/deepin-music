@@ -108,26 +108,26 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         self.logdebug("gst error received for %s", uri)
         
         self.bin.xfade_close()
-        config.set("player", "play", "false")
-        self.emit("paused")
+        # config.set("player", "play", "false")
+        # self.emit("paused")
 
-        if not self.song:
-            self.emit("init-status")
-            self.song = None
-            return 
+        # if not self.song:
+        #     self.emit("init-status")
+        #     self.song = None
+        #     return 
         
-        if self.song.get_type() == "douban":
-            return
+        # if self.song.get_type() == "douban":
+        #     return
         
-        if self.song.get_type() in [ "cdda", "webcast"]:
-            self.emit("init-status")
-            self.song = None
-            return 
-        if uri == self.song.get("uri") and not self.__next_already_called:
-            self.logdebug("request new song: error and play-end not emit")
-            self.emit("play-end")
-            self.next(True)
-        self.__next_already_called = False    
+        # if self.song.get_type() in [ "cdda", "webcast"]:
+        #     self.emit("init-status")
+        #     self.song = None
+        #     return 
+        # if uri == self.song.get("uri") and not self.__next_already_called:
+        #     self.logdebug("request new song: error and play-end not emit")
+        #     self.emit("play-end")
+        #     self.next(True)
+        # self.__next_already_called = False    
         
     def __on_tag(self, bin, taglist):    
         ''' The playbin found the tag information'''
