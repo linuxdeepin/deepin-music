@@ -429,25 +429,26 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         
     def next(self, maunal=False):    
         '''next song'''
-        self.update_skipcount()
-        if not self.__source:
-            return
-        song = self.__source.get_next_song(maunal)
+        return False
+        # self.update_skipcount()
+        # if not self.__source:
+        #     return
+        # song = self.__source.get_next_song(maunal)
         
-        # self.fadeout_and_stop()
+        # # self.fadeout_and_stop()
             
-        if song:
-            if config.getboolean("player", "crossfade") and  \
-                    config.getboolean("player", "crossfade_gapless_album") and \
-                    self.song and song.get("album") == self.song.get("album"):
-                self.logdebug("request gapless to the backend")
-                self.play_new(song, seek=song.get("seek", None))
-            else:    
-                self.play_new(song, seek=song.get("seek", None))
-            return 
-        else:
-            # stop the current song
-            self.fadeout_and_stop()
+        # if song:
+        #     if config.getboolean("player", "crossfade") and  \
+        #             config.getboolean("player", "crossfade_gapless_album") and \
+        #             self.song and song.get("album") == self.song.get("album"):
+        #         self.logdebug("request gapless to the backend")
+        #         self.play_new(song, seek=song.get("seek", None))
+        #     else:    
+        #         self.play_new(song, seek=song.get("seek", None))
+        #     return 
+        # else:
+        #     # stop the current song
+        #     self.fadeout_and_stop()
             
     def get_song_seek(self, song):        
         seek = None
