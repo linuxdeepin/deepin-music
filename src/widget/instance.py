@@ -221,7 +221,7 @@ class DeepinMusic(gobject.GObject, Logger):
         self.emit("ready")
         # wizard
         if not first_started:
-            self.show_wizard_win(self.ready_show)
+            self.show_wizard_win(True, self.ready_show)
             config.set("setting", "first_started", "false")
             
     def ready_show(self):    
@@ -371,12 +371,16 @@ class DeepinMusic(gobject.GObject, Logger):
             ]
         Menu(menu_items, True).show((x, y))
         
-    def show_wizard_win(self, callback=None):    
+    def show_wizard_win(self, show_button=False, callback=None):    
         Wizard(
             [os.path.join(wizard_dir, "%d.png" % i) for i in range(3)],
             (os.path.join(wizard_root_dir, "dot_normal.png"),
              os.path.join(wizard_root_dir, "dot_active.png"),             
              ),
+            (os.path.join(wizard_dir, "start_normal.png"),
+             os.path.join(wizard_dir, "start_press.png"),             
+             ),
+            show_button,
             callback
             ).show_all()
         
