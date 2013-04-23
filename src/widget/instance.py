@@ -369,6 +369,10 @@ class DeepinMusic(gobject.GObject, Logger):
             None,
             (self.get_pixbuf_group("close"), _("Quit"), self.force_quit),
             ]
+        
+        if config.getboolean("lyrics", "status"):
+            menu_items.insert(10, (None, _("Search Lyrics"), lambda : Dispatcher.emit("search-lyrics")))
+
         Menu(menu_items, True).show((x, y))
         
     def show_wizard_win(self, show_button=False, callback=None):    

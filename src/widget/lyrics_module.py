@@ -76,6 +76,7 @@ class LyricsModule(object):
         Dispatcher.connect("lock-lyrics", self.__lock_lyrics)
         Dispatcher.connect("show-lyrics", lambda w : self.run())
         Dispatcher.connect("close-lyrics", lambda w: self.hide_all())
+        Dispatcher.connect("search-lyrics", lambda w: self.open_search_window(w))
         
         self.lrc_manager = LrcManager()
         self.lrc = LrcParser()

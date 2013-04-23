@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-28 14:25+0800\n"
+"POT-Creation-Date: 2013-04-23 10:17+0800\n"
 "PO-Revision-Date: 2012-12-29 11:33+0800\n"
 "Last-Translator: SmallEvilBeast <houshao55@gmail.com>\n"
 "Language-Team: none\n"
@@ -170,8 +170,8 @@ msgid "Show information about supported audio file"
 msgstr "显示所支持音频文件的信息"
 
 #: ../src/main.py:163 ../src/widget/information.py:40
-#: ../src/widget/information.py:82 ../src/widget/lyrics.py:78
-#: ../src/widget/lyrics.py:746 ../src/widget/preference.py:568
+#: ../src/widget/information.py:82 ../src/widget/lyrics.py:80
+#: ../src/widget/lyrics.py:748 ../src/widget/preference.py:568
 #: ../src/widget/preference.py:578 ../src/widget/preference.py:909
 msgid "Deepin Music Player"
 msgstr "深度音乐播放器"
@@ -218,12 +218,12 @@ msgid "Audio CD"
 msgstr "音频CD"
 
 #: ../src/widget/song_editor.py:72 ../src/widget/song_editor.py:202
-#: ../src/widget/lyrics_search.py:53
+#: ../src/widget/lyrics_search.py:54
 msgid "Title:"
 msgstr "标题:"
 
 #: ../src/widget/song_editor.py:73 ../src/widget/song_editor.py:203
-#: ../src/widget/lyrics_search.py:52
+#: ../src/widget/lyrics_search.py:53
 msgid "Artist:"
 msgstr "艺术家:"
 
@@ -277,7 +277,7 @@ msgid "Location:"
 msgstr "文件位置:"
 
 #: ../src/widget/song_editor.py:150 ../src/widget/converter.py:355
-#: ../src/widget/playlist.py:516 ../src/widget/lyrics_module.py:214
+#: ../src/widget/playlist.py:516 ../src/widget/lyrics_module.py:215
 msgid "Open directory"
 msgstr "打开目录"
 
@@ -311,7 +311,7 @@ msgstr "属性"
 #: ../src/widget/song_editor.py:329 ../src/widget/equalizer.py:250
 #: ../src/widget/ui.py:1143 ../src/widget/converter.py:382
 #: ../src/widget/converter.py:437 ../src/widget/preference.py:954
-#: ../src/widget/lyrics_search.py:86
+#: ../src/widget/lyrics_search.py:88
 msgid "Close"
 msgstr "关闭"
 
@@ -424,7 +424,7 @@ msgid "Predefined"
 msgstr "预定义"
 
 #: ../src/widget/global_keys.py:95 ../src/widget/instance.py:91
-#: ../src/widget/tray.py:151 ../plugins/pidgin/__init__.py:97
+#: ../src/widget/tray.py:154 ../plugins/pidgin/__init__.py:97
 #: ../plugins/mpris2/mpris_adapter.py:252
 msgid "Deepin Music"
 msgstr "深度音乐"
@@ -492,7 +492,7 @@ msgstr "网络广播"
 msgid "Library"
 msgstr "本地音乐"
 
-#: ../src/widget/lyrics.py:731
+#: ../src/widget/lyrics.py:733
 msgid "Lyrics window"
 msgstr "窗口歌词"
 
@@ -531,7 +531,7 @@ msgid "Minimize to tray"
 msgstr "最小化到托盘"
 
 #: ../src/widget/ui.py:1153 ../src/widget/preference.py:196
-#: ../src/widget/instance.py:370 ../src/widget/tray.py:78
+#: ../src/widget/instance.py:370 ../src/widget/tray.py:81
 msgid "Quit"
 msgstr "退出"
 
@@ -719,19 +719,19 @@ msgstr "右对齐"
 msgid "Justified"
 msgstr "两端对齐"
 
-#: ../src/widget/preference.py:616 ../src/widget/lyrics_module.py:411
+#: ../src/widget/preference.py:616 ../src/widget/lyrics_module.py:412
 msgid "Vitality yellow"
 msgstr "活力黄"
 
-#: ../src/widget/preference.py:617 ../src/widget/lyrics_module.py:412
+#: ../src/widget/preference.py:617 ../src/widget/lyrics_module.py:413
 msgid "Fresh green"
 msgstr "清新绿"
 
-#: ../src/widget/preference.py:618 ../src/widget/lyrics_module.py:413
+#: ../src/widget/preference.py:618 ../src/widget/lyrics_module.py:414
 msgid "Playful pink"
 msgstr "俏皮粉"
 
-#: ../src/widget/preference.py:619 ../src/widget/lyrics_module.py:414
+#: ../src/widget/preference.py:619 ../src/widget/lyrics_module.py:415
 msgid "Cool blue"
 msgstr "清爽蓝"
 
@@ -830,7 +830,7 @@ msgstr ""
 "深度音乐播放器是自由软件,遵循自由软件基金会发布的 GNU 通用公共许可证第三版."
 
 #: ../src/widget/preference.py:947 ../src/widget/instance.py:368
-#: ../src/widget/tray.py:77
+#: ../src/widget/tray.py:80
 msgid "Preferences"
 msgstr "选项设置"
 
@@ -887,28 +887,28 @@ msgstr "播放模式"
 msgid "View New Features"
 msgstr "查看新特性"
 
-#: ../src/widget/instance.py:385 ../src/widget/tray.py:73
+#: ../src/widget/instance.py:389 ../src/widget/tray.py:69
 msgid "Hide Lyrics"
 msgstr "关闭歌词"
 
-#: ../src/widget/instance.py:387 ../src/widget/tray.py:75
+#: ../src/widget/instance.py:391 ../src/widget/tray.py:72
 msgid "Show Lyrics"
 msgstr "打开歌词"
 
-#: ../src/widget/instance.py:391 ../src/widget/tray.py:68
+#: ../src/widget/instance.py:395 ../src/widget/tray.py:75
 msgid "Unlock lyrics"
 msgstr "解锁歌词"
 
-#: ../src/widget/instance.py:393 ../src/widget/lyrics_module.py:148
-#: ../src/widget/tray.py:70
+#: ../src/widget/instance.py:397 ../src/widget/lyrics_module.py:149
+#: ../src/widget/tray.py:77
 msgid "Lock lyrics"
 msgstr "锁定歌词"
 
-#: ../src/widget/instance.py:468
+#: ../src/widget/instance.py:472
 msgid "Mini Mode"
 msgstr "迷你模式"
 
-#: ../src/widget/instance.py:470
+#: ../src/widget/instance.py:474
 msgid "Normal Mode"
 msgstr "普通模式"
 
@@ -970,12 +970,12 @@ msgstr "文件夹(包含子目录)"
 msgid "Directory"
 msgstr "文件夹"
 
-#: ../src/widget/song_view.py:649 ../src/widget/lyrics_search.py:80
+#: ../src/widget/song_view.py:649 ../src/widget/lyrics_search.py:82
 msgid "Title"
 msgstr "标题"
 
 #: ../src/widget/song_view.py:649 ../src/widget/local_browser.py:85
-#: ../src/widget/lyrics_search.py:80 ../plugins/notify/__init__.py:43
+#: ../src/widget/lyrics_search.py:82 ../plugins/notify/__init__.py:43
 msgid "Artist"
 msgstr "艺术家"
 
@@ -1128,84 +1128,84 @@ msgstr "删除歌曲"
 msgid "Sort"
 msgstr "排序"
 
-#: ../src/widget/lyrics_module.py:144
+#: ../src/widget/lyrics_module.py:145
 msgid "increase the lyrics size"
 msgstr "增大歌词尺寸"
 
-#: ../src/widget/lyrics_module.py:145
+#: ../src/widget/lyrics_module.py:146
 msgid "decrease the lyrics size"
 msgstr "减小歌词尺寸"
 
-#: ../src/widget/lyrics_module.py:147
+#: ../src/widget/lyrics_module.py:148
 msgid "predefined color schemes"
 msgstr "预定义颜色方案"
 
-#: ../src/widget/lyrics_module.py:151
+#: ../src/widget/lyrics_module.py:152
 msgid "karaoke on/off"
 msgstr "启用/关闭卡拉OK模式"
 
-#: ../src/widget/lyrics_module.py:154
+#: ../src/widget/lyrics_module.py:155
 msgid "Switch lines"
 msgstr "切换行数"
 
-#: ../src/widget/lyrics_module.py:155
+#: ../src/widget/lyrics_module.py:156
 msgid "open setting panel"
 msgstr "打开设置面板"
 
-#: ../src/widget/lyrics_module.py:156
+#: ../src/widget/lyrics_module.py:157
 msgid "search lrc file for current track"
 msgstr "搜索歌词"
 
-#: ../src/widget/lyrics_module.py:157
+#: ../src/widget/lyrics_module.py:158
 msgid "Close lyrics"
 msgstr "关闭歌词"
 
-#: ../src/widget/lyrics_module.py:158 ../src/widget/lyrics_module.py:197
+#: ../src/widget/lyrics_module.py:159 ../src/widget/lyrics_module.py:198
 msgid "Lyrics rewind"
 msgstr "后退歌词"
 
-#: ../src/widget/lyrics_module.py:159 ../src/widget/lyrics_module.py:198
+#: ../src/widget/lyrics_module.py:160 ../src/widget/lyrics_module.py:199
 msgid "Lyrics forward"
 msgstr "前进歌词"
 
-#: ../src/widget/lyrics_module.py:160
+#: ../src/widget/lyrics_module.py:161 ../src/widget/lyrics_module.py:218
 msgid "Switch to window mode"
 msgstr "切换到窗口歌词"
 
-#: ../src/widget/lyrics_module.py:195 ../src/widget/lyrics_module.py:217
+#: ../src/widget/lyrics_module.py:196
 msgid "Desktop lyrics mode"
 msgstr "切换到桌面歌词"
 
-#: ../src/widget/lyrics_module.py:200 ../src/widget/lyrics_module.py:210
-#: ../src/widget/lyrics_search.py:57
+#: ../src/widget/lyrics_module.py:201 ../src/widget/lyrics_module.py:211
+#: ../src/widget/lyrics_search.py:58
 msgid "Search"
 msgstr "搜索"
 
-#: ../src/widget/lyrics_module.py:201 ../src/widget/lyrics_module.py:216
+#: ../src/widget/lyrics_module.py:202 ../src/widget/lyrics_module.py:217
 msgid "Setting"
 msgstr "设置"
 
-#: ../src/widget/lyrics_module.py:207
+#: ../src/widget/lyrics_module.py:208
 msgid "Forward 0.5 seconds"
 msgstr "提前0.5秒"
 
-#: ../src/widget/lyrics_module.py:208
+#: ../src/widget/lyrics_module.py:209
 msgid "Rewind 0.5 seconds"
 msgstr "后退0.5秒"
 
-#: ../src/widget/lyrics_module.py:211
+#: ../src/widget/lyrics_module.py:212
 msgid "Adjust lyrics"
 msgstr "调整歌词"
 
-#: ../src/widget/lyrics_module.py:213
+#: ../src/widget/lyrics_module.py:214
 msgid "Choose local lrc"
 msgstr "关联本地歌词"
 
-#: ../src/widget/lyrics_module.py:742 ../src/widget/lyrics_module.py:743
+#: ../src/widget/lyrics_module.py:750 ../src/widget/lyrics_module.py:751
 msgid "No lyrics found!"
 msgstr "没有找到歌词文件!"
 
-#: ../src/widget/lyrics_module.py:745 ../src/widget/lyrics_module.py:746
+#: ../src/widget/lyrics_module.py:753 ../src/widget/lyrics_module.py:754
 msgid "Searching for lyrics"
 msgstr "正在搜索歌词..."
 
@@ -1229,36 +1229,36 @@ msgstr "加载播放列表"
 msgid "List view"
 msgstr "列表显示"
 
-#: ../src/widget/lyrics_search.py:46
+#: ../src/widget/lyrics_search.py:47
 msgid "Lyrics search"
 msgstr "歌词搜索"
 
-#: ../src/widget/lyrics_search.py:84
+#: ../src/widget/lyrics_search.py:86
 msgid "Download"
 msgstr "下载"
 
-#: ../src/widget/lyrics_search.py:124
+#: ../src/widget/lyrics_search.py:127
 msgid "Now searching"
 msgstr "正在搜索..."
 
-#: ../src/widget/lyrics_search.py:126 ../src/widget/lyrics_search.py:151
+#: ../src/widget/lyrics_search.py:129 ../src/widget/lyrics_search.py:154
 msgid "Not found!"
 msgstr "没有找到!"
 
-#: ../src/widget/lyrics_search.py:145 ../src/widget/lyrics_search.py:149
+#: ../src/widget/lyrics_search.py:148 ../src/widget/lyrics_search.py:152
 #, python-format
 msgid "%d lyrics found"
 msgstr "找到%d歌词"
 
-#: ../src/widget/lyrics_search.py:158
+#: ../src/widget/lyrics_search.py:161
 msgid "Downloading lyrics"
 msgstr "正在下载歌词..."
 
-#: ../src/widget/lyrics_search.py:168
+#: ../src/widget/lyrics_search.py:171
 msgid "File save to"
 msgstr "文件保存到"
 
-#: ../src/widget/lyrics_search.py:170
+#: ../src/widget/lyrics_search.py:173
 msgid "Fail to download!"
 msgstr "下载失败!"
 
@@ -1269,6 +1269,10 @@ msgstr "静音"
 #: ../src/widget/tray.py:64
 msgid "Volume"
 msgstr "音量"
+
+#: ../src/widget/tray.py:70
+msgid "Search Lyrics"
+msgstr "搜索歌词"
 
 #: ../src/widget/webcasts_browser.py:98
 msgid "Region"

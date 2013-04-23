@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-28 14:25+0800\n"
+"POT-Creation-Date: 2013-04-23 10:17+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -170,8 +170,8 @@ msgid "Show information about supported audio file"
 msgstr ""
 
 #: ../src/main.py:163 ../src/widget/information.py:40
-#: ../src/widget/information.py:82 ../src/widget/lyrics.py:78
-#: ../src/widget/lyrics.py:746 ../src/widget/preference.py:568
+#: ../src/widget/information.py:82 ../src/widget/lyrics.py:80
+#: ../src/widget/lyrics.py:748 ../src/widget/preference.py:568
 #: ../src/widget/preference.py:578 ../src/widget/preference.py:909
 msgid "Deepin Music Player"
 msgstr ""
@@ -218,12 +218,12 @@ msgid "Audio CD"
 msgstr ""
 
 #: ../src/widget/song_editor.py:72 ../src/widget/song_editor.py:202
-#: ../src/widget/lyrics_search.py:53
+#: ../src/widget/lyrics_search.py:54
 msgid "Title:"
 msgstr ""
 
 #: ../src/widget/song_editor.py:73 ../src/widget/song_editor.py:203
-#: ../src/widget/lyrics_search.py:52
+#: ../src/widget/lyrics_search.py:53
 msgid "Artist:"
 msgstr ""
 
@@ -277,7 +277,7 @@ msgid "Location:"
 msgstr ""
 
 #: ../src/widget/song_editor.py:150 ../src/widget/converter.py:355
-#: ../src/widget/playlist.py:516 ../src/widget/lyrics_module.py:214
+#: ../src/widget/playlist.py:516 ../src/widget/lyrics_module.py:215
 msgid "Open directory"
 msgstr ""
 
@@ -311,7 +311,7 @@ msgstr ""
 #: ../src/widget/song_editor.py:329 ../src/widget/equalizer.py:250
 #: ../src/widget/ui.py:1143 ../src/widget/converter.py:382
 #: ../src/widget/converter.py:437 ../src/widget/preference.py:954
-#: ../src/widget/lyrics_search.py:86
+#: ../src/widget/lyrics_search.py:88
 msgid "Close"
 msgstr ""
 
@@ -424,7 +424,7 @@ msgid "Predefined"
 msgstr ""
 
 #: ../src/widget/global_keys.py:95 ../src/widget/instance.py:91
-#: ../src/widget/tray.py:151 ../plugins/pidgin/__init__.py:97
+#: ../src/widget/tray.py:154 ../plugins/pidgin/__init__.py:97
 #: ../plugins/mpris2/mpris_adapter.py:252
 msgid "Deepin Music"
 msgstr ""
@@ -492,7 +492,7 @@ msgstr ""
 msgid "Library"
 msgstr ""
 
-#: ../src/widget/lyrics.py:731
+#: ../src/widget/lyrics.py:733
 msgid "Lyrics window"
 msgstr ""
 
@@ -531,7 +531,7 @@ msgid "Minimize to tray"
 msgstr ""
 
 #: ../src/widget/ui.py:1153 ../src/widget/preference.py:196
-#: ../src/widget/instance.py:370 ../src/widget/tray.py:78
+#: ../src/widget/instance.py:370 ../src/widget/tray.py:81
 msgid "Quit"
 msgstr ""
 
@@ -719,19 +719,19 @@ msgstr ""
 msgid "Justified"
 msgstr ""
 
-#: ../src/widget/preference.py:616 ../src/widget/lyrics_module.py:411
+#: ../src/widget/preference.py:616 ../src/widget/lyrics_module.py:412
 msgid "Vitality yellow"
 msgstr ""
 
-#: ../src/widget/preference.py:617 ../src/widget/lyrics_module.py:412
+#: ../src/widget/preference.py:617 ../src/widget/lyrics_module.py:413
 msgid "Fresh green"
 msgstr ""
 
-#: ../src/widget/preference.py:618 ../src/widget/lyrics_module.py:413
+#: ../src/widget/preference.py:618 ../src/widget/lyrics_module.py:414
 msgid "Playful pink"
 msgstr ""
 
-#: ../src/widget/preference.py:619 ../src/widget/lyrics_module.py:414
+#: ../src/widget/preference.py:619 ../src/widget/lyrics_module.py:415
 msgid "Cool blue"
 msgstr ""
 
@@ -825,7 +825,7 @@ msgid ""
 msgstr ""
 
 #: ../src/widget/preference.py:947 ../src/widget/instance.py:368
-#: ../src/widget/tray.py:77
+#: ../src/widget/tray.py:80
 msgid "Preferences"
 msgstr ""
 
@@ -882,28 +882,28 @@ msgstr ""
 msgid "View New Features"
 msgstr ""
 
-#: ../src/widget/instance.py:385 ../src/widget/tray.py:73
+#: ../src/widget/instance.py:389 ../src/widget/tray.py:69
 msgid "Hide Lyrics"
 msgstr ""
 
-#: ../src/widget/instance.py:387 ../src/widget/tray.py:75
+#: ../src/widget/instance.py:391 ../src/widget/tray.py:72
 msgid "Show Lyrics"
 msgstr ""
 
-#: ../src/widget/instance.py:391 ../src/widget/tray.py:68
+#: ../src/widget/instance.py:395 ../src/widget/tray.py:75
 msgid "Unlock lyrics"
 msgstr ""
 
-#: ../src/widget/instance.py:393 ../src/widget/lyrics_module.py:148
-#: ../src/widget/tray.py:70
+#: ../src/widget/instance.py:397 ../src/widget/lyrics_module.py:149
+#: ../src/widget/tray.py:77
 msgid "Lock lyrics"
 msgstr ""
 
-#: ../src/widget/instance.py:468
+#: ../src/widget/instance.py:472
 msgid "Mini Mode"
 msgstr ""
 
-#: ../src/widget/instance.py:470
+#: ../src/widget/instance.py:474
 msgid "Normal Mode"
 msgstr ""
 
@@ -965,12 +965,12 @@ msgstr ""
 msgid "Directory"
 msgstr ""
 
-#: ../src/widget/song_view.py:649 ../src/widget/lyrics_search.py:80
+#: ../src/widget/song_view.py:649 ../src/widget/lyrics_search.py:82
 msgid "Title"
 msgstr ""
 
 #: ../src/widget/song_view.py:649 ../src/widget/local_browser.py:85
-#: ../src/widget/lyrics_search.py:80 ../plugins/notify/__init__.py:43
+#: ../src/widget/lyrics_search.py:82 ../plugins/notify/__init__.py:43
 msgid "Artist"
 msgstr ""
 
@@ -1123,84 +1123,84 @@ msgstr ""
 msgid "Sort"
 msgstr ""
 
-#: ../src/widget/lyrics_module.py:144
+#: ../src/widget/lyrics_module.py:145
 msgid "increase the lyrics size"
 msgstr ""
 
-#: ../src/widget/lyrics_module.py:145
+#: ../src/widget/lyrics_module.py:146
 msgid "decrease the lyrics size"
 msgstr ""
 
-#: ../src/widget/lyrics_module.py:147
+#: ../src/widget/lyrics_module.py:148
 msgid "predefined color schemes"
 msgstr ""
 
-#: ../src/widget/lyrics_module.py:151
+#: ../src/widget/lyrics_module.py:152
 msgid "karaoke on/off"
 msgstr ""
 
-#: ../src/widget/lyrics_module.py:154
+#: ../src/widget/lyrics_module.py:155
 msgid "Switch lines"
 msgstr ""
 
-#: ../src/widget/lyrics_module.py:155
+#: ../src/widget/lyrics_module.py:156
 msgid "open setting panel"
 msgstr ""
 
-#: ../src/widget/lyrics_module.py:156
+#: ../src/widget/lyrics_module.py:157
 msgid "search lrc file for current track"
 msgstr ""
 
-#: ../src/widget/lyrics_module.py:157
+#: ../src/widget/lyrics_module.py:158
 msgid "Close lyrics"
 msgstr ""
 
-#: ../src/widget/lyrics_module.py:158 ../src/widget/lyrics_module.py:197
+#: ../src/widget/lyrics_module.py:159 ../src/widget/lyrics_module.py:198
 msgid "Lyrics rewind"
 msgstr ""
 
-#: ../src/widget/lyrics_module.py:159 ../src/widget/lyrics_module.py:198
+#: ../src/widget/lyrics_module.py:160 ../src/widget/lyrics_module.py:199
 msgid "Lyrics forward"
 msgstr ""
 
-#: ../src/widget/lyrics_module.py:160
+#: ../src/widget/lyrics_module.py:161 ../src/widget/lyrics_module.py:218
 msgid "Switch to window mode"
 msgstr ""
 
-#: ../src/widget/lyrics_module.py:195 ../src/widget/lyrics_module.py:217
+#: ../src/widget/lyrics_module.py:196
 msgid "Desktop lyrics mode"
 msgstr ""
 
-#: ../src/widget/lyrics_module.py:200 ../src/widget/lyrics_module.py:210
-#: ../src/widget/lyrics_search.py:57
+#: ../src/widget/lyrics_module.py:201 ../src/widget/lyrics_module.py:211
+#: ../src/widget/lyrics_search.py:58
 msgid "Search"
 msgstr ""
 
-#: ../src/widget/lyrics_module.py:201 ../src/widget/lyrics_module.py:216
+#: ../src/widget/lyrics_module.py:202 ../src/widget/lyrics_module.py:217
 msgid "Setting"
 msgstr ""
 
-#: ../src/widget/lyrics_module.py:207
+#: ../src/widget/lyrics_module.py:208
 msgid "Forward 0.5 seconds"
 msgstr ""
 
-#: ../src/widget/lyrics_module.py:208
+#: ../src/widget/lyrics_module.py:209
 msgid "Rewind 0.5 seconds"
 msgstr ""
 
-#: ../src/widget/lyrics_module.py:211
+#: ../src/widget/lyrics_module.py:212
 msgid "Adjust lyrics"
 msgstr ""
 
-#: ../src/widget/lyrics_module.py:213
+#: ../src/widget/lyrics_module.py:214
 msgid "Choose local lrc"
 msgstr ""
 
-#: ../src/widget/lyrics_module.py:742 ../src/widget/lyrics_module.py:743
+#: ../src/widget/lyrics_module.py:750 ../src/widget/lyrics_module.py:751
 msgid "No lyrics found!"
 msgstr ""
 
-#: ../src/widget/lyrics_module.py:745 ../src/widget/lyrics_module.py:746
+#: ../src/widget/lyrics_module.py:753 ../src/widget/lyrics_module.py:754
 msgid "Searching for lyrics"
 msgstr ""
 
@@ -1224,36 +1224,36 @@ msgstr ""
 msgid "List view"
 msgstr ""
 
-#: ../src/widget/lyrics_search.py:46
+#: ../src/widget/lyrics_search.py:47
 msgid "Lyrics search"
 msgstr ""
 
-#: ../src/widget/lyrics_search.py:84
+#: ../src/widget/lyrics_search.py:86
 msgid "Download"
 msgstr ""
 
-#: ../src/widget/lyrics_search.py:124
+#: ../src/widget/lyrics_search.py:127
 msgid "Now searching"
 msgstr ""
 
-#: ../src/widget/lyrics_search.py:126 ../src/widget/lyrics_search.py:151
+#: ../src/widget/lyrics_search.py:129 ../src/widget/lyrics_search.py:154
 msgid "Not found!"
 msgstr ""
 
-#: ../src/widget/lyrics_search.py:145 ../src/widget/lyrics_search.py:149
+#: ../src/widget/lyrics_search.py:148 ../src/widget/lyrics_search.py:152
 #, python-format
 msgid "%d lyrics found"
 msgstr ""
 
-#: ../src/widget/lyrics_search.py:158
+#: ../src/widget/lyrics_search.py:161
 msgid "Downloading lyrics"
 msgstr ""
 
-#: ../src/widget/lyrics_search.py:168
+#: ../src/widget/lyrics_search.py:171
 msgid "File save to"
 msgstr ""
 
-#: ../src/widget/lyrics_search.py:170
+#: ../src/widget/lyrics_search.py:173
 msgid "Fail to download!"
 msgstr ""
 
@@ -1263,6 +1263,10 @@ msgstr ""
 
 #: ../src/widget/tray.py:64
 msgid "Volume"
+msgstr ""
+
+#: ../src/widget/tray.py:70
+msgid "Search Lyrics"
 msgstr ""
 
 #: ../src/widget/webcasts_browser.py:98
