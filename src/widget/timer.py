@@ -104,8 +104,9 @@ class SongTimer(gtk.HBox):
             if Player.song.get_type() == "webcast":
                 duration = 0
         
-        pos /= 1000
-        duration /= 1000
+        pos /= 1000.0
+        duration /= 1000.0
+        
         if Player.song and Player.song.get_type() == "cue":
             duration = Player.song.get("#duration") / 1000
             pos = pos - Player.song.get("seek", 0)
