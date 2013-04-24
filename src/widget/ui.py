@@ -198,8 +198,7 @@ class CustomEntry(gtk.VBox):
         gtk.VBox.__init__(self)
         clean_button = CleanButton()
         clean_button.connect("clicked", self.on_clean_clicked)
-        
-        self.entry = Entry(content)
+        self.entry = Entry(content, place_holder=_("Need some music? Find it here..."))
         entry_align = gtk.Alignment()
         entry_align.set(0.5, 0.5, 1, 1)
         entry_align.add(self.entry)

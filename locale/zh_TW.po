@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-04-23 10:17+0800\n"
+"POT-Creation-Date: 2013-04-24 15:39+0800\n"
 "PO-Revision-Date: 2012-12-29 11:34+0800\n"
 "Last-Translator: SmallEvilBeast <houshao55@gmail.com>\n"
 "Language-Team: none\n"
@@ -309,7 +309,7 @@ msgid "Properties"
 msgstr "屬性"
 
 #: ../src/widget/song_editor.py:329 ../src/widget/equalizer.py:250
-#: ../src/widget/ui.py:1143 ../src/widget/converter.py:382
+#: ../src/widget/ui.py:1142 ../src/widget/converter.py:382
 #: ../src/widget/converter.py:437 ../src/widget/preference.py:954
 #: ../src/widget/lyrics_search.py:88
 msgid "Close"
@@ -496,54 +496,58 @@ msgstr "本地音樂"
 msgid "Lyrics window"
 msgstr "窗口歌詞"
 
-#: ../src/widget/ui.py:400
+#: ../src/widget/ui.py:201
+msgid "Need some music? Find it here..."
+msgstr "找音樂，在這裏..."
+
+#: ../src/widget/ui.py:399
 msgid "Add Music"
 msgstr "添加音樂"
 
-#: ../src/widget/ui.py:1013
+#: ../src/widget/ui.py:1012
 msgid "Your search {keyword} did not match any items in {from}"
 msgstr "在{from}中未發現與{keyword}關聯的內容"
 
-#: ../src/widget/ui.py:1014
+#: ../src/widget/ui.py:1013
 msgid "Suggestions"
 msgstr "提請"
 
-#: ../src/widget/ui.py:1015
+#: ../src/widget/ui.py:1014
 msgid "Make sure all words are spelled correctly."
 msgstr "確保全部單詞拼寫正確。"
 
-#: ../src/widget/ui.py:1016
+#: ../src/widget/ui.py:1015
 msgid ""
 "Try more general keywords, such as a title, an artist or the name of an "
 "album."
 msgstr "請嘗試更多關鍵字搜索，如標題、藝人或專輯名稱。"
 
-#: ../src/widget/ui.py:1113 ../src/widget/plugins_view.py:163
+#: ../src/widget/ui.py:1112 ../src/widget/plugins_view.py:163
 msgid "Plugin"
 msgstr "插件"
 
-#: ../src/widget/ui.py:1121
+#: ../src/widget/ui.py:1120
 msgid "Author(s)"
 msgstr "作者"
 
-#: ../src/widget/ui.py:1151
+#: ../src/widget/ui.py:1150
 msgid "Minimize to tray"
 msgstr "最小化到託盤"
 
-#: ../src/widget/ui.py:1153 ../src/widget/preference.py:196
+#: ../src/widget/ui.py:1152 ../src/widget/preference.py:196
 #: ../src/widget/instance.py:370 ../src/widget/tray.py:81
 msgid "Quit"
 msgstr "退出"
 
-#: ../src/widget/ui.py:1157
+#: ../src/widget/ui.py:1156
 msgid "Don't prompted again"
 msgstr "下次不再提示"
 
-#: ../src/widget/ui.py:1164
+#: ../src/widget/ui.py:1163
 msgid "OK"
 msgstr "確定"
 
-#: ../src/widget/ui.py:1167
+#: ../src/widget/ui.py:1166
 msgid "Cancel"
 msgstr "取消"
 
@@ -887,28 +891,32 @@ msgstr "播放模式"
 msgid "View New Features"
 msgstr "查看新特性"
 
-#: ../src/widget/instance.py:389 ../src/widget/tray.py:69
+#: ../src/widget/instance.py:374 ../src/widget/tray.py:70
+msgid "Search Lyrics"
+msgstr "搜索歌詞"
+
+#: ../src/widget/instance.py:393 ../src/widget/tray.py:69
 msgid "Hide Lyrics"
 msgstr "關閉歌詞"
 
-#: ../src/widget/instance.py:391 ../src/widget/tray.py:72
+#: ../src/widget/instance.py:395 ../src/widget/tray.py:72
 msgid "Show Lyrics"
 msgstr "打開歌詞"
 
-#: ../src/widget/instance.py:395 ../src/widget/tray.py:75
+#: ../src/widget/instance.py:399 ../src/widget/tray.py:75
 msgid "Unlock lyrics"
 msgstr "解鎖歌詞"
 
-#: ../src/widget/instance.py:397 ../src/widget/lyrics_module.py:149
+#: ../src/widget/instance.py:401 ../src/widget/lyrics_module.py:149
 #: ../src/widget/tray.py:77
 msgid "Lock lyrics"
 msgstr "鎖定歌詞"
 
-#: ../src/widget/instance.py:472
+#: ../src/widget/instance.py:476
 msgid "Mini Mode"
 msgstr "迷你模式"
 
-#: ../src/widget/instance.py:474
+#: ../src/widget/instance.py:478
 msgid "Normal Mode"
 msgstr "普通模式"
 
@@ -1269,10 +1277,6 @@ msgstr "靜音"
 #: ../src/widget/tray.py:64
 msgid "Volume"
 msgstr "音量"
-
-#: ../src/widget/tray.py:70
-msgid "Search Lyrics"
-msgstr "搜索歌詞"
 
 #: ../src/widget/webcasts_browser.py:98
 msgid "Region"

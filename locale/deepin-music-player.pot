@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-04-23 10:17+0800\n"
+"POT-Creation-Date: 2013-04-24 15:39+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -309,7 +309,7 @@ msgid "Properties"
 msgstr ""
 
 #: ../src/widget/song_editor.py:329 ../src/widget/equalizer.py:250
-#: ../src/widget/ui.py:1143 ../src/widget/converter.py:382
+#: ../src/widget/ui.py:1142 ../src/widget/converter.py:382
 #: ../src/widget/converter.py:437 ../src/widget/preference.py:954
 #: ../src/widget/lyrics_search.py:88
 msgid "Close"
@@ -496,54 +496,58 @@ msgstr ""
 msgid "Lyrics window"
 msgstr ""
 
-#: ../src/widget/ui.py:400
+#: ../src/widget/ui.py:201
+msgid "Need some music? Find it here..."
+msgstr ""
+
+#: ../src/widget/ui.py:399
 msgid "Add Music"
 msgstr ""
 
-#: ../src/widget/ui.py:1013
+#: ../src/widget/ui.py:1012
 msgid "Your search {keyword} did not match any items in {from}"
 msgstr ""
 
-#: ../src/widget/ui.py:1014
+#: ../src/widget/ui.py:1013
 msgid "Suggestions"
 msgstr ""
 
-#: ../src/widget/ui.py:1015
+#: ../src/widget/ui.py:1014
 msgid "Make sure all words are spelled correctly."
 msgstr ""
 
-#: ../src/widget/ui.py:1016
+#: ../src/widget/ui.py:1015
 msgid ""
 "Try more general keywords, such as a title, an artist or the name of an "
 "album."
 msgstr ""
 
-#: ../src/widget/ui.py:1113 ../src/widget/plugins_view.py:163
+#: ../src/widget/ui.py:1112 ../src/widget/plugins_view.py:163
 msgid "Plugin"
 msgstr ""
 
-#: ../src/widget/ui.py:1121
+#: ../src/widget/ui.py:1120
 msgid "Author(s)"
 msgstr ""
 
-#: ../src/widget/ui.py:1151
+#: ../src/widget/ui.py:1150
 msgid "Minimize to tray"
 msgstr ""
 
-#: ../src/widget/ui.py:1153 ../src/widget/preference.py:196
+#: ../src/widget/ui.py:1152 ../src/widget/preference.py:196
 #: ../src/widget/instance.py:370 ../src/widget/tray.py:81
 msgid "Quit"
 msgstr ""
 
-#: ../src/widget/ui.py:1157
+#: ../src/widget/ui.py:1156
 msgid "Don't prompted again"
 msgstr ""
 
-#: ../src/widget/ui.py:1164
+#: ../src/widget/ui.py:1163
 msgid "OK"
 msgstr ""
 
-#: ../src/widget/ui.py:1167
+#: ../src/widget/ui.py:1166
 msgid "Cancel"
 msgstr ""
 
@@ -882,28 +886,32 @@ msgstr ""
 msgid "View New Features"
 msgstr ""
 
-#: ../src/widget/instance.py:389 ../src/widget/tray.py:69
+#: ../src/widget/instance.py:374 ../src/widget/tray.py:70
+msgid "Search Lyrics"
+msgstr ""
+
+#: ../src/widget/instance.py:393 ../src/widget/tray.py:69
 msgid "Hide Lyrics"
 msgstr ""
 
-#: ../src/widget/instance.py:391 ../src/widget/tray.py:72
+#: ../src/widget/instance.py:395 ../src/widget/tray.py:72
 msgid "Show Lyrics"
 msgstr ""
 
-#: ../src/widget/instance.py:395 ../src/widget/tray.py:75
+#: ../src/widget/instance.py:399 ../src/widget/tray.py:75
 msgid "Unlock lyrics"
 msgstr ""
 
-#: ../src/widget/instance.py:397 ../src/widget/lyrics_module.py:149
+#: ../src/widget/instance.py:401 ../src/widget/lyrics_module.py:149
 #: ../src/widget/tray.py:77
 msgid "Lock lyrics"
 msgstr ""
 
-#: ../src/widget/instance.py:472
+#: ../src/widget/instance.py:476
 msgid "Mini Mode"
 msgstr ""
 
-#: ../src/widget/instance.py:474
+#: ../src/widget/instance.py:478
 msgid "Normal Mode"
 msgstr ""
 
@@ -1263,10 +1271,6 @@ msgstr ""
 
 #: ../src/widget/tray.py:64
 msgid "Volume"
-msgstr ""
-
-#: ../src/widget/tray.py:70
-msgid "Search Lyrics"
 msgstr ""
 
 #: ../src/widget/webcasts_browser.py:98
