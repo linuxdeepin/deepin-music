@@ -301,5 +301,5 @@ class TabManager(gtk.VBox):
             for item in self.items:
                 item.clear_selected_status()
             active_item.manual_select()    
+            self.current_index = active_item.index
             switch_tab(self.__container, active_item.list_widget)
-        
