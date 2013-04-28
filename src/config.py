@@ -123,7 +123,7 @@ class Config(gobject.GObject, Logger):
                 },
 
             "lyrics" : {
-                "status" : "true",
+                "status" : "false",
                 "mode" : "1",
                 "save_lrc_path" : "~/.lyrics",
                 "auto_download" : "true",
@@ -188,7 +188,7 @@ class Config(gobject.GObject, Logger):
                 "enable" :          "false",
                 "previous"           : "Alt + Left",
                 "next"               : "Alt + Right",
-                "playpause"          : "Alt + F5",
+                "playpause"          : "Alt + P",
                 "increase_vol"        : "Alt + Up",
                 "decrease_vol"        : "Alt + Down",
                 "toggle_window"      : "Alt + W",

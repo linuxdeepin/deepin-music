@@ -389,8 +389,8 @@ class HotKeySetting(gtk.VBox):
         self.toggle_lyrics_lock_entry.set_shortcut_key("Alt + U")
         self.change_lyrics_lock_key(None, "Alt + U")
         
-        self.playpause_entry.set_shortcut_key("Alt + F5")
-        self.change_playpause_key(None, "Alt + F5")        
+        self.playpause_entry.set_shortcut_key("Alt + P")
+        self.change_playpause_key(None, "Alt + P")        
         
         self.previous_entry.set_shortcut_key("Alt + Left")
         self.change_previous_key(None, "Alt + Left")
