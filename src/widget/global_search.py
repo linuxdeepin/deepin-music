@@ -61,6 +61,7 @@ class GlobalSearch(gtk.VBox):
         
         Dispatcher.connect("add-search-view", self.on_dispatcher_add_search_view)
         Dispatcher.connect("remove-search-view", self.on_dispatcher_remove_search_view)
+        Dispatcher.connect("switch-browser", self.on_list_manager_switch_browser)
         
     def on_dispatcher_add_search_view(self, widget, tab_item):    
         self.tab_switcher.add_item(tab_item)
@@ -82,3 +83,13 @@ class GlobalSearch(gtk.VBox):
         cr.set_source_rgb(*color_hex_to_cairo(self.line_dcolor.get_color()))
         cr.rectangle(rect.x, rect.y + rect.height - 1, rect.width, 1)
         cr.fill()
+        
+    def on_list_manager_switch_browser(self, widget, data, is_switched):    
+        current_index = None
+        for index, item in enumerate(self.tab_switcher.items):
+            if item.search_view.source_tab == data:
+                current_index = index
+                break
+            
+        if current_index != None:    
+            self.tab_switcher.active_item_by_index(current_index)

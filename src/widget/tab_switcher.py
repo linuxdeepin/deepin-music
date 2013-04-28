@@ -103,6 +103,11 @@ class TabSwitcher(gtk.EventBox):
         self.tab_height = tab_sizes[0][1] + self.tab_name_padding_y * 2
         self.set_size_request(-1, self.tab_height + self.tab_line_height)
         
+    def active_item_by_index(self, index):    
+        self.emit("tab_switch_start", self.items[index])
+        self.tab_index = index
+        self.queue_draw()
+
     def expose_tab_switcher(self, widget, event):
         # Init.
         cr = widget.window.cairo_create()
