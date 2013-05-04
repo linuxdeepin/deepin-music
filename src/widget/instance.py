@@ -81,13 +81,14 @@ class DeepinMusic(gobject.GObject, Logger):
     
     def __init__(self):
         gobject.GObject.__init__(self)
+        image_dir = os.path.join(get_parent_dir(__file__, 3), "image")
         application = Application("DMuisc", resizable=False)
         application.close_callback = self.prompt_quit
-        application.set_icon(app_theme.get_pixbuf("skin/logo.ico"))
-        application.set_skin_preview(app_theme.get_pixbuf("frame.png"))
+        application.set_icon(os.path.join(image_dir, "logo.ico"))
+        application.set_skin_preview(os.path.join(image_dir, "frame.png"))
         application.add_titlebar(
             ["theme", "menu", "min", "close"],
-            app_theme.get_pixbuf("skin/logo1.png"),
+            os.path.join(image_dir, "logo1.png"),
             _("Deepin Music")
             )
         application.titlebar.menu_button.connect("button-press-event", self.menu_button_press)        

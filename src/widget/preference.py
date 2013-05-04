@@ -26,7 +26,8 @@ import cairo
 from collections import OrderedDict
 
 from dtk.ui.label import Label
-from dtk.ui.box import BackgroundBox, ImageBox
+from dtk.ui.box import BackgroundBox
+from deepin_utils.file import get_parent_dir
 from dtk.ui.button import CheckButton, RadioButton
 from dtk.ui.spin import SpinBox
 from dtk.ui.entry import InputEntry, ShortcutKeyEntry
@@ -904,7 +905,7 @@ class AboutBox(gtk.VBox):
     def __init__(self):
         gtk.VBox.__init__(self)
         main_box = gtk.VBox(spacing=15)
-        logo_image = ImageBox(app_theme.get_pixbuf("skin/logo1.png"))
+        logo_image = gtk.image_new_from_pixbuf(gtk.gdk.pixbuf_new_from_file(os.path.join(get_parent_dir(__file__, 3), "image", "logo1.png")))
         light_color = app_theme.get_color("labelText")
         logo_name = Label(_("Deepin Music Player"), text_size=10)
         logo_box = gtk.HBox(spacing=2)

@@ -28,6 +28,8 @@ from widget.skin import app_theme
 from helper import Dispatcher
 from config import config
 from nls import _
+from deepin_utils.file import get_parent_dir
+import os
 
 class BaseTrayIcon(object):
     '''Trayicon base, needs to be derived from.'''
@@ -39,7 +41,7 @@ class BaseTrayIcon(object):
         self.menu = None
     
     def update_icon(self):
-        self.set_from_pixbuf(app_theme.get_pixbuf("skin/logo.ico").get_pixbuf())
+        self.set_from_pixbuf(gtk.gdk.pixbuf_new_from_file(os.path.join(get_parent_dir(__file__, 3), "image", "logo.ico")))
         
     def get_volume_menu(self):    
         menu_items = [
