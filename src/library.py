@@ -34,7 +34,7 @@ from cue_parser import read_cuesheet, CueException
 import utils
 
 
-AUTOSAVE_TIMEOUT = 1000 * 60 * 5 # 1min
+AUTOSAVE_TIMEOUT = 1000 * 60 # 1min
 SIGNAL_DB_QUERY_FIRED = 50
 
 
@@ -480,7 +480,7 @@ class MediaDatebase(gobject.GObject, Logger):
         
         # fire signal
         self.__reset_queued_signal()
-        gobject.timeout_add(AUTOSAVE_TIMEOUT, self.async_save)
+        gobject.timeout_add(AUTOSAVE_TIMEOUT, self.interval_async_save)
         gobject.timeout_add(SIGNAL_DB_QUERY_FIRED * 20, self.__fire_queued_signal)
         
         self.logdebug("%s songs loaded in %s types", len(self.__songs), len(self.__song_types))
@@ -512,10 +512,13 @@ class MediaDatebase(gobject.GObject, Logger):
         self.logdebug("%d songs saved and %d playlists saved", len(objs), len(playlists))
         self.__dirty = False
         
+    def interval_async_save(self):    
+        self.async_save()
+        return True
+        
     @utils.threaded
     def async_save(self):
         self.save()
-
         
         
 class Playlist(gobject.GObject, Logger):        

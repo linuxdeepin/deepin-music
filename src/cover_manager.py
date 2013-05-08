@@ -155,6 +155,9 @@ class DeepinCoverManager(Logger):
         cover_cache_dir = get_cache_dir("cover")
         if not os.path.isdir(cover_cache_dir):
             return None
+        
+        if len(MediaDB.get_all_uris()) < 4:
+            return None
        
         if key == "album":
             if self.album_all_cover != None:
@@ -166,7 +169,7 @@ class DeepinCoverManager(Logger):
             cache_files = [f for f in os.listdir(cover_cache_dir) if "-" not in f] 
         else:    
             return None
-            
+        
         if len(cache_files) < 4:
             return None
         
