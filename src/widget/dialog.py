@@ -25,6 +25,7 @@ import os
 
 import utils
 from nls import _
+from helper import Dispatcher
 
 
 class WinDir(gtk.FileChooserDialog):
@@ -35,9 +36,10 @@ class WinDir(gtk.FileChooserDialog):
                                        (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
                                         gtk.STOCK_OPEN, gtk.RESPONSE_OK))
         self.return_uri = return_uri
-        self.set_modal(True)
+        # self.set_modal(True)
         
     def run(self):    
+        Dispatcher.emit("dialog-run")
         response = gtk.FileChooserDialog.run(self)
         folder = None
         if response == gtk.RESPONSE_OK:
@@ -46,6 +48,7 @@ class WinDir(gtk.FileChooserDialog):
             else:
                 folder = self.get_filename()
         self.destroy()    
+        Dispatcher.emit("dialog-close")
         return folder
     
 class WinFile(gtk.FileChooserDialog):    
@@ -60,15 +63,17 @@ class WinFile(gtk.FileChooserDialog):
         # self.set_current_folder(get_music_dir())
 
     def run(self):
+        Dispatcher.emit("dialog-run")
         response = gtk.FileChooserDialog.run(self)
         folder = None
-        self.set_modal(True)
+        # self.set_modal(True)
         if response == gtk.RESPONSE_OK:
             if self.__return_uri:
                 folder = self.get_uri()                
             else:    
                 folder = self.get_filename()                
         self.destroy()
+        Dispatcher.emit("dialog-close")
         return folder
     
 class WindowExportPlaylist(gtk.FileChooserDialog):
@@ -105,6 +110,7 @@ class WindowExportPlaylist(gtk.FileChooserDialog):
         self.set_current_name("%s.%s" % ("playlist", filetype))
 
     def run(self):
+        Dispatcher.emit("dialog-run")
         response = gtk.FileChooserDialog.run(self)
         self.set_modal(True)
         if response == gtk.RESPONSE_OK:
@@ -116,6 +122,7 @@ class WindowExportPlaylist(gtk.FileChooserDialog):
                 filename = filename+"."+pl_type
                 utils.export_playlist(self.songs,filename,pl_type)
         self.destroy()
+        Dispatcher.emit("dialog-close")
         
 class WindowLoadPlaylist(gtk.FileChooserDialog):
     def __init__(self):
@@ -141,11 +148,13 @@ class WindowLoadPlaylist(gtk.FileChooserDialog):
 
     def run(self):
         uri = None
+        Dispatcher.emit("dialog-run")
         response = gtk.FileChooserDialog.run(self)
         self.set_modal(True)
         if response == gtk.RESPONSE_OK:
             uri =  self.get_uri()
         self.destroy()
+        Dispatcher.emit("dialog-close")
         return uri
     
     

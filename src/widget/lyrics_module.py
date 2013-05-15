@@ -77,6 +77,8 @@ class LyricsModule(object):
         Dispatcher.connect("show-lyrics", lambda w : self.run())
         Dispatcher.connect("close-lyrics", lambda w: self.hide_all())
         Dispatcher.connect("search-lyrics", lambda w: self.open_search_window(w))
+        Dispatcher.connect("dialog-run", self.on_dialog_run)
+        Dispatcher.connect("dialog-close", self.on_dialog_close)
         
         self.lrc_manager = LrcManager()
         self.lrc = LrcParser()
@@ -90,6 +92,7 @@ class LyricsModule(object):
         self.song_duration = 0
         self.__find_flag = False
         self.__lyrics_mode = config.getint("lyrics", "mode")
+        self.__dialog_locked_flag = False        
         
         self.init_toolbar()
         
@@ -391,10 +394,20 @@ class LyricsModule(object):
         
     def open_setting_window(self, widget):
         Dispatcher.show_desktop_page()
+        
+    def on_dialog_close(self, sender):    
+        if self.__dialog_locked_flag:
+            self.desktop_lyrics_win.set_locked(False)
     
+    def on_dialog_run(self, sender):
+        if config.getboolean("lyrics", "status"):
+            if not self.desktop_lyrics_win.get_locked():
+                self.__dialog_locked_flag = True
+                self.desktop_lyrics_win.set_locked()
+        
     def __unlock_lyrics(self, *args):
         self.desktop_lyrics_win.set_locked(False)
-    
+        
     def __lock_lyrics(self, *args):        
         self.desktop_lyrics_win.set_locked()
     
@@ -767,5 +780,3 @@ class LyricsModule(object):
             return "%s-%s" % (artist, title)
         else:
             return "%s" % title
-        
-        

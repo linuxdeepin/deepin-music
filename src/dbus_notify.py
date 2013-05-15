@@ -66,7 +66,7 @@ class DbusNotify(object):
         proxy = bus.get_object(NOTIFICATIONS_SERVICE_NAME,
                                NOTIFICATIONS_PATH)
         notify_interface = dbus.Interface(proxy, NOTIFICATIONS_SERVICE_NAME)
-        notify_interface.Notify(self.app_name, -1, self.icon, self.summary, self.body,
+        notify_interface.Notify(self.app_name, 1, self.icon, self.summary, self.body,
                                 self.actions, self.hints, self.timeout)
 
 dbus_notify = DbusNotify("deepin-music-player", "deepin-music-player")        

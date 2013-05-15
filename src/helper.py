@@ -73,6 +73,8 @@ class EventDispatcher(gobject.GObject):
         "remove-search-view" : SIGNAL_SIMPLE,
         "save-current-list" : SIGNAL_BASE,
         "search-lyrics" : SIGNAL_BASE,
+        "dialog-run" : SIGNAL_BASE,
+        "dialog-close" : SIGNAL_BASE,
         }
     
     def __init__(self):
