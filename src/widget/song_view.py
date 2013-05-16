@@ -68,7 +68,7 @@ class SongView(TreeView):
                            targets, gtk.gdk.ACTION_COPY)
         self.pl = None
         self.add_song_cache = []
-        sort_key = ["file", "album", "genre", "artist", "title", "#playcount", "#added"]
+        sort_key = ["file", "album", "genre", "#track", "artist", "title", "#playcount", "#added"]
         self.sort_reverse = {key : False for key in sort_key }
         self.connect_after("drag-data-received", self.on_drag_data_received)
         self.connect("double-click-item", self.double_click_item_cb)

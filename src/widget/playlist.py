@@ -493,6 +493,7 @@ class PlaylistUI(gtk.VBox):
         sort_dict["artist"] = _("By Artist")        
         sort_dict["album"] = _("By Album") 
         sort_dict["genre"] = _("By Genre")
+        sort_dict["#track"] = _("By Track")
         sort_dict["#playcount"] = _("By Play Count")
         sort_dict["#added"] = _("By Date Added")
 
