@@ -69,9 +69,9 @@ class SongInfo(gtk.VBox):
         content_box_align = gtk.Alignment()
         content_box_align.set_padding(20, 0, 0, 0)
         content_box = gtk.VBox(spacing=5)
-        title_box, self.title_label = self.create_combo_label(_("Title:"))
-        artist_box, self.artist_label = self.create_combo_label(_("Artist:"))
-        album_box, self.album_label  = self.create_combo_label(_("Album:"))        
+        title_box, self.title_label = self.create_combo_label(_("Title"))
+        artist_box, self.artist_label = self.create_combo_label(_("Artist"))
+        album_box, self.album_label  = self.create_combo_label(_("Album"))        
         content_box_align.add(content_box)
         
         content_box.pack_start(title_box, False, False)        
@@ -85,7 +85,7 @@ class SongInfo(gtk.VBox):
 
     def create_combo_label(self, title, content=""):   
         hbox = gtk.HBox(spacing=5)
-        title_label  = Label(title)
+        title_label  = Label("%s:" % title)
         content_label = Label(content)
         content_label.set_size_request(200, -1)
         hbox.pack_start(title_label, False, False)
@@ -93,11 +93,11 @@ class SongInfo(gtk.VBox):
         return hbox, content_label
     
     def create_detail_box(self):
-        self.file_type_label, self.file_format_label = self.create_double_combo_label(0, 1, _("Type:"), _("Format:"))
-        self.file_size_label, self.song_duration_label = self.create_double_combo_label(1, 2, _("Size:"), _("Duration:"))
-        self.song_bitrate_label, self.song_rate_label = self.create_double_combo_label(2, 3, _("Bitrate:"), _("Rate:"))
-        self.song_added_label, self.song_lasted_label = self.create_double_combo_label(3, 4, _("Added:"), _("Recently:"))
-        self.song_playcount_label, self.song_date_label = self.create_double_combo_label(4, 5, _("Playcount:"), _("Date:"))
+        self.file_type_label, self.file_format_label = self.create_double_combo_label(0, 1, _("Type"), _("Format"))
+        self.file_size_label, self.song_duration_label = self.create_double_combo_label(1, 2, _("Size"), _("Duration"))
+        self.song_bitrate_label, self.song_rate_label = self.create_double_combo_label(2, 3, _("Bitrate"), _("Rate"))
+        self.song_added_label, self.song_lasted_label = self.create_double_combo_label(3, 4, _("Added"), _("Recently"))
+        self.song_playcount_label, self.song_date_label = self.create_double_combo_label(4, 5, _("Playcount"), _("Date"))
         
     def get_song_attr(self, song, song_type=True):    
         try:
@@ -122,7 +122,7 @@ class SongInfo(gtk.VBox):
         
     def create_double_combo_label(self, top_attach, bottom_attach, first_label, second_label, first_content="", second_content=""):
         first_label_box = gtk.HBox()
-        first_title_label = Label(first_label)
+        first_title_label = Label("%s:" % first_label)
         first_label_box.pack_start(create_right_align(), True, True)        
         first_label_box.pack_start(first_title_label, False, False)
         first_content_label = Label(first_content)
@@ -144,7 +144,7 @@ class SongInfo(gtk.VBox):
         location_align = gtk.Alignment()
         location_align.set(1.0, 1.0, 0.5, 0.5)
         location_box = gtk.HBox(spacing=5)
-        location_label = Label(_("Location:"))
+        location_label = Label("%s" % _("Location"))
         self.location_entry = InputEntry("")
         self.location_entry.set_size(250, 25)
         open_button = Button(_("Open directory"))
@@ -199,11 +199,11 @@ class InfoSetting(gtk.VBox):
         self.main_table.set_col_spacings(10)
         self.main_table.set_row_spacings(10)
         
-        self.title_entry  = self.create_combo_entry(0, 1, _("Title:"))
-        self.artist_entry = self.create_combo_entry(1, 2, _("Artist:"))
-        self.album_entry  = self.create_combo_entry(2, 3, _("Album:"))
-        self.genre_entry  = self.create_combo_entry(3, 4, _("Genre:"))
-        self.date_entry   = self.create_combo_entry(4, 5, _("Date:"))
+        self.title_entry  = self.create_combo_entry(0, 1, _("Title"))
+        self.artist_entry = self.create_combo_entry(1, 2, _("Artist"))
+        self.album_entry  = self.create_combo_entry(2, 3, _("Album"))
+        self.genre_entry  = self.create_combo_entry(3, 4, _("Genre"))
+        self.date_entry   = self.create_combo_entry(4, 5, _("Date"))
         
         main_align.add(self.main_table)
         
@@ -225,7 +225,7 @@ class InfoSetting(gtk.VBox):
         
     def create_combo_entry(self, top_attach, bottom_attach, label_text, content_text=""):   
         title_label_box = gtk.HBox()
-        title_label = Label(label_text)
+        title_label = Label("%s:" % label_text)
         title_label_box.pack_start(create_right_align(), False, True)
         title_label_box.pack_start(title_label, False, True)
         

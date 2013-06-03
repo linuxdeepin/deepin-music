@@ -447,9 +447,9 @@ class SongView(TreeView):
     def get_playmode_menu(self, pos=[], align=False):
         mode_dict = OrderedDict()
 
-        mode_dict["single_mode"] = _("Repeat(single)")
-        mode_dict["order_mode"] = _("Play(ordered)")
-        mode_dict["list_mode"] = _("Repeat(list)")
+        mode_dict["single_mode"] = _("Repeat (single)")
+        mode_dict["order_mode"] = _("Play (ordered)")
+        mode_dict["list_mode"] = _("Repeat (list)")
         mode_dict["random_mode"] = _("Random")        
         
         mode_items = []
@@ -487,9 +487,9 @@ class SongView(TreeView):
         
     def popup_add_menu(self, x, y):
         menu_items = [
-            (None, _("Add URL") , self.add_unknow_uri),            
+            (None, _("URL") , self.add_unknow_uri),            
             (None, _("File"), self.add_file),
-            (None, _("Directory(include subdirectories)"), self.recursion_add_dir),
+            (None, _("Directory (include subdirectories)"), self.recursion_add_dir),
             (None, _("Directory"), self.add_dir),
             ]
         Menu(menu_items, True).show((x, y))

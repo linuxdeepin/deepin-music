@@ -124,7 +124,7 @@ class SearchUI(DialogBox):
         artist = self.artist_entry.entry.get_text()
         title = self.title_entry.entry.get_text()
         # widget.set_sensitive(False)
-        self.prompt_label.set_text(_("Now searching"))
+        self.prompt_label.set_text(_("Now searching..."))
         if artist == "" and title == "":
             self.prompt_label.set_text(_("Not found!"))
             return
@@ -158,7 +158,7 @@ class SearchUI(DialogBox):
         select_items = self.result_view.select_rows
         save_filepath = self.lrc_manager.get_lrc_filepath(Player.song)
         if len(select_items) > 0:
-            self.prompt_label.set_text(_("Downloading lyrics"))
+            self.prompt_label.set_text(_("Downloading lyrics..."))
             item = self.result_view.get_items()[select_items[0]]
             url = item.get_url()
             net_encode = item.get_netcode()
@@ -170,7 +170,7 @@ class SearchUI(DialogBox):
             Dispatcher.reload_lrc(Player.song)
             self.prompt_label.set_text("%s %s" % (_("File save to"), config.get("lyrics", "save_lrc_path")))
         else:    
-            self.prompt_label.set_text(_("Fail to download!"))
+            self.prompt_label.set_text(_("Download failed."))
         
         
 class SearchItem(TreeItem):        

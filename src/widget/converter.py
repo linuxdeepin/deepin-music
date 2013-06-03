@@ -294,7 +294,7 @@ class JobsView(ListView):
                 
     def __run_check(self, ajob):            
         if ajob.exists_prompt:
-            ConfirmDialog(_("Prompt"), _("The target file already exists overwrite?"),
+            ConfirmDialog(_("Prompt"), _("Target file already exitsts, do you want to overwrite it?"),
                           confirm_callback=lambda : ajob.start(),
                           cancel_callback=lambda :self.start_new_job(ajob)
                           ).show_window()
@@ -418,10 +418,10 @@ class AttributesUI(DialogBox):
         self.songs = songs or [Player.song]
         default_format = "MP3 (CBR)"
         default_index = FORMATS.keys().index(default_format)
-        format_box, self.format_combo_box = self.create_combo_widget(_("Format:"),
+        format_box, self.format_combo_box = self.create_combo_widget(_("Format"),
                                                                 [(key, None) for key in FORMATS.keys()],
                                                                 default_index)
-        quality_box, self.quality_combo_box = self.create_combo_widget(_("Quality:"),
+        quality_box, self.quality_combo_box = self.create_combo_widget(_("Quality"),
                                                                        self.get_quality_items(default_format),
                                                                        self.get_quality_index(default_format),
                                                                        65)
@@ -429,7 +429,7 @@ class AttributesUI(DialogBox):
         format_quality_box.pack_start(format_box, False, False)
         format_quality_box.pack_start(quality_box, False, False)
         
-        exists_box, self.exists_combo_box = self.create_combo_widget(_("Target file already exists:"),
+        exists_box, self.exists_combo_box = self.create_combo_widget(_("Target file already exists"),
                                                                 [(_("Ask"), True), (_("Cover"), False)],
                                                                 0)
         
@@ -457,7 +457,7 @@ class AttributesUI(DialogBox):
         self.right_button_box.set_buttons([start_button, close_button])
         
     def create_output_box(self):
-        output_label = Label(_("Output:"))
+        output_label = Label("%s:" % _("Output"))
         self.output_entry = InputEntry(os.path.expanduser("~/"))
         self.output_entry.set_size(210, 24)
         change_button = Button(_("Change"))
@@ -481,7 +481,7 @@ class AttributesUI(DialogBox):
         return FORMATS[name]["default_index"]
         
     def create_combo_widget(self, label_content, items, select_index=0, max_width=None):    
-        label = Label(label_content)
+        label = Label("%s:" % label_content)
         combo_box = ComboBox(items, select_index=select_index, max_width=max_width)
         
         hbox = gtk.HBox(spacing=5)

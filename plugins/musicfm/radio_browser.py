@@ -77,8 +77,8 @@ class RadioBrowser(gtk.VBox):
         items = []
         items.append(CategroyTreeItem(_("Home"), "home",  lambda : switch_tab(self.page_box, self.home_page)))
         items.append(CategroyTreeItem(_("Hot MHz"), "hot", lambda : switch_tab(self.page_box, self.hot_page_sw)))
-        items.append(CategroyTreeItem(_("Genre MHz"), "genre",  lambda : switch_tab(self.page_box, self.genre_page)))
-        items.append(CategroyTreeItem(_("Uptrending MHz"), "up", lambda : switch_tab(self.page_box, self.fast_page_sw)))        
+        items.append(CategroyTreeItem(_("Genres"), "genre",  lambda : switch_tab(self.page_box, self.genre_page)))
+        items.append(CategroyTreeItem(_("Also Poplular"), "up", lambda : switch_tab(self.page_box, self.fast_page_sw)))        
         self.radiobar.add_items(items)
         self.radiobar.select_items([self.radiobar.visible_items[0]])
         self.radiobar.set_size_request(121, -1)

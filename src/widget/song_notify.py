@@ -190,8 +190,8 @@ class SongNotify(gtk.Window):
         
         # draw size and format    
         other_y = dash_y + self.other_up_offset
-        song_size = "%s %s" % (_("Size:"), utils.xmlescape(self.song.get_str("#size")))
-        song_format = "%s %s" % (_("Type:"), utils.get_song_attr(self.song))
+        song_size = "%s: %s" % (_("Size"), utils.xmlescape(self.song.get_str("#size")))
+        song_format = "%s: %s" % (_("Type"), utils.get_song_attr(self.song))
         _width, _height = get_content_size(song_size, text_size=self.other_text_size)
         draw_text(cr, song_size, other_left_x, other_y, other_width, _height, 
                   text_size=self.other_text_size,
@@ -206,8 +206,8 @@ class SongNotify(gtk.Window):
         other_y += _height + self.other_text_padding_y
         playcount = self.song.get_str("#playcount")
         if playcount == "Never" or not playcount: playcount = "0"
-        song_playcount = "%s %s" % (_("Playcount:"), playcount)
-        duration = "%s %s" % (_("Duration:"), self.song.get_str("#duration"))
+        song_playcount = "%s: %s" % (_("Playcount"), playcount)
+        duration = "%s: %s" % (_("Duration"), self.song.get_str("#duration"))
         
         draw_text(cr, song_playcount, other_left_x, other_y, other_width, _height, 
                   text_size=self.other_text_size,

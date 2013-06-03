@@ -104,9 +104,9 @@ class DeepinMusicApp(Logger):
         group.add_option("-t", "--play-pause", dest="PlayPause", 
                          action="store_true", default=False, help=_("Pause or resume playback"))        
         group.add_option("-f", "--forward", dest="Forward", 
-                         action="store_true", default=False, help=_("Forward playback"))
+                         action="store_true", default=False, help=_("Seek Forward"))
         group.add_option("-r", "--rewind", dest="Rewind", 
-                         action="store_true", default=False, help=_("Rewind playback"))
+                         action="store_true", default=False, help=_("Seek Backward"))
         group.add_option("-s", "--stop", dest="Stop", 
                          action="store_true", default=False, help=_("Stop playback"))
         
@@ -114,7 +114,7 @@ class DeepinMusicApp(Logger):
         
         group = OptionGroup(p, _('Volume Options'))
         group.add_option("-v", "--change-vol", dest="ChangeVolume",
-                         action="store", default=None, help=_("Change volume (VOLUME 0.0-1.0)"))
+                         action="store", default=None, help=_("Change Volume (VOLUME 0.0-1.0)"))
         p.add_option_group(group)
         
         group = OptionGroup(p, _('Track information Options'))
@@ -129,7 +129,7 @@ class DeepinMusicApp(Logger):
         group.add_option("--get-path", dest="GetPath", 
                          action="store_true", default=False, help=_("Print the path of current track"))
         group.add_option("--current-position", dest="CurrentPosition",
-                action="store_true", default=False, help=_("Print the current playback position as time"))
+                action="store_true", default=False, help=_("Print current playback position"))
         p.add_option_group(group)
         
         group = OptionGroup(p, _('Other Options'))
@@ -160,7 +160,7 @@ class DeepinMusicApp(Logger):
         return p
     
     def version(self):
-        print "%s %s" % (_("Deepin Music Player"), PROGRAM_VERSION)
+        print "%s %s" % (_("Dmusic"), PROGRAM_VERSION)
         
     def mainloop_init(self):    
         import gobject

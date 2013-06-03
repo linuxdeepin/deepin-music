@@ -148,7 +148,7 @@ class LyricsModule(object):
         zoom_in_align = self.__create_zoom_button("zoom_in", _("increase the lyrics size"))
         zoom_out_align = self.__create_zoom_button("zoom_out", _("decrease the lyrics size"))
         predefine_align = self.__create_simple_button("predefine_color", self.popup_predefine_menu, 
-                                                      _("predefined color schemes"), True)
+                                                      _("Select color theme"), True)
         lock_align = self.__create_simple_button("lock", self.__lock_lyrics, _("Lock lyrics"))
         karaoke_align, self.karaoke_button = self.__create_single_toggle_button("karaoke", 
                                                                                 self.change_karaoke_status,
@@ -156,7 +156,7 @@ class LyricsModule(object):
         line_align, self.line_button = self.__create_simple_toggle_button("double_line", "single_line",
                                                                           self.change_line_status,
                                                                           _("Switch lines"))
-        setting_align = self.__create_simple_button("setting", self.open_setting_window, _("open setting panel"))
+        setting_align = self.__create_simple_button("setting", self.open_setting_window, _("Open settings panel"))
         search_align = self.__create_simple_button("search", self.open_search_window, _("search lrc file for current track"))
         close_align = self.__create_simple_button("close", self.close_lyric_window, _("Close lyrics"))
         before_align = self.__create_simple_button("before", self.before_offset, _("Lyrics rewind"))
@@ -196,13 +196,13 @@ class LyricsModule(object):
         
     def scroll_right_press_cb(self, widget, event):    
         menu_items = [
-            (self.get_scroll_menu_pixbufs("lrc"), _("Desktop lyrics mode"), self.switch_to_desktop_lyrics),
+            (self.get_scroll_menu_pixbufs("lrc"), _("Switch to desktop mode"), self.switch_to_desktop_lyrics),
             None,
             (self.get_scroll_menu_pixbufs("before"), _("Lyrics rewind"), lambda : self.before_offset(None)),
             (self.get_scroll_menu_pixbufs("after"), _("Lyrics forward"), lambda : self.after_offset(None)),
             None,
             (self.get_scroll_menu_pixbufs("search"), _("Search"), lambda :self.open_search_window(None)),
-            (self.get_scroll_menu_pixbufs("setting"), _("Setting"), lambda : Dispatcher.show_scroll_page()),
+            (self.get_scroll_menu_pixbufs("setting"), _("Settings"), lambda : Dispatcher.show_scroll_page()),
                       ]
         Menu(menu_items, True).show((int(event.x_root), int(event.y_root)))
         
@@ -217,7 +217,7 @@ class LyricsModule(object):
                 (None, _("Choose local lrc"), self.allocation_lrc),
                 (None, _("Open directory"), self.open_lrc_dir),
                 None,
-                (None, _("Setting"), lambda : self.open_setting_window(None)),
+                (None, _("Settings"), lambda : self.open_setting_window(None)),
                 (None, _("Switch to window mode"), lambda : self.switch_to_scroll_lyrics(None))
                 ]
             Menu(menu_items, True).show((int(event.x_root), int(event.y_root)))
@@ -763,8 +763,8 @@ class LyricsModule(object):
                 self.set_message(self.get_default_message(force_song) + " "+ _("No lyrics found!"))
                 self.scroll_lyrics.set_message(self.get_default_message(force_song) + " " +  _("No lyrics found!"))
             else:    
-                self.set_search_fail_message(_("Searching for lyrics"))
-                self.scroll_lyrics.set_message(_("Searching for lyrics"))
+                self.set_search_fail_message(_("Searching for lyrics..."))
+                self.scroll_lyrics.set_message(_("Searching for lyrics..."))
             self.__find_flag = False    
         return ret    
         

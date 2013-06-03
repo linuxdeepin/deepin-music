@@ -160,7 +160,7 @@ class PluginsManager(gtk.VBox):
         self.plugins_view.set_size_request(420, 330)        
         self.plugins_view.connect("single-click-item", self.on_plugins_view_single_click)
                 
-        self.plugins_view.set_column_titles([_("Plugin"), _("Version"), _("Enable"), ""],
+        self.plugins_view.set_column_titles([_("Add-on"), _("Version"), _("Enable"), ""],
                                             (self.sort_by_title, self.sort_by_title,
                                              self.sort_by_title, self.sort_by_title))
         plugins_view_align = set_widget_gravity(self.plugins_view, gravity=(1, 1, 1, 1),

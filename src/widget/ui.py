@@ -1109,7 +1109,7 @@ class PluginInfos(gtk.EventBox):
         
         # Draw plugin name.
         if self.plugin_info:
-            plugin_name = "%s: %s" % (_("Plugin"), utils.xmlescape(self.plugin_info.get("Name", "")))    
+            plugin_name = "%s: %s" % (_("Add-on"), utils.xmlescape(self.plugin_info.get("Name", "")))    
             _width, _height = get_content_size(plugin_name)
             draw_text(cr, plugin_name, rect.x, rect.y, rect.width, _height)        
             
@@ -1153,7 +1153,7 @@ class QuitDialog(DialogBox):
         
         radio_group.pack_start(self.minimize_radio, False, True)
         radio_group.pack_start(self.quit_radio, False, True)
-        self.remembar_button = CheckButton(_("Don't prompted again"))
+        self.remembar_button = CheckButton(_("Don't prompt again"))
         self.remembar_button.set_active(True)
         
         radio_group_align = gtk.Alignment()

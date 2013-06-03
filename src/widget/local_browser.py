@@ -95,8 +95,8 @@ class Browser(gtk.VBox, SignalContainer):
         self.importbar = SongImportBar()
         self.importbar.reload_items(
             [
-             (_("Scan Home Directory"), lambda : ImportFolderJob([os.path.expanduser("~")])),                
-             (_("Select Directory to Scan"), lambda : ImportFolderJob()),
+             (_("Quick Scan"), lambda : ImportFolderJob([os.path.expanduser("~")])),                
+             (_("Scan"), lambda : ImportFolderJob()),
              (_("Refresh Library"), lambda : ReloadDBJob())])
         
         # Left box

@@ -37,7 +37,7 @@ class PlayInfo(gtk.EventBox):
         self.default_height = 18
         self.set_size_request(default_width, self.default_height)
         self.default_width = default_width
-        self.artist_label = _("Deepin Music Player")
+        self.artist_label = _("Dmusic")
 
         Player.connect("instant-new-song",self.__new_song)
         MediaDB.connect("simple-changed",self.__on_change)
@@ -79,7 +79,7 @@ class PlayInfo(gtk.EventBox):
             self.update(player.song)
         
     def __on_player_init_status(self, player):    
-        self.set_text(_("Deepin Music Player"))
+        self.set_text(_("Dmusic"))
         
     def __on_buffering(self, playbin, progress):
         if self.song:

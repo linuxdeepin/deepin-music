@@ -77,7 +77,7 @@ class PlaylistUI(gtk.VBox):
                                                                 _("Search in Current Playlist"))
         
         self.__create_simple_button("list", self.popup_list_menu, _("Playlist Operations"))
-        self.__create_simple_button("add", self.popup_add_menu, _("Add track"))
+        self.__create_simple_button("add", self.popup_add_menu, _("Add"))
         
         self.playmode_button = PlaymodeButton(config.get("setting", "loop_mode", "list_mode").split("_")[0])
         Tooltip.text(self.playmode_button, _("Playback Order"))

@@ -193,7 +193,7 @@ class GeneralSetting(gtk.VBox):
         
         # mini_check_button
 
-        self.tray_radio_button = RadioButton(_("Minimize to tray icon"))
+        self.tray_radio_button = RadioButton(_("Minimize to tray"))
         self.quit_radio_button = RadioButton(_("Quit"))
         
         main_table.attach(close_title_label, 0, 2, 0, 1, yoptions=gtk.FILL, xpadding=8)
@@ -219,7 +219,7 @@ class GeneralSetting(gtk.VBox):
         album_check_hbox.pack_start(self.album_check_button, False, False)
         album_check_hbox.pack_start(create_right_align(), True, True)
         
-        fade_label = Label(_("Fade timeout:"))
+        fade_label = Label("%s" % _("Fade timeout"))
         self.fade_spin = SpinBox(200, 0, 900, 100)
         millisecond_lablel = Label(_(" ms"))        
         millisecond_lablel.set_size_request(50, 12)
@@ -566,7 +566,7 @@ class DesktopLyricsSetting(gtk.VBox):
         cr.save()
         cr.rectangle(xpos, ypos, rect.width * 0.5, rect.height)
         cr.clip()
-        active_surface = self.draw_lyric_surface(_("Deepin Music Player"), True)
+        active_surface = self.draw_lyric_surface(_("Dmusic"), True)
         if active_surface:
             cr.set_source_surface(active_surface, xpos, ypos)
             cr.paint()
@@ -576,7 +576,7 @@ class DesktopLyricsSetting(gtk.VBox):
         cr.save()
         cr.rectangle(xpos + rect.width * 0.5, ypos, rect.width*0.5, rect.height)
         cr.clip()
-        inactive_surface = self.draw_lyric_surface(_("Deepin Music Player"))
+        inactive_surface = self.draw_lyric_surface(_("Dmusic"))
         if inactive_surface:
             cr.set_source_surface(inactive_surface, xpos, ypos)
             cr.paint()
@@ -629,7 +629,7 @@ class DesktopLyricsSetting(gtk.VBox):
             [(value, key) for key, value in predefine_color_items.items()],
             select_index=predefine_color_index)    
         
-        predefine_color_label = Label(_("Color scheme:"))
+        predefine_color_label = Label("%s" % _("Color scheme"))
         predefine_color_hbox = gtk.HBox(spacing=5)
         predefine_color_hbox.pack_start(predefine_color_label, False, False)
         predefine_color_hbox.pack_start(self.predefine_color_combo_box, False, False)
@@ -650,7 +650,7 @@ class DesktopLyricsSetting(gtk.VBox):
         self.font_type_combo_box = ComboBox([(value, key) for key, value in font_type_items.items()],
                                             select_index=font_type_index)    
         
-        font_type_label = Label(_("Style:"))
+        font_type_label = Label("%s:" % _("Style"))
         font_type_hbox = gtk.HBox(spacing=5)
         font_type_hbox.pack_start(font_type_label, False, False)
         font_type_hbox.pack_start(self.font_type_combo_box, False, False)
@@ -671,20 +671,20 @@ class DesktopLyricsSetting(gtk.VBox):
         except:    
             font_item_index = 0
             
-        font_name_hbox, self.font_name_combo_box = self.create_combo_widget(_("Font:"),
+        font_name_hbox, self.font_name_combo_box = self.create_combo_widget(_("Font"),
                                                                             [(font_name, None) for font_name in font_families],
                                                                             font_item_index)
         font_type_hbox = self.create_font_type_box()
         font_size = int(config.get("lyrics", "font_size", 30))
-        font_size_hbox, self.font_size_spin = self.create_combo_spin(_("Size:"), font_size, 16, 70, 1)
+        font_size_hbox, self.font_size_spin = self.create_combo_spin(_("Size"), font_size, 16, 70, 1)
         
         line_number = config.getint("lyrics", "line_count")
-        line_number_hbox, self.line_number_combo_box = self.create_combo_widget(_("Lines:"),
+        line_number_hbox, self.line_number_combo_box = self.create_combo_widget(_("Lines"),
                                                     [(_("Single"), 1), (_("Double"), 2)], select_index=line_number - 1)
         
         self.line_align_hbox = gtk.HBox()
         part_align_hbox = gtk.HBox(spacing=5) 
-        line_align_label = Label(_("Alignment:"))
+        line_align_label = Label("%s:" % _("Alignment"))
         
         if line_number == 2:
             self.line_align_hbox.add(self.double_align_combo_box)
@@ -694,19 +694,19 @@ class DesktopLyricsSetting(gtk.VBox):
         part_align_hbox.pack_start(line_align_label, False, False)    
         part_align_hbox.pack_start(self.line_align_hbox, False, False)    
         
-        outline_hbox, self.outline_spin = self.create_combo_spin(_("Outline:"), 
+        outline_hbox, self.outline_spin = self.create_combo_spin(_("Outline"), 
                                                                  int(config.get("lyrics", "outline_width", "3")), 0, 8, 1)
         
         # blur_color_button.
         blur_color_hbox = gtk.HBox(spacing=5)
-        blur_color_label = Label(_("Stroke:"))
+        blur_color_label = Label("%s:" % _("Stroke"))
         self.blur_color_button = ColorButton(config.get("lyrics", "blur_color", "#000000"))
         blur_color_hbox.pack_start(blur_color_label, False, False)
         blur_color_hbox.pack_start(self.blur_color_button, False, False)
         
         predefine_color_hbox = self.create_predefine_box()
         inactive_color_box = gtk.HBox(spacing=10)
-        inactive_color_label = Label(_("Coming:"))
+        inactive_color_label = Label("%s:" % _("Coming"))
         self.inactive_upper_color_button = ColorButton(config.get("lyrics", "inactive_color_upper"))
         self.inactive_middle_color_button = ColorButton(config.get("lyrics", "inactive_color_middle"))
         self.inactive_bottom_color_button = ColorButton(config.get("lyrics", "inactive_color_bottom"))
@@ -716,7 +716,7 @@ class DesktopLyricsSetting(gtk.VBox):
         inactive_color_box.pack_start(self.inactive_bottom_color_button, False, False)
         
         active_color_box = gtk.HBox(spacing=10)
-        active_color_label = Label(_("Played:"))
+        active_color_label = Label("%s:" % _("Played"))
         self.active_upper_color_button = ColorButton(config.get("lyrics", "active_color_upper"))
         self.active_middle_color_button = ColorButton(config.get("lyrics", "active_color_middle"))
         self.active_bottom_color_button = ColorButton(config.get("lyrics", "active_color_bottom"))
@@ -740,7 +740,7 @@ class DesktopLyricsSetting(gtk.VBox):
         return main_table
     
     def create_combo_widget(self, label_content, items, select_index=0):
-        label = Label(label_content)
+        label = Label("%s:" % label_content)
         if len(items) > 10:
             height = 200
             max_width = 300
@@ -754,7 +754,7 @@ class DesktopLyricsSetting(gtk.VBox):
         return hbox, combo_box
     
     def create_combo_spin(self, label_content, init_value, low, upper, step):
-        label = Label(label_content)
+        label = Label("%s:" % label_content)
         spinbox = SpinBox(init_value, low, upper, step)
         
         hbox = gtk.HBox(spacing=5)
@@ -814,7 +814,7 @@ class ScrollLyricsSetting(gtk.VBox):
         self.font_type_combo_box = ComboBox([(value, key) for key, value in font_type_items.items()],
                                             select_index=font_type_index)    
         
-        font_type_label = Label(_("Style:"))
+        font_type_label = Label("%s:" % _("Style"))
         font_type_hbox = gtk.HBox(spacing=5)
         font_type_hbox.pack_start(font_type_label, False, False)
         font_type_hbox.pack_start(self.font_type_combo_box, False, False)
@@ -832,30 +832,30 @@ class ScrollLyricsSetting(gtk.VBox):
         except:    
             font_item_index = 0
             
-        font_name_hbox, self.font_name_combo_box = self.create_combo_widget(_("Font:"),
+        font_name_hbox, self.font_name_combo_box = self.create_combo_widget(_("Font"),
                                                                             [(font_name, None) for font_name in font_families],
                                                                             font_item_index)
         font_type_hbox = self.create_font_type_box()
         
         font_size = int(config.get("scroll_lyrics", "font_size", 10))
-        font_size_hbox, self.font_size_spin = self.create_combo_spin(_("Size:"), font_size, 5, 30, 1)
+        font_size_hbox, self.font_size_spin = self.create_combo_spin(_("Size"), font_size, 5, 30, 1)
         
         # alignment.
         line_align_index = int(config.get("scroll_lyrics", "line_align", 1))
-        line_align_hbox, self.line_align_combo_box = self.create_combo_widget(_("Alignment:"), 
+        line_align_hbox, self.line_align_combo_box = self.create_combo_widget(_("Alignment"), 
                                                 [(value, index) for index, value 
                                                  in enumerate([_("Left"), _("Centered"), _("Right")])],
                                                                                line_align_index)
         
         # scroll mode.
         scroll_mode_index = int(config.get("scroll_lyrics", "scroll_mode", 0))
-        scroll_mode_hbox, self.scroll_mode_combo_box = self.create_combo_widget(_("Rolling:"),
+        scroll_mode_hbox, self.scroll_mode_combo_box = self.create_combo_widget(_("Rolling"),
                                                  [(value, index) for index, value in enumerate([_("Always"), _("By line")])],
                                                                                 scroll_mode_index) 
         
         
-        inactive_color_label = Label(_("Coming:"))
-        active_color_label = Label(_("Played:"))
+        inactive_color_label = Label("%s:" % _("Coming"))
+        active_color_label = Label("%s" % _("Played"))
         self.inactive_color_button = ColorButton(config.get("scroll_lyrics", "inactive_color"))
         self.active_color_button = ColorButton(config.get("scroll_lyrics", "active_color"))
         
@@ -879,7 +879,7 @@ class ScrollLyricsSetting(gtk.VBox):
         return main_table
         
     def create_combo_widget(self, label_content, items, select_index=0):
-        label = Label(label_content)
+        label = Label("%s:" % label_content)
         if len(items) > 10:
             height = 200
             max_width = 300
@@ -893,7 +893,7 @@ class ScrollLyricsSetting(gtk.VBox):
         return hbox, combo_box
     
     def create_combo_spin(self, label_content, init_value, low, upper, step):
-        label = Label(label_content)
+        label = Label("%s:" % label_content)
         spinbox = SpinBox(init_value, low, upper, step)
         hbox = gtk.HBox(spacing=5)
         hbox.pack_start(label, False, False)
@@ -907,12 +907,12 @@ class AboutBox(gtk.VBox):
         main_box = gtk.VBox(spacing=15)
         logo_image = gtk.image_new_from_pixbuf(gtk.gdk.pixbuf_new_from_file(os.path.join(get_parent_dir(__file__, 3), "image", "logo1.png")))
         light_color = app_theme.get_color("labelText")
-        logo_name = Label(_("Deepin Music Player"), text_size=10)
+        logo_name = Label(_("Dmusic"), text_size=10)
         logo_box = gtk.HBox(spacing=2)
         logo_box.pack_start(logo_image, False, False)
         logo_box.pack_start(logo_name, False, False)
         
-        version_label = Label(_("Version:"))
+        version_label = Label("%s" % _("Version"))
         version_content = Label(PROGRAM_VERSION, light_color)
         # publish_label = Label(_("Release date:"))
         # publish_content = Label("2012.07.12", light_color)
@@ -927,7 +927,7 @@ class AboutBox(gtk.VBox):
         title_box.pack_start(create_right_align(), True, True)
         title_box.pack_start(info_box, False, False)
         
-        describe = _("        Deepin Music Player is a music application designed for Linux users.It features lyrics searching and downloading, desktop lyrics display,album cover downloading, resume playing, music management and skin selection.\n\nDeepin Music Player is free software licensed under GNU GPLv3.")
+        describe = _("        Dmusic is a music application designed for Linux users.It features lyrics searching and downloading, desktop lyrics display,album cover downloading, resume playing, music management and skin selection.\n\nDmusic is free software licensed under GNU GPLv3.")
         
         describe_label = Label(describe, enable_select=False, wrap_width=400, text_size=10)
         main_box.pack_start(title_box, False, False)
@@ -1008,7 +1008,7 @@ class PreferenceDialog(DialogBox):
         self.lyrics_expand_item = ExpandItem(_("Lyrics"), None)
         self.lyrics_expand_item.add_childs([(_("Desktop"), self.desktop_lyrics_setting),
                                        (_("Window"), self.scroll_lyrics_setting)])
-        self.plugins_expand_item = NormalItem(_("Plugins"), self.plugins_manager)
+        self.plugins_expand_item = NormalItem(_("Add-ons"), self.plugins_manager)
         about_normal_item = NormalItem(_("About"), AboutBox())
         
         items = [general_normal_item,
