@@ -42,9 +42,8 @@ from dtk.ui.combo import ComboBox
 from utils import color_hex_to_cairo
 from widget.ui_utils import (get_font_families, switch_tab,
                              create_separator_box, create_right_align,
-                             draw_alpha_mask)
+                             draw_alpha_mask, set_widget_resize)
 from widget.dialog import WinDir
-from widget.global_keys import global_hotkeys
 from widget.prefer_item import NormalItem, ExpandItem
 from widget.skin import app_theme
 from widget.plugins_view import PluginsManager
@@ -554,7 +553,7 @@ class DesktopLyricsSetting(gtk.VBox):
     def draw_lyrics(self, widget, event):
         cr = widget.window.cairo_create()
         rect = widget.allocation
-        font_height = self.render_lyrics.get_font_height()
+        # font_height = self.render_lyrics.get_font_height()
         xpos = rect.x + 5
         ypos = rect.y + 5
         cr.save()
@@ -629,7 +628,7 @@ class DesktopLyricsSetting(gtk.VBox):
             [(value, key) for key, value in predefine_color_items.items()],
             select_index=predefine_color_index)    
         
-        predefine_color_label = Label("%s" % _("Color scheme"))
+        predefine_color_label = Label("%s:" % _("Color scheme"))
         predefine_color_hbox = gtk.HBox(spacing=5)
         predefine_color_hbox.pack_start(predefine_color_label, False, False)
         predefine_color_hbox.pack_start(self.predefine_color_combo_box, False, False)
@@ -651,13 +650,10 @@ class DesktopLyricsSetting(gtk.VBox):
                                             select_index=font_type_index)    
         
         font_type_label = Label("%s:" % _("Style"))
-        font_type_hbox = gtk.HBox(spacing=5)
-        font_type_hbox.pack_start(font_type_label, False, False)
-        font_type_hbox.pack_start(self.font_type_combo_box, False, False)
-        return font_type_hbox
+        return set_widget_resize(font_type_label, self.font_type_combo_box)
     
     def create_style_table(self):
-        main_table = gtk.Table(9, 2)
+        main_table = gtk.Table(12, 2)
         main_table.set_row_spacings(CONTENT_ROW_SPACING)
         self.create_single_line_box()
         self.create_double_line_box()
@@ -683,7 +679,6 @@ class DesktopLyricsSetting(gtk.VBox):
                                                     [(_("Single"), 1), (_("Double"), 2)], select_index=line_number - 1)
         
         self.line_align_hbox = gtk.HBox()
-        part_align_hbox = gtk.HBox(spacing=5) 
         line_align_label = Label("%s:" % _("Alignment"))
         
         if line_number == 2:
@@ -691,52 +686,51 @@ class DesktopLyricsSetting(gtk.VBox):
         else:    
             self.line_align_hbox.add(self.single_align_combo_box)
             
-        part_align_hbox.pack_start(line_align_label, False, False)    
-        part_align_hbox.pack_start(self.line_align_hbox, False, False)    
+        part_align_hbox = set_widget_resize(line_align_label, self.line_align_hbox)
         
         outline_hbox, self.outline_spin = self.create_combo_spin(_("Outline"), 
                                                                  int(config.get("lyrics", "outline_width", "3")), 0, 8, 1)
         
         # blur_color_button.
-        blur_color_hbox = gtk.HBox(spacing=5)
         blur_color_label = Label("%s:" % _("Stroke"))
         self.blur_color_button = ColorButton(config.get("lyrics", "blur_color", "#000000"))
-        blur_color_hbox.pack_start(blur_color_label, False, False)
-        blur_color_hbox.pack_start(self.blur_color_button, False, False)
+        blur_color_hbox = set_widget_resize(blur_color_label, self.blur_color_button)
         
         predefine_color_hbox = self.create_predefine_box()
-        inactive_color_box = gtk.HBox(spacing=10)
         inactive_color_label = Label("%s:" % _("Coming"))
         self.inactive_upper_color_button = ColorButton(config.get("lyrics", "inactive_color_upper"))
         self.inactive_middle_color_button = ColorButton(config.get("lyrics", "inactive_color_middle"))
         self.inactive_bottom_color_button = ColorButton(config.get("lyrics", "inactive_color_bottom"))
-        inactive_color_box.pack_start(inactive_color_label, False, False)
-        inactive_color_box.pack_start(self.inactive_upper_color_button, False, False)
-        inactive_color_box.pack_start(self.inactive_middle_color_button, False, False)
-        inactive_color_box.pack_start(self.inactive_bottom_color_button, False, False)
         
-        active_color_box = gtk.HBox(spacing=10)
+        inactive_color_subbox = gtk.HBox(spacing=10)
+        inactive_color_subbox.pack_start(self.inactive_upper_color_button, False, False)
+        inactive_color_subbox.pack_start(self.inactive_middle_color_button, False, False)
+        inactive_color_subbox.pack_start(self.inactive_bottom_color_button, False, False)
+        inactive_color_box = set_widget_resize(inactive_color_label, inactive_color_subbox, sizes2=(160, 22))
+        
         active_color_label = Label("%s:" % _("Played"))
         self.active_upper_color_button = ColorButton(config.get("lyrics", "active_color_upper"))
         self.active_middle_color_button = ColorButton(config.get("lyrics", "active_color_middle"))
         self.active_bottom_color_button = ColorButton(config.get("lyrics", "active_color_bottom"))
-        active_color_box.pack_start(active_color_label, False, False)
-        active_color_box.pack_start(self.active_upper_color_button, False, False)
-        active_color_box.pack_start(self.active_middle_color_button, False, False)
-        active_color_box.pack_start(self.active_bottom_color_button, False, False)
+        
+        active_color_subbox = gtk.HBox(spacing=10)
+        active_color_subbox.pack_start(self.active_upper_color_button, False, False)
+        active_color_subbox.pack_start(self.active_middle_color_button, False, False)
+        active_color_subbox.pack_start(self.active_bottom_color_button, False, False)
+        active_color_box = set_widget_resize(active_color_label, active_color_subbox, sizes2=(160, 22))
         
         main_table.attach(style_title_label, 0, 2, 0, 1, yoptions=gtk.FILL, xpadding=8)
         main_table.attach(create_separator_box(), 0, 2, 1, 2, yoptions=gtk.FILL)
-        main_table.attach(font_name_hbox, 0, 2, 2, 3, xpadding=20, xoptions=gtk.FILL)
-        main_table.attach(font_type_hbox, 0, 1, 3, 4, xpadding=20)
-        main_table.attach(font_size_hbox, 1, 2, 3, 4)
-        main_table.attach(line_number_hbox, 0, 1, 4, 5, xpadding=20)
-        main_table.attach(part_align_hbox, 1, 2, 4, 5)
-        main_table.attach(outline_hbox, 0, 1, 5, 6, xpadding=20)
-        main_table.attach(blur_color_hbox, 1, 2, 5, 6)
-        main_table.attach(predefine_color_hbox, 0, 2, 6, 7, xpadding=20, xoptions=gtk.FILL)
-        main_table.attach(inactive_color_box, 0, 2, 7, 8, xpadding=35, xoptions=gtk.FILL)
-        main_table.attach(active_color_box, 0, 2, 8, 9, xpadding=35, xoptions=gtk.FILL)
+        main_table.attach(font_name_hbox, 0, 2, 2, 3)
+        main_table.attach(font_type_hbox, 0, 2, 3, 4)
+        main_table.attach(font_size_hbox, 0, 2, 4, 5)
+        main_table.attach(line_number_hbox, 0, 2, 5, 6)
+        main_table.attach(part_align_hbox, 0, 2, 6, 7)
+        main_table.attach(outline_hbox, 0, 2, 7, 8)
+        main_table.attach(blur_color_hbox, 0, 2, 8, 9)
+        main_table.attach(predefine_color_hbox, 0, 2, 9, 10)
+        main_table.attach(inactive_color_box, 0, 2, 10, 11)
+        main_table.attach(active_color_box, 0, 2, 11, 12)
         return main_table
     
     def create_combo_widget(self, label_content, items, select_index=0):
@@ -748,18 +742,14 @@ class DesktopLyricsSetting(gtk.VBox):
             height = None
             max_width = None
         combo_box = ComboBox(items, height, select_index=select_index, max_width=max_width)
-        hbox = gtk.HBox(spacing=5)
-        hbox.pack_start(label, False, False)
-        hbox.pack_start(combo_box, False, False)
+        hbox = set_widget_resize(label, combo_box)
         return hbox, combo_box
     
     def create_combo_spin(self, label_content, init_value, low, upper, step):
         label = Label("%s:" % label_content)
         spinbox = SpinBox(init_value, low, upper, step)
         
-        hbox = gtk.HBox(spacing=5)
-        hbox.pack_start(label, False, False)
-        hbox.pack_start(spinbox, False, False)
+        hbox = set_widget_resize(label, spinbox)
         return hbox, spinbox
     
 class ScrollLyricsSetting(gtk.VBox):
@@ -815,13 +805,10 @@ class ScrollLyricsSetting(gtk.VBox):
                                             select_index=font_type_index)    
         
         font_type_label = Label("%s:" % _("Style"))
-        font_type_hbox = gtk.HBox(spacing=5)
-        font_type_hbox.pack_start(font_type_label, False, False)
-        font_type_hbox.pack_start(self.font_type_combo_box, False, False)
-        return font_type_hbox
+        return set_widget_resize(font_type_label, self.font_type_combo_box)
     
     def create_style_table(self):
-        main_table = gtk.Table(5, 2)
+        main_table = gtk.Table(8, 2)
         main_table.set_row_spacings(CONTENT_ROW_SPACING)
         style_title_label = Label(_("Lyrics style"))
         # font_name
@@ -855,27 +842,23 @@ class ScrollLyricsSetting(gtk.VBox):
         
         
         inactive_color_label = Label("%s:" % _("Coming"))
-        active_color_label = Label("%s" % _("Played"))
+        active_color_label = Label("%s:" % _("Played"))
         self.inactive_color_button = ColorButton(config.get("scroll_lyrics", "inactive_color"))
         self.active_color_button = ColorButton(config.get("scroll_lyrics", "active_color"))
         
-        inactive_color_hbox = gtk.HBox(spacing=5)
-        inactive_color_hbox.pack_start(inactive_color_label, False, False)
-        inactive_color_hbox.pack_start(self.inactive_color_button, False, False)
-        
-        active_color_hbox = gtk.HBox(spacing=5)
-        active_color_hbox.pack_start(active_color_label, False, False)
-        active_color_hbox.pack_start(self.active_color_button, False, False)
+        color_hbox = gtk.HBox(spacing=5)        
+        color_hbox.pack_start(self.inactive_color_button, False, False)
+        color_hbox.pack_start(active_color_label, False, False)
+        color_hbox.pack_start(self.active_color_button, False, False)
         
         main_table.attach(style_title_label, 0, 2, 0, 1, yoptions=gtk.FILL, xpadding=8)
         main_table.attach(create_separator_box(), 0, 2, 1, 2, yoptions=gtk.FILL)
-        main_table.attach(font_name_hbox, 0, 2, 2, 3, xpadding=20, xoptions=gtk.FILL)
-        main_table.attach(font_type_hbox, 0, 1, 3, 4, xpadding=20)
-        main_table.attach(font_size_hbox, 1, 2, 3, 4)
-        main_table.attach(line_align_hbox, 0, 1, 4, 5, xpadding=20)
-        main_table.attach(scroll_mode_hbox, 1, 2, 4, 5)
-        main_table.attach(inactive_color_hbox, 0, 1, 5, 6, xpadding=20)
-        main_table.attach(active_color_hbox, 1, 2, 5, 6)
+        main_table.attach(font_name_hbox, 0, 2, 2, 3)
+        main_table.attach(font_type_hbox, 0, 2, 3, 4)
+        main_table.attach(font_size_hbox, 0, 2, 4, 5)
+        main_table.attach(line_align_hbox, 0, 2, 5, 6)
+        main_table.attach(scroll_mode_hbox, 0, 2, 6, 7)
+        main_table.attach(set_widget_resize(inactive_color_label, color_hbox), 0, 2, 7, 8)
         return main_table
         
     def create_combo_widget(self, label_content, items, select_index=0):
@@ -887,17 +870,13 @@ class ScrollLyricsSetting(gtk.VBox):
             height = None
             max_width = None
         combo_box = ComboBox(items, height, select_index=select_index, max_width=max_width)
-        hbox = gtk.HBox(spacing=5)
-        hbox.pack_start(label, False, False)
-        hbox.pack_start(combo_box, False, False)
+        hbox = set_widget_resize(label, combo_box)
         return hbox, combo_box
     
     def create_combo_spin(self, label_content, init_value, low, upper, step):
         label = Label("%s:" % label_content)
         spinbox = SpinBox(init_value, low, upper, step)
-        hbox = gtk.HBox(spacing=5)
-        hbox.pack_start(label, False, False)
-        hbox.pack_start(spinbox, False, False)
+        hbox = set_widget_resize(label, spinbox)
         return hbox, spinbox
     
 class AboutBox(gtk.VBox):    

@@ -107,23 +107,31 @@ def draw_separator(cr, x, y, width, height):
     draw_hlinear(cr, x, y, width, height, 
                  app_theme.get_shadow_color("hSeparator").get_color_info())
     
-def create_right_align():    
+def create_right_align(paddings=None):    
     align = gtk.Alignment()
+    if paddings:
+        align.set_padding(*paddings)
     align.set(0, 0, 0, 1)
     return align
     
-def create_left_align():
+def create_left_align(paddings=None):
     align = gtk.Alignment()
+    if paddings:
+        align.set_padding(*paddings)
     align.set(0, 0, 1, 0)
     return align
     
-def create_upper_align():
+def create_upper_align(paddings=None):
     align = gtk.Alignment()
+    if paddings:
+        align.set_padding(*paddings)
     align.set(1, 0, 0, 0)
     return align
 
-def create_bottom_align():
+def create_bottom_align(paddings=None):
     align = gtk.Alignment()
+    if paddings:
+        align.set_padding(paddings=None)
     align.set(0, 1, 0, 0)
     return align
 
@@ -147,16 +155,16 @@ def set_widget_vcenter(widget):
     align.add(widget)
     return align
     
-def set_widget_left(widget):
+def set_widget_left(widget, paddings=None):
     hbox = gtk.HBox()
     hbox.pack_start(widget, False, False)
-    hbox.pack_start(create_left_align(), False, True)
+    hbox.pack_start(create_left_align(paddings), True, True)
     return hbox
 
 
-def set_widget_right(widget):
+def set_widget_right(widget, paddings=None):
     hbox = gtk.HBox()
-    hbox.pack_start(create_right_align(), False, True)
+    hbox.pack_start(create_right_align(paddings), True, True)
     hbox.pack_start(widget, False, False)    
     return hbox
 
@@ -193,4 +201,20 @@ def cairo_color_to_hex(cairo_color):
     @return: Return hex color.
     '''
     return "#%02X%02X%02X" % (cairo_color[0] * 255, cairo_color[1] * 255, cairo_color[2] * 255)
+
+def set_widget_resize(widget1, widget2, sizes1=(80, 22), sizes2=(175, 22), spacing=5):
+    main_box = gtk.HBox(spacing=spacing)
+    sub_box1 = gtk.HBox()
+    sub_box1.set_size_request(*sizes1)
+    sub_box1.add(set_widget_right(widget1))
+    main_box.pack_start(sub_box1)
+    
+    sub_box = gtk.HBox()
+    sub_box.set_size_request(*sizes2)
+    sub_box.add(set_widget_left(widget2))
+    main_box.pack_start(sub_box)
+    return main_box
+    
+    
+    
 
