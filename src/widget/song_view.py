@@ -62,7 +62,7 @@ class SongView(TreeView):
     
     def __init__(self):
         
-        TreeView.__init__(self)        
+        TreeView.__init__(self, enable_drag_drop=False, enable_multiple_select=True)        
         targets = [("text/deepin-songs", gtk.TARGET_SAME_APP, 1), ("text/uri-list", 0, 2), ("text/plain", 0, 3)]        
         self.drag_dest_set(gtk.DEST_DEFAULT_MOTION | gtk.DEST_DEFAULT_DROP,
                            targets, gtk.gdk.ACTION_COPY)
