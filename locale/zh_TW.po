@@ -3,6 +3,7 @@
 # Copyright (C) 2012 THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # Wangdianjin, <wangdianjin@linuxdeepin.com>, 2012
+# Freddy, <freddy4212@gmail.com>, 2013
 #
 msgid ""
 msgstr ""
@@ -22,7 +23,7 @@ msgid ""
 "Vorbis is an open source, lossy audio codec with high quality output at a "
 "lower file size than MP3."
 msgstr ""
-"Vorbis是一种开源的有损音频编解码器，与MP3格式相比，可以用更小的文件获得更佳的"
+"Vorbis 是一种开源的有损音频编解码器，与 MP3 格式相比，可以用更小的文件获得更佳的"
 "输出效果。"
 
 #: ../src/transcoder.py:66
@@ -64,7 +65,7 @@ msgstr "一种解码快速的自由无损音频格式，压缩比率较高。"
 #: ../src/library.py:999 ../src/library.py:1000 ../src/library.py:1001
 #: ../src/widget/local_item.py:57
 msgid "Unknown"
-msgstr "未知"
+msgstr "不明"
 
 #: ../src/main.py:94
 msgid "Usage: deepin-music-player [OPTION]... [URI]"
@@ -92,11 +93,11 @@ msgstr "暫停/繼續播放"
 
 #: ../src/main.py:107
 msgid "Seek Forward"
-msgstr "快進"
+msgstr "往前"
 
 #: ../src/main.py:109
 msgid "Seek Backward"
-msgstr "後退"
+msgstr "往後"
 
 #: ../src/main.py:111
 msgid "Stop playback"
@@ -116,27 +117,27 @@ msgstr "歌曲資訊選項"
 
 #: ../src/main.py:122
 msgid "Print the title of current track"
-msgstr "查看當前歌曲標題"
+msgstr "檢視目前歌曲標題"
 
 #: ../src/main.py:124
 msgid "Print the album of current track"
-msgstr "查看當前歌曲專輯"
+msgstr "檢視目前歌曲專輯"
 
 #: ../src/main.py:126
 msgid "Print the artist of current track"
-msgstr "查看當前歌曲藝術家"
+msgstr "檢視目前歌曲演出者"
 
 #: ../src/main.py:128
 msgid "Print the length of current track"
-msgstr "查看當前歌曲時長"
+msgstr "檢視目前歌曲長度"
 
 #: ../src/main.py:130
 msgid "Print the path of current track"
-msgstr "查看當前歌曲路徑"
+msgstr "檢視目前歌曲路徑"
 
 #: ../src/main.py:132
 msgid "Print current playback position"
-msgstr "查看當前播放位置"
+msgstr "檢視目前播放位置"
 
 #: ../src/main.py:135
 msgid "Other Options"
@@ -168,11 +169,11 @@ msgstr "此選項可以使控制選項來啟動程式"
 
 #: ../src/main.py:152
 msgid "Development/Debug Options"
-msgstr "開發/調試選項"
+msgstr "開發/除錯選項"
 
 #: ../src/main.py:153
 msgid "Change debug level (0-9)"
-msgstr "設置調試級別(0-9)"
+msgstr "變更偵錯級別 (0-9)"
 
 #: ../src/main.py:157
 msgid "Show information about supported audio file"
@@ -202,15 +203,15 @@ msgstr "附加元件的歸檔文檔包含了一個不安全的路徑。"
 
 #: ../src/source/local.py:43
 msgid "Reading directories..."
-msgstr "正在讀取目錄資訊"
+msgstr "正在讀取目錄資訊..."
 
 #: ../src/source/local.py:175
 msgid "Check deleted files"
-msgstr "檢查並刪除檔"
+msgstr "檢查並刪除檔案"
 
 #: ../src/source/local.py:202
 msgid "Reload database"
-msgstr "重新加載歌曲庫"
+msgstr "重新載入歌曲資料庫"
 
 #: ../src/source/old.py:112 ../src/source/audiocd.py:75
 msgid "Track"
@@ -218,15 +219,15 @@ msgstr "歌曲"
 
 #: ../src/source/old.py:113 ../src/source/audiocd.py:76
 msgid "Unknown album"
-msgstr "未知專輯"
+msgstr "不明專輯"
 
 #: ../src/source/old.py:114 ../src/source/audiocd.py:77
 msgid "Unknown artist"
-msgstr "未知藝術家"
+msgstr "不明演出者"
 
 #: ../src/source/audiocd.py:83 ../src/source/audiocd.py:89
 msgid "Audio CD"
-msgstr "音頻CD"
+msgstr "音樂 CD"
 
 #: ../src/widget/song_editor.py:72 ../src/widget/song_editor.py:202
 #: ../src/widget/song_view.py:649 ../src/widget/lyrics_search.py:82
@@ -237,7 +238,7 @@ msgstr "標題"
 #: ../src/widget/song_view.py:649 ../src/widget/local_browser.py:85
 #: ../src/widget/lyrics_search.py:82 ../plugins/notify/__init__.py:43
 msgid "Artist"
-msgstr "藝術家"
+msgstr "演出者"
 
 #: ../src/widget/song_editor.py:74 ../src/widget/song_editor.py:204
 #: ../src/widget/song_view.py:649 ../src/widget/local_browser.py:87
@@ -260,15 +261,15 @@ msgstr "大小"
 
 #: ../src/widget/song_editor.py:97 ../src/widget/song_notify.py:210
 msgid "Duration"
-msgstr "時長"
+msgstr "長度"
 
 #: ../src/widget/song_editor.py:98
 msgid "Bitrate"
-msgstr "比特率"
+msgstr "位元率"
 
 #: ../src/widget/song_editor.py:98
 msgid "Rate"
-msgstr "採樣速率"
+msgstr "取樣速率"
 
 #: ../src/widget/song_editor.py:99
 msgid "Added"
@@ -288,17 +289,17 @@ msgstr "年代"
 
 #: ../src/widget/song_editor.py:147
 msgid "Location"
-msgstr "檔位置"
+msgstr "檔案位置"
 
 #: ../src/widget/song_editor.py:150 ../src/widget/converter.py:355
 #: ../src/widget/playlist.py:517 ../src/widget/lyrics_module.py:218
 msgid "Open directory"
-msgstr "打開目錄"
+msgstr "開啟目錄"
 
 #: ../src/widget/song_editor.py:205 ../src/widget/local_browser.py:89
 #: ../src/widget/webcasts_browser.py:99
 msgid "Genre"
-msgstr "流派"
+msgstr "曲風"
 
 #: ../src/widget/song_editor.py:214
 msgid "Save"
@@ -307,12 +308,12 @@ msgstr "保存"
 #: ../src/widget/song_editor.py:296 ../src/widget/converter.py:463
 #: ../src/widget/preference.py:253
 msgid "Change"
-msgstr "更改"
+msgstr "變更"
 
 #: ../src/widget/song_editor.py:298 ../src/widget/equalizer.py:252
 #: ../src/widget/preference.py:376
 msgid "Reset"
-msgstr "重置"
+msgstr "重設"
 
 #: ../src/widget/song_editor.py:316 ../src/widget/local_browser.py:343
 msgid "Select image"
@@ -348,19 +349,19 @@ msgstr "歌詞資訊"
 
 #: ../src/widget/song_editor.py:359
 msgid "Edit tags"
-msgstr "資訊設置"
+msgstr "資訊設定"
 
 #: ../src/widget/song_editor.py:360
 msgid "Edit cover"
-msgstr "封面設置"
+msgstr "封面設定"
 
 #: ../src/widget/equalizer.py:176
 msgid "Custom"
-msgstr "自定義"
+msgstr "自訂"
 
 #: ../src/widget/equalizer.py:177
 msgid "Default"
-msgstr "默認"
+msgstr "預設"
 
 #: ../src/widget/equalizer.py:178
 msgid "Classical"
@@ -376,19 +377,19 @@ msgstr "舞曲"
 
 #: ../src/widget/equalizer.py:181
 msgid "Full Bass"
-msgstr "增強低音"
+msgstr "低音強化"
 
 #: ../src/widget/equalizer.py:182
 msgid "Full Bass and Treble"
-msgstr "增強低音和高音"
+msgstr "低音與高音強化"
 
 #: ../src/widget/equalizer.py:183
 msgid "Full Treble"
-msgstr "增強高音"
+msgstr "高音強化"
 
 #: ../src/widget/equalizer.py:184
 msgid "Headphones"
-msgstr "耳機"
+msgstr "頭戴式耳機"
 
 #: ../src/widget/equalizer.py:185
 msgid "Large Hall"
@@ -432,7 +433,7 @@ msgstr "電子"
 
 #: ../src/widget/equalizer.py:199 ../src/widget/instance.py:360
 msgid "Equalizer"
-msgstr "均衡器"
+msgstr "等化器"
 
 #: ../src/widget/equalizer.py:254
 msgid "Predefined"
@@ -441,7 +442,7 @@ msgstr "預定義"
 #: ../src/widget/global_keys.py:96
 #, python-format
 msgid "Failed to bind %s !"
-msgstr "綁定快捷鍵 %s 失敗!"
+msgstr "綁定捷徑鍵「%s」失敗!"
 
 #: ../src/widget/local_item.py:59
 msgid "All Tracks"
@@ -453,11 +454,11 @@ msgstr "歌曲"
 
 #: ../src/widget/information.py:75
 msgid "Connecting"
-msgstr "連接中"
+msgstr "連線中"
 
 #: ../src/widget/information.py:105
 msgid "buffering"
-msgstr "正在緩衝"
+msgstr "正在建立緩衝區"
 
 #: ../src/widget/webcast_view.py:114 ../src/widget/webcast_view.py:120
 #: ../src/widget/playlist.py:86 ../plugins/musicfm/radio_view.py:129
@@ -469,7 +470,7 @@ msgstr "刪除"
 #: ../src/widget/playlist.py:512 ../plugins/musicfm/radio_view.py:130
 #: ../plugins/musicfm/radio_view.py:136
 msgid "Clear List"
-msgstr "清空列表"
+msgstr "清除清單"
 
 #: ../src/widget/webcast_view.py:119 ../src/widget/webcast_view.py:338
 #: ../src/widget/instance.py:319 ../src/widget/song_view.py:754
@@ -480,16 +481,16 @@ msgstr "播放"
 
 #: ../src/widget/webcast_view.py:219 ../src/widget/webcast_view.py:368
 msgid "Remove from Favorites"
-msgstr "取消收藏"
+msgstr "從「喜好」刪除"
 
 #: ../src/widget/webcast_view.py:221 ../src/widget/webcast_view.py:370
 msgid "Add to Favorites"
-msgstr "添加到收藏"
+msgstr "加入「喜好」"
 
 #: ../src/widget/webcast_view.py:333 ../src/widget/webcast_view.py:339
 #: ../src/widget/song_view.py:755
 msgid "Add to Playlist"
-msgstr "添加到播放列表"
+msgstr "加入到播放清單"
 
 #: ../src/widget/webcast_view.py:450 ../plugins/webcast/__init__.py:34
 #: ../plugins/webcast/__init__.py:36
@@ -499,11 +500,11 @@ msgstr "網路廣播"
 #: ../src/widget/global_search.py:48 ../src/widget/song_view.py:786
 #: ../src/widget/local_tab.py:28
 msgid "Library"
-msgstr "本地音樂"
+msgstr "本地端音樂"
 
 #: ../src/widget/lyrics.py:733
 msgid "Lyrics window"
-msgstr "窗口歌詞"
+msgstr "視窗歌詞"
 
 #: ../src/widget/ui.py:201
 msgid "Need some music? Find it here..."
@@ -511,7 +512,7 @@ msgstr "找音樂，在這裏..."
 
 #: ../src/widget/ui.py:399
 msgid "Add Music"
-msgstr "添加本地音樂"
+msgstr "加入本地端音樂"
 
 #: ../src/widget/ui.py:1012
 msgid "Your search {keyword} did not match any items in {from}"
@@ -519,21 +520,21 @@ msgstr "在{from}中未發現與{keyword}關聯的內容"
 
 #: ../src/widget/ui.py:1013
 msgid "Suggestions"
-msgstr "提請"
+msgstr "建議"
 
 #: ../src/widget/ui.py:1014
 msgid "Make sure all words are spelled correctly."
-msgstr "確保全部單詞拼寫正確。"
+msgstr "請確認全部字詞拼寫正確。"
 
 #: ../src/widget/ui.py:1015
 msgid ""
 "Try more general keywords, such as a title, an artist or the name of an "
 "album."
-msgstr "請嘗試更多關鍵字搜索，如標題、藝人或專輯名稱。"
+msgstr "請嘗試更多關鍵字進行搜尋，如標題、演出者或專輯名稱。"
 
 #: ../src/widget/ui.py:1112 ../src/widget/plugins_view.py:163
 msgid "Add-on"
-msgstr ""
+msgstr "附加組件"
 
 #: ../src/widget/ui.py:1120
 msgid "Author(s)"
@@ -541,12 +542,12 @@ msgstr "作者"
 
 #: ../src/widget/ui.py:1150 ../src/widget/preference.py:196
 msgid "Minimize to tray"
-msgstr "最小化到託盤"
+msgstr "最小化到系統匣"
 
 #: ../src/widget/ui.py:1152 ../src/widget/preference.py:197
 #: ../src/widget/instance.py:371 ../src/widget/tray.py:83
 msgid "Quit"
-msgstr "退出"
+msgstr "結束"
 
 #: ../src/widget/ui.py:1156
 msgid "Don't prompt again"
@@ -554,7 +555,7 @@ msgstr "下次不再提示"
 
 #: ../src/widget/ui.py:1163
 msgid "OK"
-msgstr "確定"
+msgstr "確認"
 
 #: ../src/widget/ui.py:1166
 msgid "Cancel"
@@ -566,7 +567,7 @@ msgstr "暫停/繼續"
 
 #: ../src/widget/headerbar.py:76
 msgid "Show/Hide Lyrics"
-msgstr "打開/關閉歌詞"
+msgstr "開啟/關閉歌詞"
 
 #: ../src/widget/converter.py:297 ../src/widget/song_view.py:406
 #: ../src/widget/song_view.py:749 ../src/widget/local_browser.py:339
@@ -575,19 +576,19 @@ msgstr "提示"
 
 #: ../src/widget/converter.py:297
 msgid "Target file already exitsts, do you want to overwrite it?"
-msgstr "目標檔已存在,是否覆蓋?"
+msgstr "目標檔案已存在,是否覆寫?"
 
 #: ../src/widget/converter.py:357
 msgid "Delete task"
-msgstr "刪除任務"
+msgstr "刪除工作"
 
 #: ../src/widget/converter.py:358
 msgid "Clear finished tasks"
-msgstr "清空已完成的任務"
+msgstr "清除已完成的工作"
 
 #: ../src/widget/converter.py:364 ../src/widget/instance.py:340
 msgid "Task Manager"
-msgstr "任務管理器"
+msgstr "工作管理員"
 
 #: ../src/widget/converter.py:380 ../src/widget/converter.py:400
 #: ../src/widget/converter.py:403 ../src/widget/instance.py:322
@@ -611,7 +612,7 @@ msgstr "品質"
 
 #: ../src/widget/converter.py:432
 msgid "Target file already exists"
-msgstr "目標檔存在時"
+msgstr "目標檔案存在時"
 
 #: ../src/widget/converter.py:433
 msgid "Ask"
@@ -619,7 +620,7 @@ msgstr "詢問"
 
 #: ../src/widget/converter.py:433
 msgid "Cover"
-msgstr "覆蓋"
+msgstr "覆寫"
 
 #: ../src/widget/converter.py:436
 msgid "Start"
@@ -627,7 +628,7 @@ msgstr "開始"
 
 #: ../src/widget/converter.py:438
 msgid "Add to Playlist when finished"
-msgstr "當轉換完成後添加到播放列表"
+msgstr "當轉換完成後加入到播放清單"
 
 #: ../src/widget/converter.py:460
 msgid "Output"
@@ -643,7 +644,7 @@ msgstr "顯示啟動畫面"
 
 #: ../src/widget/preference.py:165
 msgid "Show lyrics"
-msgstr "打開歌詞"
+msgstr "開啟歌詞"
 
 #: ../src/widget/preference.py:170
 msgid "Start playback automatically"
@@ -659,7 +660,7 @@ msgstr "當點擊關閉按鈕時"
 
 #: ../src/widget/preference.py:210
 msgid "Playback settings"
-msgstr "播放設置"
+msgstr "播放設定"
 
 #: ../src/widget/preference.py:214
 msgid "Enable crossfade"
@@ -683,19 +684,19 @@ msgstr "歌詞保存目錄"
 
 #: ../src/widget/preference.py:347 ../src/widget/preference.py:1007
 msgid "Hotkeys"
-msgstr "熱鍵設置"
+msgstr "捷徑鍵設定"
 
 #: ../src/widget/preference.py:357
 msgid "Enable hotkeys"
-msgstr "啟用快捷鍵"
+msgstr "啟用捷徑鍵"
 
 #: ../src/widget/preference.py:363
 msgid "Minimize/Show window"
-msgstr "隱藏/顯示主程序"
+msgstr "隱藏/顯示主視窗"
 
 #: ../src/widget/preference.py:365
 msgid "Show/Hide lyrics"
-msgstr "打開/關閉歌詞"
+msgstr "啟用/關閉歌詞"
 
 #: ../src/widget/preference.py:367
 msgid "Lock/Unlock lyrics"
@@ -717,7 +718,7 @@ msgstr "左對齊"
 #: ../src/widget/preference.py:592 ../src/widget/preference.py:604
 #: ../src/widget/preference.py:847
 msgid "Centered"
-msgstr "居中對齊"
+msgstr "置中對齊"
 
 #: ../src/widget/preference.py:593 ../src/widget/preference.py:605
 #: ../src/widget/preference.py:847
@@ -746,11 +747,11 @@ msgstr "清爽藍"
 
 #: ../src/widget/preference.py:632
 msgid "Color scheme"
-msgstr "配色方案"
+msgstr "色彩配置"
 
 #: ../src/widget/preference.py:640 ../src/widget/preference.py:806
 msgid "Regular"
-msgstr "常規"
+msgstr "一般"
 
 #: ../src/widget/preference.py:641 ../src/widget/preference.py:807
 msgid "Italic"
@@ -836,7 +837,7 @@ msgstr ""
 "詞搜索下載,桌面歌詞顯示,專輯封面下載,歌曲記憶播放,獨創音樂管理,自定義換膚等幾"
 "大特點.\n"
 "\n"
-"深度音樂是自由軟體,遵循自由軟體基金會發佈的 GNU 通用公共許可證第三版."
+"深度音樂是自由軟體,遵照自由軟體基金會發佈的 GNU 通用公共許可證條款第三版."
 
 #: ../src/widget/preference.py:948 ../src/widget/instance.py:369
 #: ../src/widget/tray.py:82
@@ -845,11 +846,11 @@ msgstr "選項設置"
 
 #: ../src/widget/preference.py:1006
 msgid "General"
-msgstr "常規設置"
+msgstr "一般"
 
 #: ../src/widget/preference.py:1008
 msgid "Lyrics"
-msgstr "歌詞設置"
+msgstr "歌詞設定"
 
 #: ../src/widget/preference.py:1009
 msgid "Desktop"
@@ -857,11 +858,11 @@ msgstr "桌面歌詞"
 
 #: ../src/widget/preference.py:1010
 msgid "Window"
-msgstr "窗口歌詞"
+msgstr "視窗歌詞"
 
 #: ../src/widget/preference.py:1011
 msgid "Add-ons"
-msgstr ""
+msgstr "附加組件"
 
 #: ../src/widget/preference.py:1012
 msgid "About"
@@ -873,7 +874,7 @@ msgstr "加入我們"
 
 #: ../src/widget/instance.py:326
 msgid "Forward"
-msgstr "快進"
+msgstr "前進"
 
 #: ../src/widget/instance.py:327
 msgid "Rewind"
@@ -890,15 +891,15 @@ msgstr "播放控制"
 #: ../src/widget/instance.py:358 ../src/widget/playlist.py:83
 #: ../src/widget/playlist.py:514
 msgid "Playback Order"
-msgstr "播放模式"
+msgstr "播放次序"
 
 #: ../src/widget/instance.py:368
 msgid "View New Features"
-msgstr "查看新特性"
+msgstr "檢視新特性"
 
 #: ../src/widget/instance.py:375 ../src/widget/tray.py:72
 msgid "Search Lyrics"
-msgstr "搜索歌詞"
+msgstr "搜尋歌詞"
 
 #: ../src/widget/instance.py:394 ../src/widget/tray.py:71
 msgid "Hide Lyrics"
@@ -906,7 +907,7 @@ msgstr "關閉歌詞"
 
 #: ../src/widget/instance.py:396 ../src/widget/tray.py:74
 msgid "Show Lyrics"
-msgstr "打開歌詞"
+msgstr "啟用歌詞"
 
 #: ../src/widget/instance.py:400 ../src/widget/tray.py:77
 msgid "Unlock lyrics"
@@ -923,20 +924,20 @@ msgstr "迷你模式"
 
 #: ../src/widget/instance.py:479
 msgid "Normal Mode"
-msgstr "普通模式"
+msgstr "一般模式"
 
 #: ../src/widget/jobs_manager.py:44 ../src/widget/jobs_manager.py:153
 msgid "jobs waiting!"
-msgstr "個任務在等待!"
+msgstr "個工作在等待!"
 
 #: ../src/widget/song_view.py:406 ../src/widget/song_view.py:749
 #: ../src/widget/local_browser.py:339
 msgid "Are you sure you want to delete them?"
-msgstr "您確定要刪除嗎?"
+msgstr "您確定要刪除它們嗎?"
 
 #: ../src/widget/song_view.py:450
 msgid "Repeat (single)"
-msgstr "單曲迴圈"
+msgstr "單曲重複"
 
 #: ../src/widget/song_view.py:451
 msgid "Play (ordered)"
@@ -944,11 +945,11 @@ msgstr "順序播放"
 
 #: ../src/widget/song_view.py:452
 msgid "Repeat (list)"
-msgstr "列表迴圈"
+msgstr "列表重複"
 
 #: ../src/widget/song_view.py:453
 msgid "Random"
-msgstr "隨機排序"
+msgstr "隨機播放"
 
 #: ../src/widget/song_view.py:476
 msgid "Remove Track from this List"
@@ -961,35 +962,35 @@ msgstr "刪除錯誤歌曲"
 #: ../src/widget/song_view.py:478 ../src/widget/song_view.py:758
 #: ../src/widget/local_browser.py:354 ../src/widget/playlist.py:511
 msgid "Move to Trash"
-msgstr "移動到回收站"
+msgstr "移至回收筒"
 
 #: ../src/widget/song_view.py:479
 msgid "Clear list"
-msgstr "清空列表"
+msgstr "清除清單"
 
 #: ../src/widget/song_view.py:490
 msgid "URL"
-msgstr "添加指定URL"
+msgstr "添加指定 URL"
 
 #: ../src/widget/song_view.py:491 ../src/widget/song_view.py:499
 msgid "File"
-msgstr "檔"
+msgstr "檔案"
 
 #: ../src/widget/song_view.py:492
 msgid "Directory (include subdirectories)"
-msgstr "檔夾(包含子目錄)"
+msgstr "資料夾(包含子目錄)"
 
 #: ../src/widget/song_view.py:493 ../src/widget/song_view.py:501
 msgid "Directory"
-msgstr "檔夾"
+msgstr "資料夾"
 
 #: ../src/widget/song_view.py:500
 msgid "Directory(include subdirectories)"
-msgstr "檔夾(包含子目錄)"
+msgstr "資料夾(包含子目錄)"
 
 #: ../src/widget/song_view.py:511
 msgid "Add URL"
-msgstr "添加指定URL"
+msgstr "添加指定 URL"
 
 #: ../src/widget/song_view.py:649
 msgid "Added time"
@@ -1001,7 +1002,7 @@ msgstr "從歌曲庫中移除"
 
 #: ../src/widget/song_view.py:760 ../src/widget/local_browser.py:359
 msgid "Open Directory"
-msgstr "打開目錄"
+msgstr "開啟目錄"
 
 #: ../src/widget/plugins_view.py:163
 msgid "Enable"
@@ -1009,19 +1010,19 @@ msgstr "啟用"
 
 #: ../src/widget/local_browser.py:91
 msgid "Folder"
-msgstr "檔夾"
+msgstr "資料夾"
 
 #: ../src/widget/local_browser.py:98
 msgid "Quick Scan"
-msgstr ""
+msgstr "快速掃描"
 
 #: ../src/widget/local_browser.py:99
 msgid "Scan"
-msgstr ""
+msgstr "掃描"
 
 #: ../src/widget/local_browser.py:100
 msgid "Refresh Library"
-msgstr "刷新歌曲庫"
+msgstr "重新整理歌曲庫"
 
 #: ../src/widget/local_browser.py:350
 msgid "Play All"
@@ -1029,58 +1030,58 @@ msgstr "播放全部"
 
 #: ../src/widget/local_browser.py:351 ../src/widget/playlist.py:507
 msgid "Add to List"
-msgstr "添加到列表"
+msgstr "加入到清單"
 
 #: ../src/widget/local_browser.py:361
 msgid "Change Cover"
-msgstr "更改封面"
+msgstr "變更封面"
 
 #: ../src/widget/playlist.py:77
 msgid "Search in Current Playlist"
-msgstr "從當前播放列表檢索歌曲"
+msgstr "從當前播放清單檢索歌曲"
 
 #: ../src/widget/playlist.py:79
 msgid "Playlist Operations"
-msgstr "播放列表操作"
+msgstr "播放清單作"
 
 #: ../src/widget/playlist.py:165
 msgid "Default List"
-msgstr "默認列表"
+msgstr "預設清單"
 
 #: ../src/widget/playlist.py:261 ../src/widget/playlist.py:273
 #: ../src/widget/playlist.py:274 ../src/widget/playlist.py:314
 #: ../src/widget/playlist.py:317 ../src/widget/playlist.py:433
 msgid "New List"
-msgstr "新建列表"
+msgstr "新建清單"
 
 #: ../src/widget/playlist.py:262 ../src/widget/playlist.py:434
 msgid "Import List"
-msgstr "導入列表"
+msgstr "匯入清單"
 
 #: ../src/widget/playlist.py:263 ../src/widget/playlist.py:442
 msgid "Open List"
-msgstr "打開列表"
+msgstr "打開清單"
 
 #: ../src/widget/playlist.py:264
 msgid "Export List"
-msgstr "導出列表"
+msgstr "匯出清單"
 
 #: ../src/widget/playlist.py:265 ../src/widget/playlist.py:441
 msgid "Remove List"
-msgstr "刪除列表"
+msgstr "刪除清單"
 
 #: ../src/widget/playlist.py:267 ../src/widget/playlist.py:436
 #: ../src/widget/playlist.py:444
 msgid "Save all Lists"
-msgstr "保存所有列表"
+msgstr "保存全部清單"
 
 #: ../src/widget/playlist.py:440 ../src/widget/playlist.py:450
 msgid "Rename"
-msgstr "重命名"
+msgstr "重新命名"
 
 #: ../src/widget/playlist.py:491
 msgid "By Filename"
-msgstr "按文件名"
+msgstr "按檔案名稱"
 
 #: ../src/widget/playlist.py:492
 msgid "By Title"
@@ -1089,7 +1090,7 @@ msgstr "按標題"
 #: ../src/widget/playlist.py:493 ../src/widget/combo.py:184
 #: ../src/widget/combo.py:233
 msgid "By Artist"
-msgstr "按藝術家"
+msgstr "按演出者"
 
 #: ../src/widget/playlist.py:494 ../src/widget/combo.py:235
 msgid "By Album"
@@ -1097,7 +1098,7 @@ msgstr "按專輯"
 
 #: ../src/widget/playlist.py:495 ../src/widget/combo.py:234
 msgid "By Genre"
-msgstr "按流派"
+msgstr "按曲風"
 
 #: ../src/widget/playlist.py:496
 msgid "By Track"
@@ -1117,7 +1118,7 @@ msgstr "隨機排序"
 
 #: ../src/widget/playlist.py:508
 msgid "move to List"
-msgstr "移動到列表"
+msgstr "移動到清單"
 
 #: ../src/widget/playlist.py:510
 msgid "Remove Track"
@@ -1137,11 +1138,11 @@ msgstr "減小歌詞尺寸"
 
 #: ../src/widget/lyrics_module.py:151
 msgid "Select color theme"
-msgstr "選擇配色"
+msgstr "選擇色彩配置"
 
 #: ../src/widget/lyrics_module.py:155
 msgid "karaoke on/off"
-msgstr "啟用/關閉卡拉OK模式"
+msgstr "啟用/關閉卡拉 OK 模式"
 
 #: ../src/widget/lyrics_module.py:158
 msgid "Switch lines"
@@ -1149,11 +1150,11 @@ msgstr "切換行數"
 
 #: ../src/widget/lyrics_module.py:159
 msgid "Open settings panel"
-msgstr "打開設置面板"
+msgstr "開啟設定面板"
 
 #: ../src/widget/lyrics_module.py:160
 msgid "search lrc file for current track"
-msgstr "搜索歌詞"
+msgstr "搜尋當前歌曲的歌詞"
 
 #: ../src/widget/lyrics_module.py:161
 msgid "Close lyrics"
@@ -1169,28 +1170,28 @@ msgstr "前進歌詞"
 
 #: ../src/widget/lyrics_module.py:164 ../src/widget/lyrics_module.py:221
 msgid "Switch to window mode"
-msgstr "切換到窗口歌詞"
+msgstr "切換到視窗歌詞"
 
 #: ../src/widget/lyrics_module.py:199
 msgid "Switch to desktop mode"
-msgstr "切換到窗口歌詞"
+msgstr "切換到桌面歌詞"
 
 #: ../src/widget/lyrics_module.py:204 ../src/widget/lyrics_module.py:214
 #: ../src/widget/lyrics_search.py:58
 msgid "Search"
-msgstr "搜索"
+msgstr "搜尋"
 
 #: ../src/widget/lyrics_module.py:205 ../src/widget/lyrics_module.py:220
 msgid "Settings"
-msgstr "設置"
+msgstr "設定"
 
 #: ../src/widget/lyrics_module.py:211
 msgid "Forward 0.5 seconds"
-msgstr "提前0.5秒"
+msgstr "提前 0.5 秒"
 
 #: ../src/widget/lyrics_module.py:212
 msgid "Rewind 0.5 seconds"
-msgstr "後退0.5秒"
+msgstr "後退 0.5 秒"
 
 #: ../src/widget/lyrics_module.py:215
 msgid "Adjust lyrics"
@@ -1198,43 +1199,43 @@ msgstr "調整歌詞"
 
 #: ../src/widget/lyrics_module.py:217
 msgid "Choose local lrc"
-msgstr "關聯本地歌詞"
+msgstr "關聯本地端歌詞"
 
 #: ../src/widget/lyrics_module.py:763 ../src/widget/lyrics_module.py:764
 msgid "No lyrics found!"
-msgstr "沒有找到歌詞檔!"
+msgstr "沒有找到歌詞檔案!"
 
 #: ../src/widget/lyrics_module.py:766 ../src/widget/lyrics_module.py:767
 msgid "Searching for lyrics..."
-msgstr "正在搜索歌詞..."
+msgstr "正在搜尋歌詞..."
 
 #: ../src/widget/dialog.py:34
 msgid "Select Directory"
-msgstr "選擇目錄"
+msgstr "選擇資料夾"
 
 #: ../src/widget/dialog.py:56
 msgid "Select file"
-msgstr "選擇檔"
+msgstr "選擇檔案"
 
 #: ../src/widget/dialog.py:82
 msgid "Export playlist"
-msgstr "導出播放列表"
+msgstr "匯出播放清單"
 
 #: ../src/widget/dialog.py:130
 msgid "Load playlist"
-msgstr "加載播放列表"
+msgstr "載入播放清單"
 
 #: ../src/widget/combo.py:195
 msgid "List view"
-msgstr "列表顯示"
+msgstr "清單視圖"
 
 #: ../src/widget/lyrics_search.py:47
 msgid "Lyrics search"
-msgstr "歌詞搜索"
+msgstr "歌詞搜尋"
 
 #: ../src/widget/lyrics_search.py:53
 msgid "Artist:"
-msgstr "藝術家:"
+msgstr "演出者:"
 
 #: ../src/widget/lyrics_search.py:54
 msgid "Title:"
@@ -1246,7 +1247,7 @@ msgstr "下載"
 
 #: ../src/widget/lyrics_search.py:127
 msgid "Now searching..."
-msgstr "正在搜索..."
+msgstr "正在搜尋..."
 
 #: ../src/widget/lyrics_search.py:129 ../src/widget/lyrics_search.py:154
 msgid "Not found!"
@@ -1255,7 +1256,7 @@ msgstr "沒有找到!"
 #: ../src/widget/lyrics_search.py:148 ../src/widget/lyrics_search.py:152
 #, python-format
 msgid "%d lyrics found"
-msgstr "找到%d歌詞"
+msgstr "找到 %d 個歌詞"
 
 #: ../src/widget/lyrics_search.py:161
 msgid "Downloading lyrics..."
@@ -1263,11 +1264,11 @@ msgstr "正在下載歌詞..."
 
 #: ../src/widget/lyrics_search.py:171
 msgid "File save to"
-msgstr "檔保存到"
+msgstr "保存檔案到"
 
 #: ../src/widget/lyrics_search.py:173
 msgid "Download failed."
-msgstr "下載失敗"
+msgstr "下載失敗。"
 
 #: ../src/widget/tray.py:50
 msgid "Mute"
@@ -1283,7 +1284,7 @@ msgstr "地域"
 
 #: ../src/widget/webcasts_browser.py:141
 msgid "Favorites"
-msgstr "我的收藏"
+msgstr "我的喜好"
 
 #: ../plugins/pidgin/__init__.py:97 ../plugins/mpris2/mpris_adapter.py:252
 msgid "Deepin Music"
@@ -1314,4 +1315,4 @@ msgstr "推薦首頁"
 
 #: ../plugins/musicfm/radio_browser.py:80
 msgid "Genres"
-msgstr "流派兆赫"
+msgstr "曲風兆赫"
