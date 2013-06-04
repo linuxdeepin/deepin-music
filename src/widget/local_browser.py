@@ -97,7 +97,8 @@ class Browser(gtk.VBox, SignalContainer):
             [
              (_("Quick Scan"), lambda : ImportFolderJob([os.path.expanduser("~")])),                
              (_("Scan"), lambda : ImportFolderJob()),
-             (_("Refresh Library"), lambda : ReloadDBJob())])
+             # (_("Refresh Library"), lambda : ReloadDBJob())
+             ])
         
         # Left box
         invailed_box = gtk.VBox()

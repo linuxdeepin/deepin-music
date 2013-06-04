@@ -534,7 +534,7 @@ msgstr "請嘗試更多關鍵字進行搜尋，如標題、演出者或專輯名
 
 #: ../src/widget/ui.py:1112 ../src/widget/plugins_view.py:163
 msgid "Add-on"
-msgstr "附加組件"
+msgstr "附加元件"
 
 #: ../src/widget/ui.py:1120
 msgid "Author(s)"
@@ -862,7 +862,7 @@ msgstr "視窗歌詞"
 
 #: ../src/widget/preference.py:1011
 msgid "Add-ons"
-msgstr "附加組件"
+msgstr "附加元件"
 
 #: ../src/widget/preference.py:1012
 msgid "About"
