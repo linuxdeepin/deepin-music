@@ -193,7 +193,7 @@ msgid "Add-on archive is not in the correct format."
 msgstr "附加元件的歸檔文件格式錯誤。"
 
 #: ../src/plugins.py:98
-#, fuzzy, python-format
+#, python-format
 msgid "An add-on with the name \"%s\" is already installed."
 msgstr "附加元件“%s”已經安裝。"
 
@@ -534,7 +534,7 @@ msgstr "請嘗試更多關鍵字進行搜尋，如標題、演出者或專輯名
 
 #: ../src/widget/ui.py:1112 ../src/widget/plugins_view.py:163
 msgid "Add-on"
-msgstr "附加組件"
+msgstr "附加元件"
 
 #: ../src/widget/ui.py:1120
 msgid "Author(s)"
@@ -751,7 +751,7 @@ msgstr "色彩配置"
 
 #: ../src/widget/preference.py:640 ../src/widget/preference.py:806
 msgid "Regular"
-msgstr "一般"
+msgstr "常規"
 
 #: ../src/widget/preference.py:641 ../src/widget/preference.py:807
 msgid "Italic"
@@ -842,7 +842,7 @@ msgstr ""
 #: ../src/widget/preference.py:948 ../src/widget/instance.py:369
 #: ../src/widget/tray.py:82
 msgid "Preferences"
-msgstr "選項設置"
+msgstr "偏好設定"
 
 #: ../src/widget/preference.py:1006
 msgid "General"
@@ -862,7 +862,7 @@ msgstr "視窗歌詞"
 
 #: ../src/widget/preference.py:1011
 msgid "Add-ons"
-msgstr "附加組件"
+msgstr "附加元件"
 
 #: ../src/widget/preference.py:1012
 msgid "About"
@@ -1042,7 +1042,7 @@ msgstr "從當前播放清單檢索歌曲"
 
 #: ../src/widget/playlist.py:79
 msgid "Playlist Operations"
-msgstr "播放清單作"
+msgstr "播放清單操作"
 
 #: ../src/widget/playlist.py:165
 msgid "Default List"
