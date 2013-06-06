@@ -157,6 +157,7 @@ class GeneralSetting(gtk.VBox):
         self.splash_check_button = CheckButton(_("Display splash-screen"))
         splash_hbox = gtk.HBox()
         splash_hbox.pack_start(self.splash_check_button, False, False)
+        splash_hbox.set_size_request(185, -1)
         # splash_hbox.pack_start(create_right_align(), True, True)        
         
         # open_lyrics_check_button.
