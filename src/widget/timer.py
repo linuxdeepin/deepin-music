@@ -55,8 +55,8 @@ class SongTimer(gtk.HBox):
         bar_align.set_padding(0, 0, 2, 2)
         bar_align.set(1, 1, 1, 1)
         bar_align.add(self.bar)
-        self.bar.connect("button_press_event", self.on_bar_press)
-        self.bar.connect("button_release_event", self.on_bar_release)
+        self.bar.connect("button-press-event", self.on_bar_press)
+        self.bar.connect("button-release-event", self.on_bar_release)
         self.__value_changed_id = self.bar.connect("value-changed", self.on_bar_value_changed)
         self.bar.handler_block(self.__value_changed_id)
         self.pack_start(bar_align, True, True)
@@ -156,14 +156,19 @@ class SongTimer(gtk.HBox):
         self.update_bar = 0
         self.__need_report = False
 
-        self.bar.handler_unblock(self.__value_changed_id)
+        try:
+            self.bar.handler_unblock(self.__value_changed_id)
+        except: pass
 
     def __idle_release(self):
         self.update_bar = 1
         self.__idle_release_id = None
 
     def on_bar_release(self, widget, event):
-        self.bar.handler_block(self.__value_changed_id)
+        try:
+            self.bar.handler_block(self.__value_changed_id)
+        except:    
+            pass
         
         s = Player.song
         if not s :
@@ -177,9 +182,9 @@ class SongTimer(gtk.HBox):
             Player.seek(self.bar.get_value())
 
         # wait a bit that the player are really seek to update the progress bar
-        if not self.__idle_release_id:
-            self.__idle_release()
-            self.__idle_release_id = gobject.idle_add(self.__idle_release)
+        # if not self.__idle_release_id:
+        self.__idle_release()
+        self.__idle_release_id = gobject.idle_add(self.__idle_release)
 
 class VolumeSlider(gtk.VBox):
     def __init__(self, auto_hide=True, mini_mode=False):
