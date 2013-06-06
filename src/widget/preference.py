@@ -157,7 +157,7 @@ class GeneralSetting(gtk.VBox):
         self.splash_check_button = CheckButton(_("Display splash-screen"))
         splash_hbox = gtk.HBox()
         splash_hbox.pack_start(self.splash_check_button, False, False)
-        splash_hbox.pack_start(create_right_align(), True, True)        
+        # splash_hbox.pack_start(create_right_align(), True, True)        
         
         # open_lyrics_check_button.
         open_lyrics_hbox = gtk.HBox()
@@ -169,7 +169,7 @@ class GeneralSetting(gtk.VBox):
         self.auto_play_check_button = CheckButton(_("Start playback automatically"))
         auto_play_hbox = gtk.HBox()
         auto_play_hbox.pack_start(self.auto_play_check_button, False, False)
-        auto_play_hbox.pack_start(create_right_align(), True, True)                
+        # auto_play_hbox.pack_start(create_right_align(), True, True)                
         
         # resume last check_button.
         self.resume_last_check_button = CheckButton(_("Resume playback"))
@@ -212,11 +212,11 @@ class GeneralSetting(gtk.VBox):
         fade_check_hbox = gtk.HBox()
         self.fade_check_button = CheckButton(_("Enable crossfade"))        
         fade_check_hbox.pack_start(self.fade_check_button, False, False)
-        fade_check_hbox.pack_start(create_right_align(), True, True)
+        # fade_check_hbox.pack_start(create_right_align(), True, True)
         self.album_check_button = CheckButton(_("Disable crossfade between tracks in the same album"))
         album_check_hbox = gtk.HBox()
         album_check_hbox.pack_start(self.album_check_button, False, False)
-        album_check_hbox.pack_start(create_right_align(), True, True)
+        # album_check_hbox.pack_start(create_right_align(), True, True)
         
         fade_label = Label("%s" % _("Fade timeout"))
         self.fade_spin = SpinBox(200, 0, 900, 100)
@@ -356,7 +356,7 @@ class HotKeySetting(gtk.VBox):
         self.using_check_button = CheckButton(_("Enable hotkeys"))
 
         using_hbox.pack_start(self.using_check_button, False, False)
-        using_hbox.pack_start(create_right_align(), False, True)
+        # using_hbox.pack_start(create_right_align(), False, True)
         self.main_table.attach(using_hbox, 0, 2, 2, 3, yoptions=gtk.FILL)
         
         self.toggle_window_entry = self.create_combo_entry(3, 4, _("Minimize/Show window"),
