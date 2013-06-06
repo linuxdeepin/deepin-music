@@ -89,7 +89,7 @@ class DeepinMusic(gobject.GObject, Logger):
         application.add_titlebar(
             ["theme", "menu", "min", "close"],
             os.path.join(image_dir, "logo1.png"),
-            _("Dmusic")
+            _("DMusic")
             )
         application.titlebar.menu_button.connect("button-press-event", self.menu_button_press)        
         application.titlebar.connect("button-press-event", self.right_click_cb)

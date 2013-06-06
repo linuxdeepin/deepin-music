@@ -153,7 +153,7 @@ class TestTrayIcon(object):
 
     def _setup_appindicator(self, menu):
     	import appindicator
-    	indicator = appindicator.Indicator(_("Dmusic"),
+    	indicator = appindicator.Indicator(_("DMusic"),
                                            "exaile",
                                            appindicator.CATEGORY_APPLICATION_STATUS)
     	indicator.set_status(appindicator.STATUS_ACTIVE)

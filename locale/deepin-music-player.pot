@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-03 10:20+0800\n"
+"POT-Creation-Date: 2013-06-06 10:29+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -172,10 +172,10 @@ msgstr ""
 #: ../src/main.py:163 ../src/widget/global_keys.py:95
 #: ../src/widget/information.py:40 ../src/widget/information.py:82
 #: ../src/widget/lyrics.py:80 ../src/widget/lyrics.py:748
-#: ../src/widget/preference.py:569 ../src/widget/preference.py:579
-#: ../src/widget/preference.py:910 ../src/widget/instance.py:92
+#: ../src/widget/preference.py:568 ../src/widget/preference.py:578
+#: ../src/widget/preference.py:889 ../src/widget/instance.py:92
 #: ../src/widget/tray.py:156
-msgid "Dmusic"
+msgid "DMusic"
 msgstr ""
 
 #: ../src/plugins.py:91
@@ -244,8 +244,8 @@ msgstr ""
 msgid "Format"
 msgstr ""
 
-#: ../src/widget/song_editor.py:97 ../src/widget/preference.py:679
-#: ../src/widget/preference.py:841 ../src/widget/song_notify.py:193
+#: ../src/widget/song_editor.py:97 ../src/widget/preference.py:675
+#: ../src/widget/preference.py:828 ../src/widget/song_notify.py:193
 msgid "Size"
 msgstr ""
 
@@ -296,16 +296,16 @@ msgid "Save"
 msgstr ""
 
 #: ../src/widget/song_editor.py:296 ../src/widget/converter.py:463
-#: ../src/widget/preference.py:253
+#: ../src/widget/preference.py:252
 msgid "Change"
 msgstr ""
 
 #: ../src/widget/song_editor.py:298 ../src/widget/equalizer.py:252
-#: ../src/widget/preference.py:376
+#: ../src/widget/preference.py:375
 msgid "Reset"
 msgstr ""
 
-#: ../src/widget/song_editor.py:316 ../src/widget/local_browser.py:343
+#: ../src/widget/song_editor.py:316 ../src/widget/local_browser.py:344
 msgid "Select image"
 msgstr ""
 
@@ -316,19 +316,19 @@ msgstr ""
 
 #: ../src/widget/song_editor.py:329 ../src/widget/equalizer.py:250
 #: ../src/widget/ui.py:1142 ../src/widget/converter.py:382
-#: ../src/widget/converter.py:437 ../src/widget/preference.py:955
+#: ../src/widget/converter.py:437 ../src/widget/preference.py:934
 #: ../src/widget/lyrics_search.py:88
 msgid "Close"
 msgstr ""
 
 #: ../src/widget/song_editor.py:332 ../src/widget/headerbar.py:70
-#: ../src/widget/preference.py:370 ../src/widget/instance.py:328
+#: ../src/widget/preference.py:369 ../src/widget/instance.py:328
 #: ../src/widget/tray.py:63
 msgid "Previous"
 msgstr ""
 
 #: ../src/widget/song_editor.py:334 ../src/widget/headerbar.py:71
-#: ../src/widget/preference.py:371 ../src/widget/instance.py:329
+#: ../src/widget/preference.py:370 ../src/widget/instance.py:329
 #: ../src/widget/tray.py:64
 msgid "Next"
 msgstr ""
@@ -530,11 +530,11 @@ msgstr ""
 msgid "Author(s)"
 msgstr ""
 
-#: ../src/widget/ui.py:1150 ../src/widget/preference.py:196
+#: ../src/widget/ui.py:1150 ../src/widget/preference.py:195
 msgid "Minimize to tray"
 msgstr ""
 
-#: ../src/widget/ui.py:1152 ../src/widget/preference.py:197
+#: ../src/widget/ui.py:1152 ../src/widget/preference.py:196
 #: ../src/widget/instance.py:371 ../src/widget/tray.py:83
 msgid "Quit"
 msgstr ""
@@ -551,7 +551,7 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: ../src/widget/headerbar.py:62 ../src/widget/preference.py:369
+#: ../src/widget/headerbar.py:62 ../src/widget/preference.py:368
 msgid "Play/Pause"
 msgstr ""
 
@@ -560,7 +560,7 @@ msgid "Show/Hide Lyrics"
 msgstr ""
 
 #: ../src/widget/converter.py:297 ../src/widget/song_view.py:406
-#: ../src/widget/song_view.py:749 ../src/widget/local_browser.py:339
+#: ../src/widget/song_view.py:749 ../src/widget/local_browser.py:340
 msgid "Prompt"
 msgstr ""
 
@@ -624,232 +624,232 @@ msgstr ""
 msgid "Output"
 msgstr ""
 
-#: ../src/widget/preference.py:151
+#: ../src/widget/preference.py:150
 msgid "Startup"
 msgstr ""
 
-#: ../src/widget/preference.py:158
+#: ../src/widget/preference.py:157
 msgid "Display splash-screen"
 msgstr ""
 
-#: ../src/widget/preference.py:165
+#: ../src/widget/preference.py:164
 msgid "Show lyrics"
 msgstr ""
 
-#: ../src/widget/preference.py:170
+#: ../src/widget/preference.py:169
 msgid "Start playback automatically"
 msgstr ""
 
-#: ../src/widget/preference.py:176
+#: ../src/widget/preference.py:175
 msgid "Resume playback"
 msgstr ""
 
-#: ../src/widget/preference.py:191
+#: ../src/widget/preference.py:190
 msgid "On pressing the close button"
 msgstr ""
 
-#: ../src/widget/preference.py:210
+#: ../src/widget/preference.py:209
 msgid "Playback settings"
 msgstr ""
 
-#: ../src/widget/preference.py:214
+#: ../src/widget/preference.py:213
 msgid "Enable crossfade"
 msgstr ""
 
-#: ../src/widget/preference.py:217
+#: ../src/widget/preference.py:216
 msgid "Disable crossfade between tracks in the same album"
 msgstr ""
 
-#: ../src/widget/preference.py:222
+#: ../src/widget/preference.py:221
 msgid "Fade timeout"
 msgstr ""
 
-#: ../src/widget/preference.py:224
+#: ../src/widget/preference.py:223
 msgid " ms"
 msgstr ""
 
-#: ../src/widget/preference.py:242
+#: ../src/widget/preference.py:241
 msgid "Lyrics directory"
 msgstr ""
 
-#: ../src/widget/preference.py:347 ../src/widget/preference.py:1007
+#: ../src/widget/preference.py:346 ../src/widget/preference.py:986
 msgid "Hotkeys"
 msgstr ""
 
-#: ../src/widget/preference.py:357
+#: ../src/widget/preference.py:356
 msgid "Enable hotkeys"
 msgstr ""
 
-#: ../src/widget/preference.py:363
+#: ../src/widget/preference.py:362
 msgid "Minimize/Show window"
 msgstr ""
 
-#: ../src/widget/preference.py:365
+#: ../src/widget/preference.py:364
 msgid "Show/Hide lyrics"
 msgstr ""
 
-#: ../src/widget/preference.py:367
+#: ../src/widget/preference.py:366
 msgid "Lock/Unlock lyrics"
 msgstr ""
 
-#: ../src/widget/preference.py:372 ../src/widget/tray.py:48
+#: ../src/widget/preference.py:371 ../src/widget/tray.py:48
 msgid "Increase volume"
 msgstr ""
 
-#: ../src/widget/preference.py:373 ../src/widget/tray.py:49
+#: ../src/widget/preference.py:372 ../src/widget/tray.py:49
 msgid "Decrease volume"
 msgstr ""
 
-#: ../src/widget/preference.py:591 ../src/widget/preference.py:603
-#: ../src/widget/preference.py:847
+#: ../src/widget/preference.py:590 ../src/widget/preference.py:602
+#: ../src/widget/preference.py:834
 msgid "Left"
 msgstr ""
 
-#: ../src/widget/preference.py:592 ../src/widget/preference.py:604
-#: ../src/widget/preference.py:847
+#: ../src/widget/preference.py:591 ../src/widget/preference.py:603
+#: ../src/widget/preference.py:834
 msgid "Centered"
 msgstr ""
 
-#: ../src/widget/preference.py:593 ../src/widget/preference.py:605
-#: ../src/widget/preference.py:847
+#: ../src/widget/preference.py:592 ../src/widget/preference.py:604
+#: ../src/widget/preference.py:834
 msgid "Right"
 msgstr ""
 
-#: ../src/widget/preference.py:606
+#: ../src/widget/preference.py:605
 msgid "Justified"
 msgstr ""
 
-#: ../src/widget/preference.py:617 ../src/widget/lyrics_module.py:425
+#: ../src/widget/preference.py:616 ../src/widget/lyrics_module.py:425
 msgid "Vitality yellow"
 msgstr ""
 
-#: ../src/widget/preference.py:618 ../src/widget/lyrics_module.py:426
+#: ../src/widget/preference.py:617 ../src/widget/lyrics_module.py:426
 msgid "Fresh green"
 msgstr ""
 
-#: ../src/widget/preference.py:619 ../src/widget/lyrics_module.py:427
+#: ../src/widget/preference.py:618 ../src/widget/lyrics_module.py:427
 msgid "Playful pink"
 msgstr ""
 
-#: ../src/widget/preference.py:620 ../src/widget/lyrics_module.py:428
+#: ../src/widget/preference.py:619 ../src/widget/lyrics_module.py:428
 msgid "Cool blue"
 msgstr ""
 
-#: ../src/widget/preference.py:632
+#: ../src/widget/preference.py:631
 msgid "Color scheme"
 msgstr ""
 
-#: ../src/widget/preference.py:640 ../src/widget/preference.py:806
+#: ../src/widget/preference.py:639 ../src/widget/preference.py:796
 msgid "Regular"
 msgstr ""
 
-#: ../src/widget/preference.py:641 ../src/widget/preference.py:807
+#: ../src/widget/preference.py:640 ../src/widget/preference.py:797
 msgid "Italic"
 msgstr ""
 
-#: ../src/widget/preference.py:642 ../src/widget/preference.py:808
+#: ../src/widget/preference.py:641 ../src/widget/preference.py:798
 msgid "Bold"
 msgstr ""
 
-#: ../src/widget/preference.py:643 ../src/widget/preference.py:809
+#: ../src/widget/preference.py:642 ../src/widget/preference.py:799
 msgid "Bold Italic"
 msgstr ""
 
-#: ../src/widget/preference.py:653 ../src/widget/preference.py:817
+#: ../src/widget/preference.py:652 ../src/widget/preference.py:807
 msgid "Style"
 msgstr ""
 
-#: ../src/widget/preference.py:664 ../src/widget/preference.py:826
+#: ../src/widget/preference.py:660 ../src/widget/preference.py:813
 msgid "Lyrics style"
 msgstr ""
 
-#: ../src/widget/preference.py:674 ../src/widget/preference.py:835
+#: ../src/widget/preference.py:670 ../src/widget/preference.py:822
 msgid "Font"
 msgstr ""
 
-#: ../src/widget/preference.py:682
+#: ../src/widget/preference.py:678
 msgid "Lines"
 msgstr ""
 
-#: ../src/widget/preference.py:683
+#: ../src/widget/preference.py:679
 msgid "Single"
 msgstr ""
 
-#: ../src/widget/preference.py:683
+#: ../src/widget/preference.py:679
 msgid "Double"
 msgstr ""
 
-#: ../src/widget/preference.py:687 ../src/widget/preference.py:845
+#: ../src/widget/preference.py:682 ../src/widget/preference.py:832
 msgid "Alignment"
 msgstr ""
 
-#: ../src/widget/preference.py:697
+#: ../src/widget/preference.py:691
 msgid "Outline"
 msgstr ""
 
-#: ../src/widget/preference.py:702
+#: ../src/widget/preference.py:695
 msgid "Stroke"
 msgstr ""
 
-#: ../src/widget/preference.py:709 ../src/widget/preference.py:857
+#: ../src/widget/preference.py:700 ../src/widget/preference.py:844
 msgid "Coming"
 msgstr ""
 
-#: ../src/widget/preference.py:719 ../src/widget/preference.py:858
+#: ../src/widget/preference.py:711 ../src/widget/preference.py:845
 msgid "Played"
 msgstr ""
 
-#: ../src/widget/preference.py:852
+#: ../src/widget/preference.py:839
 msgid "Rolling"
 msgstr ""
 
-#: ../src/widget/preference.py:853
+#: ../src/widget/preference.py:840
 msgid "Always"
 msgstr ""
 
-#: ../src/widget/preference.py:853
+#: ../src/widget/preference.py:840
 msgid "By line"
 msgstr ""
 
-#: ../src/widget/preference.py:915 ../src/widget/plugins_view.py:163
+#: ../src/widget/preference.py:894 ../src/widget/plugins_view.py:163
 msgid "Version"
 msgstr ""
 
-#: ../src/widget/preference.py:930
+#: ../src/widget/preference.py:909
 msgid ""
-"        Dmusic is a music application designed for Linux users.It features "
+"        DMusic is a music application designed for Linux users.It features "
 "lyrics searching and downloading, desktop lyrics display,album cover "
 "downloading, resume playing, music management and skin selection.\n"
 "\n"
-"Dmusic is free software licensed under GNU GPLv3."
+"DMusic is free software licensed under GNU GPLv3."
 msgstr ""
 
-#: ../src/widget/preference.py:948 ../src/widget/instance.py:369
+#: ../src/widget/preference.py:927 ../src/widget/instance.py:369
 #: ../src/widget/tray.py:82
 msgid "Preferences"
 msgstr ""
 
-#: ../src/widget/preference.py:1006
+#: ../src/widget/preference.py:985
 msgid "General"
 msgstr ""
 
-#: ../src/widget/preference.py:1008
+#: ../src/widget/preference.py:987
 msgid "Lyrics"
 msgstr ""
 
-#: ../src/widget/preference.py:1009
+#: ../src/widget/preference.py:988
 msgid "Desktop"
 msgstr ""
 
-#: ../src/widget/preference.py:1010
+#: ../src/widget/preference.py:989
 msgid "Window"
 msgstr ""
 
-#: ../src/widget/preference.py:1011
+#: ../src/widget/preference.py:990
 msgid "Add-ons"
 msgstr ""
 
-#: ../src/widget/preference.py:1012
+#: ../src/widget/preference.py:991
 msgid "About"
 msgstr ""
 
@@ -916,7 +916,7 @@ msgid "jobs waiting!"
 msgstr ""
 
 #: ../src/widget/song_view.py:406 ../src/widget/song_view.py:749
-#: ../src/widget/local_browser.py:339
+#: ../src/widget/local_browser.py:340
 msgid "Are you sure you want to delete them?"
 msgstr ""
 
@@ -945,7 +945,7 @@ msgid "Remove Unavailable Tracks"
 msgstr ""
 
 #: ../src/widget/song_view.py:478 ../src/widget/song_view.py:758
-#: ../src/widget/local_browser.py:354 ../src/widget/playlist.py:511
+#: ../src/widget/local_browser.py:355 ../src/widget/playlist.py:511
 msgid "Move to Trash"
 msgstr ""
 
@@ -981,11 +981,11 @@ msgstr ""
 msgid "Added time"
 msgstr ""
 
-#: ../src/widget/song_view.py:757 ../src/widget/local_browser.py:353
+#: ../src/widget/song_view.py:757 ../src/widget/local_browser.py:354
 msgid "Remove from Library"
 msgstr ""
 
-#: ../src/widget/song_view.py:760 ../src/widget/local_browser.py:359
+#: ../src/widget/song_view.py:760 ../src/widget/local_browser.py:360
 msgid "Open Directory"
 msgstr ""
 
@@ -1005,19 +1005,15 @@ msgstr ""
 msgid "Scan"
 msgstr ""
 
-#: ../src/widget/local_browser.py:100
-msgid "Refresh Library"
-msgstr ""
-
-#: ../src/widget/local_browser.py:350
+#: ../src/widget/local_browser.py:351
 msgid "Play All"
 msgstr ""
 
-#: ../src/widget/local_browser.py:351 ../src/widget/playlist.py:507
+#: ../src/widget/local_browser.py:352 ../src/widget/playlist.py:507
 msgid "Add to List"
 msgstr ""
 
-#: ../src/widget/local_browser.py:361
+#: ../src/widget/local_browser.py:362
 msgid "Change Cover"
 msgstr ""
 

@@ -565,7 +565,7 @@ class DesktopLyricsSetting(gtk.VBox):
         cr.save()
         cr.rectangle(xpos, ypos, rect.width * 0.5, rect.height)
         cr.clip()
-        active_surface = self.draw_lyric_surface(_("Dmusic"), True)
+        active_surface = self.draw_lyric_surface(_("DMusic"), True)
         if active_surface:
             cr.set_source_surface(active_surface, xpos, ypos)
             cr.paint()
@@ -575,7 +575,7 @@ class DesktopLyricsSetting(gtk.VBox):
         cr.save()
         cr.rectangle(xpos + rect.width * 0.5, ypos, rect.width*0.5, rect.height)
         cr.clip()
-        inactive_surface = self.draw_lyric_surface(_("Dmusic"))
+        inactive_surface = self.draw_lyric_surface(_("DMusic"))
         if inactive_surface:
             cr.set_source_surface(inactive_surface, xpos, ypos)
             cr.paint()
@@ -886,7 +886,7 @@ class AboutBox(gtk.VBox):
         main_box = gtk.VBox(spacing=15)
         logo_image = gtk.image_new_from_pixbuf(gtk.gdk.pixbuf_new_from_file(os.path.join(get_parent_dir(__file__, 3), "image", "logo1.png")))
         light_color = app_theme.get_color("labelText")
-        logo_name = Label(_("Dmusic"), text_size=10)
+        logo_name = Label(_("DMusic"), text_size=10)
         logo_box = gtk.HBox(spacing=2)
         logo_box.pack_start(logo_image, False, False)
         logo_box.pack_start(logo_name, False, False)
@@ -906,7 +906,7 @@ class AboutBox(gtk.VBox):
         title_box.pack_start(create_right_align(), True, True)
         title_box.pack_start(info_box, False, False)
         
-        describe = _("        Dmusic is a music application designed for Linux users.It features lyrics searching and downloading, desktop lyrics display,album cover downloading, resume playing, music management and skin selection.\n\nDmusic is free software licensed under GNU GPLv3.")
+        describe = _("        DMusic is a music application designed for Linux users.It features lyrics searching and downloading, desktop lyrics display,album cover downloading, resume playing, music management and skin selection.\n\nDMusic is free software licensed under GNU GPLv3.")
         
         describe_label = Label(describe, enable_select=False, wrap_width=400, text_size=10)
         main_box.pack_start(title_box, False, False)

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-03 10:04+0800\n"
+"POT-Creation-Date: 2013-06-06 10:29+0800\n"
 "PO-Revision-Date: 2012-12-29 11:34+0800\n"
 "Last-Translator: SmallEvilBeast <houshao55@gmail.com>\n"
 "Language-Team: none\n"
@@ -23,8 +23,8 @@ msgid ""
 "Vorbis is an open source, lossy audio codec with high quality output at a "
 "lower file size than MP3."
 msgstr ""
-"Vorbis 是一种开源的有损音频编解码器，与 MP3 格式相比，可以用更小的文件获得更佳的"
-"输出效果。"
+"Vorbis 是一种开源的有损音频编解码器，与 MP3 格式相比，可以用更小的文件获得更"
+"佳的输出效果。"
 
 #: ../src/transcoder.py:66
 msgid ""
@@ -59,7 +59,6 @@ msgstr ""
 #: ../src/transcoder.py:118
 msgid "A very fast Free lossless audio format with good compression."
 msgstr "一种解码快速的自由无损音频格式，压缩比率较高。"
-
 
 #: ../src/library.py:990 ../src/library.py:991 ../src/library.py:992
 #: ../src/library.py:999 ../src/library.py:1000 ../src/library.py:1001
@@ -182,10 +181,10 @@ msgstr "顯示所支持音頻檔的資訊"
 #: ../src/main.py:163 ../src/widget/global_keys.py:95
 #: ../src/widget/information.py:40 ../src/widget/information.py:82
 #: ../src/widget/lyrics.py:80 ../src/widget/lyrics.py:748
-#: ../src/widget/preference.py:569 ../src/widget/preference.py:579
-#: ../src/widget/preference.py:910 ../src/widget/instance.py:92
+#: ../src/widget/preference.py:568 ../src/widget/preference.py:578
+#: ../src/widget/preference.py:889 ../src/widget/instance.py:92
 #: ../src/widget/tray.py:156
-msgid "Dmusic"
+msgid "DMusic"
 msgstr "深度音樂"
 
 #: ../src/plugins.py:91
@@ -254,8 +253,8 @@ msgstr "類型"
 msgid "Format"
 msgstr "格式"
 
-#: ../src/widget/song_editor.py:97 ../src/widget/preference.py:679
-#: ../src/widget/preference.py:841 ../src/widget/song_notify.py:193
+#: ../src/widget/song_editor.py:97 ../src/widget/preference.py:675
+#: ../src/widget/preference.py:828 ../src/widget/song_notify.py:193
 msgid "Size"
 msgstr "大小"
 
@@ -306,16 +305,16 @@ msgid "Save"
 msgstr "保存"
 
 #: ../src/widget/song_editor.py:296 ../src/widget/converter.py:463
-#: ../src/widget/preference.py:253
+#: ../src/widget/preference.py:252
 msgid "Change"
 msgstr "變更"
 
 #: ../src/widget/song_editor.py:298 ../src/widget/equalizer.py:252
-#: ../src/widget/preference.py:376
+#: ../src/widget/preference.py:375
 msgid "Reset"
 msgstr "重設"
 
-#: ../src/widget/song_editor.py:316 ../src/widget/local_browser.py:343
+#: ../src/widget/song_editor.py:316 ../src/widget/local_browser.py:344
 msgid "Select image"
 msgstr "選擇圖片"
 
@@ -326,19 +325,19 @@ msgstr "屬性"
 
 #: ../src/widget/song_editor.py:329 ../src/widget/equalizer.py:250
 #: ../src/widget/ui.py:1142 ../src/widget/converter.py:382
-#: ../src/widget/converter.py:437 ../src/widget/preference.py:955
+#: ../src/widget/converter.py:437 ../src/widget/preference.py:934
 #: ../src/widget/lyrics_search.py:88
 msgid "Close"
 msgstr "關閉"
 
 #: ../src/widget/song_editor.py:332 ../src/widget/headerbar.py:70
-#: ../src/widget/preference.py:370 ../src/widget/instance.py:328
+#: ../src/widget/preference.py:369 ../src/widget/instance.py:328
 #: ../src/widget/tray.py:63
 msgid "Previous"
 msgstr "上一首"
 
 #: ../src/widget/song_editor.py:334 ../src/widget/headerbar.py:71
-#: ../src/widget/preference.py:371 ../src/widget/instance.py:329
+#: ../src/widget/preference.py:370 ../src/widget/instance.py:329
 #: ../src/widget/tray.py:64
 msgid "Next"
 msgstr "下一首"
@@ -540,11 +539,11 @@ msgstr "附加元件"
 msgid "Author(s)"
 msgstr "作者"
 
-#: ../src/widget/ui.py:1150 ../src/widget/preference.py:196
+#: ../src/widget/ui.py:1150 ../src/widget/preference.py:195
 msgid "Minimize to tray"
 msgstr "最小化到系統匣"
 
-#: ../src/widget/ui.py:1152 ../src/widget/preference.py:197
+#: ../src/widget/ui.py:1152 ../src/widget/preference.py:196
 #: ../src/widget/instance.py:371 ../src/widget/tray.py:83
 msgid "Quit"
 msgstr "結束"
@@ -561,7 +560,7 @@ msgstr "確認"
 msgid "Cancel"
 msgstr "取消"
 
-#: ../src/widget/headerbar.py:62 ../src/widget/preference.py:369
+#: ../src/widget/headerbar.py:62 ../src/widget/preference.py:368
 msgid "Play/Pause"
 msgstr "暫停/繼續"
 
@@ -570,7 +569,7 @@ msgid "Show/Hide Lyrics"
 msgstr "開啟/關閉歌詞"
 
 #: ../src/widget/converter.py:297 ../src/widget/song_view.py:406
-#: ../src/widget/song_view.py:749 ../src/widget/local_browser.py:339
+#: ../src/widget/song_view.py:749 ../src/widget/local_browser.py:340
 msgid "Prompt"
 msgstr "提示"
 
@@ -634,237 +633,237 @@ msgstr "當轉換完成後加入到播放清單"
 msgid "Output"
 msgstr "輸出目錄"
 
-#: ../src/widget/preference.py:151
+#: ../src/widget/preference.py:150
 msgid "Startup"
 msgstr "開始"
 
-#: ../src/widget/preference.py:158
+#: ../src/widget/preference.py:157
 msgid "Display splash-screen"
 msgstr "顯示啟動畫面"
 
-#: ../src/widget/preference.py:165
+#: ../src/widget/preference.py:164
 msgid "Show lyrics"
 msgstr "開啟歌詞"
 
-#: ../src/widget/preference.py:170
+#: ../src/widget/preference.py:169
 msgid "Start playback automatically"
 msgstr "自動播放"
 
-#: ../src/widget/preference.py:176
+#: ../src/widget/preference.py:175
 msgid "Resume playback"
 msgstr "繼續上次播放進度"
 
-#: ../src/widget/preference.py:191
+#: ../src/widget/preference.py:190
 msgid "On pressing the close button"
 msgstr "當點擊關閉按鈕時"
 
-#: ../src/widget/preference.py:210
+#: ../src/widget/preference.py:209
 msgid "Playback settings"
 msgstr "播放設定"
 
-#: ../src/widget/preference.py:214
+#: ../src/widget/preference.py:213
 msgid "Enable crossfade"
 msgstr "啟用淡入淡出"
 
-#: ../src/widget/preference.py:217
+#: ../src/widget/preference.py:216
 msgid "Disable crossfade between tracks in the same album"
 msgstr "相同專輯間無縫切換"
 
-#: ../src/widget/preference.py:222
+#: ../src/widget/preference.py:221
 msgid "Fade timeout"
 msgstr "淡入淡出"
 
-#: ../src/widget/preference.py:224
+#: ../src/widget/preference.py:223
 msgid " ms"
 msgstr " 毫秒"
 
-#: ../src/widget/preference.py:242
+#: ../src/widget/preference.py:241
 msgid "Lyrics directory"
 msgstr "歌詞保存目錄"
 
-#: ../src/widget/preference.py:347 ../src/widget/preference.py:1007
+#: ../src/widget/preference.py:346 ../src/widget/preference.py:986
 msgid "Hotkeys"
 msgstr "捷徑鍵設定"
 
-#: ../src/widget/preference.py:357
+#: ../src/widget/preference.py:356
 msgid "Enable hotkeys"
 msgstr "啟用捷徑鍵"
 
-#: ../src/widget/preference.py:363
+#: ../src/widget/preference.py:362
 msgid "Minimize/Show window"
 msgstr "隱藏/顯示主視窗"
 
-#: ../src/widget/preference.py:365
+#: ../src/widget/preference.py:364
 msgid "Show/Hide lyrics"
 msgstr "啟用/關閉歌詞"
 
-#: ../src/widget/preference.py:367
+#: ../src/widget/preference.py:366
 msgid "Lock/Unlock lyrics"
 msgstr "鎖定/解鎖歌詞"
 
-#: ../src/widget/preference.py:372 ../src/widget/tray.py:48
+#: ../src/widget/preference.py:371 ../src/widget/tray.py:48
 msgid "Increase volume"
 msgstr "增大音量"
 
-#: ../src/widget/preference.py:373 ../src/widget/tray.py:49
+#: ../src/widget/preference.py:372 ../src/widget/tray.py:49
 msgid "Decrease volume"
 msgstr "減小音量"
 
-#: ../src/widget/preference.py:591 ../src/widget/preference.py:603
-#: ../src/widget/preference.py:847
+#: ../src/widget/preference.py:590 ../src/widget/preference.py:602
+#: ../src/widget/preference.py:834
 msgid "Left"
 msgstr "左對齊"
 
-#: ../src/widget/preference.py:592 ../src/widget/preference.py:604
-#: ../src/widget/preference.py:847
+#: ../src/widget/preference.py:591 ../src/widget/preference.py:603
+#: ../src/widget/preference.py:834
 msgid "Centered"
 msgstr "置中對齊"
 
-#: ../src/widget/preference.py:593 ../src/widget/preference.py:605
-#: ../src/widget/preference.py:847
+#: ../src/widget/preference.py:592 ../src/widget/preference.py:604
+#: ../src/widget/preference.py:834
 msgid "Right"
 msgstr "右對齊"
 
-#: ../src/widget/preference.py:606
+#: ../src/widget/preference.py:605
 msgid "Justified"
 msgstr "兩端對齊"
 
-#: ../src/widget/preference.py:617 ../src/widget/lyrics_module.py:425
+#: ../src/widget/preference.py:616 ../src/widget/lyrics_module.py:425
 msgid "Vitality yellow"
 msgstr "活力黃"
 
-#: ../src/widget/preference.py:618 ../src/widget/lyrics_module.py:426
+#: ../src/widget/preference.py:617 ../src/widget/lyrics_module.py:426
 msgid "Fresh green"
 msgstr "清新綠"
 
-#: ../src/widget/preference.py:619 ../src/widget/lyrics_module.py:427
+#: ../src/widget/preference.py:618 ../src/widget/lyrics_module.py:427
 msgid "Playful pink"
 msgstr "俏皮粉"
 
-#: ../src/widget/preference.py:620 ../src/widget/lyrics_module.py:428
+#: ../src/widget/preference.py:619 ../src/widget/lyrics_module.py:428
 msgid "Cool blue"
 msgstr "清爽藍"
 
-#: ../src/widget/preference.py:632
+#: ../src/widget/preference.py:631
 msgid "Color scheme"
 msgstr "色彩配置"
 
-#: ../src/widget/preference.py:640 ../src/widget/preference.py:806
+#: ../src/widget/preference.py:639 ../src/widget/preference.py:796
 msgid "Regular"
 msgstr "常規"
 
-#: ../src/widget/preference.py:641 ../src/widget/preference.py:807
+#: ../src/widget/preference.py:640 ../src/widget/preference.py:797
 msgid "Italic"
 msgstr "傾斜"
 
-#: ../src/widget/preference.py:642 ../src/widget/preference.py:808
+#: ../src/widget/preference.py:641 ../src/widget/preference.py:798
 msgid "Bold"
 msgstr "粗體"
 
-#: ../src/widget/preference.py:643 ../src/widget/preference.py:809
+#: ../src/widget/preference.py:642 ../src/widget/preference.py:799
 msgid "Bold Italic"
 msgstr "粗體 傾斜"
 
-#: ../src/widget/preference.py:653 ../src/widget/preference.py:817
+#: ../src/widget/preference.py:652 ../src/widget/preference.py:807
 msgid "Style"
 msgstr "字型"
 
-#: ../src/widget/preference.py:664 ../src/widget/preference.py:826
+#: ../src/widget/preference.py:660 ../src/widget/preference.py:813
 msgid "Lyrics style"
 msgstr "歌詞樣式"
 
-#: ../src/widget/preference.py:674 ../src/widget/preference.py:835
+#: ../src/widget/preference.py:670 ../src/widget/preference.py:822
 msgid "Font"
 msgstr "字體"
 
-#: ../src/widget/preference.py:682
+#: ../src/widget/preference.py:678
 msgid "Lines"
 msgstr "行數"
 
-#: ../src/widget/preference.py:683
+#: ../src/widget/preference.py:679
 msgid "Single"
 msgstr "單行"
 
-#: ../src/widget/preference.py:683
+#: ../src/widget/preference.py:679
 msgid "Double"
 msgstr "雙行"
 
-#: ../src/widget/preference.py:687 ../src/widget/preference.py:845
+#: ../src/widget/preference.py:682 ../src/widget/preference.py:832
 msgid "Alignment"
 msgstr "對齊"
 
-#: ../src/widget/preference.py:697
+#: ../src/widget/preference.py:691
 msgid "Outline"
 msgstr "輪廓"
 
-#: ../src/widget/preference.py:702
+#: ../src/widget/preference.py:695
 msgid "Stroke"
 msgstr "描邊"
 
-#: ../src/widget/preference.py:709 ../src/widget/preference.py:857
+#: ../src/widget/preference.py:700 ../src/widget/preference.py:844
 msgid "Coming"
 msgstr "未播放"
 
-#: ../src/widget/preference.py:719 ../src/widget/preference.py:858
+#: ../src/widget/preference.py:711 ../src/widget/preference.py:845
 msgid "Played"
 msgstr "已播放"
 
-#: ../src/widget/preference.py:852
+#: ../src/widget/preference.py:839
 msgid "Rolling"
 msgstr "滾動方式"
 
-#: ../src/widget/preference.py:853
+#: ../src/widget/preference.py:840
 msgid "Always"
 msgstr "總是滾動"
 
-#: ../src/widget/preference.py:853
+#: ../src/widget/preference.py:840
 msgid "By line"
 msgstr "按行滾動"
 
-#: ../src/widget/preference.py:915 ../src/widget/plugins_view.py:163
+#: ../src/widget/preference.py:894 ../src/widget/plugins_view.py:163
 msgid "Version"
 msgstr "版本"
 
-#: ../src/widget/preference.py:930
+#: ../src/widget/preference.py:909
 msgid ""
-"        Dmusic is a music application designed for Linux users.It features "
+"        DMusic is a music application designed for Linux users.It features "
 "lyrics searching and downloading, desktop lyrics display,album cover "
 "downloading, resume playing, music management and skin selection.\n"
 "\n"
-"Dmusic is free software licensed under GNU GPLv3."
+"DMusic is free software licensed under GNU GPLv3."
 msgstr ""
-"深度音樂是Linux Deepin團隊為廣大linux用戶量身開發的一款音樂軟件.具有歌"
-"詞搜索下載,桌面歌詞顯示,專輯封面下載,歌曲記憶播放,獨創音樂管理,自定義換膚等幾"
-"大特點.\n"
+"深度音樂是Linux Deepin團隊為廣大linux用戶量身開發的一款音樂軟件.具有歌詞搜索"
+"下載,桌面歌詞顯示,專輯封面下載,歌曲記憶播放,獨創音樂管理,自定義換膚等幾大特"
+"點.\n"
 "\n"
 "深度音樂是自由軟體,遵照自由軟體基金會發佈的 GNU 通用公共許可證條款第三版."
 
-#: ../src/widget/preference.py:948 ../src/widget/instance.py:369
+#: ../src/widget/preference.py:927 ../src/widget/instance.py:369
 #: ../src/widget/tray.py:82
 msgid "Preferences"
 msgstr "偏好設定"
 
-#: ../src/widget/preference.py:1006
+#: ../src/widget/preference.py:985
 msgid "General"
 msgstr "一般"
 
-#: ../src/widget/preference.py:1008
+#: ../src/widget/preference.py:987
 msgid "Lyrics"
 msgstr "歌詞設定"
 
-#: ../src/widget/preference.py:1009
+#: ../src/widget/preference.py:988
 msgid "Desktop"
 msgstr "桌面歌詞"
 
-#: ../src/widget/preference.py:1010
+#: ../src/widget/preference.py:989
 msgid "Window"
 msgstr "視窗歌詞"
 
-#: ../src/widget/preference.py:1011
+#: ../src/widget/preference.py:990
 msgid "Add-ons"
 msgstr "附加元件"
 
-#: ../src/widget/preference.py:1012
+#: ../src/widget/preference.py:991
 msgid "About"
 msgstr "關於"
 
@@ -931,7 +930,7 @@ msgid "jobs waiting!"
 msgstr "個工作在等待!"
 
 #: ../src/widget/song_view.py:406 ../src/widget/song_view.py:749
-#: ../src/widget/local_browser.py:339
+#: ../src/widget/local_browser.py:340
 msgid "Are you sure you want to delete them?"
 msgstr "您確定要刪除它們嗎?"
 
@@ -960,7 +959,7 @@ msgid "Remove Unavailable Tracks"
 msgstr "刪除錯誤歌曲"
 
 #: ../src/widget/song_view.py:478 ../src/widget/song_view.py:758
-#: ../src/widget/local_browser.py:354 ../src/widget/playlist.py:511
+#: ../src/widget/local_browser.py:355 ../src/widget/playlist.py:511
 msgid "Move to Trash"
 msgstr "移至回收筒"
 
@@ -996,11 +995,11 @@ msgstr "添加指定 URL"
 msgid "Added time"
 msgstr "添加時間"
 
-#: ../src/widget/song_view.py:757 ../src/widget/local_browser.py:353
+#: ../src/widget/song_view.py:757 ../src/widget/local_browser.py:354
 msgid "Remove from Library"
 msgstr "從歌曲庫中移除"
 
-#: ../src/widget/song_view.py:760 ../src/widget/local_browser.py:359
+#: ../src/widget/song_view.py:760 ../src/widget/local_browser.py:360
 msgid "Open Directory"
 msgstr "開啟目錄"
 
@@ -1020,19 +1019,15 @@ msgstr "快速掃描"
 msgid "Scan"
 msgstr "掃描"
 
-#: ../src/widget/local_browser.py:100
-msgid "Refresh Library"
-msgstr "重新整理歌曲庫"
-
-#: ../src/widget/local_browser.py:350
+#: ../src/widget/local_browser.py:351
 msgid "Play All"
 msgstr "播放全部"
 
-#: ../src/widget/local_browser.py:351 ../src/widget/playlist.py:507
+#: ../src/widget/local_browser.py:352 ../src/widget/playlist.py:507
 msgid "Add to List"
 msgstr "加入到清單"
 
-#: ../src/widget/local_browser.py:361
+#: ../src/widget/local_browser.py:362
 msgid "Change Cover"
 msgstr "變更封面"
 
@@ -1316,3 +1311,6 @@ msgstr "推薦首頁"
 #: ../plugins/musicfm/radio_browser.py:80
 msgid "Genres"
 msgstr "曲風兆赫"
+
+#~ msgid "Refresh Library"
+#~ msgstr "重新整理歌曲庫"

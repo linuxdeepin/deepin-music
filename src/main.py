@@ -160,7 +160,7 @@ class DeepinMusicApp(Logger):
         return p
     
     def version(self):
-        print "%s %s" % (_("Dmusic"), PROGRAM_VERSION)
+        print "%s %s" % (_("DMusic"), PROGRAM_VERSION)
         
     def mainloop_init(self):    
         import gobject
