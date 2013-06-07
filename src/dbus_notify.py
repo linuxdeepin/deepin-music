@@ -60,13 +60,17 @@ class DbusNotify(object):
         
     def notify(self):
         bus = dbus.SessionBus()
-        if not check_dbus(bus, NOTIFICATIONS_SERVICE_NAME):
-            return False
+        # if not check_dbus(bus, NOTIFICATIONS_SERVICE_NAME):
+        #     return False
         
-        proxy = bus.get_object(NOTIFICATIONS_SERVICE_NAME,
-                               NOTIFICATIONS_PATH)
-        notify_interface = dbus.Interface(proxy, NOTIFICATIONS_SERVICE_NAME)
-        notify_interface.Notify(self.app_name, 1, self.icon, self.summary, self.body,
-                                self.actions, self.hints, self.timeout)
+        try:
+            proxy = bus.get_object(NOTIFICATIONS_SERVICE_NAME,
+                                   NOTIFICATIONS_PATH)
+            notify_interface = dbus.Interface(proxy, NOTIFICATIONS_SERVICE_NAME)
+            notify_interface.Notify(self.app_name, 1, self.icon, self.summary, self.body,
+                                    self.actions, self.hints, self.timeout)
+        except:    
+            pass
+            
 
 dbus_notify = DbusNotify("deepin-music-player", "deepin-music-player")        
