@@ -30,24 +30,29 @@ from dtk.ui.utils import (get_content_size, color_hex_to_cairo,
 from radio_view import RadioIconView, TAG_GENRE
 from widget.skin import app_theme
 from constant import DEFAULT_FONT_SIZE
+from nls import _
 import utils
 
+GENRE_NLS = {
+    "Rock" : "摇滚"
+    }
 
 GENRE_DATA = OrderedDict()
-GENRE_DATA["摇滚"] = "335"
-GENRE_DATA["古典"] = "326"
-GENRE_DATA["爵士"] = "327"
-GENRE_DATA["民谣/乡村"] = "337"
-GENRE_DATA["流行"] = "331"
-GENRE_DATA["电子"] = "325"
-GENRE_DATA["原声配乐"] = "328"
-GENRE_DATA["轻音乐"] = "332"
-GENRE_DATA["说唱"] = "334"
-GENRE_DATA["雷鬼"] = "330"
-GENRE_DATA["拉丁"] = "329"
-GENRE_DATA["世界音乐"] = "333"
-GENRE_DATA["布鲁斯"] = "324"
-GENRE_DATA["疯克/灵歌/R&B"] = "336"
+
+GENRE_DATA[_("Rock")] = "335"
+GENRE_DATA[_("Classical")] = "326"
+GENRE_DATA[_("Jazz")] = "327"
+GENRE_DATA[_("Folk/Country")] = "337"
+GENRE_DATA[_("Pop")] = "331"
+GENRE_DATA[_("Electronic")] = "325"
+GENRE_DATA[_("OST")] = "328"
+GENRE_DATA[_("Light")] = "332"
+GENRE_DATA[_("Hip-Hop/Rap")] = "334"
+GENRE_DATA[_("Reggae")] = "330"
+GENRE_DATA[_("Latino")] = "329"
+GENRE_DATA[_("World")] = "333"
+GENRE_DATA[_("Blues")] = "324"
+GENRE_DATA[_("Funk/Soul/R&B")] = "336"
 
 class GenreItem(object):    
     

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-06 10:33+0800\n"
+"POT-Creation-Date: 2013-06-08 09:29+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -353,7 +353,7 @@ msgstr ""
 msgid "Default"
 msgstr ""
 
-#: ../src/widget/equalizer.py:178
+#: ../src/widget/equalizer.py:178 ../plugins/musicfm/radio_genre_page.py:43
 msgid "Classical"
 msgstr ""
 
@@ -393,15 +393,11 @@ msgstr ""
 msgid "Party"
 msgstr ""
 
-#: ../src/widget/equalizer.py:188
+#: ../src/widget/equalizer.py:188 ../plugins/musicfm/radio_genre_page.py:46
 msgid "Pop"
 msgstr ""
 
-#: ../src/widget/equalizer.py:189
-msgid "Reggae"
-msgstr ""
-
-#: ../src/widget/equalizer.py:190
+#: ../src/widget/equalizer.py:190 ../plugins/musicfm/radio_genre_page.py:42
 msgid "Rock"
 msgstr ""
 
@@ -1288,6 +1284,50 @@ msgstr ""
 #: ../plugins/musicfm/radio_home_page.py:73
 #: ../plugins/musicfm/radio_browser.py:81
 msgid "Also Poplular"
+msgstr ""
+
+#: ../plugins/musicfm/radio_genre_page.py:44
+msgid "Jazz"
+msgstr ""
+
+#: ../plugins/musicfm/radio_genre_page.py:45
+msgid "Folk/Country"
+msgstr ""
+
+#: ../plugins/musicfm/radio_genre_page.py:47
+msgid "Electronic"
+msgstr ""
+
+#: ../plugins/musicfm/radio_genre_page.py:48
+msgid "OST"
+msgstr ""
+
+#: ../plugins/musicfm/radio_genre_page.py:49
+msgid "Light"
+msgstr ""
+
+#: ../plugins/musicfm/radio_genre_page.py:50
+msgid "Hip-Hop/Rap"
+msgstr ""
+
+#: ../plugins/musicfm/radio_genre_page.py:51
+msgid "Reggae"
+msgstr ""
+
+#: ../plugins/musicfm/radio_genre_page.py:52
+msgid "Latino"
+msgstr ""
+
+#: ../plugins/musicfm/radio_genre_page.py:53
+msgid "World"
+msgstr ""
+
+#: ../plugins/musicfm/radio_genre_page.py:54
+msgid "Blues"
+msgstr ""
+
+#: ../plugins/musicfm/radio_genre_page.py:55
+msgid "Funk/Soul/R&B"
 msgstr ""
 
 #: ../plugins/musicfm/radio_browser.py:78
