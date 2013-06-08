@@ -65,6 +65,7 @@ class SongTimer(gtk.HBox):
         self.__idle_release_id = None
         self.delete = False
         self.__need_report = False
+        self.press_flag = False
 
         Player.connect("instant-new-song", self.set_duration)
         Player.connect("init-status", self.on_player_init_status)
@@ -150,41 +151,46 @@ class SongTimer(gtk.HBox):
         self.set_current_time(pos, self.duration)
 
     def on_bar_press(self, widget, event):
-        if self.__idle_release_id:
-            gobject.source_remove(self.__idle_release_id)
-            self.__idle_release_id = None
-        self.update_bar = 0
-        self.__need_report = False
-
-        try:
-            self.bar.handler_unblock(self.__value_changed_id)
-        except: pass
+        if not self.press_flag:
+            if self.__idle_release_id:
+                gobject.source_remove(self.__idle_release_id)
+                self.__idle_release_id = None
+            self.update_bar = 0
+            self.__need_report = False
+            
+            try:
+                self.bar.handler_unblock(self.__value_changed_id)
+            except: pass
+            
+            self.press_flag = True
 
     def __idle_release(self):
         self.update_bar = 1
         self.__idle_release_id = None
 
     def on_bar_release(self, widget, event):
-        try:
-            self.bar.handler_block(self.__value_changed_id)
-        except:    
-            pass
-        
-        s = Player.song
-        if not s :
-            return
-        if s.get_type() in [ "webcast",]:
-            return
-        
-        if s.get_type() == "cue":
-            Player.seek(s.get("seek", 0) + self.bar.get_value())
-        else:    
-            Player.seek(self.bar.get_value())
-
-        # wait a bit that the player are really seek to update the progress bar
-        # if not self.__idle_release_id:
-        self.__idle_release()
-        self.__idle_release_id = gobject.idle_add(self.__idle_release)
+        if self.press_flag:
+            try:
+                self.bar.handler_block(self.__value_changed_id)
+            except:    
+                pass
+            
+            s = Player.song
+            if not s :
+                return
+            if s.get_type() in [ "webcast",]:
+                return
+            
+            if s.get_type() == "cue":
+                Player.seek(s.get("seek", 0) + self.bar.get_value())
+            else:    
+                Player.seek(self.bar.get_value())
+            
+            # wait a bit that the player are really seek to update the progress bar
+            # if not self.__idle_release_id:
+            self.__idle_release()
+            self.__idle_release_id = gobject.idle_add(self.__idle_release)
+            self.press_flag = False
 
 class VolumeSlider(gtk.VBox):
     def __init__(self, auto_hide=True, mini_mode=False):

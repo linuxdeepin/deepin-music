@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-08 09:29+0800\n"
+"POT-Creation-Date: 2013-06-08 10:51+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -999,6 +999,10 @@ msgstr ""
 
 #: ../src/widget/local_browser.py:99
 msgid "Scan"
+msgstr ""
+
+#: ../src/widget/local_browser.py:100
+msgid "Refresh"
 msgstr ""
 
 #: ../src/widget/local_browser.py:351
