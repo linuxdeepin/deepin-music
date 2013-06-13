@@ -769,6 +769,8 @@ class LyricsModule(object):
         return ret    
         
     def instant_update_lrc(self, widget, song):    
+        if song.get_type() in ('webcast', 'cue'):
+            return 
         self.scroll_lyrics.set_whole_lyrics([])
         self.set_message(self.get_default_message(song))
         self.update_lrc(widget, song)

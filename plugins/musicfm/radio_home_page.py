@@ -70,7 +70,7 @@ class HomePage(gtk.VBox):
         self.home_slider.set_size_request(-1, 200)
         
         # recommmend tab switcher.
-        self.recommend_tab = PageSwitcher([_("Hot MHz"), _("Also Poplular")])
+        self.recommend_tab = PageSwitcher([_("Hot MHz"), _("Pop MHz")])
         self.recommend_tab.connect("tab-switch-start", lambda switcher, tab_index: self.switch_recommend_view(tab_index))
 
         # Init recommend view.
