@@ -110,7 +110,11 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         self.bin.xfade_close()
         config.set("player", "play", "false")
         self.emit("paused")
-
+        
+        if self.song:
+            if getattr(self.__source, 'add_invaild_song'):
+                self.__source.add_invaild_song(self.song)
+        
         if not self.song:
             self.emit("init-status")
             self.song = None

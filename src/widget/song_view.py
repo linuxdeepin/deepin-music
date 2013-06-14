@@ -88,7 +88,7 @@ class SongView(TreeView):
         self.notify_timeout = 400 # ms
         self.delay_notify_item = None
         self.notify_offset_x = 5
-        
+        self.invaild_items = set()
 
         
     @property    
@@ -205,6 +205,8 @@ class SongView(TreeView):
         self.queue_draw()
         
         for each_item in self.items:
+            if each_item in self.invaild_items:
+                continue
             if each_item.exists():
                 each_item.clear_error()
             else:    
@@ -233,9 +235,16 @@ class SongView(TreeView):
         self.visible_highlight()
         return highlight_item.get_song()
     
+    def add_invaild_song(self, song):
+        item = SongItem(song)
+        if item in self.items:
+            vaild_item = self.items[self.items.index(item)]
+            vaild_item.set_error()
+            self.invaild_items.add(vaild_item)
+    
     def get_valid_songs(self):
         songs = []
-        for item in self.get_valid_items():
+        for item in self.get_valid_sitems():
             songs.append(item.get_song())
         return songs    
     
