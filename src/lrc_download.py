@@ -23,6 +23,9 @@
 import urllib
 import random
 import re
+import json
+from utils import parser_json
+from mycurl import public_curl
 
 
 class ttpClient(object):
@@ -318,7 +321,7 @@ class DUOMI(Engine):
             return None
         else:
             try:
-                raw_dict = eval(info_utf8)
+                raw_dict = parser_json(info_utf8)
             except:    
                 return None
             else:
@@ -328,3 +331,40 @@ class DUOMI(Engine):
                     else:
                         return self.order_results(self.parser(raw_dict["item"]), artist, title)
                 return None    
+            
+import tempfile            
+            
+class TTPod(Engine):            
+    TTPOD_SEARCH_URL = "http://lp.music.ttpod.com/lrc/down?title=%s&artist=%s"
+    
+    def __init__(self, proxy=None, locale="utf-8"):
+        super(TTPod, self).__init__(proxy, locale)
+        self.net_encoder = "utf-8"
+        
+    def save_to_temp(self, data):    
+        temp_file = tempfile.mktemp(suffix=".lrc")
+        with open(temp_file, "wb") as fp:
+            fp.write(data)
+        return "file://%s" % temp_file
+    
+    def request(self, title, artist):
+        quote_title = urllib.quote(title)
+        quote_artist = urllib.quote(artist)
+        
+        raw_data = public_curl.get(self.TTPOD_SEARCH_URL % (quote_title, quote_artist))
+        json_data = parser_json(raw_data)
+        
+        lrc_infos = []
+        lrc_data = json_data.get('data', {}).get('lrc', None)
+        if lrc_data:
+            temp_url = self.save_to_temp(lrc_data)
+            lrc_infos.append((artist, title, temp_url))
+        return lrc_infos    
+
+    def request_data(self, title, artist):
+        quote_title = urllib.quote(title)
+        quote_artist = urllib.quote(artist)
+        raw_data = public_curl.get(self.TTPOD_SEARCH_URL % (quote_title, quote_artist))
+        json_data = parser_json(raw_data)
+        lrc_data = json_data.get('data', {}).get('lrc', None)
+        return lrc_data

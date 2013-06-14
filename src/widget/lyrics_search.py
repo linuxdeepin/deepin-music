@@ -30,7 +30,7 @@ from dtk.ui.label import Label
 
 from dtk.ui.treeview import TreeView, TreeItem
 from widget.ui_utils import render_item_text, draw_single_mask, draw_alpha_mask
-from lrc_download import TTPlayer, DUOMI
+from lrc_download import TTPlayer, DUOMI, TTPod
 from cover_query import poster
 from helper import Dispatcher
 from constant import DEFAULT_FONT_SIZE
@@ -116,8 +116,12 @@ class SearchUI(DialogBox):
         ttplayer_result = TTPlayer().request(artist, title)
         self.render_lyrics(ttplayer_result, pid=pid)
         
+        ttpod_result = TTPod().request(artist, title)        
+        self.render_lyrics(ttpod_result, pid=pid)
+        
         duomi_result = DUOMI().request(artist, title)
         self.render_lyrics(duomi_result, pid=pid, last=True)
+        
         
     def search_lyric_cb(self, widget):
         self.result_view.clear()

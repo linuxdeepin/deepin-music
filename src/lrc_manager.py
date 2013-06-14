@@ -25,7 +25,7 @@ import re
 from deepin_utils.net import is_network_connected
 
 from config import config
-from lrc_download import TTPlayer, DUOMI, SOSO
+from lrc_download import TTPlayer, DUOMI, SOSO, TTPod
 from cover_query import poster
 from helper import Dispatcher
 import utils
@@ -75,6 +75,12 @@ class LrcManager(object):
                     ret = utils.download(url, lrc_path)
                     if ret and self.vaild_lrc(lrc_path):
                         return lrc_path
+                    
+            ttpod_result = TTPod().request_data(artist, title)        
+            if ttpod_result:
+                with open(lrc_path, 'wb') as fp:
+                    fp.write(ttpod_result)
+                    return lrc_path
                         
             duomi_result = DUOMI().request(artist, title)
             if duomi_result:
