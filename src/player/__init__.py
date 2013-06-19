@@ -357,6 +357,9 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
             ret = uri and self.bin.xfade_open(uri)
             if not ret:
                 gobject.idle_add(self.emit, "play-end")
+                if self.song:
+                    if getattr(self.__source, 'add_invaild_song'):
+                        self.__source.add_invaild_song(self.song)
                 self.next()
             elif play:    
                 self.play(crossfade, seek)

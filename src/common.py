@@ -21,6 +21,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import gio
+import os
 
 from mutagen import File as MutagenFile
 from mutagen.asf import ASF
@@ -59,6 +60,12 @@ TRUST_AUDIO_EXT = [
 
 def file_is_supported(filename, strict=False):
     ''' whther file is supported. '''
+    
+    try:
+        if os.path.getsize(filename) < 10000:
+            return False
+    except:    
+        return False
     
     results = gio.File(filename).get_basename().split(".")
     if len(results) < 2:
