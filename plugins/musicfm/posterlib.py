@@ -237,9 +237,9 @@ class DoubanFM(Logger):
         return self.explore_request("recent_chls")
     
     def get_genre_chls(self, genre_id, start=0, limit=20):
-        params = {"query" : "genre_id:%s" % genre_id, 
+        params = {"gid" : genre_id, 
                   "start" : start, "limit" : limit}
-        return self.explore_request("search", extra_data=params)
+        return self.explore_request("genre", extra_data=params)
     
     def get_uptrending_chls(self, start=0, limit=20):
         return self.explore_request("up_trending_channels", start=start, limit=limit)
