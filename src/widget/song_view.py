@@ -263,6 +263,7 @@ class SongView(TreeView):
             
         highlight_item = valid_items[random.choice(list(remaining))]
         self.set_highlight_item(highlight_item)
+        self.visible_highlight()
         return highlight_item.get_song()
     
     def get_valid_items(self):
