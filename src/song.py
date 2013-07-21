@@ -85,7 +85,9 @@ class Song(dict, Logger):
         if other_dict:
             for key in USED_KEYS:
                 default = (key.startswith("#")) and 0 or None
-                self[key] = other_dict.get(key, default)
+                other_dict[key] = other_dict.get(key, default)
+            self.update(other_dict)    
+                        
         if not self.has_key("#added"):
             self["#added"] = time()
             

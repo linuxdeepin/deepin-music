@@ -131,6 +131,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
             self.logdebug("request new song: error and play-end not emit")
             self.emit("play-end")
             self.next(True)
+            
         self.__next_already_called = False    
         
     def __on_tag(self, bin, taglist):    
@@ -191,10 +192,10 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
                     self.emit("play-end")                    
                     self.next()
                     self.__next_already_called = True
-            else:        
-                self.__next_already_called = False
-        else:        
-            self.__next_already_called = False
+        #     else:        
+        #         self.__next_already_called = False
+        # else:        
+        #     self.__next_already_called = False
             
     def __on_playing(self, bin, uri):
         '''Signal emitted by fadebin when a new stream previously queued start'''
@@ -452,9 +453,9 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
             else:    
                 self.play_new(song, seek=song.get("seek", None))
             return 
-        else:
-            # stop the current song
-            self.fadeout_and_stop()
+        # else:
+        #     # stop the current song
+        #     self.fadeout_and_stop()
             
     def get_song_seek(self, song):        
         seek = None
