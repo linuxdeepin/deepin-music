@@ -120,7 +120,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
             self.song = None
             return 
         
-        if self.song.get_type() == "douban":
+        if self.song.get_type() != "local":
             return
         
         if self.song.get_type() in [ "cdda", "webcast"]:

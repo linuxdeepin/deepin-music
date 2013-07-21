@@ -69,7 +69,7 @@ TAGS_KEYS_OVERRIDE['ASF'] = {
 
 USED_KEYS="""
 song_type uri title artist album genre date year 
-description hidden album_cover_url station info_supp station_track_url
+description hidden album_cover_url station info_supp station_track_url lrc_url
 #track #duration #progress #disc 
 #playcount #skipcount 
 #lastplayed #added #date #mtime #ctime #rate #progress #bitrate #size #stream_offset seek
@@ -80,7 +80,7 @@ tag categroys genres country location comment
 
 class Song(dict, Logger):
     ''' The deepin music song class. '''
-    def init_from_dict(self, other_dict=None):
+    def init_from_dict(self, other_dict=None, cmp_key="uri"):
         ''' init from other dict. '''
         if other_dict:
             for key in USED_KEYS:
@@ -88,6 +88,8 @@ class Song(dict, Logger):
                 self[key] = other_dict.get(key, default)
         if not self.has_key("#added"):
             self["#added"] = time()
+            
+        self.cmp_key = cmp_key    
             
     def get_dict(self):        
         ''' return valid key dict. '''
@@ -120,7 +122,9 @@ class Song(dict, Logger):
             value = self.get("#bitrate")
             if value: 
                 if isinstance(value, (int, float)):
-                    value = "%dk" % (value / 1000)
+                    test_v = value / 1000
+                    if test_v > 1:
+                        value = "%dk" % test_v
                 
         elif key == "#duration":    
             value = utils.duration_to_string(self.get(key))
@@ -255,7 +259,8 @@ class Song(dict, Logger):
     
     def __eq__(self, other_song):
         try:
-            return self.get("uri") == other_song.get("uri")
+            cmp_key = getattr(self, 'cmp_key', 'uri')
+            return self.get(cmp_key) == other_song.get(cmp_key)
         except:
             return False
         
