@@ -69,10 +69,10 @@ class Browser(gtk.VBox, SignalContainer):
         gobject.timeout_add(self.update_interval, self.on_interval_loaded_view)
         
         # The saving song Classification presented to the user.
-        self.artists_view, self.artists_sw  = self.get_icon_view(16)
-        self.albums_view,  self.albums_sw   = self.get_icon_view(16)
-        self.genres_view,  self.genres_sw   = self.get_icon_view(16)
-        self.folders_view, self.folders_sw  = self.get_icon_view(22)
+        self.artists_view, self.artists_sw  = self.get_icon_view(14)
+        self.albums_view,  self.albums_sw   = self.get_icon_view(14)
+        self.genres_view,  self.genres_sw   = self.get_icon_view(14)
+        self.folders_view, self.folders_sw  = self.get_icon_view(20)
         self.folders_view.connect("motion-notify-item", self.on_folders_view_motion_notify)
         
         # Song list for temporarily storing
