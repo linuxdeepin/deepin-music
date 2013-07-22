@@ -28,17 +28,19 @@ from dtk.ui.window import Window
 from dtk.ui.titlebar import Titlebar
 from dtk.ui.utils import (move_window, alpha_color_hex_to_cairo, 
                           color_hex_to_cairo, cairo_disable_antialias,
-                          propagate_expose, get_content_size)
+                          propagate_expose, get_content_size, set_cursor)
 from dtk.ui.entry import InputEntry, Entry
 from dtk.ui.button import ImageButton, RadioButton, CheckButton, Button
 from dtk.ui.draw import draw_pixbuf, draw_text, draw_vlinear
 from dtk.ui.dialog import DialogBox, DIALOG_MASK_SINGLE_PAGE
 from widget.skin import app_theme
-from widget.ui_utils import draw_alpha_mask, draw_line, set_widget_gravity, is_in_rect
+from widget.ui_utils import (draw_alpha_mask, draw_line, set_widget_gravity, is_in_rect,
+                             set_widget_hcenter, set_widget_vcenter)
 
 from constant import EMPTY_WEBCAST_ITEM, EMPTY_RADIO_ITEM
 from nls import _
 from config import config
+from xdg_support import get_common_image
 
 import utils
 
@@ -637,11 +639,11 @@ class WaitBox(gtk.EventBox):
         gtk.EventBox.__init__(self)
         self.set_visible_window(False)
         
-        self.max_number = 10
-        self.item_width = self.item_height = 20
+        self.max_number = 6
+        self.item_width = self.item_height = 5
         self.padding_x = 8
         self.padding_y = 5
-        self.auto_animiation_time = 500
+        self.auto_animiation_time = 100
         self.active_color = "#33CCFF"
         self.inactive_color = "#999999"        
         self.active_color_info = [(0.2, (self.active_color, 0.8)), 
@@ -686,7 +688,105 @@ class WaitBox(gtk.EventBox):
         self.queue_draw()    
         
         return True
+    
+class LoadingBox(gtk.VBox):    
+    
+    def __init__(self, prompt_text, click_text, callback=None):
+        super(LoadingBox, self).__init__()
+        
+        loading_pixbuf = gtk.gdk.PixbufAnimation(get_common_image("loading.gif"))
+        loading_image = gtk.Image()
+        loading_image.set_from_animation(loading_pixbuf)
+        
+        click_label = ClickLabel(prompt_text, click_text, callback)
+        main_box = gtk.VBox(spacing=5)
+        main_box.pack_start(loading_image)
+        main_box.pack_start(set_widget_hcenter(click_label))
+        self.add(set_widget_vcenter(main_box))                
+        
+class ClickLabel(gtk.EventBox):
+    
+    def __init__(self, prompt_text, click_text, callback=None, auto_size=True):
+        gtk.EventBox.__init__(self)
+        self.set_visible_window(False)
+        self.add_events(gtk.gdk.BUTTON_PRESS_MASK |
+                        gtk.gdk.BUTTON_RELEASE_MASK |
+                        gtk.gdk.POINTER_MOTION_MASK |
+                        gtk.gdk.ENTER_NOTIFY_MASK |
+                        gtk.gdk.LEAVE_NOTIFY_MASK
+                        )
+        
+        self.normal_text_dcolor = app_theme.get_color("labelText")
+        self.hover_text_dcolor = app_theme.get_color("globalItemHighlight")
+        self.click_text = click_text
+        self.prompt_text = prompt_text
+        
+        self.text_padding_y = 5
+        self.text_padding_x = 5
+        self.text_rect = None
+        self.is_hover = False
+        self.press_callback = callback
+
+        self.adjust_size()        
+        
+        self.connect("expose-event", self.on_expose_event)
+        self.connect("motion-notify-event", self.on_motion_notify)
+        self.connect("button-press-event", self.on_button_press)
+        
+        
+    def adjust_size(self):    
+        _w, _h = get_content_size(self.prompt_text)
+        w = _w + self.text_padding_x * 2
+        h = _h + self.text_padding_y * 2
+        self.set_size_request(w, h)
+        
+    def on_expose_event(self, widget, event):    
+        cr = widget.window.cairo_create()
+        rect = widget.allocation
+        text_y = rect.y + self.text_padding_y
+        text_x = rect.x + self.text_padding_x
+        
+        left_text, click_text, right_text = self.prompt_text.partition(self.click_text)
+        
+        if left_text:
+            _w, _h = get_content_size(left_text)
+            draw_text(cr, left_text, text_x, text_y, _w, _h, 
+                      text_color=self.normal_text_dcolor.get_color())
+            text_x += _w
             
+        _w, _h = get_content_size(click_text)    
+        self.text_rect = gtk.gdk.Rectangle(text_x - rect.x, text_y - rect.y, _w, _h)
+        if self.is_hover:        
+            text_color = self.hover_text_dcolor.get_color()
+        else:    
+            text_color = "#66B0E2" # self.normal_text_dcolor.get_color()
+        draw_text(cr, click_text, text_x, text_y, _w, _h,
+                  text_color=text_color, underline=True)
+        text_x += _w
+        
+        if right_text:                
+            _w, _h = get_content_size(left_text)
+            draw_text(cr, right_text, text_x, text_y, _w, _h, 
+                      text_color=self.normal_text_dcolor.get_color())
+            
+        return True
+    
+    def on_motion_notify(self, widget, event):
+        if self.text_rect is not None:
+            if is_in_rect((event.x, event.y), self.text_rect):
+                self.is_hover = True
+                set_cursor(widget, gtk.gdk.HAND2)
+            else:    
+                self.is_hover = False
+                set_cursor(widget, None)
+            self.queue_draw()  
+            
+    def on_button_press(self, widget, event):        
+        if self.is_hover:
+            if self.press_callback:
+                self.press_callback()
+                self.is_hover = False
+                self.queue_draw()
         
 class WaitProgress(gtk.EventBox):
     

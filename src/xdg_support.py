@@ -115,6 +115,9 @@ def get_song_save_path(song):
         os.makedirs(path)
     path = os.path.join(path, "%s.mp3" % song.get_str("title"))    
     return path    
+
+def get_common_image(name):
+    return os.path.join(dmusic_dir, "image", name)
         
 if __name__ == "__main__":
     print get_plugin_dirs()

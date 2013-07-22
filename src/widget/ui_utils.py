@@ -144,16 +144,23 @@ def set_widget_gravity(widget, gravity=(0, 0, 0, 0), paddings=(0, 0, 0, 0)):
     
 def set_widget_hcenter(widget):
     hbox = gtk.HBox()
-    hbox.pack_start(create_right_align(), False, True)
+    hbox.pack_start(create_right_align(), True, True)
     hbox.pack_start(widget, False, False)
-    hbox.pack_start(create_left_align(), False, True)
+    hbox.pack_start(create_left_align(), True, True)
     return hbox
 
 def set_widget_vcenter(widget):
-    align = gtk.Alignment()
-    align.set(0.5, 0.5, 0, 0)
-    align.add(widget)
-    return align
+    vbox = gtk.VBox()
+    vbox.pack_start(create_bottom_align(), True, True)
+    vbox.pack_start(widget, False, True)
+    vbox.pack_start(create_upper_align(), True, True)
+    return vbox
+
+# def set_widget_vcenter(widget):
+#     align = gtk.Alignment()
+#     align.set(0.5, 0.5, 0, 0)
+#     align.add(widget)
+#     return align
     
 def set_widget_left(widget, paddings=None):
     hbox = gtk.HBox()

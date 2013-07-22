@@ -46,7 +46,7 @@ from source.local import ImportFolderJob, ReloadDBJob
 from widget.combo import  PromptButton
 from nls import _
 
-from widget.download_view import TaskView
+# from widget.download_view import TaskView
 
 import utils
 

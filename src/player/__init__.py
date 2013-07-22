@@ -433,7 +433,8 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
             if song:
                 self.play_new(song, seek=song.get("seek", None))
                 return
-        self.stop()    
+        else:    
+            self.stop()    
         
     def next(self, maunal=False):    
         '''next song'''
