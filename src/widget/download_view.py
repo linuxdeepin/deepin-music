@@ -21,6 +21,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from dtk.ui.treeview import TreeView
+from helper import Dispatcher
 
 from widget.download_item import TaskItem
 from player import Player
@@ -30,13 +31,18 @@ class TaskView(TreeView):
     def __init__(self):
         TreeView.__init__(self, enable_drag_drop=False, enable_multiple_select=False)
         
-        Player.connect("instant-new-song", self.on_new_song)
+        # Player.connect("instant-new-song", self.on_new_song)
+        Dispatcher.connect("download-songs", self.on_dispatcher_download_songs)
         
         self.set_expand_column(1)
         
+        
+    def on_dispatcher_download_songs(self, obj, songs):    
+        self.add_songs(songs)
+        
     def add_songs(self, songs):    
-        pass
-            
+        self.add_items([TaskItem(song) for song in songs])
+        
     def download_current_song(self):        
         if Player.song:
             self.add_items([TaskItem(Player.song)])
@@ -47,6 +53,6 @@ class TaskView(TreeView):
         cr.fill()
         
     def on_new_song(self, player, song):    
-        if song.get_type() == "douban":
+        if song.get_type() == "baidumusic":
             self.download_current_song()
         

@@ -84,7 +84,7 @@ class Song(dict, Logger):
         ''' init from other dict. '''
         if other_dict:
             for key in USED_KEYS:
-                default = (key.startswith("#")) and 0 or None
+                default = 0 if key.startswith("#") else ""
                 other_dict[key] = other_dict.get(key, default)
             self.update(other_dict)    
                         

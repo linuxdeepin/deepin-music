@@ -75,6 +75,7 @@ class EventDispatcher(gobject.GObject):
         "search-lyrics" : SIGNAL_BASE,
         "dialog-run" : SIGNAL_BASE,
         "dialog-close" : SIGNAL_BASE,
+        "download-songs" : SIGNAL_SIMPLE,
         }
     
     def __init__(self):
@@ -155,6 +156,9 @@ class EventDispatcher(gobject.GObject):
         
     def delete_audiocd_playlist(self, udi):    
         self.emit("del-cd-playlist", udi)
+        
+    def download_songs(self, songs):    
+        self.emit("download-songs", songs)
         
 Dispatcher = EventDispatcher()
 

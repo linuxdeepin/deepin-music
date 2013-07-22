@@ -46,7 +46,7 @@ from source.local import ImportFolderJob, ReloadDBJob
 from widget.combo import  PromptButton
 from nls import _
 
-# from widget.download_view import TaskView
+from widget.download_view import TaskView
 
 import utils
 
@@ -114,7 +114,6 @@ class Browser(gtk.VBox, SignalContainer):
         self.switch_view_box = gtk.VBox()
         self.switch_view_box.add(self.artists_sw)
         # self.switch_view_box.add(TaskView())
-
         
         # Control back on a view.
         self.back_hbox = gtk.HBox()
