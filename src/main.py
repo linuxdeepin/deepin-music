@@ -48,7 +48,13 @@ class DeepinMusicApp(Logger):
         self.check_result = dbus_manager.check_exit(self.options, self.args)
 
         if self.check_result == "exit":
+            
+            # fix from dock start program cursor bus bug
+            import gtk
+            gtk.gdk.notify_startup_complete()
+            
             sys.exit(0)
+            
         elif self.check_result == "command":    
             if not self.options.StartAnyway:
                 sys.exit(0)
