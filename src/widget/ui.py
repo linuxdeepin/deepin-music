@@ -698,11 +698,13 @@ class LoadingBox(gtk.VBox):
         loading_image = gtk.Image()
         loading_image.set_from_animation(loading_pixbuf)
         
-        click_label = ClickLabel(prompt_text, click_text, callback)
+        self.click_label = ClickLabel(prompt_text, click_text, callback)
+        self.update_prompt_text = self.click_label.update_prompt_text
         main_box = gtk.VBox(spacing=5)
         main_box.pack_start(loading_image)
-        main_box.pack_start(set_widget_hcenter(click_label))
+        main_box.pack_start(set_widget_hcenter(self.click_label))
         self.add(set_widget_vcenter(main_box))                
+        
         
 class ClickLabel(gtk.EventBox):
     
@@ -733,6 +735,10 @@ class ClickLabel(gtk.EventBox):
         self.connect("motion-notify-event", self.on_motion_notify)
         self.connect("button-press-event", self.on_button_press)
         
+    def update_prompt_text(self, prompt_text):    
+        self.prompt_text = prompt_text
+        self.adjust_size()
+        self.queue_draw()
         
     def adjust_size(self):    
         _w, _h = get_content_size(self.prompt_text)
