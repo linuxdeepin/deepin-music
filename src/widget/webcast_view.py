@@ -401,7 +401,7 @@ class MultiDragWebcastView(ListView):
 
 class WebcastIconView(IconView):
 
-    def __init__(self, padding_x=18, padding_y=18):
+    def __init__(self, padding_x=14, padding_y=16):
         IconView.__init__(self, padding_x=padding_x, padding_y=padding_y)
 
         targets = [("text/deepin-webcasts", gtk.TARGET_SAME_APP, 1), ("text/uri-list", 0, 2)]
