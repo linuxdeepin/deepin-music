@@ -300,7 +300,7 @@ def get_mime_type(uri):
     return mimetype
 
     
-def duration_to_string(value, default="", i=1000):
+def duration_to_string(value, default="00:00", i=1000):
     ''' convert duration to string. '''
     if not value: return default
     if (value / i) < 1: i = 1

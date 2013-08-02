@@ -247,22 +247,25 @@ class Song(dict, Logger):
         return self.get(key)
     
     def __hash__(self):
-        return hash(self.get("uri"))
+        return hash(self.get(self.owner_key))
     
     def __repr__(self):
-        return "<Song %s>" % self.get("uri")
+        return "<Song %s>" % self.get(self.owner_key)
     
     def __cmp__(self, other_song):
         if not other_song: return -1
         try:
             return cmp(self.sort_key, other_song.sort_key)
         except AttributeError: return -1
+        
+    @property    
+    def owner_key(self):
+        return getattr(self, 'cmp_key', 'uri')
 
     
     def __eq__(self, other_song):
         try:
-            cmp_key = getattr(self, 'cmp_key', 'uri')
-            return self.get(cmp_key) == other_song.get(cmp_key)
+            return self.get(self.owner_key) == other_song.get(self.owner_key)
         except:
             return False
         
