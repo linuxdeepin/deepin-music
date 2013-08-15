@@ -100,6 +100,10 @@ class SearchUI(DialogBox):
         self.right_button_box.set_buttons([download_button, cancel_button])
         self.lrc_manager = LrcManager()
         
+    def show_window(self):    
+        DialogBox.show_window(self)
+        self.present()
+                
     def draw_view_mask(self, cr, x, y, width, height):            
         draw_alpha_mask(cr, x, y, width, height, "layoutMiddle")
         

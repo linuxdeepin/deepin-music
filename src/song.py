@@ -88,7 +88,8 @@ class Song(dict, Logger):
                 other_dict[key] = other_dict.get(key, default)
             self.update(other_dict)    
                         
-        if not self.has_key("#added"):
+        added = self.get("#added", 0)
+        if not added:
             self["#added"] = time()
             
         self.cmp_key = cmp_key    

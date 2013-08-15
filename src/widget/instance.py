@@ -348,6 +348,7 @@ class DeepinMusic(gobject.GObject, Logger):
             tags = {"uri" : utils.get_uri_from_path(filename)}
             s = Song()
             s.init_from_dict(tags)
+            s.set_type("local")                        
             s.read_from_file()
             AttributesUI([s]).show_window()
         
