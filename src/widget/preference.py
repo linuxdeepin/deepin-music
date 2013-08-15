@@ -463,6 +463,16 @@ class DesktopLyricsSetting(gtk.VBox):
         self.active_middle_color_button.connect("color-select", self.update_active_middle_color)
         self.active_bottom_color_button.connect("color-select", self.update_active_bottom_color)
         
+        config.connect("config-changed", self.on_config_changed)
+        
+        
+    def on_config_changed(self, obj, selection, option, value):    
+        if selection == "lyrics" and option == "line_count":
+            value = int(value) - 1
+            index = self.line_number_combo_box.get_select_index()
+            if index != value:
+                self.line_number_combo_box.set_select_index(value)
+                
     def get_render_color(self, active=False):        
         if active:
             return [color_hex_to_cairo(config.get("lyrics", "active_color_upper")),

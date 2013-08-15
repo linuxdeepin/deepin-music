@@ -490,7 +490,7 @@ class AttributesUI(DialogBox):
         return hbox, combo_box
     
     def reset_quality_items(self, widget, label, allocated_data, index):
-        self.quality_combo_box.set_items(self.get_quality_items(label))
+        self.quality_combo_box.add_items(self.get_quality_items(label), clear_first=True)
         self.quality_combo_box.set_select_index(self.get_quality_index(label))
         self.quality_combo_box.queue_draw()
         

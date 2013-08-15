@@ -45,7 +45,8 @@ class SearchUI(DialogBox):
     def __init__(self):
         DialogBox.__init__(
             self, _("Lyrics search"), 460, 300, DIALOG_MASK_MULTIPLE_PAGE, close_callback=self.hide_all, 
-            modal=False, window_hint=None, skip_taskbar_hint=False)
+            modal=False, window_hint=None, skip_taskbar_hint=False, window_pos=gtk.WIN_POS_CENTER)
+        
         self.artist_entry = InputEntry()
         self.artist_entry.set_size(130, 23)
         self.title_entry = InputEntry()

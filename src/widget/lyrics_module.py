@@ -80,6 +80,8 @@ class LyricsModule(object):
         Dispatcher.connect("dialog-run", self.on_dialog_run)
         Dispatcher.connect("dialog-close", self.on_dialog_close)
         
+        config.connect("config-changed", self.on_config_changed)
+        
         self.lrc_manager = LrcManager()
         self.lrc = LrcParser()
         
@@ -153,9 +155,9 @@ class LyricsModule(object):
         karaoke_align, self.karaoke_button = self.__create_single_toggle_button("karaoke", 
                                                                                 self.change_karaoke_status,
                                                                                 _("karaoke on/off"))
-        line_align, self.line_button = self.__create_simple_toggle_button("double_line", "single_line",
-                                                                          self.change_line_status,
-                                                                          _("Switch lines"))
+        line_align, self.line_button = self.__create_simple_toggle_button("single_line", "double_line",
+                                                                          None,_("Switch lines"))
+        self.line_button_toggled_id = self.line_button.connect("toggled", self.change_line_status)
         setting_align = self.__create_simple_button("setting", self.open_setting_window, _("Open settings panel"))
         search_align = self.__create_simple_button("search", self.open_search_window, _("search lrc file for current track"))
         close_align = self.__create_simple_button("close", self.close_lyric_window, _("Close lyrics"))
@@ -187,6 +189,19 @@ class LyricsModule(object):
         self.toolbar.window_frame.pack_start(main_align)
         
         self.load_button_status()
+        
+        
+    def on_config_changed(self, obj, selection, option, value):    
+        if selection == "lyrics" and option == "line_count":
+            is_active = self.line_button.get_active()
+            if value == "1" and not is_active:
+                self.line_button.handler_unblock(self.line_button_toggled_id)                
+                self.line_button.set_active(True)
+                self.line_button.handler_block(self.line_button_toggled_id)
+            elif value == "2" and is_active:    
+                self.line_button.handler_unblock(self.line_button_toggled_id)                
+                self.line_button.set_active(False)
+                self.line_button.handler_block(self.line_button_toggled_id)
         
     def expose_toolbar_mask(self, widget, event):    
         cr = widget.window.cairo_create()
@@ -285,7 +300,7 @@ class LyricsModule(object):
         button_align.add(button)
         return button_align
         
-    def __create_simple_toggle_button(self, normal_name, active_name, callback, tip_msg=None):
+    def __create_simple_toggle_button(self, normal_name, active_name, callback=None, tip_msg=None):
         toggle_button = ToggleButton(
             app_theme.get_pixbuf("lyric/%s_normal.png" % normal_name),
             app_theme.get_pixbuf("lyric/%s_normal.png" % active_name),
@@ -294,7 +309,9 @@ class LyricsModule(object):
             app_theme.get_pixbuf("lyric/%s_press.png" % normal_name),
             app_theme.get_pixbuf("lyric/%s_press.png" % active_name),
             )
-        toggle_button.connect("toggled", callback)
+        
+        if callback:
+            toggle_button.connect("toggled", callback)
         toggle_align = gtk.Alignment()
         toggle_align.set(0.5, 0.5, 0, 0)
         toggle_align.add(toggle_button)
