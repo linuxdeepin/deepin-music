@@ -569,7 +569,7 @@ class DesktopLyrics(gtk.Window):
             
         
     def draw_lyrics(self, cr):    
-        alpha = 1.0
+        alpha = 0.99
         font_height = self.render_lyrics.get_font_height()
         if self.is_composited() and self.get_locked() and self.mouse_over_lyrics and self.get_translucent_on_mouse_over():
             alpha = 0.3
