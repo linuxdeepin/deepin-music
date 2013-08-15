@@ -291,7 +291,12 @@ class SongView(TreeView):
                 self.set_highlight_song(songs[0])
                 Player.play_new(self.highlight_item.get_song(), seek=self.highlight_item.get_song().get("seek", 0))
                 self.set_current_source()
-            
+                
+    def play_song(self, song, play=False, seek=None):            
+        highlight_song_flag = self.set_highlight_song(song)
+        if highlight_song_flag:
+            Player.set_song(song, play, seek=seek)
+                        
     def emit_add_signal(self):
         self.emit("begin-add-items")
     
@@ -352,11 +357,13 @@ class SongView(TreeView):
             self.queue_draw()
             
     def set_highlight_song(self, song):        
-        if not song: return 
+        if not song: return False
         if SongItem(song) in self.items:
             self.set_highlight_item(self.items[self.items.index(SongItem(song))])
             self.visible_highlight()
             self.queue_draw()
+            return True
+        return False
         
     def play_select_item(self):    
         if len(self.select_rows) > 0:

@@ -27,6 +27,7 @@ import os
 import time
 
 from collections import OrderedDict
+from contextlib import contextmanager
 from dtk.ui.window import Window
 from dtk.ui.button import ImageButton, ToggleButton
 from dtk.ui.box import ImageBox
@@ -195,13 +196,19 @@ class LyricsModule(object):
         if selection == "lyrics" and option == "line_count":
             is_active = self.line_button.get_active()
             if value == "1" and not is_active:
-                self.line_button.handler_unblock(self.line_button_toggled_id)                
-                self.line_button.set_active(True)
-                self.line_button.handler_block(self.line_button_toggled_id)
+                with self.line_button_toggled_status():
+                    self.line_button.set_active(True)
             elif value == "2" and is_active:    
-                self.line_button.handler_unblock(self.line_button_toggled_id)                
-                self.line_button.set_active(False)
-                self.line_button.handler_block(self.line_button_toggled_id)
+                with self.line_button_toggled_status():
+                    self.line_button.set_active(False)
+                
+    @contextmanager
+    def line_button_toggled_status(self):
+        self.line_button.disconnect(self.line_button_toggled_id)        
+        try:
+            yield
+        finally:
+            self.line_button_toggled_id = self.line_button.connect("toggled", self.change_line_status)
         
     def expose_toolbar_mask(self, widget, event):    
         cr = widget.window.cairo_create()

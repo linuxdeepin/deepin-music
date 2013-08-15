@@ -195,6 +195,8 @@ class ListTab(gtk.EventBox):
         self.total = total
         self.queue_draw()
 
+    def __repr__(self):    
+        return "<%s %s>" % (self.__class__.__name__, self.title)
         
 class TabManager(gtk.VBox):        
     __gtype_name__ = 'DtkTabManager'
@@ -237,7 +239,7 @@ class TabManager(gtk.VBox):
                 self.items.append(item)
         self.adjust_items_index()
         
-    def remove_items(self, items):    
+    def remove_items(self, items, switch_to_local=True):    
         for item in items:
             item.clear_selected_status()
             try:
@@ -246,9 +248,10 @@ class TabManager(gtk.VBox):
                 continue
         self.adjust_items_index()    
         
-        item = self.items[0]
-        item.manual_select()
-        self.on_item_press(item)
+        if switch_to_local:
+            item = self.items[0]
+            item.manual_select()
+            self.on_item_press(item)
             
     def adjust_items_index(self):        
         self.total_number = len(self.items)            

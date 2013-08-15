@@ -639,27 +639,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
     
     def load(self):
         '''load configure'''
-        if not self.__need_load_prefs:
-            return
-        uri = config.get("player", "uri")
-        seek = int(config.get("player", "seek"))
-        state = config.get("player", "state")
-        play = False
-        self.logdebug("player load %s in state %s at %d", uri, state, seek)
-        if config.getboolean("player", "play_on_startup") and state == "playing":
-            play = True
-        if uri:    
-            song = MediaDB.get_song(uri)
-            if song.get_type() == "cue":
-                seek = seek + song.get("seek", 0)
-            if song and song.exists():
-                if not config.getboolean("player", "resume_last_progress") or not play:
-                    if song.get_type() == "cue":
-                        seek = song.get("seek", 0)
-                    else:    
-                        seek = None
-                self.set_song(song, play, self.get_crossfade() * 2, seek)
-        self.emit("loaded")        
+        pass
         
     def save_state(self):            
         '''save current song's state'''

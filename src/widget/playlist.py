@@ -46,6 +46,16 @@ from nls import _
 from constant import CATEGROYLIST_WIDTH, HIDE_PLAYLIST_WIDTH
 import utils
 
+class CategoryView(TreeView):
+    
+    def add_items(self, items, insert_pos=None, clear_first=False):
+        for item in items:
+            song_view = getattr(item, "song_view", None)
+            if song_view:
+                setattr(song_view, "category_view", self)
+        TreeView.add_items(self, items, insert_pos, clear_first)        
+        
+    items = property(lambda self: self.visible_items)    
 
 class PlaylistUI(gtk.VBox):
     '''Playlist UI.'''
@@ -55,11 +65,12 @@ class PlaylistUI(gtk.VBox):
         gtk.VBox.__init__(self)
 
         # Init catagory list.
-        self.category_list = TreeView()
+        self.category_list = CategoryView()
         self.category_list.draw_mask = self.draw_category_list_mask
         self.category_list.connect("single-click-item", self.on_category_single_click)
         self.category_list.connect("right-press-items", self.on_category_right_press)
         self.category_list.set_size_request(CATEGROYLIST_WIDTH, -1)
+        del self.category_list.keymap["Delete"]
         
         # Init SearchEntry.
         self.entry_box = SearchEntry("")
@@ -184,6 +195,29 @@ class PlaylistUI(gtk.VBox):
         if self.current_item:
             self.current_item.song_view.reset_error_items()
             self.current_item.song_view.set_highlight_song(Player.song)
+            
+    def restore_status(self):        
+        uri = config.get("player", "uri")
+        seek = int(config.get("player", "seek"))
+        state = config.get("player", "state")
+        play = False
+        
+        if config.getboolean("player", "play_on_startup") and state == "playing":
+            play = True
+            
+        if uri and self.current_item:    
+            song = MediaDB.get_song(uri)
+            if song.get_type() == "cue":
+                seek = seek + song.get("seek", 0)
+                
+            if song and song.exists():
+                if not config.getboolean("player", "resume_last_progress") or not play:
+                    if song.get_type() == "cue":
+                        seek = song.get("seek", 0)
+                    else:    
+                        seek = None
+                        
+                self.current_item.song_view.play_song(song, play, seek)
         
     def __play_and_add(self, widget, song):    
         self.current_item.song_view.add_songs(song, play=True)
@@ -525,7 +559,11 @@ class PlaylistUI(gtk.VBox):
         
         
     def save_current_playlist(self, *args):    
-        index = self.get_current_item_index()        
+        index = 0
+        player_source = Player.get_source()
+        for i, item in enumerate(self.category_list.get_items()):
+            if item.song_view == player_source:
+                index = i
         config.set("playlist","current_index", str(index))
         
     def save_to_library(self):    

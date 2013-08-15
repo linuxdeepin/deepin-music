@@ -58,7 +58,7 @@ class SongTimer(gtk.HBox):
         self.bar.connect("button-press-event", self.on_bar_press)
         self.bar.connect("button-release-event", self.on_bar_release)
         self.__value_changed_id = self.bar.connect("value-changed", self.on_bar_value_changed)
-        self.bar.handler_block(self.__value_changed_id)
+
         self.pack_start(bar_align, True, True)
         self.update_bar = 1
         self.duration = 0
@@ -158,10 +158,8 @@ class SongTimer(gtk.HBox):
             self.update_bar = 0
             self.__need_report = False
             
-            try:
-                self.bar.handler_unblock(self.__value_changed_id)
-            except: pass
             
+            self.bar.disconnect(self.__value_changed_id)
             self.press_flag = True
 
     def __idle_release(self):
@@ -170,10 +168,7 @@ class SongTimer(gtk.HBox):
 
     def on_bar_release(self, widget, event):
         if self.press_flag:
-            try:
-                self.bar.handler_block(self.__value_changed_id)
-            except:    
-                pass
+            self.__value_changed_id = self.bar.connect("value-changed", self.on_bar_value_changed)
             
             s = Player.song
             if not s :

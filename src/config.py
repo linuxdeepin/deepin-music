@@ -199,6 +199,10 @@ class Config(gobject.GObject, Logger):
             "plugins" : {
                 "enabled" : "mpris2",
                 },
+            
+            "listmanager" : {
+                "source" : "",
+                }
             }
     
 config = Config()    

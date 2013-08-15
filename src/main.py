@@ -232,21 +232,21 @@ class DeepinMusicApp(Logger):
         
     def post_start(self):    
         if self.db_ready and self.app_ready:
-            restore = True
+            # restore = True
             if self.app_instance:
                 current_view = self.app_instance.playlist_ui.get_selected_song_view()
                 from utils import convert_args_to_uris
                 args = convert_args_to_uris(self.args)
                 if len(args) > 0:
                     if current_view:
-                        restore = False
+                        # restore = False
                         current_view.add_file(args[0], play=True)
                 if args[1:]:
                     if current_view:
                         current_view.async_add_uris(args[1:], False)
-            if restore:
-                from player import Player            
-                Player.load()
+            # if restore:
+            #     from player import Player            
+            #     Player.load()
                 
             if self.options.StartAnyway and self.check_result == "command":
                 import dbus_manager

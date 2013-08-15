@@ -220,6 +220,7 @@ class DeepinMusic(gobject.GObject, Logger):
             
 
         self.emit("ready")
+        Dispatcher.emit("ready")
         # wizard
         if not first_started:
             self.show_wizard_win(True, self.ready_show)

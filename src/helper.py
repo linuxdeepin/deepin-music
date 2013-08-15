@@ -76,6 +76,7 @@ class EventDispatcher(gobject.GObject):
         "dialog-run" : SIGNAL_BASE,
         "dialog-close" : SIGNAL_BASE,
         "download-songs" : SIGNAL_SIMPLE,
+        "ready" : SIGNAL_BASE,
         }
     
     def __init__(self):

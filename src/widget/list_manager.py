@@ -25,6 +25,7 @@ import gtk
 from helper import Dispatcher
 from widget.tab_box import TabManager
 from widget.local_tab import local_search_tab
+from config import config
 
 class ListManager(gtk.VBox):
     def __init__(self):
@@ -39,23 +40,48 @@ class ListManager(gtk.VBox):
         self.tab_box.connect("switch-tab", self.on_tab_box_switch_tab)
         main_align.add(self.tab_box)
         self.add(main_align)
+        self.current_title = config.get("listmanager", "source", "")
+        self.current_source = None
         
         Dispatcher.connect("add-source", self.on_dispatcher_add_source)
         Dispatcher.connect("remove-source", self.on_dispatcher_remove_source)
         Dispatcher.connect("switch-source", self.on_dispatcher_switch_source)
+        Dispatcher.connect("ready", self.on_dispatcher_ready)
+        
+    def on_dispatcher_ready(self, widget):    
+        if self.current_source:
+            self.switch_source(self.current_source, True)
+            restore_status = getattr(self.current_source.list_widget, "restore_status", None)
+            if restore_status and callable(restore_status):
+                restore_status()
+        else:    
+            try:
+                local_search_tab.list_widget.restore_status()
+            except Exception, e:
+                print e
         
     def on_tab_box_switch_tab(self, widget, item):    
+        try:
+            config.set("listmanager", "source", item.title)
+            config.write()
+        except: pass    
+        
         Dispatcher.emit("switch-browser", item, True)
         
     def manual_active_tab(self, widget, songs, tab_type):    
         self.tab_box.active_tab(tab_type)
         
     def on_dispatcher_add_source(self, widget, data):    
+        if data.title == self.current_title:
+            self.current_source = data
         self.tab_box.add_items([data], False)
 
     def on_dispatcher_remove_source(self, widget, data):    
-        self.tab_box.remove_items([data])
+        self.tab_box.remove_items([data], self.current_source == data)
         
     def on_dispatcher_switch_source(self, widget, data):    
+        self.switch_source(data)
+
+    def switch_source(self, data, switched=False):    
         self.tab_box.active_item(data)
-        Dispatcher.emit("switch-browser", data, False)
+        Dispatcher.emit("switch-browser", data, switched)
