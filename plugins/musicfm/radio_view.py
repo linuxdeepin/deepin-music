@@ -43,7 +43,7 @@ from posterlib import fmlib
 from cover_manager import cover_thread_pool
 
 import utils
-from xdg_support import get_config_file
+from xdg_support import get_config_file, get_cache_file
 from nls import _
 from logger import Logger
 
@@ -73,6 +73,8 @@ class RadioView(TreeView, Logger):
         self.playlist = []
         self.limit_number = 25
         self.preview_db_file = get_config_file("preview_radios.db")
+        self.status_db_file = get_cache_file("musicfm/status.db")
+        self.load_status()        
         
     @contextmanager        
     def keep_list_lock(self):
@@ -113,6 +115,7 @@ class RadioView(TreeView, Logger):
             self.reset_playlist()
             self.set_highlight_item(item)
             self.fetch_playlist(play=True)
+            self.save_status()
             
     def clear_selected_status(self):        
         self.select_items([])
@@ -275,6 +278,11 @@ class RadioView(TreeView, Logger):
             self.visible_highlight()
             self.queue_draw()
             
+    def play_channel(self, channel):        
+        self.set_highlight_channel(channel)
+        self.reset_playlist()
+        self.fetch_playlist(play=True)
+            
     def on_button_press_event(self, widget, event):        
         pass
     
@@ -290,6 +298,18 @@ class RadioView(TreeView, Logger):
             
         if channel_infos is not None:    
             self.add_channels(channel_infos)
+            
+    def save_status(self):        
+        if self.highlight_item:
+            channel_info = self.highlight_item.channel_info
+            utils.save_db(channel_info, self.status_db_file)
+            
+    def load_status(self):        
+        self.channel_info = utils.load_db(self.status_db_file)
+        
+    def restore_status(self):    
+        if self.channel_info:
+            self.play_channel(self.channel_info)
             
 TAG_HOT = 1    
 TAG_FAST = 2

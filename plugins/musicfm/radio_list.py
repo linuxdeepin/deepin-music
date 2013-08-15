@@ -49,3 +49,5 @@ class RadioList(gtk.VBox):
         
     def save(self):    
         self.radio_view.save()
+
+    restore_status = property(lambda self: self.radio_view.restore_status)    
