@@ -73,6 +73,7 @@ class PluginItem(TreeItem):
             self.redraw_request_callback(self)
             
     def select(self):        
+        self.plugins_view.display_plugin_info(self)
         self.is_select = True
         self.emit_redraw_request()
         
@@ -155,10 +156,12 @@ class PluginsManager(gtk.VBox):
         self.set_spacing(5)
         self.plugins = utils.get_main_window().plugins
         self.plugins_view = TreeView()
+        self.plugins_view.add_items = self.plugins_view_add_items
         self.plugins_view.set_expand_column(0)
         self.plugins_view.draw_mask = self.plugins_view_draw_mask
         self.plugins_view.set_size_request(420, 330)        
         self.plugins_view.connect("single-click-item", self.on_plugins_view_single_click)
+        self.plugins_view.connect("press-return", self.on_plugins_view_press_return)
                 
         self.plugins_view.set_column_titles([_("Add-on"), _("Version"), _("Enable"), ""],
                                             (self.sort_by_title, self.sort_by_title,
@@ -172,6 +175,11 @@ class PluginsManager(gtk.VBox):
         # plugin info
         self.pack_start(plugins_view_align, False, True)
         self.pack_start(self.plugin_infos, False, True)
+        
+    def plugins_view_add_items(self, items, insert_pos=None, clear_first=False):
+        for item in items:
+            item.plugins_view = self
+        TreeView.add_items(self.plugins_view, items, insert_pos, clear_first)    
         
     def sort_by_title(self, items, reverse):    
         return sorted(items, key=lambda item: item.plugin, reverse=reverse)
@@ -205,22 +213,32 @@ class PluginsManager(gtk.VBox):
         plugins_items = [PluginItem(*args) for args in plugins_list]
         self.plugins_view.add_items(plugins_items)
         
+        
+    def on_plugins_view_press_return(self, widget, items):    
+        if len(items) > 0:
+            item = items[0]
+            self.toggle_plugin_status(item)
+        
     def on_plugins_view_single_click(self, widget, item, column, x, y):
         if column == 2:
-            plugin = item.plugin
-            will_enable = not item.enabled
-            if will_enable:
-                try:
-                    self.plugins.enable_plugin(plugin)
-                except Exception, e:    
-                    print e
-                    return
-            else:    
-                try:
-                    self.plugins.disable_plugin(plugin)
-                except Exception, e:    
-                    print e
-                    return
-            item.toggle_enabled()    
+            self.toggle_plugin_status(item)
             
+    def toggle_plugin_status(self, item):        
+        plugin = item.plugin
+        will_enable = not item.enabled
+        if will_enable:
+            try:
+                self.plugins.enable_plugin(plugin)
+            except Exception, e:    
+                print e
+                return
+        else:    
+            try:
+                self.plugins.disable_plugin(plugin)
+            except Exception, e:    
+                print e
+                return
+        item.toggle_enabled()    
+        
+    def display_plugin_info(self, item):    
         self.plugin_infos.update_info(item.pluginfo)    
