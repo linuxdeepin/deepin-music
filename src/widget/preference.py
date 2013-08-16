@@ -413,7 +413,8 @@ class HotKeySetting(gtk.VBox):
         combo_hbox.pack_start(hotkey_label, False, False)
         
         # Hotkey entry.
-        hotkey_entry = ShortcutKeyEntry(hotkey_content)
+        hotkey_entry = ShortcutKeyEntry()
+        hotkey_entry.set_shortcut_key(None if hotkey_content == "None" else hotkey_content)
         hotkey_entry.set_size(170, 24)
         hotkey_entry_align = gtk.Alignment()
         hotkey_entry_align.set_padding(0, 0, 0, 50)

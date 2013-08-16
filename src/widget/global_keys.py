@@ -71,7 +71,7 @@ class GlobalHotKeys(Logger):
     def start_bind(self):        
         for field in self.func.keys():
             keystr = config.get("globalkey", field)
-            if keystr:
+            if keystr and keystr != "None":
                 self.__bind(keystr, field)
             config.set("globalkey", "%s_last" % field, keystr)    
         
@@ -111,12 +111,12 @@ class GlobalHotKeys(Logger):
             self.__try_unbind(config.get(section, option + "_last", value))
             
             if value:
-                try:
-                    self.__bind(config.get(section, option, value), option)
-                except:    
-                    pass
-                else:
-                    config.set(section, option + "_last", value)
+                if value != "None":
+                    try:
+                        self.__bind(config.get(section, option, value), option)
+                    except: pass
+                    
+                config.set(section, option + "_last", value)
                 
         if section == "globalkey" and option == "enable":        
             if value == "true":

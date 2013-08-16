@@ -621,11 +621,12 @@ class DesktopLyrics(gtk.Window):
             pass
         
     def set_input_shape_mask(self, disable_input):    
-        if disable_input:
-            region = gtk.gdk.Region()
-            self.window.input_shape_combine_region(region, 0, 0)
-        else:    
-            self.window.input_shape_combine_region(self.window.get_visible_region(), 0, 0)
+        if self.get_property("visible"):
+            if disable_input:
+                region = gtk.gdk.Region()
+                self.window.input_shape_combine_region(region, 0, 0)
+            else:    
+                self.window.input_shape_combine_region(self.window.get_visible_region(), 0, 0)
             
     def point_in_rect(self, x, y, rect):        
         return rect.x <= x < rect.x + rect.width and rect.y <= y < rect.y + rect.height
