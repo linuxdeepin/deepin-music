@@ -402,6 +402,8 @@ class RadioIconView(IconView):
         channel_data = ret.get("data", {})
         
         channels = channel_data.get("channels", [])
+        channels = filter(lambda item: item.get("song_num", 0) != 0, channels)
+        
         total = int(channel_data.get("total", 0))
         
         if thread_id != self.__fetch_thread_id:
