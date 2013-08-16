@@ -29,6 +29,7 @@ from contextlib import contextmanager
 from dtk.ui.treeview import TreeView
 from dtk.ui.iconview import IconView
 from dtk.ui.threads import post_gui
+from deepin_utils.net import is_network_connected
 from dtk.ui.menu import Menu
 from dtk.ui.scrolled_window import ScrolledWindow
 
@@ -36,6 +37,7 @@ from radio_item import RadioListItem, CommonIconItem
 
 from widget.ui_utils import draw_alpha_mask, switch_tab
 from widget.ui import SearchPrompt
+
 
 from helper import Dispatcher
 from player import Player
@@ -308,8 +310,9 @@ class RadioView(TreeView, Logger):
         self.channel_info = utils.load_db(self.status_db_file)
         
     def restore_status(self):    
-        if self.channel_info:
-            self.play_channel(self.channel_info)
+        if is_network_connected():
+            if self.channel_info:
+                self.play_channel(self.channel_info)
             
 TAG_HOT = 1    
 TAG_FAST = 2
