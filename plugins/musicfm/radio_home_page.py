@@ -109,7 +109,9 @@ class HomePage(gtk.VBox):
             ).start()
         
     def fetch_banner_channels(self):    
-        ret = fmlib.get_hot_chls(start=random.randrange(100, 1500, 5), limit=5)
+        start = random.randrange(20, 300, 5)
+        # ret = fmlib.get_hot_chls(start=start, limit=5)
+        ret = fmlib.get_genre_chls(genre_id="331", start=start, limit=5)
         return ret.get("data", {}).get("channels", [])
     
     @post_gui
@@ -118,6 +120,8 @@ class HomePage(gtk.VBox):
             return 
         if not channels:
             return
+        
+        # print channels
         self.home_slider.set_infos(channels)
         
         
