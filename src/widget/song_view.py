@@ -301,8 +301,6 @@ class SongView(TreeView):
         highlight_song_flag = self.set_highlight_song(song)
         if highlight_song_flag:
             Player.set_song(song, play, seek=seek)
-            
-            
                         
     def emit_add_signal(self):
         self.emit("begin-add-items")

@@ -56,6 +56,10 @@ class CategoryView(TreeView):
         TreeView.add_items(self, items, insert_pos, clear_first)        
         
     items = property(lambda self: self.visible_items)    
+    
+    def check_view_status(self):
+        for item in self.items:
+            item.song_view.async_reset_error_items()
 
 class PlaylistUI(gtk.VBox):
     '''Playlist UI.'''
@@ -189,6 +193,8 @@ class PlaylistUI(gtk.VBox):
 
         Player.set_source(self.current_item.song_view)
         self.right_box.add(self.current_item.get_list_widget())
+        
+        self.category_list.check_view_status()
         self.list_paned.show_all()
         
     def __on_player_loaded(self, player):   
