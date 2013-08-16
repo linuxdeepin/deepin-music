@@ -489,7 +489,7 @@ msgstr "添加到播放列表"
 #: ../src/widget/webcast_view.py:450 ../plugins/webcast/__init__.py:34
 #: ../plugins/webcast/__init__.py:36
 msgid "Radio"
-msgstr "網路廣播"
+msgstr "網絡電台"
 
 #: ../src/widget/global_search.py:48 ../src/widget/song_view.py:786
 #: ../src/widget/local_tab.py:28
@@ -502,7 +502,7 @@ msgstr "窗口歌詞"
 
 #: ../src/widget/ui.py:201
 msgid "Need some music? Find it here..."
-msgstr "找音樂，在這裏..."
+msgstr "找音樂，在這裡..."
 
 #: ../src/widget/ui.py:399
 msgid "Add Music"
@@ -514,7 +514,7 @@ msgstr "在{from}中未發現與{keyword}關聯的內容"
 
 #: ../src/widget/ui.py:1013
 msgid "Suggestions"
-msgstr "提請"
+msgstr "建議"
 
 #: ../src/widget/ui.py:1014
 msgid "Make sure all words are spelled correctly."
@@ -831,7 +831,7 @@ msgstr ""
 "下載,桌面歌詞顯示,專輯封面下載,歌曲記憶播放,獨創音樂管理,自定義換膚等幾大特"
 "點.\n"
 "\n"
-"深度音樂是自由軟體,遵循自由軟體基金會發佈的 GNU 通用公共許可證第三版."
+"深度音樂是自由軟件,遵循自由軟件基金會發佈的 GNU 通用公共許可證第三版."
 
 #: ../src/widget/preference.py:927 ../src/widget/instance.py:369
 #: ../src/widget/tray.py:82
@@ -927,7 +927,7 @@ msgstr "個任務在等待!"
 #: ../src/widget/song_view.py:406 ../src/widget/song_view.py:749
 #: ../src/widget/local_browser.py:340
 msgid "Are you sure you want to delete them?"
-msgstr "您確定要刪除嗎?"
+msgstr "是否要刪除以下檔案?"
 
 #: ../src/widget/song_view.py:450
 msgid "Repeat (single)"
@@ -1287,7 +1287,7 @@ msgstr "深度音樂"
 #: ../plugins/musicfm/__init__.py:33 ../plugins/musicfm/__init__.py:35
 #: ../plugins/musicfm/radio_view.py:449
 msgid "MusicFM"
-msgstr "音樂電臺"
+msgstr "音樂電台"
 
 #: ../plugins/musicfm/radio_item.py:508
 msgid "More"
