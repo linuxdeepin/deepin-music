@@ -51,7 +51,6 @@ from widget.converter import AttributesUI
 from widget.song_notify import SongNotify
 from nls import _
 
-
 class SongView(TreeView):
     ''' song view. '''
     __gsignals__ = {
@@ -117,8 +116,8 @@ class SongView(TreeView):
                 self.set_highlight_item(item)                
                 Player.play_new(item.get_song(), seek=item.get_song().get("seek", None))
                 self.set_current_source()
-            else:        
-                pass
+                
+            self.async_reset_error_items()    
                 
     def draw_mask(self, cr, x, y, width, height):            
         draw_alpha_mask(cr, x, y, width, height, "layoutMiddle")
@@ -212,6 +211,8 @@ class SongView(TreeView):
             else:    
                 each_item.set_error()
                 
+    async_reset_error_items = property(lambda self: utils.threaded(self.reset_error_items))
+                
     def set_song_items(self, items):            
         self.add_items(items, clear_first=True)
         self.update_item_index()
@@ -292,10 +293,16 @@ class SongView(TreeView):
                 Player.play_new(self.highlight_item.get_song(), seek=self.highlight_item.get_song().get("seek", 0))
                 self.set_current_source()
                 
+            self.async_reset_error_items()    
+                
     def play_song(self, song, play=False, seek=None):            
+        self.async_reset_error_items()    
+        
         highlight_song_flag = self.set_highlight_song(song)
         if highlight_song_flag:
             Player.set_song(song, play, seek=seek)
+            
+            
                         
     def emit_add_signal(self):
         self.emit("begin-add-items")
