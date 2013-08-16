@@ -143,6 +143,11 @@ class LrcManager(object):
                 return local_lrc
                     
         if try_web and is_network_connected():
+            if song.get("lyric_url", None):
+                ret = utils.download(song.get("lyric_url"), lrc_path)
+                if ret:                
+                    return lrc_path
+            
             trust_a = song.get_str("artist")
             trust_t = song.get_str("title")
             filename = song.get_filename()
