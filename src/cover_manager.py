@@ -46,7 +46,7 @@ from song import Song
 
 REINIT_COVER_TO_SKIP_TIME = 100 * 60 * 30
 
-COVER_SIZE = {"x": 70, "y": 70}
+COVER_SIZE = {"x": 71, "y": 71}
 SMALL_COVER_SIZE = {"x" : 17, "y" : 17}
 COVER_SAVE_SIZE = {"x": 300, "y": 300}
 BROWSER_COVER_SIZE = {"x": 40, "y": 40}

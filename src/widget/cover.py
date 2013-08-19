@@ -101,11 +101,11 @@ class CoverButton(gtk.Button):
             self.active_pixbuf = self.get_default_pixbuf(self.current_song)
             
         draw_pixbuf(cr, self.cover_side_pixbuf, rect.x, rect.y)
-        draw_pixbuf(cr, self.active_pixbuf, rect.x + 3.5, rect.y + 3.5,
-                    self.active_alpha)
+        draw_pixbuf(cr, self.active_pixbuf, rect.x + 3, rect.y + 3, self.active_alpha)
         
         if self.target_pixbuf:
-            draw_pixbuf(cr, self.target_pixbuf, rect.x + 3.5, rect.y + 3.5, self.target_alpha)
+            draw_pixbuf(cr, self.target_pixbuf, rect.x + 3, rect.y + 3, self.target_alpha)
+            
         return True
         
         
