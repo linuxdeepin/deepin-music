@@ -241,6 +241,10 @@ class TabManager(gtk.VBox):
         
     def remove_items(self, items, switch_to_local=True):    
         for item in items:
+            
+            if item.index == self.current_index:
+                switch_to_local = True
+                
             item.clear_selected_status()
             try:
                 self.items.remove(item)

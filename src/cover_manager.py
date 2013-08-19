@@ -253,7 +253,7 @@ class DeepinCoverManager(Logger):
         random.shuffle(GENRE_PATH)
         return app_theme.get_pixbuf("genre/%s" % GENRE_PATH[1]).get_pixbuf()
     
-    def get_cover(self, song, try_web=True):
+    def get_cover(self, song, try_web=True, read_local=True):
         album = self.get_cover_search_str(song)
         image_path = get_cache_file("cover/%s.jpg" % album)
         image_path_disable = get_cache_file("cover/%s.jpg.#disable#" % album)
@@ -263,49 +263,52 @@ class DeepinCoverManager(Logger):
             return None
                         
         # Cover already exist.
-        if os.path.exists(image_path):
-            try:
-                gtk.gdk.pixbuf_new_from_file_at_size(image_path, COVER_SIZE["x"], COVER_SIZE["y"])
-            except gobject.GError:    
+        if read_local:
+            if os.path.exists(image_path):
                 try:
-                    os.unlink(image_path)
-                except:    
-                    pass
-            else:    
-                return image_path
+                    gtk.gdk.pixbuf_new_from_file_at_size(image_path, COVER_SIZE["x"], COVER_SIZE["y"])
+                except gobject.GError:    
+                    try:
+                        os.unlink(image_path)
+                    except:    
+                        pass
+                else:    
+                    return image_path
 
         # Retrieve cover from mp3 tag
-        if song.get_scheme() == "file" and song.get_ext() in [".mp3", ".tta"]:
-            found = False
-            fp = None
-            try:
-                fp = file(image_path, "wb+")
-                tag = ID3(song.get_path())
-                for frame in tag.getall("APIC"):
-                    found = True
-                    fp.write(frame.data)
-                    fp.flush()
-                    fp.seek(0, 0)
-            except:    
-                if fp:
-                    fp.close()
-            else:        
-                if fp:
-                    fp.close()
-                if found and self.cleanup_cover(song, image_path):
-                    return image_path
+        if read_local:
+            if song.get_scheme() == "file" and song.get_ext() in [".mp3", ".tta"]:
+                found = False
+                fp = None
+                try:
+                    fp = file(image_path, "wb+")
+                    tag = ID3(song.get_path())
+                    for frame in tag.getall("APIC"):
+                        found = True
+                        fp.write(frame.data)
+                        fp.flush()
+                        fp.seek(0, 0)
+                except:    
+                    if fp:
+                        fp.close()
+                else:        
+                    if fp:
+                        fp.close()
+                    if found and self.cleanup_cover(song, image_path):
+                        return image_path
                     
         # Search in local directory of the file.        
-        if song.get("uri") != None and song.get_scheme() == "file":       
-            song_dir = song.get_dir()
-            if os.path.exists(song_dir):
-                list_file = os.listdir(song_dir)
-                for pattern in COVER_PATTERNS:
-                    matches = fnmatch.filter(list_file, pattern)
-                    if matches:
-                        matches = sorted(matches, lambda a,b : (len(a) - len(b)) * 10 + cmp(a, b))
-                        if self.cleanup_cover(song, song_dir + "/" + matches[0], image_path):
-                            return image_path
+        if read_local:
+            if song.get("uri") != None and song.get_scheme() == "file":       
+                song_dir = song.get_dir()
+                if os.path.exists(song_dir):
+                    list_file = os.listdir(song_dir)
+                    for pattern in COVER_PATTERNS:
+                        matches = fnmatch.filter(list_file, pattern)
+                        if matches:
+                            matches = sorted(matches, lambda a,b : (len(a) - len(b)) * 10 + cmp(a, b))
+                            if self.cleanup_cover(song, song_dir + "/" + matches[0], image_path):
+                                return image_path
 
         if not config.getboolean("setting", "offline") and try_web and is_network_connected():
             try:
@@ -390,6 +393,15 @@ class DeepinCoverManager(Logger):
                     Dispatcher.emit("album-changed", song_or_name)
                     MediaDB.set_property(song_or_name, {"album" : song_or_name.get("album")})
                 return True
+            
+    @utils.threaded        
+    def fetch_cover(self, song):        
+        success = self.get_cover(song, try_web=True, read_local=False)
+        if success:
+            Dispatcher.emit("album-changed", song)
+            MediaDB.set_property(song, {"album" : song.get("album")})
+
+        
 
 CoverManager =  DeepinCoverManager()
 

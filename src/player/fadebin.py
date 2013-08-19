@@ -140,7 +140,6 @@ import time
 from threading import Lock, Thread
 from logger import Logger
 
-
 MMS_STREAM_SCHEMES = [ "mms", "mmsh", "mmsu", "mmst" ]
 HTTP_STREAM_SCHEME = "http"
 RTSP_STREAM_SCHEMES = [ "rtspu", "rtspt", "rtsph", "rtsp" ]
@@ -188,6 +187,9 @@ class PlayerBin(gobject.GObject, Logger):
                 gobject.TYPE_NONE,
                 (gobject.TYPE_INT, gobject.TYPE_INT)),
         "tags-found" : (gobject.SIGNAL_RUN_LAST,
+                gobject.TYPE_NONE,
+                (gobject.TYPE_PYOBJECT,)),
+        "spectrum-data-found" : (gobject.SIGNAL_RUN_LAST,
                 gobject.TYPE_NONE,
                 (gobject.TYPE_PYOBJECT,)),
         "playing-stream" : (gobject.SIGNAL_RUN_LAST,
@@ -279,6 +281,8 @@ class PlayerBin(gobject.GObject, Logger):
         self.__filterbin.add_pad(gst.GhostPad("src", pad))
 
         queue.set_property("max-size-buffers", 10)
+        
+        # self.spectrum = gst.element_factory_make ("spectrum", "spectrum")
 
         self.__output.add(self.__capsfilter, audioconvert , audioresample , \
                 self.__tee , self.__volume, self.__filterbin, postaudioconvert, postaudioresample, queue, self.__sink)
@@ -728,7 +732,25 @@ class PlayerBin(gobject.GObject, Logger):
                 self.emit("buffering", progress)
         elif message.type == gst.MESSAGE_ELEMENT:
             # FOR imperfect stream messages not implemented in python version
-            pass
+            s = message.structure
+            name = s.get_name()
+            
+            if name == "spectrum":
+                waittime = 0
+                if s.has_key("running_time") and s.has_key("duration"):
+                    timestamp = s["running_time"]
+                    duration = s["duration"]
+                    waittime = timestamp + duration / 2
+                elif s.has_key("endtime"):    
+                    waittime = s["endtime"]
+                    
+                if waittime:    
+                    magnitude_list = s['magnitude']
+                    # basetime = self.spectrum.get_base_time()                    
+                    # clock_id = self.sync_clock.new_single_shot_id(waittime + basetime)    
+                    # self.delayed_spectrum_update(spect)
+                    self.emit("spectrum-data-found", magnitude_list)
+
         elif message.type == gst.MESSAGE_STATE_CHANGED:
             pass
         else:
@@ -737,6 +759,7 @@ class PlayerBin(gobject.GObject, Logger):
 
         # FIXME: missing in python need code it...
         #bus.async_signal_func(message)
+        
 
         return True
 

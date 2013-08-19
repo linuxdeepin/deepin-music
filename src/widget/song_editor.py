@@ -295,11 +295,16 @@ class CoverSetting(gtk.VBox):
         button_box_align.add(button_box)
         change_button = Button(_("Change"))
         change_button.connect("clicked", self.change_cover_image)
+        
+        fetch_button = Button(_("Retrieve from the Internet"))
+        fetch_button.connect("clicked", self.fetch_cover_image)
+        
         delete_button = Button(_("Reset"))
         delete_button.connect("clicked", self.delete_cover_image)
         button_box.pack_start(create_right_align(), True, True)
         button_box.pack_start(change_button, False, False)
         button_box.pack_start(delete_button, False, False)
+        button_box.pack_start(fetch_button, False, False)        
         
         self.pack_start(cover_box_align, False, True)
         self.pack_start(button_box_align, False, True)
@@ -319,6 +324,10 @@ class CoverSetting(gtk.VBox):
             
     def delete_cover_image(self, widget):        
         CoverManager.remove_cover(self.song, True)
+        
+    def fetch_cover_image(self, widget):        
+        CoverManager.fetch_cover(self.song)
+        
     
 class SongEditor(DialogBox):    
     

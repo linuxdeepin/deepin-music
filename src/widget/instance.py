@@ -157,8 +157,8 @@ class DeepinMusic(gobject.GObject, Logger):
         application.main_box.pack_start(main_box)        
         application.main_box.pack_start(status_bar, False, True)
         
-        if config.get("globalkey", "enable", "false") == "true":
-            global_hotkeys.start_bind()
+        # if config.get("globalkey", "enable", "false") == "true":
+            # global_hotkeys.start_bind()
         
         if config.get("setting", "window_mode") == "simple":
             self.revert_toggle_button.set_active(False)

@@ -77,7 +77,7 @@ class ListManager(gtk.VBox):
         self.tab_box.add_items([data], False)
 
     def on_dispatcher_remove_source(self, widget, data):    
-        self.tab_box.remove_items([data], self.current_source == data)
+        self.tab_box.remove_items([data])
         
     def on_dispatcher_switch_source(self, widget, data):    
         self.switch_source(data)
