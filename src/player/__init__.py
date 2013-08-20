@@ -65,6 +65,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         self.__current_stream_seeked = False 
         self.__next_already_called = False
         self.__emit_signal_new_song_id = None
+        self.skip_error_song_flag = False
         
         self.stop_after_this_track = False
         
@@ -106,6 +107,10 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         
     def __on_error(self, bin, uri):   
         self.logdebug("gst error received for %s", uri)
+        
+        if self.skip_error_song_flag:
+            self.skip_error_song_flag = False
+            return 
         
         self.bin.xfade_close()
         config.set("player", "play", "false")
@@ -357,10 +362,11 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         else:    
             ret = uri and self.bin.xfade_open(uri)
             if not ret:
-                gobject.idle_add(self.emit, "play-end")
+                # gobject.idle_add(self.emit, "play-end")
                 if self.song:
                     if getattr(self.__source, 'add_invaild_song'):
                         self.__source.add_invaild_song(self.song)
+                        self.skip_error_song_flag = True
                 self.next()
             elif play:    
                 self.play(crossfade, seek)
