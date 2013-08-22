@@ -43,7 +43,7 @@ from transcoder import Transcoder, FORMATS, TranscodeError
 from nls import _
 from widget.skin import app_theme
 from widget.dialog import WinDir
-from widget.ui_utils import (set_widget_left, render_item_text)
+from widget.ui_utils import (set_widget_left, render_item_text2)
 from constant import DEFAULT_FONT_SIZE
 from helper import Dispatcher
 from player import Player
@@ -74,15 +74,19 @@ class TranscoderJob(gobject.GObject):
         self.status_icon_press = app_theme.get_pixbuf("transcoder/wait_press.png").get_pixbuf()
         self.stop_icon = app_theme.get_pixbuf("transcoder/stop.png").get_pixbuf()
         self.progress_ratio = 0.0
+        self.skip_flag = False        
         self.trans_data = trans_data
         self.init_transcoder(trans_data)   
         self.__update()        
         self.progress_buffer = ProgressBuffer()
-        
+
     def start(self):    
-        self.transcoder.start_transcode()
-        self.__set_status_icon("working")
-        self.__updater_id = gobject.timeout_add(500, self.update_progress)
+        if self.skip_flag:
+            self.finish_job()
+        else:    
+            self.transcoder.start_transcode()
+            self.__set_status_icon("working")
+            self.__updater_id = gobject.timeout_add(500, self.update_progress)
         
     def update_progress(self):    
         self.set_progress_ratio(self.transcoder.get_ratio())
@@ -118,6 +122,10 @@ class TranscoderJob(gobject.GObject):
             self.exists_prompt = True
         else:    
             self.exists_prompt = False
+            
+        if self.raw_song.get_path() == self.output_path:
+            self.skip_flag = True
+                        
         self.output_ext = FORMATS[attr["format"]]["extension"]
         self.transcoder = Transcoder()        
         self.transcoder.set_format(attr["format"])
@@ -134,6 +142,10 @@ class TranscoderJob(gobject.GObject):
             self.write_tags()
         except:    
             pass
+        
+        self.finish_job()
+                
+    def finish_job(self):            
         self.emit("end")
         self.__set_status_icon("success")
         self.set_progress_ratio(1.0)
@@ -223,7 +235,7 @@ class TranscoderJob(gobject.GObject):
     def render_title(self, cr, rect, in_select, in_highlight):
         rect.x += self.title_padding_x
         rect.width -= self.title_padding_x * 2
-        render_item_text(cr, self.title, rect, in_select, in_highlight)
+        render_item_text2(cr, self.title, rect, in_select, in_highlight)
     
     def render_progress(self, cr, rect, in_select, in_highlight):
         self.progress_buffer.progress = self.progress_ratio * 100
@@ -240,7 +252,7 @@ class TranscoderJob(gobject.GObject):
     def render_ext(self, cr, rect, in_select, in_highlight):    
         rect.x += self.ext_padding_x
         rect.width -= self.ext_padding_x * 2
-        render_item_text(cr, self.output_ext.upper(), rect, in_select, in_highlight)
+        render_item_text2(cr, self.output_ext.upper(), rect, in_select, in_highlight)
         
     def get_ext_type(self):    
         gio_file = gio.File(self.output_path)
@@ -293,7 +305,7 @@ class JobsView(ListView):
                 self.__job_end_cb(self.__jobs[0][0])
                 
     def __run_check(self, ajob):            
-        if ajob.exists_prompt:
+        if ajob.exists_prompt and not ajob.skip_flag:
             ConfirmDialog(_("Prompt"), _("Target file already exitsts, do you want to overwrite it?"),
                           confirm_callback=lambda : ajob.start(),
                           cancel_callback=lambda :self.start_new_job(ajob)

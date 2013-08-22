@@ -97,6 +97,19 @@ def render_item_text(cr, content, rect, in_select, in_highlight, align=pango.ALI
     content = utils.xmlescape(content)    
     draw_text(cr, content, rect.x, rect.y, rect.width, rect.height, font_size, color, alignment=align)    
     
+def render_item_text2(cr, content, rect, in_select, in_highlight, align=pango.ALIGN_LEFT, font_size=9, error=False):
+    if in_select:
+        color = app_theme.get_color("simpleSelectItem").get_color()
+    else:    
+        # color = app_theme.get_color("labelText").get_color()
+        color = "#707070"
+
+    if error:    
+        color = "#ff0000"        
+        
+    content = utils.xmlescape(content)    
+    draw_text(cr, content, rect.x, rect.y, rect.width, rect.height, font_size, color, alignment=align)    
+    
 def create_separator_box(padding_x=0, padding_y=0):    
     separator_box = HSeparator(
         app_theme.get_shadow_color("hSeparator").get_color_info(),
