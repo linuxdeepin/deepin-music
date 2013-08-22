@@ -29,6 +29,7 @@ import time
 import utils
 from logger import Logger
 from mycurl import MyCurl, CurlException, public_curl
+from deepin_utils.net import is_network_connected
 
 class PosterLib(Logger):
     
@@ -128,6 +129,8 @@ class PosterLib(Logger):
 poster = PosterLib()    
 
 def multi_query_artist_engine(artist_name):
+    if not is_network_connected():
+        return None
     if artist_name.find(",") != -1:
         artist_name = artist_name.split(",")[0]
     quote_artist_name = urllib.quote(artist_name)
@@ -171,6 +174,9 @@ def query_artist_cover_from_xiami(artist_name):
             return False
         
 def query_album_cover_from_xiami(artist_name, album_name):    
+    if not is_network_connected():
+        return None
+    
     if not artist_name and not album_name:
         return False
     xiami_album_search_url = 'http://www.xiami.com/search/album?key=' + artist_name + '+' + album_name

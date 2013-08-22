@@ -23,6 +23,7 @@
 import pango
 import gtk
 import pangocairo
+import math
 
 from dtk.ui.utils import (alpha_color_hex_to_cairo, cairo_disable_antialias)
 from dtk.ui.line import draw_vlinear, draw_hlinear
@@ -238,3 +239,56 @@ def set_widget_resize(widget1, widget2, sizes1=(80, 22), sizes2=(175, 22), spaci
     
     
 
+def draw_round_rectangle_with_triangle(cr, 
+                                       rect,
+                                       radius,
+                                       arrow_width, arrow_height, 
+                                       offset=0, border=2, 
+                                       pos_type=gtk.POS_TOP):
+    
+    x = rect.x + border
+    y = rect.y + border
+    w = rect.width - border * 2
+    h = rect.height - border * 2
+    
+    # set position top, bottom.
+    if pos_type == gtk.POS_TOP:    
+        y += arrow_height
+        h -= arrow_height
+    elif pos_type == gtk.POS_BOTTOM:    
+        h -= arrow_height
+        
+    # draw.
+    cr.arc (x + radius,
+            y + radius,
+            radius,
+            math.pi,
+            math.pi * 1.5)
+
+    if pos_type == gtk.POS_TOP:
+        cr.line_to(offset, y) 
+        cr.rel_line_to(arrow_width / 2.0, -arrow_height)
+        cr.rel_line_to(arrow_width / 2.0, arrow_height)
+
+    cr.arc(x + w - radius, y + radius,
+            radius, math.pi * 1.5, math.pi * 2.0)
+    
+    cr.arc(x + w - radius,
+           y + h - radius,
+           radius,
+           0,
+           math.pi * 0.5)
+    
+    if pos_type == gtk.POS_BOTTOM:
+        arrow_top = y + h
+        cr.line_to(offset + arrow_width, arrow_top) 
+        cr.rel_line_to(-arrow_width / 2.0, arrow_height)
+        cr.rel_line_to(-arrow_width / 2.0, -arrow_height)
+        
+    cr.arc(x + radius,
+           y + h - radius,
+           radius,
+           math.pi * 0.5,
+           math.pi)
+    
+    cr.close_path()

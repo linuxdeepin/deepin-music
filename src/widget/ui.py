@@ -1299,3 +1299,7 @@ class QuitDialog(DialogBox):
         else:    
             status = "false"
         config.set("setting", "close_remember", status)    
+
+        
+        
+        

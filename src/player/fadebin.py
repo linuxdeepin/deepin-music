@@ -195,6 +195,9 @@ class PlayerBin(gobject.GObject, Logger):
         "playing-stream" : (gobject.SIGNAL_RUN_LAST,
                 gobject.TYPE_NONE,
                 (gobject.TYPE_STRING,)),
+        "queue-running" : (gobject.SIGNAL_RUN_LAST,
+                gobject.TYPE_NONE,
+                (gobject.TYPE_STRING,)),
         "playing" : (gobject.SIGNAL_RUN_LAST,
                 gobject.TYPE_NONE,
                 ()),
@@ -582,7 +585,7 @@ class PlayerBin(gobject.GObject, Logger):
             return
 
         stream.seek_target = time * gst.SECOND
-
+        
         if stream.state == PAUSED:
             self.logdebug("seeking in paused stream %s; target %f", stream.cutted_uri , stream.seek_target)
             stream.perform_seek()
@@ -688,6 +691,9 @@ class PlayerBin(gobject.GObject, Logger):
                 if name == "STREAM_PLAYING_MESSAGE":
                     self.logdebug("got stream playing message for %s", stream.cutted_uri)
                     self.emit("playing-stream", stream.uri)
+                    
+                elif name == "STREAM_QUEUE_RUNNING":
+                    self.emit("queue-running", stream.uri)
                 elif name == "FADE_IN_DONE_MESSAGE":
                     pass
                 elif name == "FADE_OUT_DONE_MESSAGE":
@@ -1667,7 +1673,7 @@ class StreamBin(gst.Bin, Logger):
 
     def __queue_threshold_cb(self, queue):
         self.logdebug("%s: queue running", self.cutted_uri)
-
+        
         sinkpad = self.__queue.get_pad("sink")
         sinkpad.remove_buffer_probe(self.__queue_probe_id)
         self.__queue_probe_id = None
@@ -1677,6 +1683,11 @@ class StreamBin(gst.Bin, Logger):
         self.__queue.disconnect(self.__queue_threshold_id)
         self.__queue_threshold_id = None
         self.post_buffering_message(100)
+        
+        s = gst.Structure("STREAM_QUEUE_RUNNING")
+        msg = gst.message_new_application(self, s)
+        self.post_message(msg)
+        
 
     def __queue_underrun_cb(self, queue):
         self.logdebug("%s: queue underrun", self.cutted_uri)
@@ -1688,6 +1699,7 @@ class StreamBin(gst.Bin, Logger):
 
         if not self.__queue_threshold_id:
             self.__queue_threshold_id = self.__queue.connect("running", self.__queue_threshold_cb)
+            
             self.post_buffering_message(0)
 
     def post_buffering_message(self, level):

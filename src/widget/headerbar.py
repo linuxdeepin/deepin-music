@@ -28,7 +28,8 @@ import dtk.ui.tooltip as Tooltip
 
 from player import Player
 from widget.information import PlayInfo
-from widget.timer import SongTimer, VolumeSlider
+from widget.timer import  VolumeSlider
+from widget.new_timer import SongTimer
 
 from widget.cover import PlayerCoverButton
 from widget.skin import app_theme
@@ -36,6 +37,7 @@ from config import config
 from helper import Dispatcher
 from nls import _
 from widget.ui_utils import set_widget_vcenter
+from widget.progressbar import ProgressBar
 
 class SimpleHeadbar(gtk.EventBox):            
     def __init__(self):
@@ -124,6 +126,13 @@ class SimpleHeadbar(gtk.EventBox):
         body_vbox = gtk.VBox(spacing=6)
         body_vbox.pack_start(cover_main_box, False, True)
         body_vbox.pack_start(self.song_timer, False, True)
+        # progressbar_align = gtk.Alignment()
+        # progressbar_align.add(ProgressBar())
+        # progressbar_align.set(1, 1, 1, 1)
+        # progressbar_align.set_padding(0, 0, 2, 2)
+        # body_vbox.pack_start(progressbar_align, False, True)
+        
+        
         
         self.add(body_vbox)
 
