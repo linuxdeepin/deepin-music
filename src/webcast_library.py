@@ -148,7 +148,7 @@ class WebcastDatebase(gobject.GObject, Logger):
         
         with self.keep_operation():
             self.__songs[uri] = song
-            self.logdebug("add webcast %s ", uri)
+            # self.logdebug("add webcast %s ", uri)
             
             with self.keep_signal():
                 self.__queued_signal["added"].add(song)
@@ -302,7 +302,7 @@ class WebcastDatebase(gobject.GObject, Logger):
                 s = Song(obj)
                 s.set_type(self.__type)
                 if not self.__songs.has_key(s.get("uri")):
-                    self.logdebug("load webcast %s" % s)
+                    # self.logdebug("load webcast %s" % s)
                     self.add(s)
                     
         if save_flag:            

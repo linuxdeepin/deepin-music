@@ -298,7 +298,7 @@ class DeepinMusic(gobject.GObject, Logger):
     def hide_to_tray(self):
         event = self.window.get_state()
         if config.get("setting", "window_mode") == "full":
-            if event == gtk.gdk.WINDOW_STATE_MAXIMIZED:
+            if event & gtk.gdk.WINDOW_STATE_MAXIMIZED == gtk.gdk.WINDOW_STATE_MAXIMIZED:
                 config.set("window", "state", "maximized")
             else:
                 config.set("window", "state", "normal")

@@ -213,6 +213,8 @@ class VolumeSlider(gtk.VBox):
         return Label(str(int(self.volume_button.get_value())))
         
     def change_volume(self,helper,value):
+        config.set("player", "volume_mute", "false")
+        self.volume_button.unset_mute()
         val = value * 100
         self.volume_button.set_value(int(val))
 

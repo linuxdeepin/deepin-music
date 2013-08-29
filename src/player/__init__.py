@@ -117,7 +117,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
         self.emit("paused")
         
         if self.song:
-            if getattr(self.__source, 'add_invaild_song'):
+            if getattr(self.__source, 'add_invaild_song', None):
                 self.__source.add_invaild_song(self.song)
         
         if not self.song:
@@ -364,7 +364,7 @@ class DeepinMusicPlayer(gobject.GObject, Logger):
             if not ret:
                 # gobject.idle_add(self.emit, "play-end")
                 if self.song:
-                    if getattr(self.__source, 'add_invaild_song'):
+                    if getattr(self.__source, 'add_invaild_song', None):
                         self.__source.add_invaild_song(self.song)
                         self.skip_error_song_flag = True
                 self.next()
