@@ -346,6 +346,12 @@ class SongView(TreeView):
         if self.add_song_cache:
             self.render_song(self.add_song_cache, pos, sort)
             del self.add_song_cache[:]
+            
+            # save playlists
+            try:
+                self.category_view.save_to_library()
+            except:    
+                pass
                 
     @post_gui
     def render_song(self, songs, pos, sort):    

@@ -803,11 +803,14 @@ def strdate_to_time(odate):
 
 def save_db(objs, fn):
     '''Save object to db file.'''
-    f = open(fn + ".tmp", "w")
-    fcntl.flock(f.fileno(), fcntl.LOCK_EX)
-    cPickle.dump(objs, f, cPickle.HIGHEST_PROTOCOL)
-    f.close()
-    os.rename(fn + ".tmp", fn)
+    try:
+        f = open(fn + ".tmp", "w")
+        fcntl.flock(f.fileno(), fcntl.LOCK_EX)
+        cPickle.dump(objs, f, cPickle.HIGHEST_PROTOCOL)
+        f.close()
+        os.rename(fn + ".tmp", fn)
+    except:    
+        pass
     
 def load_db(fn):    
     '''Load object from db file.'''

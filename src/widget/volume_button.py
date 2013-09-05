@@ -256,6 +256,7 @@ class VolumeButton(gtk.Button):
             self.icon_state = STATE_PRESS
             self.drag_flag = False
         else:    
+            self.update_progress_width(event, emit=True)            
             self.state_press_flag = False
             self.drag_flag = True
             self.mute_flag = False

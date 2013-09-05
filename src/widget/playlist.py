@@ -70,10 +70,12 @@ class PlaylistUI(gtk.VBox):
 
         # Init catagory list.
         self.category_list = CategoryView()
+        setattr(self.category_list, "save_to_library", self.save_to_library)        
         self.category_list.draw_mask = self.draw_category_list_mask
         self.category_list.connect("single-click-item", self.on_category_single_click)
         self.category_list.connect("right-press-items", self.on_category_right_press)
         self.category_list.set_size_request(CATEGROYLIST_WIDTH, -1)
+
         del self.category_list.keymap["Delete"]
         
         # Init SearchEntry.
@@ -126,6 +128,7 @@ class PlaylistUI(gtk.VBox):
         self.menu_source_id = None
         self.song_notify_id = None
         self.detail_menu = None
+        self.save_flag = False
         
         if MediaDB.isloaded():
             self.__on_db_loaded(MediaDB)
@@ -573,6 +576,10 @@ class PlaylistUI(gtk.VBox):
         config.set("playlist","current_index", str(index))
         
     def save_to_library(self):    
+        if self.save_flag:
+            return 
+        
+        self.save_flag = True
         if self.search_flag:
             self.reset_search_entry()
                   
@@ -583,5 +590,7 @@ class PlaylistUI(gtk.VBox):
             songs = item.get_songs()
             name = item.get_title()
             MediaDB.create_playlist("local", name, songs)
+        MediaDB.async_save()    
+        self.save_flag = False
             
 playlist_ui = PlaylistUI()            
