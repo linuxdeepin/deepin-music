@@ -98,7 +98,10 @@ class SongView(TreeView):
         if len(self.items) <= 0:
             self.emit("empty-items")
             self.song_notify.hide_notify()
-            
+        try:    
+            self.category_view.save_to_library()
+        except: pass    
+                    
         
     def set_current_source(self):    
         if Player.get_source() != self:

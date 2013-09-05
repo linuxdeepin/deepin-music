@@ -312,12 +312,17 @@ class Song(dict, Logger):
         
     def read_from_file(self):    
         ''' Read song infomation for file. '''
-        if self.get_scheme() == "file" and not self.exists():
-            ret = False
-        if self.get_scheme() == "file" and common.file_is_supported(self.get_path()):
+        # if self.get_scheme() == "file" and not self.exists():
+        #     ret = False
+        # if self.get_scheme() == "file" and common.file_is_supported(self.get_path()):
+        #     ret = self.__read_from_local_file()
+        # else:    
+        #     ret = self.__read_from_remote_file()
+        # return ret    
+        try:
             ret = self.__read_from_local_file()
-        else:    
-            ret = self.__read_from_remote_file()
+        except:    
+            ret = False
         return ret    
     
     def __read_from_local_file(self):
