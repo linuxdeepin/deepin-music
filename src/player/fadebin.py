@@ -1995,6 +1995,9 @@ class StreamBin(gst.Bin, Logger):
             self.state = PAUSED
         elif self.state == SEEKING_EOS:
             self.logdebug("waiting for pad block to complete for %s before unlinking", self.cutted_uri)
+            
+        if self.state == PLAYING:    
+            self.actually_start_stream()
 
     def perform_seek_idle(self):
         self.perform_seek()
