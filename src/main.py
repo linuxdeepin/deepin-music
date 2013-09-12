@@ -175,6 +175,7 @@ class DeepinMusicApp(Logger):
         # dbus_init.
         import dbus, dbus.mainloop.glib
         dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
+        
         dbus.mainloop.glib.threads_init()
         dbus.mainloop.glib.gthreads_init()
         

@@ -54,7 +54,9 @@ class ListManager(gtk.VBox):
             self.switch_source(self.current_source, True)
             restore_status = getattr(self.current_source.list_widget, "restore_status", None)
             if restore_status and callable(restore_status):
-                gobject.idle_add(restore_status)
+                # gobject.idle_add(restore_status)
+                restore_status()
+                
         else:    
             try:
                 gobject.idle_add(local_search_tab.list_widget.restore_status)

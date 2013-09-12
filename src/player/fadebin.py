@@ -376,7 +376,11 @@ class PlayerBin(gobject.GObject, Logger):
         
 
     def xfade_open(self, uri):
-
+        
+        buffer_streams = filter(lambda item: item.is_in_buffer(), self.streams)
+        if len(buffer_streams) > 0:
+            self.dispose_streams()
+        
         try: 
             stream = StreamBin(self, uri)
         except Exception:
@@ -396,6 +400,7 @@ class PlayerBin(gobject.GObject, Logger):
 
     def xfade_close(self, uri=None):
         ret = True
+        uri = None
         if not uri:
             self.stream_list_lock.acquire()
             streams = self.streams[:]
@@ -1688,18 +1693,19 @@ class StreamBin(gst.Bin, Logger):
         msg = gst.message_new_application(self, s)
         self.post_message(msg)
         
+    def is_in_buffer(self):    
+        return self.__queue_probe_id is not None
 
     def __queue_underrun_cb(self, queue):
         self.logdebug("%s: queue underrun", self.cutted_uri)
-
         self.__queue.set_property("min-threshold-bytes", self.__queue_threshold)
+        
         if not self.__queue_probe_id:
             sinkpad = self.__queue.get_pad("sink")
             self.__queue_probe_id = sinkpad.add_buffer_probe(self.__queue_probe_cb)
-
+            
         if not self.__queue_threshold_id:
             self.__queue_threshold_id = self.__queue.connect("running", self.__queue_threshold_cb)
-            
             self.post_buffering_message(0)
 
     def post_buffering_message(self, level):
@@ -1824,6 +1830,11 @@ class StreamBin(gst.Bin, Logger):
             for pstream in to_fade:
                 fade_out_start = 1.0
                 fade_out_time = float(self.crossfade) * gst.SECOND
+                if pstream.is_in_buffer():
+                    pstream.unlink_and_block_stream()
+                    pstream.unlink_and_dispose_stream()
+                    continue
+                
                 if pstream.state in [ FADING_IN ] :
                     fade_out_start = float(pstream.get_volume())
                     fade_out_time = (float(self.crossfade) * fade_out_start) * gst.SECOND
