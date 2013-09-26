@@ -22,6 +22,7 @@
 
 import gtk
 import gobject
+import helper
 
 from helper import Dispatcher
 from widget.tab_box import TabManager
@@ -47,7 +48,8 @@ class ListManager(gtk.VBox):
         Dispatcher.connect("add-source", self.on_dispatcher_add_source)
         Dispatcher.connect("remove-source", self.on_dispatcher_remove_source)
         Dispatcher.connect("switch-source", self.on_dispatcher_switch_source)
-        Dispatcher.connect("ready", self.on_dispatcher_ready)
+        if helper.NEED_RESTORE:
+            Dispatcher.connect("ready", self.on_dispatcher_ready)
         
     def on_dispatcher_ready(self, widget):    
         if self.current_source:

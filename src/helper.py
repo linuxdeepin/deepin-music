@@ -23,6 +23,8 @@
 
 import gobject
 
+NEED_RESTORE = True
+
 class EventDispatcher(gobject.GObject):
     SIGNAL = (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,gobject.TYPE_PYOBJECT))
     SIGNAL_SIMPLE = (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,))

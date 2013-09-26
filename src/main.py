@@ -61,6 +61,9 @@ class DeepinMusicApp(Logger):
             
         self.dbus = dbus_manager.DeepinMusicDBus()    
         
+        import helper
+        helper.NEED_RESTORE = False if self.args else True
+        
         #load the rest.
         self.__init()
         

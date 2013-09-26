@@ -111,10 +111,19 @@ class LrcManager(object):
     def allocation_lrc_file(self, song, lrc_path):    
         if os.path.exists(lrc_path):
             if self.vaild_lrc(lrc_path):
-                save_lrc_path = self.get_lrc_filepath(song)
-                if os.path.exists(save_lrc_path): os.unlink(save_lrc_path)
-                utils.run_command("cp %s %s" % (lrc_path, save_lrc_path))
+                song["location_lrc"] = lrc_path
+                # save_lrc_path = self.get_lrc_filepath(song)
+                # if os.path.exists(save_lrc_path): os.unlink(save_lrc_path)
+                # utils.run_command("cp %s %s" % (lrc_path, save_lrc_path))
                 Dispatcher.reload_lrc(song)
+                
+    def unallocation_lrc_file(self, song):            
+        try:
+            del song["location_lrc"]
+        except KeyError:    
+            pass
+        else:
+            Dispatcher.reload_lrc(song)
         
     def get_lrc_filepath(self, song):    
         save_path = os.path.expanduser(config.get("lyrics", "save_lrc_path"))
@@ -127,6 +136,12 @@ class LrcManager(object):
         
         lrc_path = self.get_lrc_filepath(song)
         
+        
+        # user allocation lrc
+        location_lrc = song.get("location_lrc", "")
+        if location_lrc and os.path.exists(location_lrc):
+            return location_lrc
+        
         # lrc already exist
         if os.path.exists(lrc_path):
             if self.vaild_lrc(lrc_path):
@@ -135,13 +150,19 @@ class LrcManager(object):
                 try:
                     os.unlink(lrc_path)
                 except: pass    
+                
+        # search in current directory and same name file    
+        current_lrc_path = os.path.join(song.get_dir(), song.get_filename() + ".lrc")
+        if os.path.exists(current_lrc_path) and self.vaild_lrc(current_lrc_path):
+            return current_lrc_path
         
         # Search in local directory of the file
         if song.get("uri") != None and song.get_scheme() == "file":
             local_lrc = os.path.join(song.get_dir(), self.get_lrc_search_str(song))
             if os.path.exists(local_lrc):
                 return local_lrc
-                    
+            
+        
         if try_web and is_network_connected():
             if song.get("lyric_url", None):
                 ret = utils.download(song.get("lyric_url"), lrc_path)

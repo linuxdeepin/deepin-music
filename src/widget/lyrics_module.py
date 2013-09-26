@@ -242,12 +242,18 @@ class LyricsModule(object):
                 (None, _("Settings"), lambda : self.open_setting_window(None)),
                 (None, _("Switch to window mode"), lambda : self.switch_to_scroll_lyrics(None))
                 ]
+            
+            if Player.song.get("location_lrc", None):
+                menu_items.insert(4, (None, _("Network get lrc"), self.disassociate_lrc))
             Menu(menu_items, True).show((int(event.x_root), int(event.y_root)))
             
     def allocation_lrc(self):        
         lrc_path = WinFile(False).run()
         if lrc_path:
             self.lrc_manager.allocation_lrc_file(Player.song, lrc_path)
+            
+    def disassociate_lrc(self):        
+        self.lrc_manager.unallocation_lrc_file(Player.song)
             
     def open_lrc_dir(self):        
         save_dir = os.path.expanduser(config.get("lyrics", "save_lrc_path", "~/.lyrics"))
