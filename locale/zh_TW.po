@@ -832,11 +832,11 @@ msgid ""
 "\n"
 "DMusic is free software licensed under GNU GPLv3."
 msgstr ""
-"深度音樂是Linux Deepin團隊為廣大linux用戶量身開發的一款音樂軟件.具有歌詞搜索"
-"下載,桌面歌詞顯示,專輯封面下載,歌曲記憶播放,獨創音樂管理,自定義換膚等幾大特"
-"點.\n"
+"深度音樂是Linux Deepin團隊為廣大Linux用戶量身開發的一款音樂軟體，具有歌詞搜尋"
+"下載、桌面歌詞顯示、專輯封面下載、歌曲記憶播放、獨創音樂管理、自行更換主題等幾大特"
+"點。\n"
 "\n"
-"深度音樂是自由軟體,遵照自由軟體基金會發佈的 GNU 通用公共許可證條款第三版."
+"深度音樂是自由軟體,遵照自由軟體基金會發佈的GNU通用公共許可證條款第三版。"
 
 #: ../src/widget/preference.py:938 ../src/widget/instance.py:371
 #: ../src/widget/tray.py:82
