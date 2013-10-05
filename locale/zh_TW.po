@@ -894,7 +894,7 @@ msgstr "播放次序"
 
 #: ../src/widget/instance.py:370
 msgid "View New Features"
-msgstr "檢視新特性"
+msgstr "檢視新特點"
 
 #: ../src/widget/instance.py:377 ../src/widget/tray.py:72
 msgid "Search Lyrics"
