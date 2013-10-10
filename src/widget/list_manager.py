@@ -90,3 +90,6 @@ class ListManager(gtk.VBox):
     def switch_source(self, data, switched=False):    
         self.tab_box.active_item(data)
         Dispatcher.emit("switch-browser", data, switched)
+        
+    def switch_to_local(self):    
+        self.switch_source(local_search_tab, True)

@@ -219,6 +219,7 @@ class DeepinMusicDBus(dbus.service.Object, Logger):
         """
         app_instance = utils.get_main_window()
         current_view = app_instance.playlist_ui.get_selected_song_view()
+        app_instance.list_manager.switch_to_local()
         if current_view:
             current_view.add_file(filename, True)
             
@@ -226,6 +227,7 @@ class DeepinMusicDBus(dbus.service.Object, Logger):
     def Enqueue(self, locations):        
         app_instance = utils.get_main_window()
         current_view = app_instance.playlist_ui.get_selected_song_view()
+        app_instance.list_manager.switch_to_local()        
         if current_view:
             uris = utils.convert_args_to_uris(locations)                
             current_view.play_uris(uris)
