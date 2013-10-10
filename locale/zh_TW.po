@@ -1,5 +1,5 @@
 # Chinese(HK) translations for PACKAGE package
-# Deepin Music Player 軟體包的繁體中文(TW)翻譯.
+# Deepin Music Player 套件的繁體中文(TW)翻譯.
 # Copyright (C) 2012 THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # Wangdianjin, <wangdianjin@linuxdeepin.com>, 2012
@@ -23,42 +23,42 @@ msgid ""
 "Vorbis is an open source, lossy audio codec with high quality output at a "
 "lower file size than MP3."
 msgstr ""
-"Vorbis 是一种开源的有损音频编解码器，与 MP3 格式相比，可以用更小的文件获得更"
-"佳的输出效果。"
+"Vorbis 是一種開源的有損音訊的编解碼器，與 MP3 格式相比，可以用更小的文件取得更"
+"佳的輸出效果。"
 
 #: ../src/transcoder.py:66
 msgid ""
 "Free Lossless Audio Codec (FLAC) is an open source codec that compresses but "
 "does not degrade audio quality."
 msgstr ""
-"自由无损音频编解码器(FLAC)是一种开源的编解码器，可以压缩音频而不降低音频质"
-"量。"
+"自由無損音訊编解碼器(FLAC)是一種開源的編解碼器，可以壓縮音訊而不降低音訊品"
+"質。"
 
 #: ../src/transcoder.py:80
 msgid ""
 "Apple's proprietary lossy audio format that achieves better sound quality "
 "than MP3 at lower bitrates."
-msgstr "苹果公司开发的专有有损音频格式，可以用较低的码率达到更佳的音质"
+msgstr "蘋果公司開發的專有有損音訊格式，可以用較低的位元率達到更佳的音質质"
 
 #: ../src/transcoder.py:93
 msgid ""
 "A proprietary and older, but also popular, lossy audio format. VBR gives "
 "higher quality than CBR, but may be incompatible with some players."
 msgstr ""
-"一种专有音频格式，虽然较老但仍很流行。VBR比CBR音质更佳，但可能与某些播放器不"
-"兼容。"
+"一種專有的音訊格式，雖然較老但仍很流行。VBR比CBR音質更佳，但可能與某些播放器不"
+"相容。"
 
 #: ../src/transcoder.py:106
 msgid ""
 "A proprietary and older, but also popular, lossy audio format. CBR gives "
 "less quality than VBR, but is compatible with any player."
 msgstr ""
-"一种专有音频格式，虽然较老便仍很流行。CBR的输出效果不及VBR，但兼容于所有播放"
+"一種專有的音訊格式，雖然較老但仍很流行。CBR的輸出效果不及VBR，但相容於所有播放"
 "器。"
 
 #: ../src/transcoder.py:118
 msgid "A very fast Free lossless audio format with good compression."
-msgstr "一种解码快速的自由无损音频格式，压缩比率较高。"
+msgstr "一種解碼快速的自由無損音訊格式，壓縮比较高。"
 
 #: ../src/library.py:990 ../src/library.py:991 ../src/library.py:992
 #: ../src/library.py:999 ../src/library.py:1000 ../src/library.py:1001
@@ -176,7 +176,7 @@ msgstr "變更偵錯級別 (0-9)"
 
 #: ../src/main.py:166
 msgid "Show information about supported audio file"
-msgstr "顯示所支持音頻檔的資訊"
+msgstr "顯示所支持音訊檔的資訊"
 
 #: ../src/main.py:172 ../src/widget/global_keys.py:95
 #: ../src/widget/information.py:40 ../src/widget/information.py:82
@@ -189,7 +189,7 @@ msgstr "深度音樂"
 
 #: ../src/plugins.py:91
 msgid "Add-on archive is not in the correct format."
-msgstr "附加元件的歸檔文件格式錯誤。"
+msgstr "附加元件的壓縮檔文件格式錯誤。"
 
 #: ../src/plugins.py:98
 #, python-format
@@ -198,7 +198,7 @@ msgstr "附加元件“%s”已經安裝。"
 
 #: ../src/plugins.py:103
 msgid "Add-on archive contains an unsafe path."
-msgstr "附加元件的歸檔文檔包含了一個不安全的路徑。"
+msgstr "附加元件的壓縮檔文檔包含了一個不安全的路徑。"
 
 #: ../src/source/local.py:43
 msgid "Reading directories..."
@@ -302,7 +302,7 @@ msgstr "曲風"
 
 #: ../src/widget/song_editor.py:214
 msgid "Save"
-msgstr "保存"
+msgstr "儲存"
 
 #: ../src/widget/song_editor.py:296 ../src/widget/converter.py:475
 #: ../src/widget/preference.py:252
@@ -311,7 +311,7 @@ msgstr "變更"
 
 #: ../src/widget/song_editor.py:299
 msgid "Retrieve from the Internet"
-msgstr "網絡獲取"
+msgstr "網路取得"
 
 #: ../src/widget/song_editor.py:302 ../src/widget/equalizer.py:252
 #: ../src/widget/preference.py:375
@@ -436,12 +436,12 @@ msgstr "等化器"
 
 #: ../src/widget/equalizer.py:254
 msgid "Predefined"
-msgstr "預定義"
+msgstr "預設值"
 
 #: ../src/widget/global_keys.py:96
 #, python-format
 msgid "Failed to bind %s !"
-msgstr "綁定捷徑鍵「%s」失敗!"
+msgstr "連結捷徑鍵「%s」失敗!"
 
 #: ../src/widget/local_item.py:59
 msgid "All Tracks"
@@ -499,7 +499,7 @@ msgstr "網路廣播"
 #: ../src/widget/global_search.py:48 ../src/widget/song_view.py:817
 #: ../src/widget/local_tab.py:28
 msgid "Library"
-msgstr "本地端音樂"
+msgstr "本機音樂"
 
 #: ../src/widget/lyrics.py:734
 msgid "Lyrics window"
@@ -507,15 +507,15 @@ msgstr "視窗歌詞"
 
 #: ../src/widget/ui.py:203
 msgid "Need some music? Find it here..."
-msgstr "找音樂，在這裏..."
+msgstr "找音樂，在這裡..."
 
 #: ../src/widget/ui.py:401
 msgid "Add Music"
-msgstr "加入本地端音樂"
+msgstr "加入本機音樂"
 
 #: ../src/widget/ui.py:1118
 msgid "Your search {keyword} did not match any items in {from}"
-msgstr "在{from}中未發現與{keyword}關聯的內容"
+msgstr "在{from}中未發現與{keyword}相關的內容"
 
 #: ../src/widget/ui.py:1119
 msgid "Suggestions"
@@ -679,7 +679,7 @@ msgstr " 毫秒"
 
 #: ../src/widget/preference.py:241
 msgid "Lyrics directory"
-msgstr "歌詞保存目錄"
+msgstr "歌詞儲存目錄"
 
 #: ../src/widget/preference.py:346 ../src/widget/preference.py:997
 msgid "Hotkeys"
@@ -750,11 +750,11 @@ msgstr "色彩配置"
 
 #: ../src/widget/preference.py:650 ../src/widget/preference.py:807
 msgid "Regular"
-msgstr "常規"
+msgstr "標準"
 
 #: ../src/widget/preference.py:651 ../src/widget/preference.py:808
 msgid "Italic"
-msgstr "傾斜"
+msgstr "斜體"
 
 #: ../src/widget/preference.py:652 ../src/widget/preference.py:809
 msgid "Bold"
@@ -762,7 +762,7 @@ msgstr "粗體"
 
 #: ../src/widget/preference.py:653 ../src/widget/preference.py:810
 msgid "Bold Italic"
-msgstr "粗體 傾斜"
+msgstr "粗體 斜體"
 
 #: ../src/widget/preference.py:663 ../src/widget/preference.py:818
 msgid "Style"
@@ -832,11 +832,11 @@ msgid ""
 "\n"
 "DMusic is free software licensed under GNU GPLv3."
 msgstr ""
-"深度音樂是Linux Deepin團隊為廣大linux用戶量身開發的一款音樂軟件.具有歌詞搜索"
-"下載,桌面歌詞顯示,專輯封面下載,歌曲記憶播放,獨創音樂管理,自定義換膚等幾大特"
-"點.\n"
+"深度音樂是Linux Deepin團隊為廣大Linux用戶量身開發的一款音樂軟體，具有歌詞搜尋"
+"下載、桌面歌詞顯示、專輯封面下載、歌曲記憶播放、獨創音樂管理、自行更換主題等幾大特"
+"點。\n"
 "\n"
-"深度音樂是自由軟體,遵照自由軟體基金會發佈的 GNU 通用公共許可證條款第三版."
+"深度音樂是自由軟體,遵照自由軟體基金會發佈的GNU通用公共許可證條款第三版。"
 
 #: ../src/widget/preference.py:938 ../src/widget/instance.py:371
 #: ../src/widget/tray.py:82
@@ -894,7 +894,7 @@ msgstr "播放次序"
 
 #: ../src/widget/instance.py:370
 msgid "View New Features"
-msgstr "檢視新特性"
+msgstr "檢視新特點"
 
 #: ../src/widget/instance.py:377 ../src/widget/tray.py:72
 msgid "Search Lyrics"
@@ -1037,7 +1037,7 @@ msgstr "變更封面"
 
 #: ../src/widget/playlist.py:94
 msgid "Search in Current Playlist"
-msgstr "從當前播放清單檢索歌曲"
+msgstr "從目前播放清單尋找歌曲"
 
 #: ../src/widget/playlist.py:96
 msgid "Playlist Operations"
@@ -1072,7 +1072,7 @@ msgstr "刪除清單"
 #: ../src/widget/playlist.py:310 ../src/widget/playlist.py:479
 #: ../src/widget/playlist.py:487
 msgid "Save all Lists"
-msgstr "保存全部清單"
+msgstr "儲存全部清單"
 
 #: ../src/widget/playlist.py:483 ../src/widget/playlist.py:493
 msgid "Rename"
@@ -1198,11 +1198,11 @@ msgstr "調整歌詞"
 
 #: ../src/widget/lyrics_module.py:239
 msgid "Choose local lrc"
-msgstr "選擇本地端歌詞"
+msgstr "選擇本機歌詞"
 
 #: ../src/widget/lyrics_module.py:247
 msgid "Network get lrc"
-msgstr "網絡穫取歌詞"
+msgstr "網絡取得歌詞"
 
 #: ../src/widget/lyrics_module.py:793 ../src/widget/lyrics_module.py:794
 msgid "No lyrics found!"
