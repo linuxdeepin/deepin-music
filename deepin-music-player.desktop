@@ -1,8 +1,10 @@
 [Desktop Entry]
 Name=Deepin Music
 Name[zh_CN]=深度音乐
+Name[zh_TW]=深度音樂
 Comment=Play your music collection
 Comment[zh_CN]=为您播放本地及网络音频流
+Comment[zh_TW]=爲您播放本地及網絡音頻流
 GenericName=Music Player
 Exec=deepin-music-player %F
 Icon=deepin-music-player
@@ -13,14 +15,17 @@ MimeType=audio/musepack;application/musepack;application/x-ape;audio/ape;audio/x
 [Previous Shortcut Group]
 Name=Previous track
 Name[zh_CN]=上一首
+Name[zh_TW]=上一首
 Exec=deepin-music-player -p
 
 [Next Shortcut Group]
 Name=Next track
 Name[zh_CN]=下一首
+Name[zh_TW]=下一首
 Exec=deepin-music-player -n
 
 [PlayPause Shortcut Group]
 Name=Play/Pause track
 Name[zh_CN]=暂停/继续
+Name[zh_TW]=暫停/繼續
 Exec=deepin-music-player -t
