@@ -37,7 +37,6 @@ from config import config
 from helper import Dispatcher
 from nls import _
 from widget.ui_utils import set_widget_vcenter
-from widget.progressbar import ProgressBar
 
 class SimpleHeadbar(gtk.EventBox):            
     def __init__(self):

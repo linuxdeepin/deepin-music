@@ -43,7 +43,7 @@ class SongTimer(gtk.HBox):
             
         self.bar = ProgressBar()
         bar_align = gtk.Alignment()
-        bar_align.set_padding(0, 0, 2, 2)
+        bar_align.set_padding(0, 0, 1, 1)
         bar_align.set(1, 1, 1, 1)
         bar_align.add(self.bar)
         self.bar.connect("button-press-event", self.on_bar_press)
