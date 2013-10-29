@@ -115,7 +115,7 @@ class BrowserMananger(gtk.VBox):
     def on_expose_event(self, widget, event):    
         cr = widget.window.cairo_create()
         rect = widget.allocation
-        draw_alpha_mask(cr, rect.x, rect.y, rect.width - 2, rect.height ,"layoutRight")
+        draw_alpha_mask(cr, rect.x, rect.y, rect.width - 1, rect.height ,"layoutRight")
         
         draw_line(cr, (rect.x + 1, rect.y), 
                   (rect.x + 1, rect.y + rect.height), "#b0b0b0")
