@@ -59,7 +59,7 @@ class BrowserMananger(gtk.VBox):
         self.last_browser = local_browser
         self.bottom_box.add(local_browser)
         self.bottom_box_align = gtk.Alignment()
-        self.bottom_box_align.set_padding(0, 0, 1, 2)
+        self.bottom_box_align.set_padding(0, 0, 1, 1)
         self.bottom_box_align.set(1, 1, 1, 1)
         self.bottom_box_align.add(self.bottom_box)
         

@@ -989,7 +989,11 @@ class SearchBox(gtk.HBox):
         self.search_button.connect("button-press-event", self.on_search_button_press_event)
         
         self.pack_start(self.entry_box, False, True)
-        self.pack_start(self.search_button, False, False)
+        search_button_align = gtk.Alignment()
+        search_button_align.set_padding(0, 0, 0, 1)
+        search_button_align.set(1, 1, 1, 1)
+        search_button_align.add(self.search_button)
+        self.pack_start(search_button_align, False, False)
         self.entry = self.entry_box.entry
         
         self.connect("realize", self.on_realize, 74)
