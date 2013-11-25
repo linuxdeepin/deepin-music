@@ -180,7 +180,7 @@ class Mpris2Adapter(dbus.service.Object, Logger):
 
     ## Introspectable methods
     @dbus.service.method("org.freedesktop.DBus.Introspectable")
-    def Introspect(self):
+    def Introspectable(self):
         return MPRIS2_INTROSPECTION
 
     ## Properties methods
