@@ -62,18 +62,6 @@ MPRIS2_INTROSPECTION = \
             <arg name="invalidated_properties" type="as"/>
         </signal>
     </interface>
-    <interface name="org.mpris.MediaPlayer2">
-        <method name="Raise"/>
-        <method name="Quit"/>
-        <annotation name="org.freedesktop.DBus.Property.EmitsChangedSignal" value="false"/>
-        <property name="CanQuit" type="b" access="read"/>
-        <property name="CanRaise" type="b" access="read"/>
-        <property name="HasTrackList" type="b" access="read"/>
-        <property name="Identity" type="s" access="read"/>
-        <property name="DesktopEntry" type="s" access="read"/>
-        <property name="SupportedUriSchemes" type="as" access="read"/>
-        <property name="SupportedMimeTypes" type="as" access="read"/>
-    </interface>
     <interface name="org.mpris.MediaPlayer2.Player">
         <method name="Next"/>
         <method name="Previous"/>
@@ -140,6 +128,18 @@ MPRIS2_INTROSPECTION = \
             <annotation name="org.freedesktop.DBus.Property.EmitsChangedSignal" value="false"/>
         </property>
     </interface>
+    <interface name="org.mpris.MediaPlayer2">
+        <method name="Raise"/>
+        <method name="Quit"/>
+        <annotation name="org.freedesktop.DBus.Property.EmitsChangedSignal" value="false"/>
+        <property name="CanQuit" type="b" access="read"/>
+        <property name="CanRaise" type="b" access="read"/>
+        <property name="HasTrackList" type="b" access="read"/>
+        <property name="Identity" type="s" access="read"/>
+        <property name="DesktopEntry" type="s" access="read"/>
+        <property name="SupportedUriSchemes" type="as" access="read"/>
+        <property name="SupportedMimeTypes" type="as" access="read"/>
+    </interface>
 </node>"""
 
 class Mpris2Adapter(dbus.service.Object, Logger):
@@ -178,9 +178,9 @@ class Mpris2Adapter(dbus.service.Object, Logger):
         self.dmusic = dmusic
         self.cover_cache = {}
 
-    ## Introspectable methods
+    # Introspectable methods
     @dbus.service.method("org.freedesktop.DBus.Introspectable")
-    def Introspectable(self):
+    def Introspect(self):
         return MPRIS2_INTROSPECTION
 
     ## Properties methods
