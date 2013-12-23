@@ -1,38 +1,33 @@
-# Chinese(HK) translations for PACKAGE package
-# Deepin Music Player 套件的繁體中文(TW)翻譯.
-# Copyright (C) 2012 THE PACKAGE'S COPYRIGHT HOLDER
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# Wangdianjin, <wangdianjin@linuxdeepin.com>, 2012
-# Freddy, <freddy4212@gmail.com>, 2013
-#
+# 
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: DMusic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-09-26 11:30+0800\n"
-"PO-Revision-Date: 2012-12-29 11:34+0800\n"
-"Last-Translator: SmallEvilBeast <houshao55@gmail.com>\n"
-"Language-Team: none\n"
-"Language: zh_CN\n"
+"PO-Revision-Date: 2013-12-19 01:23+0000\n"
+"Last-Translator: lihongwu <lihongwu1987@gmail.com>\n"
+"Language-Team: Chinese (Taiwan) (http://www.transifex.com/projects/p/dmusic/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #: ../src/transcoder.py:54
 msgid ""
 "Vorbis is an open source, lossy audio codec with high quality output at a "
 "lower file size than MP3."
-msgstr ""
-"Vorbis 是一種開源的有損音訊的编解碼器，與 MP3 格式相比，可以用更小的文件取得更"
-"佳的輸出效果。"
+msgstr "Vorbis 是一種開源的有損音訊的编解碼器，與 MP3 格式相比，可以用更小的文件取得更佳的輸出效果。"
 
 #: ../src/transcoder.py:66
 msgid ""
-"Free Lossless Audio Codec (FLAC) is an open source codec that compresses but "
-"does not degrade audio quality."
-msgstr ""
-"自由無損音訊编解碼器(FLAC)是一種開源的編解碼器，可以壓縮音訊而不降低音訊品"
-"質。"
+"Free Lossless Audio Codec (FLAC) is an open source codec that compresses but"
+" does not degrade audio quality."
+msgstr "自由無損音訊编解碼器(FLAC)是一種開源的編解碼器，可以壓縮音訊而不降低音訊品質。"
 
 #: ../src/transcoder.py:80
 msgid ""
@@ -44,17 +39,13 @@ msgstr "蘋果公司開發的專有有損音訊格式，可以用較低的位元
 msgid ""
 "A proprietary and older, but also popular, lossy audio format. VBR gives "
 "higher quality than CBR, but may be incompatible with some players."
-msgstr ""
-"一種專有的音訊格式，雖然較老但仍很流行。VBR比CBR音質更佳，但可能與某些播放器不"
-"相容。"
+msgstr "一種專有的音訊格式，雖然較老但仍很流行。VBR比CBR音質更佳，但可能與某些播放器不相容。"
 
 #: ../src/transcoder.py:106
 msgid ""
 "A proprietary and older, but also popular, lossy audio format. CBR gives "
 "less quality than VBR, but is compatible with any player."
-msgstr ""
-"一種專有的音訊格式，雖然較老但仍很流行。CBR的輸出效果不及VBR，但相容於所有播放"
-"器。"
+msgstr "一種專有的音訊格式，雖然較老但仍很流行。CBR的輸出效果不及VBR，但相容於所有播放器。"
 
 #: ../src/transcoder.py:118
 msgid "A very fast Free lossless audio format with good compression."
@@ -826,17 +817,10 @@ msgstr "版本"
 
 #: ../src/widget/preference.py:920
 msgid ""
-"        DMusic is a music application designed for Linux users.It features "
-"lyrics searching and downloading, desktop lyrics display,album cover "
-"downloading, resume playing, music management and skin selection.\n"
+"        DMusic is a music application designed for Linux users.It features lyrics searching and downloading, desktop lyrics display,album cover downloading, resume playing, music management and skin selection.\n"
 "\n"
 "DMusic is free software licensed under GNU GPLv3."
-msgstr ""
-"深度音樂是Linux Deepin團隊為廣大Linux用戶量身開發的一款音樂軟體，具有歌詞搜尋"
-"下載、桌面歌詞顯示、專輯封面下載、歌曲記憶播放、獨創音樂管理、自行更換主題等幾大特"
-"點。\n"
-"\n"
-"深度音樂是自由軟體,遵照自由軟體基金會發佈的GNU通用公共許可證條款第三版。"
+msgstr "深度音樂是Linux Deepin團隊為廣大Linux用戶量身開發的一款音樂軟體，具有歌詞搜尋下載、桌面歌詞顯示、專輯封面下載、歌曲記憶播放、獨創音樂管理、自行更換主題等幾大特點。\n\n深度音樂是自由軟體,遵照自由軟體基金會發佈的GNU通用公共許可證條款第三版。"
 
 #: ../src/widget/preference.py:938 ../src/widget/instance.py:371
 #: ../src/widget/tray.py:82
