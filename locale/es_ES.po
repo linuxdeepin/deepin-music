@@ -3,15 +3,13 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# gamjachib <drios9420@gmail.com>, 2013
-# kazzike <jeancarlosrivas@gmail.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: DMusic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-09-26 11:30+0800\n"
-"PO-Revision-Date: 2013-12-10 14:36+0000\n"
-"Last-Translator: gamjachib <drios9420@gmail.com>\n"
+"PO-Revision-Date: 2013-12-19 01:23+0000\n"
+"Last-Translator: lihongwu <lihongwu1987@gmail.com>\n"
 "Language-Team: Spanish (http://www.transifex.com/projects/p/dmusic/language/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -244,391 +242,391 @@ msgstr "Tipo"
 
 #: ../src/widget/song_editor.py:96 ../src/widget/converter.py:433
 msgid "Format"
-msgstr "Formato"
+msgstr ""
 
 #: ../src/widget/song_editor.py:97 ../src/widget/preference.py:686
 #: ../src/widget/preference.py:839 ../src/widget/song_notify.py:193
 msgid "Size"
-msgstr "Tamaño"
+msgstr ""
 
 #: ../src/widget/song_editor.py:97 ../src/widget/song_notify.py:210
 msgid "Duration"
-msgstr "Duración"
+msgstr ""
 
 #: ../src/widget/song_editor.py:98
 msgid "Bitrate"
-msgstr "tasa de bits"
+msgstr ""
 
 #: ../src/widget/song_editor.py:98
 msgid "Rate"
-msgstr "Tasa"
+msgstr ""
 
 #: ../src/widget/song_editor.py:99
 msgid "Added"
-msgstr "Añadid@"
+msgstr ""
 
 #: ../src/widget/song_editor.py:99
 msgid "Recently"
-msgstr "Recientemente"
+msgstr ""
 
 #: ../src/widget/song_editor.py:100 ../src/widget/song_notify.py:209
 msgid "Playcount"
-msgstr "Contador de reproducción"
+msgstr ""
 
 #: ../src/widget/song_editor.py:100 ../src/widget/song_editor.py:206
 msgid "Date"
-msgstr "Fecha"
+msgstr ""
 
 #: ../src/widget/song_editor.py:147
 msgid "Location"
-msgstr "Ubicación"
+msgstr ""
 
 #: ../src/widget/song_editor.py:150 ../src/widget/converter.py:367
 #: ../src/widget/playlist.py:560 ../src/widget/lyrics_module.py:240
 msgid "Open directory"
-msgstr "Abrir Directorio"
+msgstr ""
 
 #: ../src/widget/song_editor.py:205 ../src/widget/local_browser.py:89
 #: ../src/widget/webcasts_browser.py:99
 msgid "Genre"
-msgstr "Género"
+msgstr ""
 
 #: ../src/widget/song_editor.py:214
 msgid "Save"
-msgstr "Guardar"
+msgstr ""
 
 #: ../src/widget/song_editor.py:296 ../src/widget/converter.py:475
 #: ../src/widget/preference.py:252
 msgid "Change"
-msgstr "Cambiar"
+msgstr ""
 
 #: ../src/widget/song_editor.py:299
 msgid "Retrieve from the Internet"
-msgstr "Recuperar desde Internet"
+msgstr ""
 
 #: ../src/widget/song_editor.py:302 ../src/widget/equalizer.py:252
 #: ../src/widget/preference.py:375
 msgid "Reset"
-msgstr "Reiniciar"
+msgstr ""
 
 #: ../src/widget/song_editor.py:321 ../src/widget/local_browser.py:343
 msgid "Select image"
-msgstr "Seleccionar Imagen"
+msgstr ""
 
 #: ../src/widget/song_editor.py:335 ../src/widget/song_view.py:793
 #: ../src/widget/playlist.py:561
 msgid "Properties"
-msgstr "Propiedades"
+msgstr ""
 
 #: ../src/widget/song_editor.py:338 ../src/widget/equalizer.py:250
 #: ../src/widget/ui.py:1248 ../src/widget/converter.py:394
 #: ../src/widget/converter.py:449 ../src/widget/preference.py:945
 #: ../src/widget/lyrics_search.py:89
 msgid "Close"
-msgstr "Cerrar"
+msgstr ""
 
 #: ../src/widget/song_editor.py:341 ../src/widget/headerbar.py:72
 #: ../src/widget/preference.py:369 ../src/widget/instance.py:329
 #: ../src/widget/tray.py:63
 msgid "Previous"
-msgstr "Anterior"
+msgstr ""
 
 #: ../src/widget/song_editor.py:343 ../src/widget/headerbar.py:73
 #: ../src/widget/preference.py:370 ../src/widget/instance.py:330
 #: ../src/widget/tray.py:64
 msgid "Next"
-msgstr "Siguiente"
+msgstr ""
 
 #: ../src/widget/song_editor.py:367
 msgid "Track Infomation"
-msgstr "Información de la Pista"
+msgstr ""
 
 #: ../src/widget/song_editor.py:368
 msgid "Edit tags"
-msgstr "Editar Etiquetas"
+msgstr ""
 
 #: ../src/widget/song_editor.py:369
 msgid "Edit cover"
-msgstr "Editar Portada"
+msgstr ""
 
 #: ../src/widget/equalizer.py:176
 msgid "Custom"
-msgstr "Personalizar"
+msgstr ""
 
 #: ../src/widget/equalizer.py:177
 msgid "Default"
-msgstr "Por Defecto"
+msgstr ""
 
 #: ../src/widget/equalizer.py:178 ../plugins/musicfm/radio_genre_page.py:43
 msgid "Classical"
-msgstr "Clásico"
+msgstr ""
 
 #: ../src/widget/equalizer.py:179
 msgid "Club"
-msgstr "Club"
+msgstr ""
 
 #: ../src/widget/equalizer.py:180
 msgid "Dance"
-msgstr "Dance"
+msgstr ""
 
 #: ../src/widget/equalizer.py:181
 msgid "Full Bass"
-msgstr "Full Bajos"
+msgstr ""
 
 #: ../src/widget/equalizer.py:182
 msgid "Full Bass and Treble"
-msgstr "Full Bajos y Agudos"
+msgstr ""
 
 #: ../src/widget/equalizer.py:183
 msgid "Full Treble"
-msgstr "Full Agudos"
+msgstr ""
 
 #: ../src/widget/equalizer.py:184
 msgid "Headphones"
-msgstr "Audífonos"
+msgstr ""
 
 #: ../src/widget/equalizer.py:185
 msgid "Large Hall"
-msgstr "Salón"
+msgstr ""
 
 #: ../src/widget/equalizer.py:186
 msgid "Live"
-msgstr "En Vivo"
+msgstr ""
 
 #: ../src/widget/equalizer.py:187
 msgid "Party"
-msgstr "Fiesta"
+msgstr ""
 
 #: ../src/widget/equalizer.py:188 ../plugins/musicfm/radio_genre_page.py:46
 msgid "Pop"
-msgstr "Pop"
+msgstr ""
 
 #: ../src/widget/equalizer.py:190 ../plugins/musicfm/radio_genre_page.py:42
 msgid "Rock"
-msgstr "Rock"
+msgstr ""
 
 #: ../src/widget/equalizer.py:191
 msgid "Ska"
-msgstr "Ska"
+msgstr ""
 
 #: ../src/widget/equalizer.py:192
 msgid "Soft"
-msgstr "Suave"
+msgstr ""
 
 #: ../src/widget/equalizer.py:193
 msgid "Soft Rock"
-msgstr "Rock Suave"
+msgstr ""
 
 #: ../src/widget/equalizer.py:194
 msgid "Techno"
-msgstr "Techno"
+msgstr ""
 
 #: ../src/widget/equalizer.py:199 ../src/widget/instance.py:362
 msgid "Equalizer"
-msgstr "Equalizador"
+msgstr ""
 
 #: ../src/widget/equalizer.py:254
 msgid "Predefined"
-msgstr "Predefinido"
+msgstr ""
 
 #: ../src/widget/global_keys.py:96
 #, python-format
 msgid "Failed to bind %s !"
-msgstr "Fallo al vincular %s! "
+msgstr ""
 
 #: ../src/widget/local_item.py:59
 msgid "All Tracks"
-msgstr "Todas las pistas"
+msgstr ""
 
 #: ../src/widget/local_item.py:67
 msgid "Track(s)"
-msgstr "Pista(s)"
+msgstr ""
 
 #: ../src/widget/information.py:75
 msgid "Connecting"
-msgstr "Conectando"
+msgstr ""
 
 #: ../src/widget/information.py:105
 msgid "buffering"
-msgstr "Almacenando en Búffer "
+msgstr ""
 
 #: ../src/widget/webcast_view.py:114 ../src/widget/webcast_view.py:120
 #: ../src/widget/playlist.py:103 ../plugins/musicfm/radio_view.py:134
 #: ../plugins/musicfm/radio_view.py:140
 msgid "Delete"
-msgstr "Eliminar"
+msgstr ""
 
 #: ../src/widget/webcast_view.py:115 ../src/widget/webcast_view.py:123
 #: ../src/widget/playlist.py:555 ../plugins/musicfm/radio_view.py:135
 #: ../plugins/musicfm/radio_view.py:141
 msgid "Clear List"
-msgstr "Limpiar Lista"
+msgstr ""
 
 #: ../src/widget/webcast_view.py:119 ../src/widget/webcast_view.py:338
 #: ../src/widget/instance.py:320 ../src/widget/song_view.py:785
 #: ../src/widget/playlist.py:549 ../src/widget/tray.py:58
 #: ../plugins/musicfm/radio_view.py:139
 msgid "Play"
-msgstr "Reproducir"
+msgstr ""
 
 #: ../src/widget/webcast_view.py:219 ../src/widget/webcast_view.py:368
 msgid "Remove from Favorites"
-msgstr "Remover de los favoritos"
+msgstr ""
 
 #: ../src/widget/webcast_view.py:221 ../src/widget/webcast_view.py:370
 msgid "Add to Favorites"
-msgstr "Añadir a favoritos"
+msgstr ""
 
 #: ../src/widget/webcast_view.py:333 ../src/widget/webcast_view.py:339
 #: ../src/widget/song_view.py:786
 msgid "Add to Playlist"
-msgstr "Añadir a la Lista de Reproducción"
+msgstr ""
 
 #: ../src/widget/webcast_view.py:450 ../plugins/webcast/__init__.py:34
 #: ../plugins/webcast/__init__.py:36
 msgid "Radio"
-msgstr "Radio"
+msgstr ""
 
 #: ../src/widget/global_search.py:48 ../src/widget/song_view.py:817
 #: ../src/widget/local_tab.py:28
 msgid "Library"
-msgstr "Libreria"
+msgstr ""
 
 #: ../src/widget/lyrics.py:734
 msgid "Lyrics window"
-msgstr "Ventana de Letras"
+msgstr ""
 
 #: ../src/widget/ui.py:203
 msgid "Need some music? Find it here..."
-msgstr "¿Necesitas alguna música? Encuentrala aquí..."
+msgstr ""
 
 #: ../src/widget/ui.py:401
 msgid "Add Music"
-msgstr "Añadir música"
+msgstr ""
 
 #: ../src/widget/ui.py:1118
 msgid "Your search {keyword} did not match any items in {from}"
-msgstr "Tu búsqueda {keyword} no coincide con ningún artículo en {from} "
+msgstr ""
 
 #: ../src/widget/ui.py:1119
 msgid "Suggestions"
-msgstr "Sugerencias"
+msgstr ""
 
 #: ../src/widget/ui.py:1120
 msgid "Make sure all words are spelled correctly."
-msgstr "Asegúrate que todas las palabras están escritas correctamente."
+msgstr ""
 
 #: ../src/widget/ui.py:1121
 msgid ""
 "Try more general keywords, such as a title, an artist or the name of an "
 "album."
-msgstr "Intente con palabras más generales, como un título, un artista o el nombre de un álbum."
+msgstr ""
 
 #: ../src/widget/ui.py:1218 ../src/widget/plugins_view.py:166
 msgid "Add-on"
-msgstr "Complemento"
+msgstr ""
 
 #: ../src/widget/ui.py:1226
 msgid "Author(s)"
-msgstr "Autor(es)"
+msgstr ""
 
 #: ../src/widget/ui.py:1256 ../src/widget/preference.py:195
 msgid "Minimize to tray"
-msgstr "Minimizar a la bandeja"
+msgstr ""
 
 #: ../src/widget/ui.py:1258 ../src/widget/preference.py:196
 #: ../src/widget/instance.py:373 ../src/widget/tray.py:83
 msgid "Quit"
-msgstr "Salir"
+msgstr ""
 
 #: ../src/widget/ui.py:1262
 msgid "Don't prompt again"
-msgstr "No Pregutar de Nuevo"
+msgstr ""
 
 #: ../src/widget/ui.py:1269
 msgid "OK"
-msgstr "Bien!"
+msgstr ""
 
 #: ../src/widget/ui.py:1272
 msgid "Cancel"
-msgstr "Cancelar"
+msgstr ""
 
 #: ../src/widget/headerbar.py:64 ../src/widget/preference.py:368
 msgid "Play/Pause"
-msgstr "Reproducir/Pausar"
+msgstr ""
 
 #: ../src/widget/headerbar.py:78
 msgid "Show/Hide Lyrics"
-msgstr "Mostrar/Esconder Letras"
+msgstr ""
 
 #: ../src/widget/converter.py:309 ../src/widget/song_view.py:437
 #: ../src/widget/song_view.py:780 ../src/widget/local_browser.py:339
 msgid "Prompt"
-msgstr "Avisar"
+msgstr ""
 
 #: ../src/widget/converter.py:309
 msgid "Target file already exitsts, do you want to overwrite it?"
-msgstr "El archivo ya existe en el destino seleccionado, ¿Desea sobreescribirlo?"
+msgstr ""
 
 #: ../src/widget/converter.py:369
 msgid "Delete task"
-msgstr "Borrar Tareas"
+msgstr ""
 
 #: ../src/widget/converter.py:370
 msgid "Clear finished tasks"
-msgstr "Limpiar Tareas Completadas"
+msgstr ""
 
 #: ../src/widget/converter.py:376 ../src/widget/instance.py:341
 msgid "Task Manager"
-msgstr "Administrador de Archivos"
+msgstr ""
 
 #: ../src/widget/converter.py:392 ../src/widget/converter.py:412
 #: ../src/widget/converter.py:415 ../src/widget/instance.py:323
 #: ../src/widget/tray.py:61
 msgid "Pause"
-msgstr "Pausar"
+msgstr ""
 
 #: ../src/widget/converter.py:413
 msgid "Continue"
-msgstr "Continuar"
+msgstr ""
 
 #: ../src/widget/converter.py:427 ../src/widget/instance.py:340
 #: ../src/widget/instance.py:363 ../src/widget/song_view.py:792
 #: ../src/widget/playlist.py:559
 msgid "Convert"
-msgstr "Convertir"
+msgstr ""
 
 #: ../src/widget/converter.py:436
 msgid "Quality"
-msgstr "Calidad"
+msgstr ""
 
 #: ../src/widget/converter.py:444
 msgid "Target file already exists"
-msgstr "El archivo ya existe en el destino."
+msgstr ""
 
 #: ../src/widget/converter.py:445
 msgid "Ask"
-msgstr "Preguntar"
+msgstr ""
 
 #: ../src/widget/converter.py:445
 msgid "Cover"
-msgstr "Portada"
+msgstr ""
 
 #: ../src/widget/converter.py:448
 msgid "Start"
-msgstr "Comenzar"
+msgstr ""
 
 #: ../src/widget/converter.py:450
 msgid "Add to Playlist when finished"
-msgstr "Añadir a la lista de reproducción cuando finalice."
+msgstr ""
 
 #: ../src/widget/converter.py:472
 msgid "Output"
-msgstr "Salida"
+msgstr ""
 
 #: ../src/widget/preference.py:150
 msgid "Startup"
-msgstr "Inicio"
+msgstr ""
 
 #: ../src/widget/preference.py:157
 msgid "Display splash-screen"
