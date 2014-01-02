@@ -144,7 +144,7 @@ msgstr "其他選項"
 
 #: ../src/main.py:146
 msgid "Show this help message and exit"
-msgstr "顯示幫助資訊並退出"
+msgstr "顯示本幫助資訊並退出"
 
 #: ../src/main.py:148
 msgid "Start new instance"
