@@ -3,158 +3,155 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# 648trindade <rafaelgt.mbin@gmail.com>, 2013
-# alanjhone <alanjhone9@gmail.com>, 2013
-# alanjhone <alanjhone9@gmail.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: DMusic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-09-26 11:30+0800\n"
-"PO-Revision-Date: 2013-12-27 19:25+0000\n"
-"Last-Translator: 648trindade <rafaelgt.mbin@gmail.com>\n"
-"Language-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/dmusic/language/pt_BR/)\n"
+"PO-Revision-Date: 2013-12-28 12:51+0000\n"
+"Last-Translator: lihongwu <lihongwu1987@gmail.com>\n"
+"Language-Team: Indonesian (Indonesia) (http://www.transifex.com/projects/p/dmusic/language/id_ID/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: pt_BR\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Language: id_ID\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #: ../src/transcoder.py:54
 msgid ""
 "Vorbis is an open source, lossy audio codec with high quality output at a "
 "lower file size than MP3."
-msgstr "Vorbis é um codec de aúdio de código aberto com alta qualidade de saída a um tamanho de arquivo menor que MP3."
+msgstr ""
 
 #: ../src/transcoder.py:66
 msgid ""
 "Free Lossless Audio Codec (FLAC) is an open source codec that compresses but"
 " does not degrade audio quality."
-msgstr "Free Lossless Audio Codec (FLAC) é um codec de código aberto que comprime mas não degrada a qualidade de áudio."
+msgstr ""
 
 #: ../src/transcoder.py:80
 msgid ""
 "Apple's proprietary lossy audio format that achieves better sound quality "
 "than MP3 at lower bitrates."
-msgstr "Formato de áudio proprietário com perdas da Apple que disponibiliza uma melhor qualidade sonora a baixas taxas de bit que MP3."
+msgstr ""
 
 #: ../src/transcoder.py:93
 msgid ""
 "A proprietary and older, but also popular, lossy audio format. VBR gives "
 "higher quality than CBR, but may be incompatible with some players."
-msgstr "Um proprietário e velho, mas também popular, formato de áudio com perdas. VBR fornecer maior qualidade que CBR, mas pode ser incompatível com alguns reprodutores."
+msgstr ""
 
 #: ../src/transcoder.py:106
 msgid ""
 "A proprietary and older, but also popular, lossy audio format. CBR gives "
 "less quality than VBR, but is compatible with any player."
-msgstr "Um proprietário e velho, mas também popular, formato de áudio com perdas. CBR fornecer menor qualidade que VBR, mas é compatível com qualquer reprodutor."
+msgstr ""
 
 #: ../src/transcoder.py:118
 msgid "A very fast Free lossless audio format with good compression."
-msgstr "Um formato de áudio livre, com poucas perdas e boa compressão."
+msgstr ""
 
 #: ../src/library.py:990 ../src/library.py:991 ../src/library.py:992
 #: ../src/library.py:999 ../src/library.py:1000 ../src/library.py:1001
 #: ../src/widget/local_item.py:57
 msgid "Unknown"
-msgstr "Desconhecido"
+msgstr ""
 
 #: ../src/main.py:103
 msgid "Usage: deepin-music-player [OPTION]... [URI]"
-msgstr "Uso: deepin-music-player [OPÇÃO]...[URI]"
+msgstr ""
 
 #: ../src/main.py:104
 msgid "Options"
-msgstr "Opções"
+msgstr ""
 
 #: ../src/main.py:108
 msgid "Control Options"
-msgstr "Opções de Controle"
+msgstr ""
 
 #: ../src/main.py:110
 msgid "Play the next track"
-msgstr "Reproduzir a próxima faixa"
+msgstr ""
 
 #: ../src/main.py:112
 msgid "Play the previous track"
-msgstr "Reproduzir a faixa anterior"
+msgstr ""
 
 #: ../src/main.py:114
 msgid "Pause or resume playback"
-msgstr "Pausar ou resumir reprodução"
+msgstr ""
 
 #: ../src/main.py:116
 msgid "Seek Forward"
-msgstr "Olhar a frente"
+msgstr ""
 
 #: ../src/main.py:118
 msgid "Seek Backward"
-msgstr "Olhar atrás"
+msgstr ""
 
 #: ../src/main.py:120
 msgid "Stop playback"
-msgstr "Parar reprodução"
+msgstr ""
 
 #: ../src/main.py:124
 msgid "Volume Options"
-msgstr "Opções de Volume"
+msgstr ""
 
 #: ../src/main.py:126
 msgid "Change Volume (VOLUME 0.0-1.0)"
-msgstr "Alterar Volume (VOLUME 0.0-1.0)"
+msgstr ""
 
 #: ../src/main.py:129
 msgid "Track information Options"
-msgstr "Opções de informações de faixa"
+msgstr ""
 
 #: ../src/main.py:131
 msgid "Print the title of current track"
-msgstr "Mostra o título da faixa atual"
+msgstr ""
 
 #: ../src/main.py:133
 msgid "Print the album of current track"
-msgstr "Mostra o álbum da faixa atual"
+msgstr ""
 
 #: ../src/main.py:135
 msgid "Print the artist of current track"
-msgstr "Mostra o artista da faixa atual"
+msgstr ""
 
 #: ../src/main.py:137
 msgid "Print the length of current track"
-msgstr "Mostra o comprimento da faixa atual"
+msgstr ""
 
 #: ../src/main.py:139
 msgid "Print the path of current track"
-msgstr "Mostra o caminho da faixa atual"
+msgstr ""
 
 #: ../src/main.py:141
 msgid "Print current playback position"
-msgstr "Mostra a posição na reprodução atual"
+msgstr ""
 
 #: ../src/main.py:144
 msgid "Other Options"
-msgstr "Outras Opções"
+msgstr ""
 
 #: ../src/main.py:146
 msgid "Show this help message and exit"
-msgstr "Mostrar essa mensagem de ajuda e sair"
+msgstr ""
 
 #: ../src/main.py:148
 msgid "Start new instance"
-msgstr "Iniciar nova instância"
+msgstr ""
 
 #: ../src/main.py:150
 msgid "Show program's version number and exit."
-msgstr "Mostrar a versão do programa e sair"
+msgstr ""
 
 #: ../src/main.py:152
 msgid "Start minimized"
-msgstr "Iniciar minimizado"
+msgstr ""
 
 #: ../src/main.py:155
 msgid "Toggle visibility of the GUI (if possible)"
-msgstr "Alternar visibilidade da GUI (se possível)"
+msgstr ""
 
 #: ../src/main.py:158
 msgid "Make control options like --play start program if it is not running"
@@ -162,11 +159,11 @@ msgstr ""
 
 #: ../src/main.py:161
 msgid "Development/Debug Options"
-msgstr "Opções de Desenvolvimento/Depuração"
+msgstr ""
 
 #: ../src/main.py:162
 msgid "Change debug level (0-9)"
-msgstr "Alterar nível de depuração (0-9)"
+msgstr ""
 
 #: ../src/main.py:166
 msgid "Show information about supported audio file"
@@ -179,275 +176,275 @@ msgstr ""
 #: ../src/widget/preference.py:900 ../src/widget/instance.py:92
 #: ../src/widget/tray.py:156
 msgid "DMusic"
-msgstr "DMusic"
+msgstr ""
 
 #: ../src/plugins.py:91
 msgid "Add-on archive is not in the correct format."
-msgstr "Arquivo de add-on não está no formato correto."
+msgstr ""
 
 #: ../src/plugins.py:98
 #, python-format
 msgid "An add-on with the name \"%s\" is already installed."
-msgstr "Um add-on com o nome \"%s\" já está instalado."
+msgstr ""
 
 #: ../src/plugins.py:103
 msgid "Add-on archive contains an unsafe path."
-msgstr "Arquivo add-on contém um caminho não-salvo."
+msgstr ""
 
 #: ../src/source/local.py:43
 msgid "Reading directories..."
-msgstr "Lendo pastas..."
+msgstr ""
 
 #: ../src/source/local.py:175
 msgid "Check deleted files"
-msgstr "Checar arquivos excluídos"
+msgstr ""
 
 #: ../src/source/local.py:202
 msgid "Reload database"
-msgstr "Recarregar base de dados"
+msgstr ""
 
 #: ../src/source/old.py:112 ../src/source/audiocd.py:75
 msgid "Track"
-msgstr "Trilha"
+msgstr ""
 
 #: ../src/source/old.py:113 ../src/source/audiocd.py:76
 msgid "Unknown album"
-msgstr "Álbum desconhecido"
+msgstr ""
 
 #: ../src/source/old.py:114 ../src/source/audiocd.py:77
 msgid "Unknown artist"
-msgstr "Artista desconhecido"
+msgstr ""
 
 #: ../src/source/audiocd.py:83 ../src/source/audiocd.py:89
 msgid "Audio CD"
-msgstr "CD de Áudio"
+msgstr ""
 
 #: ../src/widget/song_editor.py:72 ../src/widget/song_editor.py:202
 #: ../src/widget/song_view.py:680 ../src/widget/lyrics_search.py:83
 msgid "Title"
-msgstr "Titulo"
+msgstr ""
 
 #: ../src/widget/song_editor.py:73 ../src/widget/song_editor.py:203
 #: ../src/widget/song_view.py:680 ../src/widget/local_browser.py:85
 #: ../src/widget/lyrics_search.py:83 ../plugins/notify/__init__.py:43
 msgid "Artist"
-msgstr "Artista"
+msgstr ""
 
 #: ../src/widget/song_editor.py:74 ../src/widget/song_editor.py:204
 #: ../src/widget/song_view.py:680 ../src/widget/local_browser.py:87
 #: ../plugins/notify/__init__.py:45
 msgid "Album"
-msgstr "Álbum"
+msgstr ""
 
 #: ../src/widget/song_editor.py:96 ../src/widget/song_notify.py:194
 msgid "Type"
-msgstr "Tipo"
+msgstr ""
 
 #: ../src/widget/song_editor.py:96 ../src/widget/converter.py:433
 msgid "Format"
-msgstr "Formato"
+msgstr ""
 
 #: ../src/widget/song_editor.py:97 ../src/widget/preference.py:686
 #: ../src/widget/preference.py:839 ../src/widget/song_notify.py:193
 msgid "Size"
-msgstr "Tamanho"
+msgstr ""
 
 #: ../src/widget/song_editor.py:97 ../src/widget/song_notify.py:210
 msgid "Duration"
-msgstr "Duração"
+msgstr ""
 
 #: ../src/widget/song_editor.py:98
 msgid "Bitrate"
-msgstr "Taxa de bits"
+msgstr ""
 
 #: ../src/widget/song_editor.py:98
 msgid "Rate"
-msgstr "Rate"
+msgstr ""
 
 #: ../src/widget/song_editor.py:99
 msgid "Added"
-msgstr "Adicionado"
+msgstr ""
 
 #: ../src/widget/song_editor.py:99
 msgid "Recently"
-msgstr "Recentemente"
+msgstr ""
 
 #: ../src/widget/song_editor.py:100 ../src/widget/song_notify.py:209
 msgid "Playcount"
-msgstr "Reproduções:"
+msgstr ""
 
 #: ../src/widget/song_editor.py:100 ../src/widget/song_editor.py:206
 msgid "Date"
-msgstr "Data"
+msgstr ""
 
 #: ../src/widget/song_editor.py:147
 msgid "Location"
-msgstr "Localização"
+msgstr ""
 
 #: ../src/widget/song_editor.py:150 ../src/widget/converter.py:367
 #: ../src/widget/playlist.py:560 ../src/widget/lyrics_module.py:240
 msgid "Open directory"
-msgstr "Abrir diretorio"
+msgstr ""
 
 #: ../src/widget/song_editor.py:205 ../src/widget/local_browser.py:89
 #: ../src/widget/webcasts_browser.py:99
 msgid "Genre"
-msgstr "Gênero"
+msgstr ""
 
 #: ../src/widget/song_editor.py:214
 msgid "Save"
-msgstr "Salvar"
+msgstr ""
 
 #: ../src/widget/song_editor.py:296 ../src/widget/converter.py:475
 #: ../src/widget/preference.py:252
 msgid "Change"
-msgstr "Alterar"
+msgstr ""
 
 #: ../src/widget/song_editor.py:299
 msgid "Retrieve from the Internet"
-msgstr "Recuperar da internet"
+msgstr ""
 
 #: ../src/widget/song_editor.py:302 ../src/widget/equalizer.py:252
 #: ../src/widget/preference.py:375
 msgid "Reset"
-msgstr "Reconfigurar"
+msgstr ""
 
 #: ../src/widget/song_editor.py:321 ../src/widget/local_browser.py:343
 msgid "Select image"
-msgstr "Selecionar imagem"
+msgstr ""
 
 #: ../src/widget/song_editor.py:335 ../src/widget/song_view.py:793
 #: ../src/widget/playlist.py:561
 msgid "Properties"
-msgstr "Propriedades"
+msgstr ""
 
 #: ../src/widget/song_editor.py:338 ../src/widget/equalizer.py:250
 #: ../src/widget/ui.py:1248 ../src/widget/converter.py:394
 #: ../src/widget/converter.py:449 ../src/widget/preference.py:945
 #: ../src/widget/lyrics_search.py:89
 msgid "Close"
-msgstr "Fechar"
+msgstr ""
 
 #: ../src/widget/song_editor.py:341 ../src/widget/headerbar.py:72
 #: ../src/widget/preference.py:369 ../src/widget/instance.py:329
 #: ../src/widget/tray.py:63
 msgid "Previous"
-msgstr "Anterior"
+msgstr ""
 
 #: ../src/widget/song_editor.py:343 ../src/widget/headerbar.py:73
 #: ../src/widget/preference.py:370 ../src/widget/instance.py:330
 #: ../src/widget/tray.py:64
 msgid "Next"
-msgstr "Próximo"
+msgstr ""
 
 #: ../src/widget/song_editor.py:367
 msgid "Track Infomation"
-msgstr "Informação da faixa"
+msgstr ""
 
 #: ../src/widget/song_editor.py:368
 msgid "Edit tags"
-msgstr "Editar tags"
+msgstr ""
 
 #: ../src/widget/song_editor.py:369
 msgid "Edit cover"
-msgstr "Editar capa"
+msgstr ""
 
 #: ../src/widget/equalizer.py:176
 msgid "Custom"
-msgstr "Personalizado"
+msgstr ""
 
 #: ../src/widget/equalizer.py:177
 msgid "Default"
-msgstr "Padrão"
+msgstr ""
 
 #: ../src/widget/equalizer.py:178 ../plugins/musicfm/radio_genre_page.py:43
 msgid "Classical"
-msgstr "Classico"
+msgstr ""
 
 #: ../src/widget/equalizer.py:179
 msgid "Club"
-msgstr "Clube"
+msgstr ""
 
 #: ../src/widget/equalizer.py:180
 msgid "Dance"
-msgstr "Dance"
+msgstr ""
 
 #: ../src/widget/equalizer.py:181
 msgid "Full Bass"
-msgstr "Baixo Completo"
+msgstr ""
 
 #: ../src/widget/equalizer.py:182
 msgid "Full Bass and Treble"
-msgstr "Baixo e Agudo Completos"
+msgstr ""
 
 #: ../src/widget/equalizer.py:183
 msgid "Full Treble"
-msgstr "Agudo Completo"
+msgstr ""
 
 #: ../src/widget/equalizer.py:184
 msgid "Headphones"
-msgstr "Fones de Ouvido"
+msgstr ""
 
 #: ../src/widget/equalizer.py:185
 msgid "Large Hall"
-msgstr "Salão"
+msgstr ""
 
 #: ../src/widget/equalizer.py:186
 msgid "Live"
-msgstr "Ao vivo"
+msgstr ""
 
 #: ../src/widget/equalizer.py:187
 msgid "Party"
-msgstr "Festa"
+msgstr ""
 
 #: ../src/widget/equalizer.py:188 ../plugins/musicfm/radio_genre_page.py:46
 msgid "Pop"
-msgstr "Pop"
+msgstr ""
 
 #: ../src/widget/equalizer.py:190 ../plugins/musicfm/radio_genre_page.py:42
 msgid "Rock"
-msgstr "Rock"
+msgstr ""
 
 #: ../src/widget/equalizer.py:191
 msgid "Ska"
-msgstr "Ska"
+msgstr ""
 
 #: ../src/widget/equalizer.py:192
 msgid "Soft"
-msgstr "Soft"
+msgstr ""
 
 #: ../src/widget/equalizer.py:193
 msgid "Soft Rock"
-msgstr "Soft Rock"
+msgstr ""
 
 #: ../src/widget/equalizer.py:194
 msgid "Techno"
-msgstr "Techno"
+msgstr ""
 
 #: ../src/widget/equalizer.py:199 ../src/widget/instance.py:362
 msgid "Equalizer"
-msgstr "Equalizador"
+msgstr ""
 
 #: ../src/widget/equalizer.py:254
 msgid "Predefined"
-msgstr "Pré-definido"
+msgstr ""
 
 #: ../src/widget/global_keys.py:96
 #, python-format
 msgid "Failed to bind %s !"
-msgstr "Falha ao vincular %s !"
+msgstr ""
 
 #: ../src/widget/local_item.py:59
 msgid "All Tracks"
-msgstr "Todas as Faixas"
+msgstr ""
 
 #: ../src/widget/local_item.py:67
 msgid "Track(s)"
-msgstr "Faixa(s)"
+msgstr ""
 
 #: ../src/widget/information.py:75
 msgid "Connecting"
-msgstr "Conectando"
+msgstr ""
 
 #: ../src/widget/information.py:105
 msgid "buffering"
@@ -457,179 +454,179 @@ msgstr ""
 #: ../src/widget/playlist.py:103 ../plugins/musicfm/radio_view.py:134
 #: ../plugins/musicfm/radio_view.py:140
 msgid "Delete"
-msgstr "Excluir"
+msgstr ""
 
 #: ../src/widget/webcast_view.py:115 ../src/widget/webcast_view.py:123
 #: ../src/widget/playlist.py:555 ../plugins/musicfm/radio_view.py:135
 #: ../plugins/musicfm/radio_view.py:141
 msgid "Clear List"
-msgstr "Limpar lista"
+msgstr ""
 
 #: ../src/widget/webcast_view.py:119 ../src/widget/webcast_view.py:338
 #: ../src/widget/instance.py:320 ../src/widget/song_view.py:785
 #: ../src/widget/playlist.py:549 ../src/widget/tray.py:58
 #: ../plugins/musicfm/radio_view.py:139
 msgid "Play"
-msgstr "Reproduzir"
+msgstr ""
 
 #: ../src/widget/webcast_view.py:219 ../src/widget/webcast_view.py:368
 msgid "Remove from Favorites"
-msgstr "Remover dos Favoritos"
+msgstr ""
 
 #: ../src/widget/webcast_view.py:221 ../src/widget/webcast_view.py:370
 msgid "Add to Favorites"
-msgstr "Adicionar aos Favoritos"
+msgstr ""
 
 #: ../src/widget/webcast_view.py:333 ../src/widget/webcast_view.py:339
 #: ../src/widget/song_view.py:786
 msgid "Add to Playlist"
-msgstr "Adicionar à Playlist"
+msgstr ""
 
 #: ../src/widget/webcast_view.py:450 ../plugins/webcast/__init__.py:34
 #: ../plugins/webcast/__init__.py:36
 msgid "Radio"
-msgstr "Rádio"
+msgstr ""
 
 #: ../src/widget/global_search.py:48 ../src/widget/song_view.py:817
 #: ../src/widget/local_tab.py:28
 msgid "Library"
-msgstr "Biblioteca"
+msgstr ""
 
 #: ../src/widget/lyrics.py:734
 msgid "Lyrics window"
-msgstr "Janela de letras"
+msgstr ""
 
 #: ../src/widget/ui.py:203
 msgid "Need some music? Find it here..."
-msgstr "Precisa de música? Encontre aqui..."
+msgstr ""
 
 #: ../src/widget/ui.py:401
 msgid "Add Music"
-msgstr "Adicionar Música"
+msgstr ""
 
 #: ../src/widget/ui.py:1118
 msgid "Your search {keyword} did not match any items in {from}"
-msgstr "Sua busca {keyword} não retornou nenhum item em {from}"
+msgstr ""
 
 #: ../src/widget/ui.py:1119
 msgid "Suggestions"
-msgstr "Sugestões"
+msgstr ""
 
 #: ../src/widget/ui.py:1120
 msgid "Make sure all words are spelled correctly."
-msgstr "Tenha certeza que todas as palavras estão escritas corretamente."
+msgstr ""
 
 #: ../src/widget/ui.py:1121
 msgid ""
 "Try more general keywords, such as a title, an artist or the name of an "
 "album."
-msgstr "Tente mais palavras-chaves comuns, como um título, um artista ou o nome de um álbum."
+msgstr ""
 
 #: ../src/widget/ui.py:1218 ../src/widget/plugins_view.py:166
 msgid "Add-on"
-msgstr "Add-on"
+msgstr ""
 
 #: ../src/widget/ui.py:1226
 msgid "Author(s)"
-msgstr "Autor(es)"
+msgstr ""
 
 #: ../src/widget/ui.py:1256 ../src/widget/preference.py:195
 msgid "Minimize to tray"
-msgstr "Minimizar para a barra"
+msgstr ""
 
 #: ../src/widget/ui.py:1258 ../src/widget/preference.py:196
 #: ../src/widget/instance.py:373 ../src/widget/tray.py:83
 msgid "Quit"
-msgstr "Sair"
+msgstr ""
 
 #: ../src/widget/ui.py:1262
 msgid "Don't prompt again"
-msgstr "Não pergunte novamente"
+msgstr ""
 
 #: ../src/widget/ui.py:1269
 msgid "OK"
-msgstr "OK"
+msgstr ""
 
 #: ../src/widget/ui.py:1272
 msgid "Cancel"
-msgstr "Cancelar"
+msgstr ""
 
 #: ../src/widget/headerbar.py:64 ../src/widget/preference.py:368
 msgid "Play/Pause"
-msgstr "Reproduzir/Pausar"
+msgstr ""
 
 #: ../src/widget/headerbar.py:78
 msgid "Show/Hide Lyrics"
-msgstr "Mostrar/Esconder Letras"
+msgstr ""
 
 #: ../src/widget/converter.py:309 ../src/widget/song_view.py:437
 #: ../src/widget/song_view.py:780 ../src/widget/local_browser.py:339
 msgid "Prompt"
-msgstr "Prompt"
+msgstr ""
 
 #: ../src/widget/converter.py:309
 msgid "Target file already exitsts, do you want to overwrite it?"
-msgstr "Arquivo já existe, quer substituí-lo?"
+msgstr ""
 
 #: ../src/widget/converter.py:369
 msgid "Delete task"
-msgstr "Excluir tarefa"
+msgstr ""
 
 #: ../src/widget/converter.py:370
 msgid "Clear finished tasks"
-msgstr "Limpar tarefas finalizadas"
+msgstr ""
 
 #: ../src/widget/converter.py:376 ../src/widget/instance.py:341
 msgid "Task Manager"
-msgstr "Gerenciador de Tarefas"
+msgstr ""
 
 #: ../src/widget/converter.py:392 ../src/widget/converter.py:412
 #: ../src/widget/converter.py:415 ../src/widget/instance.py:323
 #: ../src/widget/tray.py:61
 msgid "Pause"
-msgstr "Pausar"
+msgstr ""
 
 #: ../src/widget/converter.py:413
 msgid "Continue"
-msgstr "Continuar"
+msgstr ""
 
 #: ../src/widget/converter.py:427 ../src/widget/instance.py:340
 #: ../src/widget/instance.py:363 ../src/widget/song_view.py:792
 #: ../src/widget/playlist.py:559
 msgid "Convert"
-msgstr "Converter"
+msgstr ""
 
 #: ../src/widget/converter.py:436
 msgid "Quality"
-msgstr "Qualidade"
+msgstr ""
 
 #: ../src/widget/converter.py:444
 msgid "Target file already exists"
-msgstr "Arquivo alvo já existe"
+msgstr ""
 
 #: ../src/widget/converter.py:445
 msgid "Ask"
-msgstr "Perguntar"
+msgstr ""
 
 #: ../src/widget/converter.py:445
 msgid "Cover"
-msgstr "Capa"
+msgstr ""
 
 #: ../src/widget/converter.py:448
 msgid "Start"
-msgstr "Iniciar"
+msgstr ""
 
 #: ../src/widget/converter.py:450
 msgid "Add to Playlist when finished"
-msgstr "Adicionar à Playlist quando finalizado"
+msgstr ""
 
 #: ../src/widget/converter.py:472
 msgid "Output"
-msgstr "Saído"
+msgstr ""
 
 #: ../src/widget/preference.py:150
 msgid "Startup"
-msgstr "Inicialização"
+msgstr ""
 
 #: ../src/widget/preference.py:157
 msgid "Display splash-screen"
@@ -637,158 +634,158 @@ msgstr ""
 
 #: ../src/widget/preference.py:164
 msgid "Show lyrics"
-msgstr "Exibir letras"
+msgstr ""
 
 #: ../src/widget/preference.py:169
 msgid "Start playback automatically"
-msgstr "Iniciar reprodução automaticamente"
+msgstr ""
 
 #: ../src/widget/preference.py:175
 msgid "Resume playback"
-msgstr "Resumir reprodução"
+msgstr ""
 
 #: ../src/widget/preference.py:190
 msgid "On pressing the close button"
-msgstr "Ao pressionar o botão de sair"
+msgstr ""
 
 #: ../src/widget/preference.py:209
 msgid "Playback settings"
-msgstr "Configurações de reprodução"
+msgstr ""
 
 #: ../src/widget/preference.py:213
 msgid "Enable crossfade"
-msgstr "Ativar crossfade"
+msgstr ""
 
 #: ../src/widget/preference.py:216
 msgid "Disable crossfade between tracks in the same album"
-msgstr "Desativar crossfade entre faixas no mesmo álbum"
+msgstr ""
 
 #: ../src/widget/preference.py:221
 msgid "Fade timeout"
-msgstr "Tempo limite de fade"
+msgstr ""
 
 #: ../src/widget/preference.py:223
 msgid " ms"
-msgstr "ms"
+msgstr ""
 
 #: ../src/widget/preference.py:241
 msgid "Lyrics directory"
-msgstr "Diretório das letras"
+msgstr ""
 
 #: ../src/widget/preference.py:346 ../src/widget/preference.py:997
 msgid "Hotkeys"
-msgstr "Atalhos"
+msgstr ""
 
 #: ../src/widget/preference.py:356
 msgid "Enable hotkeys"
-msgstr "Ativar atalhos"
+msgstr ""
 
 #: ../src/widget/preference.py:362
 msgid "Minimize/Show window"
-msgstr "Minimizar/Mostrar janela"
+msgstr ""
 
 #: ../src/widget/preference.py:364
 msgid "Show/Hide lyrics"
-msgstr "Mostrar/Esconder letras"
+msgstr ""
 
 #: ../src/widget/preference.py:366
 msgid "Lock/Unlock lyrics"
-msgstr "Travar/Destravar letras"
+msgstr ""
 
 #: ../src/widget/preference.py:371 ../src/widget/tray.py:48
 msgid "Increase volume"
-msgstr "Aumentar volume"
+msgstr ""
 
 #: ../src/widget/preference.py:372 ../src/widget/tray.py:49
 msgid "Decrease volume"
-msgstr "Diminuir volume"
+msgstr ""
 
 #: ../src/widget/preference.py:601 ../src/widget/preference.py:613
 #: ../src/widget/preference.py:845
 msgid "Left"
-msgstr "Esquerda"
+msgstr ""
 
 #: ../src/widget/preference.py:602 ../src/widget/preference.py:614
 #: ../src/widget/preference.py:845
 msgid "Centered"
-msgstr "Centralizado"
+msgstr ""
 
 #: ../src/widget/preference.py:603 ../src/widget/preference.py:615
 #: ../src/widget/preference.py:845
 msgid "Right"
-msgstr "Direita"
+msgstr ""
 
 #: ../src/widget/preference.py:616
 msgid "Justified"
-msgstr "Justificado"
+msgstr ""
 
 #: ../src/widget/preference.py:627 ../src/widget/lyrics_module.py:455
 msgid "Vitality yellow"
-msgstr "Amarelo vigoroso"
+msgstr ""
 
 #: ../src/widget/preference.py:628 ../src/widget/lyrics_module.py:456
 msgid "Fresh green"
-msgstr "Verde refrescante"
+msgstr ""
 
 #: ../src/widget/preference.py:629 ../src/widget/lyrics_module.py:457
 msgid "Playful pink"
-msgstr "Rosa divertido"
+msgstr ""
 
 #: ../src/widget/preference.py:630 ../src/widget/lyrics_module.py:458
 msgid "Cool blue"
-msgstr "Azul incrível"
+msgstr ""
 
 #: ../src/widget/preference.py:642
 msgid "Color scheme"
-msgstr "Esquema de cores"
+msgstr ""
 
 #: ../src/widget/preference.py:650 ../src/widget/preference.py:807
 msgid "Regular"
-msgstr "Regular"
+msgstr ""
 
 #: ../src/widget/preference.py:651 ../src/widget/preference.py:808
 msgid "Italic"
-msgstr "Itálico"
+msgstr ""
 
 #: ../src/widget/preference.py:652 ../src/widget/preference.py:809
 msgid "Bold"
-msgstr "Negrito"
+msgstr ""
 
 #: ../src/widget/preference.py:653 ../src/widget/preference.py:810
 msgid "Bold Italic"
-msgstr "Negrito itálico"
+msgstr ""
 
 #: ../src/widget/preference.py:663 ../src/widget/preference.py:818
 msgid "Style"
-msgstr "Estilo"
+msgstr ""
 
 #: ../src/widget/preference.py:671 ../src/widget/preference.py:824
 msgid "Lyrics style"
-msgstr "Estilo das letras"
+msgstr ""
 
 #: ../src/widget/preference.py:681 ../src/widget/preference.py:833
 msgid "Font"
-msgstr "Fonte"
+msgstr ""
 
 #: ../src/widget/preference.py:689
 msgid "Lines"
-msgstr "Linhas"
+msgstr ""
 
 #: ../src/widget/preference.py:690
 msgid "Single"
-msgstr "Singular"
+msgstr ""
 
 #: ../src/widget/preference.py:690
 msgid "Double"
-msgstr "Duplo"
+msgstr ""
 
 #: ../src/widget/preference.py:693 ../src/widget/preference.py:843
 msgid "Alignment"
-msgstr "Alinhamento"
+msgstr ""
 
 #: ../src/widget/preference.py:702
 msgid "Outline"
-msgstr "Contorno"
+msgstr ""
 
 #: ../src/widget/preference.py:706
 msgid "Stroke"
@@ -796,43 +793,43 @@ msgstr ""
 
 #: ../src/widget/preference.py:711 ../src/widget/preference.py:855
 msgid "Coming"
-msgstr "Vindo"
+msgstr ""
 
 #: ../src/widget/preference.py:722 ../src/widget/preference.py:856
 msgid "Played"
-msgstr "Reproduzida"
+msgstr ""
 
 #: ../src/widget/preference.py:850
 msgid "Rolling"
-msgstr "Rolando"
+msgstr ""
 
 #: ../src/widget/preference.py:851
 msgid "Always"
-msgstr "Sempre"
+msgstr ""
 
 #: ../src/widget/preference.py:851
 msgid "By line"
-msgstr "Por linha"
+msgstr ""
 
 #: ../src/widget/preference.py:905 ../src/widget/plugins_view.py:166
 msgid "Version"
-msgstr "Versão"
+msgstr ""
 
 #: ../src/widget/preference.py:920
 msgid ""
 "        DMusic is a music application designed for Linux users.It features lyrics searching and downloading, desktop lyrics display,album cover downloading, resume playing, music management and skin selection.\n"
 "\n"
 "DMusic is free software licensed under GNU GPLv3."
-msgstr "DMusic é um aplicativo musical projetado para usuário Linux. Ele provém procura e download de letras, tela de letras no desktop, download de capa de álbuns, resumo de reprodução, gerenciamento de música e seleção de skins\n\nDmusic é um software livre licenciado em GNU GPLv3."
+msgstr ""
 
 #: ../src/widget/preference.py:938 ../src/widget/instance.py:371
 #: ../src/widget/tray.py:82
 msgid "Preferences"
-msgstr "Preferências"
+msgstr ""
 
 #: ../src/widget/preference.py:996
 msgid "General"
-msgstr "Geral"
+msgstr ""
 
 #: ../src/widget/preference.py:998
 msgid "Lyrics"
@@ -840,7 +837,7 @@ msgstr ""
 
 #: ../src/widget/preference.py:999
 msgid "Desktop"
-msgstr "Desktop"
+msgstr ""
 
 #: ../src/widget/preference.py:1000
 msgid "Window"
@@ -852,23 +849,23 @@ msgstr ""
 
 #: ../src/widget/preference.py:1002
 msgid "About"
-msgstr "About"
+msgstr ""
 
 #: ../src/widget/instance.py:146
 msgid "Join us"
-msgstr "Join us"
+msgstr ""
 
 #: ../src/widget/instance.py:327
 msgid "Forward"
-msgstr "Avançar"
+msgstr ""
 
 #: ../src/widget/instance.py:328
 msgid "Rewind"
-msgstr "Voltar"
+msgstr ""
 
 #: ../src/widget/instance.py:358 ../src/widget/playlist.py:97
 msgid "Add"
-msgstr "Adicionar"
+msgstr ""
 
 #: ../src/widget/instance.py:359
 msgid "Controls"
@@ -881,7 +878,7 @@ msgstr ""
 
 #: ../src/widget/instance.py:370
 msgid "View New Features"
-msgstr "Ver Novos Recursos"
+msgstr ""
 
 #: ../src/widget/instance.py:377 ../src/widget/tray.py:72
 msgid "Search Lyrics"
@@ -910,7 +907,7 @@ msgstr ""
 
 #: ../src/widget/instance.py:481
 msgid "Normal Mode"
-msgstr "Modo Normal"
+msgstr ""
 
 #: ../src/widget/jobs_manager.py:44 ../src/widget/jobs_manager.py:153
 msgid "jobs waiting!"
@@ -935,7 +932,7 @@ msgstr ""
 
 #: ../src/widget/song_view.py:484
 msgid "Random"
-msgstr "Aleatório"
+msgstr ""
 
 #: ../src/widget/song_view.py:507
 msgid "Remove Track from this List"
@@ -952,7 +949,7 @@ msgstr ""
 
 #: ../src/widget/song_view.py:510
 msgid "Clear list"
-msgstr "Limpar lista"
+msgstr ""
 
 #: ../src/widget/song_view.py:521
 msgid "URL"
@@ -960,7 +957,7 @@ msgstr ""
 
 #: ../src/widget/song_view.py:522 ../src/widget/song_view.py:530
 msgid "File"
-msgstr "Arquivo"
+msgstr ""
 
 #: ../src/widget/song_view.py:523
 msgid "Directory (include subdirectories)"
@@ -976,7 +973,7 @@ msgstr ""
 
 #: ../src/widget/song_view.py:542
 msgid "Add URL"
-msgstr "Adicionar URL"
+msgstr ""
 
 #: ../src/widget/song_view.py:680
 msgid "Added time"
@@ -988,15 +985,15 @@ msgstr ""
 
 #: ../src/widget/song_view.py:791 ../src/widget/local_browser.py:359
 msgid "Open Directory"
-msgstr "Abrir Pasta"
+msgstr ""
 
 #: ../src/widget/plugins_view.py:166
 msgid "Enable"
-msgstr "Ativar"
+msgstr ""
 
 #: ../src/widget/local_browser.py:91
 msgid "Folder"
-msgstr "Pasta"
+msgstr ""
 
 #: ../src/widget/local_browser.py:98
 msgid "Quick Scan"
@@ -1008,7 +1005,7 @@ msgstr ""
 
 #: ../src/widget/local_browser.py:100
 msgid "Refresh"
-msgstr "Atualizar"
+msgstr ""
 
 #: ../src/widget/local_browser.py:350
 msgid "Play All"
@@ -1063,7 +1060,7 @@ msgstr ""
 
 #: ../src/widget/playlist.py:483 ../src/widget/playlist.py:493
 msgid "Rename"
-msgstr "Renomear"
+msgstr ""
 
 #: ../src/widget/playlist.py:534
 msgid "By Filename"
@@ -1112,7 +1109,7 @@ msgstr ""
 
 #: ../src/widget/playlist.py:558
 msgid "Sort"
-msgstr "Organizar"
+msgstr ""
 
 #: ../src/widget/lyrics_module.py:151
 msgid "increase the lyrics size"
@@ -1165,11 +1162,11 @@ msgstr ""
 #: ../src/widget/lyrics_module.py:226 ../src/widget/lyrics_module.py:236
 #: ../src/widget/lyrics_search.py:59
 msgid "Search"
-msgstr "rocurar"
+msgstr ""
 
 #: ../src/widget/lyrics_module.py:227 ../src/widget/lyrics_module.py:242
 msgid "Settings"
-msgstr "Settings"
+msgstr ""
 
 #: ../src/widget/lyrics_module.py:233
 msgid "Forward 0.5 seconds"
@@ -1201,7 +1198,7 @@ msgstr ""
 
 #: ../src/widget/dialog.py:34
 msgid "Select Directory"
-msgstr "Select Directory"
+msgstr ""
 
 #: ../src/widget/dialog.py:56
 msgid "Select file"
@@ -1262,11 +1259,11 @@ msgstr ""
 
 #: ../src/widget/tray.py:50
 msgid "Mute"
-msgstr "Mudo"
+msgstr ""
 
 #: ../src/widget/tray.py:66
 msgid "Volume"
-msgstr "Volume"
+msgstr ""
 
 #: ../src/widget/webcasts_browser.py:98
 msgid "Region"
@@ -1274,7 +1271,7 @@ msgstr ""
 
 #: ../src/widget/webcasts_browser.py:141
 msgid "Favorites"
-msgstr "Favoritos"
+msgstr ""
 
 #: ../plugins/pidgin/__init__.py:97 ../plugins/mpris2/mpris_adapter.py:252
 msgid "Deepin Music"
@@ -1345,7 +1342,7 @@ msgstr ""
 
 #: ../plugins/musicfm/radio_browser.py:78
 msgid "Home"
-msgstr "Principal"
+msgstr ""
 
 #: ../plugins/musicfm/radio_browser.py:80
 msgid "Genres"

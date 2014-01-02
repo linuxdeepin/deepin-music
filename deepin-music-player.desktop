@@ -1,31 +1,46 @@
 [Desktop Entry]
-Name=DMusic
-Name[zh_CN]=深度音乐
-Name[zh_TW]=深度音樂
+Categories=AudioVideo;Player;GTK;
 Comment=Play your music collection
+Comment[ar]=شغل مجموعة مقاطعك الموسيقية
+Comment[cs]=Přehrávejte svoji sbírku zvukových záznamů
+Comment[fr]=jouer votre collection des musiques
 Comment[zh_CN]=为您播放本地及网络音频流
 Comment[zh_TW]=爲您播放本地及網絡音頻流
-GenericName=Music Player
 Exec=deepin-music-player %F
+GenericName=Music Player
 Icon=deepin-music-player
-Type=Application
-Categories=AudioVideo;Player;GTK;
 MimeType=audio/musepack;application/musepack;application/x-ape;audio/ape;audio/x-ape;audio/x-musepack;application/x-musepack;audio/x-mp3;application/x-id3;audio/mpeg;audio/x-mpeg;audio/x-mpeg-3;audio/mpeg3;audio/mp3;audio/x-m4a;audio/mpc;audio/x-mpc;audio/mp;audio/x-mp;application/ogg;application/x-ogg;audio/vorbis;audio/x-vorbis;audio/ogg;audio/x-ogg;audio/x-flac;application/x-flac;audio/flac;
-
-[Previous Shortcut Group]
-Name=Previous track
-Name[zh_CN]=上一首
-Name[zh_TW]=上一首
-Exec=deepin-music-player -p
+Name=DMusic
+Name[ar]=د موسيقى
+Name[cs]=DMusic
+Name[fr]=DMusique
+Name[zh_CN]=深度音乐
+Name[zh_TW]=深度音樂
+Type=Application
 
 [Next Shortcut Group]
+Exec=deepin-music-player -n
 Name=Next track
+Name[ar]=المقطع التالي
+Name[cs]=Další skladba
+Name[fr]=Piste Suivante
 Name[zh_CN]=下一首
 Name[zh_TW]=下一首
-Exec=deepin-music-player -n
 
 [PlayPause Shortcut Group]
+Exec=deepin-music-player -t
 Name=Play/Pause track
+Name[ar]=شغل/أوقف مؤقتا المقطع
+Name[cs]=Přehrát/Pozastavit skladbu
+Name[fr]=Jouer/Pauser la piste
 Name[zh_CN]=暂停/继续
 Name[zh_TW]=暫停/繼續
-Exec=deepin-music-player -t
+
+[Previous Shortcut Group]
+Exec=deepin-music-player -p
+Name=Previous track
+Name[ar]=المقطع السابق
+Name[cs]=Předchozí skladba
+Name[fr]=Piste précédente
+Name[zh_CN]=上一首
+Name[zh_TW]=上一首
