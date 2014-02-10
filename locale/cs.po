@@ -1,62 +1,85 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
+#
 # Translators:
 # fri <pavelfric@seznam.cz>, 2013
+# fri <pavelfric@seznam.cz>, 2013
+# fri <pavelfric@seznam.cz>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: DMusic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-09-26 11:30+0800\n"
-"PO-Revision-Date: 2013-12-24 08:36+0000\n"
+"POT-Creation-Date: 2014-02-10 16:34+0800\n"
+"PO-Revision-Date: 2014-01-25 19:56+0000\n"
 "Last-Translator: fri <pavelfric@seznam.cz>\n"
-"Language-Team: Czech (http://www.transifex.com/projects/p/dmusic/language/cs/)\n"
+"Language-Team: Czech (http://www.transifex.com/projects/p/dmusic/language/"
+"cs/)\n"
+"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: cs\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #: ../src/transcoder.py:54
 msgid ""
 "Vorbis is an open source, lossy audio codec with high quality output at a "
 "lower file size than MP3."
-msgstr "Vorbis je ztrátový zvukový kodek s otevřeným zdrojovým kódem, s vysoce kvalitním výstupem při menší velikosti souboru, než má MP3."
+msgstr ""
+"Vorbis je ztrátový zvukový kodek s otevřeným zdrojovým kódem, s vysoce "
+"kvalitním výstupem při menší velikosti souboru, než má MP3."
 
 #: ../src/transcoder.py:66
 msgid ""
-"Free Lossless Audio Codec (FLAC) is an open source codec that compresses but"
-" does not degrade audio quality."
-msgstr "Free Lossless Audio Codec (FLAC) je zvukový kodek s otevřeným zdrojovým kódem, jenž komprimuje data, ale neponižuje kvalitu zvuku."
+"Free Lossless Audio Codec (FLAC) is an open source codec that compresses but "
+"does not degrade audio quality."
+msgstr ""
+"Free Lossless Audio Codec (FLAC) je zvukový kodek s otevřeným zdrojovým "
+"kódem, jenž komprimuje data, ale neponižuje kvalitu zvuku."
 
 #: ../src/transcoder.py:80
 msgid ""
 "Apple's proprietary lossy audio format that achieves better sound quality "
 "than MP3 at lower bitrates."
-msgstr "Ztrátový zvukový formát vlastněný firmou Apple dosahuje při nižších datových tocích lepší kvality, než jakou poskytuje MP3."
+msgstr ""
+"Ztrátový zvukový formát vlastněný firmou Apple dosahuje při nižších datových "
+"tocích lepší kvality, než jakou poskytuje MP3."
 
 #: ../src/transcoder.py:93
 msgid ""
 "A proprietary and older, but also popular, lossy audio format. VBR gives "
 "higher quality than CBR, but may be incompatible with some players."
-msgstr "Starší soukromě vlastněný, ale také oblíbený, ztrátový zvukový formát. VBR (proměnlivý datový tok) dává vyšší kvalitu než CBR (stálý datový tok), ale nemusí být kompatibilní s některými přehrávači."
+msgstr ""
+"Starší soukromě vlastněný, ale také oblíbený, ztrátový zvukový formát. VBR "
+"(proměnlivý datový tok) dává vyšší kvalitu než CBR (stálý datový tok), ale "
+"nemusí být kompatibilní s některými přehrávači."
 
 #: ../src/transcoder.py:106
 msgid ""
 "A proprietary and older, but also popular, lossy audio format. CBR gives "
 "less quality than VBR, but is compatible with any player."
-msgstr "Starší soukromě vlastněný, ale také oblíbený, ztrátový zvukový formát. CBR (stálý datový tok) dává menší kvalitu než VBR (proměnlivý datový tok), ale je kompatibilní se všemi přehrávači."
+msgstr ""
+"Starší soukromě vlastněný, ale také oblíbený, ztrátový zvukový formát. CBR "
+"(stálý datový tok) dává menší kvalitu než VBR (proměnlivý datový tok), ale "
+"je kompatibilní se všemi přehrávači."
 
 #: ../src/transcoder.py:118
 msgid "A very fast Free lossless audio format with good compression."
-msgstr "Velice rychlý bezztrátový zvukový formát s dobrou kompresí, který je zadarmo."
+msgstr ""
+"Velice rychlý bezztrátový zvukový formát s dobrou kompresí, který je zadarmo."
 
-#: ../src/library.py:990 ../src/library.py:991 ../src/library.py:992
-#: ../src/library.py:999 ../src/library.py:1000 ../src/library.py:1001
-#: ../src/widget/local_item.py:57
-msgid "Unknown"
-msgstr "Neznámý"
+#: ../src/plugins.py:91
+msgid "Add-on archive is not in the correct format."
+msgstr "Archiv s doplňkem není ve správném formátu."
+
+#: ../src/plugins.py:98
+#, python-format
+msgid "An add-on with the name \"%s\" is already installed."
+msgstr "Nějaký archiv s doplňkem nazvaný \"%s\" již je nainstalován."
+
+#: ../src/plugins.py:103
+msgid "Add-on archive contains an unsafe path."
+msgstr "Archiv s doplňkem obsahuje nebezpečnou cestu."
 
 #: ../src/main.py:103
 msgid "Usage: deepin-music-player [OPTION]... [URI]"
@@ -156,7 +179,8 @@ msgstr "Ukázat/Skrýt rozhraní (je-li to možné)"
 
 #: ../src/main.py:158
 msgid "Make control options like --play start program if it is not running"
-msgstr "Nechat volby pro ovládání, jako je --play, spustit program, pokud neběží"
+msgstr ""
+"Nechat volby pro ovládání, jako je --play, spustit program, pokud neběží"
 
 #: ../src/main.py:161
 msgid "Development/Debug Options"
@@ -170,27 +194,20 @@ msgstr "Změnit úroveň ladění (0-9)"
 msgid "Show information about supported audio file"
 msgstr "Ukázat informace o podporovaných zvukových souborech"
 
-#: ../src/main.py:172 ../src/widget/global_keys.py:95
-#: ../src/widget/information.py:40 ../src/widget/information.py:82
+#: ../src/main.py:172 ../src/widget/preference.py:579
+#: ../src/widget/preference.py:589 ../src/widget/preference.py:900
 #: ../src/widget/lyrics.py:80 ../src/widget/lyrics.py:749
-#: ../src/widget/preference.py:579 ../src/widget/preference.py:589
-#: ../src/widget/preference.py:900 ../src/widget/instance.py:92
-#: ../src/widget/tray.py:156
+#: ../src/widget/instance.py:92 ../src/widget/tray.py:156
+#: ../src/widget/global_keys.py:95 ../src/widget/information.py:40
+#: ../src/widget/information.py:82
 msgid "DMusic"
 msgstr "DMusic"
 
-#: ../src/plugins.py:91
-msgid "Add-on archive is not in the correct format."
-msgstr "Archiv s doplňkem není ve správném formátu."
-
-#: ../src/plugins.py:98
-#, python-format
-msgid "An add-on with the name \"%s\" is already installed."
-msgstr "Nějaký archiv s doplňkem nazvaný \"%s\" již je nainstalován."
-
-#: ../src/plugins.py:103
-msgid "Add-on archive contains an unsafe path."
-msgstr "Archiv s doplňkem obsahuje nebezpečnou cestu."
+#: ../src/library.py:990 ../src/library.py:991 ../src/library.py:992
+#: ../src/library.py:999 ../src/library.py:1000 ../src/library.py:1001
+#: ../src/widget/local_item.py:57
+msgid "Unknown"
+msgstr "Neznámý"
 
 #: ../src/source/local.py:43
 msgid "Reading directories..."
@@ -220,135 +237,97 @@ msgstr "Neznámý umělec"
 msgid "Audio CD"
 msgstr "Zvukové CD"
 
-#: ../src/widget/song_editor.py:72 ../src/widget/song_editor.py:202
-#: ../src/widget/song_view.py:680 ../src/widget/lyrics_search.py:83
-msgid "Title"
-msgstr "Název"
-
-#: ../src/widget/song_editor.py:73 ../src/widget/song_editor.py:203
-#: ../src/widget/song_view.py:680 ../src/widget/local_browser.py:85
-#: ../src/widget/lyrics_search.py:83 ../plugins/notify/__init__.py:43
-msgid "Artist"
-msgstr "Umělec"
-
-#: ../src/widget/song_editor.py:74 ../src/widget/song_editor.py:204
-#: ../src/widget/song_view.py:680 ../src/widget/local_browser.py:87
-#: ../plugins/notify/__init__.py:45
-msgid "Album"
-msgstr "Album"
-
-#: ../src/widget/song_editor.py:96 ../src/widget/song_notify.py:194
-msgid "Type"
-msgstr "Typ"
-
-#: ../src/widget/song_editor.py:96 ../src/widget/converter.py:433
-msgid "Format"
-msgstr "Formát"
-
-#: ../src/widget/song_editor.py:97 ../src/widget/preference.py:686
-#: ../src/widget/preference.py:839 ../src/widget/song_notify.py:193
+#: ../src/widget/song_notify.py:193 ../src/widget/preference.py:686
+#: ../src/widget/preference.py:839 ../src/widget/song_editor.py:97
 msgid "Size"
 msgstr "Velikost"
 
-#: ../src/widget/song_editor.py:97 ../src/widget/song_notify.py:210
-msgid "Duration"
-msgstr "Doba trvání"
+#: ../src/widget/song_notify.py:194 ../src/widget/song_editor.py:96
+msgid "Type"
+msgstr "Typ"
 
-#: ../src/widget/song_editor.py:98
-msgid "Bitrate"
-msgstr "Datový tok"
-
-#: ../src/widget/song_editor.py:98
-msgid "Rate"
-msgstr "Rychlost"
-
-#: ../src/widget/song_editor.py:99
-msgid "Added"
-msgstr "Přidáno"
-
-#: ../src/widget/song_editor.py:99
-msgid "Recently"
-msgstr "Nedávno"
-
-#: ../src/widget/song_editor.py:100 ../src/widget/song_notify.py:209
+#: ../src/widget/song_notify.py:209 ../src/widget/song_editor.py:100
 msgid "Playcount"
 msgstr "Počet přehrání"
 
-#: ../src/widget/song_editor.py:100 ../src/widget/song_editor.py:206
-msgid "Date"
-msgstr "Datum"
+#: ../src/widget/song_notify.py:210 ../src/widget/song_editor.py:97
+msgid "Duration"
+msgstr "Doba trvání"
 
-#: ../src/widget/song_editor.py:147
-msgid "Location"
-msgstr "Umístění"
+#: ../src/widget/webcast_view.py:114 ../src/widget/webcast_view.py:120
+#: ../src/widget/playlist.py:103 ../plugins/musicfm/radio_view.py:134
+#: ../plugins/musicfm/radio_view.py:140
+msgid "Delete"
+msgstr "Smazat"
 
-#: ../src/widget/song_editor.py:150 ../src/widget/converter.py:367
-#: ../src/widget/playlist.py:560 ../src/widget/lyrics_module.py:240
-msgid "Open directory"
-msgstr "Otevřít adresář"
+#: ../src/widget/webcast_view.py:115 ../src/widget/webcast_view.py:123
+#: ../src/widget/playlist.py:555 ../plugins/musicfm/radio_view.py:135
+#: ../plugins/musicfm/radio_view.py:141
+msgid "Clear List"
+msgstr "Vyprázdnit seznam"
 
-#: ../src/widget/song_editor.py:205 ../src/widget/local_browser.py:89
-#: ../src/widget/webcasts_browser.py:99
-msgid "Genre"
-msgstr "Žánr"
+#: ../src/widget/webcast_view.py:119 ../src/widget/webcast_view.py:338
+#: ../src/widget/song_view.py:785 ../src/widget/instance.py:320
+#: ../src/widget/tray.py:58 ../src/widget/playlist.py:549
+#: ../plugins/musicfm/radio_view.py:139
+msgid "Play"
+msgstr "Přehrát"
 
-#: ../src/widget/song_editor.py:214
-msgid "Save"
-msgstr "Uložit"
+#: ../src/widget/webcast_view.py:219 ../src/widget/webcast_view.py:368
+msgid "Remove from Favorites"
+msgstr "Odstranit z oblíbených"
 
-#: ../src/widget/song_editor.py:296 ../src/widget/converter.py:475
-#: ../src/widget/preference.py:252
-msgid "Change"
-msgstr "Změnit"
+#: ../src/widget/webcast_view.py:221 ../src/widget/webcast_view.py:370
+msgid "Add to Favorites"
+msgstr "Přidat do oblíbených"
 
-#: ../src/widget/song_editor.py:299
-msgid "Retrieve from the Internet"
-msgstr "Získat z internetu"
+#: ../src/widget/webcast_view.py:333 ../src/widget/webcast_view.py:339
+#: ../src/widget/song_view.py:786
+msgid "Add to Playlist"
+msgstr "Přidat do seznamu skladeb"
 
-#: ../src/widget/song_editor.py:302 ../src/widget/equalizer.py:252
-#: ../src/widget/preference.py:375
-msgid "Reset"
-msgstr "Nastavit znovu"
+#: ../src/widget/webcast_view.py:450 ../plugins/webcast/__init__.py:34
+#: ../plugins/webcast/__init__.py:36
+msgid "Radio"
+msgstr "Rádio"
 
-#: ../src/widget/song_editor.py:321 ../src/widget/local_browser.py:343
-msgid "Select image"
-msgstr "Vybrat obrázek"
+#: ../src/widget/local_tab.py:28 ../src/widget/song_view.py:817
+#: ../src/widget/global_search.py:48
+msgid "Library"
+msgstr "Knihovna"
 
-#: ../src/widget/song_editor.py:335 ../src/widget/song_view.py:793
-#: ../src/widget/playlist.py:561
-msgid "Properties"
-msgstr "Vlastnosti"
+#: ../src/widget/headerbar.py:63 ../src/widget/preference.py:368
+msgid "Play/Pause"
+msgstr "Přehrát/Pozastavit"
 
-#: ../src/widget/song_editor.py:338 ../src/widget/equalizer.py:250
-#: ../src/widget/ui.py:1248 ../src/widget/converter.py:394
-#: ../src/widget/converter.py:449 ../src/widget/preference.py:945
-#: ../src/widget/lyrics_search.py:89
-msgid "Close"
-msgstr "Zavřít"
-
-#: ../src/widget/song_editor.py:341 ../src/widget/headerbar.py:72
-#: ../src/widget/preference.py:369 ../src/widget/instance.py:329
-#: ../src/widget/tray.py:63
+#: ../src/widget/headerbar.py:71 ../src/widget/preference.py:369
+#: ../src/widget/instance.py:329 ../src/widget/tray.py:63
+#: ../src/widget/song_editor.py:341
 msgid "Previous"
 msgstr "Předchozí"
 
-#: ../src/widget/song_editor.py:343 ../src/widget/headerbar.py:73
-#: ../src/widget/preference.py:370 ../src/widget/instance.py:330
-#: ../src/widget/tray.py:64
+#: ../src/widget/headerbar.py:72 ../src/widget/preference.py:370
+#: ../src/widget/instance.py:330 ../src/widget/tray.py:64
+#: ../src/widget/song_editor.py:343
 msgid "Next"
 msgstr "Další"
 
-#: ../src/widget/song_editor.py:367
-msgid "Track Infomation"
-msgstr "Informace o skladbě"
+#: ../src/widget/headerbar.py:77
+msgid "Show/Hide Lyrics"
+msgstr "Zobrazit/Skrýt text písně"
 
-#: ../src/widget/song_editor.py:368
-msgid "Edit tags"
-msgstr "Upravit značky"
+#: ../src/widget/webcasts_browser.py:98
+msgid "Region"
+msgstr "Oblast"
 
-#: ../src/widget/song_editor.py:369
-msgid "Edit cover"
-msgstr "Upravit obal"
+#: ../src/widget/webcasts_browser.py:99 ../src/widget/song_editor.py:205
+#: ../src/widget/local_browser.py:89
+msgid "Genre"
+msgstr "Žánr"
+
+#: ../src/widget/webcasts_browser.py:141
+msgid "Favorites"
+msgstr "Oblíbené"
 
 #: ../src/widget/equalizer.py:176
 msgid "Custom"
@@ -426,204 +405,25 @@ msgstr "Techno"
 msgid "Equalizer"
 msgstr "Ekvalizér"
 
+#: ../src/widget/equalizer.py:250 ../src/widget/preference.py:945
+#: ../src/widget/ui.py:1252 ../src/widget/song_editor.py:338
+#: ../src/widget/converter.py:394 ../src/widget/converter.py:449
+#: ../src/widget/lyrics_search.py:89
+msgid "Close"
+msgstr "Zavřít"
+
+#: ../src/widget/equalizer.py:252 ../src/widget/preference.py:375
+#: ../src/widget/song_editor.py:302
+msgid "Reset"
+msgstr "Nastavit znovu"
+
 #: ../src/widget/equalizer.py:254
 msgid "Predefined"
 msgstr "Přednastaveno"
 
-#: ../src/widget/global_keys.py:96
-#, python-format
-msgid "Failed to bind %s !"
-msgstr "Nepodařilo se připojit %s !"
-
-#: ../src/widget/local_item.py:59
-msgid "All Tracks"
-msgstr "Všechny skladby"
-
-#: ../src/widget/local_item.py:67
-msgid "Track(s)"
-msgstr "Skladba/Skladby"
-
-#: ../src/widget/information.py:75
-msgid "Connecting"
-msgstr "Připojuje se"
-
-#: ../src/widget/information.py:105
-msgid "buffering"
-msgstr "Ukládá se do vyrovnávací paměti"
-
-#: ../src/widget/webcast_view.py:114 ../src/widget/webcast_view.py:120
-#: ../src/widget/playlist.py:103 ../plugins/musicfm/radio_view.py:134
-#: ../plugins/musicfm/radio_view.py:140
-msgid "Delete"
-msgstr "Smazat"
-
-#: ../src/widget/webcast_view.py:115 ../src/widget/webcast_view.py:123
-#: ../src/widget/playlist.py:555 ../plugins/musicfm/radio_view.py:135
-#: ../plugins/musicfm/radio_view.py:141
-msgid "Clear List"
-msgstr "Vyprázdnit seznam"
-
-#: ../src/widget/webcast_view.py:119 ../src/widget/webcast_view.py:338
-#: ../src/widget/instance.py:320 ../src/widget/song_view.py:785
-#: ../src/widget/playlist.py:549 ../src/widget/tray.py:58
-#: ../plugins/musicfm/radio_view.py:139
-msgid "Play"
-msgstr "Přehrát"
-
-#: ../src/widget/webcast_view.py:219 ../src/widget/webcast_view.py:368
-msgid "Remove from Favorites"
-msgstr "Odstranit z oblíbených"
-
-#: ../src/widget/webcast_view.py:221 ../src/widget/webcast_view.py:370
-msgid "Add to Favorites"
-msgstr "Přidat do oblíbených"
-
-#: ../src/widget/webcast_view.py:333 ../src/widget/webcast_view.py:339
-#: ../src/widget/song_view.py:786
-msgid "Add to Playlist"
-msgstr "Přidat do seznamu skladeb"
-
-#: ../src/widget/webcast_view.py:450 ../plugins/webcast/__init__.py:34
-#: ../plugins/webcast/__init__.py:36
-msgid "Radio"
-msgstr "Rádio"
-
-#: ../src/widget/global_search.py:48 ../src/widget/song_view.py:817
-#: ../src/widget/local_tab.py:28
-msgid "Library"
-msgstr "Knihovna"
-
-#: ../src/widget/lyrics.py:734
-msgid "Lyrics window"
-msgstr "Okno s textem písně"
-
-#: ../src/widget/ui.py:203
-msgid "Need some music? Find it here..."
-msgstr "Hledáte hudbu? Nalezněte ji zde..."
-
-#: ../src/widget/ui.py:401
-msgid "Add Music"
-msgstr "Přidat hudbu"
-
-#: ../src/widget/ui.py:1118
-msgid "Your search {keyword} did not match any items in {from}"
-msgstr "Vaše hledání {keyword} neodpovídá žádné z položek v {from}"
-
-#: ../src/widget/ui.py:1119
-msgid "Suggestions"
-msgstr "Návrhy"
-
-#: ../src/widget/ui.py:1120
-msgid "Make sure all words are spelled correctly."
-msgstr "Ujistěte se, že všechna slova jsou napsána správně."
-
-#: ../src/widget/ui.py:1121
-msgid ""
-"Try more general keywords, such as a title, an artist or the name of an "
-"album."
-msgstr "Zkuste zadat více obecných slov, jako jsou název, umělec nebo název alba."
-
-#: ../src/widget/ui.py:1218 ../src/widget/plugins_view.py:166
-msgid "Add-on"
-msgstr "Doplněk"
-
-#: ../src/widget/ui.py:1226
-msgid "Author(s)"
-msgstr "Autor/Autoři"
-
-#: ../src/widget/ui.py:1256 ../src/widget/preference.py:195
-msgid "Minimize to tray"
-msgstr "Zmenšit do oznamovací oblasti panelu"
-
-#: ../src/widget/ui.py:1258 ../src/widget/preference.py:196
-#: ../src/widget/instance.py:373 ../src/widget/tray.py:83
-msgid "Quit"
-msgstr "Ukončit"
-
-#: ../src/widget/ui.py:1262
-msgid "Don't prompt again"
-msgstr "Neptat se znovu"
-
-#: ../src/widget/ui.py:1269
-msgid "OK"
-msgstr "OK"
-
-#: ../src/widget/ui.py:1272
-msgid "Cancel"
-msgstr "Zrušit"
-
-#: ../src/widget/headerbar.py:64 ../src/widget/preference.py:368
-msgid "Play/Pause"
-msgstr "Přehrát/Pozastavit"
-
-#: ../src/widget/headerbar.py:78
-msgid "Show/Hide Lyrics"
-msgstr "Zobrazit/Skrýt text písně"
-
-#: ../src/widget/converter.py:309 ../src/widget/song_view.py:437
-#: ../src/widget/song_view.py:780 ../src/widget/local_browser.py:339
-msgid "Prompt"
-msgstr "Výzva"
-
-#: ../src/widget/converter.py:309
-msgid "Target file already exitsts, do you want to overwrite it?"
-msgstr "Cílový soubor již existuje. Přejete si jej přepsat?"
-
-#: ../src/widget/converter.py:369
-msgid "Delete task"
-msgstr "Smazat úkol"
-
-#: ../src/widget/converter.py:370
-msgid "Clear finished tasks"
-msgstr "Smazat dokončené úkoly"
-
-#: ../src/widget/converter.py:376 ../src/widget/instance.py:341
-msgid "Task Manager"
-msgstr "Správce úkolů"
-
-#: ../src/widget/converter.py:392 ../src/widget/converter.py:412
-#: ../src/widget/converter.py:415 ../src/widget/instance.py:323
-#: ../src/widget/tray.py:61
-msgid "Pause"
-msgstr "Pozastavit"
-
-#: ../src/widget/converter.py:413
-msgid "Continue"
-msgstr "Pokračovat"
-
-#: ../src/widget/converter.py:427 ../src/widget/instance.py:340
-#: ../src/widget/instance.py:363 ../src/widget/song_view.py:792
-#: ../src/widget/playlist.py:559
-msgid "Convert"
-msgstr "Převést"
-
-#: ../src/widget/converter.py:436
-msgid "Quality"
-msgstr "Jakost"
-
-#: ../src/widget/converter.py:444
-msgid "Target file already exists"
-msgstr "Cílový soubor již existuje"
-
-#: ../src/widget/converter.py:445
-msgid "Ask"
-msgstr "Ptát se"
-
-#: ../src/widget/converter.py:445
-msgid "Cover"
-msgstr "Obal"
-
-#: ../src/widget/converter.py:448
-msgid "Start"
-msgstr "Začít"
-
-#: ../src/widget/converter.py:450
-msgid "Add to Playlist when finished"
-msgstr "Přidat do seznamu skladeb po dokončení"
-
-#: ../src/widget/converter.py:472
-msgid "Output"
-msgstr "Výstup"
+#: ../src/widget/jobs_manager.py:44 ../src/widget/jobs_manager.py:153
+msgid "jobs waiting!"
+msgstr "Úkoly čekají!"
 
 #: ../src/widget/preference.py:150
 msgid "Startup"
@@ -649,6 +449,15 @@ msgstr "Obnovit přehrávání"
 msgid "On pressing the close button"
 msgstr "Při stisknutí tlačítka pro zavření"
 
+#: ../src/widget/preference.py:195 ../src/widget/ui.py:1260
+msgid "Minimize to tray"
+msgstr "Zmenšit do oznamovací oblasti panelu"
+
+#: ../src/widget/preference.py:196 ../src/widget/ui.py:1262
+#: ../src/widget/instance.py:373 ../src/widget/tray.py:83
+msgid "Quit"
+msgstr "Ukončit"
+
 #: ../src/widget/preference.py:209
 msgid "Playback settings"
 msgstr "Nastavení přehrávání"
@@ -672,6 +481,11 @@ msgstr " ms"
 #: ../src/widget/preference.py:241
 msgid "Lyrics directory"
 msgstr "Adresář s texty písní"
+
+#: ../src/widget/preference.py:252 ../src/widget/song_editor.py:296
+#: ../src/widget/converter.py:475
+msgid "Change"
+msgstr "Změnit"
 
 #: ../src/widget/preference.py:346 ../src/widget/preference.py:997
 msgid "Hotkeys"
@@ -818,10 +632,17 @@ msgstr "Verze"
 
 #: ../src/widget/preference.py:920
 msgid ""
-"        DMusic is a music application designed for Linux users.It features lyrics searching and downloading, desktop lyrics display,album cover downloading, resume playing, music management and skin selection.\n"
+"        DMusic is a music application designed for Linux users.It features "
+"lyrics searching and downloading, desktop lyrics display,album cover "
+"downloading, resume playing, music management and skin selection.\n"
 "\n"
 "DMusic is free software licensed under GNU GPLv3."
-msgstr "        DMusic je hudební program navržený pro uživatele Linuxu. Nabízí hledání textu písně a jeho stažení, zobrazení textu na ploše, stažení obalu alba, obnovení přehrávání, správu hudby a výběr vzhledu.\n\nDMusic je svobodný software licencovaný pod GNU GPLv3."
+msgstr ""
+"        DMusic je hudební program navržený pro uživatele Linuxu. Nabízí "
+"hledání textu písně a jeho stažení, zobrazení textu na ploše, stažení obalu "
+"alba, obnovení přehrávání, správu hudby a výběr vzhledu.\n"
+"\n"
+"DMusic je svobodný software licencovaný pod GNU GPLv3."
 
 #: ../src/widget/preference.py:938 ../src/widget/instance.py:371
 #: ../src/widget/tray.py:82
@@ -852,67 +673,10 @@ msgstr "Doplňky"
 msgid "About"
 msgstr "O programu"
 
-#: ../src/widget/instance.py:146
-msgid "Join us"
-msgstr "Připojte se k nám"
-
-#: ../src/widget/instance.py:327
-msgid "Forward"
-msgstr "Vpřed"
-
-#: ../src/widget/instance.py:328
-msgid "Rewind"
-msgstr "Přetočit zpět"
-
-#: ../src/widget/instance.py:358 ../src/widget/playlist.py:97
-msgid "Add"
-msgstr "Přidat"
-
-#: ../src/widget/instance.py:359
-msgid "Controls"
-msgstr "Ovládání"
-
-#: ../src/widget/instance.py:360 ../src/widget/playlist.py:100
-#: ../src/widget/playlist.py:557
-msgid "Playback Order"
-msgstr "Pořadí přehrávání"
-
-#: ../src/widget/instance.py:370
-msgid "View New Features"
-msgstr "Podívat se na nové vlastnosti"
-
-#: ../src/widget/instance.py:377 ../src/widget/tray.py:72
-msgid "Search Lyrics"
-msgstr "Hledat text písně"
-
-#: ../src/widget/instance.py:396 ../src/widget/tray.py:71
-msgid "Hide Lyrics"
-msgstr "Skrýt text písně"
-
-#: ../src/widget/instance.py:398 ../src/widget/tray.py:74
-msgid "Show Lyrics"
-msgstr "Ukázat text písně"
-
-#: ../src/widget/instance.py:402 ../src/widget/tray.py:77
-msgid "Unlock lyrics"
-msgstr "Odemknout text písně"
-
-#: ../src/widget/instance.py:404 ../src/widget/lyrics_module.py:155
-#: ../src/widget/tray.py:79
-msgid "Lock lyrics"
-msgstr "Zamknout text písně"
-
-#: ../src/widget/instance.py:479
-msgid "Mini Mode"
-msgstr "Malý režim"
-
-#: ../src/widget/instance.py:481
-msgid "Normal Mode"
-msgstr "Normální režim"
-
-#: ../src/widget/jobs_manager.py:44 ../src/widget/jobs_manager.py:153
-msgid "jobs waiting!"
-msgstr "Úkoly čekají!"
+#: ../src/widget/song_view.py:437 ../src/widget/song_view.py:780
+#: ../src/widget/local_browser.py:339 ../src/widget/converter.py:309
+msgid "Prompt"
+msgstr "Výzva"
 
 #: ../src/widget/song_view.py:437 ../src/widget/song_view.py:780
 #: ../src/widget/local_browser.py:339
@@ -976,6 +740,23 @@ msgstr "Adresář (včetně podadresářů)"
 msgid "Add URL"
 msgstr "Přidat adresu (URL)"
 
+#: ../src/widget/song_view.py:680 ../src/widget/song_editor.py:72
+#: ../src/widget/song_editor.py:202 ../src/widget/lyrics_search.py:83
+msgid "Title"
+msgstr "Název"
+
+#: ../src/widget/song_view.py:680 ../src/widget/song_editor.py:73
+#: ../src/widget/song_editor.py:203 ../src/widget/local_browser.py:85
+#: ../src/widget/lyrics_search.py:83 ../plugins/notify/__init__.py:43
+msgid "Artist"
+msgstr "Umělec"
+
+#: ../src/widget/song_view.py:680 ../src/widget/song_editor.py:74
+#: ../src/widget/song_editor.py:204 ../src/widget/local_browser.py:87
+#: ../plugins/notify/__init__.py:45
+msgid "Album"
+msgstr "Album"
+
 #: ../src/widget/song_view.py:680
 msgid "Added time"
 msgstr "Přidán čas"
@@ -988,129 +769,20 @@ msgstr "Odstranit z knihovny"
 msgid "Open Directory"
 msgstr "Otevřít adresář"
 
-#: ../src/widget/plugins_view.py:166
-msgid "Enable"
-msgstr "Povolit"
+#: ../src/widget/song_view.py:792 ../src/widget/instance.py:340
+#: ../src/widget/instance.py:363 ../src/widget/converter.py:427
+#: ../src/widget/playlist.py:559
+msgid "Convert"
+msgstr "Převést"
 
-#: ../src/widget/local_browser.py:91
-msgid "Folder"
-msgstr "Složka"
+#: ../src/widget/song_view.py:793 ../src/widget/song_editor.py:335
+#: ../src/widget/playlist.py:561
+msgid "Properties"
+msgstr "Vlastnosti"
 
-#: ../src/widget/local_browser.py:98
-msgid "Quick Scan"
-msgstr "Rychlé prohledávání"
-
-#: ../src/widget/local_browser.py:99
-msgid "Scan"
-msgstr "Prohledat"
-
-#: ../src/widget/local_browser.py:100
-msgid "Refresh"
-msgstr "Obnovit"
-
-#: ../src/widget/local_browser.py:350
-msgid "Play All"
-msgstr "Přehrát vše"
-
-#: ../src/widget/local_browser.py:351 ../src/widget/playlist.py:550
-msgid "Add to List"
-msgstr "Přidat do seznamu"
-
-#: ../src/widget/local_browser.py:361
-msgid "Change Cover"
-msgstr "Změnit obal"
-
-#: ../src/widget/playlist.py:94
-msgid "Search in Current Playlist"
-msgstr "Hledat v nynějším seznamu skladeb"
-
-#: ../src/widget/playlist.py:96
-msgid "Playlist Operations"
-msgstr "Operace se seznamem skladeb"
-
-#: ../src/widget/playlist.py:183
-msgid "Default List"
-msgstr "Výchozí seznam"
-
-#: ../src/widget/playlist.py:304 ../src/widget/playlist.py:316
-#: ../src/widget/playlist.py:317 ../src/widget/playlist.py:357
-#: ../src/widget/playlist.py:360 ../src/widget/playlist.py:476
-msgid "New List"
-msgstr "Nový seznam"
-
-#: ../src/widget/playlist.py:305 ../src/widget/playlist.py:477
-msgid "Import List"
-msgstr "Zavést seznam"
-
-#: ../src/widget/playlist.py:306 ../src/widget/playlist.py:485
-msgid "Open List"
-msgstr "Otevřít seznam"
-
-#: ../src/widget/playlist.py:307
-msgid "Export List"
-msgstr "Exportovat seznam"
-
-#: ../src/widget/playlist.py:308 ../src/widget/playlist.py:484
-msgid "Remove List"
-msgstr "Odstranit seznam"
-
-#: ../src/widget/playlist.py:310 ../src/widget/playlist.py:479
-#: ../src/widget/playlist.py:487
-msgid "Save all Lists"
-msgstr "Uložit všechny seznamy"
-
-#: ../src/widget/playlist.py:483 ../src/widget/playlist.py:493
-msgid "Rename"
-msgstr "Přejmenovat"
-
-#: ../src/widget/playlist.py:534
-msgid "By Filename"
-msgstr "Podle jména souboru"
-
-#: ../src/widget/playlist.py:535
-msgid "By Title"
-msgstr "Podle názvu"
-
-#: ../src/widget/playlist.py:536 ../src/widget/combo.py:184
-#: ../src/widget/combo.py:233
-msgid "By Artist"
-msgstr "Podle umělce"
-
-#: ../src/widget/playlist.py:537 ../src/widget/combo.py:235
-msgid "By Album"
-msgstr "Podle alba"
-
-#: ../src/widget/playlist.py:538 ../src/widget/combo.py:234
-msgid "By Genre"
-msgstr "Podle žánru"
-
-#: ../src/widget/playlist.py:539
-msgid "By Track"
-msgstr "Podle skladby"
-
-#: ../src/widget/playlist.py:540
-msgid "By Play Count"
-msgstr "Podle počtu přehrání"
-
-#: ../src/widget/playlist.py:541
-msgid "By Date Added"
-msgstr "Podle data přidání"
-
-#: ../src/widget/playlist.py:545
-msgid "Randomize"
-msgstr "Náhodně"
-
-#: ../src/widget/playlist.py:551
-msgid "move to List"
-msgstr "Přesunout do seznamu"
-
-#: ../src/widget/playlist.py:553
-msgid "Remove Track"
-msgstr "Odstranit skladbu"
-
-#: ../src/widget/playlist.py:558
-msgid "Sort"
-msgstr "Třídit"
+#: ../src/widget/lyrics.py:734
+msgid "Lyrics window"
+msgstr "Okno s textem písně"
 
 #: ../src/widget/lyrics_module.py:151
 msgid "increase the lyrics size"
@@ -1123,6 +795,11 @@ msgstr "Zmenšit velikost textu písně"
 #: ../src/widget/lyrics_module.py:154
 msgid "Select color theme"
 msgstr "Vybrat barevný motiv"
+
+#: ../src/widget/lyrics_module.py:155 ../src/widget/instance.py:404
+#: ../src/widget/tray.py:79
+msgid "Lock lyrics"
+msgstr "Zamknout text písně"
 
 #: ../src/widget/lyrics_module.py:158
 msgid "karaoke on/off"
@@ -1185,6 +862,11 @@ msgstr "Upravit text písně"
 msgid "Choose local lrc"
 msgstr "Zavřít místní lrc"
 
+#: ../src/widget/lyrics_module.py:240 ../src/widget/song_editor.py:150
+#: ../src/widget/converter.py:367 ../src/widget/playlist.py:560
+msgid "Open directory"
+msgstr "Otevřít adresář"
+
 #: ../src/widget/lyrics_module.py:247
 msgid "Network get lrc"
 msgstr "Síž dostane lrc"
@@ -1196,6 +878,124 @@ msgstr "Nenalezen žádný text písně!"
 #: ../src/widget/lyrics_module.py:796 ../src/widget/lyrics_module.py:797
 msgid "Searching for lyrics..."
 msgstr "Hledání textu písně..."
+
+#: ../src/widget/ui.py:203
+msgid "Need some music? Find it here..."
+msgstr "Hledáte hudbu? Nalezněte ji zde..."
+
+#: ../src/widget/ui.py:401
+msgid "Add Music"
+msgstr "Přidat hudbu"
+
+#: ../src/widget/ui.py:1122
+msgid "Your search {keyword} did not match any items in {from}"
+msgstr "Vaše hledání {keyword} neodpovídá žádné z položek v {from}"
+
+#: ../src/widget/ui.py:1123
+msgid "Suggestions"
+msgstr "Návrhy"
+
+#: ../src/widget/ui.py:1124
+msgid "Make sure all words are spelled correctly."
+msgstr "Ujistěte se, že všechna slova jsou napsána správně."
+
+#: ../src/widget/ui.py:1125
+msgid ""
+"Try more general keywords, such as a title, an artist or the name of an "
+"album."
+msgstr ""
+"Zkuste zadat více obecných slov, jako jsou název, umělec nebo název alba."
+
+#: ../src/widget/ui.py:1222 ../src/widget/plugins_view.py:166
+msgid "Add-on"
+msgstr "Doplněk"
+
+#: ../src/widget/ui.py:1230
+msgid "Author(s)"
+msgstr "Autor/Autoři"
+
+#: ../src/widget/ui.py:1266
+msgid "Don't prompt again"
+msgstr "Neptat se znovu"
+
+#: ../src/widget/ui.py:1273
+msgid "OK"
+msgstr "OK"
+
+#: ../src/widget/ui.py:1276
+msgid "Cancel"
+msgstr "Zrušit"
+
+#: ../src/widget/instance.py:146
+msgid "Join us"
+msgstr "Připojte se k nám"
+
+#: ../src/widget/instance.py:323 ../src/widget/tray.py:61
+#: ../src/widget/converter.py:392 ../src/widget/converter.py:412
+#: ../src/widget/converter.py:415
+msgid "Pause"
+msgstr "Pozastavit"
+
+#: ../src/widget/instance.py:327
+msgid "Forward"
+msgstr "Vpřed"
+
+#: ../src/widget/instance.py:328
+msgid "Rewind"
+msgstr "Přetočit zpět"
+
+#: ../src/widget/instance.py:341 ../src/widget/converter.py:376
+msgid "Task Manager"
+msgstr "Správce úkolů"
+
+#: ../src/widget/instance.py:358 ../src/widget/playlist.py:97
+msgid "Add"
+msgstr "Přidat"
+
+#: ../src/widget/instance.py:359
+msgid "Controls"
+msgstr "Ovládání"
+
+#: ../src/widget/instance.py:360 ../src/widget/playlist.py:100
+#: ../src/widget/playlist.py:557
+msgid "Playback Order"
+msgstr "Pořadí přehrávání"
+
+#: ../src/widget/instance.py:370
+msgid "View New Features"
+msgstr "Podívat se na nové vlastnosti"
+
+#: ../src/widget/instance.py:377 ../src/widget/tray.py:72
+msgid "Search Lyrics"
+msgstr "Hledat text písně"
+
+#: ../src/widget/instance.py:396 ../src/widget/tray.py:71
+msgid "Hide Lyrics"
+msgstr "Skrýt text písně"
+
+#: ../src/widget/instance.py:398 ../src/widget/tray.py:74
+msgid "Show Lyrics"
+msgstr "Ukázat text písně"
+
+#: ../src/widget/instance.py:402 ../src/widget/tray.py:77
+msgid "Unlock lyrics"
+msgstr "Odemknout text písně"
+
+#: ../src/widget/instance.py:479
+msgid "Mini Mode"
+msgstr "Malý režim"
+
+#: ../src/widget/instance.py:481
+msgid "Normal Mode"
+msgstr "Normální režim"
+
+#: ../src/widget/tray.py:50
+msgid "Mute"
+msgstr "Ztlumit"
+
+#: ../src/widget/tray.py:66
+msgid "Volume"
+msgstr "Hlasitost"
 
 #: ../src/widget/dialog.py:34
 msgid "Select Directory"
@@ -1213,9 +1013,171 @@ msgstr "Vyvést seznam skladeb"
 msgid "Load playlist"
 msgstr "Nahrát seznam skladeb"
 
+#: ../src/widget/song_editor.py:96 ../src/widget/converter.py:433
+msgid "Format"
+msgstr "Formát"
+
+#: ../src/widget/song_editor.py:98
+msgid "Bitrate"
+msgstr "Datový tok"
+
+#: ../src/widget/song_editor.py:98
+msgid "Rate"
+msgstr "Rychlost"
+
+#: ../src/widget/song_editor.py:99
+msgid "Added"
+msgstr "Přidáno"
+
+#: ../src/widget/song_editor.py:99
+msgid "Recently"
+msgstr "Nedávno"
+
+#: ../src/widget/song_editor.py:100 ../src/widget/song_editor.py:206
+msgid "Date"
+msgstr "Datum"
+
+#: ../src/widget/song_editor.py:147
+msgid "Location"
+msgstr "Umístění"
+
+#: ../src/widget/song_editor.py:214
+msgid "Save"
+msgstr "Uložit"
+
+#: ../src/widget/song_editor.py:299
+msgid "Retrieve from the Internet"
+msgstr "Získat z internetu"
+
+#: ../src/widget/song_editor.py:321 ../src/widget/local_browser.py:343
+msgid "Select image"
+msgstr "Vybrat obrázek"
+
+#: ../src/widget/song_editor.py:367
+msgid "Track Infomation"
+msgstr "Informace o skladbě"
+
+#: ../src/widget/song_editor.py:368
+msgid "Edit tags"
+msgstr "Upravit značky"
+
+#: ../src/widget/song_editor.py:369
+msgid "Edit cover"
+msgstr "Upravit obal"
+
+#: ../src/widget/combo.py:184 ../src/widget/combo.py:233
+#: ../src/widget/playlist.py:536
+msgid "By Artist"
+msgstr "Podle umělce"
+
 #: ../src/widget/combo.py:195
 msgid "List view"
 msgstr "Pohled se seznamem"
+
+#: ../src/widget/combo.py:234 ../src/widget/playlist.py:538
+msgid "By Genre"
+msgstr "Podle žánru"
+
+#: ../src/widget/combo.py:235 ../src/widget/playlist.py:537
+msgid "By Album"
+msgstr "Podle alba"
+
+#: ../src/widget/plugins_view.py:166
+msgid "Enable"
+msgstr "Povolit"
+
+#: ../src/widget/global_keys.py:96
+#, python-format
+msgid "Failed to bind %s !"
+msgstr "Nepodařilo se připojit %s !"
+
+#: ../src/widget/local_browser.py:91
+msgid "Folder"
+msgstr "Složka"
+
+#: ../src/widget/local_browser.py:98
+msgid "Quick Scan"
+msgstr "Rychlé prohledávání"
+
+#: ../src/widget/local_browser.py:99
+msgid "Scan"
+msgstr "Prohledat"
+
+#: ../src/widget/local_browser.py:100
+msgid "Refresh"
+msgstr "Obnovit"
+
+#: ../src/widget/local_browser.py:350
+msgid "Play All"
+msgstr "Přehrát vše"
+
+#: ../src/widget/local_browser.py:351 ../src/widget/playlist.py:550
+msgid "Add to List"
+msgstr "Přidat do seznamu"
+
+#: ../src/widget/local_browser.py:361
+msgid "Change Cover"
+msgstr "Změnit obal"
+
+#: ../src/widget/local_item.py:59
+msgid "All Tracks"
+msgstr "Všechny skladby"
+
+#: ../src/widget/local_item.py:67
+msgid "Track(s)"
+msgstr "Skladba/Skladby"
+
+#: ../src/widget/information.py:75
+msgid "Connecting"
+msgstr "Připojuje se"
+
+#: ../src/widget/information.py:105
+msgid "buffering"
+msgstr "Ukládá se do vyrovnávací paměti"
+
+#: ../src/widget/converter.py:309
+msgid "Target file already exitsts, do you want to overwrite it?"
+msgstr "Cílový soubor již existuje. Přejete si jej přepsat?"
+
+#: ../src/widget/converter.py:369
+msgid "Delete task"
+msgstr "Smazat úkol"
+
+#: ../src/widget/converter.py:370
+msgid "Clear finished tasks"
+msgstr "Smazat dokončené úkoly"
+
+#: ../src/widget/converter.py:413
+msgid "Continue"
+msgstr "Pokračovat"
+
+#: ../src/widget/converter.py:436
+msgid "Quality"
+msgstr "Jakost"
+
+#: ../src/widget/converter.py:444
+msgid "Target file already exists"
+msgstr "Cílový soubor již existuje"
+
+#: ../src/widget/converter.py:445
+msgid "Ask"
+msgstr "Ptát se"
+
+#: ../src/widget/converter.py:445
+msgid "Cover"
+msgstr "Obal"
+
+#: ../src/widget/converter.py:448
+msgid "Start"
+msgstr "Začít"
+
+#: ../src/widget/converter.py:450
+msgid "Add to Playlist when finished"
+msgstr "Přidat do seznamu skladeb po dokončení"
+
+#: ../src/widget/converter.py:472
+msgid "Output"
+msgstr "Výstup"
 
 #: ../src/widget/lyrics_search.py:47
 msgid "Lyrics search"
@@ -1258,34 +1220,88 @@ msgstr "Uložit soubor do"
 msgid "Download failed."
 msgstr "Stažení se nezdařilo."
 
-#: ../src/widget/tray.py:50
-msgid "Mute"
-msgstr "Ztlumit"
+#: ../src/widget/playlist.py:94
+msgid "Search in Current Playlist"
+msgstr "Hledat v nynějším seznamu skladeb"
 
-#: ../src/widget/tray.py:66
-msgid "Volume"
-msgstr "Hlasitost"
+#: ../src/widget/playlist.py:96
+msgid "Playlist Operations"
+msgstr "Operace se seznamem skladeb"
 
-#: ../src/widget/webcasts_browser.py:98
-msgid "Region"
-msgstr "Oblast"
+#: ../src/widget/playlist.py:183
+msgid "Default List"
+msgstr "Výchozí seznam"
 
-#: ../src/widget/webcasts_browser.py:141
-msgid "Favorites"
-msgstr "Oblíbené"
+#: ../src/widget/playlist.py:304 ../src/widget/playlist.py:316
+#: ../src/widget/playlist.py:317 ../src/widget/playlist.py:357
+#: ../src/widget/playlist.py:360 ../src/widget/playlist.py:476
+msgid "New List"
+msgstr "Nový seznam"
+
+#: ../src/widget/playlist.py:305 ../src/widget/playlist.py:477
+msgid "Import List"
+msgstr "Zavést seznam"
+
+#: ../src/widget/playlist.py:306 ../src/widget/playlist.py:485
+msgid "Open List"
+msgstr "Otevřít seznam"
+
+#: ../src/widget/playlist.py:307
+msgid "Export List"
+msgstr "Vyvést seznam"
+
+#: ../src/widget/playlist.py:308 ../src/widget/playlist.py:484
+msgid "Remove List"
+msgstr "Odstranit seznam"
+
+#: ../src/widget/playlist.py:310 ../src/widget/playlist.py:479
+#: ../src/widget/playlist.py:487
+msgid "Save all Lists"
+msgstr "Uložit všechny seznamy"
+
+#: ../src/widget/playlist.py:483 ../src/widget/playlist.py:493
+msgid "Rename"
+msgstr "Přejmenovat"
+
+#: ../src/widget/playlist.py:534
+msgid "By Filename"
+msgstr "Podle jména souboru"
+
+#: ../src/widget/playlist.py:535
+msgid "By Title"
+msgstr "Podle názvu"
+
+#: ../src/widget/playlist.py:539
+msgid "By Track"
+msgstr "Podle skladby"
+
+#: ../src/widget/playlist.py:540
+msgid "By Play Count"
+msgstr "Podle počtu přehrání"
+
+#: ../src/widget/playlist.py:541
+msgid "By Date Added"
+msgstr "Podle data přidání"
+
+#: ../src/widget/playlist.py:545
+msgid "Randomize"
+msgstr "Náhodně"
+
+#: ../src/widget/playlist.py:551
+msgid "move to List"
+msgstr "Přesunout do seznamu"
+
+#: ../src/widget/playlist.py:553
+msgid "Remove Track"
+msgstr "Odstranit skladbu"
+
+#: ../src/widget/playlist.py:558
+msgid "Sort"
+msgstr "Třídit"
 
 #: ../plugins/pidgin/__init__.py:97 ../plugins/mpris2/mpris_adapter.py:252
 msgid "Deepin Music"
 msgstr "Hudba Deepin"
-
-#: ../plugins/musicfm/__init__.py:33 ../plugins/musicfm/__init__.py:35
-#: ../plugins/musicfm/radio_view.py:474
-msgid "MusicFM"
-msgstr "Hudba FM"
-
-#: ../plugins/musicfm/radio_item.py:508
-msgid "More"
-msgstr "Více"
 
 #: ../plugins/musicfm/radio_home_page.py:73
 #: ../plugins/musicfm/radio_browser.py:79
@@ -1296,6 +1312,23 @@ msgstr "Hot MHz"
 #: ../plugins/musicfm/radio_browser.py:81
 msgid "Pop MHz"
 msgstr "Pop MHz"
+
+#: ../plugins/musicfm/radio_browser.py:78
+msgid "Home"
+msgstr "Domovská složka"
+
+#: ../plugins/musicfm/radio_browser.py:80
+msgid "Genres"
+msgstr "Žánry"
+
+#: ../plugins/musicfm/__init__.py:33 ../plugins/musicfm/__init__.py:35
+#: ../plugins/musicfm/radio_view.py:474
+msgid "MusicFM"
+msgstr "Hudba FM"
+
+#: ../plugins/musicfm/radio_item.py:508
+msgid "More"
+msgstr "Více"
 
 #: ../plugins/musicfm/radio_genre_page.py:44
 msgid "Jazz"
@@ -1340,11 +1373,3 @@ msgstr "Blues"
 #: ../plugins/musicfm/radio_genre_page.py:55
 msgid "Funk/Soul/R&B"
 msgstr "Funk/Soul/R&B"
-
-#: ../plugins/musicfm/radio_browser.py:78
-msgid "Home"
-msgstr "Domovská složka"
-
-#: ../plugins/musicfm/radio_browser.py:80
-msgid "Genres"
-msgstr "Žánry"
