@@ -3,20 +3,22 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
+# Mohd <mo-hd@windowslive.com>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: DMusic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-02-10 16:34+0800\n"
-"PO-Revision-Date: 2013-12-19 01:14+0000\n"
-"Last-Translator: lihongwu <lihongwu1987@gmail.com>\n"
-"Language-Team: Hungarian (http://www.transifex.com/projects/p/dmusic/"
-"language/hu/)\n"
-"Language: hu\n"
+"PO-Revision-Date: 2014-02-08 19:45+0000\n"
+"Last-Translator: Mohd <mo-hd@windowslive.com>\n"
+"Language-Team: Arabic (http://www.transifex.com/projects/p/dmusic/language/"
+"ar/)\n"
+"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #: ../src/transcoder.py:54
 msgid ""
@@ -71,91 +73,91 @@ msgstr ""
 
 #: ../src/main.py:104
 msgid "Options"
-msgstr ""
+msgstr "الخيارات"
 
 #: ../src/main.py:108
 msgid "Control Options"
-msgstr ""
+msgstr "خيارات التحكم"
 
 #: ../src/main.py:110
 msgid "Play the next track"
-msgstr ""
+msgstr "تشغيل المسار التالي"
 
 #: ../src/main.py:112
 msgid "Play the previous track"
-msgstr ""
+msgstr "تشغيل المسار السابق"
 
 #: ../src/main.py:114
 msgid "Pause or resume playback"
-msgstr ""
+msgstr "تشغيل أو إيقاف المسار"
 
 #: ../src/main.py:116
 msgid "Seek Forward"
-msgstr ""
+msgstr "السعي للأمام"
 
 #: ../src/main.py:118
 msgid "Seek Backward"
-msgstr ""
+msgstr "السعي للخلف"
 
 #: ../src/main.py:120
 msgid "Stop playback"
-msgstr ""
+msgstr "إيقاف التشغيل"
 
 #: ../src/main.py:124
 msgid "Volume Options"
-msgstr ""
+msgstr "خيارات الحجم"
 
 #: ../src/main.py:126
 msgid "Change Volume (VOLUME 0.0-1.0)"
-msgstr ""
+msgstr "تغيير الحجم (الحجم 0.0-1.0)"
 
 #: ../src/main.py:129
 msgid "Track information Options"
-msgstr ""
+msgstr "خيارات معلومات المسار"
 
 #: ../src/main.py:131
 msgid "Print the title of current track"
-msgstr ""
+msgstr "طبع عنوان المسار الحالي"
 
 #: ../src/main.py:133
 msgid "Print the album of current track"
-msgstr ""
+msgstr "طبع البوم المسار الحالي"
 
 #: ../src/main.py:135
 msgid "Print the artist of current track"
-msgstr ""
+msgstr "طبع مؤدي المسار الحالي"
 
 #: ../src/main.py:137
 msgid "Print the length of current track"
-msgstr ""
+msgstr "طبع طول المسار الحالي"
 
 #: ../src/main.py:139
 msgid "Print the path of current track"
-msgstr ""
+msgstr "طبع طريق المسار الحالي"
 
 #: ../src/main.py:141
 msgid "Print current playback position"
-msgstr ""
+msgstr "طبع وضع التشغيل الحالي"
 
 #: ../src/main.py:144
 msgid "Other Options"
-msgstr ""
+msgstr "خيارات أخرى"
 
 #: ../src/main.py:146
 msgid "Show this help message and exit"
-msgstr ""
+msgstr "أظهر رسالة المساعدة هذه ثم أخرج"
 
 #: ../src/main.py:148
 msgid "Start new instance"
-msgstr ""
+msgstr "بدأ طلب جديد"
 
 #: ../src/main.py:150
 msgid "Show program's version number and exit."
-msgstr ""
+msgstr "أظهر رقم إصدار البرنامج ثم أخرج"
 
 #: ../src/main.py:152
 msgid "Start minimized"
-msgstr ""
+msgstr "بدأ التصغير"
 
 #: ../src/main.py:155
 msgid "Toggle visibility of the GUI (if possible)"
@@ -184,50 +186,50 @@ msgstr ""
 #: ../src/widget/global_keys.py:95 ../src/widget/information.py:40
 #: ../src/widget/information.py:82
 msgid "DMusic"
-msgstr ""
+msgstr "د صوتيات"
 
 #: ../src/library.py:990 ../src/library.py:991 ../src/library.py:992
 #: ../src/library.py:999 ../src/library.py:1000 ../src/library.py:1001
 #: ../src/widget/local_item.py:57
 msgid "Unknown"
-msgstr ""
+msgstr "غير معروف"
 
 #: ../src/source/local.py:43
 msgid "Reading directories..."
-msgstr ""
+msgstr "يتم قراءة الدلائل"
 
 #: ../src/source/local.py:175
 msgid "Check deleted files"
-msgstr ""
+msgstr "فصح الملفات المحذوفة"
 
 #: ../src/source/local.py:202
 msgid "Reload database"
-msgstr ""
+msgstr "إعادة تحميل قاعدة البيانات"
 
 #: ../src/source/old.py:112 ../src/source/audiocd.py:75
 msgid "Track"
-msgstr ""
+msgstr "المسار"
 
 #: ../src/source/old.py:113 ../src/source/audiocd.py:76
 msgid "Unknown album"
-msgstr ""
+msgstr "البوم غير معروف"
 
 #: ../src/source/old.py:114 ../src/source/audiocd.py:77
 msgid "Unknown artist"
-msgstr ""
+msgstr "مؤدي غير معروف"
 
 #: ../src/source/audiocd.py:83 ../src/source/audiocd.py:89
 msgid "Audio CD"
-msgstr ""
+msgstr "صوت سي دي"
 
 #: ../src/widget/song_notify.py:193 ../src/widget/preference.py:686
 #: ../src/widget/preference.py:839 ../src/widget/song_editor.py:97
 msgid "Size"
-msgstr ""
+msgstr "الحجم"
 
 #: ../src/widget/song_notify.py:194 ../src/widget/song_editor.py:96
 msgid "Type"
-msgstr ""
+msgstr "النوع"
 
 #: ../src/widget/song_notify.py:209 ../src/widget/song_editor.py:100
 msgid "Playcount"
@@ -235,102 +237,102 @@ msgstr ""
 
 #: ../src/widget/song_notify.py:210 ../src/widget/song_editor.py:97
 msgid "Duration"
-msgstr ""
+msgstr "المدة"
 
 #: ../src/widget/webcast_view.py:114 ../src/widget/webcast_view.py:120
 #: ../src/widget/playlist.py:103 ../plugins/musicfm/radio_view.py:134
 #: ../plugins/musicfm/radio_view.py:140
 msgid "Delete"
-msgstr ""
+msgstr "حذف"
 
 #: ../src/widget/webcast_view.py:115 ../src/widget/webcast_view.py:123
 #: ../src/widget/playlist.py:555 ../plugins/musicfm/radio_view.py:135
 #: ../plugins/musicfm/radio_view.py:141
 msgid "Clear List"
-msgstr ""
+msgstr "مسح القائمة"
 
 #: ../src/widget/webcast_view.py:119 ../src/widget/webcast_view.py:338
 #: ../src/widget/song_view.py:785 ../src/widget/instance.py:320
 #: ../src/widget/tray.py:58 ../src/widget/playlist.py:549
 #: ../plugins/musicfm/radio_view.py:139
 msgid "Play"
-msgstr ""
+msgstr "تشغيل"
 
 #: ../src/widget/webcast_view.py:219 ../src/widget/webcast_view.py:368
 msgid "Remove from Favorites"
-msgstr ""
+msgstr "إزالة من المفضلة"
 
 #: ../src/widget/webcast_view.py:221 ../src/widget/webcast_view.py:370
 msgid "Add to Favorites"
-msgstr ""
+msgstr "إضافة إلى المفضلة"
 
 #: ../src/widget/webcast_view.py:333 ../src/widget/webcast_view.py:339
 #: ../src/widget/song_view.py:786
 msgid "Add to Playlist"
-msgstr ""
+msgstr "إضافة إلى قائمة التشغيل"
 
 #: ../src/widget/webcast_view.py:450 ../plugins/webcast/__init__.py:34
 #: ../plugins/webcast/__init__.py:36
 msgid "Radio"
-msgstr ""
+msgstr "مذياع"
 
 #: ../src/widget/local_tab.py:28 ../src/widget/song_view.py:817
 #: ../src/widget/global_search.py:48
 msgid "Library"
-msgstr ""
+msgstr "المكتبة"
 
 #: ../src/widget/headerbar.py:63 ../src/widget/preference.py:368
 msgid "Play/Pause"
-msgstr ""
+msgstr "تشغيل / إيقاف"
 
 #: ../src/widget/headerbar.py:71 ../src/widget/preference.py:369
 #: ../src/widget/instance.py:329 ../src/widget/tray.py:63
 #: ../src/widget/song_editor.py:341
 msgid "Previous"
-msgstr ""
+msgstr "السابق"
 
 #: ../src/widget/headerbar.py:72 ../src/widget/preference.py:370
 #: ../src/widget/instance.py:330 ../src/widget/tray.py:64
 #: ../src/widget/song_editor.py:343
 msgid "Next"
-msgstr ""
+msgstr "التالي"
 
 #: ../src/widget/headerbar.py:77
 msgid "Show/Hide Lyrics"
-msgstr ""
+msgstr "إظهار / إخفاء الكلمات"
 
 #: ../src/widget/webcasts_browser.py:98
 msgid "Region"
-msgstr ""
+msgstr "منطقة"
 
 #: ../src/widget/webcasts_browser.py:99 ../src/widget/song_editor.py:205
 #: ../src/widget/local_browser.py:89
 msgid "Genre"
-msgstr ""
+msgstr "نوع"
 
 #: ../src/widget/webcasts_browser.py:141
 msgid "Favorites"
-msgstr ""
+msgstr "التفضيلات"
 
 #: ../src/widget/equalizer.py:176
 msgid "Custom"
-msgstr ""
+msgstr "مخصص"
 
 #: ../src/widget/equalizer.py:177
 msgid "Default"
-msgstr ""
+msgstr "الأفتراضي"
 
 #: ../src/widget/equalizer.py:178 ../plugins/musicfm/radio_genre_page.py:43
 msgid "Classical"
-msgstr ""
+msgstr "كلاسيكي"
 
 #: ../src/widget/equalizer.py:179
 msgid "Club"
-msgstr ""
+msgstr "..."
 
 #: ../src/widget/equalizer.py:180
 msgid "Dance"
-msgstr ""
+msgstr "..."
 
 #: ../src/widget/equalizer.py:181
 msgid "Full Bass"
@@ -346,7 +348,7 @@ msgstr ""
 
 #: ../src/widget/equalizer.py:184
 msgid "Headphones"
-msgstr ""
+msgstr "السماعات"
 
 #: ../src/widget/equalizer.py:185
 msgid "Large Hall"
@@ -393,12 +395,12 @@ msgstr ""
 #: ../src/widget/converter.py:394 ../src/widget/converter.py:449
 #: ../src/widget/lyrics_search.py:89
 msgid "Close"
-msgstr ""
+msgstr "إغلاق"
 
 #: ../src/widget/equalizer.py:252 ../src/widget/preference.py:375
 #: ../src/widget/song_editor.py:302
 msgid "Reset"
-msgstr ""
+msgstr "إعادة تعيين"
 
 #: ../src/widget/equalizer.py:254
 msgid "Predefined"
@@ -406,11 +408,11 @@ msgstr ""
 
 #: ../src/widget/jobs_manager.py:44 ../src/widget/jobs_manager.py:153
 msgid "jobs waiting!"
-msgstr ""
+msgstr "الوظائف تنتظر!"
 
 #: ../src/widget/preference.py:150
 msgid "Startup"
-msgstr ""
+msgstr "بدأ التشغيل"
 
 #: ../src/widget/preference.py:157
 msgid "Display splash-screen"
@@ -418,15 +420,15 @@ msgstr ""
 
 #: ../src/widget/preference.py:164
 msgid "Show lyrics"
-msgstr ""
+msgstr "إظهار الكلمات"
 
 #: ../src/widget/preference.py:169
 msgid "Start playback automatically"
-msgstr ""
+msgstr "ابدأ التشغيل بشكل تلقائي"
 
 #: ../src/widget/preference.py:175
 msgid "Resume playback"
-msgstr ""
+msgstr "إكمال التشغيل"
 
 #: ../src/widget/preference.py:190
 msgid "On pressing the close button"
@@ -439,11 +441,11 @@ msgstr ""
 #: ../src/widget/preference.py:196 ../src/widget/ui.py:1262
 #: ../src/widget/instance.py:373 ../src/widget/tray.py:83
 msgid "Quit"
-msgstr ""
+msgstr "خروج"
 
 #: ../src/widget/preference.py:209
 msgid "Playback settings"
-msgstr ""
+msgstr "إعدادات التشغيل"
 
 #: ../src/widget/preference.py:213
 msgid "Enable crossfade"
@@ -468,15 +470,15 @@ msgstr ""
 #: ../src/widget/preference.py:252 ../src/widget/song_editor.py:296
 #: ../src/widget/converter.py:475
 msgid "Change"
-msgstr ""
+msgstr "تغيير"
 
 #: ../src/widget/preference.py:346 ../src/widget/preference.py:997
 msgid "Hotkeys"
-msgstr ""
+msgstr "إختصارات"
 
 #: ../src/widget/preference.py:356
 msgid "Enable hotkeys"
-msgstr ""
+msgstr "تفعيل الإختصارات"
 
 #: ../src/widget/preference.py:362
 msgid "Minimize/Show window"
@@ -484,7 +486,7 @@ msgstr ""
 
 #: ../src/widget/preference.py:364
 msgid "Show/Hide lyrics"
-msgstr ""
+msgstr "أظهار / إخفاء الكلمات"
 
 #: ../src/widget/preference.py:366
 msgid "Lock/Unlock lyrics"
@@ -492,30 +494,30 @@ msgstr ""
 
 #: ../src/widget/preference.py:371 ../src/widget/tray.py:48
 msgid "Increase volume"
-msgstr ""
+msgstr "تضخيم الصوت"
 
 #: ../src/widget/preference.py:372 ../src/widget/tray.py:49
 msgid "Decrease volume"
-msgstr ""
+msgstr "خفض الصوت"
 
 #: ../src/widget/preference.py:601 ../src/widget/preference.py:613
 #: ../src/widget/preference.py:845
 msgid "Left"
-msgstr ""
+msgstr "يسار"
 
 #: ../src/widget/preference.py:602 ../src/widget/preference.py:614
 #: ../src/widget/preference.py:845
 msgid "Centered"
-msgstr ""
+msgstr "منتصف"
 
 #: ../src/widget/preference.py:603 ../src/widget/preference.py:615
 #: ../src/widget/preference.py:845
 msgid "Right"
-msgstr ""
+msgstr "يمين"
 
 #: ../src/widget/preference.py:616
 msgid "Justified"
-msgstr ""
+msgstr "محاذي"
 
 #: ../src/widget/preference.py:627 ../src/widget/lyrics_module.py:455
 msgid "Vitality yellow"
@@ -539,43 +541,43 @@ msgstr ""
 
 #: ../src/widget/preference.py:650 ../src/widget/preference.py:807
 msgid "Regular"
-msgstr ""
+msgstr "عادي"
 
 #: ../src/widget/preference.py:651 ../src/widget/preference.py:808
 msgid "Italic"
-msgstr ""
+msgstr "مائل"
 
 #: ../src/widget/preference.py:652 ../src/widget/preference.py:809
 msgid "Bold"
-msgstr ""
+msgstr "غامق"
 
 #: ../src/widget/preference.py:653 ../src/widget/preference.py:810
 msgid "Bold Italic"
-msgstr ""
+msgstr "مائل غامق"
 
 #: ../src/widget/preference.py:663 ../src/widget/preference.py:818
 msgid "Style"
-msgstr ""
+msgstr "الأسلوب"
 
 #: ../src/widget/preference.py:671 ../src/widget/preference.py:824
 msgid "Lyrics style"
-msgstr ""
+msgstr "أسلوب الكلمات"
 
 #: ../src/widget/preference.py:681 ../src/widget/preference.py:833
 msgid "Font"
-msgstr ""
+msgstr "الخط"
 
 #: ../src/widget/preference.py:689
 msgid "Lines"
-msgstr ""
+msgstr "السطور"
 
 #: ../src/widget/preference.py:690
 msgid "Single"
-msgstr ""
+msgstr "مفرد"
 
 #: ../src/widget/preference.py:690
 msgid "Double"
-msgstr ""
+msgstr "مزدوج"
 
 #: ../src/widget/preference.py:693 ../src/widget/preference.py:843
 msgid "Alignment"
@@ -595,23 +597,23 @@ msgstr ""
 
 #: ../src/widget/preference.py:722 ../src/widget/preference.py:856
 msgid "Played"
-msgstr ""
+msgstr "مشغل"
 
 #: ../src/widget/preference.py:850
 msgid "Rolling"
-msgstr ""
+msgstr "متداول"
 
 #: ../src/widget/preference.py:851
 msgid "Always"
-msgstr ""
+msgstr "دائماً"
 
 #: ../src/widget/preference.py:851
 msgid "By line"
-msgstr ""
+msgstr "بواسطة السطر"
 
 #: ../src/widget/preference.py:905 ../src/widget/plugins_view.py:166
 msgid "Version"
-msgstr ""
+msgstr "الإصدار"
 
 #: ../src/widget/preference.py:920
 msgid ""
@@ -621,27 +623,32 @@ msgid ""
 "\n"
 "DMusic is free software licensed under GNU GPLv3."
 msgstr ""
+"د صوتيات هو تطبيق صوتي مصمم لمستخدمي لينكس. يقدم مميزات مثل البحث عن الكلمات "
+"وتحميلها ، يدعم عرضها مع تحميل أغلفة وإدارة الملفات الصوتية وتشغيل الصيغ "
+"وإيقافها مع مجموعة من السمات.\n"
+"\n"
+"د صوتيات هو تطبيق مجاني مفتوح المصدر مخصص لجنو ج ب ال في 3 "
 
 #: ../src/widget/preference.py:938 ../src/widget/instance.py:371
 #: ../src/widget/tray.py:82
 msgid "Preferences"
-msgstr ""
+msgstr "التفضيلات"
 
 #: ../src/widget/preference.py:996
 msgid "General"
-msgstr ""
+msgstr "عام"
 
 #: ../src/widget/preference.py:998
 msgid "Lyrics"
-msgstr ""
+msgstr "كلمات"
 
 #: ../src/widget/preference.py:999
 msgid "Desktop"
-msgstr ""
+msgstr "سطح المكتب"
 
 #: ../src/widget/preference.py:1000
 msgid "Window"
-msgstr ""
+msgstr "النافذة"
 
 #: ../src/widget/preference.py:1001
 msgid "Add-ons"
@@ -649,17 +656,17 @@ msgstr ""
 
 #: ../src/widget/preference.py:1002
 msgid "About"
-msgstr ""
+msgstr "حول"
 
 #: ../src/widget/song_view.py:437 ../src/widget/song_view.py:780
 #: ../src/widget/local_browser.py:339 ../src/widget/converter.py:309
 msgid "Prompt"
-msgstr ""
+msgstr "تعجيل"
 
 #: ../src/widget/song_view.py:437 ../src/widget/song_view.py:780
 #: ../src/widget/local_browser.py:339
 msgid "Are you sure you want to delete them?"
-msgstr ""
+msgstr "هل أنت متأكد أنك تريد حذفهم ؟"
 
 #: ../src/widget/song_view.py:481
 msgid "Repeat (single)"
@@ -675,32 +682,32 @@ msgstr ""
 
 #: ../src/widget/song_view.py:484
 msgid "Random"
-msgstr ""
+msgstr "عشوائي"
 
 #: ../src/widget/song_view.py:507
 msgid "Remove Track from this List"
-msgstr ""
+msgstr "إزالة المسار من هذه القائمة"
 
 #: ../src/widget/song_view.py:508
 msgid "Remove Unavailable Tracks"
-msgstr ""
+msgstr "حذف مسارات غير متوفرة"
 
 #: ../src/widget/song_view.py:509 ../src/widget/song_view.py:789
 #: ../src/widget/local_browser.py:354 ../src/widget/playlist.py:554
 msgid "Move to Trash"
-msgstr ""
+msgstr "نقل إلى المهملات"
 
 #: ../src/widget/song_view.py:510
 msgid "Clear list"
-msgstr ""
+msgstr "مسح القائمة"
 
 #: ../src/widget/song_view.py:521
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #: ../src/widget/song_view.py:522 ../src/widget/song_view.py:530
 msgid "File"
-msgstr ""
+msgstr "ملف"
 
 #: ../src/widget/song_view.py:523
 msgid "Directory (include subdirectories)"
@@ -708,7 +715,7 @@ msgstr ""
 
 #: ../src/widget/song_view.py:524 ../src/widget/song_view.py:532
 msgid "Directory"
-msgstr ""
+msgstr "دليل"
 
 #: ../src/widget/song_view.py:531
 msgid "Directory(include subdirectories)"
@@ -716,51 +723,51 @@ msgstr ""
 
 #: ../src/widget/song_view.py:542
 msgid "Add URL"
-msgstr ""
+msgstr "أضف URL"
 
 #: ../src/widget/song_view.py:680 ../src/widget/song_editor.py:72
 #: ../src/widget/song_editor.py:202 ../src/widget/lyrics_search.py:83
 msgid "Title"
-msgstr ""
+msgstr "عنوان"
 
 #: ../src/widget/song_view.py:680 ../src/widget/song_editor.py:73
 #: ../src/widget/song_editor.py:203 ../src/widget/local_browser.py:85
 #: ../src/widget/lyrics_search.py:83 ../plugins/notify/__init__.py:43
 msgid "Artist"
-msgstr ""
+msgstr "المؤدي"
 
 #: ../src/widget/song_view.py:680 ../src/widget/song_editor.py:74
 #: ../src/widget/song_editor.py:204 ../src/widget/local_browser.py:87
 #: ../plugins/notify/__init__.py:45
 msgid "Album"
-msgstr ""
+msgstr "الألبوم"
 
 #: ../src/widget/song_view.py:680
 msgid "Added time"
-msgstr ""
+msgstr "الوقت المضاف"
 
 #: ../src/widget/song_view.py:788 ../src/widget/local_browser.py:353
 msgid "Remove from Library"
-msgstr ""
+msgstr "إزالة من المكتبة"
 
 #: ../src/widget/song_view.py:791 ../src/widget/local_browser.py:359
 msgid "Open Directory"
-msgstr ""
+msgstr "فتح دليل"
 
 #: ../src/widget/song_view.py:792 ../src/widget/instance.py:340
 #: ../src/widget/instance.py:363 ../src/widget/converter.py:427
 #: ../src/widget/playlist.py:559
 msgid "Convert"
-msgstr ""
+msgstr "تحويل"
 
 #: ../src/widget/song_view.py:793 ../src/widget/song_editor.py:335
 #: ../src/widget/playlist.py:561
 msgid "Properties"
-msgstr ""
+msgstr "الخصائص"
 
 #: ../src/widget/lyrics.py:734
 msgid "Lyrics window"
-msgstr ""
+msgstr "كلمات النافذة"
 
 #: ../src/widget/lyrics_module.py:151
 msgid "increase the lyrics size"
@@ -772,12 +779,12 @@ msgstr ""
 
 #: ../src/widget/lyrics_module.py:154
 msgid "Select color theme"
-msgstr ""
+msgstr "أختر لون السمة"
 
 #: ../src/widget/lyrics_module.py:155 ../src/widget/instance.py:404
 #: ../src/widget/tray.py:79
 msgid "Lock lyrics"
-msgstr ""
+msgstr "قفل الكلمات"
 
 #: ../src/widget/lyrics_module.py:158
 msgid "karaoke on/off"
@@ -809,28 +816,28 @@ msgstr ""
 
 #: ../src/widget/lyrics_module.py:167 ../src/widget/lyrics_module.py:243
 msgid "Switch to window mode"
-msgstr ""
+msgstr "التبديل إلى أسلوب النافذة"
 
 #: ../src/widget/lyrics_module.py:221
 msgid "Switch to desktop mode"
-msgstr ""
+msgstr "التبديل إلى أسلوب سطح المكتب"
 
 #: ../src/widget/lyrics_module.py:226 ../src/widget/lyrics_module.py:236
 #: ../src/widget/lyrics_search.py:59
 msgid "Search"
-msgstr ""
+msgstr "بحث "
 
 #: ../src/widget/lyrics_module.py:227 ../src/widget/lyrics_module.py:242
 msgid "Settings"
-msgstr ""
+msgstr "إعدادات"
 
 #: ../src/widget/lyrics_module.py:233
 msgid "Forward 0.5 seconds"
-msgstr ""
+msgstr "تقديم 0.5 ثواني"
 
 #: ../src/widget/lyrics_module.py:234
 msgid "Rewind 0.5 seconds"
-msgstr ""
+msgstr "تأخير 0.5 ثواني"
 
 #: ../src/widget/lyrics_module.py:237
 msgid "Adjust lyrics"
@@ -843,7 +850,7 @@ msgstr ""
 #: ../src/widget/lyrics_module.py:240 ../src/widget/song_editor.py:150
 #: ../src/widget/converter.py:367 ../src/widget/playlist.py:560
 msgid "Open directory"
-msgstr ""
+msgstr "فتح دليل"
 
 #: ../src/widget/lyrics_module.py:247
 msgid "Network get lrc"
@@ -855,33 +862,33 @@ msgstr ""
 
 #: ../src/widget/lyrics_module.py:796 ../src/widget/lyrics_module.py:797
 msgid "Searching for lyrics..."
-msgstr ""
+msgstr "يتم البحث عن الكلمات..."
 
 #: ../src/widget/ui.py:203
 msgid "Need some music? Find it here..."
-msgstr ""
+msgstr "تحتاج الى العثور على صوتيات ؟ أعثر عليها هنا.."
 
 #: ../src/widget/ui.py:401
 msgid "Add Music"
-msgstr ""
+msgstr "إضافة صوت"
 
 #: ../src/widget/ui.py:1122
 msgid "Your search {keyword} did not match any items in {from}"
-msgstr ""
+msgstr "بحثك {الكلمة} لا توافق أي مفردات في {من}"
 
 #: ../src/widget/ui.py:1123
 msgid "Suggestions"
-msgstr ""
+msgstr "إقتراحات"
 
 #: ../src/widget/ui.py:1124
 msgid "Make sure all words are spelled correctly."
-msgstr ""
+msgstr "تأكد من أن كل الكلمات تم تدقيقها بشكل صحيح"
 
 #: ../src/widget/ui.py:1125
 msgid ""
 "Try more general keywords, such as a title, an artist or the name of an "
 "album."
-msgstr ""
+msgstr "حاول أن تبحث عن عن كلمات عامة ، مثل المؤدي أو أسم الألبوم."
 
 #: ../src/widget/ui.py:1222 ../src/widget/plugins_view.py:166
 msgid "Add-on"
@@ -889,49 +896,49 @@ msgstr ""
 
 #: ../src/widget/ui.py:1230
 msgid "Author(s)"
-msgstr ""
+msgstr "المؤلف(ين)"
 
 #: ../src/widget/ui.py:1266
 msgid "Don't prompt again"
-msgstr ""
+msgstr "لا تقم بالتعجيل مرة أخرى"
 
 #: ../src/widget/ui.py:1273
 msgid "OK"
-msgstr ""
+msgstr "موافق"
 
 #: ../src/widget/ui.py:1276
 msgid "Cancel"
-msgstr ""
+msgstr "الغاء"
 
 #: ../src/widget/instance.py:146
 msgid "Join us"
-msgstr ""
+msgstr "إنضم لنا"
 
 #: ../src/widget/instance.py:323 ../src/widget/tray.py:61
 #: ../src/widget/converter.py:392 ../src/widget/converter.py:412
 #: ../src/widget/converter.py:415
 msgid "Pause"
-msgstr ""
+msgstr "إيقاف"
 
 #: ../src/widget/instance.py:327
 msgid "Forward"
-msgstr ""
+msgstr "للأمام"
 
 #: ../src/widget/instance.py:328
 msgid "Rewind"
-msgstr ""
+msgstr "رجوع"
 
 #: ../src/widget/instance.py:341 ../src/widget/converter.py:376
 msgid "Task Manager"
-msgstr ""
+msgstr "إدارة المهام"
 
 #: ../src/widget/instance.py:358 ../src/widget/playlist.py:97
 msgid "Add"
-msgstr ""
+msgstr "أضف"
 
 #: ../src/widget/instance.py:359
 msgid "Controls"
-msgstr ""
+msgstr "ضوابط"
 
 #: ../src/widget/instance.py:360 ../src/widget/playlist.py:100
 #: ../src/widget/playlist.py:557
@@ -944,124 +951,124 @@ msgstr ""
 
 #: ../src/widget/instance.py:377 ../src/widget/tray.py:72
 msgid "Search Lyrics"
-msgstr ""
+msgstr "بحث عن الكلمات"
 
 #: ../src/widget/instance.py:396 ../src/widget/tray.py:71
 msgid "Hide Lyrics"
-msgstr ""
+msgstr "إخفاء الكلمات"
 
 #: ../src/widget/instance.py:398 ../src/widget/tray.py:74
 msgid "Show Lyrics"
-msgstr ""
+msgstr "إظهار الكلمات"
 
 #: ../src/widget/instance.py:402 ../src/widget/tray.py:77
 msgid "Unlock lyrics"
-msgstr ""
+msgstr "حرر الكلمات"
 
 #: ../src/widget/instance.py:479
 msgid "Mini Mode"
-msgstr ""
+msgstr "أسلوب مصغر"
 
 #: ../src/widget/instance.py:481
 msgid "Normal Mode"
-msgstr ""
+msgstr "أسلوب عادي"
 
 #: ../src/widget/tray.py:50
 msgid "Mute"
-msgstr ""
+msgstr "كتم"
 
 #: ../src/widget/tray.py:66
 msgid "Volume"
-msgstr ""
+msgstr "حجم"
 
 #: ../src/widget/dialog.py:34
 msgid "Select Directory"
-msgstr ""
+msgstr "أختر دليل"
 
 #: ../src/widget/dialog.py:56
 msgid "Select file"
-msgstr ""
+msgstr "أختر ملف"
 
 #: ../src/widget/dialog.py:82
 msgid "Export playlist"
-msgstr ""
+msgstr "تصدير قائمة التشغيل"
 
 #: ../src/widget/dialog.py:130
 msgid "Load playlist"
-msgstr ""
+msgstr "تحميل قائمة التشغيل"
 
 #: ../src/widget/song_editor.py:96 ../src/widget/converter.py:433
 msgid "Format"
-msgstr ""
+msgstr "الصيغة"
 
 #: ../src/widget/song_editor.py:98
 msgid "Bitrate"
-msgstr ""
+msgstr "معدل البت"
 
 #: ../src/widget/song_editor.py:98
 msgid "Rate"
-msgstr ""
+msgstr "النسبة"
 
 #: ../src/widget/song_editor.py:99
 msgid "Added"
-msgstr ""
+msgstr "مضاف"
 
 #: ../src/widget/song_editor.py:99
 msgid "Recently"
-msgstr ""
+msgstr "مؤخراً"
 
 #: ../src/widget/song_editor.py:100 ../src/widget/song_editor.py:206
 msgid "Date"
-msgstr ""
+msgstr "تاريخ"
 
 #: ../src/widget/song_editor.py:147
 msgid "Location"
-msgstr ""
+msgstr "موقع"
 
 #: ../src/widget/song_editor.py:214
 msgid "Save"
-msgstr ""
+msgstr "حفظ"
 
 #: ../src/widget/song_editor.py:299
 msgid "Retrieve from the Internet"
-msgstr ""
+msgstr "استرداد من الأنترنت"
 
 #: ../src/widget/song_editor.py:321 ../src/widget/local_browser.py:343
 msgid "Select image"
-msgstr ""
+msgstr "أختر صورة"
 
 #: ../src/widget/song_editor.py:367
 msgid "Track Infomation"
-msgstr ""
+msgstr "معلومات المسار"
 
 #: ../src/widget/song_editor.py:368
 msgid "Edit tags"
-msgstr ""
+msgstr "تعديل الشعار"
 
 #: ../src/widget/song_editor.py:369
 msgid "Edit cover"
-msgstr ""
+msgstr "تعديل الغلاف"
 
 #: ../src/widget/combo.py:184 ../src/widget/combo.py:233
 #: ../src/widget/playlist.py:536
 msgid "By Artist"
-msgstr ""
+msgstr "بواسطة المؤلف"
 
 #: ../src/widget/combo.py:195
 msgid "List view"
-msgstr ""
+msgstr "عرض القائمة"
 
 #: ../src/widget/combo.py:234 ../src/widget/playlist.py:538
 msgid "By Genre"
-msgstr ""
+msgstr "بواسطة النوع"
 
 #: ../src/widget/combo.py:235 ../src/widget/playlist.py:537
 msgid "By Album"
-msgstr ""
+msgstr "بواسطة الألبوم"
 
 #: ../src/widget/plugins_view.py:166
 msgid "Enable"
-msgstr ""
+msgstr "تمكين"
 
 #: ../src/widget/global_keys.py:96
 #, python-format
@@ -1070,115 +1077,115 @@ msgstr ""
 
 #: ../src/widget/local_browser.py:91
 msgid "Folder"
-msgstr ""
+msgstr "ملف"
 
 #: ../src/widget/local_browser.py:98
 msgid "Quick Scan"
-msgstr ""
+msgstr "فحص سريع"
 
 #: ../src/widget/local_browser.py:99
 msgid "Scan"
-msgstr ""
+msgstr "فحص"
 
 #: ../src/widget/local_browser.py:100
 msgid "Refresh"
-msgstr ""
+msgstr "تحديث"
 
 #: ../src/widget/local_browser.py:350
 msgid "Play All"
-msgstr ""
+msgstr "تشغيل الكل"
 
 #: ../src/widget/local_browser.py:351 ../src/widget/playlist.py:550
 msgid "Add to List"
-msgstr ""
+msgstr "أضف إلى القائمة"
 
 #: ../src/widget/local_browser.py:361
 msgid "Change Cover"
-msgstr ""
+msgstr "تغيير الغلاف"
 
 #: ../src/widget/local_item.py:59
 msgid "All Tracks"
-msgstr ""
+msgstr "كل المسارات"
 
 #: ../src/widget/local_item.py:67
 msgid "Track(s)"
-msgstr ""
+msgstr "مسار(ات)"
 
 #: ../src/widget/information.py:75
 msgid "Connecting"
-msgstr ""
+msgstr "التوصيل"
 
 #: ../src/widget/information.py:105
 msgid "buffering"
-msgstr ""
+msgstr "تخزين انتقالي"
 
 #: ../src/widget/converter.py:309
 msgid "Target file already exitsts, do you want to overwrite it?"
-msgstr ""
+msgstr "الهدف موجود مسبقاً ، هل تريد استبداله ؟"
 
 #: ../src/widget/converter.py:369
 msgid "Delete task"
-msgstr ""
+msgstr "حذف المهمة"
 
 #: ../src/widget/converter.py:370
 msgid "Clear finished tasks"
-msgstr ""
+msgstr "مسح المهمات المنتهية"
 
 #: ../src/widget/converter.py:413
 msgid "Continue"
-msgstr ""
+msgstr "إكمال"
 
 #: ../src/widget/converter.py:436
 msgid "Quality"
-msgstr ""
+msgstr "الجودة"
 
 #: ../src/widget/converter.py:444
 msgid "Target file already exists"
-msgstr ""
+msgstr "الهدف موجود مسبقاً"
 
 #: ../src/widget/converter.py:445
 msgid "Ask"
-msgstr ""
+msgstr "اسأل"
 
 #: ../src/widget/converter.py:445
 msgid "Cover"
-msgstr ""
+msgstr "غطاء"
 
 #: ../src/widget/converter.py:448
 msgid "Start"
-msgstr ""
+msgstr "ابدأ"
 
 #: ../src/widget/converter.py:450
 msgid "Add to Playlist when finished"
-msgstr ""
+msgstr "أضف إلى قائمة التشغيل حينما تنتهي"
 
 #: ../src/widget/converter.py:472
 msgid "Output"
-msgstr ""
+msgstr "الإخراج"
 
 #: ../src/widget/lyrics_search.py:47
 msgid "Lyrics search"
-msgstr ""
+msgstr "كلمات البحث"
 
 #: ../src/widget/lyrics_search.py:54
 msgid "Artist:"
-msgstr ""
+msgstr "المؤدي"
 
 #: ../src/widget/lyrics_search.py:55
 msgid "Title:"
-msgstr ""
+msgstr "العنوان"
 
 #: ../src/widget/lyrics_search.py:87
 msgid "Download"
-msgstr ""
+msgstr "تنزيل"
 
 #: ../src/widget/lyrics_search.py:136
 msgid "Now searching..."
-msgstr ""
+msgstr "يتم البحث..."
 
 #: ../src/widget/lyrics_search.py:138 ../src/widget/lyrics_search.py:163
 msgid "Not found!"
-msgstr ""
+msgstr "لم يتم العثور!"
 
 #: ../src/widget/lyrics_search.py:157 ../src/widget/lyrics_search.py:161
 #, python-format
@@ -1191,15 +1198,15 @@ msgstr ""
 
 #: ../src/widget/lyrics_search.py:180
 msgid "File save to"
-msgstr ""
+msgstr "حفظ الملف إلى"
 
 #: ../src/widget/lyrics_search.py:182
 msgid "Download failed."
-msgstr ""
+msgstr "فشل التنزيل"
 
 #: ../src/widget/playlist.py:94
 msgid "Search in Current Playlist"
-msgstr ""
+msgstr "ابحث في قائمة التشغيل الحالية"
 
 #: ../src/widget/playlist.py:96
 msgid "Playlist Operations"
@@ -1207,50 +1214,50 @@ msgstr ""
 
 #: ../src/widget/playlist.py:183
 msgid "Default List"
-msgstr ""
+msgstr "قائمة افتراضية"
 
 #: ../src/widget/playlist.py:304 ../src/widget/playlist.py:316
 #: ../src/widget/playlist.py:317 ../src/widget/playlist.py:357
 #: ../src/widget/playlist.py:360 ../src/widget/playlist.py:476
 msgid "New List"
-msgstr ""
+msgstr "قائمة جديدة"
 
 #: ../src/widget/playlist.py:305 ../src/widget/playlist.py:477
 msgid "Import List"
-msgstr ""
+msgstr "استيراد قائمة"
 
 #: ../src/widget/playlist.py:306 ../src/widget/playlist.py:485
 msgid "Open List"
-msgstr ""
+msgstr "فتح قائمة"
 
 #: ../src/widget/playlist.py:307
 msgid "Export List"
-msgstr ""
+msgstr "تصدير قائمة"
 
 #: ../src/widget/playlist.py:308 ../src/widget/playlist.py:484
 msgid "Remove List"
-msgstr ""
+msgstr "حذف قائمة"
 
 #: ../src/widget/playlist.py:310 ../src/widget/playlist.py:479
 #: ../src/widget/playlist.py:487
 msgid "Save all Lists"
-msgstr ""
+msgstr "حفظ كل القوائم"
 
 #: ../src/widget/playlist.py:483 ../src/widget/playlist.py:493
 msgid "Rename"
-msgstr ""
+msgstr "إعادة تسمية"
 
 #: ../src/widget/playlist.py:534
 msgid "By Filename"
-msgstr ""
+msgstr "بواسطة الأسم"
 
 #: ../src/widget/playlist.py:535
 msgid "By Title"
-msgstr ""
+msgstr "بواسطة العنوان"
 
 #: ../src/widget/playlist.py:539
 msgid "By Track"
-msgstr ""
+msgstr "بواسطة المسار"
 
 #: ../src/widget/playlist.py:540
 msgid "By Play Count"
@@ -1262,23 +1269,23 @@ msgstr ""
 
 #: ../src/widget/playlist.py:545
 msgid "Randomize"
-msgstr ""
+msgstr "بطريقة عشوائية"
 
 #: ../src/widget/playlist.py:551
 msgid "move to List"
-msgstr ""
+msgstr "انقل إلى القائمة"
 
 #: ../src/widget/playlist.py:553
 msgid "Remove Track"
-msgstr ""
+msgstr "حذف المسار"
 
 #: ../src/widget/playlist.py:558
 msgid "Sort"
-msgstr ""
+msgstr "نوع"
 
 #: ../plugins/pidgin/__init__.py:97 ../plugins/mpris2/mpris_adapter.py:252
 msgid "Deepin Music"
-msgstr ""
+msgstr "صوتيات دييبن"
 
 #: ../plugins/musicfm/radio_home_page.py:73
 #: ../plugins/musicfm/radio_browser.py:79
@@ -1292,11 +1299,11 @@ msgstr ""
 
 #: ../plugins/musicfm/radio_browser.py:78
 msgid "Home"
-msgstr ""
+msgstr "المنزل"
 
 #: ../plugins/musicfm/radio_browser.py:80
 msgid "Genres"
-msgstr ""
+msgstr "الأنواع"
 
 #: ../plugins/musicfm/__init__.py:33 ../plugins/musicfm/__init__.py:35
 #: ../plugins/musicfm/radio_view.py:474
@@ -1305,7 +1312,7 @@ msgstr ""
 
 #: ../plugins/musicfm/radio_item.py:508
 msgid "More"
-msgstr ""
+msgstr "المزيد"
 
 #: ../plugins/musicfm/radio_genre_page.py:44
 msgid "Jazz"

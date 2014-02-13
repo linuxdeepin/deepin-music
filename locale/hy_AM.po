@@ -3,16 +3,17 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
+# haykojanjado <poliped@ya.ru>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: DMusic\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-02-10 16:34+0800\n"
-"PO-Revision-Date: 2013-12-19 01:14+0000\n"
-"Last-Translator: lihongwu <lihongwu1987@gmail.com>\n"
-"Language-Team: Hungarian (http://www.transifex.com/projects/p/dmusic/"
-"language/hu/)\n"
-"Language: hu\n"
+"PO-Revision-Date: 2014-01-07 10:15+0000\n"
+"Last-Translator: haykojanjado <poliped@ya.ru>\n"
+"Language-Team: Armenian (Armenia) (http://www.transifex.com/projects/p/"
+"dmusic/language/hy_AM/)\n"
+"Language: hy_AM\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -23,159 +24,169 @@ msgid ""
 "Vorbis is an open source, lossy audio codec with high quality output at a "
 "lower file size than MP3."
 msgstr ""
+"Vorbis is an open source, lossy audio codec with high quality output at a "
+"lower file size than MP3."
 
 #: ../src/transcoder.py:66
 msgid ""
 "Free Lossless Audio Codec (FLAC) is an open source codec that compresses but "
 "does not degrade audio quality."
 msgstr ""
+"Free Lossless Audio Codec (FLAC) is an open source codec that compresses but "
+"does not degrade audio quality."
 
 #: ../src/transcoder.py:80
 msgid ""
 "Apple's proprietary lossy audio format that achieves better sound quality "
 "than MP3 at lower bitrates."
 msgstr ""
+"Apple's proprietary lossy audio format that achieves better sound quality "
+"than MP3 at lower bitrates."
 
 #: ../src/transcoder.py:93
 msgid ""
 "A proprietary and older, but also popular, lossy audio format. VBR gives "
 "higher quality than CBR, but may be incompatible with some players."
 msgstr ""
+"A proprietary and older, but also popular, lossy audio format. VBR gives "
+"higher quality than CBR, but may be incompatible with some players."
 
 #: ../src/transcoder.py:106
 msgid ""
 "A proprietary and older, but also popular, lossy audio format. CBR gives "
 "less quality than VBR, but is compatible with any player."
 msgstr ""
+"A proprietary and older, but also popular, lossy audio format. CBR gives "
+"less quality than VBR, but is compatible with any player."
 
 #: ../src/transcoder.py:118
 msgid "A very fast Free lossless audio format with good compression."
-msgstr ""
+msgstr "A very fast Free lossless audio format with good compression."
 
 #: ../src/plugins.py:91
 msgid "Add-on archive is not in the correct format."
-msgstr ""
+msgstr "Հավելվածի արխիվը ճիշտ ձևաչափով չէ:"
 
 #: ../src/plugins.py:98
 #, python-format
 msgid "An add-on with the name \"%s\" is already installed."
-msgstr ""
+msgstr "«%s» անունով հավելված արդեն կա:"
 
 #: ../src/plugins.py:103
 msgid "Add-on archive contains an unsafe path."
-msgstr ""
+msgstr "Հավելվածի արխիվը գտնվում է ոչ անվտանգ տեղում:"
 
 #: ../src/main.py:103
 msgid "Usage: deepin-music-player [OPTION]... [URI]"
-msgstr ""
+msgstr "Usage: deepin-music-player [OPTION]... [URI]"
 
 #: ../src/main.py:104
 msgid "Options"
-msgstr ""
+msgstr "Ընտրանքներ"
 
 #: ../src/main.py:108
 msgid "Control Options"
-msgstr ""
+msgstr "Ղեկավարման ընտրանքներ"
 
 #: ../src/main.py:110
 msgid "Play the next track"
-msgstr ""
+msgstr "Հաջորդը"
 
 #: ../src/main.py:112
 msgid "Play the previous track"
-msgstr ""
+msgstr "Նախորդը"
 
 #: ../src/main.py:114
 msgid "Pause or resume playback"
-msgstr ""
+msgstr "Ընդհատել/Շարունակել"
 
 #: ../src/main.py:116
 msgid "Seek Forward"
-msgstr ""
+msgstr "Առաջ գնալ"
 
 #: ../src/main.py:118
 msgid "Seek Backward"
-msgstr ""
+msgstr "Ետ տալ"
 
 #: ../src/main.py:120
 msgid "Stop playback"
-msgstr ""
+msgstr "Դադարեցնել"
 
 #: ../src/main.py:124
 msgid "Volume Options"
-msgstr ""
+msgstr "Ձայնային ընտրանքներ"
 
 #: ../src/main.py:126
 msgid "Change Volume (VOLUME 0.0-1.0)"
-msgstr ""
+msgstr "Փոխել բարձրություն (ԲԱՐՁՐՈՒԹՅՈՒՆ 0.0-1.0)"
 
 #: ../src/main.py:129
 msgid "Track information Options"
-msgstr ""
+msgstr "Նիշքի տեղեկության ընտրանքներ"
 
 #: ../src/main.py:131
 msgid "Print the title of current track"
-msgstr ""
+msgstr "Տպել անվանումը"
 
 #: ../src/main.py:133
 msgid "Print the album of current track"
-msgstr ""
+msgstr "Տպել այս նիշքի ալբոմը"
 
 #: ../src/main.py:135
 msgid "Print the artist of current track"
-msgstr ""
+msgstr "Տպել այս նիշքի հեղինակը"
 
 #: ../src/main.py:137
 msgid "Print the length of current track"
-msgstr ""
+msgstr "Տպել նիշքի երկարությունը"
 
 #: ../src/main.py:139
 msgid "Print the path of current track"
-msgstr ""
+msgstr "Տպել նիշքի տեղադրությունը"
 
 #: ../src/main.py:141
 msgid "Print current playback position"
-msgstr ""
+msgstr "Տպել նվագարկման տեղը"
 
 #: ../src/main.py:144
 msgid "Other Options"
-msgstr ""
+msgstr "Այլ ընտրանքներ"
 
 #: ../src/main.py:146
 msgid "Show this help message and exit"
-msgstr ""
+msgstr "Ցույց տալ այս օգնությունն ու դուրս գալ"
 
 #: ../src/main.py:148
 msgid "Start new instance"
-msgstr ""
+msgstr "Սկսել նոր օրինակ"
 
 #: ../src/main.py:150
 msgid "Show program's version number and exit."
-msgstr ""
+msgstr "Ցույց տալ տարբերակի թիվն ու փակել:"
 
 #: ../src/main.py:152
 msgid "Start minimized"
-msgstr ""
+msgstr "Սկսել փոքրացված"
 
 #: ../src/main.py:155
 msgid "Toggle visibility of the GUI (if possible)"
-msgstr ""
+msgstr "Փոխել GUI տեսանելիությունը (եթե հնարավոր է)"
 
 #: ../src/main.py:158
 msgid "Make control options like --play start program if it is not running"
-msgstr ""
+msgstr "Make control options like --play start program if it is not running"
 
 #: ../src/main.py:161
 msgid "Development/Debug Options"
-msgstr ""
+msgstr "Զարգացում/Ընտրանքների կարգավորում"
 
 #: ../src/main.py:162
 msgid "Change debug level (0-9)"
-msgstr ""
+msgstr "Փոխել կարգավորման աստիճանը (0-9)"
 
 #: ../src/main.py:166
 msgid "Show information about supported audio file"
-msgstr ""
+msgstr "Ցուցադրել տեղեկություն ձայնանշոցի մասին"
 
 #: ../src/main.py:172 ../src/widget/preference.py:579
 #: ../src/widget/preference.py:589 ../src/widget/preference.py:900
@@ -184,434 +195,434 @@ msgstr ""
 #: ../src/widget/global_keys.py:95 ../src/widget/information.py:40
 #: ../src/widget/information.py:82
 msgid "DMusic"
-msgstr ""
+msgstr "DMusic - Թարգմանեց Հայկ Ափրիկյանը"
 
 #: ../src/library.py:990 ../src/library.py:991 ../src/library.py:992
 #: ../src/library.py:999 ../src/library.py:1000 ../src/library.py:1001
 #: ../src/widget/local_item.py:57
 msgid "Unknown"
-msgstr ""
+msgstr "Անհայտ"
 
 #: ../src/source/local.py:43
 msgid "Reading directories..."
-msgstr ""
+msgstr "Կարդացվում է տարածքը..."
 
 #: ../src/source/local.py:175
 msgid "Check deleted files"
-msgstr ""
+msgstr "Ստուգել ջնջված նիշքերը"
 
 #: ../src/source/local.py:202
 msgid "Reload database"
-msgstr ""
+msgstr "Վերբեռնել բազան"
 
 #: ../src/source/old.py:112 ../src/source/audiocd.py:75
 msgid "Track"
-msgstr ""
+msgstr "Ձայնանշոց"
 
 #: ../src/source/old.py:113 ../src/source/audiocd.py:76
 msgid "Unknown album"
-msgstr ""
+msgstr "Անհայտ ալբոմ"
 
 #: ../src/source/old.py:114 ../src/source/audiocd.py:77
 msgid "Unknown artist"
-msgstr ""
+msgstr "Անհայտ կատարող"
 
 #: ../src/source/audiocd.py:83 ../src/source/audiocd.py:89
 msgid "Audio CD"
-msgstr ""
+msgstr "Ձայնային CD"
 
 #: ../src/widget/song_notify.py:193 ../src/widget/preference.py:686
 #: ../src/widget/preference.py:839 ../src/widget/song_editor.py:97
 msgid "Size"
-msgstr ""
+msgstr "Չափս"
 
 #: ../src/widget/song_notify.py:194 ../src/widget/song_editor.py:96
 msgid "Type"
-msgstr ""
+msgstr "Ձև"
 
 #: ../src/widget/song_notify.py:209 ../src/widget/song_editor.py:100
 msgid "Playcount"
-msgstr ""
+msgstr "Նվագարկում"
 
 #: ../src/widget/song_notify.py:210 ../src/widget/song_editor.py:97
 msgid "Duration"
-msgstr ""
+msgstr "Երկարություն"
 
 #: ../src/widget/webcast_view.py:114 ../src/widget/webcast_view.py:120
 #: ../src/widget/playlist.py:103 ../plugins/musicfm/radio_view.py:134
 #: ../plugins/musicfm/radio_view.py:140
 msgid "Delete"
-msgstr ""
+msgstr "Ջնջել"
 
 #: ../src/widget/webcast_view.py:115 ../src/widget/webcast_view.py:123
 #: ../src/widget/playlist.py:555 ../plugins/musicfm/radio_view.py:135
 #: ../plugins/musicfm/radio_view.py:141
 msgid "Clear List"
-msgstr ""
+msgstr "Մաքրել ցուցակը"
 
 #: ../src/widget/webcast_view.py:119 ../src/widget/webcast_view.py:338
 #: ../src/widget/song_view.py:785 ../src/widget/instance.py:320
 #: ../src/widget/tray.py:58 ../src/widget/playlist.py:549
 #: ../plugins/musicfm/radio_view.py:139
 msgid "Play"
-msgstr ""
+msgstr "Սկսել"
 
 #: ../src/widget/webcast_view.py:219 ../src/widget/webcast_view.py:368
 msgid "Remove from Favorites"
-msgstr ""
+msgstr "Հեռացնել սիրելիներից"
 
 #: ../src/widget/webcast_view.py:221 ../src/widget/webcast_view.py:370
 msgid "Add to Favorites"
-msgstr ""
+msgstr "Ավելացնել սիրելիներին"
 
 #: ../src/widget/webcast_view.py:333 ../src/widget/webcast_view.py:339
 #: ../src/widget/song_view.py:786
 msgid "Add to Playlist"
-msgstr ""
+msgstr "Ավելացնել ցուցակին"
 
 #: ../src/widget/webcast_view.py:450 ../plugins/webcast/__init__.py:34
 #: ../plugins/webcast/__init__.py:36
 msgid "Radio"
-msgstr ""
+msgstr "Ռադիո"
 
 #: ../src/widget/local_tab.py:28 ../src/widget/song_view.py:817
 #: ../src/widget/global_search.py:48
 msgid "Library"
-msgstr ""
+msgstr "Դարան"
 
 #: ../src/widget/headerbar.py:63 ../src/widget/preference.py:368
 msgid "Play/Pause"
-msgstr ""
+msgstr "Շարունակել/Ընդհատել"
 
 #: ../src/widget/headerbar.py:71 ../src/widget/preference.py:369
 #: ../src/widget/instance.py:329 ../src/widget/tray.py:63
 #: ../src/widget/song_editor.py:341
 msgid "Previous"
-msgstr ""
+msgstr "Նախորդ"
 
 #: ../src/widget/headerbar.py:72 ../src/widget/preference.py:370
 #: ../src/widget/instance.py:330 ../src/widget/tray.py:64
 #: ../src/widget/song_editor.py:343
 msgid "Next"
-msgstr ""
+msgstr "Հաջորդ"
 
 #: ../src/widget/headerbar.py:77
 msgid "Show/Hide Lyrics"
-msgstr ""
+msgstr "Ցուցադրել/Թաքցնել բառերը"
 
 #: ../src/widget/webcasts_browser.py:98
 msgid "Region"
-msgstr ""
+msgstr "Բնագավառ"
 
 #: ../src/widget/webcasts_browser.py:99 ../src/widget/song_editor.py:205
 #: ../src/widget/local_browser.py:89
 msgid "Genre"
-msgstr ""
+msgstr "Ժանր"
 
 #: ../src/widget/webcasts_browser.py:141
 msgid "Favorites"
-msgstr ""
+msgstr "Սիրելիներ"
 
 #: ../src/widget/equalizer.py:176
 msgid "Custom"
-msgstr ""
+msgstr "Ընտրովի"
 
 #: ../src/widget/equalizer.py:177
 msgid "Default"
-msgstr ""
+msgstr "Սովորական"
 
 #: ../src/widget/equalizer.py:178 ../plugins/musicfm/radio_genre_page.py:43
 msgid "Classical"
-msgstr ""
+msgstr "Դասական"
 
 #: ../src/widget/equalizer.py:179
 msgid "Club"
-msgstr ""
+msgstr "Ակումբային"
 
 #: ../src/widget/equalizer.py:180
 msgid "Dance"
-msgstr ""
+msgstr "Պարային"
 
 #: ../src/widget/equalizer.py:181
 msgid "Full Bass"
-msgstr ""
+msgstr "Լրիվ բասսով"
 
 #: ../src/widget/equalizer.py:182
 msgid "Full Bass and Treble"
-msgstr ""
+msgstr "Ամբողջ բասսով և եռապատկությամբ"
 
 #: ../src/widget/equalizer.py:183
 msgid "Full Treble"
-msgstr ""
+msgstr "Լրիվ եռապատկությամբ"
 
 #: ../src/widget/equalizer.py:184
 msgid "Headphones"
-msgstr ""
+msgstr "Ականջակալներ"
 
 #: ../src/widget/equalizer.py:185
 msgid "Large Hall"
-msgstr ""
+msgstr "Մեծ սրահ"
 
 #: ../src/widget/equalizer.py:186
 msgid "Live"
-msgstr ""
+msgstr "Կենդանի"
 
 #: ../src/widget/equalizer.py:187
 msgid "Party"
-msgstr ""
+msgstr "Տոնական"
 
 #: ../src/widget/equalizer.py:188 ../plugins/musicfm/radio_genre_page.py:46
 msgid "Pop"
-msgstr ""
+msgstr "Փոփ"
 
 #: ../src/widget/equalizer.py:190 ../plugins/musicfm/radio_genre_page.py:42
 msgid "Rock"
-msgstr ""
+msgstr "Ռոք"
 
 #: ../src/widget/equalizer.py:191
 msgid "Ska"
-msgstr ""
+msgstr "Սկա"
 
 #: ../src/widget/equalizer.py:192
 msgid "Soft"
-msgstr ""
+msgstr "Սոֆթ"
 
 #: ../src/widget/equalizer.py:193
 msgid "Soft Rock"
-msgstr ""
+msgstr "Սոֆթ ռոք"
 
 #: ../src/widget/equalizer.py:194
 msgid "Techno"
-msgstr ""
+msgstr "Տեխնո"
 
 #: ../src/widget/equalizer.py:199 ../src/widget/instance.py:362
 msgid "Equalizer"
-msgstr ""
+msgstr "Հավասարիչ"
 
 #: ../src/widget/equalizer.py:250 ../src/widget/preference.py:945
 #: ../src/widget/ui.py:1252 ../src/widget/song_editor.py:338
 #: ../src/widget/converter.py:394 ../src/widget/converter.py:449
 #: ../src/widget/lyrics_search.py:89
 msgid "Close"
-msgstr ""
+msgstr "Փակել"
 
 #: ../src/widget/equalizer.py:252 ../src/widget/preference.py:375
 #: ../src/widget/song_editor.py:302
 msgid "Reset"
-msgstr ""
+msgstr "Ետարկել"
 
 #: ../src/widget/equalizer.py:254
 msgid "Predefined"
-msgstr ""
+msgstr "Նախասահմանված"
 
 #: ../src/widget/jobs_manager.py:44 ../src/widget/jobs_manager.py:153
 msgid "jobs waiting!"
-msgstr ""
+msgstr "աշխատանքը սպասո՜ւմ է"
 
 #: ../src/widget/preference.py:150
 msgid "Startup"
-msgstr ""
+msgstr "Նորաստեղծ"
 
 #: ../src/widget/preference.py:157
 msgid "Display splash-screen"
-msgstr ""
+msgstr "Ցուցադրել խուրձէկրանը"
 
 #: ../src/widget/preference.py:164
 msgid "Show lyrics"
-msgstr ""
+msgstr "Ցուցադրել բառերը"
 
 #: ../src/widget/preference.py:169
 msgid "Start playback automatically"
-msgstr ""
+msgstr "Սկսել նվագարակումն ավտոմատ"
 
 #: ../src/widget/preference.py:175
 msgid "Resume playback"
-msgstr ""
+msgstr "Շարունակել նվագարկումը"
 
 #: ../src/widget/preference.py:190
 msgid "On pressing the close button"
-msgstr ""
+msgstr "Փակելու կոճակը սեղմելիս"
 
 #: ../src/widget/preference.py:195 ../src/widget/ui.py:1260
 msgid "Minimize to tray"
-msgstr ""
+msgstr "Իջեցնել ներքև"
 
 #: ../src/widget/preference.py:196 ../src/widget/ui.py:1262
 #: ../src/widget/instance.py:373 ../src/widget/tray.py:83
 msgid "Quit"
-msgstr ""
+msgstr "Դուրս գալ"
 
 #: ../src/widget/preference.py:209
 msgid "Playback settings"
-msgstr ""
+msgstr "Նվագարկման կարգավորումները"
 
 #: ../src/widget/preference.py:213
 msgid "Enable crossfade"
-msgstr ""
+msgstr "Միացնել խաչամարումը"
 
 #: ../src/widget/preference.py:216
 msgid "Disable crossfade between tracks in the same album"
-msgstr ""
+msgstr "Անջատել խաչամարումը նույն ալբոմի երգերի միջև"
 
 #: ../src/widget/preference.py:221
 msgid "Fade timeout"
-msgstr ""
+msgstr "Գունաթափման ժամանակահատված"
 
 #: ../src/widget/preference.py:223
 msgid " ms"
-msgstr ""
+msgstr " ms"
 
 #: ../src/widget/preference.py:241
 msgid "Lyrics directory"
-msgstr ""
+msgstr "Բառերի տարածքը"
 
 #: ../src/widget/preference.py:252 ../src/widget/song_editor.py:296
 #: ../src/widget/converter.py:475
 msgid "Change"
-msgstr ""
+msgstr "Փոխել"
 
 #: ../src/widget/preference.py:346 ../src/widget/preference.py:997
 msgid "Hotkeys"
-msgstr ""
+msgstr "Դյուրանցային ստեղներ"
 
 #: ../src/widget/preference.py:356
 msgid "Enable hotkeys"
-msgstr ""
+msgstr "Միացնել ստեղնաշարային դյուրանցումները"
 
 #: ../src/widget/preference.py:362
 msgid "Minimize/Show window"
-msgstr ""
+msgstr "Փոքրացնել/Ցուցադրել պատուհանը"
 
 #: ../src/widget/preference.py:364
 msgid "Show/Hide lyrics"
-msgstr ""
+msgstr "Ցուցադրել/Թաքցնել բառերը"
 
 #: ../src/widget/preference.py:366
 msgid "Lock/Unlock lyrics"
-msgstr ""
+msgstr "Կողպել/Բացել բառերը"
 
 #: ../src/widget/preference.py:371 ../src/widget/tray.py:48
 msgid "Increase volume"
-msgstr ""
+msgstr "Բարձրացնել ձայնը"
 
 #: ../src/widget/preference.py:372 ../src/widget/tray.py:49
 msgid "Decrease volume"
-msgstr ""
+msgstr "Ցածրացնել ձայնը"
 
 #: ../src/widget/preference.py:601 ../src/widget/preference.py:613
 #: ../src/widget/preference.py:845
 msgid "Left"
-msgstr ""
+msgstr "Ձախ"
 
 #: ../src/widget/preference.py:602 ../src/widget/preference.py:614
 #: ../src/widget/preference.py:845
 msgid "Centered"
-msgstr ""
+msgstr "Մեջտեղը"
 
 #: ../src/widget/preference.py:603 ../src/widget/preference.py:615
 #: ../src/widget/preference.py:845
 msgid "Right"
-msgstr ""
+msgstr "Աջ"
 
 #: ../src/widget/preference.py:616
 msgid "Justified"
-msgstr ""
+msgstr "Արդարացված"
 
 #: ../src/widget/preference.py:627 ../src/widget/lyrics_module.py:455
 msgid "Vitality yellow"
-msgstr ""
+msgstr "Կենսունակ դեղին"
 
 #: ../src/widget/preference.py:628 ../src/widget/lyrics_module.py:456
 msgid "Fresh green"
-msgstr ""
+msgstr "Մրգականաչ"
 
 #: ../src/widget/preference.py:629 ../src/widget/lyrics_module.py:457
 msgid "Playful pink"
-msgstr ""
+msgstr "Ուրախ վարդագույն"
 
 #: ../src/widget/preference.py:630 ../src/widget/lyrics_module.py:458
 msgid "Cool blue"
-msgstr ""
+msgstr "Լավ կապույտ"
 
 #: ../src/widget/preference.py:642
 msgid "Color scheme"
-msgstr ""
+msgstr "Գույների գծանկար"
 
 #: ../src/widget/preference.py:650 ../src/widget/preference.py:807
 msgid "Regular"
-msgstr ""
+msgstr "Կանոնավոր"
 
 #: ../src/widget/preference.py:651 ../src/widget/preference.py:808
 msgid "Italic"
-msgstr ""
+msgstr "Թեք"
 
 #: ../src/widget/preference.py:652 ../src/widget/preference.py:809
 msgid "Bold"
-msgstr ""
+msgstr "Հաստ"
 
 #: ../src/widget/preference.py:653 ../src/widget/preference.py:810
 msgid "Bold Italic"
-msgstr ""
+msgstr "Հաստ և թեք"
 
 #: ../src/widget/preference.py:663 ../src/widget/preference.py:818
 msgid "Style"
-msgstr ""
+msgstr "Ձև"
 
 #: ../src/widget/preference.py:671 ../src/widget/preference.py:824
 msgid "Lyrics style"
-msgstr ""
+msgstr "Բառերի ձև"
 
 #: ../src/widget/preference.py:681 ../src/widget/preference.py:833
 msgid "Font"
-msgstr ""
+msgstr "Տառատեսակ"
 
 #: ../src/widget/preference.py:689
 msgid "Lines"
-msgstr ""
+msgstr "Գծեր"
 
 #: ../src/widget/preference.py:690
 msgid "Single"
-msgstr ""
+msgstr "Եզակ"
 
 #: ../src/widget/preference.py:690
 msgid "Double"
-msgstr ""
+msgstr "Կրկնակի"
 
 #: ../src/widget/preference.py:693 ../src/widget/preference.py:843
 msgid "Alignment"
-msgstr ""
+msgstr "Հավասարեցում"
 
 #: ../src/widget/preference.py:702
 msgid "Outline"
-msgstr ""
+msgstr "Ուրվագիծ"
 
 #: ../src/widget/preference.py:706
 msgid "Stroke"
-msgstr ""
+msgstr "Հարված"
 
 #: ../src/widget/preference.py:711 ../src/widget/preference.py:855
 msgid "Coming"
-msgstr ""
+msgstr "Գալիք"
 
 #: ../src/widget/preference.py:722 ../src/widget/preference.py:856
 msgid "Played"
-msgstr ""
+msgstr "Երգված"
 
 #: ../src/widget/preference.py:850
 msgid "Rolling"
-msgstr ""
+msgstr "Ճոճվող"
 
 #: ../src/widget/preference.py:851
 msgid "Always"
-msgstr ""
+msgstr "Միշտ"
 
 #: ../src/widget/preference.py:851
 msgid "By line"
-msgstr ""
+msgstr "Ըստ գծի"
 
 #: ../src/widget/preference.py:905 ../src/widget/plugins_view.py:166
 msgid "Version"
-msgstr ""
+msgstr "Տարբերակ"
 
 #: ../src/widget/preference.py:920
 msgid ""
@@ -621,732 +632,739 @@ msgid ""
 "\n"
 "DMusic is free software licensed under GNU GPLv3."
 msgstr ""
+"        DMusic-ը երաժշտական ծրագիր է Linux-ից օգտվողների համար: Այն "
+"թարգմանել է Հայկ Ափրիկյանը: Նրանով կարելի է գտնել և փնտրել երգի բառերը, "
+"նրանք ցուցադրումը աշխատասեղանի վրա, ալբոմի կազմի ներբեռնում, երգելը "
+"շարունակելու հնարավորություն, երգերի ղեկավարություն և մաշկի ընտրություն:\n"
+"\n"
+"DMusic-ն անվճար ծրագիր է GNU GPLv3 արտոնագրի ներքո: Թ.` Հ. Ափրիկյան:"
 
 #: ../src/widget/preference.py:938 ../src/widget/instance.py:371
 #: ../src/widget/tray.py:82
 msgid "Preferences"
-msgstr ""
+msgstr "Հատկություններ"
 
 #: ../src/widget/preference.py:996
 msgid "General"
-msgstr ""
+msgstr "Գլխավոր"
 
 #: ../src/widget/preference.py:998
 msgid "Lyrics"
-msgstr ""
+msgstr "Բառեր"
 
 #: ../src/widget/preference.py:999
 msgid "Desktop"
-msgstr ""
+msgstr "Աշխատասեղան"
 
 #: ../src/widget/preference.py:1000
 msgid "Window"
-msgstr ""
+msgstr "Պատուհան"
 
 #: ../src/widget/preference.py:1001
 msgid "Add-ons"
-msgstr ""
+msgstr "Հավելումներ"
 
 #: ../src/widget/preference.py:1002
 msgid "About"
-msgstr ""
+msgstr "Տեղեկություն"
 
 #: ../src/widget/song_view.py:437 ../src/widget/song_view.py:780
 #: ../src/widget/local_browser.py:339 ../src/widget/converter.py:309
 msgid "Prompt"
-msgstr ""
+msgstr "Հուշում"
 
 #: ../src/widget/song_view.py:437 ../src/widget/song_view.py:780
 #: ../src/widget/local_browser.py:339
 msgid "Are you sure you want to delete them?"
-msgstr ""
+msgstr "Վստա՞հ եք, որ ցանկանում եք ջնջել սրանք:"
 
 #: ../src/widget/song_view.py:481
 msgid "Repeat (single)"
-msgstr ""
+msgstr "Կրկնել (մեկ անգամ)"
 
 #: ../src/widget/song_view.py:482
 msgid "Play (ordered)"
-msgstr ""
+msgstr "Նվագարկել (պատվիրվածը)"
 
 #: ../src/widget/song_view.py:483
 msgid "Repeat (list)"
-msgstr ""
+msgstr "Կրկնել (ցուցակը)"
 
 #: ../src/widget/song_view.py:484
 msgid "Random"
-msgstr ""
+msgstr "Պատահական"
 
 #: ../src/widget/song_view.py:507
 msgid "Remove Track from this List"
-msgstr ""
+msgstr "Հեռացնել երգը ցուցակից"
 
 #: ../src/widget/song_view.py:508
 msgid "Remove Unavailable Tracks"
-msgstr ""
+msgstr "Հեռացնել անմատչելի երգերը"
 
 #: ../src/widget/song_view.py:509 ../src/widget/song_view.py:789
 #: ../src/widget/local_browser.py:354 ../src/widget/playlist.py:554
 msgid "Move to Trash"
-msgstr ""
+msgstr "Տեղափոխել աղբաման"
 
 #: ../src/widget/song_view.py:510
 msgid "Clear list"
-msgstr ""
+msgstr "Մաքրել ցուցակը"
 
 #: ../src/widget/song_view.py:521
 msgid "URL"
-msgstr ""
+msgstr "Հասցե"
 
 #: ../src/widget/song_view.py:522 ../src/widget/song_view.py:530
 msgid "File"
-msgstr ""
+msgstr "Նիշք"
 
 #: ../src/widget/song_view.py:523
 msgid "Directory (include subdirectories)"
-msgstr ""
+msgstr "Տարածքը (ենթատարածքների հետ միասին)"
 
 #: ../src/widget/song_view.py:524 ../src/widget/song_view.py:532
 msgid "Directory"
-msgstr ""
+msgstr "Տարածքը"
 
 #: ../src/widget/song_view.py:531
 msgid "Directory(include subdirectories)"
-msgstr ""
+msgstr "Տարածքը (ենթատարածքների հետ միասին)"
 
 #: ../src/widget/song_view.py:542
 msgid "Add URL"
-msgstr ""
+msgstr "Ավելացնել հասցե"
 
 #: ../src/widget/song_view.py:680 ../src/widget/song_editor.py:72
 #: ../src/widget/song_editor.py:202 ../src/widget/lyrics_search.py:83
 msgid "Title"
-msgstr ""
+msgstr "Անվանում"
 
 #: ../src/widget/song_view.py:680 ../src/widget/song_editor.py:73
 #: ../src/widget/song_editor.py:203 ../src/widget/local_browser.py:85
 #: ../src/widget/lyrics_search.py:83 ../plugins/notify/__init__.py:43
 msgid "Artist"
-msgstr ""
+msgstr "Կատարող"
 
 #: ../src/widget/song_view.py:680 ../src/widget/song_editor.py:74
 #: ../src/widget/song_editor.py:204 ../src/widget/local_browser.py:87
 #: ../plugins/notify/__init__.py:45
 msgid "Album"
-msgstr ""
+msgstr "Ալբոմ"
 
 #: ../src/widget/song_view.py:680
 msgid "Added time"
-msgstr ""
+msgstr "Ավելացված ժամանակը"
 
 #: ../src/widget/song_view.py:788 ../src/widget/local_browser.py:353
 msgid "Remove from Library"
-msgstr ""
+msgstr "Հեռացնել դարանից"
 
 #: ../src/widget/song_view.py:791 ../src/widget/local_browser.py:359
 msgid "Open Directory"
-msgstr ""
+msgstr "Բացել տարածքը"
 
 #: ../src/widget/song_view.py:792 ../src/widget/instance.py:340
 #: ../src/widget/instance.py:363 ../src/widget/converter.py:427
 #: ../src/widget/playlist.py:559
 msgid "Convert"
-msgstr ""
+msgstr "Փոխարկել"
 
 #: ../src/widget/song_view.py:793 ../src/widget/song_editor.py:335
 #: ../src/widget/playlist.py:561
 msgid "Properties"
-msgstr ""
+msgstr "Հատկություններ"
 
 #: ../src/widget/lyrics.py:734
 msgid "Lyrics window"
-msgstr ""
+msgstr "Բառերի պատուհան"
 
 #: ../src/widget/lyrics_module.py:151
 msgid "increase the lyrics size"
-msgstr ""
+msgstr "բարձրացնել բառերի չափը"
 
 #: ../src/widget/lyrics_module.py:152
 msgid "decrease the lyrics size"
-msgstr ""
+msgstr "Նվազեցնել բառերի չափը"
 
 #: ../src/widget/lyrics_module.py:154
 msgid "Select color theme"
-msgstr ""
+msgstr "Նշել գույնի թեման"
 
 #: ../src/widget/lyrics_module.py:155 ../src/widget/instance.py:404
 #: ../src/widget/tray.py:79
 msgid "Lock lyrics"
-msgstr ""
+msgstr "Կողպել բառերը"
 
 #: ../src/widget/lyrics_module.py:158
 msgid "karaoke on/off"
-msgstr ""
+msgstr "կարաոկեն միացնել/անջատել"
 
 #: ../src/widget/lyrics_module.py:160
 msgid "Switch lines"
-msgstr ""
+msgstr "Փոխել գծերը"
 
 #: ../src/widget/lyrics_module.py:162
 msgid "Open settings panel"
-msgstr ""
+msgstr "Բացել կարգավորումների վահանակը"
 
 #: ../src/widget/lyrics_module.py:163
 msgid "search lrc file for current track"
-msgstr ""
+msgstr "փնտրել ներկայիս երգի lrc նիշքը"
 
 #: ../src/widget/lyrics_module.py:164
 msgid "Close lyrics"
-msgstr ""
+msgstr "Փակել բառերը"
 
 #: ../src/widget/lyrics_module.py:165 ../src/widget/lyrics_module.py:223
 msgid "Lyrics rewind"
-msgstr ""
+msgstr "Բառերը ետ տանել"
 
 #: ../src/widget/lyrics_module.py:166 ../src/widget/lyrics_module.py:224
 msgid "Lyrics forward"
-msgstr ""
+msgstr "Բառերն առաջ տանել"
 
 #: ../src/widget/lyrics_module.py:167 ../src/widget/lyrics_module.py:243
 msgid "Switch to window mode"
-msgstr ""
+msgstr "Փոխել պատուհանային ձևի"
 
 #: ../src/widget/lyrics_module.py:221
 msgid "Switch to desktop mode"
-msgstr ""
+msgstr "Փոխել աշխատասեղնակային ձևի"
 
 #: ../src/widget/lyrics_module.py:226 ../src/widget/lyrics_module.py:236
 #: ../src/widget/lyrics_search.py:59
 msgid "Search"
-msgstr ""
+msgstr "Փնտրել"
 
 #: ../src/widget/lyrics_module.py:227 ../src/widget/lyrics_module.py:242
 msgid "Settings"
-msgstr ""
+msgstr "Կարգավորումներ"
 
 #: ../src/widget/lyrics_module.py:233
 msgid "Forward 0.5 seconds"
-msgstr ""
+msgstr "0.5 վայրկյան առաջ տալ"
 
 #: ../src/widget/lyrics_module.py:234
 msgid "Rewind 0.5 seconds"
-msgstr ""
+msgstr "0.5 վայրկյան ետ տալ"
 
 #: ../src/widget/lyrics_module.py:237
 msgid "Adjust lyrics"
-msgstr ""
+msgstr "Հարմարեցնել բառերը"
 
 #: ../src/widget/lyrics_module.py:239
 msgid "Choose local lrc"
-msgstr ""
+msgstr "Ընտրել local lrc"
 
 #: ../src/widget/lyrics_module.py:240 ../src/widget/song_editor.py:150
 #: ../src/widget/converter.py:367 ../src/widget/playlist.py:560
 msgid "Open directory"
-msgstr ""
+msgstr "Բացել տարածքը"
 
 #: ../src/widget/lyrics_module.py:247
 msgid "Network get lrc"
-msgstr ""
+msgstr "Network get lrc"
 
 #: ../src/widget/lyrics_module.py:793 ../src/widget/lyrics_module.py:794
 msgid "No lyrics found!"
-msgstr ""
+msgstr "Բառեր չգտնվեցին:"
 
 #: ../src/widget/lyrics_module.py:796 ../src/widget/lyrics_module.py:797
 msgid "Searching for lyrics..."
-msgstr ""
+msgstr "Փնտրվում են բառերը..."
 
 #: ../src/widget/ui.py:203
 msgid "Need some music? Find it here..."
-msgstr ""
+msgstr "Փնտրում եք եաժշտությո՞ւն: Որոնե՛ք այստեղ..."
 
 #: ../src/widget/ui.py:401
 msgid "Add Music"
-msgstr ""
+msgstr "Ավելացնել երաժշտություն"
 
 #: ../src/widget/ui.py:1122
 msgid "Your search {keyword} did not match any items in {from}"
-msgstr ""
+msgstr "Ձեր փնտրած {keyword}-ը չի համապատասխանում ոչ մեկին {from}-ից:"
 
 #: ../src/widget/ui.py:1123
 msgid "Suggestions"
-msgstr ""
+msgstr "Առաջարկներ"
 
 #: ../src/widget/ui.py:1124
 msgid "Make sure all words are spelled correctly."
-msgstr ""
+msgstr "Համոզվեք, որ բոլոր բառերը ճիշտ են ուղղագրությամբ:"
 
 #: ../src/widget/ui.py:1125
 msgid ""
 "Try more general keywords, such as a title, an artist or the name of an "
 "album."
 msgstr ""
+"Փորձեք ավելի գլխավոր բառեր, ինչպես անվանումը, կատարողի կամ ալբոմի անունը"
 
 #: ../src/widget/ui.py:1222 ../src/widget/plugins_view.py:166
 msgid "Add-on"
-msgstr ""
+msgstr "Հավելում"
 
 #: ../src/widget/ui.py:1230
 msgid "Author(s)"
-msgstr ""
+msgstr "Հեղինակ(ներ)"
 
 #: ../src/widget/ui.py:1266
 msgid "Don't prompt again"
-msgstr ""
+msgstr "Այլևս հուշումներ չանել"
 
 #: ../src/widget/ui.py:1273
 msgid "OK"
-msgstr ""
+msgstr "Լավ"
 
 #: ../src/widget/ui.py:1276
 msgid "Cancel"
-msgstr ""
+msgstr "Չեղարկել"
 
 #: ../src/widget/instance.py:146
 msgid "Join us"
-msgstr ""
+msgstr "Միացի՜ր"
 
 #: ../src/widget/instance.py:323 ../src/widget/tray.py:61
 #: ../src/widget/converter.py:392 ../src/widget/converter.py:412
 #: ../src/widget/converter.py:415
 msgid "Pause"
-msgstr ""
+msgstr "Ընդհատել"
 
 #: ../src/widget/instance.py:327
 msgid "Forward"
-msgstr ""
+msgstr "Առաջ"
 
 #: ../src/widget/instance.py:328
 msgid "Rewind"
-msgstr ""
+msgstr "Ետ"
 
 #: ../src/widget/instance.py:341 ../src/widget/converter.py:376
 msgid "Task Manager"
-msgstr ""
+msgstr "Գործողությունների վահանակ"
 
 #: ../src/widget/instance.py:358 ../src/widget/playlist.py:97
 msgid "Add"
-msgstr ""
+msgstr "Ավելացնել"
 
 #: ../src/widget/instance.py:359
 msgid "Controls"
-msgstr ""
+msgstr "Կառավարում"
 
 #: ../src/widget/instance.py:360 ../src/widget/playlist.py:100
 #: ../src/widget/playlist.py:557
 msgid "Playback Order"
-msgstr ""
+msgstr "Պատվերներ"
 
 #: ../src/widget/instance.py:370
 msgid "View New Features"
-msgstr ""
+msgstr "Տեսնել նոր հնարավորությունները"
 
 #: ../src/widget/instance.py:377 ../src/widget/tray.py:72
 msgid "Search Lyrics"
-msgstr ""
+msgstr "Փնտրել բառերը"
 
 #: ../src/widget/instance.py:396 ../src/widget/tray.py:71
 msgid "Hide Lyrics"
-msgstr ""
+msgstr "Թաքցնել բառերը"
 
 #: ../src/widget/instance.py:398 ../src/widget/tray.py:74
 msgid "Show Lyrics"
-msgstr ""
+msgstr "Ցուցադրել բառերը"
 
 #: ../src/widget/instance.py:402 ../src/widget/tray.py:77
 msgid "Unlock lyrics"
-msgstr ""
+msgstr "Բացել բառերը"
 
 #: ../src/widget/instance.py:479
 msgid "Mini Mode"
-msgstr ""
+msgstr "Փոքրացված"
 
 #: ../src/widget/instance.py:481
 msgid "Normal Mode"
-msgstr ""
+msgstr "Սովորակա"
 
 #: ../src/widget/tray.py:50
 msgid "Mute"
-msgstr ""
+msgstr "Անջատել ձայնը"
 
 #: ../src/widget/tray.py:66
 msgid "Volume"
-msgstr ""
+msgstr "Ձայն"
 
 #: ../src/widget/dialog.py:34
 msgid "Select Directory"
-msgstr ""
+msgstr "Նշել տարածք"
 
 #: ../src/widget/dialog.py:56
 msgid "Select file"
-msgstr ""
+msgstr "Նշել նիշքը"
 
 #: ../src/widget/dialog.py:82
 msgid "Export playlist"
-msgstr ""
+msgstr "Արտահանել ցուցակը"
 
 #: ../src/widget/dialog.py:130
 msgid "Load playlist"
-msgstr ""
+msgstr "Վերբեռնել ցուցակը"
 
 #: ../src/widget/song_editor.py:96 ../src/widget/converter.py:433
 msgid "Format"
-msgstr ""
+msgstr "Ձևաչափ"
 
 #: ../src/widget/song_editor.py:98
 msgid "Bitrate"
-msgstr ""
+msgstr "Բիթրեյթ"
 
 #: ../src/widget/song_editor.py:98
 msgid "Rate"
-msgstr ""
+msgstr "Գնահատական"
 
 #: ../src/widget/song_editor.py:99
 msgid "Added"
-msgstr ""
+msgstr "Ավելացվել է"
 
 #: ../src/widget/song_editor.py:99
 msgid "Recently"
-msgstr ""
+msgstr "վերջերս"
 
 #: ../src/widget/song_editor.py:100 ../src/widget/song_editor.py:206
 msgid "Date"
-msgstr ""
+msgstr "Ամսաթիվ"
 
 #: ../src/widget/song_editor.py:147
 msgid "Location"
-msgstr ""
+msgstr "Վայր"
 
 #: ../src/widget/song_editor.py:214
 msgid "Save"
-msgstr ""
+msgstr "Պահել"
 
 #: ../src/widget/song_editor.py:299
 msgid "Retrieve from the Internet"
-msgstr ""
+msgstr "Թարմացնել համացանցից"
 
 #: ../src/widget/song_editor.py:321 ../src/widget/local_browser.py:343
 msgid "Select image"
-msgstr ""
+msgstr "Նշել պատկեր"
 
 #: ../src/widget/song_editor.py:367
 msgid "Track Infomation"
-msgstr ""
+msgstr "Տեղեկություն"
 
 #: ../src/widget/song_editor.py:368
 msgid "Edit tags"
-msgstr ""
+msgstr "Խմբագրել պիտակները"
 
 #: ../src/widget/song_editor.py:369
 msgid "Edit cover"
-msgstr ""
+msgstr "Խմբագրել կազմը"
 
 #: ../src/widget/combo.py:184 ../src/widget/combo.py:233
 #: ../src/widget/playlist.py:536
 msgid "By Artist"
-msgstr ""
+msgstr "Կատարողով"
 
 #: ../src/widget/combo.py:195
 msgid "List view"
-msgstr ""
+msgstr "Ցուցակի դիտում"
 
 #: ../src/widget/combo.py:234 ../src/widget/playlist.py:538
 msgid "By Genre"
-msgstr ""
+msgstr "Ժանրով"
 
 #: ../src/widget/combo.py:235 ../src/widget/playlist.py:537
 msgid "By Album"
-msgstr ""
+msgstr "Ալբոմով"
 
 #: ../src/widget/plugins_view.py:166
 msgid "Enable"
-msgstr ""
+msgstr "Միացնել"
 
 #: ../src/widget/global_keys.py:96
 #, python-format
 msgid "Failed to bind %s !"
-msgstr ""
+msgstr "Չհաջողվեց կապնվել %s-ին:"
 
 #: ../src/widget/local_browser.py:91
 msgid "Folder"
-msgstr ""
+msgstr "Պանակ"
 
 #: ../src/widget/local_browser.py:98
 msgid "Quick Scan"
-msgstr ""
+msgstr "Արագ ծրում"
 
 #: ../src/widget/local_browser.py:99
 msgid "Scan"
-msgstr ""
+msgstr "Ծրում"
 
 #: ../src/widget/local_browser.py:100
 msgid "Refresh"
-msgstr ""
+msgstr "Թարմացնել"
 
 #: ../src/widget/local_browser.py:350
 msgid "Play All"
-msgstr ""
+msgstr "Նվագարկել բոլորը"
 
 #: ../src/widget/local_browser.py:351 ../src/widget/playlist.py:550
 msgid "Add to List"
-msgstr ""
+msgstr "Ավելացնել ցուցակին"
 
 #: ../src/widget/local_browser.py:361
 msgid "Change Cover"
-msgstr ""
+msgstr "Փոխել կազմը"
 
 #: ../src/widget/local_item.py:59
 msgid "All Tracks"
-msgstr ""
+msgstr "Բոլորը"
 
 #: ../src/widget/local_item.py:67
 msgid "Track(s)"
-msgstr ""
+msgstr "Ձայնանշոց(ներ)"
 
 #: ../src/widget/information.py:75
 msgid "Connecting"
-msgstr ""
+msgstr "Միացվում է"
 
 #: ../src/widget/information.py:105
 msgid "buffering"
-msgstr ""
+msgstr "բուֆերացվում է"
 
 #: ../src/widget/converter.py:309
 msgid "Target file already exitsts, do you want to overwrite it?"
-msgstr ""
+msgstr "Նիշք արդեն կա, ցանկանո՞ւմ եք վերագրել այն:"
 
 #: ../src/widget/converter.py:369
 msgid "Delete task"
-msgstr ""
+msgstr "Ջնջել գործողությունը"
 
 #: ../src/widget/converter.py:370
 msgid "Clear finished tasks"
-msgstr ""
+msgstr "Մաքրել կատարված գործողությունները"
 
 #: ../src/widget/converter.py:413
 msgid "Continue"
-msgstr ""
+msgstr "Շարունակել"
 
 #: ../src/widget/converter.py:436
 msgid "Quality"
-msgstr ""
+msgstr "Որակ"
 
 #: ../src/widget/converter.py:444
 msgid "Target file already exists"
-msgstr ""
+msgstr "Նիշքն արդեն կա"
 
 #: ../src/widget/converter.py:445
 msgid "Ask"
-msgstr ""
+msgstr "Հարցնել"
 
 #: ../src/widget/converter.py:445
 msgid "Cover"
-msgstr ""
+msgstr "Կազմ"
 
 #: ../src/widget/converter.py:448
 msgid "Start"
-msgstr ""
+msgstr "Սկսել"
 
 #: ../src/widget/converter.py:450
 msgid "Add to Playlist when finished"
-msgstr ""
+msgstr "Երբ վերջանա, ավելացնել ցուցակին"
 
 #: ../src/widget/converter.py:472
 msgid "Output"
-msgstr ""
+msgstr "Արտադրանք"
 
 #: ../src/widget/lyrics_search.py:47
 msgid "Lyrics search"
-msgstr ""
+msgstr "Փնտրել բառերը"
 
 #: ../src/widget/lyrics_search.py:54
 msgid "Artist:"
-msgstr ""
+msgstr "Կատարող`"
 
 #: ../src/widget/lyrics_search.py:55
 msgid "Title:"
-msgstr ""
+msgstr "Անվանում`"
 
 #: ../src/widget/lyrics_search.py:87
 msgid "Download"
-msgstr ""
+msgstr "Ներբեռնել"
 
 #: ../src/widget/lyrics_search.py:136
 msgid "Now searching..."
-msgstr ""
+msgstr "Փնտրվում է..."
 
 #: ../src/widget/lyrics_search.py:138 ../src/widget/lyrics_search.py:163
 msgid "Not found!"
-msgstr ""
+msgstr "Չի՜ գտնվել:"
 
 #: ../src/widget/lyrics_search.py:157 ../src/widget/lyrics_search.py:161
 #, python-format
 msgid "%d lyrics found"
-msgstr ""
+msgstr "Գտնվել են %d բառեր:"
 
 #: ../src/widget/lyrics_search.py:170
 msgid "Downloading lyrics..."
-msgstr ""
+msgstr "Բառերը ներբեռնվում են..."
 
 #: ../src/widget/lyrics_search.py:180
 msgid "File save to"
-msgstr ""
+msgstr "Նիշքը պահել"
 
 #: ../src/widget/lyrics_search.py:182
 msgid "Download failed."
-msgstr ""
+msgstr "Ներբեռնումը չեղավ:"
 
 #: ../src/widget/playlist.py:94
 msgid "Search in Current Playlist"
-msgstr ""
+msgstr "Փնտրել ներկայիս ցուցակում"
 
 #: ../src/widget/playlist.py:96
 msgid "Playlist Operations"
-msgstr ""
+msgstr "Ցուցակի գործողություններ"
 
 #: ../src/widget/playlist.py:183
 msgid "Default List"
-msgstr ""
+msgstr "Հիմնական ցուցակ"
 
 #: ../src/widget/playlist.py:304 ../src/widget/playlist.py:316
 #: ../src/widget/playlist.py:317 ../src/widget/playlist.py:357
 #: ../src/widget/playlist.py:360 ../src/widget/playlist.py:476
 msgid "New List"
-msgstr ""
+msgstr "Նոր ցուցակ"
 
 #: ../src/widget/playlist.py:305 ../src/widget/playlist.py:477
 msgid "Import List"
-msgstr ""
+msgstr "Ներկրել ցուցակ"
 
 #: ../src/widget/playlist.py:306 ../src/widget/playlist.py:485
 msgid "Open List"
-msgstr ""
+msgstr "Բացել ցուցակը"
 
 #: ../src/widget/playlist.py:307
 msgid "Export List"
-msgstr ""
+msgstr "Արտահանել ցուցակը"
 
 #: ../src/widget/playlist.py:308 ../src/widget/playlist.py:484
 msgid "Remove List"
-msgstr ""
+msgstr "Հեռացնել ցուցակը"
 
 #: ../src/widget/playlist.py:310 ../src/widget/playlist.py:479
 #: ../src/widget/playlist.py:487
 msgid "Save all Lists"
-msgstr ""
+msgstr "Պահել բոլոր ցուցակները"
 
 #: ../src/widget/playlist.py:483 ../src/widget/playlist.py:493
 msgid "Rename"
-msgstr ""
+msgstr "Վերանվանել"
 
 #: ../src/widget/playlist.py:534
 msgid "By Filename"
-msgstr ""
+msgstr "Նիշքի անվանումով"
 
 #: ../src/widget/playlist.py:535
 msgid "By Title"
-msgstr ""
+msgstr "Վերնագրով"
 
 #: ../src/widget/playlist.py:539
 msgid "By Track"
-msgstr ""
+msgstr "Երգով"
 
 #: ../src/widget/playlist.py:540
 msgid "By Play Count"
-msgstr ""
+msgstr "Նվագարկման քանակով"
 
 #: ../src/widget/playlist.py:541
 msgid "By Date Added"
-msgstr ""
+msgstr "Ավելացված ամսաթվով"
 
 #: ../src/widget/playlist.py:545
 msgid "Randomize"
-msgstr ""
+msgstr "Պատահականորեն"
 
 #: ../src/widget/playlist.py:551
 msgid "move to List"
-msgstr ""
+msgstr "Տեղաշարժել դեպի ցուցակը"
 
 #: ../src/widget/playlist.py:553
 msgid "Remove Track"
-msgstr ""
+msgstr "Հեռացնել երգը"
 
 #: ../src/widget/playlist.py:558
 msgid "Sort"
-msgstr ""
+msgstr "Դասավորել"
 
 #: ../plugins/pidgin/__init__.py:97 ../plugins/mpris2/mpris_adapter.py:252
 msgid "Deepin Music"
-msgstr ""
+msgstr "Deepin Music"
 
 #: ../plugins/musicfm/radio_home_page.py:73
 #: ../plugins/musicfm/radio_browser.py:79
 msgid "Hot MHz"
-msgstr ""
+msgstr "Hot MHz"
 
 #: ../plugins/musicfm/radio_home_page.py:73
 #: ../plugins/musicfm/radio_browser.py:81
 msgid "Pop MHz"
-msgstr ""
+msgstr "Pop MHz"
 
 #: ../plugins/musicfm/radio_browser.py:78
 msgid "Home"
-msgstr ""
+msgstr "Տուն"
 
 #: ../plugins/musicfm/radio_browser.py:80
 msgid "Genres"
-msgstr ""
+msgstr "Ժանրեր"
 
 #: ../plugins/musicfm/__init__.py:33 ../plugins/musicfm/__init__.py:35
 #: ../plugins/musicfm/radio_view.py:474
 msgid "MusicFM"
-msgstr ""
+msgstr "MusicFM"
 
 #: ../plugins/musicfm/radio_item.py:508
 msgid "More"
-msgstr ""
+msgstr "Այլ"
 
 #: ../plugins/musicfm/radio_genre_page.py:44
 msgid "Jazz"
-msgstr ""
+msgstr "Ջազ"
 
 #: ../plugins/musicfm/radio_genre_page.py:45
 msgid "Folk/Country"
-msgstr ""
+msgstr "Folk/Country"
 
 #: ../plugins/musicfm/radio_genre_page.py:47
 msgid "Electronic"
-msgstr ""
+msgstr "Էլեկտրոնիկ"
 
 #: ../plugins/musicfm/radio_genre_page.py:48
 msgid "OST"
-msgstr ""
+msgstr "OST"
 
 #: ../plugins/musicfm/radio_genre_page.py:49
 msgid "Light"
-msgstr ""
+msgstr "Light"
 
 #: ../plugins/musicfm/radio_genre_page.py:50
 msgid "Hip-Hop/Rap"
-msgstr ""
+msgstr "Հիփհոփ/Ռեպ"
 
 #: ../plugins/musicfm/radio_genre_page.py:51
 msgid "Reggae"
-msgstr ""
+msgstr "Ռեգգի"
 
 #: ../plugins/musicfm/radio_genre_page.py:52
 msgid "Latino"
-msgstr ""
+msgstr "Լատինո"
 
 #: ../plugins/musicfm/radio_genre_page.py:53
 msgid "World"
-msgstr ""
+msgstr "World"
 
 #: ../plugins/musicfm/radio_genre_page.py:54
 msgid "Blues"
-msgstr ""
+msgstr "Բլյուզ"
 
 #: ../plugins/musicfm/radio_genre_page.py:55
 msgid "Funk/Soul/R&B"
-msgstr ""
+msgstr "Funk/Soul/R&B"
