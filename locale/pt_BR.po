@@ -6,12 +6,13 @@
 # 648trindade <rafaelgt.mbin@gmail.com>, 2013
 # alanjhone <alanjhone9@gmail.com>, 2013
 # alanjhone <alanjhone9@gmail.com>, 2013
+# 648trindade <rafaelgt.mbin@gmail.com>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: DMusic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-02-10 16:34+0800\n"
-"PO-Revision-Date: 2013-12-27 19:25+0000\n"
+"POT-Creation-Date: 2014-02-25 11:28+0800\n"
+"PO-Revision-Date: 2014-02-24 05:52+0000\n"
 "Last-Translator: 648trindade <rafaelgt.mbin@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/"
 "dmusic/language/pt_BR/)\n"
@@ -179,6 +180,7 @@ msgstr "Alternar visibilidade da GUI (se possível)"
 #: ../src/main.py:158
 msgid "Make control options like --play start program if it is not running"
 msgstr ""
+"Faz opções de controle como --play iniciar programa se não está executando"
 
 #: ../src/main.py:161
 msgid "Development/Debug Options"
@@ -190,7 +192,7 @@ msgstr "Alterar nível de depuração (0-9)"
 
 #: ../src/main.py:166
 msgid "Show information about supported audio file"
-msgstr ""
+msgstr "Mostra informação sobre arquivo de áudio suportado"
 
 #: ../src/main.py:172 ../src/widget/preference.py:579
 #: ../src/widget/preference.py:589 ../src/widget/preference.py:900
@@ -316,7 +318,7 @@ msgstr "Mostrar/Esconder Letras"
 
 #: ../src/widget/webcasts_browser.py:98
 msgid "Region"
-msgstr ""
+msgstr "Região"
 
 #: ../src/widget/webcasts_browser.py:99 ../src/widget/song_editor.py:205
 #: ../src/widget/local_browser.py:89
@@ -421,7 +423,7 @@ msgstr "Pré-definido"
 
 #: ../src/widget/jobs_manager.py:44 ../src/widget/jobs_manager.py:153
 msgid "jobs waiting!"
-msgstr ""
+msgstr "trabalhos à espera!"
 
 #: ../src/widget/preference.py:150
 msgid "Startup"
@@ -429,7 +431,7 @@ msgstr "Inicialização"
 
 #: ../src/widget/preference.py:157
 msgid "Display splash-screen"
-msgstr ""
+msgstr "Mostrar tela dividida"
 
 #: ../src/widget/preference.py:164
 msgid "Show lyrics"
@@ -602,7 +604,7 @@ msgstr "Contorno"
 
 #: ../src/widget/preference.py:706
 msgid "Stroke"
-msgstr ""
+msgstr "Batida"
 
 #: ../src/widget/preference.py:711 ../src/widget/preference.py:855
 msgid "Coming"
@@ -653,7 +655,7 @@ msgstr "Geral"
 
 #: ../src/widget/preference.py:998
 msgid "Lyrics"
-msgstr ""
+msgstr "Letras"
 
 #: ../src/widget/preference.py:999
 msgid "Desktop"
@@ -661,11 +663,11 @@ msgstr "Desktop"
 
 #: ../src/widget/preference.py:1000
 msgid "Window"
-msgstr ""
+msgstr "Janela"
 
 #: ../src/widget/preference.py:1001
 msgid "Add-ons"
-msgstr ""
+msgstr "Add-ons"
 
 #: ../src/widget/preference.py:1002
 msgid "About"
@@ -679,19 +681,19 @@ msgstr "Prompt"
 #: ../src/widget/song_view.py:437 ../src/widget/song_view.py:780
 #: ../src/widget/local_browser.py:339
 msgid "Are you sure you want to delete them?"
-msgstr ""
+msgstr "Você tem certeza que quer excluí-los?"
 
 #: ../src/widget/song_view.py:481
 msgid "Repeat (single)"
-msgstr ""
+msgstr "Repetir (uma)"
 
 #: ../src/widget/song_view.py:482
 msgid "Play (ordered)"
-msgstr ""
+msgstr "Reproduzir (ordenada)"
 
 #: ../src/widget/song_view.py:483
 msgid "Repeat (list)"
-msgstr ""
+msgstr "Repetir (lista)"
 
 #: ../src/widget/song_view.py:484
 msgid "Random"
@@ -699,16 +701,16 @@ msgstr "Aleatório"
 
 #: ../src/widget/song_view.py:507
 msgid "Remove Track from this List"
-msgstr ""
+msgstr "Remover Faixa da Lista"
 
 #: ../src/widget/song_view.py:508
 msgid "Remove Unavailable Tracks"
-msgstr ""
+msgstr "Remover Faixas Indisponíveis"
 
 #: ../src/widget/song_view.py:509 ../src/widget/song_view.py:789
 #: ../src/widget/local_browser.py:354 ../src/widget/playlist.py:554
 msgid "Move to Trash"
-msgstr ""
+msgstr "Mover para Lixeira"
 
 #: ../src/widget/song_view.py:510
 msgid "Clear list"
@@ -716,7 +718,7 @@ msgstr "Limpar lista"
 
 #: ../src/widget/song_view.py:521
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #: ../src/widget/song_view.py:522 ../src/widget/song_view.py:530
 msgid "File"
@@ -724,15 +726,15 @@ msgstr "Arquivo"
 
 #: ../src/widget/song_view.py:523
 msgid "Directory (include subdirectories)"
-msgstr ""
+msgstr "Diretório (Inclui sub-diretórios)"
 
 #: ../src/widget/song_view.py:524 ../src/widget/song_view.py:532
 msgid "Directory"
-msgstr ""
+msgstr "Diretório"
 
 #: ../src/widget/song_view.py:531
 msgid "Directory(include subdirectories)"
-msgstr ""
+msgstr "Diretório(inclui sub-diretórios)"
 
 #: ../src/widget/song_view.py:542
 msgid "Add URL"
@@ -757,11 +759,11 @@ msgstr "Álbum"
 
 #: ../src/widget/song_view.py:680
 msgid "Added time"
-msgstr ""
+msgstr "Data de adição"
 
 #: ../src/widget/song_view.py:788 ../src/widget/local_browser.py:353
 msgid "Remove from Library"
-msgstr ""
+msgstr "Remover da Biblioteca"
 
 #: ../src/widget/song_view.py:791 ../src/widget/local_browser.py:359
 msgid "Open Directory"
@@ -784,56 +786,56 @@ msgstr "Janela de letras"
 
 #: ../src/widget/lyrics_module.py:151
 msgid "increase the lyrics size"
-msgstr ""
+msgstr "aumentar o tamanho das letras"
 
 #: ../src/widget/lyrics_module.py:152
 msgid "decrease the lyrics size"
-msgstr ""
+msgstr "diminuir o tamanho das letras"
 
 #: ../src/widget/lyrics_module.py:154
 msgid "Select color theme"
-msgstr ""
+msgstr "Selecionar a cor do tema"
 
 #: ../src/widget/lyrics_module.py:155 ../src/widget/instance.py:404
 #: ../src/widget/tray.py:79
 msgid "Lock lyrics"
-msgstr ""
+msgstr "Travar letras"
 
 #: ../src/widget/lyrics_module.py:158
 msgid "karaoke on/off"
-msgstr ""
+msgstr "karaoke ligado/desligado"
 
 #: ../src/widget/lyrics_module.py:160
 msgid "Switch lines"
-msgstr ""
+msgstr "Alternar linhas"
 
 #: ../src/widget/lyrics_module.py:162
 msgid "Open settings panel"
-msgstr ""
+msgstr "Abrir painel de configurações"
 
 #: ../src/widget/lyrics_module.py:163
 msgid "search lrc file for current track"
-msgstr ""
+msgstr "procurar arquivo lrc para a faixa atual"
 
 #: ../src/widget/lyrics_module.py:164
 msgid "Close lyrics"
-msgstr ""
+msgstr "Fechar letras"
 
 #: ../src/widget/lyrics_module.py:165 ../src/widget/lyrics_module.py:223
 msgid "Lyrics rewind"
-msgstr ""
+msgstr "Retroceder as letras"
 
 #: ../src/widget/lyrics_module.py:166 ../src/widget/lyrics_module.py:224
 msgid "Lyrics forward"
-msgstr ""
+msgstr "Avançar as letras"
 
 #: ../src/widget/lyrics_module.py:167 ../src/widget/lyrics_module.py:243
 msgid "Switch to window mode"
-msgstr ""
+msgstr "Alternar para o modo janela"
 
 #: ../src/widget/lyrics_module.py:221
 msgid "Switch to desktop mode"
-msgstr ""
+msgstr "Alternar para o modo desktop"
 
 #: ../src/widget/lyrics_module.py:226 ../src/widget/lyrics_module.py:236
 #: ../src/widget/lyrics_search.py:59
@@ -846,19 +848,19 @@ msgstr "Settings"
 
 #: ../src/widget/lyrics_module.py:233
 msgid "Forward 0.5 seconds"
-msgstr ""
+msgstr "Avançar 0.5 segundos"
 
 #: ../src/widget/lyrics_module.py:234
 msgid "Rewind 0.5 seconds"
-msgstr ""
+msgstr "Retroceder 0.5 segundos"
 
 #: ../src/widget/lyrics_module.py:237
 msgid "Adjust lyrics"
-msgstr ""
+msgstr "Ajustar letras"
 
 #: ../src/widget/lyrics_module.py:239
 msgid "Choose local lrc"
-msgstr ""
+msgstr "Escolher lrc local"
 
 #: ../src/widget/lyrics_module.py:240 ../src/widget/song_editor.py:150
 #: ../src/widget/converter.py:367 ../src/widget/playlist.py:560
@@ -867,15 +869,15 @@ msgstr "Abrir diretorio"
 
 #: ../src/widget/lyrics_module.py:247
 msgid "Network get lrc"
-msgstr ""
+msgstr "Pegar lrc na rede"
 
 #: ../src/widget/lyrics_module.py:793 ../src/widget/lyrics_module.py:794
 msgid "No lyrics found!"
-msgstr ""
+msgstr "Letras não encontradas!"
 
 #: ../src/widget/lyrics_module.py:796 ../src/widget/lyrics_module.py:797
 msgid "Searching for lyrics..."
-msgstr ""
+msgstr "Procurando por letras..."
 
 #: ../src/widget/ui.py:203
 msgid "Need some music? Find it here..."
@@ -953,12 +955,12 @@ msgstr "Adicionar"
 
 #: ../src/widget/instance.py:359
 msgid "Controls"
-msgstr ""
+msgstr "Controles"
 
 #: ../src/widget/instance.py:360 ../src/widget/playlist.py:100
 #: ../src/widget/playlist.py:557
 msgid "Playback Order"
-msgstr ""
+msgstr "Ordem de Execução"
 
 #: ../src/widget/instance.py:370
 msgid "View New Features"
@@ -966,23 +968,23 @@ msgstr "Ver Novos Recursos"
 
 #: ../src/widget/instance.py:377 ../src/widget/tray.py:72
 msgid "Search Lyrics"
-msgstr ""
+msgstr "Procurar Letras"
 
 #: ../src/widget/instance.py:396 ../src/widget/tray.py:71
 msgid "Hide Lyrics"
-msgstr ""
+msgstr "Esconder Letras"
 
 #: ../src/widget/instance.py:398 ../src/widget/tray.py:74
 msgid "Show Lyrics"
-msgstr ""
+msgstr "Mostrar Letras"
 
 #: ../src/widget/instance.py:402 ../src/widget/tray.py:77
 msgid "Unlock lyrics"
-msgstr ""
+msgstr "Destravar letras"
 
 #: ../src/widget/instance.py:479
 msgid "Mini Mode"
-msgstr ""
+msgstr "Modo Mini"
 
 #: ../src/widget/instance.py:481
 msgid "Normal Mode"
@@ -1002,15 +1004,15 @@ msgstr "Select Directory"
 
 #: ../src/widget/dialog.py:56
 msgid "Select file"
-msgstr ""
+msgstr "Selecionar arquivo"
 
 #: ../src/widget/dialog.py:82
 msgid "Export playlist"
-msgstr ""
+msgstr "Exportar playlist"
 
 #: ../src/widget/dialog.py:130
 msgid "Load playlist"
-msgstr ""
+msgstr "Carregar playlist"
 
 #: ../src/widget/song_editor.py:96 ../src/widget/converter.py:433
 msgid "Format"
@@ -1067,19 +1069,19 @@ msgstr "Editar capa"
 #: ../src/widget/combo.py:184 ../src/widget/combo.py:233
 #: ../src/widget/playlist.py:536
 msgid "By Artist"
-msgstr ""
+msgstr "Por Artista"
 
 #: ../src/widget/combo.py:195
 msgid "List view"
-msgstr ""
+msgstr "Ver lista"
 
 #: ../src/widget/combo.py:234 ../src/widget/playlist.py:538
 msgid "By Genre"
-msgstr ""
+msgstr "Por Gênero"
 
 #: ../src/widget/combo.py:235 ../src/widget/playlist.py:537
 msgid "By Album"
-msgstr ""
+msgstr "Por Álbum"
 
 #: ../src/widget/plugins_view.py:166
 msgid "Enable"
@@ -1096,11 +1098,11 @@ msgstr "Pasta"
 
 #: ../src/widget/local_browser.py:98
 msgid "Quick Scan"
-msgstr ""
+msgstr "Scan Rápido"
 
 #: ../src/widget/local_browser.py:99
 msgid "Scan"
-msgstr ""
+msgstr "Scan"
 
 #: ../src/widget/local_browser.py:100
 msgid "Refresh"
@@ -1108,15 +1110,15 @@ msgstr "Atualizar"
 
 #: ../src/widget/local_browser.py:350
 msgid "Play All"
-msgstr ""
+msgstr "Tocar Todas"
 
 #: ../src/widget/local_browser.py:351 ../src/widget/playlist.py:550
 msgid "Add to List"
-msgstr ""
+msgstr "Adicionar à Lista"
 
 #: ../src/widget/local_browser.py:361
 msgid "Change Cover"
-msgstr ""
+msgstr "Trocar Capa"
 
 #: ../src/widget/local_item.py:59
 msgid "All Tracks"
@@ -1132,7 +1134,7 @@ msgstr "Conectando"
 
 #: ../src/widget/information.py:105
 msgid "buffering"
-msgstr ""
+msgstr "buffering"
 
 #: ../src/widget/converter.py:309
 msgid "Target file already exitsts, do you want to overwrite it?"
@@ -1180,83 +1182,83 @@ msgstr "Saído"
 
 #: ../src/widget/lyrics_search.py:47
 msgid "Lyrics search"
-msgstr ""
+msgstr "Procura de letras"
 
 #: ../src/widget/lyrics_search.py:54
 msgid "Artist:"
-msgstr ""
+msgstr "Artista:"
 
 #: ../src/widget/lyrics_search.py:55
 msgid "Title:"
-msgstr ""
+msgstr "Título:"
 
 #: ../src/widget/lyrics_search.py:87
 msgid "Download"
-msgstr ""
+msgstr "Download"
 
 #: ../src/widget/lyrics_search.py:136
 msgid "Now searching..."
-msgstr ""
+msgstr "Procurando agora..."
 
 #: ../src/widget/lyrics_search.py:138 ../src/widget/lyrics_search.py:163
 msgid "Not found!"
-msgstr ""
+msgstr "Não encontrado!"
 
 #: ../src/widget/lyrics_search.py:157 ../src/widget/lyrics_search.py:161
 #, python-format
 msgid "%d lyrics found"
-msgstr ""
+msgstr "%d letras encontradas"
 
 #: ../src/widget/lyrics_search.py:170
 msgid "Downloading lyrics..."
-msgstr ""
+msgstr "Baixando letras..."
 
 #: ../src/widget/lyrics_search.py:180
 msgid "File save to"
-msgstr ""
+msgstr "Salvar arquivo para..."
 
 #: ../src/widget/lyrics_search.py:182
 msgid "Download failed."
-msgstr ""
+msgstr "Falha no download."
 
 #: ../src/widget/playlist.py:94
 msgid "Search in Current Playlist"
-msgstr ""
+msgstr "Procurar na Playlist Atual"
 
 #: ../src/widget/playlist.py:96
 msgid "Playlist Operations"
-msgstr ""
+msgstr "Operações de Playlist"
 
 #: ../src/widget/playlist.py:183
 msgid "Default List"
-msgstr ""
+msgstr "Lista Padrão"
 
 #: ../src/widget/playlist.py:304 ../src/widget/playlist.py:316
 #: ../src/widget/playlist.py:317 ../src/widget/playlist.py:357
 #: ../src/widget/playlist.py:360 ../src/widget/playlist.py:476
 msgid "New List"
-msgstr ""
+msgstr "Nova Lista"
 
 #: ../src/widget/playlist.py:305 ../src/widget/playlist.py:477
 msgid "Import List"
-msgstr ""
+msgstr "Importar Lista"
 
 #: ../src/widget/playlist.py:306 ../src/widget/playlist.py:485
 msgid "Open List"
-msgstr ""
+msgstr "Abrir Lista"
 
 #: ../src/widget/playlist.py:307
 msgid "Export List"
-msgstr ""
+msgstr "Exportar Lista"
 
 #: ../src/widget/playlist.py:308 ../src/widget/playlist.py:484
 msgid "Remove List"
-msgstr ""
+msgstr "Remover Lista"
 
 #: ../src/widget/playlist.py:310 ../src/widget/playlist.py:479
 #: ../src/widget/playlist.py:487
 msgid "Save all Lists"
-msgstr ""
+msgstr "Salvar todas as Listas"
 
 #: ../src/widget/playlist.py:483 ../src/widget/playlist.py:493
 msgid "Rename"
@@ -1264,35 +1266,35 @@ msgstr "Renomear"
 
 #: ../src/widget/playlist.py:534
 msgid "By Filename"
-msgstr ""
+msgstr "Por Nome de Arquivo"
 
 #: ../src/widget/playlist.py:535
 msgid "By Title"
-msgstr ""
+msgstr "Por Título"
 
 #: ../src/widget/playlist.py:539
 msgid "By Track"
-msgstr ""
+msgstr "Por Faixa"
 
 #: ../src/widget/playlist.py:540
 msgid "By Play Count"
-msgstr ""
+msgstr "Por Contagem de Reproduções"
 
 #: ../src/widget/playlist.py:541
 msgid "By Date Added"
-msgstr ""
+msgstr "Por Data de Adição"
 
 #: ../src/widget/playlist.py:545
 msgid "Randomize"
-msgstr ""
+msgstr "Embaralhar"
 
 #: ../src/widget/playlist.py:551
 msgid "move to List"
-msgstr ""
+msgstr "mover para Lista"
 
 #: ../src/widget/playlist.py:553
 msgid "Remove Track"
-msgstr ""
+msgstr "Remover Faixa"
 
 #: ../src/widget/playlist.py:558
 msgid "Sort"
@@ -1300,17 +1302,17 @@ msgstr "Organizar"
 
 #: ../plugins/pidgin/__init__.py:97 ../plugins/mpris2/mpris_adapter.py:252
 msgid "Deepin Music"
-msgstr ""
+msgstr "Deepin Music"
 
 #: ../plugins/musicfm/radio_home_page.py:73
 #: ../plugins/musicfm/radio_browser.py:79
 msgid "Hot MHz"
-msgstr ""
+msgstr "Hot MHz"
 
 #: ../plugins/musicfm/radio_home_page.py:73
 #: ../plugins/musicfm/radio_browser.py:81
 msgid "Pop MHz"
-msgstr ""
+msgstr "Pop MHz"
 
 #: ../plugins/musicfm/radio_browser.py:78
 msgid "Home"
@@ -1318,57 +1320,57 @@ msgstr "Principal"
 
 #: ../plugins/musicfm/radio_browser.py:80
 msgid "Genres"
-msgstr ""
+msgstr "Gêneros"
 
 #: ../plugins/musicfm/__init__.py:33 ../plugins/musicfm/__init__.py:35
 #: ../plugins/musicfm/radio_view.py:474
 msgid "MusicFM"
-msgstr ""
+msgstr "MusicFM"
 
 #: ../plugins/musicfm/radio_item.py:508
 msgid "More"
-msgstr ""
+msgstr "Mais"
 
 #: ../plugins/musicfm/radio_genre_page.py:44
 msgid "Jazz"
-msgstr ""
+msgstr "Jazz"
 
 #: ../plugins/musicfm/radio_genre_page.py:45
 msgid "Folk/Country"
-msgstr ""
+msgstr "Folk/Country"
 
 #: ../plugins/musicfm/radio_genre_page.py:47
 msgid "Electronic"
-msgstr ""
+msgstr "Eletrônica"
 
 #: ../plugins/musicfm/radio_genre_page.py:48
 msgid "OST"
-msgstr ""
+msgstr "OST"
 
 #: ../plugins/musicfm/radio_genre_page.py:49
 msgid "Light"
-msgstr ""
+msgstr "Luz"
 
 #: ../plugins/musicfm/radio_genre_page.py:50
 msgid "Hip-Hop/Rap"
-msgstr ""
+msgstr "Hip-Hop/Rap"
 
 #: ../plugins/musicfm/radio_genre_page.py:51
 msgid "Reggae"
-msgstr ""
+msgstr "Reggae"
 
 #: ../plugins/musicfm/radio_genre_page.py:52
 msgid "Latino"
-msgstr ""
+msgstr "Latina"
 
 #: ../plugins/musicfm/radio_genre_page.py:53
 msgid "World"
-msgstr ""
+msgstr "Mundo"
 
 #: ../plugins/musicfm/radio_genre_page.py:54
 msgid "Blues"
-msgstr ""
+msgstr "Blues"
 
 #: ../plugins/musicfm/radio_genre_page.py:55
 msgid "Funk/Soul/R&B"
-msgstr ""
+msgstr "Funk/Soul/R&B"
