@@ -1,0 +1,21 @@
+[theme]
+theme_name = dark_grey
+
+[application]
+app_id = dmusic
+app_version = 2.0
+
+[background]
+image = 深度音乐背景.jpg
+x = 0
+y = 0
+scale_x = 1.0
+scale_y = 1.0
+dominant_color = #15171c
+
+[action]
+deletable = True
+editable = True
+vertical_mirror = False
+horizontal_mirror = False
+
