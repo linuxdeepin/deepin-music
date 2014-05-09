@@ -31,7 +31,10 @@ from helper import Dispatcher
 from player import Player
 from song import Song
 
-import DiscID
+try:
+    import DiscID
+except:
+    import discid as DiscID
 
 
 class CDDBInfo(object):
