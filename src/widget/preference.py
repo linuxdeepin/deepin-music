@@ -178,10 +178,10 @@ class GeneralSetting(gtk.VBox):
         
         main_table.attach(label_align, 0, 2, 0, 1, yoptions=gtk.FILL, xpadding=8)
         main_table.attach(create_separator_box(), 0, 2, 1, 2, gtk.FILL)
-        main_table.attach(splash_hbox, 0, 1, 2, 3)
-        main_table.attach(open_lyrics_hbox, 1, 2, 2, 3, yoptions=gtk.EXPAND)
-        main_table.attach(auto_play_hbox, 0, 1, 3, 4)
-        main_table.attach(resume_hbox, 1, 2, 3, 4, yoptions=gtk.EXPAND)
+        #main_table.attach(splash_hbox, 0, 1, 2, 3)
+        main_table.attach(open_lyrics_hbox, 0, 1, 2, 3)
+        main_table.attach(auto_play_hbox, 1, 2, 2, 3, yoptions=gtk.EXPAND)
+        main_table.attach(resume_hbox, 0, 1, 3, 4)
         return main_table
     
     def create_close_box(self):

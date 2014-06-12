@@ -264,7 +264,7 @@ class DeepinMusicApp(Logger):
     def __show_splash(self):            
         import widget
         from config import config
-        self.splash = widget.show_splash(config.getboolean("setting", "use_splash"))
+        self.splash = widget.show_splash(False)
 
 if __name__ == "__main__":
     DeepinMusicApp()
