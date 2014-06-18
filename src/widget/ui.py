@@ -398,7 +398,7 @@ class LocalEmpty(gtk.EventBox):
         self.text_rect = None
         self.is_hover = False
         self.press_callback = callback
-        self.prompt_text = _("Add Music")
+        self.prompt_text = _("Add Local Music")
         
     def on_expose_event(self, widget, event):    
         cr = widget.window.cairo_create()
@@ -1219,7 +1219,7 @@ class PluginInfos(gtk.EventBox):
         
         # Draw plugin name.
         if self.plugin_info:
-            plugin_name = "%s: %s" % (_("Add-on"), utils.xmlescape(self.plugin_info.get("Name", "")))    
+            plugin_name = "%s: %s" % (_("Name"), utils.xmlescape(self.plugin_info.get("Name", "")))    
             _width, _height = get_content_size(plugin_name)
             draw_text(cr, plugin_name, rect.x, rect.y, rect.width, _height)        
             

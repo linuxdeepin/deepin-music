@@ -24,7 +24,7 @@ import sys
 from logger import Logger
 from cover_download import SimpleFetchManager
 from nls import _
-from constant import PROGRAM_VERSION
+from constant import PROGRAM_VERSION, PROGRAM_NAME_LONG
 
 
 class DeepinMusicApp(Logger):
@@ -149,27 +149,27 @@ class DeepinMusicApp(Logger):
         group.add_option("--version", dest="ShowVersion", action="store_true",
                 help=_("Show program's version number and exit."))
         group.add_option("--start-minimized", dest="StartMinimized",
-                action="store_true", default=False, help=_("Start minimized"))
+                action="store_true", default=False, help=_("Minimize after started"))
         group.add_option("--toggle-visible", dest="GuiToggleVisible",
                 action="store_true", default=False,
                 help=_("Toggle visibility of the GUI (if possible)"))
         group.add_option("--start-anyway", dest="StartAnyway",
                 action="store_true", default=False, 
-                         help=_("Make control options like --play start program if it is not running"))
+                         help=_("This option makes control options like --play to start program"))
         p.add_option_group(group)
         
         group = OptionGroup(p, _('Development/Debug Options'))
-        group.add_option("--debug", dest="Debug", action="store", default=None, help=_("Change debug level (0-9)"))
+        group.add_option("--debug", dest="Debug", action="store", default=None, help=_("Set debug level (0-9)"))
         # group.add_option('--startgui', dest='StartGui', action='store_true', default=False)
         # group.add_option('--no-dbus', dest='Dbus', action='store_false', default=True, help="Disable D-Bus support")
         group.add_option("--mimetype-support", action="store_true", dest="MimetypeSupport", default=False, 
-                         help=_("Show information about supported audio file"))
+                         help=_("Show information supported audio file"))
         p.add_option_group(group)
         
         return p
     
     def version(self):
-        print "%s %s" % (_("DMusic"), PROGRAM_VERSION)
+        print "%s %s" % (PROGRAM_NAME_LONG, PROGRAM_VERSION)
         
     def mainloop_init(self):    
         import gobject

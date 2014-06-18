@@ -35,6 +35,7 @@ from utils import color_hex_to_cairo
 from ui_utils import cairo_color_to_hex
 from helper import Dispatcher
 from nls import _
+from constant import PROGRAM_NAME_LONG
 
 # drag state.
 DRAG_NONE = 1
@@ -77,7 +78,7 @@ class DesktopLyrics(gtk.Window):
         
         self.active_lyric_surfaces = [None, None]
         self.inactive_lyric_surfaces = [None, None]
-        self.lyrics_text = [_("DMusic"), "for Linux Deepin"]
+        self.lyrics_text = [PROGRAM_NAME_LONG, "for Deepin"]
         self.lyric_rects = [gtk.gdk.Rectangle(0, 0, 0, 0), gtk.gdk.Rectangle(0, 0, 0, 0)]
         self.lyrics_xpos = [0, 0]
         self.line_alignment = LINE_ALIGNMENT[config.get("lyrics", "double_line_align")]
@@ -746,7 +747,7 @@ class ScrollLyrics(DialogBox):
         
         self.percentage = 0.0
         self.whole_lyrics = []
-        self.message_text = "%s for %s" % (_("DMusic"), "Linux Deepin")
+        self.message_text = "%s for %s" % (PROGRAM_NAME_LONG, "Deepin")
         self.current_lyric_id = -1
         self.line_count = 20
         self.active_color = self.get_render_color(True)

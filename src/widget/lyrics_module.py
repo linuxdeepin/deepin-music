@@ -148,19 +148,19 @@ class LyricsModule(object):
         sep_align.set(0.5, 0.5, 0, 0)
         sep_align.add(separate_line)
         
-        zoom_in_align = self.__create_zoom_button("zoom_in", _("increase the lyrics size"))
-        zoom_out_align = self.__create_zoom_button("zoom_out", _("decrease the lyrics size"))
+        zoom_in_align = self.__create_zoom_button("zoom_in", _("Increase the lyrics size"))
+        zoom_out_align = self.__create_zoom_button("zoom_out", _("Decrease the lyrics size"))
         predefine_align = self.__create_simple_button("predefine_color", self.popup_predefine_menu, 
                                                       _("Select color theme"), True)
-        lock_align = self.__create_simple_button("lock", self.__lock_lyrics, _("Lock lyrics"))
+        lock_align = self.__create_simple_button("lock", self.__lock_lyrics, _("Lock Lyrics"))
         karaoke_align, self.karaoke_button = self.__create_single_toggle_button("karaoke", 
                                                                                 self.change_karaoke_status,
-                                                                                _("karaoke on/off"))
+                                                                                _("Karaoke on/off"))
         line_align, self.line_button = self.__create_simple_toggle_button("single_line", "double_line",
                                                                           None,_("Switch lines"))
         self.line_button_toggled_id = self.line_button.connect("toggled", self.change_line_status)
         setting_align = self.__create_simple_button("setting", self.open_setting_window, _("Open settings panel"))
-        search_align = self.__create_simple_button("search", self.open_search_window, _("search lrc file for current track"))
+        search_align = self.__create_simple_button("search", self.open_search_window, _("Search lrc file for current track"))
         close_align = self.__create_simple_button("close", self.close_lyric_window, _("Close lyrics"))
         before_align = self.__create_simple_button("before", self.before_offset, _("Lyrics rewind"))
         after_align = self.__create_simple_button("after", self.after_offset, _("Lyrics forward"))
@@ -244,7 +244,7 @@ class LyricsModule(object):
                 ]
             
             if Player.song.get("location_lrc", None):
-                menu_items.insert(4, (None, _("Network get lrc"), self.disassociate_lrc))
+                menu_items.insert(4, (None, _("Lyrics acquired by Network"), self.disassociate_lrc))
             Menu(menu_items, True).show((int(event.x_root), int(event.y_root)))
             
     def allocation_lrc(self):        

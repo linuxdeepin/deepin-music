@@ -365,8 +365,8 @@ class SongEditor(DialogBox):
         
         self.tab_box = TabBox()
         self.tab_box.add_items([(_("Track Infomation"), self.song_info),
-                                (_("Edit tags"), self.info_setting),
-                                (_("Edit cover"), self.cover_setting)])
+                                (_("Tag Settings"), self.info_setting),
+                                (_("Cover Settings"), self.cover_setting)])
         
         # DialogBox code, simple, ah? :)
         self.left_button_box.set_buttons([action_box])

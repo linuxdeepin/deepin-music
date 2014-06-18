@@ -48,7 +48,7 @@ from widget.prefer_item import NormalItem, ExpandItem
 from widget.skin import app_theme
 from widget.plugins_view import PluginsManager
 from render_lyrics import RenderContextNew
-from constant import PREDEFINE_COLORS, PROGRAM_VERSION
+from constant import PREDEFINE_COLORS, PROGRAM_VERSION, PROGRAM_NAME_LONG
 from config import config
 from nls import _
 
@@ -147,7 +147,7 @@ class GeneralSetting(gtk.VBox):
     def create_start_box(self):    
         main_table = gtk.Table(4, 2)
         main_table.set_row_spacings(CONTENT_ROW_SPACING)
-        start_title_label = Label(_("Startup"))
+        start_title_label = Label(_("On starting the player"))
         start_title_label.set_size_request(350, 12)
         label_align = gtk.Alignment()
         label_align.set_padding(20, 0, 0, 0)
@@ -187,7 +187,7 @@ class GeneralSetting(gtk.VBox):
     def create_close_box(self):
         main_table = gtk.Table(3, 2)
         main_table.set_row_spacings(CONTENT_ROW_SPACING)
-        close_title_label = Label(_("On pressing the close button"))
+        close_title_label = Label(_("When pressing the close button"))
         close_title_label.set_size_request(350, 12)
         
         # mini_check_button
@@ -213,12 +213,12 @@ class GeneralSetting(gtk.VBox):
         self.fade_check_button = CheckButton(_("Enable crossfade"))        
         fade_check_hbox.pack_start(self.fade_check_button, False, False)
         fade_check_hbox.pack_start(create_right_align(), True, True)
-        self.album_check_button = CheckButton(_("Disable crossfade between tracks in the same album"))
+        self.album_check_button = CheckButton(_("Seamless switching between the same album"))
         album_check_hbox = gtk.HBox()
         album_check_hbox.pack_start(self.album_check_button, False, False)
         album_check_hbox.pack_start(create_right_align(), True, True)
         
-        fade_label = Label("%s" % _("Fade timeout"))
+        fade_label = Label("%s" % _("Crossfade"))
         self.fade_spin = SpinBox(200, 0, 900, 100)
         millisecond_lablel = Label(_(" ms"))        
         millisecond_lablel.set_size_request(50, 12)
@@ -368,8 +368,8 @@ class HotKeySetting(gtk.VBox):
         self.playpause_entry = self.create_combo_entry(6, 7, _("Play/Pause"), config.get("globalkey", "playpause"))
         self.previous_entry = self.create_combo_entry(7, 8, _("Previous"), config.get("globalkey", "previous"))        
         self.next_entry = self.create_combo_entry(8, 9, _("Next"), config.get("globalkey", "next"))
-        self.increase_vol_entry = self.create_combo_entry(9, 10, _("Increase volume"), config.get("globalkey", "increase_vol"))
-        self.decrease_vol_entry = self.create_combo_entry(10, 11, _("Decrease volume"), config.get("globalkey", "decrease_vol"))
+        self.increase_vol_entry = self.create_combo_entry(9, 10, _("Volume Up"), config.get("globalkey", "increase_vol"))
+        self.decrease_vol_entry = self.create_combo_entry(10, 11, _("Volume Down"), config.get("globalkey", "decrease_vol"))
         
         # Button.
         default_button = Button(_("Reset"))
@@ -576,7 +576,7 @@ class DesktopLyricsSetting(gtk.VBox):
         cr.save()
         cr.rectangle(xpos, ypos, rect.width * 0.5, rect.height)
         cr.clip()
-        active_surface = self.draw_lyric_surface(_("DMusic"), True)
+        active_surface = self.draw_lyric_surface(PROGRAM_NAME_LONG, True)
         if active_surface:
             cr.set_source_surface(active_surface, xpos, ypos)
             cr.paint()
@@ -586,7 +586,7 @@ class DesktopLyricsSetting(gtk.VBox):
         cr.save()
         cr.rectangle(xpos + rect.width * 0.5, ypos, rect.width*0.5, rect.height)
         cr.clip()
-        inactive_surface = self.draw_lyric_surface(_("DMusic"))
+        inactive_surface = self.draw_lyric_surface(PROGRAM_NAME_LONG)
         if inactive_surface:
             cr.set_source_surface(inactive_surface, xpos, ypos)
             cr.paint()
@@ -708,7 +708,7 @@ class DesktopLyricsSetting(gtk.VBox):
         blur_color_hbox = set_widget_resize(blur_color_label, self.blur_color_button)
         
         predefine_color_hbox = self.create_predefine_box()
-        inactive_color_label = Label("%s:" % _("Coming"))
+        inactive_color_label = Label("%s:" % _("Unplayed"))
         self.inactive_upper_color_button = ColorButton(config.get("lyrics", "inactive_color_upper"))
         self.inactive_middle_color_button = ColorButton(config.get("lyrics", "inactive_color_middle"))
         self.inactive_bottom_color_button = ColorButton(config.get("lyrics", "inactive_color_bottom"))
@@ -852,7 +852,7 @@ class ScrollLyricsSetting(gtk.VBox):
                                                                                 scroll_mode_index) 
         
         
-        inactive_color_label = Label("%s:" % _("Coming"))
+        inactive_color_label = Label("%s:" % _("Unplayed"))
         active_color_label = Label("%s:" % _("Played"))
         self.inactive_color_button = ColorButton(config.get("scroll_lyrics", "inactive_color"))
         self.active_color_button = ColorButton(config.get("scroll_lyrics", "active_color"))
@@ -897,7 +897,7 @@ class AboutBox(gtk.VBox):
         main_box = gtk.VBox(spacing=15)
         logo_image = gtk.image_new_from_pixbuf(gtk.gdk.pixbuf_new_from_file(os.path.join(get_parent_dir(__file__, 3), "image", "logo1.png")))
         light_color = app_theme.get_color("labelText")
-        logo_name = Label(_("DMusic"), text_size=10)
+        logo_name = Label(PROGRAM_NAME_LONG, text_size=10)
         logo_box = gtk.HBox(spacing=2)
         logo_box.pack_start(logo_image, False, False)
         logo_box.pack_start(logo_name, False, False)
@@ -917,8 +917,13 @@ class AboutBox(gtk.VBox):
         title_box.pack_start(create_right_align(), True, True)
         title_box.pack_start(info_box, False, False)
         
-        describe = _("        DMusic is a music application designed for Linux users.It features lyrics searching and downloading, desktop lyrics display,album cover downloading, resume playing, music management and skin selection.\n\nDMusic is free software licensed under GNU GPLv3.")
-        
+        describe = _("Deepin Music is a music application designed for Linux "
+                     "users. It's characterized with lyrics searching, desktop "
+                     "lyrics display,album cover downloading, resume playing, "
+                     "music management and skin selection.\n"
+                     "\n"
+                     "Deepin Music is free software licensed under GNU GPLv3.")
+
         describe_label = Label(describe, enable_select=False, wrap_width=400, text_size=10)
         main_box.pack_start(title_box, False, False)
         main_box.pack_start(create_separator_box(), False, True)
@@ -998,7 +1003,7 @@ class PreferenceDialog(DialogBox):
         self.lyrics_expand_item = ExpandItem(_("Lyrics"), None)
         self.lyrics_expand_item.add_childs([(_("Desktop"), self.desktop_lyrics_setting),
                                        (_("Window"), self.scroll_lyrics_setting)])
-        self.plugins_expand_item = NormalItem(_("Add-ons"), self.plugins_manager)
+        self.plugins_expand_item = NormalItem(_("Plugins"), self.plugins_manager)
         about_normal_item = NormalItem(_("About"), AboutBox())
         
         items = [general_normal_item,

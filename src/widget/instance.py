@@ -49,7 +49,8 @@ from widget.ui import QuitDialog
 
 import plugins
 from constant import (FULL_DEFAULT_WIDTH, FULL_DEFAULT_HEIGHT,
-                      SIMPLE_DEFAULT_WIDTH, SIMPLE_DEFAULT_HEIGHT)
+                      SIMPLE_DEFAULT_WIDTH, SIMPLE_DEFAULT_HEIGHT,
+                      PROGRAM_NAME_LONG)
 from nls import _
 from config import config
 from player import Player
@@ -89,7 +90,7 @@ class DeepinMusic(gobject.GObject, Logger):
         application.add_titlebar(
             ["theme", "menu", "min", "close"],
             os.path.join(image_dir, "logo1.png"),
-            _("DMusic")
+            PROGRAM_NAME_LONG
             )
         application.titlebar.menu_button.connect("button-press-event", self.menu_button_press)        
         application.titlebar.connect("button-press-event", self.right_click_cb)
@@ -337,7 +338,7 @@ class DeepinMusic(gobject.GObject, Logger):
         
     def get_convert_sub_menu(self):    
         menu_items = [
-            (None, _("Convert"), self.choose_file_and_convert),
+            (None, _("Converter"), self.choose_file_and_convert),
             (None, _("Task Manager"), lambda : convert_task_manager.visible_it()),
             ]
         return Menu(menu_items)
@@ -356,11 +357,11 @@ class DeepinMusic(gobject.GObject, Logger):
         curren_view = self.playlist_ui.get_selected_song_view()
         menu_items = [
             (None, _("Add"), curren_view.get_add_menu()),
-            (None, _("Controls"), self.get_play_control_menu()),
-            (self.get_pixbuf_group("playmode"), _("Playback Order"), curren_view.get_playmode_menu()),
+            (None, _("Play Controls"), self.get_play_control_menu()),
+            (self.get_pixbuf_group("playmode"), _("Playback mode"), curren_view.get_playmode_menu()),
             None,
             (None, _("Equalizer"), lambda : self.equalizer_win.run()),
-            (None, _("Convert"), self.get_convert_sub_menu()),
+            (None, _("Converter"), self.get_convert_sub_menu()),
             None,
             self.get_app_mode_menu(),
             None,
@@ -399,9 +400,9 @@ class DeepinMusic(gobject.GObject, Logger):
         
     def get_locked_menu_items(self):    
         if config.getboolean("lyrics", "locked"):    
-            return (self.get_pixbuf_group("unlock"), _("Unlock lyrics"), lambda : Dispatcher.unlock_lyrics())
+            return (self.get_pixbuf_group("unlock"), _("Unlock Lyrics"), lambda : Dispatcher.unlock_lyrics())
         else:
-            return (self.get_pixbuf_group("lock"), _("Lock lyrics"), lambda : Dispatcher.lock_lyrics())
+            return (self.get_pixbuf_group("lock"), _("Lock Lyrics"), lambda : Dispatcher.lock_lyrics())
             
     def get_pixbuf_group(self, name):    
         return (app_theme.get_pixbuf("tray/%s_normal.png" % name),

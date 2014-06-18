@@ -27,6 +27,7 @@ from library import MediaDB
 from player import Player
 from nls import _
 import utils
+from constant import PROGRAM_NAME_LONG
 
 
 class PlayInfo(gtk.EventBox):
@@ -37,7 +38,7 @@ class PlayInfo(gtk.EventBox):
         self.default_height = 18
         self.set_size_request(default_width, self.default_height)
         self.default_width = default_width
-        self.artist_label = _("DMusic")
+        self.artist_label = _("Deepin Music")
 
         Player.connect("instant-new-song",self.__new_song)
         MediaDB.connect("simple-changed",self.__on_change)
@@ -79,7 +80,7 @@ class PlayInfo(gtk.EventBox):
             self.update(player.song)
         
     def __on_player_init_status(self, player):    
-        self.set_text(_("DMusic"))
+        self.set_text(PROGRAM_NAME_LONG)
         
     def __on_buffering(self, playbin, progress):
         if self.song:
@@ -102,7 +103,7 @@ class PlayInfo(gtk.EventBox):
             
         if buffering is not None:    
             if buffering >= 0 and buffering <= 98:
-                buffering_title = "%s(%d%%) - %s" % (_("buffering"), buffering, title)
+                buffering_title = "%s(%d%%) - %s" % (_("buffering..."), buffering, title)
             else:    
                 buffering_title = title
             self.set_text(buffering_title)    

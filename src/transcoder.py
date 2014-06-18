@@ -77,9 +77,9 @@ FORMATS = {
         "command"   : "faac bitrate=%i name=encoder ! ffmux_mp4",
         "extension" : "m4a",
         "plugins"   : ["faac", "ffmux_mp4"],
-        "desc"      : _("Apple's proprietary lossy audio format that "
-                        "achieves better sound quality than MP3 at "
-                        "lower bitrates.")
+        "desc"      : _("Apple's proprietary lossy audio format could give "
+                        "higher quality than MP3 at lower bitrates.")
+
         },
     
     "MP3 (VBR)" : {
@@ -103,9 +103,10 @@ FORMATS = {
         "command"   : "lame bitrate=%i name=encoder",
         "extension" : "mp3",
         "plugins"   : ["lame"],
-        "desc"      : _("A proprietary and older, but also popular, "
-                        "lossy audio format. CBR gives less quality than VBR, "
-                        "but is compatible with any player.")
+        "desc"      : _("A proprietary and older, but also popular, lossy "
+                        "audio format. The output effect of CBR is not good as "
+                        "VBR, but is compatible with any player.")
+
             },
     "WavPack" : {
         "default"   : 2,

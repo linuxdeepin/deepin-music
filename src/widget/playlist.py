@@ -97,7 +97,7 @@ class PlaylistUI(gtk.VBox):
         self.__create_simple_button("add", self.popup_add_menu, _("Add"))
         
         self.playmode_button = PlaymodeButton(config.get("setting", "loop_mode", "list_mode").split("_")[0])
-        Tooltip.text(self.playmode_button, _("Playback Order"))
+        Tooltip.text(self.playmode_button, _("Playback mode"))
         self.playmode_button.connect("button-press-event", self.popup_sort_menu)
         self.toolbar_box.pack_start(self.playmode_button, False, False)
         self.__create_simple_button("delete", self.popup_delete_menu, _("Delete"))
@@ -538,7 +538,7 @@ class PlaylistUI(gtk.VBox):
         sort_dict["genre"] = _("By Genre")
         sort_dict["#track"] = _("By Track")
         sort_dict["#playcount"] = _("By Play Count")
-        sort_dict["#added"] = _("By Date Added")
+        sort_dict["#added"] = _("By Added Time")
 
         sort_items = [(None, value, self.current_item.song_view.set_sort_keyword, key) for key, value in sort_dict.iteritems()]
         sort_items.append(None)
@@ -548,15 +548,15 @@ class PlaylistUI(gtk.VBox):
         move_to_list_menu = self.get_edit_sub_menu(select_items, True)
         self.detail_menu = Menu([(None, _("Play"),  self.current_item.song_view.play_select_item),
                                  (None, _("Add to List"), add_to_list_menu),
-                                 (None, _("move to List"), move_to_list_menu),
+                                 (None, _("Move to List"), move_to_list_menu),
                                  None,
                                  (None, _("Remove Track"), self.current_item.song_view.remove_select_items),
                                  (None, _("Move to Trash"), self.current_item.song_view.try_move_trash),
                                  (None, _("Clear List"), self.current_item.song_view.erase_items),
                                  None,
-                                 (None, _("Playback Order"), play_mode_menu),
+                                 (None, _("Playback mode"), play_mode_menu),
                                  (None, _("Sort"), sub_sort_menu),
-                                 (None, _("Convert"), self.current_item.song_view.songs_convert),
+                                 (None, _("Converter"), self.current_item.song_view.songs_convert),
                                  (None, _("Open directory"), self.current_item.song_view.open_song_dir),
                                  (None, _("Properties"), self.current_item.song_view.open_song_editor),
                                  ], True)

@@ -27,6 +27,7 @@ from player import Player
 from widget.skin import app_theme
 from helper import Dispatcher
 from config import config
+from constant import PROGRAM_NAME_LONG
 from nls import _
 from deepin_utils.file import get_parent_dir
 import os
@@ -45,8 +46,8 @@ class BaseTrayIcon(object):
         
     def get_volume_menu(self):    
         menu_items = [
-            (None, _("Increase volume"), Player.increase_volume),
-            (None, _("Decrease volume"), Player.decrease_volume),
+            (None, _("Volume Up"), Player.increase_volume),
+            (None, _("Volume Down"), Player.decrease_volume),
             (None, _("Mute"), Player.mute_volume),
             ]
         return Menu(menu_items)
@@ -68,15 +69,15 @@ class BaseTrayIcon(object):
         
         
         if config.getboolean("lyrics", "status"):
-            menu_items.append((None, _("Hide Lyrics"), lambda : Dispatcher.close_lyrics()))
+            menu_items.append((None, _("Close Lyrics"), lambda : Dispatcher.close_lyrics()))
             menu_items.append((None, _("Search Lyrics"), lambda : Dispatcher.emit("search-lyrics")))            
         else:    
             menu_items.append((None, _("Show Lyrics"), lambda : Dispatcher.show_lyrics()))
             
         if config.getboolean("lyrics", "locked"):
-            menu_items.append((self.get_pixbuf_group("unlock"), _("Unlock lyrics"), lambda : Dispatcher.unlock_lyrics()))
+            menu_items.append((self.get_pixbuf_group("unlock"), _("Unlock Lyrics"), lambda : Dispatcher.unlock_lyrics()))
         else:
-            menu_items.append((self.get_pixbuf_group("lock"), _("Lock lyrics"), lambda : Dispatcher.lock_lyrics()))
+            menu_items.append((self.get_pixbuf_group("lock"), _("Lock Lyrics"), lambda : Dispatcher.lock_lyrics()))
 
         menu_items.append(None)    
         menu_items.append((self.get_pixbuf_group("setting"), _("Preferences"), lambda : Dispatcher.show_setting()))
@@ -153,7 +154,7 @@ class TestTrayIcon(object):
 
     def _setup_appindicator(self, menu):
     	import appindicator
-    	indicator = appindicator.Indicator(_("DMusic"),
+    	indicator = appindicator.Indicator(PROGRAM_NAME_LONG,
                                            "exaile",
                                            appindicator.CATEGORY_APPLICATION_STATUS)
     	indicator.set_status(appindicator.STATUS_ACTIVE)

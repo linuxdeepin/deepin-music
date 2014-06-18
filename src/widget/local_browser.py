@@ -336,7 +336,7 @@ class Browser(gtk.VBox, SignalContainer):
             except: pass    
            
     def try_move_trash(self, item):        
-        ConfirmDialog(_("Prompt"), _("Are you sure you want to delete them?"), 
+        ConfirmDialog(_("Prompt"), _("Are you sure to delete?"), 
                       confirm_callback=lambda : self.real_remove_item(item, True)).show_all()
         
     def change_item_cover(self, item):    

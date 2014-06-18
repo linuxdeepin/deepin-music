@@ -191,7 +191,7 @@ mandatory_i18n["Rock"] = _("Rock")
 mandatory_i18n["Ska"] = _("Ska")
 mandatory_i18n["Soft"] = _("Soft")
 mandatory_i18n["Soft Rock"] = _("Soft Rock")
-mandatory_i18n["Techno"] = _("Techno")
+mandatory_i18n["Techno"] = _("Electronic")
 
 class EqualizerWindow(DialogBox):        
     def __init__(self):

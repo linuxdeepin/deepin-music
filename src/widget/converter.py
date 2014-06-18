@@ -306,7 +306,7 @@ class JobsView(ListView):
                 
     def __run_check(self, ajob):            
         if ajob.exists_prompt and not ajob.skip_flag:
-            ConfirmDialog(_("Prompt"), _("Target file already exitsts, do you want to overwrite it?"),
+            ConfirmDialog(_("Prompt"), _("Target file already exists, do you want to overwrite it?"),
                           confirm_callback=lambda : ajob.start(),
                           cancel_callback=lambda :self.start_new_job(ajob)
                           ).show_window()
@@ -424,7 +424,7 @@ class TranscoderJobManager(DialogBox):
 class AttributesUI(DialogBox):
     
     def __init__(self, songs=None):
-        DialogBox.__init__(self, _("Convert"), 385, 200, DIALOG_MASK_SINGLE_PAGE,
+        DialogBox.__init__(self, _("Converter"), 385, 200, DIALOG_MASK_SINGLE_PAGE,
                            modal=True)
         
         self.songs = songs or [Player.song]
@@ -447,7 +447,7 @@ class AttributesUI(DialogBox):
         
         start_button = Button(_("Start"))
         close_button = Button(_("Close"))
-        self.add_check_button = CheckButton(_("Add to Playlist when finished"), padding_x=2)
+        self.add_check_button = CheckButton(_("Add to Playlist after finished"), padding_x=2)
         
         main_table = gtk.Table()
         main_table.set_row_spacings(10)

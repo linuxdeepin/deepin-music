@@ -20,9 +20,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from nls import _
+
 CONFIG_FILENAME = "config"
 PROGRAM_NAME = "deepin-music-player"
 PROGRAM_VERSION = "2.0"
+PROGRAM_NAME_LONG = _("Deepin Music")
+PROGRAM_NAME_SHORT = _("DMusic")
 
 DEFAULT_TIMEOUT = 10
 DEFAULT_FONT_SIZE = 9

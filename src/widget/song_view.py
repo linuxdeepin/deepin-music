@@ -434,7 +434,7 @@ class SongView(TreeView):
         return True    
     
     def try_move_trash(self):
-        ConfirmDialog(_("Prompt"), _("Are you sure you want to delete them?"), 
+        ConfirmDialog(_("Prompt"), _("Are you sure to delete?"), 
                       confirm_callback=lambda : self.move_to_trash()).show_all()
         
     def on_drag_data_received(self, widget, context, x, y, selection, info, timestamp):    
@@ -479,9 +479,9 @@ class SongView(TreeView):
         mode_dict = OrderedDict()
 
         mode_dict["single_mode"] = _("Repeat (single)")
-        mode_dict["order_mode"] = _("Play (ordered)")
+        mode_dict["order_mode"] = _("Order play")
         mode_dict["list_mode"] = _("Repeat (list)")
-        mode_dict["random_mode"] = _("Random")        
+        mode_dict["random_mode"] = _("Randomize")
         
         mode_items = []
         for key, value in mode_dict.iteritems():
@@ -507,7 +507,7 @@ class SongView(TreeView):
         items = [(None, _("Remove Track from this List"), self.remove_select_items),
                  (None, _("Remove Unavailable Tracks"), self.delete_error_items),
                  (None, _("Move to Trash"), lambda : self.try_move_trash()),
-                 (None, _("Clear list"), self.erase_items)]
+                 (None, _("Clear List"), self.erase_items)]
         Menu(items, True).show((int(x), int(y)))
         
     def delete_error_items(self):    
@@ -520,16 +520,16 @@ class SongView(TreeView):
         menu_items = [
             (None, _("URL") , self.add_unknow_uri),            
             (None, _("File"), self.add_file),
-            (None, _("Directory (include subdirectories)"), self.recursion_add_dir),
-            (None, _("Directory"), self.add_dir),
+            (None, _("Folder(include subdirectories)"), self.recursion_add_dir),
+            (None, _("Folder"), self.add_dir),
             ]
         Menu(menu_items, True).show((x, y))
         
     def get_add_menu(self):    
         menu_items = [
             (None, _("File"), self.add_file),
-            (None, _("Directory(include subdirectories)"), self.recursion_add_dir),
-            (None, _("Directory"), self.add_dir),
+            (None, _("Folder(include subdirectories)"), self.recursion_add_dir),
+            (None, _("Folder"), self.add_dir),
             ]
         return Menu(menu_items)
     
@@ -677,7 +677,7 @@ class MultiDragSongView(TreeView):
         
         
         if has_title:
-            self.set_column_titles([_("Title"), _("Artist"), _("Album"), _("Added time")], self.sorts)
+            self.set_column_titles([_("Title"), _("Artist"), _("Album"), _("Added Time")], self.sorts)
             
         self.set_expand_column(0)    
             
@@ -777,7 +777,7 @@ class MultiDragSongView(TreeView):
         return True    
     
     def try_move_trash(self):
-        ConfirmDialog(_("Prompt"), _("Are you sure you want to delete them?"), 
+        ConfirmDialog(_("Prompt"), _("Are you sure to delete?"), 
                       confirm_callback=lambda : self.remove_songs(True)).show_all()
 
     def popup_right_menu(self, widget, x, y, item, select_items):
@@ -789,7 +789,7 @@ class MultiDragSongView(TreeView):
             (None, _("Move to Trash"), lambda : self.try_move_trash()),
             None,
             (None, _("Open Directory"), self.open_song_dir),
-            (None, _("Convert"), self.songs_convert),
+            (None, _("Converter"), self.songs_convert),
             (None, _("Properties"), self.open_song_editor)
                         ]
 

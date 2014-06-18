@@ -25,6 +25,7 @@ import keybinder
 
 from dtk.ui.keymap import deepin_to_keybinder
 
+from constant import PROGRAM_NAME_LONG
 from helper import Dispatcher
 from player import Player
 from logger import Logger
@@ -92,7 +93,7 @@ class GlobalHotKeys(Logger):
             result = False
         else:    
             if not result:
-                dbus_notify.set_summary(_("DMusic"))
+                dbus_notify.set_summary(PROGRAM_NAME_LONG)
                 dbus_notify.set_body(_("Failed to bind %s !") % utils.xmlescape(raw_key))
                 dbus_notify.notify()
         return result    

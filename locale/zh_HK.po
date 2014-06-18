@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DMusic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-05-09 14:12+0800\n"
+"POT-Creation-Date: 2014-06-18 13:29+0800\n"
 "PO-Revision-Date: 2013-12-19 01:23+0000\n"
 "Last-Translator: lihongwu <lihongwu1987@gmail.com>\n"
 "Language-Team: Chinese (Hong Kong) (http://www.transifex.com/projects/p/"
@@ -18,944 +18,22 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-msgid ""
-"        DMusic is a music application designed for Linux users.It features "
-"lyrics searching and downloading, desktop lyrics display,album cover "
-"downloading, resume playing, music management and skin selection.\n"
-"\n"
-"DMusic is free software licensed under GNU GPLv3."
-msgstr ""
-"深度音樂是Linux Deepin團隊為廣大linux用戶量身開發的一款音樂軟件.具有歌詞搜索"
-"下載,桌面歌詞顯示,專輯封面下載,歌曲記憶播放,獨創音樂管理,自定義換膚等幾大特"
-"點.\n"
-"\n"
-"深度音樂是自由軟件,遵循自由軟件基金會發佈的 GNU 通用公共許可證第三版."
-
-msgid " ms"
-msgstr " 毫秒"
-
-#, python-format
-msgid "%d lyrics found"
-msgstr "找到%d歌詞"
-
-msgid ""
-"A proprietary and older, but also popular, lossy audio format. CBR gives "
-"less quality than VBR, but is compatible with any player."
-msgstr ""
-"一种专有音频格式，虽然较老便仍很流行。CBR的输出效果不及VBR，但兼容于所有播放"
-"器。"
-
-msgid ""
-"A proprietary and older, but also popular, lossy audio format. VBR gives "
-"higher quality than CBR, but may be incompatible with some players."
-msgstr ""
-"一种专有音频格式，虽然较老但仍很流行。VBR比CBR音质更佳，但可能与某些播放器不"
-"兼容。"
-
-msgid "A very fast Free lossless audio format with good compression."
-msgstr "一种解码快速的自由无损音频格式，压缩比率较高。"
-
-msgid "About"
-msgstr "關於"
-
-msgid "Add"
-msgstr "添加時間:"
-
-msgid "Add Music"
-msgstr "添加本地音樂"
-
-msgid "Add URL"
-msgstr "添加指定URL"
-
-msgid "Add to Favorites"
-msgstr "添加到收藏"
-
-msgid "Add to List"
-msgstr "添加到列表"
-
-msgid "Add to Playlist"
-msgstr "添加到播放列表"
-
-msgid "Add to Playlist when finished"
-msgstr "當轉換完成後添加到播放列表"
-
-msgid "Add-on"
-msgstr "附加元件"
-
-msgid "Add-on archive contains an unsafe path."
-msgstr "附加元件的歸檔文檔包含了一個不安全的路徑。"
-
-msgid "Add-on archive is not in the correct format."
+#: ../src/plugins.py:91
+#, fuzzy
+msgid "Plugin archive is not in the correct format."
 msgstr "附加元件的歸檔文件格式錯誤。"
 
-msgid "Add-ons"
-msgstr "附加元件"
-
-msgid "Added"
-msgstr "添加時間"
-
-msgid "Added time"
-msgstr "添加時間"
-
-msgid "Adjust lyrics"
-msgstr "調整歌詞"
-
-msgid "Album"
-msgstr "專輯"
-
-msgid "Alignment"
-msgstr "對齊"
-
-msgid "All Tracks"
-msgstr "所有歌曲"
-
-msgid "Always"
-msgstr "總是滾動"
-
-#, python-format
-msgid "An add-on with the name \"%s\" is already installed."
+#: ../src/plugins.py:98
+#, fuzzy, python-format
+msgid "A plugin with the name \"%s\" is already installed."
 msgstr "附加元件“%s”已經安裝。"
 
-msgid ""
-"Apple's proprietary lossy audio format that achieves better sound quality "
-"than MP3 at lower bitrates."
-msgstr "苹果公司开发的专有有损音频格式，可以用较低的码率达到更佳的音质"
-
-msgid "Are you sure you want to delete them?"
-msgstr "是否要刪除以下檔案?"
-
-msgid "Artist"
-msgstr "藝術家"
-
-msgid "Artist:"
-msgstr "藝術家:"
-
-msgid "Ask"
-msgstr "詢問"
-
-msgid "Audio CD"
-msgstr "音頻CD"
-
-msgid "Author(s)"
-msgstr "作者"
-
-msgid "Bitrate"
-msgstr "比特率"
-
-msgid "Blues"
-msgstr "布魯斯"
-
-msgid "Bold"
-msgstr "粗體"
-
-msgid "Bold Italic"
-msgstr "粗體 傾斜"
-
-msgid "By Album"
-msgstr "按專輯"
-
-msgid "By Artist"
-msgstr "按藝術家"
-
-msgid "By Date Added"
-msgstr "按添加時間"
-
-msgid "By Filename"
-msgstr "按文件名"
-
-msgid "By Genre"
-msgstr "按流派"
-
-msgid "By Play Count"
-msgstr "按播放次數"
-
-msgid "By Title"
-msgstr "按標題"
-
-msgid "By Track"
-msgstr "按音軌"
-
-msgid "By line"
-msgstr "按行滾動"
-
-msgid "Cancel"
-msgstr "取消"
-
-msgid "Centered"
-msgstr "居中對齊"
-
-msgid "Change"
-msgstr "更改"
-
-msgid "Change Cover"
-msgstr "更改封面"
-
-msgid "Change Volume (VOLUME 0.0-1.0)"
-msgstr "調整音量 (VOLUME 0.0-1.0)"
-
-msgid "Change debug level (0-9)"
-msgstr "設置調試級別(0-9)"
-
-msgid "Check deleted files"
-msgstr "檢查並刪除檔"
-
-msgid "Choose local lrc"
-msgstr "選擇本地歌詞"
-
-msgid "Classical"
-msgstr "古典"
-
-msgid "Clear List"
-msgstr "清空列表"
-
-msgid "Clear finished tasks"
-msgstr "清空已完成的任務"
-
-msgid "Clear list"
-msgstr "清空列表"
-
-msgid "Close"
-msgstr "關閉"
-
-msgid "Close lyrics"
-msgstr "關閉歌詞"
-
-msgid "Club"
-msgstr "俱樂部"
-
-msgid "Color scheme"
-msgstr "配色方案"
-
-msgid "Coming"
-msgstr "未播放"
-
-msgid "Connecting"
-msgstr "連接中"
-
-msgid "Continue"
-msgstr "繼續"
-
-msgid "Control Options"
-msgstr "控制選項"
-
-msgid "Controls"
-msgstr "播放控制"
-
-msgid "Convert"
-msgstr "格式轉換器"
-
-msgid "Cool blue"
-msgstr "清爽藍"
-
-msgid "Cover"
-msgstr "覆蓋"
-
-msgid "Custom"
-msgstr "自定義"
-
-msgid "DMusic"
-msgstr "深度音樂"
-
-msgid "Dance"
-msgstr "舞曲"
-
-msgid "Date"
-msgstr "年代"
-
-msgid "Decrease volume"
-msgstr "減小音量"
-
-msgid "Deepin Music"
-msgstr "深度音樂"
-
-msgid "Default"
-msgstr "默認"
-
-msgid "Default List"
-msgstr "默認列表"
-
-msgid "Delete"
-msgstr "刪除"
-
-msgid "Delete task"
-msgstr "刪除任務"
-
-msgid "Desktop"
-msgstr "桌面歌詞"
-
-msgid "Development/Debug Options"
-msgstr "開發/調試選項"
-
-msgid "Directory"
-msgstr "檔夾"
-
-msgid "Directory (include subdirectories)"
-msgstr "檔夾(包含子目錄)"
-
-msgid "Directory(include subdirectories)"
-msgstr "檔夾(包含子目錄)"
-
-msgid "Disable crossfade between tracks in the same album"
-msgstr "相同專輯間無縫切換"
-
-msgid "Display splash-screen"
-msgstr "顯示啟動畫面"
-
-msgid "Don't prompt again"
-msgstr "下次不再提示"
-
-msgid "Double"
-msgstr "雙行"
-
-msgid "Download"
-msgstr "下載"
-
-msgid "Download failed."
-msgstr "下載失敗"
-
-msgid "Downloading lyrics..."
-msgstr "正在下載歌詞..."
-
-msgid "Duration"
-msgstr "時長"
-
-msgid "Edit cover"
-msgstr "封面設置"
-
-msgid "Edit tags"
-msgstr "資訊設置"
-
-msgid "Electronic"
-msgstr "電子"
-
-msgid "Enable"
-msgstr "啟用"
-
-msgid "Enable crossfade"
-msgstr "啟用淡入淡出"
-
-msgid "Enable hotkeys"
-msgstr "啟用快捷鍵"
-
-msgid "Equalizer"
-msgstr "均衡器"
-
-msgid "Export List"
-msgstr "導出列表"
-
-msgid "Export playlist"
-msgstr "導出播放列表"
-
-msgid "Fade timeout"
-msgstr "淡入淡出"
-
-#, python-format
-msgid "Failed to bind %s !"
-msgstr "綁定快捷鍵 %s 失敗!"
-
-msgid "Favorites"
-msgstr "我的收藏"
-
-msgid "File"
-msgstr "檔"
-
-msgid "File save to"
-msgstr "檔保存到"
-
-msgid "Folder"
-msgstr "檔夾"
-
-msgid "Folk/Country"
-msgstr "民謠/鄉村"
-
-msgid "Font"
-msgstr "字體"
-
-msgid "Format"
-msgstr "格式"
-
-msgid "Forward"
-msgstr "快進"
-
-msgid "Forward 0.5 seconds"
-msgstr "提前0.5秒"
-
-msgid ""
-"Free Lossless Audio Codec (FLAC) is an open source codec that compresses but "
-"does not degrade audio quality."
-msgstr ""
-"自由无损音频编解码器(FLAC)是一种开源的编解码器，可以压缩音频而不降低音频质"
-"量。"
-
-msgid "Fresh green"
-msgstr "清新綠"
-
-msgid "Full Bass"
-msgstr "增強低音"
-
-msgid "Full Bass and Treble"
-msgstr "增強低音和高音"
-
-msgid "Full Treble"
-msgstr "增強高音"
-
-msgid "Funk/Soul/R&B"
-msgstr "瘋克/靈歌/R&B"
-
-msgid "General"
-msgstr "常規設置"
-
-msgid "Genre"
-msgstr "流派"
-
-msgid "Genres"
-msgstr "流派兆赫"
-
-msgid "Headphones"
-msgstr "耳機"
-
-msgid "Hide Lyrics"
-msgstr "關閉歌詞"
-
-msgid "Hip-Hop/Rap"
-msgstr "說唱"
-
-msgid "Home"
-msgstr "推薦首頁"
-
-msgid "Hot MHz"
-msgstr "熱門兆赫"
-
-msgid "Hotkeys"
-msgstr "熱鍵設置"
-
-msgid "Import List"
-msgstr "導入列表"
-
-msgid "Increase volume"
-msgstr "增大音量"
-
-msgid "Italic"
-msgstr "傾斜"
-
-msgid "Jazz"
-msgstr "爵士"
-
-msgid "Join us"
-msgstr "加入我們"
-
-msgid "Justified"
-msgstr "兩端對齊"
-
-msgid "Large Hall"
-msgstr "大廳"
-
-msgid "Latino"
-msgstr "拉丁"
-
-msgid "Left"
-msgstr "左對齊"
-
-msgid "Library"
-msgstr "本地音樂"
-
-msgid "Light"
-msgstr "輕音樂"
-
-msgid "Lines"
-msgstr "行數"
-
-msgid "List view"
-msgstr "列表顯示"
-
-msgid "Live"
-msgstr "現場"
-
-msgid "Load playlist"
-msgstr "加載播放列表"
-
-msgid "Location"
-msgstr "檔位置"
-
-msgid "Lock lyrics"
-msgstr "鎖定歌詞"
-
-msgid "Lock/Unlock lyrics"
-msgstr "鎖定/解鎖歌詞"
-
-msgid "Lyrics"
-msgstr "歌詞設置"
-
-msgid "Lyrics directory"
-msgstr "歌詞保存目錄"
-
-msgid "Lyrics forward"
-msgstr "前進歌詞"
-
-msgid "Lyrics rewind"
-msgstr "後退歌詞"
-
-msgid "Lyrics search"
-msgstr "歌詞搜索"
-
-msgid "Lyrics style"
-msgstr "歌詞樣式"
-
-msgid "Lyrics window"
-msgstr "窗口歌詞"
-
-msgid "Make control options like --play start program if it is not running"
-msgstr "此選項可以使控制選項來啟動程式"
-
-msgid "Make sure all words are spelled correctly."
-msgstr "確保全部單詞拼寫正確。"
-
-msgid "Mini Mode"
-msgstr "迷你模式"
-
-msgid "Minimize to tray"
-msgstr "最小化到託盤"
-
-msgid "Minimize/Show window"
-msgstr "隱藏/顯示主程序"
-
-msgid "More"
-msgstr "更多"
-
-msgid "Move to Trash"
-msgstr "移動到回收站"
-
-msgid "MusicFM"
-msgstr "音樂電台"
-
-msgid "Mute"
-msgstr "靜音"
-
-msgid "Need some music? Find it here..."
-msgstr "找音樂，在這裡..."
-
-msgid "Network get lrc"
-msgstr "網絡穫取歌詞"
-
-msgid "New List"
-msgstr "新建列表"
-
-msgid "Next"
-msgstr "下一首"
-
-msgid "No lyrics found!"
-msgstr "沒有找到歌詞檔!"
-
-msgid "Normal Mode"
-msgstr "普通模式"
-
-msgid "Not found!"
-msgstr "沒有找到!"
-
-msgid "Now searching..."
-msgstr "正在搜索..."
-
-msgid "OK"
-msgstr "確定"
-
-msgid "OST"
-msgstr "原聲配樂"
-
-msgid "On pressing the close button"
-msgstr "當點擊關閉按鈕時"
-
-msgid "Open Directory"
-msgstr "打開目錄"
-
-msgid "Open List"
-msgstr "打開列表"
-
-msgid "Open directory"
-msgstr "打開目錄"
-
-msgid "Open settings panel"
-msgstr "打開設置面板"
-
-msgid "Options"
-msgstr "選項"
-
-msgid "Other Options"
-msgstr "其他選項"
-
-msgid "Outline"
-msgstr "輪廓"
-
-msgid "Output"
-msgstr "輸出目錄"
-
-msgid "Party"
-msgstr "派對"
-
-msgid "Pause"
-msgstr "暫停"
-
-msgid "Pause or resume playback"
-msgstr "暫停/繼續播放"
-
-msgid "Play"
-msgstr "播放"
-
-msgid "Play (ordered)"
-msgstr "順序播放"
-
-msgid "Play All"
-msgstr "播放全部"
-
-msgid "Play the next track"
-msgstr "播放下一首"
-
-msgid "Play the previous track"
-msgstr "播放上一首"
-
-msgid "Play/Pause"
-msgstr "暫停/繼續"
-
-msgid "Playback Order"
-msgstr "播放模式"
-
-msgid "Playback settings"
-msgstr "播放設置"
-
-msgid "Playcount"
-msgstr "播放次數"
-
-msgid "Played"
-msgstr "已播放"
-
-msgid "Playful pink"
-msgstr "俏皮粉"
-
-msgid "Playlist Operations"
-msgstr "播放列表操作"
-
-msgid "Pop"
-msgstr "流行"
-
-msgid "Pop MHz"
-msgstr "人氣兆赫"
-
-msgid "Predefined"
-msgstr "預定義"
-
-msgid "Preferences"
-msgstr "選項設置"
-
-msgid "Previous"
-msgstr "上一首"
-
-msgid "Print current playback position"
-msgstr "查看當前播放位置"
-
-msgid "Print the album of current track"
-msgstr "查看當前歌曲專輯"
-
-msgid "Print the artist of current track"
-msgstr "查看當前歌曲藝術家"
-
-msgid "Print the length of current track"
-msgstr "查看當前歌曲時長"
-
-msgid "Print the path of current track"
-msgstr "查看當前歌曲路徑"
-
-msgid "Print the title of current track"
-msgstr "查看當前歌曲標題"
-
-msgid "Prompt"
-msgstr "提示"
-
-msgid "Properties"
-msgstr "屬性"
-
-msgid "Quality"
-msgstr "品質"
-
-msgid "Quick Scan"
-msgstr "快速掃描"
-
-msgid "Quit"
-msgstr "退出"
-
-msgid "Radio"
-msgstr "網絡電台"
-
-msgid "Random"
-msgstr "隨機排序"
-
-msgid "Randomize"
-msgstr "隨機排序"
-
-msgid "Rate"
-msgstr "採樣速率"
-
-msgid "Reading directories..."
-msgstr "正在讀取目錄資訊"
-
-msgid "Recently"
-msgstr "最近播放時間"
-
-msgid "Refresh"
-msgstr "刷新歌曲庫"
-
-msgid "Reggae"
-msgstr "雷鬼"
-
-msgid "Region"
-msgstr "地域"
-
-msgid "Regular"
-msgstr "常規"
-
-msgid "Reload database"
-msgstr "重新加載歌曲庫"
-
-msgid "Remove List"
-msgstr "刪除列表"
-
-msgid "Remove Track"
-msgstr "刪除歌曲"
-
-msgid "Remove Track from this List"
-msgstr "刪除選中歌曲"
-
-msgid "Remove Unavailable Tracks"
-msgstr "刪除錯誤歌曲"
-
-msgid "Remove from Favorites"
-msgstr "取消收藏"
-
-msgid "Remove from Library"
-msgstr "從歌曲庫中移除"
-
-msgid "Rename"
-msgstr "重命名"
-
-msgid "Repeat (list)"
-msgstr "列表迴圈"
-
-msgid "Repeat (single)"
-msgstr "單曲迴圈"
-
-msgid "Reset"
-msgstr "重置"
-
-msgid "Resume playback"
-msgstr "繼續上次播放進度"
-
-msgid "Retrieve from the Internet"
-msgstr "網絡獲取"
-
-msgid "Rewind"
-msgstr "後退"
-
-msgid "Rewind 0.5 seconds"
-msgstr "後退0.5秒"
-
-msgid "Right"
-msgstr "右對齊"
-
-msgid "Rock"
-msgstr "搖滾"
-
-msgid "Rolling"
-msgstr "滾動方式"
-
-msgid "Save"
-msgstr "保存"
-
-msgid "Save all Lists"
-msgstr "保存所有列表"
-
-msgid "Scan"
-msgstr "掃描"
-
-msgid "Search"
-msgstr "搜索"
-
-msgid "Search Lyrics"
-msgstr "搜索歌詞"
-
-msgid "Search in Current Playlist"
-msgstr "從當前播放列表檢索歌曲"
-
-msgid "Searching for lyrics..."
-msgstr "正在搜索歌詞..."
-
-msgid "Seek Backward"
-msgstr "後退"
-
-msgid "Seek Forward"
-msgstr "快進"
-
-msgid "Select Directory"
-msgstr "選擇目錄"
-
-msgid "Select color theme"
-msgstr "選擇配色"
-
-msgid "Select file"
-msgstr "選擇檔"
-
-msgid "Select image"
-msgstr "選擇圖片"
-
-msgid "Settings"
-msgstr "設置"
-
-msgid "Show Lyrics"
-msgstr "打開歌詞"
-
-msgid "Show information about supported audio file"
-msgstr "顯示所支持音頻檔的資訊"
-
-msgid "Show lyrics"
-msgstr "打開歌詞"
-
-msgid "Show program's version number and exit."
-msgstr "顯示程式版本號並退出"
-
-msgid "Show this help message and exit"
-msgstr "顯示幫助資訊並退出"
-
-msgid "Show/Hide Lyrics"
-msgstr "打開/關閉歌詞"
-
-msgid "Show/Hide lyrics"
-msgstr "打開/關閉歌詞"
-
-msgid "Single"
-msgstr "單行"
-
-msgid "Size"
-msgstr "大小"
-
-msgid "Ska"
-msgstr "斯卡"
-
-msgid "Soft"
-msgstr "溫和"
-
-msgid "Soft Rock"
-msgstr "溫和搖滾"
-
-msgid "Sort"
-msgstr "排序"
-
-msgid "Start"
-msgstr "開始"
-
-msgid "Start minimized"
-msgstr "啟動後最小化"
-
-msgid "Start new instance"
-msgstr "啟動新實例"
-
-msgid "Start playback automatically"
-msgstr "自動播放"
-
-msgid "Startup"
-msgstr "開始"
-
-msgid "Stop playback"
-msgstr "停止播放"
-
-msgid "Stroke"
-msgstr "描邊"
-
-msgid "Style"
-msgstr "字型"
-
-msgid "Suggestions"
-msgstr "建議"
-
-msgid "Switch lines"
-msgstr "切換行數"
-
-msgid "Switch to desktop mode"
-msgstr "切換到窗口歌詞"
-
-msgid "Switch to window mode"
-msgstr "切換到窗口歌詞"
-
-msgid "Target file already exists"
-msgstr "目標檔存在時"
-
-msgid "Target file already exitsts, do you want to overwrite it?"
-msgstr "目標檔已存在,是否覆蓋?"
-
-msgid "Task Manager"
-msgstr "任務管理器"
-
-msgid "Techno"
-msgstr "電子"
-
-msgid "Title"
-msgstr "標題"
-
-msgid "Title:"
-msgstr "標題:"
-
-msgid "Toggle visibility of the GUI (if possible)"
-msgstr "介面可視性切換"
-
-msgid "Track"
-msgstr "歌曲"
-
-msgid "Track Infomation"
-msgstr "歌詞資訊"
-
-msgid "Track information Options"
-msgstr "歌曲資訊選項"
-
-msgid "Track(s)"
-msgstr "歌曲"
-
-msgid ""
-"Try more general keywords, such as a title, an artist or the name of an "
-"album."
-msgstr "請嘗試更多關鍵字搜索，如標題、藝人或專輯名稱。"
-
-msgid "Type"
-msgstr "類型"
-
-msgid "URL"
-msgstr "添加指定URL"
-
-msgid "Unknown"
-msgstr "未知"
-
-msgid "Unknown album"
-msgstr "未知專輯"
-
-msgid "Unknown artist"
-msgstr "未知藝術家"
-
-msgid "Unlock lyrics"
-msgstr "解鎖歌詞"
-
-msgid "Usage: deepin-music-player [OPTION]... [URI]"
-msgstr "用法: deepin-music-player [選項]... [URI]"
-
-msgid "Version"
-msgstr "版本"
-
-msgid "View New Features"
-msgstr "查看新特性"
-
-msgid "Vitality yellow"
-msgstr "活力黃"
-
-msgid "Volume"
-msgstr "音量"
-
-msgid "Volume Options"
-msgstr "音量選項"
-
+#: ../src/plugins.py:103
+#, fuzzy
+msgid "Plugin archive contains an unsafe path."
+msgstr "附加元件的歸檔文檔包含了一個不安全的路徑。"
+
+#: ../src/transcoder.py:54
 msgid ""
 "Vorbis is an open source, lossy audio codec with high quality output at a "
 "lower file size than MP3."
@@ -963,33 +41,1400 @@ msgstr ""
 "Vorbis是一种开源的有损音频编解码器，与MP3格式相比，可以用更小的文件获得更佳的"
 "输出效果。"
 
-msgid "Window"
-msgstr "窗口歌詞"
+#: ../src/transcoder.py:66
+msgid ""
+"Free Lossless Audio Codec (FLAC) is an open source codec that compresses but "
+"does not degrade audio quality."
+msgstr ""
+"自由无损音频编解码器(FLAC)是一种开源的编解码器，可以压缩音频而不降低音频质"
+"量。"
 
-msgid "World"
-msgstr "世界音樂"
+#: ../src/transcoder.py:80
+#, fuzzy
+msgid ""
+"Apple's proprietary lossy audio format could give higher quality than MP3 at "
+"lower bitrates."
+msgstr "苹果公司开发的专有有损音频格式，可以用较低的码率达到更佳的音质"
 
+#: ../src/transcoder.py:93
+msgid ""
+"A proprietary and older, but also popular, lossy audio format. VBR gives "
+"higher quality than CBR, but may be incompatible with some players."
+msgstr ""
+"一种专有音频格式，虽然较老但仍很流行。VBR比CBR音质更佳，但可能与某些播放器不"
+"兼容。"
+
+#: ../src/transcoder.py:106
+#, fuzzy
+msgid ""
+"A proprietary and older, but also popular, lossy audio format. The output "
+"effect of CBR is not good as VBR, but is compatible with any player."
+msgstr ""
+"一种专有音频格式，虽然较老便仍很流行。CBR的输出效果不及VBR，但兼容于所有播放"
+"器。"
+
+#: ../src/transcoder.py:119
+msgid "A very fast Free lossless audio format with good compression."
+msgstr "一种解码快速的自由无损音频格式，压缩比率较高。"
+
+#: ../src/library.py:990 ../src/library.py:991 ../src/library.py:992
+#: ../src/library.py:999 ../src/library.py:1000 ../src/library.py:1001
+#: ../src/widget/local_item.py:57
+msgid "Unknown"
+msgstr "未知"
+
+#: ../src/constant.py:28 ../src/widget/information.py:41
+#: ../plugins/pidgin/__init__.py:97 ../plugins/mpris2/mpris_adapter.py:252
+msgid "Deepin Music"
+msgstr "深度音樂"
+
+#: ../src/constant.py:29
+msgid "DMusic"
+msgstr "深度音樂"
+
+#: ../src/main.py:103
+msgid "Usage: deepin-music-player [OPTION]... [URI]"
+msgstr "用法: deepin-music-player [選項]... [URI]"
+
+#: ../src/main.py:104
+msgid "Options"
+msgstr "選項"
+
+#: ../src/main.py:108
+msgid "Control Options"
+msgstr "控制選項"
+
+#: ../src/main.py:110
+msgid "Play the next track"
+msgstr "播放下一首"
+
+#: ../src/main.py:112
+msgid "Play the previous track"
+msgstr "播放上一首"
+
+#: ../src/main.py:114
+msgid "Pause or resume playback"
+msgstr "暫停/繼續播放"
+
+#: ../src/main.py:116
+msgid "Seek Forward"
+msgstr "快進"
+
+#: ../src/main.py:118
+msgid "Seek Backward"
+msgstr "後退"
+
+#: ../src/main.py:120
+msgid "Stop playback"
+msgstr "停止播放"
+
+#: ../src/main.py:124
+msgid "Volume Options"
+msgstr "音量選項"
+
+#: ../src/main.py:126
+msgid "Change Volume (VOLUME 0.0-1.0)"
+msgstr "調整音量 (VOLUME 0.0-1.0)"
+
+#: ../src/main.py:129
+msgid "Track information Options"
+msgstr "歌曲資訊選項"
+
+#: ../src/main.py:131
+msgid "Print the title of current track"
+msgstr "查看當前歌曲標題"
+
+#: ../src/main.py:133
+msgid "Print the album of current track"
+msgstr "查看當前歌曲專輯"
+
+#: ../src/main.py:135
+msgid "Print the artist of current track"
+msgstr "查看當前歌曲藝術家"
+
+#: ../src/main.py:137
+msgid "Print the length of current track"
+msgstr "查看當前歌曲時長"
+
+#: ../src/main.py:139
+msgid "Print the path of current track"
+msgstr "查看當前歌曲路徑"
+
+#: ../src/main.py:141
+msgid "Print current playback position"
+msgstr "查看當前播放位置"
+
+#: ../src/main.py:144
+msgid "Other Options"
+msgstr "其他選項"
+
+#: ../src/main.py:146
+msgid "Show this help message and exit"
+msgstr "顯示幫助資訊並退出"
+
+#: ../src/main.py:148
+msgid "Start new instance"
+msgstr "啟動新實例"
+
+#: ../src/main.py:150
+msgid "Show program's version number and exit."
+msgstr "顯示程式版本號並退出"
+
+#: ../src/main.py:152
+#, fuzzy
+msgid "Minimize after started"
+msgstr "最小化到託盤"
+
+#: ../src/main.py:155
+msgid "Toggle visibility of the GUI (if possible)"
+msgstr "介面可視性切換"
+
+#: ../src/main.py:158
+#, fuzzy
+msgid "This option makes control options like --play to start program"
+msgstr "此選項可以使控制選項來啟動程式"
+
+#: ../src/main.py:161
+msgid "Development/Debug Options"
+msgstr "開發/調試選項"
+
+#: ../src/main.py:162
+#, fuzzy
+msgid "Set debug level (0-9)"
+msgstr "設置調試級別(0-9)"
+
+#: ../src/main.py:166
+#, fuzzy
+msgid "Show information supported audio file"
+msgstr "顯示所支持音頻檔的資訊"
+
+#: ../src/widget/song_view.py:437 ../src/widget/song_view.py:780
+#: ../src/widget/converter.py:309 ../src/widget/local_browser.py:339
+msgid "Prompt"
+msgstr "提示"
+
+#: ../src/widget/song_view.py:437 ../src/widget/song_view.py:780
+#: ../src/widget/local_browser.py:339
+#, fuzzy
+msgid "Are you sure to delete?"
+msgstr "是否要刪除以下檔案?"
+
+#: ../src/widget/song_view.py:481
+msgid "Repeat (single)"
+msgstr "單曲迴圈"
+
+#: ../src/widget/song_view.py:482
+msgid "Order play"
+msgstr ""
+
+#: ../src/widget/song_view.py:483
+msgid "Repeat (list)"
+msgstr "列表迴圈"
+
+#: ../src/widget/song_view.py:484 ../src/widget/playlist.py:545
+msgid "Randomize"
+msgstr "隨機排序"
+
+#: ../src/widget/song_view.py:507
+msgid "Remove Track from this List"
+msgstr "刪除選中歌曲"
+
+#: ../src/widget/song_view.py:508
+msgid "Remove Unavailable Tracks"
+msgstr "刪除錯誤歌曲"
+
+#: ../src/widget/song_view.py:509 ../src/widget/song_view.py:789
+#: ../src/widget/playlist.py:554 ../src/widget/local_browser.py:354
+msgid "Move to Trash"
+msgstr "移動到回收站"
+
+#: ../src/widget/song_view.py:510 ../src/widget/webcast_view.py:115
+#: ../src/widget/webcast_view.py:123 ../src/widget/playlist.py:555
+#: ../plugins/musicfm/radio_view.py:135 ../plugins/musicfm/radio_view.py:141
+msgid "Clear List"
+msgstr "清空列表"
+
+#: ../src/widget/song_view.py:521
+msgid "URL"
+msgstr "添加指定URL"
+
+#: ../src/widget/song_view.py:522 ../src/widget/song_view.py:530
+msgid "File"
+msgstr "檔"
+
+#: ../src/widget/song_view.py:523 ../src/widget/song_view.py:531
+#, fuzzy
+msgid "Folder(include subdirectories)"
+msgstr "檔夾(包含子目錄)"
+
+#: ../src/widget/song_view.py:524 ../src/widget/song_view.py:532
+#: ../src/widget/local_browser.py:91
+msgid "Folder"
+msgstr "檔夾"
+
+#: ../src/widget/song_view.py:542
+msgid "Add URL"
+msgstr "添加指定URL"
+
+#: ../src/widget/song_view.py:680 ../src/widget/song_editor.py:72
+#: ../src/widget/song_editor.py:202 ../src/widget/lyrics_search.py:83
+msgid "Title"
+msgstr "標題"
+
+#: ../src/widget/song_view.py:680 ../src/widget/song_editor.py:73
+#: ../src/widget/song_editor.py:203 ../src/widget/lyrics_search.py:83
+#: ../src/widget/local_browser.py:85 ../plugins/notify/__init__.py:43
+msgid "Artist"
+msgstr "藝術家"
+
+#: ../src/widget/song_view.py:680 ../src/widget/song_editor.py:74
+#: ../src/widget/song_editor.py:204 ../src/widget/local_browser.py:87
+#: ../plugins/notify/__init__.py:45
+msgid "Album"
+msgstr "專輯"
+
+#: ../src/widget/song_view.py:680
+#, fuzzy
+msgid "Added Time"
+msgstr "添加時間"
+
+#: ../src/widget/song_view.py:785 ../src/widget/tray.py:59
+#: ../src/widget/webcast_view.py:119 ../src/widget/webcast_view.py:338
+#: ../src/widget/playlist.py:549 ../src/widget/instance.py:321
+#: ../plugins/musicfm/radio_view.py:139
+msgid "Play"
+msgstr "播放"
+
+#: ../src/widget/song_view.py:786 ../src/widget/webcast_view.py:333
+#: ../src/widget/webcast_view.py:339
+msgid "Add to Playlist"
+msgstr "添加到播放列表"
+
+#: ../src/widget/song_view.py:788 ../src/widget/local_browser.py:353
+msgid "Remove from Library"
+msgstr "從歌曲庫中移除"
+
+#: ../src/widget/song_view.py:791 ../src/widget/local_browser.py:359
+msgid "Open Directory"
+msgstr "打開目錄"
+
+#: ../src/widget/song_view.py:792 ../src/widget/playlist.py:559
+#: ../src/widget/converter.py:427 ../src/widget/instance.py:341
+#: ../src/widget/instance.py:364
+#, fuzzy
+msgid "Converter"
+msgstr "格式轉換器"
+
+#: ../src/widget/song_view.py:793 ../src/widget/song_editor.py:335
+#: ../src/widget/playlist.py:561
+msgid "Properties"
+msgstr "屬性"
+
+#: ../src/widget/song_view.py:817 ../src/widget/global_search.py:48
+#: ../src/widget/local_tab.py:28
+msgid "Library"
+msgstr "本地音樂"
+
+#: ../src/widget/tray.py:49 ../src/widget/preference.py:371
+#, fuzzy
+msgid "Volume Up"
+msgstr "音量"
+
+#: ../src/widget/tray.py:50 ../src/widget/preference.py:372
+#, fuzzy
+msgid "Volume Down"
+msgstr "音量選項"
+
+#: ../src/widget/tray.py:51
+msgid "Mute"
+msgstr "靜音"
+
+#: ../src/widget/tray.py:62 ../src/widget/converter.py:392
+#: ../src/widget/converter.py:412 ../src/widget/converter.py:415
+#: ../src/widget/instance.py:324
+msgid "Pause"
+msgstr "暫停"
+
+#: ../src/widget/tray.py:64 ../src/widget/song_editor.py:341
+#: ../src/widget/headerbar.py:71 ../src/widget/instance.py:330
+#: ../src/widget/preference.py:369
+msgid "Previous"
+msgstr "上一首"
+
+#: ../src/widget/tray.py:65 ../src/widget/song_editor.py:343
+#: ../src/widget/headerbar.py:72 ../src/widget/instance.py:331
+#: ../src/widget/preference.py:370
+msgid "Next"
+msgstr "下一首"
+
+#: ../src/widget/tray.py:67
+msgid "Volume"
+msgstr "音量"
+
+#: ../src/widget/tray.py:72
+#, fuzzy
+msgid "Close Lyrics"
+msgstr "關閉歌詞"
+
+#: ../src/widget/tray.py:73 ../src/widget/instance.py:378
+msgid "Search Lyrics"
+msgstr "搜索歌詞"
+
+#: ../src/widget/tray.py:75 ../src/widget/instance.py:399
+msgid "Show Lyrics"
+msgstr "打開歌詞"
+
+#: ../src/widget/tray.py:78 ../src/widget/instance.py:403
+#, fuzzy
+msgid "Unlock Lyrics"
+msgstr "解鎖歌詞"
+
+#: ../src/widget/tray.py:80 ../src/widget/lyrics_module.py:155
+#: ../src/widget/instance.py:405
+#, fuzzy
+msgid "Lock Lyrics"
+msgstr "鎖定歌詞"
+
+#: ../src/widget/tray.py:83 ../src/widget/instance.py:372
+#: ../src/widget/preference.py:943
+msgid "Preferences"
+msgstr "選項設置"
+
+#: ../src/widget/tray.py:84 ../src/widget/ui.py:1262
+#: ../src/widget/instance.py:374 ../src/widget/preference.py:196
+msgid "Quit"
+msgstr "退出"
+
+#: ../src/widget/webcasts_browser.py:98
+msgid "Region"
+msgstr "地域"
+
+#: ../src/widget/webcasts_browser.py:99 ../src/widget/song_editor.py:205
+#: ../src/widget/local_browser.py:89
+msgid "Genre"
+msgstr "流派"
+
+#: ../src/widget/webcasts_browser.py:141
+msgid "Favorites"
+msgstr "我的收藏"
+
+#: ../src/widget/song_notify.py:193 ../src/widget/song_editor.py:97
+#: ../src/widget/preference.py:686 ../src/widget/preference.py:839
+msgid "Size"
+msgstr "大小"
+
+#: ../src/widget/song_notify.py:194 ../src/widget/song_editor.py:96
+msgid "Type"
+msgstr "類型"
+
+#: ../src/widget/song_notify.py:209 ../src/widget/song_editor.py:100
+msgid "Playcount"
+msgstr "播放次數"
+
+#: ../src/widget/song_notify.py:210 ../src/widget/song_editor.py:97
+msgid "Duration"
+msgstr "時長"
+
+#: ../src/widget/webcast_view.py:114 ../src/widget/webcast_view.py:120
+#: ../src/widget/playlist.py:103 ../plugins/musicfm/radio_view.py:134
+#: ../plugins/musicfm/radio_view.py:140
+msgid "Delete"
+msgstr "刪除"
+
+#: ../src/widget/webcast_view.py:219 ../src/widget/webcast_view.py:368
+msgid "Remove from Favorites"
+msgstr "取消收藏"
+
+#: ../src/widget/webcast_view.py:221 ../src/widget/webcast_view.py:370
+msgid "Add to Favorites"
+msgstr "添加到收藏"
+
+#: ../src/widget/webcast_view.py:450 ../plugins/webcast/__init__.py:34
+#: ../plugins/webcast/__init__.py:36
+msgid "Radio"
+msgstr "網絡電台"
+
+#: ../src/widget/combo.py:184 ../src/widget/combo.py:233
+#: ../src/widget/playlist.py:536
+msgid "By Artist"
+msgstr "按藝術家"
+
+#: ../src/widget/combo.py:195
+msgid "List view"
+msgstr "列表顯示"
+
+#: ../src/widget/combo.py:234 ../src/widget/playlist.py:538
+msgid "By Genre"
+msgstr "按流派"
+
+#: ../src/widget/combo.py:235 ../src/widget/playlist.py:537
+msgid "By Album"
+msgstr "按專輯"
+
+#: ../src/widget/global_keys.py:97
+#, python-format
+msgid "Failed to bind %s !"
+msgstr "綁定快捷鍵 %s 失敗!"
+
+#: ../src/widget/information.py:76
+msgid "Connecting"
+msgstr "連接中"
+
+#: ../src/widget/information.py:106
+#, fuzzy
+msgid "buffering..."
+msgstr "正在緩衝"
+
+#: ../src/widget/dialog.py:34
+msgid "Select Directory"
+msgstr "選擇目錄"
+
+#: ../src/widget/dialog.py:56
+msgid "Select file"
+msgstr "選擇檔"
+
+#: ../src/widget/dialog.py:82
+msgid "Export playlist"
+msgstr "導出播放列表"
+
+#: ../src/widget/dialog.py:130
+msgid "Load playlist"
+msgstr "加載播放列表"
+
+#: ../src/widget/lyrics_module.py:151
+#, fuzzy
+msgid "Increase the lyrics size"
+msgstr "增大歌詞尺寸"
+
+#: ../src/widget/lyrics_module.py:152
+#, fuzzy
+msgid "Decrease the lyrics size"
+msgstr "減小歌詞尺寸"
+
+#: ../src/widget/lyrics_module.py:154
+msgid "Select color theme"
+msgstr "選擇配色"
+
+#: ../src/widget/lyrics_module.py:158
+#, fuzzy
+msgid "Karaoke on/off"
+msgstr "啟用/關閉卡拉OK模式"
+
+#: ../src/widget/lyrics_module.py:160
+msgid "Switch lines"
+msgstr "切換行數"
+
+#: ../src/widget/lyrics_module.py:162
+msgid "Open settings panel"
+msgstr "打開設置面板"
+
+#: ../src/widget/lyrics_module.py:163
+#, fuzzy
+msgid "Search lrc file for current track"
+msgstr "搜索歌詞"
+
+#: ../src/widget/lyrics_module.py:164
+msgid "Close lyrics"
+msgstr "關閉歌詞"
+
+#: ../src/widget/lyrics_module.py:165 ../src/widget/lyrics_module.py:223
+msgid "Lyrics rewind"
+msgstr "後退歌詞"
+
+#: ../src/widget/lyrics_module.py:166 ../src/widget/lyrics_module.py:224
+msgid "Lyrics forward"
+msgstr "前進歌詞"
+
+#: ../src/widget/lyrics_module.py:167 ../src/widget/lyrics_module.py:243
+msgid "Switch to window mode"
+msgstr "切換到窗口歌詞"
+
+#: ../src/widget/lyrics_module.py:221
+msgid "Switch to desktop mode"
+msgstr "切換到窗口歌詞"
+
+#: ../src/widget/lyrics_module.py:226 ../src/widget/lyrics_module.py:236
+#: ../src/widget/lyrics_search.py:59
+msgid "Search"
+msgstr "搜索"
+
+#: ../src/widget/lyrics_module.py:227 ../src/widget/lyrics_module.py:242
+msgid "Settings"
+msgstr "設置"
+
+#: ../src/widget/lyrics_module.py:233
+msgid "Forward 0.5 seconds"
+msgstr "提前0.5秒"
+
+#: ../src/widget/lyrics_module.py:234
+msgid "Rewind 0.5 seconds"
+msgstr "後退0.5秒"
+
+#: ../src/widget/lyrics_module.py:237
+msgid "Adjust lyrics"
+msgstr "調整歌詞"
+
+#: ../src/widget/lyrics_module.py:239
+msgid "Choose local lrc"
+msgstr "選擇本地歌詞"
+
+#: ../src/widget/lyrics_module.py:240 ../src/widget/song_editor.py:150
+#: ../src/widget/playlist.py:560 ../src/widget/converter.py:367
+msgid "Open directory"
+msgstr "打開目錄"
+
+#: ../src/widget/lyrics_module.py:247
+#, fuzzy
+msgid "Lyrics acquired by Network"
+msgstr "歌詞保存目錄"
+
+#: ../src/widget/lyrics_module.py:455 ../src/widget/preference.py:627
+msgid "Vitality yellow"
+msgstr "活力黃"
+
+#: ../src/widget/lyrics_module.py:456 ../src/widget/preference.py:628
+msgid "Fresh green"
+msgstr "清新綠"
+
+#: ../src/widget/lyrics_module.py:457 ../src/widget/preference.py:629
+msgid "Playful pink"
+msgstr "俏皮粉"
+
+#: ../src/widget/lyrics_module.py:458 ../src/widget/preference.py:630
+msgid "Cool blue"
+msgstr "清爽藍"
+
+#: ../src/widget/lyrics_module.py:793 ../src/widget/lyrics_module.py:794
+msgid "No lyrics found!"
+msgstr "沒有找到歌詞檔!"
+
+#: ../src/widget/lyrics_module.py:796 ../src/widget/lyrics_module.py:797
+msgid "Searching for lyrics..."
+msgstr "正在搜索歌詞..."
+
+#: ../src/widget/song_editor.py:96 ../src/widget/converter.py:433
+msgid "Format"
+msgstr "格式"
+
+#: ../src/widget/song_editor.py:98
+msgid "Bitrate"
+msgstr "比特率"
+
+#: ../src/widget/song_editor.py:98
+msgid "Rate"
+msgstr "採樣速率"
+
+#: ../src/widget/song_editor.py:99
+msgid "Added"
+msgstr "添加時間"
+
+#: ../src/widget/song_editor.py:99
+msgid "Recently"
+msgstr "最近播放時間"
+
+#: ../src/widget/song_editor.py:100 ../src/widget/song_editor.py:206
+msgid "Date"
+msgstr "年代"
+
+#: ../src/widget/song_editor.py:147
+msgid "Location"
+msgstr "檔位置"
+
+#: ../src/widget/song_editor.py:214
+msgid "Save"
+msgstr "保存"
+
+#: ../src/widget/song_editor.py:296 ../src/widget/converter.py:475
+#: ../src/widget/preference.py:252
+msgid "Change"
+msgstr "更改"
+
+#: ../src/widget/song_editor.py:299
+msgid "Retrieve from the Internet"
+msgstr "網絡獲取"
+
+#: ../src/widget/song_editor.py:302 ../src/widget/equalizer.py:252
+#: ../src/widget/preference.py:375
+msgid "Reset"
+msgstr "重置"
+
+#: ../src/widget/song_editor.py:321 ../src/widget/local_browser.py:343
+msgid "Select image"
+msgstr "選擇圖片"
+
+#: ../src/widget/song_editor.py:338 ../src/widget/equalizer.py:250
+#: ../src/widget/ui.py:1252 ../src/widget/converter.py:394
+#: ../src/widget/converter.py:449 ../src/widget/lyrics_search.py:89
+#: ../src/widget/preference.py:950
+msgid "Close"
+msgstr "關閉"
+
+#: ../src/widget/song_editor.py:367
+msgid "Track Infomation"
+msgstr "歌詞資訊"
+
+#: ../src/widget/song_editor.py:368
+#, fuzzy
+msgid "Tag Settings"
+msgstr "設置"
+
+#: ../src/widget/song_editor.py:369
+#, fuzzy
+msgid "Cover Settings"
+msgstr "設置"
+
+#: ../src/widget/equalizer.py:176
+msgid "Custom"
+msgstr "自定義"
+
+#: ../src/widget/equalizer.py:177
+msgid "Default"
+msgstr "默認"
+
+#: ../src/widget/equalizer.py:178 ../plugins/musicfm/radio_genre_page.py:43
+msgid "Classical"
+msgstr "古典"
+
+#: ../src/widget/equalizer.py:179
+msgid "Club"
+msgstr "俱樂部"
+
+#: ../src/widget/equalizer.py:180
+msgid "Dance"
+msgstr "舞曲"
+
+#: ../src/widget/equalizer.py:181
+msgid "Full Bass"
+msgstr "增強低音"
+
+#: ../src/widget/equalizer.py:182
+msgid "Full Bass and Treble"
+msgstr "增強低音和高音"
+
+#: ../src/widget/equalizer.py:183
+msgid "Full Treble"
+msgstr "增強高音"
+
+#: ../src/widget/equalizer.py:184
+msgid "Headphones"
+msgstr "耳機"
+
+#: ../src/widget/equalizer.py:185
+msgid "Large Hall"
+msgstr "大廳"
+
+#: ../src/widget/equalizer.py:186
+msgid "Live"
+msgstr "現場"
+
+#: ../src/widget/equalizer.py:187
+msgid "Party"
+msgstr "派對"
+
+#: ../src/widget/equalizer.py:188 ../plugins/musicfm/radio_genre_page.py:46
+msgid "Pop"
+msgstr "流行"
+
+#: ../src/widget/equalizer.py:190 ../plugins/musicfm/radio_genre_page.py:42
+msgid "Rock"
+msgstr "搖滾"
+
+#: ../src/widget/equalizer.py:191
+msgid "Ska"
+msgstr "斯卡"
+
+#: ../src/widget/equalizer.py:192
+msgid "Soft"
+msgstr "溫和"
+
+#: ../src/widget/equalizer.py:193
+msgid "Soft Rock"
+msgstr "溫和搖滾"
+
+#: ../src/widget/equalizer.py:194 ../plugins/musicfm/radio_genre_page.py:47
+msgid "Electronic"
+msgstr "電子"
+
+#: ../src/widget/equalizer.py:199 ../src/widget/instance.py:363
+msgid "Equalizer"
+msgstr "均衡器"
+
+#: ../src/widget/equalizer.py:254
+msgid "Predefined"
+msgstr "預定義"
+
+#: ../src/widget/jobs_manager.py:44 ../src/widget/jobs_manager.py:153
+msgid "jobs waiting!"
+msgstr "個任務在等待!"
+
+#: ../src/widget/playlist.py:94
+msgid "Search in Current Playlist"
+msgstr "從當前播放列表檢索歌曲"
+
+#: ../src/widget/playlist.py:96
+msgid "Playlist Operations"
+msgstr "播放列表操作"
+
+#: ../src/widget/playlist.py:97 ../src/widget/instance.py:359
+msgid "Add"
+msgstr "添加時間:"
+
+#: ../src/widget/playlist.py:100 ../src/widget/playlist.py:557
+#: ../src/widget/instance.py:361
+#, fuzzy
+msgid "Playback mode"
+msgstr "播放模式"
+
+#: ../src/widget/playlist.py:183
+msgid "Default List"
+msgstr "默認列表"
+
+#: ../src/widget/playlist.py:304 ../src/widget/playlist.py:316
+#: ../src/widget/playlist.py:317 ../src/widget/playlist.py:357
+#: ../src/widget/playlist.py:360 ../src/widget/playlist.py:476
+msgid "New List"
+msgstr "新建列表"
+
+#: ../src/widget/playlist.py:305 ../src/widget/playlist.py:477
+msgid "Import List"
+msgstr "導入列表"
+
+#: ../src/widget/playlist.py:306 ../src/widget/playlist.py:485
+msgid "Open List"
+msgstr "打開列表"
+
+#: ../src/widget/playlist.py:307
+msgid "Export List"
+msgstr "導出列表"
+
+#: ../src/widget/playlist.py:308 ../src/widget/playlist.py:484
+msgid "Remove List"
+msgstr "刪除列表"
+
+#: ../src/widget/playlist.py:310 ../src/widget/playlist.py:479
+#: ../src/widget/playlist.py:487
+msgid "Save all Lists"
+msgstr "保存所有列表"
+
+#: ../src/widget/playlist.py:483 ../src/widget/playlist.py:493
+msgid "Rename"
+msgstr "重命名"
+
+#: ../src/widget/playlist.py:534
+msgid "By Filename"
+msgstr "按文件名"
+
+#: ../src/widget/playlist.py:535
+msgid "By Title"
+msgstr "按標題"
+
+#: ../src/widget/playlist.py:539
+msgid "By Track"
+msgstr "按音軌"
+
+#: ../src/widget/playlist.py:540
+msgid "By Play Count"
+msgstr "按播放次數"
+
+#: ../src/widget/playlist.py:541
+#, fuzzy
+msgid "By Added Time"
+msgstr "添加時間"
+
+#: ../src/widget/playlist.py:550 ../src/widget/local_browser.py:351
+msgid "Add to List"
+msgstr "添加到列表"
+
+#: ../src/widget/playlist.py:551
+#, fuzzy
+msgid "Move to List"
+msgstr "移動到列表"
+
+#: ../src/widget/playlist.py:553
+msgid "Remove Track"
+msgstr "刪除歌曲"
+
+#: ../src/widget/playlist.py:558
+msgid "Sort"
+msgstr "排序"
+
+#: ../src/widget/local_item.py:59
+msgid "All Tracks"
+msgstr "所有歌曲"
+
+#: ../src/widget/local_item.py:67
+msgid "Track(s)"
+msgstr "歌曲"
+
+#: ../src/widget/ui.py:203
+msgid "Need some music? Find it here..."
+msgstr "找音樂，在這裡..."
+
+#: ../src/widget/ui.py:401
+#, fuzzy
+msgid "Add Local Music"
+msgstr "添加本地音樂"
+
+#: ../src/widget/ui.py:1122
 #, python-brace-format
 msgid "Your search {keyword} did not match any items in {from}"
 msgstr "在{from}中未發現與{keyword}關聯的內容"
 
-msgid "buffering"
-msgstr "正在緩衝"
+#: ../src/widget/ui.py:1123
+msgid "Suggestions"
+msgstr "建議"
 
-msgid "decrease the lyrics size"
-msgstr "減小歌詞尺寸"
+#: ../src/widget/ui.py:1124
+msgid "Make sure all words are spelled correctly."
+msgstr "確保全部單詞拼寫正確。"
 
-msgid "increase the lyrics size"
-msgstr "增大歌詞尺寸"
+#: ../src/widget/ui.py:1125
+msgid ""
+"Try more general keywords, such as a title, an artist or the name of an "
+"album."
+msgstr "請嘗試更多關鍵字搜索，如標題、藝人或專輯名稱。"
 
-msgid "jobs waiting!"
-msgstr "個任務在等待!"
+#: ../src/widget/ui.py:1222 ../src/widget/plugins_view.py:166
+msgid "Name"
+msgstr ""
 
-msgid "karaoke on/off"
-msgstr "啟用/關閉卡拉OK模式"
+#: ../src/widget/ui.py:1230
+msgid "Author(s)"
+msgstr "作者"
 
-msgid "move to List"
-msgstr "移動到列表"
+#: ../src/widget/ui.py:1260 ../src/widget/preference.py:195
+msgid "Minimize to tray"
+msgstr "最小化到託盤"
 
-msgid "search lrc file for current track"
-msgstr "搜索歌詞"
+#: ../src/widget/ui.py:1266
+msgid "Don't prompt again"
+msgstr "下次不再提示"
+
+#: ../src/widget/ui.py:1273
+msgid "OK"
+msgstr "確定"
+
+#: ../src/widget/ui.py:1276
+msgid "Cancel"
+msgstr "取消"
+
+#: ../src/widget/converter.py:309
+#, fuzzy
+msgid "Target file already exists, do you want to overwrite it?"
+msgstr "目標檔已存在,是否覆蓋?"
+
+#: ../src/widget/converter.py:369
+msgid "Delete task"
+msgstr "刪除任務"
+
+#: ../src/widget/converter.py:370
+msgid "Clear finished tasks"
+msgstr "清空已完成的任務"
+
+#: ../src/widget/converter.py:376 ../src/widget/instance.py:342
+msgid "Task Manager"
+msgstr "任務管理器"
+
+#: ../src/widget/converter.py:413
+msgid "Continue"
+msgstr "繼續"
+
+#: ../src/widget/converter.py:436
+msgid "Quality"
+msgstr "品質"
+
+#: ../src/widget/converter.py:444
+msgid "Target file already exists"
+msgstr "目標檔存在時"
+
+#: ../src/widget/converter.py:445
+msgid "Ask"
+msgstr "詢問"
+
+#: ../src/widget/converter.py:445
+msgid "Cover"
+msgstr "覆蓋"
+
+#: ../src/widget/converter.py:448
+msgid "Start"
+msgstr "開始"
+
+#: ../src/widget/converter.py:450
+#, fuzzy
+msgid "Add to Playlist after finished"
+msgstr "當轉換完成後添加到播放列表"
+
+#: ../src/widget/converter.py:472
+msgid "Output"
+msgstr "輸出目錄"
+
+#: ../src/widget/lyrics_search.py:47
+msgid "Lyrics search"
+msgstr "歌詞搜索"
+
+#: ../src/widget/lyrics_search.py:54
+msgid "Artist:"
+msgstr "藝術家:"
+
+#: ../src/widget/lyrics_search.py:55
+msgid "Title:"
+msgstr "標題:"
+
+#: ../src/widget/lyrics_search.py:87
+msgid "Download"
+msgstr "下載"
+
+#: ../src/widget/lyrics_search.py:136
+msgid "Now searching..."
+msgstr "正在搜索..."
+
+#: ../src/widget/lyrics_search.py:138 ../src/widget/lyrics_search.py:163
+msgid "Not found!"
+msgstr "沒有找到!"
+
+#: ../src/widget/lyrics_search.py:157 ../src/widget/lyrics_search.py:161
+#, python-format
+msgid "%d lyrics found"
+msgstr "找到%d歌詞"
+
+#: ../src/widget/lyrics_search.py:170
+msgid "Downloading lyrics..."
+msgstr "正在下載歌詞..."
+
+#: ../src/widget/lyrics_search.py:180
+msgid "File save to"
+msgstr "檔保存到"
+
+#: ../src/widget/lyrics_search.py:182
+msgid "Download failed."
+msgstr "下載失敗"
+
+#: ../src/widget/local_browser.py:98
+msgid "Quick Scan"
+msgstr "快速掃描"
+
+#: ../src/widget/local_browser.py:99
+msgid "Scan"
+msgstr "掃描"
+
+#: ../src/widget/local_browser.py:100
+msgid "Refresh"
+msgstr "刷新歌曲庫"
+
+#: ../src/widget/local_browser.py:350
+msgid "Play All"
+msgstr "播放全部"
+
+#: ../src/widget/local_browser.py:361
+msgid "Change Cover"
+msgstr "更改封面"
+
+#: ../src/widget/headerbar.py:63 ../src/widget/preference.py:368
+msgid "Play/Pause"
+msgstr "暫停/繼續"
+
+#: ../src/widget/headerbar.py:77
+msgid "Show/Hide Lyrics"
+msgstr "打開/關閉歌詞"
+
+#: ../src/widget/plugins_view.py:166 ../src/widget/preference.py:905
+msgid "Version"
+msgstr "版本"
+
+#: ../src/widget/plugins_view.py:166
+msgid "Enable"
+msgstr "啟用"
+
+#: ../src/widget/lyrics.py:735
+msgid "Lyrics window"
+msgstr "窗口歌詞"
+
+#: ../src/widget/instance.py:147
+msgid "Join us"
+msgstr "加入我們"
+
+#: ../src/widget/instance.py:328
+msgid "Forward"
+msgstr "快進"
+
+#: ../src/widget/instance.py:329
+msgid "Rewind"
+msgstr "後退"
+
+#: ../src/widget/instance.py:360
+#, fuzzy
+msgid "Play Controls"
+msgstr "播放控制"
+
+#: ../src/widget/instance.py:371
+msgid "View New Features"
+msgstr "查看新特性"
+
+#: ../src/widget/instance.py:397
+msgid "Hide Lyrics"
+msgstr "關閉歌詞"
+
+#: ../src/widget/instance.py:480
+msgid "Mini Mode"
+msgstr "迷你模式"
+
+#: ../src/widget/instance.py:482
+msgid "Normal Mode"
+msgstr "普通模式"
+
+#: ../src/widget/preference.py:150
+#, fuzzy
+msgid "On starting the player"
+msgstr "打開設置面板"
+
+#: ../src/widget/preference.py:157
+msgid "Display splash-screen"
+msgstr "顯示啟動畫面"
+
+#: ../src/widget/preference.py:164
+msgid "Show lyrics"
+msgstr "打開歌詞"
+
+#: ../src/widget/preference.py:169
+msgid "Start playback automatically"
+msgstr "自動播放"
+
+#: ../src/widget/preference.py:175
+msgid "Resume playback"
+msgstr "繼續上次播放進度"
+
+#: ../src/widget/preference.py:190
+#, fuzzy
+msgid "When pressing the close button"
+msgstr "當點擊關閉按鈕時"
+
+#: ../src/widget/preference.py:209
+msgid "Playback settings"
+msgstr "播放設置"
+
+#: ../src/widget/preference.py:213
+msgid "Enable crossfade"
+msgstr "啟用淡入淡出"
+
+#: ../src/widget/preference.py:216
+#, fuzzy
+msgid "Seamless switching between the same album"
+msgstr "相同專輯間無縫切換"
+
+#: ../src/widget/preference.py:221
+#, fuzzy
+msgid "Crossfade"
+msgstr "啟用淡入淡出"
+
+#: ../src/widget/preference.py:223
+msgid " ms"
+msgstr " 毫秒"
+
+#: ../src/widget/preference.py:241
+msgid "Lyrics directory"
+msgstr "歌詞保存目錄"
+
+#: ../src/widget/preference.py:346 ../src/widget/preference.py:1002
+msgid "Hotkeys"
+msgstr "熱鍵設置"
+
+#: ../src/widget/preference.py:356
+msgid "Enable hotkeys"
+msgstr "啟用快捷鍵"
+
+#: ../src/widget/preference.py:362
+msgid "Minimize/Show window"
+msgstr "隱藏/顯示主程序"
+
+#: ../src/widget/preference.py:364
+msgid "Show/Hide lyrics"
+msgstr "打開/關閉歌詞"
+
+#: ../src/widget/preference.py:366
+msgid "Lock/Unlock lyrics"
+msgstr "鎖定/解鎖歌詞"
+
+#: ../src/widget/preference.py:601 ../src/widget/preference.py:613
+#: ../src/widget/preference.py:845
+msgid "Left"
+msgstr "左對齊"
+
+#: ../src/widget/preference.py:602 ../src/widget/preference.py:614
+#: ../src/widget/preference.py:845
+msgid "Centered"
+msgstr "居中對齊"
+
+#: ../src/widget/preference.py:603 ../src/widget/preference.py:615
+#: ../src/widget/preference.py:845
+msgid "Right"
+msgstr "右對齊"
+
+#: ../src/widget/preference.py:616
+msgid "Justified"
+msgstr "兩端對齊"
+
+#: ../src/widget/preference.py:642
+msgid "Color scheme"
+msgstr "配色方案"
+
+#: ../src/widget/preference.py:650 ../src/widget/preference.py:807
+msgid "Regular"
+msgstr "常規"
+
+#: ../src/widget/preference.py:651 ../src/widget/preference.py:808
+msgid "Italic"
+msgstr "傾斜"
+
+#: ../src/widget/preference.py:652 ../src/widget/preference.py:809
+msgid "Bold"
+msgstr "粗體"
+
+#: ../src/widget/preference.py:653 ../src/widget/preference.py:810
+msgid "Bold Italic"
+msgstr "粗體 傾斜"
+
+#: ../src/widget/preference.py:663 ../src/widget/preference.py:818
+msgid "Style"
+msgstr "字型"
+
+#: ../src/widget/preference.py:671 ../src/widget/preference.py:824
+msgid "Lyrics style"
+msgstr "歌詞樣式"
+
+#: ../src/widget/preference.py:681 ../src/widget/preference.py:833
+msgid "Font"
+msgstr "字體"
+
+#: ../src/widget/preference.py:689
+msgid "Lines"
+msgstr "行數"
+
+#: ../src/widget/preference.py:690
+msgid "Single"
+msgstr "單行"
+
+#: ../src/widget/preference.py:690
+msgid "Double"
+msgstr "雙行"
+
+#: ../src/widget/preference.py:693 ../src/widget/preference.py:843
+msgid "Alignment"
+msgstr "對齊"
+
+#: ../src/widget/preference.py:702
+msgid "Outline"
+msgstr "輪廓"
+
+#: ../src/widget/preference.py:706
+msgid "Stroke"
+msgstr "描邊"
+
+#: ../src/widget/preference.py:711 ../src/widget/preference.py:855
+#, fuzzy
+msgid "Unplayed"
+msgstr "已播放"
+
+#: ../src/widget/preference.py:722 ../src/widget/preference.py:856
+msgid "Played"
+msgstr "已播放"
+
+#: ../src/widget/preference.py:850
+msgid "Rolling"
+msgstr "滾動方式"
+
+#: ../src/widget/preference.py:851
+msgid "Always"
+msgstr "總是滾動"
+
+#: ../src/widget/preference.py:851
+msgid "By line"
+msgstr "按行滾動"
+
+#: ../src/widget/preference.py:920
+#, fuzzy
+msgid ""
+"Deepin Music is a music application designed for Linux users. It's "
+"characterized with lyrics searching, desktop lyrics display,album cover "
+"downloading, resume playing, music management and skin selection.\n"
+"\n"
+"Deepin Music is free software licensed under GNU GPLv3."
+msgstr ""
+"深度音樂是Linux Deepin團隊為廣大linux用戶量身開發的一款音樂軟件.具有歌詞搜索"
+"下載,桌面歌詞顯示,專輯封面下載,歌曲記憶播放,獨創音樂管理,自定義換膚等幾大特"
+"點.\n"
+"\n"
+"深度音樂是自由軟件,遵循自由軟件基金會發佈的 GNU 通用公共許可證第三版."
+
+#: ../src/widget/preference.py:1001
+msgid "General"
+msgstr "常規設置"
+
+#: ../src/widget/preference.py:1003
+msgid "Lyrics"
+msgstr "歌詞設置"
+
+#: ../src/widget/preference.py:1004
+msgid "Desktop"
+msgstr "桌面歌詞"
+
+#: ../src/widget/preference.py:1005
+msgid "Window"
+msgstr "窗口歌詞"
+
+#: ../src/widget/preference.py:1006
+msgid "Plugins"
+msgstr ""
+
+#: ../src/widget/preference.py:1007
+msgid "About"
+msgstr "關於"
+
+#: ../src/source/old.py:112 ../src/source/audiocd.py:78
+msgid "Track"
+msgstr "歌曲"
+
+#: ../src/source/old.py:113 ../src/source/audiocd.py:79
+msgid "Unknown album"
+msgstr "未知專輯"
+
+#: ../src/source/old.py:114 ../src/source/audiocd.py:80
+msgid "Unknown artist"
+msgstr "未知藝術家"
+
+#: ../src/source/audiocd.py:86 ../src/source/audiocd.py:92
+msgid "Audio CD"
+msgstr "音頻CD"
+
+#: ../src/source/local.py:43
+msgid "Reading directories..."
+msgstr "正在讀取目錄資訊"
+
+#: ../src/source/local.py:175
+msgid "Check deleted files"
+msgstr "檢查並刪除檔"
+
+#: ../src/source/local.py:202
+msgid "Reload database"
+msgstr "重新加載歌曲庫"
+
+#: ../plugins/musicfm/radio_genre_page.py:44
+msgid "Jazz"
+msgstr "爵士"
+
+#: ../plugins/musicfm/radio_genre_page.py:45
+msgid "Folk/Country"
+msgstr "民謠/鄉村"
+
+#: ../plugins/musicfm/radio_genre_page.py:48
+msgid "OST"
+msgstr "原聲配樂"
+
+#: ../plugins/musicfm/radio_genre_page.py:49
+msgid "Light"
+msgstr "輕音樂"
+
+#: ../plugins/musicfm/radio_genre_page.py:50
+msgid "Hip-Hop/Rap"
+msgstr "說唱"
+
+#: ../plugins/musicfm/radio_genre_page.py:51
+msgid "Reggae"
+msgstr "雷鬼"
+
+#: ../plugins/musicfm/radio_genre_page.py:52
+msgid "Latino"
+msgstr "拉丁"
+
+#: ../plugins/musicfm/radio_genre_page.py:53
+msgid "World"
+msgstr "世界音樂"
+
+#: ../plugins/musicfm/radio_genre_page.py:54
+msgid "Blues"
+msgstr "布魯斯"
+
+#: ../plugins/musicfm/radio_genre_page.py:55
+msgid "Funk/Soul/R&B"
+msgstr "瘋克/靈歌/R&B"
+
+#: ../plugins/musicfm/radio_browser.py:78
+msgid "Home"
+msgstr "推薦首頁"
+
+#: ../plugins/musicfm/radio_browser.py:79
+#: ../plugins/musicfm/radio_home_page.py:73
+msgid "Hot MHz"
+msgstr "熱門兆赫"
+
+#: ../plugins/musicfm/radio_browser.py:80
+#, fuzzy
+msgid "Genres MHz"
+msgstr "流派兆赫"
+
+#: ../plugins/musicfm/radio_browser.py:81
+#: ../plugins/musicfm/radio_home_page.py:73
+msgid "Pop MHz"
+msgstr "人氣兆赫"
+
+#: ../plugins/musicfm/radio_item.py:508
+msgid "More"
+msgstr "更多"
+
+#: ../plugins/musicfm/__init__.py:33 ../plugins/musicfm/__init__.py:35
+#: ../plugins/musicfm/radio_view.py:474
+msgid "MusicFM"
+msgstr "音樂電台"
+
+#~ msgid "Add-on"
+#~ msgstr "附加元件"
+
+#~ msgid "Start minimized"
+#~ msgstr "啟動後最小化"
+
+#~ msgid "Play (ordered)"
+#~ msgstr "順序播放"
+
+#~ msgid "Random"
+#~ msgstr "隨機排序"
+
+#~ msgid "Clear list"
+#~ msgstr "清空列表"
+
+#~ msgid "Directory (include subdirectories)"
+#~ msgstr "檔夾(包含子目錄)"
+
+#~ msgid "Directory"
+#~ msgstr "檔夾"
+
+#~ msgid "Increase volume"
+#~ msgstr "增大音量"
+
+#~ msgid "Decrease volume"
+#~ msgstr "減小音量"
+
+#~ msgid "Network get lrc"
+#~ msgstr "網絡穫取歌詞"
+
+#~ msgid "Edit tags"
+#~ msgstr "資訊設置"
+
+#~ msgid "Edit cover"
+#~ msgstr "封面設置"
+
+#~ msgid "Techno"
+#~ msgstr "電子"
+
+#~ msgid "By Date Added"
+#~ msgstr "按添加時間"
+
+#~ msgid "Startup"
+#~ msgstr "開始"
+
+#~ msgid "Fade timeout"
+#~ msgstr "淡入淡出"
+
+#~ msgid "Coming"
+#~ msgstr "未播放"
+
+#~ msgid "Add-ons"
+#~ msgstr "附加元件"
