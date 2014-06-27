@@ -42,7 +42,7 @@ class BaseTrayIcon(object):
         self.menu = None
     
     def update_icon(self):
-        self.set_from_pixbuf(gtk.gdk.pixbuf_new_from_file(os.path.join(get_parent_dir(__file__, 3), "image", "logo.ico")))
+        self.set_from_pixbuf(gtk.gdk.pixbuf_new_from_file(os.path.join(get_parent_dir(__file__, 3), "image", "logo1.png")))
         
     def get_volume_menu(self):    
         menu_items = [
