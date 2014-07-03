@@ -28,12 +28,10 @@ msgid "%d lyrics found"
 msgstr "%d Letras Encontradas"
 
 #: src/plugins.py:98
-#, fuzzy, python-format
 msgid "A plugin with the name \"%s\" is already installed."
 msgstr "Ya está instalado un complemento con el nombre \"%s\"."
 
 #: src/transcoder.py:106
-#, fuzzy
 msgid ""
 "A proprietary and older, but also popular, lossy audio format. The output "
 "effect of CBR is not good as VBR, but is compatible with any player."
@@ -94,7 +92,6 @@ msgid "Added"
 msgstr ""
 
 #: src/widget/song_view.py:680
-#, fuzzy
 msgid "Added Time"
 msgstr "Tiempo Añadido"
 
@@ -121,7 +118,6 @@ msgid "Always"
 msgstr "Siempre"
 
 #: src/transcoder.py:80
-#, fuzzy
 msgid ""
 "Apple's proprietary lossy audio format could give higher quality than MP3 at "
 "lower bitrates."
@@ -131,7 +127,6 @@ msgstr ""
 
 #: src/widget/song_view.py:437 src/widget/song_view.py:780
 #: src/widget/local_browser.py:339
-#, fuzzy
 msgid "Are you sure to delete?"
 msgstr "¿Estás seguro que quieres eliminarlos?"
 
@@ -174,7 +169,6 @@ msgid "Bold Italic"
 msgstr "Negrita Itálica"
 
 #: src/widget/playlist.py:541
-#, fuzzy
 msgid "By Added Time"
 msgstr "Tiempo Añadido"
 
@@ -262,7 +256,6 @@ msgid "Close"
 msgstr ""
 
 #: src/widget/tray.py:72
-#, fuzzy
 msgid "Close Lyrics"
 msgstr "Cerrar Letras"
 
@@ -305,12 +298,10 @@ msgid "Cover"
 msgstr ""
 
 #: src/widget/song_editor.py:369
-#, fuzzy
 msgid "Cover Settings"
 msgstr "Configuración"
 
 #: src/widget/preference.py:221
-#, fuzzy
 msgid "Crossfade"
 msgstr "Habilitar Mezcla"
 
@@ -331,7 +322,6 @@ msgid "Date"
 msgstr ""
 
 #: src/widget/lyrics_module.py:152
-#, fuzzy
 msgid "Decrease the lyrics size"
 msgstr "Disminuir el Tamaño de Letras"
 
@@ -341,7 +331,6 @@ msgid "Deepin Music"
 msgstr "Música DeepIn"
 
 #: src/widget/preference.py:920
-#, fuzzy
 msgid ""
 "Deepin Music is a music application designed for Linux users. It's "
 "characterized with lyrics searching, desktop lyrics display,album cover "
@@ -461,7 +450,6 @@ msgid "Folder"
 msgstr "Carpeta"
 
 #: src/widget/song_view.py:523 src/widget/song_view.py:531
-#, fuzzy
 msgid "Folder(include subdirectories)"
 msgstr "Directorio (Incluye Subdirectorios)"
 
@@ -523,7 +511,6 @@ msgid "Genre"
 msgstr ""
 
 #: plugins/musicfm/radio_browser.py:80
-#, fuzzy
 msgid "Genres MHz"
 msgstr "Géneros"
 
@@ -556,7 +543,6 @@ msgid "Import List"
 msgstr "Importar Lista"
 
 #: src/widget/lyrics_module.py:151
-#, fuzzy
 msgid "Increase the lyrics size"
 msgstr "Aumentar el Tamaño de Letras "
 
@@ -577,7 +563,6 @@ msgid "Justified"
 msgstr "Justificado"
 
 #: src/widget/lyrics_module.py:158
-#, fuzzy
 msgid "Karaoke on/off"
 msgstr "Karaoje encendido/apagado"
 
@@ -625,7 +610,6 @@ msgstr ""
 
 #: src/widget/lyrics_module.py:155 src/widget/instance.py:405
 #: src/widget/tray.py:80
-#, fuzzy
 msgid "Lock Lyrics"
 msgstr "Bloquear Letras"
 
@@ -638,7 +622,6 @@ msgid "Lyrics"
 msgstr "Letras"
 
 #: src/widget/lyrics_module.py:247
-#, fuzzy
 msgid "Lyrics acquired by Network"
 msgstr "Directorio de Letras"
 
@@ -691,7 +674,6 @@ msgid "More"
 msgstr "Más"
 
 #: src/widget/playlist.py:551
-#, fuzzy
 msgid "Move to List"
 msgstr "Mover a la Lista"
 
@@ -754,7 +736,6 @@ msgid "OST"
 msgstr "OST"
 
 #: src/widget/preference.py:150
-#, fuzzy
 msgid "On starting the player"
 msgstr "Abrir el panel de ajustes"
 
@@ -821,7 +802,6 @@ msgid "Play All"
 msgstr "Reproducir Todo"
 
 #: src/widget/instance.py:360
-#, fuzzy
 msgid "Play Controls"
 msgstr "Controles"
 
@@ -839,7 +819,6 @@ msgstr ""
 
 #: src/widget/instance.py:361 src/widget/playlist.py:100
 #: src/widget/playlist.py:557
-#, fuzzy
 msgid "Playback mode"
 msgstr "Orden de Reproducción"
 
@@ -864,12 +843,10 @@ msgid "Playlist Operations"
 msgstr "Operaciones de Reproducción de la Lista"
 
 #: src/plugins.py:103
-#, fuzzy
 msgid "Plugin archive contains an unsafe path."
 msgstr "El archivo de complemento contiene una ruta no segura."
 
 #: src/plugins.py:91
-#, fuzzy
 msgid "Plugin archive is not in the correct format."
 msgstr "El archivo de complemento no está en el formato correcto."
 
@@ -1072,7 +1049,6 @@ msgid "Scan"
 msgstr "Escanear"
 
 #: src/widget/preference.py:216
-#, fuzzy
 msgid "Seamless switching between the same album"
 msgstr "Deshabilitar mezcla entre canciones del mismo álbum "
 
@@ -1090,7 +1066,6 @@ msgid "Search in Current Playlist"
 msgstr "Buscar en la Lista de Reproducción Actual"
 
 #: src/widget/lyrics_module.py:163
-#, fuzzy
 msgid "Search lrc file for current track"
 msgstr "Buscar Archivos lrc para la Pista Actual "
 
@@ -1123,7 +1098,6 @@ msgid "Select image"
 msgstr ""
 
 #: src/main.py:162
-#, fuzzy
 msgid "Set debug level (0-9)"
 msgstr "Cambiar nivel de depuración (0-9) "
 
@@ -1136,7 +1110,6 @@ msgid "Show Lyrics"
 msgstr "Mostrar Letras"
 
 #: src/main.py:166
-#, fuzzy
 msgid "Show information supported audio file"
 msgstr "Mostrar información sobre los archivos de audio soportados "
 
@@ -1226,7 +1199,6 @@ msgid "Switch to window mode"
 msgstr "Cambiar al Modo de Ventana"
 
 #: src/widget/song_editor.py:368
-#, fuzzy
 msgid "Tag Settings"
 msgstr "Configuración"
 
@@ -1243,7 +1215,6 @@ msgid "Task Manager"
 msgstr ""
 
 #: src/main.py:158
-#, fuzzy
 msgid "This option makes control options like --play to start program"
 msgstr ""
 "Hacer opciones de control como --reproducir iniciar el programa si no se "
@@ -1306,12 +1277,10 @@ msgid "Unknown artist"
 msgstr "Artista Desconocido"
 
 #: src/widget/instance.py:403 src/widget/tray.py:78
-#, fuzzy
 msgid "Unlock Lyrics"
 msgstr "Desbloquear Letras"
 
 #: src/widget/preference.py:711 src/widget/preference.py:855
-#, fuzzy
 msgid "Unplayed"
 msgstr "Reproducido"
 
@@ -1336,7 +1305,6 @@ msgid "Volume"
 msgstr "Volumen"
 
 #: src/widget/preference.py:372 src/widget/tray.py:50
-#, fuzzy
 msgid "Volume Down"
 msgstr "Opciones de Volumen"
 
@@ -1345,7 +1313,6 @@ msgid "Volume Options"
 msgstr "Opciones de Volumen"
 
 #: src/widget/preference.py:371 src/widget/tray.py:49
-#, fuzzy
 msgid "Volume Up"
 msgstr "Volumen"
 
@@ -1358,7 +1325,6 @@ msgstr ""
 "calidad en un tamaño de archivo  menor que MP3. "
 
 #: src/widget/preference.py:190
-#, fuzzy
 msgid "When pressing the close button"
 msgstr "Al pulsar el botón cerrar "
 
