@@ -3,63 +3,45 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
-# Snubbi <carl@manjaro.dk>, 2014
+# Carl Andersen <carl@manjaro.dk>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: DMusic\n"
+"Project-Id-Version: Deepin Music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-06-18 13:29+0800\n"
-"PO-Revision-Date: 2014-01-11 15:38+0000\n"
-"Last-Translator: Snubbi <carl@manjaro.dk>\n"
-"Language-Team: Danish (http://www.transifex.com/projects/p/dmusic/language/"
-"da/)\n"
+"POT-Creation-Date: 2014-07-03 10:15+0800\n"
+"PO-Revision-Date: 2014-06-30 04:51+0000\n"
+"Last-Translator: Carl Andersen <carl@manjaro.dk>\n"
+"Language-Team: Danish (http://www.transifex.com/projects/p/deepin-music/"
+"language/da/)\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: ../src/plugins.py:91
-#, fuzzy
-msgid "Plugin archive is not in the correct format."
-msgstr "Add-on programarkiv er ikke i det rigtige format."
+#: src/widget/preference.py:223
+msgid " ms"
+msgstr "ms"
 
-#: ../src/plugins.py:98
-#, fuzzy, python-format
+#: src/widget/lyrics_search.py:157 src/widget/lyrics_search.py:161
+#, python-format
+msgid "%d lyrics found"
+msgstr "%d lyrics fandt"
+
+#: src/plugins.py:98
+#, python-format
 msgid "A plugin with the name \"%s\" is already installed."
-msgstr "Et add-on program med navnet \"%s\" er allerede installeret."
+msgstr "Et plugin med navnet \"%s\" er allerede installeret."
 
-#: ../src/plugins.py:103
-#, fuzzy
-msgid "Plugin archive contains an unsafe path."
-msgstr "Add-on programarkiv indeholder en usikker sti."
-
-#: ../src/transcoder.py:54
+#: src/transcoder.py:106
 msgid ""
-"Vorbis is an open source, lossy audio codec with high quality output at a "
-"lower file size than MP3."
+"A proprietary and older, but also popular, lossy audio format. The output "
+"effect of CBR is not good as VBR, but is compatible with any player."
 msgstr ""
-"Vorbis er en åben source, data lydafkoder  med høj kvalitetsoutput med en "
-"lavere filstørrelse end MP3."
+"En propitær og ældre, men også populært lydformat. Udgang effekt af CBR er "
+"ikke god som VBR, men er kompatibelt med enhver afspiller."
 
-#: ../src/transcoder.py:66
-msgid ""
-"Free Lossless Audio Codec (FLAC) is an open source codec that compresses but "
-"does not degrade audio quality."
-msgstr ""
-"Free Lossless Audio Codec (FLAC) er en åben source afkoder der komprimerer "
-"men som ikke forringer lydkvaliteten."
-
-#: ../src/transcoder.py:80
-#, fuzzy
-msgid ""
-"Apple's proprietary lossy audio format could give higher quality than MP3 at "
-"lower bitrates."
-msgstr ""
-"Apple's proprietære lydformat afkoder der opnår bedre lydkvalitet end MP3 "
-"ved lavere bitrater"
-
-#: ../src/transcoder.py:93
+#: src/transcoder.py:93
 msgid ""
 "A proprietary and older, but also popular, lossy audio format. VBR gives "
 "higher quality than CBR, but may be incompatible with some players."
@@ -67,1198 +49,287 @@ msgstr ""
 "Et proprietær og ældre, men også et populært, lydformatafkoder. VBR giver "
 "højere kvalitet end CBR, men kan være uforenelig med nogle afspillere."
 
-#: ../src/transcoder.py:106
-#, fuzzy
-msgid ""
-"A proprietary and older, but also popular, lossy audio format. The output "
-"effect of CBR is not good as VBR, but is compatible with any player."
-msgstr ""
-"Et proprietær og ældre, men også et populært, lydformatafkoder. CBR har en "
-"dårligere kvalitet end VBR, men kan bruges med en hvilken som helst "
-"afspiller."
-
-#: ../src/transcoder.py:119
+#: src/transcoder.py:119
 msgid "A very fast Free lossless audio format with good compression."
 msgstr "En superhurtigt fri lydafspiller formatafkoder med god kompression."
 
-#: ../src/library.py:990 ../src/library.py:991 ../src/library.py:992
-#: ../src/library.py:999 ../src/library.py:1000 ../src/library.py:1001
-#: ../src/widget/local_item.py:57
-msgid "Unknown"
-msgstr "Ukendt"
-
-#: ../src/constant.py:28 ../src/widget/information.py:41
-#: ../plugins/pidgin/__init__.py:97 ../plugins/mpris2/mpris_adapter.py:252
-msgid "Deepin Music"
-msgstr "Deepin Musik"
-
-#: ../src/constant.py:29
-msgid "DMusic"
-msgstr "DMusic"
-
-#: ../src/main.py:103
-msgid "Usage: deepin-music-player [OPTION]... [URI]"
-msgstr "Brug: deepin-musik-afspiller [OPTION]... [URI]"
-
-#: ../src/main.py:104
-msgid "Options"
-msgstr "Indstillinger"
-
-#: ../src/main.py:108
-msgid "Control Options"
-msgstr "Kontrol indstillinger"
-
-#: ../src/main.py:110
-msgid "Play the next track"
-msgstr "Aspil det næste spor"
-
-#: ../src/main.py:112
-msgid "Play the previous track"
-msgstr "Afspil det forrige spor"
-
-#: ../src/main.py:114
-msgid "Pause or resume playback"
-msgstr "Pause eller resume afspilning"
-
-#: ../src/main.py:116
-msgid "Seek Forward"
-msgstr "Søg fremad"
-
-#: ../src/main.py:118
-msgid "Seek Backward"
-msgstr "Søg baglæns"
-
-#: ../src/main.py:120
-msgid "Stop playback"
-msgstr "Stop afspilningen"
-
-#: ../src/main.py:124
-msgid "Volume Options"
-msgstr "Lydstyrke indstillinger"
-
-#: ../src/main.py:126
-msgid "Change Volume (VOLUME 0.0-1.0)"
-msgstr "Ænd lydstyrke (LYDSTYRKE 0.0-1.0)"
-
-#: ../src/main.py:129
-msgid "Track information Options"
-msgstr "Spor Informationsindstillinger"
-
-#: ../src/main.py:131
-msgid "Print the title of current track"
-msgstr "Vis titlen af aktuelt spor"
-
-#: ../src/main.py:133
-msgid "Print the album of current track"
-msgstr "Vis albummet af aktuelt spor"
-
-#: ../src/main.py:135
-msgid "Print the artist of current track"
-msgstr "Vis kunstneren af aktuelt spor"
-
-#: ../src/main.py:137
-msgid "Print the length of current track"
-msgstr "Vis længden af aktuelt spor"
-
-#: ../src/main.py:139
-msgid "Print the path of current track"
-msgstr "Vis stien af aktuelt spor"
-
-#: ../src/main.py:141
-msgid "Print current playback position"
-msgstr "Vis aktuel afspilningsposition"
-
-#: ../src/main.py:144
-msgid "Other Options"
-msgstr "Andre indstillinger"
-
-#: ../src/main.py:146
-msgid "Show this help message and exit"
-msgstr "Vis denne hjælpebesked og luk"
-
-#: ../src/main.py:148
-msgid "Start new instance"
-msgstr "Start nyt nummer"
-
-#: ../src/main.py:150
-msgid "Show program's version number and exit."
-msgstr "Vis programs versionnummer og luk."
-
-#: ../src/main.py:152
-#, fuzzy
-msgid "Minimize after started"
-msgstr "Minimer til bakke"
-
-#: ../src/main.py:155
-msgid "Toggle visibility of the GUI (if possible)"
-msgstr "Skift til synlighed på GUI (hvis muligt)"
-
-#: ../src/main.py:158
-#, fuzzy
-msgid "This option makes control options like --play to start program"
-msgstr ""
-"Lav kontrolindstillinger som -- afspil startprogram hvis det ikke er kørende"
-
-#: ../src/main.py:161
-msgid "Development/Debug Options"
-msgstr "Udvikling/Debug Indstillinger"
-
-#: ../src/main.py:162
-#, fuzzy
-msgid "Set debug level (0-9)"
-msgstr "Ændr debug niveau (0-9)"
-
-#: ../src/main.py:166
-#, fuzzy
-msgid "Show information supported audio file"
-msgstr "Vis information om understøttende lydfiler"
-
-#: ../src/widget/song_view.py:437 ../src/widget/song_view.py:780
-#: ../src/widget/converter.py:309 ../src/widget/local_browser.py:339
-msgid "Prompt"
-msgstr "Prompt"
-
-#: ../src/widget/song_view.py:437 ../src/widget/song_view.py:780
-#: ../src/widget/local_browser.py:339
-#, fuzzy
-msgid "Are you sure to delete?"
-msgstr "Er du sikker på at du vil slette dem?"
-
-#: ../src/widget/song_view.py:481
-msgid "Repeat (single)"
-msgstr "Gentag (enkelt)"
-
-#: ../src/widget/song_view.py:482
-msgid "Order play"
-msgstr ""
-
-#: ../src/widget/song_view.py:483
-msgid "Repeat (list)"
-msgstr "Gentag (liste)"
-
-#: ../src/widget/song_view.py:484 ../src/widget/playlist.py:545
-msgid "Randomize"
-msgstr "Randomisere"
-
-#: ../src/widget/song_view.py:507
-msgid "Remove Track from this List"
-msgstr "Fjern spor fra denne liste"
-
-#: ../src/widget/song_view.py:508
-msgid "Remove Unavailable Tracks"
-msgstr "Fjern Uopnåelige spor"
-
-#: ../src/widget/song_view.py:509 ../src/widget/song_view.py:789
-#: ../src/widget/playlist.py:554 ../src/widget/local_browser.py:354
-msgid "Move to Trash"
-msgstr "Flyt til parpirkurv"
-
-#: ../src/widget/song_view.py:510 ../src/widget/webcast_view.py:115
-#: ../src/widget/webcast_view.py:123 ../src/widget/playlist.py:555
-#: ../plugins/musicfm/radio_view.py:135 ../plugins/musicfm/radio_view.py:141
-msgid "Clear List"
-msgstr "Ryd liste"
-
-#: ../src/widget/song_view.py:521
-msgid "URL"
-msgstr "URL"
-
-#: ../src/widget/song_view.py:522 ../src/widget/song_view.py:530
-msgid "File"
-msgstr "Fil"
-
-#: ../src/widget/song_view.py:523 ../src/widget/song_view.py:531
-#, fuzzy
-msgid "Folder(include subdirectories)"
-msgstr "Mappe(inkluder underbiblioteker)"
-
-#: ../src/widget/song_view.py:524 ../src/widget/song_view.py:532
-#: ../src/widget/local_browser.py:91
-msgid "Folder"
-msgstr "Mappe"
-
-#: ../src/widget/song_view.py:542
-msgid "Add URL"
-msgstr "Tilføj URL"
-
-#: ../src/widget/song_view.py:680 ../src/widget/song_editor.py:72
-#: ../src/widget/song_editor.py:202 ../src/widget/lyrics_search.py:83
-msgid "Title"
-msgstr "Titel"
-
-#: ../src/widget/song_view.py:680 ../src/widget/song_editor.py:73
-#: ../src/widget/song_editor.py:203 ../src/widget/lyrics_search.py:83
-#: ../src/widget/local_browser.py:85 ../plugins/notify/__init__.py:43
-msgid "Artist"
-msgstr "Kunstner"
-
-#: ../src/widget/song_view.py:680 ../src/widget/song_editor.py:74
-#: ../src/widget/song_editor.py:204 ../src/widget/local_browser.py:87
-#: ../plugins/notify/__init__.py:45
-msgid "Album"
-msgstr "Album"
-
-#: ../src/widget/song_view.py:680
-#, fuzzy
-msgid "Added Time"
-msgstr "Tilføjet tid"
-
-#: ../src/widget/song_view.py:785 ../src/widget/tray.py:59
-#: ../src/widget/webcast_view.py:119 ../src/widget/webcast_view.py:338
-#: ../src/widget/playlist.py:549 ../src/widget/instance.py:321
-#: ../plugins/musicfm/radio_view.py:139
-msgid "Play"
-msgstr "Afspil"
-
-#: ../src/widget/song_view.py:786 ../src/widget/webcast_view.py:333
-#: ../src/widget/webcast_view.py:339
-msgid "Add to Playlist"
-msgstr "Tilføj til apspilningsliste"
-
-#: ../src/widget/song_view.py:788 ../src/widget/local_browser.py:353
-msgid "Remove from Library"
-msgstr "Fjern fra Bibliotek"
-
-#: ../src/widget/song_view.py:791 ../src/widget/local_browser.py:359
-msgid "Open Directory"
-msgstr "Åbn Mappe"
-
-#: ../src/widget/song_view.py:792 ../src/widget/playlist.py:559
-#: ../src/widget/converter.py:427 ../src/widget/instance.py:341
-#: ../src/widget/instance.py:364
-#, fuzzy
-msgid "Converter"
-msgstr "Konverter"
-
-#: ../src/widget/song_view.py:793 ../src/widget/song_editor.py:335
-#: ../src/widget/playlist.py:561
-msgid "Properties"
-msgstr "Egenskaber"
-
-#: ../src/widget/song_view.py:817 ../src/widget/global_search.py:48
-#: ../src/widget/local_tab.py:28
-msgid "Library"
-msgstr "Bibliotek"
-
-#: ../src/widget/tray.py:49 ../src/widget/preference.py:371
-#, fuzzy
-msgid "Volume Up"
-msgstr "Lydstyrke"
-
-#: ../src/widget/tray.py:50 ../src/widget/preference.py:372
-#, fuzzy
-msgid "Volume Down"
-msgstr "Lydstyrke indstillinger"
-
-#: ../src/widget/tray.py:51
-msgid "Mute"
-msgstr "Lydløs"
-
-#: ../src/widget/tray.py:62 ../src/widget/converter.py:392
-#: ../src/widget/converter.py:412 ../src/widget/converter.py:415
-#: ../src/widget/instance.py:324
-msgid "Pause"
-msgstr "Pause"
-
-#: ../src/widget/tray.py:64 ../src/widget/song_editor.py:341
-#: ../src/widget/headerbar.py:71 ../src/widget/instance.py:330
-#: ../src/widget/preference.py:369
-msgid "Previous"
-msgstr "Forrige"
-
-#: ../src/widget/tray.py:65 ../src/widget/song_editor.py:343
-#: ../src/widget/headerbar.py:72 ../src/widget/instance.py:331
-#: ../src/widget/preference.py:370
-msgid "Next"
-msgstr "Næste"
-
-#: ../src/widget/tray.py:67
-msgid "Volume"
-msgstr "Lydstyrke"
-
-#: ../src/widget/tray.py:72
-#, fuzzy
-msgid "Close Lyrics"
-msgstr "Luk lyrics"
-
-#: ../src/widget/tray.py:73 ../src/widget/instance.py:378
-msgid "Search Lyrics"
-msgstr "Søg på Lyrics"
-
-#: ../src/widget/tray.py:75 ../src/widget/instance.py:399
-msgid "Show Lyrics"
-msgstr "Vis Lyrics"
-
-#: ../src/widget/tray.py:78 ../src/widget/instance.py:403
-#, fuzzy
-msgid "Unlock Lyrics"
-msgstr "Lås lyrics op"
-
-#: ../src/widget/tray.py:80 ../src/widget/lyrics_module.py:155
-#: ../src/widget/instance.py:405
-#, fuzzy
-msgid "Lock Lyrics"
-msgstr "Lås lyrics"
-
-#: ../src/widget/tray.py:83 ../src/widget/instance.py:372
-#: ../src/widget/preference.py:943
-msgid "Preferences"
-msgstr "Præferencer"
-
-#: ../src/widget/tray.py:84 ../src/widget/ui.py:1262
-#: ../src/widget/instance.py:374 ../src/widget/preference.py:196
-msgid "Quit"
-msgstr "Afslut"
-
-#: ../src/widget/webcasts_browser.py:98
-msgid "Region"
-msgstr "Region"
-
-#: ../src/widget/webcasts_browser.py:99 ../src/widget/song_editor.py:205
-#: ../src/widget/local_browser.py:89
-msgid "Genre"
-msgstr "Sangre"
-
-#: ../src/widget/webcasts_browser.py:141
-msgid "Favorites"
-msgstr "Favoritter"
-
-#: ../src/widget/song_notify.py:193 ../src/widget/song_editor.py:97
-#: ../src/widget/preference.py:686 ../src/widget/preference.py:839
-msgid "Size"
-msgstr "Størrelse"
-
-#: ../src/widget/song_notify.py:194 ../src/widget/song_editor.py:96
-msgid "Type"
-msgstr "Type"
-
-#: ../src/widget/song_notify.py:209 ../src/widget/song_editor.py:100
-msgid "Playcount"
-msgstr "Afspilningstælning"
-
-#: ../src/widget/song_notify.py:210 ../src/widget/song_editor.py:97
-msgid "Duration"
-msgstr "Varrighed"
-
-#: ../src/widget/webcast_view.py:114 ../src/widget/webcast_view.py:120
-#: ../src/widget/playlist.py:103 ../plugins/musicfm/radio_view.py:134
-#: ../plugins/musicfm/radio_view.py:140
-msgid "Delete"
-msgstr "Slet"
-
-#: ../src/widget/webcast_view.py:219 ../src/widget/webcast_view.py:368
-msgid "Remove from Favorites"
-msgstr "Fjern fra favoritter"
-
-#: ../src/widget/webcast_view.py:221 ../src/widget/webcast_view.py:370
-msgid "Add to Favorites"
-msgstr "Tilføj til favoritter"
-
-#: ../src/widget/webcast_view.py:450 ../plugins/webcast/__init__.py:34
-#: ../plugins/webcast/__init__.py:36
-msgid "Radio"
-msgstr "Radio"
-
-#: ../src/widget/combo.py:184 ../src/widget/combo.py:233
-#: ../src/widget/playlist.py:536
-msgid "By Artist"
-msgstr "På kunstner"
-
-#: ../src/widget/combo.py:195
-msgid "List view"
-msgstr "Listevisning"
-
-#: ../src/widget/combo.py:234 ../src/widget/playlist.py:538
-msgid "By Genre"
-msgstr "På Genere"
-
-#: ../src/widget/combo.py:235 ../src/widget/playlist.py:537
-msgid "By Album"
-msgstr "På album"
-
-#: ../src/widget/global_keys.py:97
-#, python-format
-msgid "Failed to bind %s !"
-msgstr "Fejlede i at forbinde til %s !"
-
-#: ../src/widget/information.py:76
-msgid "Connecting"
-msgstr "Forbinder"
-
-#: ../src/widget/information.py:106
-#, fuzzy
-msgid "buffering..."
-msgstr "mellemlagring"
-
-#: ../src/widget/dialog.py:34
-msgid "Select Directory"
-msgstr "Vælg mappe"
-
-#: ../src/widget/dialog.py:56
-msgid "Select file"
-msgstr "Vælg fil"
-
-#: ../src/widget/dialog.py:82
-msgid "Export playlist"
-msgstr "Eksporter afspilningsliste"
-
-#: ../src/widget/dialog.py:130
-msgid "Load playlist"
-msgstr "Load afspolningsliste"
-
-#: ../src/widget/lyrics_module.py:151
-#, fuzzy
-msgid "Increase the lyrics size"
-msgstr "forøg lyrics størelsen"
-
-#: ../src/widget/lyrics_module.py:152
-#, fuzzy
-msgid "Decrease the lyrics size"
-msgstr "formindsk lyrics størelsen"
-
-#: ../src/widget/lyrics_module.py:154
-msgid "Select color theme"
-msgstr "Vælg temafarve"
-
-#: ../src/widget/lyrics_module.py:158
-#, fuzzy
-msgid "Karaoke on/off"
-msgstr "karaoke til/fra"
-
-#: ../src/widget/lyrics_module.py:160
-msgid "Switch lines"
-msgstr "Skift linier"
-
-#: ../src/widget/lyrics_module.py:162
-msgid "Open settings panel"
-msgstr "Åbn indstillingspanel"
-
-#: ../src/widget/lyrics_module.py:163
-#, fuzzy
-msgid "Search lrc file for current track"
-msgstr "søg lrc fil for aktuelle spor"
-
-#: ../src/widget/lyrics_module.py:164
-msgid "Close lyrics"
-msgstr "Luk lyrics"
-
-#: ../src/widget/lyrics_module.py:165 ../src/widget/lyrics_module.py:223
-msgid "Lyrics rewind"
-msgstr "Lyrics tilbagespol"
-
-#: ../src/widget/lyrics_module.py:166 ../src/widget/lyrics_module.py:224
-msgid "Lyrics forward"
-msgstr "Lyrics fremad"
-
-#: ../src/widget/lyrics_module.py:167 ../src/widget/lyrics_module.py:243
-msgid "Switch to window mode"
-msgstr "Skift til vinduetilstand"
-
-#: ../src/widget/lyrics_module.py:221
-msgid "Switch to desktop mode"
-msgstr "Skift til skærmtilstand"
-
-#: ../src/widget/lyrics_module.py:226 ../src/widget/lyrics_module.py:236
-#: ../src/widget/lyrics_search.py:59
-msgid "Search"
-msgstr "Søg"
-
-#: ../src/widget/lyrics_module.py:227 ../src/widget/lyrics_module.py:242
-msgid "Settings"
-msgstr "Instillinger"
-
-#: ../src/widget/lyrics_module.py:233
-msgid "Forward 0.5 seconds"
-msgstr "Fremad 0.5 sekunder"
-
-#: ../src/widget/lyrics_module.py:234
-msgid "Rewind 0.5 seconds"
-msgstr "Tilbagespol 0.5 sekunder"
-
-#: ../src/widget/lyrics_module.py:237
-msgid "Adjust lyrics"
-msgstr "Tilpas lyrics"
-
-#: ../src/widget/lyrics_module.py:239
-msgid "Choose local lrc"
-msgstr "Vælg lokal  lrc"
-
-#: ../src/widget/lyrics_module.py:240 ../src/widget/song_editor.py:150
-#: ../src/widget/playlist.py:560 ../src/widget/converter.py:367
-msgid "Open directory"
-msgstr "Åbn mappe"
-
-#: ../src/widget/lyrics_module.py:247
-#, fuzzy
-msgid "Lyrics acquired by Network"
-msgstr "Lyrics mappe"
-
-#: ../src/widget/lyrics_module.py:455 ../src/widget/preference.py:627
-msgid "Vitality yellow"
-msgstr "Vitalitetsgult"
-
-#: ../src/widget/lyrics_module.py:456 ../src/widget/preference.py:628
-msgid "Fresh green"
-msgstr "Frisk grønt"
-
-#: ../src/widget/lyrics_module.py:457 ../src/widget/preference.py:629
-msgid "Playful pink"
-msgstr "Kåd lyserødt"
-
-#: ../src/widget/lyrics_module.py:458 ../src/widget/preference.py:630
-msgid "Cool blue"
-msgstr "Kold blå"
-
-#: ../src/widget/lyrics_module.py:793 ../src/widget/lyrics_module.py:794
-msgid "No lyrics found!"
-msgstr "Ingen lyrics fundet!"
-
-#: ../src/widget/lyrics_module.py:796 ../src/widget/lyrics_module.py:797
-msgid "Searching for lyrics..."
-msgstr "Søger efter lyrics..."
-
-#: ../src/widget/song_editor.py:96 ../src/widget/converter.py:433
-msgid "Format"
-msgstr "Format"
-
-#: ../src/widget/song_editor.py:98
-msgid "Bitrate"
-msgstr "Bithastighed"
-
-#: ../src/widget/song_editor.py:98
-msgid "Rate"
-msgstr "Hastighed"
-
-#: ../src/widget/song_editor.py:99
-msgid "Added"
-msgstr "Tilføjet"
-
-#: ../src/widget/song_editor.py:99
-msgid "Recently"
-msgstr "Nyligt"
-
-#: ../src/widget/song_editor.py:100 ../src/widget/song_editor.py:206
-msgid "Date"
-msgstr "Dato"
-
-#: ../src/widget/song_editor.py:147
-msgid "Location"
-msgstr "Placering"
-
-#: ../src/widget/song_editor.py:214
-msgid "Save"
-msgstr "Gem"
-
-#: ../src/widget/song_editor.py:296 ../src/widget/converter.py:475
-#: ../src/widget/preference.py:252
-msgid "Change"
-msgstr "Ændr"
-
-#: ../src/widget/song_editor.py:299
-msgid "Retrieve from the Internet"
-msgstr "Hent fra Internettet"
-
-#: ../src/widget/song_editor.py:302 ../src/widget/equalizer.py:252
-#: ../src/widget/preference.py:375
-msgid "Reset"
-msgstr "Nulstil"
-
-#: ../src/widget/song_editor.py:321 ../src/widget/local_browser.py:343
-msgid "Select image"
-msgstr "Vælg billede"
-
-#: ../src/widget/song_editor.py:338 ../src/widget/equalizer.py:250
-#: ../src/widget/ui.py:1252 ../src/widget/converter.py:394
-#: ../src/widget/converter.py:449 ../src/widget/lyrics_search.py:89
-#: ../src/widget/preference.py:950
-msgid "Close"
-msgstr "Luk"
-
-#: ../src/widget/song_editor.py:367
-msgid "Track Infomation"
-msgstr "Spor information"
-
-#: ../src/widget/song_editor.py:368
-#, fuzzy
-msgid "Tag Settings"
-msgstr "Instillinger"
-
-#: ../src/widget/song_editor.py:369
-#, fuzzy
-msgid "Cover Settings"
-msgstr "Instillinger"
-
-#: ../src/widget/equalizer.py:176
-msgid "Custom"
-msgstr "Tilpasset"
-
-#: ../src/widget/equalizer.py:177
-msgid "Default"
-msgstr "Standard"
-
-#: ../src/widget/equalizer.py:178 ../plugins/musicfm/radio_genre_page.py:43
-msgid "Classical"
-msgstr "Klassisk"
-
-#: ../src/widget/equalizer.py:179
-msgid "Club"
-msgstr "Klub"
-
-#: ../src/widget/equalizer.py:180
-msgid "Dance"
-msgstr "Dans"
-
-#: ../src/widget/equalizer.py:181
-msgid "Full Bass"
-msgstr "Fuld Bas"
-
-#: ../src/widget/equalizer.py:182
-msgid "Full Bass and Treble"
-msgstr "Fuld Bas og Diskant"
-
-#: ../src/widget/equalizer.py:183
-msgid "Full Treble"
-msgstr "Fuld Diskant"
-
-#: ../src/widget/equalizer.py:184
-msgid "Headphones"
-msgstr "Hovedtelefoner"
-
-#: ../src/widget/equalizer.py:185
-msgid "Large Hall"
-msgstr "Stor Hal"
-
-#: ../src/widget/equalizer.py:186
-msgid "Live"
-msgstr "Live"
-
-#: ../src/widget/equalizer.py:187
-msgid "Party"
-msgstr "Fest"
-
-#: ../src/widget/equalizer.py:188 ../plugins/musicfm/radio_genre_page.py:46
-msgid "Pop"
-msgstr "Pop"
-
-#: ../src/widget/equalizer.py:190 ../plugins/musicfm/radio_genre_page.py:42
-msgid "Rock"
-msgstr "Rock"
-
-#: ../src/widget/equalizer.py:191
-msgid "Ska"
-msgstr "Ska"
-
-#: ../src/widget/equalizer.py:192
-msgid "Soft"
-msgstr "Blød"
-
-#: ../src/widget/equalizer.py:193
-msgid "Soft Rock"
-msgstr "Blød Rock"
-
-#: ../src/widget/equalizer.py:194 ../plugins/musicfm/radio_genre_page.py:47
-msgid "Electronic"
-msgstr "Elektronisk"
-
-#: ../src/widget/equalizer.py:199 ../src/widget/instance.py:363
-msgid "Equalizer"
-msgstr "Equalizer"
-
-#: ../src/widget/equalizer.py:254
-msgid "Predefined"
-msgstr "Predefineret"
-
-#: ../src/widget/jobs_manager.py:44 ../src/widget/jobs_manager.py:153
-msgid "jobs waiting!"
-msgstr "Jobs venter!"
-
-#: ../src/widget/playlist.py:94
-msgid "Search in Current Playlist"
-msgstr "Søg i aktuelle afspilningsliste"
-
-#: ../src/widget/playlist.py:96
-msgid "Playlist Operations"
-msgstr "Afspilningsbetjening"
-
-#: ../src/widget/playlist.py:97 ../src/widget/instance.py:359
+#: src/widget/preference.py:1007
+msgid "About"
+msgstr "Om"
+
+#: src/widget/instance.py:359 src/widget/playlist.py:97
 msgid "Add"
 msgstr "Tilføj"
 
-#: ../src/widget/playlist.py:100 ../src/widget/playlist.py:557
-#: ../src/widget/instance.py:361
-#, fuzzy
-msgid "Playback mode"
-msgstr "Afspilningsorden"
+#: src/widget/ui.py:401
+msgid "Add Local Music"
+msgstr "Tilføj musik lokalt"
 
-#: ../src/widget/playlist.py:183
-msgid "Default List"
-msgstr "Standardliste"
+#: src/widget/song_view.py:542
+msgid "Add URL"
+msgstr "Tilføj URL"
 
-#: ../src/widget/playlist.py:304 ../src/widget/playlist.py:316
-#: ../src/widget/playlist.py:317 ../src/widget/playlist.py:357
-#: ../src/widget/playlist.py:360 ../src/widget/playlist.py:476
-msgid "New List"
-msgstr "Ny liste"
+#: src/widget/webcast_view.py:221 src/widget/webcast_view.py:370
+msgid "Add to Favorites"
+msgstr "Tilføj til favoritter"
 
-#: ../src/widget/playlist.py:305 ../src/widget/playlist.py:477
-msgid "Import List"
-msgstr "Importer liste"
-
-#: ../src/widget/playlist.py:306 ../src/widget/playlist.py:485
-msgid "Open List"
-msgstr "Åbn liste"
-
-#: ../src/widget/playlist.py:307
-msgid "Export List"
-msgstr "Eksporter liste"
-
-#: ../src/widget/playlist.py:308 ../src/widget/playlist.py:484
-msgid "Remove List"
-msgstr "Fjern liste"
-
-#: ../src/widget/playlist.py:310 ../src/widget/playlist.py:479
-#: ../src/widget/playlist.py:487
-msgid "Save all Lists"
-msgstr "Gem alle lister"
-
-#: ../src/widget/playlist.py:483 ../src/widget/playlist.py:493
-msgid "Rename"
-msgstr "Omdøbe"
-
-#: ../src/widget/playlist.py:534
-msgid "By Filename"
-msgstr "På filnavn"
-
-#: ../src/widget/playlist.py:535
-msgid "By Title"
-msgstr "På titel"
-
-#: ../src/widget/playlist.py:539
-msgid "By Track"
-msgstr "På spor"
-
-#: ../src/widget/playlist.py:540
-msgid "By Play Count"
-msgstr "Vha. spilleoptælling"
-
-#: ../src/widget/playlist.py:541
-#, fuzzy
-msgid "By Added Time"
-msgstr "Tilføjet tid"
-
-#: ../src/widget/playlist.py:550 ../src/widget/local_browser.py:351
+#: src/widget/local_browser.py:351 src/widget/playlist.py:550
 msgid "Add to List"
 msgstr "Tilføj til liste"
 
-#: ../src/widget/playlist.py:551
-#, fuzzy
-msgid "Move to List"
-msgstr "flyt til liste"
+#: src/widget/webcast_view.py:333 src/widget/webcast_view.py:339
+#: src/widget/song_view.py:786
+msgid "Add to Playlist"
+msgstr "Tilføj til apspilningsliste"
 
-#: ../src/widget/playlist.py:553
-msgid "Remove Track"
-msgstr "Fjern spor"
-
-#: ../src/widget/playlist.py:558
-msgid "Sort"
-msgstr "Sortere"
-
-#: ../src/widget/local_item.py:59
-msgid "All Tracks"
-msgstr "Alle spor"
-
-#: ../src/widget/local_item.py:67
-msgid "Track(s)"
-msgstr "Spor(erne)"
-
-#: ../src/widget/ui.py:203
-msgid "Need some music? Find it here..."
-msgstr "Har du brug for noget musik? Find det her..."
-
-#: ../src/widget/ui.py:401
-#, fuzzy
-msgid "Add Local Music"
-msgstr "Tilføj musik"
-
-#: ../src/widget/ui.py:1122
-#, fuzzy, python-brace-format
-msgid "Your search {keyword} did not match any items in {from}"
-msgstr "Din søgning {nøgleord} matchede ikke nogen emner i {fra}"
-
-#: ../src/widget/ui.py:1123
-msgid "Suggestions"
-msgstr "Foreslag"
-
-#: ../src/widget/ui.py:1124
-msgid "Make sure all words are spelled correctly."
-msgstr "Sikr dig alle ord er stavet rigtigt."
-
-#: ../src/widget/ui.py:1125
-msgid ""
-"Try more general keywords, such as a title, an artist or the name of an "
-"album."
-msgstr ""
-"Prøv mere generelle nøgleord, så som en titel, en kunstner eller navnet på "
-"et album."
-
-#: ../src/widget/ui.py:1222 ../src/widget/plugins_view.py:166
-msgid "Name"
-msgstr ""
-
-#: ../src/widget/ui.py:1230
-msgid "Author(s)"
-msgstr "Kunstner(ere)"
-
-#: ../src/widget/ui.py:1260 ../src/widget/preference.py:195
-msgid "Minimize to tray"
-msgstr "Minimer til bakke"
-
-#: ../src/widget/ui.py:1266
-msgid "Don't prompt again"
-msgstr "Prompt ikke igen                          "
-
-#: ../src/widget/ui.py:1273
-msgid "OK"
-msgstr "OK"
-
-#: ../src/widget/ui.py:1276
-msgid "Cancel"
-msgstr "Annullere"
-
-#: ../src/widget/converter.py:309
-#, fuzzy
-msgid "Target file already exists, do you want to overwrite it?"
-msgstr "Målfil eksisterer allerede, vil du overskrive den?"
-
-#: ../src/widget/converter.py:369
-msgid "Delete task"
-msgstr "Slet job"
-
-#: ../src/widget/converter.py:370
-msgid "Clear finished tasks"
-msgstr "Ryd færdiggjorde jobs"
-
-#: ../src/widget/converter.py:376 ../src/widget/instance.py:342
-msgid "Task Manager"
-msgstr "Job håndterer"
-
-#: ../src/widget/converter.py:413
-msgid "Continue"
-msgstr "Fortsæt"
-
-#: ../src/widget/converter.py:436
-msgid "Quality"
-msgstr "Kvalitet"
-
-#: ../src/widget/converter.py:444
-msgid "Target file already exists"
-msgstr "Målfil eksisterer allerede"
-
-#: ../src/widget/converter.py:445
-msgid "Ask"
-msgstr "Spørg"
-
-#: ../src/widget/converter.py:445
-msgid "Cover"
-msgstr "Cover"
-
-#: ../src/widget/converter.py:448
-msgid "Start"
-msgstr "Start"
-
-#: ../src/widget/converter.py:450
-#, fuzzy
+#: src/widget/converter.py:450
 msgid "Add to Playlist after finished"
-msgstr "Tilføj til afspilningsliste når du er færdig"
+msgstr "Føj til afspilningsliste efter afslutning"
 
-#: ../src/widget/converter.py:472
-msgid "Output"
-msgstr "Output"
+#: src/widget/song_editor.py:99
+msgid "Added"
+msgstr "Tilføjet"
 
-#: ../src/widget/lyrics_search.py:47
-msgid "Lyrics search"
-msgstr "Lyrics søgning"
+#: src/widget/song_view.py:680
+msgid "Added Time"
+msgstr "Tilføjet Tidspunkt"
 
-#: ../src/widget/lyrics_search.py:54
-msgid "Artist:"
-msgstr "Kunstner:"
+#: src/widget/lyrics_module.py:237
+msgid "Adjust lyrics"
+msgstr "Tilpas lyrics"
 
-#: ../src/widget/lyrics_search.py:55
-msgid "Title:"
-msgstr "Titel:"
+#: src/widget/song_view.py:680 src/widget/song_editor.py:74
+#: src/widget/song_editor.py:204 src/widget/local_browser.py:87
+#: plugins/notify/__init__.py:45
+msgid "Album"
+msgstr "Album"
 
-#: ../src/widget/lyrics_search.py:87
-msgid "Download"
-msgstr "Download"
-
-#: ../src/widget/lyrics_search.py:136
-msgid "Now searching..."
-msgstr "Søger nu..."
-
-#: ../src/widget/lyrics_search.py:138 ../src/widget/lyrics_search.py:163
-msgid "Not found!"
-msgstr "Ikke fundet!"
-
-#: ../src/widget/lyrics_search.py:157 ../src/widget/lyrics_search.py:161
-#, python-format
-msgid "%d lyrics found"
-msgstr "%d lyrics fandt"
-
-#: ../src/widget/lyrics_search.py:170
-msgid "Downloading lyrics..."
-msgstr "Downloader lyrics..."
-
-#: ../src/widget/lyrics_search.py:180
-msgid "File save to"
-msgstr "Gem fil til"
-
-#: ../src/widget/lyrics_search.py:182
-msgid "Download failed."
-msgstr "Download fejlede."
-
-#: ../src/widget/local_browser.py:98
-msgid "Quick Scan"
-msgstr "Hurtig Scan"
-
-#: ../src/widget/local_browser.py:99
-msgid "Scan"
-msgstr "Scan"
-
-#: ../src/widget/local_browser.py:100
-msgid "Refresh"
-msgstr "Genopfrisk"
-
-#: ../src/widget/local_browser.py:350
-msgid "Play All"
-msgstr "Afspil alt"
-
-#: ../src/widget/local_browser.py:361
-msgid "Change Cover"
-msgstr "Ændr Cover"
-
-#: ../src/widget/headerbar.py:63 ../src/widget/preference.py:368
-msgid "Play/Pause"
-msgstr "Afspil/Pause"
-
-#: ../src/widget/headerbar.py:77
-msgid "Show/Hide Lyrics"
-msgstr "Vis/Skjul Lyrics"
-
-#: ../src/widget/plugins_view.py:166 ../src/widget/preference.py:905
-msgid "Version"
-msgstr "Version"
-
-#: ../src/widget/plugins_view.py:166
-msgid "Enable"
-msgstr "Aktivere"
-
-#: ../src/widget/lyrics.py:735
-msgid "Lyrics window"
-msgstr "Lyrics vindue"
-
-#: ../src/widget/instance.py:147
-msgid "Join us"
-msgstr "Mød os"
-
-#: ../src/widget/instance.py:328
-msgid "Forward"
-msgstr "Fremad"
-
-#: ../src/widget/instance.py:329
-msgid "Rewind"
-msgstr "Tilbagespol"
-
-#: ../src/widget/instance.py:360
-#, fuzzy
-msgid "Play Controls"
-msgstr "Kontroller"
-
-#: ../src/widget/instance.py:371
-msgid "View New Features"
-msgstr "Se nye funktioner"
-
-#: ../src/widget/instance.py:397
-msgid "Hide Lyrics"
-msgstr "Skjul Lyrics"
-
-#: ../src/widget/instance.py:480
-msgid "Mini Mode"
-msgstr "Mini tilstand"
-
-#: ../src/widget/instance.py:482
-msgid "Normal Mode"
-msgstr "Normal tilstand"
-
-#: ../src/widget/preference.py:150
-#, fuzzy
-msgid "On starting the player"
-msgstr "Åbn indstillingspanel"
-
-#: ../src/widget/preference.py:157
-msgid "Display splash-screen"
-msgstr "Vis splash-skærm"
-
-#: ../src/widget/preference.py:164
-msgid "Show lyrics"
-msgstr "Vis lyrics"
-
-#: ../src/widget/preference.py:169
-msgid "Start playback automatically"
-msgstr "Start afspilning automatisk"
-
-#: ../src/widget/preference.py:175
-msgid "Resume playback"
-msgstr "Resume afspilning"
-
-#: ../src/widget/preference.py:190
-#, fuzzy
-msgid "When pressing the close button"
-msgstr "Ved trykning på lukkeknap"
-
-#: ../src/widget/preference.py:209
-msgid "Playback settings"
-msgstr "Afspilningsindstillinger"
-
-#: ../src/widget/preference.py:213
-msgid "Enable crossfade"
-msgstr "Aktiver krydsfade"
-
-#: ../src/widget/preference.py:216
-#, fuzzy
-msgid "Seamless switching between the same album"
-msgstr "Inaktiver krydsfade imellem spor i det samme album"
-
-#: ../src/widget/preference.py:221
-#, fuzzy
-msgid "Crossfade"
-msgstr "Aktiver krydsfade"
-
-#: ../src/widget/preference.py:223
-msgid " ms"
-msgstr "ms"
-
-#: ../src/widget/preference.py:241
-msgid "Lyrics directory"
-msgstr "Lyrics mappe"
-
-#: ../src/widget/preference.py:346 ../src/widget/preference.py:1002
-msgid "Hotkeys"
-msgstr "Tastaturgenveje"
-
-#: ../src/widget/preference.py:356
-msgid "Enable hotkeys"
-msgstr "Aktiver tastaturgenveje"
-
-#: ../src/widget/preference.py:362
-msgid "Minimize/Show window"
-msgstr "Minimer/Vis vindue"
-
-#: ../src/widget/preference.py:364
-msgid "Show/Hide lyrics"
-msgstr "Vis/Skjul lyrics"
-
-#: ../src/widget/preference.py:366
-msgid "Lock/Unlock lyrics"
-msgstr "Lås/Åbn lyrics "
-
-#: ../src/widget/preference.py:601 ../src/widget/preference.py:613
-#: ../src/widget/preference.py:845
-msgid "Left"
-msgstr "Venstre"
-
-#: ../src/widget/preference.py:602 ../src/widget/preference.py:614
-#: ../src/widget/preference.py:845
-msgid "Centered"
-msgstr "Centered"
-
-#: ../src/widget/preference.py:603 ../src/widget/preference.py:615
-#: ../src/widget/preference.py:845
-msgid "Right"
-msgstr "Højre"
-
-#: ../src/widget/preference.py:616
-msgid "Justified"
-msgstr "Justeret"
-
-#: ../src/widget/preference.py:642
-msgid "Color scheme"
-msgstr "Farvesystem"
-
-#: ../src/widget/preference.py:650 ../src/widget/preference.py:807
-msgid "Regular"
-msgstr "Regulært"
-
-#: ../src/widget/preference.py:651 ../src/widget/preference.py:808
-msgid "Italic"
-msgstr "Italic"
-
-#: ../src/widget/preference.py:652 ../src/widget/preference.py:809
-msgid "Bold"
-msgstr "Bold"
-
-#: ../src/widget/preference.py:653 ../src/widget/preference.py:810
-msgid "Bold Italic"
-msgstr "Bold Italic"
-
-#: ../src/widget/preference.py:663 ../src/widget/preference.py:818
-msgid "Style"
-msgstr "Stil"
-
-#: ../src/widget/preference.py:671 ../src/widget/preference.py:824
-msgid "Lyrics style"
-msgstr "Lyrics stil"
-
-#: ../src/widget/preference.py:681 ../src/widget/preference.py:833
-msgid "Font"
-msgstr "Font"
-
-#: ../src/widget/preference.py:689
-msgid "Lines"
-msgstr "Linier"
-
-#: ../src/widget/preference.py:690
-msgid "Single"
-msgstr "Enkelt"
-
-#: ../src/widget/preference.py:690
-msgid "Double"
-msgstr "Dobbelt"
-
-#: ../src/widget/preference.py:693 ../src/widget/preference.py:843
+#: src/widget/preference.py:693 src/widget/preference.py:843
 msgid "Alignment"
 msgstr "Justering"
 
-#: ../src/widget/preference.py:702
-msgid "Outline"
-msgstr "topstreg"
+#: src/widget/local_item.py:59
+msgid "All Tracks"
+msgstr "Alle spor"
 
-#: ../src/widget/preference.py:706
-msgid "Stroke"
-msgstr "Bestryg"
-
-#: ../src/widget/preference.py:711 ../src/widget/preference.py:855
-#, fuzzy
-msgid "Unplayed"
-msgstr "Spillet"
-
-#: ../src/widget/preference.py:722 ../src/widget/preference.py:856
-msgid "Played"
-msgstr "Spillet"
-
-#: ../src/widget/preference.py:850
-msgid "Rolling"
-msgstr "Rulning"
-
-#: ../src/widget/preference.py:851
+#: src/widget/preference.py:851
 msgid "Always"
 msgstr "Altid"
 
-#: ../src/widget/preference.py:851
+#: src/transcoder.py:80
+msgid ""
+"Apple's proprietary lossy audio format could give higher quality than MP3 at "
+"lower bitrates."
+msgstr ""
+"Apples proprietære lydformat kan give højere kvalitet end MP3 ved lavere "
+"bitrates."
+
+#: src/widget/song_view.py:437 src/widget/song_view.py:780
+#: src/widget/local_browser.py:339
+msgid "Are you sure to delete?"
+msgstr "Er du sikker på at du vil slette?"
+
+#: src/widget/song_view.py:680 src/widget/song_editor.py:73
+#: src/widget/song_editor.py:203 src/widget/local_browser.py:85
+#: src/widget/lyrics_search.py:83 plugins/notify/__init__.py:43
+msgid "Artist"
+msgstr "Kunstner"
+
+#: src/widget/lyrics_search.py:54
+msgid "Artist:"
+msgstr "Kunstner:"
+
+#: src/widget/converter.py:445
+msgid "Ask"
+msgstr "Spørg"
+
+#: src/source/audiocd.py:86 src/source/audiocd.py:92
+msgid "Audio CD"
+msgstr "Lyd CD"
+
+#: src/widget/ui.py:1230
+msgid "Author(s)"
+msgstr "Kunstner(ere)"
+
+#: src/widget/song_editor.py:98
+msgid "Bitrate"
+msgstr "Bithastighed"
+
+#: plugins/musicfm/radio_genre_page.py:54
+msgid "Blues"
+msgstr "Blues"
+
+#: src/widget/preference.py:652 src/widget/preference.py:809
+msgid "Bold"
+msgstr "Bold"
+
+#: src/widget/preference.py:653 src/widget/preference.py:810
+msgid "Bold Italic"
+msgstr "Bold Italic"
+
+#: src/widget/playlist.py:541
+msgid "By Added Time"
+msgstr "Tilføjelsestidspunkt"
+
+#: src/widget/combo.py:235 src/widget/playlist.py:537
+msgid "By Album"
+msgstr "På album"
+
+#: src/widget/combo.py:184 src/widget/combo.py:233 src/widget/playlist.py:536
+msgid "By Artist"
+msgstr "På kunstner"
+
+#: src/widget/playlist.py:534
+msgid "By Filename"
+msgstr "På filnavn"
+
+#: src/widget/combo.py:234 src/widget/playlist.py:538
+msgid "By Genre"
+msgstr "På Genere"
+
+#: src/widget/playlist.py:540
+msgid "By Play Count"
+msgstr "Vha. spilleoptælling"
+
+#: src/widget/playlist.py:535
+msgid "By Title"
+msgstr "På titel"
+
+#: src/widget/playlist.py:539
+msgid "By Track"
+msgstr "På spor"
+
+#: src/widget/preference.py:851
 msgid "By line"
 msgstr "Af linie"
 
-#: ../src/widget/preference.py:920
-#, fuzzy
+#: src/widget/ui.py:1276
+msgid "Cancel"
+msgstr "Annullere"
+
+#: src/widget/preference.py:602 src/widget/preference.py:614
+#: src/widget/preference.py:845
+msgid "Centered"
+msgstr "Centered"
+
+#: src/widget/preference.py:252 src/widget/song_editor.py:296
+#: src/widget/converter.py:475
+msgid "Change"
+msgstr "Ændr"
+
+#: src/widget/local_browser.py:361
+msgid "Change Cover"
+msgstr "Ændr Cover"
+
+#: src/main.py:126
+msgid "Change Volume (VOLUME 0.0-1.0)"
+msgstr "Ænd lydstyrke (LYDSTYRKE 0.0-1.0)"
+
+#: src/source/local.py:175
+msgid "Check deleted files"
+msgstr "Tjek slettede filer"
+
+#: src/widget/lyrics_module.py:239
+msgid "Choose local lrc"
+msgstr "Vælg lokal  lrc"
+
+#: src/widget/equalizer.py:178 plugins/musicfm/radio_genre_page.py:43
+msgid "Classical"
+msgstr "Klassisk"
+
+#: src/widget/webcast_view.py:115 src/widget/webcast_view.py:123
+#: src/widget/song_view.py:510 src/widget/playlist.py:555
+#: plugins/musicfm/radio_view.py:135 plugins/musicfm/radio_view.py:141
+msgid "Clear List"
+msgstr "Ryd liste"
+
+#: src/widget/converter.py:370
+msgid "Clear finished tasks"
+msgstr "Ryd færdiggjorde jobs"
+
+#: src/widget/equalizer.py:250 src/widget/preference.py:950
+#: src/widget/ui.py:1252 src/widget/song_editor.py:338
+#: src/widget/converter.py:394 src/widget/converter.py:449
+#: src/widget/lyrics_search.py:89
+msgid "Close"
+msgstr "Luk"
+
+#: src/widget/tray.py:72
+msgid "Close Lyrics"
+msgstr "Luk Lyrics"
+
+#: src/widget/lyrics_module.py:164
+msgid "Close lyrics"
+msgstr "Luk lyrics"
+
+#: src/widget/equalizer.py:179
+msgid "Club"
+msgstr "Klub"
+
+#: src/widget/preference.py:642
+msgid "Color scheme"
+msgstr "Farvesystem"
+
+#: src/widget/information.py:76
+msgid "Connecting"
+msgstr "Forbinder"
+
+#: src/widget/converter.py:413
+msgid "Continue"
+msgstr "Fortsæt"
+
+#: src/main.py:108
+msgid "Control Options"
+msgstr "Kontrol indstillinger"
+
+#: src/widget/song_view.py:792 src/widget/instance.py:341
+#: src/widget/instance.py:364 src/widget/converter.py:427
+#: src/widget/playlist.py:559
+msgid "Converter"
+msgstr "Converter"
+
+#: src/widget/preference.py:630 src/widget/lyrics_module.py:458
+msgid "Cool blue"
+msgstr "Kold blå"
+
+#: src/widget/converter.py:445
+msgid "Cover"
+msgstr "Cover"
+
+#: src/widget/song_editor.py:369
+msgid "Cover Settings"
+msgstr "Indstillinger for omslag"
+
+#: src/widget/preference.py:221
+msgid "Crossfade"
+msgstr "Crossfade"
+
+#: src/widget/equalizer.py:176
+msgid "Custom"
+msgstr "Tilpasset"
+
+#: src/constant.py:29
+msgid "DMusic"
+msgstr "DMusic"
+
+#: src/widget/equalizer.py:180
+msgid "Dance"
+msgstr "Dans"
+
+#: src/widget/song_editor.py:100 src/widget/song_editor.py:206
+msgid "Date"
+msgstr "Dato"
+
+#: src/widget/lyrics_module.py:152
+msgid "Decrease the lyrics size"
+msgstr "Formindsk Lyrics"
+
+#: src/constant.py:28 src/widget/information.py:41
+#: plugins/pidgin/__init__.py:97 plugins/mpris2/mpris_adapter.py:252
+msgid "Deepin Music"
+msgstr "Deepin Musik"
+
+#: src/widget/preference.py:920
 msgid ""
 "Deepin Music is a music application designed for Linux users. It's "
 "characterized with lyrics searching, desktop lyrics display,album cover "
@@ -1266,181 +337,1014 @@ msgid ""
 "\n"
 "Deepin Music is free software licensed under GNU GPLv3."
 msgstr ""
-"DMusic er et musikprogram udviklet for Linux brugere. Det tilbyder Lyrics "
-"søgning og dowload, lyrics skrivebordet viser, albums,cover download, resume "
-"afspilning, musik håndtering og valg af udseende.\n"
-"DMusic er fri software, frigivet under GNU GPLv3."
+"Deepin Music er en musikafspiller designet til Linux-brugere. Den er "
+"karakteriseret  ved tekst søgning, desktop lyrics visning, download af album "
+"cover, resume afspilningen, musikhåndtering og udseende udvælgelse\n"
+"\n"
+"Deepin Music er fri software udgivet under GNU GPLv3."
 
-#: ../src/widget/preference.py:1001
-msgid "General"
-msgstr "General"
+#: src/widget/equalizer.py:177
+msgid "Default"
+msgstr "Standard"
 
-#: ../src/widget/preference.py:1003
-msgid "Lyrics"
-msgstr "Lyrics "
+#: src/widget/playlist.py:183
+msgid "Default List"
+msgstr "Standardliste"
 
-#: ../src/widget/preference.py:1004
+#: src/widget/webcast_view.py:114 src/widget/webcast_view.py:120
+#: src/widget/playlist.py:103 plugins/musicfm/radio_view.py:134
+#: plugins/musicfm/radio_view.py:140
+msgid "Delete"
+msgstr "Slet"
+
+#: src/widget/converter.py:369
+msgid "Delete task"
+msgstr "Slet job"
+
+#: src/widget/preference.py:1004
 msgid "Desktop"
 msgstr "Skrivebord"
 
-#: ../src/widget/preference.py:1005
-msgid "Window"
-msgstr "Vindue"
+#: src/main.py:161
+msgid "Development/Debug Options"
+msgstr "Udvikling/Debug Indstillinger"
 
-#: ../src/widget/preference.py:1006
-msgid "Plugins"
-msgstr ""
+#: src/widget/preference.py:157
+msgid "Display splash-screen"
+msgstr "Vis splash-skærm"
 
-#: ../src/widget/preference.py:1007
-msgid "About"
-msgstr "Om"
+#: src/widget/ui.py:1266
+msgid "Don't prompt again"
+msgstr "Prompt ikke igen                          "
 
-#: ../src/source/old.py:112 ../src/source/audiocd.py:78
-msgid "Track"
-msgstr "Spor"
+#: src/widget/preference.py:690
+msgid "Double"
+msgstr "Dobbelt"
 
-#: ../src/source/old.py:113 ../src/source/audiocd.py:79
-msgid "Unknown album"
-msgstr "Ukendt album"
+#: src/widget/lyrics_search.py:87
+msgid "Download"
+msgstr "Download"
 
-#: ../src/source/old.py:114 ../src/source/audiocd.py:80
-msgid "Unknown artist"
-msgstr "Ukendt kunstner"
+#: src/widget/lyrics_search.py:182
+msgid "Download failed."
+msgstr "Download fejlede."
 
-#: ../src/source/audiocd.py:86 ../src/source/audiocd.py:92
-msgid "Audio CD"
-msgstr "Lyd CD"
+#: src/widget/lyrics_search.py:170
+msgid "Downloading lyrics..."
+msgstr "Downloader lyrics..."
 
-#: ../src/source/local.py:43
-msgid "Reading directories..."
-msgstr "Læser mapper..."
+#: src/widget/song_notify.py:210 src/widget/song_editor.py:97
+msgid "Duration"
+msgstr "Varrighed"
 
-#: ../src/source/local.py:175
-msgid "Check deleted files"
-msgstr "Tjek slettede filer"
+#: src/widget/equalizer.py:194 plugins/musicfm/radio_genre_page.py:47
+msgid "Electronic"
+msgstr "Elektronisk"
 
-#: ../src/source/local.py:202
-msgid "Reload database"
-msgstr "Genindlæs database"
+#: src/widget/plugins_view.py:166
+msgid "Enable"
+msgstr "Aktivere"
 
-#: ../plugins/musicfm/radio_genre_page.py:44
-msgid "Jazz"
-msgstr "Jazz"
+#: src/widget/preference.py:213
+msgid "Enable crossfade"
+msgstr "Aktiver krydsfade"
 
-#: ../plugins/musicfm/radio_genre_page.py:45
+#: src/widget/preference.py:356
+msgid "Enable hotkeys"
+msgstr "Aktiver tastaturgenveje"
+
+#: src/widget/equalizer.py:199 src/widget/instance.py:363
+msgid "Equalizer"
+msgstr "Equalizer"
+
+#: src/widget/playlist.py:307
+msgid "Export List"
+msgstr "Eksporter liste"
+
+#: src/widget/dialog.py:82
+msgid "Export playlist"
+msgstr "Eksporter afspilningsliste"
+
+#: src/widget/global_keys.py:97
+#, python-format
+msgid "Failed to bind %s !"
+msgstr "Fejlede i at forbinde til %s !"
+
+#: src/widget/webcasts_browser.py:141
+msgid "Favorites"
+msgstr "Favoritter"
+
+#: src/widget/song_view.py:522 src/widget/song_view.py:530
+msgid "File"
+msgstr "Fil"
+
+#: src/widget/lyrics_search.py:180
+msgid "File save to"
+msgstr "Gem fil til"
+
+#: src/widget/song_view.py:524 src/widget/song_view.py:532
+#: src/widget/local_browser.py:91
+msgid "Folder"
+msgstr "Mappe"
+
+#: src/widget/song_view.py:523 src/widget/song_view.py:531
+msgid "Folder(include subdirectories)"
+msgstr "Folder (inkluderer undermapper)"
+
+#: plugins/musicfm/radio_genre_page.py:45
 msgid "Folk/Country"
 msgstr "Folk/Country"
 
-#: ../plugins/musicfm/radio_genre_page.py:48
-msgid "OST"
-msgstr "OST"
+#: src/widget/preference.py:681 src/widget/preference.py:833
+msgid "Font"
+msgstr "Font"
 
-#: ../plugins/musicfm/radio_genre_page.py:49
-msgid "Light"
-msgstr "Let"
+#: src/widget/song_editor.py:96 src/widget/converter.py:433
+msgid "Format"
+msgstr "Format"
 
-#: ../plugins/musicfm/radio_genre_page.py:50
-msgid "Hip-Hop/Rap"
-msgstr "Hip-Hop/Rap"
+#: src/widget/instance.py:328
+msgid "Forward"
+msgstr "Fremad"
 
-#: ../plugins/musicfm/radio_genre_page.py:51
-msgid "Reggae"
-msgstr "Reggae"
+#: src/widget/lyrics_module.py:233
+msgid "Forward 0.5 seconds"
+msgstr "Fremad 0.5 sekunder"
 
-#: ../plugins/musicfm/radio_genre_page.py:52
-msgid "Latino"
-msgstr "Latino"
+#: src/transcoder.py:66
+msgid ""
+"Free Lossless Audio Codec (FLAC) is an open source codec that compresses but "
+"does not degrade audio quality."
+msgstr ""
+"Free Lossless Audio Codec (FLAC) er en åben source afkoder der komprimerer "
+"men som ikke forringer lydkvaliteten."
 
-#: ../plugins/musicfm/radio_genre_page.py:53
-msgid "World"
-msgstr "World"
+#: src/widget/preference.py:628 src/widget/lyrics_module.py:456
+msgid "Fresh green"
+msgstr "Frisk grønt"
 
-#: ../plugins/musicfm/radio_genre_page.py:54
-msgid "Blues"
-msgstr "Blues"
+#: src/widget/equalizer.py:181
+msgid "Full Bass"
+msgstr "Fuld Bas"
 
-#: ../plugins/musicfm/radio_genre_page.py:55
+#: src/widget/equalizer.py:182
+msgid "Full Bass and Treble"
+msgstr "Fuld Bas og Diskant"
+
+#: src/widget/equalizer.py:183
+msgid "Full Treble"
+msgstr "Fuld Diskant"
+
+#: plugins/musicfm/radio_genre_page.py:55
 msgid "Funk/Soul/R&B"
 msgstr "Funk/Soul/R&B"
 
-#: ../plugins/musicfm/radio_browser.py:78
+#: src/widget/preference.py:1001
+msgid "General"
+msgstr "General"
+
+#: src/widget/webcasts_browser.py:99 src/widget/song_editor.py:205
+#: src/widget/local_browser.py:89
+msgid "Genre"
+msgstr "Sangre"
+
+#: plugins/musicfm/radio_browser.py:80
+msgid "Genres MHz"
+msgstr "Genrer MHz"
+
+#: src/widget/equalizer.py:184
+msgid "Headphones"
+msgstr "Hovedtelefoner"
+
+#: src/widget/instance.py:397
+msgid "Hide Lyrics"
+msgstr "Skjul Lyrics"
+
+#: plugins/musicfm/radio_genre_page.py:50
+msgid "Hip-Hop/Rap"
+msgstr "Hip-Hop/Rap"
+
+#: plugins/musicfm/radio_browser.py:78
 msgid "Home"
 msgstr "Hjem"
 
-#: ../plugins/musicfm/radio_browser.py:79
-#: ../plugins/musicfm/radio_home_page.py:73
+#: plugins/musicfm/radio_home_page.py:73 plugins/musicfm/radio_browser.py:79
 msgid "Hot MHz"
 msgstr "Hot MHz"
 
-#: ../plugins/musicfm/radio_browser.py:80
-#, fuzzy
-msgid "Genres MHz"
-msgstr "Genrer"
+#: src/widget/preference.py:346 src/widget/preference.py:1002
+msgid "Hotkeys"
+msgstr "Tastaturgenveje"
 
-#: ../plugins/musicfm/radio_browser.py:81
-#: ../plugins/musicfm/radio_home_page.py:73
-msgid "Pop MHz"
-msgstr "Pop MHz"
+#: src/widget/playlist.py:305 src/widget/playlist.py:477
+msgid "Import List"
+msgstr "Importer liste"
 
-#: ../plugins/musicfm/radio_item.py:508
+#: src/widget/lyrics_module.py:151
+msgid "Increase the lyrics size"
+msgstr "Forstør lyrics"
+
+#: src/widget/preference.py:651 src/widget/preference.py:808
+msgid "Italic"
+msgstr "Italic"
+
+#: plugins/musicfm/radio_genre_page.py:44
+msgid "Jazz"
+msgstr "Jazz"
+
+#: src/widget/instance.py:147
+msgid "Join us"
+msgstr "Mød os"
+
+#: src/widget/preference.py:616
+msgid "Justified"
+msgstr "Justeret"
+
+#: src/widget/lyrics_module.py:158
+msgid "Karaoke on/off"
+msgstr "Karaoke til/fra"
+
+#: src/widget/equalizer.py:185
+msgid "Large Hall"
+msgstr "Stor Hal"
+
+#: plugins/musicfm/radio_genre_page.py:52
+msgid "Latino"
+msgstr "Latino"
+
+#: src/widget/preference.py:601 src/widget/preference.py:613
+#: src/widget/preference.py:845
+msgid "Left"
+msgstr "Venstre"
+
+#: src/widget/local_tab.py:28 src/widget/song_view.py:817
+#: src/widget/global_search.py:48
+msgid "Library"
+msgstr "Bibliotek"
+
+#: plugins/musicfm/radio_genre_page.py:49
+msgid "Light"
+msgstr "Let"
+
+#: src/widget/preference.py:689
+msgid "Lines"
+msgstr "Linier"
+
+#: src/widget/combo.py:195
+msgid "List view"
+msgstr "Listevisning"
+
+#: src/widget/equalizer.py:186
+msgid "Live"
+msgstr "Live"
+
+#: src/widget/dialog.py:130
+msgid "Load playlist"
+msgstr "Load afspolningsliste"
+
+#: src/widget/song_editor.py:147
+msgid "Location"
+msgstr "Placering"
+
+#: src/widget/lyrics_module.py:155 src/widget/instance.py:405
+#: src/widget/tray.py:80
+msgid "Lock Lyrics"
+msgstr "Luk Lyrics"
+
+#: src/widget/preference.py:366
+msgid "Lock/Unlock lyrics"
+msgstr "Lås/Åbn lyrics "
+
+#: src/widget/preference.py:1003
+msgid "Lyrics"
+msgstr "Lyrics "
+
+#: src/widget/lyrics_module.py:247
+msgid "Lyrics acquired by Network"
+msgstr "Lyrics overtaget af netværk"
+
+#: src/widget/preference.py:241
+msgid "Lyrics directory"
+msgstr "Lyrics mappe"
+
+#: src/widget/lyrics_module.py:166 src/widget/lyrics_module.py:224
+msgid "Lyrics forward"
+msgstr "Lyrics fremad"
+
+#: src/widget/lyrics_module.py:165 src/widget/lyrics_module.py:223
+msgid "Lyrics rewind"
+msgstr "Lyrics tilbagespol"
+
+#: src/widget/lyrics_search.py:47
+msgid "Lyrics search"
+msgstr "Lyrics søgning"
+
+#: src/widget/preference.py:671 src/widget/preference.py:824
+msgid "Lyrics style"
+msgstr "Lyrics stil"
+
+#: src/widget/lyrics.py:735
+msgid "Lyrics window"
+msgstr "Lyrics vindue"
+
+#: src/widget/ui.py:1124
+msgid "Make sure all words are spelled correctly."
+msgstr "Sikr dig alle ord er stavet rigtigt."
+
+#: src/widget/instance.py:480
+msgid "Mini Mode"
+msgstr "Mini tilstand"
+
+#: src/main.py:152
+msgid "Minimize after started"
+msgstr "Minimer efter opstart"
+
+#: src/widget/preference.py:195 src/widget/ui.py:1260
+msgid "Minimize to tray"
+msgstr "Minimer til bakke"
+
+#: src/widget/preference.py:362
+msgid "Minimize/Show window"
+msgstr "Minimer/Vis vindue"
+
+#: plugins/musicfm/radio_item.py:508
 msgid "More"
 msgstr "Mere"
 
-#: ../plugins/musicfm/__init__.py:33 ../plugins/musicfm/__init__.py:35
-#: ../plugins/musicfm/radio_view.py:474
+#: src/widget/playlist.py:551
+msgid "Move to List"
+msgstr "Flyt til liste"
+
+#: src/widget/song_view.py:509 src/widget/song_view.py:789
+#: src/widget/local_browser.py:354 src/widget/playlist.py:554
+msgid "Move to Trash"
+msgstr "Flyt til parpirkurv"
+
+#: plugins/musicfm/__init__.py:33 plugins/musicfm/__init__.py:35
+#: plugins/musicfm/radio_view.py:474
 msgid "MusicFM"
 msgstr "MusikFM"
 
-#~ msgid "Add-on"
-#~ msgstr "Tilføje"
+#: src/widget/tray.py:51
+msgid "Mute"
+msgstr "Lydløs"
 
-#~ msgid "Start minimized"
-#~ msgstr "Start minimeret"
+#: src/widget/ui.py:1222 src/widget/plugins_view.py:166
+msgid "Name"
+msgstr "Navn"
 
-#~ msgid "Play (ordered)"
-#~ msgstr "Afspil (bestemt af dig)"
+#: src/widget/ui.py:203
+msgid "Need some music? Find it here..."
+msgstr "Har du brug for noget musik? Find det her..."
 
-#~ msgid "Random"
-#~ msgstr "Tilfældig"
+#: src/widget/playlist.py:304 src/widget/playlist.py:316
+#: src/widget/playlist.py:317 src/widget/playlist.py:357
+#: src/widget/playlist.py:360 src/widget/playlist.py:476
+msgid "New List"
+msgstr "Ny liste"
 
-#~ msgid "Clear list"
-#~ msgstr "Ryd liste"
+#: src/widget/headerbar.py:72 src/widget/preference.py:370
+#: src/widget/instance.py:331 src/widget/tray.py:65
+#: src/widget/song_editor.py:343
+msgid "Next"
+msgstr "Næste"
 
-#~ msgid "Directory (include subdirectories)"
-#~ msgstr "Mappe (inkluder underbiblioteker)"
+#: src/widget/lyrics_module.py:793 src/widget/lyrics_module.py:794
+msgid "No lyrics found!"
+msgstr "Ingen lyrics fundet!"
 
-#~ msgid "Directory"
-#~ msgstr "Mappe"
+#: src/widget/instance.py:482
+msgid "Normal Mode"
+msgstr "Normal tilstand"
 
-#~ msgid "Increase volume"
-#~ msgstr "Forøg lydstyrken"
+#: src/widget/lyrics_search.py:138 src/widget/lyrics_search.py:163
+msgid "Not found!"
+msgstr "Ikke fundet!"
 
-#~ msgid "Decrease volume"
-#~ msgstr "Formindsk lydstyrken"
+#: src/widget/lyrics_search.py:136
+msgid "Now searching..."
+msgstr "Søger nu..."
 
-#~ msgid "Network get lrc"
-#~ msgstr "Netværk fangede lrc"
+#: src/widget/ui.py:1273
+msgid "OK"
+msgstr "OK"
 
-#~ msgid "Edit tags"
-#~ msgstr "Rediger tags"
+#: plugins/musicfm/radio_genre_page.py:48
+msgid "OST"
+msgstr "OST"
 
-#~ msgid "Edit cover"
-#~ msgstr "Rediger cover"
+#: src/widget/preference.py:150
+msgid "On starting the player"
+msgstr "Ved opstart af afspiller"
 
-#~ msgid "Techno"
-#~ msgstr "Techno"
+#: src/widget/song_view.py:791 src/widget/local_browser.py:359
+msgid "Open Directory"
+msgstr "Åbn Mappe"
 
-#~ msgid "By Date Added"
-#~ msgstr "På dato det er tilføjet"
+#: src/widget/playlist.py:306 src/widget/playlist.py:485
+msgid "Open List"
+msgstr "Åbn liste"
 
-#~ msgid "Startup"
-#~ msgstr "Opstart"
+#: src/widget/lyrics_module.py:240 src/widget/song_editor.py:150
+#: src/widget/converter.py:367 src/widget/playlist.py:560
+msgid "Open directory"
+msgstr "Åbn mappe"
 
-#~ msgid "Fade timeout"
-#~ msgstr "Fade tidsudløb"
+#: src/widget/lyrics_module.py:162
+msgid "Open settings panel"
+msgstr "Åbn indstillingspanel"
 
-#~ msgid "Coming"
-#~ msgstr "Kommer"
+#: src/main.py:104
+msgid "Options"
+msgstr "Indstillinger"
 
-#~ msgid "Add-ons"
-#~ msgstr "Tilføjelser"
+#: src/widget/song_view.py:482
+msgid "Order play"
+msgstr "Afspillingsorden"
+
+#: src/main.py:144
+msgid "Other Options"
+msgstr "Andre indstillinger"
+
+#: src/widget/preference.py:702
+msgid "Outline"
+msgstr "topstreg"
+
+#: src/widget/converter.py:472
+msgid "Output"
+msgstr "Output"
+
+#: src/widget/equalizer.py:187
+msgid "Party"
+msgstr "Fest"
+
+#: src/widget/instance.py:324 src/widget/tray.py:62
+#: src/widget/converter.py:392 src/widget/converter.py:412
+#: src/widget/converter.py:415
+msgid "Pause"
+msgstr "Pause"
+
+#: src/main.py:114
+msgid "Pause or resume playback"
+msgstr "Pause eller resume afspilning"
+
+#: src/widget/webcast_view.py:119 src/widget/webcast_view.py:338
+#: src/widget/song_view.py:785 src/widget/instance.py:321
+#: src/widget/tray.py:59 src/widget/playlist.py:549
+#: plugins/musicfm/radio_view.py:139
+msgid "Play"
+msgstr "Afspil"
+
+#: src/widget/local_browser.py:350
+msgid "Play All"
+msgstr "Afspil alt"
+
+#: src/widget/instance.py:360
+msgid "Play Controls"
+msgstr "Afspilningskontrol"
+
+#: src/main.py:110
+msgid "Play the next track"
+msgstr "Aspil det næste spor"
+
+#: src/main.py:112
+msgid "Play the previous track"
+msgstr "Afspil det forrige spor"
+
+#: src/widget/headerbar.py:63 src/widget/preference.py:368
+msgid "Play/Pause"
+msgstr "Afspil/Pause"
+
+#: src/widget/instance.py:361 src/widget/playlist.py:100
+#: src/widget/playlist.py:557
+msgid "Playback mode"
+msgstr "Playback mode"
+
+#: src/widget/preference.py:209
+msgid "Playback settings"
+msgstr "Afspilningsindstillinger"
+
+#: src/widget/song_notify.py:209 src/widget/song_editor.py:100
+msgid "Playcount"
+msgstr "Afspilningstælning"
+
+#: src/widget/preference.py:722 src/widget/preference.py:856
+msgid "Played"
+msgstr "Spillet"
+
+#: src/widget/preference.py:629 src/widget/lyrics_module.py:457
+msgid "Playful pink"
+msgstr "Kåd lyserødt"
+
+#: src/widget/playlist.py:96
+msgid "Playlist Operations"
+msgstr "Afspilningsbetjening"
+
+#: src/plugins.py:103
+msgid "Plugin archive contains an unsafe path."
+msgstr "Plugin arkiv indeholder en usikker sti."
+
+#: src/plugins.py:91
+msgid "Plugin archive is not in the correct format."
+msgstr "Plugin arkiv er ikke i det korrekte format."
+
+#: src/widget/preference.py:1006
+msgid "Plugins"
+msgstr "Plugins"
+
+#: src/widget/equalizer.py:188 plugins/musicfm/radio_genre_page.py:46
+msgid "Pop"
+msgstr "Pop"
+
+#: plugins/musicfm/radio_home_page.py:73 plugins/musicfm/radio_browser.py:81
+msgid "Pop MHz"
+msgstr "Pop MHz"
+
+#: src/widget/equalizer.py:254
+msgid "Predefined"
+msgstr "Predefineret"
+
+#: src/widget/preference.py:943 src/widget/instance.py:372
+#: src/widget/tray.py:83
+msgid "Preferences"
+msgstr "Præferencer"
+
+#: src/widget/headerbar.py:71 src/widget/preference.py:369
+#: src/widget/instance.py:330 src/widget/tray.py:64
+#: src/widget/song_editor.py:341
+msgid "Previous"
+msgstr "Forrige"
+
+#: src/main.py:141
+msgid "Print current playback position"
+msgstr "Vis aktuel afspilningsposition"
+
+#: src/main.py:133
+msgid "Print the album of current track"
+msgstr "Vis albummet af aktuelt spor"
+
+#: src/main.py:135
+msgid "Print the artist of current track"
+msgstr "Vis kunstneren af aktuelt spor"
+
+#: src/main.py:137
+msgid "Print the length of current track"
+msgstr "Vis længden af aktuelt spor"
+
+#: src/main.py:139
+msgid "Print the path of current track"
+msgstr "Vis stien af aktuelt spor"
+
+#: src/main.py:131
+msgid "Print the title of current track"
+msgstr "Vis titlen af aktuelt spor"
+
+#: src/widget/song_view.py:437 src/widget/song_view.py:780
+#: src/widget/local_browser.py:339 src/widget/converter.py:309
+msgid "Prompt"
+msgstr "Prompt"
+
+#: src/widget/song_view.py:793 src/widget/song_editor.py:335
+#: src/widget/playlist.py:561
+msgid "Properties"
+msgstr "Egenskaber"
+
+#: src/widget/converter.py:436
+msgid "Quality"
+msgstr "Kvalitet"
+
+#: src/widget/local_browser.py:98
+msgid "Quick Scan"
+msgstr "Hurtig Scan"
+
+#: src/widget/preference.py:196 src/widget/ui.py:1262
+#: src/widget/instance.py:374 src/widget/tray.py:84
+msgid "Quit"
+msgstr "Afslut"
+
+#: src/widget/webcast_view.py:450 plugins/webcast/__init__.py:34
+#: plugins/webcast/__init__.py:36
+msgid "Radio"
+msgstr "Radio"
+
+#: src/widget/song_view.py:484 src/widget/playlist.py:545
+msgid "Randomize"
+msgstr "Randomisere"
+
+#: src/widget/song_editor.py:98
+msgid "Rate"
+msgstr "Hastighed"
+
+#: src/source/local.py:43
+msgid "Reading directories..."
+msgstr "Læser mapper..."
+
+#: src/widget/song_editor.py:99
+msgid "Recently"
+msgstr "Nyligt"
+
+#: src/widget/local_browser.py:100
+msgid "Refresh"
+msgstr "Genopfrisk"
+
+#: plugins/musicfm/radio_genre_page.py:51
+msgid "Reggae"
+msgstr "Reggae"
+
+#: src/widget/webcasts_browser.py:98
+msgid "Region"
+msgstr "Region"
+
+#: src/widget/preference.py:650 src/widget/preference.py:807
+msgid "Regular"
+msgstr "Regulært"
+
+#: src/source/local.py:202
+msgid "Reload database"
+msgstr "Genindlæs database"
+
+#: src/widget/playlist.py:308 src/widget/playlist.py:484
+msgid "Remove List"
+msgstr "Fjern liste"
+
+#: src/widget/playlist.py:553
+msgid "Remove Track"
+msgstr "Fjern spor"
+
+#: src/widget/song_view.py:507
+msgid "Remove Track from this List"
+msgstr "Fjern spor fra denne liste"
+
+#: src/widget/song_view.py:508
+msgid "Remove Unavailable Tracks"
+msgstr "Fjern Uopnåelige spor"
+
+#: src/widget/webcast_view.py:219 src/widget/webcast_view.py:368
+msgid "Remove from Favorites"
+msgstr "Fjern fra favoritter"
+
+#: src/widget/song_view.py:788 src/widget/local_browser.py:353
+msgid "Remove from Library"
+msgstr "Fjern fra Bibliotek"
+
+#: src/widget/playlist.py:483 src/widget/playlist.py:493
+msgid "Rename"
+msgstr "Omdøbe"
+
+#: src/widget/song_view.py:483
+msgid "Repeat (list)"
+msgstr "Gentag (liste)"
+
+#: src/widget/song_view.py:481
+msgid "Repeat (single)"
+msgstr "Gentag (enkelt)"
+
+#: src/widget/equalizer.py:252 src/widget/preference.py:375
+#: src/widget/song_editor.py:302
+msgid "Reset"
+msgstr "Nulstil"
+
+#: src/widget/preference.py:175
+msgid "Resume playback"
+msgstr "Resume afspilning"
+
+#: src/widget/song_editor.py:299
+msgid "Retrieve from the Internet"
+msgstr "Hent fra Internettet"
+
+#: src/widget/instance.py:329
+msgid "Rewind"
+msgstr "Tilbagespol"
+
+#: src/widget/lyrics_module.py:234
+msgid "Rewind 0.5 seconds"
+msgstr "Tilbagespol 0.5 sekunder"
+
+#: src/widget/preference.py:603 src/widget/preference.py:615
+#: src/widget/preference.py:845
+msgid "Right"
+msgstr "Højre"
+
+#: src/widget/equalizer.py:190 plugins/musicfm/radio_genre_page.py:42
+msgid "Rock"
+msgstr "Rock"
+
+#: src/widget/preference.py:850
+msgid "Rolling"
+msgstr "Rulning"
+
+#: src/widget/song_editor.py:214
+msgid "Save"
+msgstr "Gem"
+
+#: src/widget/playlist.py:310 src/widget/playlist.py:479
+#: src/widget/playlist.py:487
+msgid "Save all Lists"
+msgstr "Gem alle lister"
+
+#: src/widget/local_browser.py:99
+msgid "Scan"
+msgstr "Scan"
+
+#: src/widget/preference.py:216
+msgid "Seamless switching between the same album"
+msgstr "Problemfri skift mellem samme album"
+
+#: src/widget/lyrics_module.py:226 src/widget/lyrics_module.py:236
+#: src/widget/lyrics_search.py:59
+msgid "Search"
+msgstr "Søg"
+
+#: src/widget/instance.py:378 src/widget/tray.py:73
+msgid "Search Lyrics"
+msgstr "Søg på Lyrics"
+
+#: src/widget/playlist.py:94
+msgid "Search in Current Playlist"
+msgstr "Søg i aktuelle afspilningsliste"
+
+#: src/widget/lyrics_module.py:163
+msgid "Search lrc file for current track"
+msgstr "Søg LRC-fil for det aktuelle spor"
+
+#: src/widget/lyrics_module.py:796 src/widget/lyrics_module.py:797
+msgid "Searching for lyrics..."
+msgstr "Søger efter lyrics..."
+
+#: src/main.py:118
+msgid "Seek Backward"
+msgstr "Søg baglæns"
+
+#: src/main.py:116
+msgid "Seek Forward"
+msgstr "Søg fremad"
+
+#: src/widget/dialog.py:34
+msgid "Select Directory"
+msgstr "Vælg mappe"
+
+#: src/widget/lyrics_module.py:154
+msgid "Select color theme"
+msgstr "Vælg temafarve"
+
+#: src/widget/dialog.py:56
+msgid "Select file"
+msgstr "Vælg fil"
+
+#: src/widget/song_editor.py:321 src/widget/local_browser.py:343
+msgid "Select image"
+msgstr "Vælg billede"
+
+#: src/main.py:162
+msgid "Set debug level (0-9)"
+msgstr "Sæt debug-niveau (0-9)"
+
+#: src/widget/lyrics_module.py:227 src/widget/lyrics_module.py:242
+msgid "Settings"
+msgstr "Instillinger"
+
+#: src/widget/instance.py:399 src/widget/tray.py:75
+msgid "Show Lyrics"
+msgstr "Vis Lyrics"
+
+#: src/main.py:166
+msgid "Show information supported audio file"
+msgstr "Vis information om understøttet lydfiler"
+
+#: src/widget/preference.py:164
+msgid "Show lyrics"
+msgstr "Vis lyrics"
+
+#: src/main.py:150
+msgid "Show program's version number and exit."
+msgstr "Vis programs versionnummer og luk."
+
+#: src/main.py:146
+msgid "Show this help message and exit"
+msgstr "Vis denne hjælpebesked og luk"
+
+#: src/widget/headerbar.py:77
+msgid "Show/Hide Lyrics"
+msgstr "Vis/Skjul Lyrics"
+
+#: src/widget/preference.py:364
+msgid "Show/Hide lyrics"
+msgstr "Vis/Skjul lyrics"
+
+#: src/widget/preference.py:690
+msgid "Single"
+msgstr "Enkelt"
+
+#: src/widget/song_notify.py:193 src/widget/preference.py:686
+#: src/widget/preference.py:839 src/widget/song_editor.py:97
+msgid "Size"
+msgstr "Størrelse"
+
+#: src/widget/equalizer.py:191
+msgid "Ska"
+msgstr "Ska"
+
+#: src/widget/equalizer.py:192
+msgid "Soft"
+msgstr "Blød"
+
+#: src/widget/equalizer.py:193
+msgid "Soft Rock"
+msgstr "Blød Rock"
+
+#: src/widget/playlist.py:558
+msgid "Sort"
+msgstr "Sortere"
+
+#: src/widget/converter.py:448
+msgid "Start"
+msgstr "Start"
+
+#: src/main.py:148
+msgid "Start new instance"
+msgstr "Start nyt nummer"
+
+#: src/widget/preference.py:169
+msgid "Start playback automatically"
+msgstr "Start afspilning automatisk"
+
+#: src/main.py:120
+msgid "Stop playback"
+msgstr "Stop afspilningen"
+
+#: src/widget/preference.py:706
+msgid "Stroke"
+msgstr "Bestryg"
+
+#: src/widget/preference.py:663 src/widget/preference.py:818
+msgid "Style"
+msgstr "Stil"
+
+#: src/widget/ui.py:1123
+msgid "Suggestions"
+msgstr "Foreslag"
+
+#: src/widget/lyrics_module.py:160
+msgid "Switch lines"
+msgstr "Skift linier"
+
+#: src/widget/lyrics_module.py:221
+msgid "Switch to desktop mode"
+msgstr "Skift til skærmtilstand"
+
+#: src/widget/lyrics_module.py:167 src/widget/lyrics_module.py:243
+msgid "Switch to window mode"
+msgstr "Skift til vinduetilstand"
+
+#: src/widget/song_editor.py:368
+msgid "Tag Settings"
+msgstr "Tag Indstillinger"
+
+#: src/widget/converter.py:444
+msgid "Target file already exists"
+msgstr "Målfil eksisterer allerede"
+
+#: src/widget/converter.py:309
+msgid "Target file already exists, do you want to overwrite it?"
+msgstr "Mål filen eksisterer allerede, vil du overskrive den?"
+
+#: src/widget/instance.py:342 src/widget/converter.py:376
+msgid "Task Manager"
+msgstr "Job håndterer"
+
+#: src/main.py:158
+msgid "This option makes control options like --play to start program"
+msgstr ""
+"Denne indstilling laver kontrol muligheder som som - spille for at starte "
+"programmet"
+
+#: src/widget/song_view.py:680 src/widget/song_editor.py:72
+#: src/widget/song_editor.py:202 src/widget/lyrics_search.py:83
+msgid "Title"
+msgstr "Titel"
+
+#: src/widget/lyrics_search.py:55
+msgid "Title:"
+msgstr "Titel:"
+
+#: src/main.py:155
+msgid "Toggle visibility of the GUI (if possible)"
+msgstr "Skift til synlighed på GUI (hvis muligt)"
+
+#: src/source/old.py:112 src/source/audiocd.py:78
+msgid "Track"
+msgstr "Spor"
+
+#: src/widget/song_editor.py:367
+msgid "Track Infomation"
+msgstr "Spor information"
+
+#: src/main.py:129
+msgid "Track information Options"
+msgstr "Spor Informationsindstillinger"
+
+#: src/widget/local_item.py:67
+msgid "Track(s)"
+msgstr "Spor(erne)"
+
+#: src/widget/ui.py:1125
+msgid ""
+"Try more general keywords, such as a title, an artist or the name of an "
+"album."
+msgstr ""
+"Prøv mere generelle nøgleord, så som en titel, en kunstner eller navnet på "
+"et album."
+
+#: src/widget/song_notify.py:194 src/widget/song_editor.py:96
+msgid "Type"
+msgstr "Type"
+
+#: src/widget/song_view.py:521
+msgid "URL"
+msgstr "URL"
+
+#: src/library.py:990 src/library.py:991 src/library.py:992 src/library.py:999
+#: src/library.py:1000 src/library.py:1001 src/widget/local_item.py:57
+msgid "Unknown"
+msgstr "Ukendt"
+
+#: src/source/old.py:113 src/source/audiocd.py:79
+msgid "Unknown album"
+msgstr "Ukendt album"
+
+#: src/source/old.py:114 src/source/audiocd.py:80
+msgid "Unknown artist"
+msgstr "Ukendt kunstner"
+
+#: src/widget/instance.py:403 src/widget/tray.py:78
+msgid "Unlock Lyrics"
+msgstr "Åbn Lyrics "
+
+#: src/widget/preference.py:711 src/widget/preference.py:855
+msgid "Unplayed"
+msgstr "Ikke afspillet"
+
+#: src/main.py:103
+msgid "Usage: deepin-music-player [OPTION]... [URI]"
+msgstr "Brug: deepin-musik-afspiller [OPTION]... [URI]"
+
+#: src/widget/preference.py:905 src/widget/plugins_view.py:166
+msgid "Version"
+msgstr "Version"
+
+#: src/widget/instance.py:371
+msgid "View New Features"
+msgstr "Se nye funktioner"
+
+#: src/widget/preference.py:627 src/widget/lyrics_module.py:455
+msgid "Vitality yellow"
+msgstr "Vitalitetsgult"
+
+#: src/widget/tray.py:67
+msgid "Volume"
+msgstr "Lydstyrke"
+
+#: src/widget/preference.py:372 src/widget/tray.py:50
+msgid "Volume Down"
+msgstr "Lydstyrke ned"
+
+#: src/main.py:124
+msgid "Volume Options"
+msgstr "Lydstyrke indstillinger"
+
+#: src/widget/preference.py:371 src/widget/tray.py:49
+msgid "Volume Up"
+msgstr "Lydstyrke op"
+
+#: src/transcoder.py:54
+msgid ""
+"Vorbis is an open source, lossy audio codec with high quality output at a "
+"lower file size than MP3."
+msgstr ""
+"Vorbis er en åben source, data lydafkoder  med høj kvalitetsoutput med en "
+"lavere filstørrelse end MP3."
+
+#: src/widget/preference.py:190
+msgid "When pressing the close button"
+msgstr "Når du trykker på knappen Luk"
+
+#: src/widget/preference.py:1005
+msgid "Window"
+msgstr "Vindue"
+
+#: plugins/musicfm/radio_genre_page.py:53
+msgid "World"
+msgstr "World"
+
+#: src/widget/ui.py:1122
+#, python-brace-format
+msgid "Your search {keyword} did not match any items in {from}"
+msgstr "Din søgning {nøgleord} matchede ikke nogen emner i {fra}"
+
+#: src/widget/information.py:106
+msgid "buffering..."
+msgstr "buffering ..."
+
+#: src/widget/jobs_manager.py:44 src/widget/jobs_manager.py:153
+msgid "jobs waiting!"
+msgstr "Jobs venter!"
