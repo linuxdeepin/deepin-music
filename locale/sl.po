@@ -3,15 +3,16 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
+# andrej55 <andrej.marsetic@gmail.com>, 2014
 # kloki <klokimass@gmail.com>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: DMusic\n"
+"Project-Id-Version: Deepin Music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-06-18 13:29+0800\n"
-"PO-Revision-Date: 2014-04-05 14:44+0000\n"
-"Last-Translator: kloki <klokimass@gmail.com>\n"
-"Language-Team: Slovenian (http://www.transifex.com/projects/p/dmusic/"
+"POT-Creation-Date: 2014-07-03 10:15+0800\n"
+"PO-Revision-Date: 2014-06-30 04:51+0000\n"
+"Last-Translator: andrej55 <andrej.marsetic@gmail.com>\n"
+"Language-Team: Slovenian (http://www.transifex.com/projects/p/deepin-music/"
 "language/sl/)\n"
 "Language: sl\n"
 "MIME-Version: 1.0\n"
@@ -20,47 +21,27 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n"
 "%100==4 ? 2 : 3);\n"
 
-#: ../src/plugins.py:91
-#, fuzzy
-msgid "Plugin archive is not in the correct format."
-msgstr "Arhiv vključkov ni v pravilnem formatu."
+#: src/widget/preference.py:223
+msgid " ms"
+msgstr "ms"
 
-#: ../src/plugins.py:98
-#, fuzzy, python-format
+#: src/widget/lyrics_search.py:157 src/widget/lyrics_search.py:161
+#, python-format
+msgid "%d lyrics found"
+msgstr "%d besedilo pesmi najdeno"
+
+#: src/plugins.py:98
+#, python-format
 msgid "A plugin with the name \"%s\" is already installed."
-msgstr "Vključek z imenom \"%s\" je že nameščen."
+msgstr "Plugin z imenom \"%s\" je že nameščen."
 
-#: ../src/plugins.py:103
-#, fuzzy
-msgid "Plugin archive contains an unsafe path."
-msgstr "Arhiv vključkov je slab."
-
-#: ../src/transcoder.py:54
+#: src/transcoder.py:106
 msgid ""
-"Vorbis is an open source, lossy audio codec with high quality output at a "
-"lower file size than MP3."
+"A proprietary and older, but also popular, lossy audio format. The output "
+"effect of CBR is not good as VBR, but is compatible with any player."
 msgstr ""
-"Vorbis je odprtokodni, malo potratni zvokovni kodek z visoko kvaliteto "
-"izpisa pri manjši velikosti datoteke kot MP3."
 
-#: ../src/transcoder.py:66
-msgid ""
-"Free Lossless Audio Codec (FLAC) is an open source codec that compresses but "
-"does not degrade audio quality."
-msgstr ""
-"Free Lossless Audio Codec (FLAC) je odprtokodni kodek, ki stisne, ampak ne "
-"poslabša kvalitete zvoka."
-
-#: ../src/transcoder.py:80
-#, fuzzy
-msgid ""
-"Apple's proprietary lossy audio format could give higher quality than MP3 at "
-"lower bitrates."
-msgstr ""
-"Applov lastniški malo potratni zvokovni format, ki pri nižjih bitnih "
-"hitrostih dosega boljšo kvaliteto zvoka kot MP3."
-
-#: ../src/transcoder.py:93
+#: src/transcoder.py:93
 msgid ""
 "A proprietary and older, but also popular, lossy audio format. VBR gives "
 "higher quality than CBR, but may be incompatible with some players."
@@ -69,1200 +50,286 @@ msgstr ""
 "format. VBR ponuja boljšo kvaliteto kot CBR, vendar pa je lahko nezdružljiv "
 "z nekaterimi predvajalniki."
 
-#: ../src/transcoder.py:106
-#, fuzzy
-msgid ""
-"A proprietary and older, but also popular, lossy audio format. The output "
-"effect of CBR is not good as VBR, but is compatible with any player."
-msgstr ""
-"Lastniški in starejši, ampak vseeno popularen, malo potraten zvokovni "
-"format. CBR ponuja slabšo kvaliteto kot VBR, vendar pa je združljiv s "
-"katerim koli predvajalnikom."
-
-#: ../src/transcoder.py:119
+#: src/transcoder.py:119
 msgid "A very fast Free lossless audio format with good compression."
 msgstr ""
 "Zelo hiter brezplačen malo potraten zvokovni format z dobro kompresijo."
 
-#: ../src/library.py:990 ../src/library.py:991 ../src/library.py:992
-#: ../src/library.py:999 ../src/library.py:1000 ../src/library.py:1001
-#: ../src/widget/local_item.py:57
-msgid "Unknown"
-msgstr "Neznan"
-
-#: ../src/constant.py:28 ../src/widget/information.py:41
-#: ../plugins/pidgin/__init__.py:97 ../plugins/mpris2/mpris_adapter.py:252
-msgid "Deepin Music"
-msgstr "Deepin glasba"
-
-#: ../src/constant.py:29
-msgid "DMusic"
-msgstr "DGlasba"
-
-#: ../src/main.py:103
-msgid "Usage: deepin-music-player [OPTION]... [URI]"
-msgstr "Uporaba: deepin-glasbeni-predvajalnik [MOŽNOST]... [URI]"
-
-#: ../src/main.py:104
-msgid "Options"
-msgstr "Možnosti"
-
-#: ../src/main.py:108
-msgid "Control Options"
-msgstr "Možnosti nadzora"
-
-#: ../src/main.py:110
-msgid "Play the next track"
-msgstr "Predvajaj naslednjo skladbo"
-
-#: ../src/main.py:112
-msgid "Play the previous track"
-msgstr "Predvajaj prejšnjo skladbo"
-
-#: ../src/main.py:114
-msgid "Pause or resume playback"
-msgstr "Prekini ali nadaljuj predvajanje"
-
-#: ../src/main.py:116
-msgid "Seek Forward"
-msgstr "Previj naprej"
-
-#: ../src/main.py:118
-msgid "Seek Backward"
-msgstr "Previj nazaj"
-
-#: ../src/main.py:120
-msgid "Stop playback"
-msgstr "Zaustavi predvajanje"
-
-#: ../src/main.py:124
-msgid "Volume Options"
-msgstr "Nastavitve glasnosti"
-
-#: ../src/main.py:126
-msgid "Change Volume (VOLUME 0.0-1.0)"
-msgstr "Spremeni glasnost (GLASNOST 0.0-1.0)"
-
-#: ../src/main.py:129
-msgid "Track information Options"
-msgstr "Možnosti za informacije o skladbi"
-
-#: ../src/main.py:131
-msgid "Print the title of current track"
-msgstr "Prikaži ime trenutne skladbe"
-
-#: ../src/main.py:133
-msgid "Print the album of current track"
-msgstr "Prikaži album trenutne skladbe"
-
-#: ../src/main.py:135
-msgid "Print the artist of current track"
-msgstr "Prikaži izvajalca trenutne skladbe"
-
-#: ../src/main.py:137
-msgid "Print the length of current track"
-msgstr "Prikaži dolžino trenutne skladbe"
-
-#: ../src/main.py:139
-msgid "Print the path of current track"
-msgstr "Pokaži pot trenutne skladbe"
-
-#: ../src/main.py:141
-msgid "Print current playback position"
-msgstr "Prikaži trenutni položaj predvajanja"
-
-#: ../src/main.py:144
-msgid "Other Options"
-msgstr "Ostale možnosti"
-
-#: ../src/main.py:146
-msgid "Show this help message and exit"
-msgstr "Prikaži sporočilo za pomoč in zapri"
-
-#: ../src/main.py:148
-msgid "Start new instance"
-msgstr "Zaženi nov primerek"
-
-#: ../src/main.py:150
-msgid "Show program's version number and exit."
-msgstr "Prikaži različico programa in zapri."
-
-#: ../src/main.py:152
-#, fuzzy
-msgid "Minimize after started"
-msgstr "Pomanjšaj v pult"
-
-#: ../src/main.py:155
-msgid "Toggle visibility of the GUI (if possible)"
-msgstr "Prikaži/Skrij vmesnik (če je možno)"
-
-#: ../src/main.py:158
-#, fuzzy
-msgid "This option makes control options like --play to start program"
-msgstr ""
-"Ustvari možnost nadzora, kot je: --zagon predvajalnika glasbe v primeru "
-"neaktivnosti"
-
-#: ../src/main.py:161
-msgid "Development/Debug Options"
-msgstr "Razvojne/Razhroščevalne možnosti"
-
-#: ../src/main.py:162
-#, fuzzy
-msgid "Set debug level (0-9)"
-msgstr "Spremeni stopnjo razhroščevanja (0-9)"
-
-#: ../src/main.py:166
-#, fuzzy
-msgid "Show information supported audio file"
-msgstr "Prikaži informacije o podprtih zvokovnih datotekah"
-
-#: ../src/widget/song_view.py:437 ../src/widget/song_view.py:780
-#: ../src/widget/converter.py:309 ../src/widget/local_browser.py:339
-msgid "Prompt"
-msgstr "Poziv"
-
-#: ../src/widget/song_view.py:437 ../src/widget/song_view.py:780
-#: ../src/widget/local_browser.py:339
-#, fuzzy
-msgid "Are you sure to delete?"
-msgstr "Ali ste prepričani, da jih želite izbrisati?"
-
-#: ../src/widget/song_view.py:481
-msgid "Repeat (single)"
-msgstr "Ponovi (enkratno)"
-
-#: ../src/widget/song_view.py:482
-msgid "Order play"
-msgstr ""
-
-#: ../src/widget/song_view.py:483
-msgid "Repeat (list)"
-msgstr "Ponavljaj (seznam)"
-
-#: ../src/widget/song_view.py:484 ../src/widget/playlist.py:545
-msgid "Randomize"
-msgstr "Naključno"
-
-#: ../src/widget/song_view.py:507
-msgid "Remove Track from this List"
-msgstr "Odstrani skladbo iz tega seznama"
-
-#: ../src/widget/song_view.py:508
-msgid "Remove Unavailable Tracks"
-msgstr "Odstrani nedostopne skladbe"
-
-#: ../src/widget/song_view.py:509 ../src/widget/song_view.py:789
-#: ../src/widget/playlist.py:554 ../src/widget/local_browser.py:354
-msgid "Move to Trash"
-msgstr "Premakni v smetnjak"
-
-#: ../src/widget/song_view.py:510 ../src/widget/webcast_view.py:115
-#: ../src/widget/webcast_view.py:123 ../src/widget/playlist.py:555
-#: ../plugins/musicfm/radio_view.py:135 ../plugins/musicfm/radio_view.py:141
-msgid "Clear List"
-msgstr "Počisti seznam"
-
-#: ../src/widget/song_view.py:521
-msgid "URL"
-msgstr "URL naslov"
-
-#: ../src/widget/song_view.py:522 ../src/widget/song_view.py:530
-msgid "File"
-msgstr "Datoteka"
-
-#: ../src/widget/song_view.py:523 ../src/widget/song_view.py:531
-#, fuzzy
-msgid "Folder(include subdirectories)"
-msgstr "Imenik (vključujoč podimenike)"
-
-#: ../src/widget/song_view.py:524 ../src/widget/song_view.py:532
-#: ../src/widget/local_browser.py:91
-msgid "Folder"
-msgstr "Mapa"
-
-#: ../src/widget/song_view.py:542
-msgid "Add URL"
-msgstr "Dodaj URL naslov"
-
-#: ../src/widget/song_view.py:680 ../src/widget/song_editor.py:72
-#: ../src/widget/song_editor.py:202 ../src/widget/lyrics_search.py:83
-msgid "Title"
-msgstr "Naslov"
-
-#: ../src/widget/song_view.py:680 ../src/widget/song_editor.py:73
-#: ../src/widget/song_editor.py:203 ../src/widget/lyrics_search.py:83
-#: ../src/widget/local_browser.py:85 ../plugins/notify/__init__.py:43
-msgid "Artist"
-msgstr "Izvajalec"
-
-#: ../src/widget/song_view.py:680 ../src/widget/song_editor.py:74
-#: ../src/widget/song_editor.py:204 ../src/widget/local_browser.py:87
-#: ../plugins/notify/__init__.py:45
-msgid "Album"
-msgstr "Album"
-
-#: ../src/widget/song_view.py:680
-#, fuzzy
-msgid "Added Time"
-msgstr "Čas dodan"
-
-#: ../src/widget/song_view.py:785 ../src/widget/tray.py:59
-#: ../src/widget/webcast_view.py:119 ../src/widget/webcast_view.py:338
-#: ../src/widget/playlist.py:549 ../src/widget/instance.py:321
-#: ../plugins/musicfm/radio_view.py:139
-msgid "Play"
-msgstr "Predvajaj"
-
-#: ../src/widget/song_view.py:786 ../src/widget/webcast_view.py:333
-#: ../src/widget/webcast_view.py:339
-msgid "Add to Playlist"
-msgstr "Dodaj na predvajalni seznam"
-
-#: ../src/widget/song_view.py:788 ../src/widget/local_browser.py:353
-msgid "Remove from Library"
-msgstr "Odstrani iz Knjižnice"
-
-#: ../src/widget/song_view.py:791 ../src/widget/local_browser.py:359
-msgid "Open Directory"
-msgstr "Odpri Imenik"
-
-#: ../src/widget/song_view.py:792 ../src/widget/playlist.py:559
-#: ../src/widget/converter.py:427 ../src/widget/instance.py:341
-#: ../src/widget/instance.py:364
-#, fuzzy
-msgid "Converter"
-msgstr "Pretvori"
-
-#: ../src/widget/song_view.py:793 ../src/widget/song_editor.py:335
-#: ../src/widget/playlist.py:561
-msgid "Properties"
-msgstr "Lastnosti"
-
-#: ../src/widget/song_view.py:817 ../src/widget/global_search.py:48
-#: ../src/widget/local_tab.py:28
-msgid "Library"
-msgstr "Knjižnica"
-
-#: ../src/widget/tray.py:49 ../src/widget/preference.py:371
-#, fuzzy
-msgid "Volume Up"
-msgstr "Glasnost"
-
-#: ../src/widget/tray.py:50 ../src/widget/preference.py:372
-#, fuzzy
-msgid "Volume Down"
-msgstr "Nastavitve glasnosti"
-
-#: ../src/widget/tray.py:51
-msgid "Mute"
-msgstr "Utišaj"
-
-#: ../src/widget/tray.py:62 ../src/widget/converter.py:392
-#: ../src/widget/converter.py:412 ../src/widget/converter.py:415
-#: ../src/widget/instance.py:324
-msgid "Pause"
-msgstr "Premor"
-
-#: ../src/widget/tray.py:64 ../src/widget/song_editor.py:341
-#: ../src/widget/headerbar.py:71 ../src/widget/instance.py:330
-#: ../src/widget/preference.py:369
-msgid "Previous"
-msgstr "Predhodnja"
-
-#: ../src/widget/tray.py:65 ../src/widget/song_editor.py:343
-#: ../src/widget/headerbar.py:72 ../src/widget/instance.py:331
-#: ../src/widget/preference.py:370
-msgid "Next"
-msgstr "Naslednja"
-
-#: ../src/widget/tray.py:67
-msgid "Volume"
-msgstr "Glasnost"
-
-#: ../src/widget/tray.py:72
-#, fuzzy
-msgid "Close Lyrics"
-msgstr "Zapri besedilo"
-
-#: ../src/widget/tray.py:73 ../src/widget/instance.py:378
-msgid "Search Lyrics"
-msgstr "Išči besedilo"
-
-#: ../src/widget/tray.py:75 ../src/widget/instance.py:399
-msgid "Show Lyrics"
-msgstr "Prikaži besedilo"
-
-#: ../src/widget/tray.py:78 ../src/widget/instance.py:403
-#, fuzzy
-msgid "Unlock Lyrics"
-msgstr "Odkleni besedilo"
-
-#: ../src/widget/tray.py:80 ../src/widget/lyrics_module.py:155
-#: ../src/widget/instance.py:405
-#, fuzzy
-msgid "Lock Lyrics"
-msgstr "Zakleni besedilo"
-
-#: ../src/widget/tray.py:83 ../src/widget/instance.py:372
-#: ../src/widget/preference.py:943
-msgid "Preferences"
-msgstr "Lastnosti"
-
-#: ../src/widget/tray.py:84 ../src/widget/ui.py:1262
-#: ../src/widget/instance.py:374 ../src/widget/preference.py:196
-msgid "Quit"
-msgstr "Končaj"
-
-#: ../src/widget/webcasts_browser.py:98
-msgid "Region"
-msgstr "Regija"
-
-#: ../src/widget/webcasts_browser.py:99 ../src/widget/song_editor.py:205
-#: ../src/widget/local_browser.py:89
-msgid "Genre"
-msgstr "Zvrst"
-
-#: ../src/widget/webcasts_browser.py:141
-msgid "Favorites"
-msgstr "Najljubše"
-
-#: ../src/widget/song_notify.py:193 ../src/widget/song_editor.py:97
-#: ../src/widget/preference.py:686 ../src/widget/preference.py:839
-msgid "Size"
-msgstr "Velikost"
-
-#: ../src/widget/song_notify.py:194 ../src/widget/song_editor.py:96
-msgid "Type"
-msgstr "Vrsta"
-
-#: ../src/widget/song_notify.py:209 ../src/widget/song_editor.py:100
-msgid "Playcount"
-msgstr "Število predvajanj"
-
-#: ../src/widget/song_notify.py:210 ../src/widget/song_editor.py:97
-msgid "Duration"
-msgstr "Trajanje"
-
-#: ../src/widget/webcast_view.py:114 ../src/widget/webcast_view.py:120
-#: ../src/widget/playlist.py:103 ../plugins/musicfm/radio_view.py:134
-#: ../plugins/musicfm/radio_view.py:140
-msgid "Delete"
-msgstr "Izbriši"
-
-#: ../src/widget/webcast_view.py:219 ../src/widget/webcast_view.py:368
-msgid "Remove from Favorites"
-msgstr "Odstrani iz Priljubljenih"
-
-#: ../src/widget/webcast_view.py:221 ../src/widget/webcast_view.py:370
-msgid "Add to Favorites"
-msgstr "Dodaj v Priljubljene"
-
-#: ../src/widget/webcast_view.py:450 ../plugins/webcast/__init__.py:34
-#: ../plugins/webcast/__init__.py:36
-msgid "Radio"
-msgstr "Radio"
-
-#: ../src/widget/combo.py:184 ../src/widget/combo.py:233
-#: ../src/widget/playlist.py:536
-msgid "By Artist"
-msgstr "Po izvajalcu"
-
-#: ../src/widget/combo.py:195
-msgid "List view"
-msgstr "Ogled seznama"
-
-#: ../src/widget/combo.py:234 ../src/widget/playlist.py:538
-msgid "By Genre"
-msgstr "Po zvrsti"
-
-#: ../src/widget/combo.py:235 ../src/widget/playlist.py:537
-msgid "By Album"
-msgstr "Po albumu"
-
-#: ../src/widget/global_keys.py:97
-#, python-format
-msgid "Failed to bind %s !"
-msgstr "Ni uspelo povezati %s !"
-
-#: ../src/widget/information.py:76
-msgid "Connecting"
-msgstr "Povezovanje"
-
-#: ../src/widget/information.py:106
-#, fuzzy
-msgid "buffering..."
-msgstr "medpomnenje"
-
-#: ../src/widget/dialog.py:34
-msgid "Select Directory"
-msgstr "Izberi imenik"
-
-#: ../src/widget/dialog.py:56
-msgid "Select file"
-msgstr "Izberi datoteko"
-
-#: ../src/widget/dialog.py:82
-msgid "Export playlist"
-msgstr "Izvozi predvajalni seznam"
-
-#: ../src/widget/dialog.py:130
-msgid "Load playlist"
-msgstr "Naloži predvajalni seznam"
-
-#: ../src/widget/lyrics_module.py:151
-#, fuzzy
-msgid "Increase the lyrics size"
-msgstr "Povečaj velikost besedila"
-
-#: ../src/widget/lyrics_module.py:152
-#, fuzzy
-msgid "Decrease the lyrics size"
-msgstr "Zmanjšaj velikost besedila"
-
-#: ../src/widget/lyrics_module.py:154
-msgid "Select color theme"
-msgstr "Izberi barvno temo"
-
-#: ../src/widget/lyrics_module.py:158
-#, fuzzy
-msgid "Karaoke on/off"
-msgstr "Karaoke vklop/izklop"
-
-#: ../src/widget/lyrics_module.py:160
-msgid "Switch lines"
-msgstr "Zamenjaj vrstice"
-
-#: ../src/widget/lyrics_module.py:162
-msgid "Open settings panel"
-msgstr "Odpri ploščo z nastavitvami"
-
-#: ../src/widget/lyrics_module.py:163
-#, fuzzy
-msgid "Search lrc file for current track"
-msgstr "išči Irc datoteko za trentno skladbo"
-
-#: ../src/widget/lyrics_module.py:164
-msgid "Close lyrics"
-msgstr "Zapri besedilo"
-
-#: ../src/widget/lyrics_module.py:165 ../src/widget/lyrics_module.py:223
-msgid "Lyrics rewind"
-msgstr "Besedilo previj nazaj"
-
-#: ../src/widget/lyrics_module.py:166 ../src/widget/lyrics_module.py:224
-msgid "Lyrics forward"
-msgstr "Besedilo prevrti naprej"
-
-#: ../src/widget/lyrics_module.py:167 ../src/widget/lyrics_module.py:243
-msgid "Switch to window mode"
-msgstr "Preklopi na okenski način"
-
-#: ../src/widget/lyrics_module.py:221
-msgid "Switch to desktop mode"
-msgstr "Preklopi namizni način"
-
-#: ../src/widget/lyrics_module.py:226 ../src/widget/lyrics_module.py:236
-#: ../src/widget/lyrics_search.py:59
-msgid "Search"
-msgstr "Iskanje"
-
-#: ../src/widget/lyrics_module.py:227 ../src/widget/lyrics_module.py:242
-msgid "Settings"
-msgstr "Nastavitve"
-
-#: ../src/widget/lyrics_module.py:233
-msgid "Forward 0.5 seconds"
-msgstr "Naprej za 0.5 sekunde"
-
-#: ../src/widget/lyrics_module.py:234
-msgid "Rewind 0.5 seconds"
-msgstr "Nazaj za 0.5 sekunde"
-
-#: ../src/widget/lyrics_module.py:237
-msgid "Adjust lyrics"
-msgstr "Prilagodi besedilo"
-
-#: ../src/widget/lyrics_module.py:239
-msgid "Choose local lrc"
-msgstr "Izberi krajevni Irc"
-
-#: ../src/widget/lyrics_module.py:240 ../src/widget/song_editor.py:150
-#: ../src/widget/playlist.py:560 ../src/widget/converter.py:367
-msgid "Open directory"
-msgstr "Odpri imenik"
-
-#: ../src/widget/lyrics_module.py:247
-#, fuzzy
-msgid "Lyrics acquired by Network"
-msgstr "Imenik z besedili"
-
-#: ../src/widget/lyrics_module.py:455 ../src/widget/preference.py:627
-msgid "Vitality yellow"
-msgstr "Vitalno rumena"
-
-#: ../src/widget/lyrics_module.py:456 ../src/widget/preference.py:628
-msgid "Fresh green"
-msgstr "Sveže zelena"
-
-#: ../src/widget/lyrics_module.py:457 ../src/widget/preference.py:629
-msgid "Playful pink"
-msgstr "Igrivo roza"
-
-#: ../src/widget/lyrics_module.py:458 ../src/widget/preference.py:630
-msgid "Cool blue"
-msgstr "Hladno modra"
-
-#: ../src/widget/lyrics_module.py:793 ../src/widget/lyrics_module.py:794
-msgid "No lyrics found!"
-msgstr "Besedilo pesmi ni najdeno!"
-
-#: ../src/widget/lyrics_module.py:796 ../src/widget/lyrics_module.py:797
-msgid "Searching for lyrics..."
-msgstr "Iskanje besedila pesmi..."
-
-#: ../src/widget/song_editor.py:96 ../src/widget/converter.py:433
-msgid "Format"
-msgstr "Format"
-
-#: ../src/widget/song_editor.py:98
-msgid "Bitrate"
-msgstr "Bitna hitrost"
-
-#: ../src/widget/song_editor.py:98
-msgid "Rate"
-msgstr "Hitrost"
-
-#: ../src/widget/song_editor.py:99
-msgid "Added"
-msgstr "Dodano"
-
-#: ../src/widget/song_editor.py:99
-msgid "Recently"
-msgstr "Nedavno"
-
-#: ../src/widget/song_editor.py:100 ../src/widget/song_editor.py:206
-msgid "Date"
-msgstr "Datum"
-
-#: ../src/widget/song_editor.py:147
-msgid "Location"
-msgstr "Lokacija"
-
-#: ../src/widget/song_editor.py:214
-msgid "Save"
-msgstr "Shrani"
-
-#: ../src/widget/song_editor.py:296 ../src/widget/converter.py:475
-#: ../src/widget/preference.py:252
-msgid "Change"
-msgstr "Spremeni"
-
-#: ../src/widget/song_editor.py:299
-msgid "Retrieve from the Internet"
-msgstr "Pridobi iz interneta"
-
-#: ../src/widget/song_editor.py:302 ../src/widget/equalizer.py:252
-#: ../src/widget/preference.py:375
-msgid "Reset"
-msgstr "Ponastavi"
-
-#: ../src/widget/song_editor.py:321 ../src/widget/local_browser.py:343
-msgid "Select image"
-msgstr "Izberi sliko"
-
-#: ../src/widget/song_editor.py:338 ../src/widget/equalizer.py:250
-#: ../src/widget/ui.py:1252 ../src/widget/converter.py:394
-#: ../src/widget/converter.py:449 ../src/widget/lyrics_search.py:89
-#: ../src/widget/preference.py:950
-msgid "Close"
-msgstr "Zapri"
-
-#: ../src/widget/song_editor.py:367
-msgid "Track Infomation"
-msgstr "Informacija o skladbi"
-
-#: ../src/widget/song_editor.py:368
-#, fuzzy
-msgid "Tag Settings"
-msgstr "Nastavitve"
-
-#: ../src/widget/song_editor.py:369
-#, fuzzy
-msgid "Cover Settings"
-msgstr "Nastavitve"
-
-#: ../src/widget/equalizer.py:176
-msgid "Custom"
-msgstr "Po meri"
-
-#: ../src/widget/equalizer.py:177
-msgid "Default"
-msgstr "Privzeto"
-
-#: ../src/widget/equalizer.py:178 ../plugins/musicfm/radio_genre_page.py:43
-msgid "Classical"
-msgstr "Klasična"
-
-#: ../src/widget/equalizer.py:179
-msgid "Club"
-msgstr "Klubska"
-
-#: ../src/widget/equalizer.py:180
-msgid "Dance"
-msgstr "Dance"
-
-#: ../src/widget/equalizer.py:181
-msgid "Full Bass"
-msgstr "Polni basi"
-
-#: ../src/widget/equalizer.py:182
-msgid "Full Bass and Treble"
-msgstr "Polni basi in visoki toni"
-
-#: ../src/widget/equalizer.py:183
-msgid "Full Treble"
-msgstr "Polni visoki toni"
-
-#: ../src/widget/equalizer.py:184
-msgid "Headphones"
-msgstr "Slušalke"
-
-#: ../src/widget/equalizer.py:185
-msgid "Large Hall"
-msgstr "Velika dvorana"
-
-#: ../src/widget/equalizer.py:186
-msgid "Live"
-msgstr "V živo"
-
-#: ../src/widget/equalizer.py:187
-msgid "Party"
-msgstr "Zabava"
-
-#: ../src/widget/equalizer.py:188 ../plugins/musicfm/radio_genre_page.py:46
-msgid "Pop"
-msgstr "Pop"
-
-#: ../src/widget/equalizer.py:190 ../plugins/musicfm/radio_genre_page.py:42
-msgid "Rock"
-msgstr "Rock"
-
-#: ../src/widget/equalizer.py:191
-msgid "Ska"
-msgstr "Ska"
-
-#: ../src/widget/equalizer.py:192
-msgid "Soft"
-msgstr "Soft"
-
-#: ../src/widget/equalizer.py:193
-msgid "Soft Rock"
-msgstr "Soft Rock"
-
-#: ../src/widget/equalizer.py:194 ../plugins/musicfm/radio_genre_page.py:47
-msgid "Electronic"
-msgstr "Electronic"
-
-#: ../src/widget/equalizer.py:199 ../src/widget/instance.py:363
-msgid "Equalizer"
-msgstr "Izenačevalnik"
-
-#: ../src/widget/equalizer.py:254
-msgid "Predefined"
-msgstr "Prednastavitve"
-
-#: ../src/widget/jobs_manager.py:44 ../src/widget/jobs_manager.py:153
-msgid "jobs waiting!"
-msgstr "naloge čakajo!"
-
-#: ../src/widget/playlist.py:94
-msgid "Search in Current Playlist"
-msgstr "Išči v trenutnem predvajalnem seznamu"
-
-#: ../src/widget/playlist.py:96
-msgid "Playlist Operations"
-msgstr "Funkcije predvajalnega seznama"
-
-#: ../src/widget/playlist.py:97 ../src/widget/instance.py:359
+#: src/widget/preference.py:1007
+msgid "About"
+msgstr "O programu"
+
+#: src/widget/instance.py:359 src/widget/playlist.py:97
 msgid "Add"
 msgstr "Dodaj"
 
-#: ../src/widget/playlist.py:100 ../src/widget/playlist.py:557
-#: ../src/widget/instance.py:361
-#, fuzzy
-msgid "Playback mode"
-msgstr "Vrstni red predvajanja"
+#: src/widget/ui.py:401
+msgid "Add Local Music"
+msgstr "Dodaj lokalno glasbo"
 
-#: ../src/widget/playlist.py:183
-msgid "Default List"
-msgstr "Privzeti seznam"
+#: src/widget/song_view.py:542
+msgid "Add URL"
+msgstr "Dodaj URL naslov"
 
-#: ../src/widget/playlist.py:304 ../src/widget/playlist.py:316
-#: ../src/widget/playlist.py:317 ../src/widget/playlist.py:357
-#: ../src/widget/playlist.py:360 ../src/widget/playlist.py:476
-msgid "New List"
-msgstr "Nov seznam"
+#: src/widget/webcast_view.py:221 src/widget/webcast_view.py:370
+msgid "Add to Favorites"
+msgstr "Dodaj v Priljubljene"
 
-#: ../src/widget/playlist.py:305 ../src/widget/playlist.py:477
-msgid "Import List"
-msgstr "Uvozi seznam"
-
-#: ../src/widget/playlist.py:306 ../src/widget/playlist.py:485
-msgid "Open List"
-msgstr "Odpri seznam"
-
-#: ../src/widget/playlist.py:307
-msgid "Export List"
-msgstr "Izvozi seznam"
-
-#: ../src/widget/playlist.py:308 ../src/widget/playlist.py:484
-msgid "Remove List"
-msgstr "Odstrani seznam"
-
-#: ../src/widget/playlist.py:310 ../src/widget/playlist.py:479
-#: ../src/widget/playlist.py:487
-msgid "Save all Lists"
-msgstr "Shrani vse sezname"
-
-#: ../src/widget/playlist.py:483 ../src/widget/playlist.py:493
-msgid "Rename"
-msgstr "Preimenuj"
-
-#: ../src/widget/playlist.py:534
-msgid "By Filename"
-msgstr "Po imenu datoteke"
-
-#: ../src/widget/playlist.py:535
-msgid "By Title"
-msgstr "Po naslovu"
-
-#: ../src/widget/playlist.py:539
-msgid "By Track"
-msgstr "Po skladbi"
-
-#: ../src/widget/playlist.py:540
-msgid "By Play Count"
-msgstr "Po številu predvajanj"
-
-#: ../src/widget/playlist.py:541
-#, fuzzy
-msgid "By Added Time"
-msgstr "Čas dodan"
-
-#: ../src/widget/playlist.py:550 ../src/widget/local_browser.py:351
+#: src/widget/local_browser.py:351 src/widget/playlist.py:550
 msgid "Add to List"
 msgstr "Dodaj na seznam"
 
-#: ../src/widget/playlist.py:551
-#, fuzzy
-msgid "Move to List"
-msgstr "Premakni na seznam"
+#: src/widget/webcast_view.py:333 src/widget/webcast_view.py:339
+#: src/widget/song_view.py:786
+msgid "Add to Playlist"
+msgstr "Dodaj na predvajalni seznam"
 
-#: ../src/widget/playlist.py:553
-msgid "Remove Track"
-msgstr "Odstrani skladbo"
-
-#: ../src/widget/playlist.py:558
-msgid "Sort"
-msgstr "Razvrsti"
-
-#: ../src/widget/local_item.py:59
-msgid "All Tracks"
-msgstr "Vse skladbe"
-
-#: ../src/widget/local_item.py:67
-msgid "Track(s)"
-msgstr "Skladba(e)"
-
-#: ../src/widget/ui.py:203
-msgid "Need some music? Find it here..."
-msgstr "Želite malo glasbe? Poiščite jo tukaj..."
-
-#: ../src/widget/ui.py:401
-#, fuzzy
-msgid "Add Local Music"
-msgstr "Dodaj glasbo"
-
-#: ../src/widget/ui.py:1122
-#, python-brace-format
-msgid "Your search {keyword} did not match any items in {from}"
-msgstr "Vaše iskanje {keyword} se ne ujema z nobenim predmetom v {from}"
-
-#: ../src/widget/ui.py:1123
-msgid "Suggestions"
-msgstr "Predlogi"
-
-#: ../src/widget/ui.py:1124
-msgid "Make sure all words are spelled correctly."
-msgstr "Prepričajte se, da so besede črkovane pravilno."
-
-#: ../src/widget/ui.py:1125
-msgid ""
-"Try more general keywords, such as a title, an artist or the name of an "
-"album."
-msgstr ""
-"Poskusite več osnovnih besed, kot naprimer naslov, izvajalec ali naslov "
-"albuma."
-
-#: ../src/widget/ui.py:1222 ../src/widget/plugins_view.py:166
-msgid "Name"
-msgstr ""
-
-#: ../src/widget/ui.py:1230
-msgid "Author(s)"
-msgstr "Avtor(ji)"
-
-#: ../src/widget/ui.py:1260 ../src/widget/preference.py:195
-msgid "Minimize to tray"
-msgstr "Pomanjšaj v pult"
-
-#: ../src/widget/ui.py:1266
-msgid "Don't prompt again"
-msgstr "Ne sprašuj ponovno"
-
-#: ../src/widget/ui.py:1273
-msgid "OK"
-msgstr "Vredu"
-
-#: ../src/widget/ui.py:1276
-msgid "Cancel"
-msgstr "Prekliči"
-
-#: ../src/widget/converter.py:309
-#, fuzzy
-msgid "Target file already exists, do you want to overwrite it?"
-msgstr "Ciljna datoteka že obstaja, ali jo želite prepisati?"
-
-#: ../src/widget/converter.py:369
-msgid "Delete task"
-msgstr "Zbriši opravilo"
-
-#: ../src/widget/converter.py:370
-msgid "Clear finished tasks"
-msgstr "Počisti dokončana opravila"
-
-#: ../src/widget/converter.py:376 ../src/widget/instance.py:342
-msgid "Task Manager"
-msgstr "Upravitelj opravil"
-
-#: ../src/widget/converter.py:413
-msgid "Continue"
-msgstr "Nadaljuj"
-
-#: ../src/widget/converter.py:436
-msgid "Quality"
-msgstr "Kvaliteta"
-
-#: ../src/widget/converter.py:444
-msgid "Target file already exists"
-msgstr "Ciljna datoteka že obstaja"
-
-#: ../src/widget/converter.py:445
-msgid "Ask"
-msgstr "Vprašaj"
-
-#: ../src/widget/converter.py:445
-msgid "Cover"
-msgstr "Ovitek"
-
-#: ../src/widget/converter.py:448
-msgid "Start"
-msgstr "Začni"
-
-#: ../src/widget/converter.py:450
-#, fuzzy
+#: src/widget/converter.py:450
 msgid "Add to Playlist after finished"
-msgstr "Dodaj na predvajalni seznam, ko dokončaš"
+msgstr "Dodaj na seznam predvajanja po končanem"
 
-#: ../src/widget/converter.py:472
-msgid "Output"
-msgstr "Izhod"
+#: src/widget/song_editor.py:99
+msgid "Added"
+msgstr "Dodano"
 
-#: ../src/widget/lyrics_search.py:47
-msgid "Lyrics search"
-msgstr "Iskanje besedila pesmi"
+#: src/widget/song_view.py:680
+msgid "Added Time"
+msgstr "Dodan čas"
 
-#: ../src/widget/lyrics_search.py:54
-msgid "Artist:"
-msgstr "Izvajalec:"
+#: src/widget/lyrics_module.py:237
+msgid "Adjust lyrics"
+msgstr "Prilagodi besedilo"
 
-#: ../src/widget/lyrics_search.py:55
-msgid "Title:"
-msgstr "Naslov:"
+#: src/widget/song_view.py:680 src/widget/song_editor.py:74
+#: src/widget/song_editor.py:204 src/widget/local_browser.py:87
+#: plugins/notify/__init__.py:45
+msgid "Album"
+msgstr "Album"
 
-#: ../src/widget/lyrics_search.py:87
-msgid "Download"
-msgstr "Prenos"
-
-#: ../src/widget/lyrics_search.py:136
-msgid "Now searching..."
-msgstr "Iskanje..."
-
-#: ../src/widget/lyrics_search.py:138 ../src/widget/lyrics_search.py:163
-msgid "Not found!"
-msgstr "Ni najdeno!"
-
-#: ../src/widget/lyrics_search.py:157 ../src/widget/lyrics_search.py:161
-#, python-format
-msgid "%d lyrics found"
-msgstr "%d besedilo pesmi najdeno"
-
-#: ../src/widget/lyrics_search.py:170
-msgid "Downloading lyrics..."
-msgstr "Prenašanje besedila pesmi..."
-
-#: ../src/widget/lyrics_search.py:180
-msgid "File save to"
-msgstr "Shrani datoteko v"
-
-#: ../src/widget/lyrics_search.py:182
-msgid "Download failed."
-msgstr "Prenos ni uspel."
-
-#: ../src/widget/local_browser.py:98
-msgid "Quick Scan"
-msgstr "Hitri pregled"
-
-#: ../src/widget/local_browser.py:99
-msgid "Scan"
-msgstr "Pregled"
-
-#: ../src/widget/local_browser.py:100
-msgid "Refresh"
-msgstr "Osveži"
-
-#: ../src/widget/local_browser.py:350
-msgid "Play All"
-msgstr "Predvajaj vse"
-
-#: ../src/widget/local_browser.py:361
-msgid "Change Cover"
-msgstr "Zamenjaj ovitek"
-
-#: ../src/widget/headerbar.py:63 ../src/widget/preference.py:368
-msgid "Play/Pause"
-msgstr "Predvajaj/Premor"
-
-#: ../src/widget/headerbar.py:77
-msgid "Show/Hide Lyrics"
-msgstr "Prikaži/Skrij besedilo"
-
-#: ../src/widget/plugins_view.py:166 ../src/widget/preference.py:905
-msgid "Version"
-msgstr "Različica"
-
-#: ../src/widget/plugins_view.py:166
-msgid "Enable"
-msgstr "Omogoči"
-
-#: ../src/widget/lyrics.py:735
-msgid "Lyrics window"
-msgstr "Okno z besedilom pesmi"
-
-#: ../src/widget/instance.py:147
-msgid "Join us"
-msgstr "Pridruži se nam"
-
-#: ../src/widget/instance.py:328
-msgid "Forward"
-msgstr "Prevrti naprej"
-
-#: ../src/widget/instance.py:329
-msgid "Rewind"
-msgstr "Prevrti nazaj"
-
-#: ../src/widget/instance.py:360
-#, fuzzy
-msgid "Play Controls"
-msgstr "Kontrole"
-
-#: ../src/widget/instance.py:371
-msgid "View New Features"
-msgstr "Poglej nove zmožnosti"
-
-#: ../src/widget/instance.py:397
-msgid "Hide Lyrics"
-msgstr "Skrij besedilo"
-
-#: ../src/widget/instance.py:480
-msgid "Mini Mode"
-msgstr "Pomanjšani način"
-
-#: ../src/widget/instance.py:482
-msgid "Normal Mode"
-msgstr "Normalni način"
-
-#: ../src/widget/preference.py:150
-#, fuzzy
-msgid "On starting the player"
-msgstr "Odpri ploščo z nastavitvami"
-
-#: ../src/widget/preference.py:157
-msgid "Display splash-screen"
-msgstr "Pokaži pojavno okno"
-
-#: ../src/widget/preference.py:164
-msgid "Show lyrics"
-msgstr "Prikaži besedilo"
-
-#: ../src/widget/preference.py:169
-msgid "Start playback automatically"
-msgstr "Samodejno zaženi predvajanje"
-
-#: ../src/widget/preference.py:175
-msgid "Resume playback"
-msgstr "Nadaljuj predvajanje"
-
-#: ../src/widget/preference.py:190
-#, fuzzy
-msgid "When pressing the close button"
-msgstr "Ob pritisku na gumb Zapri"
-
-#: ../src/widget/preference.py:209
-msgid "Playback settings"
-msgstr "Nastavitve predvajanja"
-
-#: ../src/widget/preference.py:213
-msgid "Enable crossfade"
-msgstr "Omogoči mešanje"
-
-#: ../src/widget/preference.py:216
-#, fuzzy
-msgid "Seamless switching between the same album"
-msgstr "Onemogoči mešanje med skladbami v istem albumu"
-
-#: ../src/widget/preference.py:221
-#, fuzzy
-msgid "Crossfade"
-msgstr "Omogoči mešanje"
-
-#: ../src/widget/preference.py:223
-msgid " ms"
-msgstr "ms"
-
-#: ../src/widget/preference.py:241
-msgid "Lyrics directory"
-msgstr "Imenik z besedili"
-
-#: ../src/widget/preference.py:346 ../src/widget/preference.py:1002
-msgid "Hotkeys"
-msgstr "Tipkovnične bližnjice"
-
-#: ../src/widget/preference.py:356
-msgid "Enable hotkeys"
-msgstr "Omogoči tipkovnične bližnjice"
-
-#: ../src/widget/preference.py:362
-msgid "Minimize/Show window"
-msgstr "Pomanjšaj/Prikaži okno"
-
-#: ../src/widget/preference.py:364
-msgid "Show/Hide lyrics"
-msgstr "Prikaži/Skrij besedilo"
-
-#: ../src/widget/preference.py:366
-msgid "Lock/Unlock lyrics"
-msgstr "Zakleni/Odkleni besedilo"
-
-#: ../src/widget/preference.py:601 ../src/widget/preference.py:613
-#: ../src/widget/preference.py:845
-msgid "Left"
-msgstr "Levo"
-
-#: ../src/widget/preference.py:602 ../src/widget/preference.py:614
-#: ../src/widget/preference.py:845
-msgid "Centered"
-msgstr "Sredinsko"
-
-#: ../src/widget/preference.py:603 ../src/widget/preference.py:615
-#: ../src/widget/preference.py:845
-msgid "Right"
-msgstr "Desno"
-
-#: ../src/widget/preference.py:616
-msgid "Justified"
-msgstr "Zadoščeno"
-
-#: ../src/widget/preference.py:642
-msgid "Color scheme"
-msgstr "Barvna shema"
-
-#: ../src/widget/preference.py:650 ../src/widget/preference.py:807
-msgid "Regular"
-msgstr "Običajno"
-
-#: ../src/widget/preference.py:651 ../src/widget/preference.py:808
-msgid "Italic"
-msgstr "Ležeče"
-
-#: ../src/widget/preference.py:652 ../src/widget/preference.py:809
-msgid "Bold"
-msgstr "Krepko"
-
-#: ../src/widget/preference.py:653 ../src/widget/preference.py:810
-msgid "Bold Italic"
-msgstr "Krepko ležeče"
-
-#: ../src/widget/preference.py:663 ../src/widget/preference.py:818
-msgid "Style"
-msgstr "Slog"
-
-#: ../src/widget/preference.py:671 ../src/widget/preference.py:824
-msgid "Lyrics style"
-msgstr "Slog besedila"
-
-#: ../src/widget/preference.py:681 ../src/widget/preference.py:833
-msgid "Font"
-msgstr "Pisava"
-
-#: ../src/widget/preference.py:689
-msgid "Lines"
-msgstr "Vrstice"
-
-#: ../src/widget/preference.py:690
-msgid "Single"
-msgstr "Enojna"
-
-#: ../src/widget/preference.py:690
-msgid "Double"
-msgstr "Dvojna"
-
-#: ../src/widget/preference.py:693 ../src/widget/preference.py:843
+#: src/widget/preference.py:693 src/widget/preference.py:843
 msgid "Alignment"
 msgstr "Poravnava"
 
-#: ../src/widget/preference.py:702
-msgid "Outline"
-msgstr "Osenčenost"
+#: src/widget/local_item.py:59
+msgid "All Tracks"
+msgstr "Vse skladbe"
 
-#: ../src/widget/preference.py:706
-msgid "Stroke"
-msgstr "Barva"
-
-#: ../src/widget/preference.py:711 ../src/widget/preference.py:855
-#, fuzzy
-msgid "Unplayed"
-msgstr "Zaigrane"
-
-#: ../src/widget/preference.py:722 ../src/widget/preference.py:856
-msgid "Played"
-msgstr "Zaigrane"
-
-#: ../src/widget/preference.py:850
-msgid "Rolling"
-msgstr "Pomikanje"
-
-#: ../src/widget/preference.py:851
+#: src/widget/preference.py:851
 msgid "Always"
 msgstr "Vedno"
 
-#: ../src/widget/preference.py:851
+#: src/transcoder.py:80
+msgid ""
+"Apple's proprietary lossy audio format could give higher quality than MP3 at "
+"lower bitrates."
+msgstr ""
+
+#: src/widget/song_view.py:437 src/widget/song_view.py:780
+#: src/widget/local_browser.py:339
+msgid "Are you sure to delete?"
+msgstr "Ali ste prepričani, da želite izbrisati?"
+
+#: src/widget/song_view.py:680 src/widget/song_editor.py:73
+#: src/widget/song_editor.py:203 src/widget/local_browser.py:85
+#: src/widget/lyrics_search.py:83 plugins/notify/__init__.py:43
+msgid "Artist"
+msgstr "Izvajalec"
+
+#: src/widget/lyrics_search.py:54
+msgid "Artist:"
+msgstr "Izvajalec:"
+
+#: src/widget/converter.py:445
+msgid "Ask"
+msgstr "Vprašaj"
+
+#: src/source/audiocd.py:86 src/source/audiocd.py:92
+msgid "Audio CD"
+msgstr "Glasbeni CD"
+
+#: src/widget/ui.py:1230
+msgid "Author(s)"
+msgstr "Avtor(ji)"
+
+#: src/widget/song_editor.py:98
+msgid "Bitrate"
+msgstr "Bitna hitrost"
+
+#: plugins/musicfm/radio_genre_page.py:54
+msgid "Blues"
+msgstr "Blues"
+
+#: src/widget/preference.py:652 src/widget/preference.py:809
+msgid "Bold"
+msgstr "Krepko"
+
+#: src/widget/preference.py:653 src/widget/preference.py:810
+msgid "Bold Italic"
+msgstr "Krepko ležeče"
+
+#: src/widget/playlist.py:541
+msgid "By Added Time"
+msgstr "Po dodanem času"
+
+#: src/widget/combo.py:235 src/widget/playlist.py:537
+msgid "By Album"
+msgstr "Po albumu"
+
+#: src/widget/combo.py:184 src/widget/combo.py:233 src/widget/playlist.py:536
+msgid "By Artist"
+msgstr "Po izvajalcu"
+
+#: src/widget/playlist.py:534
+msgid "By Filename"
+msgstr "Po imenu datoteke"
+
+#: src/widget/combo.py:234 src/widget/playlist.py:538
+msgid "By Genre"
+msgstr "Po zvrsti"
+
+#: src/widget/playlist.py:540
+msgid "By Play Count"
+msgstr "Po številu predvajanj"
+
+#: src/widget/playlist.py:535
+msgid "By Title"
+msgstr "Po naslovu"
+
+#: src/widget/playlist.py:539
+msgid "By Track"
+msgstr "Po skladbi"
+
+#: src/widget/preference.py:851
 msgid "By line"
 msgstr "Po vrstici"
 
-#: ../src/widget/preference.py:920
-#, fuzzy
+#: src/widget/ui.py:1276
+msgid "Cancel"
+msgstr "Prekliči"
+
+#: src/widget/preference.py:602 src/widget/preference.py:614
+#: src/widget/preference.py:845
+msgid "Centered"
+msgstr "Sredinsko"
+
+#: src/widget/preference.py:252 src/widget/song_editor.py:296
+#: src/widget/converter.py:475
+msgid "Change"
+msgstr "Spremeni"
+
+#: src/widget/local_browser.py:361
+msgid "Change Cover"
+msgstr "Zamenjaj ovitek"
+
+#: src/main.py:126
+msgid "Change Volume (VOLUME 0.0-1.0)"
+msgstr "Spremeni glasnost (GLASNOST 0.0-1.0)"
+
+#: src/source/local.py:175
+msgid "Check deleted files"
+msgstr "Preverite izbrisane datoteke"
+
+#: src/widget/lyrics_module.py:239
+msgid "Choose local lrc"
+msgstr "Izberi krajevni Irc"
+
+#: src/widget/equalizer.py:178 plugins/musicfm/radio_genre_page.py:43
+msgid "Classical"
+msgstr "Klasična"
+
+#: src/widget/webcast_view.py:115 src/widget/webcast_view.py:123
+#: src/widget/song_view.py:510 src/widget/playlist.py:555
+#: plugins/musicfm/radio_view.py:135 plugins/musicfm/radio_view.py:141
+msgid "Clear List"
+msgstr "Počisti seznam"
+
+#: src/widget/converter.py:370
+msgid "Clear finished tasks"
+msgstr "Počisti dokončana opravila"
+
+#: src/widget/equalizer.py:250 src/widget/preference.py:950
+#: src/widget/ui.py:1252 src/widget/song_editor.py:338
+#: src/widget/converter.py:394 src/widget/converter.py:449
+#: src/widget/lyrics_search.py:89
+msgid "Close"
+msgstr "Zapri"
+
+#: src/widget/tray.py:72
+msgid "Close Lyrics"
+msgstr "Zapri Lyrics-e"
+
+#: src/widget/lyrics_module.py:164
+msgid "Close lyrics"
+msgstr "Zapri besedilo"
+
+#: src/widget/equalizer.py:179
+msgid "Club"
+msgstr "Klubska"
+
+#: src/widget/preference.py:642
+msgid "Color scheme"
+msgstr "Barvna shema"
+
+#: src/widget/information.py:76
+msgid "Connecting"
+msgstr "Povezovanje"
+
+#: src/widget/converter.py:413
+msgid "Continue"
+msgstr "Nadaljuj"
+
+#: src/main.py:108
+msgid "Control Options"
+msgstr "Možnosti nadzora"
+
+#: src/widget/song_view.py:792 src/widget/instance.py:341
+#: src/widget/instance.py:364 src/widget/converter.py:427
+#: src/widget/playlist.py:559
+msgid "Converter"
+msgstr "Pretvornik"
+
+#: src/widget/preference.py:630 src/widget/lyrics_module.py:458
+msgid "Cool blue"
+msgstr "Hladno modra"
+
+#: src/widget/converter.py:445
+msgid "Cover"
+msgstr "Ovitek"
+
+#: src/widget/song_editor.py:369
+msgid "Cover Settings"
+msgstr "Nastavitve Cover"
+
+#: src/widget/preference.py:221
+msgid "Crossfade"
+msgstr ""
+
+#: src/widget/equalizer.py:176
+msgid "Custom"
+msgstr "Po meri"
+
+#: src/constant.py:29
+msgid "DMusic"
+msgstr "DGlasba"
+
+#: src/widget/equalizer.py:180
+msgid "Dance"
+msgstr "Dance"
+
+#: src/widget/song_editor.py:100 src/widget/song_editor.py:206
+msgid "Date"
+msgstr "Datum"
+
+#: src/widget/lyrics_module.py:152
+msgid "Decrease the lyrics size"
+msgstr "Zmanjšanje velikosti lyrics-ov"
+
+#: src/constant.py:28 src/widget/information.py:41
+#: plugins/pidgin/__init__.py:97 plugins/mpris2/mpris_adapter.py:252
+msgid "Deepin Music"
+msgstr "Deepin glasba"
+
+#: src/widget/preference.py:920
 msgid ""
 "Deepin Music is a music application designed for Linux users. It's "
 "characterized with lyrics searching, desktop lyrics display,album cover "
@@ -1270,182 +337,1012 @@ msgid ""
 "\n"
 "Deepin Music is free software licensed under GNU GPLv3."
 msgstr ""
-"DGlasba je glasbeni program namenjen uporabnikom Linux-a. Omogoča iskanje "
-"besedil pesmi in njihov prenos, prikaz besedila na namizju, prenos ovitka "
-"albuma, nadaljevanje predvajanja, upravljanje glasbe in izbiro videza.\n"
+"Deepin Glasba je glasbena aplikacija ustvarjena za Linux uporabnike  z "
+"iskanjem lyrics, namizni lyrics prikazi,naslovnice albumov s samodejnim "
+"prenosom, ponovno predvajanje, upravljanje glasbe in izbiro teme. \n"
 "\n"
-"DGlasba je brezplačna programska oprema pod licenco GNU GPLv3."
+"Deepin Glasba je brezplačna programska oprema pod licenco GNU GPLv3."
 
-#: ../src/widget/preference.py:1001
-msgid "General"
-msgstr "Splošno"
+#: src/widget/equalizer.py:177
+msgid "Default"
+msgstr "Privzeto"
 
-#: ../src/widget/preference.py:1003
-msgid "Lyrics"
-msgstr "Besedila pesmi"
+#: src/widget/playlist.py:183
+msgid "Default List"
+msgstr "Privzeti seznam"
 
-#: ../src/widget/preference.py:1004
+#: src/widget/webcast_view.py:114 src/widget/webcast_view.py:120
+#: src/widget/playlist.py:103 plugins/musicfm/radio_view.py:134
+#: plugins/musicfm/radio_view.py:140
+msgid "Delete"
+msgstr "Izbriši"
+
+#: src/widget/converter.py:369
+msgid "Delete task"
+msgstr "Zbriši opravilo"
+
+#: src/widget/preference.py:1004
 msgid "Desktop"
 msgstr "Namizje"
 
-#: ../src/widget/preference.py:1005
-msgid "Window"
-msgstr "Okno"
+#: src/main.py:161
+msgid "Development/Debug Options"
+msgstr "Razvojne/Razhroščevalne možnosti"
 
-#: ../src/widget/preference.py:1006
-msgid "Plugins"
-msgstr ""
+#: src/widget/preference.py:157
+msgid "Display splash-screen"
+msgstr "Pokaži pojavno okno"
 
-#: ../src/widget/preference.py:1007
-msgid "About"
-msgstr "O programu"
+#: src/widget/ui.py:1266
+msgid "Don't prompt again"
+msgstr "Ne sprašuj ponovno"
 
-#: ../src/source/old.py:112 ../src/source/audiocd.py:78
-msgid "Track"
-msgstr "Skladba"
+#: src/widget/preference.py:690
+msgid "Double"
+msgstr "Dvojna"
 
-#: ../src/source/old.py:113 ../src/source/audiocd.py:79
-msgid "Unknown album"
-msgstr "Neznan album"
+#: src/widget/lyrics_search.py:87
+msgid "Download"
+msgstr "Prenos"
 
-#: ../src/source/old.py:114 ../src/source/audiocd.py:80
-msgid "Unknown artist"
-msgstr "Neznan izvajalec"
+#: src/widget/lyrics_search.py:182
+msgid "Download failed."
+msgstr "Prenos ni uspel."
 
-#: ../src/source/audiocd.py:86 ../src/source/audiocd.py:92
-msgid "Audio CD"
-msgstr "Glasbeni CD"
+#: src/widget/lyrics_search.py:170
+msgid "Downloading lyrics..."
+msgstr "Prenašanje besedila pesmi..."
 
-#: ../src/source/local.py:43
-msgid "Reading directories..."
-msgstr "Berem imenike..."
+#: src/widget/song_notify.py:210 src/widget/song_editor.py:97
+msgid "Duration"
+msgstr "Trajanje"
 
-#: ../src/source/local.py:175
-msgid "Check deleted files"
-msgstr "Preverite izbrisane datoteke"
+#: src/widget/equalizer.py:194 plugins/musicfm/radio_genre_page.py:47
+msgid "Electronic"
+msgstr "Electronic"
 
-#: ../src/source/local.py:202
-msgid "Reload database"
-msgstr "Ponovno naloži baze podatkov"
+#: src/widget/plugins_view.py:166
+msgid "Enable"
+msgstr "Omogoči"
 
-#: ../plugins/musicfm/radio_genre_page.py:44
-msgid "Jazz"
-msgstr "Jazz"
+#: src/widget/preference.py:213
+msgid "Enable crossfade"
+msgstr "Omogoči mešanje"
 
-#: ../plugins/musicfm/radio_genre_page.py:45
+#: src/widget/preference.py:356
+msgid "Enable hotkeys"
+msgstr "Omogoči tipkovnične bližnjice"
+
+#: src/widget/equalizer.py:199 src/widget/instance.py:363
+msgid "Equalizer"
+msgstr "Izenačevalnik"
+
+#: src/widget/playlist.py:307
+msgid "Export List"
+msgstr "Izvozi seznam"
+
+#: src/widget/dialog.py:82
+msgid "Export playlist"
+msgstr "Izvozi predvajalni seznam"
+
+#: src/widget/global_keys.py:97
+#, python-format
+msgid "Failed to bind %s !"
+msgstr "Ni uspelo povezati %s !"
+
+#: src/widget/webcasts_browser.py:141
+msgid "Favorites"
+msgstr "Najljubše"
+
+#: src/widget/song_view.py:522 src/widget/song_view.py:530
+msgid "File"
+msgstr "Datoteka"
+
+#: src/widget/lyrics_search.py:180
+msgid "File save to"
+msgstr "Shrani datoteko v"
+
+#: src/widget/song_view.py:524 src/widget/song_view.py:532
+#: src/widget/local_browser.py:91
+msgid "Folder"
+msgstr "Mapa"
+
+#: src/widget/song_view.py:523 src/widget/song_view.py:531
+msgid "Folder(include subdirectories)"
+msgstr "Mape(vključuje podmape)"
+
+#: plugins/musicfm/radio_genre_page.py:45
 msgid "Folk/Country"
 msgstr "Folk/Country"
 
-#: ../plugins/musicfm/radio_genre_page.py:48
-msgid "OST"
-msgstr "OST"
+#: src/widget/preference.py:681 src/widget/preference.py:833
+msgid "Font"
+msgstr "Pisava"
 
-#: ../plugins/musicfm/radio_genre_page.py:49
-msgid "Light"
-msgstr "Light"
+#: src/widget/song_editor.py:96 src/widget/converter.py:433
+msgid "Format"
+msgstr "Format"
 
-#: ../plugins/musicfm/radio_genre_page.py:50
-msgid "Hip-Hop/Rap"
-msgstr "Hip-Hop/Rap"
+#: src/widget/instance.py:328
+msgid "Forward"
+msgstr "Prevrti naprej"
 
-#: ../plugins/musicfm/radio_genre_page.py:51
-msgid "Reggae"
-msgstr "Reggae"
+#: src/widget/lyrics_module.py:233
+msgid "Forward 0.5 seconds"
+msgstr "Naprej za 0.5 sekunde"
 
-#: ../plugins/musicfm/radio_genre_page.py:52
-msgid "Latino"
-msgstr "Latino"
+#: src/transcoder.py:66
+msgid ""
+"Free Lossless Audio Codec (FLAC) is an open source codec that compresses but "
+"does not degrade audio quality."
+msgstr ""
+"Free Lossless Audio Codec (FLAC) je odprtokodni kodek, ki stisne, ampak ne "
+"poslabša kvalitete zvoka."
 
-#: ../plugins/musicfm/radio_genre_page.py:53
-msgid "World"
-msgstr "Svetovna"
+#: src/widget/preference.py:628 src/widget/lyrics_module.py:456
+msgid "Fresh green"
+msgstr "Sveže zelena"
 
-#: ../plugins/musicfm/radio_genre_page.py:54
-msgid "Blues"
-msgstr "Blues"
+#: src/widget/equalizer.py:181
+msgid "Full Bass"
+msgstr "Polni basi"
 
-#: ../plugins/musicfm/radio_genre_page.py:55
+#: src/widget/equalizer.py:182
+msgid "Full Bass and Treble"
+msgstr "Polni basi in visoki toni"
+
+#: src/widget/equalizer.py:183
+msgid "Full Treble"
+msgstr "Polni visoki toni"
+
+#: plugins/musicfm/radio_genre_page.py:55
 msgid "Funk/Soul/R&B"
 msgstr "Funk/Soul/R&B"
 
-#: ../plugins/musicfm/radio_browser.py:78
+#: src/widget/preference.py:1001
+msgid "General"
+msgstr "Splošno"
+
+#: src/widget/webcasts_browser.py:99 src/widget/song_editor.py:205
+#: src/widget/local_browser.py:89
+msgid "Genre"
+msgstr "Zvrst"
+
+#: plugins/musicfm/radio_browser.py:80
+msgid "Genres MHz"
+msgstr "Žanri MHz"
+
+#: src/widget/equalizer.py:184
+msgid "Headphones"
+msgstr "Slušalke"
+
+#: src/widget/instance.py:397
+msgid "Hide Lyrics"
+msgstr "Skrij besedilo"
+
+#: plugins/musicfm/radio_genre_page.py:50
+msgid "Hip-Hop/Rap"
+msgstr "Hip-Hop/Rap"
+
+#: plugins/musicfm/radio_browser.py:78
 msgid "Home"
 msgstr "Dom"
 
-#: ../plugins/musicfm/radio_browser.py:79
-#: ../plugins/musicfm/radio_home_page.py:73
+#: plugins/musicfm/radio_home_page.py:73 plugins/musicfm/radio_browser.py:79
 msgid "Hot MHz"
 msgstr "Hot MHz"
 
-#: ../plugins/musicfm/radio_browser.py:80
-#, fuzzy
-msgid "Genres MHz"
-msgstr "Zvrsti"
+#: src/widget/preference.py:346 src/widget/preference.py:1002
+msgid "Hotkeys"
+msgstr "Tipkovnične bližnjice"
 
-#: ../plugins/musicfm/radio_browser.py:81
-#: ../plugins/musicfm/radio_home_page.py:73
-msgid "Pop MHz"
-msgstr "Pop MHz"
+#: src/widget/playlist.py:305 src/widget/playlist.py:477
+msgid "Import List"
+msgstr "Uvozi seznam"
 
-#: ../plugins/musicfm/radio_item.py:508
+#: src/widget/lyrics_module.py:151
+msgid "Increase the lyrics size"
+msgstr "Povečajte velikost lyrics-ov"
+
+#: src/widget/preference.py:651 src/widget/preference.py:808
+msgid "Italic"
+msgstr "Ležeče"
+
+#: plugins/musicfm/radio_genre_page.py:44
+msgid "Jazz"
+msgstr "Jazz"
+
+#: src/widget/instance.py:147
+msgid "Join us"
+msgstr "Pridruži se nam"
+
+#: src/widget/preference.py:616
+msgid "Justified"
+msgstr "Zadoščeno"
+
+#: src/widget/lyrics_module.py:158
+msgid "Karaoke on/off"
+msgstr "Karaoke vklop/izklop"
+
+#: src/widget/equalizer.py:185
+msgid "Large Hall"
+msgstr "Velika dvorana"
+
+#: plugins/musicfm/radio_genre_page.py:52
+msgid "Latino"
+msgstr "Latino"
+
+#: src/widget/preference.py:601 src/widget/preference.py:613
+#: src/widget/preference.py:845
+msgid "Left"
+msgstr "Levo"
+
+#: src/widget/local_tab.py:28 src/widget/song_view.py:817
+#: src/widget/global_search.py:48
+msgid "Library"
+msgstr "Knjižnica"
+
+#: plugins/musicfm/radio_genre_page.py:49
+msgid "Light"
+msgstr "Light"
+
+#: src/widget/preference.py:689
+msgid "Lines"
+msgstr "Vrstice"
+
+#: src/widget/combo.py:195
+msgid "List view"
+msgstr "Ogled seznama"
+
+#: src/widget/equalizer.py:186
+msgid "Live"
+msgstr "V živo"
+
+#: src/widget/dialog.py:130
+msgid "Load playlist"
+msgstr "Naloži predvajalni seznam"
+
+#: src/widget/song_editor.py:147
+msgid "Location"
+msgstr "Lokacija"
+
+#: src/widget/lyrics_module.py:155 src/widget/instance.py:405
+#: src/widget/tray.py:80
+msgid "Lock Lyrics"
+msgstr "Zakleni pesem"
+
+#: src/widget/preference.py:366
+msgid "Lock/Unlock lyrics"
+msgstr "Zakleni/Odkleni besedilo"
+
+#: src/widget/preference.py:1003
+msgid "Lyrics"
+msgstr "Besedila pesmi"
+
+#: src/widget/lyrics_module.py:247
+msgid "Lyrics acquired by Network"
+msgstr ""
+
+#: src/widget/preference.py:241
+msgid "Lyrics directory"
+msgstr "Imenik z besedili"
+
+#: src/widget/lyrics_module.py:166 src/widget/lyrics_module.py:224
+msgid "Lyrics forward"
+msgstr "Besedilo prevrti naprej"
+
+#: src/widget/lyrics_module.py:165 src/widget/lyrics_module.py:223
+msgid "Lyrics rewind"
+msgstr "Besedilo previj nazaj"
+
+#: src/widget/lyrics_search.py:47
+msgid "Lyrics search"
+msgstr "Iskanje besedila pesmi"
+
+#: src/widget/preference.py:671 src/widget/preference.py:824
+msgid "Lyrics style"
+msgstr "Slog besedila"
+
+#: src/widget/lyrics.py:735
+msgid "Lyrics window"
+msgstr "Okno z besedilom pesmi"
+
+#: src/widget/ui.py:1124
+msgid "Make sure all words are spelled correctly."
+msgstr "Prepričajte se, da so besede črkovane pravilno."
+
+#: src/widget/instance.py:480
+msgid "Mini Mode"
+msgstr "Pomanjšani način"
+
+#: src/main.py:152
+msgid "Minimize after started"
+msgstr "Miniraj po začetku"
+
+#: src/widget/preference.py:195 src/widget/ui.py:1260
+msgid "Minimize to tray"
+msgstr "Pomanjšaj v pult"
+
+#: src/widget/preference.py:362
+msgid "Minimize/Show window"
+msgstr "Pomanjšaj/Prikaži okno"
+
+#: plugins/musicfm/radio_item.py:508
 msgid "More"
 msgstr "Več"
 
-#: ../plugins/musicfm/__init__.py:33 ../plugins/musicfm/__init__.py:35
-#: ../plugins/musicfm/radio_view.py:474
+#: src/widget/playlist.py:551
+msgid "Move to List"
+msgstr "Premakni na seznam"
+
+#: src/widget/song_view.py:509 src/widget/song_view.py:789
+#: src/widget/local_browser.py:354 src/widget/playlist.py:554
+msgid "Move to Trash"
+msgstr "Premakni v smetnjak"
+
+#: plugins/musicfm/__init__.py:33 plugins/musicfm/__init__.py:35
+#: plugins/musicfm/radio_view.py:474
 msgid "MusicFM"
 msgstr "FM Glasba"
 
-#~ msgid "Add-on"
-#~ msgstr "Vključek"
+#: src/widget/tray.py:51
+msgid "Mute"
+msgstr "Utišaj"
 
-#~ msgid "Start minimized"
-#~ msgstr "Zaženi pomanjšano"
+#: src/widget/ui.py:1222 src/widget/plugins_view.py:166
+msgid "Name"
+msgstr "Ime"
 
-#~ msgid "Play (ordered)"
-#~ msgstr "Predvajaj (po zaporedju)"
+#: src/widget/ui.py:203
+msgid "Need some music? Find it here..."
+msgstr "Želite malo glasbe? Poiščite jo tukaj..."
 
-#~ msgid "Random"
-#~ msgstr "Naključno"
+#: src/widget/playlist.py:304 src/widget/playlist.py:316
+#: src/widget/playlist.py:317 src/widget/playlist.py:357
+#: src/widget/playlist.py:360 src/widget/playlist.py:476
+msgid "New List"
+msgstr "Nov seznam"
 
-#~ msgid "Clear list"
-#~ msgstr "Počisti seznam"
+#: src/widget/headerbar.py:72 src/widget/preference.py:370
+#: src/widget/instance.py:331 src/widget/tray.py:65
+#: src/widget/song_editor.py:343
+msgid "Next"
+msgstr "Naslednja"
 
-#~ msgid "Directory (include subdirectories)"
-#~ msgstr "Imenik (vključujoč podimenike)"
+#: src/widget/lyrics_module.py:793 src/widget/lyrics_module.py:794
+msgid "No lyrics found!"
+msgstr "Besedilo pesmi ni najdeno!"
 
-#~ msgid "Directory"
-#~ msgstr "Imenik"
+#: src/widget/instance.py:482
+msgid "Normal Mode"
+msgstr "Normalni način"
 
-#~ msgid "Increase volume"
-#~ msgstr "Povečaj glasnost"
+#: src/widget/lyrics_search.py:138 src/widget/lyrics_search.py:163
+msgid "Not found!"
+msgstr "Ni najdeno!"
 
-#~ msgid "Decrease volume"
-#~ msgstr "Zmanjšaj glasnost"
+#: src/widget/lyrics_search.py:136
+msgid "Now searching..."
+msgstr "Iskanje..."
 
-#~ msgid "Network get lrc"
-#~ msgstr "Pridobi Irc iz omrežja"
+#: src/widget/ui.py:1273
+msgid "OK"
+msgstr "Vredu"
 
-#~ msgid "Edit tags"
-#~ msgstr "Uredi oznake"
+#: plugins/musicfm/radio_genre_page.py:48
+msgid "OST"
+msgstr "OST"
 
-#~ msgid "Edit cover"
-#~ msgstr "Uredi ovitek"
+#: src/widget/preference.py:150
+msgid "On starting the player"
+msgstr "Na začetku predvajanja"
 
-#~ msgid "Techno"
-#~ msgstr "Techno"
+#: src/widget/song_view.py:791 src/widget/local_browser.py:359
+msgid "Open Directory"
+msgstr "Odpri Imenik"
 
-#~ msgid "By Date Added"
-#~ msgstr "Po datumu dodajanja"
+#: src/widget/playlist.py:306 src/widget/playlist.py:485
+msgid "Open List"
+msgstr "Odpri seznam"
 
-#~ msgid "Startup"
-#~ msgstr "Zagon"
+#: src/widget/lyrics_module.py:240 src/widget/song_editor.py:150
+#: src/widget/converter.py:367 src/widget/playlist.py:560
+msgid "Open directory"
+msgstr "Odpri imenik"
 
-#~ msgid "Fade timeout"
-#~ msgstr "Časovni limit mešanja"
+#: src/widget/lyrics_module.py:162
+msgid "Open settings panel"
+msgstr "Odpri ploščo z nastavitvami"
 
-#~ msgid "Coming"
-#~ msgstr "Prihajajoče"
+#: src/main.py:104
+msgid "Options"
+msgstr "Možnosti"
 
-#~ msgid "Add-ons"
-#~ msgstr "Vključki"
+#: src/widget/song_view.py:482
+msgid "Order play"
+msgstr "Vrstni red predvajanja "
+
+#: src/main.py:144
+msgid "Other Options"
+msgstr "Ostale možnosti"
+
+#: src/widget/preference.py:702
+msgid "Outline"
+msgstr "Osenčenost"
+
+#: src/widget/converter.py:472
+msgid "Output"
+msgstr "Izhod"
+
+#: src/widget/equalizer.py:187
+msgid "Party"
+msgstr "Zabava"
+
+#: src/widget/instance.py:324 src/widget/tray.py:62
+#: src/widget/converter.py:392 src/widget/converter.py:412
+#: src/widget/converter.py:415
+msgid "Pause"
+msgstr "Premor"
+
+#: src/main.py:114
+msgid "Pause or resume playback"
+msgstr "Prekini ali nadaljuj predvajanje"
+
+#: src/widget/webcast_view.py:119 src/widget/webcast_view.py:338
+#: src/widget/song_view.py:785 src/widget/instance.py:321
+#: src/widget/tray.py:59 src/widget/playlist.py:549
+#: plugins/musicfm/radio_view.py:139
+msgid "Play"
+msgstr "Predvajaj"
+
+#: src/widget/local_browser.py:350
+msgid "Play All"
+msgstr "Predvajaj vse"
+
+#: src/widget/instance.py:360
+msgid "Play Controls"
+msgstr "Nadzor predvajanja "
+
+#: src/main.py:110
+msgid "Play the next track"
+msgstr "Predvajaj naslednjo skladbo"
+
+#: src/main.py:112
+msgid "Play the previous track"
+msgstr "Predvajaj prejšnjo skladbo"
+
+#: src/widget/headerbar.py:63 src/widget/preference.py:368
+msgid "Play/Pause"
+msgstr "Predvajaj/Premor"
+
+#: src/widget/instance.py:361 src/widget/playlist.py:100
+#: src/widget/playlist.py:557
+msgid "Playback mode"
+msgstr "Playback način"
+
+#: src/widget/preference.py:209
+msgid "Playback settings"
+msgstr "Nastavitve predvajanja"
+
+#: src/widget/song_notify.py:209 src/widget/song_editor.py:100
+msgid "Playcount"
+msgstr "Število predvajanj"
+
+#: src/widget/preference.py:722 src/widget/preference.py:856
+msgid "Played"
+msgstr "Zaigrane"
+
+#: src/widget/preference.py:629 src/widget/lyrics_module.py:457
+msgid "Playful pink"
+msgstr "Igrivo roza"
+
+#: src/widget/playlist.py:96
+msgid "Playlist Operations"
+msgstr "Funkcije predvajalnega seznama"
+
+#: src/plugins.py:103
+msgid "Plugin archive contains an unsafe path."
+msgstr "Plugin arhiv vsebuje nevarno pot."
+
+#: src/plugins.py:91
+msgid "Plugin archive is not in the correct format."
+msgstr "Plugin arhiv ni v pravilnem formatu."
+
+#: src/widget/preference.py:1006
+msgid "Plugins"
+msgstr "Dodatki"
+
+#: src/widget/equalizer.py:188 plugins/musicfm/radio_genre_page.py:46
+msgid "Pop"
+msgstr "Pop"
+
+#: plugins/musicfm/radio_home_page.py:73 plugins/musicfm/radio_browser.py:81
+msgid "Pop MHz"
+msgstr "Pop MHz"
+
+#: src/widget/equalizer.py:254
+msgid "Predefined"
+msgstr "Prednastavitve"
+
+#: src/widget/preference.py:943 src/widget/instance.py:372
+#: src/widget/tray.py:83
+msgid "Preferences"
+msgstr "Lastnosti"
+
+#: src/widget/headerbar.py:71 src/widget/preference.py:369
+#: src/widget/instance.py:330 src/widget/tray.py:64
+#: src/widget/song_editor.py:341
+msgid "Previous"
+msgstr "Predhodnja"
+
+#: src/main.py:141
+msgid "Print current playback position"
+msgstr "Prikaži trenutni položaj predvajanja"
+
+#: src/main.py:133
+msgid "Print the album of current track"
+msgstr "Prikaži album trenutne skladbe"
+
+#: src/main.py:135
+msgid "Print the artist of current track"
+msgstr "Prikaži izvajalca trenutne skladbe"
+
+#: src/main.py:137
+msgid "Print the length of current track"
+msgstr "Prikaži dolžino trenutne skladbe"
+
+#: src/main.py:139
+msgid "Print the path of current track"
+msgstr "Pokaži pot trenutne skladbe"
+
+#: src/main.py:131
+msgid "Print the title of current track"
+msgstr "Prikaži ime trenutne skladbe"
+
+#: src/widget/song_view.py:437 src/widget/song_view.py:780
+#: src/widget/local_browser.py:339 src/widget/converter.py:309
+msgid "Prompt"
+msgstr "Poziv"
+
+#: src/widget/song_view.py:793 src/widget/song_editor.py:335
+#: src/widget/playlist.py:561
+msgid "Properties"
+msgstr "Lastnosti"
+
+#: src/widget/converter.py:436
+msgid "Quality"
+msgstr "Kvaliteta"
+
+#: src/widget/local_browser.py:98
+msgid "Quick Scan"
+msgstr "Hitri pregled"
+
+#: src/widget/preference.py:196 src/widget/ui.py:1262
+#: src/widget/instance.py:374 src/widget/tray.py:84
+msgid "Quit"
+msgstr "Končaj"
+
+#: src/widget/webcast_view.py:450 plugins/webcast/__init__.py:34
+#: plugins/webcast/__init__.py:36
+msgid "Radio"
+msgstr "Radio"
+
+#: src/widget/song_view.py:484 src/widget/playlist.py:545
+msgid "Randomize"
+msgstr "Naključno"
+
+#: src/widget/song_editor.py:98
+msgid "Rate"
+msgstr "Hitrost"
+
+#: src/source/local.py:43
+msgid "Reading directories..."
+msgstr "Berem imenike..."
+
+#: src/widget/song_editor.py:99
+msgid "Recently"
+msgstr "Nedavno"
+
+#: src/widget/local_browser.py:100
+msgid "Refresh"
+msgstr "Osveži"
+
+#: plugins/musicfm/radio_genre_page.py:51
+msgid "Reggae"
+msgstr "Reggae"
+
+#: src/widget/webcasts_browser.py:98
+msgid "Region"
+msgstr "Regija"
+
+#: src/widget/preference.py:650 src/widget/preference.py:807
+msgid "Regular"
+msgstr "Običajno"
+
+#: src/source/local.py:202
+msgid "Reload database"
+msgstr "Ponovno naloži baze podatkov"
+
+#: src/widget/playlist.py:308 src/widget/playlist.py:484
+msgid "Remove List"
+msgstr "Odstrani seznam"
+
+#: src/widget/playlist.py:553
+msgid "Remove Track"
+msgstr "Odstrani skladbo"
+
+#: src/widget/song_view.py:507
+msgid "Remove Track from this List"
+msgstr "Odstrani skladbo iz tega seznama"
+
+#: src/widget/song_view.py:508
+msgid "Remove Unavailable Tracks"
+msgstr "Odstrani nedostopne skladbe"
+
+#: src/widget/webcast_view.py:219 src/widget/webcast_view.py:368
+msgid "Remove from Favorites"
+msgstr "Odstrani iz Priljubljenih"
+
+#: src/widget/song_view.py:788 src/widget/local_browser.py:353
+msgid "Remove from Library"
+msgstr "Odstrani iz Knjižnice"
+
+#: src/widget/playlist.py:483 src/widget/playlist.py:493
+msgid "Rename"
+msgstr "Preimenuj"
+
+#: src/widget/song_view.py:483
+msgid "Repeat (list)"
+msgstr "Ponavljaj (seznam)"
+
+#: src/widget/song_view.py:481
+msgid "Repeat (single)"
+msgstr "Ponovi (enkratno)"
+
+#: src/widget/equalizer.py:252 src/widget/preference.py:375
+#: src/widget/song_editor.py:302
+msgid "Reset"
+msgstr "Ponastavi"
+
+#: src/widget/preference.py:175
+msgid "Resume playback"
+msgstr "Nadaljuj predvajanje"
+
+#: src/widget/song_editor.py:299
+msgid "Retrieve from the Internet"
+msgstr "Pridobi iz interneta"
+
+#: src/widget/instance.py:329
+msgid "Rewind"
+msgstr "Prevrti nazaj"
+
+#: src/widget/lyrics_module.py:234
+msgid "Rewind 0.5 seconds"
+msgstr "Nazaj za 0.5 sekunde"
+
+#: src/widget/preference.py:603 src/widget/preference.py:615
+#: src/widget/preference.py:845
+msgid "Right"
+msgstr "Desno"
+
+#: src/widget/equalizer.py:190 plugins/musicfm/radio_genre_page.py:42
+msgid "Rock"
+msgstr "Rock"
+
+#: src/widget/preference.py:850
+msgid "Rolling"
+msgstr "Pomikanje"
+
+#: src/widget/song_editor.py:214
+msgid "Save"
+msgstr "Shrani"
+
+#: src/widget/playlist.py:310 src/widget/playlist.py:479
+#: src/widget/playlist.py:487
+msgid "Save all Lists"
+msgstr "Shrani vse sezname"
+
+#: src/widget/local_browser.py:99
+msgid "Scan"
+msgstr "Pregled"
+
+#: src/widget/preference.py:216
+msgid "Seamless switching between the same album"
+msgstr "Brezhibno preklapljanje med albuma"
+
+#: src/widget/lyrics_module.py:226 src/widget/lyrics_module.py:236
+#: src/widget/lyrics_search.py:59
+msgid "Search"
+msgstr "Iskanje"
+
+#: src/widget/instance.py:378 src/widget/tray.py:73
+msgid "Search Lyrics"
+msgstr "Išči besedilo"
+
+#: src/widget/playlist.py:94
+msgid "Search in Current Playlist"
+msgstr "Išči v trenutnem predvajalnem seznamu"
+
+#: src/widget/lyrics_module.py:163
+msgid "Search lrc file for current track"
+msgstr "Iskanje LRC datoteke za trenutno skladbo"
+
+#: src/widget/lyrics_module.py:796 src/widget/lyrics_module.py:797
+msgid "Searching for lyrics..."
+msgstr "Iskanje besedila pesmi..."
+
+#: src/main.py:118
+msgid "Seek Backward"
+msgstr "Previj nazaj"
+
+#: src/main.py:116
+msgid "Seek Forward"
+msgstr "Previj naprej"
+
+#: src/widget/dialog.py:34
+msgid "Select Directory"
+msgstr "Izberi imenik"
+
+#: src/widget/lyrics_module.py:154
+msgid "Select color theme"
+msgstr "Izberi barvno temo"
+
+#: src/widget/dialog.py:56
+msgid "Select file"
+msgstr "Izberi datoteko"
+
+#: src/widget/song_editor.py:321 src/widget/local_browser.py:343
+msgid "Select image"
+msgstr "Izberi sliko"
+
+#: src/main.py:162
+msgid "Set debug level (0-9)"
+msgstr "Nastavite nivo razhroščevanja (0-9)"
+
+#: src/widget/lyrics_module.py:227 src/widget/lyrics_module.py:242
+msgid "Settings"
+msgstr "Nastavitve"
+
+#: src/widget/instance.py:399 src/widget/tray.py:75
+msgid "Show Lyrics"
+msgstr "Prikaži besedilo"
+
+#: src/main.py:166
+msgid "Show information supported audio file"
+msgstr "Prikaži informacije o podprtih zvočnih datotekah"
+
+#: src/widget/preference.py:164
+msgid "Show lyrics"
+msgstr "Prikaži besedilo"
+
+#: src/main.py:150
+msgid "Show program's version number and exit."
+msgstr "Prikaži različico programa in zapri."
+
+#: src/main.py:146
+msgid "Show this help message and exit"
+msgstr "Prikaži sporočilo za pomoč in zapri"
+
+#: src/widget/headerbar.py:77
+msgid "Show/Hide Lyrics"
+msgstr "Prikaži/Skrij besedilo"
+
+#: src/widget/preference.py:364
+msgid "Show/Hide lyrics"
+msgstr "Prikaži/Skrij besedilo"
+
+#: src/widget/preference.py:690
+msgid "Single"
+msgstr "Enojna"
+
+#: src/widget/song_notify.py:193 src/widget/preference.py:686
+#: src/widget/preference.py:839 src/widget/song_editor.py:97
+msgid "Size"
+msgstr "Velikost"
+
+#: src/widget/equalizer.py:191
+msgid "Ska"
+msgstr "Ska"
+
+#: src/widget/equalizer.py:192
+msgid "Soft"
+msgstr "Soft"
+
+#: src/widget/equalizer.py:193
+msgid "Soft Rock"
+msgstr "Soft Rock"
+
+#: src/widget/playlist.py:558
+msgid "Sort"
+msgstr "Razvrsti"
+
+#: src/widget/converter.py:448
+msgid "Start"
+msgstr "Začni"
+
+#: src/main.py:148
+msgid "Start new instance"
+msgstr "Zaženi nov primerek"
+
+#: src/widget/preference.py:169
+msgid "Start playback automatically"
+msgstr "Samodejno zaženi predvajanje"
+
+#: src/main.py:120
+msgid "Stop playback"
+msgstr "Zaustavi predvajanje"
+
+#: src/widget/preference.py:706
+msgid "Stroke"
+msgstr "Barva"
+
+#: src/widget/preference.py:663 src/widget/preference.py:818
+msgid "Style"
+msgstr "Slog"
+
+#: src/widget/ui.py:1123
+msgid "Suggestions"
+msgstr "Predlogi"
+
+#: src/widget/lyrics_module.py:160
+msgid "Switch lines"
+msgstr "Zamenjaj vrstice"
+
+#: src/widget/lyrics_module.py:221
+msgid "Switch to desktop mode"
+msgstr "Preklopi namizni način"
+
+#: src/widget/lyrics_module.py:167 src/widget/lyrics_module.py:243
+msgid "Switch to window mode"
+msgstr "Preklopi na okenski način"
+
+#: src/widget/song_editor.py:368
+msgid "Tag Settings"
+msgstr "Nastavitve oznak"
+
+#: src/widget/converter.py:444
+msgid "Target file already exists"
+msgstr "Ciljna datoteka že obstaja"
+
+#: src/widget/converter.py:309
+msgid "Target file already exists, do you want to overwrite it?"
+msgstr "Datoteka že obstaja,jo želite prepisati?"
+
+#: src/widget/instance.py:342 src/widget/converter.py:376
+msgid "Task Manager"
+msgstr "Upravitelj opravil"
+
+#: src/main.py:158
+msgid "This option makes control options like --play to start program"
+msgstr ""
+
+#: src/widget/song_view.py:680 src/widget/song_editor.py:72
+#: src/widget/song_editor.py:202 src/widget/lyrics_search.py:83
+msgid "Title"
+msgstr "Naslov"
+
+#: src/widget/lyrics_search.py:55
+msgid "Title:"
+msgstr "Naslov:"
+
+#: src/main.py:155
+msgid "Toggle visibility of the GUI (if possible)"
+msgstr "Prikaži/Skrij vmesnik (če je možno)"
+
+#: src/source/old.py:112 src/source/audiocd.py:78
+msgid "Track"
+msgstr "Skladba"
+
+#: src/widget/song_editor.py:367
+msgid "Track Infomation"
+msgstr "Informacija o skladbi"
+
+#: src/main.py:129
+msgid "Track information Options"
+msgstr "Možnosti za informacije o skladbi"
+
+#: src/widget/local_item.py:67
+msgid "Track(s)"
+msgstr "Skladba(e)"
+
+#: src/widget/ui.py:1125
+msgid ""
+"Try more general keywords, such as a title, an artist or the name of an "
+"album."
+msgstr ""
+"Poskusite več osnovnih besed, kot naprimer naslov, izvajalec ali naslov "
+"albuma."
+
+#: src/widget/song_notify.py:194 src/widget/song_editor.py:96
+msgid "Type"
+msgstr "Vrsta"
+
+#: src/widget/song_view.py:521
+msgid "URL"
+msgstr "URL naslov"
+
+#: src/library.py:990 src/library.py:991 src/library.py:992 src/library.py:999
+#: src/library.py:1000 src/library.py:1001 src/widget/local_item.py:57
+msgid "Unknown"
+msgstr "Neznan"
+
+#: src/source/old.py:113 src/source/audiocd.py:79
+msgid "Unknown album"
+msgstr "Neznan album"
+
+#: src/source/old.py:114 src/source/audiocd.py:80
+msgid "Unknown artist"
+msgstr "Neznan izvajalec"
+
+#: src/widget/instance.py:403 src/widget/tray.py:78
+msgid "Unlock Lyrics"
+msgstr "Odkleni Lyrics"
+
+#: src/widget/preference.py:711 src/widget/preference.py:855
+msgid "Unplayed"
+msgstr "Ne predvajano "
+
+#: src/main.py:103
+msgid "Usage: deepin-music-player [OPTION]... [URI]"
+msgstr "Uporaba: deepin-glasbeni-predvajalnik [MOŽNOST]... [URI]"
+
+#: src/widget/preference.py:905 src/widget/plugins_view.py:166
+msgid "Version"
+msgstr "Različica"
+
+#: src/widget/instance.py:371
+msgid "View New Features"
+msgstr "Poglej nove zmožnosti"
+
+#: src/widget/preference.py:627 src/widget/lyrics_module.py:455
+msgid "Vitality yellow"
+msgstr "Vitalno rumena"
+
+#: src/widget/tray.py:67
+msgid "Volume"
+msgstr "Glasnost"
+
+#: src/widget/preference.py:372 src/widget/tray.py:50
+msgid "Volume Down"
+msgstr "Zmanjšaj glasnost "
+
+#: src/main.py:124
+msgid "Volume Options"
+msgstr "Nastavitve glasnosti"
+
+#: src/widget/preference.py:371 src/widget/tray.py:49
+msgid "Volume Up"
+msgstr "Povečaj glasnost"
+
+#: src/transcoder.py:54
+msgid ""
+"Vorbis is an open source, lossy audio codec with high quality output at a "
+"lower file size than MP3."
+msgstr ""
+"Vorbis je odprtokodni, malo potratni zvokovni kodek z visoko kvaliteto "
+"izpisa pri manjši velikosti datoteke kot MP3."
+
+#: src/widget/preference.py:190
+msgid "When pressing the close button"
+msgstr "Ko pritisnete na gumb Zapri"
+
+#: src/widget/preference.py:1005
+msgid "Window"
+msgstr "Okno"
+
+#: plugins/musicfm/radio_genre_page.py:53
+msgid "World"
+msgstr "Svetovna"
+
+#: src/widget/ui.py:1122
+#, python-brace-format
+msgid "Your search {keyword} did not match any items in {from}"
+msgstr "Vaše iskanje {keyword} se ne ujema z nobenim predmetom v {from}"
+
+#: src/widget/information.py:106
+msgid "buffering..."
+msgstr "buffering..."
+
+#: src/widget/jobs_manager.py:44 src/widget/jobs_manager.py:153
+msgid "jobs waiting!"
+msgstr "naloge čakajo!"
