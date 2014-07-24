@@ -18,4 +18,4 @@ install:
 	cp -r wizard ${DESTDIR}${PREFIX}/share/deepin-music
 	cp image/deepin-music-player.svg ${DESTDIR}${PREFIX}/share/icons/hicolor/scalable/apps
 	cp deepin-music-player.desktop ${DESTDIR}${PREFIX}/share/applications
-	ln -sf ${DESTDIR}${PREFIX}/share/deepin-music/src/main.py ${DESTDIR}${PREFIX}/bin/deepin-music-player
+	ln -sf ${PREFIX}/share/deepin-music/src/main.py ${DESTDIR}${PREFIX}/bin/deepin-music-player
