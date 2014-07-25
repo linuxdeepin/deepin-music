@@ -520,7 +520,7 @@ class SongView(TreeView):
         menu_items = [
             (None, _("URL") , self.add_unknow_uri),            
             (None, _("File"), self.add_file),
-            (None, _("Folder(include subdirectories)"), self.recursion_add_dir),
+            (None, _("Folder (include subdirectories)"), self.recursion_add_dir),
             (None, _("Folder"), self.add_dir),
             ]
         Menu(menu_items, True).show((x, y))
@@ -528,7 +528,7 @@ class SongView(TreeView):
     def get_add_menu(self):    
         menu_items = [
             (None, _("File"), self.add_file),
-            (None, _("Folder(include subdirectories)"), self.recursion_add_dir),
+            (None, _("Folder (include subdirectories)"), self.recursion_add_dir),
             (None, _("Folder"), self.add_dir),
             ]
         return Menu(menu_items)
