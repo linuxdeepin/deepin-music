@@ -1,0 +1,893 @@
+deepin-music-player (1.1+20140725105249~b99383bac5) trusty; urgency=low
+
+  * Build from git b99383bac53f9edc28b49eb0b3147947c7ef90ea
+
+ -- Yueqian Zhang <zhangyueqian@linuxdeepin.com>  Fri, 25 Jul 2014 10:52:49 +0800
+
+deepin-music-player (1.1+20140703161042~6239766e2c) trusty; urgency=low
+
+  * Build from git 6239766e2c3a612dbcd8995e02456784d1e759f6
+
+ -- Yueqian Zhang <zhangyueqian@linuxdeepin.com>  Thu, 03 Jul 2014 16:10:42 +0800
+
+deepin-music-player (1.1-20140701100818~95af2ff1ac) trusty; urgency=low
+
+  * Build from git 95af2ff1ac5496cf8d418051ba206b55f33584b9
+
+ -- Yueqian Zhang <zhangyueqian@linuxdeepin.com>  Tue, 01 Jul 2014 10:08:19 +0800
+
+deepin-music-player (1.1-20140627132436~b4a8526183) trusty; urgency=low
+
+  * Build from git b4a8526183b4803faa6d10acba9760267359f3fc
+
+ -- Yueqian Zhang <zhangyueqian@linuxdeepin.com>  Fri, 27 Jun 2014 13:24:37 +0800
+
+deepin-music-player (1.1-20140624160617~d3cc9dac81) trusty; urgency=low
+
+  * Build from git d3cc9dac8141780126564886e3b99d3012a0cf10
+
+ -- Yueqian Zhang <zhangyueqian@linuxdeepin.com>  Tue, 24 Jun 2014 16:06:18 +0800
+
+deepin-music-player (1.1-20140624155620~d3cc9dac81) trusty; urgency=low
+
+  * Build from git d3cc9dac8141780126564886e3b99d3012a0cf10
+
+ -- Yueqian Zhang <zhangyueqian@linuxdeepin.com>  Tue, 24 Jun 2014 15:56:21 +0800
+
+deepin-music-player (1.1-20140618134021~8101aa255c) trusty; urgency=low
+
+  * Build from git 8101aa255cc97b0f75b0e058538dfa3b102f9faa
+
+ -- Yueqian Zhang <zhangyueqian@linuxdeepin.com>  Wed, 18 Jun 2014 13:40:22 +0800
+
+deepin-music-player (1.1-20140612151300~d971461b01) trusty; urgency=low
+
+  * Build from git d971461b0147b18427389d1e92d05c432344e077
+
+ -- Yueqian Zhang <zhangyueqian@linuxdeepin.com>  Thu, 12 Jun 2014 15:13:00 +0800
+
+deepin-music-player (1.1-20140612150759~d971461b01) trusty; urgency=low
+
+  * Build from git d971461b0147b18427389d1e92d05c432344e077
+
+ -- Yueqian Zhang <zhangyueqian@linuxdeepin.com>  Thu, 12 Jun 2014 15:07:59 +0800
+
+deepin-music-player (1+git20140505155847~5e110e40b9) trusty; urgency=low
+
+  * Build from git revision 5e110e40b96665c348d71f126915c787f6ca0057
+
+ -- Deepin Packages Builder <packages@linuxdeepin.com>  Mon, 05 May 2014 15:58:48 +0800
+
+deepin-music-player (1+git20140505154250~5e110e40b9) trusty; urgency=low
+
+  * Build from git revision 5e110e40b96665c348d71f126915c787f6ca0057
+
+ -- Deepin Packages Builder <packages@linuxdeepin.com>  Mon, 05 May 2014 15:42:51 +0800
+
+deepin-music-player (1+git20140505153011~5e110e40b9) trusty; urgency=low
+
+  * Build from git revision 5e110e40b96665c348d71f126915c787f6ca0057
+
+ -- Deepin Packages Builder <packages@linuxdeepin.com>  Mon, 05 May 2014 15:30:11 +0800
+
+deepin-music-player (1+git20140428115600~24fd0e563c) trusty; urgency=low
+
+  * Build from git revision 24fd0e563c67b9cdabfad3c20dc1b5ba6aad8537
+
+ -- Deepin Packages Builder <packages@linuxdeepin.com>  Mon, 28 Apr 2014 11:56:01 +0800
+
+deepin-music-player (1+git20140428115213~24fd0e563c) trusty; urgency=low
+
+  * Build from git revision 24fd0e563c67b9cdabfad3c20dc1b5ba6aad8537
+
+ -- Deepin Packages Builder <packages@linuxdeepin.com>  Mon, 28 Apr 2014 11:52:16 +0800
+
+deepin-music-player (1+git20140411181614~cc2ab18023) trusty; urgency=low
+
+  * Build from git revision cc2ab18023cf5d7c053e31a25071d6b7f7dfa545
+
+ -- Deepin Packages Builder <packages@linuxdeepin.com>  Fri, 11 Apr 2014 18:16:14 +0800
+
+deepin-music-player (1+git20140226145604~3f30b22573) raring; urgency=low
+
+  * Build from git revision 3f30b22573302cae62e7b619d1a4c03ec91e626a
+
+ -- Deepin Packages Builder <packages@linuxdeepin.com>  Wed, 26 Feb 2014 14:56:04 +0800
+
+deepin-music-player (1+git20140213142528~bd20e2b8e8) raring; urgency=low
+
+  * Build from git revision bd20e2b8e88b20f6a544ba89829c2e78d93145c3
+
+ -- Deepin Packages Builder <packages@linuxdeepin.com>  Thu, 13 Feb 2014 14:25:29 +0800
+
+deepin-music-player (1+git20140213140841~bd20e2b8e8) raring; urgency=low
+
+  * Build from git revision bd20e2b8e88b20f6a544ba89829c2e78d93145c3
+
+ -- Deepin Packages Builder <packages@linuxdeepin.com>  Thu, 13 Feb 2014 14:08:42 +0800
+
+deepin-music-player (1+git20140102102216~fe568e3c93) raring; urgency=low
+
+  * Build from git revision fe568e3c93c5b5549ca25d3441479bb0ea6de18a
+
+ -- Deepin Packages Builder <packages@linuxdeepin.com>  Thu, 02 Jan 2014 10:22:16 +0800
+
+deepin-music-player (1+git20131219150605~7d4b63c3c0) raring; urgency=low
+
+  * Build from git revision 7d4b63c3c0daa30917793639fd221adcc6210367
+
+ -- Deepin Packages Builder <packages@linuxdeepin.com>  Thu, 19 Dec 2013 15:06:05 +0800
+
+deepin-music-player (1+git20131216172808~7d4b63c3c0) raring; urgency=low
+
+  * Build from git revision 7d4b63c3c0daa30917793639fd221adcc6210367
+
+ -- Deepin Packages Builder <packages@linuxdeepin.com>  Mon, 16 Dec 2013 17:28:08 +0800
+
+deepin-music-player (1+git20131216085328~7d4b63c3c0) raring; urgency=low
+
+  * Build from git revision 7d4b63c3c0daa30917793639fd221adcc6210367
+
+ -- Deepin Packages Builder <packages@linuxdeepin.com>  Mon, 16 Dec 2013 08:53:28 +0800
+
+deepin-music-player (1+git20131206094537~3efd1f4fff) saucy; urgency=low
+
+  * Build from git revision 3efd1f4fffe82949263fdcac39443d52c5416178
+
+ -- Deepin Packages Builder <packages@linuxdeepin.com>  Fri, 06 Dec 2013 09:45:37 +0800
+
+deepin-music-player (1+git20131127105434~3efd1f4fff) raring; urgency=low
+
+  * Build from git revision 3efd1f4fffe82949263fdcac39443d52c5416178
+
+ -- Deepin Packages Builder <packages@linuxdeepin.com>  Wed, 27 Nov 2013 10:54:34 +0800
+
+deepin-music-player (1+git20131125173921~d503608877) raring; urgency=low
+
+  * Build from git revision d50360887730b6082cc003cf44a26a19420e9426
+
+ -- Deepin Packages Builder <packages@linuxdeepin.com>  Mon, 25 Nov 2013 17:39:21 +0800
+
+deepin-music-player (1+git20131122104939~00f61cb069) raring; urgency=low
+
+  * Build from git revision 00f61cb069413af576db9c534620284a75f881e8
+
+ -- Deepin Packages Builder <packages@linuxdeepin.com>  Fri, 22 Nov 2013 10:49:39 +0800
+
+deepin-music-player (1+git20131101091658~059e3aa3b8) raring; urgency=low
+
+  * Build from git revision 059e3aa3b827ca050aff1112b4fb6ea3284697e5
+
+ -- Deepin Packages Builder <packages@linuxdeepin.com>  Fri, 01 Nov 2013 09:16:58 +0800
+
+deepin-music-player (1+git20131031143746~7d46fa92d3) raring; urgency=low
+
+  * Build from git revision 7d46fa92d3fc389ecea25951ffc565d4927c6f93
+
+ -- Deepin Packages Builder <packages@linuxdeepin.com>  Thu, 31 Oct 2013 14:37:46 +0800
+
+deepin-music-player (1+git20131029131716~60b032781d) raring; urgency=low
+
+  * Build from git revision 60b032781d3ef117a918a554082a7001c59fba05
+
+ -- Deepin Packages Builder <packages@linuxdeepin.com>  Tue, 29 Oct 2013 13:17:16 +0800
+
+deepin-music-player (1+git20131029101423~2042cc068c) raring; urgency=low
+
+  * Build from git revision 2042cc068cc0af24fc8b9d004c1fac613bc88943
+
+ -- Deepin Packages Builder <packages@linuxdeepin.com>  Tue, 29 Oct 2013 10:14:23 +0800
+
+deepin-music-player (1+git20131028101406~e6623847cc) raring; urgency=low
+
+  * Build from git revision e6623847ccee18b4aade09947c43396f367b8a1e
+
+ -- Deepin Packages Builder <packages@linuxdeepin.com>  Mon, 28 Oct 2013 10:14:06 +0800
+
+deepin-music-player (1+git20131021103607~6ffca780d2) raring; urgency=low
+
+  * Build from git revision 6ffca780d239a67e565c509a14d4ee0a9aead883
+
+ -- Deepin Packages Builder <packages@linuxdeepin.com>  Mon, 21 Oct 2013 10:36:07 +0800
+
+deepin-music-player (1+git20131021100627~6ffca780d2) raring; urgency=low
+
+  * Build from git revision 6ffca780d239a67e565c509a14d4ee0a9aead883
+
+ -- Deepin Packages Builder <packages@linuxdeepin.com>  Mon, 21 Oct 2013 10:06:27 +0800
+
+deepin-music-player (1+git20131018231739~9de3ea7e23) raring; urgency=low
+
+  * Build from git revision 9de3ea7e2300665cd9f6415abca86a65e4559845
+
+ -- Deepin Packages Builder <packages@linuxdeepin.com>  Fri, 18 Oct 2013 23:17:39 +0800
+
+deepin-music-player (1+git20131012135000~9de3ea7e23) raring; urgency=low
+
+  * Build from git revision 9de3ea7e2300665cd9f6415abca86a65e4559845
+
+ -- Deepin Packages Builder <packages@linuxdeepin.com>  Sat, 12 Oct 2013 13:50:00 +0800
+
+deepin-music-player (1+git20131010152237~9de3ea7e23) raring; urgency=low
+
+  * Build from git revision 9de3ea7e2300665cd9f6415abca86a65e4559845
+
+ -- Deepin Packages Builder <packages@linuxdeepin.com>  Thu, 10 Oct 2013 15:22:37 +0800
+
+deepin-music-player (1+git20130927091043~ec163e2cb7) raring; urgency=low
+
+  * Build from git revision ec163e2cb7d4f2caa6d8a9817eb56c67c733f014
+
+ -- Deepin Packages Builder <packages@linuxdeepin.com>  Fri, 27 Sep 2013 09:10:43 +0800
+
+deepin-music-player (1+git20130926132951~00ebb223f4) raring; urgency=low
+
+  * Build from git revision 00ebb223f4fa4142d6bc0918f769ddda37cb17a7
+
+ -- Deepin Packages Builder <packages@linuxdeepin.com>  Thu, 26 Sep 2013 13:29:51 +0800
+
+deepin-music-player (1+git20130912170620~0c3f11fc1c) raring; urgency=low
+
+  * Build from git revision 0c3f11fc1ca6e17d58dda0d8cfb0ea3a00902974
+
+ -- Deepin Packages Builder <packages@linuxdeepin.com>  Thu, 12 Sep 2013 17:06:20 +0800
+
+deepin-music-player (1+git20130905150636~2e923f2a7b) raring; urgency=low
+
+  * Build from git revision 2e923f2a7be1b54eaa4c35ccd15555117ff98151
+
+ -- Deepin Packages Builder <packages@linuxdeepin.com>  Thu, 05 Sep 2013 15:06:36 +0800
+
+deepin-music-player (1+git20130905141726~df3710e8c3) raring; urgency=low
+
+  * Build from git revision df3710e8c3b57827fc038006f468e6f60099f805
+
+ -- Deepin Packages Builder <packages@linuxdeepin.com>  Thu, 05 Sep 2013 14:17:26 +0800
+
+deepin-music-player (1+git20130905135144~5804aef957) raring; urgency=low
+
+  * Build from git revision 5804aef957b77039b48ee0758f57650fdf764988
+
+ -- Deepin Packages Builder <packages@linuxdeepin.com>  Thu, 05 Sep 2013 13:51:44 +0800
+
+deepin-music-player (1+git20130829152007~af804cf1d1) raring; urgency=low
+
+  * Build from git revision af804cf1d13ef874a8c5620b44f1978f329fe98f
+
+ -- Deepin Packages Builder <packages@linuxdeepin.com>  Thu, 29 Aug 2013 15:20:08 +0800
+
+deepin-music-player (1+git20130823103855~aa72272893) raring; urgency=low
+
+  * Build from git revision aa72272893204f16e3f09f5da9decc6781643710
+
+ -- Deepin Packages Builder <packages@linuxdeepin.com>  Fri, 23 Aug 2013 10:38:55 +0800
+
+deepin-music-player (1+git20130822143815~7559a3aa29) raring; urgency=low
+
+  * Build from git revision 7559a3aa2935901d613ab97874d961491a0568b6
+
+ -- Deepin Packages Builder <packages@linuxdeepin.com>  Thu, 22 Aug 2013 14:38:16 +0800
+
+deepin-music-player (1+git20130822120704~7559a3aa29) raring; urgency=low
+
+  * Build from git revision 7559a3aa2935901d613ab97874d961491a0568b6
+
+ -- Deepin Packages Builder <packages@linuxdeepin.com>  Thu, 22 Aug 2013 12:07:04 +0800
+
+deepin-music-player (1+git20130822120523~7559a3aa29) raring; urgency=low
+
+  * Build from git revision 7559a3aa2935901d613ab97874d961491a0568b6
+
+ -- Deepin Packages Builder <packages@linuxdeepin.com>  Thu, 22 Aug 2013 12:05:23 +0800
+
+deepin-music-player (1+git20130822120249~7559a3aa29) raring; urgency=low
+
+  * Build from git revision 7559a3aa2935901d613ab97874d961491a0568b6
+
+ -- Deepin Packages Builder <packages@linuxdeepin.com>  Thu, 22 Aug 2013 12:02:49 +0800
+
+deepin-music-player (1+git20130816154917~5b05315797) raring; urgency=low
+
+  * Build from git revision 5b05315797ab1aee603e52465bf80a61fba19171
+
+ -- Deepin Packages Builder <packages@linuxdeepin.com>  Fri, 16 Aug 2013 15:49:17 +0800
+
+deepin-music-player (1+git20130816113054~ada115f2f6) raring; urgency=low
+
+  * Build from git revision ada115f2f686c8b367ef1484a190d46c0f8451a0
+
+ -- Deepin Packages Builder <packages@linuxdeepin.com>  Fri, 16 Aug 2013 11:30:54 +0800
+
+deepin-music-player (1+git20130816102218~ada115f2f6) raring; urgency=low
+
+  * Build from git revision ada115f2f686c8b367ef1484a190d46c0f8451a0
+
+ -- Deepin Packages Builder <packages@linuxdeepin.com>  Fri, 16 Aug 2013 10:22:18 +0800
+
+deepin-music-player (1+git20130722092605~d4c39e4ac7) raring; urgency=low
+
+  * Build from git revision d4c39e4ac74f8f1bdd9fc6ac15d112fef920eeac
+
+ -- Deepin Packages Builder <packages@linuxdeepin.com>  Mon, 22 Jul 2013 09:26:05 +0800
+
+deepin-music-player (1+git20130718113156~db51357f0c) raring; urgency=low
+
+  * Build from git revision db51357f0c9a23a85222f8b139d93c3caade3203
+
+ -- Deepin Packages Builder <packages@linuxdeepin.com>  Thu, 18 Jul 2013 11:31:56 +0800
+
+deepin-music-player (1+git20130718084957~db51357f0c) raring; urgency=low
+
+  * Build from git revision db51357f0c9a23a85222f8b139d93c3caade3203
+
+ -- Deepin Packages Builder <packages@linuxdeepin.com>  Thu, 18 Jul 2013 08:49:58 +0800
+
+deepin-music-player (1+git20130717152700~79c4cce1b6) raring; urgency=low
+
+  * Build from git revision 79c4cce1b6e90b44fa46ee3a9cbc84631decbf24
+
+ -- Deepin Testing Packages <testing@linuxdeepin.com>  Wed, 17 Jul 2013 15:27:00 +0800
+
+deepin-music-player (1+git20130701093805~7efe2488a6) raring; urgency=low
+
+  * Build from git revision 7efe2488a6ce4150002c755b10ea84850788ace9
+
+ -- Deepin Testing Packages <testing@linuxdeepin.com>  Mon, 01 Jul 2013 09:38:06 +0800
+
+deepin-music-player (1+git20130614104136~86b4f5bc3f) raring; urgency=low
+
+  * Build from git revision 86b4f5bc3fed26086d31945a3e96c34e664b800e
+
+ -- Deepin Testing Packages <testing@linuxdeepin.com>  Fri, 14 Jun 2013 10:41:36 +0800
+
+deepin-music-player (1+git20130609091613~969fff4425) raring; urgency=low
+
+  * Build from git revision 969fff44253ac4a5279657b19ade4a764125a913
+
+ -- Deepin Testing Packages <testing@linuxdeepin.com>  Sun, 09 Jun 2013 09:16:14 +0800
+
+deepin-music-player (1+git20130608102817~6f1ff1e9ed) raring; urgency=low
+
+  * Build from git revision 6f1ff1e9ed8418c7d0ad999cb6ad14302eafa212
+
+ -- Deepin Testing Packages <testing@linuxdeepin.com>  Sat, 08 Jun 2013 10:28:17 +0800
+
+deepin-music-player (1+git20130607215632~18dffbc669) raring; urgency=low
+
+  * Build from git revision 18dffbc669aae4db860d2d9ad0da1c894f852bbf
+
+ -- Deepin Testing Packages <testing@linuxdeepin.com>  Fri, 07 Jun 2013 21:56:32 +0800
+
+deepin-music-player (1+git20130606162130~caafca5850) raring; urgency=low
+
+  * Build from git revision caafca585059395c0cb8acaff6d26c50c3c1dc24
+
+ -- Deepin Testing Packages <testing@linuxdeepin.com>  Thu, 06 Jun 2013 16:21:30 +0800
+
+deepin-music-player (1+git20130605165410~6ec19204d9) raring; urgency=low
+
+  * Build from git revision 6ec19204d9ae45fdbe874eebe88cd9688753a15e
+
+ -- Deepin Testing Packages <testing@linuxdeepin.com>  Wed, 05 Jun 2013 16:54:10 +0800
+
+deepin-music-player (1+git20130605084517~6ec19204d9) raring; urgency=low
+
+  * Build from git revision 6ec19204d9ae45fdbe874eebe88cd9688753a15e
+
+ -- Deepin Testing Packages <testing@linuxdeepin.com>  Wed, 05 Jun 2013 08:45:17 +0800
+
+deepin-music-player (1+git20130604091419~c489715e8b) raring; urgency=low
+
+  * Build from git revision c489715e8bfdc7e09e740204bc5f374d36cba435
+
+ -- Deepin Testing Packages <testing@linuxdeepin.com>  Tue, 04 Jun 2013 09:14:19 +0800
+
+deepin-music-player (1+git20130604085846~c489715e8b) raring; urgency=low
+
+  * Build from git revision c489715e8bfdc7e09e740204bc5f374d36cba435
+
+ -- Deepin Testing Packages <testing@linuxdeepin.com>  Tue, 04 Jun 2013 08:58:46 +0800
+
+deepin-music-player (1+git20130529170130) raring; urgency=low
+
+  * Build from git revision 46bf7231cff7b443561601ec02134228fd3f13c3
+
+ -- Deepin Testing Packages <testing@linuxdeepin.com>  Wed, 29 May 2013 17:01:30 +0800
+
+deepin-music-player (1+git20130517015808) raring; urgency=low
+
+  * Upstreamer update
+
+ -- Deepin Testing Packages <testing@linuxdeepin.com>  Fri, 17 May 2013 01:58:08 +0800
+
+deepin-music-player (1+git20130508172131) raring; urgency=low
+
+  * Upstreamer update
+
+ -- Deepin Testing Packages <testing@linuxdeepin.com>  Wed, 08 May 2013 17:21:31 +0800
+
+deepin-music-player (1+git20130506133640) raring; urgency=low
+
+  * Upstreamer update
+
+ -- Deepin Testing Packages <testing@linuxdeepin.com>  Mon, 06 May 2013 13:36:40 +0800
+
+deepin-music-player (1+git20130506095425) raring; urgency=low
+
+  [ Yueqian Zhang ]
+  * Upstreamer update
+
+  [ Deepin Testing Packages ]
+  * Just build for raring
+
+ -- Deepin Testing Packages <testing@linuxdeepin.com>  Mon, 06 May 2013 13:31:00 +0800
+
+deepin-music-player (1+git20130506091736) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Yueqian Zhang <zhangyueqian@linuxdeepin.com>  Mon, 06 May 2013 09:17:36 +0800
+
+deepin-music-player (1+git20130428172523) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Yueqian Zhang <zhangyueqian@linuxdeepin.com>  Sun, 28 Apr 2013 17:25:23 +0800
+
+deepin-music-player (1+git20130428101356) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Yueqian Zhang <zhangyueqian@linuxdeepin.com>  Sun, 28 Apr 2013 10:13:56 +0800
+
+deepin-music-player (1+git20130425140004) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Yueqian Zhang <zhangyueqian@linuxdeepin.com>  Thu, 25 Apr 2013 14:00:04 +0800
+
+deepin-music-player (1+git20130424142235) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Yueqian Zhang <zhangyueqian@linuxdeepin.com>  Wed, 24 Apr 2013 14:22:35 +0800
+
+deepin-music-player (1+git20130423144914) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Yueqian Zhang <zhangyueqian@linuxdeepin.com>  Tue, 23 Apr 2013 14:49:15 +0800
+
+deepin-music-player (1+git20130422181439) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Yueqian Zhang <zhangyueqian@linuxdeepin.com>  Mon, 22 Apr 2013 18:14:39 +0800
+
+deepin-music-player (1+git20130422114254) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Yueqian Zhang <zhangyueqian@linuxdeepin.com>  Mon, 22 Apr 2013 11:42:55 +0800
+
+deepin-music-player (1+git20130419165110) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Yueqian Zhang <zhangyueqian@linuxdeepin.com>  Fri, 19 Apr 2013 16:51:10 +0800
+
+deepin-music-player (1+git20130418131404) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Yueqian Zhang <zhangyueqian@linuxdeepin.com>  Thu, 18 Apr 2013 13:14:04 +0800
+
+deepin-music-player (1+git20130416171210) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Yueqian Zhang <zhangyueqian@linuxdeepin.com>  Tue, 16 Apr 2013 17:12:10 +0800
+
+deepin-music-player (1+git20130412095038) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Yueqian Zhang <zhangyueqian@linuxdeepin.com>  Fri, 12 Apr 2013 09:50:39 +0800
+
+deepin-music-player (1+git20130411184010) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Yueqian Zhang <zhangyueqian@linuxdeepin.com>  Thu, 11 Apr 2013 18:40:10 +0800
+
+deepin-music-player (1+git20130411151258) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Yueqian Zhang <zhangyueqian@linuxdeepin.com>  Thu, 11 Apr 2013 15:12:58 +0800
+
+deepin-music-player (1+git20130410150435) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Yueqian Zhang <zhangyueqian@linuxdeepin.com>  Wed, 10 Apr 2013 15:04:36 +0800
+
+deepin-music-player (1+git20130409170326) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Yueqian Zhang <zhangyueqian@linuxdeepin.com>  Tue, 09 Apr 2013 17:03:27 +0800
+
+deepin-music-player (1+git20130409104207) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Yueqian Zhang <zhangyueqian@linuxdeepin.com>  Tue, 09 Apr 2013 10:42:07 +0800
+
+deepin-music-player (1+git20130330191613) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Yueqian Zhang <zhangyueqian@linuxdeepin.com>  Sat, 30 Mar 2013 19:16:13 +0800
+
+deepin-music-player (1+git20130329102108) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Yueqian Zhang <zhangyueqian@linuxdeepin.com>  Fri, 29 Mar 2013 10:21:08 +0800
+
+deepin-music-player (1+git20130326174209) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Yueqian Zhang <zhangyueqian@linuxdeepin.com>  Tue, 26 Mar 2013 17:42:10 +0800
+
+deepin-music-player (1+git20130326165522) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Yueqian Zhang <zhangyueqian@linuxdeepin.com>  Tue, 26 Mar 2013 16:55:22 +0800
+
+deepin-music-player (1+git20130326143236) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Yueqian Zhang <zhangyueqian@linuxdeepin.com>  Tue, 26 Mar 2013 14:32:36 +0800
+
+deepin-music-player (1+git20130325105306) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Yueqian Zhang <zhangyueqian@linuxdeepin.com>  Mon, 25 Mar 2013 10:53:07 +0800
+
+deepin-music-player (1+git20130318151659) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Yueqian Zhang <zhangyueqian@linuxdeepin.com>  Mon, 18 Mar 2013 15:16:59 +0800
+
+deepin-music-player (1+git20130318115748) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Yueqian Zhang <zhangyueqian@linuxdeepin.com>  Mon, 18 Mar 2013 11:57:49 +0800
+
+deepin-music-player (1+git20130314111315) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Yueqian Zhang <zhangyueqian@linuxdeepin.com>  Thu, 14 Mar 2013 11:13:15 +0800
+
+deepin-music-player (1+git20130314095612) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Yueqian Zhang <zhangyueqian@linuxdeepin.com>  Thu, 14 Mar 2013 09:56:13 +0800
+
+deepin-music-player (1+git20130226092346) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Yueqian Zhang <zhangyueqian@linuxdeepin.com>  Tue, 26 Feb 2013 09:23:46 +0800
+
+deepin-music-player (1+git20130226092326) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Yueqian Zhang <zhangyueqian@linuxdeepin.com>  Tue, 26 Feb 2013 09:23:26 +0800
+
+deepin-music-player (1+git20130125175219) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Li Longyu (Ai Kotoba) <leaeasy@gmail.com>  Fri, 25 Jan 2013 17:52:19 +0800
+
+deepin-music-player (1+git20130125162728) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Li Longyu (Ai Kotoba) <leaeasy@gmail.com>  Fri, 25 Jan 2013 16:27:29 +0800
+
+deepin-music-player (1+git20130124173615) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Li Longyu (Ai Kotoba) <leaeasy@gmail.com>  Thu, 24 Jan 2013 17:36:15 +0800
+
+deepin-music-player (1+git20130122113417) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Li Longyu (Ai Kotoba) <leaeasy@gmail.com>  Tue, 22 Jan 2013 11:34:17 +0800
+
+deepin-music-player (1+git20130115090044) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Li Longyu (Ai Kotoba) <leaeasy@gmail.com>  Tue, 15 Jan 2013 09:00:45 +0800
+
+deepin-music-player (1+git20130104090055) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Li Longyu (Ai Kotoba) <leaeasy@gmail.com>  Fri, 04 Jan 2013 09:00:55 +0800
+
+deepin-music-player (1+git20121224100618) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Li Longyu (Ai Kotoba) <leaeasy@gmail.com>  Mon, 24 Dec 2012 10:06:18 +0800
+
+deepin-music-player (1+git20121221153546) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Li Longyu (Ai Kotoba) <leaeasy@gmail.com>  Fri, 21 Dec 2012 15:35:46 +0800
+
+deepin-music-player (1+git20121220105249) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Li Longyu (Ai Kotoba) <leaeasy@gmail.com>  Thu, 20 Dec 2012 10:52:49 +0800
+
+deepin-music-player (1+git20121220085506) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Li Longyu (Ai Kotoba) <leaeasy@gmail.com>  Thu, 20 Dec 2012 08:55:06 +0800
+
+deepin-music-player (1+git20121219173311) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Li Longyu (Ai Kotoba) <leaeasy@gmail.com>  Wed, 19 Dec 2012 17:33:12 +0800
+
+deepin-music-player (1+git20121219092324) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Li Longyu (Ai Kotoba) <leaeasy@gmail.com>  Wed, 19 Dec 2012 09:23:24 +0800
+
+deepin-music-player (1+git20121218085134) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Li Longyu (Ai Kotoba) <leaeasy@gmail.com>  Tue, 18 Dec 2012 08:51:34 +0800
+
+deepin-music-player (1+git20121217085613) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Li Longyu (Ai Kotoba) <leaeasy@gmail.com>  Mon, 17 Dec 2012 08:56:13 +0800
+
+deepin-music-player (1+git20121213092425) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Li Longyu (Ai Kotoba) <leaeasy@gmail.com>  Thu, 13 Dec 2012 09:24:25 +0800
+
+deepin-music-player (1+git20121213090918) quantal; urgency=low
+
+  * add postinst to auto generate and update po & mo files
+
+ -- Li Longyu (Ai Kotoba) <leaeasy@gmail.com>  Thu, 13 Dec 2012 09:10:07 +0800
+
+deepin-music-player (1+git20121213090917) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Li Longyu (Ai Kotoba) <leaeasy@gmail.com>  Thu, 13 Dec 2012 09:09:18 +0800
+
+deepin-music-player (1+git20121211085749) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Li Longyu (Ai Kotoba) <leaeasy@gmail.com>  Tue, 11 Dec 2012 08:57:49 +0800
+
+deepin-music-player (1+git20121209151118) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Li Longyu (Ai Kotoba) <leaeasy@gmail.com>  Sun, 09 Dec 2012 15:11:18 +0800
+
+deepin-music-player (1+git20121207181614) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Li Longyu (Ai Kotoba) <leaeasy@gmail.com>  Fri, 07 Dec 2012 18:16:15 +0800
+
+deepin-music-player (1+git20121207085229) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Li Longyu (Ai Kotoba) <leaeasy@gmail.com>  Fri, 07 Dec 2012 08:52:29 +0800
+
+deepin-music-player (1+git20121206110818) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Li Longyu (Ai Kotoba) <leaeasy@gmail.com>  Thu, 06 Dec 2012 11:08:19 +0800
+
+deepin-music-player (1+git20121206085048) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Li Longyu (Ai Kotoba) <leaeasy@gmail.com>  Thu, 06 Dec 2012 08:50:48 +0800
+
+deepin-music-player (1+git20121205085803) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Li Longyu (Ai Kotoba) <leaeasy@gmail.com>  Wed, 05 Dec 2012 08:58:03 +0800
+
+deepin-music-player (1+git20121204145422) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Li Longyu (Ai Kotoba) <leaeasy@gmail.com>  Tue, 04 Dec 2012 14:54:22 +0800
+
+deepin-music-player (1+git20121204090308) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Li Longyu (Ai Kotoba) <leaeasy@gmail.com>  Tue, 04 Dec 2012 09:03:09 +0800
+
+deepin-music-player (1+git20121203175108) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Li Longyu (Ai Kotoba) <leaeasy@gmail.com>  Mon, 03 Dec 2012 17:51:08 +0800
+
+deepin-music-player (1+git20121203154638) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Li Longyu (Ai Kotoba) <leaeasy@gmail.com>  Mon, 03 Dec 2012 15:46:38 +0800
+
+deepin-music-player (1+git20121203154246) quantal; urgency=low
+
+  * Upstreamer update
+
+ -- Li Longyu (Ai Kotoba) <leaeasy@gmail.com>  Mon, 03 Dec 2012 15:42:46 +0800
+
+deepin-music-player (1+git201209111106) precise; urgency=low
+
+  * fix i18n
+
+ -- Yueqian Zhang <zhangyueqian@linuxdeepin.com>  Tue, 11 Sep 2012 16:05:05 +0800
+
+deepin-music-player (1+git201209111105) precise; urgency=low
+
+  * new upstream update.
+
+ -- Yueqian Zhang <zhangyueqian@linuxdeepin.com>  Tue, 11 Sep 2012 11:04:48 +0800
+
+deepin-music-player (1+git201209101336) precise; urgency=low
+
+  * update deepin-ui dependency.
+
+ -- Yueqian Zhang <zhangyueqian@linuxdeepin.com>  Mon, 10 Sep 2012 13:39:13 +0800
+
+deepin-music-player (1+git201209071753) precise; urgency=low
+
+  * new upstream update.
+
+ -- Yueqian Zhang <zhangyueqian@linuxdeepin.com>  Fri, 07 Sep 2012 17:53:37 +0800
+
+deepin-music-player (1+git201207161003) precise; urgency=low
+
+  * Non-maintainer upload.
+  * fix translation.
+
+ -- Yueqian Zhang <zhangyueqian@linuxdeepin.com>  Mon, 16 Jul 2012 10:03:14 +0800
+
+deepin-music-player (1+git201207131728) precise; urgency=low
+
+  * Upstream updates. 
+
+ -- Li Longyu <leaeasy@gmail.com>  Fri, 13 Jul 2012 17:29:31 +0800
+
+deepin-music-player (1+git201207122326) precise; urgency=low
+
+  * fix translation filename.
+
+ -- Yueqian Zhang <zhangyueqian@linuxdeepin.com>  Thu, 12 Jul 2012 23:26:16 +0800
+
+deepin-music-player (1+git201207122315) precise; urgency=low
+
+  * Upstream updates.
+
+ -- Yueqian Zhang <zhangyueqian@linuxdeepin.com>  Thu, 12 Jul 2012 23:13:13 +0800
+
+deepin-music-player (1+git201207122254) precise; urgency=low
+
+  * add translation. fix last version.
+
+ -- Yueqian Zhang <zhangyueqian@linuxdeepin.com>  Thu, 12 Jul 2012 22:54:10 +0800
+
+deepin-music-player (1+git201207122053) precise; urgency=low
+
+  * add translation.
+
+ -- Yueqian Zhang <zhangyueqian@linuxdeepin.com>  Thu, 12 Jul 2012 20:51:04 +0800
+
+deepin-music-player (1+git201207121954) precise; urgency=low
+
+  * Upstream updates.
+  * 1.0 beta.
+
+ -- Yueqian Zhang <zhangyueqian@linuxdeepin.com>  Thu, 12 Jul 2012 19:52:55 +0800
+
+deepin-music-player (1+git201207111907) precise; urgency=low
+
+  * Nearly release version 1.0.
+
+ -- Li Longyu <leaeasy@gmail.com>  Wed, 11 Jul 2012 19:08:14 +0800
+
+deepin-music-player (1+git2012062119) precise; urgency=low
+
+  * Upstream updates.
+
+ -- Li Longyu <leaeasy@gmail.com>  Thu, 21 Jun 2012 19:41:05 +0800
+
+deepin-music-player (1+git20120621-1) precise; urgency=low
+
+  * Upstream updates. 
+
+ -- Li Longyu <leaeasy@gmail.com>  Thu, 21 Jun 2012 15:25:58 +0800
+
+deepin-music-player (1+git20120606-1) precise; urgency=low
+
+  * fix some bugs 
+
+ -- Li Longyu <leaeasy@gmail.com>  Tue, 05 Jun 2012 20:44:26 +0800
+
+deepin-music-player (1+git20120605-1) precise; urgency=low
+
+  * Release for Linuxdeepin 12.06 beta2
+
+ -- Li Longyu <leaeasy@gmail.com>  Tue, 05 Jun 2012 16:29:00 +0800
+
+deepin-music-player (1+git20120508-1) precise; urgency=low
+
+  * add cover item. 
+
+ -- Li Longyu <leaeasy@gmail.com>  Tue, 08 May 2012 14:44:36 +0800
+
+deepin-music-player (1+git20120503-1) precise; urgency=low
+
+  * upstreamer update.
+
+ -- Li Longyu <leaeasy@gmail.com>  Thu, 03 May 2012 16:19:32 +0800
+
+deepin-music-player (1+git20120502-1) oneiric; urgency=low
+
+  * modifed baidu ting demo 
+
+ -- Li Longyu <leaeasy@gmail.com>  Wed, 02 May 2012 13:03:33 +0800
+
+deepin-music-player (1+gitba975743bfbd-1) unstable; urgency=low
+
+  * New xiami demo
+
+ -- Li Longyu <leaeasy@gmail.com>  Fri, 20 Apr 2012 12:32:59 +0800
