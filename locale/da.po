@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Deepin Music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-07-25 10:35+0800\n"
+"POT-Creation-Date: 2014-08-21 16:43+0800\n"
 "PO-Revision-Date: 2014-06-30 04:51+0000\n"
 "Last-Translator: Carl Andersen <carl@manjaro.dk>\n"
 "Language-Team: Danish (http://www.transifex.com/projects/p/deepin-music/"
@@ -188,7 +188,8 @@ msgid "Toggle visibility of the GUI (if possible)"
 msgstr "Skift til synlighed på GUI (hvis muligt)"
 
 #: ../src/main.py:158
-msgid "This option makes control options like --play to start program"
+#, fuzzy
+msgid "This option makes control options, such as --play to start program"
 msgstr ""
 "Denne indstilling laver kontrol muligheder som som - spille for at starte "
 "programmet"

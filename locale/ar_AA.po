@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DMusic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-07-25 10:35+0800\n"
+"POT-Creation-Date: 2014-08-21 16:43+0800\n"
 "PO-Revision-Date: 2014-02-09 07:29+0000\n"
 "Last-Translator: lihongwu <lihongwu1987@gmail.com>\n"
 "Language-Team: Arabic (Unitag) (http://www.transifex.com/projects/p/dmusic/"
@@ -178,7 +178,7 @@ msgid "Toggle visibility of the GUI (if possible)"
 msgstr ""
 
 #: ../src/main.py:158
-msgid "This option makes control options like --play to start program"
+msgid "This option makes control options, such as --play to start program"
 msgstr ""
 
 #: ../src/main.py:161

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Deepin Music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-07-25 10:35+0800\n"
+"POT-Creation-Date: 2014-08-21 16:43+0800\n"
 "PO-Revision-Date: 2014-07-01 23:06+0000\n"
 "Last-Translator: wbear <wbear_123@hotmail.es>\n"
 "Language-Team: Spanish (Mexico) (http://www.transifex.com/projects/p/deepin-"
@@ -182,7 +182,7 @@ msgid "Toggle visibility of the GUI (if possible)"
 msgstr "Activa visibilidad de la GUI (si es posible)"
 
 #: ../src/main.py:158
-msgid "This option makes control options like --play to start program"
+msgid "This option makes control options, such as --play to start program"
 msgstr ""
 
 #: ../src/main.py:161
