@@ -1,24 +1,23 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
+# 
 # Translators:
 # lexross <its4moi@gmail.com>, 2014
 # lexross <its4moi@gmail.com>, 2014
-# trid <tristan.denni@viacesi.fr>, 2014
+# Tristan Denni <tristan.denni@viacesi.fr>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Deepin Music\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-21 16:43+0800\n"
-"PO-Revision-Date: 2014-06-30 04:51+0000\n"
-"Last-Translator: trid <tristan.denni@viacesi.fr>\n"
-"Language-Team: French (http://www.transifex.com/projects/p/deepin-music/"
-"language/fr/)\n"
-"Language: fr\n"
+"PO-Revision-Date: 2014-08-22 05:20+0000\n"
+"Last-Translator: szd_liufei <liufei@linuxdeepin.com>\n"
+"Language-Team: French (http://www.transifex.com/projects/p/deepin-music/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: ../src/plugins.py:91
@@ -38,48 +37,35 @@ msgstr "L'extension de l'archive contient un chemin non sûr."
 msgid ""
 "Vorbis is an open source, lossy audio codec with high quality output at a "
 "lower file size than MP3."
-msgstr ""
-"Vorbis est un codec audio open-source qui possède une meilleure qualité "
-"audio et une taille de fichier finale inférieure au MP3. "
+msgstr "Vorbis est un codec audio open-source qui possède une meilleure qualité audio et une taille de fichier finale inférieure au MP3. "
 
 #: ../src/transcoder.py:66
 msgid ""
-"Free Lossless Audio Codec (FLAC) is an open source codec that compresses but "
-"does not degrade audio quality."
-msgstr ""
-"Le codec FLAC (Free Lossless Audio Codec) est un codec Open Source qui "
-"compresse sans dégrader la qualité audio."
+"Free Lossless Audio Codec (FLAC) is an open source codec that compresses but"
+" does not degrade audio quality."
+msgstr "Le codec FLAC (Free Lossless Audio Codec) est un codec Open Source qui compresse sans dégrader la qualité audio."
 
 #: ../src/transcoder.py:80
 msgid ""
-"Apple's proprietary lossy audio format could give higher quality than MP3 at "
-"lower bitrates."
-msgstr ""
-"Les formats propriétaires d'Apple peuvent fournir une meilleure qualité "
-"qu'un MP3 avec un taux plus bas."
+"Apple's proprietary lossy audio format could give higher quality than MP3 at"
+" lower bitrates."
+msgstr "Les formats propriétaires d'Apple peuvent fournir une meilleure qualité qu'un MP3 avec un taux plus bas."
 
 #: ../src/transcoder.py:93
 msgid ""
 "A proprietary and older, but also popular, lossy audio format. VBR gives "
 "higher quality than CBR, but may be incompatible with some players."
-msgstr ""
-"Un ancien format audio encore populaire. VBR offre une qualité supérieure au "
-"CBR, mais peut être incompatible avec certains lecteurs audio."
+msgstr "Un ancien format audio encore populaire. VBR offre une qualité supérieure au CBR, mais peut être incompatible avec certains lecteurs audio."
 
 #: ../src/transcoder.py:106
 msgid ""
 "A proprietary and older, but also popular, lossy audio format. The output "
 "effect of CBR is not good as VBR, but is compatible with any player."
-msgstr ""
-"Un format audio sans perte propriétaire et ancien mais populaire. L'effet de "
-"sortie du CBR n'est pas aussi bon que celui du VBR, mais il est compatible "
-"avec n'importe quel lecteur."
+msgstr "Un format audio sans perte propriétaire et ancien mais populaire. L'effet de sortie du CBR n'est pas aussi bon que celui du VBR, mais il est compatible avec n'importe quel lecteur."
 
 #: ../src/transcoder.py:119
 msgid "A very fast Free lossless audio format with good compression."
-msgstr ""
-"Un format audio libre avec une bonne compression,sans perte audio et très "
-"rapide."
+msgstr "Un format audio libre avec une bonne compression,sans perte audio et très rapide."
 
 #: ../src/library.py:990 ../src/library.py:991 ../src/library.py:992
 #: ../src/library.py:999 ../src/library.py:1000 ../src/library.py:1001
@@ -193,11 +179,8 @@ msgid "Toggle visibility of the GUI (if possible)"
 msgstr "Basculer la visibilité de l'interface graphique (si possible)"
 
 #: ../src/main.py:158
-#, fuzzy
 msgid "This option makes control options, such as --play to start program"
 msgstr ""
-"Cette option permet d'ajouter des options de contrôle comme --play pour "
-"démarrer le programme"
 
 #: ../src/main.py:161
 msgid "Development/Debug Options"
@@ -265,9 +248,8 @@ msgid "File"
 msgstr "Fichier"
 
 #: ../src/widget/song_view.py:523 ../src/widget/song_view.py:531
-#, fuzzy
 msgid "Folder (include subdirectories)"
-msgstr "Dossier (inclure les sous-répertoires)"
+msgstr ""
 
 #: ../src/widget/song_view.py:524 ../src/widget/song_view.py:532
 #: ../src/widget/local_browser.py:91
@@ -875,9 +857,7 @@ msgstr "Assurez-vous que tous les mots soient correctement écrit."
 msgid ""
 "Try more general keywords, such as a title, an artist or the name of an "
 "album."
-msgstr ""
-"Essayez des mots-clés plus simples, tels que le titre, l'artiste ou le nom "
-"d'un album."
+msgstr "Essayez des mots-clés plus simples, tels que le titre, l'artiste ou le nom d'un album."
 
 #: ../src/widget/ui.py:1222 ../src/widget/plugins_view.py:166
 msgid "Name"
@@ -1229,19 +1209,10 @@ msgstr "Par ligne"
 
 #: ../src/widget/preference.py:920
 msgid ""
-"Deepin Music is a music application designed for Linux users. It's "
-"characterized with lyrics searching, desktop lyrics display,album cover "
-"downloading, resume playing, music management and skin selection.\n"
+"Deepin Music is a music application designed for Linux users. It's characterized with lyrics searching, desktop lyrics display,album cover downloading, resume playing, music management and skin selection.\n"
 "\n"
 "Deepin Music is free software licensed under GNU GPLv3."
-msgstr ""
-"Deepin Music est une application musicale conçu pour les utilisateurs Linux. "
-"Elle est caractérisée par une recherche des paroles, un affichage sur le "
-"bureau des paroles, un téléchargement des pochettes des albums, un "
-"rétablissement de la lecture, une gestion de la musique et d'une sélection "
-"de thème.\n"
-"\n"
-"Deepin Music est un logiciel libre sous licence GNU GPLv3."
+msgstr "Deepin Music est une application musicale conçu pour les utilisateurs Linux. Elle est caractérisée par une recherche des paroles, un affichage sur le bureau des paroles, un téléchargement des pochettes des albums, un rétablissement de la lecture, une gestion de la musique et d'une sélection de thème.\n\nDeepin Music est un logiciel libre sous licence GNU GPLv3."
 
 #: ../src/widget/preference.py:1001
 msgid "General"

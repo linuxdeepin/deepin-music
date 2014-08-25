@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
+# 
 # Translators:
 # mo-hd <mo-hd@windowslive.com>, 2014
 msgid ""
@@ -9,16 +9,14 @@ msgstr ""
 "Project-Id-Version: Deepin Music\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-21 16:43+0800\n"
-"PO-Revision-Date: 2014-06-30 04:51+0000\n"
-"Last-Translator: cxbii <chenxiangbang@linuxdeepin.com>\n"
-"Language-Team: Arabic (http://www.transifex.com/projects/p/deepin-music/"
-"language/ar/)\n"
-"Language: ar\n"
+"PO-Revision-Date: 2014-08-22 05:20+0000\n"
+"Last-Translator: szd_liufei <liufei@linuxdeepin.com>\n"
+"Language-Team: Arabic (http://www.transifex.com/projects/p/deepin-music/language/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
-"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #: ../src/plugins.py:91
 msgid "Plugin archive is not in the correct format."
@@ -37,31 +35,25 @@ msgstr ""
 msgid ""
 "Vorbis is an open source, lossy audio codec with high quality output at a "
 "lower file size than MP3."
-msgstr ""
-"Vorbis is an open source, lossy audio codec with high quality output at a "
-"lower file size than MP3."
+msgstr "Vorbis is an open source, lossy audio codec with high quality output at a lower file size than MP3."
 
 #: ../src/transcoder.py:66
 msgid ""
-"Free Lossless Audio Codec (FLAC) is an open source codec that compresses but "
-"does not degrade audio quality."
-msgstr ""
-"Free Lossless Audio Codec (FLAC) is an open source codec that compresses but "
-"does not degrade audio quality."
+"Free Lossless Audio Codec (FLAC) is an open source codec that compresses but"
+" does not degrade audio quality."
+msgstr "Free Lossless Audio Codec (FLAC) is an open source codec that compresses but does not degrade audio quality."
 
 #: ../src/transcoder.py:80
 msgid ""
-"Apple's proprietary lossy audio format could give higher quality than MP3 at "
-"lower bitrates."
+"Apple's proprietary lossy audio format could give higher quality than MP3 at"
+" lower bitrates."
 msgstr ""
 
 #: ../src/transcoder.py:93
 msgid ""
 "A proprietary and older, but also popular, lossy audio format. VBR gives "
 "higher quality than CBR, but may be incompatible with some players."
-msgstr ""
-"A proprietary and older, but also popular, lossy audio format. VBR gives "
-"higher quality than CBR, but may be incompatible with some players."
+msgstr "A proprietary and older, but also popular, lossy audio format. VBR gives higher quality than CBR, but may be incompatible with some players."
 
 #: ../src/transcoder.py:106
 msgid ""
@@ -1215,9 +1207,7 @@ msgstr "بواسطة السطر"
 
 #: ../src/widget/preference.py:920
 msgid ""
-"Deepin Music is a music application designed for Linux users. It's "
-"characterized with lyrics searching, desktop lyrics display,album cover "
-"downloading, resume playing, music management and skin selection.\n"
+"Deepin Music is a music application designed for Linux users. It's characterized with lyrics searching, desktop lyrics display,album cover downloading, resume playing, music management and skin selection.\n"
 "\n"
 "Deepin Music is free software licensed under GNU GPLv3."
 msgstr ""

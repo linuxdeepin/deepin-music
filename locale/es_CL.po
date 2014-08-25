@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
+# 
 # Translators:
 # Benjamin Perez Carrillo <benperezc@gmail.com>, 2014
 # David Ríos <drios9420@gmail.com>, 2013
@@ -11,14 +11,13 @@ msgstr ""
 "Project-Id-Version: Deepin Music\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-21 16:43+0800\n"
-"PO-Revision-Date: 2014-07-01 23:06+0000\n"
-"Last-Translator: Benjamin Perez Carrillo <benperezc@gmail.com>\n"
-"Language-Team: Spanish (Chile) (http://www.transifex.com/projects/p/deepin-"
-"music/language/es_CL/)\n"
-"Language: es_CL\n"
+"PO-Revision-Date: 2014-08-22 05:20+0000\n"
+"Last-Translator: szd_liufei <liufei@linuxdeepin.com>\n"
+"Language-Team: Spanish (Chile) (http://www.transifex.com/projects/p/deepin-music/language/es_CL/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: es_CL\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ../src/plugins.py:91
@@ -38,48 +37,35 @@ msgstr "El archivo de plugin indica una ruta no segura"
 msgid ""
 "Vorbis is an open source, lossy audio codec with high quality output at a "
 "lower file size than MP3."
-msgstr ""
-"Vorbis es un códec de audio con pérdida, de código abierto y con alta "
-"calidad de sonido en archivos más pequeños que MP3."
+msgstr "Vorbis es un códec de audio con pérdida, de código abierto y con alta calidad de sonido en archivos más pequeños que MP3."
 
 #: ../src/transcoder.py:66
 msgid ""
-"Free Lossless Audio Codec (FLAC) is an open source codec that compresses but "
-"does not degrade audio quality."
-msgstr ""
-"Free Lossless Audio Codec (FLAC) es un códec de código abierto que comprime "
-"pero que no degrada la calidad de audio."
+"Free Lossless Audio Codec (FLAC) is an open source codec that compresses but"
+" does not degrade audio quality."
+msgstr "Free Lossless Audio Codec (FLAC) es un códec de código abierto que comprime pero que no degrada la calidad de audio."
 
 #: ../src/transcoder.py:80
 msgid ""
-"Apple's proprietary lossy audio format could give higher quality than MP3 at "
-"lower bitrates."
-msgstr ""
-"El formato de audio propietario Apple puede dar mayor calidad que MP3 en "
-"cantidad inferior de bits"
+"Apple's proprietary lossy audio format could give higher quality than MP3 at"
+" lower bitrates."
+msgstr "El formato de audio propietario Apple puede dar mayor calidad que MP3 en cantidad inferior de bits"
 
 #: ../src/transcoder.py:93
 msgid ""
 "A proprietary and older, but also popular, lossy audio format. VBR gives "
 "higher quality than CBR, but may be incompatible with some players."
-msgstr ""
-"Un formato de audio propietario, lossy, antiguo pero muy popular. VBR ofrece "
-"una calidad superior que CBR aunque puede ser no compatible con otros "
-"reproductores."
+msgstr "Un formato de audio propietario, lossy, antiguo pero muy popular. VBR ofrece una calidad superior que CBR aunque puede ser no compatible con otros reproductores."
 
 #: ../src/transcoder.py:106
 msgid ""
 "A proprietary and older, but also popular, lossy audio format. The output "
 "effect of CBR is not good as VBR, but is compatible with any player."
-msgstr ""
-"Un formato de audio propietario, lossy, antiguo pero muy popular. La salida "
-"de CBR no ofrece una tan buena como VBR, pero es compatible con cualquier "
-"reproductor."
+msgstr "Un formato de audio propietario, lossy, antiguo pero muy popular. La salida de CBR no ofrece una tan buena como VBR, pero es compatible con cualquier reproductor."
 
 #: ../src/transcoder.py:119
 msgid "A very fast Free lossless audio format with good compression."
-msgstr ""
-"Un formato de audio muy veloz y libre de ruido con muy buena compresión."
+msgstr "Un formato de audio muy veloz y libre de ruido con muy buena compresión."
 
 #: ../src/library.py:990 ../src/library.py:991 ../src/library.py:992
 #: ../src/library.py:999 ../src/library.py:1000 ../src/library.py:1001
@@ -871,9 +857,7 @@ msgstr "Asegúrate de que todas las palabras están escritas correctamente."
 msgid ""
 "Try more general keywords, such as a title, an artist or the name of an "
 "album."
-msgstr ""
-"Intenta usar términos más generales, como un título, un artista o el nombre "
-"del álbum."
+msgstr "Intenta usar términos más generales, como un título, un artista o el nombre del álbum."
 
 #: ../src/widget/ui.py:1222 ../src/widget/plugins_view.py:166
 msgid "Name"
@@ -1225,9 +1209,7 @@ msgstr "En línea"
 
 #: ../src/widget/preference.py:920
 msgid ""
-"Deepin Music is a music application designed for Linux users. It's "
-"characterized with lyrics searching, desktop lyrics display,album cover "
-"downloading, resume playing, music management and skin selection.\n"
+"Deepin Music is a music application designed for Linux users. It's characterized with lyrics searching, desktop lyrics display,album cover downloading, resume playing, music management and skin selection.\n"
 "\n"
 "Deepin Music is free software licensed under GNU GPLv3."
 msgstr ""

@@ -1,8 +1,9 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
+# 
 # Translators:
+# kyper, 2014
 # Jonathan <jyv0708@gmail.com>, 2014
 # wbear <wbear_123@hotmail.es>, 2014
 msgid ""
@@ -10,14 +11,13 @@ msgstr ""
 "Project-Id-Version: Deepin Music\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-21 16:43+0800\n"
-"PO-Revision-Date: 2014-07-01 23:06+0000\n"
-"Last-Translator: wbear <wbear_123@hotmail.es>\n"
-"Language-Team: Spanish (Mexico) (http://www.transifex.com/projects/p/deepin-"
-"music/language/es_MX/)\n"
-"Language: es_MX\n"
+"PO-Revision-Date: 2014-08-22 05:20+0000\n"
+"Last-Translator: szd_liufei <liufei@linuxdeepin.com>\n"
+"Language-Team: Spanish (Mexico) (http://www.transifex.com/projects/p/deepin-music/language/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: es_MX\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ../src/plugins.py:91
@@ -37,38 +37,35 @@ msgstr "Archivo de plugin contiene un camino inseguro"
 msgid ""
 "Vorbis is an open source, lossy audio codec with high quality output at a "
 "lower file size than MP3."
-msgstr ""
+msgstr "Vorbs es un códec de audio de código abierto con perdida de audio y alta calidad de salida con un menor tamaño de  archivo menor que MP3"
 
 #: ../src/transcoder.py:66
 msgid ""
-"Free Lossless Audio Codec (FLAC) is an open source codec that compresses but "
-"does not degrade audio quality."
-msgstr ""
-"Free Lossless Audio Codec (FLAC) es un codec de código abierto que comprime, "
-"pero no degrada la calidad del audio"
+"Free Lossless Audio Codec (FLAC) is an open source codec that compresses but"
+" does not degrade audio quality."
+msgstr "Free Lossless Audio Codec (FLAC) es un codec de código abierto que comprime, pero no degrada la calidad del audio"
 
 #: ../src/transcoder.py:80
 msgid ""
-"Apple's proprietary lossy audio format could give higher quality than MP3 at "
-"lower bitrates."
-msgstr ""
+"Apple's proprietary lossy audio format could give higher quality than MP3 at"
+" lower bitrates."
+msgstr "Formato de audio propietario con pérdida de Apple, podría dar más calidad que MP3 a velocidades de bits más bajas."
 
 #: ../src/transcoder.py:93
 msgid ""
 "A proprietary and older, but also popular, lossy audio format. VBR gives "
 "higher quality than CBR, but may be incompatible with some players."
-msgstr ""
+msgstr "Un propietario y viejo, pero popular formato de audio con perdida. El efecto de salida de VBR da una mayor calidad que CBR, pero podría ser incompatible con algunos reproductores."
 
 #: ../src/transcoder.py:106
 msgid ""
 "A proprietary and older, but also popular, lossy audio format. The output "
 "effect of CBR is not good as VBR, but is compatible with any player."
-msgstr ""
+msgstr "Un propietario y viejo, pero popular formato de audio con perdida. El efecto de salida de CBR no es tan bueno como VBR, pero es compatible con cualquier reproductor."
 
 #: ../src/transcoder.py:119
 msgid "A very fast Free lossless audio format with good compression."
-msgstr ""
-"Un formato de audio rápido, gratis, sin perdida con una buena compresion."
+msgstr "Un formato de audio rápido, gratis, sin perdida con una buena compresion."
 
 #: ../src/library.py:990 ../src/library.py:991 ../src/library.py:992
 #: ../src/library.py:999 ../src/library.py:1000 ../src/library.py:1001
@@ -213,7 +210,7 @@ msgstr "Repetir(solo uno)"
 
 #: ../src/widget/song_view.py:482
 msgid "Order play"
-msgstr ""
+msgstr "Orden de reproducción"
 
 #: ../src/widget/song_view.py:483
 msgid "Repeat (list)"
@@ -251,9 +248,8 @@ msgid "File"
 msgstr "Archivo"
 
 #: ../src/widget/song_view.py:523 ../src/widget/song_view.py:531
-#, fuzzy
 msgid "Folder (include subdirectories)"
-msgstr "Carpeta (incluye subcarpetas)"
+msgstr ""
 
 #: ../src/widget/song_view.py:524 ../src/widget/song_view.py:532
 #: ../src/widget/local_browser.py:91
@@ -283,7 +279,7 @@ msgstr "Álbum"
 
 #: ../src/widget/song_view.py:680
 msgid "Added Time"
-msgstr ""
+msgstr "Tiempo agregado"
 
 #: ../src/widget/song_view.py:785 ../src/widget/tray.py:59
 #: ../src/widget/webcast_view.py:119 ../src/widget/webcast_view.py:338
@@ -357,7 +353,7 @@ msgstr "Volumen"
 
 #: ../src/widget/tray.py:72
 msgid "Close Lyrics"
-msgstr ""
+msgstr "Cerrar letras"
 
 #: ../src/widget/tray.py:73 ../src/widget/instance.py:378
 msgid "Search Lyrics"
@@ -369,12 +365,12 @@ msgstr "Mostrar letras"
 
 #: ../src/widget/tray.py:78 ../src/widget/instance.py:403
 msgid "Unlock Lyrics"
-msgstr ""
+msgstr "Desbloquear letras"
 
 #: ../src/widget/tray.py:80 ../src/widget/lyrics_module.py:155
 #: ../src/widget/instance.py:405
 msgid "Lock Lyrics"
-msgstr ""
+msgstr "Bloquear letras"
 
 #: ../src/widget/tray.py:83 ../src/widget/instance.py:372
 #: ../src/widget/preference.py:943
@@ -654,7 +650,7 @@ msgstr "Opciones de etiquetado"
 
 #: ../src/widget/song_editor.py:369
 msgid "Cover Settings"
-msgstr ""
+msgstr "Ajustes de álbum"
 
 #: ../src/widget/equalizer.py:176
 msgid "Custom"
@@ -810,7 +806,7 @@ msgstr "Por veces reproducidas"
 
 #: ../src/widget/playlist.py:541
 msgid "By Added Time"
-msgstr ""
+msgstr "Por tiempo agregado"
 
 #: ../src/widget/playlist.py:550 ../src/widget/local_browser.py:351
 msgid "Add to List"
@@ -861,9 +857,7 @@ msgstr "Asegurate que todas las palabras esten deletreadas correctamente"
 msgid ""
 "Try more general keywords, such as a title, an artist or the name of an "
 "album."
-msgstr ""
-"Trata palabras claves mas generales, como un titulo, artista o el nombre de "
-"un álbum"
+msgstr "Trata palabras claves mas generales, como un titulo, artista o el nombre de un álbum"
 
 #: ../src/widget/ui.py:1222 ../src/widget/plugins_view.py:166
 msgid "Name"
@@ -891,7 +885,7 @@ msgstr "Cancelar"
 
 #: ../src/widget/converter.py:309
 msgid "Target file already exists, do you want to overwrite it?"
-msgstr ""
+msgstr "El archivo seleccionado ya existe ¿desea sobreescribirlo?"
 
 #: ../src/widget/converter.py:369
 msgid "Delete task"
@@ -931,7 +925,7 @@ msgstr "Iniciar"
 
 #: ../src/widget/converter.py:450
 msgid "Add to Playlist after finished"
-msgstr ""
+msgstr "Agregar a la lista de reproducción al finalizar"
 
 #: ../src/widget/converter.py:472
 msgid "Output"
@@ -1056,7 +1050,7 @@ msgstr ""
 
 #: ../src/widget/preference.py:157
 msgid "Display splash-screen"
-msgstr ""
+msgstr "Mostrar pantalla de bienvenida"
 
 #: ../src/widget/preference.py:164
 msgid "Show lyrics"
@@ -1215,18 +1209,10 @@ msgstr "Por linea"
 
 #: ../src/widget/preference.py:920
 msgid ""
-"Deepin Music is a music application designed for Linux users. It's "
-"characterized with lyrics searching, desktop lyrics display,album cover "
-"downloading, resume playing, music management and skin selection.\n"
+"Deepin Music is a music application designed for Linux users. It's characterized with lyrics searching, desktop lyrics display,album cover downloading, resume playing, music management and skin selection.\n"
 "\n"
 "Deepin Music is free software licensed under GNU GPLv3."
-msgstr ""
-"Deepin Música es una aplicación de música diseñada para usuarios Linux. Se "
-"caracteriza por tener búsqueda de letras de las canciones, muestra de letras "
-"en el escritorio, descarga de portadas de álbum, reanudación de "
-"reproducción,  administración de música y selección de temas visuales. \n"
-"\n"
-"Deepin Música es software libre licenciado bajo la licencia GNU GPLv3."
+msgstr "Deepin Música es una aplicación de música diseñada para usuarios Linux. Se caracteriza por tener búsqueda de letras de las canciones, muestra de letras en el escritorio, descarga de portadas de álbum, reanudación de reproducción,  administración de música y selección de temas visuales. \n\nDeepin Música es software libre licenciado bajo la licencia GNU GPLv3."
 
 #: ../src/widget/preference.py:1001
 msgid "General"

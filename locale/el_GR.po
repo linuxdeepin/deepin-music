@@ -4,13 +4,14 @@
 # 
 # Translators:
 # GoldBlossom <angelnonis@gmail.com>, 2014
+# JimSp472000 <jimspentzos2000@gmail.com>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Deepin Music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-06-18 13:29+0800\n"
-"PO-Revision-Date: 2014-06-30 04:42+0000\n"
-"Last-Translator: cxbii <chenxiangbang@linuxdeepin.com>\n"
+"POT-Creation-Date: 2014-08-21 16:43+0800\n"
+"PO-Revision-Date: 2014-08-25 20:21+0000\n"
+"Last-Translator: JimSp472000 <jimspentzos2000@gmail.com>\n"
 "Language-Team: Greek (Greece) (http://www.transifex.com/projects/p/deepin-music/language/el_GR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,7 +26,7 @@ msgstr ""
 #: ../src/plugins.py:98
 #, python-format
 msgid "A plugin with the name \"%s\" is already installed."
-msgstr ""
+msgstr "Ένα πρόσθετο με το όνομα \"%s\" έχει ήδη εγκατασταθεί."
 
 #: ../src/plugins.py:103
 msgid "Plugin archive contains an unsafe path."
@@ -53,7 +54,7 @@ msgstr ""
 msgid ""
 "A proprietary and older, but also popular, lossy audio format. VBR gives "
 "higher quality than CBR, but may be incompatible with some players."
-msgstr "Ένα ιδιόκτητο και παλαιότερο, αλλά και δημοφιλής, με απώλεια μορφή ήχου. Το VBR δίνει υψηλότερη ποιότητα από CBR, αλλά μπορεί να είναι ασύμβατο με κάποιους παίκτες."
+msgstr "Μια ιδιόκτητη και παλαιότερη, αλλά και δημοφιλής, με απώλεια μορφή ήχου. Το VBR δίνει υψηλότερη ποιότητα από το CBR, αλλά μπορεί να είναι ασύμβατο με κάποιες εφαρμογές αναπαραγωγής."
 
 #: ../src/transcoder.py:106
 msgid ""
@@ -74,7 +75,7 @@ msgstr "Άγνωστο"
 #: ../src/constant.py:28 ../src/widget/information.py:41
 #: ../plugins/pidgin/__init__.py:97 ../plugins/mpris2/mpris_adapter.py:252
 msgid "Deepin Music"
-msgstr ""
+msgstr "Μουσική Deepin"
 
 #: ../src/constant.py:29
 msgid "DMusic"
@@ -90,7 +91,7 @@ msgstr "Eπιλογές"
 
 #: ../src/main.py:108
 msgid "Control Options"
-msgstr "Επιλογές ελέγχου"
+msgstr "Επιλογές Κουμπιών Ελέγχου"
 
 #: ../src/main.py:110
 msgid "Play the next track"
@@ -122,7 +123,7 @@ msgstr "Eπιλογές τόμου"
 
 #: ../src/main.py:126
 msgid "Change Volume (VOLUME 0.0-1.0)"
-msgstr "Αλλαγή έντασης ήχου (ΈΝΤΑΣΗ 0,0-1,0)"
+msgstr "Αλλαγή Έντασης (ΈΝΤΑΣΗ 0,0-1,0)"
 
 #: ../src/main.py:129
 msgid "Track information Options"
@@ -170,14 +171,14 @@ msgstr "Παρουσίαση του αριθμού έκδοσης του πρό�
 
 #: ../src/main.py:152
 msgid "Minimize after started"
-msgstr ""
+msgstr "Ελαχιστοποίηση μετά την εκκίνηση"
 
 #: ../src/main.py:155
 msgid "Toggle visibility of the GUI (if possible)"
 msgstr "Εναλλαγή προβολής του GUI (αν είναι δυνατόν)"
 
 #: ../src/main.py:158
-msgid "This option makes control options like --play to start program"
+msgid "This option makes control options, such as --play to start program"
 msgstr ""
 
 #: ../src/main.py:161
@@ -186,7 +187,7 @@ msgstr "Eπιλογές ανάπτυξης / εντοπισμού σφαλμάτ
 
 #: ../src/main.py:162
 msgid "Set debug level (0-9)"
-msgstr ""
+msgstr "Ορισμός επιπέδου αποσφαλμάτωσης (0-9)"
 
 #: ../src/main.py:166
 msgid "Show information supported audio file"
@@ -200,7 +201,7 @@ msgstr "Προτροπή"
 #: ../src/widget/song_view.py:437 ../src/widget/song_view.py:780
 #: ../src/widget/local_browser.py:339
 msgid "Are you sure to delete?"
-msgstr ""
+msgstr "Σίγουρα θέλετε να διαγράψετε;"
 
 #: ../src/widget/song_view.py:481
 msgid "Repeat (single)"
@@ -229,34 +230,34 @@ msgstr ""
 #: ../src/widget/song_view.py:509 ../src/widget/song_view.py:789
 #: ../src/widget/playlist.py:554 ../src/widget/local_browser.py:354
 msgid "Move to Trash"
-msgstr ""
+msgstr "Μετακίνηση στα Απορρίμματα"
 
 #: ../src/widget/song_view.py:510 ../src/widget/webcast_view.py:115
 #: ../src/widget/webcast_view.py:123 ../src/widget/playlist.py:555
 #: ../plugins/musicfm/radio_view.py:135 ../plugins/musicfm/radio_view.py:141
 msgid "Clear List"
-msgstr "Καθάρισμα λίστας"
+msgstr "Εκκαθάριση Λίστας"
 
 #: ../src/widget/song_view.py:521
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #: ../src/widget/song_view.py:522 ../src/widget/song_view.py:530
 msgid "File"
-msgstr ""
+msgstr "Αρχείο"
 
 #: ../src/widget/song_view.py:523 ../src/widget/song_view.py:531
-msgid "Folder(include subdirectories)"
-msgstr ""
+msgid "Folder (include subdirectories)"
+msgstr "Φάκελος (συμπερίληψη υπό-καταλόγων)"
 
 #: ../src/widget/song_view.py:524 ../src/widget/song_view.py:532
 #: ../src/widget/local_browser.py:91
 msgid "Folder"
-msgstr ""
+msgstr "Φάκελος"
 
 #: ../src/widget/song_view.py:542
 msgid "Add URL"
-msgstr ""
+msgstr "Προσθήκη "
 
 #: ../src/widget/song_view.py:680 ../src/widget/song_editor.py:72
 #: ../src/widget/song_editor.py:202 ../src/widget/lyrics_search.py:83
@@ -277,7 +278,7 @@ msgstr "Αλμπουμ"
 
 #: ../src/widget/song_view.py:680
 msgid "Added Time"
-msgstr ""
+msgstr "Ώρα Προσθήκης"
 
 #: ../src/widget/song_view.py:785 ../src/widget/tray.py:59
 #: ../src/widget/webcast_view.py:119 ../src/widget/webcast_view.py:338
@@ -289,21 +290,21 @@ msgstr "Παίξτε"
 #: ../src/widget/song_view.py:786 ../src/widget/webcast_view.py:333
 #: ../src/widget/webcast_view.py:339
 msgid "Add to Playlist"
-msgstr "Προσθήκη στα λίστα αναπαραγωγής"
+msgstr "Προσθήκη σε Λίστα αναπαραγωγής"
 
 #: ../src/widget/song_view.py:788 ../src/widget/local_browser.py:353
 msgid "Remove from Library"
-msgstr ""
+msgstr "Αφαίρεση από τη Βιβλιοθήκη"
 
 #: ../src/widget/song_view.py:791 ../src/widget/local_browser.py:359
 msgid "Open Directory"
-msgstr ""
+msgstr "Άνοιγμα Καταλόγου"
 
 #: ../src/widget/song_view.py:792 ../src/widget/playlist.py:559
 #: ../src/widget/converter.py:427 ../src/widget/instance.py:341
 #: ../src/widget/instance.py:364
 msgid "Converter"
-msgstr ""
+msgstr "Μετατροπέας"
 
 #: ../src/widget/song_view.py:793 ../src/widget/song_editor.py:335
 #: ../src/widget/playlist.py:561
@@ -317,11 +318,11 @@ msgstr "Βιβλιοθήκη"
 
 #: ../src/widget/tray.py:49 ../src/widget/preference.py:371
 msgid "Volume Up"
-msgstr ""
+msgstr "Αύξηση Έντασης"
 
 #: ../src/widget/tray.py:50 ../src/widget/preference.py:372
 msgid "Volume Down"
-msgstr ""
+msgstr "Μείωση Έντασης"
 
 #: ../src/widget/tray.py:51
 msgid "Mute"
@@ -351,7 +352,7 @@ msgstr "Τόμος"
 
 #: ../src/widget/tray.py:72
 msgid "Close Lyrics"
-msgstr ""
+msgstr "Κλείσιμο Στίχων"
 
 #: ../src/widget/tray.py:73 ../src/widget/instance.py:378
 msgid "Search Lyrics"
@@ -363,12 +364,12 @@ msgstr "Εμφάνιση στίχων"
 
 #: ../src/widget/tray.py:78 ../src/widget/instance.py:403
 msgid "Unlock Lyrics"
-msgstr ""
+msgstr "Ξεκλείδωμα Στίχων"
 
 #: ../src/widget/tray.py:80 ../src/widget/lyrics_module.py:155
 #: ../src/widget/instance.py:405
 msgid "Lock Lyrics"
-msgstr ""
+msgstr "Κλείδωμα Στίχων"
 
 #: ../src/widget/tray.py:83 ../src/widget/instance.py:372
 #: ../src/widget/preference.py:943
@@ -382,7 +383,7 @@ msgstr "Έξοδος"
 
 #: ../src/widget/webcasts_browser.py:98
 msgid "Region"
-msgstr ""
+msgstr "Περιοχή"
 
 #: ../src/widget/webcasts_browser.py:99 ../src/widget/song_editor.py:205
 #: ../src/widget/local_browser.py:89
@@ -391,7 +392,7 @@ msgstr "Είδος"
 
 #: ../src/widget/webcasts_browser.py:141
 msgid "Favorites"
-msgstr ""
+msgstr "Αγαπημένα"
 
 #: ../src/widget/song_notify.py:193 ../src/widget/song_editor.py:97
 #: ../src/widget/preference.py:686 ../src/widget/preference.py:839
@@ -432,19 +433,19 @@ msgstr "Ραδιόφωνο"
 #: ../src/widget/combo.py:184 ../src/widget/combo.py:233
 #: ../src/widget/playlist.py:536
 msgid "By Artist"
-msgstr ""
+msgstr "Κατά Καλλιτέχνη"
 
 #: ../src/widget/combo.py:195
 msgid "List view"
-msgstr ""
+msgstr "Προβολή λίστας"
 
 #: ../src/widget/combo.py:234 ../src/widget/playlist.py:538
 msgid "By Genre"
-msgstr ""
+msgstr "Κατά Είδος"
 
 #: ../src/widget/combo.py:235 ../src/widget/playlist.py:537
 msgid "By Album"
-msgstr ""
+msgstr "Κατά Άλμπουμ"
 
 #: ../src/widget/global_keys.py:97
 #, python-format
@@ -457,23 +458,23 @@ msgstr "Σύνδεση"
 
 #: ../src/widget/information.py:106
 msgid "buffering..."
-msgstr ""
+msgstr "φόρτωση..."
 
 #: ../src/widget/dialog.py:34
 msgid "Select Directory"
-msgstr ""
+msgstr "Επιλέξτε Κατάλογο"
 
 #: ../src/widget/dialog.py:56
 msgid "Select file"
-msgstr ""
+msgstr "Επιλογή αρχείου"
 
 #: ../src/widget/dialog.py:82
 msgid "Export playlist"
-msgstr ""
+msgstr "Εξαγωγή λίστας αναπαραγωγής"
 
 #: ../src/widget/dialog.py:130
 msgid "Load playlist"
-msgstr ""
+msgstr "Φόρτωση λίστας αναπαραγωγής"
 
 #: ../src/widget/lyrics_module.py:151
 msgid "Increase the lyrics size"
@@ -505,7 +506,7 @@ msgstr ""
 
 #: ../src/widget/lyrics_module.py:164
 msgid "Close lyrics"
-msgstr ""
+msgstr "Κλείσιμο στίχων"
 
 #: ../src/widget/lyrics_module.py:165 ../src/widget/lyrics_module.py:223
 msgid "Lyrics rewind"
@@ -530,7 +531,7 @@ msgstr "Αναζήτηση"
 
 #: ../src/widget/lyrics_module.py:227 ../src/widget/lyrics_module.py:242
 msgid "Settings"
-msgstr ""
+msgstr "Ρυθμίσεις"
 
 #: ../src/widget/lyrics_module.py:233
 msgid "Forward 0.5 seconds"
@@ -542,11 +543,11 @@ msgstr ""
 
 #: ../src/widget/lyrics_module.py:237
 msgid "Adjust lyrics"
-msgstr ""
+msgstr "Ρύθμιση στίχων"
 
 #: ../src/widget/lyrics_module.py:239
 msgid "Choose local lrc"
-msgstr ""
+msgstr "Επιλογή τοπικού lrc"
 
 #: ../src/widget/lyrics_module.py:240 ../src/widget/song_editor.py:150
 #: ../src/widget/playlist.py:560 ../src/widget/converter.py:367
@@ -575,11 +576,11 @@ msgstr "Δροσερό μπλε"
 
 #: ../src/widget/lyrics_module.py:793 ../src/widget/lyrics_module.py:794
 msgid "No lyrics found!"
-msgstr ""
+msgstr "Δε βρέθηκαν στίχοι!"
 
 #: ../src/widget/lyrics_module.py:796 ../src/widget/lyrics_module.py:797
 msgid "Searching for lyrics..."
-msgstr ""
+msgstr "Αναζήτηση για στίχους..."
 
 #: ../src/widget/song_editor.py:96 ../src/widget/converter.py:433
 msgid "Format"
@@ -644,11 +645,11 @@ msgstr "Κομμάτι πληροφοριών"
 
 #: ../src/widget/song_editor.py:368
 msgid "Tag Settings"
-msgstr ""
+msgstr "Ρυθμίσεις Ετικέτας"
 
 #: ../src/widget/song_editor.py:369
 msgid "Cover Settings"
-msgstr ""
+msgstr "Ρυθμίσεις Εξώφυλλου"
 
 #: ../src/widget/equalizer.py:176
 msgid "Custom"
@@ -736,7 +737,7 @@ msgstr "θέσεις εργασίας περιμένουν!"
 
 #: ../src/widget/playlist.py:94
 msgid "Search in Current Playlist"
-msgstr ""
+msgstr "Αναζήτηση στην Τρέχουσα Λίστα Αναπαραγωγής"
 
 #: ../src/widget/playlist.py:96
 msgid "Playlist Operations"
@@ -744,7 +745,7 @@ msgstr ""
 
 #: ../src/widget/playlist.py:97 ../src/widget/instance.py:359
 msgid "Add"
-msgstr "Προσθέστε"
+msgstr "Προσθήκη"
 
 #: ../src/widget/playlist.py:100 ../src/widget/playlist.py:557
 #: ../src/widget/instance.py:361
@@ -753,50 +754,50 @@ msgstr ""
 
 #: ../src/widget/playlist.py:183
 msgid "Default List"
-msgstr ""
+msgstr "Προεπιλεγμένη Λίστα"
 
 #: ../src/widget/playlist.py:304 ../src/widget/playlist.py:316
 #: ../src/widget/playlist.py:317 ../src/widget/playlist.py:357
 #: ../src/widget/playlist.py:360 ../src/widget/playlist.py:476
 msgid "New List"
-msgstr ""
+msgstr "Νέα Λίστα"
 
 #: ../src/widget/playlist.py:305 ../src/widget/playlist.py:477
 msgid "Import List"
-msgstr ""
+msgstr "Εισαγωγή Λίστα"
 
 #: ../src/widget/playlist.py:306 ../src/widget/playlist.py:485
 msgid "Open List"
-msgstr ""
+msgstr "Άνοιγμα Λίστας"
 
 #: ../src/widget/playlist.py:307
 msgid "Export List"
-msgstr ""
+msgstr "Εξαγωγή Λίστας"
 
 #: ../src/widget/playlist.py:308 ../src/widget/playlist.py:484
 msgid "Remove List"
-msgstr ""
+msgstr "Αφαίρεση Λίστας"
 
 #: ../src/widget/playlist.py:310 ../src/widget/playlist.py:479
 #: ../src/widget/playlist.py:487
 msgid "Save all Lists"
-msgstr ""
+msgstr "Αποθήκευση όλων των Λιστών"
 
 #: ../src/widget/playlist.py:483 ../src/widget/playlist.py:493
 msgid "Rename"
-msgstr ""
+msgstr "Μετονομασία"
 
 #: ../src/widget/playlist.py:534
 msgid "By Filename"
-msgstr ""
+msgstr "Κατά Όνομα Αρχείου"
 
 #: ../src/widget/playlist.py:535
 msgid "By Title"
-msgstr ""
+msgstr "Κατά Τίτλο"
 
 #: ../src/widget/playlist.py:539
 msgid "By Track"
-msgstr ""
+msgstr "Κατά Κομμάτι"
 
 #: ../src/widget/playlist.py:540
 msgid "By Play Count"
@@ -804,11 +805,11 @@ msgstr ""
 
 #: ../src/widget/playlist.py:541
 msgid "By Added Time"
-msgstr ""
+msgstr "Κατά Ώρα Προσθήκης"
 
 #: ../src/widget/playlist.py:550 ../src/widget/local_browser.py:351
 msgid "Add to List"
-msgstr ""
+msgstr "Προσθήκη στη Λίστα"
 
 #: ../src/widget/playlist.py:551
 msgid "Move to List"
@@ -816,15 +817,15 @@ msgstr ""
 
 #: ../src/widget/playlist.py:553
 msgid "Remove Track"
-msgstr ""
+msgstr "Αφαίρεση Κομματιού"
 
 #: ../src/widget/playlist.py:558
 msgid "Sort"
-msgstr ""
+msgstr "Ταξινόμηση"
 
 #: ../src/widget/local_item.py:59
 msgid "All Tracks"
-msgstr "Όλα τα κομμάτια"
+msgstr "Όλα τα Κομμάτια"
 
 #: ../src/widget/local_item.py:67
 msgid "Track(s)"
@@ -836,7 +837,7 @@ msgstr "Χρειάζεστε μουσική; Βρείτε το εδώ ..."
 
 #: ../src/widget/ui.py:401
 msgid "Add Local Music"
-msgstr ""
+msgstr "Προσθήκη Τοπικής Μουσικής"
 
 #: ../src/widget/ui.py:1122
 #, python-brace-format
@@ -863,7 +864,7 @@ msgstr "Όνομα"
 
 #: ../src/widget/ui.py:1230
 msgid "Author(s)"
-msgstr "Συγγραφέας (είς)"
+msgstr "Συγγραφέας(είς)"
 
 #: ../src/widget/ui.py:1260 ../src/widget/preference.py:195
 msgid "Minimize to tray"
@@ -891,7 +892,7 @@ msgstr "Διαγραφή εργασίας"
 
 #: ../src/widget/converter.py:370
 msgid "Clear finished tasks"
-msgstr "Καθάρισμα τελειωμένο εργασιών"
+msgstr "Εκκαθάριση τελειωμένων εργασιών"
 
 #: ../src/widget/converter.py:376 ../src/widget/instance.py:342
 msgid "Task Manager"
@@ -911,7 +912,7 @@ msgstr "Το αρχείο προορισμού υπάρχει ήδη"
 
 #: ../src/widget/converter.py:445
 msgid "Ask"
-msgstr "Ρωτήστε"
+msgstr "Ερώτηση"
 
 #: ../src/widget/converter.py:445
 msgid "Cover"
@@ -935,60 +936,60 @@ msgstr ""
 
 #: ../src/widget/lyrics_search.py:54
 msgid "Artist:"
-msgstr ""
+msgstr "Καλλιτέχνης:"
 
 #: ../src/widget/lyrics_search.py:55
 msgid "Title:"
-msgstr ""
+msgstr "Τίτλος:"
 
 #: ../src/widget/lyrics_search.py:87
 msgid "Download"
-msgstr ""
+msgstr "Λήψη"
 
 #: ../src/widget/lyrics_search.py:136
 msgid "Now searching..."
-msgstr ""
+msgstr "Αναζήτηση..."
 
 #: ../src/widget/lyrics_search.py:138 ../src/widget/lyrics_search.py:163
 msgid "Not found!"
-msgstr ""
+msgstr "Δε βρέθηκε!"
 
 #: ../src/widget/lyrics_search.py:157 ../src/widget/lyrics_search.py:161
 #, python-format
 msgid "%d lyrics found"
-msgstr ""
+msgstr "%d στίχοι βρέθηκαν"
 
 #: ../src/widget/lyrics_search.py:170
 msgid "Downloading lyrics..."
-msgstr ""
+msgstr "Λήψη στίχων..."
 
 #: ../src/widget/lyrics_search.py:180
 msgid "File save to"
-msgstr ""
+msgstr "Αποθήκευση αρχείου σε"
 
 #: ../src/widget/lyrics_search.py:182
 msgid "Download failed."
-msgstr ""
+msgstr "Αποτυχία λήψης."
 
 #: ../src/widget/local_browser.py:98
 msgid "Quick Scan"
-msgstr ""
+msgstr "Γρήγορη Σάρωση"
 
 #: ../src/widget/local_browser.py:99
 msgid "Scan"
-msgstr ""
+msgstr "Σάρωση"
 
 #: ../src/widget/local_browser.py:100
 msgid "Refresh"
-msgstr ""
+msgstr "Ανανέωση"
 
 #: ../src/widget/local_browser.py:350
 msgid "Play All"
-msgstr ""
+msgstr "Αναπαραγωγή Όλων"
 
 #: ../src/widget/local_browser.py:361
 msgid "Change Cover"
-msgstr ""
+msgstr "Αλλαγή Εξώφυλλου"
 
 #: ../src/widget/headerbar.py:63 ../src/widget/preference.py:368
 msgid "Play/Pause"
@@ -1004,7 +1005,7 @@ msgstr "Έκδοση"
 
 #: ../src/widget/plugins_view.py:166
 msgid "Enable"
-msgstr ""
+msgstr "Ενεργοποίηση"
 
 #: ../src/widget/lyrics.py:735
 msgid "Lyrics window"
@@ -1024,7 +1025,7 @@ msgstr "Επανέλαση"
 
 #: ../src/widget/instance.py:360
 msgid "Play Controls"
-msgstr ""
+msgstr "Πλήκτρα Ελέγχου Αναπαραγωγής"
 
 #: ../src/widget/instance.py:371
 msgid "View New Features"
@@ -1131,7 +1132,7 @@ msgstr "Δικαιολογημένες"
 
 #: ../src/widget/preference.py:642
 msgid "Color scheme"
-msgstr "Συνδυασμός χρωμάτων"
+msgstr "Σχήμα χρωμάτων"
 
 #: ../src/widget/preference.py:650 ../src/widget/preference.py:807
 msgid "Regular"
@@ -1199,11 +1200,11 @@ msgstr "Κύλιση"
 
 #: ../src/widget/preference.py:851
 msgid "Always"
-msgstr "Πάντοτε"
+msgstr "Πάντα"
 
 #: ../src/widget/preference.py:851
 msgid "By line"
-msgstr "Με σειρά"
+msgstr "Κατά σειρά"
 
 #: ../src/widget/preference.py:920
 msgid ""
@@ -1230,11 +1231,11 @@ msgstr "Παράθυρο"
 
 #: ../src/widget/preference.py:1006
 msgid "Plugins"
-msgstr ""
+msgstr "Πρόσθετα"
 
 #: ../src/widget/preference.py:1007
 msgid "About"
-msgstr "Πληροφορίες"
+msgstr "Σχετικά"
 
 #: ../src/source/old.py:112 ../src/source/audiocd.py:78
 msgid "Track"
@@ -1250,7 +1251,7 @@ msgstr "Άγνωστος καλλιτέχνης"
 
 #: ../src/source/audiocd.py:86 ../src/source/audiocd.py:92
 msgid "Audio CD"
-msgstr "CD ήχου"
+msgstr "CD Ήχου"
 
 #: ../src/source/local.py:43
 msgid "Reading directories..."
@@ -1258,7 +1259,7 @@ msgstr "Ανάγνωση καταλόγων ..."
 
 #: ../src/source/local.py:175
 msgid "Check deleted files"
-msgstr "Ελέγξτε τα διαγραμμένα αρχεία"
+msgstr "Έλεγχος διαγραμμένων αρχείων"
 
 #: ../src/source/local.py:202
 msgid "Reload database"
@@ -1266,7 +1267,7 @@ msgstr "Ανανέωση της βάσης δεδομένων"
 
 #: ../plugins/musicfm/radio_genre_page.py:44
 msgid "Jazz"
-msgstr ""
+msgstr "Τζαζ"
 
 #: ../plugins/musicfm/radio_genre_page.py:45
 msgid "Folk/Country"
@@ -1274,7 +1275,7 @@ msgstr ""
 
 #: ../plugins/musicfm/radio_genre_page.py:48
 msgid "OST"
-msgstr ""
+msgstr "OST"
 
 #: ../plugins/musicfm/radio_genre_page.py:49
 msgid "Light"
@@ -1298,7 +1299,7 @@ msgstr ""
 
 #: ../plugins/musicfm/radio_genre_page.py:54
 msgid "Blues"
-msgstr ""
+msgstr "Μπλουζ"
 
 #: ../plugins/musicfm/radio_genre_page.py:55
 msgid "Funk/Soul/R&B"

@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
+# 
 # Translators:
 # Carl Andersen <carl@manjaro.dk>, 2014
 msgid ""
@@ -9,14 +9,13 @@ msgstr ""
 "Project-Id-Version: Deepin Music\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-21 16:43+0800\n"
-"PO-Revision-Date: 2014-06-30 04:51+0000\n"
-"Last-Translator: Carl Andersen <carl@manjaro.dk>\n"
-"Language-Team: Danish (http://www.transifex.com/projects/p/deepin-music/"
-"language/da/)\n"
-"Language: da\n"
+"PO-Revision-Date: 2014-08-22 05:20+0000\n"
+"Last-Translator: szd_liufei <liufei@linuxdeepin.com>\n"
+"Language-Team: Danish (http://www.transifex.com/projects/p/deepin-music/language/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: da\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ../src/plugins.py:91
@@ -36,41 +35,31 @@ msgstr "Plugin arkiv indeholder en usikker sti."
 msgid ""
 "Vorbis is an open source, lossy audio codec with high quality output at a "
 "lower file size than MP3."
-msgstr ""
-"Vorbis er en åben source, data lydafkoder  med høj kvalitetsoutput med en "
-"lavere filstørrelse end MP3."
+msgstr "Vorbis er en åben source, data lydafkoder  med høj kvalitetsoutput med en lavere filstørrelse end MP3."
 
 #: ../src/transcoder.py:66
 msgid ""
-"Free Lossless Audio Codec (FLAC) is an open source codec that compresses but "
-"does not degrade audio quality."
-msgstr ""
-"Free Lossless Audio Codec (FLAC) er en åben source afkoder der komprimerer "
-"men som ikke forringer lydkvaliteten."
+"Free Lossless Audio Codec (FLAC) is an open source codec that compresses but"
+" does not degrade audio quality."
+msgstr "Free Lossless Audio Codec (FLAC) er en åben source afkoder der komprimerer men som ikke forringer lydkvaliteten."
 
 #: ../src/transcoder.py:80
 msgid ""
-"Apple's proprietary lossy audio format could give higher quality than MP3 at "
-"lower bitrates."
-msgstr ""
-"Apples proprietære lydformat kan give højere kvalitet end MP3 ved lavere "
-"bitrates."
+"Apple's proprietary lossy audio format could give higher quality than MP3 at"
+" lower bitrates."
+msgstr "Apples proprietære lydformat kan give højere kvalitet end MP3 ved lavere bitrates."
 
 #: ../src/transcoder.py:93
 msgid ""
 "A proprietary and older, but also popular, lossy audio format. VBR gives "
 "higher quality than CBR, but may be incompatible with some players."
-msgstr ""
-"Et proprietær og ældre, men også et populært, lydformatafkoder. VBR giver "
-"højere kvalitet end CBR, men kan være uforenelig med nogle afspillere."
+msgstr "Et proprietær og ældre, men også et populært, lydformatafkoder. VBR giver højere kvalitet end CBR, men kan være uforenelig med nogle afspillere."
 
 #: ../src/transcoder.py:106
 msgid ""
 "A proprietary and older, but also popular, lossy audio format. The output "
 "effect of CBR is not good as VBR, but is compatible with any player."
-msgstr ""
-"En propitær og ældre, men også populært lydformat. Udgang effekt af CBR er "
-"ikke god som VBR, men er kompatibelt med enhver afspiller."
+msgstr "En propitær og ældre, men også populært lydformat. Udgang effekt af CBR er ikke god som VBR, men er kompatibelt med enhver afspiller."
 
 #: ../src/transcoder.py:119
 msgid "A very fast Free lossless audio format with good compression."
@@ -188,11 +177,8 @@ msgid "Toggle visibility of the GUI (if possible)"
 msgstr "Skift til synlighed på GUI (hvis muligt)"
 
 #: ../src/main.py:158
-#, fuzzy
 msgid "This option makes control options, such as --play to start program"
 msgstr ""
-"Denne indstilling laver kontrol muligheder som som - spille for at starte "
-"programmet"
 
 #: ../src/main.py:161
 msgid "Development/Debug Options"
@@ -260,9 +246,8 @@ msgid "File"
 msgstr "Fil"
 
 #: ../src/widget/song_view.py:523 ../src/widget/song_view.py:531
-#, fuzzy
 msgid "Folder (include subdirectories)"
-msgstr "Folder (inkluderer undermapper)"
+msgstr "Mappe (inkluderer undermapper)"
 
 #: ../src/widget/song_view.py:524 ../src/widget/song_view.py:532
 #: ../src/widget/local_browser.py:91
@@ -870,9 +855,7 @@ msgstr "Sikr dig alle ord er stavet rigtigt."
 msgid ""
 "Try more general keywords, such as a title, an artist or the name of an "
 "album."
-msgstr ""
-"Prøv mere generelle nøgleord, så som en titel, en kunstner eller navnet på "
-"et album."
+msgstr "Prøv mere generelle nøgleord, så som en titel, en kunstner eller navnet på et album."
 
 #: ../src/widget/ui.py:1222 ../src/widget/plugins_view.py:166
 msgid "Name"
@@ -1224,17 +1207,10 @@ msgstr "Af linie"
 
 #: ../src/widget/preference.py:920
 msgid ""
-"Deepin Music is a music application designed for Linux users. It's "
-"characterized with lyrics searching, desktop lyrics display,album cover "
-"downloading, resume playing, music management and skin selection.\n"
+"Deepin Music is a music application designed for Linux users. It's characterized with lyrics searching, desktop lyrics display,album cover downloading, resume playing, music management and skin selection.\n"
 "\n"
 "Deepin Music is free software licensed under GNU GPLv3."
-msgstr ""
-"Deepin Music er en musikafspiller designet til Linux-brugere. Den er "
-"karakteriseret  ved tekst søgning, desktop lyrics visning, download af album "
-"cover, resume afspilningen, musikhåndtering og udseende udvælgelse\n"
-"\n"
-"Deepin Music er fri software udgivet under GNU GPLv3."
+msgstr "Deepin Music er en musikafspiller designet til Linux-brugere. Den er karakteriseret  ved tekst søgning, desktop lyrics visning, download af album cover, resume afspilningen, musikhåndtering og udseende udvælgelse\n\nDeepin Music er fri software udgivet under GNU GPLv3."
 
 #: ../src/widget/preference.py:1001
 msgid "General"

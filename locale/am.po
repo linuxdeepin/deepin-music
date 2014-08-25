@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Deepin Music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-06-18 13:29+0800\n"
-"PO-Revision-Date: 2014-06-30 04:51+0000\n"
-"Last-Translator: samson <sambelet@yahoo.com>\n"
+"POT-Creation-Date: 2014-08-21 16:43+0800\n"
+"PO-Revision-Date: 2014-08-22 05:20+0000\n"
+"Last-Translator: szd_liufei <liufei@linuxdeepin.com>\n"
 "Language-Team: Amharic (http://www.transifex.com/projects/p/deepin-music/language/am/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -177,7 +177,7 @@ msgid "Toggle visibility of the GUI (if possible)"
 msgstr ""
 
 #: ../src/main.py:158
-msgid "This option makes control options like --play to start program"
+msgid "This option makes control options, such as --play to start program"
 msgstr ""
 
 #: ../src/main.py:161
@@ -246,7 +246,7 @@ msgid "File"
 msgstr "ፋይል"
 
 #: ../src/widget/song_view.py:523 ../src/widget/song_view.py:531
-msgid "Folder(include subdirectories)"
+msgid "Folder (include subdirectories)"
 msgstr "ፎልደር (ንዑስ ዳይሬክቶሪዎች ያካትታል)"
 
 #: ../src/widget/song_view.py:524 ../src/widget/song_view.py:532
@@ -563,7 +563,7 @@ msgstr ""
 
 #: ../src/widget/lyrics_module.py:456 ../src/widget/preference.py:628
 msgid "Fresh green"
-msgstr ""
+msgstr "አረንጓዴ"
 
 #: ../src/widget/lyrics_module.py:457 ../src/widget/preference.py:629
 msgid "Playful pink"
@@ -571,7 +571,7 @@ msgstr ""
 
 #: ../src/widget/lyrics_module.py:458 ../src/widget/preference.py:630
 msgid "Cool blue"
-msgstr ""
+msgstr "ሰማያዊ"
 
 #: ../src/widget/lyrics_module.py:793 ../src/widget/lyrics_module.py:794
 msgid "No lyrics found!"
@@ -684,7 +684,7 @@ msgstr ""
 
 #: ../src/widget/equalizer.py:184
 msgid "Headphones"
-msgstr ""
+msgstr "በጆሮ ማድመጫ"
 
 #: ../src/widget/equalizer.py:185
 msgid "Large Hall"
@@ -720,7 +720,7 @@ msgstr "ለስላሳ ሮክ"
 
 #: ../src/widget/equalizer.py:194 ../plugins/musicfm/radio_genre_page.py:47
 msgid "Electronic"
-msgstr ""
+msgstr "ኤሌክትሮኒክ"
 
 #: ../src/widget/equalizer.py:199 ../src/widget/instance.py:363
 msgid "Equalizer"
@@ -923,7 +923,7 @@ msgstr "ማስጀመሪያ"
 
 #: ../src/widget/converter.py:450
 msgid "Add to Playlist after finished"
-msgstr ""
+msgstr "ወደ ዝርዝር ማጫወቻ መጨመሪያ ከጨረሰ በኋላ"
 
 #: ../src/widget/converter.py:472
 msgid "Output"

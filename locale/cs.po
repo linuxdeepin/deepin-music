@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
+# 
 # Translators:
 # fri, 2013-2014
 # fri, 2013
@@ -13,14 +13,13 @@ msgstr ""
 "Project-Id-Version: Deepin Music\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-21 16:43+0800\n"
-"PO-Revision-Date: 2014-06-30 04:51+0000\n"
+"PO-Revision-Date: 2014-08-22 11:11+0000\n"
 "Last-Translator: fri\n"
-"Language-Team: Czech (http://www.transifex.com/projects/p/deepin-music/"
-"language/cs/)\n"
-"Language: cs\n"
+"Language-Team: Czech (http://www.transifex.com/projects/p/deepin-music/language/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: cs\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #: ../src/plugins.py:91
@@ -40,48 +39,35 @@ msgstr "Archiv s přídavným modulem obsahuje nebezpečnou cestu."
 msgid ""
 "Vorbis is an open source, lossy audio codec with high quality output at a "
 "lower file size than MP3."
-msgstr ""
-"Vorbis je ztrátový zvukový kodek s otevřeným zdrojovým kódem, s vysoce "
-"kvalitním výstupem při menší velikosti souboru, než má MP3."
+msgstr "Vorbis je ztrátový zvukový kodek s otevřeným zdrojovým kódem, s vysoce kvalitním výstupem při menší velikosti souboru, než má MP3."
 
 #: ../src/transcoder.py:66
 msgid ""
-"Free Lossless Audio Codec (FLAC) is an open source codec that compresses but "
-"does not degrade audio quality."
-msgstr ""
-"Free Lossless Audio Codec (FLAC) je zvukový kodek s otevřeným zdrojovým "
-"kódem, jenž komprimuje data, ale neponižuje kvalitu zvuku."
+"Free Lossless Audio Codec (FLAC) is an open source codec that compresses but"
+" does not degrade audio quality."
+msgstr "Free Lossless Audio Codec (FLAC) je zvukový kodek s otevřeným zdrojovým kódem, jenž komprimuje data, ale neponižuje kvalitu zvuku."
 
 #: ../src/transcoder.py:80
 msgid ""
-"Apple's proprietary lossy audio format could give higher quality than MP3 at "
-"lower bitrates."
-msgstr ""
-"Applem soukromě vlastněný, ztrátový zvukový formát dává vyšší kvalitu než "
-"MP3 při nižších datových tocích."
+"Apple's proprietary lossy audio format could give higher quality than MP3 at"
+" lower bitrates."
+msgstr "Applem soukromě vlastněný, ztrátový zvukový formát dává vyšší kvalitu než MP3 při nižších datových tocích."
 
 #: ../src/transcoder.py:93
 msgid ""
 "A proprietary and older, but also popular, lossy audio format. VBR gives "
 "higher quality than CBR, but may be incompatible with some players."
-msgstr ""
-"Starší soukromě vlastněný, ale také oblíbený, ztrátový zvukový formát. VBR "
-"(proměnlivý datový tok) dává vyšší kvalitu než CBR (stálý datový tok), ale "
-"nemusí být kompatibilní s některými přehrávači."
+msgstr "Starší soukromě vlastněný, ale také oblíbený, ztrátový zvukový formát. VBR (proměnlivý datový tok) dává vyšší kvalitu než CBR (stálý datový tok), ale nemusí být kompatibilní s některými přehrávači."
 
 #: ../src/transcoder.py:106
 msgid ""
 "A proprietary and older, but also popular, lossy audio format. The output "
 "effect of CBR is not good as VBR, but is compatible with any player."
-msgstr ""
-"Starší soukromě vlastněný, ale také oblíbený, ztrátový zvukový formát. "
-"Výstup CBR (stálý datový tok) není tak dobrý jako VBR (proměnlivý datový "
-"tok), ale je kompatibilní se všemi přehrávači."
+msgstr "Starší soukromě vlastněný, ale také oblíbený, ztrátový zvukový formát. Výstup CBR (stálý datový tok) není tak dobrý jako VBR (proměnlivý datový tok), ale je kompatibilní se všemi přehrávači."
 
 #: ../src/transcoder.py:119
 msgid "A very fast Free lossless audio format with good compression."
-msgstr ""
-"Velice rychlý bezztrátový zvukový formát s dobrou kompresí, který je zadarmo."
+msgstr "Velice rychlý bezztrátový zvukový formát s dobrou kompresí, který je zadarmo."
 
 #: ../src/library.py:990 ../src/library.py:991 ../src/library.py:992
 #: ../src/library.py:999 ../src/library.py:1000 ../src/library.py:1001
@@ -195,7 +181,6 @@ msgid "Toggle visibility of the GUI (if possible)"
 msgstr "Ukázat/Skrýt rozhraní (je-li to možné)"
 
 #: ../src/main.py:158
-#, fuzzy
 msgid "This option makes control options, such as --play to start program"
 msgstr "Tato volba přivede řídící volby, jako je --play, ke spuštění programu"
 
@@ -265,7 +250,6 @@ msgid "File"
 msgstr "Soubor"
 
 #: ../src/widget/song_view.py:523 ../src/widget/song_view.py:531
-#, fuzzy
 msgid "Folder (include subdirectories)"
 msgstr "Složka (včetně podsložek)"
 
@@ -875,8 +859,7 @@ msgstr "Ujistěte se, že všechna slova jsou napsána správně."
 msgid ""
 "Try more general keywords, such as a title, an artist or the name of an "
 "album."
-msgstr ""
-"Zkuste zadat více obecných slov, jako jsou název, umělec nebo název alba."
+msgstr "Zkuste zadat více obecných slov, jako jsou název, umělec nebo název alba."
 
 #: ../src/widget/ui.py:1222 ../src/widget/plugins_view.py:166
 msgid "Name"
@@ -1228,17 +1211,10 @@ msgstr "Pomocí čáry"
 
 #: ../src/widget/preference.py:920
 msgid ""
-"Deepin Music is a music application designed for Linux users. It's "
-"characterized with lyrics searching, desktop lyrics display,album cover "
-"downloading, resume playing, music management and skin selection.\n"
+"Deepin Music is a music application designed for Linux users. It's characterized with lyrics searching, desktop lyrics display,album cover downloading, resume playing, music management and skin selection.\n"
 "\n"
 "Deepin Music is free software licensed under GNU GPLv3."
-msgstr ""
-"Deepin Music je hudební aplikace navržená pro uživatele Linux. Vyznačuje se "
-"vyhledávání textů písní, zobrazením textů písní na ploše, stahováním obalů "
-"alb, pokračováním v přehrávání, spravováním hudby a volbou vzhledu.\n"
-"\n"
-"Deepin Music je svobodný software licencovaný pod GNU GPLv3."
+msgstr "Deepin Music je hudební aplikace navržená pro uživatele Linux. Vyznačuje se vyhledávání textů písní, zobrazením textů písní na ploše, stahováním obalů alb, pokračováním v přehrávání, spravováním hudby a volbou vzhledu.\n\nDeepin Music je svobodný software licencovaný pod GNU GPLv3."
 
 #: ../src/widget/preference.py:1001
 msgid "General"

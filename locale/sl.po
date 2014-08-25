@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
+# 
 # Translators:
 # andrej55 <andrej.marsetic@gmail.com>, 2014
 # kloki <klokimass@gmail.com>, 2014
@@ -10,16 +10,14 @@ msgstr ""
 "Project-Id-Version: Deepin Music\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-21 16:43+0800\n"
-"PO-Revision-Date: 2014-06-30 04:51+0000\n"
-"Last-Translator: andrej55 <andrej.marsetic@gmail.com>\n"
-"Language-Team: Slovenian (http://www.transifex.com/projects/p/deepin-music/"
-"language/sl/)\n"
-"Language: sl\n"
+"PO-Revision-Date: 2014-08-22 05:20+0000\n"
+"Last-Translator: szd_liufei <liufei@linuxdeepin.com>\n"
+"Language-Team: Slovenian (http://www.transifex.com/projects/p/deepin-music/language/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n"
-"%100==4 ? 2 : 3);\n"
+"Language: sl\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
 
 #: ../src/plugins.py:91
 msgid "Plugin archive is not in the correct format."
@@ -38,43 +36,35 @@ msgstr "Plugin arhiv vsebuje nevarno pot."
 msgid ""
 "Vorbis is an open source, lossy audio codec with high quality output at a "
 "lower file size than MP3."
-msgstr ""
-"Vorbis je odprtokodni, malo potratni zvokovni kodek z visoko kvaliteto "
-"izpisa pri manjši velikosti datoteke kot MP3."
+msgstr "Vorbis je odprtokodni, malo potratni zvokovni kodek z visoko kvaliteto izpisa pri manjši velikosti datoteke kot MP3."
 
 #: ../src/transcoder.py:66
 msgid ""
-"Free Lossless Audio Codec (FLAC) is an open source codec that compresses but "
-"does not degrade audio quality."
-msgstr ""
-"Free Lossless Audio Codec (FLAC) je odprtokodni kodek, ki stisne, ampak ne "
-"poslabša kvalitete zvoka."
+"Free Lossless Audio Codec (FLAC) is an open source codec that compresses but"
+" does not degrade audio quality."
+msgstr "Free Lossless Audio Codec (FLAC) je odprtokodni kodek, ki stisne, ampak ne poslabša kvalitete zvoka."
 
 #: ../src/transcoder.py:80
 msgid ""
-"Apple's proprietary lossy audio format could give higher quality than MP3 at "
-"lower bitrates."
-msgstr ""
+"Apple's proprietary lossy audio format could give higher quality than MP3 at"
+" lower bitrates."
+msgstr "Applov lastniški avdio format bi lahko bil višje kakovosti kot MP3 pri nižjih bitnih hitrostih."
 
 #: ../src/transcoder.py:93
 msgid ""
 "A proprietary and older, but also popular, lossy audio format. VBR gives "
 "higher quality than CBR, but may be incompatible with some players."
-msgstr ""
-"Lastniški in starejši, ampak vseeno popularen, malo potraten zvokovni "
-"format. VBR ponuja boljšo kvaliteto kot CBR, vendar pa je lahko nezdružljiv "
-"z nekaterimi predvajalniki."
+msgstr "Lastniški in starejši, ampak vseeno popularen, malo potraten zvokovni format. VBR ponuja boljšo kvaliteto kot CBR, vendar pa je lahko nezdružljiv z nekaterimi predvajalniki."
 
 #: ../src/transcoder.py:106
 msgid ""
 "A proprietary and older, but also popular, lossy audio format. The output "
 "effect of CBR is not good as VBR, but is compatible with any player."
-msgstr ""
+msgstr "Lastniški in starejši, ampak tudi priljubljen, lossy audio format. Izhodni učinek CBR ni dober, kot VBR, vendar je združljiv z vsemi predvajalniki."
 
 #: ../src/transcoder.py:119
 msgid "A very fast Free lossless audio format with good compression."
-msgstr ""
-"Zelo hiter brezplačen malo potraten zvokovni format z dobro kompresijo."
+msgstr "Zelo hiter brezplačen malo potraten zvokovni format z dobro kompresijo."
 
 #: ../src/library.py:990 ../src/library.py:991 ../src/library.py:992
 #: ../src/library.py:999 ../src/library.py:1000 ../src/library.py:1001
@@ -257,9 +247,8 @@ msgid "File"
 msgstr "Datoteka"
 
 #: ../src/widget/song_view.py:523 ../src/widget/song_view.py:531
-#, fuzzy
 msgid "Folder (include subdirectories)"
-msgstr "Mape(vključuje podmape)"
+msgstr ""
 
 #: ../src/widget/song_view.py:524 ../src/widget/song_view.py:532
 #: ../src/widget/local_browser.py:91
@@ -567,7 +556,7 @@ msgstr "Odpri imenik"
 
 #: ../src/widget/lyrics_module.py:247
 msgid "Lyrics acquired by Network"
-msgstr ""
+msgstr "Besedila pesmi,ki so pridobljena iz omrežja. "
 
 #: ../src/widget/lyrics_module.py:455 ../src/widget/preference.py:627
 msgid "Vitality yellow"
@@ -867,9 +856,7 @@ msgstr "Prepričajte se, da so besede črkovane pravilno."
 msgid ""
 "Try more general keywords, such as a title, an artist or the name of an "
 "album."
-msgstr ""
-"Poskusite več osnovnih besed, kot naprimer naslov, izvajalec ali naslov "
-"albuma."
+msgstr "Poskusite več osnovnih besed, kot naprimer naslov, izvajalec ali naslov albuma."
 
 #: ../src/widget/ui.py:1222 ../src/widget/plugins_view.py:166
 msgid "Name"
@@ -1094,7 +1081,7 @@ msgstr "Brezhibno preklapljanje med albuma"
 
 #: ../src/widget/preference.py:221
 msgid "Crossfade"
-msgstr ""
+msgstr "Crossfade"
 
 #: ../src/widget/preference.py:223
 msgid " ms"
@@ -1221,17 +1208,10 @@ msgstr "Po vrstici"
 
 #: ../src/widget/preference.py:920
 msgid ""
-"Deepin Music is a music application designed for Linux users. It's "
-"characterized with lyrics searching, desktop lyrics display,album cover "
-"downloading, resume playing, music management and skin selection.\n"
+"Deepin Music is a music application designed for Linux users. It's characterized with lyrics searching, desktop lyrics display,album cover downloading, resume playing, music management and skin selection.\n"
 "\n"
 "Deepin Music is free software licensed under GNU GPLv3."
-msgstr ""
-"Deepin Glasba je glasbena aplikacija ustvarjena za Linux uporabnike  z "
-"iskanjem lyrics, namizni lyrics prikazi,naslovnice albumov s samodejnim "
-"prenosom, ponovno predvajanje, upravljanje glasbe in izbiro teme. \n"
-"\n"
-"Deepin Glasba je brezplačna programska oprema pod licenco GNU GPLv3."
+msgstr "Deepin Glasba je glasbena aplikacija ustvarjena za Linux uporabnike  z iskanjem lyrics, namizni lyrics prikazi,naslovnice albumov s samodejnim prenosom, ponovno predvajanje, upravljanje glasbe in izbiro teme. \n\nDeepin Glasba je brezplačna programska oprema pod licenco GNU GPLv3."
 
 #: ../src/widget/preference.py:1001
 msgid "General"

@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
+# 
 # Translators:
 # Ömer GÖK <omergok@outlook.com>, 2014
 # Vahap Karataş <k.vahap@gmail.com>, 2014
@@ -11,14 +11,13 @@ msgstr ""
 "Project-Id-Version: Deepin Music\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-21 16:43+0800\n"
-"PO-Revision-Date: 2014-06-30 04:51+0000\n"
-"Last-Translator: cxbii <chenxiangbang@linuxdeepin.com>\n"
-"Language-Team: Turkish (http://www.transifex.com/projects/p/deepin-music/"
-"language/tr/)\n"
-"Language: tr\n"
+"PO-Revision-Date: 2014-08-22 20:40+0000\n"
+"Last-Translator: yakup <mutouk@yandex.ru>\n"
+"Language-Team: Turkish (http://www.transifex.com/projects/p/deepin-music/language/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: ../src/plugins.py:91
@@ -38,43 +37,31 @@ msgstr "Eklenti arşivi güvenli olmayan bir konumdan."
 msgid ""
 "Vorbis is an open source, lossy audio codec with high quality output at a "
 "lower file size than MP3."
-msgstr ""
-"Vorbis açık kaynak kodlu, MP3 den daha düşük dosya boyutunda yüksek kalitede "
-"çıktı veren az kayıplı ses çözücüsü."
+msgstr "Vorbis açık kaynak kodlu, MP3 den daha düşük dosya boyutunda yüksek kalitede çıktı veren az kayıplı ses çözücüsü."
 
 #: ../src/transcoder.py:66
 msgid ""
-"Free Lossless Audio Codec (FLAC) is an open source codec that compresses but "
-"does not degrade audio quality."
-msgstr ""
-"Free Lossless Audio Codec (FLAC) ses dosyalarını sıkıştıran fakat ses "
-"kalitesini bozmayan açık kaynak ses çözücüsüdür."
+"Free Lossless Audio Codec (FLAC) is an open source codec that compresses but"
+" does not degrade audio quality."
+msgstr "Free Lossless Audio Codec (FLAC) ses dosyalarını sıkıştıran fakat ses kalitesini bozmayan açık kaynak ses çözücüsüdür."
 
 #: ../src/transcoder.py:80
 msgid ""
-"Apple's proprietary lossy audio format could give higher quality than MP3 at "
-"lower bitrates."
-msgstr ""
-"Apple'ın geliştirdiği kayıplı ses formatı MP3 e göre daha düşük bit "
-"değerlerinde daha kaliteli ses çıkışı sağlar."
+"Apple's proprietary lossy audio format could give higher quality than MP3 at"
+" lower bitrates."
+msgstr "Apple'ın geliştirdiği kayıplı ses formatı MP3 e göre daha düşük bit değerlerinde daha kaliteli ses çıkışı sağlar."
 
 #: ../src/transcoder.py:93
 msgid ""
 "A proprietary and older, but also popular, lossy audio format. VBR gives "
 "higher quality than CBR, but may be incompatible with some players."
-msgstr ""
-"Tescilli, eski ama aynı zamanda popüler, kayıplı bir ses formatı. CBR, VBR "
-"den daha yüksek kalite çıkış verir, ancak bazı oyunnatıcılar ile uyumsuz "
-"olabilir."
+msgstr "Tescilli, eski ama aynı zamanda popüler, kayıplı bir ses formatı. CBR, VBR den daha yüksek kalite çıkış verir, ancak bazı oyunnatıcılar ile uyumsuz olabilir."
 
 #: ../src/transcoder.py:106
 msgid ""
 "A proprietary and older, but also popular, lossy audio format. The output "
 "effect of CBR is not good as VBR, but is compatible with any player."
-msgstr ""
-"Tescilli, eski ama aynı zamanda popüler, kayıplı bir ses formatı. , VBR den "
-"daha yüksek kalite çıkış verir, ancak bazı oyunnatıcılar ile uyumsuz "
-"olabilir."
+msgstr "Tescilli, eski ama aynı zamanda popüler, kayıplı bir ses formatı. , VBR den daha yüksek kalite çıkış verir, ancak bazı oyunnatıcılar ile uyumsuz olabilir."
 
 #: ../src/transcoder.py:119
 msgid "A very fast Free lossless audio format with good compression."
@@ -192,7 +179,6 @@ msgid "Toggle visibility of the GUI (if possible)"
 msgstr "GUI görünürlüğünü değiştir (mümkünse)"
 
 #: ../src/main.py:158
-#, fuzzy
 msgid "This option makes control options, such as --play to start program"
 msgstr "Kontrol seçeneklerinden --play ile program çalıştırılabilir"
 
@@ -262,9 +248,8 @@ msgid "File"
 msgstr "Dosya"
 
 #: ../src/widget/song_view.py:523 ../src/widget/song_view.py:531
-#, fuzzy
 msgid "Folder (include subdirectories)"
-msgstr "Klasör(alt dizinler dahil)"
+msgstr "Klasör (alt dizinler dahil)"
 
 #: ../src/widget/song_view.py:524 ../src/widget/song_view.py:532
 #: ../src/widget/local_browser.py:91
@@ -1224,18 +1209,10 @@ msgstr "Çizgi ile"
 
 #: ../src/widget/preference.py:920
 msgid ""
-"Deepin Music is a music application designed for Linux users. It's "
-"characterized with lyrics searching, desktop lyrics display,album cover "
-"downloading, resume playing, music management and skin selection.\n"
+"Deepin Music is a music application designed for Linux users. It's characterized with lyrics searching, desktop lyrics display,album cover downloading, resume playing, music management and skin selection.\n"
 "\n"
 "Deepin Music is free software licensed under GNU GPLv3."
-msgstr ""
-"Deepin Music müzik uygulaması Linux kullanıcılarrı için tasarlanmıştır. O "
-"karakteristik olarak şarkı sözü arayabilir, masaüstündeki şarkı sözleri "
-"gösterebilir,albüm kapağı indirebilir, oynatmayı devam ettirebilir,müzik "
-"yönetimi ve kaplama seçimi yapılabilir.\n"
-"\n"
-"Deepin Music GNU GPLv3 lisansı altında ücretsiz bir yazılımdır."
+msgstr "Deepin Müzik uygulaması Linux kullanıcılarrı için tasarlanmıştır. O karakteristik olarak şarkı sözü arayabilir, masaüstündeki şarkı sözleri gösterebilir,albüm kapağı indirebilir, oynatmayı devam ettirebilir,müzik yönetimi ve kaplama seçimi yapılabilir.\n\nDeepin Müzik GNU GPLv3 lisansı altında ücretsiz bir yazılımdır."
 
 #: ../src/widget/preference.py:1001
 msgid "General"

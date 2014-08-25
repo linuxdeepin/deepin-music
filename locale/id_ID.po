@@ -1,27 +1,28 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
+# 
 # Translators:
 # Aril Apria Susanto <awriel@gmail.com>, 2014
+# Yugo Purwanto <dedy.yugo.purwanto@gmail.com>, 2014
+# Sucipto <show.cheap@gmail.com>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Deepin Music\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-21 16:43+0800\n"
-"PO-Revision-Date: 2014-07-02 13:51+0000\n"
-"Last-Translator: Aril Apria Susanto <awriel@gmail.com>\n"
-"Language-Team: Indonesian (Indonesia) (http://www.transifex.com/projects/p/"
-"deepin-music/language/id_ID/)\n"
-"Language: id_ID\n"
+"PO-Revision-Date: 2014-08-22 05:20+0000\n"
+"Last-Translator: szd_liufei <liufei@linuxdeepin.com>\n"
+"Language-Team: Indonesian (Indonesia) (http://www.transifex.com/projects/p/deepin-music/language/id_ID/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: id_ID\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: ../src/plugins.py:91
 msgid "Plugin archive is not in the correct format."
-msgstr ""
+msgstr "Arsip plugin tidak dalam format yang benar."
 
 #: ../src/plugins.py:98
 #, python-format
@@ -30,35 +31,31 @@ msgstr "Plugin \"%s\" sudah terpasang."
 
 #: ../src/plugins.py:103
 msgid "Plugin archive contains an unsafe path."
-msgstr ""
+msgstr "Arsip plugin mengandung jejak tidak aman."
 
 #: ../src/transcoder.py:54
 msgid ""
 "Vorbis is an open source, lossy audio codec with high quality output at a "
 "lower file size than MP3."
-msgstr ""
-"Vorbis adalah sumber terbuka, lossy audio codec dengan keluaran kualitas "
-"tinggi dengan ukuran berkas lebih kecil daripada MP3."
+msgstr "Vorbis adalah sumber terbuka, lossy audio codec dengan keluaran kualitas tinggi dengan ukuran berkas lebih kecil daripada MP3."
 
 #: ../src/transcoder.py:66
 msgid ""
-"Free Lossless Audio Codec (FLAC) is an open source codec that compresses but "
-"does not degrade audio quality."
-msgstr ""
-"Free Lossless Audio Codec (FLAC) adalah codec sumber terbuka yang "
-"mengkompresi berkas tapi tidak mengurangi kualitas audio."
+"Free Lossless Audio Codec (FLAC) is an open source codec that compresses but"
+" does not degrade audio quality."
+msgstr "Free Lossless Audio Codec (FLAC) adalah codec sumber terbuka yang mengkompresi berkas tapi tidak mengurangi kualitas audio."
 
 #: ../src/transcoder.py:80
 msgid ""
-"Apple's proprietary lossy audio format could give higher quality than MP3 at "
-"lower bitrates."
+"Apple's proprietary lossy audio format could give higher quality than MP3 at"
+" lower bitrates."
 msgstr ""
 
 #: ../src/transcoder.py:93
 msgid ""
 "A proprietary and older, but also popular, lossy audio format. VBR gives "
 "higher quality than CBR, but may be incompatible with some players."
-msgstr ""
+msgstr "Format loosy audio berbayar dan lama, tapi juga popular. VBR memberikan kualitas lebih baik daripada CBR tapi mungkin tidak kompatibel dengan beberapa pemutar musik."
 
 #: ../src/transcoder.py:106
 msgid ""
@@ -95,15 +92,15 @@ msgstr "Opsi"
 
 #: ../src/main.py:108
 msgid "Control Options"
-msgstr "Pilihan Kontrol"
+msgstr "Opsi Kontrol"
 
 #: ../src/main.py:110
 msgid "Play the next track"
-msgstr "Mainkan track selanjutnya"
+msgstr "Mainkan musik selanjutnya"
 
 #: ../src/main.py:112
 msgid "Play the previous track"
-msgstr "Mainkan track sebelumnya"
+msgstr "Mainkan musik sebelumnya"
 
 #: ../src/main.py:114
 msgid "Pause or resume playback"
@@ -111,15 +108,15 @@ msgstr "Jeda atau mainkan"
 
 #: ../src/main.py:116
 msgid "Seek Forward"
-msgstr ""
+msgstr "Mencari maju"
 
 #: ../src/main.py:118
 msgid "Seek Backward"
-msgstr ""
+msgstr "Mencari mundur"
 
 #: ../src/main.py:120
 msgid "Stop playback"
-msgstr ""
+msgstr "Hentikan pemutaran"
 
 #: ../src/main.py:124
 msgid "Volume Options"
@@ -131,31 +128,31 @@ msgstr "Ubah Volume (VOLUME 0.0-1.0)"
 
 #: ../src/main.py:129
 msgid "Track information Options"
-msgstr "Opsi Informasi Track"
+msgstr "Opsi Informasi Musik"
 
 #: ../src/main.py:131
 msgid "Print the title of current track"
-msgstr "Cetak judul lagu yang sedang diputar"
+msgstr "Tampilkan judul lagu sekarang"
 
 #: ../src/main.py:133
 msgid "Print the album of current track"
-msgstr "Cetak album lagu yang sedang diputar"
+msgstr "Cetak album lagu saat ini"
 
 #: ../src/main.py:135
 msgid "Print the artist of current track"
-msgstr "Cetak artis dari lagu yang sedang diputar"
+msgstr "Cetak artis dari lagu saat ini"
 
 #: ../src/main.py:137
 msgid "Print the length of current track"
-msgstr ""
+msgstr "Tampilkan panjang lagu saat ini"
 
 #: ../src/main.py:139
 msgid "Print the path of current track"
-msgstr ""
+msgstr "Tampilkan jejak lagu saat ini"
 
 #: ../src/main.py:141
 msgid "Print current playback position"
-msgstr ""
+msgstr "Tampilkan posisi pemutaran saat ini"
 
 #: ../src/main.py:144
 msgid "Other Options"
@@ -163,7 +160,7 @@ msgstr "Pilihan lainnya"
 
 #: ../src/main.py:146
 msgid "Show this help message and exit"
-msgstr ""
+msgstr "Tampilkan pesan bantuan ini dan keluar"
 
 #: ../src/main.py:148
 msgid "Start new instance"
@@ -171,11 +168,11 @@ msgstr ""
 
 #: ../src/main.py:150
 msgid "Show program's version number and exit."
-msgstr ""
+msgstr "Tampilkan nomor versi program dan keluar."
 
 #: ../src/main.py:152
 msgid "Minimize after started"
-msgstr ""
+msgstr "Minimalkan setelah dimulai"
 
 #: ../src/main.py:155
 msgid "Toggle visibility of the GUI (if possible)"
@@ -187,7 +184,7 @@ msgstr ""
 
 #: ../src/main.py:161
 msgid "Development/Debug Options"
-msgstr ""
+msgstr "Pengambangan/Opsi Debug"
 
 #: ../src/main.py:162
 msgid "Set debug level (0-9)"
@@ -195,12 +192,12 @@ msgstr "Atus level debug (0-9)"
 
 #: ../src/main.py:166
 msgid "Show information supported audio file"
-msgstr ""
+msgstr "Tampilkan informasi pendukung berkas audio"
 
 #: ../src/widget/song_view.py:437 ../src/widget/song_view.py:780
 #: ../src/widget/converter.py:309 ../src/widget/local_browser.py:339
 msgid "Prompt"
-msgstr ""
+msgstr "Munculkan"
 
 #: ../src/widget/song_view.py:437 ../src/widget/song_view.py:780
 #: ../src/widget/local_browser.py:339
@@ -213,7 +210,7 @@ msgstr "Ulangi (satu)"
 
 #: ../src/widget/song_view.py:482
 msgid "Order play"
-msgstr ""
+msgstr "Urutan memainkan"
 
 #: ../src/widget/song_view.py:483
 msgid "Repeat (list)"
@@ -225,11 +222,11 @@ msgstr "Acak"
 
 #: ../src/widget/song_view.py:507
 msgid "Remove Track from this List"
-msgstr "Hapus track dari Daftar"
+msgstr "Hapus lagu dari Daftar"
 
 #: ../src/widget/song_view.py:508
 msgid "Remove Unavailable Tracks"
-msgstr "Hapus Track yang tidak tersedia"
+msgstr "Hapus lagu yang tidak tersedia"
 
 #: ../src/widget/song_view.py:509 ../src/widget/song_view.py:789
 #: ../src/widget/playlist.py:554 ../src/widget/local_browser.py:354
@@ -251,14 +248,13 @@ msgid "File"
 msgstr "File"
 
 #: ../src/widget/song_view.py:523 ../src/widget/song_view.py:531
-#, fuzzy
 msgid "Folder (include subdirectories)"
-msgstr "Folder (termasuk subdirektori)"
+msgstr ""
 
 #: ../src/widget/song_view.py:524 ../src/widget/song_view.py:532
 #: ../src/widget/local_browser.py:91
 msgid "Folder"
-msgstr ""
+msgstr "Folder"
 
 #: ../src/widget/song_view.py:542
 msgid "Add URL"
@@ -283,7 +279,7 @@ msgstr "Album"
 
 #: ../src/widget/song_view.py:680
 msgid "Added Time"
-msgstr ""
+msgstr "Waktu ditambahkan"
 
 #: ../src/widget/song_view.py:785 ../src/widget/tray.py:59
 #: ../src/widget/webcast_view.py:119 ../src/widget/webcast_view.py:338
@@ -309,7 +305,7 @@ msgstr "Buka Direktori"
 #: ../src/widget/converter.py:427 ../src/widget/instance.py:341
 #: ../src/widget/instance.py:364
 msgid "Converter"
-msgstr ""
+msgstr "Konverter"
 
 #: ../src/widget/song_view.py:793 ../src/widget/song_editor.py:335
 #: ../src/widget/playlist.py:561
@@ -388,12 +384,12 @@ msgstr "Keluar"
 
 #: ../src/widget/webcasts_browser.py:98
 msgid "Region"
-msgstr ""
+msgstr "Wilayah"
 
 #: ../src/widget/webcasts_browser.py:99 ../src/widget/song_editor.py:205
 #: ../src/widget/local_browser.py:89
 msgid "Genre"
-msgstr ""
+msgstr "Genre"
 
 #: ../src/widget/webcasts_browser.py:141
 msgid "Favorites"
@@ -410,7 +406,7 @@ msgstr "Tipe"
 
 #: ../src/widget/song_notify.py:209 ../src/widget/song_editor.py:100
 msgid "Playcount"
-msgstr ""
+msgstr "Dimainkan"
 
 #: ../src/widget/song_notify.py:210 ../src/widget/song_editor.py:97
 msgid "Duration"
@@ -438,19 +434,19 @@ msgstr "Radio"
 #: ../src/widget/combo.py:184 ../src/widget/combo.py:233
 #: ../src/widget/playlist.py:536
 msgid "By Artist"
-msgstr ""
+msgstr "Berdasar Artis"
 
 #: ../src/widget/combo.py:195
 msgid "List view"
-msgstr ""
+msgstr "Lihat daftar"
 
 #: ../src/widget/combo.py:234 ../src/widget/playlist.py:538
 msgid "By Genre"
-msgstr ""
+msgstr "Berdasar Genre"
 
 #: ../src/widget/combo.py:235 ../src/widget/playlist.py:537
 msgid "By Album"
-msgstr ""
+msgstr "Berdasar Album"
 
 #: ../src/widget/global_keys.py:97
 #, python-format
@@ -463,7 +459,7 @@ msgstr "Menyambung"
 
 #: ../src/widget/information.py:106
 msgid "buffering..."
-msgstr ""
+msgstr "penyanggaan..."
 
 #: ../src/widget/dialog.py:34
 msgid "Select Directory"
@@ -479,15 +475,15 @@ msgstr "Ekspor daftar putar"
 
 #: ../src/widget/dialog.py:130
 msgid "Load playlist"
-msgstr ""
+msgstr "Memuat daftar putar"
 
 #: ../src/widget/lyrics_module.py:151
 msgid "Increase the lyrics size"
-msgstr ""
+msgstr "Naikkan ukuran lirik"
 
 #: ../src/widget/lyrics_module.py:152
 msgid "Decrease the lyrics size"
-msgstr ""
+msgstr "Kecilkan ukuran lirik"
 
 #: ../src/widget/lyrics_module.py:154
 msgid "Select color theme"
@@ -507,7 +503,7 @@ msgstr "Buka panel pengaturan"
 
 #: ../src/widget/lyrics_module.py:163
 msgid "Search lrc file for current track"
-msgstr ""
+msgstr "Cari berkas lrc untuk lagu saat ini"
 
 #: ../src/widget/lyrics_module.py:164
 msgid "Close lyrics"
@@ -548,11 +544,11 @@ msgstr "Mundur 0.5 detik"
 
 #: ../src/widget/lyrics_module.py:237
 msgid "Adjust lyrics"
-msgstr ""
+msgstr "Sesuaikan lirik"
 
 #: ../src/widget/lyrics_module.py:239
 msgid "Choose local lrc"
-msgstr ""
+msgstr "Pilih lrc lokal"
 
 #: ../src/widget/lyrics_module.py:240 ../src/widget/song_editor.py:150
 #: ../src/widget/playlist.py:560 ../src/widget/converter.py:367
@@ -569,7 +565,7 @@ msgstr "Vitality yellow"
 
 #: ../src/widget/lyrics_module.py:456 ../src/widget/preference.py:628
 msgid "Fresh green"
-msgstr "Fresh green"
+msgstr "Hijau segar"
 
 #: ../src/widget/lyrics_module.py:457 ../src/widget/preference.py:629
 msgid "Playful pink"
@@ -597,7 +593,7 @@ msgstr "Bitrate"
 
 #: ../src/widget/song_editor.py:98
 msgid "Rate"
-msgstr ""
+msgstr "Laju"
 
 #: ../src/widget/song_editor.py:99
 msgid "Added"
@@ -605,7 +601,7 @@ msgstr "Ditambahkan"
 
 #: ../src/widget/song_editor.py:99
 msgid "Recently"
-msgstr ""
+msgstr "Baru-baru ini"
 
 #: ../src/widget/song_editor.py:100 ../src/widget/song_editor.py:206
 msgid "Date"
@@ -613,7 +609,7 @@ msgstr "Tanggal"
 
 #: ../src/widget/song_editor.py:147
 msgid "Location"
-msgstr ""
+msgstr "Lokasi"
 
 #: ../src/widget/song_editor.py:214
 msgid "Save"
@@ -622,7 +618,7 @@ msgstr "Simpan"
 #: ../src/widget/song_editor.py:296 ../src/widget/converter.py:475
 #: ../src/widget/preference.py:252
 msgid "Change"
-msgstr ""
+msgstr "Ganti"
 
 #: ../src/widget/song_editor.py:299
 msgid "Retrieve from the Internet"
@@ -646,7 +642,7 @@ msgstr "Keluar"
 
 #: ../src/widget/song_editor.py:367
 msgid "Track Infomation"
-msgstr "Informasi Track"
+msgstr "Informasi Lagu"
 
 #: ../src/widget/song_editor.py:368
 msgid "Tag Settings"
@@ -662,7 +658,7 @@ msgstr "Kustom"
 
 #: ../src/widget/equalizer.py:177
 msgid "Default"
-msgstr "Default"
+msgstr "Baku"
 
 #: ../src/widget/equalizer.py:178 ../plugins/musicfm/radio_genre_page.py:43
 msgid "Classical"
@@ -746,7 +742,7 @@ msgstr ""
 
 #: ../src/widget/playlist.py:96
 msgid "Playlist Operations"
-msgstr ""
+msgstr "Operasi Daftar Putar"
 
 #: ../src/widget/playlist.py:97 ../src/widget/instance.py:359
 msgid "Add"
@@ -755,11 +751,11 @@ msgstr "Tambah"
 #: ../src/widget/playlist.py:100 ../src/widget/playlist.py:557
 #: ../src/widget/instance.py:361
 msgid "Playback mode"
-msgstr ""
+msgstr "Modus pemutaran"
 
 #: ../src/widget/playlist.py:183
 msgid "Default List"
-msgstr ""
+msgstr "Daftar Baku"
 
 #: ../src/widget/playlist.py:304 ../src/widget/playlist.py:316
 #: ../src/widget/playlist.py:317 ../src/widget/playlist.py:357
@@ -794,23 +790,23 @@ msgstr "Rename"
 
 #: ../src/widget/playlist.py:534
 msgid "By Filename"
-msgstr ""
+msgstr "Berdasar Nama berkas"
 
 #: ../src/widget/playlist.py:535
 msgid "By Title"
-msgstr ""
+msgstr "Berdasar Judul"
 
 #: ../src/widget/playlist.py:539
 msgid "By Track"
-msgstr ""
+msgstr "Berdasar Lagu"
 
 #: ../src/widget/playlist.py:540
 msgid "By Play Count"
-msgstr ""
+msgstr "Berdasar Jumlah dimainkan"
 
 #: ../src/widget/playlist.py:541
 msgid "By Added Time"
-msgstr ""
+msgstr "Berdasarkan waktu ditambahkan"
 
 #: ../src/widget/playlist.py:550 ../src/widget/local_browser.py:351
 msgid "Add to List"
@@ -822,7 +818,7 @@ msgstr "Pindah ke Daftar"
 
 #: ../src/widget/playlist.py:553
 msgid "Remove Track"
-msgstr "Hapus Track"
+msgstr "Hapus Lagu"
 
 #: ../src/widget/playlist.py:558
 msgid "Sort"
@@ -830,11 +826,11 @@ msgstr "Sortir"
 
 #: ../src/widget/local_item.py:59
 msgid "All Tracks"
-msgstr "Semua Tracks"
+msgstr "Semua Lagu"
 
 #: ../src/widget/local_item.py:67
 msgid "Track(s)"
-msgstr "Track"
+msgstr "Lagu"
 
 #: ../src/widget/ui.py:203
 msgid "Need some music? Find it here..."
@@ -847,21 +843,21 @@ msgstr "Tambah Musik Lokal"
 #: ../src/widget/ui.py:1122
 #, python-brace-format
 msgid "Your search {keyword} did not match any items in {from}"
-msgstr ""
+msgstr "Pencarian Anda {keyword} tidak cocok dalam item mana saja dalam {from}"
 
 #: ../src/widget/ui.py:1123
 msgid "Suggestions"
-msgstr ""
+msgstr "Saran"
 
 #: ../src/widget/ui.py:1124
 msgid "Make sure all words are spelled correctly."
-msgstr ""
+msgstr "Pastikan semua kata dieja dengan benar."
 
 #: ../src/widget/ui.py:1125
 msgid ""
 "Try more general keywords, such as a title, an artist or the name of an "
 "album."
-msgstr ""
+msgstr "Cobalah katakunci lebih umum, seperti judul, artis atau nama sebuah album."
 
 #: ../src/widget/ui.py:1222 ../src/widget/plugins_view.py:166
 msgid "Name"
@@ -873,7 +869,7 @@ msgstr "Pengarang"
 
 #: ../src/widget/ui.py:1260 ../src/widget/preference.py:195
 msgid "Minimize to tray"
-msgstr ""
+msgstr "Sembunyikan ke tray"
 
 #: ../src/widget/ui.py:1266
 msgid "Don't prompt again"
@@ -893,15 +889,15 @@ msgstr "File sudah ada. Apakah Anda akan menimpanya?"
 
 #: ../src/widget/converter.py:369
 msgid "Delete task"
-msgstr ""
+msgstr "Hapus jadwal"
 
 #: ../src/widget/converter.py:370
 msgid "Clear finished tasks"
-msgstr ""
+msgstr "Bersihkan jadwal terselesaikan"
 
 #: ../src/widget/converter.py:376 ../src/widget/instance.py:342
 msgid "Task Manager"
-msgstr ""
+msgstr "Pengelola Tugas"
 
 #: ../src/widget/converter.py:413
 msgid "Continue"
@@ -913,7 +909,7 @@ msgstr "Kualitas"
 
 #: ../src/widget/converter.py:444
 msgid "Target file already exists"
-msgstr ""
+msgstr "Berkas target sudah ada"
 
 #: ../src/widget/converter.py:445
 msgid "Ask"
@@ -929,7 +925,7 @@ msgstr "Mulai"
 
 #: ../src/widget/converter.py:450
 msgid "Add to Playlist after finished"
-msgstr ""
+msgstr "Tambahkan ke Daftar Putar setelah selesai"
 
 #: ../src/widget/converter.py:472
 msgid "Output"
@@ -978,7 +974,7 @@ msgstr "Unduhan gagal."
 
 #: ../src/widget/local_browser.py:98
 msgid "Quick Scan"
-msgstr ""
+msgstr "Pindai Cepat"
 
 #: ../src/widget/local_browser.py:99
 msgid "Scan"
@@ -1010,7 +1006,7 @@ msgstr "Versi"
 
 #: ../src/widget/plugins_view.py:166
 msgid "Enable"
-msgstr ""
+msgstr "Aktifkan"
 
 #: ../src/widget/lyrics.py:735
 msgid "Lyrics window"
@@ -1054,7 +1050,7 @@ msgstr ""
 
 #: ../src/widget/preference.py:157
 msgid "Display splash-screen"
-msgstr ""
+msgstr "Tampilkan layar sambutan"
 
 #: ../src/widget/preference.py:164
 msgid "Show lyrics"
@@ -1062,11 +1058,11 @@ msgstr "Tampilkan lirik"
 
 #: ../src/widget/preference.py:169
 msgid "Start playback automatically"
-msgstr ""
+msgstr "Mainkan otomatis"
 
 #: ../src/widget/preference.py:175
 msgid "Resume playback"
-msgstr ""
+msgstr "Lanjutkan pemutaran"
 
 #: ../src/widget/preference.py:190
 msgid "When pressing the close button"
@@ -1074,7 +1070,7 @@ msgstr "Ketika menekan tombol tutup"
 
 #: ../src/widget/preference.py:209
 msgid "Playback settings"
-msgstr ""
+msgstr "Pengaturan pemutaran"
 
 #: ../src/widget/preference.py:213
 msgid "Enable crossfade"
@@ -1141,7 +1137,7 @@ msgstr "Skema warna"
 
 #: ../src/widget/preference.py:650 ../src/widget/preference.py:807
 msgid "Regular"
-msgstr ""
+msgstr "Reguler"
 
 #: ../src/widget/preference.py:651 ../src/widget/preference.py:808
 msgid "Italic"
@@ -1157,11 +1153,11 @@ msgstr "Tebal Miring"
 
 #: ../src/widget/preference.py:663 ../src/widget/preference.py:818
 msgid "Style"
-msgstr ""
+msgstr "Gaya"
 
 #: ../src/widget/preference.py:671 ../src/widget/preference.py:824
 msgid "Lyrics style"
-msgstr ""
+msgstr "Gaya lirik"
 
 #: ../src/widget/preference.py:681 ../src/widget/preference.py:833
 msgid "Font"
@@ -1177,7 +1173,7 @@ msgstr "Tunggal"
 
 #: ../src/widget/preference.py:690
 msgid "Double"
-msgstr ""
+msgstr "Ganda"
 
 #: ../src/widget/preference.py:693 ../src/widget/preference.py:843
 msgid "Alignment"
@@ -1197,7 +1193,7 @@ msgstr "Belum dimainkan"
 
 #: ../src/widget/preference.py:722 ../src/widget/preference.py:856
 msgid "Played"
-msgstr ""
+msgstr "Dimainkan"
 
 #: ../src/widget/preference.py:850
 msgid "Rolling"
@@ -1209,21 +1205,14 @@ msgstr "Selalu"
 
 #: ../src/widget/preference.py:851
 msgid "By line"
-msgstr ""
+msgstr "Berdasar baris"
 
 #: ../src/widget/preference.py:920
 msgid ""
-"Deepin Music is a music application designed for Linux users. It's "
-"characterized with lyrics searching, desktop lyrics display,album cover "
-"downloading, resume playing, music management and skin selection.\n"
+"Deepin Music is a music application designed for Linux users. It's characterized with lyrics searching, desktop lyrics display,album cover downloading, resume playing, music management and skin selection.\n"
 "\n"
 "Deepin Music is free software licensed under GNU GPLv3."
-msgstr ""
-"Deepin Music adalah aplikasi musik diperuntukkan pengguna Linux. Dengan "
-"karakteristik pencarian lirik, tampilan desktop lirik, unduh sampul album, "
-"melanjutkan pemutaran, manajemen musik dan pemilihan tema.\n"
-"\n"
-"Deepin Music adalah perangkat lunak bebas berlisensi GNU GPLv3"
+msgstr "Deepin Music adalah aplikasi musik diperuntukkan pengguna Linux. Dengan karakteristik pencarian lirik, tampilan desktop lirik, unduh sampul album, melanjutkan pemutaran, manajemen musik dan pemilihan tema.\n\nDeepin Music adalah perangkat lunak bebas berlisensi GNU GPLv3"
 
 #: ../src/widget/preference.py:1001
 msgid "General"
@@ -1251,7 +1240,7 @@ msgstr "Tentang"
 
 #: ../src/source/old.py:112 ../src/source/audiocd.py:78
 msgid "Track"
-msgstr "Track"
+msgstr "Lagu"
 
 #: ../src/source/old.py:113 ../src/source/audiocd.py:79
 msgid "Unknown album"
@@ -1271,11 +1260,11 @@ msgstr "Membaca direktori"
 
 #: ../src/source/local.py:175
 msgid "Check deleted files"
-msgstr ""
+msgstr "Periksa berkas dihapus"
 
 #: ../src/source/local.py:202
 msgid "Reload database"
-msgstr ""
+msgstr "Muat ulang basisdata"
 
 #: ../plugins/musicfm/radio_genre_page.py:44
 msgid "Jazz"
@@ -1337,7 +1326,7 @@ msgstr "Pop MHz"
 
 #: ../plugins/musicfm/radio_item.py:508
 msgid "More"
-msgstr ""
+msgstr "Lagi"
 
 #: ../plugins/musicfm/__init__.py:33 ../plugins/musicfm/__init__.py:35
 #: ../plugins/musicfm/radio_view.py:474

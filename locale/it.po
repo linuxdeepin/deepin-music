@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
+# 
 # Translators:
 # Arreyu <massi_gi@hotmail.it>, 2014
 # massimo.carofano <massimo.carofano@gmail.com>, 2014
@@ -11,14 +11,13 @@ msgstr ""
 "Project-Id-Version: Deepin Music\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-21 16:43+0800\n"
-"PO-Revision-Date: 2014-06-30 04:51+0000\n"
+"PO-Revision-Date: 2014-08-23 11:40+0000\n"
 "Last-Translator: Maxximo88 <real.massimo@hotmail.it>\n"
-"Language-Team: Italian (http://www.transifex.com/projects/p/deepin-music/"
-"language/it/)\n"
-"Language: it\n"
+"Language-Team: Italian (http://www.transifex.com/projects/p/deepin-music/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: it\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ../src/plugins.py:91
@@ -38,42 +37,31 @@ msgstr "L'archivio plugin contiene una path non sicura."
 msgid ""
 "Vorbis is an open source, lossy audio codec with high quality output at a "
 "lower file size than MP3."
-msgstr ""
-"Vorbis è open source, con codec audio lossy di alta qualità e permette di "
-"creare file di dimensioni inferiori ai file MP3."
+msgstr "Vorbis è open source, con codec audio lossy di alta qualità e permette di creare file di dimensioni inferiori ai file MP3."
 
 #: ../src/transcoder.py:66
 msgid ""
-"Free Lossless Audio Codec (FLAC) is an open source codec that compresses but "
-"does not degrade audio quality."
-msgstr ""
-"Free Lossless Audio Codec (FLAC) è un codec open source che comprime l'audio "
-"senza degradarne la qualità."
+"Free Lossless Audio Codec (FLAC) is an open source codec that compresses but"
+" does not degrade audio quality."
+msgstr "Free Lossless Audio Codec (FLAC) è un codec open source che comprime l'audio senza degradarne la qualità."
 
 #: ../src/transcoder.py:80
 msgid ""
-"Apple's proprietary lossy audio format could give higher quality than MP3 at "
-"lower bitrates."
-msgstr ""
-"Il formato proprietario Apple lossy può dare maggiore qualità che un MP3 con "
-"bitrates bassi."
+"Apple's proprietary lossy audio format could give higher quality than MP3 at"
+" lower bitrates."
+msgstr "Il formato proprietario Apple lossy può dare maggiore qualità che un MP3 con bitrates bassi."
 
 #: ../src/transcoder.py:93
 msgid ""
 "A proprietary and older, but also popular, lossy audio format. VBR gives "
 "higher quality than CBR, but may be incompatible with some players."
-msgstr ""
-"Un formato audio proprietario vecchio ma popolare. VBR permette di avere una "
-"qualità migliore di CBR, ma potrebbe esser incompatibile con alcuni player."
+msgstr "Un formato audio proprietario vecchio ma popolare. VBR permette di avere una qualità migliore di CBR, ma potrebbe esser incompatibile con alcuni player."
 
 #: ../src/transcoder.py:106
 msgid ""
 "A proprietary and older, but also popular, lossy audio format. The output "
 "effect of CBR is not good as VBR, but is compatible with any player."
-msgstr ""
-"Un formato proprietario e vecchio, ma altrettanto popolare, chiamato lossy. "
-"L'output in CBR non è buono quanto VBR, ma è compatibile con qualsiasi "
-"player."
+msgstr "Un formato proprietario e vecchio, ma altrettanto popolare, chiamato lossy. L'output in CBR non è buono quanto VBR, ma è compatibile con qualsiasi player."
 
 #: ../src/transcoder.py:119
 msgid "A very fast Free lossless audio format with good compression."
@@ -191,9 +179,8 @@ msgid "Toggle visibility of the GUI (if possible)"
 msgstr "Mostra toggle nella GUI (se possibile)"
 
 #: ../src/main.py:158
-#, fuzzy
 msgid "This option makes control options, such as --play to start program"
-msgstr "This option makes control options like --play to start program"
+msgstr "Questa opzione attiva le opzioni di controllo, come il --avvia quando apro il DMusic"
 
 #: ../src/main.py:161
 msgid "Development/Debug Options"
@@ -261,9 +248,8 @@ msgid "File"
 msgstr "File"
 
 #: ../src/widget/song_view.py:523 ../src/widget/song_view.py:531
-#, fuzzy
 msgid "Folder (include subdirectories)"
-msgstr "Cartella (incluse sottocartelle)"
+msgstr "Cartella (Includi sottocartelle)"
 
 #: ../src/widget/song_view.py:524 ../src/widget/song_view.py:532
 #: ../src/widget/local_browser.py:91
@@ -744,7 +730,7 @@ msgstr "Equalizzatore"
 
 #: ../src/widget/equalizer.py:254
 msgid "Predefined"
-msgstr "Preferinito"
+msgstr "Predefinito"
 
 #: ../src/widget/jobs_manager.py:44 ../src/widget/jobs_manager.py:153
 msgid "jobs waiting!"
@@ -857,9 +843,7 @@ msgstr "Aggiungi musica locale"
 #: ../src/widget/ui.py:1122
 #, python-brace-format
 msgid "Your search {keyword} did not match any items in {from}"
-msgstr ""
-"La tua ricerca {keyword} non ha nessuna corrispondenza con gli elementi in "
-"{from}"
+msgstr "La tua ricerca {keyword} non ha nessuna corrispondenza con gli elementi in {from}"
 
 #: ../src/widget/ui.py:1123
 msgid "Suggestions"
@@ -873,9 +857,7 @@ msgstr "Assicurati che tutte le lettere siano corrette."
 msgid ""
 "Try more general keywords, such as a title, an artist or the name of an "
 "album."
-msgstr ""
-"Prova con parole più generiche, come un titolo, un artista o il nome di un "
-"album."
+msgstr "Prova con parole più generiche, come un titolo, un artista o il nome di un album."
 
 #: ../src/widget/ui.py:1222 ../src/widget/plugins_view.py:166
 msgid "Name"
@@ -1227,18 +1209,10 @@ msgstr "Da linea"
 
 #: ../src/widget/preference.py:920
 msgid ""
-"Deepin Music is a music application designed for Linux users. It's "
-"characterized with lyrics searching, desktop lyrics display,album cover "
-"downloading, resume playing, music management and skin selection.\n"
+"Deepin Music is a music application designed for Linux users. It's characterized with lyrics searching, desktop lyrics display,album cover downloading, resume playing, music management and skin selection.\n"
 "\n"
 "Deepin Music is free software licensed under GNU GPLv3."
-msgstr ""
-"DMusic è una applicazione musicale creata per gli utenti Linux. Permette di "
-"cercare i testi (lyrics) e scaricarli, scaricare le cover degli album, "
-"riprendere l'ascolto, gestire le canzoni e selezionare la skin che più "
-"appaga.\n"
-"\n"
-"DMusic è un software libero distribuito con licenza GNU GPLv3."
+msgstr "DMusic è una applicazione musicale creata per gli utenti Linux. Permette di gestire la propria collezione musicale, cercare i testi (lyrics) e scaricarli, scaricare le cover degli album, riprendere l'ascolto e selezionare la skin che più appaga.\n\nDMusic è un software libero distribuito con licenza GNU GPLv3."
 
 #: ../src/widget/preference.py:1001
 msgid "General"
@@ -1278,7 +1252,7 @@ msgstr "Artista sconosciuto"
 
 #: ../src/source/audiocd.py:86 ../src/source/audiocd.py:92
 msgid "Audio CD"
-msgstr "AudioCD"
+msgstr "Audio CD"
 
 #: ../src/source/local.py:43
 msgid "Reading directories..."

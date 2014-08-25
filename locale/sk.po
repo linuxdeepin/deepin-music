@@ -1,79 +1,70 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
+# 
 # Translators:
+# Microtus <hrabosmartin@gmail.com>, 2014
 # fasier <matus.ravas@outlook.com>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Deepin Music\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-21 16:43+0800\n"
-"PO-Revision-Date: 2014-06-30 04:51+0000\n"
-"Last-Translator: cxbii <chenxiangbang@linuxdeepin.com>\n"
-"Language-Team: Slovak (http://www.transifex.com/projects/p/deepin-music/"
-"language/sk/)\n"
-"Language: sk\n"
+"PO-Revision-Date: 2014-08-22 05:20+0000\n"
+"Last-Translator: szd_liufei <liufei@linuxdeepin.com>\n"
+"Language-Team: Slovak (http://www.transifex.com/projects/p/deepin-music/language/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: sk\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #: ../src/plugins.py:91
 msgid "Plugin archive is not in the correct format."
-msgstr ""
+msgstr "Plugin archív nie je v korektnom formáte. "
 
 #: ../src/plugins.py:98
 #, python-format
 msgid "A plugin with the name \"%s\" is already installed."
-msgstr ""
+msgstr "Plugin s názvom \"%s\" je už nainštalovaný."
 
 #: ../src/plugins.py:103
 msgid "Plugin archive contains an unsafe path."
-msgstr ""
+msgstr "Plugin archív obsahuje nebezpečnú cestu."
 
 #: ../src/transcoder.py:54
 msgid ""
 "Vorbis is an open source, lossy audio codec with high quality output at a "
 "lower file size than MP3."
-msgstr ""
-"Vorbis je stratový zvukový kodek s otvoreným zdrojovým kódom. Má vysoko "
-"kvalitný výstup aj s menšou veľkosťou súboru, než je MP3."
+msgstr "Vorbis je stratový zvukový kodek s otvoreným zdrojovým kódom. Má vysoko kvalitný výstup aj s menšou veľkosťou súboru, než je MP3."
 
 #: ../src/transcoder.py:66
 msgid ""
-"Free Lossless Audio Codec (FLAC) is an open source codec that compresses but "
-"does not degrade audio quality."
-msgstr ""
-"Free Lossless Audio Codec (FLAC) je zvukový kodek s otvoreným zdrojovým "
-"kódom, ktorý komprimuje dáta, ale neznižuje kvalitu zvuku."
+"Free Lossless Audio Codec (FLAC) is an open source codec that compresses but"
+" does not degrade audio quality."
+msgstr "Free Lossless Audio Codec (FLAC) je zvukový kodek s otvoreným zdrojovým kódom, ktorý komprimuje dáta, ale neznižuje kvalitu zvuku."
 
 #: ../src/transcoder.py:80
 msgid ""
-"Apple's proprietary lossy audio format could give higher quality than MP3 at "
-"lower bitrates."
-msgstr ""
+"Apple's proprietary lossy audio format could give higher quality than MP3 at"
+" lower bitrates."
+msgstr "Proprietárny stratový audio formát od Apple môže poskytnúť vyššiu kvalitu ako MP3 pri nižšom bitovom toku. "
 
 #: ../src/transcoder.py:93
 msgid ""
 "A proprietary and older, but also popular, lossy audio format. VBR gives "
 "higher quality than CBR, but may be incompatible with some players."
-msgstr ""
-"Starší a proprietárny, ale stále obľúbený zvukový formát. VBR (premenlivý "
-"dátový tok) má vyššiu kvalitu než CBR (stály dátový tok), ale nemusí byť "
-"kompatibilný s niektorými prehrávačmi."
+msgstr "Starší a proprietárny, ale stále obľúbený zvukový formát. VBR (premenlivý dátový tok) má vyššiu kvalitu než CBR (stály dátový tok), ale nemusí byť kompatibilný s niektorými prehrávačmi."
 
 #: ../src/transcoder.py:106
 msgid ""
 "A proprietary and older, but also popular, lossy audio format. The output "
 "effect of CBR is not good as VBR, but is compatible with any player."
-msgstr ""
+msgstr "Proprietárny a starší, ale stále obľúbený, stratový audio formát. Výstupný efekt CBR nie je až taký dobrý ako VBR, ale je kompatibilný so všetkými prehrávačmi. "
 
 #: ../src/transcoder.py:119
 msgid "A very fast Free lossless audio format with good compression."
-msgstr ""
-"Veľmi rýchly bezstratový zvukový formát s dobrou kompresiou, ktorý je "
-"zadarmo."
+msgstr "Veľmi rýchly bezstratový zvukový formát s dobrou kompresiou, ktorý je zadarmo."
 
 #: ../src/library.py:990 ../src/library.py:991 ../src/library.py:992
 #: ../src/library.py:999 ../src/library.py:1000 ../src/library.py:1001
@@ -180,7 +171,7 @@ msgstr "Ukázať číslo verzie programu a skončiť."
 
 #: ../src/main.py:152
 msgid "Minimize after started"
-msgstr ""
+msgstr "Minimalizovať po štarte"
 
 #: ../src/main.py:155
 msgid "Toggle visibility of the GUI (if possible)"
@@ -196,11 +187,11 @@ msgstr "Voľby pre vývoj/ladenie"
 
 #: ../src/main.py:162
 msgid "Set debug level (0-9)"
-msgstr ""
+msgstr "Nastaviť úroveň ladenia (0-9)"
 
 #: ../src/main.py:166
 msgid "Show information supported audio file"
-msgstr ""
+msgstr "Zobraziť informácie podporovaného audio súboru"
 
 #: ../src/widget/song_view.py:437 ../src/widget/song_view.py:780
 #: ../src/widget/converter.py:309 ../src/widget/local_browser.py:339
@@ -210,7 +201,7 @@ msgstr "Výzva"
 #: ../src/widget/song_view.py:437 ../src/widget/song_view.py:780
 #: ../src/widget/local_browser.py:339
 msgid "Are you sure to delete?"
-msgstr ""
+msgstr "Naozaj chcete vymazať?"
 
 #: ../src/widget/song_view.py:481
 msgid "Repeat (single)"
@@ -218,7 +209,7 @@ msgstr "Opakovať (viac)"
 
 #: ../src/widget/song_view.py:482
 msgid "Order play"
-msgstr ""
+msgstr "Hrať podľa zoradenia"
 
 #: ../src/widget/song_view.py:483
 msgid "Repeat (list)"
@@ -257,7 +248,7 @@ msgstr "Súbor"
 
 #: ../src/widget/song_view.py:523 ../src/widget/song_view.py:531
 msgid "Folder (include subdirectories)"
-msgstr ""
+msgstr "Adresár (zahrnúť podadresáre)"
 
 #: ../src/widget/song_view.py:524 ../src/widget/song_view.py:532
 #: ../src/widget/local_browser.py:91
@@ -287,7 +278,7 @@ msgstr "Album"
 
 #: ../src/widget/song_view.py:680
 msgid "Added Time"
-msgstr ""
+msgstr "Čas pridania"
 
 #: ../src/widget/song_view.py:785 ../src/widget/tray.py:59
 #: ../src/widget/webcast_view.py:119 ../src/widget/webcast_view.py:338
@@ -313,7 +304,7 @@ msgstr "Otvoriť adresár"
 #: ../src/widget/converter.py:427 ../src/widget/instance.py:341
 #: ../src/widget/instance.py:364
 msgid "Converter"
-msgstr ""
+msgstr "Konvertor"
 
 #: ../src/widget/song_view.py:793 ../src/widget/song_editor.py:335
 #: ../src/widget/playlist.py:561
@@ -327,11 +318,11 @@ msgstr "Knižnica"
 
 #: ../src/widget/tray.py:49 ../src/widget/preference.py:371
 msgid "Volume Up"
-msgstr ""
+msgstr "Zvýšiť hlasitosť"
 
 #: ../src/widget/tray.py:50 ../src/widget/preference.py:372
 msgid "Volume Down"
-msgstr ""
+msgstr "Znížiť hlasitosť"
 
 #: ../src/widget/tray.py:51
 msgid "Mute"
@@ -361,7 +352,7 @@ msgstr "Hlasitosť"
 
 #: ../src/widget/tray.py:72
 msgid "Close Lyrics"
-msgstr ""
+msgstr "Zatvoriť text piesne"
 
 #: ../src/widget/tray.py:73 ../src/widget/instance.py:378
 msgid "Search Lyrics"
@@ -373,12 +364,12 @@ msgstr "Zobraziť text piesne"
 
 #: ../src/widget/tray.py:78 ../src/widget/instance.py:403
 msgid "Unlock Lyrics"
-msgstr ""
+msgstr "Odomknúť text piesne"
 
 #: ../src/widget/tray.py:80 ../src/widget/lyrics_module.py:155
 #: ../src/widget/instance.py:405
 msgid "Lock Lyrics"
-msgstr ""
+msgstr "Zamknúť text piesne"
 
 #: ../src/widget/tray.py:83 ../src/widget/instance.py:372
 #: ../src/widget/preference.py:943
@@ -467,7 +458,7 @@ msgstr "Pripájanie"
 
 #: ../src/widget/information.py:106
 msgid "buffering..."
-msgstr ""
+msgstr "bufferovanie..."
 
 #: ../src/widget/dialog.py:34
 msgid "Select Directory"
@@ -487,11 +478,11 @@ msgstr "Nahrať zoznam skladieb"
 
 #: ../src/widget/lyrics_module.py:151
 msgid "Increase the lyrics size"
-msgstr ""
+msgstr "Zväčšiť veľkost textu piesne"
 
 #: ../src/widget/lyrics_module.py:152
 msgid "Decrease the lyrics size"
-msgstr ""
+msgstr "Zmenšiť veľkosť textu piesne"
 
 #: ../src/widget/lyrics_module.py:154
 msgid "Select color theme"
@@ -499,7 +490,7 @@ msgstr "Vybrať farebný motív"
 
 #: ../src/widget/lyrics_module.py:158
 msgid "Karaoke on/off"
-msgstr ""
+msgstr "Karaoke zap/vyp"
 
 #: ../src/widget/lyrics_module.py:160
 msgid "Switch lines"
@@ -511,7 +502,7 @@ msgstr "Otvoriť panel nastavení"
 
 #: ../src/widget/lyrics_module.py:163
 msgid "Search lrc file for current track"
-msgstr ""
+msgstr "Hľadať Irc súbor pre konkrétnu skladbu"
 
 #: ../src/widget/lyrics_module.py:164
 msgid "Close lyrics"
@@ -565,7 +556,7 @@ msgstr "Otvoriť adresár"
 
 #: ../src/widget/lyrics_module.py:247
 msgid "Lyrics acquired by Network"
-msgstr ""
+msgstr "Text piesne získaný sieťou"
 
 #: ../src/widget/lyrics_module.py:455 ../src/widget/preference.py:627
 msgid "Vitality yellow"
@@ -654,11 +645,11 @@ msgstr "Informácie o skladbe"
 
 #: ../src/widget/song_editor.py:368
 msgid "Tag Settings"
-msgstr ""
+msgstr "Tag nastavenia"
 
 #: ../src/widget/song_editor.py:369
 msgid "Cover Settings"
-msgstr ""
+msgstr "Nastavenia obalu"
 
 #: ../src/widget/equalizer.py:176
 msgid "Custom"
@@ -759,7 +750,7 @@ msgstr "Pridať"
 #: ../src/widget/playlist.py:100 ../src/widget/playlist.py:557
 #: ../src/widget/instance.py:361
 msgid "Playback mode"
-msgstr ""
+msgstr "Playback režim"
 
 #: ../src/widget/playlist.py:183
 msgid "Default List"
@@ -814,7 +805,7 @@ msgstr "Podľa počtu prehrania"
 
 #: ../src/widget/playlist.py:541
 msgid "By Added Time"
-msgstr ""
+msgstr "Podľa času pridania"
 
 #: ../src/widget/playlist.py:550 ../src/widget/local_browser.py:351
 msgid "Add to List"
@@ -822,7 +813,7 @@ msgstr "Pridať do zoznamu"
 
 #: ../src/widget/playlist.py:551
 msgid "Move to List"
-msgstr ""
+msgstr "Presunúť do zoznamu"
 
 #: ../src/widget/playlist.py:553
 msgid "Remove Track"
@@ -846,7 +837,7 @@ msgstr "Potrebujete viac hudby? Nájdite ju tu..."
 
 #: ../src/widget/ui.py:401
 msgid "Add Local Music"
-msgstr ""
+msgstr "Pridať lokálnu hudbu"
 
 #: ../src/widget/ui.py:1122
 #, python-brace-format
@@ -865,8 +856,7 @@ msgstr "Ujistite sa, že všetky slová sú správne napísané."
 msgid ""
 "Try more general keywords, such as a title, an artist or the name of an "
 "album."
-msgstr ""
-"Skúste hľadať viac obyčajných slov, ako je názov, umelec alebo názov albumu."
+msgstr "Skúste hľadať viac obyčajných slov, ako je názov, umelec alebo názov albumu."
 
 #: ../src/widget/ui.py:1222 ../src/widget/plugins_view.py:166
 msgid "Name"
@@ -894,7 +884,7 @@ msgstr "Zrušiť"
 
 #: ../src/widget/converter.py:309
 msgid "Target file already exists, do you want to overwrite it?"
-msgstr ""
+msgstr "Cieľový súbor už existuje, chcete ho prepísať?"
 
 #: ../src/widget/converter.py:369
 msgid "Delete task"
@@ -934,7 +924,7 @@ msgstr "Začať"
 
 #: ../src/widget/converter.py:450
 msgid "Add to Playlist after finished"
-msgstr ""
+msgstr "Pridať do zoznamu skladieb po dokončení"
 
 #: ../src/widget/converter.py:472
 msgid "Output"
@@ -1035,7 +1025,7 @@ msgstr "Pretočiť späť"
 
 #: ../src/widget/instance.py:360
 msgid "Play Controls"
-msgstr ""
+msgstr "Ovládanie prehrávania"
 
 #: ../src/widget/instance.py:371
 msgid "View New Features"
@@ -1055,7 +1045,7 @@ msgstr "Normálny režim"
 
 #: ../src/widget/preference.py:150
 msgid "On starting the player"
-msgstr ""
+msgstr "Pri štarte prehrávača"
 
 #: ../src/widget/preference.py:157
 msgid "Display splash-screen"
@@ -1075,7 +1065,7 @@ msgstr "Obnoviť prehrávanie"
 
 #: ../src/widget/preference.py:190
 msgid "When pressing the close button"
-msgstr ""
+msgstr "Pri stlačení zatváracieho tlačidla"
 
 #: ../src/widget/preference.py:209
 msgid "Playback settings"
@@ -1087,11 +1077,11 @@ msgstr "Povoliť prelínanie"
 
 #: ../src/widget/preference.py:216
 msgid "Seamless switching between the same album"
-msgstr ""
+msgstr "Hladké prepínanie v rámci rovnakého albumu"
 
 #: ../src/widget/preference.py:221
 msgid "Crossfade"
-msgstr ""
+msgstr "Prechod"
 
 #: ../src/widget/preference.py:223
 msgid " ms"
@@ -1198,7 +1188,7 @@ msgstr "Ťah"
 
 #: ../src/widget/preference.py:711 ../src/widget/preference.py:855
 msgid "Unplayed"
-msgstr ""
+msgstr "Neprehrané"
 
 #: ../src/widget/preference.py:722 ../src/widget/preference.py:856
 msgid "Played"
@@ -1218,12 +1208,10 @@ msgstr "Pomocou čiary"
 
 #: ../src/widget/preference.py:920
 msgid ""
-"Deepin Music is a music application designed for Linux users. It's "
-"characterized with lyrics searching, desktop lyrics display,album cover "
-"downloading, resume playing, music management and skin selection.\n"
+"Deepin Music is a music application designed for Linux users. It's characterized with lyrics searching, desktop lyrics display,album cover downloading, resume playing, music management and skin selection.\n"
 "\n"
 "Deepin Music is free software licensed under GNU GPLv3."
-msgstr ""
+msgstr "Deepin Hudba je hudobná aplikácia navrhnutá pre užívateľov Linuxu. Je charakteristická vyhľadávaním textov piesní, zobrazovaním textov piesní na ploche, sťahovaním obalov albumov, návratom k prehrávaniu, spravovaním hudby a voľbou vzhľadu. \n\nDeepin Hudba je bezplatný softvér licencovaný GNU GPLv3."
 
 #: ../src/widget/preference.py:1001
 msgid "General"
@@ -1243,7 +1231,7 @@ msgstr "Okno"
 
 #: ../src/widget/preference.py:1006
 msgid "Plugins"
-msgstr ""
+msgstr "Pluginy"
 
 #: ../src/widget/preference.py:1007
 msgid "About"
@@ -1328,7 +1316,7 @@ msgstr "Hot HMz"
 
 #: ../plugins/musicfm/radio_browser.py:80
 msgid "Genres MHz"
-msgstr ""
+msgstr "Žánre MHz"
 
 #: ../plugins/musicfm/radio_browser.py:81
 #: ../plugins/musicfm/radio_home_page.py:73

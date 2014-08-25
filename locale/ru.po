@@ -1,27 +1,26 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
+# 
 # Translators:
-# Fox909 <ffox909@mail.ru>, 2014
+# Анатолий Валерианович <ffox909@mail.ru>, 2014
 # jvjey <justVolodya@gmail.com>, 2014
 # evilscorpio <scorpkillerx@gmail.com>, 2014
 # Serge Kukharski, 2014
+# Анатолий Валерианович <ffox909@mail.ru>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Deepin Music\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-21 16:43+0800\n"
-"PO-Revision-Date: 2014-07-01 15:41+0000\n"
-"Last-Translator: Serge Kukharski\n"
-"Language-Team: Russian (http://www.transifex.com/projects/p/deepin-music/"
-"language/ru/)\n"
-"Language: ru\n"
+"PO-Revision-Date: 2014-08-25 18:40+0000\n"
+"Last-Translator: Анатолий Валерианович <ffox909@mail.ru>\n"
+"Language-Team: Russian (http://www.transifex.com/projects/p/deepin-music/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Language: ru\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #: ../src/plugins.py:91
 msgid "Plugin archive is not in the correct format."
@@ -40,41 +39,31 @@ msgstr "Архив плагина содержит небезопасный пу
 msgid ""
 "Vorbis is an open source, lossy audio codec with high quality output at a "
 "lower file size than MP3."
-msgstr ""
-"Vorbis - это свободный аудиокодек с потерей качества и хорошим звучанием, "
-"при меньшем по сравнению с MP3 размере файла."
+msgstr "Vorbis - это свободный аудиокодек с потерей качества и хорошим звучанием, при меньшем по сравнению с MP3 размере файла."
 
 #: ../src/transcoder.py:66
 msgid ""
-"Free Lossless Audio Codec (FLAC) is an open source codec that compresses but "
-"does not degrade audio quality."
-msgstr ""
-"Free Lossless Audio Codec (FLAC) - открытый аудиокодек для сжатия без потери "
-"качества."
+"Free Lossless Audio Codec (FLAC) is an open source codec that compresses but"
+" does not degrade audio quality."
+msgstr "Free Lossless Audio Codec (FLAC) - открытый аудиокодек для сжатия без потери качества."
 
 #: ../src/transcoder.py:80
 msgid ""
-"Apple's proprietary lossy audio format could give higher quality than MP3 at "
-"lower bitrates."
-msgstr ""
-"Проприетарный формат аудиофайла и алгоритма кодирования с меньшей, чем MP3, "
-"потерей качества при кодировании с одинаковыми битрейтам от Apple"
+"Apple's proprietary lossy audio format could give higher quality than MP3 at"
+" lower bitrates."
+msgstr "Проприетарный формат аудиофайла и алгоритма кодирования с меньшей, чем MP3, потерей качества при кодировании с одинаковыми битрейтам от Apple"
 
 #: ../src/transcoder.py:93
 msgid ""
 "A proprietary and older, but also popular, lossy audio format. VBR gives "
 "higher quality than CBR, but may be incompatible with some players."
-msgstr ""
-"Старейший, закрытый но популярный аудиоформат с потерями. VBR даёт более "
-"высокое качество чем CBR, но может быть несовместим с некоторыми плеерами."
+msgstr "Старейший, закрытый но популярный аудиоформат с потерями. VBR даёт более высокое качество чем CBR, но может быть несовместим с некоторыми плеерами."
 
 #: ../src/transcoder.py:106
 msgid ""
 "A proprietary and older, but also popular, lossy audio format. The output "
 "effect of CBR is not good as VBR, but is compatible with any player."
-msgstr ""
-"Старейший, закрытый но популярный аудиоформат с потерями. CBR даёт худшее, "
-"чем VBR, качество, зато совместим с любыми плеерами."
+msgstr "Старейший, закрытый но популярный аудиоформат с потерями. CBR даёт худшее, чем VBR, качество, зато совместим с любыми плеерами."
 
 #: ../src/transcoder.py:119
 msgid "A very fast Free lossless audio format with good compression."
@@ -192,9 +181,8 @@ msgid "Toggle visibility of the GUI (if possible)"
 msgstr "Переключите видимость GUI (если это возможно)"
 
 #: ../src/main.py:158
-#, fuzzy
 msgid "This option makes control options, such as --play to start program"
-msgstr "Эта опция делает возможности контроля --play для старта программы"
+msgstr "Эта опция позволяет управлять параметрами, например --play для старта программы"
 
 #: ../src/main.py:161
 msgid "Development/Debug Options"
@@ -262,9 +250,8 @@ msgid "File"
 msgstr "Файл"
 
 #: ../src/widget/song_view.py:523 ../src/widget/song_view.py:531
-#, fuzzy
 msgid "Folder (include subdirectories)"
-msgstr "Папка (включая подпапки)"
+msgstr "Папка (включает подкаталоги)"
 
 #: ../src/widget/song_view.py:524 ../src/widget/song_view.py:532
 #: ../src/widget/local_browser.py:91
@@ -872,8 +859,7 @@ msgstr "Убедитесь, что все слова написаны прави
 msgid ""
 "Try more general keywords, such as a title, an artist or the name of an "
 "album."
-msgstr ""
-"Попробуйте более общие запросы: название, исполнитель, название альбома."
+msgstr "Попробуйте более общие запросы: название, исполнитель, название альбома."
 
 #: ../src/widget/ui.py:1222 ../src/widget/plugins_view.py:166
 msgid "Name"
@@ -1225,19 +1211,10 @@ msgstr "По линии"
 
 #: ../src/widget/preference.py:920
 msgid ""
-"Deepin Music is a music application designed for Linux users. It's "
-"characterized with lyrics searching, desktop lyrics display,album cover "
-"downloading, resume playing, music management and skin selection.\n"
+"Deepin Music is a music application designed for Linux users. It's characterized with lyrics searching, desktop lyrics display,album cover downloading, resume playing, music management and skin selection.\n"
 "\n"
 "Deepin Music is free software licensed under GNU GPLv3."
-msgstr ""
-"Аудиоплеер Deepin - это музыкальное приложение, разработанное для "
-"пользователей Linux. Он включает в себя поисковик и загрузчик текстов песен "
-"с отображением их на рабочем столе, загрузку обложек альбомов, управление "
-"музыкальной библиотекой и поддержку тем оформления.\n"
-"\n"
-"Аудиоплеер Deepin - бесплатное и свободное программное обеспечение под "
-"лицензией GNU GPLv3."
+msgstr "Аудиоплеер Deepin - это музыкальное приложение, разработанное для пользователей Linux. Он включает в себя поисковик и загрузчик текстов песен с отображением их на рабочем столе, загрузку обложек альбомов, управление музыкальной библиотекой и поддержку тем оформления.\n\nАудиоплеер Deepin - бесплатное и свободное программное обеспечение под лицензией GNU GPLv3."
 
 #: ../src/widget/preference.py:1001
 msgid "General"
