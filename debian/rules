@@ -8,6 +8,9 @@ include debian/generate_mo.mk
 override_dh_auto_build: gen_locale_mo
 	dh_auto_build
 
+override_dh_auto_install:
+	dh_auto_install -- PREFIX=/usr
+
 override_dh_fixperms:
 	dh_fixperms
 	chmod 755 debian/deepin-music-player/usr/bin/deepin-music-player 
