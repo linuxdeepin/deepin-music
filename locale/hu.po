@@ -4,6 +4,7 @@
 # 
 # Translators:
 # kdavid97 <kdavid97@gmail.hu>, 2014
+# SlazO <blum1866@gmail.com>, 2014
 # unicum99 <stampf99@gmail.com>, 2014
 # vmarci21 <vmarci21@msn.com>, 2014
 msgid ""
@@ -11,8 +12,8 @@ msgstr ""
 "Project-Id-Version: Deepin Music\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-09-04 16:29+0800\n"
-"PO-Revision-Date: 2014-09-24 08:11+0000\n"
-"Last-Translator: snyh <snyh@snyh.org>\n"
+"PO-Revision-Date: 2014-10-21 09:30+0000\n"
+"Last-Translator: SlazO <blum1866@gmail.com>\n"
 "Language-Team: Hungarian (http://www.transifex.com/projects/p/deepin-music/language/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +25,7 @@ msgstr ""
 msgid ""
 "Vorbis is an open source, lossy audio codec with high quality output at a "
 "lower file size than MP3."
-msgstr "Vorbis egy nyílt forráskódú, veszteséges audio codec, kiváló minőségű, de  az MP3-nál kisebb fájlméret érhető el."
+msgstr "A Vorbis egy nyílt forráskódú, veszteséges audio codec, amely az MP3-nál kisebb méretű fájlok számára is kiváló minőséget tud biztosítani."
 
 #: ../src/transcoder.py:66
 msgid ""
@@ -42,17 +43,17 @@ msgstr "Az Apple saját fejlesztésű veszteséges audio formátuma, mely jobb m
 msgid ""
 "A proprietary and older, but also popular, lossy audio format. VBR gives "
 "higher quality than CBR, but may be incompatible with some players."
-msgstr "A szabadalmazott régi, de manapság népszerű, veszteséges audio formátumban. A VBR  jobb minőségű, mint a CBR, de lehet, hogy nem kompatibilis minden lejátszóval."
+msgstr "Szabadalmaztatott és régebbi de ugyanakkor szintén népszerű, veszteséges audio formátum. A VBR jobb minőséget bizotsít mint a CBR de néhány lejátszó nem tud mit kezdeni vele."
 
 #: ../src/transcoder.py:106
 msgid ""
 "A proprietary and older, but also popular, lossy audio format. The output "
 "effect of CBR is not good as VBR, but is compatible with any player."
-msgstr "A szabadalmazott és az idősebb, de manapság közkedvelt, veszteséges audio formátumban. A kimeneti hatása CBR nem jó, mint a VBR, de kompatibilis minden lejátszóval."
+msgstr "Szabadalmaztatott és régebbi de ugyanakkor szintén népszerű, veszteséges audio formátum. A CBR minősége nem olyan jó mint a VBR-é de ugyanakkor szinte minden lejátszóval kompatibilis."
 
 #: ../src/transcoder.py:119
 msgid "A very fast Free lossless audio format with good compression."
-msgstr "Egy nagyon gyors Szabad veszteségmentes hangkodek-formátum, jó tömörítéssel."
+msgstr "Egy nagyon gyors, szabad (nyílt) audio formátum jó tömörítési aránnyal."
 
 #: ../src/constant.py:28 ../src/widget/information.py:41
 msgid "Deepin Music"
@@ -73,7 +74,7 @@ msgstr "Már van \"%s\" nevű bővítmény."
 
 #: ../src/plugins.py:103
 msgid "Plugin archive contains an unsafe path."
-msgstr "Bővítmény archívum tartalmaz egy nem biztonságos utat"
+msgstr "A bővítmény archívum nem biztonságos útvonalat tartalmaz."
 
 #: ../src/library.py:990 ../src/library.py:991 ../src/library.py:992
 #: ../src/library.py:999 ../src/library.py:1000 ../src/library.py:1001
@@ -119,11 +120,11 @@ msgstr "A lejátszás leállítása"
 
 #: ../src/main.py:124
 msgid "Volume Options"
-msgstr "Hangerő beállításai"
+msgstr "Hangerő beállítások"
 
 #: ../src/main.py:126
 msgid "Change Volume (VOLUME 0.0-1.0)"
-msgstr "Hangerő (VOLUME 0.0-1.0)"
+msgstr "Hangerő beállítás (HANGERŐ 0.0-1.0)"
 
 #: ../src/main.py:129
 msgid "Track information Options"
@@ -139,7 +140,7 @@ msgstr "Aktuális zene album megnézése"
 
 #: ../src/main.py:135
 msgid "Print the artist of current track"
-msgstr "Aktuális zenész megnézése"
+msgstr "Aktuális előadó megtekintése"
 
 #: ../src/main.py:137
 msgid "Print the length of current track"
@@ -147,11 +148,11 @@ msgstr "Zene hossz mutatása"
 
 #: ../src/main.py:139
 msgid "Print the path of current track"
-msgstr "Zene hossz mutatása"
+msgstr "Zene útvonalának mutatása"
 
 #: ../src/main.py:141
 msgid "Print current playback position"
-msgstr "Aktuális visszajátszási mód mutatása"
+msgstr "Jelenlegi állapot mutatása"
 
 #: ../src/main.py:144
 msgid "Other Options"
@@ -159,7 +160,7 @@ msgstr "Egyéb beállítások"
 
 #: ../src/main.py:146
 msgid "Show this help message and exit"
-msgstr "Információ a segítséghez  és befejezni"
+msgstr "Mutassa a segítséget majd kilépés"
 
 #: ../src/main.py:148
 msgid "Start new instance"
@@ -167,7 +168,7 @@ msgstr "Új példány megnyitása"
 
 #: ../src/main.py:150
 msgid "Show program's version number and exit."
-msgstr "Mutassa program verziószámát, majd lépjen ki."
+msgstr "Program verziószámának megjelenítése majd kilépés."
 
 #: ../src/main.py:152
 msgid "Minimize after started"
@@ -183,11 +184,11 @@ msgstr "Ez olyan opciókat tesz lehetővé mint -- Lejátszás a program megnyit
 
 #: ../src/main.py:161
 msgid "Development/Debug Options"
-msgstr "Fejlesztés / Hibakeresési opciók"
+msgstr "Fejlesztés/Debug opciók"
 
 #: ../src/main.py:162
 msgid "Set debug level (0-9)"
-msgstr "A hiba szint beállítása (0-9)"
+msgstr "Debug szint beállítása (0-9)"
 
 #: ../src/main.py:166
 msgid "Show information supported audio file"
@@ -196,11 +197,11 @@ msgstr "Információk megjelenítése a támogatott fájloknál"
 #: ../src/widget/converter.py:309 ../src/widget/local_browser.py:339
 #: ../src/widget/song_view.py:437 ../src/widget/song_view.py:780
 msgid "Prompt"
-msgstr "Felhvás"
+msgstr "Megerősítés"
 
 #: ../src/widget/converter.py:309
 msgid "Target file already exists, do you want to overwrite it?"
-msgstr "A(z) adat már létezik,írjuk felül? "
+msgstr "A fájl már létezik, felülírja?"
 
 #: ../src/widget/converter.py:367 ../src/widget/song_editor.py:150
 #: ../src/widget/lyrics_module.py:240 ../src/widget/playlist.py:560
@@ -213,7 +214,7 @@ msgstr "Feladat törlése"
 
 #: ../src/widget/converter.py:370
 msgid "Clear finished tasks"
-msgstr "Befejezett feladatok"
+msgstr "Befejezett feladatok eltávolítása"
 
 #: ../src/widget/converter.py:376 ../src/widget/instance.py:342
 msgid "Task Manager"
@@ -268,7 +269,7 @@ msgstr "Start"
 
 #: ../src/widget/converter.py:450
 msgid "Add to Playlist after finished"
-msgstr "Adja hozzá a visszajátszáshoz, ha végzett "
+msgstr "Végén lejátszási listához adni"
 
 #: ../src/widget/converter.py:472
 msgid "Output"
@@ -287,13 +288,13 @@ msgstr "Törlés"
 #: ../src/widget/webcast_view.py:115 ../src/widget/webcast_view.py:123
 #: ../src/widget/song_view.py:510 ../src/widget/playlist.py:555
 msgid "Clear List"
-msgstr "lista üritése"
+msgstr "Lista üritése"
 
 #: ../src/widget/webcast_view.py:119 ../src/widget/webcast_view.py:338
 #: ../src/widget/instance.py:321 ../src/widget/tray.py:59
 #: ../src/widget/song_view.py:785 ../src/widget/playlist.py:549
 msgid "Play"
-msgstr "lejátszás"
+msgstr "Lejátszás"
 
 #: ../src/widget/webcast_view.py:219 ../src/widget/webcast_view.py:368
 msgid "Remove from Favorites"
@@ -314,7 +315,7 @@ msgstr "Rádió"
 
 #: ../src/widget/jobs_manager.py:44 ../src/widget/jobs_manager.py:153
 msgid "jobs waiting!"
-msgstr "A munka önre vár!"
+msgstr "Feladatok várakoznak!"
 
 #: ../src/widget/song_editor.py:72 ../src/widget/song_editor.py:202
 #: ../src/widget/song_view.py:680 ../src/widget/lyrics_search.py:83
@@ -343,15 +344,15 @@ msgstr "Méret"
 
 #: ../src/widget/song_editor.py:97 ../src/widget/song_notify.py:210
 msgid "Duration"
-msgstr "Hossz"
+msgstr "Tartam"
 
 #: ../src/widget/song_editor.py:98
 msgid "Bitrate"
-msgstr "Bitrate"
+msgstr "Bitráta"
 
 #: ../src/widget/song_editor.py:98
 msgid "Rate"
-msgstr "Rate"
+msgstr "Ráta"
 
 #: ../src/widget/song_editor.py:99
 msgid "Added"
@@ -363,7 +364,7 @@ msgstr "Mostanában"
 
 #: ../src/widget/song_editor.py:100 ../src/widget/song_notify.py:209
 msgid "Playcount"
-msgstr "Lejátszási szám"
+msgstr "Lejátszva"
 
 #: ../src/widget/song_editor.py:100 ../src/widget/song_editor.py:206
 msgid "Date"
@@ -380,11 +381,11 @@ msgstr "Műfaj"
 
 #: ../src/widget/song_editor.py:214
 msgid "Save"
-msgstr "mentés"
+msgstr "Mentés"
 
 #: ../src/widget/song_editor.py:299
 msgid "Retrieve from the Internet"
-msgstr "letöltés az internetről"
+msgstr "Beszerzés az Internetről"
 
 #: ../src/widget/song_editor.py:302 ../src/widget/preference.py:375
 #: ../src/widget/equalizer.py:252
@@ -418,7 +419,7 @@ msgstr "Szám információk"
 
 #: ../src/widget/song_editor.py:368
 msgid "Tag Settings"
-msgstr "címke beállítások"
+msgstr "Címke beállítások"
 
 #: ../src/widget/song_editor.py:369
 msgid "Cover Settings"
@@ -447,7 +448,7 @@ msgstr "Lejátszási vezérlők"
 #: ../src/widget/instance.py:361 ../src/widget/playlist.py:100
 #: ../src/widget/playlist.py:557
 msgid "Playback mode"
-msgstr "visszajátszási mód"
+msgstr "Lejátszási mód"
 
 #: ../src/widget/instance.py:363 ../src/widget/equalizer.py:199
 msgid "Equalizer"
@@ -481,29 +482,29 @@ msgstr "Zeneszöveg mutatása"
 
 #: ../src/widget/instance.py:403 ../src/widget/tray.py:78
 msgid "Unlock Lyrics"
-msgstr "Dalszövegeke feloldása"
+msgstr "Zeneszöveg feloldása"
 
 #: ../src/widget/instance.py:405 ../src/widget/tray.py:80
 #: ../src/widget/lyrics_module.py:155
 msgid "Lock Lyrics"
-msgstr "Zene szöveg zárolása "
+msgstr "Zeneszöveg zárolása "
 
 #: ../src/widget/instance.py:480
 msgid "Mini Mode"
-msgstr "Mini-mód"
+msgstr "Mini mód"
 
 #: ../src/widget/instance.py:482
 msgid "Normal Mode"
-msgstr "Normál-mód"
+msgstr "Normál mód"
 
 #: ../src/widget/local_browser.py:91 ../src/widget/song_view.py:524
 #: ../src/widget/song_view.py:532
 msgid "Folder"
-msgstr "mappa"
+msgstr "Mappa"
 
 #: ../src/widget/local_browser.py:98
 msgid "Quick Scan"
-msgstr "gyors keresés"
+msgstr "Gyors keresés"
 
 #: ../src/widget/local_browser.py:99
 msgid "Scan"
@@ -516,7 +517,7 @@ msgstr "Frissítés"
 #: ../src/widget/local_browser.py:339 ../src/widget/song_view.py:437
 #: ../src/widget/song_view.py:780
 msgid "Are you sure to delete?"
-msgstr "Biztos hogy törlöd?"
+msgstr "Biztos törölni akarja?"
 
 #: ../src/widget/local_browser.py:350
 msgid "Play All"
@@ -524,7 +525,7 @@ msgstr "Összes lejátszása"
 
 #: ../src/widget/local_browser.py:351 ../src/widget/playlist.py:550
 msgid "Add to List"
-msgstr "Listához adás"
+msgstr "Listához ad"
 
 #: ../src/widget/local_browser.py:353 ../src/widget/song_view.py:788
 msgid "Remove from Library"
@@ -533,7 +534,7 @@ msgstr "Eltávolítás a gyűjteményből"
 #: ../src/widget/local_browser.py:354 ../src/widget/song_view.py:509
 #: ../src/widget/song_view.py:789 ../src/widget/playlist.py:554
 msgid "Move to Trash"
-msgstr "Áthelyezés a lombtárba"
+msgstr "Áthelyezés a lomtárba"
 
 #: ../src/widget/local_browser.py:359 ../src/widget/song_view.py:791
 msgid "Open Directory"
@@ -541,7 +542,7 @@ msgstr "Mappa megnyitása"
 
 #: ../src/widget/local_browser.py:361
 msgid "Change Cover"
-msgstr "Borító módosítása"
+msgstr "Másik borító"
 
 #: ../src/widget/information.py:76
 msgid "Connecting"
@@ -549,7 +550,7 @@ msgstr "Csatlakozás"
 
 #: ../src/widget/information.py:106
 msgid "buffering..."
-msgstr "pufferelés"
+msgstr "pufferelés..."
 
 #: ../src/widget/tray.py:49 ../src/widget/preference.py:371
 msgid "Volume Up"
@@ -569,11 +570,11 @@ msgstr "Hangerő"
 
 #: ../src/widget/tray.py:72
 msgid "Close Lyrics"
-msgstr "Zene szöveg bezárása"
+msgstr "Zeneszöveg bezárása"
 
 #: ../src/widget/preference.py:150
 msgid "On starting the player"
-msgstr "A lejátszó indításánál "
+msgstr "A lejátszó indításakor "
 
 #: ../src/widget/preference.py:157
 msgid "Display splash-screen"
@@ -581,19 +582,19 @@ msgstr "Nyitóképernyő megjelenítése"
 
 #: ../src/widget/preference.py:164
 msgid "Show lyrics"
-msgstr "zeneszöveg mtatása"
+msgstr "Zeneszöveg mtatása"
 
 #: ../src/widget/preference.py:169
 msgid "Start playback automatically"
-msgstr "lejátszás automatikus indítása"
+msgstr "Lejátszás automatikus indítása"
 
 #: ../src/widget/preference.py:175
 msgid "Resume playback"
-msgstr "lejátszás folytatása"
+msgstr "Lejátszás folytatása"
 
 #: ../src/widget/preference.py:190
 msgid "When pressing the close button"
-msgstr "A gomb megnyomására bezárás "
+msgstr "Bezárás gomb megnyomásakor "
 
 #: ../src/widget/preference.py:195 ../src/widget/ui.py:1260
 msgid "Minimize to tray"
@@ -601,15 +602,15 @@ msgstr "Tálcára"
 
 #: ../src/widget/preference.py:209
 msgid "Playback settings"
-msgstr "lejátszási beállítások"
+msgstr "Lejátszási beállítások"
 
 #: ../src/widget/preference.py:213
 msgid "Enable crossfade"
-msgstr "Átúsztatás engedélyezése"
+msgstr "Áttűnés engedélyezése"
 
 #: ../src/widget/preference.py:216
 msgid "Seamless switching between the same album"
-msgstr "Akadály mentes váltás az albumok között "
+msgstr "Szünetmentes váltás az albumon belül "
 
 #: ../src/widget/preference.py:221
 msgid "Crossfade"
@@ -617,11 +618,11 @@ msgstr "Áttűnés "
 
 #: ../src/widget/preference.py:223
 msgid " ms"
-msgstr "mp"
+msgstr "ms"
 
 #: ../src/widget/preference.py:241
 msgid "Lyrics directory"
-msgstr "zeneszöveg gyűjtemény"
+msgstr "Zeneszöveg könyvtár"
 
 #: ../src/widget/preference.py:346 ../src/widget/preference.py:1002
 msgid "Hotkeys"
@@ -633,7 +634,7 @@ msgstr " Gyorsbillentyűk engedélyezése"
 
 #: ../src/widget/preference.py:362
 msgid "Minimize/Show window"
-msgstr "Ablak mutatása/kicsinyítése"
+msgstr "Ablak Minimalizálása/Mutatása"
 
 #: ../src/widget/preference.py:364
 msgid "Show/Hide lyrics"
@@ -641,7 +642,7 @@ msgstr "zeneszöveg megjelenése/elrejtése"
 
 #: ../src/widget/preference.py:366
 msgid "Lock/Unlock lyrics"
-msgstr "Zeneszöveg tiltása/engedélyezése"
+msgstr "Zeneszöveg lezárása/feloldása"
 
 #: ../src/widget/preference.py:368 ../src/widget/headerbar.py:63
 msgid "Play/Pause"
@@ -676,7 +677,7 @@ msgstr "Friss zöld"
 
 #: ../src/widget/preference.py:629 ../src/widget/lyrics_module.py:457
 msgid "Playful pink"
-msgstr "Játszadozó rozsaszin "
+msgstr "Játékos rózsaszín "
 
 #: ../src/widget/preference.py:630 ../src/widget/lyrics_module.py:458
 msgid "Cool blue"
@@ -712,7 +713,7 @@ msgstr "Zeneszöveg stílusa"
 
 #: ../src/widget/preference.py:681 ../src/widget/preference.py:833
 msgid "Font"
-msgstr "betű"
+msgstr "Betűtípus"
 
 #: ../src/widget/preference.py:689
 msgid "Lines"
@@ -732,7 +733,7 @@ msgstr "Igazítás"
 
 #: ../src/widget/preference.py:702
 msgid "Outline"
-msgstr "vázlat"
+msgstr "Vázlat"
 
 #: ../src/widget/preference.py:706
 msgid "Stroke"
@@ -756,7 +757,7 @@ msgstr "Mindig"
 
 #: ../src/widget/preference.py:851
 msgid "By line"
-msgstr "Vonalhoz"
+msgstr "Sor szerint"
 
 #: ../src/widget/preference.py:905 ../src/widget/plugins_view.py:166
 msgid "Version"
@@ -767,7 +768,7 @@ msgid ""
 "Deepin Music is a music application designed for Linux users. It's characterized with lyrics searching, desktop lyrics display,album cover downloading, resume playing, music management and skin selection.\n"
 "\n"
 "Deepin Music is free software licensed under GNU GPLv3."
-msgstr "Deepin zenelejátszó egy linuxra szánt lejátszó. "
+msgstr "A Deepin Music egy zenelejátszó alkalmazás Linux felhasználóknak tervezve. Elláttuk zeneszöveg kereséssel, asztalon megjeleníthető zeneszöveg -, album borító letőltési - és zenék koordinálása funkciókkal illetve felület választási lehetőséggel.\n\nA Deepin Music egy ingyenes alkalmazás a GNU GPLv3 licenc keretein belül."
 
 #: ../src/widget/preference.py:1001
 msgid "General"
@@ -795,19 +796,19 @@ msgstr "Rólunk"
 
 #: ../src/widget/song_view.py:481
 msgid "Repeat (single)"
-msgstr "Egy ismétlése"
+msgstr "Ismétlés (egyszer)"
 
 #: ../src/widget/song_view.py:482
 msgid "Order play"
-msgstr "Rendszerű lejátszás"
+msgstr "Lejátszás elrendezése"
 
 #: ../src/widget/song_view.py:483
 msgid "Repeat (list)"
-msgstr "Lista ismétlése"
+msgstr "Ismétlés (lista)"
 
 #: ../src/widget/song_view.py:484 ../src/widget/playlist.py:545
 msgid "Randomize"
-msgstr "véletlenszerű"
+msgstr "Véletlenszerű"
 
 #: ../src/widget/song_view.py:507
 msgid "Remove Track from this List"
@@ -827,11 +828,11 @@ msgstr "Fájl"
 
 #: ../src/widget/song_view.py:523 ../src/widget/song_view.py:531
 msgid "Folder (include subdirectories)"
-msgstr "Könyvtár (alkönyvtárt tartalmaz)"
+msgstr "Könyvtár (alkönyvtárakkal együtt)"
 
 #: ../src/widget/song_view.py:542
 msgid "Add URL"
-msgstr "URL megadása"
+msgstr "URL hozzáadása"
 
 #: ../src/widget/song_view.py:680
 msgid "Added Time"
@@ -848,20 +849,20 @@ msgstr "Összes szám"
 
 #: ../src/widget/local_item.py:67
 msgid "Track(s)"
-msgstr "szám(ok)"
+msgstr "Szám(ok)"
 
 #: ../src/widget/global_keys.py:97
 #, python-format
 msgid "Failed to bind %s !"
-msgstr "Nem sikerült csatlakozni  %s !"
+msgstr "Nem sikerült beállítani %s !"
 
 #: ../src/widget/lyrics_module.py:151
 msgid "Increase the lyrics size"
-msgstr "A zenének a szövege nagyítása "
+msgstr "Zeneszöveg méretének növelése"
 
 #: ../src/widget/lyrics_module.py:152
 msgid "Decrease the lyrics size"
-msgstr "A a zenének a szövege kicsinyítése"
+msgstr "Zeneszöveg méretének csökkentése"
 
 #: ../src/widget/lyrics_module.py:154
 msgid "Select color theme"
@@ -873,7 +874,7 @@ msgstr "Karaoke be/ki"
 
 #: ../src/widget/lyrics_module.py:160
 msgid "Switch lines"
-msgstr "Váltás a vonalak közt"
+msgstr "Sorváltás"
 
 #: ../src/widget/lyrics_module.py:162
 msgid "Open settings panel"
@@ -922,7 +923,7 @@ msgstr "Vissza  0,5 másodperc"
 
 #: ../src/widget/lyrics_module.py:237
 msgid "Adjust lyrics"
-msgstr "Zeneszöveg bezárása"
+msgstr "Zeneszöveg finomhangolása"
 
 #: ../src/widget/lyrics_module.py:239
 msgid "Choose local lrc"
@@ -930,7 +931,7 @@ msgstr "Válassza a lokális lrct"
 
 #: ../src/widget/lyrics_module.py:247
 msgid "Lyrics acquired by Network"
-msgstr "Zene szövegek az internetről"
+msgstr "A zeneszövegek beszerzése az Internetről"
 
 #: ../src/widget/lyrics_module.py:793 ../src/widget/lyrics_module.py:794
 msgid "No lyrics found!"
@@ -938,11 +939,11 @@ msgstr "Nem található zeneszöveg!"
 
 #: ../src/widget/lyrics_module.py:796 ../src/widget/lyrics_module.py:797
 msgid "Searching for lyrics..."
-msgstr "zeneszöveg keresése..."
+msgstr "Zeneszöveg keresése..."
 
 #: ../src/widget/headerbar.py:77
 msgid "Show/Hide Lyrics"
-msgstr "Szöveg megjelenése/elrejjtése"
+msgstr "Szöveg megjelenése/elrejtése"
 
 #: ../src/widget/lyrics.py:735
 msgid "Lyrics window"
@@ -994,7 +995,7 @@ msgstr "Élő"
 
 #: ../src/widget/equalizer.py:187
 msgid "Party"
-msgstr "Parti"
+msgstr "Party"
 
 #: ../src/widget/equalizer.py:188
 msgid "Pop"
@@ -1018,11 +1019,11 @@ msgstr "Soft Rock"
 
 #: ../src/widget/equalizer.py:194
 msgid "Electronic"
-msgstr "Electronic"
+msgstr "Elektronikus"
 
 #: ../src/widget/equalizer.py:254
 msgid "Predefined"
-msgstr "Előre megadott"
+msgstr "Előre meghatározott"
 
 #: ../src/widget/playlist.py:94
 msgid "Search in Current Playlist"
@@ -1056,7 +1057,7 @@ msgstr "Lista exportálása"
 
 #: ../src/widget/playlist.py:308 ../src/widget/playlist.py:484
 msgid "Remove List"
-msgstr "lista eltávolítása"
+msgstr "Lista eltávolítása"
 
 #: ../src/widget/playlist.py:310 ../src/widget/playlist.py:479
 #: ../src/widget/playlist.py:487
@@ -1065,40 +1066,40 @@ msgstr "Összes lista mentése"
 
 #: ../src/widget/playlist.py:483 ../src/widget/playlist.py:493
 msgid "Rename"
-msgstr "átnevezés"
+msgstr "Átnevezés"
 
 #: ../src/widget/playlist.py:534
 msgid "By Filename"
-msgstr "A Fájlnév"
+msgstr "Fájlnév szerint"
 
 #: ../src/widget/playlist.py:535
 msgid "By Title"
-msgstr "A cím"
+msgstr "Cím szerint"
 
 #: ../src/widget/playlist.py:536 ../src/widget/combo.py:184
 #: ../src/widget/combo.py:233
 msgid "By Artist"
-msgstr "Az előadó"
+msgstr "Előadó szerint"
 
 #: ../src/widget/playlist.py:537 ../src/widget/combo.py:235
 msgid "By Album"
-msgstr "Az album"
+msgstr "Album szerint"
 
 #: ../src/widget/playlist.py:538 ../src/widget/combo.py:234
 msgid "By Genre"
-msgstr "A műfaj"
+msgstr "Műfaj szerint"
 
 #: ../src/widget/playlist.py:539
 msgid "By Track"
-msgstr "A szám"
+msgstr "Szám szerint"
 
 #: ../src/widget/playlist.py:540
 msgid "By Play Count"
-msgstr "A lejátszási szám"
+msgstr "Lejátszási gyakoriság szerint"
 
 #: ../src/widget/playlist.py:541
 msgid "By Added Time"
-msgstr "Hozzáadott idő"
+msgstr "Hozzáadás szerint"
 
 #: ../src/widget/playlist.py:551
 msgid "Move to List"
@@ -1114,16 +1115,16 @@ msgstr "Rendezés"
 
 #: ../src/widget/ui.py:203
 msgid "Need some music? Find it here..."
-msgstr "Keresel egy zenét? Keresd meg itt ..."
+msgstr "Keresel egy zenét? Találd meg itt ..."
 
 #: ../src/widget/ui.py:401
 msgid "Add Local Music"
-msgstr "Lokális zene hozzáadása"
+msgstr "Helyi zene hozzáadása"
 
 #: ../src/widget/ui.py:1122
 #, python-brace-format
 msgid "Your search {keyword} did not match any items in {from}"
-msgstr "A kulcsszó ({keyword}) nem felel meg egyetlen elem {a}"
+msgstr "A keresés {kulcsszó} nem stimmel egyik elemmel sem {from}"
 
 #: ../src/widget/ui.py:1123
 msgid "Suggestions"
@@ -1131,13 +1132,13 @@ msgstr "Javaslatok"
 
 #: ../src/widget/ui.py:1124
 msgid "Make sure all words are spelled correctly."
-msgstr "Győződjön meg arról, hogy minden szót helyesen írt-e be."
+msgstr "Győződjön meg róla, hogy minden szót helyesen írt-e be."
 
 #: ../src/widget/ui.py:1125
 msgid ""
 "Try more general keywords, such as a title, an artist or the name of an "
 "album."
-msgstr "Próbálkozzon általánosabb kulcsszóval, mint például címek, előadók nevei, albumok."
+msgstr "Próbálkozzon általánosabb kulcsszóval, mint például címek, előadók nevei vagy az album neve."
 
 #: ../src/widget/ui.py:1222 ../src/widget/plugins_view.py:166
 msgid "Name"
@@ -1145,7 +1146,7 @@ msgstr "Név"
 
 #: ../src/widget/ui.py:1230
 msgid "Author(s)"
-msgstr "szerző(k)"
+msgstr "Szerző(k)"
 
 #: ../src/widget/ui.py:1266
 msgid "Don't prompt again"
@@ -1169,7 +1170,7 @@ msgstr "Régió"
 
 #: ../src/widget/webcasts_browser.py:141
 msgid "Favorites"
-msgstr "kedvenceid"
+msgstr "Kedvencek"
 
 #: ../src/widget/lyrics_search.py:47
 msgid "Lyrics search"
@@ -1189,7 +1190,7 @@ msgstr "Letöltés"
 
 #: ../src/widget/lyrics_search.py:136
 msgid "Now searching..."
-msgstr "Keresek..."
+msgstr "Keresés..."
 
 #: ../src/widget/lyrics_search.py:138 ../src/widget/lyrics_search.py:163
 msgid "Not found!"
@@ -1206,7 +1207,7 @@ msgstr "Zeneszöveg letöltése..."
 
 #: ../src/widget/lyrics_search.py:180
 msgid "File save to"
-msgstr "mentés fájlba"
+msgstr "Fájl mentése ide"
 
 #: ../src/widget/lyrics_search.py:182
 msgid "Download failed."
@@ -1214,11 +1215,11 @@ msgstr "Sikertelen letöltés."
 
 #: ../src/widget/dialog.py:34
 msgid "Select Directory"
-msgstr "Mappa megnyitása"
+msgstr "Mappa kiválasztása"
 
 #: ../src/widget/dialog.py:56
 msgid "Select file"
-msgstr "Fájl megnyitása"
+msgstr "Fájl választás"
 
 #: ../src/widget/dialog.py:82
 msgid "Export playlist"
@@ -1226,7 +1227,7 @@ msgstr "Lejátszási lista exportálása"
 
 #: ../src/widget/dialog.py:130
 msgid "Load playlist"
-msgstr "lejátszási lista betöltése"
+msgstr "Lejátszási lista betöltése"
 
 #: ../src/widget/plugins_view.py:166
 msgid "Enable"

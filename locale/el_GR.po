@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: Deepin Music\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-09-04 16:29+0800\n"
-"PO-Revision-Date: 2014-09-24 08:12+0000\n"
-"Last-Translator: snyh <snyh@snyh.org>\n"
+"PO-Revision-Date: 2014-10-22 14:51+0000\n"
+"Last-Translator: JimSp472000 <jimspentzos2000@gmail.com>\n"
 "Language-Team: Greek (Greece) (http://www.transifex.com/projects/p/deepin-music/language/el_GR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,13 +23,13 @@ msgstr ""
 msgid ""
 "Vorbis is an open source, lossy audio codec with high quality output at a "
 "lower file size than MP3."
-msgstr "Το Vorbis είναι ένα ανοιχτού κώδικα, με απώλεια κωδικοποιητής ήχου με έξοδο υψηλής ποιότητας σε μικρότερο μέγεθος αρχείου από το MP3."
+msgstr "Το Vorbis είναι ένας ανοιχτού κώδικα, με απώλειες κωδικοποιητής ήχου με έξοδο υψηλής ποιότητας σε μικρότερο μέγεθος αρχείου από το MP3."
 
 #: ../src/transcoder.py:66
 msgid ""
 "Free Lossless Audio Codec (FLAC) is an open source codec that compresses but"
 " does not degrade audio quality."
-msgstr "Δωρεάν χωρίς απώλειες ηχητικός κωδικοποιητής (FLAC), είναι ένας ανοιχτού κώδικα κωδικοποιητής που συμπιέζει αλλά δεν υποβαθμίζει την ποιότητα του ήχου."
+msgstr "Ο Ελεύθερος Χωρίς Απώλειες Κωδικοποιητής Ήχου (FLAC), είναι ένας ανοιχτού κώδικα κωδικοποιητής που συμπιέζει αλλά δεν υποβαθμίζει την ποιότητα του ήχου."
 
 #: ../src/transcoder.py:80
 msgid ""
@@ -41,7 +41,7 @@ msgstr " Η ιδιόκτητη μορφή ήχου με απώλειες της 
 msgid ""
 "A proprietary and older, but also popular, lossy audio format. VBR gives "
 "higher quality than CBR, but may be incompatible with some players."
-msgstr "Μια ιδιόκτητη και παλαιότερη, αλλά και δημοφιλής, με απώλεια μορφή ήχου. Το VBR δίνει υψηλότερη ποιότητα από το CBR, αλλά μπορεί να είναι ασύμβατο με κάποιες εφαρμογές αναπαραγωγής."
+msgstr "Μια ιδιόκτητη και παλαιότερη, αλλά και δημοφιλής, με απώλεια μορφή ήχου. Το VBR δίνει υψηλότερη ποιότητα από το CBR, αλλά μπορεί να είναι ασύμβατο με κάποια προγράμματα αναπαραγωγής."
 
 #: ../src/transcoder.py:106
 msgid ""
@@ -94,31 +94,31 @@ msgstr "Επιλογές Κουμπιών Ελέγχου"
 
 #: ../src/main.py:110
 msgid "Play the next track"
-msgstr "Αναπαραγωγή του επόμενου κομματιού"
+msgstr "Αναπαραγωγή επόμενου κομματιού"
 
 #: ../src/main.py:112
 msgid "Play the previous track"
-msgstr "Αναπαραγωγή του προηγούμενου κομματιού"
+msgstr "Αναπαραγωγή προηγούμενου κομματιού"
 
 #: ../src/main.py:114
 msgid "Pause or resume playback"
-msgstr "Παύση ή συνέχιση της αναπαραγωγής"
+msgstr "Παύση ή συνέχιση αναπαραγωγής"
 
 #: ../src/main.py:116
 msgid "Seek Forward"
-msgstr "Aναζήτηση προς τα εμπρός"
+msgstr "Aναζήτηση προς τα Εμπρός"
 
 #: ../src/main.py:118
 msgid "Seek Backward"
-msgstr "Aναζήτηση προς τα πίσω"
+msgstr "Aναζήτηση προς τα Πίσω"
 
 #: ../src/main.py:120
 msgid "Stop playback"
-msgstr "Διακοπή της αναπαραγωγής"
+msgstr "Διακοπή αναπαραγωγής"
 
 #: ../src/main.py:124
 msgid "Volume Options"
-msgstr "Eπιλογές τόμου"
+msgstr "Eπιλογές Τόμου"
 
 #: ../src/main.py:126
 msgid "Change Volume (VOLUME 0.0-1.0)"
@@ -454,7 +454,7 @@ msgstr "Ισοσταθμιστής"
 
 #: ../src/widget/instance.py:371
 msgid "View New Features"
-msgstr "Εμφάνιση νέο χαρακτηριστικό"
+msgstr "Προβολή Νέων Χαρακτηριστικών"
 
 #: ../src/widget/instance.py:372 ../src/widget/tray.py:83
 #: ../src/widget/preference.py:943
@@ -468,15 +468,15 @@ msgstr "Έξοδος"
 
 #: ../src/widget/instance.py:378 ../src/widget/tray.py:73
 msgid "Search Lyrics"
-msgstr "Αναζήτηση στίχων"
+msgstr "Αναζήτηση Στίχων"
 
 #: ../src/widget/instance.py:397
 msgid "Hide Lyrics"
-msgstr "Απόκρυψη στίχων"
+msgstr "Απόκρυψη Στίχων"
 
 #: ../src/widget/instance.py:399 ../src/widget/tray.py:75
 msgid "Show Lyrics"
-msgstr "Εμφάνιση στίχων"
+msgstr "Εμφάνιση Στίχων"
 
 #: ../src/widget/instance.py:403 ../src/widget/tray.py:78
 msgid "Unlock Lyrics"
@@ -489,11 +489,11 @@ msgstr "Κλείδωμα Στίχων"
 
 #: ../src/widget/instance.py:480
 msgid "Mini Mode"
-msgstr "Μίνι λειτουργία"
+msgstr "Λειτουργία Mini"
 
 #: ../src/widget/instance.py:482
 msgid "Normal Mode"
-msgstr "Κανονική λειτουργία"
+msgstr "Κανονική Λειτουργία"
 
 #: ../src/widget/local_browser.py:91 ../src/widget/song_view.py:524
 #: ../src/widget/song_view.py:532
@@ -636,15 +636,15 @@ msgstr "Ελαχιστοποίηση / Εμφάνιση παραθύρου"
 
 #: ../src/widget/preference.py:364
 msgid "Show/Hide lyrics"
-msgstr "Εμφάνιση / Απόκρυψη στίχων"
+msgstr "Εμφάνιση/Απόκρυψη στίχων"
 
 #: ../src/widget/preference.py:366
 msgid "Lock/Unlock lyrics"
-msgstr "Κλείδωμα / Ξεκλείδωμα στίχων"
+msgstr "Κλείδωμα/Ξεκλείδωμα στίχων"
 
 #: ../src/widget/preference.py:368 ../src/widget/headerbar.py:63
 msgid "Play/Pause"
-msgstr "Αναπαραγωγή / Παύση"
+msgstr "Αναπαραγωγή/Παύση"
 
 #: ../src/widget/preference.py:601 ../src/widget/preference.py:613
 #: ../src/widget/preference.py:845
@@ -654,7 +654,7 @@ msgstr "Αριστερά"
 #: ../src/widget/preference.py:602 ../src/widget/preference.py:614
 #: ../src/widget/preference.py:845
 msgid "Centered"
-msgstr "Επίκεντρο"
+msgstr "Στο κέντρο"
 
 #: ../src/widget/preference.py:603 ../src/widget/preference.py:615
 #: ../src/widget/preference.py:845
@@ -663,7 +663,7 @@ msgstr "Δεξιά"
 
 #: ../src/widget/preference.py:616
 msgid "Justified"
-msgstr "Δικαιολογημένες"
+msgstr "Δικαιωμένος"
 
 #: ../src/widget/preference.py:627 ../src/widget/lyrics_module.py:455
 msgid "Vitality yellow"
@@ -707,7 +707,7 @@ msgstr "Στυλ"
 
 #: ../src/widget/preference.py:671 ../src/widget/preference.py:824
 msgid "Lyrics style"
-msgstr "Στυλ στίχον"
+msgstr "Στυλ στίχων"
 
 #: ../src/widget/preference.py:681 ../src/widget/preference.py:833
 msgid "Font"
@@ -941,11 +941,11 @@ msgstr "Αναζήτηση για στίχους..."
 
 #: ../src/widget/headerbar.py:77
 msgid "Show/Hide Lyrics"
-msgstr "Παρουσίαση / Απόκρυψη στίχον"
+msgstr "Εμφάνιση/Απόκρυψη Στίχων"
 
 #: ../src/widget/lyrics.py:735
 msgid "Lyrics window"
-msgstr "Παράθυρο στίχον"
+msgstr "Παράθυρο στίχων"
 
 #: ../src/widget/equalizer.py:176
 msgid "Custom"
@@ -965,7 +965,7 @@ msgstr "Κλαμπ"
 
 #: ../src/widget/equalizer.py:180
 msgid "Dance"
-msgstr "Χορού"
+msgstr "Χορευτική"
 
 #: ../src/widget/equalizer.py:181
 msgid "Full Bass"
@@ -1043,7 +1043,7 @@ msgstr "Νέα Λίστα"
 
 #: ../src/widget/playlist.py:305 ../src/widget/playlist.py:477
 msgid "Import List"
-msgstr "Εισαγωγή Λίστα"
+msgstr "Εισαγωγή Λίστας"
 
 #: ../src/widget/playlist.py:306 ../src/widget/playlist.py:485
 msgid "Open List"
@@ -1126,7 +1126,7 @@ msgstr "Η αναζήτησή σας {keyword} δεν ταιριάζει με ο
 
 #: ../src/widget/ui.py:1123
 msgid "Suggestions"
-msgstr "Εισηγήσεις"
+msgstr "Προτάσεις"
 
 #: ../src/widget/ui.py:1124
 msgid "Make sure all words are spelled correctly."
@@ -1241,7 +1241,7 @@ msgstr "Έλεγχος διαγραμμένων αρχείων"
 
 #: ../src/source/local.py:202
 msgid "Reload database"
-msgstr "Ανανέωση της βάσης δεδομένων"
+msgstr "Ανανέωση βάσης δεδομένων"
 
 #: ../src/source/old.py:112 ../src/source/audiocd.py:78
 msgid "Track"
