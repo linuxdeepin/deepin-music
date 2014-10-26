@@ -7,14 +7,15 @@
 # jvjey <justVolodya@gmail.com>, 2014
 # evilscorpio <scorpkillerx@gmail.com>, 2014
 # Serge Kukharski, 2014
+# Vasilii Rusu <basil_russu@hotmail.com>, 2014
 # Анатолий Валерианович <ffox909@mail.ru>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Deepin Music\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-09-04 16:29+0800\n"
-"PO-Revision-Date: 2014-10-11 10:31+0000\n"
-"Last-Translator: Анатолий Валерианович <ffox909@mail.ru>\n"
+"PO-Revision-Date: 2014-10-25 21:35+0000\n"
+"Last-Translator: Vasilii Rusu <basil_russu@hotmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/projects/p/deepin-music/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -316,7 +317,7 @@ msgstr "Радио"
 
 #: ../src/widget/jobs_manager.py:44 ../src/widget/jobs_manager.py:153
 msgid "jobs waiting!"
-msgstr "ожидание работы!"
+msgstr "деятельность в ожидании!"
 
 #: ../src/widget/song_editor.py:72 ../src/widget/song_editor.py:202
 #: ../src/widget/song_view.py:680 ../src/widget/lyrics_search.py:83
@@ -607,7 +608,7 @@ msgstr "Настройки воспроизведения"
 
 #: ../src/widget/preference.py:213
 msgid "Enable crossfade"
-msgstr "Включить сведение"
+msgstr "Включить перекрёстное затухание"
 
 #: ../src/widget/preference.py:216
 msgid "Seamless switching between the same album"
@@ -615,7 +616,7 @@ msgstr "Незаметное переключение между тем же а�
 
 #: ../src/widget/preference.py:221
 msgid "Crossfade"
-msgstr "Кроссфейд"
+msgstr "Перекрёстное затухание"
 
 #: ../src/widget/preference.py:223
 msgid " ms"
@@ -666,7 +667,7 @@ msgstr "Правый"
 
 #: ../src/widget/preference.py:616
 msgid "Justified"
-msgstr "Уравнение"
+msgstr "Обоснованный"
 
 #: ../src/widget/preference.py:627 ../src/widget/lyrics_module.py:455
 msgid "Vitality yellow"
