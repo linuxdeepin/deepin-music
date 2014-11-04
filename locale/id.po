@@ -3,61 +3,62 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# Eduard Gotwig <eduardgotwig@gmail.com>, 2014
-# Ettore Atalan <atalanttore@googlemail.com>, 2014
-# webcrush <chris.plescher@yahoo.de>, 2014
-# 胡家润 <hujiadfr@126.com>, 2013
+# Aril Apria Susanto <awriel@gmail.com>, 2014
+# muksidin <muksidin101@yahoo.com>, 2014
+# muksidin <muksidin101@yahoo.com>, 2014
+# Sucipto <show.cheap@gmail.com>, 2014
+# Yugo Purwanto <dedy.yugo.purwanto@gmail.com>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Deepin Music\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-09-04 16:29+0800\n"
-"PO-Revision-Date: 2014-10-28 09:46+0000\n"
+"PO-Revision-Date: 2014-11-03 04:40+0000\n"
 "Last-Translator: szd_liufei <liufei@linuxdeepin.com>\n"
-"Language-Team: German (http://www.transifex.com/projects/p/deepin-music/language/de/)\n"
+"Language-Team: Indonesian (http://www.transifex.com/projects/p/deepin-music/language/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: de\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: id\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #: ../src/transcoder.py:54
 msgid ""
 "Vorbis is an open source, lossy audio codec with high quality output at a "
 "lower file size than MP3."
-msgstr "Vorbis ist ein Open Source komprimierter Audio-Codec, mit qualitativ hoher Audioqualität, bei zugleich niedrigerer Dateigröße als es bei MP3-Dateien der Fall ist."
+msgstr "Vorbis adalah sumber terbuka, lossy audio codec dengan keluaran kualitas tinggi dengan ukuran berkas lebih kecil daripada MP3."
 
 #: ../src/transcoder.py:66
 msgid ""
 "Free Lossless Audio Codec (FLAC) is an open source codec that compresses but"
 " does not degrade audio quality."
-msgstr "Free Lossless Audio Codec (FLAC) ist ein Open-Source-Audio Codec mit Kompression, aber ohne den Verlust der Audioqualität."
+msgstr "Free Lossless Audio Codec (FLAC) adalah codec sumber terbuka yang mengkompresi berkas tapi tidak mengurangi kualitas audio."
 
 #: ../src/transcoder.py:80
 msgid ""
 "Apple's proprietary lossy audio format could give higher quality than MP3 at"
 " lower bitrates."
-msgstr "Apple's proprietäres verlustbehaftetes Audiofromat erreicht höhere Qualität als MP3 bei niedrigeren Bitraten."
+msgstr ""
 
 #: ../src/transcoder.py:93
 msgid ""
 "A proprietary and older, but also popular, lossy audio format. VBR gives "
 "higher quality than CBR, but may be incompatible with some players."
-msgstr "Ein proprietäres und älteres, aber auch sehr beliebtes, verlustbehaftetes Audioformat. VBR bietet höhere Qualität als CBR, ist aber mit einigen Abspielgeräten inkompatibel."
+msgstr "Format loosy audio berbayar dan lama, tapi juga popular. VBR memberikan kualitas lebih baik daripada CBR tapi mungkin tidak kompatibel dengan beberapa pemutar musik."
 
 #: ../src/transcoder.py:106
 msgid ""
 "A proprietary and older, but also popular, lossy audio format. The output "
 "effect of CBR is not good as VBR, but is compatible with any player."
-msgstr "Ein propritäres und altes, aber auch beliebtes, verlustloses Audioformat. Der Ausgabeeffekt von CBR ist nicht so gut wie VBR, aber ist kompatibel mit jedem Wiedergabegerät."
+msgstr ""
 
 #: ../src/transcoder.py:119
 msgid "A very fast Free lossless audio format with good compression."
-msgstr "Ein sehr schnelles, verlustfreies und freies Audioformat mit guter Kompression."
+msgstr "format audio yang sangat cepat dan gratis dengan kompresi yang baik."
 
 #: ../src/constant.py:28 ../src/widget/information.py:41
 msgid "Deepin Music"
-msgstr "Deepin Musik"
+msgstr "Deepin Music"
 
 #: ../src/constant.py:29
 msgid "DMusic"
@@ -65,183 +66,183 @@ msgstr "DMusik"
 
 #: ../src/plugins.py:91
 msgid "Plugin archive is not in the correct format."
-msgstr "Das Plugin Archiv ist nicht im richtigen Format."
+msgstr "Arsip plugin tidak dalam format yang benar."
 
 #: ../src/plugins.py:98
 #, python-format
 msgid "A plugin with the name \"%s\" is already installed."
-msgstr "Ein Plugin mit dem Namen \"%s\" ist bereits installiert."
+msgstr "Plugin \"%s\" sudah terpasang."
 
 #: ../src/plugins.py:103
 msgid "Plugin archive contains an unsafe path."
-msgstr "Pluginarchiv enthält einen unsicheren Pfad."
+msgstr "Arsip plugin mengandung jejak tidak aman."
 
 #: ../src/library.py:990 ../src/library.py:991 ../src/library.py:992
 #: ../src/library.py:999 ../src/library.py:1000 ../src/library.py:1001
 #: ../src/widget/local_item.py:57
 msgid "Unknown"
-msgstr "Unbekannt"
+msgstr "Tidak diketahui"
 
 #: ../src/main.py:103
 msgid "Usage: deepin-music-player [OPTION]... [URI]"
-msgstr "Verwendung: deepin-Musik-Player [OPTION] ... [URI]"
+msgstr "Penggunaan: deepin-music-player [OPTION]... [URI]"
 
 #: ../src/main.py:104
 msgid "Options"
-msgstr "Optionen"
+msgstr "Opsi"
 
 #: ../src/main.py:108
 msgid "Control Options"
-msgstr "Steuerungsoptionen"
+msgstr "Opsi Kontrol"
 
 #: ../src/main.py:110
 msgid "Play the next track"
-msgstr "Nächsten Titel abspielen"
+msgstr "Mainkan musik selanjutnya"
 
 #: ../src/main.py:112
 msgid "Play the previous track"
-msgstr "Vorherigen Titel abspielen"
+msgstr "Mainkan musik sebelumnya"
 
 #: ../src/main.py:114
 msgid "Pause or resume playback"
-msgstr "Wiedergabe pausieren oder fortsetzen"
+msgstr "Jeda atau mainkan"
 
 #: ../src/main.py:116
 msgid "Seek Forward"
-msgstr "Vorwärts suchen"
+msgstr "Mencari maju"
 
 #: ../src/main.py:118
 msgid "Seek Backward"
-msgstr "Rückwärts suchen"
+msgstr "Mencari mundur"
 
 #: ../src/main.py:120
 msgid "Stop playback"
-msgstr "Wiedergabe stoppen"
+msgstr "Hentikan pemutaran"
 
 #: ../src/main.py:124
 msgid "Volume Options"
-msgstr "Lautstärkeoptionen"
+msgstr "Opsi Volume"
 
 #: ../src/main.py:126
 msgid "Change Volume (VOLUME 0.0-1.0)"
-msgstr "Lautstärke Ändern (VOLUME 0.0-1.0)"
+msgstr "Ubah Volume (VOLUME 0.0-1.0)"
 
 #: ../src/main.py:129
 msgid "Track information Options"
-msgstr "Informationsoptionen folgen"
+msgstr "Opsi Informasi Musik"
 
 #: ../src/main.py:131
 msgid "Print the title of current track"
-msgstr "Aktuellen Musiktitel anzeigen"
+msgstr "Tampilkan judul lagu sekarang"
 
 #: ../src/main.py:133
 msgid "Print the album of current track"
-msgstr "Aktuellen Musikalbum anzeigen"
+msgstr "Cetak album lagu saat ini"
 
 #: ../src/main.py:135
 msgid "Print the artist of current track"
-msgstr "Aktuellen Musikkünstler anzeigen"
+msgstr "Cetak artis dari lagu saat ini"
 
 #: ../src/main.py:137
 msgid "Print the length of current track"
-msgstr "Aktuelle Musiklänge anzeigen"
+msgstr "Tampilkan panjang lagu saat ini"
 
 #: ../src/main.py:139
 msgid "Print the path of current track"
-msgstr "Aktuellen Musikpfad anzeigen"
+msgstr "Tampilkan jejak lagu saat ini"
 
 #: ../src/main.py:141
 msgid "Print current playback position"
-msgstr "Aktuelle Wiedergabeposition anzeigen"
+msgstr "Tampilkan posisi pemutaran saat ini"
 
 #: ../src/main.py:144
 msgid "Other Options"
-msgstr "Andere Optionen"
+msgstr "Pilihan lainnya"
 
 #: ../src/main.py:146
 msgid "Show this help message and exit"
-msgstr "Informationen zur Hilfe aufrufen und beenden"
+msgstr "Tampilkan pesan bantuan ini dan keluar"
 
 #: ../src/main.py:148
 msgid "Start new instance"
-msgstr "Neue Instanz starten"
+msgstr ""
 
 #: ../src/main.py:150
 msgid "Show program's version number and exit."
-msgstr "Versionsnummer anzeigen und beenden."
+msgstr "Tampilkan nomor versi program dan keluar."
 
 #: ../src/main.py:152
 msgid "Minimize after started"
-msgstr "Nach Start minimieren"
+msgstr "Minimalkan setelah dimulai"
 
 #: ../src/main.py:155
 msgid "Toggle visibility of the GUI (if possible)"
-msgstr "Sichtbarkeit Switch-Schnittstelle (wenn möglich)"
+msgstr ""
 
 #: ../src/main.py:158
 msgid "This option makes control options, such as --play to start program"
-msgstr "Diese Option macht Steueroptionen, z. B.--Wiedergabe-Programm starten"
+msgstr ""
 
 #: ../src/main.py:161
 msgid "Development/Debug Options"
-msgstr "Entwicklung / Optionen zur Fehleranalyse"
+msgstr "Pengambangan/Opsi Debug"
 
 #: ../src/main.py:162
 msgid "Set debug level (0-9)"
-msgstr "Level zur Fehleranalyse setzen (0-9)"
+msgstr "Atus level debug (0-9)"
 
 #: ../src/main.py:166
 msgid "Show information supported audio file"
-msgstr "Informationen für unterstützte Audiodatei anzeigen"
+msgstr "Tampilkan informasi pendukung berkas audio"
 
 #: ../src/widget/converter.py:309 ../src/widget/local_browser.py:339
 #: ../src/widget/song_view.py:437 ../src/widget/song_view.py:780
 msgid "Prompt"
-msgstr "Aufforderung"
+msgstr "Munculkan"
 
 #: ../src/widget/converter.py:309
 msgid "Target file already exists, do you want to overwrite it?"
-msgstr "Zieldatei existiert bereits, soll sie überschrieben werden?"
+msgstr "File sudah ada. Apakah Anda akan menimpanya?"
 
 #: ../src/widget/converter.py:367 ../src/widget/song_editor.py:150
 #: ../src/widget/lyrics_module.py:240 ../src/widget/playlist.py:560
 msgid "Open directory"
-msgstr "Verzeichnis öffnen"
+msgstr "Buka direktori"
 
 #: ../src/widget/converter.py:369
 msgid "Delete task"
-msgstr "Aufgabe löschen"
+msgstr "Hapus jadwal"
 
 #: ../src/widget/converter.py:370
 msgid "Clear finished tasks"
-msgstr "Fertige Aufgaben entfernen"
+msgstr "Bersihkan jadwal terselesaikan"
 
 #: ../src/widget/converter.py:376 ../src/widget/instance.py:342
 msgid "Task Manager"
-msgstr "Aufgabenverwaltung"
+msgstr "Pengelola Tugas"
 
 #: ../src/widget/converter.py:392 ../src/widget/converter.py:412
 #: ../src/widget/converter.py:415 ../src/widget/instance.py:324
 #: ../src/widget/tray.py:62
 msgid "Pause"
-msgstr "Pausieren"
+msgstr "Pause"
 
 #: ../src/widget/converter.py:394 ../src/widget/converter.py:449
 #: ../src/widget/song_editor.py:338 ../src/widget/preference.py:950
 #: ../src/widget/equalizer.py:250 ../src/widget/ui.py:1252
 #: ../src/widget/lyrics_search.py:89
 msgid "Close"
-msgstr "Schließen"
+msgstr "Keluar"
 
 #: ../src/widget/converter.py:413
 msgid "Continue"
-msgstr "Fortsetzen"
+msgstr "Lanjutkan"
 
 #: ../src/widget/converter.py:427 ../src/widget/instance.py:341
 #: ../src/widget/instance.py:364 ../src/widget/song_view.py:792
 #: ../src/widget/playlist.py:559
 msgid "Converter"
-msgstr "Konvertierer"
+msgstr "Konverter"
 
 #: ../src/widget/converter.py:433 ../src/widget/song_editor.py:96
 msgid "Format"
@@ -249,65 +250,65 @@ msgstr "Format"
 
 #: ../src/widget/converter.py:436
 msgid "Quality"
-msgstr "Qualität"
+msgstr "Kualitas"
 
 #: ../src/widget/converter.py:444
 msgid "Target file already exists"
-msgstr "Zieldatei existiert bereits"
+msgstr "Berkas target sudah ada"
 
 #: ../src/widget/converter.py:445
 msgid "Ask"
-msgstr "Fragen"
+msgstr "Tanya"
 
 #: ../src/widget/converter.py:445
 msgid "Cover"
-msgstr "Cover"
+msgstr "Sampul"
 
 #: ../src/widget/converter.py:448
 msgid "Start"
-msgstr "Start"
+msgstr "Mulai"
 
 #: ../src/widget/converter.py:450
 msgid "Add to Playlist after finished"
-msgstr "Zur Wiedergabeliste hinzufügen, wenn fertig"
+msgstr "Tambahkan ke Daftar Putar setelah selesai"
 
 #: ../src/widget/converter.py:472
 msgid "Output"
-msgstr "Ausgabe"
+msgstr "Keluaran"
 
 #: ../src/widget/converter.py:475 ../src/widget/song_editor.py:296
 #: ../src/widget/preference.py:252
 msgid "Change"
-msgstr "Ändern"
+msgstr "Ganti"
 
 #: ../src/widget/webcast_view.py:114 ../src/widget/webcast_view.py:120
 #: ../src/widget/playlist.py:103
 msgid "Delete"
-msgstr "Entfernen"
+msgstr "Hapus"
 
 #: ../src/widget/webcast_view.py:115 ../src/widget/webcast_view.py:123
 #: ../src/widget/song_view.py:510 ../src/widget/playlist.py:555
 msgid "Clear List"
-msgstr "Liste leeren"
+msgstr "Bersihkan Daftar"
 
 #: ../src/widget/webcast_view.py:119 ../src/widget/webcast_view.py:338
 #: ../src/widget/instance.py:321 ../src/widget/tray.py:59
 #: ../src/widget/song_view.py:785 ../src/widget/playlist.py:549
 msgid "Play"
-msgstr "Wiedergeben"
+msgstr "Putar"
 
 #: ../src/widget/webcast_view.py:219 ../src/widget/webcast_view.py:368
 msgid "Remove from Favorites"
-msgstr "Aus Favoriten entfernen"
+msgstr "Hapus dari Kesukaan"
 
 #: ../src/widget/webcast_view.py:221 ../src/widget/webcast_view.py:370
 msgid "Add to Favorites"
-msgstr "Zu Favoriten hinzufügen"
+msgstr "Tambah ke Kesukaan"
 
 #: ../src/widget/webcast_view.py:333 ../src/widget/webcast_view.py:339
 #: ../src/widget/song_view.py:786
 msgid "Add to Playlist"
-msgstr "Zur Wiedergabeliste hinzufügen"
+msgstr "Tambahkan ke Daftar Putar"
 
 #: ../src/widget/webcast_view.py:450
 msgid "Radio"
@@ -315,18 +316,18 @@ msgstr "Radio"
 
 #: ../src/widget/jobs_manager.py:44 ../src/widget/jobs_manager.py:153
 msgid "jobs waiting!"
-msgstr "Jobs warten auf Sie!"
+msgstr "pekerjaan menunggu!"
 
 #: ../src/widget/song_editor.py:72 ../src/widget/song_editor.py:202
 #: ../src/widget/song_view.py:680 ../src/widget/lyrics_search.py:83
 msgid "Title"
-msgstr "Titel"
+msgstr "Judul"
 
 #: ../src/widget/song_editor.py:73 ../src/widget/song_editor.py:203
 #: ../src/widget/local_browser.py:85 ../src/widget/song_view.py:680
 #: ../src/widget/lyrics_search.py:83
 msgid "Artist"
-msgstr "Künstler"
+msgstr "Artis"
 
 #: ../src/widget/song_editor.py:74 ../src/widget/song_editor.py:204
 #: ../src/widget/local_browser.py:87 ../src/widget/song_view.py:680
@@ -335,16 +336,16 @@ msgstr "Album"
 
 #: ../src/widget/song_editor.py:96 ../src/widget/song_notify.py:194
 msgid "Type"
-msgstr "Typ"
+msgstr "Tipe"
 
 #: ../src/widget/song_editor.py:97 ../src/widget/preference.py:686
 #: ../src/widget/preference.py:839 ../src/widget/song_notify.py:193
 msgid "Size"
-msgstr "Größe"
+msgstr "Ukuran"
 
 #: ../src/widget/song_editor.py:97 ../src/widget/song_notify.py:210
 msgid "Duration"
-msgstr "Dauer"
+msgstr "Durasi"
 
 #: ../src/widget/song_editor.py:98
 msgid "Bitrate"
@@ -352,27 +353,27 @@ msgstr "Bitrate"
 
 #: ../src/widget/song_editor.py:98
 msgid "Rate"
-msgstr "Rate"
+msgstr "Laju"
 
 #: ../src/widget/song_editor.py:99
 msgid "Added"
-msgstr "Hinzugefügt"
+msgstr "Ditambahkan"
 
 #: ../src/widget/song_editor.py:99
 msgid "Recently"
-msgstr "Kürzlich"
+msgstr "Baru-baru ini"
 
 #: ../src/widget/song_editor.py:100 ../src/widget/song_notify.py:209
 msgid "Playcount"
-msgstr "Abgespielte Anzahl"
+msgstr "Dimainkan"
 
 #: ../src/widget/song_editor.py:100 ../src/widget/song_editor.py:206
 msgid "Date"
-msgstr "Datum"
+msgstr "Tanggal"
 
 #: ../src/widget/song_editor.py:147
 msgid "Location"
-msgstr "Ort"
+msgstr "Lokasi"
 
 #: ../src/widget/song_editor.py:205 ../src/widget/local_browser.py:89
 #: ../src/widget/webcasts_browser.py:99
@@ -381,188 +382,188 @@ msgstr "Genre"
 
 #: ../src/widget/song_editor.py:214
 msgid "Save"
-msgstr "Speichern"
+msgstr "Simpan"
 
 #: ../src/widget/song_editor.py:299
 msgid "Retrieve from the Internet"
-msgstr "Aus dem Internet abrufen"
+msgstr "Ambil dari internet"
 
 #: ../src/widget/song_editor.py:302 ../src/widget/preference.py:375
 #: ../src/widget/equalizer.py:252
 msgid "Reset"
-msgstr "Zurücksetzen"
+msgstr "Atur ulang"
 
 #: ../src/widget/song_editor.py:321 ../src/widget/local_browser.py:343
 msgid "Select image"
-msgstr "Bild auswählen"
+msgstr "Pilih gambar"
 
 #: ../src/widget/song_editor.py:335 ../src/widget/song_view.py:793
 #: ../src/widget/playlist.py:561
 msgid "Properties"
-msgstr "Eigenschaften"
+msgstr "Properti"
 
 #: ../src/widget/song_editor.py:341 ../src/widget/instance.py:330
 #: ../src/widget/tray.py:64 ../src/widget/preference.py:369
 #: ../src/widget/headerbar.py:71
 msgid "Previous"
-msgstr "Vorherige"
+msgstr "Sebelumnya"
 
 #: ../src/widget/song_editor.py:343 ../src/widget/instance.py:331
 #: ../src/widget/tray.py:65 ../src/widget/preference.py:370
 #: ../src/widget/headerbar.py:72
 msgid "Next"
-msgstr "Nächste"
+msgstr "Selanjutnya"
 
 #: ../src/widget/song_editor.py:367
 msgid "Track Infomation"
-msgstr "Titelinfomation"
+msgstr "Informasi Lagu"
 
 #: ../src/widget/song_editor.py:368
 msgid "Tag Settings"
-msgstr "Stichwort Einstellungen"
+msgstr "Pengaturan Tag"
 
 #: ../src/widget/song_editor.py:369
 msgid "Cover Settings"
-msgstr "Cover Einstellungen"
+msgstr "Pengaturan Sampul"
 
 #: ../src/widget/instance.py:147
 msgid "Join us"
-msgstr "Treten Sie uns bei"
+msgstr "Bergabung dengan kami"
 
 #: ../src/widget/instance.py:328
 msgid "Forward"
-msgstr "Vorwärts"
+msgstr "Maju"
 
 #: ../src/widget/instance.py:329
 msgid "Rewind"
-msgstr "Zurückspulen"
+msgstr "Mundur"
 
 #: ../src/widget/instance.py:359 ../src/widget/playlist.py:97
 msgid "Add"
-msgstr "Hinzufügen"
+msgstr "Tambah"
 
 #: ../src/widget/instance.py:360
 msgid "Play Controls"
-msgstr "Wiedergabeknöpfe"
+msgstr ""
 
 #: ../src/widget/instance.py:361 ../src/widget/playlist.py:100
 #: ../src/widget/playlist.py:557
 msgid "Playback mode"
-msgstr "Wiedergabe Modus"
+msgstr "Modus pemutaran"
 
 #: ../src/widget/instance.py:363 ../src/widget/equalizer.py:199
 msgid "Equalizer"
-msgstr "Equalizer"
+msgstr "Ekualiser"
 
 #: ../src/widget/instance.py:371
 msgid "View New Features"
-msgstr "Neue Funktionen anzeigen"
+msgstr "Lihat fitur terbaru"
 
 #: ../src/widget/instance.py:372 ../src/widget/tray.py:83
 #: ../src/widget/preference.py:943
 msgid "Preferences"
-msgstr "Einstellungen"
+msgstr "Preferensi"
 
 #: ../src/widget/instance.py:374 ../src/widget/tray.py:84
 #: ../src/widget/preference.py:196 ../src/widget/ui.py:1262
 msgid "Quit"
-msgstr "Beenden"
+msgstr "Keluar"
 
 #: ../src/widget/instance.py:378 ../src/widget/tray.py:73
 msgid "Search Lyrics"
-msgstr "Nach Musiktexten suchen"
+msgstr "Cari Lirik"
 
 #: ../src/widget/instance.py:397
 msgid "Hide Lyrics"
-msgstr "Musiktext ausblenden"
+msgstr "Sembunyikan Lirik"
 
 #: ../src/widget/instance.py:399 ../src/widget/tray.py:75
 msgid "Show Lyrics"
-msgstr "Musiktexte anzeigen"
+msgstr "Tampilkan Lirik"
 
 #: ../src/widget/instance.py:403 ../src/widget/tray.py:78
 msgid "Unlock Lyrics"
-msgstr "Musiktexte entsperren"
+msgstr "Lepas Lirik"
 
 #: ../src/widget/instance.py:405 ../src/widget/tray.py:80
 #: ../src/widget/lyrics_module.py:155
 msgid "Lock Lyrics"
-msgstr "Musiktexte sperren"
+msgstr "Kunci Lirik"
 
 #: ../src/widget/instance.py:480
 msgid "Mini Mode"
-msgstr "Mini-Modus"
+msgstr "Mode Mini"
 
 #: ../src/widget/instance.py:482
 msgid "Normal Mode"
-msgstr "Normaler-Modus"
+msgstr "Mode Normal"
 
 #: ../src/widget/local_browser.py:91 ../src/widget/song_view.py:524
 #: ../src/widget/song_view.py:532
 msgid "Folder"
-msgstr "Ordner"
+msgstr "Folder"
 
 #: ../src/widget/local_browser.py:98
 msgid "Quick Scan"
-msgstr "Schnellerkennung"
+msgstr "Pindai Cepat"
 
 #: ../src/widget/local_browser.py:99
 msgid "Scan"
-msgstr "Musik erkennen"
+msgstr "Pindai"
 
 #: ../src/widget/local_browser.py:100
 msgid "Refresh"
-msgstr "Aktualisieren"
+msgstr "Segarkan"
 
 #: ../src/widget/local_browser.py:339 ../src/widget/song_view.py:437
 #: ../src/widget/song_view.py:780
 msgid "Are you sure to delete?"
-msgstr "Sind Sie sicher dass Sie die Auswahl löschen möchten?"
+msgstr "Anda yakin untuk menghapusnya?"
 
 #: ../src/widget/local_browser.py:350
 msgid "Play All"
-msgstr "Alle Abspielen"
+msgstr "Mainkan semua"
 
 #: ../src/widget/local_browser.py:351 ../src/widget/playlist.py:550
 msgid "Add to List"
-msgstr "Zur Liste hinzufügen"
+msgstr "Tambahkan ke Daftar"
 
 #: ../src/widget/local_browser.py:353 ../src/widget/song_view.py:788
 msgid "Remove from Library"
-msgstr "Aus Bibliothek entfernen"
+msgstr "Hapus dari Pustaka"
 
 #: ../src/widget/local_browser.py:354 ../src/widget/song_view.py:509
 #: ../src/widget/song_view.py:789 ../src/widget/playlist.py:554
 msgid "Move to Trash"
-msgstr "In den Mull verschieben"
+msgstr "Pindah ke tempat sampah"
 
 #: ../src/widget/local_browser.py:359 ../src/widget/song_view.py:791
 msgid "Open Directory"
-msgstr "Verzeichnis öffnen"
+msgstr "Buka Direktori"
 
 #: ../src/widget/local_browser.py:361
 msgid "Change Cover"
-msgstr "Cover ändern"
+msgstr "Ganti Sampul"
 
 #: ../src/widget/information.py:76
 msgid "Connecting"
-msgstr "Verbinden"
+msgstr "Menyambung"
 
 #: ../src/widget/information.py:106
 msgid "buffering..."
-msgstr "Buffering..."
+msgstr "penyanggaan..."
 
 #: ../src/widget/tray.py:49 ../src/widget/preference.py:371
 msgid "Volume Up"
-msgstr "Lautstärke erhöhen"
+msgstr "Naikkan Volume"
 
 #: ../src/widget/tray.py:50 ../src/widget/preference.py:372
 msgid "Volume Down"
-msgstr "Lautstärke runter setzen"
+msgstr "Turunkan Volume"
 
 #: ../src/widget/tray.py:51
 msgid "Mute"
-msgstr "Stumm"
+msgstr "Senyap"
 
 #: ../src/widget/tray.py:67
 msgid "Volume"
@@ -570,51 +571,51 @@ msgstr "Volume"
 
 #: ../src/widget/tray.py:72
 msgid "Close Lyrics"
-msgstr "Musiktexte schließen"
+msgstr "Tutup Lirik"
 
 #: ../src/widget/preference.py:150
 msgid "On starting the player"
-msgstr "Beim Starten des Wiedergabeprogramms"
+msgstr ""
 
 #: ../src/widget/preference.py:157
 msgid "Display splash-screen"
-msgstr "Startbildschirm anzeigen"
+msgstr "Tampilkan layar sambutan"
 
 #: ../src/widget/preference.py:164
 msgid "Show lyrics"
-msgstr "Musiktexte anzeigen"
+msgstr "Tampilkan lirik"
 
 #: ../src/widget/preference.py:169
 msgid "Start playback automatically"
-msgstr "Wiedergabe automatisch starten"
+msgstr "Mainkan otomatis"
 
 #: ../src/widget/preference.py:175
 msgid "Resume playback"
-msgstr "Wiedergabe fortsetzen"
+msgstr "Lanjutkan pemutaran"
 
 #: ../src/widget/preference.py:190
 msgid "When pressing the close button"
-msgstr "Beim Klicken des Knopfes zum Schließen"
+msgstr "Ketika menekan tombol tutup"
 
 #: ../src/widget/preference.py:195 ../src/widget/ui.py:1260
 msgid "Minimize to tray"
-msgstr "Minimieren in die Statusleiste"
+msgstr "Sembunyikan ke tray"
 
 #: ../src/widget/preference.py:209
 msgid "Playback settings"
-msgstr "Wiedergabeeinstellungen"
+msgstr "Pengaturan pemutaran"
 
 #: ../src/widget/preference.py:213
 msgid "Enable crossfade"
-msgstr "Blendung aktivieren"
+msgstr ""
 
 #: ../src/widget/preference.py:216
 msgid "Seamless switching between the same album"
-msgstr "Reibungsloser Wechsel zwischen dem selben Album"
+msgstr ""
 
 #: ../src/widget/preference.py:221
 msgid "Crossfade"
-msgstr "Blenden"
+msgstr ""
 
 #: ../src/widget/preference.py:223
 msgid " ms"
@@ -622,7 +623,7 @@ msgstr "ms"
 
 #: ../src/widget/preference.py:241
 msgid "Lyrics directory"
-msgstr "Musiktexte Verzeichnis"
+msgstr "Direktori Lirik"
 
 #: ../src/widget/preference.py:346 ../src/widget/preference.py:1002
 msgid "Hotkeys"
@@ -630,153 +631,153 @@ msgstr "Hotkeys"
 
 #: ../src/widget/preference.py:356
 msgid "Enable hotkeys"
-msgstr "Hotkeys aktivieren"
+msgstr "hidupkan hotkeys"
 
 #: ../src/widget/preference.py:362
 msgid "Minimize/Show window"
-msgstr "Fenster minimieren/anzeigen"
+msgstr "Minimalkan/Tampilkan jendela"
 
 #: ../src/widget/preference.py:364
 msgid "Show/Hide lyrics"
-msgstr "Texte anzeigen / ausblenden"
+msgstr "Tampilkan/Sembunyikan lirik"
 
 #: ../src/widget/preference.py:366
 msgid "Lock/Unlock lyrics"
-msgstr "Musiktexte Sperren / Entsperren "
+msgstr "Kunci/Lepas lirik"
 
 #: ../src/widget/preference.py:368 ../src/widget/headerbar.py:63
 msgid "Play/Pause"
-msgstr "Wiedergeben/Pausieren"
+msgstr "Mainkan/Jeda"
 
 #: ../src/widget/preference.py:601 ../src/widget/preference.py:613
 #: ../src/widget/preference.py:845
 msgid "Left"
-msgstr "Links"
+msgstr "Kiri"
 
 #: ../src/widget/preference.py:602 ../src/widget/preference.py:614
 #: ../src/widget/preference.py:845
 msgid "Centered"
-msgstr "Zentriert"
+msgstr "Tengah"
 
 #: ../src/widget/preference.py:603 ../src/widget/preference.py:615
 #: ../src/widget/preference.py:845
 msgid "Right"
-msgstr "Rechts"
+msgstr "Rata kanan kiri"
 
 #: ../src/widget/preference.py:616
 msgid "Justified"
-msgstr "Gerechtfertigt"
+msgstr "rata"
 
 #: ../src/widget/preference.py:627 ../src/widget/lyrics_module.py:455
 msgid "Vitality yellow"
-msgstr "Vitalität Gelb"
+msgstr "Vitality yellow"
 
 #: ../src/widget/preference.py:628 ../src/widget/lyrics_module.py:456
 msgid "Fresh green"
-msgstr "Frisches Grün"
+msgstr "Hijau segar"
 
 #: ../src/widget/preference.py:629 ../src/widget/lyrics_module.py:457
 msgid "Playful pink"
-msgstr "Spielerisches rosa"
+msgstr "Playful pink"
 
 #: ../src/widget/preference.py:630 ../src/widget/lyrics_module.py:458
 msgid "Cool blue"
-msgstr "Cooles Blau"
+msgstr "Cool blue"
 
 #: ../src/widget/preference.py:642
 msgid "Color scheme"
-msgstr "Farbschema"
+msgstr "Skema warna"
 
 #: ../src/widget/preference.py:650 ../src/widget/preference.py:807
 msgid "Regular"
-msgstr "Regelmäßig"
+msgstr "Reguler"
 
 #: ../src/widget/preference.py:651 ../src/widget/preference.py:808
 msgid "Italic"
-msgstr "kursiv"
+msgstr "Miring"
 
 #: ../src/widget/preference.py:652 ../src/widget/preference.py:809
 msgid "Bold"
-msgstr "Fett"
+msgstr "Tebal"
 
 #: ../src/widget/preference.py:653 ../src/widget/preference.py:810
 msgid "Bold Italic"
-msgstr "Fett Kursiv"
+msgstr "Tebal Miring"
 
 #: ../src/widget/preference.py:663 ../src/widget/preference.py:818
 msgid "Style"
-msgstr "Stil"
+msgstr "Gaya"
 
 #: ../src/widget/preference.py:671 ../src/widget/preference.py:824
 msgid "Lyrics style"
-msgstr "Musiktext Stil"
+msgstr "Gaya lirik"
 
 #: ../src/widget/preference.py:681 ../src/widget/preference.py:833
 msgid "Font"
-msgstr "Schriftart"
+msgstr "Fonta"
 
 #: ../src/widget/preference.py:689
 msgid "Lines"
-msgstr "Linien"
+msgstr "Baris"
 
 #: ../src/widget/preference.py:690
 msgid "Single"
-msgstr "Einzeln"
+msgstr "Tunggal"
 
 #: ../src/widget/preference.py:690
 msgid "Double"
-msgstr "Doppelt"
+msgstr "Ganda"
 
 #: ../src/widget/preference.py:693 ../src/widget/preference.py:843
 msgid "Alignment"
-msgstr "Ausrichtung"
+msgstr ""
 
 #: ../src/widget/preference.py:702
 msgid "Outline"
-msgstr "Entwurf"
+msgstr ""
 
 #: ../src/widget/preference.py:706
 msgid "Stroke"
-msgstr "Strich"
+msgstr ""
 
 #: ../src/widget/preference.py:711 ../src/widget/preference.py:855
 msgid "Unplayed"
-msgstr "Ungespielt"
+msgstr "Belum dimainkan"
 
 #: ../src/widget/preference.py:722 ../src/widget/preference.py:856
 msgid "Played"
-msgstr "Abgespielt"
+msgstr "Dimainkan"
 
 #: ../src/widget/preference.py:850
 msgid "Rolling"
-msgstr "Rollt"
+msgstr ""
 
 #: ../src/widget/preference.py:851
 msgid "Always"
-msgstr "Immer"
+msgstr "Selalu"
 
 #: ../src/widget/preference.py:851
 msgid "By line"
-msgstr "Nach Linie"
+msgstr "Berdasar baris"
 
 #: ../src/widget/preference.py:905 ../src/widget/plugins_view.py:166
 msgid "Version"
-msgstr "Version"
+msgstr "Versi"
 
 #: ../src/widget/preference.py:920
 msgid ""
 "Deepin Music is a music application designed for Linux users. It's characterized with lyrics searching, desktop lyrics display,album cover downloading, resume playing, music management and skin selection.\n"
 "\n"
 "Deepin Music is free software licensed under GNU GPLv3."
-msgstr "Deepin Music ist eine für Linux Nutzer entworfene Musikanwendung. Die Anwendung beinhaltet das Suchen nach Musiktexten, das Anzeigen von Musiktexten auf dem Desktop, das Suchen nach Albumcovern, die Wiedergabe und die Verwaltung von Musiktiteln und die Auswahl von verschiedenen Erscheinungsbildern.\n\nDeepin Music ist Freie Software, lizensiert unter der GNU GPLv3."
+msgstr "Deepin Music adalah aplikasi musik diperuntukkan pengguna Linux. Dengan karakteristik pencarian lirik, tampilan desktop lirik, unduh sampul album, melanjutkan pemutaran, manajemen musik dan pemilihan tema.\n\nDeepin Music adalah perangkat lunak bebas berlisensi GNU GPLv3"
 
 #: ../src/widget/preference.py:1001
 msgid "General"
-msgstr "Allgemein"
+msgstr "Umum"
 
 #: ../src/widget/preference.py:1003
 msgid "Lyrics"
-msgstr "Text"
+msgstr "Lirik"
 
 #: ../src/widget/preference.py:1004
 msgid "Desktop"
@@ -784,39 +785,39 @@ msgstr "Desktop"
 
 #: ../src/widget/preference.py:1005
 msgid "Window"
-msgstr "Fenster"
+msgstr "Jendela"
 
 #: ../src/widget/preference.py:1006
 msgid "Plugins"
-msgstr "Plugins"
+msgstr "Plugin"
 
 #: ../src/widget/preference.py:1007
 msgid "About"
-msgstr "Über"
+msgstr "Tentang"
 
 #: ../src/widget/song_view.py:481
 msgid "Repeat (single)"
-msgstr "Wiederholen (Einzeln)"
+msgstr "Ulangi (satu)"
 
 #: ../src/widget/song_view.py:482
 msgid "Order play"
-msgstr "Geordnete Wiedergabe"
+msgstr "Urutan memainkan"
 
 #: ../src/widget/song_view.py:483
 msgid "Repeat (list)"
-msgstr "Wiederholen (Liste)"
+msgstr "Ulangi (daftar)"
 
 #: ../src/widget/song_view.py:484 ../src/widget/playlist.py:545
 msgid "Randomize"
-msgstr "Zufällig"
+msgstr "Acak"
 
 #: ../src/widget/song_view.py:507
 msgid "Remove Track from this List"
-msgstr "Titel aus dieser Liste entfernen"
+msgstr "Hapus lagu dari Daftar"
 
 #: ../src/widget/song_view.py:508
 msgid "Remove Unavailable Tracks"
-msgstr "Unverfügbare Musiktitel entfernen"
+msgstr "Hapus lagu yang tidak tersedia"
 
 #: ../src/widget/song_view.py:521
 msgid "URL"
@@ -824,142 +825,142 @@ msgstr "URL"
 
 #: ../src/widget/song_view.py:522 ../src/widget/song_view.py:530
 msgid "File"
-msgstr "Datei"
+msgstr "File"
 
 #: ../src/widget/song_view.py:523 ../src/widget/song_view.py:531
 msgid "Folder (include subdirectories)"
-msgstr "Ordner (inklusive Unterverzeichnissen)"
+msgstr ""
 
 #: ../src/widget/song_view.py:542
 msgid "Add URL"
-msgstr "URL hinzufügen"
+msgstr "Tambah URL"
 
 #: ../src/widget/song_view.py:680
 msgid "Added Time"
-msgstr "Hinzugefügte Zeit"
+msgstr "Waktu ditambahkan"
 
 #: ../src/widget/song_view.py:817 ../src/widget/global_search.py:48
 #: ../src/widget/local_tab.py:28
 msgid "Library"
-msgstr "Bibliothek"
+msgstr "Pustaka"
 
 #: ../src/widget/local_item.py:59
 msgid "All Tracks"
-msgstr "Alle Musiktitel"
+msgstr "Semua Lagu"
 
 #: ../src/widget/local_item.py:67
 msgid "Track(s)"
-msgstr "Titel"
+msgstr "Lagu"
 
 #: ../src/widget/global_keys.py:97
 #, python-format
 msgid "Failed to bind %s !"
-msgstr "%s binden fehlgeschlagen!"
+msgstr ""
 
 #: ../src/widget/lyrics_module.py:151
 msgid "Increase the lyrics size"
-msgstr "Größe der Musiktexte vergrößern..."
+msgstr "Naikkan ukuran lirik"
 
 #: ../src/widget/lyrics_module.py:152
 msgid "Decrease the lyrics size"
-msgstr "Größe der Musiktexte verkleinern..."
+msgstr "Kecilkan ukuran lirik"
 
 #: ../src/widget/lyrics_module.py:154
 msgid "Select color theme"
-msgstr "Wählen Sie das Farbschema"
+msgstr "Pilih tema warna"
 
 #: ../src/widget/lyrics_module.py:158
 msgid "Karaoke on/off"
-msgstr "Karaoke an/aus"
+msgstr "Karaoke on/off"
 
 #: ../src/widget/lyrics_module.py:160
 msgid "Switch lines"
-msgstr "Zeilen wechseln"
+msgstr "Ganti baris"
 
 #: ../src/widget/lyrics_module.py:162
 msgid "Open settings panel"
-msgstr "Einstellungen öffnen"
+msgstr "Buka panel pengaturan"
 
 #: ../src/widget/lyrics_module.py:163
 msgid "Search lrc file for current track"
-msgstr "In der lrc Datei nach dem aktuellen Musiktitel suchen"
+msgstr "Cari berkas lrc untuk lagu saat ini"
 
 #: ../src/widget/lyrics_module.py:164
 msgid "Close lyrics"
-msgstr "Schließen Texte"
+msgstr "Tutup lirik"
 
 #: ../src/widget/lyrics_module.py:165 ../src/widget/lyrics_module.py:223
 msgid "Lyrics rewind"
-msgstr "Songtext zurückspulen"
+msgstr ""
 
 #: ../src/widget/lyrics_module.py:166 ../src/widget/lyrics_module.py:224
 msgid "Lyrics forward"
-msgstr "Songtext vorwärts"
+msgstr ""
 
 #: ../src/widget/lyrics_module.py:167 ../src/widget/lyrics_module.py:243
 msgid "Switch to window mode"
-msgstr "In den Fenstermodus wechseln"
+msgstr "Beralih ke mode jendela"
 
 #: ../src/widget/lyrics_module.py:221
 msgid "Switch to desktop mode"
-msgstr "In den Fenstermodus wechseln"
+msgstr "Beralih ke mode desktop"
 
 #: ../src/widget/lyrics_module.py:226 ../src/widget/lyrics_module.py:236
 #: ../src/widget/lyrics_search.py:59
 msgid "Search"
-msgstr "Suche"
+msgstr "Cari"
 
 #: ../src/widget/lyrics_module.py:227 ../src/widget/lyrics_module.py:242
 msgid "Settings"
-msgstr "Einstellungen"
+msgstr "Pengaturan"
 
 #: ../src/widget/lyrics_module.py:233
 msgid "Forward 0.5 seconds"
-msgstr "Zukunfts 0.5 Sekunden"
+msgstr "Maju 0.5 detik"
 
 #: ../src/widget/lyrics_module.py:234
 msgid "Rewind 0.5 seconds"
-msgstr "Rücklauf 0.5 Sekunden"
+msgstr "Mundur 0.5 detik"
 
 #: ../src/widget/lyrics_module.py:237
 msgid "Adjust lyrics"
-msgstr "Stellen Texte"
+msgstr "Sesuaikan lirik"
 
 #: ../src/widget/lyrics_module.py:239
 msgid "Choose local lrc"
-msgstr "Wählen lokalen die lrc"
+msgstr "Pilih lrc lokal"
 
 #: ../src/widget/lyrics_module.py:247
 msgid "Lyrics acquired by Network"
-msgstr "Musiktexte erhalten über Netzwerk"
+msgstr ""
 
 #: ../src/widget/lyrics_module.py:793 ../src/widget/lyrics_module.py:794
 msgid "No lyrics found!"
-msgstr "Keine Songtexte gefunden!"
+msgstr "Lirik tidak ditemukan!"
 
 #: ../src/widget/lyrics_module.py:796 ../src/widget/lyrics_module.py:797
 msgid "Searching for lyrics..."
-msgstr "Suchen nach Texten ..."
+msgstr "Mencari lirik ..."
 
 #: ../src/widget/headerbar.py:77
 msgid "Show/Hide Lyrics"
-msgstr "Songtexte anzeigen / ausblenden"
+msgstr "Tampilkan/Sembunyikan Lirik"
 
 #: ../src/widget/lyrics.py:735
 msgid "Lyrics window"
-msgstr "Liedtext Fenster"
+msgstr "Jendela Lirik"
 
 #: ../src/widget/equalizer.py:176
 msgid "Custom"
-msgstr "Angepasst"
+msgstr "Kustom"
 
 #: ../src/widget/equalizer.py:177
 msgid "Default"
-msgstr "Standard"
+msgstr "Baku"
 
 #: ../src/widget/equalizer.py:178
 msgid "Classical"
-msgstr "Klassik"
+msgstr "Klasik"
 
 #: ../src/widget/equalizer.py:179
 msgid "Club"
@@ -971,23 +972,23 @@ msgstr "Dance"
 
 #: ../src/widget/equalizer.py:181
 msgid "Full Bass"
-msgstr "Voll Bass"
+msgstr "Full Bass"
 
 #: ../src/widget/equalizer.py:182
 msgid "Full Bass and Treble"
-msgstr "Voll Bässe und Höhen"
+msgstr "Full Bass dan Treble"
 
 #: ../src/widget/equalizer.py:183
 msgid "Full Treble"
-msgstr "Voll Treble"
+msgstr "Full Treble"
 
 #: ../src/widget/equalizer.py:184
 msgid "Headphones"
-msgstr "Kopfhörer"
+msgstr "Headphones"
 
 #: ../src/widget/equalizer.py:185
 msgid "Large Hall"
-msgstr "Großer Saal"
+msgstr "Large Hall"
 
 #: ../src/widget/equalizer.py:186
 msgid "Live"
@@ -1023,134 +1024,134 @@ msgstr "Electronic"
 
 #: ../src/widget/equalizer.py:254
 msgid "Predefined"
-msgstr "Vordefiniert"
+msgstr "Telah ditetapkan"
 
 #: ../src/widget/playlist.py:94
 msgid "Search in Current Playlist"
-msgstr "In der aktuellen Wiedergabeliste suchen"
+msgstr "cari di daftar main sekarang"
 
 #: ../src/widget/playlist.py:96
 msgid "Playlist Operations"
-msgstr "Wiedergabeliste Optionen"
+msgstr "Operasi Daftar Putar"
 
 #: ../src/widget/playlist.py:183
 msgid "Default List"
-msgstr "Standardliste"
+msgstr "Daftar Baku"
 
 #: ../src/widget/playlist.py:304 ../src/widget/playlist.py:316
 #: ../src/widget/playlist.py:317 ../src/widget/playlist.py:357
 #: ../src/widget/playlist.py:360 ../src/widget/playlist.py:476
 msgid "New List"
-msgstr "Liste anlegen"
+msgstr "Daftar Baru"
 
 #: ../src/widget/playlist.py:305 ../src/widget/playlist.py:477
 msgid "Import List"
-msgstr "Liste importieren"
+msgstr "Import Daftar"
 
 #: ../src/widget/playlist.py:306 ../src/widget/playlist.py:485
 msgid "Open List"
-msgstr "Liste öffnen"
+msgstr "Buka Daftar"
 
 #: ../src/widget/playlist.py:307
 msgid "Export List"
-msgstr "Liste exportieren"
+msgstr "Ekspor Daftar"
 
 #: ../src/widget/playlist.py:308 ../src/widget/playlist.py:484
 msgid "Remove List"
-msgstr "Liste entfernen"
+msgstr "Hapus Daftar"
 
 #: ../src/widget/playlist.py:310 ../src/widget/playlist.py:479
 #: ../src/widget/playlist.py:487
 msgid "Save all Lists"
-msgstr "Alle Listen speichern"
+msgstr "Simpan semua Daftar"
 
 #: ../src/widget/playlist.py:483 ../src/widget/playlist.py:493
 msgid "Rename"
-msgstr "Umbenennen"
+msgstr "Rename"
 
 #: ../src/widget/playlist.py:534
 msgid "By Filename"
-msgstr "Nach Dateiname"
+msgstr "Berdasar Nama berkas"
 
 #: ../src/widget/playlist.py:535
 msgid "By Title"
-msgstr "Nach Titel"
+msgstr "Berdasar Judul"
 
 #: ../src/widget/playlist.py:536 ../src/widget/combo.py:184
 #: ../src/widget/combo.py:233
 msgid "By Artist"
-msgstr "Nach Künstler"
+msgstr "Berdasar Artis"
 
 #: ../src/widget/playlist.py:537 ../src/widget/combo.py:235
 msgid "By Album"
-msgstr "Nach Album"
+msgstr "Berdasar Album"
 
 #: ../src/widget/playlist.py:538 ../src/widget/combo.py:234
 msgid "By Genre"
-msgstr "Nach Genre"
+msgstr "Berdasar Genre"
 
 #: ../src/widget/playlist.py:539
 msgid "By Track"
-msgstr "Nach Musiktitel"
+msgstr "Berdasar Lagu"
 
 #: ../src/widget/playlist.py:540
 msgid "By Play Count"
-msgstr "Nach abgespielter Musikanzahl"
+msgstr "Berdasar Jumlah dimainkan"
 
 #: ../src/widget/playlist.py:541
 msgid "By Added Time"
-msgstr "Nach Hinzugefügter Zeit"
+msgstr "Berdasarkan waktu ditambahkan"
 
 #: ../src/widget/playlist.py:551
 msgid "Move to List"
-msgstr "Zur Liste verschieben"
+msgstr "Pindah ke Daftar"
 
 #: ../src/widget/playlist.py:553
 msgid "Remove Track"
-msgstr "Titel entfernen"
+msgstr "Hapus Lagu"
 
 #: ../src/widget/playlist.py:558
 msgid "Sort"
-msgstr "Art"
+msgstr "Sortir"
 
 #: ../src/widget/ui.py:203
 msgid "Need some music? Find it here..."
-msgstr "Musik gefällig? Hier beginnt die Suche..."
+msgstr "Mencari musik lainnya? Cari disini ..."
 
 #: ../src/widget/ui.py:401
 msgid "Add Local Music"
-msgstr "Lokale Musik hinzufügen"
+msgstr "Tambah Musik Lokal"
 
 #: ../src/widget/ui.py:1122
 #, python-brace-format
 msgid "Your search {keyword} did not match any items in {from}"
-msgstr "Ihre Suche nach {keyword} erzielte keine Übereinstimmung in  {from}"
+msgstr "Pencarian Anda {keyword} tidak cocok dalam item mana saja dalam {from}"
 
 #: ../src/widget/ui.py:1123
 msgid "Suggestions"
-msgstr "Vorschläge"
+msgstr "Saran"
 
 #: ../src/widget/ui.py:1124
 msgid "Make sure all words are spelled correctly."
-msgstr "Stellen Sie sicher, dass alle Wörter richtig geschrieben sind."
+msgstr "Pastikan semua kata dieja dengan benar."
 
 #: ../src/widget/ui.py:1125
 msgid ""
 "Try more general keywords, such as a title, an artist or the name of an "
 "album."
-msgstr "Versuchen Sie allgemeinere Stichwörter, wie Titel, Künstler oder der Name eines Albums."
+msgstr "Cobalah katakunci lebih umum, seperti judul, artis atau nama sebuah album."
 
 #: ../src/widget/ui.py:1222 ../src/widget/plugins_view.py:166
 msgid "Name"
-msgstr "Name"
+msgstr "Nama"
 
 #: ../src/widget/ui.py:1230
 msgid "Author(s)"
-msgstr "Autor (en)"
+msgstr "Pengarang"
 
 #: ../src/widget/ui.py:1266
 msgid "Don't prompt again"
-msgstr "Nicht erneut auffordern"
+msgstr "Jangan meminta lagi"
 
 #: ../src/widget/ui.py:1273
 msgid "OK"
@@ -1158,105 +1159,105 @@ msgstr "OK"
 
 #: ../src/widget/ui.py:1276
 msgid "Cancel"
-msgstr "Abbrechen"
+msgstr "Batal"
 
 #: ../src/widget/combo.py:195
 msgid "List view"
-msgstr "Listenansicht"
+msgstr "Lihat daftar"
 
 #: ../src/widget/webcasts_browser.py:98
 msgid "Region"
-msgstr "Region"
+msgstr "Wilayah"
 
 #: ../src/widget/webcasts_browser.py:141
 msgid "Favorites"
-msgstr "Favoriten"
+msgstr "Kesukaan"
 
 #: ../src/widget/lyrics_search.py:47
 msgid "Lyrics search"
-msgstr "Songtext Suche"
+msgstr "Pencarian lirik"
 
 #: ../src/widget/lyrics_search.py:54
 msgid "Artist:"
-msgstr "Künstler:"
+msgstr "Artis:"
 
 #: ../src/widget/lyrics_search.py:55
 msgid "Title:"
-msgstr "Titel:"
+msgstr "Judul:"
 
 #: ../src/widget/lyrics_search.py:87
 msgid "Download"
-msgstr "Herunterladen"
+msgstr "Unduh"
 
 #: ../src/widget/lyrics_search.py:136
 msgid "Now searching..."
-msgstr "Jetzt suchen ..."
+msgstr "Mencari ..."
 
 #: ../src/widget/lyrics_search.py:138 ../src/widget/lyrics_search.py:163
 msgid "Not found!"
-msgstr "Nicht gefunden!"
+msgstr "Tidak ditemukan!"
 
 #: ../src/widget/lyrics_search.py:157 ../src/widget/lyrics_search.py:161
 #, python-format
 msgid "%d lyrics found"
-msgstr "%d Texte gefunden"
+msgstr "%d lirik ditemukan"
 
 #: ../src/widget/lyrics_search.py:170
 msgid "Downloading lyrics..."
-msgstr "Herunterladen von Texten ..."
+msgstr "Mengunduh lirik ..."
 
 #: ../src/widget/lyrics_search.py:180
 msgid "File save to"
-msgstr "Datei zu speichern, um"
+msgstr "Simpan berkas ke"
 
 #: ../src/widget/lyrics_search.py:182
 msgid "Download failed."
-msgstr "Download fehlgeschlagen."
+msgstr "Unduhan gagal."
 
 #: ../src/widget/dialog.py:34
 msgid "Select Directory"
-msgstr "Verzeichnis auswählen"
+msgstr "Pilih Direktori"
 
 #: ../src/widget/dialog.py:56
 msgid "Select file"
-msgstr "Datei auswählen"
+msgstr "Pilih berkas"
 
 #: ../src/widget/dialog.py:82
 msgid "Export playlist"
-msgstr "Wiedergabeliste exportieren"
+msgstr "Ekspor daftar putar"
 
 #: ../src/widget/dialog.py:130
 msgid "Load playlist"
-msgstr "Wiedergabeliste laden"
+msgstr "Memuat daftar putar"
 
 #: ../src/widget/plugins_view.py:166
 msgid "Enable"
-msgstr "Aktivieren"
+msgstr "Aktifkan"
 
 #: ../src/source/local.py:43
 msgid "Reading directories..."
-msgstr "Lesen von Verzeichnissen ..."
+msgstr "Membaca direktori"
 
 #: ../src/source/local.py:175
 msgid "Check deleted files"
-msgstr "Gelöschte Dateien prüfen"
+msgstr "Periksa berkas dihapus"
 
 #: ../src/source/local.py:202
 msgid "Reload database"
-msgstr "Datenbank neuladen"
+msgstr "Muat ulang basisdata"
 
 #: ../src/source/old.py:112 ../src/source/audiocd.py:78
 msgid "Track"
-msgstr "Musiktitel"
+msgstr "Lagu"
 
 #: ../src/source/old.py:113 ../src/source/audiocd.py:79
 msgid "Unknown album"
-msgstr "Unbekanntes Album"
+msgstr "Album tidak diketahui"
 
 #: ../src/source/old.py:114 ../src/source/audiocd.py:80
 msgid "Unknown artist"
-msgstr "Unbekannter Künstler"
+msgstr "Artis tidak diketahui"
 
 #: ../src/source/audiocd.py:86 ../src/source/audiocd.py:92
 msgid "Audio CD"
-msgstr "Audio-CD"
+msgstr "CD Audio"

@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: Deepin Music\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-09-04 16:29+0800\n"
-"PO-Revision-Date: 2014-10-17 06:02+0000\n"
-"Last-Translator: cxbii <chenxiangbang@linuxdeepin.com>\n"
+"PO-Revision-Date: 2014-11-03 15:03+0000\n"
+"Last-Translator: freddy4212 <freddy4212@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/projects/p/deepin-music/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -464,7 +464,7 @@ msgstr "偏好設定"
 #: ../src/widget/instance.py:374 ../src/widget/tray.py:84
 #: ../src/widget/preference.py:196 ../src/widget/ui.py:1262
 msgid "Quit"
-msgstr "結束"
+msgstr "退出"
 
 #: ../src/widget/instance.py:378 ../src/widget/tray.py:73
 msgid "Search Lyrics"
@@ -1188,7 +1188,7 @@ msgstr "下載"
 
 #: ../src/widget/lyrics_search.py:136
 msgid "Now searching..."
-msgstr "正在搜尋 ..."
+msgstr "正在搜尋"
 
 #: ../src/widget/lyrics_search.py:138 ../src/widget/lyrics_search.py:163
 msgid "Not found!"
