@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: Deepin Music\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-09-04 16:29+0800\n"
-"PO-Revision-Date: 2014-10-19 00:20+0000\n"
-"Last-Translator: cxbii <chenxiangbang@linuxdeepin.com>\n"
+"PO-Revision-Date: 2014-11-16 15:51+0000\n"
+"Last-Translator: lexross <its4moi@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/deepin-music/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,7 +36,7 @@ msgstr "Le codec FLAC (Free Lossless Audio Codec) est un codec Open Source qui c
 msgid ""
 "Apple's proprietary lossy audio format could give higher quality than MP3 at"
 " lower bitrates."
-msgstr "Les formats propriétaires d'Apple peuvent fournir une meilleure qualité qu'un MP3 avec un taux plus bas."
+msgstr "Les formats propriétaires d'Apple peuvent fournir une meilleure qualité qu'un MP3 avec un taux d'echantillonage plus bas."
 
 #: ../src/transcoder.py:93
 msgid ""
@@ -48,7 +48,7 @@ msgstr "Un ancien format audio encore populaire. VBR offre une qualité supérie
 msgid ""
 "A proprietary and older, but also popular, lossy audio format. The output "
 "effect of CBR is not good as VBR, but is compatible with any player."
-msgstr "Un format audio sans perte,propriétaire et ancien,mais populaire. L'effet de sortie du CBR n'est pas aussi bon que celui du VBR, mais il est compatible avec n'importe quel lecteur."
+msgstr "Un format audio ancien,mais encore populaire. L'effet de sortie du CBR n'est pas aussi bon que celui du VBR, mais il est compatible avec n'importe quel lecteur."
 
 #: ../src/transcoder.py:119
 msgid "A very fast Free lossless audio format with good compression."
@@ -64,7 +64,7 @@ msgstr "Dmusic"
 
 #: ../src/plugins.py:91
 msgid "Plugin archive is not in the correct format."
-msgstr "L'extension de l'archive n'est pas dans le format attendu."
+msgstr "L'extension de l'archive n'est pas dans un format correct."
 
 #: ../src/plugins.py:98
 #, python-format
@@ -175,7 +175,7 @@ msgstr "Réduire au démarrage"
 
 #: ../src/main.py:155
 msgid "Toggle visibility of the GUI (if possible)"
-msgstr "Basculer la visibilité de l'interface graphique (si possible)"
+msgstr "Basculer l'affichage de l'interface graphique (si possible)"
 
 #: ../src/main.py:158
 msgid "This option makes control options, such as --play to start program"
@@ -187,7 +187,7 @@ msgstr "Options de développement / de débogage"
 
 #: ../src/main.py:162
 msgid "Set debug level (0-9)"
-msgstr "Paramétrer le niveau de debug (0-9)"
+msgstr "Paramétrer le niveau de débogage (0-9)"
 
 #: ../src/main.py:166
 msgid "Show information supported audio file"
@@ -200,7 +200,7 @@ msgstr "Afficher"
 
 #: ../src/widget/converter.py:309
 msgid "Target file already exists, do you want to overwrite it?"
-msgstr "Le fichier cible est déjà existant, voulez vous l'écraser ?"
+msgstr "Le fichier est déjà existant, voulez vous l'écraser ?"
 
 #: ../src/widget/converter.py:367 ../src/widget/song_editor.py:150
 #: ../src/widget/lyrics_module.py:240 ../src/widget/playlist.py:560
@@ -573,7 +573,7 @@ msgstr "Fermer les paroles"
 
 #: ../src/widget/preference.py:150
 msgid "On starting the player"
-msgstr "Démarrage du lecteur"
+msgstr "Au démarrage du lecteur"
 
 #: ../src/widget/preference.py:157
 msgid "Display splash-screen"
@@ -585,7 +585,7 @@ msgstr "Afficher les paroles"
 
 #: ../src/widget/preference.py:169
 msgid "Start playback automatically"
-msgstr "Lancez la lecture automatiquement"
+msgstr "Lancez la lecture automatique"
 
 #: ../src/widget/preference.py:175
 msgid "Resume playback"
@@ -609,11 +609,11 @@ msgstr "Activer fondu enchaîné"
 
 #: ../src/widget/preference.py:216
 msgid "Seamless switching between the same album"
-msgstr "Basculement insensé entre les mêmes albums"
+msgstr "Commutation entre les mêmes albums"
 
 #: ../src/widget/preference.py:221
 msgid "Crossfade"
-msgstr "Fond enchaîné"
+msgstr "Fondu enchaîné"
 
 #: ../src/widget/preference.py:223
 msgid " ms"
@@ -629,7 +629,7 @@ msgstr "Raccourcis clavier"
 
 #: ../src/widget/preference.py:356
 msgid "Enable hotkeys"
-msgstr "Activer raccourcis"
+msgstr "Activer raccourcis clavier"
 
 #: ../src/widget/preference.py:362
 msgid "Minimize/Show window"
@@ -767,7 +767,7 @@ msgid ""
 "Deepin Music is a music application designed for Linux users. It's characterized with lyrics searching, desktop lyrics display,album cover downloading, resume playing, music management and skin selection.\n"
 "\n"
 "Deepin Music is free software licensed under GNU GPLv3."
-msgstr "Deepin Music est une application musicale conçu pour les utilisateurs Linux. Elle est caractérisée par une recherche des paroles, un affichage sur le bureau des paroles, un téléchargement des pochettes des albums, un rétablissement de la lecture, une gestion de la musique et d'une sélection de thème.\n\nDeepin Music est un logiciel libre sous licence GNU GPLv3."
+msgstr "Deepin Music est une application musicale conçue pour les utilisateurs Linux. Elle dispose d'un affichage et d'une recherche des paroles, un téléchargement des pochettes automatique, un gestionnaire de bibliothèque musicale et un choix de differents thèmes.\n\nDeepin Music est un logiciel libre sous licence GNU GPLv3."
 
 #: ../src/widget/preference.py:1001
 msgid "General"
@@ -795,7 +795,7 @@ msgstr "À propos"
 
 #: ../src/widget/song_view.py:481
 msgid "Repeat (single)"
-msgstr "Répéter (un seul morceau)"
+msgstr "Répéter (un seul fichier)"
 
 #: ../src/widget/song_view.py:482
 msgid "Order play"
@@ -811,7 +811,7 @@ msgstr "Aléatoire"
 
 #: ../src/widget/song_view.py:507
 msgid "Remove Track from this List"
-msgstr "Supprimer ce morceau de la liste de lecture"
+msgstr "Supprimer cette piste de la liste de lecture"
 
 #: ../src/widget/song_view.py:508
 msgid "Remove Unavailable Tracks"
@@ -865,7 +865,7 @@ msgstr "Réduire la taille des paroles"
 
 #: ../src/widget/lyrics_module.py:154
 msgid "Select color theme"
-msgstr "Sélectionner le jeu de couleurs"
+msgstr "Sélectionner le style de couleur"
 
 #: ../src/widget/lyrics_module.py:158
 msgid "Karaoke on/off"
@@ -881,7 +881,7 @@ msgstr "Ouvrir le panneau de configuration"
 
 #: ../src/widget/lyrics_module.py:163
 msgid "Search lrc file for current track"
-msgstr "Chercher un fichier lrc pour la piste courante"
+msgstr "Chercher un fichier lrc pour la piste actuelle"
 
 #: ../src/widget/lyrics_module.py:164
 msgid "Close lyrics"
@@ -910,7 +910,7 @@ msgstr "Rechercher"
 
 #: ../src/widget/lyrics_module.py:227 ../src/widget/lyrics_module.py:242
 msgid "Settings"
-msgstr "Parametres "
+msgstr "Paramètres "
 
 #: ../src/widget/lyrics_module.py:233
 msgid "Forward 0.5 seconds"
@@ -930,7 +930,7 @@ msgstr "Choisir le dossier local lrc"
 
 #: ../src/widget/lyrics_module.py:247
 msgid "Lyrics acquired by Network"
-msgstr "Paroles acquises via le réseau"
+msgstr "Paroles obtenues par internet"
 
 #: ../src/widget/lyrics_module.py:793 ../src/widget/lyrics_module.py:794
 msgid "No lyrics found!"
@@ -1114,16 +1114,16 @@ msgstr "Trier"
 
 #: ../src/widget/ui.py:203
 msgid "Need some music? Find it here..."
-msgstr "Recherche..."
+msgstr "Besoin de plus de musique? Trouvez-la ici..."
 
 #: ../src/widget/ui.py:401
 msgid "Add Local Music"
-msgstr "Ajouter la musique locale"
+msgstr "Ajouter votre musique "
 
 #: ../src/widget/ui.py:1122
 #, python-brace-format
 msgid "Your search {keyword} did not match any items in {from}"
-msgstr "Votre recherche {mot} ne correspond à rien dans votre {de} "
+msgstr "Votre recherche {mot} ne correspond à aucun fichier dans {de} "
 
 #: ../src/widget/ui.py:1123
 msgid "Suggestions"
@@ -1202,7 +1202,7 @@ msgstr "%d paroles trouvée"
 
 #: ../src/widget/lyrics_search.py:170
 msgid "Downloading lyrics..."
-msgstr "Téléchargement des paroles en cours..."
+msgstr "Chargement des paroles en cours..."
 
 #: ../src/widget/lyrics_search.py:180
 msgid "File save to"
