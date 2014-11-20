@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Deepin Music\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-09-04 16:29+0800\n"
-"PO-Revision-Date: 2014-11-16 15:51+0000\n"
+"PO-Revision-Date: 2014-12-07 14:31+0000\n"
 "Last-Translator: lexross <its4moi@gmail.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/deepin-music/language/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -447,7 +447,7 @@ msgstr "Contrôles de lecture"
 #: ../src/widget/instance.py:361 ../src/widget/playlist.py:100
 #: ../src/widget/playlist.py:557
 msgid "Playback mode"
-msgstr "Mode Playback"
+msgstr "Mode Lecture"
 
 #: ../src/widget/instance.py:363 ../src/widget/equalizer.py:199
 msgid "Equalizer"
@@ -490,7 +490,7 @@ msgstr "Verrouiller les paroles"
 
 #: ../src/widget/instance.py:480
 msgid "Mini Mode"
-msgstr "Mode mini"
+msgstr "Mode miniature"
 
 #: ../src/widget/instance.py:482
 msgid "Normal Mode"
@@ -503,11 +503,11 @@ msgstr "Dossier"
 
 #: ../src/widget/local_browser.py:98
 msgid "Quick Scan"
-msgstr "Analyse rapide"
+msgstr "Recherche rapide"
 
 #: ../src/widget/local_browser.py:99
 msgid "Scan"
-msgstr "Analyse"
+msgstr "Recherche"
 
 #: ../src/widget/local_browser.py:100
 msgid "Refresh"
@@ -585,7 +585,7 @@ msgstr "Afficher les paroles"
 
 #: ../src/widget/preference.py:169
 msgid "Start playback automatically"
-msgstr "Lancez la lecture automatique"
+msgstr "Lancer la lecture automatique"
 
 #: ../src/widget/preference.py:175
 msgid "Resume playback"
@@ -593,7 +593,7 @@ msgstr "Reprendre la lecture"
 
 #: ../src/widget/preference.py:190
 msgid "When pressing the close button"
-msgstr "En appuyant sur le bouton de fermeture"
+msgstr "À la fermeture du lecteur"
 
 #: ../src/widget/preference.py:195 ../src/widget/ui.py:1260
 msgid "Minimize to tray"
@@ -605,7 +605,7 @@ msgstr "Options de lecture"
 
 #: ../src/widget/preference.py:213
 msgid "Enable crossfade"
-msgstr "Activer fondu enchaîné"
+msgstr "Activer le fondu enchaîné"
 
 #: ../src/widget/preference.py:216
 msgid "Seamless switching between the same album"
@@ -767,7 +767,7 @@ msgid ""
 "Deepin Music is a music application designed for Linux users. It's characterized with lyrics searching, desktop lyrics display,album cover downloading, resume playing, music management and skin selection.\n"
 "\n"
 "Deepin Music is free software licensed under GNU GPLv3."
-msgstr "Deepin Music est une application musicale conçue pour les utilisateurs Linux. Elle dispose d'un affichage et d'une recherche des paroles, un téléchargement des pochettes automatique, un gestionnaire de bibliothèque musicale et un choix de differents thèmes.\n\nDeepin Music est un logiciel libre sous licence GNU GPLv3."
+msgstr "Deepin Musique est une application musicale conçue pour les utilisateurs Linux. Elle dispose d'une recherche et d'un affichage des paroles, d'un téléchargement de pochettes automatique, d'un gestionnaire de bibliothèque musicale et d'un choix de differents thèmes.\n\nDeepin Music est un logiciel libre sous licence GNU GPLv3."
 
 #: ../src/widget/preference.py:1001
 msgid "General"
@@ -795,15 +795,15 @@ msgstr "À propos"
 
 #: ../src/widget/song_view.py:481
 msgid "Repeat (single)"
-msgstr "Répéter (un seul fichier)"
+msgstr "Répéter (même morceau)"
 
 #: ../src/widget/song_view.py:482
 msgid "Order play"
-msgstr "Ordre de lecture"
+msgstr "Par ordre"
 
 #: ../src/widget/song_view.py:483
 msgid "Repeat (list)"
-msgstr "Répéter (liste)"
+msgstr "Répéter (liste complète)"
 
 #: ../src/widget/song_view.py:484 ../src/widget/playlist.py:545
 msgid "Randomize"
