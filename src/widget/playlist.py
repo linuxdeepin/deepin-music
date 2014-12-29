@@ -44,40 +44,41 @@ from config import config
 from player import Player
 from nls import _
 from constant import CATEGROYLIST_WIDTH, HIDE_PLAYLIST_WIDTH
+import sample_music
 import utils
 
 class CategoryView(TreeView):
-    
+
     def add_items(self, items, insert_pos=None, clear_first=False):
         for item in items:
             song_view = getattr(item, "song_view", None)
             if song_view:
                 setattr(song_view, "category_view", self)
-        TreeView.add_items(self, items, insert_pos, clear_first)        
-        
-    items = property(lambda self: self.visible_items)    
-    
+        TreeView.add_items(self, items, insert_pos, clear_first)
+
+    items = property(lambda self: self.visible_items)
+
     def check_view_status(self):
         for item in self.items:
             item.song_view.async_reset_error_items()
 
 class PlaylistUI(gtk.VBox):
     '''Playlist UI.'''
-	
+
     def __init__(self):
         '''Init.'''
         gtk.VBox.__init__(self)
 
         # Init catagory list.
         self.category_list = CategoryView()
-        setattr(self.category_list, "save_to_library", self.save_to_library)        
+        setattr(self.category_list, "save_to_library", self.save_to_library)
         self.category_list.draw_mask = self.draw_category_list_mask
         self.category_list.connect("single-click-item", self.on_category_single_click)
         self.category_list.connect("right-press-items", self.on_category_right_press)
         self.category_list.set_size_request(CATEGROYLIST_WIDTH, -1)
 
         del self.category_list.keymap["Delete"]
-        
+
         # Init SearchEntry.
         self.entry_box = SearchEntry("")
         self.entry_box.entry.connect("changed", self.search_cb)
@@ -87,15 +88,15 @@ class PlaylistUI(gtk.VBox):
         entry_align.set_padding(2, 0, 10, 10)
         entry_align.add(self.entry_box)
         entry_align.connect("expose-event", self.expose_entry_mask)
-        
+
         # Init toolbar.
         self.toolbar_box = gtk.HBox(spacing=45)
-        self.search_button = self.__create_simple_toggle_button("search", self.show_text_entry, 
+        self.search_button = self.__create_simple_toggle_button("search", self.show_text_entry,
                                                                 _("Search in Current Playlist"))
-        
+
         self.__create_simple_button("list", self.popup_list_menu, _("Playlist Operations"))
         self.__create_simple_button("add", self.popup_add_menu, _("Add"))
-        
+
         self.playmode_button = PlaymodeButton(config.get("setting", "loop_mode", "list_mode").split("_")[0])
         Tooltip.text(self.playmode_button, _("Playback mode"))
         self.playmode_button.connect("button-press-event", self.popup_sort_menu)
@@ -105,7 +106,7 @@ class PlaylistUI(gtk.VBox):
         toolbar_align.set_padding(6, 6, 28, 0)
         toolbar_align.add(self.toolbar_box)
         toolbar_align.connect("expose-event", self.expose_toolbar_mask)
-                
+
         self.right_box = gtk.VBox()
         self.right_box.connect("size-allocate", self.on_right_box_size_allocate)
         self.list_paned = HPaned(handle_color=app_theme.get_color("panedHandler"), enable_drag=True)
@@ -113,13 +114,13 @@ class PlaylistUI(gtk.VBox):
         self.list_paned.pack2(self.right_box, True, False)
         bottom_box = gtk.VBox()
         bottom_box.set_size_request(-1, 22)
-        self.pack_start(self.list_paned, True, True)            
-        self.pack_start(entry_align, False, False)            
-        self.pack_start(toolbar_align, False, True)            
-        
+        self.pack_start(self.list_paned, True, True)
+        self.pack_start(entry_align, False, False)
+        self.pack_start(toolbar_align, False, True)
+
         # Current
         self.current_playlist = None
-        self.search_time_source = 0        
+        self.search_time_source = 0
         self.current_item = None
         self.search_flag = False
         self.cache_items = None
@@ -129,161 +130,176 @@ class PlaylistUI(gtk.VBox):
         self.song_notify_id = None
         self.detail_menu = None
         self.save_flag = False
-        
+
         if MediaDB.isloaded():
             self.__on_db_loaded(MediaDB)
-        else:    
+        else:
             MediaDB.connect("loaded", self.__on_db_loaded)
-            
-        Player.connect("loaded", self.__on_player_loaded)    
+
+        Player.connect("loaded", self.__on_player_loaded)
         Dispatcher.connect("play-song", self.__play_and_add)
         Dispatcher.connect("add-songs", self.__add_songs_to_list)
         Dispatcher.connect("new-cd-playlist", self.__new_audiocd_playlist)
         Dispatcher.connect("del-cd-playlist", self.delete_audiocd_list)
         Dispatcher.connect("save-current-list", self.save_current_playlist)
         config.connect("config-changed", self.on_config_changed)
-        
-    def on_config_changed(self, config, section, option, value):    
+
+    def on_config_changed(self, config, section, option, value):
         if section == "setting" and option == "loop_mode":
             icon_name = value.split("_")[0]
             self.playmode_button.update_dpixbufs(icon_name, True)
-        
-    def on_right_box_size_allocate(self, widget, rect):    
+
+    def on_right_box_size_allocate(self, widget, rect):
         if self.current_item:
             if rect.width > HIDE_PLAYLIST_WIDTH:
                 self.current_item.song_view.set_hide_columns(None)
-            else:    
+            else:
                 self.current_item.song_view.set_hide_columns([1])
-        
-    def expose_toolbar_mask(self, widget, event):    
+
+    def expose_toolbar_mask(self, widget, event):
         cr = widget.window.cairo_create()
         rect = widget.allocation
         cr.set_source_rgba(1, 1, 1, 0.95)
         cr.rectangle(rect.x, rect.y, rect.width, rect.height)
         cr.fill()
-        
-        draw_line(cr, (rect.x, rect.y + 1), 
+
+        draw_line(cr, (rect.x, rect.y + 1),
                   (rect.x + rect.width, rect.y + 1), "#b0b0b0")
         return False
-    
+
     def expose_entry_mask(self, widget, event):
         cr = widget.window.cairo_create()
         rect = widget.allocation
         draw_alpha_mask(cr, rect.x , rect.y, rect.width, rect.height, "toolbarEntry")
-        
+
     def draw_category_list_mask(self, cr, x, y, width, height):
         draw_alpha_mask(cr, x, y, width, height, "layoutLeft")
-        
-    def draw_item_mask(self, cr, x, y, width, height):    
+
+    def draw_item_mask(self, cr, x, y, width, height):
         draw_vlinear(cr, x, y, width, height,
-                     app_theme.get_shadow_color("editlistItemPress").get_color_info())        
-        
-    def __on_db_loaded(self, db):        
+                     app_theme.get_shadow_color("editlistItemPress").get_color_info())
+
+    def __on_db_loaded(self, db):
+        _add_sample = False
         if not MediaDB.get_playlists():
-            MediaDB.create_playlist("local", _("Default List"))            
-            
-        # From MediaDB loaded playlists.    
-        init_items = [ListTreeItem(pl) for pl in MediaDB.get_playlists()]    
+            _add_sample = True
+            MediaDB.create_playlist("local", _("Default List"))
+
+        # From MediaDB loaded playlists.
+        init_items = [ListTreeItem(pl) for pl in MediaDB.get_playlists()]
         self.category_list.add_items(init_items)
-        
+
         # Init Category_list.
         self.category_list.set_highlight_item(self.get_categroy_item_by_index(self.get_save_item_index()))
         self.current_item = self.category_list.get_highlight_item()
-        
+
         self.delete_source_id = self.current_item.song_view.connect("delete-select-items", self.parser_delete_items)
         self.drag_source_id = self.current_item.song_view.connect("drag-data-received", self.parser_drag_event)
         self.menu_source_id = self.current_item.song_view.connect("right-press-items", self.popup_detail_menu)
 
         Player.set_source(self.current_item.song_view)
         self.right_box.add(self.current_item.get_list_widget())
-        
+
         self.category_list.check_view_status()
         self.list_paned.show_all()
-        
-    def __on_player_loaded(self, player):   
+
+        if _add_sample:
+            uris = sample_music.get_sample_list_uris()
+            for uri in uris:
+                self.import_list_from_uri(uri)
+            category_item = self.get_categroy_item_by_index(1)
+            self.reset_highlight_item(category_item)
+            config.set("playlist","current_index", "1")
+
+            def select_song(item):
+                item.song_view.get_next_song()
+                return False
+            gtk.timeout_add(500, lambda :select_song(category_item))
+
+    def __on_player_loaded(self, player):
         if self.current_item:
             self.current_item.song_view.reset_error_items()
             self.current_item.song_view.set_highlight_song(Player.song)
-            
-    def restore_status(self):        
+
+    def restore_status(self):
         uri = config.get("player", "uri")
         seek = int(config.get("player", "seek"))
         state = config.get("player", "state")
         play = False
-        
+
         if config.getboolean("player", "play_on_startup") and state == "playing":
             play = True
-            
-        if uri and self.current_item:    
+
+        if uri and self.current_item:
             song = MediaDB.get_song(uri)
             if song.get_type() == "cue":
                 seek = seek + song.get("seek", 0)
-                
+
             if song and song.exists():
                 if not config.getboolean("player", "resume_last_progress") or not play:
                     if song.get_type() == "cue":
                         seek = song.get("seek", 0)
-                    else:    
+                    else:
                         seek = None
-                        
+
                 self.current_item.song_view.play_song(song, play, seek)
-        
-    def __play_and_add(self, widget, song):    
+
+    def __play_and_add(self, widget, song):
         self.current_item.song_view.add_songs(song, play=True)
-        
+
     def __add_songs_to_list(self, widget, songs):
         if songs and self.current_item.song_view:
             self.current_item.song_view.add_songs(songs)
-        
-    def get_selected_song_view(self):    
+
+    def get_selected_song_view(self):
         if self.current_item:
             return self.current_item.song_view
-            
-    def search_cb(self, widget, text):        
+
+    def search_cb(self, widget, text):
         if not self.search_flag:
             self.cache_items = self.current_item.song_view.get_items()
-        
-        # Clear song_view select status    
+
+        # Clear song_view select status
         self.current_item.song_view.clear_highlight()
         self.current_item.song_view.select_rows = []
-        
+
         if text != "":
             self.search_flag = True
             results = filter(lambda item: text.lower().replace(" ", "") in item.get_song().get("search", ""), self.cache_items)
             self.current_item.song_view.set_song_items(results)
-        else:    
+        else:
             self.search_flag = False
             self.current_item.song_view.set_song_items(self.cache_items)
-            
+
             if Player.song:
                 self.current_item.song_view.set_highlight_song(Player.song)
-        
-    def parser_delete_items(self, widget, items):    
+
+    def parser_delete_items(self, widget, items):
         if self.search_flag:
             if self.cache_items != None:
                 [self.cache_items.remove(item) for item in items if item in self.cache_items]
-        
+
     def parser_drag_event(self, widget, context, x, y, selection, info, timestamp):
         if self.search_flag:
             self.reset_search_entry()
-            
-    def reset_search_entry(self):        
+
+    def reset_search_entry(self):
         self.search_button.set_active(False)
-            
-    def __create_simple_toggle_button(self, name, callback, tip_msg=""):        
+
+    def __create_simple_toggle_button(self, name, callback, tip_msg=""):
         toggle_button = ToggleButton(
             app_theme.get_pixbuf("toolbar/%s_normal.png" % name),
             app_theme.get_pixbuf("toolbar/%s_press.png" % name),
             )
         toggle_button.connect("toggled", callback)
-        
+
         if tip_msg:
             Tooltip.text(toggle_button, tip_msg)
-            
+
         self.toolbar_box.pack_start(toggle_button, False, False)
         return toggle_button
-            
-    def __create_simple_button(self, name, callback, tip_msg=""):        
+
+    def __create_simple_button(self, name, callback, tip_msg=""):
         button = ImageButton(
             app_theme.get_pixbuf("toolbar/%s_normal.png" % name),
             app_theme.get_pixbuf("toolbar/%s_hover.png" % name),
@@ -292,15 +308,15 @@ class PlaylistUI(gtk.VBox):
         button.connect("button-press-event", callback)
         if tip_msg:
             Tooltip.text(button, tip_msg)
-            
+
         self.toolbar_box.pack_start(button, False, False)
         return button
-                                                        
+
     def popup_add_menu(self, widget, event):
         self.current_item.song_view.popup_add_menu(int(event.x_root), int(event.y_root))
-        
-        
-    def popup_list_menu(self, widget, event):    
+
+
+    def popup_list_menu(self, widget, event):
         menu_items = [(None, _("New List"), self.new_list),
                       (None, _("Import List"), self.leading_in_list),
                       (None, _("Open List"), self.add_to_list),
@@ -309,126 +325,129 @@ class PlaylistUI(gtk.VBox):
                       None,
                       (None, _("Save all Lists"), self.save_all_list)]
         Menu(menu_items, True).show((int(event.x_root), int(event.y_root)))
-        
-    def new_list(self, items=[], name=None):    
+
+    def new_list(self, items=[], name=None):
         index = len(self.category_list.get_items())
         if name is None:
             name = "%s%d" % (_("New List"), index)
         input_dialog = InputDialog(_("New List"), name, 300, 100, lambda name : self.create_new_playlist(name, items))
         input_dialog.show_all()
-        
-    def create_new_playlist(self, name, items):    
+
+    def create_new_playlist(self, name, items):
         self.category_list.add_items([ListTreeItem(Playlist("local", name, items))])
-        
+
     def __new_audiocd_playlist(self, obj, name, songs, udi):
-        self.category_list.add_items([ListTreeItem(CDPlaylist("audiocd", name, songs), udi=udi)]) 
-        
-    def get_categroy_other_items(self):    
+        self.category_list.add_items([ListTreeItem(CDPlaylist("audiocd", name, songs), udi=udi)])
+
+    def get_categroy_other_items(self):
         other_items = []
         highlight_item = self.category_list.get_highlight_item()
         for item in self.category_list.get_items():
             if highlight_item == item:
                 continue
             other_items.append(item)
-        return other_items    
-    
+        return other_items
+
     def get_categroy_index_by_item(self, item):
         index = -1
         for each_index, each_item in enumerate(self.category_list.get_items()):
-            if item == each_item: 
+            if item == each_item:
                 index = each_index
                 break
-        return index    
-    
+        return index
+
     def get_categroy_item_by_index(self, index):
         try:
             return self.category_list.get_items()[index]
         except:
             return None
-        
-    def get_edit_sub_menu(self, select_items, move=False):    
+
+    def get_edit_sub_menu(self, select_items, move=False):
         sub_menu_items = []
         if len(self.category_list.get_items()) > 1:
             other_category_items = self.get_categroy_other_items()
-            sub_menu_items = [(None, category_item.get_title(), 
+            sub_menu_items = [(None, category_item.get_title(),
                                self.edit_list_item, category_item, select_items ,move) for category_item in other_category_items]
-        if sub_menu_items:    
+        if sub_menu_items:
             sub_menu_items.extend([None, ((app_theme.get_pixbuf("toolbar/add_normal.png"), None, None),
                                           _("New List"), self.edit_new_list_item, select_items, move)])
-        else:    
+        else:
             sub_menu_items.extend([((app_theme.get_pixbuf("toolbar/add_normal.png"), None, None),
                                     _("New List"), self.edit_new_list_item, select_items, move)])
         return Menu(sub_menu_items)
-    
+
     def edit_list_item(self, category_item, select_items, move):
         try:
             category_item.song_view.add_items(select_items)
             category_item.song_view.update_item_index()
-            category_item.song_view.update_vadjustment()        
+            category_item.song_view.update_vadjustment()
             if move:
                 self.current_item.song_view.remove_select_items()
-        except:        
+        except:
             pass
         else:
             self.current_item.song_view.update_item_index()
             self.current_item.song_view.update_vadjustment()
-        
-    def edit_new_list_item(self, select_items, move):    
+
+    def edit_new_list_item(self, select_items, move):
         self.new_list([item.get_song().get("uri") for item in select_items])
         if move:
             self.current_item.song_view.remove_select_items()
-        self.current_item.song_view.update_item_index()    
+        self.current_item.song_view.update_item_index()
         self.current_item.song_view.update_vadjustment()
-        
-    def leading_in_list(self):    
+
+    def leading_in_list(self):
         uri = WindowLoadPlaylist().run()
         try:
-            p_name = utils.get_filename(uri)
-            pl = MediaDB.create_playlist("local", p_name, [])
-            new_item = ListTreeItem(pl)
-            self.category_list.add_items([new_item])
-            new_item.song_view.async_add_uris(uri)
-        except:    
+            self.import_list_from_uri(uri)
+        except:
             pass
-        
-    def leading_out_list(self, item):    
+
+    def import_list_from_uri(self, uri):
+        p_name = utils.get_filename(uri)
+        pl = MediaDB.create_playlist("local", p_name, [])
+        new_item = ListTreeItem(pl)
+        self.category_list.add_items([new_item])
+        new_item.song_view.async_add_uris(uri)
+
+    def leading_out_list(self, item):
         if not item:
             item = self.current_item
         WindowExportPlaylist(item.get_songs()).run()
-        
-    def add_to_list(self, item=None):    
+
+    def add_to_list(self, item=None):
         uri = WindowLoadPlaylist().run()
         if uri:
             try:
                 if not item:
                     item = self.current_item
                 item.song_view.async_add_uris(uri)
-            except: pass    
-            
+            except: pass
+
     def delete_audiocd_list(self, obj, udi):
         reset = False
         for item in self.category_list.get_items():
             if item.udi == udi:
                 reset = True
                 self.category_list.delete_items([item])
-        if reset:        
-            self.reset_highlight_item(self.category_list.get_items()[-1])    
-            
+        if reset:
+            self.reset_highlight_item(self.category_list.get_items()[-1])
+
     def delete_item_list(self, item):
         if len(self.category_list.get_items()) == 1:
             return
-        
+
         index = self.get_categroy_index_by_item(item)
         self.category_list.delete_items([item])
-        
+
         max_index = len(self.category_list.get_items()) - 1
-        if index <= max_index: 
+        if index <= max_index:
             new_index = index
-        else:    
+        else:
             new_index = index- 1
-        self.reset_highlight_item(self.category_list.get_items()[new_index])    
-        
-    def save_all_list(self):    
+        self.reset_highlight_item(self.category_list.get_items()[new_index])
+
+    def save_all_list(self):
         uri = WinDir().run()
         if uri:
             try:
@@ -439,38 +458,38 @@ class PlaylistUI(gtk.VBox):
                     save_name_dict[item_name] = save_name_dict.get(item_name, -1) + 1
                     if save_name_dict.get(item_name) > 0:
                         filename = "%s%d.%s" % (os.path.join(dir_name, item_name), save_name_dict.get(item_name), "m3u")
-                    else:    
+                    else:
                         filename = "%s.%s" % (os.path.join(dir_name, item_name), "m3u")
                     utils.export_playlist(item.get_songs(), filename, "m3u")
-            except:        
+            except:
                 pass
-        
-    def reset_highlight_item(self, item):    
+
+    def reset_highlight_item(self, item):
         self.category_list.set_highlight_item(item)
         self.on_category_single_click(None, item, None, None, None)
-        
-        
-    def get_current_item_index(self):    
+
+
+    def get_current_item_index(self):
         item = self.category_list.get_highlight_item()
         index = self.get_categroy_index_by_item(item)
         if index is None:
             return 0
         else:
             return index
-    
+
     def popup_sort_menu(self, widget, event):
         self.current_item.song_view.get_playmode_menu([int(event.x_root), int(event.y_root)])
-    
+
     def popup_delete_menu(self, widget, event):
         self.current_item.song_view.popup_delete_menu(int(event.x_root), int(event.y_root))
-        
-    def get_save_item_index(self):    
+
+    def get_save_item_index(self):
         index = config.getint("playlist", "current_index")
         if index <= len(self.category_list.get_items()) - 1:
             return index
         return 0
-    
-    def on_category_right_press(self, widget, x, y, item, column):    
+
+    def on_category_right_press(self, widget, x, y, item, column):
         if not item:
             menu_items = [
                 (None, _("New List"), self.new_list),
@@ -478,7 +497,7 @@ class PlaylistUI(gtk.VBox):
                 None,
                 (None, _("Save all Lists"), self.save_all_list)
                 ]
-        else:    
+        else:
             menu_items = [
                 (None, _("Rename"), lambda : self.rename_item_list(item)),
                 (None, _("Remove List"), lambda : self.delete_item_list(item)),
@@ -486,19 +505,19 @@ class PlaylistUI(gtk.VBox):
                 None,
                 (None, _("Save all Lists"), self.save_all_list)
                 ]
-            
-        Menu(menu_items, True).show((x, y))    
-            
-    def rename_item_list(self, item):        
+
+        Menu(menu_items, True).show((x, y))
+
+    def rename_item_list(self, item):
         input_dialog = InputDialog(_("Rename"), item.get_title(), 300, 100,
-                                   lambda name: item.set_title(name))    
+                                   lambda name: item.set_title(name))
         input_dialog.show_all()
-        
-    def on_category_button_press(self, widget, event):    
+
+    def on_category_button_press(self, widget, event):
         if event.button == 3:
             self.popup_list_menu(widget, event)
-        
-    def on_category_single_click(self, widget, item, column, x, y):        
+
+    def on_category_single_click(self, widget, item, column, x, y):
         self.reset_search_entry()
         if self.drag_source_id != None or self.delete_source_id != None or self.menu_source_id !=None:
             gobject.source_remove(self.drag_source_id)
@@ -507,7 +526,7 @@ class PlaylistUI(gtk.VBox):
 
         self.current_item = item
         self.category_list.set_highlight_item(item)
-        
+
         self.delete_source_id = self.current_item.song_view.connect("delete-select-items", self.parser_delete_items)
         self.drag_source_id = self.current_item.song_view.connect("drag-data-received", self.parser_drag_event)
         self.menu_source_id = self.current_item.song_view.connect("right-press-items", self.popup_detail_menu)
@@ -515,26 +534,26 @@ class PlaylistUI(gtk.VBox):
         container_remove_all(self.right_box)
         self.right_box.add(item.get_list_widget())
         self.list_paned.show_all()
-        
-    def show_text_entry(self, widget):        
+
+    def show_text_entry(self, widget):
         if widget.get_active():
             self.entry_box.set_no_show_all(False)
             self.entry_box.show_all()
             self.entry_box.focus_input()
-        else:    
-            self.entry_box.hide_all()            
-            self.entry_box.set_no_show_all(True)                        
+        else:
+            self.entry_box.hide_all()
+            self.entry_box.set_no_show_all(True)
             self.entry_box.entry.set_text("")
-            
-    def popup_detail_menu(self, widget, x, y, item, select_items):        
+
+    def popup_detail_menu(self, widget, x, y, item, select_items):
         if self.detail_menu != None:
             self.detail_menu.destroy()
         play_mode_menu = self.current_item.song_view.get_playmode_menu(align=True)
         sort_dict = OrderedDict()
-        sort_dict["file"] = _("By Filename")        
+        sort_dict["file"] = _("By Filename")
         sort_dict["title"] = _("By Title")
-        sort_dict["artist"] = _("By Artist")        
-        sort_dict["album"] = _("By Album") 
+        sort_dict["artist"] = _("By Artist")
+        sort_dict["album"] = _("By Album")
         sort_dict["genre"] = _("By Genre")
         sort_dict["#track"] = _("By Track")
         sort_dict["#playcount"] = _("By Play Count")
@@ -560,29 +579,29 @@ class PlaylistUI(gtk.VBox):
                                  (None, _("Open directory"), self.current_item.song_view.open_song_dir),
                                  (None, _("Properties"), self.current_item.song_view.open_song_editor),
                                  ], True)
-        
+
         if item and item.song.get_type() == "cue":
             self.detail_menu.set_menu_item_sensitive_by_index(5, False)
             self.detail_menu.set_menu_item_sensitive_by_index(10, False)
         self.detail_menu.show((int(x), int(y)))
-        
-        
-    def save_current_playlist(self, *args):    
+
+
+    def save_current_playlist(self, *args):
         index = 0
         player_source = Player.get_source()
         for i, item in enumerate(self.category_list.get_items()):
             if item.song_view == player_source:
                 index = i
         config.set("playlist","current_index", str(index))
-        
-    def save_to_library(self):    
+
+    def save_to_library(self):
         if self.save_flag:
-            return 
-        
+            return
+
         self.save_flag = True
         if self.search_flag:
             self.reset_search_entry()
-                  
+
         MediaDB.full_erase_playlists()
         for item in self.category_list.get_items():
             if item.udi is not None:
@@ -590,7 +609,7 @@ class PlaylistUI(gtk.VBox):
             songs = item.get_songs()
             name = item.get_title()
             MediaDB.create_playlist("local", name, songs)
-        MediaDB.async_save()    
+        MediaDB.async_save()
         self.save_flag = False
-            
-playlist_ui = PlaylistUI()            
+
+playlist_ui = PlaylistUI()
