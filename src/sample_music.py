@@ -21,13 +21,14 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-from xdg_support import get_music_dir
+
+sample_music_dir = os.path.expanduser("~/.sample-music")
 
 def get_sample_list_uris():
-    music_dir = get_music_dir()
     sample_list_uris = []
-    for root, dirs, files in os.walk(music_dir):
-        for f in files:
-            if f.endswith(".m3u"):
-                sample_list_uris.append("file://" + os.path.join(root, f))
+    if os.path.exists(sample_music_dir):
+        for root, dirs, files in os.walk(sample_music_dir):
+            for f in files:
+                if f.endswith(".m3u"):
+                    sample_list_uris.append("file://" + os.path.join(root, f))
     return sample_list_uris
