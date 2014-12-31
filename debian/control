@@ -8,8 +8,14 @@ Homepage: http://www.linuxdeepin.com/
 
 Package: deepin-music-player
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}, deepin-ui (>=1+git201209101328), python-mutagen (>=1.8), python-gst0.10, python-pyquery, gstreamer0.10-plugins-bad-multiverse, python-cddb, gstreamer0.10-plugins-ugly, gstreamer0.10-ffmpeg, python-pycurl, python-chardet, python-keybinder
-Suggests: gstreamer0.10-plugins-bad-multiverse, python-mmkeys
+Depends: ${shlibs:Depends}, ${misc:Depends},
+         deepin-ui, python-mutagen,
+         python-gst0.10, python-pyquery, python-cddb,
+         python-pycurl, python-chardet, python-keybinder,
+         gstreamer0.10-plugins-good
+Suggests: python-mmkeys,
+          gstreamer0.10-plugins-ugly,
+          gstreamer0.10-plugins-bad-multiverse,
 Description: Awesome music player with brilliant and tweakful UI
  Deepin-UI based, gstreamer front-end, with features likes search music by 
  pinyin,quanpin, colorful lyrics supports, and more powerfull functions you 

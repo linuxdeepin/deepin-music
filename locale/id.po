@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Deepin Music\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-09-04 16:29+0800\n"
-"PO-Revision-Date: 2014-12-08 09:41+0000\n"
+"PO-Revision-Date: 2014-12-24 02:51+0000\n"
 "Last-Translator: szd_liufei <liufei@linuxdeepin.com>\n"
 "Language-Team: Indonesian (http://www.transifex.com/projects/p/deepin-music/language/id/)\n"
 "MIME-Version: 1.0\n"
@@ -38,7 +38,7 @@ msgstr "Free Lossless Audio Codec (FLAC) adalah codec sumber terbuka yang mengko
 msgid ""
 "Apple's proprietary lossy audio format could give higher quality than MP3 at"
 " lower bitrates."
-msgstr ""
+msgstr "Format audio lossy terpaten milik Apple memberikan kualitas yang lebih tinggi dari MP3 dengan bitrate yang lebih rendah."
 
 #: ../src/transcoder.py:93
 msgid ""
@@ -50,7 +50,7 @@ msgstr "Format loosy audio berbayar dan lama, tapi juga popular. VBR memberikan 
 msgid ""
 "A proprietary and older, but also popular, lossy audio format. The output "
 "effect of CBR is not good as VBR, but is compatible with any player."
-msgstr ""
+msgstr "Format audio terpaten yang tua namun populer dan lossy. Efek output dari CBR tidak sebagus VBR, namun kompatibel dengan pemutar apa pun."
 
 #: ../src/transcoder.py:119
 msgid "A very fast Free lossless audio format with good compression."
@@ -165,7 +165,7 @@ msgstr "Tampilkan pesan bantuan ini dan keluar"
 
 #: ../src/main.py:148
 msgid "Start new instance"
-msgstr ""
+msgstr "Mulai proses baru"
 
 #: ../src/main.py:150
 msgid "Show program's version number and exit."
@@ -177,11 +177,11 @@ msgstr "Minimalkan setelah dimulai"
 
 #: ../src/main.py:155
 msgid "Toggle visibility of the GUI (if possible)"
-msgstr ""
+msgstr "Ubah visibilitas GUI (bila mungkin)"
 
 #: ../src/main.py:158
 msgid "This option makes control options, such as --play to start program"
-msgstr ""
+msgstr "Opsi ini menampilkan opsi kontrol, seperti --putar untuk memulai program"
 
 #: ../src/main.py:161
 msgid "Development/Debug Options"
@@ -444,7 +444,7 @@ msgstr "Tambah"
 
 #: ../src/widget/instance.py:360
 msgid "Play Controls"
-msgstr ""
+msgstr "Kontrol Pemutaran"
 
 #: ../src/widget/instance.py:361 ../src/widget/playlist.py:100
 #: ../src/widget/playlist.py:557
@@ -575,7 +575,7 @@ msgstr "Tutup Lirik"
 
 #: ../src/widget/preference.py:150
 msgid "On starting the player"
-msgstr ""
+msgstr "Saat memulai pemutar"
 
 #: ../src/widget/preference.py:157
 msgid "Display splash-screen"
@@ -607,15 +607,15 @@ msgstr "Pengaturan pemutaran"
 
 #: ../src/widget/preference.py:213
 msgid "Enable crossfade"
-msgstr ""
+msgstr "Aktifkan crossfade"
 
 #: ../src/widget/preference.py:216
 msgid "Seamless switching between the same album"
-msgstr ""
+msgstr "Peralihan yang mulus di antara album yang sama"
 
 #: ../src/widget/preference.py:221
 msgid "Crossfade"
-msgstr ""
+msgstr "Crossfade"
 
 #: ../src/widget/preference.py:223
 msgid " ms"
@@ -730,15 +730,15 @@ msgstr "Ganda"
 
 #: ../src/widget/preference.py:693 ../src/widget/preference.py:843
 msgid "Alignment"
-msgstr ""
+msgstr "Perataan"
 
 #: ../src/widget/preference.py:702
 msgid "Outline"
-msgstr ""
+msgstr "Outline"
 
 #: ../src/widget/preference.py:706
 msgid "Stroke"
-msgstr ""
+msgstr "Gaya"
 
 #: ../src/widget/preference.py:711 ../src/widget/preference.py:855
 msgid "Unplayed"
@@ -750,7 +750,7 @@ msgstr "Dimainkan"
 
 #: ../src/widget/preference.py:850
 msgid "Rolling"
-msgstr ""
+msgstr "Memutar"
 
 #: ../src/widget/preference.py:851
 msgid "Always"
@@ -829,7 +829,7 @@ msgstr "File"
 
 #: ../src/widget/song_view.py:523 ../src/widget/song_view.py:531
 msgid "Folder (include subdirectories)"
-msgstr ""
+msgstr "Folder (termasuk subdirektori)"
 
 #: ../src/widget/song_view.py:542
 msgid "Add URL"
@@ -855,7 +855,7 @@ msgstr "Lagu"
 #: ../src/widget/global_keys.py:97
 #, python-format
 msgid "Failed to bind %s !"
-msgstr ""
+msgstr "Gagal mengikat %s !"
 
 #: ../src/widget/lyrics_module.py:151
 msgid "Increase the lyrics size"
@@ -891,11 +891,11 @@ msgstr "Tutup lirik"
 
 #: ../src/widget/lyrics_module.py:165 ../src/widget/lyrics_module.py:223
 msgid "Lyrics rewind"
-msgstr ""
+msgstr "Putar balik lirik"
 
 #: ../src/widget/lyrics_module.py:166 ../src/widget/lyrics_module.py:224
 msgid "Lyrics forward"
-msgstr ""
+msgstr "Majukan lirik"
 
 #: ../src/widget/lyrics_module.py:167 ../src/widget/lyrics_module.py:243
 msgid "Switch to window mode"
@@ -932,7 +932,7 @@ msgstr "Pilih lrc lokal"
 
 #: ../src/widget/lyrics_module.py:247
 msgid "Lyrics acquired by Network"
-msgstr ""
+msgstr "Lirik diperoleh dari Jaringan"
 
 #: ../src/widget/lyrics_module.py:793 ../src/widget/lyrics_module.py:794
 msgid "No lyrics found!"
