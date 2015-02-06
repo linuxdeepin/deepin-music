@@ -9,10 +9,6 @@ class MainWindow(DQuickView):
     def __init__(self):
         super(MainWindow, self).__init__()
         self.setFlags(Qt.FramelessWindowHint)
-        self.resize(800, 600)
+        self.resize(960, 600)
         self.moveCenter()
         self.rootContext().setContextProperty('windowView', self)
-
-    @pyqtProperty(int,constant=True)
-    def windowGlowRadius(self):
-        return 8

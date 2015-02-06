@@ -19,7 +19,7 @@ if __name__ == '__main__':
     if app.isRunning():
         sys.exit(0)
     mainWindow = MainWindow()
-    mainWindow.setSource(QtCore.QUrl('views/mainwindow.qml'))
+    mainWindow.setSource(QtCore.QUrl('views/main.qml'))
     app.setActivationWindow(mainWindow)
     mainWindow.show()
 

@@ -9,6 +9,6 @@ Rectangle {
     visible: true
     WebEngineView {
         anchors.fill: parent
-        url: "./index.html"
+        url: "http://10.0.0.153:8096"
     }
 }
