@@ -43,6 +43,7 @@ class DQuickView(QtQuick.QQuickView):
             print('This QQuickView has no source set.')
         elif status == QtQuick.QQuickView.Ready:
             print('This QQuickView has loaded %s and created the QML component.' % self.source())
+            self.moveCenter()
         elif status == QtQuick.QQuickView.Loading:
             print('This QQuickView is loading network data.')
         elif status == QtQuick.QQuickView.Error:

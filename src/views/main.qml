@@ -1,70 +1,34 @@
 import QtQuick 2.0
-import QtQuick.Window 2.2
-import QtQuick.Controls 1.2
-import QtWebEngine 1.0
-
-Rectangle {
-
+import QtQuick.Window 2.1
+import DMusic 1.0
+Item {
     id: root
+   
+    width: 960
+    height: 600
 
-    Column{
-
-        Row{
-            Rectangle {
-                id: leftSideBar
-                width: 60
-                height: root.height - buttonBar.height
-                color: "green"
-            }
-
-            Column{
-
-                Rectangle {
-                    id: titleBar
-                    width: root.width - leftSideBar.width
-                    height: 25
-                    color: "red"
-                }
-
-                WebEngineView {
-                    id: webView
-                    width: root.width - leftSideBar.width
-                    height: root.height - titleBar.height - buttonBar.height
-                    url: "http://10.0.0.153:8093/"
-                    // url: "./test.html"
-                    onLinkHovered:{
-
-                    }
-
-                    onJavaScriptConsoleMessage:{
-                        print(level, message, lineNumber, sourceID)
-                    }
-
-                    onNavigationRequested:{
-                        print(request.url)
-                    }
-
-                    onLoadingChanged:{
-                        if (loadRequest.status == WebEngineView.LoadStartedStatus){
-                            print('loading html')
-                        }
-                        else if (loadRequest.status == WebEngineView.LoadSucceededStatus){
-                            print('load html successs')
-                            runJavaScript("console.log(Dmusic)")
-                        }
-                        else if (loadRequest.status == WebEngineView.LoadFailedStatus){
-                            print('load html faile')
-                        }
-                    }
-                }
-            }
+    DSplash{
+        id: splash
+        showDuration: 0
+        pauseDuration: 0
+        hideDuration: 0
+        anchors.fill: parent
+        Text{
+            anchors.centerIn: splash
+            text: 'Welcome, this is Splash!'
+            font.family: "微软雅黑"
+            font.pointSize: 20
+            color: "white"
         }
 
-        Rectangle {
-            id: buttonBar
-            width: root.width
-            height: 100
-            color: "#345678"
+        onFinished:{
+            mainLaoder.source="mainmusic.qml"
         }
+    }
+
+    Loader{
+        anchors.fill: parent
+        focus: true
+        id: mainLaoder
     }
 }
