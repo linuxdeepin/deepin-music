@@ -29,7 +29,7 @@ Rectangle {
             LeftSideBar {
                 id: leftSideBar
                 width: 60
-                height: mainMusic.height - buttonBar.height
+                height: mainMusic.height - playBottomBar.height
                 iconWidth: leftSideBar.width
                 iconHeight: leftSideBar.width
                 color: "transparent"
@@ -49,7 +49,7 @@ Rectangle {
                 DStackView {
                     id: stackViews
                     width: mainMusic.width - leftSideBar.width
-                    height: mainMusic.height - titleBar.height - buttonBar.height
+                    height: mainMusic.height - titleBar.height - playBottomBar.height
                     current: 0
                     WebMusic360Page {
                         id: webMusic360Page
@@ -95,7 +95,7 @@ Rectangle {
         }
 
         PlayBottomBar {
-            id: buttonBar
+            id: playBottomBar
             playerDuration: player.duration
             playerPosition: player.position
             width: mainMusic.width
@@ -109,12 +109,13 @@ Rectangle {
 
         MediaPlayer {
             id: player
+            volume: 1
             source: "http://sv55.yunpan.cn/Download.outputAudio/1900239694/08c8f061209de7a3840c5e7739cee9e764263c74/55_55.fb6828bec154a5aa381c4d29aa4f6fb6/1.0/openapi/14235691366170/10003/68bbe769b0497c4aab5dea830c60ddbe/小苹果_筷子兄弟.mp3"
         }
 
-        VideoOutput {    
-            source: player
-        }
+        // VideoOutput {    
+        //     source: player
+        // }
 
         Connections {
             target: player
@@ -126,9 +127,12 @@ Rectangle {
         // <<M2 
         
         Component.onCompleted: {
-            player.play();
-            if (player.mediaObject)
-                player.mediaObject.notifyInterval = 50;
+            // player.play();
+            // if (player.mediaObject)
+            //     player.mediaObject.notifyInterval = 50;
+
+            playBottomBar.playButton.played.connect(Utils.playToggle)
+
         }
     }
 

@@ -40,3 +40,14 @@ function setSkinByImage(url) {
     buttonBar.color = "transparent"
     bgIamge.source = url
 }
+
+
+function playToggle(playing){
+    if (playing){
+        player.play()
+        if (player.mediaObject)
+           player.mediaObject.notifyInterval = 50;
+    }else{
+        player.pause()
+    }
+}

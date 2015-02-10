@@ -11,6 +11,7 @@ Item {
     property var musicinfo: musicinfo
     property var playControl: playControl
     property var musicToolbar: musicToolbar
+    property var playButton: playButton
 
     property real playerDuration: 0
     property real playerPosition: 0
@@ -206,13 +207,22 @@ Item {
                     }
 
                     DIconButton{
+                        id: playButton
+                        property bool playing: false
+
+                        signal played(bool flag)
 
                         width: playControl.iconsWidth
                         height: playControl.iconsHeight
-                        normal_image: '../skin/icons/dark/appbar.control.play.png'
-                        hover_image: '../skin/icons/dark/appbar.control.play.png'
-                        pressed_image: '../skin/icons/light/appbar.control.play.png'
-                        disabled_image: '../skin/icons/dark/appbar.control.play.png'
+                        normal_image: playButton.playing ?  '../skin/icons/dark/appbar.control.pause.png' : '../skin/icons/dark/appbar.control.play.png'
+                        hover_image: playButton.playing ? '../skin/icons/dark/appbar.control.pause.png': '../skin/icons/dark/appbar.control.play.png'
+                        pressed_image: playButton.playing ? '../skin/icons/dark/appbar.control.pause.png' : '../skin/icons/light/appbar.control.play.png'
+                        disabled_image: playButton.playing ? '../skin/icons/dark/appbar.control.pause.png' : '../skin/icons/dark/appbar.control.play.png'
+
+                        onClicked:{
+                            playButton.playing = !playButton.playing;
+                            playButton.played(playButton.playing);
+                        }
                     }
 
                     DIconButton{
