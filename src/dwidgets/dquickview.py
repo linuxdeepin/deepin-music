@@ -39,9 +39,9 @@ class DQuickView(QtQuick.QQuickView):
         if event.button() == QtCore.Qt.LeftButton:
             self.dragPosition = event.globalPos() - self.frameGeometry().topLeft()
             event.accept()
-        elif event.button() == QtCore.Qt.RightButton:
-            event.ignore()
-            return
+        # elif event.button() == QtCore.Qt.RightButton:
+        #     event.ignore()
+        #     return
         super(DQuickView, self).mousePressEvent(event)
 
     def mouseReleaseEvent(self, event):

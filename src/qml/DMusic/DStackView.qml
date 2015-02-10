@@ -9,12 +9,12 @@ Item {
     property int current: 0
 
     onCurrentChanged: setOpacities()
-    Component.onCompleted: setOpacities()
+    // Component.onCompleted: setOpacities()
 
     function setOpacities() {
         for (var i = 0; i < stack.children.length; ++i) {
             stack.children[i].opacity = (i == current ? 1 : 0)
-            stack.children[i].z = (i == current ? 10 : 0)
+            stack.children[i].z = (i == current ? 1 : 0)
         }
     }
 
