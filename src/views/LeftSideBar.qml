@@ -17,6 +17,8 @@ Rectangle {
     signal swicthViewByID(string viewID)
     signal globalSearched()
 
+    focus: false
+
     Column {
         anchors.fill: parent
 
@@ -25,10 +27,10 @@ Rectangle {
             hoverEnabled: false
             width: root.iconWidth
             height: root.iconHeight
-            normal_image: '../skin/icons/dark/appbar.music.png'
-            hover_image: '../skin/icons/dark/appbar.music.png'
-            pressed_image: '../skin/icons/light/appbar.music.png'
-            disabled_image: '../skin/icons/dark/appbar.music.png'
+            normal_image: '../skin/icons/light/appbar.music.png'
+            hover_image: '../skin/icons/light/appbar.music.png'
+            pressed_image: '../skin/icons/dark/appbar.music.png'
+            disabled_image: '../skin/icons/light/appbar.music.png'
         }
 
         DIconButton{
@@ -36,10 +38,10 @@ Rectangle {
             property var viewID: 'WebMusic360Page' 
             width: root.iconWidth
             height: root.iconHeight
-            normal_image: '../skin/icons/dark/appbar.zune.png'
-            hover_image: '../skin/icons/dark/appbar.zune.png'
-            pressed_image: '../skin/icons/light/appbar.zune.png'
-            disabled_image: '../skin/icons/dark/appbar.zune.png'
+            normal_image: '../skin/icons/light/appbar.zune.png'
+            hover_image: '../skin/icons/light/appbar.zune.png'
+            pressed_image: '../skin/icons/dark/appbar.zune.png'
+            disabled_image: '../skin/icons/light/appbar.zune.png'
 
             onClicked:{
                 root.swicthViewByID(viewID);
@@ -51,10 +53,10 @@ Rectangle {
             property var viewID: 'MusicManagerPage'
             width: root.iconWidth
             height: root.iconHeight
-            normal_image: '../skin/icons/dark/appbar.folder.png'
-            hover_image: '../skin/icons/dark/appbar.folder.png'
-            pressed_image: '../skin/icons/light/appbar.folder.png'
-            disabled_image: '../skin/icons/dark/appbar.folder.png'
+            normal_image: '../skin/icons/light/appbar.folder.png'
+            hover_image: '../skin/icons/light/appbar.folder.png'
+            pressed_image: '../skin/icons/dark/appbar.folder.png'
+            disabled_image: '../skin/icons/light/appbar.folder.png'
 
             onClicked:{
                 root.swicthViewByID(viewID);
@@ -66,10 +68,10 @@ Rectangle {
             property var viewID: 'PlayListPage'
             width: root.iconWidth
             height: root.iconHeight
-            normal_image: '../skin/icons/dark/appbar.list.png'
-            hover_image: '../skin/icons/dark/appbar.list.png'
-            pressed_image: '../skin/icons/light/appbar.list.png'
-            disabled_image: '../skin/icons/dark/appbar.list.png'
+            normal_image: '../skin/icons/light/appbar.list.png'
+            hover_image: '../skin/icons/light/appbar.list.png'
+            pressed_image: '../skin/icons/dark/appbar.list.png'
+            disabled_image: '../skin/icons/light/appbar.list.png'
 
             onClicked:{
                 root.swicthViewByID(viewID);
@@ -87,10 +89,10 @@ Rectangle {
             property var viewID: 'DownloadPage'
             width: root.iconWidth
             height: root.iconHeight
-            normal_image: '../skin/icons/dark/appbar.download.png'
-            hover_image: '../skin/icons/dark/appbar.download.png'
-            pressed_image: '../skin/icons/light/appbar.download.png'
-            disabled_image: '../skin/icons/dark/appbar.download.png'
+            normal_image: '../skin/icons/light/appbar.download.png'
+            hover_image: '../skin/icons/light/appbar.download.png'
+            pressed_image: '../skin/icons/dark/appbar.download.png'
+            disabled_image: '../skin/icons/light/appbar.download.png'
 
             onClicked:{
                 root.swicthViewByID(viewID);
@@ -101,10 +103,10 @@ Rectangle {
             id: searchButton
             width: root.iconWidth
             height: root.iconHeight
-            normal_image: '../skin/icons/dark/appbar.magnify.png'
-            hover_image: '../skin/icons/dark/appbar.magnify.png'
-            pressed_image: '../skin/icons/light/appbar.magnify.png'
-            disabled_image: '../skin/icons/dark/appbar.magnify.png'
+            normal_image: '../skin/icons/light/appbar.magnify.png'
+            hover_image: '../skin/icons/light/appbar.magnify.png'
+            pressed_image: '../skin/icons/dark/appbar.magnify.png'
+            disabled_image: '../skin/icons/light/appbar.magnify.png'
 
             onClicked:{
                 root.globalSearched()

@@ -5,7 +5,9 @@ Item {
     id: root
    
     width: 960
-    height: 600
+    height: 660
+
+    objectName: "mainLoader"
 
     DSplash{
         id: splash
@@ -22,13 +24,13 @@ Item {
         }
 
         onFinished:{
-            mainLaoder.source="mainmusic.qml"
+            mainLoader.source="mainmusic.qml"
         }
     }
 
     Loader{
         anchors.fill: parent
         focus: true
-        id: mainLaoder
+        id: mainLoader
     }
 }

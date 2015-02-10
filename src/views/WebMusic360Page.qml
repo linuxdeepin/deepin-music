@@ -5,7 +5,7 @@ WebEngineView {
     id: root
     property var viewID: 'WebMusic360Page'
     url: "http://10.0.0.153:8093/"
-    // url: "./test.html"
+    focus: false
     onLinkHovered:{
 
     }

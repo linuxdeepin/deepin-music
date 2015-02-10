@@ -25,3 +25,18 @@ function loadqml(qmlfile, parent, properties) {
     else
         component.statusChanged.connect(finishCreation);
 }
+
+
+function resetSkin() {
+    buttonBar.color = "#282F3F"
+    bgIamge.source = ''
+}
+
+
+function setSkinByImage(url) {
+    if (url === undefined){
+        url = "../skin/images/bg2.jpg"
+    }
+    buttonBar.color = "transparent"
+    bgIamge.source = url
+}

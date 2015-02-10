@@ -12,8 +12,6 @@ Rectangle {
     property alias minButton: minButton
     property alias closeButton: closeButton
 
-    color: "gray"
-
 
     signal fulltoSimple()
     signal menuShowed()
@@ -31,10 +29,10 @@ Rectangle {
             id: modeButton
             width: root.iconWidth
             height: root.iconHeight
-            normal_image: '../skin/icons/dark/appbar.layout.expand.left.png'
-            hover_image: '../skin/icons/dark/appbar.layout.expand.left.png'
-            pressed_image: '../skin/icons/light/appbar.layout.expand.left.png'
-            disabled_image: '../skin/icons/dark/appbar.layout.expand.left.png'
+            normal_image: '../skin/icons/light/appbar.layout.expand.left.png'
+            hover_image: '../skin/icons/light/appbar.layout.expand.left.png'
+            pressed_image: '../skin/icons/dark/appbar.layout.expand.left.png'
+            disabled_image: '../skin/icons/light/appbar.layout.expand.left.png'
 
             onClicked:{
                 root.fulltoSimple();
@@ -45,10 +43,10 @@ Rectangle {
             id: menuButton
             width: root.iconWidth
             height: root.iconHeight
-            normal_image: '../skin/icons/dark/appbar.list.png'
-            hover_image: '../skin/icons/dark/appbar.list.png'
-            pressed_image: '../skin/icons/light/appbar.list.png'
-            disabled_image: '../skin/icons/dark/appbar.list.png'
+            normal_image: '../skin/icons/light/appbar.list.png'
+            hover_image: '../skin/icons/light/appbar.list.png'
+            pressed_image: '../skin/icons/dark/appbar.list.png'
+            disabled_image: '../skin/icons/light/appbar.list.png'
 
             onClicked:{
                 root.menuShowed();
@@ -59,10 +57,10 @@ Rectangle {
             id: minButton
             width: root.iconWidth
             height: root.iconHeight
-            normal_image: '../skin/icons/dark/appbar.minus.png'
-            hover_image: '../skin/icons/dark/appbar.minus.png'
-            pressed_image: '../skin/icons/light/appbar.minus.png'
-            disabled_image: '../skin/icons/dark/appbar.minus.png'
+            normal_image: '../skin/icons/light/appbar.minus.png'
+            hover_image: '../skin/icons/light/appbar.minus.png'
+            pressed_image: '../skin/icons/dark/appbar.minus.png'
+            disabled_image: '../skin/icons/light/appbar.minus.png'
 
             onClicked:{
                 MainWindow.showMinimized()
@@ -73,10 +71,10 @@ Rectangle {
             id: closeButton
             width: root.iconWidth
             height: root.iconHeight
-            normal_image: '../skin/icons/dark/appbar.close.png'
-            hover_image: '../skin/icons/dark/appbar.close.png'
-            pressed_image: '../skin/icons/light/appbar.close.png'
-            disabled_image: '../skin/icons/dark/appbar.close.png'
+            normal_image: '../skin/icons/light/appbar.close.png'
+            hover_image: '../skin/icons/light/appbar.close.png'
+            pressed_image: '../skin/icons/dark/appbar.close.png'
+            disabled_image: '../skin/icons/light/appbar.close.png'
 
             onClicked:{
                 Qt.quit()

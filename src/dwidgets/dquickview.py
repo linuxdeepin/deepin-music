@@ -18,7 +18,6 @@ class DQuickView(QtQuick.QQuickView):
         self.setResizeMode(QtQuick.QQuickView.SizeRootObjectToView)
         self.engine().addImportPath(os.sep.join([os.getcwd(), 'qml']))
         self.initWebengine()
-        self.initConnect()
 
     def initWebengine(self):
         component = QtQml.QQmlComponent(self.engine())
@@ -33,28 +32,16 @@ class DQuickView(QtQuick.QQuickView):
         ''', QtCore.QUrl(''));
         item = component.create()
         item.setParentItem(self.rootObject())
-
-    def initConnect(self):
-        self.statusChanged.connect(self.trackStatus)
-        self.engine().quit.connect(QtGui.QGuiApplication.instance().quit)
-
-    def trackStatus(self, status):
-        if status == QtQuick.QQuickView.Null:
-            print('This QQuickView has no source set.')
-        elif status == QtQuick.QQuickView.Ready:
-            print('This QQuickView has loaded %s and created the QML component.' % self.source())
-            self.moveCenter()
-        elif status == QtQuick.QQuickView.Loading:
-            print('This QQuickView is loading network data.')
-        elif status == QtQuick.QQuickView.Error:
-            print('One or more errors has occurred. Call errors() to retrieve a list of errors.')
-            print(self.errors())
+    
 
     def mousePressEvent(self, event):
         # 鼠标点击事件
         if event.button() == QtCore.Qt.LeftButton:
             self.dragPosition = event.globalPos() - self.frameGeometry().topLeft()
             event.accept()
+        elif event.button() == QtCore.Qt.RightButton:
+            event.ignore()
+            return
         super(DQuickView, self).mousePressEvent(event)
 
     def mouseReleaseEvent(self, event):

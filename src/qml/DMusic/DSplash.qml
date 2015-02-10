@@ -2,7 +2,7 @@ import QtQuick 2.0
 import QtGraphicalEffects 1.0
 
 Rectangle {
-    id: root
+    id: splash
 
     property int showDuration: 500
     property int pauseDuration: 2000
@@ -17,7 +17,7 @@ Rectangle {
     SequentialAnimation {
         id: loadAnimation
         NumberAnimation { 
-            target: root
+            target: splash
             property: "opacity"; 
             to: 1; 
             duration: hideDuration 
@@ -25,7 +25,7 @@ Rectangle {
         }
         PauseAnimation { duration: pauseDuration}
         NumberAnimation { 
-            target: root
+            target: splash
             property: "opacity"
             to: 0
             duration: hideDuration
@@ -33,8 +33,8 @@ Rectangle {
         }
         ScriptAction {
             script: {
-                root.finished()
-                root.destroy()
+                splash.finished()
+                splash.destroy()
             }
         }
     }
