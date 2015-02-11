@@ -9,7 +9,7 @@ Item {
     property int current: 0
 
     onCurrentChanged: setOpacities()
-    // Component.onCompleted: setOpacities()
+    Component.onCompleted: setOpacities()
 
     function setOpacities() {
         for (var i = 0; i < stack.children.length; ++i) {

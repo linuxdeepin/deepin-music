@@ -11,13 +11,48 @@ Rectangle {
     id: mainMusic
     
     property var views: ['WebMusic360Page', 'MusicManagerPage', 'PlayListPage', 'DownloadPage']
+
     color: "lightgray"
     focus: true
 
-    objectName: "mainMusic"
+    function playMusic(url){
+        player.stop()
+        player.source = url;
+        Utils.playToggle(true)
+    }
+
+    function playToggle(playing){
+        if (playing){
+            player.play()
+            if (player.mediaObject)
+               player.mediaObject.notifyInterval = 50;
+        }else{
+            player.pause()
+        }
+    }
+
+
+    function onPlaying(){
+        playBottomBar.playing = true;
+    }
+
+    function onPaused(){
+        playBottomBar.playing = false;
+    }
+
+    function onStopped(){
+        playBottomBar.playing = false;
+    }
+
+    function onError(error, errorString){
+        playBottomBar.playing = false;
+        print(error, errorString);
+    }
 
     BorderImage {
         id: bgIamge
+        objectName: 'bgImage'
+
         anchors.fill: mainMusic
         horizontalTileMode: BorderImage.Stretch
         verticalTileMode: BorderImage.Stretch
@@ -28,6 +63,7 @@ Rectangle {
 
             LeftSideBar {
                 id: leftSideBar
+                objectName: 'leftSideBar'
                 width: 60
                 height: mainMusic.height - playBottomBar.height
                 iconWidth: leftSideBar.width
@@ -39,6 +75,7 @@ Rectangle {
 
                 TitleBar {
                     id: titleBar
+                    objectName: 'titleBar'
                     width: mainMusic.width - leftSideBar.width
                     height: 25
                     iconWidth: titleBar.height
@@ -48,13 +85,15 @@ Rectangle {
 
                 DStackView {
                     id: stackViews
+                    objectName: 'stackViews'
                     width: mainMusic.width - leftSideBar.width
                     height: mainMusic.height - titleBar.height - playBottomBar.height
                     current: 0
                     WebMusic360Page {
                         id: webMusic360Page
-                        width: stackViews.width
-                        height: stackViews.height
+
+                        objectName: 'webMusic360Page'
+                        anchors.fill: parent
 
                         Behavior on opacity {
                             NumberAnimation { duration: 500 }
@@ -63,8 +102,9 @@ Rectangle {
 
                     MusicManagerPage {
                         id: musicManagerPage
-                        width: stackViews.width
-                        height: stackViews.height
+
+                        objectName: 'musicManagerPage'
+                        anchors.fill: parent
 
                         Behavior on opacity {
                             NumberAnimation { duration: 500 }
@@ -73,8 +113,9 @@ Rectangle {
 
                     PlayListPage {
                         id: palyListPage
-                        width: stackViews.width
-                        height: stackViews.height
+
+                        objectName: 'palyListPage'
+                        anchors.fill: parent
 
                         Behavior on opacity {
                             NumberAnimation { duration: 500 }
@@ -82,9 +123,10 @@ Rectangle {
                     }
 
                     DownloadPage {
-                        id: downPage
-                        width: stackViews.width
-                        height: stackViews.height
+                        id: downloadPage
+
+                        objectName: 'downloadPage'
+                        anchors.fill: parent
 
                         Behavior on opacity {
                             NumberAnimation { duration: 500 }
@@ -110,7 +152,7 @@ Rectangle {
         MediaPlayer {
             id: player
             volume: 1
-            source: "http://sv55.yunpan.cn/Download.outputAudio/1900239694/08c8f061209de7a3840c5e7739cee9e764263c74/55_55.fb6828bec154a5aa381c4d29aa4f6fb6/1.0/openapi/14235691366170/10003/68bbe769b0497c4aab5dea830c60ddbe/小苹果_筷子兄弟.mp3"
+            source: ''
         }
 
         // VideoOutput {    
@@ -131,8 +173,12 @@ Rectangle {
             // if (player.mediaObject)
             //     player.mediaObject.notifyInterval = 50;
 
-            playBottomBar.playButton.played.connect(Utils.playToggle)
+            playBottomBar.played.connect(playToggle)
 
+            player.onPlaying.connect(onPlaying)
+            player.onPaused.connect(onPaused)
+            player.onStopped.connect(onStopped)
+            player.onError.connect(onError)
         }
     }
 

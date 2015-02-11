@@ -28,7 +28,7 @@ function loadqml(qmlfile, parent, properties) {
 
 
 function resetSkin() {
-    buttonBar.color = "#282F3F"
+    playBottomBar.color = "#282F3F"
     bgIamge.source = ''
 }
 
@@ -37,7 +37,7 @@ function setSkinByImage(url) {
     if (url === undefined){
         url = "../skin/images/bg2.jpg"
     }
-    buttonBar.color = "transparent"
+    playBottomBar.color = "transparent"
     bgIamge.source = url
 }
 
@@ -50,4 +50,30 @@ function playToggle(playing){
     }else{
         player.pause()
     }
+}
+
+
+function playMusic(musicID){
+    var url = PyUtil.getMusicURLByID(musicID);
+    player.stop()
+    player.source = url;
+    playToggle(true)
+}
+
+
+function onPlaying(){
+    playBottomBar.playing = true;
+}
+
+function onPaused(){
+    playBottomBar.playing = false;
+}
+
+function onStopped(){
+    playBottomBar.playing = false;
+}
+
+function onError(error, errorString){
+    playBottomBar.playing = false;
+    print(error, errorString);
 }

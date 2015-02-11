@@ -3,21 +3,33 @@
 
 import os
 from dwidgets import DQuickView
-from PyQt5.QtCore import Qt, pyqtProperty
+from PyQt5.QtCore import Qt, pyqtProperty, QObject, pyqtSlot, pyqtSignal, QThread
 from PyQt5.QtGui import QGuiApplication
 from PyQt5.QtQuick import QQuickView
 
 class MainWindow(DQuickView):
 
+    quickItems = {}
+
     def __init__(self):
         super(MainWindow, self).__init__()
         self.setFlags(Qt.FramelessWindowHint)
-        self.rootContext().setContextProperty('MainWindow', self)
+        self.initContext()
         self.initConnect()
+
+    def initContext(self):
+        self.rootContext = self.rootContext()
+        self.rootContext.setContextProperty('MainWindow', self)
+
+        # self.rootContext.setContextProperty('PyUtil', self.worker)
 
     def initConnect(self):
         self.statusChanged.connect(self.trackStatus)
         self.engine().quit.connect(QGuiApplication.instance().quit)
+
+    def intQMLConnect(self):
+        self.rootObj = self.rootObject()
+        self.getAllItems(self.rootObj)
 
     def trackStatus(self, status):
         if status == QQuickView.Null:
@@ -25,9 +37,7 @@ class MainWindow(DQuickView):
         elif status == QQuickView.Ready:
             print('This QQuickView has loaded %s and created the QML component.' % self.source())
             self.moveCenter()
-            self.rootobj = self.rootObject()
-            self.quickItems = {}
-            self.getAllItems(self.rootobj)
+            self.intQMLConnect()
         elif status == QQuickView.Loading:
             print('This QQuickView is loading network data.')
         elif status == QQuickView.Error:
@@ -36,10 +46,9 @@ class MainWindow(DQuickView):
 
     def getAllItems(self, obj):
         for item in obj.childItems():
-            if item and item.objectName():
+            if item.objectName():
                 self.quickItems.update({item.objectName(): item})
-                if item.childItems():
-                    self.getAllItems(item)
+            self.getAllItems(item)
 
     # def keyPressEvent(self, event):
     #     if(event.key() == Qt.Key_F1):

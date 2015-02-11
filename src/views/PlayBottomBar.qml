@@ -16,6 +16,8 @@ Item {
     property real playerDuration: 0
     property real playerPosition: 0
 
+    property bool playing: false
+
     property color color: "white"
     property color styleColor: "#0AB9E2"
 
@@ -28,6 +30,8 @@ Item {
     // property color spacingColor: "#2A3B4D"
     property color spacingColor: "transparent"
 
+
+    signal played(bool flag)
 
     Column {
 
@@ -208,20 +212,17 @@ Item {
 
                     DIconButton{
                         id: playButton
-                        property bool playing: false
-
-                        signal played(bool flag)
 
                         width: playControl.iconsWidth
                         height: playControl.iconsHeight
-                        normal_image: playButton.playing ?  '../skin/icons/dark/appbar.control.pause.png' : '../skin/icons/dark/appbar.control.play.png'
-                        hover_image: playButton.playing ? '../skin/icons/dark/appbar.control.pause.png': '../skin/icons/dark/appbar.control.play.png'
-                        pressed_image: playButton.playing ? '../skin/icons/dark/appbar.control.pause.png' : '../skin/icons/light/appbar.control.play.png'
-                        disabled_image: playButton.playing ? '../skin/icons/dark/appbar.control.pause.png' : '../skin/icons/dark/appbar.control.play.png'
+                        normal_image: playBottomBar.playing ?  '../skin/icons/dark/appbar.control.pause.png' : '../skin/icons/dark/appbar.control.play.png'
+                        hover_image: playBottomBar.playing ? '../skin/icons/dark/appbar.control.pause.png': '../skin/icons/dark/appbar.control.play.png'
+                        pressed_image: playBottomBar.playing ? '../skin/icons/dark/appbar.control.pause.png' : '../skin/icons/light/appbar.control.play.png'
+                        disabled_image: playBottomBar.playing ? '../skin/icons/dark/appbar.control.pause.png' : '../skin/icons/dark/appbar.control.play.png'
 
                         onClicked:{
-                            playButton.playing = !playButton.playing;
-                            playButton.played(playButton.playing);
+                            playBottomBar.playing = !playBottomBar.playing;
+                            playBottomBar.played(playBottomBar.playing);
                         }
                     }
 

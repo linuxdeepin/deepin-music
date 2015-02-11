@@ -15,7 +15,7 @@ class DQuickView(QtQuick.QQuickView):
 
     def __init__(self):
         super(DQuickView, self).__init__()
-        self.setResizeMode(QtQuick.QQuickView.SizeRootObjectToView)
+        self.setResizeMode(QtQuick.QQuickView.SizeViewToRootObject)
         self.engine().addImportPath(os.sep.join([os.getcwd(), 'qml']))
         self.initWebengine()
 
