@@ -2,34 +2,42 @@
 # -*- coding: utf-8 -*-
 
 import os
-from dwidgets import DQuickView
+
 from PyQt5.QtCore import Qt, pyqtProperty, QObject, pyqtSlot, pyqtSignal, QThread
 from PyQt5.QtGui import QGuiApplication
 from PyQt5.QtQuick import QQuickView
+from dwidgets import DQuickView
+from controllers import registerContext, contexts
+
 
 class MainWindow(DQuickView):
 
     quickItems = {}
 
+    __contextName__ = 'MainWindow'
+
+    @registerContext
     def __init__(self):
         super(MainWindow, self).__init__()
         self.setFlags(Qt.FramelessWindowHint)
-        self.initContext()
         self.initConnect()
 
-    def initContext(self):
-        self.rootContext = self.rootContext()
-        self.rootContext.setContextProperty('MainWindow', self)
+    def setContext(self, name, obj):
+        rootContext = self.rootContext()
+        if rootContext.contextProperty(name) is None:
+            rootContext.setContextProperty(name, obj)
 
-        # self.rootContext.setContextProperty('PyUtil', self.worker)
+    def setContexts(self, cons=None):
+        assert isinstance(cons, dict)
+        for key in cons:
+            self.setContext(key, cons[key])
 
     def initConnect(self):
         self.statusChanged.connect(self.trackStatus)
         self.engine().quit.connect(QGuiApplication.instance().quit)
 
     def intQMLConnect(self):
-        self.rootObj = self.rootObject()
-        self.getAllItems(self.rootObj)
+        self.getAllItems(self.rootObject())
 
     def trackStatus(self, status):
         if status == QQuickView.Null:
@@ -38,6 +46,8 @@ class MainWindow(DQuickView):
             print('This QQuickView has loaded %s and created the QML component.' % self.source())
             self.moveCenter()
             self.intQMLConnect()
+            self.quickItems['MainMusic'].initConnect()
+
         elif status == QQuickView.Loading:
             print('This QQuickView is loading network data.')
         elif status == QQuickView.Error:

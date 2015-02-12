@@ -68,6 +68,7 @@ class QSingleApplication(QGuiApplication):
         self._activationWindow.setWindowState(
             self._activationWindow.windowState() & ~Qt.WindowMinimized)
         self._activationWindow.raise_()
+        self._activationWindow.requestActivate()
 
     def sendMessage(self, msg,  msecs=5000):
         if not self._outStream:

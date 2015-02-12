@@ -15,6 +15,18 @@ Rectangle {
     color: "lightgray"
     focus: true
 
+    function initConnect(){
+
+        webMusic360Page.playMusicByID.connect(Web360ApiWorker.getMusicURLByID)
+        Web360ApiWorker.playUrl.connect(playMusic)
+
+        playBottomBar.played.connect(playToggle)
+        player.onPlaying.connect(onPlaying)
+        player.onPaused.connect(onPaused)
+        player.onStopped.connect(onStopped)
+        player.onError.connect(onError)
+    }
+
     function playMusic(url){
         player.stop()
         player.source = url;
@@ -165,20 +177,6 @@ Rectangle {
                 if (player.mediaObject)
                     player.mediaObject.notifyInterval = 50;
             }
-        }
-        // <<M2 
-        
-        Component.onCompleted: {
-            // player.play();
-            // if (player.mediaObject)
-            //     player.mediaObject.notifyInterval = 50;
-
-            playBottomBar.played.connect(playToggle)
-
-            player.onPlaying.connect(onPlaying)
-            player.onPaused.connect(onPaused)
-            player.onStopped.connect(onStopped)
-            player.onError.connect(onError)
         }
     }
 
