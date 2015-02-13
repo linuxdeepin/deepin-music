@@ -53,4 +53,4 @@ docs/_build/
 # PyBuilder
 target/
 
-src/views/html/musicmanager_*.html
+src/views/html/musicmanage_*.html
