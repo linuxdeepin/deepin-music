@@ -22,12 +22,6 @@ if __name__ == '__main__':
     deepinPlayer = DeepinPlayer()
     deepinPlayer.show()
 
-    # workThread = QThread()
-    # worker = PyUtil(mainWindow.quickItems)
-    # mainWindow.setContext('PyUtil', worker)
-    # worker.moveToThread(workThread)
-    # workThread.start()
-
     exitCode = app.exec_()
     
     sys.exit(exitCode)

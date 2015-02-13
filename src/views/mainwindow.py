@@ -4,7 +4,7 @@
 import os
 
 from PyQt5.QtCore import (
-    Qt, 
+    Qt, QRect,
     pyqtProperty, QObject, 
     pyqtSlot, pyqtSignal, 
     QThread)
@@ -66,11 +66,29 @@ class MainWindow(DQuickView):
                 self.quickItems.update({item.objectName(): item})
             self.getAllItems(item)
 
-    # def keyPressEvent(self, event):
-    #     if(event.key() == Qt.Key_F1):
-    #         # self.rootobj.setFocus(True)
-    #         pass
-    #     elif (event.key() == Qt.Key_F2):
-    #         # self.rootobj.setFocus(True)
-    #         pass
-    #     super(MainWindow, self).keyPressEvent(event)
+    def mousePressEvent(self, event):
+        # 鼠标点击事件
+        if event.button() == Qt.LeftButton:
+            x = self.quickItems['leftSideBar'].width()
+            y = self.quickItems['titleBar'].height()
+            width = x + self.quickItems['webEngineViewPage'].width()
+            height = y + self.quickItems['webEngineViewPage'].height()
+            rect = QRect(x, y , width, height)
+            if not rect.contains(event.pos()):
+                self.dragPosition = event.globalPos() - self.frameGeometry().topLeft()
+                event.accept()
+        super(DQuickView, self).mousePressEvent(event)
+
+    def mouseReleaseEvent(self, event):
+        # 鼠标释放事件
+        if hasattr(self, "dragPosition"):
+            del self.dragPosition
+        super(DQuickView, self).mouseReleaseEvent(event)
+
+    def mouseMoveEvent(self, event):
+        # 鼠标移动事件
+        if hasattr(self, "dragPosition"):
+            if event.buttons() == Qt.LeftButton:
+                self.setPosition(event.globalPos() - self.dragPosition)
+                event.accept()
+        super(DQuickView, self).mouseMoveEvent(event)

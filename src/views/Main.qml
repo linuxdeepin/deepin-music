@@ -3,11 +3,14 @@ import QtQuick.Window 2.1
 import DMusic 1.0
 Item {
     id: root
-   
+    objectName: "root"
+
+    property var dragPostion
+
     width: 960
     height: 660
 
-    objectName: "root"
+    
 
     DSplash{
         id: splash
@@ -35,6 +38,5 @@ Item {
         anchors.fill: parent
         opacity: 0
         focus: true
-        
     }
 }

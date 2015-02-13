@@ -95,53 +95,17 @@ Rectangle {
                     color: "transparent"
                 }
 
-                DStackView {
-                    id: stackViews
-                    objectName: 'stackViews'
+                WebEngineViewPage {
+                    id: webEngineViewPage
+
+                    objectName: 'webEngineViewPage'
+
                     width: mainMusic.width - leftSideBar.width
                     height: mainMusic.height - titleBar.height - playBottomBar.height
-                    current: 0
-                    WebEngineViewPage {
-                        id: webEngineViewPage
 
-                        objectName: 'webEngineViewPage'
-                        anchors.fill: parent
-                        url: "http://10.0.0.153:8093/"
-                        Behavior on opacity {
-                            NumberAnimation { duration: 500 }
-                        }
-                    }
-
-                    MusicManagerPage {
-                        id: musicManagerPage
-                        objectName: 'musicManagerPage'
-                        anchors.fill: parent
-
-                        Behavior on opacity {
-                            NumberAnimation { duration: 500 }
-                        }
-                    }
-
-                    PlayListPage {
-                        id: palyListPage
-
-                        objectName: 'palyListPage'
-                        anchors.fill: parent
-
-                        Behavior on opacity {
-                            NumberAnimation { duration: 500 }
-                        }
-                    }
-
-                    DownloadPage {
-                        id: downloadPage
-
-                        objectName: 'downloadPage'
-                        anchors.fill: parent
-
-                        Behavior on opacity {
-                            NumberAnimation { duration: 500 }
-                        }
+                    url: "http://10.0.0.153:8093/"
+                    Behavior on opacity {
+                        NumberAnimation { duration: 500 }
                     }
                 }
             }
@@ -193,8 +157,20 @@ Rectangle {
     Connections {
         target: leftSideBar
         onSwicthViewByID: {
-            var index =  mainMusic.views.indexOf(viewID);
-            stackViews.setCurrentIndex(index);
+            if (viewID == 'WebMusic360Page'){
+                webEngineViewPage.url = "http://10.0.0.153:8093/";
+            }
+            else if (viewID == 'MusicManagerPage'){
+                webEngineViewPage.url = MusicManageWorker.artistUrl
+            }
+            else if (viewID == 'PlayListPage'){
+                webEngineViewPage.url = "https://www.youtube.com";
+            }
+            else if (viewID == 'DownloadPage'){
+                webEngineViewPage.url = "https://play.google.com/store?hl=zh-CN&tab=w8";
+            }else{
+                console.log('--------------No Page--------------');
+            }
         }
     }
 }
