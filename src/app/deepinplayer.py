@@ -4,7 +4,7 @@
 from PyQt5.QtCore import QCoreApplication, QObject, QUrl, QThread
 from views import MainWindow
 
-from controllers import contexts, Web360ApiWorker
+from controllers import contexts, Web360ApiWorker, MusicManageWorker
 
 import config
 
@@ -37,6 +37,7 @@ class DeepinPlayer(QObject):
 
     def initControllers(self):
         self.web360ApiWorker = Web360ApiWorker()
+        self.musicManageWorker = MusicManageWorker()
 
     def initQMLContext(self):
         self.mainWindow.setContexts(contexts)
@@ -44,7 +45,3 @@ class DeepinPlayer(QObject):
     def show(self):
         self.mainWindow.setSource(QUrl('views/Main.qml'))
         self.mainWindow.show()
-
-
-        self.mainWindow.quickItems['webMusic360Page'].playMusicByID.connect(self.web360ApiWorker.getMusicURLByID)
-        self.web360ApiWorker.playUrl.connect(self.mainWindow.quickItems['MainMusic'].playMusic)

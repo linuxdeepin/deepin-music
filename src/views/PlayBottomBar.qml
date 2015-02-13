@@ -21,14 +21,14 @@ Item {
     property color color: "white"
     property color styleColor: "#0AB9E2"
 
-    // property color boderColor: 'white'
-    property color boderColor: "transparent"
+    property color boderColor: 'white'
+    // property color boderColor: "transparent"
     property int boderWidth: 2
 
     property int musicinfoWidth: 350
 
-    // property color spacingColor: "#2A3B4D"
-    property color spacingColor: "transparent"
+    property color spacingColor: "#2A3B4D"
+    // property color spacingColor: "transparent"
 
 
     signal played(bool flag)

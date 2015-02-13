@@ -3,8 +3,6 @@ import QtWebEngine 1.0
 
 WebEngineView {
     id: webEngineView
-    property var viewID: 'WebMusic360Page'
-    url: "http://10.0.0.153:8093/"
     focus: false
     
     signal playMusicByID(int musicID)

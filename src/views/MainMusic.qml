@@ -17,7 +17,7 @@ Rectangle {
 
     function initConnect(){
 
-        webMusic360Page.playMusicByID.connect(Web360ApiWorker.getMusicURLByID)
+        webEngineViewPage.playMusicByID.connect(Web360ApiWorker.getMusicURLByID)
         Web360ApiWorker.playUrl.connect(playMusic)
 
         playBottomBar.played.connect(playToggle)
@@ -101,12 +101,12 @@ Rectangle {
                     width: mainMusic.width - leftSideBar.width
                     height: mainMusic.height - titleBar.height - playBottomBar.height
                     current: 0
-                    WebMusic360Page {
-                        id: webMusic360Page
+                    WebEngineViewPage {
+                        id: webEngineViewPage
 
-                        objectName: 'webMusic360Page'
+                        objectName: 'webEngineViewPage'
                         anchors.fill: parent
-
+                        url: "http://10.0.0.153:8093/"
                         Behavior on opacity {
                             NumberAnimation { duration: 500 }
                         }
@@ -114,7 +114,6 @@ Rectangle {
 
                     MusicManagerPage {
                         id: musicManagerPage
-
                         objectName: 'musicManagerPage'
                         anchors.fill: parent
 

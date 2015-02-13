@@ -2,7 +2,6 @@ import QtQuick 2.0
 
 Rectangle {
 	id: root
-	property var viewID: 'MusciManagerPage'
 
     Text{
         anchors.centerIn: root

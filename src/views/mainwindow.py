@@ -3,11 +3,16 @@
 
 import os
 
-from PyQt5.QtCore import Qt, pyqtProperty, QObject, pyqtSlot, pyqtSignal, QThread
-from PyQt5.QtGui import QGuiApplication
+from PyQt5.QtCore import (
+    Qt, 
+    pyqtProperty, QObject, 
+    pyqtSlot, pyqtSignal, 
+    QThread)
+from PyQt5.QtGui import QGuiApplication, QIcon
 from PyQt5.QtQuick import QQuickView
 from dwidgets import DQuickView
 from controllers import registerContext, contexts
+import config
 
 
 class MainWindow(DQuickView):
@@ -20,6 +25,7 @@ class MainWindow(DQuickView):
     def __init__(self):
         super(MainWindow, self).__init__()
         self.setFlags(Qt.FramelessWindowHint)
+        self.setIcon(QIcon(config.windowIcon))
         self.initConnect()
 
     def setContext(self, name, obj):
