@@ -5,8 +5,6 @@ Item {
     id: root
     objectName: "root"
 
-    property var dragPostion
-
     width: 960
     height: 660
 

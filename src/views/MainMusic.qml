@@ -133,14 +133,6 @@ Rectangle {
         // VideoOutput {    
         //     source: player
         // }
-
-        Connections {
-            target: player
-            onMediaObjectChanged: {
-                if (player.mediaObject)
-                    player.mediaObject.notifyInterval = 50;
-            }
-        }
     }
 
 
@@ -155,6 +147,14 @@ Rectangle {
     }
 
     Connections {
+        target: player
+        onMediaObjectChanged: {
+            if (player.mediaObject)
+                player.mediaObject.notifyInterval = 50;
+        }
+    }
+
+    Connections {
         target: leftSideBar
         onSwicthViewByID: {
             if (viewID == 'WebMusic360Page'){
@@ -164,10 +164,10 @@ Rectangle {
                 webEngineViewPage.url = MusicManageWorker.artistUrl
             }
             else if (viewID == 'PlayListPage'){
-                webEngineViewPage.url = "https://www.youtube.com";
+                webEngineViewPage.url = "https://www.baidu.com";
             }
             else if (viewID == 'DownloadPage'){
-                webEngineViewPage.url = "https://play.google.com/store?hl=zh-CN&tab=w8";
+                webEngineViewPage.url = "http://www.oschina.net/";
             }else{
                 console.log('--------------No Page--------------');
             }

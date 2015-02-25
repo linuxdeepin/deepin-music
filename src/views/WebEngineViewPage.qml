@@ -13,9 +13,14 @@ WebEngineView {
 
     onJavaScriptConsoleMessage:{
         if(level === 2){
-            var rpc = JSON.parse(message)
-            if(rpc.hasOwnProperty('rpcId') && rpc.hasOwnProperty('rpcType')){
-                webEngineView.playMusicByID(rpc.rpcId)
+            var rpc;
+            try{
+                rpc = JSON.parse(message)
+                if(rpc.hasOwnProperty('rpcId') && rpc.hasOwnProperty('rpcType')){
+                    webEngineView.playMusicByID(rpc.rpcId)
+                }
+            }catch(error){
+                console.log(error)
             }
         }
     }
