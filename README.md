@@ -109,7 +109,8 @@ Virtaulenvwrapper是virtualenv的扩展包，用于更方便管理虚拟环境�
 	sudo apt-get build-dep deepin-qml-widgets
 
 安装：
-		git clone git@gitcafe.com:Deepin/deepin-qml-widgets.git
+	
+	git clone git@gitcafe.com:Deepin/deepin-qml-widgets.git
 
 
 ###5. 安装WebEngineWrapper
