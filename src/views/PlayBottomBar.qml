@@ -300,7 +300,6 @@ Item {
                         pressed_image: '../skin/icons/light/appbar.list.png'
                         disabled_image: '../skin/icons/dark/appbar.list.png'
                     }
-
                 }
             }
         }

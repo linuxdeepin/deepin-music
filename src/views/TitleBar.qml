@@ -1,4 +1,6 @@
 import QtQuick 2.0
+import QtQuick.Controls 1.3
+import QtQuick.Controls.Styles 1.3
 import DMusic 1.0
 
 
@@ -14,6 +16,7 @@ Rectangle {
 
 
     signal fulltoSimple()
+    signal showMinimized()
     signal menuShowed()
 
     Row {
@@ -63,7 +66,7 @@ Rectangle {
             disabled_image: '../skin/icons/light/appbar.minus.png'
 
             onClicked:{
-                MainWindow.showMinimized()
+                root.showMinimized()
             }
         }
 

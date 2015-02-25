@@ -52,7 +52,6 @@ class MainWindow(DQuickView):
             print('This QQuickView has loaded %s and created the QML component.' % self.source())
             self.moveCenter()
             self.intQMLConnect()
-            self.quickItems['MainMusic'].initConnect()
 
         elif status == QQuickView.Loading:
             print('This QQuickView is loading network data.')

@@ -5,6 +5,7 @@ from PyQt5.QtCore import QCoreApplication, QObject, QUrl, QThread
 from views import MainWindow
 
 from controllers import contexts, Web360ApiWorker, MusicManageWorker
+from controllers import MenuWorker
 
 import config
 
@@ -38,6 +39,7 @@ class DeepinPlayer(QObject):
     def initControllers(self):
         self.web360ApiWorker = Web360ApiWorker()
         self.musicManageWorker = MusicManageWorker()
+        self.menuWorker = MenuWorker()
 
     def initQMLContext(self):
         self.mainWindow.setContexts(contexts)

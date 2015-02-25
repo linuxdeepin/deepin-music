@@ -1,6 +1,6 @@
 import QtQuick 2.0
 import QtQuick.Window 2.2
-import QtQuick.Controls 1.2
+import QtQuick.Controls 1.3
 import QtWebEngine 1.0
 import QtMultimedia 5.0
 import DMusic 1.0
@@ -135,6 +135,10 @@ Rectangle {
         // }
     }
 
+    Component.onCompleted: {
+        initConnect();
+    }
+
 
     Keys.onPressed: {
         if (event.key == Qt.Key_F1) {
@@ -152,6 +156,11 @@ Rectangle {
             if (player.mediaObject)
                 player.mediaObject.notifyInterval = 50;
         }
+    }
+    Connections {
+        target: titleBar
+        onShowMinimized: MainWindow.showMinimized()
+        onMenuShowed: MenuWorker.showSettingMenu()
     }
 
     Connections {
