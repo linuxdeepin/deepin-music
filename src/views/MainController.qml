@@ -23,14 +23,17 @@ Item {
     function playMusic(url){
         player.stop()
         player.source = url;
+        console.log(player.metaData.hasOwnProperty('albumArtist'), '---------', player.metaData.albumArtist)
         playToggle(true)
     }
 
     function playToggle(playing){
         if (playing){
             player.play()
+            
             if (player.mediaObject)
                player.mediaObject.notifyInterval = 50;
+               console.log(player.metaData.hasOwnProperty('albumArtist'), '++++++++++', player.metaData.albumArtist)
         }else{
             player.pause()
         }
