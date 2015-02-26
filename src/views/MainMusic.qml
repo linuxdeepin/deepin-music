@@ -4,7 +4,7 @@ import QtQuick.Controls 1.3
 import QtWebEngine 1.0
 import QtMultimedia 5.0
 import DMusic 1.0
-// import "Utils.js" as Utils
+
 
 Rectangle {
 
@@ -71,9 +71,6 @@ Rectangle {
             height: 100
 
             color: "#282F3F"
-
-            Component.onCompleted: {
-            }
         }
 
         MediaPlayer {
