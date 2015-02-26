@@ -1,15 +1,13 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 from PyQt5 import QtCore
-# QtCore.Signal = QtCore.pyqtSignal
-# QtCore.Property = QtCore.pyqtProperty
-# QtCore.Slot = QtCore.pyqtSlot
+
 
 class FieldExpection(Exception):
     pass
 
 
-class ValidForMatExpection(Exception):
+class ValidFormatExpection(Exception):
     pass
 
 
@@ -33,22 +31,22 @@ class ModelMetaclass(type):
 
         for field in Fields:
             if len(field) < 2:
-                raise FieldExpection("Each Field length must be large than 1")
+                raise FieldExpection("Each Field tuple length must be large than 1")
             elif len(field) == 2:
                 newfield = (field[0], field[1], field[1]())
             elif len(field) == 3:
                 newfield = (field[0], field[1], field[2])
             else:
                 raise FieldExpection(
-                    "Each Field length must be smaller than 4")
+                    "Each Field tuple length must be smaller than 4")
             formatFields.append(newfield)
 
-        Fields = formatFields
+        Fields = tuple(formatFields)
 
-        class Object(QtCore.QObject):
+        class DObject(QtCore.QObject):
 
             def __init__(self, *args, **kwargs):
-                super(Object, self).__init__()
+                super(DObject, self).__init__()
                 for key, Type, default in Fields:
                     self.__dict__['_' + key] = kwargs.get(key, default)
 
@@ -81,7 +79,7 @@ class ModelMetaclass(type):
                 return ret
 
             for key, Type, default in Fields:
-                nfy = locals()[key + "_changed"] = QtCore.pyqtSignal(Type)
+                locals()[key + "_changed"] = QtCore.pyqtSignal(Type)
 
                 def _get(key):
                     def f(self):
@@ -98,7 +96,6 @@ class ModelMetaclass(type):
                         else:
                             def valid_defaut(self, v):
                                 return True
-                            locals()['valid_defaut'] = valid_defaut
                             method = valid_defaut
                         valid_return = method(self, value)
 
@@ -118,28 +115,28 @@ class ModelMetaclass(type):
                                     error, validFlag = (
                                         "def valid_%s function error." % key,
                                         False)
-                                    raise ValidForMatExpection(
+                                    raise ValidFormatExpection(
                                         "def valid_%s function error." % key)
                             else:
                                 error, validFlag = (
                                     "def valid_%s function error." % key,
                                     False)
-                                raise ValidForMatExpection(
+                                raise ValidFormatExpection(
                                     "def valid_%s function error." % key)
 
                         if validFlag:
                             self.__dict__['_' + key] = value
-                            self.__dict__[key + "_changed"].emit(value)
+                            getattr(self, key + "_changed").emit(value)
                         else:
                             self.valid_message[key] = error
                     return f
 
-                set = locals()['_set_' + key] = _set(key)
-                get = locals()['_get_' + key] = _get(key)
+                set = _set(key)
+                get = _get(key)
 
-                locals()[key] = QtCore.pyqtProperty(Type, get, set, notify=nfy)
+                locals()[key] = QtCore.pyqtProperty(Type, get, set)
 
-        return Object
+        return DObject
 
 
 class Object_Dict(dict):
@@ -190,6 +187,7 @@ def test(func):
 @test
 def test_Json():
     car = Car(model="1111")
+    print Car.model, car.model
     obj = {
         'model': "8888",
         'brand': "+++"
@@ -198,6 +196,7 @@ def test_Json():
     print(car.valid_message)
     print(car.getJson())
     print(car)
+
 
 
 @test
@@ -215,7 +214,9 @@ def test_slot():
     car.model = "111"
     print(car)
 
+
 if __name__ == '__main__':
     test_Json()
     # test_attr()
-    # test_slot()
+    test_slot()
+    pass
