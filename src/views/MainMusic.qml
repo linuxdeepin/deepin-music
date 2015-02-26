@@ -4,62 +4,14 @@ import QtQuick.Controls 1.3
 import QtWebEngine 1.0
 import QtMultimedia 5.0
 import DMusic 1.0
-import "Utils.js" as Utils
+// import "Utils.js" as Utils
 
 Rectangle {
 
     id: mainMusic
-    
-    property var views: ['WebMusic360Page', 'MusicManagerPage', 'PlayListPage', 'DownloadPage']
 
     color: "lightgray"
     focus: true
-
-    function initConnect(){
-
-        webEngineViewPage.playMusicByID.connect(Web360ApiWorker.getMusicURLByID)
-        Web360ApiWorker.playUrl.connect(playMusic)
-
-        playBottomBar.played.connect(playToggle)
-        player.onPlaying.connect(onPlaying)
-        player.onPaused.connect(onPaused)
-        player.onStopped.connect(onStopped)
-        player.onError.connect(onError)
-    }
-
-    function playMusic(url){
-        player.stop()
-        player.source = url;
-        Utils.playToggle(true)
-    }
-
-    function playToggle(playing){
-        if (playing){
-            player.play()
-            if (player.mediaObject)
-               player.mediaObject.notifyInterval = 50;
-        }else{
-            player.pause()
-        }
-    }
-
-
-    function onPlaying(){
-        playBottomBar.playing = true;
-    }
-
-    function onPaused(){
-        playBottomBar.playing = false;
-    }
-
-    function onStopped(){
-        playBottomBar.playing = false;
-    }
-
-    function onError(error, errorString){
-        playBottomBar.playing = false;
-        print(error, errorString);
-    }
 
     BorderImage {
         id: bgIamge
@@ -129,31 +81,25 @@ Rectangle {
             volume: 1
             source: ''
         }
-
-        // VideoOutput {    
-        //     source: player
-        // }
-    }
-
-    Component.onCompleted: {
-        initConnect();
-    }
-
-
-    Keys.onPressed: {
-        if (event.key == Qt.Key_F1) {
-            Utils.resetSkin();
-            // event.accepted = true;
-        }else if (event.key == Qt.Key_F2) {
-            Utils.setSkinByImage();
-            // event.accepted = true;
-        }
     }
 
     MainController{
+        id: mainController
+        bgIamge: bgIamge
         titleBar: titleBar
         leftSideBar: leftSideBar
         webEngineViewPage: webEngineViewPage
+        playBottomBar: playBottomBar
         player: player
+    }
+
+    Keys.onPressed: {
+        if (event.key == Qt.Key_F1) {
+            mainController.resetSkin();
+            // event.accepted = true;
+        }else if (event.key == Qt.Key_F2) {
+            mainController.setSkinByImage();
+            // event.accepted = true;
+        }
     }
 }
