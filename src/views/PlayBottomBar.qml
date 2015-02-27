@@ -40,38 +40,12 @@ Item {
 
         spacing: 0
 
-        Rectangle {
+        SimpleSlider {
             id: slider
-            
-            property var maxValue: slider.width
-            property var value: 0
 
+            progressBarColor: '#0AB9E2'
             width: playBottomBar.width
             height: 6
-            
-            color: "Gray"
-
-            function updateSlider(rate) {
-                progressBar.width = slider.width * rate
-            }
-
-            signal sliderRateChanged(double rate)
-            
-            Rectangle {
-                id: progressBar
-                anchors.left: slider.left
-                anchors.top: slider.top
-                anchors.bottom: slider.bottom
-                width: 0
-                color: playBottomBar.styleColor
-            }
-
-            MouseArea {
-                anchors.fill: slider
-                onClicked: {
-                    slider.sliderRateChanged(mouse.x / slider.width);
-                }
-            }
         }
         Row {
             id: bottomBar

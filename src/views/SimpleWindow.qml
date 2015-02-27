@@ -29,21 +29,32 @@ Rectangle {
         	id: mainPage
             objectName: 'mainPage'
             width: simpleWindow.width
-            height: simpleWindow.height - titleBar.height - bottomBar.height
+            height: simpleWindow.height - titleBar.height - playBottomBar.height
             color: "gray"
         }
 
         Rectangle{
-        	id: bottomBar
-            objectName: 'bottomBar'
+        	id: playBottomBar
+            objectName: 'playBottomBar'
+
+            property var slider: slider
+
             width: simpleWindow.width
             height: 200
             color: "green"
+
+            SimpleSlider {
+                id: slider
+                progressBarColor: '#0AB9E2'
+                width: playBottomBar.width
+                height: 6
+            }
         }
     }
 
     SimpleController{
     	bgImage: bgImage
     	titleBar: titleBar
+        playBottomBar: playBottomBar
     }
 }

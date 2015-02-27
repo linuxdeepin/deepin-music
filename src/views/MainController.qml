@@ -6,7 +6,6 @@ Item {
 	property var leftSideBar
 	property var webEngineViewPage
     property var playBottomBar
-	property var player
 
     function initConnect(){
 
@@ -17,17 +16,11 @@ Item {
 
         MediaPlayer.positionChanged.connect(updateSlider)
         MediaPlayer.stateChanged.connect(updatePlayBar)
-        MediaPlayer.error.connect(onError)
-        // player.onPlaying.connect(onPlaying)
-        // player.onPaused.connect(onPaused)
-        // player.onStopped.connect(onStopped)
-        // player.onError.connect(onError)
     }
 
     function playMusic(url){
         player.stop()
         player.source = url;
-        console.log(player.metaData.hasOwnProperty('size'), '---------', player.metaData.size)
         playToggle(true)
     }
 
@@ -70,11 +63,6 @@ Item {
     function onStopped(){
         playBottomBar.playing = false;
         console.log('Stopped')
-    }
-
-    function onError(error){
-        playBottomBar.playing = false;
-        print(error, MediaPlayer.errorString);
     }
 
     function resetSkin() {
