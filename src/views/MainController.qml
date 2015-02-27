@@ -17,6 +17,7 @@ Item {
 
         MediaPlayer.positionChanged.connect(updateSlider)
         MediaPlayer.stateChanged.connect(updatePlayBar)
+        MediaPlayer.error.connect(onError)
         // player.onPlaying.connect(onPlaying)
         // player.onPaused.connect(onPaused)
         // player.onStopped.connect(onStopped)
@@ -34,7 +35,7 @@ Item {
         if (playing){
             MediaPlayer.play()
             if (MediaPlayer.mediaObject){
-               MediaPlayer.d_notifyInterval = 50;
+               MediaPlayer.setNotifyInterval(50);
             }
         }else{
             MediaPlayer.pause()
@@ -71,10 +72,10 @@ Item {
         console.log('Stopped')
     }
 
-    // function onError(error, errorString){
-    //     playBottomBar.playing = false;
-    //     print(error, errorString);
-    // }
+    function onError(error){
+        playBottomBar.playing = false;
+        print(error, MediaPlayer.errorString);
+    }
 
     function resetSkin() {
         playBottomBar.color = "#282F3F"
@@ -100,7 +101,6 @@ Item {
     Connections {
         target: playBottomBar.slider
         onSliderRateChanged:{
-            print(MediaPlayer.seekable)
             if (MediaPlayer.seekable){
                 MediaPlayer.setPosition(MediaPlayer.duration * rate)
             }

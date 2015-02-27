@@ -27,16 +27,20 @@ class MediaPlayer(QMediaPlayer):
         return self.media()
 
     @pyqtProperty(int)
-    def d_notifyInterval(self):
-        return  self.notifyInterval()
+    def volume(self):
+        return super(MediaPlayer, self).volume()
 
-    @d_notifyInterval.setter
-    def d_notifyInterval(self, interval):
-        self.setNotifyInterval(interval)
+    @pyqtSlot(int)
+    def setVolume(self, value):
+        return super(MediaPlayer, self).setVolume(value)
 
     @pyqtProperty(int)
-    def d_duration(self):
-        return self.duration()
+    def notifyInterval(self):
+        return  super(MediaPlayer, self).notifyInterval()
+
+    @pyqtSlot(int)
+    def setNotifyInterval(self, interval):
+        super(MediaPlayer, self).setNotifyInterval(interval)
 
     @pyqtSlot(int)
     def setPostion(self, pos):
@@ -49,3 +53,7 @@ class MediaPlayer(QMediaPlayer):
     @pyqtProperty(bool)
     def seekable(self):
         return self.isSeekable()
+
+    @pyqtProperty(str)
+    def errorString(self):
+        return super(MediaPlayer, self).errorString()
