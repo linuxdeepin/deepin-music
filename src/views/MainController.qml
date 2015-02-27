@@ -14,10 +14,10 @@ Item {
         Web360ApiWorker.playUrl.connect(playMusic)
 
         playBottomBar.played.connect(playToggle)
-        player.onPlaying.connect(onPlaying)
-        player.onPaused.connect(onPaused)
-        player.onStopped.connect(onStopped)
-        player.onError.connect(onError)
+        // player.onPlaying.connect(onPlaying)
+        // player.onPaused.connect(onPaused)
+        // player.onStopped.connect(onStopped)
+        // player.onError.connect(onError)
     }
 
     function playMusic(url){
@@ -29,32 +29,33 @@ Item {
 
     function playToggle(playing){
         if (playing){
-            player.play()
-            
-            if (player.mediaObject)
-               player.mediaObject.notifyInterval = 50;
+            MediaPlayer.play()
+            if (MediaPlayer.media){
+               MediaPlayer.d_notifyInterval = 50;
+               print(MediaPlayer.seekable)
+            }
         }else{
-            player.pause()
+            MediaPlayer.pause()
         }
     }
 
-    function onPlaying(){
-        playBottomBar.playing = true;
-        console.log(player.metaData.hasOwnProperty('size'), '++++++++++', player.metaData.size)
-    }
+    // function onPlaying(){
+    //     playBottomBar.playing = true;
+    //     console.log(player.metaData.hasOwnProperty('size'), '++++++++++', player.metaData.size)
+    // }
 
-    function onPaused(){
-        playBottomBar.playing = false;
-    }
+    // function onPaused(){
+    //     playBottomBar.playing = false;
+    // }
 
-    function onStopped(){
-        playBottomBar.playing = false;
-    }
+    // function onStopped(){
+    //     playBottomBar.playing = false;
+    // }
 
-    function onError(error, errorString){
-        playBottomBar.playing = false;
-        print(error, errorString);
-    }
+    // function onError(error, errorString){
+    //     playBottomBar.playing = false;
+    //     print(error, errorString);
+    // }
 
     function resetSkin() {
         playBottomBar.color = "#282F3F"
@@ -77,11 +78,22 @@ Item {
         onSimpleWindowShowed: WindowManageWorker.simpleWindowShowed()
     }
 
+    // Connections {
+    //     target: player
+    //     onMediaObjectChanged: {
+    //         if (player.mediaObject)
+    //             player.mediaObject.notifyInterval = 50;
+    //     }
+    // }
+
     Connections {
-        target: player
-        onMediaObjectChanged: {
-            if (player.mediaObject)
-                player.mediaObject.notifyInterval = 50;
+        target: playBottomBar
+
+        onSliderRateChanged:{
+            print(MediaPlayer.seekable)
+            if (MediaPlayer.seekable){
+                MediaPlayer.setPosition(MediaPlayer.duration * rate)
+            }
         }
     }
 

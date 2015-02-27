@@ -66,24 +66,19 @@ Rectangle {
 
         PlayBottomBar {
             id: playBottomBar
-            playerDuration: player.duration
-            playerPosition: player.position
+            // playerDuration: player.duration
+            // playerPosition: player.position
             width: mainWindow.width
             height: 100
 
             color: "#282F3F"
-
-            onSliderRateChanged:{
-                if (player.seekable)
-                    player.seek(playerDuration * rate)
-            }
         }
 
-        MediaPlayer {
-            id: player
-            volume: 1
-            source: ''
-        }
+        // MediaPlayer {
+        //     id: player
+        //     volume: 1
+        //     source: ''
+        // }
     }
 
     MainController{
@@ -93,7 +88,7 @@ Rectangle {
         leftSideBar: leftSideBar
         webEngineViewPage: webEngineViewPage
         playBottomBar: playBottomBar
-        player: player
+        // player: player
     }
 
     Keys.onPressed: {
