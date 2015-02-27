@@ -13,9 +13,10 @@ Rectangle {
     property alias menuButton: menuButton
     property alias minButton: minButton
     property alias closeButton: closeButton
+    property var windowFlag: true
 
-
-    signal fulltoSimple()
+    signal simpleWindowShowed()
+    signal mainWindowShowed()
     signal showMinimized()
     signal menuShowed()
 
@@ -32,13 +33,17 @@ Rectangle {
             id: modeButton
             width: root.iconWidth
             height: root.iconHeight
-            normal_image: '../skin/icons/light/appbar.layout.expand.left.png'
-            hover_image: '../skin/icons/light/appbar.layout.expand.left.png'
-            pressed_image: '../skin/icons/dark/appbar.layout.expand.left.png'
-            disabled_image: '../skin/icons/light/appbar.layout.expand.left.png'
+            normal_image: windowFlag ? '../skin/icons/light/appbar.layout.expand.left.png': '../skin/icons/light/appbar.layout.expand.right.png'
+            hover_image: windowFlag ? '../skin/icons/light/appbar.layout.expand.left.png' : '../skin/icons/light/appbar.layout.expand.right.png'
+            pressed_image: windowFlag ? '../skin/icons/dark/appbar.layout.expand.left.png' : '../skin/icons/light/appbar.layout.expand.right.png'
+            disabled_image: windowFlag ? '../skin/icons/light/appbar.layout.expand.left.png' : '../skin/icons/light/appbar.layout.expand.right.png'
 
             onClicked:{
-                root.fulltoSimple();
+                if (windowFlag){
+                    root.simpleWindowShowed();
+                }else{
+                    root.mainWindowShowed();
+                }
             }
         }
 

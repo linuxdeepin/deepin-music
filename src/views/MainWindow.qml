@@ -8,16 +8,16 @@ import DMusic 1.0
 
 Rectangle {
 
-    id: mainMusic
+    id: mainWindow
 
     color: "lightgray"
     focus: true
 
     BorderImage {
-        id: bgIamge
+        id: bgImage
         objectName: 'bgImage'
 
-        anchors.fill: mainMusic
+        anchors.fill: mainWindow
         horizontalTileMode: BorderImage.Stretch
         verticalTileMode: BorderImage.Stretch
     }
@@ -29,7 +29,7 @@ Rectangle {
                 id: leftSideBar
                 objectName: 'leftSideBar'
                 width: 60
-                height: mainMusic.height - playBottomBar.height
+                height: mainWindow.height - playBottomBar.height
                 iconWidth: leftSideBar.width
                 iconHeight: leftSideBar.width
                 color: "transparent"
@@ -40,11 +40,12 @@ Rectangle {
                 TitleBar {
                     id: titleBar
                     objectName: 'titleBar'
-                    width: mainMusic.width - leftSideBar.width
+                    width: mainWindow.width - leftSideBar.width
                     height: 25
                     iconWidth: titleBar.height
                     iconHeight: titleBar.height
                     color: "transparent"
+                    windowFlag: true
                 }
 
                 WebEngineViewPage {
@@ -52,8 +53,8 @@ Rectangle {
 
                     objectName: 'webEngineViewPage'
 
-                    width: mainMusic.width - leftSideBar.width
-                    height: mainMusic.height - titleBar.height - playBottomBar.height
+                    width: mainWindow.width - leftSideBar.width
+                    height: mainWindow.height - titleBar.height - playBottomBar.height
 
                     url: "http://10.0.0.153:8093/"
                     Behavior on opacity {
@@ -67,10 +68,15 @@ Rectangle {
             id: playBottomBar
             playerDuration: player.duration
             playerPosition: player.position
-            width: mainMusic.width
+            width: mainWindow.width
             height: 100
 
             color: "#282F3F"
+
+            onSliderRateChanged:{
+                if (player.seekable)
+                    player.seek(playerDuration * rate)
+            }
         }
 
         MediaPlayer {
@@ -82,7 +88,7 @@ Rectangle {
 
     MainController{
         id: mainController
-        bgIamge: bgIamge
+        bgImage: bgImage
         titleBar: titleBar
         leftSideBar: leftSideBar
         webEngineViewPage: webEngineViewPage

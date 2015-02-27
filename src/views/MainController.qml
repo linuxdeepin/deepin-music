@@ -1,7 +1,7 @@
 import QtQuick 2.0
 
 Item {
-    property var bgIamge
+    property var bgImage
 	property var titleBar
 	property var leftSideBar
 	property var webEngineViewPage
@@ -23,7 +23,7 @@ Item {
     function playMusic(url){
         player.stop()
         player.source = url;
-        console.log(player.metaData.hasOwnProperty('albumArtist'), '---------', player.metaData.albumArtist)
+        console.log(player.metaData.hasOwnProperty('size'), '---------', player.metaData.size)
         playToggle(true)
     }
 
@@ -33,7 +33,6 @@ Item {
             
             if (player.mediaObject)
                player.mediaObject.notifyInterval = 50;
-               console.log(player.metaData.hasOwnProperty('albumArtist'), '++++++++++', player.metaData.albumArtist)
         }else{
             player.pause()
         }
@@ -41,6 +40,7 @@ Item {
 
     function onPlaying(){
         playBottomBar.playing = true;
+        console.log(player.metaData.hasOwnProperty('size'), '++++++++++', player.metaData.size)
     }
 
     function onPaused(){
@@ -58,7 +58,7 @@ Item {
 
     function resetSkin() {
         playBottomBar.color = "#282F3F"
-        bgIamge.source = ''
+        bgImage.source = ''
     }
 
 
@@ -67,13 +67,14 @@ Item {
             url = "../skin/images/bg2.jpg"
         }
         playBottomBar.color = "transparent"
-        bgIamge.source = url
+        bgImage.source = url
     }
 
 	Connections {
         target: titleBar
         onShowMinimized: MainWindow.showMinimized()
         onMenuShowed: MenuWorker.showSettingMenu()
+        onSimpleWindowShowed: WindowManageWorker.simpleWindowShowed()
     }
 
     Connections {

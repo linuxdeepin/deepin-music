@@ -29,9 +29,9 @@ Item {
         }
     }
 
-    MainMusic{
+    MainWindow{
         id: mainLoader
-        objectName: "MainMusic"
+        objectName: "MainWindow"
 
         anchors.fill: parent
         opacity: 0

@@ -32,6 +32,7 @@ Item {
 
 
     signal played(bool flag)
+    signal sliderRateChanged(double rate)
 
     Column {
 
@@ -42,26 +43,31 @@ Item {
 
         Rectangle {
             id: slider
+            
+            property var maxValue: slider.width
+            property var value: 0
+
             width: playBottomBar.width
             height: 6
             
             color: "Gray"
             
+
             Rectangle {
-                anchors.left: parent.left
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
+                id: progressBar
+                anchors.left: slider.left
+                anchors.top: slider.top
+                anchors.bottom: slider.bottom
                 
-                width: playBottomBar.playerDuration > 0 ? parent.width * playBottomBar.playerPosition/ playBottomBar.playerDuration: 0
+                width: playBottomBar.playerDuration > 0 ? slider.width * playBottomBar.playerPosition/ playBottomBar.playerDuration: 0
                 
                 color: playBottomBar.styleColor
             }
-            
+
             MouseArea {
-                anchors.fill: parent
+                anchors.fill: slider
                 onClicked: {
-                    if (player.seekable)
-                        player.seek(playBottomBar.playerDuration * mouse.x / slider.width)
+                    playBottomBar.sliderRateChanged(mouse.x / slider.width);
                 }
             }
         }
