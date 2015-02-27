@@ -14,6 +14,9 @@ Item {
         Web360ApiWorker.playUrl.connect(playMusic)
 
         playBottomBar.played.connect(playToggle)
+
+        MediaPlayer.positionChanged.connect(updateSlider)
+        MediaPlayer.stateChanged.connect(updatePlayBar)
         // player.onPlaying.connect(onPlaying)
         // player.onPaused.connect(onPaused)
         // player.onStopped.connect(onStopped)
@@ -30,27 +33,43 @@ Item {
     function playToggle(playing){
         if (playing){
             MediaPlayer.play()
-            if (MediaPlayer.media){
+            if (MediaPlayer.mediaObject){
                MediaPlayer.d_notifyInterval = 50;
-               print(MediaPlayer.seekable)
             }
         }else{
             MediaPlayer.pause()
         }
     }
 
-    // function onPlaying(){
-    //     playBottomBar.playing = true;
-    //     console.log(player.metaData.hasOwnProperty('size'), '++++++++++', player.metaData.size)
-    // }
+    function updateSlider(position) {
+        var rate = position / MediaPlayer.duration;
+        playBottomBar.slider.updateSlider(rate);
+    }
 
-    // function onPaused(){
-    //     playBottomBar.playing = false;
-    // }
+    function updatePlayBar(state) {
+        if (state == 0){
+            onStopped();
+        }else if (state == 1){
+            onPlaying();
+        }else if (state == 2){
+            onPaused();
+        }
+    }
 
-    // function onStopped(){
-    //     playBottomBar.playing = false;
-    // }
+    function onPlaying(){
+        playBottomBar.playing = true;
+        console.log('Playing')
+    }
+
+    function onPaused(){
+        playBottomBar.playing = false;
+        console.log('Paused')
+    }
+
+    function onStopped(){
+        playBottomBar.playing = false;
+        console.log('Stopped')
+    }
 
     // function onError(error, errorString){
     //     playBottomBar.playing = false;
@@ -78,17 +97,8 @@ Item {
         onSimpleWindowShowed: WindowManageWorker.simpleWindowShowed()
     }
 
-    // Connections {
-    //     target: player
-    //     onMediaObjectChanged: {
-    //         if (player.mediaObject)
-    //             player.mediaObject.notifyInterval = 50;
-    //     }
-    // }
-
     Connections {
-        target: playBottomBar
-
+        target: playBottomBar.slider
         onSliderRateChanged:{
             print(MediaPlayer.seekable)
             if (MediaPlayer.seekable){

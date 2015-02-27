@@ -32,7 +32,6 @@ Item {
 
 
     signal played(bool flag)
-    signal sliderRateChanged(double rate)
 
     Column {
 
@@ -51,23 +50,26 @@ Item {
             height: 6
             
             color: "Gray"
-            
 
+            function updateSlider(rate) {
+                progressBar.width = slider.width * rate
+            }
+
+            signal sliderRateChanged(double rate)
+            
             Rectangle {
                 id: progressBar
                 anchors.left: slider.left
                 anchors.top: slider.top
                 anchors.bottom: slider.bottom
-                
-                width: playBottomBar.playerDuration > 0 ? slider.width * playBottomBar.playerPosition/ playBottomBar.playerDuration: 0
-                
+                width: 0
                 color: playBottomBar.styleColor
             }
 
             MouseArea {
                 anchors.fill: slider
                 onClicked: {
-                    playBottomBar.sliderRateChanged(mouse.x / slider.width);
+                    slider.sliderRateChanged(mouse.x / slider.width);
                 }
             }
         }

@@ -18,7 +18,7 @@ class MediaPlayer(QMediaPlayer):
     @registerContext
     def __init__(self):
         super(MediaPlayer, self).__init__()
-        self.setMedia(QMediaContent(QUrl('http://sv67.yunpan.cn/Download.outputAudio/1900187504/9704d5814e04cb07a918a95f76965d1564988118/67_67.7b3e40d0d6c36462a661bcd9b1ccaccc/1.0/openapi/14250369993075/10003/c5c83c9661de45ff73310e6986e5e93e/愿得一人心_4197.mp3')))
+        self.setMedia(QMediaContent(QUrl.fromLocalFile(os.sep.join([os.path.dirname(os.getcwd()), 'music', '1.mp3']))))
         self.setVolume(50)
         # self.play()
 
