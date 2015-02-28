@@ -9,11 +9,7 @@ Item {
 
     function initConnect(){
 
-        webEngineViewPage.playMusicByID.connect(Web360ApiWorker.getMusicURLByID)
         Web360ApiWorker.playUrl.connect(playMusic)
-
-        playBottomBar.played.connect(playToggle)
-
         MediaPlayer.positionChanged.connect(updateSlider)
         MediaPlayer.stateChanged.connect(updatePlayBar)
     }
@@ -26,12 +22,9 @@ Item {
 
     function playToggle(playing){
         if (playing){
-            MediaPlayer.play()
-            if (MediaPlayer.mediaObject){
-               MediaPlayer.setNotifyInterval(50);
-            }
+            MediaPlayer.play();
         }else{
-            MediaPlayer.pause()
+            MediaPlayer.pause();
         }
     }
 
@@ -51,17 +44,17 @@ Item {
     }
 
     function onPlaying(){
-        playBottomBar.playing = true;
+        playBottomBar.playControl.playing = true;
         console.log('Playing')
     }
 
     function onPaused(){
-        playBottomBar.playing = false;
+        playBottomBar.playControl.playing = false;
         console.log('Paused')
     }
 
     function onStopped(){
-        playBottomBar.playing = false;
+        playBottomBar.playControl.playing = false;
         console.log('Stopped')
     }
 
@@ -112,6 +105,25 @@ Item {
             }else{
                 console.log('--------------No Page--------------');
             }
+        }
+    }
+
+    Connections {
+        target: webEngineViewPage
+        onPlayMusicByID: Web360ApiWorker.getMusicURLByID(musicID)
+    }
+
+    Connections {
+        target: playBottomBar.playControl
+        onPlayed: playToggle(isPlaying)
+    }
+
+    Connections {
+        target: playBottomBar.playButton
+        onClicked:{
+            var playControl = playBottomBar.playControl
+            playControl.playing = !playControl.playing;
+            playControl.played(playControl.playing);
         }
     }
 

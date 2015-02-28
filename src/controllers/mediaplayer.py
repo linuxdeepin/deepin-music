@@ -6,7 +6,7 @@ import os
 import sys
 from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot, pyqtProperty, QUrl
 from PyQt5.QtGui import QCursor
-from .utils import registerContext
+from .utils import registerContext, contexts
 
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 
@@ -20,11 +20,11 @@ class MediaPlayer(QMediaPlayer):
         super(MediaPlayer, self).__init__()
         self.setMedia(QMediaContent(QUrl.fromLocalFile(os.sep.join([os.path.dirname(os.getcwd()), 'music', '1.mp3']))))
         self.setVolume(50)
-        # self.play()
+        self.setNotifyInterval(50)
 
     @pyqtProperty('QMediaContent')
     def mediaObject(self):
-        return self.media()
+        return super(MediaPlayer, self).media()
 
     @pyqtProperty(int)
     def volume(self):

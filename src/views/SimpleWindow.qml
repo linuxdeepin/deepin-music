@@ -1,9 +1,14 @@
 import QtQuick 2.0
+import DMusic 1.0
 
 Rectangle {
-	id: simpleWindow
+    id: simpleWindow
     width: 300
     height: 660
+
+    focus: true
+
+    color: "#282F3F"
 
     BorderImage {
         id: bgImage
@@ -14,7 +19,7 @@ Rectangle {
         verticalTileMode: BorderImage.Stretch
     }
     Column{
-    	TitleBar {
+        TitleBar {
             id: titleBar
             objectName: 'titleBar'
             width: simpleWindow.width
@@ -26,35 +31,36 @@ Rectangle {
         }
 
         Rectangle{
-        	id: mainPage
+            id: mainPage
             objectName: 'mainPage'
             width: simpleWindow.width
             height: simpleWindow.height - titleBar.height - playBottomBar.height
-            color: "gray"
+            color: "transparent"
         }
 
-        Rectangle{
-        	id: playBottomBar
+        SimplePlayBar{
+            id: playBottomBar
             objectName: 'playBottomBar'
 
-            property var slider: slider
-
             width: simpleWindow.width
-            height: 200
-            color: "green"
-
-            SimpleSlider {
-                id: slider
-                progressBarColor: '#0AB9E2'
-                width: playBottomBar.width
-                height: 6
-            }
+            color: "transparent"
         }
     }
 
     SimpleController{
-    	bgImage: bgImage
-    	titleBar: titleBar
+        id: simpleController
+        bgImage: bgImage
+        titleBar: titleBar
         playBottomBar: playBottomBar
+    }
+
+    Keys.onPressed: {
+        if (event.key == Qt.Key_F1) {
+            simpleController.resetSkin();
+            // event.accepted = true;
+        }else if (event.key == Qt.Key_F2) {
+            simpleController.setSkinByImage();
+            // event.accepted = true;
+        }
     }
 }

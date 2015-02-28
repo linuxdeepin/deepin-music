@@ -8,15 +8,19 @@ Item {
     property var viewID: 'PlayBottomBar'
 
     property var slider: slider
-    property var musicinfo: musicinfo
+    property var musicInfo: musicInfo
     property var playControl: playControl
     property var musicToolbar: musicToolbar
+    property var preButton: preButton
     property var playButton: playButton
+    property var nextButton: nextButton
+    property var volumeButton: volumeButton
+    property var cycleButton: cycleButton
+    property var lrcButton: lrcButton
+    property var playlistButton: playlistButton
 
     property real playerDuration: 0
     property real playerPosition: 0
-
-    property bool playing: false
 
     property color color: "white"
     property color styleColor: "#0AB9E2"
@@ -25,13 +29,10 @@ Item {
     // property color boderColor: "transparent"
     property int boderWidth: 2
 
-    property int musicinfoWidth: 350
+    property int musicInfoWidth: 350
 
     property color spacingColor: "#2A3B4D"
     // property color spacingColor: "transparent"
-
-
-    signal played(bool flag)
 
     Column {
 
@@ -42,6 +43,7 @@ Item {
 
         SimpleSlider {
             id: slider
+            objectName: 'simpleSlider'
 
             progressBarColor: '#0AB9E2'
             width: playBottomBar.width
@@ -55,8 +57,8 @@ Item {
             spacing: 0
 
             Rectangle {
-                id: musicinfo
-                width: playBottomBar.musicinfoWidth
+                id: musicInfo
+                width: playBottomBar.musicInfoWidth
                 height: bottomBar.height
                 border.color: playBottomBar.boderColor
                 border.width: playBottomBar.boderWidth
@@ -64,7 +66,7 @@ Item {
 
                 Row {
 
-                    anchors.centerIn: musicinfo
+                    anchors.centerIn: musicInfo
 
                     Rectangle{
                         width: 30
@@ -95,7 +97,7 @@ Item {
                     Rectangle {
 
                         id: msuicText
-                        width: musicinfo.width - musicImage.width - 40 -  2 * playBottomBar.boderWidth
+                        width: musicInfo.width - musicImage.width - 40 -  2 * playBottomBar.boderWidth
                         height: 60
                         color: playBottomBar.color
 
@@ -134,31 +136,22 @@ Item {
                                     text: '02:06/04:15'
                                 }
 
-                                DIconButton{
+                                DStarButton{
                                     id: musicstar
                                     width: 20
                                     height: 20
-                                    normal_image: '../skin/icons/dark/appbar.heart.outline.png'
-                                    hover_image: '../skin/icons/dark/appbar.heart.outline.png'
-                                    pressed_image: '../skin/icons/light/appbar.heart.outline.png'
-                                    disabled_image: '../skin/icons/dark/appbar.heart.outline.png'
                                 }
 
-                                DIconButton{
+                                DDownloadButton{
                                     id: musicdownload
                                     width: 20
                                     height: 20
-                                    normal_image: '../skin/icons/dark/appbar.arrow.down.png'
-                                    hover_image: '../skin/icons/dark/appbar.arrow.down.png'
-                                    pressed_image: '../skin/icons/light/appbar.arrow.down.png'
-                                    disabled_image: '../skin/icons/dark/appbar.arrow.down.png'
                                 }
 
                                 Rectangle{
                                     width: parent.width - timeText.width - musicstar.width - musicdownload.width 
                                     height: parent.height
                                 }
-
                             }
                         }
                     }
@@ -171,61 +164,45 @@ Item {
 
                 property int iconsWidth: 60 
                 property int iconsHeight: iconsWidth
+                property bool playing: false
 
-                width: playBottomBar.width - musicinfo.width - musicToolbar.width
+                width: playBottomBar.width - musicInfo.width - musicToolbar.width
                 height: bottomBar.height
                 color: playBottomBar.color
 
                 border.color: playBottomBar.boderColor
                 border.width: playBottomBar.boderWidth
 
+                signal played(bool isPlaying)
+
                 Row {
                     anchors.centerIn: parent
 
-                    DIconButton{
-                        
+                    DPreButton{
+                        id: preButton
                         width: playControl.iconsWidth
                         height: playControl.iconsHeight
-                        normal_image: '../skin/icons/dark/appbar.navigate.previous.png'
-                        hover_image: '../skin/icons/dark/appbar.navigate.previous.png'
-                        pressed_image: '../skin/icons/light/appbar.navigate.previous.png'
-                        disabled_image: '../skin/icons/dark/appbar.navigate.previous.png'
                     }
 
-                    DIconButton{
+                    DPlayButton{
                         id: playButton
+                        playing: playControl.playing
 
                         width: playControl.iconsWidth
                         height: playControl.iconsHeight
-                        normal_image: playBottomBar.playing ?  '../skin/icons/dark/appbar.control.pause.png' : '../skin/icons/dark/appbar.control.play.png'
-                        hover_image: playBottomBar.playing ? '../skin/icons/dark/appbar.control.pause.png': '../skin/icons/dark/appbar.control.play.png'
-                        pressed_image: playBottomBar.playing ? '../skin/icons/dark/appbar.control.pause.png' : '../skin/icons/light/appbar.control.play.png'
-                        disabled_image: playBottomBar.playing ? '../skin/icons/dark/appbar.control.pause.png' : '../skin/icons/dark/appbar.control.play.png'
-
-                        onClicked:{
-                            playBottomBar.playing = !playBottomBar.playing;
-                            playBottomBar.played(playBottomBar.playing);
-                        }
                     }
 
-                    DIconButton{
-
+                    DNextButton{
+                        id: nextButton
                         width: playControl.iconsWidth
                         height: playControl.iconsHeight
-                        normal_image: '../skin/icons/dark/appbar.navigate.next.png'
-                        hover_image: '../skin/icons/dark/appbar.navigate.next.png'
-                        pressed_image: '../skin/icons/light/appbar.navigate.next.png'
-                        disabled_image: '../skin/icons/dark/appbar.navigate.next.png'
                     }
-
                 }
-
-                
             }
 
             Rectangle{
                 id: musicToolbar
-                width: musicinfo.width
+                width: musicInfo.width
 
                 property int iconsWidth: 50
                 property int iconsHeight: iconsWidth
@@ -243,44 +220,28 @@ Item {
 
                     spacing: 5
 
-                    DIconButton{
-                        
+                    DVolumeButton {
+                        id: volumeButton
                         width: musicToolbar.iconsWidth
                         height: musicToolbar.iconsHeight
-                        normal_image: '../skin/icons/dark/appbar.sound.3.png'
-                        hover_image: '../skin/icons/dark/appbar.sound.3.png'
-                        pressed_image: '../skin/icons/light/appbar.sound.3.png'
-                        disabled_image: '../skin/icons/dark/appbar.sound.3.png'
                     }
 
-                    DIconButton{
-
+                    DCycleButton {
+                        id: cycleButton
                         width: musicToolbar.iconsWidth
                         height: musicToolbar.iconsHeight
-                        normal_image: '../skin/icons/dark/appbar.refresh.png'
-                        hover_image: '../skin/icons/dark/appbar.refresh.png'
-                        pressed_image: '../skin/icons/light/appbar.refresh.png'
-                        disabled_image: '../skin/icons/dark/appbar.refresh.png'
                     }
 
-                    DIconButton{
-
+                    DLrcButton {
+                        id: lrcButton
                         width: musicToolbar.iconsWidth
                         height: musicToolbar.iconsHeight
-                        normal_image: '../skin/icons/dark/appbar.adobe.lightroom.png'
-                        hover_image: '../skin/icons/dark/appbar.adobe.lightroom.png'
-                        pressed_image: '../skin/icons/light/appbar.adobe.lightroom.png'
-                        disabled_image: '../skin/icons/dark/appbar.adobe.lightroom.png'
                     }
 
-                    DIconButton{
-
+                    DPlaylistButton {
+                        id: playlistButton
                         width: musicToolbar.iconsWidth
                         height: musicToolbar.iconsHeight
-                        normal_image: '../skin/icons/dark/appbar.list.png'
-                        hover_image: '../skin/icons/dark/appbar.list.png'
-                        pressed_image: '../skin/icons/light/appbar.list.png'
-                        disabled_image: '../skin/icons/dark/appbar.list.png'
                     }
                 }
             }

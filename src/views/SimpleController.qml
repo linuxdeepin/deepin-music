@@ -7,7 +7,6 @@ Item {
 
 	
     function initConnect(){
-        // playBottomBar.played.connect(playToggle)
         MediaPlayer.positionChanged.connect(updateSlider)
         MediaPlayer.stateChanged.connect(updatePlayBar)
     }
@@ -21,9 +20,6 @@ Item {
     function playToggle(playing){
         if (playing){
             MediaPlayer.play()
-            if (MediaPlayer.mediaObject){
-               MediaPlayer.setNotifyInterval(50);
-            }
         }else{
             MediaPlayer.pause()
         }
@@ -45,18 +41,33 @@ Item {
     }
 
     function onPlaying(){
-        playBottomBar.playing = true;
+        playBottomBar.playControl.playing = true;
         console.log('Playing')
     }
 
     function onPaused(){
-        playBottomBar.playing = false;
+        playBottomBar.playControl.playing = false;
         console.log('Paused')
     }
 
     function onStopped(){
-        playBottomBar.playing = false;
+        playBottomBar.playControl.playing = false;
         console.log('Stopped')
+    }
+
+
+    function resetSkin() {
+        playBottomBar.color = "#282F3F"
+        bgImage.source = ''
+    }
+
+
+    function setSkinByImage(url) {
+        if (url === undefined){
+            url = "../skin/images/bg2.jpg"
+        }
+        playBottomBar.color = "transparent"
+        bgImage.source = url
     }
 
 	Connections {
@@ -72,6 +83,20 @@ Item {
             if (MediaPlayer.seekable){
                 MediaPlayer.setPosition(MediaPlayer.duration * rate)
             }
+        }
+    }
+
+    Connections {
+        target: playBottomBar.playControl
+        onPlayed: playToggle(isPlaying)
+    }
+
+    Connections {
+        target: playBottomBar.playButton
+        onClicked:{
+            var playControl = playBottomBar.playControl
+            playControl.playing = !playControl.playing;
+            playControl.played(playControl.playing);
         }
     }
 
