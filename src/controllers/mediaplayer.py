@@ -21,10 +21,16 @@ class MediaPlayer(QMediaPlayer):
         self.setMedia(QMediaContent(QUrl.fromLocalFile(os.sep.join([os.path.dirname(os.getcwd()), 'music', '1.mp3']))))
         self.setVolume(50)
         self.setNotifyInterval(50)
+        self.setPlaybackRate(1)
+        self.setMuted(False)
 
     @pyqtProperty('QMediaContent')
     def mediaObject(self):
         return super(MediaPlayer, self).media()
+
+    @pyqtSlot(str)
+    def setMediaUrl(self, url):
+        self.setMedia(QMediaContent(QUrl(url)))
 
     @pyqtProperty(int)
     def volume(self):

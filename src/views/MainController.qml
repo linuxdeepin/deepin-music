@@ -15,8 +15,8 @@ Item {
     }
 
     function playMusic(url){
-        player.stop()
-        player.source = url;
+        MediaPlayer.stop()
+        MediaPlayer.setMediaUrl(url);
         playToggle(true)
     }
 
@@ -101,7 +101,7 @@ Item {
                 webEngineViewPage.url = "https://www.baidu.com";
             }
             else if (viewID == 'DownloadPage'){
-                webEngineViewPage.url = "http://www.oschina.net/";
+                webEngineViewPage.url = "file:///tmp/72.html";
             }else{
                 console.log('--------------No Page--------------');
             }

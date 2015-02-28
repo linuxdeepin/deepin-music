@@ -8,7 +8,7 @@ Rectangle {
     width: parent.width
     height: 6
 
-    color: "Gray"
+    color: "lightgray"
 
     function updateSlider(rate) {
         progressBar.width = slider.width * rate

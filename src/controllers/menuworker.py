@@ -26,6 +26,8 @@ class MenuWorker(QObject):
 
     __contextName__ = 'MenuWorker'
 
+    miniTrigger  = pyqtSignal()
+
     @registerContext
     def __init__(self):
         super(MenuWorker, self).__init__()
