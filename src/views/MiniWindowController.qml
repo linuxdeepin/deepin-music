@@ -1,29 +1,13 @@
 import QtQuick 2.0
 
 Item {
+    property var miniWindow
     property var bgImage
-	property var titleBar
-	property var playBottomBar
-    property var simpleWindow
+    property var playBottomBar
 
-	
     function initConnect(){
         MediaPlayer.positionChanged.connect(updateSlider)
         MediaPlayer.stateChanged.connect(updatePlayBar)
-    }
-
-    function playMusic(url){
-        player.stop()
-        player.source = url;
-        playToggle(true)
-    }
-
-    function playToggle(playing){
-        if (playing){
-            MediaPlayer.play()
-        }else{
-            MediaPlayer.pause()
-        }
     }
 
     function updateSlider(position) {
@@ -56,7 +40,6 @@ Item {
         console.log('Stopped')
     }
 
-
     function resetSkin() {
         playBottomBar.color = "#282F3F"
         bgImage.source = ''
@@ -71,6 +54,7 @@ Item {
         bgImage.source = url
     }
 
+
     Connections {
         target: playBottomBar.slider
         onSliderRateChanged:{
@@ -80,9 +64,10 @@ Item {
         }
     }
 
+    
     Connections {
         target: playBottomBar.playControl
-        onPlayed: playToggle(isPlaying)
+        onPlayed: MediaPlayer.playToggle(isPlaying)
     }
 
     Connections {

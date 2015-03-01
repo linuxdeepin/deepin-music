@@ -11,7 +11,7 @@ Rectangle {
     id: mainWindow
 
     property var titleBar: titleBar
-    property var mainController: mainController
+    property var mainWindowController: mainWindowController
 
     color: "lightgray"
     focus: true
@@ -80,8 +80,8 @@ Rectangle {
     }
 
     MainWindowController{
-        id: mainController
-        rootWindow: mainWindow
+        id: mainWindowController
+        mainWindow: mainWindow
         bgImage: bgImage
         titleBar: titleBar
         leftSideBar: leftSideBar

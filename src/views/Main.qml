@@ -28,20 +28,27 @@ Item {
         visible : false
     }
 
+    MiniWindow {
+        id: miniWindow
+    }
+
     MainController {
         id: mainController
         rootWindow: root
         mainWindow: mainWindow
         simpleWindow: simpleWindow
+        miniWindow: miniWindow
     }
 
     Keys.onPressed: {
         if (event.key == Qt.Key_F1) {
-            mainWindow.mainController.resetSkin();
-            simpleWindow.simpleController.resetSkin();
+            mainWindow.mainWindowController.resetSkin();
+            simpleWindow.simpleWindowController.resetSkin();
+            miniWindow.miniWindowController.resetSkin();
         }else if (event.key == Qt.Key_F2) {
-            mainWindow.mainController.setSkinByImage();
-            simpleWindow.simpleController.setSkinByImage();
+            mainWindow.mainWindowController.setSkinByImage();
+            simpleWindow.simpleWindowController.setSkinByImage();
+            miniWindow.miniWindowController.setSkinByImage();
         }
     }
 }

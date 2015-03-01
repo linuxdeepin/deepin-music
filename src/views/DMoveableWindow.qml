@@ -5,11 +5,11 @@ import DMusic 1.0
 Window {
     id: root
 
-    flags: Qt.FramelessWindowHint | Qt.Dialog
+    flags: Qt.FramelessWindowHint | Qt.Dialog | Qt.WindowStaysOnTopHint
 
     MouseArea {
 
-        anchors.fill: root
+        anchors.fill: parent
 
         property int dragStartX
         property int dragStartY
@@ -28,7 +28,7 @@ Window {
 
             print('DMoveable mouse')
 
-            mouse.accepted = false
+            // mouse.accepted = false
         }
         onPositionChanged: {
             if (pressed) {

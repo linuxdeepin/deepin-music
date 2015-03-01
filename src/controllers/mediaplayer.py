@@ -63,3 +63,10 @@ class MediaPlayer(QMediaPlayer):
     @pyqtProperty(str)
     def errorString(self):
         return super(MediaPlayer, self).errorString()
+
+    @pyqtSlot(bool)
+    def playToggle(self, playing):
+        if playing:
+            self.play();
+        else:
+            self.pause()

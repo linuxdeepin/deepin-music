@@ -34,6 +34,8 @@ class MenuWorker(QObject):
 
     def _menu_item_invoked(self, _id, _checked):
         print(_id, _checked, '+++++++++++++')
+        if _id == "MiniMode":
+            self.miniTrigger.emit()
 
     @pyqtSlot()
     def showSettingMenu(self):

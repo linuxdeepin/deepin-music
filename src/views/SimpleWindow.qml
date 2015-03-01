@@ -5,7 +5,7 @@ Rectangle {
     id: simpleWindow
 
     property var titleBar: titleBar
-    property var simpleController: simpleController
+    property var simpleWindowController: simpleWindowController
 
     width: 300
     height: 660
@@ -52,20 +52,12 @@ Rectangle {
         }
     }
 
-    SimpleController{
-        id: simpleController
+    SimpleWindowController{
+        id: simpleWindowController
+
+        simpleWindow: simpleWindow
         bgImage: bgImage
         titleBar: titleBar
         playBottomBar: playBottomBar
-    }
-
-    Keys.onPressed: {
-        if (event.key == Qt.Key_F1) {
-            simpleController.resetSkin();
-            // event.accepted = true;
-        }else if (event.key == Qt.Key_F2) {
-            simpleController.setSkinByImage();
-            // event.accepted = true;
-        }
     }
 }
