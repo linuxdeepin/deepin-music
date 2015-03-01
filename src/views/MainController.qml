@@ -11,6 +11,8 @@ Item {
         rootWindow.height = 660;
         mainWindow.visible = true
         simpleWindow.visible = false
+
+        WindowManageWorker.windowMode = 'Full'
     }
 
     function showSimpleWindow() {
@@ -18,6 +20,8 @@ Item {
         rootWindow.height = 660;
         mainWindow.visible = false
         simpleWindow.visible = true
+
+        WindowManageWorker.windowMode = 'Simple'
     }
 
 	Connections {

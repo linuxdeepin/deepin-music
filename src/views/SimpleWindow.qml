@@ -25,7 +25,7 @@ Rectangle {
     Column{
         TitleBar {
             id: titleBar
-            objectName: 'titleBar'
+            objectName: 'simpletitleBar'
 
             width: simpleWindow.width
             height: 25

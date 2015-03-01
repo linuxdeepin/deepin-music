@@ -38,8 +38,6 @@ class DeepinPlayer(QObject):
 
     def initView(self):
         self.mainWindow = MainWindow()
-        self.simpleWindow = SimpleWindow()
-        self.miniWindow = MiniWindow()
 
     def initControllers(self):
         self.windowManageWorker = WindowManageWorker()
@@ -53,39 +51,12 @@ class DeepinPlayer(QObject):
         self.mainWindow.setContexts(contexts)
         self.mainWindow.setSource(QUrl('views/Main.qml'))
 
-        self.simpleWindow.setContexts(contexts)
-        self.simpleWindow.setSource(QUrl('views/SimpleWindow.qml'))
-
-        self.miniWindow.setContexts(contexts)
-        self.miniWindow.setSource(QUrl('views/MiniWindow.qml'))
-
     def initConnect(self):
-        self.windowManageWorker.mainWindowShowed.connect(self.showMainWindow)
-        self.windowManageWorker.simpleWindowShowed.connect(self.showSimpleWindow)
-        self.windowManageWorker.miniWindowShowed.connect(self.showMiniWindow)
+        pass
 
     def showMainWindow(self):
-        self.simpleWindow.hide()
-        self.miniWindow.hide()
-
         self.mainWindow.show()
         self.qApp.setActivationWindow(self.mainWindow)
-
-    def showSimpleWindow(self):
-        self.mainWindow.hide()
-        self.miniWindow.hide()
-
-        self.simpleWindow.setPosition(self.mainWindow.position())
-        self.simpleWindow.show()
-        self.qApp.setActivationWindow(self.simpleWindow)
-
-    def showMiniWindow(self):
-        self.mainWindow.hide()
-        self.simpleWindow.hide()
-
-        self.miniWindow.setPosition(QScreen.size().width() - 100, 100)
-        self.miniWindow.show()
-        self.qApp.setActivationWindow(self.miniWindow)
 
     def show(self):
         self.showMainWindow()
