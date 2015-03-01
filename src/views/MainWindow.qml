@@ -10,6 +10,9 @@ Rectangle {
 
     id: mainWindow
 
+    property var titleBar: titleBar
+    property var mainController: mainController
+
     color: "lightgray"
     focus: true
 
@@ -40,6 +43,7 @@ Rectangle {
                 TitleBar {
                     id: titleBar
                     objectName: 'titleBar'
+
                     width: mainWindow.width - leftSideBar.width
                     height: 25
                     iconWidth: titleBar.height
@@ -73,31 +77,15 @@ Rectangle {
 
             color: "#282F3F"
         }
-
-        // MediaPlayer {
-        //     id: player
-        //     volume: 1
-        //     source: ''
-        // }
     }
 
-    MainController{
+    MainWindowController{
         id: mainController
+        rootWindow: mainWindow
         bgImage: bgImage
         titleBar: titleBar
         leftSideBar: leftSideBar
         webEngineViewPage: webEngineViewPage
         playBottomBar: playBottomBar
-        // player: player
-    }
-
-    Keys.onPressed: {
-        if (event.key == Qt.Key_F1) {
-            mainController.resetSkin();
-            // event.accepted = true;
-        }else if (event.key == Qt.Key_F2) {
-            mainController.setSkinByImage();
-            // event.accepted = true;
-        }
     }
 }

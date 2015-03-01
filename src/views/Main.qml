@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import QtQuick.Window 2.1
 import DMusic 1.0
+
 Item {
     id: root
     objectName: "root"
@@ -8,33 +9,39 @@ Item {
     width: 960
     height: 660
 
-    
-
-    DSplash{
-        id: splash
-        showDuration: 0
-        pauseDuration: 2000
-        hideDuration: 0
-        anchors.fill: parent
-        Text{
-            anchors.centerIn: splash
-            text: 'Welcome, this is Splash!'
-            font.family: "微软雅黑"
-            font.pointSize: 20
-            color: "white"
-        }
-
-        onFinished:{
-            mainLoader.opacity = 1
-        }
-    }
-
     MainWindow{
-        id: mainLoader
+        id: mainWindow
         objectName: "MainWindow"
 
         anchors.fill: parent
-        opacity: 0
-        focus: true
+        
+        width: root.width
+        height: root.heigh
+        visible : true
+    }
+
+    SimpleWindow{
+        id: simpleWindow
+        width: root.width
+        height: root.height
+        anchors.fill: parent
+        visible : false
+    }
+
+    MainController {
+        id: mainController
+        rootWindow: root
+        mainWindow: mainWindow
+        simpleWindow: simpleWindow
+    }
+
+    Keys.onPressed: {
+        if (event.key == Qt.Key_F1) {
+            mainWindow.mainController.resetSkin();
+            simpleWindow.simpleController.resetSkin();
+        }else if (event.key == Qt.Key_F2) {
+            mainWindow.mainController.setSkinByImage();
+            simpleWindow.simpleController.setSkinByImage();
+        }
     }
 }

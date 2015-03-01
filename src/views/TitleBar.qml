@@ -7,6 +7,7 @@ import DMusic 1.0
 Rectangle {
 
     id: root
+
     property int iconWidth
     property int iconHeight
     property alias modeButton: modeButton
@@ -19,6 +20,37 @@ Rectangle {
     signal mainWindowShowed()
     signal showMinimized()
     signal menuShowed()
+
+    // MouseArea {
+    //     property int dragStartX
+    //     property int dragStartY
+    //     property int windowLastX
+    //     property int windowLastY
+
+    //     anchors.fill: parent
+
+    //     onPressed: { 
+    //         var pos = WindowManageWorker.cursorPos
+            
+    //         windowLastX = parent.rootWindow.x
+    //         windowLastY = parent.rootWindow.y
+    //         dragStartX = pos.x
+    //         dragStartY = pos.y
+
+    //         print('Moveable -------')
+    //     }
+    //     onPositionChanged: {
+    //         if (pressed) {
+    //             var pos = WindowManageWorker.cursorPos
+    //             parent.rootWindow.x = (windowLastX + pos.x - dragStartX)
+    //             parent.rootWindow.y = (windowLastY + pos.y - dragStartY)
+    //             windowLastX = parent.rootWindow.x
+    //             windowLastY = parent.rootWindow.y
+    //             dragStartX = pos.x
+    //             dragStartY = pos.y
+    //         }
+    //     }
+    // }
 
     Row {
         anchors.fill: parent
@@ -35,7 +67,7 @@ Rectangle {
             height: root.iconHeight
             normal_image: windowFlag ? '../skin/icons/light/appbar.layout.expand.left.png': '../skin/icons/light/appbar.layout.expand.right.png'
             hover_image: windowFlag ? '../skin/icons/light/appbar.layout.expand.left.png' : '../skin/icons/light/appbar.layout.expand.right.png'
-            pressed_image: windowFlag ? '../skin/icons/dark/appbar.layout.expand.left.png' : '../skin/icons/light/appbar.layout.expand.right.png'
+            pressed_image: windowFlag ? '../skin/icons/dark/appbar.layout.expand.left.png' : '../skin/icons/dark/appbar.layout.expand.right.png'
             disabled_image: windowFlag ? '../skin/icons/light/appbar.layout.expand.left.png' : '../skin/icons/light/appbar.layout.expand.right.png'
 
             onClicked:{

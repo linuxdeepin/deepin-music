@@ -19,6 +19,7 @@ class SimpleWindow(BaseWindow):
     @registerContext
     def __init__(self):
         super(SimpleWindow, self).__init__()
+        self.setFlags(Qt.FramelessWindowHint)
 
     def mousePressEvent(self, event):
         # 鼠标点击事件

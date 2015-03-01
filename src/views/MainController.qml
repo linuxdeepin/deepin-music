@@ -1,133 +1,48 @@
 import QtQuick 2.0
 
 Item {
-    property var bgImage
-	property var titleBar
-	property var leftSideBar
-	property var webEngineViewPage
-    property var playBottomBar
 
-    function initConnect(){
+    property var rootWindow
+    property var mainWindow
+    property var simpleWindow
 
-        Web360ApiWorker.playUrl.connect(playMusic)
-        MediaPlayer.positionChanged.connect(updateSlider)
-        MediaPlayer.stateChanged.connect(updatePlayBar)
+    function showMainWindow() {
+        rootWindow.width = 960;
+        rootWindow.height = 660;
+        mainWindow.visible = true
+        simpleWindow.visible = false
     }
 
-    function playMusic(url){
-        MediaPlayer.stop()
-        MediaPlayer.setMediaUrl(url);
-        playToggle(true)
-    }
-
-    function playToggle(playing){
-        if (playing){
-            MediaPlayer.play();
-        }else{
-            MediaPlayer.pause();
-        }
-    }
-
-    function updateSlider(position) {
-        var rate = position / MediaPlayer.duration;
-        playBottomBar.slider.updateSlider(rate);
-    }
-
-    function updatePlayBar(state) {
-        if (state == 0){
-            onStopped();
-        }else if (state == 1){
-            onPlaying();
-        }else if (state == 2){
-            onPaused();
-        }
-    }
-
-    function onPlaying(){
-        playBottomBar.playControl.playing = true;
-        console.log('Playing')
-    }
-
-    function onPaused(){
-        playBottomBar.playControl.playing = false;
-        console.log('Paused')
-    }
-
-    function onStopped(){
-        playBottomBar.playControl.playing = false;
-        console.log('Stopped')
-    }
-
-    function resetSkin() {
-        playBottomBar.color = "#282F3F"
-        bgImage.source = ''
-    }
-
-
-    function setSkinByImage(url) {
-        if (url === undefined){
-            url = "../skin/images/bg2.jpg"
-        }
-        playBottomBar.color = "transparent"
-        bgImage.source = url
+    function showSimpleWindow() {
+        rootWindow.width = 300;
+        rootWindow.height = 660;
+        mainWindow.visible = false
+        simpleWindow.visible = true
     }
 
 	Connections {
-        target: titleBar
-        onShowMinimized: MainWindow.showMinimized()
-        onMenuShowed: MenuWorker.showSettingMenu()
-        onSimpleWindowShowed: WindowManageWorker.simpleWindowShowed()
-    }
-
-    Connections {
-        target: playBottomBar.slider
-        onSliderRateChanged:{
-            if (MediaPlayer.seekable){
-                MediaPlayer.setPosition(MediaPlayer.duration * rate)
-            }
+        target: mainWindow.titleBar
+        onShowMinimized: {
+            MainWindow.showMinimized()
+        }
+        onMenuShowed: {
+            MenuWorker.showSettingMenu();
+        }
+        onSimpleWindowShowed: {
+            showSimpleWindow();
         }
     }
 
     Connections {
-        target: leftSideBar
-        onSwicthViewByID: {
-            if (viewID == 'WebMusic360Page'){
-                webEngineViewPage.url = "http://10.0.0.153:8093/";
-            }
-            else if (viewID == 'MusicManagerPage'){
-                webEngineViewPage.url = MusicManageWorker.artistUrl
-            }
-            else if (viewID == 'PlayListPage'){
-                webEngineViewPage.url = "https://www.baidu.com";
-            }
-            else if (viewID == 'DownloadPage'){
-                webEngineViewPage.url = "file:///tmp/72.html";
-            }else{
-                console.log('--------------No Page--------------');
-            }
+        target: simpleWindow.titleBar
+        onShowMinimized: {
+            MainWindow.showMinimized();
         }
-    }
-
-    Connections {
-        target: webEngineViewPage
-        onPlayMusicByID: Web360ApiWorker.getMusicURLByID(musicID)
-    }
-
-    Connections {
-        target: playBottomBar.playControl
-        onPlayed: playToggle(isPlaying)
-    }
-
-    Connections {
-        target: playBottomBar.playButton
-        onClicked:{
-            var playControl = playBottomBar.playControl
-            playControl.playing = !playControl.playing;
-            playControl.played(playControl.playing);
+        onMenuShowed: {
+            MenuWorker.showSettingMenu();
         }
-    }
-
-    Component.onCompleted: {
-        initConnect();
+        onMainWindowShowed: {
+            showMainWindow();
+        }
     }
 }

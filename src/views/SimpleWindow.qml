@@ -3,6 +3,10 @@ import DMusic 1.0
 
 Rectangle {
     id: simpleWindow
+
+    property var titleBar: titleBar
+    property var simpleController: simpleController
+
     width: 300
     height: 660
 
@@ -22,6 +26,7 @@ Rectangle {
         TitleBar {
             id: titleBar
             objectName: 'titleBar'
+
             width: simpleWindow.width
             height: 25
             iconWidth: titleBar.height

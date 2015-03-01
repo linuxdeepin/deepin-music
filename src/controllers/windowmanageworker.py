@@ -4,8 +4,8 @@
 
 import os
 import sys
-from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot
-
+from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot, pyqtProperty
+from PyQt5.QtGui import QCursor
 from .utils import registerContext
 
 
@@ -20,3 +20,7 @@ class WindowManageWorker(QObject):
     @registerContext
     def __init__(self, parent=None):
         super(WindowManageWorker, self).__init__(parent)
+
+    @pyqtProperty('QPoint')
+    def cursorPos(self):
+    	return QCursor.pos()
