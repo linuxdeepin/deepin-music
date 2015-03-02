@@ -15,6 +15,7 @@ Rectangle{
     property var volumeButton: volumeButton
     property var cycleButton: cycleButton
     property var lrcButton: lrcButton
+    property bool playing: false
 
 
     property var contentWidth: playBottomBar.width - 2 * playBottomBar.margins
@@ -22,6 +23,11 @@ Rectangle{
     property var spacing: 10
 
     height: musicInfo.height + slider.height + musicBar.height + 2 * playBottomBar.spacing + playBottomBar.margins
+
+
+    signal preMusic()
+    signal played(bool isPlaying)
+    signal nextMusic()
 
 
     Rectangle{
@@ -68,14 +74,11 @@ Rectangle{
 
                         property int iconsWidth: 40 
                         property int iconsHeight: iconsWidth
-                        property bool playing: false
+                        
 
                         width: musicBar.width / 2
                         height: musicBar.height
                         color: "transparent"
-                        
-
-                        signal played(bool isPlaying)
 
                         Row {
                             anchors.centerIn: parent
@@ -84,20 +87,33 @@ Rectangle{
                                 id: preButton
                                 width: playControl.iconsWidth
                                 height: playControl.iconsHeight
+
+                                onClicked : {
+                                    playBottomBar.preMusic();
+                                }
                             }
 
                             DPlayButton{
                                 id: playButton
-                                playing: playControl.playing
+                                playing: playBottomBar.playing
 
                                 width: playControl.iconsWidth
                                 height: playControl.iconsHeight
+
+                                onClicked: {
+                                    playBottomBar.playing = !playBottomBar.playing;
+                                    playBottomBar.played(playBottomBar.playing);
+                                }
                             }
 
                             DNextButton{
                                 id: nextButton
                                 width: playControl.iconsWidth
                                 height: playControl.iconsHeight
+
+                                onClicked: {
+                                    playBottomBar.nextMusic();
+                                }
                             }
                         }
                     }

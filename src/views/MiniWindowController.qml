@@ -64,10 +64,15 @@ Item {
         }
     }
 
-    
+
     Connections {
         target: miniWindow
+
+        onPreMusic: PlaylistWorker.previous()
+
         onPlayed: MediaPlayer.playToggle(isPlaying)
+
+        onNextMusic: PlaylistWorker.next()
     }
 
     Component.onCompleted: {

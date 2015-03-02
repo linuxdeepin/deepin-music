@@ -28,17 +28,17 @@ Item {
     }
 
     function onPlaying(){
-        playBottomBar.playControl.playing = true;
+        playBottomBar.playing = true;
         console.log('Playing')
     }
 
     function onPaused(){
-        playBottomBar.playControl.playing = false;
+        playBottomBar.playing = false;
         console.log('Paused')
     }
 
     function onStopped(){
-        playBottomBar.playControl.playing = false;
+        playBottomBar.playing = false;
         console.log('Stopped')
     }
 
@@ -66,19 +66,18 @@ Item {
         }
     }
 
-    Connections {
-        target: playBottomBar.playControl
-        onPlayed: MediaPlayer.playToggle(isPlaying)
-    }
 
     Connections {
-        target: playBottomBar.playButton
-        onClicked:{
-            var playControl = playBottomBar.playControl
-            playControl.playing = !playControl.playing;
-            playControl.played(playControl.playing);
-        }
+        target: playBottomBar
+
+        onPreMusic: PlaylistWorker.previous()
+
+        onPlayed: MediaPlayer.playToggle(isPlaying)
+
+        onNextMusic: PlaylistWorker.next()
     }
+
+
 
     Component.onCompleted: {
         initConnect();

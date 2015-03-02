@@ -19,6 +19,7 @@ Item {
     property var cycleButton: cycleButton
     property var lrcButton: lrcButton
     property var playlistButton: playlistButton
+    property bool playing: false
 
     property real playerDuration: 0
     property real playerPosition: 0
@@ -34,6 +35,12 @@ Item {
 
     property color spacingColor: "transparent"
     // property color spacingColor: "transparent"
+
+
+    signal preMusic()
+    signal played(bool isPlaying)
+    signal nextMusic()
+
 
     Column {
 
@@ -165,7 +172,7 @@ Item {
 
                 property int iconsWidth: 60 
                 property int iconsHeight: iconsWidth
-                property bool playing: false
+                
 
                 width: playBottomBar.width - musicInfo.width - musicToolbar.width
                 height: bottomBar.height
@@ -174,7 +181,6 @@ Item {
                 border.color: playBottomBar.boderColor
                 border.width: playBottomBar.boderWidth
 
-                signal played(bool isPlaying)
 
                 Row {
                     anchors.centerIn: parent
@@ -183,20 +189,33 @@ Item {
                         id: preButton
                         width: playControl.iconsWidth
                         height: playControl.iconsHeight
+
+                        onClicked : {
+                            playBottomBar.preMusic();
+                        }
                     }
 
                     DPlayButton{
                         id: playButton
-                        playing: playControl.playing
+                        playing: playBottomBar.playing
 
                         width: playControl.iconsWidth
                         height: playControl.iconsHeight
+
+                        onClicked: {
+                            playBottomBar.playing = !playBottomBar.playing;
+                            playBottomBar.played(playBottomBar.playing);
+                        }
                     }
 
                     DNextButton{
                         id: nextButton
                         width: playControl.iconsWidth
                         height: playControl.iconsHeight
+
+                        onClicked: {
+                            playBottomBar.nextMusic();
+                        }
                     }
                 }
             }

@@ -91,3 +91,13 @@ class PlaylistWorker(QObject):
             self.nameExisted.emit(name)
         else:
             self._playlists[name] = QMediaPlaylist()
+
+    @pyqtSlot()
+    def previous(self):
+        if self._currentPlaylist:
+            self._currentPlaylist.previous()
+
+    @pyqtSlot()
+    def next(self):
+        if self._currentPlaylist:
+            self._currentPlaylist.next()
