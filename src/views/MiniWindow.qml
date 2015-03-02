@@ -7,8 +7,8 @@ Window {
     id: miniWindow
 
     property var miniWindowController: miniWindowController
-
     property var bgImage: bgImage
+    property bool playing: false
 
     color: "#282F3F"
 
@@ -17,6 +17,7 @@ Window {
 
     signal closed()
     signal expandNoraml()
+    signal played(bool isPlaying)
     signal preMusic()
     signal lrcShow()
     signal nextMusic()
@@ -51,7 +52,6 @@ Window {
             windowLastY = miniWindow.y
             dragStartX = pos.x
             dragStartY = pos.y
-            print('DMoveable mouse')
         }
         onPositionChanged: {
             if (pressed) {
@@ -93,14 +93,10 @@ Window {
 
                 property int iconsWidth: 30
                 property int iconsHeight: iconsWidth
-                property bool playing: false
 
                 width: playBottomBar.width
                 height: playBottomBar.height - slider.height - playBottomBarLayout.spacing
                 color: "transparent"
-
-                signal played(bool isPlaying)
-
 
                 Column {
 
@@ -159,10 +155,15 @@ Window {
 
                             DPlayButton{
                                 id: playButton
-                                playing: playControl.playing
+                                playing: miniWindow.playing
 
                                 width: playControl.iconsWidth * 2
                                 height: playControl.iconsHeight * 2
+
+                                onClicked:{
+                                    miniWindow.playing = !miniWindow.playing;
+                                    miniWindow.played(miniWindow.playing);
+                                }
                             }
                         }
                     }

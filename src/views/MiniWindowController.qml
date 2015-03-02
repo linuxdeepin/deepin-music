@@ -26,17 +26,17 @@ Item {
     }
 
     function onPlaying(){
-        playBottomBar.playControl.playing = true;
+        miniWindow.playing = true;
         console.log('Playing')
     }
 
     function onPaused(){
-        playBottomBar.playControl.playing = false;
+        miniWindow.playing = false;
         console.log('Paused')
     }
 
     function onStopped(){
-        playBottomBar.playControl.playing = false;
+        miniWindow.playing = false;
         console.log('Stopped')
     }
 
@@ -66,17 +66,8 @@ Item {
 
     
     Connections {
-        target: playBottomBar.playControl
+        target: miniWindow
         onPlayed: MediaPlayer.playToggle(isPlaying)
-    }
-
-    Connections {
-        target: playBottomBar.playButton
-        onClicked:{
-            var playControl = playBottomBar.playControl
-            playControl.playing = !playControl.playing;
-            playControl.played(playControl.playing);
-        }
     }
 
     Component.onCompleted: {
