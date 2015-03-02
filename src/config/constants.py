@@ -1,14 +1,20 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-MainWindow_Width = 882
-MainWindow_Height = 638
+import os
 
-SimpleWindow_Width = 286
-SimpleWindow_Height = 638
+parentDir = os.path.dirname
 
-TitleBar_Height = 25
-LeftBar_Width = 60
-Bottom_Height = 100
+Home = os.path.expanduser('~')
+ConfigPath = os.path.join(Home, '.config')
+ProjectName = "DeepinMusic3"
+ProjectConfigPath = os.path.join(ConfigPath, ProjectName)
 
-Simple_Bottom_Height = 200
+PlaylistPath = os.path.join(ProjectConfigPath, 'playlist')
+
+
+if not os.path.exists(ProjectConfigPath): 
+	os.makedirs(ProjectConfigPath)
+
+if not os.path.exists(PlaylistPath): 
+	os.makedirs(PlaylistPath)

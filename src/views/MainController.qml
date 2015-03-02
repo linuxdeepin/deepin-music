@@ -15,7 +15,8 @@ Item {
 
         MenuWorker.miniTrigger.connect(showMiniWindow);
 
-        Web360ApiWorker.playUrl.connect(playMusic)
+        Web360ApiWorker.playUrl.connect(playMusic);
+
     }
 
     function playMusic(url){

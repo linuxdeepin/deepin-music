@@ -18,7 +18,6 @@ class MediaPlayer(QMediaPlayer):
     @registerContext
     def __init__(self):
         super(MediaPlayer, self).__init__()
-        self.setMedia(QMediaContent(QUrl.fromLocalFile(os.sep.join([os.path.dirname(os.getcwd()), 'music', '1.mp3']))))
         self.setVolume(50)
         self.setNotifyInterval(50)
         self.setPlaybackRate(1)
