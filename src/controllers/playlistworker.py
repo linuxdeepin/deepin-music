@@ -39,6 +39,8 @@ class PlaylistWorker(QObject):
         self.setPlaylistByName('temporary')
         self.currentPlaylist.setCurrentIndex(0)
 
+        self.currentPlaylist.setPlaybackMode(QMediaPlaylist.Loop)
+
     def savePlaylistByName(self, name):
         f = QFile(os.sep.join([PlaylistPath, '%s.m3u' % name]))
         flag = f.open(QIODevice.ReadWrite)
