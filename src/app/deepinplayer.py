@@ -7,7 +7,7 @@ from views import MainWindow, SimpleWindow, MiniWindow
 
 from controllers import contexts, Web360ApiWorker, MusicManageWorker
 from controllers import MenuWorker, WindowManageWorker
-from controllers import MediaPlayer
+from controllers import MediaPlayer, PlaylistWorker
 
 import config
 
@@ -46,6 +46,7 @@ class DeepinPlayer(QObject):
         self.menuWorker = MenuWorker()
 
         self.mediaPlayer = MediaPlayer()
+        self.playlistWorker = PlaylistWorker()
 
     def initQMLContext(self):
         self.mainWindow.setContexts(contexts)
