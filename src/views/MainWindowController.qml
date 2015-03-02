@@ -81,7 +81,7 @@ Item {
                 webEngineViewPage.url = "https://www.baidu.com";
             }
             else if (viewID == 'DownloadPage'){
-                webEngineViewPage.url = "file:///tmp/72.html";
+                webEngineViewPage.url = "file:///tmp/90.html";
             }else{
                 console.log('--------------No Page--------------');
             }

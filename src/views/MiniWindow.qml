@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import QtQuick.Window 2.2
 import DMusic 1.0
+import "./dmusicwidgets"
 
 Window {
     id: miniWindow
@@ -12,6 +13,13 @@ Window {
     color: "#282F3F"
 
     flags: Qt.FramelessWindowHint | Qt.Dialog | Qt.WindowStaysOnTopHint
+
+
+    signal closed()
+    signal expandNoraml()
+    signal preMusic()
+    signal lrcShow()
+    signal nextMusic()
 
     BorderImage {
         id: bgImage
@@ -56,10 +64,6 @@ Window {
                 dragStartY = pos.y
             }
         }
-
-        onDoubleClicked : {
-            WindowManageWorker.showNormal();
-        }
     }
 
     Rectangle {
@@ -67,8 +71,11 @@ Window {
 
         property var slider: slider
         property var playControl: playControl
-        property var preButton: preButton
+        property var expandButton: expandButton
+        property var closeButton: closeButton
         property var playButton: playButton
+        property var preButton: preButton
+        property var lrcButton: lrcButton
         property var nextButton: nextButton
 
         width: miniWindow.width
@@ -76,40 +83,134 @@ Window {
         color: "transparent"
 
         Column {
+
+            id: playBottomBarLayout
+
+            spacing: 2
+
             Rectangle {
                 id: playControl
 
-                property int iconsWidth: 40
+                property int iconsWidth: 30
                 property int iconsHeight: iconsWidth
                 property bool playing: false
 
                 width: playBottomBar.width
-                height: playBottomBar.height - slider.height
+                height: playBottomBar.height - slider.height - playBottomBarLayout.spacing
                 color: "transparent"
 
                 signal played(bool isPlaying)
 
-                Row {
-                    anchors.centerIn: parent
 
-                    DPreButton{
-                        id: preButton
-                        width: playControl.iconsWidth
-                        height: playControl.iconsHeight
+                Column {
+
+                    Rectangle {
+
+                        id: topRect
+
+                        width: playBottomBar.width
+                        height: 30
+
+                        color: "transparent"
+
+                        Row {
+                            anchors.fill: parent
+                            spacing: (playControl.width - 3 * playControl.iconsWidth) / 2
+
+                            Rectangle {
+                                width: playControl.iconsWidth
+                                height: playControl.iconsHeight
+                                color: "transparent"
+                            }
+
+                            DExpandNormalButton{
+                                id: expandButton
+                                width: playControl.iconsWidth
+                                height: playControl.iconsHeight
+
+                                onClicked:{
+                                    miniWindow.expandNoraml();
+                                }
+                            }
+
+                            DCloseLightButton{
+                                id: closeButton
+                                width: playControl.iconsWidth
+                                height: playControl.iconsHeight
+
+                                onClicked: {
+                                    miniWindow.closed();
+                                }
+                            }
+                        }
                     }
 
-                    DPlayButton{
-                        id: playButton
-                        playing: playControl.playing
+                    Rectangle{
 
-                        width: playControl.iconsWidth
-                        height: playControl.iconsHeight
+                        id: middleRect
+
+                        width: playBottomBar.width
+                        height: playControl.height - topRect.height - bottomRect.height
+
+                        color: "transparent"
+
+                        Row {
+                            anchors.centerIn: parent
+
+                            DPlayButton{
+                                id: playButton
+                                playing: playControl.playing
+
+                                width: playControl.iconsWidth * 2
+                                height: playControl.iconsHeight * 2
+                            }
+                        }
                     }
 
-                    DNextButton{
-                        id: nextButton
-                        width: playControl.iconsWidth
-                        height: playControl.iconsHeight
+                    Rectangle {
+
+                        id: bottomRect
+
+                        width: playBottomBar.width
+                        height: 30
+
+                        color: "transparent"
+
+                        Row {
+                            anchors.fill: parent
+                            spacing: (playControl.width - 3 * playControl.iconsWidth) / 2
+
+                            DPreButton{
+                                id: preButton
+                                width: playControl.iconsWidth
+                                height: playControl.iconsHeight
+
+                                onClicked:{
+                                    miniWindow.preMusic();
+                                }
+                            }
+
+                            DLrcButton{
+                                id: lrcButton
+
+                                width: playControl.iconsWidth
+                                height: playControl.iconsHeight
+
+                                onClicked: {
+                                    miniWindow.lrcShow();
+                                }
+                            }
+
+                            DNextButton{
+                                id: nextButton
+                                width: playControl.iconsWidth
+                                height: playControl.iconsHeight
+
+                                onClicked: {
+                                    miniWindow.nextMusic();
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -121,6 +222,7 @@ Window {
                 progressBarColor: '#0AB9E2'
                 width: playBottomBar.width
                 height: 6
+                color: "transparent"
             }
         }
 
@@ -132,4 +234,4 @@ Window {
         bgImage: bgImage
         playBottomBar: playBottomBar
     }
-}
+} 

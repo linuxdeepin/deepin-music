@@ -31,7 +31,7 @@ Rectangle {
             LeftSideBar {
                 id: leftSideBar
                 objectName: 'leftSideBar'
-                width: 60
+                width: 56
                 height: mainWindow.height - playBottomBar.height
                 iconWidth: leftSideBar.width
                 iconHeight: leftSideBar.width
@@ -73,7 +73,7 @@ Rectangle {
             // playerDuration: player.duration
             // playerPosition: player.position
             width: mainWindow.width
-            height: 100
+            height: 90
 
             color: "#282F3F"
         }
@@ -87,5 +87,9 @@ Rectangle {
         leftSideBar: leftSideBar
         webEngineViewPage: webEngineViewPage
         playBottomBar: playBottomBar
+    }
+
+    Component.onCompleted: {
+        print(webEngineViewPage.width)
     }
 }

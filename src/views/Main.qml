@@ -6,10 +6,14 @@ Item {
     id: root
     objectName: "root"
 
-    width: 960
-    height: 660
+    width: constants.mainWindowWidth
+    height: constants.mainWindowHeight
 
-    MainWindow{
+    Constants{
+        id: constants
+    }
+
+    MainWindow {
         id: mainWindow
         objectName: "MainWindow"
 
@@ -20,7 +24,7 @@ Item {
         visible : true
     }
 
-    SimpleWindow{
+    SimpleWindow {
         id: simpleWindow
         width: root.width
         height: root.height
@@ -30,6 +34,8 @@ Item {
 
     MiniWindow {
         id: miniWindow
+        width: constants.miniWindowWidth
+        height: constants.miniWindowHeight
     }
 
     MainController {
@@ -38,6 +44,7 @@ Item {
         mainWindow: mainWindow
         simpleWindow: simpleWindow
         miniWindow: miniWindow
+        constants: constants
     }
 
     Keys.onPressed: {

@@ -1,5 +1,6 @@
 import QtQuick 2.0
 import DMusic 1.0
+import "./dmusicwidgets"
 
 Rectangle {
     id: musicinfo

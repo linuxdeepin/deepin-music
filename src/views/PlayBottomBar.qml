@@ -2,6 +2,7 @@ import QtQuick 2.0
 import QtQuick.Controls 1.3
 import QtQuick.Controls.Styles 1.3
 import DMusic 1.0
+import "./dmusicwidgets"
 
 Item {
     id: playBottomBar
@@ -27,11 +28,11 @@ Item {
 
     property color boderColor: 'white'
     // property color boderColor: "transparent"
-    property int boderWidth: 2
+    property int boderWidth: 0
 
     property int musicInfoWidth: 350
 
-    property color spacingColor: "#2A3B4D"
+    property color spacingColor: "transparent"
     // property color spacingColor: "transparent"
 
     Column {

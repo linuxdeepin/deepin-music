@@ -7,9 +7,6 @@ Rectangle {
     property var titleBar: titleBar
     property var simpleWindowController: simpleWindowController
 
-    width: 300
-    height: 660
-
     focus: true
 
     color: "#282F3F"
