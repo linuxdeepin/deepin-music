@@ -4,6 +4,7 @@ import QtQuick.Controls 1.3
 import QtWebEngine 1.0
 import QtMultimedia 5.0
 import DMusic 1.0
+import "../DMusicWidgets"
 
 
 Rectangle {
@@ -11,6 +12,7 @@ Rectangle {
     id: mainWindow
 
     property var titleBar: titleBar
+    property var playBottomBar: playBottomBar
     property var mainWindowController: mainWindowController
 
     color: "lightgray"
@@ -70,8 +72,6 @@ Rectangle {
 
         PlayBottomBar {
             id: playBottomBar
-            // playerDuration: player.duration
-            // playerPosition: player.position
             width: mainWindow.width
             height: 90
 

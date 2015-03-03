@@ -1,6 +1,6 @@
 import QtQuick 2.0
 import DMusic 1.0
-import "./dmusicwidgets"
+import "../DMusicWidgets"
 
 Rectangle {
     id: musicinfo
@@ -8,6 +8,14 @@ Rectangle {
     property int spacing: 10
     property color spacingColor: "#2A3B4D"
     property color textColor: "white"
+
+    property var musicImage: musicImage
+    property var musicNameText: musicNameText
+    property var artistNameText: artistNameText
+    property var timeText: timeText
+    property var musicStar: musicStar
+    property var musicDownload: musicDownload
+
 
     Row {
 
@@ -24,7 +32,7 @@ Rectangle {
                 anchors.fill: musicImage
                 horizontalTileMode: BorderImage.Stretch
                 verticalTileMode: BorderImage.Stretch
-                source: "../skin/images/bg2.jpg"
+                source: "../../skin/images/bg2.jpg"
             }
         }
 
@@ -41,6 +49,7 @@ Rectangle {
                 anchors.margins: 20
 
                 Text {
+                    id: musicNameText
                     width: msuicText.width
                     height: 20
                     color: "white"
@@ -50,6 +59,7 @@ Rectangle {
                 }
 
                 Text {
+                    id: artistNameText
                     width: msuicText.width
                     height: 20
                     color: "white"
@@ -71,13 +81,13 @@ Rectangle {
                     }
 
                     DStarButton{
-                        id: musicstar
+                        id: musicStar
                         width: 20
                         height: 20
                     }
 
                     DDownloadButton{
-                        id: musicdownload
+                        id: musicDownload
                         width: 20
                         height: 20
                     }

@@ -1,6 +1,6 @@
 import QtQuick 2.0
 import DMusic 1.0
-import "./dmusicwidgets"
+import "../DMusicWidgets"
 
 Rectangle{
     id: playBottomBar
@@ -28,6 +28,18 @@ Rectangle{
     signal preMusic()
     signal played(bool isPlaying)
     signal nextMusic()
+
+    function updateMusicName(name){
+        musicInfo.musicNameText.text = name;
+    }
+
+    function updateArtistName(name){
+        musicInfo.artistNameText.text = name;
+    }
+
+    function updatePlayTime(timeString){
+        musicInfo.timeText.text = timeString;
+    }
 
 
     Rectangle{

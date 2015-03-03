@@ -2,7 +2,7 @@ import QtQuick 2.0
 import QtQuick.Controls 1.3
 import QtQuick.Controls.Styles 1.3
 import DMusic 1.0
-import "./dmusicwidgets"
+
 
 Rectangle {
 
@@ -35,10 +35,10 @@ Rectangle {
             id: modeButton
             width: root.iconWidth
             height: root.iconHeight
-            normal_image: windowFlag ? '../skin/icons/light/appbar.layout.expand.left.png': '../skin/icons/light/appbar.layout.expand.right.png'
-            hover_image: windowFlag ? '../skin/icons/light/appbar.layout.expand.left.png' : '../skin/icons/light/appbar.layout.expand.right.png'
-            pressed_image: windowFlag ? '../skin/icons/dark/appbar.layout.expand.left.png' : '../skin/icons/dark/appbar.layout.expand.right.png'
-            disabled_image: windowFlag ? '../skin/icons/light/appbar.layout.expand.left.png' : '../skin/icons/light/appbar.layout.expand.right.png'
+            normal_image: windowFlag ? '../../skin/icons/light/appbar.layout.expand.left.png': '../../skin/icons/light/appbar.layout.expand.right.png'
+            hover_image: windowFlag ? '../../skin/icons/light/appbar.layout.expand.left.png' : '../../skin/icons/light/appbar.layout.expand.right.png'
+            pressed_image: windowFlag ? '../../skin/icons/dark/appbar.layout.expand.left.png' : '../../skin/icons/dark/appbar.layout.expand.right.png'
+            disabled_image: windowFlag ? '../../skin/icons/light/appbar.layout.expand.left.png' : '../../skin/icons/light/appbar.layout.expand.right.png'
 
             onClicked:{
                 if (windowFlag){

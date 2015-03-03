@@ -4,16 +4,19 @@
 
 import os
 import sys
-from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot, pyqtProperty, QUrl
+from PyQt5.QtCore import (QObject, pyqtSignal, pyqtSlot, 
+    pyqtProperty, QUrl, QDate)
 from PyQt5.QtGui import QCursor
 from .utils import registerContext, contexts
-
+from .utils import duration_to_string
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 
 
 class MediaPlayer(QMediaPlayer):
 
     __contextName__ = "MediaPlayer"
+
+    musicInfoChanged = pyqtSignal()
 
     @registerContext
     def __init__(self):
@@ -22,6 +25,15 @@ class MediaPlayer(QMediaPlayer):
         self.setNotifyInterval(50)
         self.setPlaybackRate(1)
         self.setMuted(False)
+
+        self.initConnect()
+
+    def initConnect(self):
+        self.currentMediaChanged.connect(self.updateMusicInfo)
+
+    @pyqtSlot('QMediaContent')
+    def updateMusicInfo(self, media):
+        self.musicInfoChanged.emit()
 
     @pyqtProperty('QMediaContent')
     def mediaObject(self):
@@ -67,5 +79,33 @@ class MediaPlayer(QMediaPlayer):
     def playToggle(self, playing):
         if playing:
             self.play();
+            print self.showMetaData()
         else:
             self.pause()
+
+    @pyqtProperty('QString')
+    def positionString(self):
+        position = super(MediaPlayer, self).position()
+        return duration_to_string(position)
+
+    @pyqtProperty('QString')
+    def durationString(self):
+        duration = super(MediaPlayer, self).duration()
+        return duration_to_string(duration)
+
+    @pyqtSlot('QString', result='QString')
+    def metaData(self, key):
+        return super(MediaPlayer, self).metaData(key)
+
+    def showMetaData(self):
+        import json
+        metaData = {}
+        for key in self.availableMetaData():
+            v = self.metaData(key)
+            if isinstance(v, QDate):
+                v = v.toString('yyyy.MM.dd')
+            metaData.update({key: v})
+        path = os.sep.join([os.path.dirname(os.getcwd()), 'music', '%s.json' %self.metaData('Title')])
+        f = open(path, 'w')
+        f.write(json.dumps(metaData, indent=4))
+        f.close()

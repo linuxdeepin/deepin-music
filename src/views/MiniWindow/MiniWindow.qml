@@ -1,13 +1,14 @@
 import QtQuick 2.0
 import QtQuick.Window 2.2
 import DMusic 1.0
-import "./dmusicwidgets"
+import "../DMusicWidgets"
 
 Window {
     id: miniWindow
 
     property var miniWindowController: miniWindowController
     property var bgImage: bgImage
+    property var slider: slider
     property bool playing: false
 
     color: "#282F3F"

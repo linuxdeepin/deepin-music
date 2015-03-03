@@ -1,10 +1,12 @@
 import QtQuick 2.0
 import DMusic 1.0
+import "../DMusicWidgets"
 
 Rectangle {
     id: simpleWindow
 
     property var titleBar: titleBar
+    property var playBottomBar: playBottomBar
     property var simpleWindowController: simpleWindowController
 
     focus: true

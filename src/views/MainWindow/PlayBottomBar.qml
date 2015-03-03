@@ -2,7 +2,7 @@ import QtQuick 2.0
 import QtQuick.Controls 1.3
 import QtQuick.Controls.Styles 1.3
 import DMusic 1.0
-import "./dmusicwidgets"
+import "../DMusicWidgets"
 
 Item {
     id: playBottomBar
@@ -40,6 +40,18 @@ Item {
     signal preMusic()
     signal played(bool isPlaying)
     signal nextMusic()
+
+    function updateMusicName(name){
+        musicNameText.text = name;
+    }
+
+    function updateArtistName(name){
+        artistNameText.text = name;
+    }
+
+    function updatePlayTime(timeString){
+        timeText.text = timeString;
+    }
 
 
     Column {
@@ -92,7 +104,7 @@ Item {
                             anchors.fill: musicImage
                             horizontalTileMode: BorderImage.Stretch
                             verticalTileMode: BorderImage.Stretch
-                            source: "../skin/images/bg2.jpg"
+                            source: "../../skin/images/bg2.jpg"
                         }
                     }
 
@@ -104,7 +116,7 @@ Item {
 
                     Rectangle {
 
-                        id: msuicText
+                        id: musicText
                         width: musicInfo.width - musicImage.width - 40 -  2 * playBottomBar.boderWidth
                         height: 60
                         color: playBottomBar.color
@@ -115,7 +127,8 @@ Item {
                             anchors.margins: 20
 
                             Text {
-                                width: msuicText.width
+                                id: musicNameText
+                                width: musicText.width
                                 height: 20
                                 color: "white"
                                 horizontalAlignment: Text.AlignLeft
@@ -124,7 +137,8 @@ Item {
                             }
 
                             Text {
-                                width: msuicText.width
+                                id:artistNameText
+                                width: musicText.width
                                 height: 20
                                 color: "white"
                                 horizontalAlignment: Text.AlignLeft
@@ -136,7 +150,7 @@ Item {
 
                                 Text {
                                     id: timeText
-                                    width: msuicText.width - 160
+                                    width: musicText.width - 160
                                     height: 20
                                     color: "white"
                                     horizontalAlignment: Text.AlignLeft
@@ -145,19 +159,19 @@ Item {
                                 }
 
                                 DStarButton{
-                                    id: musicstar
+                                    id: musicStar
                                     width: 20
                                     height: 20
                                 }
 
                                 DDownloadButton{
-                                    id: musicdownload
+                                    id: musicDownload
                                     width: 20
                                     height: 20
                                 }
 
                                 Rectangle{
-                                    width: parent.width - timeText.width - musicstar.width - musicdownload.width 
+                                    width: parent.width - timeText.width - musicStar.width - musicDownload.width 
                                     height: parent.height
                                 }
                             }

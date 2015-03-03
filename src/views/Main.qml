@@ -1,6 +1,9 @@
 import QtQuick 2.0
 import QtQuick.Window 2.1
 import DMusic 1.0
+import "./MainWindow"
+import "./SimpleWindow"
+import "./MiniWindow"
 
 Item {
     id: root
@@ -45,6 +48,13 @@ Item {
         simpleWindow: simpleWindow
         miniWindow: miniWindow
         constants: constants
+    }
+
+    MediaController {
+        id: mediaController
+        mainWindow: mainWindow
+        simpleWindow: simpleWindow
+        miniWindow: miniWindow
     }
 
     Keys.onPressed: {

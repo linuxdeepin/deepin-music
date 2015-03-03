@@ -1,0 +1,12 @@
+{
+    "AudioBitRate": 320000, 
+    "encoder": "Lavf55.19.100", 
+    "minimum-bitrate": 319725, 
+    "has-crc": 0, 
+    "Title": "\u6211\u4eec\u7684\u60c5\u6b4c", 
+    "container-format": "ID3 \u6807\u8bc6", 
+    "ContributingArtist": "\u9093\u5165\u6bd4", 
+    "maximum-bitrate": 320031, 
+    "AudioCodec": "MPEG 1 Audio, Layer 3 (MP3)", 
+    "channel-mode": "joint-stereo"
+}
