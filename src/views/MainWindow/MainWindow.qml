@@ -11,6 +11,7 @@ Rectangle {
 
     id: mainWindow
 
+    property var views: ['WebMusic360Page', 'MusicManagerPage', 'PlayListPage', 'DownloadPage']
     property var titleBar: titleBar
     property var playBottomBar: playBottomBar
     property var mainWindowController: mainWindowController
@@ -54,17 +55,58 @@ Rectangle {
                     windowFlag: true
                 }
 
-                WebEngineViewPage {
-                    id: webEngineViewPage
+                DStackView {
 
-                    objectName: 'webEngineViewPage'
-
+                    id: stackViews
+                    objectName: 'stackViews'
                     width: mainWindow.width - leftSideBar.width
                     height: mainWindow.height - titleBar.height - playBottomBar.height
+                    current: 0
 
-                    url: "http://10.0.0.153:8093/"
-                    Behavior on opacity {
-                        NumberAnimation { duration: 500 }
+                    WebEngineViewPage {
+                        id: webEngineViewPage
+
+                        objectName: 'webEngineViewPage'
+
+                        width: mainWindow.width - leftSideBar.width
+                        height: mainWindow.height - titleBar.height - playBottomBar.height
+
+                        url: "http://10.0.0.153:8093/"
+                        Behavior on opacity {
+                            NumberAnimation { duration: 500 }
+                        }
+                    }
+
+                    MusicManagerPage {
+                        id: musicManagerPage
+                        objectName: 'musicManagerPage'
+                        anchors.fill: parent
+
+                        Behavior on opacity {
+                            NumberAnimation { duration: 500 }
+                        }
+                    }
+
+                    PlayListPage {
+                        id: palyListPage
+
+                        objectName: 'palyListPage'
+                        anchors.fill: parent
+
+                        Behavior on opacity {
+                            NumberAnimation { duration: 500 }
+                        }
+                    }
+
+                    DownloadPage {
+                        id: downloadPage
+
+                        objectName: 'downloadPage'
+                        anchors.fill: parent
+
+                        Behavior on opacity {
+                            NumberAnimation { duration: 500 }
+                        }
                     }
                 }
             }
@@ -92,4 +134,6 @@ Rectangle {
     Component.onCompleted: {
         print(webEngineViewPage.width)
     }
+
+
 }
