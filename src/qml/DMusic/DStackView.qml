@@ -6,25 +6,25 @@ Item {
 
     default property alias items: stack.children
 
-    property int current: 0
+    property int currentIndex: 0
 
-    onCurrentChanged: setOpacities()
+    onCurrentIndexChanged: setOpacities()
     Component.onCompleted: setOpacities()
 
     function setOpacities() {
         for (var i = 0; i < stack.children.length; ++i) {
-            stack.children[i].opacity = (i == current ? 1 : 0)
-            stack.children[i].z = (i == current ? 1 : 0)
+            stack.children[i].opacity = (i == currentIndex ? 1 : 0)
+            stack.children[i].z = (i == currentIndex ? 1 : 0)
         }
     }
 
     function setCurrentIndex(index) {
-        stackView.current = index;
+        stackView.currentIndex = index;
     }
 
     function setCurrentItem(item) {
        index = stack.children.indexOf(item)
-       stackView.current = index;
+       stackView.currentIndex = index;
     }
 
     Item {

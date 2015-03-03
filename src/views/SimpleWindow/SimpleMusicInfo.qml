@@ -23,17 +23,9 @@ Rectangle {
 
         spacing: musicinfo.spacing
 
-        Rectangle{
+        MusicImage {
             id: musicImage
-            width: 60
-            height: 60
-
-            BorderImage {
-                anchors.fill: musicImage
-                horizontalTileMode: BorderImage.Stretch
-                verticalTileMode: BorderImage.Stretch
-                source: "../../skin/images/bg2.jpg"
-            }
+            source: "../../skin/images/bg2.jpg"
         }
 
         Rectangle {

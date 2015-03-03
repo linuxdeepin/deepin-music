@@ -22,6 +22,7 @@ Rectangle {
         verticalTileMode: BorderImage.Stretch
     }
     Column{
+
         TitleBar {
             id: titleBar
             objectName: 'simpletitleBar'
@@ -35,11 +36,67 @@ Rectangle {
         }
 
         Rectangle{
-            id: mainPage
-            objectName: 'mainPage'
+            id: simpleCenterWindow
+            objectName: 'simpleCenterWindow'
+
             width: simpleWindow.width
             height: simpleWindow.height - titleBar.height - playBottomBar.height
             color: "transparent"
+
+            Rectangle {
+
+                id: controlBar
+
+                anchors.left: simpleCenterWindow.left
+                anchors.top: simpleCenterWindow.top
+                anchors.right: simpleCenterWindow.right
+
+                anchors.leftMargin: 25
+                anchors.rightMargin: 25
+
+                width: simpleCenterWindow.width
+                height: 30
+
+                color: "transparent"
+
+                DSwitchButton {
+                    id: switchButton
+                    x: 0
+                    y: 0
+                    width: simpleCenterWindow.width
+                    height: controlBar.height
+                }
+            }
+
+            DStackView {
+                id: stackViews
+                objectName: 'stackViews'
+
+                anchors.topMargin: 25
+                anchors.leftMargin: 25
+                anchors.rightMargin: 25
+                anchors.bottomMargin: 25
+                anchors.left: simpleCenterWindow.left
+                anchors.top: controlBar.bottom
+                anchors.right: simpleCenterWindow.right
+                anchors.bottom: simpleCenterWindow.bottom
+
+                width: simpleCenterWindow.width
+                height: simpleCenterWindow.height - controlBar.width
+
+                currentIndex: 0
+
+                PlaylistPage {
+                    id: playlistPage
+                    color: "transparent"
+                }
+
+                LrcPage {
+                    id: lrcPage
+                    color: "transparent"
+                }
+            }
+
         }
 
         SimplePlayBar{
@@ -57,6 +114,10 @@ Rectangle {
         simpleWindow: simpleWindow
         bgImage: bgImage
         titleBar: titleBar
+        switchButton: switchButton
+        stackViews: stackViews
+        playlistPage: playlistPage
+        lrcPage: lrcPage
         playBottomBar: playBottomBar
     }
 }

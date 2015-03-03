@@ -89,27 +89,20 @@ Item {
                     anchors.centerIn: musicInfo
 
                     Rectangle{
-                        width: 30
+                        id: leftSpace
+                        width: 25
                         height: parent.height
                         color: playBottomBar.spacingColor
                     }
 
-                    Rectangle{
+                    MusicImage {
                         id: musicImage
-                        width: 60
-                        height: 60
-
-
-                        BorderImage {
-                            anchors.fill: musicImage
-                            horizontalTileMode: BorderImage.Stretch
-                            verticalTileMode: BorderImage.Stretch
-                            source: "../../skin/images/bg2.jpg"
-                        }
+                        source: "../../skin/images/bg2.jpg"
                     }
 
                     Rectangle{
-                        width: 10
+                        id : rightSpace
+                        width: 15
                         height: parent.height
                         color: playBottomBar.spacingColor
                     }
@@ -117,7 +110,7 @@ Item {
                     Rectangle {
 
                         id: musicText
-                        width: musicInfo.width - musicImage.width - 40 -  2 * playBottomBar.boderWidth
+                        width: musicInfo.width - musicImage.width - leftSpace.width - rightSpace.width -  2 * playBottomBar.boderWidth
                         height: 60
                         color: playBottomBar.color
 

@@ -45,7 +45,7 @@ Rectangle {
 
                 TitleBar {
                     id: titleBar
-                    objectName: 'titleBar'
+                    objectName: 'mainTitleBar'
 
                     width: mainWindow.width - leftSideBar.width
                     height: 25
@@ -61,7 +61,7 @@ Rectangle {
                     objectName: 'stackViews'
                     width: mainWindow.width - leftSideBar.width
                     height: mainWindow.height - titleBar.height - playBottomBar.height
-                    current: 0
+                    currentIndex: 0
 
                     WebEngineViewPage {
                         id: webEngineViewPage
