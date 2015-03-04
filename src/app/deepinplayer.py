@@ -9,6 +9,8 @@ from controllers import contexts, Web360ApiWorker, MusicManageWorker
 from controllers import MenuWorker, WindowManageWorker
 from controllers import MediaPlayer, PlaylistWorker
 
+from models.testdb import TestDB
+
 import config
 
 
@@ -47,6 +49,8 @@ class DeepinPlayer(QObject):
 
         self.mediaPlayer = MediaPlayer()
         self.playlistWorker = PlaylistWorker()
+
+        self.testdb = TestDB()
 
     def initQMLContext(self):
         self.mainWindow.setContexts(contexts)

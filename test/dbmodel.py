@@ -217,6 +217,5 @@ def test_slot():
 
 if __name__ == '__main__':
     test_Json()
-    # test_attr()
+    test_attr()
     test_slot()
-    pass

@@ -79,7 +79,12 @@ class MediaPlayer(QMediaPlayer):
     def playToggle(self, playing):
         if playing:
             self.play();
-            print self.showMetaData()
+            self.showMetaData()
+
+            media = self.playlist().currentMedia()
+            print(media.canonicalUrl())
+            print(media.canonicalResource().dataSize())
+
         else:
             self.pause()
 

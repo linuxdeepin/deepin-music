@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.4
 
 Item {
     property var mainWindow
@@ -9,7 +9,10 @@ Item {
         MediaPlayer.positionChanged.connect(updateSlider);
         MediaPlayer.positionChanged.connect(updateMusicTime);
         MediaPlayer.stateChanged.connect(updatePlayButton);
-        MediaPlayer.mediaStatusChanged.connect(updateMusic)
+        MediaPlayer.mediaStatusChanged.connect(updateMusic);
+
+        TestDB.model = '1111111111111111'
+        print(TestDB.string, TestDB.model)
     }
 
     function updateSlider(position) {
@@ -23,8 +26,6 @@ Item {
     function updateMusicTime(position){
         mainWindow.playBottomBar.updatePlayTime(MediaPlayer.positionString + '/' + MediaPlayer.durationString);
         simpleWindow.playBottomBar.updatePlayTime(MediaPlayer.positionString + '/' + MediaPlayer.durationString);
-
-        // updateMusicInfo()
     }
 
     function audioAvailableChange(available)
@@ -43,13 +44,11 @@ Item {
 
 
     function updateMusic(status){
-        if (status == 3) {
+        print('mediaStatusChanged', status)
+        if (status == 3 || status==6) {
             print('The current media has been loaded')
             updateMusicInfo()
-        }else{
-            print('mediaStatusChanged', status)
         }
-
     }
 
 
@@ -155,7 +154,6 @@ Item {
 
         onNextMusic: PlaylistWorker.next()
     }
-
 
     Component.onCompleted: {
         initConnect();

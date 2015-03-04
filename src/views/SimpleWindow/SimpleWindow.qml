@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.4
 import DMusic 1.0
 import "../DMusicWidgets"
 
@@ -54,8 +54,9 @@ Rectangle {
                 anchors.leftMargin: 25
                 anchors.rightMargin: 25
 
-                width: simpleCenterWindow.width
+                width: simpleCenterWindow.width - 50
                 height: 30
+
 
                 color: "transparent"
 
@@ -63,7 +64,7 @@ Rectangle {
                     id: switchButton
                     x: 0
                     y: 0
-                    width: simpleCenterWindow.width
+                    width: controlBar.height
                     height: controlBar.height
                 }
             }
@@ -72,10 +73,11 @@ Rectangle {
                 id: stackViews
                 objectName: 'stackViews'
 
-                anchors.topMargin: 25
+                anchors.topMargin: 45
                 anchors.leftMargin: 25
                 anchors.rightMargin: 25
-                anchors.bottomMargin: 25
+                anchors.bottomMargin: 45
+
                 anchors.left: simpleCenterWindow.left
                 anchors.top: controlBar.bottom
                 anchors.right: simpleCenterWindow.right

@@ -1,6 +1,6 @@
-import QtQuick 2.4
+import QtQuick 2.0
 import DMusic 1.0
-import "../DMusicWidgets"
+import "./DMusicWidgets"
 
 Rectangle {
     id: musicinfo
@@ -23,9 +23,17 @@ Rectangle {
 
         spacing: musicinfo.spacing
 
-        MusicImage {
+        Rectangle{
             id: musicImage
-            source: "../../skin/images/bg2.jpg"
+            width: 60
+            height: 60
+
+            BorderImage {
+                anchors.fill: musicImage
+                horizontalTileMode: BorderImage.Stretch
+                verticalTileMode: BorderImage.Stretch
+                source: "../skin/images/bg2.jpg"
+            }
         }
 
         Rectangle {
