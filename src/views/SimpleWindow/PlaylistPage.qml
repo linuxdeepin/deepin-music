@@ -3,6 +3,10 @@ import Deepin.Widgets 1.0
 import "../DMusicWidgets"
 
 Rectangle {
+
+    id: playlistPage
+
+    property var model
     
     anchors.fill: parent
 
@@ -16,7 +20,7 @@ Rectangle {
 
     ListView {
         anchors.fill: parent
-        model: 100
+        model: playlistPage.model
         delegate: musicDelegate
         focus: true
         spacing: 3

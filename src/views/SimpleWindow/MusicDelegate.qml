@@ -106,7 +106,7 @@ Rectangle {
                 width: mediaItem.width - playButton.width
                 height: mediaItem.height / 2
                 verticalAlignment: Text.AlignVCenter
-                text: '<b>Name:----------------------</b> ' + index
+                text: mediaItem.ListView.view.model[index].Title
                 color: "#131313"
                 font.pixelSize: 14
             }
@@ -116,7 +116,7 @@ Rectangle {
                 width: mediaItem.width - playButton.width
                 height: mediaItem.height / 2
                 verticalAlignment: Text.AlignVCenter
-                text: 'Name'
+                text: mediaItem.ListView.view.model[index].Author
                 color: "#919191"
                 font.pixelSize: 13
             }

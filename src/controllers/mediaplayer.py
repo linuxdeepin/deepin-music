@@ -78,12 +78,14 @@ class MediaPlayer(QMediaPlayer):
     @pyqtSlot(bool)
     def playToggle(self, playing):
         if playing:
-            self.play();
+            self.play()
+
+            print self.isMetaDataAvailable()
             self.showMetaData()
 
-            media = self.playlist().currentMedia()
-            print(media.canonicalUrl())
-            print(media.canonicalResource().dataSize())
+            # media = self.playlist().currentMedia()
+            # print(media.canonicalUrl())
+            # print(media.canonicalResource().dataSize())
 
         else:
             self.pause()

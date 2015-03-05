@@ -90,6 +90,7 @@ Rectangle {
 
                 PlaylistPage {
                     id: playlistPage
+                    model: MusicDataBase.test
                     color: "transparent"
                 }
 

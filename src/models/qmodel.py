@@ -24,135 +24,6 @@ class SetJsonKeyExpection(Exception):
     pass
 
 
-# class BaseModel(QObject):
-
-#     def __init__(self, *agrs, **kwargs):
-#         super(BaseModel, self).__init__()
-
-#         if hasattr(self, '__Fields__'):
-#             Fields = getattr(BaseModel, '__Fields__')
-#         else:
-#             Fields = ()
-
-#         formatFields = []
-
-#         for field in Fields:
-#             if len(field) < 2:
-#                 raise FieldExpection(
-#                     "Each Field tuple length must be large than 1")
-#             elif len(field) == 2:
-#                 newfield = (field[0], field[1], field[1]())
-#             elif len(field) == 3:
-#                 newfield = (field[0], field[1], field[2])
-#             else:
-#                 raise FieldExpection(
-#                     "Each Field tuple length must be smaller than 4")
-#             formatFields.append(newfield)
-
-#         self.Fields = tuple(formatFields)
-
-#         for key, Type, default in self.Fields:
-#             self.__dict__['_' + key] = kwargs.get(key, default)
-
-#         self.valid_message = {}
-#         self.setJsoning = False
-
-#     @pyqtProperty(str)
-#     def string(self):
-#         return str(self)
-
-#     def __repr__(self):
-#         values = ('%s=%r' % (key, self.__dict__['_' + key])
-#                   for key, value, default in self.Fields)
-#         return '<%s (%s)>' % (clsname, ', '.join(values))
-
-#     @pyqtSlot(dict)
-#     def setJson(self, obj):
-#         self.setJsoning = True
-#         self.valid_message = {}
-#         if isinstance(obj, dict):
-#             for key, value, default in self.Fields:
-#                 if key in obj:
-#                     setattr(self, key, obj[key])
-#             self.setJsoning = False
-#             return self.valid_message
-#         else:
-#             self.setJsoning = False
-#             raise SetJsonExpection("obj's type must be dict")
-
-#     def getJson(self):
-#         ret = {}
-#         for key, value, default in self.Fields:
-#             ret[key] = self.__dict__['_' + key]
-#         return ret
-
-#     # print(globals()['BaseModel'])
-#     print(locals())
-#     # print(locals()['__class__'])
-
-#     for key, Type, default in locals['__Fields__']:
-#         if Type in [dict, list]:
-#             Type = 'QVariant'
-#         if Type is str:
-#             Type = 'QString'
-#         locals()[key + "Changed"] = pyqtSignal(Type)
-
-#         def _get(key):
-#             def f(self):
-#                 return self.__dict__['_' + key]
-#             return f
-
-#         def _set(key):
-#             def f(self, value):
-#                 if not self.setJsoning:
-#                     self.valid_message = {}
-#                 validmethod = 'valid_' + key
-#                 if validmethod in clsdict:
-#                     method = clsdict[validmethod]
-#                 else:
-#                     def valid_defaut(self, v):
-#                         return True
-#                     method = valid_defaut
-#                 valid_return = method(self, value)
-
-#                 if valid_return is True:
-#                     error, validFlag = (
-#                         "set %s=%s valid ok" % (key, value), True)
-#                 elif valid_return is False:
-#                     error, validFlag = (
-#                         "set %s=%s valid error" % (key, value), False)
-#                 else:
-#                     if(len(valid_return) == 2):
-#                         validFlag, error = valid_return
-#                         if isinstance(validFlag, bool) and \
-#                                 isinstance(error, str):
-#                             pass
-#                         else:
-#                             error, validFlag = (
-#                                 "def valid_%s function error." % key,
-#                                 False)
-#                             raise ValidFormatExpection(
-#                                 "def valid_%s function error." % key)
-#                     else:
-#                         error, validFlag = (
-#                             "def valid_%s function error." % key,
-#                             False)
-#                         raise ValidFormatExpection(
-#                             "def valid_%s function error." % key)
-
-#                 if validFlag:
-#                     self.__dict__['_' + key] = value
-#                     getattr(self, key + "Changed").emit(value)
-#                 else:
-#                     self.valid_message[key] = error
-#             return f
-
-#         set = _set(key)
-#         get = _get(key)
-
-#         locals()[key] = pyqtProperty(Type, get, set)
-
-
 class ModelMetaclass(type):
 
     def __new__(cls, clsname, clsbases, clsdict):
@@ -192,7 +63,8 @@ class ModelMetaclass(type):
                 for k in clsdict:
                     setattr(self.__class__, k, clsdict[k])
 
-                self.initialize(*args, **kwargs)
+                if 'initialize' in clsdict:
+                    self.initialize(*args, **kwargs)
 
             @pyqtProperty(str)
             def string(self):
@@ -224,7 +96,7 @@ class ModelMetaclass(type):
                 return ret
 
             for key, Type, default in Fields:
-                if 'Type' in [dict, list]:
+                if Type in [dict, list]:
                     Type = 'QVariant'
                 if Type is str:
                     Type = 'QString'
@@ -283,7 +155,7 @@ class ModelMetaclass(type):
                 set = _set(key)
                 get = _get(key)
 
-                locals()[key] = pyqtProperty(Type, get, set)
+                locals()[key] = pyqtProperty(Type, get, set, notify=locals()[key + "Changed"])
 
         return DObject
 

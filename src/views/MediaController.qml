@@ -10,9 +10,6 @@ Item {
         MediaPlayer.positionChanged.connect(updateMusicTime);
         MediaPlayer.stateChanged.connect(updatePlayButton);
         MediaPlayer.mediaStatusChanged.connect(updateMusic);
-
-        TestDB.model = '1111111111111111'
-        print(TestDB.string, TestDB.model)
     }
 
     function updateSlider(position) {
