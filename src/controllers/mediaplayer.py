@@ -112,6 +112,7 @@ class MediaPlayer(QMediaPlayer):
             if isinstance(v, QDate):
                 v = v.toString('yyyy.MM.dd')
             metaData.update({key: v})
+        print metaData
         path = os.sep.join([os.path.dirname(os.getcwd()), 'music', '%s.json' %self.metaData('Title')])
         f = open(path, 'w')
         f.write(json.dumps(metaData, indent=4))

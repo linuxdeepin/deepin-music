@@ -210,7 +210,7 @@ class DBWorker(QObject):
             playlistInstance = Playlist.get(Playlist.name == name)
         except DoesNotExist:
             playlistInstance = None
-        return None
+        return playlistInstance
 
     @classmethod
     def addSongToPlaylist(cls, uri, name='termpory'):
@@ -295,14 +295,14 @@ def createSongs():
 
 basePath = '/home/djf/workspace/github/musicplayer-qml/music'
 
-# createPlaylists()
+createPlaylists()
 # createSongs()
 
-# for i in range(10):
-#     uri = os.path.join(basePath, '%d.mp3' % i)
-#     dbWorker.addSongToPlaylist(uri)
-#     if i % 2 == 0:
-#         dbWorker.addSongToPlaylist(uri, name='favourite')
+for i in range(10):
+    uri = os.path.join(basePath, '%d.mp3' % i)
+    dbWorker.addSongToPlaylist(uri)
+    if i % 2 == 0:
+        dbWorker.addSongToPlaylist(uri, name='favourite')
 
 # for i in Song.select().order_by(Song.uri).paginate(1, 5).execute():
 #     print i.uri
