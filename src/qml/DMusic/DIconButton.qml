@@ -2,12 +2,15 @@ import QtQuick 2.4
 import QtQuick.Controls 1.3
 
 Item{
+	id: root
 	property bool disabled: false
 	property bool hoverEnabled: true
 	property url normal_image
 	property url hover_image
 	property url pressed_image
 	property url disabled_image
+
+	property string tooltip
 
 	signal hovered
 	signal clicked
@@ -18,16 +21,25 @@ Item{
 	state: 'normal'
 
 	MouseArea {
+
+		id: mouseArea
+
 	    anchors.fill: parent
 	    enabled: !disabled
 	    hoverEnabled: parent.hoverEnabled
 	    onEntered: {
 	    	parent.hovered();
 	    	parent.state = "hovered"
+
+	    	var obj = mapToItem(null, mouseX, mouseY);
+			print(obj.x, obj.y, obj.width, obj.height)
 	    }
 	    onExited: {
 	    	parent.exited()
 	    	parent.state = "normal"
+
+	    	showTimer.start()
+
 	    }
 
 	    onPressed:{
@@ -49,6 +61,47 @@ Item{
         id: image
         sourceSize.width: parent.width
         sourceSize.height: parent.height
+    }
+
+    Component {
+        id: tooltip
+        DToolTip {
+            tooltip: root.tooltip
+        }
+    }
+
+    Loader {
+        id: tooltipLoader
+        // active: false
+    }
+
+
+    Timer {
+        id: showTimer
+        interval: 1000
+        running: false
+        onTriggered:{
+        	if (mouseArea.containsMouse){
+	            tooltipLoader.sourceComponent = tooltip;
+	            if (tooltipLoader.item ){
+		            tooltipLoader.item.visible = true;
+		            tooltipLoader.item.x = Qt.globalPos.x + 10;
+		            tooltipLoader.item.y = Qt.globalPos.y + 10;
+		            hideTimer.restart();
+		        }
+		    }
+        }
+    }
+
+    Timer {
+        id: hideTimer
+        interval: 2000
+        running: false
+
+        onTriggered:{
+            tooltipLoader.sourceComponent = null;
+            hideTimer.stop();
+        }
     }
 
 	states:[

@@ -3,4 +3,5 @@
 
 from .dquickview import DQuickView
 from .dsingleapplication import QSingleApplication
+from qmodel import ModelMetaclass, Object_Dict
 from dthreadutil import dthread

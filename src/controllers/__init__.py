@@ -7,3 +7,5 @@ from .windowmanageworker import WindowManageWorker
 
 from .mediaplayer import MediaPlayer
 from .playlistworker import PlaylistWorker
+
+from .configworker import ConfigWorker

@@ -11,9 +11,6 @@ DIconButton{
     pressed_image: playButton.playing ? '../../skin/icons/dark/appbar.control.pause.png' : '../../skin/icons/light/appbar.control.play.png'
     disabled_image: playButton.playing ? '../../skin/icons/dark/appbar.control.pause.png' : '../../skin/icons/dark/appbar.control.play.png'
 
-    // tootip: DToolTip {
-    //     id: tooltip1
-    //     width: 200
-    //     text: "Enter the text here."
-    // }
+    tooltip: 'Play'
+
 }

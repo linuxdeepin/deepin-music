@@ -12,6 +12,7 @@ Item {
         WindowManageWorker.mainWindowShowed.connect(showMainWindow);
         WindowManageWorker.simpleWindowShowed.connect(showSimpleWindow);
         WindowManageWorker.miniWindowShowed.connect(showMiniWindow);
+        Qt.globalPos = WindowManageWorker.cursorPos;
 
         MenuWorker.miniTrigger.connect(showMiniWindow);
 

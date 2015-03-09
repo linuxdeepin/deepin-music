@@ -21,11 +21,7 @@ class MediaPlayer(QMediaPlayer):
     @registerContext
     def __init__(self):
         super(MediaPlayer, self).__init__()
-        self.setVolume(10)
         self.setNotifyInterval(50)
-        self.setPlaybackRate(1)
-        self.setMuted(False)
-
         self.initConnect()
 
     def initConnect(self):

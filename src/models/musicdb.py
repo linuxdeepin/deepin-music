@@ -5,7 +5,7 @@ import os
 from PyQt5.QtCore import (QObject, pyqtSignal, pyqtSlot, 
     pyqtProperty)
 from controllers import registerContext
-from .qmodel import ModelMetaclass
+from dwidgets import ModelMetaclass
 
 
 class Song(object):

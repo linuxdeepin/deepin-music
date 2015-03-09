@@ -11,8 +11,11 @@ Item {
         MediaPlayer.stateChanged.connect(updatePlayButton);
         MediaPlayer.mediaStatusChanged.connect(updateMusic);
         MediaPlayer.volumeChanged.connect(updateVolumeSlider);
+        MediaPlayer.playlist.playbackModeChanged.connect(updateCycleButton);
 
-        updateVolumeSlider(MediaPlayer.volume);
+        MediaPlayer.volumeChanged(ConfigWorker.volume);
+        MediaPlayer.setPlaybackMode(ConfigWorker.playbackMode);
+
     }
 
     function updateSlider(position) {
@@ -91,6 +94,11 @@ Item {
     function updateVolumeSlider(value){
         mainWindow.playBottomBar.volumeSlider.value = value / 100;
         simpleWindow.playBottomBar.volumeSlider.value = value / 100;
+    }
+
+    function updateCycleButton(value){
+        mainWindow.playBottomBar.cycleButton.playbackMode = value;
+        simpleWindow.playBottomBar.cycleButton.playbackMode = value;
     }
 
     function setSkinByImage(url) {

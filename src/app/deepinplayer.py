@@ -8,6 +8,7 @@ from views import MainWindow, SimpleWindow, MiniWindow
 from controllers import contexts, Web360ApiWorker, MusicManageWorker
 from controllers import MenuWorker, WindowManageWorker
 from controllers import MediaPlayer, PlaylistWorker
+from controllers import ConfigWorker
 
 from models import MusicDataBase
 
@@ -42,6 +43,7 @@ class DeepinPlayer(QObject):
         self.mainWindow = MainWindow()
 
     def initControllers(self):
+        self.configWorker = ConfigWorker()
         self.windowManageWorker = WindowManageWorker()
         self.web360ApiWorker = Web360ApiWorker()
         self.musicManageWorker = MusicManageWorker()

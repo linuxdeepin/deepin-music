@@ -4,17 +4,16 @@ import QtQuick.Controls 1.3
 import QtGraphicalEffects 1.0
  
 Window {
-    id: tooltip
+    id: popupWindow
     
-    property var target: parent
-    property alias text: tooltipText.text
+    property  string tooltip
     property alias textItem: tooltipText
 
-    flags: Qt.FramelessWindowHint | Qt.Popup | Qt.WindowStaysOnTopHint
+    flags: Qt.FramelessWindowHint | Qt.Dialog | Qt.WindowStaysOnTopHint
 
-    width: tooltipText.width + 20
-    height: tooltipText.height + 10
-    color: "#dd000000"
+    width: tooltipText.contentWidth
+    height: tooltipText.contentHeight
+    color: "transparent"
    
     Text {
         id: tooltipText
@@ -22,6 +21,7 @@ Window {
         horizontalAlignment: Text.AlignHCenter
         color: "white"
         font.pointSize: 10
-        font.bold: true
+        // font.bold: true
+        text: tooltip
     }
 }

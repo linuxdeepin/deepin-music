@@ -6,6 +6,7 @@ import functools
 from PyQt5 import QtCore
 from PyQt5.QtCore import (QObject, pyqtSignal, pyqtSlot,
                           pyqtProperty)
+import copy
 
 
 class FieldExpection(Exception):
@@ -48,6 +49,18 @@ class ModelMetaclass(type):
             formatFields.append(newfield)
 
         Fields = tuple(formatFields)
+
+        Signals = {}
+
+        functions = {}
+
+        for k in copy.deepcopy(clsdict):
+            if isinstance(clsdict[k], pyqtSignal):
+                Signals.update({k:clsdict[k]})
+                clsdict.pop(k)
+            # elif isinstance(clsdict[k], types.FunctionType):
+            #     clsdict[k] = pyqtSlot()(clsdict[k])
+            #     print clsdict[k]
 
         class DObject(QtCore.QObject):
 
@@ -94,6 +107,8 @@ class ModelMetaclass(type):
                 for key, value, default in Fields:
                     ret[key] = self.__dict__['_' + key]
                 return ret
+
+            locals().update(Signals)
 
             for key, Type, default in Fields:
                 if Type in [dict, list]:
