@@ -2,7 +2,7 @@ import QtQuick 2.4
 import DMusic 1.0
 
 DIconButton{
-	id: root
+    id: root
     property bool switchflag: false
 
     normal_image: root.switchflag ?  '../../skin/icons/dark/appbar.arrow.left.right.png' : '../../skin/icons/dark/appbar.arrow.left.right.png'

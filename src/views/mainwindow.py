@@ -26,21 +26,21 @@ class MainWindow(BaseWindow):
         if event.button() == Qt.LeftButton:
             flag = contexts['WindowManageWorker'].windowMode
             if flag == "Full":
-                x = self.quickItems['leftSideBar'].width()
-                y = self.quickItems['mainTitleBar'].height()
-                width = x + self.quickItems['webEngineViewPage'].width()
-                height = y + self.quickItems['webEngineViewPage'].height()
+                x = self.quickItems['mainTitleBar'].x()
+                y = self.quickItems['mainTitleBar'].y()
+                width = self.quickItems['mainTitleBar'].width()
+                height = self.quickItems['mainTitleBar'].height()
                 rect = QRect(x, y , width, height)
-                if not rect.contains(event.pos()):
+                if  rect.contains(event.pos()):
                     self.dragPosition = event.globalPos() - self.frameGeometry().topLeft()
                     event.accept()
             elif flag == "Simple":
-                x = self.quickItems['simpleCenterWindow'].x()
-                y = self.quickItems['simpleCenterWindow'].y()
-                width = self.quickItems['simpleCenterWindow'].width()
-                height = self.quickItems['simpleCenterWindow'].height()
+                x = self.quickItems['simpletitleBar'].x()
+                y = self.quickItems['simpletitleBar'].y()
+                width = self.quickItems['simpletitleBar'].width()
+                height = self.quickItems['simpletitleBar'].height()
                 rect = QRect(x, y , width, height)
-                if not rect.contains(event.pos()):
+                if  rect.contains(event.pos()):
                     self.dragPosition = event.globalPos() - self.frameGeometry().topLeft()
                     event.accept()
 

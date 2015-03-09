@@ -19,7 +19,9 @@ Item {
     property var cycleButton: cycleButton
     property var lrcButton: lrcButton
     property var playlistButton: playlistButton
+    property var volumeSlider: volumeSlider
     property bool playing: false
+    property double volumeValue
 
     property real playerDuration: 0
     property real playerPosition: 0
@@ -40,6 +42,9 @@ Item {
     signal preMusic()
     signal played(bool isPlaying)
     signal nextMusic()
+    signal volumeChanged(double value)
+    signal muted(bool muted)
+    signal playbackModeChanged(int playbackMode)
 
     function updateMusicName(name){
         musicNameText.text = name;
@@ -241,22 +246,63 @@ Item {
                 border.width: playBottomBar.boderWidth
 
                 Row {
+                    id: rowLayout
                     anchors.right: parent.right
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.rightMargin: 20
 
                     spacing: 5
 
-                    DVolumeButton {
+                    DVolumeButton{
                         id: volumeButton
                         width: musicToolbar.iconsWidth
                         height: musicToolbar.iconsHeight
+
+
+                        function toggleSlider(){
+                            if (volumeButton.switchflag){
+                                volumeBar.visible = true;
+                                cycleButton.opacity = 0;
+                                cycleButton.disabled = true;
+                                lrcButton.opacity = 0;
+                                lrcButton.disabled = true;
+                            }else{
+                                volumeBar.visible = false;
+                                cycleButton.opacity = 1;
+                                cycleButton.disabled = false;
+                                lrcButton.opacity = 1;
+                                lrcButton.disabled = false;
+                            }
+                        }
+
+                        function hideSlider(){
+                            volumeBar.visible = false;
+                            cycleButton.opacity = 1;
+                            cycleButton.disabled = false;
+                            lrcButton.opacity = 1;
+                            lrcButton.disabled = false;
+                        }
+
+                        onHovered:{
+                            toggleSlider()
+                        }
+
+                        onClicked:{
+                            switchflag = !switchflag;
+                            playBottomBar.muted(!switchflag);
+                            toggleSlider()
+                        }
                     }
+
 
                     DCycleButton {
                         id: cycleButton
                         width: musicToolbar.iconsWidth
                         height: musicToolbar.iconsHeight
+
+                        onPlaybackModeChanged:{
+                            playBottomBar.playbackModeChanged(playbackMode);
+                        }
                     }
 
                     DLrcButton {
@@ -269,6 +315,67 @@ Item {
                         id: playlistButton
                         width: musicToolbar.iconsWidth
                         height: musicToolbar.iconsHeight
+                    }
+                }
+
+                Rectangle {
+                    id: volumeBar
+                    x: rowLayout.x
+                    y: rowLayout.y
+                    height: rowLayout.height
+                    width: volumeButton.width + cycleButton.width + lrcButton.width + 3 * rowLayout.spacing
+                    color: 'transparent'
+
+                    visible: false
+
+                    Row{
+                        anchors.fill: parent
+                        Rectangle{
+                            width: volumeButton.width
+                            height: rowLayout.height
+                            color: 'transparent'
+                        }
+
+                        Rectangle{
+                            id: volumeRect
+                            width:volumeBar.width - volumeButton.width
+                            height: rowLayout.height
+                            color: 'transparent'
+                            Slider {
+                                id: volumeSlider
+                                anchors.centerIn: parent
+                                width: parent.width
+                                height: 6
+                                onValueChanged:{
+                                    playBottomBar.volumeChanged(value)
+                                }
+                            }
+                        }
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        propagateComposedEvents: true
+                        onExited: {
+                            volumeButton.hideSlider();
+                        }
+
+                        onPressed:{
+                            mouse.accepted = false;
+                        }
+
+                        onClicked:{
+                            mouse.accepted = false;
+                        }
+
+                        onDoubleClicked:{
+                            mouse.accepted = false;
+                        }
+
+                        onPositionChanged:{
+                            mouse.accepted = false;
+                        }
                     }
                 }
             }

@@ -10,6 +10,9 @@ Item {
         MediaPlayer.positionChanged.connect(updateMusicTime);
         MediaPlayer.stateChanged.connect(updatePlayButton);
         MediaPlayer.mediaStatusChanged.connect(updateMusic);
+        MediaPlayer.volumeChanged.connect(updateVolumeSlider);
+
+        updateVolumeSlider(MediaPlayer.volume);
     }
 
     function updateSlider(position) {
@@ -85,6 +88,10 @@ Item {
         bgImage.source = ''
     }
 
+    function updateVolumeSlider(value){
+        mainWindow.playBottomBar.volumeSlider.value = value / 100;
+        simpleWindow.playBottomBar.volumeSlider.value = value / 100;
+    }
 
     function setSkinByImage(url) {
         if (url === undefined){
@@ -130,6 +137,20 @@ Item {
         onPlayed: MediaPlayer.playToggle(isPlaying)
 
         onNextMusic: PlaylistWorker.next()
+
+        onVolumeChanged: {
+            MediaPlayer.setVolume(parseInt(value * 100));
+        }
+
+        onMuted: {
+            MediaPlayer.setMuted(muted);
+            simpleWindow.playBottomBar.volumeButton.switchflag = !muted;
+        }
+
+        onPlaybackModeChanged:{
+            MediaPlayer.setPlaybackMode(playbackMode);
+            simpleWindow.playBottomBar.cycleButton.playbackMode = playbackMode;
+        }
     }
 
     Connections {
@@ -140,6 +161,19 @@ Item {
         onPlayed: MediaPlayer.playToggle(isPlaying)
 
         onNextMusic: PlaylistWorker.next()
+
+        onVolumeChanged: {
+            MediaPlayer.setVolume(parseInt(value * 100))
+        }
+        onMuted: {
+            MediaPlayer.setMuted(muted);
+            mainWindow.playBottomBar.volumeButton.switchflag = !muted;
+        }
+
+        onPlaybackModeChanged:{
+           MediaPlayer.setPlaybackMode(playbackMode);
+           mainWindow.playBottomBar.cycleButton.playbackMode = playbackMode;
+        }
     }
 
     Connections {

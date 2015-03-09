@@ -4,6 +4,7 @@ Rectangle {
     id: slider
 
     property color progressBarColor: '#0AB9E2'
+    property var value
 
     width: parent.width
     height: 6
@@ -29,6 +30,8 @@ Rectangle {
         anchors.fill: slider
         onClicked: {
             slider.sliderRateChanged(mouse.x / slider.width);
+            slider.value = mouse.x / slider.width;
         }
     }
+
 }

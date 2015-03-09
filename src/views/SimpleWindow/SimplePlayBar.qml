@@ -1,4 +1,6 @@
 import QtQuick 2.4
+import QtQuick.Controls 1.3
+import QtQuick.Controls.Styles 1.3
 import DMusic 1.0
 import "../DMusicWidgets"
 
@@ -15,19 +17,24 @@ Rectangle{
     property var volumeButton: volumeButton
     property var cycleButton: cycleButton
     property var lrcButton: lrcButton
+    property var volumeSlider: volumeSlider
     property bool playing: false
+    property double volumeValue
 
 
     property var contentWidth: playBottomBar.width - 2 * playBottomBar.margins
-    property var margins: 25
+    property var margins: 29
     property var spacing: 10
 
-    height: musicInfo.height + slider.height + musicBar.height + 2 * playBottomBar.spacing + playBottomBar.margins
+    height: musicInfo.height + slider.height + musicBar.height + spaceRect.height + 2 * playBottomBar.spacing + playBottomBar.margins
 
 
     signal preMusic()
     signal played(bool isPlaying)
     signal nextMusic()
+    signal volumeChanged(double value)
+    signal muted(bool muted)
+    signal playbackModeChanged(int playbackMode)
 
     function updateMusicName(name){
         musicInfo.musicNameText.text = name;
@@ -72,12 +79,12 @@ Rectangle{
             Rectangle {
                 id: musicBar
                 width: playBottomBar.contentWidth
-                height: 60
+                height: 40
 
                 border.color: "white"
                 border.width: 0
 
-                color: "transparent"
+                color: playBottomBar.color
                 Row{
                     anchors.fill: parent
 
@@ -90,7 +97,7 @@ Rectangle{
 
                         width: musicBar.width / 2
                         height: musicBar.height
-                        color: "transparent"
+                        color: playBottomBar.color
 
                         Row {
                             anchors.centerIn: parent
@@ -138,31 +145,137 @@ Rectangle{
 
                         width: musicBar.width / 2
                         height: musicBar.height
-                        color: "transparent"
+                        color: playBottomBar.color
 
                         Row {
+                            id: rowLayout
                             anchors.centerIn: parent
 
                             DVolumeButton{
-                            	id: volumeButton
+                                id: volumeButton
                                 width: musicToolbar.iconsWidth
                                 height: musicToolbar.iconsHeight
+
+
+                                function toggleSlider(){
+                                    if (volumeButton.switchflag){
+                                        volumeBar.visible = true;
+                                        cycleButton.opacity = 0;
+                                        cycleButton.disabled = true;
+                                        lrcButton.opacity = 0;
+                                        lrcButton.disabled = true;
+                                    }else{
+                                        volumeBar.visible = false;
+                                        cycleButton.opacity = 1;
+                                        cycleButton.disabled = false;
+                                        lrcButton.opacity = 1;
+                                        lrcButton.disabled = false;
+                                    }
+                                }
+
+                                function hideSlider(){
+                                    volumeBar.visible = false;
+                                    cycleButton.opacity = 1;
+                                    cycleButton.disabled = false;
+                                    lrcButton.opacity = 1;
+                                    lrcButton.disabled = false;
+                                }
+
+                                onHovered:{
+                                    toggleSlider()
+                                }
+
+                                onClicked:{
+                                    switchflag = !switchflag;
+                                    playBottomBar.muted(!switchflag);
+                                    toggleSlider()
+                                }
                             }
 
                             DCycleButton{
-                            	id: cycleButton
+                                id: cycleButton
                                 width: musicToolbar.iconsWidth
                                 height: musicToolbar.iconsHeight
+
+                                onPlaybackModeChanged:{
+                                    playBottomBar.playbackModeChanged(playbackMode);
+                                }
                             }
 
                             DLrcButton{
-                            	id: lrcButton
+                                id: lrcButton
                                 width: musicToolbar.iconsWidth
                                 height: musicToolbar.iconsHeight
                             }
                         }
+                        Rectangle {
+                            id: volumeBar
+                            x: rowLayout.x
+                            y: rowLayout.y
+                            height: rowLayout.height
+                            width: volumeButton.width + cycleButton.width + lrcButton.width + 3 * rowLayout.spacing
+                            color: 'transparent'
+
+                            visible: false
+
+                            Row{
+                                anchors.fill: parent
+                                Rectangle{
+                                    width: volumeButton.width
+                                    height: rowLayout.height
+                                    color: 'transparent'
+                                }
+
+                                Rectangle{
+                                    id: volumeRect
+                                    width:volumeBar.width - volumeButton.width
+                                    height: rowLayout.height
+                                    color: 'transparent'
+                                    Slider {
+                                        id: volumeSlider
+                                        anchors.centerIn: parent
+                                        width: parent.width
+                                        height: 6
+                                        onValueChanged:{
+                                            playBottomBar.volumeChanged(value);
+                                        }
+                                    }
+                                }
+                            }
+
+                            MouseArea {
+                                anchors.fill: parent
+                                hoverEnabled: true
+                                propagateComposedEvents: true
+                                onExited: {
+                                    volumeButton.hideSlider();
+                                }
+
+                                onPressed:{
+                                    mouse.accepted = false;
+                                }
+
+                                onClicked:{
+                                    mouse.accepted = false;
+                                }
+                                onDoubleClicked:{
+                                    mouse.accepted = false;
+                                }
+
+                                onPositionChanged:{
+                                    mouse.accepted = false;
+                                }
+                            }
+                        }
                     }
                 }
+            }
+
+            Rectangle {
+                id: spaceRect
+                width: playBottomBar.contentWidth
+                height: 60 - musicBar.height
+                color: "transparent"
             }
         }
     }

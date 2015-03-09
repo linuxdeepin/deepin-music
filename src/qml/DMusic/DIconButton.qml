@@ -1,4 +1,5 @@
-import QtQuick 2.1
+import QtQuick 2.4
+import QtQuick.Controls 1.3
 
 Item{
 	property bool disabled: false
@@ -18,6 +19,7 @@ Item{
 
 	MouseArea {
 	    anchors.fill: parent
+	    enabled: !disabled
 	    hoverEnabled: parent.hoverEnabled
 	    onEntered: {
 	    	parent.hovered();

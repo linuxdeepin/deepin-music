@@ -9,7 +9,7 @@ from PyQt5.QtCore import (QObject, pyqtSignal, pyqtSlot,
 from PyQt5.QtGui import QCursor
 from .utils import registerContext, contexts
 from .utils import duration_to_string
-from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
+from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent, QMediaPlaylist
 
 
 class MediaPlayer(QMediaPlayer):
@@ -21,7 +21,7 @@ class MediaPlayer(QMediaPlayer):
     @registerContext
     def __init__(self):
         super(MediaPlayer, self).__init__()
-        self.setVolume(50)
+        self.setVolume(10)
         self.setNotifyInterval(50)
         self.setPlaybackRate(1)
         self.setMuted(False)
@@ -42,6 +42,14 @@ class MediaPlayer(QMediaPlayer):
     @pyqtSlot(str)
     def setMediaUrl(self, url):
         self.setMedia(QMediaContent(QUrl(url)))
+
+    @pyqtProperty('QVariant')
+    def playlist(self):
+        return super(MediaPlayer, self).playlist()
+
+    @pyqtSlot(int)
+    def setPlaybackMode(self, playbackMode):
+        self.playlist.setPlaybackMode(playbackMode)
 
     @pyqtProperty(int)
     def volume(self):
