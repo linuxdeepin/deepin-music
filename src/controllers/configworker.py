@@ -10,7 +10,6 @@ from .utils import registerContext
 from dwidgets import ModelMetaclass
 
 
-
 class ConfigWorker(object):
 
     __metaclass__ = ModelMetaclass

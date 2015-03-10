@@ -18,10 +18,10 @@ if __name__ == '__main__':
     app = QSingleApplication(config.applicationName, sys.argv)
     if app.isRunning():
         sys.exit(0)
-    
+
     deepinPlayer = DeepinPlayer()
     deepinPlayer.show()
 
     exitCode = app.exec_()
-    
+
     sys.exit(exitCode)

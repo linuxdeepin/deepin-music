@@ -11,6 +11,8 @@ from PyQt5.QtMultimedia import QMediaPlaylist, QMediaContent
 from .utils import registerContext, contexts
 from config.constants import PlaylistPath
 
+from log import logger
+
 
 class PlaylistWorker(QObject):
 
@@ -88,7 +90,7 @@ class PlaylistWorker(QObject):
         if name in self._playlists:
             self._playlists[name].addMedia(QMediaContent(QUrl(unicode(url))))
         else:
-            print("the playlist named %s isn't existed" % name)
+            logger.info("the playlist named %s isn't existed" % name)
 
     @pyqtSlot('QString')
     def createPlaylistByName(self, name):

@@ -14,6 +14,8 @@ from dwidgets import DQuickView
 from controllers import registerContext
 import config
 
+from log import logger
+
 
 class BaseWindow(DQuickView):
 
@@ -43,17 +45,17 @@ class BaseWindow(DQuickView):
 
     def trackStatus(self, status):
         if status == QQuickView.Null:
-            print('This QQuickView has no source set.')
+            logger.info('This QQuickView has no source set.')
         elif status == QQuickView.Ready:
-            print('This QQuickView %s has loaded %s and created the QML component.' %(str(self), self.source()))
+            logger.info('This QQuickView %s has loaded %s and created the QML component.' %(str(self), self.source()))
             self.moveCenter()
             self.intQMLConnect()
 
         elif status == QQuickView.Loading:
-            print('This QQuickView is loading network data.')
+            logger.info('This QQuickView is loading network data.')
         elif status == QQuickView.Error:
-            print('One or more errors has occurred. Call errors() to retrieve a list of errors.')
-            print(self.errors())
+            logger.info('One or more errors has occurred. Call errors() to retrieve a list of errors.')
+            logger.info(self.errors())
 
     def getAllItems(self, obj):
         for item in obj.childItems():

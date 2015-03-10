@@ -31,14 +31,14 @@ Item{
 	    	parent.hovered();
 	    	parent.state = "hovered"
 
-	    	var obj = mapToItem(null, mouseX, mouseY);
-			print(obj.x, obj.y, obj.width, obj.height)
+	  //   	var obj = mapToItem(null, mouseX, mouseY);
+			// print(obj.x, obj.y, obj.width, obj.height)
 	    }
 	    onExited: {
 	    	parent.exited()
 	    	parent.state = "normal"
 
-	    	showTimer.start()
+	    	// showTimer.start()
 
 	    }
 

@@ -15,8 +15,8 @@ PlaylistPath = os.path.join(ProjectConfigPath, 'playlist')
 MusicDBFile = os.path.join(parentDir(os.getcwd()), 'music', 'music.db')
 
 
-if not os.path.exists(ProjectConfigPath): 
-	os.makedirs(ProjectConfigPath)
+if not os.path.exists(ProjectConfigPath):
+    os.makedirs(ProjectConfigPath)
 
-if not os.path.exists(PlaylistPath): 
-	os.makedirs(PlaylistPath)
+if not os.path.exists(PlaylistPath):
+    os.makedirs(PlaylistPath)

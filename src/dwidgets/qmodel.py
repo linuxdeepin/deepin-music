@@ -58,9 +58,6 @@ class ModelMetaclass(type):
             if isinstance(clsdict[k], pyqtSignal):
                 Signals.update({k:clsdict[k]})
                 clsdict.pop(k)
-            # elif isinstance(clsdict[k], types.FunctionType):
-            #     clsdict[k] = pyqtSlot()(clsdict[k])
-            #     print clsdict[k]
 
         class DObject(QtCore.QObject):
 

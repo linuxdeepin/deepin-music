@@ -9,4 +9,3 @@ organizationDomain = 'linuxdeepin.com'
 organizationName = "Deepin"
 windowIcon = os.sep.join(['skin', 'images', 'PFramer.png'])
 windowTitle = u'Deepin Music'
- 

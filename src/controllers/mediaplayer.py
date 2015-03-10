@@ -4,12 +4,14 @@
 
 import os
 import sys
-from PyQt5.QtCore import (QObject, pyqtSignal, pyqtSlot, 
-    pyqtProperty, QUrl, QDate)
+from PyQt5.QtCore import (QObject, pyqtSignal, pyqtSlot,
+                          pyqtProperty, QUrl, QDate)
 from PyQt5.QtGui import QCursor
 from .utils import registerContext, contexts
 from .utils import duration_to_string
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent, QMediaPlaylist
+
+from log import logger
 
 
 class MediaPlayer(QMediaPlayer):
@@ -57,7 +59,7 @@ class MediaPlayer(QMediaPlayer):
 
     @pyqtProperty(int)
     def notifyInterval(self):
-        return  super(MediaPlayer, self).notifyInterval()
+        return super(MediaPlayer, self).notifyInterval()
 
     @pyqtSlot(int)
     def setNotifyInterval(self, interval):
@@ -83,14 +85,7 @@ class MediaPlayer(QMediaPlayer):
     def playToggle(self, playing):
         if playing:
             self.play()
-
-            print self.isMetaDataAvailable()
             self.showMetaData()
-
-            # media = self.playlist().currentMedia()
-            # print(media.canonicalUrl())
-            # print(media.canonicalResource().dataSize())
-
         else:
             self.pause()
 
@@ -116,8 +111,10 @@ class MediaPlayer(QMediaPlayer):
             if isinstance(v, QDate):
                 v = v.toString('yyyy.MM.dd')
             metaData.update({key: v})
-        print metaData
-        path = os.sep.join([os.path.dirname(os.getcwd()), 'music', '%s.json' %self.metaData('Title')])
+        logger.info(metaData)
+        path = os.sep.join(
+            [os.path.dirname(os.getcwd()), 'music',
+             '%s.json' % self.metaData('Title')])
         f = open(path, 'w')
         f.write(json.dumps(metaData, indent=4))
         f.close()
