@@ -15,6 +15,7 @@ WebEngineView {
         if(level === 2){
             var rpc;
             try{
+                print(message)
                 rpc = JSON.parse(message)
                 if(rpc.hasOwnProperty('rpcId') && rpc.hasOwnProperty('rpcType')){
                     webEngineView.playMusicByID(rpc.rpcId)

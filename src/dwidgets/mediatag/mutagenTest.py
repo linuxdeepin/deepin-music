@@ -129,10 +129,11 @@ class Song(dict):
 
             for key in ['sample_rate', 'bitrate', 'length']:
                 try:
-                    if key == 'length':
-                        self['duration'] = getattr(audio.info, key)
-                    else:
-                        self[key] = getattr(audio.info, key)
+                    if hasattr(audio.info, key):
+                        if key == 'length':
+                            self['duration'] = getattr(audio.info, key)
+                        else:
+                            self[key] = getattr(audio.info, key)
                 except Exception, e:
                     print e
 
@@ -220,19 +221,23 @@ class Song(dict):
 
         p = copy.deepcopy(self)
         for key in keys:
-            if isinstance(self[key], unicode):
+            if self.has_key(key) and isinstance(self[key], unicode):
                 p[key] = self[key].encode('utf-8')
-        ret = '\n'.join(['%s: %s' % (key, p[key]) for key in keys])
+        ret = '\n'.join(['%s: %s' % (key, p[key]) for key in keys if self.has_key(key)])
         return ret
 
 
 if __name__ == '__main__':
-    song = Song('../../../music/1.mp3')
-    # print song.pprint()
+    ydir = QDir('/home/djf/workspace/yhm/')
+    print ydir.entryList()
+    print ydir.entryInfoList()
+    song = Song('/home/djf/workspace/yhm/游鸿明-下沙.ape')
+    print song.pprint()
+    print song
     # print song.isExisted(), song.baseName, song.fileName, song.ext
-    # song.title = u'愿得一人心'
+    # song.title = u'dddddddddd愿得一人心'
     # song.saveTags()
 
     # song = Song('../../../music/1.mp3')
     # print song.pprint()
-    print song.getMp3FontCover()
+    # print song.getMp3FontCover()

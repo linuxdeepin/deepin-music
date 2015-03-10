@@ -71,7 +71,7 @@ Rectangle {
                         width: mainWindow.width - leftSideBar.width
                         height: mainWindow.height - titleBar.height - playBottomBar.height
 
-                        url: "http://music.haosou.com/_linuxdeepin/"
+                        url: ""
                         Behavior on opacity {
                             NumberAnimation { duration: 500 }
                         }
