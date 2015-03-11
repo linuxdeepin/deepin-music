@@ -43,31 +43,7 @@ TAGS_KEYS_OVERRIDE['ASF'] = {
 }
 
 
-def auto_decode(s):
-    ''' auto detect the code and return unicode object. '''
-    if isinstance(s, unicode):
-        return s
-    try:
-        return s.decode("gbk")
-    except UnicodeError:
-        try:
-            codedetect = chardet.detect(s)["encoding"]
-            return s.decode(codedetect)
-        except:
-            return "[Invalid Encoding]"
 
-
-def fix_charset(s):
-    '''Fix the charset. unicode error'''
-    if not s:
-        return ""
-    repr_char = repr(s)
-    if repr_char.startswith("u"):
-        if repr_char.find("\u") != -1:
-            return s.encode("utf-8")
-        return auto_decode(eval(repr_char[1:])).encode("utf-8")
-    else:
-        return s
 
 
 class Song(dict):
@@ -117,7 +93,7 @@ class Song(dict):
                     value = audio[file_tag]
                     if isinstance(value, list) or isinstance(value, tuple):
                         value = value[0]
-                    fix_value = fix_charset(value)
+                    fix_value = common.fix_charset(value)
                     if fix_value == "[Invalid Encoding]":
                         if tag == "title":
                             fix_value = self.fileName
@@ -228,16 +204,16 @@ class Song(dict):
 
 
 if __name__ == '__main__':
-    ydir = QDir('/home/djf/workspace/yhm/')
-    print ydir.entryList()
-    print ydir.entryInfoList()
-    song = Song('/home/djf/workspace/yhm/游鸿明-下沙.ape')
-    print song.pprint()
-    print song
+    # ydir = QDir('/home/djf/workspace/yhm/')
+    # print ydir.entryList()
+    # print ydir.entryInfoList()
+    # song = Song('/home/djf/workspace/yhm/游鸿明-下沙.ape')
+    # print song.pprint()
+    # print song
     # print song.isExisted(), song.baseName, song.fileName, song.ext
     # song.title = u'dddddddddd愿得一人心'
     # song.saveTags()
 
-    # song = Song('../../../music/1.mp3')
-    # print song.pprint()
+    song = Song('../../../music/1.mp3')
+    print song.pprint()
     # print song.getMp3FontCover()

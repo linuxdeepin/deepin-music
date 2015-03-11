@@ -14,36 +14,81 @@ from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent, QMediaPlaylist
 from log import logger
 
 
-class MediaPlayer(QMediaPlayer):
+
+class PlayerBin(QMediaPlayer):
+
+    def __init__(self):
+        super(PlayerBin, self).__init__()
+        self.setNotifyInterval(50)
+
+
+class MediaPlayer(QObject):
 
     __contextName__ = "MediaPlayer"
 
     musicInfoChanged = pyqtSignal()
 
+    positionChanged = pyqtSignal(int)
+    stateChanged = pyqtSignal(int)
+    mediaStatusChanged = pyqtSignal('QMediaPlayer::MediaStatus')
+    volumeChanged = pyqtSignal(int)
+
     @registerContext
     def __init__(self):
         super(MediaPlayer, self).__init__()
-        self.setNotifyInterval(50)
+
+        self.player = PlayerBin()
+        self._playlist = None
+
+        self._state = 0
+        self._isPlaying = False
+
         self.initConnect()
 
     def initConnect(self):
-        self.currentMediaChanged.connect(self.updateMusicInfo)
+        self.player.currentMediaChanged.connect(self.updateMusicInfo)
+        self.player.positionChanged.connect(self.positionChange)
+        # self.player.stateChanged.connect(self.stateChange)
+        self.player.mediaStatusChanged.connect(self.mediaStatusChanged)
+        self.player.volumeChanged.connect(self.volumeChanged)
 
     @pyqtSlot('QMediaContent')
     def updateMusicInfo(self, media):
         self.musicInfoChanged.emit()
 
+    @pyqtSlot(int)
+    def positionChange(self, pos):
+        self.positionChanged.emit(pos)
+
+    @pyqtSlot(int)
+    def stateChange(self, state):
+        self.stateChanged.emit(state)
+
+    @pyqtSlot(int)
+    def mediaStatusChange(self, status):
+        self.mediaStatusChanged.emit(status)
+
+    @pyqtSlot(int)
+    def volumeChange(self, volume):
+        self.volumeChanged.emit(volume)
+
     @pyqtProperty('QMediaContent')
     def mediaObject(self):
-        return super(MediaPlayer, self).media()
+        return self.player.media()
 
-    @pyqtSlot(str)
+    @pyqtSlot('QString')
     def setMediaUrl(self, url):
-        self.setMedia(QMediaContent(QUrl(url)))
+        self.player.setMedia(QMediaContent(QUrl(url)))
+
+        self.playToggle(self._isPlaying)
 
     @pyqtProperty('QVariant')
     def playlist(self):
-        return super(MediaPlayer, self).playlist()
+        return self._playlist
+
+    @pyqtSlot('QMediaPlaylist')
+    def setPlaylist(self, playlist):
+        self._playlist = playlist
 
     @pyqtSlot(int)
     def setPlaybackMode(self, playbackMode):
@@ -51,57 +96,81 @@ class MediaPlayer(QMediaPlayer):
 
     @pyqtProperty(int)
     def volume(self):
-        return super(MediaPlayer, self).volume()
+        return self.player.volume()
 
     @pyqtSlot(int)
     def setVolume(self, value):
-        return super(MediaPlayer, self).setVolume(value)
+        return self.player.setVolume(value)
 
     @pyqtProperty(int)
     def notifyInterval(self):
-        return super(MediaPlayer, self).notifyInterval()
+        return self.player.notifyInterval()
 
     @pyqtSlot(int)
     def setNotifyInterval(self, interval):
-        super(MediaPlayer, self).setNotifyInterval(interval)
+        self.player.setNotifyInterval(interval)
 
     @pyqtSlot(int)
-    def setPostion(self, pos):
-        super(MediaPlayer, self).setPostion(pos)
+    def setPosition(self, pos):
+        self.player.setPosition(pos)
 
     @pyqtProperty(int)
     def duration(self):
-        return super(MediaPlayer, self).duration()
+        return self.player.duration()
 
     @pyqtProperty(bool)
     def seekable(self):
-        return self.isSeekable()
+        return self.player.isSeekable()
 
     @pyqtProperty(str)
     def errorString(self):
-        return super(MediaPlayer, self).errorString()
+        return self.player.errorString()
 
     @pyqtSlot(bool)
     def playToggle(self, playing):
         if playing:
             self.play()
-            self.showMetaData()
         else:
             self.pause()
 
+        self._isPlaying = playing
+
+    @pyqtSlot()
+    def stop(self):
+        print('+++++++++++++')
+        self.player.stop()
+        self._state = 0
+        self.stateChanged.emit(self._state)
+
+    @pyqtSlot()
+    def play(self):
+        self.player.play()
+        self._state = 1
+        self.stateChanged.emit(self._state)
+
+    @pyqtSlot()
+    def pause(self):
+        self.player.pause()
+        self._state = 2
+        self.stateChanged.emit(self._state)
+
+    @pyqtProperty(int)
+    def state(self):
+        return self._state
+
     @pyqtProperty('QString')
     def positionString(self):
-        position = super(MediaPlayer, self).position()
+        position = self.player.position()
         return duration_to_string(position)
 
     @pyqtProperty('QString')
     def durationString(self):
-        duration = super(MediaPlayer, self).duration()
+        duration = self.player.duration()
         return duration_to_string(duration)
 
     @pyqtSlot('QString', result='QString')
     def metaData(self, key):
-        return super(MediaPlayer, self).metaData(key)
+        return self.player.metaData(key)
 
     def showMetaData(self):
         import json

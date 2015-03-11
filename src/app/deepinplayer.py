@@ -8,7 +8,7 @@ from views import MainWindow, SimpleWindow, MiniWindow
 from controllers import contexts, Web360ApiWorker, MusicManageWorker
 from controllers import MenuWorker, WindowManageWorker
 from controllers import MediaPlayer, PlaylistWorker
-from controllers import ConfigWorker
+from controllers import ConfigWorker, DBWorker
 
 from models import MusicDataBase
 
@@ -53,13 +53,14 @@ class DeepinPlayer(QObject):
         self.playlistWorker = PlaylistWorker()
 
         self.musicDataBase = MusicDataBase()
+        self.dbworker = DBWorker()
 
     def initQMLContext(self):
         self.mainWindow.setContexts(contexts)
         self.mainWindow.setSource(QUrl('views/Main.qml'))
 
     def initConnect(self):
-        pass
+        self.playlistWorker.mediaChanged.connect(self.mediaPlayer.setMediaUrl)
 
     def showMainWindow(self):
         self.mainWindow.show()

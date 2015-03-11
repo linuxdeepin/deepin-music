@@ -18,7 +18,10 @@ class PlaylistWorker(QObject):
 
     __contextName__ = 'PlaylistWorker'
 
-    nameExisted = pyqtSignal(str)
+    nameExisted = pyqtSignal('QString')
+
+    mediaChanged = pyqtSignal('QString')
+
 
     @registerContext
     def __init__(self, parent=None):
@@ -32,10 +35,10 @@ class PlaylistWorker(QObject):
 
 
     def initPlaylist(self):
-        self.addMediaToTemporary(os.sep.join([os.environ['HOME'], 'workspace', 'yhm', '游鸿明 - 往快乐逃.flac']))
-        self.addMediaToTemporary(os.sep.join([os.environ['HOME'], 'workspace', 'yhm', 'Track01.wav']))
-        self.addMediaToTemporary(os.sep.join([os.environ['HOME'], 'workspace', 'yhm', '游鸿明-下沙.ape']))
-        self.addMediaToTemporary(os.sep.join([os.environ['HOME'], 'workspace', 'yhm', '游鸿明 - 红糖水.flac']))
+        # self.addMediaToTemporary(os.sep.join([os.environ['HOME'], 'workspace', 'yhm', '游鸿明 - 往快乐逃.flac']))
+        # self.addMediaToTemporary(os.sep.join([os.environ['HOME'], 'workspace', 'yhm', 'Track01.wav']))
+        # self.addMediaToTemporary(os.sep.join([os.environ['HOME'], 'workspace', 'yhm', '游鸿明-下沙.ape']))
+        # self.addMediaToTemporary(os.sep.join([os.environ['HOME'], 'workspace', 'yhm', '游鸿明 - 红糖水.flac']))
         self.addMediaToTemporary(os.sep.join([os.path.dirname(os.getcwd()), 'music', '1.mp3']))
         self.addMediaToTemporary(os.sep.join(['/usr/share/deepin-sample-music/邓入比_我们的情歌.mp3']))
         self.addMediaToTemporary(os.sep.join(['/usr/share/deepin-sample-music/郭一凡_说走就走的旅行.mp3']))
@@ -44,8 +47,6 @@ class PlaylistWorker(QObject):
 
         self.setPlaylistByName('temporary')
         self.currentPlaylist.setCurrentIndex(0)
-
-        self.currentPlaylist.setPlaybackMode(QMediaPlaylist.Loop)
 
     def savePlaylistByName(self, name):
         f = QFile(os.sep.join([PlaylistPath, '%s.m3u' % name]))
@@ -65,7 +66,6 @@ class PlaylistWorker(QObject):
     @pyqtProperty('QMediaPlaylist')
     def currentPlaylist(self):
         return self._currentPlaylist
-
 
     def getPlaylistByName(self, name):
         if name in self._playlists:
@@ -104,8 +104,16 @@ class PlaylistWorker(QObject):
     def previous(self):
         if self._currentPlaylist:
             self._currentPlaylist.previous()
+            url = self._currentPlaylist.currentMedia().canonicalUrl().toString()
+            self.mediaChanged.emit(url)
 
     @pyqtSlot()
     def next(self):
         if self._currentPlaylist:
             self._currentPlaylist.next()
+            url = self._currentPlaylist.currentMedia().canonicalUrl().toString()
+            self.mediaChanged.emit(url)
+
+    @pyqtSlot()
+    def playOnlineMusic(self, result):
+        pass

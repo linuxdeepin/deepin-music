@@ -21,6 +21,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import chardet
 
 from mutagen import File as MutagenFile
 from mutagen.asf import ASF
@@ -101,3 +102,31 @@ def get_audio_length(path):
         return 0
     except:
         return 0
+
+
+
+def auto_decode(s):
+    ''' auto detect the code and return unicode object. '''
+    if isinstance(s, unicode):
+        return s
+    try:
+        return s.decode("gbk")
+    except UnicodeError:
+        try:
+            codedetect = chardet.detect(s)["encoding"]
+            return s.decode(codedetect)
+        except:
+            return "[Invalid Encoding]"
+
+
+def fix_charset(s):
+    '''Fix the charset. unicode error'''
+    if not s:
+        return ""
+    repr_char = repr(s)
+    if repr_char.startswith("u"):
+        if repr_char.find("\u") != -1:
+            return s.encode("utf-8")
+        return auto_decode(eval(repr_char[1:])).encode("utf-8")
+    else:
+        return s

@@ -22,8 +22,8 @@ Item {
     function playMusic(result){
         MediaPlayer.stop()
         MediaPlayer.setMediaUrl(result.playlinkUrl);
-        updateMusicInfo(result.songName, result.singerName)
         MediaPlayer.playToggle(true)
+        updateMusicInfo(result.songName, result.singerName)
     }
 
     function updateSlider(position) {
