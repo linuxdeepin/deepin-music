@@ -6,6 +6,8 @@ Item {
     property var miniWindow
 
     function initConnect(){
+        Web360ApiWorker.playUrl.connect(playMusic);
+
         MediaPlayer.positionChanged.connect(updateSlider);
         MediaPlayer.positionChanged.connect(updateMusicTime);
         MediaPlayer.stateChanged.connect(updatePlayButton);
@@ -15,7 +17,13 @@ Item {
 
         MediaPlayer.volumeChanged(ConfigWorker.volume);
         MediaPlayer.setPlaybackMode(ConfigWorker.playbackMode);
+    }
 
+    function playMusic(result){
+        MediaPlayer.stop()
+        MediaPlayer.setMediaUrl(result.playlinkUrl);
+        updateMusicInfo(result.songName, result.singerName)
+        MediaPlayer.playToggle(true)
     }
 
     function updateSlider(position) {
@@ -36,13 +44,24 @@ Item {
         print('audioAvailableChanged---------')
     }
 
-    function updateMusicInfo()
+    function updateMusicInfo(title, artist)
     {
-        mainWindow.playBottomBar.updateMusicName(MediaPlayer.metaData('Title'));
-        mainWindow.playBottomBar.updateArtistName(MediaPlayer.metaData('ContributingArtist'));
+        var _title, _artist
+        if(title === undefined){
+            _title = MediaPlayer.metaData('Title');
+        }else{
+            _title = title;
+        }
+        if(artist === undefined){
+            _artist = MediaPlayer.metaData('ContributingArtist');
+        }else{
+            _artist = artist;
+        }
+        mainWindow.playBottomBar.updateMusicName(_title);
+        mainWindow.playBottomBar.updateArtistName(_artist);
         
-        simpleWindow.playBottomBar.updateMusicName(MediaPlayer.metaData('Title'));
-        simpleWindow.playBottomBar.updateArtistName(MediaPlayer.metaData('ContributingArtist'));
+        simpleWindow.playBottomBar.updateMusicName(_title);
+        simpleWindow.playBottomBar.updateArtistName(_artist);
     }
 
 

@@ -16,14 +16,8 @@ Item {
 
         MenuWorker.miniTrigger.connect(showMiniWindow);
 
-        Web360ApiWorker.playUrl.connect(playMusic);
+        
 
-    }
-
-    function playMusic(url){
-        MediaPlayer.stop()
-        MediaPlayer.setMediaUrl(url);
-        MediaPlayer.playToggle(true)
     }
 
     function showMainWindow() {

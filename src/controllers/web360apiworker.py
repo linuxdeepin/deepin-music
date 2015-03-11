@@ -10,10 +10,12 @@ from .utils import registerContext
 from dwidgets import dthread
 import threading
 
+from log import logger
+
 
 class Web360ApiWorker(QObject):
 
-    playUrl = pyqtSignal(unicode)
+    playUrl = pyqtSignal('QVariant')
 
     __contextName__ = 'Web360ApiWorker'
 
@@ -46,7 +48,7 @@ class Web360ApiWorker(QObject):
 
     def emitURL(self, jsonRet):
         if jsonRet and 'playlinkUrl' in jsonRet:
-            print(jsonRet['playlinkUrl'])
-            self.playUrl.emit(jsonRet['playlinkUrl'])
+            logger.info(jsonRet)
+            self.playUrl.emit(jsonRet)
         else:
-            print('Get URL Error', jsonRet)
+            logger.info('Get URL Error' + repr(jsonRet))
