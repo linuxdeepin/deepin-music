@@ -13,15 +13,19 @@ Item {
         MediaPlayer.stateChanged.connect(updatePlayButton);
         MediaPlayer.mediaStatusChanged.connect(updateMusic);
         MediaPlayer.volumeChanged.connect(updateVolumeSlider);
-        MediaPlayer.playlist.playbackModeChanged.connect(updateCycleButton);
+        MediaPlayer.playbackModeChanged.connect(updateCycleButton);
+        MediaPlayer.musicInfoChanged.connect(updateMusicInfo);
 
+        MediaPlayer.setPlaylistByName(ConfigWorker.lastPlaylistName)
+        MediaPlayer.mediaChanged(ConfigWorker.lastPlayedUri)
         MediaPlayer.volumeChanged(ConfigWorker.volume);
         MediaPlayer.setPlaybackMode(ConfigWorker.playbackMode);
+
     }
 
     function playMusic(result){
         MediaPlayer.stop()
-        MediaPlayer.setMediaUrl(result.playlinkUrl);
+        MediaPlayer.setOnlineMediaUrl(result.playlinkUrl);
         MediaPlayer.playToggle(true)
         updateMusicInfo(result.songName, result.singerName)
     }
@@ -46,22 +50,11 @@ Item {
 
     function updateMusicInfo(title, artist)
     {
-        var _title, _artist
-        if(title === undefined){
-            _title = MediaPlayer.metaData('Title');
-        }else{
-            _title = title;
-        }
-        if(artist === undefined){
-            _artist = MediaPlayer.metaData('ContributingArtist');
-        }else{
-            _artist = artist;
-        }
-        mainWindow.playBottomBar.updateMusicName(_title);
-        mainWindow.playBottomBar.updateArtistName(_artist);
+        mainWindow.playBottomBar.updateMusicName(title);
+        mainWindow.playBottomBar.updateArtistName(artist);
         
-        simpleWindow.playBottomBar.updateMusicName(_title);
-        simpleWindow.playBottomBar.updateArtistName(_artist);
+        simpleWindow.playBottomBar.updateMusicName(title);
+        simpleWindow.playBottomBar.updateArtistName(artist);
     }
 
 
@@ -69,7 +62,6 @@ Item {
         print('mediaStatusChanged', status)
         if (status == 3 || status==6) {
             print('The current media has been loaded')
-            updateMusicInfo()
         }
     }
 
@@ -159,11 +151,11 @@ Item {
     Connections {
         target: mainWindow.playBottomBar
 
-        onPreMusic: PlaylistWorker.previous()
+        onPreMusic: MediaPlayer.previous()
 
         onPlayed: MediaPlayer.playToggle(isPlaying)
 
-        onNextMusic: PlaylistWorker.next()
+        onNextMusic: MediaPlayer.next()
 
         onVolumeChanged: {
             MediaPlayer.setVolume(parseInt(value * 100));
@@ -183,11 +175,11 @@ Item {
     Connections {
         target: simpleWindow.playBottomBar
 
-        onPreMusic: PlaylistWorker.previous()
+        onPreMusic: MediaPlayer.previous()
 
         onPlayed: MediaPlayer.playToggle(isPlaying)
 
-        onNextMusic: PlaylistWorker.next()
+        onNextMusic: MediaPlayer.next()
 
         onVolumeChanged: {
             MediaPlayer.setVolume(parseInt(value * 100))
@@ -206,11 +198,11 @@ Item {
     Connections {
         target: miniWindow
 
-        onPreMusic: PlaylistWorker.previous()
+        onPreMusic: MediaPlayer.previous()
 
         onPlayed: MediaPlayer.playToggle(isPlaying)
 
-        onNextMusic: PlaylistWorker.next()
+        onNextMusic: MediaPlayer.next()
     }
 
     Component.onCompleted: {

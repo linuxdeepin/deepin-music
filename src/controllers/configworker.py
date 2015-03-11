@@ -15,6 +15,9 @@ class ConfigWorker(object):
     __metaclass__ = ModelMetaclass
 
     __Fields__ = (
+        ('lastPlaylistName', 'QString', 'temporary'),
+        ('lastPlayedUri', 'QString', os.sep.join([os.path.dirname(os.getcwd()), 'music', '1.mp3'])),
+        ('playing', bool, True),
         ('playbackMode', int, 4),
         ('volume', int, 10)
     )

@@ -26,12 +26,15 @@ class MediaPlayer(QObject):
 
     __contextName__ = "MediaPlayer"
 
-    musicInfoChanged = pyqtSignal()
+    musicInfoChanged = pyqtSignal('QString', 'QString')
 
     positionChanged = pyqtSignal(int)
     stateChanged = pyqtSignal(int)
     mediaStatusChanged = pyqtSignal('QMediaPlayer::MediaStatus')
     volumeChanged = pyqtSignal(int)
+    playbackModeChanged = pyqtSignal(int)
+
+    mediaChanged = pyqtSignal('QString')
 
     @registerContext
     def __init__(self):
@@ -46,15 +49,13 @@ class MediaPlayer(QObject):
         self.initConnect()
 
     def initConnect(self):
-        self.player.currentMediaChanged.connect(self.updateMusicInfo)
+
         self.player.positionChanged.connect(self.positionChange)
-        # self.player.stateChanged.connect(self.stateChange)
+
         self.player.mediaStatusChanged.connect(self.mediaStatusChanged)
         self.player.volumeChanged.connect(self.volumeChanged)
 
-    @pyqtSlot('QMediaContent')
-    def updateMusicInfo(self, media):
-        self.musicInfoChanged.emit()
+        self.mediaChanged.connect(self.updateMedia)
 
     @pyqtSlot(int)
     def positionChange(self, pos):
@@ -76,12 +77,6 @@ class MediaPlayer(QObject):
     def mediaObject(self):
         return self.player.media()
 
-    @pyqtSlot('QString')
-    def setMediaUrl(self, url):
-        self.player.setMedia(QMediaContent(QUrl(url)))
-
-        self.playToggle(self._isPlaying)
-
     @pyqtProperty('QVariant')
     def playlist(self):
         return self._playlist
@@ -90,9 +85,23 @@ class MediaPlayer(QObject):
     def setPlaylist(self, playlist):
         self._playlist = playlist
 
+    @pyqtSlot('QString')
+    def setPlaylistByName(self, name):
+        playlistWorker = contexts['PlaylistWorker']
+        configWorker = contexts['ConfigWorker']
+
+        playbackMode = configWorker.playbackMode
+
+        playlist = playlistWorker.getPlaylistByName(name)
+        playlist.setPlaybackMode(playbackMode)
+        self.setPlaylist(playlist)
+
     @pyqtSlot(int)
     def setPlaybackMode(self, playbackMode):
+        configWorker = contexts['ConfigWorker']
+        configWorker.playbackMode = playbackMode
         self.playlist.setPlaybackMode(playbackMode)
+        self.playbackModeChanged.emit(playbackMode)
 
     @pyqtProperty(int)
     def volume(self):
@@ -137,7 +146,6 @@ class MediaPlayer(QObject):
 
     @pyqtSlot()
     def stop(self):
-        print('+++++++++++++')
         self.player.stop()
         self._state = 0
         self.stateChanged.emit(self._state)
@@ -187,3 +195,54 @@ class MediaPlayer(QObject):
         f = open(path, 'w')
         f.write(json.dumps(metaData, indent=4))
         f.close()
+
+    @pyqtSlot('QString')
+    def setMediaUrl(self, url):
+        if url.startswith('http://') or url.startswith('https://'):
+            _url = QUrl(url)
+            print _url.path(), '------------'
+        else:
+            _url = QUrl.fromLocalFile(url)
+
+        self.player.setMedia(QMediaContent(_url))
+        self.playToggle(self._isPlaying)
+
+    @pyqtSlot()
+    def previous(self):
+        if self._playlist:
+            self._playlist.previous()
+            url = self._playlist.currentMedia().canonicalUrl()
+            if url.isLocalFile():
+                url = url.toLocalFile()
+            else:
+                url = url.toString()
+            self.mediaChanged.emit(url)
+
+    @pyqtSlot()
+    def next(self):
+        if self._playlist:
+            self._playlist.next()
+            url = self._playlist.currentMedia().canonicalUrl()
+
+            if url.isLocalFile():
+                url = url.toLocalFile()
+            else:
+                url = url.toString()
+            self.mediaChanged.emit(url)
+
+    @pyqtSlot('QString')
+    def setOnlineMediaUrl(self, url):
+        playlistWorker = contexts['PlaylistWorker']
+        playlistWorker.addMediaToTemporary(url)
+
+        if self._playlist is not playlistWorker.termporaryPlaylist:
+            self.setPlaylist(playlistWorker.termporaryPlaylist)
+
+        self.mediaChanged.emit(url)
+
+
+    def updateMedia(self, url):
+        title = '11111111111'
+        artist = 'ymh'
+        self.setMediaUrl(url)
+        self.musicInfoChanged.emit(title, artist)

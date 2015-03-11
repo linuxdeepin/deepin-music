@@ -60,7 +60,7 @@ class DeepinPlayer(QObject):
         self.mainWindow.setSource(QUrl('views/Main.qml'))
 
     def initConnect(self):
-        self.playlistWorker.mediaChanged.connect(self.mediaPlayer.setMediaUrl)
+        pass
 
     def showMainWindow(self):
         self.mainWindow.show()

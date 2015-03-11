@@ -20,8 +20,6 @@ class PlaylistWorker(QObject):
 
     nameExisted = pyqtSignal('QString')
 
-    mediaChanged = pyqtSignal('QString')
-
 
     @registerContext
     def __init__(self, parent=None):
@@ -43,10 +41,10 @@ class PlaylistWorker(QObject):
         self.addMediaToTemporary(os.sep.join(['/usr/share/deepin-sample-music/邓入比_我们的情歌.mp3']))
         self.addMediaToTemporary(os.sep.join(['/usr/share/deepin-sample-music/郭一凡_说走就走的旅行.mp3']))
         self.addMediaToTemporary(os.sep.join(['/usr/share/deepin-sample-music/胡彦斌_依然是你.mp3']))
-        self.savePlaylistByName('temporary')
+        # self.savePlaylistByName('temporary')
 
-        self.setPlaylistByName('temporary')
-        self.currentPlaylist.setCurrentIndex(0)
+        # self.setPlaylistByName('temporary')
+        # self.currentPlaylist.setCurrentIndex(0)
 
     def savePlaylistByName(self, name):
         f = QFile(os.sep.join([PlaylistPath, '%s.m3u' % name]))
@@ -67,6 +65,11 @@ class PlaylistWorker(QObject):
     def currentPlaylist(self):
         return self._currentPlaylist
 
+    @pyqtProperty('QMediaPlaylist')
+    def termporaryPlaylist(self):
+        return self._playlists['temporary']
+
+    @pyqtSlot('QString', result='QMediaPlaylist')
     def getPlaylistByName(self, name):
         if name in self._playlists:
             return self._playlists[name]
@@ -99,20 +102,6 @@ class PlaylistWorker(QObject):
             self.nameExisted.emit(name)
         else:
             self._playlists[name] = QMediaPlaylist()
-
-    @pyqtSlot()
-    def previous(self):
-        if self._currentPlaylist:
-            self._currentPlaylist.previous()
-            url = self._currentPlaylist.currentMedia().canonicalUrl().toString()
-            self.mediaChanged.emit(url)
-
-    @pyqtSlot()
-    def next(self):
-        if self._currentPlaylist:
-            self._currentPlaylist.next()
-            url = self._currentPlaylist.currentMedia().canonicalUrl().toString()
-            self.mediaChanged.emit(url)
 
     @pyqtSlot()
     def playOnlineMusic(self, result):

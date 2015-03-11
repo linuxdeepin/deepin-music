@@ -36,7 +36,6 @@ class MenuWorker(QObject):
         super(MenuWorker, self).__init__()
 
     def _menu_item_invoked(self, _id, _checked):
-        logger.info(_id, _checked, '+++++++++++++')
         if _id == "MiniMode":
             self.miniTrigger.emit()
 
