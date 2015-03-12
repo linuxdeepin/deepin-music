@@ -21,13 +21,6 @@ Item {
 
     }
 
-    function playMusic(result){
-        MediaPlayer.stop()
-        MediaPlayer.setOnlineMediaUrl(result.playlinkUrl);
-        MediaPlayer.playToggle(true)
-        updateMusicInfo(result.songName, result.singerName)
-    }
-
     function updateSlider(position) {
         var rate = position / MediaPlayer.duration;
 
@@ -69,6 +62,12 @@ Item {
         simpleWindow.playBottomBar.updateCoverImage(cover);
         simpleWindow.playBottomBar.updateMusicName(title);
         simpleWindow.playBottomBar.updateArtistName(artist);
+
+        if(ConfigWorker.isCoverBackground){
+            mainWindow.mainWindowController.setSkinByImage(cover);
+            simpleWindow.simpleWindowController.setSkinByImage(cover);
+            miniWindow.miniWindowController.setSkinByImage(cover);
+        }
     }
 
     function updatePlayButton(state) {

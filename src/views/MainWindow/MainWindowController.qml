@@ -24,27 +24,6 @@ Item {
         bgImage.source = url
     }
 
-    // Connections {
-    //     target: leftSideBar
-    //     onSwicthViewByID: {
-    //         if (viewID == 'WebMusic360Page'){
-    //             webEngineViewPage.url = "http://10.0.0.153:8093/";
-    //         }
-    //         else if (viewID == 'MusicManagerPage'){
-    //             webEngineViewPage.url = MusicManageWorker.artistUrl
-    //         }
-    //         else if (viewID == 'PlayListPage'){
-    //             webEngineViewPage.url = "https://www.baidu.com";
-    //         }
-    //         else if (viewID == 'DownloadPage'){
-    //             webEngineViewPage.url = "file:///tmp/90.html";
-    //         }else{
-    //             console.log('--------------No Page--------------');
-    //         }
-    //     }
-    // }
-
-
     Connections {
         target: leftSideBar
         onSwicthViewByID: {
