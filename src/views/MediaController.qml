@@ -168,7 +168,6 @@ Item {
 
         onPlaybackModeChanged:{
             MediaPlayer.setPlaybackMode(playbackMode);
-            // simpleWindow.playBottomBar.cycleButton.playbackMode = playbackMode;
         }
     }
 
@@ -191,7 +190,6 @@ Item {
 
         onPlaybackModeChanged:{
            MediaPlayer.setPlaybackMode(playbackMode);
-           // mainWindow.playBottomBar.cycleButton.playbackMode = playbackMode;
         }
     }
 
