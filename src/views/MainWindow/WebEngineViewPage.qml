@@ -16,7 +16,8 @@ WebEngineView {
             var rpc;
             try{
                 rpc = JSON.parse(message)
-                if(rpc.hasOwnProperty('rpcId') && rpc.hasOwnProperty('rpcType')){
+                if(rpc.hasOwnProperty('rpcId') && rpc.hasOwnProperty('rpcActionType')){
+                    print(rpc.rpcActionType, '===========')
                     webEngineView.playMusicByID(rpc.rpcId)
                 }
             }catch(error){
@@ -43,7 +44,7 @@ WebEngineView {
                         var message = JSON.stringify({
                             'rpcVersion': '1.0', 
                             'rpcId':id, 
-                            'rpcType': type
+                            'rpcActionType': 'Play'
                         })
                         console.error(message);
                     }
@@ -53,7 +54,7 @@ WebEngineView {
                         var message = JSON.stringify({
                             'rpcVersion': '1.0', 
                             'rpcId':id, 
-                            'rpcType': type
+                            'rpcActionType': type
                         })
                         console.error(message);
                     }
@@ -63,7 +64,7 @@ WebEngineView {
                         var message = JSON.stringify({
                             'rpcVersion': '1.0', 
                             'rpcId':id, 
-                            'rpcType': type
+                            'rpcActionType': 'Download'
                         })
                         console.error(message);
                     }
@@ -74,6 +75,7 @@ WebEngineView {
                         var message = JSON.stringify({
                             'rpcVersion': '1.0', 
                             'rpcId':id,
+                            'rpcActionType': 'AddFavorite'
                         })
                         console.error(message);
 
@@ -84,6 +86,7 @@ WebEngineView {
                          var message = JSON.stringify({
                             'rpcVersion': '1.0', 
                             'rpcId':id,
+                            'rpcActionType': 'RemoveFavorite'
                         })
                         console.error(message);
 
