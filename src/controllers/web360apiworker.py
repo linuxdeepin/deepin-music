@@ -15,7 +15,7 @@ from log import logger
 
 class Web360ApiWorker(QObject):
 
-    playUrl = pyqtSignal('QVariant')
+    addMediaContent = pyqtSignal('QVariant')
 
     __contextName__ = 'Web360ApiWorker'
 
@@ -42,9 +42,12 @@ class Web360ApiWorker(QObject):
             'sign': sign
         }
         ret = requests.get("http://s.music.haosou.com/player/songForPartner", params=params)
-        jsonRet = ret.json()
-        self.emitURL(jsonRet)
-        return jsonRet
+
+        result = {
+            'url': ret.url,
+            'ret': ret.json()
+        }
+        self.addMediaContent.emit(result)
 
     def emitURL(self, jsonRet):
         if jsonRet and 'playlinkUrl' in jsonRet:

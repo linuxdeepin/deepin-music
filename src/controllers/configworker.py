@@ -19,7 +19,8 @@ class ConfigWorker(object):
         ('lastPlayedUri', 'QString', os.sep.join([os.path.dirname(os.getcwd()), 'music', '1.mp3'])),
         ('playing', bool, True),
         ('playbackMode', int, 4),
-        ('volume', int, 10)
+        ('volume', int, 10),
+        ('isCoverBackground', bool, True)
     )
 
     __contextName__ = "ConfigWorker"

@@ -215,5 +215,5 @@ if __name__ == '__main__':
     # song.saveTags()
 
     song = Song('../../../music/1.mp3')
-    print song.pprint()
+    print song.pprint(), song
     # print song.getMp3FontCover()

@@ -1,5 +1,6 @@
 import QtQuick 2.4
 import QtQuick.Window 2.2
+import QtGraphicalEffects 1.0
 import QtQuick.Controls 1.3
 import QtWebEngine 1.0
 import QtMultimedia 5.0
@@ -12,8 +13,10 @@ Rectangle {
     id: mainWindow
 
     property var views: ['WebMusic360Page', 'MusicManagerPage', 'PlayListPage', 'DownloadPage']
+    property var bgImage: bgImage
     property var titleBar: titleBar
     property var playBottomBar: playBottomBar
+    property var webEngineViewPage: webEngineViewPage
     property var mainWindowController: mainWindowController
 
     color: "lightgray"
@@ -27,6 +30,16 @@ Rectangle {
         horizontalTileMode: BorderImage.Stretch
         verticalTileMode: BorderImage.Stretch
     }
+
+
+    GaussianBlur {
+        anchors.fill: bgImage
+        source: bgImage
+        deviation: 4
+        radius: 8
+        samples: 16
+    }
+
     Column{
 
         Row{
@@ -71,7 +84,7 @@ Rectangle {
                         width: mainWindow.width - leftSideBar.width
                         height: mainWindow.height - titleBar.height - playBottomBar.height
 
-                        url: "http://music.haosou.com/_linuxdeepin/"
+                        url: ""
                         Behavior on opacity {
                             NumberAnimation { duration: 500 }
                         }

@@ -60,7 +60,7 @@ class DeepinPlayer(QObject):
         self.mainWindow.setSource(QUrl('views/Main.qml'))
 
     def initConnect(self):
-        pass
+        self.web360ApiWorker.addMediaContent.connect(self.mediaPlayer.addOnlineMedia)
 
     def showMainWindow(self):
         self.mainWindow.show()

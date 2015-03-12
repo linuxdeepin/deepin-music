@@ -1,5 +1,6 @@
 import QtQuick 2.4
 import DMusic 1.0
+import QtGraphicalEffects 1.0
 import "../DMusicWidgets"
 
 Rectangle {
@@ -21,6 +22,15 @@ Rectangle {
         horizontalTileMode: BorderImage.Stretch
         verticalTileMode: BorderImage.Stretch
     }
+
+    GaussianBlur {
+        anchors.fill: bgImage
+        source: bgImage
+        deviation: 4
+        radius: 8
+        samples: 16
+    }
+
     Column{
 
         TitleBar {

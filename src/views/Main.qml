@@ -68,4 +68,13 @@ Item {
             miniWindow.miniWindowController.setSkinByImage();
         }
     }
+
+    Timer {
+        repeat: false
+        interval: 100
+        running: true
+        onTriggered:{
+            mainWindow.webEngineViewPage.url = "http://music.haosou.com/_linuxdeepin/";
+        }
+    }
 }

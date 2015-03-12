@@ -6,7 +6,7 @@ Item {
     property var miniWindow
 
     function initConnect(){
-        Web360ApiWorker.playUrl.connect(playMusic);
+        // Web360ApiWorker.playUrl.connect(playMusic);
 
         MediaPlayer.positionChanged.connect(updateSlider);
         MediaPlayer.positionChanged.connect(updateMusicTime);
@@ -15,9 +15,10 @@ Item {
         MediaPlayer.volumeChanged.connect(updateVolumeSlider);
         MediaPlayer.playbackModeChanged.connect(updateCycleButton);
         MediaPlayer.musicInfoChanged.connect(updateMusicInfo);
+        MediaPlayer.bufferStatusChanged.connect(updateBufferSlider)
 
         MediaPlayer.setPlaylistByName(ConfigWorker.lastPlaylistName)
-        MediaPlayer.mediaChanged(ConfigWorker.lastPlayedUri)
+        // MediaPlayer.mediaChanged(ConfigWorker.lastPlayedUri)
         MediaPlayer.volumeChanged(ConfigWorker.volume);
         MediaPlayer.setPlaybackMode(ConfigWorker.playbackMode);
 
@@ -28,6 +29,17 @@ Item {
         MediaPlayer.setOnlineMediaUrl(result.playlinkUrl);
         MediaPlayer.playToggle(true)
         updateMusicInfo(result.songName, result.singerName)
+
+        if (ConfigWorker.isCoverBackground){
+            if(result.albumImage_500x500){
+                mainWindow.mainWindowController.setSkinByImage(result.albumImage_500x500);
+                simpleWindow.simpleWindowController.setSkinByImage(result.albumImage_500x500);
+            }
+            else if(result.albumImage_100x100){
+                mainWindow.mainWindowController.setSkinByImage(result.albumImage_100x100);
+                simpleWindow.simpleWindowController.setSkinByImage(result.albumImage_100x100);
+            }
+        }
     }
 
     function updateSlider(position) {
@@ -36,6 +48,20 @@ Item {
         mainWindow.playBottomBar.slider.updateSlider(rate);
         simpleWindow.playBottomBar.slider.updateSlider(rate);
         miniWindow.slider.updateSlider(rate);
+    }
+
+    function updateBufferSlider(position){
+        var rate = position / 100;
+
+        mainWindow.playBottomBar.slider.updateBufferSlider(rate);
+        simpleWindow.playBottomBar.slider.updateBufferSlider(rate);
+        miniWindow.slider.updateBufferSlider(rate);
+
+        if (position == 100){
+            mainWindow.playBottomBar.slider.updateBufferSlider(0);
+            simpleWindow.playBottomBar.slider.updateBufferSlider(0);
+            miniWindow.slider.updateBufferSlider(0);
+        }
     }
 
     function updateMusicTime(position){
@@ -95,11 +121,6 @@ Item {
         simpleWindow.playBottomBar.playing = false;
         miniWindow.playing = false;
         console.log('Stopped')
-    }
-
-    function resetSkin() {
-        playBottomBar.color = "#282F3F"
-        bgImage.source = ''
     }
 
     function updateVolumeSlider(value){
@@ -168,7 +189,7 @@ Item {
 
         onPlaybackModeChanged:{
             MediaPlayer.setPlaybackMode(playbackMode);
-            simpleWindow.playBottomBar.cycleButton.playbackMode = playbackMode;
+            // simpleWindow.playBottomBar.cycleButton.playbackMode = playbackMode;
         }
     }
 
@@ -191,7 +212,7 @@ Item {
 
         onPlaybackModeChanged:{
            MediaPlayer.setPlaybackMode(playbackMode);
-           mainWindow.playBottomBar.cycleButton.playbackMode = playbackMode;
+           // mainWindow.playBottomBar.cycleButton.playbackMode = playbackMode;
         }
     }
 

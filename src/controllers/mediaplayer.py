@@ -10,7 +10,7 @@ from PyQt5.QtGui import QCursor
 from .utils import registerContext, contexts
 from .utils import duration_to_string
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent, QMediaPlaylist
-
+from .playlistworker import DLocalMediaContent, DOnlineMediaContent
 from log import logger
 
 
@@ -28,13 +28,17 @@ class MediaPlayer(QObject):
 
     musicInfoChanged = pyqtSignal('QString', 'QString')
 
-    positionChanged = pyqtSignal(int)
+    positionChanged = pyqtSignal('qint64')
+    volumeChanged = pyqtSignal(int)
+    mutedChanged = pyqtSignal(bool)
+    notifyIntervalChanged = pyqtSignal(int)
+    playbackModeChanged = pyqtSignal(int)
     stateChanged = pyqtSignal(int)
     mediaStatusChanged = pyqtSignal('QMediaPlayer::MediaStatus')
-    volumeChanged = pyqtSignal(int)
-    playbackModeChanged = pyqtSignal(int)
+    bufferStatusChanged = pyqtSignal(int)
 
-    mediaChanged = pyqtSignal('QString')
+    playlistChanged = pyqtSignal('QString')
+
 
     @registerContext
     def __init__(self):
@@ -46,44 +50,31 @@ class MediaPlayer(QObject):
         self._state = 0
         self._isPlaying = False
 
+        self.initPlayer()
+
         self.initConnect()
 
+    def initPlayer(self):
+        self.setNotifyInterval(50)
+
     def initConnect(self):
-
-        self.player.positionChanged.connect(self.positionChange)
-
         self.player.mediaStatusChanged.connect(self.mediaStatusChanged)
-        self.player.volumeChanged.connect(self.volumeChanged)
+        self.player.positionChanged.connect(self.positionChanged)
+        self.player.bufferStatusChanged.connect(self.bufferChange)
 
-        self.mediaChanged.connect(self.updateMedia)
 
-    @pyqtSlot(int)
-    def positionChange(self, pos):
-        self.positionChanged.emit(pos)
-
-    @pyqtSlot(int)
-    def stateChange(self, state):
-        self.stateChanged.emit(state)
-
-    @pyqtSlot(int)
-    def mediaStatusChange(self, status):
-        self.mediaStatusChanged.emit(status)
-
-    @pyqtSlot(int)
-    def volumeChange(self, volume):
-        self.volumeChanged.emit(volume)
-
-    @pyqtProperty('QMediaContent')
-    def mediaObject(self):
-        return self.player.media()
-
-    @pyqtProperty('QVariant')
+    @pyqtProperty('QMediaPlaylist')
     def playlist(self):
         return self._playlist
 
     @pyqtSlot('QMediaPlaylist')
     def setPlaylist(self, playlist):
+        if self._playlist:
+            self._playlist.currentIndexChanged.disconnect(self.updateMedia)
+
         self._playlist = playlist
+        self._playlist.currentIndexChanged.connect(self.updateMedia)
+        self.playlistChanged.emit(playlist.name)
 
     @pyqtSlot('QString')
     def setPlaylistByName(self, name):
@@ -91,7 +82,6 @@ class MediaPlayer(QObject):
         configWorker = contexts['ConfigWorker']
 
         playbackMode = configWorker.playbackMode
-
         playlist = playlistWorker.getPlaylistByName(name)
         playlist.setPlaybackMode(playbackMode)
         self.setPlaylist(playlist)
@@ -104,12 +94,31 @@ class MediaPlayer(QObject):
         self.playbackModeChanged.emit(playbackMode)
 
     @pyqtProperty(int)
+    def postion(self):
+        return self.player.position()
+
+    @pyqtSlot(int)
+    def setPosition(self, pos):
+        self.player.setPosition(pos)
+        self.positionChanged.emit(pos)
+
+    @pyqtProperty(int)
     def volume(self):
         return self.player.volume()
 
     @pyqtSlot(int)
     def setVolume(self, value):
-        return self.player.setVolume(value)
+        self.player.setVolume(value)
+        self.volumeChanged.emit(value)
+
+    @pyqtProperty(bool)
+    def muted(self):
+        return self.player.isMuted()
+
+    @pyqtSlot(bool)
+    def setMuted(self, muted):
+        self.player.setMuted(muted)
+        self.mutedChanged.emit(muted)
 
     @pyqtProperty(int)
     def notifyInterval(self):
@@ -118,10 +127,7 @@ class MediaPlayer(QObject):
     @pyqtSlot(int)
     def setNotifyInterval(self, interval):
         self.player.setNotifyInterval(interval)
-
-    @pyqtSlot(int)
-    def setPosition(self, pos):
-        self.player.setPosition(pos)
+        self.notifyIntervalChanged.emit(interval)
 
     @pyqtProperty(int)
     def duration(self):
@@ -200,7 +206,6 @@ class MediaPlayer(QObject):
     def setMediaUrl(self, url):
         if url.startswith('http://') or url.startswith('https://'):
             _url = QUrl(url)
-            print _url.path(), '------------'
         else:
             _url = QUrl.fromLocalFile(url)
 
@@ -211,38 +216,30 @@ class MediaPlayer(QObject):
     def previous(self):
         if self._playlist:
             self._playlist.previous()
-            url = self._playlist.currentMedia().canonicalUrl()
-            if url.isLocalFile():
-                url = url.toLocalFile()
-            else:
-                url = url.toString()
-            self.mediaChanged.emit(url)
 
     @pyqtSlot()
     def next(self):
         if self._playlist:
             self._playlist.next()
-            url = self._playlist.currentMedia().canonicalUrl()
-
-            if url.isLocalFile():
-                url = url.toLocalFile()
-            else:
-                url = url.toString()
-            self.mediaChanged.emit(url)
 
     @pyqtSlot('QString')
-    def setOnlineMediaUrl(self, url):
-        playlistWorker = contexts['PlaylistWorker']
-        playlistWorker.addMediaToTemporary(url)
+    def updateMedia(self, index):
+        urls = self._playlist.urls
+        mediaContents =  self._playlist.mediaContents
+        
+        mediaContent = mediaContents[urls[index]]
 
-        if self._playlist is not playlistWorker.termporaryPlaylist:
-            self.setPlaylist(playlistWorker.termporaryPlaylist)
+        if isinstance(mediaContent, DLocalMediaContent):
+            url = mediaContent.url
+        elif isinstance(mediaContent, DOnlineMediaContent):
+            url = mediaContent.playLinkUrl
+        if url:
+            self.setMediaUrl(url)
+            self.musicInfoChanged.emit(mediaContent.song['title'], mediaContent.song['artist'])
 
-        self.mediaChanged.emit(url)
+    def bufferChange(self, progress):
+        self.bufferStatusChanged.emit(progress)
 
-
-    def updateMedia(self, url):
-        title = '11111111111'
-        artist = 'ymh'
-        self.setMediaUrl(url)
-        self.musicInfoChanged.emit(title, artist)
+    @pyqtSlot('QVariant')
+    def addOnlineMedia(self, result):
+        self._playlist.addMedia(result['url'], result['ret'])
