@@ -59,6 +59,7 @@ class MediaPlayer(QObject):
 
     def initConnect(self):
         self.player.mediaStatusChanged.connect(self.mediaStatusChanged)
+        self.player.mediaStatusChanged.connect(self.monitorMediaStatus)
         self.player.positionChanged.connect(self.positionChanged)
         self.player.bufferStatusChanged.connect(self.bufferChange)
 
@@ -141,6 +142,15 @@ class MediaPlayer(QObject):
     def errorString(self):
         return self.player.errorString()
 
+
+    def monitorMediaStatus(self, status):
+        if status == 7:
+            if self._playlist:
+                if self._playlist.playbackMode() == 1:
+                    self.playToggle(self._isPlaying)
+                elif self._playlist.playbackMode() in [3, 4]:
+                    self.next()
+
     @pyqtSlot(bool)
     def playToggle(self, playing):
         if playing:
@@ -216,11 +226,27 @@ class MediaPlayer(QObject):
     def previous(self):
         if self._playlist:
             self._playlist.previous()
+            if self._playlist.playbackMode() == 1:
+                count = self._playlist.mediaCount()
+                currentIndex = self._playlist.currentIndex()
+                if currentIndex == 0:
+                    index = count - 1
+                else:
+                    index = currentIndex - 1
+                self._playlist.setCurrentIndex(index)
 
     @pyqtSlot()
     def next(self):
         if self._playlist:
             self._playlist.next()
+            if self._playlist.playbackMode() == 1:
+                count = self._playlist.mediaCount()
+                currentIndex = self._playlist.currentIndex()
+                if currentIndex == count - 1:
+                    index = 0
+                else:
+                    index = currentIndex + 1
+                self._playlist.setCurrentIndex(index)
 
     @pyqtSlot('QString')
     def updateMedia(self, index):
@@ -232,7 +258,6 @@ class MediaPlayer(QObject):
         if isinstance(mediaContent, DLocalMediaContent):
             url = mediaContent.url
             cover = ''
-
         elif isinstance(mediaContent, DOnlineMediaContent):
             url = mediaContent.playLinkUrl
             cover = mediaContent.song['albumImage_500x500']
