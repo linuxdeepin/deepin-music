@@ -17,11 +17,14 @@ Item {
 
 
     function setSkinByImage(url) {
-        if (url === undefined){
+        if (url){
+            playBottomBar.color = "transparent"
+            bgImage.source = url
+        }else{
             url = "../../skin/images/bg2.jpg"
+            playBottomBar.color = "#282F3F"
+            bgImage.source = ''
         }
-        playBottomBar.color = "transparent"
-        bgImage.source = url
     }
 
     Connections {
