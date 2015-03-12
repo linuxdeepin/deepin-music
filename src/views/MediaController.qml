@@ -13,6 +13,7 @@ Item {
         MediaPlayer.playbackModeChanged.connect(updateCycleButton);
         MediaPlayer.musicInfoChanged.connect(updateMusicInfo);
         MediaPlayer.bufferStatusChanged.connect(updateBufferSlider);
+        // MediaPlayer.playlistChanged.connect(updatePlaylistPage);
 
         MediaPlayer.setPlaylistByName(ConfigWorker.lastPlaylistName);
         MediaPlayer.updateMedia(ConfigWorker.updateMedia);
@@ -111,14 +112,10 @@ Item {
         simpleWindow.playBottomBar.cycleButton.playbackMode = value;
     }
 
-    function setSkinByImage(url) {
-        if (url === undefined){
-            url = "../skin/images/bg2.jpg"
-        }
-        playBottomBar.color = "transparent"
-        bgImage.source = url
-    }
 
+    function updatePlaylistPage(name){
+        simpleWindow.playlistPage.model = MediaPlayer.playlist.medias;
+    }
 
     Connections {
         target: mainWindow.playBottomBar.slider

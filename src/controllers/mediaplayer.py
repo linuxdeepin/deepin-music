@@ -64,7 +64,7 @@ class MediaPlayer(QObject):
         self.player.bufferStatusChanged.connect(self.bufferChange)
 
 
-    @pyqtProperty('QMediaPlaylist')
+    @pyqtProperty('QVariant', notify=playlistChanged)
     def playlist(self):
         return self._playlist
 

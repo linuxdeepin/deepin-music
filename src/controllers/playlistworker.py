@@ -22,9 +22,19 @@ class DLocalMediaContent(QMediaContent):
         self.song = Song(url)
         self._url = url
 
+        print self.title, self.artist
+
     @pyqtProperty('QString')
     def url(self):
         return self._url
+
+    @pyqtProperty('QString')
+    def title(self):
+        return self.song['title']
+
+    @pyqtProperty('QString')
+    def artist(self):
+        return self.song['artist']
 
 
 class DOnlineMediaContent(QMediaContent):
@@ -68,6 +78,14 @@ class DOnlineMediaContent(QMediaContent):
         else:
             return ''
 
+    @pyqtProperty('QString')
+    def title(self):
+        return self.song['title']
+
+    @pyqtProperty('QString')
+    def artist(self):
+        return self.song['artist']
+
     @classmethod
     def md5(cls, musicId):
         import hashlib
@@ -96,6 +114,8 @@ class DMediaPlaylist(QMediaPlaylist):
 
     nameChanged = pyqtSignal('QString')
 
+    mediasChanged = pyqtSignal('QVariant')
+
     def __init__(self, name=''):
         super(DMediaPlaylist, self).__init__()
         self._name = name
@@ -111,13 +131,22 @@ class DMediaPlaylist(QMediaPlaylist):
         self._name = name
         self.nameChanged.emit()
 
-    @pyqtProperty(list)
+    @pyqtProperty('QVariant')
     def urls(self):
         return self._urls
 
-    @pyqtProperty(dict)
+    @pyqtProperty('QVariant')
     def mediaContents(self):
         return self._mediaContents
+
+    @pyqtProperty('QVariant', notify=mediasChanged)
+    def medias(self):
+        medias = []
+        for key in self._urls:
+            mediaContent = self._mediaContents[key]
+            media = {'title': mediaContent.title, 'artist': mediaContent.title}
+            medias.append(media)
+        return medias
 
     def addMedia(self, url, ret=None):
         url = str(url)
@@ -130,6 +159,9 @@ class DMediaPlaylist(QMediaPlaylist):
 
         index = self._urls.index(url)
         self.setCurrentIndex(index)
+
+        medias = self.medias
+        self.mediasChanged.emit(medias)
 
     def addLocalMedia(self, url):
         mediaContent = DLocalMediaContent(url)

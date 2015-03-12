@@ -7,6 +7,7 @@ Rectangle {
     id: simpleWindow
 
     property var titleBar: titleBar
+    property var playlistPage: playlistPage
     property var playBottomBar: playBottomBar
     property var simpleWindowController: simpleWindowController
 
@@ -100,7 +101,7 @@ Rectangle {
 
                 PlaylistPage {
                     id: playlistPage
-                    model: MusicDataBase.test
+                    model: MediaPlayer.playlist.medias
                     color: "transparent"
                 }
 
