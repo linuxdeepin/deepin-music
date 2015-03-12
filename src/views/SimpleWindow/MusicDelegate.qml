@@ -106,7 +106,7 @@ Rectangle {
                 width: mediaItem.width - playButton.width
                 height: mediaItem.height / 2
                 verticalAlignment: Text.AlignVCenter
-                text: mediaItem.ListView.view.model[index].Title
+                text: mediaItem.ListView.view.model[index].title
                 color: "#131313"
                 font.pixelSize: 14
             }
@@ -116,12 +116,11 @@ Rectangle {
                 width: mediaItem.width - playButton.width
                 height: mediaItem.height / 2
                 verticalAlignment: Text.AlignVCenter
-                text: mediaItem.ListView.view.model[index].Author
+                text: mediaItem.ListView.view.model[index].artist
                 color: "#919191"
                 font.pixelSize: 13
             }
         }
-        
     }
 
 

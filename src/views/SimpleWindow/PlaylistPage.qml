@@ -1,5 +1,5 @@
 import QtQuick 2.4
-import Deepin.Widgets 1.0
+import DMusic 1.0
 import "../DMusicWidgets"
 
 Rectangle {

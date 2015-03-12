@@ -15,9 +15,9 @@ class Song(object):
     __Fields__ = (
         ('Uri', str),
 
-        ('Title', str),
+        ('title', str),
         ('SubTitle', str),
-        ('Author', str),
+        ('artist', str),
         ('Comment', str),
         ('Description', str),
         ('Category', str),
@@ -85,12 +85,13 @@ class MusicDataBase(object):
             '/usr/share/deepin-sample-music/邓入比_我们的情歌.mp3',
             '/usr/share/deepin-sample-music/郭一凡_说走就走的旅行.mp3',
             '/usr/share/deepin-sample-music/胡彦斌_依然是你.mp3'
-        ]
+        ] * 20
 
         for uri in testuris:
             song = Song()
             song.Uri = uri
-            song.Title = os.path.basename(uri).split('.')[0]
+            song.title = os.path.basename(uri).split('.')[0]
+            song.artist = 'youhong ming'
             # self.songs.update({uri: song})
             self.test.append(song)
         # print self.test

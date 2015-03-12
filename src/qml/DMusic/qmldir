@@ -2,6 +2,7 @@ module DMusic
 DSplash 1.0 DSplash.qml
 DIconButton 1.0 DIconButton.qml
 DStackView 1.0 DStackView.qml
+DScrollBar 1.0 DScrollBar.qml
 DToolTip 1.0 DToolTip.qml
 ToolTip 1.0 ToolTip.qml
 ToolTipArea 1.0 ToolTipArea.qml
