@@ -290,16 +290,19 @@ Item {
                         }
 
                         onHovered:{
-                            toggleSlider()
+                            volumeTimer.restart();
+                        }
+
+                        onExited:{
+                            volumeTimer.stop();
                         }
 
                         onClicked:{
                             switchflag = !switchflag;
                             playBottomBar.muted(!switchflag);
-                            toggleSlider()
+                            toggleSlider();
                         }
                     }
-
 
                     DCycleButton {
                         id: cycleButton
@@ -385,6 +388,16 @@ Item {
                     }
                 }
             }
+        }
+    }
+
+    Timer {
+        id: volumeTimer
+        interval: 1000
+        running: false
+        repeat: false
+        onTriggered:{
+            volumeButton.toggleSlider();
         }
     }
 }

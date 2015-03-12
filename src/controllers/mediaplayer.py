@@ -248,13 +248,12 @@ class MediaPlayer(QObject):
                     index = currentIndex + 1
                 self._playlist.setCurrentIndex(index)
 
-    @pyqtSlot('QString')
+    @pyqtSlot(int)
     def updateMedia(self, index):
         urls = self._playlist.urls
         mediaContents =  self._playlist.mediaContents
         
         mediaContent = mediaContents[urls[index]]
-
         if isinstance(mediaContent, DLocalMediaContent):
             url = mediaContent.url
             cover = ''

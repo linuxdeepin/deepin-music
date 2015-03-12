@@ -9,13 +9,13 @@ Item {
         MediaPlayer.positionChanged.connect(updateSlider);
         MediaPlayer.positionChanged.connect(updateMusicTime);
         MediaPlayer.stateChanged.connect(updatePlayButton);
-        MediaPlayer.mediaStatusChanged.connect(updateMusic);
         MediaPlayer.volumeChanged.connect(updateVolumeSlider);
         MediaPlayer.playbackModeChanged.connect(updateCycleButton);
         MediaPlayer.musicInfoChanged.connect(updateMusicInfo);
-        MediaPlayer.bufferStatusChanged.connect(updateBufferSlider)
+        MediaPlayer.bufferStatusChanged.connect(updateBufferSlider);
 
-        MediaPlayer.setPlaylistByName(ConfigWorker.lastPlaylistName)
+        MediaPlayer.setPlaylistByName(ConfigWorker.lastPlaylistName);
+        MediaPlayer.updateMedia(ConfigWorker.updateMedia);
         MediaPlayer.volumeChanged(ConfigWorker.volume);
         MediaPlayer.setPlaybackMode(ConfigWorker.playbackMode);
 
@@ -70,14 +70,6 @@ Item {
         simpleWindow.playBottomBar.updateMusicName(title);
         simpleWindow.playBottomBar.updateArtistName(artist);
     }
-
-    function updateMusic(status){
-        print('mediaStatusChanged', status)
-        if (status == 3 || status==6) {
-            print('The current media has been loaded')
-        }
-    }
-
 
     function updatePlayButton(state) {
         if (state == 0){

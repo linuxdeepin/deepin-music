@@ -16,7 +16,7 @@ class ConfigWorker(object):
 
     __Fields__ = (
         ('lastPlaylistName', 'QString', 'temporary'),
-        ('lastPlayedUri', 'QString', os.sep.join([os.path.dirname(os.getcwd()), 'music', '1.mp3'])),
+        ('lastPlayedIndex', int, 0),
         ('playing', bool, True),
         ('playbackMode', int, 4),
         ('volume', int, 10),

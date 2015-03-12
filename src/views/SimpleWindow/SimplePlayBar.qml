@@ -186,13 +186,17 @@ Rectangle{
                                 }
 
                                 onHovered:{
-                                    toggleSlider()
+                                    volumeTimer.restart();
+                                }
+
+                                onExited:{
+                                    volumeTimer.stop();
                                 }
 
                                 onClicked:{
                                     switchflag = !switchflag;
                                     playBottomBar.muted(!switchflag);
-                                    toggleSlider()
+                                    toggleSlider();
                                 }
                             }
 
@@ -281,6 +285,16 @@ Rectangle{
                 height: 60 - musicBar.height
                 color: "transparent"
             }
+        }
+    }
+
+    Timer {
+        id: volumeTimer
+        interval: 1000
+        running: false
+        repeat: false
+        onTriggered:{
+            volumeButton.toggleSlider();
         }
     }
 }
