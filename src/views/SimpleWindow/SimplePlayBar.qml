@@ -36,6 +36,10 @@ Rectangle{
     signal muted(bool muted)
     signal playbackModeChanged(int playbackMode)
 
+    function updateCoverImage(url){
+        musicInfo.musicImage.source = url;
+    }
+
     function updateMusicName(name){
         musicInfo.musicNameText.text = name;
     }

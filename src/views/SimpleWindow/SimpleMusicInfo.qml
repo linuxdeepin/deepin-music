@@ -16,7 +16,6 @@ Rectangle {
     property var musicStar: musicStar
     property var musicDownload: musicDownload
 
-
     Row {
 
         anchors.verticalCenter: musicinfo.verticalCenter

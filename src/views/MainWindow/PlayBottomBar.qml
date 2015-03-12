@@ -9,6 +9,7 @@ Item {
     property var viewID: 'PlayBottomBar'
 
     property var slider: slider
+    property var musicImage: musicImage
     property var musicInfo: musicInfo
     property var playControl: playControl
     property var musicToolbar: musicToolbar
@@ -46,6 +47,11 @@ Item {
     signal muted(bool muted)
     signal playbackModeChanged(int playbackMode)
 
+
+    function updateCoverImage(url){
+        musicImage.source = url;
+    }
+ 
     function updateMusicName(name){
         musicNameText.text = name;
     }

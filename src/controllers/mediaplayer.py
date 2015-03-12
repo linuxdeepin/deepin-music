@@ -26,7 +26,7 @@ class MediaPlayer(QObject):
 
     __contextName__ = "MediaPlayer"
 
-    musicInfoChanged = pyqtSignal('QString', 'QString')
+    musicInfoChanged = pyqtSignal('QString', 'QString', 'QString')
 
     positionChanged = pyqtSignal('qint64')
     volumeChanged = pyqtSignal(int)
@@ -231,11 +231,17 @@ class MediaPlayer(QObject):
 
         if isinstance(mediaContent, DLocalMediaContent):
             url = mediaContent.url
+            cover = ''
+
         elif isinstance(mediaContent, DOnlineMediaContent):
             url = mediaContent.playLinkUrl
+            cover = mediaContent.song['albumImage_500x500']
+
         if url:
             self.setMediaUrl(url)
-            self.musicInfoChanged.emit(mediaContent.song['title'], mediaContent.song['artist'])
+            title = mediaContent.song['title']
+            artist = mediaContent.song['artist']
+            self.musicInfoChanged.emit(title, artist, cover)
 
     def bufferChange(self, progress):
         self.bufferStatusChanged.emit(progress)

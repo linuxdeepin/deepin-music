@@ -6,8 +6,6 @@ Item {
     property var miniWindow
 
     function initConnect(){
-        // Web360ApiWorker.playUrl.connect(playMusic);
-
         MediaPlayer.positionChanged.connect(updateSlider);
         MediaPlayer.positionChanged.connect(updateMusicTime);
         MediaPlayer.stateChanged.connect(updatePlayButton);
@@ -18,7 +16,6 @@ Item {
         MediaPlayer.bufferStatusChanged.connect(updateBufferSlider)
 
         MediaPlayer.setPlaylistByName(ConfigWorker.lastPlaylistName)
-        // MediaPlayer.mediaChanged(ConfigWorker.lastPlayedUri)
         MediaPlayer.volumeChanged(ConfigWorker.volume);
         MediaPlayer.setPlaybackMode(ConfigWorker.playbackMode);
 
@@ -29,17 +26,6 @@ Item {
         MediaPlayer.setOnlineMediaUrl(result.playlinkUrl);
         MediaPlayer.playToggle(true)
         updateMusicInfo(result.songName, result.singerName)
-
-        if (ConfigWorker.isCoverBackground){
-            if(result.albumImage_500x500){
-                mainWindow.mainWindowController.setSkinByImage(result.albumImage_500x500);
-                simpleWindow.simpleWindowController.setSkinByImage(result.albumImage_500x500);
-            }
-            else if(result.albumImage_100x100){
-                mainWindow.mainWindowController.setSkinByImage(result.albumImage_100x100);
-                simpleWindow.simpleWindowController.setSkinByImage(result.albumImage_100x100);
-            }
-        }
     }
 
     function updateSlider(position) {
@@ -74,15 +60,16 @@ Item {
         print('audioAvailableChanged---------')
     }
 
-    function updateMusicInfo(title, artist)
+    function updateMusicInfo(title, artist, cover)
     {
+        mainWindow.playBottomBar.updateCoverImage(cover);
         mainWindow.playBottomBar.updateMusicName(title);
         mainWindow.playBottomBar.updateArtistName(artist);
-        
+
+        simpleWindow.playBottomBar.updateCoverImage(cover);
         simpleWindow.playBottomBar.updateMusicName(title);
         simpleWindow.playBottomBar.updateArtistName(artist);
     }
-
 
     function updateMusic(status){
         print('mediaStatusChanged', status)
