@@ -65,7 +65,7 @@ Rectangle{
                 id: musicInfo
                 width: playBottomBar.contentWidth
                 height: 60
-                color: "#282F3F"
+                color: "transparent"
 
                 border.color: "white"
                 border.width: 0

@@ -259,8 +259,12 @@ class MediaPlayer(QObject):
             cover = ''
         elif isinstance(mediaContent, DOnlineMediaContent):
             url = mediaContent.playLinkUrl
-            cover = mediaContent.song['albumImage_500x500']
-
+            if 'albumImage_500x500' in mediaContent.song and mediaContent.song['albumImage_500x500']:
+                cover = mediaContent.song['albumImage_500x500']
+            elif 'albumImage_100x100' in mediaContent.song and mediaContent.song['albumImage_100x100']:
+                cover = mediaContent.song['albumImage_100x100']
+            else:
+                cover = ''
         if url:
             self.setMediaUrl(url)
             title = mediaContent.song['title']

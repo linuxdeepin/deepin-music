@@ -11,17 +11,25 @@ Item {
 	property var playBottomBar
 
     function resetSkin() {
-        playBottomBar.color = "#282F3F"
-        bgImage.source = ''
+        playBottomBar.color = "transparent";
+        bgImage.source = "../../skin/images/bg2.jpg";
     }
 
-
     function setSkinByImage(url) {
-        if (url === undefined){
-            url = "../../skin/images/bg2.jpg"
+        if(url){
+            bgImage.source = url;
+        }else{
+            url = "../../skin/images/bg2.jpg";
         }
-        playBottomBar.color = "transparent"
-        bgImage.source = url
+    }
+
+    Connections {
+        target: bgImage
+        onProgressChanged:{
+            if (progress == 1){
+                playBottomBar.color = 'transparent'
+            }
+        }
     }
 
     Connections {
