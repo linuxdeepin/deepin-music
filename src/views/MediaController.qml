@@ -49,11 +49,6 @@ Item {
         simpleWindow.playBottomBar.updatePlayTime(MediaPlayer.positionString + '/' + MediaPlayer.durationString);
     }
 
-    function audioAvailableChange(available)
-    {
-        print('audioAvailableChanged---------')
-    }
-
     function updateMusicInfo(title, artist, cover)
     {
         mainWindow.playBottomBar.updateCoverImage(cover);
@@ -186,6 +181,14 @@ Item {
 
         onPlaybackModeChanged:{
            MediaPlayer.setPlaybackMode(playbackMode);
+        }
+    }
+
+    Connections {
+        target: simpleWindow.playlistPage.playlistView
+        onChangeIndex: {
+            MediaPlayer.updateMedia(index);
+            MediaPlayer.playToggle(true);
         }
     }
 

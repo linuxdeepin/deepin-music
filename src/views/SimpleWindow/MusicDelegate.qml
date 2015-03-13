@@ -124,13 +124,19 @@ Rectangle {
     }
 
 
-    states: State {
-        name: "Current"
-        when: mediaItem.ListView.isCurrentItem
-        PropertyChanges { target: waveBar; active: true ; visible: true}
-        PropertyChanges { target: musicText; color: "#4ba3fb" ; font.pixelSize: 16}
-        PropertyChanges { target: artistText; color: "#4ba3fb" ; font.pixelSize: 14}
-    }
+    states: [
+        State {
+            name: "Current"
+            when: mediaItem.ListView.isCurrentItem
+            PropertyChanges { target: musicText; color: "#4ba3fb" ; font.pixelSize: 16}
+            PropertyChanges { target: artistText; color: "#4ba3fb" ; font.pixelSize: 14}
+        },
+        State {
+            name: "!Current"
+            when: !mediaItem.ListView.isCurrentItem
+            PropertyChanges { target: waveBar; active: false ; visible: false}
+        }
+    ]
 
     MouseArea {
         anchors.fill: parent
@@ -138,17 +144,21 @@ Rectangle {
         acceptedButtons: Qt.LeftButton | Qt.RightButton
         onEntered: {
             if (mediaItem.ListView.view.currentIndex != index){
-                playButton.visible = true
+                playButton.visible = true;
+            }else{
+                playButton.visible = ! waveBar.visible;
             }
         }
         onExited: {
             playButton.visible = false
-
         }
         onClicked: {
             if (mouse.button == Qt.LeftButton){
                 mediaItem.ListView.view.currentIndex = index;
-                playButton.visible = false
+                mediaItem.ListView.view.changeIndex(index);
+                playButton.visible = false;
+                waveBar.active = true;
+                waveBar.visible = true;
             }
             else if (mouse.button == Qt.RightButton){
                 mediaItem.menuShowed(index);
