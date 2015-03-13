@@ -22,8 +22,6 @@ class DLocalMediaContent(QMediaContent):
         self.song = Song(url)
         self._url = url
 
-        print self.title, self.artist
-
     @pyqtProperty('QString')
     def url(self):
         return self._url
@@ -144,7 +142,7 @@ class DMediaPlaylist(QMediaPlaylist):
         medias = []
         for key in self._urls:
             mediaContent = self._mediaContents[key]
-            media = {'title': mediaContent.title, 'artist': mediaContent.title}
+            media = {'title': mediaContent.title, 'artist': mediaContent.artist}
             medias.append(media)
         return medias
 

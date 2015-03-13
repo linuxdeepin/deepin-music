@@ -16,9 +16,27 @@ WebEngineView {
             var rpc;
             try{
                 rpc = JSON.parse(message)
-                if(rpc.hasOwnProperty('rpcId') && rpc.hasOwnProperty('rpcActionType')){
-                    print(rpc.rpcActionType, '===========')
-                    webEngineView.playMusicByID(rpc.rpcId)
+                if(rpc.hasOwnProperty('rpcId') && rpc.hasOwnProperty('type')){
+                    if (rpc.rpcActionType == 'Play'){
+                        if (rpc.type == 'music'){
+                            print(rpc.rpcActionType, rpc.type, rpc.rpcId);
+                            webEngineView.playMusicByID(rpc.rpcId)
+                        }else if (rpc.type == 'album'){
+                            print(rpc.rpcActionType, rpc.type, rpc.rpcId);
+                        }else if (rpc.type == 'songlist'){
+                            print(rpc.rpcActionType, rpc.type, rpc.rpcId);
+                        }else if (rpc.type == 'album'){
+                            print(rpc.rpcActionType, rpc.type, rpc.rpcId);
+                        }else if (rpc.type == 'artist'){
+                            print(rpc.rpcActionType, rpc.type, rpc.rpcId);
+                        }
+                    }else if(rpc.rpcActionType == 'Download'){
+                        print(rpc.rpcActionType, rpc.type, rpc.rpcId);
+                    }
+                }else if (rpc.hasOwnProperty('rpcId') && !rpc.hasOwnProperty('type')){
+                    print(rpc.rpcActionType, rpc.rpcId);
+                }else{
+                    print(rpc)
                 }
             }catch(error){
                 console.log(error)
@@ -44,7 +62,8 @@ WebEngineView {
                         var message = JSON.stringify({
                             'rpcVersion': '1.0', 
                             'rpcId':id, 
-                            'rpcActionType': 'Play'
+                            'rpcActionType': 'Play',
+                            'type': type
                         })
                         console.error(message);
                     }
@@ -54,7 +73,8 @@ WebEngineView {
                         var message = JSON.stringify({
                             'rpcVersion': '1.0', 
                             'rpcId':id, 
-                            'rpcActionType': type
+                            'rpcActionType': 'Enqueue',
+                            'type': type
                         })
                         console.error(message);
                     }
@@ -64,7 +84,8 @@ WebEngineView {
                         var message = JSON.stringify({
                             'rpcVersion': '1.0', 
                             'rpcId':id, 
-                            'rpcActionType': 'Download'
+                            'rpcActionType': 'Download',
+                            'type': type
                         })
                         console.error(message);
                     }
