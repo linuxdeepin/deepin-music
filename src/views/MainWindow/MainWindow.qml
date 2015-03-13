@@ -11,7 +11,7 @@ import "../DMusicWidgets"
 Rectangle {
 
     id: mainWindow
-
+    property var constants
     property var views: ['WebMusic360Page', 'MusicManagerPage', 'PlayListPage', 'DownloadPage']
     property var bgImage: bgImage
     property var titleBar: titleBar

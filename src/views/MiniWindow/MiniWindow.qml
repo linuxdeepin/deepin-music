@@ -6,6 +6,7 @@ import "../DMusicWidgets"
 Window {
     id: miniWindow
 
+    property var constants
     property var miniWindowController: miniWindowController
     property var bgImage: bgImage
     property var slider: slider
@@ -233,6 +234,7 @@ Window {
     MiniWindowController {
         id: miniWindowController
         miniWindow: miniWindow
+        constants: miniWindow.constants
         bgImage: bgImage
         playBottomBar: playBottomBar
     }

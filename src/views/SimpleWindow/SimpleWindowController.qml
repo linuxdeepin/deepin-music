@@ -2,6 +2,7 @@ import QtQuick 2.4
 
 Item {
     property var simpleWindow
+    property var constants
     property var bgImage
 	property var titleBar
     property var switchButton
@@ -12,14 +13,14 @@ Item {
 
     function resetSkin() {
         playBottomBar.color = "transparent";
-        bgImage.source = "../../skin/images/bg2.jpg";
+        bgImage.source = constants.defaultBackgroundImage;
     }
 
     function setSkinByImage(url) {
         if(url){
             bgImage.source = url;
         }else{
-            url = "../../skin/images/bg2.jpg";
+            resetSkin();
         }
     }
 

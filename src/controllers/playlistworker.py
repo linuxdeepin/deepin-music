@@ -78,11 +78,17 @@ class DOnlineMediaContent(QMediaContent):
 
     @pyqtProperty('QString')
     def title(self):
-        return self.song['title']
+        if 'title' in self.song:
+            return self.song['title']
+        else:
+            return 'unknown'
 
     @pyqtProperty('QString')
     def artist(self):
-        return self.song['artist']
+        if 'artist' in self.song:
+            return self.song['artist']
+        else:
+            return 'unknown'
 
     @classmethod
     def md5(cls, musicId):

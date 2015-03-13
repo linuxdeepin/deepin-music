@@ -2,21 +2,30 @@ import QtQuick 2.4
 
 Item {
     property var miniWindow
+    property var constants
     property var bgImage
     property var playBottomBar
 
 
-    function resetSkin() {
-        playBottomBar.color = "#282F3F"
-        bgImage.source = ''
+   function resetSkin() {
+        playBottomBar.color = "transparent";
+        bgImage.source = constants.defaultBackgroundImage;
     }
 
-
     function setSkinByImage(url) {
-        if (url === undefined){
-            url = "../../skin/images/bg2.jpg"
+        if(url){
+            bgImage.source = url;
+        }else{
+            resetSkin();
         }
-        playBottomBar.color = "transparent"
-        bgImage.source = url
+    }
+
+    Connections {
+        target: bgImage
+        onProgressChanged:{
+            if (progress == 1){
+                playBottomBar.color = 'transparent'
+            }
+        }
     }
 }

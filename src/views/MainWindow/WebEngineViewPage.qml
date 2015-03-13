@@ -5,7 +5,8 @@ WebEngineView {
     id: webEngineView
     focus: false
     
-    signal playMusicByID(int musicID)
+    signal playMusicById(int musicId)
+    signal playMusicByIds(string musicIds)
 
     onLinkHovered:{
 
@@ -19,8 +20,12 @@ WebEngineView {
                 if(rpc.hasOwnProperty('rpcId') && rpc.hasOwnProperty('type')){
                     if (rpc.rpcActionType == 'Play'){
                         if (rpc.type == 'music'){
-                            print(rpc.rpcActionType, rpc.type, rpc.rpcId);
-                            webEngineView.playMusicByID(rpc.rpcId)
+                            print(rpc.rpcActionType, rpc.type, rpc.rpcId, typeof rpc.rpcId);
+                            if (typeof rpc.rpcId === 'number'){
+                                webEngineView.playMusicById(rpc.rpcId)
+                            }else if(typeof rpc.rpcId === 'string'){
+                                webEngineView.playMusicByIds(rpc.rpcId)
+                            }
                         }else if (rpc.type == 'album'){
                             print(rpc.rpcActionType, rpc.type, rpc.rpcId);
                         }else if (rpc.type == 'songlist'){

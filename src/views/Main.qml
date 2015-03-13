@@ -22,6 +22,7 @@ Item {
         id: mainWindow
         objectName: "MainWindow"
 
+        constants: constants
         anchors.fill: parent
         
         width: root.width
@@ -31,6 +32,7 @@ Item {
 
     SimpleWindow {
         id: simpleWindow
+        constants: constants
         width: root.width
         height: root.height
         anchors.fill: parent
@@ -39,6 +41,7 @@ Item {
 
     MiniWindow {
         id: miniWindow
+        constants: constants
         width: constants.miniWindowWidth
         height: constants.miniWindowHeight
     }
