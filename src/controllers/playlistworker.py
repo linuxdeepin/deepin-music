@@ -199,10 +199,13 @@ class PlaylistWorker(QObject):
         self.addMediaToTemporary(os.sep.join(['/usr/share/deepin-sample-music/邓入比_我们的情歌.mp3']))
         self.addMediaToTemporary(os.sep.join(['/usr/share/deepin-sample-music/郭一凡_说走就走的旅行.mp3']))
         self.addMediaToTemporary(os.sep.join(['/usr/share/deepin-sample-music/胡彦斌_依然是你.mp3']))
-        # self.savePlaylistByName('temporary')
 
-        # self.setPlaylistByName('temporary')
-        # self.currentPlaylist.setCurrentIndex(0)
+
+        self.addMediaToFavorite(os.sep.join([os.path.dirname(os.getcwd()), 'music', '1.mp3']))
+        self.addMediaToFavorite(os.sep.join(['/usr/share/deepin-sample-music/邓入比_我们的情歌.mp3']))
+        # self.addMediaToTemporary(os.sep.join(['/usr/share/deepin-sample-music/郭一凡_说走就走的旅行.mp3']))
+        # self.addMediaToTemporary(os.sep.join(['/usr/share/deepin-sample-music/胡彦斌_依然是你.mp3']))
+
 
     def savePlaylistByName(self, name):
         f = QFile(os.sep.join([PlaylistPath, '%s.m3u' % name]))
@@ -229,6 +232,10 @@ class PlaylistWorker(QObject):
     @pyqtSlot('QString')
     def addMediaToTemporary(self, url):
         self._playlists['temporary'].addMedia(url)
+
+    @pyqtSlot('QString')
+    def addMediaToFavorite(self, url):
+        self._playlists['favorite'].addMedia(url)
 
     @pyqtSlot('QString', 'QString')
     def addMediaByName(self, name, url):

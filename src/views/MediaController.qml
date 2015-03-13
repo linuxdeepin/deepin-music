@@ -16,7 +16,7 @@ Item {
         // MediaPlayer.playlistChanged.connect(updatePlaylistPage);
 
         MediaPlayer.setPlaylistByName(ConfigWorker.lastPlaylistName);
-        MediaPlayer.updateMedia(ConfigWorker.updateMedia);
+        MediaPlayer.setCurrentMedia(ConfigWorker.lastPlayedIndex);
         MediaPlayer.volumeChanged(ConfigWorker.volume);
         MediaPlayer.setPlaybackMode(ConfigWorker.playbackMode);
 
@@ -107,11 +107,6 @@ Item {
         simpleWindow.playBottomBar.cycleButton.playbackMode = value;
     }
 
-
-    function updatePlaylistPage(name){
-        simpleWindow.playlistPage.model = MediaPlayer.playlist.medias;
-    }
-
     Connections {
         target: mainWindow.playBottomBar.slider
         onSliderRateChanged:{
@@ -187,7 +182,7 @@ Item {
     Connections {
         target: simpleWindow.playlistPage.playlistView
         onChangeIndex: {
-            MediaPlayer.updateMedia(index);
+            MediaPlayer.setCurrentMedia(index);
             MediaPlayer.playToggle(true);
         }
     }

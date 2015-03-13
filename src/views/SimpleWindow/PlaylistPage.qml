@@ -6,7 +6,8 @@ Rectangle {
 
     id: playlistPage
 
-    property var model
+    property var model: null
+    property var currentIndex: -1
     property var playlistView: playlistView
     
     anchors.fill: parent
@@ -23,7 +24,7 @@ Rectangle {
         anchors.fill: parent
         model: playlistPage.model
         delegate: musicDelegate
-        currentIndex: -1
+        currentIndex: playlistPage.currentIndex
         focus: true
         spacing: 3
         displayMarginBeginning: 0

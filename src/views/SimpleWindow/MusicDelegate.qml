@@ -25,13 +25,19 @@ Rectangle {
             Rectangle {
                 id: waveBar
 
-                property var active: false
+                property var active: {
+                    if (MediaPlayer.state == 1){
+                        return true;
+                    }else{
+                        return false;
+                    }
+                }
 
                 anchors.centerIn: parent
                 width: 30
                 height: 40
 
-                visible: false
+                visible: waveBar.active
 
                 color: "transparent"
 
@@ -134,7 +140,7 @@ Rectangle {
         State {
             name: "!Current"
             when: !mediaItem.ListView.isCurrentItem
-            PropertyChanges { target: waveBar; active: false ; visible: false}
+            PropertyChanges { target: waveBar; active: false ;}
         }
     ]
 
@@ -157,8 +163,6 @@ Rectangle {
                 mediaItem.ListView.view.currentIndex = index;
                 mediaItem.ListView.view.changeIndex(index);
                 playButton.visible = false;
-                waveBar.active = true;
-                waveBar.visible = true;
             }
             else if (mouse.button == Qt.RightButton){
                 mediaItem.menuShowed(index);

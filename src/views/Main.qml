@@ -12,6 +12,8 @@ Item {
     width: constants.mainWindowWidth
     height: constants.mainWindowHeight
 
+    focus: true
+
     Constants{
         id: constants
     }
@@ -59,13 +61,9 @@ Item {
 
     Keys.onPressed: {
         if (event.key == Qt.Key_F1) {
-            mainWindow.mainWindowController.resetSkin();
-            simpleWindow.simpleWindowController.resetSkin();
-            miniWindow.miniWindowController.resetSkin();
+            MediaPlayer.setPlaylistByName('temporary');
         }else if (event.key == Qt.Key_F2) {
-            mainWindow.mainWindowController.setSkinByImage();
-            simpleWindow.simpleWindowController.setSkinByImage();
-            miniWindow.miniWindowController.setSkinByImage();
+            MediaPlayer.setPlaylistByName('favorite');
         }
     }
 
@@ -75,6 +73,7 @@ Item {
         running: true
         onTriggered:{
             mainWindow.webEngineViewPage.url = "http://music.haosou.com/_linuxdeepin/";
+            root.focus = true;
         }
     }
 }

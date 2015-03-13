@@ -102,6 +102,7 @@ Rectangle {
                 PlaylistPage {
                     id: playlistPage
                     model: MediaPlayer.playlist.medias
+                    currentIndex: MediaPlayer.playlist.currentIndex
                     color: "transparent"
                 }
 

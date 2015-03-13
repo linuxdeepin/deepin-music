@@ -39,6 +39,7 @@ class MediaPlayer(QObject):
 
     playlistChanged = pyqtSignal('QString')
 
+    currentIndexChanged = pyqtSignal(int)
 
     @registerContext
     def __init__(self):
@@ -71,10 +72,12 @@ class MediaPlayer(QObject):
     @pyqtSlot('QMediaPlaylist')
     def setPlaylist(self, playlist):
         if self._playlist:
-            self._playlist.currentIndexChanged.disconnect(self.updateMedia)
+            self._playlist.currentIndexChanged.disconnect(self.setCurrentMedia)
+            self._playlist.currentIndexChanged.disconnect(self.currentIndexChanged)
 
         self._playlist = playlist
-        self._playlist.currentIndexChanged.connect(self.updateMedia)
+        self._playlist.currentIndexChanged.connect(self.setCurrentMedia)
+        self._playlist.currentIndexChanged.connect(self.currentIndexChanged)
         self.playlistChanged.emit(playlist.name)
 
     @pyqtSlot('QString')
@@ -178,7 +181,7 @@ class MediaPlayer(QObject):
         self._state = 2
         self.stateChanged.emit(self._state)
 
-    @pyqtProperty(int)
+    @pyqtProperty(int, notify=stateChanged)
     def state(self):
         return self._state
 
@@ -249,7 +252,7 @@ class MediaPlayer(QObject):
                 self._playlist.setCurrentIndex(index)
 
     @pyqtSlot(int)
-    def updateMedia(self, index):
+    def setCurrentMedia(self, index):
         urls = self._playlist.urls
         mediaContents =  self._playlist.mediaContents
         
@@ -277,3 +280,8 @@ class MediaPlayer(QObject):
     @pyqtSlot('QVariant')
     def addOnlineMedia(self, result):
         self._playlist.addMedia(result['url'], result['ret'])
+
+
+    @pyqtProperty(int, notify=currentIndexChanged)
+    def currentIndex(self):
+        return self._playlist.currentIndex()
