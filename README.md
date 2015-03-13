@@ -115,3 +115,8 @@ Virtaulenvwrapper是virtualenv的扩展包，用于更方便管理虚拟环境�
 
 ###5. 安装WebEngineWrapper
 	git clone git@github.com:rodrigogolive/WebEngineWrapper.git
+
+
+###6. deepin_menu
+	git clone git@github.com:linuxdeepin/deepin-menu.git
+
