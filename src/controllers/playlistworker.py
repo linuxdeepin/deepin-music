@@ -206,6 +206,8 @@ class PlaylistWorker(QObject):
         # self.addMediaToTemporary(os.sep.join(['/usr/share/deepin-sample-music/郭一凡_说走就走的旅行.mp3']))
         # self.addMediaToTemporary(os.sep.join(['/usr/share/deepin-sample-music/胡彦斌_依然是你.mp3']))
 
+        print self._playlists['temporary'].currentIndex()
+        print self._playlists['favorite'].currentIndex()
 
     def savePlaylistByName(self, name):
         f = QFile(os.sep.join([PlaylistPath, '%s.m3u' % name]))

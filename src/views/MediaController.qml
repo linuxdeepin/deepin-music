@@ -13,10 +13,9 @@ Item {
         MediaPlayer.playbackModeChanged.connect(updateCycleButton);
         MediaPlayer.musicInfoChanged.connect(updateMusicInfo);
         MediaPlayer.bufferStatusChanged.connect(updateBufferSlider);
-        // MediaPlayer.playlistChanged.connect(updatePlaylistPage);
 
         MediaPlayer.setPlaylistByName(ConfigWorker.lastPlaylistName);
-        MediaPlayer.setCurrentMedia(ConfigWorker.lastPlayedIndex);
+        MediaPlayer.playlist.setCurrentIndex(ConfigWorker.lastPlayedIndex);
         MediaPlayer.volumeChanged(ConfigWorker.volume);
         MediaPlayer.setPlaybackMode(ConfigWorker.playbackMode);
 
