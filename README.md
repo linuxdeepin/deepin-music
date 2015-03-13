@@ -110,7 +110,7 @@ Virtaulenvwrapper是virtualenv的扩展包，用于更方便管理虚拟环境�
 
 安装：
 	
-	git clone git@gitcafe.com:Deepin/deepin-qml-widgets.git
+	git clone git@github.com:linuxdeepin/deepin-qml-widgets.git
 
 
 ###5. 安装WebEngineWrapper

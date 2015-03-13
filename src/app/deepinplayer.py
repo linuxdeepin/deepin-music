@@ -3,7 +3,7 @@
 
 from PyQt5.QtCore import QCoreApplication, QObject, QUrl, QThread
 from PyQt5.QtGui import QScreen
-from views import MainWindow, SimpleWindow, MiniWindow
+from views import MainWindow
 
 from controllers import contexts, Web360ApiWorker, MusicManageWorker
 from controllers import MenuWorker, WindowManageWorker
