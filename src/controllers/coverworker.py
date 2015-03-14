@@ -33,8 +33,6 @@ class CoverWorker(QObject):
     @dthread
     def saveCover(self, url, title='', album=''):
         url = str(url)
-        
-
         if url in self._covers:
             self.coverUpdated.emit(self._covers[url])
             return
@@ -43,6 +41,7 @@ class CoverWorker(QObject):
             filename = '%s_%s_%s.%s' % (title, album, coverID, url.split('.')[-1])
             filepath = os.path.join(CoverPath, filename)
             if os.path.exists(filepath):
+                self._covers.update({url: filepath})
                 self.coverUpdated.emit(filepath)
                 return
             else:
