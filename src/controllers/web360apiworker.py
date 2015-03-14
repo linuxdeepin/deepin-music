@@ -85,3 +85,4 @@ class Web360ApiWorker(QObject):
                 self.addMediaContent.emit(result)
                 self._musicIds.remove(musicId) 
                 self._results.pop(musicId)
+            self.addMediaContent.emit(results[musicIds[0]])

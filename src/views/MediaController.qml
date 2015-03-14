@@ -14,6 +14,7 @@ Item {
         MediaPlayer.playbackModeChanged.connect(updateCycleButton);
         MediaPlayer.musicInfoChanged.connect(updateMusicInfo);
         MediaPlayer.bufferStatusChanged.connect(updateBufferSlider);
+        MediaPlayer.currentIndexChanged.connect(updatePlaylistIndex);
 
         CoverWorker.coverUpdated.connect(updateCover);
 
@@ -84,21 +85,21 @@ Item {
         mainWindow.playBottomBar.playing = true;
         simpleWindow.playBottomBar.playing = true;
         miniWindow.playing = true;
-        console.log('Playing');
+        // console.log('Playing');
     }
 
     function onPaused(){
         mainWindow.playBottomBar.playing = false;
         simpleWindow.playBottomBar.playing = false;
         miniWindow.playing = false;
-        console.log('Paused')
+        // console.log('Paused')
     }
 
     function onStopped(){
         mainWindow.playBottomBar.playing = false;
         simpleWindow.playBottomBar.playing = false;
         miniWindow.playing = false;
-        console.log('Stopped')
+        // console.log('Stopped')
     }
 
     function updateVolumeSlider(value){
@@ -109,6 +110,11 @@ Item {
     function updateCycleButton(value){
         mainWindow.playBottomBar.cycleButton.playbackMode = value;
         simpleWindow.playBottomBar.cycleButton.playbackMode = value;
+    }
+
+    function updatePlaylistIndex(index){
+        print(index)
+        simpleWindow.playlistPage.playlistView.currentIndex = index;
     }
 
     Connections {
@@ -196,6 +202,14 @@ Item {
             MediaPlayer.playToggle(true);
         }
     }
+
+    Connections {
+        target: simpleWindow.playlistPage.playlistView
+        onModelChanged:{
+            simpleWindow.playlistPage.playlistView.positionViewAtEnd()
+        } 
+    }
+
 
     Connections {
         target: miniWindow

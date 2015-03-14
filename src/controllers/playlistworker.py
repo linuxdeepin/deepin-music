@@ -161,11 +161,11 @@ class DMediaPlaylist(QMediaPlaylist):
                 self.addLocalMedia(url)
             self._urls.append(url)
 
-        index = self._urls.index(url)
-        self.setCurrentIndex(index)
-
         medias = self.medias
         self.mediasChanged.emit(medias)
+
+        index = self._urls.index(url)
+        self.setCurrentIndex(index)
 
     def addLocalMedia(self, url):
         mediaContent = DLocalMediaContent(url)
