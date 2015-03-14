@@ -157,15 +157,16 @@ class DMediaPlaylist(QMediaPlaylist):
         if url not in self._urls:
             if url.startswith('http://') or url.startswith('https://'):
                 self.addOnlineMedia(url, ret)
+                self._urls.append(url)
             else:
-                self.addLocalMedia(url)
-            self._urls.append(url)
-
-        medias = self.medias
-        self.mediasChanged.emit(medias)
-
-        index = self._urls.index(url)
-        self.setCurrentIndex(index)
+                if os.path.exists(url):
+                    self.addLocalMedia(url)
+                    self._urls.append(url)
+        if url in self._urls:
+            medias = self.medias
+            self.mediasChanged.emit(medias)
+            index = self._urls.index(url)
+            self.setCurrentIndex(index)
 
     def addLocalMedia(self, url):
         mediaContent = DLocalMediaContent(url)
@@ -197,10 +198,10 @@ class PlaylistWorker(QObject):
 
 
     def initPlaylist(self):
-        # self.addMediaToTemporary(os.sep.join([os.environ['HOME'], 'workspace', 'yhm', '游鸿明 - 往快乐逃.flac']))
-        # self.addMediaToTemporary(os.sep.join([os.environ['HOME'], 'workspace', 'yhm', 'Track01.wav']))
-        # self.addMediaToTemporary(os.sep.join([os.environ['HOME'], 'workspace', 'yhm', '游鸿明-下沙.ape']))
-        # self.addMediaToTemporary(os.sep.join([os.environ['HOME'], 'workspace', 'yhm', '游鸿明 - 红糖水.flac']))
+        self.addMediaToTemporary(os.sep.join([os.environ['HOME'], 'workspace', 'yhm', '游鸿明 - 往快乐逃.flac']))
+        self.addMediaToTemporary(os.sep.join([os.environ['HOME'], 'workspace', 'yhm', 'Track01.wav']))
+        self.addMediaToTemporary(os.sep.join([os.environ['HOME'], 'workspace', 'yhm', '游鸿明-下沙.ape']))
+        self.addMediaToTemporary(os.sep.join([os.environ['HOME'], 'workspace', 'yhm', '游鸿明 - 红糖水.flac']))
         self.addMediaToTemporary(os.sep.join([os.path.dirname(os.getcwd()), 'music', '1.mp3']))
         self.addMediaToTemporary(os.sep.join(['/usr/share/deepin-sample-music/邓入比_我们的情歌.mp3']))
         self.addMediaToTemporary(os.sep.join(['/usr/share/deepin-sample-music/郭一凡_说走就走的旅行.mp3']))

@@ -50,24 +50,23 @@ class Song(dict):
 
     """docstring for Song"""
 
-    def __init__(self, uri):
+    def __init__(self, url):
         super(Song, self).__init__()
         self.__dict__ = self
         from os.path import abspath, realpath, normpath
-        self.uri = normpath(realpath(abspath(uri)))
-
+        self.url = normpath(realpath(abspath(url)))
         if self.isExisted():
             self.getTags()
 
     def isExisted(self):
-        return os.path.exists(self.uri)
+        return os.path.exists(self.url)
 
     def isLocalFile(self):
-        return QUrl.fromLocalFile(self.uri).isLocalFile()
+        return QUrl.fromLocalFile(self.url).isLocalFile()
 
     @property
     def baseName(self):
-        return os.path.basename(self.uri)
+        return os.path.basename(self.url)
 
     @property
     def fileName(self):
@@ -78,7 +77,7 @@ class Song(dict):
         return os.path.splitext(self.baseName)[1][1:]
 
     def getTags(self):
-        path = self.uri
+        path = self.url
         self["size"] = os.path.getsize(path)
 
         audio = common.MutagenFile(path, common.FORMATS)
@@ -116,17 +115,17 @@ class Song(dict):
     def saveTags(self):
         ''' Save tag information to file. '''
         if not self.isLocalFile():
-            self.last_error = self.uri + " " + "is not a local file"
+            self.last_error = self.url + " " + "is not a local file"
             return False
         if not self.isExisted():
-            self.last_error = self.uri + " doesn't exist"
+            self.last_error = self.url + " doesn't exist"
             return False
-        if not os.access(self.uri, os.W_OK):
-            self.last_error = self.uri + " doesn't have enough permission"
+        if not os.access(self.url, os.W_OK):
+            self.last_error = self.url + " doesn't have enough permission"
             return False
 
         try:
-            audio = common.MutagenFile(self.uri, common.FORMATS)
+            audio = common.MutagenFile(self.url, common.FORMATS)
             tag_keys_override = None
 
             if audio is not None:
@@ -157,16 +156,16 @@ class Song(dict):
 
         except Exception, e:
             print traceback.format_exc()
-            print "W: Error while writting (" + self.get("uri") + ")\nTracback :", e
+            print "W: Error while writting (" + self.get("url") + ")\nTracback :", e
             self.last_error = "Error while writting" + \
-                ": " + self.uri
+                ": " + self.url
             return False
         else:
             return True
 
     def getMp3FontCover(self):
         from common import EasyMP3
-        audio = common.MutagenFile(self.uri, common.FORMATS)
+        audio = common.MutagenFile(self.url, common.FORMATS)
         ext = None
         img_data = None
         if isinstance(audio, EasyMP3):
@@ -181,7 +180,7 @@ class Song(dict):
 
     def pprint(self):
         keys = [
-            'uri',
+            'url',
             'title',
             'artist',
             'album',
