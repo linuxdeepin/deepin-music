@@ -26,7 +26,7 @@ class MediaPlayer(QObject):
 
     __contextName__ = "MediaPlayer"
 
-    musicInfoChanged = pyqtSignal('QString', 'QString', 'QString')
+    musicInfoChanged = pyqtSignal('QString', 'QString')
 
     positionChanged = pyqtSignal('qint64')
     volumeChanged = pyqtSignal(int)
@@ -38,6 +38,8 @@ class MediaPlayer(QObject):
     bufferStatusChanged = pyqtSignal(int)
 
     playlistChanged = pyqtSignal('QString')
+
+    coverChanged = pyqtSignal('QString', 'QString','QString')
 
     @registerContext
     def __init__(self):
@@ -268,7 +270,9 @@ class MediaPlayer(QObject):
             self.setMediaUrl(url)
             title = mediaContent.song['title']
             artist = mediaContent.song['artist']
-            self.musicInfoChanged.emit(title, artist, cover)
+
+            self.musicInfoChanged.emit(title, artist)
+            self.coverChanged.emit(cover, title, artist)
 
     def bufferChange(self, progress):
         self.bufferStatusChanged.emit(progress)
@@ -276,8 +280,3 @@ class MediaPlayer(QObject):
     @pyqtSlot('QVariant')
     def addOnlineMedia(self, result):
         self._playlist.addMedia(result['url'], result['ret'])
-
-
-    # @pyqtProperty(int, notify=currentIndexChanged)
-    # def currentIndex(self):
-    #     return self._playlist.currentIndex()

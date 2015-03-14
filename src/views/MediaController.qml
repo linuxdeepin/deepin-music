@@ -15,6 +15,8 @@ Item {
         MediaPlayer.musicInfoChanged.connect(updateMusicInfo);
         MediaPlayer.bufferStatusChanged.connect(updateBufferSlider);
 
+        CoverWorker.coverUpdated.connect(updateCover);
+
         MediaPlayer.setPlaylistByName(ConfigWorker.lastPlaylistName);
         MediaPlayer.playlist.setCurrentIndex(ConfigWorker.lastPlayedIndex);
         MediaPlayer.volumeChanged(ConfigWorker.volume);
@@ -51,14 +53,16 @@ Item {
 
     function updateMusicInfo(title, artist, cover)
     {
-        mainWindow.playBottomBar.updateCoverImage(cover);
         mainWindow.playBottomBar.updateMusicName(title);
         mainWindow.playBottomBar.updateArtistName(artist);
 
-        simpleWindow.playBottomBar.updateCoverImage(cover);
         simpleWindow.playBottomBar.updateMusicName(title);
         simpleWindow.playBottomBar.updateArtistName(artist);
+    }
 
+    function updateCover(cover){
+        mainWindow.playBottomBar.updateCoverImage(cover);
+        simpleWindow.playBottomBar.updateCoverImage(cover);
         if(ConfigWorker.isCoverBackground){
             mainWindow.mainWindowController.setSkinByImage(cover);
             simpleWindow.simpleWindowController.setSkinByImage(cover);

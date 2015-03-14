@@ -11,6 +11,7 @@ ProjectName = "DeepinMusic3"
 ProjectConfigPath = os.path.join(ConfigPath, ProjectName)
 
 PlaylistPath = os.path.join(ProjectConfigPath, 'playlist')
+CoverPath = os.path.join(ProjectConfigPath, 'cover')
 
 MusicDBFile = os.path.join(parentDir(os.getcwd()), 'music', 'music.db')
 
@@ -20,3 +21,6 @@ if not os.path.exists(ProjectConfigPath):
 
 if not os.path.exists(PlaylistPath):
     os.makedirs(PlaylistPath)
+
+if not os.path.exists(CoverPath):
+	os.makedirs(CoverPath)

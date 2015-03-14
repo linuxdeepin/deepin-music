@@ -7,7 +7,7 @@ from views import MainWindow
 
 from controllers import contexts, Web360ApiWorker, MusicManageWorker
 from controllers import MenuWorker, WindowManageWorker
-from controllers import MediaPlayer, PlaylistWorker
+from controllers import MediaPlayer, PlaylistWorker, CoverWorker
 from controllers import ConfigWorker, DBWorker
 
 from models import MusicDataBase
@@ -51,6 +51,7 @@ class DeepinPlayer(QObject):
 
         self.mediaPlayer = MediaPlayer()
         self.playlistWorker = PlaylistWorker()
+        self.coverWorker = CoverWorker()
 
         self.musicDataBase = MusicDataBase()
         self.dbworker = DBWorker()
@@ -61,6 +62,7 @@ class DeepinPlayer(QObject):
 
     def initConnect(self):
         self.web360ApiWorker.addMediaContent.connect(self.mediaPlayer.addOnlineMedia)
+        self.mediaPlayer.coverChanged.connect(self.coverWorker.saveCover)
 
     def showMainWindow(self):
         self.mainWindow.show()
