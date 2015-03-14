@@ -113,7 +113,6 @@ Item {
     }
 
     function updatePlaylistIndex(index){
-        print(index)
         simpleWindow.playlistPage.playlistView.currentIndex = index;
     }
 
