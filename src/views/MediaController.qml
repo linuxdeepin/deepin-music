@@ -4,6 +4,7 @@ Item {
     property var mainWindow
     property var simpleWindow
     property var miniWindow
+    property var positionTimer
 
     function initConnect(){
         MediaPlayer.positionChanged.connect(updateSlider);
@@ -110,6 +111,8 @@ Item {
         target: mainWindow.playBottomBar.slider
         onSliderRateChanged:{
             if (MediaPlayer.seekable){
+                MediaPlayer.setMuted(true);
+                positionTimer.restart();
                 MediaPlayer.setPosition(MediaPlayer.duration * rate)
             }
         }
@@ -119,6 +122,8 @@ Item {
         target: simpleWindow.playBottomBar.slider
         onSliderRateChanged:{
             if (MediaPlayer.seekable){
+                MediaPlayer.setMuted(true);
+                positionTimer.restart();
                 MediaPlayer.setPosition(MediaPlayer.duration * rate)
             }
         }
@@ -128,6 +133,8 @@ Item {
         target: miniWindow.slider
         onSliderRateChanged:{
             if (MediaPlayer.seekable){
+                MediaPlayer.setMuted(true);
+                positionTimer.restart();
                 MediaPlayer.setPosition(MediaPlayer.duration * rate)
             }
         }
@@ -194,6 +201,13 @@ Item {
         onPlayed: MediaPlayer.playToggle(isPlaying)
 
         onNextMusic: MediaPlayer.next()
+    }
+
+    Connections {
+        target: positionTimer
+        onTriggered:{
+            MediaPlayer.setMuted(false);
+        } 
     }
 
     Component.onCompleted: {
