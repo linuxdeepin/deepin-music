@@ -214,6 +214,12 @@ class PlaylistWorker(QObject):
         self.addMediaToFavorite(os.sep.join([os.path.dirname(os.getcwd()), 'music', '1.mp3']))
         self.addMediaToFavorite(os.sep.join(['/usr/share/deepin-sample-music/胡彦斌_依然是你.mp3']))
 
+    def savePlaylists(self):
+        pass
+
+    def loadPlaylists(self):
+        pass
+
 
     def savePlaylistByName(self, name):
         f = QFile(os.sep.join([PlaylistPath, '%s.m3u' % name]))
@@ -258,10 +264,3 @@ class PlaylistWorker(QObject):
             self.nameExisted.emit(name)
         else:
             self._playlists[name] = DMediaPlaylist(name)
-
-    @pyqtSlot()
-    def playOnlineMusic(self, result):
-        pass
-
-
-
