@@ -65,10 +65,16 @@ class DRealLocalMediaContent(BaseMediaContent):
 
     def __init__(self, url, tags=None):
         super(DRealLocalMediaContent, self).__init__(url)
-        self.song = Song(url)
-        self.title = self.song['title']
-        self.artist = self.song['artist']
+        self._tags = Song(url)
+        self.title = self._tags['title']
+        self.artist = self._tags['artist']
 
+    @pyqtProperty(dict)
+    def tags(self):
+        return self._tags
+    @tags.setter
+    def tags(self, value):
+        self._tags = value
 
 class DRealOnlineMediaContent(BaseMediaContent):
 
@@ -95,13 +101,14 @@ class DRealOnlineMediaContent(BaseMediaContent):
         'playlinkUrl': 'playlinkUrl'
     }
 
-    def __init__(self, url, tags=None):
+    def __init__(self, url, onlineTags=None):
         super(DRealOnlineMediaContent, self).__init__(url)
         self._palyLinkUrl = ''
-        self.song = {}
+        self._onlineTags = onlineTags
+        self._tags = {}
         self.tagsUpdated.connect(self.updateTags)
-        if tags:
-            self.updateTags(tags)
+        if onlineTags:
+            self.updateTags(onlineTags)
         else:
             self.updateTagsByUrl(url)
 
@@ -109,11 +116,11 @@ class DRealOnlineMediaContent(BaseMediaContent):
         for key in self.__keys__:
             k = self.__keys__[key]
             if k in tags:
-                self.song[key] = tags[k]
+                self._tags[key] = tags[k]
 
-        self.title = self.song['title']
-        self.artist = self.song['artist']
-        self.playlinkUrl = self.song['playlinkUrl']
+        self.title = self._tags['title']
+        self.artist = self._tags['artist']
+        self.playlinkUrl = self._tags['playlinkUrl']
 
     @dthread
     @pyqtSlot(int)
@@ -122,6 +129,22 @@ class DRealOnlineMediaContent(BaseMediaContent):
         ret = requests.get(url)
         tags = ret.json()
         self.tagsUpdated.emit(tags)
+
+    @pyqtProperty(dict)
+    def tags(self):
+        return self._tags
+
+    @tags.setter
+    def tags(self, value):
+        self._tags = value
+
+    @pyqtProperty(dict)
+    def onlineTags(self):
+        return self._onlineTags
+
+    @onlineTags.setter
+    def onlineTags(self, value):
+        self._onlineTags = value
 
     @pyqtProperty('QString')
     def playlinkUrl(self):

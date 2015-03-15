@@ -268,10 +268,10 @@ class MediaPlayer(QObject):
             cover = ''
         elif isinstance(mediaContent, DRealOnlineMediaContent):
             url = mediaContent.playlinkUrl
-            if 'albumImage_500x500' in mediaContent.song and mediaContent.song['albumImage_500x500']:
-                cover = mediaContent.song['albumImage_500x500']
-            elif 'albumImage_100x100' in mediaContent.song and mediaContent.song['albumImage_100x100']:
-                cover = mediaContent.song['albumImage_100x100']
+            if 'albumImage_500x500' in mediaContent.tags and mediaContent.tags['albumImage_500x500']:
+                cover = mediaContent.tags['albumImage_500x500']
+            elif 'albumImage_100x100' in mediaContent.tags and mediaContent.tags['albumImage_100x100']:
+                cover = mediaContent.tags['albumImage_100x100']
             else:
                 cover = ''
         if url:
