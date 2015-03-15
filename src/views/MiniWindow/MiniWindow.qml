@@ -14,8 +14,9 @@ Window {
 
     color: "#282F3F"
 
-    flags: Qt.FramelessWindowHint | Qt.Dialog | Qt.WindowStaysOnTopHint
-
+    flags: Qt.FramelessWindowHint | Qt.Popup| Qt.WindowStaysOnTopHint
+    x: Screen.desktopAvailableWidth - 200
+    y: 100
 
     signal closed()
     signal expandNoraml()
