@@ -39,7 +39,6 @@ class MediaPlayer(QObject):
 
     playlistChanged = pyqtSignal('QString')
 
-    # mediasChanged = pyqtSignal('QVariant')
     currentIndexChanged = pyqtSignal(int)
 
     coverChanged = pyqtSignal('QString', 'QString','QString')
@@ -77,11 +76,9 @@ class MediaPlayer(QObject):
         if self._playlist:
             self._playlist.currentIndexChanged.disconnect(self.setCurrentMedia)
             self._playlist.currentIndexChanged.disconnect(self.currentIndexChanged)
-            # self._playlist.mediasChanged.disconnect(self.mediasChanged)
 
         self._playlist = playlist
         self._playlist.currentIndexChanged.connect(self.setCurrentMedia)
-        # self._playlist.mediasChanged.connect(self.mediasChanged)
         self._playlist.currentIndexChanged.connect(self.currentIndexChanged)
         self.playlistChanged.emit(playlist.name)
 
@@ -292,7 +289,3 @@ class MediaPlayer(QObject):
     @pyqtProperty(int, notify=currentIndexChanged)
     def currentIndex(self):
         return self._playlist.currentIndex()
-
-    # @pyqtProperty('QVariant', notify=mediasChanged)
-    # def medias(self):
-    #     return self._playlist.medias

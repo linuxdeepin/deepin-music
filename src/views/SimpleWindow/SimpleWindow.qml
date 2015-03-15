@@ -102,8 +102,22 @@ Rectangle {
 
                 PlaylistPage {
                     id: playlistPage
-                    model: MediaPlayer.playlist.medias
-                    // currentIndex: MediaPlayer.playlist.currentIndex
+                    model: {
+                        var playlist = MediaPlayer.playlist;
+                        if (playlist){
+                            return playlist.medias;
+                        }else{
+                            return null;
+                        }
+                    }
+                    currentIndex: {
+                        var playlist = MediaPlayer.playlist;
+                        if (playlist){
+                            return playlist.currentIndex;
+                        }else{
+                            return -1;
+                        }
+                    }
                     color: "transparent"
                 }
 

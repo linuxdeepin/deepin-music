@@ -65,16 +65,21 @@ class DRealLocalMediaContent(BaseMediaContent):
 
     def __init__(self, url, tags=None):
         super(DRealLocalMediaContent, self).__init__(url)
-        self._tags = Song(url)
+        if tags:
+            self._tags = tags
+        else:
+            self._tags = Song(url)
         self.title = self._tags['title']
         self.artist = self._tags['artist']
 
     @pyqtProperty(dict)
     def tags(self):
         return self._tags
+
     @tags.setter
     def tags(self, value):
         self._tags = value
+
 
 class DRealOnlineMediaContent(BaseMediaContent):
 
@@ -117,7 +122,6 @@ class DRealOnlineMediaContent(BaseMediaContent):
             k = self.__keys__[key]
             if k in tags:
                 self._tags[key] = tags[k]
-
         self.title = self._tags['title']
         self.artist = self._tags['artist']
         self.playlinkUrl = self._tags['playlinkUrl']
@@ -132,18 +136,10 @@ class DRealOnlineMediaContent(BaseMediaContent):
 
     @pyqtProperty(dict)
     def tags(self):
-        return self._tags
+        return self._onlineTags
 
     @tags.setter
     def tags(self, value):
-        self._tags = value
-
-    @pyqtProperty(dict)
-    def onlineTags(self):
-        return self._onlineTags
-
-    @onlineTags.setter
-    def onlineTags(self, value):
         self._onlineTags = value
 
     @pyqtProperty('QString')
@@ -158,10 +154,10 @@ class DRealOnlineMediaContent(BaseMediaContent):
 
 class DLocalMediaContent(QMediaContent):
 
-    def __init__(self, url):
+    def __init__(self, url, ret=None):
         super(DLocalMediaContent, self).__init__(QUrl.fromLocalFile(url))
         self._url = url
-        self.content = DRealLocalMediaContent(url)
+        self.content = DRealLocalMediaContent(url, ret)
 
     @pyqtProperty('QString')
     def url(self):
@@ -189,7 +185,7 @@ class DMediaPlaylist(QMediaPlaylist):
         super(DMediaPlaylist, self).__init__()
         self._name = name
         self._urls = []
-        self._mediaContents = {}
+        self._mediaContents = OrderedDict()
 
     @pyqtProperty('QString')
     def name(self):
@@ -226,7 +222,7 @@ class DMediaPlaylist(QMediaPlaylist):
                 self.mediasChanged.emit(medias)
             else:
                 if os.path.exists(url):
-                    self.addLocalMedia(url)
+                    self.addLocalMedia(url, ret)
                     self._urls.append(url)
                     medias = self.medias
                     self.mediasChanged.emit(medias)
@@ -234,8 +230,8 @@ class DMediaPlaylist(QMediaPlaylist):
             index = self._urls.index(url)
             self.setCurrentIndex(index)
 
-    def addLocalMedia(self, url):
-        mediaContent = DLocalMediaContent(url)
+    def addLocalMedia(self, url, ret):
+        mediaContent = DLocalMediaContent(url, ret)
         content = mediaContent.content
         self._mediaContents.update({url: content})
         super(DMediaPlaylist, self).addMedia(mediaContent)
@@ -265,38 +261,32 @@ class PlaylistWorker(QObject):
 
         self.initPlaylist()
 
-
     def initPlaylist(self):
-        self.addMediaToTemporary(os.sep.join([os.environ['HOME'], 'workspace', 'yhm', '游鸿明 - 往快乐逃.flac']))
-        self.addMediaToTemporary(os.sep.join([os.environ['HOME'], 'workspace', 'yhm', 'Track01.wav']))
-        self.addMediaToTemporary(os.sep.join([os.environ['HOME'], 'workspace', 'yhm', '游鸿明-下沙.ape']))
-        self.addMediaToTemporary(os.sep.join([os.environ['HOME'], 'workspace', 'yhm', '游鸿明 - 红糖水.flac']))
-        self.addMediaToTemporary(os.sep.join([os.path.dirname(os.getcwd()), 'music', '1.mp3']))
-        self.addMediaToTemporary(os.sep.join(['/usr/share/deepin-sample-music/邓入比_我们的情歌.mp3']))
-        self.addMediaToTemporary(os.sep.join(['/usr/share/deepin-sample-music/郭一凡_说走就走的旅行.mp3']))
-        self.addMediaToTemporary(os.sep.join(['/usr/share/deepin-sample-music/胡彦斌_依然是你.mp3']))
-
-
-        
-        self.addMediaToFavorite(os.sep.join(['/usr/share/deepin-sample-music/邓入比_我们的情歌.mp3']))
-        self.addMediaToFavorite(os.sep.join(['/usr/share/deepin-sample-music/郭一凡_说走就走的旅行.mp3']))
-        self.addMediaToFavorite(os.sep.join([os.path.dirname(os.getcwd()), 'music', '1.mp3']))
-        self.addMediaToFavorite(os.sep.join(['/usr/share/deepin-sample-music/胡彦斌_依然是你.mp3']))
+        self.loadPlaylists()
 
     def savePlaylists(self):
         result = OrderedDict()
+        for name, playlist in self._playlists.items():
+            _playlist = OrderedDict()
+            for  url, mediaContent in playlist.mediaContents.items():
+                _playlist[url] = mediaContent.tags
+            result[name] = _playlist
 
-        for name in self._playlists:
-            result['name'] = name
-            result['']
-
-        with open('DeepinMusic3.playlist', 'wb') as f:
-            json.dump(self._d)
+        playlistPath = os.path.join(PlaylistPath, 'DeepinMusic3.playlist')
+        with open(playlistPath, 'wb') as f:
+            json.dump(result, f, indent=4)
 
 
     def loadPlaylists(self):
-        pass
-
+        playlistPath = os.path.join(PlaylistPath, 'DeepinMusic3.playlist')
+        if os.path.exists(playlistPath):
+            with open(playlistPath, 'r') as f:
+                results = json.load(f, object_pairs_hook=OrderedDict)
+            for name, _playlist in results.items():
+                playlist = self.createPlaylistByName(name)
+                for url, tags in _playlist.items():
+                    url = url.encode('utf-8')
+                    playlist.addMedia(url, tags)
 
     def savePlaylistByName(self, name):
         f = QFile(os.sep.join([PlaylistPath, '%s.m3u' % name]))
@@ -341,3 +331,5 @@ class PlaylistWorker(QObject):
             self.nameExisted.emit(name)
         else:
             self._playlists[name] = DMediaPlaylist(name)
+
+        return self._playlists[name]

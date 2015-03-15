@@ -14,15 +14,8 @@ Item {
         MediaPlayer.playbackModeChanged.connect(updateCycleButton);
         MediaPlayer.musicInfoChanged.connect(updateMusicInfo);
         MediaPlayer.bufferStatusChanged.connect(updateBufferSlider);
-        MediaPlayer.currentIndexChanged.connect(updatePlaylistIndex);
-
+        // MediaPlayer.currentIndexChanged.connect(updatePlaylistIndex);
         CoverWorker.coverUpdated.connect(updateCover);
-
-        MediaPlayer.setPlaylistByName(ConfigWorker.lastPlaylistName);
-        MediaPlayer.playlist.setCurrentIndex(ConfigWorker.lastPlayedIndex);
-        MediaPlayer.volumeChanged(ConfigWorker.volume);
-        MediaPlayer.setPlaybackMode(ConfigWorker.playbackMode);
-
     }
 
     function updateSlider(position) {

@@ -23,9 +23,9 @@ class DeepinPlayer(QObject):
         self.loadDB()
         self.initView()
         self.initControllers()
-        self.initQMLContext()
-
         self.initConnect()
+        self.initQMLContext()
+        self.loadConfig()
 
     @property
     def qApp(self):
@@ -63,6 +63,13 @@ class DeepinPlayer(QObject):
     def initConnect(self):
         self.web360ApiWorker.addMediaContent.connect(self.mediaPlayer.addOnlineMedia)
         self.mediaPlayer.coverChanged.connect(self.coverWorker.saveCover)
+        self.qApp.aboutToQuit.connect(self.close)
+
+    def loadConfig(self):
+        self.mediaPlayer.setPlaylistByName(self.configWorker.lastPlaylistName);
+        self.mediaPlayer.playlist.setCurrentIndex(self.configWorker.lastPlayedIndex);
+        self.mediaPlayer.setVolume(self.configWorker.volume);
+        self.mediaPlayer.setPlaybackMode(self.configWorker.playbackMode);
 
     def showMainWindow(self):
         self.mainWindow.show()
@@ -70,3 +77,6 @@ class DeepinPlayer(QObject):
 
     def show(self):
         self.showMainWindow()
+
+    def close(self):
+        self.playlistWorker.savePlaylists()
