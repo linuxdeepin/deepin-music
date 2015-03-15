@@ -10,7 +10,7 @@ from PyQt5.QtGui import QCursor
 from .utils import registerContext, contexts
 from .utils import duration_to_string
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent, QMediaPlaylist
-from .playlistworker import DLocalMediaContent, DOnlineMediaContent
+from .playlistworker import DRealLocalMediaContent, DRealOnlineMediaContent
 from log import logger
 
 
@@ -260,13 +260,14 @@ class MediaPlayer(QObject):
     def setCurrentMedia(self, index):
         urls = self._playlist.urls
         mediaContents =  self._playlist.mediaContents
-        
+
         mediaContent = mediaContents[urls[index]]
-        if isinstance(mediaContent, DLocalMediaContent):
+
+        if isinstance(mediaContent, DRealLocalMediaContent):
             url = mediaContent.url
             cover = ''
-        elif isinstance(mediaContent, DOnlineMediaContent):
-            url = mediaContent.playLinkUrl
+        elif isinstance(mediaContent, DRealOnlineMediaContent):
+            url = mediaContent.playlinkUrl
             if 'albumImage_500x500' in mediaContent.song and mediaContent.song['albumImage_500x500']:
                 cover = mediaContent.song['albumImage_500x500']
             elif 'albumImage_100x100' in mediaContent.song and mediaContent.song['albumImage_100x100']:
@@ -275,8 +276,8 @@ class MediaPlayer(QObject):
                 cover = ''
         if url:
             self.setMediaUrl(url)
-            title = mediaContent.song['title']
-            artist = mediaContent.song['artist']
+            title = mediaContent.title
+            artist = mediaContent.artist
 
             self.musicInfoChanged.emit(title, artist)
             self.coverChanged.emit(cover, title, artist)
