@@ -4,6 +4,8 @@
 
 import os
 import sys
+from collections import OrderedDict
+import json 
 from PyQt5.QtCore import (QObject, pyqtSignal, pyqtSlot, 
     pyqtProperty, QUrl, QFile, QIODevice
     )
@@ -15,27 +17,65 @@ from config.constants import PlaylistPath
 from log import logger
 
 
-class DLocalMediaContent(QMediaContent):
+class BaseMediaContent(QObject):
+
+    titleChanged = pyqtSignal('QString')
+    artistChanged = pyqtSignal('QString')
+    coverChanged = pyqtSignal('QString')
 
     def __init__(self, url):
-        super(DLocalMediaContent, self).__init__(QUrl.fromLocalFile(url))
-        self.song = Song(url)
+        super(BaseMediaContent, self).__init__()
         self._url = url
+        self._title = ''
+        self._artist = ''
+        self._cover = ''
 
     @pyqtProperty('QString')
     def url(self):
         return self._url
 
-    @pyqtProperty('QString')
+    @pyqtProperty('QString', notify=titleChanged)
     def title(self):
-        return self.song['title']
+        return self._title
 
-    @pyqtProperty('QString')
+    @title.setter
+    def title(self, title):
+        self._title = title
+        self.titleChanged.emit(title)
+
+    @pyqtProperty('QString', notify=artistChanged)
     def artist(self):
-        return self.song['artist']
+        return self._artist
+
+    @artist.setter
+    def artist(self, artist):
+        self._artist = artist
+        self.artistChanged.emit(artist)
+
+    @pyqtProperty('QString', notify=coverChanged)
+    def cover(self):
+        return self._cover
+
+    @cover.setter
+    def cover(self, cover):
+        self._cover = cover
+        self.coverChanged.emit(cover)
+
+class DRealLocalMediaContent(BaseMediaContent):
+
+    def __init__(self, url, tags=None):
+        super(DRealLocalMediaContent, self).__init__(url)
+        self.song = Song(url)
+        self.title = self.song['title']
+        self.artist = self.song['artist']
 
 
-class DOnlineMediaContent(QMediaContent):
+class DRealOnlineMediaContent(BaseMediaContent):
+
+    tagsUpdated = pyqtSignal(dict)
+    playlinkChanged = pyqtSignal('QString')
+
+    tagsUpdateSuccessed = pyqtSignal('QString')
 
     __keys__ = {
         'title': 'songName',
@@ -55,64 +95,66 @@ class DOnlineMediaContent(QMediaContent):
         'playlinkUrl': 'playlinkUrl'
     }
 
-    def __init__(self, url, ret):
-        super(DOnlineMediaContent, self).__init__(QUrl(url))
+    def __init__(self, url, tags=None):
+        super(DRealOnlineMediaContent, self).__init__(url)
+        self._palyLinkUrl = ''
         self.song = {}
+        self.tagsUpdated.connect(self.updateTags)
+        if tags:
+            self.updateTags(tags)
+        else:
+            self.updateTagsByUrl(url)
+
+    def updateTags(self, tags):
         for key in self.__keys__:
             k = self.__keys__[key]
-            if k in ret:
-                self.song[key] = ret[k]
+            if k in tags:
+                self.song[key] = tags[k]
 
+        self.title = self.song['title']
+        self.artist = self.song['artist']
+        self.playlinkUrl = self.song['playlinkUrl']
+
+    @dthread
+    @pyqtSlot(int)
+    def updateTagsByUrl(self, url):
+        import requests
+        ret = requests.get(url)
+        tags = ret.json()
+        self.tagsUpdated.emit(tags)
+
+    @pyqtProperty('QString')
+    def playlinkUrl(self):
+        return self._palyLinkUrl
+
+    @playlinkUrl.setter
+    def playlinkUrl(self, link):
+        self._palyLinkUrl = link
+        self.playlinkChanged.emit(link)
+    
+
+class DLocalMediaContent(QMediaContent):
+
+    def __init__(self, url):
+        super(DLocalMediaContent, self).__init__(QUrl.fromLocalFile(url))
         self._url = url
+        self.content = DRealLocalMediaContent(url)
 
     @pyqtProperty('QString')
     def url(self):
         return self._url
 
-    @pyqtProperty('QString')
-    def playLinkUrl(self):
-        if 'playlinkUrl' in self.song:
-            return self.song['playlinkUrl']
-        else:
-            return ''
+
+class DOnlineMediaContent(QMediaContent):
+
+    def __init__(self, url, tags=None):
+        super(DOnlineMediaContent, self).__init__(QUrl(url))
+        self_url = url
+        self.content = DRealOnlineMediaContent(url, tags)
 
     @pyqtProperty('QString')
-    def title(self):
-        if 'title' in self.song:
-            return self.song['title']
-        else:
-            return 'unknown'
-
-    @pyqtProperty('QString')
-    def artist(self):
-        if 'artist' in self.song:
-            return self.song['artist']
-        else:
-            return 'unknown'
-
-    @classmethod
-    def md5(cls, musicId):
-        import hashlib
-        s = 'id=%d_projectName=linuxdeepin' % (musicId)
-        md5Value = hashlib.md5(s)
-        return md5Value.hexdigest()
-
-    @dthread
-    @pyqtSlot(int)
-    def getMusicURLByID(self, musicId):
-        import hashlib
-        import requests
-        sign = self.md5(musicId)
-        params = {
-            'id': musicId,
-            'src': 'linuxdeepin',
-            'sign': sign
-        }
-        ret = requests.get("http://s.music.haosou.com/player/songForPartner", params=params)
-        jsonRet = ret.json()
-        self.emitURL(jsonRet)
-        return jsonRet
-
+    def url(self):
+        return self._url
 
 class DMediaPlaylist(QMediaPlaylist):
 
@@ -148,8 +190,7 @@ class DMediaPlaylist(QMediaPlaylist):
         medias = []
         for key in self._urls:
             mediaContent = self._mediaContents[key]
-            media = {'title': mediaContent.title, 'artist': mediaContent.artist}
-            medias.append(media)
+            medias.append(mediaContent)
         return medias
 
     def addMedia(self, url, ret=None):
@@ -158,24 +199,28 @@ class DMediaPlaylist(QMediaPlaylist):
             if url.startswith('http://') or url.startswith('https://'):
                 self.addOnlineMedia(url, ret)
                 self._urls.append(url)
+                medias = self.medias
+                self.mediasChanged.emit(medias)
             else:
                 if os.path.exists(url):
                     self.addLocalMedia(url)
                     self._urls.append(url)
+                    medias = self.medias
+                    self.mediasChanged.emit(medias)
         if url in self._urls:
-            medias = self.medias
-            self.mediasChanged.emit(medias)
             index = self._urls.index(url)
             self.setCurrentIndex(index)
 
     def addLocalMedia(self, url):
         mediaContent = DLocalMediaContent(url)
-        self._mediaContents.update({url: mediaContent})
+        content = mediaContent.content
+        self._mediaContents.update({url: content})
         super(DMediaPlaylist, self).addMedia(mediaContent)
 
     def addOnlineMedia(self, url, ret):
         mediaContent = DOnlineMediaContent(url, ret)
-        self._mediaContents.update({url: mediaContent})
+        content = mediaContent.content
+        self._mediaContents.update({url: content})
         super(DMediaPlaylist, self).addMedia(mediaContent)
 
 
@@ -189,10 +234,11 @@ class PlaylistWorker(QObject):
     def __init__(self, parent=None):
         super(PlaylistWorker, self).__init__(parent)
 
-        self._playlists = {}
+        self._playlists = OrderedDict()
         self._currentPlaylist = None
-        self._playlists['temporary'] = DMediaPlaylist('temporary')
-        self._playlists['favorite'] = DMediaPlaylist('favorite')
+
+        self.createPlaylistByName('temporary')
+        self.createPlaylistByName('favorite')
 
         self.initPlaylist()
 
@@ -215,7 +261,15 @@ class PlaylistWorker(QObject):
         self.addMediaToFavorite(os.sep.join(['/usr/share/deepin-sample-music/胡彦斌_依然是你.mp3']))
 
     def savePlaylists(self):
-        pass
+        result = OrderedDict()
+
+        for name in self._playlists:
+            result['name'] = name
+            result['']
+
+        with open('DeepinMusic3.playlist', 'wb') as f:
+            json.dump(self._d)
+
 
     def loadPlaylists(self):
         pass
