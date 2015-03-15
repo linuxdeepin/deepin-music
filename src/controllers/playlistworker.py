@@ -212,6 +212,13 @@ class DMediaPlaylist(QMediaPlaylist):
             medias.append(mediaContent)
         return medias
 
+    def removeMedia(self, index):
+        flag = super(DMediaPlaylist, self).removeMedia(index)
+        if flag:
+            url = self._urls[index]
+            self._urls.pop(index)
+            self._mediaContents.pop(url)
+
     def addMedia(self, url, ret=None):
         url = str(url)
         if url not in self._urls:
