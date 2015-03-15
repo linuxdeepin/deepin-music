@@ -14,7 +14,7 @@ Item {
         MediaPlayer.playbackModeChanged.connect(updateCycleButton);
         MediaPlayer.musicInfoChanged.connect(updateMusicInfo);
         MediaPlayer.bufferStatusChanged.connect(updateBufferSlider);
-        // MediaPlayer.currentIndexChanged.connect(updatePlaylistIndex);
+        MediaPlayer.currentIndexChanged.connect(updatePlaylistIndex);
         CoverWorker.coverUpdated.connect(updateCover);
     }
 
