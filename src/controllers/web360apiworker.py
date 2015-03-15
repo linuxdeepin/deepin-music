@@ -24,6 +24,7 @@ class Web360ApiWorker(QObject):
     @registerContext
     def __init__(self, parent=None):
         super(Web360ApiWorker, self).__init__(parent)
+        self.playedMusics = {}
         self._musicIds = []
         self._results = {}
         self.initConnect()
@@ -71,11 +72,22 @@ class Web360ApiWorker(QObject):
         except:
             result = None        
 
+        self.playedMusics.update({musicId: result})
+
         return result
+
+    @pyqtSlot(int)
+    def getMusicUrlById(self, musicId):
+        if musicId in self.playedMusics:
+            result = self.playedMusics[musicId]
+            if result:
+                self.addMediaContent.emit(result)
+        else:
+            self.getNetMusicUrlById(musicId)
 
     @dthread
     @pyqtSlot(int)
-    def getMusicUrlById(self, musicId):
+    def getNetMusicUrlById(self, musicId):
         result = self.getResult(musicId)
         if result:
             self.addMediaContent.emit(result)
@@ -88,10 +100,14 @@ class Web360ApiWorker(QObject):
 
     @pyqtSlot('QString')
     def getMusicUrlByIds(self, musicIds):
-        musicIds = [int(k) for k in musicIds.split('_')]
-        for musicId in musicIds:
-            self._musicIds.append(musicId)
-            self.getQueueResults(musicId)
+        self._musicIds = [int(k) for k in musicIds.split('_')]
+        for musicId in self._musicIds:
+            if musicId in self.playedMusics:
+                result = self.playedMusics[musicId]
+                if result:
+                    self.requestSuccessed.emit(musicId, result)
+            else:
+                self.getQueueResults(musicId)
 
     @pyqtSlot(int, dict)
     def collectResults(self, musicId, result):
