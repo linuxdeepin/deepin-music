@@ -20,6 +20,11 @@ Rectangle{
     property var volumeSlider: volumeSlider
     property bool playing: false
     property double volumeValue
+
+    property var title
+    property var artist
+    property var cover
+
     property int iconsWidth: 40 
 
 
@@ -67,6 +72,10 @@ Rectangle{
                 width: playBottomBar.contentWidth
                 height: 60
                 color: "transparent"
+
+                title: playBottomBar.title
+                artist: playBottomBar.artist
+                cover: playBottomBar.cover
 
                 border.color: "white"
                 border.width: 0

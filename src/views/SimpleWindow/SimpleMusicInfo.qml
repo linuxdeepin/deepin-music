@@ -3,7 +3,7 @@ import DMusic 1.0
 import "../DMusicWidgets"
 
 Rectangle {
-    id: musicinfo
+    id: musicInfo
 
     property int spacing: 10
     property color spacingColor: "#2A3B4D"
@@ -16,21 +16,25 @@ Rectangle {
     property var musicStar: musicStar
     property var musicDownload: musicDownload
 
+    property var title
+    property var artist
+    property var cover
+
     Row {
 
-        anchors.verticalCenter: musicinfo.verticalCenter
+        anchors.verticalCenter: musicInfo.verticalCenter
 
-        spacing: musicinfo.spacing
+        spacing: musicInfo.spacing
 
         MusicImage {
             id: musicImage
-            source: "../../skin/images/bg2.jpg"
+            source: musicInfo.cover
         }
 
         Rectangle {
 
             id: msuicText
-            width: musicinfo.width - musicImage.width - 2 * musicinfo.spacing
+            width: musicInfo.width - musicImage.width - 2 * musicInfo.spacing
             height: 60
             color: 'transparent'
 
@@ -46,7 +50,7 @@ Rectangle {
                     color: "white"
                     horizontalAlignment: Text.AlignLeft
                     verticalAlignment: Text.AlignVCenter
-                    text: 'LIFE'
+                    text: musicInfo.title
                 }
 
                 Text {
@@ -56,7 +60,7 @@ Rectangle {
                     color: "white"
                     horizontalAlignment: Text.AlignLeft
                     verticalAlignment: Text.AlignVCenter
-                    text: 'Kenichior Nishihara'
+                    text: musicInfo.artist
                 }
 
                 Row {
@@ -68,7 +72,7 @@ Rectangle {
                         color: "white"
                         horizontalAlignment: Text.AlignLeft
                         verticalAlignment: Text.AlignVCenter
-                        text: '02:06/04:15'
+                        text: ''
                     }
 
                     DStarButton{

@@ -41,7 +41,12 @@ class MediaPlayer(QObject):
 
     currentIndexChanged = pyqtSignal(int)
 
-    coverChanged = pyqtSignal('QString', 'QString','QString')
+
+    titleChanged = pyqtSignal('QString')
+    artistChanged = pyqtSignal('QString')
+    coverChanged = pyqtSignal('QString')
+
+    coverdownloaded = pyqtSignal('QVariant')
 
     @registerContext
     def __init__(self):
@@ -52,6 +57,10 @@ class MediaPlayer(QObject):
 
         self._state = 0
         self._isPlaying = False
+
+        self._title = ''
+        self._artist = ''
+        self._cover = ''
 
         self.initPlayer()
 
@@ -65,7 +74,7 @@ class MediaPlayer(QObject):
         self.player.mediaStatusChanged.connect(self.monitorMediaStatus)
         self.player.positionChanged.connect(self.positionChanged)
         self.player.bufferStatusChanged.connect(self.bufferChange)
-
+        self.player.error.connect(self.monitorError)
 
     @pyqtProperty('QVariant', notify=playlistChanged)
     def playlist(self):
@@ -155,6 +164,17 @@ class MediaPlayer(QObject):
                     self.playToggle(self._isPlaying)
                 elif self._playlist.playbackMode() in [3, 4]:
                     self.next()
+
+    def monitorError(self, error):
+        errors = {
+            0: "No error has occurred.",
+            1: "A media resource couldn't be resolved",
+            2: "The format of a media resource isn't (fully) supported. Playback may still be possible, but without an audio or video component",
+            3: "A network error occurred",
+            4: "There are not the appropriate permissions to play a media resource",
+            5: "A valid playback service was not found, playback cannot proceed."
+        }
+        print(errors[error])
 
     @pyqtSlot(bool)
     def playToggle(self, playing):
@@ -259,25 +279,17 @@ class MediaPlayer(QObject):
         mediaContents =  self._playlist.mediaContents
 
         mediaContent = mediaContents[urls[index]]
-
+        url = mediaContent.url
         if isinstance(mediaContent, DRealLocalMediaContent):
-            url = mediaContent.url
-            cover = ''
+            playurl = mediaContent.url
         elif isinstance(mediaContent, DRealOnlineMediaContent):
-            url = mediaContent.playlinkUrl
-            if 'albumImage_500x500' in mediaContent.tags and mediaContent.tags['albumImage_500x500']:
-                cover = mediaContent.tags['albumImage_500x500']
-            elif 'albumImage_100x100' in mediaContent.tags and mediaContent.tags['albumImage_100x100']:
-                cover = mediaContent.tags['albumImage_100x100']
-            else:
-                cover = ''
-        if url:
-            self.setMediaUrl(url)
-            title = mediaContent.title
-            artist = mediaContent.artist
+            playurl = mediaContent.playlinkUrl
 
-            self.musicInfoChanged.emit(title, artist)
-            self.coverChanged.emit(cover, title, artist)
+        if playurl:
+            self.setMediaUrl(playurl)
+            self.title = mediaContent.title
+            self.artist = mediaContent.artist
+            self.coverdownloaded.emit(mediaContent)
 
     def bufferChange(self, progress):
         self.bufferStatusChanged.emit(progress)
@@ -289,3 +301,30 @@ class MediaPlayer(QObject):
     @pyqtProperty(int, notify=currentIndexChanged)
     def currentIndex(self):
         return self._playlist.currentIndex()
+
+    @pyqtProperty('QString', notify=titleChanged)
+    def title(self):
+        return self._title
+
+    @title.setter
+    def title(self, value):
+        self._title = value
+        self.titleChanged.emit(value)
+
+    @pyqtProperty('QString', notify=artistChanged)
+    def artist(self):
+        return self._artist
+
+    @artist.setter
+    def artist(self, value):
+        self._artist = value
+        self.artistChanged.emit(value)
+
+    @pyqtProperty('QString', notify=coverChanged)
+    def cover(self):
+        return self._cover
+
+    @cover.setter
+    def cover(self, value):
+        self._cover = value
+        self.coverChanged.emit(value)

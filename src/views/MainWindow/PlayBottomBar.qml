@@ -9,8 +9,14 @@ Item {
     property var viewID: 'PlayBottomBar'
 
     property var slider: slider
-    property var musicImage: musicImage
+    property var coverImage: coverImage
     property var musicInfo: musicInfo
+    property var musicTitleText: musicTitleText
+    property var artistNameText: artistNameText
+    property var timeText: timeText
+    property var musicStar: musicStar
+    property var musicDownload: musicDownload
+
     property var playControl: playControl
     property var musicToolbar: musicToolbar
     property var preButton: preButton
@@ -21,8 +27,15 @@ Item {
     property var lrcButton: lrcButton
     property var playlistButton: playlistButton
     property var volumeSlider: volumeSlider
+    
+
     property bool playing: false
     property double volumeValue
+    property var title
+    property var artist
+    property var cover
+
+
 
     property real playerDuration: 0
     property real playerPosition: 0
@@ -49,11 +62,11 @@ Item {
 
 
     function updateCoverImage(url){
-        musicImage.source = url;
+        coverImage.source = url;
     }
  
     function updateMusicName(name){
-        musicNameText.text = name;
+        musicTitleText.text = name;
     }
 
     function updateArtistName(name){
@@ -107,8 +120,8 @@ Item {
                     }
 
                     MusicImage {
-                        id: musicImage
-                        source: "../../skin/images/bg2.jpg"
+                        id: coverImage
+                        source: playBottomBar.cover
                     }
 
                     Rectangle{
@@ -121,7 +134,7 @@ Item {
                     Rectangle {
 
                         id: musicText
-                        width: musicInfo.width - musicImage.width - leftSpace.width - rightSpace.width -  2 * playBottomBar.boderWidth
+                        width: musicInfo.width - coverImage.width - leftSpace.width - rightSpace.width -  2 * playBottomBar.boderWidth
                         height: 60
                         color: playBottomBar.color
 
@@ -131,13 +144,13 @@ Item {
                             anchors.margins: 20
 
                             Text {
-                                id: musicNameText
+                                id: musicTitleText
                                 width: musicText.width
                                 height: 20
                                 color: "white"
                                 horizontalAlignment: Text.AlignLeft
                                 verticalAlignment: Text.AlignVCenter
-                                text: 'LIFE'
+                                text: playBottomBar.title
                             }
 
                             Text {
@@ -147,7 +160,7 @@ Item {
                                 color: "white"
                                 horizontalAlignment: Text.AlignLeft
                                 verticalAlignment: Text.AlignVCenter
-                                text: 'Kenichior Nishihara'
+                                text: playBottomBar.artist
                             }
 
                             Row {
@@ -159,7 +172,7 @@ Item {
                                     color: "white"
                                     horizontalAlignment: Text.AlignLeft
                                     verticalAlignment: Text.AlignVCenter
-                                    text: '02:06/04:15'
+                                    text: ''
                                 }
 
                                 DStarButton{

@@ -12,9 +12,8 @@ from .utils import registerContext
 from dwidgets import dthread
 from config.constants import CoverPath
 
-class CoverWorker(QObject):
 
-    __contextName__ = 'CoverWorker'
+class CoverWorker(QObject):
 
     coverUpdated = pyqtSignal('QString')
 
@@ -29,28 +28,33 @@ class CoverWorker(QObject):
         md5Value = hashlib.md5(string)
         return md5Value.hexdigest()
 
-    @pyqtSlot('QString', 'QString', 'QString')
+    @classmethod
+    def getCoverPath(cls, url):
+        coverID = cls.md5(url)
+        filename = '%s' % coverID
+        filepath = os.path.join(CoverPath, filename)
+        return filepath
+
+    @pyqtSlot('QVariant', 'QString')
     @dthread
-    def saveCover(self, url, title='', album=''):
-        url = str(url)
+    def downloadCover(self, mediaContent):
+        cover = mediaContent.cover
+        url = mediaContent.url
         if url in self._covers:
             self.coverUpdated.emit(self._covers[url])
             return
         else:
-            coverID = self.md5(url)
-            filename = '%s_%s_%s.%s' % (title, album, coverID, url.split('.')[-1])
-            filepath = os.path.join(CoverPath, filename)
+            filepath = self.getCoverPath(url)
             if os.path.exists(filepath):
                 self._covers.update({url: filepath})
                 self.coverUpdated.emit(filepath)
                 return
             else:
                 try:
-                    r = requests.get(url)
+                    r = requests.get(cover)
                     with open(filepath, "wb") as f:
                         f.write(r.content)
                 except:
                     return
                 self._covers.update({url: filepath})
-
                 self.coverUpdated.emit(filepath)

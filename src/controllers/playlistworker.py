@@ -13,6 +13,7 @@ from PyQt5.QtMultimedia import QMediaPlaylist, QMediaContent
 from .utils import registerContext, contexts
 from dwidgets.mediatag.song import Song
 from dwidgets import dthread
+from .coverworker import CoverWorker
 from config.constants import PlaylistPath
 from log import logger
 
@@ -60,6 +61,7 @@ class BaseMediaContent(QObject):
     def cover(self, cover):
         self._cover = cover
         self.coverChanged.emit(cover)
+
 
 class DRealLocalMediaContent(BaseMediaContent):
 
@@ -118,21 +120,39 @@ class DRealOnlineMediaContent(BaseMediaContent):
             self.updateTagsByUrl(url)
 
     def updateTags(self, tags):
+        self._onlineTags = tags
         for key in self.__keys__:
             k = self.__keys__[key]
             if k in tags:
                 self._tags[key] = tags[k]
         self.title = self._tags['title']
         self.artist = self._tags['artist']
+
+        if 'albumImage_500x500' in tags and tags['albumImage_500x500']:
+            self.cover = tags['albumImage_500x500']
+        elif 'albumImage_100x100' in tags and tags['albumImage_100x100']:
+            self.cover = tags['albumImage_100x100']
+
         self.playlinkUrl = self._tags['playlinkUrl']
 
     @dthread
     @pyqtSlot(int)
     def updateTagsByUrl(self, url):
         import requests
-        ret = requests.get(url)
-        tags = ret.json()
-        self.tagsUpdated.emit(tags)
+        maxQueryCount = 5
+        i = 0
+        while i < maxQueryCount:
+            try:
+                ret = requests.get(url)
+                tags = ret.json()
+                if isinstance(tags, list):
+                    i = i + 1
+                else:
+                    break
+            except:
+                i = i + 1
+        if isinstance(tags, dict):
+            self.tagsUpdated.emit(tags)
 
     @pyqtProperty(dict)
     def tags(self):
@@ -148,9 +168,21 @@ class DRealOnlineMediaContent(BaseMediaContent):
 
     @playlinkUrl.setter
     def playlinkUrl(self, link):
+        self.updateTagsByUrl(self.url)
         self._palyLinkUrl = link
         self.playlinkChanged.emit(link)
-    
+
+    def getCover(self):
+        if 'albumImage_500x500' in self.tags and self.tags['albumImage_500x500']:
+            url = self.tags['albumImage_500x500']
+        elif 'albumImage_100x100' in self.tags and self.tags['albumImage_100x100']:
+            url = self.tags['albumImage_100x100']
+        title = self.tags['songName']
+        artist = self.tags['singerName']
+        filepath = CoverWorker.getLocalCoverPath(url, title, artist)
+        return filepath
+
+
 
 class DLocalMediaContent(QMediaContent):
 

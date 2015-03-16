@@ -16,11 +16,12 @@ CoverPath = os.path.join(ProjectPath, 'cover')
 MusicDBFile = os.path.join(ProjectPath,  'music.db')
 
 
-if not os.path.exists(ProjectPath):
-    os.makedirs(ProjectPath)
+paths = [
+	ProjectPath,
+	PlaylistPath,
+	CoverPath
+]
 
-if not os.path.exists(PlaylistPath):
-    os.makedirs(PlaylistPath)
-
-if not os.path.exists(CoverPath):
-	os.makedirs(CoverPath)
+for path in paths:
+	if not os.path.exists(path):
+	    os.makedirs(path)

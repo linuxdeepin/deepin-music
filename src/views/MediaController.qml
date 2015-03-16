@@ -12,10 +12,9 @@ Item {
         MediaPlayer.stateChanged.connect(updatePlayButton);
         MediaPlayer.volumeChanged.connect(updateVolumeSlider);
         MediaPlayer.playbackModeChanged.connect(updateCycleButton);
-        MediaPlayer.musicInfoChanged.connect(updateMusicInfo);
         MediaPlayer.bufferStatusChanged.connect(updateBufferSlider);
         MediaPlayer.currentIndexChanged.connect(updatePlaylistIndex);
-        CoverWorker.coverUpdated.connect(updateCover);
+        MediaPlayer.coverChanged.connect(updateBackgroundCover);
     }
 
     function updateSlider(position) {
@@ -45,18 +44,7 @@ Item {
         simpleWindow.playBottomBar.updatePlayTime(MediaPlayer.positionString + '/' + MediaPlayer.durationString);
     }
 
-    function updateMusicInfo(title, artist, cover)
-    {
-        mainWindow.playBottomBar.updateMusicName(title);
-        mainWindow.playBottomBar.updateArtistName(artist);
-
-        simpleWindow.playBottomBar.updateMusicName(title);
-        simpleWindow.playBottomBar.updateArtistName(artist);
-    }
-
-    function updateCover(cover){
-        mainWindow.playBottomBar.updateCoverImage(cover);
-        simpleWindow.playBottomBar.updateCoverImage(cover);
+    function updateBackgroundCover(cover){
         if(ConfigWorker.isCoverBackground){
             mainWindow.mainWindowController.setSkinByImage(cover);
             simpleWindow.simpleWindowController.setSkinByImage(cover);
@@ -107,6 +95,40 @@ Item {
 
     function updatePlaylistIndex(index){
         simpleWindow.playlistPage.playlistView.currentIndex = index;
+    }
+
+    Binding { 
+        target: mainWindow.playBottomBar
+        property: 'title'
+        value: MediaPlayer.title
+    }
+
+    Binding { 
+        target: mainWindow.playBottomBar
+        property: 'artist'
+        value: MediaPlayer.artist
+    }
+    Binding { 
+        target: mainWindow.playBottomBar
+        property: 'cover'
+        value: MediaPlayer.cover
+    }
+
+    Binding { 
+        target: simpleWindow.playBottomBar
+        property: 'title'
+        value: MediaPlayer.title
+    }
+
+    Binding { 
+        target: simpleWindow.playBottomBar
+        property: 'artist'
+        value: MediaPlayer.artist
+    }
+    Binding { 
+        target: simpleWindow.playBottomBar
+        property: 'cover'
+        value: MediaPlayer.cover
     }
 
     Connections {

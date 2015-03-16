@@ -62,7 +62,7 @@ class DeepinPlayer(QObject):
 
     def initConnect(self):
         self.web360ApiWorker.addMediaContent.connect(self.mediaPlayer.addOnlineMedia)
-        self.mediaPlayer.coverChanged.connect(self.coverWorker.saveCover)
+        self.mediaPlayer.coverdownloaded.connect(self.coverWorker.downloadCover)
         self.qApp.aboutToQuit.connect(self.close)
 
     def loadConfig(self):
