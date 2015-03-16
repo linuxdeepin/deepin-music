@@ -20,6 +20,7 @@ Rectangle{
     property var volumeSlider: volumeSlider
     property bool playing: false
     property double volumeValue
+    property int iconsWidth: 40 
 
 
     property var contentWidth: playBottomBar.width - 2 * playBottomBar.margins
@@ -90,16 +91,17 @@ Rectangle{
 
                 color: playBottomBar.color
                 Row{
+                    id: musicBarLayout
                     anchors.fill: parent
-
+                    spacing: 38
                     Rectangle {
                         id: playControl
 
-                        property int iconsWidth: 40 
+                        property int iconsWidth: playBottomBar.iconsWidth 
                         property int iconsHeight: iconsWidth
                         
 
-                        width: musicBar.width / 2
+                        width: (musicBar.width - musicBarLayout.spacing) / 2
                         height: musicBar.height
                         color: playBottomBar.color
 
@@ -143,11 +145,11 @@ Rectangle{
                     Rectangle {
                         id: musicToolbar
 
-                        property int iconsWidth: 40 
+                        property int iconsWidth: playBottomBar.iconsWidth 
                         property int iconsHeight: iconsWidth
                         property bool playing: false
 
-                        width: musicBar.width / 2
+                        width: (musicBar.width - musicBarLayout.spacing) / 2
                         height: musicBar.height
                         color: playBottomBar.color
 
