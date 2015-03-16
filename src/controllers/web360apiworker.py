@@ -24,6 +24,7 @@ class Web360ApiWorker(QObject):
     @registerContext
     def __init__(self, parent=None):
         super(Web360ApiWorker, self).__init__(parent)
+        self.playedMusics = {}
         self._musicIds = []
         self._results = {}
         self.initConnect()
@@ -38,8 +39,20 @@ class Web360ApiWorker(QObject):
         md5Value = hashlib.md5(s)
         return md5Value.hexdigest()
 
+    @classmethod
+    def getUrlByID(cls, musicId):
+        sign = cls.md5(musicId)
+        params = {
+            'id': musicId,
+            'src': 'linuxdeepin',
+            'sign': sign
+        }
+
+        url = 'http://s.music.haosou.com/player/songForPartner?id=%s&src=%s&sign=%s'\
+            %(params['id'], params['src'], params['sign'])
+        return url
+
     def getResult(self, musicId):
-        import hashlib
         import requests
         sign = self.md5(musicId)
         params = {
@@ -47,32 +60,54 @@ class Web360ApiWorker(QObject):
             'src': 'linuxdeepin',
             'sign': sign
         }
-        ret = requests.get("http://s.music.haosou.com/player/songForPartner", params=params)
 
-        result = {
-            'url': ret.url,
-            'ret': ret.json()
-        }
+        url = self.getUrlByID(musicId)
+        try:
+            # ret = requests.get("http://s.music.haosou.com/player/songForPartner", params=params)
+            ret = requests.get(url)
+            result = {
+                'url': ret.url,
+                'ret': ret.json()
+            }
+        except:
+            result = None        
+
+        self.playedMusics.update({musicId: result})
 
         return result
 
-    @dthread
     @pyqtSlot(int)
     def getMusicUrlById(self, musicId):
+        if musicId in self.playedMusics:
+            result = self.playedMusics[musicId]
+            if result:
+                self.addMediaContent.emit(result)
+        else:
+            self.getNetMusicUrlById(musicId)
+
+    @dthread
+    @pyqtSlot(int)
+    def getNetMusicUrlById(self, musicId):
         result = self.getResult(musicId)
-        self.addMediaContent.emit(result)
+        if result:
+            self.addMediaContent.emit(result)
 
     @dthread
     def getQueueResults(self, musicId):
         result = self.getResult(musicId)
-        self.requestSuccessed.emit(musicId, result)
+        if result:
+            self.requestSuccessed.emit(musicId, result)
 
     @pyqtSlot('QString')
     def getMusicUrlByIds(self, musicIds):
-        musicIds = [int(k) for k in musicIds.split('_')]
-        for musicId in musicIds:
-            self._musicIds.append(musicId)
-            self.getQueueResults(musicId)
+        self._musicIds = [int(k) for k in musicIds.split('_')]
+        for musicId in self._musicIds:
+            if musicId in self.playedMusics:
+                result = self.playedMusics[musicId]
+                if result:
+                    self.requestSuccessed.emit(musicId, result)
+            else:
+                self.getQueueResults(musicId)
 
     @pyqtSlot(int, dict)
     def collectResults(self, musicId, result):
@@ -85,3 +120,4 @@ class Web360ApiWorker(QObject):
                 self.addMediaContent.emit(result)
                 self._musicIds.remove(musicId) 
                 self._results.pop(musicId)
+            self.addMediaContent.emit(results[musicIds[0]])

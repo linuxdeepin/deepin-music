@@ -1,0 +1,4 @@
+chardet==2.3.0
+mutagen==1.28
+peewee==2.4.7
+requests==2.5.3

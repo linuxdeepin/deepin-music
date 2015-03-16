@@ -60,6 +60,7 @@ Item {
         mainWindow: mainWindow
         simpleWindow: simpleWindow
         miniWindow: miniWindow
+        positionTimer: positionTimer
     }
 
     Keys.onPressed: {
@@ -78,5 +79,12 @@ Item {
             mainWindow.webEngineViewPage.url = "http://music.haosou.com/_linuxdeepin/";
             root.focus = true;
         }
+    }
+
+    Timer {
+        id: positionTimer
+        repeat: false
+        interval: 100
+        running: false
     }
 }

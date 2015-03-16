@@ -3,11 +3,11 @@
 
 from PyQt5.QtCore import QCoreApplication, QObject, QUrl, QThread
 from PyQt5.QtGui import QScreen
-from views import MainWindow, SimpleWindow, MiniWindow
+from views import MainWindow
 
 from controllers import contexts, Web360ApiWorker, MusicManageWorker
 from controllers import MenuWorker, WindowManageWorker
-from controllers import MediaPlayer, PlaylistWorker
+from controllers import MediaPlayer, PlaylistWorker, CoverWorker
 from controllers import ConfigWorker, DBWorker
 
 from models import MusicDataBase
@@ -23,9 +23,9 @@ class DeepinPlayer(QObject):
         self.loadDB()
         self.initView()
         self.initControllers()
-        self.initQMLContext()
-
         self.initConnect()
+        self.initQMLContext()
+        self.loadConfig()
 
     @property
     def qApp(self):
@@ -51,6 +51,7 @@ class DeepinPlayer(QObject):
 
         self.mediaPlayer = MediaPlayer()
         self.playlistWorker = PlaylistWorker()
+        self.coverWorker = CoverWorker()
 
         self.musicDataBase = MusicDataBase()
         self.dbworker = DBWorker()
@@ -61,6 +62,14 @@ class DeepinPlayer(QObject):
 
     def initConnect(self):
         self.web360ApiWorker.addMediaContent.connect(self.mediaPlayer.addOnlineMedia)
+        self.mediaPlayer.coverChanged.connect(self.coverWorker.saveCover)
+        self.qApp.aboutToQuit.connect(self.close)
+
+    def loadConfig(self):
+        self.mediaPlayer.setPlaylistByName(self.configWorker.lastPlaylistName);
+        self.mediaPlayer.playlist.setCurrentIndex(self.configWorker.lastPlayedIndex);
+        self.mediaPlayer.setVolume(self.configWorker.volume);
+        self.mediaPlayer.setPlaybackMode(self.configWorker.playbackMode);
 
     def showMainWindow(self):
         self.mainWindow.show()
@@ -68,3 +77,6 @@ class DeepinPlayer(QObject):
 
     def show(self):
         self.showMainWindow()
+
+    def close(self):
+        self.playlistWorker.savePlaylists()

@@ -4,6 +4,7 @@ Item {
     property var mainWindow
     property var simpleWindow
     property var miniWindow
+    property var positionTimer
 
     function initConnect(){
         MediaPlayer.positionChanged.connect(updateSlider);
@@ -13,12 +14,8 @@ Item {
         MediaPlayer.playbackModeChanged.connect(updateCycleButton);
         MediaPlayer.musicInfoChanged.connect(updateMusicInfo);
         MediaPlayer.bufferStatusChanged.connect(updateBufferSlider);
-
-        MediaPlayer.setPlaylistByName(ConfigWorker.lastPlaylistName);
-        MediaPlayer.playlist.setCurrentIndex(ConfigWorker.lastPlayedIndex);
-        MediaPlayer.volumeChanged(ConfigWorker.volume);
-        MediaPlayer.setPlaybackMode(ConfigWorker.playbackMode);
-
+        MediaPlayer.currentIndexChanged.connect(updatePlaylistIndex);
+        CoverWorker.coverUpdated.connect(updateCover);
     }
 
     function updateSlider(position) {
@@ -50,14 +47,16 @@ Item {
 
     function updateMusicInfo(title, artist, cover)
     {
-        mainWindow.playBottomBar.updateCoverImage(cover);
         mainWindow.playBottomBar.updateMusicName(title);
         mainWindow.playBottomBar.updateArtistName(artist);
 
-        simpleWindow.playBottomBar.updateCoverImage(cover);
         simpleWindow.playBottomBar.updateMusicName(title);
         simpleWindow.playBottomBar.updateArtistName(artist);
+    }
 
+    function updateCover(cover){
+        mainWindow.playBottomBar.updateCoverImage(cover);
+        simpleWindow.playBottomBar.updateCoverImage(cover);
         if(ConfigWorker.isCoverBackground){
             mainWindow.mainWindowController.setSkinByImage(cover);
             simpleWindow.simpleWindowController.setSkinByImage(cover);
@@ -79,21 +78,21 @@ Item {
         mainWindow.playBottomBar.playing = true;
         simpleWindow.playBottomBar.playing = true;
         miniWindow.playing = true;
-        console.log('Playing');
+        // console.log('Playing');
     }
 
     function onPaused(){
         mainWindow.playBottomBar.playing = false;
         simpleWindow.playBottomBar.playing = false;
         miniWindow.playing = false;
-        console.log('Paused')
+        // console.log('Paused')
     }
 
     function onStopped(){
         mainWindow.playBottomBar.playing = false;
         simpleWindow.playBottomBar.playing = false;
         miniWindow.playing = false;
-        console.log('Stopped')
+        // console.log('Stopped')
     }
 
     function updateVolumeSlider(value){
@@ -106,10 +105,16 @@ Item {
         simpleWindow.playBottomBar.cycleButton.playbackMode = value;
     }
 
+    function updatePlaylistIndex(index){
+        simpleWindow.playlistPage.playlistView.currentIndex = index;
+    }
+
     Connections {
         target: mainWindow.playBottomBar.slider
         onSliderRateChanged:{
             if (MediaPlayer.seekable){
+                MediaPlayer.setMuted(true);
+                positionTimer.restart();
                 MediaPlayer.setPosition(MediaPlayer.duration * rate)
             }
         }
@@ -119,6 +124,8 @@ Item {
         target: simpleWindow.playBottomBar.slider
         onSliderRateChanged:{
             if (MediaPlayer.seekable){
+                MediaPlayer.setMuted(true);
+                positionTimer.restart();
                 MediaPlayer.setPosition(MediaPlayer.duration * rate)
             }
         }
@@ -128,6 +135,8 @@ Item {
         target: miniWindow.slider
         onSliderRateChanged:{
             if (MediaPlayer.seekable){
+                MediaPlayer.setMuted(true);
+                positionTimer.restart();
                 MediaPlayer.setPosition(MediaPlayer.duration * rate)
             }
         }
@@ -187,6 +196,14 @@ Item {
     }
 
     Connections {
+        target: simpleWindow.playlistPage.playlistView
+        onModelChanged:{
+            simpleWindow.playlistPage.playlistView.positionViewAtEnd()
+        } 
+    }
+
+
+    Connections {
         target: miniWindow
 
         onPreMusic: MediaPlayer.previous()
@@ -194,6 +211,13 @@ Item {
         onPlayed: MediaPlayer.playToggle(isPlaying)
 
         onNextMusic: MediaPlayer.next()
+    }
+
+    Connections {
+        target: positionTimer
+        onTriggered:{
+            MediaPlayer.setMuted(false);
+        } 
     }
 
     Component.onCompleted: {

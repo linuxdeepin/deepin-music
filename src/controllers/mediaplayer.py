@@ -10,7 +10,7 @@ from PyQt5.QtGui import QCursor
 from .utils import registerContext, contexts
 from .utils import duration_to_string
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent, QMediaPlaylist
-from .playlistworker import DLocalMediaContent, DOnlineMediaContent
+from .playlistworker import DRealLocalMediaContent, DRealOnlineMediaContent
 from log import logger
 
 
@@ -26,7 +26,7 @@ class MediaPlayer(QObject):
 
     __contextName__ = "MediaPlayer"
 
-    musicInfoChanged = pyqtSignal('QString', 'QString', 'QString')
+    musicInfoChanged = pyqtSignal('QString', 'QString')
 
     positionChanged = pyqtSignal('qint64')
     volumeChanged = pyqtSignal(int)
@@ -38,6 +38,10 @@ class MediaPlayer(QObject):
     bufferStatusChanged = pyqtSignal(int)
 
     playlistChanged = pyqtSignal('QString')
+
+    currentIndexChanged = pyqtSignal(int)
+
+    coverChanged = pyqtSignal('QString', 'QString','QString')
 
     @registerContext
     def __init__(self):
@@ -71,9 +75,11 @@ class MediaPlayer(QObject):
     def setPlaylist(self, playlist):
         if self._playlist:
             self._playlist.currentIndexChanged.disconnect(self.setCurrentMedia)
+            self._playlist.currentIndexChanged.disconnect(self.currentIndexChanged)
 
         self._playlist = playlist
         self._playlist.currentIndexChanged.connect(self.setCurrentMedia)
+        self._playlist.currentIndexChanged.connect(self.currentIndexChanged)
         self.playlistChanged.emit(playlist.name)
 
     @pyqtSlot('QString')
@@ -251,24 +257,27 @@ class MediaPlayer(QObject):
     def setCurrentMedia(self, index):
         urls = self._playlist.urls
         mediaContents =  self._playlist.mediaContents
-        
+
         mediaContent = mediaContents[urls[index]]
-        if isinstance(mediaContent, DLocalMediaContent):
+
+        if isinstance(mediaContent, DRealLocalMediaContent):
             url = mediaContent.url
             cover = ''
-        elif isinstance(mediaContent, DOnlineMediaContent):
-            url = mediaContent.playLinkUrl
-            if 'albumImage_500x500' in mediaContent.song and mediaContent.song['albumImage_500x500']:
-                cover = mediaContent.song['albumImage_500x500']
-            elif 'albumImage_100x100' in mediaContent.song and mediaContent.song['albumImage_100x100']:
-                cover = mediaContent.song['albumImage_100x100']
+        elif isinstance(mediaContent, DRealOnlineMediaContent):
+            url = mediaContent.playlinkUrl
+            if 'albumImage_500x500' in mediaContent.tags and mediaContent.tags['albumImage_500x500']:
+                cover = mediaContent.tags['albumImage_500x500']
+            elif 'albumImage_100x100' in mediaContent.tags and mediaContent.tags['albumImage_100x100']:
+                cover = mediaContent.tags['albumImage_100x100']
             else:
                 cover = ''
         if url:
             self.setMediaUrl(url)
-            title = mediaContent.song['title']
-            artist = mediaContent.song['artist']
-            self.musicInfoChanged.emit(title, artist, cover)
+            title = mediaContent.title
+            artist = mediaContent.artist
+
+            self.musicInfoChanged.emit(title, artist)
+            self.coverChanged.emit(cover, title, artist)
 
     def bufferChange(self, progress):
         self.bufferStatusChanged.emit(progress)
@@ -277,7 +286,6 @@ class MediaPlayer(QObject):
     def addOnlineMedia(self, result):
         self._playlist.addMedia(result['url'], result['ret'])
 
-
-    # @pyqtProperty(int, notify=currentIndexChanged)
-    # def currentIndex(self):
-    #     return self._playlist.currentIndex()
+    @pyqtProperty(int, notify=currentIndexChanged)
+    def currentIndex(self):
+        return self._playlist.currentIndex()

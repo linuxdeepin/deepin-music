@@ -292,7 +292,7 @@ Rectangle{
 
     Timer {
         id: volumeTimer
-        interval: 1000
+        interval: 500
         running: false
         repeat: false
         onTriggered:{
