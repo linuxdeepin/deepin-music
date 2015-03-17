@@ -5,7 +5,7 @@
 import os
 import sys
 from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot
-
+import requests
 from .utils import registerContext
 from dwidgets import dthread
 import threading
@@ -17,7 +17,7 @@ class Web360ApiWorker(QObject):
 
     addMediaContent = pyqtSignal('QVariant')
 
-    requestSuccessed = pyqtSignal(int, dict)
+    requestSuccessed = pyqtSignal('QString', int, dict)
 
     __contextName__ = 'Web360ApiWorker'
 
@@ -25,7 +25,8 @@ class Web360ApiWorker(QObject):
     def __init__(self, parent=None):
         super(Web360ApiWorker, self).__init__(parent)
         self.playedMusics = {}
-        self._musicIds = []
+        self.recommendedMusics = {}
+        self.recommendedmusicIds = {}
         self._results = {}
         self.initConnect()
 
@@ -53,26 +54,20 @@ class Web360ApiWorker(QObject):
         return url
 
     def getResult(self, musicId):
-        import requests
-        sign = self.md5(musicId)
-        params = {
-            'id': musicId,
-            'src': 'linuxdeepin',
-            'sign': sign
-        }
-
         url = self.getUrlByID(musicId)
         try:
-            # ret = requests.get("http://s.music.haosou.com/player/songForPartner", params=params)
             ret = requests.get(url)
+            tags = ret.json()
             result = {
                 'url': ret.url,
-                'ret': ret.json()
+                'tags': tags
             }
+            if isinstance(tags, dict):
+                self.playedMusics.update({musicId: result})
+            elif isinstance(tags, list) and not tags:
+                return None
         except:
-            result = None        
-
-        self.playedMusics.update({musicId: result})
+            result = None
 
         return result
 
@@ -93,31 +88,31 @@ class Web360ApiWorker(QObject):
             self.addMediaContent.emit(result)
 
     @dthread
-    def getQueueResults(self, musicId):
+    def getQueueResults(self, musicIdString, musicId):
         result = self.getResult(musicId)
         if result:
-            self.requestSuccessed.emit(musicId, result)
+            self.requestSuccessed.emit(musicIdString, musicId, result)
 
     @pyqtSlot('QString')
-    def getMusicUrlByIds(self, musicIds):
-        self._musicIds = [int(k) for k in musicIds.split('_')]
-        for musicId in self._musicIds:
+    def getMusicUrlByIds(self, musicIdString):
+        _musicIds = [int(k) for k in musicIdString.split('_')]
+        self.recommendedMusics[musicIdString] = {}
+        self.recommendedmusicIds[musicIdString] = _musicIds
+        for musicId in _musicIds:
             if musicId in self.playedMusics:
                 result = self.playedMusics[musicId]
                 if result:
-                    self.requestSuccessed.emit(musicId, result)
+                    self.requestSuccessed.emit(musicIdString, musicId, result)
             else:
-                self.getQueueResults(musicId)
+                self.getQueueResults(musicIdString, musicId)
 
-    @pyqtSlot(int, dict)
-    def collectResults(self, musicId, result):
-        self._results.update({musicId: result})
-        if len(self._results) == len(self._musicIds):
-            results = copy.deepcopy(self._results)
-            musicIds =copy.deepcopy(self._musicIds)
-            for musicId in  musicIds:
-                result = results[musicId]
+    @pyqtSlot(' QString', int, dict)
+    def collectResults(self, musicIdString, musicId, result):
+        self.recommendedMusics[musicIdString].update({musicId: result})
+        _results = self.recommendedMusics[musicIdString]
+        _musicIds = self.recommendedmusicIds[musicIdString]
+        if len(_results) == len(_musicIds):
+            for musicId in  _musicIds:
+                result = _results[musicId]
                 self.addMediaContent.emit(result)
-                self._musicIds.remove(musicId) 
-                self._results.pop(musicId)
-            self.addMediaContent.emit(results[musicIds[0]])
+            self.addMediaContent.emit(_results[_musicIds[0]])

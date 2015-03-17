@@ -6,3 +6,4 @@ DScrollBar 1.0 DScrollBar.qml
 DToolTip 1.0 DToolTip.qml
 ToolTip 1.0 ToolTip.qml
 ToolTipArea 1.0 ToolTipArea.qml
+DRectWithCorner 1.0 DRectWithCorner.qml

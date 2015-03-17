@@ -1,4 +1,5 @@
 import QtQuick 2.4
+import "./TermporyWindow"
 
 Item {
     property var mainWindow
@@ -225,6 +226,7 @@ Item {
     }
 
 
+
     Connections {
         target: miniWindow
 
@@ -241,6 +243,41 @@ Item {
             MediaPlayer.setMuted(false);
         } 
     }
+
+    Connections {
+        target: mainWindow.playBottomBar.playlistButton
+        onClicked:{
+            if(mainWindow.termporyLoader.source == ''){
+                mainWindow.termporyLoader.source = './TermporyWindow/TermporyWindow.qml'
+                mainWindow.termporyLoader.focus = true;
+                mainWindow.focus = false;
+            }else{
+                mainWindow.termporyLoader.source = ''
+                mainWindow.focus = true;
+            }
+        } 
+    }
+
+    // Connections {
+    //     target: mainWindow.termporyLoader
+    //     onLoaded:{
+
+    //         var playlistView = mainWindow.termporyLoader.item.playlistView;
+
+    //         playlistView.modelChanged.connect(positionViewAtEnd)
+    //         // Connections {
+    //         //     target: mainWindow.termporyLoader.item.playlistView
+    //         //     onModelChanged:{
+    //         //         mainWindow.termporyLoader.item.playlistView.positionViewAtEnd()
+    //         //     } 
+    //         // }
+    //     } 
+    // }
+
+    // function positionViewAtEnd() {
+    //     mainWindow.termporyLoader.item.playlistView.positionViewAtEnd()
+    // }
+
 
     Component.onCompleted: {
         initConnect();

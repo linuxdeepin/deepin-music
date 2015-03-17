@@ -4,6 +4,7 @@ import DMusic 1.0
 import "./MainWindow"
 import "./SimpleWindow"
 import "./MiniWindow"
+import "./TermporyWindow"
 
 Item {
     id: root
@@ -45,6 +46,7 @@ Item {
         width: constants.miniWindowWidth
         height: constants.miniWindowHeight
     }
+
 
     MainController {
         id: mainController

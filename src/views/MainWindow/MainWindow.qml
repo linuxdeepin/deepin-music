@@ -18,6 +18,7 @@ Rectangle {
     property var playBottomBar: playBottomBar
     property var webEngineViewPage: webEngineViewPage
     property var mainWindowController: mainWindowController
+    property var termporyLoader: termporyLoader
 
     color: "lightgray"
     focus: true
@@ -142,5 +143,12 @@ Rectangle {
         leftSideBar: leftSideBar
         webEngineViewPage: webEngineViewPage
         playBottomBar: playBottomBar
+    }
+
+    Loader {
+        id: termporyLoader
+        y: 165
+        anchors.right: parent.right
+        asynchronous: true
     }
 }

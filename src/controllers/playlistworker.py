@@ -211,6 +211,7 @@ class DMediaPlaylist(QMediaPlaylist):
 
     nameChanged = pyqtSignal('QString')
 
+    countChanged = pyqtSignal(int)
     mediasChanged = pyqtSignal('QVariant')
 
     def __init__(self, name=''):
@@ -236,6 +237,10 @@ class DMediaPlaylist(QMediaPlaylist):
     def mediaContents(self):
         return self._mediaContents
 
+    @pyqtProperty(int, notify=countChanged)
+    def count(self):
+        return self.mediaCount()
+
     @pyqtProperty('QVariant', notify=mediasChanged)
     def medias(self):
         medias = []
@@ -259,12 +264,14 @@ class DMediaPlaylist(QMediaPlaylist):
                 self._urls.append(url)
                 medias = self.medias
                 self.mediasChanged.emit(medias)
+                self.countChanged.emit(self.mediaCount())
             else:
                 if os.path.exists(url):
                     self.addLocalMedia(url, ret)
                     self._urls.append(url)
                     medias = self.medias
                     self.mediasChanged.emit(medias)
+                    self.countChanged.emit(self.mediaCount())
         if url in self._urls:
             index = self._urls.index(url)
             self.setCurrentIndex(index)

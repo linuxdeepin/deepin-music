@@ -296,7 +296,7 @@ class MediaPlayer(QObject):
 
     @pyqtSlot('QVariant')
     def addOnlineMedia(self, result):
-        self._playlist.addMedia(result['url'], result['ret'])
+        self._playlist.addMedia(result['url'], result['tags'])
 
     @pyqtProperty(int, notify=currentIndexChanged)
     def currentIndex(self):

@@ -9,7 +9,6 @@ Item {
     property var playBottomBar
     property var dSimpleWindow
 
-
     function resetSkin() {
         playBottomBar.color = "#282F3F"
         bgImage.source = ''
@@ -46,5 +45,4 @@ Item {
         onPlayMusicById: Web360ApiWorker.getMusicUrlById(musicId)
         onPlayMusicByIds: Web360ApiWorker.getMusicUrlByIds(musicIds)
     }
-
 }
