@@ -50,7 +50,7 @@ Rectangle {
             if (cornerDirection == "down") {
                 var x = blurWidth
                 var y = blurWidth
-                var w = rectWidth - 2 * blurWidth
+                var w = rectWidth - 1 * blurWidth
                 var h = rectHeight - 2 * blurWidth - cornerHeight
 
                 ctx.moveTo(x + rectRadius, y);                 // top side

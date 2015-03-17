@@ -1,4 +1,5 @@
 import QtQuick 2.4
+import DMusic 1.0
 import "../DMusicWidgets"
 
 Rectangle {
@@ -22,76 +23,15 @@ Rectangle {
 
             color: "transparent"
 
-            Rectangle {
+            DWaveBar {
                 id: waveBar
-
-                property var active: {
+                itemHeight: 30
+                itemWidth: 5
+                active: {
                     if (MediaPlayer.state == 1){
                         return true;
                     }else{
                         return false;
-                    }
-                }
-
-                anchors.centerIn: parent
-                width: 30
-                height: 40
-
-                visible: waveBar.active
-
-                color: "transparent"
-
-                Row {
-                    anchors.centerIn: parent
-                    spacing: 2
-                    Rectangle {
-                        width: (waveBar.width - 3 * 2) / 4
-                        height: waveBar.height - y
-                        color: "green"
-
-                        NumberAnimation on height { 
-                            loops: Animation.Infinite
-                            running: waveBar.active
-                            from :waveBar.height
-                            to: 0
-                            duration: 1000 
-                        }
-                    }
-                    Rectangle{
-                        width: (waveBar.width - 3 * 2) / 4
-                        height: waveBar.height - y
-                        color: "green"
-                        NumberAnimation on height { 
-                            loops: Animation.Infinite
-                            running: waveBar.active
-                            from :waveBar.height
-                            to: 0
-                            duration: 1200 
-                        }
-                    }
-                    Rectangle{
-                        width: (waveBar.width - 3 * 2) / 4
-                        height: waveBar.height - y
-                        color: "green"
-                        NumberAnimation on height { 
-                            loops: Animation.Infinite
-                            running: waveBar.active
-                            from :waveBar.height
-                            to: 0
-                            duration: 2000 
-                        }
-                    }
-                    Rectangle{
-                        width: (waveBar.width - 3 * 2) / 4
-                        height: waveBar.height - y
-                        color: "green"
-                        NumberAnimation on height { 
-                            loops: Animation.Infinite
-                            running: waveBar.active
-                            from :waveBar.height
-                            to: 0
-                            duration: 1600 
-                        }
                     }
                 }
             }

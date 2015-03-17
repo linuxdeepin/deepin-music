@@ -9,19 +9,15 @@ DRectWithCorner {
     property var models
     property var currentIndex: -1
 
-    rectWidth: 302
-    rectHeight: 402 + 12
-    withBlur: false
+    rectWidth: 302 + 4
+    rectHeight: 402 + 12 + 20
     rectRadius: 0
-    fillColor: "transparent"
-    blurColor: "transparent"
-    borderColor: "transparent"
-    blurRadius: 0
+    blurRadius: 4
     blurWidth: 4
-    cornerPos: 257
+    cornerPos: 260
     cornerWidth: 20
     cornerHeight: 10
-    color: "transparent"
+    color: 'transparent'
 
     Component {
         id: musicDelegate
@@ -29,12 +25,15 @@ DRectWithCorner {
     }
 
     Column{
-
+        id: layout
+        x: 4
+        y: 4
         height: 402
+        width: 302
 
         Rectangle{
             id: titleBar
-            width: termporyWindow.width
+            width: layout.width
             height: 34
             color: "white"
 
@@ -88,7 +87,7 @@ DRectWithCorner {
         Rectangle {
             id: separator
             height: 1
-            width: termporyWindow.width
+            width: layout.width
             color: "transparent"
             Rectangle{
                 anchors.fill: parent
@@ -101,10 +100,8 @@ DRectWithCorner {
         Rectangle {
             id: playlistContainer
             height: 402 - titleBar.height - separator.height
-            width: termporyWindow.width
+            width: layout.width
 
-            border.color: 'green'
-            border.width: 1
             ListView {
                 id: playlistView
                 anchors.fill: playlistContainer
@@ -113,12 +110,13 @@ DRectWithCorner {
                 // flickingVertically: false
                 // boundsBehavior: Flickable.DragOverBounds
                 // pressDelay: 0
-                maximumFlickVelocity: 10000
-                highlightMoveVelocity: 10000
+                // maximumFlickVelocity: 10000
+                // highlightMoveVelocity: 10000
+                highlightMoveDuration: 1
 
-                preferredHighlightBegin: 0
-                preferredHighlightEnd: 34
-                highlightRangeMode: ListView.ApplyRange
+                // preferredHighlightBegin: -10
+                // preferredHighlightEnd: -34
+                // highlightRangeMode: ListView.StrictlyEnforceRange
 
                 model: {
                     var playlist = MediaPlayer.playlist;

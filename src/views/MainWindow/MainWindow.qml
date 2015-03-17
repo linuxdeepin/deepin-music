@@ -147,7 +147,7 @@ Rectangle {
 
     Loader {
         id: termporyLoader
-        y: 165
+        y: 150
         anchors.right: parent.right
         asynchronous: true
     }
