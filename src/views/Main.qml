@@ -6,9 +6,11 @@ import "./SimpleWindow"
 import "./MiniWindow"
 import "./TermporyWindow"
 
-Item {
+Rectangle {
     id: root
     objectName: "root"
+
+    property int borderWidth: 1
 
     width: constants.mainWindowWidth
     height: constants.mainWindowHeight
@@ -25,9 +27,8 @@ Item {
 
         constants: constants
         anchors.fill: parent
-        
-        width: root.width
-        height: root.heigh
+        width: constants.mainWindowWidth
+        height: constants.mainWindowHeight
         visible : true
     }
 

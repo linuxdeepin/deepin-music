@@ -17,10 +17,10 @@ Rectangle {
 
         anchors.fill: parent
 
-        spacing: 16
+        spacing: 0
 
         Rectangle {
-            width: 24
+            width: 28
             height: 24
 
             color: "transparent"
@@ -40,25 +40,49 @@ Rectangle {
 
             DPlayButton {
                 id: playButton
-                anchors.fill: parent
+                anchors.centerIn: parent
                 width: 24
                 height: 24
                 visible: false
             }
-
         }
 
         
-        Text {
-            id: musicText
-            width: mediaItem.width - playButton.width - 16
-            height: mediaItem.height
-            verticalAlignment: Text.AlignVCenter
-            text: mediaItem.ListView.view.model[index].title
-            color: "#7d7d7d"
-            font.pixelSize: 12
-        }
+        Row {
+            spacing: 16
 
+            Image {
+                width: 24
+                height: 24
+                asynchronous: true
+                source: '../../skin/images/bg1.jpg'
+            }
+
+            Text {
+                id: musicText
+                width: 164
+                height: mediaItem.height
+                verticalAlignment: Text.AlignVCenter
+                text: mediaItem.ListView.view.model[index].title
+                color: "#a0a0a0"
+                font.pixelSize: 11
+            }
+
+            Text {
+                id: durationText
+                width: 34
+                height: mediaItem.height
+                verticalAlignment: Text.AlignVCenter
+                text: '03:17'
+                color: "#a0a0a0"
+                font.pixelSize: 11
+            }
+
+            Rectangle{
+                width: 4
+                height: mediaItem.height
+            }
+        }
     }
 
 
@@ -67,6 +91,7 @@ Rectangle {
             name: "Current"
             when: mediaItem.ListView.isCurrentItem
             PropertyChanges { target: musicText; color: "#2ca7f8";}
+            PropertyChanges { target: durationText; color: "#2ca7f8";}
         },
         State {
             name: "!Current"

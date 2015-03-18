@@ -96,6 +96,14 @@ Item {
 
     function updatePlaylistIndex(index){
         simpleWindow.playlistPage.playlistView.currentIndex = index;
+        if (mainWindow.termporyLoader.item){
+            mainWindow.termporyLoader.item.playlistView.currentIndex = index;
+        }
+    }
+
+    function changeIndex(index) {
+        MediaPlayer.setCurrentMedia(index);
+        MediaPlayer.playToggle(true);
     }
 
     Binding { 
@@ -213,8 +221,7 @@ Item {
     Connections {
         target: simpleWindow.playlistPage.playlistView
         onChangeIndex: {
-            MediaPlayer.setCurrentMedia(index);
-            MediaPlayer.playToggle(true);
+            changeIndex(index);
         }
     }
 
@@ -258,26 +265,21 @@ Item {
         } 
     }
 
-    // Connections {
-    //     target: mainWindow.termporyLoader
-    //     onLoaded:{
+    Connections {
+        target: mainWindow.termporyLoader
+        onLoaded:{
 
-    //         var playlistView = mainWindow.termporyLoader.item.playlistView;
+            var playlistView = mainWindow.termporyLoader.item.playlistView;
 
-    //         playlistView.modelChanged.connect(positionViewAtEnd)
-    //         // Connections {
-    //         //     target: mainWindow.termporyLoader.item.playlistView
-    //         //     onModelChanged:{
-    //         //         mainWindow.termporyLoader.item.playlistView.positionViewAtEnd()
-    //         //     } 
-    //         // }
-    //     } 
-    // }
-
-    // function positionViewAtEnd() {
-    //     mainWindow.termporyLoader.item.playlistView.positionViewAtEnd()
-    // }
-
+            playlistView.changeIndex.connect(changeIndex)
+            // Connections {
+            //     target: mainWindow.termporyLoader.item.playlistView
+            //     onModelChanged:{
+            //         mainWindow.termporyLoader.item.playlistView.positionViewAtEnd()
+            //     } 
+            // }
+        } 
+    }
 
     Component.onCompleted: {
         initConnect();
