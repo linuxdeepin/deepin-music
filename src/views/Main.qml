@@ -10,8 +10,6 @@ Rectangle {
     id: root
     objectName: "root"
 
-    property int borderWidth: 1
-
     width: constants.mainWindowWidth
     height: constants.mainWindowHeight
 

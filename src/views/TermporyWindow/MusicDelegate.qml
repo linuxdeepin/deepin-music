@@ -62,6 +62,7 @@ Rectangle {
                 id: musicText
                 width: 164
                 height: mediaItem.height
+                elide: Text.ElideRight
                 verticalAlignment: Text.AlignVCenter
                 text: mediaItem.ListView.view.model[index].title
                 color: "#a0a0a0"

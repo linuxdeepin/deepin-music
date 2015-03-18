@@ -45,4 +45,12 @@ class MainWindow(BaseWindow):
                         self.frameGeometry().topLeft()
                     event.accept()
 
-        super(MainWindow, self).mousePressEvent(event)
+            super(MainWindow, self).mousePressEvent(event)
+        elif event.button() == Qt.RightButton:
+            flag = contexts['WindowManageWorker'].windowMode
+            if flag == "Full":
+                if self.quickItems['webEngineViewPage'].isVisible():
+                    event.ignore()
+                else:
+                    event.accept()
+                    super(MainWindow, self).mousePressEvent(event)

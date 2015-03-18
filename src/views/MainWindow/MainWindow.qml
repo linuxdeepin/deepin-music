@@ -86,9 +86,9 @@ Rectangle {
                         height: mainWindow.height - titleBar.height - playBottomBar.height
 
                         url: ""
-                        Behavior on opacity {
-                            NumberAnimation { duration: 500 }
-                        }
+                        // Behavior on opacity {
+                        //     NumberAnimation { duration: 500 }
+                        // }
                     }
 
                     MusicManagerPage {
@@ -96,9 +96,9 @@ Rectangle {
                         objectName: 'musicManagerPage'
                         anchors.fill: parent
 
-                        Behavior on opacity {
-                            NumberAnimation { duration: 500 }
-                        }
+                        // Behavior on opacity {
+                        //     NumberAnimation { duration: 500 }
+                        // }
                     }
 
                     PlayListPage {
@@ -107,9 +107,9 @@ Rectangle {
                         objectName: 'palyListPage'
                         anchors.fill: parent
 
-                        Behavior on opacity {
-                            NumberAnimation { duration: 500 }
-                        }
+                        // Behavior on opacity {
+                        //     NumberAnimation { duration: 500 }
+                        // }
                     }
 
                     DownloadPage {
@@ -118,9 +118,9 @@ Rectangle {
                         objectName: 'downloadPage'
                         anchors.fill: parent
 
-                        Behavior on opacity {
-                            NumberAnimation { duration: 500 }
-                        }
+                        // Behavior on opacity {
+                        //     NumberAnimation { duration: 500 }
+                        // }
                     }
                 }
             }

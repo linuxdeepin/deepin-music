@@ -25,6 +25,7 @@ Rectangle{
 
     BorderImage {
         id: image
+        asynchronous: true
         anchors.fill: musicImage
         horizontalTileMode: BorderImage.Stretch
         verticalTileMode: BorderImage.Stretch

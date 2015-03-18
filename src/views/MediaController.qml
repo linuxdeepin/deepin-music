@@ -106,6 +106,22 @@ Item {
         MediaPlayer.playToggle(true);
     }
 
+    function positionEnd(){
+        simpleWindow.playlistPage.playlistView.positionViewAtEnd();
+        if (mainWindow.termporyLoader.item){
+            mainWindow.termporyLoader.item.playlistView.positionViewAtEnd();
+        }
+    }
+
+    function destoryTermporyWindow(){
+        mainWindow.termporyLoader.source = ''
+        mainWindow.focus = true;
+    }
+
+    function clearCurrentPlaylist() {
+        MediaPlayer.playlist.clearMedias()
+    }
+
     Binding { 
         target: mainWindow.playBottomBar
         property: 'title'
@@ -232,8 +248,6 @@ Item {
         } 
     }
 
-
-
     Connections {
         target: miniWindow
 
@@ -259,8 +273,7 @@ Item {
                 mainWindow.termporyLoader.focus = true;
                 mainWindow.focus = false;
             }else{
-                mainWindow.termporyLoader.source = ''
-                mainWindow.focus = true;
+                destoryTermporyWindow();
             }
         } 
     }
@@ -268,16 +281,14 @@ Item {
     Connections {
         target: mainWindow.termporyLoader
         onLoaded:{
-
-            var playlistView = mainWindow.termporyLoader.item.playlistView;
-
-            playlistView.changeIndex.connect(changeIndex)
-            // Connections {
-            //     target: mainWindow.termporyLoader.item.playlistView
-            //     onModelChanged:{
-            //         mainWindow.termporyLoader.item.playlistView.positionViewAtEnd()
-            //     } 
-            // }
+            var item = mainWindow.termporyLoader.item;
+            var playlistView =item.playlistView;
+            var closeButton = item.closeButton;
+            var clearButton = item.clearButton;
+            playlistView.changeIndex.connect(changeIndex);
+            playlistView.modelChanged.connect(positionEnd);
+            closeButton.clicked.connect(destoryTermporyWindow);
+            clearButton.clicked.connect(clearCurrentPlaylist);
         } 
     }
 

@@ -25,6 +25,7 @@ Rectangle {
         model: playlistPage.model
         delegate: musicDelegate
         currentIndex: playlistPage.currentIndex
+        highlightMoveDuration: 1
         focus: true
         spacing: 3
         displayMarginBeginning: 0

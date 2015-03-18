@@ -249,12 +249,31 @@ class DMediaPlaylist(QMediaPlaylist):
             medias.append(mediaContent)
         return medias
 
-    def removeMedia(self, index):
+    @pyqtSlot()
+    def clearMedias(self):
+        count = self.mediaCount()
+        flag = self.clear()
+        if flag:
+            self._urls = []
+            self._mediaContents = OrderedDict()
+            self.emitSignal()
+
+    def removeMediaByIndex(self, index):
         flag = super(DMediaPlaylist, self).removeMedia(index)
         if flag:
             url = self._urls[index]
             self._urls.pop(index)
             self._mediaContents.pop(url)
+
+    @pyqtSlot(int)
+    def removeMedia(self, index):
+        self.removeMediaByIndex(index)
+        self.emitSignal()
+
+    def emitSignal(self):
+        medias = self.medias
+        self.mediasChanged.emit(medias)
+        self.countChanged.emit(self.mediaCount())
 
     def addMedia(self, url, ret=None):
         url = str(url)
@@ -262,16 +281,12 @@ class DMediaPlaylist(QMediaPlaylist):
             if url.startswith('http://') or url.startswith('https://'):
                 self.addOnlineMedia(url, ret)
                 self._urls.append(url)
-                medias = self.medias
-                self.mediasChanged.emit(medias)
-                self.countChanged.emit(self.mediaCount())
+                self.emitSignal()
             else:
                 if os.path.exists(url):
                     self.addLocalMedia(url, ret)
                     self._urls.append(url)
-                    medias = self.medias
-                    self.mediasChanged.emit(medias)
-                    self.countChanged.emit(self.mediaCount())
+                    self.emitSignal()
         if url in self._urls:
             index = self._urls.index(url)
             self.setCurrentIndex(index)

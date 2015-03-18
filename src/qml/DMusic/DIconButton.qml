@@ -59,6 +59,7 @@ Item{
 
 	Image {
         id: image
+        asynchronous: true
         sourceSize.width: parent.width
         sourceSize.height: parent.height
     }

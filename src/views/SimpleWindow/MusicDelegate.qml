@@ -100,7 +100,7 @@ Rectangle {
         }
         onClicked: {
             if (mouse.button == Qt.LeftButton){
-                // mediaItem.ListView.view.currentIndex = index;
+                mediaItem.ListView.view.currentIndex = index;
                 mediaItem.ListView.view.changeIndex(index);
                 playButton.visible = false;
             }

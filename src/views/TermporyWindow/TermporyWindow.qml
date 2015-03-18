@@ -6,6 +6,8 @@ DRectWithCorner {
     id: termporyWindow
 
     property var playlistView: playlistView
+    property var clearButton: clearButton
+    property var closeButton: closeButton
     property var models
     property var currentIndex: -1
 
@@ -18,6 +20,18 @@ DRectWithCorner {
     cornerWidth: 20
     cornerHeight: 10
     color: 'transparent'
+
+
+    // MouseArea {
+    //     anchors.fill: parent
+    //     hoverEnabled: true
+    //     propagateComposedEvents: false
+    //     acceptedButtons: Qt.LeftButton
+
+    //     onWheel: {
+    //         wheel.accepted = true;
+    //     }
+    // }
 
     Component {
         id: musicDelegate
@@ -44,7 +58,7 @@ DRectWithCorner {
 
                 Text{
                     id: playlistName
-                    width: titleBar.width - 28 - deleteButton.width - closeButton.width
+                    width: titleBar.width - 28 - clearButton.width - closeButton.width
                     height: 25
                     verticalAlignment: Text.AlignVCenter
                     font.pixelSize: 16
@@ -70,7 +84,7 @@ DRectWithCorner {
                 }
 
                 DDeleteButton {
-                    id: deleteButton
+                    id: clearButton
                     width: 25
                     height: 25
                 }
