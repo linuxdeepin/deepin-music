@@ -34,6 +34,10 @@ Rectangle{
 
     height: musicInfo.height + slider.height + musicBar.height + spaceRect.height + 2 * playBottomBar.spacing + playBottomBar.margins
 
+    gradient: Gradient {
+        GradientStop { position: 0.0; color: Qt.rgba(0, 0, 0, 0) }
+        GradientStop { position: 1.0; color: Qt.rgba(0, 0, 0, 0.6) }
+    }
 
     signal preMusic()
     signal played(bool isPlaying)
@@ -98,7 +102,7 @@ Rectangle{
                 border.color: "white"
                 border.width: 0
 
-                color: playBottomBar.color
+                color: 'transparent'
                 Row{
                     id: musicBarLayout
                     anchors.fill: parent
@@ -112,7 +116,7 @@ Rectangle{
 
                         width: (musicBar.width - musicBarLayout.spacing) / 2
                         height: musicBar.height
-                        color: playBottomBar.color
+                        color: 'transparent'
 
                         Row {
                             anchors.centerIn: parent
@@ -160,7 +164,7 @@ Rectangle{
 
                         width: (musicBar.width - musicBarLayout.spacing) / 2
                         height: musicBar.height
-                        color: playBottomBar.color
+                        color: 'transparent'
 
                         Row {
                             id: rowLayout

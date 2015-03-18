@@ -3,11 +3,21 @@ import QtQuick 2.4
 Rectangle {
 	id: root
 
-    Text{
-        anchors.centerIn: root
-        text: 'Welcome, this is Music PlayLsit Page!'
-        font.family: "微软雅黑"
-        font.pointSize: 20
-        color: "Black"
+    Row {
+    	
+    	Rectangle {
+    		id: playlistNameBar
+    		width : 200
+    		height: root.height
+
+    		color: "white"
+    	}
+
+    	Rectangle {
+    		width: root.width - playlistNameBar.width
+    		height: root.height
+    		color: "#145278"
+    	}
+
     }
 }

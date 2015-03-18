@@ -51,6 +51,7 @@ Rectangle {
                 id: musicText
                 width: mediaItem.width - playButton.width
                 height: mediaItem.height / 2
+                elide: Text.ElideRight
                 verticalAlignment: Text.AlignVCenter
                 text: mediaItem.ListView.view.model[index].title
                 color: "#131313"
@@ -61,6 +62,7 @@ Rectangle {
                 id: artistText
                 width: mediaItem.width - playButton.width
                 height: mediaItem.height / 2
+                elide: Text.ElideRight
                 verticalAlignment: Text.AlignVCenter
                 text: mediaItem.ListView.view.model[index].artist
                 color: "#919191"

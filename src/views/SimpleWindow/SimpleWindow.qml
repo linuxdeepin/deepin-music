@@ -14,7 +14,7 @@ Rectangle {
 
     focus: true
 
-    color: "#282F3F"
+    color: "white"
 
     BorderImage {
         id: bgImage
@@ -134,7 +134,6 @@ Rectangle {
             objectName: 'playBottomBar'
 
             width: simpleWindow.width
-            color: "transparent"
         }
     }
 

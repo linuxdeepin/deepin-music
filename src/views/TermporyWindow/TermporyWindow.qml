@@ -22,16 +22,16 @@ DRectWithCorner {
     color: 'transparent'
 
 
-    // MouseArea {
-    //     anchors.fill: parent
-    //     hoverEnabled: true
-    //     propagateComposedEvents: false
-    //     acceptedButtons: Qt.LeftButton
+    MouseArea {
+        anchors.fill: parent
+        hoverEnabled: true
+        propagateComposedEvents: false
+        acceptedButtons: Qt.LeftButton
 
-    //     onWheel: {
-    //         wheel.accepted = true;
-    //     }
-    // }
+        onWheel: {
+            wheel.accepted = true;
+        }
+    }
 
     Component {
         id: musicDelegate

@@ -48,6 +48,7 @@ Rectangle {
                     width: msuicText.width
                     height: 20
                     color: "white"
+                    elide: Text.ElideRight
                     horizontalAlignment: Text.AlignLeft
                     verticalAlignment: Text.AlignVCenter
                     text: musicInfo.title
@@ -58,6 +59,7 @@ Rectangle {
                     width: msuicText.width
                     height: 20
                     color: "white"
+                    elide: Text.ElideRight
                     horizontalAlignment: Text.AlignLeft
                     verticalAlignment: Text.AlignVCenter
                     text: musicInfo.artist
@@ -90,5 +92,4 @@ Rectangle {
             }
         }
     }
-
 }
