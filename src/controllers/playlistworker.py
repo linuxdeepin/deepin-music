@@ -5,16 +5,17 @@
 import os
 import sys
 from collections import OrderedDict
-import json 
-from PyQt5.QtCore import (QObject, pyqtSignal, pyqtSlot, 
-    pyqtProperty, QUrl, QFile, QIODevice
-    )
+import json
+from PyQt5.QtCore import (QObject, pyqtSignal, pyqtSlot,
+                          pyqtProperty, QUrl, QFile, QIODevice, QTimer
+                          )
 from PyQt5.QtMultimedia import QMediaPlaylist, QMediaContent
 from .utils import registerContext, contexts
 from dwidgets.mediatag.song import Song
 from dwidgets import dthread
 from .coverworker import CoverWorker
 from config.constants import PlaylistPath
+from config.constants import CoverPath
 from log import logger
 
 
@@ -23,6 +24,7 @@ class BaseMediaContent(QObject):
     titleChanged = pyqtSignal('QString')
     artistChanged = pyqtSignal('QString')
     coverChanged = pyqtSignal('QString')
+    coverDownloadSuccessed = pyqtSignal('QString')
 
     def __init__(self, url):
         super(BaseMediaContent, self).__init__()
@@ -30,6 +32,9 @@ class BaseMediaContent(QObject):
         self._title = ''
         self._artist = ''
         self._cover = ''
+
+    def _initConnect(self):
+        self.coverDownloadSuccessed.connect(self.setCover)
 
     @pyqtProperty('QString')
     def url(self):
@@ -59,8 +64,39 @@ class BaseMediaContent(QObject):
 
     @cover.setter
     def cover(self, cover):
+
         self._cover = cover
         self.coverChanged.emit(cover)
+
+    @pyqtSlot('QString')
+    def setCover(self, cover):
+        self._cover = cover
+        self.coverChanged.emit(cover)
+
+    @classmethod
+    def md5(cls, string):
+        import hashlib
+        md5Value = hashlib.md5(string)
+        return md5Value.hexdigest()
+
+    @classmethod
+    def getCoverPathByUrl(cls, url):
+        coverID = cls.md5(url)
+        filename = '%s' % coverID
+        filepath = os.path.join(CoverPath, filename)
+        return filepath
+
+    @pyqtSlot('QString')
+    @dthread
+    def downloadCover(self, coverUrl):
+        filepath = self.getCoverPathByUrl(self._url)
+        try:
+            r = requests.get(coverUrl)
+            with open(filepath, "wb") as f:
+                f.write(r.content)
+        except:
+            return
+        self.coverDownloadSuccessed.emit(filepath)
 
 
 class DRealLocalMediaContent(BaseMediaContent):
@@ -168,7 +204,6 @@ class DRealOnlineMediaContent(BaseMediaContent):
 
     @playlinkUrl.setter
     def playlinkUrl(self, link):
-        self.updateTagsByUrl(self.url)
         self._palyLinkUrl = link
         self.playlinkChanged.emit(link)
 
@@ -181,7 +216,6 @@ class DRealOnlineMediaContent(BaseMediaContent):
         artist = self.tags['singerName']
         filepath = CoverWorker.getLocalCoverPath(url, title, artist)
         return filepath
-
 
 
 class DLocalMediaContent(QMediaContent):
@@ -206,6 +240,7 @@ class DOnlineMediaContent(QMediaContent):
     @pyqtProperty('QString')
     def url(self):
         return self._url
+
 
 class DMediaPlaylist(QMediaPlaylist):
 
@@ -329,14 +364,13 @@ class PlaylistWorker(QObject):
         result = OrderedDict()
         for name, playlist in self._playlists.items():
             _playlist = OrderedDict()
-            for  url, mediaContent in playlist.mediaContents.items():
+            for url, mediaContent in playlist.mediaContents.items():
                 _playlist[url] = mediaContent.tags
             result[name] = _playlist
 
         playlistPath = os.path.join(PlaylistPath, 'DeepinMusic3.playlist')
         with open(playlistPath, 'wb') as f:
             json.dump(result, f, indent=4)
-
 
     def loadPlaylists(self):
         playlistPath = os.path.join(PlaylistPath, 'DeepinMusic3.playlist')

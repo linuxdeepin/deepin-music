@@ -289,7 +289,11 @@ Item {
             playlistView.modelChanged.connect(positionEnd);
             closeButton.clicked.connect(destoryTermporyWindow);
             clearButton.clicked.connect(clearCurrentPlaylist);
-        } 
+            
+            // playlistView.currentIndex = MediaPlayer.playlist.currentIndex
+            // playlistView.state = 'Current'
+            // playlistView.positionViewAtEnd();
+        }   
     }
 
     Component.onCompleted: {
