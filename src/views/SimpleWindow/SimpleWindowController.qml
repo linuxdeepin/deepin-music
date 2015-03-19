@@ -25,6 +25,11 @@ Item {
         }
     }
 
+    function changeIndex(index) {
+        MediaPlayer.setCurrentMedia(index);
+        MediaPlayer.playToggle(true);
+    }
+
     Binding { 
         target: playBottomBar
         property: 'title'
@@ -85,6 +90,12 @@ Item {
         onClosed: {
             Qt.quit();
         }
+    }
+
+    Connections {
+        target: playlistPage.playlistView
+        onChangeIndex: changeIndex(index)
+        onModelChanged: playlistPage.playlistView.positionViewAtEnd()
     }
 
     Connections {

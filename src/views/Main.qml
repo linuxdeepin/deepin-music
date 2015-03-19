@@ -34,15 +34,6 @@ Rectangle {
         visible : true
     }
 
-    // SimpleWindow {
-    //     id: simpleWindow
-    //     constants: constants
-    //     width: root.width
-    //     height: root.height
-    //     anchors.fill: parent
-    //     visible : false
-    // }
-
     MiniWindow {
         id: miniWindow
         constants: constants
@@ -53,11 +44,9 @@ Rectangle {
     Loader {
         id: simpleWindowLoader
         objectName: 'simpleWindowLoader'
-        asynchronous: true
         anchors.fill: parent
         width: root.width
         height: root.height
-        // source: './SimpleWindow/SimpleWindow.qml'
         visible : false
     }
 
@@ -65,7 +54,6 @@ Rectangle {
         id: mainController
         rootWindow: root
         mainWindow: mainWindow
-        // simpleWindow: simpleWindow
         simpleWindowLoader: simpleWindowLoader
         miniWindow: miniWindow
         constants: constants
@@ -74,7 +62,6 @@ Rectangle {
     MediaController {
         id: mediaController
         mainWindow: mainWindow
-        // simpleWindow: simpleWindow
         simpleWindowLoader: simpleWindowLoader
         miniWindow: miniWindow
         positionTimer: positionTimer

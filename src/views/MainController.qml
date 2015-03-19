@@ -22,7 +22,7 @@ Item {
         rootWindow.height = constants.mainWindowHeight;
         mainWindow.visible = true;
         simpleWindowLoader.visible = false;
-        // simpleWindowLoader.source = ''
+        simpleWindowLoader.source = ''
         miniWindow.visible = false;
 
         WindowManageWorker.windowMode = 'Full'
