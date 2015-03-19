@@ -96,21 +96,16 @@ Item {
 
     function updatePlaylistIndex(index){
         simpleWindow.playlistPage.playlistView.currentIndex = index;
-        if (mainWindow.termporyLoader.item){
-            mainWindow.termporyLoader.item.playlistView.currentIndex = index;
+
+        var item = mainWindow.termporyLoader.item
+        if (item){
+            item.playlistView.currentIndex = index;
         }
     }
 
     function changeIndex(index) {
         MediaPlayer.setCurrentMedia(index);
         MediaPlayer.playToggle(true);
-    }
-
-    function positionEnd(){
-        simpleWindow.playlistPage.playlistView.positionViewAtEnd();
-        if (mainWindow.termporyLoader.item){
-            mainWindow.termporyLoader.item.playlistView.positionViewAtEnd();
-        }
     }
 
     function destoryTermporyWindow(){
@@ -282,18 +277,9 @@ Item {
         target: mainWindow.termporyLoader
         onLoaded:{
             var item = mainWindow.termporyLoader.item;
-            var playlistView =item.playlistView;
             var closeButton = item.closeButton;
-            var clearButton = item.clearButton;
-            playlistView.changeIndex.connect(changeIndex);
-            playlistView.modelChanged.connect(positionEnd);
             closeButton.clicked.connect(destoryTermporyWindow);
-            clearButton.clicked.connect(clearCurrentPlaylist);
-            
-            // playlistView.currentIndex = MediaPlayer.playlist.currentIndex
-            // playlistView.state = 'Current'
-            // playlistView.positionViewAtEnd();
-        }   
+        }
     }
 
     Component.onCompleted: {

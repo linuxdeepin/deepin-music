@@ -132,23 +132,15 @@ DRectWithCorner {
                 // preferredHighlightEnd: -34
                 // highlightRangeMode: ListView.StrictlyEnforceRange
 
-                model: {
-                    var playlist = MediaPlayer.playlist;
-                    if (playlist){
-                        return playlist.medias;
-                    }else{
-                        return null;
-                    }
-                }
                 delegate: musicDelegate
-                currentIndex: {
-                    var playlist = MediaPlayer.playlist;
-                    if (playlist){
-                        return playlist.currentIndex;
-                    }else{
-                        return -1;
-                    }
-                }
+                // currentIndex: {
+                //     var playlist = MediaPlayer.playlist;
+                //     if (playlist){
+                //         return playlist.currentIndex;
+                //     }else{
+                //         return -1;
+                //     }
+                // }
                 focus: true
                 spacing: 8
                 displayMarginBeginning: -24
@@ -165,5 +157,12 @@ DRectWithCorner {
                 Component.onCompleted: positionViewAtIndex(currentIndex, ListView.Center)
             }
         }
+    }
+
+    TemporyWindowController {
+        id: temporyWindowController
+        playlistView: playlistView
+        clearButton: clearButton
+        closeButton: closeButton
     }
 }

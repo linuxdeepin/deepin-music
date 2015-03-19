@@ -7,10 +7,13 @@ Rectangle {
     	
     	Rectangle {
     		id: playlistNameBar
-    		width : 200
+    		width : 134
     		height: root.height
-
     		color: "white"
+
+    		Column {
+    			
+    		}
     	}
 
     	Rectangle {
