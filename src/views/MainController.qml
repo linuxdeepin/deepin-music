@@ -21,7 +21,6 @@ Item {
         rootWindow.width = constants.mainWindowWidth;
         rootWindow.height = constants.mainWindowHeight;
         mainWindow.visible = true;
-        simpleWindowLoader.visible = false;
         simpleWindowLoader.source = ''
         miniWindow.visible = false;
 
@@ -34,8 +33,7 @@ Item {
         rootWindow.width = constants.simpleWindowWidth;
         rootWindow.height = constants.simpleWindowHeight;
         mainWindow.visible = false;
-        simpleWindowLoader.visible = true;
-        simpleWindowLoader.setSource('./SimpleWindow/SimpleWindow.qml', { "rootWindow": rootWindow });
+        simpleWindowLoader.setSource('./SimpleWindow/SimpleWindow.qml');
 
         miniWindow.visible = false;
         WindowManageWorker.windowMode = 'Simple'
@@ -51,6 +49,11 @@ Item {
 
     function closeAll() {
         Qt.quit();
+    }
+
+    function destoryTermporyWindow(){
+        mainWindow.termporyLoader.source = ''
+        mainWindow.focus = true;
     }
 
 	Connections {
@@ -73,26 +76,29 @@ Item {
         }
     }
 
-    // Connections {
-    //     target: simpleWindow.titleBar
+    Connections {
+        target: mainWindow.playBottomBar.playlistButton
+        onClicked:{
+            if(mainWindow.termporyLoader.source == ''){
+                mainWindow.termporyLoader.source = './TermporyWindow/TermporyWindow.qml'
+                mainWindow.termporyLoader.focus = true;
+                mainWindow.focus = false;
+            }else{
+                destoryTermporyWindow();
+            }
+        } 
+    }
 
-    //     onMainWindowShowed: {
-    //         showMainWindow();
-    //     }
-        
-    //     onMenuShowed: {
-    //         MenuWorker.showSettingMenu();
-    //     }
-        
-
-    //     onShowMinimized: {
-    //         MainWindow.showMinimized();
-    //     }
-
-    //     onClosed: {
-    //         closeAll();
-    //     }
-    // }
+    Connections {
+        target: mainWindow.termporyLoader
+        onLoaded:{
+            var termporyWindow = mainWindow.termporyLoader.item;
+            if (termporyWindow){
+                var closeButton = termporyWindow.closeButton;
+                closeButton.clicked.connect(destoryTermporyWindow);
+            }
+        }
+    }
 
     Connections {
         target: miniWindow

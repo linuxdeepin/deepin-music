@@ -47,7 +47,6 @@ Rectangle {
         anchors.fill: parent
         width: root.width
         height: root.height
-        visible : false
     }
 
     MainController {
@@ -90,5 +89,12 @@ Rectangle {
         repeat: false
         interval: 100
         running: false
+    }
+
+    Component.onCompleted: {
+        Qt.constants = constants
+        Qt.mainWindow = mainWindow
+        Qt.mainController= mainController
+        Qt.positionTimer = positionTimer
     }
 }

@@ -1,7 +1,6 @@
 import QtQuick 2.4
 
 Item {
-    property var rootWindow
     property var simpleWindow
     property var constants
     property var bgImage
@@ -47,12 +46,6 @@ Item {
         value: MediaPlayer.cover
     }
 
-    // Binding {
-    //     target: playBottomBar.volumeButton
-    //     property: 'switchflag'
-    //     value: !MediaPlayer.muted
-    // }
-
     Connections {
         target: bgImage
         onProgressChanged:{
@@ -75,7 +68,7 @@ Item {
         target: titleBar
 
         onMainWindowShowed: {
-            rootWindow.mainController.showMainWindow();
+            Qt.mainController.showMainWindow();
         }
 
         onMenuShowed: {
@@ -112,7 +105,7 @@ Item {
         }
         onMuted: {
             MediaPlayer.muted = muted;
-            rootWindow.mainWindow.playBottomBar.volumeButton.switchflag = !muted;
+            Qt.mainWindow.playBottomBar.volumeButton.switchflag = !muted;
         }
 
         onPlaybackModeChanged:{
@@ -125,20 +118,9 @@ Item {
         onSliderRateChanged:{
             if (MediaPlayer.seekable){
                 MediaPlayer.muted = true;
-                rootWindow.positionTimer.restart();
+                Qt.positionTimer.restart();
                 MediaPlayer.setPosition(MediaPlayer.duration * rate)
             }
         }
-    }
-
-
-   Component.onCompleted: {
-
-        var mainPlayBottomBar = rootWindow.mainWindow.playBottomBar;
-        playBottomBar.slider.value = mainPlayBottomBar.slider.value;
-        playBottomBar.volumeButton.switchflag = !MediaPlayer.muted;
-        playBottomBar.volumeSlider.value = mainPlayBottomBar.volumeSlider.value;
-        playBottomBar.cycleButton.playbackMode = mainPlayBottomBar.cycleButton.playbackMode;
-        playBottomBar.playing = mainPlayBottomBar.playing
     }
 }

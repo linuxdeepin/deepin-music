@@ -6,8 +6,8 @@ import "../DMusicWidgets"
 Rectangle {
     id: simpleWindow
 
-    property var constants
-    property var rootWindow
+    // property var constants
+    // property var rootWindow
     property var titleBar: titleBar
     property var playlistPage: playlistPage
     property var playBottomBar: playBottomBar
@@ -142,7 +142,6 @@ Rectangle {
 
     SimpleWindowController{
         id: simpleWindowController
-        rootWindow: simpleWindow.rootWindow
         simpleWindow: simpleWindow
         constants: simpleWindow.constants
         bgImage: bgImage
@@ -152,5 +151,14 @@ Rectangle {
         playlistPage: playlistPage
         lrcPage: lrcPage
         playBottomBar: playBottomBar
+    }
+
+    Component.onCompleted: {
+        var mainPlayBottomBar = Qt.mainWindow.playBottomBar;
+        playBottomBar.slider.value = mainPlayBottomBar.slider.value;
+        playBottomBar.volumeButton.switchflag = !MediaPlayer.muted;
+        playBottomBar.volumeSlider.value = mainPlayBottomBar.volumeSlider.value;
+        playBottomBar.cycleButton.playbackMode = mainPlayBottomBar.cycleButton.playbackMode;
+        playBottomBar.playing = mainPlayBottomBar.playing;
     }
 }

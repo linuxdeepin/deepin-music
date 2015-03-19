@@ -147,11 +147,6 @@ Item {
         MediaPlayer.playToggle(true);
     }
 
-    function destoryTermporyWindow(){
-        mainWindow.termporyLoader.source = ''
-        mainWindow.focus = true;
-    }
-
     function clearCurrentPlaylist() {
         MediaPlayer.playlist.clearMedias()
     }
@@ -232,42 +227,6 @@ Item {
         }
     }
 
-    // Connections {
-    //     target: simpleWindow.playBottomBar
-
-    //     onPreMusic: MediaPlayer.previous()
-
-    //     onPlayed: MediaPlayer.playToggle(isPlaying)
-
-    //     onNextMusic: MediaPlayer.next()
-
-    //     onVolumeChanged: {
-    //         MediaPlayer.setVolume(parseInt(value * 100))
-    //     }
-    //     onMuted: {
-    //         MediaPlayer.setMuted(muted);
-    //         mainWindow.playBottomBar.volumeButton.switchflag = !muted;
-    //     }
-
-    //     onPlaybackModeChanged:{
-    //        MediaPlayer.setPlaybackMode(playbackMode);
-    //     }
-    // }
-
-    // Connections {
-    //     target: simpleWindow.playlistPage.playlistView
-    //     onChangeIndex: {
-    //         changeIndex(index);
-    //     }
-    // }
-
-    // Connections {
-    //     target: simpleWindow.playlistPage.playlistView
-    //     onModelChanged:{
-    //         simpleWindow.playlistPage.playlistView.positionViewAtEnd()
-    //     } 
-    // }
-
     Connections {
         target: miniWindow
 
@@ -283,30 +242,6 @@ Item {
         onTriggered:{
             MediaPlayer.muted = false;
         } 
-    }
-
-    Connections {
-        target: mainWindow.playBottomBar.playlistButton
-        onClicked:{
-            if(mainWindow.termporyLoader.source == ''){
-                mainWindow.termporyLoader.source = './TermporyWindow/TermporyWindow.qml'
-                mainWindow.termporyLoader.focus = true;
-                mainWindow.focus = false;
-            }else{
-                destoryTermporyWindow();
-            }
-        } 
-    }
-
-    Connections {
-        target: mainWindow.termporyLoader
-        onLoaded:{
-            var termporyWindow = mainWindow.termporyLoader.item;
-            if (termporyWindow){
-                var closeButton = termporyWindow.closeButton;
-                closeButton.clicked.connect(destoryTermporyWindow);
-            }
-        }
     }
 
     Component.onCompleted: {

@@ -36,14 +36,10 @@ class MainWindow(BaseWindow):
                         self.frameGeometry().topLeft()
                     event.accept()
             elif flag == "Simple":
-
-                # item = self.findChild(self.rootObject(), 'simpleWindowLoader')
-                # print item
-
                 x = self.quickItems['simpleWindowLoader'].x()
                 y = self.quickItems['simpleWindowLoader'].y()
                 width = self.quickItems['simpleWindowLoader'].width()
-                height = self.quickItems['simpleWindowLoader'].height()
+                height = 40
                 rect = QRect(x, y, width, height)
                 if rect.contains(event.pos()):
                     self.dragPosition = event.globalPos() - \
