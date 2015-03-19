@@ -55,20 +55,26 @@ class Web360ApiWorker(QObject):
 
     def getResult(self, musicId):
         url = self.getUrlByID(musicId)
-        try:
-            ret = requests.get(url)
-            tags = ret.json()
-            result = {
-                'url': ret.url,
-                'tags': tags
-            }
-            if isinstance(tags, dict):
-                self.playedMusics.update({musicId: result})
-            elif isinstance(tags, list) and not tags:
-                return None
-        except:
-            result = None
+        tags = None
+        maxQueryCount = 5
+        i = 0
+        while i < maxQueryCount:
+            try:
+                ret = requests.get(url)
+                tags = ret.json()
+                if isinstance(tags, dict):
+                    break
+                else:
+                    i = i + 1
+            except:
+                i = i + 1
 
+        result = {
+            'url': url,
+            'tags': tags
+        }
+        if isinstance(tags, list) and not tags:            
+            result = None
         return result
 
     @pyqtSlot(int)
