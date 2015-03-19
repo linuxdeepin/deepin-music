@@ -150,7 +150,14 @@ Item {
     Binding {
         target: playlistPage.playlistView
         property: 'currentIndex'
-        value:  MediaPlayer.currentIndex
+        value:  {
+            var playlist = MediaPlayer.playlist;
+            if (playlist){
+                return playlist.currentIndex;
+            }else{
+                return -1;
+            }
+        }
     }
 
     Connections {
