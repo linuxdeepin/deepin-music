@@ -4,6 +4,7 @@ import "./TermporyWindow"
 Item {
     property var mainWindow
     property var simpleWindow
+    property var simpleWindowLoader
     property var miniWindow
     property var positionTimer
 
@@ -22,7 +23,11 @@ Item {
         var rate = position / MediaPlayer.duration;
 
         mainWindow.playBottomBar.slider.updateSlider(rate);
-        simpleWindow.playBottomBar.slider.updateSlider(rate);
+
+        var simpleWindow = simpleWindowLoader.item
+        if(simpleWindow){
+            simpleWindow.playBottomBar.slider.updateSlider(rate);
+        }
         miniWindow.slider.updateSlider(rate);
     }
 
@@ -30,25 +35,39 @@ Item {
         var rate = position / 100;
 
         mainWindow.playBottomBar.slider.updateBufferSlider(rate);
-        simpleWindow.playBottomBar.slider.updateBufferSlider(rate);
+
+        var simpleWindow = simpleWindowLoader.item
+        if(simpleWindow){
+            simpleWindow.playBottomBar.slider.updateBufferSlider(rate);
+        }
+        
         miniWindow.slider.updateBufferSlider(rate);
 
         if (position == 100){
             mainWindow.playBottomBar.slider.updateBufferSlider(0);
-            simpleWindow.playBottomBar.slider.updateBufferSlider(0);
+            if(simpleWindow){
+                simpleWindow.playBottomBar.slider.updateBufferSlider(0);
+            }
             miniWindow.slider.updateBufferSlider(0);
         }
     }
 
     function updateMusicTime(position){
         mainWindow.playBottomBar.updatePlayTime(MediaPlayer.positionString + '/' + MediaPlayer.durationString);
-        simpleWindow.playBottomBar.updatePlayTime(MediaPlayer.positionString + '/' + MediaPlayer.durationString);
+        
+        var simpleWindow = simpleWindowLoader.item
+        if(simpleWindow){
+            simpleWindow.playBottomBar.updatePlayTime(MediaPlayer.positionString + '/' + MediaPlayer.durationString);
+        }
     }
 
     function updateBackgroundCover(cover){
         if(ConfigWorker.isCoverBackground){
             mainWindow.mainWindowController.setSkinByImage(cover);
-            simpleWindow.simpleWindowController.setSkinByImage(cover);
+            var simpleWindow = simpleWindowLoader.item
+            if(simpleWindow){
+                simpleWindow.simpleWindowController.setSkinByImage(cover);
+            }
             miniWindow.miniWindowController.setSkinByImage(cover);
         }
     }
@@ -65,41 +84,61 @@ Item {
 
     function onPlaying(){
         mainWindow.playBottomBar.playing = true;
-        simpleWindow.playBottomBar.playing = true;
+        var simpleWindow = simpleWindowLoader.item
+        if(simpleWindow){
+            simpleWindow.playBottomBar.playing = true;
+        }
         miniWindow.playing = true;
         // console.log('Playing');
     }
 
     function onPaused(){
         mainWindow.playBottomBar.playing = false;
-        simpleWindow.playBottomBar.playing = false;
+        var simpleWindow = simpleWindowLoader.item
+        if(simpleWindow){
+            simpleWindow.playBottomBar.playing = false;
+        }
         miniWindow.playing = false;
         // console.log('Paused')
     }
 
     function onStopped(){
         mainWindow.playBottomBar.playing = false;
-        simpleWindow.playBottomBar.playing = false;
+        var simpleWindow = simpleWindowLoader.item
+        if(simpleWindow){
+            simpleWindow.playBottomBar.playing = false;
+        }
         miniWindow.playing = false;
         // console.log('Stopped')
     }
 
     function updateVolumeSlider(value){
         mainWindow.playBottomBar.volumeSlider.value = value / 100;
-        simpleWindow.playBottomBar.volumeSlider.value = value / 100;
+        var simpleWindow = simpleWindowLoader.item
+        if(simpleWindow){
+            simpleWindow.playBottomBar.volumeSlider.value = value / 100;
+        }
+       
     }
 
     function updateCycleButton(value){
         mainWindow.playBottomBar.cycleButton.playbackMode = value;
-        simpleWindow.playBottomBar.cycleButton.playbackMode = value;
+        var simpleWindow = simpleWindowLoader.item
+        if(simpleWindow){
+            simpleWindow.playBottomBar.cycleButton.playbackMode = value;
+        }
     }
 
     function updatePlaylistIndex(index){
-        simpleWindow.playlistPage.playlistView.currentIndex = index;
 
-        var item = mainWindow.termporyLoader.item
-        if (item){
-            item.playlistView.currentIndex = index;
+        var simpleWindow = simpleWindowLoader.item
+        if(simpleWindow){
+            simpleWindow.playlistPage.playlistView.currentIndex = index;
+        }
+
+        var termporyWindow = mainWindow.termporyLoader.item
+        if (termporyWindow){
+            termporyWindow.playlistView.currentIndex = index;
         }
     }
 
@@ -134,50 +173,33 @@ Item {
         value: MediaPlayer.cover
     }
 
-    Binding { 
-        target: simpleWindow.playBottomBar
-        property: 'title'
-        value: MediaPlayer.title
-    }
-
-    Binding { 
-        target: simpleWindow.playBottomBar
-        property: 'artist'
-        value: MediaPlayer.artist
-    }
-    Binding { 
-        target: simpleWindow.playBottomBar
-        property: 'cover'
-        value: MediaPlayer.cover
-    }
-
     Connections {
         target: mainWindow.playBottomBar.slider
         onSliderRateChanged:{
             if (MediaPlayer.seekable){
-                MediaPlayer.setMuted(true);
+                MediaPlayer.muted = true;
                 positionTimer.restart();
                 MediaPlayer.setPosition(MediaPlayer.duration * rate)
             }
         }
     }
 
-    Connections {
-        target: simpleWindow.playBottomBar.slider
-        onSliderRateChanged:{
-            if (MediaPlayer.seekable){
-                MediaPlayer.setMuted(true);
-                positionTimer.restart();
-                MediaPlayer.setPosition(MediaPlayer.duration * rate)
-            }
-        }
-    }
+    // Connections {
+    //     target: simpleWindow.playBottomBar.slider
+    //     onSliderRateChanged:{
+    //         if (MediaPlayer.seekable){
+    //             MediaPlayer.setMuted(true);
+    //             positionTimer.restart();
+    //             MediaPlayer.setPosition(MediaPlayer.duration * rate)
+    //         }
+    //     }
+    // }
 
     Connections {
         target: miniWindow.slider
         onSliderRateChanged:{
             if (MediaPlayer.seekable){
-                MediaPlayer.setMuted(true);
+                MediaPlayer.muted = true;
                 positionTimer.restart();
                 MediaPlayer.setPosition(MediaPlayer.duration * rate)
             }
@@ -194,12 +216,15 @@ Item {
         onNextMusic: MediaPlayer.next()
 
         onVolumeChanged: {
-            MediaPlayer.setVolume(parseInt(value * 100));
+            MediaPlayer.volume = parseInt(value * 100);
         }
 
         onMuted: {
-            MediaPlayer.setMuted(muted);
-            simpleWindow.playBottomBar.volumeButton.switchflag = !muted;
+            MediaPlayer.muted = muted;
+            var simpleWindow = simpleWindowLoader.item
+            if(simpleWindow){
+                simpleWindow.playBottomBar.volumeButton.switchflag = !muted;
+            }
         }
 
         onPlaybackModeChanged:{
@@ -207,41 +232,41 @@ Item {
         }
     }
 
-    Connections {
-        target: simpleWindow.playBottomBar
+    // Connections {
+    //     target: simpleWindow.playBottomBar
 
-        onPreMusic: MediaPlayer.previous()
+    //     onPreMusic: MediaPlayer.previous()
 
-        onPlayed: MediaPlayer.playToggle(isPlaying)
+    //     onPlayed: MediaPlayer.playToggle(isPlaying)
 
-        onNextMusic: MediaPlayer.next()
+    //     onNextMusic: MediaPlayer.next()
 
-        onVolumeChanged: {
-            MediaPlayer.setVolume(parseInt(value * 100))
-        }
-        onMuted: {
-            MediaPlayer.setMuted(muted);
-            mainWindow.playBottomBar.volumeButton.switchflag = !muted;
-        }
+    //     onVolumeChanged: {
+    //         MediaPlayer.setVolume(parseInt(value * 100))
+    //     }
+    //     onMuted: {
+    //         MediaPlayer.setMuted(muted);
+    //         mainWindow.playBottomBar.volumeButton.switchflag = !muted;
+    //     }
 
-        onPlaybackModeChanged:{
-           MediaPlayer.setPlaybackMode(playbackMode);
-        }
-    }
+    //     onPlaybackModeChanged:{
+    //        MediaPlayer.setPlaybackMode(playbackMode);
+    //     }
+    // }
 
-    Connections {
-        target: simpleWindow.playlistPage.playlistView
-        onChangeIndex: {
-            changeIndex(index);
-        }
-    }
+    // Connections {
+    //     target: simpleWindow.playlistPage.playlistView
+    //     onChangeIndex: {
+    //         changeIndex(index);
+    //     }
+    // }
 
-    Connections {
-        target: simpleWindow.playlistPage.playlistView
-        onModelChanged:{
-            simpleWindow.playlistPage.playlistView.positionViewAtEnd()
-        } 
-    }
+    // Connections {
+    //     target: simpleWindow.playlistPage.playlistView
+    //     onModelChanged:{
+    //         simpleWindow.playlistPage.playlistView.positionViewAtEnd()
+    //     } 
+    // }
 
     Connections {
         target: miniWindow
@@ -256,7 +281,7 @@ Item {
     Connections {
         target: positionTimer
         onTriggered:{
-            MediaPlayer.setMuted(false);
+            MediaPlayer.muted = false;
         } 
     }
 
@@ -276,9 +301,11 @@ Item {
     Connections {
         target: mainWindow.termporyLoader
         onLoaded:{
-            var item = mainWindow.termporyLoader.item;
-            var closeButton = item.closeButton;
-            closeButton.clicked.connect(destoryTermporyWindow);
+            var termporyWindow = mainWindow.termporyLoader.item;
+            if (termporyWindow){
+                var closeButton = termporyWindow.closeButton;
+                closeButton.clicked.connect(destoryTermporyWindow);
+            }
         }
     }
 

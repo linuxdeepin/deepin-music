@@ -7,10 +7,13 @@ Rectangle {
     id: simpleWindow
 
     property var constants
+    property var rootWindow
     property var titleBar: titleBar
     property var playlistPage: playlistPage
     property var playBottomBar: playBottomBar
     property var simpleWindowController: simpleWindowController
+
+    anchors.fill: parent
 
     focus: true
 
@@ -139,7 +142,7 @@ Rectangle {
 
     SimpleWindowController{
         id: simpleWindowController
-
+        rootWindow: simpleWindow.rootWindow
         simpleWindow: simpleWindow
         constants: simpleWindow.constants
         bgImage: bgImage

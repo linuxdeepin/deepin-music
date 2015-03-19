@@ -4,7 +4,7 @@ Item {
 
     property var rootWindow
     property var mainWindow
-    property var simpleWindow
+    property var simpleWindowLoader
     property var miniWindow
     property var constants
 
@@ -13,11 +13,7 @@ Item {
         WindowManageWorker.simpleWindowShowed.connect(showSimpleWindow);
         WindowManageWorker.miniWindowShowed.connect(showMiniWindow);
         Qt.globalPos = WindowManageWorker.cursorPos;
-
         MenuWorker.miniTrigger.connect(showMiniWindow);
-
-        
-
     }
 
     function showMainWindow() {
@@ -25,9 +21,10 @@ Item {
         rootWindow.width = constants.mainWindowWidth;
         rootWindow.height = constants.mainWindowHeight;
         mainWindow.visible = true;
-        simpleWindow.visible = false;
+        simpleWindowLoader.visible = false;
+        // simpleWindowLoader.source = ''
         miniWindow.visible = false;
-        
+
         WindowManageWorker.windowMode = 'Full'
         WindowManageWorker.lastWindowMode = 'Full'
     }
@@ -37,7 +34,9 @@ Item {
         rootWindow.width = constants.simpleWindowWidth;
         rootWindow.height = constants.simpleWindowHeight;
         mainWindow.visible = false;
-        simpleWindow.visible = true;
+        simpleWindowLoader.visible = true;
+        simpleWindowLoader.setSource('./SimpleWindow/SimpleWindow.qml', { "rootWindow": rootWindow });
+
         miniWindow.visible = false;
         WindowManageWorker.windowMode = 'Simple'
         WindowManageWorker.lastWindowMode = 'Simple'
@@ -74,26 +73,26 @@ Item {
         }
     }
 
-    Connections {
-        target: simpleWindow.titleBar
+    // Connections {
+    //     target: simpleWindow.titleBar
 
-        onMainWindowShowed: {
-            showMainWindow();
-        }
+    //     onMainWindowShowed: {
+    //         showMainWindow();
+    //     }
         
-        onMenuShowed: {
-            MenuWorker.showSettingMenu();
-        }
+    //     onMenuShowed: {
+    //         MenuWorker.showSettingMenu();
+    //     }
         
 
-        onShowMinimized: {
-            MainWindow.showMinimized();
-        }
+    //     onShowMinimized: {
+    //         MainWindow.showMinimized();
+    //     }
 
-        onClosed: {
-            closeAll();
-        }
-    }
+    //     onClosed: {
+    //         closeAll();
+    //     }
+    // }
 
     Connections {
         target: miniWindow

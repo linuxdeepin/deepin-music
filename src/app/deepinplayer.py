@@ -68,7 +68,7 @@ class DeepinPlayer(QObject):
     def loadConfig(self):
         self.mediaPlayer.setPlaylistByName(self.configWorker.lastPlaylistName);
         self.mediaPlayer.playlist.setCurrentIndex(self.configWorker.lastPlayedIndex);
-        self.mediaPlayer.setVolume(self.configWorker.volume);
+        self.mediaPlayer.volume = self.configWorker.volume
         self.mediaPlayer.setPlaybackMode(self.configWorker.playbackMode);
 
     def showMainWindow(self):

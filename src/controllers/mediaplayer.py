@@ -117,21 +117,21 @@ class MediaPlayer(QObject):
         self.player.setPosition(pos)
         self.positionChanged.emit(pos)
 
-    @pyqtProperty(int)
+    @pyqtProperty(int, notify=volumeChanged)
     def volume(self):
         return self.player.volume()
 
-    @pyqtSlot(int)
-    def setVolume(self, value):
+    @volume.setter
+    def volume(self, value):
         self.player.setVolume(value)
         self.volumeChanged.emit(value)
 
-    @pyqtProperty(bool)
+    @pyqtProperty(bool, notify=mutedChanged)
     def muted(self):
         return self.player.isMuted()
 
-    @pyqtSlot(bool)
-    def setMuted(self, muted):
+    @muted.setter
+    def muted(self, muted):
         self.player.setMuted(muted)
         self.mutedChanged.emit(muted)
 

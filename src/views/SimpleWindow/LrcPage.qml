@@ -8,6 +8,6 @@ Rectangle {
         text: 'Welcome, this is Music Manager Page!'
         font.family: "微软雅黑"
         font.pointSize: 10
-        color: "white"
+        color: "#a0a0a0"
     }
 }
