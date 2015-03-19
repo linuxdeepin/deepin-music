@@ -21,53 +21,28 @@ Item {
 
     function updateSlider(position) {
         var rate = position / MediaPlayer.duration;
-
         mainWindow.playBottomBar.slider.updateSlider(rate);
-
-        var simpleWindow = simpleWindowLoader.item
-        if(simpleWindow){
-            simpleWindow.playBottomBar.slider.updateSlider(rate);
-        }
         miniWindow.slider.updateSlider(rate);
     }
 
     function updateBufferSlider(position){
         var rate = position / 100;
-
         mainWindow.playBottomBar.slider.updateBufferSlider(rate);
-
-        var simpleWindow = simpleWindowLoader.item
-        if(simpleWindow){
-            simpleWindow.playBottomBar.slider.updateBufferSlider(rate);
-        }
-        
         miniWindow.slider.updateBufferSlider(rate);
 
         if (position == 100){
             mainWindow.playBottomBar.slider.updateBufferSlider(0);
-            if(simpleWindow){
-                simpleWindow.playBottomBar.slider.updateBufferSlider(0);
-            }
             miniWindow.slider.updateBufferSlider(0);
         }
     }
 
     function updateMusicTime(position){
         mainWindow.playBottomBar.updatePlayTime(MediaPlayer.positionString + '/' + MediaPlayer.durationString);
-        
-        var simpleWindow = simpleWindowLoader.item
-        if(simpleWindow){
-            simpleWindow.playBottomBar.updatePlayTime(MediaPlayer.positionString + '/' + MediaPlayer.durationString);
-        }
     }
 
     function updateBackgroundCover(cover){
         if(ConfigWorker.isCoverBackground){
             mainWindow.mainWindowController.setSkinByImage(cover);
-            var simpleWindow = simpleWindowLoader.item
-            if(simpleWindow){
-                simpleWindow.simpleWindowController.setSkinByImage(cover);
-            }
             miniWindow.miniWindowController.setSkinByImage(cover);
         }
     }
@@ -84,58 +59,28 @@ Item {
 
     function onPlaying(){
         mainWindow.playBottomBar.playing = true;
-        var simpleWindow = simpleWindowLoader.item
-        if(simpleWindow){
-            simpleWindow.playBottomBar.playing = true;
-        }
         miniWindow.playing = true;
-        // console.log('Playing');
     }
 
     function onPaused(){
         mainWindow.playBottomBar.playing = false;
-        var simpleWindow = simpleWindowLoader.item
-        if(simpleWindow){
-            simpleWindow.playBottomBar.playing = false;
-        }
         miniWindow.playing = false;
-        // console.log('Paused')
     }
 
     function onStopped(){
         mainWindow.playBottomBar.playing = false;
-        var simpleWindow = simpleWindowLoader.item
-        if(simpleWindow){
-            simpleWindow.playBottomBar.playing = false;
-        }
         miniWindow.playing = false;
-        // console.log('Stopped')
     }
 
     function updateVolumeSlider(value){
         mainWindow.playBottomBar.volumeSlider.value = value / 100;
-        var simpleWindow = simpleWindowLoader.item
-        if(simpleWindow){
-            simpleWindow.playBottomBar.volumeSlider.value = value / 100;
-        }
-       
     }
 
     function updateCycleButton(value){
         mainWindow.playBottomBar.cycleButton.playbackMode = value;
-        var simpleWindow = simpleWindowLoader.item
-        if(simpleWindow){
-            simpleWindow.playBottomBar.cycleButton.playbackMode = value;
-        }
     }
 
     function updatePlaylistIndex(index){
-
-        var simpleWindow = simpleWindowLoader.item
-        if(simpleWindow){
-            simpleWindow.playlistPage.playlistView.currentIndex = index;
-        }
-
         var termporyWindow = mainWindow.termporyLoader.item
         if (termporyWindow){
             termporyWindow.playlistView.currentIndex = index;
@@ -162,6 +107,7 @@ Item {
         property: 'artist'
         value: MediaPlayer.artist
     }
+
     Binding { 
         target: mainWindow.playBottomBar
         property: 'cover'
@@ -178,17 +124,6 @@ Item {
             }
         }
     }
-
-    // Connections {
-    //     target: simpleWindow.playBottomBar.slider
-    //     onSliderRateChanged:{
-    //         if (MediaPlayer.seekable){
-    //             MediaPlayer.setMuted(true);
-    //             positionTimer.restart();
-    //             MediaPlayer.setPosition(MediaPlayer.duration * rate)
-    //         }
-    //     }
-    // }
 
     Connections {
         target: miniWindow.slider
@@ -216,10 +151,6 @@ Item {
 
         onMuted: {
             MediaPlayer.muted = muted;
-            var simpleWindow = simpleWindowLoader.item
-            if(simpleWindow){
-                simpleWindow.playBottomBar.volumeButton.switchflag = !muted;
-            }
         }
 
         onPlaybackModeChanged:{

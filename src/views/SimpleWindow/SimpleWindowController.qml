@@ -2,7 +2,6 @@ import QtQuick 2.4
 
 Item {
     property var simpleWindow
-    property var constants
     property var bgImage
 	property var titleBar
     property var switchButton
@@ -11,9 +10,21 @@ Item {
     property var lrcPage
 	property var playBottomBar
 
+
+    function initConnect(){
+        MediaPlayer.positionChanged.connect(updateSlider);
+        MediaPlayer.positionChanged.connect(updateMusicTime);
+        MediaPlayer.stateChanged.connect(updatePlayButton);
+        MediaPlayer.volumeChanged.connect(updateVolumeSlider);
+        MediaPlayer.playbackModeChanged.connect(updateCycleButton);
+        MediaPlayer.bufferStatusChanged.connect(updateBufferSlider);
+        MediaPlayer.currentIndexChanged.connect(updatePlaylistIndex);
+        MediaPlayer.coverChanged.connect(updateBackgroundCover);
+    }
+
     function resetSkin() {
         playBottomBar.color = "transparent";
-        bgImage.source = constants.defaultBackgroundImage;
+        bgImage.source = Qt.constants.defaultBackgroundImage;
     }
 
     function setSkinByImage(url) {
@@ -23,6 +34,82 @@ Item {
             resetSkin();
         }
     }
+
+    function updateSlider(position) {
+        var rate = position / MediaPlayer.duration;
+        if (playBottomBar){
+            playBottomBar.slider.updateSlider(rate);
+        }
+    }
+
+    function updateBufferSlider(position){
+        var rate = position / 100;
+        if (playBottomBar){
+            playBottomBar.slider.updateBufferSlider(rate);
+            if (position == 100){
+                playBottomBar.slider.updateBufferSlider(0);
+            }
+        }
+    }
+
+    function updateMusicTime(position){
+        if (playBottomBar) {
+            playBottomBar.updatePlayTime(MediaPlayer.positionString + '/' + MediaPlayer.durationString);
+        }
+    }
+
+    function updateBackgroundCover(cover){
+        if(ConfigWorker.isCoverBackground){
+            simpleWindowController.setSkinByImage(cover);
+        }
+    }
+
+    function updatePlayButton(state) {
+        if (state == 0){
+            onStopped();
+        }else if (state == 1){
+            onPlaying();
+        }else if (state == 2){
+            onPaused();
+        }
+    }
+
+    function onPlaying(){
+        if (playBottomBar){
+            playBottomBar.playing = true;
+        }
+    }
+
+    function onPaused(){
+        if(playBottomBar) {
+            playBottomBar.playing = false;
+        }
+    }
+
+    function onStopped(){
+        if (playBottomBar) {
+            playBottomBar.playing = false;
+        }
+    }
+
+    function updateVolumeSlider(value){
+        if (playBottomBar) {
+            playBottomBar.volumeSlider.value = value / 100;
+        }
+    }
+
+    function updateCycleButton(value){
+        if (playBottomBar) {
+            playBottomBar.cycleButton.playbackMode = value;
+        }
+    }
+
+    function updatePlaylistIndex(index){
+        if (playlistPage) {
+            playlistPage.playlistView.currentIndex = index;
+        }
+    }
+
 
     function changeIndex(index) {
         MediaPlayer.setCurrentMedia(index);
@@ -123,4 +210,19 @@ Item {
             }
         }
     }
+
+    Component.onCompleted: {
+        initConnect();
+    }
+
+    Component.onDestruction: {
+        MediaPlayer.positionChanged.disconnect(updateSlider);
+        MediaPlayer.positionChanged.disconnect(updateMusicTime);
+        MediaPlayer.stateChanged.disconnect(updatePlayButton);
+        MediaPlayer.volumeChanged.disconnect(updateVolumeSlider);
+        MediaPlayer.playbackModeChanged.disconnect(updateCycleButton);
+        MediaPlayer.bufferStatusChanged.disconnect(updateBufferSlider);
+        MediaPlayer.currentIndexChanged.disconnect(updatePlaylistIndex);
+        MediaPlayer.coverChanged.disconnect(updateBackgroundCover);
+    } 
 }

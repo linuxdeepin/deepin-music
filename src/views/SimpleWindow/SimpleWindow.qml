@@ -6,8 +6,6 @@ import "../DMusicWidgets"
 Rectangle {
     id: simpleWindow
 
-    // property var constants
-    // property var rootWindow
     property var titleBar: titleBar
     property var playlistPage: playlistPage
     property var playBottomBar: playBottomBar
@@ -143,7 +141,6 @@ Rectangle {
     SimpleWindowController{
         id: simpleWindowController
         simpleWindow: simpleWindow
-        constants: simpleWindow.constants
         bgImage: bgImage
         titleBar: titleBar
         switchButton: switchButton
