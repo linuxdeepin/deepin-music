@@ -103,7 +103,10 @@ Rectangle {
         onClicked: {
             if (mouse.button == Qt.LeftButton){
                 mediaItem.ListView.view.currentIndex = index;
-                mediaItem.ListView.view.changeIndex(index);
+                if (playButton.visible){
+                    var url = mediaItem.ListView.view.model[index].url;
+                    mediaItem.ListView.view.playMusicByUrl(url);
+                }
                 playButton.visible = false;
             }
             else if (mouse.button == Qt.RightButton){

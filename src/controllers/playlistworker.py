@@ -229,6 +229,10 @@ class DLocalMediaContent(QMediaContent):
     def url(self):
         return self._url
 
+    @pyqtProperty('QString')
+    def type(self):
+        return 'DLocalMediaContent'
+
 
 class DOnlineMediaContent(QMediaContent):
 
@@ -240,6 +244,10 @@ class DOnlineMediaContent(QMediaContent):
     @pyqtProperty('QString')
     def url(self):
         return self._url
+
+    @pyqtProperty('QString')
+    def type(self):
+        return 'DOnlineMediaContent'
 
 
 class DMediaPlaylist(QMediaPlaylist):
@@ -311,7 +319,7 @@ class DMediaPlaylist(QMediaPlaylist):
         self.countChanged.emit(self.mediaCount())
 
     def addMedia(self, url, ret=None):
-        url = str(url)
+        url = unicode(url)
         if url not in self._urls:
             if url.startswith('http://') or url.startswith('https://'):
                 self.addOnlineMedia(url, ret)
@@ -358,6 +366,13 @@ class PlaylistWorker(QObject):
         self.initPlaylist()
 
     def initPlaylist(self):
+        urls = [
+            u'/usr/share/deepin-sample-music/邓入比_我们的情歌.mp3',
+            u'/usr/share/deepin-sample-music/郭一凡_说走就走的旅行.mp3',
+            u'/usr/share/deepin-sample-music/胡彦斌_依然是你.mp3'
+        ]
+        for url in urls:
+            self.addMediaToTemporary(url)
         self.loadPlaylists()
 
     def savePlaylists(self):
@@ -380,7 +395,7 @@ class PlaylistWorker(QObject):
             for name, _playlist in results.items():
                 playlist = self.createPlaylistByName(name)
                 for url, tags in _playlist.items():
-                    url = url.encode('utf-8')
+                    url = url
                     playlist.addMedia(url, tags)
 
     def savePlaylistByName(self, name):

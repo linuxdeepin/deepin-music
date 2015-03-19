@@ -27,7 +27,7 @@ Rectangle {
         displayMarginEnd: 0
         snapMode:ListView.SnapToItem
 
-        signal changeIndex(int index)
+        signal playMusicByUrl(string url)
 
         DScrollBar {
             flickable: parent

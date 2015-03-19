@@ -307,8 +307,14 @@ class MediaPlayer(QObject):
         self.bufferStatusChanged.emit(progress)
 
     @pyqtSlot('QVariant')
-    def addOnlineMedia(self, result):
+    def playLocalMedia(self, url):
+        self._playlist.addMedia(url)
+        self.playToggle(True)
+
+    @pyqtSlot('QVariant')
+    def playOnlineMedia(self, result):
         self._playlist.addMedia(result['url'], result['tags'])
+        self.playToggle(True)
 
     @pyqtProperty(int, notify=currentIndexChanged)
     def currentIndex(self):

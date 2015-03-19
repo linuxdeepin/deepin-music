@@ -15,7 +15,7 @@ from log import logger
 
 class Web360ApiWorker(QObject):
 
-    addMediaContent = pyqtSignal('QVariant')
+    playMediaContent = pyqtSignal('QVariant')
 
     requestSuccessed = pyqtSignal('QString', int, dict)
 
@@ -53,8 +53,12 @@ class Web360ApiWorker(QObject):
             %(params['id'], params['src'], params['sign'])
         return url
 
-    def getResult(self, musicId):
+    def getResultById(self, musicId):
         url = self.getUrlByID(musicId)
+        result = self.getResultByUrl(url)
+        return result
+
+    def getResultByUrl(self, url):
         tags = None
         maxQueryCount = 5
         i = 0
@@ -73,29 +77,36 @@ class Web360ApiWorker(QObject):
             'url': url,
             'tags': tags
         }
-        if isinstance(tags, list) and not tags:            
+        if isinstance(tags, list) and not tags:
             result = None
         return result
 
     @pyqtSlot(int)
-    def getMusicUrlById(self, musicId):
-        self.getNetMusicUrlById(musicId)
+    def playMusicById(self, musicId):
+        self.playMediaById(musicId)
 
     @dthread
     @pyqtSlot(int)
-    def getNetMusicUrlById(self, musicId):
-        result = self.getResult(musicId)
+    def playMediaById(self, musicId):
+        result = self.getResultById(musicId)
         if result:
-            self.addMediaContent.emit(result)
+            self.playMediaContent.emit(result)
+
+    @dthread
+    @pyqtSlot('QString')
+    def playMediaByUrl(self, url):
+        result = self.getResultByUrl(url)
+        if result:
+            self.playMediaContent.emit(result)
 
     @dthread
     def getQueueResults(self, musicIdString, musicId):
-        result = self.getResult(musicId)
+        result = self.getResultById(musicId)
         if result:
             self.requestSuccessed.emit(musicIdString, musicId, result)
 
     @pyqtSlot('QString')
-    def getMusicUrlByIds(self, musicIdString):
+    def playMusicByIds(self, musicIdString):
         _musicIds = [int(k) for k in musicIdString.split('_')]
         self.recommendedMusics[musicIdString] = {}
         self.recommendedmusicIds[musicIdString] = _musicIds
@@ -110,5 +121,5 @@ class Web360ApiWorker(QObject):
         if len(_results) == len(_musicIds):
             for musicId in  _musicIds:
                 result = _results[musicId]
-                self.addMediaContent.emit(result)
-            self.addMediaContent.emit(_results[_musicIds[0]])
+                self.playMediaContent.emit(result)
+            self.playMediaContent.emit(_results[_musicIds[0]])

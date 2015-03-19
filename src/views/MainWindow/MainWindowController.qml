@@ -42,7 +42,7 @@ Item {
 
     Connections {
         target: webEngineViewPage
-        onPlayMusicById: Web360ApiWorker.getMusicUrlById(musicId)
-        onPlayMusicByIds: Web360ApiWorker.getMusicUrlByIds(musicIds)
+        onPlayMusicById: Web360ApiWorker.playMusicById(musicId)
+        onPlayMusicByIds: Web360ApiWorker.playMusicByIds(musicIds)
     }
 }

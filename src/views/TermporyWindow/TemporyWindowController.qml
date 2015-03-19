@@ -5,9 +5,13 @@ Item {
     property var clearButton
     property var closeButton
 
-    function changeIndex(index) {
-        MediaPlayer.setCurrentIndex(index);
-        MediaPlayer.playToggle(true);
+
+    function playMusicByUrl(url) {
+        if (url.indexOf('http') != -1){
+            Web360ApiWorker.playMediaByUrl(url);
+        }else{
+            MediaPlayer.playLocalMedia(url);
+        }
     }
 
     function clearCurrentPlaylist() {
@@ -42,7 +46,8 @@ Item {
 
     Connections {
         target: playlistView
-        onChangeIndex: changeIndex(index)
+        // onChangeIndex: changeIndex(index)
+        onPlayMusicByUrl: playMusicByUrl(url)
         onModelChanged: playlistView.positionViewAtEnd()
     }
 

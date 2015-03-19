@@ -110,10 +110,12 @@ Item {
         }
     }
 
-
-    function changeIndex(index) {
-        MediaPlayer.setCurrentIndex(index);
-        MediaPlayer.playToggle(true);
+    function playMusicByUrl(url) {
+        if (url.indexOf('http') != -1){
+            Web360ApiWorker.playMediaByUrl(url);
+        }else{
+            MediaPlayer.playLocalMedia(url);
+        }
     }
 
     Binding { 
@@ -201,7 +203,7 @@ Item {
 
     Connections {
         target: playlistPage.playlistView
-        onChangeIndex: changeIndex(index)
+        onPlayMusicByUrl: playMusicByUrl(url)
         onModelChanged: playlistPage.playlistView.positionViewAtEnd()
     }
 

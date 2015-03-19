@@ -61,7 +61,7 @@ class DeepinPlayer(QObject):
         self.mainWindow.setSource(QUrl('views/Main.qml'))
 
     def initConnect(self):
-        self.web360ApiWorker.addMediaContent.connect(self.mediaPlayer.addOnlineMedia)
+        self.web360ApiWorker.playMediaContent.connect(self.mediaPlayer.playOnlineMedia)
         self.mediaPlayer.coverdownloaded.connect(self.coverWorker.downloadCover)
         self.qApp.aboutToQuit.connect(self.close)
 
