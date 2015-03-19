@@ -121,26 +121,8 @@ DRectWithCorner {
                 anchors.fill: playlistContainer
                 topMargin: 10
                 bottomMargin: 10
-                // flickingVertically: false
-                // boundsBehavior: Flickable.DragOverBounds
-                // pressDelay: 0
-                // maximumFlickVelocity: 10000
-                // highlightMoveVelocity: 10000
                 highlightMoveDuration: 1
-
-                // preferredHighlightBegin: -10
-                // preferredHighlightEnd: -34
-                // highlightRangeMode: ListView.StrictlyEnforceRange
-
                 delegate: musicDelegate
-                // currentIndex: {
-                //     var playlist = MediaPlayer.playlist;
-                //     if (playlist){
-                //         return playlist.currentIndex;
-                //     }else{
-                //         return -1;
-                //     }
-                // }
                 focus: true
                 spacing: 8
                 displayMarginBeginning: -24

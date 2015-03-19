@@ -22,6 +22,8 @@ Item {
         rootWindow.height = constants.mainWindowHeight;
         mainWindow.visible = true;
         simpleWindowLoader.source = ''
+        simpleWindowLoader.focus = false;
+
         miniWindow.visible = false;
 
         WindowManageWorker.windowMode = 'Full'
@@ -33,7 +35,8 @@ Item {
         rootWindow.width = constants.simpleWindowWidth;
         rootWindow.height = constants.simpleWindowHeight;
         mainWindow.visible = false;
-        simpleWindowLoader.setSource('./SimpleWindow/SimpleWindow.qml');
+        simpleWindowLoader.source = './SimpleWindow/SimpleWindow.qml';
+        simpleWindowLoader.focus = true;
 
         miniWindow.visible = false;
         WindowManageWorker.windowMode = 'Simple'
