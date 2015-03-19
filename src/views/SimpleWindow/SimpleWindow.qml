@@ -151,11 +151,10 @@ Rectangle {
     }
 
     Component.onCompleted: {
-        var mainPlayBottomBar = Qt.mainWindow.playBottomBar;
-        playBottomBar.slider.value = mainPlayBottomBar.slider.value;
         playBottomBar.volumeButton.switchflag = !MediaPlayer.muted;
-        playBottomBar.volumeSlider.value = mainPlayBottomBar.volumeSlider.value;
-        playBottomBar.cycleButton.playbackMode = mainPlayBottomBar.cycleButton.playbackMode;
-        playBottomBar.playing = mainPlayBottomBar.playing;
+        playBottomBar.volumeSlider.value = MediaPlayer.volume / 100;
+        playBottomBar.cycleButton.playbackMode = MediaPlayer.playbackMode;
+        playBottomBar.playing = MediaPlayer.playing;
+        playBottomBar.slider.value = MediaPlayer.position / MediaPlayer.duration;
     }
 }

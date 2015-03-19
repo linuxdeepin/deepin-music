@@ -61,7 +61,6 @@ Rectangle {
     MediaController {
         id: mediaController
         mainWindow: mainWindow
-        simpleWindowLoader: simpleWindowLoader
         miniWindow: miniWindow
         positionTimer: positionTimer
     }

@@ -38,5 +38,7 @@ Rectangle {
             flickable: parent
             inactiveColor: 'black'
         }
+
+        Component.onCompleted: positionViewAtIndex(currentIndex, ListView.Center)
     }
 }

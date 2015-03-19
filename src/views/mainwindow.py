@@ -26,19 +26,19 @@ class MainWindow(BaseWindow):
         if event.button() == Qt.LeftButton:
             flag = contexts['WindowManageWorker'].windowMode
             if flag == "Full":
-                x = self.quickItems['mainTitleBar'].x()
-                y = self.quickItems['mainTitleBar'].y()
-                width = self.quickItems['mainTitleBar'].width()
-                height = self.quickItems['mainTitleBar'].height()
+                x = 56
+                y = self.rootObject().y()
+                width = self.rootObject().width() - 56
+                height = 25
                 rect = QRect(x, y, width, height)
                 if rect.contains(event.pos()):
                     self.dragPosition = event.globalPos() - \
                         self.frameGeometry().topLeft()
                     event.accept()
             elif flag == "Simple":
-                x = self.quickItems['simpleWindowLoader'].x()
-                y = self.quickItems['simpleWindowLoader'].y()
-                width = self.quickItems['simpleWindowLoader'].width()
+                x = self.rootObject().x()
+                y = self.rootObject().y()
+                width = self.rootObject().width()
                 height = 40
                 rect = QRect(x, y, width, height)
                 if rect.contains(event.pos()):

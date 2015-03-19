@@ -101,6 +101,10 @@ class MediaPlayer(QObject):
         playlist.setPlaybackMode(playbackMode)
         self.setPlaylist(playlist)
 
+    @pyqtProperty(int)
+    def playbackMode(self):
+        return self.playlist.playbackMode()
+
     @pyqtSlot(int)
     def setPlaybackMode(self, playbackMode):
         configWorker = contexts['ConfigWorker']
@@ -108,8 +112,12 @@ class MediaPlayer(QObject):
         self.playlist.setPlaybackMode(playbackMode)
         self.playbackModeChanged.emit(playbackMode)
 
+    @pyqtProperty(bool)
+    def playing(self):
+        return self._isPlaying
+
     @pyqtProperty(int)
-    def postion(self):
+    def position(self):
         return self.player.position()
 
     @pyqtSlot(int)

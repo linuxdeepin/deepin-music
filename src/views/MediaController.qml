@@ -3,8 +3,6 @@ import "./TermporyWindow"
 
 Item {
     property var mainWindow
-    property var simpleWindow
-    property var simpleWindowLoader
     property var miniWindow
     property var positionTimer
 
