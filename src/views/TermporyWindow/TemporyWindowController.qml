@@ -6,7 +6,7 @@ Item {
     property var closeButton
 
     function changeIndex(index) {
-        MediaPlayer.setCurrentMedia(index);
+        MediaPlayer.setCurrentIndex(index);
         MediaPlayer.playToggle(true);
     }
 

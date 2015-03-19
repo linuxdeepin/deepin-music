@@ -112,7 +112,7 @@ Item {
 
 
     function changeIndex(index) {
-        MediaPlayer.setCurrentMedia(index);
+        MediaPlayer.setCurrentIndex(index);
         MediaPlayer.playToggle(true);
     }
 
@@ -131,6 +131,26 @@ Item {
         target: playBottomBar
         property: 'cover'
         value: MediaPlayer.cover
+    }
+
+
+    Binding {
+        target: playlistPage.playlistView
+        property: 'model'
+        value: {
+            var playlist = MediaPlayer.playlist;
+            if (playlist){
+                return playlist.medias;
+            }else{
+                return null;
+            }
+        }
+    }
+
+    Binding {
+        target: playlistPage.playlistView
+        property: 'currentIndex'
+        value:  MediaPlayer.currentIndex
     }
 
     Connections {

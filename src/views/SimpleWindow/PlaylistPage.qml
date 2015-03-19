@@ -5,9 +5,6 @@ import "../DMusicWidgets"
 Rectangle {
 
     id: playlistPage
-
-    property var model: null
-    property var currentIndex: -1
     property var playlistView: playlistView
     
     anchors.fill: parent
@@ -22,9 +19,7 @@ Rectangle {
     ListView {
         id: playlistView
         anchors.fill: parent
-        model: playlistPage.model
         delegate: musicDelegate
-        currentIndex: playlistPage.currentIndex
         highlightMoveDuration: 1
         focus: true
         spacing: 3
