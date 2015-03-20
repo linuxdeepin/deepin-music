@@ -73,6 +73,7 @@ class MediaPlayer(QObject):
         self.player.mediaStatusChanged.connect(self.mediaStatusChanged)
         self.player.mediaStatusChanged.connect(self.monitorMediaStatus)
         self.player.positionChanged.connect(self.positionChanged)
+        self.player.durationChanged.connect(self.durationChange)
         self.player.bufferStatusChanged.connect(self.bufferChange)
         self.player.error.connect(self.monitorError)
 
@@ -156,6 +157,15 @@ class MediaPlayer(QObject):
     def duration(self):
         return self.player.duration()
 
+    @pyqtSlot(int)
+    def durationChange(self, duration):
+        index = self._playlist.currentIndex()
+        urls = self._playlist.urls
+        mediaContents =  self._playlist.mediaContents
+        if index < len(urls):
+            mediaContent = mediaContents[urls[index]]
+            mediaContent.duration =  duration_to_string(self.player.duration())
+
     @pyqtProperty(bool)
     def seekable(self):
         return self.player.isSeekable()
@@ -163,7 +173,6 @@ class MediaPlayer(QObject):
     @pyqtProperty(str)
     def errorString(self):
         return self.player.errorString()
-
 
     def monitorMediaStatus(self, status):
         if status == 7:
@@ -301,7 +310,7 @@ class MediaPlayer(QObject):
             self.setMediaUrl(playurl)
             self.title = mediaContent.title
             self.artist = mediaContent.artist
-            self.coverdownloaded.emit(mediaContent)
+            # self.coverdownloaded.emit(mediaContent)
 
     def bufferChange(self, progress):
         self.bufferStatusChanged.emit(progress)
@@ -313,7 +322,7 @@ class MediaPlayer(QObject):
 
     @pyqtSlot('QVariant')
     def playOnlineMedia(self, result):
-        self._playlist.addMedia(result['url'], result['tags'])
+        self._playlist.addMedia(result['url'], result['tags'], result['updated'])
         self.playToggle(True)
 
     @pyqtProperty(int, notify=currentIndexChanged)

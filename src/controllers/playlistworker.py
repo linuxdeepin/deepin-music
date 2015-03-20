@@ -9,8 +9,8 @@ import json
 from PyQt5.QtCore import (QObject, pyqtSignal, pyqtSlot,
                           pyqtProperty, QUrl, QFile, QIODevice, QTimer
                           )
-from PyQt5.QtMultimedia import QMediaPlaylist, QMediaContent
-from .utils import registerContext, contexts
+from PyQt5.QtMultimedia import QMediaPlaylist, QMediaContent, QMediaPlayer
+from .utils import registerContext, contexts, duration_to_string
 from dwidgets.mediatag.song import Song
 from dwidgets import dthread
 from .coverworker import CoverWorker
@@ -19,12 +19,20 @@ from config.constants import CoverPath
 from log import logger
 
 
+class PlayerBin(QMediaPlayer):
+
+    def __init__(self):
+        super(PlayerBin, self).__init__()
+        self.setNotifyInterval(50)
+
+
 class BaseMediaContent(QObject):
 
     titleChanged = pyqtSignal('QString')
     artistChanged = pyqtSignal('QString')
     coverChanged = pyqtSignal('QString')
     coverDownloadSuccessed = pyqtSignal('QString')
+    durationChanged = pyqtSignal('QString')
 
     def __init__(self, url):
         super(BaseMediaContent, self).__init__()
@@ -32,6 +40,7 @@ class BaseMediaContent(QObject):
         self._title = ''
         self._artist = ''
         self._cover = ''
+        self._duration = '00:00'
 
     def _initConnect(self):
         self.coverDownloadSuccessed.connect(self.setCover)
@@ -64,9 +73,17 @@ class BaseMediaContent(QObject):
 
     @cover.setter
     def cover(self, cover):
-
         self._cover = cover
         self.coverChanged.emit(cover)
+
+    @pyqtProperty('QString', notify=durationChanged)
+    def duration(self):
+        return self._duration
+
+    @duration.setter
+    def duration(self, value):
+        self._duration = value
+        self.durationChanged.emit(value)
 
     @pyqtSlot('QString')
     def setCover(self, cover):
@@ -109,6 +126,7 @@ class DRealLocalMediaContent(BaseMediaContent):
             self._tags = Song(url)
         self.title = self._tags['title']
         self.artist = self._tags['artist']
+        self.duration = duration_to_string(self._tags['duration'])
 
     @pyqtProperty(dict)
     def tags(self):
@@ -141,7 +159,8 @@ class DRealOnlineMediaContent(BaseMediaContent):
         'serviceName': 'serviceName',
         'serviceUrl': 'serviceUrl',
 
-        'playlinkUrl': 'playlinkUrl'
+        'playlinkUrl': 'playlinkUrl',
+        'duration': 'duration'
     }
 
     def __init__(self, url, onlineTags=None):
@@ -149,14 +168,19 @@ class DRealOnlineMediaContent(BaseMediaContent):
         self._palyLinkUrl = ''
         self._onlineTags = onlineTags
         self._tags = {}
+
+        self.player = PlayerBin()
+        self.player.setMuted(True)
+        self.player.mediaStatusChanged.connect(self.monitorMediaStatus)
+
         self.tagsUpdated.connect(self.updateTags)
         if onlineTags:
             self.updateTags(onlineTags)
         else:
-            self.updateTagsByUrl(url)
+            # QTimer.singleShot(5000, self.updateTagsByUrl)
+            pass
 
     def updateTags(self, tags):
-        self._onlineTags = tags
         for key in self.__keys__:
             k = self.__keys__[key]
             if k in tags:
@@ -164,16 +188,27 @@ class DRealOnlineMediaContent(BaseMediaContent):
         self.title = self._tags['title']
         self.artist = self._tags['artist']
 
+        if 'duration' in self._tags:
+            self.duration = duration_to_string(self._tags['duration'])
+
         if 'albumImage_500x500' in tags and tags['albumImage_500x500']:
             self.cover = tags['albumImage_500x500']
         elif 'albumImage_100x100' in tags and tags['albumImage_100x100']:
             self.cover = tags['albumImage_100x100']
 
-        self.playlinkUrl = self._tags['playlinkUrl']
+        if 'playlinkUrl' in self._tags:
+            self.playlinkUrl = self._tags['playlinkUrl']
+            # if self.duration == u"00:00":
+            #     QTimer.singleShot(5000, self.updateDuration)
+
+    def updateDuration(self):
+        if self.playlinkUrl:
+            self.setMedia(self.playlinkUrl)
 
     @dthread
-    @pyqtSlot(int)
-    def updateTagsByUrl(self, url):
+    @pyqtSlot('QString')
+    def updateTagsByUrl(self, url=''):
+        url = self.url
         import requests
         maxQueryCount = 5
         i = 0
@@ -217,6 +252,16 @@ class DRealOnlineMediaContent(BaseMediaContent):
         filepath = CoverWorker.getLocalCoverPath(url, title, artist)
         return filepath
 
+    def setMedia(self, url):
+        self.player.setMedia(QMediaContent(QUrl(url)))
+
+    def monitorMediaStatus(self, status):
+        if status == 3:
+            duration = self.player.duration()
+            self.tags['duration'] = duration
+            self.duration = duration_to_string(duration)
+            # self.player.deleteLater()
+
 
 class DLocalMediaContent(QMediaContent):
 
@@ -248,6 +293,7 @@ class DOnlineMediaContent(QMediaContent):
     @pyqtProperty('QString')
     def type(self):
         return 'DOnlineMediaContent'
+
 
 
 class DMediaPlaylist(QMediaPlaylist):
@@ -318,7 +364,7 @@ class DMediaPlaylist(QMediaPlaylist):
         self.mediasChanged.emit(medias)
         self.countChanged.emit(self.mediaCount())
 
-    def addMedia(self, url, ret=None):
+    def addMedia(self, url, ret=None, updated=False):
         url = unicode(url)
         if url not in self._urls:
             if url.startswith('http://') or url.startswith('https://'):
@@ -330,6 +376,13 @@ class DMediaPlaylist(QMediaPlaylist):
                     self.addLocalMedia(url, ret)
                     self._urls.append(url)
                     self.emitSignal()
+
+        content = self._mediaContents[url]
+        if isinstance(content, DRealOnlineMediaContent):
+            content.updateTags(ret)
+            if updated:
+                # QTimer.singleShot(5000, content.updateTagsByUrl)
+                pass
         if url in self._urls:
             index = self._urls.index(url)
             self.setCurrentIndex(index)
@@ -396,7 +449,7 @@ class PlaylistWorker(QObject):
                 playlist = self.createPlaylistByName(name)
                 for url, tags in _playlist.items():
                     url = url
-                    playlist.addMedia(url, tags)
+                    playlist.addMedia(url, tags, updated=True)
 
     def savePlaylistByName(self, name):
         f = QFile(os.sep.join([PlaylistPath, '%s.m3u' % name]))

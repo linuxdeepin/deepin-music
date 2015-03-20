@@ -4,13 +4,29 @@
 
 import os
 import sys
-from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot
+import json
+from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot, QUrl
 import requests
-from .utils import registerContext
+from .utils import registerContext, duration_to_string
 from dwidgets import dthread
 import threading
 import copy
 from log import logger
+
+
+songlist = {
+    u'新歌榜': 'http://music.haosou.com/data/top/top_new.json',
+    u'热歌榜': 'http://music.haosou.com/data/top/top_hot.json',
+    u'咪咕音乐榜': 'http://music.haosou.com/data/top/top_migu.json',
+    u'网络流行榜': 'http://music.haosou.com/data/top/top_internet.json',
+    u'中国歌曲排行榜': 'http://music.haosou.com/data/top/top_zggqphb.json',
+    u'日本ORICON': 'http://music.haosou.com/data/top/top_gongxin.json',
+    u'英国UK Official': 'http://music.haosou.com/data/top/top_uk.json',
+    u'美国The Billboard': 'http://music.haosou.com/data/top/top_bill.json',
+    u'Channel V': 'http://music.haosou.com/data/top/top_channelv.json',
+    u'香港中文龙虎榜': 'http://music.haosou.com/data/top/top_zwlhb.json',
+    u'经典老歌': 'http://music.haosou.com/data/top/top_classic.json'
+}
 
 
 class Web360ApiWorker(QObject):
@@ -53,32 +69,41 @@ class Web360ApiWorker(QObject):
             %(params['id'], params['src'], params['sign'])
         return url
 
-    def getResultById(self, musicId):
-        url = self.getUrlByID(musicId)
-        result = self.getResultByUrl(url)
-        return result
-
-    def getResultByUrl(self, url):
-        tags = None
-        maxQueryCount = 5
+    @classmethod
+    def request(cls, url, count=5):
+        result = None
         i = 0
-        while i < maxQueryCount:
+        while i < count:
             try:
                 ret = requests.get(url)
-                tags = ret.json()
-                if isinstance(tags, dict):
+                result = ret.json()
+                if isinstance(result, dict):
                     break
                 else:
                     i = i + 1
+            except ValueError:
+                result = ret.text
+                break
             except:
                 i = i + 1
+        return result
 
+    def getResultById(self, musicId):
+        url = self.getUrlByID(musicId)
+        result = self.getResultByUrl(url)
+
+        return result
+
+    def getResultByUrl(self, url):
+        tags = self.request(url)
         result = {
             'url': url,
-            'tags': tags
+            'tags': tags,
+            'updated': False
         }
         if isinstance(tags, list) and not tags:
             result = None
+
         return result
 
     @pyqtSlot(int)
@@ -98,6 +123,27 @@ class Web360ApiWorker(QObject):
         result = self.getResultByUrl(url)
         if result:
             self.playMediaContent.emit(result)
+
+    @pyqtSlot('QString')
+    def playMusicBySonglist(self, songlistName):
+        url = songlist[songlistName]
+        result = self.request(url)
+        if result:
+            header = 'cb_' + url.split('/')[-1].split('.')[0]
+            content = result[len(header) + 1: -1]
+            ret = json.loads(content)
+
+            for song in ret['songList']:
+                url = self.getUrlByID(song['songId'])
+                tags = song
+                result = {
+                    'url': url,
+                    'tags': tags,
+                    'updated': True
+                }
+                self.playMediaContent.emit(result)
+            url = self.getUrlByID(ret['songList'][0]['songId'])
+            self.playMediaByUrl(url)
 
     @dthread
     def getQueueResults(self, musicIdString, musicId):

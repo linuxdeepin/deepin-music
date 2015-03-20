@@ -44,5 +44,6 @@ Item {
         target: webEngineViewPage
         onPlayMusicById: Web360ApiWorker.playMusicById(musicId)
         onPlayMusicByIds: Web360ApiWorker.playMusicByIds(musicIds)
+        onPlaySonglist: Web360ApiWorker.playMusicBySonglist(songlistName)
     }
 }

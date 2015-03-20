@@ -106,7 +106,7 @@ class Song(dict):
                 try:
                     if hasattr(audio.info, key):
                         if key == 'length':
-                            self['duration'] = getattr(audio.info, key)
+                            self['duration'] = getattr(audio.info, key) * 1000
                         else:
                             self[key] = getattr(audio.info, key)
                 except Exception, e:

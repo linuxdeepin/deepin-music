@@ -7,6 +7,7 @@ WebEngineView {
     
     signal playMusicById(int musicId)
     signal playMusicByIds(string musicIds)
+    signal playSonglist(string songlistName)
 
     onLinkHovered:{
 
@@ -30,6 +31,7 @@ WebEngineView {
                             print(rpc.rpcActionType, rpc.type, rpc.rpcId);
                         }else if (rpc.type == 'songlist'){
                             print(rpc.rpcActionType, rpc.type, rpc.rpcId);
+                            webEngineView.playSonglist(rpc.rpcId);
                         }else if (rpc.type == 'album'){
                             print(rpc.rpcActionType, rpc.type, rpc.rpcId);
                         }else if (rpc.type == 'artist'){
