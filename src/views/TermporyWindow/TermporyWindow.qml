@@ -118,9 +118,10 @@ DRectWithCorner {
 
             ListView {
                 id: playlistView
+                clip: true
                 anchors.fill: playlistContainer
-                topMargin: 10
-                bottomMargin: 10
+                anchors.topMargin: 10
+                anchors.bottomMargin: 10
                 highlightMoveDuration: 1
                 delegate: musicDelegate
                 focus: true

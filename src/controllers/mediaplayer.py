@@ -48,6 +48,8 @@ class MediaPlayer(QObject):
 
     coverdownloaded = pyqtSignal('QVariant')
 
+    requestMusic = pyqtSignal('QString')
+
     @registerContext
     def __init__(self):
         super(MediaPlayer, self).__init__()
@@ -302,10 +304,15 @@ class MediaPlayer(QObject):
 
         mediaContent = mediaContents[urls[index]]
         url = mediaContent.url
+
         if isinstance(mediaContent, DRealLocalMediaContent):
             playurl = mediaContent.url
         elif isinstance(mediaContent, DRealOnlineMediaContent):
             playurl = mediaContent.playlinkUrl
+            if not playurl:
+                # self._playlist.setCurrentIndex(self._playlist.previousIndex())
+                self.requestMusic.emit(url)
+                return
 
         if playurl:
             self.setMediaUrl(playurl)

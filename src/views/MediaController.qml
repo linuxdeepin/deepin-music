@@ -85,11 +85,6 @@ Item {
         }
     }
 
-    function changeIndex(index) {
-        MediaPlayer.setCurrentIndex(index);
-        MediaPlayer.playToggle(true);
-    }
-
     function clearCurrentPlaylist() {
         MediaPlayer.playlist.clearMedias()
     }
