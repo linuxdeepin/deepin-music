@@ -164,7 +164,8 @@ class MediaPlayer(QObject):
         mediaContents =  self._playlist.mediaContents
         if index < len(urls):
             mediaContent = mediaContents[urls[index]]
-            mediaContent.duration =  duration_to_string(self.player.duration())
+            mediaContent.tags.update({'duration': duration})
+            mediaContent.duration =  duration_to_string(duration)
 
     @pyqtProperty(bool)
     def seekable(self):
