@@ -6,7 +6,7 @@ import QtWebEngine 1.0
 import QtMultimedia 5.0
 import DMusic 1.0
 import "../DMusicWidgets"
-
+import "../MusicManager"
 
 Rectangle {
 
@@ -20,7 +20,7 @@ Rectangle {
     property var mainWindowController: mainWindowController
     property var termporyLoader: termporyLoader
 
-    color: "lightgray"
+    color: "white"
     focus: true
 
     BorderImage {
@@ -53,6 +53,9 @@ Rectangle {
                 iconWidth: leftSideBar.width
                 iconHeight: leftSideBar.width
                 color: "transparent"
+
+                border.color: "lightgray"
+                border.width: 1
             }
 
             Column{

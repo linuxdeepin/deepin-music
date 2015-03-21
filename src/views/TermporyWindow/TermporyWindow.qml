@@ -129,7 +129,6 @@ DRectWithCorner {
                 displayMarginEnd: -24
                 snapMode:ListView.SnapToItem
 
-                signal changeIndex(int index)
                 signal playMusicByUrl(string url)
 
                 DScrollBar {
