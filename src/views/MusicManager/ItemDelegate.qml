@@ -5,6 +5,10 @@ import "../DMusicWidgets"
 Rectangle {
     id: item
 
+    property var cover
+    property var name
+    property var count
+
     property var contentWidth: 108
 
     width: item.contentWidth + 56
@@ -16,9 +20,10 @@ Rectangle {
         anchors.rightMargin: 28
         Column {
             Image {
+                asynchronous: true
                 width: item.contentWidth
                 height: item.contentWidth
-                source: '../../skin/images/bg1.jpg'
+                source: item.cover
             }
             Item {
                 width: item.contentWidth
@@ -31,7 +36,7 @@ Rectangle {
                 color: "#252525"
                 font.pixelSize: 12
                 horizontalAlignment: Text.AlignHCenter
-                text: 'liudehua'
+                text: item.name
             }
             Item {
                 width: item.contentWidth
@@ -43,7 +48,7 @@ Rectangle {
                 color: "#888888"
                 font.pixelSize: 12
                 horizontalAlignment: Text.AlignHCenter
-                text: '4'
+                text: item.count
             }
         }
     }

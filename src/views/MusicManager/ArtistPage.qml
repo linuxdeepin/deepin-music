@@ -6,7 +6,11 @@ Rectangle {
 
     DGridView {
         id: grid
-        model: 52
-        delegate: ItemDelegate{}
+        model: MusicManageWorker.artists
+        delegate: ItemDelegate{
+            cover: '../../skin/images/bg1.jpg'
+            name: GridView.view.model[index].name
+            count: GridView.view.model[index].count
+        }
     }
 }

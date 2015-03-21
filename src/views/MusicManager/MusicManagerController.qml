@@ -41,6 +41,7 @@ Item {
 	Connections {
 	    target: rootWindow
 	    onVisibleChanged:{
+	    	catgoryCombox.visible = false;
 	    	if (visible){
 	    		updateWindow(catgoryCombox.currentIndex);
 	    	}
