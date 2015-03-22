@@ -113,7 +113,7 @@ Item {
             if (MediaPlayer.seekable){
                 MediaPlayer.muted = true;
                 positionTimer.restart();
-                MediaPlayer.setPosition(MediaPlayer.duration * rate)
+                MediaPlayer.position = MediaPlayer.duration * rate
             }
         }
     }
@@ -124,7 +124,7 @@ Item {
             if (MediaPlayer.seekable){
                 MediaPlayer.muted = true;
                 positionTimer.restart();
-                MediaPlayer.setPosition(MediaPlayer.duration * rate)
+                MediaPlayer.position = MediaPlayer.duration * rate
             }
         }
     }
@@ -147,7 +147,7 @@ Item {
         }
 
         onPlaybackModeChanged:{
-            MediaPlayer.setPlaybackMode(playbackMode);
+            MediaPlayer.playbackMode = playbackMode;
         }
     }
 

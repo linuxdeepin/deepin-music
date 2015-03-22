@@ -69,13 +69,13 @@ class MediaPlayer(QObject):
         self.initConnect()
 
     def initPlayer(self):
-        self.setNotifyInterval(50)
+        self.notifyInterval = 50
 
     def initConnect(self):
         self.player.mediaStatusChanged.connect(self.mediaStatusChanged)
         self.player.mediaStatusChanged.connect(self.monitorMediaStatus)
         self.player.positionChanged.connect(self.positionChanged)
-        self.player.durationChanged.connect(self.durationChange)
+        self.player.durationChanged.connect(self.updateDuration)
         self.player.bufferStatusChanged.connect(self.bufferChange)
         self.player.error.connect(self.monitorError)
 
@@ -104,12 +104,12 @@ class MediaPlayer(QObject):
         playlist.setPlaybackMode(playbackMode)
         self.setPlaylist(playlist)
 
-    @pyqtProperty(int)
+    @pyqtProperty(int, notify=playbackModeChanged)
     def playbackMode(self):
         return self.playlist.playbackMode()
 
-    @pyqtSlot(int)
-    def setPlaybackMode(self, playbackMode):
+    @playbackMode.setter
+    def playbackMode(self, playbackMode):
         configWorker = contexts['ConfigWorker']
         configWorker.playbackMode = playbackMode
         self.playlist.setPlaybackMode(playbackMode)
@@ -123,8 +123,8 @@ class MediaPlayer(QObject):
     def position(self):
         return self.player.position()
 
-    @pyqtSlot(int)
-    def setPosition(self, pos):
+    @position.setter
+    def position(self, pos):
         self.player.setPosition(pos)
         self.positionChanged.emit(pos)
 
@@ -150,8 +150,8 @@ class MediaPlayer(QObject):
     def notifyInterval(self):
         return self.player.notifyInterval()
 
-    @pyqtSlot(int)
-    def setNotifyInterval(self, interval):
+    @notifyInterval.setter
+    def notifyInterval(self, interval):
         self.player.setNotifyInterval(interval)
         self.notifyIntervalChanged.emit(interval)
 
@@ -160,14 +160,14 @@ class MediaPlayer(QObject):
         return self.player.duration()
 
     @pyqtSlot(int)
-    def durationChange(self, duration):
+    def updateDuration(self, duration):
         index = self._playlist.currentIndex()
         urls = self._playlist.urls
         mediaContents =  self._playlist.mediaContents
         if index < len(urls):
             mediaContent = mediaContents[urls[index]]
             mediaContent.tags.update({'duration': duration})
-            mediaContent.duration =  duration_to_string(duration)
+            mediaContent.duration = duration_to_string(duration)
 
     @pyqtProperty(bool)
     def seekable(self):
@@ -208,24 +208,26 @@ class MediaPlayer(QObject):
     @pyqtSlot()
     def stop(self):
         self.player.stop()
-        self._state = 0
-        self.stateChanged.emit(self._state)
+        self.state = 0
 
     @pyqtSlot()
     def play(self):
         self.player.play()
-        self._state = 1
-        self.stateChanged.emit(self._state)
+        self.state = 1
 
     @pyqtSlot()
     def pause(self):
         self.player.pause()
-        self._state = 2
-        self.stateChanged.emit(self._state)
+        self.state = 2
 
     @pyqtProperty(int, notify=stateChanged)
     def state(self):
         return self._state
+
+    @state.setter
+    def state(self, value):
+        self._state = value
+        self.stateChanged.emit(value)
 
     @pyqtProperty('QString')
     def positionString(self):
@@ -236,26 +238,6 @@ class MediaPlayer(QObject):
     def durationString(self):
         duration = self.player.duration()
         return duration_to_string(duration)
-
-    @pyqtSlot('QString', result='QString')
-    def metaData(self, key):
-        return self.player.metaData(key)
-
-    def showMetaData(self):
-        import json
-        metaData = {}
-        for key in self.availableMetaData():
-            v = self.metaData(key)
-            if isinstance(v, QDate):
-                v = v.toString('yyyy.MM.dd')
-            metaData.update({key: v})
-        logger.info(metaData)
-        path = os.sep.join(
-            [os.path.dirname(os.getcwd()), 'music',
-             '%s.json' % self.metaData('Title')])
-        f = open(path, 'w')
-        f.write(json.dumps(metaData, indent=4))
-        f.close()
 
     @pyqtSlot('QString')
     def setMediaUrl(self, url):
@@ -363,3 +345,23 @@ class MediaPlayer(QObject):
     def cover(self, value):
         self._cover = value
         self.coverChanged.emit(value)
+
+    @pyqtSlot('QString', result='QString')
+    def metaData(self, key):
+        return self.player.metaData(key)
+
+    def showMetaData(self):
+        import json
+        metaData = {}
+        for key in self.availableMetaData():
+            v = self.metaData(key)
+            if isinstance(v, QDate):
+                v = v.toString('yyyy.MM.dd')
+            metaData.update({key: v})
+        logger.info(metaData)
+        path = os.sep.join(
+            [os.path.dirname(os.getcwd()), 'music',
+             '%s.json' % self.metaData('Title')])
+        f = open(path, 'w')
+        f.write(json.dumps(metaData, indent=4))
+        f.close()
