@@ -383,9 +383,6 @@ class DMediaPlaylist(QMediaPlaylist):
             if updated:
                 # QTimer.singleShot(5000, content.updateTagsByUrl)
                 pass
-        if url in self._urls:
-            index = self._urls.index(url)
-            self.setCurrentIndex(index)
 
     def addLocalMedia(self, url, ret):
         mediaContent = DLocalMediaContent(url, ret)
@@ -481,12 +478,12 @@ class PlaylistWorker(QObject):
     def addMediaToFavorite(self, url):
         self._playlists['favorite'].addMedia(url)
 
-    @pyqtSlot('QString', 'QString')
-    def addMediaByName(self, name, url):
-        if name in self._playlists:
-            self._playlists[name].addMedia(url)
-        else:
-            logger.info("the playlist named %s isn't existed" % name)
+    # @pyqtSlot('QString', 'QString')
+    # def addMediaByName(self, name, url):
+    #     if name in self._playlists:
+    #         self._playlists[name].addMedia(url)
+    #     else:
+    #         logger.info("the playlist named %s isn't existed" % name)
 
     @pyqtSlot('QString')
     def createPlaylistByName(self, name):
@@ -496,3 +493,8 @@ class PlaylistWorker(QObject):
             self._playlists[name] = DMediaPlaylist(name)
 
         return self._playlists[name]
+
+    def addOnlineMediasToTemporary(self, medias):
+        playlist = self.termporaryPlaylist
+        for media in medias:
+            playlist.addMedia(media['url'], media['tags'], media['updated'])

@@ -86,11 +86,9 @@ class MediaPlayer(QObject):
     @pyqtSlot('QMediaPlaylist')
     def setPlaylist(self, playlist):
         if self._playlist:
-            self._playlist.currentIndexChanged.disconnect(self.setCurrentMedia)
             self._playlist.currentIndexChanged.disconnect(self.currentIndexChanged)
 
         self._playlist = playlist
-        self._playlist.currentIndexChanged.connect(self.setCurrentMedia)
         self._playlist.currentIndexChanged.connect(self.currentIndexChanged)
         self.playlistChanged.emit(playlist.name)
 
@@ -195,6 +193,9 @@ class MediaPlayer(QObject):
             5: "A valid playback service was not found, playback cannot proceed."
         }
         print(errors[error])
+        if error == 3:
+            self.stop()
+            self.play()
 
     @pyqtSlot(bool)
     def playToggle(self, playing):
@@ -253,34 +254,38 @@ class MediaPlayer(QObject):
     def previous(self):
         if self._playlist:
             self._playlist.previous()
+            currentIndex = self._playlist.currentIndex()
             if self._playlist.playbackMode() == 1:
                 count = self._playlist.mediaCount()
-                currentIndex = self._playlist.currentIndex()
                 if currentIndex == 0:
                     index = count - 1
                 else:
                     index = currentIndex - 1
                 self._playlist.setCurrentIndex(index)
+            self.playMediaByIndex(currentIndex)
 
     @pyqtSlot()
     def next(self):
         if self._playlist:
             self._playlist.next()
+            currentIndex = self._playlist.currentIndex()
             if self._playlist.playbackMode() == 1:
                 count = self._playlist.mediaCount()
-                currentIndex = self._playlist.currentIndex()
+                
                 if currentIndex == count - 1:
                     index = 0
                 else:
                     index = currentIndex + 1
                 self._playlist.setCurrentIndex(index)
 
+            self.playMediaByIndex(currentIndex)
+
     @pyqtSlot(int)
     def setCurrentIndex(self, index):
         self._playlist.setCurrentIndex(index)
 
     @pyqtSlot(int)
-    def setCurrentMedia(self, index):
+    def playMediaByIndex(self, index):
         urls = self._playlist.urls
         mediaContents =  self._playlist.mediaContents
 
@@ -292,7 +297,6 @@ class MediaPlayer(QObject):
         elif isinstance(mediaContent, DRealOnlineMediaContent):
             playurl = mediaContent.playlinkUrl
             if not playurl:
-                # self._playlist.setCurrentIndex(self._playlist.previousIndex())
                 self.requestMusic.emit(url)
                 return
 
@@ -300,19 +304,39 @@ class MediaPlayer(QObject):
             self.setMediaUrl(playurl)
             self.title = mediaContent.title
             self.artist = mediaContent.artist
-            # self.coverdownloaded.emit(mediaContent)
+            self.cover = mediaContent.cover
 
     def bufferChange(self, progress):
         self.bufferStatusChanged.emit(progress)
 
     @pyqtSlot('QVariant')
     def playLocalMedia(self, url):
-        self._playlist.addMedia(url)
+        url = unicode(url)
+        urls = self._playlist.urls
+        index = urls.index(url)
+        self._playlist.setCurrentIndex(index)
+        mediaContents =  self._playlist.mediaContents
+        mediaContent = mediaContents[url]
+        self.title = mediaContent.title
+        self.artist = mediaContent.artist
+        self.cover = mediaContent.cover
+        self.setMediaUrl(url)
         self.playToggle(True)
 
     @pyqtSlot('QVariant')
     def playOnlineMedia(self, result):
         self._playlist.addMedia(result['url'], result['tags'], result['updated'])
+        url = unicode(result['url'])
+        urls = self._playlist.urls
+        index = urls.index(url)
+        self._playlist.setCurrentIndex(index)
+        mediaContents =  self._playlist.mediaContents
+        mediaContent = mediaContents[url]
+        self.title = mediaContent.title
+        self.artist = mediaContent.artist
+        self.cover = mediaContent.cover
+        playurl = mediaContent.playlinkUrl
+        self.setMediaUrl(playurl)
         self.playToggle(True)
 
     @pyqtProperty(int, notify=currentIndexChanged)

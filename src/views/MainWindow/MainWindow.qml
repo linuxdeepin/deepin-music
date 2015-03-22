@@ -52,7 +52,7 @@ Rectangle {
                 height: mainWindow.height - playBottomBar.height
                 iconWidth: leftSideBar.width
                 iconHeight: leftSideBar.width
-                color: "transparent"
+                color: "white"
 
                 border.color: "lightgray"
                 border.width: 1
@@ -68,7 +68,7 @@ Rectangle {
                     height: 25
                     iconWidth: titleBar.height
                     iconHeight: titleBar.height
-                    color: "transparent"
+                    color: "white"
                     windowFlag: true
                 }
 

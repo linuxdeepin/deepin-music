@@ -33,6 +33,8 @@ class Web360ApiWorker(QObject):
 
     playMediaContent = pyqtSignal('QVariant')
 
+    addMediaContents = pyqtSignal(list)
+
     requestSuccessed = pyqtSignal('QString', int, dict)
 
     __contextName__ = 'Web360ApiWorker'
@@ -133,6 +135,7 @@ class Web360ApiWorker(QObject):
             content = result[len(header) + 1: -1]
             ret = json.loads(content)
 
+            results = []
             for song in ret['songList']:
                 url = self.getUrlByID(song['songId'])
                 tags = song
@@ -141,7 +144,9 @@ class Web360ApiWorker(QObject):
                     'tags': tags,
                     'updated': True
                 }
-                self.playMediaContent.emit(result)
+                results.append(result)
+            self.addMediaContents.emit(results)
+
             url = self.getUrlByID(ret['songList'][0]['songId'])
             self.playMediaByUrl(url)
 
