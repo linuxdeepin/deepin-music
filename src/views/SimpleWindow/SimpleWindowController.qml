@@ -22,6 +22,18 @@ Item {
         MediaPlayer.coverChanged.connect(updateBackgroundCover);
     }
 
+
+    function disconnect(){
+        MediaPlayer.positionChanged.disconnect(updateSlider);
+        MediaPlayer.positionChanged.disconnect(updateMusicTime);
+        MediaPlayer.stateChanged.disconnect(updatePlayButton);
+        MediaPlayer.volumeChanged.disconnect(updateVolumeSlider);
+        MediaPlayer.playbackModeChanged.disconnect(updateCycleButton);
+        MediaPlayer.bufferStatusChanged.disconnect(updateBufferSlider);
+        MediaPlayer.currentIndexChanged.disconnect(updatePlaylistIndex);
+        MediaPlayer.coverChanged.disconnect(updateBackgroundCover);
+    }
+
     function resetSkin() {
         playBottomBar.color = "transparent";
         bgImage.source = Qt.constants.defaultBackgroundImage;
@@ -241,17 +253,15 @@ Item {
     }
 
     Component.onCompleted: {
+        playBottomBar.volumeButton.switchflag = !MediaPlayer.muted;
+        playBottomBar.volumeSlider.value = MediaPlayer.volume / 100;
+        playBottomBar.cycleButton.playbackMode = MediaPlayer.playbackMode;
+        playBottomBar.playing = MediaPlayer.playing;
+        playBottomBar.slider.value = MediaPlayer.position / MediaPlayer.duration;
         initConnect();
     }
 
     Component.onDestruction: {
-        MediaPlayer.positionChanged.disconnect(updateSlider);
-        MediaPlayer.positionChanged.disconnect(updateMusicTime);
-        MediaPlayer.stateChanged.disconnect(updatePlayButton);
-        MediaPlayer.volumeChanged.disconnect(updateVolumeSlider);
-        MediaPlayer.playbackModeChanged.disconnect(updateCycleButton);
-        MediaPlayer.bufferStatusChanged.disconnect(updateBufferSlider);
-        MediaPlayer.currentIndexChanged.disconnect(updatePlaylistIndex);
-        MediaPlayer.coverChanged.disconnect(updateBackgroundCover);
-    } 
+        disconnect();
+    }
 }

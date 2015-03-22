@@ -133,12 +133,4 @@ Rectangle {
         lrcPage: lrcPage
         playBottomBar: playBottomBar
     }
-
-    Component.onCompleted: {
-        playBottomBar.volumeButton.switchflag = !MediaPlayer.muted;
-        playBottomBar.volumeSlider.value = MediaPlayer.volume / 100;
-        playBottomBar.cycleButton.playbackMode = MediaPlayer.playbackMode;
-        playBottomBar.playing = MediaPlayer.playing;
-        playBottomBar.slider.value = MediaPlayer.position / MediaPlayer.duration;
-    }
 }
