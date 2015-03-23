@@ -34,6 +34,7 @@ class Web360ApiWorker(QObject):
     playMediaContent = pyqtSignal('QVariant')
 
     addMediaContents = pyqtSignal(list)
+    addMediaContent = pyqtSignal('QVariant')
 
     requestSuccessed = pyqtSignal('QString', int, dict)
 
@@ -117,6 +118,7 @@ class Web360ApiWorker(QObject):
     def playMediaById(self, musicId):
         result = self.getResultById(musicId)
         if result:
+            self.addMediaContent.emit(result)
             self.playMediaContent.emit(result)
 
     @dthread

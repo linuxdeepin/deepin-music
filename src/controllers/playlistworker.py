@@ -494,6 +494,10 @@ class PlaylistWorker(QObject):
 
         return self._playlists[name]
 
+    def addOnlineMediaToTemporary(self, media):
+        playlist = self.termporaryPlaylist
+        playlist.addMedia(media['url'], media['tags'], media['updated'])
+
     def addOnlineMediasToTemporary(self, medias):
         playlist = self.termporaryPlaylist
         for media in medias:
