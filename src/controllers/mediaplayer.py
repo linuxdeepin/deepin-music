@@ -325,11 +325,13 @@ class MediaPlayer(QObject):
 
     @pyqtSlot('QVariant')
     def playOnlineMedia(self, result):
-        # self._playlist.addMedia(result['url'], result['tags'], result['updated'])
         url = unicode(result['url'])
         urls = self._playlist.urls
         index = urls.index(url)
+
+        self._playlist.updateMedia(result['url'], result['tags'])
         self._playlist.setCurrentIndex(index)
+
         mediaContents =  self._playlist.mediaContents
         mediaContent = mediaContents[url]
         self.title = mediaContent.title
@@ -338,6 +340,23 @@ class MediaPlayer(QObject):
         playurl = mediaContent.playlinkUrl
         self.setMediaUrl(playurl)
         self.playToggle(True)
+
+    @pyqtSlot('QVariant')
+    def swicthOnlineMedia(self, result):
+        url = unicode(result['url'])
+        urls = self._playlist.urls
+        index = urls.index(url)
+
+        self._playlist.updateMedia(result['url'], result['tags'])
+        self._playlist.setCurrentIndex(index)
+
+        mediaContents =  self._playlist.mediaContents
+        mediaContent = mediaContents[url]
+        self.title = mediaContent.title
+        self.artist = mediaContent.artist
+        self.cover = mediaContent.cover
+        playurl = mediaContent.playlinkUrl
+        self.setMediaUrl(playurl)
 
     @pyqtProperty(int, notify=currentIndexChanged)
     def currentIndex(self):

@@ -265,10 +265,10 @@ class DRealOnlineMediaContent(BaseMediaContent):
 
 class DLocalMediaContent(QMediaContent):
 
-    def __init__(self, url, ret=None):
+    def __init__(self, url, tags=None):
         super(DLocalMediaContent, self).__init__(QUrl.fromLocalFile(url))
         self._url = url
-        self.content = DRealLocalMediaContent(url, ret)
+        self.content = DRealLocalMediaContent(url, tags)
 
     @pyqtProperty('QString')
     def url(self):
@@ -364,34 +364,40 @@ class DMediaPlaylist(QMediaPlaylist):
         self.mediasChanged.emit(medias)
         self.countChanged.emit(self.mediaCount())
 
-    def addMedia(self, url, ret=None, updated=False):
+    def addMedia(self, url, tags=None, updated=False):
         url = unicode(url)
         if url not in self._urls:
             if url.startswith('http://') or url.startswith('https://'):
-                self.addOnlineMedia(url, ret)
+                self.addOnlineMedia(url, tags)
                 self._urls.append(url)
                 self.emitSignal()
             else:
                 if os.path.exists(url):
-                    self.addLocalMedia(url, ret)
+                    self.addLocalMedia(url, tags)
                     self._urls.append(url)
                     self.emitSignal()
 
         content = self._mediaContents[url]
         if isinstance(content, DRealOnlineMediaContent):
-            content.updateTags(ret)
+            content.updateTags(tags)
             if updated:
                 # QTimer.singleShot(5000, content.updateTagsByUrl)
                 pass
 
-    def addLocalMedia(self, url, ret):
-        mediaContent = DLocalMediaContent(url, ret)
+    def updateMedia(self, url, tags, updated=False):
+        url = unicode(url)
+        if url in self._urls:
+            content = self._mediaContents[url]
+            content.updateTags(tags)
+
+    def addLocalMedia(self, url, tags):
+        mediaContent = DLocalMediaContent(url, tags)
         content = mediaContent.content
         self._mediaContents.update({url: content})
         super(DMediaPlaylist, self).addMedia(mediaContent)
 
-    def addOnlineMedia(self, url, ret):
-        mediaContent = DOnlineMediaContent(url, ret)
+    def addOnlineMedia(self, url, tags):
+        mediaContent = DOnlineMediaContent(url, tags)
         content = mediaContent.content
         self._mediaContents.update({url: content})
         super(DMediaPlaylist, self).addMedia(mediaContent)

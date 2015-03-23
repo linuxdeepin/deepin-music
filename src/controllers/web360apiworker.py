@@ -8,8 +8,8 @@ import json
 from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot, QUrl
 import requests
 from .utils import registerContext, duration_to_string
+from .mediaplayer import MediaPlayer
 from dwidgets import dthread
-import threading
 import copy
 from log import logger
 
@@ -32,6 +32,7 @@ songlist = {
 class Web360ApiWorker(QObject):
 
     playMediaContent = pyqtSignal('QVariant')
+    swicthMediaContent = pyqtSignal('QVariant')
 
     addMediaContents = pyqtSignal(list)
     addMediaContent = pyqtSignal('QVariant')
@@ -127,6 +128,13 @@ class Web360ApiWorker(QObject):
         result = self.getResultByUrl(url)
         if result:
             self.playMediaContent.emit(result)
+
+    @dthread
+    @pyqtSlot('QString')
+    def switchMediaByUrl(self, url):
+        result = self.getResultByUrl(url)
+        if result:
+            self.swicthMediaContent.emit(result)
 
     @pyqtSlot('QString')
     def playMusicBySonglist(self, songlistName):
