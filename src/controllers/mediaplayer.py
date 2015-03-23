@@ -11,6 +11,7 @@ from .utils import registerContext, contexts
 from .utils import duration_to_string
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent, QMediaPlaylist
 from .playlistworker import DRealLocalMediaContent, DRealOnlineMediaContent
+from .coverworker import CoverWorker
 from log import logger
 
 
@@ -46,7 +47,7 @@ class MediaPlayer(QObject):
     artistChanged = pyqtSignal('QString')
     coverChanged = pyqtSignal('QString')
 
-    coverdownloaded = pyqtSignal('QVariant')
+    downloadCover = pyqtSignal('QString', 'QString')
 
     requestMusic = pyqtSignal('QString')
 
@@ -60,6 +61,7 @@ class MediaPlayer(QObject):
         self._state = 0
         self._isPlaying = False
 
+        self._url = ''
         self._title = ''
         self._artist = ''
         self._cover = ''
@@ -242,7 +244,8 @@ class MediaPlayer(QObject):
 
     @pyqtSlot('QString')
     def setMediaUrl(self, url):
-        if url.startswith('http://') or url.startswith('https://'):
+        self._url = url
+        if url.startswith('http'):
             _url = QUrl(url)
         else:
             _url = QUrl.fromLocalFile(url)
@@ -335,11 +338,13 @@ class MediaPlayer(QObject):
 
         mediaContents =  self._playlist.mediaContents
         mediaContent = mediaContents[url]
+        playurl = mediaContent.playlinkUrl
+        self.setMediaUrl(playurl)
+
         self.title = mediaContent.title
         self.artist = mediaContent.artist
         self.cover = mediaContent.cover
-        playurl = mediaContent.playlinkUrl
-        self.setMediaUrl(playurl)
+        
         self.playToggle(True)
 
     @pyqtSlot('QVariant')
@@ -353,11 +358,12 @@ class MediaPlayer(QObject):
 
         mediaContents =  self._playlist.mediaContents
         mediaContent = mediaContents[url]
+        playurl = mediaContent.playlinkUrl
+        self.setMediaUrl(playurl)
+
         self.title = mediaContent.title
         self.artist = mediaContent.artist
         self.cover = mediaContent.cover
-        playurl = mediaContent.playlinkUrl
-        self.setMediaUrl(playurl)
 
     @pyqtProperty(int, notify=currentIndexChanged)
     def currentIndex(self):
@@ -383,12 +389,33 @@ class MediaPlayer(QObject):
 
     @pyqtProperty('QString', notify=coverChanged)
     def cover(self):
+        if self._url:
+            index = self._playlist.currentIndex()
+            urls = self._playlist.urls
+            if index < len(urls):
+                url = urls[index]
+                coverfile = CoverWorker.getCoverPathByMediaUrl(url)
+                if os.path.exists(coverfile):
+                    self._cover = coverfile
         return self._cover
 
     @cover.setter
-    def cover(self, value):
-        self._cover = value
-        self.coverChanged.emit(value)
+    def cover(self, cover):
+        if cover.startswith('http'):
+            index = self._playlist.currentIndex()
+            urls = self._playlist.urls
+            url = urls[index]
+            self.downloadCover.emit(url , cover)
+            return
+        self._cover = cover
+        self.coverChanged.emit(cover)
+
+    def updateCover(self, mediaUrl, coverUrl):
+        mediaContents =  self._playlist.mediaContents
+        if mediaUrl in mediaContents:
+            mediaContent = mediaContents[mediaUrl]
+            mediaContent.cover = coverUrl
+        self.cover = coverUrl
 
     @pyqtSlot('QString', result='QString')
     def metaData(self, key):

@@ -90,31 +90,6 @@ class BaseMediaContent(QObject):
         self._cover = cover
         self.coverChanged.emit(cover)
 
-    @classmethod
-    def md5(cls, string):
-        import hashlib
-        md5Value = hashlib.md5(string)
-        return md5Value.hexdigest()
-
-    @classmethod
-    def getCoverPathByUrl(cls, url):
-        coverID = cls.md5(url)
-        filename = '%s' % coverID
-        filepath = os.path.join(CoverPath, filename)
-        return filepath
-
-    @pyqtSlot('QString')
-    @dthread
-    def downloadCover(self, coverUrl):
-        filepath = self.getCoverPathByUrl(self._url)
-        try:
-            r = requests.get(coverUrl)
-            with open(filepath, "wb") as f:
-                f.write(r.content)
-        except:
-            return
-        self.coverDownloadSuccessed.emit(filepath)
-
 
 class DRealLocalMediaContent(BaseMediaContent):
 
@@ -191,15 +166,22 @@ class DRealOnlineMediaContent(BaseMediaContent):
         if 'duration' in self._tags:
             self.duration = duration_to_string(self._tags['duration'])
 
-        if 'albumImage_500x500' in tags and tags['albumImage_500x500']:
+        coverfile = CoverWorker.getCoverPathByMediaUrl(self._url)
+        if os.path.exists(coverfile):
+            self.cover = coverfile
+        elif 'albumImage_500x500' in tags and tags['albumImage_500x500']:
             self.cover = tags['albumImage_500x500']
         elif 'albumImage_100x100' in tags and tags['albumImage_100x100']:
             self.cover = tags['albumImage_100x100']
+        # else:
+            # print('********')
 
         if 'playlinkUrl' in self._tags:
             self.playlinkUrl = self._tags['playlinkUrl']
             # if self.duration == u"00:00":
             #     QTimer.singleShot(5000, self.updateDuration)
+
+        self.tags.update(tags)
 
     def updateDuration(self):
         if self.playlinkUrl:

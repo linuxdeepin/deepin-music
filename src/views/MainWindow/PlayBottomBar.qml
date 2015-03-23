@@ -148,6 +148,7 @@ Item {
                                 width: musicText.width
                                 height: 20
                                 color: "white"
+                                elide: Text.ElideRight
                                 horizontalAlignment: Text.AlignLeft
                                 verticalAlignment: Text.AlignVCenter
                                 text: playBottomBar.title
@@ -158,6 +159,7 @@ Item {
                                 width: musicText.width
                                 height: 20
                                 color: "white"
+                                elide: Text.ElideRight
                                 horizontalAlignment: Text.AlignLeft
                                 verticalAlignment: Text.AlignVCenter
                                 text: playBottomBar.artist

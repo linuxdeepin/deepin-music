@@ -51,7 +51,8 @@ class Web360ApiWorker(QObject):
         self.initConnect()
 
     def initConnect(self):
-        self.requestSuccessed.connect(self.collectResults)
+        # self.requestSuccessed.connect(self.collectResults)
+        pass
 
     @classmethod
     def md5(cls, musicId):
@@ -136,51 +137,87 @@ class Web360ApiWorker(QObject):
         if result:
             self.swicthMediaContent.emit(result)
 
+    @classmethod
+    def getSongList(self, ret):
+        results = []
+        for song in ret['songList']:
+            url = self.getUrlByID(song['songId'])
+            tags = song
+            result = {
+                'url': url,
+                'tags': tags,
+                'updated': True
+            }
+            results.append(result)
+        return results
+
+    @dthread
     @pyqtSlot('QString')
-    def playMusicBySonglist(self, songlistName):
-        url = songlist[songlistName]
-        result = self.request(url)
-        if result:
-            header = 'cb_' + url.split('/')[-1].split('.')[0]
-            content = result[len(header) + 1: -1]
-            ret = json.loads(content)
+    def playMusicBySonglistName(self, songlistName):
+        if songlistName in songlist:
+            url = songlist[songlistName]
+            result = self.request(url)
+            if result:
+                header = 'cb_' + url.split('/')[-1].split('.')[0]
+                content = result[len(header) + 1: -1]
+                ret = json.loads(content)
+                results = self.getSongList(ret)
+                self.addMediaContents.emit(results)
 
-            results = []
-            for song in ret['songList']:
-                url = self.getUrlByID(song['songId'])
-                tags = song
-                result = {
-                    'url': url,
-                    'tags': tags,
-                    'updated': True
-                }
-                results.append(result)
+                url = self.getUrlByID(ret['songList'][0]['songId'])
+                self.playMediaByUrl(url)
+
+    @dthread
+    @pyqtSlot(int)
+    def playMusicBySonglistId(self, songlistId):
+        url = "http://s.music.haosou.com/list/intfDetail?id=%d" % songlistId
+        ret = self.request(url)
+        if ret:
+            results = self.getSongList(ret)
             self.addMediaContents.emit(results)
-
             url = self.getUrlByID(ret['songList'][0]['songId'])
             self.playMediaByUrl(url)
 
     @dthread
-    def getQueueResults(self, musicIdString, musicId):
-        result = self.getResultById(musicId)
-        if result:
-            self.requestSuccessed.emit(musicIdString, musicId, result)
+    @pyqtSlot(int)
+    def playMusicByAlbumId(self, albumId):
+        url = "http://s.music.haosou.com/album/intfDetail?id=%d" % albumId
+        ret = self.request(url)
+        if ret:
+            results = self.getSongList(ret)
+            for result in results:
+                result['tags'].update({
+                    'singerId': ret['singerId'],
+                    'singerName': ret['singerName'],
+                    'albumId': ret['albumId'],
+                    'albumName': ret['albumName']
+                })
+            self.addMediaContents.emit(results)
+            url = self.getUrlByID(ret['songList'][0]['songId'])
+            self.playMediaByUrl(url)
 
-    @pyqtSlot('QString')
-    def playMusicByIds(self, musicIdString):
-        _musicIds = [int(k) for k in musicIdString.split('_')]
-        self.recommendedMusics[musicIdString] = {}
-        self.recommendedmusicIds[musicIdString] = _musicIds
-        for musicId in _musicIds:
-            self.getQueueResults(musicIdString, musicId)
 
-    @pyqtSlot(' QString', int, dict)
-    def collectResults(self, musicIdString, musicId, result):
-        self.recommendedMusics[musicIdString].update({musicId: result})
-        _results = self.recommendedMusics[musicIdString]
-        _musicIds = self.recommendedmusicIds[musicIdString]
-        if len(_results) == len(_musicIds):
-            for musicId in  _musicIds:
-                result = _results[musicId]
-                self.playMediaContent.emit(result)
-            self.playMediaContent.emit(_results[_musicIds[0]])
+    # @dthread
+    # def getQueueResults(self, musicIdString, musicId):
+    #     result = self.getResultById(musicId)
+    #     if result:
+    #         self.requestSuccessed.emit(musicIdString, musicId, result)
+
+    # @pyqtSlot('QString')
+    # def playMusicByIds(self, musicIdString):
+    #     _musicIds = [int(k) for k in musicIdString.split('_')]
+    #     self.recommendedMusics[musicIdString] = {}
+    #     self.recommendedmusicIds[musicIdString] = _musicIds
+    #     for musicId in _musicIds:
+    #         self.getQueueResults(musicIdString, musicId)
+
+    # @pyqtSlot(' QString', int, dict)
+    # def collectResults(self, musicIdString, musicId, result):
+    #     self.recommendedMusics[musicIdString].update({musicId: result})
+    #     _results = self.recommendedMusics[musicIdString]
+    #     _musicIds = self.recommendedmusicIds[musicIdString]
+    #     if len(_results) == len(_musicIds):
+    #         for musicId in  _musicIds:
+    #             result = _results[musicId]
+    #             self.playMediaContent.emit(result)
+    #         self.playMediaContent.emit(_results[_musicIds[0]])

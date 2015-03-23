@@ -55,7 +55,7 @@ Rectangle {
                 width: 24
                 height: 24
                 asynchronous: true
-                source: '../../skin/images/bg1.jpg'
+                source: mediaItem.ListView.view.model[index].cover
             }
 
             Text {

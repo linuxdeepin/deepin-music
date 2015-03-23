@@ -7,7 +7,9 @@ WebEngineView {
     
     signal playMusicById(int musicId)
     signal playMusicByIds(string musicIds)
-    signal playSonglist(string songlistName)
+    signal playSonglistByName(string songlistName)
+    signal playSonglistById(int songlistId)
+    signal playAlbumById(int albumId)
 
     onLinkHovered:{
 
@@ -29,11 +31,14 @@ WebEngineView {
                             }
                         }else if (rpc.type == 'album'){
                             print(rpc.rpcActionType, rpc.type, rpc.rpcId);
+                            webEngineView.playAlbumById(rpc.rpcId);
                         }else if (rpc.type == 'songlist'){
                             print(rpc.rpcActionType, rpc.type, rpc.rpcId);
-                            webEngineView.playSonglist(rpc.rpcId);
-                        }else if (rpc.type == 'album'){
-                            print(rpc.rpcActionType, rpc.type, rpc.rpcId);
+                            if (typeof rpc.rpcId == 'number'){
+                                webEngineView.playSonglistById(rpc.rpcId);
+                            }else if(typeof rpc.rpcId === 'string'){
+                                webEngineView.playSonglistByName(rpc.rpcId);
+                            }
                         }else if (rpc.type == 'artist'){
                             print(rpc.rpcActionType, rpc.type, rpc.rpcId);
                         }

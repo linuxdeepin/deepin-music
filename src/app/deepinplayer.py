@@ -44,14 +44,15 @@ class DeepinPlayer(QObject):
 
     def initControllers(self):
         self.configWorker = ConfigWorker()
+        
         self.windowManageWorker = WindowManageWorker()
         self.web360ApiWorker = Web360ApiWorker()
         self.musicManageWorker = MusicManageWorker()
         self.menuWorker = MenuWorker()
 
         self.mediaPlayer = MediaPlayer()
-        self.playlistWorker = PlaylistWorker()
         self.coverWorker = CoverWorker()
+        self.playlistWorker = PlaylistWorker()
 
         self.musicDataBase = MusicDataBase()
         self.dbworker = DBWorker()
@@ -68,7 +69,10 @@ class DeepinPlayer(QObject):
         self.web360ApiWorker.addMediaContents.connect(self.playlistWorker.addOnlineMediasToTemporary)
 
         self.mediaPlayer.requestMusic.connect(self.web360ApiWorker.switchMediaByUrl)
-        self.mediaPlayer.coverdownloaded.connect(self.coverWorker.downloadCover)
+        self.mediaPlayer.downloadCover.connect(self.coverWorker.downloadCoverByUrl)
+
+        self.coverWorker.downloadCoverSuccessed.connect(self.mediaPlayer.updateCover)
+
         self.qApp.aboutToQuit.connect(self.close)
 
     def loadConfig(self):
