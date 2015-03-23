@@ -283,6 +283,7 @@ class MediaPlayer(QObject):
     @pyqtSlot(int)
     def setCurrentIndex(self, index):
         self._playlist.setCurrentIndex(index)
+        self.playMediaByIndex(index)
 
     @pyqtSlot(int)
     def playMediaByIndex(self, index):

@@ -73,7 +73,7 @@ class DeepinPlayer(QObject):
 
     def loadConfig(self):
         self.mediaPlayer.setPlaylistByName(self.configWorker.lastPlaylistName);
-        self.mediaPlayer.playMediaByIndex(self.configWorker.lastPlayedIndex);
+        self.mediaPlayer.setCurrentIndex(self.configWorker.lastPlayedIndex);
         self.mediaPlayer.volume = self.configWorker.volume
         self.mediaPlayer.playbackMode = self.configWorker.playbackMode
 

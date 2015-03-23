@@ -33,12 +33,12 @@ Rectangle {
     }
 
 
-    GaussianBlur {
+    FastBlur {
         anchors.fill: bgImage
         source: bgImage
-        deviation: 4
-        radius: 8
-        samples: 16
+        // deviation: 4
+        radius: 64
+        // samples: 16
     }
 
     Column{
