@@ -55,7 +55,12 @@ class DeepinPlayer(QObject):
         self.playlistWorker = PlaylistWorker()
 
         self.musicDataBase = MusicDataBase()
-        self.dbworker = DBWorker()
+        self.dbWorker = DBWorker()
+
+        self.web360Thread = QThread(self)
+        self.web360ApiWorker.moveToThread(self.web360Thread)
+        self.web360Thread.start()
+
 
     def initQMLContext(self):
         self.mainWindow.setContexts(contexts)
