@@ -45,11 +45,11 @@ class MusicManageWorker(QObject):
             }
             self._albums.append(item)
 
-        for i in range(1000):
+        for i in range(100):
             item = {
                 'name': '/home/djf/folder%d' % i,
-                'count': 1000,
-                'urls': range(1000)
+                'count': 100,
+                'urls': range(100)
             }
             self._folders.append(item)
 

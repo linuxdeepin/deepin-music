@@ -10,6 +10,7 @@ from PyQt5.QtCore import (QObject, pyqtSignal, pyqtSlot,
                           pyqtProperty, QUrl, QFile, QIODevice, QTimer
                           )
 from PyQt5.QtMultimedia import QMediaPlaylist, QMediaContent, QMediaPlayer
+
 from .utils import registerContext, contexts, duration_to_string
 from dwidgets.mediatag.song import Song
 from dwidgets import dthread
@@ -289,6 +290,7 @@ class DMediaPlaylist(QMediaPlaylist):
         super(DMediaPlaylist, self).__init__()
         self._name = name
         self._urls = []
+        self._medias = []
         self._mediaContents = OrderedDict()
 
     @pyqtProperty('QString')
@@ -314,11 +316,13 @@ class DMediaPlaylist(QMediaPlaylist):
 
     @pyqtProperty('QVariant', notify=mediasChanged)
     def medias(self):
-        medias = []
-        for key in self._urls:
-            mediaContent = self._mediaContents[key]
-            medias.append(mediaContent)
-        return medias
+        return self._medias
+
+    @medias.setter
+    def medias(self, medias):
+        self._medias = medias
+        self.mediasChanged.emit(self._medias)
+        self.countChanged.emit(self.mediaCount())
 
     @pyqtSlot()
     def clearMedias(self):
@@ -327,24 +331,23 @@ class DMediaPlaylist(QMediaPlaylist):
         if flag:
             self._urls = []
             self._mediaContents = OrderedDict()
-            self.emitSignal()
+            self.medias = []
 
     def removeMediaByIndex(self, index):
         flag = super(DMediaPlaylist, self).removeMedia(index)
         if flag:
             url = self._urls[index]
             self._urls.pop(index)
-            self._mediaContents.pop(url)
-
-    @pyqtSlot(int)
-    def removeMedia(self, index):
-        self.removeMediaByIndex(index)
-        self.emitSignal()
+            mediaContent = self._mediaContents.pop(url)
+            self._medias.pop(mediaContent)
+            self.medias = self._medias
 
     def emitSignal(self):
-        medias = self.medias
-        self.mediasChanged.emit(medias)
-        self.countChanged.emit(self.mediaCount())
+        for key in self._urls:
+            mediaContent = self._mediaContents[key]
+            if mediaContent not in self._medias:
+                self._medias.append(mediaContent)
+        self.medias = self._medias
 
     def addMedia(self, url, tags=None, updated=False):
         url = unicode(url)
@@ -365,6 +368,31 @@ class DMediaPlaylist(QMediaPlaylist):
             if updated:
                 # QTimer.singleShot(5000, content.updateTagsByUrl)
                 pass
+
+    def addMedias(self, medias):
+        oldCount = len(self._urls)
+        for media in medias:
+            url = media['url']
+            tags = media['tags'] 
+            updated = media['updated']
+            url = unicode(url)
+            if url not in self._urls:
+                if url.startswith('http://') or url.startswith('https://'):
+                    self.addOnlineMedia(url, tags)
+                    self._urls.append(url)
+                else:
+                    if os.path.exists(url):
+                        self.addLocalMedia(url, tags)
+                        self._urls.append(url)
+
+            content = self._mediaContents[url]
+            if isinstance(content, DRealOnlineMediaContent):
+                content.updateTags(tags)
+                if updated:
+                    # QTimer.singleShot(5000, content.updateTagsByUrl)
+                    pass
+        if oldCount < len(self._urls):
+            self.emitSignal()
 
     def updateMedia(self, url, tags, updated=False):
         url = unicode(url)
@@ -432,9 +460,14 @@ class PlaylistWorker(QObject):
                 results = json.load(f, object_pairs_hook=OrderedDict)
             for name, _playlist in results.items():
                 playlist = self.createPlaylistByName(name)
+                medias = []
                 for url, tags in _playlist.items():
-                    url = url
-                    playlist.addMedia(url, tags, updated=True)
+                    medias.append({
+                        'url' : url,
+                        'tags': tags,
+                        'updated': True
+                    })
+                playlist.addMedias(medias)
 
     def savePlaylistByName(self, name):
         f = QFile(os.sep.join([PlaylistPath, '%s.m3u' % name]))
@@ -488,5 +521,8 @@ class PlaylistWorker(QObject):
 
     def addOnlineMediasToTemporary(self, medias):
         playlist = self.termporaryPlaylist
-        for media in medias:
-            playlist.addMedia(media['url'], media['tags'], media['updated'])
+
+        # for media in medias:
+            # playlist.addMedia(media['url'], media['tags'], media['updated'])
+        # print('++++++++===========')
+        playlist.addMedias(medias)

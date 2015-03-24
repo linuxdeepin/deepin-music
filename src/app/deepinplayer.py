@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtCore import QCoreApplication, QObject, QUrl, QThread
+from PyQt5.QtCore import QCoreApplication, QObject, QUrl, QThread, QTimer
 from PyQt5.QtGui import QScreen
 from views import MainWindow
 
@@ -17,6 +17,8 @@ import config
 
 class DeepinPlayer(QObject):
 
+    _instance = None
+
     def __init__(self):
         super(DeepinPlayer, self).__init__()
         self.initApplication()
@@ -26,6 +28,16 @@ class DeepinPlayer(QObject):
         self.initConnect()
         self.initQMLContext()
         self.loadConfig()
+
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.clearCache)
+        self.timer.start(2000)
+
+    @classmethod
+    def instance(cls):
+        if cls._instance is None:
+            cls._instance = cls()
+        return cls._instance
 
     @property
     def qApp(self):
@@ -61,6 +73,9 @@ class DeepinPlayer(QObject):
         self.web360ApiWorker.moveToThread(self.web360Thread)
         self.web360Thread.start()
 
+        # self.mediaPlayerThread = QThread(self)
+        # self.mediaPlayer.moveToThread(self.mediaPlayerThread)
+        # self.mediaPlayerThread.start()
 
     def initQMLContext(self):
         self.mainWindow.setContexts(contexts)
@@ -92,6 +107,11 @@ class DeepinPlayer(QObject):
 
     def show(self):
         self.showMainWindow()
+
+    def clearCache(self):
+        self.mainWindow.engine().clearComponentCache()
+        self.mainWindow.engine().collectGarbage()
+        self.mainWindow.engine().trimComponentCache()
 
     def close(self):
         self.mediaPlayer.stop()

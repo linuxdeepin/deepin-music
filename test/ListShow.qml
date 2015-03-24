@@ -2,6 +2,9 @@ import QtQuick 2.4
 import Deepin.Widgets 1.0
 
 Rectangle {
+    id: root
+
+    property var count: 100
     width: 180; height: 200
 
     Component {
@@ -30,8 +33,9 @@ Rectangle {
     }
 
     ListView {
+        id: list
         anchors.fill: parent
-        model: 5
+        model: root.count
         delegate: contactDelegate
         highlight: Rectangle { color: "lightsteelblue"; radius: 5 }
         focus: true
@@ -39,6 +43,25 @@ Rectangle {
         DScrollBar {
             flickable: parent
             inactiveColor: 'black'
+        }
+    }
+
+    Timer {
+        id: timer
+        interval: 5000
+        repeat: true
+        running: true
+        onTriggered: {
+            root.count += 10000
+            list.model = root.count
+            print(root.count)
+            // if (root.count > 20 * 100){
+            //     root.count = 100
+            //     print('++++++++++++++')
+            //     timer.repeat = false
+            //     list.model = root.count * 10
+            //     timer.stop()
+            // }
         }
     }
 }

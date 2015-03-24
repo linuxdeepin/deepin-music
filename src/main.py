@@ -19,7 +19,7 @@ if __name__ == '__main__':
     if app.isRunning():
         sys.exit(0)
 
-    deepinPlayer = DeepinPlayer()
+    deepinPlayer = DeepinPlayer.instance()
     deepinPlayer.show()
 
     exitCode = app.exec_()
