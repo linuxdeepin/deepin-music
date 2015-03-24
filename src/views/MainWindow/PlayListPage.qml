@@ -14,7 +14,7 @@ Rectangle {
         Rectangle {
             id: playlistNameBar
             width : 120
-            height: root.height
+            height: root.height - 10
             color: "white"
 
             Column {
