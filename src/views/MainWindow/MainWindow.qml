@@ -6,7 +6,8 @@ import QtWebEngine 1.0
 import QtMultimedia 5.0
 import DMusic 1.0
 import "../DMusicWidgets"
-import "../MusicManager"
+import "../MusicManagerWindow"
+import "../PlaylistManagerWindow"
 
 Rectangle {
 
@@ -104,10 +105,10 @@ Rectangle {
                         // }
                     }
 
-                    PlayListPage {
-                        id: palyListPage
+                    PlaylistPage {
+                        id: palylistPage
 
-                        objectName: 'palyListPage'
+                        objectName: 'palylistPage'
                         anchors.fill: parent
 
                         // Behavior on opacity {

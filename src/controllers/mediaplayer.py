@@ -101,8 +101,9 @@ class MediaPlayer(QObject):
 
         playbackMode = configWorker.playbackMode
         playlist = playlistWorker.getPlaylistByName(name)
-        playlist.setPlaybackMode(playbackMode)
-        self.setPlaylist(playlist)
+        if playlist:
+            playlist.setPlaybackMode(playbackMode)
+            self.setPlaylist(playlist)
 
     @pyqtProperty(int, notify=playbackModeChanged)
     def playbackMode(self):

@@ -419,11 +419,14 @@ class PlaylistWorker(QObject):
 
     nameExisted = pyqtSignal('QString')
 
+    playlistNamesChanged = pyqtSignal('QVariant')
+
     @registerContext
     def __init__(self, parent=None):
         super(PlaylistWorker, self).__init__(parent)
 
         self._playlists = OrderedDict()
+        self._playlistNames = []
         self._currentPlaylist = None
 
         self.createPlaylistByName('temporary')
@@ -438,7 +441,7 @@ class PlaylistWorker(QObject):
             u'/usr/share/deepin-sample-music/胡彦斌_依然是你.mp3'
         ]
         for url in urls:
-            self.addMediaToTemporary(url)
+            self.addMediaToFavorite(url)
         self.loadPlaylists()
 
     def savePlaylists(self):
@@ -499,19 +502,28 @@ class PlaylistWorker(QObject):
     def addMediaToFavorite(self, url):
         self._playlists['favorite'].addMedia(url)
 
-    # @pyqtSlot('QString', 'QString')
-    # def addMediaByName(self, name, url):
-    #     if name in self._playlists:
-    #         self._playlists[name].addMedia(url)
-    #     else:
-    #         logger.info("the playlist named %s isn't existed" % name)
+    @pyqtProperty('QString')
+    def playlistNames(self):
+        return self._playlistNames
+
+    @playlistNames.setter
+    def playlistNames(self, names):
+        self._playlistNames = names
+        self.playlistNamesChanged.emit(self._playlistNames)
 
     @pyqtSlot('QString')
     def createPlaylistByName(self, name):
+        print self._playlistNames, '++++++++', name
+        names = self._playlistNames + ['favorite', 'temporary']
         if name in self._playlists:
             self.nameExisted.emit(name)
         else:
             self._playlists[name] = DMediaPlaylist(name)
+            if name not in ['favorite', 'temporary']:
+                names = self._playlistNames.append({'name': name})
+                self.playlistNames = names
+
+                print names, '+++++++++'
 
         return self._playlists[name]
 
@@ -521,8 +533,4 @@ class PlaylistWorker(QObject):
 
     def addOnlineMediasToTemporary(self, medias):
         playlist = self.termporaryPlaylist
-
-        # for media in medias:
-            # playlist.addMedia(media['url'], media['tags'], media['updated'])
-        # print('++++++++===========')
         playlist.addMedias(medias)

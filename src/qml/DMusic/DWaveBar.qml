@@ -5,8 +5,9 @@ Rectangle {
     property var itemWidth: 3
     property var itemHeight: 20
     property var active: true
+    property var count: 4
 
-    width: 5 * root.itemWidth + 3
+    width: count * root.itemWidth + 4
     height: root.itemHeight
     anchors.centerIn: parent
     color: "transparent"
@@ -51,18 +52,18 @@ Rectangle {
                 duration: 400 
             }
         }
-        Rectangle {
-            width: root.itemWidth
-            height: root.itemHeight - y
-            color: "green"
-            NumberAnimation on y { 
-                loops: Animation.Infinite
-                running: root.active
-                from : height
-                to: 0
-                duration: 1000 
-            }
-        }
+        // Rectangle {
+        //     width: root.itemWidth
+        //     height: root.itemHeight - y
+        //     color: "green"
+        //     NumberAnimation on y { 
+        //         loops: Animation.Infinite
+        //         running: root.active
+        //         from : height
+        //         to: 0
+        //         duration: 1000 
+        //     }
+        // }
         Rectangle {
             width: root.itemWidth
             height: root.itemHeight - y
