@@ -479,11 +479,11 @@ class PlaylistWorker(QObject):
             self._playlists[name].save(f, 'm3u')
             f.close()
 
-    @pyqtProperty('QMediaPlaylist')
+    @pyqtProperty('QVariant')
     def termporaryPlaylist(self):
         return self._playlists['temporary']
 
-    @pyqtSlot('QString', result='QMediaPlaylist')
+    @pyqtSlot('QString', result='QVariant')
     def getPlaylistByName(self, name):
         if name in self._playlists:
             return self._playlists[name]
@@ -502,7 +502,7 @@ class PlaylistWorker(QObject):
     def addMediaToFavorite(self, url):
         self._playlists['favorite'].addMedia(url)
 
-    @pyqtProperty('QString')
+    @pyqtProperty('QVariant', notify=playlistNamesChanged)
     def playlistNames(self):
         return self._playlistNames
 
@@ -513,17 +513,14 @@ class PlaylistWorker(QObject):
 
     @pyqtSlot('QString')
     def createPlaylistByName(self, name):
-        print self._playlistNames, '++++++++', name
         names = self._playlistNames + ['favorite', 'temporary']
         if name in self._playlists:
             self.nameExisted.emit(name)
         else:
             self._playlists[name] = DMediaPlaylist(name)
             if name not in ['favorite', 'temporary']:
-                names = self._playlistNames.append({'name': name})
-                self.playlistNames = names
-
-                print names, '+++++++++'
+                self._playlistNames.append({'name': name})
+                self.playlistNames = self._playlistNames
 
         return self._playlists[name]
 

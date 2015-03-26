@@ -86,7 +86,7 @@ class ModelMetaclass(type):
                 return '<%s (%s)>' % (clsname, ', '.join(values))
 
             @pyqtSlot(dict)
-            def setJson(self, obj):
+            def setDict(self, obj):
                 self.setJsoning = True
                 self.valid_message = {}
                 if isinstance(obj, dict):
@@ -99,7 +99,7 @@ class ModelMetaclass(type):
                     self.setJsoning = False
                     raise SetJsonExpection("obj's type must be dict")
 
-            def getJson(self):
+            def getDict(self):
                 ret = {}
                 for key, value, default in Fields:
                     ret[key] = self.__dict__['_' + key]

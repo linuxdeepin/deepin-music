@@ -6,6 +6,12 @@ Rectangle {
 
     id: playlistNavgationBar
 
+    property var addButton: addButton
+    property var starList: starList
+    property var termporyList: termporyList
+    property var playlistInputText: playlistInputText
+    property var customPlaylistView: customPlaylistView
+
     property var _playlistName
 
     width : 120
@@ -86,8 +92,9 @@ Rectangle {
                 anchors.left: playlistBox.left
                 anchors.top: playlistTitle.bottom
                 anchors.right: playlistBox.right
-                border.color: "green"
+                border.color: "gray"
                 border.width: 1
+                radius: 2
                 visible: false
                 // color: "gray"
 
@@ -142,7 +149,7 @@ Rectangle {
             onClicked: {
             	playlistInputTextBox.visible = true;
                 playlistInputText.focus = true
-                playlistInputText.text = "新建歌单" + (playlistModel.count + 1)
+                playlistInputText.text = "新建歌单" + (customPlaylistView.count + 1)
             	customPlaylistView.anchors.top =  playlistInputTextBox.bottom;
                 customPlaylistView.anchors.topMargin =  14;
             }
@@ -155,7 +162,6 @@ Rectangle {
                 playlistInputText.focus = false;
             	customPlaylistView.anchors.top =  playlistTitle.bottom;
                 customPlaylistView.anchors.topMargin =  0;
-                // playlistModel.insert(0, {name: playlistInputText.text})
 
                 playlistNavgationBar.addPlaylistName(playlistInputText.text)
 
@@ -169,7 +175,6 @@ Rectangle {
                 if (customPlaylistView.currentItem){
                     customPlaylistView.currentItem.state = '!Active';
                 }
-                
                 playlistNavgationBar.playlistNameChanged(starList.name);
             } 
         }

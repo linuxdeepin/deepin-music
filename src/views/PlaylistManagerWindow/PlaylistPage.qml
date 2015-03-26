@@ -21,7 +21,7 @@ Rectangle {
         PlaylistDetailBox {
             id: playlistDetailBox
             width: root.width - playlistNavgationBar.width
-            height: root.height
+            height: root.height - 10
         }
     }
 

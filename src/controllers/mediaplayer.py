@@ -61,6 +61,10 @@ class MediaPlayer(QObject):
         self._state = 0
         self._isPlaying = False
 
+
+        self._playbackMode = 4
+        self._volume = 0
+
         self._url = ''
         self._title = ''
         self._artist = ''
@@ -85,7 +89,7 @@ class MediaPlayer(QObject):
     def playlist(self):
         return self._playlist
 
-    @pyqtSlot('QMediaPlaylist')
+    @pyqtSlot('QVariant')
     def setPlaylist(self, playlist):
         if self._playlist:
             self._playlist.currentIndexChanged.disconnect(self.currentIndexChanged)
@@ -97,23 +101,24 @@ class MediaPlayer(QObject):
     @pyqtSlot('QString')
     def setPlaylistByName(self, name):
         playlistWorker = contexts['PlaylistWorker']
-        configWorker = contexts['ConfigWorker']
 
-        playbackMode = configWorker.playbackMode
+        playbackMode = self._playbackMode
         playlist = playlistWorker.getPlaylistByName(name)
         if playlist:
             playlist.setPlaybackMode(playbackMode)
             self.setPlaylist(playlist)
+            self.setCurrentIndex(0)
+
 
     @pyqtProperty(int, notify=playbackModeChanged)
     def playbackMode(self):
-        return self.playlist.playbackMode()
+        return self._playbackMode
 
     @playbackMode.setter
     def playbackMode(self, playbackMode):
-        configWorker = contexts['ConfigWorker']
-        configWorker.playbackMode = playbackMode
-        self.playlist.setPlaybackMode(playbackMode)
+        self._playbackMode = playbackMode
+        if self._playlist:
+            self._playlist.setPlaybackMode(playbackMode)
         self.playbackModeChanged.emit(playbackMode)
 
     @pyqtProperty(bool)
@@ -131,10 +136,11 @@ class MediaPlayer(QObject):
 
     @pyqtProperty(int, notify=volumeChanged)
     def volume(self):
-        return self.player.volume()
+        return self._volume
 
     @volume.setter
     def volume(self, value):
+        self._volume = value
         self.player.setVolume(value)
         self.volumeChanged.emit(value)
 
@@ -286,8 +292,10 @@ class MediaPlayer(QObject):
 
     @pyqtSlot(int)
     def setCurrentIndex(self, index):
-        self._playlist.setCurrentIndex(index)
-        self.playMediaByIndex(index)
+        if self._playlist:
+            if index < self._playlist.mediaCount():
+                self._playlist.setCurrentIndex(index)
+                self.playMediaByIndex(index)
 
     @pyqtSlot(int)
     def playMediaByIndex(self, index):

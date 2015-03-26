@@ -50,7 +50,7 @@ Rectangle{
             color: "#868686"
             font.pixelSize: 12
             elide: Text.ElideRight
-            text: name
+            text: playlistNameDelegate.ListView.view.model[index].name
         }
     }
 
