@@ -46,6 +46,8 @@ class ConfigWorker(object):
             json.dump(ret, f, indent=4)
 
     def load(self):
-        with open(os.path.join(ProjectPath, 'config.json'), 'r') as f:
-            ret = json.load(f)
-        self.setDict(ret)
+        filePath = os.path.join(ProjectPath, 'config.json')
+        if os.path.exists(filePath):
+            with open(os.path.join(ProjectPath, 'config.json'), 'r') as f:
+                ret = json.load(f)
+            self.setDict(ret)

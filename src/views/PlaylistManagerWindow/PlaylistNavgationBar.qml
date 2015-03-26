@@ -21,6 +21,16 @@ Rectangle {
     signal addPlaylistName(string name)
     signal playlistNameChanged(string name)
 
+
+    function checkedByName(name) {
+         for (var i = 0 ; i< PlaylistWorker.playlistNames.length; i++){
+            if (PlaylistWorker.playlistNames[i].name == name){
+                playlistNavgationBar.customPlaylistView.currentIndex = i;
+                return
+            }
+        }
+    }
+
     Column {
 
         
@@ -166,6 +176,8 @@ Rectangle {
 
                 playlistNavgationBar.addPlaylistName(playlistInputText.text)
 
+                playlistNavgationBar.checkedByName(_playlistName);
+
             }
         }
 
@@ -200,6 +212,16 @@ Rectangle {
                     playlistNavgationBar.playlistNameChanged(name);
                     _playlistName = name;
                 }
+            } 
+        }
+
+        Connections {
+            target: customPlaylistView
+            onCurrentIndexChanged: {
+                // if (customPlaylistView.currentItem){
+                    customPlaylistView.currentItem.state = 'Checked'
+                // }
+                
             } 
         }
     }

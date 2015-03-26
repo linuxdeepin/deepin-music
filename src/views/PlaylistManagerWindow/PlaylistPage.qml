@@ -7,7 +7,7 @@ Rectangle {
 
     Row {
 
-        anchors.topMargin: 10
+        anchors.topMargin: 20
         anchors.leftMargin: 14
         anchors.fill: parent
 
@@ -20,7 +20,7 @@ Rectangle {
 
         PlaylistDetailBox {
             id: playlistDetailBox
-            width: root.width - playlistNavgationBar.width
+            width: root.width - playlistNavgationBar.width - 14
             height: root.height - 10
         }
     }

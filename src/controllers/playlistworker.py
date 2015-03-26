@@ -519,10 +519,16 @@ class PlaylistWorker(QObject):
         else:
             self._playlists[name] = DMediaPlaylist(name)
             if name not in ['favorite', 'temporary']:
-                self._playlistNames.append({'name': name})
+                self._playlistNames.insert(0, {'name': name})
                 self.playlistNames = self._playlistNames
 
         return self._playlists[name]
+
+
+    @pyqtSlot('QString', result='QVariant')
+    def getMediasByName(self, name):
+        if name in self._playlists:
+            return self._playlists[name].medias
 
     def addOnlineMediaToTemporary(self, media):
         playlist = self.termporaryPlaylist

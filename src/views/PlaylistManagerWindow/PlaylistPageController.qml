@@ -4,15 +4,22 @@ Item {
 
     property var playlistNavgationBar
     property var playlistDetailBox
+    property var currentPlaylistName: ''
 
     function init() {
         if (ConfigWorker.lastPlaylistName == "favorite"){
-            playlistNavgationBar.starList.state = 'Active'
+            playlistNavgationBar.starList.state = 'Checked'
         }else if(ConfigWorker.lastPlaylistName == "temporary"){
-            playlistNavgationBar.termporyList.state = 'Active'
+            playlistNavgationBar.termporyList.state = 'Checked'
         }else{
-
+            for (var i = 0 ; i< PlaylistWorker.playlistNames.length; i++){
+                if (PlaylistWorker.playlistNames[i].name == ConfigWorker.lastPlaylistName){
+                    playlistNavgationBar.customPlaylistView.currentIndex = i;
+                    return
+                }
+            }
         }
+        currentPlaylistName = ConfigWorker.lastPlaylistName
     }
 
     Binding { 
@@ -21,11 +28,24 @@ Item {
         value: PlaylistWorker.playlistNames
     }
 
+    Binding {
+        target: playlistDetailBox.playlistView
+        property: 'model'
+        value:{
+            if (currentPlaylistName) {
+                var medias = PlaylistWorker.getMediasByName(currentPlaylistName);
+                return medias
+            }
+        }
+    }
+
     Connections {
         target: playlistNavgationBar
 
         onAddPlaylistName:{
             PlaylistWorker.createPlaylistByName(name);
+            playlistNavgationBar.starList.state = '!Active'
+            playlistNavgationBar.termporyList.state = '!Active'
         }
 
         onPlaylistNameChanged: {
@@ -38,6 +58,7 @@ Item {
                 nameId = name;
             }
             MediaPlayer.setPlaylistByName(nameId);
+            currentPlaylistName = nameId;
         }
     }
 
