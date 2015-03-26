@@ -293,7 +293,7 @@ class DMediaPlaylist(QMediaPlaylist):
         self._medias = []
         self._mediaContents = OrderedDict()
 
-    @pyqtProperty('QString')
+    @pyqtProperty('QString', notify=nameChanged)
     def name(self):
         return self._name
 

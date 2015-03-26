@@ -172,6 +172,7 @@ class MediaPlayer(QObject):
         urls = self._playlist.urls
         mediaContents =  self._playlist.mediaContents
         if index < len(urls):
+            print(index, len(urls))
             mediaContent = mediaContents[urls[index]]
             mediaContent.tags.update({'duration': duration})
             mediaContent.duration = duration_to_string(duration)
@@ -302,22 +303,24 @@ class MediaPlayer(QObject):
         urls = self._playlist.urls
         mediaContents =  self._playlist.mediaContents
 
-        mediaContent = mediaContents[urls[index]]
-        url = mediaContent.url
+        if index < len(urls) and index > 0:
+            print(index, len(urls))
+            mediaContent = mediaContents[urls[index]]
+            url = mediaContent.url
 
-        if isinstance(mediaContent, DRealLocalMediaContent):
-            playurl = mediaContent.url
-        elif isinstance(mediaContent, DRealOnlineMediaContent):
-            playurl = mediaContent.playlinkUrl
-            if not playurl:
-                self.requestMusic.emit(url)
-                return
+            if isinstance(mediaContent, DRealLocalMediaContent):
+                playurl = mediaContent.url
+            elif isinstance(mediaContent, DRealOnlineMediaContent):
+                playurl = mediaContent.playlinkUrl
+                if not playurl:
+                    self.requestMusic.emit(url)
+                    return
 
-        if playurl:
-            self.setMediaUrl(playurl)
-            self.title = mediaContent.title
-            self.artist = mediaContent.artist
-            self.cover = mediaContent.cover
+            if playurl:
+                self.setMediaUrl(playurl)
+                self.title = mediaContent.title
+                self.artist = mediaContent.artist
+                self.cover = mediaContent.cover
 
     def bufferChange(self, progress):
         self.bufferStatusChanged.emit(progress)

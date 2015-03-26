@@ -133,4 +133,14 @@ Rectangle {
         }
     }
 
+    // Component.onCompleted: {
+    //     Qt.createItems.push(index);
+    //     print(Qt.createItems.length, 'created')
+    // }
+
+    // Component.onDestruction:{
+    //     Qt.destoryItems.push(index);
+    //     print(Qt.destoryItems.length, 'destory')
+    // }
+
 }

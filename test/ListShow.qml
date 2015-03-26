@@ -35,7 +35,7 @@ Rectangle {
     ListView {
         id: list
         anchors.fill: parent
-        model: root.count
+        model: 100000
         delegate: contactDelegate
         highlight: Rectangle { color: "lightsteelblue"; radius: 5 }
         focus: true
@@ -46,22 +46,22 @@ Rectangle {
         }
     }
 
-    Timer {
-        id: timer
-        interval: 5000
-        repeat: true
-        running: true
-        onTriggered: {
-            root.count += 10000
-            list.model = root.count
-            print(root.count)
-            // if (root.count > 20 * 100){
-            //     root.count = 100
-            //     print('++++++++++++++')
-            //     timer.repeat = false
-            //     list.model = root.count * 10
-            //     timer.stop()
-            // }
-        }
-    }
+    // Timer {
+    //     id: timer
+    //     interval: 5000
+    //     repeat: true
+    //     running: true
+    //     onTriggered: {
+    //         root.count += 10000
+    //         list.model = root.count
+    //         print(root.count)
+    //         // if (root.count > 20 * 100){
+    //         //     root.count = 100
+    //         //     print('++++++++++++++')
+    //         //     timer.repeat = false
+    //         //     list.model = root.count * 10
+    //         //     timer.stop()
+    //         // }
+    //     }
+    // }
 }

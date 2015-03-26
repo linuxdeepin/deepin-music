@@ -63,7 +63,20 @@ DRectWithCorner {
                     verticalAlignment: Text.AlignVCenter
                     font.pixelSize: 16
                     color: "#676767"
-                    text: '正在播放'
+                    text: {
+                        var playlist = MediaPlayer.playlist;
+                        if (playlist){
+                            if (playlist.name == "temporary"){
+                                return Qt.constants.termporyPlaylist
+                            }else if(playlist.name == 'favorite'){
+                                return Qt.constants.starPlaylist
+                            }else{
+                                return playlist.name
+                            }
+                        }else{
+                            return '';
+                        }
+                    }
 
                     Text {
                         x: playlistName.contentWidth
@@ -132,10 +145,10 @@ DRectWithCorner {
 
                 signal playMusicByUrl(string url)
 
-                DScrollBar {
-                    flickable: parent
-                    inactiveColor: 'black'
-                }
+                // DScrollBar {
+                //     flickable: parent
+                //     inactiveColor: 'black'
+                // }
 
                 Component.onCompleted: positionViewAtIndex(currentIndex, ListView.Center)
             }

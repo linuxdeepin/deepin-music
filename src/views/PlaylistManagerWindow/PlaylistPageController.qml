@@ -30,9 +30,9 @@ Item {
 
         onPlaylistNameChanged: {
             var nameId;
-            if (name == "我的收藏"){
+            if (name == Qt.constants.starPlaylist){
                 nameId = "favorite";
-            }else if (name == "试听歌单"){
+            }else if (name == Qt.constants.termporyPlaylist){
                 nameId = "temporary";
             }else{
                 nameId = name;

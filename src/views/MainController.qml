@@ -13,6 +13,8 @@ Item {
         WindowManageWorker.simpleWindowShowed.connect(showSimpleWindow);
         WindowManageWorker.miniWindowShowed.connect(showMiniWindow);
         Qt.globalPos = WindowManageWorker.cursorPos;
+        Qt.createItems = []
+        Qt.destoryItems = []
         MenuWorker.miniTrigger.connect(showMiniWindow);
     }
 

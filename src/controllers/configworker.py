@@ -21,7 +21,10 @@ class ConfigWorker(object):
         ('lastPlayedIndex', int, 0),
         ('playbackMode', int, 4),
         ('volume', int, 50),
-        ('isCoverBackground', bool, True)
+        ('isCoverBackground', bool, True),
+
+        ('createItems', list),
+        ('destoryItems', list)
     )
 
     __contextName__ = "ConfigWorker"

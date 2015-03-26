@@ -131,11 +131,12 @@ Rectangle {
                 highlightMoveDuration: 1
                 model: playlistModel
                 delegate: PlaylistNameDelegate{}
+                currentIndex: -1
                 focus: true
                 spacing: 14
                 snapMode:ListView.SnapToItem
 
-                // signal playMusicByUrl(string url)
+                signal itemClicked(string name)
 
                 DScrollBar {
                     flickable: parent
@@ -192,10 +193,9 @@ Rectangle {
 
         Connections {
             target: customPlaylistView
-            onCurrentIndexChanged: {
+            onItemClicked: {
                 starList.state = '!Active';
                 termporyList.state = '!Active';
-                var name = customPlaylistView.currentItem.playlistName
                 if (name != _playlistName){
                     playlistNavgationBar.playlistNameChanged(name);
                     _playlistName = name;

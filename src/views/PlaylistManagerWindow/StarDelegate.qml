@@ -71,6 +71,13 @@ Rectangle{
             PropertyChanges { target: waveBar; active: false ;}
             PropertyChanges { target: tipButton; visible: true ;}
             PropertyChanges { target: playButton; visible: false ;}
+        },
+        State {
+            name: "Checked"
+            PropertyChanges { target: playlistName; color: "#2ca7f8"}
+            PropertyChanges { target: waveBar; active: false ;}
+            PropertyChanges { target: tipButton; visible: false ;}
+            PropertyChanges { target: playButton; visible: true ;}
         }
     ]
 
@@ -99,7 +106,7 @@ Rectangle{
             }
         }
         onClicked: {
-            starDelegate.state = "Active";
+            starDelegate.state = "Checked";
             starDelegate.clicked()
         }
     }

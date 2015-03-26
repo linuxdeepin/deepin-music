@@ -9,4 +9,8 @@ QtObject{
 	property int miniWindowHeight: 120
 
 	property string defaultBackgroundImage: "../../skin/images/bg1.jpg"
+
+
+	property string starPlaylist: '我的收藏'
+	property string termporyPlaylist: '试听歌单'
 }
