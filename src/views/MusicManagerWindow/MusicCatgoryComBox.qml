@@ -21,7 +21,7 @@ Rectangle {
             id: item
             width: item.ListView.width
             height: 20
-            text: name
+            text: item.ListView.view.model[index].name
             color: "#252525"
             font.pixelSize: 12
             horizontalAlignment: Text.AlignHCenter
@@ -37,7 +37,7 @@ Rectangle {
                 }
                 onClicked: {
                     catgoryCombox.currentIndex = index;
-                    catgoryCombox.currentText = name;
+                    catgoryCombox.currentText = item.ListView.view.model[index].name;
                     catgoryCombox.itemClicked();
                 }
             }
@@ -50,14 +50,14 @@ Rectangle {
         anchors.fill: parent
         spacing: 2
         interactive: false
-        model: MusicCatgoryModel{}
+        model: MusicManageWorker.categories
         delegate: catgoryDelegate
         currentIndex: 0
     }
     visible: false
 
     Component.onCompleted: {
-        catgoryCombox.currentText = catgoryView.model.get(0).name;
+        catgoryCombox.currentText = catgoryView.model[0].name;
         catgoryCombox.currentIndex = 0
     }
 }

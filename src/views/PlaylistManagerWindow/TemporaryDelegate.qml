@@ -3,9 +3,9 @@ import DMusic 1.0
 import "../DMusicWidgets"
 
 Rectangle{
-    id: termporyDelegate
+    id: temporaryDelegate
 
-    property var name: playlistName.text
+    property var name: playlistNameText.text
 
     width: 120
     height: 16
@@ -21,15 +21,12 @@ Rectangle{
             width: 16
             height: 16
 
+            color: "transparent"
+
             DStarButton {
                 id: tipButton
                 anchors.fill: parent
-            }
-
-            DPlayButton {
-                id: playButton
-                anchors.fill: parent
-                visible: false
+                visible: true
             }
 
             DWaveBar {
@@ -47,38 +44,44 @@ Rectangle{
             }
         }
 
-        Text {
-            id: playlistName
+        Rectangle {
+            id: textBox
             width: 94
             height: 16
-            color: "#868686"
-            font.pixelSize: 12
-            elide: Text.ElideRight
-            text: '试听歌单'
+
+            color: "transparent"
+            Text {
+                id: playlistNameText
+                anchors.fill: parent
+                color: "#868686"
+                font.pixelSize: 12
+                elide: Text.ElideRight
+                verticalAlignment: Text.AlignVCenter
+                text: I18nWorker.temporary
+            }
         }
     }
 
     states: [
         State {
             name: "Active"
-            PropertyChanges { target: playlistName; color: "#2ca7f8"}
+            PropertyChanges { target: playlistNameText; color: "#2ca7f8"}
             PropertyChanges { target: waveBar; active: true ;}
             PropertyChanges { target: tipButton; visible: false ;}
-            PropertyChanges { target: playButton; visible: false ;}
         },
         State {
-            name: "!Active"
-            PropertyChanges { target: playlistName; color: "#868686"}
+            name: "!Checked"
+            PropertyChanges { target: temporaryDelegate; color: "transparent"}
+            PropertyChanges { target: playlistNameText; color: "#868686"}
             PropertyChanges { target: waveBar; active: false ;}
             PropertyChanges { target: tipButton; visible: true ;}
-            PropertyChanges { target: playButton; visible: false ;}
         },
         State {
             name: "Checked"
-            PropertyChanges { target: playlistName; color: "#2ca7f8"}
+            PropertyChanges { target: temporaryDelegate; color: "#eeeeee"}
+            PropertyChanges { target: playlistNameText; color: "black"}
             PropertyChanges { target: waveBar; active: false ;}
-            PropertyChanges { target: tipButton; visible: false ;}
-            PropertyChanges { target: playButton; visible: true ;}
+            PropertyChanges { target: tipButton; visible: true ;}
         }
     ]
 
@@ -88,27 +91,19 @@ Rectangle{
         hoverEnabled: true
         propagateComposedEvents: true
         onEntered: {
-            if (termporyDelegate.state != "Active"){
-                tipButton.visible = false;
-                playButton.visible = true;
-            }else{
-                tipButton.visible = false;
-                playButton.visible = false;
+            if (temporaryDelegate.state != "Checked"){
+                temporaryDelegate.color = "#f9f9f9";
             }
             
         }
         onExited: {
-            if (termporyDelegate.state != "Active"){
-                tipButton.visible = true;
-                playButton.visible = false;
-            }else{
-                tipButton.visible = false;
-                playButton.visible = false;
+            if (temporaryDelegate.state != "Checked"){
+                temporaryDelegate.color = 'transparent'
             }
         }
         onClicked: {
-            termporyDelegate.state = "Checked";
-            termporyDelegate.clicked();
+            temporaryDelegate.state = "Checked";
+            temporaryDelegate.clicked();
         }
     }
 }

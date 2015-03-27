@@ -19,7 +19,7 @@ Rectangle {
     property var playBottomBar: playBottomBar
     property var webEngineViewPage: webEngineViewPage
     property var mainWindowController: mainWindowController
-    property var termporyLoader: termporyLoader
+    property var temporaryLoader: temporaryLoader
 
     color: "white"
     focus: true
@@ -150,7 +150,7 @@ Rectangle {
     }
 
     Loader {
-        id: termporyLoader
+        id: temporaryLoader
         y: 150
         anchors.right: parent.right
         asynchronous: true

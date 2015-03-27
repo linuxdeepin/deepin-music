@@ -2,7 +2,7 @@ import QtQuick 2.4
 
 ListModel {
     ListElement {
-        name: "艺术家"
+        name: {return I18nWorker.artist}
     }
     ListElement {
         name: "专辑"
@@ -12,5 +12,9 @@ ListModel {
     }
     ListElement {
         name: '文件夹'
+    }
+
+    Component.onCompleted: {
+        print(I18nWorker.artist)
     }
 }

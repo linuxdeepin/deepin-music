@@ -8,7 +8,7 @@ Rectangle {
 
     property var addButton: addButton
     property var starList: starList
-    property var termporyList: termporyList
+    property var temporaryList: temporaryList
     property var playlistInputText: playlistInputText
     property var customPlaylistView: customPlaylistView
 
@@ -26,6 +26,8 @@ Rectangle {
          for (var i = 0 ; i< PlaylistWorker.playlistNames.length; i++){
             if (PlaylistWorker.playlistNames[i].name == name){
                 playlistNavgationBar.customPlaylistView.currentIndex = i;
+                playlistNavgationBar.customPlaylistView.currentItem.state = "Checked";
+                playlistNavgationBar.customPlaylistView.itemClicked(name);
                 return
             }
         }
@@ -41,14 +43,16 @@ Rectangle {
             width: 120
             height: 64
 
+            color: "transparent"
+
             Column {
                 spacing: 16
 
                 StarDelegate{
                     id: starList
                 }
-                TermporyDelegate{
-                    id: termporyList
+                TemporaryDelegate{
+                    id: temporaryList
                 }
             }
 
@@ -83,7 +87,7 @@ Rectangle {
                         height: 11
                         color: "#b9b9b9"
                         font.pixelSize: 11
-                        text: '我创建的歌单'
+                        text: I18nWorker.myPlaylist
                     }
 
                     DAddButton {
@@ -160,7 +164,7 @@ Rectangle {
             onClicked: {
             	playlistInputTextBox.visible = true;
                 playlistInputText.focus = true
-                playlistInputText.text = "新建歌单" + (customPlaylistView.count + 1)
+                playlistInputText.text = I18nWorker.newPlaylist + (customPlaylistView.count + 1)
             	customPlaylistView.anchors.top =  playlistInputTextBox.bottom;
                 customPlaylistView.anchors.topMargin =  14;
             }
@@ -176,7 +180,7 @@ Rectangle {
 
                 playlistNavgationBar.addPlaylistName(playlistInputText.text)
 
-                playlistNavgationBar.checkedByName(_playlistName);
+                playlistNavgationBar.checkedByName(playlistInputText.text);
 
             }
         }
@@ -184,30 +188,26 @@ Rectangle {
         Connections {
             target: starList
             onClicked: {
-                termporyList.state = '!Active';
-                if (customPlaylistView.currentItem){
-                    customPlaylistView.currentItem.state = '!Active';
-                }
+                temporaryList.state = '!Checked';
+                customPlaylistView.currentIndex = -1
                 playlistNavgationBar.playlistNameChanged(starList.name);
             } 
         }
 
         Connections {
-            target: termporyList
+            target: temporaryList
             onClicked: {
-                starList.state = '!Active'
-                if (customPlaylistView.currentItem){
-                    customPlaylistView.currentItem.state = '!Active';
-                }
-                playlistNavgationBar.playlistNameChanged(termporyList.name);
+                starList.state = '!Checked'
+                customPlaylistView.currentIndex = -1
+                playlistNavgationBar.playlistNameChanged(temporaryList.name);
             } 
         }
 
         Connections {
             target: customPlaylistView
             onItemClicked: {
-                starList.state = '!Active';
-                termporyList.state = '!Active';
+                starList.state = '!Checked';
+                temporaryList.state = '!Checked';
                 if (name != _playlistName){
                     playlistNavgationBar.playlistNameChanged(name);
                     _playlistName = name;
@@ -215,14 +215,13 @@ Rectangle {
             } 
         }
 
-        Connections {
-            target: customPlaylistView
-            onCurrentIndexChanged: {
-                // if (customPlaylistView.currentItem){
-                    customPlaylistView.currentItem.state = 'Checked'
-                // }
-                
-            } 
-        }
+        // Connections {
+        //     target: customPlaylistView
+        //     onCurrentIndexChanged: {
+        //         if (customPlaylistView.currentItem){
+        //             customPlaylistView.currentItem.state = 'Checked'
+        //         }                
+        //     } 
+        // }
     }
 }

@@ -1,5 +1,5 @@
 import QtQuick 2.4
-import "./TermporyWindow"
+import "./TemporaryWindow"
 
 Item {
     property var mainWindow
@@ -79,9 +79,9 @@ Item {
     }
 
     function updatePlaylistIndex(index){
-        var termporyWindow = mainWindow.termporyLoader.item
-        if (termporyWindow){
-            termporyWindow.playlistView.currentIndex = index;
+        var temporaryWindow = mainWindow.temporaryLoader.item
+        if (temporaryWindow){
+            temporaryWindow.playlistView.currentIndex = index;
         }
     }
 

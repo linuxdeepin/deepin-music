@@ -6,11 +6,13 @@ import os
 import sys
 from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot, pyqtProperty
 
-from .utils import registerContext
+from .utils import registerContext, contexts
 from dwidgets.tornadotemplate import template
 
 
 class MusicManageWorker(QObject):
+
+    categoriesChanged = pyqtSignal('QVariant')
 
     artistsChanged = pyqtSignal('QVariant')
     albumsChanged = pyqtSignal('QVariant')
@@ -53,9 +55,17 @@ class MusicManageWorker(QObject):
             }
             self._folders.append(item)
 
-    @pyqtProperty('QVariant')
+    @pyqtProperty('QVariant', notify=categoriesChanged)
     def categories(self):
-        return []
+        i18nWorker = contexts['I18nWorker']
+
+        categories = [
+            {'name': i18nWorker.artist},
+            {'name': i18nWorker.album},
+            {'name': i18nWorker.song},
+            {'name': i18nWorker.folder}
+        ]
+        return categories
 
     @pyqtProperty('QVariant', notify=artistsChanged)
     def artists(self):

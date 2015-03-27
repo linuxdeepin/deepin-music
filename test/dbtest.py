@@ -213,7 +213,7 @@ class DBWorker(QObject):
         return playlistInstance
 
     @classmethod
-    def addSongToPlaylist(cls, uri, name='termpory'):
+    def addSongToPlaylist(cls, uri, name='temporary'):
         songInstance = cls.getSongByUri(uri)
         playlistInstance = cls.getPlaylistByName(name)
 
@@ -254,7 +254,7 @@ class DBWorker(QObject):
 dbWorker = DBWorker()
 
 def createPlaylists():
-    names = ['termpory', 'favourite']
+    names = ['temporary', 'favourite']
     for name in names:
         playlistInstance = dbWorker.get_create_PlaylistInstance(name=name)
 
@@ -319,5 +319,5 @@ for i in range(10):
 # for s in Song.select().join(Folder).where(Folder.path == "/home/djf/workspace/github/musicplayer-qml/music"):
 #     print s.uri
 
-print dbWorker.getSongsByPlaylistName('termpory')
+print dbWorker.getSongsByPlaylistName('temporary')
 print dbWorker.getPlaylistsBySongUri(os.path.join(basePath, '%d.mp3' % 2))

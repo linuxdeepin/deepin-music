@@ -172,7 +172,6 @@ class MediaPlayer(QObject):
         urls = self._playlist.urls
         mediaContents =  self._playlist.mediaContents
         if index < len(urls):
-            print(index, len(urls))
             mediaContent = mediaContents[urls[index]]
             mediaContent.tags.update({'duration': duration})
             mediaContent.duration = duration_to_string(duration)
@@ -304,7 +303,6 @@ class MediaPlayer(QObject):
         mediaContents =  self._playlist.mediaContents
 
         if index < len(urls) and index > 0:
-            print(index, len(urls))
             mediaContent = mediaContents[urls[index]]
             url = mediaContent.url
 

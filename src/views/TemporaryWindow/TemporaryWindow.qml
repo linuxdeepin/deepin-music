@@ -3,7 +3,7 @@ import DMusic 1.0
 import "../DMusicWidgets"
 
 DRectWithCorner {
-    id: termporyWindow
+    id: temporaryWindow
 
     property var playlistView: playlistView
     property var clearButton: clearButton
@@ -67,9 +67,9 @@ DRectWithCorner {
                         var playlist = MediaPlayer.playlist;
                         if (playlist){
                             if (playlist.name == "temporary"){
-                                return Qt.constants.termporyPlaylist
+                                return I18nWorker.temporary
                             }else if(playlist.name == 'favorite'){
-                                return Qt.constants.starPlaylist
+                                return I18nWorker.favorite
                             }else{
                                 return playlist.name
                             }
@@ -145,18 +145,18 @@ DRectWithCorner {
 
                 signal playMusicByUrl(string url)
 
-                // DScrollBar {
-                //     flickable: parent
-                //     inactiveColor: 'black'
-                // }
+                DScrollBar {
+                    flickable: parent
+                    inactiveColor: 'black'
+                }
 
                 Component.onCompleted: positionViewAtIndex(currentIndex, ListView.Center)
             }
         }
     }
 
-    TemporyWindowController {
-        id: temporyWindowController
+    TemporaryWindowController {
+        id: temporaryWindowController
         playlistView: playlistView
         clearButton: clearButton
         closeButton: closeButton

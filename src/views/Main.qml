@@ -4,7 +4,7 @@ import DMusic 1.0
 import "./MainWindow"
 import "./SimpleWindow"
 import "./MiniWindow"
-import "./TermporyWindow"
+import "./TemporaryWindow"
 
 Rectangle {
     id: root

@@ -411,7 +411,7 @@ class SongPlaylist(BaseModel):
     playlist = ForeignKeyField(Playlist)
 
     @classmethod
-    def addSongToPlaylist(cls, uri, name='termpory'):
+    def addSongToPlaylist(cls, uri, name='temporary'):
 
 
         songRecord = Song.getSongByUri(uri)

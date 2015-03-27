@@ -10,7 +10,7 @@ Item {
         if (ConfigWorker.lastPlaylistName == "favorite"){
             playlistNavgationBar.starList.state = 'Checked'
         }else if(ConfigWorker.lastPlaylistName == "temporary"){
-            playlistNavgationBar.termporyList.state = 'Checked'
+            playlistNavgationBar.temporaryList.state = 'Checked'
         }else{
             for (var i = 0 ; i< PlaylistWorker.playlistNames.length; i++){
                 if (PlaylistWorker.playlistNames[i].name == ConfigWorker.lastPlaylistName){
@@ -40,24 +40,30 @@ Item {
     }
 
     Connections {
+        target: playlistDetailBox.playlistView
+        onModelChanged: {
+            playlistDetailBox.playlistView.currentIndex = -1;
+        } 
+    }
+
+    Connections {
         target: playlistNavgationBar
 
         onAddPlaylistName:{
             PlaylistWorker.createPlaylistByName(name);
             playlistNavgationBar.starList.state = '!Active'
-            playlistNavgationBar.termporyList.state = '!Active'
+            playlistNavgationBar.temporaryList.state = '!Active'
         }
 
         onPlaylistNameChanged: {
             var nameId;
-            if (name == Qt.constants.starPlaylist){
+            if (name == I18nWorker.favorite){
                 nameId = "favorite";
-            }else if (name == Qt.constants.termporyPlaylist){
+            }else if (name == I18nWorker.temporary){
                 nameId = "temporary";
             }else{
                 nameId = name;
             }
-            MediaPlayer.setPlaylistByName(nameId);
             currentPlaylistName = nameId;
         }
     }

@@ -5,23 +5,25 @@ import "../DMusicWidgets"
 Rectangle {
     id: root
 
+    property int topMargin: 20
+
     Row {
 
-        anchors.topMargin: 20
+        anchors.topMargin: topMargin
         anchors.leftMargin: 14
         anchors.fill: parent
 
         PlaylistNavgationBar {
             id: playlistNavgationBar
             width : 120
-            height: root.height - 10
+            height: root.height - topMargin
             color: "white"
         }
 
         PlaylistDetailBox {
             id: playlistDetailBox
             width: root.width - playlistNavgationBar.width - 14
-            height: root.height - 10
+            height: root.height - topMargin
         }
     }
 

@@ -57,7 +57,7 @@ Item {
     }
 
     function destoryTermporyWindow(){
-        mainWindow.termporyLoader.source = ''
+        mainWindow.temporaryLoader.source = ''
         mainWindow.focus = true;
     }
 
@@ -84,9 +84,9 @@ Item {
     Connections {
         target: mainWindow.playBottomBar.playlistButton
         onClicked:{
-            if(mainWindow.termporyLoader.source == ''){
-                mainWindow.termporyLoader.source = './TermporyWindow/TermporyWindow.qml'
-                mainWindow.termporyLoader.focus = true;
+            if(mainWindow.temporaryLoader.source == ''){
+                mainWindow.temporaryLoader.source = './TemporaryWindow/TemporaryWindow.qml'
+                mainWindow.temporaryLoader.focus = true;
                 mainWindow.focus = false;
             }else{
                 destoryTermporyWindow();
@@ -95,11 +95,11 @@ Item {
     }
 
     Connections {
-        target: mainWindow.termporyLoader
+        target: mainWindow.temporaryLoader
         onLoaded:{
-            var termporyWindow = mainWindow.termporyLoader.item;
-            if (termporyWindow){
-                var closeButton = termporyWindow.closeButton;
+            var temporyWindow = mainWindow.temporaryLoader.item;
+            if (temporyWindow){
+                var closeButton = temporyWindow.closeButton;
                 closeButton.clicked.connect(destoryTermporyWindow);
             }
         }

@@ -480,7 +480,7 @@ class PlaylistWorker(QObject):
             f.close()
 
     @pyqtProperty('QVariant')
-    def termporaryPlaylist(self):
+    def temporaryPlaylist(self):
         return self._playlists['temporary']
 
     @pyqtSlot('QString', result='QVariant')
@@ -531,9 +531,9 @@ class PlaylistWorker(QObject):
             return self._playlists[name].medias
 
     def addOnlineMediaToTemporary(self, media):
-        playlist = self.termporaryPlaylist
+        playlist = self.temporaryPlaylist
         playlist.addMedia(media['url'], media['tags'], media['updated'])
 
     def addOnlineMediasToTemporary(self, medias):
-        playlist = self.termporaryPlaylist
+        playlist = self.temporaryPlaylist
         playlist.addMedias(medias)

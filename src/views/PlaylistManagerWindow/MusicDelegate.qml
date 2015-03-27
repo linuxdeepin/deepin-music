@@ -5,7 +5,7 @@ import "../DMusicWidgets"
 Rectangle {
     id: mediaItem
 
-    // property var playButton: playButton
+    property var mouseArea: mouseArea
 
     width: parent.width
     height: 24
@@ -25,7 +25,7 @@ Rectangle {
 
             Text {
                 anchors.centerIn: parent
-                text: index
+                text: index + 1
             }
         }
 
@@ -82,21 +82,22 @@ Rectangle {
     ]
 
     MouseArea {
+        id: mouseArea
         anchors.fill: parent
         hoverEnabled: true
         acceptedButtons: Qt.LeftButton | Qt.RightButton
         onEntered: {
             if (mediaItem.ListView.view.currentIndex != index){
                 // playButton.visible = true;
-                // mediaItem.color = "lightgray"
+                mediaItem.color = "lightgray"
             }else{
                 // playButton.visible = ! waveBar.visible;
-                // mediaItem.color = "transparent"
+                mediaItem.color = "transparent"
             }
         }
         onExited: {
             // playButton.visible = false
-            // mediaItem.color = "transparent"
+            mediaItem.color = "transparent"
         }
         onClicked: {
             if (mouse.button == Qt.LeftButton){

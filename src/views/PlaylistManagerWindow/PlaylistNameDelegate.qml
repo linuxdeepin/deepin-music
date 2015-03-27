@@ -5,11 +5,23 @@ import "../DMusicWidgets"
 Rectangle{
     id: playlistNameDelegate
 
+    property var mouseArea: mouseArea
     property var playlistName
 
     width: 120
     height: 16
     color: "transparent"
+
+    function active() {
+        waveBar.active = true
+        playlistNameText.color = "#2ca7f8"
+    }
+
+    function normal() {
+        waveBar.active = false
+        playlistNameText.color = "#868686"
+    }
+
     Row {
         spacing: 10
 
@@ -17,15 +29,12 @@ Rectangle{
             width: 16
             height: 16
 
+            color: "transparent"
+
             DPlaylistButton {
                 id: tipButton
                 anchors.fill: parent
-            }
-
-            DPlayButton {
-                id: playButton
-                anchors.fill: parent
-                visible: false
+                visible: !waveBar.active
             }
 
             DWaveBar {
@@ -33,68 +42,58 @@ Rectangle{
                 anchors.centerIn: parent
                 itemHeight: 12
                 itemWidth: 3
-                active: {
-                    if (MediaPlayer.state == 1){
-                        return true;
-                    }else{
-                        return false;
-                    }
-                }
+                active: false
             }
         }
 
-        Text {
-            id: playlistNameText
+        Rectangle {
+            id: textBox
             width: 94
             height: 16
-            color: "#868686"
-            font.pixelSize: 12
-            elide: Text.ElideRight
-            text: playlistNameDelegate.ListView.view.model[index].name
+
+            color: "transparent"
+            Text {
+                id: playlistNameText
+                anchors.fill: parent
+                color: "#868686"
+                font.pixelSize: 12
+                elide: Text.ElideRight
+                verticalAlignment: Text.AlignVCenter
+                text: playlistNameDelegate.ListView.view.model[index].name
+            }
         }
     }
 
     states: [
         State {
-            name: "Active"
-            // when: playlistNameDelegate.ListView.isCurrentItem
-            PropertyChanges { target: playlistNameText; color: "#2ca7f8"}
-            PropertyChanges { target: waveBar; active: true ;}
-            PropertyChanges { target: tipButton; visible: false ;}
-            PropertyChanges { target: playButton; visible: false ;}
-        },
-        State {
-            name: "!Active"
+            name: "!Checked"
             when: !playlistNameDelegate.ListView.isCurrentItem
+            PropertyChanges {target: playlistNameDelegate; color: "transparent"}
             PropertyChanges { target: playlistNameText; color: "#868686"}
-            PropertyChanges { target: waveBar; active: false ;}
-            PropertyChanges { target: tipButton; visible: true ;}
-            PropertyChanges { target: playButton; visible: false ;}
         },
         State {
             name: "Checked"
-            PropertyChanges { target: playlistNameText; color: "#2ca7f8"}
-            PropertyChanges { target: waveBar; active: false ;}
-            PropertyChanges { target: tipButton; visible: false ;}
-            PropertyChanges { target: playButton; visible: true ;}
+            PropertyChanges {target: playlistNameDelegate; color: "#eeeeee"}
+            PropertyChanges { target: playlistNameText; color: "black"}
         }
     ]
 
     MouseArea {
+        id: mouseArea
         anchors.fill: parent
         acceptedButtons: Qt.LeftButton | Qt.RightButton
         hoverEnabled: true
         propagateComposedEvents: true
         onEntered: {
             if ( playlistNameDelegate.ListView.view.currentIndex != index){
-                tipButton.visible = false
-                playButton.visible = true;
+                playlistNameDelegate.color = "#f9f9f9";
             }
         }
         onExited: {
             if ( playlistNameDelegate.ListView.view.currentIndex != index){
-                tipButton.visible = true
-                playButton.visible = false;
+                playlistNameDelegate.color = "transparent";
+            }else{
+                playlistNameDelegate.color = "#eeeeee";
             }
         }
         onClicked: {
