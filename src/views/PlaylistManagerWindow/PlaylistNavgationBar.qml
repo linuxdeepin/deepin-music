@@ -224,7 +224,6 @@ Rectangle {
                 }else {
                     temporaryDelegate.state = '!Checked'
                 }
-                print(temporaryDelegate.state)
                 if (name != _playlistName){
                     playlistNavgationBar.playlistNameChanged(name);
                     _playlistName = name;
