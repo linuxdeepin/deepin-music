@@ -8,9 +8,9 @@ Item {
 
     function init() {
         if (ConfigWorker.lastPlaylistName == "favorite"){
-            playlistNavgationBar.starList.state = 'Checked'
+            playlistNavgationBar.starDelegate.state = 'Checked'
         }else if(ConfigWorker.lastPlaylistName == "temporary"){
-            playlistNavgationBar.temporaryList.state = 'Checked'
+            playlistNavgationBar.temporaryDelegate.state = 'Checked'
         }else{
             for (var i = 0 ; i< PlaylistWorker.playlistNames.length; i++){
                 if (PlaylistWorker.playlistNames[i].name == ConfigWorker.lastPlaylistName){
@@ -20,6 +20,14 @@ Item {
             }
         }
         currentPlaylistName = ConfigWorker.lastPlaylistName
+    }
+
+    function playMusicByUrl(url) {
+        if (url.indexOf('http') != -1){
+            Web360ApiWorker.playMediaByUrl(url);
+        }else{
+            MediaPlayer.playLocalMedia(url);
+        }
     }
 
     Binding { 
@@ -39,11 +47,39 @@ Item {
         }
     }
 
+    Binding {
+        target: playlistDetailBox.titleText
+        property: 'text'
+        value: {
+            if (playlistDetailBox.playlistView.model) {
+                var model = playlistDetailBox.playlistView.model;
+                return I18nWorker.song + '   (' + model.length +')'
+            }
+        }
+    }
+
     Connections {
         target: playlistDetailBox.playlistView
+
+        onPlayMusicByUrl: {
+            MediaPlayer.setPlaylistByName(currentPlaylistName);
+            playMusicByUrl(url);
+
+            if (MediaPlayer.playlist.name == 'favorite'){
+                playlistNavgationBar.starDelegate.state = 'Active'
+                playlistNavgationBar.temporaryDelegate.state = '!Checked'
+
+            }else if(MediaPlayer.playlist.name == 'temporary'){
+                playlistNavgationBar.starDelegate.state = '!Checked'
+                playlistNavgationBar.temporaryDelegate.state = 'Active'
+            }else{
+
+            }
+        }
+
         onModelChanged: {
             playlistDetailBox.playlistView.currentIndex = -1;
-        } 
+        }
     }
 
     Connections {
@@ -51,8 +87,16 @@ Item {
 
         onAddPlaylistName:{
             PlaylistWorker.createPlaylistByName(name);
-            playlistNavgationBar.starList.state = '!Active'
-            playlistNavgationBar.temporaryList.state = '!Active'
+            if (playlistNavgationBar.starDelegate.state == "Active"){
+                
+            }else{
+                playlistNavgationBar.starDelegate.state = '!Checked'
+            }
+            if (playlistNavgationBar.temporaryDelegate.state == "Active"){
+                
+            }else {
+                playlistNavgationBar.temporaryDelegate.state = '!Checked'
+            }
         }
 
         onPlaylistNameChanged: {
@@ -64,7 +108,13 @@ Item {
             }else{
                 nameId = name;
             }
+
             currentPlaylistName = nameId;
+
+            if (MediaPlayer.playlist.name == currentPlaylistName){
+                playlistDetailBox.playlistView.currentIndex = MediaPlayer.playlist.currentIndex;
+                playlistDetailBox.playlistView.currentItem.state = "Active";
+            }
         }
     }
 

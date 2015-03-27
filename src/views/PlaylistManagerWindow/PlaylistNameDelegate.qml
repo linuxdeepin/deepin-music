@@ -66,6 +66,12 @@ Rectangle{
 
     states: [
         State {
+            name: "Active"
+            PropertyChanges { target: playlistNameText; color: "#2ca7f8"}
+            PropertyChanges { target: waveBar; active: true ;}
+            PropertyChanges { target: tipButton; visible: false ;}
+        },
+        State {
             name: "!Checked"
             when: !playlistNameDelegate.ListView.isCurrentItem
             PropertyChanges {target: playlistNameDelegate; color: "transparent"}
@@ -99,7 +105,12 @@ Rectangle{
         onClicked: {
             playlistName = playlistNameText.text
             playlistNameDelegate.ListView.view.currentIndex = index;
-            playlistNameDelegate.state = "Checked";
+
+            if (playlistNameDelegate.state == 'Active'){
+
+            }else{
+                playlistNameDelegate.state = "Checked";
+            }
 
             var name = playlistNameDelegate.ListView.view.model[index].name;
             playlistNameDelegate.ListView.view.itemClicked(name);

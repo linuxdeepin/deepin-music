@@ -23,9 +23,21 @@ Rectangle {
             width: 20
             height: 24
 
+            color: "transparent"
+
             Text {
+                id: indexTip
                 anchors.centerIn: parent
                 text: index + 1
+                visible: !waveBar.active
+            }
+
+            DWaveBar {
+                id: waveBar
+                anchors.centerIn: parent
+                itemHeight: 12
+                itemWidth: 3
+                active: false
             }
         }
 
@@ -70,6 +82,11 @@ Rectangle {
 
     states: [
         State {
+            name: "Active"
+            PropertyChanges { target: titleTetx; color: "#2ca7f8"}
+            PropertyChanges { target: waveBar; active: true ;}
+        },
+        State {
             name: "Current"
             when: mediaItem.ListView.isCurrentItem
             PropertyChanges { target: titleTetx; color: "#2ca7f8";}
@@ -77,7 +94,7 @@ Rectangle {
         State {
             name: "!Current"
             when: !mediaItem.ListView.isCurrentItem
-            // PropertyChanges { target: waveBar; active: false ;}
+            PropertyChanges { target: waveBar; active: false ;}
         }
     ]
 
@@ -102,11 +119,9 @@ Rectangle {
         onClicked: {
             if (mouse.button == Qt.LeftButton){
                 mediaItem.ListView.view.currentIndex = index;
-                // if (playButton.visible){
-                    // var url = mediaItem.ListView.view.model[index].url
-                    // mediaItem.ListView.view.playMusicByUrl(url);
-                // }
-                // playButton.visible = false;
+                var url = mediaItem.ListView.view.model[index].url
+                mediaItem.ListView.view.playMusicByUrl(url);
+                waveBar.active = true
             }
             else if (mouse.button == Qt.RightButton){
                 mediaItem.menuShowed(index);

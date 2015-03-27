@@ -13,11 +13,16 @@ Rectangle {
         anchors.leftMargin: 14
         anchors.fill: parent
 
-        PlaylistNavgationBar {
-            id: playlistNavgationBar
+        Rectangle {
+            id: leftBar
             width : 120
             height: root.height - topMargin
-            color: "white"
+
+            PlaylistNavgationBar {
+                id: playlistNavgationBar
+                y: 4
+                color: "white"
+            }
         }
 
         PlaylistDetailBox {

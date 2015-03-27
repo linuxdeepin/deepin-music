@@ -26,7 +26,7 @@ Rectangle{
             DStarButton {
                 id: tipButton
                 anchors.fill: parent
-                visible: true
+                visible: !waveBar.active
             }
 
             DWaveBar {
@@ -34,13 +34,7 @@ Rectangle{
                 anchors.centerIn: parent
                 itemHeight: 12
                 itemWidth: 3
-                active: {
-                    if (MediaPlayer.state == 1){
-                        return true;
-                    }else{
-                        return false;
-                    }
-                }
+                active: false
             }
         }
 
@@ -102,7 +96,10 @@ Rectangle{
             }
         }
         onClicked: {
-            temporaryDelegate.state = "Checked";
+            if (temporaryDelegate.state == 'Active'){
+            }else{
+                temporaryDelegate.state = "Checked";
+            }
             temporaryDelegate.clicked();
         }
     }

@@ -7,8 +7,8 @@ Rectangle {
     id: playlistNavgationBar
 
     property var addButton: addButton
-    property var starList: starList
-    property var temporaryList: temporaryList
+    property var starDelegate: starDelegate
+    property var temporaryDelegate: temporaryDelegate
     property var playlistInputText: playlistInputText
     property var customPlaylistView: customPlaylistView
 
@@ -49,10 +49,10 @@ Rectangle {
                 spacing: 16
 
                 StarDelegate{
-                    id: starList
+                    id: starDelegate
                 }
                 TemporaryDelegate{
-                    id: temporaryList
+                    id: temporaryDelegate
                 }
             }
 
@@ -186,28 +186,45 @@ Rectangle {
         }
 
         Connections {
-            target: starList
+            target: starDelegate
             onClicked: {
-                temporaryList.state = '!Checked';
+                if (temporaryDelegate.state == 'Active'){
+
+                }else {
+                    temporaryDelegate.state = '!Checked'
+                }
                 customPlaylistView.currentIndex = -1
-                playlistNavgationBar.playlistNameChanged(starList.name);
+                playlistNavgationBar.playlistNameChanged(starDelegate.name);
             } 
         }
 
         Connections {
-            target: temporaryList
+            target: temporaryDelegate
             onClicked: {
-                starList.state = '!Checked'
+                if (starDelegate.state == 'Active'){
+
+                }else {
+                    starDelegate.state = '!Checked'
+                }
                 customPlaylistView.currentIndex = -1
-                playlistNavgationBar.playlistNameChanged(temporaryList.name);
+                playlistNavgationBar.playlistNameChanged(temporaryDelegate.name);
             } 
         }
 
         Connections {
             target: customPlaylistView
             onItemClicked: {
-                starList.state = '!Checked';
-                temporaryList.state = '!Checked';
+                if (starDelegate.state == 'Active'){
+
+                }else {
+                    starDelegate.state = '!Checked'
+                }
+                if (temporaryDelegate.state == 'Active'){
+
+                }else {
+                    temporaryDelegate.state = '!Checked'
+                }
+                print(temporaryDelegate.state)
                 if (name != _playlistName){
                     playlistNavgationBar.playlistNameChanged(name);
                     _playlistName = name;

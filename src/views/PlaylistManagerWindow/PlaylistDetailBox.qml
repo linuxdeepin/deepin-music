@@ -5,6 +5,7 @@ Rectangle {
     id: playlistDetailBox
 
     property var playlistView: playlistView
+    property var titleText: titleText
 
     Rectangle {
         id: detailBox
@@ -23,7 +24,7 @@ Rectangle {
 
                 width: parent.width
                 height: 24
-                color: "transparent"
+                color: "#eeeeee"
 
                 Row {
 
@@ -34,6 +35,8 @@ Rectangle {
                         id: tipRect
                         width: 20
                         height: 24
+
+                        color: "transparent"
                     }
 
                     Row {
@@ -41,14 +44,22 @@ Rectangle {
                         spacing: 38
 
                         Text {
-                            id: titleTetx
+                            id: titleText
                             width: 250
                             height: 24
                             color:  "#8a8a8a"
                             font.pixelSize: 12
                             elide: Text.ElideRight
-                            // verticalAlignment: Text.AlignVCenter
+                            verticalAlignment: Text.AlignVCenter
                             text: I18nWorker.song
+
+                            Rectangle {
+                                x: 270
+                                y: 4
+                                width: 1
+                                height: parent.height - 8
+                                color: "lightgray"
+                            }
                         }
 
                         Text {
@@ -58,8 +69,16 @@ Rectangle {
                             color: "#8a8a8a"
                             font.pixelSize: 12
                             elide: Text.ElideRight
-                            // verticalAlignment: Text.AlignVCenter
+                            verticalAlignment: Text.AlignVCenter
                             text: I18nWorker.artist
+
+                            Rectangle {
+                                x: 174
+                                y: 4
+                                width: 1
+                                height: parent.height - 8
+                                color: "lightgray"
+                            }
                         }
 
                         Text {
@@ -69,8 +88,10 @@ Rectangle {
                             color: "#8a8a8a"
                             font.pixelSize: 12
                             elide: Text.ElideRight
-                            // verticalAlignment: Text.AlignVCenter
+                            verticalAlignment: Text.AlignVCenter
                             text: I18nWorker.duration
+
+                            
                         }
                     }
                 }
@@ -88,6 +109,8 @@ Rectangle {
                     focus: true
                     spacing: 14
                     snapMode:ListView.SnapToItem
+
+                    signal playMusicByUrl(string url)
 
                     DScrollBar {
                         flickable: parent
