@@ -9,7 +9,7 @@ from controllers import contexts, Web360ApiWorker, MusicManageWorker
 from controllers import MenuWorker, WindowManageWorker
 from controllers import MediaPlayer, PlaylistWorker, CoverWorker
 from controllers import ConfigWorker, DBWorker, I18nWorker
-from controllers.mediaplayer import gPlayer
+# from controllers.mediaplayer import gPlayer
 
 from models import MusicDataBase
 
@@ -75,11 +75,11 @@ class DeepinPlayer(QObject):
         self.web360ApiWorker.moveToThread(self.web360Thread)
         self.web360Thread.start()
 
-        self.playerBinThread = QThread()
-        gPlayer.moveToThread(self.playerBinThread)
-        self.playerBinThread.start()
-        print(self.playerBinThread, '++++++++++')
-        print(gPlayer.thread())
+        # self.playerBinThread = QThread()
+        # gPlayer.moveToThread(self.playerBinThread)
+        # self.playerBinThread.start()
+        # print(self.playerBinThread, '++++++++++')
+        # print(gPlayer.thread())
 
     def initQMLContext(self):
         self.mainWindow.setContexts(contexts)

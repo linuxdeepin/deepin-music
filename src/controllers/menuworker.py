@@ -4,11 +4,12 @@
 
 import os
 import sys
-from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot, pyqtProperty
+from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot, pyqtProperty, QPoint
 from PyQt5.QtGui import QCursor
 from .utils import registerContext
 from deepin_menu.menu import *
 
+from menu import SettingsMenu
 from log import logger
 
 
@@ -34,6 +35,8 @@ class MenuWorker(QObject):
     @registerContext
     def __init__(self):
         super(MenuWorker, self).__init__()
+        self.menu = SettingsMenu()
+
 
     def _menu_item_invoked(self, _id, _checked):
         if _id == "MiniMode":
@@ -41,9 +44,9 @@ class MenuWorker(QObject):
 
     @pyqtSlot()
     def showSettingMenu(self):
-        self.menu = Menu(SettingMenuItems)
-        self.menu.itemClicked.connect(self._menu_item_invoked)
-        self.menu.showRectMenu(QCursor.pos().x(), QCursor.pos().y())
+        # self.menu = Menu(SettingMenuItems)
+        # self.menu.itemClicked.connect(self._menu_item_invoked)
+        self.menu.popup(QCursor.pos())
 
 
 if __name__ == "__main__":
