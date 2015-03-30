@@ -1,7 +1,7 @@
 import QtQuick 2.4
 
 Item {
-
+    property var playlistPage
     property var playlistNavgationBar
     property var playlistDetailBox
     property var currentPlaylistName: ''
@@ -20,6 +20,9 @@ Item {
             }
         }
         currentPlaylistName = ConfigWorker.lastPlaylistName
+
+        MediaPlayer.currentIndexChanged.connect(activeCurrentItem)
+        MediaPlayer.playingChanged.connect(activeCurrentItem)
     }
 
     function playMusicByUrl(url) {
@@ -27,6 +30,37 @@ Item {
             Web360ApiWorker.playMediaByUrl(url);
         }else{
             MediaPlayer.playLocalMedia(url);
+        }
+    }
+
+    function activeCurrentItem(currentIndex){
+        if (MediaPlayer.playlist) {
+            if (MediaPlayer.playlist.name == currentPlaylistName){
+                playlistDetailBox.playlistView.currentIndex = MediaPlayer.playlist.currentIndex;
+                if (playlistDetailBox.playlistView.currentItem){
+                    if (MediaPlayer.playing){
+                        playlistDetailBox.playlistView.currentItem.state = "Active";
+                    }else{
+                        playlistDetailBox.playlistView.currentItem.state = "!Checked";
+                    }
+                }
+            }
+
+            if (MediaPlayer.playing){
+                if (MediaPlayer.playlist.name == 'favorite'){
+                    playlistNavgationBar.starDelegate.state = 'Active'
+                    playlistNavgationBar.temporaryDelegate.state = '!Checked'
+
+                }else if(MediaPlayer.playlist.name == 'temporary'){
+                    playlistNavgationBar.starDelegate.state = '!Checked'
+                    playlistNavgationBar.temporaryDelegate.state = 'Active'
+                }else{
+
+                }
+            }else{
+                playlistNavgationBar.starDelegate.state = '!Checked'
+                playlistNavgationBar.temporaryDelegate.state = '!Checked'
+            }
         }
     }
 
@@ -79,6 +113,7 @@ Item {
 
         onModelChanged: {
             playlistDetailBox.playlistView.currentIndex = -1;
+            activeCurrentItem();
         }
     }
 
@@ -111,9 +146,18 @@ Item {
 
             currentPlaylistName = nameId;
 
-            if (MediaPlayer.playlist.name == currentPlaylistName){
-                playlistDetailBox.playlistView.currentIndex = MediaPlayer.playlist.currentIndex;
-                playlistDetailBox.playlistView.currentItem.state = "Active";
+            activeCurrentItem();
+        }
+    }
+
+    Connections {
+        target: playlistPage
+        onVisibleChanged: {
+            if (playlistPage.visible){
+                if (MediaPlayer.playlist){
+                    currentPlaylistName = MediaPlayer.playlist.name;
+                    activeCurrentItem()
+                }
             }
         }
     }

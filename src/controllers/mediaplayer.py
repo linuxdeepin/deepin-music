@@ -29,6 +29,8 @@ class MediaPlayer(QObject):
 
     musicInfoChanged = pyqtSignal('QString', 'QString')
 
+    playingChanged = pyqtSignal(bool)
+
     positionChanged = pyqtSignal('qint64')
     volumeChanged = pyqtSignal(int)
     mutedChanged = pyqtSignal(bool)
@@ -41,7 +43,6 @@ class MediaPlayer(QObject):
     playlistChanged = pyqtSignal('QString')
 
     currentIndexChanged = pyqtSignal(int)
-
 
     titleChanged = pyqtSignal('QString')
     artistChanged = pyqtSignal('QString')
@@ -105,6 +106,8 @@ class MediaPlayer(QObject):
         playbackMode = self._playbackMode
         playlist = playlistWorker.getPlaylistByName(name)
         if playlist:
+            if self._playlist and self._playlist.name == playlist.name:
+                return
             playlist.setPlaybackMode(playbackMode)
             self.setPlaylist(playlist)
             self.setCurrentIndex(0)
@@ -121,7 +124,7 @@ class MediaPlayer(QObject):
             self._playlist.setPlaybackMode(playbackMode)
         self.playbackModeChanged.emit(playbackMode)
 
-    @pyqtProperty(bool)
+    @pyqtProperty(bool, notify=playingChanged)
     def playing(self):
         return self._isPlaying
 
@@ -214,6 +217,8 @@ class MediaPlayer(QObject):
             self.pause()
 
         self._isPlaying = playing
+
+        self.playingChanged.emit(self._isPlaying)
 
     @pyqtSlot()
     def stop(self):

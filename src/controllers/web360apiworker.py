@@ -56,7 +56,7 @@ class Web360ApiWorker(QObject):
 
     def initConnect(self):
         self.playMusicByIdSignal.connect(self.playMusicById)
-        # self.playMusicByIdsSignal.connect(self.playMusicById)
+        self.playMusicByIdsSignal.connect(self.playMusicByIds)
         self.playSonglistByNameSignal.connect(self.playMusicBySonglistName)
         self.playSonglistByIdSignal.connect(self.playMusicBySonglistId)
         self.playAlbumByIdSignal.connect(self.playMusicByAlbumId)
@@ -65,7 +65,14 @@ class Web360ApiWorker(QObject):
     @classmethod
     def md5(cls, musicId):
         import hashlib
-        s = 'id=%d_projectName=linuxdeepin' % (musicId)
+        s = 'id=%s_projectName=linuxdeepin' % (musicId)
+        md5Value = hashlib.md5(s)
+        return md5Value.hexdigest()
+
+    @classmethod
+    def md5s(cls, musicIds):
+        import hashlib
+        s = 'ids=%s_projectName=linuxdeepin' % (musicIds)
         md5Value = hashlib.md5(s)
         return md5Value.hexdigest()
 
@@ -80,6 +87,19 @@ class Web360ApiWorker(QObject):
 
         url = 'http://s.music.haosou.com/player/songForPartner?id=%s&src=%s&sign=%s'\
             %(params['id'], params['src'], params['sign'])
+        return url
+
+    @classmethod
+    def getUrlByIDs(cls, musicIds):
+        sign = cls.md5s(musicIds)
+        params = {
+            'ids': musicIds,
+            'src': 'linuxdeepin',
+            'sign': sign
+        }
+
+        url = 'http://s.music.haosou.com/player/songlistForPartner?ids=%s&src=%s&sign=%s'\
+            %(params['ids'], params['src'], params['sign'])
         return url
 
     @classmethod
@@ -122,6 +142,26 @@ class Web360ApiWorker(QObject):
     @pyqtSlot(int)
     def playMusicById(self, musicId):
         self.playMediaById(musicId)
+
+    @pyqtSlot('QString')
+    def playMusicByIds(self, musicIds):
+        url = self.getUrlByIDs(musicIds)
+        songLists = self.request(url)
+
+        results = []
+        for song in songLists:
+            url = self.getUrlByID(song['songId'])
+            tags = song
+            result = {
+                'url': url,
+                'tags': tags,
+                'updated': True
+            }
+            results.append(result)
+
+        self.addMediaContents.emit(results)
+        url = self.getUrlByID(songLists[0]['songId'])
+        self.playMediaByUrl(url)
 
     # @dthread
     @pyqtSlot(int)

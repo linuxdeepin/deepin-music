@@ -418,8 +418,8 @@ class PlaylistWorker(QObject):
     __contextName__ = 'PlaylistWorker'
 
     nameExisted = pyqtSignal('QString')
-
     playlistNamesChanged = pyqtSignal('QVariant')
+    currentPlaylistChanged = pyqtSignal('QString')
 
     @registerContext
     def __init__(self, parent=None):
@@ -532,8 +532,10 @@ class PlaylistWorker(QObject):
 
     def addOnlineMediaToTemporary(self, media):
         playlist = self.temporaryPlaylist
+        self.currentPlaylistChanged.emit('temporary')
         playlist.addMedia(media['url'], media['tags'], media['updated'])
 
     def addOnlineMediasToTemporary(self, medias):
         playlist = self.temporaryPlaylist
+        self.currentPlaylistChanged.emit('temporary')
         playlist.addMedias(medias)

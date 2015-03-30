@@ -33,6 +33,7 @@ Rectangle {
     }
 
     PlaylistPageController {
+        playlistPage: root
         playlistNavgationBar: playlistNavgationBar
         playlistDetailBox: playlistDetailBox
     }

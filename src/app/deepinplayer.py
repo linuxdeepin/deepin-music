@@ -94,6 +94,7 @@ class DeepinPlayer(QObject):
 
         self.coverWorker.downloadCoverSuccessed.connect(self.mediaPlayer.updateCover)
 
+        self.playlistWorker.currentPlaylistChanged.connect(self.mediaPlayer.setPlaylistByName)
 
         self.qApp.aboutToQuit.connect(self.close)
 
