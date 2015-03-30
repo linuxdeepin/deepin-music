@@ -22,10 +22,22 @@ class PlayerBin(QMediaPlayer):
         super(PlayerBin, self).__init__()
         self.setNotifyInterval(50)
 
+    def setMediaUrl(self, url):
+        import threading
+        print(threading.currentThread())
+        if url.startswith('http'):
+            _url = QUrl(url)
+        else:
+            _url = QUrl.fromLocalFile(url)
+
+        self.setMedia(QMediaContent(_url))
+
 
 class MediaPlayer(QObject):
 
     __contextName__ = "MediaPlayer"
+
+    mediaUrlChanged = pyqtSignal('QString')
 
     musicInfoChanged = pyqtSignal('QString', 'QString')
 
@@ -57,6 +69,10 @@ class MediaPlayer(QObject):
         super(MediaPlayer, self).__init__()
 
         self.player = PlayerBin()
+
+
+
+
         self._playlist = None
 
         self._state = 0
@@ -79,6 +95,8 @@ class MediaPlayer(QObject):
         self.notifyInterval = 50
 
     def initConnect(self):
+        self.mediaUrlChanged.connect(self.player.setMediaUrl)
+
         self.player.mediaStatusChanged.connect(self.mediaStatusChanged)
         self.player.mediaStatusChanged.connect(self.monitorMediaStatus)
         self.player.positionChanged.connect(self.positionChanged)
@@ -171,13 +189,16 @@ class MediaPlayer(QObject):
 
     @pyqtSlot(int)
     def updateDuration(self, duration):
-        index = self._playlist.currentIndex()
-        urls = self._playlist.urls
-        mediaContents =  self._playlist.mediaContents
-        if index < len(urls):
-            mediaContent = mediaContents[urls[index]]
-            mediaContent.tags.update({'duration': duration})
-            mediaContent.duration = duration_to_string(duration)
+        try:
+            index = self._playlist.currentIndex()
+            urls = self._playlist.urls
+            mediaContents =  self._playlist.mediaContents
+            if index < len(urls):
+                mediaContent = mediaContents[urls[index]]
+                mediaContent.tags.update({'duration': duration})
+                mediaContent.duration = duration_to_string(duration)
+        except Exception, e:
+            raise e
 
     @pyqtProperty(bool)
     def seekable(self):
@@ -257,12 +278,15 @@ class MediaPlayer(QObject):
     @pyqtSlot('QString')
     def setMediaUrl(self, url):
         self._url = url
-        if url.startswith('http'):
-            _url = QUrl(url)
-        else:
-            _url = QUrl.fromLocalFile(url)
+        # if url.startswith('http'):
+        #     _url = QUrl(url)
+        # else:
+        #     _url = QUrl.fromLocalFile(url)
 
-        self.player.setMedia(QMediaContent(_url))
+        # self.player.setMedia(QMediaContent(_url))
+
+        self.mediaUrlChanged.emit(url)
+
         self.playToggle(self._isPlaying)
 
     @pyqtSlot()

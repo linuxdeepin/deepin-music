@@ -103,17 +103,19 @@ Rectangle{
             }
         }
         onClicked: {
-            playlistName = playlistNameText.text
-            playlistNameDelegate.ListView.view.currentIndex = index;
+            if (mouse.button == Qt.LeftButton){
+                playlistName = playlistNameText.text
+                playlistNameDelegate.ListView.view.currentIndex = index;
+                if (playlistNameDelegate.state == 'Active'){
 
-            if (playlistNameDelegate.state == 'Active'){
+                }else{
+                    playlistNameDelegate.state = "Checked";
+                }
+                var name = playlistNameDelegate.ListView.view.model[index].name;
+                playlistNameDelegate.ListView.view.itemClicked(name);
+            }else if (mouse.button == Qt.RightButton){
 
-            }else{
-                playlistNameDelegate.state = "Checked";
             }
-
-            var name = playlistNameDelegate.ListView.view.model[index].name;
-            playlistNameDelegate.ListView.view.itemClicked(name);
         }
     }
 }

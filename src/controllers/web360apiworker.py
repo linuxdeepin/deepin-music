@@ -36,12 +36,16 @@ class Web360ApiWorker(QObject):
 
     addMediaContents = pyqtSignal(list)
     addMediaContent = pyqtSignal('QVariant')
+    addMediaContentToFavorite = pyqtSignal('QVariant')
+    removeMediaContentFromFavorite = pyqtSignal('QString')
 
     playMusicByIdSignal = pyqtSignal(int)
     playMusicByIdsSignal = pyqtSignal('QString')
     playSonglistByNameSignal = pyqtSignal('QString')
     playSonglistByIdSignal = pyqtSignal(int)
     playAlbumByIdSignal = pyqtSignal(int)
+    addFavoriteSignal = pyqtSignal(int)
+    removeFavoriteSignal = pyqtSignal(int)
 
     __contextName__ = 'Web360ApiWorker'
 
@@ -60,6 +64,9 @@ class Web360ApiWorker(QObject):
         self.playSonglistByNameSignal.connect(self.playMusicBySonglistName)
         self.playSonglistByIdSignal.connect(self.playMusicBySonglistId)
         self.playAlbumByIdSignal.connect(self.playMusicByAlbumId)
+
+        self.addFavoriteSignal.connect(self.addMusicToFavorite)
+        self.removeFavoriteSignal.connect(self.removeMusicFromFavorite)
         pass
 
     @classmethod
@@ -246,6 +253,22 @@ class Web360ApiWorker(QObject):
             url = self.getUrlByID(ret['songList'][0]['songId'])
             self.playMediaByUrl(url)
 
+
+    @pyqtSlot(int)
+    def addMusicToFavorite(self, musicId):
+        url = self.getUrlByID(musicId)
+        tags = self.request(url)
+        result = {
+            'url': url,
+            'tags': tags,
+            'updated': False
+        }
+        self.addMediaContentToFavorite.emit(result)
+
+    @pyqtSlot(int)
+    def removeMusicFromFavorite(self, musicId):
+        url = self.getUrlByID(musicId)
+        self.removeMediaContentFromFavorite.emit(url)
 
     # @dthread
     # def getQueueResults(self, musicIdString, musicId):

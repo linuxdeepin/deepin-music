@@ -161,9 +161,10 @@ class DRealOnlineMediaContent(BaseMediaContent):
             k = self.__keys__[key]
             if k in tags:
                 self._tags[key] = tags[k]
-        self.title = self._tags['title']
-        self.artist = self._tags['artist']
-
+        if 'title' in self._tags:
+            self.title = self._tags['title']
+        if 'artist' in self._tags:
+            self.artist = self._tags['artist']
         if 'duration' in self._tags:
             self.duration = duration_to_string(self._tags['duration'])
 
@@ -181,8 +182,8 @@ class DRealOnlineMediaContent(BaseMediaContent):
             self.playlinkUrl = self._tags['playlinkUrl']
             # if self.duration == u"00:00":
             #     QTimer.singleShot(5000, self.updateDuration)
-
-        self.tags.update(tags)
+        if isinstance(self.tags, dict):
+            self.tags.update(tags)
 
     def updateDuration(self):
         if self.playlinkUrl:
@@ -339,8 +340,13 @@ class DMediaPlaylist(QMediaPlaylist):
             url = self._urls[index]
             self._urls.pop(index)
             mediaContent = self._mediaContents.pop(url)
-            self._medias.pop(mediaContent)
+            self._medias.remove(mediaContent)
             self.medias = self._medias
+
+    def removeMediaByUrl(self, url):
+        url = unicode(url)
+        index = self._urls.index(url)
+        self.removeMediaByIndex(index)
 
     def emitSignal(self):
         for key in self._urls:
@@ -483,6 +489,10 @@ class PlaylistWorker(QObject):
     def temporaryPlaylist(self):
         return self._playlists['temporary']
 
+    @pyqtProperty('QVariant')
+    def favoritePlaylist(self):
+        return self._playlists['favorite']
+
     @pyqtSlot('QString', result='QVariant')
     def getPlaylistByName(self, name):
         if name in self._playlists:
@@ -538,4 +548,19 @@ class PlaylistWorker(QObject):
     def addOnlineMediasToTemporary(self, medias):
         playlist = self.temporaryPlaylist
         self.currentPlaylistChanged.emit('temporary')
+        playlist.addMedias(medias)
+
+    def addOnlineMediaToFavorite(self, media):
+        playlist = self.favoritePlaylist
+        # self.currentPlaylistChanged.emit('temporary')
+        playlist.addMedia(media['url'], media['tags'], media['updated'])
+
+    def removeFavoriteMediaContent(self, url):
+        playlist = self.favoritePlaylist
+        print url
+        playlist.removeMediaByUrl(url)
+
+    def addOnlineMediasToFavorite(self, medias):
+        playlist = self.favoritePlaylist
+        # self.currentPlaylistChanged.emit('temporary')
         playlist.addMedias(medias)

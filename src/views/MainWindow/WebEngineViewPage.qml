@@ -11,6 +11,9 @@ WebEngineView {
     signal playSonglistById(int songlistId)
     signal playAlbumById(int albumId)
 
+    signal addFavorite(int musicId)
+    signal removeFavorite(int musicId)
+
     onLinkHovered:{
 
     }
@@ -46,7 +49,13 @@ WebEngineView {
                         print(rpc.rpcActionType, rpc.type, rpc.rpcId);
                     }
                 }else if (rpc.hasOwnProperty('rpcId') && !rpc.hasOwnProperty('type')){
-                    print(rpc.rpcActionType, rpc.rpcId);
+                    print(rpc.rpcActionType, rpc.rpcId, typeof rpc.rpcId);
+                    if (rpc.rpcActionType == "AddFavorite") {
+                        webEngineView.addFavorite(rpc.rpcId);
+                    }else if (rpc.rpcActionType == "RemoveFavorite")
+                    {
+                        webEngineView.removeFavorite(rpc.rpcId);
+                    }
                 }else{
                     print(rpc)
                 }

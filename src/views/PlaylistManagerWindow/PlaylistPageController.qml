@@ -49,17 +49,33 @@ Item {
             if (MediaPlayer.playing){
                 if (MediaPlayer.playlist.name == 'favorite'){
                     playlistNavgationBar.starDelegate.state = 'Active'
-                    playlistNavgationBar.temporaryDelegate.state = '!Checked'
+                    if (currentPlaylistName == 'temporary'){
+                        playlistNavgationBar.temporaryDelegate.state = 'Checked'
+                    }else{
+                        playlistNavgationBar.temporaryDelegate.state = '!Checked'
+                    }
 
                 }else if(MediaPlayer.playlist.name == 'temporary'){
-                    playlistNavgationBar.starDelegate.state = '!Checked'
                     playlistNavgationBar.temporaryDelegate.state = 'Active'
+                    if (currentPlaylistName == 'favorite'){
+                        playlistNavgationBar.starDelegate.state = 'Checked'
+                    }else{
+                        playlistNavgationBar.starDelegate.state = '!Checked'
+                    }
                 }else{
 
                 }
             }else{
-                playlistNavgationBar.starDelegate.state = '!Checked'
-                playlistNavgationBar.temporaryDelegate.state = '!Checked'
+               if (currentPlaylistName == 'favorite'){
+                    playlistNavgationBar.starDelegate.state = 'Checked'
+                    playlistNavgationBar.temporaryDelegate.state = '!Checked'
+
+                }else if(currentPlaylistName == 'temporary'){
+                    playlistNavgationBar.starDelegate.state = '!Checked'
+                    playlistNavgationBar.temporaryDelegate.state = 'Checked'
+                }else{
+
+                }
             }
         }
     }
@@ -145,7 +161,6 @@ Item {
             }
 
             currentPlaylistName = nameId;
-
             activeCurrentItem();
         }
     }

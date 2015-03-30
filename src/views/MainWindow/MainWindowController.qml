@@ -47,5 +47,8 @@ Item {
         onPlaySonglistById: Web360ApiWorker.playSonglistByIdSignal(songlistId)
         onPlaySonglistByName: Web360ApiWorker.playSonglistByNameSignal(songlistName)
         onPlayAlbumById: Web360ApiWorker.playAlbumByIdSignal(albumId)
+
+        onAddFavorite: Web360ApiWorker.addFavoriteSignal(musicId)
+        onRemoveFavorite: Web360ApiWorker.removeFavoriteSignal(musicId)
     }
 }

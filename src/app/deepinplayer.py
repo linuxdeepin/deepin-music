@@ -9,6 +9,7 @@ from controllers import contexts, Web360ApiWorker, MusicManageWorker
 from controllers import MenuWorker, WindowManageWorker
 from controllers import MediaPlayer, PlaylistWorker, CoverWorker
 from controllers import ConfigWorker, DBWorker, I18nWorker
+from controllers.mediaplayer import gPlayer
 
 from models import MusicDataBase
 
@@ -74,9 +75,11 @@ class DeepinPlayer(QObject):
         self.web360ApiWorker.moveToThread(self.web360Thread)
         self.web360Thread.start()
 
-        # self.mediaPlayerThread = QThread(self)
-        # self.mediaPlayer.moveToThread(self.mediaPlayerThread)
-        # self.mediaPlayerThread.start()
+        self.playerBinThread = QThread()
+        gPlayer.moveToThread(self.playerBinThread)
+        self.playerBinThread.start()
+        print(self.playerBinThread, '++++++++++')
+        print(gPlayer.thread())
 
     def initQMLContext(self):
         self.mainWindow.setContexts(contexts)
@@ -88,6 +91,9 @@ class DeepinPlayer(QObject):
 
         self.web360ApiWorker.addMediaContent.connect(self.playlistWorker.addOnlineMediaToTemporary)
         self.web360ApiWorker.addMediaContents.connect(self.playlistWorker.addOnlineMediasToTemporary)
+
+        self.web360ApiWorker.addMediaContentToFavorite.connect(self.playlistWorker.addOnlineMediaToFavorite)
+        self.web360ApiWorker.removeMediaContentFromFavorite.connect(self.playlistWorker.removeFavoriteMediaContent)
 
         self.mediaPlayer.requestMusic.connect(self.web360ApiWorker.switchMediaByUrl)
         self.mediaPlayer.downloadCover.connect(self.coverWorker.downloadCoverByUrl)

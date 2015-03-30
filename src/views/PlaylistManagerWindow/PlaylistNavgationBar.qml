@@ -193,6 +193,7 @@ Rectangle {
                 }else {
                     temporaryDelegate.state = '!Checked'
                 }
+                
                 customPlaylistView.currentIndex = -1
                 playlistNavgationBar.playlistNameChanged(starDelegate.name);
             } 
@@ -206,6 +207,7 @@ Rectangle {
                 }else {
                     starDelegate.state = '!Checked'
                 }
+                
                 customPlaylistView.currentIndex = -1
                 playlistNavgationBar.playlistNameChanged(temporaryDelegate.name);
             } 
