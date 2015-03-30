@@ -78,8 +78,8 @@ class DeepinPlayer(QObject):
         self.playerBinThread = QThread()
         gPlayer.moveToThread(self.playerBinThread)
         self.playerBinThread.start()
-        print(self.playerBinThread, '++++++++++')
-        print(gPlayer.thread())
+
+        # self.mediaPlayer.initConnect()
 
     def initQMLContext(self):
         self.mainWindow.setContexts(contexts)
@@ -97,6 +97,22 @@ class DeepinPlayer(QObject):
 
         self.mediaPlayer.requestMusic.connect(self.web360ApiWorker.switchMediaByUrl)
         self.mediaPlayer.downloadCover.connect(self.coverWorker.downloadCoverByUrl)
+
+        self.mediaPlayer.mediaUrlChanged.connect(gPlayer.setMediaUrl)
+        self.mediaPlayer.played.connect(gPlayer.play)
+        self.mediaPlayer.stoped.connect(gPlayer.stop)
+        self.mediaPlayer.paused.connect(gPlayer.pause)
+        self.mediaPlayer.notifyIntervalChanged.connect(gPlayer.setNotifyInterval)
+        # self.mediaPlayer.positionChanged.connect(gPlayer.setPosition)
+        self.mediaPlayer.volumeChanged.connect(gPlayer.setVolume)
+        self.mediaPlayer.mutedChanged.connect(gPlayer.setMuted)
+
+        gPlayer.mediaStatusChanged.connect(self.mediaPlayer.mediaStatusChanged)
+        gPlayer.mediaStatusChanged.connect(self.mediaPlayer.monitorMediaStatus)
+        gPlayer.positionChanged.connect(self.mediaPlayer.positionChanged)
+        gPlayer.durationChanged.connect(self.mediaPlayer.updateDuration)
+        gPlayer.bufferStatusChanged.connect(self.mediaPlayer.bufferChange)
+        gPlayer.error.connect(self.mediaPlayer.monitorError)
 
         self.coverWorker.downloadCoverSuccessed.connect(self.mediaPlayer.updateCover)
 
