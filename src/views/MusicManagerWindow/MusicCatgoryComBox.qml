@@ -53,6 +53,10 @@ Rectangle {
         model: MusicManageWorker.categories
         delegate: catgoryDelegate
         currentIndex: 0
+
+        onCurrentIndexChanged:{
+            catgoryCombox.currentText = catgoryView.model[currentIndex].name
+        }
     }
     visible: false
 

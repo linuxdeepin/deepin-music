@@ -166,7 +166,6 @@ Item {
             currentPlaylistName = nameId;
             activeCurrentItem();
 
-            print(currentPlaylistName, '和本地乐库')
             if (playlistDetailBox.playlistView.count == 0){
                 playlistDetailBox.noMusicTip.visible = true;
             }else{

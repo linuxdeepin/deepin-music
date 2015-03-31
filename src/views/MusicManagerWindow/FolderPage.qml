@@ -12,5 +12,9 @@ Rectangle {
         	name: GridView.view.model[index].name
             count: GridView.view.model[index].count
         }
+
+        onModelChanged:{
+            positionViewAtEnd()
+        }
     }
 }

@@ -4,15 +4,27 @@
 
 import os
 import sys
-from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot, pyqtProperty
+import time
+from PyQt5.QtCore import (QObject, pyqtSignal,
+                pyqtSlot, pyqtProperty, QDir, QDirIterator)
 
 from .utils import registerContext, contexts
 from dwidgets.tornadotemplate import template
+from models import *
+from dwidgets import dthread
+from collections import OrderedDict
 
 
 class MusicManageWorker(QObject):
 
     categoriesChanged = pyqtSignal('QVariant')
+    songCountChanged = pyqtSignal(int)
+
+    searchAllDriver =pyqtSignal()
+
+    scanfileChanged = pyqtSignal('QString')
+
+    searchOneFolder = pyqtSignal()
 
     artistsChanged = pyqtSignal('QVariant')
     albumsChanged = pyqtSignal('QVariant')
@@ -27,7 +39,9 @@ class MusicManageWorker(QObject):
         self._artists = []
         self._albums = []
         self._folders = []
+        self._folderDict = OrderedDict()
 
+        self.initConnect()
         self.initData()
 
     def initData(self):
@@ -47,13 +61,17 @@ class MusicManageWorker(QObject):
             }
             self._albums.append(item)
 
-        for i in range(100):
-            item = {
-                'name': '/home/djf/folder%d' % i,
-                'count': 100,
-                'urls': range(100)
-            }
-            self._folders.append(item)
+        # for i in range(100):
+        #     item = {
+        #         'name': '/home/djf/folder%d' % i,
+        #         'count': 100,
+        #         'urls': range(100)
+        #     }
+        #     self._folders.append(item)
+
+    def initConnect(self):
+        self.searchAllDriver.connect(self.searchAllDriverMusic)
+        self.searchOneFolder.connect(self.searchOneFolderMusic)
 
     @pyqtProperty('QVariant', notify=categoriesChanged)
     def categories(self):
@@ -66,6 +84,10 @@ class MusicManageWorker(QObject):
             {'name': i18nWorker.folder}
         ]
         return categories
+
+    @pyqtProperty('QVariant', notify=songCountChanged)
+    def songCount(self):
+        return Song.select().count()
 
     @pyqtProperty('QVariant', notify=artistsChanged)
     def artists(self):
@@ -93,3 +115,45 @@ class MusicManageWorker(QObject):
     def folders(self, value):
         self._folders = value
         self.foldersChanged.emit(self._folders)
+
+    @dthread
+    def searchAllDriverMusic(self):
+        self.scan(QDir.rootPath())
+
+    @dthread
+    def searchOneFolderMusic(self):
+        print('searchOneFolderMusic')
+
+    def scan(self, path):
+        filters = QDir.Files
+        nameFilters = ["*.wav", "*.wma", "*.mp2", "*.mp3", "*.mp4", "*.m4a", "*.flac", "*.ogg"]
+        qDirIterator = QDirIterator(path, nameFilters, filters, QDirIterator.Subdirectories);
+        _item = None
+        self._folderDict = OrderedDict()
+        self.folders = []
+        while qDirIterator.hasNext():
+            qDirIterator.next()
+            key = qDirIterator.fileInfo().absoluteDir().absolutePath()
+            value = qDirIterator.filePath()
+            self.scanfileChanged.emit(value)
+            if key not in self._folderDict:
+                self._folderDict[key] = []
+                _item = {
+                    'name': key,
+                    'count': 0,
+                    'urls': []
+                }
+                self._folders.append(_item)
+                self.folders = self._folders
+                time.sleep(0.25)
+
+            if key in self._folderDict:
+                if value not in self._folderDict[key]:
+                    self._folderDict[key].append(value)
+                if _item:
+                    _item['count'] = len(self._folderDict[key])
+                    _item['urls'] = self._folderDict[key]
+
+        self.folders = self._folders
+        self.scanfileChanged.emit('')
+

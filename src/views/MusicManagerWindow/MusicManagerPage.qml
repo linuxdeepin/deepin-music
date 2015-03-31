@@ -15,35 +15,58 @@ Rectangle {
         spacing: 12
 
         Rectangle {
-            id: navigationBar
-            width: 108 + 28
+            id: rowBox
+            width: layout.width - 2 * layout.magrin
             height: 20
 
             Rectangle {
-                anchors.leftMargin: 28
-                anchors.fill: parent
+                id: navigationBar
+                width: 108 + 28
+                height: 20
 
-                DText {
-                    width: 80
-
-                    height: parent.height
-                    color: "#252525"
-                    font.pixelSize: 12
-                    text: catgoryCombox.currentText
-                }
-
-                DUpDownButton {
-                    anchors.centerIn: parent
-                    width: 16
-                    height: 16
-                    switchflag: catgoryCombox.visible
-                }
-
-                MouseArea {
+                Rectangle {
+                    anchors.leftMargin: 28
                     anchors.fill: parent
-                    onClicked :{
-                        catgoryCombox.visible = !catgoryCombox.visible;
+
+                    DText {
+                        width: 80
+
+                        height: parent.height
+                        color: "#252525"
+                        font.pixelSize: 12
+                        text: catgoryCombox.currentText
                     }
+
+                    DUpDownButton {
+                        anchors.centerIn: parent
+                        width: 16
+                        height: 16
+                        switchflag: catgoryCombox.visible
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked :{
+                            catgoryCombox.visible = !catgoryCombox.visible;
+                        }
+                    }
+                }
+            }
+
+            Rectangle {
+                x: 100
+                y: 0
+                width: rowBox.width - x
+                height: rowBox.height
+
+                Text {
+                    id: statusText
+                    anchors.fill: parent
+                    color: "#535353"
+                    linkColor: "#31a4fa"
+                    font.pixelSize: 14
+                    elide: Text.ElideRight
+                    verticalAlignment: Text.AlignVCenter
                 }
             }
         }
@@ -68,7 +91,7 @@ Rectangle {
             elide: Text.ElideRight
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
-            text: "到 <a href=\"Online\" style=\"text-decoration:none;\">网络音乐</a> 和<a href=\"Local\" style=\"text-decoration:none;\">本地乐库</a>添加你喜欢的音乐吧"
+            text: "到 <a href=\"SearchAllDriver\" style=\"text-decoration:none;\">扫描全盘</a> 和<a href=\"SearchOneFolder\" style=\"text-decoration:none;\">指定目录</a>添加你喜欢的音乐吧"
         }
     }
 
@@ -83,8 +106,11 @@ Rectangle {
         id: musicManagerController
         rootWindow: rootWindow
         catgoryCombox: catgoryCombox
+        statusText: statusText
         musicManagerLoader: musicManagerLoader
+
         noMusicTip: noMusicTip
         linkTipText: linkTipText
+
     }
 }
