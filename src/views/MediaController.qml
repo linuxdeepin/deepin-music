@@ -15,6 +15,8 @@ Item {
         MediaPlayer.bufferStatusChanged.connect(updateBufferSlider);
         MediaPlayer.currentIndexChanged.connect(updatePlaylistIndex);
         MediaPlayer.coverChanged.connect(updateBackgroundCover);
+
+        print("首页")
     }
 
     function updateSlider(position) {

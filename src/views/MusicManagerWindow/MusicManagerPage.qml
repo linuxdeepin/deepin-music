@@ -55,6 +55,23 @@ Rectangle {
         }
     }
 
+    Rectangle {
+        id: noMusicTip
+        anchors.fill: parent
+        visible: false
+        Text {
+            id: linkTipText
+            anchors.centerIn: parent
+            color: "#535353"
+            linkColor: "#31a4fa"
+            font.pixelSize: 14
+            elide: Text.ElideRight
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            text: "到 <a href=\"Online\" style=\"text-decoration:none;\">网络音乐</a> 和<a href=\"Local\" style=\"text-decoration:none;\">本地乐库</a>添加你喜欢的音乐吧"
+        }
+    }
+
     MusicCatgoryComBox {
         id: catgoryCombox
         x: 36
@@ -67,5 +84,7 @@ Rectangle {
         rootWindow: rootWindow
         catgoryCombox: catgoryCombox
         musicManagerLoader: musicManagerLoader
+        noMusicTip: noMusicTip
+        linkTipText: linkTipText
     }
 }

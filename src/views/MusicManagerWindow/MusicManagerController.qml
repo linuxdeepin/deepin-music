@@ -4,6 +4,8 @@ Item {
 	property var rootWindow
 	property var catgoryCombox
 	property var musicManagerLoader
+	property var noMusicTip
+    property var linkTipText
 
 	function updateWindow(index) {
 	    if (index == 0){

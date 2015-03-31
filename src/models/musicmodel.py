@@ -80,7 +80,7 @@ class BaseModel(Model):
         try:
             ret = cls.create(**kwargs)
         except IntegrityError:
-            # print('%s is already in use' % kwargs['uri'])
+            # print('%s is already in use' % kwargs['url'])
             retId = cls.update(**kwargs).where(getattr(cls, key) == kwargs[key]).execute()
             if retId != 0:
                 ret = cls.get(cls.id==retId)
@@ -133,7 +133,7 @@ class Playlist(BaseModel):
 
 class Song(BaseModel):
 
-    uri = CharField(default='', unique=True)
+    url = CharField(default='', unique=True)
 
     #Common attributes
     title = CharField(default='')
@@ -186,7 +186,7 @@ class Song(BaseModel):
     #other
     created_date = DateTimeField(default=datetime.datetime.now)
 
-    __key__ = 'uri'
+    __key__ = 'url'
 
 
     TAG_KEYS = [
@@ -224,11 +224,11 @@ class Song(BaseModel):
     }
 
     @classmethod
-    def createLocalInstanceByUri(self, uri):
+    def createLocalInstanceByUrl(self, url):
         from os.path import abspath, realpath, normpath
-        uri = normpath(realpath(abspath(uri)))
-        if Song.checkUri(uri):
-            kwargs = {'uri': uri}
+        url = normpath(realpath(abspath(url)))
+        if Song.checkUrl(url):
+            kwargs = {'url': url}
             song = Song.get_create_Record(**kwargs)
             if song:
                 song.getTags()
@@ -238,19 +238,19 @@ class Song(BaseModel):
             return None
 
     @classmethod
-    def checkUri(cls, uri):
-        return cls.isExisted(uri)
+    def checkUrl(cls, url):
+        return cls.isExisted(url)
 
     @classmethod
-    def isExisted(cls, uri):
-        return os.path.exists(uri)
+    def isExisted(cls, url):
+        return os.path.exists(url)
 
     def isLocalFile(self):
-        return QUrl.fromLocalFile(self.uri).isLocalFile()
+        return QUrl.fromLocalFile(self.url).isLocalFile()
 
     @property
     def baseName(self):
-        return os.path.basename(self.uri)
+        return os.path.basename(self.url)
 
     @property
     def fileName(self):
@@ -271,7 +271,7 @@ class Song(BaseModel):
             return False
 
     def getTags(self):
-        path = self.uri
+        path = self.url
 
         TAG_KEYS = self.TAG_KEYS
         TAGS_KEYS_OVERRIDE = self.TAGS_KEYS_OVERRIDE
@@ -312,20 +312,20 @@ class Song(BaseModel):
     def saveTags(self):
         ''' Save tag information to file. '''
         if not self.isLocalFile():
-            self.last_error = self.uri + " " + "is not a local file"
+            self.last_error = self.url + " " + "is not a local file"
             return False
-        if not self.isExisted(self.uri):
-            self.last_error = self.uri + " doesn't exist"
+        if not self.isExisted(self.url):
+            self.last_error = self.url + " doesn't exist"
             return False
-        if not os.access(self.uri, os.W_OK):
-            self.last_error = self.uri + " doesn't have enough permission"
+        if not os.access(self.url, os.W_OK):
+            self.last_error = self.url + " doesn't have enough permission"
             return False
 
         TAG_KEYS = self.TAG_KEYS
         TAGS_KEYS_OVERRIDE = self.TAGS_KEYS_OVERRIDE
 
         try:
-            audio = common.MutagenFile(self.uri, common.FORMATS)
+            audio = common.MutagenFile(self.url, common.FORMATS)
             tag_keys_override = None
 
             if audio is not None:
@@ -357,16 +357,16 @@ class Song(BaseModel):
 
         except Exception, e:
             print traceback.format_exc()
-            print "W: Error while writting (" + self.get("uri") + ")\nTracback :", e
+            print "W: Error while writting (" + self.get("url") + ")\nTracback :", e
             self.last_error = "Error while writting" + \
-                ": " + self.uri
+                ": " + self.url
             return False
         else:
             return True
 
     def getMp3FontCover(self):
         from common import EasyMP3
-        audio = common.MutagenFile(self.uri, common.FORMATS)
+        audio = common.MutagenFile(self.url, common.FORMATS)
         ext = None
         img_data = None
         if isinstance(audio, EasyMP3):
@@ -381,7 +381,7 @@ class Song(BaseModel):
 
     def pprint(self):
         keys = [
-            'uri',
+            'url',
             'title',
             'artist',
             'album',
@@ -411,10 +411,10 @@ class SongPlaylist(BaseModel):
     playlist = ForeignKeyField(Playlist)
 
     @classmethod
-    def addSongToPlaylist(cls, uri, name='temporary'):
+    def addSongToPlaylist(cls, url, name='temporary'):
 
 
-        songRecord = Song.getSongByUri(uri)
+        songRecord = Song.getSongByUri(url)
         playlistRecord = Playlist.getPlaylistByName(name)
 
 
@@ -440,14 +440,14 @@ class SongPlaylist(BaseModel):
     def getSongsByPlaylistName(cls, name):
         songs = []
         for song in Song.select().join(cls).join(Playlist).where(Playlist.name==name):
-            songs.append(song.uri)
+            songs.append(song.url)
 
         return songs
 
     @classmethod
-    def getPlaylistsBySongUri(cls, uri):
+    def getPlaylistsBySongUri(cls, url):
         playlists = []
-        for playlist in Playlist.select().join(cls).join(Song).where(Song.uri==uri):
+        for playlist in Playlist.select().join(cls).join(Song).where(Song.url==url):
             playlists.append(playlist.name)
         return playlists
 
@@ -465,13 +465,13 @@ if __name__ == '__main__':
 
 
     basePath = '/home/djf/workspace/github/musicplayer-qml/music'
-    uri = os.path.join(basePath, '1.mp3')
-    song = Song.createLocalInstanceByUri(uri)
+    url = os.path.join(basePath, '1.mp3')
+    song = Song.createLocalInstanceByUrl(url)
     # song.updateTagsToDB(**{'title': '12456789'})
+    print song, song.title
+    song = Song.createLocalInstanceByUrl(url)
     print song
-    song = Song.createLocalInstanceByUri(uri)
+    song = Song.createLocalInstanceByUrl(url)
     print song
-    song = Song.createLocalInstanceByUri(uri)
-    print song
-    song = Song.createLocalInstanceByUri(uri)
+    song = Song.createLocalInstanceByUrl(url)
     print song

@@ -4,11 +4,11 @@
 import sys
 from PyQt5.QtCore import Qt, QTextStream, pyqtSignal
 from PyQt5.QtGui import QGuiApplication
-from PyQt5.QtWidgets import QApplication
+# from PyQt5.QtWidgets import QApplication
 from PyQt5.QtNetwork import QLocalSocket, QLocalServer
 
 
-class QSingleApplication(QApplication):
+class QSingleApplication(QGuiApplication):
 
     messageReceived = pyqtSignal(str)
 

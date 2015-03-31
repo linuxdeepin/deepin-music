@@ -11,7 +11,7 @@ from controllers import MediaPlayer, PlaylistWorker, CoverWorker
 from controllers import ConfigWorker, DBWorker, I18nWorker
 from controllers.mediaplayer import gPlayer
 
-from models import MusicDataBase
+# from models import MusicDataBase
 
 import config
 
@@ -68,7 +68,7 @@ class DeepinPlayer(QObject):
         self.coverWorker = CoverWorker()
         self.playlistWorker = PlaylistWorker()
 
-        self.musicDataBase = MusicDataBase()
+        # self.musicDataBase = MusicDataBase()
         self.dbWorker = DBWorker()
 
         self.web360Thread = QThread(self)
