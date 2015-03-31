@@ -35,7 +35,7 @@ class MenuWorker(QObject):
     @registerContext
     def __init__(self):
         super(MenuWorker, self).__init__()
-        self.menu = SettingsMenu()
+        # self.menu = SettingsMenu()
 
 
     def _menu_item_invoked(self, _id, _checked):
@@ -44,9 +44,9 @@ class MenuWorker(QObject):
 
     @pyqtSlot()
     def showSettingMenu(self):
-        # self.menu = Menu(SettingMenuItems)
-        # self.menu.itemClicked.connect(self._menu_item_invoked)
-        self.menu.popup(QCursor.pos())
+        self.menu = Menu(SettingMenuItems)
+        self.menu.itemClicked.connect(self._menu_item_invoked)
+        self.menu.showRectMenu(QCursor.pos().x(), QCursor.pos().y())
 
 
 if __name__ == "__main__":

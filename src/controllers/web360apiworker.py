@@ -7,11 +7,13 @@ import sys
 import json
 from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot, QUrl
 import requests
+import threading
 from .utils import registerContext, duration_to_string
 from .mediaplayer import MediaPlayer
 from dwidgets import dthread
 import copy
 from log import logger
+
 
 
 songlist = {
@@ -150,8 +152,10 @@ class Web360ApiWorker(QObject):
     def playMusicById(self, musicId):
         self.playMediaById(musicId)
 
+    @dthread
     @pyqtSlot('QString')
     def playMusicByIds(self, musicIds):
+        print(threading.currentThread())
         url = self.getUrlByIDs(musicIds)
         songLists = self.request(url)
 
@@ -170,7 +174,7 @@ class Web360ApiWorker(QObject):
         url = self.getUrlByID(songLists[0]['songId'])
         self.playMediaByUrl(url)
 
-    # @dthread
+    @dthread
     @pyqtSlot(int)
     def playMediaById(self, musicId):
         result = self.getResultById(musicId)
@@ -178,14 +182,14 @@ class Web360ApiWorker(QObject):
             self.addMediaContent.emit(result)
             self.playMediaContent.emit(result)
 
-    # @dthread
+    @dthread
     @pyqtSlot('QString')
     def playMediaByUrl(self, url):
         result = self.getResultByUrl(url)
         if result:
             self.playMediaContent.emit(result)
 
-    # @dthread
+    @dthread
     @pyqtSlot('QString')
     def switchMediaByUrl(self, url):
         result = self.getResultByUrl(url)
@@ -206,11 +210,9 @@ class Web360ApiWorker(QObject):
             results.append(result)
         return results
 
-    # @dthread
+    @dthread
     @pyqtSlot('QString')
     def playMusicBySonglistName(self, songlistName):
-        import threading
-        print(threading.currentThread())
         if songlistName in songlist:
             url = songlist[songlistName]
             result = self.request(url)
@@ -224,7 +226,7 @@ class Web360ApiWorker(QObject):
                 url = self.getUrlByID(ret['songList'][0]['songId'])
                 self.playMediaByUrl(url)
 
-    # @dthread
+    @dthread
     @pyqtSlot(int)
     def playMusicBySonglistId(self, songlistId):
         url = "http://s.music.haosou.com/list/intfDetail?id=%d" % songlistId
@@ -235,7 +237,7 @@ class Web360ApiWorker(QObject):
             url = self.getUrlByID(ret['songList'][0]['songId'])
             self.playMediaByUrl(url)
 
-    # @dthread
+    @dthread
     @pyqtSlot(int)
     def playMusicByAlbumId(self, albumId):
         url = "http://s.music.haosou.com/album/intfDetail?id=%d" % albumId

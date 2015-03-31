@@ -128,6 +128,7 @@ Item {
         }
 
         onModelChanged: {
+            playlistDetailBox.playlistView.positionViewAtEnd()
             playlistDetailBox.playlistView.currentIndex = -1;
             activeCurrentItem();
         }
@@ -154,28 +155,48 @@ Item {
             var nameId;
             if (name == I18nWorker.favorite){
                 nameId = "favorite";
+                playlistNavgationBar._playlistName = ""
             }else if (name == I18nWorker.temporary){
                 nameId = "temporary";
+                playlistNavgationBar._playlistName = ""
             }else{
                 nameId = name;
             }
 
             currentPlaylistName = nameId;
             activeCurrentItem();
+
+            print(currentPlaylistName, '和本地乐库')
+            if (playlistDetailBox.playlistView.count == 0){
+                playlistDetailBox.noMusicTip.visible = true;
+            }else{
+                playlistDetailBox.noMusicTip.visible = false;
+            }
         }
     }
 
     Connections {
-        target: playlistPage
-        onVisibleChanged: {
-            if (playlistPage.visible){
-                if (MediaPlayer.playlist){
-                    currentPlaylistName = MediaPlayer.playlist.name;
-                    activeCurrentItem()
-                }
+        target: playlistDetailBox.linkTipText
+        onLinkActivated: {
+            if (link == "Online"){
+                WindowManageWorker.switchPageByID('WebMusic360Page');
+            }else if (link == "Local"){
+                WindowManageWorker.switchPageByID('MusicManagerPage');
             }
         }
     }
+
+    // Connections {
+    //     target: playlistPage
+    //     onVisibleChanged: {
+    //         if (playlistPage.visible){
+    //             if (MediaPlayer.playlist){
+    //                 currentPlaylistName = MediaPlayer.playlist.name;
+    //                 activeCurrentItem()
+    //             }
+    //         }
+    //     }
+    // }
 
     Component.onCompleted: {
         init()

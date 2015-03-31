@@ -6,6 +6,8 @@ Rectangle {
 
     property var playlistView: playlistView
     property var titleText: titleText
+    property var noMusicTip: noMusicTip
+    property var linkTipText: linkTipText
 
     Rectangle {
         id: detailBox
@@ -115,6 +117,25 @@ Rectangle {
                     DScrollBar {
                         flickable: parent
                         inactiveColor: 'black'
+                    }
+
+                    Component.onCompleted: positionViewAtIndex(currentIndex, ListView.Center)
+                }
+
+                Rectangle {
+                    id: noMusicTip
+                    anchors.fill: parent
+                    visible: false
+                    Text {
+                        id: linkTipText
+                        anchors.centerIn: parent
+                        color: "#535353"
+                        linkColor: "#31a4fa"
+                        font.pixelSize: 14
+                        elide: Text.ElideRight
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        text: "到 <a href=\"Online\" style=\"text-decoration:none;\">网络音乐</a> 和<a href=\"Local\" style=\"text-decoration:none;\">本地乐库</a>添加你喜欢的音乐吧"
                     }
                 }
             }

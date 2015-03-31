@@ -68,7 +68,7 @@ Rectangle {
         Rectangle {
             id: playlistBox
             width: 120
-            height: playlistNavgationBar.height - separator.height - fixPlaylistBar.height - 20
+            height: playlistNavgationBar.height - separator.height - fixPlaylistBar.height - 10
             color: "white"
 
             Rectangle {

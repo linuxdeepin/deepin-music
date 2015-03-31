@@ -15,6 +15,8 @@ class WindowManageWorker(QObject):
     simpleWindowShowed = pyqtSignal()
     miniWindowShowed = pyqtSignal()
 
+    switchPageByID = pyqtSignal('QString')
+
     __contextName__ = 'WindowManageWorker'
 
     @registerContext

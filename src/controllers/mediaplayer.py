@@ -4,6 +4,7 @@
 
 import os
 import sys
+import time
 from PyQt5.QtCore import (QObject, pyqtSignal, pyqtSlot,
                           pyqtProperty, QUrl, QDate)
 from PyQt5.QtGui import QCursor
@@ -22,22 +23,16 @@ class PlayerBin(QMediaPlayer):
         super(PlayerBin, self).__init__()
         self.setNotifyInterval(50)
 
-    def setMediaUrl(self, url):
-        import threading
-        print(threading.currentThread())
-        if url.startswith('http'):
-            _url = QUrl(url)
-        else:
-            _url = QUrl.fromLocalFile(url)
-
-        self.setMedia(QMediaContent(_url))
+gPlayer = PlayerBin()
 
 
 class MediaPlayer(QObject):
 
     __contextName__ = "MediaPlayer"
 
-    mediaUrlChanged = pyqtSignal('QString')
+    played = pyqtSignal()
+    stoped = pyqtSignal()
+    paused = pyqtSignal()
 
     musicInfoChanged = pyqtSignal('QString', 'QString')
 
@@ -67,12 +62,6 @@ class MediaPlayer(QObject):
     @registerContext
     def __init__(self):
         super(MediaPlayer, self).__init__()
-
-        self.player = PlayerBin()
-
-
-
-
         self._playlist = None
 
         self._state = 0
@@ -95,14 +84,17 @@ class MediaPlayer(QObject):
         self.notifyInterval = 50
 
     def initConnect(self):
-        self.mediaUrlChanged.connect(self.player.setMediaUrl)
 
-        self.player.mediaStatusChanged.connect(self.mediaStatusChanged)
-        self.player.mediaStatusChanged.connect(self.monitorMediaStatus)
-        self.player.positionChanged.connect(self.positionChanged)
-        self.player.durationChanged.connect(self.updateDuration)
-        self.player.bufferStatusChanged.connect(self.bufferChange)
-        self.player.error.connect(self.monitorError)
+        self.played.connect(gPlayer.play)
+        self.stoped.connect(gPlayer.stop)
+        self.paused.connect(gPlayer.pause)
+
+        gPlayer.mediaStatusChanged.connect(self.mediaStatusChanged)
+        gPlayer.mediaStatusChanged.connect(self.monitorMediaStatus)
+        gPlayer.positionChanged.connect(self.positionChanged)
+        gPlayer.durationChanged.connect(self.updateDuration)
+        gPlayer.bufferStatusChanged.connect(self.bufferChange)
+        gPlayer.error.connect(self.monitorError)
 
     @pyqtProperty('QVariant', notify=playlistChanged)
     def playlist(self):
@@ -148,11 +140,11 @@ class MediaPlayer(QObject):
 
     @pyqtProperty(int)
     def position(self):
-        return self.player.position()
+        return gPlayer.position()
 
     @position.setter
     def position(self, pos):
-        self.player.setPosition(pos)
+        gPlayer.setPosition(pos)
         self.positionChanged.emit(pos)
 
     @pyqtProperty(int, notify=volumeChanged)
@@ -162,30 +154,30 @@ class MediaPlayer(QObject):
     @volume.setter
     def volume(self, value):
         self._volume = value
-        self.player.setVolume(value)
+        gPlayer.setVolume(value)
         self.volumeChanged.emit(value)
 
     @pyqtProperty(bool, notify=mutedChanged)
     def muted(self):
-        return self.player.isMuted()
+        return gPlayer.isMuted()
 
     @muted.setter
     def muted(self, muted):
-        self.player.setMuted(muted)
+        gPlayer.setMuted(muted)
         self.mutedChanged.emit(muted)
 
     @pyqtProperty(int)
     def notifyInterval(self):
-        return self.player.notifyInterval()
+        return gPlayer.notifyInterval()
 
     @notifyInterval.setter
     def notifyInterval(self, interval):
-        self.player.setNotifyInterval(interval)
+        gPlayer.setNotifyInterval(interval)
         self.notifyIntervalChanged.emit(interval)
 
     @pyqtProperty(int)
     def duration(self):
-        return self.player.duration()
+        return gPlayer.duration()
 
     @pyqtSlot(int)
     def updateDuration(self, duration):
@@ -200,13 +192,31 @@ class MediaPlayer(QObject):
         except Exception, e:
             raise e
 
+    @pyqtProperty('QString')
+    def positionString(self):
+        position = gPlayer.position()
+        return duration_to_string(position)
+
+    @pyqtProperty('QString')
+    def durationString(self):
+        duration = gPlayer.duration()
+        if duration <= 0:
+            index = self._playlist.currentIndex()
+            urls = self._playlist.urls
+            mediaContents =  self._playlist.mediaContents
+            if index < len(urls):
+                mediaContent = mediaContents[urls[index]]
+                if 'duration' in mediaContent.tags:
+                    duration = mediaContent.tags['duration']
+        return duration_to_string(duration)
+
     @pyqtProperty(bool)
     def seekable(self):
-        return self.player.isSeekable()
+        return gPlayer.isSeekable()
 
     @pyqtProperty(str)
     def errorString(self):
-        return self.player.errorString()
+        return gPlayer.errorString()
 
     def monitorMediaStatus(self, status):
         if status == 7:
@@ -215,6 +225,12 @@ class MediaPlayer(QObject):
                     self.playToggle(self._isPlaying)
                 elif self._playlist.playbackMode() in [3, 4]:
                     self.next()
+        elif status == 4:
+            self.buffingBeginTime = time.time()
+            self.stop()
+            self.play()
+        elif status in [3, 6]:
+            self.playToggle(self._isPlaying)
 
     def monitorError(self, error):
         errors = {
@@ -225,10 +241,11 @@ class MediaPlayer(QObject):
             4: "There are not the appropriate permissions to play a media resource",
             5: "A valid playback service was not found, playback cannot proceed."
         }
-        print(errors[error])
+        print(error, errors[error])
         if error == 3:
-            self.stop()
-            self.play()
+            url = self.getUrlID()
+            if url:
+                self.requestMusic.emit(url)
 
     @pyqtSlot(bool)
     def playToggle(self, playing):
@@ -243,17 +260,17 @@ class MediaPlayer(QObject):
 
     @pyqtSlot()
     def stop(self):
-        self.player.stop()
+        self.stoped.emit()
         self.state = 0
 
     @pyqtSlot()
     def play(self):
-        self.player.play()
+        self.played.emit()
         self.state = 1
 
     @pyqtSlot()
     def pause(self):
-        self.player.pause()
+        self.paused.emit()
         self.state = 2
 
     @pyqtProperty(int, notify=stateChanged)
@@ -265,28 +282,15 @@ class MediaPlayer(QObject):
         self._state = value
         self.stateChanged.emit(value)
 
-    @pyqtProperty('QString')
-    def positionString(self):
-        position = self.player.position()
-        return duration_to_string(position)
-
-    @pyqtProperty('QString')
-    def durationString(self):
-        duration = self.player.duration()
-        return duration_to_string(duration)
-
     @pyqtSlot('QString')
     def setMediaUrl(self, url):
         self._url = url
-        # if url.startswith('http'):
-        #     _url = QUrl(url)
-        # else:
-        #     _url = QUrl.fromLocalFile(url)
+        if url.startswith('http'):
+            _url = QUrl(url)
+        else:
+            _url = QUrl.fromLocalFile(url)
 
-        # self.player.setMedia(QMediaContent(_url))
-
-        self.mediaUrlChanged.emit(url)
-
+        gPlayer.setMedia(QMediaContent(_url))
         self.playToggle(self._isPlaying)
 
     @pyqtSlot()
@@ -337,17 +341,31 @@ class MediaPlayer(QObject):
 
             if isinstance(mediaContent, DRealLocalMediaContent):
                 playurl = mediaContent.url
-            elif isinstance(mediaContent, DRealOnlineMediaContent):
-                playurl = mediaContent.playlinkUrl
-                if not playurl:
-                    self.requestMusic.emit(url)
-                    return
-
-            if playurl:
                 self.setMediaUrl(playurl)
                 self.title = mediaContent.title
                 self.artist = mediaContent.artist
                 self.cover = mediaContent.cover
+            elif isinstance(mediaContent, DRealOnlineMediaContent):
+                # self.title = mediaContent.title
+                # self.artist = mediaContent.artist
+                # self.cover = mediaContent.cover
+                self.requestMusic.emit(url)
+                return
+
+            # if playurl:
+            #     self.setMediaUrl(playurl)
+            #     self.title = mediaContent.title
+            #     self.artist = mediaContent.artist
+            #     self.cover = mediaContent.cover
+
+    def getUrlID(self):
+        if self._playlist:
+            currentIndex = self._playlist.currentIndex()
+            urls = self._playlist.urls
+            url = urls[currentIndex]
+            return url
+        else:
+            return None
 
     def bufferChange(self, progress):
         self.bufferStatusChanged.emit(progress)
@@ -457,7 +475,7 @@ class MediaPlayer(QObject):
 
     @pyqtSlot('QString', result='QString')
     def metaData(self, key):
-        return self.player.metaData(key)
+        return gPlayer.metaData(key)
 
     def showMetaData(self):
         import json

@@ -9,6 +9,11 @@ Item {
     property var playBottomBar
     property var dSimpleWindow
 
+
+    function initConnect(){
+        WindowManageWorker.switchPageByID.connect(leftSideBar.swicthViewByID);
+    }
+
     function resetSkin() {
         playBottomBar.color = "#282F3F"
         bgImage.source = ''
@@ -50,5 +55,9 @@ Item {
 
         onAddFavorite: Web360ApiWorker.addFavoriteSignal(musicId)
         onRemoveFavorite: Web360ApiWorker.removeFavoriteSignal(musicId)
+    }
+
+    Component.onCompleted: {
+        initConnect();
     }
 }

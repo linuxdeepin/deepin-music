@@ -100,9 +100,15 @@ class DRealLocalMediaContent(BaseMediaContent):
             self._tags = tags
         else:
             self._tags = Song(url)
-        self.title = self._tags['title']
-        self.artist = self._tags['artist']
-        self.duration = duration_to_string(self._tags['duration'])
+
+        if 'title' in self._tags:
+            self.title = self._tags['title']
+
+        if 'artist' in self._tags:
+            self.artist = self._tags['artist']
+
+        if 'duration' in self._tags:
+            self.duration = duration_to_string(self._tags['duration'])
 
     @pyqtProperty(dict)
     def tags(self):

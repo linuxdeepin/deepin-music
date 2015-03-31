@@ -28,6 +28,8 @@ Rectangle {
             Text {
                 id: indexTip
                 anchors.centerIn: parent
+                color: "#8a8a8a"
+                font.pixelSize: 10
                 text: index + 1
                 visible: !waveBar.active
             }
@@ -104,13 +106,13 @@ Rectangle {
         hoverEnabled: true
         acceptedButtons: Qt.LeftButton | Qt.RightButton
         onEntered: {
-            if (mediaItem.ListView.view.currentIndex != index){
-                // playButton.visible = true;
+            // if (mediaItem.ListView.view.currentIndex != index){
+            //     // playButton.visible = true;
                 mediaItem.color = "lightgray"
-            }else{
-                // playButton.visible = ! waveBar.visible;
-                mediaItem.color = "transparent"
-            }
+            // }else{
+            //     // playButton.visible = ! waveBar.visible;
+            //     mediaItem.color = "transparent"
+            // }
         }
         onExited: {
             // playButton.visible = false
