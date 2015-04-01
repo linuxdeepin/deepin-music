@@ -18,4 +18,8 @@ GridView {
         flickable: parent
         inactiveColor: 'black'
     }
+
+    onModelChanged:{
+        positionViewAtEnd()
+    }
 }

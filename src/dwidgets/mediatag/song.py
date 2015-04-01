@@ -53,8 +53,16 @@ class Song(dict):
     def __init__(self, url):
         super(Song, self).__init__()
         self.__dict__ = self
+        for key in TAG_KEYS:
+            if key in ['tracknumber', 'discnumber']:
+                self[key] = 0
+            elif key in ['title', 'artist', 'album']:
+                self[key] = "unKonwn"
+
         from os.path import abspath, realpath, normpath
-        self.url = normpath(realpath(abspath(url)))
+        self['url'] = normpath(realpath(abspath(url)))
+        self['folder'] = os.path.dirname(self['url'])
+
         if self.isExisted():
             self.getTags()
 
@@ -100,7 +108,7 @@ class Song(dict):
                             fix_value = ""
                     self[file_tag] = fix_value
                 else:
-                    self[file_tag] = None
+                    self[file_tag] = 0
 
             for key in ['sample_rate', 'bitrate', 'length']:
                 try:
@@ -162,6 +170,31 @@ class Song(dict):
             return False
         else:
             return True
+
+    def __setitem__(self, key, value):
+        if key == "tracknumber":
+            value = str(value)
+            if value is not None and not isinstance(value,int) and value.rfind("/")!=-1 and value.strip()!="":
+                value = value.strip()
+                discnumber = value[value.rfind("/"):]
+                try: 
+                    discnumber = int(discnumber)
+                except: 
+                    discnumber = 0
+                self["discnumber"] = discnumber
+                value = int(value[:value.rfind("/")])
+        elif key == "discnumber":
+            if isinstance(value, str):
+                value = 0
+        elif key in ['title', 'artist', 'album']:
+            if not value:
+                value = 'unKonwn'
+
+        if value is None:        
+            if key in self:
+                super(Song, self).__delitem__(key)
+        else:
+            super(Song, self).__setitem__(key, value)
 
     def getMp3FontCover(self):
         from common import EasyMP3

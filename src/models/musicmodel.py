@@ -89,7 +89,7 @@ class BaseModel(Model):
         return ret
 
 
-class Singer(BaseModel):
+class Artist(BaseModel):
     name = CharField(default='', unique=True)
     area = CharField(default='')
     summary = CharField(default='')
@@ -100,20 +100,20 @@ class Singer(BaseModel):
 
 
 class Album(BaseModel):
-    title = CharField(default='', unique=True)
-    artist = CharField(default='')
+    name = CharField(default='', unique=True)
+    # artist = CharField(default='')
 
     created_date = DateTimeField(default=datetime.datetime.now)
 
-    __key__ = 'title'
+    __key__ = 'name'
 
 
 class Folder(BaseModel):
-    path = CharField(default='', unique=True)
+    name = CharField(default='', unique=True)
 
     created_date = DateTimeField(default=datetime.datetime.now)
 
-    __key__ = 'path'
+    __key__ = 'name'
     
 
 class Playlist(BaseModel):
@@ -132,8 +132,12 @@ class Playlist(BaseModel):
 
 
 class Song(BaseModel):
+    fartist = ForeignKeyField(Artist, related_name='songs')
+    falbum = ForeignKeyField(Album, related_name='songs')
+    ffolder = ForeignKeyField(Folder, related_name='songs')
 
     url = CharField(default='', unique=True)
+    folder = CharField(default='')
 
     #Common attributes
     title = CharField(default='')
@@ -164,12 +168,12 @@ class Song(BaseModel):
     duration = IntegerField(default=0)
 
     #Audio attributes
-    audioBitRate = IntegerField(default=0)
+    bitrate = IntegerField(default=0)
     audioCodec = CharField(default='')
     averageLevel = IntegerField(default=0)
     channelCount = IntegerField(default=0)
     peakValue = IntegerField(default=0)
-    sampleRate = IntegerField(default=0)
+    sample_rate = IntegerField(default=0)
 
     #Music attributes
     albumArtist = CharField(default='')
@@ -459,7 +463,7 @@ if __name__ == '__main__':
         def __init__(self):
             super(DBWorker, self).__init__()
             db.connect()
-            db.create_tables([Song, Singer, Album, Folder, Playlist, SongPlaylist], safe=True)
+            db.create_tables([Song, Artist, Album, Folder, Playlist, SongPlaylist], safe=True)
 
     dbWorker = DBWorker()
 

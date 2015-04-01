@@ -12,6 +12,7 @@ from .utils import registerContext, contexts
 from dwidgets.tornadotemplate import template
 from models import *
 from dwidgets import dthread
+from dwidgets.mediatag.song import Song as SongDict
 from collections import OrderedDict
 
 
@@ -21,10 +22,10 @@ class MusicManageWorker(QObject):
     songCountChanged = pyqtSignal(int)
 
     searchAllDriver =pyqtSignal()
-
     scanfileChanged = pyqtSignal('QString')
-
     searchOneFolder = pyqtSignal()
+
+    saveSongToDB = pyqtSignal(dict)
 
     artistsChanged = pyqtSignal('QVariant')
     albumsChanged = pyqtSignal('QVariant')
@@ -39,39 +40,18 @@ class MusicManageWorker(QObject):
         self._artists = []
         self._albums = []
         self._folders = []
-        self._folderDict = OrderedDict()
+
+        self._artistsDict = OrderedDict()
+        self._albumsDict = OrderedDict()
+        self._foldersDict = OrderedDict()
 
         self.initConnect()
-        self.initData()
-
-    def initData(self):
-        for i in range(100):
-            item = {
-                'name': 'artist%d' % i,
-                'count': 100,
-                'urls': range(100)
-            }
-            self._artists.append(item)
-
-        for i in range(20):
-            item = {
-                'name': 'album%d' % i,
-                'count': 20,
-                'urls': range(20)
-            }
-            self._albums.append(item)
-
-        # for i in range(100):
-        #     item = {
-        #         'name': '/home/djf/folder%d' % i,
-        #         'count': 100,
-        #         'urls': range(100)
-        #     }
-        #     self._folders.append(item)
 
     def initConnect(self):
         self.searchAllDriver.connect(self.searchAllDriverMusic)
         self.searchOneFolder.connect(self.searchOneFolderMusic)
+
+        self.scanfileChanged.connect(self.updateSonglist)
 
     @pyqtProperty('QVariant', notify=categoriesChanged)
     def categories(self):
@@ -118,42 +98,85 @@ class MusicManageWorker(QObject):
 
     @dthread
     def searchAllDriverMusic(self):
-        self.scan(QDir.rootPath())
+        self.scanFolder(QDir.rootPath())
 
     @dthread
     def searchOneFolderMusic(self):
         print('searchOneFolderMusic')
 
-    def scan(self, path):
+    def scanFolder(self, path):
         filters = QDir.Files
         nameFilters = ["*.wav", "*.wma", "*.mp2", "*.mp3", "*.mp4", "*.m4a", "*.flac", "*.ogg"]
-        qDirIterator = QDirIterator(path, nameFilters, filters, QDirIterator.Subdirectories);
-        _item = None
-        self._folderDict = OrderedDict()
-        self.folders = []
+        qDirIterator = QDirIterator(path, nameFilters, filters, QDirIterator.Subdirectories)
+        self._folders = []
+        self._folderDict = {}
         while qDirIterator.hasNext():
             qDirIterator.next()
-            key = qDirIterator.fileInfo().absoluteDir().absolutePath()
-            value = qDirIterator.filePath()
-            self.scanfileChanged.emit(value)
-            if key not in self._folderDict:
-                self._folderDict[key] = []
-                _item = {
-                    'name': key,
-                    'count': 0,
-                    'urls': []
-                }
-                self._folders.append(_item)
-                self.folders = self._folders
-                time.sleep(0.25)
+            fileInfo = qDirIterator.fileInfo()
+            fdir = fileInfo.absoluteDir().absolutePath()
+            fpath = qDirIterator.filePath()
+            fsize = fileInfo.size() / (1024 * 1024)
+            time.sleep(0.05)
+            if fsize >= 1:
+                self.scanfileChanged.emit(fpath)
+        # self.scanfileChanged.emit('')/
 
-            if key in self._folderDict:
-                if value not in self._folderDict[key]:
-                    self._folderDict[key].append(value)
-                if _item:
-                    _item['count'] = len(self._folderDict[key])
-                    _item['urls'] = self._folderDict[key]
+    def updateSonglist(self, fpath):
+        songDict = SongDict(fpath)
+        url = songDict['url']
+        artist = songDict['artist']
+        if artist not in self._artistsDict:
+            self._artistsDict[artist] = {
+                'name': artist,
+                'count': 0,
+                'urls': []
+            }
+        _artistDict = self._artistsDict[artist]
+        if url not in _artistDict['urls']:
+            urls = _artistDict['urls']
+            urls.append(url)
+            _artistDict['count'] = len(urls)
+        self.updateArtists(artist)
 
-        self.folders = self._folders
-        self.scanfileChanged.emit('')
 
+        album = songDict['album']
+        if album not in self._albumsDict:
+            self._albumsDict[album] = {
+                'name': album,
+                'count': 0,
+                'urls': []
+            }
+        _albumDict = self._albumsDict[album]
+        if url not in _albumDict['urls']:
+            urls = _albumDict['urls']
+            urls.append(url)
+            _albumDict['count'] = len(urls)
+
+        self.updateAlbumss(album)
+
+
+        folder = songDict['folder']
+        if folder not in self._foldersDict:
+            self._foldersDict[folder] = {
+                'name': folder,
+                'count': 0,
+                'urls': []
+            }
+        _folderDict = self._foldersDict[folder]
+        if url not in _folderDict['urls']:
+            urls = _folderDict['urls']
+            urls.append(url)
+            _folderDict['count'] = len(urls)
+        self.updateFolders(folder)
+
+        self.saveSongToDB.emit(songDict)
+
+
+    def updateArtists(self, artist):
+        self.artists = self._artistsDict.values()
+
+    def updateAlbumss(self, album):
+        self.albums = self._albumsDict.values()
+
+    def updateFolders(self, folder):
+        self.folders = self._foldersDict.values()

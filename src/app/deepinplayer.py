@@ -68,7 +68,6 @@ class DeepinPlayer(QObject):
         self.coverWorker = CoverWorker()
         self.playlistWorker = PlaylistWorker()
 
-        # self.musicDataBase = MusicDataBase()
         self.dbWorker = DBWorker()
 
         self.web360Thread = QThread(self)
@@ -80,6 +79,10 @@ class DeepinPlayer(QObject):
         gPlayer.moveToThread(self.playerBinThread)
         self.playerBinThread.start()
 
+
+        self.dbThread = QThread()
+        self.dbWorker.moveToThread(self.dbThread)
+        self.dbThread.start()
 
     def initQMLContext(self):
         self.mainWindow.setContexts(contexts)
@@ -98,25 +101,13 @@ class DeepinPlayer(QObject):
         self.mediaPlayer.requestMusic.connect(self.web360ApiWorker.switchMediaByUrl)
         self.mediaPlayer.downloadCover.connect(self.coverWorker.downloadCoverByUrl)
 
-        # self.mediaPlayer.mediaUrlChanged.connect(gPlayer.setMediaUrl)
-        # self.mediaPlayer.played.connect(gPlayer.play)
-        # self.mediaPlayer.stoped.connect(gPlayer.stop)
-        # self.mediaPlayer.paused.connect(gPlayer.pause)
-        # self.mediaPlayer.notifyIntervalChanged.connect(gPlayer.setNotifyInterval)
-        # # self.mediaPlayer.positionChanged.connect(gPlayer.setPosition)
-        # self.mediaPlayer.volumeChanged.connect(gPlayer.setVolume)
-        # self.mediaPlayer.mutedChanged.connect(gPlayer.setMuted)
 
-        # gPlayer.mediaStatusChanged.connect(self.mediaPlayer.mediaStatusChanged)
-        # gPlayer.mediaStatusChanged.connect(self.mediaPlayer.monitorMediaStatus)
-        # gPlayer.positionChanged.connect(self.mediaPlayer.positionChanged)
-        # gPlayer.durationChanged.connect(self.mediaPlayer.updateDuration)
-        # gPlayer.bufferStatusChanged.connect(self.mediaPlayer.bufferChange)
-        # gPlayer.error.connect(self.mediaPlayer.monitorError)
 
         self.coverWorker.downloadCoverSuccessed.connect(self.mediaPlayer.updateCover)
 
         self.playlistWorker.currentPlaylistChanged.connect(self.mediaPlayer.setPlaylistByName)
+
+        self.musicManageWorker.saveSongToDB.connect(self.dbWorker.addSong)
 
         self.qApp.aboutToQuit.connect(self.close)
 

@@ -5,39 +5,47 @@
 import os
 import sys
 from PyQt5.QtCore import (QObject, pyqtSignal, pyqtSlot,
-                          pyqtProperty, QUrl, QDate, QDir)
+                          pyqtProperty, QUrl, QDate, QDir, QTimer)
 from PyQt5.QtGui import QCursor
 from .utils import registerContext, contexts
 from .utils import duration_to_string
 from models import *
 from log import logger
 
+
 class DBWorker(QObject):
 
     def __init__(self):
         super(DBWorker, self).__init__()
         db.connect()
-        db.create_tables([Song, Singer, Album, Folder, Playlist, SongPlaylist], safe=True)
-        # self.initDB()
-        print self.getSongCount()
-        self.initDB()
+        db.create_tables([Song, Artist, Album, Folder, Playlist, SongPlaylist], safe=True)
+        self._count = 0
+        # self.loadDB()
 
-    def initDB(self):
-        # print sys.setdefaultencoding('utf-8')
-        print sys.getfilesystemencoding()
-        print "怎样才能使它工作正常呢?"
-        basePath =  '/usr/share/deepin-sample-music/'
-        d = QDir(basePath)
-        filters = ["*.wav", "*.wma", "*.mp2", "*.mp3", "*.mp4", "*.m4a", "*.flac", "*.ogg"]
-        d.setNameFilters(filters)
-        # d.setFilter(QDir.Files)
-        print d.entryList()
+    def loadDB(self):
+        for song in Song.select():
+            print song.pprint()
 
-    def getSongCount(self):
-        return Song.select().count()
+        print Song.select().count()
 
-    # def initDB(self):
-    #     basePath = '/home/djf/workspace/github/musicplayer-qml/music'
-    #     url = os.path.join(basePath, '1.mp3')
-    #     song = Song.createLocalInstanceByUrl(url)
-    #     print(song.pprint())
+    def addSong(self, songDict):
+        self._count += 1
+        def writeToDB():
+            try:
+                artistDict = {'name': songDict['artist']}
+                albumDict = {'name': songDict['album']}
+                folderDict = {'name': songDict['folder']}
+
+                fartist = Artist.get_create_Record(**artistDict)
+                falbum = Album.get_create_Record(**albumDict)
+                ffolder = Folder.get_create_Record(**folderDict)
+
+                songDict['fartist'] = fartist
+                songDict['falbum'] = falbum
+                songDict['ffolder'] = ffolder
+                song = Song.get_create_Record(**songDict)
+                print(song.id)
+            except Exception, e:
+                logger.error(songDict.pprint())
+                logger.error(e)
+        QTimer.singleShot(200 * self._count, writeToDB)

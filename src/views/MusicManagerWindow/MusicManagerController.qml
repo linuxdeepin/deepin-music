@@ -69,8 +69,8 @@ Item {
             if (link == "SearchAllDriver"){
                 MusicManageWorker.searchAllDriver();
                 noMusicTip.visible = false
-                updateWindow(3)
-                catgoryCombox.currentText = catgoryCombox.view.model[3].name
+                updateWindow(0)
+                catgoryCombox.currentText = catgoryCombox.view.model[0].name
             }else if (link == "SearchOneFolder"){
                 MusicManageWorker.searchOneFolder();
             }
