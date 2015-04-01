@@ -12,7 +12,7 @@ Depends: ${shlibs:Depends}, ${misc:Depends},
          deepin-ui, python-mutagen,
          python-gst0.10, python-pyquery, python-cddb,
          python-pycurl, python-chardet, python-keybinder,
-         gstreamer0.10-plugins-good
+         gstreamer0.10-plugins-good, gstreamer0.10-plugins-bad
 Suggests: python-mmkeys,
           gstreamer0.10-plugins-ugly,
           gstreamer0.10-plugins-bad-multiverse,
