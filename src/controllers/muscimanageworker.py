@@ -169,14 +169,16 @@ class MusicManageWorker(QObject):
             _folderDict['count'] = len(urls)
         self.updateFolders(folder)
 
-        self.saveSongToDB.emit(songDict)
-
+        # self.saveSongToDB.emit(songDict)
 
     def updateArtists(self, artist):
-        self.artists = self._artistsDict.values()
+        if self._artists != self._artistsDict.values():
+            self.artists = self._artistsDict.values()
 
     def updateAlbumss(self, album):
-        self.albums = self._albumsDict.values()
+        if self._albums != self._albumsDict.values():
+            self.albums = self._albumsDict.values()
 
     def updateFolders(self, folder):
-        self.folders = self._foldersDict.values()
+        if self._folders != self._foldersDict.values():
+            self.folders = self._foldersDict.values()

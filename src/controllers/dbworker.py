@@ -11,6 +11,8 @@ from .utils import registerContext, contexts
 from .utils import duration_to_string
 from models import *
 from log import logger
+from dwidgets import dthread
+import threading
 
 
 class DBWorker(QObject):
@@ -30,6 +32,7 @@ class DBWorker(QObject):
 
     def addSong(self, songDict):
         self._count += 1
+        # @dthread
         def writeToDB():
             try:
                 artistDict = {'name': songDict['artist']}
@@ -44,8 +47,8 @@ class DBWorker(QObject):
                 songDict['falbum'] = falbum
                 songDict['ffolder'] = ffolder
                 song = Song.get_create_Record(**songDict)
-                print(song.id)
+                print(song.id, threading.currentThread())
             except Exception, e:
                 logger.error(songDict.pprint())
                 logger.error(e)
-        QTimer.singleShot(200 * self._count, writeToDB)
+        QTimer.singleShot(100 * self._count, writeToDB)
