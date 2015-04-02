@@ -4,13 +4,14 @@ Item {
     property var rootWindow
     property var catgoryCombox
     property var statusText
+    property var scanStatusText
     property var musicManagerLoader
     property var noMusicTip
     property var linkTipText
 
 
     function initConnect() {
-        MusicManageWorker.scanfileChanged.connect(updateStatusText)
+        MusicManageWorker.tipMessageChanged.connect(updateStatusText)
     }
 
     function updateWindow(index) {
@@ -26,7 +27,7 @@ Item {
     }
 
     function updateStatusText(text){
-        statusText.text = text;
+        scanStatusText.text = text;
     }
 
     Connections {
@@ -68,12 +69,13 @@ Item {
         onLinkActivated: {
             if (link == "SearchAllDriver"){
                 MusicManageWorker.searchAllDriver();
-                noMusicTip.visible = false
-                updateWindow(0)
-                catgoryCombox.currentText = catgoryCombox.view.model[0].name
+                
             }else if (link == "SearchOneFolder"){
                 MusicManageWorker.searchOneFolder();
             }
+            noMusicTip.visible = false
+            updateWindow(0)
+            catgoryCombox.currentText = catgoryCombox.view.model[0].name
         }
     }
 

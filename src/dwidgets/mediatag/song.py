@@ -7,16 +7,18 @@ import common
 from PyQt5.QtCore import QDir, QUrl
 import chardet
 import copy
+import json
+import mutagen
 
-TAG_KEYS = [
-    'title',
-    'artist',
-    'album',
-    'tracknumber',
-    'discnumber',
-    'genre',
-    'date'
-]
+TAG_KEYS = {
+    'title' : 'title',
+    'artist': 'artist',
+    'album' : 'album',
+    'tracknumber': 'tracknumber',
+    'discnumber': 'discnumber',
+    'genre': 'genre',
+    'date': 'date'
+}
 
 TAGS_KEYS_OVERRIDE = {}
 
@@ -44,8 +46,6 @@ TAGS_KEYS_OVERRIDE['ASF'] = {
 
 
 
-
-
 class Song(dict):
 
     """docstring for Song"""
@@ -57,7 +57,7 @@ class Song(dict):
             if key in ['tracknumber', 'discnumber']:
                 self[key] = 0
             elif key in ['title', 'artist', 'album']:
-                self[key] = "unKonwn"
+                self[key] = "unknown"
 
         from os.path import abspath, realpath, normpath
         self['url'] = normpath(realpath(abspath(url)))
@@ -93,22 +93,24 @@ class Song(dict):
         if audio is not None:
             tag_keys_override = TAGS_KEYS_OVERRIDE.get(
                 audio.__class__.__name__, None)
-            for file_tag in TAG_KEYS:
+            for tag, file_tag in TAG_KEYS.iteritems():
                 if tag_keys_override and tag_keys_override.has_key(file_tag):
                     file_tag = tag_keys_override[file_tag]
                 if audio.has_key(file_tag) and audio[file_tag]:
                     value = audio[file_tag]
                     if isinstance(value, list) or isinstance(value, tuple):
                         value = value[0]
+                        if isinstance(value, mutagen.asf.ASFUnicodeAttribute):
+                            value = value.value
                     fix_value = common.fix_charset(value)
                     if fix_value == "[Invalid Encoding]":
                         if tag == "title":
                             fix_value = self.fileName
                         else:
                             fix_value = ""
-                    self[file_tag] = fix_value
+                    self[tag] = fix_value
                 else:
-                    self[file_tag] = 0
+                    self[tag] = 0
 
             for key in ['sample_rate', 'bitrate', 'length']:
                 try:
@@ -142,20 +144,26 @@ class Song(dict):
                 tag_keys_override = TAGS_KEYS_OVERRIDE.get(
                     audio.__class__.__name__, None)
 
-                for file_tag in TAG_KEYS:
+                for file_tag, tag in TAG_KEYS.iteritems():
                     if tag_keys_override and tag_keys_override.has_key(file_tag):
                         file_tag = tag_keys_override[file_tag]
-
-                    if self.get(file_tag):
+                    if self.get(tag):    
                         try:
-                            value = unicode(self.get(file_tag))
+                            if audio.__class__.__name__ == "MP4" and tag == "tracknumber":
+                                _value = self.get(tag)
+                                _vtuple = _value.split(',')
+                                if len(_vtuple) == 2:
+                                    value = [(int(_vtuple[0][1:].strip()), int(_vtuple[1][:-1].strip()))]
+                                else:
+                                    value = self.get(tag)
+                            else:
+                                value = self.get(tag)
                         except Exception, e:
-                            value = self.get(file_tag).decode('utf-8')
-                        # print file_tag, value, type(value)
+                            value = self.get(tag).decode('utf-8')
                         audio[file_tag] = value
                     else:
                         try:
-                            del(audio[file_tag])  # TEST
+                            del(audio[file_tag]) # TEST
                         except KeyError:
                             pass
                 audio.save()
@@ -188,7 +196,7 @@ class Song(dict):
                 value = 0
         elif key in ['title', 'artist', 'album']:
             if not value:
-                value = 'unKonwn'
+                value = 'unknown'
 
         if value is None:        
             if key in self:

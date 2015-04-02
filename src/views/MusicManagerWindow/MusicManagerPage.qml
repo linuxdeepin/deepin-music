@@ -79,6 +79,35 @@ Rectangle {
     }
 
     Rectangle {
+        anchors.right: rootWindow.right
+        anchors.bottom: rootWindow.bottom
+        width: 500
+        height: 20
+        color: "#eae4e4"
+        visible: false
+        Text {
+            id: scanStatusText
+            anchors.fill: parent
+            anchors.leftMargin: 5
+            anchors.rightMargin: 20
+            color: "#535353"
+            linkColor: "#31a4fa"
+            font.pixelSize: 14
+            elide: Text.ElideRight
+            horizontalAlignment: Text.AlignLeft
+            verticalAlignment: Text.AlignVCenter
+
+            onTextChanged:{
+                if (text == ""){
+                    parent.visible = false;
+                }else{
+                    parent.visible = true;
+                }
+            }
+        }
+    }
+
+    Rectangle {
         id: noMusicTip
         anchors.fill: parent
         visible: false
@@ -107,6 +136,7 @@ Rectangle {
         rootWindow: rootWindow
         catgoryCombox: catgoryCombox
         statusText: statusText
+        scanStatusText: scanStatusText
         musicManagerLoader: musicManagerLoader
 
         noMusicTip: noMusicTip
