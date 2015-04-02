@@ -483,6 +483,8 @@ class PlaylistWorker(QObject):
                         'updated': True
                     })
                 playlist.addMedias(medias)
+            from objbrowser import browse
+            browse(results)
 
     def savePlaylistByName(self, name):
         f = QFile(os.sep.join([PlaylistPath, '%s.m3u' % name]))

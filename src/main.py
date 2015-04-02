@@ -13,7 +13,6 @@ from dwidgets import QSingleApplication
 from app import DeepinPlayer
 import config
 
-
 if __name__ == '__main__':
     app = QSingleApplication(config.applicationName, sys.argv)
     if app.isRunning():
