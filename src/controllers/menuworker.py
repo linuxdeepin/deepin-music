@@ -14,7 +14,7 @@ from log import logger
 
 
 SettingMenuItems = [
-    ('AddMusic', 'Add music'),
+    ('AddMusic', 'Add music', (), [("File", "file"), ("Folder", "folder")]),
     None,
     ('EasyMode', 'Easy mode'),
     ('MiniMode', 'Mini mode'),
@@ -26,27 +26,43 @@ SettingMenuItems = [
 ]
 
 
+class DMenu(Menu):
+    """docstring for DMenu"""
+    def __init__(self, items):
+        super(DMenu, self).__init__(items)
+
+    def show(self):
+        self.showRectMenu(QCursor.pos().x(), QCursor.pos().y())
+
+
 class MenuWorker(QObject):
 
     __contextName__ = 'MenuWorker'
 
+    settingMenuShow = pyqtSignal()
+    
     miniTrigger = pyqtSignal()
+    addSongFile = pyqtSignal()
+    addSongFolder = pyqtSignal()
 
     @registerContext
     def __init__(self):
         super(MenuWorker, self).__init__()
-        # self.menu = SettingsMenu()
+        self.createSettingMenu()
 
+    def createSettingMenu(self):
+        self.settingMenu = DMenu(SettingMenuItems)
+        self.settingMenu.itemClicked.connect(self.settingMenuConnection)
+        self.settingMenuShow.connect(self.settingMenu.show)
 
-    def _menu_item_invoked(self, _id, _checked):
+    def settingMenuConnection(self, _id, _checked):
+        print _id, _checked
         if _id == "MiniMode":
             self.miniTrigger.emit()
-
-    @pyqtSlot()
-    def showSettingMenu(self):
-        self.menu = Menu(SettingMenuItems)
-        self.menu.itemClicked.connect(self._menu_item_invoked)
-        self.menu.showRectMenu(QCursor.pos().x(), QCursor.pos().y())
+        elif _id == "File":
+            self.addSongFile.emit()
+        elif _id == "Folder":
+            self.addSongFolder.emit()
 
 
 if __name__ == "__main__":

@@ -10,6 +10,7 @@ ConfigPath = os.path.join(Home, '.config')
 ProjectName = "DeepinMusic3"
 ProjectPath = os.path.join(ConfigPath, ProjectName)
 
+MusicManagerPath = os.path.join(ProjectPath, 'music')
 PlaylistPath = os.path.join(ProjectPath, 'playlist')
 CoverPath = os.path.join(ProjectPath, 'cover')
 
@@ -18,6 +19,7 @@ MusicDBFile = os.path.join(ProjectPath,  'music.db')
 
 paths = [
 	ProjectPath,
+	MusicManagerPath,
 	PlaylistPath,
 	CoverPath
 ]

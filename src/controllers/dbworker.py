@@ -32,7 +32,6 @@ class DBWorker(QObject):
 
     def addSong(self, songDict):
         self._count += 1
-        # @dthread
         def writeToDB():
             try:
                 artistDict = {'name': songDict['artist']}

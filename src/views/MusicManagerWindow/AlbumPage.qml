@@ -5,12 +5,16 @@ Rectangle {
     id: root
 
     DGridView {
-        id: grid
+        id: albumView
         model: MusicManageWorker.albums
         delegate: ItemDelegate{
         	cover: '../../skin/images/bg2.jpg'
         	name: GridView.view.model[index].name
             count: GridView.view.model[index].count
         }
+    }
+
+    AlbumController {
+        albumView: albumView
     }
 }

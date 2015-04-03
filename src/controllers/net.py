@@ -13,7 +13,6 @@
 import re
 import json
 import requests
-# from bs4 import BeautifulSoup
 import logger
 import hashlib
 import random
@@ -58,8 +57,6 @@ class NetEaseAPI(object):
             )
 
         connection.encoding = "UTF-8"
-
-        print connection.url
         return connection.text
 
     # 搜索单曲(1)，歌手(100)，专辑(10)，歌单(1000)，用户(1002) *(type)*

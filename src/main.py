@@ -3,6 +3,7 @@
 
 
 import os
+os.environ['LC_ALL'] = "en_US.UTF-8"
 import sys
 from PyQt5.QtCore import QCoreApplication, Qt
 
@@ -12,6 +13,8 @@ if os.name == 'posix':
 from dwidgets import QSingleApplication
 from app import DeepinPlayer
 import config
+
+
 
 if __name__ == '__main__':
     app = QSingleApplication(config.applicationName, sys.argv)

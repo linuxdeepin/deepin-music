@@ -123,7 +123,11 @@ class ObjectBrowser(FMainWindow):
 
     def setskin(self, skinID="BB"):
         path = os.path.dirname(__file__)
-        setSkinForApp( os.path.join(path, '%s.qss' % skinID))  # 设置主窗口样式
+        # setSkinForApp( os.path.join(path, '%s.qss' % skinID))  # 设置主窗口样式
+        fd = open(os.path.join(path, '%s.qss' % skinID), "r")
+        style = fd.read()
+        fd.close()
+        self.setStyleSheet(style)
 
     def initSize(self):
         desktopWidth = QtGui.QDesktopWidget().availableGeometry().width()

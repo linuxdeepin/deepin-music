@@ -74,11 +74,9 @@ class DeepinPlayer(QObject):
         self.web360ApiWorker.moveToThread(self.web360Thread)
         self.web360Thread.start()
 
-
         self.playerBinThread = QThread()
         gPlayer.moveToThread(self.playerBinThread)
         self.playerBinThread.start()
-
 
         self.dbThread = QThread()
         self.dbWorker.moveToThread(self.dbThread)
@@ -89,6 +87,15 @@ class DeepinPlayer(QObject):
         self.mainWindow.setSource(QUrl('views/Main.qml'))
 
     def initConnect(self):
+        self.web360ApiWorkerConnect()
+        self.mediaPlayerConnect()
+        self.playlistWorkerConnect()
+        self.coverWorkerConnect()
+        self.musicManageWorkerConnect()
+        self.menuWorkerConnect()
+        self.qApp.aboutToQuit.connect(self.close)
+
+    def web360ApiWorkerConnect(self):
         self.web360ApiWorker.playMediaContent.connect(self.mediaPlayer.playOnlineMedia)
         self.web360ApiWorker.swicthMediaContent.connect(self.mediaPlayer.swicthOnlineMedia)
 
@@ -98,18 +105,22 @@ class DeepinPlayer(QObject):
         self.web360ApiWorker.addMediaContentToFavorite.connect(self.playlistWorker.addOnlineMediaToFavorite)
         self.web360ApiWorker.removeMediaContentFromFavorite.connect(self.playlistWorker.removeFavoriteMediaContent)
 
+    def mediaPlayerConnect(self):
         self.mediaPlayer.requestMusic.connect(self.web360ApiWorker.switchMediaByUrl)
         self.mediaPlayer.downloadCover.connect(self.coverWorker.downloadCoverByUrl)
 
-
-
-        self.coverWorker.downloadCoverSuccessed.connect(self.mediaPlayer.updateCover)
-
+    def playlistWorkerConnect(self):
         self.playlistWorker.currentPlaylistChanged.connect(self.mediaPlayer.setPlaylistByName)
 
+    def coverWorkerConnect(self):
+        self.coverWorker.downloadCoverSuccessed.connect(self.mediaPlayer.updateCover)
+
+    def musicManageWorkerConnect(self):
         self.musicManageWorker.saveSongToDB.connect(self.dbWorker.addSong)
 
-        self.qApp.aboutToQuit.connect(self.close)
+    def menuWorkerConnect(self):
+        self.menuWorker.addSongFile.connect(self.musicManageWorker.addSongFile)
+        self.menuWorker.addSongFolder.connect(self.musicManageWorker.searchOneFolderMusic)
 
     def loadConfig(self):
         self.mediaPlayer.setPlaylistByName(self.configWorker.lastPlaylistName);
@@ -132,4 +143,5 @@ class DeepinPlayer(QObject):
     def close(self):
         self.mediaPlayer.stop()
         self.configWorker.save()
+        self.musicManageWorker.saveDB()
         self.playlistWorker.savePlaylists()

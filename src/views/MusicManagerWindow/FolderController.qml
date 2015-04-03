@@ -1,10 +1,10 @@
 import QtQuick 2.4
 
 Item {
-    property var albumView
+    property var folderView
 
     Connections {
-        target: albumView
+        target: folderView
         onPlay: {
             print(name)
         }

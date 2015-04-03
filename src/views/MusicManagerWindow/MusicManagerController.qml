@@ -30,6 +30,18 @@ Item {
         scanStatusText.text = text;
     }
 
+    Binding {
+    	target: noMusicTip
+    	property: 'visible'
+    	value: {
+    		if (MusicManageWorker.songCount == 0){
+                return true;
+            }else{
+            	return false
+            }
+    	}
+    }
+
     Connections {
         target: catgoryCombox
         onCurrentIndexChanged: {
@@ -73,7 +85,6 @@ Item {
             }else if (link == "SearchOneFolder"){
                 MusicManageWorker.searchOneFolder();
             }
-            noMusicTip.visible = false
             updateWindow(0)
             catgoryCombox.currentText = catgoryCombox.view.model[0].name
         }

@@ -14,20 +14,22 @@ Rectangle {
     width: item.contentWidth + 56
     height: item.contentWidth + 12 + 12 + 18
 
-    signal clicked()
-    signal rightClicked()
-
     Rectangle {
         anchors.fill: parent
         anchors.leftMargin: 28
         anchors.rightMargin: 28
         Column {
-            Image {
-                asynchronous: true
+
+            Item {
                 width: item.contentWidth
                 height: item.contentWidth
-                source: item.cover
 
+                Image {
+                    asynchronous: true
+                    width: item.contentWidth
+                    height: item.contentWidth
+                    source: item.cover
+                }
 
                 DPlayButton {
                     id: playButton
@@ -35,6 +37,10 @@ Rectangle {
                     width: 40
                     height: 40
                     visible: false
+
+                    onClicked:{
+                        item.GridView.view.play(item.name);
+                    }
                 }
 
                 MouseArea {
@@ -49,15 +55,19 @@ Rectangle {
                         playButton.visible = false;
                     }
                     onClicked: {
+                        print('******')
                         if (mouse.button == Qt.LeftButton){
-                            item.clicked()
+                            item.GridView.view.clicked(item.name);
+                            // print('++++++++++++')
                             mouse.accpted = false
                         }else if (mouse.button == Qt.RightButton){
-                            item.rightClicked()
+                            item.GridView.view.rightClicked(item.name);
                         }
+                        mouse.accpted = false
                     }
 
                     onPressed:{
+                        print('++++**')
                         mouse.accepted = false;
                     }
 
@@ -69,8 +79,10 @@ Rectangle {
                         mouse.accepted = false;
                     }
                 }
-
             }
+            
+
+           
             Item {
                 width: item.contentWidth
                 height: 10

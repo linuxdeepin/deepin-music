@@ -5,6 +5,7 @@
 import os
 import sys
 import time
+import json
 from PyQt5.QtCore import (QObject, pyqtSignal,
                 pyqtSlot, pyqtProperty, QDir, QDirIterator)
 
@@ -15,6 +16,9 @@ from models import *
 from dwidgets import dthread, LevelJsonDict
 from dwidgets.mediatag.song import Song as SongDict
 from collections import OrderedDict
+from config.constants import CoverPath, MusicManagerPath
+
+
 
 
 class MusicManageWorker(QObject):
@@ -23,9 +27,9 @@ class MusicManageWorker(QObject):
     songCountChanged = pyqtSignal(int)
 
     searchAllDriver =pyqtSignal()
+    searchOneFolder = pyqtSignal()
     scanfileChanged = pyqtSignal('QString')
     tipMessageChanged = pyqtSignal('QString')
-    searchOneFolder = pyqtSignal()
 
     saveSongToDB = pyqtSignal(dict)
 
@@ -36,18 +40,16 @@ class MusicManageWorker(QObject):
 
     __contextName__ = 'MusicManageWorker'
 
+    songsPath = os.path.join(MusicManagerPath, 'songs.json')
+    artistsPath = os.path.join(MusicManagerPath, 'artists.json')
+    albumsPath = os.path.join(MusicManagerPath, 'albums.json')
+    foldersPath = os.path.join(MusicManagerPath, 'folders.json')
+
     @registerContext
     def __init__(self, parent=None):
         super(MusicManageWorker, self).__init__(parent)
         self.initData()
 
-        self._artists = []
-        self._albums = []
-        self._folders = []
-
-        self._artistsDict =  OrderedDict()
-        self._albumsDict = OrderedDict()
-        self._foldersDict =  OrderedDict()
         self.initConnect()
         self.loadDB()
 
@@ -57,10 +59,10 @@ class MusicManageWorker(QObject):
         self._albums = []
         self._folders = []
 
-        self._songsDict = OrderedDict()
-        self._artistsDict =  OrderedDict()
-        self._albumsDict = OrderedDict()
-        self._foldersDict =  OrderedDict()
+        self._songsDict = {}
+        self._artistsDict =  {}
+        self._albumsDict = {}
+        self._foldersDict =  {}
 
     def initConnect(self):
         self.searchAllDriver.connect(self.searchAllDriverMusic)
@@ -68,22 +70,50 @@ class MusicManageWorker(QObject):
         self.scanfileChanged.connect(self.updateSonglist)
 
     def loadDB(self):
-        self._songsDB = LevelJsonDict('/tmp/songs')
+        if os.path.exists(self.songsPath):
+            with open(self.songsPath, 'r') as f:
+                self._songsDict = json.load(f)
 
-        self._artistsDB = LevelJsonDict('/tmp/artist')
-        self._albumsDB = LevelJsonDict('/tmp/album')
-        self._foldersDB = LevelJsonDict('/tmp/folder')
+        if os.path.exists(self.artistsPath):
+            with open(self.artistsPath, 'r') as f:
+                self._artistsDict = json.load(f)
 
-        self.clearDB()
-        self._songsDict.update(self._songsDB)
-        self._artistsDict.update(self._artistsDB)
-        self._albumsDict.update(self._albumsDB)
-        self._foldersDict.update(self._foldersDB)
+        if os.path.exists(self.albumsPath):
+            with open(self.albumsPath, 'r') as f:
+                self._albumsDict = json.load(f)
+
+        if os.path.exists(self.foldersPath):
+            with open(self.foldersPath, 'r') as f:
+                self._foldersDict= json.load(f)
+        # self._songsDB = LevelJsonDict('/tmp/songs')
+
+        # self._artistsDB = LevelJsonDict('/tmp/artist')
+        # self._albumsDB = LevelJsonDict('/tmp/album')
+        # self._foldersDB = LevelJsonDict('/tmp/folder')
+
+        # self.clearDB()
+        # self._songsDict.update(self._songsDB)
+        # self._artistsDict.update(self._artistsDB)
+        # self._albumsDict.update(self._albumsDB)
+        # self._foldersDict.update(self._foldersDB)
 
         self.updateSongs()
         self.updateArtists()
         self.updateAlbumss()
         self.updateFolders()
+
+    def saveDB(self):
+        with open(self.songsPath, 'wb') as f:
+            json.dump(self._songsDict, f, indent=4)
+
+        with open(self.artistsPath, 'wb') as f:
+            json.dump(self._artistsDict, f, indent=4)
+
+        with open(self.albumsPath, 'wb') as f:
+            json.dump(self._albumsDict, f, indent=4)
+
+        with open(self.foldersPath, 'wb') as f:
+            json.dump(self._foldersDict, f, indent=4)
 
     def clearDB(self):
         self._songsDB.clear()
@@ -148,7 +178,21 @@ class MusicManageWorker(QObject):
 
     def searchOneFolderMusic(self):
         url = QFileDialog.getExistingDirectory()
-        self.scanFolder(url)
+        if url:
+            self.scanFolder(url)
+
+    def addSongFile(self):
+        urls, _ = QFileDialog.getOpenFileNames(
+            caption="Select one or more files to open", 
+            directory="/home", 
+            filter="music(*mp2 *.mp3 *.mp4 *.m4a *wma *wav)"
+        )
+        self.addSongFiles(urls)
+
+    @dthread
+    def addSongFiles(self, urls):
+        for url in urls:
+            self.updateSonglist(url)
 
     @dthread
     def scanFolder(self, path):
@@ -168,10 +212,10 @@ class MusicManageWorker(QObject):
                 self.tipMessageChanged.emit(fpath)
         self.tipMessageChanged.emit('')
 
-        self._songsDB.update(self._songsDict)
-        self._artistsDB.update(self._artistsDict)
-        self._albumsDB.update(self._albumsDict)
-        self._foldersDB.update(self._foldersDict)
+        # self._songsDB.update(self._songsDict)
+        # self._artistsDB.update(self._artistsDict)
+        # self._albumsDB.update(self._albumsDict)
+        # self._foldersDB.update(self._foldersDict)
 
     def updateSonglist(self, fpath):
         songDict = SongDict(fpath)
@@ -190,7 +234,6 @@ class MusicManageWorker(QObject):
             urls = _artistDict['urls']
             urls.append(url)
             _artistDict['count'] = len(urls)
-        self.updateArtists()
 
 
         album = songDict['album']
@@ -205,7 +248,6 @@ class MusicManageWorker(QObject):
             urls = _albumDict['urls']
             urls.append(url)
             _albumDict['count'] = len(urls)
-        self.updateAlbumss()
 
 
         folder = songDict['folder']
@@ -220,6 +262,10 @@ class MusicManageWorker(QObject):
             urls = _folderDict['urls']
             urls.append(url)
             _folderDict['count'] = len(urls)
+
+        self.updateSongs()
+        self.updateArtists()
+        self.updateAlbumss()
         self.updateFolders()
 
         # self.saveSongToDB.emit(songDict)
@@ -227,6 +273,7 @@ class MusicManageWorker(QObject):
     def updateSongs(self):
         if self._songs != self._songsDict.values():
             self.songs = self._songsDict.values()
+        self.songCountChanged.emit(len(self._songsDict))
 
     def updateArtists(self):
         if self._artists != self._artistsDict.values():
