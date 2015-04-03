@@ -6,11 +6,11 @@ Item {
     Connections {
         target: albumView
         onPlay: {
-            print(name)
+            MusicManageWorker.playAlbum(name)
         }
 
         onClicked:{
-            print(name)
+            print(name, 'onClicked')
         }
 
         onRightClicked:{

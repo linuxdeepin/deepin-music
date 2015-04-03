@@ -20,23 +20,30 @@ from config.constants import CoverPath, MusicManagerPath
 
 
 
-
 class MusicManageWorker(QObject):
 
-    categoriesChanged = pyqtSignal('QVariant')
-    songCountChanged = pyqtSignal(int)
-
-    searchAllDriver =pyqtSignal()
-    searchOneFolder = pyqtSignal()
+    #py2py
     scanfileChanged = pyqtSignal('QString')
-    tipMessageChanged = pyqtSignal('QString')
-
     saveSongToDB = pyqtSignal(dict)
+    addSongsToPlaylist = pyqtSignal(list)
 
+    #property signal
     songsChanged = pyqtSignal('QVariant')
     artistsChanged = pyqtSignal('QVariant')
     albumsChanged = pyqtSignal('QVariant')
     foldersChanged = pyqtSignal('QVariant')
+    categoriesChanged = pyqtSignal('QVariant')
+    songCountChanged = pyqtSignal(int)
+
+    #py2qml
+    tipMessageChanged = pyqtSignal('QString')
+
+    #qml2py
+    searchAllDriver =pyqtSignal()
+    searchOneFolder = pyqtSignal()
+    playArtist = pyqtSignal('QString')
+    playAlbum = pyqtSignal('QString')
+    playFolder = pyqtSignal('QString')
 
     __contextName__ = 'MusicManageWorker'
 
@@ -67,6 +74,10 @@ class MusicManageWorker(QObject):
     def initConnect(self):
         self.searchAllDriver.connect(self.searchAllDriverMusic)
         self.searchOneFolder.connect(self.searchOneFolderMusic)
+        self.playArtist.connect(self.playArtistMusic)
+        self.playAlbum.connect(self.playAlbumMusic)
+        self.playFolder.connect(self.playFolderMusic)
+
         self.scanfileChanged.connect(self.updateSonglist)
 
     def loadDB(self):
@@ -286,3 +297,21 @@ class MusicManageWorker(QObject):
     def updateFolders(self):
         if self._folders != self._foldersDict.values():
             self.folders = self._foldersDict.values()
+
+    def playArtistMusic(self, name):
+        urls = self._artistsDict[name]['urls']
+        self.postSongs(urls)
+
+    def playAlbumMusic(self, name):
+        urls = self._albumsDict[name]['urls']
+        self.postSongs(urls)
+
+    def playFolderMusic(self, name):
+        urls = self._foldersDict[name]['urls']
+        self.postSongs(urls)
+
+    def postSongs(self, urls):
+        songs = []
+        for url in urls:
+            songs.append(self._songsDict[url])
+        self.addSongsToPlaylist.emit(songs)

@@ -31,18 +31,6 @@ Rectangle {
                     source: item.cover
                 }
 
-                DPlayButton {
-                    id: playButton
-                    anchors.centerIn: parent
-                    width: 40
-                    height: 40
-                    visible: false
-
-                    onClicked:{
-                        item.GridView.view.play(item.name);
-                    }
-                }
-
                 MouseArea {
                     anchors.fill: parent
                     acceptedButtons:  Qt.LeftButton | Qt.RightButton
@@ -55,20 +43,17 @@ Rectangle {
                         playButton.visible = false;
                     }
                     onClicked: {
-                        print('******')
                         if (mouse.button == Qt.LeftButton){
                             item.GridView.view.clicked(item.name);
-                            // print('++++++++++++')
-                            mouse.accpted = false
+                            mouse.accpted = true
                         }else if (mouse.button == Qt.RightButton){
                             item.GridView.view.rightClicked(item.name);
+                            mouse.accpted = true
                         }
-                        mouse.accpted = false
                     }
 
                     onPressed:{
-                        print('++++**')
-                        mouse.accepted = false;
+                        mouse.accepted = true;
                     }
 
                     onDoubleClicked:{
@@ -78,6 +63,22 @@ Rectangle {
                     onPositionChanged:{
                         mouse.accepted = false;
                     }
+                }
+
+                DPlayButton {
+                    id: playButton
+                    anchors.centerIn: parent
+                    width: 40
+                    height: 40
+                    visible: false
+                    onHovered:{
+                        visible = true;
+                    }
+                    onClicked:{
+                        item.GridView.view.play(item.name);
+                    }
+
+                    
                 }
             }
             

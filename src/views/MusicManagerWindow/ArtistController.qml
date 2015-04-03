@@ -6,11 +6,11 @@ Item {
     Connections {
         target: artistView
         onPlay: {
-            print(name)
+            MusicManageWorker.playArtist(name)
         }
 
         onClicked:{
-            print(name)
+            print(name, 'onClicked')
         }
 
         onRightClicked:{

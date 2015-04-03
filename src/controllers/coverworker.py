@@ -204,10 +204,10 @@ class CoverWorker(QObject):
         super(CoverWorker, self).__init__(parent)
 
         self.netEaseEngine = NetEaseEngine()
-        url = self.netEaseEngine.searchCoverByArtistName(u'谢霆锋')
-        print url
-        url = self.netEaseEngine.searchCoverByAlbumName(u'刘德华演唱会99')
-        print url
+        # url = self.netEaseEngine.searchCoverByArtistName(u'谢霆锋')
+        # print url
+        # url = self.netEaseEngine.searchCoverByAlbumName(u'刘德华演唱会99')
+        # print url
         
         self.initConnect()
 

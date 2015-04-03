@@ -6,7 +6,7 @@ Item {
     Connections {
         target: folderView
         onPlay: {
-            print(name)
+            MusicManageWorker.playFolder(name)
         }
 
         onClicked:{

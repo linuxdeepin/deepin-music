@@ -385,20 +385,21 @@ class DMediaPlaylist(QMediaPlaylist):
         oldCount = len(self._urls)
         for media in medias:
             url = media['url']
-            tags = media['tags'] 
-            updated = media['updated']
             url = unicode(url)
             if url not in self._urls:
                 if url.startswith('http://') or url.startswith('https://'):
+                    tags = media['tags']
                     self.addOnlineMedia(url, tags)
                     self._urls.append(url)
                 else:
                     if os.path.exists(url):
+                        tags = media  
                         self.addLocalMedia(url, tags)
                         self._urls.append(url)
 
             content = self._mediaContents[url]
             if isinstance(content, DRealOnlineMediaContent):
+                updated = media['updated']
                 content.updateTags(tags)
                 if updated:
                     # QTimer.singleShot(5000, content.updateTagsByUrl)
@@ -542,11 +543,20 @@ class PlaylistWorker(QObject):
 
         return self._playlists[name]
 
-
     @pyqtSlot('QString', result='QVariant')
     def getMediasByName(self, name):
         if name in self._playlists:
             return self._playlists[name].medias
+
+    def addLocalMediaToTemporary(self, media):
+        playlist = self.temporaryPlaylist
+        self.currentPlaylistChanged.emit('temporary')
+        playlist.addMedia(media['url'], media)
+
+    def addLocalMediasToTemporary(self, medias):
+        playlist = self.temporaryPlaylist
+        self.currentPlaylistChanged.emit('temporary')
+        playlist.addMedias(medias)
 
     def addOnlineMediaToTemporary(self, media):
         playlist = self.temporaryPlaylist
@@ -565,7 +575,6 @@ class PlaylistWorker(QObject):
 
     def removeFavoriteMediaContent(self, url):
         playlist = self.favoritePlaylist
-        print url
         playlist.removeMediaByUrl(url)
 
     def addOnlineMediasToFavorite(self, medias):
