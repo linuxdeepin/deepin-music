@@ -478,11 +478,14 @@ class PlaylistWorker(QObject):
                 playlist = self.createPlaylistByName(name)
                 medias = []
                 for url, tags in _playlist.items():
-                    medias.append({
-                        'url' : url,
-                        'tags': tags,
-                        'updated': True
-                    })
+                    if url.startswith("http"):
+                        medias.append({
+                            'url' : url,
+                            'tags': tags,
+                            'updated': True
+                        })
+                    else:
+                        medias.append(tags)
                 playlist.addMedias(medias)
             # from objbrowser import browse
             # browse(results)
@@ -570,7 +573,6 @@ class PlaylistWorker(QObject):
 
     def addOnlineMediaToFavorite(self, media):
         playlist = self.favoritePlaylist
-        # self.currentPlaylistChanged.emit('temporary')
         playlist.addMedia(media['url'], media['tags'], media['updated'])
 
     def removeFavoriteMediaContent(self, url):
