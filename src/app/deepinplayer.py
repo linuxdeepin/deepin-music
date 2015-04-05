@@ -117,6 +117,7 @@ class DeepinPlayer(QObject):
 
     def musicManageWorkerConnect(self):
         self.musicManageWorker.saveSongToDB.connect(self.dbWorker.addSong)
+        self.musicManageWorker.saveSongsToDB.connect(self.dbWorker.addSongs)
         self.musicManageWorker.addSongsToPlaylist.connect(self.playlistWorker.addLocalMediasToTemporary)
 
     def menuWorkerConnect(self):

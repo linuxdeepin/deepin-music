@@ -51,3 +51,49 @@ class DBWorker(QObject):
                 logger.error(songDict.pprint())
                 logger.error(e)
         QTimer.singleShot(100 * self._count, writeToDB)
+
+    def addSongs(self, songs):
+        artists = []
+        albums = []
+        folders = []
+        for song in songs:
+            artists.append({'name': song['artist']})
+            albums.append({'name': song['album']})
+            folders.append({'name': song['folder']})
+
+        Artist.get_create_Records(artists)
+        Album.get_create_Records(albums)
+        Folder.get_create_Records(folders)
+
+        for song in songs:
+            artistDict = {'name': song['artist']}
+            albumDict = {'name': song['album']}
+            folderDict = {'name': song['folder']}
+            fartist = Artist.getRecord(**artistDict)
+            falbum = Album.getRecord(**albumDict)
+            ffolder = Folder.getRecord(**folderDict)
+            song['fartist'] = fartist
+            song['falbum'] = falbum
+            song['ffolder'] = ffolder
+        Song.get_create_Records(songs)
+
+        # self._count += 1
+        # def writeToDB():
+        #     try:
+        #         artistDict = {'name': songDict['artist']}
+        #         albumDict = {'name': songDict['album']}
+        #         folderDict = {'name': songDict['folder']}
+
+        #         fartist = Artist.get_create_Record(**artistDict)
+        #         falbum = Album.get_create_Record(**albumDict)
+        #         ffolder = Folder.get_create_Record(**folderDict)
+
+        #         songDict['fartist'] = fartist
+        #         songDict['falbum'] = falbum
+        #         songDict['ffolder'] = ffolder
+        #         song = Song.get_create_Record(**songDict)
+        #         print(song.id, threading.currentThread())
+        #     except Exception, e:
+        #         logger.error(songDict.pprint())
+        #         logger.error(e)
+        # QTimer.singleShot(100 * self._count, writeToDB)

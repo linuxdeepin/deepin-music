@@ -25,6 +25,7 @@ class MusicManageWorker(QObject):
     #py2py
     scanfileChanged = pyqtSignal('QString')
     saveSongToDB = pyqtSignal(dict)
+    saveSongsToDB = pyqtSignal(list)
     addSongsToPlaylist = pyqtSignal(list)
 
     #property signal
@@ -228,8 +229,17 @@ class MusicManageWorker(QObject):
         # self._albumsDB.update(self._albumsDict)
         # self._foldersDB.update(self._foldersDict)
 
+        self.saveSongsToDB.emit(self._songsDict.values())
+
     def updateSonglist(self, fpath):
         songDict = SongDict(fpath)
+        if isinstance(songDict['artist'], str):
+            songDict['artist'] = songDict['artist'].decode('utf-8')
+        if isinstance(songDict['album'], str):
+            songDict['album'] = songDict['album'].decode('utf-8')
+        if isinstance(songDict['folder'], str):
+            songDict['folder'] = songDict['folder'].decode('utf-8')
+
         url = songDict['url']
         self._songsDict[url] = songDict
 

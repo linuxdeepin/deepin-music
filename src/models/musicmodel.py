@@ -88,6 +88,17 @@ class BaseModel(Model):
                 ret = None
         return ret
 
+    @classmethod
+    def get_create_Records(cls, records):
+        with db.transaction():
+            for record in records:
+                key = getattr(cls, '__key__')
+                assert key in record
+                try:
+                    ret = cls.create(**record)
+                except IntegrityError:
+                    cls.update(**record).where(getattr(cls, key) == record[key]).execute()
+
 
 class Artist(BaseModel):
     name = CharField(default='', unique=True)
@@ -468,14 +479,44 @@ if __name__ == '__main__':
     dbWorker = DBWorker()
 
 
-    basePath = '/home/djf/workspace/github/musicplayer-qml/music'
-    url = os.path.join(basePath, '1.mp3')
-    song = Song.createLocalInstanceByUrl(url)
-    # song.updateTagsToDB(**{'title': '12456789'})
-    print song, song.title
-    song = Song.createLocalInstanceByUrl(url)
-    print song
-    song = Song.createLocalInstanceByUrl(url)
-    print song
-    song = Song.createLocalInstanceByUrl(url)
-    print song
+    # basePath = '/home/djf/workspace/github/musicplayer-qml/music'
+    # url = os.path.join(basePath, '1.mp3')
+    # song = Song.createLocalInstanceByUrl(url)
+    # # song.updateTagsToDB(**{'title': '12456789'})
+    # print song, song.title
+    # song = Song.createLocalInstanceByUrl(url)
+    # print song
+    # song = Song.createLocalInstanceByUrl(url)
+    # print song
+    # song = Song.createLocalInstanceByUrl(url)
+    # print song
+    
+
+    artists = []
+    for i in range(1000):
+        artists.append({'name': 'val1-%s' % i})
+
+
+    with db.transaction():
+        # a = Song.insert(**{'url': '111'})
+        # print a.sql()[0]
+        # print a.__dict__
+        # db.get_cursor().executemany('INSERT INTO artist(name) VALUES (?)', artists)
+        # a.execute()
+        # Artist.insert_many(artists).execute()
+
+        for idx in range(0, len(artists), 500):
+            Artist.insert_many(artists[idx:idx+500]).execute()
+
+    # con = sqlite3.connect('existing_db.db')
+    # with open('dump.sql', 'w') as f:
+    #     for line in db.get_conn().iterdump():
+    #         f.write('%s\n' % line)
+
+    # import sqlite3
+    # conn = sqlite3.connect('example.db')
+    # # print artists
+    # c = conn.cursor()
+    # c.execute('''CREATE TABLE artist (name TEXT, name1 TEXT,name2 TEXT,name3 TEXT)''')
+    # c.executemany('INSERT INTO artist VALUES (?, ?, ? ,?)', artists)
+    # conn.commit()
