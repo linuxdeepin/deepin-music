@@ -24,9 +24,11 @@ class MusicManageWorker(QObject):
 
     #py2py
     scanfileChanged = pyqtSignal('QString')
+    scanfileFinished = pyqtSignal()
     saveSongToDB = pyqtSignal(dict)
     saveSongsToDB = pyqtSignal(list)
     addSongsToPlaylist = pyqtSignal(list)
+    playSongByUrl = pyqtSignal('QString')
 
     #property signal
     songsChanged = pyqtSignal('QVariant')
@@ -80,58 +82,47 @@ class MusicManageWorker(QObject):
         self.playFolder.connect(self.playFolderMusic)
 
         self.scanfileChanged.connect(self.updateSonglist)
+        self.scanfileFinished.connect(self.saveSongs)
 
     def loadDB(self):
-        if os.path.exists(self.songsPath):
-            with open(self.songsPath, 'r') as f:
-                self._songsDict = json.load(f)
+        for song in Song.select():
+            self._songsDict[song.url] = song.toDict()
 
-        if os.path.exists(self.artistsPath):
-            with open(self.artistsPath, 'r') as f:
-                self._artistsDict = json.load(f)
+        for artist in Artist.select():
+            self._artistsDict[artist.name] = {
+                'name': artist.name,
+                'count': artist.songs.count(),
+                'songs': {}
+            }
+            songs = self._artistsDict[artist.name]['songs']
+            for song in artist.songs:
+                songs.update({song.toDict()['url']: song.toDict()})
 
-        if os.path.exists(self.albumsPath):
-            with open(self.albumsPath, 'r') as f:
-                self._albumsDict = json.load(f)
+        for album in Album.select():
+            self._albumsDict[album.name] = {
+                'name': album.name,
+                'count': album.songs.count(),
+                'songs': {}
+            }
+            songs = self._albumsDict[album.name]['songs']
+            for song in album.songs:
+                songs.update({song.toDict()['url']: song.toDict()})
 
-        if os.path.exists(self.foldersPath):
-            with open(self.foldersPath, 'r') as f:
-                self._foldersDict= json.load(f)
-        # self._songsDB = LevelJsonDict('/tmp/songs')
 
-        # self._artistsDB = LevelJsonDict('/tmp/artist')
-        # self._albumsDB = LevelJsonDict('/tmp/album')
-        # self._foldersDB = LevelJsonDict('/tmp/folder')
-
-        # self.clearDB()
-        # self._songsDict.update(self._songsDB)
-        # self._artistsDict.update(self._artistsDB)
-        # self._albumsDict.update(self._albumsDB)
-        # self._foldersDict.update(self._foldersDB)
+        for folder in Folder.select():
+            self._foldersDict[folder.name] = {
+                'name': folder.name,
+                'count': folder.songs.count(),
+                'songs': {}
+            }
+            songs = self._foldersDict[folder.name]['songs']
+            for song in folder.songs:
+                songs.update({song.toDict()['url']: song.toDict()})
 
         self.updateSongs()
         self.updateArtists()
         self.updateAlbumss()
         self.updateFolders()
-
-    def saveDB(self):
-        with open(self.songsPath, 'wb') as f:
-            json.dump(self._songsDict, f, indent=4)
-
-        with open(self.artistsPath, 'wb') as f:
-            json.dump(self._artistsDict, f, indent=4)
-
-        with open(self.albumsPath, 'wb') as f:
-            json.dump(self._albumsDict, f, indent=4)
-
-        with open(self.foldersPath, 'wb') as f:
-            json.dump(self._foldersDict, f, indent=4)
-
-    def clearDB(self):
-        self._songsDB.clear()
-        self._artistsDB.clear()
-        self._albumsDB.clear()
-        self._foldersDB.clear()
 
     @pyqtProperty('QVariant', notify=categoriesChanged)
     def categories(self):
@@ -203,11 +194,15 @@ class MusicManageWorker(QObject):
 
     @dthread
     def addSongFiles(self, urls):
+        self._tempSongs = {}
         for url in urls:
             self.updateSonglist(url)
+        self.scanfileFinished.emit()
 
     @dthread
     def scanFolder(self, path):
+        self._tempSongs = {}
+
         filters = QDir.Files
         nameFilters = ["*.wav", "*.wma", "*.mp2", "*.mp3", "*.mp4", "*.m4a", "*.flac", "*.ogg"]
         qDirIterator = QDirIterator(path, nameFilters, filters, QDirIterator.Subdirectories)
@@ -223,13 +218,10 @@ class MusicManageWorker(QObject):
                 self.scanfileChanged.emit(fpath)
                 self.tipMessageChanged.emit(fpath)
         self.tipMessageChanged.emit('')
+        self.scanfileFinished.emit()
 
-        # self._songsDB.update(self._songsDict)
-        # self._artistsDB.update(self._artistsDict)
-        # self._albumsDB.update(self._albumsDict)
-        # self._foldersDB.update(self._foldersDict)
-
-        self.saveSongsToDB.emit(self._songsDict.values())
+    def saveSongs(self):
+        self.saveSongsToDB.emit(self._tempSongs.values())
 
     def updateSonglist(self, fpath):
         songDict = SongDict(fpath)
@@ -242,19 +234,19 @@ class MusicManageWorker(QObject):
 
         url = songDict['url']
         self._songsDict[url] = songDict
+        self._tempSongs[url] = songDict
 
         artist = songDict['artist']
         if artist not in self._artistsDict:
             self._artistsDict[artist] = {
                 'name': artist,
                 'count': 0,
-                'urls': []
+                'songs': {}
             }
         _artistDict = self._artistsDict[artist]
-        if url not in _artistDict['urls']:
-            urls = _artistDict['urls']
-            urls.append(url)
-            _artistDict['count'] = len(urls)
+        songs = _artistDict['songs']
+        songs.update({url: songDict})
+        _artistDict['count'] = len(songs)
 
 
         album = songDict['album']
@@ -262,13 +254,12 @@ class MusicManageWorker(QObject):
             self._albumsDict[album] = {
                 'name': album,
                 'count': 0,
-                'urls': []
+                'songs': {}
             }
         _albumDict = self._albumsDict[album]
-        if url not in _albumDict['urls']:
-            urls = _albumDict['urls']
-            urls.append(url)
-            _albumDict['count'] = len(urls)
+        songs = _albumDict['songs']
+        songs.update({url: songDict})
+        _albumDict['count'] = len(songs)
 
 
         folder = songDict['folder']
@@ -276,52 +267,44 @@ class MusicManageWorker(QObject):
             self._foldersDict[folder] = {
                 'name': folder,
                 'count': 0,
-                'urls': []
+                'songs': {}
             }
         _folderDict = self._foldersDict[folder]
-        if url not in _folderDict['urls']:
-            urls = _folderDict['urls']
-            urls.append(url)
-            _folderDict['count'] = len(urls)
+        songs = _folderDict['songs']
+        songs.update({url: songDict})
+        _folderDict['count'] = len(songs)
 
         self.updateSongs()
         self.updateArtists()
         self.updateAlbumss()
         self.updateFolders()
 
-        # self.saveSongToDB.emit(songDict)
-
     def updateSongs(self):
-        if self._songs != self._songsDict.values():
-            self.songs = self._songsDict.values()
+        self.songs = self._songsDict.values()
         self.songCountChanged.emit(len(self._songsDict))
 
     def updateArtists(self):
-        if self._artists != self._artistsDict.values():
-            self.artists = self._artistsDict.values()
+        self.artists = self._artistsDict.values()
 
     def updateAlbumss(self):
-        if self._albums != self._albumsDict.values():
-            self.albums = self._albumsDict.values()
+        self.albums = self._albumsDict.values()
 
     def updateFolders(self):
-        if self._folders != self._foldersDict.values():
-            self.folders = self._foldersDict.values()
+        self.folders = self._foldersDict.values()
 
     def playArtistMusic(self, name):
-        urls = self._artistsDict[name]['urls']
-        self.postSongs(urls)
+        songs = self._artistsDict[name]['songs']
+        self.postSongs(songs)
 
     def playAlbumMusic(self, name):
-        urls = self._albumsDict[name]['urls']
-        self.postSongs(urls)
+        songs = self._albumsDict[name]['songs']
+        self.postSongs(songs)
 
     def playFolderMusic(self, name):
-        urls = self._foldersDict[name]['urls']
-        self.postSongs(urls)
+        songs = self._foldersDict[name]['songs']
+        self.postSongs(songs)
 
-    def postSongs(self, urls):
-        songs = []
-        for url in urls:
-            songs.append(self._songsDict[url])
-        self.addSongsToPlaylist.emit(songs)
+    def postSongs(self, songs):
+        songlist = songs.values()
+        self.addSongsToPlaylist.emit(songlist)
+        self.playSongByUrl.emit(songlist[0]['url'])

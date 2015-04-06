@@ -420,6 +420,29 @@ class Song(BaseModel):
         ret = '\n'.join(['%s: %s' % (key, p[key]) for key in keys if p.has_key(key)])
         return ret
 
+    def toDict(self):
+        keys = [
+            'url',
+            'folder',
+            'title',
+            'artist',
+            'album',
+            'date',
+            'genre',
+            'tracknumber',
+            'discnumber',
+            'sample_rate',
+            'bitrate',
+            'duration',
+            'size',
+        ]
+
+        p = {}
+        for key in keys:
+            if hasattr(self, key):
+                p[key] = getattr(self, key)
+        return p
+
 
 class SongPlaylist(BaseModel):
     song = ForeignKeyField(Song)

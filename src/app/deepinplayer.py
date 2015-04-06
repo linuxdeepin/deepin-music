@@ -56,6 +56,7 @@ class DeepinPlayer(QObject):
         self.mainWindow = MainWindow()
 
     def initControllers(self):
+        self.dbWorker = DBWorker()
         self.configWorker = ConfigWorker()
         self.i18nWorker = I18nWorker()
 
@@ -67,8 +68,6 @@ class DeepinPlayer(QObject):
         self.mediaPlayer = MediaPlayer()
         self.coverWorker = CoverWorker()
         self.playlistWorker = PlaylistWorker()
-
-        self.dbWorker = DBWorker()
 
         self.web360Thread = QThread(self)
         self.web360ApiWorker.moveToThread(self.web360Thread)
@@ -119,6 +118,7 @@ class DeepinPlayer(QObject):
         self.musicManageWorker.saveSongToDB.connect(self.dbWorker.addSong)
         self.musicManageWorker.saveSongsToDB.connect(self.dbWorker.addSongs)
         self.musicManageWorker.addSongsToPlaylist.connect(self.playlistWorker.addLocalMediasToTemporary)
+        self.musicManageWorker.playSongByUrl.connect(self.mediaPlayer.playLocalMedia)
 
     def menuWorkerConnect(self):
         self.menuWorker.addSongFile.connect(self.musicManageWorker.addSongFile)
@@ -145,5 +145,4 @@ class DeepinPlayer(QObject):
     def close(self):
         self.mediaPlayer.stop()
         self.configWorker.save()
-        self.musicManageWorker.saveDB()
         self.playlistWorker.savePlaylists()
