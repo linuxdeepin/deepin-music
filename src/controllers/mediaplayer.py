@@ -305,6 +305,7 @@ class MediaPlayer(QObject):
                 else:
                     index = currentIndex - 1
                 self._playlist.setCurrentIndex(index)
+            currentIndex = self._playlist.currentIndex()
             self.playMediaByIndex(currentIndex)
 
     @pyqtSlot()
@@ -320,7 +321,7 @@ class MediaPlayer(QObject):
                 else:
                     index = currentIndex + 1
                 self._playlist.setCurrentIndex(index)
-
+            currentIndex = self._playlist.currentIndex()
             self.playMediaByIndex(currentIndex)
 
     @pyqtSlot(int)
