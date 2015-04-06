@@ -196,7 +196,7 @@ class Song(BaseModel):
     # mood = CharField(default='')
     # trackCount = CharField(default='')
     # coverArtUrlLarge = CharField(default='')
-    # coverArtUrlSmall = CharField(default='')
+    cover = CharField(default='')
 
     #other
     created_date = DateTimeField(default=datetime.datetime.now)
@@ -435,6 +435,7 @@ class Song(BaseModel):
             'bitrate',
             'duration',
             'size',
+            'cover',
         ]
 
         p = {}

@@ -107,6 +107,9 @@ class DRealLocalMediaContent(BaseMediaContent):
         if 'artist' in self._tags:
             self.artist = self._tags['artist']
 
+        if 'cover' in self._tags:
+            self.cover = self._tags['cover']
+
         if 'duration' in self._tags:
             self.duration = duration_to_string(self._tags['duration'])
 

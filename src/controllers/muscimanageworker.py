@@ -17,7 +17,7 @@ from dwidgets import dthread, LevelJsonDict
 from dwidgets.mediatag.song import Song as SongDict
 from collections import OrderedDict
 from config.constants import CoverPath, MusicManagerPath
-
+from .coverworker import CoverWorker
 
 
 class MusicManageWorker(QObject):
@@ -225,6 +225,13 @@ class MusicManageWorker(QObject):
 
     def updateSonglist(self, fpath):
         songDict = SongDict(fpath)
+        ext, coverData = songDict.getMp3FontCover()
+        if ext and coverData:
+            coverName = CoverWorker.getCoverPathByMediaUrl(songDict['url'])
+            with open(coverName, 'wb') as f:
+                f.write(coverData)
+            songDict['cover'] = coverName
+
         if isinstance(songDict['artist'], str):
             songDict['artist'] = songDict['artist'].decode('utf-8')
         if isinstance(songDict['album'], str):

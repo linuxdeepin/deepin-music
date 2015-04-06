@@ -13,6 +13,7 @@ from models import *
 from log import logger
 from dwidgets import dthread
 import threading
+import copy
 
 
 class DBWorker(QObject):
@@ -54,6 +55,7 @@ class DBWorker(QObject):
 
     @dthread
     def addSongs(self, songs):
+        songs = copy.deepcopy(songs)
         artists = []
         albums = []
         folders = []
