@@ -400,6 +400,7 @@ class DMediaPlaylist(QMediaPlaylist):
             content = self._mediaContents[url]
             if isinstance(content, DRealOnlineMediaContent):
                 updated = media['updated']
+                tags = media['tags']
                 content.updateTags(tags)
                 if updated:
                     # QTimer.singleShot(5000, content.updateTagsByUrl)
