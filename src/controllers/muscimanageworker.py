@@ -93,6 +93,7 @@ class MusicManageWorker(QObject):
             self._artistsDict[artist.name] = {
                 'name': artist.name,
                 'count': artist.songs.count(),
+                'cover': CoverWorker.getCoverPathByArtist(artist.name),
                 'songs': {}
             }
             songs = self._artistsDict[artist.name]['songs']
@@ -103,6 +104,7 @@ class MusicManageWorker(QObject):
             self._albumsDict[album.name] = {
                 'name': album.name,
                 'count': album.songs.count(),
+                'cover': CoverWorker.getCoverPathByArtistAlbum(album.artist, album.name),
                 'songs': {}
             }
             songs = self._albumsDict[album.name]['songs']
@@ -250,6 +252,7 @@ class MusicManageWorker(QObject):
             self._artistsDict[artist] = {
                 'name': artist,
                 'count': 0,
+                'cover': CoverWorker.getCoverPathByArtist(artist),
                 'songs': {}
             }
         _artistDict = self._artistsDict[artist]

@@ -140,10 +140,6 @@ class PosterLib(object):
     
 poster = PosterLib()
 
-
-
-
-
 def multi_query_artist_engine(artist_name):
     if isinstance(artist_name, unicode):
         artist_name = artist_name.encode("utf-8")

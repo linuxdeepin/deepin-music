@@ -8,7 +8,7 @@ Rectangle {
         id: artistView
         model: MusicManageWorker.artists
         delegate: ItemDelegate{
-            cover: '../../skin/images/bg1.jpg'
+            cover: GridView.view.model[index].cover
             name: GridView.view.model[index].name
             count: GridView.view.model[index].count
         }

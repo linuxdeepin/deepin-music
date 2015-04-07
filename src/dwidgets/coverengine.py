@@ -12,14 +12,29 @@ from PyQt5.QtCore import (QObject, pyqtSignal, pyqtSlot,
       )
 from PyQt5.QtGui import QGuiApplication
 import requests
-
+import urllib
+import urllib2
+import StringIO
+import gzip
+import re
 from cover.cover_query import multi_query_album_engine, multi_query_artist_engine
 
+class XiamiTingEngine(object):
 
-from peewee import *
-MusicDBFile = '/home/djf/.config/DeepinMusic3/music.db'
-db = SqliteDatabase(MusicDBFile, threadlocals=True)
-db.connect()
+    def __init__(self):
+        super(XiamiTingEngine, self).__init__()
+
+    def searchCoverByArtistName(self, artist):
+        try:
+            return multi_query_artist_engine(artist)
+        except Exception, e:
+            return False
+
+    def searchCoverByAlbumName(self, artist, album):
+        try:
+            return multi_query_album_engine(artist, album)
+        except Exception, e:
+            return False
 
 class NetEaseEngine(object):
     def __init__(self):
@@ -110,8 +125,7 @@ class NetEaseEngine(object):
             if ret['code'] == 200 and ret['result'] and ret['result']['artistCount'] >= 1:
                 picUrl = ret['result']['artists'][0]['picUrl']
         except Exception, e:
-            raise e
-            picUrl = ''
+            picUrl = False
         return picUrl
 
 
@@ -184,69 +198,174 @@ class NetEaseEngine(object):
             if ret['code'] == 200 and ret['result'] and ret['result']['albumCount'] >= 1:
                 picUrl = ret['result']['albums'][0]['picUrl']
         except Exception, e:
-            picUrl = ''
+            picUrl = False
         return picUrl
 
+class DoubanEngine(object):
 
+    _doubanSearchApi    = 'http://music.douban.com/subject_search?search_text={0}&cat=1001'
+    _doubanCoverPattern = '<img src="http://img3.douban.com/spic/s(\d+).jpg"'
+    _doubanConverAddr   = 'http://img3.douban.com/lpic/s{0}.jpg'
+
+    def __init__(self):
+        super(DoubanEngine, self).__init__()
+
+    def urlread(self, url, need_gzip = True, host = "www.douban.com"):
+        req = urllib2.Request(url)
+        req.add_header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:15.0) Gecko/20100101 Firefox/15.0.1")
+        req.add_header("Referer", "http://music.douban.com/")
+        req.add_header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
+        req.add_header("Accept-Encoding", "gzip, deflate")
+        req.add_header("Accept-Language", "zh-cn,zh;q=0.8,en-us;q=0.5,en;q=0.3")
+        req.add_header("Connection", "keep-alive")
+        req.add_header("Host", host)
+        req.add_header("Cookie", 'bid="9vSv1w9XJNs"; report=ref=%2Fsubject_search&mus_msc=musmsc_1') 
+
+        source = urllib2.urlopen(req).read()
+
+        if need_gzip == True:
+            data = StringIO.StringIO(source)
+            gzipper = gzip.GzipFile(fileobj=data)
+            source = gzipper.read()
+        return source
+
+    def searchCover(self, artist, album='', title=''):
+        if isinstance(artist, unicode):
+            artist = artist.encode('utf-8')
+        if isinstance(album, unicode):
+            album = album.encode('utf-8')
+        if isinstance(title, unicode):
+            title = title.encode('utf-8')
+
+        keywords = artist + ' ' + (album or title)
+        request = self._doubanSearchApi.format(urllib.quote(keywords))
+        try:
+            result  = self.urlread(request)
+            if not len(result):
+                return False
+
+            match = re.compile(self._doubanCoverPattern, re.IGNORECASE).search(result)
+            if match:
+                return self._doubanConverAddr.format(match.groups()[0])
+            else:
+                return False
+        except Exception, e:
+            False
+
+
+class CoverRunnable(QRunnable):
+
+    def __init__(self, coverWorker, artist, album='' ,qtype='artist', **kwargs):
+        super(CoverRunnable, self).__init__()
+        self.coverWorker = coverWorker
+        self.artist = artist
+        self.album = album
+        self.qtype = qtype
+
+    def run(self):
+        netEaseEngine = NetEaseEngine()
+        xiamiTingEngine = XiamiTingEngine()
+        doubanEngine = DoubanEngine()
+
+        if self.qtype == "artist":
+            url = netEaseEngine.searchCoverByArtistName(self.artist)
+            if not url:
+                url = xiamiTingEngine.searchCoverByArtistName(self.artist)
+            if not url:
+                url = doubanEngine.searchCover(self.artist)
+            if url:
+                localUrl = self.coverWorker.getArtistCoverPath(self.artist)
+                flag = self.downloadCoverByUrl(url, localUrl)
+                if flag:
+                    self.coverWorker.downloadArtistCoverSuccessed.emit(self.artist, localUrl)
+
+        elif self.qtype == "album":
+            url = netEaseEngine.searchCoverByAlbumName(self.artist)
+            if not url:
+                url = xiamiTingEngine.searchCoverByAlbumName(self.artist, self.album)
+            if not url:
+                url = doubanEngine.searchCover(self.artist, self.album)
+            if url:
+                localUrl = self.coverWorker.getAlbumCoverPath(self.artist, self.album)
+                flag = self.downloadCoverByUrl(url, localUrl)
+                if flag:
+                    self.coverWorker.downloadAlbumCoverSuccessed.emit(self.artist, self.album, localUrl)
+
+    def downloadCoverByUrl(self, url, localUrl):
+        try:
+            r = requests.get(url)
+            with open(localUrl, "wb") as f:
+                f.write(r.content)
+            return True
+        except:
+            return False
 
 
 class CoverWorker(QObject):
 
-    receiveCover = pyqtSignal('QString', 'QString', 'QString')
+    downloadArtistCoverSuccessed = pyqtSignal('QString', 'QString')
+    downloadAlbumCoverSuccessed = pyqtSignal('QString', 'QString', 'QString')
 
     def __init__(self):
         super(CoverWorker, self).__init__()
-        self.receiveCover.connect(self.getResults)
+        QThreadPool.globalInstance().setMaxThreadCount(4)
+        self.downloadArtistCoverSuccessed.connect(self.cacheArtistCover)
+        self.downloadAlbumCoverSuccessed.connect(self.cacheAlbumCover)
+        self.artistCovers = {}
+        self.albumCovers = {}
 
-    def getResults(self, qtype, name, url):
-        print qtype, name, url
+    def cacheArtistCover(self, artist, url):
+        print artist, url
+        self.artistCovers[artist]  = url
 
+    def cacheAlbumCover(self, artist, album, url):
+        print artist, album, url
+        self.albumCovers[album] = url
 
-coverWorker = CoverWorker()
+    def downloadArtistCover(self, artist):
+        d = CoverRunnable(self, artist, qtype="artist")
+        QThreadPool.globalInstance().start(d)
 
+    def downloadAlbumCover(self, artist, album):
+        d = CoverRunnable(self, artist, album, qtype="artist")
+        QThreadPool.globalInstance().start(d)
 
-class DRunnable(QRunnable):
-    """docstring for ClassName"""
-    def __init__(self, name, qtype='artist', **kwargs):
-        super(DRunnable, self).__init__()
-        self.name = name[0]
-        self.qtype = qtype
+    @classmethod
+    def getArtistCoverPath(cls, artist):
+        ArtistCoverPath =  '/home/djf/.config/DeepinMusic3/cover/artist'
+        filepath = os.path.join(ArtistCoverPath, artist)
+        return filepath
 
-    def run(self):
-        engine = NetEaseEngine()
-        if self.qtype == "artist":
-            url = engine.searchCoverByArtistName(self.name)
-            if not url:
-                url = multi_query_artist_engine(self.name)
-        elif self.qtype == "album":
-            url = engine.searchCoverByAlbumName(self.name)
-            if not url:
-                url =multi_query_album_engine('', self.name)
-
-        coverWorker.receiveCover.emit(self.qtype, self.name, url)
+    @classmethod
+    def getAlbumCoverPath(cls, artist, album):
+        ArtistCoverPath =  '/home/djf/.config/DeepinMusic3/cover/album'
+        filepath = os.path.join(ArtistCoverPath, '%s-%s' % (artist, album))
+        return filepath
 
 
 if __name__ == '__main__':
     app = QGuiApplication(sys.argv)
-    import time
+    QThreadPool.globalInstance().setMaxThreadCount(10)
+    from peewee import *
+    MusicDBFile = '/home/djf/.config/DeepinMusic3/music.db'
+    db = SqliteDatabase(MusicDBFile, threadlocals=True)
+    db.connect()
 
-    # artists = []
-    # for artist in db.get_cursor().execute('Select name from artist').fetchall():
-    #     artists.append(artist)
-
-    # for artist in artists:
-    #     d = DRunnable(artist, qtype="artist")
-    #     QThreadPool.globalInstance().start(d)
-
+    coverWorker = CoverWorker()
+    artists = []
+    for artist in db.get_cursor().execute('Select name from artist').fetchall():
+        artists.append(artist[0])
+    for artist in artists:
+        coverWorker.downloadArtistCover(artist)
 
     albums = []
-    for album in db.get_cursor().execute('Select name from album').fetchall():
-        albums.append(album)
-    
-    for album in albums:
-        d = DRunnable(album, qtype="album")
-        QThreadPool.globalInstance().start(d)
+    for artist, album in db.get_cursor().execute('Select artist, name from album').fetchall():
+        albums.append((artist, album))
+    for _album in albums:
+        artist, album = _album
+        coverWorker.downloadAlbumCover(artist, album)
 
+    print(QThreadPool.globalInstance().maxThreadCount())
 
     exitCode = app.exec_()
     sys.exit(exitCode)

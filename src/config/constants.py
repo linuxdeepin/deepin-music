@@ -13,6 +13,9 @@ ProjectPath = os.path.join(ConfigPath, ProjectName)
 MusicManagerPath = os.path.join(ProjectPath, 'music')
 PlaylistPath = os.path.join(ProjectPath, 'playlist')
 CoverPath = os.path.join(ProjectPath, 'cover')
+ArtistCoverPath = os.path.join(CoverPath, 'artist')
+AlbumCoverPath = os.path.join(CoverPath, 'album')
+SongCoverPath = os.path.join(CoverPath, 'song')
 
 MusicDBFile = os.path.join(ProjectPath,  'music.db')
 
@@ -21,7 +24,10 @@ paths = [
 	ProjectPath,
 	MusicManagerPath,
 	PlaylistPath,
-	CoverPath
+	CoverPath,
+	ArtistCoverPath,
+	AlbumCoverPath,
+	SongCoverPath
 ]
 
 for path in paths:
