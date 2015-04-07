@@ -231,7 +231,7 @@ class MusicManageWorker(QObject):
         songDict = SongDict(fpath)
         ext, coverData = songDict.getMp3FontCover()
         if ext and coverData:
-            coverName = CoverWorker.getCoverPathByMediaUrl(songDict['url'])
+            coverName = CoverWorker.songCoverPath(songDict['artist'], songDict['title'])
             with open(coverName, 'wb') as f:
                 f.write(coverData)
             songDict['cover'] = coverName
@@ -252,7 +252,7 @@ class MusicManageWorker(QObject):
             self._artistsDict[artist] = {
                 'name': artist,
                 'count': 0,
-                'cover': CoverWorker.getCoverPathByArtist(artist),
+                'cover': CoverWorker.getCoverPathByArtist(''),
                 'songs': {}
             }
         _artistDict = self._artistsDict[artist]
@@ -260,12 +260,12 @@ class MusicManageWorker(QObject):
         songs.update({url: songDict})
         _artistDict['count'] = len(songs)
 
-
         album = songDict['album']
         if album not in self._albumsDict:
             self._albumsDict[album] = {
                 'name': album,
                 'count': 0,
+                'cover':CoverWorker.getCoverPathByArtistAlbum('', ''),
                 'songs': {}
             }
         _albumDict = self._albumsDict[album]
@@ -287,6 +287,19 @@ class MusicManageWorker(QObject):
         _folderDict['count'] = len(songs)
 
         QTimer.singleShot(1500, self.update)
+
+        contexts['CoverWorker'].downloadArtistCover(artist)
+        contexts['CoverWorker'].downloadAlbumCover(artist, album)
+
+    def updateArtistCover(self, artist, url):
+        _artistDict = self._artistsDict[artist]
+        _artistDict['cover'] = url
+        self.updateArtists()
+
+    def updateAlbumCover(self, artist, album, url):
+        _albumDict = self._albumsDict[album]
+        _albumDict['cover'] = url
+        self.updateAlbumss()
 
     def update(self):
         self.updateSongs()

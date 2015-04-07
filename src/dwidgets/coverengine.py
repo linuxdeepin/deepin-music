@@ -274,7 +274,7 @@ class CoverRunnable(QRunnable):
             if not url:
                 url = doubanEngine.searchCover(self.artist)
             if url:
-                localUrl = self.coverWorker.getArtistCoverPath(self.artist)
+                localUrl = self.coverWorker.artistCoverPath(self.artist)
                 flag = self.downloadCoverByUrl(url, localUrl)
                 if flag:
                     self.coverWorker.downloadArtistCoverSuccessed.emit(self.artist, localUrl)
@@ -286,7 +286,7 @@ class CoverRunnable(QRunnable):
             if not url:
                 url = doubanEngine.searchCover(self.artist, self.album)
             if url:
-                localUrl = self.coverWorker.getAlbumCoverPath(self.artist, self.album)
+                localUrl = self.coverWorker.albumCoverPath(self.artist, self.album)
                 flag = self.downloadCoverByUrl(url, localUrl)
                 if flag:
                     self.coverWorker.downloadAlbumCoverSuccessed.emit(self.artist, self.album, localUrl)

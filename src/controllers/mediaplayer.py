@@ -451,7 +451,11 @@ class MediaPlayer(QObject):
             urls = self._playlist.urls
             if index < len(urls):
                 url = urls[index]
-                coverfile = CoverWorker.getCoverPathByMediaUrl(url)
+                mediaContents =  self._playlist.mediaContents
+                mediaContent = mediaContents[url]
+                title = mediaContent.title
+                artist = mediaContent.artist
+                coverfile = CoverWorker.getCoverPathByArtistSong(artist, title)
                 if os.path.exists(coverfile):
                     self._cover = coverfile
         return self._cover

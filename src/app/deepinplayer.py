@@ -113,6 +113,8 @@ class DeepinPlayer(QObject):
 
     def coverWorkerConnect(self):
         self.coverWorker.downloadCoverSuccessed.connect(self.mediaPlayer.updateCover)
+        self.coverWorker.updateArtistCover.connect(self.musicManageWorker.updateArtistCover)
+        self.coverWorker.updateAlbumCover.connect(self.musicManageWorker.updateAlbumCover)
 
     def musicManageWorkerConnect(self):
         self.musicManageWorker.saveSongToDB.connect(self.dbWorker.addSong)

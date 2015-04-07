@@ -123,10 +123,16 @@ def fix_charset(s):
     '''Fix the charset. unicode error'''
     if not s:
         return ""
-    repr_char = repr(s)
-    if repr_char.startswith("u"):
-        if repr_char.find("\u") != -1:
-            return s.encode("utf-8")
-        return auto_decode(eval(repr_char[1:])).encode("utf-8")
+    # repr_char = repr(s)
+    # if repr_char.startswith("u"):
+    #     if repr_char.find("\u") != -1:
+    #         return s.encode("utf-8")
+    #     return auto_decode(eval(repr_char[1:])).encode("utf-8")
+    # else:
+    #     return s
+
+    if isinstance(s, str):
+    	return s.decode('utf-8')
     else:
-        return s
+    	return s
+

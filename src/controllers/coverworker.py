@@ -23,6 +23,9 @@ class CoverWorker(QObject):
     downloadArtistCoverSuccessed = pyqtSignal('QString', 'QString')
     downloadAlbumCoverSuccessed = pyqtSignal('QString', 'QString', 'QString')
 
+    updateArtistCover = pyqtSignal('QString', 'QString')
+    updateAlbumCover = pyqtSignal('QString', 'QString', 'QString')
+
     @registerContext
     def __init__(self, parent=None):
         super(CoverWorker, self).__init__(parent)
@@ -63,19 +66,26 @@ class CoverWorker(QObject):
             pass
 
     def cacheArtistCover(self, artist, url):
-        print artist, url
         self.artistCovers[artist]  = url
 
+        self.updateArtistCover.emit(artist, url)
+
     def cacheAlbumCover(self, artist, album, url):
-        print artist, album, url
         self.albumCovers[album] = url
+        self.updateAlbumCover.emit(artist, album, url)
 
     def downloadArtistCover(self, artist):
+        f = self.artistCoverPath(artist)
+        if os.path.exists(f):
+            return
         d = CoverRunnable(self, artist, qtype="artist")
         QThreadPool.globalInstance().start(d)
 
     def downloadAlbumCover(self, artist, album):
-        d = CoverRunnable(self, artist, album, qtype="artist")
+        f = self.albumCoverPath(artist, album)
+        if os.path.exists(f):
+            return
+        d = CoverRunnable(self, artist, album, qtype="album")
         QThreadPool.globalInstance().start(d)
 
     def getCoverBySongName(self, name):
@@ -90,14 +100,38 @@ class CoverWorker(QObject):
     @classmethod
     def getCoverPathByArtist(cls, artist):
         filepath = os.path.join(ArtistCoverPath, artist)
-        return filepath
+        if os.path.exists(filepath):
+            return filepath
+        else:
+            return os.path.join(os.getcwd(), 'skin', 'images','bg1.jpg')
 
     @classmethod
     def getCoverPathByArtistAlbum(cls, artist, album):
         filepath = os.path.join(AlbumCoverPath, '%s-%s' % (artist, album))
-        return filepath
+        if os.path.exists(filepath):
+            return filepath
+        else:
+            return os.path.join(os.getcwd(), 'skin', 'images','bg2.jpg')
 
     @classmethod
     def getCoverPathByArtistSong(cls, artist, title):
+        filepath = os.path.join(SongCoverPath, '%s-%s' % (artist, title))
+        if os.path.exists(filepath):
+            return filepath
+        else:
+            return os.path.join(os.getcwd(), 'skin', 'images','bg3.jpg')
+
+    @classmethod
+    def artistCoverPath(self, artist):
+        filepath = os.path.join(ArtistCoverPath, artist)
+        return filepath
+
+    @classmethod
+    def albumCoverPath(self, artist, album):
+        filepath = os.path.join(AlbumCoverPath, '%s-%s' % (artist, album))
+        return filepath
+
+    @classmethod
+    def songCoverPath(cls, artist, title):
         filepath = os.path.join(SongCoverPath, '%s-%s' % (artist, title))
         return filepath
