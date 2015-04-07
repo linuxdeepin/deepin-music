@@ -120,3 +120,11 @@ Virtaulenvwrapper是virtualenv的扩展包，用于更方便管理虚拟环境�
 ###6. deepin_menu
 	git clone git@github.com:linuxdeepin/deepin-menu.git
 
+###7. pyquery
+	sudo apt-get install libxml2-dev libxslt1-dev python-dev
+	sudo apt-get install zlib1g-dev
+	pip install pyquery
+
+###8.pycurl
+	sudo apt-get install libcurl4-openssl-dev
+	pip install pycurl
