@@ -181,19 +181,25 @@ class Song(dict):
 
     def __setitem__(self, key, value):
         if key == "tracknumber":
-            value = str(value)
-            if value is not None and not isinstance(value,int) and value.rfind("/")!=-1 and value.strip()!="":
-                value = value.strip()
-                discnumber = value[value.rfind("/"):]
-                try: 
-                    discnumber = int(discnumber)
-                except: 
-                    discnumber = 0
-                self["discnumber"] = discnumber
-                value = int(value[:value.rfind("/")])
-        elif key == "discnumber":
-            if isinstance(value, str):
+            value = value
+            if isinstance(value, tuple):
+                value = value[0]
+            else:
                 value = 0
+            # elif value is not None and not isinstance(value,int) and value.rfind("/")!=-1 and value.strip()!="":
+            #     value = str(value)
+            #     value = value.strip()
+            #     discnumber = value[value.rfind("/"):]
+            #     try: 
+            #         discnumber = int(discnumber)
+            #     except: 
+            #         discnumber = 0
+            #     self["discnumber"] = discnumber
+            #     value = int(value[:value.rfind("/")])
+
+        elif key == "discnumber":
+            # if isinstance(value, str):
+            value = 0
         elif key in ['title', 'artist', 'album']:
             if not value:
                 value = 'unknown'
@@ -210,13 +216,14 @@ class Song(dict):
         ext = None
         img_data = None
         if isinstance(audio, EasyMP3):
-            apics = audio.tags.getID3().getall('APIC')
-            if len(apics) > 0:
-                apic = apics[0]
-                if apic.type == 3:
-                    mine = apic.mime
-                    ext = mine.split('/')[-1]
-                    img_data = apic.data
+            if audio.tags:
+                apics = audio.tags.getID3().getall('APIC')
+                if len(apics) > 0:
+                    apic = apics[0]
+                    if apic.type == 3:
+                        mine = apic.mime
+                        ext = mine.split('/')[-1]
+                        img_data = apic.data
         return ext, img_data
 
     def pprint(self):

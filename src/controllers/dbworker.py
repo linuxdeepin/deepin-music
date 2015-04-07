@@ -61,7 +61,7 @@ class DBWorker(QObject):
         folders = []
         for song in songs:
             artists.append({'name': song['artist']})
-            albums.append({'name': song['album']})
+            albums.append({'name': song['album'], 'artist': song['artist']})
             folders.append({'name': song['folder']})
 
         Artist.get_create_Records(artists)

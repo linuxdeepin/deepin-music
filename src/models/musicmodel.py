@@ -112,7 +112,7 @@ class Artist(BaseModel):
 
 class Album(BaseModel):
     name = CharField(default='', unique=True)
-    # artist = CharField(default='')
+    artist = CharField(default='')
 
     created_date = DateTimeField(default=datetime.datetime.now)
 

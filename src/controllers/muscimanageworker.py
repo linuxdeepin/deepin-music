@@ -7,7 +7,7 @@ import sys
 import time
 import json
 from PyQt5.QtCore import (QObject, pyqtSignal,
-                pyqtSlot, pyqtProperty, QDir, QDirIterator)
+                pyqtSlot, pyqtProperty, QDir, QDirIterator, QTimer, QThread)
 
 from PyQt5.QtWidgets import QFileDialog
 from .utils import registerContext, contexts
@@ -16,6 +16,7 @@ from models import *
 from dwidgets import dthread, LevelJsonDict
 from dwidgets.mediatag.song import Song as SongDict
 from collections import OrderedDict
+from UserList import UserList
 from config.constants import CoverPath, MusicManagerPath
 from .coverworker import CoverWorker
 
@@ -119,10 +120,7 @@ class MusicManageWorker(QObject):
             for song in folder.songs:
                 songs.update({song.toDict()['url']: song.toDict()})
 
-        self.updateSongs()
-        self.updateArtists()
-        self.updateAlbumss()
-        self.updateFolders()
+        self.update()
 
     @pyqtProperty('QVariant', notify=categoriesChanged)
     def categories(self):
@@ -146,7 +144,8 @@ class MusicManageWorker(QObject):
 
     @songs.setter
     def songs(self, value):
-        self._songs = value
+        del self._songs[:]
+        self._songs.extend(value)
         self.songsChanged.emit(self._songs) 
 
     @pyqtProperty('QVariant', notify=artistsChanged)
@@ -155,7 +154,8 @@ class MusicManageWorker(QObject):
 
     @artists.setter
     def artists(self, value):
-        self._artists = value
+        del self._artists[:]
+        self._artists.extend(value)
         self.artistsChanged.emit(self._artists)
 
     @pyqtProperty('QVariant', notify=albumsChanged)
@@ -164,7 +164,8 @@ class MusicManageWorker(QObject):
 
     @albums.setter
     def albums(self, value):
-        self._albums = value
+        del self._albums[:]
+        self._albums.extend(value)
         self.albumsChanged.emit(self._albums)
 
     @pyqtProperty('QVariant', notify=foldersChanged)
@@ -173,7 +174,8 @@ class MusicManageWorker(QObject):
 
     @folders.setter
     def folders(self, value):
-        self._folders = value
+        del self._folders[:]
+        self._folders.extend(value)
         self.foldersChanged.emit(self._folders)
     
     def searchAllDriverMusic(self):
@@ -213,7 +215,7 @@ class MusicManageWorker(QObject):
             fdir = fileInfo.absoluteDir().absolutePath()
             fpath = qDirIterator.filePath()
             fsize = fileInfo.size() / (1024 * 1024)
-            time.sleep(0.05)
+            time.sleep(0.1)
             if fsize >= 1:
                 self.scanfileChanged.emit(fpath)
                 self.tipMessageChanged.emit(fpath)
@@ -281,6 +283,9 @@ class MusicManageWorker(QObject):
         songs.update({url: songDict})
         _folderDict['count'] = len(songs)
 
+        QTimer.singleShot(1500, self.update)
+
+    def update(self):
         self.updateSongs()
         self.updateArtists()
         self.updateAlbumss()

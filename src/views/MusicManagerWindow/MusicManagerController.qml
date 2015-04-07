@@ -1,4 +1,5 @@
 import QtQuick 2.4
+import Deepin.Widgets 1.0
 
 Item {
     property var rootWindow
@@ -31,15 +32,15 @@ Item {
     }
 
     Binding {
-    	target: noMusicTip
-    	property: 'visible'
-    	value: {
-    		if (MusicManageWorker.songCount == 0){
+        target: noMusicTip
+        property: 'visible'
+        value: {
+            if (MusicManageWorker.songCount == 0){
                 return true;
             }else{
-            	return false
+                return false
             }
-    	}
+        }
     }
 
     Connections {

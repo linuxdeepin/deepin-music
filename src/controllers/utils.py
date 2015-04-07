@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import functools
+from PyQt5.QtCore import QRunnable, QThreadPool
 
 contexts = {}
 
