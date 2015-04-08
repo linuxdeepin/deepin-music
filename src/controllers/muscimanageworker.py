@@ -65,7 +65,7 @@ class MusicManageWorker(QObject):
         self.loadDB()
 
         self.updateTimer = QTimer()
-        self.updateTimer.setInterval(1000)
+        self.updateTimer.setInterval(2000)
         self.updateTimer.timeout.connect(self.update)
 
     def initData(self):
@@ -185,11 +185,13 @@ class MusicManageWorker(QObject):
         self.foldersChanged.emit(self._folders)
     
     def searchAllDriverMusic(self):
+        self.updateTimer.start(0)
         self.scanFolder(QDir.homePath())
 
     def searchOneFolderMusic(self):
         url = QFileDialog.getExistingDirectory()
         if url:
+            self.updateTimer.start(0)
             self.scanFolder(url)
 
     def addSongFile(self):
@@ -220,7 +222,7 @@ class MusicManageWorker(QObject):
             fdir = fileInfo.absoluteDir().absolutePath()
             fpath = qDirIterator.filePath()
             fsize = fileInfo.size() / (1024 * 1024)
-            # time.sleep(0.01)
+            time.sleep(0.1)
             if fsize >= 1:
                 self.scanfileChanged.emit(fpath)
                 self.tipMessageChanged.emit(fpath)
@@ -299,11 +301,6 @@ class MusicManageWorker(QObject):
 
         if contexts['WindowManageWorker'].currentMusicManagerPageName == "ArtistPage":
             contexts['CoverWorker'].downloadArtistCover(artist)
-        # elif contexts['WindowManageWorker'].currentMusicManagerPageName == "AlbumPage":
-        #     contexts['CoverWorker'].downloadAlbumCover(artist, album)
-
-        # QTimer.singleShot(1500, self.update)
-        self.updateTimer.start(0)
 
     def updateArtistCover(self, artist, url):
         if artist in  self._artistsDict:
@@ -311,7 +308,7 @@ class MusicManageWorker(QObject):
             image= QImage()
             if image.load(url):
                 _artistDict['cover'] = url
-            self.updateArtists()
+            # self.updateArtists()
 
     def updateAlbumCover(self, artist, album, url):
         if album in self._albumsDict:
@@ -319,7 +316,7 @@ class MusicManageWorker(QObject):
             image= QImage()
             if image.load(url):
                 _albumDict['cover'] = url
-            self.updateAlbumss()
+            # self.updateAlbumss()
 
     def update(self):
         self.updateSongs()

@@ -68,7 +68,6 @@ class CoverWorker(QObject):
 
     def cacheArtistCover(self, artist, url):
         self.artistCovers[artist]  = url
-
         self.updateArtistCover.emit(artist, url)
 
     def cacheAlbumCover(self, artist, album, url):
