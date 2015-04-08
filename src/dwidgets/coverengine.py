@@ -28,6 +28,7 @@ class XiamiTingEngine(object):
         try:
             return multi_query_artist_engine(artist)
         except Exception, e:
+            raise
             return False
 
     def searchCoverByAlbumName(self, artist, album):
@@ -94,7 +95,7 @@ class NetEaseEngine(object):
         }
         return self.httpRequest('POST', action, data)
 
-    def searchCoverByArtistName(self, name):
+    def searchCoverByArtistName(self, artist):
         '''
         name: 谢霆锋
         {
@@ -120,7 +121,7 @@ class NetEaseEngine(object):
         }
         '''
         try:
-            ret = self.search(name, stype=100)
+            ret = self.search(artist, stype=100)
             picUrl = ''
             if ret['code'] == 200 and ret['result'] and ret['result']['artistCount'] >= 1:
                 picUrl = ret['result']['artists'][0]['picUrl']
@@ -129,7 +130,7 @@ class NetEaseEngine(object):
         return picUrl
 
 
-    def searchCoverByAlbumName(self, name):
+    def searchCoverByAlbumName(self, artist, album):
         '''
         name = 刘德华演唱会99
         {
@@ -193,7 +194,7 @@ class NetEaseEngine(object):
         }
         '''
         try:
-            ret = self.search(name, stype=10)
+            ret = self.search(album, stype=10)
             picUrl = ''
             if ret['code'] == 200 and ret['result'] and ret['result']['albumCount'] >= 1:
                 picUrl = ret['result']['albums'][0]['picUrl']
@@ -252,6 +253,12 @@ class DoubanEngine(object):
         except Exception, e:
             False
 
+    def searchCoverByArtistName(self, artist):
+        return self.searchCover(artist)
+
+    def searchCoverByAlbumName(self, artist, album):
+        return self.searchCover(artist, album)
+
 
 class CoverRunnable(QRunnable):
 
@@ -266,13 +273,14 @@ class CoverRunnable(QRunnable):
         netEaseEngine = NetEaseEngine()
         xiamiTingEngine = XiamiTingEngine()
         doubanEngine = DoubanEngine()
+        engines = [xiamiTingEngine, netEaseEngine, doubanEngine]
 
         if self.qtype == "artist":
-            url = netEaseEngine.searchCoverByArtistName(self.artist)
+            url = engines[0].searchCoverByArtistName(self.artist)
             if not url:
-                url = xiamiTingEngine.searchCoverByArtistName(self.artist)
+                url = engines[1].searchCoverByArtistName(self.artist)
             if not url:
-                url = doubanEngine.searchCover(self.artist)
+                url = engines[2].searchCoverByArtistName(self.artist)
             if url:
                 localUrl = self.coverWorker.artistCoverPath(self.artist)
                 flag = self.downloadCoverByUrl(url, localUrl)
@@ -280,11 +288,11 @@ class CoverRunnable(QRunnable):
                     self.coverWorker.downloadArtistCoverSuccessed.emit(self.artist, localUrl)
 
         elif self.qtype == "album":
-            url = netEaseEngine.searchCoverByAlbumName(self.artist)
+            url = engines[0].searchCoverByAlbumName(self.artist, self.album)
             if not url:
-                url = xiamiTingEngine.searchCoverByAlbumName(self.artist, self.album)
+                url = engines[1].searchCoverByAlbumName(self.artist, self.album)
             if not url:
-                url = doubanEngine.searchCover(self.artist, self.album)
+                url = engines[2].searchCoverByAlbumName(self.artist, self.album)
             if url:
                 localUrl = self.coverWorker.albumCoverPath(self.artist, self.album)
                 flag = self.downloadCoverByUrl(url, localUrl)
@@ -293,6 +301,8 @@ class CoverRunnable(QRunnable):
 
     def downloadCoverByUrl(self, url, localUrl):
         try:
+            if '\/' in url:
+                url = url.replace('\\', '')
             r = requests.get(url)
             with open(localUrl, "wb") as f:
                 f.write(r.content)

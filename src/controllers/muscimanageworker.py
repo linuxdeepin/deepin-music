@@ -8,7 +8,7 @@ import time
 import json
 from PyQt5.QtCore import (QObject, pyqtSignal,
                 pyqtSlot, pyqtProperty, QDir, QDirIterator, QTimer, QThread)
-
+from PyQt5.QtGui import QImage
 from PyQt5.QtWidgets import QFileDialog
 from .utils import registerContext, contexts
 from dwidgets.tornadotemplate import template
@@ -63,6 +63,10 @@ class MusicManageWorker(QObject):
 
         self.initConnect()
         self.loadDB()
+
+        self.updateTimer = QTimer()
+        self.updateTimer.setInterval(1000)
+        self.updateTimer.timeout.connect(self.update)
 
     def initData(self):
         self._songs = []
@@ -200,7 +204,7 @@ class MusicManageWorker(QObject):
     def addSongFiles(self, urls):
         self._tempSongs = {}
         for url in urls:
-            self.updateSonglist(url)
+            self.scanfileChanged.emit(url)
         self.scanfileFinished.emit()
 
     @dthread
@@ -210,14 +214,13 @@ class MusicManageWorker(QObject):
         filters = QDir.Files
         nameFilters = ["*.wav", "*.wma", "*.mp2", "*.mp3", "*.mp4", "*.m4a", "*.flac", "*.ogg"]
         qDirIterator = QDirIterator(path, nameFilters, filters, QDirIterator.Subdirectories)
-
         while qDirIterator.hasNext():
             qDirIterator.next()
             fileInfo = qDirIterator.fileInfo()
             fdir = fileInfo.absoluteDir().absolutePath()
             fpath = qDirIterator.filePath()
             fsize = fileInfo.size() / (1024 * 1024)
-            time.sleep(0.1)
+            # time.sleep(0.01)
             if fsize >= 1:
                 self.scanfileChanged.emit(fpath)
                 self.tipMessageChanged.emit(fpath)
@@ -226,11 +229,19 @@ class MusicManageWorker(QObject):
 
     def saveSongs(self):
         self.saveSongsToDB.emit(self._tempSongs.values())
+        # self.updateTimer.stop()
+        self.update()
+        for song in self._songsDict.values():
+            artist = song['artist']
+            album = song['album']
+            contexts['CoverWorker'].downloadAlbumCover(artist, album)
 
     def updateSonglist(self, fpath):
         songDict = SongDict(fpath)
         ext, coverData = songDict.getMp3FontCover()
         if ext and coverData:
+            if os.sep in songDict['artist']:
+                songDict['artist'] = songDict['artist'].replace(os.sep, '')
             coverName = CoverWorker.songCoverPath(songDict['artist'], songDict['title'])
             with open(coverName, 'wb') as f:
                 f.write(coverData)
@@ -252,7 +263,7 @@ class MusicManageWorker(QObject):
             self._artistsDict[artist] = {
                 'name': artist,
                 'count': 0,
-                'cover': CoverWorker.getCoverPathByArtist(''),
+                'cover': CoverWorker.getCoverPathByArtist(artist),
                 'songs': {}
             }
         _artistDict = self._artistsDict[artist]
@@ -265,7 +276,7 @@ class MusicManageWorker(QObject):
             self._albumsDict[album] = {
                 'name': album,
                 'count': 0,
-                'cover':CoverWorker.getCoverPathByArtistAlbum('', ''),
+                'cover':CoverWorker.getCoverPathByArtistAlbum(artist, album),
                 'songs': {}
             }
         _albumDict = self._albumsDict[album]
@@ -281,25 +292,34 @@ class MusicManageWorker(QObject):
                 'count': 0,
                 'songs': {}
             }
-        _folderDict = self._foldersDict[folder]
+        _folderDict = self._foldersDict[folder]         
         songs = _folderDict['songs']
         songs.update({url: songDict})
         _folderDict['count'] = len(songs)
 
-        QTimer.singleShot(1500, self.update)
+        if contexts['WindowManageWorker'].currentMusicManagerPageName == "ArtistPage":
+            contexts['CoverWorker'].downloadArtistCover(artist)
+        # elif contexts['WindowManageWorker'].currentMusicManagerPageName == "AlbumPage":
+        #     contexts['CoverWorker'].downloadAlbumCover(artist, album)
 
-        contexts['CoverWorker'].downloadArtistCover(artist)
-        contexts['CoverWorker'].downloadAlbumCover(artist, album)
+        # QTimer.singleShot(1500, self.update)
+        self.updateTimer.start(0)
 
     def updateArtistCover(self, artist, url):
-        _artistDict = self._artistsDict[artist]
-        _artistDict['cover'] = url
-        self.updateArtists()
+        if artist in  self._artistsDict:
+            _artistDict = self._artistsDict[artist]
+            image= QImage()
+            if image.load(url):
+                _artistDict['cover'] = url
+            self.updateArtists()
 
     def updateAlbumCover(self, artist, album, url):
-        _albumDict = self._albumsDict[album]
-        _albumDict['cover'] = url
-        self.updateAlbumss()
+        if album in self._albumsDict:
+            _albumDict = self._albumsDict[album]
+            image= QImage()
+            if image.load(url):
+                _albumDict['cover'] = url
+            self.updateAlbumss()
 
     def update(self):
         self.updateSongs()

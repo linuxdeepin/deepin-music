@@ -59,6 +59,7 @@ class DeepinPlayer(QObject):
         self.dbWorker = DBWorker()
         self.configWorker = ConfigWorker()
         self.i18nWorker = I18nWorker()
+        self.coverWorker = CoverWorker()
 
         self.windowManageWorker = WindowManageWorker()
         self.web360ApiWorker = Web360ApiWorker()
@@ -66,7 +67,6 @@ class DeepinPlayer(QObject):
         self.menuWorker = MenuWorker()
 
         self.mediaPlayer = MediaPlayer()
-        self.coverWorker = CoverWorker()
         self.playlistWorker = PlaylistWorker()
 
         self.web360Thread = QThread(self)

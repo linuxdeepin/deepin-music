@@ -17,12 +17,16 @@ Item {
     function updateWindow(index) {
         if (index == 0){
             musicManagerLoader.source = './ArtistPage.qml';
+            WindowManageWorker.currentMusicManagerPageName = 'ArtistPage'
         }else if(index == 1){
             musicManagerLoader.source = './AlbumPage.qml';
+            WindowManageWorker.currentMusicManagerPageName = 'AlbumPage'
         }else if (index == 2){
             musicManagerLoader.source = './SongPage.qml';
+            WindowManageWorker.currentMusicManagerPageName = 'SongPage'
         }else if (index == 3){
             musicManagerLoader.source = './FolderPage.qml';
+            WindowManageWorker.currentMusicManagerPageName = 'FolderPage'
         }
     }
 

@@ -14,6 +14,7 @@ class WindowManageWorker(QObject):
     mainWindowShowed = pyqtSignal()
     simpleWindowShowed = pyqtSignal()
     miniWindowShowed = pyqtSignal()
+    currentMusicManagerPageNameChanged = pyqtSignal('QString')
 
     switchPageByID = pyqtSignal('QString')
 
@@ -25,12 +26,13 @@ class WindowManageWorker(QObject):
 
         self._WindowMode = 'Full'
         self._lastWindowMode = 'Full'
+        self._currentMusicManagerPageName = 'ArtistPage'
 
     @pyqtProperty('QPoint')
     def cursorPos(self):
         return QCursor.pos()
 
-    @pyqtProperty(str)
+    @pyqtProperty('QString')
     def windowMode(self):
         return self._WindowMode
 
@@ -38,7 +40,7 @@ class WindowManageWorker(QObject):
     def windowMode(self, mode):
         self._WindowMode = mode
 
-    @pyqtProperty(str)
+    @pyqtProperty('QString')
     def lastWindowMode(self):
         return self._lastWindowMode
 
@@ -54,3 +56,12 @@ class WindowManageWorker(QObject):
             self.simpleWindowShowed.emit()
         else:
             pass
+
+    @pyqtProperty('QString', notify=currentMusicManagerPageNameChanged)
+    def currentMusicManagerPageName(self):
+        return self._currentMusicManagerPageName
+
+    @currentMusicManagerPageName.setter
+    def currentMusicManagerPageName(self, value):
+        self._currentMusicManagerPageName = value
+        self.currentMusicManagerPageNameChanged.emit(value)

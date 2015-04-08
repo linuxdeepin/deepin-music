@@ -23,7 +23,7 @@ GridView {
         inactiveColor: 'black'
     }
 
-    onModelChanged:{
-        positionViewAtEnd()
-    }
+    // onModelChanged:{
+    //     positionViewAtEnd()
+    // }
 }

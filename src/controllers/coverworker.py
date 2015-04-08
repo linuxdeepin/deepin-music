@@ -12,6 +12,7 @@ from log import logger
 from .utils import registerContext
 from dwidgets import dthread, CoverRunnable
 from config.constants import ArtistCoverPath, AlbumCoverPath, SongCoverPath
+import urllib
 
 
 class CoverWorker(QObject):
@@ -78,8 +79,14 @@ class CoverWorker(QObject):
         f = self.artistCoverPath(artist)
         if os.path.exists(f):
             return
-        d = CoverRunnable(self, artist, qtype="artist")
-        QThreadPool.globalInstance().start(d)
+        if ',' in artist:
+            artist = artist.split(',')
+            for item in artist:
+                d = CoverRunnable(self, item, qtype="artist")
+                QThreadPool.globalInstance().start(d)
+        else:
+            d = CoverRunnable(self, artist, qtype="artist")
+            QThreadPool.globalInstance().start(d)
 
     def downloadAlbumCover(self, artist, album):
         f = self.albumCoverPath(artist, album)
@@ -99,17 +106,26 @@ class CoverWorker(QObject):
 
     @classmethod
     def getCoverPathByArtist(cls, artist):
+        if ',' in artist:
+            artist = artist.split(',')[0]
         filepath = os.path.join(ArtistCoverPath, artist)
+        if isinstance(artist, unicode):
+            artist = artist.encode('utf-8')
+        encodefilepath = os.path.join(ArtistCoverPath, urllib.quote(artist))
         if os.path.exists(filepath):
-            return filepath
+            return encodefilepath
         else:
             return os.path.join(os.getcwd(), 'skin', 'images','bg1.jpg')
 
     @classmethod
     def getCoverPathByArtistAlbum(cls, artist, album):
-        filepath = os.path.join(AlbumCoverPath, '%s-%s' % (artist, album))
+        filename = '%s-%s' % (artist, album)
+        filepath = os.path.join(AlbumCoverPath, filename)
+        if isinstance(filename, unicode):
+            filename = filename.encode('utf-8')
+        encodefilepath = os.path.join(AlbumCoverPath, urllib.quote(filename))
         if os.path.exists(filepath):
-            return filepath
+            return encodefilepath
         else:
             return os.path.join(os.getcwd(), 'skin', 'images','bg2.jpg')
 
