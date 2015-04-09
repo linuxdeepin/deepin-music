@@ -9,6 +9,7 @@ from controllers import contexts, Web360ApiWorker, MusicManageWorker
 from controllers import MenuWorker, WindowManageWorker
 from controllers import MediaPlayer, PlaylistWorker, CoverWorker
 from controllers import ConfigWorker, DBWorker, I18nWorker
+from controllers import UtilWorker
 from controllers.mediaplayer import gPlayer
 
 # from models import MusicDataBase
@@ -56,6 +57,7 @@ class DeepinPlayer(QObject):
         self.mainWindow = MainWindow()
 
     def initControllers(self):
+        self.utilWorker = UtilWorker()
         self.dbWorker = DBWorker()
         self.configWorker = ConfigWorker()
         self.i18nWorker = I18nWorker()
@@ -120,6 +122,7 @@ class DeepinPlayer(QObject):
     def musicManageWorkerConnect(self):
         self.musicManageWorker.saveSongToDB.connect(self.dbWorker.addSong)
         self.musicManageWorker.saveSongsToDB.connect(self.dbWorker.addSongs)
+        self.musicManageWorker.addSongToPlaylist.connect(self.playlistWorker.addLocalMediaToTemporary)
         self.musicManageWorker.addSongsToPlaylist.connect(self.playlistWorker.addLocalMediasToTemporary)
         self.musicManageWorker.playSongByUrl.connect(self.mediaPlayer.playLocalMedia)
 

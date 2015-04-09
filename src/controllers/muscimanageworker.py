@@ -30,6 +30,7 @@ class MusicManageWorker(QObject):
     scanfileFinished = pyqtSignal()
     saveSongToDB = pyqtSignal(dict)
     saveSongsToDB = pyqtSignal(list)
+    addSongToPlaylist = pyqtSignal(dict)
     addSongsToPlaylist = pyqtSignal(list)
     playSongByUrl = pyqtSignal('QString')
 
@@ -53,6 +54,7 @@ class MusicManageWorker(QObject):
     playArtist = pyqtSignal('QString')
     playAlbum = pyqtSignal('QString')
     playFolder = pyqtSignal('QString')
+    playSong = pyqtSignal('QString')
 
     __contextName__ = 'MusicManageWorker'
 
@@ -90,6 +92,7 @@ class MusicManageWorker(QObject):
         self.playArtist.connect(self.playArtistMusic)
         self.playAlbum.connect(self.playAlbumMusic)
         self.playFolder.connect(self.playFolderMusic)
+        self.playSong.connect(self.playSongMusic)
 
         self.scanfileChanged.connect(self.updateSonglist)
         self.scanfileFinished.connect(self.saveSongs)
@@ -363,3 +366,7 @@ class MusicManageWorker(QObject):
         songlist = songs.values()
         self.addSongsToPlaylist.emit(songlist)
         self.playSongByUrl.emit(songlist[0]['url'])
+
+    def playSongMusic(self, url):
+        song = self._songsDict[url]
+        self.addSongToPlaylist.emit(song)

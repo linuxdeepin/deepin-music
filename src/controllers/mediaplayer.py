@@ -188,7 +188,7 @@ class MediaPlayer(QObject):
             if index < len(urls):
                 mediaContent = mediaContents[urls[index]]
                 mediaContent.tags.update({'duration': duration})
-                mediaContent.duration = duration_to_string(duration)
+                mediaContent.duration = duration
         except Exception, e:
             raise e
 
@@ -382,6 +382,7 @@ class MediaPlayer(QObject):
         self.title = mediaContent.title
         self.artist = mediaContent.artist
         self.cover = mediaContent.cover
+
         self.setMediaUrl(url)
         self.playToggle(True)
 
@@ -446,18 +447,6 @@ class MediaPlayer(QObject):
 
     @pyqtProperty('QString', notify=coverChanged)
     def cover(self):
-        if self._url:
-            index = self._playlist.currentIndex()
-            urls = self._playlist.urls
-            if index < len(urls):
-                url = urls[index]
-                mediaContents =  self._playlist.mediaContents
-                mediaContent = mediaContents[url]
-                title = mediaContent.title
-                artist = mediaContent.artist
-                coverfile = CoverWorker.getCoverPathByArtistSong(artist, title)
-                if os.path.exists(coverfile):
-                    self._cover = coverfile
         return self._cover
 
     @cover.setter

@@ -74,7 +74,7 @@ Rectangle {
                 width: 34
                 height: mediaItem.height
                 verticalAlignment: Text.AlignVCenter
-                text: mediaItem.ListView.view.model[index].duration
+                text: UtilWorker.duration_to_string(mediaItem.ListView.view.model[index].duration)
                 color: "#a0a0a0"
                 font.pixelSize: 11
             }

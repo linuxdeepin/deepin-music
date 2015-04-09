@@ -16,11 +16,11 @@ Rectangle {
     Row {
 
         anchors.fill: parent
-        spacing: 10
+        spacing: 0
 
         Rectangle{
             id: tipRect
-            width: 20
+            width: 24
             height: 24
 
             color: "transparent"
@@ -45,39 +45,69 @@ Rectangle {
 
         Row {
             height: 24
-            spacing: 38
-
-            Text {
-                id: titleTetx
-                width: 250
+            spacing: 20
+            Rectangle{
+                width: 238
                 height: 24
-                color: "#3a3a3a"
-                font.pixelSize: 12
-                elide: Text.ElideRight
-                verticalAlignment: Text.AlignVCenter
-                text: mediaItem.ListView.view.model[index].title
+                color: "transparent"
+                Text {
+                    id: titleTetx
+                    anchors.fill: parent
+                    anchors.leftMargin: 10
+                    color: "#3a3a3a"
+                    font.pixelSize: 12
+                    elide: Text.ElideRight
+                    verticalAlignment: Text.AlignVCenter
+                    text: mediaItem.ListView.view.model[index].title
+                }
             }
 
-            Text {
-                id: artistText
-                width: 156
+            Rectangle{
+                width: 160
                 height: 24
-                color: "#8a8a8a"
-                font.pixelSize: 12
-                elide: Text.ElideRight
-                verticalAlignment: Text.AlignVCenter
-                text: mediaItem.ListView.view.model[index].artist
+                color: "transparent"
+                Text {
+                    id: artistTetx
+                    anchors.fill: parent
+                    anchors.leftMargin: 12
+                    color: "#8a8a8a"
+                    font.pixelSize: 12
+                    elide: Text.ElideRight
+                    verticalAlignment: Text.AlignVCenter
+                    text: mediaItem.ListView.view.model[index].artist
+                }
             }
-
-            Text {
-                id: durationText
-                width: 50
+            
+            Rectangle{
+                width: 160
                 height: 24
-                color: "#8a8a8a"
-                font.pixelSize: 12
-                elide: Text.ElideRight
-                verticalAlignment: Text.AlignVCenter
-                text: UtilWorker.duration_to_string(mediaItem.ListView.view.model[index].duration)
+                color: "transparent"
+                Text {
+                    id: albumTetx
+                    anchors.fill: parent
+                    anchors.leftMargin: 12
+                    color: "#8a8a8a"
+                    font.pixelSize: 12
+                    elide: Text.ElideRight
+                    verticalAlignment: Text.AlignVCenter
+                    text: mediaItem.ListView.view.model[index].album
+                }
+            }
+            
+            Rectangle{
+                width: 58
+                height: 24
+                color: "transparent"
+                Text {
+                    id: durationTetx
+                    anchors.fill: parent
+                    anchors.leftMargin: 12
+                    color: "#8a8a8a"
+                    font.pixelSize: 12
+                    elide: Text.ElideRight
+                    verticalAlignment: Text.AlignVCenter
+                    text: UtilWorker.duration_to_string(mediaItem.ListView.view.model[index].duration)
+                }
             }
         }
     }
@@ -106,16 +136,9 @@ Rectangle {
         hoverEnabled: true
         acceptedButtons: Qt.LeftButton | Qt.RightButton
         onEntered: {
-            // if (mediaItem.ListView.view.currentIndex != index){
-            //     // playButton.visible = true;
-                mediaItem.color = "lightgray"
-            // }else{
-            //     // playButton.visible = ! waveBar.visible;
-            //     mediaItem.color = "transparent"
-            // }
+            mediaItem.color = "lightgray"
         }
         onExited: {
-            // playButton.visible = false
             mediaItem.color = "transparent"
         }
         onClicked: {

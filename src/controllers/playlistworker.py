@@ -11,7 +11,7 @@ from PyQt5.QtCore import (QObject, pyqtSignal, pyqtSlot,
                           )
 from PyQt5.QtMultimedia import QMediaPlaylist, QMediaContent, QMediaPlayer
 
-from .utils import registerContext, contexts, duration_to_string
+from .utils import registerContext, contexts
 from dwidgets.mediatag.song import Song
 from dwidgets import dthread
 from .coverworker import CoverWorker
@@ -33,7 +33,7 @@ class BaseMediaContent(QObject):
     artistChanged = pyqtSignal('QString')
     coverChanged = pyqtSignal('QString')
     coverDownloadSuccessed = pyqtSignal('QString')
-    durationChanged = pyqtSignal('QString')
+    durationChanged = pyqtSignal(int)
 
     def __init__(self, url):
         super(BaseMediaContent, self).__init__()
@@ -77,7 +77,7 @@ class BaseMediaContent(QObject):
         self._cover = cover
         self.coverChanged.emit(cover)
 
-    @pyqtProperty('QString', notify=durationChanged)
+    @pyqtProperty(int, notify=durationChanged)
     def duration(self):
         return self._duration
 
@@ -114,7 +114,7 @@ class DRealLocalMediaContent(BaseMediaContent):
                 self.cover = CoverWorker.getCoverPathByArtist(self.artist)
 
         if 'duration' in self._tags:
-            self.duration = duration_to_string(self._tags['duration'])
+            self.duration = self._tags['duration']
 
     @pyqtProperty(dict)
     def tags(self):
@@ -178,7 +178,7 @@ class DRealOnlineMediaContent(BaseMediaContent):
         if 'artist' in self._tags:
             self.artist = self._tags['artist']
         if 'duration' in self._tags:
-            self.duration = duration_to_string(self._tags['duration'])
+            self.duration = self._tags['duration']
 
         coverfile = CoverWorker.getCoverPathByMediaUrl(self._url)
         if os.path.exists(coverfile):
@@ -255,7 +255,7 @@ class DRealOnlineMediaContent(BaseMediaContent):
         if status == 3:
             duration = self.player.duration()
             self.tags['duration'] = duration
-            self.duration = duration_to_string(duration)
+            self.duration = duration
             # self.player.deleteLater()
 
 
@@ -588,5 +588,4 @@ class PlaylistWorker(QObject):
 
     def addOnlineMediasToFavorite(self, medias):
         playlist = self.favoritePlaylist
-        # self.currentPlaylistChanged.emit('temporary')
         playlist.addMedias(medias)
