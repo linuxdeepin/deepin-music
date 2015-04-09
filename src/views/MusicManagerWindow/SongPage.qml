@@ -131,6 +131,7 @@ Rectangle {
                 clip: true
                 highlightMoveDuration: 1
                 delegate: SongDelegate {}
+                currentIndex: -1
                 focus: true
                 spacing: 20
                 snapMode:ListView.SnapToItem

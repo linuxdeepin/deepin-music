@@ -340,6 +340,7 @@ class MusicManageWorker(QObject):
     def updateSongs(self):
         self.songs = self._songsDict.values()
         self.songCountChanged.emit(len(self._songsDict))
+        print self.songs
 
     def updateArtists(self):
         self.artists = self._artistsDict.values()

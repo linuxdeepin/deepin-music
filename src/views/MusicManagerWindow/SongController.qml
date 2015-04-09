@@ -16,7 +16,10 @@ Item {
     Binding {
         target: songsView
         property: 'model'
-        value: MusicManageWorker.songs
+        value: {
+            print(MusicManageWorker.songs[0].title)
+            return MusicManageWorker.songs
+        }
     }
 
     Connections {
