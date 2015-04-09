@@ -7,7 +7,9 @@ import sys
 import time
 import json
 from PyQt5.QtCore import (QObject, pyqtSignal,
-                pyqtSlot, pyqtProperty, QDir, QDirIterator, QTimer, QThread)
+                pyqtSlot, pyqtProperty, QDir, 
+                QDirIterator, QTimer, QThread,
+                QThreadPool)
 from PyQt5.QtGui import QImage
 from PyQt5.QtWidgets import QFileDialog
 from .utils import registerContext, contexts
@@ -30,6 +32,9 @@ class MusicManageWorker(QObject):
     saveSongsToDB = pyqtSignal(list)
     addSongsToPlaylist = pyqtSignal(list)
     playSongByUrl = pyqtSignal('QString')
+
+    downloadArtistCover = pyqtSignal('QString')
+    downloadAlbumCover = pyqtSignal('QString', 'QString')
 
     #property signal
     songsChanged = pyqtSignal('QVariant')
@@ -185,14 +190,14 @@ class MusicManageWorker(QObject):
         self.foldersChanged.emit(self._folders)
     
     def searchAllDriverMusic(self):
-        self.updateTimer.start(0)
         self.scanFolder(QDir.homePath())
+        self.updateTimer.start(1000)
 
     def searchOneFolderMusic(self):
         url = QFileDialog.getExistingDirectory()
         if url:
-            self.updateTimer.start(0)
             self.scanFolder(url)
+            self.updateTimer.start(1000)
 
     def addSongFile(self):
         urls, _ = QFileDialog.getOpenFileNames(
@@ -200,7 +205,9 @@ class MusicManageWorker(QObject):
             directory="/home", 
             filter="music(*mp2 *.mp3 *.mp4 *.m4a *wma *wav)"
         )
-        self.addSongFiles(urls)
+        if urls:
+            self.addSongFiles(urls)
+            self.updateTimer.start(1000)
 
     @dthread
     def addSongFiles(self, urls):
@@ -231,12 +238,12 @@ class MusicManageWorker(QObject):
 
     def saveSongs(self):
         self.saveSongsToDB.emit(self._tempSongs.values())
-        # self.updateTimer.stop()
         self.update()
         for song in self._songsDict.values():
             artist = song['artist']
             album = song['album']
-            contexts['CoverWorker'].downloadAlbumCover(artist, album)
+            if not CoverWorker.isAlbumCoverExisted(artist, album):
+                self.downloadAlbumCover.emit(artist, album)
 
     def updateSonglist(self, fpath):
         songDict = SongDict(fpath)
@@ -300,29 +307,32 @@ class MusicManageWorker(QObject):
         _folderDict['count'] = len(songs)
 
         if contexts['WindowManageWorker'].currentMusicManagerPageName == "ArtistPage":
-            contexts['CoverWorker'].downloadArtistCover(artist)
+            if not CoverWorker.isArtistCoverExisted(artist):
+                self.downloadArtistCover.emit(artist)
 
     def updateArtistCover(self, artist, url):
-        if artist in  self._artistsDict:
-            _artistDict = self._artistsDict[artist]
-            image= QImage()
-            if image.load(url):
-                _artistDict['cover'] = url
-            # self.updateArtists()
+        for artistName in  self._artistsDict:
+            if artist in artistName:
+                _artistDict = self._artistsDict[artistName]
+                url = CoverWorker.getCoverPathByArtist(artistName)
+                if url:
+                    _artistDict['cover'] = url
 
     def updateAlbumCover(self, artist, album, url):
         if album in self._albumsDict:
             _albumDict = self._albumsDict[album]
-            image= QImage()
-            if image.load(url):
-                _albumDict['cover'] = url
-            # self.updateAlbumss()
+            _albumDict['cover'] = CoverWorker.getCoverPathByArtistAlbum(artist, album)
 
     def update(self):
         self.updateSongs()
         self.updateArtists()
         self.updateAlbumss()
         self.updateFolders()
+
+    def stopUpdate(self):
+        self.update()
+        self.updateTimer.stop()
+        print('stop update')
 
     def updateSongs(self):
         self.songs = self._songsDict.values()

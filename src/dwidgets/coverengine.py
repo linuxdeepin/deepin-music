@@ -286,6 +286,10 @@ class CoverRunnable(QRunnable):
                 flag = self.downloadCoverByUrl(url, localUrl)
                 if flag:
                     self.coverWorker.downloadArtistCoverSuccessed.emit(self.artist, localUrl)
+                else:
+                    self.coverWorker.downloadArtistCoverSuccessed.emit(self.artist, '')
+            else:
+                self.coverWorker.downloadArtistCoverSuccessed.emit(self.artist, '')
 
         elif self.qtype == "album":
             url = engines[0].searchCoverByAlbumName(self.artist, self.album)
@@ -298,6 +302,10 @@ class CoverRunnable(QRunnable):
                 flag = self.downloadCoverByUrl(url, localUrl)
                 if flag:
                     self.coverWorker.downloadAlbumCoverSuccessed.emit(self.artist, self.album, localUrl)
+                else:
+                    self.coverWorker.downloadAlbumCoverSuccessed.emit(self.artist, self.album, '')
+            else:
+                self.coverWorker.downloadAlbumCoverSuccessed.emit(self.artist, self.album, '')
 
     def downloadCoverByUrl(self, url, localUrl):
         try:

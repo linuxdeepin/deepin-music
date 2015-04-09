@@ -108,7 +108,10 @@ class DRealLocalMediaContent(BaseMediaContent):
             self.artist = self._tags['artist']
 
         if 'cover' in self._tags:
-            self.cover = self._tags['cover']
+            if CoverWorker.isSongCoverExisted(self.artist, self.title):
+                self.cover = CoverWorker.getCoverPathByArtistSong(self.artist, self.title)
+            else:
+                self.cover = CoverWorker.getCoverPathByArtist(self.artist)
 
         if 'duration' in self._tags:
             self.duration = duration_to_string(self._tags['duration'])

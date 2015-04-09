@@ -7,6 +7,7 @@ import sys
 import copy
 import json
 from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot, QThreadPool
+from PyQt5.QtGui import QImage
 import requests
 from log import logger
 from .utils import registerContext
@@ -24,8 +25,15 @@ class CoverWorker(QObject):
     downloadArtistCoverSuccessed = pyqtSignal('QString', 'QString')
     downloadAlbumCoverSuccessed = pyqtSignal('QString', 'QString', 'QString')
 
+    allTaskFinished = pyqtSignal()
+
     updateArtistCover = pyqtSignal('QString', 'QString')
     updateAlbumCover = pyqtSignal('QString', 'QString', 'QString')
+
+
+    defaultArtistCover = os.path.join(os.getcwd(), 'skin', 'images','bg1.jpg')
+    defaultAlbumCover = os.path.join(os.getcwd(), 'skin', 'images','bg2.jpg')
+    defaultSongCover = os.path.join(os.getcwd(), 'skin', 'images','bg3.jpg')
 
     @registerContext
     def __init__(self, parent=None):
@@ -33,6 +41,7 @@ class CoverWorker(QObject):
         QThreadPool.globalInstance().setMaxThreadCount(4)
         self.artistCovers = {}
         self.albumCovers = {}
+        self.taskNumber = 0
         self.initConnect()
 
     def initConnect(self):
@@ -69,10 +78,16 @@ class CoverWorker(QObject):
     def cacheArtistCover(self, artist, url):
         self.artistCovers[artist]  = url
         self.updateArtistCover.emit(artist, url)
+        self.taskNumber -= 1
+        if self.taskNumber == 0 and QThreadPool.globalInstance().activeThreadCount() == 0:
+            self.allTaskFinished.emit()
 
     def cacheAlbumCover(self, artist, album, url):
         self.albumCovers[album] = url
         self.updateAlbumCover.emit(artist, album, url)
+        self.taskNumber -= 1
+        if self.taskNumber == 0 and QThreadPool.globalInstance().activeThreadCount() == 0:
+            self.allTaskFinished.emit()
 
     def downloadArtistCover(self, artist):
         f = self.artistCoverPath(artist)
@@ -81,9 +96,12 @@ class CoverWorker(QObject):
         if ',' in artist:
             artist = artist.split(',')
             for item in artist:
+                self.taskNumber += 1
                 d = CoverRunnable(self, item, qtype="artist")
                 QThreadPool.globalInstance().start(d)
+                
         else:
+            self.taskNumber += 1
             d = CoverRunnable(self, artist, qtype="artist")
             QThreadPool.globalInstance().start(d)
 
@@ -91,17 +109,9 @@ class CoverWorker(QObject):
         f = self.albumCoverPath(artist, album)
         if os.path.exists(f):
             return
+        self.taskNumber += 1
         d = CoverRunnable(self, artist, album, qtype="album")
         QThreadPool.globalInstance().start(d)
-
-    def getCoverBySongName(self, name):
-        pass
-
-    def getCoverByAlbumName(self, name):
-        pass
-
-    def getCoverBySignerName(self, name):
-        pass 
 
     @classmethod
     def getCoverPathByArtist(cls, artist):
@@ -112,9 +122,13 @@ class CoverWorker(QObject):
             artist = artist.encode('utf-8')
         encodefilepath = os.path.join(ArtistCoverPath, urllib.quote(artist))
         if os.path.exists(filepath):
-            return encodefilepath
+            image = QImage()
+            if image.load(filepath):
+                return encodefilepath
+            else:
+                return cls.defaultArtistCover
         else:
-            return os.path.join(os.getcwd(), 'skin', 'images','bg1.jpg')
+            return cls.defaultArtistCover
 
     @classmethod
     def getCoverPathByArtistAlbum(cls, artist, album):
@@ -124,29 +138,48 @@ class CoverWorker(QObject):
             filename = filename.encode('utf-8')
         encodefilepath = os.path.join(AlbumCoverPath, urllib.quote(filename))
         if os.path.exists(filepath):
-            return encodefilepath
+            image = QImage()
+            if image.load(filepath):
+                return encodefilepath
+            else:
+                return cls.defaultAlbumCover
         else:
-            return os.path.join(os.getcwd(), 'skin', 'images','bg2.jpg')
+            return cls.defaultAlbumCover
 
     @classmethod
     def getCoverPathByArtistSong(cls, artist, title):
         filepath = os.path.join(SongCoverPath, '%s-%s' % (artist, title))
         if os.path.exists(filepath):
-            return filepath
+            image = QImage()
+            if image.load(filepath):
+                return filepath
+            else:
+                return cls.defaultSongCover
         else:
-            return os.path.join(os.getcwd(), 'skin', 'images','bg3.jpg')
+            return cls.defaultSongCover
 
     @classmethod
-    def artistCoverPath(self, artist):
+    def artistCoverPath(cls, artist):
         filepath = os.path.join(ArtistCoverPath, artist)
         return filepath
 
     @classmethod
-    def albumCoverPath(self, artist, album):
+    def isArtistCoverExisted(cls, artist):
+        return os.path.exists(cls.artistCoverPath(artist))
+
+    @classmethod
+    def albumCoverPath(cls, artist, album):
         filepath = os.path.join(AlbumCoverPath, '%s-%s' % (artist, album))
         return filepath
+    @classmethod
+    def isAlbumCoverExisted(cls, artist, album):
+        return os.path.exists(cls.albumCoverPath(artist, album))
 
     @classmethod
     def songCoverPath(cls, artist, title):
         filepath = os.path.join(SongCoverPath, '%s-%s' % (artist, title))
         return filepath
+
+    @classmethod
+    def isSongCoverExisted(cls, artist, title):
+        return os.path.exists(cls.songCoverPath(artist, title))
