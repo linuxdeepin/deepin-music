@@ -37,7 +37,8 @@ class ListModel(QAbstractListModel):
             index = fields.index(i)
             role = '%sRole' % i[0]
             setattr(self, role, Qt.UserRole + index + 1)
-            self._roles[role] = i[0]
+            self._roles[Qt.UserRole + index + 1] = i[0]
+        print self._roles
         self._items = []
 
     def addItem(self, item):
