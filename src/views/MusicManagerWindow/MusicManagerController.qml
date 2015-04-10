@@ -11,7 +11,17 @@ Item {
 
 
     function initConnect() {
-        MusicManageWorker.tipMessageChanged.connect(updateStatusText)
+        MusicManageWorker.songCountChanged.connect(showArtistPage);
+        MusicManageWorker.tipMessageChanged.connect(updateStatusText);
+    }
+
+    function showArtistPage(){
+        if (MusicManageWorker.songCount == 0){
+            linkTipText.visible = true;
+        }else{
+            linkTipText.visible = false;
+            updateWindow(catgoryCombox.currentIndex);
+        }
     }
 
     function updateWindow(index) {
@@ -46,6 +56,18 @@ Item {
         }
     }
 
+    Binding {
+        target: rootWindow
+        property: 'visible'
+        value: {
+            if (MusicManageWorker.songCount == 0){
+                return false;
+            }else{
+                return true
+            }
+        }
+    }
+
     Connections {
         target: catgoryCombox
         onCurrentIndexChanged: {
@@ -66,26 +88,11 @@ Item {
         } 
     }
 
-
-    Connections {
-        target: rootWindow
-        onVisibleChanged:{
-            catgoryCombox.visible = false;
-            if (visible){
-                updateWindow(catgoryCombox.currentIndex);
-            }
-            if (MusicManageWorker.songCount == 0){
-                noMusicTip.visible = true;
-            }
-        }
-    }
-
     Connections {
         target: linkTipText
         onLinkActivated: {
             if (link == "SearchAllDriver"){
                 MusicManageWorker.searchAllDriver();
-                
             }else if (link == "SearchOneFolder"){
                 MusicManageWorker.searchOneFolder();
             }

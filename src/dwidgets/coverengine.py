@@ -273,39 +273,42 @@ class CoverRunnable(QRunnable):
         netEaseEngine = NetEaseEngine()
         xiamiTingEngine = XiamiTingEngine()
         doubanEngine = DoubanEngine()
-        engines = [doubanEngine, doubanEngine, doubanEngine]
+        engines = [xiamiTingEngine, doubanEngine, netEaseEngine]
 
-        if self.qtype == "artist":
-            url = engines[0].searchCoverByArtistName(self.artist)
-            if not url:
-                url = engines[1].searchCoverByArtistName(self.artist)
-            if not url:
-                url = engines[2].searchCoverByArtistName(self.artist)
-            if url:
-                localUrl = self.coverWorker.artistCoverPath(self.artist)
-                flag = self.downloadCoverByUrl(url, localUrl)
-                if flag:
-                    self.coverWorker.downloadArtistCoverSuccessed.emit(self.artist, localUrl)
+        try:
+            if self.qtype == "artist":
+                url = engines[0].searchCoverByArtistName(self.artist)
+                if not url:
+                    url = engines[1].searchCoverByArtistName(self.artist)
+                if not url:
+                    url = engines[2].searchCoverByArtistName(self.artist)
+                if url:
+                    localUrl = self.coverWorker.artistCoverPath(self.artist)
+                    flag = self.downloadCoverByUrl(url, localUrl)
+                    if flag:
+                        self.coverWorker.downloadArtistCoverSuccessed.emit(self.artist, localUrl)
+                    else:
+                        self.coverWorker.downloadArtistCoverSuccessed.emit(self.artist, '')
                 else:
                     self.coverWorker.downloadArtistCoverSuccessed.emit(self.artist, '')
-            else:
-                self.coverWorker.downloadArtistCoverSuccessed.emit(self.artist, '')
 
-        elif self.qtype == "album":
-            url = engines[0].searchCoverByAlbumName(self.artist, self.album)
-            if not url:
-                url = engines[1].searchCoverByAlbumName(self.artist, self.album)
-            if not url:
-                url = engines[2].searchCoverByAlbumName(self.artist, self.album)
-            if url:
-                localUrl = self.coverWorker.albumCoverPath(self.artist, self.album)
-                flag = self.downloadCoverByUrl(url, localUrl)
-                if flag:
-                    self.coverWorker.downloadAlbumCoverSuccessed.emit(self.artist, self.album, localUrl)
+            elif self.qtype == "album":
+                url = engines[0].searchCoverByAlbumName(self.artist, self.album)
+                if not url:
+                    url = engines[1].searchCoverByAlbumName(self.artist, self.album)
+                if not url:
+                    url = engines[2].searchCoverByAlbumName(self.artist, self.album)
+                if url:
+                    localUrl = self.coverWorker.albumCoverPath(self.artist, self.album)
+                    flag = self.downloadCoverByUrl(url, localUrl)
+                    if flag:
+                        self.coverWorker.downloadAlbumCoverSuccessed.emit(self.artist, self.album, localUrl)
+                    else:
+                        self.coverWorker.downloadAlbumCoverSuccessed.emit(self.artist, self.album, '')
                 else:
                     self.coverWorker.downloadAlbumCoverSuccessed.emit(self.artist, self.album, '')
-            else:
-                self.coverWorker.downloadAlbumCoverSuccessed.emit(self.artist, self.album, '')
+        except Exception, e:
+            raise e
 
     def downloadCoverByUrl(self, url, localUrl):
         try:

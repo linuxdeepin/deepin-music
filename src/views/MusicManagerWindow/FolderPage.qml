@@ -6,15 +6,20 @@ Rectangle {
 
     DGridView {
         id: folderView
-        model: MusicManageWorker.folders
+        model: folderListModel
         delegate: ItemDelegate{
-        	cover: '../../skin/images/bg4.jpg'
-        	name: GridView.view.model[index].name
-            count: GridView.view.model[index].count
+            cover: folderView.model.get(index).cover
+            name: folderView.model.get(index).name
+            count: folderView.model.get(index).count
         }
+    }
+
+    ListModel {
+        id: folderListModel
     }
 
     FolderController {
         folderView: folderView
+        folderListModel: folderListModel
     }
 }

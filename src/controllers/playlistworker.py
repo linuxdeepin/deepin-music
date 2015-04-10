@@ -469,6 +469,8 @@ class PlaylistWorker(QObject):
         for name, playlist in self._playlists.items():
             _playlist = OrderedDict()
             for url, mediaContent in playlist.mediaContents.items():
+                if 'created_date' in mediaContent.tags:
+                    mediaContent.tags.pop('created_date')
                 _playlist[url] = mediaContent.tags
             result[name] = _playlist
 

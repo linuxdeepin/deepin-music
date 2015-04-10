@@ -166,6 +166,7 @@ class ModelMetaclass(type):
                         if validFlag:
                             self.__dict__['_' + key] = value
                             getattr(self, key + "Changed").emit(value)
+
                         else:
                             self.valid_message[key] = error
                     return f

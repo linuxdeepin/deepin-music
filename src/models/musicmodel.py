@@ -157,7 +157,7 @@ class Song(BaseModel):
     tracknumber = IntegerField(default=0)
     discnumber = IntegerField(default=0)
     genre = CharField(default='')
-    date = CharField(default='')
+    date = IntegerField(default='')
 
 
     # subTitle = CharField(default='')

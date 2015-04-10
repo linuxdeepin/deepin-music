@@ -1,5 +1,5 @@
 import QtQuick 2.4
-import Deepin.Widgets 1.0
+// import Deepin.Widgets 1.0
 
 Rectangle {
     id: root
@@ -94,10 +94,10 @@ Rectangle {
         highlight: Rectangle { color: "lightsteelblue"; radius: 5 }
         focus: true
 
-        DScrollBar {
-            flickable: parent
-            inactiveColor: 'black'
-        }
+        // DScrollBar {
+        //     flickable: parent
+        //     inactiveColor: 'black'
+        // }
     }
 
     Timer{

@@ -147,8 +147,13 @@ Rectangle {
         }
     }
 
+    ListModel {
+        id: songListModel
+    }
+
     SongController {
         titleText: titleText
         songsView: songsView
+        songListModel: songListModel
     }
 }

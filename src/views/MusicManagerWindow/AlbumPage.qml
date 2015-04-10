@@ -14,7 +14,12 @@ Rectangle {
         }
     }
 
+    ListModel{
+        id: albumListModel
+    }
+
     AlbumController {
         albumView: albumView
+        albumListModel: albumListModel
     }
 }

@@ -34,6 +34,7 @@ class CoverWorker(QObject):
     defaultArtistCover = os.path.join(os.getcwd(), 'skin', 'images','bg1.jpg')
     defaultAlbumCover = os.path.join(os.getcwd(), 'skin', 'images','bg2.jpg')
     defaultSongCover = os.path.join(os.getcwd(), 'skin', 'images','bg3.jpg')
+    defaultFolderCover = os.path.join(os.getcwd(), 'skin', 'images','bg4.jpg')
 
     @registerContext
     def __init__(self, parent=None):
@@ -42,6 +43,8 @@ class CoverWorker(QObject):
         self.artistCovers = {}
         self.albumCovers = {}
         self.taskNumber = 0
+        self._artists = set()
+        self._albums = set()
         self.initConnect()
 
     def initConnect(self):
@@ -96,22 +99,28 @@ class CoverWorker(QObject):
         if ',' in artist:
             artist = artist.split(',')
             for item in artist:
-                self.taskNumber += 1
-                d = CoverRunnable(self, item, qtype="artist")
-                QThreadPool.globalInstance().start(d)
-                
+                if item not in self._artists:
+                    self._artists.add(item)
+                    self.taskNumber += 1
+                    d = CoverRunnable(self, item, qtype="artist")
+                    QThreadPool.globalInstance().start(d)
         else:
-            self.taskNumber += 1
-            d = CoverRunnable(self, artist, qtype="artist")
-            QThreadPool.globalInstance().start(d)
+            if artist not in self._artists:
+                self._artists.add(artist)
+                self.taskNumber += 1
+                d = CoverRunnable(self, artist, qtype="artist")
+                QThreadPool.globalInstance().start(d)
 
     def downloadAlbumCover(self, artist, album):
         f = self.albumCoverPath(artist, album)
         if os.path.exists(f):
             return
-        self.taskNumber += 1
-        d = CoverRunnable(self, artist, album, qtype="album")
-        QThreadPool.globalInstance().start(d)
+        key = (artist, album)
+        if key not in self._albums:
+            self._albums.add(key)
+            self.taskNumber += 1
+            d = CoverRunnable(self, artist, album, qtype="album")
+            QThreadPool.globalInstance().start(d)
 
     @classmethod
     def getCoverPathByArtist(cls, artist):
@@ -157,6 +166,10 @@ class CoverWorker(QObject):
                 return cls.defaultSongCover
         else:
             return cls.defaultSongCover
+
+    @classmethod
+    def getFolderCover(cls):
+        return cls.defaultFolderCover
 
     @classmethod
     def artistCoverPath(cls, artist):
