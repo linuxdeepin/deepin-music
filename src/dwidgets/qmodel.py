@@ -40,7 +40,10 @@ class ModelMetaclass(type):
                 raise FieldExpection(
                     "Each Field tuple length must be large than 1")
             elif len(field) == 2:
-                newfield = (field[0], field[1], field[1]())
+                if field[1] == 'QString':
+                    newfield = (field[0], field[1], '')
+                else:
+                    newfield = (field[0], field[1], field[1]())
             elif len(field) == 3:
                 newfield = (field[0], field[1], field[2])
             else:
@@ -60,6 +63,9 @@ class ModelMetaclass(type):
                 clsdict.pop(k)
 
         class DObject(QtCore.QObject):
+
+            if '__Fields__' in clsdict:
+                __Fields__ = clsdict['__Fields__']
 
             def __init__(self, *args, **kwargs):
                 super(DObject, self).__init__()

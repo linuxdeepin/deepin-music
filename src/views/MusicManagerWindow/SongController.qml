@@ -17,7 +17,7 @@ Item {
         target: songsView
         property: 'model'
         value: {
-            print(MusicManageWorker.songs[0].title)
+            print(MusicManageWorker.songs.length, '////////')
             return MusicManageWorker.songs
         }
     }

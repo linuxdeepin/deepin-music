@@ -7,14 +7,68 @@ Rectangle {
     property var count: 100
     width: 180; height: 200
 
+
+    ListModel {
+        id: fruitModel
+
+        ListElement {
+            name: "Apple"
+            cost: 2.45
+        }
+        ListElement {
+            name: "Orange"
+            cost: 3.25
+        }
+        ListElement {
+            name: "Banana"
+            cost: 1.95
+        }
+        ListElement {
+            name: "Apple"
+            cost: 2.45
+        }
+        ListElement {
+            name: "Orange"
+            cost: 3.25
+        }
+        ListElement {
+            name: "Banana"
+            cost: 1.95
+        }
+        ListElement {
+            name: "Apple"
+            cost: 2.45
+        }
+        ListElement {
+            name: "Orange"
+            cost: 3.25
+        }
+        ListElement {
+            name: "Banana"
+            cost: 1.95
+        }
+        ListElement {
+            name: "Apple"
+            cost: 2.45
+        }
+        ListElement {
+            name: "Orange"
+            cost: 3.25
+        }
+        ListElement {
+            name: "Banana"
+            cost: 1.95
+        }
+}
+
     Component {
         id: contactDelegate
         Rectangle {
             id: mediaItem
             width: 180; height: 40
             Column {
-                Text { text: '<b>Name:</b> ' + index}
-                Text { text: '<b>Number:</b> ' }
+                Text { text: '<b>Name:</b> ' + name}
+                Text { text: '<b>Number:</b> '+ cost }
             }
 
             states: State {
@@ -23,19 +77,19 @@ Rectangle {
                 PropertyChanges { target: mediaItem; color: "green" }
             }
 
-            MouseArea {
-                anchors.fill: parent
-                onClicked: {
-                    mediaItem.ListView.view.currentIndex = index
-                }
-            }
+            // MouseArea {
+            //     anchors.fill: parent
+            //     onClicked: {
+            //         mediaItem.ListView.view.currentIndex = cost
+            //     }
+            // }
         }
     }
 
     ListView {
         id: list
         anchors.fill: parent
-        model: 100000
+        model: fruitModel
         delegate: contactDelegate
         highlight: Rectangle { color: "lightsteelblue"; radius: 5 }
         focus: true
@@ -43,6 +97,17 @@ Rectangle {
         DScrollBar {
             flickable: parent
             inactiveColor: 'black'
+        }
+    }
+
+    Timer{
+        interval: 1000
+        repeat: true
+        running: true
+        onTriggered:{
+            print('+++')
+            fruitModel.insert(0, {"name": "0", "cost": 10})
+            fruitModel.append({"name": "11110", "cost": 11110})
         }
     }
 

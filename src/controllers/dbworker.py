@@ -14,6 +14,7 @@ from log import logger
 from dwidgets import dthread
 import threading
 import copy
+import datetime
 
 
 class DBWorker(QObject):
@@ -55,14 +56,28 @@ class DBWorker(QObject):
 
     @dthread
     def addSongs(self, songs):
+        created_date = datetime.datetime.now()
+        for song in songs:
+            song['created_date'] = created_date
         songs = copy.deepcopy(songs)
         artists = []
         albums = []
         folders = []
+
         for song in songs:
-            artists.append({'name': song['artist']})
-            albums.append({'name': song['album'], 'artist': song['artist']})
-            folders.append({'name': song['folder']})
+            artists.append({
+                'name': song['artist'],
+                'created_date': song['created_date']
+                })
+            albums.append({
+                'name': song['album'], 
+                'artist': song['artist'],
+                'created_date': song['created_date']
+                })
+            folders.append({
+                'name': song['folder'],
+                'created_date': song['created_date']
+            })
 
         Artist.get_create_Records(artists)
         Album.get_create_Records(albums)

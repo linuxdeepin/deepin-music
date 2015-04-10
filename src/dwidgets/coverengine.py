@@ -273,7 +273,7 @@ class CoverRunnable(QRunnable):
         netEaseEngine = NetEaseEngine()
         xiamiTingEngine = XiamiTingEngine()
         doubanEngine = DoubanEngine()
-        engines = [xiamiTingEngine, netEaseEngine, doubanEngine]
+        engines = [doubanEngine, doubanEngine, doubanEngine]
 
         if self.qtype == "artist":
             url = engines[0].searchCoverByArtistName(self.artist)

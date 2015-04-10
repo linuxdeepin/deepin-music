@@ -197,6 +197,9 @@ class Song(dict):
             #     self["discnumber"] = discnumber
             #     value = int(value[:value.rfind("/")])
 
+        if key == 'genre':
+            value = str(value)
+
         elif key == "discnumber":
             # if isinstance(value, str):
             value = 0
