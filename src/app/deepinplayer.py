@@ -1,7 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtCore import QCoreApplication, QObject, QUrl, QThread, QTimer
+from PyQt5.QtCore import (QCoreApplication, QObject, 
+    QUrl, QThread, QTimer,
+    QThreadPool)
 from PyQt5.QtGui import QScreen
 from views import MainWindow
 
@@ -152,6 +154,7 @@ class DeepinPlayer(QObject):
         self.mainWindow.engine().trimComponentCache()
 
     def close(self):
+        QThreadPool.globalInstance().clear()
         self.mediaPlayer.stop()
         self.configWorker.save()
         self.playlistWorker.savePlaylists()

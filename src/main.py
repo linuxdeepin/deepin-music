@@ -25,5 +25,4 @@ if __name__ == '__main__':
     deepinPlayer.show()
 
     exitCode = app.exec_()
-
     sys.exit(exitCode)

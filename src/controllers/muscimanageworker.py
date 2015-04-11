@@ -388,7 +388,7 @@ class MusicManageWorker(QObject):
             fdir = fileInfo.absoluteDir().absolutePath()
             fpath = qDirIterator.filePath()
             fsize = fileInfo.size() / (1024 * 1024)
-            time.sleep(0.1)
+            time.sleep(0.01)
             if fsize >= 1:
                 self.scanfileChanged.emit(fpath)
                 self.tipMessageChanged.emit(fpath)

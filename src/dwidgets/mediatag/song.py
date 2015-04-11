@@ -197,7 +197,10 @@ class Song(dict):
             #     self["discnumber"] = discnumber
             #     value = int(value[:value.rfind("/")])
         elif key == 'date':
-            value = int(value)
+            try:
+                value = int(value)
+            except:
+                value = int(value.split('-')[0])
 
         elif key == 'genre':
             value = str(value)
