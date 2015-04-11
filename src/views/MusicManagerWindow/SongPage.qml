@@ -131,6 +131,7 @@ Rectangle {
                 clip: true
                 highlightMoveDuration: 1
                 delegate: SongDelegate {}
+                model: songListModel
                 currentIndex: -1
                 focus: true
                 spacing: 20
@@ -147,13 +148,13 @@ Rectangle {
         }
     }
 
-    ListModel {
+    DListModel {
         id: songListModel
+        pymodel: SongListModel
     }
 
     SongController {
         titleText: titleText
         songsView: songsView
-        songListModel: songListModel
     }
 }

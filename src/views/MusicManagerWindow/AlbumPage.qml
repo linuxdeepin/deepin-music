@@ -1,4 +1,5 @@
 import QtQuick 2.4
+import DMusic 1.0
 import "../DMusicWidgets"
 
 Rectangle {
@@ -6,20 +7,20 @@ Rectangle {
 
     DGridView {
         id: albumView
-        model: MusicManageWorker.albums
+        model: albumListModel
         delegate: ItemDelegate{
-        	cover: GridView.view.model[index].cover
-        	name: GridView.view.model[index].name
-            count: GridView.view.model[index].count
+        	cover: GridView.view.model.get(index).cover
+        	name: GridView.view.model.get(index).name
+            count: GridView.view.model.get(index).count
         }
     }
 
-    ListModel{
+    DListModel{
         id: albumListModel
+        pymodel: AlbumListModel
     }
 
     AlbumController {
         albumView: albumView
-        albumListModel: albumListModel
     }
 }

@@ -12,6 +12,7 @@ from PyQt5.QtCore import (QObject, pyqtSignal,
                 QDirIterator, QTimer, QThread,
                 QThreadPool, QAbstractListModel, Qt, QModelIndex, QVariant)
 from PyQt5.QtGui import QImage
+from PyQt5.QtQml import QJSValue
 from PyQt5.QtWidgets import QFileDialog
 from .utils import registerContext, contexts
 from dwidgets.tornadotemplate import template
@@ -26,40 +27,150 @@ from .coverworker import CoverWorker
 from dwidgets import ModelMetaclass
 
 
-class ListModel(QAbstractListModel):
+# class ListModel(QAbstractListModel):
 
-    def __init__(self, fields, parent=None):
-        super(ListModel, self).__init__(parent)
-        self._roles = {}
-        for i in fields:
-            index = fields.index(i)
-            role = '%sRole' % i[0]
-            setattr(self, role, Qt.UserRole + index + 1)
-            self._roles[getattr(self, role)] = i[0]
-        self._items = []
+    # def __init__(self, fields, parent=None):
+    #     super(ListModel, self).__init__(parent)
+    #     self._roles = {}
+    #     for i in fields:
+    #         index = fields.index(i)
+    #         role = '%sRole' % i[0]
+    #         setattr(self, role, Qt.UserRole + index + 1)
+    #         self._roles[getattr(self, role)] = i[0]
+    #     self._items = []
 
-    def addItem(self, item):
-        self.beginInsertRows(QModelIndex(), self.rowCount(), self.rowCount())
-        self._items.append(item)
-        self.endInsertRows()
+    # def addItem(self, item):
+    #     self.beginInsertRows(QModelIndex(), self.rowCount(), self.rowCount())
+    #     self._items.append(item)
+    #     self.endInsertRows()
 
-    def rowCount(self, parent=QModelIndex()):
-        return len(self._items)
+    # def rowCount(self, parent=QModelIndex()):
+    #     return len(self._items)
 
-    def data(self, index, role=Qt.DisplayRole):
-        try:
-            item = self._items[index.row()]
-        except IndexError:
-            return QVariant()
+    # def data(self, index, role=Qt.DisplayRole):
+    #     try:
+    #         item = self._items[index.row()]
+    #     except IndexError:
+    #         return QVariant()
 
-        for key, value in self._roles.items():
-            if role == key:
-                return getattr(item, value)
+    #     for key, value in self._roles.items():
+    #         if role == key:
+    #             return getattr(item, value)
 
-        return QVariant()
+    #     return QVariant()
 
-    def roleNames(self):
-        return self._roles
+    # def roleNames(self):
+    #     # return self._roles
+
+
+class ListModel(QObject):
+
+    countChanged = pyqtSignal(int)
+    dataChanged = pyqtSignal('QVariant')
+
+    #qml2py
+    qml2Py_appendSignal = pyqtSignal('QVariant')
+    qml2py_clearSignal = pyqtSignal()
+    qml2py_insertSignal = pyqtSignal(int, 'QVariant')
+    qml2py_moveSignal = pyqtSignal(int, int, int)
+    qml2py_removeSignal = pyqtSignal(int)
+    qml2py_setSignal = pyqtSignal(int, 'QVariant')
+    qml2py_setPropertySignal = pyqtSignal(int, 'QString', 'QVariant')
+
+    #py2qml
+    py2qml_appendSignal = pyqtSignal('QVariant')
+    py2qml_clearSignal = pyqtSignal()
+    py2qml_insertSignal = pyqtSignal(int, 'QVariant')
+    py2qml_moveSignal = pyqtSignal(int, int, int)
+    py2qml_removeSignal = pyqtSignal(int)
+    py2qml_setSignal = pyqtSignal(int, 'QVariant')
+    py2qml_setPropertySignal = pyqtSignal(int, 'QString', 'QVariant')
+    
+
+    def __init__(self, dataTye):
+        super(ListModel, self).__init__()
+        self.dataTye = QmlArtistObject
+        self._data = []
+        self.initConnect()
+
+    def initConnect(self):
+        self.qml2Py_appendSignal.connect(self.append)
+        self.qml2py_clearSignal.connect(self.clear)
+        self.qml2py_insertSignal.connect(self.insert)
+        self.qml2py_moveSignal.connect(self.move)
+        self.qml2py_removeSignal.connect(self.remove)
+        self.qml2py_setSignal.connect(self.set)
+        self.qml2py_setPropertySignal.connect(self.setProperty)        
+
+    @pyqtProperty('QVariant', notify=dataChanged)
+    def data(self):
+        return self._data
+
+    @data.setter
+    def data(self, value):
+        self._data = value
+        self.dataChanged.emit(value)
+
+    @pyqtProperty(int, notify=countChanged)
+    def count(self):
+        return len(self._data)
+
+    def append(self, obj):
+        if isinstance(obj, QJSValue):
+            _obj = obj.toVariant()
+            obj = self.dataTye(**_obj)
+        self._data.append(obj)
+        self.py2qml_appendSignal.emit(obj)
+
+    def clear(self):
+        del self._data[:]
+        self.py2qml_clearSignal.emit()
+
+    def get(self, index):
+        if index < len(self._data):
+            return self._data[index]
+        else:
+            return None
+
+    def insert(self, index, obj):
+        if isinstance(obj, QJSValue):
+            _obj = obj.toVariant()
+            obj = self.dataTye(**_obj)
+        self._data.insert(index, obj)
+        self.py2qml_insertSignal.emit(index, obj)
+
+    def move(self, _from, _to, _n):
+        dataMoved = []
+        for i in range(_from, _from + _n):
+            dataMoved.append(self._data.pop(_from))
+        for item in dataMoved:
+            index = dataMoved.index(item)
+            self._data.insert(_to + index, item)
+        self.py2qml_moveSignal.emit(_from, _to, _n)
+
+        a = []
+        for obj in self._data:
+            a.append(obj.count)
+        print a
+
+    def remove(self, index):
+        self._data.pop(index)
+        self.py2qml_removeSignal.emit(index)
+
+    def set(self, index, obj):
+        if index < len(self._data):
+            if isinstance(obj, QJSValue):
+                _obj = obj.toVariant()
+                obj = self.dataTye(**_obj)
+            self._data[index] = obj
+            self.py2qml_setSignal.emit(index, obj)
+
+    def setProperty(self, index, key, value):
+        if index < len(self._data):
+            obj = self._data[index]
+            if hasattr(obj, key):
+                setattr(obj, key, value)
+                self.py2qml_setPropertySignal.emit(index, key, value)
 
 
 class QmlSongObject(QObject):
@@ -135,6 +246,39 @@ class QmlFolderObject(QObject):
         self.setDict(kwargs)
 
 
+class SongListModel(ListModel):
+
+    __contextName__ = 'SongListModel'
+
+    @registerContext
+    def __init__(self, dataTye):
+        super(SongListModel, self).__init__(dataTye)
+
+class ArtistListModel(ListModel):
+
+    __contextName__ = 'ArtistListModel'
+
+    @registerContext
+    def __init__(self, dataTye):
+        super(ArtistListModel, self).__init__(dataTye)    
+
+class AlbumListModel(ListModel):
+
+    __contextName__ = 'AlbumListModel'
+
+    @registerContext
+    def __init__(self, dataTye):
+        super(AlbumListModel, self).__init__(dataTye)    
+
+class FolderListModel(ListModel):
+
+    __contextName__ = 'FolderListModel'
+
+    @registerContext
+    def __init__(self, dataTye):
+        super(FolderListModel, self).__init__(dataTye)    
+
+
 class MusicManageWorker(QObject):
 
     #py2py
@@ -150,25 +294,11 @@ class MusicManageWorker(QObject):
     downloadAlbumCover = pyqtSignal('QString', 'QString')
 
     #property signal
-    songsChanged = pyqtSignal('QVariant')
-    artistsChanged = pyqtSignal('QVariant')
-    albumsChanged = pyqtSignal('QVariant')
-    foldersChanged = pyqtSignal('QVariant')
     categoriesChanged = pyqtSignal('QVariant')
     songCountChanged = pyqtSignal(int)
 
     #py2qml
     tipMessageChanged = pyqtSignal('QString')
-    addSongElement = pyqtSignal('QVariant')
-
-    addArtistElement = pyqtSignal('QVariant')
-    updateArtistElement = pyqtSignal(int, 'QString', 'QVariant')
-
-    addAlbumElement = pyqtSignal('QVariant')
-    updateAlbumElement = pyqtSignal(int, 'QString', 'QVariant')
-
-    addFolderElement =  pyqtSignal('QVariant')
-    updateFolderElement = pyqtSignal(int, 'QString', 'QVariant')
 
     #qml2py
     searchAllDriver =pyqtSignal()
@@ -210,6 +340,11 @@ class MusicManageWorker(QObject):
         self._albumObjs = OrderedDict()
         self._folderObjs = OrderedDict()
 
+        self._songObjsListModel = SongListModel(QmlSongObject)
+        self._artistObjsListModel = ArtistListModel(QmlArtistObject)
+        self._albumObjsListModel = AlbumListModel(QmlAlbumObject)
+        self._folderObjsListModel = FolderListModel(QmlFolderObject)
+
     def initConnect(self):
         self.searchAllDriver.connect(self.searchAllDriverMusic)
         self.searchOneFolder.connect(self.searchOneFolderMusic)
@@ -227,6 +362,7 @@ class MusicManageWorker(QObject):
             self._songsDict[song.url] = songDict
             songObj = QmlSongObject(**songDict)
             self._songObjs[song.url] = songObj
+            self._songObjsListModel.append(songObj)
 
         for artist in Artist.select():
             self._artistsDict[artist.name] = {
@@ -242,6 +378,7 @@ class MusicManageWorker(QObject):
             artistObj = QmlArtistObject(**self._artistsDict[artist.name])
             self._artistObjs[artist.name] = artistObj
 
+            self._artistObjsListModel.append(artistObj)
 
         for album in Album.select():
             self._albumsDict[album.name] = {
@@ -256,12 +393,13 @@ class MusicManageWorker(QObject):
 
             albumObj = QmlAlbumObject(**self._albumsDict[album.name])
             self._albumObjs[album.name] = albumObj
-
+            self._albumObjsListModel.append(albumObj)
 
         for folder in Folder.select():
             self._foldersDict[folder.name] = {
                 'name': folder.name,
                 'count': folder.songs.count(),
+                'cover':CoverWorker.getFolderCover(),
                 'songs': {}
             }
             songs = self._foldersDict[folder.name]['songs']
@@ -270,7 +408,7 @@ class MusicManageWorker(QObject):
 
             folderObj = QmlFolderObject(**self._foldersDict[folder.name])
             self._folderObjs[folder.name] = folderObj
-
+            self._folderObjsListModel.append(folderObj)
 
     @pyqtProperty('QVariant', notify=categoriesChanged)
     def categories(self):
@@ -287,69 +425,6 @@ class MusicManageWorker(QObject):
     @pyqtProperty('QVariant', notify=songCountChanged)
     def songCount(self):
         return len(self._songsDict)
-
-    @pyqtProperty('QVariant', notify=songsChanged)
-    def songs(self):
-        return self._songObjs.values()
-
-    # @songs.setter
-    # def songs(self, value):
-    #     self.songsChanged.emit(self._songs)
-
-    @pyqtProperty('QVariant', notify=artistsChanged)
-    def artists(self):
-        return self._artistObjs.values()
-
-    # @artists.setter
-    # def artists(self, value):
-    #     # del self._artists[:]
-    #     # self._artists.extend(value)
-
-    #     # objects = []
-    #     # for song in value:
-    #     #     obj = QmlArtistObject(**song)
-    #     #     objects.append(obj)
-    #     # del self._artists[:]
-    #     # self._artists.extend(objects)
-
-    #     # self.artistsChanged.emit(self._artists)
-    #     pass
-
-    @pyqtProperty('QVariant', notify=albumsChanged)
-    def albums(self):
-        return self._albumObjs.values()
-
-    # @albums.setter
-    # def albums(self, value):
-    #     # del self._albums[:]
-    #     # self._albums.extend(value)
-
-    #     objects = []
-    #     for song in value:
-    #         obj = QmlAlbumObject(**song)
-    #         objects.append(obj)
-    #     del self._albums[:]
-    #     self._albums.extend(objects)
-
-    #     self.albumsChanged.emit(self._albums)
-
-    @pyqtProperty('QVariant', notify=foldersChanged)
-    def folders(self):
-        return self._folderObjs.values()
-
-    # @folders.setter
-    # def folders(self, value):
-    #     # del self._folders[:]
-    #     # self._folders.extend(value)
-
-    #     objects = []
-    #     for song in value:
-    #         obj = QmlFolderObject(**song)
-    #         objects.append(obj)
-    #     del self._folders[:]
-    #     self._folders.extend(objects)
-
-    #     self.foldersChanged.emit(self._folders)
     
     def searchAllDriverMusic(self):
         self.scanFolder(QDir.homePath())
@@ -427,7 +502,7 @@ class MusicManageWorker(QObject):
         #add or update song view
         songObj = QmlSongObject(**songDict)
         self._songObjs[url] = songObj
-        self.addSongElement.emit(songObj)
+        self._songObjsListModel.append(songObj)
 
         # add or update artist view
         artist = songDict['artist']
@@ -446,13 +521,12 @@ class MusicManageWorker(QObject):
         if artist not in self._artistObjs:
             artistObj = QmlArtistObject(**_artistDict)
             self._artistObjs[artist] = artistObj
-            self.addArtistElement.emit(artistObj)
+            self._artistObjsListModel.append(artistObj)
         else:
             artistObj = self._artistObjs[artist]
             index = self._artistObjs.keys().index(artist)
             artistObj.count = _artistDict['count']
-            self.updateArtistElement.emit(index, 'count', _artistDict['count'])
-
+            self._artistObjsListModel.setProperty(index, 'count', _artistDict['count'])
 
         # add or update album view
         album = songDict['album']
@@ -471,15 +545,14 @@ class MusicManageWorker(QObject):
         if album not in self._albumObjs:
             albumObj = QmlAlbumObject(**_albumDict)
             self._albumObjs[album] = albumObj
-            self.addAlbumElement.emit(albumObj)
+            self._albumObjsListModel.append(albumObj)
         else:
             albumObj = self._albumObjs[album]
             index = self._albumObjs.keys().index(album)
             albumObj.count = _albumDict['count']
-            self.updateAlbumElement.emit(index, 'count', _albumDict['count'])
+            self._albumObjsListModel.setProperty(index, 'count', _albumDict['count'])
 
         # add or update folder view
-
         folder = songDict['folder']
         if folder not in self._foldersDict:
             self._foldersDict[folder] = {
@@ -495,13 +568,12 @@ class MusicManageWorker(QObject):
         if folder not in self._folderObjs:
             folderObj = QmlFolderObject(**_folderDict)
             self._folderObjs[folder] = folderObj
-            self.addFolderElement.emit(folderObj)
+            self._folderObjsListModel.append(folderObj)
         else:
             folderObj = self._folderObjs[folder]
             index = self._folderObjs.keys().index(folder)
             folderObj.count = _folderDict['count']
-            self.updateFolderElement.emit(index, 'count', _folderDict['count'])
-
+            self._folderObjsListModel.setProperty(index, 'count', _folderDict['count'])
 
         self.songCountChanged.emit(len(self._songsDict))
 
@@ -519,7 +591,7 @@ class MusicManageWorker(QObject):
                     index = self._artistObjs.keys().index(artistName)
                     artistObj = self._artistObjs[artistName]
                     artistObj.cover = url
-                    self.updateArtistElement.emit(index, 'cover', url)
+                    self._artistObjsListModel.setProperty(index, 'cover', url)
 
     def updateAlbumCover(self, artist, album, url):
         if album in self._albumsDict:
@@ -530,26 +602,10 @@ class MusicManageWorker(QObject):
                 index = self._albumObjs.keys().index(album)
                 albumObj = self._albumObjs[album]
                 albumObj.cover = url
-                self.updateAlbumElement.emit(index, 'cover', url)
-
-    # def update(self):
-    #     self.updateSongs()
+                self._albumObjsListModel.setProperty(index, 'cover', url)
 
     def stopUpdate(self):
         print('stop update')
-
-    # def updateSongs(self):
-    #     # self.songs = self._songsDict.values()s
-    #     self.songCountChanged.emit(len(self._songsDict))
-
-    # def updateArtists(self):
-    #     self.artists = self._artistsDict.values()
-
-    # def updateAlbumss(self):
-    #     self.albums = self._albumsDict.values()
-
-    # def updateFolders(self):
-    #     self.folders = self._foldersDict.values()
 
     def playArtistMusic(self, name):
         songs = self._artistsDict[name]['songs']
