@@ -56,14 +56,22 @@ Item {
         }
     }
 
-    Binding {
+    // Binding {
+    //     target: rootWindow
+    //     property: 'visible'
+    //     value: MusicManageWorker.songCount
+    // }
+
+    Connections {
         target: rootWindow
-        property: 'visible'
-        value: {
-            if (MusicManageWorker.songCount == 0){
-                return false;
-            }else{
-                return true
+        onVisibleChanged: {
+            if (visible == true){
+                if (MusicManageWorker.songCount == 0){
+                    print('+++++++++', MusicManageWorker.songCount)
+                    noMusicTip.visible = true;
+                }else{
+                    noMusicTip.visible = false;
+                }
             }
         }
     }

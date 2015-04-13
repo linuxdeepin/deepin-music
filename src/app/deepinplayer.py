@@ -26,12 +26,12 @@ class DeepinPlayer(QObject):
     def __init__(self):
         super(DeepinPlayer, self).__init__()
         self.initApplication()
-        self.loadDB()
         self.initView()
         self.initControllers()
         self.initConnect()
         self.initQMLContext()
         self.loadConfig()
+        self.loadDB()
 
         self.timer = QTimer()
         self.timer.timeout.connect(self.clearCache)
@@ -53,7 +53,8 @@ class DeepinPlayer(QObject):
         self.qApp.setOrganizationName(config.organizationName)
 
     def loadDB(self):
-        pass
+        # QTimer.singleShot(1000, self.musicManageWorker.loadDB)
+        self.musicManageWorker.restoreDB()
 
     def initView(self):
         self.mainWindow = MainWindow()
@@ -96,6 +97,7 @@ class DeepinPlayer(QObject):
         self.coverWorkerConnect()
         self.musicManageWorkerConnect()
         self.menuWorkerConnect()
+        self.dbWorkerConnect()
         self.qApp.aboutToQuit.connect(self.close)
 
     def web360ApiWorkerConnect(self):
@@ -124,6 +126,7 @@ class DeepinPlayer(QObject):
     def musicManageWorkerConnect(self):
         self.musicManageWorker.saveSongToDB.connect(self.dbWorker.addSong)
         self.musicManageWorker.saveSongsToDB.connect(self.dbWorker.addSongs)
+        self.musicManageWorker.restoreSongsToDB.connect(self.dbWorker.restoreSongs)
         self.musicManageWorker.addSongToPlaylist.connect(self.playlistWorker.addLocalMediaToTemporary)
         self.musicManageWorker.addSongsToPlaylist.connect(self.playlistWorker.addLocalMediasToTemporary)
         self.musicManageWorker.playSongByUrl.connect(self.mediaPlayer.playLocalMedia)
@@ -134,6 +137,9 @@ class DeepinPlayer(QObject):
     def menuWorkerConnect(self):
         self.menuWorker.addSongFile.connect(self.musicManageWorker.addSongFile)
         self.menuWorker.addSongFolder.connect(self.musicManageWorker.searchOneFolderMusic)
+
+    def dbWorkerConnect(self):
+        self.dbWorker.restoreSongsSuccessed.connect(self.musicManageWorker.loadDB)
 
     def loadConfig(self):
         self.mediaPlayer.setPlaylistByName(self.configWorker.lastPlaylistName);

@@ -81,16 +81,11 @@ class CoverWorker(QObject):
     def cacheArtistCover(self, artist, url):
         self.artistCovers[artist]  = url
         self.updateArtistCover.emit(artist, url)
-        self.taskNumber -= 1
-        if self.taskNumber == 0 and QThreadPool.globalInstance().activeThreadCount() == 0:
-            self.allTaskFinished.emit()
 
     def cacheAlbumCover(self, artist, album, url):
         self.albumCovers[album] = url
         self.updateAlbumCover.emit(artist, album, url)
         self.taskNumber -= 1
-        if self.taskNumber == 0 and QThreadPool.globalInstance().activeThreadCount() == 0:
-            self.allTaskFinished.emit()
 
     def downloadArtistCover(self, artist):
         f = self.artistCoverPath(artist)

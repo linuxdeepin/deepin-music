@@ -157,21 +157,7 @@ class Song(BaseModel):
     tracknumber = IntegerField(default=0)
     discnumber = IntegerField(default=0)
     genre = CharField(default='')
-    date = IntegerField(default='')
-
-
-    # subTitle = CharField(default='')
-    # comment = CharField(default='')
-    # description = CharField(default='')
-    # category = CharField(default='')
-    # year = IntegerField(default=0)
-    # userRating = CharField(default='')
-    # keywords = CharField(default='')
-    # language = CharField(default='')
-    # publisher = CharField(default='')
-    # copyright = CharField(default='')
-    # parentalRating = CharField(default='')
-    # ratingOrganization = CharField(default='')
+    date = CharField(default='')
 
     #Media attributes
     size = IntegerField(default=0)
@@ -180,22 +166,9 @@ class Song(BaseModel):
 
     #Audio attributes
     bitrate = IntegerField(default=0)
-    # audioCodec = CharField(default='')
-    # averageLevel = IntegerField(default=0)
-    # channelCount = IntegerField(default=0)
-    # peakValue = IntegerField(default=0)
     sample_rate = IntegerField(default=0)
 
     #Music attributes
-    # albumArtist = CharField(default='')
-    # albumTitle = CharField(default='')
-    # contributingArtist = CharField(default='')
-    # composer = CharField(default='')
-    # conductor = CharField(default='')
-    # lyrics = CharField(default='')
-    # mood = CharField(default='')
-    # trackCount = CharField(default='')
-    # coverArtUrlLarge = CharField(default='')
     cover = CharField(default='')
 
     #other
@@ -203,200 +176,10 @@ class Song(BaseModel):
 
     __key__ = 'url'
 
-
-    TAG_KEYS = [
-        'title',
-        'artist',
-        'album',
-        'tracknumber',
-        'discnumber',
-        'genre',
-        'date'
-    ]
-
-    TAGS_KEYS_OVERRIDE = {}
-
-    TAGS_KEYS_OVERRIDE['Musepack'] = {"tracknumber": "track", "date": "year"}
-
-    TAGS_KEYS_OVERRIDE['MP4'] = {
-        "title": "\xa9nam",
-        "artist": "\xa9ART",
-        "album": "\xa9alb",
-        "tracknumber": "trkn",
-        "discnumber": "disk",
-        "genre": "\xa9gen",
-        "date": "\xa9day"
-    }
-
-    TAGS_KEYS_OVERRIDE['ASF'] = {
-        "title": "Title",
-        "artist": "Author",
-        "album": "WM/AlbumArtist",
-        "tracknumber": "WM/TrackNumber",
-        "discnumber": "WM/PartOfSet",
-        "genre": "WM/Genre",
-        "date": "WM/Year"
-    }
-
-    @classmethod
-    def createLocalInstanceByUrl(self, url):
-        from os.path import abspath, realpath, normpath
-        url = normpath(realpath(abspath(url)))
-        if Song.checkUrl(url):
-            kwargs = {'url': url}
-            song = Song.get_create_Record(**kwargs)
-            if song:
-                song.getTags()
-                ret = song.save()
-            return song
-        else:
-            return None
-
-    @classmethod
-    def checkUrl(cls, url):
-        return cls.isExisted(url)
-
-    @classmethod
-    def isExisted(cls, url):
-        return os.path.exists(url)
-
-    def isLocalFile(self):
-        return QUrl.fromLocalFile(self.url).isLocalFile()
-
-    @property
-    def baseName(self):
-        return os.path.basename(self.url)
-
-    @property
-    def fileName(self):
-        return os.path.splitext(self.baseName)[0]
-
-    @property
-    def ext(self):
-        return os.path.splitext(self.baseName)[1][1:]
-
-    def updateTagsToDB(self, **kwargs):
-        for key, value in kwargs.items():
-            setattr(self, key, value)
-        retID = self.save()
-        ret = self.saveTags()
-        if retID > 0 and ret:
-            return True
-        else:
-            return False
-
-    def getTags(self):
-        path = self.url
-
-        TAG_KEYS = self.TAG_KEYS
-        TAGS_KEYS_OVERRIDE = self.TAGS_KEYS_OVERRIDE
-
-        setattr(self, 'size', os.path.getsize(path))
-
-        audio = common.MutagenFile(path, common.FORMATS)
-
-        if audio is not None:
-            tag_keys_override = TAGS_KEYS_OVERRIDE.get(
-                audio.__class__.__name__, None)
-            for file_tag in TAG_KEYS:
-                if tag_keys_override and tag_keys_override.has_key(file_tag):
-                    file_tag = tag_keys_override[file_tag]
-                if audio.has_key(file_tag) and audio[file_tag]:
-                    value = audio[file_tag]
-                    if isinstance(value, list) or isinstance(value, tuple):
-                        value = value[0]
-                    fix_value = common.fix_charset(value)
-                    if fix_value == "[Invalid Encoding]":
-                        if tag == "title":
-                            fix_value = self.fileName
-                        else:
-                            fix_value = ""
-
-                    setattr(self, file_tag, fix_value)
-
-            for key in ['sample_rate', 'bitrate', 'length']:
-                try:
-                    if hasattr(audio.info, key):
-                        if key == 'length':
-                            setattr(self, 'duration', getattr(audio.info, key))
-                        else:
-                            setattr(self, key, getattr(audio.info, key))
-                except Exception, e:
-                    print e
-
-    def saveTags(self):
-        ''' Save tag information to file. '''
-        if not self.isLocalFile():
-            self.last_error = self.url + " " + "is not a local file"
-            return False
-        if not self.isExisted(self.url):
-            self.last_error = self.url + " doesn't exist"
-            return False
-        if not os.access(self.url, os.W_OK):
-            self.last_error = self.url + " doesn't have enough permission"
-            return False
-
-        TAG_KEYS = self.TAG_KEYS
-        TAGS_KEYS_OVERRIDE = self.TAGS_KEYS_OVERRIDE
-
-        try:
-            audio = common.MutagenFile(self.url, common.FORMATS)
-            tag_keys_override = None
-
-            if audio is not None:
-                if audio.tags is None:
-                    audio.add_tags()
-                tag_keys_override = TAGS_KEYS_OVERRIDE.get(
-                    audio.__class__.__name__, None)
-
-                for file_tag in TAG_KEYS:
-                    if tag_keys_override and tag_keys_override.has_key(file_tag):
-                        file_tag = tag_keys_override[file_tag]
-
-                    value = getattr(self, file_tag)
-                    if value:
-                        try:
-                            value = unicode(value)
-                        except Exception, e:
-                            value = value.decode('utf-8')
-                        # print file_tag, value, type(value)
-                        audio[file_tag] = value
-                    else:
-                        try:
-                            del(audio[file_tag])  # TEST
-                        except KeyError:
-                            pass
-                audio.save()
-            else:
-                raise "w:Song:MutagenTag:No audio found"
-
-        except Exception, e:
-            print traceback.format_exc()
-            print "W: Error while writting (" + self.get("url") + ")\nTracback :", e
-            self.last_error = "Error while writting" + \
-                ": " + self.url
-            return False
-        else:
-            return True
-
-    def getMp3FontCover(self):
-        from common import EasyMP3
-        audio = common.MutagenFile(self.url, common.FORMATS)
-        ext = None
-        img_data = None
-        if isinstance(audio, EasyMP3):
-            apics = audio.tags.getID3().getall('APIC')
-            if len(apics) > 0:
-                apic = apics[0]
-                if apic.type == 3:
-                    mine = apic.mime
-                    ext = mine.split('/')[-1]
-                    img_data = apic.data
-        return ext, img_data
-
     def pprint(self):
         keys = [
             'url',
+            'folder',
             'title',
             'artist',
             'album',
@@ -408,6 +191,7 @@ class Song(BaseModel):
             'bitrate',
             'duration',
             'size',
+            'cover',
         ]
 
         p = {}
@@ -443,104 +227,3 @@ class Song(BaseModel):
             if hasattr(self, key):
                 p[key] = getattr(self, key)
         return p
-
-
-class SongPlaylist(BaseModel):
-    song = ForeignKeyField(Song)
-    playlist = ForeignKeyField(Playlist)
-
-    @classmethod
-    def addSongToPlaylist(cls, url, name='temporary'):
-
-
-        songRecord = Song.getSongByUri(url)
-        playlistRecord = Playlist.getPlaylistByName(name)
-
-
-        if songRecord and playlistRecord:
-            kwargs = {
-                'song': songRecord, 
-                'playlist': playlistRecord
-            }
-            try:
-                ret = cls.get(cls.song==songRecord, 
-                    cls.playlist==playlistRecord)
-                if ret:
-                    # print('cls existed, Emit Singal')
-                    pass
-            except DoesNotExist:
-                ret = cls.create(**kwargs)
-        else:
-            ret = None
-
-        return ret
-
-    @classmethod
-    def getSongsByPlaylistName(cls, name):
-        songs = []
-        for song in Song.select().join(cls).join(Playlist).where(Playlist.name==name):
-            songs.append(song.url)
-
-        return songs
-
-    @classmethod
-    def getPlaylistsBySongUri(cls, url):
-        playlists = []
-        for playlist in Playlist.select().join(cls).join(Song).where(Song.url==url):
-            playlists.append(playlist.name)
-        return playlists
-
-
-if __name__ == '__main__':
-
-    class DBWorker(object):
-
-        def __init__(self):
-            super(DBWorker, self).__init__()
-            db.connect()
-            db.create_tables([Song, Artist, Album, Folder, Playlist, SongPlaylist], safe=True)
-
-    dbWorker = DBWorker()
-
-
-    # basePath = '/home/djf/workspace/github/musicplayer-qml/music'
-    # url = os.path.join(basePath, '1.mp3')
-    # song = Song.createLocalInstanceByUrl(url)
-    # # song.updateTagsToDB(**{'title': '12456789'})
-    # print song, song.title
-    # song = Song.createLocalInstanceByUrl(url)
-    # print song
-    # song = Song.createLocalInstanceByUrl(url)
-    # print song
-    # song = Song.createLocalInstanceByUrl(url)
-    # print song
-    
-
-    artists = []
-    for i in range(1000):
-        artists.append({'name': 'val1-%s' % i})
-
-
-    with db.transaction():
-        # a = Song.insert(**{'url': '111'})
-        # print a.sql()[0]
-        # print a.__dict__
-        # db.get_cursor().executemany('INSERT INTO artist(name) VALUES (?)', artists)
-        # a.execute()
-        # Artist.insert_many(artists).execute()
-
-        for idx in range(0, len(artists), 500):
-            Artist.insert_many(artists[idx:idx+500]).execute()
-
-    # con = sqlite3.connect('existing_db.db')
-    # with open('dump.sql', 'w') as f:
-    #     for line in db.get_conn().iterdump():
-    #         f.write('%s\n' % line)
-
-    # import sqlite3
-    # conn = sqlite3.connect('example.db')
-    # # print artists
-    # c = conn.cursor()
-    # c.execute('''CREATE TABLE artist (name TEXT, name1 TEXT,name2 TEXT,name3 TEXT)''')
-    # c.executemany('INSERT INTO artist VALUES (?, ?, ? ,?)', artists)
-    # conn.commit()

@@ -5,7 +5,7 @@
 import os
 import sys
 from PyQt5.QtCore import (QObject, pyqtSignal, pyqtSlot,
-                          pyqtProperty, QUrl, QDate, QDir, QTimer)
+                          pyqtProperty, QUrl, QDate, QDir, QTimer, QRunnable, QThreadPool)
 from PyQt5.QtGui import QCursor
 from .utils import registerContext, contexts
 from .utils import duration_to_string
@@ -17,12 +17,36 @@ import copy
 import datetime
 
 
+class DBRunnable(QRunnable):
+
+    def __init__(self, worker, songs):
+        super(DBRunnable, self).__init__()
+        self.worker = worker
+        self.songs = songs
+
+    def run(self):
+        self.worker.saveSongs(self.songs)
+
+
+class RestoreDBRunnable(QRunnable):
+
+    def __init__(self, worker, songs):
+        super(RestoreDBRunnable, self).__init__()
+        self.worker = worker
+        self.songs = songs
+
+    def run(self):
+        self.worker.saveSongs(self.songs)
+        self.worker.restoreSongsSuccessed.emit()
+
 class DBWorker(QObject):
+
+    restoreSongsSuccessed = pyqtSignal()
 
     def __init__(self):
         super(DBWorker, self).__init__()
         db.connect()
-        db.create_tables([Song, Artist, Album, Folder, Playlist, SongPlaylist], safe=True)
+        db.create_tables([Song, Artist, Album, Folder], safe=True)
         self._count = 0
         # self.loadDB()
 
@@ -54,11 +78,20 @@ class DBWorker(QObject):
                 logger.error(e)
         QTimer.singleShot(100 * self._count, writeToDB)
 
-    @dthread
     def addSongs(self, songs):
+        d = DBRunnable(self, songs)
+        QThreadPool.globalInstance().start(d)
+
+    def restoreSongs(self, songs):
+        d = RestoreDBRunnable(self, songs)
+        QThreadPool.globalInstance().start(d)
+
+    @classmethod
+    def saveSongs(self, songs):
         created_date = datetime.datetime.now()
         for song in songs:
-            song['created_date'] = created_date
+            if 'created_date' not in songs:
+                song['created_date'] = created_date
         songs = copy.deepcopy(songs)
         artists = []
         albums = []

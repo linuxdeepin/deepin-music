@@ -69,6 +69,7 @@ class ModelMetaclass(type):
 
             def __init__(self, *args, **kwargs):
                 super(DObject, self).__init__()
+                self.__class__.__name__ = clsname
                 for key, Type, default in Fields:
                     self.__dict__['_' + key] = kwargs.get(key, default)
 
@@ -255,6 +256,5 @@ class Object_Dict(dict):
 
 
 # if __name__ == '__main__':
-#     test_Json()
-#     test_attr()
-#     test_slot()
+#     car = Car()
+#     print car.__class__

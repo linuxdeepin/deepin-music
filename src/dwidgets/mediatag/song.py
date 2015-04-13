@@ -197,13 +197,12 @@ class Song(dict):
             #     self["discnumber"] = discnumber
             #     value = int(value[:value.rfind("/")])
         elif key == 'date':
-            try:
-                value = int(value)
-            except:
-                value = int(value.split('-')[0])
+            if isinstance(value, int):
+                value = str(value).decode('utf-8')
 
         elif key == 'genre':
-            value = str(value)
+            if isinstance(value, int):
+                value = str(value)
 
         elif key == "discnumber":
             # if isinstance(value, str):
@@ -211,7 +210,6 @@ class Song(dict):
         elif key in ['title', 'artist', 'album']:
             if not value:
                 value = 'unknown'
-
         if value is None:        
             if key in self:
                 super(Song, self).__delitem__(key)
