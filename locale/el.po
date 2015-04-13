@@ -5,14 +5,14 @@
 # Translators:
 # GoldBlossom <angelnonis@gmail.com>, 2014
 # Jim Spentzos <jimspentzos2000@gmail.com>, 2014
-# Jim Spentzos <jimspentzos2000@gmail.com>, 2014
+# Jim Spentzos <jimspentzos2000@gmail.com>, 2014-2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Deepin Music\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-02-03 16:14+0800\n"
-"PO-Revision-Date: 2015-02-03 09:03+0000\n"
-"Last-Translator: deepin_transifex <xiabin@linuxdeepin.com>\n"
+"PO-Revision-Date: 2015-04-05 14:42+0000\n"
+"Last-Translator: Jim Spentzos <jimspentzos2000@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/projects/p/deepin-music/language/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1282,61 +1282,61 @@ msgstr "CD Ήχου"
 #: ../plugins/musicfm/radio_home_page.py:73
 #: ../plugins/musicfm/radio_browser.py:79
 msgid "Hot MHz"
-msgstr ""
+msgstr "Hot MHz"
 
 #: ../plugins/musicfm/radio_home_page.py:73
 #: ../plugins/musicfm/radio_browser.py:81
 msgid "Pop MHz"
-msgstr ""
+msgstr "Pop MHz"
 
 #: ../plugins/musicfm/__init__.py:33 ../plugins/musicfm/__init__.py:35
 #: ../plugins/musicfm/radio_view.py:474
 msgid "MusicFM"
-msgstr ""
+msgstr "MusicFM"
 
 #: ../plugins/musicfm/radio_item.py:508
 msgid "More"
-msgstr ""
+msgstr "Περισσότερα"
 
 #: ../plugins/musicfm/radio_genre_page.py:44
 msgid "Jazz"
-msgstr ""
+msgstr "Τζαζ"
 
 #: ../plugins/musicfm/radio_genre_page.py:45
 msgid "Folk/Country"
-msgstr ""
+msgstr "Παραδοσιακή/Κάντρι"
 
 #: ../plugins/musicfm/radio_genre_page.py:48
 msgid "OST"
-msgstr ""
+msgstr "OST"
 
 #: ../plugins/musicfm/radio_genre_page.py:49
 msgid "Light"
-msgstr ""
+msgstr "Ελαφριά"
 
 #: ../plugins/musicfm/radio_genre_page.py:50
 msgid "Hip-Hop/Rap"
-msgstr ""
+msgstr "Χιπ Χοπ/Ραπ"
 
 #: ../plugins/musicfm/radio_genre_page.py:51
 msgid "Reggae"
-msgstr ""
+msgstr "Ρέγκε"
 
 #: ../plugins/musicfm/radio_genre_page.py:52
 msgid "Latino"
-msgstr ""
+msgstr "Λατίνο"
 
 #: ../plugins/musicfm/radio_genre_page.py:53
 msgid "World"
-msgstr ""
+msgstr "Παγκόσμια"
 
 #: ../plugins/musicfm/radio_genre_page.py:54
 msgid "Blues"
-msgstr ""
+msgstr "Μπλουζ"
 
 #: ../plugins/musicfm/radio_genre_page.py:55
 msgid "Funk/Soul/R&B"
-msgstr ""
+msgstr "Φανκ/Σουλ/R&B"
 
 #: ../plugins/musicfm/radio_browser.py:78
 msgid "Home"
@@ -1344,4 +1344,4 @@ msgstr "Προσωπικός φάκελος"
 
 #: ../plugins/musicfm/radio_browser.py:80
 msgid "Genres MHz"
-msgstr ""
+msgstr "Genres MHz"
