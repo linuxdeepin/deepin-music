@@ -8,7 +8,8 @@ Rectangle {
     DGridView {
         id: folderView
         anchors.leftMargin: 20
-        cellWidth: 64 + 96
+        anchors.rightMargin: 40
+        cellWidth: 64 + 88
         cellHeight: 64 + 12 + 12 + 30 + 10
         model: folderListModel
         delegate: ItemDelegate{

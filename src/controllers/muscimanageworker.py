@@ -233,6 +233,9 @@ class MusicManageWorker(QObject):
             self._artistObjs[artist.name] = artistObj
             self._artistObjsListModel.append(artistObj)
 
+            if not CoverWorker.isArtistCoverExisted(artist.name):
+                self.downloadArtistCover.emit(artist.name)
+
         # if Album.select().count() > 0:
         for album in Album.select().order_by(Album.name):
             albumDict = {
@@ -251,6 +254,9 @@ class MusicManageWorker(QObject):
             self._albumObjs[album.name] = albumObj
             self._albumObjsListModel.append(albumObj)
 
+            if not CoverWorker.isAlbumCoverExisted(album.artist, album.name):
+                self.downloadAlbumCover.emit(album.artist, album.name)
+
         # if Folder.select().count() > 0:
         for folder in Folder.select().order_by(Folder.name):
             folderDict = {
@@ -267,16 +273,16 @@ class MusicManageWorker(QObject):
             self._folderObjs[folder.name] = folderObj
             self._folderObjsListModel.append(folderObj)
 
-        for artistObj in self._artistObjsListModel.data:
-            artist = artistObj.name
-            if not CoverWorker.isArtistCoverExisted(artist):
-                self.downloadArtistCover.emit(artist)
+        # for artistObj in self._artistObjsListModel.data:
+        #     artist = artistObj.name
+        #     if not CoverWorker.isArtistCoverExisted(artist):
+        #         self.downloadArtistCover.emit(artist)
 
-        for albumObj in self._albumObjsListModel.data:
-            album = albumObj.name
-            artist = albumObj.artist
-            if not CoverWorker.isAlbumCoverExisted(artist, album):
-                self.downloadAlbumCover.emit(artist, album)
+        # for albumObj in self._albumObjsListModel.data:
+        #     album = albumObj.name
+        #     artist = albumObj.artist
+        #     if not CoverWorker.isAlbumCoverExisted(artist, album):
+        #         self.downloadAlbumCover.emit(artist, album)
 
     @pyqtProperty('QVariant', notify=categoriesChanged)
     def categories(self):
