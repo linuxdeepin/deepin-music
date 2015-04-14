@@ -9,9 +9,10 @@ Rectangle {
     property var name
     property var count
 
+    property var spacing: 56
     property var contentWidth: 108
 
-    width: item.contentWidth + 56
+    width: item.contentWidth + item.spacing
     height: item.contentWidth + 12 + 12 + 18
 
     Rectangle {

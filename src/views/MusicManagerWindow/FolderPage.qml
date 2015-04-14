@@ -7,8 +7,14 @@ Rectangle {
 
     DGridView {
         id: folderView
+        anchors.leftMargin: 20
+        cellWidth: 64 + 96
+        cellHeight: 64 + 12 + 12 + 30 + 10
         model: folderListModel
         delegate: ItemDelegate{
+            spacing: 96
+            contentWidth: 64
+            height: 64 + 12 + 12 + 30
             cover: folderView.model.get(index).cover
             name: folderView.model.get(index).name
             count: folderView.model.get(index).count
