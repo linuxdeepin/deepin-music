@@ -20,3 +20,8 @@ class UtilWorker(QObject):
     @pyqtSlot(int, result='QString')
     def duration_to_string(self, duration):
         return duration_to_string(duration)
+
+
+    @pyqtSlot('QString', result='QString')
+    def basename(self, path):
+        return os.path.basename(path)

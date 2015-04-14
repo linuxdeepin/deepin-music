@@ -14,9 +14,9 @@ GridView {
     snapMode: GridView.SnapToRow 
     focus: true
 
-    signal play(string name)
-    signal clicked(string name)
-    signal rightClicked(string name)
+    signal play(string name, int index)
+    signal clicked(string name, int index)
+    signal rightClicked(string name, int index)
 
     DScrollBar {
         flickable: parent

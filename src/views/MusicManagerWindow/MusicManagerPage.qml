@@ -4,6 +4,8 @@ import "../DMusicWidgets"
 Rectangle {
     id: rootWindow
 
+    signal clearDetailLoader()
+
     Column {
         id: layout
 
@@ -131,6 +133,12 @@ Rectangle {
         visible: false
     }
 
+
+    Loader {
+        id: detailLoader
+        anchors.fill: parent
+    }
+
     MusicManagerController {
         id: musicManagerController
         rootWindow: rootWindow
@@ -138,7 +146,7 @@ Rectangle {
         statusText: statusText
         scanStatusText: scanStatusText
         musicManagerLoader: musicManagerLoader
-
+        detailLoader: detailLoader
         noMusicTip: noMusicTip
         linkTipText: linkTipText
 

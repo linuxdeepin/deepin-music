@@ -51,6 +51,7 @@ class LevelJsonDict(LevelDict):
         try:
             LevelDict.__setitem__(self, json.dumps(key), json.dumps(value))
         except Exception, e:
+            raise e
             print key, value
 
     def __delitem__(self, key):

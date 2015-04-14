@@ -10,7 +10,7 @@ Item {
         }
 
         onClicked:{
-            print(name, 'onClicked')
+            MusicManageWorker.detailAlbum(name, index)
         }
 
         onRightClicked:{

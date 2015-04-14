@@ -5,6 +5,8 @@ import "../DMusicWidgets"
 Rectangle {
     id: root
 
+    property var model: albumListModel
+
     DGridView {
         id: albumView
         model: albumListModel

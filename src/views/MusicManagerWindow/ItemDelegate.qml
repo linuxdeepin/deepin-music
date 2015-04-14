@@ -21,69 +21,14 @@ Rectangle {
         anchors.rightMargin: 28
         Column {
 
-            Item {
+            ImageItem {
+                source: item.cover
                 width: item.contentWidth
                 height: item.contentWidth
-
-                Image {
-                    asynchronous: true
-                    width: item.contentWidth
-                    height: item.contentWidth
-                    source: item.cover
-                }
-
-                MouseArea {
-                    anchors.fill: parent
-                    acceptedButtons:  Qt.LeftButton | Qt.RightButton
-                    propagateComposedEvents: true
-                    hoverEnabled: true
-                    onEntered: {
-                        playButton.visible = true;
-                    }
-                    onExited: {
-                        playButton.visible = false;
-                    }
-                    onClicked: {
-                        if (mouse.button == Qt.LeftButton){
-                            item.GridView.view.clicked(item.name);
-                            mouse.accpted = true
-                        }else if (mouse.button == Qt.RightButton){
-                            item.GridView.view.rightClicked(item.name);
-                            mouse.accpted = true
-                        }
-                    }
-
-                    onPressed:{
-                        mouse.accepted = true;
-                    }
-
-                    onDoubleClicked:{
-                        mouse.accepted = false;
-                    }
-
-                    onPositionChanged:{
-                        mouse.accepted = false;
-                    }
-                }
-
-                DPlayButton {
-                    id: playButton
-                    anchors.centerIn: parent
-                    width: 40
-                    height: 40
-                    visible: false
-                    onHovered:{
-                        visible = true;
-                    }
-                    onClicked:{
-                        item.GridView.view.play(item.name);
-                    }
-
-                    
-                }
+                onPlay: item.GridView.view.play(item.name, index)
+                onClicked : item.GridView.view.clicked(item.name, index)
+                onRightClicked: item.GridView.view.rightClicked(item.name, index)
             }
-            
-
            
             Item {
                 width: item.contentWidth

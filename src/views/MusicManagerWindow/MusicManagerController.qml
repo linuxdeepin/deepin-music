@@ -6,6 +6,7 @@ Item {
     property var statusText
     property var scanStatusText
     property var musicManagerLoader
+    property var detailLoader
     property var noMusicTip
     property var linkTipText
 
@@ -13,6 +14,9 @@ Item {
     function initConnect() {
         MusicManageWorker.songCountChanged.connect(showArtistPage);
         MusicManageWorker.tipMessageChanged.connect(updateStatusText);
+        MusicManageWorker.detailArtist.connect(showDetailArtist)
+        MusicManageWorker.detailAlbum.connect(showDetailAlbum)
+        MusicManageWorker.detailFolder.connect(showDetailFolder)
     }
 
     function showArtistPage(){
@@ -22,6 +26,27 @@ Item {
             linkTipText.visible = false;
             updateWindow(catgoryCombox.currentIndex);
         }
+    }
+
+    function showDetailArtist(name, index) {
+        MusicManageWorker.updateDetailSongObjsByArtist(name)
+        detailLoader.setSource('./DetailPage.qml', { 
+            'model': musicManagerLoader.item.model.get(index),
+            'type': 'Artist',
+            'parentItem':rootWindow
+        })
+    }
+
+    function showDetailAlbum(name, index) {
+        MusicManageWorker.updateDetailSongObjsByAlbum(name)
+        detailLoader.setSource('./DetailPage.qml', { 
+            'model': musicManagerLoader.item.model.get(index),
+            'type': 'Album',
+            'parentItem': rootWindow})
+    }
+
+    function showDetailFolder(name, index) {
+        // print(FolderListModel.data[index].name)
     }
 
     function updateWindow(index) {
@@ -56,23 +81,20 @@ Item {
         }
     }
 
-    // Binding {
-    //     target: rootWindow
-    //     property: 'visible'
-    //     value: MusicManageWorker.songCount
-    // }
-
     Connections {
         target: rootWindow
         onVisibleChanged: {
             if (visible == true){
                 if (MusicManageWorker.songCount == 0){
-                    print('+++++++++', MusicManageWorker.songCount)
                     noMusicTip.visible = true;
                 }else{
                     noMusicTip.visible = false;
                 }
             }
+        }
+
+        onClearDetailLoader:{
+            detailLoader.setSource('')
         }
     }
 

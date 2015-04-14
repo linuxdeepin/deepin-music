@@ -17,7 +17,7 @@ Rectangle {
             contentWidth: 64
             height: 64 + 12 + 12 + 30
             cover: folderView.model.get(index).cover
-            name: folderView.model.get(index).name
+            name:  UtilWorker.basename(folderView.model.get(index).name)
             count: folderView.model.get(index).count
         }
     }
@@ -29,5 +29,6 @@ Rectangle {
 
     FolderController {
         folderView: folderView
+        folderListModel: folderListModel
     }
 }

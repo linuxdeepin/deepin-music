@@ -106,6 +106,7 @@ class SongListModel(DListModel):
     def __init__(self, dataTye):
         super(SongListModel, self).__init__(dataTye)
 
+
 class ArtistListModel(DListModel):
 
     __contextName__ = 'ArtistListModel'
@@ -129,6 +130,14 @@ class FolderListModel(DListModel):
     @registerContext
     def __init__(self, dataTye):
         super(FolderListModel, self).__init__(dataTye)
+
+class DetailSongListModel(DListModel):
+
+    __contextName__ = 'DetailSongListModel'
+
+    @registerContext
+    def __init__(self, dataTye):
+        super(DetailSongListModel, self).__init__(dataTye)
 
 
 class MusicManageWorker(QObject):
@@ -161,6 +170,11 @@ class MusicManageWorker(QObject):
     playFolder = pyqtSignal('QString')
     playSong = pyqtSignal('QString')
 
+    #qml2qml 
+    detailArtist = pyqtSignal('QString', int)
+    detailAlbum = pyqtSignal('QString', int)
+    detailFolder = pyqtSignal('QString', int)
+
     __contextName__ = 'MusicManageWorker'
 
     songsPath = os.path.join(MusicManagerPath, 'songs.json')
@@ -189,6 +203,7 @@ class MusicManageWorker(QObject):
         self._artistObjsListModel = ArtistListModel(QmlArtistObject)
         self._albumObjsListModel = AlbumListModel(QmlAlbumObject)
         self._folderObjsListModel = FolderListModel(QmlFolderObject)
+        self._detailSongObjsListModel = DetailSongListModel(QmlSongObject)
 
     def initConnect(self):
         self.searchAllDriver.connect(self.searchAllDriverMusic)
@@ -273,17 +288,6 @@ class MusicManageWorker(QObject):
             self._folderObjs[folder.name] = folderObj
             self._folderObjsListModel.append(folderObj)
 
-        # for artistObj in self._artistObjsListModel.data:
-        #     artist = artistObj.name
-        #     if not CoverWorker.isArtistCoverExisted(artist):
-        #         self.downloadArtistCover.emit(artist)
-
-        # for albumObj in self._albumObjsListModel.data:
-        #     album = albumObj.name
-        #     artist = albumObj.artist
-        #     if not CoverWorker.isAlbumCoverExisted(artist, album):
-        #         self.downloadAlbumCover.emit(artist, album)
-
     @pyqtProperty('QVariant', notify=categoriesChanged)
     def categories(self):
         i18nWorker = contexts['I18nWorker']
@@ -295,6 +299,24 @@ class MusicManageWorker(QObject):
             {'name': i18nWorker.folder}
         ]
         return categories
+
+    @pyqtSlot('QString', result=QVariant)
+    def updateDetailSongObjsByArtist(self, artist):
+        artistDict = self._artistsDict[artist]
+        songs = artistDict['songs']
+        self._detailSongObjsListModel.clear()
+        for url, obj in self._songObjs.items():
+            if url in songs:
+                self._detailSongObjsListModel.append(obj)
+
+    @pyqtSlot('QString', result=QVariant)
+    def updateDetailSongObjsByAlbum(self, album):
+        albumDict = self._albumsDict[album]
+        songs = albumDict['songs']
+        self._detailSongObjsListModel.clear()
+        for url, obj in self._songObjs.items():
+            if url in songs:
+                self._detailSongObjsListModel.append(obj)
 
     @pyqtProperty('QVariant', notify=songCountChanged)
     def songCount(self):

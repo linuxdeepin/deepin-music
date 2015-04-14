@@ -336,11 +336,11 @@ class CoverWorker(QObject):
         self.albumCovers = {}
 
     def cacheArtistCover(self, artist, url):
-        print artist, url
+        # print artist, url
         self.artistCovers[artist]  = url
 
     def cacheAlbumCover(self, artist, album, url):
-        print artist, album, url
+        # print artist, album, url
         self.albumCovers[album] = url
 
     def downloadArtistCover(self, artist):

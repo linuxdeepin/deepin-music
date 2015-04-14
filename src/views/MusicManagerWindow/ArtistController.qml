@@ -10,7 +10,7 @@ Item {
         }
 
         onClicked:{
-            print(name, 'onClicked')
+            MusicManageWorker.detailArtist(name, index)
         }
 
         onRightClicked:{

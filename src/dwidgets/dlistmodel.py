@@ -131,7 +131,6 @@ class DListModel(QObject):
         a = []
         for obj in self._data:
             a.append(obj.count)
-        print a
 
     def remove(self, index):
         self._data.pop(index)

@@ -107,9 +107,14 @@ class DRealLocalMediaContent(BaseMediaContent):
         if 'artist' in self._tags:
             self.artist = self._tags['artist']
 
+        if 'album' in self._tags:
+            self.album = self._tags['album']
+
         if 'cover' in self._tags:
             if CoverWorker.isSongCoverExisted(self.artist, self.title):
                 self.cover = CoverWorker.getCoverPathByArtistSong(self.artist, self.title)
+            elif CoverWorker.isAlbumCoverExisted(self.artist, self.album):
+                self.cover = CoverWorker.getCoverPathByArtistAlbum(self.artist, self.album)
             else:
                 self.cover = CoverWorker.getCoverPathByArtist(self.artist)
 

@@ -2,15 +2,16 @@ import QtQuick 2.4
 
 Item {
     property var folderView
+    property var folderListModel
 
     Connections {
         target: folderView
         onPlay: {
-            MusicManageWorker.playFolder(name)
+            MusicManageWorker.playFolder(folderListModel.get(index).name)
         }
 
         onClicked:{
-            print(name)
+            MusicManageWorker.detailFolder(name, index)
         }
 
         onRightClicked:{
