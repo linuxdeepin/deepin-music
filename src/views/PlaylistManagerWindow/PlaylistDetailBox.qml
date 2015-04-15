@@ -8,6 +8,16 @@ Rectangle {
     property var titleText: titleText
     property var noMusicTip: noMusicTip
     property var linkTipText: linkTipText
+    property var currentPlayListName: ConfigWorker.lastPlaylistName
+    property var songListModel: songListModel
+
+
+    function getModel(){
+        if (currentPlayListName){
+            var model = eval(currentPlayListName);
+            return model;
+        }
+    }
 
     Rectangle {
         id: detailBox
@@ -108,6 +118,7 @@ Rectangle {
                     clip: true
                     highlightMoveDuration: 1
                     delegate: MusicDelegate {}
+                    model: songListModel
                     focus: true
                     spacing: 14
                     snapMode:ListView.SnapToItem
@@ -120,6 +131,11 @@ Rectangle {
                     }
 
                     Component.onCompleted: positionViewAtIndex(currentIndex, ListView.Center)
+                }
+
+                DListModel {
+                    id: songListModel
+                    pymodel: playlistDetailBox.getModel()
                 }
 
                 Rectangle {

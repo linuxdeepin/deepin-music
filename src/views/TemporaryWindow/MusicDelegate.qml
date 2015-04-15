@@ -29,13 +29,7 @@ Rectangle {
                 id: waveBar
                 itemHeight: 16
                 itemWidth: 3
-                active: {
-                    if (MediaPlayer.state == 1){
-                        return true;
-                    }else{
-                        return false;
-                    }
-                }
+                active: false
             }
 
             DPlayButton {
@@ -93,6 +87,7 @@ Rectangle {
             when: mediaItem.ListView.isCurrentItem
             PropertyChanges { target: musicText; color: "#2ca7f8";}
             PropertyChanges { target: durationText; color: "#2ca7f8";}
+            PropertyChanges { target: waveBar; active: true ;}
         },
         State {
             name: "!Current"
@@ -122,7 +117,6 @@ Rectangle {
             if (mouse.button == Qt.LeftButton){
                 mediaItem.ListView.view.currentIndex = index;
                 if (playButton.visible){
-                    var url = mediaItem.ListView.view.model[index].url
                     mediaItem.ListView.view.playMusicByUrl(url);
                 }
                 playButton.visible = false;

@@ -48,6 +48,11 @@ ListModel {
         listModel.setPropertySignal(index, property, value);
     }
 
+    // onPymodelChanged:{
+    //     listModel.clear();
+    //     initModel();
+    // }
+
     Component.onCompleted: {
         initModel();
         listModel.appendSignal.connect(pymodel.qml2Py_appendSignal)

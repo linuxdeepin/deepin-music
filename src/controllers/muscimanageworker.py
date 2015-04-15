@@ -68,7 +68,12 @@ class QmlSongObject(QObject):
 
     @cover.setter
     def cover(self, cover):
-        self._cover = cover
+        if CoverWorker.isSongCoverExisted(self.artist, self.title):
+            self._cover = CoverWorker.getCoverPathByArtistSong(self.artist, self.title)
+        elif CoverWorker.isAlbumCoverExisted(self.artist, self.album):
+            self._cover = CoverWorker.getCoverPathByArtistAlbum(self.artist, self.album)
+        else:
+            self._cover = CoverWorker.getCoverPathByArtist(self.artist)
         return self._cover
 
 class QmlArtistObject(QObject):

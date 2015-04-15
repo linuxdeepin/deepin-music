@@ -106,6 +106,7 @@ class DListModel(QObject):
     def clear(self):
         del self._data[:]
         self.py2qml_clearSignal.emit()
+        self.countChanged.emit(len(self._data))
 
     def get(self, index):
         if index < len(self._data):
@@ -119,6 +120,7 @@ class DListModel(QObject):
             obj = self.dataTye(**_obj)
         self._data.insert(index, obj)
         self.py2qml_insertSignal.emit(index, obj)
+        self.countChanged.emit(len(self._data))
 
     def move(self, _from, _to, _n):
         dataMoved = []
@@ -136,6 +138,7 @@ class DListModel(QObject):
     def remove(self, index):
         self._data.pop(index)
         self.py2qml_removeSignal.emit(index)
+        self.countChanged.emit(len(self._data))
 
     def set(self, index, obj):
         if index < len(self._data):

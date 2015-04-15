@@ -80,6 +80,13 @@ Item {
         }
     }
 
+    function getModel(){
+        if (currentPlaylistName){
+            var model = eval(currentPlaylistName);
+            return model;
+        }
+    }
+
     Binding { 
         target: playlistNavgationBar.customPlaylistView
         property: 'model'
@@ -87,14 +94,9 @@ Item {
     }
 
     Binding {
-        target: playlistDetailBox.playlistView
-        property: 'model'
-        value:{
-            if (currentPlaylistName) {
-                var medias = PlaylistWorker.getMediasByName(currentPlaylistName);
-                return medias
-            }
-        }
+        target: playlistDetailBox
+        property: 'currentPlaylistName'
+        value: currentPlaylistName
     }
 
     Binding {
@@ -164,6 +166,10 @@ Item {
             }
 
             currentPlaylistName = nameId;
+
+            print(getModel())
+            playlistDetailBox.songListModel.pymodel = getModel()
+
             activeCurrentItem();
 
             if (playlistDetailBox.playlistView.count == 0){

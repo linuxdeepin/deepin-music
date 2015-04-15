@@ -55,7 +55,7 @@ Rectangle {
                 font.pixelSize: 12
                 elide: Text.ElideRight
                 verticalAlignment: Text.AlignVCenter
-                text: mediaItem.ListView.view.model[index].title
+                text: title
             }
 
             Text {
@@ -66,7 +66,7 @@ Rectangle {
                 font.pixelSize: 12
                 elide: Text.ElideRight
                 verticalAlignment: Text.AlignVCenter
-                text: mediaItem.ListView.view.model[index].artist
+                text: artist
             }
 
             Text {
@@ -77,7 +77,7 @@ Rectangle {
                 font.pixelSize: 12
                 elide: Text.ElideRight
                 verticalAlignment: Text.AlignVCenter
-                text: UtilWorker.duration_to_string(mediaItem.ListView.view.model[index].duration)
+                text: UtilWorker.duration_to_string(duration)
             }
         }
     }
@@ -121,7 +121,6 @@ Rectangle {
         onClicked: {
             if (mouse.button == Qt.LeftButton){
                 mediaItem.ListView.view.currentIndex = index;
-                var url = mediaItem.ListView.view.model[index].url
                 mediaItem.ListView.view.playMusicByUrl(url);
                 waveBar.active = true
             }
