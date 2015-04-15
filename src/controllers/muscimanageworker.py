@@ -309,6 +309,8 @@ class MusicManageWorker(QObject):
         for url, obj in self._songObjs.items():
             if url in songs:
                 self._detailSongObjsListModel.append(obj)
+        print  len(self._artistsDict), songs, artistDict
+        print('++++++++++', len(self._songObjs), len(songs), self._detailSongObjsListModel.count)
 
     @pyqtSlot('QString', result=QVariant)
     def updateDetailSongObjsByAlbum(self, album):
@@ -413,16 +415,19 @@ class MusicManageWorker(QObject):
         # add or update artist view
         artist = songDict['artist']
         if artist not in self._artistsDict:
-            self._artistsDict[artist] = {
+            _artistDict = {
                 'name': artist,
                 'count': 0,
                 'cover': CoverWorker.getCoverPathByArtist(artist),
                 'songs': {}
             }
-        _artistDict = self._artistsDict[artist]
+        self._artistsDict[artist] = _artistDict
         songs = _artistDict['songs']
-        songs.update({url: songDict})
+        songs[url] = songDict
         _artistDict['count'] = len(songs)
+        # self._artistsDict[artist] = _artistDict
+
+        print(id(self._artistsDict[artist]), id(_artistDict))
 
         if artist not in self._artistObjs:
             artistObj = QmlArtistObject(**_artistDict)
