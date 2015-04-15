@@ -46,7 +46,11 @@ Item {
     }
 
     function showDetailFolder(name, index) {
-        // print(FolderListModel.data[index].name)
+        var folderName = FolderListModel.data[index].name;
+        MusicManageWorker.updateDetailSongObjsByFolder(folderName);
+        detailLoader.setSource('./FolderDetailPage.qml', {
+            'type': 'Folder',
+            'parentItem': rootWindow})
     }
 
     function updateWindow(index) {

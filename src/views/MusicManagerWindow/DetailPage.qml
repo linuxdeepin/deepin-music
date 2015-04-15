@@ -73,7 +73,6 @@ Rectangle {
                             elide: Text.ElideRight
                             verticalAlignment: Text.AlignVCenter
                             text: {
-                                print(model.artist)
                                 if (model.artist == undefined){
                                     return ''
                                 }else{

@@ -1,20 +1,17 @@
 import QtQuick 2.4
 
 Item {
-
-    property var songsView
-
+    property var folderView
     function playMusicByUrl(url) {
         MusicManageWorker.playSong(url);
         MediaPlayer.playLocalMedia(url);
     }
 
     Connections {
-        target: songsView
+        target: folderView
 
         onPlayMusicByUrl: {
             playMusicByUrl(url);
         }
     }
-
 }

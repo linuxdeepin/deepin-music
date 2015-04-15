@@ -64,6 +64,10 @@ Item {
         onHovered:{
             visible = true;
         }
+
+        onExited: {
+            visible = false;
+        }
         onClicked:{
             root.play(item.name, index);
         }

@@ -174,6 +174,7 @@ class MusicManageWorker(QObject):
     detailArtist = pyqtSignal('QString', int)
     detailAlbum = pyqtSignal('QString', int)
     detailFolder = pyqtSignal('QString', int)
+    
 
     __contextName__ = 'MusicManageWorker'
 
@@ -313,6 +314,15 @@ class MusicManageWorker(QObject):
     def updateDetailSongObjsByAlbum(self, album):
         albumDict = self._albumsDict[album]
         songs = albumDict['songs']
+        self._detailSongObjsListModel.clear()
+        for url, obj in self._songObjs.items():
+            if url in songs:
+                self._detailSongObjsListModel.append(obj)
+
+    @pyqtSlot('QString', result=QVariant)
+    def updateDetailSongObjsByFolder(self, folder):
+        folderDict = self._foldersDict[folder]
+        songs = folderDict['songs']
         self._detailSongObjsListModel.clear()
         for url, obj in self._songObjs.items():
             if url in songs:

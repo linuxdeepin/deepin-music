@@ -20,6 +20,7 @@ class MainWindow(BaseWindow):
     @registerContext
     def __init__(self):
         super(MainWindow, self).__init__()
+        self.setPosition(-100, -100)
 
     def mousePressEvent(self, event):
         # 鼠标点击事件
