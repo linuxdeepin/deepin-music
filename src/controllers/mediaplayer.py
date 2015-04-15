@@ -11,10 +11,9 @@ from PyQt5.QtGui import QCursor
 from .utils import registerContext, contexts
 from .utils import duration_to_string
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent, QMediaPlaylist
-from .playlistworker import DRealLocalMediaContent, DRealOnlineMediaContent
 from .coverworker import CoverWorker
 from log import logger
-
+from .muscimanageworker import MusicManageWorker
 
 
 class PlayerBin(QMediaPlayer):
@@ -184,11 +183,9 @@ class MediaPlayer(QObject):
         try:
             index = self._playlist.currentIndex()
             urls = self._playlist.urls
-            mediaContents =  self._playlist.mediaContents
             if index < len(urls):
-                mediaContent = mediaContents[urls[index]]
-                mediaContent.tags.update({'duration': duration})
-                mediaContent.duration = duration
+                url = urls[index]
+
         except Exception, e:
             raise e
 
@@ -203,11 +200,11 @@ class MediaPlayer(QObject):
         if duration <= 0:
             index = self._playlist.currentIndex()
             urls = self._playlist.urls
-            mediaContents =  self._playlist.mediaContents
-            if index < len(urls):
-                mediaContent = mediaContents[urls[index]]
-                if 'duration' in mediaContent.tags:
-                    duration = mediaContent.tags['duration']
+            # mediaContents =  self._playlist.mediaContents
+            # if index < len(urls):
+            #     mediaContent = mediaContents[urls[index]]
+            #     if 'duration' in mediaContent.tags:
+            #         duration = mediaContent.tags['duration']
         return duration_to_string(duration)
 
     @pyqtProperty(bool)
@@ -334,24 +331,24 @@ class MediaPlayer(QObject):
     @pyqtSlot(int)
     def playMediaByIndex(self, index):
         urls = self._playlist.urls
-        mediaContents =  self._playlist.mediaContents
+        # mediaContents =  self._playlist.mediaContents
 
-        if index < len(urls) and index > 0:
-            mediaContent = mediaContents[urls[index]]
-            url = mediaContent.url
+        # if index < len(urls) and index > 0:
+        #     mediaContent = mediaContents[urls[index]]
+        #     url = mediaContent.url
 
-            if isinstance(mediaContent, DRealLocalMediaContent):
-                playurl = mediaContent.url
-                self.setMediaUrl(playurl)
-                self.title = mediaContent.title
-                self.artist = mediaContent.artist
-                self.cover = mediaContent.cover
-            elif isinstance(mediaContent, DRealOnlineMediaContent):
-                # self.title = mediaContent.title
-                # self.artist = mediaContent.artist
-                # self.cover = mediaContent.cover
-                self.requestMusic.emit(url)
-                return
+        #     if isinstance(mediaContent, DRealLocalMediaContent):
+        #         playurl = mediaContent.url
+        #         self.setMediaUrl(playurl)
+        #         self.title = mediaContent.title
+        #         self.artist = mediaContent.artist
+        #         self.cover = mediaContent.cover
+        #     elif isinstance(mediaContent, DRealOnlineMediaContent):
+        #         # self.title = mediaContent.title
+        #         # self.artist = mediaContent.artist
+        #         # self.cover = mediaContent.cover
+        #         self.requestMusic.emit(url)
+        #         return
 
             # if playurl:
             #     self.setMediaUrl(playurl)
@@ -373,16 +370,15 @@ class MediaPlayer(QObject):
 
     @pyqtSlot('QVariant')
     def playLocalMedia(self, url):
-        url = unicode(url)
         urls = self._playlist.urls
         index = urls.index(url)
         self._playlist.setCurrentIndex(index)
-        mediaContents =  self._playlist.mediaContents
-        mediaContent = mediaContents[url]
-        self.title = mediaContent.title
-        self.artist = mediaContent.artist
-        self.cover = mediaContent.cover
 
+        songObj = MusicManageWorker.getSongObjByUrl(url)
+        if songObj:
+            self.title = songObj.title
+            self.artist = songObj.artist
+            self.cover = songObj.cover
         self.setMediaUrl(url)
         self.playToggle(True)
 

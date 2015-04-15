@@ -15,6 +15,9 @@ def registerContext(func):
         func(*args, **kwargs)
     return wrapper
 
+def registerObj(name, obj):
+    print name, obj
+    contexts.update({name: obj})
 
 def duration_to_string(value, default="00:00", i=1000):
     ''' convert duration to string. '''

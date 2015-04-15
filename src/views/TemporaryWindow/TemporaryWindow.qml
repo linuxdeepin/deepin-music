@@ -10,6 +10,7 @@ DRectWithCorner {
     property var closeButton: closeButton
     property var models
     property var currentIndex: -1
+    property var datamodel
 
     rectWidth: 302 + 4
     rectHeight: 402 + 12 + 20
@@ -137,6 +138,7 @@ DRectWithCorner {
                 anchors.bottomMargin: 10
                 highlightMoveDuration: 1
                 delegate: musicDelegate
+                model: songListModel
                 focus: true
                 spacing: 8
                 displayMarginBeginning: -24
@@ -155,8 +157,14 @@ DRectWithCorner {
         }
     }
 
+    DListModel {
+        id: songListModel
+        pymodel: datamodel
+    }
+
     TemporaryWindowController {
         id: temporaryWindowController
+        temporaryWindow: temporaryWindow
         playlistView: playlistView
         clearButton: clearButton
         closeButton: closeButton

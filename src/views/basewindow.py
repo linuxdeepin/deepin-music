@@ -36,6 +36,10 @@ class BaseWindow(DQuickView):
         for key in cons:
             self.setContext(key, cons[key])
 
+    @pyqtProperty('QJSValue')
+    def globalObject(self):
+        return self.engine().globalObject()
+
     def initConnect(self):
         self.statusChanged.connect(self.trackStatus)
         self.engine().quit.connect(QGuiApplication.instance().quit)

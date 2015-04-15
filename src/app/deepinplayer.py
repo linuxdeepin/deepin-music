@@ -11,9 +11,8 @@ from controllers import contexts, Web360ApiWorker, MusicManageWorker
 from controllers import MenuWorker, WindowManageWorker
 from controllers import MediaPlayer, PlaylistWorker, CoverWorker
 from controllers import ConfigWorker, DBWorker, I18nWorker
-from controllers import UtilWorker
+from controllers import UtilWorker, registerObj
 from controllers.mediaplayer import gPlayer
-
 # from models import MusicDataBase
 
 import config

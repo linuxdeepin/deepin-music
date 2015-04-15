@@ -92,6 +92,10 @@ class ModelMetaclass(type):
                           for key, value, default in Fields)
                 return '<%s (%s)>' % (clsname, ', '.join(values))
 
+            def __getitem__(self, key):
+                print key, '+++'
+                return self.__dict__['_' + key]
+
             @pyqtSlot(dict)
             def setDict(self, obj):
                 self.setJsoning = True

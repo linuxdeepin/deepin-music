@@ -49,10 +49,27 @@ class QmlSongObject(QObject):
         ('created_date', 'QString'),
     )
 
+    coverChanged = pyqtSignal()
+
     def initialize(self, *agrs, **kwargs):
         if 'created_date' in kwargs:
             kwargs['created_date'] = kwargs['created_date'].strftime('%Y-%m-%d %H:%M:%S')
         self.setDict(kwargs)
+
+    @pyqtProperty('QString', notify=coverChanged)
+    def cover(self):
+        if CoverWorker.isSongCoverExisted(self.artist, self.title):
+            self._cover = CoverWorker.getCoverPathByArtistSong(self.artist, self.title)
+        elif CoverWorker.isAlbumCoverExisted(self.artist, self.album):
+            self._cover = CoverWorker.getCoverPathByArtistAlbum(self.artist, self.album)
+        else:
+            self._cover = CoverWorker.getCoverPathByArtist(self.artist)
+        return self._cover
+
+    @cover.setter
+    def cover(self, cover):
+        self._cover = cover
+        return self._cover
 
 class QmlArtistObject(QObject):
 
@@ -62,7 +79,7 @@ class QmlArtistObject(QObject):
         ('name', 'QString'),
         ('count', int),
         ('cover', 'QString'),
-        ('songs', dict),
+        # ('songs', dict),
     )
 
     def initialize(self, *agrs, **kwargs):
@@ -77,7 +94,7 @@ class QmlAlbumObject(QObject):
         ('artist', 'QString'),
         ('count', int),
         ('cover', 'QString'),
-        ('songs', dict),
+        # ('songs', dict),
     )
 
     def initialize(self, *agrs, **kwargs):
@@ -91,7 +108,7 @@ class QmlFolderObject(QObject):
         ('name', 'QString'),
         ('count', int),
         ('cover', 'QString'),
-        ('songs', dict),
+        # ('songs', dict),
     )
 
     def initialize(self, *agrs, **kwargs):
@@ -148,7 +165,7 @@ class MusicManageWorker(QObject):
     saveSongToDB = pyqtSignal(dict)
     saveSongsToDB = pyqtSignal(list)
     restoreSongsToDB = pyqtSignal(list)
-    addSongToPlaylist = pyqtSignal(dict)
+    addSongToPlaylist = pyqtSignal('QString')
     addSongsToPlaylist = pyqtSignal(list)
     playSongByUrl = pyqtSignal('QString')
 
@@ -183,28 +200,26 @@ class MusicManageWorker(QObject):
     albumsPath = os.path.join(MusicManagerPath, 'albums.json')
     foldersPath = os.path.join(MusicManagerPath, 'folders.json')
 
+    _songsDict = LevelJsonDict(os.path.join(LevevDBPath, 'song'))
+    _artistsDict =  LevelJsonDict(os.path.join(LevevDBPath, 'artist'))
+    _albumsDict = LevelJsonDict(os.path.join(LevevDBPath, 'album'))
+    _foldersDict =  LevelJsonDict(os.path.join(LevevDBPath, 'folder'))
+
+    _songObjs = OrderedDict()
+    _artistObjs = OrderedDict()
+    _albumObjs = OrderedDict()
+    _folderObjs = OrderedDict()
+
+    _songObjsListModel = SongListModel(QmlSongObject)
+    _artistObjsListModel = ArtistListModel(QmlArtistObject)
+    _albumObjsListModel = AlbumListModel(QmlAlbumObject)
+    _folderObjsListModel = FolderListModel(QmlFolderObject)
+    _detailSongObjsListModel = DetailSongListModel(QmlSongObject)
+
     @registerContext
     def __init__(self, parent=None):
         super(MusicManageWorker, self).__init__(parent)
         self.initConnect()
-        self.initData()
-
-    def initData(self):
-        self._songsDict = LevelJsonDict(os.path.join(LevevDBPath, 'song'))
-        self._artistsDict =  LevelJsonDict(os.path.join(LevevDBPath, 'artist'))
-        self._albumsDict = LevelJsonDict(os.path.join(LevevDBPath, 'album'))
-        self._foldersDict =  LevelJsonDict(os.path.join(LevevDBPath, 'folder'))
-
-        self._songObjs = OrderedDict()
-        self._artistObjs = OrderedDict()
-        self._albumObjs = OrderedDict()
-        self._folderObjs = OrderedDict()
-
-        self._songObjsListModel = SongListModel(QmlSongObject)
-        self._artistObjsListModel = ArtistListModel(QmlArtistObject)
-        self._albumObjsListModel = AlbumListModel(QmlAlbumObject)
-        self._folderObjsListModel = FolderListModel(QmlFolderObject)
-        self._detailSongObjsListModel = DetailSongListModel(QmlSongObject)
 
     def initConnect(self):
         self.searchAllDriver.connect(self.searchAllDriverMusic)
@@ -238,12 +253,8 @@ class MusicManageWorker(QObject):
             artistDict = {
                 'name': artist.name,
                 'count': artist.songs.count(),
-                'cover': CoverWorker.getCoverPathByArtist(artist.name),
-                'songs': {}
+                'cover': CoverWorker.getCoverPathByArtist(artist.name)
             }
-            songs = artistDict['songs']
-            for song in artist.songs:
-                songs.update({song.toDict()['url']: song.toDict()})
             self._artistsDict[artist.name] = artistDict
             artistObj = QmlArtistObject(**artistDict)
             self._artistObjs[artist.name] = artistObj
@@ -258,13 +269,8 @@ class MusicManageWorker(QObject):
                 'name': album.name,
                 'artist': album.artist,
                 'count': album.songs.count(),
-                'cover': CoverWorker.getCoverPathByArtistAlbum(album.artist, album.name),
-                'songs': {}
+                'cover': CoverWorker.getCoverPathByArtistAlbum(album.artist, album.name)
             }
-            songs = albumDict['songs']
-            for song in album.songs:
-                songs.update({song.toDict()['url']: song.toDict()})
-
             self._albumsDict[album.name] = albumDict
             albumObj = QmlAlbumObject(**albumDict)
             self._albumObjs[album.name] = albumObj
@@ -278,12 +284,8 @@ class MusicManageWorker(QObject):
             folderDict = {
                 'name': folder.name,
                 'count': folder.songs.count(),
-                'cover':CoverWorker.getFolderCover(),
-                'songs': {}
+                'cover':CoverWorker.getFolderCover()
             }
-            songs = folderDict['songs']
-            for song in folder.songs:
-                songs.update({song.toDict()['url']: song.toDict()})
             self._foldersDict[folder.name] = folderDict
             folderObj = QmlFolderObject(**folderDict)
             self._folderObjs[folder.name] = folderObj
@@ -301,34 +303,81 @@ class MusicManageWorker(QObject):
         ]
         return categories
 
+    @classmethod
+    def getSongObjByUrl(cls, url):
+        if url in cls._songObjs:
+            return cls._songObjs[url]
+        else:
+            return None
+
     @pyqtSlot('QString', result=QVariant)
     def updateDetailSongObjsByArtist(self, artist):
-        artistDict = self._artistsDict[artist]
-        songs = artistDict['songs']
         self._detailSongObjsListModel.clear()
         for url, obj in self._songObjs.items():
-            if url in songs:
+            if obj.artist == artist:
                 self._detailSongObjsListModel.append(obj)
-        print  len(self._artistsDict), songs, artistDict
-        print('++++++++++', len(self._songObjs), len(songs), self._detailSongObjsListModel.count)
+
+    @classmethod
+    def getSongObjsByArtist(cls, artist):
+        songObjs = []
+        for url, obj in cls._songObjs.items():
+            if obj.artist == artist:
+                songObjs.append(obj)
+        return songObjs
+
+    @classmethod
+    def getUrlsByArtist(cls, artist):
+        urls = []
+        for url, obj in cls._songObjs.items():
+            if obj.artist == artist:
+                urls.append(url)
+        return urls
 
     @pyqtSlot('QString', result=QVariant)
     def updateDetailSongObjsByAlbum(self, album):
-        albumDict = self._albumsDict[album]
-        songs = albumDict['songs']
         self._detailSongObjsListModel.clear()
         for url, obj in self._songObjs.items():
-            if url in songs:
+            if obj.album == album:
                 self._detailSongObjsListModel.append(obj)
+
+    @classmethod
+    def getSongObjsByAlbum(cls, album):
+        songObjs = []
+        for url, obj in cls._songObjs.items():
+            if obj.album == album:
+                songObjs.append(obj)
+        return songObjs
+
+    @classmethod
+    def getUrlsByAlbum(cls, album):
+        urls = []
+        for url, obj in cls._songObjs.items():
+            if obj.album == album:
+                urls.append(url)
+        return urls
 
     @pyqtSlot('QString', result=QVariant)
     def updateDetailSongObjsByFolder(self, folder):
-        folderDict = self._foldersDict[folder]
-        songs = folderDict['songs']
         self._detailSongObjsListModel.clear()
         for url, obj in self._songObjs.items():
-            if url in songs:
+            if obj.folder == folder:
                 self._detailSongObjsListModel.append(obj)
+
+    @classmethod
+    def getSongObjsByFolder(cls, folder):
+        songObjs = []
+        for url, obj in cls._songObjs.items():
+            if obj.folder == folder:
+                songObjs.append(obj)
+        return songObjs
+
+    @classmethod
+    def getUrlsByFolder(cls, folder):
+        urls = []
+        for url, obj in cls._songObjs.items():
+            if obj.folder == folder:
+                urls.append(url)
+        return urls
 
     @pyqtProperty('QVariant', notify=songCountChanged)
     def songCount(self):
@@ -404,8 +453,13 @@ class MusicManageWorker(QObject):
             songDict['folder'] = songDict['folder'].decode('utf-8')
 
         url = songDict['url']
-        self._songsDict[url] = songDict
-        self._tempSongs[url] = songDict
+        if url in self._songsDict:
+            self._songsDict[url] = songDict
+            self._tempSongs[url] = songDict
+            return
+        else:
+            self._songsDict[url] = songDict
+            self._tempSongs[url] = songDict
 
         #add or update song view
         songObj = QmlSongObject(**songDict)
@@ -415,19 +469,14 @@ class MusicManageWorker(QObject):
         # add or update artist view
         artist = songDict['artist']
         if artist not in self._artistsDict:
-            _artistDict = {
+            self._artistsDict[artist] = {
                 'name': artist,
                 'count': 0,
-                'cover': CoverWorker.getCoverPathByArtist(artist),
-                'songs': {}
+                'cover': CoverWorker.getCoverPathByArtist(artist)
             }
+        _artistDict = self._artistsDict[artist]
+        _artistDict['count'] = _artistDict['count'] + 1
         self._artistsDict[artist] = _artistDict
-        songs = _artistDict['songs']
-        songs[url] = songDict
-        _artistDict['count'] = len(songs)
-        # self._artistsDict[artist] = _artistDict
-
-        print(id(self._artistsDict[artist]), id(_artistDict))
 
         if artist not in self._artistObjs:
             artistObj = QmlArtistObject(**_artistDict)
@@ -446,13 +495,11 @@ class MusicManageWorker(QObject):
                 'name': album,
                 'artist': artist,
                 'count': 0,
-                'cover':CoverWorker.getCoverPathByArtistAlbum(artist, album),
-                'songs': {}
+                'cover':CoverWorker.getCoverPathByArtistAlbum(artist, album)
             }
         _albumDict = self._albumsDict[album]
-        songs = _albumDict['songs']
-        songs.update({url: songDict})
-        _albumDict['count'] = len(songs)
+        _albumDict['count'] = _albumDict['count'] + 1
+        self._albumsDict[album] = _albumDict
 
         if album not in self._albumObjs:
             albumObj = QmlAlbumObject(**_albumDict)
@@ -470,13 +517,12 @@ class MusicManageWorker(QObject):
             self._foldersDict[folder] = {
                 'name': folder,
                 'count': 0,
-                'cover':CoverWorker.getFolderCover(),
-                'songs': {}
+                'cover':CoverWorker.getFolderCover()
             }
-        _folderDict = self._foldersDict[folder]         
-        songs = _folderDict['songs']
-        songs.update({url: songDict})
-        _folderDict['count'] = len(songs)
+        _folderDict = self._foldersDict[folder]
+        _folderDict['count'] = _folderDict['count'] + 1
+        self._foldersDict[folder] = _folderDict
+
         if folder not in self._folderObjs:
             folderObj = QmlFolderObject(**_folderDict)
             self._folderObjs[folder] = folderObj
@@ -500,10 +546,12 @@ class MusicManageWorker(QObject):
                 url = CoverWorker.getCoverPathByArtist(artistName)
                 if url:
                     _artistDict['cover'] = url
-                    index = self._artistObjs.keys().index(artistName)
-                    artistObj = self._artistObjs[artistName]
-                    artistObj.cover = url
-                    self._artistObjsListModel.setProperty(index, 'cover', url)
+                    keys = self._artistObjs.keys()
+                    if artistName in keys:
+                        index = keys.index(artistName)
+                        artistObj = self._artistObjs[artistName]
+                        artistObj.cover = url
+                        self._artistObjsListModel.setProperty(index, 'cover', url)
 
     def updateAlbumCover(self, artist, album, url):
         if album in self._albumsDict:
@@ -511,31 +559,31 @@ class MusicManageWorker(QObject):
             url = CoverWorker.getCoverPathByArtistAlbum(artist, album)
             if url:
                 _albumDict['cover'] = url
-                index = self._albumObjs.keys().index(album)
-                albumObj = self._albumObjs[album]
-                albumObj.cover = url
-                self._albumObjsListModel.setProperty(index, 'cover', url)
+                keys = self._albumObjs.keys()
+                if album in keys:
+                    index = keys.index(album)
+                    albumObj = self._albumObjs[album]
+                    albumObj.cover = url
+                    self._albumObjsListModel.setProperty(index, 'cover', url)
 
     def stopUpdate(self):
         print('stop update')
 
     def playArtistMusic(self, name):
-        songs = self._artistsDict[name]['songs']
-        self.postSongs(songs)
+        urls = self.getUrlsByArtist(name)
+        self.postSongs(urls)
 
     def playAlbumMusic(self, name):
-        songs = self._albumsDict[name]['songs']
-        self.postSongs(songs)
+        urls = self.getUrlsByAlbum(name)
+        self.postSongs(urls)
 
     def playFolderMusic(self, name):
-        songs = self._foldersDict[name]['songs']
-        self.postSongs(songs)
+        urls = self.getUrlsByFolder(name)
+        self.postSongs(urls)
 
-    def postSongs(self, songs):
-        songlist = songs.values()
-        self.addSongsToPlaylist.emit(songlist)
-        self.playSongByUrl.emit(songlist[0]['url'])
+    def postSongs(self, urls):
+        self.addSongsToPlaylist.emit(urls)
+        self.playSongByUrl.emit(urls[0])
 
     def playSongMusic(self, url):
-        song = self._songsDict[url]
-        self.addSongToPlaylist.emit(song)
+        self.addSongToPlaylist.emit(url)

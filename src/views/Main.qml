@@ -95,5 +95,11 @@ Rectangle {
         Qt.mainWindow = mainWindow
         Qt.mainController= mainController
         Qt.positionTimer = positionTimer
+        Qt.globalObject = MainWindow.globalObject
+
+        function get(arg) {
+            return eval(arg)
+        }
+        Qt.get = get
     }
 }

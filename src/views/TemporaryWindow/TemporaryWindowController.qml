@@ -1,6 +1,7 @@
 import QtQuick 2.4
 
 Item {
+    property var temporaryWindow
     property var playlistView
     property var clearButton
     property var closeButton
@@ -19,12 +20,14 @@ Item {
     }
 
     Binding {
-        target: playlistView
-        property: 'model'
-        value: {
+        target: temporaryWindow
+        property: datamodel
+        value:{
             var playlist = MediaPlayer.playlist;
             if (playlist){
+                print(playlist.medias.data, '++++')
                 return playlist.medias;
+
             }else{
                 return null;
             }
