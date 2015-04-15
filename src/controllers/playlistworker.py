@@ -92,20 +92,11 @@ class DMediaPlaylist(QMediaPlaylist):
         return self.mediaCount()
 
     @pyqtSlot()
-    def updateListModel(self):
-        self._medias.clear()
-        for url in self._urls:
-            if url.startswith('http'):
-                pass
-            else:
-                songObj = MusicManageWorker.getSongObjByUrl(url)
-                self._medias.append(songObj)
-
-    @pyqtSlot()
     def clearMedias(self):
         flag = self.clear()
         if flag:
             self._urls = []
+            self._medias.clear()
 
     def addMedia(self, url):
         if url not in self._urls:
@@ -123,6 +114,7 @@ class DMediaPlaylist(QMediaPlaylist):
 
     def addLocalMedia(self, url):
         mediaContent = DLocalMediaContent(url)
+        self._medias.append(MusicManageWorker.getSongObjByUrl(url))
         super(DMediaPlaylist, self).addMedia(mediaContent)
 
     def addOnlineMedia(self, url):

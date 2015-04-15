@@ -55,7 +55,7 @@ Rectangle {
                 width: 24
                 height: 24
                 asynchronous: true
-                source: mediaItem.ListView.view.model[index].cover
+                source: cover
             }
 
             Text {
@@ -64,7 +64,7 @@ Rectangle {
                 height: mediaItem.height
                 elide: Text.ElideRight
                 verticalAlignment: Text.AlignVCenter
-                text: mediaItem.ListView.view.model[index].title
+                text: title
                 color: "#a0a0a0"
                 font.pixelSize: 11
             }
@@ -74,7 +74,7 @@ Rectangle {
                 width: 34
                 height: mediaItem.height
                 verticalAlignment: Text.AlignVCenter
-                text: UtilWorker.duration_to_string(mediaItem.ListView.view.model[index].duration)
+                text: UtilWorker.duration_to_string(duration)
                 color: "#a0a0a0"
                 font.pixelSize: 11
             }

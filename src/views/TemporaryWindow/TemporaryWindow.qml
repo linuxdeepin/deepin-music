@@ -10,7 +10,6 @@ DRectWithCorner {
     property var closeButton: closeButton
     property var models
     property var currentIndex: -1
-    property var datamodel
 
     rectWidth: 302 + 4
     rectHeight: 402 + 12 + 20
@@ -21,6 +20,19 @@ DRectWithCorner {
     cornerWidth: 20
     cornerHeight: 10
     color: 'transparent'
+
+    function getModel(){
+        var playlist = MediaPlayer.playlist;
+        if (playlist){
+            var name = playlist.name
+            // playlist.updateListModel()
+            var model = Qt.get(name);
+            return model;
+
+        }else{
+            return null;
+        }
+    }
 
 
     MouseArea {
@@ -86,14 +98,7 @@ DRectWithCorner {
                         verticalAlignment: Text.AlignVCenter
                         font.pixelSize: 16
                         color: "#a0a0a0"
-                        text: {
-                            var playlist = MediaPlayer.playlist;
-                            if (playlist){
-                                return '(' + playlist.count + ')';
-                            }else{
-                                return '';
-                            }
-                        }
+                        text: '(' + songListModel.pymodel.count + ')';
                     }
                 }
 
@@ -159,7 +164,7 @@ DRectWithCorner {
 
     DListModel {
         id: songListModel
-        pymodel: datamodel
+        pymodel: getModel()
     }
 
     TemporaryWindowController {

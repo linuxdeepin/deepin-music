@@ -20,21 +20,6 @@ Item {
     }
 
     Binding {
-        target: temporaryWindow
-        property: datamodel
-        value:{
-            var playlist = MediaPlayer.playlist;
-            if (playlist){
-                print(playlist.medias.data, '++++')
-                return playlist.medias;
-
-            }else{
-                return null;
-            }
-        }
-    }
-
-    Binding {
         target: playlistView
         property: 'currentIndex'
         value: {

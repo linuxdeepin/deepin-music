@@ -101,6 +101,7 @@ class DListModel(QObject):
             obj = self.dataTye(**_obj)
         self._data.append(obj)
         self.py2qml_appendSignal.emit(obj)
+        self.countChanged.emit(len(self._data))
 
     def clear(self):
         del self._data[:]
