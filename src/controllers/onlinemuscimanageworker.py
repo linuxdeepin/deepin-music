@@ -1,0 +1,234 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+
+import os
+import sys
+import time
+import json
+import datetime
+from PyQt5.QtCore import (QObject, pyqtSignal,
+                pyqtSlot, pyqtProperty, QDir, 
+                QDirIterator, QTimer, QThread, QRunnable,
+                QThreadPool, QAbstractListModel, Qt, QModelIndex, QVariant)
+from PyQt5.QtGui import QImage
+from PyQt5.QtQml import QJSValue
+from PyQt5.QtWidgets import QFileDialog
+from .utils import registerContext, contexts
+from dwidgets.tornadotemplate import template
+from models import *
+from dwidgets import dthread, LevelJsonDict
+from dwidgets.mediatag.song import Song as SongDict
+from collections import OrderedDict
+from UserList import UserList
+from config.constants import LevevDBPath, CoverPath, MusicManagerPath
+from .coverworker import CoverWorker
+
+from dwidgets import DListModel, ModelMetaclass
+from .web360apiworker import Web360ApiWorker
+
+
+class QmlOnlineSongObject(QObject):
+
+    __metaclass__ = ModelMetaclass
+
+    __Fields__ = (
+        ('url', 'QString'),
+        ('title', 'QString'),
+        ('artist', 'QString'),
+        ('album', 'QString'),
+        ('tracknumber', int),
+        ('discnumber', int),
+        ('genre', 'QString'),
+        ('date', 'QString'),
+        ('size', int),
+        ('mediaType', 'QString'),
+        ('duration', int),
+        ('bitrate', int),
+        ('sample_rate', int),
+        ('cover', 'QString'),
+        ('created_date', 'QString'),
+
+        ('songId', int),
+        ('singerId', int),
+        ('albumId', int),
+
+        ('serviceEngName', 'QString'),
+        ('serviceName', 'QString'),
+        ('serviceUrl', 'QString'),
+
+        ('albumImage_100x100', 'QString'),
+        ('albumImage_500x500', 'QString'),
+        ('playlinkUrl', 'QString')
+    )
+
+    coverChanged = pyqtSignal('QString')
+
+    def initialize(self, *agrs, **kwargs):
+        if 'created_date' in kwargs:
+            kwargs['created_date'] = kwargs['created_date'].strftime('%Y-%m-%d %H:%M:%S')
+        self.cover = CoverWorker.getOnlineCoverPathByArtistSong(self.artist, self.title)
+        self.setDict(kwargs)
+
+    @pyqtProperty('QString', notify=coverChanged)
+    def cover(self):
+        if CoverWorker.isOnlineSongCoverExisted(self.artist, self.title):
+            self._cover = CoverWorker.getOnlineCoverPathByArtistSong(self.artist, self.title)
+        elif CoverWorker.isSongCoverExisted(self.artist, self.title):
+            self._cover = CoverWorker.getCoverPathByArtistSong(self.artist, self.title)
+        elif CoverWorker.isAlbumCoverExisted(self.artist, self.album):
+            self._cover = CoverWorker.getCoverPathByArtistAlbum(self.artist, self.album)
+        else:
+            self._cover = CoverWorker.getCoverPathByArtist(self.artist, self.title)
+
+        if not self._cover:
+            self._cover = CoverWorker.getOnlineCoverPathByArtistSong(self.artist, self.title)
+
+        return self._cover
+
+    @cover.setter
+    def cover(self, cover):
+        if CoverWorker.isOnlineSongCoverExisted(self.artist, self.title):
+            self._cover = CoverWorker.getOnlineCoverPathByArtistSong(self.artist, self.title)
+        elif CoverWorker.isSongCoverExisted(self.artist, self.title):
+            self._cover = CoverWorker.getCoverPathByArtistSong(self.artist, self.title)
+        elif CoverWorker.isAlbumCoverExisted(self.artist, self.album):
+            self._cover = CoverWorker.getCoverPathByArtistAlbum(self.artist, self.album)
+        else:
+            self._cover = CoverWorker.getCoverPathByArtist(self.artist)
+
+        if not self._cover:
+            self._cover = CoverWorker.getOnlineCoverPathByArtistSong(self.artist, self.title)
+
+        self.coverChanged.emit(self._cover)
+        return self._cover
+
+
+class RequestRunnable(QRunnable):
+
+    def __init__(self, worker, url):
+        super(RequestRunnable, self).__init__()
+        self.worker = worker
+        self.url = url
+
+    def run(self):
+        result = Web360ApiWorker.request(self.url)
+        if result:
+            result.update({'url': self.url})
+            self.worker.updateSongSignal.emit(result)
+
+
+class OnlineMusicManageWorker(QObject):
+
+    downloadOnlineSongCover = pyqtSignal('QString', 'QString', 'QString')
+    downloadAlbumCover = pyqtSignal('QString', 'QString')
+
+    updateSongSignal = pyqtSignal(dict)
+
+    _songObjs = OrderedDict()
+
+    _songsDict = LevelJsonDict(os.path.join(LevevDBPath, 'onlineSongs'))
+
+
+    __keys__ = {
+        'url': 'url',
+        'title': 'songName',
+        'artist': 'singerName',
+        'album': 'albumName',
+        'albumImage_100x100': 'albumImage_100x100',
+        'albumImage_500x500': 'albumImage_500x500',
+
+        'songId': 'songId',
+        'singerId': 'singerId',
+        'albumId': 'albumId',
+
+        'serviceEngName': 'serviceEngName',
+        'serviceName': 'serviceName',
+        'serviceUrl': 'serviceUrl',
+
+        'playlinkUrl': 'playlinkUrl',
+        'duration': 'duration'
+    }
+
+    def __init__(self):
+        super(OnlineMusicManageWorker, self).__init__()
+        self.initConnect()
+        self.loadDB()
+
+    def initConnect(self):
+        self.updateSongSignal.connect(self.updateSong)
+
+    def loadDB(self):
+        for url, _songDict in self._songsDict.items():
+            self._songObjs[url] = QmlOnlineSongObject(**_songDict)
+
+    @classmethod
+    def getSongObjByUrl(cls, url):
+        if url in cls._songObjs:
+            return cls._songObjs[url]
+        else:
+            return None
+
+    def addSong(self, media):
+        _songDict = self.updateTags(media)
+        url = media['url']
+        self._songsDict[url] = _songDict
+        songObj  = QmlOnlineSongObject(**_songDict)
+        self._songObjs[url] = songObj
+
+        if not songObj.playlinkUrl:
+            d = RequestRunnable(self, url)
+            QThreadPool.globalInstance().start(d)
+        else:
+            self.downloadCover(_songDict)
+
+    def addSongs(self, medias):
+        for media in medias:
+            self.addSong(media)
+
+    def updateTags(self, media):
+        _songDict = {}
+        for key in self.__keys__:
+            _key = self.__keys__[key]
+            if _key in media:
+                _songDict[key] = media[_key]
+        return _songDict
+
+    def downloadCover(self, media):
+        url = media['url']
+        artist = media['artist']
+        title = media['title']
+        if not CoverWorker.isOnlineSongCoverExisted(artist, title):
+            albumImage_500x500 = media['albumImage_500x500']
+            albumImage_100x100 = media['albumImage_100x100']
+            if albumImage_100x100:
+                self.downloadOnlineSongCover.emit(artist, title, albumImage_100x100)
+            elif albumImage_500x500:
+                self.downloadOnlineSongCover.emit(artist, title, albumImage_500x500)
+            else:
+                self.downloadAlbumCover.emit(artist, title)
+
+    def updateSong(self, result):
+        _songDict = self.updateTags(result)
+        url = result['url']
+        if url in self._songsDict:
+            self._songsDict[url] = _songDict
+        if url in self._songObjs:
+            self._songObjs[url].setDict(_songDict)
+        self.downloadCover(_songDict)
+
+    def updateSongCover(self, artist, title, url):
+        for url , songObj in  self._songObjs.items():
+            _songDict = self._songsDict[url]
+            if songObj.title == title and songObj.artist == artist:
+                cover = songObj.cover
+                _songDict['cover'] = cover
+                self._songsDict[url] = _songDict
+
+        mediaPlayer = contexts['MediaPlayer']
+        if mediaPlayer.playlist:
+            dlistModel = mediaPlayer.playlist._medias
+            for index, songObj in enumerate(dlistModel.data):
+                if songObj.title == title and songObj.artist == artist:
+                    cover = songObj.cover
+                    dlistModel.setProperty(index, 'cover', cover)

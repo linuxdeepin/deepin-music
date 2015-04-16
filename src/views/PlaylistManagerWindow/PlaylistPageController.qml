@@ -3,7 +3,7 @@ import QtQuick 2.4
 Item {
     property var playlistPage
     property var playlistNavgationBar
-    property var playlistDetailBox
+    property var playlistDetailLoader
     property var currentPlaylistName: ''
 
     function init() {
@@ -34,7 +34,8 @@ Item {
     }
 
     function activeCurrentItem(currentIndex){
-        if (MediaPlayer.playlist) {
+        var playlistDetailBox = playlistDetailLoader.item
+        if (MediaPlayer.playlist && playlistDetailBox) {
             if (MediaPlayer.playlist.name == currentPlaylistName){
                 playlistDetailBox.playlistView.currentIndex = MediaPlayer.playlist.currentIndex;
                 if (playlistDetailBox.playlistView.currentItem){
@@ -93,48 +94,31 @@ Item {
         value: PlaylistWorker.playlistNames
     }
 
-    Binding {
-        target: playlistDetailBox
-        property: 'currentPlaylistName'
-        value: currentPlaylistName
-    }
+    // Connections {
+    //     target: playlistDetailBox.playlistView
 
-    Binding {
-        target: playlistDetailBox.titleText
-        property: 'text'
-        value: {
-            if (playlistDetailBox.playlistView.model) {
-                var model = playlistDetailBox.playlistView.model;
-                return I18nWorker.song + '   (' + model.length +')'
-            }
-        }
-    }
+    //     onPlayMusicByUrl: {
+    //         MediaPlayer.setPlaylistByName(currentPlaylistName);
+    //         playMusicByUrl(url);
 
-    Connections {
-        target: playlistDetailBox.playlistView
+    //         if (MediaPlayer.playlist.name == 'favorite'){
+    //             playlistNavgationBar.starDelegate.state = 'Active'
+    //             playlistNavgationBar.temporaryDelegate.state = '!Checked'
 
-        onPlayMusicByUrl: {
-            MediaPlayer.setPlaylistByName(currentPlaylistName);
-            playMusicByUrl(url);
+    //         }else if(MediaPlayer.playlist.name == 'temporary'){
+    //             playlistNavgationBar.starDelegate.state = '!Checked'
+    //             playlistNavgationBar.temporaryDelegate.state = 'Active'
+    //         }else{
 
-            if (MediaPlayer.playlist.name == 'favorite'){
-                playlistNavgationBar.starDelegate.state = 'Active'
-                playlistNavgationBar.temporaryDelegate.state = '!Checked'
+    //         }
+    //     }
 
-            }else if(MediaPlayer.playlist.name == 'temporary'){
-                playlistNavgationBar.starDelegate.state = '!Checked'
-                playlistNavgationBar.temporaryDelegate.state = 'Active'
-            }else{
-
-            }
-        }
-
-        onModelChanged: {
-            playlistDetailBox.playlistView.positionViewAtEnd()
-            playlistDetailBox.playlistView.currentIndex = -1;
-            activeCurrentItem();
-        }
-    }
+    //     onModelChanged: {
+    //         playlistDetailBox.playlistView.positionViewAtEnd()
+    //         playlistDetailBox.playlistView.currentIndex = -1;
+    //         activeCurrentItem();
+    //     }
+    // }
 
     Connections {
         target: playlistNavgationBar
@@ -167,41 +151,19 @@ Item {
 
             currentPlaylistName = nameId;
 
-            print(getModel())
-            playlistDetailBox.songListModel.pymodel = getModel()
+            // var pymodel = getModel()
+
+            playlistDetailLoader.setSource('./PlaylistDetailBox.qml', {'currentPlaylistName': currentPlaylistName})
 
             activeCurrentItem();
 
-            if (playlistDetailBox.playlistView.count == 0){
-                playlistDetailBox.noMusicTip.visible = true;
+            if (playlistDetailLoader.item.playlistView.count == 0){
+                playlistDetailLoader.item.noMusicTip.visible = true;
             }else{
-                playlistDetailBox.noMusicTip.visible = false;
+                playlistDetailLoader.item.noMusicTip.visible = false;
             }
         }
     }
-
-    Connections {
-        target: playlistDetailBox.linkTipText
-        onLinkActivated: {
-            if (link == "Online"){
-                WindowManageWorker.switchPageByID('WebMusic360Page');
-            }else if (link == "Local"){
-                WindowManageWorker.switchPageByID('MusicManagerPage');
-            }
-        }
-    }
-
-    // Connections {
-    //     target: playlistPage
-    //     onVisibleChanged: {
-    //         if (playlistPage.visible){
-    //             if (MediaPlayer.playlist){
-    //                 currentPlaylistName = MediaPlayer.playlist.name;
-    //                 activeCurrentItem()
-    //             }
-    //         }
-    //     }
-    // }
 
     Component.onCompleted: {
         init()

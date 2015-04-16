@@ -46,7 +46,7 @@ class DBWorker(QObject):
     def __init__(self):
         super(DBWorker, self).__init__()
         db.connect()
-        db.create_tables([Song, Artist, Album, Folder], safe=True)
+        db.create_tables([Song, Artist, Album, Folder, OnlineSong], safe=True)
         self._count = 0
         # self.loadDB()
 

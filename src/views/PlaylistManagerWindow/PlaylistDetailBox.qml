@@ -8,13 +8,13 @@ Rectangle {
     property var titleText: titleText
     property var noMusicTip: noMusicTip
     property var linkTipText: linkTipText
-    property var currentPlayListName: ConfigWorker.lastPlaylistName
     property var songListModel: songListModel
+    property var currentPlaylistName
 
 
     function getModel(){
-        if (currentPlayListName){
-            var model = eval(currentPlayListName);
+        if (currentPlaylistName){
+            var model = eval(currentPlaylistName);
             return model;
         }
     }
@@ -135,7 +135,7 @@ Rectangle {
 
                 DListModel {
                     id: songListModel
-                    pymodel: playlistDetailBox.getModel()
+                    pymodel: getModel()
                 }
 
                 Rectangle {
@@ -156,5 +156,13 @@ Rectangle {
                 }
             }
         }
+    }
+
+    PlaylistDetailBoxController {
+        id: playlistDetailBoxController
+        playlistDetailBox: playlistDetailBox
+        playlistView: playlistView
+        titleText: titleText
+        linkTipText: linkTipText
     }
 }

@@ -388,18 +388,18 @@ class MediaPlayer(QObject):
         urls = self._playlist.urls
         if url in urls:
             index = urls.index(url)
-            self._playlist.updateMedia(result['url'], result['tags'])
-            self._playlist.setCurrentIndex(index)
+            # self._playlist.updateMedia(result['url'], result['tags'])
+            # self._playlist.setCurrentIndex(index)
 
-            mediaContents =  self._playlist.mediaContents
-            mediaContent = mediaContents[url]
-            playurl = mediaContent.playlinkUrl
-            self.setMediaUrl(playurl)
+            # mediaContents =  self._playlist.mediaContents
+            # mediaContent = mediaContents[url]
+            # playurl = mediaContent.playlinkUrl
+            # self.setMediaUrl(playurl)
 
-            self.title = mediaContent.title
-            self.artist = mediaContent.artist
-            self.cover = mediaContent.cover
-            self.playToggle(True)
+            # self.title = mediaContent.title
+            # self.artist = mediaContent.artist
+            # self.cover = mediaContent.cover
+            # self.playToggle(True)
 
     @pyqtSlot('QVariant')
     def swicthOnlineMedia(self, result):

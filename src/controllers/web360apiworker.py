@@ -138,15 +138,12 @@ class Web360ApiWorker(QObject):
 
     def getResultByUrl(self, url):
         tags = self.request(url)
-        result = {
-            'url': url,
-            'tags': tags,
-            'updated': False
-        }
         if isinstance(tags, list) and not tags:
-            result = None
+            tags = None
+        else:
+            tags.update({'url': url})
 
-        return result
+        return tags
 
     @pyqtSlot(int)
     def playMusicById(self, musicId):
@@ -162,13 +159,8 @@ class Web360ApiWorker(QObject):
         results = []
         for song in songLists:
             url = self.getUrlByID(song['songId'])
-            tags = song
-            result = {
-                'url': url,
-                'tags': tags,
-                'updated': True
-            }
-            results.append(result)
+            song.update({'url': url})
+            results.append(song)
 
         self.addMediaContents.emit(results)
         url = self.getUrlByID(songLists[0]['songId'])
@@ -199,15 +191,12 @@ class Web360ApiWorker(QObject):
     @classmethod
     def getSongList(self, ret):
         results = []
-        for song in ret['songList']:
-            url = self.getUrlByID(song['songId'])
-            tags = song
-            result = {
-                'url': url,
-                'tags': tags,
-                'updated': True
-            }
-            results.append(result)
+        if 'songList' in ret:
+            for song in ret['songList']:
+                url = self.getUrlByID(song['songId'])
+                tags = song
+                tags.update({'url': url})
+                results.append(tags)
         return results
 
     @dthread
@@ -245,7 +234,7 @@ class Web360ApiWorker(QObject):
         if ret:
             results = self.getSongList(ret)
             for result in results:
-                result['tags'].update({
+                result.update({
                     'singerId': ret['singerId'],
                     'singerName': ret['singerName'],
                     'albumId': ret['albumId'],
@@ -260,12 +249,8 @@ class Web360ApiWorker(QObject):
     def addMusicToFavorite(self, musicId):
         url = self.getUrlByID(musicId)
         tags = self.request(url)
-        result = {
-            'url': url,
-            'tags': tags,
-            'updated': False
-        }
-        self.addMediaContentToFavorite.emit(result)
+        tags.update({'url': url})
+        self.addMediaContentToFavorite.emit(tags)
 
     @pyqtSlot(int)
     def removeMusicFromFavorite(self, musicId):

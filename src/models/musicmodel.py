@@ -227,3 +227,98 @@ class Song(BaseModel):
             if hasattr(self, key):
                 p[key] = getattr(self, key)
         return p
+
+
+class OnlineSong(BaseModel):
+
+    url = CharField(default='', unique=True)
+
+    #Common attributes
+    title = CharField(default='')
+    artist = CharField(default='')
+    album = CharField(default='')
+    tracknumber = IntegerField(default=0)
+    discnumber = IntegerField(default=0)
+    genre = CharField(default='')
+    date = CharField(default='')
+
+    #Media attributes
+    size = IntegerField(default=0)
+    mediaType = CharField(default='')
+    duration = IntegerField(default=0)
+
+    #Audio attributes
+    bitrate = IntegerField(default=0)
+    sample_rate = IntegerField(default=0)
+
+    #Music attributes
+    cover = CharField(default='')
+    albumImage_100x100 = CharField(default='')
+    albumImage_500x500 = CharField(default='')
+
+    songId = IntegerField(default=0)
+    singerId =  IntegerField(default=0)
+    albumId = IntegerField(default=0)
+
+    serviceEngName = CharField(default='')
+    serviceName = CharField(default='')
+    serviceUrl = CharField(default='')
+
+    playlinkUrl = CharField(default='')
+
+    #other
+    created_date = DateTimeField(default=datetime.datetime.now)
+
+    __key__ = 'url'
+
+    def pprint(self):
+        keys = [
+            'url',
+            'folder',
+            'title',
+            'artist',
+            'album',
+            'date',
+            'genre',
+            'tracknumber',
+            'discnumber',
+            'sample_rate',
+            'bitrate',
+            'duration',
+            'size',
+            'cover',
+        ]
+
+        p = {}
+        for key in keys:
+            if hasattr(self, key):
+                if isinstance(getattr(self, key) , unicode):
+                    p[key] = getattr(self, key).encode('utf-8')
+                else:
+                    p[key] = getattr(self, key)
+        ret = '\n'.join(['%s: %s' % (key, p[key]) for key in keys if p.has_key(key)])
+        return ret
+
+    def toDict(self):
+        keys = [
+            'url',
+            'folder',
+            'title',
+            'artist',
+            'album',
+            'date',
+            'genre',
+            'tracknumber',
+            'discnumber',
+            'sample_rate',
+            'bitrate',
+            'duration',
+            'size',
+            'cover',
+        ]
+
+        p = {}
+        for key in keys:
+            if hasattr(self, key):
+                p[key] = getattr(self, key)
+        return p

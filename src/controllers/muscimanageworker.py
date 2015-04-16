@@ -49,7 +49,7 @@ class QmlSongObject(QObject):
         ('created_date', 'QString'),
     )
 
-    coverChanged = pyqtSignal()
+    coverChanged = pyqtSignal('QString')
 
     def initialize(self, *agrs, **kwargs):
         if 'created_date' in kwargs:
@@ -74,6 +74,8 @@ class QmlSongObject(QObject):
             self._cover = CoverWorker.getCoverPathByArtistAlbum(self.artist, self.album)
         else:
             self._cover = CoverWorker.getCoverPathByArtist(self.artist)
+
+        self.coverChanged.emit(self._cover)
         return self._cover
 
 class QmlArtistObject(QObject):
@@ -84,7 +86,6 @@ class QmlArtistObject(QObject):
         ('name', 'QString'),
         ('count', int),
         ('cover', 'QString'),
-        # ('songs', dict),
     )
 
     def initialize(self, *agrs, **kwargs):
@@ -99,7 +100,6 @@ class QmlAlbumObject(QObject):
         ('artist', 'QString'),
         ('count', int),
         ('cover', 'QString'),
-        # ('songs', dict),
     )
 
     def initialize(self, *agrs, **kwargs):
@@ -113,7 +113,6 @@ class QmlFolderObject(QObject):
         ('name', 'QString'),
         ('count', int),
         ('cover', 'QString'),
-        # ('songs', dict),
     )
 
     def initialize(self, *agrs, **kwargs):
@@ -234,7 +233,7 @@ class MusicManageWorker(QObject):
         self.playFolder.connect(self.playFolderMusic)
         self.playSong.connect(self.playSongMusic)
 
-        self.scanfileChanged.connect(self.updateSonglist)
+        self.scanfileChanged.connect(self.addSong)
         self.scanfileFinished.connect(self.saveSongs)
 
     def restoreDB(self):
@@ -440,7 +439,7 @@ class MusicManageWorker(QObject):
             if not CoverWorker.isAlbumCoverExisted(artist, album):
                 self.downloadAlbumCover.emit(artist, album)
 
-    def updateSonglist(self, fpath):
+    def addSong(self, fpath):
         songDict = SongDict(fpath)
         ext, coverData = songDict.getMp3FontCover()
         if ext and coverData:

@@ -6,29 +6,49 @@ import os
 import sys
 import copy
 import json
-from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot, QThreadPool
+from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot, QThreadPool, QRunnable
 from PyQt5.QtGui import QImage
 import requests
 from log import logger
 from .utils import registerContext
 from dwidgets import dthread, CoverRunnable
-from config.constants import ArtistCoverPath, AlbumCoverPath, SongCoverPath
+from config.constants import ArtistCoverPath, AlbumCoverPath, SongCoverPath, OnlineSongCoverPath
 import urllib
 
+
+class Cover360Runnable(QRunnable):
+
+    def __init__(self, worker, artist, title, url):
+        super(Cover360Runnable, self).__init__()
+        self.worker = worker
+        self.artist = artist
+        self.title = title
+        self.url = url
+
+    def run(self):
+        localUrl = CoverWorker.onlineSongCoverPath(self.artist, self.title)
+        try:
+            r = requests.get(self.url)
+            with open(localUrl, "wb") as f:
+                f.write(r.content)
+            self.worker.download360SongCoverSuccessed.emit(self.artist, self.title, localUrl)
+        except Exception, e:
+            raise e
 
 class CoverWorker(QObject):
 
     __contextName__ = "CoverWorker"
 
-    downloadCoverSuccessed = pyqtSignal('QString', 'QString')
 
     downloadArtistCoverSuccessed = pyqtSignal('QString', 'QString')
     downloadAlbumCoverSuccessed = pyqtSignal('QString', 'QString', 'QString')
+    download360SongCoverSuccessed = pyqtSignal('QString', 'QString', 'QString')
 
     allTaskFinished = pyqtSignal()
 
     updateArtistCover = pyqtSignal('QString', 'QString')
     updateAlbumCover = pyqtSignal('QString', 'QString', 'QString')
+    updateOnlineSongCover = pyqtSignal('QString', 'QString', 'QString')
 
 
     defaultArtistCover = os.path.join(os.getcwd(), 'skin', 'images','bg1.jpg')
@@ -42,6 +62,7 @@ class CoverWorker(QObject):
         QThreadPool.globalInstance().setMaxThreadCount(4)
         self.artistCovers = {}
         self.albumCovers = {}
+        self.onlineSongCovers = {}
         self.taskNumber = 0
         self._artists = set()
         self._albums = set()
@@ -50,24 +71,8 @@ class CoverWorker(QObject):
     def initConnect(self):
         self.downloadArtistCoverSuccessed.connect(self.cacheArtistCover)
         self.downloadAlbumCoverSuccessed.connect(self.cacheAlbumCover)
+        self.download360SongCoverSuccessed.connect(self.cancheSongCover)
 
-    @classmethod
-    def md5(cls, string):
-        import hashlib
-        md5Value = hashlib.md5(string)
-        return md5Value.hexdigest()
-
-    @classmethod
-    def getCoverPathByMediaUrl(cls, url):
-        if isinstance(url, unicode):
-            url = url.encode('utf-8')
-        coverID = cls.md5(url)
-        filename = '%s' % coverID
-        filepath = os.path.join(SongCoverPath, filename)
-        return filepath
-
-    @pyqtSlot('QString', 'QString')
-    @dthread
     def downloadCoverByUrl(self, mediaUrl, coverUrl):
         filepath = self.getCoverPathByMediaUrl(mediaUrl)
         try:
@@ -86,6 +91,10 @@ class CoverWorker(QObject):
         self.albumCovers[album] = url
         self.updateAlbumCover.emit(artist, album, url)
         self.taskNumber -= 1
+
+    def cancheSongCover(self, artist, title, url):
+        self.onlineSongCovers[title] = url
+        self.updateOnlineSongCover.emit(artist, title, url)
 
     def downloadArtistCover(self, artist):
         f = self.artistCoverPath(artist)
@@ -115,6 +124,14 @@ class CoverWorker(QObject):
             self._albums.add(key)
             self.taskNumber += 1
             d = CoverRunnable(self, artist, album, qtype="album")
+            QThreadPool.globalInstance().start(d)
+
+    def downloadOnlineSongCover(self, artist, title, url):
+        f = self.onlineSongCoverPath(artist, title)
+        if os.path.exists(f):
+            return
+        if url:
+            d = Cover360Runnable(self, artist, title, url)
             QThreadPool.globalInstance().start(d)
 
     @classmethod
@@ -163,6 +180,18 @@ class CoverWorker(QObject):
             return cls.defaultSongCover
 
     @classmethod
+    def getOnlineCoverPathByArtistSong(cls, artist, title):
+        filepath = os.path.join(OnlineSongCoverPath, '%s-%s' % (artist, title))
+        if os.path.exists(filepath):
+            image = QImage()
+            if image.load(filepath):
+                return filepath
+            else:
+                return cls.defaultSongCover
+        else:
+            return cls.defaultSongCover
+
+    @classmethod
     def getFolderCover(cls):
         return cls.defaultFolderCover
 
@@ -191,3 +220,12 @@ class CoverWorker(QObject):
     @classmethod
     def isSongCoverExisted(cls, artist, title):
         return os.path.exists(cls.songCoverPath(artist, title))
+
+    @classmethod
+    def onlineSongCoverPath(cls, artist, title):
+        filepath = os.path.join(OnlineSongCoverPath, '%s-%s' % (artist, title))
+        return filepath
+
+    @classmethod
+    def isOnlineSongCoverExisted(cls, artist, title):
+        return os.path.exists(cls.onlineSongCoverPath(artist, title))

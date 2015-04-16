@@ -2,6 +2,7 @@
 from .utils import contexts, registerContext, registerObj
 from .web360apiworker import Web360ApiWorker
 from .muscimanageworker import MusicManageWorker
+from .onlinemuscimanageworker import OnlineMusicManageWorker
 from .menuworker import MenuWorker
 from .windowmanageworker import WindowManageWorker
 

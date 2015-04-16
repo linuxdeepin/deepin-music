@@ -20,6 +20,7 @@ from config.constants import CoverPath
 from log import logger
 from dwidgets import DListModel
 from .muscimanageworker import QmlSongObject, MusicManageWorker
+from .onlinemuscimanageworker import QmlOnlineSongObject, OnlineMusicManageWorker
 
 
 
@@ -64,7 +65,6 @@ class DOnlineMediaContent(QMediaContent):
 class DMediaPlaylist(QMediaPlaylist):
 
     nameChanged = pyqtSignal('QString')
-
     countChanged = pyqtSignal(int)
     mediasChanged = pyqtSignal('QVariant')
 
@@ -119,6 +119,7 @@ class DMediaPlaylist(QMediaPlaylist):
 
     def addOnlineMedia(self, url):
         mediaContent = DOnlineMediaContent(url)
+        self._medias.append(OnlineMusicManageWorker.getSongObjByUrl(url))
         super(DMediaPlaylist, self).addMedia(mediaContent)
 
 
@@ -146,8 +147,6 @@ class PlaylistWorker(QObject):
 
         self.initPlaylist()
 
-        
-
     def initPlaylist(self):
         urls = [
             u'/usr/share/deepin-sample-music/邓入比_我们的情歌.mp3',
@@ -159,41 +158,22 @@ class PlaylistWorker(QObject):
         self.loadPlaylists()
 
     def savePlaylists(self):
-        # result = OrderedDict()
-        # for name, playlist in self._playlists.items():
-        #     _playlist = OrderedDict()
-        #     for url, mediaContent in playlist.mediaContents.items():
-        #         if 'created_date' in mediaContent.tags:
-        #             mediaContent.tags.pop('created_date')
-        #         _playlist[url] = mediaContent.tags
-        #     result[name] = _playlist
-
-        # playlistPath = os.path.join(PlaylistPath, 'DeepinMusic3.playlist')
-        # with open(playlistPath, 'wb') as f:
-        #     json.dump(result, f, indent=4)
-        pass
+        result = OrderedDict()
+        for name, playlist in self._playlists.items():
+            _urls = playlist.urls
+            result[name] = _urls
+        playlistPath = os.path.join(PlaylistPath, 'DeepinMusic3.playlist')
+        with open(playlistPath, 'wb') as f:
+            json.dump(result, f, indent=4)
 
     def loadPlaylists(self):
-        pass
-        # playlistPath = os.path.join(PlaylistPath, 'DeepinMusic3.playlist')
-        # if os.path.exists(playlistPath):
-        #     with open(playlistPath, 'r') as f:
-        #         results = json.load(f, object_pairs_hook=OrderedDict)
-        #     for name, _playlist in results.items():
-        #         playlist = self.createPlaylistByName(name)
-        #         medias = []
-        #         for url, tags in _playlist.items():
-        #             if url.startswith("http"):
-        #                 medias.append({
-        #                     'url' : url,
-        #                     'tags': tags,
-        #                     'updated': True
-        #                 })
-        #             else:
-        #                 medias.append(tags)
-        #         playlist.addMedias(medias)
-            # from objbrowser import browse
-            # browse(results)
+        playlistPath = os.path.join(PlaylistPath, 'DeepinMusic3.playlist')
+        if os.path.exists(playlistPath):
+            with open(playlistPath, 'r') as f:
+                results = json.load(f, object_pairs_hook=OrderedDict)
+            for name, urls in results.items():
+                playlist = self.createPlaylistByName(name)
+                playlist.addMedias(urls)
 
     def savePlaylistByName(self, name):
         f = QFile(os.sep.join([PlaylistPath, '%s.m3u' % name]))
@@ -271,16 +251,19 @@ class PlaylistWorker(QObject):
     def addOnlineMediaToTemporary(self, media):
         playlist = self.temporaryPlaylist
         self.currentPlaylistChanged.emit('temporary')
-        playlist.addMedia(media['url'], media['tags'], media['updated'])
+        playlist.addMedia(media['url'])
 
     def addOnlineMediasToTemporary(self, medias):
         playlist = self.temporaryPlaylist
         self.currentPlaylistChanged.emit('temporary')
-        playlist.addMedias(medias)
+        urls = []
+        for media in medias:
+            urls.append(media['url'])
+        playlist.addMedias(urls)
 
     def addOnlineMediaToFavorite(self, media):
         playlist = self.favoritePlaylist
-        playlist.addMedia(media['url'], media['tags'], media['updated'])
+        playlist.addMedia(media['url'])
 
     def removeFavoriteMediaContent(self, url):
         playlist = self.favoritePlaylist
