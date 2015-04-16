@@ -9,7 +9,6 @@ from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot, QUrl
 import requests
 import threading
 from .utils import registerContext, duration_to_string
-from .mediaplayer import MediaPlayer
 from dwidgets import dthread
 import copy
 from log import logger
@@ -136,8 +135,9 @@ class Web360ApiWorker(QObject):
 
         return result
 
-    def getResultByUrl(self, url):
-        tags = self.request(url)
+    @classmethod
+    def getResultByUrl(cls, url):
+        tags = cls.request(url)
         if isinstance(tags, list) and not tags:
             tags = None
         else:

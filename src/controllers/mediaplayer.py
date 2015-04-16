@@ -14,6 +14,8 @@ from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent, QMediaPlaylist
 from .coverworker import CoverWorker
 from log import logger
 from .muscimanageworker import MusicManageWorker
+from .onlinemuscimanageworker import OnlineMusicManageWorker
+from .web360apiworker import Web360ApiWorker
 
 
 class PlayerBin(QMediaPlayer):
@@ -200,7 +202,6 @@ class MediaPlayer(QObject):
         if duration <= 0:
             index = self._playlist.currentIndex()
             urls = self._playlist.urls
-            # mediaContents =  self._playlist.mediaContents
             # if index < len(urls):
             #     mediaContent = mediaContents[urls[index]]
             #     if 'duration' in mediaContent.tags:
@@ -331,30 +332,12 @@ class MediaPlayer(QObject):
     @pyqtSlot(int)
     def playMediaByIndex(self, index):
         urls = self._playlist.urls
-        # mediaContents =  self._playlist.mediaContents
-
-        # if index < len(urls) and index > 0:
-        #     mediaContent = mediaContents[urls[index]]
-        #     url = mediaContent.url
-
-        #     if isinstance(mediaContent, DRealLocalMediaContent):
-        #         playurl = mediaContent.url
-        #         self.setMediaUrl(playurl)
-        #         self.title = mediaContent.title
-        #         self.artist = mediaContent.artist
-        #         self.cover = mediaContent.cover
-        #     elif isinstance(mediaContent, DRealOnlineMediaContent):
-        #         # self.title = mediaContent.title
-        #         # self.artist = mediaContent.artist
-        #         # self.cover = mediaContent.cover
-        #         self.requestMusic.emit(url)
-        #         return
-
-            # if playurl:
-            #     self.setMediaUrl(playurl)
-            #     self.title = mediaContent.title
-            #     self.artist = mediaContent.artist
-            #     self.cover = mediaContent.cover
+        if index < len(urls) and index > 0:
+            url = urls[index]
+            if url.startswith('http'):
+                self.requestMusic.emit(url)
+            else:
+                self.playLocalMedia(url)
 
     def getUrlID(self):
         if self._playlist:
@@ -374,50 +357,42 @@ class MediaPlayer(QObject):
         index = urls.index(url)
         self._playlist.setCurrentIndex(index)
 
-        songObj = MusicManageWorker.getSongObjByUrl(url)
+        self.updateMediaView(url)
+        self.playMediaByUrl(url)
+
+    @pyqtSlot('QVariant')
+    def playOnlineMedia(self, result):
+        url = result['url']
+        urls = self._playlist.urls
+        if url in urls:
+            self.updateMediaView(url)
+
+        if 'playlinkUrl' in result:
+            playlinkUrl = result['playlinkUrl']
+            self.playMediaByUrl(playlinkUrl)
+
+    def updateMediaView(self, url):
+        if url.startswith('http'):
+            songObj = OnlineMusicManageWorker.getSongObjByUrl(url)
+        else:
+            songObj = MusicManageWorker.getSongObjByUrl(url)
         if songObj:
             self.title = songObj.title
             self.artist = songObj.artist
             self.cover = songObj.cover
+
+    def playMediaByUrl(self, url):
         self.setMediaUrl(url)
         self.playToggle(True)
 
     @pyqtSlot('QVariant')
-    def playOnlineMedia(self, result):
-        url = unicode(result['url'])
-        urls = self._playlist.urls
-        if url in urls:
-            index = urls.index(url)
-            # self._playlist.updateMedia(result['url'], result['tags'])
-            # self._playlist.setCurrentIndex(index)
-
-            # mediaContents =  self._playlist.mediaContents
-            # mediaContent = mediaContents[url]
-            # playurl = mediaContent.playlinkUrl
-            # self.setMediaUrl(playurl)
-
-            # self.title = mediaContent.title
-            # self.artist = mediaContent.artist
-            # self.cover = mediaContent.cover
-            # self.playToggle(True)
-
-    @pyqtSlot('QVariant')
     def swicthOnlineMedia(self, result):
-        url = unicode(result['url'])
-        urls = self._playlist.urls
-        index = urls.index(url)
-
-        self._playlist.updateMedia(result['url'], result['tags'])
-        self._playlist.setCurrentIndex(index)
-
-        mediaContents =  self._playlist.mediaContents
-        mediaContent = mediaContents[url]
-        playurl = mediaContent.playlinkUrl
-        self.setMediaUrl(playurl)
-
-        self.title = mediaContent.title
-        self.artist = mediaContent.artist
-        self.cover = mediaContent.cover
+        if 'url' in result:
+            url = result['url']
+            self.updateMediaView(url)
+        if 'playlinkUrl' in result:
+            playlinkUrl = result['playlinkUrl']
+            self.playMediaByUrl(playlinkUrl)
 
     @pyqtProperty(int, notify=currentIndexChanged)
     def currentIndex(self):

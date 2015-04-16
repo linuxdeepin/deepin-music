@@ -79,7 +79,7 @@ class QmlOnlineSongObject(QObject):
         elif CoverWorker.isAlbumCoverExisted(self.artist, self.album):
             self._cover = CoverWorker.getCoverPathByArtistAlbum(self.artist, self.album)
         else:
-            self._cover = CoverWorker.getCoverPathByArtist(self.artist, self.title)
+            self._cover = CoverWorker.getCoverPathByArtist(self.artist)
 
         if not self._cover:
             self._cover = CoverWorker.getOnlineCoverPathByArtistSong(self.artist, self.title)
