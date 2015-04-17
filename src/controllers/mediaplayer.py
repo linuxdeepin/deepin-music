@@ -54,6 +54,7 @@ class MediaPlayer(QObject):
 
     titleChanged = pyqtSignal('QString')
     artistChanged = pyqtSignal('QString')
+    albumChanged = pyqtSignal('QString')
     coverChanged = pyqtSignal('QString')
 
     downloadCover = pyqtSignal('QString', 'QString')
@@ -75,6 +76,7 @@ class MediaPlayer(QObject):
         self._url = ''
         self._title = ''
         self._artist = ''
+        self._album = ''
         self._cover = ''
 
         self.initPlayer()
@@ -379,6 +381,7 @@ class MediaPlayer(QObject):
         if songObj:
             self.title = songObj.title
             self.artist = songObj.artist
+            self.album = songObj.album
             self.cover = songObj.cover
 
     def playMediaByUrl(self, url):
@@ -416,27 +419,43 @@ class MediaPlayer(QObject):
         self._artist = value
         self.artistChanged.emit(value)
 
+    @pyqtProperty('QString', notify=albumChanged)
+    def album(self):
+        return self._album
+
+    @album.setter
+    def album(self, value):
+        self._album = value
+        self.albumChanged.emit(value)
+
     @pyqtProperty('QString', notify=coverChanged)
     def cover(self):
+        if CoverWorker.isSongCoverExisted(self.artist, self.title):
+            self._cover = CoverWorker.getCoverPathByArtistSong(self.artist, self.title)
+        elif CoverWorker.isOnlineSongCoverExisted(self.artist, self.title):
+            self._cover = CoverWorker.getOnlineCoverPathByArtistSong(self.artist, self.title)
+        elif CoverWorker.isAlbumCoverExisted(self.artist, self.album):
+            self._cover = CoverWorker.getCoverPathByArtistAlbum(self.artist, self.album)
+        else:
+            self._cover = CoverWorker.getCoverPathByArtist(self.artist)
         return self._cover
 
     @cover.setter
     def cover(self, cover):
-        if cover.startswith('http'):
-            index = self._playlist.currentIndex()
-            urls = self._playlist.urls
-            url = urls[index]
-            self.downloadCover.emit(url , cover)
-            return
         self._cover = cover
         self.coverChanged.emit(cover)
 
-    def updateCover(self, mediaUrl, coverUrl):
-        mediaContents =  self._playlist.mediaContents
-        if mediaUrl in mediaContents:
-            mediaContent = mediaContents[mediaUrl]
-            mediaContent.cover = coverUrl
-        self.cover = coverUrl
+    def updateArtistCover(self, artist='', cover=''):
+        if self.artist in artist:
+            self.cover = self.cover
+
+    def updateAlbumCover(self, artist='',album='', cover=''):
+        if self.artist == artist and self.album == album:
+            self.cover = self.cover
+
+    def updateOnlineSongCover(self, artist='', title='', cover=''):
+        if self.artist == artist and self.title == title:
+            self.cover = self.cover
 
     @pyqtSlot('QString', result='QString')
     def metaData(self, key):

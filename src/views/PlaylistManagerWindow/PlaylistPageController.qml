@@ -94,31 +94,19 @@ Item {
         value: PlaylistWorker.playlistNames
     }
 
-    // Connections {
-    //     target: playlistDetailBox.playlistView
-
-    //     onPlayMusicByUrl: {
-    //         MediaPlayer.setPlaylistByName(currentPlaylistName);
-    //         playMusicByUrl(url);
-
-    //         if (MediaPlayer.playlist.name == 'favorite'){
-    //             playlistNavgationBar.starDelegate.state = 'Active'
-    //             playlistNavgationBar.temporaryDelegate.state = '!Checked'
-
-    //         }else if(MediaPlayer.playlist.name == 'temporary'){
-    //             playlistNavgationBar.starDelegate.state = '!Checked'
-    //             playlistNavgationBar.temporaryDelegate.state = 'Active'
-    //         }else{
-
-    //         }
-    //     }
-
-    //     onModelChanged: {
-    //         playlistDetailBox.playlistView.positionViewAtEnd()
-    //         playlistDetailBox.playlistView.currentIndex = -1;
-    //         activeCurrentItem();
-    //     }
-    // }
+    Connections {
+        target: playlistPage
+        onVisibleChanged: {
+            if (visible){
+                var playlist = MediaPlayer.playlist;
+                if (playlist){
+                    var name = playlist.name;
+                    print(name)
+                    playlistNavgationBar.playlistNameChanged(name);
+                }
+            }
+        } 
+    }
 
     Connections {
         target: playlistNavgationBar

@@ -16,6 +16,17 @@ Rectangle {
         MusicDelegate {}
     }
 
+    function getModel(){
+        var playlist = MediaPlayer.playlist;
+        if (playlist){
+            var name = playlist.name
+            var model = eval(name);
+            return model;
+        }else{
+            return null;
+        }
+    }
+
     ListView {
         id: playlistView
         anchors.fill: parent
@@ -25,6 +36,7 @@ Rectangle {
         spacing: 3
         displayMarginBeginning: 0
         displayMarginEnd: 0
+        model: songListModel
         snapMode:ListView.SnapToItem
 
         signal playMusicByUrl(string url)
@@ -35,5 +47,10 @@ Rectangle {
         }
 
         Component.onCompleted: positionViewAtIndex(currentIndex, ListView.Center)
+    }
+
+    DListModel {
+        id: songListModel
+        pymodel: getModel()
     }
 }

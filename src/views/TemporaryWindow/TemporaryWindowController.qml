@@ -3,6 +3,7 @@ import QtQuick 2.4
 Item {
     property var temporaryWindow
     property var playlistView
+    property var songListModel
     property var clearButton
     property var closeButton
 
@@ -19,6 +20,14 @@ Item {
         MediaPlayer.playlist.clearMedias()
     }
 
+    function updateModel() {
+        var pymodel = temporaryWindow.getModel()
+        if (pymodel){
+            songListModel.clear();
+            songListModel.initModel();
+        }
+    }
+
     Binding {
         target: playlistView
         property: 'currentIndex'
@@ -33,6 +42,19 @@ Item {
     }
 
     Connections {
+        target: temporaryWindow
+        onVisibleChanged: {
+            if (visible){
+                var pymodel = temporaryWindow.getModel()
+
+                for(var i=0; i<pymodel.data.length; i++){
+                    songListModel.set(i, pymodel.data[i])
+                }
+            }
+        } 
+    }
+
+    Connections {
         target: playlistView
         // onChangeIndex: changeIndex(index)
         onPlayMusicByUrl: playMusicByUrl(url)
@@ -42,5 +64,9 @@ Item {
     Connections {
         target: clearButton
         onClicked: clearCurrentPlaylist() 
+    }
+
+    Component.onCompleted: {
+        MediaPlayer.playlistChanged.connect(updateModel);
     }
 }

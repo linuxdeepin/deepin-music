@@ -53,7 +53,7 @@ Rectangle {
                 height: mediaItem.height / 2
                 elide: Text.ElideRight
                 verticalAlignment: Text.AlignVCenter
-                text: mediaItem.ListView.view.model[index].title
+                text: mediaItem.ListView.view.model.get(index).title
                 color: "#131313"
                 font.pixelSize: 14
             }
@@ -64,7 +64,7 @@ Rectangle {
                 height: mediaItem.height / 2
                 elide: Text.ElideRight
                 verticalAlignment: Text.AlignVCenter
-                text: mediaItem.ListView.view.model[index].artist
+                text: mediaItem.ListView.view.model.get(index).artist
                 color: "#919191"
                 font.pixelSize: 13
             }
@@ -104,7 +104,7 @@ Rectangle {
             if (mouse.button == Qt.LeftButton){
                 mediaItem.ListView.view.currentIndex = index;
                 if (playButton.visible){
-                    var url = mediaItem.ListView.view.model[index].url;
+                    var url = mediaItem.ListView.view.model.get(index).url;
                     mediaItem.ListView.view.playMusicByUrl(url);
                 }
                 playButton.visible = false;

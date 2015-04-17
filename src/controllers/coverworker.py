@@ -82,10 +82,9 @@ class CoverWorker(QObject):
     updateAlbumCover = pyqtSignal('QString', 'QString', 'QString')
     updateOnlineSongCover = pyqtSignal('QString', 'QString', 'QString')
 
-
     defaultArtistCover = os.path.join(os.getcwd(), 'skin', 'images','bg1.jpg')
-    defaultAlbumCover = os.path.join(os.getcwd(), 'skin', 'images','bg2.jpg')
-    defaultSongCover = os.path.join(os.getcwd(), 'skin', 'images','bg3.jpg')
+    defaultAlbumCover = os.path.join(os.getcwd(), 'skin', 'images','bg1.jpg')
+    defaultSongCover = os.path.join(os.getcwd(), 'skin', 'images','bg1.jpg')
     defaultFolderCover = os.path.join(os.getcwd(), 'skin', 'images','bg4.jpg')
 
     @registerContext

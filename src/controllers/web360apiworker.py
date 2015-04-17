@@ -125,6 +125,7 @@ class Web360ApiWorker(QObject):
                 else:
                     i = i + 1
             except ValueError:
+                result = ret.text
                 break
             except:
                 i = i + 1
@@ -213,7 +214,6 @@ class Web360ApiWorker(QObject):
                 ret = json.loads(content)
                 results = self.getSongList(ret)
                 self.addMediaContents.emit(results)
-
                 url = self.getUrlByID(ret['songList'][0]['songId'])
                 self.playMediaByUrl(url)
 

@@ -11,7 +11,7 @@ from controllers import contexts, Web360ApiWorker, MusicManageWorker
 from controllers import OnlineMusicManageWorker, MenuWorker, WindowManageWorker
 from controllers import MediaPlayer, PlaylistWorker, CoverWorker
 from controllers import ConfigWorker, DBWorker, I18nWorker
-from controllers import UtilWorker, registerObj
+from controllers import UtilWorker
 from controllers.mediaplayer import gPlayer
 # from models import MusicDataBase
 
@@ -88,6 +88,9 @@ class DeepinPlayer(QObject):
 
     def initQMLContext(self):
         self.mainWindow.setContexts(contexts)
+        playlists = self.playlistWorker._playlists
+        for name, playlist in playlists.items():
+            self.playlistWorker.registerObj.emit(name, playlist._medias)
         self.mainWindow.setSource(QUrl('views/Main.qml'))
 
     def initConnect(self):
@@ -117,6 +120,7 @@ class DeepinPlayer(QObject):
         self.web360ApiWorker.addMediaContents.connect(
             self.playlistWorker.addOnlineMediasToTemporary)
 
+        self.web360ApiWorker.addMediaContentToFavorite.connect(self.onlineMusicManageWorker.addSong)
         self.web360ApiWorker.addMediaContentToFavorite.connect(
             self.playlistWorker.addOnlineMediaToFavorite)
         self.web360ApiWorker.removeMediaContentFromFavorite.connect(
@@ -130,6 +134,8 @@ class DeepinPlayer(QObject):
         self.playlistWorker.currentPlaylistChanged.connect(
             self.mediaPlayer.setPlaylistByName)
 
+        self.playlistWorker.registerObj.connect(self.mainWindow.setContext)
+
     def coverWorkerConnect(self):
         self.coverWorker.updateArtistCover.connect(
             self.musicManageWorker.updateArtistCover)
@@ -137,7 +143,14 @@ class DeepinPlayer(QObject):
             self.musicManageWorker.updateAlbumCover)
         self.coverWorker.allTaskFinished.connect(
             self.musicManageWorker.stopUpdate)
-        self.coverWorker.updateOnlineSongCover.connect(self.onlineMusicManageWorker.updateSongCover)
+        self.coverWorker.updateOnlineSongCover.connect(
+            self.onlineMusicManageWorker.updateSongCover)
+        self.coverWorker.updateAlbumCover.connect(
+            self.onlineMusicManageWorker.updateSongCover)
+
+        self.coverWorker.updateArtistCover.connect(self.mediaPlayer.updateArtistCover)
+        self.coverWorker.updateAlbumCover.connect(self.mediaPlayer.updateAlbumCover)
+        self.coverWorker.updateOnlineSongCover.connect(self.mediaPlayer.updateOnlineSongCover)
 
     def musicManageWorkerConnect(self):
         self.musicManageWorker.saveSongToDB.connect(self.dbWorker.addSong)
@@ -157,9 +170,12 @@ class DeepinPlayer(QObject):
             self.coverWorker.downloadAlbumCover)
 
     def onlineMusicManageWorkerConnect(self):
-        self.onlineMusicManageWorker.downloadOnlineSongCover.connect(self.coverWorker.downloadOnlineSongCover)
-        self.onlineMusicManageWorker.downloadOnlineAlbumCover.connect(self.coverWorker.downloadOnlineAlbumCover)
-        self.onlineMusicManageWorker.downloadAlbumCover.connect(self.coverWorker.downloadAlbumCover)
+        self.onlineMusicManageWorker.downloadOnlineSongCover.connect(
+            self.coverWorker.downloadOnlineSongCover)
+        self.onlineMusicManageWorker.downloadOnlineAlbumCover.connect(
+            self.coverWorker.downloadOnlineAlbumCover)
+        self.onlineMusicManageWorker.downloadAlbumCover.connect(
+            self.coverWorker.downloadAlbumCover)
 
     def menuWorkerConnect(self):
         self.menuWorker.addSongFile.connect(self.musicManageWorker.addSongFile)

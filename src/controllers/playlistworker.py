@@ -141,20 +141,23 @@ class PlaylistWorker(QObject):
         self._playlistNames = []
         self._currentPlaylist = None
 
-        self.registerObj.connect(registerObj)
+        # self.registerObj.connect(registerObj)
         self.createPlaylistByName('temporary')
         self.createPlaylistByName('favorite')
+
+        registerObj('temporary', self._playlists['temporary']._medias)
+        registerObj('favorite', self._playlists['favorite']._medias)
 
         self.initPlaylist()
 
     def initPlaylist(self):
-        urls = [
-            u'/usr/share/deepin-sample-music/邓入比_我们的情歌.mp3',
-            u'/usr/share/deepin-sample-music/郭一凡_说走就走的旅行.mp3',
-            u'/usr/share/deepin-sample-music/胡彦斌_依然是你.mp3'
-        ]
-        for url in urls:
-            self.addMediaToFavorite(url)
+        # urls = [
+        #     u'/usr/share/deepin-sample-music/邓入比_我们的情歌.mp3',
+        #     u'/usr/share/deepin-sample-music/郭一凡_说走就走的旅行.mp3',
+        #     u'/usr/share/deepin-sample-music/胡彦斌_依然是你.mp3'
+        # ]
+        # for url in urls:
+        #     self.addMediaToFavorite(url)
         self.loadPlaylists()
 
     def savePlaylists(self):
@@ -225,7 +228,6 @@ class PlaylistWorker(QObject):
             self.nameExisted.emit(name)
         else:
             self._playlists[name] = DMediaPlaylist(name)
-            self.registerObj.emit(name, self._playlists[name]._medias)
             if name not in ['favorite', 'temporary']:
                 self._playlistNames.insert(0, {'name': name})
                 self.playlistNames = self._playlistNames
@@ -233,10 +235,9 @@ class PlaylistWorker(QObject):
         return self._playlists[name]
 
     @pyqtSlot('QString', result='QVariant')
-    def getMediasByName(self, name):
-        # if name in self._playlists:
-        #     return self._playlists[name].medias
-        pass
+    def getUrlsByName(self, name):
+        if name in self._playlists:
+            return self._playlists[name].urls
 
     def addLocalMediaToTemporary(self, url):
         playlist = self.temporaryPlaylist

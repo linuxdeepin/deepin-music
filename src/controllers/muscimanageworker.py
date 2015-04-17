@@ -433,9 +433,9 @@ class MusicManageWorker(QObject):
 
     def saveSongs(self):
         self.saveSongsToDB.emit(self._tempSongs.values())
-        for song in self._songsDict.values():
-            artist = song['artist']
-            album = song['album']
+        for song in self._songObjs.values():
+            artist = song.artist
+            album = song.album
             if not CoverWorker.isAlbumCoverExisted(artist, album):
                 self.downloadAlbumCover.emit(artist, album)
 

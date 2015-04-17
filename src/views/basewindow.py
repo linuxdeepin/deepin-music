@@ -19,6 +19,8 @@ from log import logger
 
 class BaseWindow(DQuickView):
 
+    globalObjectChanged = pyqtSignal('QJSValue')
+
     def __init__(self):
         super(BaseWindow, self).__init__()
         self.setFlags(Qt.FramelessWindowHint)
@@ -36,7 +38,7 @@ class BaseWindow(DQuickView):
         for key in cons:
             self.setContext(key, cons[key])
 
-    @pyqtProperty('QJSValue')
+    @pyqtProperty('QJSValue', notify=globalObjectChanged)
     def globalObject(self):
         return self.engine().globalObject()
 

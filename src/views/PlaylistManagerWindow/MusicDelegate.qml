@@ -92,10 +92,12 @@ Rectangle {
             name: "Current"
             when: mediaItem.ListView.isCurrentItem
             PropertyChanges { target: titleTetx; color: "#2ca7f8";}
+            PropertyChanges { target: waveBar; active: true ;}
         },
         State {
             name: "!Current"
             when: !mediaItem.ListView.isCurrentItem
+            
             PropertyChanges { target: waveBar; active: false ;}
         }
     ]
@@ -122,7 +124,7 @@ Rectangle {
             if (mouse.button == Qt.LeftButton){
                 mediaItem.ListView.view.currentIndex = index;
                 mediaItem.ListView.view.playMusicByUrl(url);
-                waveBar.active = true
+                // waveBar.active = true
             }
             else if (mouse.button == Qt.RightButton){
                 mediaItem.menuShowed(index);

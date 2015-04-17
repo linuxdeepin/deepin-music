@@ -148,18 +148,18 @@ Item {
     }
 
 
-    Binding {
-        target: playlistPage.playlistView
-        property: 'model'
-        value: {
-            var playlist = MediaPlayer.playlist;
-            if (playlist){
-                return playlist.medias;
-            }else{
-                return null;
-            }
-        }
-    }
+    // Binding {
+    //     target: playlistPage.playlistView
+    //     property: 'model'
+    //     value: {
+    //         var playlist = MediaPlayer.playlist;
+    //         if (playlist){
+    //             return playlist.medias;
+    //         }else{
+    //             return null;
+    //         }
+    //     }
+    // }
 
     Binding {
         target: playlistPage.playlistView

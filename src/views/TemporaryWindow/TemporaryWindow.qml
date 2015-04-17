@@ -25,10 +25,8 @@ DRectWithCorner {
         var playlist = MediaPlayer.playlist;
         if (playlist){
             var name = playlist.name
-            // playlist.updateListModel()
-            var model = Qt.get(name);
+            var model = eval(name);
             return model;
-
         }else{
             return null;
         }
@@ -146,8 +144,6 @@ DRectWithCorner {
                 model: songListModel
                 focus: true
                 spacing: 8
-                displayMarginBeginning: -24
-                displayMarginEnd: -24
                 snapMode:ListView.SnapToItem
 
                 signal playMusicByUrl(string url)
@@ -171,6 +167,7 @@ DRectWithCorner {
         id: temporaryWindowController
         temporaryWindow: temporaryWindow
         playlistView: playlistView
+        songListModel: songListModel
         clearButton: clearButton
         closeButton: closeButton
     }

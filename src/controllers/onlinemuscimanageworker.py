@@ -88,18 +88,7 @@ class QmlOnlineSongObject(QObject):
 
     @cover.setter
     def cover(self, cover):
-        if CoverWorker.isOnlineSongCoverExisted(self.artist, self.title):
-            self._cover = CoverWorker.getOnlineCoverPathByArtistSong(self.artist, self.title)
-        elif CoverWorker.isSongCoverExisted(self.artist, self.title):
-            self._cover = CoverWorker.getCoverPathByArtistSong(self.artist, self.title)
-        elif CoverWorker.isAlbumCoverExisted(self.artist, self.album):
-            self._cover = CoverWorker.getCoverPathByArtistAlbum(self.artist, self.album)
-        else:
-            self._cover = CoverWorker.getCoverPathByArtist(self.artist)
-
-        if not self._cover:
-            self._cover = CoverWorker.getOnlineCoverPathByArtistSong(self.artist, self.title)
-
+        self._cover = cover
         self.coverChanged.emit(self._cover)
         return self._cover
 
@@ -185,17 +174,6 @@ class OnlineMusicManageWorker(QObject):
         else:
             self.downloadCover(_songDict)
 
-    def addSongByAlbum(self, media):
-        _songDict = self.updateTags(media)
-        url = media['url']
-        self._songsDict[url] = _songDict
-        songObj  = QmlOnlineSongObject(**_songDict)
-        self._songObjs[url] = songObj
-
-        if not songObj.playlinkUrl:
-            d = RequestAlbumSongRunnable(self, url)
-            QThreadPool.globalInstance().start(d)
-
     def addSongs(self, medias):
         if self.isMediasBeyondToSameAlbum(medias):
             self._albums[medias[0]['albumName']] = medias
@@ -205,7 +183,8 @@ class OnlineMusicManageWorker(QObject):
     def isMediasBeyondToSameAlbum(self, medias):
         _m = set()
         for media in medias:
-            _m.add(media['albumName'])
+            if 'albumName' in media:
+                _m.add(media['albumName'])
         if len(_m) == 1:
             return True
         else:
@@ -233,7 +212,7 @@ class OnlineMusicManageWorker(QObject):
                 elif albumImage_500x500:
                     self.downloadOnlineSongCover.emit(artist, title, albumImage_500x500)
                 else:
-                    self.downloadAlbumCover.emit(artist, title)
+                    self.downloadAlbumCover.emit(artist, album)
         else:
             if not CoverWorker.isOnlineSongCoverExisted(artist, title):
                 albumImage_500x500 = media['albumImage_500x500']
@@ -243,7 +222,9 @@ class OnlineMusicManageWorker(QObject):
                 elif albumImage_500x500:
                     self.downloadOnlineAlbumCover.emit(artist, title, albumImage_500x500, self._albums[album])
                 else:
-                    self.downloadAlbumCover.emit(artist, title)
+                    self.downloadAlbumCover.emit(artist, album)
+            else:
+                self.updateSongCover(artist, title, CoverWorker.isOnlineSongCoverExisted(artist, title))
 
     def updateSongAndDownloadCover(self, result):
         _songDict = self.updateTags(result)
@@ -254,19 +235,21 @@ class OnlineMusicManageWorker(QObject):
             self._songObjs[url].setDict(_songDict)
         self.downloadCover(_songDict)
 
-    def updateSongCover(self, artist, title, coverUrl):
-        for url , songObj in  self._songObjs.items():
-            _songDict = self._songsDict[url]
-            if songObj.title == title and songObj.artist == artist:
-                cover = songObj.cover
-                _songDict['cover'] = coverUrl
-                self._songsDict[url] = _songDict
-
+    def updateSongCover(self, artist, albumtitle, coverUrl):
         mediaPlayer = contexts['MediaPlayer']
         if mediaPlayer.playlist:
             dlistModel = mediaPlayer.playlist._medias
-            for index, songObj in enumerate(dlistModel.data):
-                if songObj:
-                    if songObj.title == title and songObj.artist == artist:
-                        cover = songObj.cover
-                        dlistModel.setProperty(index, 'cover', coverUrl)
+        else:
+            dlistModel = None
+        for url , songObj in  self._songObjs.items():
+            _songDict = self._songsDict[url]
+            if (songObj.title == albumtitle or songObj.album == albumtitle) and songObj.artist == artist:
+                cover = songObj.cover
+                if cover  == CoverWorker.defaultSongCover:
+                    cover = coverUrl
+                _songDict['cover'] = cover
+                self._songsDict[url] = _songDict
+
+                if dlistModel and songObj in dlistModel.data:
+                    index = dlistModel.data.index(songObj)
+                    dlistModel.setProperty(index, 'cover', cover)
