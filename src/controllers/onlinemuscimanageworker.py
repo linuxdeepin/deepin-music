@@ -104,10 +104,10 @@ class QmlOnlineSongObject(QObject):
         return self._cover
 
 
-class RequestRunnable(QRunnable):
+class RequestSongRunnable(QRunnable):
 
     def __init__(self, worker, url):
-        super(RequestRunnable, self).__init__()
+        super(RequestSongRunnable, self).__init__()
         self.worker = worker
         self.url = url
 
@@ -121,9 +121,11 @@ class RequestRunnable(QRunnable):
 class OnlineMusicManageWorker(QObject):
 
     downloadOnlineSongCover = pyqtSignal('QString', 'QString', 'QString')
+    downloadOnlineAlbumCover = pyqtSignal('QString', 'QString', 'QString', list)
     downloadAlbumCover = pyqtSignal('QString', 'QString')
 
     updateSongSignal = pyqtSignal(dict)
+    updateAlbumSongSignal = pyqtSignal(dict)
 
     _songObjs = OrderedDict()
 
@@ -152,11 +154,12 @@ class OnlineMusicManageWorker(QObject):
 
     def __init__(self):
         super(OnlineMusicManageWorker, self).__init__()
+        self._albums = {}
         self.initConnect()
         self.loadDB()
 
     def initConnect(self):
-        self.updateSongSignal.connect(self.updateSong)
+        self.updateSongSignal.connect(self.updateSongAndDownloadCover)
 
     def loadDB(self):
         for url, _songDict in self._songsDict.items():
@@ -177,14 +180,36 @@ class OnlineMusicManageWorker(QObject):
         self._songObjs[url] = songObj
 
         if not songObj.playlinkUrl:
-            d = RequestRunnable(self, url)
+            d = RequestSongRunnable(self, url)
             QThreadPool.globalInstance().start(d)
         else:
             self.downloadCover(_songDict)
 
+    def addSongByAlbum(self, media):
+        _songDict = self.updateTags(media)
+        url = media['url']
+        self._songsDict[url] = _songDict
+        songObj  = QmlOnlineSongObject(**_songDict)
+        self._songObjs[url] = songObj
+
+        if not songObj.playlinkUrl:
+            d = RequestAlbumSongRunnable(self, url)
+            QThreadPool.globalInstance().start(d)
+
     def addSongs(self, medias):
+        if self.isMediasBeyondToSameAlbum(medias):
+            self._albums[medias[0]['albumName']] = medias
         for media in medias:
             self.addSong(media)
+
+    def isMediasBeyondToSameAlbum(self, medias):
+        _m = set()
+        for media in medias:
+            _m.add(media['albumName'])
+        if len(_m) == 1:
+            return True
+        else:
+            return False
 
     def updateTags(self, media):
         _songDict = {}
@@ -198,17 +223,29 @@ class OnlineMusicManageWorker(QObject):
         url = media['url']
         artist = media['artist']
         title = media['title']
-        if not CoverWorker.isOnlineSongCoverExisted(artist, title):
-            albumImage_500x500 = media['albumImage_500x500']
-            albumImage_100x100 = media['albumImage_100x100']
-            if albumImage_100x100:
-                self.downloadOnlineSongCover.emit(artist, title, albumImage_100x100)
-            elif albumImage_500x500:
-                self.downloadOnlineSongCover.emit(artist, title, albumImage_500x500)
-            else:
-                self.downloadAlbumCover.emit(artist, title)
+        album = media['album']
+        if album not in self._albums:
+            if not CoverWorker.isOnlineSongCoverExisted(artist, title):
+                albumImage_500x500 = media['albumImage_500x500']
+                albumImage_100x100 = media['albumImage_100x100']
+                if albumImage_100x100:
+                    self.downloadOnlineSongCover.emit(artist, title, albumImage_100x100, )
+                elif albumImage_500x500:
+                    self.downloadOnlineSongCover.emit(artist, title, albumImage_500x500)
+                else:
+                    self.downloadAlbumCover.emit(artist, title)
+        else:
+            if not CoverWorker.isOnlineSongCoverExisted(artist, title):
+                albumImage_500x500 = media['albumImage_500x500']
+                albumImage_100x100 = media['albumImage_100x100']
+                if albumImage_100x100:
+                    self.downloadOnlineAlbumCover.emit(artist, title, albumImage_100x100, self._albums[album])
+                elif albumImage_500x500:
+                    self.downloadOnlineAlbumCover.emit(artist, title, albumImage_500x500, self._albums[album])
+                else:
+                    self.downloadAlbumCover.emit(artist, title)
 
-    def updateSong(self, result):
+    def updateSongAndDownloadCover(self, result):
         _songDict = self.updateTags(result)
         url = result['url']
         if url in self._songsDict:
@@ -217,18 +254,19 @@ class OnlineMusicManageWorker(QObject):
             self._songObjs[url].setDict(_songDict)
         self.downloadCover(_songDict)
 
-    def updateSongCover(self, artist, title, url):
+    def updateSongCover(self, artist, title, coverUrl):
         for url , songObj in  self._songObjs.items():
             _songDict = self._songsDict[url]
             if songObj.title == title and songObj.artist == artist:
                 cover = songObj.cover
-                _songDict['cover'] = cover
+                _songDict['cover'] = coverUrl
                 self._songsDict[url] = _songDict
 
         mediaPlayer = contexts['MediaPlayer']
         if mediaPlayer.playlist:
             dlistModel = mediaPlayer.playlist._medias
             for index, songObj in enumerate(dlistModel.data):
-                if songObj.title == title and songObj.artist == artist:
-                    cover = songObj.cover
-                    dlistModel.setProperty(index, 'cover', cover)
+                if songObj:
+                    if songObj.title == title and songObj.artist == artist:
+                        cover = songObj.cover
+                        dlistModel.setProperty(index, 'cover', coverUrl)

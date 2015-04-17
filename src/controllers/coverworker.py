@@ -35,6 +35,38 @@ class Cover360Runnable(QRunnable):
         except Exception, e:
             raise e
 
+
+class AlbumCover360Runnable(QRunnable):
+
+    def __init__(self, worker, artist, title, url, medias):
+        super(AlbumCover360Runnable, self).__init__()
+        self.worker = worker
+        self.artist = artist
+        self.title = title
+        self.url = url
+        self.medias = medias
+
+    def run(self):
+        try:
+            if CoverWorker.isOnlineSongCoverExisted(self.artist, self.title):
+                for media in self.medias:
+                    artist = media['singerName']
+                    title = media['songName']
+                    localUrl = CoverWorker.onlineSongCoverPath(artist, title)
+                    self.worker.download360SongCoverSuccessed.emit(artist, title, localUrl)
+                return
+            r = requests.get(self.url)
+            for media in self.medias:
+                artist = media['singerName']
+                title = media['songName']
+                localUrl = CoverWorker.onlineSongCoverPath(artist, title)
+                with open(localUrl, "wb") as f:
+                    f.write(r.content)
+                self.worker.download360SongCoverSuccessed.emit(self.artist, self.title, localUrl)
+        except Exception, e:
+            raise e
+
+
 class CoverWorker(QObject):
 
     __contextName__ = "CoverWorker"
@@ -71,7 +103,7 @@ class CoverWorker(QObject):
     def initConnect(self):
         self.downloadArtistCoverSuccessed.connect(self.cacheArtistCover)
         self.downloadAlbumCoverSuccessed.connect(self.cacheAlbumCover)
-        self.download360SongCoverSuccessed.connect(self.cancheSongCover)
+        self.download360SongCoverSuccessed.connect(self.cancheOnlineSongCover)
 
     def downloadCoverByUrl(self, mediaUrl, coverUrl):
         filepath = self.getCoverPathByMediaUrl(mediaUrl)
@@ -92,7 +124,11 @@ class CoverWorker(QObject):
         self.updateAlbumCover.emit(artist, album, url)
         self.taskNumber -= 1
 
-    def cancheSongCover(self, artist, title, url):
+    def cancheOnlineSongCover(self, artist, title, url):
+        self.onlineSongCovers[title] = url
+        self.updateOnlineSongCover.emit(artist, title, url)
+
+    def cancheOnlineAlbumSongCover(self, artist, title, url):
         self.onlineSongCovers[title] = url
         self.updateOnlineSongCover.emit(artist, title, url)
 
@@ -132,6 +168,15 @@ class CoverWorker(QObject):
             return
         if url:
             d = Cover360Runnable(self, artist, title, url)
+            QThreadPool.globalInstance().start(d)
+
+
+    def downloadOnlineAlbumCover(self, artist, title, url, medias):
+        f = self.onlineSongCoverPath(artist, title)
+        if os.path.exists(f):
+            return
+        if url:
+            d = AlbumCover360Runnable(self, artist, title, url, medias)
             QThreadPool.globalInstance().start(d)
 
     @classmethod

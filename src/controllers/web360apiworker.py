@@ -113,9 +113,11 @@ class Web360ApiWorker(QObject):
     @classmethod
     def request(cls, url, count=5):
         result = None
+        ret = None
         i = 0
         while i < count:
             try:
+                
                 ret = requests.get(url)
                 result = ret.json()
                 if isinstance(result, dict):
@@ -123,7 +125,6 @@ class Web360ApiWorker(QObject):
                 else:
                     i = i + 1
             except ValueError:
-                result = ret.text
                 break
             except:
                 i = i + 1
@@ -162,9 +163,10 @@ class Web360ApiWorker(QObject):
             song.update({'url': url})
             results.append(song)
 
-        self.addMediaContents.emit(results)
-        url = self.getUrlByID(songLists[0]['songId'])
-        self.playMediaByUrl(url)
+        if results:
+            self.addMediaContents.emit(results)
+            url = self.getUrlByID(songLists[0]['songId'])
+            self.playMediaByUrl(url)
 
     @dthread
     @pyqtSlot(int)
@@ -233,16 +235,17 @@ class Web360ApiWorker(QObject):
         ret = self.request(url)
         if ret:
             results = self.getSongList(ret)
-            for result in results:
-                result.update({
-                    'singerId': ret['singerId'],
-                    'singerName': ret['singerName'],
-                    'albumId': ret['albumId'],
-                    'albumName': ret['albumName']
-                })
-            self.addMediaContents.emit(results)
-            url = self.getUrlByID(ret['songList'][0]['songId'])
-            self.playMediaByUrl(url)
+            if results:
+                for result in results:
+                    result.update({
+                        'singerId': ret['singerId'],
+                        'singerName': ret['singerName'],
+                        'albumId': ret['albumId'],
+                        'albumName': ret['albumName']
+                    })
+                self.addMediaContents.emit(results)
+                url = self.getUrlByID(ret['songList'][0]['songId'])
+                self.playMediaByUrl(url)
 
 
     @pyqtSlot(int)

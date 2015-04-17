@@ -158,6 +158,7 @@ class DeepinPlayer(QObject):
 
     def onlineMusicManageWorkerConnect(self):
         self.onlineMusicManageWorker.downloadOnlineSongCover.connect(self.coverWorker.downloadOnlineSongCover)
+        self.onlineMusicManageWorker.downloadOnlineAlbumCover.connect(self.coverWorker.downloadOnlineAlbumCover)
         self.onlineMusicManageWorker.downloadAlbumCover.connect(self.coverWorker.downloadAlbumCover)
 
     def menuWorkerConnect(self):
