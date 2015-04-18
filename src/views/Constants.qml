@@ -1,4 +1,4 @@
-import QtQuick 2.4
+import QtQuick 2.3
 
 QtObject{
 	property int mainWindowWidth: 900

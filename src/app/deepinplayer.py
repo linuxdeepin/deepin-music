@@ -13,9 +13,9 @@ from controllers import MediaPlayer, PlaylistWorker, CoverWorker
 from controllers import ConfigWorker, DBWorker, I18nWorker
 from controllers import UtilWorker
 from controllers.mediaplayer import gPlayer
-# from models import MusicDataBase
 
 import config
+from config import isWebengineUsed
 
 
 class DeepinPlayer(QObject):
@@ -200,9 +200,13 @@ class DeepinPlayer(QObject):
         self.showMainWindow()
 
     def clearCache(self):
-        self.mainWindow.engine().clearComponentCache()
-        self.mainWindow.engine().collectGarbage()
-        self.mainWindow.engine().trimComponentCache()
+        if isWebengineUsed:
+            self.mainWindow.engine().clearComponentCache()
+            self.mainWindow.engine().collectGarbage()
+            self.mainWindow.engine().trimComponentCache()
+        else:
+            self.mainWindow.engine().collectGarbage()
+            self.mainWindow.engine().trimComponentCache()
 
     def close(self):
         QThreadPool.globalInstance().clear()

@@ -1,5 +1,5 @@
-import QtQuick 2.4
-import QtWebEngine 1.0
+import QtQuick 2.3
+// import QtWebEngine 1.0
 
 WebEngineView {
     id: webEngineView
