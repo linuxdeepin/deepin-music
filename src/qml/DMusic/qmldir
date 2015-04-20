@@ -9,3 +9,4 @@ ToolTipArea 1.0 ToolTipArea.qml
 DRectWithCorner 1.0 DRectWithCorner.qml
 DWaveBar 1.0 DWaveBar.qml
 DListModel 1.0 DListModel.qml
+WebEngineView 1.0 WebEngineView.qml

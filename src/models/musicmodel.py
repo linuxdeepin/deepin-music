@@ -8,6 +8,7 @@ import traceback
 try:
     from dwidgets.mediatag import common
 except:
+    raise
     import sys
     sys.path.insert(0, os.path.join(os.path.dirname(os.getcwd()), 'dwidgets'))
     from mediatag import common

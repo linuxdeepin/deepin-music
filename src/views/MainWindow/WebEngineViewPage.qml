@@ -1,10 +1,12 @@
 import QtQuick 2.3
 // import QtWebEngine 1.0
+import DMusic 1.0
 
 WebEngineView {
     id: webEngineView
     focus: false
-    
+    oxideUserJs: '../../views/MainWindow/oxide-user.js'
+
     signal playMusicById(int musicId)
     signal playMusicByIds(string musicIds)
     signal playSonglistByName(string songlistName)
@@ -14,15 +16,11 @@ WebEngineView {
     signal addFavorite(int musicId)
     signal removeFavorite(int musicId)
 
-    onLinkHovered:{
-
-    }
-
     onJavaScriptConsoleMessage:{
         if(level === 2){
             var rpc;
             try{
-                rpc = JSON.parse(message)
+                rpc = JSON.parse(message);
                 if(rpc.hasOwnProperty('rpcId') && rpc.hasOwnProperty('type')){
                     if (rpc.rpcActionType == 'Play'){
                         if (rpc.type == 'music'){
@@ -60,20 +58,16 @@ WebEngineView {
                     print(rpc)
                 }
             }catch(error){
-                console.log(error)
+                console.log(error, message)
             }
         }
     }
 
-    onNavigationRequested:{
-        print(request.url)
-    }
-
     onLoadingChanged:{
-        if (loadRequest.status == WebEngineView.LoadStartedStatus){
+        if (loadEvent.type == 0){
             print('loading html')
         }
-        else if (loadRequest.status == WebEngineView.LoadSucceededStatus){
+        else if (loadEvent.type == 2){
             print('load html successs')
             runJavaScript("
                 (function(global, undefined){
@@ -150,7 +144,7 @@ WebEngineView {
                     })(window);
                 ")
         }
-        else if (loadRequest.status == WebEngineView.LoadFailedStatus){
+        else{
             print('load html faile')
         }
     }
