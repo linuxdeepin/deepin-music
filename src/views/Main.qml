@@ -78,7 +78,9 @@ Rectangle {
         interval: 100
         running: true
         onTriggered:{
+            print('load oxide qml')
             mainWindow.webEngineViewPage.url = Qt.resolvedUrl("http://music.haosou.com/_linuxdeepin/");
+            // mainWindow.webEngineViewPage.url = Qt.resolvedUrl("http://www.baidu.com/");
             root.focus = true;
         }
     }

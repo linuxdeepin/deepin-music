@@ -142,7 +142,7 @@ WebEngineView {
 
                     global.Dmusic = Dmusic;
                     })(window);
-                ")
+                ");
         }
         else{
             print('load html faile')
