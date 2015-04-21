@@ -2,10 +2,11 @@ import QtQuick 2.3
 
 Rectangle {
     id: root
-    // anchors.fill: parent
+    color: "white"
+
     Text{
-        anchors.centerIn: root
-        text: 'Welcome, this is Music DownLoad Page!'
+        anchors.centerIn: parent
+        text: 'Welcome, this is Setting Page!'
         font.family: "微软雅黑"
         font.pointSize: 20
         color: "Black"

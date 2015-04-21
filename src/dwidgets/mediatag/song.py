@@ -9,6 +9,7 @@ import chardet
 import copy
 import json
 import mutagen
+from log import logger
 
 TAG_KEYS = {
     'title' : 'title',
@@ -64,7 +65,10 @@ class Song(dict):
         self['folder'] = os.path.dirname(self['url'])
 
         if self.isExisted():
-            self.getTags()
+            try:
+                self.getTags()
+            except Exception, e:
+                logger.error(e)
 
     def isExisted(self):
         return os.path.exists(self.url)
@@ -218,18 +222,21 @@ class Song(dict):
 
     def getMp3FontCover(self):
         from common import EasyMP3
-        audio = common.MutagenFile(self.url, common.FORMATS)
         ext = None
         img_data = None
-        if isinstance(audio, EasyMP3):
-            if audio.tags:
-                apics = audio.tags.getID3().getall('APIC')
-                if len(apics) > 0:
-                    apic = apics[0]
-                    if apic.type == 3:
-                        mine = apic.mime
-                        ext = mine.split('/')[-1]
-                        img_data = apic.data
+        try:
+            audio = common.MutagenFile(self.url, common.FORMATS)
+            if isinstance(audio, EasyMP3):
+                if audio.tags:
+                    apics = audio.tags.getID3().getall('APIC')
+                    if len(apics) > 0:
+                        apic = apics[0]
+                        if apic.type == 3:
+                            mine = apic.mime
+                            ext = mine.split('/')[-1]
+                            img_data = apic.data
+        except Exception, e:
+            logger.error(e)
         return ext, img_data
 
     def pprint(self):
