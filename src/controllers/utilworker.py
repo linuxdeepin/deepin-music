@@ -4,8 +4,9 @@
 
 import os
 import sys
-from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot, pyqtProperty
-from PyQt5.QtGui import QCursor
+from PyQt5.QtCore import (QObject, pyqtSignal, pyqtSlot, 
+    pyqtProperty, QUrl)
+from PyQt5.QtGui import QCursor, QDesktopServices
 from .utils import registerContext, duration_to_string
 
 
@@ -24,7 +25,7 @@ class UtilWorker(QObject):
     @pyqtSlot(int, result='QString')
     def size_to_string(self, size):
         ''' convert file size byte to MB. '''
-        return '%.2f MB' % (float(size) /(1024 * 1024))
+        return '%.2f MB' % (float(size) / (1024 * 1024))
 
     @pyqtSlot(int, result='QString')
     def progress_to_string(self, progress):
@@ -34,3 +35,7 @@ class UtilWorker(QObject):
     @pyqtSlot('QString', result='QString')
     def basename(self, path):
         return os.path.basename(path)
+
+    @pyqtSlot('QString')
+    def openUrl(self, path):
+        QDesktopServices.openUrl(QUrl.fromLocalFile(path))

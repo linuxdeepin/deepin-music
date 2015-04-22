@@ -1,7 +1,7 @@
 import QtQuick 2.3
 import QtQuick.Controls 1.0
 
-Item{
+Rectangle {
     id: root
     property bool disabled: false
     property bool hoverEnabled: true
@@ -10,7 +10,12 @@ Item{
     property url pressed_image
     property url disabled_image
 
+    property int iconWidth: 16
+    property int iconHeight: 16
     property string tooltip
+    property string text
+    property string textColor: '#535353'
+    property int fontSize: 10
 
     signal hovered
     signal clicked
@@ -18,6 +23,9 @@ Item{
     signal released
     signal exited
 
+    border.color: "lightgray"
+    border.width: 1
+    radius: 2
     state: 'normal'
 
     MouseArea {
@@ -57,11 +65,37 @@ Item{
         }
     }
 
-    Image {
-        id: image
-        asynchronous: true
-        sourceSize.width: parent.width
-        sourceSize.height: parent.height
+    Row {
+        id: layout
+        anchors.centerIn: parent
+        width: root.width - 2 * root.border.width
+        height: root.height - 2 * root.border.width
+
+        Rectangle {
+            id: imageBox
+            width: root.iconWidth
+            height: root.iconHeight
+            Image {
+                id: image
+                anchors.centerIn: parent
+                asynchronous: true
+                sourceSize.width: parent.width
+                sourceSize.height: parent.height
+            }
+        }
+
+        Rectangle {
+            id: textBox
+            width: layout.width - imageBox.width 
+            height: layout.height
+            Text {
+                anchors.centerIn: parent
+                horizontalAlignment: Text.AlignHCenter
+                color: root.textColor
+                font.pointSize: root.fontSize
+                text: root.text
+            }
+        }
     }
 
     Component {

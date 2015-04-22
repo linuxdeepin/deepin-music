@@ -78,8 +78,8 @@ Rectangle {
         interval: 100
         running: true
         onTriggered:{
-            // mainWindow.webEngineViewPage.url = Qt.resolvedUrl("http://music.haosou.com/_linuxdeepin/");
-            mainWindow.webEngineViewPage.url = Qt.resolvedUrl("http://10.0.0.153:8093/");
+            mainWindow.webEngineViewPage.url = Qt.resolvedUrl("http://music.haosou.com/_linuxdeepin/");
+            // mainWindow.webEngineViewPage.url = Qt.resolvedUrl("http://10.0.0.153:8093/");
             root.focus = true;
         }
     }

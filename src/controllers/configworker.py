@@ -8,7 +8,7 @@ import json
 from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot, pyqtProperty
 from PyQt5.QtGui import QCursor
 from .utils import registerContext, contexts
-from config.constants import ProjectPath
+from config.constants import ProjectPath, DownloadSongPath
 from dwidgets import ModelMetaclass
 
 
@@ -24,7 +24,8 @@ class ConfigWorker(object):
         ('isCoverBackground', bool, True),
 
         ('createItems', list),
-        ('destoryItems', list)
+        ('destoryItems', list),
+        ('DownloadSongPath', 'QString', DownloadSongPath)
     )
 
     __contextName__ = "ConfigWorker"

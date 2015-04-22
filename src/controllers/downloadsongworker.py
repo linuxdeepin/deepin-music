@@ -14,10 +14,10 @@ from PyQt5.QtCore import (QObject, pyqtSignal, pyqtSlot,
 from PyQt5.QtGui import QImage
 import requests
 from log import logger
-from .utils import registerContext
+from .utils import registerContext, contexts
 from dwidgets import dthread, LevelJsonDict
 from collections import OrderedDict
-from config.constants import LevevDBPath, DownloadSongPath
+from config.constants import LevevDBPath
 from dwidgets import DListModel, ModelMetaclass
 from dwidgets.mediatag.song import Song as SongDict
 from .web360apiworker import Web360ApiWorker
@@ -62,12 +62,12 @@ class DownloadSongObject(QObject):
         self.stopDownloaded = False
         self.isFinished = False
         self.filename = DownloadSongWorker.getSongPath(self.singerName, self.name, self.ext)
+        self.temp_filename = '%s.tmp' % self.filename
 
         self.speedTimer = QTimer()
         self.speedTimer.setInterval(100)
         self.speedTimer.timeout.connect(self.calSpeed)
         self.initConnect()
-        self.startDownLoad()
 
     def initConnect(self):
         self.sizeUpdated.connect(self.updateSize)
@@ -87,6 +87,8 @@ class DownloadSongObject(QObject):
     def setFinished(self, finished):
         self.isFinished = finished
         self.deleteSelf.emit(self.songId)
+        if os.path.exists(self.temp_filename):
+            os.rename(self.temp_filename, self.filename)
         self.saveTags()
 
     def updateFields(self, result):
@@ -94,15 +96,18 @@ class DownloadSongObject(QObject):
         self.albumId = result['albumId']
         self.albumName = result['albumName']
         if self.isFinished:
+            if os.path.exists(self.temp_filename):
+                os.rename(self.temp_filename, self.filename)
             self.saveTags()
 
     def saveTags(self):
-        song = SongDict(self.filename)
-        song.artist = self.singerName
-        song.title = self.name
-        song.album = self.albumName
-        song.size = os.path.getsize(self.filename)
-        song.saveTags()
+        if not self.stopDownloaded:
+            song = SongDict(self.filename)
+            song.artist = self.singerName
+            song.title = self.name
+            song.album = self.albumName
+            song.size = os.path.getsize(self.filename)
+            song.saveTags()
 
     def startDownLoad(self):
         if os.path.exists(self.filename):
@@ -203,23 +208,23 @@ class DownLoadRunnable(QRunnable):
         self.tryCount += 1
         self.songObj.isFinished = False
         block = self.block
-        local_filename = filename
+        temp_filename = self.songObj.temp_filename
 
         isSupportContinued = self.support_continue(url)
         if isSupportContinued:
             try:
-                if os.path.exists(local_filename):
-                    with open(local_filename, 'rb') as fin:
+                if os.path.exists(temp_filename):
+                    with open(temp_filename, 'rb') as fin:
                         self.size = len(fin.read())
                 else:
-                    self.touch(local_filename)
+                    self.touch(temp_filename)
                     self.size = 0
             except:
                 logger.error(traceback.print_exc())
             finally:
                 headers['Range'] = "bytes=%d-" % (self.size, )
         else:
-            self.touch(local_filename)
+            self.touch(temp_filename)
             self.size = 0
 
         total = self.total
@@ -235,12 +240,14 @@ class DownLoadRunnable(QRunnable):
                 return
 
         start_t = time.time()
-        with open(local_filename, 'ab+') as f:
+        with open(temp_filename, 'ab+') as f:
             f.seek(len(f.read()))
             f.truncate()
             try:
                 for chunk in r.iter_content(chunk_size=block):
-                    if chunk and not self.songObj.stopDownloaded:
+                    if self.songObj.stopDownloaded:
+                        break
+                    if chunk:
                         f.write(chunk)
                         size += len(chunk)
                         f.flush()
@@ -251,7 +258,8 @@ class DownLoadRunnable(QRunnable):
                             self.songObj.downloadFinished.emit(True)
                     else:
                         break
-                self.songObj.downloadFinished.emit(True)
+                if not self.songObj.stopDownloaded:
+                    self.songObj.downloadFinished.emit(True)
             except:
                 logger.error(traceback.print_exc())
 
@@ -265,13 +273,32 @@ class DownloadSongWorker(QObject):
 
     _downloadSongListModel = DownloadSongListModel(DownloadSongObject)
 
+    allStartDownloadSignal = pyqtSignal()
+    allPausedSignal = pyqtSignal()
+
+    @registerContext
     def __init__(self, parent=None):
         super(DownloadSongWorker, self).__init__(parent)
         self.loadDB()
+        self.initConnect()
 
     def loadDB(self):
         for songDict in self._songsDict.values():
             self.downloadSong(songDict)
+
+    def initConnect(self):
+        self.allStartDownloadSignal.connect(self.startDownloadAll)
+        self.allPausedSignal.connect(self.pausedAll)
+
+    def startDownloadAll(self):
+        for musicId, songObj in self._songObjs.items():
+            if songObj.stopDownloaded:
+                songObj.stopDownloaded = False
+                songObj.startDownLoad()
+
+    def pausedAll(self):
+        for musicId, songObj in self._songObjs.items():
+            songObj.stopDownloaded = True
 
     def downloadSong(self, songDict):
         songId = songDict['songId']
@@ -290,6 +317,7 @@ class DownloadSongWorker(QObject):
         songObj = DownloadSongObject(**songDict)
         songObj.deleteSelf.connect(self.delSongObj)
         songObj.updateDBPoperty.connect(self.updateModel)
+        songObj.startDownLoad()
 
         self._songObjs[songId] = songObj
         self._songsDict[songId] = songDict
@@ -318,7 +346,9 @@ class DownloadSongWorker(QObject):
 
     @classmethod
     def getSongPath(cls, singerName, name, ext):
-        return os.path.join(DownloadSongPath, '%s-%s.%s'%(singerName, name, ext))
+        configWorker = contexts['ConfigWorker']
+        downloadSongPath = configWorker.DownloadSongPath
+        return os.path.join(downloadSongPath, '%s-%s.%s'%(singerName, name, ext))
 
     @classmethod
     def isSongExisted(cls, singerName, name, ext):
