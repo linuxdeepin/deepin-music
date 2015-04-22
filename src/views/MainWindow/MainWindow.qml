@@ -87,11 +87,6 @@ Rectangle {
 
                         width: mainWindow.width - leftSideBar.width
                         height: mainWindow.height - titleBar.height - playBottomBar.height
-
-                        // url: Qt.resolvedUrl("http://music.haosou.com/_linuxdeepin/")
-                        // Behavior on opacity {
-                        //     NumberAnimation { duration: 500 }
-                        // }
                     }
 
                     MusicManagerPage {

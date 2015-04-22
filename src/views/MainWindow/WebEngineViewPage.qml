@@ -15,6 +15,7 @@ WebEngineView {
 
     signal addFavorite(int musicId)
     signal removeFavorite(int musicId)
+    signal downloadSong(int musicId)
 
     onJavaScriptConsoleMessage:{
         if(level === 2){
@@ -45,6 +46,7 @@ WebEngineView {
                         }
                     }else if(rpc.rpcActionType == 'Download'){
                         print(rpc.rpcActionType, rpc.type, rpc.rpcId);
+                        webEngineView.downloadSong(rpc.rpcId);
                     }
                 }else if (rpc.hasOwnProperty('rpcId') && !rpc.hasOwnProperty('type')){
                     print(rpc.rpcActionType, rpc.rpcId, typeof rpc.rpcId);

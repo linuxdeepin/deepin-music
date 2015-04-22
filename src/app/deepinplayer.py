@@ -11,7 +11,7 @@ from controllers import contexts, Web360ApiWorker, MusicManageWorker
 from controllers import OnlineMusicManageWorker, MenuWorker, WindowManageWorker
 from controllers import MediaPlayer, PlaylistWorker, CoverWorker
 from controllers import ConfigWorker, DBWorker, I18nWorker
-from controllers import UtilWorker
+from controllers import UtilWorker, DownloadSongWorker
 from controllers.mediaplayer import gPlayer
 
 import config
@@ -64,6 +64,7 @@ class DeepinPlayer(QObject):
         self.configWorker = ConfigWorker()
         self.i18nWorker = I18nWorker()
         self.coverWorker = CoverWorker()
+        self.downloadSongWorker = DownloadSongWorker()
 
         self.windowManageWorker = WindowManageWorker()
         self.web360ApiWorker = Web360ApiWorker()
@@ -125,6 +126,8 @@ class DeepinPlayer(QObject):
             self.playlistWorker.addOnlineMediaToFavorite)
         self.web360ApiWorker.removeMediaContentFromFavorite.connect(
             self.playlistWorker.removeFavoriteMediaContent)
+
+        self.web360ApiWorker.downloadSongConetent.connect(self.downloadSongWorker.downloadSong)
 
     def mediaPlayerConnect(self):
         self.mediaPlayer.requestMusic.connect(

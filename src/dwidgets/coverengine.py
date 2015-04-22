@@ -273,7 +273,7 @@ class CoverRunnable(QRunnable):
         netEaseEngine = NetEaseEngine()
         xiamiTingEngine = XiamiTingEngine()
         doubanEngine = DoubanEngine()
-        engines = [netEaseEngine, xiamiTingEngine, doubanEngine, netEaseEngine]
+        engines = [xiamiTingEngine, doubanEngine, netEaseEngine]
 
         try:
             if self.qtype == "artist":

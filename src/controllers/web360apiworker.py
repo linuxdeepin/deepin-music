@@ -32,6 +32,7 @@ songlist = {
 
 class Web360ApiWorker(QObject):
 
+    #py2py
     playMediaContent = pyqtSignal('QVariant')
     swicthMediaContent = pyqtSignal('QVariant')
 
@@ -40,6 +41,8 @@ class Web360ApiWorker(QObject):
     addMediaContentToFavorite = pyqtSignal('QVariant')
     removeMediaContentFromFavorite = pyqtSignal('QString')
 
+    downloadSongConetent = pyqtSignal(dict)
+    # qml2py
     playMusicByIdSignal = pyqtSignal(int)
     playMusicByIdsSignal = pyqtSignal('QString')
     playSonglistByNameSignal = pyqtSignal('QString')
@@ -47,6 +50,7 @@ class Web360ApiWorker(QObject):
     playAlbumByIdSignal = pyqtSignal(int)
     addFavoriteSignal = pyqtSignal(int)
     removeFavoriteSignal = pyqtSignal(int)
+    downloadSongSignal = pyqtSignal(int)
 
     __contextName__ = 'Web360ApiWorker'
 
@@ -68,6 +72,8 @@ class Web360ApiWorker(QObject):
 
         self.addFavoriteSignal.connect(self.addMusicToFavorite)
         self.removeFavoriteSignal.connect(self.removeMusicFromFavorite)
+
+        self.downloadSongSignal.connect(self.downloadSong)
         pass
 
     @classmethod
@@ -111,13 +117,17 @@ class Web360ApiWorker(QObject):
         return url
 
     @classmethod
+    def getDownloadUrl(self, musicId):
+        url = "http://s.music.haosou.com/player/zdown?projectName=linuxdeepin&id=%s" % musicId
+        return url
+
+    @classmethod
     def request(cls, url, count=5):
         result = None
         ret = None
         i = 0
         while i < count:
             try:
-                
                 ret = requests.get(url)
                 result = ret.json()
                 if isinstance(result, dict):
@@ -260,27 +270,10 @@ class Web360ApiWorker(QObject):
         url = self.getUrlByID(musicId)
         self.removeMediaContentFromFavorite.emit(url)
 
-    # @dthread
-    # def getQueueResults(self, musicIdString, musicId):
-    #     result = self.getResultById(musicId)
-    #     if result:
-    #         self.requestSuccessed.emit(musicIdString, musicId, result)
-
-    # @pyqtSlot('QString')
-    # def playMusicByIds(self, musicIdString):
-    #     _musicIds = [int(k) for k in musicIdString.split('_')]
-    #     self.recommendedMusics[musicIdString] = {}
-    #     self.recommendedmusicIds[musicIdString] = _musicIds
-    #     for musicId in _musicIds:
-    #         self.getQueueResults(musicIdString, musicId)
-
-    # @pyqtSlot(' QString', int, dict)
-    # def collectResults(self, musicIdString, musicId, result):
-    #     self.recommendedMusics[musicIdString].update({musicId: result})
-    #     _results = self.recommendedMusics[musicIdString]
-    #     _musicIds = self.recommendedmusicIds[musicIdString]
-    #     if len(_results) == len(_musicIds):
-    #         for musicId in  _musicIds:
-    #             result = _results[musicId]
-    #             self.playMediaContent.emit(result)
-    #         self.playMediaContent.emit(_results[_musicIds[0]])
+    @dthread
+    @pyqtSlot(int)
+    def downloadSong(self, musicId):
+        url = self.getDownloadUrl(musicId)
+        result = self.request(url)
+        if 'data' in result:
+            self.downloadSongConetent.emit(result['data'])
