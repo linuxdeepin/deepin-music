@@ -124,7 +124,7 @@ class Song(dict):
                         else:
                             self[key] = getattr(audio.info, key)
                 except Exception, e:
-                    print e
+                    logger.error(e)
 
     def saveTags(self):
         ''' Save tag information to file. '''
@@ -175,8 +175,8 @@ class Song(dict):
                 raise "w:Song:MutagenTag:No audio found"
 
         except Exception, e:
-            print traceback.format_exc()
-            print "W: Error while writting (" + self.get("url") + ")\nTracback :", e
+            logger.error(traceback.format_exc())
+            logger.error("W: Error while writting (" + self.get("url") + ")\nTracback :" + e)
             self.last_error = "Error while writting" + \
                 ": " + self.url
             return False
@@ -266,7 +266,7 @@ class Song(dict):
 if __name__ == '__main__':
     # ydir = QDir('/home/djf/workspace/yhm/')
     # print ydir.entryList()
-    # print ydir.entryInfoList()
+    # pprint ydir.entryInfoList()
     # song = Song('/home/djf/workspace/yhm/游鸿明-下沙.ape')
     # print song.pprint()
     # print song
