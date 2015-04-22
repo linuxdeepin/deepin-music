@@ -101,7 +101,7 @@ Rectangle {
                         anchors.fill: parent
                     }
 
-                    DownloadPage {
+                    DownloadSongPage {
                         id: downloadPage
                         objectName: 'downloadPage'
                         anchors.fill: parent

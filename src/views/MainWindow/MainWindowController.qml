@@ -57,6 +57,7 @@ Item {
         onRemoveFavorite: Web360ApiWorker.removeFavoriteSignal(musicId)
 
         onDownloadSong: Web360ApiWorker.downloadSongSignal(musicId)
+        onDownloadSongs: Web360ApiWorker.downloadSongsSignal(musicIds)
     }
 
     Component.onCompleted: {

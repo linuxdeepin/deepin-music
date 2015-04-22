@@ -19,6 +19,9 @@ from dwidgets import dthread, LevelJsonDict
 from collections import OrderedDict
 from config.constants import LevevDBPath, DownloadSongPath
 from dwidgets import DListModel, ModelMetaclass
+from dwidgets.mediatag.song import Song as SongDict
+from .web360apiworker import Web360ApiWorker
+from dwidgets import dthread
 
 
 class DownloadSongObject(QObject):
@@ -30,10 +33,13 @@ class DownloadSongObject(QObject):
         ('ext', 'QString'),
         ('bitrate', 'QString'),
         ('hdDesc', 'QString'),
-        ('size', 'QString'),
+        ('size', int),
         ('songId', int),
         ('name', 'QString'),
         ('singerName', 'QString'),
+        ('singerId',  int),
+        ('albumId', int),
+        ('albumName','QString'),
         ('originalServiceEngName', 'QString'),
         ('serviceEngName', 'QString'),
         ('serviceName', 'QString'),
@@ -43,9 +49,12 @@ class DownloadSongObject(QObject):
 
     downloadFinished = pyqtSignal(bool)
     progressUpdated = pyqtSignal(float)
+    sizeUpdated = pyqtSignal(int)
 
     deleteSelf = pyqtSignal(int)
-    updateDBPoperty = pyqtSignal(int, float)
+    updateDBPoperty = pyqtSignal(int, 'QString', 'QVariant')
+
+    fieldsUpdated = pyqtSignal(dict)
 
     def initialize(self, *agrs, **kwargs):
         self.setDict(kwargs)
@@ -53,7 +62,7 @@ class DownloadSongObject(QObject):
         self.stopDownloaded = False
         self.isFinished = False
         self.filename = DownloadSongWorker.getSongPath(self.singerName, self.name, self.ext)
-        print self.filename
+
         self.speedTimer = QTimer()
         self.speedTimer.setInterval(100)
         self.speedTimer.timeout.connect(self.calSpeed)
@@ -61,21 +70,45 @@ class DownloadSongObject(QObject):
         self.startDownLoad()
 
     def initConnect(self):
+        self.sizeUpdated.connect(self.updateSize)
         self.progressUpdated.connect(self.updatePorgress)
         self.downloadFinished.connect(self.setFinished)
 
+        self.fieldsUpdated.connect(self.updateFields)
+
+    def updateSize(self, size):
+        self.size = size
+        self.updateDBPoperty.emit(self.songId, 'size', size)
+
     def updatePorgress(self, progress):
         self.progress = progress
-        self.updateDBPoperty.emit(self.songId, progress)
+        self.updateDBPoperty.emit(self.songId, 'progress', progress)
 
     def setFinished(self, finished):
         self.isFinished = finished
         self.deleteSelf.emit(self.songId)
+        self.saveTags()
+
+    def updateFields(self, result):
+        self.singerId = result['singerId']
+        self.albumId = result['albumId']
+        self.albumName = result['albumName']
+        if self.isFinished:
+            self.saveTags()
+
+    def saveTags(self):
+        song = SongDict(self.filename)
+        song.artist = self.singerName
+        song.title = self.name
+        song.album = self.albumName
+        song.size = os.path.getsize(self.filename)
+        song.saveTags()
 
     def startDownLoad(self):
         if os.path.exists(self.filename):
             with open(self.filename, 'r') as f:
                 self.start_size = self.getCurrentSize()
+        self.getMusicInfo(self.songId)
         d = DownLoadRunnable(self)
         QThreadPool.globalInstance().start(d)
 
@@ -100,6 +133,13 @@ class DownloadSongObject(QObject):
         else:
             return None
 
+    @dthread
+    def getMusicInfo(self, musicId):
+        url = Web360ApiWorker.getUrlByID(musicId)
+        result = Web360ApiWorker.getResultByUrl(url)
+        if result:
+            self.fieldsUpdated.emit(result)
+
 
 class DownloadSongListModel(DListModel):
 
@@ -121,6 +161,8 @@ class DownLoadRunnable(QRunnable):
         self.filename = songObj.filename
         self.url = songObj.downloadUrl
 
+        self.tryCount = 0
+
     def run(self):
         self.download(self.url, self.filename)
 
@@ -141,9 +183,13 @@ class DownLoadRunnable(QRunnable):
         }
         try:
             r = requests.head(url, headers=headers)
-            crange = r.headers['content-range']
-            self.total = int(re.match(ur'^bytes 0-4/(\d+)$', crange).group(1))
-            return True
+            if 'content-range' in r.headers:
+                crange = r.headers['content-range']
+                self.total = int(re.match(ur'^bytes 0-4/(\d+)$', crange).group(1))
+                return True
+            else:
+                self.total = 0
+                return False
         except:
             logger.error(traceback.print_exc())
         try:
@@ -154,6 +200,7 @@ class DownLoadRunnable(QRunnable):
         return False
 
     def download(self, url, filename, headers={}):
+        self.tryCount += 1
         self.songObj.isFinished = False
         block = self.block
         local_filename = filename
@@ -178,6 +225,15 @@ class DownLoadRunnable(QRunnable):
         total = self.total
         size = self.size
         r = requests.get(url, stream=True, verify=False, headers=headers)
+        
+        if 'content-length' in r.headers:
+            self.total = int(r.headers['content-length'])
+            self.songObj.sizeUpdated.emit(self.total)
+        else:
+            if self.tryCount < 5:
+                self.download(url, filename)
+                return
+
         start_t = time.time()
         with open(local_filename, 'ab+') as f:
             f.seek(len(f.read()))
@@ -188,8 +244,11 @@ class DownLoadRunnable(QRunnable):
                         f.write(chunk)
                         size += len(chunk)
                         f.flush()
-                        self.progress = (float(size) / float(total)) * 100
-                        self.songObj.progressUpdated.emit(self.progress)
+                        if total > 0:
+                            self.progress = (float(size) / float(total)) * 100
+                            self.songObj.progressUpdated.emit(self.progress)
+                        if size == self.total:
+                            self.songObj.downloadFinished.emit(True)
                     else:
                         break
                 self.songObj.downloadFinished.emit(True)
@@ -208,6 +267,11 @@ class DownloadSongWorker(QObject):
 
     def __init__(self, parent=None):
         super(DownloadSongWorker, self).__init__(parent)
+        self.loadDB()
+
+    def loadDB(self):
+        for songDict in self._songsDict.values():
+            self.downloadSong(songDict)
 
     def downloadSong(self, songDict):
         songId = songDict['songId']
@@ -217,9 +281,10 @@ class DownloadSongWorker(QObject):
         ext = songDict['ext']
 
         if self.isSongExisted(singerName, name, ext):
-            logger.info(singerName, name, ext, 'exists')
+            logger.info('%s %s %s exists' % (singerName, name, ext))
             return
 
+        songDict['size'] = 0
         songDict['progress'] = 0
 
         songObj = DownloadSongObject(**songDict)
@@ -235,22 +300,21 @@ class DownloadSongWorker(QObject):
             songObj = self._songObjs[songId]
             songObj.deleteSelf.disconnect(self.delSongObj)
             songObj.updateDBPoperty.disconnect(self.updateModel)
-
-        del self._songObjs[songId]
-        del self._songsDict[songId]
+            del self._songObjs[songId]
+        if songId in self._songsDict:
+            del self._songsDict[songId]
         for index, songObj in  enumerate(self._downloadSongListModel.data):
             if songObj.songId == songId:
                 self._downloadSongListModel.remove(index)
 
-    def updateModel(self, songId, progress):
+    def updateModel(self, songId, key, value):
         if songId in self._songsDict:
             songDict = self._songsDict[songId]
-            songDict['progress'] = progress
+            songDict[key] = value
             self._songsDict[songId] = songDict
         for index, songObj in  enumerate(self._downloadSongListModel.data):
             if songObj.songId == songId:
-                self._downloadSongListModel.setProperty(index, 'progress', progress)
-                print songId, progress, 'update data for UI'
+                self._downloadSongListModel.setProperty(index, key, value)
 
     @classmethod
     def getSongPath(cls, singerName, name, ext):

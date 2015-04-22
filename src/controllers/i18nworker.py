@@ -22,6 +22,8 @@ class I18nWorker(object):
         ('artist', 'QString', u'艺术家'),
         ('folder', 'QString', u'文件夹'),
         ('duration', 'QString', u'曲长'),
+        ('size', 'QString', u'大小'),
+        ('progress', 'QString', u'进度'),
         ('temporary', 'QString', u'试听歌单'),
         ('favorite', 'QString', u'我的收藏'),
         ('myPlaylist', 'QString', u'我创建的歌单'),

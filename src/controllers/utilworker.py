@@ -21,6 +21,15 @@ class UtilWorker(QObject):
     def duration_to_string(self, duration):
         return duration_to_string(duration)
 
+    @pyqtSlot(int, result='QString')
+    def size_to_string(self, size):
+        ''' convert file size byte to MB. '''
+        return '%.2f MB' % (float(size) /(1024 * 1024))
+
+    @pyqtSlot(int, result='QString')
+    def progress_to_string(self, progress):
+        ''' convert progress to string like 99%. '''
+        return '%d%%' % float(progress)
 
     @pyqtSlot('QString', result='QString')
     def basename(self, path):

@@ -51,6 +51,7 @@ class Web360ApiWorker(QObject):
     addFavoriteSignal = pyqtSignal(int)
     removeFavoriteSignal = pyqtSignal(int)
     downloadSongSignal = pyqtSignal(int)
+    downloadSongsSignal = pyqtSignal('QString')
 
     __contextName__ = 'Web360ApiWorker'
 
@@ -74,6 +75,7 @@ class Web360ApiWorker(QObject):
         self.removeFavoriteSignal.connect(self.removeMusicFromFavorite)
 
         self.downloadSongSignal.connect(self.downloadSong)
+        self.downloadSongsSignal.connect(self.downloadSongs)
         pass
 
     @classmethod
@@ -277,3 +279,9 @@ class Web360ApiWorker(QObject):
         result = self.request(url)
         if 'data' in result:
             self.downloadSongConetent.emit(result['data'])
+
+    @pyqtSlot('QString')
+    def downloadSongs(self, musicIds):
+        _musicIds = musicIds.split('_')
+        for musicId in _musicIds:
+            self.downloadSong(musicId)
