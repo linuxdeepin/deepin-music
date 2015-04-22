@@ -5,14 +5,17 @@ import QtQuick.Controls 1.0
 import QtMultimedia 5.0
 import DMusic 1.0
 import "../DMusicWidgets"
-import "../MusicManagerWindow"
-import "../PlaylistManagerWindow"
+import "../MusicManagerPage"
+import "../PlaylistManagerPage"
+import "../DownloadPage"
+import "../SettingPage"
+
 
 Rectangle {
 
     id: mainWindow
     property var constants
-    property var views: ['WebMusic360Page', 'MusicManagerPage', 'PlayListPage', 'DownloadPage']
+    property var views: ['WebMusic360Page', 'MusicManagerPage', 'PlayListPage', 'DownloadPage', 'SettingPage']
     property var bgImage: bgImage
     property var titleBar: titleBar
     property var playBottomBar: playBottomBar
@@ -82,43 +85,32 @@ Rectangle {
 
                     WebEngineViewPage {
                         id: webEngineViewPage
-
                         objectName: 'webEngineViewPage'
-
-                        width: mainWindow.width - leftSideBar.width
-                        height: mainWindow.height - titleBar.height - playBottomBar.height
+                        anchors.fill: parent
                     }
 
                     MusicManagerPage {
                         id: musicManagerPage
                         objectName: 'musicManagerPage'
                         anchors.fill: parent
-
-                        // Behavior on opacity {
-                        //     NumberAnimation { duration: 500 }
-                        // }
                     }
 
                     PlaylistPage {
                         id: palylistPage
-
                         objectName: 'palylistPage'
                         anchors.fill: parent
-
-                        // Behavior on opacity {
-                        //     NumberAnimation { duration: 500 }
-                        // }
                     }
 
                     DownloadPage {
                         id: downloadPage
-
                         objectName: 'downloadPage'
                         anchors.fill: parent
+                    }
 
-                        // Behavior on opacity {
-                        //     NumberAnimation { duration: 500 }
-                        // }
+                    SettingPage {
+                        id: settingPage
+                        objectName: 'settingPage'
+                        anchors.fill: parent
                     }
                 }
             }

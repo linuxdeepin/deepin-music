@@ -45,6 +45,8 @@ class MenuWorker(QObject):
     addSongFile = pyqtSignal()
     addSongFolder = pyqtSignal()
 
+    settingTrigger = pyqtSignal()
+
     @registerContext
     def __init__(self):
         super(MenuWorker, self).__init__()
@@ -63,6 +65,8 @@ class MenuWorker(QObject):
             self.addSongFile.emit()
         elif _id == "Folder":
             self.addSongFolder.emit()
+        elif _id == "Setting":
+            self.settingTrigger.emit()
 
 
 if __name__ == "__main__":

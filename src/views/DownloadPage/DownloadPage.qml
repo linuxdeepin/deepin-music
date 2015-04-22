@@ -1,7 +1,7 @@
 import QtQuick 2.3
 
 Rectangle {
-	id: root
+    id: root
     // anchors.fill: parent
     Text{
         anchors.centerIn: root

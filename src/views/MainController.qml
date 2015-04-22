@@ -16,6 +16,7 @@ Item {
         Qt.createItems = []
         Qt.destoryItems = []
         MenuWorker.miniTrigger.connect(showMiniWindow);
+        MenuWorker.settingTrigger.connect(loadSettingPage);
     }
 
     function showMainWindow() {
@@ -59,6 +60,10 @@ Item {
     function destoryTermporyWindow(){
         mainWindow.temporaryLoader.source = ''
         mainWindow.focus = true;
+    }
+
+    function loadSettingPage(){
+        WindowManageWorker.switchPageByID('SettingPage')
     }
 
 	Connections {
