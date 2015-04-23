@@ -8,7 +8,7 @@ Rectangle {
     property var mouseArea: mouseArea
 
     width: parent.width
-    height: 24
+    height: 28
     color: "transparent"
 
     signal menuShowed(int index)
@@ -20,8 +20,8 @@ Rectangle {
 
         Rectangle{
             id: tipRect
-            width: 24
-            height: 24
+            width: mediaItem.height
+            height: mediaItem.height
 
             color: "transparent"
 
@@ -44,16 +44,16 @@ Rectangle {
         }
 
         Row {
-            height: 24
+            height: mediaItem.height
             spacing: 20
             Rectangle{
-                width: 238
-                height: 24
+                width: 266
+                height: mediaItem.height
                 color: "transparent"
                 Text {
                     id: titleText
                     anchors.fill: parent
-                    anchors.leftMargin: 10
+                    anchors.leftMargin: 12
                     color: "#3a3a3a"
                     font.pixelSize: 12
                     elide: Text.ElideRight
@@ -64,7 +64,7 @@ Rectangle {
 
             Rectangle{
                 width: 160
-                height: 24
+                height: mediaItem.height
                 color: "transparent"
                 Text {
                     id: artistText
@@ -79,8 +79,8 @@ Rectangle {
             }
             
             Rectangle{
-                width: 160
-                height: 24
+                width: 134
+                height: mediaItem.height
                 color: "transparent"
                 Text {
                     id: sizeText
@@ -95,19 +95,17 @@ Rectangle {
             }
             
             Rectangle{
-                width: 116
-                height: 24
+                width: 114
+                height: mediaItem.height
                 color: "transparent"
-                Text {
-                    id: progressText
-                    anchors.fill: parent
-                    anchors.leftMargin: 12
-                    color: "#8a8a8a"
-                    font.pixelSize: 12
-                    elide: Text.ElideRight
-                    verticalAlignment: Text.AlignVCenter
-                    text: UtilWorker.progress_to_string(progress)
+
+                DCircleProgressBar {
+                    width: mediaItem.height
+                    height: mediaItem.height
+                    color: "transparent"
+                    dprogress: progress
                 }
+
             }
         }
     }

@@ -42,6 +42,8 @@ class Web360ApiWorker(QObject):
     removeMediaContentFromFavorite = pyqtSignal('QString')
 
     downloadSongConetent = pyqtSignal(dict)
+    resultsCollected = pyqtSignal(int, dict)
+
     # qml2py
     playMusicByIdSignal = pyqtSignal(int)
     playMusicByIdsSignal = pyqtSignal('QString')
@@ -62,6 +64,7 @@ class Web360ApiWorker(QObject):
         self.recommendedMusics = {}
         self.recommendedmusicIds = {}
         self._results = {}
+        self._musicIds = []
         self.initConnect()
 
     def initConnect(self):
@@ -76,7 +79,8 @@ class Web360ApiWorker(QObject):
 
         self.downloadSongSignal.connect(self.downloadSong)
         self.downloadSongsSignal.connect(self.downloadSongs)
-        pass
+        
+        self.resultsCollected.connect(self.collectResult)
 
     @classmethod
     def md5(cls, musicId):
@@ -280,8 +284,34 @@ class Web360ApiWorker(QObject):
         if 'data' in result:
             self.downloadSongConetent.emit(result['data'])
 
+    @dthread
+    @pyqtSlot(int)
+    def requestSong(self, musicId):
+        url = self.getDownloadUrl(musicId)
+        result = self.request(url)
+        if 'data' in result:
+            self.resultsCollected.emit(musicId, result['data'])
+
     @pyqtSlot('QString')
     def downloadSongs(self, musicIds):
         _musicIds = musicIds.split('_')
         for musicId in _musicIds:
-            self.downloadSong(musicId)
+            if musicId not in self._musicIds:
+                self._musicIds.append(int(musicId))
+                self.requestSong(int(musicId))
+
+    @pyqtSlot(int, dict)
+    def collectResult(self, musicId, result):
+        self._results[musicId] = result
+        _rmusicIds = copy.deepcopy(self._results.keys())
+        _rmusicIds.sort()
+        _musicIds = copy.deepcopy(self._musicIds)
+        _musicIds.sort()
+
+        if _rmusicIds == _musicIds:
+            for musicId in self._musicIds:
+                result = self._results[musicId]
+                self.downloadSongConetent.emit(result)
+
+            self._results = {}
+            self._musicIds = []

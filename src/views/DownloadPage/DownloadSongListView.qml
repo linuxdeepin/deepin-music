@@ -18,23 +18,23 @@ Rectangle {
             anchors.fill: parent
             Rectangle{
                 id: tipRect
-                width: 24
+                width: header.height
                 height: 18
                 color: "transparent"
             }
 
             Row {
-                height: 24
+                height: header.height
                 spacing: 20
 
                 Rectangle {
-                    width: 238
-                    height: 24
+                    width: 266
+                    height: header.height
                     color: "transparent"
                     Text {
                         id: titleText
                         anchors.fill: parent
-                        anchors.leftMargin: 10
+                        anchors.leftMargin: 12
                         color:  "#8a8a8a"
                         font.pixelSize: 12
                         elide: Text.ElideRight
@@ -45,12 +45,12 @@ Rectangle {
 
                 Rectangle {
                     width: 160
-                    height: 24
+                    height: header.height
                     color: "transparent"
                     Text {
                         id: artistText
                         anchors.fill: parent
-                        anchors.leftMargin: 10
+                        anchors.leftMargin: 12
                         color:  "#8a8a8a"
                         font.pixelSize: 12
                         elide: Text.ElideRight
@@ -67,13 +67,13 @@ Rectangle {
                 }
 
                 Rectangle {
-                    width: 160
-                    height: 24
+                    width: 134
+                    height: header.height
                     color: "transparent"
                     Text {
                         id: sizeText
                         anchors.fill: parent
-                        anchors.leftMargin: 10
+                        anchors.leftMargin: 12
                         color:  "#8a8a8a"
                         font.pixelSize: 12
                         elide: Text.ElideRight
@@ -90,13 +90,13 @@ Rectangle {
                 }
 
                 Rectangle {
-                    width: 116
-                    height: 24
+                    width: 114
+                    height: header.height
                     color: "transparent"
                     Text {
                         id: progressText
                         anchors.fill: parent
-                        anchors.leftMargin: 10
+                        anchors.leftMargin: 12
                         color:  "#8a8a8a"
                         font.pixelSize: 12
                         elide: Text.ElideRight
@@ -121,7 +121,7 @@ Rectangle {
         anchors.left: rootBox.left
         anchors.right: rootBox.right
         anchors.bottom: rootBox.bottom
-        anchors.bottomMargin: 1
+        anchors.bottomMargin: 10
         ListView {
             id: listView
             anchors.fill: parent
@@ -131,7 +131,7 @@ Rectangle {
             model: songListModel
             currentIndex: -1
             focus: true
-            spacing: 20
+            spacing: 10
             snapMode:ListView.SnapToItem
             signal playMusicByUrl(string url)
 
