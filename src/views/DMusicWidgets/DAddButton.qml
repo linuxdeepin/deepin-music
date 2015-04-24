@@ -1,9 +1,8 @@
 import QtQuick 2.3
 import DMusic 1.0
 
-DIconButton{
-    normal_image: '../../skin/icons/dark/appbar.add.png'
-    hover_image: '../../skin/icons/dark/appbar.add.png'
-    pressed_image: '../../skin/icons/light/appbar.add.png'
-    disabled_image: '../../skin/icons/dark/appbar.add.png'
+DSvgButton{
+    id: playButton
+    normal_opacity: 0.8
+    normal_image: '../../../skin/svg/back.svg'
 }

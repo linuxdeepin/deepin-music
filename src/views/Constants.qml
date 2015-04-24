@@ -1,7 +1,7 @@
 import QtQuick 2.3
 
 QtObject{
-	property int mainWindowWidth: 900
+	property int mainWindowWidth: 901
 	property int mainWindowHeight: 638
 	property int simpleWindowWidth: 286
 	property int simpleWindowHeight: 638

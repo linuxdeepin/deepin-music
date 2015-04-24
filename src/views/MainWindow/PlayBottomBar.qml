@@ -3,6 +3,8 @@ import QtQuick.Controls 1.0
 import QtQuick.Controls.Styles 1.1
 import DMusic 1.0
 import "../DMusicWidgets"
+import "../DMusicWidgets/FullPlayBar"
+import "../DMusicWidgets/CustomSlider"
 
 Item {
     id: playBottomBar
@@ -257,8 +259,8 @@ Item {
                 id: musicToolbar
                 width: musicInfo.width
 
-                property int iconsWidth: 50
-                property int iconsHeight: iconsWidth
+                property int iconsWidth: 26
+                property int iconsHeight: 21
 
                 height: bottomBar.height
                 color: playBottomBar.color
@@ -270,13 +272,13 @@ Item {
                     id: rowLayout
                     anchors.right: parent.right
                     anchors.verticalCenter: parent.verticalCenter
-                    anchors.rightMargin: 20
+                    anchors.rightMargin: 22
 
-                    spacing: 5
+                    spacing: 12
 
                     DVolumeButton{
                         id: volumeButton
-                        width: musicToolbar.iconsWidth
+                        width: 24
                         height: musicToolbar.iconsHeight
 
 
@@ -319,9 +321,9 @@ Item {
                         }
                     }
 
-                    DCycleButton {
+                    DLoopButton {
                         id: cycleButton
-                        width: musicToolbar.iconsWidth
+                        width: 22
                         height: musicToolbar.iconsHeight
 
                         onPlaybackModeChanged:{
@@ -331,13 +333,13 @@ Item {
 
                     DLrcButton {
                         id: lrcButton
-                        width: musicToolbar.iconsWidth
+                        width: 26
                         height: musicToolbar.iconsHeight
                     }
 
                     DPlaylistButton {
                         id: playlistButton
-                        width: musicToolbar.iconsWidth
+                        width: 21
                         height: musicToolbar.iconsHeight
                     }
                 }

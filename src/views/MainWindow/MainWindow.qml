@@ -47,18 +47,20 @@ Rectangle {
     Column{
 
         Row{
-
             LeftSideBar {
                 id: leftSideBar
                 objectName: 'leftSideBar'
                 width: 56
                 height: mainWindow.height - playBottomBar.height
-                iconWidth: leftSideBar.width
-                iconHeight: leftSideBar.width
+                iconWidth: 56
+                iconHeight: 56
                 color: "white"
+            }
 
-                border.color: "lightgray"
-                border.width: 1
+            Rectangle {
+                width: 1
+                height: mainWindow.height - playBottomBar.height
+                color: "lightgray"
             }
 
             Column{
@@ -67,7 +69,7 @@ Rectangle {
                     id: titleBar
                     objectName: 'mainTitleBar'
 
-                    width: mainWindow.width - leftSideBar.width
+                    width: mainWindow.width - leftSideBar.width - 1
                     height: 25
                     iconWidth: titleBar.height
                     iconHeight: titleBar.height

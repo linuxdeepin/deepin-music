@@ -1,6 +1,6 @@
 import QtQuick 2.3
 import DMusic 1.0
-
+import "../DMusicWidgets/LeftSideBar"
 
 Rectangle {
 
@@ -19,97 +19,88 @@ Rectangle {
 
     focus: false
 
-    Column {
-        anchors.fill: parent
+    Rectangle {
+        id: topBox
+        anchors.left: parent.left
+        anchors.top: parent.top
+        anchors.right: parent.right
+        anchors.bottom: bottomBox.top
 
-        DIconButton{
-            id: logoButton
-            hoverEnabled: false
-            width: root.iconWidth
-            height: root.iconHeight
-            normal_image: '../../skin/icons/light/appbar.music.png'
-            hover_image: '../../skin/icons/light/appbar.music.png'
-            pressed_image: '../../skin/icons/dark/appbar.music.png'
-            disabled_image: '../../skin/icons/light/appbar.music.png'
-        }
+        height: parent.height - bottomBox.height
 
-        DIconButton{
-            id: webMusic360Button
-            property var viewID: 'WebMusic360Page' 
-            width: root.iconWidth
-            height: root.iconHeight
-            normal_image: '../../skin/icons/light/appbar.zune.png'
-            hover_image: '../../skin/icons/light/appbar.zune.png'
-            pressed_image: '../../skin/icons/dark/appbar.zune.png'
-            disabled_image: '../../skin/icons/light/appbar.zune.png'
+        Column {
+            anchors.fill: parent
+            spacing: 8
 
-            onClicked:{
-                root.swicthViewByID(viewID);
+            DLogoButton{
+                id: logoButton
+                hoverEnabled: false
+                width: root.iconWidth
+                height: root.iconHeight
+            }
+
+            DOnlineButton{
+                id: webMusic360Button
+                property var viewID: 'WebMusic360Page' 
+                width: root.iconWidth
+                height: root.iconHeight
+                onClicked:{
+                    root.swicthViewByID(viewID);
+                }
+            }
+
+            DLocalButton{
+                id: musciManagerButton
+                property var viewID: 'MusicManagerPage'
+                width: root.iconWidth
+                height: root.iconHeight
+
+                onClicked:{
+                    root.swicthViewByID(viewID);
+                }
+            }
+
+            DPlaylistButton{
+                id: playListButton
+                property var viewID: 'PlayListPage'
+                width: root.iconWidth
+                height: root.iconHeight
+                onClicked:{
+                    root.swicthViewByID(viewID);
+                }
             }
         }
+    }
 
-        DIconButton{
-            id: musciManagerButton
-            property var viewID: 'MusicManagerPage'
-            width: root.iconWidth
-            height: root.iconHeight
-            normal_image: '../../skin/icons/light/appbar.folder.png'
-            hover_image: '../../skin/icons/light/appbar.folder.png'
-            pressed_image: '../../skin/icons/dark/appbar.folder.png'
-            disabled_image: '../../skin/icons/light/appbar.folder.png'
+    Rectangle {
+        id: bottomBox
+        anchors.left: parent.left
+        anchors.top: topBox.bottom
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        height: 91
+        Column {
+            anchors.fill: parent
+            anchors.bottomMargin: 7
+            DDownloadButton{
+                id: downloadButton
+                property var viewID: 'DownloadPage'
+                width: root.iconWidth
+                height: 42
 
-            onClicked:{
-                root.swicthViewByID(viewID);
+                onClicked:{
+                    root.swicthViewByID(viewID);
+                }
             }
-        }
 
-        DIconButton{
-            id: playListButton
-            property var viewID: 'PlayListPage'
-            width: root.iconWidth
-            height: root.iconHeight
-            normal_image: '../../skin/icons/light/appbar.list.png'
-            hover_image: '../../skin/icons/light/appbar.list.png'
-            pressed_image: '../../skin/icons/dark/appbar.list.png'
-            disabled_image: '../../skin/icons/light/appbar.list.png'
+            DSearchButton{
+                id: searchButton
+                width: root.iconWidth
+                height: 42
 
-            onClicked:{
-                root.swicthViewByID(viewID);
-            }
-        }
-
-        Rectangle{
-            width: root.width
-            height: root.height - 6 * root.iconHeight
-            color: "transparent"
-        }
-
-        DIconButton{
-            id: downloadButton
-            property var viewID: 'DownloadPage'
-            width: root.iconWidth
-            height: root.iconHeight
-            normal_image: '../../skin/icons/light/appbar.download.png'
-            hover_image: '../../skin/icons/light/appbar.download.png'
-            pressed_image: '../../skin/icons/dark/appbar.download.png'
-            disabled_image: '../../skin/icons/light/appbar.download.png'
-
-            onClicked:{
-                root.swicthViewByID(viewID);
-            }
-        }
-
-        DIconButton{
-            id: searchButton
-            width: root.iconWidth
-            height: root.iconHeight
-            normal_image: '../../skin/icons/light/appbar.magnify.png'
-            hover_image: '../../skin/icons/light/appbar.magnify.png'
-            pressed_image: '../../skin/icons/dark/appbar.magnify.png'
-            disabled_image: '../../skin/icons/light/appbar.magnify.png'
-
-            onClicked:{
-                root.globalSearched()
+                onClicked:{
+                    root.globalSearched()
+                }
             }
         }
     }

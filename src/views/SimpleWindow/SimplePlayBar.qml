@@ -2,7 +2,8 @@ import QtQuick 2.3
 import QtQuick.Controls 1.0
 import QtQuick.Controls.Styles 1.1
 import DMusic 1.0
-import "../DMusicWidgets"
+import "../DMusicWidgets/SimplePlayer"
+import "../DMusicWidgets/CustomSlider"
 
 Rectangle{
     id: playBottomBar
@@ -215,7 +216,7 @@ Rectangle{
                                 }
                             }
 
-                            DCycleButton{
+                            DLoopButton{
                                 id: cycleButton
                                 width: musicToolbar.iconsWidth
                                 height: musicToolbar.iconsHeight

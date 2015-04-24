@@ -20,7 +20,7 @@ Rectangle {
 
         Rectangle{
             id: tipRect
-            width: mediaItem.height
+            width: 24
             height: mediaItem.height
 
             color: "transparent"
@@ -100,6 +100,7 @@ Rectangle {
                 color: "transparent"
 
                 DCircleProgressBar {
+                    x: 12
                     width: mediaItem.height
                     height: mediaItem.height
                     color: "transparent"

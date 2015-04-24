@@ -10,7 +10,8 @@ Rectangle {
     Rectangle {
         id: header
 
-        width: parent.width
+        anchors.left: rootBox.left
+        anchors.right: rootBox.right
         height: 24
         color: "#eeeeee"
 
@@ -34,7 +35,7 @@ Rectangle {
                     Text {
                         id: titleText
                         anchors.fill: parent
-                        anchors.leftMargin: 12
+                        anchors.leftMargin: 10
                         color:  "#8a8a8a"
                         font.pixelSize: 12
                         elide: Text.ElideRight
