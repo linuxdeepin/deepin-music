@@ -186,7 +186,6 @@ Item {
     Connections {
         target: switchButton
         onClicked: {
-            switchButton.switchflag = !switchButton.switchflag;
             var index =  1 - stackViews.currentIndex
             stackViews.setCurrentIndex(index);
         }

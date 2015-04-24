@@ -6,6 +6,7 @@ Rectangle{
     property bool disabled: false
     property bool hoverEnabled: true
     property url normal_image
+    property url hovered_image: normal_image
     property var normal_opacity: 0.8
     property var hovered_opacity: 1
     property var pressed_opacity: 1
@@ -112,19 +113,19 @@ Rectangle{
     states:[
         State{
             name: "normal"
-            PropertyChanges {target: image; opacity: normal_opacity}
+            PropertyChanges {target: image; opacity: normal_opacity; source: normal_image}
         },
         State{
             name: "hovered"
-            PropertyChanges {target: image; opacity: hovered_opacity}
+            PropertyChanges {target: image; opacity: hovered_opacity; source: hovered_image}
         },
         State{
             name: "pressed"
-            PropertyChanges {target: image; opacity: pressed_opacity}
+            PropertyChanges {target: image; opacity: pressed_opacity; source: normal_image}
         },
         State{
             name: "disabled"
-            PropertyChanges {target: image; opacity: disabled_opacity}
+            PropertyChanges {target: image; opacity: disabled_opacity; source: normal_image}
         }
     ]
 }

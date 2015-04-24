@@ -1,7 +1,8 @@
 import QtQuick 2.3
 import DMusic 1.0
 import QtGraphicalEffects 1.0
-import "../DMusicWidgets"
+import "../DMusicWidgets/"
+import "../DMusicWidgets/SimplePlayer"
 
 Rectangle {
     id: simpleWindow
