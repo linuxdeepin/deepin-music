@@ -4,9 +4,5 @@ import DMusic 1.0
 DSvgButton{
     id: root
     normal_opacity: 0.8
-    normal_image: '../../../skin/svg/back.svg'
-
-    Component.onCompleted: {
-    	print(normal_image)
-    }
+    normal_image: '../../../skin/svg/simple.pause.svg'
 }
