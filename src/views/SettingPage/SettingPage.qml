@@ -9,12 +9,34 @@ Rectangle{
     property var count
     property int currentIndex
 
+
+    ListModel {
+        id: navgationModel
+
+        ListElement {
+            name: "基础设置"
+        }
+        ListElement {
+            name: "快捷键"
+        }
+        ListElement {
+            name: "桌面歌词"
+        }
+        ListElement {
+            name: "下载"
+        }
+        ListElement {
+            name: "关于"
+        }
+    }
+
     Row {
+        anchors.fill: parent
+        anchors.topMargin: 20
         Rectangle {
             id: navgationBar
-            width: 100
+            width: 120
             height: root.height
-
             Component{
                 id: delegateItem
                 Rectangle {
@@ -22,14 +44,18 @@ Rectangle{
                     width: parent.width
                     height: 24
                     Text {
-                        anchors.centerIn: parent
-                        text: index
+                        id: navText
+                        anchors.fill: parent
+                        anchors.leftMargin: 24
+                        color: "#3a3a3a"
+                        horizontalAlignment: Text.AlignLeft
+                        text: name
                     }
                     states: [
                         State {
                             name: "Current"
                             when: delegateRect.ListView.isCurrentItem
-                            PropertyChanges { target: delegateRect; color: "#4ba3fb"}
+                            PropertyChanges { target: navText; color: "#4ba3fb"}
                         }
                     ]
                     MouseArea {
@@ -49,7 +75,7 @@ Rectangle{
                 currentIndex: root.currentIndex
                 onCurrentIndexChanged: root.currentIndex = currentIndex
                 focus: true
-                model: 4
+                model: navgationModel
                 delegate: delegateItem
             }
         }
@@ -86,6 +112,13 @@ Rectangle{
 
                 Component.onDestruction: if (printDestruction) print("destroyed 3")
             }
+            Rectangle {
+                width: view.width; height: view.height
+                color: "#F411d2"
+                Text { text: "Page 5"; font.bold: true; anchors.centerIn: parent }
+
+                Component.onDestruction: if (printDestruction) print("destroyed 3")
+            }
         }
 
         ListView {
@@ -95,13 +128,9 @@ Rectangle{
             model: itemModel
             clip: true
             highlightMoveDuration: 1
-            // preferredHighlightBegin: 0
-            // preferredHighlightEnd: 0
-            // displayMarginBeginning: 0
-            // displayMarginEnd: 0
+            // interactive: false
             highlightRangeMode: ListView.StrictlyEnforceRange
-            // highlightMoveVelocity: 2000
-            snapMode: ListView.SnapOneItem; flickDeceleration: 2000
+            snapMode: ListView.SnapOneItem
             currentIndex: root.currentIndex
             onCurrentIndexChanged: root.currentIndex = currentIndex
 
