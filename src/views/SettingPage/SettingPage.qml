@@ -12,7 +12,6 @@ Rectangle{
 
     ListModel {
         id: navgationModel
-
         ListElement {
             name: "基础设置"
         }
@@ -71,7 +70,7 @@ Rectangle{
                 id: navgationListView
                 width: navgationBar.width
                 height: navgationListView.count * 50
-                snapMode: ListView.SnapToItem
+                snapMode: ListView.SnapOneItem
                 currentIndex: root.currentIndex
                 onCurrentIndexChanged: root.currentIndex = currentIndex
                 focus: true
@@ -119,6 +118,7 @@ Rectangle{
 
                 Component.onDestruction: if (printDestruction) print("destroyed 3")
             }
+
         }
 
         ListView {
@@ -128,12 +128,9 @@ Rectangle{
             model: itemModel
             clip: true
             highlightMoveDuration: 1
-            // interactive: false
             highlightRangeMode: ListView.StrictlyEnforceRange
-            snapMode: ListView.SnapOneItem
             currentIndex: root.currentIndex
             onCurrentIndexChanged: root.currentIndex = currentIndex
-
         }
     }
 }

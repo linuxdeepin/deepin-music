@@ -5,7 +5,7 @@ import "../DMusicWidgets"
 import "../DMusicWidgets/MiniWindow"
 import "../DMusicWidgets/CustomSlider"
 
-Window {
+DMovableWindow {
     id: miniWindow
 
     property var constants
@@ -16,7 +16,6 @@ Window {
 
     color: "#282F3F"
 
-    flags: Qt.FramelessWindowHint | Qt.Popup| Qt.WindowStaysOnTopHint
     x: Screen.desktopAvailableWidth - 200
     y: 100
 
@@ -36,39 +35,6 @@ Window {
 
         horizontalTileMode: BorderImage.Stretch
         verticalTileMode: BorderImage.Stretch
-    }
-
-    MouseArea {
-
-        width: miniWindow.width
-        height: miniWindow.height
-
-        property int dragStartX
-        property int dragStartY
-        property int windowLastX
-        property int windowLastY
-
-        propagateComposedEvents: true
-
-        onPressed: { 
-            var pos = WindowManageWorker.cursorPos
-            
-            windowLastX = miniWindow.x
-            windowLastY = miniWindow.y
-            dragStartX = pos.x
-            dragStartY = pos.y
-        }
-        onPositionChanged: {
-            if (pressed) {
-                var pos = WindowManageWorker.cursorPos
-                miniWindow.x = (windowLastX + pos.x - dragStartX)
-                miniWindow.y = (windowLastY + pos.y - dragStartY)
-                windowLastX = miniWindow.x
-                windowLastY = miniWindow.y
-                dragStartX = pos.x
-                dragStartY = pos.y
-            }
-        }
     }
 
     Rectangle {

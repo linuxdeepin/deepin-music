@@ -6,6 +6,7 @@ Item {
     property var mainWindow
     property var simpleWindowLoader
     property var miniWindow
+    property var lrcWindow
     property var constants
 
     function initConnect() {
@@ -96,6 +97,13 @@ Item {
             }else{
                 destoryTermporyWindow();
             }
+        } 
+    }
+
+    Connections {
+        target: mainWindow.playBottomBar.lrcButton
+        onClicked:{
+            lrcWindow.visible = !lrcWindow.visible;
         } 
     }
 

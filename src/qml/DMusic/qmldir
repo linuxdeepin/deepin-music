@@ -13,3 +13,4 @@ DWaveBar 1.0 DWaveBar.qml
 DListModel 1.0 DListModel.qml
 DCircleProgressBar 1.0 DCircleProgressBar.qml
 WebEngineView 1.0 WebEngineView.qml
+DMovableWindow 1.0 DMovableWindow.qml

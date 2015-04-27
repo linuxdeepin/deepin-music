@@ -5,6 +5,7 @@ import "./MainWindow"
 import "./SimpleWindow"
 import "./MiniWindow"
 import "./TemporaryWindow"
+import "./LrcWindow"
 
 Rectangle {
     id: root
@@ -49,12 +50,17 @@ Rectangle {
         height: root.height
     }
 
+    LrcWindow {
+        id: lrcWindow
+    }
+
     MainController {
         id: mainController
         rootWindow: root
         mainWindow: mainWindow
         simpleWindowLoader: simpleWindowLoader
         miniWindow: miniWindow
+        lrcWindow: lrcWindow
         constants: constants
     }
 
