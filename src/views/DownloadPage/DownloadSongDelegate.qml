@@ -1,6 +1,6 @@
 import QtQuick 2.3
 import DMusic 1.0
-import "../DMusicWidgets"
+import "../DMusicWidgets/DownloadPage"
 
 Rectangle {
     id: mediaItem
@@ -12,6 +12,31 @@ Rectangle {
     color: "transparent"
 
     signal menuShowed(int index)
+
+
+    MouseArea {
+        id: mouseArea
+        anchors.fill: parent
+        hoverEnabled: true
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
+        onEntered: {
+            mediaItem.color = "lightgray"
+        }
+        onExited: {
+            mediaItem.color = "transparent"
+        }
+        onClicked: {
+            if (mouse.button == Qt.LeftButton){
+                mediaItem.ListView.view.currentIndex = index;
+                var url = mediaItem.ListView.view.model.get(index).url
+                mediaItem.ListView.view.playMusicByUrl(url);
+                waveBar.active = true
+            }
+            else if (mouse.button == Qt.RightButton){
+                mediaItem.menuShowed(index);
+            }
+        }
+    }
 
     Row {
 
@@ -99,14 +124,27 @@ Rectangle {
                 height: mediaItem.height
                 color: "transparent"
 
-                DCircleProgressBar {
+                DDownloadCircleProgressButton {
+                    id: progressButton
                     x: 12
                     width: mediaItem.height
                     height: mediaItem.height
                     color: "transparent"
                     dprogress: progress
-                }
+                    downloading: {
+                        var obj = mediaItem.ListView.view.model.get(index)
+                        if (obj){
+                            return obj.downloading
+                        }else{
+                            return false
+                        }
+                    }
 
+                    onSwitchdownloadedStatus:{
+                        var songId = mediaItem.ListView.view.model.get(index).songId;
+                        mediaItem.ListView.view.switchDownloadedStatus(songId, downloaded);
+                    }
+                }
             }
         }
     }
@@ -114,13 +152,13 @@ Rectangle {
     states: [
         State {
             name: "Active"
-            PropertyChanges { target: titleTetx; color: "#2ca7f8"}
+            PropertyChanges { target: titleText; color: "#2ca7f8"}
             PropertyChanges { target: waveBar; active: true ;}
         },
         State {
             name: "Current"
             when: mediaItem.ListView.isCurrentItem
-            PropertyChanges { target: titleTetx; color: "#2ca7f8";}
+            PropertyChanges { target: titleText; color: "#2ca7f8";}
         },
         State {
             name: "!Current"
@@ -128,28 +166,4 @@ Rectangle {
             PropertyChanges { target: waveBar; active: false ;}
         }
     ]
-
-    MouseArea {
-        id: mouseArea
-        anchors.fill: parent
-        hoverEnabled: true
-        acceptedButtons: Qt.LeftButton | Qt.RightButton
-        onEntered: {
-            mediaItem.color = "lightgray"
-        }
-        onExited: {
-            mediaItem.color = "transparent"
-        }
-        onClicked: {
-            if (mouse.button == Qt.LeftButton){
-                mediaItem.ListView.view.currentIndex = index;
-                var url = mediaItem.ListView.view.model.get(index).url
-                mediaItem.ListView.view.playMusicByUrl(url);
-                waveBar.active = true
-            }
-            else if (mouse.button == Qt.RightButton){
-                mediaItem.menuShowed(index);
-            }
-        }
-    }
 }

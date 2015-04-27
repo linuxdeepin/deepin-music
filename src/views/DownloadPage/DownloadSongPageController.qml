@@ -31,4 +31,15 @@ Item {
             UtilWorker.openUrl(ConfigWorker.DownloadSongPath)
         } 
     }
+
+    Connections {
+        target: songListView.view
+        onSwitchDownloadedStatus: {
+            if (downloaded){
+                DownloadSongWorker.oneStartDownloadSignal(songId, downloaded);
+            }else{
+                DownloadSongWorker.onePausedDownloadSignal(songId, downloaded);
+            }
+        }
+    }
 }

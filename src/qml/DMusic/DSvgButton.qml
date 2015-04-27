@@ -7,6 +7,7 @@ Rectangle{
     property bool hoverEnabled: true
     property url normal_image
     property url hovered_image: normal_image
+    property url pressed_image: normal_image
     property var normal_opacity: 0.8
     property var hovered_opacity: 1
     property var pressed_opacity: 1
@@ -33,28 +34,28 @@ Rectangle{
         enabled: !disabled
         hoverEnabled: parent.hoverEnabled
         onEntered: {
-            parent.hovered();
+            
             parent.state = "hovered"
-
+            parent.hovered();
       //    var obj = mapToItem(null, mouseX, mouseY);
             // print(obj.x, obj.y, obj.width, obj.height)
         }
         onExited: {
-            parent.exited()
+            
             parent.state = "normal"
-
+            parent.exited()
             // showTimer.start()
 
         }
 
         onPressed:{
-            parent.pressed()
             parent.state = "pressed"
+            parent.pressed()
         }
 
         onReleased:{
-            parent.released()
             parent.state = "normal"
+            parent.released()
         }
 
         onClicked: {
@@ -121,11 +122,15 @@ Rectangle{
         },
         State{
             name: "pressed"
-            PropertyChanges {target: image; opacity: pressed_opacity; source: normal_image}
+            PropertyChanges {target: image; opacity: pressed_opacity; source: pressed_image}
         },
         State{
             name: "disabled"
             PropertyChanges {target: image; opacity: disabled_opacity; source: normal_image}
+        },
+        State{
+            name: "null"
+            PropertyChanges {target: image; opacity: disabled_opacity; source: ''}
         }
     ]
 }

@@ -135,7 +135,7 @@ Rectangle {
             spacing: 10
             snapMode:ListView.SnapToItem
             signal playMusicByUrl(string url)
-
+            signal switchDownloadedStatus(int songId, bool downloaded)
             DScrollBar {
                 flickable: parent
                 inactiveColor: 'black'

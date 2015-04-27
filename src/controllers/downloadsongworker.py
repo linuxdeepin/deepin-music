@@ -10,7 +10,8 @@ import re
 import time
 import traceback
 from PyQt5.QtCore import (QObject, pyqtSignal, pyqtSlot,
-                         QThreadPool, QRunnable, QTimer)
+                         pyqtProperty, QThreadPool, QRunnable, 
+                         QTimer)
 from PyQt5.QtGui import QImage
 import requests
 from log import logger
@@ -33,7 +34,7 @@ class DownloadSongObject(QObject):
         ('ext', 'QString'),
         ('bitrate', 'QString'),
         ('hdDesc', 'QString'),
-        ('size', int),
+        ('size', int, 0),
         ('songId', int),
         ('name', 'QString'),
         ('singerName', 'QString'),
@@ -44,7 +45,8 @@ class DownloadSongObject(QObject):
         ('serviceEngName', 'QString'),
         ('serviceName', 'QString'),
         ('downloadUrl', 'QString'),
-        ('progress', int)
+        ('progress', int),
+        ('downloading', bool, False)
     )
 
     downloadFinished = pyqtSignal(bool)
@@ -62,6 +64,7 @@ class DownloadSongObject(QObject):
         self.start_size = 0
         self.stopDownloaded = False
         self.isFinished = False
+        self.isConnected = False
         self.filename = DownloadSongWorker.getSongPath(self.singerName, self.name, self.ext)
         self.temp_filename = '%s.tmp' % self.filename
 
@@ -83,7 +86,8 @@ class DownloadSongObject(QObject):
 
     def updatePorgress(self, progress):
         self.progress = progress
-        self.updateDBPoperty.emit(self.songId, 'progress', progress)
+        if progress >= self.progress:
+            self.updateDBPoperty.emit(self.songId, 'progress', progress)
 
     def setFinished(self, finished):
         self.isFinished = finished
@@ -117,9 +121,13 @@ class DownloadSongObject(QObject):
         self.getMusicInfo(self.songId)
         d = DownLoadRunnable(self)
         DownloadSongWorker.threadPool.start(d)
+        self.downloading = True
+        self.updateDBPoperty.emit(self.songId, 'downloading', True)
 
     def stopDownload(self):
         self.stopDownloaded = True
+        self.downloading = False
+        self.updateDBPoperty.emit(self.songId, 'downloading', False)
 
     def calSpeed(self):
         if self.isFinished:
@@ -192,6 +200,7 @@ class DownLoadRunnable(QRunnable):
             if 'content-range' in r.headers:
                 crange = r.headers['content-range']
                 self.total = int(re.match(ur'^bytes 0-4/(\d+)$', crange).group(1))
+                self.songObj.sizeUpdated.emit(self.total)
                 return True
             else:
                 self.total = 0
@@ -200,6 +209,7 @@ class DownLoadRunnable(QRunnable):
             logger.error(traceback.print_exc())
         try:
             self.total = int(r.headers['content-length'])
+            self.songObj.sizeUpdated.emit(self.total)
         except:
             logger.error(traceback.print_exc())
             self.total = 0
@@ -234,7 +244,6 @@ class DownLoadRunnable(QRunnable):
         
         if 'content-length' in r.headers:
             self.total = int(r.headers['content-length'])
-            self.songObj.sizeUpdated.emit(self.total)
         else:
             if self.tryCount < 5:
                 self.download(url, filename)
@@ -279,6 +288,9 @@ class DownloadSongWorker(QObject):
     allStartDownloadSignal = pyqtSignal()
     allPausedSignal = pyqtSignal()
 
+    oneStartDownloadSignal = pyqtSignal(int, bool)
+    onePausedDownloadSignal = pyqtSignal(int, bool)
+
     threadPool = QThreadPool()
 
 
@@ -304,19 +316,49 @@ class DownloadSongWorker(QObject):
         self.allStartDownloadSignal.connect(self.startDownloadAll)
         self.allPausedSignal.connect(self.pausedAll)
 
+        self.oneStartDownloadSignal.connect(self.startDownloadBySongId)
+        self.onePausedDownloadSignal.connect(self.pauseDownloadBySongId)
+
+    def songObjConnect(self, songObj):
+        if not songObj.isConnected:
+            songObj.deleteSelf.connect(self.delSongObj)
+            songObj.updateDBPoperty.connect(self.updateModel)
+            songObj.downloadStoped.connect(self.removeFormDownloadList)
+            songObj.isConnected = True
+
+    def songObjDisConnect(self, songObj):
+        if songObj.isConnected:
+            songObj.deleteSelf.disconnect(self.delSongObj)
+            songObj.updateDBPoperty.disconnect(self.updateModel)
+            songObj.downloadStoped.disconnect(self.removeFormDownloadList)
+            songObj.isConnected = False
+
     def startDownloadAll(self):
         for musicId, songObj in self._songObjs.items():
             songObj.stopDownloaded = False
-            if len(self.downloadObjs) == 4:
-                break
-            else:
-                self.addSongObjToDownloadList(songObj)
+            self.addSongObjToDownloadList(songObj)
 
     def pausedAll(self):
         for musicId, songObj in self.downloadObjs.items():
-            songObj.stopDownloaded = True
+            songObj.stopDownload()
         flag = self.threadPool.waitForDone(1000)
+
+        for songId, songObj in self.downloadObjs.items():
+            self.songObjDisConnect(songObj)
         self.downloadObjs.clear()
+
+    def startDownloadBySongId(self, songId, downloaded):
+        for _songId, songObj in self._songObjs.items():
+            if songId == _songId:
+                songObj.stopDownloaded = False
+                self.addSongObjToDownloadList(songObj)
+                break
+
+    def pauseDownloadBySongId(self, songId, downloaded):
+        for _songId, songObj in self._songObjs.items():
+            if songId == _songId:
+                songObj.stopDownload()
+                break
 
     def downloadSong(self, songDict, isDownloadNow=True):
         songId = songDict['songId']
@@ -331,12 +373,16 @@ class DownloadSongWorker(QObject):
         if songId in self._songObjs:
             logger.info('%s %s %s %s has existed in download list' % (songId, singerName, name, ext))
             return
-        songDict['size'] = 0
+        if isinstance(songDict['size'], unicode):
+            if songDict['size']:
+                songDict['size'] = float(songDict['size'][:-1]) * 1024 * 1024
+            else:
+                songDict['size'] = 0
+
+        songDict['downloading'] = False
 
         songObj = DownloadSongObject(**songDict)
-        songObj.deleteSelf.connect(self.delSongObj)
-        songObj.updateDBPoperty.connect(self.updateModel)
-        songObj.downloadStoped.connect(self.removeFormDownloadList)
+        self.songObjConnect(songObj)
 
         if isDownloadNow:
             self.addSongObjToDownloadList(songObj)
@@ -353,9 +399,7 @@ class DownloadSongWorker(QObject):
     def delSongObj(self, songId):
         if songId in self._songObjs:
             songObj = self._songObjs[songId]
-            songObj.deleteSelf.disconnect(self.delSongObj)
-            songObj.updateDBPoperty.disconnect(self.updateModel)
-            songObj.downloadStoped.disconnect(self.removeFormDownloadList)
+            self.songObjDisConnect(songObj)
             del self._songObjs[songId]
 
         if songId in self._songsDict:
@@ -379,22 +423,23 @@ class DownloadSongWorker(QObject):
     def removeFormDownloadList(self, songId):
         if songId in self._songObjs:
             songObj = self._songObjs[songId]
-            songObj.deleteSelf.disconnect(self.delSongObj)
-            songObj.updateDBPoperty.disconnect(self.updateModel)
-            songObj.downloadStoped.disconnect(self.removeFormDownloadList)
+            self.songObjDisConnect(songObj)
 
         if songId in self.downloadObjs:
             del self.downloadObjs[songId]
-            for songId, songObj in self._songObjs.items():
-                if songObj.songId not in self.downloadObjs:
-                    self.addSongObjToDownloadList(songObj)
-                    break
+            # for songId, songObj in self._songObjs.items():
+            #     if songObj.songId not in self.downloadObjs:
+            #         self.addSongObjToDownloadList(songObj)
+            #         break
 
     def addSongObjToDownloadList(self, songObj):
-        if len(self.downloadObjs) < 5:
-            if songObj.songId not in self.downloadObjs:
-                self.downloadObjs[songObj.songId] = songObj
-                songObj.startDownLoad()
+        if songObj.songId not in self.downloadObjs:
+            self.downloadObjs[songObj.songId] = songObj
+            self.songObjConnect(songObj)
+            songObj.startDownLoad()
+        else:
+            self.songObjConnect(songObj)
+            songObj.startDownLoad()
 
     def updateModel(self, songId, key, value):
         if songId in self._songsDict:
