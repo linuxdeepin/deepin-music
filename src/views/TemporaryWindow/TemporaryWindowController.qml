@@ -21,8 +21,8 @@ Item {
     }
 
     function updateModel() {
-        var pymodel = temporaryWindow.getModel()
-        if (pymodel){
+        var pymodel = temporaryWindow.getModel();
+        if (pymodel != null){
             songListModel.clear();
             songListModel.initModel();
         }

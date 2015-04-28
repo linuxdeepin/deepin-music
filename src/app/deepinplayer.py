@@ -53,7 +53,6 @@ class DeepinPlayer(QObject):
 
     def loadDB(self):
         QTimer.singleShot(500, self.musicManageWorker.restoreDB)
-        # self.musicManageWorker.restoreDB()
 
     def initView(self):
         self.mainWindow = MainWindow()
@@ -89,9 +88,9 @@ class DeepinPlayer(QObject):
 
     def initQMLContext(self):
         self.mainWindow.setContexts(contexts)
-        playlists = self.playlistWorker._playlists
-        for name, playlist in playlists.items():
-            self.playlistWorker.registerObj.emit(name, playlist._medias)
+        # playlists = self.playlistWorker._playlists
+        # for name, playlist in playlists.items():
+        #     self.playlistWorker.registerObj.emit(name, playlist._medias)
         self.mainWindow.setSource(QUrl('views/Main.qml'))
 
     def initConnect(self):
@@ -137,8 +136,6 @@ class DeepinPlayer(QObject):
         self.playlistWorker.currentPlaylistChanged.connect(
             self.mediaPlayer.setPlaylistByName)
 
-        self.playlistWorker.registerObj.connect(self.mainWindow.setContext)
-
     def coverWorkerConnect(self):
         self.coverWorker.updateArtistCover.connect(
             self.musicManageWorker.updateArtistCover)
@@ -171,6 +168,9 @@ class DeepinPlayer(QObject):
             self.coverWorker.downloadArtistCover)
         self.musicManageWorker.downloadAlbumCover.connect(
             self.coverWorker.downloadAlbumCover)
+
+        self.musicManageWorker.loadDBSuccessed.connect(
+            self.playlistWorker.loadPlaylists)
 
     def onlineMusicManageWorkerConnect(self):
         self.onlineMusicManageWorker.downloadOnlineSongCover.connect(

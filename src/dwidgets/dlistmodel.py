@@ -4,7 +4,7 @@
 import os
 from PyQt5.QtCore import (QObject, pyqtSignal,
                 pyqtSlot, pyqtProperty, QVariant)
-from PyQt5.QtQml import QJSValue
+from PyQt5.QtQml import QJSValue, qmlRegisterType
 from .qmodel import ModelMetaclass
 
 # class ListModel(QAbstractListModel):

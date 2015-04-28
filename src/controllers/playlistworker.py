@@ -83,6 +83,15 @@ class DMediaPlaylist(QMediaPlaylist):
         self._name = name
         self.nameChanged.emit()
 
+    # @pyqtProperty(DListModel, notify=mediasChanged)
+    # def medias(self):
+    #     return self._medias
+
+    # @medias.setter
+    # def medias(self, medias):
+    #     self._medias = medias
+    #     self.mediasChanged.emit(medias)
+
     @pyqtProperty('QVariant')
     def urls(self):
         return self._urls
@@ -114,12 +123,16 @@ class DMediaPlaylist(QMediaPlaylist):
 
     def addLocalMedia(self, url):
         mediaContent = DLocalMediaContent(url)
-        self._medias.append(MusicManageWorker.getSongObjByUrl(url))
+        songObj = MusicManageWorker.getSongObjByUrl(url)
+        if songObj:
+            self._medias.append(songObj)
         super(DMediaPlaylist, self).addMedia(mediaContent)
 
     def addOnlineMedia(self, url):
         mediaContent = DOnlineMediaContent(url)
-        self._medias.append(OnlineMusicManageWorker.getSongObjByUrl(url))
+        songObj = OnlineMusicManageWorker.getSongObjByUrl(url)
+        if songObj:
+            self._medias.append(songObj)
         super(DMediaPlaylist, self).addMedia(mediaContent)
 
 
@@ -131,8 +144,6 @@ class PlaylistWorker(QObject):
     playlistNamesChanged = pyqtSignal('QVariant')
     currentPlaylistChanged = pyqtSignal('QString')
 
-    registerObj  = pyqtSignal('QString', 'QVariant')
-
     @registerContext
     def __init__(self, parent=None):
         super(PlaylistWorker, self).__init__(parent)
@@ -141,24 +152,8 @@ class PlaylistWorker(QObject):
         self._playlistNames = []
         self._currentPlaylist = None
 
-        # self.registerObj.connect(registerObj)
         self.createPlaylistByName('temporary')
         self.createPlaylistByName('favorite')
-
-        registerObj('temporary', self._playlists['temporary']._medias)
-        registerObj('favorite', self._playlists['favorite']._medias)
-
-        self.initPlaylist()
-
-    def initPlaylist(self):
-        # urls = [
-        #     u'/usr/share/deepin-sample-music/邓入比_我们的情歌.mp3',
-        #     u'/usr/share/deepin-sample-music/郭一凡_说走就走的旅行.mp3',
-        #     u'/usr/share/deepin-sample-music/胡彦斌_依然是你.mp3'
-        # ]
-        # for url in urls:
-        #     self.addMediaToFavorite(url)
-        self.loadPlaylists()
 
     def savePlaylists(self):
         result = OrderedDict()
@@ -184,6 +179,15 @@ class PlaylistWorker(QObject):
         if flag:
             self._playlists[name].save(f, 'm3u')
             f.close()
+
+    def setContext(self, name, obj):
+        if contexts['MainWindow']:
+            contexts['MainWindow'].setContext(name, obj)
+
+    @pyqtSlot('QString', result=DListModel)
+    def getMediasByName(self, name):
+        if name in self._playlists:
+            return self._playlists[name]._medias
 
     @pyqtProperty('QVariant')
     def temporaryPlaylist(self):
@@ -228,6 +232,7 @@ class PlaylistWorker(QObject):
             self.nameExisted.emit(name)
         else:
             self._playlists[name] = DMediaPlaylist(name)
+            self.setContext(name, self._playlists[name]._medias)
             if name not in ['favorite', 'temporary']:
                 self._playlistNames.insert(0, {'name': name})
                 self.playlistNames = self._playlistNames

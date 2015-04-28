@@ -8,8 +8,7 @@ DMovableWindow {
     y: Screen.desktopAvailableHeight - 200
     width: Screen.desktopAvailableWidth - 400
     height: 100
-    color: "#000000"
-    opacity: 0.2
+    color: Qt.rgba(0, 0, 0, 0.2)
 
     Rectangle {
         id: toolBar

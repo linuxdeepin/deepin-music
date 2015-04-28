@@ -169,6 +169,7 @@ class MusicManageWorker(QObject):
     saveSongToDB = pyqtSignal(dict)
     saveSongsToDB = pyqtSignal(list)
     restoreSongsToDB = pyqtSignal(list)
+    loadDBSuccessed = pyqtSignal()
     addSongToPlaylist = pyqtSignal('QString')
     addSongsToPlaylist = pyqtSignal(list)
     playSongByUrl = pyqtSignal('QString')
@@ -294,6 +295,8 @@ class MusicManageWorker(QObject):
             folderObj = QmlFolderObject(**folderDict)
             self._folderObjs[folder.name] = folderObj
             self._folderObjsListModel.append(folderObj)
+
+        self.loadDBSuccessed.emit()
 
     @pyqtProperty('QVariant', notify=categoriesChanged)
     def categories(self):

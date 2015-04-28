@@ -25,7 +25,7 @@ DRectWithCorner {
         var playlist = MediaPlayer.playlist;
         if (playlist){
             var name = playlist.name
-            var model = eval(name);
+            var model = eval(name)
             return model;
         }else{
             return null;

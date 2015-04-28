@@ -14,7 +14,7 @@ Rectangle {
 
     function getModel(){
         if (currentPlaylistName){
-            var model = eval(currentPlaylistName);
+            var model = eval(currentPlaylistName)
             return model;
         }
     }
