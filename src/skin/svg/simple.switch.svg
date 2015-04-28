@@ -1,16 +1,16 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 18.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" id="&#x56FE;&#x5C42;_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
-	 y="0px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+<svg version="1.1" id="图层_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
 <g>
 	<g>
-		<path style="fill:#FFFFFF;" d="M12,23C5.935,23,1,18.065,1,12S5.935,1,12,1s11,4.935,11,11S18.065,23,12,23z M12,2
-			C6.486,2,2,6.486,2,12s4.486,10,10,10s10-4.486,10-10S17.514,2,12,2z"/>
+		<path fill="#B8B7B8" d="M11.6,23c-6.1,0-11-4.9-11-11s4.9-11,11-11s11,4.9,11,11S17.6,23,11.6,23z M11.6,2C6,2,1.6,6.5,1.6,12
+			s4.5,10,10,10s10-4.5,10-10S17.1,2,11.6,2z"/>
 	</g>
-	<path style="fill:#FFFFFF;" d="M14.5,8H9V6.4c0-0.165-0.188-0.259-0.32-0.16l-3.467,2.6c-0.107,0.08-0.107,0.24,0,0.32l3.467,2.6
-		C8.812,11.859,9,11.765,9,11.6V10h5.488C14.769,10,15,9.769,15,9.488V8.5C15,8.224,14.776,8,14.5,8z"/>
-	<path style="fill:#FFFFFF;" d="M9.633,14H15v-1.6c0-0.165,0.255-0.259,0.387-0.16l3.5,2.6c0.107,0.08,0.123,0.24,0.017,0.32
-		l-3.525,2.6C15.246,17.859,15,17.765,15,17.6V16H9.646C9.364,16,9,15.769,9,15.488V14.5C9,14.224,9.357,14,9.633,14z"/>
+	<path fill="#B8B7B8" d="M14.1,8H9V6.4c0-0.2-0.4-0.3-0.5-0.2L4.9,8.8C4.8,8.9,4.7,9.1,4.8,9.2l3.7,2.6c0.1,0.1,0.5,0,0.5-0.2V10h5
+		c0.3,0,1-0.2,1-0.5v-1C15,8.2,14.3,8,14.1,8z"/>
+	<path fill="#B8B7B8" d="M9.2,14H15v-1.6c0-0.2,0-0.3,0.2-0.2l3.4,2.6c0.1,0.1,0.1,0.2,0,0.3l-3.3,2.6c-0.1,0.1-0.2,0-0.2-0.2V16
+		H9.2C8.9,16,9,15.8,9,15.5v-1C9,14.2,8.9,14,9.2,14z"/>
 </g>
 </svg>
