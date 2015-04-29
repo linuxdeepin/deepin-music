@@ -61,6 +61,7 @@ Rectangle{
                         anchors.fill: parent
                         onClicked: {
                             root.currentIndex  = index
+                            view.currentIndex = index
                         }
                     }
                 }
@@ -71,52 +72,50 @@ Rectangle{
                 width: navgationBar.width
                 height: navgationListView.count * 50
                 snapMode: ListView.SnapOneItem
+                highlightMoveDuration: 1
                 currentIndex: root.currentIndex
-                onCurrentIndexChanged: root.currentIndex = currentIndex
                 focus: true
                 model: navgationModel
                 delegate: delegateItem
+                // highlightRangeMode: ListView.StrictlyEnforceRange
+
+                // Component.onCompleted: positionViewAtIndex(0, ListView.Beginning)
+                // Component.onCompleted: {
+                //     navgationListView.currentIndex = -1;
+                // }
             }
         }
 
         ObjectModel {
             id: itemModel
 
-            Rectangle {
+            BasicSettingSection {
+                id: basicSettingSection
                 width: view.width; height: view.height - 200
-                color: "#FFFEF0"
-                Text { text: "Page 1"; font.bold: true; anchors.centerIn: parent }
 
-                Component.onDestruction: if (printDestruction) print("destroyed 1")
+                subject: navgationModel.get(0).name
             }
-            Rectangle {
+            KeyBindingSection {
+                id: keyBindingSection
                 width: view.width; height: view.height - 300
-                color: "#F0FFF7"
-                Text { text: "Page 2"; font.bold: true; anchors.centerIn: parent }
-
-                Component.onDestruction: if (printDestruction) print("destroyed 2")
+                subject: navgationModel.get(1).name
             }
-            Rectangle {
-                width: view.width; height: view.height - 400
-                color: "#F4F0FF"
-                Text { text: "Page 3"; font.bold: true; anchors.centerIn: parent }
-
-                Component.onDestruction: if (printDestruction) print("destroyed 3")
-            }
-
-            Rectangle {
+            DesktopLRCSection {
+                id: desktopLRCSection
                 width: view.width; height: view.height
-                color: "#F4a3d2"
-                Text { text: "Page 4"; font.bold: true; anchors.centerIn: parent }
-
-                Component.onDestruction: if (printDestruction) print("destroyed 3")
+                subject: navgationModel.get(2).name
             }
-            Rectangle {
-                width: view.width; height: view.height
-                color: "#F411d2"
-                Text { text: "Page 5"; font.bold: true; anchors.centerIn: parent }
 
-                Component.onDestruction: if (printDestruction) print("destroyed 3")
+            DownloadSection {
+                id: downloadSection
+                width: view.width; height: view.height
+                subject: navgationModel.get(3).name
+            }
+
+            AboutSection {
+                id: aboutSection
+                width: view.width; height: view.height
+                subject: navgationModel.get(4).name
             }
 
         }
@@ -129,8 +128,65 @@ Rectangle{
             clip: true
             highlightMoveDuration: 1
             highlightRangeMode: ListView.StrictlyEnforceRange
-            currentIndex: root.currentIndex
-            onCurrentIndexChanged: root.currentIndex = currentIndex
+
+            // currentIndex: root.currentIndex
+            // onCurrentIndexChanged: {
+            //     if (root.currentIndex != currentIndex) {
+            //         root.currentIndex = currentIndex
+            //     }
+            // }
+
+            // function scrollTo(sectionId) {
+            //     var children = col.visibleChildren
+            //     for (var i = 0; i < children.length; i++) {
+            //         if (children[i].sectionId == sectionId) {
+            //             contentY = children[i].y
+            //         }
+            //     }
+            // }
+
+            // onContentYChanged: {
+            //     print(contentY, root.height)
+            //     // if (!flicking) return
+
+            //     // if(atYEnd) {
+            //     //     root.currentSectionId = col.visibleChildren[col.visibleChildren.length - 1].sectionId
+            //     // } else {
+            //     //     var currentTopItem = col.childAt(50, contentY)
+            //     //     root.currentSectionId = currentTopItem ? currentTopItem.sectionId : col.visibleChildren[0].sectionId
+            //     // }
+            // }
+
+
+            MouseArea {
+                anchors.fill: parent
+                propagateComposedEvents: true
+                hoverEnabled: false
+                onWheel: {
+                    wheel.accepted = false;
+                    if(wheel.angleDelta.y < 0){
+                        if (view.currentIndex < view.count - 1){
+                            view.currentIndex = view.currentIndex + 1;
+                        }
+                    }
+                    // else{
+                    //     if (view.currentIndex > 0){
+                    //         view.currentIndex = view.currentIndex - 1;
+                    //     }
+                    // }
+                    root.currentIndex = view.currentIndex;
+
+                    // print(view.contentY)
+                }
+            }
+
+
+
+            // Component.onCompleted: positionViewAtIndex(0, ListView.Beginning)
         }
+    }
+
+    Component.onCompleted: {
+        root.currentIndex = 0;
     }
 }

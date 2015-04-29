@@ -18,6 +18,8 @@ import StringIO
 import gzip
 import re
 from cover.cover_query import multi_query_album_engine, multi_query_artist_engine
+from log import logger
+
 
 class XiamiTingEngine(object):
 
@@ -308,7 +310,7 @@ class CoverRunnable(QRunnable):
                 else:
                     self.coverWorker.downloadAlbumCoverSuccessed.emit(self.artist, self.album, '')
         except Exception, e:
-            raise e
+            logger.error(e)
 
     def downloadCoverByUrl(self, url, localUrl):
         try:
