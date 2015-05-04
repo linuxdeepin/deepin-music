@@ -7,7 +7,7 @@ import sys
 from logging.handlers import RotatingFileHandler
 from logging import RootLogger
 import traceback
-
+from config.constants import LogPath
 
 class ALERootLogger(RootLogger):
 
@@ -31,7 +31,7 @@ logging.root = ALERootLogger(logging.WARNING)
 logging.root.setLevel(logging.INFO)
 logging.root.propagate = 0
 #log write in file
-logpath = os.sep.join([os.getcwd(), 'log', 'main.log'])
+logpath = LogPath
 fh = RotatingFileHandler(logpath, maxBytes=10 * 1024 * 1024, backupCount=100)
 fh.setLevel(logging.INFO)
 #log write in console

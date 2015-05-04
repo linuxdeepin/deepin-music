@@ -24,6 +24,9 @@ MusicDBFile = os.path.join(ProjectPath,  'music.db')
 DownloadSongPath = os.path.join(QDir.homePath(), u'音乐', 'download')
 
 
+LogCachePath = os.path.join(Home, '.cache', 'DeepinMusic3')
+LogPath = os.path.join(LogCachePath, 'main.log')
+
 paths = [
 	ProjectPath,
 	MusicManagerPath,
@@ -34,7 +37,8 @@ paths = [
 	SongCoverPath,
 	OnlineSongCoverPath,
 	LevevDBPath,
-	DownloadSongPath
+	DownloadSongPath,
+	LogCachePath
 ]
 
 for path in paths:
