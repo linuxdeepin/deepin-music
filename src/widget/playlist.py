@@ -44,7 +44,6 @@ from config import config
 from player import Player
 from nls import _
 from constant import CATEGROYLIST_WIDTH, HIDE_PLAYLIST_WIDTH
-import sample_music
 import utils
 
 class CategoryView(TreeView):
@@ -180,9 +179,7 @@ class PlaylistUI(gtk.VBox):
                      app_theme.get_shadow_color("editlistItemPress").get_color_info())
 
     def __on_db_loaded(self, db):
-        _add_sample = False
         if not MediaDB.get_playlists():
-            _add_sample = True
             MediaDB.create_playlist("local", _("Default List"))
 
         # From MediaDB loaded playlists.
@@ -202,19 +199,6 @@ class PlaylistUI(gtk.VBox):
 
         self.category_list.check_view_status()
         self.list_paned.show_all()
-
-        if _add_sample:
-            uris = sample_music.get_sample_list_uris()
-            for uri in uris:
-                self.import_list_from_uri(uri)
-            category_item = self.get_categroy_item_by_index(1)
-            self.reset_highlight_item(category_item)
-            config.set("playlist","current_index", "1")
-
-            def select_song(item):
-                item.song_view.get_next_song()
-                return False
-            gtk.timeout_add(500, lambda :select_song(category_item))
 
     def __on_player_loaded(self, player):
         if self.current_item:

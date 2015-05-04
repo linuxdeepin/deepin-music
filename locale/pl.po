@@ -4,14 +4,14 @@
 # 
 # Translators:
 # Daniel Krawczyk <daniekonepl@gmail.com>, 2014
-# Piotr Strębski <strebski@o2.pl>, 2014
+# Piotr Strębski <strebski@o2.pl>, 2014-2015
 # suore <suore@outlook.com>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Deepin Music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-04 16:29+0800\n"
-"PO-Revision-Date: 2014-12-24 02:51+0000\n"
+"POT-Creation-Date: 2015-02-03 16:14+0800\n"
+"PO-Revision-Date: 2015-03-23 16:51+0000\n"
 "Last-Translator: Piotr Strębski <strebski@o2.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/projects/p/deepin-music/language/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -24,25 +24,25 @@ msgstr ""
 msgid ""
 "Vorbis is an open source, lossy audio codec with high quality output at a "
 "lower file size than MP3."
-msgstr "Vorbis jest otwarto źródłowym, stratnym kodekiem z wysoką jakość produkcji przy niższym rozmiarze pliku niż MP3."
+msgstr "Vorbis jest otwartoźródłowym, stratnym kodekiem z wysoką jakość produkcji przy niższym rozmiarze pliku niż MP3."
 
 #: ../src/transcoder.py:66
 msgid ""
 "Free Lossless Audio Codec (FLAC) is an open source codec that compresses but"
 " does not degrade audio quality."
-msgstr "FLAC (Free Lossless Audio Codec) ang. Wolny Bezstratny Kodek Audio jest to otwarto źródłowym kodekiem który przeciwieństwie do stratnych kodeków dźwięku takich jak Vorbis, MP3 i AAC, kodek FLAC nie usuwa żadnych danych ze strumienia audio, dzięki czemu po dekompresji otrzymujemy dźwięk identyczny z pierwowzorem. "
+msgstr "FLAC (Free Lossless Audio Codec, ang. Wolny Bezstratny Kodek Audio) jest otwartoźródłowym kodekiem, który w przeciwieństwie do stratnych kodeków dźwięku, takich jak Vorbis, MP3 i AAC, nie usuwa żadnych danych ze strumienia audio, dzięki czemu po dekompresji otrzymujemy dźwięk identyczny z pierwowzorem."
 
 #: ../src/transcoder.py:80
 msgid ""
 "Apple's proprietary lossy audio format could give higher quality than MP3 at"
 " lower bitrates."
-msgstr "Własnościowy, stratny format audio Apple może dać wyższą jakość dźwięku, przy niższym próbkowaniu, niż format MP3."
+msgstr "Własnościowy, stratny format dźwięku Apple może dać wyższą jakość dźwięku, przy niższym próbkowaniu, niż format MP3."
 
 #: ../src/transcoder.py:93
 msgid ""
 "A proprietary and older, but also popular, lossy audio format. VBR gives "
 "higher quality than CBR, but may be incompatible with some players."
-msgstr "Zastrzeżony i stary, ale również bardzo popularny, stratny format audio. VBR (Zmienna przepływność) daje wyższą jakość niż CBR (Stała przepływność), ale mogą być niezgodne z niektórymi odtwarzaczami."
+msgstr "Własnościowy i starszy, ale również bardzo popularny, stratny format dźwiękowy. VBR o zmiennej przepływności daje wyższą jakość niż CBR o stałej przepływności, ale może być niezgodny z niektórymi odtwarzaczami."
 
 #: ../src/transcoder.py:106
 msgid ""
@@ -55,8 +55,9 @@ msgid "A very fast Free lossless audio format with good compression."
 msgstr "Bardzo szybki format FLAC zapewnia dobrą kompresję w stosunku do jakości dźwięku."
 
 #: ../src/constant.py:28 ../src/widget/information.py:41
+#: ../plugins/pidgin/__init__.py:97 ../plugins/mpris2/mpris_adapter.py:252
 msgid "Deepin Music"
-msgstr "Deepin Muzyka"
+msgstr "Muzyka Deepin"
 
 #: ../src/constant.py:29
 msgid "DMusic"
@@ -204,8 +205,9 @@ msgstr "Plik docelowy już istnieje, czy chcesz go nadpisać?"
 
 #: ../src/widget/converter.py:367 ../src/widget/song_editor.py:150
 #: ../src/widget/lyrics_module.py:240 ../src/widget/playlist.py:560
+#: ../src/widget/playlist.py:563
 msgid "Open directory"
-msgstr "Otwórz lokalizację"
+msgstr "Otwórz katalog"
 
 #: ../src/widget/converter.py:369
 msgid "Delete task"
@@ -223,7 +225,7 @@ msgstr "Menedżer zadań"
 #: ../src/widget/converter.py:415 ../src/widget/instance.py:324
 #: ../src/widget/tray.py:62
 msgid "Pause"
-msgstr "Zatrzymaj"
+msgstr "Wstrzymaj"
 
 #: ../src/widget/converter.py:394 ../src/widget/converter.py:449
 #: ../src/widget/song_editor.py:338 ../src/widget/preference.py:950
@@ -238,7 +240,7 @@ msgstr "Kontynuuj"
 
 #: ../src/widget/converter.py:427 ../src/widget/instance.py:341
 #: ../src/widget/instance.py:364 ../src/widget/song_view.py:792
-#: ../src/widget/playlist.py:559
+#: ../src/widget/playlist.py:559 ../src/widget/playlist.py:562
 msgid "Converter"
 msgstr "Konwerter"
 
@@ -264,7 +266,7 @@ msgstr "Okładka"
 
 #: ../src/widget/converter.py:448
 msgid "Start"
-msgstr "Start"
+msgstr "Rozpocznij"
 
 #: ../src/widget/converter.py:450
 msgid "Add to Playlist after finished"
@@ -280,18 +282,22 @@ msgid "Change"
 msgstr "Zmień"
 
 #: ../src/widget/webcast_view.py:114 ../src/widget/webcast_view.py:120
-#: ../src/widget/playlist.py:103
+#: ../src/widget/playlist.py:103 ../plugins/musicfm/radio_view.py:134
+#: ../plugins/musicfm/radio_view.py:140
 msgid "Delete"
 msgstr "Usuń"
 
 #: ../src/widget/webcast_view.py:115 ../src/widget/webcast_view.py:123
 #: ../src/widget/song_view.py:510 ../src/widget/playlist.py:555
+#: ../src/widget/playlist.py:558 ../plugins/musicfm/radio_view.py:135
+#: ../plugins/musicfm/radio_view.py:141
 msgid "Clear List"
 msgstr "Wyczyść listę"
 
 #: ../src/widget/webcast_view.py:119 ../src/widget/webcast_view.py:338
 #: ../src/widget/instance.py:321 ../src/widget/tray.py:59
 #: ../src/widget/song_view.py:785 ../src/widget/playlist.py:549
+#: ../src/widget/playlist.py:552 ../plugins/musicfm/radio_view.py:139
 msgid "Play"
 msgstr "Odtwórz"
 
@@ -308,7 +314,8 @@ msgstr "Dodaj do ulubionych"
 msgid "Add to Playlist"
 msgstr "Dodaj do listy odtwarzania"
 
-#: ../src/widget/webcast_view.py:450
+#: ../src/widget/webcast_view.py:450 ../plugins/webcast/__init__.py:34
+#: ../plugins/webcast/__init__.py:36
 msgid "Radio"
 msgstr "Radio"
 
@@ -323,12 +330,13 @@ msgstr "Tytuł"
 
 #: ../src/widget/song_editor.py:73 ../src/widget/song_editor.py:203
 #: ../src/widget/local_browser.py:85 ../src/widget/song_view.py:680
-#: ../src/widget/lyrics_search.py:83
+#: ../src/widget/lyrics_search.py:83 ../plugins/notify/__init__.py:43
 msgid "Artist"
 msgstr "Wykonawca"
 
 #: ../src/widget/song_editor.py:74 ../src/widget/song_editor.py:204
 #: ../src/widget/local_browser.py:87 ../src/widget/song_view.py:680
+#: ../plugins/notify/__init__.py:45
 msgid "Album"
 msgstr "Album"
 
@@ -371,7 +379,7 @@ msgstr "Data"
 
 #: ../src/widget/song_editor.py:147
 msgid "Location"
-msgstr "Umiejscowienie"
+msgstr "Położenie"
 
 #: ../src/widget/song_editor.py:205 ../src/widget/local_browser.py:89
 #: ../src/widget/webcasts_browser.py:99
@@ -396,7 +404,7 @@ msgid "Select image"
 msgstr "Wybierz obraz"
 
 #: ../src/widget/song_editor.py:335 ../src/widget/song_view.py:793
-#: ../src/widget/playlist.py:561
+#: ../src/widget/playlist.py:561 ../src/widget/playlist.py:564
 msgid "Properties"
 msgstr "Właściwości"
 
@@ -445,7 +453,7 @@ msgid "Play Controls"
 msgstr "Sterowanie odtwarzaniem"
 
 #: ../src/widget/instance.py:361 ../src/widget/playlist.py:100
-#: ../src/widget/playlist.py:557
+#: ../src/widget/playlist.py:557 ../src/widget/playlist.py:560
 msgid "Playback mode"
 msgstr "Tryb odtwarzania"
 
@@ -490,20 +498,20 @@ msgstr "Zablokuj słowa"
 
 #: ../src/widget/instance.py:480
 msgid "Mini Mode"
-msgstr "Tryb mały"
+msgstr "Tryb mini"
 
 #: ../src/widget/instance.py:482
 msgid "Normal Mode"
-msgstr "Tryb Normalny"
+msgstr "Tryb normalny"
 
 #: ../src/widget/local_browser.py:91 ../src/widget/song_view.py:524
 #: ../src/widget/song_view.py:532
 msgid "Folder"
-msgstr "Folder"
+msgstr "Katalog"
 
 #: ../src/widget/local_browser.py:98
 msgid "Quick Scan"
-msgstr "Szybkie Skanowanie"
+msgstr "Szybkie skanowanie"
 
 #: ../src/widget/local_browser.py:99
 msgid "Scan"
@@ -523,6 +531,7 @@ msgid "Play All"
 msgstr "Odtwórz wszystko"
 
 #: ../src/widget/local_browser.py:351 ../src/widget/playlist.py:550
+#: ../src/widget/playlist.py:553
 msgid "Add to List"
 msgstr "Dodaj do listy"
 
@@ -532,6 +541,7 @@ msgstr "Usuń z biblioteki"
 
 #: ../src/widget/local_browser.py:354 ../src/widget/song_view.py:509
 #: ../src/widget/song_view.py:789 ../src/widget/playlist.py:554
+#: ../src/widget/playlist.py:557
 msgid "Move to Trash"
 msgstr "Przenieś do kosza"
 
@@ -625,7 +635,7 @@ msgstr "Katalog tekstów"
 
 #: ../src/widget/preference.py:346 ../src/widget/preference.py:1002
 msgid "Hotkeys"
-msgstr "Hotkeys"
+msgstr "Skróty klawiszowe"
 
 #: ../src/widget/preference.py:356
 msgid "Enable hotkeys"
@@ -806,6 +816,7 @@ msgid "Repeat (list)"
 msgstr "Powtórz (listę)"
 
 #: ../src/widget/song_view.py:484 ../src/widget/playlist.py:545
+#: ../src/widget/playlist.py:548
 msgid "Randomize"
 msgstr "Losowo"
 
@@ -942,7 +953,7 @@ msgstr "Szukanie tekstów..."
 
 #: ../src/widget/headerbar.py:77
 msgid "Show/Hide Lyrics"
-msgstr "Pokaż/Ukryj Tekst"
+msgstr "Pokaż/Ukryj tekst"
 
 #: ../src/widget/lyrics.py:735
 msgid "Lyrics window"
@@ -956,7 +967,7 @@ msgstr "Własny"
 msgid "Default"
 msgstr "Domyślny"
 
-#: ../src/widget/equalizer.py:178
+#: ../src/widget/equalizer.py:178 ../plugins/musicfm/radio_genre_page.py:43
 msgid "Classical"
 msgstr "Klasyczny"
 
@@ -966,15 +977,15 @@ msgstr "Klub"
 
 #: ../src/widget/equalizer.py:180
 msgid "Dance"
-msgstr "Dance"
+msgstr "Taneczna"
 
 #: ../src/widget/equalizer.py:181
 msgid "Full Bass"
-msgstr "Bass"
+msgstr "Pełny bas"
 
 #: ../src/widget/equalizer.py:182
 msgid "Full Bass and Treble"
-msgstr "Bass i wysokie tony"
+msgstr "Pełny bas i wysokie tony"
 
 #: ../src/widget/equalizer.py:183
 msgid "Full Treble"
@@ -996,11 +1007,11 @@ msgstr "Na żywo"
 msgid "Party"
 msgstr "Impreza"
 
-#: ../src/widget/equalizer.py:188
+#: ../src/widget/equalizer.py:188 ../plugins/musicfm/radio_genre_page.py:46
 msgid "Pop"
 msgstr "Pop"
 
-#: ../src/widget/equalizer.py:190
+#: ../src/widget/equalizer.py:190 ../plugins/musicfm/radio_genre_page.py:42
 msgid "Rock"
 msgstr "Rock"
 
@@ -1016,13 +1027,13 @@ msgstr "Soft"
 msgid "Soft Rock"
 msgstr "Soft Rock"
 
-#: ../src/widget/equalizer.py:194
+#: ../src/widget/equalizer.py:194 ../plugins/musicfm/radio_genre_page.py:47
 msgid "Electronic"
 msgstr "Elektroniczna"
 
 #: ../src/widget/equalizer.py:254
 msgid "Predefined"
-msgstr "Predefiniowana"
+msgstr "Predefiniowane"
 
 #: ../src/widget/playlist.py:94
 msgid "Search in Current Playlist"
@@ -1039,14 +1050,17 @@ msgstr "Domyślna lista"
 #: ../src/widget/playlist.py:304 ../src/widget/playlist.py:316
 #: ../src/widget/playlist.py:317 ../src/widget/playlist.py:357
 #: ../src/widget/playlist.py:360 ../src/widget/playlist.py:476
+#: ../src/widget/playlist.py:479
 msgid "New List"
 msgstr "Nowa lista"
 
 #: ../src/widget/playlist.py:305 ../src/widget/playlist.py:477
+#: ../src/widget/playlist.py:480
 msgid "Import List"
 msgstr "Importuj listę"
 
 #: ../src/widget/playlist.py:306 ../src/widget/playlist.py:485
+#: ../src/widget/playlist.py:488
 msgid "Open List"
 msgstr "Otwórz listę"
 
@@ -1055,60 +1069,65 @@ msgid "Export List"
 msgstr "Eksportuj listę"
 
 #: ../src/widget/playlist.py:308 ../src/widget/playlist.py:484
+#: ../src/widget/playlist.py:487
 msgid "Remove List"
 msgstr "Usuń listę"
 
 #: ../src/widget/playlist.py:310 ../src/widget/playlist.py:479
-#: ../src/widget/playlist.py:487
+#: ../src/widget/playlist.py:487 ../src/widget/playlist.py:482
+#: ../src/widget/playlist.py:490
 msgid "Save all Lists"
 msgstr "Zapisz wszystkie listy"
 
 #: ../src/widget/playlist.py:483 ../src/widget/playlist.py:493
+#: ../src/widget/playlist.py:486 ../src/widget/playlist.py:496
 msgid "Rename"
 msgstr "Zmień nazwę"
 
-#: ../src/widget/playlist.py:534
+#: ../src/widget/playlist.py:534 ../src/widget/playlist.py:537
 msgid "By Filename"
 msgstr "Według nazwy pliku"
 
-#: ../src/widget/playlist.py:535
+#: ../src/widget/playlist.py:535 ../src/widget/playlist.py:538
 msgid "By Title"
 msgstr "Według tytułu"
 
 #: ../src/widget/playlist.py:536 ../src/widget/combo.py:184
-#: ../src/widget/combo.py:233
+#: ../src/widget/combo.py:233 ../src/widget/playlist.py:539
 msgid "By Artist"
 msgstr "Według artysty"
 
 #: ../src/widget/playlist.py:537 ../src/widget/combo.py:235
+#: ../src/widget/playlist.py:540
 msgid "By Album"
 msgstr "Według albumu"
 
 #: ../src/widget/playlist.py:538 ../src/widget/combo.py:234
+#: ../src/widget/playlist.py:541
 msgid "By Genre"
 msgstr "Według gatunku"
 
-#: ../src/widget/playlist.py:539
+#: ../src/widget/playlist.py:539 ../src/widget/playlist.py:542
 msgid "By Track"
 msgstr "Według utworu"
 
-#: ../src/widget/playlist.py:540
+#: ../src/widget/playlist.py:540 ../src/widget/playlist.py:543
 msgid "By Play Count"
 msgstr "Według liczby odtworzeń"
 
-#: ../src/widget/playlist.py:541
+#: ../src/widget/playlist.py:541 ../src/widget/playlist.py:544
 msgid "By Added Time"
 msgstr "Według daty dodania"
 
-#: ../src/widget/playlist.py:551
+#: ../src/widget/playlist.py:551 ../src/widget/playlist.py:554
 msgid "Move to List"
 msgstr "Przenieś do listy"
 
-#: ../src/widget/playlist.py:553
+#: ../src/widget/playlist.py:553 ../src/widget/playlist.py:556
 msgid "Remove Track"
 msgstr "Usuń utwór"
 
-#: ../src/widget/playlist.py:558
+#: ../src/widget/playlist.py:558 ../src/widget/playlist.py:561
 msgid "Sort"
 msgstr "Sortuj"
 
@@ -1206,7 +1225,7 @@ msgstr "Pobieranie tekstu..."
 
 #: ../src/widget/lyrics_search.py:180
 msgid "File save to"
-msgstr "Zapisano w"
+msgstr "Zapisz plik w"
 
 #: ../src/widget/lyrics_search.py:182
 msgid "Download failed."
@@ -1258,4 +1277,71 @@ msgstr "Nieznany wykonwca"
 
 #: ../src/source/audiocd.py:86 ../src/source/audiocd.py:92
 msgid "Audio CD"
-msgstr "Płyta Audio"
+msgstr "Płyta dźwiękowa"
+
+#: ../plugins/musicfm/radio_home_page.py:73
+#: ../plugins/musicfm/radio_browser.py:79
+msgid "Hot MHz"
+msgstr "Gorące MHz"
+
+#: ../plugins/musicfm/radio_home_page.py:73
+#: ../plugins/musicfm/radio_browser.py:81
+msgid "Pop MHz"
+msgstr "Pop MHz"
+
+#: ../plugins/musicfm/__init__.py:33 ../plugins/musicfm/__init__.py:35
+#: ../plugins/musicfm/radio_view.py:474
+msgid "MusicFM"
+msgstr "MusicFM"
+
+#: ../plugins/musicfm/radio_item.py:508
+msgid "More"
+msgstr "Więcej"
+
+#: ../plugins/musicfm/radio_genre_page.py:44
+msgid "Jazz"
+msgstr "Jazz"
+
+#: ../plugins/musicfm/radio_genre_page.py:45
+msgid "Folk/Country"
+msgstr "Folk/Country"
+
+#: ../plugins/musicfm/radio_genre_page.py:48
+msgid "OST"
+msgstr "Ścieżka dźwiękowa"
+
+#: ../plugins/musicfm/radio_genre_page.py:49
+msgid "Light"
+msgstr "Lekka"
+
+#: ../plugins/musicfm/radio_genre_page.py:50
+msgid "Hip-Hop/Rap"
+msgstr "Hip-Hop/Rap"
+
+#: ../plugins/musicfm/radio_genre_page.py:51
+msgid "Reggae"
+msgstr "Reggae"
+
+#: ../plugins/musicfm/radio_genre_page.py:52
+msgid "Latino"
+msgstr "Latino"
+
+#: ../plugins/musicfm/radio_genre_page.py:53
+msgid "World"
+msgstr "Muzyka świata"
+
+#: ../plugins/musicfm/radio_genre_page.py:54
+msgid "Blues"
+msgstr "Blues"
+
+#: ../plugins/musicfm/radio_genre_page.py:55
+msgid "Funk/Soul/R&B"
+msgstr "Funk/Soul/R&B"
+
+#: ../plugins/musicfm/radio_browser.py:78
+msgid "Home"
+msgstr "Początek"
+
+#: ../plugins/musicfm/radio_browser.py:80
+msgid "Genres MHz"
+msgstr "Gatunki MHz"

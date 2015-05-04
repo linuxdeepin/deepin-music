@@ -3,20 +3,20 @@
 
 # Copyright (C) 2011 ~ 2012 Deepin, Inc.
 #               2011 ~ 2012 Hou Shaohui
-# 
+#
 # Author:     Hou Shaohui <houshao55@gmail.com>
 # Maintainer: Hou Shaohui <houshao55@gmail.com>
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -40,9 +40,9 @@ class InvalidPluginError(Exception):
         return str(self.args[0])
 
 class PluginsManager(Logger):
-    
+
     def __init__(self, dmusic, load=True):
-        
+
         self.plugindirs = xdg_support.get_plugin_dirs()
         for plugin_dir in self.plugindirs:
             try:
@@ -133,7 +133,7 @@ class PluginsManager(Logger):
             del self.enabled_plugins[plugin_name]
             plugin.disable(self.dmusic)
             self.logdebug("Unloaded plugin %s", plugin_name)
-            self.save_enabled()
+            self.save_disabled(plugin_name)
         except Exception, e:
             traceback.print_exc()
             self.logwarn("Unable to fully disable plugin %s", plugin_name)
@@ -184,8 +184,23 @@ class PluginsManager(Logger):
         if self.load:
             config.set("plugins", "enabled", ",".join(self.enabled_plugins.keys()))
 
+    def save_disabled(self, plugin):
+        if self.load:
+            self.save_enabled()
+            disabled = config.get("plugins", "disabled").split(",")
+            if plugin not in disabled:
+                disabled.append(plugin)
+                config.set("plugins", "disabled", ",".join(disabled))
+
     def load_enabled(self):
-        to_enable = config.get("plugins", "enabled", "mpris2").replace("\n", ",").split(",")
+        to_disable = config.get("plugins", "disabled", "").replace("\n", ",").split(",")
+        to_enable = config.get("plugins", "enabled", "").replace("\n", ",").split(",")
+        plugin_list = self.list_installed_plugins()
+        for plugin in plugin_list:
+            info = self.get_plugin_info(plugin)
+            if info.get("Enable", None) == "True" and plugin not in to_enable and plugin not in to_disable:
+                to_enable.append(plugin)
+
         if to_enable:
             for plugin in to_enable:
                 try:
@@ -193,4 +208,4 @@ class PluginsManager(Logger):
                         self.enable_plugin(plugin)
                 except:
                     pass
-        self.load = True        
+        self.load = True

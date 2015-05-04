@@ -4,13 +4,15 @@
 # 
 # Translators:
 # Anne <a.vangulick@hotmail.com>, 2014
+# Heimen Stoffels <vistausss@outlook.com>, 2015
+# Stefan van den Brink <stefan.vandenbrink@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Deepin Music\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-04 16:29+0800\n"
-"PO-Revision-Date: 2014-12-27 08:30+0000\n"
-"Last-Translator: Anne <a.vangulick@hotmail.com>\n"
+"POT-Creation-Date: 2015-02-03 16:14+0800\n"
+"PO-Revision-Date: 2015-03-23 10:24+0000\n"
+"Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
 "Language-Team: Dutch (http://www.transifex.com/projects/p/deepin-music/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,37 +24,38 @@ msgstr ""
 msgid ""
 "Vorbis is an open source, lossy audio codec with high quality output at a "
 "lower file size than MP3."
-msgstr "Vorbis is een open source, 'lossy' audiocodec met output van hoge kwaliteit en een kleinere bestandsgrootte dan MP3."
+msgstr "Vorbis is een open bron, losse audiocodec van hoge kwaliteit met een kleinere bestandsgrootte dan MP3."
 
 #: ../src/transcoder.py:66
 msgid ""
 "Free Lossless Audio Codec (FLAC) is an open source codec that compresses but"
 " does not degrade audio quality."
-msgstr "Free Lossless Audio Codec (FLAC) is een open source codec die comprimeert zonder dat de audiokwaliteit daarbij verloren gaat."
+msgstr "Free Lossless Audio Codec (FLAC) is een open bron-codec die audio comprimeert zonder dat de kwaliteit daarbij verloren gaat."
 
 #: ../src/transcoder.py:80
 msgid ""
 "Apple's proprietary lossy audio format could give higher quality than MP3 at"
 " lower bitrates."
-msgstr "Het lossy audiobestandsformaat van Apple geeft mogelijk een hogere kwaliteit dan MP3 bij lagere bitrates."
+msgstr "Het losse audiobestandsformaat van Apple geeft mogelijk een hogere kwaliteit dan MP3 bij lagere bitrates."
 
 #: ../src/transcoder.py:93
 msgid ""
 "A proprietary and older, but also popular, lossy audio format. VBR gives "
 "higher quality than CBR, but may be incompatible with some players."
-msgstr "Een gepatenteerd en ouder, maar ook populair, lossy audio-formaat. VBR geeft een hogere kwaliteit dan CBR, maar is mogelijk niet compatibel met sommige afspeelmedia."
+msgstr "Een gepatenteerd en ouder, maar ook populair, los audio-formaat. VBR geeft een hogere kwaliteit dan CBR maar is mogelijk niet compatibel met sommige mediaspelers."
 
 #: ../src/transcoder.py:106
 msgid ""
 "A proprietary and older, but also popular, lossy audio format. The output "
 "effect of CBR is not good as VBR, but is compatible with any player."
-msgstr "Een gepatenteerd en ouder, maar ook populair, lossy audio-formaat. Het output effect van CBR is niet zo goed als VBR, maar is compatibel met elke speler."
+msgstr "Een gepatenteerd en ouder, maar ook populair, los audio-formaat. Het output effect van CBR is niet zo goed als VBR, maar is compatibel met elke mediaspeler."
 
 #: ../src/transcoder.py:119
 msgid "A very fast Free lossless audio format with good compression."
-msgstr "Een zeer snel gratis audiobestandsformaat dat goed comprimeert zonder kwaliteitsverlies."
+msgstr "Een zeer snel, gratis audiobestandsformaat dat goed comprimeert zonder kwaliteitsverlies."
 
 #: ../src/constant.py:28 ../src/widget/information.py:41
+#: ../plugins/pidgin/__init__.py:97 ../plugins/mpris2/mpris_adapter.py:252
 msgid "Deepin Music"
 msgstr "Deepin Muziek"
 
@@ -62,16 +65,16 @@ msgstr "DMusic"
 
 #: ../src/plugins.py:91
 msgid "Plugin archive is not in the correct format."
-msgstr "Plug-in-archief heeft niet het juiste bestandsformaat."
+msgstr "Het plug-in-archief heeft niet het juiste bestandsformaat."
 
 #: ../src/plugins.py:98
 #, python-format
 msgid "A plugin with the name \"%s\" is already installed."
-msgstr "Er is al een plug-in genaamd \"%s\" geinstalleerd."
+msgstr "Er is al een plug-in geïnstalleerd met de naam \"%s\"."
 
 #: ../src/plugins.py:103
 msgid "Plugin archive contains an unsafe path."
-msgstr "Plug-in-archief bevat een onveilige padaanduiding."
+msgstr "Het plug-in-archief bevat een onveilig pad."
 
 #: ../src/library.py:990 ../src/library.py:991 ../src/library.py:992
 #: ../src/library.py:999 ../src/library.py:1000 ../src/library.py:1001
@@ -89,15 +92,15 @@ msgstr "Opties"
 
 #: ../src/main.py:108
 msgid "Control Options"
-msgstr "Controle Opties"
+msgstr "Beheeropties"
 
 #: ../src/main.py:110
 msgid "Play the next track"
-msgstr "Volgende nummer afspelen"
+msgstr "Volgend nummer afspelen"
 
 #: ../src/main.py:112
 msgid "Play the previous track"
-msgstr "Vorige nummer afspelen"
+msgstr "Vorig nummer afspelen"
 
 #: ../src/main.py:114
 msgid "Pause or resume playback"
@@ -105,11 +108,11 @@ msgstr "Afspelen pauzeren of hervatten"
 
 #: ../src/main.py:116
 msgid "Seek Forward"
-msgstr "Zoek Vooruit"
+msgstr "Vooruit zoeken"
 
 #: ../src/main.py:118
 msgid "Seek Backward"
-msgstr "Zoek Achteruit"
+msgstr "Achteruit zoeken"
 
 #: ../src/main.py:120
 msgid "Stop playback"
@@ -117,15 +120,15 @@ msgstr "Afspelen stoppen"
 
 #: ../src/main.py:124
 msgid "Volume Options"
-msgstr "Volumeopties"
+msgstr "Volume-opties"
 
 #: ../src/main.py:126
 msgid "Change Volume (VOLUME 0.0-1.0)"
-msgstr "Volume veranderen (VOLUME 0.0-1.0)"
+msgstr "Volume wijzigen (VOLUME 0.0-1.0)"
 
 #: ../src/main.py:129
 msgid "Track information Options"
-msgstr "Opties nummerinformatie"
+msgstr "Opties over nummerinformatie"
 
 #: ../src/main.py:131
 msgid "Print the title of current track"
@@ -133,7 +136,7 @@ msgstr "Print de titel van het huidige nummer"
 
 #: ../src/main.py:133
 msgid "Print the album of current track"
-msgstr "Print het album van huidig nummer"
+msgstr "Print het album van het huidige nummer"
 
 #: ../src/main.py:135
 msgid "Print the artist of current track"
@@ -141,15 +144,15 @@ msgstr "Print de artiest van het huidige nummer"
 
 #: ../src/main.py:137
 msgid "Print the length of current track"
-msgstr "Print de lengte van de huidige track"
+msgstr "Print de lengte van het huidige nummer"
 
 #: ../src/main.py:139
 msgid "Print the path of current track"
-msgstr "Print het path van het huidige nummer"
+msgstr "Print het pad van het huidige nummer"
 
 #: ../src/main.py:141
 msgid "Print current playback position"
-msgstr "Print huidige afspeelpositie"
+msgstr "Print de huidige afspeelpositie"
 
 #: ../src/main.py:144
 msgid "Other Options"
@@ -157,15 +160,15 @@ msgstr "Andere opties"
 
 #: ../src/main.py:146
 msgid "Show this help message and exit"
-msgstr "Dit hulpbericht tonen en afsluiten"
+msgstr "Dit hulpbericht weergeven en afsluiten"
 
 #: ../src/main.py:148
 msgid "Start new instance"
-msgstr "Nieuwe sessie opstarten"
+msgstr "Nieuwe sessie starten"
 
 #: ../src/main.py:150
 msgid "Show program's version number and exit."
-msgstr "Versienummer van programma tonen en afsluiten"
+msgstr "Het versienummer van het programma weergeven en afsluiten"
 
 #: ../src/main.py:152
 msgid "Minimize after started"
@@ -177,33 +180,34 @@ msgstr "Zichtbaarheid van de GUI (waar mogelijk) in- of uitschakelen"
 
 #: ../src/main.py:158
 msgid "This option makes control options, such as --play to start program"
-msgstr "Deze optie maakt controle opties, zoals --Afspelen om programma te starten"
+msgstr "Deze optie maakt beheeropties mogelijk, zoals --play om het programma te starten"
 
 #: ../src/main.py:161
 msgid "Development/Debug Options"
-msgstr "Development/Debug Opties"
+msgstr "Ontwikkelings- en foutopsporingsopties"
 
 #: ../src/main.py:162
 msgid "Set debug level (0-9)"
-msgstr "Stel debug-niveau in (0-9)"
+msgstr "Stel het foutopsporingsniveau in (0-9)"
 
 #: ../src/main.py:166
 msgid "Show information supported audio file"
-msgstr "Toon informatie ondersteund audiobestand"
+msgstr "Informatie weergeven over ondersteund audiobestand"
 
 #: ../src/widget/converter.py:309 ../src/widget/local_browser.py:339
 #: ../src/widget/song_view.py:437 ../src/widget/song_view.py:780
 msgid "Prompt"
-msgstr "Prompt"
+msgstr "Vragen"
 
 #: ../src/widget/converter.py:309
 msgid "Target file already exists, do you want to overwrite it?"
-msgstr "Doelbestand bestaat al, wil je het overschrijven?"
+msgstr "Het doelbestand bestaat al, wilt u het overschrijven?"
 
 #: ../src/widget/converter.py:367 ../src/widget/song_editor.py:150
 #: ../src/widget/lyrics_module.py:240 ../src/widget/playlist.py:560
+#: ../src/widget/playlist.py:563
 msgid "Open directory"
-msgstr "Open map"
+msgstr "Map openen"
 
 #: ../src/widget/converter.py:369
 msgid "Delete task"
@@ -211,7 +215,7 @@ msgstr "Taak verwijderen"
 
 #: ../src/widget/converter.py:370
 msgid "Clear finished tasks"
-msgstr "Voltooide taken weghalen"
+msgstr "Voltooide taken wissen"
 
 #: ../src/widget/converter.py:376 ../src/widget/instance.py:342
 msgid "Task Manager"
@@ -236,9 +240,9 @@ msgstr "Doorgaan"
 
 #: ../src/widget/converter.py:427 ../src/widget/instance.py:341
 #: ../src/widget/instance.py:364 ../src/widget/song_view.py:792
-#: ../src/widget/playlist.py:559
+#: ../src/widget/playlist.py:559 ../src/widget/playlist.py:562
 msgid "Converter"
-msgstr "Converter"
+msgstr "Converteerder"
 
 #: ../src/widget/converter.py:433 ../src/widget/song_editor.py:96
 msgid "Format"
@@ -254,65 +258,70 @@ msgstr "Doelbestand bestaat al"
 
 #: ../src/widget/converter.py:445
 msgid "Ask"
-msgstr "Vraag"
+msgstr "Vragen"
 
 #: ../src/widget/converter.py:445
 msgid "Cover"
-msgstr "Cover"
+msgstr "Omslag"
 
 #: ../src/widget/converter.py:448
 msgid "Start"
-msgstr "Start"
+msgstr "Starten"
 
 #: ../src/widget/converter.py:450
 msgid "Add to Playlist after finished"
-msgstr "Voeg toe aan Afspeellijst na voltooiing"
+msgstr "Toevoegen aan afspeellijst wanneer afgerond"
 
 #: ../src/widget/converter.py:472
 msgid "Output"
-msgstr "Output"
+msgstr "Uitvoer"
 
 #: ../src/widget/converter.py:475 ../src/widget/song_editor.py:296
 #: ../src/widget/preference.py:252
 msgid "Change"
-msgstr "Wijzig"
+msgstr "Wijzigen"
 
 #: ../src/widget/webcast_view.py:114 ../src/widget/webcast_view.py:120
-#: ../src/widget/playlist.py:103
+#: ../src/widget/playlist.py:103 ../plugins/musicfm/radio_view.py:134
+#: ../plugins/musicfm/radio_view.py:140
 msgid "Delete"
-msgstr "Verwijder"
+msgstr "Verwijderen"
 
 #: ../src/widget/webcast_view.py:115 ../src/widget/webcast_view.py:123
 #: ../src/widget/song_view.py:510 ../src/widget/playlist.py:555
+#: ../src/widget/playlist.py:558 ../plugins/musicfm/radio_view.py:135
+#: ../plugins/musicfm/radio_view.py:141
 msgid "Clear List"
-msgstr "Lijst Wissen"
+msgstr "Lijst wissen"
 
 #: ../src/widget/webcast_view.py:119 ../src/widget/webcast_view.py:338
 #: ../src/widget/instance.py:321 ../src/widget/tray.py:59
 #: ../src/widget/song_view.py:785 ../src/widget/playlist.py:549
+#: ../src/widget/playlist.py:552 ../plugins/musicfm/radio_view.py:139
 msgid "Play"
-msgstr "Afspele"
+msgstr "Afspelen"
 
 #: ../src/widget/webcast_view.py:219 ../src/widget/webcast_view.py:368
 msgid "Remove from Favorites"
-msgstr "Verwijder uit Favorieten"
+msgstr "Verwijderen uit favorieten"
 
 #: ../src/widget/webcast_view.py:221 ../src/widget/webcast_view.py:370
 msgid "Add to Favorites"
-msgstr "Voeg toe aan Favorieten"
+msgstr "Toevoegen aan favorieten"
 
 #: ../src/widget/webcast_view.py:333 ../src/widget/webcast_view.py:339
 #: ../src/widget/song_view.py:786
 msgid "Add to Playlist"
-msgstr "Voeg toe aan Afspeellijst"
+msgstr "Toevoegen aan afspeellijst"
 
-#: ../src/widget/webcast_view.py:450
+#: ../src/widget/webcast_view.py:450 ../plugins/webcast/__init__.py:34
+#: ../plugins/webcast/__init__.py:36
 msgid "Radio"
 msgstr "Radio"
 
 #: ../src/widget/jobs_manager.py:44 ../src/widget/jobs_manager.py:153
 msgid "jobs waiting!"
-msgstr "jobs in afwachting!"
+msgstr "er staan taken in de wachtrij!"
 
 #: ../src/widget/song_editor.py:72 ../src/widget/song_editor.py:202
 #: ../src/widget/song_view.py:680 ../src/widget/lyrics_search.py:83
@@ -321,12 +330,13 @@ msgstr "Titel"
 
 #: ../src/widget/song_editor.py:73 ../src/widget/song_editor.py:203
 #: ../src/widget/local_browser.py:85 ../src/widget/song_view.py:680
-#: ../src/widget/lyrics_search.py:83
+#: ../src/widget/lyrics_search.py:83 ../plugins/notify/__init__.py:43
 msgid "Artist"
 msgstr "Artiest"
 
 #: ../src/widget/song_editor.py:74 ../src/widget/song_editor.py:204
 #: ../src/widget/local_browser.py:87 ../src/widget/song_view.py:680
+#: ../plugins/notify/__init__.py:45
 msgid "Album"
 msgstr "Album"
 
@@ -349,7 +359,7 @@ msgstr "Bitrate"
 
 #: ../src/widget/song_editor.py:98
 msgid "Rate"
-msgstr "Tarief"
+msgstr "Waardering"
 
 #: ../src/widget/song_editor.py:99
 msgid "Added"
@@ -357,11 +367,11 @@ msgstr "Toegevoegd"
 
 #: ../src/widget/song_editor.py:99
 msgid "Recently"
-msgstr "Recent"
+msgstr "Recentelijk"
 
 #: ../src/widget/song_editor.py:100 ../src/widget/song_notify.py:209
 msgid "Playcount"
-msgstr "Playcount"
+msgstr "Aantal keren afgespeeld"
 
 #: ../src/widget/song_editor.py:100 ../src/widget/song_editor.py:206
 msgid "Date"
@@ -387,16 +397,16 @@ msgstr "Ophalen van het internet"
 #: ../src/widget/song_editor.py:302 ../src/widget/preference.py:375
 #: ../src/widget/equalizer.py:252
 msgid "Reset"
-msgstr "Opnieuw instellen"
+msgstr "Herstellen"
 
 #: ../src/widget/song_editor.py:321 ../src/widget/local_browser.py:343
 msgid "Select image"
 msgstr "Selecteer afbeelding"
 
 #: ../src/widget/song_editor.py:335 ../src/widget/song_view.py:793
-#: ../src/widget/playlist.py:561
+#: ../src/widget/playlist.py:561 ../src/widget/playlist.py:564
 msgid "Properties"
-msgstr "Eigendomsrechten"
+msgstr "Eigenschappen"
 
 #: ../src/widget/song_editor.py:341 ../src/widget/instance.py:330
 #: ../src/widget/tray.py:64 ../src/widget/preference.py:369
@@ -416,15 +426,15 @@ msgstr "Nummerinformatie"
 
 #: ../src/widget/song_editor.py:368
 msgid "Tag Settings"
-msgstr "Tag Instellingen"
+msgstr "Sleutelwoordinstellingen"
 
 #: ../src/widget/song_editor.py:369
 msgid "Cover Settings"
-msgstr "Cover-Instellingen"
+msgstr "Omslaginstellingen"
 
 #: ../src/widget/instance.py:147
 msgid "Join us"
-msgstr "Doe mee"
+msgstr "Doe mee met ons"
 
 #: ../src/widget/instance.py:328
 msgid "Forward"
@@ -440,12 +450,12 @@ msgstr "Toevoegen"
 
 #: ../src/widget/instance.py:360
 msgid "Play Controls"
-msgstr "Afspeelinstellingen"
+msgstr "Afspeelbeheerpaneel"
 
 #: ../src/widget/instance.py:361 ../src/widget/playlist.py:100
-#: ../src/widget/playlist.py:557
+#: ../src/widget/playlist.py:557 ../src/widget/playlist.py:560
 msgid "Playback mode"
-msgstr "Playback modus"
+msgstr "Afspeelmodus"
 
 #: ../src/widget/instance.py:363 ../src/widget/equalizer.py:199
 msgid "Equalizer"
@@ -453,7 +463,7 @@ msgstr "Equalizer"
 
 #: ../src/widget/instance.py:371
 msgid "View New Features"
-msgstr "Nieuwe functies bekijken"
+msgstr "Nieuwe functies weergeven"
 
 #: ../src/widget/instance.py:372 ../src/widget/tray.py:83
 #: ../src/widget/preference.py:943
@@ -467,32 +477,32 @@ msgstr "Afsluiten"
 
 #: ../src/widget/instance.py:378 ../src/widget/tray.py:73
 msgid "Search Lyrics"
-msgstr "Zoek songteksten"
+msgstr "Songteksten zoeken"
 
 #: ../src/widget/instance.py:397
 msgid "Hide Lyrics"
-msgstr "Verberg Songtekst"
+msgstr "Songtekst verbergen"
 
 #: ../src/widget/instance.py:399 ../src/widget/tray.py:75
 msgid "Show Lyrics"
-msgstr "Toon Songtekst"
+msgstr "Songtekst weergeven"
 
 #: ../src/widget/instance.py:403 ../src/widget/tray.py:78
 msgid "Unlock Lyrics"
-msgstr "Ontgrendel songtekst"
+msgstr "Songtekst ontgrendelen"
 
 #: ../src/widget/instance.py:405 ../src/widget/tray.py:80
 #: ../src/widget/lyrics_module.py:155
 msgid "Lock Lyrics"
-msgstr "Vergrendel Songtekst"
+msgstr "Songtekst vergrendelen"
 
 #: ../src/widget/instance.py:480
 msgid "Mini Mode"
-msgstr "Mini Modus"
+msgstr "Minimale modus"
 
 #: ../src/widget/instance.py:482
 msgid "Normal Mode"
-msgstr "Normale Modus"
+msgstr "Normale modus"
 
 #: ../src/widget/local_browser.py:91 ../src/widget/song_view.py:524
 #: ../src/widget/song_view.py:532
@@ -501,53 +511,55 @@ msgstr "Map"
 
 #: ../src/widget/local_browser.py:98
 msgid "Quick Scan"
-msgstr "Snelle Scan"
+msgstr "Snelle scan"
 
 #: ../src/widget/local_browser.py:99
 msgid "Scan"
-msgstr "Scan"
+msgstr "Scannen"
 
 #: ../src/widget/local_browser.py:100
 msgid "Refresh"
-msgstr "Ververs"
+msgstr "Verversen"
 
 #: ../src/widget/local_browser.py:339 ../src/widget/song_view.py:437
 #: ../src/widget/song_view.py:780
 msgid "Are you sure to delete?"
-msgstr "Bent u zeker dat u dit wilt verwijderen?"
+msgstr "Weet u zeker dat u dit wilt verwijderen?"
 
 #: ../src/widget/local_browser.py:350
 msgid "Play All"
-msgstr "Speel alles af"
+msgstr "Alles afspele"
 
 #: ../src/widget/local_browser.py:351 ../src/widget/playlist.py:550
+#: ../src/widget/playlist.py:553
 msgid "Add to List"
-msgstr "Voeg toe aan Lijst"
+msgstr "Toevoegen aan lijst"
 
 #: ../src/widget/local_browser.py:353 ../src/widget/song_view.py:788
 msgid "Remove from Library"
-msgstr "Verwijderen uit Bibliotheek"
+msgstr "Verwijderen uit bibliotheek"
 
 #: ../src/widget/local_browser.py:354 ../src/widget/song_view.py:509
 #: ../src/widget/song_view.py:789 ../src/widget/playlist.py:554
+#: ../src/widget/playlist.py:557
 msgid "Move to Trash"
-msgstr "Verplaats naar Prullenbak"
+msgstr "Verplaatsen naar prullenbak"
 
 #: ../src/widget/local_browser.py:359 ../src/widget/song_view.py:791
 msgid "Open Directory"
-msgstr "Open Directory"
+msgstr "Map openen"
 
 #: ../src/widget/local_browser.py:361
 msgid "Change Cover"
-msgstr "Verander Cover"
+msgstr "Omslag wijzigen"
 
 #: ../src/widget/information.py:76
 msgid "Connecting"
-msgstr "Verbinden"
+msgstr "Bezig met verbinden"
 
 #: ../src/widget/information.py:106
 msgid "buffering..."
-msgstr "buffering..."
+msgstr "bezig met bufferen..."
 
 #: ../src/widget/tray.py:49 ../src/widget/preference.py:371
 msgid "Volume Up"
@@ -567,7 +579,7 @@ msgstr "Volume"
 
 #: ../src/widget/tray.py:72
 msgid "Close Lyrics"
-msgstr "Sluit Songtekst"
+msgstr "Songtekst sluiten"
 
 #: ../src/widget/preference.py:150
 msgid "On starting the player"
@@ -575,35 +587,35 @@ msgstr "Bij het starten van de speler"
 
 #: ../src/widget/preference.py:157
 msgid "Display splash-screen"
-msgstr "Weergave splash-screen"
+msgstr "Het opstartscherm weergeven"
 
 #: ../src/widget/preference.py:164
 msgid "Show lyrics"
-msgstr "Toon songtekst"
+msgstr "Songtekst weergeven"
 
 #: ../src/widget/preference.py:169
 msgid "Start playback automatically"
-msgstr "Start playback automatisch"
+msgstr "Afspelen automatisch starten"
 
 #: ../src/widget/preference.py:175
 msgid "Resume playback"
-msgstr "Hervat playback"
+msgstr "Afspelen hervatten"
 
 #: ../src/widget/preference.py:190
 msgid "When pressing the close button"
-msgstr "Wanneer u op de sluit knop drukt"
+msgstr "Bij het klikken op de sluitknop"
 
 #: ../src/widget/preference.py:195 ../src/widget/ui.py:1260
 msgid "Minimize to tray"
-msgstr "Minimaliseer naar systeemvak"
+msgstr "Minimaliseren naar systeemvak"
 
 #: ../src/widget/preference.py:209
 msgid "Playback settings"
-msgstr "Playback-instellingen"
+msgstr "Afspeelinstellingen"
 
 #: ../src/widget/preference.py:213
 msgid "Enable crossfade"
-msgstr "Schakel crossfade in"
+msgstr "In elkaar overlopen (crossfade) inschakelen"
 
 #: ../src/widget/preference.py:216
 msgid "Seamless switching between the same album"
@@ -611,7 +623,7 @@ msgstr "Naadloos schakelen binnen hetzelfde album"
 
 #: ../src/widget/preference.py:221
 msgid "Crossfade"
-msgstr "Crossfade"
+msgstr "In elkaar overlopen (crossfade)"
 
 #: ../src/widget/preference.py:223
 msgid " ms"
@@ -619,7 +631,7 @@ msgstr "ms"
 
 #: ../src/widget/preference.py:241
 msgid "Lyrics directory"
-msgstr "Songtekst directory"
+msgstr "Songtekstenmap"
 
 #: ../src/widget/preference.py:346 ../src/widget/preference.py:1002
 msgid "Hotkeys"
@@ -627,23 +639,23 @@ msgstr "Sneltoetsen"
 
 #: ../src/widget/preference.py:356
 msgid "Enable hotkeys"
-msgstr "Activeer hotkeys"
+msgstr "Sneltoetsen inschakelen"
 
 #: ../src/widget/preference.py:362
 msgid "Minimize/Show window"
-msgstr "Minimaliseer/Toon venster"
+msgstr "Venster minimaliseren/weergeven"
 
 #: ../src/widget/preference.py:364
 msgid "Show/Hide lyrics"
-msgstr "Toon/Verberg songtekst"
+msgstr "Songtekst weergeven/verbergen"
 
 #: ../src/widget/preference.py:366
 msgid "Lock/Unlock lyrics"
-msgstr "Vergrendel/Ontgrendel songtekst"
+msgstr "Songtekst vergrendelen/ontgrendelen"
 
 #: ../src/widget/preference.py:368 ../src/widget/headerbar.py:63
 msgid "Play/Pause"
-msgstr "Afspelen/Pauzeren"
+msgstr "Afspelen/pauzeren"
 
 #: ../src/widget/preference.py:601 ../src/widget/preference.py:613
 #: ../src/widget/preference.py:845
@@ -682,11 +694,11 @@ msgstr "Koel blauw"
 
 #: ../src/widget/preference.py:642
 msgid "Color scheme"
-msgstr "Kleurschema"
+msgstr "Kleurenschema"
 
 #: ../src/widget/preference.py:650 ../src/widget/preference.py:807
 msgid "Regular"
-msgstr "Regelmatig"
+msgstr "Gebruikelijk"
 
 #: ../src/widget/preference.py:651 ../src/widget/preference.py:808
 msgid "Italic"
@@ -694,11 +706,11 @@ msgstr "Cursief"
 
 #: ../src/widget/preference.py:652 ../src/widget/preference.py:809
 msgid "Bold"
-msgstr "Vet"
+msgstr "Vetgedrukt"
 
 #: ../src/widget/preference.py:653 ../src/widget/preference.py:810
 msgid "Bold Italic"
-msgstr "Vet Cursief"
+msgstr "Vetgedrukt en cursief"
 
 #: ../src/widget/preference.py:663 ../src/widget/preference.py:818
 msgid "Style"
@@ -706,7 +718,7 @@ msgstr "Stijl"
 
 #: ../src/widget/preference.py:671 ../src/widget/preference.py:824
 msgid "Lyrics style"
-msgstr "Songtekststijl"
+msgstr "Stijl van songteksten"
 
 #: ../src/widget/preference.py:681 ../src/widget/preference.py:833
 msgid "Font"
@@ -718,11 +730,11 @@ msgstr "Lijnen"
 
 #: ../src/widget/preference.py:690
 msgid "Single"
-msgstr "Eén"
+msgstr "Enkel"
 
 #: ../src/widget/preference.py:690
 msgid "Double"
-msgstr "Kopieer"
+msgstr "Dubbel"
 
 #: ../src/widget/preference.py:693 ../src/widget/preference.py:843
 msgid "Alignment"
@@ -730,11 +742,11 @@ msgstr "Uitlijning"
 
 #: ../src/widget/preference.py:702
 msgid "Outline"
-msgstr "Schets"
+msgstr "Schetsen"
 
 #: ../src/widget/preference.py:706
 msgid "Stroke"
-msgstr "Slag"
+msgstr "Doorhalen"
 
 #: ../src/widget/preference.py:711 ../src/widget/preference.py:855
 msgid "Unplayed"
@@ -754,7 +766,7 @@ msgstr "Altijd"
 
 #: ../src/widget/preference.py:851
 msgid "By line"
-msgstr "Op lijn"
+msgstr "Op regel"
 
 #: ../src/widget/preference.py:905 ../src/widget/plugins_view.py:166
 msgid "Version"
@@ -765,7 +777,7 @@ msgid ""
 "Deepin Music is a music application designed for Linux users. It's characterized with lyrics searching, desktop lyrics display,album cover downloading, resume playing, music management and skin selection.\n"
 "\n"
 "Deepin Music is free software licensed under GNU GPLv3."
-msgstr "Deepin Music is een muziek-applicatie ontworpen voor Linux-gebruikers. Met deze app kunt u teksten zoeken, desktop teksten tonen, album covers downloaden, spelen hervatten, muziek beheren en een skin selecteren.\n\nDeepin Music is gratis software die valt onder de GNU GPLv3 licentie."
+msgstr "Deepin Muziek is een muziekapplicatie ontworpen voor Linux-gebruikers. Met deze applicatie kunt u songteksten zoeken, songteksten op het bureaublad weergeven, albumomslagen downloaden, afspelen hervatten, uw muziek beheren en thema's selecteren.\n\nDeepin Muziek is gratis software gelicenseerd onder de GNU GPLv3-licentie."
 
 #: ../src/widget/preference.py:1001
 msgid "General"
@@ -773,7 +785,7 @@ msgstr "Algemeen"
 
 #: ../src/widget/preference.py:1003
 msgid "Lyrics"
-msgstr "Songtekst"
+msgstr "Songteksten"
 
 #: ../src/widget/preference.py:1004
 msgid "Desktop"
@@ -793,7 +805,7 @@ msgstr "Over"
 
 #: ../src/widget/song_view.py:481
 msgid "Repeat (single)"
-msgstr "Herhaal (single)"
+msgstr "Herhalen (los nummer)"
 
 #: ../src/widget/song_view.py:482
 msgid "Order play"
@@ -801,19 +813,20 @@ msgstr "Afspeelvolgorde"
 
 #: ../src/widget/song_view.py:483
 msgid "Repeat (list)"
-msgstr "Herhaal (lijst)"
+msgstr "Herhalen (lijst)"
 
 #: ../src/widget/song_view.py:484 ../src/widget/playlist.py:545
+#: ../src/widget/playlist.py:548
 msgid "Randomize"
 msgstr "Willekeurig"
 
 #: ../src/widget/song_view.py:507
 msgid "Remove Track from this List"
-msgstr "Verwijder Nummer uit deze Lijst"
+msgstr "Nummer verwijderen uit deze lijst"
 
 #: ../src/widget/song_view.py:508
 msgid "Remove Unavailable Tracks"
-msgstr "Verwijder Onbeschikbare Nummers"
+msgstr "Niet-beschikbare nummers verwijderen"
 
 #: ../src/widget/song_view.py:521
 msgid "URL"
@@ -829,11 +842,11 @@ msgstr "Map (inclusief submappen)"
 
 #: ../src/widget/song_view.py:542
 msgid "Add URL"
-msgstr "Voeg URL toe"
+msgstr "URL toevoegen"
 
 #: ../src/widget/song_view.py:680
 msgid "Added Time"
-msgstr "Aanmaakdatum"
+msgstr "Datum van toevoegen"
 
 #: ../src/widget/song_view.py:817 ../src/widget/global_search.py:48
 #: ../src/widget/local_tab.py:28
@@ -842,7 +855,7 @@ msgstr "Bibliotheek"
 
 #: ../src/widget/local_item.py:59
 msgid "All Tracks"
-msgstr "Alle Nummers"
+msgstr "Alle nummers"
 
 #: ../src/widget/local_item.py:67
 msgid "Track(s)"
@@ -855,15 +868,15 @@ msgstr "Niet gelukt om %s te binden!"
 
 #: ../src/widget/lyrics_module.py:151
 msgid "Increase the lyrics size"
-msgstr "Vergroot het songtekst formaat"
+msgstr "Vergroot de songtekstgrootte"
 
 #: ../src/widget/lyrics_module.py:152
 msgid "Decrease the lyrics size"
-msgstr "Verklein het formaat van de songtekst"
+msgstr "Verklein de songtekstgrootte"
 
 #: ../src/widget/lyrics_module.py:154
 msgid "Select color theme"
-msgstr "Selecteer kleurthema"
+msgstr "Selecteer kleurenschema"
 
 #: ../src/widget/lyrics_module.py:158
 msgid "Karaoke on/off"
@@ -871,11 +884,11 @@ msgstr "Karaoke aan/uit"
 
 #: ../src/widget/lyrics_module.py:160
 msgid "Switch lines"
-msgstr "Schakel tussen lijnen"
+msgstr "Schakelen tussen lijnen"
 
 #: ../src/widget/lyrics_module.py:162
 msgid "Open settings panel"
-msgstr "Open paneel met instellingen"
+msgstr "Open het instellingenpaneel"
 
 #: ../src/widget/lyrics_module.py:163
 msgid "Search lrc file for current track"
@@ -883,7 +896,7 @@ msgstr "Zoek lrc-bestand voor huidig nummer"
 
 #: ../src/widget/lyrics_module.py:164
 msgid "Close lyrics"
-msgstr "Sluit songtekst"
+msgstr "Songtekst sluiten"
 
 #: ../src/widget/lyrics_module.py:165 ../src/widget/lyrics_module.py:223
 msgid "Lyrics rewind"
@@ -899,7 +912,7 @@ msgstr "Overschakelen naar venstermodus"
 
 #: ../src/widget/lyrics_module.py:221
 msgid "Switch to desktop mode"
-msgstr "Schakel over naar desktop-modus"
+msgstr "Overschakelen naar bureaubladmodus"
 
 #: ../src/widget/lyrics_module.py:226 ../src/widget/lyrics_module.py:236
 #: ../src/widget/lyrics_search.py:59
@@ -912,15 +925,15 @@ msgstr "Instellingen"
 
 #: ../src/widget/lyrics_module.py:233
 msgid "Forward 0.5 seconds"
-msgstr "Doorspoelen 0,5 seconden"
+msgstr "0,5 seconden doorspoelen"
 
 #: ../src/widget/lyrics_module.py:234
 msgid "Rewind 0.5 seconds"
-msgstr "Terugspoelen 0,5 seconden"
+msgstr "0,5 seconden terugspoelen"
 
 #: ../src/widget/lyrics_module.py:237
 msgid "Adjust lyrics"
-msgstr "Pas songtekst aan"
+msgstr "Songtekst aanpassen"
 
 #: ../src/widget/lyrics_module.py:239
 msgid "Choose local lrc"
@@ -928,23 +941,23 @@ msgstr "Kies locaal lrc-bestand"
 
 #: ../src/widget/lyrics_module.py:247
 msgid "Lyrics acquired by Network"
-msgstr "Lyrics opgehaald via Netwerk"
+msgstr "Songtekst opgehaald via het netwerk"
 
 #: ../src/widget/lyrics_module.py:793 ../src/widget/lyrics_module.py:794
 msgid "No lyrics found!"
-msgstr "Geen songtekst gevonden!"
+msgstr "Er zijn geen songteksten gevonden!"
 
 #: ../src/widget/lyrics_module.py:796 ../src/widget/lyrics_module.py:797
 msgid "Searching for lyrics..."
-msgstr "Zoeken voor songteksten..."
+msgstr "Bezig met zoeken naar songteksten..."
 
 #: ../src/widget/headerbar.py:77
 msgid "Show/Hide Lyrics"
-msgstr "Toon/Verberg Songtekst"
+msgstr "Songtekst weergeven/verbergen"
 
 #: ../src/widget/lyrics.py:735
 msgid "Lyrics window"
-msgstr "Songtekst venster"
+msgstr "Songtekstenvenster"
 
 #: ../src/widget/equalizer.py:176
 msgid "Custom"
@@ -954,7 +967,7 @@ msgstr "Aangepast"
 msgid "Default"
 msgstr "Standaard"
 
-#: ../src/widget/equalizer.py:178
+#: ../src/widget/equalizer.py:178 ../plugins/musicfm/radio_genre_page.py:43
 msgid "Classical"
 msgstr "Klassiek"
 
@@ -968,15 +981,15 @@ msgstr "Dance"
 
 #: ../src/widget/equalizer.py:181
 msgid "Full Bass"
-msgstr "Voluit Bass"
+msgstr "Volle bass"
 
 #: ../src/widget/equalizer.py:182
 msgid "Full Bass and Treble"
-msgstr "Voluit Bass en Treble"
+msgstr "Volle bass en treble"
 
 #: ../src/widget/equalizer.py:183
 msgid "Full Treble"
-msgstr "Volledige Treble"
+msgstr "Volle treble"
 
 #: ../src/widget/equalizer.py:184
 msgid "Headphones"
@@ -984,7 +997,7 @@ msgstr "Koptelefoon"
 
 #: ../src/widget/equalizer.py:185
 msgid "Large Hall"
-msgstr "Grote Hal"
+msgstr "Grote zaal"
 
 #: ../src/widget/equalizer.py:186
 msgid "Live"
@@ -992,13 +1005,13 @@ msgstr "Live"
 
 #: ../src/widget/equalizer.py:187
 msgid "Party"
-msgstr "Groep"
+msgstr "Feest"
 
-#: ../src/widget/equalizer.py:188
+#: ../src/widget/equalizer.py:188 ../plugins/musicfm/radio_genre_page.py:46
 msgid "Pop"
 msgstr "Pop"
 
-#: ../src/widget/equalizer.py:190
+#: ../src/widget/equalizer.py:190 ../plugins/musicfm/radio_genre_page.py:42
 msgid "Rock"
 msgstr "Rock"
 
@@ -1012,19 +1025,19 @@ msgstr "Zacht"
 
 #: ../src/widget/equalizer.py:193
 msgid "Soft Rock"
-msgstr "Soft Rock"
+msgstr "Zachte rock"
 
-#: ../src/widget/equalizer.py:194
+#: ../src/widget/equalizer.py:194 ../plugins/musicfm/radio_genre_page.py:47
 msgid "Electronic"
 msgstr "Elektronisch"
 
 #: ../src/widget/equalizer.py:254
 msgid "Predefined"
-msgstr "Voorgedefinieerd"
+msgstr "Vooringesteld"
 
 #: ../src/widget/playlist.py:94
 msgid "Search in Current Playlist"
-msgstr "Zoek in Huidige Afspeellijst"
+msgstr "Zoeken in huidige afspeellijst"
 
 #: ../src/widget/playlist.py:96
 msgid "Playlist Operations"
@@ -1032,81 +1045,89 @@ msgstr "Afspeellijst-instellingen"
 
 #: ../src/widget/playlist.py:183
 msgid "Default List"
-msgstr "Standaard Lijst"
+msgstr "Standaard lijst"
 
 #: ../src/widget/playlist.py:304 ../src/widget/playlist.py:316
 #: ../src/widget/playlist.py:317 ../src/widget/playlist.py:357
 #: ../src/widget/playlist.py:360 ../src/widget/playlist.py:476
+#: ../src/widget/playlist.py:479
 msgid "New List"
-msgstr "Nieuwe Lijst"
+msgstr "Nieuwe lijst"
 
 #: ../src/widget/playlist.py:305 ../src/widget/playlist.py:477
+#: ../src/widget/playlist.py:480
 msgid "Import List"
-msgstr "Importeer Lijst"
+msgstr "Lijst importeren"
 
 #: ../src/widget/playlist.py:306 ../src/widget/playlist.py:485
+#: ../src/widget/playlist.py:488
 msgid "Open List"
-msgstr "Open Lijst"
+msgstr "Lijst openen"
 
 #: ../src/widget/playlist.py:307
 msgid "Export List"
-msgstr "Exporteer Lijst"
+msgstr "Lijst exporteren"
 
 #: ../src/widget/playlist.py:308 ../src/widget/playlist.py:484
+#: ../src/widget/playlist.py:487
 msgid "Remove List"
-msgstr "Verwijder Lijst"
+msgstr "Lijst verwijderen"
 
 #: ../src/widget/playlist.py:310 ../src/widget/playlist.py:479
-#: ../src/widget/playlist.py:487
+#: ../src/widget/playlist.py:487 ../src/widget/playlist.py:482
+#: ../src/widget/playlist.py:490
 msgid "Save all Lists"
-msgstr "Bewaar alle Lijsten"
+msgstr "Alle lijsten opslaan"
 
 #: ../src/widget/playlist.py:483 ../src/widget/playlist.py:493
+#: ../src/widget/playlist.py:486 ../src/widget/playlist.py:496
 msgid "Rename"
-msgstr "Hernoem"
+msgstr "Hernoemen"
 
-#: ../src/widget/playlist.py:534
+#: ../src/widget/playlist.py:534 ../src/widget/playlist.py:537
 msgid "By Filename"
-msgstr "Op Bestandsnaam"
+msgstr "Op bestandsnaam"
 
-#: ../src/widget/playlist.py:535
+#: ../src/widget/playlist.py:535 ../src/widget/playlist.py:538
 msgid "By Title"
-msgstr "Op Titel"
+msgstr "Op titel"
 
 #: ../src/widget/playlist.py:536 ../src/widget/combo.py:184
-#: ../src/widget/combo.py:233
+#: ../src/widget/combo.py:233 ../src/widget/playlist.py:539
 msgid "By Artist"
-msgstr "Op Artiest"
+msgstr "Op artiest"
 
 #: ../src/widget/playlist.py:537 ../src/widget/combo.py:235
+#: ../src/widget/playlist.py:540
 msgid "By Album"
-msgstr "Op Album"
+msgstr "Op album"
 
 #: ../src/widget/playlist.py:538 ../src/widget/combo.py:234
-msgid "By Genre"
-msgstr "Op Genre"
-
-#: ../src/widget/playlist.py:539
-msgid "By Track"
-msgstr "Op Nummer"
-
-#: ../src/widget/playlist.py:540
-msgid "By Play Count"
-msgstr "Op Playcount"
-
 #: ../src/widget/playlist.py:541
+msgid "By Genre"
+msgstr "Op genre"
+
+#: ../src/widget/playlist.py:539 ../src/widget/playlist.py:542
+msgid "By Track"
+msgstr "Op nummer"
+
+#: ../src/widget/playlist.py:540 ../src/widget/playlist.py:543
+msgid "By Play Count"
+msgstr "Op aantal keren afgespeeld"
+
+#: ../src/widget/playlist.py:541 ../src/widget/playlist.py:544
 msgid "By Added Time"
-msgstr "Volgens Aanmaakdatum"
+msgstr "Op datum van toevoeging"
 
-#: ../src/widget/playlist.py:551
+#: ../src/widget/playlist.py:551 ../src/widget/playlist.py:554
 msgid "Move to List"
-msgstr "Verplaats naar Lijst"
+msgstr "Verplaatsen naar lijst"
 
-#: ../src/widget/playlist.py:553
+#: ../src/widget/playlist.py:553 ../src/widget/playlist.py:556
 msgid "Remove Track"
-msgstr "Verwijder Nummer"
+msgstr "Nummer verwijderen"
 
-#: ../src/widget/playlist.py:558
+#: ../src/widget/playlist.py:558 ../src/widget/playlist.py:561
 msgid "Sort"
 msgstr "Sorteren"
 
@@ -1116,7 +1137,7 @@ msgstr "Heeft u muziek nodig? Vindt het hier..."
 
 #: ../src/widget/ui.py:401
 msgid "Add Local Music"
-msgstr "Voeg Locale Muziek Toe"
+msgstr "Lokale muziek toevoegen"
 
 #: ../src/widget/ui.py:1122
 #, python-brace-format
@@ -1151,7 +1172,7 @@ msgstr "Niet opnieuw vragen"
 
 #: ../src/widget/ui.py:1273
 msgid "OK"
-msgstr "Oké"
+msgstr "OK"
 
 #: ../src/widget/ui.py:1276
 msgid "Cancel"
@@ -1159,7 +1180,7 @@ msgstr "Annuleren"
 
 #: ../src/widget/combo.py:195
 msgid "List view"
-msgstr "Bekijk Lijst"
+msgstr "Lijstweergave"
 
 #: ../src/widget/webcasts_browser.py:98
 msgid "Region"
@@ -1183,11 +1204,11 @@ msgstr "Titel:"
 
 #: ../src/widget/lyrics_search.py:87
 msgid "Download"
-msgstr "Download"
+msgstr "Downloaden"
 
 #: ../src/widget/lyrics_search.py:136
 msgid "Now searching..."
-msgstr "Aan het zoeken..."
+msgstr "Bezig met zoeken..."
 
 #: ../src/widget/lyrics_search.py:138 ../src/widget/lyrics_search.py:163
 msgid "Not found!"
@@ -1200,19 +1221,19 @@ msgstr "%d songteksten gevonden"
 
 #: ../src/widget/lyrics_search.py:170
 msgid "Downloading lyrics..."
-msgstr "Songtekst downloaden..."
+msgstr "Bezig met downloaden van songtekst..."
 
 #: ../src/widget/lyrics_search.py:180
 msgid "File save to"
-msgstr "Bestand opslaan als"
+msgstr "Bestand opslaan naar"
 
 #: ../src/widget/lyrics_search.py:182
 msgid "Download failed."
-msgstr "Download mislukt."
+msgstr "Het downloaden is mislukt."
 
 #: ../src/widget/dialog.py:34
 msgid "Select Directory"
-msgstr "Selecteer Directory"
+msgstr "Selecteer map"
 
 #: ../src/widget/dialog.py:56
 msgid "Select file"
@@ -1220,11 +1241,11 @@ msgstr "Selecteer bestand"
 
 #: ../src/widget/dialog.py:82
 msgid "Export playlist"
-msgstr "Exporteer afspeellijst"
+msgstr "Afspeellijst exporteren"
 
 #: ../src/widget/dialog.py:130
 msgid "Load playlist"
-msgstr "Laad afspeellijst"
+msgstr "Afspeellijst laden"
 
 #: ../src/widget/plugins_view.py:166
 msgid "Enable"
@@ -1232,15 +1253,15 @@ msgstr "Inschakelen"
 
 #: ../src/source/local.py:43
 msgid "Reading directories..."
-msgstr "Directories lezen..."
+msgstr "Bezig met uitlezen van mappen..."
 
 #: ../src/source/local.py:175
 msgid "Check deleted files"
-msgstr "Controleer verwijderde bestanden"
+msgstr "Verwijderde bestanden controleren"
 
 #: ../src/source/local.py:202
 msgid "Reload database"
-msgstr "Herlaad database"
+msgstr "Database herladen"
 
 #: ../src/source/old.py:112 ../src/source/audiocd.py:78
 msgid "Track"
@@ -1256,4 +1277,71 @@ msgstr "Onbekende artiest"
 
 #: ../src/source/audiocd.py:86 ../src/source/audiocd.py:92
 msgid "Audio CD"
-msgstr "Audio CD"
+msgstr "Audio-CD"
+
+#: ../plugins/musicfm/radio_home_page.py:73
+#: ../plugins/musicfm/radio_browser.py:79
+msgid "Hot MHz"
+msgstr "Hot MHz"
+
+#: ../plugins/musicfm/radio_home_page.py:73
+#: ../plugins/musicfm/radio_browser.py:81
+msgid "Pop MHz"
+msgstr "Pop MHz"
+
+#: ../plugins/musicfm/__init__.py:33 ../plugins/musicfm/__init__.py:35
+#: ../plugins/musicfm/radio_view.py:474
+msgid "MusicFM"
+msgstr "MusicFM"
+
+#: ../plugins/musicfm/radio_item.py:508
+msgid "More"
+msgstr "Meer"
+
+#: ../plugins/musicfm/radio_genre_page.py:44
+msgid "Jazz"
+msgstr "Jazz"
+
+#: ../plugins/musicfm/radio_genre_page.py:45
+msgid "Folk/Country"
+msgstr "Folk/Country"
+
+#: ../plugins/musicfm/radio_genre_page.py:48
+msgid "OST"
+msgstr "OST"
+
+#: ../plugins/musicfm/radio_genre_page.py:49
+msgid "Light"
+msgstr "Licht"
+
+#: ../plugins/musicfm/radio_genre_page.py:50
+msgid "Hip-Hop/Rap"
+msgstr "Hip-Hop/Rap"
+
+#: ../plugins/musicfm/radio_genre_page.py:51
+msgid "Reggae"
+msgstr "Reggae"
+
+#: ../plugins/musicfm/radio_genre_page.py:52
+msgid "Latino"
+msgstr "Latino"
+
+#: ../plugins/musicfm/radio_genre_page.py:53
+msgid "World"
+msgstr "Wereldmuziek"
+
+#: ../plugins/musicfm/radio_genre_page.py:54
+msgid "Blues"
+msgstr "Blues"
+
+#: ../plugins/musicfm/radio_genre_page.py:55
+msgid "Funk/Soul/R&B"
+msgstr "Funk/Soul/R&B"
+
+#: ../plugins/musicfm/radio_browser.py:78
+msgid "Home"
+msgstr "Thuis"
+
+#: ../plugins/musicfm/radio_browser.py:80
+msgid "Genres MHz"
+msgstr "Genres MHz"

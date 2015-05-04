@@ -21,7 +21,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import gobject    
+import gobject
 from xdg_support import get_config_file
 from ConfigParser import RawConfigParser as ConfigParser
 from logger import Logger
@@ -34,7 +34,7 @@ class Config(gobject.GObject, Logger):
         "config-changed" : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
                             (gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING))
         }
-    
+
     def __init__(self):
         gobject.GObject.__init__(self)
         self._config       = ConfigParser()
@@ -45,48 +45,48 @@ class Config(gobject.GObject, Logger):
         self.getint        = self._config.getint
         self.getfloat      = self._config.getfloat
         self.options       = self._config.options
-        
+
         # Load default configure.
         for section, items in self.__get_default().iteritems():
             self.add_section(section)
             for key, value in items.iteritems():
                 self._config.set(section, key, value)
-                
-    def load(self):            
+
+    def load(self):
         ''' Load config items from the file. '''
         try:
             self._config.read(get_config_file(CONFIG_FILENAME))
             self._timeout_save()
-        except:    
+        except:
             pass
-        
-    @glib_wait_seconds(30)    
-    def _timeout_save(self):    
+
+    @glib_wait_seconds(30)
+    def _timeout_save(self):
         self.write()
         return True
-    
+
     def get(self, section, option, default=""):
         ''' specified the section for read the option value. '''
         try:
             return self._config.get(section, option)
         except:
             return default
-            
-    def set(self, section, option, value):        
+
+    def set(self, section, option, value):
         if not self._config.has_section(section):
             self.logdebug("Section \"%s\" not exist. create...", section)
             self.add_section(section)
-        self._config.set(section, option, value)    
+        self._config.set(section, option, value)
         self.emit("config-changed", section, option, value)
-        
-    def write(self):    
+
+    def write(self):
         ''' write configure to file. '''
         filename = get_config_file(CONFIG_FILENAME)
         f = file(filename, "w")
         self._config.write(f)
         f.close()
-        
-    def __get_default(self):    
+
+    def __get_default(self):
         return {
             "window" : {
                 "x" : "-1",
@@ -95,12 +95,12 @@ class Config(gobject.GObject, Logger):
                 "height" : str(FULL_DEFAULT_HEIGHT),
                 "state"  : "normal",
                 },
-            
+
             "mini" : {
                 "x" : "-1",
                 "y" : "-1",
                 },
-            
+
             "player" : {
                 "uri"  : "",
                 "play" : "false",
@@ -152,7 +152,7 @@ class Config(gobject.GObject, Logger):
                 "desktop_x" : "-1",
                 "desktop_y" : "-1",
                 },
-            
+
             "scroll_lyrics" : {
                 "font_name" : "文泉驿微米黑",
                 "font_type" : "Regular",
@@ -163,11 +163,11 @@ class Config(gobject.GObject, Logger):
                 "inactive_color" : "#000000",
                 "active_color" : "#00AEFF"
                 },
-            
+
             "setting" : {
                 "empty_random" : "false",
                 "loop_mode" : "list_mode",
-                "offline" : "false",                
+                "offline" : "false",
                 "use_tray" : "true",
                 "close_to_tray" : "true",
                 "close_remember" : "false",
@@ -175,15 +175,15 @@ class Config(gobject.GObject, Logger):
                 "window_mode" : "simple",
                 "app_mode" : "normal",
                 },
-            
+
             "playlist" : {
                 "current_index" : "0",
                 },
-            
+
             "equalizer" : {
                 "x" : "-1",
                 },
-            
+
             "globalkey" : {
                 "enable" :          "false",
                 "previous"           : "Alt + Left",
@@ -195,14 +195,14 @@ class Config(gobject.GObject, Logger):
                 "toggle_lyrics_lock" : "Alt + U",
                 "toggle_lyrics_status" : "Alt + H",
                 },
-            
+
             "plugins" : {
-                "enabled" : "mpris2",
+                "enabled" : "",
                 },
-            
+
             "listmanager" : {
                 "source" : "",
                 }
             }
-    
-config = Config()    
+
+config = Config()
