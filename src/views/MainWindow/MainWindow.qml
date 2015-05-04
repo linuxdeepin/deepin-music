@@ -113,7 +113,6 @@ Rectangle {
                         id: settingPage
                         objectName: 'settingPage'
                         anchors.fill: parent
-                        currentIndex: 0
                     }
                 }
             }

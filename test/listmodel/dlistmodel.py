@@ -1,37 +1,50 @@
-#!/usr/bin/env python
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import sys
-sys.path.insert(0, '../src/dwidgets/')
+import os
 from PyQt5.QtCore import (QObject, pyqtSignal,
-                pyqtSlot, pyqtProperty, QDir, 
-                QDirIterator, QTimer, QThread,
-                QThreadPool, QAbstractListModel, Qt, QUrl, QModelIndex, QVariant)
-from PyQt5.QtGui import QGuiApplication
-from PyQt5.QtQuick import QQuickView
-from PyQt5.QtQml import QJSValue
+                pyqtSlot, pyqtProperty, QVariant)
+from PyQt5.QtQml import QJSValue, qmlRegisterType
+
+# class ListModel(QAbstractListModel):
+
+    # def __init__(self, fields, parent=None):
+    #     super(ListModel, self).__init__(parent)
+    #     self._roles = {}
+    #     for i in fields:
+    #         index = fields.index(i)
+    #         role = '%sRole' % i[0]
+    #         setattr(self, role, Qt.UserRole + index + 1)
+    #         self._roles[getattr(self, role)] = i[0]
+    #     self._items = []
+
+    # def addItem(self, item):
+    #     self.beginInsertRows(QModelIndex(), self.rowCount(), self.rowCount())
+    #     self._items.append(item)
+    #     self.endInsertRows()
+
+    # def rowCount(self, parent=QModelIndex()):
+    #     return len(self._items)
+
+    # def data(self, index, role=Qt.DisplayRole):
+    #     try:
+    #         item = self._items[index.row()]
+    #     except IndexError:
+    #         return QVariant()
+
+    #     for key, value in self._roles.items():
+    #         if role == key:
+    #             return getattr(item, value)
+
+    #     return QVariant()
+
+    # def roleNames(self):
+    #     # return self._roles
 
 
-from qmodel import ModelMetaclass
+class DListModel(QObject):
 
-
-
-class QmlArtistObject(QObject):
-
-    __metaclass__ = ModelMetaclass
-
-    __Fields__ = (
-        ('name', 'QString'),
-        ('count', int),
-        ('cover', 'QString'),
-        ('songs', dict),
-    )
-
-    def initialize(self, *agrs, **kwargs):
-        self.setDict(kwargs)
-
-class ListModel(QObject):
-
+    countChanged = pyqtSignal(int)
     dataChanged = pyqtSignal('QVariant')
 
     #qml2py
@@ -41,7 +54,7 @@ class ListModel(QObject):
     qml2py_moveSignal = pyqtSignal(int, int, int)
     qml2py_removeSignal = pyqtSignal(int)
     qml2py_setSignal = pyqtSignal(int, 'QVariant')
-    qml2py_setPropertySignal = pyqtSignal(int, 'QString', 'QString')
+    qml2py_setPropertySignal = pyqtSignal(int, 'QString', 'QVariant')
 
     #py2qml
     py2qml_appendSignal = pyqtSignal('QVariant')
@@ -50,51 +63,14 @@ class ListModel(QObject):
     py2qml_moveSignal = pyqtSignal(int, int, int)
     py2qml_removeSignal = pyqtSignal(int)
     py2qml_setSignal = pyqtSignal(int, 'QVariant')
-    py2qml_setPropertySignal = pyqtSignal(int, 'QString', 'QString')
+    py2qml_setPropertySignal = pyqtSignal(int, 'QString', 'QVariant')
     
 
     def __init__(self, dataTye):
-        super(ListModel, self).__init__()
-        self.dataTye = QmlArtistObject
+        super(DListModel, self).__init__()
+        self.dataTye = dataTye
         self._data = []
         self.initConnect()
-        self.initData()
-
-        self.timer = QTimer()
-        self.timer.timeout.connect(self.appendData)
-        self.timer.timeout.connect(self.updateData)
-        # self.timer.start(1000)
-
-        self.appendData()
-
-    def initData(self):
-        objs = []
-        for i in range(10):
-            objdict = {
-                'name': 'qwe%s' % i,
-                'count': i,
-                'cover': '/home/djf/jjk/',
-                'songs': {'song': '1111'}
-            }
-            obj = self.dataTye(**objdict)
-            objs.append(obj)
-
-        self.data = objs
-
-    def appendData(self):
-        i = len(self._data)
-        objdict = {
-            'name': 'qwe%s' % i,
-            'count': i,
-            'cover': '/home/djf/jjk/',
-            'songs': {}
-        }
-        obj = self.dataTye(**objdict)
-        self.append(obj)
-
-    def updateData(self):
-        import random
-        self.setProperty(0, 'count', random.randrange(0,10000))
 
     def initConnect(self):
         self.qml2Py_appendSignal.connect(self.append)
@@ -114,16 +90,22 @@ class ListModel(QObject):
         self._data = value
         self.dataChanged.emit(value)
 
+    @pyqtProperty(int, notify=countChanged)
+    def count(self):
+        return len(self._data)
+
     def append(self, obj):
         if isinstance(obj, QJSValue):
             _obj = obj.toVariant()
             obj = self.dataTye(**_obj)
         self._data.append(obj)
         self.py2qml_appendSignal.emit(obj)
+        self.countChanged.emit(len(self._data))
 
     def clear(self):
         del self._data[:]
         self.py2qml_clearSignal.emit()
+        self.countChanged.emit(len(self._data))
 
     def get(self, index):
         if index < len(self._data):
@@ -137,6 +119,7 @@ class ListModel(QObject):
             obj = self.dataTye(**_obj)
         self._data.insert(index, obj)
         self.py2qml_insertSignal.emit(index, obj)
+        self.countChanged.emit(len(self._data))
 
     def move(self, _from, _to, _n):
         dataMoved = []
@@ -150,11 +133,11 @@ class ListModel(QObject):
         a = []
         for obj in self._data:
             a.append(obj.count)
-        print a
 
     def remove(self, index):
         self._data.pop(index)
         self.py2qml_removeSignal.emit(index)
+        self.countChanged.emit(len(self._data))
 
     def set(self, index, obj):
         if index < len(self._data):
@@ -170,19 +153,3 @@ class ListModel(QObject):
             if hasattr(obj, key):
                 setattr(obj, key, value)
                 self.py2qml_setPropertySignal.emit(index, key, value)
-
-if __name__ == '__main__':
-    import sys
-
-    app = QGuiApplication(sys.argv)
-
-    view = QQuickView()
-    view.setResizeMode(QQuickView.SizeRootObjectToView)
-    ctxt = view.rootContext()
-    myListModel = ListModel(QmlArtistObject)
-    ctxt.setContextProperty('myListModel', myListModel)
-
-    view.setSource(QUrl('ListShow.qml'))
-    view.show()
-
-    sys.exit(app.exec_())

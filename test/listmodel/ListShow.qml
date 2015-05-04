@@ -1,5 +1,4 @@
-import QtQuick 2.4
-// import Deepin.Widgets 1.0
+import QtQuick 2.3
 
 Rectangle {
     id: root
@@ -10,7 +9,7 @@ Rectangle {
 
     DListModel {
         id: listModel
-        _model: myListModel
+        pymodel: myListModel
     }
 
     Component {
@@ -40,9 +39,10 @@ Rectangle {
                         'cover': '/dsdssd/dssdds0',
                         'songs': {'song': 'dsdsdsdsddssssssss'}
                     }
-                    // mediaItem.ListView.view.model.setSignal(index, item)
+                    mediaItem.ListView.view.model.setSignal(index, item)
                     mediaItem.ListView.view.model.dremove(0);
                     mediaItem.ListView.view.model.dinsert(0, item)
+                    // print(mediaItem.ListView.view.model.count, '-----')
                     // mediaItem.ListView.view.model.dremove(0);
                     // mediaItem.ListView.view.model.removeSignal(index)
                 }

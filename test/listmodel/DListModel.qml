@@ -11,6 +11,7 @@ ListModel {
     signal removeSignal(int index)
     signal setSignal(int index, var obj)
     signal setPropertySignal(int index, var property, var value)
+    
 
     function initModel() {
         for(var i=0; i<pymodel.data.length; i++){
@@ -46,11 +47,6 @@ ListModel {
     function dsetProperty(index, property , value){
         listModel.setPropertySignal(index, property, value);
     }
-
-    // onPymodelChanged:{
-    //     listModel.clear();
-    //     initModel();
-    // }
 
     Component.onCompleted: {
         initModel();

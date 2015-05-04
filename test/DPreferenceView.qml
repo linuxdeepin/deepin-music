@@ -1,7 +1,5 @@
 import QtQuick 2.3
 import QtQml.Models 2.1
-import DMusic 1.0
-
 
 Rectangle {
     id: root
@@ -29,35 +27,40 @@ Rectangle {
     ObjectModel {
         id: itemModel
 
-        BasicSettingSection {
-            id: basicSettingSection
-            width: flickable.width; height: flickable.height - 200
-
-            subject: navgationModel.get(0).name
-        }
-        KeyBindingSection {
-            id: keyBindingSection
-            width: flickable.width; height: flickable.height - 300
-            subject: navgationModel.get(1).name
-        }
-        DesktopLRCSection {
-            id: desktopLRCSection
-            width: flickable.width; height: flickable.height
-            subject: navgationModel.get(2).name
+        Rectangle {
+            property var sectionId: 'section1'
+            width: col.width
+            height: 400
+            color: "#111111"
         }
 
-        DownloadSection {
-            id: downloadSection
-            width: flickable.width; height: flickable.height
-            subject: navgationModel.get(3).name
+        Rectangle {
+            property var sectionId: 'section2'
+            width: col.width
+            height: 200
+            color: "#222222"
         }
 
-        AboutSection {
-            id: aboutSection
-            width: flickable.width; height: flickable.height
-            subject: navgationModel.get(4).name
+        Rectangle {
+            property var sectionId: 'section3'
+            width: col.width
+            height: 300
+            color: "#333333"
         }
 
+        Rectangle {
+            property var sectionId: 'section4'
+            width: col.width
+            height: 500
+            color: "#444444"
+        }
+
+        Rectangle {
+            property var sectionId: 'section5'
+            width: col.width
+            height: root.height
+            color: "#555555"
+        }
     }
 
     Row {
@@ -92,8 +95,7 @@ Rectangle {
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
-                            flickable.currentIndex = index
-                            flickable.scrollbyIndex(index);
+                            flickable.currentIndex  = index
                         }
                     }
                 }
@@ -133,6 +135,8 @@ Rectangle {
                 var visibleChildren = col.visibleChildren
                 contentY = visibleChildren[index].y
             }
+
+            onCurrentIndexChanged: scrollbyIndex(currentIndex)
 
             onContentYChanged: {
                 if (!flicking) return
