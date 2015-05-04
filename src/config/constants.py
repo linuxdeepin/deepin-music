@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import os
-from PyQt5.QtCore import QDir
+from PyQt5.QtCore import QDir, QStandardPaths
 
 parentDir = os.path.dirname
 
@@ -21,7 +21,7 @@ OnlineSongCoverPath = os.path.join(CoverPath, 'onlineSong')
 LevevDBPath = os.path.join(ProjectPath,  'leveldb')
 MusicDBFile = os.path.join(ProjectPath,  'music.db')
 
-DownloadSongPath = os.path.join(QDir.homePath(), u'音乐', 'download')
+DownloadSongPath = os.path.join(QStandardPaths.writableLocation(QStandardPaths.MusicLocation), 'download')
 
 
 LogCachePath = os.path.join(Home, '.cache', 'DeepinMusic3')
