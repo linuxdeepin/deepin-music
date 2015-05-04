@@ -1,40 +1,111 @@
-import QtQuick 2.0
+import QtQuick 2.3
 import QtQuick.Window 2.1
 import DMusic 1.0
-Item {
-    id: root
-   
-    width: 960
-    height: 660
+import "./MainWindow"
+import "./SimpleWindow"
+import "./MiniWindow"
+import "./TemporaryWindow"
+import "./LrcWindow"
 
+Rectangle {
+    id: root
     objectName: "root"
 
-    DSplash{
-        id: splash
-        showDuration: 0
-        pauseDuration: 2000
-        hideDuration: 0
-        anchors.fill: parent
-        Text{
-            anchors.centerIn: splash
-            text: 'Welcome, this is Splash!'
-            font.family: "微软雅黑"
-            font.pointSize: 20
-            color: "white"
-        }
+    property var mainWindow: mainWindow
+    property var mainController: mainController
+    property var positionTimer: positionTimer
 
-        onFinished:{
-            mainLoader.opacity = 1
+    width: constants.mainWindowWidth
+    height: constants.mainWindowHeight
+
+    focus: true
+
+    Constants{
+        id: constants
+    }
+
+    MainWindow {
+        id: mainWindow
+        objectName: "MainWindow"
+
+        constants: constants
+        anchors.fill: parent
+        width: constants.mainWindowWidth
+        height: constants.mainWindowHeight
+        visible : true
+    }
+
+    MiniWindow {
+        id: miniWindow
+        constants: constants
+        width: constants.miniWindowWidth
+        height: constants.miniWindowHeight
+    }
+
+    Loader {
+        id: simpleWindowLoader
+        objectName: 'simpleWindowLoader'
+        anchors.fill: parent
+        width: root.width
+        height: root.height
+    }
+
+    LrcWindow {
+        id: lrcWindow
+    }
+
+    MainController {
+        id: mainController
+        rootWindow: root
+        mainWindow: mainWindow
+        simpleWindowLoader: simpleWindowLoader
+        miniWindow: miniWindow
+        lrcWindow: lrcWindow
+        constants: constants
+    }
+
+    MediaController {
+        id: mediaController
+        mainWindow: mainWindow
+        miniWindow: miniWindow
+        positionTimer: positionTimer
+    }
+
+    Keys.onPressed: {
+        if (event.key == Qt.Key_F1) {
+            MediaPlayer.setPlaylistByName('temporary');
+        }else if (event.key == Qt.Key_F2) {
+            MediaPlayer.setPlaylistByName('favorite');
         }
     }
 
-    MainMusic{
-        id: mainLoader
-        objectName: "MainMusic"
+    Timer {
+        repeat: false
+        interval: 100
+        running: true
+        onTriggered:{
+            mainWindow.webEngineViewPage.url = Qt.resolvedUrl("http://music.haosou.com/_linuxdeepin/");
+            root.focus = true;
+        }
+    }
 
-        anchors.fill: parent
-        opacity: 0
-        focus: true
-        
+    Timer {
+        id: positionTimer
+        repeat: false
+        interval: 100
+        running: false
+    }
+
+    Component.onCompleted: {
+        Qt.constants = constants
+        Qt.mainWindow = mainWindow
+        Qt.mainController= mainController
+        Qt.positionTimer = positionTimer
+        Qt.globalObject = MainWindow.globalObject
+
+        function get(arg) {
+            return eval(arg)
+        }
+        Qt.get = get
     }
 }

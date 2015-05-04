@@ -1,4 +1,16 @@
 module DMusic
 DSplash 1.0 DSplash.qml
 DIconButton 1.0 DIconButton.qml
+DIconTextButton 1.0 DIconTextButton.qml
+DSvgButton 1.0 DSvgButton.qml
 DStackView 1.0 DStackView.qml
+DScrollBar 1.0 DScrollBar.qml
+DToolTip 1.0 DToolTip.qml
+ToolTip 1.0 ToolTip.qml
+ToolTipArea 1.0 ToolTipArea.qml
+DRectWithCorner 1.0 DRectWithCorner.qml
+DWaveBar 1.0 DWaveBar.qml
+DListModel 1.0 DListModel.qml
+DCircleProgressBar 1.0 DCircleProgressBar.qml
+WebEngineView 1.0 WebEngineView.qml
+DMovableWindow 1.0 DMovableWindow.qml

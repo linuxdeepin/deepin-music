@@ -1,14 +1,42 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-MainWindow_Width = 905
-MainWindow_Height = 600
+import os
+from PyQt5.QtCore import QDir
 
-SimpleWindow_Width = 300
-SimpleWindow_Height = 600
+parentDir = os.path.dirname
 
-TitleBar_Height = 25
-LeftBar_Width = 60
-Bottom_Height = 100
+Home = os.path.expanduser('~')
+ConfigPath = os.path.join(Home, '.config')
+ProjectName = "DeepinMusic3"
+ProjectPath = os.path.join(ConfigPath, ProjectName)
 
-Simple_Bottom_Height = 200
+MusicManagerPath = os.path.join(ProjectPath, 'music')
+PlaylistPath = os.path.join(ProjectPath, 'playlist')
+CoverPath = os.path.join(ProjectPath, 'cover')
+ArtistCoverPath = os.path.join(CoverPath, 'artist')
+AlbumCoverPath = os.path.join(CoverPath, 'album')
+SongCoverPath = os.path.join(CoverPath, 'song')
+OnlineSongCoverPath = os.path.join(CoverPath, 'onlineSong')
+LevevDBPath = os.path.join(ProjectPath,  'leveldb')
+MusicDBFile = os.path.join(ProjectPath,  'music.db')
+
+DownloadSongPath = os.path.join(QDir.homePath(), u'音乐', 'download')
+
+
+paths = [
+	ProjectPath,
+	MusicManagerPath,
+	PlaylistPath,
+	CoverPath,
+	ArtistCoverPath,
+	AlbumCoverPath,
+	SongCoverPath,
+	OnlineSongCoverPath,
+	LevevDBPath,
+	DownloadSongPath
+]
+
+for path in paths:
+	if not os.path.exists(path):
+	    os.makedirs(path)
