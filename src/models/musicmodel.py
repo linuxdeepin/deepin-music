@@ -3,7 +3,7 @@
 
 import os
 import datetime
-from peewee import *
+from dwidgets.peewee import *
 import traceback
 try:
     from dwidgets.mediatag import common

@@ -9,7 +9,6 @@ from PyQt5.QtGui import QCursor
 from .utils import registerContext
 from deepin_menu.menu import *
 
-from menu import SettingsMenu
 from log import logger
 
 
