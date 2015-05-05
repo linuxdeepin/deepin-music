@@ -7,57 +7,43 @@ Rectangle {
     id: root
     width: 800; height: 600
 
-    ListModel {
-        id: navgationModel
-        ListElement {
-            name: "基础设置"
-        }
-        ListElement {
-            name: "快捷键"
-        }
-        ListElement {
-            name: "桌面歌词"
-        }
-        ListElement {
-            name: "下载"
-        }
-        ListElement {
-            name: "关于"
-        }
-    }
-
     ObjectModel {
         id: itemModel
 
         BasicSettingSection {
             id: basicSettingSection
-            width: flickable.width; height: flickable.height - 200
+            width: flickable.width; height: flickable.height - 100
 
-            subject: navgationModel.get(0).name
+            subject: I18nWorker.setting_basicSetting
         }
+
         KeyBindingSection {
             id: keyBindingSection
             width: flickable.width; height: flickable.height - 300
-            subject: navgationModel.get(1).name
+            subject: I18nWorker.setting_keyBindings
         }
+
         DesktopLRCSection {
             id: desktopLRCSection
             width: flickable.width; height: flickable.height
-            subject: navgationModel.get(2).name
+            subject: I18nWorker.setting_desktopLRC
         }
 
         DownloadSection {
             id: downloadSection
             width: flickable.width; height: flickable.height
-            subject: navgationModel.get(3).name
+            subject: I18nWorker.setting_download
         }
 
         AboutSection {
             id: aboutSection
             width: flickable.width; height: flickable.height
-            subject: navgationModel.get(4).name
+            subject: I18nWorker.setting_about
         }
 
+        function get(index) {
+            return itemModel.children[index]
+        }
     }
 
     Row {
@@ -80,7 +66,7 @@ Rectangle {
                         anchors.leftMargin: 24
                         color: "#3a3a3a"
                         horizontalAlignment: Text.AlignLeft
-                        text: name
+                        text: itemModel.get(index).subject
                     }
                     states: [
                         State {
@@ -108,7 +94,7 @@ Rectangle {
                 highlightMoveDuration: 1
                 currentIndex: flickable.currentIndex
                 focus: true
-                model: navgationModel
+                model: itemModel.count
                 delegate: delegateItem
             }
         }

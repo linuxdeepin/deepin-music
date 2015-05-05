@@ -100,7 +100,7 @@ DMovableWindow {
                                 }
                             }
 
-                            DCloseLightButton{
+                            DCloseButton{
                                 id: closeButton
                                 width: playControl.iconsWidth
                                 height: playControl.iconsHeight
