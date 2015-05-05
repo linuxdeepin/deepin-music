@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import os
 from PyQt5.QtCore import (QCoreApplication, QObject,
                           QUrl, QThread, QTimer,
                           QThreadPool)
@@ -13,7 +14,7 @@ from controllers import MediaPlayer, PlaylistWorker, CoverWorker
 from controllers import ConfigWorker, DBWorker, I18nWorker
 from controllers import UtilWorker, DownloadSongWorker
 from controllers.mediaplayer import gPlayer
-
+from deepin_utils.file import get_parent_dir
 import config
 from config import isWebengineUsed
 
@@ -91,7 +92,7 @@ class DeepinPlayer(QObject):
         # playlists = self.playlistWorker._playlists
         # for name, playlist in playlists.items():
         #     self.playlistWorker.registerObj.emit(name, playlist._medias)
-        self.mainWindow.setSource(QUrl('views/Main.qml'))
+        self.mainWindow.setSource(QUrl.fromLocalFile(os.path.join(get_parent_dir(__file__, 2), 'views', 'Main.qml')))
 
     def initConnect(self):
         self.web360ApiWorkerConnect()

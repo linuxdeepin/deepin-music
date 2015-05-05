@@ -1,3 +1,9 @@
+deepin-music-player (3.0.0) unstable; urgency=medium
+
+  * update
+
+ -- Yueqian Zhang <djf@djf-pc>  Tue, 05 May 2015 10:55:53 +0800
+
 deepin-music-player (1.1+20140725105249~b99383bac5) trusty; urgency=low
 
   * Build from git b99383bac53f9edc28b49eb0b3147947c7ef90ea

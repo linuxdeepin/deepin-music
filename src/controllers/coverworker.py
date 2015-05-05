@@ -14,6 +14,7 @@ from .utils import registerContext
 from dwidgets import dthread, CoverRunnable
 from config.constants import ArtistCoverPath, AlbumCoverPath, SongCoverPath, OnlineSongCoverPath
 import urllib
+from deepin_utils.file import get_parent_dir
 
 
 class Cover360Runnable(QRunnable):
@@ -82,10 +83,10 @@ class CoverWorker(QObject):
     updateAlbumCover = pyqtSignal('QString', 'QString', 'QString')
     updateOnlineSongCover = pyqtSignal('QString', 'QString', 'QString')
 
-    defaultArtistCover = os.path.join(os.getcwd(), 'skin', 'images','bg1.jpg')
-    defaultAlbumCover = os.path.join(os.getcwd(), 'skin', 'images','bg1.jpg')
-    defaultSongCover = os.path.join(os.getcwd(), 'skin', 'images','bg1.jpg')
-    defaultFolderCover = os.path.join(os.getcwd(), 'skin', 'images','bg4.jpg')
+    defaultArtistCover = os.path.join(get_parent_dir(__file__, 2), 'skin', 'images','bg1.jpg')
+    defaultAlbumCover = os.path.join(get_parent_dir(__file__, 2), 'skin', 'images','bg1.jpg')
+    defaultSongCover = os.path.join(get_parent_dir(__file__, 2), 'skin', 'images','bg1.jpg')
+    defaultFolderCover = os.path.join(get_parent_dir(__file__, 2), 'skin', 'images','bg4.jpg')
 
     @registerContext
     def __init__(self, parent=None):

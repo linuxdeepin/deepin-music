@@ -15,7 +15,9 @@ from app import DeepinPlayer
 import config
 import faulthandler
 import threading
-fd = open('crash.log', 'w')
+from config.constants import LogCachePath 
+
+fd = open(os.path.join(LogCachePath, 'crash.log'), 'w')
 faulthandler.enable(fd, all_threads=True)
 
 

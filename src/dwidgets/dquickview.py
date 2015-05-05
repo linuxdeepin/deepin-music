@@ -8,6 +8,7 @@ from PyQt5 import QtGui
 from PyQt5 import QtQuick
 from PyQt5 import QtQml
 from PyQt5.QtCore import qVersion
+from deepin_utils.file import get_parent_dir
 
 if '5.3' in qVersion():
     isWebengineUsed = False
@@ -22,7 +23,7 @@ class DQuickView(QtQuick.QQuickView):
     def __init__(self):
         super(DQuickView, self).__init__()
         self.setResizeMode(QtQuick.QQuickView.SizeViewToRootObject)
-        self.engine().addImportPath(os.sep.join([os.getcwd(), 'qml']))
+        self.engine().addImportPath(os.sep.join([get_parent_dir(__file__, 2), 'qml']))
         if isWebengineUsed:
             self.initWebengine()
 
