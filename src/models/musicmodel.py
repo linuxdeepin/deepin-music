@@ -173,7 +173,7 @@ class Song(BaseModel):
     cover = CharField(default='')
 
     #other
-    created_date = DateTimeField(default=datetime.datetime.now)
+    created_date = FloatField(default=0)
 
     __key__ = 'url'
 
@@ -221,6 +221,7 @@ class Song(BaseModel):
             'duration',
             'size',
             'cover',
+            'created_date'
         ]
 
         p = {}

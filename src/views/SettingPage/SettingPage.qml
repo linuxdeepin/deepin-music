@@ -19,7 +19,7 @@ Rectangle {
 
         KeyBindingSection {
             id: keyBindingSection
-            width: flickable.width; height: flickable.height - 300
+            width: flickable.width; height: flickable.height - 130
             subject: I18nWorker.setting_keyBindings
         }
 

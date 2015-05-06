@@ -11,8 +11,6 @@ Rectangle {
     height: 24
     color: "transparent"
 
-    signal menuShowed(int index)
-
     Row {
 
         anchors.fill: parent
@@ -142,14 +140,14 @@ Rectangle {
             mediaItem.color = "transparent"
         }
         onClicked: {
+            var url = mediaItem.ListView.view.model.get(index).url
             if (mouse.button == Qt.LeftButton){
                 mediaItem.ListView.view.currentIndex = index;
-                var url = mediaItem.ListView.view.model.get(index).url
                 mediaItem.ListView.view.playMusicByUrl(url);
                 waveBar.active = true
             }
             else if (mouse.button == Qt.RightButton){
-                mediaItem.menuShowed(index);
+                mediaItem.ListView.view.menuShowed(url);
             }
         }
     }

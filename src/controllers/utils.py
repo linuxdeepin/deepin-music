@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 
 import functools
-from PyQt5.QtCore import QRunnable, QThreadPool
+from PyQt5.QtCore import QUrl
+from PyQt5.QtGui import QDesktopServices
 
 contexts = {}
 
@@ -29,3 +30,7 @@ def duration_to_string(value, default="00:00", i=1000):
         if value/(60*i) / 60 >= 2:
             duration = "%03d:%02d" % (value/(60*i), (value/i) % 60)
         return duration
+
+
+def openLocalUrl(url):
+    QDesktopServices.openUrl(QUrl.fromLocalFile(url))

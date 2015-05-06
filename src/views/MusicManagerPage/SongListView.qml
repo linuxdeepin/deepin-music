@@ -138,6 +138,7 @@ Rectangle {
             spacing: 20
             snapMode:ListView.SnapToItem
             signal playMusicByUrl(string url)
+            signal menuShowed(string url)
 
             DScrollBar {
                 flickable: parent

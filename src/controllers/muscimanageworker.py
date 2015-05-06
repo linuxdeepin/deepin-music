@@ -14,7 +14,7 @@ from PyQt5.QtCore import (QObject, pyqtSignal,
 from PyQt5.QtGui import QImage
 from PyQt5.QtQml import QJSValue
 from PyQt5.QtWidgets import QFileDialog
-from .utils import registerContext, contexts
+from .utils import registerContext, contexts, openLocalUrl
 from dwidgets.tornadotemplate import template
 from models import *
 from dwidgets import dthread, LevelJsonDict
@@ -25,6 +25,13 @@ from config.constants import LevevDBPath, CoverPath, MusicManagerPath
 from .coverworker import CoverWorker
 
 from dwidgets import DListModel, ModelMetaclass
+from dwidgets.xpinyin import Pinyin
+
+
+p = Pinyin()
+def getPinyin(chinese):
+    return  p.get_pinyin(chinese, '')
+
 
 class QmlSongObject(QObject):
 
@@ -46,14 +53,12 @@ class QmlSongObject(QObject):
         ('bitrate', int),
         ('sample_rate', int),
         ('cover', 'QString'),
-        ('created_date', 'QString'),
+        ('created_date', float),
     )
 
     coverChanged = pyqtSignal('QString')
 
     def initialize(self, *agrs, **kwargs):
-        if 'created_date' in kwargs:
-            kwargs['created_date'] = kwargs['created_date'].strftime('%Y-%m-%d %H:%M:%S')
         self.setDict(kwargs)
 
     @pyqtProperty('QString', notify=coverChanged)
@@ -459,6 +464,8 @@ class MusicManageWorker(QObject):
         if isinstance(songDict['folder'], str):
             songDict['folder'] = songDict['folder'].decode('utf-8')
 
+        songDict['created_date'] = time.time()
+
         url = songDict['url']
         if url in self._songsDict:
             self._songsDict[url] = songDict
@@ -594,3 +601,55 @@ class MusicManageWorker(QObject):
 
     def playSongMusic(self, url):
         self.addSongToPlaylist.emit(url)
+
+    def openSongFolder(self, url):
+        songDict = self._songsDict[url]
+        openLocalUrl(songDict['folder'])
+
+    def orderBySongName(self):
+        songObjs = {}
+        for songObj in self._songObjsListModel.data:
+            songObjs[getPinyin(songObj.title)] = songObj
+        self._songObjsListModel.clear()
+        data = [songObjs[k] for k in sorted(songObjs.keys())]
+        for obj in data:
+            self._songObjsListModel.append(obj)
+
+    def orderByArtist(self):
+        songObjs = {}
+        for songObj in self._songObjsListModel.data:
+            songObjs[getPinyin(songObj.artist)] = songObj
+        self._songObjsListModel.clear()
+        data = [songObjs[k] for k in sorted(songObjs.keys())]
+        for obj in data:
+            self._songObjsListModel.append(obj)
+
+    def orderByAlbum(self):
+        songObjs = {}
+        for songObj in self._songObjsListModel.data:
+            songObjs[getPinyin(songObj.album)] = songObj
+        self._songObjsListModel.clear()
+        data = [songObjs[k] for k in sorted(songObjs.keys())]
+        for obj in data:
+            self._songObjsListModel.append(obj)
+
+    def orderByPlayCount(self):
+        pass
+
+    def orderByAddTime(self):
+        songObjs = {}
+        for songObj in self._songObjsListModel.data:
+            songObjs[songObj.created_date] = songObj
+        self._songObjsListModel.clear()
+        data = [songObjs[k] for k in sorted(songObjs.keys())]
+        for obj in data:
+            self._songObjsListModel.append(obj)
+
+    def orderByFileSize(self):
+        songObjs = {}
+        for songObj in self._songObjsListModel.data:
+            songObjs[songObj.size] = songObj
+        self._songObjsListModel.clear()
+        data = [songObjs[k] for k in sorted(songObjs.keys())]
+        for obj in data:
+            self._songObjsListModel.append(obj)

@@ -14,7 +14,7 @@ Item {
         }
 
         onRightClicked:{
-            print(name)
+            MenuWorker.albumMenuShow(name);
         }
     }
 }

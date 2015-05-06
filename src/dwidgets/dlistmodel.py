@@ -80,7 +80,7 @@ class DListModel(QObject):
         self.qml2py_moveSignal.connect(self.move)
         self.qml2py_removeSignal.connect(self.remove)
         self.qml2py_setSignal.connect(self.set)
-        self.qml2py_setPropertySignal.connect(self.setProperty)        
+        self.qml2py_setPropertySignal.connect(self.setProperty)
 
     @pyqtProperty('QVariant', notify=dataChanged)
     def data(self):

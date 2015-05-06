@@ -7,15 +7,15 @@ Item {
     Connections {
         target: folderView
         onPlay: {
-            MusicManageWorker.playFolder(folderListModel.get(index).name)
+            MusicManageWorker.playFolder(folderListModel.get(index).name);
         }
 
         onClicked:{
-            MusicManageWorker.detailFolder(name, index)
+            MusicManageWorker.detailFolder(name, index);
         }
 
         onRightClicked:{
-            print(name)
+            MenuWorker.folderMenuShow(folderListModel.get(index).name);
         }
     }
 

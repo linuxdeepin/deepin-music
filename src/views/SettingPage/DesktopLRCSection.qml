@@ -15,9 +15,9 @@ BaseSection {
         Column {
             spacing: 5
 
-            CheckBox {
-                text: I18nWorker.setting_enableKeyBindings
-                checked: true
+            
+            DDComboBox {
+                labelText: I18nWorker.setting_last
             }
         }
     }

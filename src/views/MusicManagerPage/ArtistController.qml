@@ -6,15 +6,15 @@ Item {
     Connections {
         target: artistView
         onPlay: {
-            MusicManageWorker.playArtist(name)
+            MusicManageWorker.playArtist(name);
         }
 
         onClicked:{
-            MusicManageWorker.detailArtist(name, index)
+            MusicManageWorker.detailArtist(name, index);
         }
 
         onRightClicked:{
-            print(name)
+            MenuWorker.artistMenuShow(name);
         }
     }
 }

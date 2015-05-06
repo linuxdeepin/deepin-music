@@ -15,6 +15,10 @@ Item {
         onPlayMusicByUrl: {
             playMusicByUrl(url);
         }
+
+        onMenuShowed:{
+            MenuWorker.songMenuShow(url);
+        }
     }
 
 }

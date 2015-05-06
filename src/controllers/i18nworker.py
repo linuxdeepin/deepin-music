@@ -52,6 +52,7 @@ class I18nWorker(object):
         ('setting_simpleFullMode', 'QString', u'简洁/完整模式'),
         ('setting_miniFullMode', 'QString', u'迷你/完整模式'),
         ('setting_hideShowWindow', 'QString', u'隐藏/显示窗口'),
+        ('setting_hideShowdesktopLRC', 'QString', u'隐藏/显示桌面歌词'),
         ('setting_desktopLRC', 'QString', u'桌面歌词'),
         ('setting_fontType', 'QString', u'字体'),
         ('setting_fontSize', 'QString', u'字号'),

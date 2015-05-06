@@ -186,6 +186,23 @@ class DeepinPlayer(QObject):
         self.menuWorker.addSongFolder.connect(
             self.musicManageWorker.searchOneFolderMusic)
 
+        self.menuWorker.playArtist.connect(self.musicManageWorker.playArtist)
+
+        self.menuWorker.playAlbum.connect(self.musicManageWorker.playAlbum)
+
+        self.menuWorker.playSong.connect(self.musicManageWorker.playSong)
+        self.menuWorker.playSong.connect(self.mediaPlayer.playLocalMedia)
+        self.menuWorker.orderBySongName.connect(self.musicManageWorker.orderBySongName)
+        self.menuWorker.orderByArtist.connect(self.musicManageWorker.orderByArtist)
+        self.menuWorker.orderByAlbum.connect(self.musicManageWorker.orderByAlbum)
+        self.menuWorker.orderByPlayCount.connect(self.musicManageWorker.orderByPlayCount)
+
+        self.menuWorker.orderByAddTime.connect(self.musicManageWorker.orderByAddTime)
+        self.menuWorker.orderByFileSize.connect(self.musicManageWorker.orderByFileSize)
+        self.menuWorker.openSongFolder.connect(self.musicManageWorker.openSongFolder)
+
+        self.menuWorker.playFolder.connect(self.musicManageWorker.playFolder)
+
     def dbWorkerConnect(self):
         self.dbWorker.restoreSongsSuccessed.connect(
             self.musicManageWorker.loadDB)

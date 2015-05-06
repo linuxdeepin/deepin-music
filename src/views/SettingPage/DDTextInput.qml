@@ -6,16 +6,20 @@ import Deepin.Widgets 1.0
 Row {
     id: root
     property var labelText
+    property DTextInput textInput: textInput
 
-    spacing: 5
+    spacing: 20
 
-    Label {
+    Text {
         text: root.labelText
+        horizontalAlignment: Text.AlignRight
         verticalAlignment: Text.AlignVCenter
         font.pixelSize: 14
+        width: 120
+        height: textInput.height
     }
 
     DTextInput{
-
+        id: textInput
     }
 }

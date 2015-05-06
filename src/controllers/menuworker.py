@@ -4,25 +4,133 @@
 
 import os
 import sys
-from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot, pyqtProperty, QPoint
-from PyQt5.QtGui import QCursor
-from .utils import registerContext
+from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot, pyqtProperty, QPoint, QUrl
+from PyQt5.QtGui import QCursor, QDesktopServices
+from .utils import registerContext, openLocalUrl
 from deepin_menu.menu import *
-
+from dwidgets import ModelMetaclass
 from log import logger
 
 
+
+class MenuI18nWorker(QObject):
+
+    __metaclass__ = ModelMetaclass
+
+    __Fields__ = (
+        ('addMusic', 'QString', u'添加歌曲'),
+        ('easyMode', 'QString', u'简洁模式'),
+        ('file', 'QString', u'文件'),
+        ('folder', 'QString', u'文件夹'),
+        ('miniMode', 'QString', u'迷你模式'),
+        ('checkUpdate', 'QString', u'查看新特性'),
+        ('setting', 'QString', u'设置'),
+        ('exit', 'QString', u'退出'),
+        ('play', 'QString', u'播放'),
+        ('addToSinglePlaylist', 'QString', u'添加到歌单'),
+        ('addToMutiPlaylist', 'QString', u'添加到多个歌单'),
+        ('newPlaylist', 'QString', u'新建歌单'),
+        ('removeFromDatabase', 'QString', u'从歌库中移除'),
+        ('removeFromDriver', 'QString', u'从硬盘中移除'),
+        ('changeCover', 'QString', u'更换封面'),
+        ('order', 'QString', u'排序'),
+        ('orderBySongName', 'QString', u'按歌曲名'),
+        ('orderByArtist', 'QString', u'按歌手'),
+        ('orderByAlbum', 'QString', u'按专辑'),
+        ('orderByPlayCount', 'QString', u'按播放次数'),
+        ('orderByAddTime', 'QString', u'按添加时间'),
+        ('orderByFileSize', 'QString', u'按文件大小'),
+        ('openFolder', 'QString', u'打开目录'),
+        ('information', 'QString', u'信息'),
+    )
+
+    __contextName__ = "MenuI18nWorker"
+
+    @registerContext
+    def initialize(self, *agrs, **kwargs):
+        pass
+
+menuI18nWorker = MenuI18nWorker()
+
+
 SettingMenuItems = [
-    ('AddMusic', 'Add music', (), [("File", "file"), ("Folder", "folder")]),
+    ('AddMusic', menuI18nWorker.addMusic, (), [("File", menuI18nWorker.file), ("Folder", menuI18nWorker.folder)]),
     None,
-    ('EasyMode', 'Easy mode'),
-    ('MiniMode', 'Mini mode'),
+    ('EasyMode', menuI18nWorker.easyMode),
+    ('MiniMode', menuI18nWorker.miniMode),
     None,
-    ('CheckUpdate', 'Check update'),
-    ('Setting', 'Setting'),
+    ('CheckUpdate', menuI18nWorker.checkUpdate),
+    ('Setting', menuI18nWorker.setting),
     None,
-    ('Exit', 'Exit')
+    ('Exit', menuI18nWorker.exit)
 ]
+
+
+ArtistMenuItems = [
+    ('Play', menuI18nWorker.play),
+    None,
+    ('AddToSinglePlaylist', menuI18nWorker.addToSinglePlaylist, (), []),
+    ('AddToMutiPlaylist', menuI18nWorker.addToMutiPlaylist),
+    ('NewPlaylist', menuI18nWorker.newPlaylist),
+    None,
+    ('RemoveFromDatabase', menuI18nWorker.removeFromDatabase),
+    ('RemoveFromDriver', menuI18nWorker.removeFromDriver),
+    None,
+    ('ChangeCover', menuI18nWorker.changeCover)
+]
+
+
+AlbumMenuItems = [
+    ('Play', menuI18nWorker.play),
+    None,
+    ('AddToSinglePlaylist', menuI18nWorker.addToSinglePlaylist, (), []),
+    ('AddToMutiPlaylist', menuI18nWorker.addToMutiPlaylist),
+    ('NewPlaylist', menuI18nWorker.newPlaylist),
+    None,
+    ('RemoveFromDatabase', menuI18nWorker.removeFromDatabase),
+    ('RemoveFromDriver', menuI18nWorker.removeFromDriver),
+    None,
+    ('ChangeCover', menuI18nWorker.changeCover)
+]
+
+
+SongMenuItems = [
+    ('Play', menuI18nWorker.play),
+    None,
+    ('AddToSinglePlaylist', menuI18nWorker.addToSinglePlaylist, (), []),
+    ('AddToMutiPlaylist', menuI18nWorker.addToMutiPlaylist),
+    ('NewPlaylist', menuI18nWorker.newPlaylist),
+    None,
+    ('Order', menuI18nWorker.order, (), [
+        CheckableMenuItem('Order_group:radio:OrderBySongName', menuI18nWorker.orderBySongName),
+        CheckableMenuItem('Order_group:radio:OrderByArtist', menuI18nWorker.orderByArtist),
+        CheckableMenuItem('Order_group:radio:OrderByAlbum', menuI18nWorker.orderByAlbum),
+        CheckableMenuItem('Order_group:radio:OrderByPlayCount', menuI18nWorker.orderByPlayCount),
+        CheckableMenuItem('Order_group:radio:OrderByAddTime', menuI18nWorker.orderByAddTime, True),
+        CheckableMenuItem('Order_group:radio:OrderByFileSize', menuI18nWorker.orderByFileSize),
+        ]),
+    None,
+    ('RemoveFromDatabase', menuI18nWorker.removeFromDatabase),
+    ('RemoveFromDriver', menuI18nWorker.removeFromDriver),
+    None,
+    ('OpenFolder', menuI18nWorker.openFolder),
+    ('Information', menuI18nWorker.information)
+]
+
+
+FolderMenuItems = [
+    ('Play', menuI18nWorker.play),
+    None,
+    ('AddToSinglePlaylist', menuI18nWorker.addToSinglePlaylist, (), []),
+    ('AddToMutiPlaylist', menuI18nWorker.addToMutiPlaylist),
+    ('NewPlaylist', menuI18nWorker.newPlaylist),
+    None,
+    ('RemoveFromDatabase', menuI18nWorker.removeFromDatabase),
+    ('RemoveFromDriver', menuI18nWorker.removeFromDriver),
+    None,
+    ('OpenFolder', menuI18nWorker.openFolder)
+]
+
 
 
 class DMenu(Menu):
@@ -39,33 +147,145 @@ class MenuWorker(QObject):
     __contextName__ = 'MenuWorker'
 
     settingMenuShow = pyqtSignal()
+    artistMenuShow = pyqtSignal('QString')
+    albumMenuShow = pyqtSignal('QString')
+    songMenuShow = pyqtSignal('QString')
+    folderMenuShow = pyqtSignal('QString')
     
+    #setting Menu
     miniTrigger = pyqtSignal()
     addSongFile = pyqtSignal()
     addSongFolder = pyqtSignal()
-
     settingTrigger = pyqtSignal()
+
+    #Artist Menu
+    playArtist = pyqtSignal('QString')
+
+
+    #Album Menu
+    playAlbum = pyqtSignal('QString')
+
+
+    #Song Menu
+    playSong = pyqtSignal('QString')
+
+    orderBySongName = pyqtSignal()
+    orderByArtist = pyqtSignal()
+    orderByAlbum = pyqtSignal()
+    orderByPlayCount = pyqtSignal()
+    orderByAddTime = pyqtSignal()
+    orderByFileSize = pyqtSignal()
+    openSongFolder = pyqtSignal('QString')
+
+    #Folder Menu
+    playFolder = pyqtSignal('QString')
 
     @registerContext
     def __init__(self):
         super(MenuWorker, self).__init__()
+        self._artist = ''
+        self._album = ''
+        self._url = ''
+        self._folder = ''
         self.createSettingMenu()
+        self.createArtistMenu()
+        self.createAlbumMenu()
+        self.createSongMenu()
+        self.createFolderMenu()
 
     def createSettingMenu(self):
         self.settingMenu = DMenu(SettingMenuItems)
         self.settingMenu.itemClicked.connect(self.settingMenuConnection)
         self.settingMenuShow.connect(self.settingMenu.show)
 
-    def settingMenuConnection(self, _id, _checked):
-        print _id, _checked
-        if _id == "MiniMode":
+    def createArtistMenu(self):
+        self.artistMenu = DMenu(ArtistMenuItems)
+        self.artistMenu.itemClicked.connect(self.artistMenuConnection)
+        self.artistMenuShow.connect(self.showArtistMenu)
+
+    def showArtistMenu(self, artist):
+        self._artist = artist
+        self.artistMenu.show()
+
+    def createAlbumMenu(self):
+        self.albumMenu = DMenu(AlbumMenuItems)
+        self.albumMenu.itemClicked.connect(self.albumMenuConnection)
+        self.albumMenuShow.connect(self.showAlbumMenu)
+
+    def showAlbumMenu(self, album):
+        self._album = album
+        self.albumMenu.show()
+
+    def createSongMenu(self):
+        self.songMenu = DMenu(SongMenuItems)
+        self.songMenu.itemClicked.connect(self.songMenuConnection)
+        self.songMenuShow.connect(self.showSongMenu)
+
+    def showSongMenu(self, url):
+        self._url = url
+        self.songMenu.show()
+
+    def createFolderMenu(self):
+        self.folderMenu = DMenu(FolderMenuItems)
+        self.folderMenu.itemClicked.connect(self.folderMenuConnection)
+        self.folderMenuShow.connect(self.showFolderMenu)
+
+    def showFolderMenu(self, folder):
+        self._folder = folder
+        self.folderMenu.show()
+
+    def settingMenuConnection(self, menuId, checked):
+        if menuId == "MiniMode":
             self.miniTrigger.emit()
-        elif _id == "File":
+        elif menuId == "File":
             self.addSongFile.emit()
-        elif _id == "Folder":
+        elif menuId == "Folder":
             self.addSongFolder.emit()
-        elif _id == "Setting":
+        elif menuId == "Setting":
             self.settingTrigger.emit()
+
+    def artistMenuConnection(self, menuId, checked):
+        if menuId == "Play":
+            self.playArtist.emit(self._artist)
+
+    def albumMenuConnection(self, menuId, checked):
+        if menuId == "Play":
+            self.playAlbum.emit(self._album)
+
+    def songMenuConnection(self, menuId, checked):
+        if menuId == 'Play':
+            self.playSong.emit(self._url)
+        elif menuId == 'OpenFolder':
+            self.openSongFolder.emit(self._url)
+        elif menuId == "Order_group:radio:OrderBySongName":
+            self.orderBySongName.emit()
+        elif menuId == "Order_group:radio:OrderByArtist":
+            self.orderByArtist.emit()
+        elif menuId == "Order_group:radio:OrderByAlbum":
+            self.orderByAlbum.emit()
+        elif menuId == "Order_group:radio:OrderByPlayCount":
+            self.orderByPlayCount.emit()
+        elif menuId == "Order_group:radio:OrderByAddTime":
+            self.orderByAddTime.emit()
+        elif menuId == "Order_group:radio:OrderByFileSize":
+            self.orderByFileSize.emit()
+
+        if menuId.startswith('Order'):
+            subMenuItems =  self.songMenu.getItemById('Order').subMenu.items
+            self.updateCheckableItems(subMenuItems, menuId)
+
+    def updateCheckableItems(self, subMenuItems, checkedID):
+        for menuItem in subMenuItems:
+            if menuItem.id == checkedID:
+                menuItem.checked = True
+            else:
+                menuItem.checked = False
+
+    def folderMenuConnection(self, menuId, checked):
+        if menuId == 'Play':
+            self.playFolder.emit(self._folder)
+        if menuId == 'OpenFolder':
+           openLocalUrl(self._folder)
 
 
 if __name__ == "__main__":

@@ -88,10 +88,10 @@ class DBWorker(QObject):
 
     @classmethod
     def saveSongs(self, songs):
-        created_date = datetime.datetime.now()
-        for song in songs:
-            if 'created_date' not in songs:
-                song['created_date'] = created_date
+        # created_date = datetime.datetime.now()
+        # for song in songs:
+        #     if 'created_date' not in songs:
+        #         song['created_date'] = created_date
         songs = copy.deepcopy(songs)
         artists = []
         albums = []
@@ -100,16 +100,16 @@ class DBWorker(QObject):
         for song in songs:
             artists.append({
                 'name': song['artist'],
-                'created_date': song['created_date']
+                # 'created_date': song['created_date']
                 })
             albums.append({
                 'name': song['album'], 
                 'artist': song['artist'],
-                'created_date': song['created_date']
+                # 'created_date': song['created_date']
                 })
             folders.append({
                 'name': song['folder'],
-                'created_date': song['created_date']
+                # 'created_date': song['created_date']
             })
 
         Artist.get_create_Records(artists)
