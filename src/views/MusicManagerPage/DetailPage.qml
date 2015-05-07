@@ -50,6 +50,12 @@ Rectangle {
                     Rectangle {
                         width: detailPage.width
                         height: 108
+
+                        MouseArea {
+                            anchors.fill: parent
+                            propagateComposedEvents: false
+                        }
+
                         Text {
                             id: nameText
                             width: 300
@@ -114,6 +120,7 @@ Rectangle {
                 spacing: 20
                 snapMode:ListView.SnapToItem
                 signal playMusicByUrl(string url)
+                signal menuShowed(string url)
 
                 DScrollBar {
                     flickable: parent

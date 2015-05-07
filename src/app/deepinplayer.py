@@ -182,25 +182,23 @@ class DeepinPlayer(QObject):
             self.coverWorker.downloadAlbumCover)
 
     def menuWorkerConnect(self):
+        # setting menu
         self.menuWorker.addSongFile.connect(self.musicManageWorker.addSongFile)
         self.menuWorker.addSongFolder.connect(
             self.musicManageWorker.searchOneFolderMusic)
 
+        #artist menu
         self.menuWorker.playArtist.connect(self.musicManageWorker.playArtist)
 
+        #album menu
         self.menuWorker.playAlbum.connect(self.musicManageWorker.playAlbum)
 
+        #song menu
         self.menuWorker.playSong.connect(self.musicManageWorker.playSong)
         self.menuWorker.playSong.connect(self.mediaPlayer.playLocalMedia)
-        self.menuWorker.orderBySongName.connect(self.musicManageWorker.orderBySongName)
-        self.menuWorker.orderByArtist.connect(self.musicManageWorker.orderByArtist)
-        self.menuWorker.orderByAlbum.connect(self.musicManageWorker.orderByAlbum)
-        self.menuWorker.orderByPlayCount.connect(self.musicManageWorker.orderByPlayCount)
-
-        self.menuWorker.orderByAddTime.connect(self.musicManageWorker.orderByAddTime)
-        self.menuWorker.orderByFileSize.connect(self.musicManageWorker.orderByFileSize)
+        self.menuWorker.orderByKey.connect(self.musicManageWorker.orderByKey)
         self.menuWorker.openSongFolder.connect(self.musicManageWorker.openSongFolder)
-
+        #folder menu
         self.menuWorker.playFolder.connect(self.musicManageWorker.playFolder)
 
     def dbWorkerConnect(self):

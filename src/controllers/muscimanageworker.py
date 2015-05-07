@@ -28,7 +28,18 @@ from dwidgets import DListModel, ModelMetaclass
 from dwidgets.xpinyin import Pinyin
 
 
+def is_chinese(chinese):
+    """check chinese or not"""
+    if isinstance(chinese, str):
+        chinese = chinese.decode('utf-8')
+    uchar = chinese[0]
+    if uchar >= u'\u4e00' and uchar<=u'\u9fa5':
+        return True
+    else:
+        return False
+
 p = Pinyin()
+
 def getPinyin(chinese):
     return  p.get_pinyin(chinese, '')
 
@@ -53,6 +64,7 @@ class QmlSongObject(QObject):
         ('bitrate', int),
         ('sample_rate', int),
         ('cover', 'QString'),
+        ('playCount', int),
         ('created_date', float),
     )
 
@@ -606,50 +618,42 @@ class MusicManageWorker(QObject):
         songDict = self._songsDict[url]
         openLocalUrl(songDict['folder'])
 
-    def orderBySongName(self):
+    def orderByKey(self, modelType, key):
+        if modelType == 'AllSongs':
+            model = self._songObjsListModel
+        elif modelType == 'DetailSubSongs':
+            model = self._detailSongObjsListModel
         songObjs = {}
-        for songObj in self._songObjsListModel.data:
-            songObjs[getPinyin(songObj.title)] = songObj
-        self._songObjsListModel.clear()
-        data = [songObjs[k] for k in sorted(songObjs.keys())]
-        for obj in data:
-            self._songObjsListModel.append(obj)
+        chineseObjs = {}
+        for songObj in model.data:
+            if key in ['title', 'artist', 'album']:
+                value = getattr(songObj, key)
+                if is_chinese(value):
+                    pinkey = getPinyin(value)
+                    if pinkey not in chineseObjs:
+                        chineseObjs[pinkey] = [songObj]
+                    else:
+                        chineseObjs[pinkey].append(songObj)
+                else:
+                    pinkey = getattr(songObj, key)
+                    if pinkey not in songObjs:
+                        songObjs[pinkey] = [songObj]
+                    else:
+                        songObjs[pinkey].append(songObj)
+            else:
+                pinkey = getattr(songObj, key)
+                if pinkey not in songObjs:
+                    songObjs[pinkey] = [songObj]
+                else:
+                    songObjs[pinkey].append(songObj)
 
-    def orderByArtist(self):
-        songObjs = {}
-        for songObj in self._songObjsListModel.data:
-            songObjs[getPinyin(songObj.artist)] = songObj
-        self._songObjsListModel.clear()
+        model.clear()
         data = [songObjs[k] for k in sorted(songObjs.keys())]
-        for obj in data:
-            self._songObjsListModel.append(obj)
+        for objs in data:
+            for obj in objs:
+                model.append(obj)
 
-    def orderByAlbum(self):
-        songObjs = {}
-        for songObj in self._songObjsListModel.data:
-            songObjs[getPinyin(songObj.album)] = songObj
-        self._songObjsListModel.clear()
-        data = [songObjs[k] for k in sorted(songObjs.keys())]
-        for obj in data:
-            self._songObjsListModel.append(obj)
-
-    def orderByPlayCount(self):
-        pass
-
-    def orderByAddTime(self):
-        songObjs = {}
-        for songObj in self._songObjsListModel.data:
-            songObjs[songObj.created_date] = songObj
-        self._songObjsListModel.clear()
-        data = [songObjs[k] for k in sorted(songObjs.keys())]
-        for obj in data:
-            self._songObjsListModel.append(obj)
-
-    def orderByFileSize(self):
-        songObjs = {}
-        for songObj in self._songObjsListModel.data:
-            songObjs[songObj.size] = songObj
-        self._songObjsListModel.clear()
-        data = [songObjs[k] for k in sorted(songObjs.keys())]
-        for obj in data:
-            self._songObjsListModel.append(obj)
+        data = [chineseObjs[k] for k in sorted(chineseObjs.keys())]
+        for objs in data:
+            for obj in objs:
+                model.append(obj)

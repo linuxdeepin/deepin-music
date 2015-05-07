@@ -17,6 +17,10 @@ Item {
         onPlayMusicByUrl: {
             playMusicByUrl(url);
         }
+
+        onMenuShowed:{
+            MenuWorker.songMenuShow('DetailSubSongs', url);
+        }
     }
 
     Connections {

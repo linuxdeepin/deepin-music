@@ -37,6 +37,7 @@ class MenuI18nWorker(QObject):
         ('orderBySongName', 'QString', u'按歌曲名'),
         ('orderByArtist', 'QString', u'按歌手'),
         ('orderByAlbum', 'QString', u'按专辑'),
+        ('orderByDuration', 'QString', u'曲长'),
         ('orderByPlayCount', 'QString', u'按播放次数'),
         ('orderByAddTime', 'QString', u'按添加时间'),
         ('orderByFileSize', 'QString', u'按文件大小'),
@@ -74,9 +75,7 @@ ArtistMenuItems = [
     ('NewPlaylist', menuI18nWorker.newPlaylist),
     None,
     ('RemoveFromDatabase', menuI18nWorker.removeFromDatabase),
-    ('RemoveFromDriver', menuI18nWorker.removeFromDriver),
-    None,
-    ('ChangeCover', menuI18nWorker.changeCover)
+    ('RemoveFromDriver', menuI18nWorker.removeFromDriver)
 ]
 
 
@@ -88,9 +87,7 @@ AlbumMenuItems = [
     ('NewPlaylist', menuI18nWorker.newPlaylist),
     None,
     ('RemoveFromDatabase', menuI18nWorker.removeFromDatabase),
-    ('RemoveFromDriver', menuI18nWorker.removeFromDriver),
-    None,
-    ('ChangeCover', menuI18nWorker.changeCover)
+    ('RemoveFromDriver', menuI18nWorker.removeFromDriver)
 ]
 
 
@@ -105,6 +102,7 @@ SongMenuItems = [
         CheckableMenuItem('Order_group:radio:OrderBySongName', menuI18nWorker.orderBySongName),
         CheckableMenuItem('Order_group:radio:OrderByArtist', menuI18nWorker.orderByArtist),
         CheckableMenuItem('Order_group:radio:OrderByAlbum', menuI18nWorker.orderByAlbum),
+        CheckableMenuItem('Order_group:radio:OrderByDuration', menuI18nWorker.orderByDuration),
         CheckableMenuItem('Order_group:radio:OrderByPlayCount', menuI18nWorker.orderByPlayCount),
         CheckableMenuItem('Order_group:radio:OrderByAddTime', menuI18nWorker.orderByAddTime, True),
         CheckableMenuItem('Order_group:radio:OrderByFileSize', menuI18nWorker.orderByFileSize),
@@ -149,14 +147,15 @@ class MenuWorker(QObject):
     settingMenuShow = pyqtSignal()
     artistMenuShow = pyqtSignal('QString')
     albumMenuShow = pyqtSignal('QString')
-    songMenuShow = pyqtSignal('QString')
+    songMenuShow = pyqtSignal('QString', 'QString')
     folderMenuShow = pyqtSignal('QString')
-    
+
     #setting Menu
     miniTrigger = pyqtSignal()
     addSongFile = pyqtSignal()
     addSongFolder = pyqtSignal()
     settingTrigger = pyqtSignal()
+    exitTrigger = pyqtSignal()
 
     #Artist Menu
     playArtist = pyqtSignal('QString')
@@ -168,13 +167,7 @@ class MenuWorker(QObject):
 
     #Song Menu
     playSong = pyqtSignal('QString')
-
-    orderBySongName = pyqtSignal()
-    orderByArtist = pyqtSignal()
-    orderByAlbum = pyqtSignal()
-    orderByPlayCount = pyqtSignal()
-    orderByAddTime = pyqtSignal()
-    orderByFileSize = pyqtSignal()
+    orderByKey = pyqtSignal('QString', 'QString')
     openSongFolder = pyqtSignal('QString')
 
     #Folder Menu
@@ -187,6 +180,7 @@ class MenuWorker(QObject):
         self._album = ''
         self._url = ''
         self._folder = ''
+        self._modelType = ''
         self.createSettingMenu()
         self.createArtistMenu()
         self.createAlbumMenu()
@@ -221,8 +215,10 @@ class MenuWorker(QObject):
         self.songMenu.itemClicked.connect(self.songMenuConnection)
         self.songMenuShow.connect(self.showSongMenu)
 
-    def showSongMenu(self, url):
+    def showSongMenu(self, modelType, url):
+        self._modelType = modelType
         self._url = url
+        self.songMenu.itemClicked.emit('Order_group:radio:OrderBySongName', True)
         self.songMenu.show()
 
     def createFolderMenu(self):
@@ -243,6 +239,8 @@ class MenuWorker(QObject):
             self.addSongFolder.emit()
         elif menuId == "Setting":
             self.settingTrigger.emit()
+        elif menuId == "Exit":
+            self.exitTrigger.emit()
 
     def artistMenuConnection(self, menuId, checked):
         if menuId == "Play":
@@ -258,17 +256,19 @@ class MenuWorker(QObject):
         elif menuId == 'OpenFolder':
             self.openSongFolder.emit(self._url)
         elif menuId == "Order_group:radio:OrderBySongName":
-            self.orderBySongName.emit()
+            self.orderByKey.emit(self._modelType, 'title')
         elif menuId == "Order_group:radio:OrderByArtist":
-            self.orderByArtist.emit()
+            self.orderByKey.emit(self._modelType, 'artist')
         elif menuId == "Order_group:radio:OrderByAlbum":
-            self.orderByAlbum.emit()
+            self.orderByKey.emit(self._modelType, 'album')
+        elif menuId == "Order_group:radio:OrderByDuration":
+            self.orderByKey.emit(self._modelType, 'duration')
         elif menuId == "Order_group:radio:OrderByPlayCount":
-            self.orderByPlayCount.emit()
+            self.orderByKey.emit(self._modelType, 'playCount')
         elif menuId == "Order_group:radio:OrderByAddTime":
-            self.orderByAddTime.emit()
+            self.orderByKey.emit(self._modelType, 'created_date')
         elif menuId == "Order_group:radio:OrderByFileSize":
-            self.orderByFileSize.emit()
+            self.orderByKey.emit(self._modelType, 'size')
 
         if menuId.startswith('Order'):
             subMenuItems =  self.songMenu.getItemById('Order').subMenu.items

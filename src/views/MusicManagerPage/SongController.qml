@@ -17,7 +17,7 @@ Item {
         }
 
         onMenuShowed:{
-            MenuWorker.songMenuShow(url);
+            MenuWorker.songMenuShow('AllSongs', url);
         }
     }
 
