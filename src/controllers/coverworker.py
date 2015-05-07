@@ -88,10 +88,13 @@ class CoverWorker(QObject):
     defaultSongCover = os.path.join(get_parent_dir(__file__, 2), 'skin', 'images','bg1.jpg')
     defaultFolderCover = os.path.join(get_parent_dir(__file__, 2), 'skin', 'images','bg4.jpg')
 
+    albumCoverThreadPool = QThreadPool()
+
     @registerContext
     def __init__(self, parent=None):
         super(CoverWorker, self).__init__(parent)
-        QThreadPool.globalInstance().setMaxThreadCount(4)
+        QThreadPool.globalInstance().setMaxThreadCount(50)
+        self.albumCoverThreadPool.setMaxThreadCount(50)
         self.artistCovers = {}
         self.albumCovers = {}
         self.onlineSongCovers = {}
@@ -160,7 +163,7 @@ class CoverWorker(QObject):
             self._albums.add(key)
             self.taskNumber += 1
             d = CoverRunnable(self, artist, album, qtype="album")
-            QThreadPool.globalInstance().start(d)
+            self.albumCoverThreadPool.start(d)
 
     def downloadOnlineSongCover(self, artist, title, url):
         f = self.onlineSongCoverPath(artist, title)

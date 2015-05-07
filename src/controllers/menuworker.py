@@ -159,19 +159,25 @@ class MenuWorker(QObject):
 
     #Artist Menu
     playArtist = pyqtSignal('QString')
-
+    removeFromDatabaseByArtistName = pyqtSignal('QString')
+    removeFromDriverByArtistName = pyqtSignal('QString')
 
     #Album Menu
     playAlbum = pyqtSignal('QString')
-
+    removeFromDatabaseByAlbumName = pyqtSignal('QString')
+    removeFromDriverByAlbumName = pyqtSignal('QString')
 
     #Song Menu
     playSong = pyqtSignal('QString')
     orderByKey = pyqtSignal('QString', 'QString')
     openSongFolder = pyqtSignal('QString')
+    removeFromDatabaseByUrl = pyqtSignal('QString')
+    removeFromDriveByUrl = pyqtSignal('QString')
 
     #Folder Menu
     playFolder = pyqtSignal('QString')
+    removeFromDatabaseByFolderName = pyqtSignal('QString')
+    removeFromDriverByFolderName = pyqtSignal('QString')
 
     @registerContext
     def __init__(self):
@@ -245,10 +251,18 @@ class MenuWorker(QObject):
     def artistMenuConnection(self, menuId, checked):
         if menuId == "Play":
             self.playArtist.emit(self._artist)
+        elif menuId == "RemoveFromDatabase":
+            self.removeFromDatabaseByArtistName.emit(self._artist)
+        elif menuId == "RemoveFromDriver":
+            self.removeFromDriverByArtistName.emit(self._artist)
 
     def albumMenuConnection(self, menuId, checked):
         if menuId == "Play":
             self.playAlbum.emit(self._album)
+        elif menuId == "RemoveFromDatabase":
+            self.removeFromDatabaseByAlbumName.emit(self._album)
+        elif menuId == "RemoveFromDriver":
+            self.removeFromDriverByAlbumName.emit(self._album)
 
     def songMenuConnection(self, menuId, checked):
         if menuId == 'Play':
@@ -269,6 +283,10 @@ class MenuWorker(QObject):
             self.orderByKey.emit(self._modelType, 'created_date')
         elif menuId == "Order_group:radio:OrderByFileSize":
             self.orderByKey.emit(self._modelType, 'size')
+        elif menuId == "RemoveFromDatabase":
+            self.removeFromDatabaseByUrl.emit(self._url)
+        elif menuId == "RemoveFromDriver":
+            self.removeFromDriveByUrl.emit(self._url)
 
         if menuId.startswith('Order'):
             subMenuItems =  self.songMenu.getItemById('Order').subMenu.items
@@ -284,8 +302,12 @@ class MenuWorker(QObject):
     def folderMenuConnection(self, menuId, checked):
         if menuId == 'Play':
             self.playFolder.emit(self._folder)
-        if menuId == 'OpenFolder':
+        elif menuId == 'OpenFolder':
            openLocalUrl(self._folder)
+        elif menuId == "RemoveFromDatabase":
+            self.removeFromDatabaseByFolderName.emit(self._folder)
+        elif menuId == "RemoveFromDriver":
+            self.removeFromDriverByFolderName.emit(self._folder)
 
 
 if __name__ == "__main__":

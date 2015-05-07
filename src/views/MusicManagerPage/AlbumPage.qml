@@ -11,9 +11,30 @@ Rectangle {
         id: albumView
         model: albumListModel
         delegate: ItemDelegate{
-        	cover: GridView.view.model.get(index).cover
-        	name: GridView.view.model.get(index).name
-            count: GridView.view.model.get(index).count
+            cover: {
+                var obj = albumView.model.get(index)
+                if (obj){
+                    return obj.cover
+                }else{
+                    return ''
+                }
+            }
+            name: {
+                var obj = albumView.model.get(index)
+                if (obj){
+                    return obj.name
+                }else{
+                    return ''
+                }
+            }
+            count: {
+                var obj = albumView.model.get(index)
+                if (obj){
+                    return obj.count
+                }else{
+                    return ''
+                }
+            }
         }
     }
 

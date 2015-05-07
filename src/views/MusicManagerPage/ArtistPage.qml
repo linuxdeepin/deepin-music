@@ -11,9 +11,30 @@ Rectangle {
         id: artistView
         model: artistListModel
         delegate: ItemDelegate{
-            cover: artistView.model.get(index).cover
-            name: artistView.model.get(index).name
-            count: artistView.model.get(index).count
+            cover: {
+                var obj = artistView.model.get(index)
+                if (obj){
+                    return obj.cover
+                }else{
+                    return ''
+                }
+            }
+            name: {
+                var obj = artistView.model.get(index)
+                if (obj){
+                    return obj.name
+                }else{
+                    return ''
+                }
+            }
+            count: {
+                var obj = artistView.model.get(index)
+                if (obj){
+                    return obj.count
+                }else{
+                    return ''
+                }
+            }
         }
     }
 

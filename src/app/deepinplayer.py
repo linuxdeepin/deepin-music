@@ -189,17 +189,26 @@ class DeepinPlayer(QObject):
 
         #artist menu
         self.menuWorker.playArtist.connect(self.musicManageWorker.playArtist)
+        self.menuWorker.removeFromDatabaseByArtistName.connect(self.musicManageWorker.removeFromDatabaseByArtistName)
+        self.menuWorker.removeFromDriverByArtistName.connect(self.musicManageWorker.removeFromDriverByArtistName)
 
         #album menu
         self.menuWorker.playAlbum.connect(self.musicManageWorker.playAlbum)
+        self.menuWorker.removeFromDatabaseByAlbumName.connect(self.musicManageWorker.removeFromDatabaseByAlbumName)
+        self.menuWorker.removeFromDriverByAlbumName.connect(self.musicManageWorker.removeFromDriverByAlbumName)
 
         #song menu
         self.menuWorker.playSong.connect(self.musicManageWorker.playSong)
         self.menuWorker.playSong.connect(self.mediaPlayer.playLocalMedia)
         self.menuWorker.orderByKey.connect(self.musicManageWorker.orderByKey)
         self.menuWorker.openSongFolder.connect(self.musicManageWorker.openSongFolder)
+        self.menuWorker.removeFromDatabaseByUrl.connect(self.musicManageWorker.removeFromDatabaseByUrl)
+        self.menuWorker.removeFromDriveByUrl.connect(self.musicManageWorker.removeFromDriveByUrl)
+
         #folder menu
         self.menuWorker.playFolder.connect(self.musicManageWorker.playFolder)
+        self.menuWorker.removeFromDatabaseByFolderName.connect(self.musicManageWorker.removeFromDatabaseByFolderName)
+        self.menuWorker.removeFromDriverByFolderName.connect(self.musicManageWorker.removeFromDriverByFolderName)
 
     def dbWorkerConnect(self):
         self.dbWorker.restoreSongsSuccessed.connect(

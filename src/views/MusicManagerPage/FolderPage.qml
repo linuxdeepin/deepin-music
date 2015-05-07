@@ -16,9 +16,32 @@ Rectangle {
             spacing: 96
             contentWidth: 64
             height: 64 + 12 + 12 + 30
-            cover: folderView.model.get(index).cover
-            name:  UtilWorker.basename(folderView.model.get(index).name)
-            count: folderView.model.get(index).count
+
+            cover: {
+                var obj = folderView.model.get(index)
+                if (obj){
+                    return obj.cover
+                }else{
+                    return ''
+                }
+            }
+            name: {
+                var obj = folderView.model.get(index)
+                if (obj){
+                    return UtilWorker.basename(obj.name)
+                }else{
+                    return ''
+                }
+            }
+            count: {
+                var obj = folderView.model.get(index)
+                if (obj){
+                    return obj.count
+                }else{
+                    return ''
+                }
+            }
+
         }
     }
 
