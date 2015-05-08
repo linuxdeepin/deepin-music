@@ -943,8 +943,11 @@ class MusicManageWorker(QObject):
 
     def updatePage(self, pageName):
         if pageName == 'ArtistPage':
-            self.updateArtist()
+            # self.updateArtist()
+            pass
         elif pageName == 'AlbumPage':
-            self.updateAlbum()
+            # self.updateAlbum()
+            pass
         elif pageName == 'FolderPage':
-            self.updateFolder()
+            # self.updateFolder()
+            pass
