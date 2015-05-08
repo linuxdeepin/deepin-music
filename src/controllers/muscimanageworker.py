@@ -626,37 +626,40 @@ class MusicManageWorker(QObject):
             for obj in objs:
                 model.append(obj)
 
-    def removeFromDatabaseByUrl(self, url):
+    def removeFromDatabaseByUrl(self, url, actionType="removeSongByUrl"):
         '''
             remove song from DataBase by url
         '''
         if url in self._songsDict:
             songDict = self._songsDict[url]
             del self._songsDict[url]
-        if url in self._songObjs:
-            del self._songObjs[url]
+            if url in self._songObjs:
+                del self._songObjs[url]
 
-        self.removeFormModel('url', url, self._songObjsListModel)
-        self.removeFormModel('url', url, self._detailSongObjsListModel)
+            self.removeFormModel('url', url, self._songObjsListModel)
+            self.removeFormModel('url', url, self._detailSongObjsListModel)
 
-        songInstance = Song.getRecord(**{'url': url})
-        if songInstance:
-            artistName = songInstance.artist
-            albumName = songInstance.album
-            folderName = songInstance.folder
-            songInstance.delete_instance()
+            if actionType == "removeSongByUrl":
+                songInstance = Song.getRecord(**{'url': url})
+                if songInstance:
+                        songInstance.delete_instance()
+
+            artistName = songDict['artist']
+            albumName = songDict['album']
+            folderName = songDict['folder']
             self.updateArtistByUrl(artistName)
             self.updateAlbumByUrl(albumName)
             self.updateFolderByUrl(folderName)
+        self.songCountChanged.emit(len(self._songsDict))
 
-    def removeFromDriveByUrl(self, url):
+    def removeFromDriveByUrl(self, url, actionType="removeSongByUrl"):
         '''
             remove song from Drive by url
         '''
         df = QFile(url)
         flag = df.remove()
         if flag:
-            self.removeFromDatabaseByUrl(url)
+            self.removeFromDatabaseByUrl(url, actionType)
 
     def removeFormModel(self, key, value, model):
         '''
@@ -681,13 +684,22 @@ class MusicManageWorker(QObject):
                 'count': artist.songs.count(),
                 'cover': CoverWorker.getCoverPathByArtist(artist.name)
             }
-            self._artistsDict[artist.name] = artistDict
-            artistObj = QmlArtistObject(**artistDict)
-            self._artistObjs[artist.name] = artistObj
+            if artistDict['count'] > 0:
+                self._artistsDict[artist.name] = artistDict
+                artistObj = QmlArtistObject(**artistDict)
+                self._artistObjs[artist.name] = artistObj
+            else:
+                if artist.name in self._artistsDict:
+                    del self._artistsDict[artist.name]
+                if artist.name in self._artistObjs:
+                    del self._artistObjs[artist.name]
 
             for index, artistObj in enumerate(self._artistObjsListModel.data):
                 if artistObj.name == artistName:
-                    self._artistObjsListModel.setProperty(index, 'count', artistDict['count'])
+                    if artistDict['count'] > 0:
+                        self._artistObjsListModel.setProperty(index, 'count', artistDict['count'])
+                    else:
+                        self._artistObjsListModel.remove(index)
 
     def updateAlbumByUrl(self, albumName):
         '''
@@ -700,13 +712,22 @@ class MusicManageWorker(QObject):
                 'count': album.songs.count(),
                 'cover': CoverWorker.getCoverPathByArtist(album.name)
             }
-            self._albumsDict[album.name] = albumDict
-            albumObj = QmlArtistObject(**albumDict)
-            self._albumObjs[album.name] = albumObj
+            if albumDict['count'] > 0:
+                self._albumsDict[album.name] = albumDict
+                albumObj = QmlArtistObject(**albumDict)
+                self._albumObjs[album.name] = albumObj
+            else:
+                if album.name in self._albumsDict:
+                    del self._albumsDict[album.name]
+                if album.name in self._albumObjs:
+                    del self._albumObjs[album.name]
 
             for index, albumObj in enumerate(self._albumObjsListModel.data):
                 if albumObj.name == albumName:
-                    self._albumObjsListModel.setProperty(index, 'count', albumDict['count'])
+                    if albumDict['count'] > 0:
+                        self._albumObjsListModel.setProperty(index, 'count', albumDict['count'])
+                    else:
+                        self._albumObjsListModel.remove(index)
 
     def updateFolderByUrl(self, folderName):
         '''
@@ -719,19 +740,30 @@ class MusicManageWorker(QObject):
                 'count': folder.songs.count(),
                 'cover': CoverWorker.getCoverPathByArtist(folder.name)
             }
-            self._foldersDict[folder.name] = folderDict
-            folderObj = QmlArtistObject(**folderDict)
-            self._folderObjs[folder.name] = folderObj
+            if folderDict['count'] > 0:
+                self._foldersDict[folder.name] = folderDict
+                folderObj = QmlArtistObject(**folderDict)
+                self._folderObjs[folder.name] = folderObj
+            else:
+                if folder.name in self._foldersDict:
+                    del self._foldersDict[folder.name]
+                if folder.name in self._folderObjs:
+                    del self._folderObjs[folder.name]
 
             for index, folderObj in enumerate(self._folderObjsListModel.data):
                 if folderObj.name == folderName:
-                    self._folderObjsListModel.setProperty(index, 'count', folderDict['count'])
+                    if folderDict['count'] > 0:
+                        self._folderObjsListModel.setProperty(index, 'count', folderDict['count'])
+                    else:
+                        self._folderObjsListModel.remove(index)
 
     def removeFromDatabaseByArtistName(self, artistName):
         '''
             remove artist from DataBase and remove songs belong to this artist
         '''
-        _urls = self.updateArtistByArtist(artistName)
+        _urls = self.getSongUrlsByArtist(artistName)
+        query = Song.delete().where(Song.artist == artistName)
+        count = query.execute()
         for url in _urls:
             self.removeFromDatabaseByUrl(url)
 
@@ -739,30 +771,30 @@ class MusicManageWorker(QObject):
         '''
             remove artist from Driver and remove songs belong to this artist
         '''
-        _urls = self.updateArtistByArtist(artistName)
+        _urls = self.getSongUrlsByArtist(artistName)
+        query = Song.delete().where(Song.artist == artistName)
+        count = query.execute()
         for url in _urls:
             self.removeFromDriveByUrl(url)
 
-    def updateArtistByArtist(self, artistName):
+    def getSongUrlsByArtist(self, artistName):
         '''
-            remove artist from DataBase
+            get song urls by artist
         '''
         artist = Artist.getRecord(**{'name': artistName})
         _urls = []
         if artist:
             for song in artist.songs:
                 _urls.append(song.url)
-            artist.delete_instance()
-            del self._artistsDict[artistName]
-            del self._artistObjs[artistName]
-            self.removeFormModel('name', artistName, self._artistObjsListModel)
         return _urls
 
     def removeFromDatabaseByAlbumName(self, albumName):
         '''
             remove album from DataBase and remove songs belong to this artist
         '''
-        _urls = self.updateAlbumByAlbum(albumName)
+        _urls = self.getSongUrlsByAlbum(albumName)
+        query = Song.delete().where(Song.album == albumName)
+        count = query.execute()
         for url in _urls:
             self.removeFromDatabaseByUrl(url)
 
@@ -770,56 +802,52 @@ class MusicManageWorker(QObject):
         '''
             remove album from Driver and remove songs belong to this artist
         '''
-        _urls = self.updateAlbumByAlbum(albumName)
+        _urls = self.getSongUrlsByAlbum(albumName)
+        query = Song.delete().where(Song.album == albumName)
+        count = query.execute()
         for url in _urls:
             self.removeFromDriveByUrl(url)
 
-
-    def updateAlbumByAlbum(self, albumName):
+    def getSongUrlsByAlbum(self, albumName):
         '''
-            remove album from DataBase
+            get song urls by album
         '''
         album = Album.getRecord(**{'name': albumName})
         _urls = []
         if album:
             for song in album.songs:
                 _urls.append(song.url)
-            album.delete_instance()
-            del self._albumsDict[albumName]
-            del self._albumObjs[albumName]
-            self.removeFormModel('name', albumName, self._albumObjsListModel)
         return _urls
 
     def removeFromDatabaseByFolderName(self, folderName):
         '''
             remove folder from Driver and remove songs belong to this artist
         '''
-        _urls = self.updateFolderByFolder(folderName)
+        _urls = self.getSongUrlsByFolder(folderName)
+        query = Song.delete().where(Song.folder == folderName)
+        count = query.execute()
         for url in _urls:
-            self.removeFromDatabaseByUrl(url)
+            self.removeFromDatabaseByUrl(url, actionType="removeByFolder")
 
     def removeFromDriverByFolderName(self, folderName):
         '''
             remove folder from Driver and remove songs belong to this artist
         '''
-        _urls = self.updateFolderByFolder(folderName)
+        _urls = self.getSongUrlsByFolder(folderName)
+        query = Song.delete().where(Song.folder == folderName)
+        query.execute()
         for url in _urls:
-            self.removeFromDriveByUrl(url)
+            self.removeFromDriveByUrl(url, actionType="removeByFolder")
 
-
-    def updateFolderByFolder(self, folderName):
+    def getSongUrlsByFolder(self, folderName):
         '''
-            remove folder from DataBase
+            get song urls by folder
         '''
         folder = Folder.getRecord(**{'name': folderName})
         _urls = []
         if folder:
             for song in folder.songs:
                 _urls.append(song.url)
-            folder.delete_instance()
-            del self._foldersDict[folderName]
-            del self._folderObjs[folderName]
-            self.removeFormModel('name', folderName, self._folderObjsListModel)
         return _urls
 
     def updateArtist(self):
@@ -833,7 +861,8 @@ class MusicManageWorker(QObject):
             self._artistsDict[artist.name] = artistDict
             artistObj = QmlArtistObject(**artistDict)
             self._artistObjs[artist.name] = artistObj
-            self._artistObjsListModel.append(artistObj)
+            if artistDict['count'] > 0:
+                self._artistObjsListModel.append(artistObj)
             if not CoverWorker.isArtistCoverExisted(artist.name):
                 self.downloadArtistCover.emit(artist.name)
 
@@ -851,7 +880,9 @@ class MusicManageWorker(QObject):
             self._albumsDict[album.name] = albumDict
             albumObj = QmlAlbumObject(**albumDict)
             self._albumObjs[album.name] = albumObj
-            self._albumObjsListModel.append(albumObj)
+
+            if albumDict['count'] > 0:
+                self._albumObjsListModel.append(albumObj)
 
             if not CoverWorker.isAlbumCoverExisted(album.artist, album.name):
                 self.downloadAlbumCover.emit(album.artist, album.name)
@@ -869,7 +900,8 @@ class MusicManageWorker(QObject):
             self._foldersDict[folder.name] = folderDict
             folderObj = QmlFolderObject(**folderDict)
             self._folderObjs[folder.name] = folderObj
-            self._folderObjsListModel.append(folderObj)
+            if folderDict['count'] > 0:
+                self._folderObjsListModel.append(folderObj)
 
         self.orderModel('name', self._folderObjsListModel)
 

@@ -12,20 +12,10 @@ Item {
 
 
     function initConnect() {
-        MusicManageWorker.songCountChanged.connect(showArtistPage);
         MusicManageWorker.tipMessageChanged.connect(updateStatusText);
         MusicManageWorker.detailArtist.connect(showDetailArtist)
         MusicManageWorker.detailAlbum.connect(showDetailAlbum)
         MusicManageWorker.detailFolder.connect(showDetailFolder)
-    }
-
-    function showArtistPage(){
-        if (MusicManageWorker.songCount == 0){
-            linkTipText.visible = true;
-        }else{
-            linkTipText.visible = false;
-            updateWindow(catgoryCombox.currentIndex);
-        }
     }
 
     function showDetailArtist(name, index) {

@@ -224,7 +224,7 @@ class MenuWorker(QObject):
     def showSongMenu(self, modelType, url):
         self._modelType = modelType
         self._url = url
-        self.songMenu.itemClicked.emit('Order_group:radio:OrderBySongName', True)
+        # self.songMenu.itemClicked.emit('Order_group:radio:OrderBySongName', True)
         self.songMenu.show()
 
     def createFolderMenu(self):
