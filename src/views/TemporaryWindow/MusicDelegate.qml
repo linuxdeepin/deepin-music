@@ -11,8 +11,6 @@ Rectangle {
     height: 24
     color: "transparent"
 
-    signal menuShowed(int index)
-
     Row {
 
         anchors.fill: parent
@@ -122,7 +120,7 @@ Rectangle {
                 playButton.visible = false;
             }
             else if (mouse.button == Qt.RightButton){
-                mediaItem.menuShowed(index);
+                mediaItem.ListView.view.menuShowed(url);
             }
         }
     }

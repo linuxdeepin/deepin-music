@@ -199,7 +199,7 @@ Item {
         }
 
         onMenuShowed: {
-            MenuWorker.showSettingMenu();
+            MenuWorker.settingMenuShow('SimpleWindow');
         }
         
 

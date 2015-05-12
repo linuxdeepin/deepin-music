@@ -10,7 +10,7 @@ from .utils import registerContext, openLocalUrl
 from deepin_menu.menu import *
 from dwidgets import ModelMetaclass
 from log import logger
-
+from .playlistworker import PlaylistWorker
 
 
 class MenuI18nWorker(QObject):
@@ -19,7 +19,8 @@ class MenuI18nWorker(QObject):
 
     __Fields__ = (
         ('addMusic', 'QString', u'添加歌曲'),
-        ('easyMode', 'QString', u'简洁模式'),
+        ('simpleMode', 'QString', u'简洁模式'),
+        ('fullMode', 'QString', u'完整模式'),
         ('file', 'QString', u'文件'),
         ('folder', 'QString', u'文件夹'),
         ('miniMode', 'QString', u'迷你模式'),
@@ -27,11 +28,15 @@ class MenuI18nWorker(QObject):
         ('setting', 'QString', u'设置'),
         ('exit', 'QString', u'退出'),
         ('play', 'QString', u'播放'),
+        ('download', 'QString', u'下载'),
+        ('temporary', 'QString', u'试听歌单'),
+        ('favorite', 'QString', u'我的收藏'),
         ('addToSinglePlaylist', 'QString', u'添加到歌单'),
         ('addToMutiPlaylist', 'QString', u'添加到多个歌单'),
         ('newPlaylist', 'QString', u'新建歌单'),
         ('removeFromDatabase', 'QString', u'从歌库中移除'),
         ('removeFromDriver', 'QString', u'从硬盘中移除'),
+        ('removeFromPlaylist', 'QString', u'从列表中移除'),
         ('changeCover', 'QString', u'更换封面'),
         ('order', 'QString', u'排序'),
         ('orderBySongName', 'QString', u'按歌曲名'),
@@ -43,6 +48,15 @@ class MenuI18nWorker(QObject):
         ('orderByFileSize', 'QString', u'按文件大小'),
         ('openFolder', 'QString', u'打开目录'),
         ('information', 'QString', u'信息'),
+        ('playAll', 'QString', u'播放全部'),
+        ('rename', 'QString', u'重命名'),
+        ('downloadAll', 'QString', u'下载全部'),
+        ('exportPlaylist', 'QString', u'导出歌单'),
+        ('importPlaylist', 'QString', u'导入歌单'),
+        ('deletePlaylist', 'QString', u'删除歌单'),
+        ('startDownload', 'QString', u'开始下载'),
+        ('pauseDownload', 'QString', u'暂停下载'),
+        ('deleteDownload', 'QString', u'删除下载'),
     )
 
     __contextName__ = "MenuI18nWorker"
@@ -57,7 +71,7 @@ menuI18nWorker = MenuI18nWorker()
 SettingMenuItems = [
     ('AddMusic', menuI18nWorker.addMusic, (), [("File", menuI18nWorker.file), ("Folder", menuI18nWorker.folder)]),
     None,
-    ('EasyMode', menuI18nWorker.easyMode),
+    ('WindowMode', menuI18nWorker.simpleMode),
     ('MiniMode', menuI18nWorker.miniMode),
     None,
     ('CheckUpdate', menuI18nWorker.checkUpdate),
@@ -130,6 +144,65 @@ FolderMenuItems = [
 ]
 
 
+PlaylistLocalSongMenuItems = [
+    ('Play', menuI18nWorker.play),
+    None,
+    ('AddToSinglePlaylist', menuI18nWorker.addToSinglePlaylist, (), []),
+    ('AddToMutiPlaylist', menuI18nWorker.addToMutiPlaylist),
+    ('NewPlaylist', menuI18nWorker.newPlaylist),
+    None,
+    ('RemoveFromPlaylist', menuI18nWorker.removeFromPlaylist),
+    None,
+    ('OpenFolder', menuI18nWorker.openFolder),
+    ('Information', menuI18nWorker.information)
+]
+
+
+PlaylistOnlineSongMenuItems = [
+    ('Play', menuI18nWorker.play),
+    ('Download', menuI18nWorker.download),
+    None,
+    ('AddToSinglePlaylist', menuI18nWorker.addToSinglePlaylist, (), []),
+    ('AddToMutiPlaylist', menuI18nWorker.addToMutiPlaylist),
+    ('NewPlaylist', menuI18nWorker.newPlaylist),
+    None,
+    ('RemoveFromPlaylist', menuI18nWorker.removeFromPlaylist),
+    None,
+    ('Information', menuI18nWorker.information)
+]
+
+
+PlaylistMenuItems = [
+    ('PlayAll', menuI18nWorker.playAll),
+    None,
+    ('Rename', menuI18nWorker.rename),
+    ('DownloadAll', menuI18nWorker.downloadAll),
+    None,
+    ('ExportPlaylist', menuI18nWorker.exportPlaylist),
+    ('ImportPlaylist', menuI18nWorker.importPlaylist),
+    None,
+    ('DeletePlaylist', menuI18nWorker.deletePlaylist),
+]
+
+FTPlaylistMenuItems = [
+    ('PlayAll', menuI18nWorker.playAll),
+    ('DownloadAll', menuI18nWorker.downloadAll),
+]
+
+
+TemporaryMenuItems = [
+    ('Play', menuI18nWorker.play),
+    ('RemoveFromPlaylist', menuI18nWorker.removeFromPlaylist),
+]
+
+DownloadMenuItems = [
+    ('StartDownload', menuI18nWorker.startDownload),
+    ('Play', menuI18nWorker.play),
+    None,
+    ('AddToSinglePlaylist', menuI18nWorker.addToSinglePlaylist),
+    None,
+    ('DeleteDownload', menuI18nWorker.deleteDownload)
+]
 
 class DMenu(Menu):
     """docstring for DMenu"""
@@ -144,13 +217,20 @@ class MenuWorker(QObject):
 
     __contextName__ = 'MenuWorker'
 
-    settingMenuShow = pyqtSignal()
+    settingMenuShow = pyqtSignal('QString')
     artistMenuShow = pyqtSignal('QString')
     albumMenuShow = pyqtSignal('QString')
     songMenuShow = pyqtSignal('QString', 'QString')
     folderMenuShow = pyqtSignal('QString')
+    playlistSongMenuShow = pyqtSignal('QString', 'QString')
+    playlistNavigationMenuShow = pyqtSignal('QString', int)
+    ftPlaylistNavigationMenuShow = pyqtSignal('QString')
+    temporaryMenuShowed = pyqtSignal('QString', 'QString')
+    downloadMenuShowed = pyqtSignal(int, bool)
 
     #setting Menu
+    simpleTrigger = pyqtSignal()
+    fullTrigger = pyqtSignal()
     miniTrigger = pyqtSignal()
     addSongFile = pyqtSignal()
     addSongFolder = pyqtSignal()
@@ -179,6 +259,27 @@ class MenuWorker(QObject):
     removeFromDatabaseByFolderName = pyqtSignal('QString')
     removeFromDriverByFolderName = pyqtSignal('QString')
 
+    #playlist menu:
+    playMusicByUrl = pyqtSignal('QString')
+    removeFromPlaylist = pyqtSignal('QString', 'QString')
+
+    #playlist navigation menu
+    playFTAllSongs = pyqtSignal('QString')
+    playNavigationAllSongs = pyqtSignal('QString', int)
+    deletePlaylist = pyqtSignal('QString')
+
+    # temporary menu
+    playMusicInTemporary = pyqtSignal('QString')
+
+    #download menu
+    switchDownloadedStatus = pyqtSignal(int, bool)
+    playMusicByIdSignal = pyqtSignal(int)
+    removeFromDownloadList = pyqtSignal(int)
+
+    #public menu:
+    addSongToPlaylist = pyqtSignal('QString', 'QString')
+    addSongsToPlaylist = pyqtSignal('QString', 'QString', 'QString')
+
     @registerContext
     def __init__(self):
         super(MenuWorker, self).__init__()
@@ -187,16 +288,34 @@ class MenuWorker(QObject):
         self._url = ''
         self._folder = ''
         self._modelType = ''
+        self._windowMode = ''
+        self._playlist = ''
+        self._playlistNavigationIndex = 0
+        self._songId = 0
+        self._downloaded = False
         self.createSettingMenu()
         self.createArtistMenu()
         self.createAlbumMenu()
         self.createSongMenu()
         self.createFolderMenu()
+        self.createPlaylistSongMenu()
+        self.createPlaylistNavgationMenu()
+        self.createFTPlaylistNavgationMenu()
+        self.createTemporaryMenu()
+        self.createDownloadMenu()
 
     def createSettingMenu(self):
         self.settingMenu = DMenu(SettingMenuItems)
         self.settingMenu.itemClicked.connect(self.settingMenuConnection)
-        self.settingMenuShow.connect(self.settingMenu.show)
+        self.settingMenuShow.connect(self.showSettingMenu)
+
+    def showSettingMenu(self, windowMode):
+        self._windowMode = windowMode
+        if windowMode == 'MainWindow':
+            self.settingMenu.setItemText('WindowMode', menuI18nWorker.simpleMode)
+        elif windowMode == 'SimpleWindow':
+            self.settingMenu.setItemText('WindowMode', menuI18nWorker.fullMode)
+        self.settingMenu.show()
 
     def createArtistMenu(self):
         self.artistMenu = DMenu(ArtistMenuItems)
@@ -205,6 +324,7 @@ class MenuWorker(QObject):
 
     def showArtistMenu(self, artist):
         self._artist = artist
+        self.addPlaylistMenuItemsForMusicManager(self.artistMenu)
         self.artistMenu.show()
 
     def createAlbumMenu(self):
@@ -214,6 +334,7 @@ class MenuWorker(QObject):
 
     def showAlbumMenu(self, album):
         self._album = album
+        self.addPlaylistMenuItemsForMusicManager(self.albumMenu)
         self.albumMenu.show()
 
     def createSongMenu(self):
@@ -224,7 +345,7 @@ class MenuWorker(QObject):
     def showSongMenu(self, modelType, url):
         self._modelType = modelType
         self._url = url
-        # self.songMenu.itemClicked.emit('Order_group:radio:OrderBySongName', True)
+        self.addPlaylistMenuItemsForMusicManager(self.songMenu)
         self.songMenu.show()
 
     def createFolderMenu(self):
@@ -234,10 +355,76 @@ class MenuWorker(QObject):
 
     def showFolderMenu(self, folder):
         self._folder = folder
+        self.addPlaylistMenuItemsForMusicManager(self.folderMenu)
         self.folderMenu.show()
 
+    def createPlaylistSongMenu(self):
+        self.playlistLocalSongMenu = DMenu(PlaylistLocalSongMenuItems)
+        self.playlistOnlineSongMenu = DMenu(PlaylistOnlineSongMenuItems)
+        self.playlistLocalSongMenu.itemClicked.connect(self.playlistLocalSongMenuConnection)
+        self.playlistOnlineSongMenu.itemClicked.connect(self.playlistOnlineSongMenuConnection)
+        self.playlistSongMenuShow.connect(self.showPlaylistSongMenu)
+
+    def showPlaylistSongMenu(self, playlist, url):
+        self._playlist = playlist
+        self._url = url
+        if url.startswith('http'):
+            self.addPlaylistMenuItemsForPlaylist(self.playlistOnlineSongMenu)
+            self.playlistOnlineSongMenu.show()
+        else:
+            self.addPlaylistMenuItemsForPlaylist(self.playlistLocalSongMenu)
+            self.playlistLocalSongMenu.show()
+
+    def createPlaylistNavgationMenu(self):
+        self.playlistNavigationMenu = DMenu(PlaylistMenuItems)
+        self.playlistNavigationMenu.itemClicked.connect(self.playlistNavigationMenuConnection)
+        self.playlistNavigationMenuShow.connect(self.showPlaylistNavigationMenu)
+
+    def showPlaylistNavigationMenu(self, playlistName, index):
+        self._playlist = playlistName
+        self._playlistNavigationIndex = index
+        self.playlistNavigationMenu.show()
+
+    def createFTPlaylistNavgationMenu(self):
+        self.ftPlaylistNavigationMenu = DMenu(FTPlaylistMenuItems)
+        self.ftPlaylistNavigationMenu.itemClicked.connect(self.ftPlaylistNavigationMenuConnection)
+        self.ftPlaylistNavigationMenuShow.connect(self.showFTPlaylistNavgationMenu)
+
+    def showFTPlaylistNavgationMenu(self, playlistName):
+        self._playlist = playlistName
+        self.ftPlaylistNavigationMenu.show()
+
+    def createTemporaryMenu(self):
+        self.temporaryMenu = DMenu(TemporaryMenuItems)
+        self.temporaryMenu.itemClicked.connect(self.temporaryMenuConnection)
+        self.temporaryMenuShowed.connect(self.showTemporaryMenu)
+
+    def showTemporaryMenu(self, playlistName, url):
+        self._playlist = playlistName
+        self._url = url
+        self.temporaryMenu.show()
+
+    def createDownloadMenu(self):
+        self.downloadMenu = DMenu(DownloadMenuItems)
+        self.downloadMenu.itemClicked.connect(self.downloadMenuConnection)
+        self.downloadMenuShowed.connect(self.showDownloadMenu)
+
+    def showDownloadMenu(self, songId, downloaded):
+        self._songId =songId
+        self._downloaded = downloaded
+        if self._downloaded:
+            self.downloadMenu.setItemText('StartDownload', menuI18nWorker.pauseDownload)
+        else:
+            self.downloadMenu.setItemText('StartDownload', menuI18nWorker.startDownload)
+        self.downloadMenu.show()
+
     def settingMenuConnection(self, menuId, checked):
-        if menuId == "MiniMode":
+        if menuId == 'WindowMode':
+            if self._windowMode == 'MainWindow':
+                self.simpleTrigger.emit()
+            elif self._windowMode == 'SimpleWindow':
+                self.fullTrigger.emit()
+        elif menuId == "MiniMode":
             self.miniTrigger.emit()
         elif menuId == "File":
             self.addSongFile.emit()
@@ -255,6 +442,11 @@ class MenuWorker(QObject):
             self.removeFromDatabaseByArtistName.emit(self._artist)
         elif menuId == "RemoveFromDriver":
             self.removeFromDriverByArtistName.emit(self._artist)
+        else:
+            if menuId.startswith('playlist_group'):
+                playlistName = menuId.split(':')[-1]
+                if playlistName in PlaylistWorker._playlists:
+                    self.addSongsToPlaylist.emit(self._artist, playlistName, 'Artist')
 
     def albumMenuConnection(self, menuId, checked):
         if menuId == "Play":
@@ -263,6 +455,11 @@ class MenuWorker(QObject):
             self.removeFromDatabaseByAlbumName.emit(self._album)
         elif menuId == "RemoveFromDriver":
             self.removeFromDriverByAlbumName.emit(self._album)
+        else:
+            if menuId.startswith('playlist_group'):
+                playlistName = menuId.split(':')[-1]
+                if playlistName in PlaylistWorker._playlists:
+                    self.addSongsToPlaylist.emit(self._album, playlistName, 'Album')
 
     def songMenuConnection(self, menuId, checked):
         if menuId == 'Play':
@@ -287,6 +484,11 @@ class MenuWorker(QObject):
             self.removeFromDatabaseByUrl.emit(self._url)
         elif menuId == "RemoveFromDriver":
             self.removeFromDriveByUrl.emit(self._url)
+        else:
+            if menuId.startswith('playlist_group'):
+                playlistName = menuId.split(':')[-1]
+                if playlistName in PlaylistWorker._playlists:
+                    self.addSongToPlaylist.emit(self._url, playlistName)
 
         if menuId.startswith('Order'):
             subMenuItems =  self.songMenu.getItemById('Order').subMenu.items
@@ -308,6 +510,81 @@ class MenuWorker(QObject):
             self.removeFromDatabaseByFolderName.emit(self._folder)
         elif menuId == "RemoveFromDriver":
             self.removeFromDriverByFolderName.emit(self._folder)
+        else:
+            if menuId.startswith('playlist_group'):
+                playlistName = menuId.split(':')[-1]
+                if playlistName in PlaylistWorker._playlists:
+                    self.addSongsToPlaylist.emit(self._folder, playlistName, 'Folder')
+
+    def playlistLocalSongMenuConnection(self, menuId, checked):
+        if menuId == 'Play':
+            self.playMusicByUrl.emit(self._url)
+        elif menuId == 'OpenFolder':
+            self.openSongFolder.emit(self._url)
+        elif menuId == 'RemoveFromPlaylist':
+            self.removeFromPlaylist.emit(self._playlist, self._url)
+        else:
+            if menuId.startswith('playlist_group'):
+                playlistName = menuId.split(':')[-1]
+                if playlistName in PlaylistWorker._playlists:
+                    self.addSongToPlaylist.emit(self._url, playlistName)
+
+    def playlistOnlineSongMenuConnection(self, menuId, checked):
+        if menuId == 'Play':
+            self.playMusicByUrl.emit(self._url)
+        elif menuId == 'RemoveFromPlaylist':
+            self.removeFromPlaylist.emit(self._playlist, self._url)
+
+    def addPlaylistMenuItemsForMusicManager(self, menu, menuId='AddToSinglePlaylist'):
+        playlistSubMenuItems = []
+        for key in PlaylistWorker._playlists:
+            if key == 'temporary':
+                subMenuID = menuI18nWorker.temporary
+            elif key == 'favorite':
+                subMenuID = menuI18nWorker.favorite
+            else:
+                subMenuID = key
+            playlistSubMenuItems.append((key, subMenuID))
+        playlistSubMenu = CheckboxMenu('playlist_group', playlistSubMenuItems)
+        menu.getItemById(menuId).setSubMenu(playlistSubMenu)
+
+    def addPlaylistMenuItemsForPlaylist(self, menu, menuId='AddToSinglePlaylist'):
+        playlistSubMenuItems = []
+        for key in PlaylistWorker._playlists:
+            if key != self._playlist:
+                if key == 'temporary':
+                    subMenuID = menuI18nWorker.temporary
+                elif key == 'favorite':
+                    subMenuID = menuI18nWorker.favorite
+                else:
+                    subMenuID = key
+                playlistSubMenuItems.append((key, subMenuID))
+        playlistSubMenu = CheckboxMenu('playlist_group', playlistSubMenuItems)
+        menu.getItemById(menuId).setSubMenu(playlistSubMenu)
+
+    def playlistNavigationMenuConnection(self, menuId, checked):
+        if menuId == 'PlayAll':
+            self.playNavigationAllSongs.emit(self._playlist, self._playlistNavigationIndex)
+        elif menuId == 'DeletePlaylist':
+            self.deletePlaylist.emit(self._playlist)
+
+    def ftPlaylistNavigationMenuConnection(self, menuId, checked):
+        if menuId == 'PlayAll':
+            self.playFTAllSongs.emit(self._playlist)
+
+    def temporaryMenuConnection(self, menuId, checked):
+        if menuId == 'Play':
+            self.playMusicInTemporary.emit(self._url)
+        elif menuId == 'RemoveFromPlaylist':
+            self.removeFromPlaylist.emit(self._playlist, self._url)
+
+    def downloadMenuConnection(self, menuId, checked):
+        if menuId == 'StartDownload':
+            self.switchDownloadedStatus.emit(self._songId, not self._downloaded)
+        elif menuId == 'Play':
+            self.playMusicByIdSignal.emit(self._songId)
+        elif menuId == 'DeleteDownload':
+            self.removeFromDownloadList.emit(self._songId)
 
 
 if __name__ == "__main__":

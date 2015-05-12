@@ -47,26 +47,21 @@ ListModel {
         listModel.setPropertySignal(index, property, value);
     }
 
-    // onPymodelChanged:{
-    //     listModel.clear();
-    //     initModel();
-    // }
-
     Component.onCompleted: {
         initModel();
-        listModel.appendSignal.connect(pymodel.qml2Py_appendSignal)
-        listModel.clearSignal.connect(pymodel.qml2py_clearSignal)
-        listModel.insertSignal.connect(pymodel.qml2py_insertSignal)
-        listModel.moveSignal.connect(pymodel.qml2py_moveSignal)
-        listModel.removeSignal.connect(pymodel.qml2py_removeSignal)
-        listModel.setSignal.connect(pymodel.qml2py_setSignal)
-        listModel.setPropertySignal.connect(pymodel.qml2py_setPropertySignal)
-        pymodel.py2qml_appendSignal.connect(listModel.append)
-        pymodel.py2qml_clearSignal.connect(listModel.clear)
-        pymodel.py2qml_insertSignal.connect(listModel.insert)
-        pymodel.py2qml_moveSignal.connect(listModel.move)
-        pymodel.py2qml_removeSignal.connect(listModel.remove)
-        pymodel.py2qml_setSignal.connect(listModel.set)
-        pymodel.py2qml_setPropertySignal.connect(listModel.setProperty)
+        listModel.appendSignal.connect(pymodel.qml2Py_appendSignal);
+        listModel.clearSignal.connect(pymodel.qml2py_clearSignal);
+        listModel.insertSignal.connect(pymodel.qml2py_insertSignal);
+        listModel.moveSignal.connect(pymodel.qml2py_moveSignal);
+        listModel.removeSignal.connect(pymodel.qml2py_removeSignal);
+        listModel.setSignal.connect(pymodel.qml2py_setSignal);
+        listModel.setPropertySignal.connect(pymodel.qml2py_setPropertySignal);
+        pymodel.py2qml_appendSignal.connect(listModel.append);
+        pymodel.py2qml_clearSignal.connect(listModel.clear);
+        pymodel.py2qml_insertSignal.connect(listModel.insert);
+        pymodel.py2qml_moveSignal.connect(listModel.move);
+        pymodel.py2qml_removeSignal.connect(listModel.remove);
+        pymodel.py2qml_setSignal.connect(listModel.set);
+        pymodel.py2qml_setPropertySignal.connect(listModel.setProperty);
     }
 }

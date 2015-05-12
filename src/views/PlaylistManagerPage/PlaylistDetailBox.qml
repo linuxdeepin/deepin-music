@@ -14,7 +14,7 @@ Rectangle {
 
     function getModel(){
         if (currentPlaylistName){
-            var model = eval(currentPlaylistName)
+            var model = eval('Playlist_' + Qt.md5(currentPlaylistName));
             return model;
         }
     }
@@ -123,7 +123,8 @@ Rectangle {
                     spacing: 14
                     snapMode:ListView.SnapToItem
 
-                    signal playMusicByUrl(string url)
+                    signal playMusicByUrl(string songUrl)
+                    signal playlistMenuShow(string songUrl)
 
                     DScrollBar {
                         flickable: parent

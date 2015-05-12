@@ -14,10 +14,13 @@ Item {
         WindowManageWorker.simpleWindowShowed.connect(showSimpleWindow);
         WindowManageWorker.miniWindowShowed.connect(showMiniWindow);
         Qt.globalPos = WindowManageWorker.cursorPos;
-        Qt.createItems = []
-        Qt.destoryItems = []
+        Qt.createItems = [];
+        Qt.destoryItems = [];
+        MenuWorker.simpleTrigger.connect(showSimpleWindow);
+        MenuWorker.fullTrigger.connect(showMainWindow)
         MenuWorker.miniTrigger.connect(showMiniWindow);
         MenuWorker.settingTrigger.connect(loadSettingPage);
+        MenuWorker.exitTrigger.connect(closeAll)
     }
 
     function showMainWindow() {
@@ -75,7 +78,7 @@ Item {
         }
         
         onMenuShowed: {
-            MenuWorker.settingMenuShow();
+            MenuWorker.settingMenuShow('MainWindow');
         }
 
         onShowMinimized: {

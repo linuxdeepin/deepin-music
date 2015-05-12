@@ -59,14 +59,14 @@ class QmlOnlineSongObject(QObject):
 
         ('albumImage_100x100', 'QString'),
         ('albumImage_500x500', 'QString'),
-        ('playlinkUrl', 'QString')
+        ('playlinkUrl', 'QString'),
+
+        ('created_date', float),
     )
 
     coverChanged = pyqtSignal('QString')
 
     def initialize(self, *agrs, **kwargs):
-        if 'created_date' in kwargs:
-            kwargs['created_date'] = kwargs['created_date'].strftime('%Y-%m-%d %H:%M:%S')
         self.cover = CoverWorker.getOnlineCoverPathByArtistSong(self.artist, self.title)
         self.setDict(kwargs)
 

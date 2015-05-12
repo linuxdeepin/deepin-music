@@ -115,7 +115,6 @@ class MediaPlayer(QObject):
     @pyqtSlot('QString')
     def setPlaylistByName(self, name):
         playlistWorker = contexts['PlaylistWorker']
-
         playbackMode = self._playbackMode
         playlist = playlistWorker.getPlaylistByName(name)
         if playlist:
@@ -124,7 +123,6 @@ class MediaPlayer(QObject):
             playlist.setPlaybackMode(playbackMode)
             self.setPlaylist(playlist)
             self.setCurrentIndex(0)
-
 
     @pyqtProperty(int, notify=playbackModeChanged)
     def playbackMode(self):
@@ -334,7 +332,7 @@ class MediaPlayer(QObject):
     @pyqtSlot(int)
     def playMediaByIndex(self, index):
         urls = self._playlist.urls
-        if index < len(urls) and index > 0:
+        if index < len(urls) and index >= 0:
             url = urls[index]
             if url.startswith('http'):
                 self.requestMusic.emit(url)
@@ -353,7 +351,7 @@ class MediaPlayer(QObject):
     def bufferChange(self, progress):
         self.bufferStatusChanged.emit(progress)
 
-    @pyqtSlot('QVariant')
+    @pyqtSlot('QString')
     def playLocalMedia(self, url):
         urls = self._playlist.urls
         index = urls.index(url)

@@ -2,6 +2,7 @@ import QtQuick 2.3
 import QtQuick.Controls 1.0
 import QtQuick.Controls.Styles 1.1
 import DMusic 1.0
+import "../DMusicWidgets"
 import "../DMusicWidgets/SimplePlayer"
 import "../DMusicWidgets/CustomSlider"
 
@@ -249,19 +250,24 @@ Rectangle{
                                     height: rowLayout.height
                                     color: 'transparent'
                                 }
-
                                 Rectangle{
                                     id: volumeRect
                                     width:volumeBar.width - volumeButton.width
                                     height: rowLayout.height
                                     color: 'transparent'
-                                    Slider {
-                                        id: volumeSlider
-                                        anchors.centerIn: parent
-                                        width: parent.width
-                                        height: 6
-                                        onValueChanged:{
-                                            playBottomBar.volumeChanged(value);
+                                    Rectangle {
+                                        anchors.fill: parent
+                                        anchors.leftMargin: 4
+                                        anchors.rightMargin: 4
+                                        color: 'transparent'
+                                        DSlider {
+                                            id: volumeSlider
+                                            anchors.centerIn: parent
+                                            width: parent.width
+                                            height: 6
+                                            onValueChanged:{
+                                                playBottomBar.volumeChanged(value)
+                                            }
                                         }
                                     }
                                 }

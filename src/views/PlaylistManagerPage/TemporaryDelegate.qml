@@ -11,8 +11,8 @@ Rectangle{
     height: 16
     color: "transparent"
 
-    signal clicked()
-
+    signal leftClicked()
+    signal rightClicked()
 
     Row {
         spacing: 10
@@ -96,11 +96,15 @@ Rectangle{
             }
         }
         onClicked: {
-            if (temporaryDelegate.state == 'Active'){
-            }else{
-                temporaryDelegate.state = "Checked";
+            if (mouse.button == Qt.LeftButton){
+                if (temporaryDelegate.state == 'Active'){
+                }else{
+                    temporaryDelegate.state = "Checked";
+                }
+                temporaryDelegate.leftClicked();
+            }else if (mouse.button == Qt.RightButton){
+                temporaryDelegate.rightClicked();
             }
-            temporaryDelegate.clicked();
         }
     }
 }

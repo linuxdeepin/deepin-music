@@ -21,18 +21,6 @@ Rectangle {
     signal addPlaylistName(string name)
     signal playlistNameChanged(string name)
 
-
-    function checkedByName(name) {
-         for (var i = 0 ; i< PlaylistWorker.playlistNames.length; i++){
-            if (PlaylistWorker.playlistNames[i].name == name){
-                playlistNavgationBar.customPlaylistView.currentIndex = i;
-                playlistNavgationBar.customPlaylistView.currentItem.state = "Checked";
-                playlistNavgationBar.customPlaylistView.itemClicked(name);
-                return
-            }
-        }
-    }
-
     Column {
 
         
@@ -151,6 +139,7 @@ Rectangle {
                 snapMode:ListView.SnapToItem
 
                 signal itemClicked(string name)
+                signal menuShowed(string name, int index)
 
                 DScrollBar {
                     flickable: parent
@@ -158,88 +147,14 @@ Rectangle {
                 }
             }
         }
-        
-        Connections {
-            target: addButton
-            onClicked: {
-            	playlistInputTextBox.visible = true;
-                playlistInputText.focus = true
-                playlistInputText.text = I18nWorker.newPlaylist + (customPlaylistView.count + 1)
-            	customPlaylistView.anchors.top =  playlistInputTextBox.bottom;
-                customPlaylistView.anchors.topMargin =  14;
-            }
-        }
+    }
 
-        Connections {
-            target: playlistInputText
-            onAccepted:{
-            	playlistInputTextBox.visible = false;
-                playlistInputText.focus = false;
-            	customPlaylistView.anchors.top =  playlistTitle.bottom;
-                customPlaylistView.anchors.topMargin =  0;
-
-                playlistNavgationBar.addPlaylistName(playlistInputText.text)
-
-                playlistNavgationBar.checkedByName(playlistInputText.text);
-
-            }
-        }
-
-        Connections {
-            target: starDelegate
-            onClicked: {
-                if (temporaryDelegate.state == 'Active'){
-
-                }else {
-                    temporaryDelegate.state = '!Checked'
-                }
-                
-                customPlaylistView.currentIndex = -1
-                playlistNavgationBar.playlistNameChanged(starDelegate.name);
-            } 
-        }
-
-        Connections {
-            target: temporaryDelegate
-            onClicked: {
-                if (starDelegate.state == 'Active'){
-
-                }else {
-                    starDelegate.state = '!Checked'
-                }
-                
-                customPlaylistView.currentIndex = -1
-                playlistNavgationBar.playlistNameChanged(temporaryDelegate.name);
-            } 
-        }
-
-        Connections {
-            target: customPlaylistView
-            onItemClicked: {
-                if (starDelegate.state == 'Active'){
-
-                }else {
-                    starDelegate.state = '!Checked'
-                }
-                if (temporaryDelegate.state == 'Active'){
-
-                }else {
-                    temporaryDelegate.state = '!Checked'
-                }
-                if (name != _playlistName){
-                    playlistNavgationBar.playlistNameChanged(name);
-                    _playlistName = name;
-                }
-            } 
-        }
-
-        // Connections {
-        //     target: customPlaylistView
-        //     onCurrentIndexChanged: {
-        //         if (customPlaylistView.currentItem){
-        //             customPlaylistView.currentItem.state = 'Checked'
-        //         }                
-        //     } 
-        // }
+    PlaylistNavgationBarController{
+        playlistNavgationBar: playlistNavgationBar
+        addButton: addButton
+        starDelegate: starDelegate
+        temporaryDelegate: temporaryDelegate
+        playlistInputText: playlistInputText
+        customPlaylistView: customPlaylistView
     }
 }

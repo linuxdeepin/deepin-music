@@ -25,10 +25,10 @@ DRectWithCorner {
         var playlist = MediaPlayer.playlist;
         if (playlist){
             var name = playlist.name
-            var model = eval(name)
+            var model = eval('Playlist_' + Qt.md5(name));
             return model;
         }else{
-            return null;
+            return EmptyModel;
         }
     }
 
@@ -37,7 +37,7 @@ DRectWithCorner {
         anchors.fill: parent
         hoverEnabled: true
         propagateComposedEvents: false
-        acceptedButtons: Qt.LeftButton
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
 
         onWheel: {
             wheel.accepted = true;
@@ -146,7 +146,8 @@ DRectWithCorner {
                 spacing: 8
                 snapMode:ListView.SnapToItem
 
-                signal playMusicByUrl(string url)
+                signal playMusicByUrl(string songUrl)
+                signal menuShowed(string songUrl)
 
                 DScrollBar {
                     flickable: parent

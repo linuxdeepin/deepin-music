@@ -135,6 +135,12 @@ class DMediaPlaylist(QMediaPlaylist):
             self._medias.append(songObj)
         super(DMediaPlaylist, self).addMedia(mediaContent)
 
+    def removeMediaByUrl(self, url):
+        index = self._urls.index(url)
+        self._urls.remove(url)
+        self.removeMedia(index)
+        self._medias.remove(index)
+
 
 class PlaylistWorker(QObject):
 
@@ -144,16 +150,21 @@ class PlaylistWorker(QObject):
     playlistNamesChanged = pyqtSignal('QVariant')
     currentPlaylistChanged = pyqtSignal('QString')
 
+    _playlists = OrderedDict()
+
     @registerContext
     def __init__(self, parent=None):
         super(PlaylistWorker, self).__init__(parent)
 
-        self._playlists = OrderedDict()
+        
         self._playlistNames = []
         self._currentPlaylist = None
 
         self.createPlaylistByName('temporary')
         self.createPlaylistByName('favorite')
+
+        self.emptyListModel = DListModel(QmlSongObject)
+        self.setContext('EmptyModel', self.emptyListModel)
 
     def savePlaylists(self):
         result = OrderedDict()
@@ -180,9 +191,16 @@ class PlaylistWorker(QObject):
             self._playlists[name].save(f, 'm3u')
             f.close()
 
+    @classmethod
+    def md5(cls, value):
+        import hashlib
+        s = '%s' % (value)
+        md5Value = hashlib.md5(s.encode('utf-8'))
+        return md5Value.hexdigest()
+
     def setContext(self, name, obj):
         if contexts['MainWindow']:
-            contexts['MainWindow'].setContext(name, obj)
+            contexts['MainWindow'].setContext('Playlist_%s' % self.md5(name), obj)
 
     @pyqtSlot('QString', result=DListModel)
     def getMediasByName(self, name):
@@ -239,6 +257,13 @@ class PlaylistWorker(QObject):
 
         return self._playlists[name]
 
+    @pyqtSlot('QString')
+    def deletePlaylist(self, name):
+        print name, self._playlistNames
+        self._playlistNames.remove({'name': name})
+        self._playlists.pop(name)
+        self.playlistNamesChanged.emit(self._playlistNames)
+
     @pyqtSlot('QString', result='QVariant')
     def getUrlsByName(self, name):
         if name in self._playlists:
@@ -278,3 +303,26 @@ class PlaylistWorker(QObject):
     def addOnlineMediasToFavorite(self, medias):
         playlist = self.favoritePlaylist
         playlist.addMedias(medias)
+
+    def removeFromPlaylist(self, playlistName, url):
+        if playlistName in self._playlists:
+            playlist =  self._playlists[playlistName]
+            playlist.removeMediaByUrl(url)
+
+    def addSongToPlaylist(self, url, playlistName):
+        if playlistName in self._playlists:
+            playlist =  self._playlists[playlistName]
+            playlist.addMedia(url)
+
+    def addSongsToPlaylist(self, value, playlistName, _type):
+        if playlistName in self._playlists:
+            playlist =  self._playlists[playlistName]
+            if _type == "Artist":
+                urls = MusicManageWorker.getUrlsByArtist(value)
+                playlist.addMedias(urls)
+            elif _type == 'Album':
+                urls = MusicManageWorker.getUrlsByAlbum(value)
+                playlist.addMedias(urls)
+            elif _type == "Folder":
+                urls = MusicManageWorker.getUrlsByFolder(value)
+                playlist.addMedias(urls)

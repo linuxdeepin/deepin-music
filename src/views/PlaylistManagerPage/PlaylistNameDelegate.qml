@@ -104,6 +104,7 @@ Rectangle{
             }
         }
         onClicked: {
+            var name = playlistNameDelegate.ListView.view.model[index].name;
             if (mouse.button == Qt.LeftButton){
                 playlistName = playlistNameText.text
                 playlistNameDelegate.ListView.view.currentIndex = index;
@@ -112,10 +113,9 @@ Rectangle{
                 }else{
                     playlistNameDelegate.state = "Checked";
                 }
-                var name = playlistNameDelegate.ListView.view.model[index].name;
                 playlistNameDelegate.ListView.view.itemClicked(name);
             }else if (mouse.button == Qt.RightButton){
-
+                playlistNameDelegate.ListView.view.menuShowed(name, index);
             }
         }
     }

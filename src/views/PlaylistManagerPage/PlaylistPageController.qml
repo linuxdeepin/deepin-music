@@ -83,7 +83,7 @@ Item {
 
     function getModel(){
         if (currentPlaylistName){
-            var model = eval(currentPlaylistName);
+            var model = eval('Playlist_' + Qt.md5(currentPlaylistName));
             return model;
         }
     }
@@ -101,7 +101,6 @@ Item {
                 var playlist = MediaPlayer.playlist;
                 if (playlist){
                     var name = playlist.name;
-                    print(name)
                     playlistNavgationBar.playlistNameChanged(name);
                 }
             }

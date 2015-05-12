@@ -43,11 +43,8 @@ class DeepinPlayer(QObject):
             cls._instance = cls()
         return cls._instance
 
-    @property
-    def qApp(self):
-        return QCoreApplication.instance()
-
     def initApplication(self):
+        self.qApp = QCoreApplication.instance()
         self.qApp.setApplicationName(config.applicationName)
         self.qApp.setApplicationVersion(config.applicationVersion)
         self.qApp.setOrganizationName(config.organizationName)
@@ -92,7 +89,8 @@ class DeepinPlayer(QObject):
         # playlists = self.playlistWorker._playlists
         # for name, playlist in playlists.items():
         #     self.playlistWorker.registerObj.emit(name, playlist._medias)
-        self.mainWindow.setSource(QUrl.fromLocalFile(os.path.join(get_parent_dir(__file__, 2), 'views', 'Main.qml')))
+        self.mainWindow.setSource(QUrl.fromLocalFile(
+            os.path.join(get_parent_dir(__file__, 2), 'views', 'Main.qml')))
 
     def initConnect(self):
         self.web360ApiWorkerConnect()
@@ -121,13 +119,15 @@ class DeepinPlayer(QObject):
         self.web360ApiWorker.addMediaContents.connect(
             self.playlistWorker.addOnlineMediasToTemporary)
 
-        self.web360ApiWorker.addMediaContentToFavorite.connect(self.onlineMusicManageWorker.addSong)
+        self.web360ApiWorker.addMediaContentToFavorite.connect(
+            self.onlineMusicManageWorker.addSong)
         self.web360ApiWorker.addMediaContentToFavorite.connect(
             self.playlistWorker.addOnlineMediaToFavorite)
         self.web360ApiWorker.removeMediaContentFromFavorite.connect(
             self.playlistWorker.removeFavoriteMediaContent)
 
-        self.web360ApiWorker.downloadSongConetent.connect(self.downloadSongWorker.downloadSong)
+        self.web360ApiWorker.downloadSongConetent.connect(
+            self.downloadSongWorker.downloadSong)
 
     def mediaPlayerConnect(self):
         self.mediaPlayer.requestMusic.connect(
@@ -149,9 +149,12 @@ class DeepinPlayer(QObject):
         self.coverWorker.updateAlbumCover.connect(
             self.onlineMusicManageWorker.updateSongCover)
 
-        self.coverWorker.updateArtistCover.connect(self.mediaPlayer.updateArtistCover)
-        self.coverWorker.updateAlbumCover.connect(self.mediaPlayer.updateAlbumCover)
-        self.coverWorker.updateOnlineSongCover.connect(self.mediaPlayer.updateOnlineSongCover)
+        self.coverWorker.updateArtistCover.connect(
+            self.mediaPlayer.updateArtistCover)
+        self.coverWorker.updateAlbumCover.connect(
+            self.mediaPlayer.updateAlbumCover)
+        self.coverWorker.updateOnlineSongCover.connect(
+            self.mediaPlayer.updateOnlineSongCover)
 
     def musicManageWorkerConnect(self):
         self.musicManageWorker.saveSongToDB.connect(self.dbWorker.addSong)
@@ -187,28 +190,51 @@ class DeepinPlayer(QObject):
         self.menuWorker.addSongFolder.connect(
             self.musicManageWorker.searchOneFolderMusic)
 
-        #artist menu
+        # artist menu
         self.menuWorker.playArtist.connect(self.musicManageWorker.playArtist)
-        self.menuWorker.removeFromDatabaseByArtistName.connect(self.musicManageWorker.removeFromDatabaseByArtistName)
-        self.menuWorker.removeFromDriverByArtistName.connect(self.musicManageWorker.removeFromDriverByArtistName)
+        self.menuWorker.removeFromDatabaseByArtistName.connect(
+            self.musicManageWorker.removeFromDatabaseByArtistName)
+        self.menuWorker.removeFromDriverByArtistName.connect(
+            self.musicManageWorker.removeFromDriverByArtistName)
 
-        #album menu
+        # album menu
         self.menuWorker.playAlbum.connect(self.musicManageWorker.playAlbum)
-        self.menuWorker.removeFromDatabaseByAlbumName.connect(self.musicManageWorker.removeFromDatabaseByAlbumName)
-        self.menuWorker.removeFromDriverByAlbumName.connect(self.musicManageWorker.removeFromDriverByAlbumName)
+        self.menuWorker.removeFromDatabaseByAlbumName.connect(
+            self.musicManageWorker.removeFromDatabaseByAlbumName)
+        self.menuWorker.removeFromDriverByAlbumName.connect(
+            self.musicManageWorker.removeFromDriverByAlbumName)
 
-        #song menu
+        # song menu
         self.menuWorker.playSong.connect(self.musicManageWorker.playSong)
         self.menuWorker.playSong.connect(self.mediaPlayer.playLocalMedia)
         self.menuWorker.orderByKey.connect(self.musicManageWorker.orderByKey)
-        self.menuWorker.openSongFolder.connect(self.musicManageWorker.openSongFolder)
-        self.menuWorker.removeFromDatabaseByUrl.connect(self.musicManageWorker.removeFromDatabaseByUrl)
-        self.menuWorker.removeFromDriveByUrl.connect(self.musicManageWorker.removeFromDriveByUrl)
+        self.menuWorker.openSongFolder.connect(
+            self.musicManageWorker.openSongFolder)
+        self.menuWorker.removeFromDatabaseByUrl.connect(
+            self.musicManageWorker.removeFromDatabaseByUrl)
+        self.menuWorker.removeFromDriveByUrl.connect(
+            self.musicManageWorker.removeFromDriveByUrl)
 
-        #folder menu
+        # folder menu
         self.menuWorker.playFolder.connect(self.musicManageWorker.playFolder)
-        self.menuWorker.removeFromDatabaseByFolderName.connect(self.musicManageWorker.removeFromDatabaseByFolderName)
-        self.menuWorker.removeFromDriverByFolderName.connect(self.musicManageWorker.removeFromDriverByFolderName)
+        self.menuWorker.removeFromDatabaseByFolderName.connect(
+            self.musicManageWorker.removeFromDatabaseByFolderName)
+        self.menuWorker.removeFromDriverByFolderName.connect(
+            self.musicManageWorker.removeFromDriverByFolderName)
+
+        #playlist menu
+        self.menuWorker.removeFromPlaylist.connect(self.playlistWorker.removeFromPlaylist)
+
+        #playlist navigation menu
+        self.menuWorker.deletePlaylist.connect(self.playlistWorker.deletePlaylist)
+
+        #download menu
+        self.menuWorker.playMusicByIdSignal.connect(self.web360ApiWorker.playMusicByIdSignal)
+        self.menuWorker.removeFromDownloadList.connect(self.downloadSongWorker.delSongObj)
+
+        #public menu:
+        self.menuWorker.addSongToPlaylist.connect(self.playlistWorker.addSongToPlaylist)
+        self.menuWorker.addSongsToPlaylist.connect(self.playlistWorker.addSongsToPlaylist)
 
     def dbWorkerConnect(self):
         self.dbWorker.restoreSongsSuccessed.connect(

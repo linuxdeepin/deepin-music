@@ -6,9 +6,8 @@ Item {
     property var openFolderButton
     property var songListView
 
-    function playMusicByUrl(url) {
-        MusicManageWorker.playSong(url);
-        MediaPlayer.playLocalMedia(url);
+    function init(){
+        MenuWorker.switchDownloadedStatus.connect(songListView.view.switchDownloadedStatus)
     }
 
     Connections {
@@ -34,6 +33,11 @@ Item {
 
     Connections {
         target: songListView.view
+
+        onPlayMusicByUrl:{
+            Web360ApiWorker.playMediaByUrl(url);
+        }
+
         onSwitchDownloadedStatus: {
             if (downloaded){
                 DownloadSongWorker.oneStartDownloadSignal(songId, downloaded);
@@ -41,5 +45,13 @@ Item {
                 DownloadSongWorker.onePausedDownloadSignal(songId, downloaded);
             }
         }
+
+        onMenuShowed:{
+            MenuWorker.downloadMenuShowed(songId, downloaded);
+        }
+    }
+
+    Component.onCompleted: {
+        init();
     }
 }

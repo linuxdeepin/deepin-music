@@ -20,10 +20,10 @@ Rectangle {
         var playlist = MediaPlayer.playlist;
         if (playlist){
             var name = playlist.name
-            var model = eval(name);
+            var model = eval('Playlist_' + Qt.md5(name));
             return model;
         }else{
-            return null;
+            return EmptyModel;
         }
     }
 

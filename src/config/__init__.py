@@ -11,7 +11,7 @@ organizationName = "Deepin"
 windowIcon = os.sep.join(['skin', 'images', 'PFramer.png'])
 windowTitle = u'Deepin Music'
 
-if '5.3' in qVersion():
+if qVersion().startswith('5.3'):
     isWebengineUsed = False
 else:
     isWebengineUsed = True

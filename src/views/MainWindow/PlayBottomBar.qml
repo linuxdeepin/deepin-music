@@ -367,13 +367,19 @@ Item {
                             width:volumeBar.width - volumeButton.width
                             height: rowLayout.height
                             color: 'transparent'
-                            Slider {
-                                id: volumeSlider
-                                anchors.centerIn: parent
-                                width: parent.width
-                                height: 6
-                                onValueChanged:{
-                                    playBottomBar.volumeChanged(value)
+                            Rectangle {
+                                anchors.fill: parent
+                                anchors.leftMargin: 4
+                                anchors.rightMargin: 4
+                                color: 'transparent'
+                                DSlider {
+                                    id: volumeSlider
+                                    anchors.centerIn: parent
+                                    width: parent.width
+                                    height: 6
+                                    onValueChanged:{
+                                        playBottomBar.volumeChanged(value)
+                                    }
                                 }
                             }
                         }

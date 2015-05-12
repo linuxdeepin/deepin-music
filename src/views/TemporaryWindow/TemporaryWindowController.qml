@@ -7,12 +7,16 @@ Item {
     property var clearButton
     property var closeButton
 
+    function init(){
+        MediaPlayer.playlistChanged.connect(updateModel);
+        MenuWorker.playMusicInTemporary.connect(playlistView.playMusicByUrl);
+    }
 
-    function playMusicByUrl(url) {
-        if (url.indexOf('http') != -1){
-            Web360ApiWorker.playMediaByUrl(url);
+    function playMusicByUrl(songUrl) {
+        if (songUrl.indexOf('http') != -1){
+            Web360ApiWorker.playMediaByUrl(songUrl);
         }else{
-            MediaPlayer.playLocalMedia(url);
+            MediaPlayer.playLocalMedia(songUrl);
         }
     }
 
@@ -21,10 +25,15 @@ Item {
     }
 
     function updateModel() {
-        var pymodel = temporaryWindow.getModel();
-        if (pymodel != null){
-            songListModel.clear();
-            songListModel.initModel();
+        try {
+            var pymodel = temporaryWindow.getModel();
+            if (pymodel != null){
+                songListModel.clear();
+                songListModel.pymodel = pymodel;
+                songListModel.initModel();
+            }
+        }catch(e) {
+
         }
     }
 
@@ -57,7 +66,14 @@ Item {
     Connections {
         target: playlistView
         // onChangeIndex: changeIndex(index)
-        onPlayMusicByUrl: playMusicByUrl(url)
+        onPlayMusicByUrl: playMusicByUrl(songUrl)
+        onMenuShowed: {
+            var playlist = MediaPlayer.playlist;
+            if (playlist){
+                var name = playlist.name
+                MenuWorker.temporaryMenuShowed(name, songUrl);
+            }
+        }
         onModelChanged: playlistView.positionViewAtEnd()
     }
 
@@ -67,6 +83,6 @@ Item {
     }
 
     Component.onCompleted: {
-        MediaPlayer.playlistChanged.connect(updateModel);
+        init();
     }
 }
