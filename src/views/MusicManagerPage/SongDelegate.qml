@@ -37,7 +37,24 @@ Rectangle {
                 anchors.centerIn: parent
                 itemHeight: 12
                 itemWidth: 3
-                active: false
+                active: {
+                    var playlist = MediaPlayer.playlist;
+                    if (playlist){
+                        if (MediaPlayer.url == url){
+                            if (MediaPlayer.playing){
+                                return true
+                            }else{
+                                return false
+                            }
+                        }
+                        else{
+                            return false
+                        }
+                    }
+                    else{
+                        return false
+                    }
+                }
             }
         }
 
@@ -68,7 +85,7 @@ Rectangle {
                     id: artistTetx
                     anchors.fill: parent
                     anchors.leftMargin: 12
-                    color: "#8a8a8a"
+                    color: waveBar.active? "##2ca7f8":"#8a8a8a"
                     font.pixelSize: 12
                     elide: Text.ElideRight
                     verticalAlignment: Text.AlignVCenter
@@ -110,24 +127,6 @@ Rectangle {
         }
     }
 
-    states: [
-        State {
-            name: "Active"
-            PropertyChanges { target: titleTetx; color: "#2ca7f8"}
-            PropertyChanges { target: waveBar; active: true ;}
-        },
-        State {
-            name: "Current"
-            when: mediaItem.ListView.isCurrentItem
-            PropertyChanges { target: titleTetx; color: "#2ca7f8";}
-        },
-        State {
-            name: "!Current"
-            when: !mediaItem.ListView.isCurrentItem
-            PropertyChanges { target: waveBar; active: false ;}
-        }
-    ]
-
     MouseArea {
         id: mouseArea
         anchors.fill: parent
@@ -144,7 +143,6 @@ Rectangle {
             if (mouse.button == Qt.LeftButton){
                 mediaItem.ListView.view.currentIndex = index;
                 mediaItem.ListView.view.playMusicByUrl(url);
-                waveBar.active = true
             }
             else if (mouse.button == Qt.RightButton){
                 mediaItem.ListView.view.menuShowed(url);

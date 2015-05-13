@@ -11,14 +11,6 @@ Rectangle {
     property var songListModel: songListModel
     property var currentPlaylistName
 
-
-    function getModel(){
-        if (currentPlaylistName){
-            var model = eval('Playlist_' + Qt.md5(currentPlaylistName));
-            return model;
-        }
-    }
-
     Rectangle {
         id: detailBox
         anchors.fill: parent
@@ -114,6 +106,9 @@ Rectangle {
 
                 ListView {
                     id: playlistView
+
+                    property var currentPlaylistName: playlistDetailBox.currentPlaylistName
+
                     anchors.fill: parent
                     clip: true
                     highlightMoveDuration: 1
@@ -136,13 +131,12 @@ Rectangle {
 
                 DListModel {
                     id: songListModel
-                    pymodel: getModel()
+                    pymodel: EmptyModel
                 }
 
                 Rectangle {
                     id: noMusicTip
                     anchors.fill: parent
-                    visible: false
                     Text {
                         id: linkTipText
                         anchors.centerIn: parent
@@ -163,6 +157,7 @@ Rectangle {
         id: playlistDetailBoxController
         playlistDetailBox: playlistDetailBox
         playlistView: playlistView
+        noMusicTip: noMusicTip
         titleText: titleText
         linkTipText: linkTipText
     }

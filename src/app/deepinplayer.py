@@ -50,7 +50,7 @@ class DeepinPlayer(QObject):
         self.qApp.setOrganizationName(config.organizationName)
 
     def loadDB(self):
-        QTimer.singleShot(500, self.musicManageWorker.restoreDB)
+        QTimer.singleShot(100, self.musicManageWorker.restoreDB)
 
     def initView(self):
         self.mainWindow = MainWindow()

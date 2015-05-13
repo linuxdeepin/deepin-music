@@ -26,16 +26,17 @@ Rectangle {
         }
 
 
-        Loader {
-            id: playlistDetailLoader
+        PlaylistDetailBox {
+            id: playlistDetailBox
             width: root.width - playlistNavgationBar.width - 14
             height: root.height - topMargin
         }
     }
 
     PlaylistPageController {
+        id: playlistPageController
         playlistPage: root
         playlistNavgationBar: playlistNavgationBar
-        playlistDetailLoader: playlistDetailLoader
+        playlistDetailBox: playlistDetailBox
     }
 }

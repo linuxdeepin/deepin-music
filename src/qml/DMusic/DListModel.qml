@@ -13,6 +13,7 @@ ListModel {
     signal setPropertySignal(int index, var property, var value)
 
     function initModel() {
+        listModel.clear()
         for(var i=0; i<pymodel.data.length; i++){
             var obj = pymodel.data[i];
             listModel.append(obj);
@@ -47,8 +48,13 @@ ListModel {
         listModel.setPropertySignal(index, property, value);
     }
 
+    onPymodelChanged:{
+        if (pymodel){
+            initModel();
+        }
+    }
+
     Component.onCompleted: {
-        initModel();
         listModel.appendSignal.connect(pymodel.qml2Py_appendSignal);
         listModel.clearSignal.connect(pymodel.qml2py_clearSignal);
         listModel.insertSignal.connect(pymodel.qml2py_insertSignal);

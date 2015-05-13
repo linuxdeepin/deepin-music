@@ -37,7 +37,24 @@ Rectangle {
                 anchors.centerIn: parent
                 itemHeight: 12
                 itemWidth: 3
-                active: false
+                active: {
+                    var playlist = MediaPlayer.playlist;
+                    if (playlist){
+                        if (MediaPlayer.url == url && playlist.name == mediaItem.ListView.view.currentPlaylistName){
+                            if (MediaPlayer.playing){
+                                return true
+                            }else{
+                                return false
+                            }
+                        }
+                        else{
+                            return false
+                        }
+                    }
+                    else{
+                        return false
+                    }
+                }
             }
         }
 
@@ -46,10 +63,10 @@ Rectangle {
             spacing: 38
 
             Text {
-                id: titleTetx
+                id: titleText
                 width: 250
                 height: 24
-                color: "#3a3a3a"
+                color: waveBar.active? "#2ca7f8": "#3a3a3a"
                 font.pixelSize: 12
                 elide: Text.ElideRight
                 verticalAlignment: Text.AlignVCenter
@@ -80,49 +97,21 @@ Rectangle {
         }
     }
 
-    states: [
-        State {
-            name: "Active"
-            PropertyChanges { target: titleTetx; color: "#2ca7f8"}
-            PropertyChanges { target: waveBar; active: true ;}
-        },
-        State {
-            name: "Current"
-            when: mediaItem.ListView.isCurrentItem
-            PropertyChanges { target: titleTetx; color: "#2ca7f8";}
-            PropertyChanges { target: waveBar; active: true ;}
-        },
-        State {
-            name: "!Current"
-            when: !mediaItem.ListView.isCurrentItem
-            
-            PropertyChanges { target: waveBar; active: false ;}
-        }
-    ]
-
     MouseArea {
         id: mouseArea
         anchors.fill: parent
         hoverEnabled: true
         acceptedButtons: Qt.LeftButton | Qt.RightButton
         onEntered: {
-            // if (mediaItem.ListView.view.currentIndex != index){
-            //     // playButton.visible = true;
                 mediaItem.color = "lightgray"
-            // }else{
-            //     // playButton.visible = ! waveBar.visible;
-            //     mediaItem.color = "transparent"
-            // }
         }
         onExited: {
-            // playButton.visible = false
             mediaItem.color = "transparent"
         }
         onClicked: {
             if (mouse.button == Qt.LeftButton){
                 mediaItem.ListView.view.currentIndex = index;
                 mediaItem.ListView.view.playMusicByUrl(url);
-                // waveBar.active = true
             }
             else if (mouse.button == Qt.RightButton){
                 mediaItem.ListView.view.playlistMenuShow(url);

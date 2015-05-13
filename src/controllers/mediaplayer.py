@@ -49,6 +49,7 @@ class MediaPlayer(QObject):
     bufferStatusChanged = pyqtSignal(int)
 
     playlistChanged = pyqtSignal('QString')
+    urlChanged = pyqtSignal('QString')
 
     currentIndexChanged = pyqtSignal(int)
 
@@ -98,6 +99,15 @@ class MediaPlayer(QObject):
         gPlayer.durationChanged.connect(self.updateDuration)
         gPlayer.bufferStatusChanged.connect(self.bufferChange)
         gPlayer.error.connect(self.monitorError)
+
+    @pyqtProperty('QString', notify=urlChanged)
+    def url(self):
+        return self._url
+
+    @url.setter
+    def url(self, value):
+        self._url = value
+        self.urlChanged.emit(value)
 
     @pyqtProperty('QVariant', notify=playlistChanged)
     def playlist(self):
@@ -282,7 +292,6 @@ class MediaPlayer(QObject):
 
     @pyqtSlot('QString')
     def setMediaUrl(self, url):
-        self._url = url
         if url.startswith('http'):
             _url = QUrl(url)
         else:
@@ -360,16 +369,22 @@ class MediaPlayer(QObject):
         self.updateMediaView(url)
         self.playMediaByUrl(url)
 
+        self.url = url
+
     @pyqtSlot('QVariant')
     def playOnlineMedia(self, result):
         url = result['url']
         urls = self._playlist.urls
+        index = urls.index(url)
+        self._playlist.setCurrentIndex(index)
         if url in urls:
             self.updateMediaView(url)
 
         if 'playlinkUrl' in result:
             playlinkUrl = result['playlinkUrl']
             self.playMediaByUrl(playlinkUrl)
+
+            self.url = url
 
     def updateMediaView(self, url):
         if url.startswith('http'):

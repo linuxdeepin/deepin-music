@@ -3,6 +3,7 @@ import QtQuick 2.3
 Item {
     property var playlistDetailBox
     property var playlistView
+    property var noMusicTip
     property var titleText
     property var linkTipText
 
@@ -18,11 +19,33 @@ Item {
         }
     }
 
+    function getModelByPlaylistName(name){
+        if (name){
+            var model = eval('Playlist_' + Qt.md5(name));
+            return model;
+        }else{
+            return EmptyModel
+        }
+    }
+
     Binding {
         target: titleText
         property: 'text'
         value: {
             return I18nWorker.song + '   (' + playlistView.count +')'
+        }
+    }
+
+    Binding {
+        target: noMusicTip
+        property: 'visible'
+        value: {
+            var model = getModelByPlaylistName(playlistDetailBox.currentPlaylistName);
+            if (model.count == 0){
+                return true;
+            }else{
+                return false;
+            }
         }
     }
 

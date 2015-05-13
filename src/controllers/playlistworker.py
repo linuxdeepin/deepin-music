@@ -164,7 +164,7 @@ class PlaylistWorker(QObject):
         self.createPlaylistByName('favorite')
 
         self.emptyListModel = DListModel(QmlSongObject)
-        self.setContext('EmptyModel', self.emptyListModel)
+        contexts['MainWindow'].setContext('EmptyModel', self.emptyListModel)
 
     def savePlaylists(self):
         result = OrderedDict()

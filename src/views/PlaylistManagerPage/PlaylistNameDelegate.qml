@@ -13,16 +13,6 @@ Rectangle{
     height: 16
     color: "transparent"
 
-    function active() {
-        waveBar.active = true
-        playlistNameText.color = "#2ca7f8"
-    }
-
-    function normal() {
-        waveBar.active = false
-        playlistNameText.color = "#868686"
-    }
-
     Row {
         spacing: 10
 
@@ -32,18 +22,29 @@ Rectangle{
 
             color: "transparent"
 
-            DPlaylistButton {
-                id: tipButton
-                anchors.fill: parent
-                visible: !waveBar.active
-            }
-
             DWaveBar {
                 id: waveBar
                 anchors.centerIn: parent
                 itemHeight: 12
                 itemWidth: 3
-                active: false
+                active: {
+                    var playlist = MediaPlayer.playlist;
+                    if (playlist){
+                        if (playlist.name == playlistName){
+                            if (MediaPlayer.playing){
+                                return true
+                            }else{
+                                return false
+                            }
+                        }
+                        else{
+                            return false
+                        }
+                    }
+                    else{
+                        return false
+                    }
+                }
             }
         }
 
@@ -68,9 +69,8 @@ Rectangle{
     states: [
         State {
             name: "Active"
+            when: waveBar.active
             PropertyChanges { target: playlistNameText; color: "#2ca7f8"}
-            PropertyChanges { target: waveBar; active: true ;}
-            PropertyChanges { target: tipButton; visible: false ;}
         },
         State {
             name: "!Checked"
@@ -109,7 +109,6 @@ Rectangle{
                 playlistName = playlistNameText.text
                 playlistNameDelegate.ListView.view.currentIndex = index;
                 if (playlistNameDelegate.state == 'Active'){
-
                 }else{
                     playlistNameDelegate.state = "Checked";
                 }

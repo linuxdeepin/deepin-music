@@ -3,10 +3,11 @@ import QtQuick 2.3
 Item {
     property var playlistPage
     property var playlistNavgationBar
-    property var playlistDetailLoader
+    property var playlistDetailBox
     property var currentPlaylistName: ''
 
     function init() {
+        currentPlaylistName = ConfigWorker.lastPlaylistName
         if (ConfigWorker.lastPlaylistName == "favorite"){
             playlistNavgationBar.starDelegate.state = 'Checked'
         }else if(ConfigWorker.lastPlaylistName == "temporary"){
@@ -19,10 +20,6 @@ Item {
                 }
             }
         }
-        currentPlaylistName = ConfigWorker.lastPlaylistName
-
-        MediaPlayer.currentIndexChanged.connect(activeCurrentItem)
-        MediaPlayer.playingChanged.connect(activeCurrentItem)
     }
 
     function playMusicByUrl(url) {
@@ -33,58 +30,12 @@ Item {
         }
     }
 
-    function activeCurrentItem(currentIndex){
-        var playlistDetailBox = playlistDetailLoader.item
-        if (MediaPlayer.playlist && playlistDetailBox) {
-            if (MediaPlayer.playlist.name == currentPlaylistName){
-                playlistDetailBox.playlistView.currentIndex = MediaPlayer.playlist.currentIndex;
-                if (playlistDetailBox.playlistView.currentItem){
-                    if (MediaPlayer.playing){
-                        playlistDetailBox.playlistView.currentItem.state = "Active";
-                    }else{
-                        playlistDetailBox.playlistView.currentItem.state = "!Checked";
-                    }
-                }
-            }
-
-            if (MediaPlayer.playing){
-                if (MediaPlayer.playlist.name == 'favorite'){
-                    playlistNavgationBar.starDelegate.state = 'Active'
-                    if (currentPlaylistName == 'temporary'){
-                        playlistNavgationBar.temporaryDelegate.state = 'Checked'
-                    }else{
-                        playlistNavgationBar.temporaryDelegate.state = '!Checked'
-                    }
-
-                }else if(MediaPlayer.playlist.name == 'temporary'){
-                    playlistNavgationBar.temporaryDelegate.state = 'Active'
-                    if (currentPlaylistName == 'favorite'){
-                        playlistNavgationBar.starDelegate.state = 'Checked'
-                    }else{
-                        playlistNavgationBar.starDelegate.state = '!Checked'
-                    }
-                }else{
-
-                }
-            }else{
-               if (currentPlaylistName == 'favorite'){
-                    playlistNavgationBar.starDelegate.state = 'Checked'
-                    playlistNavgationBar.temporaryDelegate.state = '!Checked'
-
-                }else if(currentPlaylistName == 'temporary'){
-                    playlistNavgationBar.starDelegate.state = '!Checked'
-                    playlistNavgationBar.temporaryDelegate.state = 'Checked'
-                }else{
-
-                }
-            }
-        }
-    }
-
-    function getModel(){
-        if (currentPlaylistName){
-            var model = eval('Playlist_' + Qt.md5(currentPlaylistName));
+    function getModelByPlaylistName(name){
+        if (name){
+            var model = eval('Playlist_' + Qt.md5(name));
             return model;
+        }else{
+            return EmptyModel
         }
     }
 
@@ -94,17 +45,16 @@ Item {
         value: PlaylistWorker.playlistNames
     }
 
-    Connections {
-        target: playlistPage
-        onVisibleChanged: {
-            if (visible){
-                var playlist = MediaPlayer.playlist;
-                if (playlist){
-                    var name = playlist.name;
-                    playlistNavgationBar.playlistNameChanged(name);
-                }
-            }
-        } 
+    Binding {
+        target: playlistDetailBox
+        property: 'currentPlaylistName'
+        value: currentPlaylistName
+    }
+
+    Binding {
+        target: playlistDetailBox.songListModel
+        property: 'pymodel'
+        value: getModelByPlaylistName(currentPlaylistName)
     }
 
     Connections {
@@ -112,16 +62,6 @@ Item {
 
         onAddPlaylistName:{
             PlaylistWorker.createPlaylistByName(name);
-            if (playlistNavgationBar.starDelegate.state == "Active"){
-                
-            }else{
-                playlistNavgationBar.starDelegate.state = '!Checked'
-            }
-            if (playlistNavgationBar.temporaryDelegate.state == "Active"){
-                
-            }else {
-                playlistNavgationBar.temporaryDelegate.state = '!Checked'
-            }
         }
 
         onPlaylistNameChanged: {
@@ -137,18 +77,6 @@ Item {
             }
 
             currentPlaylistName = nameId;
-
-            // var pymodel = getModel()
-
-            playlistDetailLoader.setSource('./PlaylistDetailBox.qml', {'currentPlaylistName': currentPlaylistName})
-
-            activeCurrentItem();
-
-            if (playlistDetailLoader.item.playlistView.count == 0){
-                playlistDetailLoader.item.noMusicTip.visible = true;
-            }else{
-                playlistDetailLoader.item.noMusicTip.visible = false;
-            }
         }
     }
 

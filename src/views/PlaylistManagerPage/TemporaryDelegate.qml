@@ -23,18 +23,29 @@ Rectangle{
 
             color: "transparent"
 
-            DStarButton {
-                id: tipButton
-                anchors.fill: parent
-                visible: !waveBar.active
-            }
-
             DWaveBar {
                 id: waveBar
                 anchors.centerIn: parent
                 itemHeight: 12
                 itemWidth: 3
-                active: false
+                active: {
+                    var playlist = MediaPlayer.playlist;
+                    if (playlist){
+                        if (playlist.name == 'temporary'){
+                            if (MediaPlayer.playing){
+                                return true
+                            }else{
+                                return false
+                            }
+                        }
+                        else{
+                            return false
+                        }
+                    }
+                    else{
+                        return false
+                    }
+                }
             }
         }
 
@@ -59,23 +70,18 @@ Rectangle{
     states: [
         State {
             name: "Active"
+            when: waveBar.active
             PropertyChanges { target: playlistNameText; color: "#2ca7f8"}
-            PropertyChanges { target: waveBar; active: true ;}
-            PropertyChanges { target: tipButton; visible: false ;}
         },
         State {
             name: "!Checked"
             PropertyChanges { target: temporaryDelegate; color: "transparent"}
             PropertyChanges { target: playlistNameText; color: "#868686"}
-            PropertyChanges { target: waveBar; active: false ;}
-            PropertyChanges { target: tipButton; visible: true ;}
         },
         State {
             name: "Checked"
             PropertyChanges { target: temporaryDelegate; color: "#eeeeee"}
             PropertyChanges { target: playlistNameText; color: "black"}
-            PropertyChanges { target: waveBar; active: false ;}
-            PropertyChanges { target: tipButton; visible: true ;}
         }
     ]
 
