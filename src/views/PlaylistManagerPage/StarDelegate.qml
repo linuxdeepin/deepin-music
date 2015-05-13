@@ -1,6 +1,6 @@
 import QtQuick 2.3
 import DMusic 1.0
-import "../DMusicWidgets"
+import "../DMusicWidgets/PlaylistPage"
 
 Rectangle{
     id: starDelegate
@@ -22,6 +22,12 @@ Rectangle{
             height: 16
 
             color: "transparent"
+
+            DStarButton {
+                id: tipButton
+                anchors.fill: parent
+                visible: !waveBar.active
+            }
 
             DWaveBar {
                 id: waveBar

@@ -22,6 +22,12 @@ Rectangle{
 
             color: "transparent"
 
+            DPlaylistButton {
+                id: tipButton
+                anchors.fill: parent
+                visible: !waveBar.active
+            }
+
             DWaveBar {
                 id: waveBar
                 anchors.centerIn: parent
