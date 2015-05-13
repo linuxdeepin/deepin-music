@@ -11,6 +11,8 @@ class LevelDict(object, DictMixin):
     def __init__(self, path):
         """Constructor for LevelDict"""
         self.path = path
+
+    def open(self):
         self.db = leveldb.LevelDB(self.path)
 
     def __getitem__(self, key):

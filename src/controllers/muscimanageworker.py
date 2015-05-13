@@ -239,6 +239,10 @@ class MusicManageWorker(QObject):
     @registerContext
     def __init__(self, parent=None):
         super(MusicManageWorker, self).__init__(parent)
+        self._songsDict.open()
+        self._artistsDict.open()
+        self._albumsDict.open()
+        self._foldersDict.open()
         self.initConnect()
 
     def initConnect(self):
@@ -390,6 +394,10 @@ class MusicManageWorker(QObject):
         )
         if urls:
             self.addSongFiles(urls)
+
+    def addDownloadSongToDataBase(self, url):
+        urls = [url]
+        self.addSongFiles(urls)
 
     @dthread
     def addSongFiles(self, urls):

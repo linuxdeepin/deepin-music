@@ -59,6 +59,7 @@ class MediaPlayer(QObject):
     coverChanged = pyqtSignal('QString')
 
     downloadCover = pyqtSignal('QString', 'QString')
+    downloadLrc = pyqtSignal('QString', 'QString')
 
     requestMusic = pyqtSignal('QString')
 
@@ -396,6 +397,8 @@ class MediaPlayer(QObject):
             self.artist = songObj.artist
             self.album = songObj.album
             self.cover = songObj.cover
+
+            self.downloadLrc.emit(self.artist, self.title)
 
     def playMediaByUrl(self, url):
         self.setMediaUrl(url)

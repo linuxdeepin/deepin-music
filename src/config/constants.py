@@ -23,7 +23,7 @@ LevevDBPath = os.path.join(ProjectPath,  'leveldb')
 MusicDBFile = os.path.join(ProjectPath,  'music.db')
 
 DownloadSongPath = os.path.join(QStandardPaths.writableLocation(QStandardPaths.MusicLocation), 'download')
-
+LRCPath = os.path.join(QStandardPaths.writableLocation(QStandardPaths.MusicLocation), 'LRC')
 LogCachePath = os.path.join(Home, '.cache', 'DeepinMusic3')
 LogPath = os.path.join(LogCachePath, 'main.log')
 
@@ -38,6 +38,7 @@ paths = [
 	OnlineSongCoverPath,
 	LevevDBPath,
 	DownloadSongPath,
+	LRCPath,
 	LogCachePath
 ]
 

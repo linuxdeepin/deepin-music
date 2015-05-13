@@ -12,7 +12,7 @@ from controllers import contexts, Web360ApiWorker, MusicManageWorker
 from controllers import OnlineMusicManageWorker, MenuWorker, WindowManageWorker
 from controllers import MediaPlayer, PlaylistWorker, CoverWorker
 from controllers import ConfigWorker, DBWorker, I18nWorker
-from controllers import UtilWorker, DownloadSongWorker
+from controllers import UtilWorker, DownloadSongWorker, LrcWorker
 from controllers.mediaplayer import gPlayer
 from deepin_utils.file import get_parent_dir
 import config
@@ -61,6 +61,7 @@ class DeepinPlayer(QObject):
         self.configWorker = ConfigWorker()
         self.i18nWorker = I18nWorker()
         self.coverWorker = CoverWorker()
+        self.lrcWorker = LrcWorker()
         self.downloadSongWorker = DownloadSongWorker()
 
         self.windowManageWorker = WindowManageWorker()
@@ -101,6 +102,7 @@ class DeepinPlayer(QObject):
         self.onlineMusicManageWorkerConnect()
         self.menuWorkerConnect()
         self.dbWorkerConnect()
+        self.downloadSongWorkerConnect()
         self.qApp.aboutToQuit.connect(self.close)
 
     def web360ApiWorkerConnect(self):
@@ -132,6 +134,7 @@ class DeepinPlayer(QObject):
     def mediaPlayerConnect(self):
         self.mediaPlayer.requestMusic.connect(
             self.web360ApiWorker.switchMediaByUrl)
+        self.mediaPlayer.downloadLrc.connect(self.lrcWorker.getLrc)
 
     def playlistWorkerConnect(self):
         self.playlistWorker.currentPlaylistChanged.connect(
@@ -239,6 +242,9 @@ class DeepinPlayer(QObject):
     def dbWorkerConnect(self):
         self.dbWorker.restoreSongsSuccessed.connect(
             self.musicManageWorker.loadDB)
+
+    def downloadSongWorkerConnect(self):
+        self.downloadSongWorker.addSongToDataBase.connect(self.musicManageWorker.addDownloadSongToDataBase)
 
     def loadConfig(self):
         self.mediaPlayer.setPlaylistByName(self.configWorker.lastPlaylistName)

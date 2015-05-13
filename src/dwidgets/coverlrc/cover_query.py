@@ -27,10 +27,10 @@ from pyquery import PyQuery
 
 import time
 from mycurl import MyCurl, CurlException, public_curl
-# from net import is_network_connected
+from deepin_utils.net import is_network_connected
 
-def is_network_connected():
-    return True
+# def is_network_connected():
+#     return True
 
 def parser_json(raw):
     try:

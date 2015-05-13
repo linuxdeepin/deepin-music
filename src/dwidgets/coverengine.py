@@ -17,7 +17,7 @@ import urllib2
 import StringIO
 import gzip
 import re
-from cover.cover_query import multi_query_album_engine, multi_query_artist_engine
+from coverlrc.cover_query import multi_query_album_engine, multi_query_artist_engine
 from log import logger
 
 

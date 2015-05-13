@@ -143,6 +143,7 @@ class OnlineMusicManageWorker(QObject):
 
     def __init__(self):
         super(OnlineMusicManageWorker, self).__init__()
+        self._songsDict.open()
         self._albums = {}
         self.initConnect()
         self.loadDB()

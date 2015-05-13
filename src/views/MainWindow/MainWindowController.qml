@@ -3,9 +3,9 @@ import QtQuick 2.3
 Item {
     property var mainWindow
     property var bgImage
-	property var titleBar
-	property var leftSideBar
-	property var webEngineViewPage
+    property var titleBar
+    property var leftSideBar
+    property var webEngineViewPage
     property var playBottomBar
     property var dSimpleWindow
 

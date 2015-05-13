@@ -5,6 +5,7 @@ import DMusic 1.0
 
 Rectangle {
     id: root
+
     anchors.fill: parent
     Rectangle {
         id: contentBox
@@ -71,6 +72,7 @@ Rectangle {
     }
 
     DownloadSongPageController {
+
         allDownloadButton: allDownloadButton
         allPausedButton: allPausedButton
         openFolderButton: openFolderButton

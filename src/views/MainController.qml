@@ -107,7 +107,7 @@ Item {
         target: mainWindow.playBottomBar.lrcButton
         onClicked:{
             lrcWindow.visible = !lrcWindow.visible;
-        } 
+        }
     }
 
     Connections {

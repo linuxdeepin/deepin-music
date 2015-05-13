@@ -46,7 +46,7 @@ class BaseWindow(DQuickView):
         self.statusChanged.connect(self.trackStatus)
         self.engine().quit.connect(QGuiApplication.instance().quit)
 
-    def intQMLConnect(self):
+    def initQMLConnect(self):
         self.getAllItems(self.rootObject())
 
     def trackStatus(self, status):
@@ -55,7 +55,7 @@ class BaseWindow(DQuickView):
         elif status == QQuickView.Ready:
             logger.info('This QQuickView %s has loaded %s and created the QML component.' %(str(self), self.source()))
             self.moveCenter()
-            self.intQMLConnect()
+            self.initQMLConnect()
 
         elif status == QQuickView.Loading:
             logger.info('This QQuickView is loading network data.')

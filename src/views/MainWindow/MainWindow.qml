@@ -111,6 +111,7 @@ Rectangle {
 
                     SettingPage {
                         id: settingPage
+                        property var name: '9999'
                         objectName: 'settingPage'
                         anchors.fill: parent
                     }

@@ -9,6 +9,7 @@ from .windowmanageworker import WindowManageWorker
 from .mediaplayer import MediaPlayer
 from .playlistworker import PlaylistWorker
 from .coverworker import CoverWorker
+from .lrcworker import LrcWorker
 from .downloadsongworker import DownloadSongWorker
 
 from .configworker import ConfigWorker

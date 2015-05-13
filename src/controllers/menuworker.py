@@ -534,6 +534,11 @@ class MenuWorker(QObject):
             self.playMusicByUrl.emit(self._url)
         elif menuId == 'RemoveFromPlaylist':
             self.removeFromPlaylist.emit(self._playlist, self._url)
+        else:
+            if menuId.startswith('playlist_group'):
+                    playlistName = menuId.split(':')[-1]
+                    if playlistName in PlaylistWorker._playlists:
+                        self.addSongToPlaylist.emit(self._url, playlistName)
 
     def addPlaylistMenuItemsForMusicManager(self, menu, menuId='AddToSinglePlaylist'):
         playlistSubMenuItems = []
