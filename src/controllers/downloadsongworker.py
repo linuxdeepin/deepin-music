@@ -337,7 +337,7 @@ class DownloadSongWorker(QObject):
             songObj.deleteSelf.disconnect(self.delSongObj)
             songObj.updateDBPoperty.disconnect(self.updateModel)
             songObj.downloadStoped.disconnect(self.removeFormDownloadList)
-            songObj.addSongToDataBase.connect(self.addSongToDataBase)
+            songObj.addSongToDataBase.disconnect(self.addSongToDataBase)
             songObj.isConnected = False
 
     def startDownloadAll(self):
