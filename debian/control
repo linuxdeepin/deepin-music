@@ -1,4 +1,4 @@
-Source: deepin-music-player
+Source: deepin-music
 Section: sound
 Priority: extra
 Maintainer: Ding JiangFeng <ding465398889@163.com>
@@ -6,7 +6,7 @@ Build-Depends: debhelper (>= 8.0.0), python
 Standards-Version: 3.9.2
 Homepage: http://www.linuxdeepin.com/
 
-Package: deepin-music-player
+Package: deepin-music
 Architecture: all
 Depends: ${shlibs:Depends}, ${misc:Depends},
          python-mutagen, python-leveldb, python-chardet, python-requests, python-faulthandler,

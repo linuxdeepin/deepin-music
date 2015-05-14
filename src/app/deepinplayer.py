@@ -244,7 +244,7 @@ class DeepinPlayer(QObject):
             self.musicManageWorker.loadDB)
 
     def downloadSongWorkerConnect(self):
-        self.downloadSongWorker.addSongToDataBase.connect(self.musicManageWorker.addDownloadSongToDataBase)
+        self.downloadSongWorker.addDownloadSongToDataBase.connect(self.musicManageWorker.addDownloadSongToDataBase)
 
     def loadConfig(self):
         self.mediaPlayer.setPlaylistByName(self.configWorker.lastPlaylistName)

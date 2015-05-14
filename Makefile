@@ -16,5 +16,5 @@ install:
 	# cp -r plugins ${DESTDIR}${PREFIX}/share/deepin-music
 	# cp -r wizard ${DESTDIR}${PREFIX}/share/deepin-music
 	# cp -r image/hicolor ${DESTDIR}${PREFIX}/share/icons
-	cp deepin-music-player.desktop ${DESTDIR}${PREFIX}/share/applications
-	ln -sf ${PREFIX}/share/deepin-music/src/main.py ${DESTDIR}${PREFIX}/bin/deepin-music-player
+	cp deepin-music.desktop ${DESTDIR}${PREFIX}/share/applications
+	ln -sf ${PREFIX}/share/deepin-music/src/main.py ${DESTDIR}${PREFIX}/bin/deepin-music

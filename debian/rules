@@ -13,4 +13,4 @@ override_dh_auto_install:
 
 override_dh_fixperms:
 	dh_fixperms
-	chmod 755 debian/deepin-music-player/usr/bin/deepin-music-player 
+	chmod 755 debian/deepin-music/usr/bin/deepin-music 

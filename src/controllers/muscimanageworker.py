@@ -216,7 +216,6 @@ class MusicManageWorker(QObject):
     detailArtist = pyqtSignal('QString', int)
     detailAlbum = pyqtSignal('QString', int)
     detailFolder = pyqtSignal('QString', int)
-    
 
     __contextName__ = 'MusicManageWorker'
 
@@ -395,6 +394,7 @@ class MusicManageWorker(QObject):
         if urls:
             self.addSongFiles(urls)
 
+    @pyqtSlot('QString')
     def addDownloadSongToDataBase(self, url):
         urls = [url]
         self.addSongFiles(urls)

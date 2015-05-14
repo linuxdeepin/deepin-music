@@ -56,9 +56,9 @@ class DownloadSongObject(QObject):
 
     deleteSelf = pyqtSignal(int)
     updateDBPoperty = pyqtSignal(int, 'QString', 'QVariant')
+    addSongToDB = pyqtSignal('QString')
 
     fieldsUpdated = pyqtSignal(dict)
-    addSongToDataBase = pyqtSignal('QString')
 
     def initialize(self, *agrs, **kwargs):
         self.setDict(kwargs)
@@ -78,7 +78,6 @@ class DownloadSongObject(QObject):
         self.sizeUpdated.connect(self.updateSize)
         self.progressUpdated.connect(self.updatePorgress)
         self.downloadFinished.connect(self.setFinished)
-
         self.fieldsUpdated.connect(self.updateFields)
 
     def updateSize(self, size):
@@ -92,10 +91,10 @@ class DownloadSongObject(QObject):
 
     def setFinished(self, finished):
         self.isFinished = finished
-        self.deleteSelf.emit(self.songId)
         if os.path.exists(self.temp_filename):
             os.rename(self.temp_filename, self.filename)
             self.saveTags()
+        self.deleteSelf.emit(self.songId)
 
     def updateFields(self, result):
         self.singerId = result['singerId']
@@ -114,7 +113,7 @@ class DownloadSongObject(QObject):
             song.album = self.albumName
             song.size = os.path.getsize(self.filename)
             song.saveTags()
-            self.addSongToDataBase.emit(self.filename)
+            self.addSongToDB.emit(self.filename)
 
     def startDownLoad(self):
         if os.path.exists(self.filename):
@@ -293,7 +292,7 @@ class DownloadSongWorker(QObject):
     oneStartDownloadSignal = pyqtSignal(int, bool)
     onePausedDownloadSignal = pyqtSignal(int, bool)
 
-    addSongToDataBase = pyqtSignal('QString')
+    addDownloadSongToDataBase = pyqtSignal('QString')
 
     threadPool = QThreadPool()
 
@@ -329,7 +328,7 @@ class DownloadSongWorker(QObject):
             songObj.deleteSelf.connect(self.delSongObj)
             songObj.updateDBPoperty.connect(self.updateModel)
             songObj.downloadStoped.connect(self.removeFormDownloadList)
-            songObj.addSongToDataBase.connect(self.addSongToDataBase)
+            songObj.addSongToDB.connect(self.addDownloadSongToDataBase)
             songObj.isConnected = True
 
     def songObjDisConnect(self, songObj):
@@ -337,7 +336,7 @@ class DownloadSongWorker(QObject):
             songObj.deleteSelf.disconnect(self.delSongObj)
             songObj.updateDBPoperty.disconnect(self.updateModel)
             songObj.downloadStoped.disconnect(self.removeFormDownloadList)
-            songObj.addSongToDataBase.disconnect(self.addSongToDataBase)
+            songObj.addSongToDB.disconnect(self.addDownloadSongToDataBase)
             songObj.isConnected = False
 
     def startDownloadAll(self):
