@@ -250,7 +250,6 @@ class SOSO(Engine):
                 
                 _url = self.SOSO_DOWNLOAD_URL % (urllib.quote_plus(self.change_url_to_gb(_title)), 
                                             urllib.quote_plus(self.change_url_to_gb(_artist)))
-                
             except:    
                 pass
             else:

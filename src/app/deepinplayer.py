@@ -136,6 +136,8 @@ class DeepinPlayer(QObject):
             self.web360ApiWorker.switchMediaByUrl)
         self.mediaPlayer.downloadLrc.connect(self.lrcWorker.getLrc)
 
+        self.mediaPlayer.positionChanged.connect(self.lrcWorker.getLrcText)
+
     def playlistWorkerConnect(self):
         self.playlistWorker.currentPlaylistChanged.connect(
             self.mediaPlayer.setPlaylistByName)

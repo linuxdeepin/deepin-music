@@ -14,25 +14,42 @@ from config.constants import LRCPath
 from deepin_utils.net import is_network_connected
 from dwidgets.coverlrc.lrc_download import TTPlayer, DUOMI, SOSO, TTPod
 from dwidgets.coverlrc.cover_query import poster
+from dwidgets.coverlrc.lrc_parser import LrcParser
 from dwidgets.dthreadutil import dthread
 
 
 class LrcWorker(QObject):
 
-    __contextName__ = 'LrcWorker'
-
     lrcFileExisted = pyqtSignal('QString')
     lrcDownloaded = pyqtSignal('QString', 'QString')
+
+    textChanged = pyqtSignal('QString', float, int)
+
+    __contextName__ = 'LrcWorker'
 
     @registerContext
     def __init__(self, parent=None):
         super(LrcWorker, self).__init__(parent)
         self._lrcDir = LRCPath
-
+        self.lrcParser = LrcParser()
         self.initConnect()
 
     def initConnect(self):
         self.lrcDownloaded.connect(self.getLrc)
+        self.lrcFileExisted.connect(self.parserLrc)
+
+    def parserLrc(self, filepath):
+        self.lrcParser.set_filename(filepath)
+
+    def getLrcText(self, pos):
+        ret = self.lrcParser.get_lyric_by_time(pos, self.sender().duration)
+        if ret:
+            text, percentage, lyric_id = ret
+            self.textChanged.emit(text, percentage, lyric_id)
+
+    @pyqtSlot(int, result='QString')
+    def getLyricTextById(self, lyric_id):
+        return self.lrcParser.get_item_lyric(lyric_id)
 
     def isLrcExisted(self , artist, title):
         path = self.getLrcPath(artist, title)
@@ -56,8 +73,11 @@ class LrcWorker(QObject):
         except:    
             return False
         else:
-            partial="".join( (i for i in lrc_content if (ord(i) < 128 and ord(i) != 0) ) )
-            return bool(re.search('\[\d{1,}:\d{1,}.*?\]',partial))
+            return self.validLrcContent(lrc_content)
+
+    def validLrcContent(self, content):
+        partial="".join( (i for i in content if (ord(i) < 128 and ord(i) != 0) ) )
+        return bool(re.search('\[\d{1,}:\d{1,}.*?\]',partial))
 
     @dthread
     def getLrc(self, artist, title):
@@ -78,62 +98,98 @@ class LrcWorker(QObject):
 
     def multiple_engine(self, lrc_path, artist, title):
         try:
-            ret = False
-
-            ting_result = poster.query_lrc_info(artist, title)
-            if ting_result:
-                urls = [item[2] for item in ting_result]
-                for url in urls:
-                    ret = self.downloadLRC(url, lrc_path)
-                    if ret:
-                        return lrc_path
             
-            result = TTPlayer().request(artist, title)
-
-            if result:
-                urls = [item[2] for item in result]                
-                for url in urls:
-                    ret = self.downloadLRC(url, lrc_path)
-                    if ret and self.vaild_lrc(lrc_path):
-                        return lrc_path
-                    
-            ttpod_result = TTPod().request_data(artist, title)        
-            if ttpod_result:
-                with open(lrc_path, 'wb') as fp:
-                    fp.write(ttpod_result)
-                    return lrc_path
-                        
-            duomi_result = DUOMI().request(artist, title)
-            if duomi_result:
-                urls = [item[2] for item in duomi_result]                
-                for url in urls:
-                    ret = self.downloadLRC(url, lrc_path)
-                    if ret and self.vaild_lrc(lrc_path):
-                        return lrc_path
-                        
-            soso_result =  SOSO().request(artist, title)
-            if soso_result:
-                urls = [item[2] for item in soso_result]                
-                for url in urls:
-                    ret = self.downloadLRC(url, lrc_path)
-                    if ret and self.vaild_lrc(lrc_path):
-                        return lrc_path
+            engines = [self.ttPlayerEngine, self.ttPodEngine, self.tingEngine, self.sosoEngine, self.duomiEngine]
+            for engine in engines:
+                lrcPath = engine(lrc_path, artist, title)
+                if lrcPath:
+                    return lrcPath
+            print('not result')
             try:
                 os.unlink(lrc_path)
             except:
                 pass
-                
             return None
-                    
         except Exception, e:
             raise
+            return None
+
+    def tingEngine(self, lrc_path, artist, title):
+        ting_result = poster.query_lrc_info(artist, title)
+        if ting_result:
+            urls = [item[2] for item in ting_result]
+            for url in urls:
+                ret = self.downloadLRC(url, lrc_path)
+                if ret:
+                    print('result from ting_result')
+                    return lrc_path
+                else:
+                    return None
+        else:
+            return None
+
+    def ttPlayerEngine(self, lrc_path, artist, title):
+        result = TTPlayer().request(artist, title)
+        if result:
+            urls = [item[2] for item in result]                
+            for url in urls:
+                ret = self.downloadLRC(url, lrc_path)
+                if ret:
+                    print('result from TTPlayer')
+                    return lrc_path
+                else:
+                    return None
+        else:
+            return None
+
+    def ttPodEngine(self, lrc_path, artist, title):
+        ttpod_result = TTPod().request_data(artist, title)        
+        if ttpod_result:
+            if self.validLrcContent(ttpod_result):
+                with open(lrc_path, 'wb') as fp:
+                    fp.write(ttpod_result.encode('utf-8'))
+                    print('result from TTPod')
+                    return lrc_path
+            else:
+                return None
+
+    def duomiEngine(self, lrc_path, artist, title):
+        duomi_result = DUOMI().request(artist, title)
+        if duomi_result:
+            urls = [item[2] for item in duomi_result]                
+            for url in urls:
+                ret = self.downloadLRC(url, lrc_path)
+                if ret:
+                    print('result from DUOMI')
+                    return lrc_path
+                else:
+                    return None
+        else:
+            return None
+
+    def sosoEngine(self, lrc_path, artist, title):
+        soso_result =  SOSO().request(artist, title)
+        if soso_result:
+            urls = [item[2] for item in soso_result]
+            for url in urls:
+                ret = self.downloadLRC(url, lrc_path)
+                if ret:
+                    print('result from SOSO')
+                    return lrc_path
+                else:
+                    return None
+        else:
             return None
 
     def downloadLRC(self, url, localUrl):
         try:
             r = requests.get(url)
-            with open(localUrl, "wb") as f:
-                f.write(r.content)
-            return True
+            lrcContent = r.content
+            if self.validLrcContent(lrcContent):
+                with open(localUrl, "wb") as f:
+                    f.write(lrcContent)
+                return True
+            else:
+                return False
         except:
             return False
