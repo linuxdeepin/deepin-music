@@ -23,7 +23,8 @@ class LrcWorker(QObject):
     lrcFileExisted = pyqtSignal('QString')
     lrcDownloaded = pyqtSignal('QString', 'QString')
 
-    textChanged = pyqtSignal('QString', float, int)
+    currentTextChanged = pyqtSignal('QString')
+    textInfoChanged = pyqtSignal('QString', float, int)
 
     __contextName__ = 'LrcWorker'
 
@@ -32,6 +33,7 @@ class LrcWorker(QObject):
         super(LrcWorker, self).__init__(parent)
         self._lrcDir = LRCPath
         self.lrcParser = LrcParser()
+        self._currentText = 'gvgffg'
         self.initConnect()
 
     def initConnect(self):
@@ -45,7 +47,17 @@ class LrcWorker(QObject):
         ret = self.lrcParser.get_lyric_by_time(pos, self.sender().duration)
         if ret:
             text, percentage, lyric_id = ret
-            self.textChanged.emit(text, percentage, lyric_id)
+            self.textInfoChanged.emit(text, percentage, lyric_id)
+            self.currentText = text
+
+    @pyqtProperty('QString', notify=currentTextChanged)
+    def currentText(self):
+        return self._currentText
+
+    @currentText.setter
+    def currentText(self, text):
+        self._currentText = text
+        self.currentTextChanged.emit(text)
 
     @pyqtSlot(int, result='QString')
     def getLyricTextById(self, lyric_id):
@@ -121,7 +133,6 @@ class LrcWorker(QObject):
             for url in urls:
                 ret = self.downloadLRC(url, lrc_path)
                 if ret:
-                    print('result from ting_result')
                     return lrc_path
                 else:
                     return None
@@ -135,7 +146,6 @@ class LrcWorker(QObject):
             for url in urls:
                 ret = self.downloadLRC(url, lrc_path)
                 if ret:
-                    print('result from TTPlayer')
                     return lrc_path
                 else:
                     return None
@@ -148,7 +158,6 @@ class LrcWorker(QObject):
             if self.validLrcContent(ttpod_result):
                 with open(lrc_path, 'wb') as fp:
                     fp.write(ttpod_result.encode('utf-8'))
-                    print('result from TTPod')
                     return lrc_path
             else:
                 return None
@@ -160,7 +169,6 @@ class LrcWorker(QObject):
             for url in urls:
                 ret = self.downloadLRC(url, lrc_path)
                 if ret:
-                    print('result from DUOMI')
                     return lrc_path
                 else:
                     return None
@@ -174,7 +182,6 @@ class LrcWorker(QObject):
             for url in urls:
                 ret = self.downloadLRC(url, lrc_path)
                 if ret:
-                    print('result from SOSO')
                     return lrc_path
                 else:
                     return None

@@ -38,7 +38,7 @@ class ConfigWorker(object):
         mediaPlayer = contexts['MediaPlayer']
         if mediaPlayer._playlist:
             self.lastPlaylistName = mediaPlayer._playlist.name
-            self.lastPlayedIndex = mediaPlayer._playlist.currentIndex()
+            self.lastPlayedIndex = mediaPlayer.currentIndex
         self.volume = mediaPlayer.volume
         self.playbackMode = mediaPlayer.playbackMode
 

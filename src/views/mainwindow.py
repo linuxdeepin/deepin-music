@@ -11,16 +11,20 @@ from PyQt5.QtCore import (
 from PyQt5.QtQuick import QQuickView
 from .basewindow import BaseWindow
 from controllers import registerContext, contexts
-
+from lrcwindow import LrcWindowManager
 
 class MainWindow(BaseWindow):
 
     __contextName__ = 'MainWindow'
 
+    toggleShow = pyqtSignal()
+
     @registerContext
     def __init__(self):
         super(MainWindow, self).__init__()
         self.setPosition(-100, -100)
+        self.lrcWindow = LrcWindowManager()
+        self.toggleShow.connect(self.lrcWindow.toggle)
 
     def mousePressEvent(self, event):
         # 鼠标点击事件

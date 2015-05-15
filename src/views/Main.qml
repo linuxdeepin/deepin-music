@@ -1,11 +1,11 @@
 import QtQuick 2.3
 import QtQuick.Window 2.1
 import DMusic 1.0
+// import DLrcWindow 1.0
 import "./MainWindow"
 import "./SimpleWindow"
 import "./MiniWindow"
 import "./TemporaryWindow"
-import "./LrcWindow"
 
 Rectangle {
     id: root
@@ -50,9 +50,9 @@ Rectangle {
         height: root.height
     }
 
-    LrcWindow {
-        id: lrcWindow
-    }
+    // DLrcWindow {
+    //     id: lrcWindow
+    // }
 
     MainController {
         id: mainController
@@ -60,7 +60,7 @@ Rectangle {
         mainWindow: mainWindow
         simpleWindowLoader: simpleWindowLoader
         miniWindow: miniWindow
-        lrcWindow: lrcWindow
+        // lrcWindow: lrcWindow
         constants: constants
     }
 

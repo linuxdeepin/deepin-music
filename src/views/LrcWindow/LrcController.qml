@@ -6,11 +6,21 @@ Item {
     // property var canvas
 
     function init() {
-        LrcWorker.textChanged.connect(updateLrcText)
+        // LrcWorker.textChanged.connect(updateLrcText)
     }
 
     function updateLrcText(text, percentage, lyric_id){
-        lrcTextBox.text = text
+        // lrcTextBox.text = text
+        // print(text)
+    }
+
+    Binding {
+        target: lrcTextBox
+        property: 'text'
+        value: {
+            print(LrcWorker.currentText)
+            return LrcWorker.currentText
+        }
     }
 
     Component.onCompleted: {

@@ -8,7 +8,7 @@ applicationName = 'Deepin Music'
 applicationVersion = '3.0.0'
 organizationDomain = 'linuxdeepin.com'
 organizationName = "Deepin"
-windowIcon = os.sep.join(['skin', 'images', 'PFramer.png'])
+windowIcon = os.sep.join(['skin', 'images', 'deepin-music.png'])
 windowTitle = u'Deepin Music'
 
 if qVersion().startswith('5.3'):

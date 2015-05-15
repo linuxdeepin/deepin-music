@@ -4,7 +4,11 @@ import QtQuick.Window 2.2
 Window {
     id: miniWindow
 
+    property bool hovered: false
     flags: Qt.FramelessWindowHint | Qt.Popup| Qt.WindowStaysOnTopHint
+
+    color: root.hovered? Qt.rgba(0, 0, 0, 0.2) : Qt.rgba(0, 0, 0, 0)
+
     MouseArea {
         property int dragStartX
         property int dragStartY
@@ -13,6 +17,14 @@ Window {
 
         anchors.fill: parent
         propagateComposedEvents: true
+        hoverEnabled: true
+
+        onEntered: {
+            root.hovered = true
+        }
+        onExited:{
+            root.hovered = false
+        }
 
         onPressed: { 
             var pos = WindowManageWorker.cursorPos

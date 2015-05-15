@@ -30,7 +30,7 @@ class DeepinPlayer(QObject):
         self.initControllers()
         self.initConnect()
         self.initQMLContext()
-        self.loadConfig()
+
         self.loadDB()
 
         self.timer = QTimer()
@@ -103,6 +103,7 @@ class DeepinPlayer(QObject):
         self.menuWorkerConnect()
         self.dbWorkerConnect()
         self.downloadSongWorkerConnect()
+        self.lrcWorkerConnect()
         self.qApp.aboutToQuit.connect(self.close)
 
     def web360ApiWorkerConnect(self):
@@ -180,6 +181,8 @@ class DeepinPlayer(QObject):
 
         self.musicManageWorker.loadDBSuccessed.connect(
             self.playlistWorker.loadPlaylists)
+        self.musicManageWorker.loadDBSuccessed.connect(
+            self.loadConfig)
 
     def onlineMusicManageWorkerConnect(self):
         self.onlineMusicManageWorker.downloadOnlineSongCover.connect(
@@ -247,6 +250,9 @@ class DeepinPlayer(QObject):
 
     def downloadSongWorkerConnect(self):
         self.downloadSongWorker.addDownloadSongToDataBase.connect(self.musicManageWorker.addDownloadSongToDataBase)
+
+    def lrcWorkerConnect(self):
+        self.lrcWorker.textInfoChanged.connect(self.mainWindow.lrcWindow.updateTextInfo)
 
     def loadConfig(self):
         self.mediaPlayer.setPlaylistByName(self.configWorker.lastPlaylistName)

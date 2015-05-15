@@ -106,7 +106,9 @@ Item {
     Connections {
         target: mainWindow.playBottomBar.lrcButton
         onClicked:{
-            lrcWindow.visible = !lrcWindow.visible;
+            // lrcWindow.move(Qt.point(100, 400))
+            // lrcWindow.setVisible(!lrcWindow.visible);
+            MainWindow.toggleShow();
         }
     }
 

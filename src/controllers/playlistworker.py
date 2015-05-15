@@ -259,7 +259,6 @@ class PlaylistWorker(QObject):
 
     @pyqtSlot('QString')
     def deletePlaylist(self, name):
-        print name, self._playlistNames
         self._playlistNames.remove({'name': name})
         self._playlists.pop(name)
         self.playlistNamesChanged.emit(self._playlistNames)

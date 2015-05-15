@@ -1,46 +1,156 @@
 import QtQuick 2.3
 import QtQuick.Window 2.2
 import DMusic 1.0
+import "../DMusicWidgets/LrcWindow"
 
 DMovableWindow {
     id: root
+    property bool hovered: false
     x: 200
     y: Screen.desktopAvailableHeight - 200
     width: Screen.desktopAvailableWidth - 400
     height: 100
-    color: Qt.rgba(0, 0, 0, 0)
+    // color: root.hovered? Qt.rgba(0, 0, 0, 0.2) : Qt.rgba(0, 0, 0, 0)
 
-    MouseArea {
-        anchors.fill: parent
-        hoverEnabled: true
-        propagateComposedEvents: true
-        onEntered: {
-            root.color = Qt.rgba(0, 0, 0, 0.2)
-        }
-        onExited:{
-            root.color = Qt.rgba(0, 0, 0, 0)
-        }
+    // MouseArea {
+    //     anchors.fill: parent
+    //     hoverEnabled: true
+    //     propagateComposedEvents: true
 
-        onPressed:{
-            mouse.accepted = false
-        }
+    //     onPressed:{
+    //         mouse.accepted = false
+    //     }
 
-        onClicked:{
-            mouse.accepted = false
-        }
+    //     onClicked:{
+    //         mouse.accepted = false
+    //     }
 
-        onDoubleClicked:{
-            mouse.accepted = false
-        }
-    }
+    //     onDoubleClicked:{
+    //         mouse.accepted = false
+    //     }
+
+    //     onPositionChanged:{
+    //         mouse.accepted = false
+    //     }
+    // }
 
     Rectangle {
         id: toolBar
+        
+        property int largerHeight: 24
+        property int normalHeight: 16
+
         anchors.left: parent.left
         anchors.top: parent.top
         anchors.right: parent.right
-        height: 40
-        color: 'red'
+        anchors.topMargin: 18
+        height: anchors.topMargin + toolBar.lagerHeight
+
+        // Row {
+        //     id: layout
+        //     width: 436
+        //     anchors.centerIn: parent
+        //     spacing: 14
+        //     Row {
+        //         id: playLayout
+        //         spacing: 10
+        //         Rectangle {
+        //             width: toolBar.normalHeight
+        //             height: toolBar.largerHeight
+        //             color: 'transparent'
+        //             DLrcPreButton{
+        //                 anchors.centerIn: parent
+        //                 width: toolBar.normalHeight
+        //                 height: toolBar.normalHeight
+        //             }
+        //         }
+
+        //         DLrcPlayButton {
+        //             width: toolBar.largerHeight
+        //             height: toolBar.largerHeight
+        //         }
+        //         Rectangle {
+        //             width: toolBar.normalHeight
+        //             height: toolBar.largerHeight
+        //             color: 'transparent'
+        //             DLrcNextButton{
+        //                 anchors.centerIn: parent
+        //                 width: toolBar.normalHeight
+        //                 height: toolBar.normalHeight
+        //             }
+        //         }
+        //     }
+
+        //     Rectangle {
+
+        //         width: layout.width - playLayout.width - 14
+        //         height:toolBar.largerHeight
+        //         color: "transparent"
+        //         Row {
+        //             height: toolBar.normalHeight
+        //             anchors.verticalCenter: parent.verticalCenter
+        //             spacing: 14
+        //             DLrcFontPlusButton {
+        //                 width: toolBar.normalHeight
+        //                 height: toolBar.normalHeight
+        //             }
+
+        //             DLrcFontMinusButton {
+        //                 width: toolBar.normalHeight
+        //                 height: toolBar.normalHeight
+        //             }
+
+        //             DLrcBackButton{
+        //                 width: toolBar.normalHeight
+        //                 height: toolBar.normalHeight
+        //             }
+
+        //             DLrcForwordButton{
+        //                 width: toolBar.normalHeight
+        //                 height: toolBar.normalHeight
+        //             }
+
+        //             DLrcThemeButton{
+        //                 width: toolBar.normalHeight
+        //                 height: toolBar.normalHeight
+        //             }
+        //             DLrcSingleLineButton{
+        //                 width: toolBar.normalHeight
+        //                 height: toolBar.normalHeight
+        //             }
+
+        //             DLrcDoubleLineButton{
+        //                 width: toolBar.normalHeight
+        //                 height: toolBar.normalHeight
+        //             }
+
+        //             DLrcKalaokButton{
+        //                 width: toolBar.normalHeight
+        //                 height: toolBar.normalHeight
+        //             }
+
+        //             DLrcLockButton{
+        //                 width: toolBar.normalHeight
+        //                 height: toolBar.normalHeight
+        //             }
+
+        //             DLrcSettingButton{
+        //                 width: toolBar.normalHeight
+        //                 height: toolBar.normalHeight
+        //             }
+        //             DLrcSearchButton{
+        //                 width: toolBar.normalHeight
+        //                 height: toolBar.normalHeight
+        //             }
+        //             DLrcCloseButton{
+        //                 width: toolBar.normalHeight
+        //                 height: toolBar.normalHeight
+        //             }
+        //         }
+        //     }
+
+            
+        // }
     }
 
     Rectangle {
@@ -57,13 +167,42 @@ DMovableWindow {
 
         Text {
             id: lrcTextBox
-            anchors.fill: parent
-            font.pixelSize: 50
+            anchors.centerIn: parent
+            font.pixelSize: 30
             color: "green"
             text: '111111111111111111111'
             // onTextChanged:{
             //     // print(text)
             //     // canvas.requestPaint();
+            // }
+
+            // MouseArea {
+            //     anchors.fill: parent
+            //     hoverEnabled: true
+            //     propagateComposedEvents: true
+            //     onEntered: {
+            //         print('+++++++++++')
+            //         root.hovered = true
+            //     }
+            //     onExited:{
+            //         root.hovered = false
+            //     }
+
+            //     onPressed:{
+            //         mouse.accepted = false
+            //     }
+
+            //     onClicked:{
+            //         mouse.accepted = false
+            //     }
+
+            //     onDoubleClicked:{
+            //         mouse.accepted = false
+            //     }
+
+            //     onPositionChanged:{
+            //         mouse.accepted = false
+            //     }
             // }
         }
 
@@ -101,4 +240,5 @@ DMovableWindow {
         // canvas: canvas
     }
 
+    
 }
