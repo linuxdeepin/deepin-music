@@ -11,6 +11,19 @@ Item {
         MediaPlayer.playLocalMedia(url);
     }
 
+    Binding {
+        target: detailView
+        property: 'currentIndex'
+        value: {
+            var model = detailView.model
+            for(var i=0; i<detailView.count; i++){
+                if (model.get(i).url == MediaPlayer.url){
+                    return i;
+                }
+            }
+        }
+    }
+
     Connections {
         target: detailView
 

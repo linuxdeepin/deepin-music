@@ -7,6 +7,20 @@ Item {
         MediaPlayer.playLocalMedia(url);
     }
 
+    Binding {
+        target: folderView
+        property: 'currentIndex'
+        value: {
+            var model = folderView.model
+            for(var i=0; i<folderView.count; i++){
+                if (model.get(i).url == MediaPlayer.url){
+                    return i;
+                }
+            }
+            return -1;
+        }
+    }
+
     Connections {
         target: folderView
 

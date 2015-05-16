@@ -30,14 +30,9 @@ Rectangle {
                 active: {
                     var playlist = MediaPlayer.playlist;
                     if (playlist){
-                        if (MediaPlayer.url == url){
-                            if (MediaPlayer.playing){
-                                return true
-                            }else{
-                                return false
-                            }
-                        }
-                        else{
+                        if (MediaPlayer.currentIndex == index && MediaPlayer.playing){
+                            return true
+                        }else{
                             return false
                         }
                     }

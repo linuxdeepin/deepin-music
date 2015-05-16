@@ -19,10 +19,17 @@ Item {
         }
     }
 
+
+
     function getModelByPlaylistName(name){
         if (name){
             var model = eval('Playlist_' + Qt.md5(name));
-            return model;
+            print(Qt.md5(name))
+            if (model){
+                return model
+            }else{
+                return EmptyModel
+            }
         }else{
             return EmptyModel
         }
@@ -54,9 +61,14 @@ Item {
         property: 'currentIndex'
         value: {
             var playlist = MediaPlayer.playlist;
-            if (playlist && playlist.name == playlistDetailBox.currentPlaylistName){
-                return playlist.currentIndex;
-            }else{
+            if (playlist){
+                if (playlist && playlist.name == playlistDetailBox.currentPlaylistName){
+                    return playlist.currentIndex;
+                }else{
+                    return -1;
+                }
+            }
+            else{
                 return -1;
             }
         }

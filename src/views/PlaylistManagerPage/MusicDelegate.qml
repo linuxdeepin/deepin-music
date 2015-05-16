@@ -11,7 +11,6 @@ Rectangle {
     width: parent.width
     height: 24
     color: "transparent"
-
     Row {
 
         anchors.fill: parent
@@ -49,8 +48,8 @@ Rectangle {
                 active: {
                     var playlist = MediaPlayer.playlist;
                     if (playlist){
-                        if (MediaPlayer.url == url && playlist.name == mediaItem.ListView.view.currentPlaylistName){
-                            if (MediaPlayer.playing){
+                        if (playlist.name == mediaItem.ListView.view.currentPlaylistName){
+                            if (MediaPlayer.currentIndex == index && MediaPlayer.playing){
                                 return true
                             }else{
                                 return false
@@ -107,6 +106,7 @@ Rectangle {
     }
 
     states: [
+
         State {
             name: "Entered"
             PropertyChanges { target: mediaItem; color: "lightgray";}
@@ -119,11 +119,18 @@ Rectangle {
             PropertyChanges { target: playButton; visible: false;}
             PropertyChanges { target: indexTip; visible: !waveBar.active;}
         },
+
         State {
             name: "DoubleClicked"
-            when: mediaItem.ListView.isCurrentItem
-            PropertyChanges { target: indexTip; visible: !waveBar.active ;}
+            PropertyChanges { target: indexTip; visible: false ;}
             PropertyChanges { target: playButton; visible: !waveBar.active ;}
+        },
+
+        State {
+            name: "current"
+            when: mediaItem.ListView.isCurrentItem
+            PropertyChanges { target: indexTip; visible: false ;}
+            PropertyChanges { target: playButton; visible: false ;}
         }
     ]
 
@@ -144,6 +151,7 @@ Rectangle {
             }
         }
         onDoubleClicked: {
+            mediaItem.state = 'DoubleClicked';
             if (mouse.button == Qt.LeftButton){
                 mediaItem.ListView.view.currentIndex = index;
                 mediaItem.ListView.view.playMusicByUrl(url);

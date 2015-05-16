@@ -33,7 +33,11 @@ Item {
     function getModelByPlaylistName(name){
         if (name){
             var model = eval('Playlist_' + Qt.md5(name));
-            return model;
+            if (model){
+                return model;
+            }else{
+                return EmptyModel        
+            }
         }else{
             return EmptyModel
         }

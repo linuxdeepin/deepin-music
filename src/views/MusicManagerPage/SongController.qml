@@ -9,6 +9,20 @@ Item {
         MediaPlayer.playLocalMedia(url);
     }
 
+    Binding {
+        target: songsView
+        property: 'currentIndex'
+        value: {
+            var model = songsView.model
+            for(var i=0; i<songsView.count; i++){
+                if (model.get(i).url == MediaPlayer.url){
+                    return i;
+                }
+            }
+            return -1;
+        }
+    }
+
     Connections {
         target: songsView
 
