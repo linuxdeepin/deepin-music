@@ -121,13 +121,13 @@ class DLrcWindow(FMoveableWidget):
             painter.setPen(QPen(self.mask_linear_gradient, 0))
             painter.drawText(self.startX, self.startY, self.textWidth * self.percentage , self.textHeight, Qt.AlignLeft, self.text)
 
-        if self.isBackgroundVisible:
-            color = QColor('lightgray')
-            color.setAlpha(30)
-            painter.fillRect(0, self.startY, self.width(), self.textHeight, color)
-            self.button.show()
-        else:
-            self.button.hide()
+            if self.isBackgroundVisible:
+                color = QColor('lightgray')
+                color.setAlpha(30)
+                painter.fillRect(0, self.startY, self.width(), self.textHeight, color)
+                self.button.show()
+            else:
+                self.button.hide()
 
     def eventFilter(self, obj, event):
         if event.type() == QEvent.HoverEnter:

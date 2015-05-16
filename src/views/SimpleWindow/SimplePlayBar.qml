@@ -172,6 +172,8 @@ Rectangle{
                             id: rowLayout
                             anchors.centerIn: parent
 
+                            spacing: 0
+
                             DVolumeButton{
                                 id: volumeButton
                                 width: musicToolbar.iconsWidth

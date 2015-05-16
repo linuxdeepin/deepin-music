@@ -27,10 +27,27 @@ Rectangle {
                 id: waveBar
                 itemHeight: 16
                 itemWidth: 3
-                active: false
+                active: {
+                    var playlist = MediaPlayer.playlist;
+                    if (playlist){
+                        if (MediaPlayer.url == url){
+                            if (MediaPlayer.playing){
+                                return true
+                            }else{
+                                return false
+                            }
+                        }
+                        else{
+                            return false
+                        }
+                    }
+                    else{
+                        return false
+                    }
+                }
             }
 
-            DPlayButton {
+            DPlayTipButton {
                 id: playButton
                 anchors.centerIn: parent
                 width: 24
@@ -81,16 +98,19 @@ Rectangle {
 
     states: [
         State {
-            name: "Current"
-            when: mediaItem.ListView.isCurrentItem
-            PropertyChanges { target: musicText; color: "#2ca7f8";}
-            PropertyChanges { target: durationText; color: "#2ca7f8";}
-            PropertyChanges { target: waveBar; active: true ;}
+            name: "Entered"
+            PropertyChanges { target: mediaItem; color: "lightgray";}
+            PropertyChanges { target: playButton; visible: !waveBar.active;}
         },
         State {
-            name: "!Current"
-            when: !mediaItem.ListView.isCurrentItem
-            PropertyChanges { target: waveBar; active: false ;}
+            name: "Exited"
+            PropertyChanges { target: mediaItem; color: "transparent";}
+            PropertyChanges { target: playButton; visible: false;}
+        },
+        State {
+            name: "DoubleClicked"
+            when: mediaItem.ListView.isCurrentItem
+            PropertyChanges { target: playButton; visible: !waveBar.active ;}
         }
     ]
 
@@ -99,28 +119,23 @@ Rectangle {
         hoverEnabled: true
         acceptedButtons: Qt.LeftButton | Qt.RightButton
         onEntered: {
-            if (mediaItem.ListView.view.currentIndex != index){
-                playButton.visible = true;
-                mediaItem.color = "lightgray"
-            }else{
-                playButton.visible = ! waveBar.visible;
-                mediaItem.color = "transparent"
-            }
+            mediaItem.state = 'Entered';
         }
         onExited: {
-            playButton.visible = false
-            mediaItem.color = "transparent"
+            mediaItem.state = 'Exited';
         }
         onClicked: {
+            if (mouse.button == Qt.RightButton){
+                mediaItem.ListView.view.menuShowed(url);
+            }
+        }
+        onDoubleClicked: {
             if (mouse.button == Qt.LeftButton){
                 mediaItem.ListView.view.currentIndex = index;
                 if (playButton.visible){
                     mediaItem.ListView.view.playMusicByUrl(url);
                 }
                 playButton.visible = false;
-            }
-            else if (mouse.button == Qt.RightButton){
-                mediaItem.ListView.view.menuShowed(url);
             }
         }
     }

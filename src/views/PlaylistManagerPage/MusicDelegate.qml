@@ -1,6 +1,7 @@
 import QtQuick 2.3
 import DMusic 1.0
 import "../DMusicWidgets"
+import "../DMusicWidgets/PlaylistPage"
 
 Rectangle {
     id: mediaItem
@@ -30,6 +31,14 @@ Rectangle {
                 font.pixelSize: 10
                 text: index + 1
                 visible: !waveBar.active
+            }
+
+            DPlayTipButton {
+                id: playButton
+                anchors.centerIn: parent
+                width: 24
+                height: 24
+                visible: false
             }
 
             DWaveBar {
@@ -97,24 +106,47 @@ Rectangle {
         }
     }
 
+    states: [
+        State {
+            name: "Entered"
+            PropertyChanges { target: mediaItem; color: "lightgray";}
+            PropertyChanges { target: playButton; visible: !waveBar.active;}
+            PropertyChanges { target: indexTip; visible: false;}
+        },
+        State {
+            name: "Exited"
+            PropertyChanges { target: mediaItem; color: "transparent";}
+            PropertyChanges { target: playButton; visible: false;}
+            PropertyChanges { target: indexTip; visible: !waveBar.active;}
+        },
+        State {
+            name: "DoubleClicked"
+            when: mediaItem.ListView.isCurrentItem
+            PropertyChanges { target: indexTip; visible: !waveBar.active ;}
+            PropertyChanges { target: playButton; visible: !waveBar.active ;}
+        }
+    ]
+
     MouseArea {
         id: mouseArea
         anchors.fill: parent
         hoverEnabled: true
         acceptedButtons: Qt.LeftButton | Qt.RightButton
         onEntered: {
-                mediaItem.color = "lightgray"
+            mediaItem.state = 'Entered';
         }
         onExited: {
-            mediaItem.color = "transparent"
+            mediaItem.state = 'Exited';
         }
-        onClicked: {
+        onClicked:{
+            if (mouse.button == Qt.RightButton){
+                mediaItem.ListView.view.menuShowed(url);
+            }
+        }
+        onDoubleClicked: {
             if (mouse.button == Qt.LeftButton){
                 mediaItem.ListView.view.currentIndex = index;
                 mediaItem.ListView.view.playMusicByUrl(url);
-            }
-            else if (mouse.button == Qt.RightButton){
-                mediaItem.ListView.view.playlistMenuShow(url);
             }
         }
     }

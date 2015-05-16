@@ -65,7 +65,6 @@ Item {
 
     Connections {
         target: playlistView
-        // onChangeIndex: changeIndex(index)
         onPlayMusicByUrl: playMusicByUrl(songUrl)
         onMenuShowed: {
             var playlist = MediaPlayer.playlist;

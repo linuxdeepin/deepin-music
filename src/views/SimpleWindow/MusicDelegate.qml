@@ -28,10 +28,21 @@ Rectangle {
                 itemHeight: 30
                 itemWidth: 5
                 active: {
-                    if (MediaPlayer.state == 1){
-                        return true;
-                    }else{
-                        return false;
+                    var playlist = MediaPlayer.playlist;
+                    if (playlist){
+                        if (MediaPlayer.url == url){
+                            if (MediaPlayer.playing){
+                                return true
+                            }else{
+                                return false
+                            }
+                        }
+                        else{
+                            return false
+                        }
+                    }
+                    else{
+                        return false
                     }
                 }
             }
@@ -71,18 +82,28 @@ Rectangle {
         }
     }
 
-
     states: [
+        State {
+            name: "Entered"
+            PropertyChanges { target: mediaItem; color: "lightgray";}
+            PropertyChanges { target: playButton; visible: !waveBar.active;}
+        },
+        State {
+            name: "Exited"
+            PropertyChanges { target: mediaItem; color: "transparent";}
+            PropertyChanges { target: playButton; visible: false;}
+        },
+        State {
+            name: "DoubleClicked"
+            when: mediaItem.ListView.isCurrentItem
+            PropertyChanges { target: playButton; visible: !waveBar.active ;}
+        },
+
         State {
             name: "Current"
             when: mediaItem.ListView.isCurrentItem
             PropertyChanges { target: musicText; color: "#4ba3fb" ; font.pixelSize: 16}
             PropertyChanges { target: artistText; color: "#4ba3fb" ; font.pixelSize: 14}
-        },
-        State {
-            name: "!Current"
-            when: !mediaItem.ListView.isCurrentItem
-            PropertyChanges { target: waveBar; active: false ;}
         }
     ]
 
@@ -91,26 +112,25 @@ Rectangle {
         hoverEnabled: true
         acceptedButtons: Qt.LeftButton | Qt.RightButton
         onEntered: {
-            if (mediaItem.ListView.view.currentIndex != index){
-                playButton.visible = true;
-            }else{
-                playButton.visible = ! waveBar.visible;
-            }
+            mediaItem.state = 'Entered'
         }
         onExited: {
-            playButton.visible = false
+            mediaItem.state = 'Exited'
         }
-        onClicked: {
+
+        onClicked:{
+            if (mouse.button == Qt.RightButton){
+                mediaItem.menuShowed(index);
+            }
+        }
+
+        onDoubleClicked: {
             if (mouse.button == Qt.LeftButton){
                 mediaItem.ListView.view.currentIndex = index;
                 if (playButton.visible){
                     var url = mediaItem.ListView.view.model.get(index).url;
                     mediaItem.ListView.view.playMusicByUrl(url);
                 }
-                playButton.visible = false;
-            }
-            else if (mouse.button == Qt.RightButton){
-                mediaItem.menuShowed(index);
             }
         }
     }

@@ -49,6 +49,19 @@ Item {
         }
     }
 
+    Binding {
+        target: playlistView
+        property: 'currentIndex'
+        value: {
+            var playlist = MediaPlayer.playlist;
+            if (playlist && playlist.name == playlistDetailBox.currentPlaylistName){
+                return playlist.currentIndex;
+            }else{
+                return -1;
+            }
+        }
+    }
+
     Connections {
         target: playlistView
 
@@ -57,7 +70,7 @@ Item {
             playMusicByUrl(songUrl);
         }
 
-        onPlaylistMenuShow: {
+        onMenuShowed: {
             MenuWorker.playlistSongMenuShow(playlistDetailBox.currentPlaylistName, songUrl);
         }
     }
