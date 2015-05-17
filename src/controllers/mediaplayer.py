@@ -366,28 +366,30 @@ class MediaPlayer(QObject):
     @pyqtSlot('QString')
     def playLocalMedia(self, url):
         urls = self._playlist.urls
-        index = urls.index(url)
-        self._playlist.setCurrentIndex(index)
+        if url in urls:
+            index = urls.index(url)
+            self._playlist.setCurrentIndex(index)
 
-        self.updateMediaView(url)
-        self.playMediaByUrl(url)
+            self.updateMediaView(url)
+            self.playMediaByUrl(url)
 
-        self.url = url
+            self.url = url
 
     @pyqtSlot('QVariant')
     def playOnlineMedia(self, result):
         url = result['url']
         urls = self._playlist.urls
-        index = urls.index(url)
-        self._playlist.setCurrentIndex(index)
         if url in urls:
-            self.updateMediaView(url)
+            index = urls.index(url)
+            self._playlist.setCurrentIndex(index)
+            if url in urls:
+                self.updateMediaView(url)
 
-        if 'playlinkUrl' in result:
-            playlinkUrl = result['playlinkUrl']
-            self.playMediaByUrl(playlinkUrl)
+            if 'playlinkUrl' in result:
+                playlinkUrl = result['playlinkUrl']
+                self.playMediaByUrl(playlinkUrl)
 
-            self.url = url
+                self.url = url
 
     def updateMediaView(self, url):
         if url.startswith('http'):

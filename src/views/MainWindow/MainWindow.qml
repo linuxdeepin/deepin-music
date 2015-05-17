@@ -21,7 +21,6 @@ Rectangle {
     property var playBottomBar: playBottomBar
     property var webEngineViewPage: webEngineViewPage
     property var mainWindowController: mainWindowController
-    property var temporaryLoader: temporaryLoader
 
     color: "white"
     focus: true
@@ -136,12 +135,5 @@ Rectangle {
         leftSideBar: leftSideBar
         webEngineViewPage: webEngineViewPage
         playBottomBar: playBottomBar
-    }
-
-    Loader {
-        id: temporaryLoader
-        y: 150
-        anchors.right: parent.right
-        asynchronous: true
     }
 }

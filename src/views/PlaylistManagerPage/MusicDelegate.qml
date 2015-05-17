@@ -1,7 +1,7 @@
 import QtQuick 2.3
 import DMusic 1.0
 import "../DMusicWidgets"
-import "../DMusicWidgets/PlaylistPage"
+import "../DMusicWidgets/PublicWidgets"
 
 Rectangle {
     id: mediaItem
@@ -27,9 +27,32 @@ Rectangle {
         }
     }
 
+    property bool isFavorite:{
+        if (mediaItem.ListView.view.currentPlaylistName == 'favorite'){
+            return true
+        }else{
+            return PlaylistWorker.isFavorite(url);
+        }
+    }
+
+
+    function getModelByPlaylistName(name){
+        if (name){
+            var model = eval('Playlist_' + Qt.md5(name));
+            if (model){
+                return model
+            }else{
+                return EmptyModel
+            }
+        }else{
+            return EmptyModel
+        }
+    }
+
     width: parent.width
     height: 24
     color: "transparent"
+
     Row {
 
         anchors.fill: parent
@@ -94,16 +117,47 @@ Rectangle {
                 text: artist
             }
 
-            Text {
-                id: durationText
-                width: 50
-                height: 24
-                color: "#8a8a8a"
-                font.pixelSize: 12
-                elide: Text.ElideRight
-                verticalAlignment: Text.AlignVCenter
-                text: UtilWorker.duration_to_string(duration)
+            Row {
+                spacing: 30
+                Text {
+                    id: durationText
+                    width: 50
+                    height: 24
+                    color: "#8a8a8a"
+                    font.pixelSize: 12
+                    elide: Text.ElideRight
+                    verticalAlignment: Text.AlignVCenter
+                    text: UtilWorker.duration_to_string(duration)
+                }
+
+                Row {
+
+                    DFavoriteButton {
+                        id: favoriteButton
+                        width: 24
+                        height: 24
+                        isFavorite: mediaItem.isFavorite
+                        onClicked:{
+                            
+                            favoriteButton.isFavorite = !favoriteButton.isFavorite;
+                            if (favoriteButton.isFavorite){
+                                SignalManager.addtoFavorite(url);
+                            }else{
+                                SignalManager.removeFromFavorite(url);
+                            }
+                        }
+                    }
+
+                    DDownloadButton {
+                        id: downloadButton
+                        width: 24
+                        height: 24
+                    }
+                }
+
             }
+
+            
         }
     }
 
@@ -140,6 +194,7 @@ Rectangle {
         id: mouseArea
         anchors.fill: parent
         hoverEnabled: true
+        propagateComposedEvents: true
         acceptedButtons: Qt.LeftButton | Qt.RightButton
         onEntered: {
             mediaItem.state = 'Entered';
@@ -151,6 +206,8 @@ Rectangle {
             if (mouse.button == Qt.RightButton){
                 mediaItem.ListView.view.menuShowed(url);
             }
+
+            mouse.accepted = false;
         }
         onDoubleClicked: {
             mediaItem.state = 'DoubleClicked';

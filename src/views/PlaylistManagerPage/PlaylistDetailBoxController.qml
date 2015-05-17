@@ -35,14 +35,6 @@ Item {
     }
 
     Binding {
-        target: titleText
-        property: 'text'
-        value: {
-            return I18nWorker.song + '   (' + playlistView.count +')'
-        }
-    }
-
-    Binding {
         target: noMusicTip
         property: 'visible'
         value: {

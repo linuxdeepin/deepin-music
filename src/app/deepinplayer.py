@@ -13,6 +13,7 @@ from controllers import OnlineMusicManageWorker, MenuWorker, WindowManageWorker
 from controllers import MediaPlayer, PlaylistWorker, CoverWorker
 from controllers import ConfigWorker, DBWorker, I18nWorker
 from controllers import UtilWorker, DownloadSongWorker, LrcWorker
+from controllers import signalManager
 from controllers.mediaplayer import gPlayer
 from deepin_utils.file import get_parent_dir
 import config

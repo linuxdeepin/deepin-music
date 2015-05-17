@@ -4,6 +4,5 @@ import DMusic 1.0
 DSvgButton{
     id: playButton
     normal_opacity: 0.8
-    color: "transparent"
-    normal_image: '../../../skin/svg/playlist.play.svg'
+    normal_image: '../../../skin/svg/download.arrow2.svg'
 }

@@ -1,6 +1,6 @@
 import QtQuick 2.3
 import DMusic 1.0
-import "../DMusicWidgets/TermporyWindow"
+import "../DMusicWidgets/PublicWidgets"
 
 Rectangle {
     id: mediaItem

@@ -6,7 +6,7 @@ Item {
     property var mainWindow
     property var simpleWindowLoader
     property var miniWindow
-    property var lrcWindow
+    property var temporaryLoader
     property var constants
 
     function initConnect() {
@@ -62,7 +62,7 @@ Item {
     }
 
     function destoryTermporyWindow(){
-        mainWindow.temporaryLoader.source = ''
+        temporaryLoader.source = ''
         mainWindow.focus = true;
     }
 
@@ -93,9 +93,9 @@ Item {
     Connections {
         target: mainWindow.playBottomBar.playlistButton
         onClicked:{
-            if(mainWindow.temporaryLoader.source == ''){
-                mainWindow.temporaryLoader.source = './TemporaryWindow/TemporaryWindow.qml'
-                mainWindow.temporaryLoader.focus = true;
+            if (temporaryLoader.source == ''){
+                temporaryLoader.source = './TemporaryWindow/TemporaryWindow.qml'
+                temporaryLoader.focus = true;
                 mainWindow.focus = false;
             }else{
                 destoryTermporyWindow();
@@ -113,9 +113,9 @@ Item {
     }
 
     Connections {
-        target: mainWindow.temporaryLoader
+        target: temporaryLoader
         onLoaded:{
-            var temporyWindow = mainWindow.temporaryLoader.item;
+            var temporyWindow = temporaryLoader.item;
             if (temporyWindow){
                 var closeButton = temporyWindow.closeButton;
                 closeButton.clicked.connect(destoryTermporyWindow);
