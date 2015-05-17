@@ -11,6 +11,19 @@ Rectangle {
     property var songListModel: songListModel
     property var currentPlaylistName
 
+    function getModelByPlaylistName(name){
+        if (name){
+            var model = eval('Playlist_' + Qt.md5(name));
+            if (model){
+                return model;
+            }else{
+                return EmptyModel        
+            }
+        }else{
+            return EmptyModel
+        }
+    }
+
     Rectangle {
         id: detailBox
         anchors.fill: parent
@@ -131,7 +144,7 @@ Rectangle {
 
                 DListModel {
                     id: songListModel
-                    pymodel: EmptyModel
+                    pymodel: getModelByPlaylistName(currentPlaylistName)
                 }
 
                 Rectangle {

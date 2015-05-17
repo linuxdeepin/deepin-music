@@ -47,6 +47,12 @@ Item {
         }
     }
 
+    Binding {
+        target: customPlaylistView
+        property: 'model'
+        value: PlaylistWorker.playlistNames
+    }
+
     Connections {
         target: addButton
         onClicked: {
@@ -66,7 +72,7 @@ Item {
             customPlaylistView.anchors.top =  playlistTitle.bottom;
             customPlaylistView.anchors.topMargin =  0;
 
-            playlistNavgationBar.addPlaylistName(playlistInputText.text)
+            playlistNavgationBar.addPlaylistName(playlistInputText.text);
 
             checkedByName(playlistInputText.text);
 
@@ -83,7 +89,7 @@ Item {
             }
             
             customPlaylistView.currentIndex = -1
-            playlistNavgationBar.playlistNameChanged(starDelegate.name);
+            playlistNavgationBar.playlistNameChanged  (starDelegate.name);
         }
 
         onRightClicked:{
@@ -101,7 +107,7 @@ Item {
             }
             
             customPlaylistView.currentIndex = -1
-            playlistNavgationBar.playlistNameChanged(temporaryDelegate.name);
+            playlistNavgationBar.playlistNameChanged  (temporaryDelegate.name);
         }
         onRightClicked:{
             MenuWorker.ftPlaylistNavigationMenuShow('temporary');
@@ -122,7 +128,7 @@ Item {
                 temporaryDelegate.state = '!Checked'
             }
             if (name != playlistNavgationBar._playlistName){
-                playlistNavgationBar.playlistNameChanged(name);
+                playlistNavgationBar.playlistNameChanged  (name);
                 playlistNavgationBar._playlistName = name;
             }
         }

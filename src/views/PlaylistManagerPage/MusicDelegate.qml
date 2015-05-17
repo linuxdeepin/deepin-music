@@ -49,6 +49,18 @@ Rectangle {
         }
     }
 
+    function favoriteOn(songUrl) {
+        if (songUrl == url){
+            favoriteButton.isFavorite = true;
+        }
+    }
+
+    function favoriteOff(songUrl) {
+        if (songUrl == url){
+            favoriteButton.isFavorite = false;
+        }
+    }
+
     width: parent.width
     height: 24
     color: "transparent"
@@ -138,9 +150,7 @@ Rectangle {
                         height: 24
                         isFavorite: mediaItem.isFavorite
                         onClicked:{
-                            
-                            favoriteButton.isFavorite = !favoriteButton.isFavorite;
-                            if (favoriteButton.isFavorite){
+                            if (!favoriteButton.isFavorite){
                                 SignalManager.addtoFavorite(url);
                             }else{
                                 SignalManager.removeFromFavorite(url);
@@ -216,5 +226,10 @@ Rectangle {
                 mediaItem.ListView.view.playMusicByUrl(url);
             }
         }
+    }
+
+    Component.onCompleted: {
+        SignalManager.addtoFavorite.connect(favoriteOn);
+        SignalManager.removeFromFavorite.connect(favoriteOff);
     }
 }

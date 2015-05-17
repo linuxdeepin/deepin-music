@@ -3,7 +3,7 @@ import QtQuick 2.3
 Item {
     property var playlistPage
     property var playlistNavgationBar
-    property var playlistDetailBox
+    property var playlistDetailBoxLoader
     property var currentPlaylistName: ''
 
     function init() {
@@ -30,36 +30,6 @@ Item {
         }
     }
 
-    function getModelByPlaylistName(name){
-        if (name){
-            var model = eval('Playlist_' + Qt.md5(name));
-            if (model){
-                return model;
-            }else{
-                return EmptyModel        
-            }
-        }else{
-            return EmptyModel
-        }
-    }
-
-    Binding { 
-        target: playlistNavgationBar.customPlaylistView
-        property: 'model'
-        value: PlaylistWorker.playlistNames
-    }
-
-    Binding {
-        target: playlistDetailBox
-        property: 'currentPlaylistName'
-        value: currentPlaylistName
-    }
-
-    Binding {
-        target: playlistDetailBox.songListModel
-        property: 'pymodel'
-        value: getModelByPlaylistName(currentPlaylistName)
-    }
 
     Connections {
         target: playlistNavgationBar
@@ -82,6 +52,10 @@ Item {
 
             currentPlaylistName = nameId;
         }
+    }
+
+    onCurrentPlaylistNameChanged:{
+        playlistDetailBoxLoader.setSource('./PlaylistDetailBox.qml', {'currentPlaylistName': currentPlaylistName})
     }
 
     Component.onCompleted: {

@@ -153,7 +153,6 @@ class DMediaPlaylist(QMediaPlaylist):
         super(DMediaPlaylist, self).addMedia(mediaContent)
 
     def removeMediaByUrl(self, url):
-        print self.name, url
         if url in self._urls:
             index = self._urls.index(url)
             self._urls.remove(url)
@@ -286,7 +285,6 @@ class PlaylistWorker(QObject):
             if name not in ['favorite', 'temporary']:
                 self._playlistNames.insert(0, {'name': name})
                 self.playlistNames = self._playlistNames
-
         return self._playlists[name]
 
     @pyqtSlot('QString')
@@ -350,7 +348,10 @@ class PlaylistWorker(QObject):
     def addSongToPlaylist(self, url, playlistName):
         if playlistName in self._playlists:
             playlist =  self._playlists[playlistName]
-            playlist.addMedia(url)
+            if playlistName == 'favorite':
+                signalManager.addtoFavorite.emit(url)
+            else:
+                playlist.addMedia(url)
 
     def addSongsToPlaylist(self, value, playlistName, _type):
         if playlistName in self._playlists:

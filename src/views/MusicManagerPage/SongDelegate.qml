@@ -38,6 +38,20 @@ Rectangle {
         }
     }
 
+    property bool isFavorite:PlaylistWorker.isFavorite(url);
+
+    function favoriteOn(songUrl) {
+        if (songUrl == url){
+            favoriteButton.isFavorite = true;
+        }
+    }
+
+    function favoriteOff(songUrl) {
+        if (songUrl == url){
+            favoriteButton.isFavorite = false;
+        }
+    }
+
     width: parent.width
     height: 24
     color: "transparent"
@@ -130,22 +144,45 @@ Rectangle {
                     text: album
                 }
             }
-            
-            Rectangle{
-                width: 58
-                height: 24
-                color: "transparent"
-                Text {
-                    id: durationTetx
-                    anchors.fill: parent
-                    anchors.leftMargin: 12
-                    color: "#8a8a8a"
-                    font.pixelSize: 12
-                    elide: Text.ElideRight
-                    verticalAlignment: Text.AlignVCenter
-                    text: UtilWorker.duration_to_string(duration)
+
+            Row {
+                spacing: 30
+                
+                Rectangle{
+                    width: 58
+                    height: 24
+                    color: "transparent"
+                    Text {
+                        id: durationTetx
+                        anchors.fill: parent
+                        anchors.leftMargin: 12
+                        color: "#8a8a8a"
+                        font.pixelSize: 12
+                        elide: Text.ElideRight
+                        verticalAlignment: Text.AlignVCenter
+                        text: UtilWorker.duration_to_string(duration)
+                    }
                 }
+
+                Row {
+
+                    DFavoriteButton {
+                        id: favoriteButton
+                        width: 24
+                        height: 24
+                        isFavorite: mediaItem.isFavorite
+                        onClicked:{
+                            if (!favoriteButton.isFavorite){
+                                SignalManager.addtoFavorite(url);
+                            }else{
+                                SignalManager.removeFromFavorite(url);
+                            }
+                        }
+                    }
+                }
+
             }
+
         }
     }
 
@@ -174,6 +211,7 @@ Rectangle {
         id: mouseArea
         anchors.fill: parent
         hoverEnabled: true
+        propagateComposedEvents: true
         acceptedButtons: Qt.LeftButton | Qt.RightButton
 
         onEntered: {
@@ -189,6 +227,7 @@ Rectangle {
             if (mouse.button == Qt.RightButton){
                 mediaItem.ListView.view.menuShowed(url);
             }
+            mouse.accepted = false;
         }
         onDoubleClicked: {
             var url = mediaItem.ListView.view.model.get(index).url;
@@ -197,5 +236,10 @@ Rectangle {
                 mediaItem.ListView.view.playMusicByUrl(url);
             }
         }
+    }
+
+    Component.onCompleted: {
+        SignalManager.addtoFavorite.connect(favoriteOn);
+        SignalManager.removeFromFavorite.connect(favoriteOff);
     }
 }

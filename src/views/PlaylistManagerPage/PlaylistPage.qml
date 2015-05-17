@@ -26,8 +26,8 @@ Rectangle {
         }
 
 
-        PlaylistDetailBox {
-            id: playlistDetailBox
+        Loader {
+            id: playlistDetailBoxLoader
             width: root.width - playlistNavgationBar.width - 14
             height: root.height - topMargin
         }
@@ -37,6 +37,6 @@ Rectangle {
         id: playlistPageController
         playlistPage: root
         playlistNavgationBar: playlistNavgationBar
-        playlistDetailBox: playlistDetailBox
+        playlistDetailBoxLoader: playlistDetailBoxLoader
     }
 }
