@@ -6,6 +6,19 @@ Rectangle {
     id: mediaItem
 
     property var playButton: playButton
+    property bool isWavBarActive: {
+        var playlist = MediaPlayer.playlist;
+        if (playlist){
+            if (playlist.url == url && MediaPlayer.playing){
+                return true
+            }else{
+                return false
+            }
+        }
+        else{
+            return false
+        }
+    }
 
     width: parent.width
     height: 44
@@ -27,19 +40,7 @@ Rectangle {
                 id: waveBar
                 itemHeight: 30
                 itemWidth: 5
-                active: {
-                    var playlist = MediaPlayer.playlist;
-                    if (playlist){
-                        if (MediaPlayer.currentIndex == index && MediaPlayer.playing){
-                            return true
-                        }else{
-                            return false
-                        }
-                    }
-                    else{
-                        return false
-                    }
-                }
+                active: mediaItem.isWavBarActive
             }
 
             DPlayButton {
@@ -81,7 +82,7 @@ Rectangle {
         State {
             name: "Entered"
             PropertyChanges { target: mediaItem; color: "lightgray";}
-            PropertyChanges { target: playButton; visible: !waveBar.active;}
+            PropertyChanges { target: playButton; visible: !mediaItem.isWavBarActive;}
         },
         State {
             name: "Exited"
@@ -91,7 +92,7 @@ Rectangle {
         State {
             name: "DoubleClicked"
             when: mediaItem.ListView.isCurrentItem
-            PropertyChanges { target: playButton; visible: !waveBar.active ;}
+            PropertyChanges { target: playButton; visible: !mediaItem.isWavBarActive ;}
         },
 
         State {

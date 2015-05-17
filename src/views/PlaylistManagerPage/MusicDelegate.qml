@@ -7,6 +7,25 @@ Rectangle {
     id: mediaItem
 
     property var mouseArea: mouseArea
+    property bool isWavBarActive: {
+        var playlist = MediaPlayer.playlist;
+        if (playlist){
+            var isPlaylistMatched = playlist.name == mediaItem.ListView.view.currentPlaylistName
+            if (isPlaylistMatched && playlist.url == url){
+                if (MediaPlayer.playing){
+                    return true
+                }else{
+                    return false
+                }
+            }
+            else{
+                return false
+            }
+        }
+        else{
+            return false
+        }
+    }
 
     width: parent.width
     height: 24
@@ -45,24 +64,7 @@ Rectangle {
                 anchors.centerIn: parent
                 itemHeight: 12
                 itemWidth: 3
-                active: {
-                    var playlist = MediaPlayer.playlist;
-                    if (playlist){
-                        if (playlist.name == mediaItem.ListView.view.currentPlaylistName){
-                            if (MediaPlayer.currentIndex == index && MediaPlayer.playing){
-                                return true
-                            }else{
-                                return false
-                            }
-                        }
-                        else{
-                            return false
-                        }
-                    }
-                    else{
-                        return false
-                    }
-                }
+                active: mediaItem.isWavBarActive
             }
         }
 
@@ -110,20 +112,20 @@ Rectangle {
         State {
             name: "Entered"
             PropertyChanges { target: mediaItem; color: "lightgray";}
-            PropertyChanges { target: playButton; visible: !waveBar.active;}
+            PropertyChanges { target: playButton; visible: !isWavBarActive;}
             PropertyChanges { target: indexTip; visible: false;}
         },
         State {
             name: "Exited"
             PropertyChanges { target: mediaItem; color: "transparent";}
             PropertyChanges { target: playButton; visible: false;}
-            PropertyChanges { target: indexTip; visible: !waveBar.active;}
+            PropertyChanges { target: indexTip; visible: !isWavBarActive;}
         },
 
         State {
             name: "DoubleClicked"
             PropertyChanges { target: indexTip; visible: false ;}
-            PropertyChanges { target: playButton; visible: !waveBar.active ;}
+            PropertyChanges { target: playButton; visible: !isWavBarActive ;}
         },
 
         State {

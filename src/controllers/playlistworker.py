@@ -67,12 +67,16 @@ class DMediaPlaylist(QMediaPlaylist):
     nameChanged = pyqtSignal('QString')
     countChanged = pyqtSignal(int)
     mediasChanged = pyqtSignal('QVariant')
+    urlChanged = pyqtSignal('QString')
 
     def __init__(self, name=''):
         super(DMediaPlaylist, self).__init__()
         self._name = name
+        self._url = ''
         self._urls = []
         self._medias = DListModel(QmlSongObject)
+
+        self.currentIndexChanged.connect(self.updateUrl)
 
     @pyqtProperty('QString', notify=nameChanged)
     def name(self):
@@ -82,6 +86,19 @@ class DMediaPlaylist(QMediaPlaylist):
     def name(self, name):
         self._name = name
         self.nameChanged.emit()
+
+    @pyqtProperty('QString', notify=urlChanged)
+    def url(self):
+        return self._url
+
+    @url.setter
+    def url(self, value):
+        self._url = value
+        self.urlChanged.emit(value)
+
+    def updateUrl(self, index):
+        if index < len(self._urls):
+            self.url = self._urls[index]
 
     # @pyqtProperty(DListModel, notify=mediasChanged)
     # def medias(self):
