@@ -12,7 +12,7 @@ from .utils import registerContext, duration_to_string
 from dwidgets import dthread
 import copy
 from log import logger
-from .signalmanager import SignalManager
+from .signalmanager import signalManager
 
 
 songlist = {
@@ -81,6 +81,8 @@ class Web360ApiWorker(QObject):
         self.downloadSongsSignal.connect(self.downloadSongs)
         
         self.resultsCollected.connect(self.collectResult)
+
+        signalManager.addtoDownloadlist.connect(self.downloadSong)
 
     @classmethod
     def md5(cls, musicId):

@@ -162,6 +162,13 @@ class OnlineMusicManageWorker(QObject):
         else:
             return None
 
+    @classmethod
+    def getSongDictByUrl(cls, url):
+        if url in cls._songsDict:
+            return cls._songsDict[url]
+        else:
+            return None
+
     def addSong(self, media):
         _songDict = self.updateTags(media)
         url = media['url']

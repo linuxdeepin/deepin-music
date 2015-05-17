@@ -35,6 +35,18 @@ Rectangle {
         }
     }
 
+    property bool isDownload: {
+        if(url.indexOf('http') != -1){
+            if (DownloadSongWorker.isOnlineSongExisted(artist, title)){
+                return false;
+            }else{
+                return true;
+            }
+        }else{
+            return false;
+        }
+    }
+
 
     function getModelByPlaylistName(name){
         if (name){
@@ -160,8 +172,12 @@ Rectangle {
 
                     DDownloadButton {
                         id: downloadButton
+                        visible: mediaItem.isDownload
                         width: 24
                         height: 24
+                        onClicked:{
+                            SignalManager.addtoDownloadlist(songId);
+                        }
                     }
                 }
 

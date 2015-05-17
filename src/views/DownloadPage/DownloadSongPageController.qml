@@ -40,9 +40,9 @@ Item {
 
         onSwitchDownloadedStatus: {
             if (downloaded){
-                DownloadSongWorker.oneStartDownloadSignal(songId, downloaded);
+                DownloadSongWorker.oneStartDownloadSignal(songId);
             }else{
-                DownloadSongWorker.onePausedDownloadSignal(songId, downloaded);
+                DownloadSongWorker.onePausedDownloadSignal(songId);
             }
         }
 

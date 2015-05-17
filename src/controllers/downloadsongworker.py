@@ -22,6 +22,8 @@ from config.constants import LevevDBPath
 from dwidgets import DListModel, ModelMetaclass
 from dwidgets.mediatag.song import Song as SongDict
 from .web360apiworker import Web360ApiWorker
+from .signalmanager import signalManager
+from .onlinemuscimanageworker import OnlineMusicManageWorker
 from dwidgets import dthread
 
 
@@ -289,8 +291,8 @@ class DownloadSongWorker(QObject):
     allStartDownloadSignal = pyqtSignal()
     allPausedSignal = pyqtSignal()
 
-    oneStartDownloadSignal = pyqtSignal(int, bool)
-    onePausedDownloadSignal = pyqtSignal(int, bool)
+    oneStartDownloadSignal = pyqtSignal(int)
+    onePausedDownloadSignal = pyqtSignal(int)
 
     addDownloadSongToDataBase = pyqtSignal('QString')
 
@@ -353,14 +355,14 @@ class DownloadSongWorker(QObject):
             self.songObjDisConnect(songObj)
         self.downloadObjs.clear()
 
-    def startDownloadBySongId(self, songId, downloaded):
+    def startDownloadBySongId(self, songId):
         for _songId, songObj in self._songObjs.items():
             if songId == _songId:
                 songObj.stopDownloaded = False
                 self.addSongObjToDownloadList(songObj)
                 break
 
-    def pauseDownloadBySongId(self, songId, downloaded):
+    def pauseDownloadBySongId(self, songId):
         for _songId, songObj in self._songObjs.items():
             if songId == _songId:
                 songObj.stopDownload()
@@ -465,6 +467,14 @@ class DownloadSongWorker(QObject):
     @classmethod
     def isSongExisted(cls, singerName, name, ext):
         return os.path.exists(cls.getSongPath(singerName, name, ext))
+
+    @pyqtSlot('QString', 'QString', result=bool)
+    def isOnlineSongExisted(self, singerName, name):
+        from dwidgets.mediatag.common import TRUST_AUDIO_EXT
+        for ext in TRUST_AUDIO_EXT:
+            if os.path.exists(self.getSongPath(singerName, name, ext)):
+                return True
+        return False
 
 
 if __name__ == '__main__':

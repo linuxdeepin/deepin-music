@@ -16,6 +16,8 @@ class SignalManager(QObject):
     addtoFavorite = pyqtSignal('QString')
     removeFromFavorite = pyqtSignal('QString')
 
+    addtoDownloadlist = pyqtSignal(int)
+
     @registerContext
     def __init__(self, parent=None):
         super(SignalManager, self).__init__(parent)
