@@ -49,6 +49,12 @@ Rectangle {
         width: root.width
         height: root.height
     }
+    Loader {
+        id: temporaryLoader
+        y: 150
+        anchors.right: parent.right
+        asynchronous: true
+    }
 
     // DLrcWindow {
     //     id: lrcWindow
@@ -60,7 +66,7 @@ Rectangle {
         mainWindow: mainWindow
         simpleWindowLoader: simpleWindowLoader
         miniWindow: miniWindow
-        // lrcWindow: lrcWindow
+        temporaryLoader: temporaryLoader
         constants: constants
     }
 

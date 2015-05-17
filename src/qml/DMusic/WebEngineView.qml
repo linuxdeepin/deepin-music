@@ -2,10 +2,10 @@ import QtQuick 2.3
 import com.canonical.Oxide 1.0
 
 WebView {
-	id: root
-	property string usContext: "messaging://"
+    id: root
+    property string usContext: "messaging://"
     property string oxideUserJs
-	property var devtoolsEnabled: true
+    property var devtoolsEnabled: true
     property var devtoolsPort: 8080
 
     context: webcontext

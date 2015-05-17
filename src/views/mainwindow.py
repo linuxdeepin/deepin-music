@@ -39,7 +39,6 @@ class MainWindow(BaseWindow):
                 if rect.contains(event.pos()):
                     self.dragPosition = event.globalPos() - \
                         self.frameGeometry().topLeft()
-                    event.accept()
             elif flag == "Simple":
                 x = self.rootObject().x()
                 y = self.rootObject().y()
@@ -49,14 +48,4 @@ class MainWindow(BaseWindow):
                 if rect.contains(event.pos()):
                     self.dragPosition = event.globalPos() - \
                         self.frameGeometry().topLeft()
-                    event.accept()
-
-            super(MainWindow, self).mousePressEvent(event)
-        elif event.button() == Qt.RightButton:
-            flag = contexts['WindowManageWorker'].windowMode
-            if flag == "Full":
-                if self.quickItems['webEngineViewPage'].isVisible():
-                    event.ignore()
-                else:
-                    event.accept()
-                    super(MainWindow, self).mousePressEvent(event)
+        super(MainWindow, self).mousePressEvent(event)

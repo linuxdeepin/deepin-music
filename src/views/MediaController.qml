@@ -13,7 +13,6 @@ Item {
         MediaPlayer.volumeChanged.connect(updateVolumeSlider);
         MediaPlayer.playbackModeChanged.connect(updateCycleButton);
         MediaPlayer.bufferStatusChanged.connect(updateBufferSlider);
-        MediaPlayer.currentIndexChanged.connect(updatePlaylistIndex);
         MediaPlayer.coverChanged.connect(updateBackgroundCover);
     }
 
@@ -76,13 +75,6 @@ Item {
 
     function updateCycleButton(value){
         mainWindow.playBottomBar.cycleButton.playbackMode = value;
-    }
-
-    function updatePlaylistIndex(index){
-        var temporaryWindow = mainWindow.temporaryLoader.item
-        if (temporaryWindow){
-            temporaryWindow.playlistView.currentIndex = index;
-        }
     }
 
     function clearCurrentPlaylist() {
