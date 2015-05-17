@@ -55,7 +55,7 @@ Rectangle {
                             font.pixelSize: 12
                             elide: Text.ElideRight
                             verticalAlignment: Text.AlignVCenter
-                            text: I18nWorker.song
+                            text: I18nWorker.song + '   (' + playlistView.count +')'
 
                             Rectangle {
                                 x: 270

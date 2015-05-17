@@ -12,7 +12,7 @@ from .utils import registerContext, duration_to_string
 from dwidgets import dthread
 import copy
 from log import logger
-
+from .signalmanager import SignalManager
 
 
 songlist = {

@@ -21,7 +21,7 @@ from log import logger
 from dwidgets import DListModel
 from .muscimanageworker import QmlSongObject, MusicManageWorker
 from .onlinemuscimanageworker import QmlOnlineSongObject, OnlineMusicManageWorker
-
+from .signalmanager import signalManager
 
 
 class PlayerBin(QMediaPlayer):
@@ -100,14 +100,14 @@ class DMediaPlaylist(QMediaPlaylist):
         if index < len(self._urls):
             self.url = self._urls[index]
 
-    # @pyqtProperty(DListModel, notify=mediasChanged)
-    # def medias(self):
-    #     return self._medias
+    @pyqtProperty(DListModel, notify=mediasChanged)
+    def medias(self):
+        return self._medias
 
-    # @medias.setter
-    # def medias(self, medias):
-    #     self._medias = medias
-    #     self.mediasChanged.emit(medias)
+    @medias.setter
+    def medias(self, medias):
+        self._medias = medias
+        self.mediasChanged.emit(medias)
 
     @pyqtProperty('QVariant')
     def urls(self):
@@ -153,10 +153,12 @@ class DMediaPlaylist(QMediaPlaylist):
         super(DMediaPlaylist, self).addMedia(mediaContent)
 
     def removeMediaByUrl(self, url):
-        index = self._urls.index(url)
-        self._urls.remove(url)
-        self.removeMedia(index)
-        self._medias.remove(index)
+        print self.name, url
+        if url in self._urls:
+            index = self._urls.index(url)
+            self._urls.remove(url)
+            self.removeMedia(index)
+            self._medias.remove(index)
 
 
 class PlaylistWorker(QObject):
@@ -173,7 +175,6 @@ class PlaylistWorker(QObject):
     def __init__(self, parent=None):
         super(PlaylistWorker, self).__init__(parent)
 
-        
         self._playlistNames = []
         self._currentPlaylist = None
 
@@ -182,6 +183,12 @@ class PlaylistWorker(QObject):
 
         self.emptyListModel = DListModel(QmlSongObject)
         contexts['MainWindow'].setContext('EmptyModel', self.emptyListModel)
+
+        self.initConnect()
+
+    def initConnect(self):
+        signalManager.addtoFavorite.connect(self.addToFavorite)
+        signalManager.removeFromFavorite.connect(self.removeFromFavorite)
 
     def savePlaylists(self):
         result = OrderedDict()
@@ -223,6 +230,14 @@ class PlaylistWorker(QObject):
     def getMediasByName(self, name):
         if name in self._playlists:
             return self._playlists[name]._medias
+
+    @pyqtSlot('QString', result=bool)
+    def isFavorite(self, url):
+        playlist =  self._playlists['favorite']
+        if url in playlist.urls:
+            return True
+        else:
+            return False
 
     @pyqtProperty('QVariant')
     def temporaryPlaylist(self):
@@ -309,12 +324,19 @@ class PlaylistWorker(QObject):
         playlist.addMedias(urls)
 
     def addOnlineMediaToFavorite(self, media):
-        playlist = self.favoritePlaylist
-        playlist.addMedia(media['url'])
+        url = media['url']
+        self.addToFavorite(url)
 
-    def removeFavoriteMediaContent(self, url):
+    def addToFavorite(self, url):
+        playlist = self.favoritePlaylist
+        playlist.addMedia(url)
+
+    def removeFromFavorite(self, url):
         playlist = self.favoritePlaylist
         playlist.removeMediaByUrl(url)
+
+    def removeFavoriteMediaContent(self, url):
+        self.removeFromFavorite(url)
 
     def addOnlineMediasToFavorite(self, medias):
         playlist = self.favoritePlaylist
