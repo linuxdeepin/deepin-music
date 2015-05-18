@@ -33,12 +33,11 @@ Rectangle{
         anchors.fill: parent
         enabled: !disabled
         hoverEnabled: parent.hoverEnabled
+        propagateComposedEvents: false
         onEntered: {
             
             parent.state = "hovered"
             parent.hovered();
-      //    var obj = mapToItem(null, mouseX, mouseY);
-            // print(obj.x, obj.y, obj.width, obj.height)
         }
         onExited: {
             
@@ -60,6 +59,10 @@ Rectangle{
 
         onClicked: {
             parent.clicked()
+        }
+
+        onDoubleClicked:{
+            mouse.accepted = true;
         }
     }
 

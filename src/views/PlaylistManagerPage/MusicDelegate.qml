@@ -85,6 +85,38 @@ Rectangle {
     height: 24
     color: "transparent"
 
+    MouseArea {
+        id: mouseArea
+        anchors.fill: parent
+        hoverEnabled: true
+        // propagateComposedEvents: true
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
+        onEntered: {
+            mediaItem.state = 'Entered';
+        }
+        onExited: {
+            mediaItem.state = 'Exited';
+        }
+        onClicked:{
+            if (mouse.button == Qt.RightButton){
+                if (mediaItem.isLocalSong(url)){
+                    mediaItem.ListView.view.localMenuShowed(url);
+                }else{
+                    var songId = mediaItem.ListView.view.model.get(index).songId;
+                    mediaItem.ListView.view.onlineMenuShowed(url, songId);
+                }
+            }
+            // mouse.accepted = false;
+        }
+        onDoubleClicked: {
+            mediaItem.state = 'DoubleClicked';
+            if (mouse.button == Qt.LeftButton){
+                mediaItem.ListView.view.currentIndex = index;
+                mediaItem.ListView.view.playMusicByUrl(url);
+            }
+        }
+    }
+
     Row {
 
         anchors.fill: parent
@@ -221,38 +253,6 @@ Rectangle {
             PropertyChanges { target: playButton; visible: false ;}
         }
     ]
-
-    MouseArea {
-        id: mouseArea
-        anchors.fill: parent
-        hoverEnabled: true
-        propagateComposedEvents: true
-        acceptedButtons: Qt.LeftButton | Qt.RightButton
-        onEntered: {
-            mediaItem.state = 'Entered';
-        }
-        onExited: {
-            mediaItem.state = 'Exited';
-        }
-        onClicked:{
-            if (mouse.button == Qt.RightButton){
-                if (mediaItem.isLocalSong(url)){
-                    mediaItem.ListView.view.localMenuShowed(url);
-                }else{
-                    var songId = mediaItem.ListView.view.model.get(index).songId;
-                    mediaItem.ListView.view.onlineMenuShowed(url, songId);
-                }
-            }
-            mouse.accepted = false;
-        }
-        onDoubleClicked: {
-            mediaItem.state = 'DoubleClicked';
-            if (mouse.button == Qt.LeftButton){
-                mediaItem.ListView.view.currentIndex = index;
-                mediaItem.ListView.view.playMusicByUrl(url);
-            }
-        }
-    }
 
     Component.onCompleted: {
         SignalManager.addtoFavorite.connect(favoriteOn);
