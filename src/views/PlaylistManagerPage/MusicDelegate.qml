@@ -73,6 +73,14 @@ Rectangle {
         }
     }
 
+    function isLocalSong(songUrl){
+        if (songUrl.indexOf('http') != -1){
+            return false
+        }else{
+            return true
+        }
+    }
+
     width: parent.width
     height: 24
     color: "transparent"
@@ -182,8 +190,6 @@ Rectangle {
                 }
 
             }
-
-            
         }
     }
 
@@ -230,9 +236,13 @@ Rectangle {
         }
         onClicked:{
             if (mouse.button == Qt.RightButton){
-                mediaItem.ListView.view.menuShowed(url);
+                if (mediaItem.isLocalSong(url)){
+                    mediaItem.ListView.view.localMenuShowed(url);
+                }else{
+                    var songId = mediaItem.ListView.view.model.get(index).songId;
+                    mediaItem.ListView.view.onlineMenuShowed(url, songId);
+                }
             }
-
             mouse.accepted = false;
         }
         onDoubleClicked: {

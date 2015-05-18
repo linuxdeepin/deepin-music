@@ -13,14 +13,27 @@ class SignalManager(QObject):
 
     __contextName__ = 'SignalManager'
 
+    #添加我的收藏
     addtoFavorite = pyqtSignal('QString')
+
+    #移出我的收藏
     removeFromFavorite = pyqtSignal('QString')
 
+    # 在线音乐添加到下载列表
     addtoDownloadlist = pyqtSignal(int)
+    addAlltoDownloadlist = pyqtSignal('QString')
+
+    # 在线音乐对象切换本地音乐对象
+    switchOnlinetoLocal = pyqtSignal('QString', 'QString')
+
+    #
+    addLocalSongToDataBase = pyqtSignal('QString')
+    addLocalSongsToDataBase = pyqtSignal(list)
 
     @registerContext
     def __init__(self, parent=None):
         super(SignalManager, self).__init__(parent)
+
 
 
 signalManager = SignalManager()

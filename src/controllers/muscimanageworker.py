@@ -24,7 +24,7 @@ from collections import OrderedDict
 from UserList import UserList
 from config.constants import LevevDBPath, CoverPath, MusicManagerPath
 from .coverworker import CoverWorker
-
+from .signalmanager import signalManager
 from dwidgets import DListModel, ModelMetaclass
 from dwidgets.xpinyin import Pinyin
 
@@ -257,6 +257,9 @@ class MusicManageWorker(QObject):
         self.scanfileChanged.connect(self.addSong)
         self.scanfileFinished.connect(self.saveSongs)
 
+        signalManager.addLocalSongToDataBase.connect(self.addLocalSongToDataBase)
+        signalManager.addLocalSongsToDataBase.connect(self.addLocalSongsToDataBase)
+
     def restoreDB(self):
         if Song.select().count() == 0:
             self.restoreSongsToDB.emit(self._songsDict.values())
@@ -296,6 +299,21 @@ class MusicManageWorker(QObject):
             {'name': i18nWorker.folder}
         ]
         return categories
+
+    @classmethod
+    def getSongDownloadPath(cls, singerName, name, ext):
+        configWorker = contexts['ConfigWorker']
+        downloadSongPath = configWorker.DownloadSongPath
+        return os.path.join(downloadSongPath, '%s-%s.%s' % (singerName, name, ext))
+
+    @classmethod
+    def isSongExistedInDataBase(cls, artist, title):
+        from dwidgets.mediatag.common import TRUST_AUDIO_EXT
+        for ext in TRUST_AUDIO_EXT:
+            path = cls.getSongDownloadPath(artist, title, ext)
+            if cls.getSongObjByUrl(path):
+                return True, path
+        return False, ''
 
     @classmethod
     def getSongObjByUrl(cls, url):
@@ -395,8 +413,12 @@ class MusicManageWorker(QObject):
             self.addSongFiles(urls)
 
     @pyqtSlot('QString')
-    def addDownloadSongToDataBase(self, url):
+    def addLocalSongToDataBase(self, url):
         urls = [url]
+        self.addSongFiles(urls)
+
+    @pyqtSlot('QString')
+    def addLocalSongsToDataBase(self, urls):
         self.addSongFiles(urls)
 
     @dthread
@@ -568,6 +590,12 @@ class MusicManageWorker(QObject):
     def stopUpdate(self):
         print('stop update')
 
+    @classmethod
+    def generateSongObjByUrl(cls, fpath):
+        songDict = SongDict(fpath)
+        songObj = QmlSongObject(**songDict)
+        return songObj
+
     def playArtistMusic(self, name):
         urls = self.getUrlsByArtist(name)
         self.postSongs(urls)
@@ -588,8 +616,8 @@ class MusicManageWorker(QObject):
         self.addSongToPlaylist.emit(url)
 
     def openSongFolder(self, url):
-        songDict = self._songsDict[url]
-        openLocalUrl(songDict['folder'])
+        songObj = self._songObjs[url]
+        openLocalUrl(songObj.folder)
 
     def orderByKey(self, modelType, key):
         '''

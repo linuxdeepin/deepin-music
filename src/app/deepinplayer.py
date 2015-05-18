@@ -250,7 +250,7 @@ class DeepinPlayer(QObject):
             self.musicManageWorker.loadDB)
 
     def downloadSongWorkerConnect(self):
-        self.downloadSongWorker.addDownloadSongToDataBase.connect(self.musicManageWorker.addDownloadSongToDataBase)
+        self.downloadSongWorker.addDownloadSongToDataBase.connect(self.musicManageWorker.addLocalSongToDataBase)
 
     def lrcWorkerConnect(self):
         self.lrcWorker.textInfoChanged.connect(self.mainWindow.lrcWindow.updateTextInfo)

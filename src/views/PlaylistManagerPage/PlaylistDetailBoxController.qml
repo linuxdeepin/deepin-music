@@ -73,8 +73,12 @@ Item {
             playMusicByUrl(songUrl);
         }
 
-        onMenuShowed: {
-            MenuWorker.playlistSongMenuShow(playlistDetailBox.currentPlaylistName, songUrl);
+        onLocalMenuShowed: {
+            MenuWorker.playlistLocalSongMenuShow(playlistDetailBox.currentPlaylistName, songUrl);
+        }
+
+        onOnlineMenuShowed: {
+            MenuWorker.playlistOnlineSongMenuShow(playlistDetailBox.currentPlaylistName, songUrl, songId);
         }
     }
 

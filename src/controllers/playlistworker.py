@@ -22,6 +22,7 @@ from dwidgets import DListModel
 from .muscimanageworker import QmlSongObject, MusicManageWorker
 from .onlinemuscimanageworker import QmlOnlineSongObject, OnlineMusicManageWorker
 from .signalmanager import signalManager
+from .downloadsongworker import DownloadSongWorker
 
 
 class PlayerBin(QMediaPlayer):
@@ -128,11 +129,9 @@ class DMediaPlaylist(QMediaPlaylist):
         if url not in self._urls:
             if url.startswith('http'):
                 self.addOnlineMedia(url)
-                self._urls.append(url)
             else:
                 if os.path.exists(url):
                     self.addLocalMedia(url)
-                    self._urls.append(url)
 
     def addMedias(self, urls):
         for url in urls:
@@ -144,6 +143,19 @@ class DMediaPlaylist(QMediaPlaylist):
         if songObj:
             self._medias.append(songObj)
         super(DMediaPlaylist, self).addMedia(mediaContent)
+        self._urls.append(url)
+
+    def insertLocalMedia(self, index, url):
+        mediaContent = DLocalMediaContent(url)
+        songObj = MusicManageWorker.getSongObjByUrl(url)
+        if songObj:
+            self._medias.insert(index, songObj)
+        else:
+            songObj = MusicManageWorker.generateSongObjByUrl(url)
+            self._medias.insert(index, songObj)
+
+        super(DMediaPlaylist, self).insertMedia(index, mediaContent)
+        self._urls.insert(index, url)
 
     def addOnlineMedia(self, url):
         mediaContent = DOnlineMediaContent(url)
@@ -151,13 +163,21 @@ class DMediaPlaylist(QMediaPlaylist):
         if songObj:
             self._medias.append(songObj)
         super(DMediaPlaylist, self).addMedia(mediaContent)
+        self._urls.append(url)
 
     def removeMediaByUrl(self, url):
         if url in self._urls:
             index = self._urls.index(url)
             self._urls.remove(url)
             self.removeMedia(index)
-            self._medias.remove(index)
+            if index < self._medias.count:
+                self._medias.remove(index)
+
+    def insertMediaByUrl(self, onlineUrl, localUrl):
+        for index, url in enumerate(self._urls):
+            if url == onlineUrl:
+                self.removeMediaByUrl(onlineUrl)
+                self.insertLocalMedia(index, localUrl)
 
 
 class PlaylistWorker(QObject):
@@ -188,6 +208,8 @@ class PlaylistWorker(QObject):
     def initConnect(self):
         signalManager.addtoFavorite.connect(self.addToFavorite)
         signalManager.removeFromFavorite.connect(self.removeFromFavorite)
+        signalManager.switchOnlinetoLocal.connect(self.updateAllPlaylist)
+        signalManager.addAlltoDownloadlist.connect(self.downloadPlaylist)
 
     def savePlaylists(self):
         result = OrderedDict()
@@ -298,6 +320,16 @@ class PlaylistWorker(QObject):
         if name in self._playlists:
             return self._playlists[name].urls
 
+    def getLocalUrlforOnline(self, media):
+        url = media['url']
+        artist = media['singerName']
+        title = media['songName']
+        flag, path = MusicManageWorker.isSongExistedInDataBase(artist, title)
+        if flag and path:
+            return path
+        else:
+            return url
+
     def addLocalMediaToTemporary(self, url):
         playlist = self.temporaryPlaylist
         self.currentPlaylistChanged.emit('temporary')
@@ -311,18 +343,20 @@ class PlaylistWorker(QObject):
     def addOnlineMediaToTemporary(self, media):
         playlist = self.temporaryPlaylist
         self.currentPlaylistChanged.emit('temporary')
-        playlist.addMedia(media['url'])
+        url = self.getLocalUrlforOnline(media)
+        playlist.addMedia(url)
 
     def addOnlineMediasToTemporary(self, medias):
         playlist = self.temporaryPlaylist
         self.currentPlaylistChanged.emit('temporary')
         urls = []
         for media in medias:
-            urls.append(media['url'])
+            url = self.getLocalUrlforOnline(media)
+            urls.append(url)
         playlist.addMedias(urls)
 
     def addOnlineMediaToFavorite(self, media):
-        url = media['url']
+        url = self.getLocalUrlforOnline(media)
         self.addToFavorite(url)
 
     def addToFavorite(self, url):
@@ -335,10 +369,6 @@ class PlaylistWorker(QObject):
 
     def removeFavoriteMediaContent(self, url):
         self.removeFromFavorite(url)
-
-    def addOnlineMediasToFavorite(self, medias):
-        playlist = self.favoritePlaylist
-        playlist.addMedias(medias)
 
     def removeFromPlaylist(self, playlistName, url):
         if playlistName in self._playlists:
@@ -365,3 +395,13 @@ class PlaylistWorker(QObject):
             elif _type == "Folder":
                 urls = MusicManageWorker.getUrlsByFolder(value)
                 playlist.addMedias(urls)
+
+    def updateAllPlaylist(self, onlineUrl, localUrl):
+        for name, playlist in self._playlists.items():
+            playlist.insertMediaByUrl(onlineUrl, localUrl)
+
+    def downloadPlaylist(self, playlistName):
+        playlist = self._playlists[playlistName]
+        for obj in playlist.medias.data:
+            if isinstance(obj, QmlOnlineSongObject):
+                signalManager.addtoDownloadlist.emit(obj.songId)

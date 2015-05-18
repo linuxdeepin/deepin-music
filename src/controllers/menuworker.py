@@ -11,6 +11,7 @@ from deepin_menu.menu import *
 from dwidgets import ModelMetaclass
 from log import logger
 from .playlistworker import PlaylistWorker
+from .signalmanager import signalManager
 
 
 class MenuI18nWorker(QObject):
@@ -222,7 +223,8 @@ class MenuWorker(QObject):
     albumMenuShow = pyqtSignal('QString')
     songMenuShow = pyqtSignal('QString', 'QString')
     folderMenuShow = pyqtSignal('QString')
-    playlistSongMenuShow = pyqtSignal('QString', 'QString')
+    playlistLocalSongMenuShow = pyqtSignal('QString', 'QString')
+    playlistOnlineSongMenuShow = pyqtSignal('QString', 'QString', int)
     playlistNavigationMenuShow = pyqtSignal('QString', int)
     ftPlaylistNavigationMenuShow = pyqtSignal('QString')
     temporaryMenuShowed = pyqtSignal('QString', 'QString')
@@ -293,6 +295,7 @@ class MenuWorker(QObject):
         self._playlistNavigationIndex = 0
         self._songId = 0
         self._downloaded = False
+        self._isDownload = False
         self.createSettingMenu()
         self.createArtistMenu()
         self.createAlbumMenu()
@@ -363,17 +366,23 @@ class MenuWorker(QObject):
         self.playlistOnlineSongMenu = DMenu(PlaylistOnlineSongMenuItems)
         self.playlistLocalSongMenu.itemClicked.connect(self.playlistLocalSongMenuConnection)
         self.playlistOnlineSongMenu.itemClicked.connect(self.playlistOnlineSongMenuConnection)
-        self.playlistSongMenuShow.connect(self.showPlaylistSongMenu)
+        
 
-    def showPlaylistSongMenu(self, playlist, url):
+        self.playlistLocalSongMenuShow.connect(self.showPlaylistLocalSongMenu)
+        self.playlistOnlineSongMenuShow.connect(self.showPlaylistOnlineSongMenu)
+
+    def showPlaylistLocalSongMenu(self, playlist, url):
         self._playlist = playlist
         self._url = url
-        if url.startswith('http'):
-            self.addPlaylistMenuItemsForPlaylist(self.playlistOnlineSongMenu)
-            self.playlistOnlineSongMenu.show()
-        else:
-            self.addPlaylistMenuItemsForPlaylist(self.playlistLocalSongMenu)
-            self.playlistLocalSongMenu.show()
+        self.addPlaylistMenuItemsForPlaylist(self.playlistLocalSongMenu)
+        self.playlistLocalSongMenu.show()
+
+    def showPlaylistOnlineSongMenu(self, playlist, url, songId):
+        self._playlist = playlist
+        self._url = url
+        self._songId = songId            
+        self.addPlaylistMenuItemsForPlaylist(self.playlistOnlineSongMenu)
+        self.playlistOnlineSongMenu.show()
 
     def createPlaylistNavgationMenu(self):
         self.playlistNavigationMenu = DMenu(PlaylistMenuItems)
@@ -532,6 +541,8 @@ class MenuWorker(QObject):
     def playlistOnlineSongMenuConnection(self, menuId, checked):
         if menuId == 'Play':
             self.playMusicByUrl.emit(self._url)
+        elif menuId == 'Download':
+            signalManager.addtoDownloadlist.emit(self._songId)
         elif menuId == 'RemoveFromPlaylist':
             self.removeFromPlaylist.emit(self._playlist, self._url)
         else:
@@ -570,12 +581,16 @@ class MenuWorker(QObject):
     def playlistNavigationMenuConnection(self, menuId, checked):
         if menuId == 'PlayAll':
             self.playNavigationAllSongs.emit(self._playlist, self._playlistNavigationIndex)
+        elif menuId == 'DownloadAll':
+            signalManager.addAlltoDownloadlist.emit(self._playlist)
         elif menuId == 'DeletePlaylist':
             self.deletePlaylist.emit(self._playlist)
 
     def ftPlaylistNavigationMenuConnection(self, menuId, checked):
         if menuId == 'PlayAll':
             self.playFTAllSongs.emit(self._playlist)
+        elif menuId == 'DownloadAll':
+            signalManager.addAlltoDownloadlist.emit(self._playlist)
 
     def temporaryMenuConnection(self, menuId, checked):
         if menuId == 'Play':

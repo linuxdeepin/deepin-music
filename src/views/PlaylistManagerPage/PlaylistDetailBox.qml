@@ -132,7 +132,8 @@ Rectangle {
                     snapMode:ListView.SnapToItem
 
                     signal playMusicByUrl(string songUrl)
-                    signal menuShowed(string songUrl)
+                    signal localMenuShowed(string songUrl)
+                    signal onlineMenuShowed(string songUrl, int songId)
 
                     DScrollBar {
                         flickable: parent

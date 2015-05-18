@@ -108,6 +108,13 @@ Rectangle {
         Rectangle {
             width: detailPage.width - 44
             height: detailPage.height - backbar.height - detailHeader.height - 20
+            
+            MouseArea {
+                id: mouseArea
+                anchors.fill: parent
+                propagateComposedEvents: false
+            }
+
             ListView {
                 id: detailView
                 anchors.fill: parent

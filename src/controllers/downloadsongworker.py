@@ -10,8 +10,8 @@ import re
 import time
 import traceback
 from PyQt5.QtCore import (QObject, pyqtSignal, pyqtSlot,
-                         pyqtProperty, QThreadPool, QRunnable, 
-                         QTimer)
+                          pyqtProperty, QThreadPool, QRunnable,
+                          QTimer)
 from PyQt5.QtGui import QImage
 import requests
 from log import logger
@@ -32,7 +32,7 @@ class DownloadSongObject(QObject):
     __metaclass__ = ModelMetaclass
 
     __Fields__ = (
-        ('url','QString'),
+        ('url', 'QString'),
         ('ext', 'QString'),
         ('bitrate', 'QString'),
         ('hdDesc', 'QString'),
@@ -42,7 +42,7 @@ class DownloadSongObject(QObject):
         ('singerName', 'QString'),
         ('singerId',  int),
         ('albumId', int),
-        ('albumName','QString'),
+        ('albumName', 'QString'),
         ('originalServiceEngName', 'QString'),
         ('serviceEngName', 'QString'),
         ('serviceName', 'QString'),
@@ -68,7 +68,8 @@ class DownloadSongObject(QObject):
         self.stopDownloaded = False
         self.isFinished = False
         self.isConnected = False
-        self.filename = DownloadSongWorker.getSongPath(self.singerName, self.name, self.ext)
+        self.filename = DownloadSongWorker.getSongPath(
+            self.singerName, self.name, self.ext)
         self.temp_filename = '%s.tmp' % self.filename
 
         self.speedTimer = QTimer()
@@ -116,6 +117,8 @@ class DownloadSongObject(QObject):
             song.size = os.path.getsize(self.filename)
             song.saveTags()
             self.addSongToDB.emit(self.filename)
+            signalManager.switchOnlinetoLocal.emit(
+                Web360ApiWorker.getUrlByID(self.songId), self.filename)
 
     def startDownLoad(self):
         if os.path.exists(self.filename):
@@ -244,7 +247,7 @@ class DownLoadRunnable(QRunnable):
         total = self.total
         size = self.size
         r = requests.get(url, stream=True, verify=False, headers=headers)
-        
+
         if 'content-length' in r.headers:
             self.total = int(r.headers['content-length'])
         else:
@@ -297,7 +300,6 @@ class DownloadSongWorker(QObject):
     addDownloadSongToDataBase = pyqtSignal('QString')
 
     threadPool = QThreadPool()
-
 
     @registerContext
     def __init__(self, parent=None):
@@ -379,7 +381,8 @@ class DownloadSongWorker(QObject):
             logger.info('%s %s %s exists' % (singerName, name, ext))
             return
         if songId in self._songObjs:
-            logger.info('%s %s %s %s has existed in download list' % (songId, singerName, name, ext))
+            logger.info('%s %s %s %s has existed in download list' %
+                        (songId, singerName, name, ext))
             return
         if isinstance(songDict['size'], unicode):
             if songDict['size']:
@@ -417,7 +420,7 @@ class DownloadSongWorker(QObject):
                 keys.remove(songId)
                 self._songsDict['index'] = keys
 
-        for index, songObj in  enumerate(self._downloadSongListModel.data):
+        for index, songObj in enumerate(self._downloadSongListModel.data):
             if songObj.songId == songId:
                 self._downloadSongListModel.remove(index)
 
@@ -454,7 +457,7 @@ class DownloadSongWorker(QObject):
             songDict = self._songsDict[songId]
             songDict[key] = value
             self._songsDict[songId] = songDict
-        for index, songObj in  enumerate(self._downloadSongListModel.data):
+        for index, songObj in enumerate(self._downloadSongListModel.data):
             if songObj.songId == songId:
                 self._downloadSongListModel.setProperty(index, key, value)
 
@@ -462,19 +465,28 @@ class DownloadSongWorker(QObject):
     def getSongPath(cls, singerName, name, ext):
         configWorker = contexts['ConfigWorker']
         downloadSongPath = configWorker.DownloadSongPath
-        return os.path.join(downloadSongPath, '%s-%s.%s'%(singerName, name, ext))
+        return os.path.join(downloadSongPath, '%s-%s.%s' % (singerName, name, ext))
 
     @classmethod
-    def isSongExisted(cls, singerName, name, ext):
-        return os.path.exists(cls.getSongPath(singerName, name, ext))
+    def isSongExisted(cls, artist, title, ext):
+        return os.path.exists(cls.getSongPath(artist, title, ext))
 
     @pyqtSlot('QString', 'QString', result=bool)
-    def isOnlineSongExisted(self, singerName, name):
+    def isOnlineSongExisted(self, artist, title):
         from dwidgets.mediatag.common import TRUST_AUDIO_EXT
         for ext in TRUST_AUDIO_EXT:
-            if os.path.exists(self.getSongPath(singerName, name, ext)):
+            if os.path.exists(self.getSongPath(artist, title, ext)):
                 return True
         return False
+
+    @classmethod
+    def isLocalSongExisted(cls, artist, title):
+        from dwidgets.mediatag.common import TRUST_AUDIO_EXT
+        for ext in TRUST_AUDIO_EXT:
+            path = cls.getSongPath(artist, title, ext)
+            if os.path.exists(path):
+                return True, path
+        return False, ''
 
 
 if __name__ == '__main__':
