@@ -50,6 +50,7 @@ class MediaPlayer(QObject):
 
     playlistChanged = pyqtSignal('QString')
     urlChanged = pyqtSignal('QString')
+    songIdChanged = pyqtSignal('QVariant')
 
     currentIndexChanged = pyqtSignal(int)
 
@@ -75,6 +76,7 @@ class MediaPlayer(QObject):
         self._playbackMode = 4
         self._volume = 0
 
+        self._songId = 0
         self._url = ''
         self._title = ''
         self._artist = ''
@@ -109,6 +111,15 @@ class MediaPlayer(QObject):
     def url(self, value):
         self._url = value
         self.urlChanged.emit(value)
+
+    @pyqtProperty('QVariant', notify=songIdChanged)
+    def songId(self):
+        return self._songId
+
+    @songId.setter
+    def songId(self, value):
+        self._songId = value
+        self.songIdChanged.emit(value)
 
     @pyqtProperty('QVariant', notify=playlistChanged)
     def playlist(self):
@@ -394,6 +405,8 @@ class MediaPlayer(QObject):
     def updateMediaView(self, url):
         if url.startswith('http'):
             songObj = OnlineMusicManageWorker.getSongObjByUrl(url)
+            if songObj:
+                self.songId = songObj.songId
         else:
             songObj = MusicManageWorker.getSongObjByUrl(url)
         if songObj:
@@ -419,7 +432,10 @@ class MediaPlayer(QObject):
 
     @pyqtProperty(int, notify=currentIndexChanged)
     def currentIndex(self):
-        return self._playlist.currentIndex()
+        if self._playlist:
+            return self._playlist.currentIndex()
+        else:
+            return -1
 
     @pyqtProperty('QString', notify=titleChanged)
     def title(self):

@@ -19,8 +19,6 @@ Item {
         }
     }
 
-
-
     function getModelByPlaylistName(name){
         if (name){
             var model = eval('Playlist_' + Qt.md5(name));

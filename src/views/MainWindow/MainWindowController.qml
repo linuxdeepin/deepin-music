@@ -1,6 +1,7 @@
 import QtQuick 2.3
 
 Item {
+    id: mainWindowController
     property var mainWindow
     property var bgImage
     property var titleBar
@@ -9,9 +10,26 @@ Item {
     property var playBottomBar
     property var dSimpleWindow
 
+    property bool isDownload: {
+        var url = MediaPlayer.url;
+        var artist = MediaPlayer.artist;
+        var title = MediaPlayer.title;
+        if(url.indexOf('http') != -1){
+            if (DownloadSongWorker.isOnlineSongExisted(artist, title)){
+                return false;
+            }else{
+                return true;
+            }
+        }else{
+            return false;
+        }
+        return false
+    }
 
     function initConnect(){
         WindowManageWorker.switchPageByID.connect(leftSideBar.swicthViewByID);
+        SignalManager.addtoFavorite.connect(favoriteOn);
+        SignalManager.removeFromFavorite.connect(favoriteOff);
     }
 
     function resetSkin() {
@@ -26,6 +44,43 @@ Item {
         }else{
             resetSkin();
         }
+    }
+
+    function favoriteOn(songUrl) {
+        if (songUrl == MediaPlayer.url){
+            playBottomBar.musicStarButton.isFavorite = true;
+        }
+    }
+
+    function favoriteOff(songUrl) {
+        if (songUrl == MediaPlayer.url){
+            playBottomBar.musicStarButton.isFavorite = false;
+        }
+    }
+
+    function getModelByPlaylistName(name){
+        if (name){
+            var model = eval('Playlist_' + Qt.md5(name));
+            if (model){
+                return model
+            }else{
+                return EmptyModel
+            }
+        }else{
+            return EmptyModel
+        }
+    }
+
+    Binding {
+        target: playBottomBar.musicStarButton
+        property: 'isFavorite'
+        value: PlaylistWorker.isFavorite(MediaPlayer.url)
+    }
+
+    Binding {
+        target: playBottomBar.musicDownloadButton
+        property: 'visible'
+        value: mainWindowController.isDownload
     }
 
     Connections {
@@ -58,6 +113,26 @@ Item {
 
         onDownloadSong: Web360ApiWorker.downloadSongSignal(musicId)
         onDownloadSongs: Web360ApiWorker.downloadSongsSignal(musicIds)
+    }
+
+    Connections {
+        target: playBottomBar.musicStarButton
+        onClicked:{
+            var url = MediaPlayer.url;
+            if (!playBottomBar.musicStarButton.isFavorite){
+                SignalManager.addtoFavorite(url);
+            }else{
+                SignalManager.removeFromFavorite(url);
+            }
+        }
+    }
+
+    Connections {
+        target: playBottomBar.musicDownloadButton
+        onClicked:{
+            var songId = MediaPlayer.songId;
+            SignalManager.addtoDownloadlist(songId);
+        }
     }
 
     Component.onCompleted: {

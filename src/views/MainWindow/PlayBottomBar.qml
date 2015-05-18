@@ -3,6 +3,7 @@ import QtQuick.Controls 1.0
 import QtQuick.Controls.Styles 1.1
 import DMusic 1.0
 import "../DMusicWidgets"
+import "../DMusicWidgets/PublicWidgets"
 import "../DMusicWidgets/FullPlayBar"
 import "../DMusicWidgets/CustomSlider"
 
@@ -16,8 +17,8 @@ Item {
     property var musicTitleText: musicTitleText
     property var artistNameText: artistNameText
     property var timeText: timeText
-    property var musicStar: musicStar
-    property var musicDownload: musicDownload
+    property var musicStarButton: musicStarButton
+    property var musicDownloadButton: musicDownloadButton
 
     property var playControl: playControl
     property var musicToolbar: musicToolbar
@@ -179,27 +180,21 @@ Item {
                                     text: ''
                                 }
 
-                                DStarButton{
-                                    id: musicStar
+                                DFavoriteButton{
+                                    id: musicStarButton
                                     width: 20
                                     height: 20
                                 }
 
                                 DDownloadButton{
-                                    id: musicDownload
+                                    id: musicDownloadButton
                                     width: 20
                                     height: 20
-                                }
-
-                                Rectangle{
-                                    width: parent.width - timeText.width - musicStar.width - musicDownload.width 
-                                    height: parent.height
                                 }
                             }
                         }
                     }
                 }
-
             }
 
             Rectangle {
