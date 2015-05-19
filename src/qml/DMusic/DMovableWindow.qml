@@ -5,9 +5,9 @@ Window {
     id: miniWindow
 
     property bool hovered: false
-    flags: Qt.FramelessWindowHint | Qt.Popup| Qt.WindowStaysOnTopHint
+    flags: Qt.FramelessWindowHint | Qt.Pop| Qt.WindowStaysOnTopHint
 
-    color: root.hovered? Qt.rgba(0, 0, 0, 0.2) : Qt.rgba(0, 0, 0, 0)
+    color: miniWindow.hovered? Qt.rgba(0, 0, 0, 0.2) : Qt.rgba(0, 0, 0, 0)
 
     MouseArea {
         property int dragStartX
@@ -20,10 +20,10 @@ Window {
         hoverEnabled: true
 
         onEntered: {
-            root.hovered = true
+            miniWindow.hovered = true
         }
         onExited:{
-            root.hovered = false
+            miniWindow.hovered = false
         }
 
         onPressed: { 

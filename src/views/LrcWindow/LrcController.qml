@@ -2,28 +2,27 @@ import QtQuick 2.3
 
 Item {
     property var toolBar
-    property var lrcTextBox
-    // property var canvas
+    property var barLoader
 
-    function init() {
-        // LrcWorker.textChanged.connect(updateLrcText)
-    }
+    Connections {
+        target: toolBar
+        onLockedChanged: {
+            if (!locked){
+                barLoader.source = './UnlockBar.qml';
+            }
+        }
 
-    function updateLrcText(text, percentage, lyric_id){
-        // lrcTextBox.text = text
-        // print(text)
-    }
-
-    Binding {
-        target: lrcTextBox
-        property: 'text'
-        value: {
-            print(LrcWorker.currentText)
-            return LrcWorker.currentText
+        onHoveredChanged:{
+            if (locked && hovered) {
+                barLoader.setSource('./LockBar.qml', {'toolBar': toolBar})
+            }else if (locked && !hovered){
+                barLoader.setSource('./Empty.qml')
+            }
         }
     }
 
+
     Component.onCompleted: {
-        init();
+
     }
 }

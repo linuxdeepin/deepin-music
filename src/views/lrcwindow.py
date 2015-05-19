@@ -10,9 +10,13 @@ from PyQt5.QtCore import (
     QTimer, QEvent, QPoint)
 from PyQt5.QtGui import QColor, QPen, QLinearGradient, QPainter, QFont, QPalette, QRegion
 from PyQt5.QtWidgets import QApplication, QLabel, QFrame, QPushButton, QDesktopWidget
-
+from controllers import registerContext, contexts, registerObj
+from controllers import signalManager
 
 class FMoveableWidget(QLabel):
+
+    qSizeChanged = pyqtSignal('QSize')
+    qPositionChanged = pyqtSignal('QPoint')
 
     def __init__(self, locked, parent=None):
         super(FMoveableWidget, self).__init__(parent)
@@ -24,6 +28,27 @@ class FMoveableWidget(QLabel):
         self.setAttribute(Qt.WA_Hover, True)
         self.setWindowFlags(Qt.ToolTip | Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
 
+    @pyqtProperty('QPoint', notify=qPositionChanged)
+    def qPosition(self):
+        return self.pos()
+
+    @qPosition.setter
+    def qPosition(self, pos):
+        self.move(pos)
+        self.qPositionChanged.emit(pos)
+
+    def setPosition(self, pos):
+        self.qPosition = pos
+
+    @pyqtProperty('QSize', notify=qSizeChanged)
+    def qSize(self):
+        return self.size()
+
+    @qSize.setter
+    def qSize(self, size):
+        self.resize(size)
+        self.qSizeChanged.emit(size)
+
     def moveCenter(self):
         qr = self.frameGeometry()
         cp = QDesktopWidget().availableGeometry().center()
@@ -33,8 +58,8 @@ class FMoveableWidget(QLabel):
     def mouseMoveEvent(self, event):
         if hasattr(self, "dragPosition"):
             if event.buttons() == Qt.LeftButton:
-                self.move(event.globalPos() - self.dragPosition)
-                event.accept()
+                pos = event.globalPos() - self.dragPosition
+                self.qPosition = pos
                 self.setAttribute(Qt.WA_TranslucentBackground, False)
 
     def mousePressEvent(self, event):
@@ -43,7 +68,7 @@ class FMoveableWidget(QLabel):
         if event.button() == Qt.LeftButton:
             self.dragPosition = event.globalPos() - \
                 self.frameGeometry().topLeft()
-            event.accept()
+        super(FMoveableWidget, self).mousePressEvent(event)
 
     def mouseReleaseEvent(self, event):
         # 鼠标释放事件
@@ -51,24 +76,22 @@ class FMoveableWidget(QLabel):
             del self.dragPosition
             self.isSideClicked = False
             self.setCursor(Qt.ArrowCursor)
+        super(FMoveableWidget, self).mousePressEvent(event)
 
-    def mouseMoveEvent(self, event):
-        if hasattr(self, "dragPosition"):
-            if event.buttons() == Qt.LeftButton:
-                self.move(
-                    event.globalPos() - self.dragPosition)
-                event.accept()
+    def resizeEvent(self, event):
+        self.qSizeChanged.emit(event.size())
+        super(FMoveableWidget, self).resizeEvent(event)
 
 
 class DLrcWindow(FMoveableWidget):
 
+    hoverChanged = pyqtSignal(bool)
+
     def __init__(self, locked=False, parent=None):
         super(DLrcWindow, self).__init__(locked, parent)
         self.installEventFilter(self)
-        self.isBackgroundVisible = False
-        self.resize(1000, 100)
-
-        self.setMinimumSize(100, 80)
+        self._hovered = False
+        self.resize(901, 40)
 
         self.linear_gradient = QLinearGradient()
         self.linear_gradient.setStart(0, 10)
@@ -88,15 +111,18 @@ class DLrcWindow(FMoveableWidget):
         self.text = ""
         self.percentage = 0
 
-        self.button = QPushButton('l', self)
-        self.button.move(100, 0)
-        self.button.resize(40, 40)
-
-        self.toolBarHeight = 60
-
         self.font = QFont()
         self.font.setPixelSize(30)
         self.setFont(self.font)
+
+    @pyqtProperty(bool, notify=hoverChanged)
+    def hovered(self):
+        return  self._hovered
+
+    @hovered.setter
+    def hovered(self, hovered):
+        self._hovered = hovered
+        self.hoverChanged.emit(hovered)
 
     @pyqtSlot('QPoint')
     def move(self, pos):
@@ -110,7 +136,7 @@ class DLrcWindow(FMoveableWidget):
             self.textWidth = self.fontMetrics().width(self.text)
             self.textHeight = self.fontMetrics().height()
             self.startX = (self.width() - self.textWidth) / 2
-            self.startY = self.toolBarHeight + (self.height() - self.toolBarHeight - self.textHeight) / 2
+            self.startY = (self.height() - self.textHeight) / 2
 
             painter.setPen(QColor(0, 0, 0, 200))
             painter.drawText(self.startX + 1, self.startY + 1, self.textWidth, self.textHeight, Qt.AlignLeft, self.text)
@@ -121,59 +147,19 @@ class DLrcWindow(FMoveableWidget):
             painter.setPen(QPen(self.mask_linear_gradient, 0))
             painter.drawText(self.startX, self.startY, self.textWidth * self.percentage , self.textHeight, Qt.AlignLeft, self.text)
 
-            if self.isBackgroundVisible:
+            if self.hovered:
                 color = QColor('lightgray')
                 color.setAlpha(30)
-                painter.fillRect(0, self.startY, self.width(), self.textHeight, color)
-                self.button.show()
+                painter.fillRect(0, 0, self.width(), self.height(), color)
             else:
-                self.button.hide()
+                pass
 
     def eventFilter(self, obj, event):
         if event.type() == QEvent.HoverEnter:
-            self.isBackgroundVisible = True
+            self.hovered = True
         elif event.type() == QEvent.HoverLeave:
-            self.isBackgroundVisible = False
-
+            self.hovered = False
         return super(FMoveableWidget, self).eventFilter(obj, event)
-        
-
-
-class LockWindow(QFrame):
-
-    style = '''
-    QPushButton#LockedButton{
-        border-image: url(./skin/svg/lrc.desktop.lock.svg);
-        border: none
-    }
-
-    QPushButton#LockedButton:pressed{
-        border-image: url(./skin/svg/lrc.desktop.unlock.svg);
-        border: none
-    }
-
-    '''
-
-    def __init__(self):
-        super(LockWindow, self).__init__()
-        self.setAttribute(Qt.WA_TranslucentBackground, True)
-        self.setAttribute(Qt.WA_Hover, True)
-        self.setWindowFlags(Qt.ToolTip | Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
-        self.setMouseTracking(True)
-        self.installEventFilter(self)
-        
-        self.button = QPushButton(self)
-        self.button.setObjectName('LockedButton')
-        self.button.resize(32, 32)
-        self.setStyleSheet(self.style)
-
-    def eventFilter(self, obj, event):
-        if event.type() == QEvent.HoverEnter:
-            self.button.show()
-        elif event.type() == QEvent.HoverLeave:
-            self.button.hide()
-
-        return super(LockWindow, self).eventFilter(obj, event)
 
 
 class LrcWindowManager(QObject):
@@ -182,17 +168,16 @@ class LrcWindowManager(QObject):
         super(LrcWindowManager, self).__init__()
         self.unLockWindow = DLrcWindow(False)
         self.lockedWindow = DLrcWindow(True)
-        self.lockButtonWindow = LockWindow()
 
-        self.unLockWindow.button.clicked.connect(self.showLocked)
-        self.lockButtonWindow.button.clicked.connect(self.showNoraml)
+        self.unLockWindow.qPositionChanged.connect(self.lockedWindow.setPosition)
+        signalManager.locked.connect(self.showLocked)
+        signalManager.unLocked.connect(self.showNoraml)
 
         self.text = ''
         self.percentage = 0
         self.state = 'Normal'
 
         screenHeight = QDesktopWidget().availableGeometry().height()
-        self.lastPosition = QPoint(200, screenHeight - 100)
         self.isVisible = False
 
     def updateTextInfo(self, text, percentage, lyric_id):
@@ -208,28 +193,13 @@ class LrcWindowManager(QObject):
         self.lockedWindow.update()
 
     def showNoraml(self):
-        pos = self.lockedWindow.pos()
-        if pos == QPoint(0, 0):
-            pos = self.lastPosition
-        self.unLockWindow.move(pos)
-        self.lockButtonWindow.move(pos)
         self.lockedWindow.hide()
-        self.lockButtonWindow.hide()
         self.unLockWindow.show()
         self.state = 'Normal'
 
     def showLocked(self):
-        pos = self.unLockWindow.pos()
-        self.lockedWindow.move(pos)
-        self.lockButtonWindow.move(pos)
         self.unLockWindow.hide()
         self.lockedWindow.show()
-
-        self.lockButtonWindow.resize(self.lockedWindow.width(), 40)
-        centerX = (self.lockedWindow.width() - self.lockButtonWindow.button.width()) / 2
-        self.lockButtonWindow.button.move(QPoint(centerX, 8))
-        self.lockButtonWindow.show()
-
         self.state = 'Locked'
 
     def show(self):
@@ -243,9 +213,6 @@ class LrcWindowManager(QObject):
         self.isVisible = False
         self.unLockWindow.hide()
         self.lockedWindow.hide()
-        self.lockButtonWindow.hide()
-
-        self.lastPosition = self.unLockWindow.pos()
 
     def toggle(self):
         if self.isVisible:

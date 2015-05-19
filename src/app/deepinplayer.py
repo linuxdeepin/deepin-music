@@ -4,7 +4,7 @@
 import os
 from PyQt5.QtCore import (QCoreApplication, QObject,
                           QUrl, QThread, QTimer,
-                          QThreadPool)
+                          QThreadPool, QPoint)
 from PyQt5.QtGui import QScreen
 from views import MainWindow
 
@@ -88,11 +88,11 @@ class DeepinPlayer(QObject):
 
     def initQMLContext(self):
         self.mainWindow.setContexts(contexts)
-        # playlists = self.playlistWorker._playlists
-        # for name, playlist in playlists.items():
-        #     self.playlistWorker.registerObj.emit(name, playlist._medias)
         self.mainWindow.setSource(QUrl.fromLocalFile(
             os.path.join(get_parent_dir(__file__, 2), 'views', 'Main.qml')))
+
+        unLockWindow = self.mainWindow.lrcWindowManager.unLockWindow
+        unLockWindow.setPosition(self.mainWindow.geometry().bottomLeft() + QPoint(0, 50))
 
     def initConnect(self):
         self.web360ApiWorkerConnect()
@@ -253,7 +253,7 @@ class DeepinPlayer(QObject):
         self.downloadSongWorker.addDownloadSongToDataBase.connect(self.musicManageWorker.addLocalSongToDataBase)
 
     def lrcWorkerConnect(self):
-        self.lrcWorker.textInfoChanged.connect(self.mainWindow.lrcWindow.updateTextInfo)
+        self.lrcWorker.textInfoChanged.connect(self.mainWindow.lrcWindowManager.updateTextInfo)
 
     def loadConfig(self):
         self.mediaPlayer.setPlaylistByName(self.configWorker.lastPlaylistName)

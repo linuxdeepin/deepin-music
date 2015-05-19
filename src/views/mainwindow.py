@@ -10,7 +10,7 @@ from PyQt5.QtCore import (
     QThread)
 from PyQt5.QtQuick import QQuickView
 from .basewindow import BaseWindow
-from controllers import registerContext, contexts
+from controllers import registerContext, contexts, registerObj
 from lrcwindow import LrcWindowManager
 
 class MainWindow(BaseWindow):
@@ -22,9 +22,11 @@ class MainWindow(BaseWindow):
     @registerContext
     def __init__(self):
         super(MainWindow, self).__init__()
-        self.setPosition(-100, -100)
-        self.lrcWindow = LrcWindowManager()
-        self.toggleShow.connect(self.lrcWindow.toggle)
+        # self.setPosition(-100, -100)
+        self.lrcWindowManager = LrcWindowManager()
+        registerObj('UnLockWindow', self.lrcWindowManager.unLockWindow)
+        registerObj('LockWindow', self.lrcWindowManager.lockedWindow)
+        self.toggleShow.connect(self.lrcWindowManager.toggle)
 
     def mousePressEvent(self, event):
         # 鼠标点击事件

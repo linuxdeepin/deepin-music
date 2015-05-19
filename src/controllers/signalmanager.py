@@ -30,6 +30,10 @@ class SignalManager(QObject):
     addLocalSongToDataBase = pyqtSignal('QString')
     addLocalSongsToDataBase = pyqtSignal(list)
 
+    #lrc
+    locked = pyqtSignal()
+    unLocked = pyqtSignal()
+
     @registerContext
     def __init__(self, parent=None):
         super(SignalManager, self).__init__(parent)
