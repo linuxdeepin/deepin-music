@@ -56,10 +56,6 @@ Rectangle {
         asynchronous: true
     }
 
-    LrcWindow {
-        id: lrcWindow
-    }
-
     MainController {
         id: mainController
         rootWindow: root

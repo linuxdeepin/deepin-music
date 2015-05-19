@@ -22,7 +22,7 @@ Item {
         MenuWorker.settingTrigger.connect(loadSettingPage);
         MenuWorker.exitTrigger.connect(closeAll)
 
-        UnLockWindow.qPositionChanged.connect(updateLrcWindowPosition)
+        // UnLockWindow.qPositionChanged.connect(updateLrcWindowPosition)
     }
 
     function showMainWindow() {
@@ -72,10 +72,10 @@ Item {
         WindowManageWorker.switchPageByID('SettingPage')
     }
 
-    function updateLrcWindowPosition(pos){
-        lrcWindow.x = pos.x + (UnLockWindow.qSize.width - lrcWindow.width) / 2;
-        lrcWindow.y = pos.y - lrcWindow.height;
-    }
+    // function updateLrcWindowPosition(pos){
+    //     lrcWindow.x = pos.x + (UnLockWindow.qSize.width - lrcWindow.width) / 2;
+    //     lrcWindow.y = pos.y - lrcWindow.height;
+    // }
 
 	Connections {
         target: mainWindow.titleBar
@@ -97,22 +97,22 @@ Item {
         }
     }
 
-    Connections {
-        target: lrcWindow
-        onWidthChanged:{
-            lrcWindow.x = UnLockWindow.qPosition.x + (UnLockWindow.qSize.width - lrcWindow.width) / 2;
-            lrcWindow.y = UnLockWindow.qPosition.y - lrcWindow.height;
-            mainWindow.playBottomBar.lrcButton.clicked();
-            mainWindow.playBottomBar.lrcButton.clicked();
-        }
+    // Connections {
+    //     target: lrcWindow
+    //     onWidthChanged:{
+    //         lrcWindow.x = UnLockWindow.qPosition.x + (UnLockWindow.qSize.width - lrcWindow.width) / 2;
+    //         lrcWindow.y = UnLockWindow.qPosition.y - lrcWindow.height;
+    //         mainWindow.playBottomBar.lrcButton.clicked();
+    //         mainWindow.playBottomBar.lrcButton.clicked();
+    //     }
 
-        onHoveredChanged:{
-            if (lrcWindow.hovered && lrcWindow.locked){
-                lrcWindow.setVisible(!lrcWindow.visible);
-                lrcWindow.setVisible(!lrcWindow.visible);
-            } 
-        }
-    }
+    //     onHoveredChanged:{
+    //         if (lrcWindow.hovered && lrcWindow.locked){
+    //             lrcWindow.setVisible(!lrcWindow.visible);
+    //             lrcWindow.setVisible(!lrcWindow.visible);
+    //         } 
+    //     }
+    // }
 
     Connections {
         target: mainWindow.playBottomBar.playlistButton
@@ -130,10 +130,10 @@ Item {
     Connections {
         target: mainWindow.playBottomBar.lrcButton
         onClicked:{
-            lrcWindow.setVisible(!lrcWindow.visible);
+            // lrcWindow.setVisible(!lrcWindow.visible);
             MainWindow.toggleShow();
-            lrcWindow.x = UnLockWindow.qPosition.x + (UnLockWindow.qSize.width - lrcWindow.width) / 2;
-            lrcWindow.y = UnLockWindow.qPosition.y - lrcWindow.height;
+            // lrcWindow.x = UnLockWindow.qPosition.x + (UnLockWindow.qSize.width - lrcWindow.width) / 2;
+            // lrcWindow.y = UnLockWindow.qPosition.y - lrcWindow.height;
         }
     }
 

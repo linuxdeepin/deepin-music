@@ -9,7 +9,7 @@ from PyQt5.QtCore import (
     pyqtSlot, pyqtSignal, 
     QTimer, QEvent, QPoint)
 from PyQt5.QtGui import QColor, QPen, QLinearGradient, QPainter, QFont, QPalette, QRegion
-from PyQt5.QtWidgets import QApplication, QLabel, QFrame, QPushButton, QDesktopWidget
+from PyQt5.QtWidgets import QApplication, QLabel, QFrame, QPushButton, QDesktopWidget, QHBoxLayout
 from controllers import registerContext, contexts, registerObj
 from controllers import signalManager
 
@@ -162,6 +162,263 @@ class DLrcWindow(FMoveableWidget):
         return super(FMoveableWidget, self).eventFilter(obj, event)
 
 
+class DToolButton(QPushButton):
+    """docstring for DToolButton"""
+    def __init__(self, parent=None):
+        super(DToolButton, self).__init__(parent)
+        self.setFocusPolicy(Qt.NoFocus)
+        self.setFixedSize(16, 16)
+
+    def mousePressEvent(self, event):
+        self.setWindowOpacity(0)
+        super(DToolButton, self).mousePressEvent(event)
+
+    def mouseReleaseEvent(self, event):
+        self.setWindowOpacity(1)
+        super(DToolButton, self).mouseReleaseEvent(event)
+
+        
+
+
+class UnLockToolBar(QFrame):
+    
+    style = '''
+        QPushButton#PreButton{
+            border-image: url(./skin/lrc/lrc.previous.normal.png)
+
+        }
+        QPushButton#PreButton:pressed{
+            border-image: url(./skin/lrc/lrc.previous.pressed.png)
+        }
+
+        QPushButton#PlayButton{
+            border-image: url(./skin/lrc/lrc.play.normal.png)
+        }
+        QPushButton#PlayButton:pressed{
+            border-image: url(./skin/lrc/lrc.play.pressed.png)
+        }
+
+        QPushButton#PauseButton{
+            border-image: url(./skin/lrc/lrc.pause.normal.png)
+        }
+        QPushButton#PauseButton:pressed{
+            border-image: url(./skin/lrc/lrc.pause.pressed.png)
+        }
+
+        QPushButton#NextButton{
+            border-image: url(./skin/lrc/lrc.previous.normal.png)
+        }
+        QPushButton#NextButton:pressed{
+            border-image: url(./skin/lrc/lrc.previous.pressed.png)
+        }
+
+        QPushButton#FontPlusButton{
+            border-image: url(./skin/lrc/lrc.font.increase.normal.png)
+        }
+        QPushButton#FontPlusButton:pressed{
+            border-image: url(./skin/lrc/lrc.font.increase.pressed.png)
+        }
+
+        QPushButton#FontMinusButton{
+            border-image: url(./skin/lrc/lrc.font.decrease.normal.png)
+        }
+        QPushButton#FontMinusButton:pressed{
+            border-image: url(./skin/lrc/lrc.font.decrease.pressed.png)
+        }
+
+        QPushButton#BackButton{
+            border-image: url(./skin/lrc/lrc.back.normal.png)
+        }
+        QPushButton#BackButton:pressed{
+            border-image: url(./skin/lrc/lrc.back.pressed.png)
+        }
+
+        QPushButton#ForwardButton{
+            border-image: url(./skin/lrc/lrc.forward.normal.png)
+        }
+        QPushButton#ForwardButton:pressed{
+            border-image: url(./skin/lrc/lrc.forward.pressed.png)
+        }
+
+        QPushButton#ThemeButton{
+            border-image: url(./skin/lrc/lrc.theme.normal.png)
+        }
+        QPushButton#ThemeButton:pressed{
+            border-image: url(./skin/lrc/lrc.theme.pressed.png)
+        }
+
+        QPushButton#SingleLineButton{
+            border-image: url(./skin/lrc/lrc.single.normal.png)
+        }
+        QPushButton#SingleLineButton:pressed{
+            border-image: url(./skin/lrc/lrc.single.pressed.png)
+        }
+
+        QPushButton#DoubleLineButton{
+            border-image: url(./skin/lrc/lrc.double.normal.png)
+        }
+        QPushButton#DoubleLineButton:pressed{
+            border-image: url(./skin/lrc/lrc.double.pressed.png)
+        }
+
+        QPushButton#KalaokButton{
+            border-image: url(./skin/lrc/lrc.kalaok.normal.png)
+        }
+        QPushButton#KalaokButton:pressed{
+            border-image: url(./skin/lrc/lrc.kalaok.pressed.png)
+        }
+
+        QPushButton#LockButton{
+            border-image: url(./skin/lrc/lrc.lock.normal.png)
+        }
+        QPushButton#LockButton:pressed{
+            border-image: url(./skin/lrc/lrc.lock.pressed.png)
+        }
+
+        QPushButton#SettingButton{
+            border-image: url(./skin/lrc/lrc.setting.normal.png)
+        }
+        QPushButton#SettingButton:pressed{
+            border-image: url(./skin/lrc/lrc.setting.pressed.png)
+        }
+
+        QPushButton#SearchButton{
+            border-image: url(./skin/lrc/lrc.search.normal.png)
+        }
+        QPushButton#SearchButton:pressed{
+            border-image: url(./skin/lrc/lrc.search.pressed.png)
+        }
+
+        QPushButton#CloseButton{
+            border-image: url(./skin/lrc/lrc.close.normal.png)
+        }
+        QPushButton#CloseButton:pressed{
+            border-image: url(./skin/lrc/lrc.close.pressed.png)
+        }
+    '''
+
+    qPositionChanged = pyqtSignal('QPoint')
+    hoverChanged = pyqtSignal(bool)
+
+    def __init__(self, parent=None):
+        super(UnLockToolBar, self).__init__(parent)
+        self.setAttribute(Qt.WA_TranslucentBackground, True)
+        self.setAttribute(Qt.WA_Hover, True)
+        self.setWindowFlags(Qt.ToolTip | Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
+        self.installEventFilter(self)
+
+        self._hovered = False
+
+        self.preButton =  DToolButton()
+        self.preButton.setObjectName('PreButton')
+        self.preButton.setStyleSheet(self.style)
+        self.playButton = DToolButton()
+        self.playButton.setObjectName('PlayButton')
+        self.playButton.setFixedSize(24, 24)
+        self.nextButton = DToolButton()
+        self.nextButton.setObjectName('NextButton')
+
+        self.fontPlusButton = DToolButton()
+        self.fontPlusButton.setObjectName('FontPlusButton')
+        self.fontMinusButton = DToolButton()
+        self.fontMinusButton.setObjectName('FontMinusButton')
+
+        self.backButton = DToolButton()
+        self.backButton.setObjectName('BackButton')
+        self.forwardButton = DToolButton()
+        self.forwardButton.setObjectName('ForwardButton')
+
+        self.themeButton = DToolButton()
+        self.themeButton.setObjectName('ThemeButton')
+        
+        self.singleLineButton = DToolButton()
+        self.singleLineButton.setObjectName('SingleLineButton')
+        self.doubleLineButton = DToolButton()
+        self.doubleLineButton.setObjectName('DoubleLineButton')
+
+        self.kalaokButton = DToolButton()
+        self.kalaokButton.setObjectName('KalaokButton')
+
+        self.lockButton = DToolButton()
+        self.lockButton.setObjectName('LockButton')
+
+        self.settingButton = DToolButton()
+        self.settingButton.setObjectName('SettingButton')
+
+        self.searchButton = DToolButton()
+        self.searchButton.setObjectName('SearchButton')
+
+        self.closeButton = DToolButton()
+        self.closeButton.setObjectName('CloseButton')
+
+        
+        playLayout = QHBoxLayout()
+        playLayout.addWidget(self.preButton)
+        playLayout.addWidget(self.playButton)
+        playLayout.addWidget(self.nextButton)
+        playLayout.setSpacing(10)
+        playLayout.setContentsMargins(0, 0, 0, 0)
+
+        controlLayout = QHBoxLayout()
+        controlLayout.addWidget(self.fontPlusButton)
+        controlLayout.addWidget(self.fontMinusButton)
+        controlLayout.addWidget(self.backButton)
+        controlLayout.addWidget(self.forwardButton)
+        controlLayout.addWidget(self.themeButton)
+        controlLayout.addWidget(self.singleLineButton)
+        controlLayout.addWidget(self.doubleLineButton)
+        controlLayout.addWidget(self.kalaokButton)
+        controlLayout.addWidget(self.lockButton)
+        controlLayout.addWidget(self.settingButton)
+        controlLayout.addWidget(self.searchButton)
+        controlLayout.addWidget(self.closeButton)
+        controlLayout.setSpacing(14)
+        controlLayout.setContentsMargins(0, 0, 0, 0)
+
+        mainLayout = QHBoxLayout()
+        mainLayout.addLayout(playLayout)
+        mainLayout.addLayout(controlLayout)
+        mainLayout.setContentsMargins(0, 18, 0, 8)
+        mainLayout.setSpacing(14)
+        self.setLayout(mainLayout)
+
+
+        self.setFixedSize(436, 50)
+
+        self.setStyleSheet(self.style)
+
+    @pyqtProperty(bool, notify=hoverChanged)
+    def hovered(self):
+        return  self._hovered
+
+    @hovered.setter
+    def hovered(self, hovered):
+        self._hovered = hovered
+        self.hoverChanged.emit(hovered)
+
+
+    @pyqtProperty('QPoint', notify=qPositionChanged)
+    def qPosition(self):
+        return self.pos()
+
+    @qPosition.setter
+    def qPosition(self, pos):
+        self.move(pos)
+        self.qPositionChanged.emit(pos)
+
+    def setPosition(self, pos):
+        self.qPosition = pos
+
+    def eventFilter(self, obj, event):
+        if event.type() == QEvent.HoverEnter:
+            self.hovered = True
+            self.setVisible(True)
+        elif event.type() == QEvent.HoverLeave:
+            self.hovered = False
+            self.setVisible(False)
+        return super(UnLockToolBar, self).eventFilter(obj, event)
+
+
 class LrcWindowManager(QObject):
 
     def __init__(self):
@@ -169,7 +426,11 @@ class LrcWindowManager(QObject):
         self.unLockWindow = DLrcWindow(False)
         self.lockedWindow = DLrcWindow(True)
 
+        self.unLockBar = UnLockToolBar()
+
         self.unLockWindow.qPositionChanged.connect(self.lockedWindow.setPosition)
+        self.unLockWindow.qPositionChanged.connect(self.updateLockBar)
+        self.unLockWindow.hoverChanged.connect(self.unLockBar.setVisible)
         signalManager.locked.connect(self.showLocked)
         signalManager.unLocked.connect(self.showNoraml)
 
@@ -192,13 +453,20 @@ class LrcWindowManager(QObject):
         self.unLockWindow.update()
         self.lockedWindow.update()
 
+    def updateLockBar(self, pos):
+        x = self.unLockWindow.x() + (self.unLockWindow.width() - self.unLockBar.width()) / 2
+        y = self.unLockWindow.y() - self.unLockBar.height()
+        self.unLockBar.qPosition = QPoint(x, y)
+
     def showNoraml(self):
         self.lockedWindow.hide()
         self.unLockWindow.show()
+        self.updateLockBar(self.unLockWindow.qPosition)
         self.state = 'Normal'
 
     def showLocked(self):
         self.unLockWindow.hide()
+        self.unLockBar.hide()
         self.lockedWindow.show()
         self.state = 'Locked'
 
@@ -212,6 +480,7 @@ class LrcWindowManager(QObject):
     def hide(self):
         self.isVisible = False
         self.unLockWindow.hide()
+        self.unLockBar.hide()
         self.lockedWindow.hide()
 
     def toggle(self):
