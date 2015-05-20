@@ -6,7 +6,7 @@ from PyQt5.QtCore import (QCoreApplication, QObject,
                           QUrl, QThread, QTimer,
                           QThreadPool, QPoint)
 from PyQt5.QtGui import QScreen
-from views import MainWindow
+from views import MainWindow, LrcWindowManager
 
 from controllers import contexts, Web360ApiWorker, MusicManageWorker
 from controllers import OnlineMusicManageWorker, MenuWorker, WindowManageWorker
@@ -55,6 +55,7 @@ class DeepinPlayer(QObject):
 
     def initView(self):
         self.mainWindow = MainWindow()
+        self.lrcWindowManager = LrcWindowManager()
 
     def initControllers(self):
         self.utilWorker = UtilWorker()
@@ -91,8 +92,8 @@ class DeepinPlayer(QObject):
         self.mainWindow.setSource(QUrl.fromLocalFile(
             os.path.join(get_parent_dir(__file__, 2), 'views', 'Main.qml')))
 
-        unLockWindow = self.mainWindow.lrcWindowManager.unLockWindow
-        unLockWindow.setPosition(self.mainWindow.geometry().bottomLeft() + QPoint(0, 50))
+        unLockWindow = self.lrcWindowManager.unLockWindow
+        unLockWindow.setPosition(self.mainWindow.geometry().bottomLeft() + QPoint(0, 0))
 
     def initConnect(self):
         self.web360ApiWorkerConnect()
@@ -104,7 +105,6 @@ class DeepinPlayer(QObject):
         self.menuWorkerConnect()
         self.dbWorkerConnect()
         self.downloadSongWorkerConnect()
-        self.lrcWorkerConnect()
         self.qApp.aboutToQuit.connect(self.close)
 
     def web360ApiWorkerConnect(self):
@@ -251,9 +251,6 @@ class DeepinPlayer(QObject):
 
     def downloadSongWorkerConnect(self):
         self.downloadSongWorker.addDownloadSongToDataBase.connect(self.musicManageWorker.addLocalSongToDataBase)
-
-    def lrcWorkerConnect(self):
-        self.lrcWorker.textInfoChanged.connect(self.mainWindow.lrcWindowManager.updateTextInfo)
 
     def loadConfig(self):
         self.mediaPlayer.setPlaylistByName(self.configWorker.lastPlaylistName)

@@ -97,23 +97,6 @@ Item {
         }
     }
 
-    // Connections {
-    //     target: lrcWindow
-    //     onWidthChanged:{
-    //         lrcWindow.x = UnLockWindow.qPosition.x + (UnLockWindow.qSize.width - lrcWindow.width) / 2;
-    //         lrcWindow.y = UnLockWindow.qPosition.y - lrcWindow.height;
-    //         mainWindow.playBottomBar.lrcButton.clicked();
-    //         mainWindow.playBottomBar.lrcButton.clicked();
-    //     }
-
-    //     onHoveredChanged:{
-    //         if (lrcWindow.hovered && lrcWindow.locked){
-    //             lrcWindow.setVisible(!lrcWindow.visible);
-    //             lrcWindow.setVisible(!lrcWindow.visible);
-    //         } 
-    //     }
-    // }
-
     Connections {
         target: mainWindow.playBottomBar.playlistButton
         onClicked:{
@@ -130,10 +113,7 @@ Item {
     Connections {
         target: mainWindow.playBottomBar.lrcButton
         onClicked:{
-            // lrcWindow.setVisible(!lrcWindow.visible);
-            MainWindow.toggleShow();
-            // lrcWindow.x = UnLockWindow.qPosition.x + (UnLockWindow.qSize.width - lrcWindow.width) / 2;
-            // lrcWindow.y = UnLockWindow.qPosition.y - lrcWindow.height;
+            SignalManager.toggleShow();
         }
     }
 

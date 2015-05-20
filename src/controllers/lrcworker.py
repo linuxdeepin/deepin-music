@@ -16,6 +16,7 @@ from dwidgets.coverlrc.lrc_download import TTPlayer, DUOMI, SOSO, TTPod
 from dwidgets.coverlrc.cover_query import poster
 from dwidgets.coverlrc.lrc_parser import LrcParser
 from dwidgets.dthreadutil import dthread
+from .signalmanager import signalManager
 
 
 class LrcWorker(QObject):
@@ -24,7 +25,6 @@ class LrcWorker(QObject):
     lrcDownloaded = pyqtSignal('QString', 'QString')
 
     currentTextChanged = pyqtSignal('QString')
-    textInfoChanged = pyqtSignal('QString', float, int)
 
     __contextName__ = 'LrcWorker'
 
@@ -33,21 +33,39 @@ class LrcWorker(QObject):
         super(LrcWorker, self).__init__(parent)
         self._lrcDir = LRCPath
         self.lrcParser = LrcParser()
-        self._currentText = 'gvgffg'
+        self._currentText = ''
+        self._lineMode = 1
         self.initConnect()
 
     def initConnect(self):
         self.lrcDownloaded.connect(self.getLrc)
         self.lrcFileExisted.connect(self.parserLrc)
 
+        signalManager.lineModeChanged.connect(self.setLrcLineMode)
+
     def parserLrc(self, filepath):
         self.lrcParser.set_filename(filepath)
+
+    def setLrcLineMode(self, lineMode):
+        self._lineMode = lineMode
 
     def getLrcText(self, pos):
         ret = self.lrcParser.get_lyric_by_time(pos, self.sender().duration)
         if ret:
             text, percentage, lyric_id = ret
-            self.textInfoChanged.emit(text, percentage, lyric_id)
+            if self._lineMode == 1: 
+                signalManager.singleTextInfoChanged.emit(text, percentage, lyric_id)
+            elif self._lineMode == 2:
+                texts = []
+                if lyric_id % 2 == 0:
+                    texts.append((text, percentage, lyric_id))
+                    text = self.getLyricTextById(lyric_id + 1)
+                    texts.append((text, 0, lyric_id + 1))
+                else:
+                    texts.append((text, 1, lyric_id))
+                    text = self.getLyricTextById(lyric_id + 1)
+                    texts.append((text, percentage, lyric_id + 1))
+                signalManager.douleTextInfoChanged.emit(texts)
             self.currentText = text
 
     @pyqtProperty('QString', notify=currentTextChanged)
@@ -116,7 +134,7 @@ class LrcWorker(QObject):
                 lrcPath = engine(lrc_path, artist, title)
                 if lrcPath:
                     return lrcPath
-            print('not result')
+            # signalManager.noLrcFound.emit()  
             try:
                 os.unlink(lrc_path)
             except:

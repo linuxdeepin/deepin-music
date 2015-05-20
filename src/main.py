@@ -17,7 +17,7 @@ import config
 import faulthandler
 import threading
 from config.constants import LogCachePath 
-from views.lrcwindow import DLrcWindow 
+
 fd = open(os.path.join(LogCachePath, 'crash.log'), 'w')
 faulthandler.enable(fd, all_threads=True)
 

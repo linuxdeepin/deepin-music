@@ -30,9 +30,32 @@ class SignalManager(QObject):
     addLocalSongToDataBase = pyqtSignal('QString')
     addLocalSongsToDataBase = pyqtSignal(list)
 
+    # mediaplayer
+
+    playingChanged = pyqtSignal(bool)
+
     #lrc
+    sizeChanged = pyqtSignal(int, int)
+
+    noLrcFound = pyqtSignal()
+
+    lineModeChanged = pyqtSignal(int)
+    singleTextInfoChanged = pyqtSignal('QString', float, int)
+    douleTextInfoChanged = pyqtSignal(list)
+
+    previousSong = pyqtSignal()
+    playToggle = pyqtSignal(bool)
+    nextSong = pyqtSignal()
+    fontIncreaseChanged = pyqtSignal()
+    fontDecreaseChanged = pyqtSignal()
+
+    showLrcSingleLine = pyqtSignal()
+    showLrcDoubleLine = pyqtSignal()
+
     locked = pyqtSignal()
-    unLocked = pyqtSignal()
+    unlocked = pyqtSignal()
+    toggleShow = pyqtSignal()
+    lrcClosed = pyqtSignal()
 
     @registerContext
     def __init__(self, parent=None):

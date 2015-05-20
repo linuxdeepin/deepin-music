@@ -16,7 +16,7 @@ from log import logger
 from .muscimanageworker import MusicManageWorker
 from .onlinemuscimanageworker import OnlineMusicManageWorker
 from .web360apiworker import Web360ApiWorker
-
+from .signalmanager import signalManager
 
 class PlayerBin(QMediaPlayer):
 
@@ -102,6 +102,12 @@ class MediaPlayer(QObject):
         gPlayer.durationChanged.connect(self.updateDuration)
         gPlayer.bufferStatusChanged.connect(self.bufferChange)
         gPlayer.error.connect(self.monitorError)
+
+        self.playingChanged.connect(signalManager.playingChanged)
+
+        signalManager.previousSong.connect(self.previous)
+        signalManager.playToggle.connect(self.playToggle)
+        signalManager.nextSong.connect(self.next)
 
     @pyqtProperty('QString', notify=urlChanged)
     def url(self):
