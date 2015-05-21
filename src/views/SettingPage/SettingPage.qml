@@ -147,4 +147,9 @@ Rectangle {
             }
         }
     }
+
+    SettingPageController{
+        id: settingController
+        flickable: flickable
+    }
 }

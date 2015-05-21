@@ -20,8 +20,8 @@ class DQuickView(QtQuick.QQuickView):
 
     """The DQuickView init webengine in PyQt5"""
 
-    def __init__(self):
-        super(DQuickView, self).__init__()
+    def __init__(self, engine=None, parent=None):
+        super(DQuickView, self).__init__(engine, parent)
         self.setResizeMode(QtQuick.QQuickView.SizeViewToRootObject)
         self.engine().addImportPath(os.sep.join([get_parent_dir(__file__, 2), 'qml']))
         if isWebengineUsed:

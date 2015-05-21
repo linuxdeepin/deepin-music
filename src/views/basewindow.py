@@ -22,8 +22,8 @@ class BaseWindow(DQuickView):
     globalObjectChanged = pyqtSignal('QJSValue')
     loadSuccessed = pyqtSignal()
 
-    def __init__(self):
-        super(BaseWindow, self).__init__()
+    def __init__(self, engine=None, parent=None):
+        super(BaseWindow, self).__init__(engine, parent)
         self.setFlags(Qt.FramelessWindowHint)
         self.setIcon(QIcon(config.windowIcon))
         self.initConnect()

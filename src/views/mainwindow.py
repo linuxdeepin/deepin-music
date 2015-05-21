@@ -18,8 +18,8 @@ class MainWindow(BaseWindow):
     __contextName__ = 'MainWindow'
 
     @registerContext
-    def __init__(self):
-        super(MainWindow, self).__init__()
+    def __init__(self, engine=None, parent=None):
+        super(MainWindow, self).__init__(engine, parent)
 
     def mousePressEvent(self, event):
         # 鼠标点击事件

@@ -3,6 +3,7 @@ import QtQuick 2.3
 Item {
     id: mainWindowController
     property var mainWindow
+    property var stackViews
     property var bgImage
     property var titleBar
     property var leftSideBar
@@ -28,6 +29,7 @@ Item {
 
     function initConnect(){
         WindowManageWorker.switchPageByID.connect(leftSideBar.swicthViewByID);
+        SignalManager.lrcSetting.connect(switchToSettingPage);
         SignalManager.addtoFavorite.connect(favoriteOn);
         SignalManager.removeFromFavorite.connect(favoriteOff);
     }
@@ -69,6 +71,11 @@ Item {
         }else{
             return EmptyModel
         }
+    }
+
+    function switchToSettingPage(){
+        var index =  mainWindow.views.indexOf('SettingPage');
+        stackViews.setCurrentIndex(index);
     }
 
     Binding {

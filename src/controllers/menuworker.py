@@ -451,6 +451,8 @@ class MenuWorker(QObject):
             self.removeFromDatabaseByArtistName.emit(self._artist)
         elif menuId == "RemoveFromDriver":
             self.removeFromDriverByArtistName.emit(self._artist)
+        elif menuId == "NewPlaylist":
+            signalManager.newPlaylistWindowShowed.emit()
         else:
             if menuId.startswith('playlist_group'):
                 playlistName = menuId.split(':')[-1]
@@ -464,6 +466,8 @@ class MenuWorker(QObject):
             self.removeFromDatabaseByAlbumName.emit(self._album)
         elif menuId == "RemoveFromDriver":
             self.removeFromDriverByAlbumName.emit(self._album)
+        elif menuId == "NewPlaylist":
+            signalManager.newPlaylistWindowShowed.emit()
         else:
             if menuId.startswith('playlist_group'):
                 playlistName = menuId.split(':')[-1]
@@ -493,6 +497,8 @@ class MenuWorker(QObject):
             self.removeFromDatabaseByUrl.emit(self._url)
         elif menuId == "RemoveFromDriver":
             self.removeFromDriveByUrl.emit(self._url)
+        elif menuId == "NewPlaylist":
+            signalManager.newPlaylistWindowShowed.emit()
         else:
             if menuId.startswith('playlist_group'):
                 playlistName = menuId.split(':')[-1]
@@ -519,6 +525,8 @@ class MenuWorker(QObject):
             self.removeFromDatabaseByFolderName.emit(self._folder)
         elif menuId == "RemoveFromDriver":
             self.removeFromDriverByFolderName.emit(self._folder)
+        elif menuId == "NewPlaylist":
+            signalManager.newPlaylistWindowShowed.emit()
         else:
             if menuId.startswith('playlist_group'):
                 playlistName = menuId.split(':')[-1]
@@ -532,6 +540,8 @@ class MenuWorker(QObject):
             self.openSongFolder.emit(self._url)
         elif menuId == 'RemoveFromPlaylist':
             self.removeFromPlaylist.emit(self._playlist, self._url)
+        elif menuId == "NewPlaylist":
+            signalManager.newPlaylistWindowShowed.emit()
         else:
             if menuId.startswith('playlist_group'):
                 playlistName = menuId.split(':')[-1]
@@ -545,6 +555,8 @@ class MenuWorker(QObject):
             signalManager.addtoDownloadlist.emit(self._songId)
         elif menuId == 'RemoveFromPlaylist':
             self.removeFromPlaylist.emit(self._playlist, self._url)
+        elif menuId == "NewPlaylist":
+            signalManager.newPlaylistWindowShowed.emit()
         else:
             if menuId.startswith('playlist_group'):
                     playlistName = menuId.split(':')[-1]

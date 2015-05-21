@@ -130,6 +130,7 @@ Rectangle {
     MainWindowController{
         id: mainWindowController
         mainWindow: mainWindow
+        stackViews: stackViews
         bgImage: bgImage
         titleBar: titleBar
         leftSideBar: leftSideBar

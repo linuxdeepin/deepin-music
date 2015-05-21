@@ -6,7 +6,7 @@ from PyQt5.QtCore import (QCoreApplication, QObject,
                           QUrl, QThread, QTimer,
                           QThreadPool, QPoint)
 from PyQt5.QtGui import QScreen
-from views import MainWindow, LrcWindowManager
+from views import MainWindow, LrcWindowManager, NewPlaylistWindow
 
 from controllers import contexts, Web360ApiWorker, MusicManageWorker
 from controllers import OnlineMusicManageWorker, MenuWorker, WindowManageWorker
@@ -97,6 +97,8 @@ class DeepinPlayer(QObject):
         self.mainWindow.setContexts(contexts)
         self.mainWindow.setSource(QUrl.fromLocalFile(
             os.path.join(get_parent_dir(__file__, 2), 'views', 'Main.qml')))
+
+        self.newPlaylistWindow = NewPlaylistWindow(self.mainWindow.engine(), self.mainWindow)
 
     def initConnect(self):
         self.web360ApiWorkerConnect()

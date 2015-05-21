@@ -31,13 +31,17 @@ class SignalManager(QObject):
     addLocalSongsToDataBase = pyqtSignal(list)
 
     # mediaplayer
-
     playingChanged = pyqtSignal(bool)
     lrcPositionChanged = pyqtSignal('qint64', int)
+
+    #playlist
+    newPlaylistWindowShowed = pyqtSignal()
+    newMultiPlaylistWindow = pyqtSignal()
 
     #lrc
     downloadLrc = pyqtSignal('QString', 'QString')
     noLrcFound = pyqtSignal()
+    toggleShow = pyqtSignal()
 
     lineModeChanged = pyqtSignal(int)
     singleTextInfoChanged = pyqtSignal('QString', float, int)
@@ -48,13 +52,16 @@ class SignalManager(QObject):
     nextSong = pyqtSignal()
     fontIncreaseChanged = pyqtSignal()
     fontDecreaseChanged = pyqtSignal()
-
+    lrcBackHalfSecond = pyqtSignal()
+    lrcForwardHarfSecond = pyqtSignal()
+    lrcThemeChanged = pyqtSignal()
     showLrcSingleLine = pyqtSignal()
     showLrcDoubleLine = pyqtSignal()
-
+    kalaokChanged = pyqtSignal()
     locked = pyqtSignal()
     unlocked = pyqtSignal()
-    toggleShow = pyqtSignal()
+    lrcSetting = pyqtSignal()
+    lrcSearch = pyqtSignal()
     lrcClosed = pyqtSignal()
 
     @registerContext
