@@ -20,6 +20,7 @@ from log import logger
 class BaseWindow(DQuickView):
 
     globalObjectChanged = pyqtSignal('QJSValue')
+    loadSuccessed = pyqtSignal()
 
     def __init__(self):
         super(BaseWindow, self).__init__()
@@ -56,7 +57,7 @@ class BaseWindow(DQuickView):
             logger.info('This QQuickView %s has loaded %s and created the QML component.' %(str(self), self.source()))
             self.moveCenter()
             self.initQMLConnect()
-
+            self.loadSuccessed.emit()
         elif status == QQuickView.Loading:
             logger.info('This QQuickView is loading network data.')
         elif status == QQuickView.Error:

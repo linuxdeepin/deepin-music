@@ -7,13 +7,14 @@ from PyQt5.QtCore import (
     Qt, QRect,QUrl,
     pyqtProperty, QObject, 
     pyqtSlot, pyqtSignal, 
-    QTimer, QEvent, QPoint)
+    QTimer, QEvent, QPoint, QSize)
 from PyQt5.QtGui import QColor, QPen, QLinearGradient, QPainter, QFont, QPalette, QRegion
 from PyQt5.QtWidgets import (QApplication, QLabel, QFrame, 
     QPushButton, QDesktopWidget, QHBoxLayout,
     QVBoxLayout)
 from controllers import registerContext, contexts, registerObj
 from controllers import signalManager
+
 
 class FMoveableWidget(QLabel):
 
@@ -129,9 +130,9 @@ class UnLockWindow(FMoveableWidget):
         self.hoverChanged.connect(self.unLockBar.setVisible)
         self.qSizeChanged.connect(self.lrcText.updateTextSize)
 
-        signalManager.sizeChanged.connect(self.updateSize)
+        self.lrcText.qSizeChanged.connect(self.updateSize)
 
-    def updateSize(self, width, height):
+    def updateSize(self, size):
         self.setFixedSize(self.width(), self.unLockBar.height() + self.lrcText.height())
 
     def updateText(self, text, percentage, lyric_id):
@@ -189,6 +190,7 @@ class LockWindow(FMoveableWidget):
         self.setFixedSize(901, 40)
 
     def initConnect(self):
+        # self.qSizeChanged.connect(self.lrcText.setSize)
         pass
 
     @pyqtSlot('QPoint')
@@ -197,6 +199,7 @@ class LockWindow(FMoveableWidget):
 
 class DLrcText(QLabel):
 
+    qSizeChanged = pyqtSignal('QSize')
     hoverChanged = pyqtSignal(bool)
 
     def __init__(self, parent=None):
@@ -253,26 +256,37 @@ class DLrcText(QLabel):
         signalManager.showLrcSingleLine.connect(self.setSingleLine)
         signalManager.showLrcDoubleLine.connect(self.setDoubleLine)
 
+    def disConnect(self):
+        signalManager.singleTextInfoChanged.disconnect(self.updateSingleText)
+        signalManager.douleTextInfoChanged.disconnect(self.updateDoubleText)
+
+        signalManager.noLrcFound.disconnect(self.updateNoLrcTip)
+        signalManager.fontIncreaseChanged.disconnect(self.increaseFont)
+        signalManager.fontDecreaseChanged.disconnect(self.decreaseFont)
+
+        signalManager.showLrcSingleLine.disconnect(self.setSingleLine)
+        signalManager.showLrcDoubleLine.disconnect(self.setDoubleLine)
+
     def increaseFont(self):
         font = self.font()
         size = font.pixelSize()
         font.setPixelSize(size + 1)
         self.setFont(font)
         height = self.height()
-        self.setFixedSize(self.width(), height + 1)
+        self.qSize = QSize(self.width(), height + 1)
 
     def decreaseFont(self):
         font = self.font()
         size = font.pixelSize()
         font.setPixelSize(size - 1)
         self.setFont(font)
-        self.setFixedSize(self.width(), self.height() - 1)
+        self.qSize = QSize(self.width(), self.height() - 1)
 
     def setSingleLine(self):
         if self._lineMode == 1:
             return
         self._lineMode = 1
-        self.setFixedSize(self.width(), self.height() / 2)
+        self.qSize = QSize(self.width(), self.height() / 2)
         signalManager.lineModeChanged.emit(self._lineMode)
         
 
@@ -280,9 +294,20 @@ class DLrcText(QLabel):
         if self._lineMode == 2:
             return
         self._lineMode = 2
-        self.setFixedSize(self.width(), self.height() * 2)
+        self.qSize = QSize(self.width(), self.height() * 2)
         signalManager.lineModeChanged.emit(self._lineMode)
-        
+    
+    @pyqtProperty('QSize', notify=qSizeChanged)
+    def qSize(self):
+        return self.size()
+
+    @qSize.setter
+    def qSize(self, size):
+        self.setFixedSize(size)
+        self.qSizeChanged.emit(size)
+
+    def setSize(self, size):
+        self.qSize = size
 
     @pyqtProperty(bool, notify=hoverChanged)
     def hovered(self):
@@ -320,12 +345,11 @@ class DLrcText(QLabel):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.Antialiasing)
         painter.setFont(self.font())
-        if self.text:
-            if self._lineMode == 1:
-                self.drawText(painter, self.text, self.percentage)
-            elif self._lineMode == 2:
-                self.drawText(painter, self.line1_text, self.line1_percentage, mode="Double", lineMode=1)
-                self.drawText(painter, self.line2_text, self.line2_percentage, mode="Double", lineMode=2)
+        if self._lineMode == 1:
+            self.drawText(painter, self.text, self.percentage)
+        if self._lineMode == 2:
+            self.drawText(painter, self.line1_text, self.line1_percentage, mode="Double", lineMode=1)
+            self.drawText(painter, self.line2_text, self.line2_percentage, mode="Double", lineMode=2)
 
         super(DLrcText, self).paintEvent(event)
 
@@ -353,10 +377,6 @@ class DLrcText(QLabel):
 
         painter.setPen(QPen(self.mask_linear_gradient, 0))
         painter.drawText(startX, startY, textWidth * percentage , textHeight, Qt.AlignLeft, text)
-
-    def setFixedSize(self, width, height):
-        super(DLrcText, self).setFixedSize(width, height)
-        signalManager.sizeChanged.emit(width, height)
 
 
 class DToolButton(QPushButton):
@@ -702,8 +722,9 @@ class LockBar(QFrame):
 
 class LrcWindowManager(QObject):
 
-    def __init__(self):
+    def __init__(self, mainWindow):
         super(LrcWindowManager, self).__init__()
+        self.mainWindow = mainWindow
 
         self.initData()
         self.initUI()
@@ -717,39 +738,54 @@ class LrcWindowManager(QObject):
 
     def initUI(self):
         self.unLockWindow = UnLockWindow(False)
-        self.lockedWindow = LockWindow(True)
-        self.lockBar = LockBar()
 
     def initConnect(self):
-        self.lockedWindow.qPositionChanged.connect(self.updateLockBarPostion)
+        self.mainWindow.loadSuccessed.connect(self.updateUnLockWindowPosition)
         signalManager.locked.connect(self.showLocked)
         signalManager.unlocked.connect(self.showNoraml)
         signalManager.toggleShow.connect(self.toggle)
         signalManager.lrcClosed.connect(self.hide)
 
-    def updateLockWindow(self):
-        self.lockedWindow.setFixedSize(self.unLockWindow.lrcText.size())
-        pos = self.unLockWindow.mapToGlobal(self.unLockWindow.lrcText.geometry().topLeft())
-        self.lockedWindow.setPosition(pos)
-
-    def updateLockBarPostion(self, pos):
-        x = pos.x() + (self.lockedWindow.width() - self.lockBar.width()) / 2
-        y = pos.y() - self.lockBar.height()
-        self.lockBar.setPosition(QPoint(x, y))
+    def updateUnLockWindowPosition(self):
+        self.unLockWindow.setPosition(self.mainWindow.geometry().bottomLeft() + QPoint(0, 0))
 
     def showNoraml(self):
-        self.lockedWindow.hide()
-        self.lockBar.hide()
         self.unLockWindow.show()
+
+        self.destoryLockWindow()
+
         self.state = 'Normal'
 
     def showLocked(self):
-        self.unLockWindow.hide()
+        self.lockedWindow = LockWindow(True)
+        self.lockBar = LockBar()
 
         self.updateLockWindow()
         self.lockedWindow.show()
         self.lockBar.show()
+
+        self.unLockWindow.hide()
         self.state = 'Locked'
+
+    def updateLockWindow(self):
+        self.lockedWindow.qSize = self.unLockWindow.lrcText.size()
+        pos = self.unLockWindow.mapToGlobal(self.unLockWindow.lrcText.geometry().topLeft())
+        self.lockedWindow.setPosition(pos)
+        x = pos.x() + (self.lockedWindow.width() - self.lockBar.width()) / 2
+        y = pos.y() - self.lockBar.height()
+        self.lockBar.setPosition(QPoint(x, y))
+
+        self.lockedWindow.lrcText._lineMode = self.unLockWindow.lrcText._lineMode
+        self.lockedWindow.lrcText.setFont(self.unLockWindow.lrcText.font())
+
+    def destoryLockWindow(self):
+        if hasattr(self, 'lockedWindow'):
+            self.lockedWindow.hide()
+            self.lockedWindow.lrcText.disConnect()
+            del self.lockedWindow
+        if hasattr(self, 'lockBar'):
+            self.lockBar.hide()
+            del self.lockBar
 
     def show(self):
         self.isVisible = True
@@ -761,8 +797,7 @@ class LrcWindowManager(QObject):
     def hide(self):
         self.isVisible = False
         self.unLockWindow.hide()
-        self.lockedWindow.hide()
-        self.lockBar.hide()
+        self.destoryLockWindow()
 
     def toggle(self):
         if self.isVisible:

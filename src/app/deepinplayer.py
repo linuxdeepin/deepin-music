@@ -44,6 +44,12 @@ class DeepinPlayer(QObject):
             cls._instance = cls()
         return cls._instance
 
+    @classmethod
+    def getMainWindow(cls):
+        instance = cls.instance()
+        if instance:
+            return instance.mainWindow
+
     def initApplication(self):
         self.qApp = QCoreApplication.instance()
         self.qApp.setApplicationName(config.applicationName)
@@ -55,7 +61,7 @@ class DeepinPlayer(QObject):
 
     def initView(self):
         self.mainWindow = MainWindow()
-        self.lrcWindowManager = LrcWindowManager()
+        self.lrcWindowManager = LrcWindowManager(self.mainWindow)
 
     def initControllers(self):
         self.utilWorker = UtilWorker()
@@ -91,9 +97,6 @@ class DeepinPlayer(QObject):
         self.mainWindow.setContexts(contexts)
         self.mainWindow.setSource(QUrl.fromLocalFile(
             os.path.join(get_parent_dir(__file__, 2), 'views', 'Main.qml')))
-
-        unLockWindow = self.lrcWindowManager.unLockWindow
-        unLockWindow.setPosition(self.mainWindow.geometry().bottomLeft() + QPoint(0, 0))
 
     def initConnect(self):
         self.web360ApiWorkerConnect()

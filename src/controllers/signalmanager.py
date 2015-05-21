@@ -35,7 +35,6 @@ class SignalManager(QObject):
     playingChanged = pyqtSignal(bool)
 
     #lrc
-    sizeChanged = pyqtSignal(int, int)
 
     noLrcFound = pyqtSignal()
 

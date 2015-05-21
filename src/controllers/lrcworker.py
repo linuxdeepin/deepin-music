@@ -62,9 +62,9 @@ class LrcWorker(QObject):
                     text = self.getLyricTextById(lyric_id + 1)
                     texts.append((text, 0, lyric_id + 1))
                 else:
-                    texts.append((text, 1, lyric_id))
-                    text = self.getLyricTextById(lyric_id + 1)
-                    texts.append((text, percentage, lyric_id + 1))
+                    texts.append((text, percentage, lyric_id))
+                    text = self.getLyricTextById(lyric_id - 1)
+                    texts.insert(0, (text, 1, lyric_id - 1))
                 signalManager.douleTextInfoChanged.emit(texts)
             self.currentText = text
 
