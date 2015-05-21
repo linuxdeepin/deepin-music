@@ -60,7 +60,6 @@ class MediaPlayer(QObject):
     coverChanged = pyqtSignal('QString')
 
     downloadCover = pyqtSignal('QString', 'QString')
-    downloadLrc = pyqtSignal('QString', 'QString')
 
     requestMusic = pyqtSignal('QString')
 
@@ -104,10 +103,14 @@ class MediaPlayer(QObject):
         gPlayer.error.connect(self.monitorError)
 
         self.playingChanged.connect(signalManager.playingChanged)
+        self.positionChanged.connect(self.updateLrc)
 
         signalManager.previousSong.connect(self.previous)
         signalManager.playToggle.connect(self.playToggle)
         signalManager.nextSong.connect(self.next)
+
+    def updateLrc(self, pos):
+        signalManager.lrcPositionChanged.emit(pos, self.duration)
 
     @pyqtProperty('QString', notify=urlChanged)
     def url(self):
@@ -421,7 +424,7 @@ class MediaPlayer(QObject):
             self.album = songObj.album
             self.cover = songObj.cover
 
-            self.downloadLrc.emit(self.artist, self.title)
+            signalManager.downloadLrc.emit(self.artist, self.title)
 
     def playMediaByUrl(self, url):
         self.setMediaUrl(url)

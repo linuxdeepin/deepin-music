@@ -45,6 +45,7 @@ class LrcParser(object):
         self.attr_dict = {"offset" : 0}
         self.current_id = 0
         self.parser_from_file(filename)
+
         
     def parser_from_file(self, filename):    
         if not filename:

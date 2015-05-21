@@ -22,7 +22,6 @@ from .signalmanager import signalManager
 class LrcWorker(QObject):
 
     lrcFileExisted = pyqtSignal('QString')
-    lrcDownloaded = pyqtSignal('QString', 'QString')
 
     currentTextChanged = pyqtSignal('QString')
 
@@ -38,10 +37,11 @@ class LrcWorker(QObject):
         self.initConnect()
 
     def initConnect(self):
-        self.lrcDownloaded.connect(self.getLrc)
         self.lrcFileExisted.connect(self.parserLrc)
 
+        signalManager.downloadLrc.connect(self.getLrc)
         signalManager.lineModeChanged.connect(self.setLrcLineMode)
+        signalManager.lrcPositionChanged.connect(self.getLrcText)
 
     def parserLrc(self, filepath):
         self.lrcParser.set_filename(filepath)
@@ -49,11 +49,11 @@ class LrcWorker(QObject):
     def setLrcLineMode(self, lineMode):
         self._lineMode = lineMode
 
-    def getLrcText(self, pos):
-        ret = self.lrcParser.get_lyric_by_time(pos, self.sender().duration)
+    def getLrcText(self, pos, duration):
+        ret = self.lrcParser.get_lyric_by_time(pos, duration)
         if ret:
             text, percentage, lyric_id = ret
-            if self._lineMode == 1: 
+            if self._lineMode == 1:
                 signalManager.singleTextInfoChanged.emit(text, percentage, lyric_id)
             elif self._lineMode == 2:
                 texts = []
@@ -122,13 +122,10 @@ class LrcWorker(QObject):
                 if lrc_path:
                     self.lrcFileExisted.emit(lrc_path)
                 else:
-                    self.lrcFileExisted.emit('')
-        else:
-            self.lrcFileExisted.emit('')
+                    signalManager.noLrcFound.emit()
 
     def multiple_engine(self, lrc_path, artist, title):
         try:
-            
             engines = [self.ttPlayerEngine, self.ttPodEngine, self.tingEngine, self.sosoEngine, self.duomiEngine]
             for engine in engines:
                 lrcPath = engine(lrc_path, artist, title)

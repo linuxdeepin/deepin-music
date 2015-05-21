@@ -33,9 +33,10 @@ class SignalManager(QObject):
     # mediaplayer
 
     playingChanged = pyqtSignal(bool)
+    lrcPositionChanged = pyqtSignal('qint64', int)
 
     #lrc
-
+    downloadLrc = pyqtSignal('QString', 'QString')
     noLrcFound = pyqtSignal()
 
     lineModeChanged = pyqtSignal(int)
