@@ -3,11 +3,10 @@
 
 
 import os
-os.environ['LC_ALL'] = "en_US.UTF-8"
 import sys
+os.chdir(os.path.dirname(os.path.realpath(sys.argv[0])))
 from PyQt5.QtCore import QCoreApplication, Qt, QThread
 from PyQt5.QtQml import qmlRegisterType
-# from PyQt5.QtQuick import QQuickWindow
 if os.name == 'posix':
     QCoreApplication.setAttribute(Qt.AA_X11InitThreads, True)
 
@@ -26,7 +25,6 @@ if __name__ == '__main__':
     app = QSingleApplication(config.applicationName, sys.argv)
     if app.isRunning():
         sys.exit(0)
-    # qmlRegisterType(QQuickWindow, "QQuickWindow", 1, 0, "DWindow")
     deepinPlayer = DeepinPlayer.instance()
     deepinPlayer.show()
     exitCode = app.exec_()
