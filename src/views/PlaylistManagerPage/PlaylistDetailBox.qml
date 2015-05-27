@@ -12,14 +12,18 @@ Rectangle {
     property var currentPlaylistName
 
     function getModelByPlaylistName(name){
-        if (name){
-            var model = eval('Playlist_' + Qt.md5(name));
-            if (model){
-                return model;
+        try {
+            if (name){
+                var model = eval('Playlist_' + Qt.md5(name));
+                if (model){
+                    return model
+                }else{
+                    return EmptyModel
+                }
             }else{
-                return EmptyModel        
+                return EmptyModel
             }
-        }else{
+        }catch(e){
             return EmptyModel
         }
     }

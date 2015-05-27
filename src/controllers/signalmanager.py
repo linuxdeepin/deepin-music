@@ -34,9 +34,17 @@ class SignalManager(QObject):
     playingChanged = pyqtSignal(bool)
     lrcPositionChanged = pyqtSignal('qint64', int)
 
-    #playlist
-    newPlaylistWindowShowed = pyqtSignal()
-    newMultiPlaylistWindow = pyqtSignal()
+    #Dialog
+    dialogClosed = pyqtSignal()
+
+    #add playlist dialog
+    newPlaylistDialogShowed = pyqtSignal()
+    addNewPlaylist = pyqtSignal('QString')
+
+    #add multi playlist dialog
+    newMultiPlaylistDialogShowed = pyqtSignal('QString', 'QString')
+    addMutiPlaylistFlags = pyqtSignal('QVariant')
+    addSongsToMultiPlaylist = pyqtSignal('QString', 'QString', list)
 
     #lrc
     downloadLrc = pyqtSignal('QString', 'QString')

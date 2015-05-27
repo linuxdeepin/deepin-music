@@ -67,15 +67,15 @@ Item {
     Connections {
         target: playlistInputText
         onAccepted:{
-            playlistInputTextBox.visible = false;
-            playlistInputText.focus = false;
-            customPlaylistView.anchors.top =  playlistTitle.bottom;
-            customPlaylistView.anchors.topMargin =  0;
-
-            playlistNavgationBar.addPlaylistName(playlistInputText.text);
-
-            checkedByName(playlistInputText.text);
-
+            var text = playlistInputText.text;
+            if (text){
+                playlistInputTextBox.visible = false;
+                playlistInputText.focus = false;
+                customPlaylistView.anchors.top =  playlistTitle.bottom;
+                customPlaylistView.anchors.topMargin =  0;
+                playlistNavgationBar.addPlaylistName(playlistInputText.text);
+                checkedByName(playlistInputText.text);
+            }
         }
     }
 

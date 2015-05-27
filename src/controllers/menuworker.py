@@ -452,7 +452,9 @@ class MenuWorker(QObject):
         elif menuId == "RemoveFromDriver":
             self.removeFromDriverByArtistName.emit(self._artist)
         elif menuId == "NewPlaylist":
-            signalManager.newPlaylistWindowShowed.emit()
+            signalManager.newPlaylistDialogShowed.emit()
+        elif menuId == "AddToMutiPlaylist":
+            signalManager.newMultiPlaylistDialogShowed.emit(self._artist, 'Artist')
         else:
             if menuId.startswith('playlist_group'):
                 playlistName = menuId.split(':')[-1]
@@ -467,7 +469,9 @@ class MenuWorker(QObject):
         elif menuId == "RemoveFromDriver":
             self.removeFromDriverByAlbumName.emit(self._album)
         elif menuId == "NewPlaylist":
-            signalManager.newPlaylistWindowShowed.emit()
+            signalManager.newPlaylistDialogShowed.emit()
+        elif menuId == "AddToMutiPlaylist":
+            signalManager.newMultiPlaylistDialogShowed.emit(self._album, 'Album')
         else:
             if menuId.startswith('playlist_group'):
                 playlistName = menuId.split(':')[-1]
@@ -498,7 +502,9 @@ class MenuWorker(QObject):
         elif menuId == "RemoveFromDriver":
             self.removeFromDriveByUrl.emit(self._url)
         elif menuId == "NewPlaylist":
-            signalManager.newPlaylistWindowShowed.emit()
+            signalManager.newPlaylistDialogShowed.emit()
+        elif menuId == "AddToMutiPlaylist":
+            signalManager.newMultiPlaylistDialogShowed.emit(self._url, 'Song')
         else:
             if menuId.startswith('playlist_group'):
                 playlistName = menuId.split(':')[-1]
@@ -526,7 +532,9 @@ class MenuWorker(QObject):
         elif menuId == "RemoveFromDriver":
             self.removeFromDriverByFolderName.emit(self._folder)
         elif menuId == "NewPlaylist":
-            signalManager.newPlaylistWindowShowed.emit()
+            signalManager.newPlaylistDialogShowed.emit()
+        elif menuId == "AddToMutiPlaylist":
+            signalManager.newMultiPlaylistDialogShowed.emit(self._folder, 'Folder')
         else:
             if menuId.startswith('playlist_group'):
                 playlistName = menuId.split(':')[-1]
@@ -541,7 +549,9 @@ class MenuWorker(QObject):
         elif menuId == 'RemoveFromPlaylist':
             self.removeFromPlaylist.emit(self._playlist, self._url)
         elif menuId == "NewPlaylist":
-            signalManager.newPlaylistWindowShowed.emit()
+            signalManager.newPlaylistDialogShowed.emit()
+        elif menuId == "AddToMutiPlaylist":
+            signalManager.newMultiPlaylistDialogShowed.emit(self._url, 'Song')
         else:
             if menuId.startswith('playlist_group'):
                 playlistName = menuId.split(':')[-1]
@@ -556,7 +566,9 @@ class MenuWorker(QObject):
         elif menuId == 'RemoveFromPlaylist':
             self.removeFromPlaylist.emit(self._playlist, self._url)
         elif menuId == "NewPlaylist":
-            signalManager.newPlaylistWindowShowed.emit()
+            signalManager.newPlaylistDialogShowed.emit()
+        elif menuId == "AddToMutiPlaylist":
+            signalManager.newMultiPlaylistDialogShowed.emit(self._url, 'Song')
         else:
             if menuId.startswith('playlist_group'):
                     playlistName = menuId.split(':')[-1]

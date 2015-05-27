@@ -186,6 +186,7 @@ class PlaylistWorker(QObject):
 
     nameExisted = pyqtSignal('QString')
     playlistNamesChanged = pyqtSignal('QVariant')
+    allPlaylistNamesChanged = pyqtSignal('QVariant')
     currentPlaylistChanged = pyqtSignal('QString')
 
     _playlists = OrderedDict()
@@ -210,6 +211,9 @@ class PlaylistWorker(QObject):
         signalManager.removeFromFavorite.connect(self.removeFromFavorite)
         signalManager.switchOnlinetoLocal.connect(self.updateAllPlaylist)
         signalManager.addAlltoDownloadlist.connect(self.downloadPlaylist)
+
+        signalManager.addNewPlaylist.connect(self.createPlaylistByName)
+        signalManager.addSongsToMultiPlaylist.connect(self.addSongsToMultiPlaylist)
 
     def savePlaylists(self):
         result = OrderedDict()
@@ -296,6 +300,11 @@ class PlaylistWorker(QObject):
         self._playlistNames = names
         self.playlistNamesChanged.emit(self._playlistNames)
 
+    @pyqtProperty('QVariant', notify=allPlaylistNamesChanged)
+    def allPlaylistNames(self):
+        _names = [{'name': 'favorite'}, {'name': 'temporary'}] + self._playlistNames
+        return _names
+  
     @pyqtSlot('QString')
     def createPlaylistByName(self, name):
         names = self._playlistNames + ['favorite', 'temporary']
@@ -405,3 +414,12 @@ class PlaylistWorker(QObject):
         for obj in playlist.medias.data:
             if isinstance(obj, QmlOnlineSongObject):
                 signalManager.addtoDownloadlist.emit(obj.songId)
+
+    def addSongsToMultiPlaylist(self, _id, _type, flags):
+        for index, flag in enumerate(flags):
+            if flag:
+                playlistName = self.allPlaylistNames[index]['name']
+                if _type in ['Artist', 'Album', 'Folder']:
+                    self.addSongsToPlaylist(_id, playlistName, _type)
+                else:
+                    self.addSongToPlaylist(_id, playlistName)

@@ -98,8 +98,7 @@ class DeepinPlayer(QObject):
         self.mainWindow.setSource(QUrl.fromLocalFile(
             os.path.join(get_parent_dir(__file__, 2), 'views', 'Main.qml')))
 
-        self.newPlaylistWindow = NewPlaylistWindow()
-        self.newPlaylistWindow.setTransientParent(self.mainWindow)
+        self.newPlaylistWindow = NewPlaylistWindow(self.mainWindow.engine())
 
     def initConnect(self):
         self.web360ApiWorkerConnect()
