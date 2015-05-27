@@ -46,6 +46,10 @@ class SignalManager(QObject):
     addMutiPlaylistFlags = pyqtSignal('QVariant')
     addSongsToMultiPlaylist = pyqtSignal('QString', 'QString', list)
 
+    #global search
+
+    globalSearched = pyqtSignal('QString')
+
     #lrc
     downloadLrc = pyqtSignal('QString', 'QString')
     noLrcFound = pyqtSignal()

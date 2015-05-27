@@ -10,6 +10,7 @@ Item {
     property var webEngineViewPage
     property var playBottomBar
     property var dSimpleWindow
+    property var searchBar
 
     property bool isDownload: {
         var url = MediaPlayer.url;
@@ -104,6 +105,18 @@ Item {
         onSwicthViewByID: {
             var index =  mainWindow.views.indexOf(viewID);
             stackViews.setCurrentIndex(index);
+        }
+
+        onGlobalSearched:{
+            searchBar.visible = !searchBar.visible;
+        }
+    }
+
+    Connections {
+        target: searchBar
+        onAccepted: {
+            SignalManager.globalSearched(searchBar.text);
+            searchBar.visible = false;
         }
     }
 
