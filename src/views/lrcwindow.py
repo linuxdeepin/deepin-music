@@ -12,6 +12,7 @@ from PyQt5.QtGui import QColor, QPen, QLinearGradient, QPainter, QFont, QPalette
 from PyQt5.QtWidgets import (QApplication, QLabel, QFrame, 
     QPushButton, QDesktopWidget, QHBoxLayout,
     QVBoxLayout)
+from deepin_utils.file import get_parent_dir
 from controllers import registerContext, contexts, registerObj
 from controllers import signalManager
 
@@ -397,118 +398,118 @@ class UnLockToolBar(QFrame):
     
     style = '''
         QPushButton#PreButton{
-            border-image: url(./skin/lrc/lrc.previous.normal.png)
+            border-image: url(%(path)s/skin/lrc/lrc.previous.normal.png)
 
         }
         QPushButton#PreButton:pressed{
-            border-image: url(./skin/lrc/lrc.previous.pressed.png)
+            border-image: url(%(path)s/skin/lrc/lrc.previous.pressed.png)
         }
 
         QPushButton#PlayButton{
-            border-image: url(./skin/lrc/lrc.play.normal.png)
+            border-image: url(%(path)s/skin/lrc/lrc.play.normal.png)
         }
         QPushButton#PlayButton:pressed{
-            border-image: url(./skin/lrc/lrc.play.pressed.png)
+            border-image: url(%(path)s/skin/lrc/lrc.play.pressed.png)
         }
 
         QPushButton#PauseButton{
-            border-image: url(./skin/lrc/lrc.pause.normal.png)
+            border-image: url(%(path)s/skin/lrc/lrc.pause.normal.png)
         }
         QPushButton#PauseButton:pressed{
-            border-image: url(./skin/lrc/lrc.pause.pressed.png)
+            border-image: url(%(path)s/skin/lrc/lrc.pause.pressed.png)
         }
 
         QPushButton#NextButton{
-            border-image: url(./skin/lrc/lrc.next.normal.png)
+            border-image: url(%(path)s/skin/lrc/lrc.next.normal.png)
         }
         QPushButton#NextButton:pressed{
-            border-image: url(./skin/lrc/lrc.next.pressed.png)
+            border-image: url(%(path)s/skin/lrc/lrc.next.pressed.png)
         }
 
         QPushButton#FontPlusButton{
-            border-image: url(./skin/lrc/lrc.font.increase.normal.png)
+            border-image: url(%(path)s/skin/lrc/lrc.font.increase.normal.png)
         }
         QPushButton#FontPlusButton:pressed{
-            border-image: url(./skin/lrc/lrc.font.increase.pressed.png)
+            border-image: url(%(path)s/skin/lrc/lrc.font.increase.pressed.png)
         }
 
         QPushButton#FontMinusButton{
-            border-image: url(./skin/lrc/lrc.font.decrease.normal.png)
+            border-image: url(%(path)s/skin/lrc/lrc.font.decrease.normal.png)
         }
         QPushButton#FontMinusButton:pressed{
-            border-image: url(./skin/lrc/lrc.font.decrease.pressed.png)
+            border-image: url(%(path)s/skin/lrc/lrc.font.decrease.pressed.png)
         }
 
         QPushButton#BackButton{
-            border-image: url(./skin/lrc/lrc.back.normal.png)
+            border-image: url(%(path)s/skin/lrc/lrc.back.normal.png)
         }
         QPushButton#BackButton:pressed{
-            border-image: url(./skin/lrc/lrc.back.pressed.png)
+            border-image: url(%(path)s/skin/lrc/lrc.back.pressed.png)
         }
 
         QPushButton#ForwardButton{
-            border-image: url(./skin/lrc/lrc.forward.normal.png)
+            border-image: url(%(path)s/skin/lrc/lrc.forward.normal.png)
         }
         QPushButton#ForwardButton:pressed{
-            border-image: url(./skin/lrc/lrc.forward.pressed.png)
+            border-image: url(%(path)s/skin/lrc/lrc.forward.pressed.png)
         }
 
         QPushButton#ThemeButton{
-            border-image: url(./skin/lrc/lrc.theme.normal.png)
+            border-image: url(%(path)s/skin/lrc/lrc.theme.normal.png)
         }
         QPushButton#ThemeButton:pressed{
-            border-image: url(./skin/lrc/lrc.theme.pressed.png)
+            border-image: url(%(path)s/skin/lrc/lrc.theme.pressed.png)
         }
 
         QPushButton#SingleLineButton{
-            border-image: url(./skin/lrc/lrc.single.normal.png)
+            border-image: url(%(path)s/skin/lrc/lrc.single.normal.png)
         }
         QPushButton#SingleLineButton:pressed{
-            border-image: url(./skin/lrc/lrc.single.pressed.png)
+            border-image: url(%(path)s/skin/lrc/lrc.single.pressed.png)
         }
 
         QPushButton#DoubleLineButton{
-            border-image: url(./skin/lrc/lrc.double.normal.png)
+            border-image: url(%(path)s/skin/lrc/lrc.double.normal.png)
         }
         QPushButton#DoubleLineButton:pressed{
-            border-image: url(./skin/lrc/lrc.double.pressed.png)
+            border-image: url(%(path)s/skin/lrc/lrc.double.pressed.png)
         }
 
         QPushButton#KalaokButton{
-            border-image: url(./skin/lrc/lrc.kalaok.normal.png)
+            border-image: url(%(path)s/skin/lrc/lrc.kalaok.normal.png)
         }
         QPushButton#KalaokButton:pressed{
-            border-image: url(./skin/lrc/lrc.kalaok.pressed.png)
+            border-image: url(%(path)s/skin/lrc/lrc.kalaok.pressed.png)
         }
 
         QPushButton#LockButton{
-            border-image: url(./skin/lrc/lrc.lock.normal.png)
+            border-image: url(%(path)s/skin/lrc/lrc.lock.normal.png)
         }
         QPushButton#LockButton:pressed{
-            border-image: url(./skin/lrc/lrc.lock.pressed.png)
+            border-image: url(%(path)s/skin/lrc/lrc.lock.pressed.png)
         }
 
         QPushButton#SettingButton{
-            border-image: url(./skin/lrc/lrc.setting.normal.png)
+            border-image: url(%(path)s/skin/lrc/lrc.setting.normal.png)
         }
         QPushButton#SettingButton:pressed{
-            border-image: url(./skin/lrc/lrc.setting.pressed.png)
+            border-image: url(%(path)s/skin/lrc/lrc.setting.pressed.png)
         }
 
         QPushButton#SearchButton{
-            border-image: url(./skin/lrc/lrc.search.normal.png)
+            border-image: url(%(path)s/skin/lrc/lrc.search.normal.png)
         }
         QPushButton#SearchButton:pressed{
-            border-image: url(./skin/lrc/lrc.search.pressed.png)
+            border-image: url(%(path)s/skin/lrc/lrc.search.pressed.png)
         }
 
         QPushButton#CloseButton{
-            border-image: url(./skin/lrc/lrc.close.normal.png)
+            border-image: url(%(path)s/skin/lrc/lrc.close.normal.png)
         }
         QPushButton#CloseButton:pressed{
-            border-image: url(./skin/lrc/lrc.close.pressed.png)
+            border-image: url(%(path)s/skin/lrc/lrc.close.pressed.png)
         }
-    '''
+    ''' % {'path': get_parent_dir(__file__, 2)}
 
     qPositionChanged = pyqtSignal('QPoint')
 
@@ -648,13 +649,13 @@ class LockBar(QFrame):
 
     style = '''
         QPushButton#unlockButton{
-            border-image: url(./skin/lrc/lrc.desktop.lock.normal.png)
+            border-image: url(%(path)s/skin/lrc/lrc.desktop.lock.normal.png)
 
         }
         QPushButton#unlockButton:pressed{
-            border-image: url(./skin/lrc/lrc.desktop.unlock.normal.png)
+            border-image: url(%(path)s/skin/lrc/lrc.desktop.unlock.normal.png)
         }
-    '''
+    '''% {'path': get_parent_dir(__file__, 2)}
 
     hoverChanged = pyqtSignal(bool)
     qPositionChanged = pyqtSignal('QPoint')

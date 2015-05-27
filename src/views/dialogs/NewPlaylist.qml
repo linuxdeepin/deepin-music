@@ -15,6 +15,12 @@ Rectangle {
         anchors.fill: parent
         radius: 10
         color: 'white'
+
+    }
+
+    Text {
+        anchors.centerIn: parent
+        text: '1111111'
     }
 
     DCloseButton{

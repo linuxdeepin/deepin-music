@@ -24,9 +24,17 @@ class NewPlaylistWindow(BaseWindow):
     @registerContext
     def __init__(self, engine=None, parent=None):
         super(NewPlaylistWindow, self).__init__(engine, parent)
-        self.moveCenter()
-
+        self.setFlags(Qt.Popup)
         self.setSource(QUrl.fromLocalFile(
             os.path.join(get_parent_dir(__file__, 2), 'views','dialogs' ,'NewPlaylist.qml')))
-
         signalManager.newPlaylistWindowShowed.connect(self.show)
+        self.loadSuccessed.connect(self.moveCenter)
+
+    # def moveCenter(self):
+    #     # qr = self.frameGeometry()
+    #     # print qr
+    #     # cp = self.parent().frameGeometry().center()
+    #     # qr.moveCenter(cp)
+    #     # print qr, 'moved'
+    #     qr = QRect(-110, 0, 300, 100)
+    #     self.setPosition(qr.topLeft())
