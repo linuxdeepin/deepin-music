@@ -11,6 +11,7 @@ Item {
     property var playBottomBar
     property var dSimpleWindow
     property var searchBar
+    property var searchPage
 
     property bool isDownload: {
         var url = MediaPlayer.url;
@@ -117,6 +118,7 @@ Item {
         onAccepted: {
             SignalManager.globalSearched(searchBar.text);
             searchBar.visible = false;
+            stackViews.setCurrentIndex(5);
         }
     }
 

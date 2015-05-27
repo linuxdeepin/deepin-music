@@ -9,13 +9,14 @@ import "../MusicManagerPage"
 import "../PlaylistManagerPage"
 import "../DownloadPage"
 import "../SettingPage"
+import "../SearchPage"
 
 
 Rectangle {
 
     id: mainWindow
     property var constants
-    property var views: ['WebMusic360Page', 'MusicManagerPage', 'PlayListPage', 'DownloadPage', 'SettingPage']
+    property var views: ['WebMusic360Page', 'MusicManagerPage', 'PlayListPage', 'DownloadPage', 'SettingPage', 'SearchPage']
     property var bgImage: bgImage
     property var titleBar: titleBar
     property var playBottomBar: playBottomBar
@@ -114,6 +115,12 @@ Rectangle {
                         objectName: 'settingPage'
                         anchors.fill: parent
                     }
+
+                    SearchPage {
+                        id: searchPage
+                        objectName: 'searchPage'
+                        anchors.fill: parent
+                    }
                 }
             }
         }
@@ -144,6 +151,7 @@ Rectangle {
         titleBar: titleBar
         leftSideBar: leftSideBar
         webEngineViewPage: webEngineViewPage
+        searchPage: searchPage
         playBottomBar: playBottomBar
         searchBar: searchBar
     }
