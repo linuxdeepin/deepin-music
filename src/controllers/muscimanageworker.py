@@ -16,7 +16,6 @@ from PyQt5.QtGui import QImage
 from PyQt5.QtQml import QJSValue
 from PyQt5.QtWidgets import QFileDialog
 from .utils import registerContext, contexts, openLocalUrl
-from dwidgets.tornadotemplate import template
 from models import *
 from dwidgets import dthread, LevelJsonDict
 from dwidgets.mediatag.song import Song as SongDict
@@ -177,6 +176,9 @@ class DetailSongListModel(DListModel):
     @registerContext
     def __init__(self, dataTye):
         super(DetailSongListModel, self).__init__(dataTye)
+
+
+
 
 
 class MusicManageWorker(QObject):

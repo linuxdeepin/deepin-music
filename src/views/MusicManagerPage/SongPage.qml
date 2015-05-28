@@ -10,6 +10,6 @@ Rectangle {
     }
 
     SongController {
-        songsView: songListView.view    
+        songsView: songListView.view
     }
 }

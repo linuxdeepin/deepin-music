@@ -369,12 +369,15 @@ class DLrcText(QLabel):
             startX = (self.width() - textWidth) / 2 + self.width() / 4
             startY = self.height() / 2 + (self.height() / 2 - textHeight) / 2
 
-        # painter.setPen(QColor(0, 0, 0, 200))
-        # painter.drawText(startX + 1, startY + 1, textWidth, textHeight, Qt.AlignLeft, text)
+        painter.setPen(QColor(0, 0, 0, 200))
+        painter.drawText(startX + 1, startY + 1, textWidth, textHeight, Qt.AlignLeft, text)
 
 
         painter.setPen(QPen(self.linear_gradient, 0))
         painter.drawText(startX, startY, textWidth, textHeight, Qt.AlignLeft, text)
+
+        self.mask_linear_gradient.setStart(startX, startY)
+        self.mask_linear_gradient.setFinalStop(startX, startY + textHeight)
 
         painter.setPen(QPen(self.mask_linear_gradient, 0))
         painter.drawText(startX, startY, textWidth * percentage , textHeight, Qt.AlignLeft, text)
@@ -685,6 +688,7 @@ class LockBar(QFrame):
         self.setLayout(mainLayout)
 
         self.unlockButton.setStyleSheet(self.style)
+        self.unlockButton.setVisible(False)
         self.setFixedSize(32, 32)
 
     def initConnect(self):

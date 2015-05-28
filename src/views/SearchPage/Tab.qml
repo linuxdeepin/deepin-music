@@ -5,23 +5,15 @@ Rectangle{
     id: root
     property string text
     property bool disabled: false
-    property bool hoverEnabled: true
-    property var normal_color: 'dark'
-    property var hover_color: 'dark'
-    property var pressed_color: 'gray'
-    property var disabled_color: 'gray'
-
+    property bool hoverEnabled: false
+    property var normal_color: 'white'
+    property var check_color: '#0AB9E2'
 
     signal hovered
     signal clicked
     signal pressed
     signal released
     signal exited
-
-    radius: 2
-    border.width: 1
-    border.color: "lightgray"
-    state: 'normal'
 
     MouseArea {
 
@@ -32,50 +24,46 @@ Rectangle{
         hoverEnabled: parent.hoverEnabled
         onEntered: {
             parent.hovered();
-            parent.state = "hovered"
+            // parent.state = "hovered"
         }
         onExited: {
             parent.exited()
-            parent.state = "normal"
+            // parent.state = "normal"
         }
 
         onPressed:{
             parent.pressed()
-            parent.state = "pressed"
+            // parent.state = "pressed"
         }
 
         onReleased:{
             parent.released()
-            parent.state = "normal"
+            // parent.state = "normal"
         }
 
         onClicked: {
-            parent.clicked()
+            parent.clicked();
+            root.ListView.view.currentIndex = index;
         }
     }
 
     Text {
         id: label
         anchors.centerIn: parent
+        color: "green"
         text: root.text
     }
 
     states:[
         State{
-            name: "normal"
-            PropertyChanges {target: label; color: normal_color}
+            when: root.ListView.isCurrentItem
+            PropertyChanges {target: root; color: check_color}
+            PropertyChanges {target: label; color: 'white'}
         },
         State{
-            name: "hovered"
-            PropertyChanges {target: label; color: hover_color}
-        },
-        State{
-            name: "pressed"
-            PropertyChanges {target: label; color: pressed_color}
-        },
-        State{
-            name: "disabled"
-            PropertyChanges {target: label; color: disabled_color}
+            when: !root.ListView.isCurrentItem
+            PropertyChanges {target: root; color: normal_color}
+            PropertyChanges {target: label; color: 'gray'}
         }
     ]
 }

@@ -17,3 +17,4 @@ from .i18nworker import I18nWorker
 from .dbworker import DBWorker
 from .utilworker import UtilWorker
 from .signalmanager import signalManager
+from .searchworker import SearchWorker

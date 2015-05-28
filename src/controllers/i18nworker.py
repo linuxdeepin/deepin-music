@@ -65,6 +65,8 @@ class I18nWorker(object):
         ('setting_download', 'QString', u'下载'),
         ('setting_downloadFolder', 'QString', u'下载目录'),
         ('setting_about', 'QString', u'关于'),
+        ('search_online', 'QString', u'在线音乐'),
+        ('search_local', 'QString', u'本地音乐'),
     )
 
     __contextName__ = "I18nWorker"

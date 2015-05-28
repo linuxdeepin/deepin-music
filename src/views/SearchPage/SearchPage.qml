@@ -13,8 +13,11 @@ Rectangle {
 
             Rectangle {
                 anchors.centerIn: parent
-                width: tabBar.width
-                height: tabBar.height
+                width: 202
+                height: 22
+                radius: 2
+                border.width: 1
+                border.color: "lightgray"
                 TabBar {
                     id: tabBar
                     anchors.centerIn: parent
@@ -30,24 +33,13 @@ Rectangle {
             height: root.height - titleBar.height
             currentIndex: tabBar.currentIndex
 
-            Rectangle {
+            OnlinePage {
                 anchors.fill: parent
-                Text {
-                    anchors.centerIn: parent
-                    text: '11111111'
-                }
             }
-           
 
-            Rectangle {
+            LocalPage {
                 anchors.fill: parent
-                Text {
-                    anchors.centerIn: parent
-                    text: '22222222222'
-                }
             }
         }
     }
-
-    
 }

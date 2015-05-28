@@ -3,21 +3,19 @@ import DMusic 1.0
 
 ListView {
     id: root
-    anchors.fill: parent
+    property var tabs:[
+        {'name': I18nWorker.search_online},
+        {'name': I18nWorker.search_local}
+    ]
     clip: true
     orientation: ListView.Horizontal
-    model: ListModel {
-        ListElement {
-            name: "Bill Smith"
-        }
-        ListElement {
-            name: "John Brown"
-        }
-    }
+    currentIndex: 0
+    spacing: 0
+    model:root.tabs
     delegate: Tab {
         width: root.width / root.count
         height: root.height
-        text: name
+        text: ListView.view.model[index].name
         onClicked:{
             ListView.view.currentIndex = index;
         }
