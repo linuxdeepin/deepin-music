@@ -42,4 +42,27 @@ Rectangle {
             }
         }
     }
+
+    Rectangle {
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        height: 30
+        width: parent.width
+
+        border.width: 1
+        border.color: 'lightgray'
+
+        SearchInput {
+            id: searchInput
+            anchors.margins: 1
+            anchors.fill: parent
+        }
+    }
+
+
+    SearchController {
+        searchPage: root
+        searchInput: searchInput
+    }
 }

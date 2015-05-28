@@ -205,6 +205,12 @@ DownloadMenuItems = [
     ('DeleteDownload', menuI18nWorker.deleteDownload)
 ]
 
+SearchLocalMenuItems = [
+    ('Play', menuI18nWorker.play),
+    ('AddToSinglePlaylist', menuI18nWorker.addToSinglePlaylist, (), []),
+    ('Information', menuI18nWorker.information)
+]
+
 class DMenu(Menu):
     """docstring for DMenu"""
     def __init__(self, items):
@@ -278,6 +284,9 @@ class MenuWorker(QObject):
     playMusicByIdSignal = pyqtSignal(int)
     removeFromDownloadList = pyqtSignal(int)
 
+    #search menu
+    searchLocalSongShowed = pyqtSignal('QString')
+
     #public menu:
     addSongToPlaylist = pyqtSignal('QString', 'QString')
     addSongsToPlaylist = pyqtSignal('QString', 'QString', 'QString')
@@ -306,6 +315,7 @@ class MenuWorker(QObject):
         self.createFTPlaylistNavgationMenu()
         self.createTemporaryMenu()
         self.createDownloadMenu()
+        self.createSearchLocalMenu()
 
     def createSettingMenu(self):
         self.settingMenu = DMenu(SettingMenuItems)
@@ -426,6 +436,16 @@ class MenuWorker(QObject):
         else:
             self.downloadMenu.setItemText('StartDownload', menuI18nWorker.startDownload)
         self.downloadMenu.show()
+
+    def createSearchLocalMenu(self):
+        self.searchLocalMenu = DMenu(SearchLocalMenuItems)
+        self.searchLocalMenu.itemClicked.connect(self.searchLocalMenuConnection)
+        self.searchLocalSongShowed.connect(self.showSearchLocalMenu)
+
+    def showSearchLocalMenu(self, url):
+        self._url = url
+        self.addPlaylistMenuItemsForMusicManager(self.searchLocalMenu)
+        self.searchLocalMenu.show()
 
     def settingMenuConnection(self, menuId, checked):
         if menuId == 'WindowMode':
@@ -629,6 +649,16 @@ class MenuWorker(QObject):
             self.playMusicByIdSignal.emit(self._songId)
         elif menuId == 'DeleteDownload':
             self.removeFromDownloadList.emit(self._songId)
+
+    def searchLocalMenuConnection(self, menuId, checked):
+        if menuId == 'Play':
+            self.playSong.emit(self._url)
+        elif menuId == 'Information':
+            pass
+        if menuId.startswith('playlist_group'):
+                playlistName = menuId.split(':')[-1]
+                if playlistName in PlaylistWorker._playlists:
+                    self.addSongsToPlaylist.emit(self._album, playlistName, 'Album')
 
 
 if __name__ == "__main__":

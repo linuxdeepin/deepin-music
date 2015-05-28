@@ -134,15 +134,6 @@ Rectangle {
         }
     }
 
-    SearchInput {
-        id: searchBar
-        x: leftSideBar.width
-        y: playBottomBar.y - searchBar.height
-        height: 30
-        width: stackViews.width
-        visible: false
-    }
-
     MainWindowController{
         id: mainWindowController
         mainWindow: mainWindow
@@ -153,6 +144,5 @@ Rectangle {
         webEngineViewPage: webEngineViewPage
         searchPage: searchPage
         playBottomBar: playBottomBar
-        searchBar: searchBar
     }
 }

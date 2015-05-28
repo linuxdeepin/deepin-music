@@ -6,7 +6,7 @@ Rectangle {
 
     Column {
         anchors.fill: parent
-        spacing: 20
+        spacing: 10
         Rectangle {
             width: parent.width
             height: 160

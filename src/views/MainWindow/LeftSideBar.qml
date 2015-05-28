@@ -15,7 +15,6 @@ Rectangle {
     property alias searchButton: searchButton
 
     signal swicthViewByID(string viewID)
-    signal globalSearched()
 
     focus: false
 
@@ -95,11 +94,12 @@ Rectangle {
 
             DSearchButton{
                 id: searchButton
+                property var viewID: 'SearchPage'
                 width: root.iconWidth
                 height: 42
 
                 onClicked:{
-                    root.globalSearched()
+                    root.swicthViewByID(viewID);
                 }
             }
         }

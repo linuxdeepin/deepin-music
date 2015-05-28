@@ -73,15 +73,22 @@ class SearchWorker(QObject):
         self._searchLocalSongObjsListModel.clear()
         for song in Song.select().where(Song.title.contains(keyword) | Song.artist.contains(
             keyword) | Song.album.contains(keyword)):
-            self._searchLocalSongObjsListModel.append(MusicManageWorker._songObjs[song.url])
+            if song.url in MusicManageWorker._songObjs:
+                self._searchLocalSongObjsListModel.append(MusicManageWorker._songObjs[song.url])
 
         self._searchLocalArtistObjsListModel.clear()
         for artist in Artist.select().where(Artist.name.contains(keyword)):
-            self._searchLocalArtistObjsListModel.append(MusicManageWorker._artistObjs[artist.name])
+            if artist.name in MusicManageWorker._artistObjs:
+                self._searchLocalArtistObjsListModel.append(MusicManageWorker._artistObjs[artist.name])
+                if self._searchLocalArtistObjsListModel.count >= 5:
+                    break
 
         self._searchLocalAlbumObjsListModel.clear()
         for album in Album.select().where(Album.name.contains(keyword)):
-            self._searchLocalAlbumObjsListModel.append(MusicManageWorker._albumObjs[album.name])
+            if album.name in MusicManageWorker._albumObjs:
+                self._searchLocalAlbumObjsListModel.append(MusicManageWorker._albumObjs[album.name])
+                if self._searchLocalAlbumObjsListModel.count >= 5:
+                    break
 
     def searchOnline(self, keyword):
         pass

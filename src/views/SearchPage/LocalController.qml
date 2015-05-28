@@ -31,7 +31,7 @@ Item {
         }
 
         onMenuShowed:{
-            MenuWorker.songMenuShow('AllSongs', url);
+            MenuWorker.searchLocalSongShowed(url);
         }
     }
 

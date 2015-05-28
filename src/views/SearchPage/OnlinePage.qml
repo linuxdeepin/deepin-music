@@ -12,8 +12,4 @@ Rectangle {
     LocalController {
         localSongsView: songListView.view
     }
-
-    Component.onCompleted: {
-    	print('online', height)
-    }
 }
