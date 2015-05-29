@@ -4,7 +4,6 @@
 
 import os
 import sys
-os.environ['LC_ALL'] = "en_US.UTF-8"
 os.chdir(os.path.dirname(os.path.realpath(sys.argv[0])))
 from PyQt5.QtCore import QCoreApplication, Qt, QThread
 from PyQt5.QtQml import qmlRegisterType
