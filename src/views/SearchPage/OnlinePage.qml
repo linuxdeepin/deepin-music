@@ -6,7 +6,7 @@ Rectangle {
 
     SongListView {
         id: songListView
-        datamodel: SearchLocalSongListModel
+        datamodel: SearchOnlineSongListModel
     }
 
     // LocalController {

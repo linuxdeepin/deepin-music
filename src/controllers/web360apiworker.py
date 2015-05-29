@@ -324,4 +324,7 @@ class Web360ApiWorker(QObject):
     def searchSongs(self, keyword):
         url = "http://s.music.haosou.com/LinuxDeepin/search?q=%s&src=linuxdeepin" % keyword
         result = self.request(url)
-        signalManager.onlineResult.emit(result)
+        if isinstance(result, dict):
+            signalManager.onlineResult.emit(result)
+        else:
+            signalManager.onlineResult.emit({})

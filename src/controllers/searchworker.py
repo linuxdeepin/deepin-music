@@ -11,6 +11,7 @@ from models import *
 from dwidgets import DListModel, ModelMetaclass
 from .muscimanageworker import QmlSongObject, QmlArtistObject, QmlAlbumObject, MusicManageWorker
 from .signalmanager import signalManager
+from .web360apiworker import Web360ApiWorker
 from .utils import registerContext
 
 
@@ -19,12 +20,13 @@ class QmlOnlineSongObject(QObject):
     __metaclass__ = ModelMetaclass
 
     __Fields__ = (
+        ('url', 'QString'),
+        ('title', 'QString'),
+        ('artist', 'QString'),
+        ('album', 'QString'),
         ('songId', int),
-        ('songName', 'QString'),
         ('singerId', int),
-        ('singerName', 'QString'),
         ('albumId', int),
-        ('albumName', 'QString')
     )
 
     def initialize(self, *agrs, **kwargs):
@@ -37,9 +39,9 @@ class QmlOnlineAlbumObject(QObject):
 
     __Fields__ = (
         ('singerId', int),
-        ('singerName', 'QString'),
         ('albumId', int),
-        ('albumName', 'QString'),
+        ('title', 'QString'),
+        ('album', 'QString'),
         ('albumImage', 'QString')
     )
 
@@ -144,17 +146,27 @@ class SearchWorker(QObject):
                     break
 
     def handleOnlineSongs(self, result):
+        self._searchOnlineSongObjsListModel.clear()
+        self._searchOnlineAlbumObjsListModel.clear()
         if 'songList' in result:
             songList = result['songList']
-            self._searchOnlineSongObjsListModel.clear()
+
             for song in songList:
+                song['url'] = Web360ApiWorker.getUrlByID(int(song['songId']))
+                song['title'] = song['songName']
+                song['artist'] = song['singerName']
+                song['album'] = song['albumName']
+                song['songId'] = int(song['songId'])
+                song['singerId'] = int(song['singerId'])
+                song['albumId'] = int(song['albumId'])
                 obj = QmlOnlineSongObject(**song)
                 self._searchOnlineSongObjsListModel.append(obj)
 
         if 'albumList' in result and 'data' in result['albumList']:
-            self._searchOnlineAlbumObjsListModel.clear()
             albumList = result['albumList']['data']
             for album in albumList:
+                album['title'] = song['songName']
+                album['album'] = song['albumName']
                 obj = QmlOnlineAlbumObject(**album)
                 self._searchOnlineAlbumObjsListModel.append(obj)
 
