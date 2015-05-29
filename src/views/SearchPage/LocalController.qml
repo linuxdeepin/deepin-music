@@ -3,10 +3,19 @@ import QtQuick 2.3
 Item {
 
     property var localSongsView
+    property var linkTipText
 
     function playMusicByUrl(url) {
         MusicManageWorker.playSong(url);
         MediaPlayer.playLocalMedia(url);
+    }
+
+    function getTextByLength(s, l){
+        if (s.length > l){
+            return s.slice(0, l) + '...'
+        }else{
+            return s
+        }
     }
 
     Binding {
@@ -23,6 +32,17 @@ Item {
         }
     }
 
+    Binding {
+        target: linkTipText
+        property: 'text'
+        value: {
+            var startText = "没有找到与\" <a href=\"Online\" style=\"text-decoration:none;\">";
+            var endText = "</a>\" 相关的音乐";
+            var result = getTextByLength(SearchWorker.keyword, 20);
+            return startText + result + endText;
+        }
+    }
+
     Connections {
         target: localSongsView
 
@@ -34,5 +54,4 @@ Item {
             MenuWorker.searchLocalSongShowed(url);
         }
     }
-
 }

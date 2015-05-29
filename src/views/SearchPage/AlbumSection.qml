@@ -11,6 +11,8 @@ Rectangle {
 
     DGridView {
         id: albumView
+        isScrollBarVisible: false
+        interactive: false
         model: albumListModel
         delegate: SearchItemDelegate{
             cover: {

@@ -4,6 +4,8 @@ import DMusic 1.0
 Rectangle {
     color: "transparent"
 
+
+
     Column {
         anchors.fill: parent
         spacing: 10
@@ -121,7 +123,6 @@ Rectangle {
                     elide: Text.ElideRight
                     horizontalAlignment: Text.AlignLeft
                     verticalAlignment: Text.AlignVCenter
-                    text: "没有找到与\" <a href=\"Online\" style=\"text-decoration:none;\">" + SearchWorker.keyword + "</a>\" 相关的音乐"
                 }
 
                 Text {
@@ -151,5 +152,6 @@ Rectangle {
 
     LocalController {
         localSongsView: songListView.view
+        linkTipText: linkTipText
     }
 }

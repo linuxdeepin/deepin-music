@@ -9,7 +9,7 @@ Rectangle {
         datamodel: SearchLocalSongListModel
     }
 
-    LocalController {
-        localSongsView: songListView.view
-    }
+    // LocalController {
+    //     localSongsView: songListView.view
+    // }
 }

@@ -3,6 +3,7 @@ import DMusic 1.0
 
 GridView {
     id: grid
+    property bool isScrollBarVisible: true
     anchors.fill: parent
     clip: true
 
@@ -21,6 +22,7 @@ GridView {
     DScrollBar {
         flickable: parent
         inactiveColor: 'black'
+        visible: grid.isScrollBarVisible
     }
 
     // onModelChanged:{
