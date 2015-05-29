@@ -13,9 +13,6 @@ StandardDialog {
         anchors.centerIn: parent
         text: I18nWorker.newPlaylist + (PlaylistWorker.playlistNames.length + 1)
     }
-    Component.onCompleted: {
-        print(SignalManager)
-    }
 
     onEntered:{
         var name = playlistInputText.text;

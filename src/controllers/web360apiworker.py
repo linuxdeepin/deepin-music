@@ -83,6 +83,7 @@ class Web360ApiWorker(QObject):
         self.resultsCollected.connect(self.collectResult)
 
         signalManager.addtoDownloadlist.connect(self.downloadSong)
+        signalManager.globalSearched.connect(self.searchSongs)
 
     @classmethod
     def md5(cls, musicId):
@@ -317,3 +318,10 @@ class Web360ApiWorker(QObject):
 
             self._results = {}
             self._musicIds = []
+
+    @dthread
+    @pyqtSlot('QString')
+    def searchSongs(self, keyword):
+        url = "http://s.music.haosou.com/LinuxDeepin/search?q=%s&src=linuxdeepin" % keyword
+        result = self.request(url)
+        signalManager.onlineResult.emit(result)

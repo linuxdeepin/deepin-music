@@ -14,6 +14,39 @@ from .signalmanager import signalManager
 from .utils import registerContext
 
 
+class QmlOnlineSongObject(QObject):
+
+    __metaclass__ = ModelMetaclass
+
+    __Fields__ = (
+        ('songId', int),
+        ('songName', 'QString'),
+        ('singerId', int),
+        ('singerName', 'QString'),
+        ('albumId', int),
+        ('albumName', 'QString')
+    )
+
+    def initialize(self, *agrs, **kwargs):
+        self.setDict(kwargs)
+
+
+class QmlOnlineAlbumObject(QObject):
+
+    __metaclass__ = ModelMetaclass
+
+    __Fields__ = (
+        ('singerId', int),
+        ('singerName', 'QString'),
+        ('albumId', int),
+        ('albumName', 'QString'),
+        ('albumImage', 'QString')
+    )
+
+    def initialize(self, *agrs, **kwargs):
+        self.setDict(kwargs)
+
+
 class SearchLocalSongListModel(DListModel):
 
     __contextName__ = 'SearchLocalSongListModel'
@@ -39,6 +72,22 @@ class SearchLocalAlbumListModel(DListModel):
         super(SearchLocalAlbumListModel, self).__init__(dataTye)
 
 
+class SearchOnlineSongListModel(DListModel):
+
+    __contextName__ = 'SearchOnlineSongListModel'
+
+    @registerContext
+    def __init__(self, dataTye):
+        super(SearchOnlineSongListModel, self).__init__(dataTye)
+
+class SearchOnlineAlbumListModel(DListModel):
+
+    __contextName__ = 'SearchOnlineAlbumListModel'
+
+    @registerContext
+    def __init__(self, dataTye):
+        super(SearchOnlineAlbumListModel, self).__init__(dataTye)
+
 
 class SearchWorker(QObject):
 
@@ -47,6 +96,9 @@ class SearchWorker(QObject):
     _searchLocalSongObjsListModel = SearchLocalSongListModel(QmlSongObject)
     _searchLocalArtistObjsListModel = SearchLocalArtistListModel(QmlArtistObject)
     _searchLocalAlbumObjsListModel = SearchLocalAlbumListModel(QmlAlbumObject)
+
+    _searchOnlineSongObjsListModel = SearchOnlineSongListModel(QmlOnlineSongObject)
+    _searchOnlineAlbumObjsListModel = SearchOnlineAlbumListModel(QmlOnlineAlbumObject)
 
     keywordChanged = pyqtSignal('QString')
 
@@ -57,7 +109,8 @@ class SearchWorker(QObject):
         self.initConnect()
 
     def initConnect(self):
-        signalManager.globalSearched.connect(self.searchSongs)
+        signalManager.globalSearched.connect(self.searchLocalSongs)
+        signalManager.onlineResult.connect(self.handleOnlineSongs)
 
     @pyqtProperty('QString', notify=keywordChanged)
     def keyword(self):
@@ -68,7 +121,7 @@ class SearchWorker(QObject):
         self._keyword = value
         self.keywordChanged.emit(value)
 
-    def searchSongs(self, keyword):
+    def searchLocalSongs(self, keyword):
         self.keyword = keyword
         self._searchLocalSongObjsListModel.clear()
         for song in Song.select().where(Song.title.contains(keyword) | Song.artist.contains(
@@ -90,8 +143,20 @@ class SearchWorker(QObject):
                 if self._searchLocalAlbumObjsListModel.count >= 5:
                     break
 
-    def searchOnline(self, keyword):
-        pass
+    def handleOnlineSongs(self, result):
+        if 'songList' in result:
+            songList = result['songList']
+            self._searchOnlineSongObjsListModel.clear()
+            for song in songList:
+                obj = QmlOnlineSongObject(**song)
+                self._searchOnlineSongObjsListModel.append(obj)
+
+        if 'albumList' in result and 'data' in result['albumList']:
+            self._searchOnlineAlbumObjsListModel.clear()
+            albumList = result['albumList']['data']
+            for album in albumList:
+                obj = QmlOnlineAlbumObject(**album)
+                self._searchOnlineAlbumObjsListModel.append(obj)
 
     def searchLocal(self, keyword):
         pass

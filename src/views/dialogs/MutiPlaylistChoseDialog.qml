@@ -10,7 +10,7 @@ StandardDialog {
 
     centerItem: Rectangle {
         id: playlistInputText
-        width: mediaItem.width
+        width: mediaItem.width - 2
         height: 160
         
         ListView {

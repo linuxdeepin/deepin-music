@@ -49,6 +49,9 @@ class SignalManager(QObject):
     #global search
     globalSearched = pyqtSignal('QString')
 
+    #online search
+    onlineResult = pyqtSignal(dict) 
+
     #lrc
     downloadLrc = pyqtSignal('QString', 'QString')
     noLrcFound = pyqtSignal()

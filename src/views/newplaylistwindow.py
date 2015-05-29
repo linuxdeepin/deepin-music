@@ -12,7 +12,7 @@ from PyQt5.QtGui import QRegion, QIcon
 from PyQt5.QtWidgets import QDesktopWidget
 from PyQt5.QtQuick import QQuickView
 from .basewindow import BaseWindow
-from dwidgets import DQuickWidget
+from dwidgets import DQuickWidget, DQuickView
 from controllers import registerContext, contexts, registerObj
 from lrcwindow import LrcWindowManager
 from deepin_utils.file import get_parent_dir
@@ -61,16 +61,16 @@ import config
 #         super(NewPlaylistWindow, self).mousePressEvent(event)
 
 
-class NewPlaylistWindow(DQuickWidget):
+class NewPlaylistWindow(DQuickView):
 
     __contextName__ = 'NewPlaylistWindow'
 
     @registerContext
     def __init__(self, engine=None, parent=None):
-        super(NewPlaylistWindow, self).__init__(engine)
-        self.setWindowFlags(Qt.Window | Qt.FramelessWindowHint)
-        self.setWindowModality(Qt.ApplicationModal)
-        self.setWindowIcon(QIcon(config.windowIcon))
+        super(NewPlaylistWindow, self).__init__(engine, parent)
+        self.setFlags(Qt.Tool | Qt.FramelessWindowHint)
+        self.setModality(Qt.ApplicationModal)
+        self.setIcon(QIcon(config.windowIcon))
 
         signalManager.newPlaylistDialogShowed.connect(self.showPlaylistDialog)
         signalManager.newMultiPlaylistDialogShowed.connect(self.showMutiPlaylistDialog)
@@ -99,7 +99,7 @@ class NewPlaylistWindow(DQuickWidget):
             if event.buttons() == Qt.LeftButton:
                 # rect = QRect(0, 0, self.width(), 25)
                 # if rect.contains(event.pos()):
-                self.move(event.globalPos() - self.dragPosition)
+                self.setPosition(event.globalPos() - self.dragPosition)
         super(NewPlaylistWindow, self).mouseMoveEvent(event)
 
     def mousePressEvent(self, event):
@@ -120,4 +120,4 @@ class NewPlaylistWindow(DQuickWidget):
         qr = self.frameGeometry()
         cp =  qApp.desktop().availableGeometry().center()
         qr.moveCenter(cp)
-        self.move(qr.topLeft())
+        self.setPosition(qr.topLeft())
