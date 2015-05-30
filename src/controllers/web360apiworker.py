@@ -89,6 +89,8 @@ class Web360ApiWorker(QObject):
         signalManager.playMusicBySongIdSignal.connect(self.playMediaById)
         signalManager.playMusicByIdsSignal.connect(self.playMusicByIds)
         signalManager.playMusicByAlbumIdSignal.connect(self.playMusicByAlbumId)
+        signalManager.addToFavoriteByIdSignal.connect(self.addMusicToFavorite)
+        signalManager.removeFromFavoriteByIdSignal.connect(self.removeMusicFromFavorite)
 
     @classmethod
     def md5(cls, musicId):

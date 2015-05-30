@@ -5,6 +5,7 @@ Rectangle {
     id: rootBox
 
     property var datamodel
+    property var isLocal: true
     property var view: listView
 
     anchors.fill: parent
@@ -139,7 +140,9 @@ Rectangle {
             anchors.fill: parent
             clip: true
             highlightMoveDuration: 1
-            delegate: SongDelegate{}
+            delegate: SongDelegate{
+                isLocal: rootBox.isLocal
+            }
             model: songListModel
             currentIndex: -1
             focus: true

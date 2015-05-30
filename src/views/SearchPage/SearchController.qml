@@ -15,6 +15,7 @@ Item {
         onVisibleChanged:{
             if(visible){
                 searchInput.focus = true;
+                SignalManager.globalSearched(searchInput.text);
             }
         } 
     }

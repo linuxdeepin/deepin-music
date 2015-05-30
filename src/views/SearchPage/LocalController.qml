@@ -4,10 +4,6 @@ Item {
 
     property var localSongsView
 
-    function playMusicByUrl(url) {
-        MusicManageWorker.playSong(url);
-        MediaPlayer.playLocalMedia(url);
-    }
 
     Binding {
         target: localSongsView
@@ -27,7 +23,7 @@ Item {
         target: localSongsView
 
         onPlayMusicByUrl: {
-            playMusicByUrl(url);
+            SignalManager.playMusicByLocalUrl(url);
         }
 
         onMenuShowed:{

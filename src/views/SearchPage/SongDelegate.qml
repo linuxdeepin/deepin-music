@@ -5,7 +5,7 @@ import "../DMusicWidgets/PublicWidgets"
 
 Rectangle {
     id: mediaItem
-
+    property bool isLocal: true
     property var mouseArea: mouseArea
     property bool isWavBarActive: {
         var playlist = MediaPlayer.playlist;
@@ -41,14 +41,14 @@ Rectangle {
     property bool isFavorite:PlaylistWorker.isFavorite(url);
 
     property bool isDownload: {
-        if(url.indexOf('http') != -1){
+        if (isLocal){
+            return false;
+        }else{
             if (DownloadSongWorker.isOnlineSongExisted(artist, title)){
                 return false;
             }else{
                 return true;
             }
-        }else{
-            return false;
         }
     }
 
@@ -215,11 +215,29 @@ Rectangle {
                         height: 24
                         isFavorite: mediaItem.isFavorite
                         onClicked:{
-                            if (!favoriteButton.isFavorite){
-                                SignalManager.addtoFavorite(url);
+                            if (isLocal){
+                                if (!favoriteButton.isFavorite){
+                                    SignalManager.addtoFavorite(url);
+                                }else{
+                                    SignalManager.removeFromFavorite(url);
+                                }
                             }else{
-                                SignalManager.removeFromFavorite(url);
+                                var localUrl = DownloadSongWorker.getDownloadSongByKey(artist, title);
+                                if (!favoriteButton.isFavorite){
+                                    if(localUrl){
+                                        SignalManager.addtoFavorite(localUrl);
+                                    }else{
+                                        SignalManager.addToFavoriteByIdSignal(songId);
+                                    }
+                                }else{
+                                    if(localUrl){
+                                        SignalManager.removeFromFavorite(localUrl);
+                                    }else{
+                                        SignalManager.removeFromFavoriteByIdSignal(songId);
+                                    }
+                                }
                             }
+                            favoriteButton.isFavorite = !favoriteButton.isFavorite;
                         }
                     }
 
@@ -229,6 +247,7 @@ Rectangle {
                         width: 24
                         height: 24
                         onClicked:{
+                            print(artist, title, DownloadSongWorker.isOnlineSongExisted(artist, title))
                             SignalManager.addtoDownloadlist(songId);
                         }
                     }
@@ -259,9 +278,4 @@ Rectangle {
             PropertyChanges { target: playButton; visible: mediaItem.isPlayTipButtonVisible}
         }
     ]
-
-    Component.onCompleted: {
-        SignalManager.addtoFavorite.connect(favoriteOn);
-        SignalManager.removeFromFavorite.connect(favoriteOff);
-    }
 }

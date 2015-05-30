@@ -13,7 +13,7 @@ class SignalManager(QObject):
 
     __contextName__ = 'SignalManager'
 
-    #init Load
+    #init load
     downloadSuggestPlaylist = pyqtSignal()
 
     #play song by local url
@@ -28,6 +28,12 @@ class SignalManager(QObject):
 
     #play songs by album Id like 1285572
     playMusicByAlbumIdSignal = pyqtSignal(int)
+
+    # add online song to favorite playlist by songId
+    addToFavoriteByIdSignal = pyqtSignal(int)
+
+    # remove online song from playlist by songId 
+    removeFromFavoriteByIdSignal = pyqtSignal(int)
 
     #添加我的收藏
     addtoFavorite = pyqtSignal('QString')

@@ -12,6 +12,7 @@ Rectangle {
             height: 290
             SongListView {
                 id: songListView
+                isLocal: false
                 datamodel: SearchOnlineSongListModel
             }
         }
