@@ -14,7 +14,7 @@ Rectangle {
         isScrollBarVisible: false
         interactive: false
         model: albumListModel
-        delegate: CoverItemDelegate{
+        delegate: OnlineCoverItemDelegate{
             cover: {
                 var obj = albumView.model.get(index)
                 if (obj){
@@ -23,18 +23,18 @@ Rectangle {
                     return ''
                 }
             }
-            name: {
+            album: {
                 var obj = albumView.model.get(index)
                 if (obj){
-                    return obj.name
+                    return obj.album
                 }else{
                     return ''
                 }
             }
-            count: {
+            artist: {
                 var obj = albumView.model.get(index)
                 if (obj){
-                    return obj.count
+                    return obj.artist
                 }else{
                     return ''
                 }
@@ -44,10 +44,6 @@ Rectangle {
 
     DListModel{
         id: albumListModel
-        pymodel: SearchLocalAlbumListModel
-    }
-
-    AlbumController {
-        albumView: albumView
+        pymodel: SearchOnlineAlbumListModel
     }
 }

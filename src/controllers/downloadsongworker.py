@@ -488,6 +488,15 @@ class DownloadSongWorker(QObject):
                 return True, path
         return False, ''
 
+    @pyqtSlot('QString', 'QString', result='QString')
+    def getDownloadSongByKey(self, artist, title):
+        from dwidgets.mediatag.common import TRUST_AUDIO_EXT
+        for ext in TRUST_AUDIO_EXT:
+            path = self.getSongPath(artist, title, ext)
+            if os.path.exists(path):
+                return path
+        return ''
+
 
 if __name__ == '__main__':
     from PyQt5.QtGui import QGuiApplication

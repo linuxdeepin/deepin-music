@@ -67,6 +67,7 @@ class I18nWorker(object):
         ('setting_about', 'QString', u'关于'),
         ('search_online', 'QString', u'在线音乐'),
         ('search_local', 'QString', u'本地音乐'),
+        ('suggestPlaylist', 'QString', u'推荐歌单')
     )
 
     __contextName__ = "I18nWorker"

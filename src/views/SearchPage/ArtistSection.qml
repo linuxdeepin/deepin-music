@@ -15,7 +15,7 @@ Rectangle {
         isScrollBarVisible: false
         interactive: false
         model: artistListModel
-        delegate: SearchItemDelegate{
+        delegate: CoverItemDelegate{
             cover: {
                 var obj = artistView.model.get(index)
                 if (obj){

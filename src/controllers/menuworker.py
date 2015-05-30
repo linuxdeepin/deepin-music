@@ -256,7 +256,6 @@ class MenuWorker(QObject):
     removeFromDriverByAlbumName = pyqtSignal('QString')
 
     #Song Menu
-    playSong = pyqtSignal('QString')
     orderByKey = pyqtSignal('QString', 'QString')
     openSongFolder = pyqtSignal('QString')
     removeFromDatabaseByUrl = pyqtSignal('QString')
@@ -500,7 +499,7 @@ class MenuWorker(QObject):
 
     def songMenuConnection(self, menuId, checked):
         if menuId == 'Play':
-            self.playSong.emit(self._url)
+            signalManager.playMusicByLocalUrl.emit(self._url)
         elif menuId == 'OpenFolder':
             self.openSongFolder.emit(self._url)
         elif menuId == "Order_group:radio:OrderBySongName":
@@ -652,7 +651,7 @@ class MenuWorker(QObject):
 
     def searchLocalMenuConnection(self, menuId, checked):
         if menuId == 'Play':
-            self.playSong.emit(self._url)
+            signalManager.playMusicByLocalUrl.emit(self._url)
         elif menuId == 'Information':
             pass
         if menuId.startswith('playlist_group'):

@@ -6,11 +6,6 @@ Item {
     property var detailView
     property var songListModel
 
-    function playMusicByUrl(url) {
-        MusicManageWorker.playSong(url);
-        MediaPlayer.playLocalMedia(url);
-    }
-
     Binding {
         target: detailView
         property: 'currentIndex'
@@ -28,7 +23,7 @@ Item {
         target: detailView
 
         onPlayMusicByUrl: {
-            playMusicByUrl(url);
+            SignalManager.playMusicByLocalUrl(url);
         }
 
         onMenuShowed:{

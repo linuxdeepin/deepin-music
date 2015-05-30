@@ -109,6 +109,8 @@ class MediaPlayer(QObject):
         signalManager.playToggle.connect(self.playToggle)
         signalManager.nextSong.connect(self.next)
 
+        signalManager.playMusicByLocalUrl.connect(self.playLocalMedia)
+
     def updateLrc(self, pos):
         signalManager.lrcPositionChanged.emit(pos, self.duration)
 

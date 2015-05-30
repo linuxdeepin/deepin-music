@@ -11,6 +11,15 @@ Item {
     }
 
     Connections {
+        target: searchPage
+        onVisibleChanged:{
+            if(visible){
+                searchInput.focus = true;
+            }
+        } 
+    }
+
+    Connections {
         target: searchInput
         onAccepted: {
             if (searchInput.text){

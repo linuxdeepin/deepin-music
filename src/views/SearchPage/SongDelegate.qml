@@ -40,6 +40,18 @@ Rectangle {
 
     property bool isFavorite:PlaylistWorker.isFavorite(url);
 
+    property bool isDownload: {
+        if(url.indexOf('http') != -1){
+            if (DownloadSongWorker.isOnlineSongExisted(artist, title)){
+                return false;
+            }else{
+                return true;
+            }
+        }else{
+            return false;
+        }
+    }
+
     function favoriteOn(songUrl) {
         if (songUrl == url){
             favoriteButton.isFavorite = true;
@@ -74,14 +86,14 @@ Rectangle {
         onClicked:{
             var url = mediaItem.ListView.view.model.get(index).url;
             if (mouse.button == Qt.RightButton){
-                mediaItem.ListView.view.menuShowed(url);
+                mediaItem.ListView.view.menuShowed(url, index);
             }
         }
         onDoubleClicked: {
             var url = mediaItem.ListView.view.model.get(index).url;
             if (mouse.button == Qt.LeftButton){
                 mediaItem.ListView.view.currentIndex = index;
-                mediaItem.ListView.view.playMusicByUrl(url);
+                mediaItem.ListView.view.playMusicByUrl(url, index, isDownload);
             }
         }
     }
@@ -208,6 +220,16 @@ Rectangle {
                             }else{
                                 SignalManager.removeFromFavorite(url);
                             }
+                        }
+                    }
+
+                    DDownloadButton {
+                        id: downloadButton
+                        visible: mediaItem.isDownload
+                        width: 24
+                        height: 24
+                        onClicked:{
+                            SignalManager.addtoDownloadlist(songId);
                         }
                     }
                 }

@@ -6,35 +6,35 @@ import "../MusicManagerPage"
 Rectangle {
     id: root
 
-    property var model: albumListModel
-    property var view: albumView
+    property var model: playlistListModel
+    property var view: playlistView
 
     DGridView {
-        id: albumView
+        id: playlistView
         isScrollBarVisible: false
         interactive: false
-        model: albumListModel
-        delegate: CoverItemDelegate{
+        model: playlistListModel
+        delegate: PlaylistCoverItemDelegate{
             cover: {
-                var obj = albumView.model.get(index)
+                var obj = playlistView.model.get(index)
                 if (obj){
                     return obj.cover
                 }else{
                     return ''
                 }
             }
-            name: {
-                var obj = albumView.model.get(index)
+            listName: {
+                var obj = playlistView.model.get(index)
                 if (obj){
-                    return obj.name
+                    return obj.listName
                 }else{
                     return ''
                 }
             }
-            count: {
-                var obj = albumView.model.get(index)
+            playAll: {
+                var obj = playlistView.model.get(index)
                 if (obj){
-                    return obj.count
+                    return obj.playAll
                 }else{
                     return ''
                 }
@@ -43,11 +43,7 @@ Rectangle {
     }
 
     DListModel{
-        id: albumListModel
-        pymodel: SearchLocalAlbumListModel
-    }
-
-    AlbumController {
-        albumView: albumView
+        id: playlistListModel
+        pymodel: SuggestPlaylistListModel
     }
 }

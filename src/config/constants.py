@@ -19,6 +19,7 @@ ArtistCoverPath = os.path.join(CoverPath, 'artist')
 AlbumCoverPath = os.path.join(CoverPath, 'album')
 SongCoverPath = os.path.join(CoverPath, 'song')
 OnlineSongCoverPath = os.path.join(CoverPath, 'onlineSong')
+OnlineAlbumCoverPath = os.path.join(CoverPath, 'onlineAlbum')
 LevevDBPath = os.path.join(ProjectPath,  'leveldb')
 MusicDBFile = os.path.join(ProjectPath,  'music.db')
 
@@ -36,6 +37,7 @@ paths = [
 	AlbumCoverPath,
 	SongCoverPath,
 	OnlineSongCoverPath,
+	OnlineAlbumCoverPath,
 	LevevDBPath,
 	DownloadSongPath,
 	LRCPath,

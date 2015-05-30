@@ -252,7 +252,6 @@ class MusicManageWorker(QObject):
         self.playArtist.connect(self.playArtistMusic)
         self.playAlbum.connect(self.playAlbumMusic)
         self.playFolder.connect(self.playFolderMusic)
-        self.playSong.connect(self.playSongMusic)
 
         self.switchPage.connect(self.updatePage)
 
@@ -261,6 +260,8 @@ class MusicManageWorker(QObject):
 
         signalManager.addLocalSongToDataBase.connect(self.addLocalSongToDataBase)
         signalManager.addLocalSongsToDataBase.connect(self.addLocalSongsToDataBase)
+
+        signalManager.playMusicByLocalUrl.connect(self.playSongMusic)
 
     def restoreDB(self):
         if Song.select().count() == 0:

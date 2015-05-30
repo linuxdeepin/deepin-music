@@ -82,8 +82,13 @@ class Web360ApiWorker(QObject):
         
         self.resultsCollected.connect(self.collectResult)
 
+        signalManager.downloadSuggestPlaylist.connect(self.suggestPlaylist)
         signalManager.addtoDownloadlist.connect(self.downloadSong)
         signalManager.globalSearched.connect(self.searchSongs)
+
+        signalManager.playMusicBySongIdSignal.connect(self.playMediaById)
+        signalManager.playMusicByIdsSignal.connect(self.playMusicByIds)
+        signalManager.playMusicByAlbumIdSignal.connect(self.playMusicByAlbumId)
 
     @classmethod
     def md5(cls, musicId):
@@ -173,7 +178,6 @@ class Web360ApiWorker(QObject):
     @dthread
     @pyqtSlot('QString')
     def playMusicByIds(self, musicIds):
-        print(threading.currentThread())
         url = self.getUrlByIDs(musicIds)
         songLists = self.request(url)
 
@@ -328,3 +332,13 @@ class Web360ApiWorker(QObject):
             signalManager.onlineResult.emit(result)
         else:
             signalManager.onlineResult.emit({})
+            self.suggestPlaylist()
+
+    @dthread
+    def suggestPlaylist(self):
+        url = "http://music.haosou.com/linuxdeepin/index.json"
+        result = self.request(url)
+        if isinstance(result, dict):
+            signalManager.suggestPlaylist.emit(result)
+        else:
+            signalManager.suggestPlaylist.emit({})

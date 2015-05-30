@@ -13,6 +13,22 @@ class SignalManager(QObject):
 
     __contextName__ = 'SignalManager'
 
+    #init Load
+    downloadSuggestPlaylist = pyqtSignal()
+
+    #play song by local url
+
+    playMusicByLocalUrl = pyqtSignal('QString')
+
+    #play song by songId like 86245
+    playMusicBySongIdSignal = pyqtSignal(int)
+
+    #play songs by ids like '1503754_189217_280991'
+    playMusicByIdsSignal = pyqtSignal('QString')
+
+    #play songs by album Id like 1285572
+    playMusicByAlbumIdSignal = pyqtSignal(int)
+
     #添加我的收藏
     addtoFavorite = pyqtSignal('QString')
 
@@ -26,7 +42,7 @@ class SignalManager(QObject):
     # 在线音乐对象切换本地音乐对象
     switchOnlinetoLocal = pyqtSignal('QString', 'QString')
 
-    #
+    #download song  
     addLocalSongToDataBase = pyqtSignal('QString')
     addLocalSongsToDataBase = pyqtSignal(list)
 
@@ -50,7 +66,10 @@ class SignalManager(QObject):
     globalSearched = pyqtSignal('QString')
 
     #online search
-    onlineResult = pyqtSignal(dict) 
+    onlineResult = pyqtSignal(dict)
+    suggestPlaylist = pyqtSignal(dict)
+
+    playAll = pyqtSignal('QString')
 
     #lrc
     downloadLrc = pyqtSignal('QString', 'QString')

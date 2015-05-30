@@ -58,6 +58,7 @@ class DeepinPlayer(QObject):
 
     def loadDB(self):
         QTimer.singleShot(100, self.musicManageWorker.restoreDB)
+        signalManager.downloadSuggestPlaylist.emit()
 
     def initView(self):
         self.mainWindow = MainWindow()
@@ -218,8 +219,7 @@ class DeepinPlayer(QObject):
             self.musicManageWorker.removeFromDriverByAlbumName)
 
         # song menu
-        self.menuWorker.playSong.connect(self.musicManageWorker.playSong)
-        self.menuWorker.playSong.connect(self.mediaPlayer.playLocalMedia)
+
         self.menuWorker.orderByKey.connect(self.musicManageWorker.orderByKey)
         self.menuWorker.openSongFolder.connect(
             self.musicManageWorker.openSongFolder)
