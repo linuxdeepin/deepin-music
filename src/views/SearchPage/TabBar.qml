@@ -4,8 +4,8 @@ import DMusic 1.0
 ListView {
     id: root
     property var tabs:[
-        {'name': I18nWorker.search_online},
-        {'name': I18nWorker.search_local}
+        {'name': I18nWorker.search_online + '(' + SearchOnlineSongListModel.count + ')'},
+        {'name': I18nWorker.search_local + '(' + SearchLocalSongListModel.count + ')'}
     ]
     clip: true
     orientation: ListView.Horizontal

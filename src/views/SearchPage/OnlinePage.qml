@@ -1,12 +1,12 @@
 import QtQuick 2.3
+import QtQml.Models 2.1
 import DMusic 1.0
 
 Rectangle {
     color: "transparent"
 
-    Column {
-        anchors.fill: parent
-        spacing: 20
+    ObjectModel {
+    	id: itemModel
         Rectangle {
             width: parent.width
             height: 290
@@ -50,10 +50,15 @@ Rectangle {
                 OnlineAlbumSection{
                     id: albumSection
                     width: parent.width
-                    height: 108
                 }
             }
         }
+    }
+
+    DListPage {
+        anchors.fill: parent
+        objectModel: itemModel
+        spacing: 30
     }
 
     NoMusicTip {

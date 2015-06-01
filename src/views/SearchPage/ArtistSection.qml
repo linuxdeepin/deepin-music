@@ -10,12 +10,20 @@ Rectangle {
     property var model: artistListModel
     property var view: artistView
 
+    height: {
+        if (artistView.count % 5 == 0){
+            return  150 *  artistView.count / 5;
+        }else{
+            return 150 *  (artistView.count / 5 + 1);
+        }
+    }
+
     DGridView {
         id: artistView
         isScrollBarVisible: false
         interactive: false
         model: artistListModel
-        delegate: CoverItemDelegate{
+        delegate: ItemDelegate{
             cover: {
                 var obj = artistView.model.get(index)
                 if (obj){

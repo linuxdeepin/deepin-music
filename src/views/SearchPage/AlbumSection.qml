@@ -9,12 +9,20 @@ Rectangle {
     property var model: albumListModel
     property var view: albumView
 
+    height: {
+        if (albumView.count % 5 == 0){
+            return  150 *  albumView.count / 5;
+        }else{
+            return 150 *  (albumView.count / 5 + 1);
+        }
+    }
+
     DGridView {
         id: albumView
         isScrollBarVisible: false
         interactive: false
         model: albumListModel
-        delegate: CoverItemDelegate{
+        delegate: ItemDelegate{
             cover: {
                 var obj = albumView.model.get(index)
                 if (obj){

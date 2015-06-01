@@ -11,7 +11,7 @@ Rectangle {
     property var artist
 
     property var spacing: 56
-    property var contentWidth: 66
+    property var contentWidth: 108
 
     width: item.contentWidth + item.spacing
     height: item.contentWidth + albumText.height + artistText.height + 18

@@ -134,6 +134,16 @@ Rectangle {
         }
     }
 
+    SearchInputBox {
+        id: searchInputBox
+        x: leftSideBar.width + 1
+        y: playBottomBar.y - 30
+        height: 30
+        width: stackViews.width
+    }
+
+   
+
     MainWindowController{
         id: mainWindowController
         mainWindow: mainWindow
@@ -143,6 +153,7 @@ Rectangle {
         leftSideBar: leftSideBar
         webEngineViewPage: webEngineViewPage
         searchPage: searchPage
+        searchInputBox: searchInputBox
         playBottomBar: playBottomBar
     }
 }

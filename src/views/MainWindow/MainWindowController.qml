@@ -2,6 +2,7 @@ import QtQuick 2.3
 
 Item {
     id: mainWindowController
+    property bool isSearchBoxVisible: false
     property var mainWindow
     property var stackViews
     property var bgImage
@@ -11,6 +12,8 @@ Item {
     property var playBottomBar
     property var dSimpleWindow
     property var searchPage
+    property var searchInputBox
+    property var searchInput: searchInputBox.searchInput
 
     property bool isDownload: {
         var url = MediaPlayer.url;
@@ -33,6 +36,8 @@ Item {
         SignalManager.lrcSetting.connect(switchToSettingPage);
         SignalManager.addtoFavorite.connect(favoriteOn);
         SignalManager.removeFromFavorite.connect(favoriteOff);
+
+        SignalManager.globalSearched.connect(showSearchPage)
     }
 
     function resetSkin() {
@@ -74,6 +79,10 @@ Item {
         }
     }
 
+    function showSearchPage(keyword){
+        stackViews.setCurrentIndex(5);
+    }
+
     function switchToSettingPage(){
         var index =  mainWindow.views.indexOf('SettingPage');
         stackViews.setCurrentIndex(index);
@@ -91,6 +100,53 @@ Item {
         value: mainWindowController.isDownload
     }
 
+    Binding {
+        target: searchInputBox
+        property: 'visible'
+        value: isSearchBoxVisible
+    }
+
+
+    Binding {
+        target: searchInput
+        property: 'text'
+        value: SearchWorker.keyword
+    }
+
+    Connections {
+        target: searchInputBox
+        onClosed:{
+            isSearchBoxVisible = false;
+        } 
+    }
+
+
+    Connections {
+        target: searchInput
+        onAccepted: {
+            if (searchInput.text){
+                SignalManager.globalSearched(searchInput.text);
+                isSearchBoxVisible = true;
+            }
+        }
+
+        onTextChanged:{
+            searchTimer.restart();
+        }
+    }
+
+    Timer {
+        id: searchTimer
+        interval: 100
+        running: false
+        onTriggered: {
+            if (searchInput.text){
+                SignalManager.globalSearched(searchInput.text);
+                isSearchBoxVisible = true;
+            }
+        }
+    }
+
     Connections {
         target: bgImage
         onProgressChanged:{
@@ -105,6 +161,10 @@ Item {
         onSwicthViewByID: {
             var index =  mainWindow.views.indexOf(viewID);
             stackViews.setCurrentIndex(index);
+        }
+
+        onSearchButtonClicked:{
+            isSearchBoxVisible = true;
         }
     }
 

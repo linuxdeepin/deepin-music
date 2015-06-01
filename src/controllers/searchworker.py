@@ -218,15 +218,11 @@ class SearchWorker(QObject):
         for artist in Artist.select().where(Artist.name.contains(keyword)):
             if artist.name in MusicManageWorker._artistObjs:
                 self._searchLocalArtistObjsListModel.append(MusicManageWorker._artistObjs[artist.name])
-                if self._searchLocalArtistObjsListModel.count >= 5:
-                    break
 
         self._searchLocalAlbumObjsListModel.clear()
         for album in Album.select().where(Album.name.contains(keyword)):
             if album.name in MusicManageWorker._albumObjs:
                 self._searchLocalAlbumObjsListModel.append(MusicManageWorker._albumObjs[album.name])
-                if self._searchLocalAlbumObjsListModel.count >= 5:
-                    break
 
     def handleOnlineSongs(self, result):
         self._searchOnlineSongObjsListModel.clear()
@@ -259,8 +255,6 @@ class SearchWorker(QObject):
 
                 obj = QmlOnlineAlbumObject(**album)
                 self._searchOnlineAlbumObjsListModel.append(obj)
-                if self._searchOnlineAlbumObjsListModel.count >= 5:
-                    break
 
     def updateOnlineAlbumListModel(self, index, coverPath):
         self._searchOnlineAlbumObjsListModel.setProperty(index, 'cover', coverPath)
@@ -290,8 +284,6 @@ class SearchWorker(QObject):
 
                 obj = QmlSuggestPlaylistObject(**_list)
                 self._suggestPlayListModel.append(obj)
-                if self._suggestPlayListModel.count >= 5:
-                    break
 
     def updatePlaylistListModel(self, index, coverPath):
         self._suggestPlayListModel.setProperty(index, 'cover', coverPath)

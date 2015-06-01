@@ -15,6 +15,7 @@ Rectangle {
     property alias searchButton: searchButton
 
     signal swicthViewByID(string viewID)
+    signal searchButtonClicked()
 
     focus: false
 
@@ -99,7 +100,7 @@ Rectangle {
                 height: 42
 
                 onClicked:{
-                    root.swicthViewByID(viewID);
+                    root.searchButtonClicked();
                 }
             }
         }

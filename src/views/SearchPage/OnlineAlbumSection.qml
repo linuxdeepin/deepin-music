@@ -9,6 +9,14 @@ Rectangle {
     property var model: albumListModel
     property var view: albumView
 
+    height: {
+        if (albumView.count % 5 == 0){
+            return  150 *  albumView.count / 5;
+        }else{
+            return 150 *  (albumView.count / 5 + 1);
+        }
+    }
+
     DGridView {
         id: albumView
         isScrollBarVisible: false

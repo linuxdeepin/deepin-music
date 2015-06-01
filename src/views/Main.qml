@@ -18,6 +18,7 @@ Rectangle {
     width: constants.mainWindowWidth
     height: constants.mainWindowHeight
 
+
     focus: true
 
     Constants{

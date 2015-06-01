@@ -1,4 +1,5 @@
 import QtQuick 2.3
+import QtQml.Models 2.1
 import DMusic 1.0
 
 Rectangle {
@@ -6,9 +7,9 @@ Rectangle {
 
 
 
-    Column {
-        anchors.fill: parent
-        spacing: 10
+    ObjectModel {
+        id: itemModel
+
         Rectangle {
             width: parent.width
             height: 160
@@ -52,9 +53,9 @@ Rectangle {
                 ArtistSection {
                     id: artistSection
                     width: parent.width
-                    height:108
+                    // height: 108 * artistSection.view.count / 5
                 }
-            } 
+            }
         }
 
         Rectangle {
@@ -90,10 +91,15 @@ Rectangle {
                 AlbumSection{
                     id: albumSection
                     width: parent.width
-                    height: 108
                 }
             }
         }
+    }
+
+    DListPage {
+        anchors.fill: parent
+        objectModel: itemModel
+        spacing: 30
     }
 
     NoMusicTip {

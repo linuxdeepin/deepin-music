@@ -9,6 +9,14 @@ Rectangle {
     property var model: playlistListModel
     property var view: playlistView
 
+    height: {
+        if (playlistView.count % 5 == 0){
+            return  150 *  playlistView.count / 5;
+        }else{
+            return 150 *  (playlistView.count / 5 + 1);
+        }
+    }
+
     DGridView {
         id: playlistView
         isScrollBarVisible: false
