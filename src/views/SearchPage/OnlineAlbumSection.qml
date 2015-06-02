@@ -11,16 +11,16 @@ Rectangle {
 
     height: {
         if (albumView.count % 5 == 0){
-            return  150 *  albumView.count / 5;
+            return  albumView.cellHeight *  parseInt(albumView.count) / 5;
         }else{
-            return 150 *  (albumView.count / 5 + 1);
+            return albumView.cellHeight *  (parseInt(albumView.count / 5) + 1);
         }
     }
 
     DGridView {
         id: albumView
         isScrollBarVisible: false
-        interactive: false
+        // interactive: false
         model: albumListModel
         delegate: OnlineCoverItemDelegate{
             cover: {

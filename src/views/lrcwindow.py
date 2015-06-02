@@ -616,6 +616,7 @@ class UnLockToolBar(QFrame):
         self.doubleLineButton.clicked.connect(signalManager.showLrcDoubleLine)
 
         self.lockButton.clicked.connect(signalManager.locked)
+        self.settingButton.clicked.connect(signalManager.lrcSetting)
         self.closeButton.clicked.connect(signalManager.lrcClosed)
         signalManager.playingChanged.connect(self.updatePlayButton)
 

@@ -74,7 +74,7 @@ class BaseWindow(DQuickView):
         # 鼠标释放事件
         if hasattr(self, "dragPosition"):
             del self.dragPosition
-        super(DQuickView, self).mouseReleaseEvent(event)
+        super(BaseWindow, self).mouseReleaseEvent(event)
 
     def mouseMoveEvent(self, event):
         # 鼠标移动事件
@@ -82,4 +82,4 @@ class BaseWindow(DQuickView):
             if event.buttons() == Qt.LeftButton:
                 self.setPosition(event.globalPos() - self.dragPosition)
                 event.accept()
-        super(DQuickView, self).mouseMoveEvent(event)
+        super(BaseWindow, self).mouseMoveEvent(event)

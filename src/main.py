@@ -3,6 +3,7 @@
 
 
 import os
+os.environ["DUI_STYLE"] = "StyleWhite"
 import sys
 os.chdir(os.path.dirname(os.path.realpath(sys.argv[0])))
 from PyQt5.QtCore import QCoreApplication, Qt, QThread

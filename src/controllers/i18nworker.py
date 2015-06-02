@@ -44,7 +44,7 @@ class I18nWorker(object):
         ('setting_lastPlay', 'QString', u'最后播放'),
         ('setting_keyBindings', 'QString', u'快捷键'),
         ('setting_enableKeyBindings', 'QString', u'启用快捷键'),
-        ('setting_last', 'QString', u'上一首'),
+        ('setting_preivous', 'QString', u'上一首'),
         ('setting_next', 'QString', u'下一首'),
         ('setting_volumnIncrease', 'QString', u'音量增大'),
         ('setting_volumeDecrease', 'QString', u'音量减小'),
@@ -52,22 +52,23 @@ class I18nWorker(object):
         ('setting_simpleFullMode', 'QString', u'简洁/完整模式'),
         ('setting_miniFullMode', 'QString', u'迷你/完整模式'),
         ('setting_hideShowWindow', 'QString', u'隐藏/显示窗口'),
-        ('setting_hideShowdesktopLRC', 'QString', u'隐藏/显示桌面歌词'),
+        ('setting_hideShowDesktopLRC', 'QString', u'隐藏/显示桌面歌词'),
         ('setting_desktopLRC', 'QString', u'桌面歌词'),
         ('setting_fontType', 'QString', u'字体'),
         ('setting_fontSize', 'QString', u'字号'),
         ('setting_fontItalic', 'QString', u'字型'),
         ('setting_lineNumber', 'QString', u'行数'),
         ('setting_fontAlignment', 'QString', u'对齐'),
-        ('setting_background1', 'QString', u'颜色阴影'),
-        ('setting_background2', 'QString', u'颜色阴影'),
+        ('setting_background1', 'QString', u'字体颜色'),
+        ('setting_background2', 'QString', u'阴影颜色'),
         ('setting_backgroundSize', 'QString', u'阴影大小'),
         ('setting_download', 'QString', u'下载'),
         ('setting_downloadFolder', 'QString', u'下载目录'),
         ('setting_about', 'QString', u'关于'),
         ('search_online', 'QString', u'在线音乐'),
         ('search_local', 'QString', u'本地音乐'),
-        ('suggestPlaylist', 'QString', u'推荐歌单')
+        ('suggestPlaylist', 'QString', u'推荐歌单'),
+        ('keyBingTipMessage', 'QString', u'请输入新的快捷键')
     )
 
     __contextName__ = "I18nWorker"

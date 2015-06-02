@@ -67,6 +67,8 @@ class ModelMetaclass(type):
             if '__Fields__' in clsdict:
                 __Fields__ = clsdict['__Fields__']
 
+            fieldChanged = pyqtSignal('QVariant', 'QVariant')
+
             def __init__(self, *args, **kwargs):
                 super(DObject, self).__init__()
                 self.__class__.__name__ = clsname
@@ -171,7 +173,7 @@ class ModelMetaclass(type):
                         if validFlag:
                             self.__dict__['_' + key] = value
                             getattr(self, key + "Changed").emit(value)
-
+                            self.fieldChanged.emit(key, value)
                         else:
                             self.valid_message[key] = error
                     return f

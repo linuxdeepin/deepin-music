@@ -1,47 +1,74 @@
 import QtQuick 2.3
 import QtQuick.Controls 1.2
+import Deepin.Widgets 1.0
 
 BaseSection {
     id: root
-    content: Rectangle {
-        anchors.fill: parent
-        anchors.leftMargin: 40
-        anchors.topMargin: 10
-        anchors.rightMargin: 40
-        anchors.bottomMargin: 40
-
+    content: SectionItem {
         Column {
 
-            spacing: 5
+            spacing: 10
 
             Label {
                 text: I18nWorker.setting_start
                 font.pixelSize: 14
             }
 
-            CheckBox {
+            DCheckBox {
+                id: isAutoPlayCheckBox
                 text: I18nWorker.setting_autoPlay
-                checked: true
+                checked: ConfigWorker.isAutoPlay
+                Binding {
+                    target: ConfigWorker
+                    property: 'isAutoPlay'
+                    value: isAutoPlayCheckBox.checked
+                }
             }
 
-            CheckBox {
+            DCheckBox {
+                id: isDesktopLrcShowCheckBox
                 text: I18nWorker.setting_showDesktopLRC
-                checked: true
+                checked: ConfigWorker.isDesktopLrcShow
+                Binding {
+                    target: ConfigWorker
+                    property: 'isDesktopLrcShow'
+                    value: isDesktopLrcShowCheckBox.checked
+                }
             }
 
-            CheckBox {
+            DCheckBox {
+                id: isContinueLastPlayProgressCheckBox
                 text: I18nWorker.setting_continueLastPlayProgress
-                checked: true
+                checked: ConfigWorker.isContinueLastPlayProgress
+                Binding {
+                    target: ConfigWorker
+                    property: 'isContinueLastPlayProgress'
+                    value: isContinueLastPlayProgressCheckBox.checked
+                }
             }
 
-            CheckBox {
+            DCheckBox {
+                id: isCoverBackgroundCheckBox
                 text: I18nWorker.setting_coverSkin
-                checked: false
+                checked: ConfigWorker.isCoverBackground
+
+                Binding {
+                    target: ConfigWorker
+                    property: 'isCoverBackground'
+                    value: isCoverBackgroundCheckBox.checked
+                }
             }
 
-            CheckBox {
+            DCheckBox {
+                id: isFadeCheckBox
                 text: I18nWorker.setting_fade
-                checked: false
+                checked: ConfigWorker.isFade
+
+                Binding {
+                    target: ConfigWorker
+                    property: 'isFade'
+                    value: isFadeCheckBox.checked
+                }
             }
 
             Label {
@@ -49,17 +76,40 @@ BaseSection {
                 font.pixelSize: 14
             }
 
-            ExclusiveGroup { id: closeGroup }
+            ExclusiveGroup { 
+                id: closeGroup
+                onCurrentChanged:{
+                    if (current === minimizedRadio){
+                        ConfigWorker.isExitedWhenClosed = 0;
+                    }else if( current == quitRadio){
+                        ConfigWorker.isExitedWhenClosed = 1;
+                    }
+                } 
+            }
 
-            RadioButton {
+            DRadio {
+                id: minimizedRadio
                 text: I18nWorker.setting_minimized
-                checked: true
+                checked: {
+                    if (ConfigWorker.isExitedWhenClosed == 0){
+                        return true
+                    }else{
+                        return false
+                    }
+                }
                 exclusiveGroup: closeGroup
             }
 
-            RadioButton {
+            DRadio {
+                id: quitRadio
                 text: I18nWorker.setting_quit
-                checked: false
+                checked: {
+                    if (ConfigWorker.isExitedWhenClosed == 1){
+                        return true
+                    }else{
+                        return false
+                    }
+                }
                 exclusiveGroup: closeGroup
             }
 
@@ -68,23 +118,55 @@ BaseSection {
                 font.pixelSize: 14
             }
 
-            ExclusiveGroup { id: playGroup }
+            ExclusiveGroup {
+                id: playGroup
+                onCurrentChanged:{
+                    if (current === firstPlayRadio){
+                        ConfigWorker.addSongToPlaylistPlayMode = 0;
+                    }else if( current == nextPalyRadio){
+                        ConfigWorker.addSongToPlaylistPlayMode = 1;
+                    }else if( current == lastPlayRadio){
+                        ConfigWorker.addSongToPlaylistPlayMode = 2;
+                    }
+                } 
+            }
 
-            RadioButton {
+            DRadio {
+                id: firstPlayRadio
                 text: I18nWorker.setting_firstPlay
-                checked: true
+                checked: {
+                    if (ConfigWorker.addSongToPlaylistPlayMode == 0){
+                        return true
+                    }else{
+                        return false
+                    }
+                }
                 exclusiveGroup: playGroup
             }
 
-            RadioButton {
+            DRadio {
+                id: nextPalyRadio
                 text: I18nWorker.setting_nextPaly
-                checked: false
+                checked: {
+                    if (ConfigWorker.addSongToPlaylistPlayMode == 1){
+                        return true
+                    }else{
+                        return false
+                    }
+                }
                 exclusiveGroup: playGroup
             }
 
-            RadioButton {
+            DRadio {
+                id: lastPlayRadio
                 text: I18nWorker.setting_lastPlay
-                checked: false
+                checked: {
+                    if (ConfigWorker.addSongToPlaylistPlayMode == 2){
+                        return true
+                    }else{
+                        return false
+                    }
+                }
                 exclusiveGroup: playGroup
             }
         }

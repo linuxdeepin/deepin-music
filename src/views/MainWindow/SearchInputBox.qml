@@ -11,12 +11,14 @@ Rectangle {
     border.width: 1
     border.color: 'lightgray'
 
+
     signal closed()
 
     SearchInput {
         id: searchInput
         anchors.margins: 1
         anchors.fill: parent
+        focus: searchInputBox.visible
     }
 
     DCloseButton {

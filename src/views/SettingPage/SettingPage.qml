@@ -12,32 +12,37 @@ Rectangle {
 
         BasicSettingSection {
             id: basicSettingSection
-            width: flickable.width; height: flickable.height - 100
+            width: flickable.width
+            height: flickable.height - 100
 
             subject: I18nWorker.setting_basicSetting
         }
 
         KeyBindingSection {
             id: keyBindingSection
-            width: flickable.width; height: flickable.height - 130
+            width: flickable.width
+            height: flickable.height - 130
             subject: I18nWorker.setting_keyBindings
         }
 
         DesktopLRCSection {
             id: desktopLRCSection
-            width: flickable.width; height: flickable.height
+            width: flickable.width
+            height: flickable.height - 160
             subject: I18nWorker.setting_desktopLRC
         }
 
         DownloadSection {
             id: downloadSection
-            width: flickable.width; height: flickable.height
+            width: flickable.width
+            height: 120
             subject: I18nWorker.setting_download
         }
 
         AboutSection {
             id: aboutSection
-            width: flickable.width; height: flickable.height
+            width: flickable.width
+            height: flickable.height
             subject: I18nWorker.setting_about
         }
 
@@ -100,8 +105,9 @@ Rectangle {
         }
 
 
-        DListPage {
+        DFlickablePage {
             id: flickable
+            clip: true
             objectModel: itemModel
             width: layout.width - navgationBar.width
             height: layout.height

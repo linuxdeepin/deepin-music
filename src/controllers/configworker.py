@@ -21,10 +21,53 @@ class ConfigWorker(object):
         ('lastPlayedIndex', int, 0),
         ('playbackMode', int, 4),
         ('volume', int, 50),
-        ('isCoverBackground', bool, False),
+        # settings
 
-        ('createItems', list),
-        ('destoryItems', list),
+        ('isAutoPlay', bool, False),
+        ('isDesktopLrcShow', bool, False),
+        ('isContinueLastPlayProgress', bool, False),
+        ('isCoverBackground', bool, False),
+        ('isFade', bool, False),
+        ('isExitedWhenClosed', int, 0), # 0: minimized 1:exited
+        ('addSongToPlaylistPlayMode', int, 0), # 0: play first; 1:play next ; 2:play last:
+
+        ('isShortcutEnable', bool, True),
+        ('shortcut_preivous', 'QString', 'Left'),
+        ('shortcut_next', 'QString', 'Right'),
+        ('shortcut_volumnIncrease', 'QString', 'Up'),
+        ('shortcut_volumeDecrease', 'QString', 'Down'),
+        ('shortcut_playPause', 'QString', 'Space'),
+        ('shortcut_simpleFullMode', 'QString', 'F11'),
+        ('shortcut_miniFullMode', 'QString', 'F10'),
+        ('shortcut_hideShowWindow', 'QString', 'F5'),
+        ('shortcut_hideShowDesktopLRC', 'QString', 'F6'),
+
+        ('desktopLRC_fontType', int, 0),
+        ('fontType', list, ['A', 'B']),
+
+        ('desktopLRC_fontSize', int, 30),
+        ('desktopLRC_fontSize_minValue', int, 10),
+        ('desktopLRC_fontSize_maxValue', int, 100),
+
+        ('desktopLRC_fontItalic', int, 0),
+        ('fontItalic', list, ['C', 'D']),
+
+        ('desktopLRC_lineNumber', int, 1),
+        ('lineNumber', list, ['1', '2']),
+
+        ('desktopLRC_fontAlignment', int, 0),
+        ('fontAlignment', list, ['F', 'G']),
+
+        ('desktopLRC_background1', int, 0),
+        ('background1', list, ['green', 'red']),
+
+        ('desktopLRC_background2', int, 0),
+        ('background2', list, ['yellow', 'gray']),
+
+        ('desktopLRC_backgroundSize', int, 30),
+        ('desktopLRC_backgroundSize_minValue', int, 10),
+        ('desktopLRC_backgroundSize_maxValue', int, 100),
+
         ('DownloadSongPath', 'QString', DownloadSongPath)
     )
 

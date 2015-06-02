@@ -5,6 +5,7 @@ DIconTextButton 1.0 DIconTextButton.qml
 DTextButton 1.0 DTextButton.qml
 DSvgButton 1.0 DSvgButton.qml
 DStackView 1.0 DStackView.qml
+DFlickablePage 1.0 DFlickablePage.qml
 DListPage 1.0 DListPage.qml
 DScrollBar 1.0 DScrollBar.qml
 DToolTip 1.0 DToolTip.qml

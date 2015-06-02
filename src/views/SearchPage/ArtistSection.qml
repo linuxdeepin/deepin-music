@@ -12,9 +12,9 @@ Rectangle {
 
     height: {
         if (artistView.count % 5 == 0){
-            return  150 *  artistView.count / 5;
+            return  artistView.cellHeight *  parseInt(artistView.count / 5);
         }else{
-            return 150 *  (artistView.count / 5 + 1);
+            return artistView.cellHeight *  (parseInt(artistView.count / 5) + 1);
         }
     }
 

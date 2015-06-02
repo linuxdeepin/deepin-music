@@ -7,7 +7,7 @@ from PyQt5.QtCore import (
     Qt, QRect, QUrl,
     pyqtProperty, QObject,
     pyqtSlot, pyqtSignal,
-    QThread)
+    QThread, QPointF)
 from PyQt5.QtQuick import QQuickView
 from .basewindow import BaseWindow
 from controllers import registerContext, contexts, registerObj
@@ -17,11 +17,21 @@ class MainWindow(BaseWindow):
 
     __contextName__ = 'MainWindow'
 
+    windowFocusChanged = pyqtSignal('QWindow*', arguments=['window'])
+    mousePressed = pyqtSignal('QPointF', arguments=['point'])
+    wheel = pyqtSignal('QPointF', arguments=['point'])
+
     @registerContext
     def __init__(self, engine=None, parent=None):
         super(MainWindow, self).__init__(engine, parent)
+        self._initConnect()
+
+    def _initConnect(self):
+        from PyQt5.QtWidgets import qApp
+        qApp.focusWindowChanged.connect(self.changeFocusWindow) 
 
     def mousePressEvent(self, event):
+        self.mousePressed.emit(event.pos())
         # 鼠标点击事件
         if event.button() == Qt.LeftButton:
             flag = contexts['WindowManageWorker'].windowMode
@@ -44,3 +54,10 @@ class MainWindow(BaseWindow):
                     self.dragPosition = event.globalPos() - \
                         self.frameGeometry().topLeft()
         super(MainWindow, self).mousePressEvent(event)
+
+    def changeFocusWindow(self, window):
+        self.windowFocusChanged.emit(window)
+
+    def wheelEvent(self, event):
+        self.wheel.emit(QPointF(event.x(), event.y()))
+        super(MainWindow, self).wheelEvent(event)

@@ -7,7 +7,8 @@ from PyQt5 import QtCore
 from PyQt5 import QtGui
 from PyQt5 import QtQuick
 from PyQt5 import QtQml
-from PyQt5.QtCore import qVersion
+from PyQt5.QtCore import qVersion, pyqtSlot, pyqtSignal, QPointF
+from PyQt5.QtGui import QCursor
 from deepin_utils.file import get_parent_dir
 
 if '5.3' in qVersion():
@@ -46,6 +47,10 @@ class DQuickView(QtQuick.QQuickView):
         cp = self.screen().availableGeometry().center()
         qr.moveCenter(cp)
         self.setPosition(qr.topLeft())
+
+    @pyqtSlot(result='QPoint')
+    def getCursorPos(self):
+        return QCursor.pos()
 
 
 if __name__ == '__main__':

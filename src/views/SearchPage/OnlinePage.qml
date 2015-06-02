@@ -3,12 +3,13 @@ import QtQml.Models 2.1
 import DMusic 1.0
 
 Rectangle {
+    id: onlinePage
     color: "transparent"
 
     ObjectModel {
-    	id: itemModel
+        id: itemModel
         Rectangle {
-            width: parent.width
+            width: onlinePage.width
             height: 290
             SongListView {
                 id: songListView
@@ -19,7 +20,7 @@ Rectangle {
 
         Rectangle {
             id: albumBox
-            width: parent.width
+            width: onlinePage.width
             height: albumSection.height + 10 + albumTitle.height
             color: "transparent"
             visible: {
@@ -53,11 +54,16 @@ Rectangle {
                 }
             }
         }
+
+        Item {
+            width: onlinePage.width
+            height: 10
+        }
     }
 
     DListPage {
         anchors.fill: parent
-        objectModel: itemModel
+        model: itemModel
         spacing: 30
     }
 
