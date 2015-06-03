@@ -8,10 +8,12 @@ from PyQt5.QtCore import (
     pyqtProperty, QObject,
     pyqtSlot, pyqtSignal,
     QThread, QPointF)
+from PyQt5.QtGui import QKeySequence
 from PyQt5.QtQuick import QQuickView
 from .basewindow import BaseWindow
-from controllers import registerContext, contexts, registerObj
+from controllers import registerContext, windowManageWorker, signalManager
 from lrcwindow import LrcWindowManager
+
 
 class MainWindow(BaseWindow):
 
@@ -28,13 +30,15 @@ class MainWindow(BaseWindow):
 
     def _initConnect(self):
         from PyQt5.QtWidgets import qApp
-        qApp.focusWindowChanged.connect(self.changeFocusWindow) 
+        qApp.focusWindowChanged.connect(self.changeFocusWindow)
+
+        signalManager.hideShowWindowToggle.connect(self.actionhideShow)
 
     def mousePressEvent(self, event):
         self.mousePressed.emit(event.pos())
         # 鼠标点击事件
         if event.button() == Qt.LeftButton:
-            flag = contexts['WindowManageWorker'].windowMode
+            flag = windowManageWorker.windowMode
             if flag == "Full":
                 x = self.quickItems['mainTitleBar'].x()
                 y = self.quickItems['mainTitleBar'].y()
@@ -61,3 +65,36 @@ class MainWindow(BaseWindow):
     def wheelEvent(self, event):
         self.wheel.emit(QPointF(event.x(), event.y()))
         super(MainWindow, self).wheelEvent(event)
+
+    def keyPressEvent(self, event):
+        from controllers import configWorker, signalManager, mediaPlayer
+        if configWorker.isShortcutEnable:
+            modifier = QKeySequence(event.modifiers()).toString()
+            keyString = QKeySequence(event.key()).toString()
+            shortcut = modifier + keyString
+            if shortcut == configWorker.shortcut_preivous:
+                signalManager.previousSong.emit()
+            elif shortcut == configWorker.shortcut_next:
+                signalManager.nextSong.emit()
+            elif shortcut == configWorker.shortcut_volumnIncrease:
+                signalManager.volumnIncrease.emit()
+            elif shortcut == configWorker.shortcut_volumeDecrease:
+                signalManager.volumnDecrease.emit()
+            elif shortcut == configWorker.shortcut_playPause:
+                signalManager.playToggle.emit(not mediaPlayer.playing)
+            elif shortcut == configWorker.shortcut_simpleFullMode:
+                signalManager.simpleFullToggle.emit()
+            elif shortcut == configWorker.shortcut_miniFullMode:
+                signalManager.miniFullToggle.emit()
+            elif shortcut == configWorker.shortcut_hideShowWindow:
+                signalManager.hideShowWindowToggle.emit()
+            elif shortcut == configWorker.shortcut_hideShowDesktopLRC:
+                signalManager.hideShowDesktopLrcToggle.emit()
+
+        super(MainWindow, self).keyPressEvent(event)
+
+    def actionhideShow(self):
+        if self.windowState() == Qt.WindowActive:
+            self.setWindowState(Qt.WindowMinimized)
+        elif self.windowState() == Qt.WindowMinimized:
+            self.setWindowState(Qt.WindowActive)

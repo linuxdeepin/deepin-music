@@ -498,6 +498,8 @@ class DownloadSongWorker(QObject):
         return ''
 
 
+downloadSongWorker = DownloadSongWorker()
+
 if __name__ == '__main__':
     from PyQt5.QtGui import QGuiApplication
     app = QGuiApplication(sys.argv)

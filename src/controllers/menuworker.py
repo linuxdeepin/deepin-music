@@ -660,6 +660,8 @@ class MenuWorker(QObject):
                     self.addSongsToPlaylist.emit(self._album, playlistName, 'Album')
 
 
+menuWorker = MenuWorker()
+
 if __name__ == "__main__":
     import sys
     from PyQt5.QtCore import QCoreApplication

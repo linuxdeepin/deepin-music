@@ -89,7 +89,7 @@ Item {
             }
             
             customPlaylistView.currentIndex = -1
-            playlistNavgationBar.playlistNameChanged  (starDelegate.name);
+            playlistNavgationBar.playlistNameChanged(starDelegate.name);
         }
 
         onRightClicked:{
@@ -128,7 +128,7 @@ Item {
                 temporaryDelegate.state = '!Checked'
             }
             if (name != playlistNavgationBar._playlistName){
-                playlistNavgationBar.playlistNameChanged  (name);
+                playlistNavgationBar.playlistNameChanged(name);
                 playlistNavgationBar._playlistName = name;
             }
         }

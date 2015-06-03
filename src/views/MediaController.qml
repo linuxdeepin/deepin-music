@@ -131,7 +131,7 @@ Item {
         onNextMusic: MediaPlayer.next()
 
         onVolumeChanged: {
-            MediaPlayer.volume = parseInt(value * 100);
+            MediaPlayer.volume = Math.round(value * 100);
         }
 
         onMuted: {

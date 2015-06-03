@@ -95,3 +95,6 @@ class ConfigWorker(object):
             with open(os.path.join(ProjectPath, 'config.json'), 'r') as f:
                 ret = json.load(f)
             self.setDict(ret)
+
+
+configWorker = ConfigWorker()

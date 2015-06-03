@@ -9,7 +9,7 @@ parentDir = os.path.dirname
 
 Home = os.path.expanduser('~')
 ConfigPath = os.path.join(Home, '.config')
-ProjectName = "DeepinMusic3"
+ProjectName = "deepin-muisc"
 ProjectPath = os.path.join(ConfigPath, ProjectName)
 
 MusicManagerPath = os.path.join(ProjectPath, 'music')
@@ -25,7 +25,7 @@ MusicDBFile = os.path.join(ProjectPath,  'music.db')
 
 DownloadSongPath = os.path.join(QStandardPaths.writableLocation(QStandardPaths.MusicLocation), 'download')
 LRCPath = os.path.join(QStandardPaths.writableLocation(QStandardPaths.MusicLocation), 'lyrics')
-LogCachePath = os.path.join(Home, '.cache', 'DeepinMusic3')
+LogCachePath = os.path.join(Home, '.cache', 'deepin-muisc')
 LogPath = os.path.join(LogCachePath, 'main.log')
 
 paths = [

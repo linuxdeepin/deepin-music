@@ -178,9 +178,6 @@ class DetailSongListModel(DListModel):
         super(DetailSongListModel, self).__init__(dataTye)
 
 
-
-
-
 class MusicManageWorker(QObject):
 
     #py2py
@@ -990,3 +987,6 @@ class MusicManageWorker(QObject):
         elif pageName == 'FolderPage':
             # self.updateFolder()
             pass
+
+
+musicManageWorker = MusicManageWorker()

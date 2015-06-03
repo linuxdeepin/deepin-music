@@ -24,6 +24,7 @@ Rectangle {
                 return EmptyModel
             }
         }catch(e){
+            print(e)
             return EmptyModel
         }
     }

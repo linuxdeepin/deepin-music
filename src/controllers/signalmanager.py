@@ -13,11 +13,12 @@ class SignalManager(QObject):
 
     __contextName__ = 'SignalManager'
 
+    registerQmlObj = pyqtSignal('QString', 'QVariant')
+
     #init load
     downloadSuggestPlaylist = pyqtSignal()
 
     #play song by local url
-
     playMusicByLocalUrl = pyqtSignal('QString')
 
     #play song by songId like 86245
@@ -53,6 +54,12 @@ class SignalManager(QObject):
     addLocalSongsToDataBase = pyqtSignal(list)
 
     # mediaplayer
+    previousSong = pyqtSignal()
+    playToggle = pyqtSignal(bool)
+    nextSong = pyqtSignal()
+    volumnIncrease = pyqtSignal()
+    volumnDecrease = pyqtSignal()
+
     playingChanged = pyqtSignal(bool)
     lrcPositionChanged = pyqtSignal('qint64', int)
 
@@ -86,9 +93,6 @@ class SignalManager(QObject):
     singleTextInfoChanged = pyqtSignal('QString', float, int)
     douleTextInfoChanged = pyqtSignal(list)
 
-    previousSong = pyqtSignal()
-    playToggle = pyqtSignal(bool)
-    nextSong = pyqtSignal()
     fontIncreaseChanged = pyqtSignal()
     fontDecreaseChanged = pyqtSignal()
     lrcBackHalfSecond = pyqtSignal()
@@ -103,10 +107,15 @@ class SignalManager(QObject):
     lrcSearch = pyqtSignal()
     lrcClosed = pyqtSignal()
 
+    # window manager
+    simpleFullToggle = pyqtSignal()
+    miniFullToggle = pyqtSignal()
+    hideShowWindowToggle = pyqtSignal()
+    hideShowDesktopLrcToggle = pyqtSignal()
+
     @registerContext
     def __init__(self, parent=None):
         super(SignalManager, self).__init__(parent)
-
 
 
 signalManager = SignalManager()

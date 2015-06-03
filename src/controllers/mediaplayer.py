@@ -108,6 +108,9 @@ class MediaPlayer(QObject):
         signalManager.previousSong.connect(self.previous)
         signalManager.playToggle.connect(self.playToggle)
         signalManager.nextSong.connect(self.next)
+        signalManager.volumnIncrease.connect(self.actionVolumeIncrease)
+        signalManager.volumnDecrease.connect(self.actionVolumeDecrease)
+
 
         signalManager.playMusicByLocalUrl.connect(self.playLocalMedia)
 
@@ -190,6 +193,17 @@ class MediaPlayer(QObject):
         self._volume = value
         gPlayer.setVolume(value)
         self.volumeChanged.emit(value)
+
+    def setVolume(self, value):
+        self.volume = value
+
+    def actionVolumeIncrease(self):
+        if self.volume < 100:
+            self.volume += 1
+
+    def actionVolumeDecrease(self):
+        if self.volume > 0:
+            self.volume -= 1
 
     @pyqtProperty(bool, notify=mutedChanged)
     def muted(self):
@@ -523,3 +537,6 @@ class MediaPlayer(QObject):
         f = open(path, 'w')
         f.write(json.dumps(metaData, indent=4))
         f.close()
+
+
+mediaPlayer = MediaPlayer()

@@ -76,3 +76,6 @@ class I18nWorker(object):
     @registerContext
     def initialize(self, *agrs, **kwargs):
         pass
+
+
+i18nWorker = I18nWorker()

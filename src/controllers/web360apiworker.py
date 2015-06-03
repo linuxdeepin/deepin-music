@@ -344,3 +344,6 @@ class Web360ApiWorker(QObject):
             signalManager.suggestPlaylist.emit(result)
         else:
             signalManager.suggestPlaylist.emit({})
+
+
+web360ApiWorker = Web360ApiWorker()

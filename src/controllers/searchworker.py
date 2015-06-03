@@ -161,8 +161,6 @@ class PlaylistCover360Runnable(QRunnable):
             pass
 
 
-
-
 class SearchWorker(QObject):
 
     __contextName__ = 'SearchWorker'
@@ -318,3 +316,5 @@ class SearchWorker(QObject):
         import hashlib
         md5Value = hashlib.md5(s.encode('utf-8'))
         return md5Value.hexdigest()
+
+searchWorker = SearchWorker()

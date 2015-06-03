@@ -74,14 +74,6 @@ Rectangle {
         positionTimer: positionTimer
     }
 
-    Keys.onPressed: {
-        if (event.key == Qt.Key_F1) {
-            MediaPlayer.setPlaylistByName('temporary');
-        }else if (event.key == Qt.Key_F2) {
-            MediaPlayer.setPlaylistByName('favorite');
-        }
-    }
-
     Timer {
         repeat: false
         interval: 100

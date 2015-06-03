@@ -2,10 +2,6 @@ import QtQuick 2.3
 
 Item {
     property var folderView
-    function playMusicByUrl(url) {
-        MusicManageWorker.playSong(url);
-        MediaPlayer.playLocalMedia(url);
-    }
 
     Binding {
         target: folderView
@@ -25,7 +21,7 @@ Item {
         target: folderView
 
         onPlayMusicByUrl: {
-            playMusicByUrl(url);
+            SignalManager.playMusicByLocalUrl(url);
         }
 
         onMenuShowed:{

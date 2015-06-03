@@ -17,7 +17,7 @@ DRectWithCorner {
     rectRadius: 0
     blurRadius: 4
     blurWidth: 4
-    cornerPos: 260
+    cornerPos: 274
     cornerWidth: 20
     cornerHeight: 10
     color: 'transparent'

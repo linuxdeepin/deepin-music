@@ -7,6 +7,7 @@ import sys
 from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot, pyqtProperty
 from PyQt5.QtGui import QCursor
 from .utils import registerContext
+from .signalmanager import signalManager
 
 
 class WindowManageWorker(QObject):
@@ -24,9 +25,15 @@ class WindowManageWorker(QObject):
     def __init__(self, parent=None):
         super(WindowManageWorker, self).__init__(parent)
 
-        self._WindowMode = 'Full'
+        self._windowMode = 'Full'
         self._lastWindowMode = 'Full'
         self._currentMusicManagerPageName = 'ArtistPage'
+
+        self.initConnect()
+
+    def initConnect(self):
+        signalManager.simpleFullToggle.connect(self.actionSimpleFullToggle)
+        signalManager.miniFullToggle.connect(self.actionMiniFullToggle)
 
     @pyqtProperty('QPoint')
     def cursorPos(self):
@@ -34,11 +41,11 @@ class WindowManageWorker(QObject):
 
     @pyqtProperty('QString')
     def windowMode(self):
-        return self._WindowMode
+        return self._windowMode
 
     @windowMode.setter
     def windowMode(self, mode):
-        self._WindowMode = mode
+        self._windowMode = mode
 
     @pyqtProperty('QString')
     def lastWindowMode(self):
@@ -65,3 +72,18 @@ class WindowManageWorker(QObject):
     def currentMusicManagerPageName(self, value):
         self._currentMusicManagerPageName = value
         self.currentMusicManagerPageNameChanged.emit(value)
+
+    def actionSimpleFullToggle(self):
+        if self._windowMode == 'Full':
+            self.simpleWindowShowed.emit()
+        elif self._windowMode == 'Simple':
+            self.mainWindowShowed.emit()
+
+    def actionMiniFullToggle(self):
+        print self._windowMode
+        if self._windowMode == 'Full':
+            self.miniWindowShowed.emit()
+        elif self._windowMode == 'Mini':
+            self.mainWindowShowed.emit()
+
+windowManageWorker = WindowManageWorker()

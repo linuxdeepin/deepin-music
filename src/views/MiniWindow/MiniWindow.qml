@@ -207,4 +207,12 @@ DMovableWindow {
         bgImage: bgImage
         playBottomBar: playBottomBar
     }
+
+    // Keys.onPressed: {
+    //     var shortcut = KeysUtils.keyEventToString(event.modifiers, event.key);
+    //     print(shortcut)
+    //     // if (shortcut == ConfigWorker.shortcut_miniFullMode) {
+    //     //     MediaPlayer.miniFullToggle();
+    //     // }
+    // }
 } 

@@ -86,7 +86,7 @@ class CoverWorker(QObject):
     defaultArtistCover = os.path.join(get_parent_dir(__file__, 2), 'skin', 'images','bg1.jpg')
     defaultAlbumCover = os.path.join(get_parent_dir(__file__, 2), 'skin', 'images','bg1.jpg')
     defaultSongCover = os.path.join(get_parent_dir(__file__, 2), 'skin', 'images','bg1.jpg')
-    defaultFolderCover = os.path.join(get_parent_dir(__file__, 2), 'skin', 'images','bg4.jpg')
+    defaultFolderCover = os.path.join(get_parent_dir(__file__, 2), 'skin', 'images','folder-music.svg')
 
     albumCoverThreadPool = QThreadPool()
 
@@ -277,3 +277,6 @@ class CoverWorker(QObject):
     @classmethod
     def isOnlineSongCoverExisted(cls, artist, title):
         return os.path.exists(cls.onlineSongCoverPath(artist, title))
+
+
+coverWorker = CoverWorker()

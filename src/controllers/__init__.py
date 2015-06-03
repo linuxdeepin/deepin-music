@@ -1,20 +1,20 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 
 from .utils import contexts, registerContext, registerObj
-from .web360apiworker import Web360ApiWorker
-from .muscimanageworker import MusicManageWorker
-from .onlinemuscimanageworker import OnlineMusicManageWorker
-from .menuworker import MenuWorker
-from .windowmanageworker import WindowManageWorker
-
-from .mediaplayer import MediaPlayer
-from .playlistworker import PlaylistWorker
-from .coverworker import CoverWorker
-from .lrcworker import LrcWorker
-from .downloadsongworker import DownloadSongWorker
-
-from .configworker import ConfigWorker
-from .i18nworker import I18nWorker
-from .dbworker import DBWorker
-from .utilworker import UtilWorker
 from .signalmanager import signalManager
-from .searchworker import SearchWorker
+from .utilworker import utilWorker
+from .dbworker import dbWorker
+from .configworker import configWorker
+from .i18nworker import i18nWorker
+from .coverworker import coverWorker
+from .lrcworker import lrcWorker
+from .downloadsongworker import downloadSongWorker
+from .windowmanageworker import windowManageWorker
+from .web360apiworker import web360ApiWorker
+from .muscimanageworker import musicManageWorker
+from .onlinemuscimanageworker import onlineMusicManageWorker
+from .menuworker import menuWorker
+from .mediaplayer import mediaPlayer
+from .playlistworker import playlistWorker
+from .searchworker import searchWorker

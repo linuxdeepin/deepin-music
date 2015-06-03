@@ -127,3 +127,6 @@ class DBWorker(QObject):
             song['falbum'] = falbum
             song['ffolder'] = ffolder
         Song.get_create_Records(songs)
+
+
+dbWorker = DBWorker()

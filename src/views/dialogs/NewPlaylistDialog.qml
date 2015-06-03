@@ -7,6 +7,7 @@ StandardDialog {
     id: mediaItem
 
     width: 300
+    // height: 100
 
     centerItem: DTextInput {
         id: playlistInputText

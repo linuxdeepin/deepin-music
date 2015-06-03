@@ -8,12 +8,7 @@ from PyQt5.QtCore import (QCoreApplication, QObject,
 from PyQt5.QtGui import QScreen
 from views import MainWindow, LrcWindowManager, NewPlaylistWindow
 
-from controllers import contexts, Web360ApiWorker, MusicManageWorker
-from controllers import OnlineMusicManageWorker, MenuWorker, WindowManageWorker
-from controllers import MediaPlayer, PlaylistWorker, CoverWorker
-from controllers import ConfigWorker, DBWorker, I18nWorker
-from controllers import UtilWorker, DownloadSongWorker, LrcWorker
-from controllers import signalManager, SearchWorker
+from controllers import *
 from controllers.mediaplayer import gPlayer
 from deepin_utils.file import get_parent_dir
 import config
@@ -57,7 +52,7 @@ class DeepinPlayer(QObject):
         self.qApp.setOrganizationName(config.organizationName)
 
     def loadDB(self):
-        QTimer.singleShot(100, self.musicManageWorker.restoreDB)
+        QTimer.singleShot(100, musicManageWorker.restoreDB)
         signalManager.downloadSuggestPlaylist.emit()
 
     def initView(self):
@@ -65,27 +60,8 @@ class DeepinPlayer(QObject):
         self.lrcWindowManager = LrcWindowManager(self.mainWindow)
 
     def initControllers(self):
-        self.utilWorker = UtilWorker()
-        self.dbWorker = DBWorker()
-        self.configWorker = ConfigWorker()
-        self.i18nWorker = I18nWorker()
-        self.coverWorker = CoverWorker()
-        self.lrcWorker = LrcWorker()
-        self.downloadSongWorker = DownloadSongWorker()
-
-        self.windowManageWorker = WindowManageWorker()
-        self.web360ApiWorker = Web360ApiWorker()
-        self.musicManageWorker = MusicManageWorker()
-        self.onlineMusicManageWorker = OnlineMusicManageWorker()
-        self.menuWorker = MenuWorker()
-
-        self.mediaPlayer = MediaPlayer()
-        self.playlistWorker = PlaylistWorker()
-
-        self.searchWorker = SearchWorker()
-
         self.web360Thread = QThread(self)
-        self.web360ApiWorker.moveToThread(self.web360Thread)
+        web360ApiWorker.moveToThread(self.web360Thread)
         self.web360Thread.start()
 
         self.playerBinThread = QThread()
@@ -93,7 +69,7 @@ class DeepinPlayer(QObject):
         self.playerBinThread.start()
 
         self.dbThread = QThread()
-        self.dbWorker.moveToThread(self.dbThread)
+        dbWorker.moveToThread(self.dbThread)
         self.dbThread.start()
 
     def initQMLContext(self):
@@ -113,154 +89,156 @@ class DeepinPlayer(QObject):
         self.menuWorkerConnect()
         self.dbWorkerConnect()
         self.downloadSongWorkerConnect()
+
+        signalManager.registerQmlObj.connect(self.mainWindow.setContext)
         self.qApp.aboutToQuit.connect(self.close)
 
     def web360ApiWorkerConnect(self):
-        self.web360ApiWorker.playMediaContent.connect(
-            self.mediaPlayer.playOnlineMedia)
-        self.web360ApiWorker.swicthMediaContent.connect(
-            self.mediaPlayer.swicthOnlineMedia)
+        web360ApiWorker.playMediaContent.connect(
+            mediaPlayer.playOnlineMedia)
+        web360ApiWorker.swicthMediaContent.connect(
+            mediaPlayer.swicthOnlineMedia)
 
-        self.web360ApiWorker.addMediaContent.connect(
-            self.onlineMusicManageWorker.addSong)
-        self.web360ApiWorker.addMediaContents.connect(
-            self.onlineMusicManageWorker.addSongs)
+        web360ApiWorker.addMediaContent.connect(
+            onlineMusicManageWorker.addSong)
+        web360ApiWorker.addMediaContents.connect(
+            onlineMusicManageWorker.addSongs)
 
-        self.web360ApiWorker.addMediaContent.connect(
-            self.playlistWorker.addOnlineMediaToTemporary)
-        self.web360ApiWorker.addMediaContents.connect(
-            self.playlistWorker.addOnlineMediasToTemporary)
+        web360ApiWorker.addMediaContent.connect(
+            playlistWorker.addOnlineMediaToTemporary)
+        web360ApiWorker.addMediaContents.connect(
+            playlistWorker.addOnlineMediasToTemporary)
 
-        self.web360ApiWorker.addMediaContentToFavorite.connect(
-            self.onlineMusicManageWorker.addSong)
-        self.web360ApiWorker.addMediaContentToFavorite.connect(
-            self.playlistWorker.addOnlineMediaToFavorite)
-        self.web360ApiWorker.removeMediaContentFromFavorite.connect(
-            self.playlistWorker.removeFavoriteMediaContent)
+        web360ApiWorker.addMediaContentToFavorite.connect(
+            onlineMusicManageWorker.addSong)
+        web360ApiWorker.addMediaContentToFavorite.connect(
+            playlistWorker.addOnlineMediaToFavorite)
+        web360ApiWorker.removeMediaContentFromFavorite.connect(
+            playlistWorker.removeFavoriteMediaContent)
 
-        self.web360ApiWorker.downloadSongConetent.connect(
-            self.downloadSongWorker.downloadSong)
+        web360ApiWorker.downloadSongConetent.connect(
+            downloadSongWorker.downloadSong)
 
     def mediaPlayerConnect(self):
-        self.mediaPlayer.requestMusic.connect(
-            self.web360ApiWorker.switchMediaByUrl)
+        mediaPlayer.requestMusic.connect(
+            web360ApiWorker.switchMediaByUrl)
 
     def playlistWorkerConnect(self):
-        self.playlistWorker.currentPlaylistChanged.connect(
-            self.mediaPlayer.setPlaylistByName)
+        playlistWorker.currentPlaylistChanged.connect(
+            mediaPlayer.setPlaylistByName)
 
     def coverWorkerConnect(self):
-        self.coverWorker.updateArtistCover.connect(
-            self.musicManageWorker.updateArtistCover)
-        self.coverWorker.updateAlbumCover.connect(
-            self.musicManageWorker.updateAlbumCover)
-        self.coverWorker.allTaskFinished.connect(
-            self.musicManageWorker.stopUpdate)
-        self.coverWorker.updateOnlineSongCover.connect(
-            self.onlineMusicManageWorker.updateSongCover)
-        self.coverWorker.updateAlbumCover.connect(
-            self.onlineMusicManageWorker.updateSongCover)
+        coverWorker.updateArtistCover.connect(
+            musicManageWorker.updateArtistCover)
+        coverWorker.updateAlbumCover.connect(
+            musicManageWorker.updateAlbumCover)
+        coverWorker.allTaskFinished.connect(
+            musicManageWorker.stopUpdate)
+        coverWorker.updateOnlineSongCover.connect(
+            onlineMusicManageWorker.updateSongCover)
+        coverWorker.updateAlbumCover.connect(
+            onlineMusicManageWorker.updateSongCover)
 
-        self.coverWorker.updateArtistCover.connect(
-            self.mediaPlayer.updateArtistCover)
-        self.coverWorker.updateAlbumCover.connect(
-            self.mediaPlayer.updateAlbumCover)
-        self.coverWorker.updateOnlineSongCover.connect(
-            self.mediaPlayer.updateOnlineSongCover)
+        coverWorker.updateArtistCover.connect(
+            mediaPlayer.updateArtistCover)
+        coverWorker.updateAlbumCover.connect(
+            mediaPlayer.updateAlbumCover)
+        coverWorker.updateOnlineSongCover.connect(
+            mediaPlayer.updateOnlineSongCover)
 
     def musicManageWorkerConnect(self):
-        self.musicManageWorker.saveSongToDB.connect(self.dbWorker.addSong)
-        self.musicManageWorker.saveSongsToDB.connect(self.dbWorker.addSongs)
-        self.musicManageWorker.restoreSongsToDB.connect(
-            self.dbWorker.restoreSongs)
-        self.musicManageWorker.addSongToPlaylist.connect(
-            self.playlistWorker.addLocalMediaToTemporary)
-        self.musicManageWorker.addSongsToPlaylist.connect(
-            self.playlistWorker.addLocalMediasToTemporary)
-        self.musicManageWorker.playSongByUrl.connect(
-            self.mediaPlayer.playLocalMedia)
+        musicManageWorker.saveSongToDB.connect(dbWorker.addSong)
+        musicManageWorker.saveSongsToDB.connect(dbWorker.addSongs)
+        musicManageWorker.restoreSongsToDB.connect(
+            dbWorker.restoreSongs)
+        musicManageWorker.addSongToPlaylist.connect(
+            playlistWorker.addLocalMediaToTemporary)
+        musicManageWorker.addSongsToPlaylist.connect(
+            playlistWorker.addLocalMediasToTemporary)
+        musicManageWorker.playSongByUrl.connect(
+            mediaPlayer.playLocalMedia)
 
-        self.musicManageWorker.downloadArtistCover.connect(
-            self.coverWorker.downloadArtistCover)
-        self.musicManageWorker.downloadAlbumCover.connect(
-            self.coverWorker.downloadAlbumCover)
+        musicManageWorker.downloadArtistCover.connect(
+            coverWorker.downloadArtistCover)
+        musicManageWorker.downloadAlbumCover.connect(
+            coverWorker.downloadAlbumCover)
 
-        self.musicManageWorker.loadDBSuccessed.connect(
-            self.playlistWorker.loadPlaylists)
-        self.musicManageWorker.loadDBSuccessed.connect(
+        musicManageWorker.loadDBSuccessed.connect(
+            playlistWorker.loadPlaylists)
+        musicManageWorker.loadDBSuccessed.connect(
             self.loadConfig)
 
     def onlineMusicManageWorkerConnect(self):
-        self.onlineMusicManageWorker.downloadOnlineSongCover.connect(
-            self.coverWorker.downloadOnlineSongCover)
-        self.onlineMusicManageWorker.downloadOnlineAlbumCover.connect(
-            self.coverWorker.downloadOnlineAlbumCover)
-        self.onlineMusicManageWorker.downloadAlbumCover.connect(
-            self.coverWorker.downloadAlbumCover)
+        onlineMusicManageWorker.downloadOnlineSongCover.connect(
+            coverWorker.downloadOnlineSongCover)
+        onlineMusicManageWorker.downloadOnlineAlbumCover.connect(
+            coverWorker.downloadOnlineAlbumCover)
+        onlineMusicManageWorker.downloadAlbumCover.connect(
+            coverWorker.downloadAlbumCover)
 
     def menuWorkerConnect(self):
         # setting menu
-        self.menuWorker.addSongFile.connect(self.musicManageWorker.addSongFile)
-        self.menuWorker.addSongFolder.connect(
-            self.musicManageWorker.searchOneFolderMusic)
+        menuWorker.addSongFile.connect(musicManageWorker.addSongFile)
+        menuWorker.addSongFolder.connect(
+            musicManageWorker.searchOneFolderMusic)
 
         # artist menu
-        self.menuWorker.playArtist.connect(self.musicManageWorker.playArtist)
-        self.menuWorker.removeFromDatabaseByArtistName.connect(
-            self.musicManageWorker.removeFromDatabaseByArtistName)
-        self.menuWorker.removeFromDriverByArtistName.connect(
-            self.musicManageWorker.removeFromDriverByArtistName)
+        menuWorker.playArtist.connect(musicManageWorker.playArtist)
+        menuWorker.removeFromDatabaseByArtistName.connect(
+            musicManageWorker.removeFromDatabaseByArtistName)
+        menuWorker.removeFromDriverByArtistName.connect(
+            musicManageWorker.removeFromDriverByArtistName)
 
         # album menu
-        self.menuWorker.playAlbum.connect(self.musicManageWorker.playAlbum)
-        self.menuWorker.removeFromDatabaseByAlbumName.connect(
-            self.musicManageWorker.removeFromDatabaseByAlbumName)
-        self.menuWorker.removeFromDriverByAlbumName.connect(
-            self.musicManageWorker.removeFromDriverByAlbumName)
+        menuWorker.playAlbum.connect(musicManageWorker.playAlbum)
+        menuWorker.removeFromDatabaseByAlbumName.connect(
+            musicManageWorker.removeFromDatabaseByAlbumName)
+        menuWorker.removeFromDriverByAlbumName.connect(
+            musicManageWorker.removeFromDriverByAlbumName)
 
         # song menu
 
-        self.menuWorker.orderByKey.connect(self.musicManageWorker.orderByKey)
-        self.menuWorker.openSongFolder.connect(
-            self.musicManageWorker.openSongFolder)
-        self.menuWorker.removeFromDatabaseByUrl.connect(
-            self.musicManageWorker.removeFromDatabaseByUrl)
-        self.menuWorker.removeFromDriveByUrl.connect(
-            self.musicManageWorker.removeFromDriveByUrl)
+        menuWorker.orderByKey.connect(musicManageWorker.orderByKey)
+        menuWorker.openSongFolder.connect(
+            musicManageWorker.openSongFolder)
+        menuWorker.removeFromDatabaseByUrl.connect(
+            musicManageWorker.removeFromDatabaseByUrl)
+        menuWorker.removeFromDriveByUrl.connect(
+            musicManageWorker.removeFromDriveByUrl)
 
         # folder menu
-        self.menuWorker.playFolder.connect(self.musicManageWorker.playFolder)
-        self.menuWorker.removeFromDatabaseByFolderName.connect(
-            self.musicManageWorker.removeFromDatabaseByFolderName)
-        self.menuWorker.removeFromDriverByFolderName.connect(
-            self.musicManageWorker.removeFromDriverByFolderName)
+        menuWorker.playFolder.connect(musicManageWorker.playFolder)
+        menuWorker.removeFromDatabaseByFolderName.connect(
+            musicManageWorker.removeFromDatabaseByFolderName)
+        menuWorker.removeFromDriverByFolderName.connect(
+            musicManageWorker.removeFromDriverByFolderName)
 
         #playlist menu
-        self.menuWorker.removeFromPlaylist.connect(self.playlistWorker.removeFromPlaylist)
+        menuWorker.removeFromPlaylist.connect(playlistWorker.removeFromPlaylist)
 
         #playlist navigation menu
-        self.menuWorker.deletePlaylist.connect(self.playlistWorker.deletePlaylist)
+        menuWorker.deletePlaylist.connect(playlistWorker.deletePlaylist)
 
         #download menu
-        self.menuWorker.playMusicByIdSignal.connect(self.web360ApiWorker.playMusicByIdSignal)
-        self.menuWorker.removeFromDownloadList.connect(self.downloadSongWorker.delSongObj)
+        menuWorker.playMusicByIdSignal.connect(web360ApiWorker.playMusicByIdSignal)
+        menuWorker.removeFromDownloadList.connect(downloadSongWorker.delSongObj)
 
         #public menu:
-        self.menuWorker.addSongToPlaylist.connect(self.playlistWorker.addSongToPlaylist)
-        self.menuWorker.addSongsToPlaylist.connect(self.playlistWorker.addSongsToPlaylist)
+        menuWorker.addSongToPlaylist.connect(playlistWorker.addSongToPlaylist)
+        menuWorker.addSongsToPlaylist.connect(playlistWorker.addSongsToPlaylist)
 
     def dbWorkerConnect(self):
-        self.dbWorker.restoreSongsSuccessed.connect(
-            self.musicManageWorker.loadDB)
+        dbWorker.restoreSongsSuccessed.connect(
+            musicManageWorker.loadDB)
 
     def downloadSongWorkerConnect(self):
-        self.downloadSongWorker.addDownloadSongToDataBase.connect(self.musicManageWorker.addLocalSongToDataBase)
+        downloadSongWorker.addDownloadSongToDataBase.connect(musicManageWorker.addLocalSongToDataBase)
 
     def loadConfig(self):
-        self.mediaPlayer.setPlaylistByName(self.configWorker.lastPlaylistName)
-        self.mediaPlayer.setCurrentIndex(self.configWorker.lastPlayedIndex)
-        self.mediaPlayer.volume = self.configWorker.volume
-        self.mediaPlayer.playbackMode = self.configWorker.playbackMode
+        mediaPlayer.setPlaylistByName(configWorker.lastPlaylistName)
+        mediaPlayer.setCurrentIndex(configWorker.lastPlayedIndex)
+        mediaPlayer.volume = configWorker.volume
+        mediaPlayer.playbackMode = configWorker.playbackMode
 
     def showMainWindow(self):
         self.mainWindow.show()
@@ -280,6 +258,6 @@ class DeepinPlayer(QObject):
 
     def close(self):
         QThreadPool.globalInstance().clear()
-        self.mediaPlayer.stop()
-        self.configWorker.save()
-        self.playlistWorker.savePlaylists()
+        mediaPlayer.stop()
+        configWorker.save()
+        playlistWorker.savePlaylists()

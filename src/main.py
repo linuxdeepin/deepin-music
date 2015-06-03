@@ -7,12 +7,12 @@ os.environ["DUI_STYLE"] = "StyleWhite"
 import sys
 os.chdir(os.path.dirname(os.path.realpath(sys.argv[0])))
 from PyQt5.QtCore import QCoreApplication, Qt, QThread
+from PyQt5.QtGui import QIcon
 from PyQt5.QtQml import qmlRegisterType
 if os.name == 'posix':
     QCoreApplication.setAttribute(Qt.AA_X11InitThreads, True)
 
 from dwidgets import QSingleApplication
-from app import DeepinPlayer
 import config
 import faulthandler
 import threading
@@ -26,6 +26,9 @@ if __name__ == '__main__':
     app = QSingleApplication(config.applicationName, sys.argv)
     if app.isRunning():
         sys.exit(0)
+    app.setWindowIcon(QIcon(config.windowIcon))
+
+    from app import DeepinPlayer
     deepinPlayer = DeepinPlayer.instance()
     deepinPlayer.show()
     exitCode = app.exec_()

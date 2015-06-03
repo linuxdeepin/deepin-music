@@ -261,3 +261,6 @@ class OnlineMusicManageWorker(QObject):
                 if dlistModel and songObj in dlistModel.data:
                     index = dlistModel.data.index(songObj)
                     dlistModel.setProperty(index, 'cover', cover)
+
+
+onlineMusicManageWorker = OnlineMusicManageWorker()

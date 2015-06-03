@@ -39,3 +39,6 @@ class UtilWorker(QObject):
     @pyqtSlot('QString')
     def openUrl(self, path):
         QDesktopServices.openUrl(QUrl.fromLocalFile(path))
+
+
+utilWorker = UtilWorker()

@@ -215,3 +215,6 @@ class LrcWorker(QObject):
                 return False
         except:
             return False
+
+
+lrcWorker = LrcWorker()

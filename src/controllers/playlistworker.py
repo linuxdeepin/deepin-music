@@ -198,11 +198,8 @@ class PlaylistWorker(QObject):
         self._playlistNames = []
         self._currentPlaylist = None
 
-        self.createPlaylistByName('temporary')
-        self.createPlaylistByName('favorite')
-
         self.emptyListModel = DListModel(QmlSongObject)
-        contexts['MainWindow'].setContext('EmptyModel', self.emptyListModel)
+        registerObj('EmptyModel', self.emptyListModel)
 
         self.initConnect()
 
@@ -232,6 +229,9 @@ class PlaylistWorker(QObject):
             for name, urls in results.items():
                 playlist = self.createPlaylistByName(name)
                 playlist.addMedias(urls)
+        else:
+            self.createPlaylistByName('temporary')
+            self.createPlaylistByName('favorite')
 
     def savePlaylistByName(self, name):
         f = QFile(os.sep.join([PlaylistPath, '%s.m3u' % name]))
@@ -248,8 +248,7 @@ class PlaylistWorker(QObject):
         return md5Value.hexdigest()
 
     def setContext(self, name, obj):
-        if contexts['MainWindow']:
-            contexts['MainWindow'].setContext('Playlist_%s' % self.md5(name), obj)
+        signalManager.registerQmlObj.emit('Playlist_%s' % self.md5(name), obj)
 
     @pyqtSlot('QString', result=DListModel)
     def getMediasByName(self, name):
@@ -258,9 +257,12 @@ class PlaylistWorker(QObject):
 
     @pyqtSlot('QString', result=bool)
     def isFavorite(self, url):
-        playlist =  self._playlists['favorite']
-        if url in playlist.urls:
-            return True
+        if 'favorite' in self._playlists:
+            playlist =  self._playlists['favorite']
+            if url in playlist.urls:
+                return True
+            else:
+                return False
         else:
             return False
 
@@ -423,3 +425,6 @@ class PlaylistWorker(QObject):
                     self.addSongsToPlaylist(_id, playlistName, _type)
                 else:
                     self.addSongToPlaylist(_id, playlistName)
+
+
+playlistWorker = PlaylistWorker()
