@@ -4,7 +4,7 @@ import QtQuick.Window 2.2
 Window {
     id: miniWindow
 
-    flags: Qt.FramelessWindowHint | Qt.Popup | Qt.WindowStaysOnTopHint
+    flags: Qt.FramelessWindowHint | Qt.Dialog | Qt.WindowStaysOnTopHint
 
     MouseArea {
         property int dragStartX

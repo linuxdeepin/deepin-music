@@ -29,6 +29,7 @@ class MenuI18nWorker(QObject):
         ('setting', 'QString', u'设置'),
         ('exit', 'QString', u'退出'),
         ('play', 'QString', u'播放'),
+        ('pause', 'QString', u'暂停'),
         ('download', 'QString', u'下载'),
         ('temporary', 'QString', u'试听歌单'),
         ('favorite', 'QString', u'我的收藏'),
@@ -58,6 +59,17 @@ class MenuI18nWorker(QObject):
         ('startDownload', 'QString', u'开始下载'),
         ('pauseDownload', 'QString', u'暂停下载'),
         ('deleteDownload', 'QString', u'删除下载'),
+        ('preivousSong', 'QString', u'上一首'),
+        ('nextSong', 'QString', u'下一首'),
+        ('playbackMode', 'QString', u'播放模式'),
+        ('random', 'QString', u'随机播放'),
+        ('sequential', 'QString', u'顺序播放'),
+        ('currentItemInLoop', 'QString', u'单曲循环'),
+        ('windowMode', 'QString', u'窗口模式'),
+        ('showDesktopLrc', 'QString', u'打开桌面歌词'),
+        ('hideDesktopLrc', 'QString', u'关闭桌面歌词'),
+        ('lockDesktopLrc', 'QString', u'锁定桌面歌词'),
+        ('unlockDesktopLrc', 'QString', u'解锁桌面歌词'),
     )
 
     __contextName__ = "MenuI18nWorker"
@@ -211,13 +223,37 @@ SearchLocalMenuItems = [
     ('Information', menuI18nWorker.information)
 ]
 
+SystemTrayMenuItems = [
+    ('Play', menuI18nWorker.play),
+    ('Previous', menuI18nWorker.preivousSong),
+    ('Next', menuI18nWorker.nextSong),
+    ('PlaybackMode', menuI18nWorker.playbackMode, (), [
+        CheckableMenuItem('PlaybackMode_group:radio:Random', menuI18nWorker.random),
+        CheckableMenuItem('PlaybackMode_group:radio:Loop', menuI18nWorker.sequential),
+        CheckableMenuItem('PlaybackMode_group:radio:CurrentItemInLoop', menuI18nWorker.currentItemInLoop),
+    ]),
+    ('WindowMode', menuI18nWorker.windowMode,(), [
+        CheckableMenuItem('WindowMode_group:radio:FullMode', menuI18nWorker.fullMode),
+        CheckableMenuItem('WindowMode_group:radio:SimpleMode', menuI18nWorker.simpleMode),
+        CheckableMenuItem('WindowMode_group:radio:MiniMode', menuI18nWorker.miniMode),
+    ]),
+    ('DesktopLrcVisible', menuI18nWorker.showDesktopLrc),
+    ('DesktopLrcLockStatus', menuI18nWorker.lockDesktopLrc),
+    None,
+    ('Exit', menuI18nWorker.exit)
+]
+
+
 class DMenu(Menu):
     """docstring for DMenu"""
     def __init__(self, items):
         super(DMenu, self).__init__(items)
 
-    def show(self):
-        self.showRectMenu(QCursor.pos().x(), QCursor.pos().y())
+    def show(self, style='normal'):
+        if style == 'normal':
+            self.showRectMenu(QCursor.pos().x(), QCursor.pos().y())
+        elif style == 'dock':
+            self.showDockMenu(QCursor.pos().x(), QCursor.pos().y())
 
 
 class MenuWorker(QObject):
@@ -286,6 +322,9 @@ class MenuWorker(QObject):
     #search menu
     searchLocalSongShowed = pyqtSignal('QString')
 
+    #systemTray:
+    systemTrayMenuShowed = pyqtSignal()
+
     #public menu:
     addSongToPlaylist = pyqtSignal('QString', 'QString')
     addSongsToPlaylist = pyqtSignal('QString', 'QString', 'QString')
@@ -315,6 +354,7 @@ class MenuWorker(QObject):
         self.createTemporaryMenu()
         self.createDownloadMenu()
         self.createSearchLocalMenu()
+        self.createSystemTrayMenu()
 
     def createSettingMenu(self):
         self.settingMenu = DMenu(SettingMenuItems)
@@ -445,6 +485,60 @@ class MenuWorker(QObject):
         self._url = url
         self.addPlaylistMenuItemsForMusicManager(self.searchLocalMenu)
         self.searchLocalMenu.show()
+
+    def createSystemTrayMenu(self):
+        self.systemTrayMenu = DMenu(SystemTrayMenuItems)
+        self.systemTrayMenu.itemClicked.connect(self.systemTrayMenuConnection)
+        self.systemTrayMenuShowed.connect(self.showSystemTrayMenu)
+
+    def showSystemTrayMenu(self):
+        from mediaplayer import mediaPlayer
+        from windowmanageworker import windowManageWorker
+        from app import DeepinPlayer
+
+        if mediaPlayer.playing:
+            self.systemTrayMenu.getItemById('Play').text = menuI18nWorker.pause
+        else:
+            self.systemTrayMenu.getItemById('Play').text = menuI18nWorker.play
+
+        if mediaPlayer.playbackMode == 4:
+            self.systemTrayMenu.getItemById('PlaybackMode_group:radio:Random').checked = True
+            self.systemTrayMenu.getItemById('PlaybackMode_group:radio:Loop').checked = False
+            self.systemTrayMenu.getItemById('PlaybackMode_group:radio:CurrentItemInLoop').checked = False
+        elif mediaPlayer.playbackMode == 3:
+            self.systemTrayMenu.getItemById('PlaybackMode_group:radio:Random').checked = False
+            self.systemTrayMenu.getItemById('PlaybackMode_group:radio:Loop').checked = True
+            self.systemTrayMenu.getItemById('PlaybackMode_group:radio:CurrentItemInLoop').checked = False
+        elif mediaPlayer.playbackMode == 1:
+            self.systemTrayMenu.getItemById('PlaybackMode_group:radio:Random').checked = False
+            self.systemTrayMenu.getItemById('PlaybackMode_group:radio:Loop').checked = False
+            self.systemTrayMenu.getItemById('PlaybackMode_group:radio:CurrentItemInLoop').checked = True
+
+        if windowManageWorker.windowMode == 'Full':
+            self.systemTrayMenu.getItemById('WindowMode_group:radio:FullMode').checked = True
+            self.systemTrayMenu.getItemById('WindowMode_group:radio:SimpleMode').checked = False
+            self.systemTrayMenu.getItemById('WindowMode_group:radio:MiniMode').checked = False
+        elif windowManageWorker.windowMode == 'Simple':
+            self.systemTrayMenu.getItemById('WindowMode_group:radio:FullMode').checked = False
+            self.systemTrayMenu.getItemById('WindowMode_group:radio:SimpleMode').checked = True
+            self.systemTrayMenu.getItemById('WindowMode_group:radio:MiniMode').checked = False
+        elif windowManageWorker.windowMode == 'Mini':
+            self.systemTrayMenu.getItemById('WindowMode_group:radio:FullMode').checked = False
+            self.systemTrayMenu.getItemById('WindowMode_group:radio:SimpleMode').checked = False
+            self.systemTrayMenu.getItemById('WindowMode_group:radio:MiniMode').checked = True
+
+        lrcWindowManager = DeepinPlayer.instance().lrcWindowManager
+        if lrcWindowManager.isVisible:
+            self.systemTrayMenu.getItemById('DesktopLrcVisible').text = menuI18nWorker.hideDesktopLrc
+        else:
+            self.systemTrayMenu.getItemById('DesktopLrcVisible').text = menuI18nWorker.showDesktopLrc
+
+        if lrcWindowManager.state == 'Locked':
+            self.systemTrayMenu.getItemById('DesktopLrcLockStatus').text = menuI18nWorker.unlockDesktopLrc
+        else:
+            self.systemTrayMenu.getItemById('DesktopLrcLockStatus').text = menuI18nWorker.lockDesktopLrc
+
+        self.systemTrayMenu.show(style='normal')
 
     def settingMenuConnection(self, menuId, checked):
         if menuId == 'WindowMode':
@@ -658,6 +752,31 @@ class MenuWorker(QObject):
                 playlistName = menuId.split(':')[-1]
                 if playlistName in PlaylistWorker._playlists:
                     self.addSongsToPlaylist.emit(self._album, playlistName, 'Album')
+
+    def systemTrayMenuConnection(self, menuId, checked):
+        if menuId == 'Play':
+            from mediaplayer import mediaPlayer
+            signalManager.playToggle.emit(not mediaPlayer.playing)
+        elif menuId == 'Previous':
+            signalManager.previousSong.emit()
+        elif menuId == 'Next':
+            signalManager.nextSong.emit()
+        elif menuId == 'PlaybackMode_group:radio:Random':
+            pass
+        elif menuId == 'PlaybackMode_group:radio:Loop':
+            pass
+        elif menuId == 'PlaybackMode_group:radio:CurrentItemInLoop':
+            pass
+        elif menuId == 'WindowMode_group:radio:FullMode':
+            pass
+        elif menuId == 'WindowMode_group:radio:MiniMode':
+            pass
+        elif menuId == 'DesktopLrcVisible':
+            pass
+        elif menuId == 'DesktopLrcLockStatus':
+            pass
+        elif menuId == 'Exit':
+            pass
 
 
 menuWorker = MenuWorker()

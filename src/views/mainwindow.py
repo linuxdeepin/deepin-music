@@ -9,9 +9,10 @@ from PyQt5.QtCore import (
     pyqtSlot, pyqtSignal,
     QThread, QPointF)
 from PyQt5.QtGui import QKeySequence
+from PyQt5.QtWidgets import QSystemTrayIcon
 from PyQt5.QtQuick import QQuickView
 from .basewindow import BaseWindow
-from controllers import registerContext, windowManageWorker, signalManager
+from controllers import registerContext, windowManageWorker, signalManager, menuWorker
 from lrcwindow import LrcWindowManager
 
 
@@ -26,13 +27,34 @@ class MainWindow(BaseWindow):
     @registerContext
     def __init__(self, engine=None, parent=None):
         super(MainWindow, self).__init__(engine, parent)
+        self._initSystemTray()
         self._initConnect()
 
     def _initConnect(self):
         from PyQt5.QtWidgets import qApp
         qApp.focusWindowChanged.connect(self.changeFocusWindow)
-
         signalManager.hideShowWindowToggle.connect(self.actionhideShow)
+
+    def _initSystemTray(self):
+        from PyQt5.QtWidgets import qApp
+        self.systemTray = QSystemTrayIcon(self)
+        self.systemTray.setIcon(qApp.windowIcon())
+        self.systemTray.show()
+        self.systemTray.activated.connect(self.onSystemTrayIconClicked)
+
+    def onSystemTrayIconClicked(self, reason):
+        if reason == QSystemTrayIcon.Unknown:
+            pass
+        elif reason == QSystemTrayIcon.Context:
+            menuWorker.systemTrayMenuShowed.emit()
+        elif reason == QSystemTrayIcon.DoubleClick:
+            pass
+        elif reason == QSystemTrayIcon.Trigger:
+            self.setVisible(not self.isVisible())
+        elif reason == QSystemTrayIcon.MiddleClick:
+            pass
+        else:
+            pass
 
     def mousePressEvent(self, event):
         self.mousePressed.emit(event.pos())

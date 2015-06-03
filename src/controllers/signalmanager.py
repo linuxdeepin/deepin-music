@@ -113,6 +113,9 @@ class SignalManager(QObject):
     hideShowWindowToggle = pyqtSignal()
     hideShowDesktopLrcToggle = pyqtSignal()
 
+    # SystemTray
+    systemTrayContext = pyqtSignal()
+
     @registerContext
     def __init__(self, parent=None):
         super(SignalManager, self).__init__(parent)

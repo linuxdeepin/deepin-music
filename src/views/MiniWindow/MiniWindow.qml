@@ -1,6 +1,7 @@
 import QtQuick 2.3
 import QtQuick.Window 2.2
 import DMusic 1.0
+import Deepin.Widgets 1.0
 import "../DMusicWidgets"
 import "../DMusicWidgets/MiniWindow"
 import "../DMusicWidgets/CustomSlider"
@@ -208,11 +209,15 @@ DMovableWindow {
         playBottomBar: playBottomBar
     }
 
-    // Keys.onPressed: {
-    //     var shortcut = KeysUtils.keyEventToString(event.modifiers, event.key);
-    //     print(shortcut)
-    //     // if (shortcut == ConfigWorker.shortcut_miniFullMode) {
-    //     //     MediaPlayer.miniFullToggle();
-    //     // }
-    // }
-} 
+    Item {
+        anchors.fill: parent
+        focus: true
+
+        Keys.onPressed: {
+            var shortcut = KeysUtils.keyEventToString(event.modifiers, event.key);
+            if (shortcut == ConfigWorker.shortcut_miniFullMode) {
+                SignalManager.miniFullToggle();
+            }
+        }
+    }
+}
