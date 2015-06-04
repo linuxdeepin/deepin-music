@@ -749,7 +749,8 @@ class LrcWindowManager(QObject):
         self.mainWindow.loadSuccessed.connect(self.updateUnLockWindowPosition)
         signalManager.locked.connect(self.showLocked)
         signalManager.unlocked.connect(self.showNoraml)
-        signalManager.toggleShow.connect(self.toggle)
+        signalManager.lrcToggleShow.connect(self.toggleShow)
+        signalManager.lrcToggleLock.connect(self.toggleLock)
         signalManager.lrcClosed.connect(self.hide)
 
     def updateUnLockWindowPosition(self):
@@ -805,12 +806,17 @@ class LrcWindowManager(QObject):
         self.unLockWindow.hide()
         self.destoryLockWindow()
 
-    def toggle(self):
+    def toggleShow(self):
         if self.isVisible:
             self.hide()
         else:
             self.show()
 
+    def toggleLock(self):
+        if self.state == 'Normal':
+            self.showLocked()
+        elif self.state == 'Locked':
+            self.showNoraml()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

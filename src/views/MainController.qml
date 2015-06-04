@@ -111,7 +111,7 @@ Item {
     Connections {
         target: mainWindow.playBottomBar.lrcButton
         onClicked:{
-            SignalManager.toggleShow();
+            SignalManager.lrcToggleShow();
         }
     }
 

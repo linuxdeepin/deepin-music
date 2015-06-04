@@ -762,21 +762,23 @@ class MenuWorker(QObject):
         elif menuId == 'Next':
             signalManager.nextSong.emit()
         elif menuId == 'PlaybackMode_group:radio:Random':
-            pass
+            signalManager.playbackModeChanged.emit(4)
         elif menuId == 'PlaybackMode_group:radio:Loop':
-            pass
+            signalManager.playbackModeChanged.emit(3)
         elif menuId == 'PlaybackMode_group:radio:CurrentItemInLoop':
-            pass
+            signalManager.playbackModeChanged.emit(1)
         elif menuId == 'WindowMode_group:radio:FullMode':
-            pass
+            signalManager.fullMode.emit()
+        elif menuId == 'WindowMode_group:radio:SimpleMode':
+            signalManager.simpleMode.emit()
         elif menuId == 'WindowMode_group:radio:MiniMode':
-            pass
+            signalManager.miniMode.emit()
         elif menuId == 'DesktopLrcVisible':
-            pass
+            signalManager.lrcToggleShow.emit()
         elif menuId == 'DesktopLrcLockStatus':
-            pass
+            signalManager.lrcToggleLock.emit()
         elif menuId == 'Exit':
-            pass
+            signalManager.exited.emit()
 
 
 menuWorker = MenuWorker()

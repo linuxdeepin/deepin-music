@@ -5,7 +5,7 @@ import os
 from PyQt5.QtCore import (QCoreApplication, QObject,
                           QUrl, QThread, QTimer,
                           QThreadPool, QPoint)
-from PyQt5.QtGui import QScreen
+from PyQt5.QtGui import QScreen, QIcon
 from views import MainWindow, LrcWindowManager, NewPlaylistWindow
 
 from controllers import *
@@ -50,6 +50,7 @@ class DeepinPlayer(QObject):
         self.qApp.setApplicationName(config.applicationName)
         self.qApp.setApplicationVersion(config.applicationVersion)
         self.qApp.setOrganizationName(config.organizationName)
+        self.qApp.setWindowIcon(QIcon(config.windowIcon))
 
     def loadDB(self):
         QTimer.singleShot(100, musicManageWorker.restoreDB)
@@ -91,6 +92,7 @@ class DeepinPlayer(QObject):
         self.downloadSongWorkerConnect()
 
         signalManager.registerQmlObj.connect(self.mainWindow.setContext)
+        signalManager.exited.connect(self.qApp.aboutToQuit)
         self.qApp.aboutToQuit.connect(self.close)
 
     def web360ApiWorkerConnect(self):

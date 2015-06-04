@@ -110,7 +110,7 @@ class MediaPlayer(QObject):
         signalManager.nextSong.connect(self.next)
         signalManager.volumnIncrease.connect(self.actionVolumeIncrease)
         signalManager.volumnDecrease.connect(self.actionVolumeDecrease)
-
+        signalManager.playbackModeChanged.connect(self.setPlaybackMode)
 
         signalManager.playMusicByLocalUrl.connect(self.playLocalMedia)
 
@@ -170,6 +170,9 @@ class MediaPlayer(QObject):
         if self._playlist:
             self._playlist.setPlaybackMode(playbackMode)
         self.playbackModeChanged.emit(playbackMode)
+
+    def setPlaybackMode(self, value):
+        self.playbackMode = value
 
     @pyqtProperty(bool, notify=playingChanged)
     def playing(self):

@@ -59,6 +59,7 @@ class SignalManager(QObject):
     nextSong = pyqtSignal()
     volumnIncrease = pyqtSignal()
     volumnDecrease = pyqtSignal()
+    playbackModeChanged = pyqtSignal(int)
 
     playingChanged = pyqtSignal(bool)
     lrcPositionChanged = pyqtSignal('qint64', int)
@@ -87,7 +88,8 @@ class SignalManager(QObject):
     #lrc
     downloadLrc = pyqtSignal('QString', 'QString')
     noLrcFound = pyqtSignal()
-    toggleShow = pyqtSignal()
+    lrcToggleShow = pyqtSignal()
+    lrcToggleLock = pyqtSignal()
 
     lineModeChanged = pyqtSignal(int)
     singleTextInfoChanged = pyqtSignal('QString', float, int)
@@ -110,11 +112,17 @@ class SignalManager(QObject):
     # window manager
     simpleFullToggle = pyqtSignal()
     miniFullToggle = pyqtSignal()
+    fullMode = pyqtSignal()
+    simpleMode = pyqtSignal()
+    miniMode = pyqtSignal()
+
     hideShowWindowToggle = pyqtSignal()
     hideShowDesktopLrcToggle = pyqtSignal()
 
     # SystemTray
     systemTrayContext = pyqtSignal()
+
+    exited = pyqtSignal()
 
     @registerContext
     def __init__(self, parent=None):

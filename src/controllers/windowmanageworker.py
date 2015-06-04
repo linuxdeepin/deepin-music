@@ -34,6 +34,9 @@ class WindowManageWorker(QObject):
     def initConnect(self):
         signalManager.simpleFullToggle.connect(self.actionSimpleFullToggle)
         signalManager.miniFullToggle.connect(self.actionMiniFullToggle)
+        signalManager.fullMode.connect(self.actionFullMode)
+        signalManager.simpleMode.connect(self.actionSimpleMode)
+        signalManager.miniMode.connect(self.actionMiniMode)
 
     @pyqtProperty('QPoint')
     def cursorPos(self):
@@ -80,10 +83,18 @@ class WindowManageWorker(QObject):
             self.mainWindowShowed.emit()
 
     def actionMiniFullToggle(self):
-        print self._windowMode
         if self._windowMode == 'Full':
             self.miniWindowShowed.emit()
         elif self._windowMode == 'Mini':
             self.mainWindowShowed.emit()
+
+    def actionFullMode(self):
+        self.mainWindowShowed.emit()
+
+    def actionSimpleMode(self):
+        self.simpleWindowShowed.emit()
+
+    def actionMiniMode(self):
+        self.miniWindowShowed.emit()
 
 windowManageWorker = WindowManageWorker()
