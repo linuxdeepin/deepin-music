@@ -8,7 +8,7 @@ from PyQt5.QtCore import (
     pyqtProperty, QObject,
     pyqtSlot, pyqtSignal,
     QThread)
-from PyQt5.QtGui import QRegion, QIcon
+from PyQt5.QtGui import QRegion, QIcon, QSurfaceFormat, QColor
 from PyQt5.QtWidgets import QDesktopWidget
 from PyQt5.QtQuick import QQuickView
 from .basewindow import BaseWindow
@@ -17,65 +17,39 @@ from controllers import registerContext, contexts, registerObj
 from lrcwindow import LrcWindowManager
 from deepin_utils.file import get_parent_dir
 from controllers.signalmanager import signalManager
+from controllers import musicManageWorker
 import config
 
-# class NewPlaylistWindow(BaseWindow):
 
-#     __contextName__ = 'NewPlaylistWindow'
+class QmlDialog(DQuickView):
 
-#     @registerContext
-#     def __init__(self, engine=None, parent=None):
-#         super(NewPlaylistWindow, self).__init__(engine, parent)
-#         self.setFlags(Qt.Popup)
-#         self.setSource(QUrl.fromLocalFile(
-#             os.path.join(get_parent_dir(__file__, 2), 'views','dialogs' ,'NewPlaylist.qml')))
-#         signalManager.newPlaylistWindowShowed.connect(self.show)
-#         self.loadSuccessed.connect(self.moveCenter)
-
-#     # def moveCenter(self):
-#     #     # qr = self.frameGeometry()
-#     #     # print qr
-#     #     # cp = self.parent().frameGeometry().center()
-#     #     # qr.moveCenter(cp)
-#     #     # print qr, 'moved'
-#     #     qr = QRect(-110, 0, 300, 100)
-#     #     self.setPosition(qr.topLeft())
-
-#     def mouseMoveEvent(self, event):
-#         if hasattr(self, "dragPosition"):
-#             if event.buttons() == Qt.LeftButton:
-#                 self.setPosition(event.globalPos() - self.dragPosition)
-#         super(NewPlaylistWindow, self).mouseMoveEvent(event)
-
-#     def mousePressEvent(self, event):
-#         # 鼠标点击事件
-#         if event.button() == Qt.LeftButton:
-#             self.dragPosition = event.globalPos() - \
-#                 self.frameGeometry().topLeft()
-#         super(NewPlaylistWindow, self).mousePressEvent(event)
-
-#     def mouseReleaseEvent(self, event):
-#         # 鼠标释放事件
-#         if hasattr(self, "dragPosition"):
-#             del self.dragPosition
-#         super(NewPlaylistWindow, self).mousePressEvent(event)
-
-
-class NewPlaylistWindow(DQuickView):
-
-    __contextName__ = 'NewPlaylistWindow'
+    songObjChanged = pyqtSignal('QVariant')
+    __contextName__ = 'QmlDialog'
 
     @registerContext
     def __init__(self, engine=None, parent=None):
-        super(NewPlaylistWindow, self).__init__(engine, parent)
-        self.setFlags(Qt.Tool | Qt.FramelessWindowHint)
+        super(QmlDialog, self).__init__(engine, parent)
+
+        self.setFlags(Qt.Tool | Qt.Dialog |Qt.FramelessWindowHint)
         self.setModality(Qt.ApplicationModal)
         self.setIcon(QIcon(config.windowIcon))
 
+        self._songObj = None
+
         signalManager.newPlaylistDialogShowed.connect(self.showPlaylistDialog)
         signalManager.newMultiPlaylistDialogShowed.connect(self.showMutiPlaylistDialog)
+        signalManager.informationShow.connect(self.showInformationDialog)
         signalManager.addMutiPlaylistFlags.connect(self.addMutiPlaylist)
         signalManager.dialogClosed.connect(self.close)
+
+    @pyqtProperty('QVariant', notify=songObjChanged)
+    def songObj(self):
+        return self._songObj
+
+    @songObj.setter
+    def songObj(self, value):
+        self._songObj = value
+        self.songObjChanged.emit(value) 
 
     def showPlaylistDialog(self):
         self.setSource(QUrl.fromLocalFile(
@@ -91,6 +65,14 @@ class NewPlaylistWindow(DQuickView):
         self.moveCenter()
         self.show()
 
+    def showInformationDialog(self, _url):
+        self._url = _url
+        self.songObj = musicManageWorker.getSongObjByUrl(self._url).getDict()
+        self.setSource(QUrl.fromLocalFile(
+            os.path.join(get_parent_dir(__file__, 2), 'views','dialogs' ,'InformationDialog.qml')))
+        self.moveCenter()
+        self.show()
+
     def addMutiPlaylist(self, flags):
         signalManager.addSongsToMultiPlaylist.emit(self._id, self._type, flags)
 
@@ -100,20 +82,20 @@ class NewPlaylistWindow(DQuickView):
                 # rect = QRect(0, 0, self.width(), 25)
                 # if rect.contains(event.pos()):
                 self.setPosition(event.globalPos() - self.dragPosition)
-        super(NewPlaylistWindow, self).mouseMoveEvent(event)
+        super(QmlDialog, self).mouseMoveEvent(event)
 
     def mousePressEvent(self, event):
         # 鼠标点击事件
         if event.button() == Qt.LeftButton:
             self.dragPosition = event.globalPos() - \
                 self.frameGeometry().topLeft()
-        super(NewPlaylistWindow, self).mousePressEvent(event)
+        super(QmlDialog, self).mousePressEvent(event)
 
     def mouseReleaseEvent(self, event):
         # 鼠标释放事件
         if hasattr(self, "dragPosition"):
             del self.dragPosition
-        super(NewPlaylistWindow, self).mouseReleaseEvent(event)
+        super(QmlDialog, self).mouseReleaseEvent(event)
 
     def moveCenter(self):
         from PyQt5.QtWidgets import qApp

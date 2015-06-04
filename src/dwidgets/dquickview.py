@@ -7,8 +7,8 @@ from PyQt5 import QtCore
 from PyQt5 import QtGui
 from PyQt5 import QtQuick
 from PyQt5 import QtQml
-from PyQt5.QtCore import qVersion, pyqtSlot, pyqtSignal, QPointF
-from PyQt5.QtGui import QCursor
+from PyQt5.QtCore import qVersion, pyqtSlot, pyqtSignal, QPointF, Qt
+from PyQt5.QtGui import QCursor, QSurfaceFormat, QColor
 from deepin_utils.file import get_parent_dir
 
 if '5.3' in qVersion():
@@ -27,6 +27,14 @@ class DQuickView(QtQuick.QQuickView):
         self.engine().addImportPath(os.sep.join([get_parent_dir(__file__, 2), 'qml']))
         if isWebengineUsed:
             self.initWebengine()
+
+        format = QSurfaceFormat()
+        format.setAlphaBufferSize(8)
+        format.setRenderableType(QSurfaceFormat.OpenGL)
+
+        self.setFormat(format)
+        self.setColor(QColor(Qt.transparent))
+        self.setClearBeforeRendering(True)
 
     def initWebengine(self):
         component = QtQml.QQmlComponent(self.engine())

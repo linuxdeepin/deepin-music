@@ -3,4 +3,4 @@
 
 from .mainwindow import MainWindow
 from .lrcwindow import LrcWindowManager
-from .newplaylistwindow import NewPlaylistWindow
+from .qmldialog import QmlDialog

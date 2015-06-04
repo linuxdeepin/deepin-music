@@ -25,6 +25,7 @@ Rectangle {
 
     color: "white"
     focus: true
+    radius: 10
 
     BorderImage {
         id: bgImage
@@ -45,7 +46,7 @@ Rectangle {
     }
 
     Column{
-
+        anchors.fill: parent
         Row{
             LeftSideBar {
                 id: leftSideBar

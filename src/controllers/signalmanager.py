@@ -84,6 +84,7 @@ class SignalManager(QObject):
     suggestPlaylist = pyqtSignal(dict)
 
     playAll = pyqtSignal('QString')
+    informationShow = pyqtSignal('QString')
 
     #lrc
     downloadLrc = pyqtSignal('QString', 'QString')

@@ -618,6 +618,8 @@ class MenuWorker(QObject):
             signalManager.newPlaylistDialogShowed.emit()
         elif menuId == "AddToMutiPlaylist":
             signalManager.newMultiPlaylistDialogShowed.emit(self._url, 'Song')
+        elif menuId == 'Information':
+            signalManager.informationShow.emit(self._url)
         else:
             if menuId.startswith('playlist_group'):
                 playlistName = menuId.split(':')[-1]
@@ -665,6 +667,8 @@ class MenuWorker(QObject):
             signalManager.newPlaylistDialogShowed.emit()
         elif menuId == "AddToMutiPlaylist":
             signalManager.newMultiPlaylistDialogShowed.emit(self._url, 'Song')
+        elif menuId == 'Information':
+            signalManager.informationShow.emit(self._url)
         else:
             if menuId.startswith('playlist_group'):
                 playlistName = menuId.split(':')[-1]
@@ -747,7 +751,7 @@ class MenuWorker(QObject):
         if menuId == 'Play':
             signalManager.playMusicByLocalUrl.emit(self._url)
         elif menuId == 'Information':
-            pass
+            signalManager.informationShow.emit(self._url)
         if menuId.startswith('playlist_group'):
                 playlistName = menuId.split(':')[-1]
                 if playlistName in PlaylistWorker._playlists:

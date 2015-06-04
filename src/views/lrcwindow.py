@@ -758,7 +758,6 @@ class LrcWindowManager(QObject):
 
     def showNoraml(self):
         self.unLockWindow.show()
-
         self.destoryLockWindow()
 
         self.state = 'Normal'

@@ -8,6 +8,7 @@ DStackView 1.0 DStackView.qml
 DFlickablePage 1.0 DFlickablePage.qml
 DListPage 1.0 DListPage.qml
 DScrollBar 1.0 DScrollBar.qml
+DGlowRectangle 1.0 DGlowRectangle.qml
 DToolTip 1.0 DToolTip.qml
 ToolTip 1.0 ToolTip.qml
 ToolTipArea 1.0 ToolTipArea.qml
