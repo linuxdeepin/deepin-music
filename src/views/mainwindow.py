@@ -94,6 +94,7 @@ class MainWindow(BaseWindow):
             modifier = QKeySequence(event.modifiers()).toString()
             keyString = QKeySequence(event.key()).toString()
             shortcut = modifier + keyString
+            print shortcut
             if shortcut == configWorker.shortcut_preivous:
                 signalManager.previousSong.emit()
             elif shortcut == configWorker.shortcut_next:

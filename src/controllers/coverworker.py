@@ -216,6 +216,16 @@ class CoverWorker(QObject):
             return cls.defaultAlbumCover
 
     @classmethod
+    def getCover(cls, title, artist, album):
+        if cls.isSongCoverExisted(artist, title):
+            _cover = cls.getCoverPathByArtistSong(artist, title)
+        elif cls.isAlbumCoverExisted(artist, album):
+            _cover = cls.getCoverPathByArtistAlbum(artist, album)
+        else:
+            _cover = cls.getCoverPathByArtist(artist)
+        return _cover
+
+    @classmethod
     def getCoverPathByArtistSong(cls, artist, title):
         filepath = os.path.join(SongCoverPath, '%s-%s' % (artist, title))
         if os.path.exists(filepath):

@@ -18,6 +18,7 @@ from .onlinemuscimanageworker import OnlineMusicManageWorker
 from .web360apiworker import Web360ApiWorker
 from .signalmanager import signalManager
 
+
 class PlayerBin(QMediaPlayer):
 
     def __init__(self):
@@ -82,6 +83,8 @@ class MediaPlayer(QObject):
         self._album = ''
         self._cover = ''
 
+        self._isLyricUpdated = True
+
         self.initPlayer()
 
         self.initConnect()
@@ -112,10 +115,21 @@ class MediaPlayer(QObject):
         signalManager.volumnDecrease.connect(self.actionVolumeDecrease)
         signalManager.playbackModeChanged.connect(self.setPlaybackMode)
 
+        signalManager.noLrcFound.connect(self.stopUpdateLyric)
+        signalManager.updateLrc.connect(self.startUpdateLyric)
+
         signalManager.playMusicByLocalUrl.connect(self.playLocalMedia)
 
     def updateLrc(self, pos):
-        signalManager.lrcPositionChanged.emit(pos, self.duration)
+        from app.deepinplayer import DeepinPlayer
+        if DeepinPlayer.instance().lrcWindowManager.isVisible and self._isLyricUpdated:
+            signalManager.lrcPositionChanged.emit(pos, self.duration)
+
+    def stopUpdateLyric(self):
+        self._isLyricUpdated = False
+
+    def startUpdateLyric(self):
+         self._isLyricUpdated = True
 
     @pyqtProperty('QString', notify=urlChanged)
     def url(self):

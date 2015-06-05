@@ -31,8 +31,8 @@ Rectangle {
         	id: titleText
             width: parent.width
             height: 20
-            color: "#888888"
             font.pixelSize: 12
+            color: "black"
             horizontalAlignment: Text.AlignLeft
             text: QmlDialog.songObj.title
         }
@@ -46,7 +46,7 @@ Rectangle {
         }
     }
 
-    DCloseButton {
+    DUpDownButton {
         id: expandButton
         width: 25
         height: 25

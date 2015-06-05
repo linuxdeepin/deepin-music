@@ -71,12 +71,11 @@ DGlowRectangle {
                     BaseSection {
                         id: section1
                         width: parent.width
-                        expandHeight: 250
+                        expandHeight: 240
                         state: 'expanded'
-                        sectionTitle: '1'
-                        contentItem: Rectangle {
+                        sectionTitle: I18nWorker.info_songAbstract
+                        contentItem: SectionAbstractPage {
                             anchors.fill: parent
-                            color: "red"
                         }
                         onStateChanged:{
                             if (state == 'expanded'){
@@ -92,10 +91,9 @@ DGlowRectangle {
                         width: parent.width
                         expandHeight: 200
                         state: 'closed'
-                        sectionTitle: '2'
-                        contentItem: Rectangle {
+                        sectionTitle: I18nWorker.info_detail
+                        contentItem: SectionDetailPage {
                             anchors.fill: parent
-                            color: "red"
                         }
                         onStateChanged:{
                             if (state == 'expanded'){
@@ -109,12 +107,11 @@ DGlowRectangle {
                     BaseSection {
                         id: section3
                         width: parent.width
-                        expandHeight: 150
+                        expandHeight: 210
                         state: 'closed'
-                        sectionTitle: '3'
-                        contentItem: Rectangle {
+                        sectionTitle: I18nWorker.info_lyric
+                        contentItem: SectionLyricPage {
                             anchors.fill: parent
-                            color: "red"
                         }
                         onStateChanged:{
                             if (state == 'expanded'){
@@ -130,10 +127,9 @@ DGlowRectangle {
                         width: parent.width
                         expandHeight: 200
                         state: 'closed'
-                        sectionTitle: '4'
-                        contentItem: Rectangle {
+                        sectionTitle: I18nWorker.info_options
+                        contentItem: SectionOptionsPage {
                             anchors.fill: parent
-                            color: "red"
                         }
                         onStateChanged:{
                             if (state == 'expanded'){

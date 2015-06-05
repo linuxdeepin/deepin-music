@@ -18,6 +18,7 @@ TAG_KEYS = {
     'tracknumber': 'tracknumber',
     'discnumber': 'discnumber',
     'genre': 'genre',
+    'composer': 'composer',
     'date': 'date'
 }
 
@@ -86,14 +87,14 @@ class Song(dict):
 
     @property
     def ext(self):
-        return os.path.splitext(self.baseName)[1][1:]
+        return os.path.splitext(self.url)[1][1:]
 
     def getTags(self):
         path = self.url
         self["size"] = os.path.getsize(path)
+        self["ext"] = self.ext
 
         audio = common.MutagenFile(path, common.FORMATS)
-
         if audio is not None:
             tag_keys_override = TAGS_KEYS_OVERRIDE.get(
                 audio.__class__.__name__, None)
@@ -114,7 +115,10 @@ class Song(dict):
                             fix_value = ""
                     self[tag] = fix_value
                 else:
-                    self[tag] = 0
+                    if tag == 'composer':
+                        self[tag] = ''
+                    else:
+                        self[tag] = 0
 
             for key in ['sample_rate', 'bitrate', 'length']:
                 try:

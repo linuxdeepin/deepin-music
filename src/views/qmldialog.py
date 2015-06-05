@@ -17,7 +17,7 @@ from controllers import registerContext, contexts, registerObj
 from lrcwindow import LrcWindowManager
 from deepin_utils.file import get_parent_dir
 from controllers.signalmanager import signalManager
-from controllers import musicManageWorker
+from controllers import musicManageWorker, coverWorker, lrcWorker
 import config
 
 
@@ -35,6 +35,7 @@ class QmlDialog(DQuickView):
         self.setIcon(QIcon(config.windowIcon))
 
         self._songObj = None
+        self.moveRect = QRect(0, 0, 300, 150)
 
         signalManager.newPlaylistDialogShowed.connect(self.showPlaylistDialog)
         signalManager.newMultiPlaylistDialogShowed.connect(self.showMutiPlaylistDialog)
@@ -68,6 +69,9 @@ class QmlDialog(DQuickView):
     def showInformationDialog(self, _url):
         self._url = _url
         self.songObj = musicManageWorker.getSongObjByUrl(self._url).getDict()
+        self.songObj['cover'] = coverWorker.getCover(self.songObj['title'], self.songObj['artist'], self.songObj['album'])
+        content = lrcWorker.getLrcContent(self.songObj['title'], self.songObj['artist'])
+        self.songObj['lyric'] = '\n'.join(content)
         self.setSource(QUrl.fromLocalFile(
             os.path.join(get_parent_dir(__file__, 2), 'views','dialogs' ,'InformationDialog.qml')))
         self.moveCenter()
@@ -79,9 +83,8 @@ class QmlDialog(DQuickView):
     def mouseMoveEvent(self, event):
         if hasattr(self, "dragPosition"):
             if event.buttons() == Qt.LeftButton:
-                # rect = QRect(0, 0, self.width(), 25)
-                # if rect.contains(event.pos()):
-                self.setPosition(event.globalPos() - self.dragPosition)
+                if self.moveRect.contains(event.pos()):
+                    self.setPosition(event.globalPos() - self.dragPosition)
         super(QmlDialog, self).mouseMoveEvent(event)
 
     def mousePressEvent(self, event):

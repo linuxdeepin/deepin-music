@@ -68,7 +68,25 @@ class I18nWorker(object):
         ('search_online', 'QString', u'在线音乐'),
         ('search_local', 'QString', u'本地音乐'),
         ('suggestPlaylist', 'QString', u'推荐歌单'),
-        ('keyBingTipMessage', 'QString', u'请输入新的快捷键')
+        ('keyBingTipMessage', 'QString', u'请输入新的快捷键'),
+        ('info_songAbstract', 'QString', u'歌曲摘要'),
+        ('info_songType', 'QString', u'类型'),
+        ('info_songFormat', 'QString', u'格式'),
+        ('info_songSize', 'QString', u'大小'),
+        ('info_songDuration', 'QString', u'时长'),
+        ('info_songAge', 'QString', u'年代'),
+        ('info_songBitrate', 'QString', u'比特率'),
+        ('info_songSampleRate', 'QString', u'采样率'),
+        ('info_songPlayCount', 'QString', u'播放次数'),
+        ('info_detail', 'QString', u'详细信息'),
+        ('info_songTitle', 'QString', u'歌曲名'),
+        ('info_songArtist', 'QString', u'艺术家'),
+        ('info_songAlbum', 'QString', u'专辑'),
+        ('info_albumArtist', 'QString', u'专辑艺术家'),
+        ('info_songComposer', 'QString', u'作曲家'),
+        ('info_songTracks', 'QString', u'曲目'),
+        ('info_lyric', 'QString', u'歌词'),
+        ('info_options', 'QString', u'选项'),
     )
 
     __contextName__ = "I18nWorker"

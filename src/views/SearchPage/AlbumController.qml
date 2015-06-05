@@ -10,7 +10,7 @@ Item {
         }
 
         onClicked:{
-            MusicManageWorker.detailAlbum(name, index)
+            MusicManageWorker.jumpToLocalDetailAlbum(name)
         }
 
         onRightClicked:{

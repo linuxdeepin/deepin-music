@@ -155,6 +155,7 @@ class Song(BaseModel):
     title = CharField(default='')
     artist = CharField(default='')
     album = CharField(default='')
+    composer = CharField(default='')
     tracknumber = IntegerField(default=0)
     discnumber = IntegerField(default=0)
     genre = CharField(default='')
@@ -162,6 +163,7 @@ class Song(BaseModel):
 
     #Media attributes
     size = IntegerField(default=0)
+    ext = CharField(default='')
     mediaType = CharField(default='')
     duration = IntegerField(default=0)
 
@@ -212,6 +214,7 @@ class Song(BaseModel):
             'title',
             'artist',
             'album',
+            'composer',
             'date',
             'genre',
             'tracknumber',
@@ -220,6 +223,7 @@ class Song(BaseModel):
             'bitrate',
             'duration',
             'size',
+            'ext',
             'cover',
             'created_date'
         ]

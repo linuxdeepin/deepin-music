@@ -38,6 +38,7 @@ Item {
         SignalManager.removeFromFavorite.connect(favoriteOff);
 
         SignalManager.globalSearched.connect(showSearchPage)
+        SignalManager.jumpToLocalDetailArtist.connect(showLocalDetailArtistPage)
     }
 
     function resetSkin() {
@@ -83,10 +84,17 @@ Item {
         stackViews.setCurrentIndex(5);
     }
 
+    function showLocalDetailArtistPage(name){
+        var index =  mainWindow.views.indexOf('MusicManagerPage');
+        stackViews.setCurrentIndex(index);
+        print(index, '+++++++++')
+    }
+
     function switchToSettingPage(){
         var index =  mainWindow.views.indexOf('SettingPage');
         stackViews.setCurrentIndex(index);
     }
+
 
     Binding {
         target: playBottomBar.musicStarButton

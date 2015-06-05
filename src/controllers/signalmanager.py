@@ -78,6 +78,8 @@ class SignalManager(QObject):
 
     #global search
     globalSearched = pyqtSignal('QString')
+    jumpToLocalDetailArtist = pyqtSignal('QString')
+    jumpToLocalDetailAlbum = pyqtSignal('QString')
 
     #online search
     onlineResult = pyqtSignal(dict)
@@ -88,6 +90,7 @@ class SignalManager(QObject):
 
     #lrc
     downloadLrc = pyqtSignal('QString', 'QString')
+    updateLrc = pyqtSignal()
     noLrcFound = pyqtSignal()
     lrcToggleShow = pyqtSignal()
     lrcToggleLock = pyqtSignal()

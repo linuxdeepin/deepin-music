@@ -45,6 +45,8 @@ class LrcWorker(QObject):
 
     def parserLrc(self, filepath):
         self.lrcParser.set_filename(filepath)
+        if self.lrcParser.scroll_lyrics:
+            signalManager.updateLrc.emit()
 
     def setLrcLineMode(self, lineMode):
         self._lineMode = lineMode
@@ -108,6 +110,24 @@ class LrcWorker(QObject):
     def validLrcContent(self, content):
         partial="".join( (i for i in content if (ord(i) < 128 and ord(i) != 0) ) )
         return bool(re.search('\[\d{1,}:\d{1,}.*?\]',partial))
+
+    @pyqtSlot('QString', 'QString', result=list)
+    def getLrcContent(self, artist, title):
+        lrcParser = LrcParser()
+        if title:
+            lrc_path = self.getLrcPath(artist, title)
+            if lrc_path and os.path.exists(lrc_path):
+                lrcParser.set_filename(lrc_path)
+            else:
+                artist = artist.encode('utf-8')
+                title = title.encode('utf-8')
+                lrc_path = self.multiple_engine(lrc_path, artist, title)
+                if lrc_path:
+                    lrcParser.set_filename(lrc_path)
+        if hasattr(lrcParser, 'scroll_lyrics'):
+            return lrcParser.scroll_lyrics
+        else:
+            return []
 
     @dthread
     def getLrc(self, artist, title):

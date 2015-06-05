@@ -10,7 +10,7 @@ Item {
         }
 
         onClicked:{
-            MusicManageWorker.detailArtist(name, index);
+            SignalManager.jumpToLocalDetailArtist(name);
         }
 
         onRightClicked:{
