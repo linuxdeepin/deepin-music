@@ -82,9 +82,9 @@ class QmlDialog(DQuickView):
 
     def mouseMoveEvent(self, event):
         if hasattr(self, "dragPosition"):
-            if event.buttons() == Qt.LeftButton:
-                if self.moveRect.contains(event.pos()):
-                    self.setPosition(event.globalPos() - self.dragPosition)
+            # if event.buttons() == Qt.LeftButton:
+                # if self.moveRect.contains(event.pos()):
+            self.setPosition(event.globalPos() - self.dragPosition)
         super(QmlDialog, self).mouseMoveEvent(event)
 
     def mousePressEvent(self, event):

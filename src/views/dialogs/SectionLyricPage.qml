@@ -31,6 +31,7 @@ Flickable {
         height: flick.height
         focus: true
         wrapMode: TextEdit.Wrap
+        readOnly: true
         text: QmlDialog.songObj.lyric
         onCursorRectangleChanged: flick.ensureVisible(cursorRectangle)
     }

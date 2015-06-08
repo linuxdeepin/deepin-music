@@ -17,7 +17,9 @@ Rectangle {
     Column {
     	id: layout
         anchors.fill: parent
-        anchors.margins: 20
+        anchors.leftMargin: 20
+        anchors.rightMargin: 20
+        anchors.bottomMargin: 20
         spacing: 5
 
         Rectangle {
@@ -40,7 +42,7 @@ Rectangle {
         Rectangle{
             id: baseinfoRect
             width: parent.width
-            height: expandHeight - layout.anchors.margins * 2 - lineHeader.height - titleText.height
+            height: expandHeight - lineHeader.height - titleText.height - 20
             children: [contentItem]
             Behavior on height { NumberAnimation {} }
         }
@@ -52,7 +54,7 @@ Rectangle {
         height: 25
         anchors.right: parent.right
         anchors.top: parent.top
-        anchors.margins: 25
+        anchors.rightMargin: 15
         visible:  {
         	if (section.state == 'closed'){
                 return true;
@@ -73,10 +75,12 @@ Rectangle {
         State {
             name: "closed"
             PropertyChanges { target: section; height: headerHeight}
+            PropertyChanges { target: baseinfoRect; visible: false}
         },
         State {
             name: "expanded"
             PropertyChanges { target: section; height: expandHeight}
+            PropertyChanges { target: baseinfoRect; visible: true}
         }
     ]
 }

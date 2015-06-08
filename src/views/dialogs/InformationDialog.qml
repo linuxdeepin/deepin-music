@@ -4,21 +4,20 @@ import DMusic 1.0
 import "../DMusicWidgets"
 import Deepin.Widgets 1.0
 
-DGlowRectangle {
+DWindowFrame {
 
     width: 304
-    height: 604
+    height: 636
 
-    contentItem: Rectangle {
+    content: Rectangle {
         id: contentItem
         anchors.fill: parent
         anchors.margins: 2
         radius: 4
-        color: "white"
 
         Column {
             anchors.fill: parent
-            
+            spacing: 0
             Rectangle {
                 id: titleBar
                 width: parent.width
@@ -40,12 +39,13 @@ DGlowRectangle {
             Rectangle {
                 id: box
                 width: parent.width
-                height: 575
+                height: 606 - 25
+
                 Column {
                     anchors.fill: parent
                     Rectangle {
                         width: parent.width
-                        height:150
+                        height:170
                         Column{
                             anchors.centerIn: parent
                             spacing: 20
@@ -107,7 +107,7 @@ DGlowRectangle {
                     BaseSection {
                         id: section3
                         width: parent.width
-                        expandHeight: 210
+                        expandHeight: 205
                         state: 'closed'
                         sectionTitle: I18nWorker.info_lyric
                         contentItem: SectionLyricPage {
@@ -125,7 +125,7 @@ DGlowRectangle {
                     BaseSection {
                         id: section4
                         width: parent.width
-                        expandHeight: 200
+                        expandHeight: 100
                         state: 'closed'
                         sectionTitle: I18nWorker.info_options
                         contentItem: SectionOptionsPage {
@@ -140,11 +140,11 @@ DGlowRectangle {
                         }
                     }
 
-                    Rectangle {
-                        width: parent.width
-                        height: parent.height - section1.height - section2.height - section3.height - section4.height
-                        color: "white"
-                    }
+                    // Rectangle {
+                    //     width: parent.width
+                    //     height: parent.height - section1.height - section2.height - section3.height - section4.height - 20
+                    //     color: "white"
+                    // }
                 }
             }
         }
