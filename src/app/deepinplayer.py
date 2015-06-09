@@ -245,6 +245,7 @@ class DeepinPlayer(QObject):
 
     def showMainWindow(self):
         self.mainWindow.show()
+        self.mainWindow.setRoundMask()
         self.qApp.setActivationWindow(self.mainWindow)
 
     def show(self):

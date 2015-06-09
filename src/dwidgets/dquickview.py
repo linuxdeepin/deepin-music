@@ -8,7 +8,7 @@ from PyQt5 import QtGui
 from PyQt5 import QtQuick
 from PyQt5 import QtQml
 from PyQt5.QtCore import qVersion, pyqtSlot, pyqtSignal, QPointF, Qt
-from PyQt5.QtGui import QCursor, QSurfaceFormat, QColor
+from PyQt5.QtGui import QCursor, QSurfaceFormat, QColor, QPainter, QPixmap,QBitmap, QRegion, QBrush
 from deepin_utils.file import get_parent_dir
 
 if '5.3' in qVersion():
@@ -35,6 +35,19 @@ class DQuickView(QtQuick.QQuickView):
         self.setFormat(format)
         self.setColor(QColor(Qt.transparent))
         self.setClearBeforeRendering(True)
+
+
+    def setRoundMask(self):
+        bmp = QPixmap(self.size())
+        bmp.fill(Qt.white)
+        p = QPainter(bmp)
+        p.setRenderHint(QPainter.Antialiasing)
+        p.setBrush(QBrush(Qt.white))
+        p.setCompositionMode(QPainter.CompositionMode_Clear)
+        p.drawRoundedRect(0, 0, self.width(), self.height(), 3, 3)
+        p.end()
+        self.setMask(QRegion(QBitmap(bmp)))
+
 
     def initWebengine(self):
         component = QtQml.QQmlComponent(self.engine())
