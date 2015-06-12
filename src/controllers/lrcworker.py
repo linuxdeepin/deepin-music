@@ -10,7 +10,7 @@ from PyQt5.QtCore import (QObject, pyqtSignal, pyqtSlot,
 from PyQt5.QtGui import QCursor, QDesktopServices
 from .utils import registerContext
 from config.constants import LRCPath
-
+from log import logger
 from deepin_utils.net import is_network_connected
 from dwidgets.coverlrc.lrc_download import TTPlayer, DUOMI, SOSO, TTPod
 from dwidgets.coverlrc.cover_query import poster
@@ -131,18 +131,22 @@ class LrcWorker(QObject):
 
     @dthread
     def getLrc(self, artist, title):
-        if title:
-            lrc_path = self.getLrcPath(artist, title)
-            if lrc_path and os.path.exists(lrc_path):
-                self.lrcFileExisted.emit(lrc_path)
-            else:
-                artist = artist.encode('utf-8')
-                title = title.encode('utf-8')
-                lrc_path = self.multiple_engine(lrc_path, artist, title)
-                if lrc_path:
+        try:
+            if title:
+                lrc_path = self.getLrcPath(artist, title)
+                if lrc_path and os.path.exists(lrc_path):
                     self.lrcFileExisted.emit(lrc_path)
                 else:
-                    signalManager.noLrcFound.emit()
+                    artist = artist.encode('utf-8')
+                    title = title.encode('utf-8')
+                    lrc_path = self.multiple_engine(lrc_path, artist, title)
+                    if lrc_path:
+                        self.lrcFileExisted.emit(lrc_path)
+                    else:
+                        signalManager.noLrcFound.emit()
+        except Exception, e:
+            logger.info(e)
+        
 
     def multiple_engine(self, lrc_path, artist, title):
         try:
@@ -158,7 +162,7 @@ class LrcWorker(QObject):
                 pass
             return None
         except Exception, e:
-            raise
+            logger.info(e)
             return None
 
     def tingEngine(self, lrc_path, artist, title):

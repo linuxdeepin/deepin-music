@@ -59,6 +59,7 @@ class MediaPlayer(QObject):
     artistChanged = pyqtSignal('QString')
     albumChanged = pyqtSignal('QString')
     coverChanged = pyqtSignal('QString')
+    songObjChanged = pyqtSignal('QVariant')
 
     downloadCover = pyqtSignal('QString', 'QString')
 
@@ -82,6 +83,8 @@ class MediaPlayer(QObject):
         self._artist = ''
         self._album = ''
         self._cover = ''
+
+        self._songObj = None
 
         self._isLyricUpdated = True
 
@@ -451,12 +454,19 @@ class MediaPlayer(QObject):
                 self.songId = songObj.songId
         else:
             songObj = MusicManageWorker.getSongObjByUrl(url)
+        
+        if self._songObj:
+            self._songObj.coverReady.disconnect(self.setCover)
+            self._songObj = None
+
+        self._songObj = songObj
+        self._songObj.coverReady.connect(self.setCover)
+        self._songObj.getCover()
+
         if songObj:
             self.title = songObj.title
             self.artist = songObj.artist
             self.album = songObj.album
-            self.cover = songObj.cover
-
             signalManager.downloadLrc.emit(self.artist, self.title)
 
     def playMediaByUrl(self, url):
@@ -508,32 +518,26 @@ class MediaPlayer(QObject):
 
     @pyqtProperty('QString', notify=coverChanged)
     def cover(self):
-        if CoverWorker.isSongCoverExisted(self.artist, self.title):
-            self._cover = CoverWorker.getCoverPathByArtistSong(self.artist, self.title)
-        elif CoverWorker.isOnlineSongCoverExisted(self.artist, self.title):
-            self._cover = CoverWorker.getOnlineCoverPathByArtistSong(self.artist, self.title)
-        elif CoverWorker.isAlbumCoverExisted(self.artist, self.album):
-            self._cover = CoverWorker.getCoverPathByArtistAlbum(self.artist, self.album)
-        else:
-            self._cover = CoverWorker.getCoverPathByArtist(self.artist)
         return self._cover
 
     @cover.setter
-    def cover(self, cover):
-        self._cover = cover
-        self.coverChanged.emit(cover)
+    def cover(self, value):
+        self._cover = value
+        self.coverChanged.emit(self._cover)
 
-    def updateArtistCover(self, artist='', cover=''):
-        if self.artist in artist:
-            self.cover = self.cover
+    def setCover(self, value):
+        self.cover = value
 
-    def updateAlbumCover(self, artist='',album='', cover=''):
-        if self.artist == artist and self.album == album:
-            self.cover = self.cover
-
-    def updateOnlineSongCover(self, artist='', title='', cover=''):
-        if self.artist == artist and self.title == title:
-            self.cover = self.cover
+    def getCover(self):
+        if CoverWorker.isSongCoverExisted(self.artist, self.title):
+            _cover = CoverWorker.getCoverPathByArtistSong(self.artist, self.title)
+        elif CoverWorker.isOnlineSongCoverExisted(self.artist, self.title):
+            _cover = CoverWorker.getOnlineCoverPathByArtistSong(self.artist, self.title)
+        elif CoverWorker.isAlbumCoverExisted(self.artist, self.album):
+            _cover = CoverWorker.getCoverPathByArtistAlbum(self.artist, self.album)
+        else:
+            _cover = CoverWorker.getCoverPathByArtist(self.artist)
+        return _cover
 
     @pyqtSlot('QString', result='QString')
     def metaData(self, key):

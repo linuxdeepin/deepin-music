@@ -197,70 +197,75 @@ class Object_Dict(dict):
         self.__dict__ = self
 
 
-# class Car(object):
+if __name__ == '__main__':
 
-#     __metaclass__ = ModelMetaclass
+    class Car(object):
 
-#     __Fields__ = (
-#         ('model', str, "123"),
-#         ('brand', str, "456"),
-#         ('year', int),
-#         ('inStock', bool),
-#         ('d', dict, {'a': 1111})
-#     )
+        __metaclass__ = ModelMetaclass
 
-#     def valid_model(self, value):
-#         return True
+        __Fields__ = (
+            ('model', str, "123"),
+            ('brand', str, "456"),
+            ('year', int),
+            ('inStock', bool),
+            ('d', dict, {'a': 1111})
+        )
 
-#     def valid_brand(self, value):
-#         return False
+        def initialize(self, *args, **kwargs):
+            self.modelChanged.connect(self.checkModel)
 
+        def valid_model(self, value):
+            return True
 
-# def slot(n):
-#     print("get data from signal:", n)
+        def valid_brand(self, value):
+            return False
 
-
-# def test(func):
-#     import functools
-
-#     @functools.wraps(func)
-#     def wrapper(*args, **kwagrs):
-#         print("============ %s start =============" % func.func_name)
-#         func(*args, **kwagrs)
-#         print("============ %s end   =============\n" % func.func_name)
-#     return wrapper
+        def checkModel(self, model):
+            print(model, 'checked')
 
 
-# @test
-# def test_Json():
-#     car = Car(model="1111")
-#     print Car.model, car.model
-#     obj = {
-#         'model': "8888",
-#         'brand': "+++"
-#     }
-#     car.setJson(obj)
-#     print(car.valid_message)
-#     print(car.getJson())
-#     print(car)
+    def slot(n):
+        print("get data from signal:", n)
 
 
-# @test
-# def test_attr():
-#     car = Car(model="1111")
-#     car.model = "333"
-#     print(car.valid_message)
-#     print(car)
+    def test(func):
+        import functools
+
+        @functools.wraps(func)
+        def wrapper(*args, **kwagrs):
+            print("============ %s start =============" % func.func_name)
+            func(*args, **kwagrs)
+            print("============ %s end   =============\n" % func.func_name)
+        return wrapper
 
 
-# @test
-# def test_slot():
-#     car = Car(model="1111")
-#     car.modelChanged.connect(slot)
-#     car.model = "111"
-#     print(car)
+    @test
+    def test_Json():
+        car = Car(model="1111")
+        print Car.model, car.model
+        obj = {
+            'model': "8888",
+            'brand': "+++"
+        }
+        car.setJson(obj)
+        print(car.valid_message)
+        print(car.getJson())
+        print(car)
 
 
-# if __name__ == '__main__':
-#     car = Car()
-#     print car.__class__
+    @test
+    def test_attr():
+        car = Car(model="1111")
+        car.model = "333"
+        print(car.valid_message)
+        print(car)
+
+
+    @test
+    def test_slot():
+        car = Car(model="1111")
+        car.modelChanged.connect(slot)
+        car.model = "111sdds"
+        print(car)
+
+    test_slot()

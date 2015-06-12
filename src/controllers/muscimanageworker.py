@@ -26,6 +26,7 @@ from .coverworker import CoverWorker
 from .signalmanager import signalManager
 from dwidgets import DListModel, ModelMetaclass
 from dwidgets.xpinyin import Pinyin
+from windowmanageworker import windowManageWorker
 
 
 def is_chinese(chinese):
@@ -70,32 +71,21 @@ class QmlSongObject(QObject):
         ('created_date', float),
     )
 
-    coverChanged = pyqtSignal('QString')
+    coverReady = pyqtSignal('QString')
 
     def initialize(self, *agrs, **kwargs):
         self.setDict(kwargs)
+        self.cover = CoverWorker.getCover(self.title, self.artist, self.album)
+        self.coverChanged.connect(self.checkCover)
 
-    @pyqtProperty('QString', notify=coverChanged)
-    def cover(self):
-        if CoverWorker.isSongCoverExisted(self.artist, self.title):
-            self._cover = CoverWorker.getCoverPathByArtistSong(self.artist, self.title)
-        elif CoverWorker.isAlbumCoverExisted(self.artist, self.album):
-            self._cover = CoverWorker.getCoverPathByArtistAlbum(self.artist, self.album)
-        else:
-            self._cover = CoverWorker.getCoverPathByArtist(self.artist)
-        return self._cover
+    def checkCover(self, cover):
+        self.coverReady.emit(cover)
 
-    @cover.setter
-    def cover(self, cover):
-        if CoverWorker.isSongCoverExisted(self.artist, self.title):
-            self._cover = CoverWorker.getCoverPathByArtistSong(self.artist, self.title)
-        elif CoverWorker.isAlbumCoverExisted(self.artist, self.album):
-            self._cover = CoverWorker.getCoverPathByArtistAlbum(self.artist, self.album)
-        else:
-            self._cover = CoverWorker.getCoverPathByArtist(self.artist)
+    def getCover(self):
+        _cover = CoverWorker.getCover(self.title, self.artist, self.album)
+        self.cover = _cover
+        self.coverReady.emit(_cover)
 
-        self.coverChanged.emit(self._cover)
-        return self._cover
 
 class QmlArtistObject(QObject):
 
@@ -555,8 +545,8 @@ class MusicManageWorker(QObject):
 
         self.songCountChanged.emit(len(self._songsDict))
 
-        if contexts['WindowManageWorker'].currentMusicManagerPageName == "ArtistPage":
-            if not CoverWorker.isArtistCoverExisted(artist):
+        # if windowManageWorker.currentMusicManagerPageName == "ArtistPage":
+        if not CoverWorker.isArtistCoverExisted(artist):
                 self.downloadArtistCover.emit(artist)
 
         if not CoverWorker.isAlbumCoverExisted(artist, album):
@@ -566,28 +556,40 @@ class MusicManageWorker(QObject):
         for artistName in  self._artistsDict:
             if artist in artistName:
                 _artistDict = self._artistsDict[artistName]
-                url = CoverWorker.getCoverPathByArtist(artistName)
-                if url:
-                    _artistDict['cover'] = url
+                artistCoverUrl = CoverWorker.getCoverPathByArtist(artistName)
+                if artistCoverUrl:
+                    _artistDict['cover'] = artistCoverUrl
                     keys = self._artistObjs.keys()
                     if artistName in keys:
                         index = keys.index(artistName)
                         artistObj = self._artistObjs[artistName]
-                        artistObj.cover = url
-                        self._artistObjsListModel.setProperty(index, 'cover', url)
+                        artistObj.cover = artistCoverUrl
+                        self._artistObjsListModel.setProperty(index, 'cover', artistCoverUrl)
+
+                    for songUrl, songObj in self._songObjs.items():
+                        if artist in songObj.artist:
+                            albumCoverUrl = CoverWorker.getCoverPathByArtistAlbum(songObj.artist, songObj.album)
+                            if albumCoverUrl != CoverWorker.defaultAlbumCover:
+                                break
+                            else:
+                                songObj.cover = artistCoverUrl
 
     def updateAlbumCover(self, artist, album, url):
         if album in self._albumsDict:
             _albumDict = self._albumsDict[album]
-            url = CoverWorker.getCoverPathByArtistAlbum(artist, album)
-            if url:
-                _albumDict['cover'] = url
+            albumCoverUrl = CoverWorker.getCoverPathByArtistAlbum(artist, album)
+            if albumCoverUrl:
+                _albumDict['cover'] = albumCoverUrl
                 keys = self._albumObjs.keys()
                 if album in keys:
                     index = keys.index(album)
                     albumObj = self._albumObjs[album]
-                    albumObj.cover = url
-                    self._albumObjsListModel.setProperty(index, 'cover', url)
+                    albumObj.cover = albumCoverUrl
+                    self._albumObjsListModel.setProperty(index, 'cover', albumCoverUrl)
+
+                for url, songObj in self._songObjs.items():
+                    if artist in songObj.artist and album in songObj.album:
+                        songObj.cover = albumCoverUrl
 
     def stopUpdate(self):
         print('stop update')

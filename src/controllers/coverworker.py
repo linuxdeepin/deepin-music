@@ -34,7 +34,7 @@ class Cover360Runnable(QRunnable):
                 f.write(r.content)
             self.worker.download360SongCoverSuccessed.emit(self.artist, self.title, localUrl)
         except Exception, e:
-            raise e
+            logger.error(e)
 
 
 class AlbumCover360Runnable(QRunnable):
@@ -65,7 +65,7 @@ class AlbumCover360Runnable(QRunnable):
                     f.write(r.content)
                 self.worker.download360SongCoverSuccessed.emit(self.artist, self.title, localUrl)
         except Exception, e:
-            raise e
+            logger.error(e)
 
 
 class CoverWorker(QObject):
@@ -76,8 +76,6 @@ class CoverWorker(QObject):
     downloadArtistCoverSuccessed = pyqtSignal('QString', 'QString')
     downloadAlbumCoverSuccessed = pyqtSignal('QString', 'QString', 'QString')
     download360SongCoverSuccessed = pyqtSignal('QString', 'QString', 'QString')
-
-    allTaskFinished = pyqtSignal()
 
     updateArtistCover = pyqtSignal('QString', 'QString')
     updateAlbumCover = pyqtSignal('QString', 'QString', 'QString')
@@ -173,7 +171,6 @@ class CoverWorker(QObject):
             d = Cover360Runnable(self, artist, title, url)
             QThreadPool.globalInstance().start(d)
 
-
     def downloadOnlineAlbumCover(self, artist, title, url, medias):
         f = self.onlineSongCoverPath(artist, title)
         if os.path.exists(f):
@@ -216,16 +213,6 @@ class CoverWorker(QObject):
             return cls.defaultAlbumCover
 
     @classmethod
-    def getCover(cls, title, artist, album):
-        if cls.isSongCoverExisted(artist, title):
-            _cover = cls.getCoverPathByArtistSong(artist, title)
-        elif cls.isAlbumCoverExisted(artist, album):
-            _cover = cls.getCoverPathByArtistAlbum(artist, album)
-        else:
-            _cover = cls.getCoverPathByArtist(artist)
-        return _cover
-
-    @classmethod
     def getCoverPathByArtistSong(cls, artist, title):
         filepath = os.path.join(SongCoverPath, '%s-%s' % (artist, title))
         if os.path.exists(filepath):
@@ -248,6 +235,28 @@ class CoverWorker(QObject):
                 return cls.defaultSongCover
         else:
             return cls.defaultSongCover
+
+    @classmethod
+    def getCover(cls, title, artist, album):
+        if cls.isSongCoverExisted(artist, title):
+            _cover = cls.getCoverPathByArtistSong(artist, title)
+        elif cls.isAlbumCoverExisted(artist, album):
+            _cover = cls.getCoverPathByArtistAlbum(artist, album)
+        else:
+            _cover = cls.getCoverPathByArtist(artist)
+        return _cover
+
+    @classmethod
+    def getOnlineCover(cls, title, artist, album):
+        if CoverWorker.isOnlineSongCoverExisted(artist, title):
+            _cover = CoverWorker.getOnlineCoverPathByArtistSong(artist, title)
+        elif CoverWorker.isSongCoverExisted(artist, title):
+            _cover = CoverWorker.getCoverPathByArtistSong(artist, title)
+        elif CoverWorker.isAlbumCoverExisted(artist, album):
+            _cover = CoverWorker.getCoverPathByArtistAlbum(artist, album)
+        else:
+            _cover = CoverWorker.getCoverPathByArtist(artist)
+        return _cover
 
     @classmethod
     def getFolderCover(cls):

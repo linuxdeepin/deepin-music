@@ -135,19 +135,10 @@ class DeepinPlayer(QObject):
             musicManageWorker.updateArtistCover)
         coverWorker.updateAlbumCover.connect(
             musicManageWorker.updateAlbumCover)
-        coverWorker.allTaskFinished.connect(
-            musicManageWorker.stopUpdate)
         coverWorker.updateOnlineSongCover.connect(
             onlineMusicManageWorker.updateSongCover)
         coverWorker.updateAlbumCover.connect(
             onlineMusicManageWorker.updateSongCover)
-
-        coverWorker.updateArtistCover.connect(
-            mediaPlayer.updateArtistCover)
-        coverWorker.updateAlbumCover.connect(
-            mediaPlayer.updateAlbumCover)
-        coverWorker.updateOnlineSongCover.connect(
-            mediaPlayer.updateOnlineSongCover)
 
     def musicManageWorkerConnect(self):
         musicManageWorker.saveSongToDB.connect(dbWorker.addSong)
@@ -178,6 +169,7 @@ class DeepinPlayer(QObject):
             coverWorker.downloadOnlineAlbumCover)
         onlineMusicManageWorker.downloadAlbumCover.connect(
             coverWorker.downloadAlbumCover)
+        pass
 
     def menuWorkerConnect(self):
         # setting menu

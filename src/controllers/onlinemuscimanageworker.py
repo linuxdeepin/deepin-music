@@ -64,33 +64,20 @@ class QmlOnlineSongObject(QObject):
         ('created_date', float),
     )
 
-    coverChanged = pyqtSignal('QString')
+    coverReady = pyqtSignal('QString')
 
     def initialize(self, *agrs, **kwargs):
-        self.cover = CoverWorker.getOnlineCoverPathByArtistSong(self.artist, self.title)
         self.setDict(kwargs)
+        self.cover = CoverWorker.getOnlineCover(self.title, self.artist, self.album)
+        self.coverChanged.connect(self.checkCover)
 
-    @pyqtProperty('QString', notify=coverChanged)
-    def cover(self):
-        if CoverWorker.isOnlineSongCoverExisted(self.artist, self.title):
-            self._cover = CoverWorker.getOnlineCoverPathByArtistSong(self.artist, self.title)
-        elif CoverWorker.isSongCoverExisted(self.artist, self.title):
-            self._cover = CoverWorker.getCoverPathByArtistSong(self.artist, self.title)
-        elif CoverWorker.isAlbumCoverExisted(self.artist, self.album):
-            self._cover = CoverWorker.getCoverPathByArtistAlbum(self.artist, self.album)
-        else:
-            self._cover = CoverWorker.getCoverPathByArtist(self.artist)
+    def checkCover(self, cover):
+        self.coverReady.emit(cover)
 
-        if not self._cover:
-            self._cover = CoverWorker.getOnlineCoverPathByArtistSong(self.artist, self.title)
-
-        return self._cover
-
-    @cover.setter
-    def cover(self, cover):
-        self._cover = cover
-        self.coverChanged.emit(self._cover)
-        return self._cover
+    def getCover(self):
+        _cover = CoverWorker.getOnlineCover(self.title, self.artist, self.album)
+        self.cover = _cover
+        self.coverReady.emit(_cover)
 
 
 class RequestSongRunnable(QRunnable):
@@ -232,7 +219,7 @@ class OnlineMusicManageWorker(QObject):
                 else:
                     self.downloadAlbumCover.emit(artist, album)
             else:
-                self.updateSongCover(artist, title, CoverWorker.isOnlineSongCoverExisted(artist, title))
+                self.updateSongCover(artist, title, CoverWorker.onlineSongCoverPath(artist, title))
 
     def updateSongAndDownloadCover(self, result):
         _songDict = self.updateTags(result)
@@ -244,7 +231,7 @@ class OnlineMusicManageWorker(QObject):
         self.downloadCover(_songDict)
 
     def updateSongCover(self, artist, albumtitle, coverUrl):
-        mediaPlayer = contexts['MediaPlayer']
+        from mediaplayer import mediaPlayer
         if mediaPlayer.playlist:
             dlistModel = mediaPlayer.playlist._medias
         else:
@@ -252,15 +239,12 @@ class OnlineMusicManageWorker(QObject):
         for url , songObj in  self._songObjs.items():
             _songDict = self._songsDict[url]
             if (songObj.title == albumtitle or songObj.album == albumtitle) and songObj.artist == artist:
-                cover = songObj.cover
-                if cover  == CoverWorker.defaultSongCover:
-                    cover = coverUrl
+                cover = coverUrl
                 _songDict['cover'] = cover
                 self._songsDict[url] = _songDict
 
                 if dlistModel and songObj in dlistModel.data:
                     index = dlistModel.data.index(songObj)
                     dlistModel.setProperty(index, 'cover', cover)
-
 
 onlineMusicManageWorker = OnlineMusicManageWorker()
