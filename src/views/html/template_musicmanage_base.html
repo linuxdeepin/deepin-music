@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<!-- saved from url=(0036)http://10.0.0.153:8093/songlist.html -->
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="UTF-8">
+    <title>Music HaoSou Plugin UI</title>
+    <link href="css/main.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <div class="article" avalonctrl="songlists">
+            <div class="songlist-filters">
+                <div class="grene-filter">
+                    <h2 id="filter_title" style="width: 100px"> {% block filter_itle %}艺术家{% end %}</h2>
+                    <div class="local_filter-box">
+                        <ul>
+                            <li><a id="artist" href="./musicmanage_artist.html">艺术家</a>
+                            </li>
+                            <li><a id="album" href="./musicmanage_album.html">专辑</a>
+                            </li>
+                            <li><a id="music" href="./musicmanage_music.html">歌曲</a>
+                            </li>
+                            <li><a id="folder" href="./musicmanage_folder.html">文件夹</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {% block content %} {% end %}
+        </div>
+    </div>
+    <script src="js/jquery.js"></script>
+    <script src="js/actions.js"></script>
+    <script src="js/dmusic.js"></script>
+
+    <script type="text/javascript">
+    </script>>
+
+</body>
+
+</html>

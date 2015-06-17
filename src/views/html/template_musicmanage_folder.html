@@ -1,0 +1,28 @@
+{% extends "template_musicmanage_base.html" %}
+
+{% block filter_itle %}文件夹{% end %}
+
+{% block content %}
+<div class="songlist-container">
+    <ul>
+        {% for index, item in enumerate(albums) %} {% if (index + 1) % 5 == 0 %}
+        <li class="songlist line-last ">
+            {% else %}
+            <li class="songlist">
+                {% end %}
+                <div class="cover">
+                    <div class="img">
+                        <a class="link" href="javascript:;" title="餐厅角落划过音符" data-songlist-id="11922">
+                            <img width="128" height="128" data-original="http://p7.qhimg.com/t01e45396bed4294d28.jpg" alt="餐厅角落划过音符" src="{{ item['cover'] }}" style="display: block;">
+                        </a>
+                        <a href="javascript:;" class="btn btn-play" title="播放歌单" data-songlist-id="11922">播放歌单</a>
+                    </div>
+                    <a class="name" title="餐厅角落划过音符" href="javascript:;">{{ item['artist'] }}</a>
+                </div>
+            </li>
+            {% end %}
+        </li>
+    </ul>
+</div>
+
+{% end %}
