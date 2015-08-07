@@ -394,7 +394,7 @@ class PlaylistUI(gtk.VBox):
         self.category_list.add_items([new_item])
         new_item.song_view.async_add_uris(uri)
 
-    def leading_out_list(self, item):
+    def leading_out_list(self, item=None):
         if not item:
             item = self.current_item
         WindowExportPlaylist(item.get_songs()).run()
@@ -417,19 +417,28 @@ class PlaylistUI(gtk.VBox):
         if reset:
             self.reset_highlight_item(self.category_list.get_items()[-1])
 
-    def delete_item_list(self, item):
-        if len(self.category_list.get_items()) == 1:
-            return
+    def delete_item_list(self, item=None):
+        #print len(self.category_list.get_items())
+        #if len(self.category_list.get_items()) == 1:
+        #    return
+        if not item:
+            item = self.current_item
+
+        item.song_view.erase_items()
 
         index = self.get_categroy_index_by_item(item)
         self.category_list.delete_items([item])
+        #print index, self.current_item
 
         max_index = len(self.category_list.get_items()) - 1
+
         if index <= max_index:
             new_index = index
         else:
             new_index = index- 1
-        self.reset_highlight_item(self.category_list.get_items()[new_index])
+        #print max_index, index, new_index
+        if len(self.category_list.get_items()) != 0:
+            self.reset_highlight_item(self.category_list.get_items()[new_index])
 
     def save_all_list(self):
         uri = WinDir().run()
