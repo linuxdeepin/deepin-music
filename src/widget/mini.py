@@ -112,7 +112,7 @@ class MiniWindow(Window):
         quell_button.connect("clicked", self.on_quell_button_clicked)
         
         min_button = MinButton()
-        min_button.connect("clicked", lambda w: self.min_window())
+        min_button.connect("clicked", lambda w: self.hide_to_tray())
         close_button = CloseButton()
         close_button.connect("clicked", self.try_to_quit)
         self.event_box.pack_start(quell_button, False, False)
@@ -160,8 +160,8 @@ class MiniWindow(Window):
         # drag params.
         self.drag_move = False
         self.old_x = self.old_y = self.mouse_x = self.mouse_y = 0
-        
-    def on_quell_button_clicked(self, widget):    
+
+    def on_quell_button_clicked(self, widget):
         main_window = get_main_window()
         main_window.change_app_mode("normal")
         switch_tab(self.body_box, self.info_box)
