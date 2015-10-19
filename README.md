@@ -1,6 +1,6 @@
-Deepin Music
-============
-Awesome music player with brilliant and tweakful UI Deepin-UI based, gstreamer front-end, with features likes search music by pinyin, quanpin, colorful lyrics supports, and more powerfull functions you will found.
+# Deepin Music
+
+An awesome music player with brilliant and tweakful UI which is based on gstreamer, with features likes search music by pinyin, quanpin, colorful lyrics supports, and more powerfull functions you will found.
 
 Just enjoy it! have fun!
 
@@ -25,10 +25,21 @@ Just enjoy it! have fun!
 
 `make && make install`
 
+## Getting help
+
+Any usage issues can ask for help via
+[Gitter](https://gitter.im/orgs/linuxdeepin/rooms)
+[IRC channel](https://webchat.freenode.net/?channels=deepin)
+[Forum](https://bbs.deepin.org)
+[WiKi](http://wiki.deepin.org/)
+
 ## Getting involved
 
-We encourage you to report issues and contribute changes. Please check out the [Contribution Guidelines](http://wiki.deepin.org/index.php?title=Contribution_Guidelines) about how to proceed.
+We encourage you to report issues and contribute changes
+[Contirubtion guide for users](http://wiki.deepin.org/index.php?title=Contribution_Guidelines_for_Users)
+[Contribution guide for developers](http://wiki.deepin.org/index.php?title=Contribution_Guidelines_for_Developers).
 
 ## License
 
-GNU General Public License, Version 3.0
+Deepin Music is licensed under [GPLv3](LICENSE).
+
