@@ -3,16 +3,16 @@
 
 from UserDict import DictMixin
 import json
-import leveldb
 
 
-class LevelDict(object, DictMixin):
+class LevelDict_leveldb(object, DictMixin):
     """Dict Wrapper around the Google LevelDB Database"""
     def __init__(self, path):
         """Constructor for LevelDict"""
         self.path = path
 
     def open(self):
+        import leveldb
         self.db = leveldb.LevelDB(self.path)
 
     def __getitem__(self, key):
@@ -43,15 +43,15 @@ class LevelDict(object, DictMixin):
             return self.db.RangeIter(start, end)
 
 
-class LevelJsonDict(LevelDict):
+class LevelJsonDict_leveldb(LevelDict_leveldb):
     """Dict Wrapper around the Google LevelDB Database with JSON serialization"""
 
     def __getitem__(self, key):
-        return json.loads(LevelDict.__getitem__(self, json.dumps(key)))
+        return json.loads(LevelDict_leveldb.__getitem__(self, json.dumps(key)))
 
     def __setitem__(self, key, value):
         try:
-            LevelDict.__setitem__(self, json.dumps(key), json.dumps(value))
+            LevelDict_leveldb.__setitem__(self, json.dumps(key), json.dumps(value))
         except Exception, e:
             raise e
             print key, value
@@ -70,12 +70,99 @@ class LevelJsonDict(LevelDict):
         return [json.loads(v) for _, v in self.db.RangeIter()]
 
     def iteritems(self):
-        for k, v in LevelDict.iteritems(self):
+        for k, v in LevelDict_leveldb.iteritems(self):
             yield json.loads(k), json.loads(v)
 
     def rangescan(self, start=None, end=None):
-        for k, v in LevelDict.rangescan(self, json.dumps(start), json.dumps(end)):
+        for k, v in LevelDict_leveldb.rangescan(self, json.dumps(start), json.dumps(end)):
             yield json.loads(k), json.loads(v)
+
+
+class LevelDict_plyvel(object, DictMixin):
+    """Dict Wrapper around the Google LevelDB Database"""
+    def __init__(self, path):
+        """Constructor for LevelDict"""
+        self.path = path
+
+    def open(self):
+        import plyvel
+        self.db = plyvel.DB(self.path, create_if_missing=True)
+
+    def __getitem__(self, key):
+        value = self.db.get(key)
+        if value is None:
+            raise KeyError
+        else:
+            return value
+
+    def __setitem__(self, key, value):
+        self.db.put(key, value)
+
+    def __delitem__(self, key):
+        self.db.delete(key)
+
+    def __iter__(self):
+        for k in self.db.iterator(include_value=False):
+            yield k
+
+    def keys(self):
+        return [k for k, _ in self.db.iterator()]
+
+    def iteritems(self):
+        return self.db.iterator()
+
+    def rangescan(self, start=None, end=None):
+        if start is None and end is None:
+            return self.db.iterator()
+        elif end is None:
+            return self.db.iterator(start=start)
+        else:
+            return self.db.iterator(start=start, stop=end)
+
+
+class LevelJsonDict_plyvel(LevelDict_plyvel):
+    """Dict Wrapper around the Google LevelDB Database with JSON serialization"""
+
+    def __getitem__(self, key):
+        return json.loads(LevelDict_plyvel.__getitem__(self, json.dumps(key)))
+
+    def __setitem__(self, key, value):
+        try:
+            LevelDict_plyvel.__setitem__(self, json.dumps(key), json.dumps(value))
+        except Exception, e:
+            raise e
+            print key, value
+
+    def __delitem__(self, key):
+        self.db.delete(json.dumps(key))
+
+    def __iter__(self):
+        for k in self.db.iterator(include_value=False):
+            yield json.loads(k)
+
+    def keys(self):
+        return [json.loads(k) for k in self.db.iterator(include_value=False)]
+
+    def values(self):
+        return [json.loads(v) for _, v in self.db.iterator()]
+
+    def iteritems(self):
+        for k, v in LevelDict_plyvel.iteritems(self):
+            yield json.loads(k), json.loads(v)
+
+    def rangescan(self, start=None, end=None):
+        for k, v in LevelDict_plyvel.rangescan(self, json.dumps(start), json.dumps(end)):
+            yield json.loads(k), json.loads(v)
+
+
+try:
+    import leveldb
+    LevelDict = LevelDict_leveldb
+    LevelJsonDict = LevelJsonDict_leveldb
+except ImportError:
+    import plyvel
+    LevelDict = LevelDict_plyvel
+    LevelJsonDict = LevelJsonDict_plyvel
 
 
 if __name__ == '__main__':
