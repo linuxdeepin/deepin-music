@@ -1,16 +1,19 @@
 #!/usr/bin/make -f
 # -*- makefile -*-
 
-include debian/generate_mo.mk
+include /usr/share/dpkg/default.mk
+export QT_SELECT = qt5
+
 %:
-	dh $@  --with python2
+	dh $@
 
-override_dh_auto_build: gen_locale_mo
-	dh_auto_build
+override_dh_auto_build:
+	make -j `nproc`
 
-override_dh_auto_install:
-	dh_auto_install -- PREFIX=/usr
-
-override_dh_fixperms:
-	dh_fixperms
-	chmod 755 debian/deepin-music-player/usr/bin/deepin-music-player 
+ifeq ($(ARCH), sw_64)
+override_dh_strip:
+	dh_strip
+else
+override_dh_strip:
+	dh_strip
+endif
