@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/">
+        <file>light/TitleBar.theme</file>
+        <file>light/Footer.theme</file>
+        <file>light/ImportWidget.theme</file>
+        <file>light/MusicListView.theme</file>
+        <file>light/MusicItem.theme</file>
+        <file>light/LyricView.theme</file>
+        <file>light/PlayListWidget.theme</file>
+        <file>light/PlayListItem.theme</file>
+        <file>light/MusicListWidget.theme</file>
+        <file>light/PlayerFrame.theme</file>
+    </qresource>
+</RCC>

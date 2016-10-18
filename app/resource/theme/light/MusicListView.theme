@@ -1,0 +1,14 @@
+#MusicListView{
+    border: 0px solid red;
+    show-decoration-selected: 1;
+    selection-color: white;
+    selection-background-color: #2ca7f8;
+}
+
+#MusicListView::item
+{
+    height: 36px;
+    font-size: 12pt;
+    font-weight: bold;
+    color:red;
+}

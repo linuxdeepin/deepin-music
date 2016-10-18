@@ -1,0 +1,7 @@
+#TitleBar {
+    border: 2px solid transparent;
+}
+
+#TitleIcon {
+    image: url(/usr/share/icons/deepin/apps/scalable/deepin-music.svg)
+}

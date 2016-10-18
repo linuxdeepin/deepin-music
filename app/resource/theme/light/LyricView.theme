@@ -1,0 +1,30 @@
+#LyricView {
+    background-image: url(/home/iceyer/1.jpg);
+}
+
+#LyricCover {
+    image: url(:/image/cover_max.png);
+}
+
+#LyricTextScroll {
+    background-color: rgba(0,0,255,1%);
+}
+#LyricText {
+    qproperty-alignment: AlignCenter;
+    font-size: 16px;
+    font-weight: normal;
+    font-style: normal;
+    line-height: 1.88;
+    color: rgba(255,255,255,50%);
+    background-color: transparent;
+}
+
+#LyricBack{
+    border-image: url(:/image/show_lyc_normal.png);
+}
+#LyricBack:hover{
+    border-image: url(:/image/show_lyc_hover.png);
+}
+#LyricBack:pressed{
+    border-image: url(:/image/show_lyc_press.png);
+}

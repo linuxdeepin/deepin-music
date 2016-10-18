@@ -10,6 +10,8 @@
 #include <DLog>
 #include <DApplication>
 
+#include "musicapp.h"
+
 using namespace Dtk::Util;
 using namespace Dtk::Widget;
 
@@ -25,6 +27,11 @@ int main(int argc, char *argv[])
 
     qDebug() << app.applicationVersion();
     app.loadTranslator();
+
+    app.setTheme("light");
+
+    MusicApp::instance().init();
+    MusicApp::instance().showPlayer();
 
     return app.exec();
 }

@@ -1,0 +1,12 @@
+#BackgroundWidget {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 3;
+    border-bottom-left-radius: 3;
+    background-image: url(/home/iceyer/Pictures/2.jpg);
+}
+
+QStackedWidget {
+    border: none;
+    background-color: transparent;
+}

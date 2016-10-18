@@ -1,0 +1,18 @@
+#MusicListWidget{
+    background-color: white;
+    border: 0px solid red;
+}
+#MusicListActionBar{
+    border: 0px solid red;
+}
+
+#MusicListPlayAll{
+    qproperty-icon: url(:/image/play_all.png);
+    border: none;
+}
+
+#MusicListSort {
+    font-size: 12px;
+    color: #202020;
+    border: none;
+}

@@ -1,0 +1,50 @@
+#ImportWidget {
+    background-color: white;
+}
+
+#ImportViewLogo {
+    image: url(:/image/app_icon.png);
+}
+
+#ImportViewText{
+    font-size: 12px;
+    font-weight: normal;
+    font-style: normal;
+    line-height: 1.5;
+    text-align: center;
+    color: #979797;
+}
+
+#ImportViewImportButton{
+    font-size: 14px;
+    font-weight: 500;
+    font-style: normal;
+    text-align: center;
+    color: red;
+    border: 1px solid;
+    border-radius: 3;
+    border-color: rgba(0, 0, 255, 50%);
+    background: transparent;
+}
+#ImportViewImportButton[normal=true]{
+    font-size: 14px;
+    font-weight: 500;
+    font-style: normal;
+    text-align: center;
+    color: black;
+    border: none;
+    background: transparent;
+    background-image: url(":/theme/light/image/button_normal.png")
+}
+#ImportViewImportButton:hover{
+    color: white;
+    background-image: url(":/theme/light/image/suggest_button_hover.png")
+}
+#ImportViewImportButton:pressed{
+    color: white;
+    background-image: url(":/theme/light/image/suggest_button_press.png")
+}
+#ImportViewImportButton:disabled{
+    color: grey;
+    background-image: url(":/theme/light/image/suggest_button_disabled.png")
+}

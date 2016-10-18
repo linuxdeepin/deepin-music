@@ -1,0 +1,106 @@
+#Footer {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 3;
+    border-bottom-left-radius: 3;
+    border-color: rgba(0, 0, 0, 0.00);
+    background-color: rgb(150, 150, 150);
+}
+
+#Footer[playstatus="active"]{
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+#FooterCover {
+    image: url(:/image/cover_min.png);
+}
+
+#FooterTitle{
+    font-size: 12px;
+    color: #ffffff;
+}
+
+#FooterArtlist{
+    font-size: 11px;
+    color: #797979;
+}
+
+#FooterActionPrev{
+    border-image: url(:/image/previous_normal.png);
+}
+#FooterActionPrev:hover{
+    border-image: url(:/image/previous_hover.png);
+}
+#FooterActionPrev:pressed{
+    border-image: url(:/image/previous_press.png);
+}
+
+#FooterActionPlay{
+    border-image: url(:/image/start_normal.png);
+}
+#FooterActionPlay:hover{
+    border-image: url(:/image/start_hover.png);
+}
+#FooterActionPlay:pressed{
+    border-image: url(:/image/start_press.png);
+}
+
+#FooterActionNext{
+    border-image: url(:/image/next_normal.png);
+}
+#FooterActionNext:hover{
+    border-image: url(:/image/next_hover.png);
+}
+#FooterActionNext:pressed{
+    border-image: url(:/image/next_press.png);
+}
+
+#FooterActionFavorite{
+    border-image: url(:/image/fav_normal.png);
+}
+#FooterActionFavorite:hover{
+    border-image: url(:/image/fav_hover.png);
+}
+#FooterActionFavorite:pressed{
+    border-image: url(:/image/fav_press.png);
+}
+
+#FooterActionLyric{
+    border-image: url(:/image/lrc_normal.png);
+}
+#FooterActionLyric:hover{
+    border-image: url(:/image/lrc_hover.png);
+}
+#FooterActionLyric:pressed{
+    border-image: url(:/image/lrc_press.png);
+}
+
+#FooterActionPlayMode{
+    border-image: url(:/image/shuffle_normal.png);
+}
+#FooterActionPlayMode:hover{
+    border-image: url(:/image/shuffle_hover.png);
+}
+#FooterActionPlayMode:pressed{
+    border-image: url(:/image/shuffle_press.png);
+}
+
+#FooterActionSound{
+    border-image: url(:/image/volumemid_normal.png);
+}
+#FooterActionSound:hover{
+    border-image: url(:/image/volumemid_hover.png);
+}
+#FooterActionSound:pressed{
+    border-image: url(:/image/volumemid_press.png);
+}
+
+#FooterActionPlayList{
+    border-image: url(:/image/show_playlist_normal.png);
+}
+#FooterActionPlayList:hover{
+    border-image: url(:/image/show_playlist_hover.png);
+}
+#FooterActionPlayList:pressed{
+    border-image: url(:/image/show_playlist_press.png);
+}

@@ -1,0 +1,17 @@
+#PlayListIcon {
+    image: url(:/image/playlist_fav.png)
+}
+
+#PlayListTitle {
+    background: transparent;
+    border: none;
+    qproperty-alignment: AlignLeft;
+    font-size: 12px;
+    color: #009aff;
+}
+
+#PlayListTitle:focus {
+    background-color: white;
+    border-radius: 3px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+}
