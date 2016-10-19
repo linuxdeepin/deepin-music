@@ -1,6 +1,6 @@
 DEFINES += QT_MESSAGELOGCONTEXT
 
-QT       += core gui widgets svg dbus multimedia
+QT       += core gui widgets svg dbus multimedia multimediawidgets
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TEMPLATE    = app
@@ -17,13 +17,14 @@ SOURCES += \
     view/musicitem.cpp \
     view/importwidget.cpp \
     view/lyricview.cpp \
-    view/playlistwidget.cpp \
     view/playlistitem.cpp \
     presenter/apppresenter.cpp \
     musicapp.cpp \
     view/musiclistwidget.cpp \
     core/playlistmanager.cpp \
-    core/playlist.cpp
+    core/playlist.cpp \
+    view/playlistview.cpp \
+    view/playlistwidget.cpp
 
 HEADERS += \
     view/playerframe.h \
@@ -33,14 +34,15 @@ HEADERS += \
     view/musicitem.h \
     view/importwidget.h \
     view/lyricview.h \
-    view/playlistwidget.h \
     view/playlistitem.h \
     presenter/apppresenter.h \
     musicapp.h \
     view/musiclistwidget.h \
     model/musiclistmodel.h \
     core/playlistmanager.h \
-    core/playlist.h
+    core/playlist.h \
+    view/playlistview.h \
+    view/playlistwidget.h
 
 RESOURCES += \
     resource/theme/theme.qrc \

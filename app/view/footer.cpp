@@ -125,7 +125,7 @@ Footer::Footer(QWidget *parent) : QFrame(parent)
     D_THEME_INIT_WIDGET(Footer);
 
     connect(MusicApp::presenter(), &AppPresenter::musicPlayed,
-            this, [=](const MusicInfo &info){
+    this, [ = ](const MusicInfo & info) {
         title->setText(info.title);
         artlist->setText(info.artist);
 
@@ -139,6 +139,10 @@ Footer::Footer(QWidget *parent) : QFrame(parent)
         this->setProperty("playstatus", "active");
         this->style()->unpolish(this);
         this->style()->polish(this);
+    });
+
+    connect(btPlayList, &QPushButton::clicked, this, [ = ](bool) {
+        emit  MusicApp::presenter()->showPlaylist();
     });
 }
 

@@ -7,20 +7,17 @@
  * (at your option) any later version.
  **/
 
-#ifndef MUSICLISTVIEW_H
-#define MUSICLISTVIEW_H
+#pragma once
 
 #include <QListWidget>
 
-class MusicListView : public QListWidget
+class PlayListView : public QListWidget
 {
     Q_OBJECT
 public:
-    explicit MusicListView(QWidget *parent = 0);
+    explicit PlayListView(QWidget *parent = 0);
 
 signals:
 
 public slots:
 };
-
-#endif // MUSICLISTVIEW_H

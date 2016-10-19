@@ -23,8 +23,15 @@ public:
 
     const MusicInfo &info() {return m_info;}
 signals:
+    void play();
+//    void showFile();
+    void remove();
+    void deleteFile();
+    void addToPlaylist(const QString &id);
+//    void showInfo();
 
 public slots:
+    void showContextMenu(const QPoint &pos);
 private:
     MusicInfo m_info;
 };

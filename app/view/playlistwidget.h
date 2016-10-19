@@ -10,17 +10,29 @@
 #ifndef PLAYLISTWIDGET_H
 #define PLAYLISTWIDGET_H
 
-#include <QListWidget>
+#include <QFrame>
 
-class PlayListWidget : public QListWidget
+class MusicListInfo;
+class Playlist;
+class PlayListView;
+class PlaylistWidget : public QFrame
 {
     Q_OBJECT
 public:
-    explicit PlayListWidget(QWidget *parent = 0);
+    explicit PlaylistWidget(QWidget *parent = 0);
 
-signals:
+    void updatePlaylist(QList<QSharedPointer<Playlist> > playlists);
 
 public slots:
+    void onPlaylistAdded(QSharedPointer<Playlist>);
+    void onCurrentPlaylistChanded(QSharedPointer<Playlist> playlist);
+
+signals:
+    void addPlaylist(bool editmode);
+    void selectPlaylist(QSharedPointer<Playlist>);
+
+private:
+    PlayListView *m_listview;
 };
 
 #endif // PLAYLISTWIDGET_H

@@ -31,6 +31,8 @@ public:
 
     static AppPresenter *presenter();
 
+    static QString configPath();
+
     void init();
     void showPlayer();
 signals:

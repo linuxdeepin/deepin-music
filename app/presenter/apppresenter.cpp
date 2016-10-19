@@ -33,6 +33,19 @@ AppPresenter::AppPresenter(QObject *parent)
 {
     qRegisterMetaType<MusicListInfo>();
     qRegisterMetaType<MusicInfo>();
+    qRegisterMetaType<QSharedPointer<Playlist> >();
+
+    d->playlistMgr.load();
+
+    connect(this, &AppPresenter::musicAdded,
+    this, [ = ](const MusicInfo & info) {
+        d->playlistMgr.currentPlaylist()->addMusic(info);
+    });
+
+    connect(&d->playlistMgr, &PlaylistManager::currentPlaylistChanged,
+    this, [ = ](QSharedPointer<Playlist> playlist) {
+        emit musicListChanged(playlist);
+    });
 }
 
 AppPresenter::~AppPresenter()
@@ -47,19 +60,56 @@ QMediaPlayer *AppPresenter::player()
 
 void AppPresenter::work()
 {
-    MusicListInfo model;
+}
 
-    // TODO: test data
-    for (int i = 0; i < 20; ++i) {
-        MusicInfo info;
-        info.title = "Adrian Benson";
-        info.artist = "Georgie Boone";
-        info.album = "Patrick Alvarez";
-        info.lenght = 300;
-        model.list.append(info);
+QSharedPointer<Playlist> AppPresenter::lastPlaylist()
+{
+    return d->playlistMgr.currentPlaylist();
+}
+
+QList<QSharedPointer<Playlist> > AppPresenter::playlist()
+{
+    return d->playlistMgr.allplaylist();
+}
+
+void AppPresenter::onMusicAddToplaylist(const QString &id, const MusicInfo &info)
+{
+    QString listid = id;
+    if (id == "New") {
+        MusicListInfo info;
+        info.editmode = false;
+        info.readonly = false;
+        info.id = d->playlistMgr.newID();
+        info.displayName = d->playlistMgr.newDisplayName();
+        d->playlistMgr.addplaylist(info);
+
+        emit playlistAdded(d->playlistMgr.playlist(info.id));
+        listid = info.id;
     }
+    if (d->playlistMgr.playlist(listid).isNull()) {
+        qDebug() << "no list";
+        return;
+    }
+    d->playlistMgr.playlist(listid)->addMusic(info);
+}
 
-    emit musicListChanged(model);
+void AppPresenter::onPlaylistSelected(QSharedPointer<Playlist> playlist)
+{
+    // TODO: write current list
+    qDebug() << playlist;
+    d->playlistMgr.setCurrentPlaylist(playlist);
+}
+
+void AppPresenter::onPlaylistAdd(bool edit)
+{
+    MusicListInfo info;
+    info.editmode = edit;
+    info.readonly = false;
+    info.id = d->playlistMgr.newID();
+    info.displayName = d->playlistMgr.newDisplayName();
+    d->playlistMgr.addplaylist(info);
+
+    emit playlistAdded(d->playlistMgr.playlist(info.id));
 }
 
 void AppPresenter::onMusicPlay(const MusicInfo &info)
@@ -69,17 +119,15 @@ void AppPresenter::onMusicPlay(const MusicInfo &info)
     connect(&d->player, &QMediaPlayer::mediaStatusChanged,
     this, [ = ](QMediaPlayer::MediaStatus status) {
         qDebug() << status << info.url;
-        d->player.play();
+        if (QMediaPlayer::PlayingState != d->player.state()) {
+            d->player.play();
+        }
         emit musicPlayed(info);
     });
 }
 
 void AppPresenter::onFilesImportDefault(const QStringList &filelist)
 {
-    MusicListInfo model;
-
-    qDebug() << QThread::currentThread() << qApp->thread();
-
     QStringList urllist;
     // save default playlist
     for (auto &dir : filelist) {
@@ -95,9 +143,7 @@ void AppPresenter::onFilesImportDefault(const QStringList &filelist)
         qCritical() << "can not find meida file";
         return;
     }
-
-    emit musicListChanged(model);
-
+    bool listshow = false;
     for (auto &url : urllist) {
         TagLib::FileRef f(url.toStdString().c_str());
 
@@ -121,5 +167,10 @@ void AppPresenter::onFilesImportDefault(const QStringList &filelist)
         }
 
         emit musicAdded(info);
+        if (!listshow) {
+            emit showMusiclist();
+        }
+        listshow = true;
     }
+
 }

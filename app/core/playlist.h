@@ -11,20 +11,30 @@
 #define PLAYLIST_H
 
 #include <QObject>
+
+#include <QSettings>
+
 #include "../model/musiclistmodel.h"
 
 class Playlist : public QObject
 {
     Q_OBJECT
 public:
-    explicit Playlist(QObject *parent = 0);
+    explicit Playlist(const MusicListInfo &info, QObject *parent = 0);
 
+    MusicListInfo &info();
 signals:
+    void removed();
 
 public slots:
+    void load();
+    void save();
+    void onDisplayNameChanged(const QString& name);
+    void addMusic(const MusicInfo &info);
 
 private:
-    MusicListInfo d;
+    QSettings       setting;
+    MusicListInfo   d;
 };
 
 #endif // PLAYLIST_H

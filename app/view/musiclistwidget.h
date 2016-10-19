@@ -12,6 +12,7 @@
 
 #include <QFrame>
 
+class Playlist;
 class MusicInfo;
 class MusicListInfo;
 class QStringListModel;
@@ -27,15 +28,16 @@ public:
 
 signals:
     void musicClicked(const MusicInfo &info);
+    void musicAddToPlaylist(const QString &playlistID, const MusicInfo &info);
 
 public slots:
     void onMusicAdded(const MusicInfo &info);
-//    void onMusicDel(QList<MusicInfo> music);
-    void onMusicListChanged(const MusicListInfo &musiclist);
+    void onMusicListChanged(QSharedPointer<Playlist> palylist);
 
 private:
-    QStringListModel    *m_model        = nullptr;
-    MusicListView       *m_musiclist    = nullptr;
+    void addMusicInfo(MusicListView *m_musiclist, const MusicInfo &info);
+    QSharedPointer<Playlist>    m_palylist;
+    MusicListView               *m_musiclist    = nullptr;
 };
 
 

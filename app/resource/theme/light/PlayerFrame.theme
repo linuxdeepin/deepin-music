@@ -1,4 +1,5 @@
 #BackgroundWidget {
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
     border-top-left-radius: 0;
     border-top-right-radius: 0;
     border-bottom-right-radius: 3;
@@ -7,6 +8,6 @@
 }
 
 QStackedWidget {
-    border: none;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
     background-color: transparent;
 }

@@ -16,23 +16,50 @@
 
 #include "playlist.h"
 
+#include <QSettings>
+
 class PlaylistManager : public QObject
 {
     Q_OBJECT
+
+    Q_PROPERTY(QSharedPointer<Playlist> currentPlaylist READ currentPlaylist WRITE setCurrentPlaylist NOTIFY currentPlaylistChanged)
 public:
     explicit PlaylistManager(QObject *parent = 0);
+    ~PlaylistManager();
+
+    QString newID();
+    QString newDisplayName();
 
     void load();
+    void sync();
 
-//    void sync();
+    QList<QSharedPointer<Playlist> > allplaylist();
+    QSharedPointer<Playlist> addplaylist(const MusicListInfo &info);
+    QSharedPointer<Playlist> playlist(const QString &id);
+
+    QSharedPointer<Playlist> currentPlaylist() const
+    {
+        return m_currentPlaylist;
+    }
+
 signals:
-//    Playlist &playlist(const QString &name);
+    void currentPlaylistChanged(QSharedPointer<Playlist> currentPlaylist);
 
 public slots:
-//    void addFilesToPlaylist();
+    void setCurrentPlaylist(QSharedPointer<Playlist> currentPlaylist);
 
 private:
-    QMap<QString, QSharedPointer<Playlist>>  playlists;
+    QString getPlaylistPath(const QString &id);
+    void insertPlaylist(const QString &id, QSharedPointer<Playlist>);
+
+    QSettings                                   listmgrSetting;
+    QSharedPointer<Playlist>                    m_currentPlaylist;
+    QMap<QString, QSharedPointer<Playlist>>     playlists;
 };
+
+Q_DECLARE_METATYPE(QSharedPointer<Playlist>);
+
+extern const QString AllMusicListID;
+extern const QString FavMusicListID;
 
 #endif // PLAYLISTMANAGER_H

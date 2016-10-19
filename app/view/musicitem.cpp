@@ -10,11 +10,18 @@
 #include "musicitem.h"
 #include <QLabel>
 #include <QHBoxLayout>
+#include <QDebug>
+#include <QFileInfo>
+#include <QDir>
+#include <QProcess>
 
 #include <dthememanager.h>
+#include <DMenu>
 DWIDGET_USE_NAMESPACE
 
 #include "../model/musiclistmodel.h"
+#include "../core/playlist.h"
+#include "../musicapp.h"
 
 MusicItem::MusicItem(int num, const MusicInfo &info, QWidget *parent)
     : QWidget(parent), m_info(info)
@@ -69,4 +76,68 @@ MusicItem::MusicItem(int num, const MusicInfo &info, QWidget *parent)
 
     setFixedHeight(36);
     D_THEME_INIT_WIDGET(MusicItem);
+
+    this->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(this, &MusicItem::customContextMenuRequested,
+            this, &MusicItem::showContextMenu);
+}
+
+void MusicItem::showContextMenu(const QPoint &pos)
+{
+    QPoint globalPos = this->mapToGlobal(pos);
+
+    DMenu playlistMenu;
+
+    for (auto playlist : MusicApp::presenter()->playlist()) {
+        if (playlist->info().id == "All") {
+            continue;
+        }
+        if (playlist->info().id == MusicApp::presenter()->lastPlaylist()->info().id) {
+            continue;
+        }
+        if (playlist->info().id == "Fav") {
+            auto act = playlistMenu.addAction(tr("My favorites"));
+            act->setData("Fav");
+            continue;
+        }
+        auto act = playlistMenu.addAction(playlist->info().displayName);
+        act->setData(playlist->info().id);
+    }
+    playlistMenu.addSeparator();
+    playlistMenu.addAction(tr("New playlist"))->setData("New");
+
+    // TODO: add all list
+    connect(&playlistMenu, &DMenu::triggered, this, [ = ](DAction * action) {
+        qDebug() << action->data().toString();
+        QString act = action->data().toString();
+        qDebug() << "addToPlaylist" << act;
+        emit addToPlaylist(act);
+    });
+
+    DMenu myMenu;
+    myMenu.addAction(tr("Play"));
+    myMenu.addAction(tr("Add to playlist"))->setMenu(&playlistMenu);
+    myMenu.addSeparator();
+    myMenu.addAction(tr("Display in file manager"));
+    myMenu.addAction(tr("Remove from list"));
+    myMenu.addAction(tr("Delete"));
+    myMenu.addSeparator();
+    myMenu.addAction(tr("Song info"));
+
+    connect(&myMenu, &DMenu::triggered, this, [ = ](DAction * action) {
+        qDebug() << action;
+        if (action->text() == tr("Play")) {
+            emit play();
+        }
+
+        if (action->text() == tr("Display in file manager")) {
+            QProcess::startDetached("gvfs-open " + QFileInfo(m_info.url).absoluteDir().absolutePath());
+        }
+
+        if (action->text() == tr("Remove from list")) {
+            emit this->remove();
+        }
+    });
+
+    myMenu.exec(globalPos);
 }

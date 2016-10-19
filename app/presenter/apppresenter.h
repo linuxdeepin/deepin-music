@@ -15,6 +15,7 @@
 
 #include "model/musiclistmodel.h"
 
+class Playlist;
 class AppPresenterPrivate;
 class QMediaPlayer;
 class AppPresenter : public QObject
@@ -23,15 +24,30 @@ class AppPresenter : public QObject
 public:
     explicit AppPresenter(QObject *parent = 0);
     ~AppPresenter();
+
     QMediaPlayer *player();
     void work();
 
+    QSharedPointer<Playlist> lastPlaylist();
+    QList<QSharedPointer<Playlist> > playlist();
 signals:
-    void musicListChanged(const MusicListInfo &listinfo);
+    void showPlaylist();
+    void showMusiclist();
+
+    void playlistAdded(QSharedPointer<Playlist>);
+
+    void musicListChanged(QSharedPointer<Playlist>);
+
+    // TODO: delte
+    void musicListLoaded(QSharedPointer<Playlist>);
     void musicAdded(const MusicInfo &info);
     void musicPlayed(const MusicInfo &info);
 
 public slots:
+    void onMusicAddToplaylist(const QString &id, const MusicInfo &info);
+    void onPlaylistSelected(QSharedPointer<Playlist> playlist);
+
+    void onPlaylistAdd(bool edit);
     void onMusicPlay(const MusicInfo &info);
     void onFilesImportDefault(const QStringList &filelist);
 

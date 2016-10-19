@@ -1,5 +1,18 @@
 #PlayListIcon {
-    image: url(:/image/playlist_fav.png)
+    image: url(:/image/playlist.png);
+}
+#PlayListIcon[iconName="all"] {
+    image: url(:/image/playlist_allmusic.png);
+}
+#PlayListIcon[iconName="fav"] {
+    image: url(:/image/playlist_fav.png);
+}
+
+#PlayListInterFrame{
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-top: none;
+    border-right: none;
+    border-left: none;
 }
 
 #PlayListTitle {

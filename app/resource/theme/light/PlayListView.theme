@@ -1,0 +1,22 @@
+#PlayListView{
+    border: 0px solid rgba(255, 0, 0, 0.7);
+    background-color: rgba(255, 255, 255, 0.9);
+    show-decoration-selected: 1;
+    selection-color: red;
+    selection-background-color: rgba(42, 166, 248, 0.2);
+    outline:none;
+}
+
+#PlayListView::item{
+    height: 56;
+}
+#PlayListView::item:focus {
+    border:none;
+}
+#PlayListView::item:selected:!active {
+}
+#PlayListView::item:selected:active {
+    background-color: rgba(42, 166, 248, 0.2);
+}
+#PlayListView::item:hover {
+}

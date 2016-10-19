@@ -6,9 +6,10 @@
         <file>light/MusicListView.theme</file>
         <file>light/MusicItem.theme</file>
         <file>light/LyricView.theme</file>
-        <file>light/PlayListWidget.theme</file>
+        <file>light/PlaylistWidget.theme</file>
         <file>light/PlayListItem.theme</file>
         <file>light/MusicListWidget.theme</file>
         <file>light/PlayerFrame.theme</file>
+        <file>light/PlayListView.theme</file>
     </qresource>
 </RCC>

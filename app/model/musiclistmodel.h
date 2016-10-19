@@ -16,18 +16,25 @@
 class MusicInfo
 {
 public:
+    QString id;
     QString url;
     QString title;
     QString artist;
     QString album;
     qint64  lenght;
+    qint64  track;
 };
 
 class MusicListInfo
 {
 public:
-    QString title;
     QString id;
+    QString displayName;
+    QString url;
+    QString icon;
+
+    bool    editmode;
+    bool    readonly;
 
     QList<MusicInfo>    list;
 };

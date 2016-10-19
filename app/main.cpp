@@ -7,6 +7,8 @@
  * (at your option) any later version.
  **/
 
+#include <QIcon>
+
 #include <DLog>
 #include <DApplication>
 
@@ -29,6 +31,7 @@ int main(int argc, char *argv[])
     app.loadTranslator();
 
     app.setTheme("light");
+    app.setWindowIcon(QIcon("/usr/share/icons/deepin/apps/scalable/deepin-music.svg"));
 
     MusicApp::instance().init();
     MusicApp::instance().showPlayer();

@@ -9,17 +9,95 @@
 
 #include "playlistwidget.h"
 
+#include <QVBoxLayout>
+#include <QPushButton>
+#include <QFocusEvent>
+#include <QDebug>
+
 #include <dthememanager.h>
+
+#include "playlistview.h"
+#include "playlistitem.h"
+#include "../core/playlist.h"
+
 DWIDGET_USE_NAMESPACE
 
-PlayListWidget::PlayListWidget(QWidget *parent) : QListWidget(parent)
+PlaylistWidget::PlaylistWidget(QWidget *parent) : QFrame(parent)
 {
-    setObjectName("PlayListWidget");
+    setObjectName("PlaylistWidget");
 
-    setSelectionMode(QListView::ExtendedSelection);
-    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    setFocusPolicy(Qt::NoFocus);
+    auto layout = new QVBoxLayout(this);
+    layout->setContentsMargins(0, 0, 0, 15);
+    layout->setSpacing(15);
 
-    D_THEME_INIT_WIDGET(PlayListWidget);
+    m_listview = new PlayListView;
+
+    auto btAdd = new QPushButton();
+    btAdd->setFixedSize(190, 36);
+    btAdd->setObjectName("PlaylistWidgetAdd");
+    btAdd->setText(tr("+ Add Playlist"));
+
+    QSizePolicy sp(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    sp.setVerticalStretch(100);
+    m_listview->setSizePolicy(sp);
+
+    layout->addWidget(m_listview, 0, Qt::AlignHCenter);
+    layout->addWidget(btAdd, 0, Qt::AlignBottom | Qt::AlignHCenter);
+
+    D_THEME_INIT_WIDGET(PlaylistWidget);
+
+    connect(btAdd, &QPushButton::clicked, this, [ = ](bool /*checked*/) {
+        emit this->addPlaylist(true);
+    });
+
+    connect(m_listview, &PlayListView::itemClicked,
+    this, [ = ](QListWidgetItem * item) {
+        auto playlistItem = qobject_cast<PlayListItem *>(m_listview->itemWidget(item));
+        emit selectPlaylist(playlistItem->data());
+    });
 }
+
+void PlaylistWidget::updatePlaylist(QList<QSharedPointer<Playlist> > playlists)
+{
+    for (auto &playlist : playlists) {
+        auto item = new QListWidgetItem;
+        m_listview->addItem(item);
+        m_listview->setItemWidget(item, new PlayListItem(playlist));
+
+        auto playlistItem = qobject_cast<PlayListItem *>(m_listview->itemWidget(item));
+        connect(playlistItem, &PlayListItem::remove, this, [ = ]() {
+            m_listview->removeItemWidget(item);
+            delete m_listview->takeItem(m_listview->row(item));
+            // remote to firest
+            Q_ASSERT(m_listview->count() > 0);
+            m_listview->setCurrentItem(m_listview->item(0));
+        });
+    }
+}
+
+void PlaylistWidget::onPlaylistAdded(QSharedPointer<Playlist> playlist)
+{
+    auto item = new QListWidgetItem;
+    m_listview->addItem(item);
+    m_listview->setItemWidget(item, new PlayListItem(playlist));
+    auto playlistItem = qobject_cast<PlayListItem *>(m_listview->itemWidget(item));
+    connect(playlistItem, &PlayListItem::remove, this, [ = ]() {
+        m_listview->removeItemWidget(item);
+        delete m_listview->takeItem(m_listview->row(item));
+    });
+    m_listview->scrollToBottom();
+}
+
+void PlaylistWidget::onCurrentPlaylistChanded(QSharedPointer<Playlist> playlist)
+{
+    qDebug() <<"select" << playlist;
+    for (int i = 0; i < m_listview->count(); ++i) {
+        QListWidgetItem *item = m_listview->item(i);
+        auto playlistItem = qobject_cast<PlayListItem *>(m_listview->itemWidget(item));
+        if (playlistItem->data()->info().id == playlist->info().id) {
+            m_listview->setCurrentItem(item);
+        }
+    }
+}
+
+

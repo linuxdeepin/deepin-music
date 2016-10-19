@@ -14,6 +14,8 @@
 #include <QThread>
 #include <QDebug>
 #include <QMediaPlayer>
+#include <QApplication>
+#include <QStandardPaths>
 
 #include "presenter/apppresenter.h"
 
@@ -46,9 +48,14 @@ AppPresenter *MusicApp::presenter()
     return MusicApp::instance().d->appPresenter;
 }
 
+QString MusicApp::configPath()
+{
+    auto userConfigPath = QStandardPaths::standardLocations(QStandardPaths::ConfigLocation).first();
+    return userConfigPath + "/" + qApp->organizationName() + "/" + qApp->applicationName();
+}
+
 void MusicApp::showPlayer()
 {
-    qDebug() << "show";
     DUtility::moveToCenter(d->playerFrame);
     d->playerFrame->show();
 }
@@ -56,7 +63,6 @@ void MusicApp::showPlayer()
 void MusicApp::init()
 {
     d->appPresenter = new AppPresenter;
-
     auto presenterWork = new QThread;
     d->appPresenter->moveToThread(presenterWork);
     d->appPresenter->player()->moveToThread(presenterWork);
@@ -65,13 +71,9 @@ void MusicApp::init()
     qDebug() << presenterWork << QThread::currentThread();
 
     d->playerFrame = new PlayerFrame;
-    connect(d->appPresenter, &AppPresenter::musicListChanged,
-            d->playerFrame, &PlayerFrame::onMusicListChanged);
 
-    connect(d->appPresenter, &AppPresenter::musicAdded,
-            d->playerFrame->musicList(), &MusicListWidget::onMusicAdded);
-
-    connect(d->playerFrame->musicList(), &MusicListWidget::musicClicked,
-            d->appPresenter, &AppPresenter::onMusicPlay);
-
+    d->playerFrame->initMusiclist(d->appPresenter->lastPlaylist());
+    d->playerFrame->updatePlaylist(d->appPresenter->playlist());
+    d->playerFrame->onMusicListChanged(d->appPresenter->lastPlaylist());
+    d->playerFrame->binding(d->appPresenter);
 }

@@ -26,6 +26,7 @@ DWIDGET_USE_NAMESPACE
 #include "musiclistview.h"
 #include "musicitem.h"
 #include "../model/musiclistmodel.h"
+#include "../core/playlist.h"
 
 MusicListWidget::MusicListWidget(QWidget *parent) : QFrame(parent)
 {
@@ -60,9 +61,6 @@ MusicListWidget::MusicListWidget(QWidget *parent) : QFrame(parent)
     layout->addWidget(actionBar, 0, Qt::AlignTop);
     layout->addWidget(m_musiclist, 0, Qt::AlignTop);
 
-    m_model = new QStringListModel;
-    m_musiclist->setModel(m_model);
-
     D_THEME_INIT_WIDGET(MusicListWidget);
 
     connect(m_musiclist, &MusicListView::doubleClicked, this, [ = ](const QModelIndex & index) {
@@ -81,19 +79,42 @@ void MusicListWidget::resizeEvent(QResizeEvent *event)
     m_musiclist->setFixedHeight(event->size().height() - 40);
 }
 
-void MusicListWidget::onMusicAdded(const MusicInfo &info)
+void MusicListWidget::addMusicInfo(MusicListView *m_musiclist, const MusicInfo &info)
 {
-    m_model->insertRows(m_model->rowCount(), 1);
-    auto index = m_model->index(m_model->rowCount() - 1);
-    m_musiclist->setIndexWidget(index,
-                                new MusicItem(m_model->rowCount(), info));
+    auto item = new QListWidgetItem;
+    auto musicItem = new MusicItem(m_musiclist->model()->rowCount() + 1, info);
+
+    m_musiclist->addItem(item);
+    m_musiclist->setItemWidget(item, musicItem);
+
+    connect(musicItem, &MusicItem::remove, this, [ = ]() {
+        m_musiclist->removeItemWidget(item);
+        delete m_musiclist->takeItem(m_musiclist->row(item));
+    });
+
+    connect(musicItem, &MusicItem::play, this, [ = ]() {
+        emit musicClicked(musicItem->info());
+    });
+
+    connect(musicItem, &MusicItem::addToPlaylist, this, [ = ](const QString & id) {
+        emit musicAddToPlaylist(id, musicItem->info());
+    });
 }
 
-void MusicListWidget::onMusicListChanged(const MusicListInfo &musiclist)
+void MusicListWidget::onMusicAdded(const MusicInfo &info)
 {
-    for (auto &info : musiclist.list) {
-        m_model->insertRows(m_model->rowCount(), 1);
-        m_musiclist->setIndexWidget(m_model->index(m_model->rowCount() - 1),
-                                    new MusicItem(m_model->rowCount(), info));
+    addMusicInfo(m_musiclist, info);
+
+}
+
+void MusicListWidget::onMusicListChanged(QSharedPointer<Playlist> palylist)
+{
+    if (palylist.isNull()) {
+        return;
+    }
+    m_palylist = palylist;
+    m_musiclist->clear();
+    for (auto &info : palylist->info().list) {
+        addMusicInfo(m_musiclist, info);
     }
 }

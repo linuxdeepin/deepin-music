@@ -7,18 +7,21 @@
  * (at your option) any later version.
  **/
 
-#include "musiclistview.h"
+#include "playlistview.h"
 
+#include <QDebug>
+
+#include <dmenu.h>
 #include <dthememanager.h>
 DWIDGET_USE_NAMESPACE
 
-MusicListView::MusicListView(QWidget *parent) : QListWidget(parent)
+PlayListView::PlayListView(QWidget *parent) : QListWidget(parent)
 {
-    setObjectName("MusicListView");
+    setObjectName("PlayListView");
 
-    setSelectionMode(QListView::ExtendedSelection);
+    setSelectionMode(QListView::SingleSelection);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    setFocusPolicy(Qt::NoFocus);
-    D_THEME_INIT_WIDGET(MusicListView);
+    setFocusPolicy(Qt::ClickFocus);
+    D_THEME_INIT_WIDGET(PlayListView);
 }
