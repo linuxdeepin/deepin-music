@@ -1,19 +1,7 @@
 #!/usr/bin/make -f
-# -*- makefile -*-
-
-include /usr/share/dpkg/default.mk
-export QT_SELECT = qt5
 
 %:
 	dh $@
 
-override_dh_auto_build:
-	make -j `nproc`
-
-ifeq ($(ARCH), sw_64)
-override_dh_strip:
-	dh_strip
-else
-override_dh_strip:
-	dh_strip
-endif
+override_dh_auto_install:
+	dh_auto_install -- PREFIX=/usr

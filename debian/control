@@ -1,18 +1,21 @@
-Source: deepin-music-player
+Source: deepin-music
 Section: sound
 Priority: extra
-Maintainer: Li Longyu <leaeasy@gmail.com>
-Build-Depends: debhelper (>= 8.0.0)
+Maintainer: Deepin Sysdev <sysdev@deepin.com>
+Build-Depends: debhelper (>= 8.0.0), python
 Standards-Version: 3.9.2
-Homepage: http://www.linuxdeepin.com/
+Homepage: http://www.deepin.com/
 
-Package: deepin-music-player
+Package: deepin-music
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}
-Suggests:
+Depends: ${misc:Depends}, deepin-ui, python-mutagen,
+ python-gst0.10, python-pyquery, python-cddb,
+ python-pycurl, python-chardet, python-keybinder,
+ gstreamer0.10-plugins-good, gstreamer0.10-plugins-bad,
+ gstreamer0.10-plugins-ugly, python-mmkeys, python-deepin-gsettings
 Description: Awesome music player with brilliant and tweakful UI
- Deepin-UI based, gstreamer front-end, with features likes search music by
- pinyin,quanpin, colorful lyrics supports, and more powerfull functions you
- will found.
+ Deepin-UI based, gstreamer front-end, with features likes search music 
+ by pinyin,quanpin, colorful lyrics supports, and more powerful
+ functions you will found.
  .
  Just enjoy it! have fun!

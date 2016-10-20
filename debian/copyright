@@ -4,12 +4,12 @@ Source: http://www.linuxdeepin.com
 
 Files: *
 Copyright: 2012 huoshaohui@linudeepin.com
-           2011-2012 wangyong@linuxdeepin.com
-License: GPL-3
+           2011-2012 wangyong@deepin.com
+License: GPL-3+
 
 Files: debian/*
-Copyright: 2012 Li Longyu <leaeasy@gmail.com>
-License: GPL-3
+Copyright: Deepin Sysdev <sysdev@deepin.com>
+License: GPL-3+
  This package is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation; either version 3 of the License, or
