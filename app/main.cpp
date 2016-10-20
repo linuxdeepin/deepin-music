@@ -27,7 +27,6 @@ int main(int argc, char *argv[])
     DLogManager::registerConsoleAppender();
     DLogManager::registerFileAppender();
 
-    qDebug() << app.applicationVersion();
     app.loadTranslator();
 
     app.setTheme("light");

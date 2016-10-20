@@ -19,22 +19,39 @@
 class Playlist : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QString displayName READ displayName WRITE setDisplayName NOTIFY displayNameChanged)
 public:
-    explicit Playlist(const MusicListInfo &info, QObject *parent = 0);
+    explicit Playlist(const MusicListInfo &musiclistinfo, QObject *parent = 0);
 
-    MusicListInfo &info();
-signals:
-    void removed();
+public:
+    //! public interface
+    QString id();
+    QString displayName();
+    QString icon();
+    bool readonly();
+    bool editmode();
+    int length();
+
+    bool contains(const MusicInfo &info);
+    MusicList allmusic();
 
 public slots:
+    void setDisplayName(const QString &name);
+    void appendMusic(const MusicInfo &listinfo);
+    void removeMusic(const MusicInfo &listinfo);
+
+    //! private interface
+public:
     void load();
     void save();
-    void onDisplayNameChanged(const QString& name);
-    void addMusic(const MusicInfo &info);
+
+signals:
+    void removed();
+    void displayNameChanged(QString displayName);
 
 private:
-    QSettings       setting;
-    MusicListInfo   d;
+    QSettings       settings;
+    MusicListInfo   listinfo;
 };
 
 #endif // PLAYLIST_H

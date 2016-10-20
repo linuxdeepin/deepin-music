@@ -42,20 +42,22 @@ PlayListItem::PlayListItem(QSharedPointer<Playlist> playlist, QWidget *parent) :
     auto icon = new QLabel;
     icon->setObjectName("PlayListIcon");
     icon->setFixedSize(48, 48);
-    icon->setProperty("iconName", playlist->info().icon);
+    icon->setProperty("iconName", playlist->icon());
 
     m_titleedit = new QLineEdit;
     m_titleedit->setObjectName("PlayListTitle");
     m_titleedit->setFixedHeight(20);
     m_titleedit->setMinimumWidth(140);
-    m_titleedit->setText(playlist->info().displayName);
+    m_titleedit->setText(playlist->displayName());
     m_titleedit->setProperty("HistoryValue", m_titleedit->text());
 
-    if (playlist->info().readonly) {
+    if (playlist->readonly()) {
         m_titleedit->setReadOnly(true);
         m_titleedit->setDisabled(true);
     }
-    if (playlist->info().editmode) {
+
+    if (playlist->editmode()) {
+        // TODO: for qt5.3
         QTimer::singleShot(0, this, [ = ] {
             m_titleedit->setFocus();
             m_titleedit->setCursorPosition(0);
@@ -101,7 +103,7 @@ PlayListItem::PlayListItem(QSharedPointer<Playlist> playlist, QWidget *parent) :
             this, &PlayListItem::showContextMenu);
 
     connect(this, &PlayListItem::rename,
-            m_data.data(), &Playlist::onDisplayNameChanged);
+            m_data.data(), &Playlist::setDisplayName);
     connect(this, &PlayListItem::remove,
             m_data.data(), &Playlist::removed);
 }
@@ -115,9 +117,9 @@ void PlayListItem::showContextMenu(const QPoint &pos)
     // Create menu and insert some actions
     DMenu myMenu;
     auto playact = myMenu.addAction(tr("Play"));
-    playact->setDisabled(0 == m_data->info().list.length());
+    playact->setDisabled(0 == m_data->length());
 
-    if (m_data->info().id != "All" && m_data->info().id != "Fav") {
+    if (m_data->id() != "All" && m_data->id() != "Fav") {
         myMenu.addAction(tr("Rename"));
         myMenu.addAction(tr("Delete"));
     }

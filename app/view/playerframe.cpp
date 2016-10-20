@@ -16,6 +16,8 @@
 #include <QPropertyAnimation>
 #include <QTimer>
 #include <QResizeEvent>
+#include <QHBoxLayout>
+#include <QStackedLayout>
 
 #include <dutility.h>
 #include <dthememanager.h>
@@ -38,7 +40,7 @@ DWIDGET_USE_NAMESPACE
 class PlayerFramePrivate
 {
 public:
-    QStackedWidget  *stacked    = nullptr;
+    QFrame  *stacked    = nullptr;
     ImportWidget    *import     = nullptr;
     MusicListWidget *musicList  = nullptr;
     PlaylistWidget  *playlist   = nullptr;
@@ -58,7 +60,7 @@ static void slideWidget(QWidget *left, QWidget *right)
 
     QPropertyAnimation *animation = new QPropertyAnimation(left, "geometry");
     animation->setDuration(delay);
-    animation->setEasingCurve(QEasingCurve::InCurve);
+    animation->setEasingCurve(QEasingCurve::InOutCubic);
     animation->setStartValue(leftStart);
     animation->setEndValue(leftEnd);
     animation->start();
@@ -68,7 +70,7 @@ static void slideWidget(QWidget *left, QWidget *right)
     rightEnd.moveRight(left->width() - 1);
 
     QPropertyAnimation *animation2 = new QPropertyAnimation(right, "geometry");
-    animation2->setEasingCurve(QEasingCurve::InCurve);
+    animation2->setEasingCurve(QEasingCurve::InOutCubic);
     animation2->setDuration(delay);
     animation2->setStartValue(rightStart);
     animation2->setEndValue(rightEnd);
@@ -123,31 +125,33 @@ PlayerFrame::PlayerFrame(QWidget *parent)
     footer->setFixedHeight(60);
 
     d->import = new ImportWidget;
-
     d->musicList = new MusicListWidget;
-
     auto lv = new LyricView;
     lv->hide();
+    d->import->hide();
 
-    d->playlist = new PlaylistWidget();
+    d->stacked = new QFrame;
+    d->playlist = new PlaylistWidget(d->stacked);
     d->playlist->hide();
     d->playlist->setFixedWidth(220);
-
-    d->stacked = new QStackedWidget;
+    auto slayout = new  QStackedLayout(d->stacked);
+    slayout->setMargin(0);
+    slayout->setSpacing(0);
     d->stacked->setObjectName("ContentWidget");
-    d->stacked->addWidget(d->import);
-    d->stacked->addWidget(d->musicList);
-    d->stacked->addWidget(lv);
-    d->stacked->addWidget(d->playlist);
+    slayout->addWidget(d->import);
+    slayout->addWidget(d->musicList);
+    slayout->addWidget(lv);
+    lv->hide();
+    d->playlist->hide();
 
     contentLayout->addWidget(d->stacked);
     contentLayout->addWidget(footer);
 
+//    setCentralWidget(contentWidget);
     setContentWidget(contentWidget);
-
     D_THEME_INIT_WIDGET(PlayerFrame);
 
-    resize(960, 720);
+    setFixedSize(960, 720);
 }
 
 PlayerFrame::~PlayerFrame()
@@ -155,61 +159,67 @@ PlayerFrame::~PlayerFrame()
 
 }
 
-void PlayerFrame::initMusiclist(QSharedPointer<Playlist> playlist)
+void PlayerFrame::initMusiclist(QSharedPointer<Playlist> allmusic, QSharedPointer<Playlist> last)
 {
-
-    if (playlist.isNull() || playlist->info().list.isEmpty()) {
-        qDebug() << playlist->info().displayName
-                 << playlist->info().list.isEmpty();
+    if (allmusic.isNull() || 0 == allmusic->length()) {
+        d->import->show();
+        d->musicList->hide();
+        qWarning() << "no music in all music list" << allmusic;
+        d->musicList->setCurrentList(allmusic);
         return;
     }
+
+    if (last.isNull() || 0 == last->length()) {
+        qDebug() << "init music with empty playlist:" << last;
+    }
     d->import->hide();
-    d->musicList->onMusicListChanged(playlist);
-    // TODO: auto change size
     d->musicList->resize(958, 720 - 40);
     d->musicList->raise();
     d->musicList->show();
+    d->musicList->setCurrentList(last);
+    d->musicList->onMusiclistChanged(last);
 }
 
-void PlayerFrame::updatePlaylist(QList<QSharedPointer<Playlist> > playlists)
+void PlayerFrame::initPlaylist(QList<QSharedPointer<Playlist> > playlists, QSharedPointer<Playlist> last)
 {
-    d->playlist->updatePlaylist(playlists);
+    d->playlist->initPlaylist(playlists, last);
 }
 
 void PlayerFrame::binding(AppPresenter *presenter)
 {
-    connect(presenter, &AppPresenter::musicListChanged,
-            this, &PlayerFrame::onMusicListChanged);
-    connect(presenter, &AppPresenter::musicListLoaded,
-            this, &PlayerFrame::onMusicListLoaded);
+    // Music list binding
+    connect(presenter, &AppPresenter::playlistChanged,
+            d->musicList, &MusicListWidget::onMusiclistChanged);
     connect(presenter, &AppPresenter::musicAdded,
             d->musicList, &MusicListWidget::onMusicAdded);
-    connect(presenter, &AppPresenter::playlistAdded,
-            d->playlist, &PlaylistWidget::onPlaylistAdded);
 
     connect(d->musicList, &MusicListWidget::musicClicked,
             presenter, &AppPresenter::onMusicPlay);
-    connect(d->musicList, &MusicListWidget::musicAddToPlaylist,
-            presenter, &AppPresenter::onMusicAddToplaylist);
+    connect(d->musicList, &MusicListWidget::musicAdd,
+            presenter, &AppPresenter::onMusicAdd);
+    connect(d->musicList, &MusicListWidget::musicRemove,
+            presenter, &AppPresenter::onMusicRemove);
+
+    // Play list bindding
+    connect(presenter, &AppPresenter::playlistChanged,
+            d->playlist, &PlaylistWidget::onCurrentChanged);
+    connect(presenter, &AppPresenter::playlistAdded,
+            d->playlist, &PlaylistWidget::onPlaylistAdded);
 
     connect(d->playlist, &PlaylistWidget::addPlaylist,
             presenter, &AppPresenter::onPlaylistAdd);
     connect(d->playlist, &PlaylistWidget::selectPlaylist,
-            presenter, &AppPresenter::onPlaylistSelected);
+            presenter, &AppPresenter::onPlaylistChange);
 
+    // Footer Control
+
+    // View control
     connect(presenter, &AppPresenter::showPlaylist,
     this, [ = ]() {
-        d->playlist->setFixedHeight(d->stacked->height());
-
-        QRect start(this->width(), 0,
-                    d->playlist->width(),
-                    d->playlist->height());
-        QRect end(this->width() - d->playlist->width(), 0,
-                  d->playlist->width(),
-                  d->playlist->height());
-
+        d->playlist->resize(d->playlist->width(), d->stacked->height());
+        QRect start(this->width(), 0, d->playlist->width(), d->playlist->height());
+        QRect end(this->width() - d->playlist->width(), 0, d->playlist->width(), d->playlist->height());
         d->playlist->raise();
-
         if (d->playlist->isVisible()) {
             slideEdgeWidget(d->playlist, end, start, true);
         } else {
@@ -224,27 +234,4 @@ void PlayerFrame::binding(AppPresenter *presenter)
         d->musicList->raise();
         d->musicList->show();
     });
-}
-
-void PlayerFrame::resizeEvent(QResizeEvent *event)
-{
-    DWindow::resizeEvent(event);
-}
-
-void PlayerFrame::onMusicListChanged(QSharedPointer<Playlist> playlist)
-{
-    qDebug() << "onMusicListChanged";
-    d->musicList->onMusicListChanged(playlist);
-    d->playlist->onCurrentPlaylistChanded(playlist);
-}
-
-void PlayerFrame::onMusicListLoaded(QSharedPointer<Playlist> playlist)
-{
-    if (playlist->info().list.isEmpty()) {
-        return;
-    }
-    d->musicList->onMusicListChanged(playlist);
-    d->musicList->resize(d->import->size());
-    d->musicList->raise();
-    d->musicList->show();
 }

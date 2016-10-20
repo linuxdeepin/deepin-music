@@ -30,18 +30,14 @@ public:
     QString newID();
     QString newDisplayName();
 
-    void load();
-    void sync();
-
     QList<QSharedPointer<Playlist> > allplaylist();
-    QSharedPointer<Playlist> addplaylist(const MusicListInfo &info);
+    QSharedPointer<Playlist> currentPlaylist() const;
     QSharedPointer<Playlist> playlist(const QString &id);
 
-    QSharedPointer<Playlist> currentPlaylist() const
-    {
-        return m_currentPlaylist;
-    }
+    QSharedPointer<Playlist> addPlaylist(const MusicListInfo &listinfo);
 
+    void load();
+    void sync();
 signals:
     void currentPlaylistChanged(QSharedPointer<Playlist> currentPlaylist);
 
@@ -52,8 +48,9 @@ private:
     QString getPlaylistPath(const QString &id);
     void insertPlaylist(const QString &id, QSharedPointer<Playlist>);
 
-    QSettings                                   listmgrSetting;
+    QSettings                                   settings;
     QSharedPointer<Playlist>                    m_currentPlaylist;
+    QStringList                                 sortPlaylists;
     QMap<QString, QSharedPointer<Playlist>>     playlists;
 };
 

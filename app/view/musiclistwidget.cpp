@@ -63,18 +63,23 @@ MusicListWidget::MusicListWidget(QWidget *parent) : QFrame(parent)
 
     D_THEME_INIT_WIDGET(MusicListWidget);
 
-    connect(m_musiclist, &MusicListView::doubleClicked, this, [ = ](const QModelIndex & index) {
+    connect(m_musiclist, &MusicListView::doubleClicked,
+    this, [ = ](const QModelIndex & index) {
         auto musicItem = qobject_cast<MusicItem *>(m_musiclist->indexWidget(index));
-        qDebug() << musicItem << musicItem->info().url;
         if (musicItem) {
-            emit musicClicked(musicItem->info());
+            emit musicClicked(m_palylist, musicItem->info());
         }
     });
 }
 
+void MusicListWidget::setCurrentList(QSharedPointer<Playlist> palylist)
+{
+    m_palylist = palylist;
+}
+
 void MusicListWidget::resizeEvent(QResizeEvent *event)
 {
-    qDebug() << event;
+    // TODO: remove resize
     QWidget::resizeEvent(event);
     m_musiclist->setFixedHeight(event->size().height() - 40);
 }
@@ -88,33 +93,42 @@ void MusicListWidget::addMusicInfo(MusicListView *m_musiclist, const MusicInfo &
     m_musiclist->setItemWidget(item, musicItem);
 
     connect(musicItem, &MusicItem::remove, this, [ = ]() {
+        qDebug() << musicItem->info().id;
         m_musiclist->removeItemWidget(item);
         delete m_musiclist->takeItem(m_musiclist->row(item));
+        // TODO: begin remove music item
+        emit this->musicRemove(m_palylist, musicItem->info());
     });
 
     connect(musicItem, &MusicItem::play, this, [ = ]() {
-        emit musicClicked(musicItem->info());
+        emit musicClicked(m_palylist, musicItem->info());
     });
 
     connect(musicItem, &MusicItem::addToPlaylist, this, [ = ](const QString & id) {
-        emit musicAddToPlaylist(id, musicItem->info());
+        emit musicAdd(id, musicItem->info());
     });
 }
 
-void MusicListWidget::onMusicAdded(const MusicInfo &info)
+void MusicListWidget::onMusicAdded(QSharedPointer<Playlist> palylist, const MusicInfo &info)
 {
+    if (palylist != m_palylist) {
+        qWarning() << "check playlist failed!"
+                   << "m_palylist:" << m_palylist
+                   << "playlist:" << m_palylist;
+        return;
+    }
     addMusicInfo(m_musiclist, info);
-
 }
 
-void MusicListWidget::onMusicListChanged(QSharedPointer<Playlist> palylist)
+void MusicListWidget::onMusiclistChanged(QSharedPointer<Playlist> palylist)
 {
     if (palylist.isNull()) {
+        qWarning() << "change to emptry playlist";
         return;
     }
     m_palylist = palylist;
     m_musiclist->clear();
-    for (auto &info : palylist->info().list) {
+    for (auto &info : palylist->allmusic()) {
         addMusicInfo(m_musiclist, info);
     }
 }
