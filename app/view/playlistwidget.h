@@ -12,7 +12,6 @@
 
 #include <QFrame>
 
-class MusicListInfo;
 class Playlist;
 class PlayListView;
 class PlaylistWidget : public QFrame
@@ -21,11 +20,11 @@ class PlaylistWidget : public QFrame
 public:
     explicit PlaylistWidget(QWidget *parent = 0);
 
-    void updatePlaylist(QList<QSharedPointer<Playlist> > playlists);
+    void initPlaylist(QList<QSharedPointer<Playlist> > playlists, QSharedPointer<Playlist> last);
 
 public slots:
     void onPlaylistAdded(QSharedPointer<Playlist>);
-    void onCurrentPlaylistChanded(QSharedPointer<Playlist> playlist);
+    void onCurrentChanged(QSharedPointer<Playlist> playlist);
 
 signals:
     void addPlaylist(bool editmode);

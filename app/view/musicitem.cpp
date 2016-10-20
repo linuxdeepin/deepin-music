@@ -88,20 +88,20 @@ void MusicItem::showContextMenu(const QPoint &pos)
 
     DMenu playlistMenu;
 
-    for (auto playlist : MusicApp::presenter()->playlist()) {
-        if (playlist->info().id == "All") {
+    for (auto playlist : MusicApp::presenter()->allplaylist()) {
+        if (playlist->id() == "All") {
             continue;
         }
-        if (playlist->info().id == MusicApp::presenter()->lastPlaylist()->info().id) {
+        if (playlist->id() == MusicApp::presenter()->lastPlaylist()->id()) {
             continue;
         }
-        if (playlist->info().id == "Fav") {
+        if (playlist->id() == "Fav") {
             auto act = playlistMenu.addAction(tr("My favorites"));
             act->setData("Fav");
             continue;
         }
-        auto act = playlistMenu.addAction(playlist->info().displayName);
-        act->setData(playlist->info().id);
+        auto act = playlistMenu.addAction(playlist->displayName());
+        act->setData(playlist->id());
     }
     playlistMenu.addSeparator();
     playlistMenu.addAction(tr("New playlist"))->setData("New");

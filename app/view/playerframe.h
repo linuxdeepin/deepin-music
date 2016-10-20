@@ -14,29 +14,23 @@
 #include <QScopedPointer>
 #include <QMainWindow>
 
+DWIDGET_USE_NAMESPACE
+
 class Playlist;
 class MusicInfo;
-class MusicListInfo;
 class AppPresenter;
 class MusicListWidget;
 class PlayerFramePrivate;
-class PlayerFrame : public Dtk::Widget::DWindow
+class PlayerFrame : public DWindow
 {
     Q_OBJECT
 public:
     explicit PlayerFrame(QWidget *parent = 0);
     ~PlayerFrame();
 
-    void initMusiclist(QSharedPointer<Playlist> playlist);
-    void updatePlaylist(QList<QSharedPointer<Playlist> > playlists);
+    void initMusiclist(QSharedPointer<Playlist> allmusic, QSharedPointer<Playlist> last);
+    void initPlaylist(QList<QSharedPointer<Playlist> > playlists, QSharedPointer<Playlist> last);
     void binding(AppPresenter *presenter);
-
-    virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
-signals:
-
-public slots:
-    void onMusicListChanged(QSharedPointer<Playlist> playlist);
-    void onMusicListLoaded(QSharedPointer<Playlist> playlist);
 
 private:
     QScopedPointer<PlayerFramePrivate> d;

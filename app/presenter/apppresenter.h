@@ -25,35 +25,45 @@ public:
     explicit AppPresenter(QObject *parent = 0);
     ~AppPresenter();
 
-    QMediaPlayer *player();
-    void work();
-
+    QSharedPointer<Playlist> allMusicPlaylist();
     QSharedPointer<Playlist> lastPlaylist();
-    QList<QSharedPointer<Playlist> > playlist();
+    QList<QSharedPointer<Playlist> > allplaylist();
 signals:
     void showPlaylist();
     void showMusiclist();
 
     void playlistAdded(QSharedPointer<Playlist>);
+    void playlistChanged(QSharedPointer<Playlist>);
 
-    void musicListChanged(QSharedPointer<Playlist>);
-
-    // TODO: delte
-    void musicListLoaded(QSharedPointer<Playlist>);
-    void musicAdded(const MusicInfo &info);
+    void musicAdded(QSharedPointer<Playlist> palylist, const MusicInfo &info);
     void musicPlayed(const MusicInfo &info);
 
 public slots:
-    void onMusicAddToplaylist(const QString &id, const MusicInfo &info);
-    void onPlaylistSelected(QSharedPointer<Playlist> playlist);
+    //! UI: music control interface
+    void onMusicPlay(QSharedPointer<Playlist> allplaylist, const MusicInfo &info);
+//    void onMusicPause(QSharedPointer<Playlist> playlist, const MusicInfo &info);
+//    void onMusicStop(QSharedPointer<Playlist> playlist, const MusicInfo &info);
+//    void onMusicPrev(QSharedPointer<Playlist> playlist, const MusicInfo &info);
+//    void onMusicNext(QSharedPointer<Playlist> playlist, const MusicInfo &info);
 
+    //! UI: playlist manager interface
+//    void onMusicAdd(QSharedPointer<Playlist> playlist, const MusicInfo &info);
+    void onMusicRemove(QSharedPointer<Playlist> allplaylist, const MusicInfo &info);
     void onPlaylistAdd(bool edit);
-    void onMusicPlay(const MusicInfo &info);
+    void onPlaylistChange(QSharedPointer<Playlist> playlist);
+
+    //! UI: menu interface
+//    void onRequestPlaylistMenuData(QSharedPointer<Playlist> playlist);
+//    void onRequestMusiclistMenuData(QSharedPointer<Playlist> playlist, const MusicInfo &selected);
+
+    //! TODO: refactor
+    void onMusicAdd(const QString &id, const MusicInfo &info);
+
+public slots:
     void onFilesImportDefault(const QStringList &filelist);
 
 private:
     void prepareData();
-    void loadUrlList(QStringList urllist, QMediaPlayer *player);
 
     QScopedPointer<AppPresenterPrivate> d;
 };

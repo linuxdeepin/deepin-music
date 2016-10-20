@@ -63,17 +63,14 @@ void MusicApp::showPlayer()
 void MusicApp::init()
 {
     d->appPresenter = new AppPresenter;
+
     auto presenterWork = new QThread;
     d->appPresenter->moveToThread(presenterWork);
-    d->appPresenter->player()->moveToThread(presenterWork);
     presenterWork->start();
-
-    qDebug() << presenterWork << QThread::currentThread();
 
     d->playerFrame = new PlayerFrame;
 
-    d->playerFrame->initMusiclist(d->appPresenter->lastPlaylist());
-    d->playerFrame->updatePlaylist(d->appPresenter->playlist());
-    d->playerFrame->onMusicListChanged(d->appPresenter->lastPlaylist());
+    d->playerFrame->initPlaylist(d->appPresenter->allplaylist() , d->appPresenter->lastPlaylist());
+    d->playerFrame->initMusiclist(d->appPresenter->allMusicPlaylist(), d->appPresenter->lastPlaylist());
     d->playerFrame->binding(d->appPresenter);
 }

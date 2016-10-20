@@ -12,6 +12,7 @@
 
 #include <QObject>
 #include <QStringList>
+#include <QMap>
 
 class MusicInfo
 {
@@ -25,6 +26,8 @@ public:
     qint64  track;
 };
 
+typedef QList<MusicInfo>    MusicList;
+
 class MusicListInfo
 {
 public:
@@ -36,7 +39,8 @@ public:
     bool    editmode;
     bool    readonly;
 
-    QList<MusicInfo>    list;
+    QStringList                 musicIds;
+    QMap<QString, MusicInfo>    musicMap;
 };
 
 Q_DECLARE_METATYPE(MusicInfo);

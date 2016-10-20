@@ -57,8 +57,14 @@ PlaylistWidget::PlaylistWidget(QWidget *parent) : QFrame(parent)
     });
 }
 
-void PlaylistWidget::updatePlaylist(QList<QSharedPointer<Playlist> > playlists)
+void PlaylistWidget::initPlaylist(QList<QSharedPointer<Playlist> > playlists, QSharedPointer<Playlist> last)
 {
+    if (playlists.length() <= 0) {
+        qCritical()<< "playlist is empty";
+        return;
+    }
+
+    QListWidgetItem *current = nullptr;
     for (auto &playlist : playlists) {
         auto item = new QListWidgetItem;
         m_listview->addItem(item);
@@ -72,6 +78,16 @@ void PlaylistWidget::updatePlaylist(QList<QSharedPointer<Playlist> > playlists)
             Q_ASSERT(m_listview->count() > 0);
             m_listview->setCurrentItem(m_listview->item(0));
         });
+
+        if (last->id() == playlist->id()) {
+            current = item;
+        }
+    }
+
+    if (current) {
+        m_listview->setCurrentItem(current);
+    } else {
+        m_listview->setCurrentItem(m_listview->item(0));
     }
 }
 
@@ -88,13 +104,12 @@ void PlaylistWidget::onPlaylistAdded(QSharedPointer<Playlist> playlist)
     m_listview->scrollToBottom();
 }
 
-void PlaylistWidget::onCurrentPlaylistChanded(QSharedPointer<Playlist> playlist)
+void PlaylistWidget::onCurrentChanged(QSharedPointer<Playlist> playlist)
 {
-    qDebug() <<"select" << playlist;
     for (int i = 0; i < m_listview->count(); ++i) {
         QListWidgetItem *item = m_listview->item(i);
         auto playlistItem = qobject_cast<PlayListItem *>(m_listview->itemWidget(item));
-        if (playlistItem->data()->info().id == playlist->info().id) {
+        if (playlistItem->data()->id() == playlist->id()) {
             m_listview->setCurrentItem(item);
         }
     }

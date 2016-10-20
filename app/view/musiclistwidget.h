@@ -14,8 +14,6 @@
 
 class Playlist;
 class MusicInfo;
-class MusicListInfo;
-class QStringListModel;
 class MusicListView;
 
 class MusicListWidget : public QFrame
@@ -24,18 +22,21 @@ class MusicListWidget : public QFrame
 public:
     explicit MusicListWidget(QWidget *parent = 0);
 
+    void setCurrentList(QSharedPointer<Playlist> palylist);
     virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
 
 signals:
-    void musicClicked(const MusicInfo &info);
-    void musicAddToPlaylist(const QString &playlistID, const MusicInfo &info);
+    void musicRemove(QSharedPointer<Playlist> palylist, const MusicInfo &info);
+    void musicClicked(QSharedPointer<Playlist> palylist, const MusicInfo &info);
+    void musicAdd(const QString &playlistID, const MusicInfo &info);
 
 public slots:
-    void onMusicAdded(const MusicInfo &info);
-    void onMusicListChanged(QSharedPointer<Playlist> palylist);
+    void onMusicAdded(QSharedPointer<Playlist> palylist, const MusicInfo &info);
+    void onMusiclistChanged(QSharedPointer<Playlist> palylist);
 
 private:
     void addMusicInfo(MusicListView *m_musiclist, const MusicInfo &info);
+
     QSharedPointer<Playlist>    m_palylist;
     MusicListView               *m_musiclist    = nullptr;
 };
