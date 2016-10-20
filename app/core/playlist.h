@@ -41,6 +41,9 @@ public:
     bool editmode();
     int length();
 
+    const MusicInfo prev(const MusicInfo &info);
+    const MusicInfo next(const MusicInfo &info);
+
     bool contains(const MusicInfo &info);
     MusicList allmusic();
 

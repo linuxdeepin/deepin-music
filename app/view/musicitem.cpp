@@ -30,7 +30,7 @@ MusicItem::MusicItem(int num, const MusicInfo &info, QWidget *parent)
     auto layout = new QHBoxLayout(this);
     layout->setContentsMargins(20, 5, 20, 5);
 
-    auto number = new QLabel;
+    number = new QLabel;
     number->setObjectName("MusicNumber");
     number->setText(QString("%1").arg(num));
 
@@ -48,7 +48,7 @@ MusicItem::MusicItem(int num, const MusicInfo &info, QWidget *parent)
 
     auto length = new QLabel;
     length->setObjectName("MusicLength");
-    length->setText(QString("%1").arg(info.lenght));
+    length->setText(QString("%1").arg(info.length));
 
     QSizePolicy spNumber(QSizePolicy::Fixed, QSizePolicy::Preferred);
     number->setSizePolicy(spNumber);
@@ -82,19 +82,21 @@ MusicItem::MusicItem(int num, const MusicInfo &info, QWidget *parent)
     connect(this, &MusicItem::customContextMenuRequested,
             this, &MusicItem::showContextMenu);
 
-    connect(this, &MusicItem::play,
-    this, [ = ]() {
-        number->setProperty("playstatus", "active");
-        this->style()->unpolish(number);
-        this->style()->polish(number);
-    });
+    connect(this, &MusicItem::stop, this,  &MusicItem::onMusicStop);
+}
 
-    connect(this, &MusicItem::stop,
-    this, [ = ]() {
-        number->setProperty("playstatus", "");
-        this->style()->unpolish(number);
-        this->style()->polish(number);
-    });
+void MusicItem::onMusicPlay()
+{
+    number->setProperty("playstatus", "active");
+    this->style()->unpolish(number);
+    this->style()->polish(number);
+}
+
+void MusicItem::onMusicStop()
+{
+    number->setProperty("playstatus", "");
+    this->style()->unpolish(number);
+    this->style()->polish(number);
 }
 
 void MusicItem::showContextMenu(const QPoint &pos)

@@ -79,6 +79,37 @@ void MusicListWidget::resizeEvent(QResizeEvent *event)
     m_musiclist->setFixedHeight(event->size().height() - 40);
 }
 
+void MusicListWidget::onMusicPlayed(QSharedPointer<Playlist> palylist, const MusicInfo &info)
+{
+    if (palylist != m_palylist) {
+        qWarning() << "check playlist failed!"
+                   << "m_palylist:" << m_palylist
+                   << "playlist:" << m_palylist;
+        return;
+    }
+    // TODO: spead up find item
+    MusicItem *musicItem = nullptr;
+    QListWidgetItem *item = nullptr;
+    for (int i = 0; i < m_musiclist->count(); ++i) {
+        item = m_musiclist->item(i);
+        musicItem = qobject_cast<MusicItem *>(m_musiclist->itemWidget(item));
+        if (musicItem && musicItem->info().id == info.id) {
+            qDebug() << "find"<< i << item << m_musiclist->count();
+            break;
+        }
+    }
+    if (m_last) {
+        m_last->stop();
+    }
+    m_last = musicItem;
+
+    if (!musicItem) {
+        return;
+    }
+    musicItem->onMusicPlay();
+    m_musiclist->setCurrentItem(item);
+}
+
 void MusicListWidget::onMusicRemoved(QSharedPointer<Playlist> palylist, const MusicInfo &info)
 {
     if (palylist != m_palylist) {
@@ -87,8 +118,7 @@ void MusicListWidget::onMusicRemoved(QSharedPointer<Playlist> palylist, const Mu
                    << "playlist:" << m_palylist;
         return;
     }
-    // find item
-    // TODO: spead up
+    // TODO: spead up find item
     MusicItem *musicItem = nullptr;
     QListWidgetItem *item = nullptr;
     for (int i = 0; i < m_musiclist->count(); ++i) {
@@ -112,6 +142,7 @@ void MusicListWidget::onMusicRemoved(QSharedPointer<Playlist> palylist, const Mu
 
 void MusicListWidget::addMusicInfo(MusicListView *m_musiclist, const MusicInfo &info)
 {
+    qDebug() << "add" << m_musiclist->count()<<info.title;
     auto item = new QListWidgetItem;
     auto musicItem = new MusicItem(m_musiclist->model()->rowCount() + 1, info);
 

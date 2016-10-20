@@ -14,6 +14,7 @@
 
 #include "../model/musiclistmodel.h"
 
+class QLabel;
 class MusicInfo;
 class MusicItem : public QWidget
 {
@@ -21,21 +22,22 @@ class MusicItem : public QWidget
 public:
     explicit MusicItem(int num, const MusicInfo &info, QWidget *parent = 0);
 
-
     const MusicInfo &info() {return m_info;}
 signals:
     void play();
     void stop();
-//    void showFile();
     void remove();
     void deleteFile();
     void addToPlaylist(const QString &id);
-//    void showInfo();
 
 public slots:
+    void onMusicPlay();
+    void onMusicStop();
+
     void showContextMenu(const QPoint &pos);
 private:
-    MusicInfo m_info;
+    MusicInfo   m_info;
+    QLabel      *number = nullptr;
 };
 
 #endif // MUSICITEM_H

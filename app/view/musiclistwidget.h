@@ -32,6 +32,7 @@ signals:
     void musicAdd(const QString &playlistID, const MusicInfo &info);
 
 public slots:
+    void onMusicPlayed(QSharedPointer<Playlist> palylist, const MusicInfo &info);
     void onMusicRemoved(QSharedPointer<Playlist> palylist, const MusicInfo &info);
     void onMusicAdded(QSharedPointer<Playlist> palylist, const MusicInfo &info);
     void onMusiclistChanged(QSharedPointer<Playlist> palylist);

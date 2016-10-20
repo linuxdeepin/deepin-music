@@ -39,15 +39,18 @@ signals:
     void playlistChanged(QSharedPointer<Playlist>);
 
     void musicAdded(QSharedPointer<Playlist> palylist, const MusicInfo &info);
-    void musicPlayed(const MusicInfo &info);
+    void musicPlayed(QSharedPointer<Playlist> palylist, const MusicInfo &info);
+    void musicPaused(QSharedPointer<Playlist> palylist, const MusicInfo &info);
+//    void musicPreved(QSharedPointer<Playlist> palylist, const MusicInfo &info);
+//    void musicNexted(QSharedPointer<Playlist> palylist, const MusicInfo &info);
 
 public slots:
     //! UI: music control interface
     void onMusicPlay(QSharedPointer<Playlist> playlist, const MusicInfo &info);
-//    void onMusicPause(QSharedPointer<Playlist> playlist, const MusicInfo &info);
+    void onMusicPause(QSharedPointer<Playlist> playlist, const MusicInfo &info);
 //    void onMusicStop(QSharedPointer<Playlist> playlist, const MusicInfo &info);
-//    void onMusicPrev(QSharedPointer<Playlist> playlist, const MusicInfo &info);
-//    void onMusicNext(QSharedPointer<Playlist> playlist, const MusicInfo &info);
+    void onMusicPrev(QSharedPointer<Playlist> playlist, const MusicInfo &info);
+    void onMusicNext(QSharedPointer<Playlist> playlist, const MusicInfo &info);
 
     //! UI: playlist manager interface
     //! TODO: refactor

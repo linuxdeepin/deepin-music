@@ -174,7 +174,7 @@ void PlayerFrame::initMusiclist(QSharedPointer<Playlist> allmusic, QSharedPointe
         qDebug() << "init music with empty playlist:" << last;
     }
     d->import->hide();
-    d->musicList->resize(958, 720 - 40);
+    d->musicList->resize(958, 720-100);
     d->musicList->raise();
     d->musicList->show();
     d->musicList->setCurrentList(last);
@@ -198,6 +198,8 @@ void PlayerFrame::binding(AppPresenter *presenter)
             d->musicList, &MusicListWidget::onMusiclistChanged);
     connect(presenter, &AppPresenter::musicAdded,
             d->musicList, &MusicListWidget::onMusicAdded);
+    connect(presenter, &AppPresenter::musicPlayed,
+            d->musicList, &MusicListWidget::onMusicPlayed);
 
     connect(d->musicList, &MusicListWidget::musicClicked,
             presenter, &AppPresenter::onMusicPlay);
@@ -218,6 +220,19 @@ void PlayerFrame::binding(AppPresenter *presenter)
             presenter, &AppPresenter::onPlaylistChange);
 
     // Footer Control
+    connect(presenter, &AppPresenter::musicPlayed,
+            d->footer, &Footer::onMusicPlay);
+    connect(presenter, &AppPresenter::musicPaused,
+            d->footer, &Footer::onMusicPause);
+
+    connect(d->footer, &Footer::play,
+            presenter, &AppPresenter::onMusicPlay);
+    connect(d->footer, &Footer::pause,
+            presenter, &AppPresenter::onMusicPause);
+    connect(d->footer, &Footer::prev,
+            presenter, &AppPresenter::onMusicPrev);
+    connect(d->footer, &Footer::next,
+            presenter, &AppPresenter::onMusicNext);
 
     // View control
     connect(presenter, &AppPresenter::showPlaylist,

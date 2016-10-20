@@ -7,7 +7,7 @@
     background-color: rgb(150, 150, 150);
 }
 
-#Footer[playstatus="active"]{
+#Footer[playstatus="playing"]{
     background-color: rgba(0, 0, 0, 0.6);
 }
 
@@ -43,6 +43,15 @@
 }
 #FooterActionPlay:pressed{
     border-image: url(:/image/start_press.png);
+}
+#FooterActionPlay[playstatus=playing]{
+    border-image: url(:/image/pause_normal.png);
+}
+#FooterActionPlay:hover[playstatus=playing]{
+    border-image: url(:/image/pause_hover.png);
+}
+#FooterActionPlay:pressed[playstatus=playing]{
+    border-image: url(:/image/pause_press.png);
 }
 
 #FooterActionNext{

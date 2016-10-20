@@ -22,7 +22,7 @@ public:
     QString title;
     QString artist;
     QString album;
-    qint64  lenght;
+    qint64  length;
     qint64  track;
 };
 

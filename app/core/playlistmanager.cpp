@@ -87,6 +87,7 @@ void PlaylistManager::load()
             continue;
         }
         MusicListInfo info;
+        info.id = playlistid;
         info.url = playlistPath;
         auto emptylist = QSharedPointer<Playlist>(new Playlist(info));
         emptylist->load();

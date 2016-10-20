@@ -21,6 +21,28 @@ int Playlist::length()
     return listinfo.musicMap.size();
 }
 
+const MusicInfo Playlist::prev(const MusicInfo &info)
+{
+    if (0 == listinfo.musicIds.length()) {
+        return MusicInfo();
+    }
+    auto index = listinfo.musicIds.indexOf(info.id);
+    // can not find
+    auto prev = (index + listinfo.musicIds.length() - 1) % listinfo.musicIds.length();
+    return listinfo.musicMap.value(listinfo.musicIds.at(prev));
+}
+
+const MusicInfo Playlist::next(const MusicInfo &info)
+{
+    if (0 == listinfo.musicIds.length()) {
+        return MusicInfo();
+    }
+    auto index = listinfo.musicIds.indexOf(info.id);
+    // can not find
+    auto prev = (index + 1) % listinfo.musicIds.length();
+    return listinfo.musicMap.value(listinfo.musicIds.at(prev));
+}
+
 bool Playlist::contains(const MusicInfo &info)
 {
     return listinfo.musicMap.contains(info.id);
@@ -80,6 +102,7 @@ void Playlist::load()
         info.title = settings.value("Title").toString();
         info.artist = settings.value("Artist").toString();
         info.album = settings.value("Album").toString();
+        info.length = settings.value("Length").toLongLong();
         settings.endGroup();
 
         listinfo.musicMap.insert(key, info);
@@ -106,6 +129,7 @@ void Playlist::save()
         settings.setValue("Title", info.title);
         settings.setValue("Artist", info.artist);
         settings.setValue("Album", info.album);
+        settings.setValue("Length", info.length);
         settings.endGroup();
     }
 
@@ -141,6 +165,7 @@ void Playlist::appendMusic(const MusicInfo &info)
     settings.setValue("Title", info.title);
     settings.setValue("Artist", info.artist);
     settings.setValue("Album", info.album);
+    settings.setValue("Length", info.length);
     settings.endGroup();
     settings.sync();
 

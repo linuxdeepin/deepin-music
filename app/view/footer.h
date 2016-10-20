@@ -11,9 +11,11 @@
 #define FOOTER_H
 
 #include <QFrame>
+#include <QPointer>
 
-#include "../core/playlist.h"
-
+class MusicInfo;
+class Playlist;
+class FooterPrivate;
 class Footer : public QFrame
 {
     Q_OBJECT
@@ -22,21 +24,22 @@ public:
 
 signals:
     void initFooter(QSharedPointer<Playlist> favlist, int mode);
-    void play();
-    void pasue();
-    void next();
-    void prev();
+    void play(QSharedPointer<Playlist> palylist, const MusicInfo &info);
+    void pause(QSharedPointer<Playlist> palylist, const MusicInfo &info);
+    void next(QSharedPointer<Playlist> palylist, const MusicInfo &info);
+    void prev(QSharedPointer<Playlist> palylist, const MusicInfo &info);
     void showLyric();
     void changePlayMode(int);
 
 public slots:
-    void onMusicPause(const MusicInfo &info);
-    void onMusicStop(const MusicInfo &info);
+    void onMusicPlay(QSharedPointer<Playlist> palylist, const MusicInfo &info);
+    void onMusicPause(QSharedPointer<Playlist> palylist, const MusicInfo &info);
+    void onMusicStop(QSharedPointer<Playlist> palylist, const MusicInfo &info);
 
 private:
-    MusicInfo                   m_info;
-    int                         m_mode;
-    QSharedPointer<Playlist>    m_favlist;
+    void updateQssProperty(QWidget *w, const char *name, const QVariant &value);
+
+    QSharedPointer<FooterPrivate>     d;
 };
 
 

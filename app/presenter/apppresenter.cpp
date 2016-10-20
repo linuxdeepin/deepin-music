@@ -142,10 +142,15 @@ void AppPresenter::onPlaylistAdd(bool edit)
 
 void AppPresenter::onMusicPlay(QSharedPointer<Playlist> palylist, const MusicInfo &info)
 {
+    if (d->player->media().canonicalUrl() == QUrl::fromLocalFile(info.url)) {
+        d->player->play();
+        return;
+    }
+    qDebug() << "Fix me: play status" << info.id  << info.url;
+    d->player->stop();
     d->player->setMedia(QUrl::fromLocalFile(info.url));
 
     // TODO: bugfix here, hao to get player ready.
-    qDebug() << "Fix me: play status" << info.id  << info.url ;
     connect(d->player, &QMediaPlayer::mediaStatusChanged,
     this, [ = ](QMediaPlayer::MediaStatus status) {
         if (QMediaPlayer::PlayingState != d->player->state()) {
@@ -153,8 +158,25 @@ void AppPresenter::onMusicPlay(QSharedPointer<Playlist> palylist, const MusicInf
             d->player->play();
         }
     });
-    emit musicPlayed(info);
+    emit musicPlayed(palylist, info);
 }
+
+void AppPresenter::onMusicPause(QSharedPointer<Playlist> playlist, const MusicInfo &info)
+{
+    d->player->pause();
+    emit musicPaused(playlist, playlist->next(info));
+}
+
+void AppPresenter::onMusicPrev(QSharedPointer<Playlist> playlist, const MusicInfo &info)
+{
+    onMusicPlay(playlist, playlist->prev(info));
+}
+
+void AppPresenter::onMusicNext(QSharedPointer<Playlist> playlist, const MusicInfo &info)
+{
+    onMusicPlay(playlist, playlist->next(info));
+}
+
 
 void AppPresenter::onFilesImportDefault(const QStringList &filelist)
 {
@@ -187,7 +209,7 @@ void AppPresenter::onFilesImportDefault(const QStringList &filelist)
         info.title = QString::fromUtf8(f.tag()->title().toCString(true));
         info.artist = QString::fromUtf8(f.tag()->artist().toCString(true));
         info.album = QString::fromUtf8(f.tag()->album().toCString(true));
-        info.lenght = f.audioProperties()->length();
+        info.length = f.audioProperties()->length();
 
         if (info.title.isEmpty()) {
             info.title = QFileInfo(url).baseName();
