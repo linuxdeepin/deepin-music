@@ -30,6 +30,7 @@ public:
 
     void initMusiclist(QSharedPointer<Playlist> allmusic, QSharedPointer<Playlist> last);
     void initPlaylist(QList<QSharedPointer<Playlist> > playlists, QSharedPointer<Playlist> last);
+    void initFooter(QSharedPointer<Playlist> favlist, int mode);
     void binding(AppPresenter *presenter);
 
 private:

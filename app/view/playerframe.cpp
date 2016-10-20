@@ -44,6 +44,7 @@ public:
     ImportWidget    *import     = nullptr;
     MusicListWidget *musicList  = nullptr;
     PlaylistWidget  *playlist   = nullptr;
+    Footer          *footer     = nullptr;
 };
 
 
@@ -121,8 +122,8 @@ PlayerFrame::PlayerFrame(QWidget *parent)
     contentLayout->setMargin(0);
     contentLayout->setSpacing(0);
 
-    auto footer = new Footer;
-    footer->setFixedHeight(60);
+    d->footer = new Footer;
+    d->footer->setFixedHeight(60);
 
     d->import = new ImportWidget;
     d->musicList = new MusicListWidget;
@@ -145,7 +146,7 @@ PlayerFrame::PlayerFrame(QWidget *parent)
     d->playlist->hide();
 
     contentLayout->addWidget(d->stacked);
-    contentLayout->addWidget(footer);
+    contentLayout->addWidget(d->footer);
 
 //    setCentralWidget(contentWidget);
     setContentWidget(contentWidget);
@@ -183,6 +184,11 @@ void PlayerFrame::initMusiclist(QSharedPointer<Playlist> allmusic, QSharedPointe
 void PlayerFrame::initPlaylist(QList<QSharedPointer<Playlist> > playlists, QSharedPointer<Playlist> last)
 {
     d->playlist->initPlaylist(playlists, last);
+}
+
+void PlayerFrame::initFooter(QSharedPointer<Playlist> favlist, int mode)
+{
+    emit d->footer->initFooter(favlist, mode);
 }
 
 void PlayerFrame::binding(AppPresenter *presenter)

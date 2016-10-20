@@ -143,6 +143,8 @@ void Playlist::appendMusic(const MusicInfo &info)
     settings.setValue("Album", info.album);
     settings.endGroup();
     settings.sync();
+
+    emit musicAdded(info);
 }
 
 void Playlist::removeMusic(const MusicInfo &info)
@@ -167,4 +169,6 @@ void Playlist::removeMusic(const MusicInfo &info)
     settings.endGroup();
 
     settings.sync();
+
+    emit musicRemoved(info);
 }

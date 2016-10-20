@@ -49,3 +49,12 @@ RESOURCES += \
     resource/resource.qrc
 
 DISTFILES +=
+
+
+isEmpty(PREFIX){
+    PREFIX = /usr
+}
+binary.path = $${PREFIX}/bin
+binary.files = deepin-music
+
+INSTALLS    += binary

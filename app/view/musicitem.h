@@ -21,9 +21,11 @@ class MusicItem : public QWidget
 public:
     explicit MusicItem(int num, const MusicInfo &info, QWidget *parent = 0);
 
+
     const MusicInfo &info() {return m_info;}
 signals:
     void play();
+    void stop();
 //    void showFile();
     void remove();
     void deleteFile();

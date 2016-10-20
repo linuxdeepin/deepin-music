@@ -26,8 +26,11 @@ public:
     ~AppPresenter();
 
     QSharedPointer<Playlist> allMusicPlaylist();
+    QSharedPointer<Playlist> favMusicPlaylist();
     QSharedPointer<Playlist> lastPlaylist();
     QList<QSharedPointer<Playlist> > allplaylist();
+    int playMode();
+
 signals:
     void showPlaylist();
     void showMusiclist();
@@ -40,15 +43,18 @@ signals:
 
 public slots:
     //! UI: music control interface
-    void onMusicPlay(QSharedPointer<Playlist> allplaylist, const MusicInfo &info);
+    void onMusicPlay(QSharedPointer<Playlist> playlist, const MusicInfo &info);
 //    void onMusicPause(QSharedPointer<Playlist> playlist, const MusicInfo &info);
 //    void onMusicStop(QSharedPointer<Playlist> playlist, const MusicInfo &info);
 //    void onMusicPrev(QSharedPointer<Playlist> playlist, const MusicInfo &info);
 //    void onMusicNext(QSharedPointer<Playlist> playlist, const MusicInfo &info);
 
     //! UI: playlist manager interface
+    //! TODO: refactor
+    void onMusicAdd(const QString &id, const MusicInfo &info);
 //    void onMusicAdd(QSharedPointer<Playlist> playlist, const MusicInfo &info);
-    void onMusicRemove(QSharedPointer<Playlist> allplaylist, const MusicInfo &info);
+    void onMusicRemove(QSharedPointer<Playlist> playlist, const MusicInfo &info);
+
     void onPlaylistAdd(bool edit);
     void onPlaylistChange(QSharedPointer<Playlist> playlist);
 
@@ -56,8 +62,6 @@ public slots:
 //    void onRequestPlaylistMenuData(QSharedPointer<Playlist> playlist);
 //    void onRequestMusiclistMenuData(QSharedPointer<Playlist> playlist, const MusicInfo &selected);
 
-    //! TODO: refactor
-    void onMusicAdd(const QString &id, const MusicInfo &info);
 
 public slots:
     void onFilesImportDefault(const QStringList &filelist);

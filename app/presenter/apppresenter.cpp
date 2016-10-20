@@ -38,6 +38,7 @@ AppPresenter::AppPresenter(QObject *parent)
     qRegisterMetaType<QSharedPointer<Playlist> >();
 
     d->player = new QMediaPlayer(this);
+
     //! load playlist
     d->playlistMgr.load();
 
@@ -66,6 +67,11 @@ QSharedPointer<Playlist> AppPresenter::allMusicPlaylist()
     return d->playlistMgr.playlist(AllMusicListID);
 }
 
+QSharedPointer<Playlist> AppPresenter::favMusicPlaylist()
+{
+    return d->playlistMgr.playlist(FavMusicListID);
+}
+
 QSharedPointer<Playlist> AppPresenter::lastPlaylist()
 {
     return d->playlistMgr.currentPlaylist();
@@ -76,9 +82,13 @@ QList<QSharedPointer<Playlist> > AppPresenter::allplaylist()
     return d->playlistMgr.allplaylist();
 }
 
+int AppPresenter::playMode()
+{
+    return d->playlistMgr.playMode();
+}
+
 void AppPresenter::onMusicRemove(QSharedPointer<Playlist> playlist, const MusicInfo &info)
 {
-    qDebug() << "onMusicRemove";
     playlist->removeMusic(info);
 
     // TODO: do better;
@@ -134,14 +144,16 @@ void AppPresenter::onMusicPlay(QSharedPointer<Playlist> palylist, const MusicInf
 {
     d->player->setMedia(QUrl::fromLocalFile(info.url));
 
+    // TODO: bugfix here, hao to get player ready.
+    qDebug() << "Fix me: play status" << info.id  << info.url ;
     connect(d->player, &QMediaPlayer::mediaStatusChanged,
     this, [ = ](QMediaPlayer::MediaStatus status) {
-        qDebug() << status << info.url;
         if (QMediaPlayer::PlayingState != d->player->state()) {
+            qDebug() << "start play" << d->player->media().canonicalUrl() << status;
             d->player->play();
         }
-        emit musicPlayed(info);
     });
+    emit musicPlayed(info);
 }
 
 void AppPresenter::onFilesImportDefault(const QStringList &filelist)

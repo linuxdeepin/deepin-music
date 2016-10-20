@@ -13,6 +13,7 @@
 #include <QDebug>
 #include <QFileInfo>
 #include <QDir>
+#include <QStyle>
 #include <QProcess>
 
 #include <dthememanager.h>
@@ -80,6 +81,20 @@ MusicItem::MusicItem(int num, const MusicInfo &info, QWidget *parent)
     this->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this, &MusicItem::customContextMenuRequested,
             this, &MusicItem::showContextMenu);
+
+    connect(this, &MusicItem::play,
+    this, [ = ]() {
+        number->setProperty("playstatus", "active");
+        this->style()->unpolish(number);
+        this->style()->polish(number);
+    });
+
+    connect(this, &MusicItem::stop,
+    this, [ = ]() {
+        number->setProperty("playstatus", "");
+        this->style()->unpolish(number);
+        this->style()->polish(number);
+    });
 }
 
 void MusicItem::showContextMenu(const QPoint &pos)
@@ -88,6 +103,7 @@ void MusicItem::showContextMenu(const QPoint &pos)
 
     DMenu playlistMenu;
 
+    bool hasAction = false;
     for (auto playlist : MusicApp::presenter()->allplaylist()) {
         if (playlist->id() == "All") {
             continue;
@@ -96,14 +112,18 @@ void MusicItem::showContextMenu(const QPoint &pos)
             continue;
         }
         if (playlist->id() == "Fav") {
+            hasAction = true;
             auto act = playlistMenu.addAction(tr("My favorites"));
             act->setData("Fav");
             continue;
         }
         auto act = playlistMenu.addAction(playlist->displayName());
         act->setData(playlist->id());
+        hasAction = true;
     }
-    playlistMenu.addSeparator();
+    if (hasAction) {
+        playlistMenu.addSeparator();
+    }
     playlistMenu.addAction(tr("New playlist"))->setData("New");
 
     // TODO: add all list
