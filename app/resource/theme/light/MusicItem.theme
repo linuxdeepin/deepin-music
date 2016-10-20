@@ -7,6 +7,11 @@
     color: #797979;
 }
 
+#MusicNumber[playstatus="active"]{
+    color: transparent;
+    image: url(:/image/playing_normal.png);
+}
+
 #MusicTitle{
     border: 1px solid transparent;
     qproperty-alignment: AlignLeft;

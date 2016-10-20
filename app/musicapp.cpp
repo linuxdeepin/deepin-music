@@ -72,5 +72,6 @@ void MusicApp::init()
 
     d->playerFrame->initPlaylist(d->appPresenter->allplaylist() , d->appPresenter->lastPlaylist());
     d->playerFrame->initMusiclist(d->appPresenter->allMusicPlaylist(), d->appPresenter->lastPlaylist());
+    d->playerFrame->initFooter(d->appPresenter->favMusicPlaylist(), d->appPresenter->playMode());
     d->playerFrame->binding(d->appPresenter);
 }

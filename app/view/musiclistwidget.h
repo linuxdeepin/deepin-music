@@ -13,6 +13,7 @@
 #include <QFrame>
 
 class Playlist;
+class MusicItem;
 class MusicInfo;
 class MusicListView;
 
@@ -31,6 +32,7 @@ signals:
     void musicAdd(const QString &playlistID, const MusicInfo &info);
 
 public slots:
+    void onMusicRemoved(QSharedPointer<Playlist> palylist, const MusicInfo &info);
     void onMusicAdded(QSharedPointer<Playlist> palylist, const MusicInfo &info);
     void onMusiclistChanged(QSharedPointer<Playlist> palylist);
 
@@ -38,6 +40,7 @@ private:
     void addMusicInfo(MusicListView *m_musiclist, const MusicInfo &info);
 
     QSharedPointer<Playlist>    m_palylist;
+    MusicItem                   *m_last         = nullptr;
     MusicListView               *m_musiclist    = nullptr;
 };
 

@@ -14,11 +14,13 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QPushButton>
+#include <QDebug>
 
 #include <dthememanager.h>
 DWIDGET_USE_NAMESPACE
 
 #include "../musicapp.h"
+#include "../core/playlist.h"
 
 Footer::Footer(QWidget *parent) : QFrame(parent)
 {
@@ -35,7 +37,7 @@ Footer::Footer(QWidget *parent) : QFrame(parent)
     auto title = new QLabel;
     title->setObjectName("FooterTitle");
     title->setMaximumWidth(240);
-    title->setText(tr("Unknow Title TitleTitleTitleTitleTitleTitleTitleTitleTitleTitleTitleTitleTitle"));
+    title->setText(tr("Unknow Title"));
 
     auto artlist = new QLabel;
     artlist->setObjectName("FooterArtlist");
@@ -136,17 +138,70 @@ Footer::Footer(QWidget *parent) : QFrame(parent)
         btFavorite->show();
         btLyric->show();
 
+        m_info = info;
+        // set fav
+        if (m_favlist) {
+            btFavorite->setProperty("fav", m_favlist->contains(info));
+            this->style()->unpolish(btFavorite);
+            this->style()->polish(btFavorite);
+        }
+
         this->setProperty("playstatus", "active");
         this->style()->unpolish(this);
         this->style()->polish(this);
     });
 
+    connect(btFavorite, &QPushButton::clicked, this, [ = ](bool) {
+        if (m_favlist) {
+            // TODO: signal ??
+            if (m_favlist->contains(m_info)) {
+                m_favlist->removeMusic(m_info);
+            } else {
+                // TODO: check all list has it
+                m_favlist->appendMusic(m_info);
+            }
+        }
+    });
+
     connect(btPlayList, &QPushButton::clicked, this, [ = ](bool) {
         emit  MusicApp::presenter()->showPlaylist();
     });
+
+    connect(this, &Footer::initFooter, this, [ = ](QSharedPointer<Playlist> favlist, int mode) {
+        m_mode = mode;
+        m_favlist = favlist;
+        if (favlist) {
+            connect(favlist.data(), &Playlist::musicRemoved, this, [ = ](const MusicInfo & info) {
+                qDebug() << "remove" << info.id << m_info.id;
+                if (info.id == m_info.id) {
+                    btFavorite->setProperty("fav", false);
+                    this->style()->unpolish(btFavorite);
+                    this->style()->polish(btFavorite);
+                    this->style()->unpolish(this);
+                    this->style()->polish(this);
+                }
+            });
+
+            connect(favlist.data(), &Playlist::musicAdded, this, [ = ](const MusicInfo & info) {
+                qDebug() << "add" << info.id << m_info.id;
+                if (info.id == m_info.id) {
+                    btFavorite->setProperty("fav", true);
+                    this->style()->unpolish(btFavorite);
+                    this->style()->polish(btFavorite);
+                    this->style()->unpolish(this);
+                    this->style()->polish(this);
+                }
+            });
+        }
+    });
 }
 
-void Footer::onMusicPlay(const MusicInfo &info)
+void Footer::onMusicPause(const MusicInfo &info)
+{
+
+}
+
+void Footer::onMusicStop(const MusicInfo &info)
 {
 
 }

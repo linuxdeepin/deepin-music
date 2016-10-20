@@ -12,7 +12,7 @@
 
 #include <QFrame>
 
-class MusicInfo;
+#include "../core/playlist.h"
 
 class Footer : public QFrame
 {
@@ -21,11 +21,23 @@ public:
     explicit Footer(QWidget *parent = 0);
 
 signals:
+    void initFooter(QSharedPointer<Playlist> favlist, int mode);
+    void play();
+    void pasue();
+    void next();
+    void prev();
+    void showLyric();
+    void changePlayMode(int);
 
 public slots:
-    void onMusicPlay(const MusicInfo &info);
-//    void onMusicPause(const MusicInfo &info);
-//    void onMusicStop(const MusicInfo &info);
+    void onMusicPause(const MusicInfo &info);
+    void onMusicStop(const MusicInfo &info);
+
+private:
+    MusicInfo                   m_info;
+    int                         m_mode;
+    QSharedPointer<Playlist>    m_favlist;
 };
+
 
 #endif // FOOTER_H

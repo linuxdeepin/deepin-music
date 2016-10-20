@@ -65,6 +65,16 @@
     border-image: url(:/image/fav_press.png);
 }
 
+#FooterActionFavorite[fav=true]{
+    border-image: url(:/image/unfav_normal.png);
+}
+#FooterActionFavorite:hover[fav=true]{
+    border-image: url(:/image/unfav_hover.png);
+}
+#FooterActionFavorite:pressed[fav=true]{
+    border-image: url(:/image/unfav_press.png);
+}
+
 #FooterActionLyric{
     border-image: url(:/image/lrc_normal.png);
 }

@@ -65,11 +65,17 @@ QString PlaylistManager::newDisplayName()
     return QString("%1 %2").arg(temp).arg(i);
 }
 
+int PlaylistManager::playMode()
+{
+    return m_palyMode;
+}
+
 void PlaylistManager::load()
 {
     settings.beginGroup("PlaylistManager");
     auto currentTitle = settings.value("Current").toString();
     sortPlaylists = settings.value("SortPlaylist").toStringList();
+    m_palyMode = settings.value("PlayMode").toInt();
     settings.endGroup();
 
     for (auto &playlistid : sortPlaylists) {

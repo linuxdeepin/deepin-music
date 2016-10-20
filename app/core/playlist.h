@@ -16,12 +16,21 @@
 
 #include "../model/musiclistmodel.h"
 
+
 class Playlist : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString displayName READ displayName WRITE setDisplayName NOTIFY displayNameChanged)
 public:
     explicit Playlist(const MusicListInfo &musiclistinfo, QObject *parent = 0);
+
+    enum PlayMode {
+        Order  = 0,
+        RepeatList,
+        Repeat,
+        Shufflt
+    };
+    Q_ENUM(PlayMode)
 
 public:
     //! public interface
@@ -37,8 +46,8 @@ public:
 
 public slots:
     void setDisplayName(const QString &name);
-    void appendMusic(const MusicInfo &listinfo);
-    void removeMusic(const MusicInfo &listinfo);
+    void appendMusic(const MusicInfo &info);
+    void removeMusic(const MusicInfo &info);
 
     //! private interface
 public:
@@ -46,6 +55,8 @@ public:
     void save();
 
 signals:
+    void musicAdded(const MusicInfo &info);
+    void musicRemoved(const MusicInfo &info);
     void removed();
     void displayNameChanged(QString displayName);
 
