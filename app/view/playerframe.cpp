@@ -18,6 +18,8 @@
 #include <QResizeEvent>
 #include <QHBoxLayout>
 #include <QStackedLayout>
+#include <QFileDialog>
+#include <QStandardPaths>
 
 #include <dutility.h>
 #include <dthememanager.h>
@@ -40,13 +42,14 @@ DWIDGET_USE_NAMESPACE
 class PlayerFramePrivate
 {
 public:
-    QFrame  *stacked    = nullptr;
+    QFrame                 *content = nullptr;
+    ResizableStackedWidget  *stacked    = nullptr;
     ImportWidget    *import     = nullptr;
     MusicListWidget *musicList  = nullptr;
     PlaylistWidget  *playlist   = nullptr;
     Footer          *footer     = nullptr;
+    LyricView       *lyric      = nullptr;
 };
-
 
 static void slideWidget(QWidget *left, QWidget *right)
 {
@@ -106,53 +109,80 @@ static void slideEdgeWidget(QWidget *right, QRect start, QRect end, bool hide = 
 
 }
 
+QT_BEGIN_NAMESPACE
+extern Q_WIDGETS_EXPORT void qt_blurImage(QPainter *p, QImage &blurImage, qreal radius, bool quality, bool alphaOnly, int transposed = 0);
+QT_END_NAMESPACE
+#include <QMatrix3x3>
+#include <QImage>
+#include <QGraphicsScene>
+#include <QGraphicsPixmapItem>
+#include <QPainter>
+#include <QGraphicsBlurEffect>
+QImage applyEffectToImage(QImage src, QGraphicsEffect *effect, int extent = 0)
+{
+    if (src.isNull()) { return QImage(); }  //No need to do anything else!
+    if (!effect) { return src; }            //No need to do anything else!
+    QGraphicsScene scene;
+    QGraphicsPixmapItem item;
+    item.setPixmap(QPixmap::fromImage(src));
+    item.setGraphicsEffect(effect);
+    scene.addItem(&item);
+    QImage res(src.size() + QSize(extent * 2, extent * 2), QImage::Format_ARGB32);
+    res.fill(Qt::transparent);
+    QPainter ptr(&res);
+    scene.render(&ptr, QRectF(), QRectF(-extent, -extent, src.width() + extent * 2, src.height() + extent * 2));
+    return res;
+}
 
 PlayerFrame::PlayerFrame(QWidget *parent)
     : DWindow(parent), d(new PlayerFramePrivate)
 {
-//    setFixedSize(960, 720);
+    QImage image = QImage((":/image/cover_max_background.png")).scaled(960, 720);
+    QGraphicsBlurEffect *blur = new QGraphicsBlurEffect;
+    blur->setBlurRadius(60);
+    QImage result = applyEffectToImage(image, blur);
+
+//    setBackgroundImage(QPixmap::fromImage(result));
+    setObjectName("PlayerFrame");
 
     auto title = new TitleBar;
     setTitlebarWidget(title);
 
-    auto contentWidget = new QWidget;
-    contentWidget->setFixedSize(958, 720 - 40);
-    contentWidget->setObjectName("BackgroundWidget");
-    auto contentLayout = new QVBoxLayout(contentWidget);
+    d->content = new QFrame;
+    d->content->setObjectName("BackgroundWidget");
+    d->content->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    auto contentLayout = new QVBoxLayout(d->content);
     contentLayout->setMargin(0);
     contentLayout->setSpacing(0);
 
+    d->import = new ImportWidget;
+    d->musicList = new MusicListWidget;
+    d->lyric = new LyricView;
+    d->playlist = new PlaylistWidget(d->stacked);
+    d->playlist->setFixedWidth(220);
     d->footer = new Footer;
     d->footer->setFixedHeight(60);
 
-    d->import = new ImportWidget;
-    d->musicList = new MusicListWidget;
-    auto lv = new LyricView;
-    lv->hide();
-    d->import->hide();
-
-    d->stacked = new QFrame;
-    d->playlist = new PlaylistWidget(d->stacked);
-    d->playlist->hide();
-    d->playlist->setFixedWidth(220);
-    auto slayout = new  QStackedLayout(d->stacked);
-    slayout->setMargin(0);
-    slayout->setSpacing(0);
+    d->stacked = new ResizableStackedWidget;
     d->stacked->setObjectName("ContentWidget");
-    slayout->addWidget(d->import);
-    slayout->addWidget(d->musicList);
-    slayout->addWidget(lv);
-    lv->hide();
+
+    d->stacked->addWidget(d->import);
+    d->stacked->addWidget(d->musicList);
+    d->stacked->addWidget(d->lyric);
+    d->stacked->addWidget(d->playlist);
+
+    d->lyric->hide();
+    d->import->hide();
     d->playlist->hide();
+    d->musicList->hide();
 
     contentLayout->addWidget(d->stacked);
     contentLayout->addWidget(d->footer);
-
-//    setCentralWidget(contentWidget);
-    setContentWidget(contentWidget);
+    setContentWidget(d->content);
+//    setCentralWidget(d->content);
     D_THEME_INIT_WIDGET(PlayerFrame);
 
-    setFixedSize(960, 720);
+    resize(960, 720);
 }
 
 PlayerFrame::~PlayerFrame()
@@ -174,7 +204,7 @@ void PlayerFrame::initMusiclist(QSharedPointer<Playlist> allmusic, QSharedPointe
         qDebug() << "init music with empty playlist:" << last;
     }
     d->import->hide();
-    d->musicList->resize(958, 720-100);
+    d->musicList->resize(958, 720 - 100);
     d->musicList->raise();
     d->musicList->show();
     d->musicList->setCurrentList(last);
@@ -186,15 +216,15 @@ void PlayerFrame::initPlaylist(QList<QSharedPointer<Playlist> > playlists, QShar
     d->playlist->initPlaylist(playlists, last);
 }
 
-void PlayerFrame::initFooter(QSharedPointer<Playlist> favlist, int mode)
+void PlayerFrame::initFooter(QSharedPointer<Playlist> favlist, QSharedPointer<Playlist> current, int mode)
 {
-    emit d->footer->initFooter(favlist, mode);
+    emit d->footer->initFooter(favlist, current, mode);
 }
 
 void PlayerFrame::binding(AppPresenter *presenter)
 {
     // Music list binding
-    connect(presenter, &AppPresenter::playlistChanged,
+    connect(presenter, &AppPresenter::selectedPlaylistChanged,
             d->musicList, &MusicListWidget::onMusiclistChanged);
     connect(presenter, &AppPresenter::musicAdded,
             d->musicList, &MusicListWidget::onMusicAdded);
@@ -209,7 +239,7 @@ void PlayerFrame::binding(AppPresenter *presenter)
             presenter, &AppPresenter::onMusicRemove);
 
     // Play list bindding
-    connect(presenter, &AppPresenter::playlistChanged,
+    connect(presenter, &AppPresenter::selectedPlaylistChanged,
             d->playlist, &PlaylistWidget::onCurrentChanged);
     connect(presenter, &AppPresenter::playlistAdded,
             d->playlist, &PlaylistWidget::onPlaylistAdded);
@@ -217,13 +247,17 @@ void PlayerFrame::binding(AppPresenter *presenter)
     connect(d->playlist, &PlaylistWidget::addPlaylist,
             presenter, &AppPresenter::onPlaylistAdd);
     connect(d->playlist, &PlaylistWidget::selectPlaylist,
-            presenter, &AppPresenter::onPlaylistChange);
+            presenter, &AppPresenter::onSelectedPlaylistChanged);
 
     // Footer Control
     connect(presenter, &AppPresenter::musicPlayed,
             d->footer, &Footer::onMusicPlay);
     connect(presenter, &AppPresenter::musicPaused,
             d->footer, &Footer::onMusicPause);
+    connect(presenter, &AppPresenter::musicAdded,
+            d->footer, &Footer::onMusicAdded);
+    connect(presenter, &AppPresenter::musicRemoved,
+            d->footer, &Footer::onMusicRemoved);
 
     connect(d->footer, &Footer::play,
             presenter, &AppPresenter::onMusicPlay);
@@ -233,11 +267,33 @@ void PlayerFrame::binding(AppPresenter *presenter)
             presenter, &AppPresenter::onMusicPrev);
     connect(d->footer, &Footer::next,
             presenter, &AppPresenter::onMusicNext);
+    connect(d->footer, &Footer::toggleFavourite,
+            presenter, &AppPresenter::onToggleFavourite);
+
+    // Import bindding
+    connect(d->import, &ImportWidget::importMusicDirectory,
+            presenter, &AppPresenter::onImportMusicDirectory);
+    connect(d->import, &ImportWidget::importFiles,
+            this, &PlayerFrame::onSelectImportFiles);
+    connect(this, &PlayerFrame::importSelectFiles,
+            presenter, &AppPresenter::onImportFiles);
 
     // View control
-    connect(presenter, &AppPresenter::showPlaylist,
+    connect(presenter, &AppPresenter::requestImportFiles,
+            this, &PlayerFrame::onSelectImportFiles);
+
+    connect(d->footer, &Footer::showLyric,
     this, [ = ]() {
-        d->playlist->resize(d->playlist->width(), d->stacked->height());
+        qDebug() << "showLyric";
+        slideWidget(d->musicList, d->lyric);
+        d->lyric->resize(d->musicList->size());
+        d->lyric->raise();
+        d->lyric->show();
+    });
+
+    connect(d->footer, &Footer::showPlaylist,
+    this, [ = ]() {
+        d->playlist->resize(d->playlist->width(), d->stacked->height() - d->footer->height());
         QRect start(this->width(), 0, d->playlist->width(), d->playlist->height());
         QRect end(this->width() - d->playlist->width(), 0, d->playlist->width(), d->playlist->height());
         d->playlist->raise();
@@ -255,4 +311,33 @@ void PlayerFrame::binding(AppPresenter *presenter)
         d->musicList->raise();
         d->musicList->show();
     });
+}
+
+void PlayerFrame::resizeEvent(QResizeEvent *e)
+{
+    DWindow::resizeEvent(e);
+    QSize newSize = DWindow::size();
+    d->stacked->setFixedSize(newSize.width(), newSize.height() - titlebarHeight());
+    d->musicList->setFixedSize(newSize.width(),
+                               newSize.height() - titlebarHeight() - d->footer->height());
+
+    if (d->playlist->isVisible()) {
+        d->playlist->resize(d->playlist->width(), d->stacked->height() - d->footer->height());
+        QRect start(this->width(), 0, d->playlist->width(), d->playlist->height());
+        QRect end(this->width() - d->playlist->width(), 0, d->playlist->width(), d->playlist->height());
+        d->playlist->setGeometry(end);
+    }
+}
+
+void PlayerFrame::onSelectImportFiles()
+{
+    QFileDialog fileDlg;
+    auto musicDir =  QStandardPaths::standardLocations(QStandardPaths::MusicLocation);
+    fileDlg.setDirectory(musicDir.first());
+
+    fileDlg.setViewMode(QFileDialog::Detail);
+    fileDlg.setFileMode(QFileDialog::Directory);
+    if (QFileDialog::Accepted == fileDlg.exec()) {
+        emit importSelectFiles(fileDlg.selectedFiles());
+    }
 }

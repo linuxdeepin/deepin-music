@@ -16,6 +16,11 @@ MusicListView::MusicListView(QWidget *parent) : QListWidget(parent)
 {
     setObjectName("MusicListView");
 
+    setAcceptDrops(true);
+    setDragDropMode(QAbstractItemView::DropOnly);
+    viewport()->setAcceptDrops(true);
+    setDropIndicatorShown(false);
+
     setSelectionMode(QListView::ExtendedSelection);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);

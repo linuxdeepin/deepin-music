@@ -44,8 +44,6 @@ ImportWidget::ImportWidget(QWidget *parent) : QFrame(parent)
     QString linkText = QString(linkTemplate).arg(tr("Scan")).arg(tr("Scan"));
     text->setText(QString(tr("You can %1 or drop music here")).arg(linkText));
 
-//    connect(text, SIGNAL(linkActivated(QString)),
-//            this, SLOT(onLogLinkActivated(QString)));
 
     layout->addStretch();
     layout->addWidget(logo, 0, Qt::AlignCenter);
@@ -59,17 +57,11 @@ ImportWidget::ImportWidget(QWidget *parent) : QFrame(parent)
 
     connect(importButton, &QPushButton::clicked,
     this, [ = ] {
-        QFileDialog fileDlg(this);
-        fileDlg.setViewMode(QFileDialog::Detail);
-        fileDlg.setFileMode(QFileDialog::Directory);
-        if (QFileDialog::Accepted == fileDlg.exec())
-        {
-            qDebug() << "select " << fileDlg.selectedFiles();
-            emit this->importFiles(fileDlg.selectedFiles());
-        }
+        emit this->importFiles();
     });
 
-    connect(this, &ImportWidget::importFiles,
-            MusicApp::presenter(), &AppPresenter::onFilesImportDefault,
-            Qt::QueuedConnection);
+    connect(text, &QLabel::linkActivated,
+    this, [ = ](const QString & /*link*/) {
+        emit this->importMusicDirectory();
+    });
 }

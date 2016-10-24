@@ -7,22 +7,9 @@
  * (at your option) any later version.
  **/
 
-#ifndef IMPORTVIEW_H
-#define IMPORTVIEW_H
+#include "player.h"
 
-#include <QFrame>
-
-class ImportWidget : public QFrame
+player::player(QObject *parent) : QObject(parent)
 {
-    Q_OBJECT
-public:
-    explicit ImportWidget(QWidget *parent = 0);
 
-signals:
-    void importMusicDirectory();
-    void importFiles();
-
-public slots:
-};
-
-#endif // IMPORTVIEW_H
+}

@@ -24,6 +24,7 @@ public:
     QString album;
     qint64  length;
     qint64  track;
+    bool    favourite;
 };
 
 typedef QList<MusicInfo>    MusicList;

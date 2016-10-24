@@ -12,6 +12,8 @@
 #include <QFileInfo>
 #include <QDebug>
 #include <QUuid>
+#include <QApplication>
+#include <QThread>
 
 #include "../musicapp.h"
 
@@ -72,6 +74,8 @@ int PlaylistManager::playMode()
 
 void PlaylistManager::load()
 {
+//    qDebug() frameles<< QThread::currentThread() << qApp->thread();
+
     settings.beginGroup("PlaylistManager");
     auto currentTitle = settings.value("Current").toString();
     sortPlaylists = settings.value("SortPlaylist").toStringList();
@@ -115,10 +119,10 @@ void PlaylistManager::load()
         addPlaylist(info);
         playlist(FavMusicListID)->save();
     }
-    m_currentPlaylist = playlist(currentTitle);
-    if (m_currentPlaylist.isNull()) {
+    m_playingPlaylist = playlist(currentTitle);
+    if (m_playingPlaylist.isNull()) {
         qDebug() << "change to default all palylist";
-        m_currentPlaylist = playlist(AllMusicListID);
+        m_playingPlaylist = playlist(AllMusicListID);
     }
 }
 
@@ -163,23 +167,38 @@ QSharedPointer<Playlist> PlaylistManager::playlist(const QString &id)
     return playlists.value(id);
 }
 
-QSharedPointer<Playlist> PlaylistManager::currentPlaylist() const
+QSharedPointer<Playlist> PlaylistManager::playingPlaylist() const
 {
-    return m_currentPlaylist;
+    return m_playingPlaylist;
 }
 
-void PlaylistManager::setCurrentPlaylist(QSharedPointer<Playlist> currentPlaylist)
+QSharedPointer<Playlist> PlaylistManager::selectedPlaylist() const
 {
-    if (m_currentPlaylist == currentPlaylist) {
+    return m_selectedPlaylist;
+}
+
+void PlaylistManager::setPlayingPlaylist(QSharedPointer<Playlist> currentPlaylist)
+{
+    if (m_playingPlaylist == currentPlaylist) {
         return;
     }
-    m_currentPlaylist = currentPlaylist;
-    emit currentPlaylistChanged(currentPlaylist);
+    m_playingPlaylist = currentPlaylist;
+    emit playingPlaylistChanged(currentPlaylist);
 
     settings.beginGroup("PlaylistManager");
-    settings.setValue("Current", m_currentPlaylist->id());
+    settings.setValue("Current", m_playingPlaylist->id());
     settings.endGroup();
     settings.sync();
+}
+
+void PlaylistManager::setSelectedPlaylist(QSharedPointer<Playlist> selectedPlaylist)
+{
+    if (m_selectedPlaylist == selectedPlaylist)
+        return;
+
+    m_selectedPlaylist = selectedPlaylist;
+    qDebug() << selectedPlaylist;
+    emit selectedPlaylistChanged(selectedPlaylist);
 }
 
 QString PlaylistManager::getPlaylistPath(const QString &id)
@@ -193,9 +212,9 @@ void PlaylistManager::insertPlaylist(const QString &id, QSharedPointer<Playlist>
 
     connect(playlist.data(), &Playlist::removed,
     this, [ = ] {
-        if (m_currentPlaylist.isNull() || m_currentPlaylist->id() == deleteID)
+        if (m_playingPlaylist.isNull() || m_playingPlaylist->id() == deleteID)
         {
-            setCurrentPlaylist(this->playlist(AllMusicListID));
+            setPlayingPlaylist(this->playlist(AllMusicListID));
         }
         QFile::remove(getPlaylistPath(deleteID));
         playlists.remove(deleteID);
@@ -213,6 +232,16 @@ void PlaylistManager::insertPlaylist(const QString &id, QSharedPointer<Playlist>
         }
 
         settings.sync();
+    });
+
+    connect(playlist.data(), &Playlist::musicAdded,
+    this, [ = ](const MusicInfo & info) {
+        emit musicAdded(playlist,  info);
+    });
+
+    connect(playlist.data(), &Playlist::musicRemoved,
+    this, [ = ](const MusicInfo & info) {
+        emit musicRemoved(playlist,  info);
     });
 
     playlists.insert(id, playlist);

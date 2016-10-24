@@ -3,13 +3,9 @@
     border-top-right-radius: 0;
     border-bottom-right-radius: 3;
     border-bottom-left-radius: 3;
-    border-color: rgba(0, 0, 0, 0.00);
-    background-color: rgb(150, 150, 150);
-}
-
-#Footer[playstatus="playing"]{
     background-color: rgba(0, 0, 0, 0.6);
 }
+
 
 #FooterCover {
     image: url(:/image/cover_min.png);

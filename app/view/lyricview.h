@@ -22,6 +22,9 @@ public:
     explicit LyricView(QWidget *parent = 0);
 
     virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
+    void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
+
+    void setLyricLines(const QStringList &lines);
 signals:
 
 public slots:

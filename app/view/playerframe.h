@@ -13,6 +13,7 @@
 #include <DWindow>
 #include <QScopedPointer>
 #include <QMainWindow>
+#include "resizablestackedwidget.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -30,8 +31,15 @@ public:
 
     void initMusiclist(QSharedPointer<Playlist> allmusic, QSharedPointer<Playlist> last);
     void initPlaylist(QList<QSharedPointer<Playlist> > playlists, QSharedPointer<Playlist> last);
-    void initFooter(QSharedPointer<Playlist> favlist, int mode);
+    void initFooter(QSharedPointer<Playlist> favlist, QSharedPointer<Playlist> current, int mode);
     void binding(AppPresenter *presenter);
+
+    void resizeEvent(QResizeEvent *e) Q_DECL_OVERRIDE;
+signals:
+    void importSelectFiles(const QStringList &filelist);
+
+public slots:
+    void onSelectImportFiles();
 
 private:
     QScopedPointer<PlayerFramePrivate> d;

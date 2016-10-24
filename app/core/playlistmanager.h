@@ -22,7 +22,8 @@ class PlaylistManager : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(QSharedPointer<Playlist> currentPlaylist READ currentPlaylist WRITE setCurrentPlaylist NOTIFY currentPlaylistChanged)
+    Q_PROPERTY(QSharedPointer<Playlist> playingPlaylist READ playingPlaylist WRITE setPlayingPlaylist NOTIFY playingPlaylistChanged)
+    Q_PROPERTY(QSharedPointer<Playlist> selectedPlaylist READ selectedPlaylist WRITE setSelectedPlaylist NOTIFY selectedPlaylistChanged)
 public:
     explicit PlaylistManager(QObject *parent = 0);
     ~PlaylistManager();
@@ -32,18 +33,25 @@ public:
 
     int playMode();
     QList<QSharedPointer<Playlist> > allplaylist();
-    QSharedPointer<Playlist> currentPlaylist() const;
     QSharedPointer<Playlist> playlist(const QString &id);
+    QSharedPointer<Playlist> playingPlaylist() const;
+    QSharedPointer<Playlist> selectedPlaylist() const;
 
     QSharedPointer<Playlist> addPlaylist(const MusicListInfo &listinfo);
 
     void load();
     void sync();
+
 signals:
-    void currentPlaylistChanged(QSharedPointer<Playlist> currentPlaylist);
+    void playingPlaylistChanged(QSharedPointer<Playlist> playingPlaylist);
+    void selectedPlaylistChanged(QSharedPointer<Playlist> selectedPlaylist);
+    void musicAdded(QSharedPointer<Playlist> palylist, const MusicInfo &info);
+    void musicRemoved(QSharedPointer<Playlist> palylist, const MusicInfo &info);
+
 
 public slots:
-    void setCurrentPlaylist(QSharedPointer<Playlist> currentPlaylist);
+    void setPlayingPlaylist(QSharedPointer<Playlist> playingPlaylist);
+    void setSelectedPlaylist(QSharedPointer<Playlist> selectedPlaylist);
 
 private:
     QString getPlaylistPath(const QString &id);
@@ -51,7 +59,8 @@ private:
 
     int                                         m_palyMode;
     QSettings                                   settings;
-    QSharedPointer<Playlist>                    m_currentPlaylist;
+    QSharedPointer<Playlist>                    m_playingPlaylist;
+    QSharedPointer<Playlist>                    m_selectedPlaylist;
     QStringList                                 sortPlaylists;
     QMap<QString, QSharedPointer<Playlist>>     playlists;
 };

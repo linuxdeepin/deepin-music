@@ -1,5 +1,6 @@
 #MusicListView{
-    border: 0px solid red;
+background-color: transparent;
+    border-top: 1px solid rgba(0, 0, 0, 0.04);
     show-decoration-selected: 1;
     selection-color: white;
     selection-background-color: #2ca7f8;
@@ -9,6 +10,17 @@
 {
     height: 36px;
     font-size: 12pt;
-    font-weight: bold;
     color:red;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+}
+#MusicListView::item:focus {
+    border:none;
+}
+#MusicListView::item:selected:!active {
+    background-color: #2ca7f8;
+}
+#MusicListView::item:selected:active {
+    background-color: #2ca7f8;
+}
+#MusicListView::item:hover {
 }

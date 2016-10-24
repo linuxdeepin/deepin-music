@@ -14,48 +14,50 @@
 #include <QScrollArea>
 #include <QPushButton>
 #include <QHBoxLayout>
+#include <QPainter>
 #include <QResizeEvent>
+#include <QPaintEvent>
 
 #include <dthememanager.h>
 DWIDGET_USE_NAMESPACE
 
 const QString aaa =
-    "You're the one that i want' the one that i need\n"
-    "你是我想要的那个唯一，也是我需要的那个唯一\n\n"
-    "The one that i gotta have just to succeed\n"
-    "是唯一我想要成功的唯一\n\n"
-    "When i first saw you' i knew it was real\n"
-    "当我第一次看到你的时候.我知道你是我真正的唯一\n\n"
-    "I'm sorry about the pain i made you feel\n"
-    "真的对不起我让你陷入了痛苦的境地\n\n"
-    "That wasn't me; let me show you the way\n"
-    "那不是我！那不是真正的我！\n\n"
-    "I looked for the sun' but it's raining today\n"
-    "就像我想要太阳，天空却偏偏下起了雨一样的无奈\n\n"
-    "You're the one that i want' the one that i need\n"
-    "你是我想要的那个唯一，也是我需要的那个唯一\n\n"
+    "You're the one that i want' the one that i need"
+    "你是我想要的那个唯一，也是我需要的那个唯一\n"
     "The one that i gotta have just to succeed"
-    "是唯一我想要成功的唯一\n\n"
-    "When i first saw you' i knew it was real\n"
-    "当我第一次看到你的时候.我知道你是我真正的唯一\n\n"
-    "I'm sorry about the pain i made you feel\n"
-    "真的对不起我让你陷入了痛苦的境地\n\n"
-    "That wasn't me; let me show you the way\n"
-    "那不是我！那不是真正的我！\n\n"
-    "I looked for the sun' but it's raining today\n"
-    "就像我想要太阳，天空却偏一样的无奈\n\n"
-    "You're the one that i want' the one that i need\n"
-    "你是我想要的那个唯一，也是我需要的那个唯一\n\n"
+    "是唯一我想要成功的唯一\n"
+    "When i first saw you' i knew it was real"
+    "当我第一次看到你的时候.我知道你是我真正的唯一\n"
+    "I'm sorry about the pain i made you feel"
+    "真的对不起我让你陷入了痛苦的境地\n"
+    "That wasn't me; let me show you the way"
+    "那不是我！那不是真正的我！\n"
+    "I looked for the sun' but it's raining today"
+    "就像我想要太阳，天空却偏偏下起了雨一样的无奈\n"
+    "You're the one that i want' the one that i need"
+    "你是我想要的那个唯一，也是我需要的那个唯一\n"
     "The one that i gotta have just to succeed"
-    "是唯一我想要成功的唯一\n\n"
-    "When i first saw you' i knew it was real\n"
-    "当我第一次看到你的时候.我知道你是我真正的唯一\n\n"
-    "I'm sorry about the pain i made you feel\n"
-    "真的对不起我让你陷入了痛苦的境地\n\n"
-    "That wasn't me; let me show you the way\n"
-    "那不是我！那不是真正的我！\n\n"
-    "I looked for the sun' but it's raining today\n"
-    "就像我想要太阳，天空却偏偏下起了雨一样的无奈\n\n";
+    "是唯一我想要成功的唯一\n"
+    "When i first saw you' i knew it was real"
+    "当我第一次看到你的时候.我知道你是我真正的唯一\n"
+    "I'm sorry about the pain i made you feel"
+    "真的对不起我让你陷入了痛苦的境地\n"
+    "That wasn't me; let me show you the way"
+    "那不是我！那不是真正的我！\n"
+    "I looked for the sun' but it's raining today"
+    "就像我想要太阳，天空却偏一样的无奈\n"
+    "You're the one that i want' the one that i need"
+    "你是我想要的那个唯一，也是我需要的那个唯一\n"
+    "The one that i gotta have just to succeed"
+    "是唯一我想要成功的唯一\n"
+    "When i first saw you' i knew it was real"
+    "当我第一次看到你的时候.我知道你是我真正的唯一\n"
+    "I'm sorry about the pain i made you feel"
+    "真的对不起我让你陷入了痛苦的境地\n"
+    "That wasn't me; let me show you the way"
+    "那不是我！那不是真正的我！\n"
+    "I looked for the sun' but it's raining today"
+    "就像我想要太阳，天空却偏偏下起了雨一样的无奈\n";
 
 
 LyricView::LyricView(QWidget *parent) : QFrame(parent)
@@ -73,7 +75,7 @@ LyricView::LyricView(QWidget *parent) : QFrame(parent)
 
     m_lyric = new QLabel;
     m_lyric->setObjectName("LyricText");
-    m_lyric->setText(aaa) ;
+    setLyricLines(aaa.split("\n"));
     m_lyric->setWordWrap(true);
 
     m_scroll->setWidget(m_lyric);
@@ -85,19 +87,21 @@ LyricView::LyricView(QWidget *parent) : QFrame(parent)
     btBack->setObjectName("LyricBack");
 
     QSizePolicy spCover(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    spCover.setHorizontalStretch(50);
+    spCover.setHorizontalStretch(80);
     cover->setSizePolicy(spCover);
     layout->addWidget(cover, 0, Qt::AlignCenter);
 
     QSizePolicy spText(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    spText.setHorizontalStretch(50);
+    spText.setHorizontalStretch(20);
     m_scroll->setSizePolicy(spText);
+
     layout->addWidget(m_scroll, 0, Qt::AlignCenter);
 
     QSizePolicy spBack(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    spBack.setHorizontalStretch(10);
+    spBack.setHorizontalStretch(20);
     btBack->setSizePolicy(spBack);
     btBack->setFixedSize(27, 23);
+
     layout->addWidget(btBack, 0, Qt::AlignRight | Qt::AlignTop);
 
 
@@ -106,8 +110,55 @@ LyricView::LyricView(QWidget *parent) : QFrame(parent)
 
 void LyricView::resizeEvent(QResizeEvent *event)
 {
-    qDebug() << event;
     QWidget::resizeEvent(event);
-    m_scroll->setFixedSize(event->size().width() * 0.5, event->size().height() * 0.9);
-    m_lyric->setFixedWidth(event->size().width() * 0.45);
+    m_scroll->setFixedSize(event->size().width() * 45 / 100, event->size().height() * 90 / 100);
+    m_lyric->setFixedWidth(event->size().width() * 35 / 100);
+}
+
+void LyricView::paintEvent(QPaintEvent *e)
+{
+    QFrame::paintEvent(e);
+
+    QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing);
+    painter.setRenderHint(QPainter::HighQualityAntialiasing);
+
+    QBrush brush(QColor(255, 255, 255, 25));
+    auto hcenter = m_scroll->y() + m_scroll->height() / 2;
+    auto xstart = m_scroll->x();
+    auto xend = m_scroll->x() + m_scroll->width();
+
+    QPainterPath path;
+    path.moveTo(xstart, hcenter - 4);
+    path.lineTo(xstart, hcenter + 5);
+    path.lineTo(xstart + 9, hcenter);
+    path.lineTo(xstart, hcenter - 4);
+
+    path.moveTo(xstart + 20, hcenter);
+    path.lineTo(xend - 20, hcenter);
+    path.lineTo(xend - 20, hcenter + 1);
+    path.lineTo(xstart + 20, hcenter + 1);
+    path.lineTo(xstart + 20, hcenter);
+
+    path.moveTo(xend, hcenter - 4);
+    path.lineTo(xend, hcenter + 5);
+    path.lineTo(xend - 9, hcenter);
+    path.lineTo(xend, hcenter - 4);
+
+    painter.fillPath(path, brush);
+
+
+}
+
+void LyricView::setLyricLines(const QStringList &lines)
+{
+    QString lyric;
+    for (auto line : lines) {
+        if (line.isEmpty()) {
+            lyric.append("<br />");
+        } else {
+        }
+        lyric.append(QString("<p style='line-height:180%'>%1</p>").arg(line));
+    }
+    m_lyric->setText(lyric);
 }

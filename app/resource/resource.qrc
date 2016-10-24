@@ -81,5 +81,6 @@
         <file>image/show_lyc_normal.png</file>
         <file>image/show_lyc_press.png</file>
         <file>image/slider_handle.png</file>
+        <file>image/cover_max_background.png</file>
     </qresource>
 </RCC>

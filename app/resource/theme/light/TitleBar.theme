@@ -1,5 +1,5 @@
 #TitleBar {
-    border: 2px solid transparent;
+    border: 0px solid red;
 }
 
 #TitleIcon {

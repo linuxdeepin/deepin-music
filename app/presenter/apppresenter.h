@@ -32,17 +32,25 @@ public:
     int playMode();
 
 signals:
+    // change ui signal
+    void requestImportFiles();
     void showPlaylist();
     void showMusiclist();
 
-    void playlistAdded(QSharedPointer<Playlist>);
-    void playlistChanged(QSharedPointer<Playlist>);
+    //! request import dialog
+    void importMediaFiles(QSharedPointer<Playlist> playlist, const QStringList &filelist);
 
+    // to playlist
+    void playlistAdded(QSharedPointer<Playlist>);
+    void playlistRemove(QSharedPointer<Playlist>);
+    void selectedPlaylistChanged(QSharedPointer<Playlist>);
+    void playingPlaylistChanged(QSharedPointer<Playlist>);
+
+    // to music list
     void musicAdded(QSharedPointer<Playlist> palylist, const MusicInfo &info);
     void musicPlayed(QSharedPointer<Playlist> palylist, const MusicInfo &info);
     void musicPaused(QSharedPointer<Playlist> palylist, const MusicInfo &info);
-//    void musicPreved(QSharedPointer<Playlist> palylist, const MusicInfo &info);
-//    void musicNexted(QSharedPointer<Playlist> palylist, const MusicInfo &info);
+    void musicRemoved(QSharedPointer<Playlist> palylist, const MusicInfo &info);
 
 public slots:
     //! UI: music control interface
@@ -51,6 +59,7 @@ public slots:
 //    void onMusicStop(QSharedPointer<Playlist> playlist, const MusicInfo &info);
     void onMusicPrev(QSharedPointer<Playlist> playlist, const MusicInfo &info);
     void onMusicNext(QSharedPointer<Playlist> playlist, const MusicInfo &info);
+    void onToggleFavourite(const MusicInfo &info);
 
     //! UI: playlist manager interface
     //! TODO: refactor
@@ -59,7 +68,7 @@ public slots:
     void onMusicRemove(QSharedPointer<Playlist> playlist, const MusicInfo &info);
 
     void onPlaylistAdd(bool edit);
-    void onPlaylistChange(QSharedPointer<Playlist> playlist);
+    void onSelectedPlaylistChanged(QSharedPointer<Playlist> playlist);
 
     //! UI: menu interface
 //    void onRequestPlaylistMenuData(QSharedPointer<Playlist> playlist);
@@ -67,7 +76,8 @@ public slots:
 
 
 public slots:
-    void onFilesImportDefault(const QStringList &filelist);
+    void onImportMusicDirectory();
+    void onImportFiles(const QStringList &filelist);
 
 private:
     void prepareData();

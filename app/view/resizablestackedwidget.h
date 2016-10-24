@@ -7,22 +7,21 @@
  * (at your option) any later version.
  **/
 
-#ifndef IMPORTVIEW_H
-#define IMPORTVIEW_H
+#pragma once
 
-#include <QFrame>
+#include <QStackedWidget>
 
-class ImportWidget : public QFrame
+class ResizableStackedWidget : public QStackedWidget
 {
     Q_OBJECT
 public:
-    explicit ImportWidget(QWidget *parent = 0);
+    explicit ResizableStackedWidget(QWidget *parent = 0);
 
+    void addWidget(QWidget *pWidget);
 signals:
-    void importMusicDirectory();
-    void importFiles();
 
 public slots:
+    void onCurrentChanged(int index);
+
 };
 
-#endif // IMPORTVIEW_H

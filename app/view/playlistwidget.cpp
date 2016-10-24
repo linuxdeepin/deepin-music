@@ -53,6 +53,10 @@ PlaylistWidget::PlaylistWidget(QWidget *parent) : QFrame(parent)
     connect(m_listview, &PlayListView::itemClicked,
     this, [ = ](QListWidgetItem * item) {
         auto playlistItem = qobject_cast<PlayListItem *>(m_listview->itemWidget(item));
+        if (!playlistItem) {
+            qCritical() << "playlistItem is empty" << item << playlistItem;
+            return;
+        }
         emit selectPlaylist(playlistItem->data());
     });
 }
@@ -60,7 +64,7 @@ PlaylistWidget::PlaylistWidget(QWidget *parent) : QFrame(parent)
 void PlaylistWidget::initPlaylist(QList<QSharedPointer<Playlist> > playlists, QSharedPointer<Playlist> last)
 {
     if (playlists.length() <= 0) {
-        qCritical()<< "playlist is empty";
+        qCritical() << "playlist is empty";
         return;
     }
 

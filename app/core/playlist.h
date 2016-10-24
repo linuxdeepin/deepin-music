@@ -11,11 +11,10 @@
 #define PLAYLIST_H
 
 #include <QObject>
-
+#include <QSharedPointer>
 #include <QSettings>
 
 #include "../model/musiclistmodel.h"
-
 
 class Playlist : public QObject
 {
@@ -67,5 +66,7 @@ private:
     QSettings       settings;
     MusicListInfo   listinfo;
 };
+
+typedef QSharedPointer<Playlist> PlaylistPtr;
 
 #endif // PLAYLIST_H

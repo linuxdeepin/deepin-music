@@ -47,6 +47,7 @@ MusicListWidget::MusicListWidget(QWidget *parent) : QFrame(parent)
     auto btPlayAll = new QPushButton;
     btPlayAll->setObjectName("MusicListPlayAll");
     btPlayAll->setText(tr("Play All"));
+    btPlayAll->setFixedHeight(28);
 
     auto cbSort = new DComboBox;
     cbSort->setObjectName("MusicListSort");
@@ -142,7 +143,7 @@ void MusicListWidget::onMusicRemoved(QSharedPointer<Playlist> palylist, const Mu
 
 void MusicListWidget::addMusicInfo(MusicListView *m_musiclist, const MusicInfo &info)
 {
-    qDebug() << "add" << m_musiclist->count()<<info.title;
+//    qDebug() << "add" << m_musiclist->count()<<info.title;
     auto item = new QListWidgetItem;
     auto musicItem = new MusicItem(m_musiclist->model()->rowCount() + 1, info);
 
@@ -173,17 +174,14 @@ void MusicListWidget::setCurrentList(QSharedPointer<Playlist> palylist)
         m_palylist.data()->disconnect(this);
     }
     m_palylist = palylist;
-    connect(m_palylist.data(), &Playlist::musicRemoved, this, [ = ](const MusicInfo & info) {
-        this->onMusicRemoved(m_palylist, info);
-    });
 }
 
 void MusicListWidget::onMusicAdded(QSharedPointer<Playlist> palylist, const MusicInfo &info)
 {
     if (palylist != m_palylist) {
-        qWarning() << "check playlist failed!"
-                   << "m_palylist:" << m_palylist
-                   << "playlist:" << m_palylist;
+//        qWarning() << "check playlist failed!"
+//                   << "m_palylist:" << m_palylist
+//                   << "playlist:" << m_palylist;
         return;
     }
     addMusicInfo(m_musiclist, info);

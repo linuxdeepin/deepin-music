@@ -1,14 +1,16 @@
 #LyricView {
-    background-image: url(/home/iceyer/1.jpg);
+    background-color: rgba(0,0,0,40%);
 }
 
 #LyricCover {
-    image: url(:/image/cover_max.png);
+    image: url(/home/iceyer/Music/Cardcaptor Sakura/CD.jpg);
 }
 
 #LyricTextScroll {
-    background-color: rgba(0,0,255,1%);
+    background-color: transparent;
+    border-radius: 3px;
 }
+
 #LyricText {
     qproperty-alignment: AlignCenter;
     font-size: 16px;
