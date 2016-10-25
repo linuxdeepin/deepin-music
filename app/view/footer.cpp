@@ -80,7 +80,7 @@ Footer::Footer(QWidget *parent) : QFrame(parent)
     d->progress->setFixedHeight(2);
     d->progress->setMinimum(0);
     d->progress->setMaximum(1000);
-    d->progress->setValue(240);
+    d->progress->setValue(0);
     qDebug() << d->progress->singleStep() << d->progress->pageStep();
 
     auto layout = new QHBoxLayout();

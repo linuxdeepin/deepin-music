@@ -107,7 +107,9 @@ void Playlist::load()
         info.title = settings.value("Title").toString();
         info.artist = settings.value("Artist").toString();
         info.album = settings.value("Album").toString();
+        info.filetype = settings.value("Filetype").toString();
         info.length = settings.value("Length").toLongLong();
+        info.size = settings.value("Size").toLongLong();
         settings.endGroup();
 
         listinfo.musicMap.insert(key, info);
@@ -135,6 +137,8 @@ void Playlist::save()
         settings.setValue("Artist", info.artist);
         settings.setValue("Album", info.album);
         settings.setValue("Length", info.length);
+        settings.setValue("Filetype", info.filetype);
+        settings.setValue("Size", info.size);
         settings.endGroup();
     }
 
@@ -171,6 +175,8 @@ void Playlist::appendMusic(const MusicInfo &info)
     settings.setValue("Artist", info.artist);
     settings.setValue("Album", info.album);
     settings.setValue("Length", info.length);
+    settings.setValue("Filetype", info.filetype);
+    settings.setValue("Size", info.size);
     settings.endGroup();
     settings.sync();
 

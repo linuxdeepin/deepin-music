@@ -23,6 +23,7 @@ DWIDGET_USE_NAMESPACE
 #include "../model/musiclistmodel.h"
 #include "../core/playlist.h"
 #include "../musicapp.h"
+#include "widget/infodialog.h"
 
 MusicItem::MusicItem(int num, const MusicInfo &info, QWidget *parent)
     : QWidget(parent), m_info(info)
@@ -48,7 +49,7 @@ MusicItem::MusicItem(int num, const MusicInfo &info, QWidget *parent)
 
     auto length = new QLabel;
     length->setObjectName("MusicLength");
-    length->setText(QString("%1").arg(info.length));
+    length->setText(lengthString(info.length));
 
     QSizePolicy spNumber(QSizePolicy::Fixed, QSizePolicy::Preferred);
     number->setSizePolicy(spNumber);
@@ -168,6 +169,11 @@ void MusicItem::showContextMenu(const QPoint &pos)
 
         if (action->text() == tr("Remove from list")) {
             emit this->remove();
+        }
+
+        if (action->text() == tr("Song info")) {
+            InfoDialog dlg(m_info);
+            dlg.exec();
         }
     });
 

@@ -1,0 +1,28 @@
+InfoDialog{
+    qproperty-backgroundColor: white;
+    qproperty-borderColor: rgba(0, 0, 0, 0.2);
+}
+#InfoCover{
+    border: 1px solid transparent;
+}
+#InfoTitle{
+    width: 260px;
+    height: 18px;
+    font-size: 12px;
+    text-align: center;
+}
+#InfoSplit{
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+#InfoKey{
+    font-size: 11px;
+    line-height: 1.18;
+    text-align: right;
+    color: #606060;
+}
+#InfoValue{
+    font-size: 11px;
+    line-height: 1.64;
+    color: #000000;
+}

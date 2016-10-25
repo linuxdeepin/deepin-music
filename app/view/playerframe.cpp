@@ -348,6 +348,8 @@ void PlayerFrame::paintEvent(QPaintEvent *e)
     int windowExtern = 40 + 1 * 2;
 
     QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing);
+    painter.setRenderHint(QPainter::HighQualityAntialiasing);
 
     QRect windowRect = QWidget::rect().marginsRemoved(
                            QMargins(windowExtern, windowExtern - 10, windowExtern, windowExtern + 10));

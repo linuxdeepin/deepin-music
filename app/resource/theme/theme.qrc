@@ -11,5 +11,6 @@
         <file>light/MusicListWidget.theme</file>
         <file>light/PlayerFrame.theme</file>
         <file>light/PlayListView.theme</file>
+        <file>light/InfoDialog.theme</file>
     </qresource>
 </RCC>

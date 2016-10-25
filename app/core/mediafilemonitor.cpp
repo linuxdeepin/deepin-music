@@ -72,6 +72,8 @@ void MediaFileMonitor::importPlaylistFiles(QSharedPointer<Playlist> playlist, co
         info.artist = QString::fromUtf8(f.tag()->artist().toCString(true));
         info.album = QString::fromUtf8(f.tag()->album().toCString(true));
         info.length = f.audioProperties()->length();
+        info.size = f.file()->length();
+        info.filetype =  QFileInfo(url).suffix();
 
         if (info.title.isEmpty()) {
             info.title = QFileInfo(url).baseName();
