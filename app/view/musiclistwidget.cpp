@@ -71,6 +71,12 @@ MusicListWidget::MusicListWidget(QWidget *parent) : QFrame(parent)
             emit musicItem->play();
         }
     });
+
+    connect(btPlayAll, &QPushButton::clicked, this, [ = ](bool) {
+        if (m_palylist) {
+            emit this->playall(m_palylist);
+        }
+    });
 }
 
 void MusicListWidget::resizeEvent(QResizeEvent *event)
@@ -95,7 +101,7 @@ void MusicListWidget::onMusicPlayed(QSharedPointer<Playlist> palylist, const Mus
         item = m_musiclist->item(i);
         musicItem = qobject_cast<MusicItem *>(m_musiclist->itemWidget(item));
         if (musicItem && musicItem->info().id == info.id) {
-            qDebug() << "find"<< i << item << m_musiclist->count();
+            qDebug() << "find" << i << item << m_musiclist->count();
             break;
         }
     }

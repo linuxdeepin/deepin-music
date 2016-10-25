@@ -35,6 +35,7 @@ public:
     void binding(AppPresenter *presenter);
 
     void resizeEvent(QResizeEvent *e) Q_DECL_OVERRIDE;
+    void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
 signals:
     void importSelectFiles(const QStringList &filelist);
 

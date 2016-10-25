@@ -52,6 +52,9 @@ signals:
     void musicPaused(QSharedPointer<Playlist> palylist, const MusicInfo &info);
     void musicRemoved(QSharedPointer<Playlist> palylist, const MusicInfo &info);
 
+    // to control
+    void progrossChanged(qint64 value, qint64 range);
+
 public slots:
     //! UI: music control interface
     void onMusicPlay(QSharedPointer<Playlist> playlist, const MusicInfo &info);
@@ -60,6 +63,10 @@ public slots:
     void onMusicPrev(QSharedPointer<Playlist> playlist, const MusicInfo &info);
     void onMusicNext(QSharedPointer<Playlist> playlist, const MusicInfo &info);
     void onToggleFavourite(const MusicInfo &info);
+    void onChangeProgress(qint64 value, qint64 range);
+
+    // music list
+    void onPlayall(QSharedPointer<Playlist> playlist);
 
     //! UI: playlist manager interface
     //! TODO: refactor

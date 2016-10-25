@@ -21,6 +21,11 @@ int Playlist::length()
     return listinfo.musicMap.size();
 }
 
+const MusicInfo Playlist::first()
+{
+    return listinfo.musicMap.value(listinfo.musicIds.value(0));
+}
+
 const MusicInfo Playlist::prev(const MusicInfo &info)
 {
     if (0 == listinfo.musicIds.length()) {

@@ -24,7 +24,20 @@ public:
     explicit Footer(QWidget *parent = 0);
 
 signals:
+    //!
+    //! \brief initFooter
+    //! \param favlist
+    //! \param current
+    //! \param mode
+    //!
     void initFooter(QSharedPointer<Playlist> favlist, QSharedPointer<Playlist> current, int mode);
+
+    //!
+    //! \brief changeProgress
+    //! \param value
+    //! \param duration
+    //!
+    void changeProgress(qint64 value, qint64 duration);
 
     void play(QSharedPointer<Playlist> palylist, const MusicInfo &info);
     void pause(QSharedPointer<Playlist> palylist, const MusicInfo &info);
@@ -42,6 +55,7 @@ public slots:
     void onMusicPlay(QSharedPointer<Playlist> palylist, const MusicInfo &info);
     void onMusicPause(QSharedPointer<Playlist> palylist, const MusicInfo &info);
     void onMusicStop(QSharedPointer<Playlist> palylist, const MusicInfo &info);
+    void onProgressChanged(qint64 value, qint64 duration);
 
 private:
     void updateQssProperty(QWidget *w, const char *name, const QVariant &value);

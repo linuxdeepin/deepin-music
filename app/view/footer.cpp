@@ -23,6 +23,8 @@ DWIDGET_USE_NAMESPACE
 #include "../core/playlist.h"
 #include "../core/playlistmanager.h"
 
+#include "widget/slider.h"
+
 static const char *sPropertyFavourite         = "fav";
 static const char *sPropertyPlayStatus        = "playstatus";
 
@@ -58,7 +60,7 @@ public:
     QPushButton *btLyric    = nullptr;
     QPushButton *btPlayMode = nullptr;
     QPushButton *btSound    = nullptr;
-    QProgressBar *progress  = nullptr;
+    Slider     *progress  = nullptr;
 
     QSharedPointer<Playlist>    m_playinglist;
     MusicInfo                   m_info;
@@ -73,10 +75,15 @@ Footer::Footer(QWidget *parent) : QFrame(parent)
     auto vboxlayout = new QVBoxLayout(this);
     vboxlayout->setSpacing(0);
     vboxlayout->setMargin(0);
-    d->progress = new QProgressBar;
+    d->progress = new Slider(Qt::Horizontal);
+    d->progress->setObjectName("FooterProgress");
     d->progress->setFixedHeight(2);
+    d->progress->setMinimum(0);
+    d->progress->setMaximum(1000);
+    d->progress->setValue(240);
+    qDebug() << d->progress->singleStep() << d->progress->pageStep();
 
-    auto layout = new QHBoxLayout(this);
+    auto layout = new QHBoxLayout();
     layout->setContentsMargins(10, 10, 20, 10);
     layout->setSpacing(20);
 
@@ -178,6 +185,11 @@ Footer::Footer(QWidget *parent) : QFrame(parent)
 
     D_THEME_INIT_WIDGET(Footer);
 
+    connect(d->progress, &Slider::valueChanged, this, [ = ](int value) {
+        auto range = d->progress->maximum() - d->progress->minimum();
+        Q_ASSERT(range != 0);
+        emit this->changeProgress(value, range);
+    });
     connect(d->btPlay, &QPushButton::clicked, this, [ = ](bool) {
         qDebug() << d->m_playinglist;
         if (!d->m_playinglist) {
@@ -266,6 +278,16 @@ void Footer::onMusicPause(QSharedPointer<Playlist> palylist, const MusicInfo &in
 void Footer::onMusicStop(QSharedPointer<Playlist> palylist, const MusicInfo &info)
 {
 
+}
+
+void Footer::onProgressChanged(qint64 value, qint64 duration)
+{
+    auto length = d->progress->maximum() - d->progress->minimum();
+    Q_ASSERT(length != 0);
+    Q_ASSERT(duration != 0);
+    d->progress->blockSignals(true);
+    d->progress->setValue(value * length / duration);
+    d->progress->blockSignals(false);
 }
 
 void Footer::updateQssProperty(QWidget *w, const char *name, const QVariant &value)

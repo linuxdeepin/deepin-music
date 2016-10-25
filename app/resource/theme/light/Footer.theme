@@ -6,6 +6,24 @@
     background-color: rgba(0, 0, 0, 0.6);
 }
 
+#FooterProgress::groove:horizontal {
+    background: transparent;
+    position: absolute; /* absolutely position 4px from the left and right of the widget. setting margins on the widget should work too... */
+    left: 0px; right: 0px;
+}
+
+#FooterProgress::handle:horizontal {
+    background: 2ca7f8;
+    margin: 0 -6px; /* expand outside the groove */
+}
+
+#FooterProgress::add-page:horizontal {
+    background: transparent;
+}
+
+#FooterProgress::sub-page:horizontal {
+    background: #2ca7f8;
+}
 
 #FooterCover {
     image: url(:/image/cover_min.png);

@@ -99,6 +99,7 @@ void MusicItem::onMusicStop()
     this->style()->polish(number);
 }
 
+#include <QUrl>
 void MusicItem::showContextMenu(const QPoint &pos)
 {
     QPoint globalPos = this->mapToGlobal(pos);
@@ -153,7 +154,16 @@ void MusicItem::showContextMenu(const QPoint &pos)
         }
 
         if (action->text() == tr("Display in file manager")) {
-            QProcess::startDetached("gvfs-open " + QFileInfo(m_info.url).absoluteDir().absolutePath());
+            // TODO: better
+            auto dirUrl = QUrl::fromLocalFile(QFileInfo(m_info.url).absoluteDir().absolutePath());
+            QFileInfo ddefilemanger("/usr/bin/dde-file-manager");
+            if (ddefilemanger.exists()) {
+                auto dirFile = QUrl::fromLocalFile(QFileInfo(m_info.url).absoluteFilePath());
+                auto url = QString("%1?selectUrl=%2").arg(dirUrl.toString()).arg(dirFile.toString());
+                QProcess::startDetached("dde-file-manager" , QStringList() << url);
+            } else {
+                QProcess::startDetached("gvfs-open" , QStringList() << dirUrl.toString());
+            }
         }
 
         if (action->text() == tr("Remove from list")) {

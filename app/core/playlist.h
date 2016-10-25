@@ -40,6 +40,7 @@ public:
     bool editmode();
     int length();
 
+    const MusicInfo first();
     const MusicInfo prev(const MusicInfo &info);
     const MusicInfo next(const MusicInfo &info);
 

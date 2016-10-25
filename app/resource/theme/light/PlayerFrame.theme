@@ -1,5 +1,5 @@
 #PlayerFrame{
-border: 0px solid rgba(255, 0, 0,1);
+    border: 0px solid rgba(255, 0, 0,1);
     background-color: white;
 }
 
@@ -7,10 +7,15 @@ border: 0px solid rgba(255, 0, 0,1);
     border: 0px solid rgba(255, 255, 0,1);
 }
 #BackgroundWidget2 {
+border-image: url(:/image/cover_max_background.png);
     border: 1px solid rgba(255, 0, 0,1);
     border-top: 1px solid rgba(255, 0, 0, 1);
     border-top-left-radius: 0;
     border-top-right-radius: 0;
     border-bottom-right-radius: 3;
     border-bottom-left-radius: 3;
+}
+
+#PlayerFrame::DTitlebar{
+    background-color: red;
 }

@@ -42,8 +42,9 @@ DWIDGET_USE_NAMESPACE
 class PlayerFramePrivate
 {
 public:
-    QFrame                 *content = nullptr;
     ResizableStackedWidget  *stacked    = nullptr;
+    QFrame          *content    = nullptr;
+    TitleBar        *title      = nullptr;
     ImportWidget    *import     = nullptr;
     MusicListWidget *musicList  = nullptr;
     PlaylistWidget  *playlist   = nullptr;
@@ -142,11 +143,12 @@ PlayerFrame::PlayerFrame(QWidget *parent)
     blur->setBlurRadius(60);
     QImage result = applyEffectToImage(image, blur);
 
-//    setBackgroundImage(QPixmap::fromImage(result));
+    setBackgroundImage(QPixmap::fromImage(result));
     setObjectName("PlayerFrame");
 
-    auto title = new TitleBar;
-    setTitlebarWidget(title);
+    d->title = new TitleBar;
+    d->title->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+    setTitlebarWidget(d->title);
 
     d->content = new QFrame;
     d->content->setObjectName("BackgroundWidget");
@@ -226,6 +228,8 @@ void PlayerFrame::binding(AppPresenter *presenter)
     // Music list binding
     connect(presenter, &AppPresenter::selectedPlaylistChanged,
             d->musicList, &MusicListWidget::onMusiclistChanged);
+    connect(presenter, &AppPresenter::musicRemoved,
+            d->musicList, &MusicListWidget::onMusicRemoved);
     connect(presenter, &AppPresenter::musicAdded,
             d->musicList, &MusicListWidget::onMusicAdded);
     connect(presenter, &AppPresenter::musicPlayed,
@@ -237,6 +241,8 @@ void PlayerFrame::binding(AppPresenter *presenter)
             presenter, &AppPresenter::onMusicAdd);
     connect(d->musicList, &MusicListWidget::musicRemove,
             presenter, &AppPresenter::onMusicRemove);
+    connect(d->musicList, &MusicListWidget::playall,
+            presenter, &AppPresenter::onPlayall);
 
     // Play list bindding
     connect(presenter, &AppPresenter::selectedPlaylistChanged,
@@ -258,6 +264,8 @@ void PlayerFrame::binding(AppPresenter *presenter)
             d->footer, &Footer::onMusicAdded);
     connect(presenter, &AppPresenter::musicRemoved,
             d->footer, &Footer::onMusicRemoved);
+    connect(presenter, &AppPresenter::progrossChanged,
+            d->footer, &Footer::onProgressChanged);
 
     connect(d->footer, &Footer::play,
             presenter, &AppPresenter::onMusicPlay);
@@ -267,6 +275,8 @@ void PlayerFrame::binding(AppPresenter *presenter)
             presenter, &AppPresenter::onMusicPrev);
     connect(d->footer, &Footer::next,
             presenter, &AppPresenter::onMusicNext);
+    connect(d->footer, &Footer::changeProgress,
+            presenter, &AppPresenter::onChangeProgress);
     connect(d->footer, &Footer::toggleFavourite,
             presenter, &AppPresenter::onToggleFavourite);
 
@@ -319,7 +329,10 @@ void PlayerFrame::resizeEvent(QResizeEvent *e)
     QSize newSize = DWindow::size();
     d->stacked->setFixedSize(newSize.width(), newSize.height() - titlebarHeight());
     d->musicList->setFixedSize(newSize.width(),
-                               newSize.height() - titlebarHeight() - d->footer->height());
+                               newSize.height() - titlebarHeight() - d->footer->height() - 1);
+    d->lyric->setFixedSize(newSize.width(),
+                           newSize.height() - titlebarHeight() - d->footer->height() - 1);
+    d->title->setFixedSize(newSize.width(), titlebarHeight() - 2);
 
     if (d->playlist->isVisible()) {
         d->playlist->resize(d->playlist->width(), d->stacked->height() - d->footer->height());
@@ -327,6 +340,36 @@ void PlayerFrame::resizeEvent(QResizeEvent *e)
         QRect end(this->width() - d->playlist->width(), 0, d->playlist->width(), d->playlist->height());
         d->playlist->setGeometry(end);
     }
+}
+
+void PlayerFrame::paintEvent(QPaintEvent *e)
+{
+    int radius = 3;
+    int windowExtern = 40 + 1 * 2;
+
+    QPainter painter(this);
+
+    QRect windowRect = QWidget::rect().marginsRemoved(
+                           QMargins(windowExtern, windowExtern - 10, windowExtern, windowExtern + 10));
+
+    QPoint topLeft(windowRect.x(), windowRect.y());
+    QPoint bottomRight(windowRect.x() + windowRect.width(), windowRect.y() + windowRect.height());
+    QPainterPath border;
+    border.addRoundedRect(windowRect, radius, radius);
+
+    QLinearGradient linearGradient(topLeft, QPoint(topLeft.x(), bottomRight.y()));
+    linearGradient.setColorAt(0.0, Qt::white);
+    linearGradient.setColorAt(0.2, Qt::white);
+    linearGradient.setColorAt(1.0, Qt::white);
+
+    QPen borderPen(Qt::white);
+
+    painter.setRenderHint(QPainter::Antialiasing);
+    painter.setBrush(QBrush(linearGradient));
+    painter.strokePath(border, borderPen);
+    painter.fillPath(border, QBrush(linearGradient));
+
+    DWindow::paintEvent(e);
 }
 
 void PlayerFrame::onSelectImportFiles()

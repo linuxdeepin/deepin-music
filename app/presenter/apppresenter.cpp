@@ -62,6 +62,10 @@ AppPresenter::AppPresenter(QObject *parent)
         emit playingPlaylistChanged(playlist);
     });
 
+    connect(d->player, &QMediaPlayer::positionChanged, this, [ = ](qint64 position) {
+        emit progrossChanged(position, d->player->duration());
+    });
+
     connect(&d->playlistMgr, &PlaylistManager::musicAdded,
             this, &AppPresenter::musicAdded);
     connect(&d->playlistMgr, &PlaylistManager::musicRemoved,
@@ -206,6 +210,19 @@ void AppPresenter::onToggleFavourite(const MusicInfo &info)
     }
 }
 
+void AppPresenter::onChangeProgress(qint64 value, qint64 range)
+{
+    auto position = value * d->player->duration() / range;
+    if (position < 0) {
+        qCritical() << "invaild position:" << d->player->media().canonicalUrl() << position;
+    }
+    d->player->setPosition(position);
+}
+
+void AppPresenter::onPlayall(QSharedPointer<Playlist> playlist)
+{
+    this->onMusicPlay(playlist, playlist->first());
+}
 
 void AppPresenter::onImportFiles(const QStringList &filelist)
 {

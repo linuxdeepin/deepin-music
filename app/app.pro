@@ -27,7 +27,8 @@ SOURCES += \
     view/playlistwidget.cpp \
     core/mediafilemonitor.cpp \
     view/resizablestackedwidget.cpp \
-    core/player.cpp
+    core/player.cpp \
+    view/widget/slider.cpp
 
 HEADERS += \
     view/playerframe.h \
@@ -48,7 +49,8 @@ HEADERS += \
     view/playlistwidget.h \
     core/mediafilemonitor.h \
     view/resizablestackedwidget.h \
-    core/player.h
+    core/player.h \
+    view/widget/slider.h
 
 RESOURCES += \
     resource/theme/theme.qrc \
