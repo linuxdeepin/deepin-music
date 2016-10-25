@@ -17,8 +17,6 @@
 #include <QStandardItemModel>
 #include <QStringListModel>
 
-#include <QMediaPlayer>
-
 #include <dthememanager.h>
 #include <dcombobox.h>
 DWIDGET_USE_NAMESPACE
@@ -171,6 +169,10 @@ void MusicListWidget::addMusicInfo(MusicListView *m_musiclist, const MusicInfo &
     connect(musicItem, &MusicItem::addToPlaylist, this, [ = ](const QString & id) {
         emit musicAdd(id, musicItem->info());
     });
+
+    connect(musicItem, &MusicItem::requestCustomContextMenu, this, [ = ](const QPoint & pos) {
+        emit this->requestCustomContextMenu(musicItem, pos);
+    });
 }
 
 
@@ -205,4 +207,14 @@ void MusicListWidget::onMusiclistChanged(QSharedPointer<Playlist> playlist)
     for (auto &info : playlist->allmusic()) {
         addMusicInfo(m_musiclist, info);
     }
+}
+
+void MusicListWidget::onCustomContextMenuRequest(MusicItem* item,
+                                                 const QPoint &pos,
+                                                 QSharedPointer<Playlist> selectedlist,
+                                                 QSharedPointer<Playlist> favlist,
+                                                 QList<QSharedPointer<Playlist> > newlists)
+{
+    Q_ASSERT(item != nullptr);
+    item->showContextMenu(pos, selectedlist, favlist, newlists);
 }

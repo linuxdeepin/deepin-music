@@ -16,6 +16,7 @@
 
 class QLabel;
 class MusicInfo;
+class Playlist;
 class MusicItem : public QWidget
 {
     Q_OBJECT
@@ -29,15 +30,19 @@ signals:
     void remove();
     void deleteFile();
     void addToPlaylist(const QString &id);
+    void requestCustomContextMenu(const QPoint &pos);
 
 public slots:
     void onMusicPlay();
     void onMusicStop();
 
-    void showContextMenu(const QPoint &pos);
+    void showContextMenu(const QPoint &pos,
+                         QSharedPointer<Playlist> selectedlist,
+                         QSharedPointer<Playlist> favlist,
+                         QList<QSharedPointer<Playlist> >newlist);
 private:
     MusicInfo   m_info;
-    QLabel      *number = nullptr;
+    QLabel      *m_number = nullptr;
 };
 
 #endif // MUSICITEM_H

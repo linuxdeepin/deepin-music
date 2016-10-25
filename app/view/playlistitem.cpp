@@ -20,6 +20,7 @@
 DWIDGET_USE_NAMESPACE
 
 #include "../core/playlist.h"
+#include "widget/menu.h"
 
 PlayListItem::PlayListItem(QSharedPointer<Playlist> playlist, QWidget *parent) : QFrame(parent)
 {
@@ -111,20 +112,18 @@ PlayListItem::PlayListItem(QSharedPointer<Playlist> playlist, QWidget *parent) :
 
 void PlayListItem::showContextMenu(const QPoint &pos)
 {
-    // Handle global position
     QPoint globalPos = this->mapToGlobal(pos);
 
-    // Create menu and insert some actions
-    DMenu myMenu;
-    auto playact = myMenu.addAction(tr("Play"));
+    Menu menu;
+    auto playact = menu.addAction(tr("Play"));
     playact->setDisabled(0 == m_data->length());
 
     if (m_data->id() != "All" && m_data->id() != "Fav") {
-        myMenu.addAction(tr("Rename"));
-        myMenu.addAction(tr("Delete"));
+        menu.addAction(tr("Rename"));
+        menu.addAction(tr("Delete"));
     }
 
-    connect(&myMenu, &DMenu::triggered, this, [ = ](DAction * action) {
+    connect(&menu, &Menu::triggered, this, [ = ](QAction * action) {
         if (action->text() == "Rename") {
             QTimer::singleShot(0, this, [ = ] {
                 m_titleedit->setFocus();
@@ -139,6 +138,5 @@ void PlayListItem::showContextMenu(const QPoint &pos)
         }
     });
 
-    // Show context menu at handling position
-    myMenu.exec(globalPos);
+    menu.exec(globalPos);
 }

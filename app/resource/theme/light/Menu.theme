@@ -1,0 +1,12 @@
+QMenu {
+    border-radius: 3px;
+    background-color: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-top: 2px solid rgba(0, 0, 0, 0.2);
+}
+
+QMenu::item {
+    border-radius: 3px
+    border: 1px solid transparent; /* reserve space for selection border */
+}
+

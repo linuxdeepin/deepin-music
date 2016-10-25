@@ -31,12 +31,18 @@ signals:
     void musicClicked(QSharedPointer<Playlist> palylist, const MusicInfo &info);
     void musicAdd(const QString &playlistID, const MusicInfo &info);
     void playall(QSharedPointer<Playlist> palylist);
+    void requestCustomContextMenu(MusicItem* item, const QPoint &pos);
 
 public slots:
     void onMusicPlayed(QSharedPointer<Playlist> palylist, const MusicInfo &info);
     void onMusicRemoved(QSharedPointer<Playlist> palylist, const MusicInfo &info);
     void onMusicAdded(QSharedPointer<Playlist> palylist, const MusicInfo &info);
     void onMusiclistChanged(QSharedPointer<Playlist> palylist);
+    void onCustomContextMenuRequest(MusicItem* item,
+                                    const QPoint &pos,
+                                    QSharedPointer<Playlist> selectedlist,
+                                    QSharedPointer<Playlist> favlist,
+                                    QList<QSharedPointer<Playlist> >newlists);
 
 private:
     void addMusicInfo(MusicListView *m_musiclist, const MusicInfo &info);

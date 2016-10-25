@@ -10,17 +10,16 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include <QObject>
 #include <QSharedPointer>
+#include <QMediaPlayer>
 
 class MusicInfo;
 class Playlist;
 
-class player : public QObject
+class Player : public QMediaPlayer
 {
     Q_OBJECT
 public:
-    explicit player(QObject *parent = 0);
 
     enum PlayStatus {
         Invaild  = 0,
@@ -30,11 +29,22 @@ public:
     };
     Q_ENUM(PlayStatus)
 
-    void playMusic(QSharedPointer<Playlist> currentPlaylist, const MusicInfo &info);
-    PlayStatus status();
+    static Player *instance()
+    {
+        static auto s_app = new Player;
+        return s_app;
+    }
 
+    void init(){}
 signals:
+    void progrossChanged(qint64 value, qint64 range);
 public slots:
+    void setMedia(const QString &mediaUrl);
+
+private:
+    explicit Player(QObject *parent = 0);
+
+    qint64 m_duration = -1;
 };
 
 #endif // PLAYER_H

@@ -36,6 +36,7 @@
 #include "../model/musiclistmodel.h"
 #include "../core/playlist.h"
 #include "../musicapp.h"
+#include "musicitem.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -234,6 +235,8 @@ void PlayerFrame::binding(AppPresenter *presenter)
             d->musicList, &MusicListWidget::onMusicAdded);
     connect(presenter, &AppPresenter::musicPlayed,
             d->musicList, &MusicListWidget::onMusicPlayed);
+    connect(presenter, &AppPresenter::musiclistMenuRequested,
+            d->musicList, &MusicListWidget::onCustomContextMenuRequest);
 
     connect(d->musicList, &MusicListWidget::musicClicked,
             presenter, &AppPresenter::onMusicPlay);
@@ -243,6 +246,8 @@ void PlayerFrame::binding(AppPresenter *presenter)
             presenter, &AppPresenter::onMusicRemove);
     connect(d->musicList, &MusicListWidget::playall,
             presenter, &AppPresenter::onPlayall);
+    connect(d->musicList, &MusicListWidget::requestCustomContextMenu,
+            presenter, &AppPresenter::onRequestMusiclistMenu);
 
     // Play list bindding
     connect(presenter, &AppPresenter::selectedPlaylistChanged,
@@ -289,6 +294,15 @@ void PlayerFrame::binding(AppPresenter *presenter)
             presenter, &AppPresenter::onImportFiles);
 
     // View control
+    connect(presenter, &AppPresenter::selectedPlaylistChanged,
+    this, [ = ]() {
+        if (d->lyric->isVisible()) {
+            slideWidget(d->lyric, d->musicList);
+            d->musicList->resize(d->lyric->size());
+            d->musicList->show();
+        }
+    });
+
     connect(presenter, &AppPresenter::requestImportFiles,
             this, &PlayerFrame::onSelectImportFiles);
 
@@ -326,11 +340,18 @@ void PlayerFrame::binding(AppPresenter *presenter)
         }
     });
 
+    connect(presenter, &AppPresenter::showPlaylist,
+    this, [ = ]() {
+        // show playlist
+        if (!d->playlist->isVisible())  {
+            emit d->footer->togglePlaylist();
+        }
+    });
+
     connect(presenter, &AppPresenter::showMusiclist,
     this, [ = ]() {
         slideWidget(d->import, d->musicList);
         d->musicList->resize(d->import->size());
-        d->musicList->raise();
         d->musicList->show();
     });
 }

@@ -6,7 +6,46 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TEMPLATE    = app
 TARGET      = deepin-music
 CONFIG      += c++11 link_pkgconfig
-PKGCONFIG   += dtkbase dtkutil dtkwidget taglib
+
+unix{
+    PKGCONFIG   += dtkbase dtkutil dtkwidget taglib
+}
+
+win32{
+    DEFINES += STATIC_LIB
+    DEFINES += TAGLIB_STATIC
+
+    INCLUDEPATH += D:\Develop\deepin-tool-kit\dwidget
+    INCLUDEPATH += D:\Develop\deepin-tool-kit\dwidget\widgets
+    INCLUDEPATH += D:\Develop\deepin-tool-kit\dwidget\platforms\windows
+
+    DEPENDPATH += D:\Develop\deepin-tool-kit\dwidget
+
+    INCLUDEPATH += D:\Develop\deepin-tool-kit\dutil
+    INCLUDEPATH += D:\Develop\deepin-tool-kit\dutil\dlog
+    DEPENDPATH += D:\Develop\deepin-tool-kit\dutil
+
+    INCLUDEPATH += D:\Develop\deepin-tool-kit\dbase
+    DEPENDPATH += D:\Develop\deepin-tool-kit\dbase
+
+    INCLUDEPATH += D:\Develop\Library\zlib\include
+    INCLUDEPATH += "C:\Program Files (x86)\taglib\include\taglib"
+
+    CONFIG(release, debug|release) {
+        LIBS += -LD:\Develop\deepin-tool-kit\build\dwidget\release -ldtkwidget
+        LIBS += -LD:\Develop\deepin-tool-kit\build\dutil\release -ldtkutil
+        LIBS += -LD:\Develop\deepin-tool-kit\build\dbase\release -ldtkbase
+        LIBS += -L"C:\Program Files (x86)\taglib\lib" -ltag
+        LIBS += -L"C:\Program Files (x86)\taglib\lib" -ltag_c
+        LIBS += -L"D:\Develop\Library\zlib-1.2.8\contrib\vstudio\vc11\x64\ZlibStatRelease" -lzlibstat
+    }
+    else:CONFIG(debug, debug|release){
+        LIBS += -LD:\Develop\deepin-tool-kit\build\dwidget\debug -ldtkwidget
+        LIBS += -LD:\Develop\deepin-tool-kit\build\dutil\debug -ldtkutil
+        LIBS += -LD:\Develop\deepin-tool-kit\build\dbase\debug -ldtkbase
+    }
+}
+
 
 SOURCES += \
     main.cpp \
@@ -30,7 +69,8 @@ SOURCES += \
     core/player.cpp \
     view/widget/slider.cpp \
     view/widget/infodialog.cpp \
-    view/widget/cover.cpp
+    view/widget/cover.cpp \
+    view/widget/menu.cpp
 
 HEADERS += \
     view/playerframe.h \
@@ -54,7 +94,8 @@ HEADERS += \
     core/player.h \
     view/widget/slider.h \
     view/widget/infodialog.h \
-    view/widget/cover.h
+    view/widget/cover.h \
+    view/widget/menu.h
 
 RESOURCES += \
     resource/theme/theme.qrc \

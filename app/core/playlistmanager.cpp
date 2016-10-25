@@ -20,6 +20,8 @@
 static const QString DefaultListID = "Default";
 const QString AllMusicListID = "All";
 const QString FavMusicListID = "Fav";
+const QString SearchMusicListID = "Search";
+
 static MusicListInfo emptyInfo;
 
 PlaylistManager::PlaylistManager(QObject *parent)
@@ -193,8 +195,9 @@ void PlaylistManager::setPlayingPlaylist(QSharedPointer<Playlist> currentPlaylis
 
 void PlaylistManager::setSelectedPlaylist(QSharedPointer<Playlist> selectedPlaylist)
 {
-    if (m_selectedPlaylist == selectedPlaylist)
+    if (m_selectedPlaylist == selectedPlaylist) {
         return;
+    }
 
     m_selectedPlaylist = selectedPlaylist;
     qDebug() << selectedPlaylist;

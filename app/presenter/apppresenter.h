@@ -15,9 +15,10 @@
 
 #include "model/musiclistmodel.h"
 
+class MusicItem;
 class Playlist;
 class AppPresenterPrivate;
-class QMediaPlayer;
+
 class AppPresenter : public QObject
 {
     Q_OBJECT
@@ -55,6 +56,19 @@ signals:
     // to control
     void progrossChanged(qint64 value, qint64 range);
 
+    // to player
+    void setMedia(const QString &mediaUrl);
+    void play();
+    void stop();
+    void pause();
+
+    // ui menu
+    void musiclistMenuRequested(MusicItem* item,
+                                    const QPoint &pos,
+                                    QSharedPointer<Playlist> selectedlist,
+                                    QSharedPointer<Playlist> favlist,
+                                    QList<QSharedPointer<Playlist> >newlists);
+
 public slots:
     //! UI: music control interface
     void onMusicPlay(QSharedPointer<Playlist> playlist, const MusicInfo &info);
@@ -78,6 +92,7 @@ public slots:
     void onSelectedPlaylistChanged(QSharedPointer<Playlist> playlist);
 
     //! UI: menu interface
+    void onRequestMusiclistMenu(MusicItem* item, const QPoint &pos);
 //    void onRequestPlaylistMenuData(QSharedPointer<Playlist> playlist);
 //    void onRequestMusiclistMenuData(QSharedPointer<Playlist> playlist, const MusicInfo &selected);
 

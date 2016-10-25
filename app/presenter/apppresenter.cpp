@@ -12,11 +12,11 @@
 #include <QDir>
 #include <QUrl>
 #include <QThread>
-#include <QMediaPlayer>
-#include <QMediaMetaData>
 #include <QApplication>
 #include <QStandardPaths>
 #include <QDebug>
+
+#include "../core/player.h"
 
 #include "../core/playlistmanager.h"
 #include "../core/mediafilemonitor.h"
@@ -24,7 +24,6 @@
 class AppPresenterPrivate
 {
 public:
-    QMediaPlayer        *player;
     PlaylistManager     playlistMgr;
     MediaFileMonitor     *moniter;
 };
@@ -35,8 +34,7 @@ AppPresenter::AppPresenter(QObject *parent)
     qRegisterMetaType<MusicListInfo>();
     qRegisterMetaType<MusicInfo>();
     qRegisterMetaType<QSharedPointer<Playlist> >();
-
-    d->player = new QMediaPlayer(this);
+    qRegisterMetaType<QList<QSharedPointer<Playlist> > >();
 
     d->moniter = new MediaFileMonitor;
     auto work = new QThread;
@@ -54,6 +52,7 @@ AppPresenter::AppPresenter(QObject *parent)
         }
         playlist->appendMusic(info);
     });
+
     //! load playlist
     d->playlistMgr.load();
 
@@ -62,9 +61,13 @@ AppPresenter::AppPresenter(QObject *parent)
         emit playingPlaylistChanged(playlist);
     });
 
-    connect(d->player, &QMediaPlayer::positionChanged, this, [ = ](qint64 position) {
-        emit progrossChanged(position, d->player->duration());
+    connect(Player::instance(), &Player::progrossChanged, this, [ = ](qint64 position, qint64 duration) {
+        emit progrossChanged(position, duration);
     });
+    connect(this, &AppPresenter::setMedia, Player::instance(), &Player::setMedia);
+    connect(this, &AppPresenter::play, Player::instance(), &QMediaPlayer::play);
+    connect(this, &AppPresenter::pause, Player::instance(), &QMediaPlayer::pause);
+    connect(this, &AppPresenter::stop, Player::instance(), &QMediaPlayer::stop);
 
     connect(&d->playlistMgr, &PlaylistManager::musicAdded,
             this, &AppPresenter::musicAdded);
@@ -122,8 +125,10 @@ void AppPresenter::onMusicAdd(const QString &id, const MusicInfo &info)
 {
     QString listid = id;
     if (id == "New") {
+        emit showPlaylist();
+
         MusicListInfo info;
-        info.editmode = false;
+        info.editmode = true;
         info.readonly = false;
         info.id = d->playlistMgr.newID();
         info.displayName = d->playlistMgr.newDisplayName();
@@ -145,6 +150,21 @@ void AppPresenter::onSelectedPlaylistChanged(QSharedPointer<Playlist> playlist)
     d->playlistMgr.setSelectedPlaylist(playlist);
 }
 
+void AppPresenter::onRequestMusiclistMenu(MusicItem *item, const QPoint &pos)
+{
+    qDebug() << item;
+    QList<QSharedPointer<Playlist> > newlists = d->playlistMgr.allplaylist();
+    // remove all and fav and search
+    newlists.removeAll(d->playlistMgr.playlist(AllMusicListID));
+    newlists.removeAll(d->playlistMgr.playlist(FavMusicListID));
+    newlists.removeAll(d->playlistMgr.playlist(SearchMusicListID));
+
+    auto selectedlist = d->playlistMgr.selectedPlaylist();
+    auto favlist = d->playlistMgr.playlist(FavMusicListID);
+
+    emit this->musiclistMenuRequested(item, pos, selectedlist, favlist, newlists);
+}
+
 void AppPresenter::onPlaylistAdd(bool edit)
 {
     MusicListInfo info;
@@ -164,22 +184,14 @@ void AppPresenter::onMusicPlay(QSharedPointer<Playlist> palylist,  const MusicIn
         return;
     }
 
-    if (d->player->media().canonicalUrl() == QUrl::fromLocalFile(info.url)) {
-        d->player->play();
+    if (Player::instance()->media().canonicalUrl() == QUrl::fromLocalFile(info.url)) {
+        emit this->play();
         return;
     }
-    qDebug() << "Fix me: play status" << info.id  << info.url;
-    d->player->stop();
-    d->player->setMedia(QUrl::fromLocalFile(info.url));
+    qDebug() << "Fix me: play status" << info.id  << info.url << Player::instance();
+    emit this->setMedia(QUrl::fromLocalFile(info.url).toString());
+    emit this->play();
 
-    // TODO: bugfix here, hao to get player ready.
-    connect(d->player, &QMediaPlayer::mediaStatusChanged,
-    this, [ = ](QMediaPlayer::MediaStatus status) {
-        if (QMediaPlayer::PlayingState != d->player->state()) {
-            qDebug() << "start play" << d->player->media().canonicalUrl() << status;
-            d->player->play();
-        }
-    });
     MusicInfo favInfo(info);
     favInfo.favourite = d->playlistMgr.playlist(FavMusicListID)->contains(info);
     emit musicPlayed(palylist, favInfo);
@@ -187,7 +199,7 @@ void AppPresenter::onMusicPlay(QSharedPointer<Playlist> palylist,  const MusicIn
 
 void AppPresenter::onMusicPause(QSharedPointer<Playlist> playlist, const MusicInfo &info)
 {
-    d->player->pause();
+    emit this->pause();
     emit musicPaused(playlist, playlist->next(info));
 }
 
@@ -212,11 +224,11 @@ void AppPresenter::onToggleFavourite(const MusicInfo &info)
 
 void AppPresenter::onChangeProgress(qint64 value, qint64 range)
 {
-    auto position = value * d->player->duration() / range;
+    auto position = value * Player::instance()->duration() / range;
     if (position < 0) {
-        qCritical() << "invaild position:" << d->player->media().canonicalUrl() << position;
+        qCritical() << "invaild position:" << Player::instance()->media().canonicalUrl() << position;
     }
-    d->player->setPosition(position);
+    Player::instance()->setPosition(position);
 }
 
 void AppPresenter::onPlayall(QSharedPointer<Playlist> playlist)

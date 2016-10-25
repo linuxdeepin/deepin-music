@@ -82,5 +82,6 @@
         <file>image/show_lyc_press.png</file>
         <file>image/slider_handle.png</file>
         <file>image/cover_max_background.png</file>
+        <file>image/deepin-music.svg</file>
     </qresource>
 </RCC>

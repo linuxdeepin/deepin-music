@@ -9,7 +9,19 @@
 
 #include "player.h"
 
-player::player(QObject *parent) : QObject(parent)
+#include <QDebug>
+void Player::setMedia(const QString &mediaUrl)
 {
+    qDebug() << mediaUrl;
+    QMediaPlayer::setMedia(QUrl(mediaUrl));
+}
 
+Player::Player(QObject *parent) : QMediaPlayer(parent)
+{
+    connect(this, &QMediaPlayer::durationChanged, this, [ = ](qint64 duration) {
+        m_duration = duration;
+    });
+    connect(this, &QMediaPlayer::positionChanged, this, [ = ](qint64 position) {
+        emit progrossChanged(position,  m_duration);
+    });
 }

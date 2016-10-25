@@ -70,4 +70,8 @@ private:
 
 typedef QSharedPointer<Playlist> PlaylistPtr;
 
+extern const QString AllMusicListID;
+extern const QString FavMusicListID;
+extern const QString SearchMusicListID;
+
 #endif // PLAYLIST_H

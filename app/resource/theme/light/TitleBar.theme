@@ -3,5 +3,5 @@
 }
 
 #TitleIcon {
-    image: url(/usr/share/icons/deepin/apps/scalable/deepin-music.svg)
+    image: url(:/image/deepin-music.svg)
 }

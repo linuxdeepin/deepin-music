@@ -66,8 +66,6 @@ private:
 };
 
 Q_DECLARE_METATYPE(QSharedPointer<Playlist>);
-
-extern const QString AllMusicListID;
-extern const QString FavMusicListID;
+Q_DECLARE_METATYPE(QList<QSharedPointer<Playlist> >);
 
 #endif // PLAYLISTMANAGER_H

@@ -10,15 +10,14 @@
 #include "musicapp.h"
 
 #include <QTimer>
-#include <dutility.h>
 #include <QThread>
-#include <QDebug>
-#include <QMediaPlayer>
 #include <QApplication>
 #include <QStandardPaths>
+#include <QDebug>
+
+#include <dutility.h>
 
 #include "presenter/apppresenter.h"
-
 #include "presenter/apppresenter.h"
 #include "view/playerframe.h"
 #include "view/musiclistwidget.h"

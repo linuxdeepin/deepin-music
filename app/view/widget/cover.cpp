@@ -19,6 +19,7 @@ Cover::Cover(QWidget *parent) : QWidget(parent)
     QWidget::setAttribute(Qt::WA_TranslucentBackground, true);
     m_borderColor = QColor(0, 0, 0, 26);
     m_shadowColor = QColor(0, 0, 0, 26);
+
     QGraphicsDropShadowEffect *bodyShadow = new QGraphicsDropShadowEffect;
     bodyShadow->setBlurRadius(4.0);
     bodyShadow->setColor(m_shadowColor);
@@ -26,7 +27,7 @@ Cover::Cover(QWidget *parent) : QWidget(parent)
     this->setGraphicsEffect(bodyShadow);
 }
 
-void Cover::paintEvent(QPaintEvent */*e*/)
+void Cover::paintEvent(QPaintEvent * /*e*/)
 {
     QPainter painter(this);
     auto radius = 4;
@@ -44,15 +45,12 @@ void Cover::paintEvent(QPaintEvent */*e*/)
 
     QPen borderPen(m_borderColor);
     painter.strokePath(border, borderPen);
-
-
 }
 
 void Cover::setBackgroundImage(const QPixmap &bk)
 {
     QImage bkImage = bk.toImage().scaled(200, 200);
     QPixmap maskPixmap(bkImage.size());
-    qDebug() << bkImage.size();
     maskPixmap.fill(Qt::transparent);
     QPainterPath path;
     path.addRoundRect(QRectF(0, 0, bkImage.width(), bkImage.height()), 4);
@@ -87,5 +85,5 @@ void Cover::setBackgroundImage(const QPixmap &bk)
     bkTmp.close();
     qDebug() << bkTmp.fileName();
     m_Background = QPixmap(bkTmp.fileName());
-//    bkTmp.remove();
+    bkTmp.remove();
 }

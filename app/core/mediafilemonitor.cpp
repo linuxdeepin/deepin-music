@@ -18,7 +18,7 @@
 #include <QDebug>
 #include <QApplication>
 
-#include <taglib/tag.h>
+#include <tag.h>
 #include <fileref.h>
 
 #include "playlist.h"
@@ -64,6 +64,12 @@ void MediaFileMonitor::importPlaylistFiles(QSharedPointer<Playlist> playlist, co
 
     for (auto &url : urllist) {
         TagLib::FileRef f(url.toStdString().c_str());
+
+        // TODO: fix me in windows
+        if (f.isNull()) {
+            qDebug() << url;
+            continue;
+        }
 
         MusicInfo info;
         info.url = url;
