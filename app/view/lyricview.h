@@ -14,6 +14,7 @@
 
 class QScrollArea;
 class QLabel;
+class MusicInfo;
 
 class LyricView : public QFrame
 {
@@ -28,6 +29,7 @@ public:
 signals:
 
 public slots:
+//    void onMusicInfoUpdate(class MusicInfo& info);
 
 private:
     QScrollArea *m_scroll = nullptr;

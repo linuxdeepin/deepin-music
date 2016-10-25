@@ -292,16 +292,28 @@ void PlayerFrame::binding(AppPresenter *presenter)
     connect(presenter, &AppPresenter::requestImportFiles,
             this, &PlayerFrame::onSelectImportFiles);
 
-    connect(d->footer, &Footer::showLyric,
+    connect(d->footer, &Footer::toggleLyric,
     this, [ = ]() {
-        qDebug() << "showLyric";
-        slideWidget(d->musicList, d->lyric);
-        d->lyric->resize(d->musicList->size());
-        d->lyric->raise();
-        d->lyric->show();
+        qDebug() << "toggle Lyric";
+        if (d->lyric->isVisible()) {
+            slideWidget(d->lyric, d->musicList);
+            d->musicList->resize(d->lyric->size());
+            d->musicList->raise();
+            d->musicList->show();
+        } else {
+            slideWidget(d->musicList, d->lyric);
+            d->lyric->resize(d->musicList->size());
+            d->lyric->raise();
+            d->lyric->show();
+        }
+
+        // hide playlist
+        if (d->playlist->isVisible())  {
+            emit d->footer->togglePlaylist();
+        }
     });
 
-    connect(d->footer, &Footer::showPlaylist,
+    connect(d->footer, &Footer::togglePlaylist,
     this, [ = ]() {
         d->playlist->resize(d->playlist->width(), d->stacked->height() - d->footer->height());
         QRect start(this->width(), 0, d->playlist->width(), d->playlist->height());

@@ -29,7 +29,8 @@ SOURCES += \
     view/resizablestackedwidget.cpp \
     core/player.cpp \
     view/widget/slider.cpp \
-    view/widget/infodialog.cpp
+    view/widget/infodialog.cpp \
+    view/widget/cover.cpp
 
 HEADERS += \
     view/playerframe.h \
@@ -52,7 +53,8 @@ HEADERS += \
     view/resizablestackedwidget.h \
     core/player.h \
     view/widget/slider.h \
-    view/widget/infodialog.h
+    view/widget/infodialog.h \
+    view/widget/cover.h
 
 RESOURCES += \
     resource/theme/theme.qrc \

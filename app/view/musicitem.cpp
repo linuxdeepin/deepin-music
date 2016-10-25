@@ -57,17 +57,17 @@ MusicItem::MusicItem(int num, const MusicInfo &info, QWidget *parent)
     layout->addWidget(number, 0, Qt::AlignCenter);
 
     QSizePolicy spTitle(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    spTitle.setHorizontalStretch(2);
+    spTitle.setHorizontalStretch(30);
     titel->setSizePolicy(spTitle);
     layout->addWidget(titel, 0, Qt::AlignLeft | Qt::AlignVCenter);
 
     QSizePolicy spArtist(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    spArtist.setHorizontalStretch(1);
+    spArtist.setHorizontalStretch(30);
     artist->setSizePolicy(spArtist);
     layout->addWidget(artist, 0, Qt::AlignLeft | Qt::AlignVCenter);
 
     QSizePolicy spAlbum(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    spAlbum.setHorizontalStretch(1);
+    spAlbum.setHorizontalStretch(30);
     album->setSizePolicy(spAlbum);
     layout->addWidget(album, 0, Qt::AlignLeft | Qt::AlignVCenter);
 
@@ -172,7 +172,7 @@ void MusicItem::showContextMenu(const QPoint &pos)
         }
 
         if (action->text() == tr("Song info")) {
-            InfoDialog dlg(m_info);
+            InfoDialog dlg(m_info, this);
             dlg.exec();
         }
     });

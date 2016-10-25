@@ -81,7 +81,6 @@ Footer::Footer(QWidget *parent) : QFrame(parent)
     d->progress->setMinimum(0);
     d->progress->setMaximum(1000);
     d->progress->setValue(0);
-    qDebug() << d->progress->singleStep() << d->progress->pageStep();
 
     auto layout = new QHBoxLayout();
     layout->setContentsMargins(10, 10, 20, 10);
@@ -181,7 +180,7 @@ Footer::Footer(QWidget *parent) : QFrame(parent)
     d->btPrev->hide();
     d->btNext->hide();
     d->btFavorite->hide();
-//    d->btLyric->hide();
+    d->btLyric->hide();
 
     D_THEME_INIT_WIDGET(Footer);
 
@@ -191,12 +190,10 @@ Footer::Footer(QWidget *parent) : QFrame(parent)
         emit this->changeProgress(value, range);
     });
     connect(d->btPlay, &QPushButton::clicked, this, [ = ](bool) {
-        qDebug() << d->m_playinglist;
         if (!d->m_playinglist) {
             emit play(d->m_playinglist, d->m_info);
             return;
         }
-        qDebug() << d->m_playinglist->id();
         auto status = d->btPlay->property(sPropertyPlayStatus).toString();
         if (status == sPlayStatusValuePlaying) {
             emit pause(d->m_playinglist, d->m_info);
@@ -221,10 +218,10 @@ Footer::Footer(QWidget *parent) : QFrame(parent)
 
     connect(d->cover, &ClickableLabel::clicked, d->btLyric, &QPushButton::clicked);
     connect(d->btLyric, &QPushButton::clicked, this, [ = ](bool) {
-        emit  this->showLyric();
+        emit  this->toggleLyric();
     });
     connect(btPlayList, &QPushButton::clicked, this, [ = ](bool) {
-        emit  this->showPlaylist();
+        emit  this->togglePlaylist();
     });
 
     connect(this, &Footer::initFooter,

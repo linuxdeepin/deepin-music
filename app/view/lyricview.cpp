@@ -21,6 +21,8 @@
 #include <dthememanager.h>
 DWIDGET_USE_NAMESPACE
 
+#include "widget/cover.h"
+
 const QString aaa =
     "You're the one that i want' the one that i need"
     "你是我想要的那个唯一，也是我需要的那个唯一\n"
@@ -66,9 +68,10 @@ LyricView::LyricView(QWidget *parent) : QFrame(parent)
     auto layout = new QHBoxLayout(this);
     layout->setContentsMargins(20, 20, 20, 20);
 
-    auto cover = new QLabel;
+    auto cover = new Cover;
     cover->setFixedSize(200, 200);
-    cover->setObjectName("LyricCover");
+    cover->setObjectName("LyricCoveraa");
+    cover->setBackgroundUrl(":/image/cover_max.png");
 
     m_scroll = new QScrollArea;
     m_scroll->setObjectName("LyricTextScroll");

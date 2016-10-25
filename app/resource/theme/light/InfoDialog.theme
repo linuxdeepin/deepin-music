@@ -2,9 +2,6 @@ InfoDialog{
     qproperty-backgroundColor: white;
     qproperty-borderColor: rgba(0, 0, 0, 0.2);
 }
-#InfoCover{
-    border: 1px solid transparent;
-}
 #InfoTitle{
     width: 260px;
     height: 18px;

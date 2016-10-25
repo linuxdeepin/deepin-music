@@ -3,7 +3,7 @@
 }
 
 #LyricCover {
-    image: url(/home/iceyer/Music/Cardcaptor Sakura/CD.jpg);
+    background-color: transparent;
 }
 
 #LyricTextScroll {

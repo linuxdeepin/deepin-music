@@ -28,7 +28,6 @@ void ResizableStackedWidget::onCurrentChanged(int index)
 {
     QWidget *pWidget = widget(index);
     Q_ASSERT(pWidget);
-    qDebug() << currentIndex() << size();
     pWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     pWidget->adjustSize();
     adjustSize();

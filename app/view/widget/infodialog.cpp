@@ -33,6 +33,7 @@ InfoDialog::InfoDialog(const MusicInfo &info, QWidget *parent) : DAbstractDialog
     closeBt->setAttribute(Qt::WA_NoMousePropagation);
 
     auto cover = new QLabel;
+    cover->setContentsMargins(0, 0, 0, 0);
     cover->setObjectName("InfoCover");
     cover->setFixedSize(140, 140);
     cover->setPixmap(QPixmap(":/image/cover_max.png").scaled(140, 140));
@@ -67,8 +68,7 @@ InfoDialog::InfoDialog(const MusicInfo &info, QWidget *parent) : DAbstractDialog
 
         auto infoValue = new QLabel(infoValues.value(i));
         infoValue->setObjectName("InfoValue");
-//        infoValue->setFixedHeight(18);
-        infoValue->setMaximumWidth(180);
+//        infoValue->setMaximumWidth(250);
 
         infogridLayout->addWidget(infoKey, i, 0, Qt::AlignRight);
         infogridLayout->addWidget(infoValue, i, 1, Qt::AlignLeft);
