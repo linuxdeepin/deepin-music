@@ -308,7 +308,6 @@ void PlayerFrame::binding(AppPresenter *presenter)
 
     connect(d->footer, &Footer::toggleLyric,
     this, [ = ]() {
-        qDebug() << "toggle Lyric";
         if (d->lyric->isVisible()) {
             slideWidget(d->lyric, d->musicList);
             d->musicList->resize(d->lyric->size());
@@ -350,10 +349,13 @@ void PlayerFrame::binding(AppPresenter *presenter)
 
     connect(presenter, &AppPresenter::showMusiclist,
     this, [ = ]() {
-        slideWidget(d->import, d->musicList);
+        if (d->import->isVisible()) {
+            slideWidget(d->import, d->musicList);
+        }
         d->musicList->resize(d->import->size());
         d->musicList->show();
     });
+    initMenu();
 }
 
 void PlayerFrame::resizeEvent(QResizeEvent *e)
@@ -418,4 +420,89 @@ void PlayerFrame::onSelectImportFiles()
     if (QFileDialog::Accepted == fileDlg.exec()) {
         emit importSelectFiles(fileDlg.selectedFiles());
     }
+}
+#include <DAboutDialog>
+#include <QProcess>
+
+void PlayerFrame::initMenu()
+{
+
+    auto m_newlist = new DAction(tr("New songlist"), this);
+    connect(m_newlist, &DAction::triggered, this, [ = ](bool) {
+        if (!d->playlist->isVisible()) {
+            emit d->footer->togglePlaylist();
+        }
+        emit d->playlist->addPlaylist(true);
+    });
+
+    auto m_addmusic = new DAction(tr("Add music"), this);
+    connect(m_addmusic, &DAction::triggered, this, [ = ](bool) {
+
+        if (d->lyric->isVisible()) {
+            slideWidget(d->lyric, d->musicList);
+            d->musicList->resize(d->lyric->size());
+            d->musicList->show();
+            if (!d->playlist->isVisible()) {
+                emit d->footer->togglePlaylist();
+            }
+        }
+        this->onSelectImportFiles();
+    });
+
+    auto m_settings = new DAction(tr("Settings"), this);
+    connect(m_settings, &DAction::triggered, this, [ = ](bool) {
+
+    });
+
+    auto m_colorMode = new DAction(tr("Deep color mode"), this);
+    connect(m_colorMode, &DAction::triggered, this, [ = ](bool) {
+
+    });
+
+    auto m_about = new DAction(tr("About"), this);
+    connect(m_about, &DAction::triggered, this, [ = ](bool) {
+        QString descriptionText = tr("Deepin Music is a new scanning technology developed by Wuhan Deepin Technology Co., Ltd.. It will connect your scanner to the network, and is enabled for network scanning via daily used applications. Deepin Cloud Scan is suitable for desktops, laptops, tablets and other networking devices that you have authorized to scan.");
+        DAboutDialog *about = new DAboutDialog(
+            tr("Deepin Music"),
+            QString(":/image/deepin-music.svg"),
+            QString(":/image/deepin-music.svg"),
+            tr("Deepin Music"),
+            tr("Version: 3.0"),
+            descriptionText,
+            this);
+        about->show();
+    });
+
+    DAction *m_help = new DAction(tr("Help"), this);
+    connect(m_help, &DAction::triggered,
+    this, [ = ](bool) {
+        static QProcess *m_manual = nullptr;
+        if (NULL == m_manual) {
+            m_manual =  new QProcess(this);
+            const QString pro = "dman";
+            const QStringList args("dde");
+            connect(m_manual, static_cast<void(QProcess::*)(int)>(&QProcess::finished), this, [ = ](int) {
+                m_manual->deleteLater();
+                m_manual = nullptr;
+            });
+            m_manual->start(pro, args);
+        }
+    });
+
+    DAction *m_close = new DAction(tr("Exit"), this);
+    connect(m_close, &DAction::triggered, this, [ = ](bool) {
+        this->close();
+    });
+
+    dbusMenu()->addAction(m_newlist);
+    dbusMenu()->addAction(m_addmusic);
+    dbusMenu()->addSeparator();
+
+    dbusMenu()->addAction(m_colorMode);
+    dbusMenu()->addAction(m_settings);
+    dbusMenu()->addSeparator();
+
+    dbusMenu()->addAction(m_about);
+    dbusMenu()->addAction(m_help);
+    dbusMenu()->addAction(m_close);
 }

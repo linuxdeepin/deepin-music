@@ -43,6 +43,8 @@ public slots:
     void onSelectImportFiles();
 
 private:
+    void initMenu();
+
     QScopedPointer<PlayerFramePrivate> d;
 };
 

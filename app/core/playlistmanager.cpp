@@ -200,7 +200,6 @@ void PlaylistManager::setSelectedPlaylist(QSharedPointer<Playlist> selectedPlayl
     }
 
     m_selectedPlaylist = selectedPlaylist;
-    qDebug() << selectedPlaylist;
     emit selectedPlaylistChanged(selectedPlaylist);
 }
 
