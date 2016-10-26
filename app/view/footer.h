@@ -44,6 +44,7 @@ signals:
     void next(QSharedPointer<Playlist> palylist, const MusicInfo &info);
     void prev(QSharedPointer<Playlist> palylist, const MusicInfo &info);
 
+    void modeChanged(int mode);
     void toggleFavourite(const MusicInfo &info);
     void toggleLyric();
     void changePlayMode(int);

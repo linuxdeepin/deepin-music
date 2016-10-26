@@ -65,6 +65,7 @@ AppPresenter::AppPresenter(QObject *parent)
         emit progrossChanged(position, duration);
     });
     connect(this, &AppPresenter::setMedia, Player::instance(), &Player::setMedia);
+    connect(this, &AppPresenter::changeProgress, Player::instance(), &Player::changeProgress);
     connect(this, &AppPresenter::play, Player::instance(), &QMediaPlayer::play);
     connect(this, &AppPresenter::pause, Player::instance(), &QMediaPlayer::pause);
     connect(this, &AppPresenter::stop, Player::instance(), &QMediaPlayer::stop);
@@ -152,7 +153,6 @@ void AppPresenter::onSelectedPlaylistChanged(QSharedPointer<Playlist> playlist)
 
 void AppPresenter::onRequestMusiclistMenu(MusicItem *item, const QPoint &pos)
 {
-    qDebug() << item;
     QList<QSharedPointer<Playlist> > newlists = d->playlistMgr.allplaylist();
     // remove all and fav and search
     newlists.removeAll(d->playlistMgr.playlist(AllMusicListID));
@@ -189,7 +189,9 @@ void AppPresenter::onMusicPlay(QSharedPointer<Playlist> palylist,  const MusicIn
         return;
     }
     qDebug() << "Fix me: play status" << info.id  << info.url << Player::instance();
-    emit this->setMedia(QUrl::fromLocalFile(info.url).toString());
+    // TODO: using signal;
+    Player::instance()->setPlaylist(palylist);
+    emit this->setMedia(info);
     emit this->play();
 
     MusicInfo favInfo(info);
@@ -224,11 +226,17 @@ void AppPresenter::onToggleFavourite(const MusicInfo &info)
 
 void AppPresenter::onChangeProgress(qint64 value, qint64 range)
 {
-    auto position = value * Player::instance()->duration() / range;
-    if (position < 0) {
-        qCritical() << "invaild position:" << Player::instance()->media().canonicalUrl() << position;
-    }
-    Player::instance()->setPosition(position);
+//    auto position = value * Player::instance()->duration() / range;
+//    if (position < 0) {
+//        qCritical() << "invaild position:" << Player::instance()->media().canonicalUrl() << position;
+//    }
+//    Player::instance()->setPosition(position);
+    emit changeProgress(value, range);
+}
+
+void AppPresenter::onPlayModeChanged(int mode)
+{
+
 }
 
 void AppPresenter::onPlayall(QSharedPointer<Playlist> playlist)

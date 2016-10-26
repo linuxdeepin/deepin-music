@@ -70,7 +70,9 @@ SOURCES += \
     view/widget/slider.cpp \
     view/widget/infodialog.cpp \
     view/widget/cover.cpp \
-    view/widget/menu.cpp
+    view/widget/menu.cpp \
+    view/widget/settingsdialog.cpp \
+    view/widget/modebuttom.cpp
 
 HEADERS += \
     view/playerframe.h \
@@ -95,7 +97,9 @@ HEADERS += \
     view/widget/slider.h \
     view/widget/infodialog.h \
     view/widget/cover.h \
-    view/widget/menu.h
+    view/widget/menu.h \
+    view/widget/settingsdialog.h \
+    view/widget/modebuttom.h
 
 RESOURCES += \
     resource/theme/theme.qrc \

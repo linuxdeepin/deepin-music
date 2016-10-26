@@ -13,7 +13,8 @@
 #include <QSharedPointer>
 #include <QMediaPlayer>
 
-class MusicInfo;
+#include "../model/musiclistmodel.h"
+
 class Playlist;
 
 class Player : public QMediaPlayer
@@ -22,12 +23,20 @@ class Player : public QMediaPlayer
 public:
 
     enum PlayStatus {
-        Invaild  = 0,
+        Invaild = 0,
         Stop,
         Playing,
         Pause
     };
     Q_ENUM(PlayStatus)
+
+    enum PlayMode {
+        Order = 0,
+        RepeatAll = 1,
+        RepeatSingle = 2,
+        Shuffle = 3,
+    };
+    Q_ENUM(PlayMode)
 
     static Player *instance()
     {
@@ -35,16 +44,26 @@ public:
         return s_app;
     }
 
-    void init(){}
+    void setPlaylist(QSharedPointer<Playlist> playlist);
+    void setMode(PlayMode mode);
+
+    void init() {}
 signals:
     void progrossChanged(qint64 value, qint64 range);
 public slots:
-    void setMedia(const QString &mediaUrl);
+    void setMedia(const MusicInfo &info);
+    void changeProgress(qint64 value, qint64 range);
 
 private:
+    void selectNext();
     explicit Player(QObject *parent = 0);
 
-    qint64 m_duration = -1;
+    MusicInfo                   m_info;
+    QStringList                 m_historyIDs;
+    QSharedPointer<Playlist>    m_playlist;
+    QMap<QString, MusicInfo>    musicMap;
+    qint64                      m_duration = -1;
+    PlayMode                    m_mode;
 };
 
 #endif // PLAYER_H

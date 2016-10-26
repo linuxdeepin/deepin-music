@@ -83,5 +83,8 @@
         <file>image/slider_handle.png</file>
         <file>image/cover_max_background.png</file>
         <file>image/deepin-music.svg</file>
+        <file>image/sequence_hover.png</file>
+        <file>image/sequence_normal.png</file>
+        <file>image/sequence_press.png</file>
     </qresource>
 </RCC>

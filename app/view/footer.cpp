@@ -24,6 +24,7 @@ DWIDGET_USE_NAMESPACE
 #include "../core/playlistmanager.h"
 
 #include "widget/slider.h"
+#include "widget/modebuttom.h"
 
 static const char *sPropertyFavourite         = "fav";
 static const char *sPropertyPlayStatus        = "playstatus";
@@ -58,9 +59,10 @@ public:
     QPushButton *btNext  = nullptr;
     QPushButton *btFavorite = nullptr;
     QPushButton *btLyric    = nullptr;
-    QPushButton *btPlayMode = nullptr;
+    ModeButton *btPlayMode = nullptr;
     QPushButton *btSound    = nullptr;
     Slider     *progress  = nullptr;
+    Slider      *hideProgress = nullptr;
 
     QSharedPointer<Playlist>    m_playinglist;
     MusicInfo                   m_info;
@@ -75,6 +77,7 @@ Footer::Footer(QWidget *parent) : QFrame(parent)
     auto vboxlayout = new QVBoxLayout(this);
     vboxlayout->setSpacing(0);
     vboxlayout->setMargin(0);
+
     d->progress = new Slider(Qt::Horizontal);
     d->progress->setObjectName("FooterProgress");
     d->progress->setFixedHeight(2);
@@ -82,8 +85,15 @@ Footer::Footer(QWidget *parent) : QFrame(parent)
     d->progress->setMaximum(1000);
     d->progress->setValue(0);
 
+    d->hideProgress = new Slider(Qt::Horizontal);
+    d->hideProgress->setObjectName("HideFooterProgress");
+    d->hideProgress->setFixedHeight(10);
+    d->hideProgress->setMinimum(0);
+    d->hideProgress->setMaximum(1000);
+    d->hideProgress->setValue(0);
+
     auto layout = new QHBoxLayout();
-    layout->setContentsMargins(10, 10, 20, 10);
+    layout->setContentsMargins(20, 0, 20, 10);
     layout->setSpacing(20);
 
     d->cover = new ClickableLabel;
@@ -120,9 +130,15 @@ Footer::Footer(QWidget *parent) : QFrame(parent)
     d->btLyric->setObjectName("FooterActionLyric");
     d->btLyric->setFixedSize(24, 24);
 
-    d->btPlayMode = new QPushButton;
+    QStringList modes;
+    modes /*<< ":/image/sequence"*/
+          << ":/image/repeat_all"
+          << ":/image/repeat_single"
+          << ":/image/shuffle";
+    d->btPlayMode = new ModeButton;
     d->btPlayMode->setObjectName("FooterActionPlayMode");
     d->btPlayMode->setFixedSize(24, 24);
+    d->btPlayMode->setModeIcons(modes);
 
     d->btSound = new QPushButton;
     d->btSound->setObjectName("FooterActionSound");
@@ -173,6 +189,7 @@ Footer::Footer(QWidget *parent) : QFrame(parent)
     layout->addWidget(actWidget, 0, Qt::AlignRight | Qt::AlignVCenter);
 
     vboxlayout->addWidget(d->progress);
+    vboxlayout->addWidget(d->hideProgress);
     vboxlayout->addLayout(layout);
 
     d->title->hide();
@@ -189,6 +206,12 @@ Footer::Footer(QWidget *parent) : QFrame(parent)
         Q_ASSERT(range != 0);
         emit this->changeProgress(value, range);
     });
+    connect(d->hideProgress, &Slider::valueChanged, this, [ = ](int value) {
+        auto range = d->progress->maximum() - d->progress->minimum();
+        Q_ASSERT(range != 0);
+        emit this->changeProgress(value, range);
+    });
+
     connect(d->btPlay, &QPushButton::clicked, this, [ = ](bool) {
         if (!d->m_playinglist) {
             emit play(d->m_playinglist, d->m_info);
@@ -285,6 +308,10 @@ void Footer::onProgressChanged(qint64 value, qint64 duration)
     d->progress->blockSignals(true);
     d->progress->setValue(value * length / duration);
     d->progress->blockSignals(false);
+
+    d->hideProgress->blockSignals(true);
+    d->hideProgress->setValue(value * length / duration);
+    d->hideProgress->blockSignals(false);
 }
 
 void Footer::updateQssProperty(QWidget *w, const char *name, const QVariant &value)

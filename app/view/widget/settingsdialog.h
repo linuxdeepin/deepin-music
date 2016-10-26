@@ -7,23 +7,22 @@
  * (at your option) any later version.
  **/
 
-#ifndef SLIDER_H
-#define SLIDER_H
+#ifndef SETTINGSDIALOG_H
+#define SETTINGSDIALOG_H
 
-#include <QSlider>
+#include <ddialog.h>
 
-class Slider : public QSlider
+DWIDGET_USE_NAMESPACE
+
+class SettingsDialog : public DAbstractDialog
 {
     Q_OBJECT
 public:
-    explicit Slider(QWidget *parent = 0);
-    explicit Slider(Qt::Orientation orientation, QWidget *parent = Q_NULLPTR);
+    explicit SettingsDialog(QWidget *parent = 0);
 
-    void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
-    void mouseMoveEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
 signals:
 
 public slots:
 };
 
-#endif // SLIDER_H
+#endif // SETTINGSDIALOG_H

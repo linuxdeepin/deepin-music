@@ -7,28 +7,38 @@
 }
 
 #FooterProgress::groove:horizontal {
-    background: transparent;
-    position: absolute; /* absolutely position 4px from the left and right of the widget. setting margins on the widget should work too... */
+    background: rgba(255, 255, 255, 0.1);
+    position: absolute;
     left: 0px; right: 0px;
 }
-
 #FooterProgress::handle:horizontal {
-    background: 2ca7f8;
-    margin: 0 -6px; /* expand outside the groove */
+    background: #2ca7f8;
+    margin: 0px -20px; /* expand outside the groove */
 }
-
 #FooterProgress::add-page:horizontal {
     background: transparent;
 }
-
 #FooterProgress::sub-page:horizontal {
     background: #2ca7f8;
+}
+
+#HideFooterProgress::groove:horizontal {
+    background: transparent;
+}
+#HideFooterProgress::handle:horizontal {
+    background: transparent;
+    margin: 0px -20px; /* expand outside the groove */
+}
+#HideFooterProgress::add-page:horizontal {
+    background: transparent;
+}
+#HideFooterProgress::sub-page:horizontal {
+    background: transparent;
 }
 
 #FooterCover {
     image: url(:/image/cover_min.png);
 }
-
 #FooterTitle{
     font-size: 12px;
     color: #ffffff;
@@ -109,12 +119,30 @@
 }
 
 #FooterActionPlayMode{
-    border-image: url(:/image/shuffle_normal.png);
+    border-image: url(:/image/repeat_all_normal.png);
 }
 #FooterActionPlayMode:hover{
-    border-image: url(:/image/shuffle_hover.png);
+    border-image: url(:/image/repeat_all_hover.png);
 }
 #FooterActionPlayMode:pressed{
+    border-image: url(:/image/repeat_all_press.png);
+}
+#FooterActionPlayMode[mode="1"]{
+    border-image: url(:/image/repeat_single_normal.png);
+}
+#FooterActionPlayMode:hover[mode="1"]{
+    border-image: url(:/image/repeat_single_hover.png);
+}
+#FooterActionPlayMode:pressed[mode="1"]{
+    border-image: url(:/image/repeat_single_press.png);
+}
+#FooterActionPlayMode[mode="2"]{
+    border-image: url(:/image/shuffle_normal.png);
+}
+#FooterActionPlayMode:hover[mode="2"]{
+    border-image: url(:/image/shuffle_hover.png);
+}
+#FooterActionPlayMode:pressed[mode="2"]{
     border-image: url(:/image/shuffle_press.png);
 }
 

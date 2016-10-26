@@ -14,7 +14,7 @@
 
 Slider::Slider(QWidget *parent) : QSlider(parent)
 {
-
+    setTracking(false);
 }
 
 Slider::Slider(Qt::Orientation orientation, QWidget *parent): QSlider(orientation, parent)
@@ -29,7 +29,12 @@ void Slider::mousePressEvent(QMouseEvent *event)
         if (orientation() == Qt::Vertical) {
             setValue(minimum() + ((maximum() - minimum()) * (height() - event->y())) / height()) ;
         } else {
-            setValue(minimum() + ((maximum() - minimum()) * (event->x() )) / (width() )) ;
+            setValue(minimum() + ((maximum() - minimum()) * (event->x())) / (width()));
         }
     }
+}
+
+void Slider::mouseMoveEvent(QMouseEvent *event)
+{
+    QSlider::mouseMoveEvent(event);
 }

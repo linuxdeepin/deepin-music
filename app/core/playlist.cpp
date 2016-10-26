@@ -48,6 +48,11 @@ const MusicInfo Playlist::next(const MusicInfo &info)
     return listinfo.musicMap.value(listinfo.musicIds.at(prev));
 }
 
+bool Playlist::isLast(const MusicInfo &info)
+{
+    return listinfo.musicIds.last() == info.id;
+}
+
 bool Playlist::contains(const MusicInfo &info)
 {
     return listinfo.musicMap.contains(info.id);

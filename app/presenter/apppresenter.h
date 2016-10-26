@@ -57,7 +57,8 @@ signals:
     void progrossChanged(qint64 value, qint64 range);
 
     // to player
-    void setMedia(const QString &mediaUrl);
+    void setMedia(const MusicInfo &info);
+    void changeProgress(qint64 value, qint64 range);
     void play();
     void stop();
     void pause();
@@ -78,6 +79,7 @@ public slots:
     void onMusicNext(QSharedPointer<Playlist> playlist, const MusicInfo &info);
     void onToggleFavourite(const MusicInfo &info);
     void onChangeProgress(qint64 value, qint64 range);
+    void onPlayModeChanged(int mode);
 
     // music list
     void onPlayall(QSharedPointer<Playlist> playlist);
@@ -93,8 +95,6 @@ public slots:
 
     //! UI: menu interface
     void onRequestMusiclistMenu(MusicItem* item, const QPoint &pos);
-//    void onRequestPlaylistMenuData(QSharedPointer<Playlist> playlist);
-//    void onRequestMusiclistMenuData(QSharedPointer<Playlist> playlist, const MusicInfo &selected);
 
 
 public slots:
