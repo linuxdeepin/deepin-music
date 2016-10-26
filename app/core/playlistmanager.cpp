@@ -69,11 +69,6 @@ QString PlaylistManager::newDisplayName()
     return QString("%1 %2").arg(temp).arg(i);
 }
 
-int PlaylistManager::playMode()
-{
-    return m_palyMode;
-}
-
 void PlaylistManager::load()
 {
 //    qDebug() frameles<< QThread::currentThread() << qApp->thread();
@@ -81,7 +76,6 @@ void PlaylistManager::load()
     settings.beginGroup("PlaylistManager");
     auto currentTitle = settings.value("Current").toString();
     sortPlaylists = settings.value("SortPlaylist").toStringList();
-    m_palyMode = settings.value("PlayMode").toInt();
     settings.endGroup();
 
     for (auto &playlistid : sortPlaylists) {
@@ -126,6 +120,7 @@ void PlaylistManager::load()
         qDebug() << "change to default all palylist";
         m_playingPlaylist = playlist(AllMusicListID);
     }
+    m_selectedPlaylist = m_playingPlaylist;
 }
 
 void PlaylistManager::sync()
@@ -186,7 +181,7 @@ void PlaylistManager::setPlayingPlaylist(QSharedPointer<Playlist> currentPlaylis
     }
     m_playingPlaylist = currentPlaylist;
     emit playingPlaylistChanged(currentPlaylist);
-
+    m_playingPlaylist->clearHistory();
     settings.beginGroup("PlaylistManager");
     settings.setValue("Current", m_playingPlaylist->id());
     settings.endGroup();

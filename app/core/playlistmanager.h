@@ -31,7 +31,6 @@ public:
     QString newID();
     QString newDisplayName();
 
-    int playMode();
     QList<QSharedPointer<Playlist> > allplaylist();
     QSharedPointer<Playlist> playlist(const QString &id);
     QSharedPointer<Playlist> playingPlaylist() const;
@@ -57,7 +56,6 @@ private:
     QString getPlaylistPath(const QString &id);
     void insertPlaylist(const QString &id, QSharedPointer<Playlist>);
 
-    int                                         m_palyMode;
     QSettings                                   settings;
     QSharedPointer<Playlist>                    m_playingPlaylist;
     QSharedPointer<Playlist>                    m_selectedPlaylist;

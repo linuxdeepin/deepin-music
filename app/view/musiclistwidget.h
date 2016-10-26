@@ -35,7 +35,7 @@ signals:
 
 public slots:
     void onMusicPlayed(QSharedPointer<Playlist> palylist, const MusicInfo &info);
-    void onMusicRemoved(QSharedPointer<Playlist> palylist, const MusicInfo &info);
+    void onMusicRemoved(QSharedPointer<Playlist> playlist, const MusicInfo &info);
     void onMusicAdded(QSharedPointer<Playlist> palylist, const MusicInfo &info);
     void onMusiclistChanged(QSharedPointer<Playlist> palylist);
     void onCustomContextMenuRequest(MusicItem* item,
@@ -43,6 +43,9 @@ public slots:
                                     QSharedPointer<Playlist> selectedlist,
                                     QSharedPointer<Playlist> favlist,
                                     QList<QSharedPointer<Playlist> >newlists);
+
+signals:
+    void showEmpty(bool isEmpty);
 
 private:
     void addMusicInfo(MusicListView *m_musiclist, const MusicInfo &info);

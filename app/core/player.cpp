@@ -15,22 +15,78 @@
 
 void Player::setPlaylist(QSharedPointer<Playlist> playlist)
 {
-
 }
 
 void Player::setMode(Player::PlayMode mode)
 {
     m_mode = mode;
-    if (m_mode == Shuffle) {
-//        m_historyIDs.clear();
+}
+
+void Player::playMusic(QSharedPointer<Playlist> playlist, const MusicInfo &info)
+{
+    MusicInfo nextInfo = info;
+
+    m_playlist = playlist;
+    if (info.id.isEmpty() && this->state() == QMediaPlayer::State::StoppedState) {
+        nextInfo = m_playlist->first();
     }
+
+    this->blockSignals(true);
+    setMedia(nextInfo);
+    this->blockSignals(false);
+    emit musicPlayed(playlist, nextInfo);
+
+    if (!playlist->history().contains(nextInfo.id)) {
+        // TODO: max
+        playlist->history().append(nextInfo.id);
+    }
+    this->play();
+}
+
+void Player::playNextMusic(QSharedPointer<Playlist> playlist, const MusicInfo &info)
+{
+    Q_ASSERT(playlist == m_playlist);
+
+    if (m_mode == RepeatSingle) {
+        selectNext(info, RepeatAll);
+    } else {
+        selectNext(info, m_mode);
+    }
+}
+
+void Player::playPrevMusic(QSharedPointer<Playlist> playlist, const MusicInfo &info)
+{
+    Q_ASSERT(playlist == m_playlist);
+
+    if (m_mode == RepeatSingle) {
+        selectPrev(info, RepeatAll);
+    } else {
+        selectPrev(info, m_mode);
+    }
+
+//    if (playlist->history().isEmpty()) {
+//        //rebuild history
+//        playlist->buildHistory(info.id);
+//    }
+//    auto nextId = playlist->history().last();
+//    MusicInfo nextInfo = playlist->music(nextId);
+//    if (nextInfo.id.isEmpty()) {
+//        nextInfo = playlist->prev(info);
+//    }
+//    playMusic(playlist, nextInfo);
 }
 
 void Player::setMedia(const MusicInfo &info)
 {
-    qDebug() << info.url;
     m_info = info;
     QMediaPlayer::setMedia(QUrl::fromLocalFile(info.url));
+    // TODO:
+    if (!m_historyIDs.contains(info.id)) {
+        if (m_historyIDs.length() >= 100) {
+            m_historyIDs.pop_front();
+        }
+        m_historyIDs << info.id;
+    }
 }
 
 void Player::changeProgress(qint64 value, qint64 range)
@@ -42,32 +98,49 @@ void Player::changeProgress(qint64 value, qint64 range)
     this->setPosition(position);
 }
 
-void Player::selectNext()
+void Player::selectNext(const MusicInfo &info, PlayMode mode)
 {
+    qDebug() << "next" << m_playlist << m_mode;
     if (!m_playlist) {
         return;
     }
 
-    switch (m_mode) {
-    case Order: {
-        // next of list, stop next
-        if (m_playlist->isLast(m_info)) {
-            break;
-        }
-        setMedia(m_playlist->next(m_info));
-        this->play();
-        break;
-    }
+    switch (mode) {
     case RepeatAll: {
-        setMedia(m_playlist->next(m_info));
-        this->play();
+        playMusic(m_playlist, m_playlist->next(info));
         break;
     }
     case RepeatSingle: {
-        this->play();
+        playMusic(m_playlist, info);
         break;
     }
     case Shuffle: {
+        int randomValue = qrand() % m_playlist->length();
+        playMusic(m_playlist, m_playlist->music(randomValue));
+        break;
+    }
+    }
+}
+
+void Player::selectPrev(const MusicInfo &info, Player::PlayMode mode)
+{
+    qDebug() << "prev" << m_playlist << m_mode;
+    if (!m_playlist) {
+        return;
+    }
+
+    switch (mode) {
+    case RepeatAll: {
+        playMusic(m_playlist, m_playlist->prev(info));
+        break;
+    }
+    case RepeatSingle: {
+        playMusic(m_playlist, info);
+        break;
+    }
+    case Shuffle: {
+        int randomValue = qrand() % m_playlist->length();
+        playMusic(m_playlist, m_playlist->music(randomValue));
         break;
     }
     }
@@ -82,10 +155,10 @@ Player::Player(QObject *parent) : QMediaPlayer(parent)
         emit progrossChanged(position,  m_duration);
     });
     connect(this, &QMediaPlayer::stateChanged, this, [ = ](QMediaPlayer::State state) {
-        qDebug() << state;
         switch (state) {
         case QMediaPlayer::StoppedState: {
-            this->selectNext();
+            qDebug() << "auto change next music";
+            this->selectNext(m_info, m_mode);
             break;
         }
         case QMediaPlayer::PlayingState:

@@ -6,6 +6,11 @@
     border: 0px solid red;
 }
 
+#MusicListEmptyHits{
+    font-size: 20px;
+    color: #979797;
+}
+
 #MusicListPlayAll{
     padding: 0 10 0 10;
     qproperty-icon: url(:/image/play_all.png);

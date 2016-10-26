@@ -20,6 +20,7 @@ class Playlist;
 class Player : public QMediaPlayer
 {
     Q_OBJECT
+    Q_PROPERTY(PlayMode mode READ mode WRITE setMode NOTIFY modeChanged)
 public:
 
     enum PlayStatus {
@@ -31,10 +32,9 @@ public:
     Q_ENUM(PlayStatus)
 
     enum PlayMode {
-        Order = 0,
-        RepeatAll = 1,
-        RepeatSingle = 2,
-        Shuffle = 3,
+        RepeatAll = 0,
+        RepeatSingle = 1,
+        Shuffle = 2,
     };
     Q_ENUM(PlayMode)
 
@@ -48,14 +48,24 @@ public:
     void setMode(PlayMode mode);
 
     void init() {}
+
+    inline PlayMode mode() const { return m_mode; }
+
 signals:
     void progrossChanged(qint64 value, qint64 range);
+    void modeChanged(PlayMode mode);
+    void musicPlayed(QSharedPointer<Playlist> palylist, const MusicInfo &info);
+
 public slots:
-    void setMedia(const MusicInfo &info);
+    void playMusic(QSharedPointer<Playlist> playlist, const MusicInfo &info);
+    void playNextMusic(QSharedPointer<Playlist> playlist, const MusicInfo &info);
+    void playPrevMusic(QSharedPointer<Playlist> playlist, const MusicInfo &info);
     void changeProgress(qint64 value, qint64 range);
 
 private:
-    void selectNext();
+    void setMedia(const MusicInfo &info);
+    void selectNext(const MusicInfo &info, PlayMode mode);
+    void selectPrev(const MusicInfo &info, PlayMode mode);
     explicit Player(QObject *parent = 0);
 
     MusicInfo                   m_info;

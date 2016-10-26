@@ -32,6 +32,8 @@ public:
     Q_ENUM(PlayMode)
 
 public:
+    QStringList &history() {return m_history;}
+
     //! public interface
     QString id();
     QString displayName();
@@ -43,12 +45,16 @@ public:
     const MusicInfo first();
     const MusicInfo prev(const MusicInfo &info);
     const MusicInfo next(const MusicInfo &info);
+    const MusicInfo music(int index);
+    const MusicInfo music(const QString &id);
 
     bool isLast(const MusicInfo &info);
     bool contains(const MusicInfo &info);
     MusicList allmusic();
 
 public slots:
+    void buildHistory(const QString &last);
+    void clearHistory();
     void setDisplayName(const QString &name);
     void appendMusic(const MusicInfo &info);
     void removeMusic(const MusicInfo &info);
@@ -65,6 +71,7 @@ signals:
     void displayNameChanged(QString displayName);
 
 private:
+    QStringList     m_history;
     QSettings       settings;
     MusicListInfo   listinfo;
 };

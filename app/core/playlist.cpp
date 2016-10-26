@@ -14,6 +14,7 @@ Playlist::Playlist(const MusicListInfo &musiclistinfo, QObject *parent)
     : QObject(parent), settings(musiclistinfo.url, QSettings::IniFormat)
 {
     listinfo = musiclistinfo;
+    m_history = listinfo.musicIds;
 }
 
 int Playlist::length()
@@ -46,6 +47,16 @@ const MusicInfo Playlist::next(const MusicInfo &info)
     // can not find
     auto prev = (index + 1) % listinfo.musicIds.length();
     return listinfo.musicMap.value(listinfo.musicIds.at(prev));
+}
+
+const MusicInfo Playlist::music(int index)
+{
+    return listinfo.musicMap.value(listinfo.musicIds.value(index));
+}
+
+const MusicInfo Playlist::music(const QString &id)
+{
+    return listinfo.musicMap.value(id);
 }
 
 bool Playlist::isLast(const MusicInfo &info)
@@ -92,6 +103,23 @@ MusicList Playlist::allmusic()
     return mlist;
 }
 
+void Playlist::buildHistory(const QString &last)
+{
+    auto lastindex = listinfo.musicIds.indexOf(last);
+    m_history.clear();
+    for (int i = lastindex + 1; i < listinfo.musicIds.length(); ++i) {
+        m_history.append(listinfo.musicIds.value(i));
+    }
+    for (int i = 0; i <= lastindex; ++i) {
+        m_history.append(listinfo.musicIds.value(i));
+    }
+}
+
+void Playlist::clearHistory()
+{
+    m_history.clear();
+}
+
 void Playlist::load()
 {
     settings.beginGroup("PlaylistInfo");
@@ -119,6 +147,7 @@ void Playlist::load()
 
         listinfo.musicMap.insert(key, info);
     }
+    m_history = listinfo.musicIds;
 }
 
 void Playlist::save()
@@ -198,6 +227,7 @@ void Playlist::removeMusic(const MusicInfo &info)
         qWarning() << "no such id in playlist" << info.id << info.url << listinfo.displayName;
         return;
     }
+    m_history.removeAll(info.id);
     listinfo.musicIds.removeAll(info.id);
     listinfo.musicMap.remove(info.id);
 

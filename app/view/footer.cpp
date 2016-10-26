@@ -201,6 +201,7 @@ Footer::Footer(QWidget *parent) : QFrame(parent)
 
     D_THEME_INIT_WIDGET(Footer);
 
+    connect(d->btPlayMode, &ModeButton::modeChanged, this, &Footer::modeChanged);
     connect(d->progress, &Slider::valueChanged, this, [ = ](int value) {
         auto range = d->progress->maximum() - d->progress->minimum();
         Q_ASSERT(range != 0);
@@ -217,15 +218,18 @@ Footer::Footer(QWidget *parent) : QFrame(parent)
             emit play(d->m_playinglist, d->m_info);
             return;
         }
+
         auto status = d->btPlay->property(sPropertyPlayStatus).toString();
+        qDebug() << status << d->m_playinglist->id();
         if (status == sPlayStatusValuePlaying) {
             emit pause(d->m_playinglist, d->m_info);
-            status = sPlayStatusValuePause;
+            auto status = sPlayStatusValuePause;
+            updateQssProperty(d->btPlay, sPropertyPlayStatus, status);
         } else {
             emit play(d->m_playinglist, d->m_info);
-            status = sPlayStatusValuePlaying;
+            auto status = sPlayStatusValuePlaying;
+            updateQssProperty(d->btPlay, sPropertyPlayStatus, status);
         }
-        updateQssProperty(d->btPlay, sPropertyPlayStatus, status);
     });
 
     connect(d->btPrev, &QPushButton::clicked, this, [ = ](bool) {
@@ -247,10 +251,15 @@ Footer::Footer(QWidget *parent) : QFrame(parent)
         emit  this->togglePlaylist();
     });
 
+    // TODO: remove fav?
     connect(this, &Footer::initFooter,
     this, [ = ](QSharedPointer<Playlist> favlist, QSharedPointer<Playlist> current, int mode) {
         d->m_mode = mode;
         d->m_playinglist = current;
+        d->btPlayMode->setMode(mode);
+        this->style()->unpolish(d->btPlayMode);
+        this->style()->polish(d->btPlayMode);
+        this->repaint();
     });
 }
 
@@ -292,7 +301,8 @@ void Footer::onMusicPlay(QSharedPointer<Playlist> palylist, const MusicInfo &inf
 
 void Footer::onMusicPause(QSharedPointer<Playlist> palylist, const MusicInfo &info)
 {
-
+    auto status = sPlayStatusValuePause;
+    updateQssProperty(d->btPlay, sPropertyPlayStatus, status);
 }
 
 void Footer::onMusicStop(QSharedPointer<Playlist> palylist, const MusicInfo &info)

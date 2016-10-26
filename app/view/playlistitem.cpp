@@ -16,6 +16,8 @@
 #include <QDebug>
 
 #include <dmenu.h>
+#include <ddialog.h>
+#include <QMessageBox>
 #include <dthememanager.h>
 DWIDGET_USE_NAMESPACE
 
@@ -114,7 +116,7 @@ void PlayListItem::showContextMenu(const QPoint &pos)
 {
     QPoint globalPos = this->mapToGlobal(pos);
 
-    Menu menu;
+    DMenu menu;
     auto playact = menu.addAction(tr("Play"));
     playact->setDisabled(0 == m_data->length());
 
@@ -123,7 +125,7 @@ void PlayListItem::showContextMenu(const QPoint &pos)
         menu.addAction(tr("Delete"));
     }
 
-    connect(&menu, &Menu::triggered, this, [ = ](QAction * action) {
+    connect(&menu, &DMenu::triggered, this, [ = ](DAction * action) {
         if (action->text() == "Rename") {
             QTimer::singleShot(0, this, [ = ] {
                 m_titleedit->setFocus();
@@ -133,6 +135,16 @@ void PlayListItem::showContextMenu(const QPoint &pos)
         }
 
         if (action->text() == "Delete") {
+            QString message = QString(tr("\nAre you sure to delete \"%1\"?")).arg(m_titleedit->text());
+
+            DDialog warnDlg(this);
+            warnDlg.setIcon(QIcon(":/image/deepin-music.svg"));
+            warnDlg.setTextFormat(Qt::AutoText);
+            warnDlg.setMessage(message);
+            warnDlg.addButtons(QStringList() << tr("Cancel") << tr("Delete"));
+            if (0 == warnDlg.exec()) {
+                return;
+            }
             qDebug() << "remove" << action;
             emit this->remove();
         }

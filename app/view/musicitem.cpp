@@ -19,6 +19,7 @@
 #include <QDebug>
 
 #include <dthememanager.h>
+#include <DMenu>
 DWIDGET_USE_NAMESPACE
 
 #include "../model/musiclistmodel.h"
@@ -110,7 +111,7 @@ void MusicItem::showContextMenu(const QPoint &pos,
 {
     QPoint globalPos = this->mapToGlobal(pos);
 
-    Menu playlistMenu;
+    DMenu playlistMenu;
     bool hasAction = false;
 
     if (selectedPlaylist != favPlaylist) {
@@ -132,14 +133,14 @@ void MusicItem::showContextMenu(const QPoint &pos,
 
 
     // TODO: add all list
-    connect(&playlistMenu, &Menu::triggered, this, [ = ](QAction * action) {
+    connect(&playlistMenu, &DMenu::triggered, this, [ = ](DAction * action) {
         qDebug() << action->data().toString();
         QString playlistID = action->data().toString();
         qDebug() << "addToPlaylist" << playlistID;
         emit addToPlaylist(playlistID);
     });
 
-    Menu myMenu;
+    DMenu myMenu;
     myMenu.addAction(tr("Play"));
     myMenu.addAction(tr("Add to playlist"))->setMenu(&playlistMenu);
     myMenu.addSeparator();
@@ -149,7 +150,7 @@ void MusicItem::showContextMenu(const QPoint &pos,
     myMenu.addSeparator();
     myMenu.addAction(tr("Song info"));
 
-    connect(&myMenu, &Menu::triggered, this, [ = ](QAction * action) {
+    connect(&myMenu, &DMenu::triggered, this, [ = ](DAction * action) {
         qDebug() << action;
         if (action->text() == tr("Play")) {
             emit play();

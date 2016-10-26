@@ -57,9 +57,10 @@ signals:
     void progrossChanged(qint64 value, qint64 range);
 
     // to player
-    void setMedia(const MusicInfo &info);
     void changeProgress(qint64 value, qint64 range);
-    void play();
+    void play(QSharedPointer<Playlist> playlist, const MusicInfo &info);
+    void playNext(QSharedPointer<Playlist> playlist, const MusicInfo &info);
+    void playPrev(QSharedPointer<Playlist> playlist, const MusicInfo &info);
     void stop();
     void pause();
 

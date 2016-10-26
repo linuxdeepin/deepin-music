@@ -13,6 +13,7 @@
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <QComboBox>
+#include <QLabel>
 #include <QResizeEvent>
 #include <QStandardItemModel>
 #include <QStringListModel>
@@ -49,8 +50,13 @@ MusicListWidget::MusicListWidget(QWidget *parent) : QFrame(parent)
 
     auto cbSort = new DComboBox;
     cbSort->setObjectName("MusicListSort");
-    cbSort->addItem(tr("By Title"));
-    cbSort->addItem(tr("By Add Time"));
+    cbSort->addItem(tr("Time added"));
+    cbSort->addItem(tr("Title"));
+    cbSort->addItem(tr("Artist"));
+    cbSort->addItem(tr("Album name"));
+
+    auto emptyHits = new QLabel(tr("No Music in list"));
+    emptyHits->setObjectName("MusicListEmptyHits");
 
     actionBarLayout->addWidget(btPlayAll, 0, Qt::AlignCenter);
     actionBarLayout->addStretch();
@@ -59,6 +65,8 @@ MusicListWidget::MusicListWidget(QWidget *parent) : QFrame(parent)
 
     layout->addWidget(actionBar, 0, Qt::AlignTop);
     layout->addWidget(m_musiclist, 0, Qt::AlignTop);
+    layout->addWidget(emptyHits, 0, Qt::AlignCenter);
+
 
     D_THEME_INIT_WIDGET(MusicListWidget);
 
@@ -74,6 +82,12 @@ MusicListWidget::MusicListWidget(QWidget *parent) : QFrame(parent)
         if (m_palylist) {
             emit this->playall(m_palylist);
         }
+    });
+
+    connect(this, &MusicListWidget::showEmpty, this, [ = ](bool isEmpty) {
+        actionBar->setVisible(!isEmpty);
+        m_musiclist->setVisible(!isEmpty);
+        emptyHits->setVisible(isEmpty);
     });
 }
 
@@ -99,7 +113,7 @@ void MusicListWidget::onMusicPlayed(QSharedPointer<Playlist> palylist, const Mus
         item = m_musiclist->item(i);
         musicItem = qobject_cast<MusicItem *>(m_musiclist->itemWidget(item));
         if (musicItem && musicItem->info().id == info.id) {
-            qDebug() << "find" << i << item << m_musiclist->count();
+//            qDebug() << "find" << i << item << m_musiclist->count();
             break;
         }
     }
@@ -115,9 +129,9 @@ void MusicListWidget::onMusicPlayed(QSharedPointer<Playlist> palylist, const Mus
     m_musiclist->setCurrentItem(item);
 }
 
-void MusicListWidget::onMusicRemoved(QSharedPointer<Playlist> palylist, const MusicInfo &info)
+void MusicListWidget::onMusicRemoved(QSharedPointer<Playlist> playlist, const MusicInfo &info)
 {
-    if (palylist != m_palylist) {
+    if (playlist != m_palylist) {
         qWarning() << "check playlist failed!"
                    << "m_palylist:" << m_palylist
                    << "playlist:" << m_palylist;
@@ -143,6 +157,9 @@ void MusicListWidget::onMusicRemoved(QSharedPointer<Playlist> palylist, const Mu
 
     // TODO: how to scroll
 //        m_musiclist->scrollToItem(m_musiclist->item(row));
+
+    qDebug() << playlist->id() << playlist->length();
+    emit this->showEmpty(playlist->length() == 0);
 }
 
 void MusicListWidget::addMusicInfo(MusicListView *m_musiclist, const MusicInfo &info)
@@ -173,6 +190,8 @@ void MusicListWidget::addMusicInfo(MusicListView *m_musiclist, const MusicInfo &
     connect(musicItem, &MusicItem::requestCustomContextMenu, this, [ = ](const QPoint & pos) {
         emit this->requestCustomContextMenu(musicItem, pos);
     });
+
+    emit this->showEmpty(false);
 }
 
 
@@ -207,13 +226,15 @@ void MusicListWidget::onMusiclistChanged(QSharedPointer<Playlist> playlist)
     for (auto &info : playlist->allmusic()) {
         addMusicInfo(m_musiclist, info);
     }
+
+    emit this->showEmpty(playlist->length() == 0);
 }
 
-void MusicListWidget::onCustomContextMenuRequest(MusicItem* item,
-                                                 const QPoint &pos,
-                                                 QSharedPointer<Playlist> selectedlist,
-                                                 QSharedPointer<Playlist> favlist,
-                                                 QList<QSharedPointer<Playlist> > newlists)
+void MusicListWidget::onCustomContextMenuRequest(MusicItem *item,
+        const QPoint &pos,
+        QSharedPointer<Playlist> selectedlist,
+        QSharedPointer<Playlist> favlist,
+        QList<QSharedPointer<Playlist> > newlists)
 {
     Q_ASSERT(item != nullptr);
     item->showContextMenu(pos, selectedlist, favlist, newlists);

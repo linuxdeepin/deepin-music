@@ -15,6 +15,7 @@
 #include <QStackedWidget>
 #include <QPropertyAnimation>
 #include <QTimer>
+#include <QProcess>
 #include <QResizeEvent>
 #include <QHBoxLayout>
 #include <QStackedLayout>
@@ -23,6 +24,7 @@
 
 #include <dutility.h>
 #include <dthememanager.h>
+#include <DAboutDialog>
 
 #include "titlebar.h"
 #include "footer.h"
@@ -182,7 +184,6 @@ PlayerFrame::PlayerFrame(QWidget *parent)
     contentLayout->addWidget(d->stacked);
     contentLayout->addWidget(d->footer);
     setContentWidget(d->content);
-//    setCentralWidget(d->content);
     D_THEME_INIT_WIDGET(PlayerFrame);
 
     resize(960, 720);
@@ -284,6 +285,8 @@ void PlayerFrame::binding(AppPresenter *presenter)
             presenter, &AppPresenter::onChangeProgress);
     connect(d->footer, &Footer::toggleFavourite,
             presenter, &AppPresenter::onToggleFavourite);
+    connect(d->footer, &Footer::modeChanged,
+            presenter, &AppPresenter::onPlayModeChanged);
 
     // Import bindding
     connect(d->import, &ImportWidget::importMusicDirectory,
@@ -421,8 +424,6 @@ void PlayerFrame::onSelectImportFiles()
         emit importSelectFiles(fileDlg.selectedFiles());
     }
 }
-#include <DAboutDialog>
-#include <QProcess>
 
 void PlayerFrame::initMenu()
 {
@@ -461,11 +462,11 @@ void PlayerFrame::initMenu()
 
     auto m_about = new DAction(tr("About"), this);
     connect(m_about, &DAction::triggered, this, [ = ](bool) {
-        QString descriptionText = tr("Deepin Music is a new scanning technology developed by Wuhan Deepin Technology Co., Ltd.. It will connect your scanner to the network, and is enabled for network scanning via daily used applications. Deepin Cloud Scan is suitable for desktops, laptops, tablets and other networking devices that you have authorized to scan.");
+        QString descriptionText = tr("Deepin Music Player is a beautiful design and simple function local music player. It supports viewing lyrics when playing, playing lossless music and creating customizable songlist, etc.");
         DAboutDialog *about = new DAboutDialog(
             tr("Deepin Music"),
             QString(":/image/deepin-music.svg"),
-            QString(":/image/deepin-music.svg"),
+            QString(":/image/about_icon.png"),
             tr("Deepin Music"),
             tr("Version: 3.0"),
             descriptionText,

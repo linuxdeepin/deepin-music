@@ -13,7 +13,7 @@
 }
 #FooterProgress::handle:horizontal {
     background: #2ca7f8;
-    margin: 0px -20px; /* expand outside the groove */
+    margin: 5px -5px; /* expand outside the groove */
 }
 #FooterProgress::add-page:horizontal {
     background: transparent;
@@ -27,7 +27,7 @@
 }
 #HideFooterProgress::handle:horizontal {
     background: transparent;
-    margin: 0px -20px; /* expand outside the groove */
+    margin: 5px -5px; /* expand outside the groove */
 }
 #HideFooterProgress::add-page:horizontal {
     background: transparent;

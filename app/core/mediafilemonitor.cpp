@@ -16,6 +16,7 @@
 #include <QCryptographicHash>
 #include <QDirIterator>
 #include <QDebug>
+#include <QThread>
 #include <QApplication>
 
 #include <tag.h>
@@ -45,7 +46,7 @@ MediaFileMonitor::MediaFileMonitor(QObject *parent) : QObject(parent)
         }
     }
 }
-#include <QThread>
+
 void MediaFileMonitor::importPlaylistFiles(QSharedPointer<Playlist> playlist, const QStringList &filelist)
 {
     QStringList urllist;
@@ -63,6 +64,9 @@ void MediaFileMonitor::importPlaylistFiles(QSharedPointer<Playlist> playlist, co
     }
 
     for (auto &url : urllist) {
+        // TODO: do not import exist file;
+        auto id = QString(QCryptographicHash::hash(url.toUtf8(), QCryptographicHash::Md5).toHex());
+
         TagLib::FileRef f(url.toStdString().c_str());
 
         // TODO: fix me in windows
@@ -73,7 +77,7 @@ void MediaFileMonitor::importPlaylistFiles(QSharedPointer<Playlist> playlist, co
 
         MusicInfo info;
         info.url = url;
-        info.id = QString(QCryptographicHash::hash(info.url.toUtf8(), QCryptographicHash::Md5).toHex());
+        info.id = id;
         info.title = QString::fromUtf8(f.tag()->title().toCString(true));
         info.artist = QString::fromUtf8(f.tag()->artist().toCString(true));
         info.album = QString::fromUtf8(f.tag()->album().toCString(true));

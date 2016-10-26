@@ -86,5 +86,6 @@
         <file>image/sequence_hover.png</file>
         <file>image/sequence_normal.png</file>
         <file>image/sequence_press.png</file>
+        <file>image/about_icon.png</file>
     </qresource>
 </RCC>
