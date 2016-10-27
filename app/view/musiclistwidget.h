@@ -14,7 +14,7 @@
 
 class Playlist;
 class MusicItem;
-class MusicInfo;
+class MusicMeta;
 class MusicListView;
 
 class MusicListWidget : public QFrame
@@ -27,16 +27,16 @@ public:
     virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
 
 signals:
-    void musicRemove(QSharedPointer<Playlist> palylist, const MusicInfo &info);
-    void musicClicked(QSharedPointer<Playlist> palylist, const MusicInfo &info);
-    void musicAdd(const QString &playlistID, const MusicInfo &info);
+    void musicRemove(QSharedPointer<Playlist> palylist, const MusicMeta &info);
+    void musicClicked(QSharedPointer<Playlist> palylist, const MusicMeta &info);
+    void musicAdd(const QString &playlistID, const MusicMeta &info);
     void playall(QSharedPointer<Playlist> palylist);
     void requestCustomContextMenu(MusicItem* item, const QPoint &pos);
 
 public slots:
-    void onMusicPlayed(QSharedPointer<Playlist> palylist, const MusicInfo &info);
-    void onMusicRemoved(QSharedPointer<Playlist> playlist, const MusicInfo &info);
-    void onMusicAdded(QSharedPointer<Playlist> palylist, const MusicInfo &info);
+    void onMusicPlayed(QSharedPointer<Playlist> palylist, const MusicMeta &info);
+    void onMusicRemoved(QSharedPointer<Playlist> playlist, const MusicMeta &info);
+    void onMusicAdded(QSharedPointer<Playlist> palylist, const MusicMeta &info);
     void onMusiclistChanged(QSharedPointer<Playlist> palylist);
     void onCustomContextMenuRequest(MusicItem* item,
                                     const QPoint &pos,
@@ -48,7 +48,7 @@ signals:
     void showEmpty(bool isEmpty);
 
 private:
-    void addMusicInfo(MusicListView *m_musiclist, const MusicInfo &info);
+    void addMusicInfo(MusicListView *m_musiclist, const MusicMeta &info);
 
     QSharedPointer<Playlist>    m_palylist;
     MusicItem                   *m_last         = nullptr;

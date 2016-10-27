@@ -12,7 +12,6 @@
 
 #include <QObject>
 #include <QSharedPointer>
-#include <QSettings>
 
 #include "../model/musiclistmodel.h"
 
@@ -21,7 +20,7 @@ class Playlist : public QObject
     Q_OBJECT
     Q_PROPERTY(QString displayName READ displayName WRITE setDisplayName NOTIFY displayNameChanged)
 public:
-    explicit Playlist(const MusicListInfo &musiclistinfo, QObject *parent = 0);
+    explicit Playlist(const PlaylistMeta &musiclistinfo, QObject *parent = 0);
 
     enum PlayMode {
         Order  = 0,
@@ -40,40 +39,39 @@ public:
     QString icon();
     bool readonly();
     bool editmode();
+    bool hide();
     int length();
 
-    const MusicInfo first();
-    const MusicInfo prev(const MusicInfo &info);
-    const MusicInfo next(const MusicInfo &info);
-    const MusicInfo music(int index);
-    const MusicInfo music(const QString &id);
+    const MusicMeta first();
+    const MusicMeta prev(const MusicMeta &info);
+    const MusicMeta next(const MusicMeta &info);
+    const MusicMeta music(int index);
+    const MusicMeta music(const QString &id);
 
-    bool isLast(const MusicInfo &info);
-    bool contains(const MusicInfo &info);
+    bool isLast(const MusicMeta &info);
+    bool contains(const MusicMeta &info);
     MusicList allmusic();
 
 public slots:
     void buildHistory(const QString &last);
     void clearHistory();
     void setDisplayName(const QString &name);
-    void appendMusic(const MusicInfo &info);
-    void removeMusic(const MusicInfo &info);
+    void appendMusic(const MusicMeta &info);
+    void removeMusic(const MusicMeta &info);
 
     //! private interface
 public:
     void load();
-    void save();
 
 signals:
-    void musicAdded(const MusicInfo &info);
-    void musicRemoved(const MusicInfo &info);
+    void musicAdded(const MusicMeta &info);
+    void musicRemoved(const MusicMeta &info);
     void removed();
     void displayNameChanged(QString displayName);
 
 private:
     QStringList     m_history;
-    QSettings       settings;
-    MusicListInfo   listinfo;
+    PlaylistMeta   listmeta;
 };
 
 typedef QSharedPointer<Playlist> PlaylistPtr;

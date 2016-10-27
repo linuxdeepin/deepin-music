@@ -12,7 +12,7 @@
 
 #include <QObject>
 
-class MusicInfo;
+class MusicMeta;
 class QNetworkReply;
 class LyricService : public QObject
 {
@@ -21,17 +21,20 @@ public:
     explicit LyricService(QObject *parent = 0);
 
 signals:
-    void lyricSearchFinished(const MusicInfo &, const QString &lyricPath);
-    void coverSearchFinished(const MusicInfo &, const QString &coverPath);
+    void lyricSearchFinished(const MusicMeta &, const QString &lyricPath);
+    void coverSearchFinished(const MusicMeta &, const QString &coverPath);
 
 public slots:
-    void searchLyricCover(const MusicInfo &info);
+    void searchLyricCover(const MusicMeta &info);
 
 private:
-    int doSongArtistRequest(const MusicInfo &info);
-    int doSongRequest(const MusicInfo &info);
-    int doLyricRequest(const MusicInfo &info, int sid);
-    int doCoverRequest(const MusicInfo &info, int aid);
+    int searchCacheLyric(const MusicMeta &info);
+    int searchCacheCover(const MusicMeta &info);
+
+    int doSongArtistRequest(const MusicMeta &info, bool lyric, bool cover);
+    int doSongRequest(const MusicMeta &info, bool lyric, bool cover);
+    int doLyricRequest(const MusicMeta &info, int sid);
+    int doCoverRequest(const MusicMeta &info, int aid);
 
     int downloadUrl(const QString &url, const QString &filepath);
 };

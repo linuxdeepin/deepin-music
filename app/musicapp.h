@@ -32,6 +32,7 @@ public:
     static AppPresenter *presenter();
 
     static QString configPath();
+    static QString cachePath();
 
     void init();
     void showPlayer();

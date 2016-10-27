@@ -22,12 +22,12 @@ void Player::setMode(Player::PlayMode mode)
     m_mode = mode;
 }
 
-void Player::playMusic(QSharedPointer<Playlist> playlist, const MusicInfo &info)
+void Player::playMusic(QSharedPointer<Playlist> playlist, const MusicMeta &info)
 {
-    MusicInfo nextInfo = info;
+    MusicMeta nextInfo = info;
 
     m_playlist = playlist;
-    if (info.id.isEmpty() && this->state() == QMediaPlayer::State::StoppedState) {
+    if (info.hash.isEmpty() && this->state() == QMediaPlayer::State::StoppedState) {
         nextInfo = m_playlist->first();
     }
 
@@ -36,14 +36,14 @@ void Player::playMusic(QSharedPointer<Playlist> playlist, const MusicInfo &info)
     this->blockSignals(false);
     emit musicPlayed(playlist, nextInfo);
 
-    if (!playlist->history().contains(nextInfo.id)) {
+    if (!playlist->history().contains(nextInfo.hash)) {
         // TODO: max
-        playlist->history().append(nextInfo.id);
+        playlist->history().append(nextInfo.hash);
     }
     this->play();
 }
 
-void Player::playNextMusic(QSharedPointer<Playlist> playlist, const MusicInfo &info)
+void Player::playNextMusic(QSharedPointer<Playlist> playlist, const MusicMeta &info)
 {
     Q_ASSERT(playlist == m_playlist);
 
@@ -54,7 +54,7 @@ void Player::playNextMusic(QSharedPointer<Playlist> playlist, const MusicInfo &i
     }
 }
 
-void Player::playPrevMusic(QSharedPointer<Playlist> playlist, const MusicInfo &info)
+void Player::playPrevMusic(QSharedPointer<Playlist> playlist, const MusicMeta &info)
 {
     Q_ASSERT(playlist == m_playlist);
 
@@ -76,16 +76,16 @@ void Player::playPrevMusic(QSharedPointer<Playlist> playlist, const MusicInfo &i
 //    playMusic(playlist, nextInfo);
 }
 
-void Player::setMedia(const MusicInfo &info)
+void Player::setMedia(const MusicMeta &info)
 {
     m_info = info;
-    QMediaPlayer::setMedia(QUrl::fromLocalFile(info.url));
+    QMediaPlayer::setMedia(QUrl::fromLocalFile(info.localpath));
     // TODO:
-    if (!m_historyIDs.contains(info.id)) {
+    if (!m_historyIDs.contains(info.hash)) {
         if (m_historyIDs.length() >= 100) {
             m_historyIDs.pop_front();
         }
-        m_historyIDs << info.id;
+        m_historyIDs << info.hash;
     }
 }
 
@@ -98,7 +98,7 @@ void Player::changeProgress(qint64 value, qint64 range)
     this->setPosition(position);
 }
 
-void Player::selectNext(const MusicInfo &info, PlayMode mode)
+void Player::selectNext(const MusicMeta &info, PlayMode mode)
 {
     qDebug() << "next" << m_playlist << m_mode;
     if (!m_playlist) {
@@ -122,7 +122,7 @@ void Player::selectNext(const MusicInfo &info, PlayMode mode)
     }
 }
 
-void Player::selectPrev(const MusicInfo &info, Player::PlayMode mode)
+void Player::selectPrev(const MusicMeta &info, Player::PlayMode mode)
 {
     qDebug() << "prev" << m_playlist << m_mode;
     if (!m_playlist) {

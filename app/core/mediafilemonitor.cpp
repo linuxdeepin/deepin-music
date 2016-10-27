@@ -77,9 +77,9 @@ void MediaFileMonitor::importPlaylistFiles(QSharedPointer<Playlist> playlist, co
             continue;
         }
 
-        MusicInfo info;
-        info.url = url;
-        info.id = id;
+        MusicMeta info;
+        info.localpath = url;
+        info.hash = id;
 
         // TODO: more encode support
         TagLib::Tag *tag = f.tag();

@@ -16,36 +16,44 @@
 #include <QMap>
 #include <QTime>
 
-class MusicInfo
+class MusicMeta
 {
 public:
-    QString id;
-    QString url;
+    QString hash;
+    QString localpath;
     QString title;
     QString artist;
     QString album;
     QString filetype;
+    QString timestamp;
     qint64  length;
     qint64  track;
     qint64  size;
     bool    favourite;
 };
 
-typedef QList<MusicInfo>    MusicList;
+typedef QList<MusicMeta>    MusicList;
 
-class MusicListInfo
+class PlaylistMeta
 {
 public:
-    QString id;
+    PlaylistMeta() {
+        editmode = false;
+        readonly = false;
+        hide = false;
+    }
+
+    QString uuid;
     QString displayName;
     QString url;
     QString icon;
 
     bool    editmode;
     bool    readonly;
+    bool    hide;
 
     QStringList                 musicIds;
-    QMap<QString, MusicInfo>    musicMap;
+    QMap<QString, MusicMeta>    musicMap;
 };
 
 inline QString lengthString(qint64 length)
@@ -73,7 +81,7 @@ inline QString sizeString(qint64 sizeByte)
     return text;
 }
 
-Q_DECLARE_METATYPE(MusicInfo);
-Q_DECLARE_METATYPE(MusicListInfo);
+Q_DECLARE_METATYPE(MusicMeta);
+Q_DECLARE_METATYPE(PlaylistMeta);
 
 #endif // MUSICLISTMODEL_H

@@ -18,10 +18,26 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QFile>
+#include <QFileInfo>
 
 #include <QDebug>
 
 #include "../model/musiclistmodel.h"
+#include "../musicapp.h"
+
+static QString cacheLyricPath(const MusicMeta &info)
+{
+    auto cacheLyricDir = MusicApp::cachePath() + "/lyric";
+    // TODO: key is what?
+    return cacheLyricDir + "/" + info.hash + ".lyric";
+}
+
+static QString cacheCoverPath(const MusicMeta &info)
+{
+    auto cacheLyricDir = MusicApp::cachePath() + "/cover";
+    // TODO: key is what?
+    return cacheLyricDir + "/" + info.hash + ".jpg";
+}
 
 static int doSyncGet(const QString &rootUrl, QByteArray &result)
 {
@@ -64,23 +80,59 @@ LyricService::LyricService(QObject *parent) : QObject(parent)
 
 }
 
+
+int LyricService::searchCacheLyric(const MusicMeta &info)
+{
+    qDebug() << cacheLyricPath(info);
+    QFileInfo lyric(cacheLyricPath(info));
+    if (!lyric.exists() || lyric.size() < 1) {
+        emit lyricSearchFinished(info, "");
+        return -1;
+    }
+    emit lyricSearchFinished(info, cacheLyricPath(info));
+    return 0;
+}
+
+int LyricService::searchCacheCover(const MusicMeta &info)
+{
+    qDebug() << cacheCoverPath(info);
+    QFileInfo cover(cacheCoverPath(info));
+    if (!cover.exists() || cover.size() < 1) {
+        emit coverSearchFinished(info, ":/image/cover_max_background.png");
+        return -1;
+    }
+    emit coverSearchFinished(info, cacheCoverPath(info));
+    return 0;
+}
 //!
 //! \brief LyricService::searchLyric
 //! \param info
 //!
-void LyricService::searchLyricCover(const MusicInfo &info)
+void LyricService::searchLyricCover(const MusicMeta &info)
 {
-    if (info.artist != "Unknow Artist") {
-        if (0 != doSongArtistRequest(info)) {
+    bool needlyric = false;
+    bool needCover = false;
 
-            doSongRequest(info);
-        }
+    if (0 != searchCacheLyric(info)) {
+        needlyric = true;
     }
-    else {
+    if (0 != searchCacheCover(info)) {
+        needCover = true;
+    }
 
-        doSongRequest(info);
+    qDebug() << needlyric << needCover;
+    if (!needCover && !needlyric) {
+        return;
+    }
+    if (info.artist != "Unknow Artist") {
+        if (0 != doSongArtistRequest(info, needlyric, needCover)) {
+            doSongRequest(info, needlyric, needCover);
+        }
+    } else {
+        doSongRequest(info, needlyric, needCover);
     }
 }
+
 
 //!
 //! \brief LyricService::doSongRequest
@@ -99,7 +151,7 @@ void LyricService::searchLyricCover(const MusicInfo &info)
         ]
     }
  */
-int LyricService::doSongRequest(const MusicInfo &info)
+int LyricService::doSongRequest(const MusicMeta &info, bool lyric, bool cover)
 {
     QString rootUrl = "http://gecimi.com/api/lyric/%1";
     rootUrl = rootUrl.arg(info.title);
@@ -118,8 +170,8 @@ int LyricService::doSongRequest(const MusicInfo &info)
     auto result = resultArray.first().toObject();
     auto aid = result.value("aid").toInt();
     auto sid = result.value("sid").toInt();
-    doLyricRequest(info, sid);
-    doCoverRequest(info, aid);
+    if (lyric) { doLyricRequest(info, sid); }
+    if (cover) { doCoverRequest(info, aid); }
     return ret;
 }
 
@@ -138,7 +190,7 @@ int LyricService::doSongRequest(const MusicInfo &info)
         ]
     }
  */
-int LyricService::doSongArtistRequest(const MusicInfo &info)
+int LyricService::doSongArtistRequest(const MusicMeta &info, bool lyric, bool cover)
 {
     QString rootUrl = "http://gecimi.com/api/lyric/%1/%2";
     rootUrl = rootUrl.arg(info.title).arg(info.artist);
@@ -157,8 +209,9 @@ int LyricService::doSongArtistRequest(const MusicInfo &info)
     auto result = resultArray.first().toObject();
     auto aid = result.value("aid").toInt();
     auto sid = result.value("sid").toInt();
-    doLyricRequest(info, sid);
-    doCoverRequest(info, aid);
+
+    if (lyric) { doLyricRequest(info, sid); }
+    if (cover) { doCoverRequest(info, aid); }
     return ret;
 }
 
@@ -177,7 +230,7 @@ int LyricService::doSongArtistRequest(const MusicInfo &info)
     }
 }
  */
-int LyricService::doLyricRequest(const MusicInfo &info, int sid)
+int LyricService::doLyricRequest(const MusicMeta &info, int sid)
 {
     QString rootUrl = "http://gecimi.com/api/lrc/%1";
     rootUrl = rootUrl.arg(sid);
@@ -200,8 +253,8 @@ int LyricService::doLyricRequest(const MusicInfo &info, int sid)
         result = jsonObject.value("result").toArray().first().toObject();
     }
     auto lrcurl = result.value("lrc").toString();
-    downloadUrl(lrcurl, "/tmp/1.lyric");
-    emit lyricSearchFinished(info, "/tmp/1.lyric");
+    downloadUrl(lrcurl, cacheLyricPath(info));
+    emit lyricSearchFinished(info, cacheLyricPath(info));
     return ret;
 }
 
@@ -220,7 +273,7 @@ int LyricService::doLyricRequest(const MusicInfo &info, int sid)
         }
     }
  */
-int LyricService::doCoverRequest(const MusicInfo &info, int aid)
+int LyricService::doCoverRequest(const MusicMeta &info, int aid)
 {
     QString rootUrl = "http://gecimi.com/api/cover/%1";
     rootUrl = rootUrl.arg(aid);
@@ -243,8 +296,8 @@ int LyricService::doCoverRequest(const MusicInfo &info, int aid)
         result = jsonObject.value("result").toArray().first().toObject();
     }
     auto lrcurl = result.value("cover").toString();
-    downloadUrl(lrcurl, "/tmp/cover.jpg");
-    emit coverSearchFinished(info, "/tmp/cover.jpg");
+    downloadUrl(lrcurl, cacheCoverPath(info));
+    emit coverSearchFinished(info, cacheCoverPath(info));
     return ret;
 }
 

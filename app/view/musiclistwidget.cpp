@@ -98,7 +98,7 @@ void MusicListWidget::resizeEvent(QResizeEvent *event)
     m_musiclist->setFixedHeight(event->size().height() - 40);
 }
 
-void MusicListWidget::onMusicPlayed(QSharedPointer<Playlist> palylist, const MusicInfo &info)
+void MusicListWidget::onMusicPlayed(QSharedPointer<Playlist> palylist, const MusicMeta &info)
 {
     if (palylist != m_palylist) {
         qWarning() << "check playlist failed!"
@@ -112,7 +112,7 @@ void MusicListWidget::onMusicPlayed(QSharedPointer<Playlist> palylist, const Mus
     for (int i = 0; i < m_musiclist->count(); ++i) {
         item = m_musiclist->item(i);
         musicItem = qobject_cast<MusicItem *>(m_musiclist->itemWidget(item));
-        if (musicItem && musicItem->info().id == info.id) {
+        if (musicItem && musicItem->info().hash == info.hash) {
 //            qDebug() << "find" << i << item << m_musiclist->count();
             break;
         }
@@ -129,7 +129,7 @@ void MusicListWidget::onMusicPlayed(QSharedPointer<Playlist> palylist, const Mus
     m_musiclist->setCurrentItem(item);
 }
 
-void MusicListWidget::onMusicRemoved(QSharedPointer<Playlist> playlist, const MusicInfo &info)
+void MusicListWidget::onMusicRemoved(QSharedPointer<Playlist> playlist, const MusicMeta &info)
 {
     if (playlist != m_palylist) {
         qWarning() << "check playlist failed!"
@@ -143,7 +143,7 @@ void MusicListWidget::onMusicRemoved(QSharedPointer<Playlist> playlist, const Mu
     for (int i = 0; i < m_musiclist->count(); ++i) {
         item = m_musiclist->item(i);
         musicItem = qobject_cast<MusicItem *>(m_musiclist->itemWidget(item));
-        if (musicItem && musicItem->info().id == info.id) {
+        if (musicItem && musicItem->info().hash == info.hash) {
             break;
         }
     }
@@ -162,7 +162,7 @@ void MusicListWidget::onMusicRemoved(QSharedPointer<Playlist> playlist, const Mu
     emit this->showEmpty(playlist->length() == 0);
 }
 
-void MusicListWidget::addMusicInfo(MusicListView *m_musiclist, const MusicInfo &info)
+void MusicListWidget::addMusicInfo(MusicListView *m_musiclist, const MusicMeta &info)
 {
 //    qDebug() << "add" << m_musiclist->count()<<info.title;
     auto item = new QListWidgetItem;
@@ -203,7 +203,7 @@ void MusicListWidget::setCurrentList(QSharedPointer<Playlist> palylist)
     m_palylist = palylist;
 }
 
-void MusicListWidget::onMusicAdded(QSharedPointer<Playlist> palylist, const MusicInfo &info)
+void MusicListWidget::onMusicAdded(QSharedPointer<Playlist> palylist, const MusicMeta &info)
 {
     if (palylist != m_palylist) {
 //        qWarning() << "check playlist failed!"

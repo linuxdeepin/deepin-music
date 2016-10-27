@@ -19,7 +19,7 @@
 
 #include "../../model/musiclistmodel.h"
 
-InfoDialog::InfoDialog(const MusicInfo &info, QWidget *parent) : DAbstractDialog(parent)
+InfoDialog::InfoDialog(const MusicMeta &info, QWidget *parent) : DAbstractDialog(parent)
 {
     setFixedSize(320, 480);
 
@@ -54,7 +54,7 @@ InfoDialog::InfoDialog(const MusicInfo &info, QWidget *parent) : DAbstractDialog
     QStringList infoValues;
     infoValues << info.title << info.artist << info.album
                << info.filetype << sizeString(info.size) << lengthString(info.length)
-               << info.url;
+               << info.localpath;
 
     auto infogridLayout = new QGridLayout;
     infogridLayout->setMargin(10);

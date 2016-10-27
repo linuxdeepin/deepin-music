@@ -165,15 +165,19 @@ void LyricView::setLyricLines(const QStringList &lines)
     m_lyric->setText(lyric);
 }
 
-void LyricView::onLyricChanged(const MusicInfo &info, const QString &lyricPath)
+void LyricView::onLyricChanged(const MusicMeta &info, const QString &lyricPath)
 {
     QFile lyricFile(lyricPath);
-    lyricFile.open(QIODevice::ReadOnly);
+    qDebug() << lyricPath;
+    if (!lyricFile.open(QIODevice::ReadOnly)) {
+        this->setLyricLines(QStringList());
+        return;
+    }
     auto lyric = QString::fromUtf8(lyricFile.readAll());
     this->setLyricLines(lyric.split("\n"));
 }
 
-void LyricView::onCoverChanged(const MusicInfo &info, const QString &coverPath)
+void LyricView::onCoverChanged(const MusicMeta &info, const QString &coverPath)
 {
     m_cover->setBackgroundUrl("");
     m_cover->setBackgroundUrl(coverPath);

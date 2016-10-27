@@ -10,13 +10,13 @@
 #ifndef PLAYLISTMANAGER_H
 #define PLAYLISTMANAGER_H
 
-#include <QObject>
 #include <QMap>
+#include <QObject>
+#include <QSettings>
 #include <QSharedPointer>
 
 #include "playlist.h"
-
-#include <QSettings>
+#include "mediadatabase.h"
 
 class PlaylistManager : public QObject
 {
@@ -36,7 +36,7 @@ public:
     QSharedPointer<Playlist> playingPlaylist() const;
     QSharedPointer<Playlist> selectedPlaylist() const;
 
-    QSharedPointer<Playlist> addPlaylist(const MusicListInfo &listinfo);
+    QSharedPointer<Playlist> addPlaylist(const PlaylistMeta &listinfo);
 
     void load();
     void sync();
@@ -44,9 +44,8 @@ public:
 signals:
     void playingPlaylistChanged(QSharedPointer<Playlist> playingPlaylist);
     void selectedPlaylistChanged(QSharedPointer<Playlist> selectedPlaylist);
-    void musicAdded(QSharedPointer<Playlist> palylist, const MusicInfo &info);
-    void musicRemoved(QSharedPointer<Playlist> palylist, const MusicInfo &info);
-
+    void musicAdded(QSharedPointer<Playlist> palylist, const MusicMeta &info);
+    void musicRemoved(QSharedPointer<Playlist> palylist, const MusicMeta &info);
 
 public slots:
     void setPlayingPlaylist(QSharedPointer<Playlist> playingPlaylist);
@@ -56,6 +55,7 @@ private:
     QString getPlaylistPath(const QString &id);
     void insertPlaylist(const QString &id, QSharedPointer<Playlist>);
 
+    MediaDatabase                               m_db;
     QSettings                                   settings;
     QSharedPointer<Playlist>                    m_playingPlaylist;
     QSharedPointer<Playlist>                    m_selectedPlaylist;

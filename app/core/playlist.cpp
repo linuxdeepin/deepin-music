@@ -8,110 +8,119 @@
  **/
 
 #include "playlist.h"
+
+#include <QSqlDatabase>
+#include <QSqlQuery>
+#include <QSqlError>
 #include <QDebug>
 
-Playlist::Playlist(const MusicListInfo &musiclistinfo, QObject *parent)
-    : QObject(parent), settings(musiclistinfo.url, QSettings::IniFormat)
+#include "mediadatabase.h"
+
+Playlist::Playlist(const PlaylistMeta &musiclistinfo, QObject *parent)
+    : QObject(parent)
 {
-    listinfo = musiclistinfo;
-    m_history = listinfo.musicIds;
+    listmeta = musiclistinfo;
+    m_history = listmeta.musicIds;
 }
 
 int Playlist::length()
 {
-    return listinfo.musicMap.size();
+    return listmeta.musicMap.size();
 }
 
-const MusicInfo Playlist::first()
+const MusicMeta Playlist::first()
 {
-    return listinfo.musicMap.value(listinfo.musicIds.value(0));
+    return listmeta.musicMap.value(listmeta.musicIds.value(0));
 }
 
-const MusicInfo Playlist::prev(const MusicInfo &info)
+const MusicMeta Playlist::prev(const MusicMeta &info)
 {
-    if (0 == listinfo.musicIds.length()) {
-        return MusicInfo();
+    if (0 == listmeta.musicIds.length()) {
+        return MusicMeta();
     }
-    auto index = listinfo.musicIds.indexOf(info.id);
-    // can not find
-    auto prev = (index + listinfo.musicIds.length() - 1) % listinfo.musicIds.length();
-    return listinfo.musicMap.value(listinfo.musicIds.at(prev));
+    auto index = listmeta.musicIds.indexOf(info.hash);
+    auto prev = (index + listmeta.musicIds.length() - 1) % listmeta.musicIds.length();
+    return listmeta.musicMap.value(listmeta.musicIds.at(prev));
 }
 
-const MusicInfo Playlist::next(const MusicInfo &info)
+const MusicMeta Playlist::next(const MusicMeta &info)
 {
-    if (0 == listinfo.musicIds.length()) {
-        return MusicInfo();
+    if (0 == listmeta.musicIds.length()) {
+        return MusicMeta();
     }
-    auto index = listinfo.musicIds.indexOf(info.id);
-    // can not find
-    auto prev = (index + 1) % listinfo.musicIds.length();
-    return listinfo.musicMap.value(listinfo.musicIds.at(prev));
+    auto index = listmeta.musicIds.indexOf(info.hash);
+    auto prev = (index + 1) % listmeta.musicIds.length();
+    return listmeta.musicMap.value(listmeta.musicIds.at(prev));
 }
 
-const MusicInfo Playlist::music(int index)
+const MusicMeta Playlist::music(int index)
 {
-    return listinfo.musicMap.value(listinfo.musicIds.value(index));
+    return listmeta.musicMap.value(listmeta.musicIds.value(index));
 }
 
-const MusicInfo Playlist::music(const QString &id)
+const MusicMeta Playlist::music(const QString &id)
 {
-    return listinfo.musicMap.value(id);
+    return listmeta.musicMap.value(id);
 }
 
-bool Playlist::isLast(const MusicInfo &info)
+bool Playlist::isLast(const MusicMeta &info)
 {
-    return listinfo.musicIds.last() == info.id;
+    return listmeta.musicIds.last() == info.hash;
 }
 
-bool Playlist::contains(const MusicInfo &info)
+bool Playlist::contains(const MusicMeta &info)
 {
-    return listinfo.musicMap.contains(info.id);
+    return listmeta.musicMap.contains(info.hash);
 }
 
 QString Playlist::id()
 {
-    return listinfo.id;
+    return listmeta.uuid;
 }
 
 QString Playlist::displayName()
 {
-    return listinfo.displayName;
+    return listmeta.displayName;
 }
 
 QString Playlist::icon()
 {
-    return listinfo.icon;
+    return listmeta.icon;
 }
 
 bool Playlist::readonly()
 {
-    return listinfo.readonly;
+    return listmeta.readonly;
 }
 
 bool Playlist::editmode()
 {
-    return listinfo.editmode;
+    return listmeta.editmode;
+}
+
+bool Playlist::hide()
+{
+    return listmeta.hide;
 }
 
 MusicList Playlist::allmusic()
 {
     MusicList mlist;
-    for (auto id : listinfo.musicIds) {
-        mlist << listinfo.musicMap.value(id);
+    for (auto id : listmeta.musicIds) {
+        mlist << listmeta.musicMap.value(id);
     }
     return mlist;
 }
 
 void Playlist::buildHistory(const QString &last)
 {
-    auto lastindex = listinfo.musicIds.indexOf(last);
+    auto lastindex = listmeta.musicIds.indexOf(last);
     m_history.clear();
-    for (int i = lastindex + 1; i < listinfo.musicIds.length(); ++i) {
-        m_history.append(listinfo.musicIds.value(i));
+    for (int i = lastindex + 1; i < listmeta.musicIds.length(); ++i) {
+        m_history.append(listmeta.musicIds.value(i));
     }
     for (int i = 0; i <= lastindex; ++i) {
-        m_history.append(listinfo.musicIds.value(i));
+        m_history.append(listmeta.musicIds.value(i));
     }
 }
 
@@ -122,124 +131,89 @@ void Playlist::clearHistory()
 
 void Playlist::load()
 {
-    settings.beginGroup("PlaylistInfo");
-    listinfo.id = settings.value("Title").toString();
-    listinfo.editmode = settings.value("EditMode").toBool();
-    listinfo.displayName = settings.value("DisplayName").toString();
-    listinfo.icon = settings.value("Icon").toString();
-    listinfo.readonly = settings.value("Readonly").toBool();
-    listinfo.musicIds = settings.value("SortIds").toStringList();
-    settings.endGroup();
+    QList<PlaylistMeta> list;
+    QSqlQuery query;
+    query.prepare(QString("SELECT music_id FROM playlist_%1").arg(listmeta.uuid));
 
-    for (auto &key : listinfo.musicIds) {
-        settings.beginGroup(key);
-        MusicInfo info;
-        info.id = key;
-        info.url = settings.value("Url").toString();;
-        info.track = settings.value("Track").toLongLong();
-        info.title = settings.value("Title").toString();
-        info.artist = settings.value("Artist").toString();
-        info.album = settings.value("Album").toString();
-        info.filetype = settings.value("Filetype").toString();
-        info.length = settings.value("Length").toLongLong();
-        info.size = settings.value("Size").toLongLong();
-        settings.endGroup();
-
-        listinfo.musicMap.insert(key, info);
-    }
-    m_history = listinfo.musicIds;
-}
-
-void Playlist::save()
-{
-    settings.beginGroup("PlaylistInfo");
-    settings.setValue("Title", listinfo.id);
-    settings.setValue("NumberOfEntries", listinfo.musicIds.length());
-    settings.setValue("EditMode", false);
-    settings.setValue("DisplayName", listinfo.displayName);
-    settings.setValue("Icon", listinfo.icon);
-    settings.setValue("Readonly", listinfo.readonly);
-    settings.setValue("SortIds", listinfo.musicIds);
-    settings.endGroup();
-
-    for (auto &id : listinfo.musicIds) {
-        auto info = listinfo.musicMap.value(id);
-        settings.beginGroup(id);
-        settings.setValue("Url", info.url);
-        settings.setValue("Track", info.track);
-        settings.setValue("Title", info.title);
-        settings.setValue("Artist", info.artist);
-        settings.setValue("Album", info.album);
-        settings.setValue("Length", info.length);
-        settings.setValue("Filetype", info.filetype);
-        settings.setValue("Size", info.size);
-        settings.endGroup();
+    if (!query.exec()) {
+        qWarning() << query.lastError();
+        return;
     }
 
-    settings.sync();
+    QStringList musicIDs;
+    while (query.next()) {
+        auto musicID = query.value(0).toString();
+        listmeta.musicIds << musicID;
+        musicIDs << QString("\"%1\"").arg(musicID);
+    }
+    auto sqlStr = QString("SELECT hash, localpath, title, artist, album, "
+                          "filetype, length, size "
+                          "FROM music WHERE hash IN (%1)").arg(musicIDs.join(","));
+    if (!query.exec(sqlStr)) {
+        qWarning() << query.lastError();
+        return;
+    }
+
+    while (query.next()) {
+        MusicMeta info;
+        info.hash = query.value(0).toString();
+        info.localpath = query.value(1).toString();
+        info.title = query.value(2).toString();
+        info.artist = query.value(3).toString();
+        info.album = query.value(4).toString();
+        info.filetype = query.value(5).toString();
+        info.length = query.value(6).toInt();
+        info.size = query.value(6).toInt();
+        listmeta.musicMap.insert(info.hash, info);
+    }
 }
 
 void Playlist::setDisplayName(const QString &name)
 {
-    listinfo.displayName = name;
-    settings.beginGroup("PlaylistInfo");
-    settings.setValue("DisplayName", name);
-    settings.endGroup();
-    settings.sync();
+    listmeta.displayName = name;
+
+    QSqlQuery query;
+    query.prepare("UPDATE playlist SET displayname = :displayname WHERE uuid= :uuid");
+    query.bindValue(":displayname", listmeta.displayName);
+    query.bindValue(":uuid", listmeta.uuid);
+
+    if (!query.exec()) {
+        qWarning() << query.lastError();
+        return;
+    }
 }
 
-void Playlist::appendMusic(const MusicInfo &info)
+void Playlist::appendMusic(const MusicMeta &meta)
 {
-    if (listinfo.musicMap.contains(info.id)) {
-        qDebug() << "add dump music " << info.id << info.url;
+    if (listmeta.musicMap.contains(meta.hash)) {
+        qDebug() << "add dump music " << meta.hash << meta.localpath;
         return;
     }
 
-    listinfo.musicIds << info.id;
-    listinfo.musicMap.insert(info.id, info);
+    listmeta.musicIds << meta.hash;
+    listmeta.musicMap.insert(meta.hash, meta);
 
-    settings.beginGroup("PlaylistInfo");
-    settings.setValue("SortIds", listinfo.musicIds);
-    settings.endGroup();
+    MediaDatabase::insertMusic(meta, listmeta);
 
-    settings.beginGroup(info.id);
-    settings.setValue("Url", info.url);
-    settings.setValue("Track", info.track);
-    settings.setValue("Title", info.title);
-    settings.setValue("Artist", info.artist);
-    settings.setValue("Album", info.album);
-    settings.setValue("Length", info.length);
-    settings.setValue("Filetype", info.filetype);
-    settings.setValue("Size", info.size);
-    settings.endGroup();
-    settings.sync();
-
-    emit musicAdded(info);
+    emit musicAdded(meta);
 }
 
-void Playlist::removeMusic(const MusicInfo &info)
+void Playlist::removeMusic(const MusicMeta &info)
 {
-    if (info.id.isEmpty()) {
+    if (info.hash.isEmpty()) {
         qCritical() << "Cannot remove empty id";
         return;
     }
-    if (!listinfo.musicMap.contains(info.id)) {
-        qWarning() << "no such id in playlist" << info.id << info.url << listinfo.displayName;
+    if (!listmeta.musicMap.contains(info.hash)) {
+        qWarning() << "no such id in playlist" << info.hash << info.localpath << listmeta.displayName;
         return;
     }
-    m_history.removeAll(info.id);
-    listinfo.musicIds.removeAll(info.id);
-    listinfo.musicMap.remove(info.id);
 
-    settings.beginGroup("PlaylistInfo");
-    settings.setValue("SortIds", listinfo.musicIds);
-    settings.endGroup();
-
-    settings.beginGroup(info.id);
-    settings.remove("");
-    settings.endGroup();
-
-    settings.sync();
+    m_history.removeAll(info.hash);
+    listmeta.musicIds.removeAll(info.hash);
+    listmeta.musicMap.remove(info.hash);
 
     emit musicRemoved(info);
+
+    MediaDatabase::deleteMusic(info, listmeta);
 }

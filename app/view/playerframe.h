@@ -18,7 +18,7 @@
 DWIDGET_USE_NAMESPACE
 
 class Playlist;
-class MusicInfo;
+class MusicMeta;
 class AppPresenter;
 class MusicListWidget;
 class PlayerFramePrivate;

@@ -55,37 +55,37 @@ signals:
     void playingPlaylistChanged(QSharedPointer<Playlist>);
 
     // to music list
-    void musicAdded(QSharedPointer<Playlist> palylist, const MusicInfo &info);
-    void musicPlayed(QSharedPointer<Playlist> palylist, const MusicInfo &info);
-    void musicPaused(QSharedPointer<Playlist> palylist, const MusicInfo &info);
-    void musicRemoved(QSharedPointer<Playlist> palylist, const MusicInfo &info);
+    void musicAdded(QSharedPointer<Playlist> palylist, const MusicMeta &info);
+    void musicPlayed(QSharedPointer<Playlist> palylist, const MusicMeta &info);
+    void musicPaused(QSharedPointer<Playlist> palylist, const MusicMeta &info);
+    void musicRemoved(QSharedPointer<Playlist> palylist, const MusicMeta &info);
 
     // to control
     void progrossChanged(qint64 value, qint64 range);
 
     // to lyricservice
-    void lyricSearchFinished(const MusicInfo &, const QString &lyricPath);
-    void coverSearchFinished(const MusicInfo &, const QString &coverPath);
+    void lyricSearchFinished(const MusicMeta &, const QString &lyricPath);
+    void coverSearchFinished(const MusicMeta &, const QString &coverPath);
 
     // to player backend
     void changeProgress(qint64 value, qint64 range);
-    void play(QSharedPointer<Playlist> playlist, const MusicInfo &info);
-    void playNext(QSharedPointer<Playlist> playlist, const MusicInfo &info);
-    void playPrev(QSharedPointer<Playlist> playlist, const MusicInfo &info);
+    void play(QSharedPointer<Playlist> playlist, const MusicMeta &info);
+    void playNext(QSharedPointer<Playlist> playlist, const MusicMeta &info);
+    void playPrev(QSharedPointer<Playlist> playlist, const MusicMeta &info);
     void stop();
     void pause();
 
     // to lyric backend
-    void requestLyricCoverSearch(const MusicInfo &);
+    void requestLyricCoverSearch(const MusicMeta &);
 
 public slots:
     //! music control interface
-    void onMusicPlay(QSharedPointer<Playlist> playlist, const MusicInfo &info);
-    void onMusicPause(QSharedPointer<Playlist> playlist, const MusicInfo &info);
+    void onMusicPlay(QSharedPointer<Playlist> playlist, const MusicMeta &info);
+    void onMusicPause(QSharedPointer<Playlist> playlist, const MusicMeta &info);
 //    void onMusicStop(QSharedPointer<Playlist> playlist, const MusicInfo &info);
-    void onMusicPrev(QSharedPointer<Playlist> playlist, const MusicInfo &info);
-    void onMusicNext(QSharedPointer<Playlist> playlist, const MusicInfo &info);
-    void onToggleFavourite(const MusicInfo &info);
+    void onMusicPrev(QSharedPointer<Playlist> playlist, const MusicMeta &info);
+    void onMusicNext(QSharedPointer<Playlist> playlist, const MusicMeta &info);
+    void onToggleFavourite(const MusicMeta &info);
     void onChangeProgress(qint64 value, qint64 range);
     void onPlayModeChanged(int mode);
 
@@ -94,9 +94,9 @@ public slots:
 
     //! UI: playlist manager interface
     //! TODO: refactor
-    void onMusicAdd(const QString &id, const MusicInfo &info);
+    void onMusicAdd(const QString &id, const MusicMeta &info);
 //    void onMusicAdd(QSharedPointer<Playlist> playlist, const MusicInfo &info);
-    void onMusicRemove(QSharedPointer<Playlist> playlist, const MusicInfo &info);
+    void onMusicRemove(QSharedPointer<Playlist> playlist, const MusicMeta &info);
 
     void onPlaylistAdd(bool edit);
     void onSelectedPlaylistChanged(QSharedPointer<Playlist> playlist);

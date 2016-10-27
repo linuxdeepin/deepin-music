@@ -53,6 +53,12 @@ QString MusicApp::configPath()
     return userConfigPath + "/" + qApp->organizationName() + "/" + qApp->applicationName();
 }
 
+QString MusicApp::cachePath()
+{
+    auto userCachePath = QStandardPaths::standardLocations(QStandardPaths::CacheLocation).first();
+    return userCachePath;
+}
+
 void MusicApp::showPlayer()
 {
     DUtility::moveToCenter(d->playerFrame);

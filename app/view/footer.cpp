@@ -65,7 +65,7 @@ public:
     Slider      *hideProgress = nullptr;
 
     QSharedPointer<Playlist>    m_playinglist;
-    MusicInfo                   m_info;
+    MusicMeta                   m_info;
     int                         m_mode;
 };
 
@@ -263,23 +263,23 @@ Footer::Footer(QWidget *parent) : QFrame(parent)
     });
 }
 
-void Footer::onMusicAdded(QSharedPointer<Playlist> palylist, const MusicInfo &info)
+void Footer::onMusicAdded(QSharedPointer<Playlist> palylist, const MusicMeta &info)
 {
     if (palylist->id() == FavMusicListID)
-        if (info.id == d->m_info.id) {
+        if (info.hash == d->m_info.hash) {
             updateQssProperty(d->btFavorite, sPropertyFavourite, true);
         }
 }
 
-void Footer::onMusicRemoved(QSharedPointer<Playlist> palylist, const MusicInfo &info)
+void Footer::onMusicRemoved(QSharedPointer<Playlist> palylist, const MusicMeta &info)
 {
     if (palylist->id() == FavMusicListID)
-        if (info.id == d->m_info.id) {
+        if (info.hash == d->m_info.hash) {
             updateQssProperty(d->btFavorite, sPropertyFavourite, false);
         }
 }
 
-void Footer::onMusicPlay(QSharedPointer<Playlist> palylist, const MusicInfo &info)
+void Footer::onMusicPlay(QSharedPointer<Playlist> palylist, const MusicMeta &info)
 {
     d->title->setText(info.title);
     d->artlist->setText(info.artist);
@@ -299,13 +299,13 @@ void Footer::onMusicPlay(QSharedPointer<Playlist> palylist, const MusicInfo &inf
     updateQssProperty(d->btPlay, sPropertyPlayStatus, sPlayStatusValuePlaying);
 }
 
-void Footer::onMusicPause(QSharedPointer<Playlist> palylist, const MusicInfo &info)
+void Footer::onMusicPause(QSharedPointer<Playlist> palylist, const MusicMeta &info)
 {
     auto status = sPlayStatusValuePause;
     updateQssProperty(d->btPlay, sPropertyPlayStatus, status);
 }
 
-void Footer::onMusicStop(QSharedPointer<Playlist> palylist, const MusicInfo &info)
+void Footer::onMusicStop(QSharedPointer<Playlist> palylist, const MusicMeta &info)
 {
 
 }
@@ -324,7 +324,7 @@ void Footer::onProgressChanged(qint64 value, qint64 duration)
     d->hideProgress->blockSignals(false);
 }
 
-void Footer::onCoverChanged(const MusicInfo &info, const QString &coverPath)
+void Footer::onCoverChanged(const MusicMeta &info, const QString &coverPath)
 {
     d->cover->setStyleSheet(
                 QString("#FooterCover {image: url(%1);}").arg(coverPath));

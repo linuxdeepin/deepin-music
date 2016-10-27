@@ -29,7 +29,7 @@ DWIDGET_USE_NAMESPACE
 #include "widget/infodialog.h"
 #include "widget/menu.h"
 
-MusicItem::MusicItem(int num, const MusicInfo &info, QWidget *parent)
+MusicItem::MusicItem(int num, const MusicMeta &info, QWidget *parent)
     : QWidget(parent), m_info(info)
 {
     auto layout = new QHBoxLayout(this);
@@ -158,10 +158,10 @@ void MusicItem::showContextMenu(const QPoint &pos,
 
         if (action->text() == tr("Display in file manager")) {
             // TODO: better
-            auto dirUrl = QUrl::fromLocalFile(QFileInfo(m_info.url).absoluteDir().absolutePath());
+            auto dirUrl = QUrl::fromLocalFile(QFileInfo(m_info.localpath).absoluteDir().absolutePath());
             QFileInfo ddefilemanger("/usr/bin/dde-file-manager");
             if (ddefilemanger.exists()) {
-                auto dirFile = QUrl::fromLocalFile(QFileInfo(m_info.url).absoluteFilePath());
+                auto dirFile = QUrl::fromLocalFile(QFileInfo(m_info.localpath).absoluteFilePath());
                 auto url = QString("%1?selectUrl=%2").arg(dirUrl.toString()).arg(dirFile.toString());
                 QProcess::startDetached("dde-file-manager" , QStringList() << url);
             } else {

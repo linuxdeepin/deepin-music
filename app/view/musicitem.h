@@ -15,15 +15,15 @@
 #include "../model/musiclistmodel.h"
 
 class QLabel;
-class MusicInfo;
+class MusicMeta;
 class Playlist;
 class MusicItem : public QWidget
 {
     Q_OBJECT
 public:
-    explicit MusicItem(int num, const MusicInfo &info, QWidget *parent = 0);
+    explicit MusicItem(int num, const MusicMeta &info, QWidget *parent = 0);
 
-    const MusicInfo &info() {return m_info;}
+    const MusicMeta &info() {return m_info;}
 signals:
     void play();
     void stop();
@@ -41,7 +41,7 @@ public slots:
                          QSharedPointer<Playlist> favlist,
                          QList<QSharedPointer<Playlist> >newlist);
 private:
-    MusicInfo   m_info;
+    MusicMeta   m_info;
     QLabel      *m_number = nullptr;
 };
 

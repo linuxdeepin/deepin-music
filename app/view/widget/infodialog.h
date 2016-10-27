@@ -14,12 +14,12 @@
 
 DWIDGET_USE_NAMESPACE
 
-class MusicInfo;
+class MusicMeta;
 class InfoDialog : public DAbstractDialog
 {
     Q_OBJECT
 public:
-    explicit InfoDialog(const MusicInfo& info, QWidget *parent = 0);
+    explicit InfoDialog(const MusicMeta& info, QWidget *parent = 0);
 
 signals:
 

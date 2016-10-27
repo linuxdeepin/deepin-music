@@ -268,7 +268,7 @@ void PlayerFrame::binding(AppPresenter *presenter)
             d->lyric, &LyricView::onCoverChanged);
 
     connect(presenter, &AppPresenter::coverSearchFinished,
-            this, [=](const MusicInfo &, const QString &coverPath){
+            this, [=](const MusicMeta &, const QString &coverPath){
         QImage image = QImage(coverPath).scaled(960, 720);
         QGraphicsBlurEffect *blur = new QGraphicsBlurEffect;
         blur->setBlurRadius(60);

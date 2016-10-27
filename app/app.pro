@@ -1,6 +1,6 @@
 DEFINES += QT_MESSAGELOGCONTEXT
 
-QT       += core gui widgets svg dbus multimedia multimediawidgets xml network
+QT       += core gui widgets svg dbus multimedia multimediawidgets xml network sql
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TEMPLATE    = app
@@ -73,7 +73,8 @@ SOURCES += \
     view/widget/menu.cpp \
     view/widget/settingsdialog.cpp \
     view/widget/modebuttom.cpp \
-    core/lyricservice.cpp
+    core/lyricservice.cpp \
+    core/mediadatabase.cpp
 
 HEADERS += \
     view/playerframe.h \
@@ -101,7 +102,8 @@ HEADERS += \
     view/widget/menu.h \
     view/widget/settingsdialog.h \
     view/widget/modebuttom.h \
-    core/lyricservice.h
+    core/lyricservice.h \
+    core/mediadatabase.h
 
 RESOURCES += \
     resource/theme/theme.qrc \

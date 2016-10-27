@@ -17,15 +17,15 @@
 
 #include "../musicapp.h"
 
-static const QString DefaultListID = "Default";
-const QString AllMusicListID = "All";
-const QString FavMusicListID = "Fav";
-const QString SearchMusicListID = "Search";
+const QString AllMusicListID = "all";
+const QString FavMusicListID = "fav";
+const QString SearchMusicListID = "search";
+const QString NewMusicListID = "new";
 
-static MusicListInfo emptyInfo;
+static PlaylistMeta emptyInfo;
 
 PlaylistManager::PlaylistManager(QObject *parent)
-    : QObject(parent), settings(MusicApp::configPath() + "/Playlist.ini", QSettings::IniFormat)
+    : QObject(parent), settings(MusicApp::configPath() + "/playlist.ini", QSettings::IniFormat)
 {
 }
 
@@ -36,23 +36,15 @@ PlaylistManager::~PlaylistManager()
 
 QString PlaylistManager::newID()
 {
-    return QUuid::createUuid().toString().remove("{").remove("}");
+    return QUuid::createUuid().toString().remove("{").remove("}").remove("-");
 }
 
 QString PlaylistManager::newDisplayName()
 {
     QMap<QString, QString> existName;
-
-    settings.beginGroup("PlaylistManager");
-    auto keys = settings.value("SortPlaylist").toStringList();
-    settings.endGroup();
-
-    settings.beginGroup("PlaylistEntry");
-    for (auto &key : keys) {
-        auto name = settings.value(key).toString();
+    for (auto &name : MediaDatabase::allPlaylistDisplayName()) {
         existName.insert(name, name);
     }
-    settings.endGroup();
 
     QString temp = tr("New Playlist");
     if (!existName.contains(temp)) {
@@ -71,50 +63,13 @@ QString PlaylistManager::newDisplayName()
 
 void PlaylistManager::load()
 {
-//    qDebug() frameles<< QThread::currentThread() << qApp->thread();
-
-    settings.beginGroup("PlaylistManager");
-    auto currentTitle = settings.value("Current").toString();
-    sortPlaylists = settings.value("SortPlaylist").toStringList();
-    settings.endGroup();
-
-    for (auto &playlistid : sortPlaylists) {
-        auto playlistPath = getPlaylistPath(playlistid);
-        QFileInfo fi(playlistPath);
-        if (!fi.exists()) {
-            qWarning() << "playlist file not exist" << playlistid
-                       << fi.absoluteFilePath();
-            continue;
-        }
-        MusicListInfo info;
-        info.id = playlistid;
-        info.url = playlistPath;
-        auto emptylist = QSharedPointer<Playlist>(new Playlist(info));
+    for (auto &playlistmeta : m_db.allPlaylist()) {
+        QSharedPointer<Playlist> emptylist(new Playlist(playlistmeta));
         emptylist->load();
-        insertPlaylist(playlistid, emptylist);
+        insertPlaylist(playlistmeta.uuid, emptylist);
     }
 
-    if (playlist(AllMusicListID).isNull()) {
-        MusicListInfo info;
-        info.id = AllMusicListID;
-        info.editmode = false;
-        info.icon = "all";
-        info.readonly = true;
-        info.displayName = tr("All Music");
-        addPlaylist(info);
-        playlist(AllMusicListID)->save();
-    }
-
-    if (playlist(FavMusicListID).isNull()) {
-        MusicListInfo info;
-        info.id = FavMusicListID;
-        info.editmode = false;
-        info.icon = "fav";
-        info.readonly = true;
-        info.displayName = tr("Favator Music");
-        addPlaylist(info);
-        playlist(FavMusicListID)->save();
-    }
+    auto currentTitle = "all";
     m_playingPlaylist = playlist(currentTitle);
     if (m_playingPlaylist.isNull()) {
         qDebug() << "change to default all palylist";
@@ -137,26 +92,16 @@ QList<QSharedPointer<Playlist> > PlaylistManager::allplaylist()
     return list;
 }
 
-QSharedPointer<Playlist> PlaylistManager::addPlaylist(const MusicListInfo &listinfo)
+QSharedPointer<Playlist> PlaylistManager::addPlaylist(const PlaylistMeta &listinfo)
 {
-    MusicListInfo saveInfo(listinfo);
-    QString playlistPath = getPlaylistPath(listinfo.id);
+    PlaylistMeta saveInfo(listinfo);
+    QString playlistPath = getPlaylistPath(listinfo.uuid);
     saveInfo.url = playlistPath;
-    insertPlaylist(listinfo.id, QSharedPointer<Playlist>(new Playlist(saveInfo)));
-    sortPlaylists << listinfo.id;
+    insertPlaylist(listinfo.uuid, QSharedPointer<Playlist>(new Playlist(saveInfo)));
 
-    settings.beginGroup("PlaylistManager");
-    settings.setValue("SortPlaylist", sortPlaylists);
-    settings.endGroup();
+    MediaDatabase::addPlaylist(saveInfo);
 
-    settings.beginGroup("PlaylistEntry");
-    settings.setValue(listinfo.id, listinfo.displayName);
-    settings.endGroup();
-
-    settings.sync();
-
-    playlists.value(listinfo.id)->save();
-    return playlists.value(listinfo.id);
+    return playlists.value(listinfo.uuid);
 }
 
 QSharedPointer<Playlist> PlaylistManager::playlist(const QString &id)
@@ -213,33 +158,23 @@ void PlaylistManager::insertPlaylist(const QString &id, QSharedPointer<Playlist>
         {
             setPlayingPlaylist(this->playlist(AllMusicListID));
         }
-        QFile::remove(getPlaylistPath(deleteID));
-        playlists.remove(deleteID);
+
         sortPlaylists.removeAll(deleteID);
-
-        settings.beginGroup("PlaylistManager");
-        settings.setValue("SortPlaylist", sortPlaylists);
-        settings.endGroup();
-
-        if (!deleteID.isEmpty())
-        {
-            settings.beginGroup("PlaylistEntry");
-            settings.remove(deleteID);
-            settings.endGroup();
-        }
-
-        settings.sync();
+        PlaylistMeta listmeta;
+        listmeta.uuid = deleteID;
+        MediaDatabase::removePlaylist(listmeta);
     });
 
     connect(playlist.data(), &Playlist::musicAdded,
-    this, [ = ](const MusicInfo & info) {
+    this, [ = ](const MusicMeta & info) {
         emit musicAdded(playlist,  info);
     });
 
     connect(playlist.data(), &Playlist::musicRemoved,
-    this, [ = ](const MusicInfo & info) {
+    this, [ = ](const MusicMeta & info) {
         emit musicRemoved(playlist,  info);
     });
 
+    sortPlaylists << id;
     playlists.insert(id, playlist);
 }

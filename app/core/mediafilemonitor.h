@@ -13,7 +13,7 @@
 #include <QObject>
 #include <QSharedPointer>
 
-class MusicInfo;
+class MusicMeta;
 class Playlist;
 class MediaFileMonitor : public QObject
 {
@@ -24,7 +24,7 @@ public:
     explicit MediaFileMonitor(QObject *parent = 0);
 
 signals:
-    void meidaFileImported(QSharedPointer<Playlist> playlist, const MusicInfo &info);
+    void meidaFileImported(QSharedPointer<Playlist> playlist, const MusicMeta &info);
 
 public slots:
     void importPlaylistFiles(QSharedPointer<Playlist> playlist, const QStringList &filelist);
