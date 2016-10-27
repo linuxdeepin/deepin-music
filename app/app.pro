@@ -72,7 +72,8 @@ SOURCES += \
     view/widget/cover.cpp \
     view/widget/menu.cpp \
     view/widget/settingsdialog.cpp \
-    view/widget/modebuttom.cpp
+    view/widget/modebuttom.cpp \
+    core/lyricservice.cpp
 
 HEADERS += \
     view/playerframe.h \
@@ -99,7 +100,8 @@ HEADERS += \
     view/widget/cover.h \
     view/widget/menu.h \
     view/widget/settingsdialog.h \
-    view/widget/modebuttom.h
+    view/widget/modebuttom.h \
+    core/lyricservice.h
 
 RESOURCES += \
     resource/theme/theme.qrc \

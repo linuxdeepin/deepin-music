@@ -261,6 +261,22 @@ void PlayerFrame::binding(AppPresenter *presenter)
     connect(d->playlist, &PlaylistWidget::selectPlaylist,
             presenter, &AppPresenter::onSelectedPlaylistChanged);
 
+    // Lyric
+    connect(presenter, &AppPresenter::lyricSearchFinished,
+            d->lyric, &LyricView::onLyricChanged);
+    connect(presenter, &AppPresenter::coverSearchFinished,
+            d->lyric, &LyricView::onCoverChanged);
+
+    connect(presenter, &AppPresenter::coverSearchFinished,
+            this, [=](const MusicInfo &, const QString &coverPath){
+        QImage image = QImage(coverPath).scaled(960, 720);
+        QGraphicsBlurEffect *blur = new QGraphicsBlurEffect;
+        blur->setBlurRadius(60);
+        QImage result = applyEffectToImage(image, blur);
+        this->setBackgroundImage(QPixmap::fromImage(result));
+        this->repaint();
+    });
+
     // Footer Control
     connect(presenter, &AppPresenter::musicPlayed,
             d->footer, &Footer::onMusicPlay);

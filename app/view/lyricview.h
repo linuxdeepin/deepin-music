@@ -15,6 +15,7 @@
 class QScrollArea;
 class QLabel;
 class MusicInfo;
+class Cover;
 
 class LyricView : public QFrame
 {
@@ -29,11 +30,13 @@ public:
 signals:
 
 public slots:
-//    void onMusicInfoUpdate(class MusicInfo& info);
+    void onLyricChanged(const MusicInfo &info, const QString &lyricPath);
+    void onCoverChanged(const MusicInfo &info, const QString &coverPath);
 
 private:
-    QScrollArea *m_scroll = nullptr;
-    QLabel      *m_lyric = nullptr;
+    Cover       *m_cover    =nullptr;
+    QScrollArea *m_scroll   = nullptr;
+    QLabel      *m_lyric    = nullptr;
 };
 
 #endif // LYRICVIEW_H

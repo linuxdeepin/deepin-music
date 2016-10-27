@@ -33,13 +33,20 @@ public:
     int playMode();
 
 signals:
-    // change ui signal
+    //! ui: control
     void requestImportFiles();
     void showPlaylist();
     void showMusiclist();
 
-    //! request import dialog
+    //! ui: request import dialog
     void importMediaFiles(QSharedPointer<Playlist> playlist, const QStringList &filelist);
+
+    //! ui: menu
+    void musiclistMenuRequested(MusicItem* item,
+                                    const QPoint &pos,
+                                    QSharedPointer<Playlist> selectedlist,
+                                    QSharedPointer<Playlist> favlist,
+                                    QList<QSharedPointer<Playlist> >newlists);
 
     // to playlist
     void playlistAdded(QSharedPointer<Playlist>);
@@ -56,7 +63,11 @@ signals:
     // to control
     void progrossChanged(qint64 value, qint64 range);
 
-    // to player
+    // to lyricservice
+    void lyricSearchFinished(const MusicInfo &, const QString &lyricPath);
+    void coverSearchFinished(const MusicInfo &, const QString &coverPath);
+
+    // to player backend
     void changeProgress(qint64 value, qint64 range);
     void play(QSharedPointer<Playlist> playlist, const MusicInfo &info);
     void playNext(QSharedPointer<Playlist> playlist, const MusicInfo &info);
@@ -64,15 +75,11 @@ signals:
     void stop();
     void pause();
 
-    // ui menu
-    void musiclistMenuRequested(MusicItem* item,
-                                    const QPoint &pos,
-                                    QSharedPointer<Playlist> selectedlist,
-                                    QSharedPointer<Playlist> favlist,
-                                    QList<QSharedPointer<Playlist> >newlists);
+    // to lyric backend
+    void requestLyricCoverSearch(const MusicInfo &);
 
 public slots:
-    //! UI: music control interface
+    //! music control interface
     void onMusicPlay(QSharedPointer<Playlist> playlist, const MusicInfo &info);
     void onMusicPause(QSharedPointer<Playlist> playlist, const MusicInfo &info);
 //    void onMusicStop(QSharedPointer<Playlist> playlist, const MusicInfo &info);
@@ -94,7 +101,7 @@ public slots:
     void onPlaylistAdd(bool edit);
     void onSelectedPlaylistChanged(QSharedPointer<Playlist> playlist);
 
-    //! UI: menu interface
+    //! ui: menu interface
     void onRequestMusiclistMenu(MusicItem* item, const QPoint &pos);
 
 

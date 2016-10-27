@@ -20,6 +20,7 @@
 #include "../core/player.h"
 #include "../core/playlistmanager.h"
 #include "../core/mediafilemonitor.h"
+#include "../core/lyricservice.h"
 
 class AppPresenterPrivate
 {
@@ -30,6 +31,7 @@ public:
 
     }
 
+    LyricService        *lyricService;
     PlaylistManager     playlistMgr;
     MediaFileMonitor     *moniter;
     QSettings           settings;
@@ -43,8 +45,20 @@ AppPresenter::AppPresenter(QObject *parent)
     qRegisterMetaType<QSharedPointer<Playlist> >();
     qRegisterMetaType<QList<QSharedPointer<Playlist> > >();
 
-    d->moniter = new MediaFileMonitor;
+    d->lyricService = new LyricService;
     auto work = new QThread;
+    d->lyricService->moveToThread(work);
+    work->start();
+
+    connect(this, &AppPresenter::requestLyricCoverSearch,
+            d->lyricService, &LyricService::searchLyricCover);
+    connect(d->lyricService, &LyricService::lyricSearchFinished,
+            this, &AppPresenter::lyricSearchFinished);
+    connect(d->lyricService, &LyricService::coverSearchFinished,
+            this, &AppPresenter::coverSearchFinished);
+
+    d->moniter = new MediaFileMonitor;
+    work = new QThread;
     d->moniter->moveToThread(work);
     work->start();
 
@@ -91,6 +105,9 @@ AppPresenter::AppPresenter(QObject *parent)
         MusicInfo favInfo(info);
         favInfo.favourite = d->playlistMgr.playlist(FavMusicListID)->contains(info);
         emit this->musicPlayed(palylist, favInfo);
+
+        qDebug() << info.artist;
+        emit this->requestLyricCoverSearch(info);
     });
 
     connect(this, &AppPresenter::changeProgress, Player::instance(), &Player::changeProgress);

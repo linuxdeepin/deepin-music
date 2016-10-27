@@ -21,6 +21,8 @@
 
 #include <tag.h>
 #include <fileref.h>
+#include <taglib.h>
+#include <tpropertymap.h>
 
 #include "playlist.h"
 
@@ -46,7 +48,7 @@ MediaFileMonitor::MediaFileMonitor(QObject *parent) : QObject(parent)
         }
     }
 }
-
+#include <QTextCodec>
 void MediaFileMonitor::importPlaylistFiles(QSharedPointer<Playlist> playlist, const QStringList &filelist)
 {
     QStringList urllist;
@@ -78,12 +80,32 @@ void MediaFileMonitor::importPlaylistFiles(QSharedPointer<Playlist> playlist, co
         MusicInfo info;
         info.url = url;
         info.id = id;
-        info.title = QString::fromUtf8(f.tag()->title().toCString(true));
-        info.artist = QString::fromUtf8(f.tag()->artist().toCString(true));
-        info.album = QString::fromUtf8(f.tag()->album().toCString(true));
+
+        // TODO: more encode support
+        TagLib::Tag *tag = f.tag();
+        bool encode = true;
+        encode &= tag->title().isNull() ? true : tag->title().isLatin1();
+        encode &= tag->artist().isNull() ? true : tag->artist().isLatin1();
+        encode &= tag->album().isNull() ? true : tag->album().isLatin1();
+        if (encode) {
+            // Localized encode, current only GB18030 is used.
+            QTextCodec *codec = QTextCodec::codecForName("GB18030");
+            info.album = codec->toUnicode(tag->album().toCString());
+            info.artist = codec->toUnicode(tag->artist().toCString());
+            info.title = codec->toUnicode(tag->title().toCString());
+        } else {
+            // UTF8 encoded.
+            info.album = TStringToQString(tag->album());
+            info.artist = TStringToQString(tag->artist());
+            info.title = TStringToQString(tag->title());
+        }
+
         info.length = f.audioProperties()->length();
         info.size = f.file()->length();
         info.filetype =  QFileInfo(url).suffix();
+
+        qDebug() << info.title << info.artist << info.album
+                 << f.tag()->properties().toString().toCString(true);
 
         if (info.title.isEmpty()) {
             info.title = QFileInfo(url).baseName();
@@ -98,7 +120,7 @@ void MediaFileMonitor::importPlaylistFiles(QSharedPointer<Playlist> playlist, co
         }
 
         qDebug() << QThread::currentThread() << qApp->thread();
-        QThread::msleep(200);
+        QThread::msleep(400);
         emit meidaFileImported(playlist, info);
     }
 }

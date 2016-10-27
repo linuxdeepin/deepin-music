@@ -132,9 +132,9 @@ Footer::Footer(QWidget *parent) : QFrame(parent)
 
     QStringList modes;
     modes /*<< ":/image/sequence"*/
-          << ":/image/repeat_all"
-          << ":/image/repeat_single"
-          << ":/image/shuffle";
+            << ":/image/repeat_all"
+            << ":/image/repeat_single"
+            << ":/image/shuffle";
     d->btPlayMode = new ModeButton;
     d->btPlayMode->setObjectName("FooterActionPlayMode");
     d->btPlayMode->setFixedSize(24, 24);
@@ -322,6 +322,12 @@ void Footer::onProgressChanged(qint64 value, qint64 duration)
     d->hideProgress->blockSignals(true);
     d->hideProgress->setValue(value * length / duration);
     d->hideProgress->blockSignals(false);
+}
+
+void Footer::onCoverChanged(const MusicInfo &info, const QString &coverPath)
+{
+    d->cover->setStyleSheet(
+                QString("#FooterCover {image: url(%1);}").arg(coverPath));
 }
 
 void Footer::updateQssProperty(QWidget *w, const char *name, const QVariant &value)

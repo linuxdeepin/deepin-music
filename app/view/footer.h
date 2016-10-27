@@ -57,6 +57,7 @@ public slots:
     void onMusicPause(QSharedPointer<Playlist> palylist, const MusicInfo &info);
     void onMusicStop(QSharedPointer<Playlist> palylist, const MusicInfo &info);
     void onProgressChanged(qint64 value, qint64 duration);
+    void onCoverChanged(const MusicInfo &info, const QString &coverPath);
 
 private:
     void updateQssProperty(QWidget *w, const char *name, const QVariant &value);

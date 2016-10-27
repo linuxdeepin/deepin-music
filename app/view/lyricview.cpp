@@ -11,6 +11,7 @@
 
 #include <QDebug>
 #include <QLabel>
+#include <QFile>
 #include <QScrollArea>
 #include <QPushButton>
 #include <QHBoxLayout>
@@ -68,10 +69,10 @@ LyricView::LyricView(QWidget *parent) : QFrame(parent)
     auto layout = new QHBoxLayout(this);
     layout->setContentsMargins(20, 20, 20, 20);
 
-    auto cover = new Cover;
-    cover->setFixedSize(200, 200);
-    cover->setObjectName("LyricCoveraa");
-    cover->setBackgroundUrl(":/image/cover_max.png");
+    m_cover = new Cover;
+    m_cover->setFixedSize(200, 200);
+    m_cover->setObjectName("LyricCoveraa");
+    m_cover->setBackgroundUrl(":/image/cover_max.png");
 
     m_scroll = new QScrollArea;
     m_scroll->setObjectName("LyricTextScroll");
@@ -91,8 +92,8 @@ LyricView::LyricView(QWidget *parent) : QFrame(parent)
 
     QSizePolicy spCover(QSizePolicy::Preferred, QSizePolicy::Preferred);
     spCover.setHorizontalStretch(80);
-    cover->setSizePolicy(spCover);
-    layout->addWidget(cover, 0, Qt::AlignCenter);
+    m_cover->setSizePolicy(spCover);
+    layout->addWidget(m_cover, 0, Qt::AlignCenter);
 
     QSizePolicy spText(QSizePolicy::Preferred, QSizePolicy::Preferred);
     spText.setHorizontalStretch(20);
@@ -149,8 +150,6 @@ void LyricView::paintEvent(QPaintEvent *e)
     path.lineTo(xend, hcenter - 4);
 
     painter.fillPath(path, brush);
-
-
 }
 
 void LyricView::setLyricLines(const QStringList &lines)
@@ -164,4 +163,19 @@ void LyricView::setLyricLines(const QStringList &lines)
         lyric.append(QString("<p style='line-height:180%'>%1</p>").arg(line));
     }
     m_lyric->setText(lyric);
+}
+
+void LyricView::onLyricChanged(const MusicInfo &info, const QString &lyricPath)
+{
+    QFile lyricFile(lyricPath);
+    lyricFile.open(QIODevice::ReadOnly);
+    auto lyric = QString::fromUtf8(lyricFile.readAll());
+    this->setLyricLines(lyric.split("\n"));
+}
+
+void LyricView::onCoverChanged(const MusicInfo &info, const QString &coverPath)
+{
+    m_cover->setBackgroundUrl("");
+    m_cover->setBackgroundUrl(coverPath);
+    m_cover->repaint();
 }

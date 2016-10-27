@@ -17,5 +17,5 @@
 }
 
 #PlayerFrame::DTitlebar{
-    background-color: red;
+    background-color: transparent;
 }
