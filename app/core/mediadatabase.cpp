@@ -37,7 +37,7 @@ static bool createConnection()
 
     QSqlQuery query;
     query.exec("CREATE TABLE IF NOT EXISTS music (hash TEXT primary key not null, "
-               "timestamp VARCHAR(32),"
+               "timestamp INTEGER,"
                "title VARCHAR(256), artist VARCHAR(256),"
                "album VARCHAR(256), filetype VARCHAR(32),"
                "size INTEGER, track INTEGER,"
@@ -54,7 +54,7 @@ static bool createConnection()
     query.exec("CREATE TABLE IF NOT EXISTS playlist (uuid TEXT primary key not null, "
                "displayname VARCHAR(4096), "
                "icon VARCHAR(256), readonly INTEGER,"
-               "hide INTEGER)");
+               "hide INTEGER, sortType INTEGER)");
 
     return true;
 }
@@ -113,7 +113,7 @@ QList<PlaylistMeta> MediaDatabase::allPlaylist()
 {
     QList<PlaylistMeta> list;
     QSqlQuery query;
-    query.prepare("SELECT uuid, displayname, icon, readonly, hide FROM playlist");
+    query.prepare("SELECT uuid, displayname, icon, readonly, hide, sortType FROM playlist");
 
     if (!query.exec()) {
         qWarning() << query.lastError();
@@ -127,6 +127,7 @@ QList<PlaylistMeta> MediaDatabase::allPlaylist()
         palylistMeta.icon = query.value(2).toString();
         palylistMeta.readonly = query.value(3).toBool();
         palylistMeta.hide = query.value(4).toBool();
+        palylistMeta.sortType = query.value(5).toInt();
         list << palylistMeta;
     }
     return list;
@@ -136,16 +137,19 @@ void MediaDatabase::addPlaylist(const PlaylistMeta &palylistMeta)
 {
     QSqlQuery query;
     query.prepare("INSERT INTO playlist ("
-                  "uuid, displayname, icon, readonly, hide "
+                  "uuid, displayname, icon, readonly, hide, "
+                  "sortType "
                   ") "
                   "VALUES ("
-                  ":uuid, :displayname, :icon, :readonly, :hide "
+                  ":uuid, :displayname, :icon, :readonly, :hide, "
+                  ":sortType "
                   ")");
     query.bindValue(":uuid", palylistMeta.uuid);
     query.bindValue(":displayname", palylistMeta.displayName);
     query.bindValue(":icon", palylistMeta.icon);
     query.bindValue(":readonly", palylistMeta.readonly);
     query.bindValue(":hide", palylistMeta.hide);
+    query.bindValue(":sortType", palylistMeta.sortType);
 
     if (! query.exec()) {
         qWarning() << query.lastError();
@@ -157,6 +161,27 @@ void MediaDatabase::addPlaylist(const PlaylistMeta &palylistMeta)
                                 "playlist_id TEXT, sortid INTEGER"
                                 ")").arg(palylistMeta.uuid);
     if (! query.exec(sqlstring)) {
+        qWarning() << query.lastError();
+        return;
+    }
+}
+
+void MediaDatabase::updatePlaylist(const PlaylistMeta &palylistMeta)
+{
+    QSqlQuery query;
+    query.prepare("UPDATE playlist "
+                  "SET displayname = :displayname, icon = :icon, "
+                  "readonly = :readonly, hide = :hide, "
+                  "sortType = :sortType "
+                  "WHERE uuid = :uuid;");
+    query.bindValue(":uuid", palylistMeta.uuid);
+    query.bindValue(":displayname", palylistMeta.displayName);
+    query.bindValue(":icon", palylistMeta.icon);
+    query.bindValue(":readonly", palylistMeta.readonly);
+    query.bindValue(":hide", palylistMeta.hide);
+    query.bindValue(":sortType", palylistMeta.sortType);
+
+    if (! query.exec()) {
         qWarning() << query.lastError();
         return;
     }

@@ -12,6 +12,7 @@
 
 #include <QFrame>
 
+#include <dcombobox.h>
 class Playlist;
 class MusicItem;
 class MusicMeta;
@@ -32,6 +33,7 @@ signals:
     void musicAdd(const QString &playlistID, const MusicMeta &info);
     void playall(QSharedPointer<Playlist> palylist);
     void requestCustomContextMenu(MusicItem* item, const QPoint &pos);
+    void resort(QSharedPointer<Playlist> palylist, int sortType);
 
 public slots:
     void onMusicPlayed(QSharedPointer<Playlist> palylist, const MusicMeta &info);
@@ -53,6 +55,7 @@ private:
     QSharedPointer<Playlist>    m_palylist;
     MusicItem                   *m_last         = nullptr;
     MusicListView               *m_musiclist    = nullptr;
+    Dtk::Widget::DComboBox      *m_sortCombo    = nullptr;
 };
 
 

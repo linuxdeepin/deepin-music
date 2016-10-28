@@ -91,6 +91,7 @@ public slots:
 
     // music list
     void onPlayall(QSharedPointer<Playlist> playlist);
+    void onResort(QSharedPointer<Playlist> palylist, int sortType);
 
     //! UI: playlist manager interface
     //! TODO: refactor

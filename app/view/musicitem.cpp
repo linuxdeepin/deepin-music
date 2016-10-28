@@ -19,6 +19,7 @@
 #include <QDebug>
 
 #include <dthememanager.h>
+#include <DAction>
 #include <DMenu>
 DWIDGET_USE_NAMESPACE
 

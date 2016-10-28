@@ -25,7 +25,7 @@ public:
     QString artist;
     QString album;
     QString filetype;
-    QString timestamp;
+    qint64  timestamp;
     qint64  length;
     qint64  track;
     qint64  size;
@@ -41,6 +41,7 @@ public:
         editmode = false;
         readonly = false;
         hide = false;
+        sortType = 0;
     }
 
     QString uuid;
@@ -48,9 +49,11 @@ public:
     QString url;
     QString icon;
 
+    int     sortType;
     bool    editmode;
     bool    readonly;
     bool    hide;
+    bool    unused;
 
     QStringList                 musicIds;
     QMap<QString, MusicMeta>    musicMap;

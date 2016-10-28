@@ -12,9 +12,12 @@
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QSqlError>
+#include <QCollator>
 #include <QDebug>
 
 #include "mediadatabase.h"
+
+static QCollator collator;
 
 Playlist::Playlist(const PlaylistMeta &musiclistinfo, QObject *parent)
     : QObject(parent)
@@ -26,6 +29,11 @@ Playlist::Playlist(const PlaylistMeta &musiclistinfo, QObject *parent)
 int Playlist::length()
 {
     return listmeta.musicMap.size();
+}
+
+int Playlist::sorttype()
+{
+    return listmeta.sortType;
 }
 
 const MusicMeta Playlist::first()
@@ -147,7 +155,7 @@ void Playlist::load()
         musicIDs << QString("\"%1\"").arg(musicID);
     }
     auto sqlStr = QString("SELECT hash, localpath, title, artist, album, "
-                          "filetype, length, size "
+                          "filetype, length, size, timestamp "
                           "FROM music WHERE hash IN (%1)").arg(musicIDs.join(","));
     if (!query.exec(sqlStr)) {
         qWarning() << query.lastError();
@@ -163,9 +171,11 @@ void Playlist::load()
         info.album = query.value(4).toString();
         info.filetype = query.value(5).toString();
         info.length = query.value(6).toInt();
-        info.size = query.value(6).toInt();
+        info.size = query.value(7).toInt();
+        info.timestamp = query.value(8).toInt();
         listmeta.musicMap.insert(info.hash, info);
     }
+    resort();
 }
 
 void Playlist::setDisplayName(const QString &name)
@@ -216,4 +226,89 @@ void Playlist::removeMusic(const MusicMeta &info)
     emit musicRemoved(info);
 
     MediaDatabase::deleteMusic(info, listmeta);
+}
+
+bool lessThanTimestamp(const MusicMeta &v1, const MusicMeta &v2)
+{
+    return v1.timestamp < v2.timestamp;
+}
+
+bool lessThanTitile(const MusicMeta &v1, const MusicMeta &v2)
+{
+    if (v1.title.isEmpty()) {
+        return false;
+    }
+    if (v2.title.isEmpty()) {
+        return true;
+    }
+    return collator.compare(v1.title , v2.title) < 0;
+}
+
+bool lessThanArtist(const MusicMeta &v1, const MusicMeta &v2)
+{
+    if (v1.artist.isEmpty()) {
+        return false;
+    }
+    if (v2.artist.isEmpty()) {
+        return true;
+    }
+    return collator.compare(v1.artist , v2.artist) < 0;
+}
+
+bool lessThanAblum(const MusicMeta &v1, const MusicMeta &v2)
+{
+    if (v1.album.isEmpty()) {
+        return false;
+    }
+    if (v2.album.isEmpty()) {
+        return true;
+    }
+    return collator.compare(v1.album , v2.album) < 0;
+}
+
+typedef bool (*LessThanFunctionPtr)(const MusicMeta &v1, const MusicMeta &v2);
+
+LessThanFunctionPtr getSortFunction(Playlist::SortType sortType)
+{
+    switch (sortType) {
+    case Playlist::SortByAddTime :
+        return &lessThanTimestamp;
+    case Playlist::SortByTitle :
+        return &lessThanTitile;
+    case Playlist::SortByArtist :
+        return &lessThanArtist;
+    case Playlist::SortByAblum :
+        return &lessThanAblum;
+    }
+    return &lessThanTimestamp;
+}
+
+void Playlist::sortBy(Playlist::SortType sortType)
+{
+    if (listmeta.sortType == sortType) {
+        return;
+    }
+    listmeta.sortType = sortType;
+    MediaDatabase::updatePlaylist(listmeta);
+    resort();
+}
+
+void Playlist::resort()
+{
+    collator.setNumericMode(true);
+    collator.setCaseSensitivity(Qt::CaseInsensitive);
+
+    QList<MusicMeta> sortList;
+
+    for (auto id : listmeta.musicIds) {
+        sortList << listmeta.musicMap.value(id);
+    }
+
+    qSort(sortList.begin(), sortList.end(),
+          getSortFunction(static_cast<Playlist::SortType>(listmeta.sortType)));
+
+    listmeta.musicIds.clear();
+    for (auto meta : sortList) {
+        listmeta.musicIds << meta.hash;
+    }
 }

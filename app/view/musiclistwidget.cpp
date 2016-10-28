@@ -19,7 +19,6 @@
 #include <QStringListModel>
 
 #include <dthememanager.h>
-#include <dcombobox.h>
 DWIDGET_USE_NAMESPACE
 
 #include "musiclistview.h"
@@ -48,19 +47,19 @@ MusicListWidget::MusicListWidget(QWidget *parent) : QFrame(parent)
     btPlayAll->setText(tr("Play All"));
     btPlayAll->setFixedHeight(28);
 
-    auto cbSort = new DComboBox;
-    cbSort->setObjectName("MusicListSort");
-    cbSort->addItem(tr("Time added"));
-    cbSort->addItem(tr("Title"));
-    cbSort->addItem(tr("Artist"));
-    cbSort->addItem(tr("Album name"));
+    m_sortCombo = new DComboBox;
+    m_sortCombo->setObjectName("MusicListSort");
+    m_sortCombo->addItem(tr("Time added"));
+    m_sortCombo->addItem(tr("Title"));
+    m_sortCombo->addItem(tr("Artist"));
+    m_sortCombo->addItem(tr("Album name"));
 
     auto emptyHits = new QLabel(tr("No Music in list"));
     emptyHits->setObjectName("MusicListEmptyHits");
 
     actionBarLayout->addWidget(btPlayAll, 0, Qt::AlignCenter);
     actionBarLayout->addStretch();
-    actionBarLayout->addWidget(cbSort, 0, Qt::AlignCenter);
+    actionBarLayout->addWidget(m_sortCombo, 0, Qt::AlignCenter);
     m_musiclist = new MusicListView;
 
     layout->addWidget(actionBar, 0, Qt::AlignTop);
@@ -69,6 +68,12 @@ MusicListWidget::MusicListWidget(QWidget *parent) : QFrame(parent)
 
 
     D_THEME_INIT_WIDGET(MusicListWidget);
+    connect(m_sortCombo, static_cast<void (DComboBox::*)(int)>(&DComboBox::activated),
+    this, [ = ](int sortType) {
+
+        qWarning() << "change to emptry playlist" << sortType;
+        emit this->resort(m_palylist, sortType);
+    });
 
     connect(m_musiclist, &MusicListView::doubleClicked,
     this, [ = ](const QModelIndex & index) {
@@ -222,6 +227,7 @@ void MusicListWidget::onMusiclistChanged(QSharedPointer<Playlist> playlist)
     }
     m_last = nullptr;
     this->setCurrentList(playlist);
+    m_sortCombo->setCurrentIndex(playlist->sorttype());
     m_musiclist->clear();
     for (auto &info : playlist->allmusic()) {
         addMusicInfo(m_musiclist, info);

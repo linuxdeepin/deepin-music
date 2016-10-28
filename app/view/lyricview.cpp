@@ -74,7 +74,6 @@ LyricView::LyricView(QWidget *parent) : QFrame(parent)
 
     layout->addWidget(btBack, 0, Qt::AlignRight | Qt::AlignTop);
 
-
     D_THEME_INIT_WIDGET(LyricView);
 }
 
@@ -83,40 +82,42 @@ void LyricView::resizeEvent(QResizeEvent *event)
     QWidget::resizeEvent(event);
     m_scroll->setFixedSize(event->size().width() * 45 / 100, event->size().height() * 90 / 100);
     m_lyric->setFixedWidth(event->size().width() * 35 / 100);
+    m_lyric->adjustSize();
 }
 
 void LyricView::paintEvent(QPaintEvent *e)
 {
     QFrame::paintEvent(e);
 
-    QPainter painter(this);
+    return;
+//    QPainter painter(this);
 
-    painter.setRenderHint(QPainter::Antialiasing);
-    painter.setRenderHint(QPainter::HighQualityAntialiasing);
+//    painter.setRenderHint(QPainter::Antialiasing);
+//    painter.setRenderHint(QPainter::HighQualityAntialiasing);
 
-    QBrush brush(QColor(255, 255, 255, 25));
-    auto hcenter = m_scroll->y() + m_scroll->height() / 2;
-    auto xstart = m_scroll->x();
-    auto xend = m_scroll->x() + m_scroll->width();
+//    QBrush brush(QColor(255, 255, 255, 25));
+//    auto hcenter = m_scroll->y() + m_scroll->height() / 2;
+//    auto xstart = m_scroll->x();
+//    auto xend = m_scroll->x() + m_scroll->width();
 
-    QPainterPath path;
-    path.moveTo(xstart, hcenter - 4);
-    path.lineTo(xstart, hcenter + 5);
-    path.lineTo(xstart + 9, hcenter);
-    path.lineTo(xstart, hcenter - 4);
+//    QPainterPath path;
+//    path.moveTo(xstart, hcenter - 4);
+//    path.lineTo(xstart, hcenter + 5);
+//    path.lineTo(xstart + 9, hcenter);
+//    path.lineTo(xstart, hcenter - 4);
 
-    path.moveTo(xstart + 20, hcenter);
-    path.lineTo(xend - 20, hcenter);
-    path.lineTo(xend - 20, hcenter + 1);
-    path.lineTo(xstart + 20, hcenter + 1);
-    path.lineTo(xstart + 20, hcenter);
+//    path.moveTo(xstart + 20, hcenter);
+//    path.lineTo(xend - 20, hcenter);
+//    path.lineTo(xend - 20, hcenter + 1);
+//    path.lineTo(xstart + 20, hcenter + 1);
+//    path.lineTo(xstart + 20, hcenter);
 
-    path.moveTo(xend, hcenter - 4);
-    path.lineTo(xend, hcenter + 5);
-    path.lineTo(xend - 9, hcenter);
-    path.lineTo(xend, hcenter - 4);
+//    path.moveTo(xend, hcenter - 4);
+//    path.lineTo(xend, hcenter + 5);
+//    path.lineTo(xend - 9, hcenter);
+//    path.lineTo(xend, hcenter - 4);
 
-    painter.fillPath(path, brush);
+//    painter.fillPath(path, brush);
 }
 
 void LyricView::setLyricLines(const QStringList &lines)

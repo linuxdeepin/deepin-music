@@ -15,7 +15,8 @@
 #include <QTimer>
 #include <QDebug>
 
-#include <dmenu.h>
+#include <DAction>
+#include <DMenu>
 #include <ddialog.h>
 #include <QMessageBox>
 #include <dthememanager.h>

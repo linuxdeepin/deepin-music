@@ -224,14 +224,12 @@ static void slideTop2BottomWidget(QWidget *top, QWidget *bottom)
     animation->connect(animation4, &QPropertyAnimation::finished,
                        topOpacity, &QGraphicsOpacityEffect::deleteLater);
 
-
     animation->connect(animation, &QPropertyAnimation::finished,
                        animation, &QPropertyAnimation::deleteLater);
     animation->connect(animation2, &QPropertyAnimation::finished,
                        animation2, &QPropertyAnimation::deleteLater);
     animation->connect(animation2, &QPropertyAnimation::finished,
                        top, &QWidget::hide);
-
 }
 
 static void slideEdgeWidget(QWidget *right, QRect start, QRect end, bool hide = false)
@@ -362,6 +360,8 @@ void PlayerFrame::binding(AppPresenter *presenter)
             presenter, &AppPresenter::onPlayall);
     connect(d->musicList, &MusicListWidget::requestCustomContextMenu,
             presenter, &AppPresenter::onRequestMusiclistMenu);
+    connect(d->musicList, &MusicListWidget::resort,
+            presenter, &AppPresenter::onResort);
 
     // Play list bindding
     connect(presenter, &AppPresenter::selectedPlaylistChanged,

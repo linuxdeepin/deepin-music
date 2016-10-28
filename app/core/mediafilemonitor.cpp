@@ -17,7 +17,8 @@
 #include <QDirIterator>
 #include <QDebug>
 #include <QThread>
-#include <QApplication>
+#include <QTextCodec>
+#include <QTime>
 
 #include <tag.h>
 #include <fileref.h>
@@ -48,7 +49,6 @@ MediaFileMonitor::MediaFileMonitor(QObject *parent) : QObject(parent)
         }
     }
 }
-#include <QTextCodec>
 void MediaFileMonitor::importPlaylistFiles(QSharedPointer<Playlist> playlist, const QStringList &filelist)
 {
     QStringList urllist;
@@ -69,11 +69,15 @@ void MediaFileMonitor::importPlaylistFiles(QSharedPointer<Playlist> playlist, co
         // TODO: do not import exist file;
         auto id = QString(QCryptographicHash::hash(url.toUtf8(), QCryptographicHash::Md5).toHex());
 
-        TagLib::FileRef f(url.toStdString().c_str());
-
         // TODO: fix me in windows
+#ifdef _WIN32
+        TagLib::FileRef f(url.toStdWString().c_str());
+#else
+        TagLib::FileRef f(url.toStdString().c_str());
+#endif
+
         if (f.isNull()) {
-            qDebug() << url;
+            qWarning() << "import music file failed:" << url;
             continue;
         }
 
@@ -100,6 +104,9 @@ void MediaFileMonitor::importPlaylistFiles(QSharedPointer<Playlist> playlist, co
             info.title = TStringToQString(tag->title());
         }
 
+        auto current = QDateTime::currentDateTime();
+        info.timestamp = current.toTime_t()  * 1000 + current.time().msec();
+        qDebug() << info.timestamp;
         info.length = f.audioProperties()->length();
         info.size = f.file()->length();
         info.filetype =  QFileInfo(url).suffix();
@@ -112,14 +119,13 @@ void MediaFileMonitor::importPlaylistFiles(QSharedPointer<Playlist> playlist, co
         }
 
         if (info.artist.isEmpty()) {
-            info.artist = tr("Unknow Artist");
+//            info.artist = tr("Unknow Artist");
         }
 
         if (info.album.isEmpty()) {
-            info.album = tr("Unknow Album");
+//            info.album = tr("Unknow Album");
         }
 
-        qDebug() << QThread::currentThread() << qApp->thread();
 //        QThread::msleep(400);
         emit meidaFileImported(playlist, info);
     }

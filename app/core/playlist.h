@@ -30,6 +30,14 @@ public:
     };
     Q_ENUM(PlayMode)
 
+    enum SortType {
+        SortByAddTime  = 0,
+        SortByTitle,
+        SortByArtist,
+        SortByAblum
+    };
+    Q_ENUM(SortType)
+
 public:
     QStringList &history() {return m_history;}
 
@@ -41,6 +49,7 @@ public:
     bool editmode();
     bool hide();
     int length();
+    int sorttype();
 
     const MusicMeta first();
     const MusicMeta prev(const MusicMeta &info);
@@ -58,6 +67,8 @@ public slots:
     void setDisplayName(const QString &name);
     void appendMusic(const MusicMeta &info);
     void removeMusic(const MusicMeta &info);
+    void sortBy(Playlist::SortType sortType);
+    void resort();
 
     //! private interface
 public:

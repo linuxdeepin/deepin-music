@@ -288,6 +288,13 @@ void AppPresenter::onPlayall(QSharedPointer<Playlist> playlist)
     this->onMusicPlay(playlist, playlist->first());
 }
 
+void AppPresenter::onResort(QSharedPointer<Playlist> palylist, int sortType)
+{
+    palylist->sortBy(static_cast<Playlist::SortType>(sortType));
+    //store
+    emit this->selectedPlaylistChanged(palylist);
+}
+
 void AppPresenter::onImportFiles(const QStringList &filelist)
 {
 //    QSharedPointer<Playlist> playlist = d->playlistMgr.playlist(AllMusicListID);

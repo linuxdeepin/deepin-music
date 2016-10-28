@@ -26,6 +26,7 @@ signals:
 
 public slots:
     static void addPlaylist(const PlaylistMeta &palylistMeta);
+    static void updatePlaylist(const PlaylistMeta &palylistMeta);
     static void removePlaylist(const PlaylistMeta &palylistMeta);
 
     static void addMusicMeta(const MusicMeta &meta);

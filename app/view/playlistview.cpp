@@ -11,7 +11,6 @@
 
 #include <QDebug>
 
-#include <dmenu.h>
 #include <dthememanager.h>
 DWIDGET_USE_NAMESPACE
 
