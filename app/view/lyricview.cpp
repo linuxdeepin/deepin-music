@@ -26,41 +26,7 @@ DWIDGET_USE_NAMESPACE
 
 const QString aaa =
     "You're the one that i want' the one that i need"
-    "你是我想要的那个唯一，也是我需要的那个唯一\n"
-    "The one that i gotta have just to succeed"
-    "是唯一我想要成功的唯一\n"
-    "When i first saw you' i knew it was real"
-    "当我第一次看到你的时候.我知道你是我真正的唯一\n"
-    "I'm sorry about the pain i made you feel"
-    "真的对不起我让你陷入了痛苦的境地\n"
-    "That wasn't me; let me show you the way"
-    "那不是我！那不是真正的我！\n"
-    "I looked for the sun' but it's raining today"
-    "就像我想要太阳，天空却偏偏下起了雨一样的无奈\n"
-    "You're the one that i want' the one that i need"
-    "你是我想要的那个唯一，也是我需要的那个唯一\n"
-    "The one that i gotta have just to succeed"
-    "是唯一我想要成功的唯一\n"
-    "When i first saw you' i knew it was real"
-    "当我第一次看到你的时候.我知道你是我真正的唯一\n"
-    "I'm sorry about the pain i made you feel"
-    "真的对不起我让你陷入了痛苦的境地\n"
-    "That wasn't me; let me show you the way"
-    "那不是我！那不是真正的我！\n"
-    "I looked for the sun' but it's raining today"
-    "就像我想要太阳，天空却偏一样的无奈\n"
-    "You're the one that i want' the one that i need"
-    "你是我想要的那个唯一，也是我需要的那个唯一\n"
-    "The one that i gotta have just to succeed"
-    "是唯一我想要成功的唯一\n"
-    "When i first saw you' i knew it was real"
-    "当我第一次看到你的时候.我知道你是我真正的唯一\n"
-    "I'm sorry about the pain i made you feel"
-    "真的对不起我让你陷入了痛苦的境地\n"
-    "That wasn't me; let me show you the way"
-    "那不是我！那不是真正的我！\n"
-    "I looked for the sun' but it's raining today"
-    "就像我想要太阳，天空却偏偏下起了雨一样的无奈\n";
+    "你是我想要的那个唯一，也是我需要的那个唯一\n";
 
 
 LyricView::LyricView(QWidget *parent) : QFrame(parent)
@@ -124,6 +90,7 @@ void LyricView::paintEvent(QPaintEvent *e)
     QFrame::paintEvent(e);
 
     QPainter painter(this);
+
     painter.setRenderHint(QPainter::Antialiasing);
     painter.setRenderHint(QPainter::HighQualityAntialiasing);
 
@@ -179,7 +146,6 @@ void LyricView::onLyricChanged(const MusicMeta &info, const QString &lyricPath)
 
 void LyricView::onCoverChanged(const MusicMeta &info, const QString &coverPath)
 {
-    m_cover->setBackgroundUrl("");
     m_cover->setBackgroundUrl(coverPath);
     m_cover->repaint();
 }

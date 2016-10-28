@@ -111,7 +111,7 @@ void MusicItem::showContextMenu(const QPoint &pos,
 {
     QPoint globalPos = this->mapToGlobal(pos);
 
-    DMenu playlistMenu;
+    Menu playlistMenu;
     bool hasAction = false;
 
     if (selectedPlaylist != favPlaylist) {
@@ -133,14 +133,14 @@ void MusicItem::showContextMenu(const QPoint &pos,
 
 
     // TODO: add all list
-    connect(&playlistMenu, &DMenu::triggered, this, [ = ](DAction * action) {
+    connect(&playlistMenu, &Menu::triggered, this, [ = ](QAction * action) {
         qDebug() << action->data().toString();
         QString playlistID = action->data().toString();
         qDebug() << "addToPlaylist" << playlistID;
         emit addToPlaylist(playlistID);
     });
 
-    DMenu myMenu;
+    Menu myMenu;
     myMenu.addAction(tr("Play"));
     myMenu.addAction(tr("Add to playlist"))->setMenu(&playlistMenu);
     myMenu.addSeparator();
@@ -150,7 +150,7 @@ void MusicItem::showContextMenu(const QPoint &pos,
     myMenu.addSeparator();
     myMenu.addAction(tr("Song info"));
 
-    connect(&myMenu, &DMenu::triggered, this, [ = ](DAction * action) {
+    connect(&myMenu, &Menu::triggered, this, [ = ](QAction * action) {
         qDebug() << action;
         if (action->text() == tr("Play")) {
             emit play();

@@ -74,7 +74,8 @@ SOURCES += \
     view/widget/settingsdialog.cpp \
     view/widget/modebuttom.cpp \
     core/lyricservice.cpp \
-    core/mediadatabase.cpp
+    core/mediadatabase.cpp \
+    view/helper/widgethellper.cpp
 
 HEADERS += \
     view/playerframe.h \
@@ -103,7 +104,8 @@ HEADERS += \
     view/widget/settingsdialog.h \
     view/widget/modebuttom.h \
     core/lyricservice.h \
-    core/mediadatabase.h
+    core/mediadatabase.h \
+    view/helper/widgethellper.h
 
 RESOURCES += \
     resource/theme/theme.qrc \

@@ -10,10 +10,12 @@
 #include "playerframe.h"
 
 #include <QDebug>
+#include <QPainter>
 #include <QVBoxLayout>
 #include <QListWidgetItem>
 #include <QStackedWidget>
 #include <QPropertyAnimation>
+#include <QGraphicsOpacityEffect>
 #include <QTimer>
 #include <QProcess>
 #include <QResizeEvent>
@@ -34,11 +36,13 @@
 #include "playlistview.h"
 #include "playlistitem.h"
 #include "musiclistwidget.h"
+#include "musicitem.h"
 
 #include "../model/musiclistmodel.h"
 #include "../core/playlist.h"
 #include "../musicapp.h"
-#include "musicitem.h"
+
+#include "helper/widgethellper.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -55,7 +59,7 @@ public:
     LyricView       *lyric      = nullptr;
 };
 
-static void slideWidget(QWidget *left, QWidget *right)
+static void slideRight2LeftWidget(QWidget *left, QWidget *right)
 {
     right->show();
     left->show();
@@ -93,6 +97,143 @@ static void slideWidget(QWidget *left, QWidget *right)
 
 }
 
+static void slideBottom2TopWidget(QWidget *top, QWidget *bottom)
+{
+    bottom->show();
+    top->show();
+    bottom->resize(top->size());
+
+    int delay = 300;
+    QRect topStart = QRect(0, 0, top->width(), top->height());
+    QRect topEnd = topStart;
+    topEnd.moveTop(-top->height());
+
+    QPropertyAnimation *animation = new QPropertyAnimation(top, "geometry");
+    animation->setDuration(delay);
+    animation->setEasingCurve(QEasingCurve::InOutCubic);
+    animation->setStartValue(topStart);
+    animation->setEndValue(topEnd);
+    animation->start();
+
+    QRect bottomStart = QRect(0, top->height(), bottom->width(), bottom->height());
+    QRect bottomEnd = bottomStart;
+    bottomEnd.moveTo(0, 0);
+
+    QPropertyAnimation *animation2 = new QPropertyAnimation(bottom, "geometry");
+    animation2->setEasingCurve(QEasingCurve::InOutCubic);
+    animation2->setDuration(delay);
+    animation2->setStartValue(bottomStart);
+    animation2->setEndValue(bottomEnd);
+    animation2->start();
+
+    auto bottomOpacity = new QGraphicsOpacityEffect(bottom);
+    bottom->setGraphicsEffect(bottomOpacity);
+    bottomOpacity->setOpacity(0);
+
+    QPropertyAnimation *animation3 = new QPropertyAnimation(bottomOpacity, "opacity");
+    animation3->setEasingCurve(QEasingCurve::InCubic);
+    animation3->setDuration(delay);
+    animation3->setStartValue(0);
+    animation3->setEndValue(1);
+    animation3->start();
+    animation->connect(animation3, &QPropertyAnimation::finished,
+                       animation3, &QPropertyAnimation::deleteLater);
+    animation->connect(animation3, &QPropertyAnimation::finished,
+                       bottomOpacity, &QGraphicsOpacityEffect::deleteLater);
+
+    auto topOpacity = new QGraphicsOpacityEffect(top);
+    top->setGraphicsEffect(topOpacity);
+    topOpacity->setOpacity(1);
+
+    QPropertyAnimation *animation4 = new QPropertyAnimation(topOpacity, "opacity");
+    animation4->setEasingCurve(QEasingCurve::InCubic);
+    animation4->setDuration(delay);
+    animation4->setStartValue(1);
+    animation4->setEndValue(0);
+    animation4->start();
+    animation->connect(animation4, &QPropertyAnimation::finished,
+                       animation4, &QPropertyAnimation::deleteLater);
+    animation->connect(animation4, &QPropertyAnimation::finished,
+                       topOpacity, &QGraphicsOpacityEffect::deleteLater);
+
+    animation->connect(animation, &QPropertyAnimation::finished,
+                       animation, &QPropertyAnimation::deleteLater);
+    animation->connect(animation2, &QPropertyAnimation::finished,
+                       animation2, &QPropertyAnimation::deleteLater);
+    animation->connect(animation2, &QPropertyAnimation::finished,
+                       top, &QWidget::hide);
+
+}
+
+static void slideTop2BottomWidget(QWidget *top, QWidget *bottom)
+{
+    bottom->show();
+    top->show();
+    bottom->resize(top->size());
+
+    int delay = 300;
+    QRect topStart = QRect(0, 0, top->width(), top->height());
+    QRect topEnd = topStart;
+    topEnd.moveTo(0, top->height());
+
+    QPropertyAnimation *animation = new QPropertyAnimation(top, "geometry");
+    animation->setDuration(delay);
+    animation->setEasingCurve(QEasingCurve::InOutCubic);
+    animation->setStartValue(topStart);
+    animation->setEndValue(topEnd);
+    animation->start();
+
+    QRect bottomStart = QRect(0, -top->height(), bottom->width(), bottom->height());
+    QRect bottomEnd = bottomStart;
+    bottomEnd.moveBottom(top->height());
+
+    QPropertyAnimation *animation2 = new QPropertyAnimation(bottom, "geometry");
+    animation2->setEasingCurve(QEasingCurve::InOutCubic);
+    animation2->setDuration(delay);
+    animation2->setStartValue(bottomStart);
+    animation2->setEndValue(bottomEnd);
+    animation2->start();
+
+    auto bottomOpacity = new QGraphicsOpacityEffect(bottom);
+    bottom->setGraphicsEffect(bottomOpacity);
+    bottomOpacity->setOpacity(0);
+
+    QPropertyAnimation *animation3 = new QPropertyAnimation(bottomOpacity, "opacity");
+    animation3->setEasingCurve(QEasingCurve::InCubic);
+    animation3->setDuration(delay);
+    animation3->setStartValue(0);
+    animation3->setEndValue(1);
+    animation3->start();
+    animation->connect(animation3, &QPropertyAnimation::finished,
+                       animation3, &QPropertyAnimation::deleteLater);
+    animation->connect(animation3, &QPropertyAnimation::finished,
+                       bottomOpacity, &QGraphicsOpacityEffect::deleteLater);
+
+    auto topOpacity = new QGraphicsOpacityEffect(top);
+    top->setGraphicsEffect(topOpacity);
+    topOpacity->setOpacity(0.99);
+
+    QPropertyAnimation *animation4 = new QPropertyAnimation(topOpacity, "opacity");
+    animation4->setEasingCurve(QEasingCurve::InCubic);
+    animation4->setDuration(delay);
+    animation4->setStartValue(0.99);
+    animation4->setEndValue(0);
+    animation4->start();
+    animation->connect(animation4, &QPropertyAnimation::finished,
+                       animation4, &QPropertyAnimation::deleteLater);
+    animation->connect(animation4, &QPropertyAnimation::finished,
+                       topOpacity, &QGraphicsOpacityEffect::deleteLater);
+
+
+    animation->connect(animation, &QPropertyAnimation::finished,
+                       animation, &QPropertyAnimation::deleteLater);
+    animation->connect(animation2, &QPropertyAnimation::finished,
+                       animation2, &QPropertyAnimation::deleteLater);
+    animation->connect(animation2, &QPropertyAnimation::finished,
+                       top, &QWidget::hide);
+
+}
+
 static void slideEdgeWidget(QWidget *right, QRect start, QRect end, bool hide = false)
 {
     right->show();
@@ -113,40 +254,12 @@ static void slideEdgeWidget(QWidget *right, QRect start, QRect end, bool hide = 
 
 }
 
-QT_BEGIN_NAMESPACE
-extern Q_WIDGETS_EXPORT void qt_blurImage(QPainter *p, QImage &blurImage, qreal radius, bool quality, bool alphaOnly, int transposed = 0);
-QT_END_NAMESPACE
-#include <QMatrix3x3>
-#include <QImage>
-#include <QGraphicsScene>
-#include <QGraphicsPixmapItem>
-#include <QPainter>
-#include <QGraphicsBlurEffect>
-QImage applyEffectToImage(QImage src, QGraphicsEffect *effect, int extent = 0)
-{
-    if (src.isNull()) { return QImage(); }  //No need to do anything else!
-    if (!effect) { return src; }            //No need to do anything else!
-    QGraphicsScene scene;
-    QGraphicsPixmapItem item;
-    item.setPixmap(QPixmap::fromImage(src));
-    item.setGraphicsEffect(effect);
-    scene.addItem(&item);
-    QImage res(src.size() + QSize(extent * 2, extent * 2), QImage::Format_ARGB32);
-    res.fill(Qt::transparent);
-    QPainter ptr(&res);
-    scene.render(&ptr, QRectF(), QRectF(-extent, -extent, src.width() + extent * 2, src.height() + extent * 2));
-    return res;
-}
-
 PlayerFrame::PlayerFrame(QWidget *parent)
     : DWindow(parent), d(new PlayerFramePrivate)
 {
-    QImage image = QImage((":/image/cover_max_background.png")).scaled(960, 720);
-    QGraphicsBlurEffect *blur = new QGraphicsBlurEffect;
-    blur->setBlurRadius(60);
-    QImage result = applyEffectToImage(image, blur);
+    QImage image = QImage((":/image/cover_max.png")).scaled(960, 720);
 
-    setBackgroundImage(QPixmap::fromImage(result));
+    setBackgroundImage(WidgetHellper::blurImage(image, 50));
     setObjectName("PlayerFrame");
 
     d->title = new TitleBar;
@@ -268,16 +381,15 @@ void PlayerFrame::binding(AppPresenter *presenter)
             d->lyric, &LyricView::onCoverChanged);
 
     connect(presenter, &AppPresenter::coverSearchFinished,
-            this, [=](const MusicMeta &, const QString &coverPath){
-        QImage image = QImage(coverPath).scaled(960, 720);
-        QGraphicsBlurEffect *blur = new QGraphicsBlurEffect;
-        blur->setBlurRadius(60);
-        QImage result = applyEffectToImage(image, blur);
-        this->setBackgroundImage(QPixmap::fromImage(result));
+    this, [ = ](const MusicMeta &, const QString & coverPath) {
+        QImage image = QImage(coverPath).scaled(this->size());
+        setBackgroundImage(WidgetHellper::blurImage(image, 50));
         this->repaint();
     });
 
     // Footer Control
+    connect(presenter, &AppPresenter::coverSearchFinished,
+            d->footer, &Footer::onCoverChanged);
     connect(presenter, &AppPresenter::musicPlayed,
             d->footer, &Footer::onMusicPlay);
     connect(presenter, &AppPresenter::musicPaused,
@@ -316,7 +428,7 @@ void PlayerFrame::binding(AppPresenter *presenter)
     connect(presenter, &AppPresenter::selectedPlaylistChanged,
     this, [ = ]() {
         if (d->lyric->isVisible()) {
-            slideWidget(d->lyric, d->musicList);
+            slideTop2BottomWidget(d->lyric, d->musicList);
             d->musicList->resize(d->lyric->size());
             d->musicList->show();
         }
@@ -328,12 +440,12 @@ void PlayerFrame::binding(AppPresenter *presenter)
     connect(d->footer, &Footer::toggleLyric,
     this, [ = ]() {
         if (d->lyric->isVisible()) {
-            slideWidget(d->lyric, d->musicList);
+            slideTop2BottomWidget(d->lyric, d->musicList);
             d->musicList->resize(d->lyric->size());
             d->musicList->raise();
             d->musicList->show();
         } else {
-            slideWidget(d->musicList, d->lyric);
+            slideBottom2TopWidget(d->musicList, d->lyric);
             d->lyric->resize(d->musicList->size());
             d->lyric->raise();
             d->lyric->show();
@@ -369,7 +481,7 @@ void PlayerFrame::binding(AppPresenter *presenter)
     connect(presenter, &AppPresenter::showMusiclist,
     this, [ = ]() {
         if (d->import->isVisible()) {
-            slideWidget(d->import, d->musicList);
+            slideRight2LeftWidget(d->import, d->musicList);
         }
         d->musicList->resize(d->import->size());
         d->musicList->show();
@@ -399,7 +511,7 @@ void PlayerFrame::resizeEvent(QResizeEvent *e)
 void PlayerFrame::paintEvent(QPaintEvent *e)
 {
     int radius = 3;
-    int windowExtern = 40 + 1 * 2;
+    int windowExtern = 40 + 2 * 2;
 
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
@@ -443,7 +555,6 @@ void PlayerFrame::onSelectImportFiles()
 
 void PlayerFrame::initMenu()
 {
-
     auto m_newlist = new DAction(tr("New songlist"), this);
     connect(m_newlist, &DAction::triggered, this, [ = ](bool) {
         if (!d->playlist->isVisible()) {
@@ -456,7 +567,7 @@ void PlayerFrame::initMenu()
     connect(m_addmusic, &DAction::triggered, this, [ = ](bool) {
 
         if (d->lyric->isVisible()) {
-            slideWidget(d->lyric, d->musicList);
+            slideTop2BottomWidget(d->lyric, d->musicList);
             d->musicList->resize(d->lyric->size());
             d->musicList->show();
             if (!d->playlist->isVisible()) {

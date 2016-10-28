@@ -27,8 +27,10 @@ Cover::Cover(QWidget *parent) : QWidget(parent)
     this->setGraphicsEffect(bodyShadow);
 }
 
-void Cover::paintEvent(QPaintEvent * /*e*/)
+void Cover::paintEvent(QPaintEvent * e)
 {
+//    QWidget::paintEvent(e);
+//    return;
     QPainter painter(this);
     auto radius = 4;
     painter.setRenderHint(QPainter::Antialiasing);
@@ -49,6 +51,7 @@ void Cover::paintEvent(QPaintEvent * /*e*/)
 
 void Cover::setBackgroundImage(const QPixmap &bk)
 {
+//    return;
     QImage bkImage = bk.toImage().scaled(200, 200);
     QPixmap maskPixmap(bkImage.size());
     maskPixmap.fill(Qt::transparent);

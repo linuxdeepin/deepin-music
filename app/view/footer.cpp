@@ -328,6 +328,9 @@ void Footer::onCoverChanged(const MusicMeta &info, const QString &coverPath)
 {
     d->cover->setStyleSheet(
                 QString("#FooterCover {image: url(%1);}").arg(coverPath));
+    this->style()->unpolish(d->cover);
+    this->style()->polish(d->cover);
+    d->cover->repaint();
 }
 
 void Footer::updateQssProperty(QWidget *w, const char *name, const QVariant &value)

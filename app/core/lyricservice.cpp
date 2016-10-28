@@ -98,7 +98,7 @@ int LyricService::searchCacheCover(const MusicMeta &info)
     qDebug() << cacheCoverPath(info);
     QFileInfo cover(cacheCoverPath(info));
     if (!cover.exists() || cover.size() < 1) {
-        emit coverSearchFinished(info, ":/image/cover_max_background.png");
+        emit coverSearchFinished(info, ":/image/cover_min.png");
         return -1;
     }
     emit coverSearchFinished(info, cacheCoverPath(info));

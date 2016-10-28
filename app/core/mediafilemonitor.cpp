@@ -120,7 +120,7 @@ void MediaFileMonitor::importPlaylistFiles(QSharedPointer<Playlist> playlist, co
         }
 
         qDebug() << QThread::currentThread() << qApp->thread();
-        QThread::msleep(400);
+//        QThread::msleep(400);
         emit meidaFileImported(playlist, info);
     }
 }
