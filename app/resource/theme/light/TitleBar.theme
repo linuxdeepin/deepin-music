@@ -5,3 +5,8 @@
 #TitleIcon {
     image: url(:/image/deepin-music.svg)
 }
+
+#DEditInsideFrame {
+    background: transparent;
+}
+

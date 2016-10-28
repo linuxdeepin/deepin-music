@@ -9,6 +9,7 @@
 
 #include "footer.h"
 
+#include <QTimer>
 #include <QStyle>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -71,6 +72,7 @@ public:
 
 Footer::Footer(QWidget *parent) : QFrame(parent)
 {
+    setFocusPolicy(Qt::ClickFocus);
     d = QSharedPointer<FooterPrivate>(new FooterPrivate);
     setObjectName("Footer");
 
@@ -261,6 +263,10 @@ Footer::Footer(QWidget *parent) : QFrame(parent)
         this->style()->polish(d->btPlayMode);
         this->repaint();
     });
+
+    QTimer::singleShot(200, this, [ = ] {
+//        d->btPlay->setFocus();
+    });
 }
 
 void Footer::onMusicAdded(QSharedPointer<Playlist> palylist, const MusicMeta &info)
@@ -327,7 +333,7 @@ void Footer::onProgressChanged(qint64 value, qint64 duration)
 void Footer::onCoverChanged(const MusicMeta &info, const QString &coverPath)
 {
     d->cover->setStyleSheet(
-                QString("#FooterCover {image: url(%1);}").arg(coverPath));
+                QString("#FooterCover {image: url(%1) no-repeat center center fixed;}").arg(coverPath));
     this->style()->unpolish(d->cover);
     this->style()->polish(d->cover);
     d->cover->repaint();

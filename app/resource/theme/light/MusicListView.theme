@@ -4,6 +4,7 @@
     show-decoration-selected: 1;
     selection-color: white;
     selection-background-color: #2ca7f8;
+    outline: none;
 }
 
 #MusicListView::item
@@ -17,10 +18,10 @@
     border:none;
 }
 #MusicListView::item:selected:!active {
-    background-color: #2ca7f8;
+    background-color: rgba(44,167,248,60%);
 }
 #MusicListView::item:selected:active {
-    background-color: #2ca7f8;
+    background-color: rgba(44,167,248,60%);
 }
 #MusicListView::item:hover {
 }

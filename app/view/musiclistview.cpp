@@ -24,6 +24,6 @@ MusicListView::MusicListView(QWidget *parent) : QListWidget(parent)
     setSelectionMode(QListView::ExtendedSelection);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    setFocusPolicy(Qt::NoFocus);
+//    setFocusPolicy(Qt::ClickFocus);
     D_THEME_INIT_WIDGET(MusicListView);
 }

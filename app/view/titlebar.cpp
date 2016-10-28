@@ -9,6 +9,7 @@
 
 #include "titlebar.h"
 
+#include <QDebug>
 #include <QLabel>
 #include <QHBoxLayout>
 
@@ -19,6 +20,7 @@ DWIDGET_USE_NAMESPACE
 
 TitleBar::TitleBar(QWidget *parent) : QFrame(parent)
 {
+    setFocusPolicy(Qt::NoFocus);
     setObjectName("TitleBar");
 
     auto layout = new QHBoxLayout(this);
@@ -28,7 +30,7 @@ TitleBar::TitleBar(QWidget *parent) : QFrame(parent)
     iconLabel->setObjectName("TitleIcon");
     iconLabel->setFixedSize(20, 20);
 
-    auto search = new DSearchEdit;
+    auto search = new SearchEdit;
     search->setObjectName("TitleSearch");
     search->setFixedSize(278, 26);
     search->setPlaceHolder(tr("Search"));
@@ -39,5 +41,35 @@ TitleBar::TitleBar(QWidget *parent) : QFrame(parent)
     layout->addWidget(search, 0, Qt::AlignHCenter);
     layout->addStretch();
 
+    auto result = this->findChild<QWidget *>("DEditInsideFrame");
+    if (result) {
+        result->setStyleSheet("#DEditInsideFrame{background: rgba(255,255,255,0.3);}");
+    }
+
+    connect(search, &SearchEdit::focusOut,
+            search, &SearchEdit::onFocusOut);
+    connect(search, &SearchEdit::focusIn,
+            search, &SearchEdit::onFocusIn);
     D_THEME_INIT_WIDGET(TitleBar);
+}
+
+SearchEdit::SearchEdit(QWidget *parent) : DSearchEdit(parent)
+{
+    m_result = new SearchResult();
+    m_result->setFixedWidth(278);
+    m_result->hide();
+}
+
+void SearchEdit::onFocusIn()
+{
+    m_result->adjustSize();
+    auto pos = this->mapToGlobal(QPoint(0, this->height() + 2));
+    m_result->show();
+    m_result->move(pos);
+}
+
+void SearchEdit::onFocusOut()
+{
+    m_result->hide();
+    m_result->close();
 }

@@ -27,7 +27,7 @@
     font-size: 11px;
     font-weight: normal;
     font-style: normal;
-    color: #797979;
+    color: #292929;
 }
 
 #MusicAlbum{
@@ -36,7 +36,7 @@
     font-size: 11px;
     font-weight: normal;
     font-style: normal;
-    color: #797979;
+    color: #292929;
 }
 
 #MusicLength{
@@ -45,5 +45,5 @@
     font-size: 11px;
     font-weight: normal;
     font-style: normal;
-    color: #797979;
+    color: #292929;
 }

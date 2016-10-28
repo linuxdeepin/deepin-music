@@ -24,9 +24,7 @@ DWIDGET_USE_NAMESPACE
 
 #include "widget/cover.h"
 
-const QString aaa =
-    "You're the one that i want' the one that i need"
-    "你是我想要的那个唯一，也是我需要的那个唯一\n";
+const QString defaultLyric = "Youth is not a time of life";
 
 
 LyricView::LyricView(QWidget *parent) : QFrame(parent)
@@ -45,7 +43,7 @@ LyricView::LyricView(QWidget *parent) : QFrame(parent)
 
     m_lyric = new QLabel;
     m_lyric->setObjectName("LyricText");
-    setLyricLines(aaa.split("\n"));
+    setLyricLines(defaultLyric.split("\n"));
     m_lyric->setWordWrap(true);
 
     m_scroll->setWidget(m_lyric);
@@ -131,6 +129,7 @@ void LyricView::setLyricLines(const QStringList &lines)
         lyric.append(QString("<p style='line-height:180%'>%1</p>").arg(line));
     }
     m_lyric->setText(lyric);
+    m_lyric->adjustSize();
 }
 
 void LyricView::onLyricChanged(const MusicMeta &info, const QString &lyricPath)
@@ -138,7 +137,7 @@ void LyricView::onLyricChanged(const MusicMeta &info, const QString &lyricPath)
     QFile lyricFile(lyricPath);
     qDebug() << lyricPath;
     if (!lyricFile.open(QIODevice::ReadOnly)) {
-        this->setLyricLines(QStringList());
+        this->setLyricLines(QStringList() << defaultLyric);
         return;
     }
     auto lyric = QString::fromUtf8(lyricFile.readAll());

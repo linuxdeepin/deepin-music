@@ -24,6 +24,7 @@
 #include <QFileDialog>
 #include <QStandardPaths>
 
+#include <DAction>
 #include <dutility.h>
 #include <dthememanager.h>
 #include <DAboutDialog>
@@ -255,6 +256,7 @@ static void slideEdgeWidget(QWidget *right, QRect start, QRect end, bool hide = 
 PlayerFrame::PlayerFrame(QWidget *parent)
     : DWindow(parent), d(new PlayerFramePrivate)
 {
+    setFocusPolicy(Qt::ClickFocus);
     QImage image = QImage((":/image/cover_max.png")).scaled(960, 720);
 
     setBackgroundImage(WidgetHellper::blurImage(image, 50));
@@ -298,6 +300,7 @@ PlayerFrame::PlayerFrame(QWidget *parent)
     D_THEME_INIT_WIDGET(PlayerFrame);
 
     resize(960, 720);
+    d->footer->setFocus();
 }
 
 PlayerFrame::~PlayerFrame()
@@ -536,6 +539,15 @@ void PlayerFrame::paintEvent(QPaintEvent *e)
     painter.setBrush(QBrush(linearGradient));
     painter.strokePath(border, borderPen);
     painter.fillPath(border, QBrush(linearGradient));
+
+    // draw header
+
+    QPoint titleTopLeft(windowRect.x()-2, windowRect.y()-2);
+    QPoint titleBottomRight(windowRect.x() + windowRect.width()+1, windowRect.y() + 40-2);
+    QRect headerRect(titleTopLeft, titleBottomRight);
+    QPainterPath titleBorder;
+    titleBorder.addRoundedRect(headerRect, radius*2, radius*2);
+    painter.fillPath(titleBorder, QBrush(QColor(255,255,255,255*3/5)));
 
     DWindow::paintEvent(e);
 }

@@ -52,7 +52,7 @@ void Cover::paintEvent(QPaintEvent * e)
 void Cover::setBackgroundImage(const QPixmap &bk)
 {
 //    return;
-    QImage bkImage = bk.toImage().scaled(200, 200);
+    QImage bkImage = bk.toImage().scaled(200, 200, Qt::KeepAspectRatioByExpanding);
     QPixmap maskPixmap(bkImage.size());
     maskPixmap.fill(Qt::transparent);
     QPainterPath path;

@@ -11,6 +11,11 @@
 #define TITLEBAR_H
 
 #include <QFrame>
+#include <dsearchedit.h>
+
+#include "widget/searchresult.h"
+
+DWIDGET_USE_NAMESPACE
 
 class TitleBar : public QFrame
 {
@@ -21,6 +26,23 @@ public:
 signals:
 
 public slots:
+};
+
+
+class SearchEdit : public DSearchEdit
+{
+    Q_OBJECT
+public:
+    explicit SearchEdit(QWidget *parent = 0);
+
+signals:
+
+public slots:
+    void onFocusIn();
+    void onFocusOut();
+
+private:
+    SearchResult *m_result = nullptr;
 };
 
 #endif // TITLEBAR_H

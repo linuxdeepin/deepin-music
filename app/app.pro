@@ -75,7 +75,9 @@ SOURCES += \
     view/widget/modebuttom.cpp \
     core/lyricservice.cpp \
     core/mediadatabase.cpp \
-    view/helper/widgethellper.cpp
+    view/helper/widgethellper.cpp \
+    view/widget/searchresult.cpp \
+    view/widget/fitsizelstview.cpp
 
 HEADERS += \
     view/playerframe.h \
@@ -105,7 +107,9 @@ HEADERS += \
     view/widget/modebuttom.h \
     core/lyricservice.h \
     core/mediadatabase.h \
-    view/helper/widgethellper.h
+    view/helper/widgethellper.h \
+    view/widget/searchresult.h \
+    view/widget/fitsizelstview.h
 
 RESOURCES += \
     resource/theme/theme.qrc \

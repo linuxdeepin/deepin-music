@@ -88,7 +88,7 @@ InfoDialog::InfoDialog(const MusicMeta &info, QWidget *parent) : DAbstractDialog
     layout->addLayout(infogridLayout);
     layout->addStretch();
 
-    D_THEME_INIT_WIDGET(InfoDialog);
+    D_THEME_INIT_WIDGET(Widget/InfoDialog);
 
     connect(closeBt, &DWindowCloseButton::clicked, this, &DAbstractDialog::close);
 }
