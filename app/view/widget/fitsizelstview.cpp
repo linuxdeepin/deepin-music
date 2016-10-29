@@ -21,5 +21,6 @@ QSize FitSizeLstView::sizeHint() const
 //    int nToShow = _nItemsToShow < model()->rowCount() ? _nItemsToShow : model()->rowCount();
     int nToShow = model()->rowCount();
     qDebug() << nToShow;
+    qDebug () << nToShow * sizeHintForRow(0) << minimumSize();
     return QSize(width(), nToShow * sizeHintForRow(0));
 }

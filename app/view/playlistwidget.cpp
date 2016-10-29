@@ -82,6 +82,7 @@ void PlaylistWidget::initPlaylist(QList<QSharedPointer<Playlist> > playlists, QS
             Q_ASSERT(m_listview->count() > 0);
             m_listview->setCurrentItem(m_listview->item(0));
         });
+        connect(playlistItem, &PlayListItem::playall, this, &PlaylistWidget::playall);
 
         if (last->id() == playlist->id()) {
             current = item;
@@ -109,11 +110,14 @@ void PlaylistWidget::onPlaylistAdded(QSharedPointer<Playlist> playlist)
         m_listview->removeItemWidget(item);
         delete m_listview->takeItem(m_listview->row(item));
     });
-    m_listview->scrollToBottom();
 
+    connect(playlistItem, &PlayListItem::playall, this, &PlaylistWidget::playall);
+    m_listview->scrollToBottom();
+    m_listview->setCurrentItem(item);
     if (playlist->hide()) {
         m_listview->setItemHidden(item, true);
     }
+    emit selectPlaylist(playlist);
 }
 
 void PlaylistWidget::onCurrentChanged(QSharedPointer<Playlist> playlist)

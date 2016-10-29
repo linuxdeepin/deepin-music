@@ -105,6 +105,8 @@ public slots:
     //! ui: menu interface
     void onRequestMusiclistMenu(MusicItem* item, const QPoint &pos);
 
+    void onSearchText(const QString text);
+    void onLocateMusic(const QString& hash);
 
 public slots:
     void onImportMusicDirectory();

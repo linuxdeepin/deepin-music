@@ -4,7 +4,7 @@ SearchResult{
 }
 
 #SearchResultList{
-    background-color: rgba(255, 255, 0, 0.02);
+    background-color: rgba(255, 255, 255, 0.0);
     border: none;
 }
 #SearchResultList::item
@@ -23,19 +23,23 @@ SearchResult{
     background-color: #2ca7f8;
 }
 #SearchResultList::item:hover {
-    background-color: #2ca7f8;
 }
 
 #SearchResultAction{
+    margin: 0 7 0 7;
     border: none;
-    background-color: rgba(255, 255, 0, 0.02);
+    background-color: rgba(255, 255, 255, 0.0);
 }
 #SearchResultAction:hover{
     border: none;
-    background-color: #2ca7f8;
 }
 #SearchResultAction:press{
     border: none;
     background-color: rgba(255, 255, 0, 0.04);
+}
+#SearchResultAction:checked{
+    color: white;
+    border: none;
+    background-color: #2ca7f8;
 }
 

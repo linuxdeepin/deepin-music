@@ -59,7 +59,8 @@ public:
 
     bool isLast(const MusicMeta &info);
     bool contains(const MusicMeta &info);
-    MusicList allmusic();
+    MusicMetaList allmusic();
+    void reset(const MusicMetaList&);
 
 public slots:
     void buildHistory(const QString &last);
@@ -69,6 +70,8 @@ public slots:
     void removeMusic(const MusicMeta &info);
     void sortBy(Playlist::SortType sortType);
     void resort();
+
+    void searchTitle(const QString& title);
 
     //! private interface
 public:

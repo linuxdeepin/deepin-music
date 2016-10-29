@@ -12,6 +12,8 @@
 
 #include <QObject>
 
+#include "../model/musiclistmodel.h"
+
 class MusicMeta;
 class PlaylistMeta;
 class MediaDatabase : public QObject
@@ -23,6 +25,10 @@ public:
     static QStringList allPlaylistDisplayName();
     QList<PlaylistMeta> allPlaylist();
 signals:
+
+public slots:
+    static QList<MusicMeta> searchMusicTitle(const QString &title, int limit);
+    static QList<MusicMeta> searchMusicInfo(const QString &title, int limit);
 
 public slots:
     static void addPlaylist(const PlaylistMeta &palylistMeta);

@@ -13,9 +13,16 @@
 #include <QPixmap>
 #include <QImage>
 
-namespace WidgetHellper
+namespace WidgetHelper
 {
-    QPixmap blurImage(const QImage &image, int radius);
+
+QPixmap blurImage(const QImage &image, int radius);
+
+void slideRight2LeftWidget(QWidget *left, QWidget *right, int delay);
+void slideBottom2TopWidget(QWidget *top, QWidget *bottom, int delay);
+void slideTop2BottomWidget(QWidget *top, QWidget *bottom, int delay);
+void slideEdgeWidget(QWidget *right, QRect start, QRect end, int delay, bool hide = false);
+
 }
 
 #endif // WIDGETHELLPER_H

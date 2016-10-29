@@ -41,6 +41,7 @@ AppPresenter::AppPresenter(QObject *parent)
     : QObject(parent), d(new AppPresenterPrivate)
 {
     qRegisterMetaType<PlaylistMeta>();
+    qRegisterMetaType<MusicMetaList>();
     qRegisterMetaType<MusicMeta>();
     qRegisterMetaType<QSharedPointer<Playlist> >();
     qRegisterMetaType<QList<QSharedPointer<Playlist> > >();
@@ -107,8 +108,6 @@ AppPresenter::AppPresenter(QObject *parent)
         MusicMeta favInfo(info);
         favInfo.favourite = d->playlistMgr.playlist(FavMusicListID)->contains(info);
         emit this->musicPlayed(palylist, favInfo);
-
-        qDebug() << "get lyric cover of" << info.artist;
         emit this->requestLyricCoverSearch(info);
     });
 
@@ -206,6 +205,24 @@ void AppPresenter::onRequestMusiclistMenu(MusicItem *item, const QPoint &pos)
     auto favlist = d->playlistMgr.playlist(FavMusicListID);
 
     emit this->musiclistMenuRequested(item, pos, selectedlist, favlist, newlists);
+}
+
+void AppPresenter::onSearchText(const QString text)
+{
+    auto searchList = d->playlistMgr.playlist(SearchMusicListID);
+    auto resultList = MediaDatabase::searchMusicInfo(text, 100);
+    searchList->reset(resultList);
+
+    d->playlistMgr.setSelectedPlaylist(searchList);
+    //    emit this->selectedPlaylistChanged(searchList);
+}
+
+void AppPresenter::onLocateMusic(const QString &hash)
+{
+    auto allList = d->playlistMgr.playlist(AllMusicListID);
+
+    d->playlistMgr.setSelectedPlaylist(allList);
+    onMusicPlay(allList, allList->music(hash));
 }
 
 void AppPresenter::onPlaylistAdd(bool edit)

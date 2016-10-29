@@ -28,7 +28,6 @@
 static QString cacheLyricPath(const MusicMeta &info)
 {
     auto cacheLyricDir = MusicApp::cachePath() + "/lyric";
-    // TODO: key is what?
     return cacheLyricDir + "/" + info.hash + ".lyric";
 }
 
@@ -47,15 +46,15 @@ static int doSyncGet(const QString &rootUrl, QByteArray &result)
     QScopedPointer<QNetworkAccessManager> connection(new QNetworkAccessManager);
     QScopedPointer<QNetworkReply> reply(connection->get(url));
 
-    qDebug() << "begin get" << url.url();
+//    qDebug() << "begin get" << url.url();
     QEventLoop waitLoop;
     QObject::connect(reply.data(), SIGNAL(finished()), &waitLoop, SLOT(quit()));
     waitLoop.exec();
-    qDebug() << "end get" << url.url();
+//    qDebug() << "end get" << url.url();
 
     int errorCode = reply->error();
     if (errorCode != 0) {
-        qWarning() << "get" << url.url() << reply->errorString();
+//        qWarning() << "get" << url.url() << reply->errorString();
         return errorCode;
     }
 
@@ -83,7 +82,6 @@ LyricService::LyricService(QObject *parent) : QObject(parent)
 
 int LyricService::searchCacheLyric(const MusicMeta &info)
 {
-    qDebug() << cacheLyricPath(info);
     QFileInfo lyric(cacheLyricPath(info));
     if (!lyric.exists() || lyric.size() < 1) {
         emit lyricSearchFinished(info, "");
@@ -95,7 +93,6 @@ int LyricService::searchCacheLyric(const MusicMeta &info)
 
 int LyricService::searchCacheCover(const MusicMeta &info)
 {
-    qDebug() << cacheCoverPath(info);
     QFileInfo cover(cacheCoverPath(info));
     if (!cover.exists() || cover.size() < 1) {
         emit coverSearchFinished(info, ":/image/cover_max.png");
@@ -104,6 +101,7 @@ int LyricService::searchCacheCover(const MusicMeta &info)
     emit coverSearchFinished(info, cacheCoverPath(info));
     return 0;
 }
+
 //!
 //! \brief LyricService::searchLyric
 //! \param info
@@ -119,8 +117,6 @@ void LyricService::searchLyricCover(const MusicMeta &info)
     if (0 != searchCacheCover(info)) {
         needCover = true;
     }
-
-    qDebug() << needlyric << needCover;
     if (!needCover && !needlyric) {
         return;
     }

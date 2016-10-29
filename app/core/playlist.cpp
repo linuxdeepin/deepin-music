@@ -111,13 +111,25 @@ bool Playlist::hide()
     return listmeta.hide;
 }
 
-MusicList Playlist::allmusic()
+MusicMetaList Playlist::allmusic()
 {
-    MusicList mlist;
+    MusicMetaList mlist;
     for (auto id : listmeta.musicIds) {
         mlist << listmeta.musicMap.value(id);
     }
     return mlist;
+}
+
+void Playlist::reset(const MusicMetaList& metas)\
+{
+    qDebug() << listmeta.musicIds;
+    listmeta.musicIds.clear();
+    listmeta.musicMap.clear();
+
+    for (auto &meta : metas) {
+        listmeta.musicIds << meta.hash;
+        listmeta.musicMap.insert(meta.hash, meta);
+    }
 }
 
 void Playlist::buildHistory(const QString &last)
@@ -211,7 +223,7 @@ void Playlist::appendMusic(const MusicMeta &meta)
 void Playlist::removeMusic(const MusicMeta &info)
 {
     if (info.hash.isEmpty()) {
-        qCritical() << "Cannot remove empty id";
+        qCritical() << "Cannot remove empty id" << info.hash << info.title;
         return;
     }
     if (!listmeta.musicMap.contains(info.hash)) {
@@ -311,4 +323,9 @@ void Playlist::resort()
     for (auto meta : sortList) {
         listmeta.musicIds << meta.hash;
     }
+}
+
+void Playlist::searchTitle(const QString &title)
+{
+
 }

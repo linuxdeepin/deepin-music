@@ -12,7 +12,7 @@
     left: 0px; right: 0px;
 }
 #FooterProgress::handle:horizontal {
-    background: #2ca7f8;
+    background: red;
     margin: 5px -5px; /* expand outside the groove */
 }
 #FooterProgress::add-page:horizontal {

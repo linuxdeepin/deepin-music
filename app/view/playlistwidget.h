@@ -27,6 +27,7 @@ public slots:
     void onCurrentChanged(QSharedPointer<Playlist> playlist);
 
 signals:
+    void playall(QSharedPointer<Playlist> palylist);
     void addPlaylist(bool editmode);
     void selectPlaylist(QSharedPointer<Playlist>);
 

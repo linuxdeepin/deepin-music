@@ -13,8 +13,8 @@
 #include <dabstractdialog.h>
 DWIDGET_USE_NAMESPACE
 
-class FitSizeLstView;
-class QPushButton;
+class QListView;
+class PushButton;
 class QStringListModel;
 
 class SearchResult : public DAbstractDialog
@@ -22,14 +22,27 @@ class SearchResult : public DAbstractDialog
     Q_OBJECT
 public:
     explicit SearchResult(QWidget *parent = 0);
+    void autoResize();
 
-    virtual void focusInEvent(QFocusEvent *event);
+    void setSearchString(const QString& str);
+    void setResultList(const QStringList &titlelist, const QStringList &hashlist);
+
+    bool isSelected();
+    void selectUp();
+    void selectDown();
+
+
+    virtual void leaveEvent(QEvent *event);
 signals:
+    void locateMusic(const QString& hash);
+    void searchText(const QString& text);
 
 public slots:
+    void onReturnPressed();
+
 private:
-    FitSizeLstView      *m_searchResult = nullptr;
-    QPushButton         *m_doSearchButton = nullptr;
+    QListView           *m_searchResult = nullptr;
+    PushButton          *m_doSearchButton = nullptr;
     QStringListModel    *m_model = nullptr;
 };
 

@@ -1,6 +1,6 @@
 #PlaylistWidget{
     border: 1px solid rgba(0, 0, 0, 0.1);
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.7);
 }
 
 #PlaylistWidgetAdd{

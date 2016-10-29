@@ -1,5 +1,7 @@
 DEFINES += QT_MESSAGELOGCONTEXT
 
+include($$PWD/../vendor/vendor.pri)
+
 QT       += core gui widgets svg dbus multimedia multimediawidgets xml network sql
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -65,7 +67,6 @@ SOURCES += \
     view/playlistview.cpp \
     view/playlistwidget.cpp \
     core/mediafilemonitor.cpp \
-    view/resizablestackedwidget.cpp \
     core/player.cpp \
     view/widget/slider.cpp \
     view/widget/infodialog.cpp \
@@ -77,7 +78,9 @@ SOURCES += \
     core/mediadatabase.cpp \
     view/helper/widgethellper.cpp \
     view/widget/searchresult.cpp \
-    view/widget/fitsizelstview.cpp
+    view/widget/fitsizelstview.cpp \
+    view/widget/searchedit.cpp \
+    view/widget/pushbutton.cpp
 
 HEADERS += \
     view/playerframe.h \
@@ -97,7 +100,6 @@ HEADERS += \
     view/playlistview.h \
     view/playlistwidget.h \
     core/mediafilemonitor.h \
-    view/resizablestackedwidget.h \
     core/player.h \
     view/widget/slider.h \
     view/widget/infodialog.h \
@@ -109,7 +111,9 @@ HEADERS += \
     core/mediadatabase.h \
     view/helper/widgethellper.h \
     view/widget/searchresult.h \
-    view/widget/fitsizelstview.h
+    view/widget/fitsizelstview.h \
+    view/widget/searchedit.h \
+    view/widget/pushbutton.h
 
 RESOURCES += \
     resource/theme/theme.qrc \

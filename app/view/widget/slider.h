@@ -11,7 +11,7 @@
 #define SLIDER_H
 
 #include <QSlider>
-
+#include <QTimer>
 class Slider : public QSlider
 {
     Q_OBJECT
@@ -19,11 +19,15 @@ public:
     explicit Slider(QWidget *parent = 0);
     explicit Slider(Qt::Orientation orientation, QWidget *parent = Q_NULLPTR);
 
+    void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     void mouseMoveEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
 signals:
 
 public slots:
+
+private:
+    QTimer  m_delaySetValueTimer;
 };
 
 #endif // SLIDER_H

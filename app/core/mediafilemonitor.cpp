@@ -25,6 +25,62 @@
 #include <taglib.h>
 #include <tpropertymap.h>
 
+#include "../../vendor/src/chinese2pinyin/chinese2pinyin.h"
+
+inline bool isAlphabeta(const QChar &c)
+{
+    QRegExp re("[A-Za-z]*");
+    return re.exactMatch(c);
+}
+
+inline bool isNumber(const QChar &c)
+{
+    QRegExp re("[0-9]*");
+    return re.exactMatch(c);
+}
+
+inline bool isChinese(const QChar &c)
+{
+    return c.unicode() < 0x9FBF && c.unicode() > 0x4E00;
+}
+
+inline QString toChinese(const QString &c)
+{
+    QString pinyin = Pinyin::Chinese2Pinyin(c);
+    if (pinyin.length() >= 2
+            && isNumber(pinyin.at(pinyin.length() - 1))) {
+        return pinyin.left(pinyin.length() - 1);
+    }
+    return pinyin;
+}
+
+QStringList simpleSplit(QString &pinyin)
+{
+    QStringList wordList;
+    bool isLastAlphabeta = false;
+    for (auto &c : pinyin) {
+        bool isCurAlphabeta = isAlphabeta(c);
+        if (isCurAlphabeta) {
+            if (!isLastAlphabeta) {
+                wordList << c;
+            } else {
+                wordList.last().append(c);
+            }
+            continue;
+        }
+        isLastAlphabeta = isCurAlphabeta;
+        if (isNumber(c)) {
+            wordList << c;
+            continue;
+        }
+        if (isChinese(c)) {
+            wordList << toChinese(c);
+            continue;
+        }
+    }
+    return wordList;
+}
+
 #include "playlist.h"
 
 static QMap<QString, bool>  sSupportedSuffix;
@@ -106,17 +162,24 @@ void MediaFileMonitor::importPlaylistFiles(QSharedPointer<Playlist> playlist, co
 
         auto current = QDateTime::currentDateTime();
         info.timestamp = current.toTime_t()  * 1000 + current.time().msec();
-        qDebug() << info.timestamp;
         info.length = f.audioProperties()->length();
         info.size = f.file()->length();
         info.filetype =  QFileInfo(url).suffix();
 
-        qDebug() << info.title << info.artist << info.album
-                 << f.tag()->properties().toString().toCString(true);
+//        qDebug() << info.title << info.artist << info.album
+//                 << f.tag()->properties().toString().toCString(true);
 
         if (info.title.isEmpty()) {
             info.title = QFileInfo(url).baseName();
         }
+
+        for (auto &str : simpleSplit(info.title)) {
+            info.pinyinTitle += toChinese(str);
+            info.pinyinTitleShort += str.at(0);
+        }
+        qDebug() << info.pinyinTitle
+                 << info.pinyinTitleShort
+                 << simpleSplit(info.title);
 
         if (info.artist.isEmpty()) {
 //            info.artist = tr("Unknow Artist");

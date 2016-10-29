@@ -1,6 +1,6 @@
 #MusicListView{
     background-color: transparent;
-    border-top: 1px solid rgba(0, 0, 0, 0.04);
+    border: none;
     show-decoration-selected: 1;
     selection-color: white;
     selection-background-color: #2ca7f8;

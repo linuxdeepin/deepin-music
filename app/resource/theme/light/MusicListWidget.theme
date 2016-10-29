@@ -6,28 +6,30 @@
     border: 0px solid red;
 }
 
+#MusicListSort{
+    border: 2px solid red;
+    background-color:  rgba(255, 255, 255, 0.4);
+}
+
 #MusicListEmptyHits{
-    font-size: 20px;
-    color: #979797;
+    font-size: 24px;
+    color: #474747;
 }
 
 #MusicListPlayAll{
     padding: 0 10 0 10;
-    qproperty-icon: url(:/image/play_all.png);
     border: none;
     border-radius: 3px;
+    qproperty-icon: url(:/image/play_all.png);
 }
 #MusicListPlayAll:hover{
-    background-color: qlineargradient( x1:0 y1:0, x2:0 y2:1, stop:0 #ffffff, stop:1 #fdfdfd);
     border: 1px solid rgba(0, 0, 0, 0.08);
+    background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1,
+    stop:0 rgba(255, 255, 255, 40%), stop:1 rgba(255, 255, 255, 20%));
 }
 #MusicListPlayAll:pressed{
     color: #2ca7f8;
-    background-color: qlineargradient( x1:0 y1:0, x2:0 y2:1, stop:0 #ffffff, stop:1 #fdfdfd);
     border: 1px solid rgba(0, 0, 0, 0.08);
-}
-#MusicListSort {
-    font-size: 12px;
-    color: #202020;
-    border: none;
+    background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1,
+    stop:0 rgba(255, 255, 255, 80%), stop:1 rgba(255, 255, 255, 60%));
 }

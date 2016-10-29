@@ -24,6 +24,7 @@ public:
 signals:
     void rename(const QString& newNameA);
     void remove();
+    void playall(QSharedPointer<Playlist> palylist);
 
 public slots:
     void showContextMenu(const QPoint &pos);

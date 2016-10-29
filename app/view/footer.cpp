@@ -269,6 +269,17 @@ Footer::Footer(QWidget *parent) : QFrame(parent)
     });
 }
 
+void Footer::enableControl(bool enable)
+{
+    d->btPrev->setEnabled(enable);
+    d->btNext->setEnabled(enable);
+    d->btFavorite->setEnabled(enable);
+    d->btLyric->setEnabled(enable);
+    d->btPlay->setEnabled(enable);
+    d->btPlayMode->setEnabled(enable);
+    d->cover->blockSignals(!enable);
+}
+
 void Footer::onMusicAdded(QSharedPointer<Playlist> palylist, const MusicMeta &info)
 {
     if (palylist->id() == FavMusicListID)
@@ -333,7 +344,7 @@ void Footer::onProgressChanged(qint64 value, qint64 duration)
 void Footer::onCoverChanged(const MusicMeta &info, const QString &coverPath)
 {
     d->cover->setStyleSheet(
-                QString("#FooterCover {image: url(%1) no-repeat center center fixed;}").arg(coverPath));
+        QString("#FooterCover {image: url(%1) no-repeat center center fixed;}").arg(coverPath));
     this->style()->unpolish(d->cover);
     this->style()->polish(d->cover);
     d->cover->repaint();

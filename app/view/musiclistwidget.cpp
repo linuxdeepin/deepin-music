@@ -46,8 +46,10 @@ MusicListWidget::MusicListWidget(QWidget *parent) : QFrame(parent)
     btPlayAll->setObjectName("MusicListPlayAll");
     btPlayAll->setText(tr("Play All"));
     btPlayAll->setFixedHeight(28);
+    btPlayAll->setFocusPolicy(Qt::NoFocus);
 
     m_sortCombo = new DComboBox;
+    m_sortCombo->setFixedHeight(24);
     m_sortCombo->setObjectName("MusicListSort");
     m_sortCombo->addItem(tr("Time added"));
     m_sortCombo->addItem(tr("Title"));
@@ -68,6 +70,10 @@ MusicListWidget::MusicListWidget(QWidget *parent) : QFrame(parent)
 
 
     D_THEME_INIT_WIDGET(MusicListWidget);
+    m_sortCombo->setStyleSheet(
+        DThemeManager::instance()->getQssForWidget("Widget/ComboBox")
+    );
+
     connect(m_sortCombo, static_cast<void (DComboBox::*)(int)>(&DComboBox::activated),
     this, [ = ](int sortType) {
 
@@ -131,6 +137,7 @@ void MusicListWidget::onMusicPlayed(QSharedPointer<Playlist> palylist, const Mus
         return;
     }
     musicItem->onMusicPlay();
+    m_musiclist->setCurrentItem(nullptr);
     m_musiclist->setCurrentItem(item);
 }
 

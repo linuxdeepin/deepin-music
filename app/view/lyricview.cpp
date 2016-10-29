@@ -134,14 +134,15 @@ void LyricView::setLyricLines(const QStringList &lines)
 
 void LyricView::onLyricChanged(const MusicMeta &info, const QString &lyricPath)
 {
+    if (lyricPath.isEmpty()) { return; }
     QFile lyricFile(lyricPath);
-    qDebug() << lyricPath;
     if (!lyricFile.open(QIODevice::ReadOnly)) {
         this->setLyricLines(QStringList() << defaultLyric);
         return;
     }
     auto lyric = QString::fromUtf8(lyricFile.readAll());
     this->setLyricLines(lyric.split("\n"));
+    lyricFile.close();
 }
 
 void LyricView::onCoverChanged(const MusicMeta &info, const QString &coverPath)

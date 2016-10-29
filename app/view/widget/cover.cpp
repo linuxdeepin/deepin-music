@@ -29,8 +29,8 @@ Cover::Cover(QWidget *parent) : QWidget(parent)
 
 void Cover::paintEvent(QPaintEvent * e)
 {
-//    QWidget::paintEvent(e);
-//    return;
+    QWidget::paintEvent(e);
+
     QPainter painter(this);
     auto radius = 4;
     painter.setRenderHint(QPainter::Antialiasing);
@@ -51,7 +51,6 @@ void Cover::paintEvent(QPaintEvent * e)
 
 void Cover::setBackgroundImage(const QPixmap &bk)
 {
-//    return;
     QImage bkImage = bk.toImage().scaled(200, 200, Qt::KeepAspectRatioByExpanding);
     QPixmap maskPixmap(bkImage.size());
     maskPixmap.fill(Qt::transparent);
@@ -86,7 +85,7 @@ void Cover::setBackgroundImage(const QPixmap &bk)
     QTemporaryFile bkTmp;
     maskImage.save(&bkTmp, "png");
     bkTmp.close();
-    qDebug() << bkTmp.fileName();
+    qDebug() << "fixme: save tmp cover" << bkTmp.fileName();
     m_Background = QPixmap(bkTmp.fileName());
     bkTmp.remove();
 }

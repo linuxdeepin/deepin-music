@@ -7,21 +7,15 @@
  * (at your option) any later version.
  **/
 
-#pragma once
+#include "pushbutton.h"
 
-#include <QStackedWidget>
-
-class ResizableStackedWidget : public QStackedWidget
+PushButton::PushButton(QWidget *parent) : QPushButton(parent)
 {
-    Q_OBJECT
-public:
-    explicit ResizableStackedWidget(QWidget *parent = 0);
 
-    void addWidget(QWidget *pWidget);
-signals:
+}
 
-public slots:
-    void onCurrentChanged(int index);
-
-};
-
+void PushButton::enterEvent(QEvent *event)
+{
+    QPushButton::enterEvent(event);
+    emit entered();
+}

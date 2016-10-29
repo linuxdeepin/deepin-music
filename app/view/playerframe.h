@@ -12,8 +12,6 @@
 
 #include <DWindow>
 #include <QScopedPointer>
-#include <QMainWindow>
-#include "resizablestackedwidget.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -44,6 +42,9 @@ public slots:
 
 private:
     void initMenu();
+
+    // disable control
+    void disableControl();
 
     QScopedPointer<PlayerFramePrivate> d;
 };

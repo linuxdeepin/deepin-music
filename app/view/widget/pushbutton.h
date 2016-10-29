@@ -7,22 +7,23 @@
  * (at your option) any later version.
  **/
 
-#ifndef TITLEBAR_H
-#define TITLEBAR_H
+#ifndef PUSHBUTTON_H
+#define PUSHBUTTON_H
 
-#include <QFrame>
+#include <QPushButton>
 
-class TitleBar : public QFrame
+class PushButton : public QPushButton
 {
     Q_OBJECT
 public:
-    explicit TitleBar(QWidget *parent = 0);
+    explicit PushButton(QWidget *parent = 0);
+
+    virtual void enterEvent(QEvent *event);
 
 signals:
-    void searchText(const QString& text);
-    void locateMusic(const QString& hash);
+    void entered();
 
 public slots:
 };
 
-#endif // TITLEBAR_H
+#endif // PUSHBUTTON_H

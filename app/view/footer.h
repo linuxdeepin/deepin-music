@@ -23,20 +23,11 @@ class Footer : public QFrame
 public:
     explicit Footer(QWidget *parent = 0);
 
+    void enableControl(bool enable=true);
+
 signals:
-    //!
-    //! \brief initFooter
-    //! \param favlist
-    //! \param current
-    //! \param mode
-    //!
     void initFooter(QSharedPointer<Playlist> favlist, QSharedPointer<Playlist> current, int mode);
 
-    //!
-    //! \brief changeProgress
-    //! \param value
-    //! \param duration
-    //!
     void changeProgress(qint64 value, qint64 duration);
 
     void play(QSharedPointer<Playlist> palylist, const MusicMeta &info);

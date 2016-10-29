@@ -7,22 +7,34 @@
  * (at your option) any later version.
  **/
 
-#ifndef TITLEBAR_H
-#define TITLEBAR_H
+#ifndef SEARCHEDIT_H
+#define SEARCHEDIT_H
 
-#include <QFrame>
+#include <dsearchedit.h>
 
-class TitleBar : public QFrame
+DWIDGET_USE_NAMESPACE
+
+class SearchResult;
+class SearchEdit : public DSearchEdit
 {
     Q_OBJECT
 public:
-    explicit TitleBar(QWidget *parent = 0);
+    explicit SearchEdit(QWidget *parent = 0);
 
+    virtual void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
 signals:
     void searchText(const QString& text);
     void locateMusic(const QString& hash);
 
 public slots:
+    void onFocusIn();
+    void onFocusOut();
+    void onTextChanged();
+    void onReturnPressed();
+
+private:
+    SearchResult *m_result = nullptr;
 };
 
-#endif // TITLEBAR_H
+
+#endif // SEARCHEDIT_H

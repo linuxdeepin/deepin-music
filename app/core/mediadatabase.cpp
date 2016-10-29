@@ -39,6 +39,7 @@ static bool createConnection()
     query.exec("CREATE TABLE IF NOT EXISTS music (hash TEXT primary key not null, "
                "timestamp INTEGER,"
                "title VARCHAR(256), artist VARCHAR(256),"
+               "py_title VARCHAR(256), py_title_short VARCHAR(256),"
                "album VARCHAR(256), filetype VARCHAR(32),"
                "size INTEGER, track INTEGER,"
                "favourite INTEGER(32),"
@@ -131,6 +132,65 @@ QList<PlaylistMeta> MediaDatabase::allPlaylist()
         list << palylistMeta;
     }
     return list;
+}
+
+static QList<MusicMeta> searchTitle(const QString &queryString)
+{
+    QList<MusicMeta> list;
+    QSqlQuery query;
+    query.prepare(queryString);
+    if (! query.exec()) {
+        qDebug() << query.executedQuery();
+        qWarning() << query.lastError();
+        return list;
+    }
+    qDebug() << query.executedQuery();
+
+    while (query.next()) {
+        MusicMeta musicMeta;
+        musicMeta.hash = query.value(0).toString();
+        musicMeta.localpath = query.value(1).toString();
+        musicMeta.title = query.value(2).toString();
+        musicMeta.artist = query.value(3).toString();
+        musicMeta.album = query.value(4).toString();
+        musicMeta.filetype = query.value(5).toString();
+        musicMeta.length = query.value(6).toInt();
+        musicMeta.size = query.value(7).toInt();
+        musicMeta.timestamp = query.value(8).toInt();
+        list << musicMeta;
+    }
+
+    return list;
+}
+
+QList<MusicMeta> MediaDatabase::searchMusicTitle(const QString &title, int limit)
+{
+    auto matchReg = QString("\"%%1%\" ").arg(title);
+    QString queryString = QString("SELECT hash, localpath, title, artist, album, "
+                                  "filetype, length, size, timestamp "
+                                  "FROM music WHERE "
+                                  "title LIKE  " + matchReg +
+                                  "OR py_title LIKE  " + matchReg +
+                                  "OR py_title_short LIKE  " + matchReg +
+                                  "LIMIT " + QString("%1").arg(limit));
+
+    return searchTitle(queryString);
+}
+
+QList<MusicMeta> MediaDatabase::searchMusicInfo(const QString &title, int limit)
+{
+    auto matchReg = QString("\"%%1%\" ").arg(title);
+    QString queryString = QString("SELECT hash, localpath, title, artist, album, "
+                                  "filetype, length, size, timestamp "
+                                  "FROM music WHERE "
+                                  "title LIKE  " + matchReg +
+                                  "OR py_title LIKE  " + matchReg +
+                                  "OR py_title_short LIKE  " + matchReg +
+                                  "OR artist LIKE " + matchReg +
+                                  "OR album LIKE " + matchReg +
+                                  "LIMIT " + QString("%1").arg(limit));
+
+    return searchTitle(queryString);
 }
 
 void MediaDatabase::addPlaylist(const PlaylistMeta &palylistMeta)
@@ -254,11 +314,13 @@ void MediaDatabase::addMusicMeta(const MusicMeta &meta)
     QSqlQuery query;
     query.prepare("INSERT INTO music ("
                   "hash, timestamp, title, artist, album, "
-                  "filetype, size, track, favourite, localpath, length"
+                  "filetype, size, track, favourite, localpath, length, "
+                  "py_title, py_title_short "
                   ") "
                   "VALUES ("
                   ":hash, :timestamp, :title, :artist, :album, "
-                  ":filetype, :size, :track, :favourite, :localpath, :length"
+                  ":filetype, :size, :track, :favourite, :localpath, :length, "
+                  ":py_title, :py_title_short "
                   ")");
     query.bindValue(":hash", meta.hash);
     query.bindValue(":timestamp", meta.timestamp);
@@ -271,6 +333,8 @@ void MediaDatabase::addMusicMeta(const MusicMeta &meta)
     query.bindValue(":favourite", meta.favourite);
     query.bindValue(":localpath", meta.localpath);
     query.bindValue(":length", meta.length);
+    query.bindValue(":py_title", meta.pinyinTitle);
+    query.bindValue(":py_title_short", meta.pinyinTitleShort);
 
     if (! query.exec()) {
         qDebug() << query.lastError();

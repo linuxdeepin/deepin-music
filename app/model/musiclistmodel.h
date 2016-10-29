@@ -22,6 +22,8 @@ public:
     QString hash;
     QString localpath;
     QString title;
+    QString pinyinTitle;
+    QString pinyinTitleShort;
     QString artist;
     QString album;
     QString filetype;
@@ -32,12 +34,13 @@ public:
     bool    favourite;
 };
 
-typedef QList<MusicMeta>    MusicList;
+typedef QList<MusicMeta>  MusicMetaList;
 
 class PlaylistMeta
 {
 public:
-    PlaylistMeta() {
+    PlaylistMeta()
+    {
         editmode = false;
         readonly = false;
         hide = false;
@@ -85,6 +88,7 @@ inline QString sizeString(qint64 sizeByte)
 }
 
 Q_DECLARE_METATYPE(MusicMeta);
+Q_DECLARE_METATYPE(MusicMetaList);
 Q_DECLARE_METATYPE(PlaylistMeta);
 
 #endif // MUSICLISTMODEL_H

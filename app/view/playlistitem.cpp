@@ -121,12 +121,15 @@ void PlayListItem::showContextMenu(const QPoint &pos)
     auto playact = menu.addAction(tr("Play"));
     playact->setDisabled(0 == m_data->length());
 
-    if (m_data->id() != "All" && m_data->id() != "Fav") {
+    if (m_data->id() != AllMusicListID && m_data->id() != FavMusicListID) {
         menu.addAction(tr("Rename"));
         menu.addAction(tr("Delete"));
     }
 
     connect(&menu, &DMenu::triggered, this, [ = ](DAction * action) {
+        if (action->text() == "Play") {
+            emit this->playall(m_data);
+        }
         if (action->text() == "Rename") {
             QTimer::singleShot(0, this, [ = ] {
                 m_titleedit->setFocus();
