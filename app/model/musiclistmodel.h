@@ -22,10 +22,16 @@ public:
     QString hash;
     QString localpath;
     QString title;
-    QString pinyinTitle;
-    QString pinyinTitleShort;
     QString artist;
     QString album;
+
+    QString pinyinTitle;
+    QString pinyinTitleShort;
+    QString pinyinArtist;
+    QString pinyinArtistShort;
+    QString pinyinAlbum;
+    QString pinyinAlbumShort;
+
     QString filetype;
     qint64  timestamp;
     qint64  length;

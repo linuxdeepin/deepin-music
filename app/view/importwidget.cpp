@@ -12,7 +12,6 @@
 #include <QVBoxLayout>
 #include <QFileDialog>
 #include <QLabel>
-#include <QDebug>
 
 #include <dthememanager.h>
 #include <dbasebutton.h>

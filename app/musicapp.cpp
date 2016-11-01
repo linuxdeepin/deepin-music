@@ -13,14 +13,11 @@
 #include <QThread>
 #include <QApplication>
 #include <QStandardPaths>
-#include <QDebug>
 
 #include <dutility.h>
 
 #include "presenter/apppresenter.h"
-#include "presenter/apppresenter.h"
 #include "view/playerframe.h"
-#include "view/musiclistwidget.h"
 
 using namespace Dtk::Widget;
 
@@ -42,11 +39,6 @@ MusicApp::~MusicApp()
 
 }
 
-AppPresenter *MusicApp::presenter()
-{
-    return MusicApp::instance().d->appPresenter;
-}
-
 QString MusicApp::configPath()
 {
     auto userConfigPath = QStandardPaths::standardLocations(QStandardPaths::ConfigLocation).first();
@@ -59,27 +51,27 @@ QString MusicApp::cachePath()
     return userCachePath;
 }
 
-void MusicApp::showPlayer()
-{
-    DUtility::moveToCenter(d->playerFrame);
-    d->playerFrame->show();
-}
-
 void MusicApp::init()
 {
     d->appPresenter = new AppPresenter;
+    d->playerFrame = new PlayerFrame;
 
     auto presenterWork = new QThread;
     d->appPresenter->moveToThread(presenterWork);
+    connect(presenterWork, &QThread::started, d->appPresenter, &AppPresenter::prepareData);
+    connect(d->appPresenter, &AppPresenter::dataPrepared, this, &MusicApp::onDataPrepared);
+
     presenterWork->start();
+}
 
-    d->playerFrame = new PlayerFrame;
-
+void MusicApp::onDataPrepared()
+{
     d->playerFrame->initMusiclist(d->appPresenter->allMusicPlaylist(), d->appPresenter->lastPlaylist());
     d->playerFrame->initPlaylist(d->appPresenter->allplaylist() , d->appPresenter->lastPlaylist());
-    d->playerFrame->initFooter(d->appPresenter->favMusicPlaylist(),
-                               d->appPresenter->lastPlaylist(),
-                               d->appPresenter->playMode());
+    d->playerFrame->initFooter(d->appPresenter->lastPlaylist(), d->appPresenter->playMode());
 
     d->playerFrame->binding(d->appPresenter);
+
+    DUtility::moveToCenter(d->playerFrame);
+    d->playerFrame->show();
 }

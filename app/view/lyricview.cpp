@@ -9,7 +9,6 @@
 
 #include "lyricview.h"
 
-#include <QDebug>
 #include <QLabel>
 #include <QFile>
 #include <QScrollArea>

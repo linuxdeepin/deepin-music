@@ -9,10 +9,10 @@
 
 #include "playlistwidget.h"
 
+#include <QDebug>
 #include <QVBoxLayout>
 #include <QPushButton>
 #include <QFocusEvent>
-#include <QDebug>
 
 #include <dthememanager.h>
 

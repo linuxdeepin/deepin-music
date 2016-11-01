@@ -9,21 +9,21 @@
 
 #include "playlistitem.h"
 
+#include <QTimer>
 #include <QLabel>
 #include <QLineEdit>
 #include <QHBoxLayout>
-#include <QTimer>
-#include <QDebug>
 
 #include <DAction>
 #include <DMenu>
 #include <ddialog.h>
 #include <QMessageBox>
 #include <dthememanager.h>
-DWIDGET_USE_NAMESPACE
 
 #include "../core/playlist.h"
 #include "widget/menu.h"
+
+DWIDGET_USE_NAMESPACE
 
 PlayListItem::PlayListItem(QSharedPointer<Playlist> playlist, QWidget *parent) : QFrame(parent)
 {

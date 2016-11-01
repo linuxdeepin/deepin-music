@@ -9,21 +9,165 @@
 
 #include "musiclistview.h"
 
+#include <QStandardItemModel>
+#include <QHeaderView>
+
+
+#include <QLabel>
+#include <QHBoxLayout>
+#include <QFileInfo>
+#include <QDir>
+#include <QStyle>
+#include <QUrl>
+#include <QProcess>
+
 #include <dthememanager.h>
+#include <DAction>
+#include <DMenu>
+
+#include "../core/playlist.h"
+#include "../musicapp.h"
+#include "widget/musicitemdelegate.h"
+#include "widget/infodialog.h"
+#include "widget/menu.h"
+
 DWIDGET_USE_NAMESPACE
 
-MusicListView::MusicListView(QWidget *parent) : QListWidget(parent)
+MusicListView::MusicListView(QWidget *parent) : QTableView(parent)
 {
     setObjectName("MusicListView");
+
+    m_model = new QStandardItemModel(0, 5, this);
+    this->setModel(m_model);
 
     setAcceptDrops(true);
     setDragDropMode(QAbstractItemView::DropOnly);
     viewport()->setAcceptDrops(true);
     setDropIndicatorShown(false);
 
-    setSelectionMode(QListView::ExtendedSelection);
+    setSelectionMode(QTableView::ExtendedSelection);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-//    setFocusPolicy(Qt::ClickFocus);
+
+    this->horizontalHeader()->hide();
+    this->verticalHeader()->hide();
+    this->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    this->setSelectionBehavior(QAbstractItemView::SelectRows);
+    this->setShowGrid(false);
+
+    QHeaderView *verticalHeader = this->verticalHeader();
+    verticalHeader->setSectionResizeMode(QHeaderView::Fixed);
+    verticalHeader->setDefaultSectionSize(36);
+
+    QHeaderView *headerView = this->horizontalHeader();
+    headerView->setSectionResizeMode(QHeaderView::Stretch);
+    headerView->setSectionResizeMode(0, QHeaderView::ResizeToContents);
+    headerView->setSectionResizeMode(1, QHeaderView::Stretch);
+    headerView->setSectionResizeMode(2, QHeaderView::Stretch);
+    headerView->setSectionResizeMode(3, QHeaderView::Stretch);
+    headerView->setSectionResizeMode(4, QHeaderView::Fixed);
+
+    this->setItemDelegate(new MusicItemDelegate);
+
     D_THEME_INIT_WIDGET(MusicListView);
+
+    this->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(this, &MusicListView::customContextMenuRequested,
+            this, &MusicListView::requestCustomContextMenu);
+
+}
+
+void MusicListView::showContextMenu(const QPoint &pos,
+                                    QSharedPointer<Playlist> selectedPlaylist,
+                                    QSharedPointer<Playlist> favPlaylist,
+                                    QList<QSharedPointer<Playlist> > newPlaylists)
+{
+    QItemSelectionModel *selection = this->selectionModel();
+
+    QPoint globalPos = this->mapToGlobal(pos);
+
+    DMenu playlistMenu;
+    bool hasAction = false;
+
+    if (selectedPlaylist != favPlaylist) {
+        hasAction = true;
+        auto act = playlistMenu.addAction(favPlaylist->displayName());
+        act->setData(QVariant::fromValue(favPlaylist));
+    }
+
+    for (auto playlist : newPlaylists) {
+        auto act = playlistMenu.addAction(playlist->displayName());
+        act->setData(QVariant::fromValue(playlist));
+        hasAction = true;
+    }
+
+    if (hasAction) {
+        playlistMenu.addSeparator();
+    }
+    auto newvar = QVariant::fromValue(QSharedPointer<Playlist>());
+    playlistMenu.addAction(tr("New playlist"))->setData(newvar);
+
+    connect(&playlistMenu, &DMenu::triggered, this, [ = ](DAction * action) {
+        auto playlist = action->data().value<QSharedPointer<Playlist> >();
+        MusicMetaList metalist;
+        for (auto &index : selection->selectedRows()) {
+            auto item = this->model()->item(index.row(), index.column());
+            if (item) {
+                metalist << qvariant_cast<MusicMeta>(item->data());
+            }
+        }
+        emit addToPlaylist(playlist, metalist);
+    });
+
+    DMenu myMenu;
+    myMenu.addAction(tr("Play"));
+    myMenu.addAction(tr("Add to playlist"))->setMenu(&playlistMenu);
+    myMenu.addSeparator();
+    myMenu.addAction(tr("Display in file manager"));
+    myMenu.addAction(tr("Remove from list"));
+    myMenu.addAction(tr("Delete"));
+    myMenu.addSeparator();
+    myMenu.addAction(tr("Song info"));
+
+    connect(&myMenu, &DMenu::triggered, this, [ = ](DAction * action) {
+        if (action->text() == tr("Play")) {
+            auto index = selection->selectedRows().first();
+            auto item = this->model()->item(index.row(), index.column());
+            MusicMeta meta = qvariant_cast<MusicMeta>(item->data());
+            emit play(meta);
+        }
+
+        if (action->text() == tr("Display in file manager")) {
+            auto index = selection->selectedRows().first();
+            auto item = this->model()->item(index.row(), index.column());
+            MusicMeta meta = qvariant_cast<MusicMeta>(item->data());
+            auto dirUrl = QUrl::fromLocalFile(QFileInfo(meta.localpath).absoluteDir().absolutePath());
+            QFileInfo ddefilemanger("/usr/bin/dde-file-manager");
+            if (ddefilemanger.exists()) {
+                auto dirFile = QUrl::fromLocalFile(QFileInfo(meta.localpath).absoluteFilePath());
+                auto url = QString("%1?selectUrl=%2").arg(dirUrl.toString()).arg(dirFile.toString());
+                QProcess::startDetached("dde-file-manager" , QStringList() << url);
+            } else {
+                QProcess::startDetached("gvfs-open" , QStringList() << dirUrl.toString());
+            }
+        }
+
+        if (action->text() == tr("Remove from list")) {
+            auto index = selection->selectedRows().first();
+            auto item = this->model()->item(index.row(), index.column());
+            MusicMeta meta = qvariant_cast<MusicMeta>(item->data());
+            emit remove(meta);
+        }
+
+        if (action->text() == tr("Song info")) {
+            auto index = selection->selectedRows().first();
+            auto item = this->model()->item(index.row(), index.column());
+            MusicMeta meta = qvariant_cast<MusicMeta>(item->data());
+            emit remove(meta);
+            InfoDialog dlg(meta, this);
+            dlg.exec();
+        }
+    });
+
+    myMenu.exec(globalPos);
 }

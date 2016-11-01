@@ -9,9 +9,8 @@
 
 #include "playlistview.h"
 
-#include <QDebug>
-
 #include <dthememanager.h>
+
 DWIDGET_USE_NAMESPACE
 
 PlayListView::PlayListView(QWidget *parent) : QListWidget(parent)

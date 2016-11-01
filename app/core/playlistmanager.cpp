@@ -16,6 +16,7 @@
 #include <QThread>
 
 #include "../musicapp.h"
+#include "mediadatabase.h"
 
 const QString AllMusicListID = "all";
 const QString FavMusicListID = "fav";
@@ -63,16 +64,16 @@ QString PlaylistManager::newDisplayName()
 
 void PlaylistManager::load()
 {
-    for (auto &playlistmeta : m_db.allPlaylist()) {
+    for (auto &playlistmeta : MediaDatabase::instance()->allPlaylist()) {
         QSharedPointer<Playlist> emptylist(new Playlist(playlistmeta));
         emptylist->load();
         insertPlaylist(playlistmeta.uuid, emptylist);
     }
 
-    auto currentTitle = "all";
+    auto currentTitle = AllMusicListID;
     m_playingPlaylist = playlist(currentTitle);
     if (m_playingPlaylist.isNull()) {
-        qDebug() << "change to default all palylist";
+        qWarning() << "change to default all palylist";
         m_playingPlaylist = playlist(AllMusicListID);
     }
     m_selectedPlaylist = m_playingPlaylist;
@@ -126,7 +127,6 @@ void PlaylistManager::setPlayingPlaylist(QSharedPointer<Playlist> currentPlaylis
     }
     m_playingPlaylist = currentPlaylist;
     emit playingPlaylistChanged(currentPlaylist);
-    m_playingPlaylist->clearHistory();
     settings.beginGroup("PlaylistManager");
     settings.setValue("Current", m_playingPlaylist->id());
     settings.endGroup();
@@ -148,9 +148,9 @@ QString PlaylistManager::getPlaylistPath(const QString &id)
     return MusicApp::configPath() + "/" + id + ".plsx";
 }
 
-void PlaylistManager::insertPlaylist(const QString &id, QSharedPointer<Playlist> playlist)
+void PlaylistManager::insertPlaylist(const QString &uuid, QSharedPointer<Playlist> playlist)
 {
-    QString deleteID = id;
+    QString deleteID = uuid;
 
     connect(playlist.data(), &Playlist::removed,
     this, [ = ] {
@@ -170,11 +170,16 @@ void PlaylistManager::insertPlaylist(const QString &id, QSharedPointer<Playlist>
         emit musicAdded(playlist,  info);
     });
 
+    connect(playlist.data(), &Playlist::musiclistAdded,
+    this, [ = ](const MusicMetaList & info) {
+        emit musiclistAdded(playlist, info);
+    });
+
     connect(playlist.data(), &Playlist::musicRemoved,
     this, [ = ](const MusicMeta & info) {
         emit musicRemoved(playlist,  info);
     });
 
-    sortPlaylists << id;
-    playlists.insert(id, playlist);
+    sortPlaylists << uuid;
+    playlists.insert(uuid, playlist);
 }

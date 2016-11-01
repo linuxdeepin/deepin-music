@@ -39,8 +39,6 @@ public:
     Q_ENUM(SortType)
 
 public:
-    QStringList &history() {return m_history;}
-
     //! public interface
     QString id();
     QString displayName();
@@ -63,14 +61,11 @@ public:
     void reset(const MusicMetaList&);
 
 public slots:
-    void buildHistory(const QString &last);
-    void clearHistory();
     void setDisplayName(const QString &name);
-    void appendMusic(const MusicMeta &info);
+    void appendMusic(const MusicMetaList &metalist);
     void removeMusic(const MusicMeta &info);
     void sortBy(Playlist::SortType sortType);
     void resort();
-
     void searchTitle(const QString& title);
 
     //! private interface
@@ -78,13 +73,13 @@ public:
     void load();
 
 signals:
+    void musiclistAdded(const MusicMetaList &metalist);
     void musicAdded(const MusicMeta &info);
     void musicRemoved(const MusicMeta &info);
     void removed();
     void displayNameChanged(QString displayName);
 
 private:
-    QStringList     m_history;
     PlaylistMeta   listmeta;
 };
 

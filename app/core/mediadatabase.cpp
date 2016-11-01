@@ -14,6 +14,7 @@
 #include <QSqlError>
 #include <QDebug>
 #include <QDir>
+#include <QThread>
 
 #include "../model/musiclistmodel.h"
 #include "../musicapp.h"
@@ -29,7 +30,7 @@ static bool createConnection()
     db.setDatabaseName(cachePath);
 
     if (!db.open()) {
-        qDebug() << db.lastError()
+        qCritical() << db.lastError()
                  << MusicApp::cachePath()
                  << cachePath;
         return false;
@@ -40,6 +41,8 @@ static bool createConnection()
                "timestamp INTEGER,"
                "title VARCHAR(256), artist VARCHAR(256),"
                "py_title VARCHAR(256), py_title_short VARCHAR(256),"
+               "py_artist VARCHAR(256), py_artist_short VARCHAR(256),"
+               "py_album VARCHAR(256), py_album_short VARCHAR(256),"
                "album VARCHAR(256), filetype VARCHAR(32),"
                "size INTEGER, track INTEGER,"
                "favourite INTEGER(32),"
@@ -63,6 +66,13 @@ static bool createConnection()
 MediaDatabase::MediaDatabase(QObject *parent) : QObject(parent)
 {
     createConnection();
+
+    m_writer = new MediaDatabaseWriter;
+    auto work = new QThread;
+    m_writer->moveToThread(work);
+    work->start();
+
+    bind();
 
     PlaylistMeta palylistMeta;
     palylistMeta.uuid = "all";
@@ -140,11 +150,9 @@ static QList<MusicMeta> searchTitle(const QString &queryString)
     QSqlQuery query;
     query.prepare(queryString);
     if (! query.exec()) {
-        qDebug() << query.executedQuery();
-        qWarning() << query.lastError();
+        qCritical() << query.lastError();
         return list;
     }
-    qDebug() << query.executedQuery();
 
     while (query.next()) {
         MusicMeta musicMeta;
@@ -177,7 +185,7 @@ QList<MusicMeta> MediaDatabase::searchMusicTitle(const QString &title, int limit
     return searchTitle(queryString);
 }
 
-QList<MusicMeta> MediaDatabase::searchMusicInfo(const QString &title, int limit)
+QList<MusicMeta> MediaDatabase::searchMusicMeta(const QString &title, int limit)
 {
     auto matchReg = QString("\"%%1%\" ").arg(title);
     QString queryString = QString("SELECT hash, localpath, title, artist, album, "
@@ -186,6 +194,10 @@ QList<MusicMeta> MediaDatabase::searchMusicInfo(const QString &title, int limit)
                                   "title LIKE  " + matchReg +
                                   "OR py_title LIKE  " + matchReg +
                                   "OR py_title_short LIKE  " + matchReg +
+                                  "OR py_artist LIKE  " + matchReg +
+                                  "OR py_artist_short LIKE  " + matchReg +
+                                  "OR py_album LIKE  " + matchReg +
+                                  "OR py_album_short LIKE  " + matchReg +
                                   "OR artist LIKE " + matchReg +
                                   "OR album LIKE " + matchReg +
                                   "LIMIT " + QString("%1").arg(limit));
@@ -249,7 +261,6 @@ void MediaDatabase::updatePlaylist(const PlaylistMeta &palylistMeta)
 
 void MediaDatabase::removePlaylist(const PlaylistMeta &palylistMeta)
 {
-    qDebug() << "remove";
     QSqlQuery query;
     QString sqlstring = QString("DROP TABLE IF EXISTS playlist_%1").arg(palylistMeta.uuid);
     if (! query.exec(sqlstring)) {
@@ -260,26 +271,6 @@ void MediaDatabase::removePlaylist(const PlaylistMeta &palylistMeta)
     sqlstring = QString("DELETE FROM playlist WHERE uuid = '%1'").arg(palylistMeta.uuid);
     if (! query.exec(sqlstring)) {
         qWarning() << query.lastError();
-        return;
-    }
-}
-
-void MediaDatabase::insertMusic(const MusicMeta &meta, const PlaylistMeta &palylistMeta)
-{
-    QSqlQuery query;
-    QString sqlstring = QString("INSERT INTO playlist_%1 "
-                                "(music_id, playlist_id, sortid) "
-                                "SELECT :music_id, :playlist_id, :sort_id "
-                                "WHERE NOT EXISTS("
-                                "SELECT * FROM playlist_%1 "
-                                "WHERE music_id = :music_id)").arg(palylistMeta.uuid);
-    query.prepare(sqlstring);
-    query.bindValue(":playlist_id", palylistMeta.uuid);
-    query.bindValue(":music_id", meta.hash);
-    query.bindValue(":sort_id", 0);
-
-    if (! query.exec()) {
-        qDebug() << query.lastError() << sqlstring;
         return;
     }
 }
@@ -309,37 +300,30 @@ bool MediaDatabase::playlistExist(const QString &uuid)
     return query.value(0).toInt() > 0;
 }
 
-void MediaDatabase::addMusicMeta(const MusicMeta &meta)
+bool MediaDatabase::musicMetaExist(const QString &hash)
 {
     QSqlQuery query;
-    query.prepare("INSERT INTO music ("
-                  "hash, timestamp, title, artist, album, "
-                  "filetype, size, track, favourite, localpath, length, "
-                  "py_title, py_title_short "
-                  ") "
-                  "VALUES ("
-                  ":hash, :timestamp, :title, :artist, :album, "
-                  ":filetype, :size, :track, :favourite, :localpath, :length, "
-                  ":py_title, :py_title_short "
-                  ")");
-    query.bindValue(":hash", meta.hash);
-    query.bindValue(":timestamp", meta.timestamp);
-    query.bindValue(":title", meta.title);
-    query.bindValue(":artist", meta.artist);
-    query.bindValue(":album", meta.album);
-    query.bindValue(":filetype", meta.filetype);
-    query.bindValue(":size", meta.size);
-    query.bindValue(":track", meta.track);
-    query.bindValue(":favourite", meta.favourite);
-    query.bindValue(":localpath", meta.localpath);
-    query.bindValue(":length", meta.length);
-    query.bindValue(":py_title", meta.pinyinTitle);
-    query.bindValue(":py_title_short", meta.pinyinTitleShort);
+    query.prepare("SELECT COUNT(*) FROM music where hash = :hash");
+    query.bindValue(":hash", hash);
 
-    if (! query.exec()) {
-        qDebug() << query.lastError();
-        return;
+    if (!query.exec()) {
+        qWarning() << query.lastError();
+        return false;
     }
+    query.first();
+    return query.value(0).toInt() > 0;
+}
+
+void MediaDatabase::bind()
+{
+    connect(this, &MediaDatabase::addMusicMeta,
+            m_writer, &MediaDatabaseWriter::addMusicMeta);
+    connect(this, &MediaDatabase::addMusicMetaList,
+            m_writer, &MediaDatabaseWriter::addMusicMetaList);
+    connect(this, &MediaDatabase::insertMusic,
+            m_writer, &MediaDatabaseWriter::insertMusic);
+    connect(this, &MediaDatabase::insertMusicList,
+            m_writer, &MediaDatabaseWriter::insertMusicList);
 }
 
 void MediaDatabase::removeMusicMeta(const MusicMeta &meta)

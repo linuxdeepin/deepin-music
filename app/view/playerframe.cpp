@@ -35,7 +35,6 @@
 #include "playlistview.h"
 #include "playlistitem.h"
 #include "musiclistwidget.h"
-#include "musicitem.h"
 
 #include "../model/musiclistmodel.h"
 #include "../core/playlist.h"
@@ -64,6 +63,9 @@ public:
 PlayerFrame::PlayerFrame(QWidget *parent)
     : DWindow(parent), d(new PlayerFramePrivate)
 {
+    m_titlebarTopColor = QColor(255, 255, 255, 255);
+    m_titlebarBottomColor = QColor(0xf8, 0xf8, 0xf8, 255);
+
     setFocusPolicy(Qt::ClickFocus);
     setObjectName("PlayerFrame");
 
@@ -141,9 +143,9 @@ void PlayerFrame::initPlaylist(QList<QSharedPointer<Playlist> > playlists, QShar
     d->playlist->initPlaylist(playlists, last);
 }
 
-void PlayerFrame::initFooter(QSharedPointer<Playlist> favlist, QSharedPointer<Playlist> current, int mode)
+void PlayerFrame::initFooter(QSharedPointer<Playlist> current, int mode)
 {
-    emit d->footer->initFooter(favlist, current, mode);
+    emit d->footer->initFooter(current, mode);
 }
 
 void PlayerFrame::binding(AppPresenter *presenter)
@@ -158,8 +160,12 @@ void PlayerFrame::binding(AppPresenter *presenter)
             d->musicList, &MusicListWidget::onMusiclistChanged);
     connect(presenter, &AppPresenter::musicRemoved,
             d->musicList, &MusicListWidget::onMusicRemoved);
+
     connect(presenter, &AppPresenter::musicAdded,
             d->musicList, &MusicListWidget::onMusicAdded);
+    connect(presenter, &AppPresenter::musiclistAdded,
+            d->musicList, &MusicListWidget::onMusicListAdded);
+
     connect(presenter, &AppPresenter::musicPlayed,
             d->musicList, &MusicListWidget::onMusicPlayed);
     connect(presenter, &AppPresenter::musiclistMenuRequested,
@@ -213,6 +219,8 @@ void PlayerFrame::binding(AppPresenter *presenter)
             d->footer, &Footer::onMusicPause);
     connect(presenter, &AppPresenter::musicAdded,
             d->footer, &Footer::onMusicAdded);
+    connect(presenter, &AppPresenter::musiclistAdded,
+            d->footer, &Footer::onMusicListAdded);
     connect(presenter, &AppPresenter::musicRemoved,
             d->footer, &Footer::onMusicRemoved);
     connect(presenter, &AppPresenter::progrossChanged,
@@ -258,17 +266,26 @@ void PlayerFrame::binding(AppPresenter *presenter)
     connect(d->footer, &Footer::toggleLyric,
     this, [ = ]() {
         if (d->lyric->isVisible()) {
+            // change to optical
+            m_titlebarTopColor = QColor(255, 255, 255, 255);
+            m_titlebarBottomColor = QColor(0xf8, 0xf8, 0xf8, 255);
+
             WidgetHelper::slideTop2BottomWidget(
                 d->lyric, d->musicList, s_AnimationDelay);
             d->musicList->resize(d->lyric->size());
             d->musicList->raise();
             d->musicList->show();
+            this->repaint();
         } else {
+            m_titlebarTopColor = QColor(0, 0, 0, 46);
+            m_titlebarBottomColor = QColor(0, 0, 0, 46);
+
             WidgetHelper::slideBottom2TopWidget(
                 d->musicList, d->lyric, s_AnimationDelay);
             d->lyric->resize(d->musicList->size());
             d->lyric->raise();
             d->lyric->show();
+            this->repaint();
         }
         this->disableControl();
 
@@ -366,10 +383,13 @@ void PlayerFrame::paintEvent(QPaintEvent *e)
 
     // draw header
     {
-        int radius = this->radius() ;
+        int radius = 3 ;
         int windowExtern = 40 + 1 * 2;
 
         QPainter titlePainter(this);
+        titlePainter.setRenderHint(QPainter::Antialiasing);
+        titlePainter.setRenderHint(QPainter::HighQualityAntialiasing);
+
         QRect winRect = QWidget::rect().marginsRemoved(
                             QMargins(windowExtern, windowExtern - 10  , windowExtern, windowExtern + 10));
 
@@ -392,9 +412,17 @@ void PlayerFrame::paintEvent(QPaintEvent *e)
         titleBorder.arcTo(topLeftRect, 90.0, 90.0);
         titleBorder.closeSubpath();
 
-        titlePainter.fillPath(titleBorder, QBrush(QColor(255, 255, 255, 64)));
-    }
 
+        QLinearGradient linearGradient(QPointF(0.0, 0.0), QPointF(0.0, 1.0));
+        linearGradient.setColorAt(0.0, m_titlebarTopColor);
+        linearGradient.setColorAt(1.0, m_titlebarBottomColor);
+
+        QPen borderPen(QColor(0, 0, 0, 25));
+
+        titlePainter.setBrush(QBrush(linearGradient));
+        titlePainter.fillPath(titleBorder, QBrush(linearGradient));
+        titlePainter.strokePath(titleBorder, borderPen);
+    }
 }
 
 void PlayerFrame::onSelectImportFiles()

@@ -9,13 +9,13 @@
 
 #include "mediafilemonitor.h"
 
+#include <QDebug>
 #include <QMap>
 #include <QDir>
 #include <QFileInfo>
 #include <QMimeDatabase>
 #include <QCryptographicHash>
 #include <QDirIterator>
-#include <QDebug>
 #include <QThread>
 #include <QTextCodec>
 #include <QTime>
@@ -25,63 +25,10 @@
 #include <taglib.h>
 #include <tpropertymap.h>
 
-#include "../../vendor/src/chinese2pinyin/chinese2pinyin.h"
-
-inline bool isAlphabeta(const QChar &c)
-{
-    QRegExp re("[A-Za-z]*");
-    return re.exactMatch(c);
-}
-
-inline bool isNumber(const QChar &c)
-{
-    QRegExp re("[0-9]*");
-    return re.exactMatch(c);
-}
-
-inline bool isChinese(const QChar &c)
-{
-    return c.unicode() < 0x9FBF && c.unicode() > 0x4E00;
-}
-
-inline QString toChinese(const QString &c)
-{
-    QString pinyin = Pinyin::Chinese2Pinyin(c);
-    if (pinyin.length() >= 2
-            && isNumber(pinyin.at(pinyin.length() - 1))) {
-        return pinyin.left(pinyin.length() - 1);
-    }
-    return pinyin;
-}
-
-QStringList simpleSplit(QString &pinyin)
-{
-    QStringList wordList;
-    bool isLastAlphabeta = false;
-    for (auto &c : pinyin) {
-        bool isCurAlphabeta = isAlphabeta(c);
-        if (isCurAlphabeta) {
-            if (!isLastAlphabeta) {
-                wordList << c;
-            } else {
-                wordList.last().append(c);
-            }
-            continue;
-        }
-        isLastAlphabeta = isCurAlphabeta;
-        if (isNumber(c)) {
-            wordList << c;
-            continue;
-        }
-        if (isChinese(c)) {
-            wordList << toChinese(c);
-            continue;
-        }
-    }
-    return wordList;
-}
-
 #include "playlist.h"
+#include "mediadatabase.h"
+
+#include "util/pinyin.h"
 
 static QMap<QString, bool>  sSupportedSuffix;
 static QStringList          sSupportedSuffixList;
@@ -121,9 +68,14 @@ void MediaFileMonitor::importPlaylistFiles(QSharedPointer<Playlist> playlist, co
         return;
     }
 
+    MusicMetaList metaCache;
+
     for (auto &url : urllist) {
-        // TODO: do not import exist file;
-        auto id = QString(QCryptographicHash::hash(url.toUtf8(), QCryptographicHash::Md5).toHex());
+        auto hash = QString(QCryptographicHash::hash(url.toUtf8(), QCryptographicHash::Md5).toHex());
+
+        if (MediaDatabase::instance()->musicMetaExist(hash)) {
+            continue;
+        }
 
         // TODO: fix me in windows
 #ifdef _WIN32
@@ -131,6 +83,7 @@ void MediaFileMonitor::importPlaylistFiles(QSharedPointer<Playlist> playlist, co
 #else
         TagLib::FileRef f(url.toStdString().c_str());
 #endif
+        QFileInfo fileInfo(url);
 
         if (f.isNull()) {
             qWarning() << "import music file failed:" << url;
@@ -139,7 +92,7 @@ void MediaFileMonitor::importPlaylistFiles(QSharedPointer<Playlist> playlist, co
 
         MusicMeta info;
         info.localpath = url;
-        info.hash = id;
+        info.hash = hash;
 
         // TODO: more encode support
         TagLib::Tag *tag = f.tag();
@@ -161,35 +114,41 @@ void MediaFileMonitor::importPlaylistFiles(QSharedPointer<Playlist> playlist, co
         }
 
         auto current = QDateTime::currentDateTime();
-        info.timestamp = current.toTime_t()  * 1000 + current.time().msec();
+        info.timestamp = current.toTime_t()
+                         + static_cast<uint>(1000 + current.time().msec());
         info.length = f.audioProperties()->length();
         info.size = f.file()->length();
-        info.filetype =  QFileInfo(url).suffix();
-
-//        qDebug() << info.title << info.artist << info.album
-//                 << f.tag()->properties().toString().toCString(true);
+        info.filetype = fileInfo.suffix();
 
         if (info.title.isEmpty()) {
-            info.title = QFileInfo(url).baseName();
+            info.title = fileInfo.baseName();
         }
 
-        for (auto &str : simpleSplit(info.title)) {
-            info.pinyinTitle += toChinese(str);
+        for (auto &str : Pinyin::simpleChineseSplit(info.title)) {
+            info.pinyinTitle += str;
             info.pinyinTitleShort += str.at(0);
         }
-        qDebug() << info.pinyinTitle
-                 << info.pinyinTitleShort
-                 << simpleSplit(info.title);
-
-        if (info.artist.isEmpty()) {
-//            info.artist = tr("Unknow Artist");
+        for (auto &str : Pinyin::simpleChineseSplit(info.artist)) {
+            info.pinyinArtist += str;
+            info.pinyinArtistShort += str.at(0);
+        }
+        for (auto &str : Pinyin::simpleChineseSplit(info.album)) {
+            info.pinyinAlbum += str;
+            info.pinyinAlbumShort += str.at(0);
         }
 
-        if (info.album.isEmpty()) {
-//            info.album = tr("Unknow Album");
-        }
+        metaCache << info;
 
-//        QThread::msleep(400);
-        emit meidaFileImported(playlist, info);
+        if (metaCache.length() >= 500) {
+            emit MediaDatabase::instance()->addMusicMetaList(metaCache);
+            emit meidaFileImported(playlist, metaCache);
+            metaCache.clear();
+        }
+    }
+
+    if (metaCache.length() > 0) {
+        emit MediaDatabase::instance()->addMusicMetaList(metaCache);
+        emit meidaFileImported(playlist, metaCache);
+        metaCache.clear();
     }
 }

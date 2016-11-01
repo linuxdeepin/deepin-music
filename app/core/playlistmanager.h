@@ -16,7 +16,6 @@
 #include <QSharedPointer>
 
 #include "playlist.h"
-#include "mediadatabase.h"
 
 class PlaylistManager : public QObject
 {
@@ -45,6 +44,7 @@ signals:
     void playingPlaylistChanged(QSharedPointer<Playlist> playingPlaylist);
     void selectedPlaylistChanged(QSharedPointer<Playlist> selectedPlaylist);
     void musicAdded(QSharedPointer<Playlist> palylist, const MusicMeta &info);
+    void musiclistAdded(QSharedPointer<Playlist> palylist, const MusicMetaList &metalist);
     void musicRemoved(QSharedPointer<Playlist> palylist, const MusicMeta &info);
 
 public slots:
@@ -55,7 +55,6 @@ private:
     QString getPlaylistPath(const QString &id);
     void insertPlaylist(const QString &id, QSharedPointer<Playlist>);
 
-    MediaDatabase                               m_db;
     QSettings                                   settings;
     QSharedPointer<Playlist>                    m_playingPlaylist;
     QSharedPointer<Playlist>                    m_selectedPlaylist;

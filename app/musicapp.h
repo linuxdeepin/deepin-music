@@ -23,26 +23,22 @@ class MusicApp : public QObject
 public:
     ~MusicApp();
 
-    static MusicApp &instance()
+    static MusicApp *instance()
     {
         static auto s_app = new MusicApp;
-        return *s_app;
+        return s_app;
     }
-
-    static AppPresenter *presenter();
 
     static QString configPath();
     static QString cachePath();
 
     void init();
-    void showPlayer();
-signals:
 
 public slots:
+    void onDataPrepared();
 
 private:
     explicit MusicApp(QObject *parent = 0);
-
     QScopedPointer<MusicAppPrivate> d;
 };
 

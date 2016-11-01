@@ -12,37 +12,46 @@
 
 #include <QObject>
 
-#include "../model/musiclistmodel.h"
+#include "mediadatabasewriter.h"
 
-class MusicMeta;
-class PlaylistMeta;
 class MediaDatabase : public QObject
 {
     Q_OBJECT
 public:
     explicit MediaDatabase(QObject *parent = 0);
 
+    static MediaDatabase* instance() {
+        static auto s_instance = new MediaDatabase;
+        return s_instance;
+    }
+
+    //! music meta query interface
+    bool musicMetaExist(const QString &hash);
+    static QList<MusicMeta> searchMusicTitle(const QString &title, int limit);
+    static QList<MusicMeta> searchMusicMeta(const QString &title, int limit);
+
+    //! sync query interface
     static QStringList allPlaylistDisplayName();
     QList<PlaylistMeta> allPlaylist();
-signals:
+    bool playlistExist(const QString &uuid);
 
-public slots:
-    static QList<MusicMeta> searchMusicTitle(const QString &title, int limit);
-    static QList<MusicMeta> searchMusicInfo(const QString &title, int limit);
+signals:
+    void addMusicMeta(const MusicMeta &meta);
+    void addMusicMetaList(const MusicMetaList &metalist);
+    void insertMusic(const MusicMeta &meta, const PlaylistMeta &palylistMeta);
+    void insertMusicList(const MusicMetaList &metalist, const PlaylistMeta &palylistMeta);
 
 public slots:
     static void addPlaylist(const PlaylistMeta &palylistMeta);
     static void updatePlaylist(const PlaylistMeta &palylistMeta);
     static void removePlaylist(const PlaylistMeta &palylistMeta);
-
-    static void addMusicMeta(const MusicMeta &meta);
     static void removeMusicMeta(const MusicMeta &meta);
-
-    static void insertMusic(const MusicMeta &meta, const PlaylistMeta &palylistMeta);
     static void deleteMusic(const MusicMeta &meta, const PlaylistMeta &palylistMeta);
 
 private:
-    bool playlistExist(const QString &uuid);
+    void bind();
+
+    MediaDatabaseWriter *m_writer;
 };
 
 #endif // MEDIADATABASE_H

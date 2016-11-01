@@ -36,9 +36,9 @@ int main(int argc, char *argv[])
     app.setTheme("light");
     app.setWindowIcon(QIcon(":/image/deepin-music.svg"));
 
+    // For Windows, must init media player in main thread!!!
     Player::instance()->init();
-    MusicApp::instance().init();
-    MusicApp::instance().showPlayer();
+    MusicApp::instance()->init();
 
     return app.exec();
 }

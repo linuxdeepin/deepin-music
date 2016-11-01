@@ -10,17 +10,33 @@
 #ifndef MUSICLISTVIEW_H
 #define MUSICLISTVIEW_H
 
-#include <QListWidget>
+#include <QTableView>
 
-class MusicListView : public QListWidget
+#include "../model/musiclistmodel.h"
+
+class Playlist;
+class QStandardItemModel;
+class MusicListView : public QTableView
 {
     Q_OBJECT
 public:
     explicit MusicListView(QWidget *parent = 0);
 
+    QStandardItemModel *model() {return m_model;}
+
 signals:
+    void play(const MusicMeta &meta);
+    void addToPlaylist(QSharedPointer<Playlist> playlist, const MusicMetaList metalist);
+    void remove(const MusicMeta &meta);
+    void requestCustomContextMenu(const QPoint &pos);
 
 public slots:
+    void showContextMenu(const QPoint &pos,
+                         QSharedPointer<Playlist> selectedlist,
+                         QSharedPointer<Playlist> favlist,
+                         QList<QSharedPointer<Playlist> >newlist);
+private:
+    QStandardItemModel *m_model = nullptr;
 };
 
 #endif // MUSICLISTVIEW_H

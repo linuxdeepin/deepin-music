@@ -21,7 +21,6 @@
 DWIDGET_USE_NAMESPACE
 
 #include "../musicapp.h"
-#include "../core/playlist.h"
 #include "../core/playlistmanager.h"
 
 #include "widget/slider.h"
@@ -222,7 +221,6 @@ Footer::Footer(QWidget *parent) : QFrame(parent)
         }
 
         auto status = d->btPlay->property(sPropertyPlayStatus).toString();
-        qDebug() << status << d->m_playinglist->id();
         if (status == sPlayStatusValuePlaying) {
             emit pause(d->m_playinglist, d->m_info);
             auto status = sPlayStatusValuePause;
@@ -255,7 +253,7 @@ Footer::Footer(QWidget *parent) : QFrame(parent)
 
     // TODO: remove fav?
     connect(this, &Footer::initFooter,
-    this, [ = ](QSharedPointer<Playlist> favlist, QSharedPointer<Playlist> current, int mode) {
+    this, [ = ](QSharedPointer<Playlist> current, int mode) {
         d->m_mode = mode;
         d->m_playinglist = current;
         d->btPlayMode->setMode(mode);
@@ -285,6 +283,16 @@ void Footer::onMusicAdded(QSharedPointer<Playlist> palylist, const MusicMeta &in
     if (palylist->id() == FavMusicListID)
         if (info.hash == d->m_info.hash) {
             updateQssProperty(d->btFavorite, sPropertyFavourite, true);
+        }
+}
+
+void Footer::onMusicListAdded(QSharedPointer<Playlist> palylist, const MusicMetaList &infolist)
+{
+    if (palylist->id() == FavMusicListID)
+        for (auto &meta : infolist) {
+            if (meta.hash == d->m_info.hash) {
+                updateQssProperty(d->btFavorite, sPropertyFavourite, true);
+            }
         }
 }
 
@@ -318,14 +326,19 @@ void Footer::onMusicPlay(QSharedPointer<Playlist> palylist, const MusicMeta &inf
 
 void Footer::onMusicPause(QSharedPointer<Playlist> palylist, const MusicMeta &info)
 {
+    if (info.hash != d->m_info.hash || palylist != d->m_playinglist) {
+        qWarning() << "can not pasue" << d->m_playinglist << palylist
+                   << d->m_info.hash << info.hash;
+        return;
+    }
     auto status = sPlayStatusValuePause;
     updateQssProperty(d->btPlay, sPropertyPlayStatus, status);
 }
 
-void Footer::onMusicStop(QSharedPointer<Playlist> palylist, const MusicMeta &info)
-{
+//void Footer::onMusicStop(QSharedPointer<Playlist> palylist, const MusicMeta &info)
+//{
 
-}
+//}
 
 void Footer::onProgressChanged(qint64 value, qint64 duration)
 {
@@ -343,6 +356,10 @@ void Footer::onProgressChanged(qint64 value, qint64 duration)
 
 void Footer::onCoverChanged(const MusicMeta &info, const QString &coverPath)
 {
+    if (info.hash != d->m_info.hash) {
+        return;
+    }
+
     d->cover->setStyleSheet(
         QString("#FooterCover {image: url(%1) no-repeat center center fixed;}").arg(coverPath));
     this->style()->unpolish(d->cover);

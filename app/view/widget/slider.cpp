@@ -8,11 +8,11 @@
  **/
 
 #include "slider.h"
-#include <QDebug>
-#include <QMouseEvent>
-#include <dslider.h>
 
 #include <QTime>
+#include <QMouseEvent>
+
+#include <dslider.h>
 
 static const int s_valueUpdateDelay = 1500;
 

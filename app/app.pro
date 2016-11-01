@@ -55,7 +55,6 @@ SOURCES += \
     view/titlebar.cpp \
     view/footer.cpp \
     view/musiclistview.cpp \
-    view/musicitem.cpp \
     view/importwidget.cpp \
     view/lyricview.cpp \
     view/playlistitem.cpp \
@@ -78,16 +77,17 @@ SOURCES += \
     core/mediadatabase.cpp \
     view/helper/widgethellper.cpp \
     view/widget/searchresult.cpp \
-    view/widget/fitsizelstview.cpp \
     view/widget/searchedit.cpp \
-    view/widget/pushbutton.cpp
+    view/widget/pushbutton.cpp \
+    core/mediadatabasewriter.cpp \
+    core/util/pinyin.cpp \
+    view/widget/musicitemdelegate.cpp
 
 HEADERS += \
     view/playerframe.h \
     view/titlebar.h \
     view/footer.h \
     view/musiclistview.h \
-    view/musicitem.h \
     view/importwidget.h \
     view/lyricview.h \
     view/playlistitem.h \
@@ -111,9 +111,11 @@ HEADERS += \
     core/mediadatabase.h \
     view/helper/widgethellper.h \
     view/widget/searchresult.h \
-    view/widget/fitsizelstview.h \
     view/widget/searchedit.h \
-    view/widget/pushbutton.h
+    view/widget/pushbutton.h \
+    core/mediadatabasewriter.h \
+    core/util/pinyin.h \
+    view/widget/musicitemdelegate.h
 
 RESOURCES += \
     resource/theme/theme.qrc \

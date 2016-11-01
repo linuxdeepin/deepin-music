@@ -1,27 +1,30 @@
 #MusicListView{
-    background-color: transparent;
-    border: none;
-    show-decoration-selected: 1;
-    selection-color: white;
-    selection-background-color: #2ca7f8;
+    margin: 0 0 0 0;
     outline: none;
+    background-color: transparent;
+    border: 0px solid rgba(0, 0, 255 1);
+    selection-background-color: #2ca7f8;
 }
 
+/* useless */
 #MusicListView::item
 {
-    height: 36px;
+    color: blue;
+    height: 6px;
     font-size: 12pt;
-    color:red;
     border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+    background-color: red;
 }
 #MusicListView::item:focus {
     border:none;
 }
 #MusicListView::item:selected:!active {
-    background-color: rgba(44,167,248,60%);
+    color: white;
+    background-color: rgba(44,167,248,100%);
 }
 #MusicListView::item:selected:active {
-    background-color: rgba(44,167,248,60%);
+    color: white;
+    background-color: rgba(255,167,248,100%);
 }
 #MusicListView::item:hover {
 }

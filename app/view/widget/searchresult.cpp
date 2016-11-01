@@ -9,7 +9,6 @@
 
 #include "searchresult.h"
 
-#include <QDebug>
 #include <QVBoxLayout>
 #include <QListView>
 #include <QPushButton>
@@ -18,7 +17,6 @@
 #include <dlistview.h>
 #include <dthememanager.h>
 
-#include "fitsizelstview.h"
 #include "pushbutton.h"
 
 SearchResult::SearchResult(QWidget *parent) : DAbstractDialog(parent)

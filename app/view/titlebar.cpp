@@ -9,7 +9,6 @@
 
 #include "titlebar.h"
 
-#include <QDebug>
 #include <QLabel>
 #include <QHBoxLayout>
 

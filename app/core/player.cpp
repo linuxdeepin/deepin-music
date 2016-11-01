@@ -24,6 +24,7 @@ void Player::setMode(Player::PlayMode mode)
 
 void Player::playMusic(QSharedPointer<Playlist> playlist, const MusicMeta &info)
 {
+    qDebug () << "play" << info.localpath;
     MusicMeta nextInfo = info;
 
     m_playlist = playlist;
@@ -36,10 +37,6 @@ void Player::playMusic(QSharedPointer<Playlist> playlist, const MusicMeta &info)
     this->blockSignals(false);
     emit musicPlayed(playlist, nextInfo);
 
-    if (!playlist->history().contains(nextInfo.hash)) {
-        // TODO: max
-        playlist->history().append(nextInfo.hash);
-    }
     this->play();
 }
 
@@ -63,30 +60,12 @@ void Player::playPrevMusic(QSharedPointer<Playlist> playlist, const MusicMeta &i
     } else {
         selectPrev(info, m_mode);
     }
-
-//    if (playlist->history().isEmpty()) {
-//        //rebuild history
-//        playlist->buildHistory(info.id);
-//    }
-//    auto nextId = playlist->history().last();
-//    MusicInfo nextInfo = playlist->music(nextId);
-//    if (nextInfo.id.isEmpty()) {
-//        nextInfo = playlist->prev(info);
-//    }
-//    playMusic(playlist, nextInfo);
 }
 
 void Player::setMedia(const MusicMeta &info)
 {
     m_info = info;
     QMediaPlayer::setMedia(QUrl::fromLocalFile(info.localpath));
-    // TODO:
-    if (!m_historyIDs.contains(info.hash)) {
-        if (m_historyIDs.length() >= 100) {
-            m_historyIDs.pop_front();
-        }
-        m_historyIDs << info.hash;
-    }
 }
 
 void Player::changeProgress(qint64 value, qint64 range)
@@ -100,7 +79,6 @@ void Player::changeProgress(qint64 value, qint64 range)
 
 void Player::selectNext(const MusicMeta &info, PlayMode mode)
 {
-    qDebug() << "next" << m_playlist << m_mode;
     if (!m_playlist) {
         return;
     }
@@ -124,7 +102,6 @@ void Player::selectNext(const MusicMeta &info, PlayMode mode)
 
 void Player::selectPrev(const MusicMeta &info, Player::PlayMode mode)
 {
-    qDebug() << "prev" << m_playlist << m_mode;
     if (!m_playlist) {
         return;
     }

@@ -13,10 +13,15 @@
 #include <QFrame>
 
 #include <dcombobox.h>
+
+#include "../model/musiclistmodel.h"
+
 class Playlist;
 class MusicItem;
 class MusicMeta;
+class QLabel;
 class MusicListView;
+class QStandardItemModel;
 
 class MusicListWidget : public QFrame
 {
@@ -30,31 +35,31 @@ public:
 signals:
     void musicRemove(QSharedPointer<Playlist> palylist, const MusicMeta &info);
     void musicClicked(QSharedPointer<Playlist> palylist, const MusicMeta &info);
-    void musicAdd(const QString &playlistID, const MusicMeta &info);
+    void musicAdd(QSharedPointer<Playlist> playlist, const MusicMetaList &metalist);
     void playall(QSharedPointer<Playlist> palylist);
-    void requestCustomContextMenu(MusicItem* item, const QPoint &pos);
     void resort(QSharedPointer<Playlist> palylist, int sortType);
+    void requestCustomContextMenu(const QPoint &pos);
 
 public slots:
     void onMusicPlayed(QSharedPointer<Playlist> palylist, const MusicMeta &info);
     void onMusicRemoved(QSharedPointer<Playlist> playlist, const MusicMeta &info);
     void onMusicAdded(QSharedPointer<Playlist> palylist, const MusicMeta &info);
+    void onMusicListAdded(QSharedPointer<Playlist> palylist, const MusicMetaList &infolist);
+
     void onMusiclistChanged(QSharedPointer<Playlist> palylist);
-    void onCustomContextMenuRequest(MusicItem* item,
-                                    const QPoint &pos,
+    void onCustomContextMenuRequest(const QPoint &pos,
                                     QSharedPointer<Playlist> selectedlist,
                                     QSharedPointer<Playlist> favlist,
                                     QList<QSharedPointer<Playlist> >newlists);
-
 signals:
-    void showEmpty(bool isEmpty);
-
+    void showEmptyHits(bool empty);
 private:
     void addMusicInfo(MusicListView *m_musiclist, const MusicMeta &info);
 
     QSharedPointer<Playlist>    m_palylist;
-    MusicItem                   *m_last         = nullptr;
+    QLabel                      *m_emptyHits    = nullptr;
     MusicListView               *m_musiclist    = nullptr;
+    QStandardItemModel          *m_model        = nullptr;
     Dtk::Widget::DComboBox      *m_sortCombo    = nullptr;
 };
 

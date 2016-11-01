@@ -14,6 +14,8 @@
 #include <QPointer>
 #include <QLabel>
 
+#include "../core/playlist.h"
+
 class MusicMeta;
 class Playlist;
 class FooterPrivate;
@@ -23,10 +25,10 @@ class Footer : public QFrame
 public:
     explicit Footer(QWidget *parent = 0);
 
-    void enableControl(bool enable=true);
+    void enableControl(bool enable = true);
 
 signals:
-    void initFooter(QSharedPointer<Playlist> favlist, QSharedPointer<Playlist> current, int mode);
+    void initFooter(QSharedPointer<Playlist> current, int mode);
 
     void changeProgress(qint64 value, qint64 duration);
 
@@ -43,10 +45,11 @@ signals:
 
 public slots:
     void onMusicAdded(QSharedPointer<Playlist> palylist, const MusicMeta &info);
+    void onMusicListAdded(QSharedPointer<Playlist> palylist, const MusicMetaList &infolist);
     void onMusicRemoved(QSharedPointer<Playlist> palylist, const MusicMeta &info);
     void onMusicPlay(QSharedPointer<Playlist> palylist, const MusicMeta &info);
     void onMusicPause(QSharedPointer<Playlist> palylist, const MusicMeta &info);
-    void onMusicStop(QSharedPointer<Playlist> palylist, const MusicMeta &info);
+//    void onMusicStop(QSharedPointer<Playlist> palylist, const MusicMeta &info);
     void onProgressChanged(qint64 value, qint64 duration);
     void onCoverChanged(const MusicMeta &info, const QString &coverPath);
 

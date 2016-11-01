@@ -23,7 +23,6 @@ Playlist::Playlist(const PlaylistMeta &musiclistinfo, QObject *parent)
     : QObject(parent)
 {
     listmeta = musiclistinfo;
-    m_history = listmeta.musicIds;
 }
 
 int Playlist::length()
@@ -120,33 +119,16 @@ MusicMetaList Playlist::allmusic()
     return mlist;
 }
 
-void Playlist::reset(const MusicMetaList& metas)\
+void Playlist::reset(const MusicMetaList &metas)\
 {
-    qDebug() << listmeta.musicIds;
     listmeta.musicIds.clear();
     listmeta.musicMap.clear();
 
-    for (auto &meta : metas) {
+    for (auto &meta : metas)
+    {
         listmeta.musicIds << meta.hash;
         listmeta.musicMap.insert(meta.hash, meta);
     }
-}
-
-void Playlist::buildHistory(const QString &last)
-{
-    auto lastindex = listmeta.musicIds.indexOf(last);
-    m_history.clear();
-    for (int i = lastindex + 1; i < listmeta.musicIds.length(); ++i) {
-        m_history.append(listmeta.musicIds.value(i));
-    }
-    for (int i = 0; i <= lastindex; ++i) {
-        m_history.append(listmeta.musicIds.value(i));
-    }
-}
-
-void Playlist::clearHistory()
-{
-    m_history.clear();
 }
 
 void Playlist::load()
@@ -205,19 +187,22 @@ void Playlist::setDisplayName(const QString &name)
     }
 }
 
-void Playlist::appendMusic(const MusicMeta &meta)
+void Playlist::appendMusic(const MusicMetaList &metalist)
 {
-    if (listmeta.musicMap.contains(meta.hash)) {
-        qDebug() << "add dump music " << meta.hash << meta.localpath;
-        return;
+    MusicMetaList newMetalist;
+    for (auto &meta : metalist) {
+        if (listmeta.musicMap.contains(meta.hash)) {
+            qDebug() << "skip dump music " << meta.hash << meta.localpath;
+            continue;
+        }
+
+        newMetalist << meta;
+        listmeta.musicIds << meta.hash;
+        listmeta.musicMap.insert(meta.hash, meta);
     }
 
-    listmeta.musicIds << meta.hash;
-    listmeta.musicMap.insert(meta.hash, meta);
-
-    MediaDatabase::insertMusic(meta, listmeta);
-
-    emit musicAdded(meta);
+    emit MediaDatabase::instance()->insertMusicList(newMetalist, this->listmeta);
+    emit musiclistAdded(newMetalist);
 }
 
 void Playlist::removeMusic(const MusicMeta &info)
@@ -231,7 +216,6 @@ void Playlist::removeMusic(const MusicMeta &info)
         return;
     }
 
-    m_history.removeAll(info.hash);
     listmeta.musicIds.removeAll(info.hash);
     listmeta.musicMap.remove(info.hash);
 

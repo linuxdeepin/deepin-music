@@ -9,6 +9,7 @@
 
 #include "musiclistwidget.h"
 
+#include <QThread>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QPushButton>
@@ -16,15 +17,14 @@
 #include <QLabel>
 #include <QResizeEvent>
 #include <QStandardItemModel>
-#include <QStringListModel>
 
 #include <dthememanager.h>
-DWIDGET_USE_NAMESPACE
 
 #include "musiclistview.h"
-#include "musicitem.h"
 #include "../model/musiclistmodel.h"
 #include "../core/playlist.h"
+
+DWIDGET_USE_NAMESPACE
 
 MusicListWidget::MusicListWidget(QWidget *parent) : QFrame(parent)
 {
@@ -37,6 +37,7 @@ MusicListWidget::MusicListWidget(QWidget *parent) : QFrame(parent)
     QWidget *actionBar = new QFrame;
     actionBar->setFixedHeight(40);
     actionBar->setObjectName("MusicListActionBar");
+    actionBar->hide();
 
     auto actionBarLayout = new QHBoxLayout(actionBar);
     actionBarLayout->setContentsMargins(20, 0, 20, 0);
@@ -56,18 +57,20 @@ MusicListWidget::MusicListWidget(QWidget *parent) : QFrame(parent)
     m_sortCombo->addItem(tr("Artist"));
     m_sortCombo->addItem(tr("Album name"));
 
-    auto emptyHits = new QLabel(tr("No Music in list"));
-    emptyHits->setObjectName("MusicListEmptyHits");
+    m_emptyHits = new QLabel(tr("No Music in list"));
+    m_emptyHits->setObjectName("MusicListEmptyHits");
+    m_emptyHits->hide();
 
     actionBarLayout->addWidget(btPlayAll, 0, Qt::AlignCenter);
     actionBarLayout->addStretch();
     actionBarLayout->addWidget(m_sortCombo, 0, Qt::AlignCenter);
     m_musiclist = new MusicListView;
+    m_model = m_musiclist->model();
+    m_musiclist->hide();
 
     layout->addWidget(actionBar, 0, Qt::AlignTop);
     layout->addWidget(m_musiclist, 0, Qt::AlignTop);
-    layout->addWidget(emptyHits, 0, Qt::AlignCenter);
-
+    layout->addWidget(m_emptyHits, 0, Qt::AlignCenter);
 
     D_THEME_INIT_WIDGET(MusicListWidget);
     m_sortCombo->setStyleSheet(
@@ -81,24 +84,42 @@ MusicListWidget::MusicListWidget(QWidget *parent) : QFrame(parent)
         emit this->resort(m_palylist, sortType);
     });
 
-    connect(m_musiclist, &MusicListView::doubleClicked,
-    this, [ = ](const QModelIndex & index) {
-        auto musicItem = qobject_cast<MusicItem *>(m_musiclist->indexWidget(index));
-        if (musicItem) {
-            emit musicItem->play();
-        }
-    });
-
     connect(btPlayAll, &QPushButton::clicked, this, [ = ](bool) {
         if (m_palylist) {
             emit this->playall(m_palylist);
         }
     });
 
-    connect(this, &MusicListWidget::showEmpty, this, [ = ](bool isEmpty) {
+    connect(this, &MusicListWidget::showEmptyHits, this, [ = ](bool isEmpty) {
         actionBar->setVisible(!isEmpty);
         m_musiclist->setVisible(!isEmpty);
-        emptyHits->setVisible(isEmpty);
+        m_emptyHits->setVisible(isEmpty);
+    });
+
+    connect(m_musiclist, &MusicListView::requestCustomContextMenu,
+    this, [ = ](const QPoint & pos) {
+        emit this->requestCustomContextMenu(pos);
+    });
+
+
+    connect(m_musiclist, &MusicListView::remove,
+    this, [ = ](const MusicMeta & meta) {
+        emit this->musicRemove(m_palylist, meta);
+    });
+    connect(m_musiclist, &MusicListView::addToPlaylist,
+    this, [ = ](QSharedPointer<Playlist> playlist, const MusicMetaList metalist) {
+        emit this->musicAdd(playlist, metalist);
+    });
+
+    connect(m_musiclist, &MusicListView::doubleClicked,
+    this, [ = ](const QModelIndex & index) {
+        auto item = m_musiclist->model()->item(index.row(), 0);
+        MusicMeta meta = qvariant_cast<MusicMeta>(item->data());
+        emit musicClicked(m_palylist, meta);
+    });
+    connect(m_musiclist, &MusicListView::play,
+    this, [ = ](const MusicMeta & meta) {
+        emit musicClicked(m_palylist, meta);
     });
 }
 
@@ -106,6 +127,7 @@ void MusicListWidget::resizeEvent(QResizeEvent *event)
 {
     // TODO: remove resize
     QWidget::resizeEvent(event);
+    m_musiclist->resize(event->size());
     m_musiclist->setFixedHeight(event->size().height() - 40);
 }
 
@@ -117,28 +139,24 @@ void MusicListWidget::onMusicPlayed(QSharedPointer<Playlist> palylist, const Mus
                    << "playlist:" << m_palylist;
         return;
     }
-    // TODO: spead up find item
-    MusicItem *musicItem = nullptr;
-    QListWidgetItem *item = nullptr;
-    for (int i = 0; i < m_musiclist->count(); ++i) {
-        item = m_musiclist->item(i);
-        musicItem = qobject_cast<MusicItem *>(m_musiclist->itemWidget(item));
-        if (musicItem && musicItem->info().hash == info.hash) {
-//            qDebug() << "find" << i << item << m_musiclist->count();
+
+    // TODO: quick find
+    QModelIndex index;
+    QStandardItem *item = nullptr;
+    for (int i = 0; i < m_model->rowCount(); ++i) {
+        index = m_model->index(i, 0);
+        item = m_model->item(i, 0);
+        MusicMeta meta = qvariant_cast<MusicMeta>(item->data());
+        if (meta.hash == info.hash) {
             break;
         }
     }
-    if (m_last) {
-        m_last->stop();
-    }
-    m_last = musicItem;
-
-    if (!musicItem) {
+    if (nullptr == item) {
         return;
     }
-    musicItem->onMusicPlay();
-    m_musiclist->setCurrentItem(nullptr);
-    m_musiclist->setCurrentItem(item);
+    m_musiclist->clearSelection();
+    m_musiclist->setCurrentIndex(index);
+    m_musiclist->scrollTo(index);
 }
 
 void MusicListWidget::onMusicRemoved(QSharedPointer<Playlist> playlist, const MusicMeta &info)
@@ -149,61 +167,44 @@ void MusicListWidget::onMusicRemoved(QSharedPointer<Playlist> playlist, const Mu
                    << "playlist:" << m_palylist;
         return;
     }
-    // TODO: spead up find item
-    MusicItem *musicItem = nullptr;
-    QListWidgetItem *item = nullptr;
-    for (int i = 0; i < m_musiclist->count(); ++i) {
-        item = m_musiclist->item(i);
-        musicItem = qobject_cast<MusicItem *>(m_musiclist->itemWidget(item));
-        if (musicItem && musicItem->info().hash == info.hash) {
+
+    // TODO: quick find
+    for (int i = 0; i < m_model->rowCount(); ++i) {
+        auto item = m_model->item(i, 0);
+        MusicMeta meta = qvariant_cast<MusicMeta>(item->data());
+        if (meta.hash == info.hash) {
+            m_model->removeRow(i);
             break;
         }
     }
 
-    if (m_last == musicItem) {
-        m_last = nullptr;
-    }
 
-    m_musiclist->removeItemWidget(item);
-    delete m_musiclist->takeItem(m_musiclist->row(item));
-
-    // TODO: how to scroll
-//        m_musiclist->scrollToItem(m_musiclist->item(row));
-
-    qDebug() << playlist->id() << playlist->length();
-    emit this->showEmpty(playlist->length() == 0);
+    showEmptyHits(playlist->length() == 0);
 }
 
 void MusicListWidget::addMusicInfo(MusicListView *m_musiclist, const MusicMeta &info)
 {
-//    qDebug() << "add" << m_musiclist->count()<<info.title;
-    auto item = new QListWidgetItem;
-    auto musicItem = new MusicItem(m_musiclist->model()->rowCount() + 1, info);
+    Q_ASSERT(m_musiclist);
 
-    m_musiclist->addItem(item);
-    m_musiclist->setItemWidget(item, musicItem);
+    QStandardItem *newItem = new QStandardItem;
+    newItem->setData(QVariant::fromValue<MusicMeta>(info));
+    m_model->appendRow(newItem);
+    auto row = m_model->rowCount() - 1;
+    QModelIndex index = m_model->index(row, 0, QModelIndex());
+    m_model->setData(index, row);
+    index = m_model->index(row, 1, QModelIndex());
+    m_model->setData(index, info.title);
+    index = m_model->index(row, 2, QModelIndex());
+    auto artist = info.artist.isEmpty() ? tr("Unknow Artist") : info.artist;
+    m_model->setData(index, artist);
+    index = m_model->index(row, 3, QModelIndex());
+    auto album = info.album.isEmpty() ? tr("Unknow Album") : info.album;
+    m_model->setData(index, album);
 
-    connect(musicItem, &MusicItem::remove, this, [ = ]() {
-        emit this->musicRemove(m_palylist, musicItem->info());
-    });
+    index = m_model->index(row, 4, QModelIndex());
+    m_model->setData(index, lengthString(info.length));
 
-    connect(musicItem, &MusicItem::play, this, [ = ]() {
-        if (m_last) {
-            m_last->stop();
-        }
-        m_last = musicItem;
-        emit musicClicked(m_palylist, musicItem->info());
-    });
-
-    connect(musicItem, &MusicItem::addToPlaylist, this, [ = ](const QString & id) {
-        emit musicAdd(id, musicItem->info());
-    });
-
-    connect(musicItem, &MusicItem::requestCustomContextMenu, this, [ = ](const QPoint & pos) {
-        emit this->requestCustomContextMenu(musicItem, pos);
-    });
-
-    emit this->showEmpty(false);
+    showEmptyHits(false);
 }
 
 
@@ -226,29 +227,34 @@ void MusicListWidget::onMusicAdded(QSharedPointer<Playlist> palylist, const Musi
     addMusicInfo(m_musiclist, info);
 }
 
+void MusicListWidget::onMusicListAdded(QSharedPointer<Playlist> palylist, const MusicMetaList &infolist)
+{
+    for (auto &meta : infolist) {
+        onMusicAdded(palylist, meta);
+    }
+}
+
 void MusicListWidget::onMusiclistChanged(QSharedPointer<Playlist> playlist)
 {
     if (playlist.isNull()) {
-        qWarning() << "change to emptry playlist";
+        qWarning() << "can not change to emptry playlist";
         return;
     }
-    m_last = nullptr;
     this->setCurrentList(playlist);
     m_sortCombo->setCurrentIndex(playlist->sorttype());
-    m_musiclist->clear();
+    m_model->removeRows(0, m_model->rowCount());
     for (auto &info : playlist->allmusic()) {
         addMusicInfo(m_musiclist, info);
     }
 
-    emit this->showEmpty(playlist->length() == 0);
+    showEmptyHits(playlist->length() == 0);
 }
 
-void MusicListWidget::onCustomContextMenuRequest(MusicItem *item,
-        const QPoint &pos,
+void MusicListWidget::onCustomContextMenuRequest(const QPoint &pos,
         QSharedPointer<Playlist> selectedlist,
         QSharedPointer<Playlist> favlist,
         QList<QSharedPointer<Playlist> > newlists)
 {
-    Q_ASSERT(item != nullptr);
-    item->showContextMenu(pos, selectedlist, favlist, newlists);
+//    Q_ASSERT(item != nullptr);
+    m_musiclist->showContextMenu(pos, selectedlist, favlist, newlists);
 }

@@ -20,8 +20,6 @@
 #include <QFile>
 #include <QFileInfo>
 
-#include <QDebug>
-
 #include "../model/musiclistmodel.h"
 #include "../musicapp.h"
 
@@ -46,11 +44,9 @@ static int doSyncGet(const QString &rootUrl, QByteArray &result)
     QScopedPointer<QNetworkAccessManager> connection(new QNetworkAccessManager);
     QScopedPointer<QNetworkReply> reply(connection->get(url));
 
-//    qDebug() << "begin get" << url.url();
     QEventLoop waitLoop;
     QObject::connect(reply.data(), SIGNAL(finished()), &waitLoop, SLOT(quit()));
     waitLoop.exec();
-//    qDebug() << "end get" << url.url();
 
     int errorCode = reply->error();
     if (errorCode != 0) {
@@ -160,7 +156,6 @@ int LyricService::doSongRequest(const MusicMeta &info, bool lyric, bool cover)
 
     auto resultArray = jsonObject.value("result").toArray();
     if (0 == resultArray.size()) {
-        qDebug() << "empty result" << jsonObject;
         return -1;
     };
     auto result = resultArray.first().toObject();
@@ -199,7 +194,6 @@ int LyricService::doSongArtistRequest(const MusicMeta &info, bool lyric, bool co
 
     auto resultArray = jsonObject.value("result").toArray();
     if (0 == resultArray.size()) {
-        qDebug() << "empty result" << jsonObject;
         return -1;
     };
     auto result = resultArray.first().toObject();
@@ -238,7 +232,6 @@ int LyricService::doLyricRequest(const MusicMeta &info, int sid)
     }
     auto count = jsonObject.value("count").toInt();
     if (0 == count) {
-        qDebug() << "empty " << jsonObject;
         return -1;
     };
     QJsonObject result;
@@ -281,7 +274,6 @@ int LyricService::doCoverRequest(const MusicMeta &info, int aid)
     }
     auto count = jsonObject.value("count").toInt();
     if (0 == count) {
-        qDebug() << "empty " << jsonObject;
         return -1;
     };
     QJsonObject result;
@@ -310,6 +302,5 @@ int LyricService::downloadUrl(const QString &rootUrl, const QString &filepath)
     file.write(result);
     file.close();
 
-    qDebug() << "downloadUrl " << file.errorString();
     return ret;
 }

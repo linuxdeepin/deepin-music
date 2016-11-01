@@ -7,21 +7,16 @@
  * (at your option) any later version.
  **/
 
-#ifndef FITSIZELSTVIEW_H
-#define FITSIZELSTVIEW_H
+#ifndef PINYIN_H
+#define PINYIN_H
 
-#include <QListView>
+#include <QStringList>
 
-class FitSizeLstView : public QListView
+namespace Pinyin
 {
-    Q_OBJECT
-public:
-    explicit FitSizeLstView(QWidget *parent = 0);
 
-    QSize sizeHint() const Q_DECL_OVERRIDE;
-signals:
+QStringList simpleChineseSplit(QString &pinyin);
 
-public slots:
 };
 
-#endif // FITSIZELSTVIEW_H
+#endif // PINYIN_H

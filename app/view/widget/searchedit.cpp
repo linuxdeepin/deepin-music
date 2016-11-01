@@ -9,7 +9,6 @@
 
 #include "searchedit.h"
 
-#include <QDebug>
 #include <QKeyEvent>
 
 #include "searchresult.h"
