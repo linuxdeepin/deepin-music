@@ -138,7 +138,8 @@ void AppPresenter::prepareData()
     connect(d->playlistMgr, &PlaylistManager::selectedPlaylistChanged,
             this, &AppPresenter::selectedPlaylistChanged);
 
-    connect(Player::instance(), &Player::progrossChanged, this, [ = ](qint64 position, qint64 duration) {
+    connect(Player::instance(), &Player::progrossChanged,
+            this, [ = ](qint64 position, qint64 duration) {
         emit progrossChanged(position, duration);
     });
     connect(Player::instance(), &Player::musicPlayed,

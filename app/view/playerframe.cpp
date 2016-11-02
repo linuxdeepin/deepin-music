@@ -203,6 +203,8 @@ void PlayerFrame::binding(AppPresenter *presenter)
     connect(presenter, &AppPresenter::coverSearchFinished,
             d->lyric, &LyricView::onCoverChanged);
 
+    connect(presenter, &AppPresenter::progrossChanged,
+            d->lyric, &LyricView::onProgressChanged);
     connect(presenter, &AppPresenter::coverSearchFinished,
     this, [ = ](const MusicMeta &, const QString & coverPath) {
         QImage image = QImage(coverPath).scaled(this->size());

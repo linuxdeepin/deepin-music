@@ -100,7 +100,6 @@ void MediaFileMonitor::importPlaylistFiles(QSharedPointer<Playlist> playlist, co
     for (auto &url : urllist) {
         QFileInfo fileInfo(url);
         if (fileInfo.suffix() == "cue") {
-            qDebug() << "add cue" << url;
             cuelist << CueParser(url);
             continue;
         }
@@ -115,7 +114,6 @@ void MediaFileMonitor::importPlaylistFiles(QSharedPointer<Playlist> playlist, co
 
         //check is lossless file
         if (losslessSuffix.contains(fileInfo.suffix())) {
-            qDebug() << "insert" << info.localpath;
             losslessMetaCache.insert(info.localpath, info);
             continue;
         }

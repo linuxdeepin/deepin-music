@@ -23,7 +23,7 @@ static bool createConnection()
 {
     QDir cacheDir(MusicApp::cachePath());
     if (!cacheDir.exists()) {
-        cacheDir.mkdir(".");
+        cacheDir.mkpath(".");
     }
     QString cachePath = MusicApp::cachePath() + "/mediameta.sqlite";
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
@@ -31,8 +31,8 @@ static bool createConnection()
 
     if (!db.open()) {
         qCritical() << db.lastError()
-                 << MusicApp::cachePath()
-                 << cachePath;
+                    << MusicApp::cachePath()
+                    << cachePath;
         return false;
     }
 

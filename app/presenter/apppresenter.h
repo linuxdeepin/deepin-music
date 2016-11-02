@@ -68,7 +68,7 @@ signals:
     //! from control
     void musicPlayed(QSharedPointer<Playlist> palylist, const MusicMeta &info);
     void musicPaused(QSharedPointer<Playlist> palylist, const MusicMeta &info);
-    void progrossChanged(qint64 value, qint64 range);
+    void progrossChanged(qint64 pos, qint64 length);
 
     //! from lyricservice
     void lyricSearchFinished(const MusicMeta &, const QString &lyricPath);

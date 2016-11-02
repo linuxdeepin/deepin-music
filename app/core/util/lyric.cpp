@@ -23,10 +23,11 @@ Lyric parseLrc(QString &rawLyric)
     QString lrc(rawLyric.replace(QString("\\n"), QChar('\n')));
 
     if (HasNoTimeTag(lrc)) {
-        //
+        lyric.hasTime = false;
 //        lrc_type_ = LrcType::kLrcTypeNoTimeLrc;
         return lyric;
     }
+    lyric.hasTime = true;
 
     // Parse each line of content.
     foreach(const QString & line, lrc.split(QChar('\n'))) {

@@ -63,7 +63,7 @@ public slots:
     void changeProgress(qint64 value, qint64 range);
 
 private:
-    void setMedia(const MusicMeta &info);
+    void setMediaMeta(const MusicMeta &info);
     void selectNext(const MusicMeta &info, PlayMode mode);
     void selectPrev(const MusicMeta &info, PlayMode mode);
     explicit Player(QObject *parent = 0);

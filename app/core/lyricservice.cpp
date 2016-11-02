@@ -18,6 +18,7 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QFile>
+#include <QDir>
 #include <QFileInfo>
 
 #include "../model/musiclistmodel.h"
@@ -72,7 +73,14 @@ static int doGecimeAPI(const QString &url, QJsonObject &resultObject)
 
 LyricService::LyricService(QObject *parent) : QObject(parent)
 {
-
+    QDir cacheDir(MusicApp::cachePath() + "/lyric");
+    if (!cacheDir.exists()) {
+        cacheDir.mkpath(".");
+    }
+    cacheDir = QDir(MusicApp::cachePath() + "/cover");
+    if (!cacheDir.exists()) {
+        cacheDir.mkpath(".");
+    }
 }
 
 

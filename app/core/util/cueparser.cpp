@@ -13,6 +13,7 @@ extern "C" {
 //#include "../../vendor/src/libcue/libcue.h"
 //#include "../../vendor/src/libcue/cue_time.h"
 #include <libcue/libcue.h>
+#include <libcue/time.h>
 }
 
 #include <QFile>
@@ -24,14 +25,14 @@ extern "C" {
 
 #include "musicmeta.h"
 
-void time_frame_to_msf(long frame, int *m, int *s, int *f)
-{
-    *f = frame % 75;           /* 0 <= frames <= 74 */
-    frame /= 75;
-    *s = frame % 60;          /* 0 <= seconds <= 59 */
-    frame /= 60;
-    *m = frame;               /* 0 <= minutes */
-}
+//void time_frame_to_msf(long frame, int *m, int *s, int *f)
+//{
+//    *f = frame % 75;           /* 0 <= frames <= 74 */
+//    frame /= 75;
+//    *s = frame % 60;          /* 0 <= seconds <= 59 */
+//    frame /= 60;
+//    *m = frame;               /* 0 <= minutes */
+//}
 
 qint64 timeframe2mtime(long frame)
 {
@@ -39,14 +40,13 @@ qint64 timeframe2mtime(long frame)
     time_frame_to_msf(frame, &m, &s, &f);
     auto a =  m * 60 * 1000 + s * 1000 + f * 1000 / 75;
 
-    qDebug() << frame << a << lengthString(a);
     return a;
 }
 
-#define mu_assert(msg, condition) \
+#define CHECK_RETURN(msg, condition) \
     do{ \
         if (! (condition)) { \
-            /*qDebug() << msg*/; \
+            /*qCritical() << msg*/; \
             /*return*/; \
         } \
     }while(0)
@@ -65,17 +65,15 @@ CueParser::CueParser(const QString &filepath)
 
     QString album;
     Cd *cd = cue_parse_string(cue.toStdString().c_str());
-    if (nullptr == cd) {
-        qCritical() << "parse cue failed" << cue;
-        return;
-    }
+    CHECK_RETURN("parse cue failed", nullptr != cd);
 
     Cdtext *cdtext = cd_get_cdtext(cd);
-    mu_assert("error getting CDTEXT", cdtext != NULL);
+    CHECK_RETURN("error getting CDTEXT", cdtext != NULL);
 
     const char *val;
     val = cdtext_get(PTI_TITLE, cdtext);
-    mu_assert("error getting CD title", val != NULL);
+    CHECK_RETURN("error getting CD title", val != NULL);
+
     album = val;
 
     int ival = cd_get_ntrack(cd);
@@ -86,14 +84,17 @@ CueParser::CueParser(const QString &filepath)
 
     for (int i = 0; i < ival; ++i) {
         MusicMeta meta;
-        meta.album = album;
         meta.track = i + 1;
         Track *track;
         track = cd_get_track(cd, int(meta.track));
-        mu_assert("error getting track", track != NULL);
+        if (nullptr == track) {
+            continue;
+        }
 
         val = track_get_filename(track);
-        mu_assert("error getting track filename", val != NULL);
+        if (nullptr == val) {
+            continue;
+        }
         meta.localpath = cueFileInfo.absolutePath() + "/" + val;
 
         if (!fileMetaCache.contains(meta.localpath)) {
@@ -116,22 +117,24 @@ CueParser::CueParser(const QString &filepath)
         musicFilePath = meta.localpath;
 
         cdtext = track_get_cdtext(track);
-        mu_assert("error getting track CDTEXT", cdtext != NULL);
-
-        val = cdtext_get(PTI_PERFORMER, cdtext);
-        mu_assert("error getting track performer", val != NULL);
-        meta.artist = val;
+        if (nullptr == cdtext) {
+            continue;
+        }
 
         val = cdtext_get(PTI_TITLE, cdtext);
-        mu_assert("error getting track title", val != NULL);
         meta.title = val;
+
+        val = cdtext_get(PTI_PERFORMER, cdtext);
+        meta.artist = val;
+        meta.album = album;
 
         meta.offset = timeframe2mtime(track_get_start(track));
         meta.length = timeframe2mtime(track_get_length(track));
 
-        // TODO: track must < 1000
+        // TODO: hack track must < 1000
         meta.timestamp = fileMetaCache.value(meta.localpath).timestamp + meta.track;
         meta.filetype = fileMetaCache.value(meta.localpath).filetype;
+        meta.size = fileMetaCache.value(meta.localpath).size;
 
         MusicMetaName::pinyinIndex(meta);
 

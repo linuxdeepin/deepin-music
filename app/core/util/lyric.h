@@ -68,6 +68,7 @@ class Lyric
 public:
     explicit Lyric();
 
+    bool        hasTime;
     MusicMeta   m_meta;
     QList<LrcElement> m_lyricElements;
 };

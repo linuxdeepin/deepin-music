@@ -36,8 +36,8 @@ void MusicItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
         } else {
             painter->setPen(headerColor);
         }
-
-        painter->drawText(option.rect, Qt::AlignCenter, index.data().toString());
+        auto num = QString("%1").arg(index.row()+1);
+        painter->drawText(option.rect, Qt::AlignCenter, num);
     }
     break;
     case 4: {

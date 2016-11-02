@@ -19,6 +19,7 @@
 #include <QResizeEvent>
 #include <QPaintEvent>
 #include <QStringListModel>
+#include <QAbstractItemDelegate>
 
 #include <dthememanager.h>
 
@@ -29,11 +30,15 @@
 
 DWIDGET_USE_NAMESPACE
 
-const QString defaultLyric = "Youth is not a time of life";
+const int lyricLineHeight = 40;
+const QString defaultLyric = "No Lyric";
 
 class LyricViewPrivate
 {
 public:
+    int                 m_emptyOffset = 0;
+    int                 m_currentline = 0;
+    Lyric               m_lyriclist;
     Cover               *m_cover    = nullptr;
     QListView           *m_lyric    = nullptr;
     QStringListModel    *m_model    = nullptr;
@@ -63,9 +68,11 @@ LyricView::LyricView(QWidget *parent)
     d->m_lyric->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     d->m_lyric->setItemDelegate(new LyricLineDelegate);
     d->m_lyric->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    d->m_lyric->setFlow(QListView::TopToBottom);
+//    d->m_lyric->setSelectionBehavior(QAbstractItemView::SelectRows);
 
     d->m_model = new QStringListModel;
-    setLyricLines(defaultLyric.split("\n"));
+    setLyricLines("");
 
     d->m_lyric->setModel(d->m_model);
 
@@ -102,8 +109,7 @@ void LyricView::resizeEvent(QResizeEvent *event)
 {
     QWidget::resizeEvent(event);
     d->m_lyric->setFixedWidth(event->size().width() * 45 / 100);
-    d->m_lyric->setFixedHeight(event->size().height() * 90 / 100);
-    d->m_lyric->resize(event->size());
+    adjustLyric();
 }
 
 void LyricView::paintEvent(QPaintEvent *e)
@@ -117,9 +123,9 @@ void LyricView::paintEvent(QPaintEvent *e)
 //    painter.setRenderHint(QPainter::HighQualityAntialiasing);
 
 //    QBrush brush(QColor(255, 255, 255, 25));
-//    auto hcenter = d->m_scroll->y() + d->m_scroll->height() / 2;
-//    auto xstart = d->m_scroll->x();
-//    auto xend = d->m_scroll->x() + d->m_scroll->width();
+//    auto hcenter = d->m_lyric->y() + d->m_lyric->height() / 2;
+//    auto xstart = d->m_lyric->x();
+//    auto xend = d->m_lyric->x() + d->m_lyric->width();
 
 //    QPainterPath path;
 //    path.moveTo(xstart, hcenter - 4);
@@ -140,39 +146,115 @@ void LyricView::paintEvent(QPaintEvent *e)
 
 //    painter.fillPath(path, brush);
 }
-
-void LyricView::setLyricLines(const QStringList &lines)
+#include <QDebug>
+void LyricView::setLyricLines(QString str)
 {
+    d->m_lyriclist = parseLrc(str);
+
+    QStringList lines;
+    if (!d->m_lyriclist.hasTime) {
+        lines = str.split('\n');
+    } else {
+        for (auto &ele : d->m_lyriclist.m_lyricElements) {
+            lines << ele.content;
+        }
+    }
+
+    if (lines.length() <= 0) {
+        lines << defaultLyric;
+    }
+
+    d->m_currentline = 0;
+    auto itemHeight = lyricLineHeight;
+    auto maxHeight = this->height() * 9 / 10;
+    if (lines.length() > 2) {
+        d->m_emptyOffset = maxHeight / itemHeight / 2;
+    } else {
+        d->m_emptyOffset = 0;
+    }
+
     QStringList lyric;
+
+    for (int i = 0; i < d->m_emptyOffset; ++i) {
+        lyric << "";
+    }
     for (auto line : lines) {
         lyric << line;
     }
+    for (int i = 0; i < d->m_emptyOffset; ++i) {
+        lyric << "";
+    }
     d->m_model->setStringList(lyric);
-    d->m_lyric->adjustSize();
+    d->m_lyric->setModel(d->m_model);
+
+    QModelIndex index = d->m_model->index(
+                            d->m_emptyOffset + d->m_currentline, 0, d->m_lyric->rootIndex());
+    d->m_lyric->clearSelection();
+    d->m_lyric->setCurrentIndex(index);
+    d->m_lyric->scrollTo(index, QListView::PositionAtCenter);
+    d->m_lyric->clearSelection();
+
+    adjustLyric();
+}
+
+void LyricView::onProgressChanged(qint64 value, qint64 /*length*/)
+{
+    auto len = d->m_lyriclist.m_lyricElements.length();
+    if (!d->m_lyriclist.hasTime) {
+        return;
+    }
+    if (len <= 2) {
+        return;
+    }
+
+    int i = 0;
+    for (i = 0; i < len; ++i) {
+        auto curEle = d->m_lyriclist.m_lyricElements.at(i);
+        if (value < curEle.start) {
+            break;
+        }
+    }
+    QModelIndex index = d->m_model->index(
+                            d->m_emptyOffset + i, 0, d->m_lyric->rootIndex());
+    d->m_lyric->clearSelection();
+    d->m_lyric->setCurrentIndex(index);
+    d->m_lyric->scrollTo(index, QListView::PositionAtCenter);
+
 }
 
 void LyricView::onLyricChanged(const MusicMeta &info, const QString &lyricPath)
 {
-    if (lyricPath.isEmpty()) { return; }
+    if (lyricPath.isEmpty()) {
+        setLyricLines("");
+        return;
+    }
+
     QFile lyricFile(lyricPath);
     if (!lyricFile.open(QIODevice::ReadOnly)) {
-        this->setLyricLines(QStringList() << defaultLyric);
+        setLyricLines("");
         return;
     }
     auto lyricStr = QString::fromUtf8(lyricFile.readAll());
-    auto lyric = parseLrc(lyricStr);
-
-    QStringList lyrics;
-    for (auto &ele : lyric.m_lyricElements) {
-        lyrics << ele.content;
-    }
-    d->m_model->setStringList(lyrics);
-    d->m_lyric->adjustSize();
     lyricFile.close();
+
+
+    setLyricLines(lyricStr);
 }
 
 void LyricView::onCoverChanged(const MusicMeta &info, const QString &coverPath)
 {
+    if (coverPath.isEmpty()) { return; }
     d->m_cover->setBackgroundUrl(coverPath);
     d->m_cover->repaint();
+}
+
+void LyricView::adjustLyric()
+{
+    auto itemHeight = lyricLineHeight;
+    auto maxHeight = this->height() * 9 / 10;
+    if (d->m_model->rowCount() * itemHeight < maxHeight) {
+        d->m_lyric->setFixedHeight(d->m_model->rowCount() * itemHeight);
+    } else {
+        d->m_lyric->setFixedHeight(maxHeight);
+    }
 }

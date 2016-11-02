@@ -26,14 +26,16 @@ public:
     virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
     void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
 
-    void setLyricLines(const QStringList &lines);
+    void setLyricLines(QString lines);
 signals:
 
 public slots:
+    void onProgressChanged(qint64 value, qint64 length);
     void onLyricChanged(const MusicMeta &info, const QString &lyricPath);
     void onCoverChanged(const MusicMeta &info, const QString &coverPath);
 
 private:
+    void adjustLyric();
     QScopedPointer<LyricViewPrivate>  d;
 };
 

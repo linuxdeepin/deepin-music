@@ -44,6 +44,16 @@ public:
     qint64  offset;//msec
 
     bool    favourite;
+public:
+    MusicMeta()
+    {
+        timestamp = 0;
+        length = 0;
+        offset = 0;
+        size = 0;
+        track = 0;
+        favourite = false;
+    }
 };
 
 typedef QList<MusicMeta>  MusicMetaList;
