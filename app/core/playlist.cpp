@@ -149,7 +149,7 @@ void Playlist::load()
         musicIDs << QString("\"%1\"").arg(musicID);
     }
     auto sqlStr = QString("SELECT hash, localpath, title, artist, album, "
-                          "filetype, length, size, timestamp "
+                          "filetype, track, offset, length, size, timestamp "
                           "FROM music WHERE hash IN (%1)").arg(musicIDs.join(","));
     if (!query.exec(sqlStr)) {
         qWarning() << query.lastError();
@@ -164,9 +164,11 @@ void Playlist::load()
         info.artist = query.value(3).toString();
         info.album = query.value(4).toString();
         info.filetype = query.value(5).toString();
-        info.length = query.value(6).toInt();
-        info.size = query.value(7).toInt();
-        info.timestamp = query.value(8).toInt();
+        info.track = query.value(6).toInt();
+        info.offset = query.value(7).toInt();
+        info.length = query.value(8).toInt();
+        info.size = query.value(9).toInt();
+        info.timestamp = query.value(10).toInt();
         listmeta.musicMap.insert(info.hash, info);
     }
     resort();
@@ -307,9 +309,4 @@ void Playlist::resort()
     for (auto meta : sortList) {
         listmeta.musicIds << meta.hash;
     }
-}
-
-void Playlist::searchTitle(const QString &title)
-{
-
 }

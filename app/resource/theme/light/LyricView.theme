@@ -6,21 +6,6 @@
     background-color: transparent;
 }
 
-#LyricTextScroll {
-    background-color: transparent;
-    border-radius: 3px;
-}
-
-#LyricText {
-    qproperty-alignment: AlignCenter;
-    font-size: 16px;
-    font-weight: normal;
-    font-style: normal;
-    line-height: 1.88;
-    color: rgba(255,255,255,50%);
-    background-color: transparent;
-}
-
 #LyricBack{
     border-image: url(:/image/show_lyc_normal.png);
 }

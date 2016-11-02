@@ -39,13 +39,13 @@ static bool createConnection()
     QSqlQuery query;
     query.exec("CREATE TABLE IF NOT EXISTS music (hash TEXT primary key not null, "
                "timestamp INTEGER,"
-               "title VARCHAR(256), artist VARCHAR(256),"
-               "py_title VARCHAR(256), py_title_short VARCHAR(256),"
-               "py_artist VARCHAR(256), py_artist_short VARCHAR(256),"
-               "py_album VARCHAR(256), py_album_short VARCHAR(256),"
-               "album VARCHAR(256), filetype VARCHAR(32),"
-               "size INTEGER, track INTEGER,"
-               "favourite INTEGER(32),"
+               "title VARCHAR(256), artist VARCHAR(256), "
+               "py_title VARCHAR(256), py_title_short VARCHAR(256), "
+               "py_artist VARCHAR(256), py_artist_short VARCHAR(256), "
+               "py_album VARCHAR(256), py_album_short VARCHAR(256), "
+               "album VARCHAR(256), filetype VARCHAR(32), "
+               "size INTEGER, track INTEGER, "
+               "offset INTEGER, favourite INTEGER(32), "
                "localpath VARCHAR(4096), length INTEGER)"
               );
 
@@ -175,7 +175,7 @@ QList<MusicMeta> MediaDatabase::searchMusicTitle(const QString &title, int limit
 {
     auto matchReg = QString("\"%%1%\" ").arg(title);
     QString queryString = QString("SELECT hash, localpath, title, artist, album, "
-                                  "filetype, length, size, timestamp "
+                                  "filetype, track, offset, length, size, timestamp "
                                   "FROM music WHERE "
                                   "title LIKE  " + matchReg +
                                   "OR py_title LIKE  " + matchReg +
@@ -189,7 +189,7 @@ QList<MusicMeta> MediaDatabase::searchMusicMeta(const QString &title, int limit)
 {
     auto matchReg = QString("\"%%1%\" ").arg(title);
     QString queryString = QString("SELECT hash, localpath, title, artist, album, "
-                                  "filetype, length, size, timestamp "
+                                  "filetype, track, offset, length, size, timestamp "
                                   "FROM music WHERE "
                                   "title LIKE  " + matchReg +
                                   "OR py_title LIKE  " + matchReg +

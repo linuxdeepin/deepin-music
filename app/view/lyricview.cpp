@@ -14,55 +14,74 @@
 #include <QScrollArea>
 #include <QPushButton>
 #include <QHBoxLayout>
+#include <QListView>
 #include <QPainter>
 #include <QResizeEvent>
 #include <QPaintEvent>
+#include <QStringListModel>
 
 #include <dthememanager.h>
-DWIDGET_USE_NAMESPACE
+
+#include "../core/util/lyric.h"
 
 #include "widget/cover.h"
+#include "widget/lyriclinedelegate.h"
+
+DWIDGET_USE_NAMESPACE
 
 const QString defaultLyric = "Youth is not a time of life";
 
-
-LyricView::LyricView(QWidget *parent) : QFrame(parent)
+class LyricViewPrivate
 {
+public:
+    Cover               *m_cover    = nullptr;
+    QListView           *m_lyric    = nullptr;
+    QStringListModel    *m_model    = nullptr;
+};
+
+LyricView::LyricView(QWidget *parent)
+    : QFrame(parent), d(new LyricViewPrivate)
+{
+
     setObjectName("LyricView");
     auto layout = new QHBoxLayout(this);
     layout->setContentsMargins(20, 20, 20, 20);
 
-    m_cover = new Cover;
-    m_cover->setFixedSize(200, 200);
-    m_cover->setObjectName("LyricCoveraa");
-    m_cover->setBackgroundUrl(":/image/cover_max.png");
+    d->m_cover = new Cover;
+    d->m_cover->setFixedSize(200, 200);
+    d->m_cover->setObjectName("LyricCoveraa");
+    d->m_cover->setBackgroundUrl(":/image/cover_max.png");
 
-    m_scroll = new QScrollArea;
-    m_scroll->setObjectName("LyricTextScroll");
+    d->m_lyric = new QListView;
+    d->m_lyric->setObjectName("LyricTextView");
+    d->m_lyric->setStyleSheet(
+        DThemeManager::instance()->getQssForWidget("Widget/LyricTextView")
+    );
 
-    m_lyric = new QLabel;
-    m_lyric->setObjectName("LyricText");
+    d->m_lyric->setSelectionMode(QListView::SingleSelection);
+    d->m_lyric->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    d->m_lyric->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    d->m_lyric->setItemDelegate(new LyricLineDelegate);
+    d->m_lyric->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
+    d->m_model = new QStringListModel;
     setLyricLines(defaultLyric.split("\n"));
-    m_lyric->setWordWrap(true);
 
-    m_scroll->setWidget(m_lyric);
-    m_scroll->setAlignment(Qt::AlignCenter);
-    m_scroll->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    m_scroll->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    d->m_lyric->setModel(d->m_model);
 
     auto btBack = new QPushButton;
     btBack->setObjectName("LyricBack");
 
     QSizePolicy spCover(QSizePolicy::Preferred, QSizePolicy::Preferred);
     spCover.setHorizontalStretch(80);
-    m_cover->setSizePolicy(spCover);
-    layout->addWidget(m_cover, 0, Qt::AlignCenter);
+    d->m_cover->setSizePolicy(spCover);
+    layout->addWidget(d->m_cover, 0, Qt::AlignCenter);
 
-    QSizePolicy spText(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    QSizePolicy spText(QSizePolicy::Preferred, QSizePolicy::Expanding);
     spText.setHorizontalStretch(20);
-    m_scroll->setSizePolicy(spText);
-
-    layout->addWidget(m_scroll, 0, Qt::AlignCenter);
+    spText.setVerticalStretch(100);
+    d->m_lyric->setSizePolicy(spText);
+    layout->addWidget(d->m_lyric, 0, Qt::AlignVCenter);
 
     QSizePolicy spBack(QSizePolicy::Preferred, QSizePolicy::Preferred);
     spBack.setHorizontalStretch(20);
@@ -74,12 +93,17 @@ LyricView::LyricView(QWidget *parent) : QFrame(parent)
     D_THEME_INIT_WIDGET(LyricView);
 }
 
+LyricView::~LyricView()
+{
+
+}
+
 void LyricView::resizeEvent(QResizeEvent *event)
 {
     QWidget::resizeEvent(event);
-    m_scroll->setFixedSize(event->size().width() * 45 / 100, event->size().height() * 90 / 100);
-    m_lyric->setFixedWidth(event->size().width() * 35 / 100);
-    m_lyric->adjustSize();
+    d->m_lyric->setFixedWidth(event->size().width() * 45 / 100);
+    d->m_lyric->setFixedHeight(event->size().height() * 90 / 100);
+    d->m_lyric->resize(event->size());
 }
 
 void LyricView::paintEvent(QPaintEvent *e)
@@ -93,9 +117,9 @@ void LyricView::paintEvent(QPaintEvent *e)
 //    painter.setRenderHint(QPainter::HighQualityAntialiasing);
 
 //    QBrush brush(QColor(255, 255, 255, 25));
-//    auto hcenter = m_scroll->y() + m_scroll->height() / 2;
-//    auto xstart = m_scroll->x();
-//    auto xend = m_scroll->x() + m_scroll->width();
+//    auto hcenter = d->m_scroll->y() + d->m_scroll->height() / 2;
+//    auto xstart = d->m_scroll->x();
+//    auto xend = d->m_scroll->x() + d->m_scroll->width();
 
 //    QPainterPath path;
 //    path.moveTo(xstart, hcenter - 4);
@@ -119,16 +143,12 @@ void LyricView::paintEvent(QPaintEvent *e)
 
 void LyricView::setLyricLines(const QStringList &lines)
 {
-    QString lyric;
+    QStringList lyric;
     for (auto line : lines) {
-        if (line.isEmpty()) {
-            lyric.append("<br />");
-        } else {
-        }
-        lyric.append(QString("<p style='line-height:180%'>%1</p>").arg(line));
+        lyric << line;
     }
-    m_lyric->setText(lyric);
-    m_lyric->adjustSize();
+    d->m_model->setStringList(lyric);
+    d->m_lyric->adjustSize();
 }
 
 void LyricView::onLyricChanged(const MusicMeta &info, const QString &lyricPath)
@@ -139,13 +159,20 @@ void LyricView::onLyricChanged(const MusicMeta &info, const QString &lyricPath)
         this->setLyricLines(QStringList() << defaultLyric);
         return;
     }
-    auto lyric = QString::fromUtf8(lyricFile.readAll());
-    this->setLyricLines(lyric.split("\n"));
+    auto lyricStr = QString::fromUtf8(lyricFile.readAll());
+    auto lyric = parseLrc(lyricStr);
+
+    QStringList lyrics;
+    for (auto &ele : lyric.m_lyricElements) {
+        lyrics << ele.content;
+    }
+    d->m_model->setStringList(lyrics);
+    d->m_lyric->adjustSize();
     lyricFile.close();
 }
 
 void LyricView::onCoverChanged(const MusicMeta &info, const QString &coverPath)
 {
-    m_cover->setBackgroundUrl(coverPath);
-    m_cover->repaint();
+    d->m_cover->setBackgroundUrl(coverPath);
+    d->m_cover->repaint();
 }

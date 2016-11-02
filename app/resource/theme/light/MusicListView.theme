@@ -3,12 +3,15 @@
     outline: none;
     background-color: transparent;
     border: 0px solid rgba(0, 0, 255 1);
+    color: rgba(41,41,41,100%);
     selection-background-color: #2ca7f8;
+    selection-color: white;
+
+    qproperty-headerColor: rgba(127,127,127,100%);
 }
 
 /* useless */
-#MusicListView::item
-{
+#MusicListView::item {
     color: blue;
     height: 6px;
     font-size: 12pt;

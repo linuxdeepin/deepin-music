@@ -11,17 +11,17 @@
 #define LYRICVIEW_H
 
 #include <QFrame>
+#include <QScopedPointer>
 
-class QScrollArea;
-class QLabel;
 class MusicMeta;
-class Cover;
+class LyricViewPrivate;
 
 class LyricView : public QFrame
 {
     Q_OBJECT
 public:
     explicit LyricView(QWidget *parent = 0);
+    ~LyricView();
 
     virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
     void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
@@ -34,9 +34,7 @@ public slots:
     void onCoverChanged(const MusicMeta &info, const QString &coverPath);
 
 private:
-    Cover       *m_cover    =nullptr;
-    QScrollArea *m_scroll   = nullptr;
-    QLabel      *m_lyric    = nullptr;
+    QScopedPointer<LyricViewPrivate>  d;
 };
 
 #endif // LYRICVIEW_H

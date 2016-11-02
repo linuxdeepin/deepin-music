@@ -40,13 +40,13 @@ void MediaDatabaseWriter::addMusicMeta(const MusicMeta &metalist)
     QSqlQuery query;
     query.prepare("INSERT INTO music ("
                   "hash, timestamp, title, artist, album, "
-                  "filetype, size, track, favourite, localpath, length, "
+                  "filetype, size, track, offset, favourite, localpath, length, "
                   "py_title, py_title_short, py_artist, py_artist_short, "
                   "py_album, py_album_short"
                   ") "
                   "VALUES ("
                   ":hash, :timestamp, :title, :artist, :album, "
-                  ":filetype, :size, :track, :favourite, :localpath, :length, "
+                  ":filetype, :size, :track, :offset, :favourite, :localpath, :length, "
                   ":py_title, :py_title_short, :py_artist, :py_artist_short, "
                   ":py_album, :py_album_short "
                   ")");
@@ -58,6 +58,7 @@ void MediaDatabaseWriter::addMusicMeta(const MusicMeta &metalist)
     query.bindValue(":filetype", metalist.filetype);
     query.bindValue(":size", metalist.size);
     query.bindValue(":track", metalist.track);
+    query.bindValue(":offset", metalist.offset);
     query.bindValue(":favourite", metalist.favourite);
     query.bindValue(":localpath", metalist.localpath);
     query.bindValue(":length", metalist.length);

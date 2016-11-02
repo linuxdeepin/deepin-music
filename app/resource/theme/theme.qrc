@@ -15,5 +15,6 @@
         <file>light/Widget/InfoDialog.theme</file>
         <file>light/Widget/SearchResult.theme</file>
         <file>light/Widget/ComboBox.theme</file>
+        <file>light/Widget/LyricTextView.theme</file>
     </qresource>
 </RCC>

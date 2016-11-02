@@ -24,7 +24,7 @@ void Player::setMode(Player::PlayMode mode)
 
 void Player::playMusic(QSharedPointer<Playlist> playlist, const MusicMeta &info)
 {
-    qDebug () << "play" << info.localpath;
+    qDebug() << "play" << info.localpath;
     MusicMeta nextInfo = info;
 
     m_playlist = playlist;
@@ -38,6 +38,10 @@ void Player::playMusic(QSharedPointer<Playlist> playlist, const MusicMeta &info)
     emit musicPlayed(playlist, nextInfo);
 
     this->play();
+
+    this->setPosition(nextInfo.offset);
+    qDebug() << nextInfo.offset << nextInfo.offset / 1000
+             << this->duration();
 }
 
 void Player::playNextMusic(QSharedPointer<Playlist> playlist, const MusicMeta &info)
@@ -65,14 +69,20 @@ void Player::playPrevMusic(QSharedPointer<Playlist> playlist, const MusicMeta &i
 void Player::setMedia(const MusicMeta &info)
 {
     m_info = info;
-    QMediaPlayer::setMedia(QUrl::fromLocalFile(info.localpath));
+    if (this->media().canonicalUrl() != QUrl::fromLocalFile(info.localpath)) {
+        QMediaPlayer::setMedia(QUrl::fromLocalFile(info.localpath));
+    }
 }
 
 void Player::changeProgress(qint64 value, qint64 range)
 {
-    auto position = value * this->duration() / range;
+    Q_ASSERT(value <= range);
+    Q_ASSERT(m_info.offset + m_info.length <= QMediaPlayer::duration());
+
+    auto position = value * m_info.length / range + m_info.offset;
     if (position < 0) {
         qCritical() << "invaild position:" << this->media().canonicalUrl() << position;
+        return;
     }
     this->setPosition(position);
 }
@@ -129,7 +139,20 @@ Player::Player(QObject *parent) : QMediaPlayer(parent)
         m_duration = duration;
     });
     connect(this, &QMediaPlayer::positionChanged, this, [ = ](qint64 position) {
-        emit progrossChanged(position,  m_duration);
+        if (0 == m_info.length) {
+            return;
+        }
+
+        if (m_info.offset > position) {
+            return;
+        }
+
+        if (position > m_info.offset + m_info.length) {
+            // TODO: to next
+            qDebug() << "auto change next music";
+            this->selectNext(m_info, m_mode);
+        }
+        emit progrossChanged(position - m_info.offset,  m_info.length);
     });
     connect(this, &QMediaPlayer::stateChanged, this, [ = ](QMediaPlayer::State state) {
         switch (state) {

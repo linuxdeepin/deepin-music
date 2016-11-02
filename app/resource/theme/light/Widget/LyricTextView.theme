@@ -1,0 +1,16 @@
+#LyricTextView{
+    border: 0px solid red;
+    alignment: center;
+    font-size: 16px;
+    font-weight: normal;
+    font-style: normal;
+    line-height: 1.88;
+    color: rgba(255,255,255,50%);
+    background-color: transparent;
+    outline: none;
+    selection-background-color:red;
+    selection-color: white;
+}
+#LyricTextView::item {
+    height: 40px;
+}

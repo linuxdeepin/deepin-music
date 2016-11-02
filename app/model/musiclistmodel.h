@@ -34,9 +34,15 @@ public:
 
     QString filetype;
     qint64  timestamp;
-    qint64  length;
+    qint64  length;//msec
     qint64  track;
     qint64  size;
+
+    QString editor;
+    QString composer;
+    QString creator;
+    qint64  offset;//msec
+
     bool    favourite;
 };
 
@@ -70,6 +76,7 @@ public:
 
 inline QString lengthString(qint64 length)
 {
+    length = length / 1000;
     QTime t(static_cast<int>(length / 3600), length % 3600 / 60, length % 60);
     return t.toString("mm:ss");
 }

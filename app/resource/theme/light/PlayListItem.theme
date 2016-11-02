@@ -16,11 +16,11 @@
 }
 
 #PlayListTitle {
+    color: #009aff;
     background: transparent;
     border: none;
     qproperty-alignment: AlignLeft;
     font-size: 12px;
-    color: #009aff;
 }
 
 #PlayListTitle:focus {

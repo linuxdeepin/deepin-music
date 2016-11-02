@@ -66,7 +66,6 @@ public slots:
     void removeMusic(const MusicMeta &info);
     void sortBy(Playlist::SortType sortType);
     void resort();
-    void searchTitle(const QString& title);
 
     //! private interface
 public:

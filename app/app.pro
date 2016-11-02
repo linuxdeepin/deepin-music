@@ -1,6 +1,6 @@
 DEFINES += QT_MESSAGELOGCONTEXT
 
-include($$PWD/../vendor/vendor.pri)
+include($$PWD/../vendor/src/chinese2pinyin/chinese2pinyin.pri)
 
 QT       += core gui widgets svg dbus multimedia multimediawidgets xml network sql
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -10,7 +10,7 @@ TARGET      = deepin-music
 CONFIG      += c++11 link_pkgconfig
 
 unix{
-    PKGCONFIG   += dtkbase dtkutil dtkwidget taglib
+    PKGCONFIG += dtkbase dtkutil dtkwidget taglib libcue
 }
 
 win32{
@@ -81,7 +81,11 @@ SOURCES += \
     view/widget/pushbutton.cpp \
     core/mediadatabasewriter.cpp \
     core/util/pinyin.cpp \
-    view/widget/musicitemdelegate.cpp
+    view/widget/musicitemdelegate.cpp \
+    core/util/lyric.cpp \
+    core/util/cueparser.cpp \
+    view/widget/lyriclinedelegate.cpp \
+    core/util/musicmeta.cpp
 
 HEADERS += \
     view/playerframe.h \
@@ -115,7 +119,11 @@ HEADERS += \
     view/widget/pushbutton.h \
     core/mediadatabasewriter.h \
     core/util/pinyin.h \
-    view/widget/musicitemdelegate.h
+    view/widget/musicitemdelegate.h \
+    core/util/lyric.h \
+    core/util/cueparser.h \
+    view/widget/lyriclinedelegate.h \
+    core/util/musicmeta.h
 
 RESOURCES += \
     resource/theme/theme.qrc \

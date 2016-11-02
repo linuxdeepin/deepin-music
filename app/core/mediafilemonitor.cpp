@@ -19,6 +19,7 @@
 #include <QThread>
 #include <QTextCodec>
 #include <QTime>
+#include <QHash>
 
 #include <tag.h>
 #include <fileref.h>
@@ -28,7 +29,8 @@
 #include "playlist.h"
 #include "mediadatabase.h"
 
-#include "util/pinyin.h"
+#include "util/cueparser.h"
+#include "util/musicmeta.h"
 
 static QMap<QString, bool>  sSupportedSuffix;
 static QStringList          sSupportedSuffixList;
@@ -41,23 +43,48 @@ QStringList MediaFileMonitor::supportedFilterStringList()
 
 MediaFileMonitor::MediaFileMonitor(QObject *parent) : QObject(parent)
 {
+    //black list
+    QHash<QString, bool> suffixBlacklist;
+    suffixBlacklist.insert("m3u", true);
+
+    QHash<QString, bool> suffixWhitelist;
+    suffixWhitelist.insert("cue", true);
+
     QMimeDatabase mdb;
     for (auto &mt : mdb.allMimeTypes()) {
         if (mt.name().startsWith("audio/")) {
             sSupportedFiterList <<  mt.filterString();
             for (auto &suffix : mt.suffixes()) {
+                if (suffixBlacklist.contains(suffix)) {
+                    continue;
+                }
                 sSupportedSuffixList << "*." + suffix;
                 sSupportedSuffix.insert(suffix, true);
             }
         }
     }
+
+    for (auto &suffix : suffixWhitelist.keys()) {
+        sSupportedSuffixList << "*." + suffix;
+        sSupportedSuffix.insert(suffix, true);
+    }
 }
+
 void MediaFileMonitor::importPlaylistFiles(QSharedPointer<Playlist> playlist, const QStringList &filelist)
 {
     QStringList urllist;
 
+    QHash<QString, bool> losslessSuffix;
+    losslessSuffix.insert("flac", true);
+    losslessSuffix.insert("ape", true);
+    losslessSuffix.insert("wav", true);
+
+    QMap<QString, MusicMeta> losslessMetaCache;
+    QList<CueParser>  cuelist;
+
     for (auto &filepath : filelist) {
-        QDirIterator it(filepath, sSupportedSuffixList, QDir::Files, QDirIterator::Subdirectories);
+        QDirIterator it(filepath, sSupportedSuffixList,
+                        QDir::Files, QDirIterator::Subdirectories);
         while (it.hasNext()) {
             urllist << it.next();
         }
@@ -71,73 +98,51 @@ void MediaFileMonitor::importPlaylistFiles(QSharedPointer<Playlist> playlist, co
     MusicMetaList metaCache;
 
     for (auto &url : urllist) {
-        auto hash = QString(QCryptographicHash::hash(url.toUtf8(), QCryptographicHash::Md5).toHex());
+        QFileInfo fileInfo(url);
+        if (fileInfo.suffix() == "cue") {
+            qDebug() << "add cue" << url;
+            cuelist << CueParser(url);
+            continue;
+        }
 
+        auto hash = QString(QCryptographicHash::hash(url.toUtf8(),
+                            QCryptographicHash::Md5).toHex());
         if (MediaDatabase::instance()->musicMetaExist(hash)) {
             continue;
         }
 
-        // TODO: fix me in windows
-#ifdef _WIN32
-        TagLib::FileRef f(url.toStdWString().c_str());
-#else
-        TagLib::FileRef f(url.toStdString().c_str());
-#endif
-        QFileInfo fileInfo(url);
+        MusicMeta info = MusicMetaName::fromLocalFile(fileInfo, hash);
 
-        if (f.isNull()) {
-            qWarning() << "import music file failed:" << url;
+        //check is lossless file
+        if (losslessSuffix.contains(fileInfo.suffix())) {
+            qDebug() << "insert" << info.localpath;
+            losslessMetaCache.insert(info.localpath, info);
             continue;
         }
 
-        MusicMeta info;
-        info.localpath = url;
-        info.hash = hash;
-
-        // TODO: more encode support
-        TagLib::Tag *tag = f.tag();
-        bool encode = true;
-        encode &= tag->title().isNull() ? true : tag->title().isLatin1();
-        encode &= tag->artist().isNull() ? true : tag->artist().isLatin1();
-        encode &= tag->album().isNull() ? true : tag->album().isLatin1();
-        if (encode) {
-            // Localized encode, current only GB18030 is used.
-            QTextCodec *codec = QTextCodec::codecForName("GB18030");
-            info.album = codec->toUnicode(tag->album().toCString());
-            info.artist = codec->toUnicode(tag->artist().toCString());
-            info.title = codec->toUnicode(tag->title().toCString());
-        } else {
-            // UTF8 encoded.
-            info.album = TStringToQString(tag->album());
-            info.artist = TStringToQString(tag->artist());
-            info.title = TStringToQString(tag->title());
-        }
-
-        auto current = QDateTime::currentDateTime();
-        info.timestamp = current.toTime_t()
-                         + static_cast<uint>(1000 + current.time().msec());
-        info.length = f.audioProperties()->length();
-        info.size = f.file()->length();
-        info.filetype = fileInfo.suffix();
-
-        if (info.title.isEmpty()) {
-            info.title = fileInfo.baseName();
-        }
-
-        for (auto &str : Pinyin::simpleChineseSplit(info.title)) {
-            info.pinyinTitle += str;
-            info.pinyinTitleShort += str.at(0);
-        }
-        for (auto &str : Pinyin::simpleChineseSplit(info.artist)) {
-            info.pinyinArtist += str;
-            info.pinyinArtistShort += str.at(0);
-        }
-        for (auto &str : Pinyin::simpleChineseSplit(info.album)) {
-            info.pinyinAlbum += str;
-            info.pinyinAlbumShort += str.at(0);
-        }
-
         metaCache << info;
+
+        if (metaCache.length() >= 500) {
+            emit MediaDatabase::instance()->addMusicMetaList(metaCache);
+            emit meidaFileImported(playlist, metaCache);
+            metaCache.clear();
+        }
+    }
+
+    for (auto &cue : cuelist) {
+        losslessMetaCache.remove(cue.musicFilePath);
+        metaCache += cue.metalist;
+
+        if (metaCache.length() >= 500) {
+            emit MediaDatabase::instance()->addMusicMetaList(metaCache);
+            emit meidaFileImported(playlist, metaCache);
+            metaCache.clear();
+        }
+    }
+
+    for (auto &key : losslessMetaCache.keys()) {
+        qDebug() << "add" << key;
+        metaCache << losslessMetaCache.value(key);
 
         if (metaCache.length() >= 500) {
             emit MediaDatabase::instance()->addMusicMetaList(metaCache);
@@ -151,4 +156,5 @@ void MediaFileMonitor::importPlaylistFiles(QSharedPointer<Playlist> playlist, co
         emit meidaFileImported(playlist, metaCache);
         metaCache.clear();
     }
+
 }

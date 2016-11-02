@@ -19,10 +19,16 @@ class QStandardItemModel;
 class MusicListView : public QTableView
 {
     Q_OBJECT
+    Q_PROPERTY(QColor headerColor READ headerColor WRITE setHeaderColor NOTIFY headerColorChanged)
 public:
     explicit MusicListView(QWidget *parent = 0);
 
     QStandardItemModel *model() {return m_model;}
+
+    QColor headerColor() const
+    {
+        return m_headerColor;
+    }
 
 signals:
     void play(const MusicMeta &meta);
@@ -30,13 +36,25 @@ signals:
     void remove(const MusicMeta &meta);
     void requestCustomContextMenu(const QPoint &pos);
 
+    void headerColorChanged(QColor headerColor);
+
 public slots:
     void showContextMenu(const QPoint &pos,
                          QSharedPointer<Playlist> selectedlist,
                          QSharedPointer<Playlist> favlist,
                          QList<QSharedPointer<Playlist> >newlist);
+    void setHeaderColor(QColor headerColor)
+    {
+        if (m_headerColor == headerColor)
+            return;
+
+        m_headerColor = headerColor;
+        emit headerColorChanged(headerColor);
+    }
+
 private:
     QStandardItemModel *m_model = nullptr;
+    QColor m_headerColor;
 };
 
 #endif // MUSICLISTVIEW_H

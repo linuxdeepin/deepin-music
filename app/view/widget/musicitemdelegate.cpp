@@ -24,19 +24,41 @@ void MusicItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
     painter->fillRect(option.rect, option.palette.background());
     painter->setBrush(option.palette.foreground());
     auto rect = option.rect.marginsRemoved(QMargins(10, 0, 10, 0));
+
     switch (index.column()) {
-    case 0:
-        painter->setPen(QColor(0x79,0x79,0x79));
+    case 0: {
+        auto headerColor = QColor(0x79, 0x79, 0x79);
+        if (option.widget) {
+            headerColor = qvariant_cast<QColor>(option.widget->property("headerColor"));
+        }
+        if (option.state & QStyle::State_Selected) {
+            painter->setPen(option.palette.highlightedText().color());
+        } else {
+            painter->setPen(headerColor);
+        }
+
         painter->drawText(option.rect, Qt::AlignCenter, index.data().toString());
-        break;
-    case 4:
-        painter->setPen(QColor(0x29,0x29,0x29));
+    }
+    break;
+    case 4: {
+        if (option.state & QStyle::State_Selected) {
+            painter->setPen(option.palette.highlightedText().color());
+        } else {
+            painter->setPen(option.palette.foreground().color());
+        }
         painter->drawText(option.rect, Qt::AlignCenter, index.data().toString());
-        break;
-    default:
-        painter->setPen(QColor(0x29,0x29,0x29));
+    }
+    break;
+    default: {
+        if (option.state & QStyle::State_Selected) {
+            painter->setPen(option.palette.highlightedText().color());
+        } else {
+            painter->setPen(option.palette.foreground().color());
+        }
+
         painter->drawText(rect, Qt::AlignVCenter, index.data().toString());
-        break;
+    }
+    break;
     }
     painter->restore();
 }
