@@ -7,10 +7,7 @@
  * (at your option) any later version.
  **/
 
-#ifndef CUEPARSER_H
-#define CUEPARSER_H
-
-#include <QObject>
+#pragma once
 
 #include "../../model/musiclistmodel.h"
 
@@ -22,5 +19,3 @@ public:
     MusicMetaList metalist;
     QString musicFilePath;
 };
-
-#endif // CUEPARSER_H

@@ -1,0 +1,7 @@
+language: c
+script:
+        - cmake -DCMAKE_INSTALL_PREFIX=/usr .
+        - make
+        - make test
+        - make DESTDIR=. install
+        - make package_source

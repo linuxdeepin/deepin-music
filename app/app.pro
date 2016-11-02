@@ -1,6 +1,7 @@
 DEFINES += QT_MESSAGELOGCONTEXT
 
 include($$PWD/../vendor/src/chinese2pinyin/chinese2pinyin.pri)
+include($$PWD/../vendor/src/libcue/libcue.pri)
 
 QT       += core gui widgets svg dbus multimedia multimediawidgets xml network sql
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -10,7 +11,7 @@ TARGET      = deepin-music
 CONFIG      += c++11 link_pkgconfig
 
 unix{
-    PKGCONFIG += dtkbase dtkutil dtkwidget taglib libcue
+    PKGCONFIG += dtkbase dtkutil dtkwidget taglib
 }
 
 win32{

@@ -10,29 +10,17 @@
 #include "cueparser.h"
 
 extern "C" {
-//#include "../../vendor/src/libcue/libcue.h"
-//#include "../../vendor/src/libcue/cue_time.h"
-#include <libcue/libcue.h>
-#include <libcue/time.h>
+#include "../../../vendor/src/libcue/libcue.h"
+#include "../../../vendor/src/libcue/time.h"
 }
 
 #include <QFile>
 #include <QFileInfo>
 #include <QTextCodec>
-#include <QCryptographicHash>
 
 #include <QDebug>
 
 #include "musicmeta.h"
-
-//void time_frame_to_msf(long frame, int *m, int *s, int *f)
-//{
-//    *f = frame % 75;           /* 0 <= frames <= 74 */
-//    frame /= 75;
-//    *s = frame % 60;          /* 0 <= seconds <= 59 */
-//    frame /= 60;
-//    *m = frame;               /* 0 <= minutes */
-//}
 
 qint64 timeframe2mtime(long frame)
 {
@@ -43,11 +31,10 @@ qint64 timeframe2mtime(long frame)
     return a;
 }
 
-#define CHECK_RETURN(msg, condition) \
-    do{ \
+#define CHECK_RETURN(msg, condition) do{ \
         if (! (condition)) { \
-            /*qCritical() << msg*/; \
-            /*return*/; \
+            qCritical() << (msg); \
+            return; \
         } \
     }while(0)
 
@@ -62,6 +49,9 @@ CueParser::CueParser(const QString &filepath)
 
     QTextCodec *codec = QTextCodec::codecForName("GB18030");
     QString cue = codec->toUnicode(cueByte.toStdString().c_str());
+
+    // TODO: libcue need empty line at last
+    cue.append("\r\n");
 
     QString album;
     Cd *cd = cue_parse_string(cue.toStdString().c_str());
