@@ -61,20 +61,23 @@ MusicListView::MusicListView(QWidget *parent) : QTableView(parent)
 
     QHeaderView *headerView = this->horizontalHeader();
     headerView->setSectionResizeMode(QHeaderView::Stretch);
-    headerView->setSectionResizeMode(0, QHeaderView::ResizeToContents);
-    headerView->setSectionResizeMode(1, QHeaderView::Stretch);
-    headerView->setSectionResizeMode(2, QHeaderView::Stretch);
-    headerView->setSectionResizeMode(3, QHeaderView::Stretch);
-    headerView->setSectionResizeMode(4, QHeaderView::Fixed);
+
+    for (int i = +1; i < MusicItemDelegate::ColumnButt; ++i) {
+        headerView->setSectionResizeMode(i, QHeaderView::ResizeToContents);
+    }
+    headerView->setSectionResizeMode(MusicItemDelegate::Number, QHeaderView::ResizeToContents);
+    headerView->setSectionResizeMode(MusicItemDelegate::Title, QHeaderView::Stretch);
+    headerView->setSectionResizeMode(MusicItemDelegate::Artist, QHeaderView::ResizeToContents);
+    headerView->setSectionResizeMode(MusicItemDelegate::Album, QHeaderView::ResizeToContents);
+    headerView->setSectionResizeMode(MusicItemDelegate::Length, QHeaderView::ResizeToContents);
 
     this->setItemDelegate(new MusicItemDelegate);
-
-    D_THEME_INIT_WIDGET(MusicListView);
 
     this->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this, &MusicListView::customContextMenuRequested,
             this, &MusicListView::requestCustomContextMenu);
 
+    D_THEME_INIT_WIDGET(MusicListView);
 }
 
 void MusicListView::showContextMenu(const QPoint &pos,

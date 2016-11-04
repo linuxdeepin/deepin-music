@@ -44,7 +44,7 @@
 
 DWIDGET_USE_NAMESPACE
 
-static const int s_AnimationDelay = 400;
+static const int s_AnimationDelay = 100;
 
 class PlayerFramePrivate
 {
@@ -395,7 +395,7 @@ void PlayerFrame::paintEvent(QPaintEvent *e)
         linearGradient.setColorAt(0.2, Qt::white);
         linearGradient.setColorAt(1.0, Qt::white);
 
-        QPen borderPen(Qt::white);
+        QPen borderPen(QColor(0, 0, 0, 38));
 
         painter.setRenderHint(QPainter::Antialiasing);
         painter.setBrush(QBrush(linearGradient));
@@ -436,16 +436,21 @@ void PlayerFrame::paintEvent(QPaintEvent *e)
         titleBorder.arcTo(topLeftRect, 90.0, 90.0);
         titleBorder.closeSubpath();
 
-
+        m_titlebarTopColor = QColor(0, 0, 0, 46);
+        m_titlebarBottomColor = QColor(0, 0, 0, 52);
         QLinearGradient linearGradient(QPointF(0.0, 0.0), QPointF(0.0, 1.0));
         linearGradient.setColorAt(0.0, m_titlebarTopColor);
         linearGradient.setColorAt(1.0, m_titlebarBottomColor);
 
-        QPen borderPen(QColor(0, 0, 0, 25));
+        QPen borderPen(QColor(255, 255, 255, 25));
 
         titlePainter.setBrush(QBrush(linearGradient));
-        titlePainter.fillPath(titleBorder, QBrush(linearGradient));
+        titlePainter.fillPath(titleBorder, QBrush(QColor(0, 0, 0, 255 * 0.4)));
         titlePainter.strokePath(titleBorder, borderPen);
+        QLine line(titleTopLeft.x(), winRect.y() + 39,
+                   winRect.x() + winRect.width(), winRect.y() + 39);
+        titlePainter.setPen(QPen(QColor(0, 0, 0, 255 * 0.3), 0.5));
+        titlePainter.drawLine(line);
     }
 }
 

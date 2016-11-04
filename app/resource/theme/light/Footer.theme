@@ -12,8 +12,13 @@
     left: 0px; right: 0px;
 }
 #FooterProgress::handle:horizontal {
-    background: red;
-    margin: 5px -5px; /* expand outside the groove */
+background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1,
+                                  stop:0     black,       stop:0.1 black,
+                                  stop:0.11  white,     stop:0.2 white,
+                                  stop:0.21  black,      stop:0.3 black,
+                                  stop:0.31  white,     stop:1 white
+                                  );
+    margin: 15px -15px; /* expand outside the groove */
 }
 #FooterProgress::add-page:horizontal {
     background: transparent;

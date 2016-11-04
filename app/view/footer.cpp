@@ -50,7 +50,6 @@ public:
     ModeButton      *btPlayMode = nullptr;
     QPushButton     *btSound    = nullptr;
     Slider          *progress   = nullptr;
-    Slider          *hideProgress   = nullptr;
 
     QSharedPointer<Playlist>    m_playinglist;
     MusicMeta                   m_playingMeta;
@@ -69,17 +68,10 @@ Footer::Footer(QWidget *parent) : QFrame(parent)
 
     d->progress = new Slider(Qt::Horizontal);
     d->progress->setObjectName("FooterProgress");
-    d->progress->setFixedHeight(2);
+    d->progress->setFixedHeight(12);
     d->progress->setMinimum(0);
     d->progress->setMaximum(1000);
     d->progress->setValue(0);
-
-    d->hideProgress = new Slider(Qt::Horizontal);
-    d->hideProgress->setObjectName("HideFooterProgress");
-    d->hideProgress->setFixedHeight(10);
-    d->hideProgress->setMinimum(0);
-    d->hideProgress->setMaximum(1000);
-    d->hideProgress->setValue(0);
 
     auto layout = new QHBoxLayout();
     layout->setContentsMargins(20, 0, 20, 10);
@@ -178,7 +170,6 @@ Footer::Footer(QWidget *parent) : QFrame(parent)
     layout->addWidget(actWidget, 0, Qt::AlignRight | Qt::AlignVCenter);
 
     vboxlayout->addWidget(d->progress);
-    vboxlayout->addWidget(d->hideProgress);
     vboxlayout->addLayout(layout);
 
     d->title->hide();
@@ -193,12 +184,6 @@ Footer::Footer(QWidget *parent) : QFrame(parent)
     connect(d->btPlayMode, &ModeButton::modeChanged, this, &Footer::modeChanged);
 
     connect(d->progress, &Slider::valueChanged, this, [ = ](int value) {
-        auto range = d->progress->maximum() - d->progress->minimum();
-        Q_ASSERT(range != 0);
-        emit this->changeProgress(value, range);
-    });
-
-    connect(d->hideProgress, &Slider::valueChanged, this, [ = ](int value) {
         auto range = d->progress->maximum() - d->progress->minimum();
         Q_ASSERT(range != 0);
         emit this->changeProgress(value, range);
@@ -268,7 +253,6 @@ void Footer::enableControl(bool enable)
     d->btPlayMode->setEnabled(enable);
     d->btSound->setEnabled(enable);
     d->progress->setEnabled(enable);
-    d->hideProgress->setEnabled(enable);
 
     d->cover->blockSignals(!enable);
     d->title->blockSignals(!enable);
@@ -352,9 +336,6 @@ void Footer::onProgressChanged(qint64 value, qint64 duration)
     d->progress->setValue(progress);
     d->progress->blockSignals(false);
 
-    d->hideProgress->blockSignals(true);
-    d->hideProgress->setValue(progress);
-    d->hideProgress->blockSignals(false);
 }
 
 void Footer::onCoverChanged(const MusicMeta &info, const QString &coverPath)

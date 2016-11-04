@@ -17,6 +17,16 @@ class MusicItemDelegate : public QStyledItemDelegate
     Q_OBJECT
 
 public:
+    enum MusicColumn {
+        Number  = 0,
+        Title,
+        Artist,
+        Album,
+        Length,
+
+        ColumnButt,
+    };
+
     MusicItemDelegate(QWidget *parent = 0) : QStyledItemDelegate(parent) {}
 
     virtual void initStyleOption(QStyleOptionViewItem *option,

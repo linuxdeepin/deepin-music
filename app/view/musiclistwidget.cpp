@@ -40,7 +40,7 @@ MusicListWidget::MusicListWidget(QWidget *parent) : QFrame(parent)
     actionBar->hide();
 
     auto actionBarLayout = new QHBoxLayout(actionBar);
-    actionBarLayout->setContentsMargins(20, 0, 20, 0);
+    actionBarLayout->setContentsMargins(10, 0, 20, 0);
     actionBarLayout->setSpacing(0);
 
     auto btPlayAll = new QPushButton;
