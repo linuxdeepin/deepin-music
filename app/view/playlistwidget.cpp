@@ -131,4 +131,3 @@ void PlaylistWidget::onCurrentChanged(QSharedPointer<Playlist> playlist)
     }
 }
 
-

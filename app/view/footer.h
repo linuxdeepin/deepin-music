@@ -37,7 +37,7 @@ signals:
     void pause(QSharedPointer<Playlist> palylist, const MusicMeta &info);
     void next(QSharedPointer<Playlist> palylist, const MusicMeta &info);
     void prev(QSharedPointer<Playlist> palylist, const MusicMeta &info);
-    void local(QSharedPointer<Playlist> palylist, const MusicMeta &info);
+    void locate(QSharedPointer<Playlist> playlist, const MusicMeta &info);
 
     void modeChanged(int mode);
     void toggleFavourite(const MusicMeta &info);
@@ -51,7 +51,6 @@ public slots:
     void onMusicRemoved(QSharedPointer<Playlist> palylist, const MusicMeta &info);
     void onMusicPlayed(QSharedPointer<Playlist> palylist, const MusicMeta &info);
     void onMusicPause(QSharedPointer<Playlist> palylist, const MusicMeta &info);
-//    void onMusicStop(QSharedPointer<Playlist> palylist, const MusicMeta &info);
     void onProgressChanged(qint64 value, qint64 duration);
     void onCoverChanged(const MusicMeta &info, const QString &coverPath);
 
@@ -61,16 +60,5 @@ private:
     QSharedPointer<FooterPrivate>     d;
 };
 
-class ClickableLabel : public QLabel
-{
-    Q_OBJECT
-public:
-    explicit ClickableLabel(const QString &text = "", QWidget *parent = 0);
-    ~ClickableLabel();
-signals:
-    void clicked(bool);
-protected:
-    void mousePressEvent(QMouseEvent *event);
-};
 
 #endif // FOOTER_H

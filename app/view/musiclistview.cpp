@@ -163,7 +163,6 @@ void MusicListView::showContextMenu(const QPoint &pos,
             auto index = selection->selectedRows().first();
             auto item = this->model()->item(index.row(), index.column());
             MusicMeta meta = qvariant_cast<MusicMeta>(item->data());
-            emit remove(meta);
             InfoDialog dlg(meta, this);
             dlg.exec();
         }

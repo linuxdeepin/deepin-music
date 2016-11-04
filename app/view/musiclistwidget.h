@@ -46,6 +46,8 @@ public slots:
     void onMusicAdded(QSharedPointer<Playlist> palylist, const MusicMeta &info);
     void onMusicListAdded(QSharedPointer<Playlist> palylist, const MusicMetaList &infolist);
 
+    void onLocate(QSharedPointer<Playlist> playlist, const MusicMeta &info);
+
     void onMusiclistChanged(QSharedPointer<Playlist> palylist);
     void onCustomContextMenuRequest(const QPoint &pos,
                                     QSharedPointer<Playlist> selectedlist,

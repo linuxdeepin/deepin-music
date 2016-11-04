@@ -81,49 +81,41 @@ void MediaFileMonitor::importPlaylistFiles(QSharedPointer<Playlist> playlist, co
 
     QMap<QString, MusicMeta> losslessMetaCache;
     QList<CueParser>  cuelist;
+    MusicMetaList metaCache;
 
     for (auto &filepath : filelist) {
         QDirIterator it(filepath, sSupportedSuffixList,
                         QDir::Files, QDirIterator::Subdirectories);
         while (it.hasNext()) {
-            urllist << it.next();
-        }
-    }
+            QString  url = it.next();
 
-    if (urllist.empty()) {
-        qCritical() << "can not find meida file";
-        return;
-    }
+            QFileInfo fileInfo(url);
+            if (fileInfo.suffix() == "cue") {
+                cuelist << CueParser(url);
+                continue;
+            }
 
-    MusicMetaList metaCache;
+            auto hash = QString(QCryptographicHash::hash(url.toUtf8(),
+                                QCryptographicHash::Md5).toHex());
+            if (MediaDatabase::instance()->musicMetaExist(hash)) {
+                continue;
+            }
 
-    for (auto &url : urllist) {
-        QFileInfo fileInfo(url);
-        if (fileInfo.suffix() == "cue") {
-            cuelist << CueParser(url);
-            continue;
-        }
+            MusicMeta info = MusicMetaName::fromLocalFile(fileInfo, hash);
 
-        auto hash = QString(QCryptographicHash::hash(url.toUtf8(),
-                            QCryptographicHash::Md5).toHex());
-        if (MediaDatabase::instance()->musicMetaExist(hash)) {
-            continue;
-        }
+            //check is lossless file
+            if (losslessSuffix.contains(fileInfo.suffix())) {
+                losslessMetaCache.insert(info.localpath, info);
+                continue;
+            }
 
-        MusicMeta info = MusicMetaName::fromLocalFile(fileInfo, hash);
+            metaCache << info;
 
-        //check is lossless file
-        if (losslessSuffix.contains(fileInfo.suffix())) {
-            losslessMetaCache.insert(info.localpath, info);
-            continue;
-        }
-
-        metaCache << info;
-
-        if (metaCache.length() >= 500) {
-            emit MediaDatabase::instance()->addMusicMetaList(metaCache);
-            emit meidaFileImported(playlist, metaCache);
-            metaCache.clear();
+            if (metaCache.length() >= ScanCacheSize) {
+                emit MediaDatabase::instance()->addMusicMetaList(metaCache);
+                emit meidaFileImported(playlist, metaCache);
+                metaCache.clear();
+            }
         }
     }
 
@@ -131,7 +123,7 @@ void MediaFileMonitor::importPlaylistFiles(QSharedPointer<Playlist> playlist, co
         losslessMetaCache.remove(cue.musicFilePath);
         metaCache += cue.metalist;
 
-        if (metaCache.length() >= 500) {
+        if (metaCache.length() >= ScanCacheSize) {
             emit MediaDatabase::instance()->addMusicMetaList(metaCache);
             emit meidaFileImported(playlist, metaCache);
             metaCache.clear();
@@ -139,10 +131,8 @@ void MediaFileMonitor::importPlaylistFiles(QSharedPointer<Playlist> playlist, co
     }
 
     for (auto &key : losslessMetaCache.keys()) {
-        qDebug() << "add" << key;
         metaCache << losslessMetaCache.value(key);
-
-        if (metaCache.length() >= 500) {
+        if (metaCache.length() >= ScanCacheSize) {
             emit MediaDatabase::instance()->addMusicMetaList(metaCache);
             emit meidaFileImported(playlist, metaCache);
             metaCache.clear();
@@ -154,5 +144,4 @@ void MediaFileMonitor::importPlaylistFiles(QSharedPointer<Playlist> playlist, co
         emit meidaFileImported(playlist, metaCache);
         metaCache.clear();
     }
-
 }

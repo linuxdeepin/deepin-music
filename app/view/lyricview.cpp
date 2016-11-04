@@ -42,7 +42,7 @@ public:
     int                 m_currentline = 0;
     Lyric               m_lyriclist;
 
-    QPushButton         *m_hideLyric= nullptr;
+    QPushButton         *m_hideLyric = nullptr;
     Cover               *m_cover    = nullptr;
     QListView           *m_lyric    = nullptr;
     QStringListModel    *m_model    = nullptr;
@@ -225,7 +225,7 @@ void LyricView::onProgressChanged(qint64 value, qint64 /*length*/)
         }
     }
     QModelIndex index = d->m_model->index(
-                            d->m_emptyOffset + i, 0, d->m_lyric->rootIndex());
+                            d->m_emptyOffset + i - 1, 0, d->m_lyric->rootIndex());
     d->m_lyric->clearSelection();
     d->m_lyric->setCurrentIndex(index);
     d->m_lyric->scrollTo(index, QListView::PositionAtCenter);
@@ -234,8 +234,9 @@ void LyricView::onProgressChanged(qint64 value, qint64 /*length*/)
 
 void LyricView::onLyricChanged(const MusicMeta &meta, const QString &lyricPath)
 {
-    if (d->m_playingMusic.hash != meta.hash)
+    if (d->m_playingMusic.hash != meta.hash) {
         return;
+    }
 
     if (lyricPath.isEmpty()) {
         setLyricLines("");
@@ -256,8 +257,9 @@ void LyricView::onLyricChanged(const MusicMeta &meta, const QString &lyricPath)
 void LyricView::onCoverChanged(const MusicMeta &meta, const QString &coverPath)
 {
     qDebug() << d->m_playingMusic.hash << meta.hash;
-    if (d->m_playingMusic.hash != meta.hash)
+    if (d->m_playingMusic.hash != meta.hash) {
         return;
+    }
 
     if (coverPath.isEmpty()) { return; }
     d->m_cover->setBackgroundUrl(coverPath);

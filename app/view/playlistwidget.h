@@ -12,6 +12,7 @@
 
 #include <QFrame>
 
+class MusicMeta;
 class Playlist;
 class PlayListView;
 class PlaylistWidget : public QFrame

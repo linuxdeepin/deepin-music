@@ -91,9 +91,8 @@ void AppPresenter::prepareData()
 
     connect(d->moniter, &MediaFileMonitor::meidaFileImported,
     this, [ = ](QSharedPointer<Playlist> playlist, MusicMetaList metalist) {
-        qWarning() << "add music to empty playlist." << metalist.length();
         if (playlist.isNull()) {
-            qWarning() << "add music to empty playlist." << metalist.length();
+            qCritical() << "add music to empty playlist." << metalist.length();
             return;
         }
 
@@ -121,7 +120,7 @@ void AppPresenter::prepareData()
         for (int i = 0; i < length; i++) {
             auto meta = metalist.at(i);
             slice << meta;
-            if (i % 500 == 0) {
+            if (i % 30 == 0) {
                 emit this->musiclistAdded(palylist, slice);
                 slice.clear();
                 QThread::msleep(233);
@@ -139,7 +138,7 @@ void AppPresenter::prepareData()
             this, &AppPresenter::selectedPlaylistChanged);
 
     connect(Player::instance(), &Player::progrossChanged,
-            this, [ = ](qint64 position, qint64 duration) {
+    this, [ = ](qint64 position, qint64 duration) {
         emit progrossChanged(position, duration);
     });
     connect(Player::instance(), &Player::musicPlayed,

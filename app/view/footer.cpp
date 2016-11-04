@@ -18,13 +18,15 @@
 #include <QProgressBar>
 
 #include <dthememanager.h>
-DWIDGET_USE_NAMESPACE
 
 #include "../musicapp.h"
 #include "../core/playlistmanager.h"
 
 #include "widget/slider.h"
 #include "widget/modebuttom.h"
+#include "widget/clickablelabel.h"
+
+DWIDGET_USE_NAMESPACE
 
 static const char *sPropertyFavourite         = "fav";
 static const char *sPropertyPlayStatus        = "playstatus";
@@ -33,39 +35,25 @@ static const QString sPlayStatusValuePlaying    = "playing";
 static const QString sPlayStatusValuePause      = "pause";
 static const QString sPlayStatusValueStop       = "stop";
 
-ClickableLabel::ClickableLabel(const QString &text, QWidget *parent)
-    : QLabel(parent)
-{
-    setText(text);
-}
-
-ClickableLabel::~ClickableLabel()
-{
-}
-
-void ClickableLabel::mousePressEvent(QMouseEvent * /*event*/)
-{
-    emit clicked(false);
-}
-
 class FooterPrivate
 {
 public:
-    ClickableLabel      *cover   = nullptr;
-    ClickableLabel      *title   = nullptr;
-    ClickableLabel      *artlist = nullptr;
-    QPushButton *btPlay  = nullptr;
-    QPushButton *btPrev  = nullptr;
-    QPushButton *btNext  = nullptr;
-    QPushButton *btFavorite = nullptr;
-    QPushButton *btLyric    = nullptr;
-    ModeButton *btPlayMode = nullptr;
-    QPushButton *btSound    = nullptr;
-    Slider     *progress  = nullptr;
-    Slider      *hideProgress = nullptr;
+    ClickableLabel  *cover      = nullptr;
+    ClickableLabel  *title      = nullptr;
+    ClickableLabel  *artlist    = nullptr;
+    QPushButton     *btPlay     = nullptr;
+    QPushButton     *btPrev     = nullptr;
+    QPushButton     *btNext     = nullptr;
+    QPushButton     *btFavorite = nullptr;
+    QPushButton     *btLyric    = nullptr;
+    QPushButton     *btPlayList = nullptr;
+    ModeButton      *btPlayMode = nullptr;
+    QPushButton     *btSound    = nullptr;
+    Slider          *progress   = nullptr;
+    Slider          *hideProgress   = nullptr;
 
     QSharedPointer<Playlist>    m_playinglist;
-    MusicMeta                   m_info;
+    MusicMeta                   m_playingMeta;
     int                         m_mode;
 };
 
@@ -145,9 +133,9 @@ Footer::Footer(QWidget *parent) : QFrame(parent)
     d->btSound->setObjectName("FooterActionSound");
     d->btSound->setFixedSize(24, 24);
 
-    auto btPlayList = new QPushButton;
-    btPlayList->setObjectName("FooterActionPlayList");
-    btPlayList->setFixedSize(24, 24);
+    d->btPlayList = new QPushButton;
+    d->btPlayList->setObjectName("FooterActionPlayList");
+    d->btPlayList->setFixedSize(24, 24);
 
     auto infoWidget = new QWidget;
     auto infoLayout = new QHBoxLayout(infoWidget);
@@ -175,7 +163,7 @@ Footer::Footer(QWidget *parent) : QFrame(parent)
     actLayout->addWidget(d->btLyric, 0, Qt::AlignRight | Qt::AlignVCenter);
     actLayout->addWidget(d->btPlayMode, 0, Qt::AlignRight | Qt::AlignVCenter);
     actLayout->addWidget(d->btSound, 0, Qt::AlignRight | Qt::AlignVCenter);
-    actLayout->addWidget(btPlayList, 0, Qt::AlignRight | Qt::AlignVCenter);
+    actLayout->addWidget(d->btPlayList, 0, Qt::AlignRight | Qt::AlignVCenter);
 
     QSizePolicy sp(QSizePolicy::Preferred, QSizePolicy::Preferred);
     sp.setHorizontalStretch(33);
@@ -203,11 +191,13 @@ Footer::Footer(QWidget *parent) : QFrame(parent)
     D_THEME_INIT_WIDGET(Footer);
 
     connect(d->btPlayMode, &ModeButton::modeChanged, this, &Footer::modeChanged);
+
     connect(d->progress, &Slider::valueChanged, this, [ = ](int value) {
         auto range = d->progress->maximum() - d->progress->minimum();
         Q_ASSERT(range != 0);
         emit this->changeProgress(value, range);
     });
+
     connect(d->hideProgress, &Slider::valueChanged, this, [ = ](int value) {
         auto range = d->progress->maximum() - d->progress->minimum();
         Q_ASSERT(range != 0);
@@ -216,38 +206,44 @@ Footer::Footer(QWidget *parent) : QFrame(parent)
 
     connect(d->btPlay, &QPushButton::clicked, this, [ = ](bool) {
         if (!d->m_playinglist) {
-            emit play(d->m_playinglist, d->m_info);
+            emit play(d->m_playinglist, d->m_playingMeta);
             return;
         }
 
         auto status = d->btPlay->property(sPropertyPlayStatus).toString();
         if (status == sPlayStatusValuePlaying) {
-            emit pause(d->m_playinglist, d->m_info);
-            auto status = sPlayStatusValuePause;
-            updateQssProperty(d->btPlay, sPropertyPlayStatus, status);
+            emit pause(d->m_playinglist, d->m_playingMeta);
+//            auto status = sPlayStatusValuePause;
+//            updateQssProperty(d->btPlay, sPropertyPlayStatus, status);
         } else {
-            emit play(d->m_playinglist, d->m_info);
-            auto status = sPlayStatusValuePlaying;
-            updateQssProperty(d->btPlay, sPropertyPlayStatus, status);
+            emit play(d->m_playinglist, d->m_playingMeta);
+//            auto status = sPlayStatusValuePlaying;
+//            updateQssProperty(d->btPlay, sPropertyPlayStatus, status);
         }
     });
 
     connect(d->btPrev, &QPushButton::clicked, this, [ = ](bool) {
-        emit prev(d->m_playinglist, d->m_info);
+        emit prev(d->m_playinglist, d->m_playingMeta);
     });
     connect(d->btNext, &QPushButton::clicked, this, [ = ](bool) {
-        emit next(d->m_playinglist, d->m_info);
+        emit next(d->m_playinglist, d->m_playingMeta);
     });
 
     connect(d->btFavorite, &QPushButton::clicked, this, [ = ](bool) {
-        emit toggleFavourite(d->m_info);
+        emit toggleFavourite(d->m_playingMeta);
     });
 
     connect(d->cover, &ClickableLabel::clicked, d->btLyric, &QPushButton::clicked);
+
+    connect(d->title, &ClickableLabel::clicked,
+    this, [ = ](bool) {
+        emit locate(d->m_playinglist, d->m_playingMeta);
+    });
+
     connect(d->btLyric, &QPushButton::clicked, this, [ = ](bool) {
         emit  this->toggleLyric();
     });
-    connect(btPlayList, &QPushButton::clicked, this, [ = ](bool) {
+    connect(d->btPlayList, &QPushButton::clicked, this, [ = ](bool) {
         emit  this->togglePlaylist();
     });
 
@@ -261,27 +257,31 @@ Footer::Footer(QWidget *parent) : QFrame(parent)
         this->style()->polish(d->btPlayMode);
         this->repaint();
     });
-
-    QTimer::singleShot(200, this, [ = ] {
-//        d->btPlay->setFocus();
-    });
 }
 
 void Footer::enableControl(bool enable)
 {
+    qDebug() << enable;
+//    d->btPlay->setEnabled(enable);
     d->btPrev->setEnabled(enable);
     d->btNext->setEnabled(enable);
     d->btFavorite->setEnabled(enable);
     d->btLyric->setEnabled(enable);
-    d->btPlay->setEnabled(enable);
+    d->btPlayList->setEnabled(enable);
     d->btPlayMode->setEnabled(enable);
+    d->btSound->setEnabled(enable);
+    d->progress->setEnabled(enable);
+    d->hideProgress->setEnabled(enable);
+
     d->cover->blockSignals(!enable);
+    d->title->blockSignals(!enable);
+    d->artlist->blockSignals(!enable);
 }
 
 void Footer::onMusicAdded(QSharedPointer<Playlist> palylist, const MusicMeta &info)
 {
     if (palylist->id() == FavMusicListID)
-        if (info.hash == d->m_info.hash) {
+        if (info.hash == d->m_playingMeta.hash) {
             updateQssProperty(d->btFavorite, sPropertyFavourite, true);
         }
 }
@@ -290,7 +290,7 @@ void Footer::onMusicListAdded(QSharedPointer<Playlist> palylist, const MusicMeta
 {
     if (palylist->id() == FavMusicListID)
         for (auto &meta : infolist) {
-            if (meta.hash == d->m_info.hash) {
+            if (meta.hash == d->m_playingMeta.hash) {
                 updateQssProperty(d->btFavorite, sPropertyFavourite, true);
             }
         }
@@ -299,7 +299,7 @@ void Footer::onMusicListAdded(QSharedPointer<Playlist> palylist, const MusicMeta
 void Footer::onMusicRemoved(QSharedPointer<Playlist> palylist, const MusicMeta &info)
 {
     if (palylist->id() == FavMusicListID)
-        if (info.hash == d->m_info.hash) {
+        if (info.hash == d->m_playingMeta.hash) {
             updateQssProperty(d->btFavorite, sPropertyFavourite, false);
         }
 }
@@ -307,7 +307,12 @@ void Footer::onMusicRemoved(QSharedPointer<Playlist> palylist, const MusicMeta &
 void Footer::onMusicPlayed(QSharedPointer<Playlist> palylist, const MusicMeta &info)
 {
     d->title->setText(info.title);
-    d->artlist->setText(info.artist);
+
+    if (!info.artist.isEmpty()) {
+        d->artlist->setText(info.artist);
+    } else {
+        d->artlist->setText(tr("Unknow Artist"));
+    }
 
     d->title->show();
     d->artlist->show();
@@ -317,7 +322,7 @@ void Footer::onMusicPlayed(QSharedPointer<Playlist> palylist, const MusicMeta &i
     d->btLyric->show();
 
     d->m_playinglist = palylist;
-    d->m_info = info;
+    d->m_playingMeta = info;
     updateQssProperty(d->btFavorite, sPropertyFavourite, info.favourite);
 
     updateQssProperty(this, sPropertyPlayStatus, sPlayStatusValuePlaying);
@@ -326,37 +331,37 @@ void Footer::onMusicPlayed(QSharedPointer<Playlist> palylist, const MusicMeta &i
 
 void Footer::onMusicPause(QSharedPointer<Playlist> palylist, const MusicMeta &info)
 {
-    if (info.hash != d->m_info.hash || palylist != d->m_playinglist) {
+    if (info.hash != d->m_playingMeta.hash || palylist != d->m_playinglist) {
         qWarning() << "can not pasue" << d->m_playinglist << palylist
-                   << d->m_info.hash << info.hash;
+                   << d->m_playingMeta.hash << info.hash;
         return;
     }
     auto status = sPlayStatusValuePause;
     updateQssProperty(d->btPlay, sPropertyPlayStatus, status);
 }
 
-//void Footer::onMusicStop(QSharedPointer<Playlist> palylist, const MusicMeta &info)
-//{
-
-//}
-
 void Footer::onProgressChanged(qint64 value, qint64 duration)
 {
     auto length = d->progress->maximum() - d->progress->minimum();
     Q_ASSERT(length != 0);
-    Q_ASSERT(duration != 0);
+
+    auto progress = 0;
+    if (0 != duration) {
+        progress = static_cast<int>(length * value / duration);
+    }
+
     d->progress->blockSignals(true);
-    d->progress->setValue(value * length / duration);
+    d->progress->setValue(progress);
     d->progress->blockSignals(false);
 
     d->hideProgress->blockSignals(true);
-    d->hideProgress->setValue(value * length / duration);
+    d->hideProgress->setValue(progress);
     d->hideProgress->blockSignals(false);
 }
 
 void Footer::onCoverChanged(const MusicMeta &info, const QString &coverPath)
 {
-    if (info.hash != d->m_info.hash) {
+    if (info.hash != d->m_playingMeta.hash) {
         return;
     }
 

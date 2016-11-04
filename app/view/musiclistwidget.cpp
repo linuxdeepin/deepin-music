@@ -234,6 +234,34 @@ void MusicListWidget::onMusicListAdded(QSharedPointer<Playlist> palylist, const 
     }
 }
 
+void MusicListWidget::onLocate(QSharedPointer<Playlist> playlist, const MusicMeta &info)
+{
+    if (playlist.isNull()) {
+        return;
+    }
+
+    if (playlist != m_palylist) {
+        onMusiclistChanged(playlist);
+    }
+
+    QModelIndex index;
+    QStandardItem *item = nullptr;
+    for (int i = 0; i < m_model->rowCount(); ++i) {
+        index = m_model->index(i, 0);
+        item = m_model->item(i, 0);
+        MusicMeta meta = qvariant_cast<MusicMeta>(item->data());
+        if (meta.hash == info.hash) {
+            break;
+        }
+    }
+    if (nullptr == item) {
+        return;
+    }
+    m_musiclist->clearSelection();
+    m_musiclist->setCurrentIndex(index);
+    m_musiclist->scrollTo(index, QListView::PositionAtCenter);
+}
+
 void MusicListWidget::onMusiclistChanged(QSharedPointer<Playlist> playlist)
 {
     if (playlist.isNull()) {

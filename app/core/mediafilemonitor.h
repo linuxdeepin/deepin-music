@@ -29,6 +29,9 @@ signals:
 public slots:
     void importPlaylistFiles(QSharedPointer<Playlist> playlist, const QStringList &filelist);
 
+
+private:
+    const int ScanCacheSize = 200;
 };
 
 #endif // MEDIAFILEMONITOR_H

@@ -123,6 +123,7 @@ void PlayerFrame::initMusiclist(QSharedPointer<Playlist> allmusic, QSharedPointe
 {
     if (allmusic.isNull() || 0 == allmusic->length()) {
         d->import->show();
+        d->footer->enableControl(false);
         d->musicList->hide();
         qWarning() << "no music in all music list" << allmusic;
         d->musicList->setCurrentList(allmusic);
@@ -251,6 +252,15 @@ void PlayerFrame::binding(AppPresenter *presenter)
             presenter, &AppPresenter::onToggleFavourite);
     connect(d->footer, &Footer::modeChanged,
             presenter, &AppPresenter::onPlayModeChanged);
+
+    connect(d->footer, &Footer::locate,
+    this, [ = ](QSharedPointer<Playlist> playlist, const MusicMeta & info) {
+        d->musicList->onLocate(playlist, info);
+        d->playlist->onCurrentChanged(playlist);
+        if (d->lyric->isVisible()) {
+            d->footer->toggleLyric();
+        }
+    });
 
     // Import bindding
     connect(d->import, &ImportWidget::importMusicDirectory,

@@ -86,7 +86,8 @@ SOURCES += \
     core/util/lyric.cpp \
     core/util/cueparser.cpp \
     view/widget/lyriclinedelegate.cpp \
-    core/util/musicmeta.cpp
+    core/util/musicmeta.cpp \
+    view/widget/clickablelabel.cpp
 
 HEADERS += \
     view/playerframe.h \
@@ -124,7 +125,8 @@ HEADERS += \
     core/util/lyric.h \
     core/util/cueparser.h \
     view/widget/lyriclinedelegate.h \
-    core/util/musicmeta.h
+    core/util/musicmeta.h \
+    view/widget/clickablelabel.h
 
 RESOURCES += \
     resource/theme/theme.qrc \
