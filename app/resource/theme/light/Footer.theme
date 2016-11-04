@@ -7,39 +7,33 @@
 }
 
 #FooterProgress::groove:horizontal {
-    background: rgba(255, 255, 255, 0.1);
+    background: transparent;
     position: absolute;
     left: 0px; right: 0px;
 }
 #FooterProgress::handle:horizontal {
-background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1,
-                                  stop:0     black,       stop:0.1 black,
-                                  stop:0.11  white,     stop:0.2 white,
-                                  stop:0.21  black,      stop:0.3 black,
-                                  stop:0.31  white,     stop:1 white
-                                  );
-    margin: 15px -15px; /* expand outside the groove */
+    background-color:transparent;
+    margin: 5px -5px; /* expand outside the groove */
 }
 #FooterProgress::add-page:horizontal {
     background: transparent;
+    background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1,
+                                      stop:0     transparent,               stop:0.1 transparent,
+                                      stop:0.11  rgba(255, 255, 255, 0.15), stop:0.2 rgba(255, 255, 255, 0.15),
+                                      stop:0.21  rgba(0, 0, 0, 0.0),    stop:0.3 rgba(0, 0, 0, 0.0),
+                                      stop:0.31  rgba(0, 0, 0, 0.0),    stop:1 rgba(0, 0, 0, 0.0)
+                                      );
 }
 #FooterProgress::sub-page:horizontal {
     background: #2ca7f8;
+    background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1,
+                                      stop:0     #2ca7f8, stop:0.1 #2ca7f8,
+                                      stop:0.11  #2ca7f8, stop:0.2 #2ca7f8,
+                                      stop:0.21  rgba(0, 0, 0, 0.3),    stop:0.26 rgba(0, 0, 0, 0.3),
+                                      stop:0.31  rgba(0, 0, 0, 0.0),    stop:1 rgba(0, 0, 0, 0.0)
+                                      );
 }
 
-#HideFooterProgress::groove:horizontal {
-    background: transparent;
-}
-#HideFooterProgress::handle:horizontal {
-    background: transparent;
-    margin: 5px -5px; /* expand outside the groove */
-}
-#HideFooterProgress::add-page:horizontal {
-    background: transparent;
-}
-#HideFooterProgress::sub-page:horizontal {
-    background: transparent;
-}
 
 #FooterCover {
     image: url(:/image/cover_min.png);

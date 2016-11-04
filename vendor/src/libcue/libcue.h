@@ -12,7 +12,12 @@
 extern "C" {
 #endif
 
+#ifdef _WIN32
+#define CUE_EXPORT
+#define YY_NO_UNISTD_H
+#else
 #define CUE_EXPORT __attribute__((visibility("default")))
+#endif
 
 /*
  * disc modes

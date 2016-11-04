@@ -44,7 +44,11 @@
 
 DWIDGET_USE_NAMESPACE
 
-static const int s_AnimationDelay = 100;
+static const int s_AnimationDelay   = 350;
+static QColor s_normalTitleTop      = QColor(255, 255, 255, 255);
+static QColor s_normalTitleBottom   = QColor(0xf8, 0xf8, 0xf8, 255);
+static QColor s_lyricTitleTop       = QColor(0, 0, 0, 94);
+static QColor s_lyriclTitleBottom   = QColor(0, 0, 0, 102);
 
 class PlayerFramePrivate
 {
@@ -63,8 +67,8 @@ public:
 PlayerFrame::PlayerFrame(QWidget *parent)
     : DWindow(parent), d(new PlayerFramePrivate)
 {
-    m_titlebarTopColor = QColor(255, 255, 255, 255);
-    m_titlebarBottomColor = QColor(0xf8, 0xf8, 0xf8, 255);
+    m_titlebarTopColor = s_normalTitleTop;
+    m_titlebarBottomColor = s_normalTitleBottom;
 
     setFocusPolicy(Qt::ClickFocus);
     setObjectName("PlayerFrame");
@@ -290,8 +294,8 @@ void PlayerFrame::binding(AppPresenter *presenter)
     this, [ = ]() {
         if (d->lyric->isVisible()) {
             // change to optical
-            m_titlebarTopColor = QColor(255, 255, 255, 255);
-            m_titlebarBottomColor = QColor(0xf8, 0xf8, 0xf8, 255);
+            m_titlebarTopColor = s_normalTitleTop;
+            m_titlebarBottomColor = s_normalTitleBottom;
 
             WidgetHelper::slideTop2BottomWidget(
                 d->lyric, d->musicList, s_AnimationDelay);
@@ -300,8 +304,8 @@ void PlayerFrame::binding(AppPresenter *presenter)
             d->musicList->show();
             this->repaint();
         } else {
-            m_titlebarTopColor = QColor(0, 0, 0, 46);
-            m_titlebarBottomColor = QColor(0, 0, 0, 46);
+            m_titlebarTopColor = s_lyricTitleTop;
+            m_titlebarBottomColor = s_lyriclTitleBottom;
 
             WidgetHelper::slideBottom2TopWidget(
                 d->musicList, d->lyric, s_AnimationDelay);
@@ -436,8 +440,6 @@ void PlayerFrame::paintEvent(QPaintEvent *e)
         titleBorder.arcTo(topLeftRect, 90.0, 90.0);
         titleBorder.closeSubpath();
 
-        m_titlebarTopColor = QColor(0, 0, 0, 46);
-        m_titlebarBottomColor = QColor(0, 0, 0, 52);
         QLinearGradient linearGradient(QPointF(0.0, 0.0), QPointF(0.0, 1.0));
         linearGradient.setColorAt(0.0, m_titlebarTopColor);
         linearGradient.setColorAt(1.0, m_titlebarBottomColor);
@@ -445,10 +447,11 @@ void PlayerFrame::paintEvent(QPaintEvent *e)
         QPen borderPen(QColor(255, 255, 255, 25));
 
         titlePainter.setBrush(QBrush(linearGradient));
-        titlePainter.fillPath(titleBorder, QBrush(QColor(0, 0, 0, 255 * 0.4)));
+        titlePainter.fillPath(titleBorder, QBrush(linearGradient));
         titlePainter.strokePath(titleBorder, borderPen);
         QLine line(titleTopLeft.x(), winRect.y() + 39,
                    winRect.x() + winRect.width(), winRect.y() + 39);
+
         titlePainter.setPen(QPen(QColor(0, 0, 0, 255 * 0.3), 0.5));
         titlePainter.drawLine(line);
     }

@@ -84,7 +84,12 @@ void MusicItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
     painter->setRenderHint(QPainter::Antialiasing);
     painter->setRenderHint(QPainter::HighQualityAntialiasing);
 
-    painter->fillRect(option.rect, option.palette.background());
+
+    if (option.state & QStyle::State_Selected) {
+        painter->fillRect(option.rect, option.palette.highlight());
+    } else {
+        painter->fillRect(option.rect, option.palette.background());
+    }
 
     //headerColor = qvariant_cast<QColor>(option.widget->property("headerColor"));
     auto textColor = foregroundColor(index.column(), option);
