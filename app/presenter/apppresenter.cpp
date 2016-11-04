@@ -249,7 +249,9 @@ void AppPresenter::onSearchText(const QString text)
     searchList->reset(resultList);
 
     d->playlistMgr->setSelectedPlaylist(searchList);
-    //    emit this->selectedPlaylistChanged(searchList);
+    if (d->playlistMgr->selectedPlaylist() == searchList) {
+        emit this->selectedPlaylistChanged(searchList);
+    }
 }
 
 void AppPresenter::onLocateMusic(const QString &hash)
