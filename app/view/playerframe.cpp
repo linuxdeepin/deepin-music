@@ -108,6 +108,7 @@ PlayerFrame::PlayerFrame(QWidget *parent)
 
     resize(1040, 650);
     QImage image = QImage((":/image/cover_max.png"));
+    image = WidgetHelper::cropRect(image, this->size());
     setBackgroundImage(WidgetHelper::blurImage(image, 50));
 
     d->footer->setFocus();
@@ -155,6 +156,7 @@ void PlayerFrame::binding(AppPresenter *presenter)
             presenter, &AppPresenter::onSearchText);
     connect(d->title, &TitleBar::locateMusic,
             presenter, &AppPresenter::onLocateMusic);
+
     // Music list binding
     connect(presenter, &AppPresenter::selectedPlaylistChanged,
             d->musicList, &MusicListWidget::onMusiclistChanged);
@@ -198,25 +200,32 @@ void PlayerFrame::binding(AppPresenter *presenter)
             presenter, &AppPresenter::onSelectedPlaylistChanged);
 
     // Lyric
+    connect(presenter, &AppPresenter::musicPlayed,
+            d->lyric, &LyricView::onMusicPlayed);
     connect(presenter, &AppPresenter::lyricSearchFinished,
             d->lyric, &LyricView::onLyricChanged);
     connect(presenter, &AppPresenter::coverSearchFinished,
             d->lyric, &LyricView::onCoverChanged);
-
+    connect(presenter, &AppPresenter::progrossChanged,
+            d->lyric, &LyricView::onProgressChanged);
     connect(presenter, &AppPresenter::progrossChanged,
             d->lyric, &LyricView::onProgressChanged);
     connect(presenter, &AppPresenter::coverSearchFinished,
     this, [ = ](const MusicMeta &, const QString & coverPath) {
-        QImage image = QImage(coverPath).scaled(this->size());
+        QImage image = QImage(coverPath);
+        image = WidgetHelper::cropRect(image, this->size());
+        image.save("/tmp/a.png");
         setBackgroundImage(WidgetHelper::blurImage(image, 50));
         this->repaint();
     });
+    connect(d->lyric, &LyricView::hideLyricView,
+            d->footer, &Footer::toggleLyric);
 
     // Footer Control
     connect(presenter, &AppPresenter::coverSearchFinished,
             d->footer, &Footer::onCoverChanged);
     connect(presenter, &AppPresenter::musicPlayed,
-            d->footer, &Footer::onMusicPlay);
+            d->footer, &Footer::onMusicPlayed);
     connect(presenter, &AppPresenter::musicPaused,
             d->footer, &Footer::onMusicPause);
     connect(presenter, &AppPresenter::musicAdded,

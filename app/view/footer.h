@@ -25,6 +25,7 @@ class Footer : public QFrame
 public:
     explicit Footer(QWidget *parent = 0);
 
+public:
     void enableControl(bool enable = true);
 
 signals:
@@ -36,6 +37,7 @@ signals:
     void pause(QSharedPointer<Playlist> palylist, const MusicMeta &info);
     void next(QSharedPointer<Playlist> palylist, const MusicMeta &info);
     void prev(QSharedPointer<Playlist> palylist, const MusicMeta &info);
+    void local(QSharedPointer<Playlist> palylist, const MusicMeta &info);
 
     void modeChanged(int mode);
     void toggleFavourite(const MusicMeta &info);
@@ -47,7 +49,7 @@ public slots:
     void onMusicAdded(QSharedPointer<Playlist> palylist, const MusicMeta &info);
     void onMusicListAdded(QSharedPointer<Playlist> palylist, const MusicMetaList &infolist);
     void onMusicRemoved(QSharedPointer<Playlist> palylist, const MusicMeta &info);
-    void onMusicPlay(QSharedPointer<Playlist> palylist, const MusicMeta &info);
+    void onMusicPlayed(QSharedPointer<Playlist> palylist, const MusicMeta &info);
     void onMusicPause(QSharedPointer<Playlist> palylist, const MusicMeta &info);
 //    void onMusicStop(QSharedPointer<Playlist> palylist, const MusicMeta &info);
     void onProgressChanged(qint64 value, qint64 duration);

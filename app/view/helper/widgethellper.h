@@ -17,6 +17,7 @@ namespace WidgetHelper
 {
 
 QPixmap blurImage(const QImage &image, int radius);
+QImage cropRect(const QImage &image, QSize sz);
 
 void slideRight2LeftWidget(QWidget *left, QWidget *right, int delay);
 void slideBottom2TopWidget(QWidget *top, QWidget *bottom, int delay);

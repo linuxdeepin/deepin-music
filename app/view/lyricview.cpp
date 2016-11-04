@@ -36,9 +36,13 @@ const QString defaultLyric = "No Lyric";
 class LyricViewPrivate
 {
 public:
+    MusicMeta           m_playingMusic;
+
     int                 m_emptyOffset = 0;
     int                 m_currentline = 0;
     Lyric               m_lyriclist;
+
+    QPushButton         *m_hideLyric= nullptr;
     Cover               *m_cover    = nullptr;
     QListView           *m_lyric    = nullptr;
     QStringListModel    *m_model    = nullptr;
@@ -54,8 +58,7 @@ LyricView::LyricView(QWidget *parent)
 
     d->m_cover = new Cover;
     d->m_cover->setFixedSize(200, 200);
-    d->m_cover->setObjectName("LyricCoveraa");
-    d->m_cover->setBackgroundUrl(":/image/cover_max.png");
+    d->m_cover->setObjectName("LyricCover");
 
     d->m_lyric = new QListView;
     d->m_lyric->setObjectName("LyricTextView");
@@ -69,15 +72,14 @@ LyricView::LyricView(QWidget *parent)
     d->m_lyric->setItemDelegate(new LyricLineDelegate);
     d->m_lyric->setEditTriggers(QAbstractItemView::NoEditTriggers);
     d->m_lyric->setFlow(QListView::TopToBottom);
-//    d->m_lyric->setSelectionBehavior(QAbstractItemView::SelectRows);
 
     d->m_model = new QStringListModel;
     setLyricLines("");
 
     d->m_lyric->setModel(d->m_model);
 
-    auto btBack = new QPushButton;
-    btBack->setObjectName("LyricBack");
+    d->m_hideLyric = new QPushButton;
+    d->m_hideLyric->setObjectName("LyricBack");
 
     QSizePolicy spCover(QSizePolicy::Preferred, QSizePolicy::Preferred);
     spCover.setHorizontalStretch(80);
@@ -92,12 +94,14 @@ LyricView::LyricView(QWidget *parent)
 
     QSizePolicy spBack(QSizePolicy::Preferred, QSizePolicy::Preferred);
     spBack.setHorizontalStretch(20);
-    btBack->setSizePolicy(spBack);
-    btBack->setFixedSize(27, 23);
+    d->m_hideLyric->setSizePolicy(spBack);
+    d->m_hideLyric->setFixedSize(27, 23);
 
-    layout->addWidget(btBack, 0, Qt::AlignRight | Qt::AlignTop);
+    layout->addWidget(d->m_hideLyric, 0, Qt::AlignRight | Qt::AlignTop);
 
     D_THEME_INIT_WIDGET(LyricView);
+
+    initConnection();
 }
 
 LyricView::~LyricView()
@@ -197,6 +201,12 @@ void LyricView::setLyricLines(QString str)
     adjustLyric();
 }
 
+void LyricView::onMusicPlayed(QSharedPointer<Playlist> playlist, const MusicMeta &meta)
+{
+    Q_UNUSED(playlist);
+    d->m_playingMusic = meta;
+}
+
 void LyricView::onProgressChanged(qint64 value, qint64 /*length*/)
 {
     auto len = d->m_lyriclist.m_lyricElements.length();
@@ -222,8 +232,11 @@ void LyricView::onProgressChanged(qint64 value, qint64 /*length*/)
 
 }
 
-void LyricView::onLyricChanged(const MusicMeta &info, const QString &lyricPath)
+void LyricView::onLyricChanged(const MusicMeta &meta, const QString &lyricPath)
 {
+    if (d->m_playingMusic.hash != meta.hash)
+        return;
+
     if (lyricPath.isEmpty()) {
         setLyricLines("");
         return;
@@ -237,15 +250,23 @@ void LyricView::onLyricChanged(const MusicMeta &info, const QString &lyricPath)
     auto lyricStr = QString::fromUtf8(lyricFile.readAll());
     lyricFile.close();
 
-
     setLyricLines(lyricStr);
 }
 
-void LyricView::onCoverChanged(const MusicMeta &info, const QString &coverPath)
+void LyricView::onCoverChanged(const MusicMeta &meta, const QString &coverPath)
 {
+    qDebug() << d->m_playingMusic.hash << meta.hash;
+    if (d->m_playingMusic.hash != meta.hash)
+        return;
+
     if (coverPath.isEmpty()) { return; }
     d->m_cover->setBackgroundUrl(coverPath);
     d->m_cover->repaint();
+}
+
+void LyricView::initConnection()
+{
+    connect(d->m_hideLyric, &QPushButton::clicked, this, &LyricView::hideLyricView);
 }
 
 void LyricView::adjustLyric()

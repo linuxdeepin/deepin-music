@@ -17,75 +17,69 @@
 Cover::Cover(QWidget *parent) : QWidget(parent)
 {
     QWidget::setAttribute(Qt::WA_TranslucentBackground, true);
-    m_borderColor = QColor(0, 0, 0, 26);
+    m_radius = 4;
+    m_borderColor = QColor(0, 0, 0, 52);
     m_shadowColor = QColor(0, 0, 0, 26);
 
     QGraphicsDropShadowEffect *bodyShadow = new QGraphicsDropShadowEffect;
     bodyShadow->setBlurRadius(4.0);
     bodyShadow->setColor(m_shadowColor);
-    bodyShadow->setOffset(0.0, 2.0);
+    bodyShadow->setOffset(2.0, 4.0);
     this->setGraphicsEffect(bodyShadow);
+
+    connect(this, &Cover::shadowColorChanged, this, [ = ](QColor shadowColor) {
+        bodyShadow->setColor(shadowColor);
+    });
 }
 
-void Cover::paintEvent(QPaintEvent * e)
+void Cover::paintEvent(QPaintEvent *e)
 {
-    QWidget::paintEvent(e);
+    auto radius = m_radius;
 
     QPainter painter(this);
-    auto radius = 4;
     painter.setRenderHint(QPainter::Antialiasing);
     painter.setRenderHint(QPainter::HighQualityAntialiasing);
 
-    painter.drawPixmap(0, 0, m_Background);
-
     QRect windowRect = QWidget::rect();
-    QPoint topLeft(windowRect.x(), windowRect.y());
-    QPoint bottomRight(windowRect.x() + windowRect.width(), windowRect.y() + windowRect.height());
+
+    painter.drawPixmap(0, 0, m_Background);
 
     QPainterPath border;
     border.addRoundedRect(windowRect, radius, radius);
 
-    QPen borderPen(m_borderColor);
+    QPen borderPen(m_borderColor, 1);
     painter.strokePath(border, borderPen);
+
+    QWidget::paintEvent(e);
 }
 
-void Cover::setBackgroundImage(const QPixmap &bk)
+void Cover::setBackgroundImage(const QPixmap &backgroundPixmap)
 {
-    QImage bkImage = bk.toImage().scaled(200, 200, Qt::KeepAspectRatioByExpanding);
-    QPixmap maskPixmap(bkImage.size());
-    maskPixmap.fill(Qt::transparent);
+    int radius = m_radius;
+    QSize sz = size();
+    QPainter::CompositionMode mode = QPainter::CompositionMode_SourceIn;
+
+    QPixmap destinationImage(sz);
+    destinationImage.fill(Qt::transparent);
     QPainterPath path;
-    path.addRoundRect(QRectF(0, 0, bkImage.width(), bkImage.height()), 4);
-    QPainter bkPainter(&maskPixmap);
+    path.addRoundRect(QRectF(0, 0, sz.width(), sz.height()), radius);
+    QPainter bkPainter(&destinationImage);
     bkPainter.setRenderHint(QPainter::Antialiasing);
-    bkPainter.setPen(QPen(Qt::black, 1));
+    bkPainter.setPen(QPen(Qt::white, 1));
     bkPainter.fillPath(path, QBrush(Qt::red));
 
-    QImage maskImage = maskPixmap.toImage();
-    int nDepth = bkImage.depth();
-    int nWidth = maskImage.width();
-    int nHeight = maskImage.height();
-    switch (nDepth) {
-    case 32:
-        for (int y = 0; y < nHeight; ++y) {
-            quint32 *pMaskData = reinterpret_cast<quint32 *>(maskImage.scanLine(y));
-            quint32 *pWaveData = reinterpret_cast<quint32 *>(bkImage.scanLine(y));
-            quint32 alpha;
-            for (int x = 0; x < nWidth; ++x) {
-                alpha = (pMaskData[x] >> 24) << 24 | 0x00FFFFFF;
-                pMaskData[x] = pWaveData[x] & (alpha);
-            }
-        }
-        break;
-    default:
-        break;
-    }
+    QPixmap backgroundImage = backgroundPixmap.scaled(sz, Qt::KeepAspectRatioByExpanding);
 
-    // TODO: fixme , only export as png file can work
-    QTemporaryFile bkTmp;
-    maskImage.save(&bkTmp, "png");
-    bkTmp.close();
-    qDebug() << "fixme: save tmp cover" << bkTmp.fileName();
-    m_Background = QPixmap(bkTmp.fileName());
-    bkTmp.remove();
+    QImage resultImage = QImage(sz, QImage::Format_ARGB32_Premultiplied);
+    QPainter painter(&resultImage);
+    painter.setCompositionMode(QPainter::CompositionMode_Source);
+    painter.fillRect(resultImage.rect(), Qt::transparent);
+    painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
+    painter.drawImage(0, 0, destinationImage.toImage());
+    painter.setCompositionMode(mode);
+    painter.drawImage(0, 0, backgroundImage.toImage());
+    painter.setCompositionMode(QPainter::CompositionMode_DestinationOver);
+    painter.end();
+
+    m_Background = QPixmap::fromImage(resultImage);
 }

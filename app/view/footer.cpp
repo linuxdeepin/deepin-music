@@ -304,7 +304,7 @@ void Footer::onMusicRemoved(QSharedPointer<Playlist> palylist, const MusicMeta &
         }
 }
 
-void Footer::onMusicPlay(QSharedPointer<Playlist> palylist, const MusicMeta &info)
+void Footer::onMusicPlayed(QSharedPointer<Playlist> palylist, const MusicMeta &info)
 {
     d->title->setText(info.title);
     d->artlist->setText(info.artist);

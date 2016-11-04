@@ -14,6 +14,7 @@
 #include <QScopedPointer>
 
 class MusicMeta;
+class Playlist;
 class LyricViewPrivate;
 
 class LyricView : public QFrame
@@ -27,14 +28,18 @@ public:
     void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
 
     void setLyricLines(QString lines);
+
 signals:
+    void hideLyricView();
 
 public slots:
+    void onMusicPlayed(QSharedPointer<Playlist> palylist, const MusicMeta &meta);
     void onProgressChanged(qint64 value, qint64 length);
-    void onLyricChanged(const MusicMeta &info, const QString &lyricPath);
-    void onCoverChanged(const MusicMeta &info, const QString &coverPath);
+    void onLyricChanged(const MusicMeta &meta, const QString &lyricPath);
+    void onCoverChanged(const MusicMeta &meta, const QString &coverPath);
 
 private:
+    void initConnection();
     void adjustLyric();
     QScopedPointer<LyricViewPrivate>  d;
 };

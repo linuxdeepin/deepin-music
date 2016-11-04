@@ -2,10 +2,12 @@
     background-color: rgba(0,0,0,40%);
 }
 
-#LyricCover {
-    background-color: transparent;
+#LyricCover{
+    qproperty-radius: 4;
+    qproperty-borderColor: rgba(0,0,0,20%);
+    qproperty-shadowColor: rgba(0,0,0,10%);
+    qproperty-backgroundUrl: url(:/image/cover_max.png);
 }
-
 #LyricBack{
     border-image: url(:/image/show_lyc_normal.png);
 }

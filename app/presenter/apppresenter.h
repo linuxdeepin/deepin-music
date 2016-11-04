@@ -15,7 +15,6 @@
 
 #include "model/musiclistmodel.h"
 
-class MusicItem;
 class Playlist;
 class AppPresenterPrivate;
 

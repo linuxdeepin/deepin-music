@@ -10,11 +10,12 @@
 #ifndef COVER_H
 #define COVER_H
 
-#include <QWidget>
+#include <QFrame>
 
 class Cover : public QWidget
 {
     Q_OBJECT
+    Q_PROPERTY(int radius READ radius WRITE setRadius NOTIFY radiusChanged)
     Q_PROPERTY(QColor borderColor READ borderColor WRITE setBorderColor NOTIFY borderColorChanged)
     Q_PROPERTY(QColor shadowColor READ shadowColor WRITE setShadowColor NOTIFY shadowColorChanged)
     Q_PROPERTY(QString backgroundUrl READ backgroundUrl WRITE setBackgroundUrl NOTIFY backgroundUrlChanged)
@@ -28,21 +29,25 @@ public:
     {
         return m_borderColor;
     }
+    QString backgroundUrl() const
+    {
+        return m_backgroundUrl;
+    }
+    int radius() const
+    {
+        return m_radius;
+    }
 
     QColor shadowColor() const
     {
         return m_shadowColor;
     }
 
-    QString backgroundUrl() const
-    {
-        return m_backgroundUrl;
-    }
-
 signals:
     void borderColorChanged(QColor borderColor);
-    void shadowColorChanged(QColor shadowColor);
     void backgroundUrlChanged(QString backgroundUrl);
+    void radiusChanged(int radius);
+    void shadowColorChanged(QColor shadowColor);
 
 public slots:
     void setBorderColor(QColor borderColor)
@@ -54,15 +59,6 @@ public slots:
         m_borderColor = borderColor;
         emit borderColorChanged(borderColor);
     }
-    void setShadowColor(QColor shadowColor)
-    {
-        if (m_shadowColor == shadowColor) {
-            return;
-        }
-
-        m_shadowColor = shadowColor;
-        emit shadowColorChanged(shadowColor);
-    }
     void setBackgroundUrl(QString backgroundUrl)
     {
         if (m_backgroundUrl == backgroundUrl) {
@@ -73,10 +69,28 @@ public slots:
         setBackgroundImage(QPixmap(backgroundUrl));
         emit backgroundUrlChanged(backgroundUrl);
     }
+    void setRadius(int radius)
+    {
+        if (m_radius == radius) {
+            return;
+        }
+
+        m_radius = radius;
+        emit radiusChanged(radius);
+    }
+    void setShadowColor(QColor shadowColor)
+    {
+        if (m_shadowColor == shadowColor)
+            return;
+
+        m_shadowColor = shadowColor;
+        emit shadowColorChanged(shadowColor);
+    }
 
 private:
-    void setBackgroundImage(const QPixmap &bk);
+    void setBackgroundImage(const QPixmap &backgroundPixmap);
 
+    int     m_radius;
     QColor  m_borderColor;
     QColor  m_shadowColor;
     QString m_backgroundUrl;
