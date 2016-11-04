@@ -33,26 +33,27 @@ signals:
 
     void changeProgress(qint64 value, qint64 duration);
 
-    void play(QSharedPointer<Playlist> palylist, const MusicMeta &info);
-    void pause(QSharedPointer<Playlist> palylist, const MusicMeta &info);
-    void next(QSharedPointer<Playlist> palylist, const MusicMeta &info);
-    void prev(QSharedPointer<Playlist> palylist, const MusicMeta &info);
-    void locate(QSharedPointer<Playlist> playlist, const MusicMeta &info);
+    void play(QSharedPointer<Playlist> playlist, const MusicMeta &meta);
+    void resume(QSharedPointer<Playlist> playlist, const MusicMeta &meta);
+    void pause(QSharedPointer<Playlist> playlist, const MusicMeta &meta);
+    void next(QSharedPointer<Playlist> playlist, const MusicMeta &meta);
+    void prev(QSharedPointer<Playlist> playlist, const MusicMeta &meta);
+    void locate(QSharedPointer<Playlist> playlist, const MusicMeta &meta);
 
     void modeChanged(int mode);
-    void toggleFavourite(const MusicMeta &info);
+    void toggleFavourite(const MusicMeta &meta);
     void toggleLyric();
     void changePlayMode(int);
     void togglePlaylist();
 
 public slots:
-    void onMusicAdded(QSharedPointer<Playlist> palylist, const MusicMeta &info);
-    void onMusicListAdded(QSharedPointer<Playlist> palylist, const MusicMetaList &infolist);
-    void onMusicRemoved(QSharedPointer<Playlist> palylist, const MusicMeta &info);
-    void onMusicPlayed(QSharedPointer<Playlist> palylist, const MusicMeta &info);
-    void onMusicPause(QSharedPointer<Playlist> palylist, const MusicMeta &info);
+    void onMusicAdded(QSharedPointer<Playlist> playlist, const MusicMeta &meta);
+    void onMusicListAdded(QSharedPointer<Playlist> playlist, const MusicMetaList &metalist);
+    void onMusicRemoved(QSharedPointer<Playlist> playlist, const MusicMeta &meta);
+    void onMusicPlayed(QSharedPointer<Playlist> playlist, const MusicMeta &meta);
+    void onMusicPause(QSharedPointer<Playlist> playlist, const MusicMeta &meta);
     void onProgressChanged(qint64 value, qint64 duration);
-    void onCoverChanged(const MusicMeta &info, const QString &coverPath);
+    void onCoverChanged(const MusicMeta &meta, const QString &coverPath);
 
 private:
     void updateQssProperty(QWidget *w, const char *name, const QVariant &value);

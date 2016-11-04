@@ -33,7 +33,7 @@ signals:
     void hideLyricView();
 
 public slots:
-    void onMusicPlayed(QSharedPointer<Playlist> palylist, const MusicMeta &meta);
+    void onMusicPlayed(QSharedPointer<Playlist> playlist, const MusicMeta &meta);
     void onProgressChanged(qint64 value, qint64 length);
     void onLyricChanged(const MusicMeta &meta, const QString &lyricPath);
     void onCoverChanged(const MusicMeta &meta, const QString &coverPath);

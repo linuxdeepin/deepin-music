@@ -256,7 +256,6 @@ void LyricView::onLyricChanged(const MusicMeta &meta, const QString &lyricPath)
 
 void LyricView::onCoverChanged(const MusicMeta &meta, const QString &coverPath)
 {
-    qDebug() << d->m_playingMusic.hash << meta.hash;
     if (d->m_playingMusic.hash != meta.hash) {
         return;
     }

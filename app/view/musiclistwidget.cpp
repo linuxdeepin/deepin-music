@@ -81,12 +81,12 @@ MusicListWidget::MusicListWidget(QWidget *parent) : QFrame(parent)
     this, [ = ](int sortType) {
 
         qWarning() << "change to emptry playlist" << sortType;
-        emit this->resort(m_palylist, sortType);
+        emit this->resort(m_playlist, sortType);
     });
 
     connect(btPlayAll, &QPushButton::clicked, this, [ = ](bool) {
-        if (m_palylist) {
-            emit this->playall(m_palylist);
+        if (m_playlist) {
+            emit this->playall(m_playlist);
         }
     });
 
@@ -104,7 +104,7 @@ MusicListWidget::MusicListWidget(QWidget *parent) : QFrame(parent)
 
     connect(m_musiclist, &MusicListView::remove,
     this, [ = ](const MusicMeta & meta) {
-        emit this->musicRemove(m_palylist, meta);
+        emit this->musicRemove(m_playlist, meta);
     });
     connect(m_musiclist, &MusicListView::addToPlaylist,
     this, [ = ](QSharedPointer<Playlist> playlist, const MusicMetaList metalist) {
@@ -115,11 +115,11 @@ MusicListWidget::MusicListWidget(QWidget *parent) : QFrame(parent)
     this, [ = ](const QModelIndex & index) {
         auto item = m_musiclist->model()->item(index.row(), 0);
         MusicMeta meta = qvariant_cast<MusicMeta>(item->data());
-        emit musicClicked(m_palylist, meta);
+        emit musicClicked(m_playlist, meta);
     });
     connect(m_musiclist, &MusicListView::play,
     this, [ = ](const MusicMeta & meta) {
-        emit musicClicked(m_palylist, meta);
+        emit musicClicked(m_playlist, meta);
     });
 }
 
@@ -131,12 +131,12 @@ void MusicListWidget::resizeEvent(QResizeEvent *event)
     m_musiclist->setFixedHeight(event->size().height() - 40);
 }
 
-void MusicListWidget::onMusicPlayed(QSharedPointer<Playlist> palylist, const MusicMeta &info)
+void MusicListWidget::onMusicPlayed(QSharedPointer<Playlist> playlist, const MusicMeta &info)
 {
-    if (palylist != m_palylist) {
+    if (playlist != m_playlist) {
         qWarning() << "check playlist failed!"
-                   << "m_palylist:" << m_palylist
-                   << "playlist:" << m_palylist;
+                   << "m_playlist:" << m_playlist
+                   << "playlist:" << m_playlist;
         return;
     }
 
@@ -161,10 +161,10 @@ void MusicListWidget::onMusicPlayed(QSharedPointer<Playlist> palylist, const Mus
 
 void MusicListWidget::onMusicRemoved(QSharedPointer<Playlist> playlist, const MusicMeta &info)
 {
-    if (playlist != m_palylist) {
+    if (playlist != m_playlist) {
         qWarning() << "check playlist failed!"
-                   << "m_palylist:" << m_palylist
-                   << "playlist:" << m_palylist;
+                   << "m_playlist:" << m_playlist
+                   << "playlist:" << m_playlist;
         return;
     }
 
@@ -208,29 +208,29 @@ void MusicListWidget::addMusicInfo(MusicListView *m_musiclist, const MusicMeta &
 }
 
 
-void MusicListWidget::setCurrentList(QSharedPointer<Playlist> palylist)
+void MusicListWidget::setCurrentList(QSharedPointer<Playlist> playlist)
 {
-    if (m_palylist) {
-        m_palylist.data()->disconnect(this);
+    if (m_playlist) {
+        m_playlist.data()->disconnect(this);
     }
-    m_palylist = palylist;
+    m_playlist = playlist;
 }
 
-void MusicListWidget::onMusicAdded(QSharedPointer<Playlist> palylist, const MusicMeta &info)
+void MusicListWidget::onMusicAdded(QSharedPointer<Playlist> playlist, const MusicMeta &info)
 {
-    if (palylist != m_palylist) {
+    if (playlist != m_playlist) {
 //        qWarning() << "check playlist failed!"
-//                   << "m_palylist:" << m_palylist
-//                   << "playlist:" << m_palylist;
+//                   << "m_playlist:" << m_playlist
+//                   << "playlist:" << m_playlist;
         return;
     }
     addMusicInfo(m_musiclist, info);
 }
 
-void MusicListWidget::onMusicListAdded(QSharedPointer<Playlist> palylist, const MusicMetaList &infolist)
+void MusicListWidget::onMusicListAdded(QSharedPointer<Playlist> playlist, const MusicMetaList &infolist)
 {
     for (auto &meta : infolist) {
-        onMusicAdded(palylist, meta);
+        onMusicAdded(playlist, meta);
     }
 }
 
@@ -240,7 +240,7 @@ void MusicListWidget::onLocate(QSharedPointer<Playlist> playlist, const MusicMet
         return;
     }
 
-    if (playlist != m_palylist) {
+    if (playlist != m_playlist) {
         onMusiclistChanged(playlist);
     }
 

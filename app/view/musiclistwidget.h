@@ -29,26 +29,26 @@ class MusicListWidget : public QFrame
 public:
     explicit MusicListWidget(QWidget *parent = 0);
 
-    void setCurrentList(QSharedPointer<Playlist> palylist);
+    void setCurrentList(QSharedPointer<Playlist> playlist);
     virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
 
 signals:
-    void musicRemove(QSharedPointer<Playlist> palylist, const MusicMeta &info);
-    void musicClicked(QSharedPointer<Playlist> palylist, const MusicMeta &info);
+    void musicRemove(QSharedPointer<Playlist> playlist, const MusicMeta &info);
+    void musicClicked(QSharedPointer<Playlist> playlist, const MusicMeta &info);
     void musicAdd(QSharedPointer<Playlist> playlist, const MusicMetaList &metalist);
-    void playall(QSharedPointer<Playlist> palylist);
-    void resort(QSharedPointer<Playlist> palylist, int sortType);
+    void playall(QSharedPointer<Playlist> playlist);
+    void resort(QSharedPointer<Playlist> playlist, int sortType);
     void requestCustomContextMenu(const QPoint &pos);
 
 public slots:
-    void onMusicPlayed(QSharedPointer<Playlist> palylist, const MusicMeta &info);
+    void onMusicPlayed(QSharedPointer<Playlist> playlist, const MusicMeta &info);
     void onMusicRemoved(QSharedPointer<Playlist> playlist, const MusicMeta &info);
-    void onMusicAdded(QSharedPointer<Playlist> palylist, const MusicMeta &info);
-    void onMusicListAdded(QSharedPointer<Playlist> palylist, const MusicMetaList &infolist);
+    void onMusicAdded(QSharedPointer<Playlist> playlist, const MusicMeta &info);
+    void onMusicListAdded(QSharedPointer<Playlist> playlist, const MusicMetaList &infolist);
 
     void onLocate(QSharedPointer<Playlist> playlist, const MusicMeta &info);
 
-    void onMusiclistChanged(QSharedPointer<Playlist> palylist);
+    void onMusiclistChanged(QSharedPointer<Playlist> playlist);
     void onCustomContextMenuRequest(const QPoint &pos,
                                     QSharedPointer<Playlist> selectedlist,
                                     QSharedPointer<Playlist> favlist,
@@ -58,7 +58,7 @@ signals:
 private:
     void addMusicInfo(MusicListView *m_musiclist, const MusicMeta &info);
 
-    QSharedPointer<Playlist>    m_palylist;
+    QSharedPointer<Playlist>    m_playlist;
     QLabel                      *m_emptyHits    = nullptr;
     MusicListView               *m_musiclist    = nullptr;
     QStandardItemModel          *m_model        = nullptr;

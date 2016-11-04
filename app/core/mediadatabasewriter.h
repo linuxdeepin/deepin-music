@@ -24,13 +24,13 @@ public slots:
     void addMusicMeta(const MusicMeta &meta);
     void addMusicMetaList(const MusicMetaList &metalist);
 
-    void insertMusic(const MusicMeta &meta, const PlaylistMeta &palylistMeta);
-    void insertMusicList(const MusicMetaList &metalist, const PlaylistMeta &palylistMeta);
-//    static void addPlaylist(const PlaylistMeta &palylistMeta);
-//    static void updatePlaylist(const PlaylistMeta &palylistMeta);
-//    static void removePlaylist(const PlaylistMeta &palylistMeta);
+    void insertMusic(const MusicMeta &meta, const PlaylistMeta &playlistMeta);
+    void insertMusicList(const MusicMetaList &metalist, const PlaylistMeta &playlistMeta);
+//    static void addPlaylist(const PlaylistMeta &playlistMeta);
+//    static void updatePlaylist(const PlaylistMeta &playlistMeta);
+//    static void removePlaylist(const PlaylistMeta &playlistMeta);
 //    static void removeMusicMeta(const MusicMeta &meta);
-//    static void deleteMusic(const MusicMeta &meta, const PlaylistMeta &palylistMeta);
+//    static void deleteMusic(const MusicMeta &meta, const PlaylistMeta &playlistMeta);
 };
 
 

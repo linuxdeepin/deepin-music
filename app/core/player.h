@@ -54,23 +54,24 @@ public:
 signals:
     void progrossChanged(qint64 value, qint64 range);
     void modeChanged(PlayMode mode);
-    void musicPlayed(QSharedPointer<Playlist> palylist, const MusicMeta &info);
+    void musicPlayed(QSharedPointer<Playlist> playlist, const MusicMeta &meta);
 
 public slots:
-    void playMusic(QSharedPointer<Playlist> playlist, const MusicMeta &info);
-    void playNextMusic(QSharedPointer<Playlist> playlist, const MusicMeta &info);
-    void playPrevMusic(QSharedPointer<Playlist> playlist, const MusicMeta &info);
+    void playMusic(QSharedPointer<Playlist> playlist, const MusicMeta &meta);
+    void resumeMusic(QSharedPointer<Playlist> playlist, const MusicMeta &meta);
+    void playNextMusic(QSharedPointer<Playlist> playlist, const MusicMeta &meta);
+    void playPrevMusic(QSharedPointer<Playlist> playlist, const MusicMeta &meta);
     void changeProgress(qint64 value, qint64 range);
 
 private:
-    void setMediaMeta(const MusicMeta &info);
-    void selectNext(const MusicMeta &info, PlayMode mode);
-    void selectPrev(const MusicMeta &info, PlayMode mode);
+    void setMediaMeta(const MusicMeta &meta);
+    void selectNext(const MusicMeta &meta, PlayMode mode);
+    void selectPrev(const MusicMeta &meta, PlayMode mode);
     explicit Player(QObject *parent = 0);
 
-    MusicMeta                   m_info;
+    MusicMeta                   m_playingMeta;
     QStringList                 m_historyIDs;
-    QSharedPointer<Playlist>    m_playlist;
+    QSharedPointer<Playlist>    m_playinglist;
     QMap<QString, MusicMeta>    musicMap;
     qint64                      m_duration = -1;
     PlayMode                    m_mode;

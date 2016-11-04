@@ -73,7 +73,7 @@ void PlaylistManager::load()
     auto currentTitle = AllMusicListID;
     m_playingPlaylist = playlist(currentTitle);
     if (m_playingPlaylist.isNull()) {
-        qWarning() << "change to default all palylist";
+        qWarning() << "change to default all playlist";
         m_playingPlaylist = playlist(AllMusicListID);
     }
     m_selectedPlaylist = m_playingPlaylist;

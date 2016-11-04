@@ -113,7 +113,7 @@ void AppPresenter::prepareData()
             this, &AppPresenter::musicAdded);
 
     connect(d->playlistMgr, &PlaylistManager::musiclistAdded,
-    this, [ = ](QSharedPointer<Playlist> palylist, const MusicMetaList & metalist) {
+    this, [ = ](QSharedPointer<Playlist> playlist, const MusicMetaList & metalist) {
         auto favlist = d->playlistMgr->playlist(FavMusicListID);
         int length = metalist.length();
         MusicMetaList slice;
@@ -121,13 +121,13 @@ void AppPresenter::prepareData()
             auto meta = metalist.at(i);
             slice << meta;
             if (i % 30 == 0) {
-                emit this->musiclistAdded(palylist, slice);
+                emit this->musiclistAdded(playlist, slice);
                 slice.clear();
                 QThread::msleep(233);
             }
         }
         if (slice.length() > 0) {
-            emit this->musiclistAdded(palylist, slice);
+            emit this->musiclistAdded(playlist, slice);
             slice.clear();
         }
     });
@@ -142,15 +142,16 @@ void AppPresenter::prepareData()
         emit progrossChanged(position, duration);
     });
     connect(Player::instance(), &Player::musicPlayed,
-    this, [ = ](QSharedPointer<Playlist> palylist, const MusicMeta & info) {
+    this, [ = ](QSharedPointer<Playlist> playlist, const MusicMeta & info) {
         MusicMeta favInfo(info);
         favInfo.favourite = d->playlistMgr->playlist(FavMusicListID)->contains(info);
-        emit this->musicPlayed(palylist, favInfo);
+        emit this->musicPlayed(playlist, favInfo);
         emit this->requestLyricCoverSearch(info);
     });
 
     connect(this, &AppPresenter::changeProgress, Player::instance(), &Player::changeProgress);
     connect(this, &AppPresenter::play, Player::instance(), &Player::playMusic);
+    connect(this, &AppPresenter::resume, Player::instance(), &Player::resumeMusic);
     connect(this, &AppPresenter::playNext, Player::instance(), &Player::playNextMusic);
     connect(this, &AppPresenter::playPrev, Player::instance(), &Player::playPrevMusic);
     connect(this, &AppPresenter::pause, Player::instance(), &Player::pause);
@@ -219,7 +220,6 @@ void AppPresenter::onMusicAdd(QSharedPointer<Playlist> playlist,
         qCritical() << "no list" << modifiedPlaylist->id();
         return;
     }
-    qCritical() << "appendMusic" << modifiedPlaylist->id();
     modifiedPlaylist->appendMusic(metalist);
 }
 
@@ -272,14 +272,14 @@ void AppPresenter::onPlaylistAdd(bool edit)
     emit playlistAdded(d->playlistMgr->playlist(info.uuid));
 }
 
-void AppPresenter::onMusicPlay(QSharedPointer<Playlist> palylist,  const MusicMeta &info)
+void AppPresenter::onMusicPlay(QSharedPointer<Playlist> playlist,  const MusicMeta &info)
 {
     if (0 == d->playlistMgr->playlist(AllMusicListID)->length()) {
         emit requestImportFiles();
         return;
     }
 
-    d->playlistMgr->setPlayingPlaylist(palylist);
+    d->playlistMgr->setPlayingPlaylist(playlist);
     if (Player::instance()->media().canonicalUrl() == QUrl::fromLocalFile(info.localpath)) {
         emit this->play(d->playlistMgr->playingPlaylist(), info);
         return;
@@ -287,14 +287,20 @@ void AppPresenter::onMusicPlay(QSharedPointer<Playlist> palylist,  const MusicMe
     qDebug() << "Fix me: play status"
              << info.hash  << info.localpath;
     // TODO: using signal;
-    Player::instance()->setPlaylist(palylist);
+    Player::instance()->setPlaylist(playlist);
     emit this->play(d->playlistMgr->playingPlaylist(), info);
 }
 
 void AppPresenter::onMusicPause(QSharedPointer<Playlist> playlist, const MusicMeta &info)
 {
     emit this->pause();
-    emit musicPaused(playlist, playlist->next(info));
+    emit musicPaused(playlist, info);
+}
+
+void AppPresenter::onMusicResume(QSharedPointer<Playlist> playlist, const MusicMeta &info)
+{
+    emit this->resume(playlist, info);
+    emit this->musicPlayed(playlist, info);
 }
 
 void AppPresenter::onMusicPrev(QSharedPointer<Playlist> playlist, const MusicMeta &info)
@@ -341,11 +347,11 @@ void AppPresenter::onPlayall(QSharedPointer<Playlist> playlist)
     this->onMusicPlay(playlist, playlist->first());
 }
 
-void AppPresenter::onResort(QSharedPointer<Playlist> palylist, int sortType)
+void AppPresenter::onResort(QSharedPointer<Playlist> playlist, int sortType)
 {
-    palylist->sortBy(static_cast<Playlist::SortType>(sortType));
+    playlist->sortBy(static_cast<Playlist::SortType>(sortType));
     //store
-    emit this->selectedPlaylistChanged(palylist);
+    emit this->selectedPlaylistChanged(playlist);
 }
 
 void AppPresenter::onImportFiles(const QStringList &filelist)

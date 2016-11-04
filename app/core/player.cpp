@@ -28,9 +28,9 @@ void Player::playMusic(QSharedPointer<Playlist> playlist, const MusicMeta &info)
 {
     MusicMeta nextInfo = info;
 
-    m_playlist = playlist;
+    m_playinglist = playlist;
     if (info.hash.isEmpty() && this->state() == QMediaPlayer::State::StoppedState) {
-        nextInfo = m_playlist->first();
+        nextInfo = m_playinglist->first();
     }
 
     this->blockSignals(true);
@@ -48,9 +48,19 @@ void Player::playMusic(QSharedPointer<Playlist> playlist, const MusicMeta &info)
     emit musicPlayed(playlist, nextInfo);
 }
 
+void Player::resumeMusic(QSharedPointer<Playlist> playlist, const MusicMeta &meta)
+{
+    Q_ASSERT(playlist == m_playinglist);
+    Q_ASSERT(meta.hash == m_playingMeta.hash);
+
+    QTimer::singleShot(50, this, [ = ]() {
+        this->play();
+    });
+}
+
 void Player::playNextMusic(QSharedPointer<Playlist> playlist, const MusicMeta &info)
 {
-    Q_ASSERT(playlist == m_playlist);
+    Q_ASSERT(playlist == m_playinglist);
 
     if (m_mode == RepeatSingle) {
         selectNext(info, RepeatAll);
@@ -61,7 +71,7 @@ void Player::playNextMusic(QSharedPointer<Playlist> playlist, const MusicMeta &i
 
 void Player::playPrevMusic(QSharedPointer<Playlist> playlist, const MusicMeta &info)
 {
-    Q_ASSERT(playlist == m_playlist);
+    Q_ASSERT(playlist == m_playinglist);
 
     if (m_mode == RepeatSingle) {
         selectPrev(info, RepeatAll);
@@ -75,7 +85,7 @@ void Player::setMediaMeta(const MusicMeta &info)
     if (this->media().canonicalUrl() != QUrl::fromLocalFile(info.localpath)) {
         QMediaPlayer::setMedia(QUrl::fromLocalFile(info.localpath));
     }
-    m_info = info;
+    m_playingMeta = info;
 }
 
 void Player::changeProgress(qint64 value, qint64 range)
@@ -83,7 +93,7 @@ void Player::changeProgress(qint64 value, qint64 range)
     Q_ASSERT(value <= range);
     //Q_ASSERT(m_info.offset + m_info.length < QMediaPlayer::duration());
 
-    auto position = value * m_info.length / range + m_info.offset;
+    auto position = value * m_playingMeta.length / range + m_playingMeta.offset;
     if (position < 0) {
         qCritical() << "invaild position:" << this->media().canonicalUrl() << position;
         return;
@@ -93,22 +103,22 @@ void Player::changeProgress(qint64 value, qint64 range)
 
 void Player::selectNext(const MusicMeta &info, PlayMode mode)
 {
-    if (!m_playlist) {
+    if (!m_playinglist) {
         return;
     }
 
     switch (mode) {
     case RepeatAll: {
-        playMusic(m_playlist, m_playlist->next(info));
+        playMusic(m_playinglist, m_playinglist->next(info));
         break;
     }
     case RepeatSingle: {
-        playMusic(m_playlist, info);
+        playMusic(m_playinglist, info);
         break;
     }
     case Shuffle: {
-        int randomValue = qrand() % m_playlist->length();
-        playMusic(m_playlist, m_playlist->music(randomValue));
+        int randomValue = qrand() % m_playinglist->length();
+        playMusic(m_playinglist, m_playinglist->music(randomValue));
         break;
     }
     }
@@ -116,22 +126,22 @@ void Player::selectNext(const MusicMeta &info, PlayMode mode)
 
 void Player::selectPrev(const MusicMeta &info, Player::PlayMode mode)
 {
-    if (!m_playlist) {
+    if (!m_playinglist) {
         return;
     }
 
     switch (mode) {
     case RepeatAll: {
-        playMusic(m_playlist, m_playlist->prev(info));
+        playMusic(m_playinglist, m_playinglist->prev(info));
         break;
     }
     case RepeatSingle: {
-        playMusic(m_playlist, info);
+        playMusic(m_playinglist, info);
         break;
     }
     case Shuffle: {
-        int randomValue = qrand() % m_playlist->length();
-        playMusic(m_playlist, m_playlist->music(randomValue));
+        int randomValue = qrand() % m_playinglist->length();
+        playMusic(m_playinglist, m_playinglist->music(randomValue));
         break;
     }
     }
@@ -143,15 +153,15 @@ Player::Player(QObject *parent) : QMediaPlayer(parent)
         m_duration = duration;
     });
     connect(this, &QMediaPlayer::positionChanged, this, [ = ](qint64 position) {
-        if (0 == m_info.length) {
+        if (0 == m_playingMeta.length) {
             return;
         }
 
-        if (m_info.offset > position) {
+        if (m_playingMeta.offset > position) {
             return;
         }
 
-        if (position >= m_info.offset + m_info.length) {
+        if (position >= m_playingMeta.offset + m_playingMeta.length) {
             // TODO: to next
 //            qDebug() << "auto change next music" << m_info.title;
 //            qDebug() << lengthString(m_duration)
@@ -159,13 +169,13 @@ Player::Player(QObject *parent) : QMediaPlayer(parent)
 //                     << lengthString(m_info.offset)
 //                     << lengthString(m_info.length) ;
 
-            this->selectNext(m_info, m_mode);
+            this->selectNext(m_playingMeta, m_mode);
         }
 //        qDebug() << lengthString(m_duration)
 //                 << lengthString(position)
 //                 << lengthString(m_info.offset)
 //                 << lengthString(m_info.length) ;
-        emit progrossChanged(position - m_info.offset,  m_info.length);
+        emit progrossChanged(position - m_playingMeta.offset,  m_playingMeta.length);
     });
     connect(this, &QMediaPlayer::stateChanged, this, [ = ](QMediaPlayer::State state) {
         switch (state) {

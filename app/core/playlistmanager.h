@@ -43,9 +43,9 @@ public:
 signals:
     void playingPlaylistChanged(QSharedPointer<Playlist> playingPlaylist);
     void selectedPlaylistChanged(QSharedPointer<Playlist> selectedPlaylist);
-    void musicAdded(QSharedPointer<Playlist> palylist, const MusicMeta &info);
-    void musiclistAdded(QSharedPointer<Playlist> palylist, const MusicMetaList &metalist);
-    void musicRemoved(QSharedPointer<Playlist> palylist, const MusicMeta &info);
+    void musicAdded(QSharedPointer<Playlist> playlist, const MusicMeta &info);
+    void musiclistAdded(QSharedPointer<Playlist> playlist, const MusicMetaList &metalist);
+    void musicRemoved(QSharedPointer<Playlist> playlist, const MusicMeta &info);
 
 public slots:
     void setPlayingPlaylist(QSharedPointer<Playlist> playingPlaylist);

@@ -78,7 +78,7 @@ void MediaDatabaseWriter::addMusicMeta(const MusicMeta &metalist)
 
 
 void MediaDatabaseWriter::insertMusic(const MusicMeta &meta,
-                                      const PlaylistMeta &palylistMeta)
+                                      const PlaylistMeta &playlistMeta)
 {
 //    qDebug() << "insertMusic begin";
     QSqlQuery query;
@@ -87,9 +87,9 @@ void MediaDatabaseWriter::insertMusic(const MusicMeta &meta,
                                 "SELECT :music_id, :playlist_id, :sort_id "
                                 "WHERE NOT EXISTS("
                                 "SELECT * FROM playlist_%1 "
-                                "WHERE music_id = :music_id)").arg(palylistMeta.uuid);
+                                "WHERE music_id = :music_id)").arg(playlistMeta.uuid);
     query.prepare(sqlstring);
-    query.bindValue(":playlist_id", palylistMeta.uuid);
+    query.bindValue(":playlist_id", playlistMeta.uuid);
     query.bindValue(":music_id", meta.hash);
     query.bindValue(":sort_id", 0);
 
@@ -100,14 +100,14 @@ void MediaDatabaseWriter::insertMusic(const MusicMeta &meta,
 //    qDebug() << "insertMusic end";
 }
 
-void MediaDatabaseWriter::insertMusicList(const MusicMetaList &metalist, const PlaylistMeta &palylistMeta)
+void MediaDatabaseWriter::insertMusicList(const MusicMetaList &metalist, const PlaylistMeta &playlistMeta)
 {
 //    qDebug() << "insertMusicList beign";
     QSqlDatabase::database().transaction();
     QSqlQuery query;
 
     for (auto &meta : metalist) {
-        insertMusic(meta, palylistMeta);
+        insertMusic(meta, playlistMeta);
     }
     QSqlDatabase::database().commit();
 //    qDebug() << "insertMusicList end";

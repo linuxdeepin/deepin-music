@@ -240,6 +240,8 @@ void PlayerFrame::binding(AppPresenter *presenter)
 
     connect(d->footer, &Footer::play,
             presenter, &AppPresenter::onMusicPlay);
+    connect(d->footer, &Footer::resume,
+            presenter, &AppPresenter::onMusicResume);
     connect(d->footer, &Footer::pause,
             presenter, &AppPresenter::onMusicPause);
     connect(d->footer, &Footer::prev,
@@ -328,6 +330,7 @@ void PlayerFrame::binding(AppPresenter *presenter)
             WidgetHelper::slideEdgeWidget(d->playlist, start, end, s_AnimationDelay);
         }
         this->disableControl();
+        d->playlist->setFocus();
     });
 
     connect(presenter, &AppPresenter::showPlaylist,

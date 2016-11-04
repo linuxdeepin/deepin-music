@@ -74,32 +74,32 @@ MediaDatabase::MediaDatabase(QObject *parent) : QObject(parent)
 
     bind();
 
-    PlaylistMeta palylistMeta;
-    palylistMeta.uuid = "all";
-    palylistMeta.displayName = "All Music";
-    palylistMeta.icon = "all";
-    palylistMeta.readonly = true;
-    palylistMeta.hide = false;
+    PlaylistMeta playlistMeta;
+    playlistMeta.uuid = "all";
+    playlistMeta.displayName = "All Music";
+    playlistMeta.icon = "all";
+    playlistMeta.readonly = true;
+    playlistMeta.hide = false;
     if (!playlistExist("all")) {
-        addPlaylist(palylistMeta);
+        addPlaylist(playlistMeta);
     }
 
-    palylistMeta.displayName = "Favourite Music";
-    palylistMeta.uuid = "fav";
-    palylistMeta.icon = "fav";
-    palylistMeta.readonly = true;
-    palylistMeta.hide = false;
+    playlistMeta.displayName = "Favourite Music";
+    playlistMeta.uuid = "fav";
+    playlistMeta.icon = "fav";
+    playlistMeta.readonly = true;
+    playlistMeta.hide = false;
     if (!playlistExist("fav")) {
-        addPlaylist(palylistMeta);
+        addPlaylist(playlistMeta);
     }
 
-    palylistMeta.displayName = "Search Music";
-    palylistMeta.uuid = "search";
-    palylistMeta.icon = "search";
-    palylistMeta.readonly = true;
-    palylistMeta.hide = true;
+    playlistMeta.displayName = "Search Music";
+    playlistMeta.uuid = "search";
+    playlistMeta.icon = "search";
+    playlistMeta.readonly = true;
+    playlistMeta.hide = true;
     if (!playlistExist("search")) {
-        addPlaylist(palylistMeta);
+        addPlaylist(playlistMeta);
     }
 }
 
@@ -132,14 +132,14 @@ QList<PlaylistMeta> MediaDatabase::allPlaylist()
     }
 
     while (query.next()) {
-        PlaylistMeta palylistMeta;
-        palylistMeta.uuid = query.value(0).toString();
-        palylistMeta.displayName = query.value(1).toString();
-        palylistMeta.icon = query.value(2).toString();
-        palylistMeta.readonly = query.value(3).toBool();
-        palylistMeta.hide = query.value(4).toBool();
-        palylistMeta.sortType = query.value(5).toInt();
-        list << palylistMeta;
+        PlaylistMeta playlistMeta;
+        playlistMeta.uuid = query.value(0).toString();
+        playlistMeta.displayName = query.value(1).toString();
+        playlistMeta.icon = query.value(2).toString();
+        playlistMeta.readonly = query.value(3).toBool();
+        playlistMeta.hide = query.value(4).toBool();
+        playlistMeta.sortType = query.value(5).toInt();
+        list << playlistMeta;
     }
     return list;
 }
@@ -205,7 +205,7 @@ QList<MusicMeta> MediaDatabase::searchMusicMeta(const QString &title, int limit)
     return searchTitle(queryString);
 }
 
-void MediaDatabase::addPlaylist(const PlaylistMeta &palylistMeta)
+void MediaDatabase::addPlaylist(const PlaylistMeta &playlistMeta)
 {
     QSqlQuery query;
     query.prepare("INSERT INTO playlist ("
@@ -216,12 +216,12 @@ void MediaDatabase::addPlaylist(const PlaylistMeta &palylistMeta)
                   ":uuid, :displayname, :icon, :readonly, :hide, "
                   ":sortType "
                   ")");
-    query.bindValue(":uuid", palylistMeta.uuid);
-    query.bindValue(":displayname", palylistMeta.displayName);
-    query.bindValue(":icon", palylistMeta.icon);
-    query.bindValue(":readonly", palylistMeta.readonly);
-    query.bindValue(":hide", palylistMeta.hide);
-    query.bindValue(":sortType", palylistMeta.sortType);
+    query.bindValue(":uuid", playlistMeta.uuid);
+    query.bindValue(":displayname", playlistMeta.displayName);
+    query.bindValue(":icon", playlistMeta.icon);
+    query.bindValue(":readonly", playlistMeta.readonly);
+    query.bindValue(":hide", playlistMeta.hide);
+    query.bindValue(":sortType", playlistMeta.sortType);
 
     if (! query.exec()) {
         qWarning() << query.lastError();
@@ -231,14 +231,14 @@ void MediaDatabase::addPlaylist(const PlaylistMeta &palylistMeta)
     QString sqlstring = QString("CREATE TABLE IF NOT EXISTS playlist_%1 ("
                                 "music_id TEXT primary key not null, "
                                 "playlist_id TEXT, sortid INTEGER"
-                                ")").arg(palylistMeta.uuid);
+                                ")").arg(playlistMeta.uuid);
     if (! query.exec(sqlstring)) {
         qWarning() << query.lastError();
         return;
     }
 }
 
-void MediaDatabase::updatePlaylist(const PlaylistMeta &palylistMeta)
+void MediaDatabase::updatePlaylist(const PlaylistMeta &playlistMeta)
 {
     QSqlQuery query;
     query.prepare("UPDATE playlist "
@@ -246,12 +246,12 @@ void MediaDatabase::updatePlaylist(const PlaylistMeta &palylistMeta)
                   "readonly = :readonly, hide = :hide, "
                   "sortType = :sortType "
                   "WHERE uuid = :uuid;");
-    query.bindValue(":uuid", palylistMeta.uuid);
-    query.bindValue(":displayname", palylistMeta.displayName);
-    query.bindValue(":icon", palylistMeta.icon);
-    query.bindValue(":readonly", palylistMeta.readonly);
-    query.bindValue(":hide", palylistMeta.hide);
-    query.bindValue(":sortType", palylistMeta.sortType);
+    query.bindValue(":uuid", playlistMeta.uuid);
+    query.bindValue(":displayname", playlistMeta.displayName);
+    query.bindValue(":icon", playlistMeta.icon);
+    query.bindValue(":readonly", playlistMeta.readonly);
+    query.bindValue(":hide", playlistMeta.hide);
+    query.bindValue(":sortType", playlistMeta.sortType);
 
     if (! query.exec()) {
         qWarning() << query.lastError();
@@ -259,27 +259,27 @@ void MediaDatabase::updatePlaylist(const PlaylistMeta &palylistMeta)
     }
 }
 
-void MediaDatabase::removePlaylist(const PlaylistMeta &palylistMeta)
+void MediaDatabase::removePlaylist(const PlaylistMeta &playlistMeta)
 {
     QSqlQuery query;
-    QString sqlstring = QString("DROP TABLE IF EXISTS playlist_%1").arg(palylistMeta.uuid);
+    QString sqlstring = QString("DROP TABLE IF EXISTS playlist_%1").arg(playlistMeta.uuid);
     if (! query.exec(sqlstring)) {
         qWarning() << query.lastError();
         return;
     }
 
-    sqlstring = QString("DELETE FROM playlist WHERE uuid = '%1'").arg(palylistMeta.uuid);
+    sqlstring = QString("DELETE FROM playlist WHERE uuid = '%1'").arg(playlistMeta.uuid);
     if (! query.exec(sqlstring)) {
         qWarning() << query.lastError();
         return;
     }
 }
 
-void MediaDatabase::deleteMusic(const MusicMeta &meta, const PlaylistMeta &palylistMeta)
+void MediaDatabase::deleteMusic(const MusicMeta &meta, const PlaylistMeta &playlistMeta)
 {
     QSqlQuery query;
     QString sqlstring = QString("DELETE FROM playlist_%1 WHERE music_id = '%2'")
-                        .arg(palylistMeta.uuid).arg(meta.hash);
+                        .arg(playlistMeta.uuid).arg(meta.hash);
     if (! query.exec(sqlstring)) {
         qWarning() << query.lastError();
         return;

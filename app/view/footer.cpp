@@ -213,12 +213,10 @@ Footer::Footer(QWidget *parent) : QFrame(parent)
         auto status = d->btPlay->property(sPropertyPlayStatus).toString();
         if (status == sPlayStatusValuePlaying) {
             emit pause(d->m_playinglist, d->m_playingMeta);
-//            auto status = sPlayStatusValuePause;
-//            updateQssProperty(d->btPlay, sPropertyPlayStatus, status);
-        } else {
-            emit play(d->m_playinglist, d->m_playingMeta);
-//            auto status = sPlayStatusValuePlaying;
-//            updateQssProperty(d->btPlay, sPropertyPlayStatus, status);
+        }
+
+        if (status == sPlayStatusValuePause) {
+            emit resume(d->m_playinglist, d->m_playingMeta);
         }
     });
 
@@ -261,7 +259,6 @@ Footer::Footer(QWidget *parent) : QFrame(parent)
 
 void Footer::enableControl(bool enable)
 {
-    qDebug() << enable;
 //    d->btPlay->setEnabled(enable);
     d->btPrev->setEnabled(enable);
     d->btNext->setEnabled(enable);
@@ -278,17 +275,17 @@ void Footer::enableControl(bool enable)
     d->artlist->blockSignals(!enable);
 }
 
-void Footer::onMusicAdded(QSharedPointer<Playlist> palylist, const MusicMeta &info)
+void Footer::onMusicAdded(QSharedPointer<Playlist> playlist, const MusicMeta &info)
 {
-    if (palylist->id() == FavMusicListID)
+    if (playlist->id() == FavMusicListID)
         if (info.hash == d->m_playingMeta.hash) {
             updateQssProperty(d->btFavorite, sPropertyFavourite, true);
         }
 }
 
-void Footer::onMusicListAdded(QSharedPointer<Playlist> palylist, const MusicMetaList &infolist)
+void Footer::onMusicListAdded(QSharedPointer<Playlist> playlist, const MusicMetaList &infolist)
 {
-    if (palylist->id() == FavMusicListID)
+    if (playlist->id() == FavMusicListID)
         for (auto &meta : infolist) {
             if (meta.hash == d->m_playingMeta.hash) {
                 updateQssProperty(d->btFavorite, sPropertyFavourite, true);
@@ -296,15 +293,15 @@ void Footer::onMusicListAdded(QSharedPointer<Playlist> palylist, const MusicMeta
         }
 }
 
-void Footer::onMusicRemoved(QSharedPointer<Playlist> palylist, const MusicMeta &info)
+void Footer::onMusicRemoved(QSharedPointer<Playlist> playlist, const MusicMeta &info)
 {
-    if (palylist->id() == FavMusicListID)
+    if (playlist->id() == FavMusicListID)
         if (info.hash == d->m_playingMeta.hash) {
             updateQssProperty(d->btFavorite, sPropertyFavourite, false);
         }
 }
 
-void Footer::onMusicPlayed(QSharedPointer<Playlist> palylist, const MusicMeta &info)
+void Footer::onMusicPlayed(QSharedPointer<Playlist> playlist, const MusicMeta &info)
 {
     d->title->setText(info.title);
 
@@ -321,18 +318,19 @@ void Footer::onMusicPlayed(QSharedPointer<Playlist> palylist, const MusicMeta &i
     d->btFavorite->show();
     d->btLyric->show();
 
-    d->m_playinglist = palylist;
+    d->m_playinglist = playlist;
     d->m_playingMeta = info;
+
     updateQssProperty(d->btFavorite, sPropertyFavourite, info.favourite);
 
     updateQssProperty(this, sPropertyPlayStatus, sPlayStatusValuePlaying);
     updateQssProperty(d->btPlay, sPropertyPlayStatus, sPlayStatusValuePlaying);
 }
 
-void Footer::onMusicPause(QSharedPointer<Playlist> palylist, const MusicMeta &info)
+void Footer::onMusicPause(QSharedPointer<Playlist> playlist, const MusicMeta &info)
 {
-    if (info.hash != d->m_playingMeta.hash || palylist != d->m_playinglist) {
-        qWarning() << "can not pasue" << d->m_playinglist << palylist
+    if (info.hash != d->m_playingMeta.hash || playlist != d->m_playinglist) {
+        qWarning() << "can not pasue" << d->m_playinglist << playlist
                    << d->m_playingMeta.hash << info.hash;
         return;
     }
