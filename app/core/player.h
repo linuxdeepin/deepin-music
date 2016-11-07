@@ -44,6 +44,8 @@ public:
         return s_app;
     }
 
+    const MusicMeta playingMeta();
+
     void setPlaylist(QSharedPointer<Playlist> playlist);
     void setMode(PlayMode mode);
 

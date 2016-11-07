@@ -102,10 +102,15 @@ MusicListWidget::MusicListWidget(QWidget *parent) : QFrame(parent)
     });
 
 
-    connect(m_musiclist, &MusicListView::remove,
-    this, [ = ](const MusicMeta & meta) {
-        emit this->musicRemove(m_playlist, meta);
+    connect(m_musiclist, &MusicListView::removeMusicList,
+    this, [ = ](const MusicMetaList &metalist) {
+        emit this->musicListRemove(m_playlist, metalist);
     });
+    connect(m_musiclist, &MusicListView::deleteMusicList,
+    this, [ = ](const MusicMetaList &metalist) {
+        emit this->musicListDelete(m_playlist, metalist);
+    });
+
     connect(m_musiclist, &MusicListView::addToPlaylist,
     this, [ = ](QSharedPointer<Playlist> playlist, const MusicMetaList metalist) {
         emit this->musicAdd(playlist, metalist);

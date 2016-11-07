@@ -15,6 +15,7 @@
 
 #include "playlist.h"
 
+class InotifyEngine;
 class MediaFileMonitor : public QObject
 {
     Q_OBJECT
@@ -24,14 +25,16 @@ public:
     explicit MediaFileMonitor(QObject *parent = 0);
 
 signals:
+    void fileRemoved(const QString &filepath);
     void meidaFileImported(QSharedPointer<Playlist> playlist, MusicMetaList metalist);
 
 public slots:
     void importPlaylistFiles(QSharedPointer<Playlist> playlist, const QStringList &filelist);
-
+    void startMonitor();
 
 private:
     const int ScanCacheSize = 200;
+    InotifyEngine  *m_watcher;
 };
 
 #endif // MEDIAFILEMONITOR_H

@@ -149,7 +149,7 @@ void Playlist::load()
         musicIDs << QString("\"%1\"").arg(musicID);
     }
     auto sqlStr = QString("SELECT hash, localpath, title, artist, album, "
-                          "filetype, track, offset, length, size, timestamp "
+                          "filetype, track, offset, length, size, timestamp, cuepath "
                           "FROM music WHERE hash IN (%1)").arg(musicIDs.join(","));
     if (!query.exec(sqlStr)) {
         qWarning() << query.lastError();
@@ -159,7 +159,7 @@ void Playlist::load()
     while (query.next()) {
         MusicMeta info;
         info.hash = query.value(0).toString();
-        info.localpath = query.value(1).toString();
+        info.localPath = query.value(1).toString();
         info.title = query.value(2).toString();
         info.artist = query.value(3).toString();
         info.album = query.value(4).toString();
@@ -169,6 +169,7 @@ void Playlist::load()
         info.length = query.value(8).toInt();
         info.size = query.value(9).toInt();
         info.timestamp = query.value(10).toInt();
+        info.cuePath = query.value(11).toString();
         listmeta.musicMap.insert(info.hash, info);
     }
     resort();
@@ -194,7 +195,7 @@ void Playlist::appendMusic(const MusicMetaList &metalist)
     MusicMetaList newMetalist;
     for (auto &meta : metalist) {
         if (listmeta.musicMap.contains(meta.hash)) {
-            qDebug() << "skip dump music " << meta.hash << meta.localpath;
+            qDebug() << "skip dump music " << meta.hash << meta.localPath;
             continue;
         }
 
@@ -207,23 +208,31 @@ void Playlist::appendMusic(const MusicMetaList &metalist)
     emit musiclistAdded(newMetalist);
 }
 
-void Playlist::removeMusic(const MusicMeta &info)
+void Playlist::removeMusic(const MusicMetaList &metalist)
 {
-    if (info.hash.isEmpty()) {
-        qCritical() << "Cannot remove empty id" << info.hash << info.title;
+    QSqlDatabase::database().transaction();
+    for (auto &meta: metalist)
+        removeOneMusic(meta);
+    QSqlDatabase::database().commit();
+}
+
+void Playlist::removeOneMusic(const MusicMeta &meta)
+{
+    if (meta.hash.isEmpty()) {
+        qCritical() << "Cannot remove empty id" << meta.hash << meta.title;
         return;
     }
-    if (!listmeta.musicMap.contains(info.hash)) {
-        qWarning() << "no such id in playlist" << info.hash << info.localpath << listmeta.displayName;
+    if (!listmeta.musicMap.contains(meta.hash)) {
+//        qWarning() << "no such id in playlist" << meta.hash << meta.localPath << listmeta.displayName;
         return;
     }
 
-    listmeta.musicIds.removeAll(info.hash);
-    listmeta.musicMap.remove(info.hash);
+    listmeta.musicIds.removeAll(meta.hash);
+    listmeta.musicMap.remove(meta.hash);
 
-    emit musicRemoved(info);
+    emit musicRemoved(meta);
 
-    MediaDatabase::deleteMusic(info, listmeta);
+    MediaDatabase::deleteMusic(meta, listmeta);
 }
 
 bool lessThanTimestamp(const MusicMeta &v1, const MusicMeta &v2)

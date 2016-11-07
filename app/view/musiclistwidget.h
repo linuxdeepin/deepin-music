@@ -33,7 +33,9 @@ public:
     virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
 
 signals:
-    void musicRemove(QSharedPointer<Playlist> playlist, const MusicMeta &info);
+    void musicListRemove(QSharedPointer<Playlist> playlist, const MusicMetaList &metalist);
+    void musicListDelete(QSharedPointer<Playlist> playlist, const MusicMetaList &metalist);
+
     void musicClicked(QSharedPointer<Playlist> playlist, const MusicMeta &info);
     void musicAdd(QSharedPointer<Playlist> playlist, const MusicMetaList &metalist);
     void playall(QSharedPointer<Playlist> playlist);

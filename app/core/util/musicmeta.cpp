@@ -28,18 +28,18 @@ namespace MusicMetaName
 MusicMeta fromLocalFile(const QFileInfo &fileInfo, const QString &hash)
 {
     MusicMeta info;
-    info.localpath = fileInfo.absoluteFilePath();
+    info.localPath = fileInfo.absoluteFilePath();
     info.hash = hash;
 
-    if (info.localpath.isEmpty()) {
+    if (info.localPath.isEmpty()) {
         return info;
     }
 
     // TODO: fix me in windows
 #ifdef _WIN32
-    TagLib::FileRef f(info.localpath.toStdWString().c_str());
+    TagLib::FileRef f(info.localPath.toStdWString().c_str());
 #else
-    TagLib::FileRef f(info.localpath.toStdString().c_str());
+    TagLib::FileRef f(info.localPath.toStdString().c_str());
 #endif
 
     // TODO: more encode support
@@ -51,15 +51,15 @@ MusicMeta fromLocalFile(const QFileInfo &fileInfo, const QString &hash)
         encode &= tag->artist().isNull() ? true : tag->artist().isLatin1();
         encode &= tag->album().isNull() ? true : tag->album().isLatin1();
 
-        // WARING: icu detect is useless because the sample is to small !!!!!
+//         WARING: icu detect is useless because the sample is to small !!!!!
 
-        //            auto detectString = tag->album() + tag->artist() + tag->title();
-        //            auto detectByte = QByteArray(detectString.toCString());
-        //Localized encode, current only GB18030 is used.
-        //            QByteArray codeName = ICU::codeName(detectByte);
-        //            QTextCodec *codec = QTextCodec::codecForName(codeName);
+        auto detectString = tag->album() + tag->artist() + tag->title();
+        auto detectByte = QByteArray(detectString.toCString());
+        QByteArray codeName = ICU::codeName(detectByte);
+        QTextCodec *codec = QTextCodec::codecForName(codeName);
 
-        QTextCodec *codec = QTextCodec::codecForName("GB18030");
+//                    Localized encode, current only GB18030 is used.
+//        QTextCodec *codec = QTextCodec::codecForName("GB18030");
 
         if (encode && codec) {
             info.album = codec->toUnicode(tag->album().toCString());

@@ -22,6 +22,7 @@
 #include "../core/mediafilemonitor.h"
 #include "../core/lyricservice.h"
 #include "../core/mediadatabase.h"
+#include "../core/util/musicmeta.h"
 
 class AppPresenterPrivate
 {
@@ -73,6 +74,7 @@ void AppPresenter::prepareData()
     d->moniter = new MediaFileMonitor;
     work = new QThread;
     d->moniter->moveToThread(work);
+    connect(work, &QThread::started, d->moniter, &MediaFileMonitor::startMonitor);
     work->start();
 
     //! load playlist
@@ -103,6 +105,19 @@ void AppPresenter::prepareData()
         }
 
         playlist->appendMusic(metalist);
+    });
+
+    connect(d->moniter, &MediaFileMonitor::fileRemoved,
+    this, [ = ](const QString & filepath) {
+        auto metalist = MediaDatabase::searchMusicPath(filepath, std::numeric_limits<int>::max());
+        QSharedPointer<Playlist> allplaylist = d->playlistMgr->playlist(AllMusicListID);
+
+        qDebug() << "remove" << filepath << metalist.length();
+
+        for (auto playlist : d->playlistMgr->allplaylist()) {
+            playlist->removeMusic(metalist);
+        }
+        emit MediaDatabase::instance()->removeMusicMetaList(metalist);
     });
 
     connect(d->playlistMgr, &PlaylistManager::playingPlaylistChanged,
@@ -186,17 +201,53 @@ int AppPresenter::playMode()
     return Player::instance()->mode();
 }
 
-void AppPresenter::onMusicRemove(QSharedPointer<Playlist> playlist, const MusicMeta &info)
+void AppPresenter::onMusicRemove(QSharedPointer<Playlist> playlist, const MusicMetaList &metalist)
 {
-    playlist->removeMusic(info);
+    if (playlist == d->playlistMgr->playingPlaylist() ||
+            playlist->id() == AllMusicListID) {
+        //stop music
+        for (auto &meta : metalist) {
+            if (meta.hash == Player::instance()->playingMeta().hash) {
+                emit coverSearchFinished(meta, ":/image/cover_max.png");
+                emit lyricSearchFinished(meta, "");
+                Player::instance()->stop();
+                emit musicStoped(d->playlistMgr->playingPlaylist(), meta);
+            }
+        }
+    }
 
     // TODO: do better;
     if (playlist->id() == AllMusicListID) {
         for (auto &playlist : allplaylist()) {
-            if (playlist->contains(info)) {
-                playlist->removeMusic(info);
-            }
+            playlist->removeMusic(metalist);
         }
+        MediaDatabase::instance()->removeMusicMetaList(metalist);
+        return;
+    }
+    playlist->removeMusic(metalist);
+}
+
+void AppPresenter::onMusicDelete(QSharedPointer<Playlist> , const MusicMetaList &metalist)
+{
+    for (auto &playlist : allplaylist()) {
+        playlist->removeMusic(metalist);
+    }
+    MediaDatabase::instance()->removeMusicMetaList(metalist);
+
+    for (auto &meta : metalist) {
+        if (meta.hash == Player::instance()->playingMeta().hash) {
+            Player::instance()->stop();
+            emit coverSearchFinished(meta, ":/image/cover_max.png");
+            emit lyricSearchFinished(meta, "");
+            emit musicStoped(d->playlistMgr->playingPlaylist(), meta);
+        }
+
+        QFile::remove(meta.localPath);
+
+        if (!meta.cuePath.isEmpty()) {
+            QFile::remove(meta.cuePath);
+        }
+
     }
 }
 
@@ -274,23 +325,37 @@ void AppPresenter::onPlaylistAdd(bool edit)
     emit playlistAdded(d->playlistMgr->playlist(info.uuid));
 }
 
-void AppPresenter::onMusicPlay(QSharedPointer<Playlist> playlist,  const MusicMeta &info)
+void AppPresenter::onMusicPlay(QSharedPointer<Playlist> playlist,  const MusicMeta &meta)
 {
+    auto nextMeta = meta;
+    qDebug() << "Fix me: play status";
     if (0 == d->playlistMgr->playlist(AllMusicListID)->length()) {
         emit requestImportFiles();
         return;
     }
 
     d->playlistMgr->setPlayingPlaylist(playlist);
-    if (Player::instance()->media().canonicalUrl() == QUrl::fromLocalFile(info.localpath)) {
-        emit this->play(d->playlistMgr->playingPlaylist(), info);
+
+    if (0 == playlist->length()) {
+        qDebug() << "empty";
+        return;
+    }
+
+    if (!playlist->contains(nextMeta)) {
+        nextMeta = playlist->next(meta);
+    }
+
+    qDebug() << nextMeta.title;
+
+    if (Player::instance()->media().canonicalUrl() == QUrl::fromLocalFile(nextMeta.localPath)) {
+        emit this->play(d->playlistMgr->playingPlaylist(), nextMeta);
         return;
     }
     qDebug() << "Fix me: play status"
-             << info.hash  << info.localpath;
+             << nextMeta.hash  << nextMeta.localPath;
     // TODO: using signal;
     Player::instance()->setPlaylist(playlist);
-    emit this->play(d->playlistMgr->playingPlaylist(), info);
+    emit this->play(d->playlistMgr->playingPlaylist(), nextMeta);
 }
 
 void AppPresenter::onMusicPause(QSharedPointer<Playlist> playlist, const MusicMeta &info)
@@ -318,7 +383,7 @@ void AppPresenter::onMusicNext(QSharedPointer<Playlist> playlist, const MusicMet
 void AppPresenter::onToggleFavourite(const MusicMeta &info)
 {
     if (d->playlistMgr->playlist(FavMusicListID)->contains(info)) {
-        d->playlistMgr->playlist(FavMusicListID)->removeMusic(info);
+        d->playlistMgr->playlist(FavMusicListID)->removeOneMusic(info);
     } else {
         d->playlistMgr->playlist(FavMusicListID)->appendMusic(MusicMetaList() << info);
     }

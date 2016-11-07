@@ -30,7 +30,7 @@ static QString cacheLyricPath(const MusicMeta &info)
     return cacheLyricDir + "/" + info.hash + ".lyric";
 }
 
-static QString cacheCoverPath(const MusicMeta &info)
+inline QString cacheCoverPath(const MusicMeta &info)
 {
     auto cacheLyricDir = MusicApp::cachePath() + "/cover";
     // TODO: key is what?
@@ -83,6 +83,11 @@ LyricService::LyricService(QObject *parent) : QObject(parent)
     }
 }
 
+QString LyricService::coverPath(const MusicMeta &info)
+{
+    return cacheCoverPath(info);
+}
+
 
 int LyricService::searchCacheLyric(const MusicMeta &info)
 {
@@ -97,12 +102,12 @@ int LyricService::searchCacheLyric(const MusicMeta &info)
 
 int LyricService::searchCacheCover(const MusicMeta &info)
 {
-    QFileInfo cover(cacheCoverPath(info));
+    QFileInfo cover(coverPath(info));
     if (!cover.exists() || cover.size() < 1) {
         emit coverSearchFinished(info, ":/image/cover_max.png");
         return -1;
     }
-    emit coverSearchFinished(info, cacheCoverPath(info));
+    emit coverSearchFinished(info, coverPath(info));
     return 0;
 }
 
@@ -292,8 +297,8 @@ int LyricService::doCoverRequest(const MusicMeta &info, int aid)
         result = jsonObject.value("result").toArray().first().toObject();
     }
     auto lrcurl = result.value("cover").toString();
-    downloadUrl(lrcurl, cacheCoverPath(info));
-    emit coverSearchFinished(info, cacheCoverPath(info));
+    downloadUrl(lrcurl, coverPath(info));
+    emit coverSearchFinished(info, coverPath(info));
     return ret;
 }
 

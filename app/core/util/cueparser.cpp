@@ -49,8 +49,9 @@ CueParser::CueParser(const QString &filepath)
 
     QByteArray codeName = ICU::codeName(cueByte);
     QTextCodec *codec = QTextCodec::codecForName(codeName);
-    if (!codec)
+    if (!codec) {
         codec = QTextCodec::codecForLocale();
+    }
     QString cue = codec->toUnicode(cueByte.toStdString().c_str());
 
     // TODO: libcue need empty line at last
@@ -71,7 +72,7 @@ CueParser::CueParser(const QString &filepath)
 
     int ival = cd_get_ntrack(cd);
 
-    qDebug() << "cd_get_ntrack" << filepath <<ival;
+//    qDebug() << "cd_get_ntrack" << filepath << ival;
 
     QFileInfo cueFileInfo(filepath);
     QMap<QString, MusicMeta> fileMetaCache;
@@ -90,17 +91,18 @@ CueParser::CueParser(const QString &filepath)
         if (nullptr == val) {
             continue;
         }
-        meta.localpath = cueFileInfo.absolutePath() + "/" + val;
+        meta.localPath = cueFileInfo.absolutePath() + "/" + val;
+        meta.cuePath = cueFileInfo.absoluteFilePath();
 
-        if (!fileMetaCache.contains(meta.localpath)) {
-            QFileInfo media(meta.localpath);
+        if (!fileMetaCache.contains(meta.localPath)) {
+            QFileInfo media(meta.localPath);
             auto mediaHash = MusicMetaName::hash(media.absoluteFilePath());
             auto mediaMeta = MusicMetaName::fromLocalFile(media, mediaHash);
-            fileMetaCache.insert(meta.localpath, mediaMeta);
-            fileExist.insert(meta.localpath, media.exists());
+            fileMetaCache.insert(meta.localPath, mediaMeta);
+            fileExist.insert(meta.localPath, media.exists());
         }
 
-        if (!fileExist.value(meta.localpath)) {
+        if (!fileExist.value(meta.localPath)) {
             continue;
         }
 
@@ -109,7 +111,7 @@ CueParser::CueParser(const QString &filepath)
         meta.hash = hash;
 
         // TODO: maybe multi
-        musicFilePath = meta.localpath;
+        musicFilePath = meta.localPath;
 
         cdtext = track_get_cdtext(track);
         if (nullptr == cdtext) {
@@ -127,15 +129,15 @@ CueParser::CueParser(const QString &filepath)
         meta.length = timeframe2mtime(track_get_length(track));
 
         // TODO: hack track must < 1000
-        meta.timestamp = fileMetaCache.value(meta.localpath).timestamp + meta.track;
-        meta.filetype = fileMetaCache.value(meta.localpath).filetype;
-        meta.size = fileMetaCache.value(meta.localpath).size;
+        meta.timestamp = fileMetaCache.value(meta.localPath).timestamp + meta.track;
+        meta.filetype = fileMetaCache.value(meta.localPath).filetype;
+        meta.size = fileMetaCache.value(meta.localPath).size;
 
         MusicMetaName::pinyinIndex(meta);
 
         // TODO: fix last len
         if (meta.track == ival && meta.length <= 0) {
-            auto total = fileMetaCache.value(meta.localpath).length;
+            auto total = fileMetaCache.value(meta.localPath).length;
             if (total > meta.offset) {
                 meta.length = total - meta.offset;
             }

@@ -46,7 +46,8 @@ static bool createConnection()
                "album VARCHAR(256), filetype VARCHAR(32), "
                "size INTEGER, track INTEGER, "
                "offset INTEGER, favourite INTEGER(32), "
-               "localpath VARCHAR(4096), length INTEGER)"
+               "localpath VARCHAR(4096), length INTEGER, "
+               "cuepath VARCHAR(4096) )"
               );
 
     query.exec("CREATE TABLE IF NOT EXISTS ablum (id int primary key, "
@@ -75,6 +76,12 @@ MediaDatabase::MediaDatabase(QObject *parent) : QObject(parent)
     bind();
 
     QSqlDatabase::database().transaction();
+
+    QSqlQuery query;
+    query.prepare("ALTER TABLE music ADD COLUMN cuepath VARCHAR(4096);");
+    if (query.exec()) {
+        qWarning() << "sql upgrade with out error:" << query.lastError();
+    }
 
     PlaylistMeta playlistMeta;
     playlistMeta.uuid = "all";
@@ -161,7 +168,7 @@ static QList<MusicMeta> searchTitle(const QString &queryString)
     while (query.next()) {
         MusicMeta musicMeta;
         musicMeta.hash = query.value(0).toString();
-        musicMeta.localpath = query.value(1).toString();
+        musicMeta.localPath = query.value(1).toString();
         musicMeta.title = query.value(2).toString();
         musicMeta.artist = query.value(3).toString();
         musicMeta.album = query.value(4).toString();
@@ -204,6 +211,19 @@ QList<MusicMeta> MediaDatabase::searchMusicMeta(const QString &title, int limit)
                                   "OR py_album_short LIKE  " + matchReg +
                                   "OR artist LIKE " + matchReg +
                                   "OR album LIKE " + matchReg +
+                                  "LIMIT " + QString("%1").arg(limit));
+
+    return searchTitle(queryString);
+}
+
+QList<MusicMeta> MediaDatabase::searchMusicPath(const QString &path, int limit)
+{
+    auto matchReg = QString("\"%%1%\" ").arg(path);
+    QString queryString = QString("SELECT hash, localpath, title, artist, album, "
+                                  "filetype, track, offset, length, size, timestamp "
+                                  "FROM music WHERE "
+                                  "localpath LIKE  " + matchReg +
+                                  "OR cuepath LIKE  " + matchReg +
                                   "LIMIT " + QString("%1").arg(limit));
 
     return searchTitle(queryString);
@@ -328,15 +348,8 @@ void MediaDatabase::bind()
             m_writer, &MediaDatabaseWriter::insertMusic);
     connect(this, &MediaDatabase::insertMusicList,
             m_writer, &MediaDatabaseWriter::insertMusicList);
+    connect(this, &MediaDatabase::removeMusicMetaList,
+            m_writer, &MediaDatabaseWriter::removeMusicMetaList);
 }
 
-void MediaDatabase::removeMusicMeta(const MusicMeta &meta)
-{
-    QSqlQuery query;
-    QString sqlstring = QString("DELETE FROM music WHERE hash = '%1'").arg(meta.hash);
-    if (! query.exec(sqlstring)) {
-        qWarning() << query.lastError();
-        return;
-    }
-}
 

@@ -52,6 +52,7 @@ public slots:
     void onMusicRemoved(QSharedPointer<Playlist> playlist, const MusicMeta &meta);
     void onMusicPlayed(QSharedPointer<Playlist> playlist, const MusicMeta &meta);
     void onMusicPause(QSharedPointer<Playlist> playlist, const MusicMeta &meta);
+    void onMusicStoped(QSharedPointer<Playlist> playlist, const MusicMeta &meta);
     void onProgressChanged(qint64 value, qint64 duration);
     void onCoverChanged(const MusicMeta &meta, const QString &coverPath);
 
@@ -60,6 +61,5 @@ private:
 
     QSharedPointer<FooterPrivate>     d;
 };
-
 
 #endif // FOOTER_H

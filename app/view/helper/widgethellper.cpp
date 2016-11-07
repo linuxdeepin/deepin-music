@@ -62,13 +62,17 @@ QImage cropRect(const QImage &image, QSize sz)
     QImage newImage = image.scaled(sz, Qt::KeepAspectRatioByExpanding);
     auto center = QRectF(newImage.rect()).center();
     auto topLeft = QPointF(center.x() - sz.width() / 2.0,
-                           center.y() - sz.height()/2.0);
-    auto bottomRight = QPointF(center.x() + sz.width() / 2.0,
-                               center.y() + sz.height()/2.0);
-    QRect crop(topLeft.toPoint(), bottomRight.toPoint());
+                           center.y() - sz.height() / 2.0);
+    if (topLeft.x() < 0) {
+        topLeft.setX(0);
+    }
+    if (topLeft.y() < 0) {
+        topLeft.setY(0);
+    }
+
+    QRect crop(topLeft.toPoint(), sz);
     return newImage.copy(crop);
 }
-
 
 void slideRight2LeftWidget(QWidget *left, QWidget *right, int delay)
 {
@@ -256,6 +260,11 @@ void slideEdgeWidget(QWidget *right, QRect start, QRect end, int delay, bool hid
         animation2->connect(animation2, &QPropertyAnimation::finished,
                             right, &QWidget::hide);
 
+}
+
+QPixmap coverPixmap(const QString &coverPath, QSize sz)
+{
+    return QPixmap::fromImage(cropRect(QImage(coverPath), sz));
 }
 
 

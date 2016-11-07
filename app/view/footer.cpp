@@ -195,11 +195,18 @@ Footer::Footer(QWidget *parent) : QFrame(parent)
             return;
         }
 
+        if (d->m_playinglist && 0 == d->m_playinglist->length()) {
+            emit play(d->m_playinglist, d->m_playingMeta);
+            return;
+        }
+
         auto status = d->btPlay->property(sPropertyPlayStatus).toString();
         if (status == sPlayStatusValuePlaying) {
             emit pause(d->m_playinglist, d->m_playingMeta);
         }
-
+        if (status == sPlayStatusValueStop) {
+            emit play(d->m_playinglist, d->m_playingMeta);
+        }
         if (status == sPlayStatusValuePause) {
             emit resume(d->m_playinglist, d->m_playingMeta);
         }
@@ -295,6 +302,7 @@ void Footer::onMusicPlayed(QSharedPointer<Playlist> playlist, const MusicMeta &i
         d->artlist->setText(tr("Unknow Artist"));
     }
 
+    this->enableControl(true);
     d->title->show();
     d->artlist->show();
     d->btPrev->show();
@@ -311,15 +319,35 @@ void Footer::onMusicPlayed(QSharedPointer<Playlist> playlist, const MusicMeta &i
     updateQssProperty(d->btPlay, sPropertyPlayStatus, sPlayStatusValuePlaying);
 }
 
-void Footer::onMusicPause(QSharedPointer<Playlist> playlist, const MusicMeta &info)
+void Footer::onMusicPause(QSharedPointer<Playlist> playlist, const MusicMeta &meta)
 {
-    if (info.hash != d->m_playingMeta.hash || playlist != d->m_playinglist) {
+    if (meta.hash != d->m_playingMeta.hash || playlist != d->m_playinglist) {
         qWarning() << "can not pasue" << d->m_playinglist << playlist
-                   << d->m_playingMeta.hash << info.hash;
+                   << d->m_playingMeta.hash << meta.hash;
         return;
     }
     auto status = sPlayStatusValuePause;
     updateQssProperty(d->btPlay, sPropertyPlayStatus, status);
+}
+
+void Footer::onMusicStoped(QSharedPointer<Playlist> playlist, const MusicMeta &meta)
+{
+    if (meta.hash != d->m_playingMeta.hash || playlist != d->m_playinglist) {
+        qWarning() << "can not pasue" << d->m_playinglist << playlist
+                   << d->m_playingMeta.hash << meta.hash;
+        return;
+    }
+
+    auto status = sPlayStatusValueStop;
+    updateQssProperty(d->btPlay, sPropertyPlayStatus, status);
+    onProgressChanged(0, 1);
+    this->enableControl(false);
+
+    D_THEME_INIT_WIDGET(Footer);
+
+    this->style()->unpolish(this);
+    this->style()->polish(this);
+    this->repaint();
 }
 
 void Footer::onProgressChanged(qint64 value, qint64 duration)

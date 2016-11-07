@@ -33,7 +33,8 @@ public:
 signals:
     void play(const MusicMeta &meta);
     void addToPlaylist(QSharedPointer<Playlist> playlist, const MusicMetaList metalist);
-    void remove(const MusicMeta &meta);
+    void removeMusicList(const MusicMetaList &metalist);
+    void deleteMusicList(const MusicMetaList &metalist);
     void requestCustomContextMenu(const QPoint &pos);
 
     void headerColorChanged(QColor headerColor);
@@ -45,8 +46,9 @@ public slots:
                          QList<QSharedPointer<Playlist> >newlist);
     void setHeaderColor(QColor headerColor)
     {
-        if (m_headerColor == headerColor)
+        if (m_headerColor == headerColor) {
             return;
+        }
 
         m_headerColor = headerColor;
         emit headerColorChanged(headerColor);

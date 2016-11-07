@@ -15,6 +15,11 @@
 #include <QThread>
 #include <QTimer>
 
+const MusicMeta Player::playingMeta()
+{
+    return m_playingMeta;
+}
+
 void Player::setPlaylist(QSharedPointer<Playlist> playlist)
 {
 }
@@ -34,6 +39,7 @@ void Player::playMusic(QSharedPointer<Playlist> playlist, const MusicMeta &info)
     }
 
     this->blockSignals(true);
+    qDebug() << nextInfo.title;
     setMediaMeta(nextInfo);
     this->blockSignals(false);
 
@@ -82,8 +88,8 @@ void Player::playPrevMusic(QSharedPointer<Playlist> playlist, const MusicMeta &i
 
 void Player::setMediaMeta(const MusicMeta &info)
 {
-    if (this->media().canonicalUrl() != QUrl::fromLocalFile(info.localpath)) {
-        QMediaPlayer::setMedia(QUrl::fromLocalFile(info.localpath));
+    if (this->media().canonicalUrl() != QUrl::fromLocalFile(info.localPath)) {
+        QMediaPlayer::setMedia(QUrl::fromLocalFile(info.localPath));
     }
     m_playingMeta = info;
 }

@@ -25,11 +25,15 @@
 #include <DAction>
 #include <DMenu>
 
-#include "../core/playlist.h"
 #include "../musicapp.h"
+#include "../model/musiclistmodel.h"
+#include "../core/playlist.h"
+#include "../core/lyricservice.h"
+
 #include "widget/musicitemdelegate.h"
 #include "widget/infodialog.h"
 #include "widget/menu.h"
+#include "helper/widgethellper.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -79,6 +83,7 @@ MusicListView::MusicListView(QWidget *parent) : QTableView(parent)
 
     D_THEME_INIT_WIDGET(MusicListView);
 }
+
 
 void MusicListView::showContextMenu(const QPoint &pos,
                                     QSharedPointer<Playlist> selectedPlaylist,
@@ -144,10 +149,10 @@ void MusicListView::showContextMenu(const QPoint &pos,
             auto index = selection->selectedRows().first();
             auto item = this->model()->item(index.row(), index.column());
             MusicMeta meta = qvariant_cast<MusicMeta>(item->data());
-            auto dirUrl = QUrl::fromLocalFile(QFileInfo(meta.localpath).absoluteDir().absolutePath());
+            auto dirUrl = QUrl::fromLocalFile(QFileInfo(meta.localPath).absoluteDir().absolutePath());
             QFileInfo ddefilemanger("/usr/bin/dde-file-manager");
             if (ddefilemanger.exists()) {
-                auto dirFile = QUrl::fromLocalFile(QFileInfo(meta.localpath).absoluteFilePath());
+                auto dirFile = QUrl::fromLocalFile(QFileInfo(meta.localPath).absoluteFilePath());
                 auto url = QString("%1?selectUrl=%2").arg(dirUrl.toString()).arg(dirFile.toString());
                 QProcess::startDetached("dde-file-manager" , QStringList() << url);
             } else {
@@ -156,17 +161,61 @@ void MusicListView::showContextMenu(const QPoint &pos,
         }
 
         if (action->text() == tr("Remove from list")) {
-            auto index = selection->selectedRows().first();
-            auto item = this->model()->item(index.row(), index.column());
-            MusicMeta meta = qvariant_cast<MusicMeta>(item->data());
-            emit remove(meta);
+            MusicMetaList metalist;
+            for (auto index : selection->selectedRows()) {
+                auto item = this->model()->item(index.row(), index.column());
+                MusicMeta meta = qvariant_cast<MusicMeta>(item->data());
+                metalist << meta;
+            }
+            emit removeMusicList(metalist);
+        }
+
+        if (action->text() == tr("Delete")) {
+            MusicMetaList metalist;
+            for (auto index : selection->selectedRows()) {
+                auto item = this->model()->item(index.row(), index.column());
+                MusicMeta meta = qvariant_cast<MusicMeta>(item->data());
+                metalist << meta;
+            }
+
+            DDialog warnDlg;
+            warnDlg.setTextFormat(Qt::AutoText);
+            warnDlg.addButtons(QStringList() << tr("Cancel") << tr("Delete"));
+
+            auto coverPath = QString(":/image/cover_max.png");
+            if (1 == metalist.length()) {
+                auto meta = metalist.first();
+                QFileInfo coverfi(LyricService::coverPath(meta));
+                if (coverfi.exists()) {
+                    coverPath = coverfi.absoluteFilePath();
+                }
+                warnDlg.setMessage(
+                    QString(tr("Are you sure to delete %1?")).arg(meta.title));
+            } else {
+                warnDlg.setMessage(
+                    QString(tr("TODO: Are you sure to delete %1 songs?")).arg(metalist.length()));
+            }
+
+            auto cover = WidgetHelper::coverPixmap(coverPath, QSize(64, 64));
+
+            warnDlg.setIcon(QIcon(cover));
+            if (0 == warnDlg.exec()) {
+                return;
+            }
+            emit deleteMusicList(metalist);
         }
 
         if (action->text() == tr("Song info")) {
             auto index = selection->selectedRows().first();
             auto item = this->model()->item(index.row(), index.column());
             MusicMeta meta = qvariant_cast<MusicMeta>(item->data());
-            InfoDialog dlg(meta, this);
+            auto coverPath = QString(":/image/cover_max.png");
+            QFileInfo coverfi(LyricService::coverPath(meta));
+            if (coverfi.exists()) {
+                coverPath = coverfi.absoluteFilePath();
+            }
+            auto cover = WidgetHelper::coverPixmap(coverPath, QSize(140, 140));
+            InfoDialog dlg(meta, cover, this);
             dlg.exec();
         }
     });

@@ -63,7 +63,8 @@ public:
 public slots:
     void setDisplayName(const QString &name);
     void appendMusic(const MusicMetaList &metalist);
-    void removeMusic(const MusicMeta &info);
+    void removeMusic(const MusicMetaList &metalist);
+    void removeOneMusic(const MusicMeta &meta);
     void sortBy(Playlist::SortType sortType);
     void resort();
 

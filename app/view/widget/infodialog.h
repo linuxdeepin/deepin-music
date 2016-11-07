@@ -19,7 +19,7 @@ class InfoDialog : public DAbstractDialog
 {
     Q_OBJECT
 public:
-    explicit InfoDialog(const MusicMeta& info, QWidget *parent = 0);
+    explicit InfoDialog(const MusicMeta& info, const QPixmap& coverPixmap, QWidget *parent = 0);
 
 signals:
 

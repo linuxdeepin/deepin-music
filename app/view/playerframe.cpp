@@ -182,8 +182,11 @@ void PlayerFrame::binding(AppPresenter *presenter)
             presenter, &AppPresenter::onMusicPlay);
     connect(d->musicList, &MusicListWidget::musicAdd,
             presenter, &AppPresenter::onMusicAdd);
-    connect(d->musicList, &MusicListWidget::musicRemove,
+    connect(d->musicList, &MusicListWidget::musicListRemove,
             presenter, &AppPresenter::onMusicRemove);
+    connect(d->musicList, &MusicListWidget::musicListDelete,
+            presenter, &AppPresenter::onMusicDelete);
+
     connect(d->musicList, &MusicListWidget::playall,
             presenter, &AppPresenter::onPlayall);
     connect(d->musicList, &MusicListWidget::requestCustomContextMenu,
@@ -233,6 +236,8 @@ void PlayerFrame::binding(AppPresenter *presenter)
             d->footer, &Footer::onMusicPlayed);
     connect(presenter, &AppPresenter::musicPaused,
             d->footer, &Footer::onMusicPause);
+    connect(presenter, &AppPresenter::musicStoped,
+            d->footer, &Footer::onMusicStoped);
     connect(presenter, &AppPresenter::musicAdded,
             d->footer, &Footer::onMusicAdded);
     connect(presenter, &AppPresenter::musiclistAdded,

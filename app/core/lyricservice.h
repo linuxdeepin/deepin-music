@@ -20,6 +20,7 @@ class LyricService : public QObject
 public:
     explicit LyricService(QObject *parent = 0);
 
+    static QString coverPath(const MusicMeta &info);
 signals:
     void lyricSearchFinished(const MusicMeta &, const QString &lyricPath);
     void coverSearchFinished(const MusicMeta &, const QString &coverPath);

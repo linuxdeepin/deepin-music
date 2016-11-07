@@ -93,7 +93,9 @@ SOURCES += \
     view/widget/lyriclinedelegate.cpp \
     core/util/musicmeta.cpp \
     view/widget/clickablelabel.cpp \
-    core/util/icu.cpp
+    core/util/icu.cpp \
+#    core/util/filesystemwatcher.cpp \
+    core/util/inotifyengine.cpp
 
 HEADERS += \
     view/playerframe.h \
@@ -133,7 +135,9 @@ HEADERS += \
     view/widget/lyriclinedelegate.h \
     core/util/musicmeta.h \
     view/widget/clickablelabel.h \
-    core/util/icu.h
+    core/util/icu.h \
+#    core/util/filesystemwatcher.h \
+    core/util/inotifyengine.h
 
 RESOURCES += \
     resource/theme/theme.qrc \

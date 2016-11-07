@@ -20,7 +20,8 @@ class MusicMeta
 {
 public:
     QString hash;
-    QString localpath;
+    QString localPath;
+    QString cuePath;
     QString title;
     QString artist;
     QString album;

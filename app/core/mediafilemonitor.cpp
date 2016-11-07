@@ -10,16 +10,18 @@
 #include "mediafilemonitor.h"
 
 #include <QDebug>
+
+#include <QTime>
+#include <QThread>
 #include <QMap>
 #include <QDir>
+#include <QHash>
+#include <QCryptographicHash>
 #include <QFileInfo>
 #include <QMimeDatabase>
-#include <QCryptographicHash>
 #include <QDirIterator>
-#include <QThread>
 #include <QTextCodec>
-#include <QTime>
-#include <QHash>
+#include <QFileSystemWatcher>
 
 #include <tag.h>
 #include <fileref.h>
@@ -31,6 +33,7 @@
 
 #include "util/cueparser.h"
 #include "util/musicmeta.h"
+#include "util/inotifyengine.h"
 
 static QMap<QString, bool>  sSupportedSuffix;
 static QStringList          sSupportedSuffixList;
@@ -43,6 +46,12 @@ QStringList MediaFileMonitor::supportedFilterStringList()
 
 MediaFileMonitor::MediaFileMonitor(QObject *parent) : QObject(parent)
 {
+    m_watcher = new InotifyEngine;
+
+
+    connect(m_watcher, &InotifyEngine::fileRemoved,
+            this, &MediaFileMonitor::fileRemoved);
+
     //black list
     QHash<QString, bool> suffixBlacklist;
     suffixBlacklist.insert("m3u", true);
@@ -92,6 +101,8 @@ void MediaFileMonitor::importPlaylistFiles(QSharedPointer<Playlist> playlist, co
             QFileInfo fileInfo(url);
             if (fileInfo.suffix() == "cue") {
                 cuelist << CueParser(url);
+                // TODO: check cue invaild
+                m_watcher->addPath(fileInfo.absolutePath());
                 continue;
             }
 
@@ -105,11 +116,12 @@ void MediaFileMonitor::importPlaylistFiles(QSharedPointer<Playlist> playlist, co
 
             //check is lossless file
             if (losslessSuffix.contains(fileInfo.suffix())) {
-                losslessMetaCache.insert(info.localpath, info);
+                losslessMetaCache.insert(info.localPath, info);
                 continue;
             }
 
             metaCache << info;
+            m_watcher->addPath(fileInfo.absolutePath());
 
             if (metaCache.length() >= ScanCacheSize) {
                 emit MediaDatabase::instance()->addMusicMetaList(metaCache);
@@ -144,4 +156,18 @@ void MediaFileMonitor::importPlaylistFiles(QSharedPointer<Playlist> playlist, co
         emit meidaFileImported(playlist, metaCache);
         metaCache.clear();
     }
+
+    //    qDebug() << m_watcher->directories();
+}
+
+void MediaFileMonitor::startMonitor()
+{
+    auto metalist = MediaDatabase::instance()->searchMusicMeta("", std::numeric_limits<int>::max());
+    QMap<QString, QString> dirs;
+    for (auto &meta : metalist) {
+        QFileInfo metafi(meta.localPath);
+        dirs.insert(metafi.absolutePath(), metafi.absolutePath());
+    }
+
+    m_watcher->addPaths(dirs.keys());
 }

@@ -29,6 +29,7 @@ public:
     bool musicMetaExist(const QString &hash);
     static QList<MusicMeta> searchMusicTitle(const QString &title, int limit);
     static QList<MusicMeta> searchMusicMeta(const QString &title, int limit);
+    static QList<MusicMeta> searchMusicPath(const QString &title, int limit);
 
     //! sync query interface
     static QStringList allPlaylistDisplayName();
@@ -40,12 +41,12 @@ signals:
     void addMusicMetaList(const MusicMetaList &metalist);
     void insertMusic(const MusicMeta &meta, const PlaylistMeta &playlistMeta);
     void insertMusicList(const MusicMetaList &metalist, const PlaylistMeta &playlistMeta);
+    void removeMusicMetaList(const MusicMetaList &metalist);
 
 public slots:
     static void addPlaylist(const PlaylistMeta &playlistMeta);
     static void updatePlaylist(const PlaylistMeta &playlistMeta);
     static void removePlaylist(const PlaylistMeta &playlistMeta);
-    static void removeMusicMeta(const MusicMeta &meta);
     static void deleteMusic(const MusicMeta &meta, const PlaylistMeta &playlistMeta);
 
 private:

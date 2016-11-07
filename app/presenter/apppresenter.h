@@ -67,6 +67,7 @@ signals:
     //! from control
     void musicPlayed(QSharedPointer<Playlist> playlist, const MusicMeta &info);
     void musicPaused(QSharedPointer<Playlist> playlist, const MusicMeta &info);
+    void musicStoped(QSharedPointer<Playlist> playlist, const MusicMeta &info);
     void progrossChanged(qint64 pos, qint64 length);
 
     //! from lyricservice
@@ -75,7 +76,7 @@ signals:
 
 public slots:
     //! music control interface
-    void onMusicPlay(QSharedPointer<Playlist> playlist, const MusicMeta &info);
+    void onMusicPlay(QSharedPointer<Playlist> playlist, const MusicMeta &meta);
     void onMusicPause(QSharedPointer<Playlist> playlist, const MusicMeta &info);
     void onMusicResume(QSharedPointer<Playlist> playlist, const MusicMeta &info);
     //void onMusicStop(QSharedPointer<Playlist> playlist, const MusicInfo &info);
@@ -91,7 +92,8 @@ public slots:
 
     //! UI: playlist manager interface
     void onMusicAdd(QSharedPointer<Playlist> playlist, const MusicMetaList &metalist);
-    void onMusicRemove(QSharedPointer<Playlist> playlist, const MusicMeta &info);
+    void onMusicRemove(QSharedPointer<Playlist> playlist, const MusicMetaList &metalist);
+    void onMusicDelete(QSharedPointer<Playlist>, const MusicMetaList &metalist);
     void onPlaylistAdd(bool edit);
     void onSelectedPlaylistChanged(QSharedPointer<Playlist> playlist);
 

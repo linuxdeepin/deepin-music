@@ -19,7 +19,7 @@
 
 #include "../../model/musiclistmodel.h"
 
-InfoDialog::InfoDialog(const MusicMeta &info, QWidget *parent) : DAbstractDialog(parent)
+InfoDialog::InfoDialog(const MusicMeta &info, const QPixmap &coverPixmap, QWidget *parent) : DAbstractDialog(parent)
 {
     setFixedSize(320, 480);
 
@@ -36,7 +36,7 @@ InfoDialog::InfoDialog(const MusicMeta &info, QWidget *parent) : DAbstractDialog
     cover->setContentsMargins(0, 0, 0, 0);
     cover->setObjectName("InfoCover");
     cover->setFixedSize(140, 140);
-    cover->setPixmap(QPixmap(":/image/cover_max.png").scaled(140, 140));
+    cover->setPixmap(coverPixmap.scaled(140, 140));
 
     auto title = new QLabel(info.title);
     title->setObjectName("InfoTitle");
@@ -54,7 +54,7 @@ InfoDialog::InfoDialog(const MusicMeta &info, QWidget *parent) : DAbstractDialog
     QStringList infoValues;
     infoValues << info.title << info.artist << info.album
                << info.filetype << sizeString(info.size) << lengthString(info.length)
-               << info.localpath;
+               << info.localPath;
 
     auto infogridLayout = new QGridLayout;
     infogridLayout->setMargin(10);
