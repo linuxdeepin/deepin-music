@@ -21,6 +21,7 @@ extern "C" {
 #include <QDebug>
 
 #include "musicmeta.h"
+#include "icu.h"
 
 qint64 timeframe2mtime(long frame)
 {
@@ -38,7 +39,6 @@ qint64 timeframe2mtime(long frame)
         } \
     }while(0)
 
-
 CueParser::CueParser(const QString &filepath)
 {
     QFile cueFile(filepath);
@@ -47,7 +47,10 @@ CueParser::CueParser(const QString &filepath)
     QByteArray cueByte = cueFile.readAll();
     cueFile.close();
 
-    QTextCodec *codec = QTextCodec::codecForName("GB18030");
+    QByteArray codeName = ICU::codeName(cueByte);
+    QTextCodec *codec = QTextCodec::codecForName(codeName);
+    if (!codec)
+        codec = QTextCodec::codecForLocale();
     QString cue = codec->toUnicode(cueByte.toStdString().c_str());
 
     // TODO: libcue need empty line at last
@@ -67,6 +70,8 @@ CueParser::CueParser(const QString &filepath)
     album = val;
 
     int ival = cd_get_ntrack(cd);
+
+    qDebug() << "cd_get_ntrack" << filepath <<ival;
 
     QFileInfo cueFileInfo(filepath);
     QMap<QString, MusicMeta> fileMetaCache;
@@ -136,6 +141,7 @@ CueParser::CueParser(const QString &filepath)
             }
         }
 
+        meta.filetype = cueFileInfo.fileName();
         metalist << meta;
     }
 

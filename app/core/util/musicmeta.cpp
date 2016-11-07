@@ -20,6 +20,7 @@
 #include <tpropertymap.h>
 
 #include "pinyin.h"
+#include "icu.h"
 
 namespace MusicMetaName
 {
@@ -49,9 +50,18 @@ MusicMeta fromLocalFile(const QFileInfo &fileInfo, const QString &hash)
         encode &= tag->title().isNull() ? true : tag->title().isLatin1();
         encode &= tag->artist().isNull() ? true : tag->artist().isLatin1();
         encode &= tag->album().isNull() ? true : tag->album().isLatin1();
-        if (encode) {
-            // Localized encode, current only GB18030 is used.
-            QTextCodec *codec = QTextCodec::codecForName("GB18030");
+
+        // WARING: icu detect is useless because the sample is to small !!!!!
+
+        //            auto detectString = tag->album() + tag->artist() + tag->title();
+        //            auto detectByte = QByteArray(detectString.toCString());
+        //Localized encode, current only GB18030 is used.
+        //            QByteArray codeName = ICU::codeName(detectByte);
+        //            QTextCodec *codec = QTextCodec::codecForName(codeName);
+
+        QTextCodec *codec = QTextCodec::codecForName("GB18030");
+
+        if (encode && codec) {
             info.album = codec->toUnicode(tag->album().toCString());
             info.artist = codec->toUnicode(tag->artist().toCString());
             info.title = codec->toUnicode(tag->title().toCString());

@@ -74,6 +74,8 @@ MediaDatabase::MediaDatabase(QObject *parent) : QObject(parent)
 
     bind();
 
+    QSqlDatabase::database().transaction();
+
     PlaylistMeta playlistMeta;
     playlistMeta.uuid = "all";
     playlistMeta.displayName = "All Music";
@@ -101,6 +103,8 @@ MediaDatabase::MediaDatabase(QObject *parent) : QObject(parent)
     if (!playlistExist("search")) {
         addPlaylist(playlistMeta);
     }
+
+    QSqlDatabase::database().commit();
 }
 
 QStringList MediaDatabase::allPlaylistDisplayName()

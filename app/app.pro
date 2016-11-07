@@ -11,7 +11,7 @@ TARGET      = deepin-music
 CONFIG      += c++11 link_pkgconfig
 
 unix{
-    PKGCONFIG += dtkbase dtkutil dtkwidget taglib
+    PKGCONFIG += dtkbase dtkutil dtkwidget taglib icu-uc icu-i18n
 }
 
 win32{
@@ -47,6 +47,11 @@ win32{
         LIBS += -LD:\Develop\deepin-tool-kit\build\dutil\debug -ldtkutil
         LIBS += -LD:\Develop\deepin-tool-kit\build\dbase\debug -ldtkbase
     }
+
+
+    INCLUDEPATH += D:\Develop\Library\icu\include
+    LIBS += -LD:\Develop\Library\icu\lib64 -licuuc
+    LIBS += -LD:\Develop\Library\icu\lib64 -licuin
 }
 
 
@@ -87,7 +92,8 @@ SOURCES += \
     core/util/cueparser.cpp \
     view/widget/lyriclinedelegate.cpp \
     core/util/musicmeta.cpp \
-    view/widget/clickablelabel.cpp
+    view/widget/clickablelabel.cpp \
+    core/util/icu.cpp
 
 HEADERS += \
     view/playerframe.h \
@@ -126,7 +132,8 @@ HEADERS += \
     core/util/cueparser.h \
     view/widget/lyriclinedelegate.h \
     core/util/musicmeta.h \
-    view/widget/clickablelabel.h
+    view/widget/clickablelabel.h \
+    core/util/icu.h
 
 RESOURCES += \
     resource/theme/theme.qrc \
