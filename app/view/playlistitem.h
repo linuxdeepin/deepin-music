@@ -21,8 +21,9 @@ public:
     explicit PlayListItem(QSharedPointer<Playlist> playlist, QWidget *parent = 0);
     inline QSharedPointer<Playlist> data() {return m_data;}
 
+    void mouseDoubleClickEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
 signals:
-    void rename(const QString& newNameA);
+    void rename(const QString &newNameA);
     void remove();
     void playall(QSharedPointer<Playlist> playlist);
 

@@ -12,6 +12,7 @@
 #include <QTimer>
 #include <QLabel>
 #include <QLineEdit>
+#include <QMouseEvent>
 #include <QHBoxLayout>
 
 #include <DAction>
@@ -55,13 +56,14 @@ PlayListItem::PlayListItem(QSharedPointer<Playlist> playlist, QWidget *parent) :
     m_titleedit->setText(playlist->displayName());
     m_titleedit->setProperty("HistoryValue", m_titleedit->text());
 
+    m_titleedit->setDisabled(true);
     if (playlist->readonly()) {
         m_titleedit->setReadOnly(true);
-        m_titleedit->setDisabled(true);
     }
 
     if (playlist->editmode()) {
         // TODO: for qt5.3
+        m_titleedit->setEnabled(true);
         QTimer::singleShot(0, this, [ = ] {
             m_titleedit->setFocus();
             m_titleedit->setCursorPosition(0);
@@ -94,6 +96,8 @@ PlayListItem::PlayListItem(QSharedPointer<Playlist> playlist, QWidget *parent) :
             emit this->rename(m_titleedit->text());
             m_titleedit->setProperty("HistoryValue", m_titleedit->text());
         }
+
+        m_titleedit->setEnabled(false);
     });
     connect(m_titleedit, &QLineEdit::returnPressed,
     this, [ = ] {
@@ -110,6 +114,26 @@ PlayListItem::PlayListItem(QSharedPointer<Playlist> playlist, QWidget *parent) :
             m_data.data(), &Playlist::setDisplayName);
     connect(this, &PlayListItem::remove,
             m_data.data(), &Playlist::removed);
+}
+
+void PlayListItem::mouseDoubleClickEvent(QMouseEvent *event)
+{
+    QFrame::mouseDoubleClickEvent(event);
+
+    auto lineeditMousePos = m_titleedit->mapFromParent(event->pos());
+    if (!m_titleedit->rect().contains(lineeditMousePos)) {
+        return;
+    }
+
+    if (m_titleedit->isReadOnly()) {
+        return;
+    }
+
+    QTimer::singleShot(0, this, [ = ] {
+        m_titleedit->setEnabled(true);
+        m_titleedit->setFocus();
+        m_titleedit->setCursorPosition(m_titleedit->text().length());
+    });
 }
 
 
@@ -132,6 +156,7 @@ void PlayListItem::showContextMenu(const QPoint &pos)
         }
         if (action->text() == "Rename") {
             QTimer::singleShot(0, this, [ = ] {
+                m_titleedit->setEnabled(true);
                 m_titleedit->setFocus();
                 m_titleedit->setCursorPosition(0);
                 m_titleedit->setSelection(0, m_titleedit->text().length());
