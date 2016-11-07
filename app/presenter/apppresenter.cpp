@@ -208,7 +208,7 @@ void AppPresenter::onMusicRemove(QSharedPointer<Playlist> playlist, const MusicM
         //stop music
         for (auto &meta : metalist) {
             if (meta.hash == Player::instance()->playingMeta().hash) {
-                emit coverSearchFinished(meta, ":/image/cover_max.png");
+                emit coverSearchFinished(meta, "");
                 emit lyricSearchFinished(meta, "");
                 Player::instance()->stop();
                 emit musicStoped(d->playlistMgr->playingPlaylist(), meta);
@@ -237,7 +237,7 @@ void AppPresenter::onMusicDelete(QSharedPointer<Playlist> , const MusicMetaList 
     for (auto &meta : metalist) {
         if (meta.hash == Player::instance()->playingMeta().hash) {
             Player::instance()->stop();
-            emit coverSearchFinished(meta, ":/image/cover_max.png");
+            emit coverSearchFinished(meta, "");
             emit lyricSearchFinished(meta, "");
             emit musicStoped(d->playlistMgr->playingPlaylist(), meta);
         }

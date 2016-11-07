@@ -36,7 +36,7 @@
 
 
 #FooterCover {
-    image: url(:/image/cover_min.png);
+    image: url(:/image/cover_welcome.png);
 }
 #FooterTitle{
     font-size: 12px;

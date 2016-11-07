@@ -220,9 +220,9 @@ void PlayerFrame::binding(AppPresenter *presenter)
             d->lyric, &LyricView::onProgressChanged);
     connect(presenter, &AppPresenter::coverSearchFinished,
     this, [ = ](const MusicMeta &, const QString & coverPath) {
-        QImage image = QImage(coverPath);
+        auto path = coverPath.isEmpty() ? ":/image/cover_max.png" : coverPath;
+        QImage image = QImage(path);
         image = WidgetHelper::cropRect(image, this->size());
-        image.save("/tmp/a.png");
         setBackgroundImage(WidgetHelper::blurImage(image, 50));
         this->repaint();
     });

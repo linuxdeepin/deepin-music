@@ -35,6 +35,8 @@ static const QString sPlayStatusValuePlaying    = "playing";
 static const QString sPlayStatusValuePause      = "pause";
 static const QString sPlayStatusValueStop       = "stop";
 
+static const QString sDefaultCover = ":/image/cover_welcome.png";
+
 class FooterPrivate
 {
 public:
@@ -365,15 +367,22 @@ void Footer::onProgressChanged(qint64 value, qint64 duration)
     d->progress->blockSignals(false);
 
 }
-
+#include <QFileInfo>
 void Footer::onCoverChanged(const MusicMeta &info, const QString &coverPath)
 {
     if (info.hash != d->m_playingMeta.hash) {
         return;
     }
 
+    auto newCover = sDefaultCover;
+    if (!coverPath.isEmpty()) {
+        QFileInfo fi(coverPath);
+        if (fi.exists())
+            newCover = coverPath;
+    }
+
     d->cover->setStyleSheet(
-        QString("#FooterCover {image: url(%1) no-repeat center center fixed;}").arg(coverPath));
+        QString("#FooterCover {image: url(%1) no-repeat center center fixed;}").arg(newCover));
     this->style()->unpolish(d->cover);
     this->style()->polish(d->cover);
     d->cover->repaint();

@@ -260,8 +260,9 @@ void LyricView::onCoverChanged(const MusicMeta &meta, const QString &coverPath)
         return;
     }
 
-    if (coverPath.isEmpty()) { return; }
-    d->m_cover->setBackgroundUrl(coverPath);
+    auto path = coverPath.isEmpty() ? ":/image/cover_max.png" : coverPath;
+
+    d->m_cover->setBackgroundUrl(path);
     d->m_cover->repaint();
 }
 
