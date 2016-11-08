@@ -12,6 +12,7 @@
 #include <QDir>
 #include <QUrl>
 #include <QThread>
+#include <QProcess>
 #include <QApplication>
 #include <QStandardPaths>
 #include <QDebug>
@@ -234,6 +235,7 @@ void AppPresenter::onMusicDelete(QSharedPointer<Playlist> , const MusicMetaList 
     }
     MediaDatabase::instance()->removeMusicMetaList(metalist);
 
+    QMap<QString, QString> trashFiles;
     for (auto &meta : metalist) {
         if (meta.hash == Player::instance()->playingMeta().hash) {
             Player::instance()->stop();
@@ -242,13 +244,15 @@ void AppPresenter::onMusicDelete(QSharedPointer<Playlist> , const MusicMetaList 
             emit musicStoped(d->playlistMgr->playingPlaylist(), meta);
         }
 
-        QFile::remove(meta.localPath);
+        trashFiles.insert(meta.localPath, "");
 
         if (!meta.cuePath.isEmpty()) {
-            QFile::remove(meta.cuePath);
+            trashFiles.insert(meta.cuePath, "");
         }
 
     }
+
+    QProcess::startDetached("gvfs-trash", trashFiles.keys());
 }
 
 void AppPresenter::onMusicAdd(QSharedPointer<Playlist> playlist,

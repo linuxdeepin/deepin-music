@@ -44,7 +44,7 @@ InfoDialog::InfoDialog(const MusicMeta &info, const QPixmap &coverPixmap, QWidge
 
     auto split = new QLabel();
     split->setObjectName("InfoSplit");
-    split->setFixedSize(300, 2);
+    split->setFixedSize(300, 1);
 
     QStringList infoKeys;
     infoKeys << tr("Title:") << tr("Artist:") << tr("Album:")
