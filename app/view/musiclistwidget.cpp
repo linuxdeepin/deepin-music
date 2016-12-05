@@ -103,11 +103,11 @@ MusicListWidget::MusicListWidget(QWidget *parent) : QFrame(parent)
 
 
     connect(m_musiclist, &MusicListView::removeMusicList,
-    this, [ = ](const MusicMetaList &metalist) {
+    this, [ = ](const MusicMetaList & metalist) {
         emit this->musicListRemove(m_playlist, metalist);
     });
     connect(m_musiclist, &MusicListView::deleteMusicList,
-    this, [ = ](const MusicMetaList &metalist) {
+    this, [ = ](const MusicMetaList & metalist) {
         emit this->musicListDelete(m_playlist, metalist);
     });
 
@@ -264,7 +264,11 @@ void MusicListWidget::onLocate(QSharedPointer<Playlist> playlist, const MusicMet
     }
     m_musiclist->clearSelection();
     m_musiclist->setCurrentIndex(index);
-    m_musiclist->scrollTo(index, QListView::PositionAtCenter);
+
+    auto viewRect = QRect(QPoint(0,0), size());
+    if (!viewRect.intersects(m_musiclist->visualRect(index))) {
+        m_musiclist->scrollTo(index, QListView::PositionAtCenter);
+    }
 }
 
 void MusicListWidget::onMusiclistChanged(QSharedPointer<Playlist> playlist)

@@ -84,7 +84,6 @@ void MusicItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
     painter->setRenderHint(QPainter::Antialiasing);
     painter->setRenderHint(QPainter::HighQualityAntialiasing);
 
-
     if (option.state & QStyle::State_Selected) {
         painter->fillRect(option.rect, option.palette.highlight());
     } else {
@@ -120,37 +119,52 @@ void MusicItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
 }
 #include <QDebug>
 
-int headerWidth(const QModelIndex &index)
+
+inline int pixel2point(int pixel)
 {
+    return pixel * 96 / 72;
+}
+
+inline int headerPointWidth(const QStyleOptionViewItem &option, const QModelIndex &index)
+{
+    auto averageWitch = option.fontMetrics.averageCharWidth();
+    auto headerWith = averageWitch * 3;
     if (index.row() > 10000) {
-        return 70;
+        headerWith = averageWitch * 6;
     }
     if (index.row() > 1000) {
-        return 60;
+        headerWith =  averageWitch * 5;
     }
     if (index.row() > 100) {
-        return 50;
+        headerWith =   averageWitch * 4;
     }
-    return 40;
+    return pixel2point(headerWith) + 20;
+}
+
+inline int tailPointWidth(const QStyleOptionViewItem &option)
+{
+    auto averageWitch = option.fontMetrics.averageCharWidth();
+    return pixel2point(averageWitch * 5) + 20;
 }
 
 QSize MusicItemDelegate::sizeHint(const QStyleOptionViewItem &option,
                                   const QModelIndex &index) const
 {
     auto baseSize = QStyledItemDelegate::sizeHint(option, index);
-    auto hw = headerWidth(index);
-    auto w = option.widget->width() - hw - 100;
+    auto headerWidth = headerPointWidth(option, index);
+    auto tialWidth = tailPointWidth(option);
+    auto w = option.widget->width() - headerWidth - tialWidth;
     Q_ASSERT(w > 0);
     switch (index.column()) {
     case 0:
-        return  QSize(hw, baseSize.height());
+        return  QSize(headerWidth, baseSize.height());
     case 1:
         return  QSize(w / 2, baseSize.height());
     case 2:
     case 3:
         return  QSize(w / 4, baseSize.height());
     case 4:
-        return  QSize(100, baseSize.height());
+        return  QSize(tialWidth, baseSize.height());
     }
 
     return baseSize;

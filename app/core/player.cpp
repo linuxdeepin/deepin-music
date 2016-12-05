@@ -167,6 +167,7 @@ Player::Player(QObject *parent) : QMediaPlayer(parent)
             return;
         }
 
+        qDebug() << position << m_playingMeta.offset << m_playingMeta.length;
         if (position >= m_playingMeta.offset + m_playingMeta.length) {
             // TODO: to next
 //            qDebug() << "auto change next music" << m_info.title;

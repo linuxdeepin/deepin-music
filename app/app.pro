@@ -152,4 +152,9 @@ isEmpty(PREFIX){
 binary.path = $${PREFIX}/bin
 binary.files = deepin-music
 
-INSTALLS    += binary
+INSTALLS   += binary
+
+#unix:!macx: LIBS += -L$$OUT_PWD/../vendor/src/mpris/ -lmpris
+
+#INCLUDEPATH += $$PWD/../vendor/src/mpris
+#DEPENDPATH += $$PWD/../vendor/src/mpris
