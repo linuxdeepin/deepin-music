@@ -224,9 +224,16 @@ void AppPresenter::onMusicRemove(QSharedPointer<Playlist> playlist, const MusicM
             playlist->removeMusic(metalist);
         }
         MediaDatabase::instance()->removeMusicMetaList(metalist);
+
+        if (playlist->isEmpty()) {
+            emit metaInfoClean();
+        }
         return;
+
+
     }
     playlist->removeMusic(metalist);
+
 }
 
 void AppPresenter::onMusicDelete(QSharedPointer<Playlist> , const MusicMetaList &metalist)
@@ -261,7 +268,7 @@ void AppPresenter::onMusicAdd(QSharedPointer<Playlist> playlist,
 {
     QSharedPointer<Playlist> modifiedPlaylist = playlist;
     if (playlist.isNull()) {
-        emit showPlaylist();
+        emit setPlaylistVisible(true);
 
         PlaylistMeta info;
         info.editmode = true;

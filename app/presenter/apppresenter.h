@@ -44,7 +44,7 @@ signals:
 
     //! ui: control
     void requestImportFiles();
-    void showPlaylist();
+    void setPlaylistVisible(bool visible);
     void showMusiclist();
 
     //! ui: menu
@@ -73,6 +73,9 @@ signals:
     //! from lyricservice
     void lyricSearchFinished(const MusicMeta &, const QString &lyricPath);
     void coverSearchFinished(const MusicMeta &, const QString &coverPath);
+
+    //! meta info
+    void metaInfoClean();
 
 public slots:
     //! music control interface

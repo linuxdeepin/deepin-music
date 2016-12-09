@@ -25,16 +25,6 @@ Playlist::Playlist(const PlaylistMeta &musiclistinfo, QObject *parent)
     listmeta = musiclistinfo;
 }
 
-int Playlist::length()
-{
-    return listmeta.musicMap.size();
-}
-
-int Playlist::sorttype()
-{
-    return listmeta.sortType;
-}
-
 const MusicMeta Playlist::first()
 {
     return listmeta.musicMap.value(listmeta.musicIds.value(0));
@@ -108,6 +98,21 @@ bool Playlist::editmode()
 bool Playlist::hide()
 {
     return listmeta.hide;
+}
+
+bool Playlist::isEmpty() const
+{
+    return listmeta.musicMap.isEmpty();
+}
+
+int Playlist::length() const
+{
+    return listmeta.musicMap.size();
+}
+
+int Playlist::sorttype()
+{
+    return listmeta.sortType;
 }
 
 MusicMetaList Playlist::allmusic()

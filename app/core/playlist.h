@@ -46,7 +46,8 @@ public:
     bool readonly();
     bool editmode();
     bool hide();
-    int length();
+    bool isEmpty() const;
+    int length() const;
     int sorttype();
 
     const MusicMeta first();

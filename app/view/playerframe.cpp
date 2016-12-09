@@ -342,10 +342,13 @@ void PlayerFrame::binding(AppPresenter *presenter)
         d->playlist->setFocus();
     });
 
-    connect(presenter, &AppPresenter::showPlaylist,
-    this, [ = ]() {
+    connect(presenter, &AppPresenter::setPlaylistVisible,
+    this, [ = ](bool visible) {
         // show playlist
-        if (!d->playlist->isVisible())  {
+        if (!d->playlist->isVisible() && visible)  {
+            emit d->footer->togglePlaylist();
+        }
+        if (d->playlist->isVisible() && !visible)  {
             emit d->footer->togglePlaylist();
         }
     });
@@ -359,6 +362,21 @@ void PlayerFrame::binding(AppPresenter *presenter)
         d->musicList->resize(d->import->size());
         d->musicList->show();
     });
+
+    connect(presenter, &AppPresenter::metaInfoClean,
+    this, [ = ]() {
+        if (d->musicList->isVisible()) {
+            if (d->playlist->isVisible())  {
+                emit d->footer->togglePlaylist();
+            }
+
+            d->import->setFixedSize(d->musicList->size());
+            WidgetHelper::slideRight2LeftWidget(d->musicList, d->import, s_AnimationDelay);
+            this->disableControl();
+        }
+        d->import->show();
+    });
+
     initMenu();
 }
 
