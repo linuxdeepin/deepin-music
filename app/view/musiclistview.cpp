@@ -22,8 +22,8 @@
 #include <QProcess>
 
 #include <dthememanager.h>
-#include <DAction>
-#include <DMenu>
+#include <QAction>
+#include <QMenu>
 
 #include "../musicapp.h"
 #include "../model/musiclistmodel.h"
@@ -94,7 +94,7 @@ void MusicListView::showContextMenu(const QPoint &pos,
 
     QPoint globalPos = this->mapToGlobal(pos);
 
-    DMenu playlistMenu;
+    QMenu playlistMenu;
     bool hasAction = false;
 
     if (selectedPlaylist != favPlaylist) {
@@ -115,7 +115,7 @@ void MusicListView::showContextMenu(const QPoint &pos,
     auto newvar = QVariant::fromValue(QSharedPointer<Playlist>());
     playlistMenu.addAction(tr("New playlist"))->setData(newvar);
 
-    connect(&playlistMenu, &DMenu::triggered, this, [ = ](DAction * action) {
+    connect(&playlistMenu, &QMenu::triggered, this, [ = ](QAction * action) {
         auto playlist = action->data().value<QSharedPointer<Playlist> >();
         MusicMetaList metalist;
         for (auto &index : selection->selectedRows()) {
@@ -127,17 +127,28 @@ void MusicListView::showContextMenu(const QPoint &pos,
         emit addToPlaylist(playlist, metalist);
     });
 
-    DMenu myMenu;
-    myMenu.addAction(tr("Play"));
+    bool singleSelect = (1 == selection->selectedRows().length());
+
+    QMenu myMenu;
+
+    if (singleSelect) {
+        myMenu.addAction(tr("Play"));
+    }
     myMenu.addAction(tr("Add to playlist"))->setMenu(&playlistMenu);
     myMenu.addSeparator();
-    myMenu.addAction(tr("Display in file manager"));
+
+    if (singleSelect) {
+        myMenu.addAction(tr("Display in file manager"));
+    }
     myMenu.addAction(tr("Remove from list"));
     myMenu.addAction(tr("Delete"));
-    myMenu.addSeparator();
-    myMenu.addAction(tr("Song info"));
 
-    connect(&myMenu, &DMenu::triggered, this, [ = ](DAction * action) {
+    if (singleSelect) {
+        myMenu.addSeparator();
+        myMenu.addAction(tr("Song info"));
+    }
+
+    connect(&myMenu, &QMenu::triggered, this, [ = ](QAction * action) {
         if (action->text() == tr("Play")) {
             auto index = selection->selectedRows().first();
             auto item = this->model()->item(index.row(), index.column());

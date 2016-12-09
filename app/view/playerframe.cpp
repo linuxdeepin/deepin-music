@@ -530,18 +530,20 @@ void PlayerFrame::initMenu()
 
     auto m_about = new DAction(tr("About"), this);
     connect(m_about, &DAction::triggered, this, [ = ](bool) {
-        QString descriptionText = tr("Deepin Music Player is a beautiful design and simple function local music player. "
+        QString descriptionText = tr("Deepin Music Player is a beautiful design and "
+                                     "simple function local music player. "
                                      "It supports viewing lyrics when playing, "
                                      "playing lossless music and creating customizable songlist, etc.");
-        DAboutDialog *about = new DAboutDialog(
-            QPixmap(":/image/deepin-music.svg"),
-            QPixmap(":/image/about_icon.png"),
-            tr("Deepin Music"),
-            tr("Version: 3.0"),
-            descriptionText,
-            "https://www.deepin.org/acknowledgments/deepin-music#thanks",
-            this);
-        about->show();
+        QString acknowledgementLink = "https://www.deepin.org/acknowledgments/deepin-music#thanks";
+
+        auto *aboutDlg = new DAboutDialog(this);
+        aboutDlg->setWindowIcon(QPixmap(":/image/deepin-music.svg"));
+        aboutDlg->setProductIcon(QPixmap(":/image/about_icon.png"));
+        aboutDlg->setProductName("Deepin Music");
+        aboutDlg->setVersion(tr("Version: 3.0"));
+        aboutDlg->setDescription(descriptionText);
+        aboutDlg->setAcknowledgementLink(acknowledgementLink);
+        aboutDlg->show();
     });
 
     DAction *m_help = new DAction(tr("Help"), this);
