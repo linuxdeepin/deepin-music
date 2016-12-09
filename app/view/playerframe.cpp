@@ -21,8 +21,8 @@
 #include <QStackedLayout>
 #include <QFileDialog>
 #include <QStandardPaths>
+#include <QMenu>
 
-#include <DAction>
 #include <dutility.h>
 #include <dthememanager.h>
 #include <DAboutDialog>
@@ -495,16 +495,16 @@ void PlayerFrame::onSelectImportFiles()
 
 void PlayerFrame::initMenu()
 {
-    auto m_newlist = new DAction(tr("New songlist"), this);
-    connect(m_newlist, &DAction::triggered, this, [ = ](bool) {
+    auto m_newlist = new QAction(tr("New songlist"), this);
+    connect(m_newlist, &QAction::triggered, this, [ = ](bool) {
         if (!d->playlist->isVisible()) {
             emit d->footer->togglePlaylist();
         }
         emit d->playlist->addPlaylist(true);
     });
 
-    auto m_addmusic = new DAction(tr("Add music"), this);
-    connect(m_addmusic, &DAction::triggered, this, [ = ](bool) {
+    auto m_addmusic = new QAction(tr("Add music"), this);
+    connect(m_addmusic, &QAction::triggered, this, [ = ](bool) {
 
         if (d->lyric->isVisible()) {
             WidgetHelper::slideTop2BottomWidget(d->lyric, d->musicList, s_AnimationDelay);
@@ -518,18 +518,18 @@ void PlayerFrame::initMenu()
         this->onSelectImportFiles();
     });
 
-    auto m_settings = new DAction(tr("Settings"), this);
-    connect(m_settings, &DAction::triggered, this, [ = ](bool) {
+    auto m_settings = new QAction(tr("Settings"), this);
+    connect(m_settings, &QAction::triggered, this, [ = ](bool) {
 
     });
 
-    auto m_colorMode = new DAction(tr("Deep color mode"), this);
-    connect(m_colorMode, &DAction::triggered, this, [ = ](bool) {
+    auto m_colorMode = new QAction(tr("Deep color mode"), this);
+    connect(m_colorMode, &QAction::triggered, this, [ = ](bool) {
 
     });
 
-    auto m_about = new DAction(tr("About"), this);
-    connect(m_about, &DAction::triggered, this, [ = ](bool) {
+    auto m_about = new QAction(tr("About"), this);
+    connect(m_about, &QAction::triggered, this, [ = ](bool) {
         QString descriptionText = tr("Deepin Music Player is a beautiful design and "
                                      "simple function local music player. "
                                      "It supports viewing lyrics when playing, "
@@ -546,8 +546,8 @@ void PlayerFrame::initMenu()
         aboutDlg->show();
     });
 
-    DAction *m_help = new DAction(tr("Help"), this);
-    connect(m_help, &DAction::triggered,
+    QAction *m_help = new QAction(tr("Help"), this);
+    connect(m_help, &QAction::triggered,
     this, [ = ](bool) {
         static QProcess *m_manual = nullptr;
         if (NULL == m_manual) {
@@ -562,22 +562,22 @@ void PlayerFrame::initMenu()
         }
     });
 
-    DAction *m_close = new DAction(tr("Exit"), this);
-    connect(m_close, &DAction::triggered, this, [ = ](bool) {
+    QAction *m_close = new QAction(tr("Exit"), this);
+    connect(m_close, &QAction::triggered, this, [ = ](bool) {
         this->close();
     });
 
-    dbusMenu()->addAction(m_newlist);
-    dbusMenu()->addAction(m_addmusic);
-    dbusMenu()->addSeparator();
+    titleBarMenu()->addAction(m_newlist);
+    titleBarMenu()->addAction(m_addmusic);
+    titleBarMenu()->addSeparator();
 
-    dbusMenu()->addAction(m_colorMode);
-    dbusMenu()->addAction(m_settings);
-    dbusMenu()->addSeparator();
+    titleBarMenu()->addAction(m_colorMode);
+    titleBarMenu()->addAction(m_settings);
+    titleBarMenu()->addSeparator();
 
-    dbusMenu()->addAction(m_about);
-    dbusMenu()->addAction(m_help);
-    dbusMenu()->addAction(m_close);
+    titleBarMenu()->addAction(m_about);
+    titleBarMenu()->addAction(m_help);
+    titleBarMenu()->addAction(m_close);
 }
 
 void PlayerFrame::disableControl()

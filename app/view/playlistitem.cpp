@@ -14,9 +14,8 @@
 #include <QLineEdit>
 #include <QMouseEvent>
 #include <QHBoxLayout>
+#include <QMenu>
 
-#include <DAction>
-#include <DMenu>
 #include <ddialog.h>
 #include <QMessageBox>
 #include <dthememanager.h>
@@ -141,7 +140,7 @@ void PlayListItem::showContextMenu(const QPoint &pos)
 {
     QPoint globalPos = this->mapToGlobal(pos);
 
-    DMenu menu;
+    QMenu menu;
     auto playact = menu.addAction(tr("Play"));
     playact->setDisabled(0 == m_data->length());
 
@@ -150,7 +149,7 @@ void PlayListItem::showContextMenu(const QPoint &pos)
         menu.addAction(tr("Delete"));
     }
 
-    connect(&menu, &DMenu::triggered, this, [ = ](DAction * action) {
+    connect(&menu, &QMenu::triggered, this, [ = ](QAction * action) {
         if (action->text() == "Play") {
             emit this->playall(m_data);
         }

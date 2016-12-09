@@ -1,10 +1,10 @@
 DEFINES += QT_MESSAGELOGCONTEXT
 
-include($$PWD/../vendor/src/chinese2pinyin/chinese2pinyin.pri)
-include($$PWD/../vendor/src/libcue/libcue.pri)
-
 QT       += core gui widgets svg dbus multimedia multimediawidgets xml network sql
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+
+include($$PWD/../vendor/src/chinese2pinyin/chinese2pinyin.pri)
+include($$PWD/../vendor/src/libcue/libcue.pri)
 
 TEMPLATE    = app
 TARGET      = deepin-music
@@ -47,7 +47,6 @@ win32{
         LIBS += -LD:\Develop\deepin-tool-kit\build\dutil\debug -ldtkutil
         LIBS += -LD:\Develop\deepin-tool-kit\build\dbase\debug -ldtkbase
     }
-
 
     INCLUDEPATH += D:\Develop\Library\icu\include
     LIBS += -LD:\Develop\Library\icu\lib64 -licuuc
