@@ -30,6 +30,7 @@ public slots:
 signals:
     void playall(QSharedPointer<Playlist> playlist);
     void addPlaylist(bool editmode);
+    void deletePlaylist(QSharedPointer<Playlist> playlist);
     void selectPlaylist(QSharedPointer<Playlist>);
 
 private:

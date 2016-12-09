@@ -42,7 +42,7 @@ class FooterPrivate
 public:
     ClickableLabel  *cover      = nullptr;
     ClickableLabel  *title      = nullptr;
-    ClickableLabel  *artlist    = nullptr;
+    ClickableLabel  *artist    = nullptr;
     QPushButton     *btPlay     = nullptr;
     QPushButton     *btPrev     = nullptr;
     QPushButton     *btNext     = nullptr;
@@ -88,10 +88,10 @@ Footer::Footer(QWidget *parent) : QFrame(parent)
     d->title->setMaximumWidth(240);
     d->title->setText(tr("Unknow Title"));
 
-    d->artlist = new ClickableLabel;
-    d->artlist->setObjectName("FooterArtlist");
-    d->artlist->setMaximumWidth(240);
-    d->artlist->setText(tr("Unknow Artlist"));
+    d->artist = new ClickableLabel;
+    d->artist->setObjectName("FooterArtist");
+    d->artist->setMaximumWidth(240);
+    d->artist->setText(tr("Unknow Artist"));
 
     d->btPlay = new QPushButton;
     d->btPlay->setObjectName("FooterActionPlay");
@@ -135,7 +135,7 @@ Footer::Footer(QWidget *parent) : QFrame(parent)
     auto infoLayout = new QHBoxLayout(infoWidget);
     auto musicMetaLayout = new QVBoxLayout;
     musicMetaLayout->addWidget(d->title);
-    musicMetaLayout->addWidget(d->artlist);
+    musicMetaLayout->addWidget(d->artist);
     musicMetaLayout->setSpacing(0);
     infoLayout->setMargin(0);
     infoLayout->addWidget(d->cover, 0, Qt::AlignLeft | Qt::AlignVCenter);
@@ -175,7 +175,7 @@ Footer::Footer(QWidget *parent) : QFrame(parent)
     vboxlayout->addLayout(layout);
 
     d->title->hide();
-    d->artlist->hide();
+    d->artist->hide();
     d->btPrev->hide();
     d->btNext->hide();
     d->btFavorite->hide();
@@ -265,7 +265,7 @@ void Footer::enableControl(bool enable)
 
     d->cover->blockSignals(!enable);
     d->title->blockSignals(!enable);
-    d->artlist->blockSignals(!enable);
+    d->artist->blockSignals(!enable);
 }
 
 void Footer::onMusicAdded(QSharedPointer<Playlist> playlist, const MusicMeta &info)
@@ -299,14 +299,14 @@ void Footer::onMusicPlayed(QSharedPointer<Playlist> playlist, const MusicMeta &i
     d->title->setText(info.title);
 
     if (!info.artist.isEmpty()) {
-        d->artlist->setText(info.artist);
+        d->artist->setText(info.artist);
     } else {
-        d->artlist->setText(tr("Unknow Artist"));
+        d->artist->setText(tr("Unknow Artist"));
     }
 
     this->enableControl(true);
     d->title->show();
-    d->artlist->show();
+    d->artist->show();
     d->btPrev->show();
     d->btNext->show();
     d->btFavorite->show();

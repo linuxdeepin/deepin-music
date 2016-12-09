@@ -34,15 +34,14 @@ ImportWidget::ImportWidget(QWidget *parent) : QFrame(parent)
     auto importButton = new Dtk::Widget::DBaseButton;
     importButton->setObjectName("ImportViewImportButton");
     importButton->setFixedSize(130, 36);
-    importButton->setText(tr("Import"));
+    importButton->setText(tr("Add Music"));
 
     auto text = new QLabel;
     text->setObjectName("ImportViewText");
     text->setFixedHeight(24);
     text->setOpenExternalLinks(false);
     QString linkText = QString(linkTemplate).arg(tr("Scan")).arg(tr("Scan"));
-    text->setText(QString(tr("You can %1 or drop music here")).arg(linkText));
-
+    text->setText(QString(tr("%1 music directory or drag & drop music file to add music")).arg(linkText));
 
     layout->addStretch();
     layout->addWidget(logo, 0, Qt::AlignCenter);

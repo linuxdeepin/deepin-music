@@ -85,6 +85,7 @@ void AppPresenter::prepareData()
     //! load config
     d->settings.beginGroup("Config");
     auto mode = d->settings.value("Mode").toInt();
+    auto lastImportPath = d->settings.value("LastImportPath").toString();
     d->settings.endGroup();
 
     onPlayModeChanged(mode);

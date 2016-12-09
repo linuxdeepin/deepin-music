@@ -43,7 +43,7 @@
     color: #ffffff;
 }
 
-#FooterArtlist{
+#FooterArtist{
     font-size: 11px;
     color: #797979;
 }

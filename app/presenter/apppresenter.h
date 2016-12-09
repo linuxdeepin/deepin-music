@@ -16,8 +16,8 @@
 #include "model/musiclistmodel.h"
 
 class Playlist;
-class AppPresenterPrivate;
 
+class AppPresenterPrivate;
 class AppPresenter : public QObject
 {
     Q_OBJECT

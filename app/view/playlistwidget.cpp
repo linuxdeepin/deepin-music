@@ -117,7 +117,7 @@ void PlaylistWidget::onPlaylistAdded(QSharedPointer<Playlist> playlist)
     if (playlist->hide()) {
         m_listview->setItemHidden(item, true);
     }
-    emit selectPlaylist(playlist);
+//    emit selectPlaylist(playlist);
 }
 
 void PlaylistWidget::onCurrentChanged(QSharedPointer<Playlist> playlist)

@@ -143,16 +143,13 @@ RESOURCES += \
     resource/theme/theme.qrc \
     resource/resource.qrc
 
-DISTFILES +=
+# Automating generation .qm files from .ts files
+system($$PWD/translate_generation.sh)
 
+TRANSLATIONS += $$PWD/translations/$${TARGET}.ts \
+                $$PWD/translations/$${TARGET}_zh_CN.ts
 
-isEmpty(PREFIX){
-    PREFIX = /usr
-}
-binary.path = $${PREFIX}/bin
-binary.files = deepin-music
-
-INSTALLS   += binary
+include($$PWD/install.pri)
 
 #unix:!macx: LIBS += -L$$OUT_PWD/../vendor/src/mpris/ -lmpris
 
