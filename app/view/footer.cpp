@@ -192,7 +192,7 @@ Footer::Footer(QWidget *parent) : QFrame(parent)
 
     connect(d->btPlayMode, &ModeButton::modeChanged, this, &Footer::modeChanged);
 
-    connect(d->progress, &Slider::valueChanged, this, [ = ](int value) {
+    connect(d->progress, &Slider::valueAccpet, this, [ = ](int value) {
         auto range = d->progress->maximum() - d->progress->minimum();
         Q_ASSERT(range != 0);
         emit this->changeProgress(value, range);
@@ -369,11 +369,14 @@ void Footer::onProgressChanged(qint64 value, qint64 duration)
         progress = static_cast<int>(length * value / duration);
     }
 
+    if (d->progress->signalsBlocked())
+        return;
+
     d->progress->blockSignals(true);
     d->progress->setValue(progress);
     d->progress->blockSignals(false);
-
 }
+
 #include <QFileInfo>
 void Footer::onCoverChanged(const MusicMeta &info, const QString &coverPath)
 {

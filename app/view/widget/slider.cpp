@@ -9,6 +9,8 @@
 
 #include "slider.h"
 
+#include <QDebug>
+
 #include <QTime>
 #include <QMouseEvent>
 
@@ -24,17 +26,18 @@ Slider::Slider(QWidget *parent) : QSlider(parent)
 Slider::Slider(Qt::Orientation orientation, QWidget *parent): QSlider(orientation, parent)
 {
     m_delaySetValueTimer.setInterval(s_valueUpdateDelay);
-    connect(&m_delaySetValueTimer, &QTimer::timeout,
-    this, [ = ]() {
-        m_delaySetValueTimer.stop();
-        this->blockSignals(false);
-    });
+//    connect(&m_delaySetValueTimer, &QTimer::timeout,
+//    this, [ = ]() {
+//        m_delaySetValueTimer.stop();
+//        this->blockSignals(false);
+//    });
 }
 
 void Slider::mouseReleaseEvent(QMouseEvent *event)
 {
     this->blockSignals(false);
     QSlider::mouseReleaseEvent(event);
+    emit valueAccpet(value());
 }
 
 void Slider::mousePressEvent(QMouseEvent *event)
@@ -61,8 +64,8 @@ void Slider::mouseMoveEvent(QMouseEvent *event)
     }
 
     auto value = (event->x() - this->x()) * valueRange / this->width();
-    m_delaySetValueTimer.stop();
-    m_delaySetValueTimer.start();
+//    m_delaySetValueTimer.stop();
+//    m_delaySetValueTimer.start();
     setSliderPosition(value);
     QSlider::mouseMoveEvent(event);
 }

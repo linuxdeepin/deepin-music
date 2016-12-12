@@ -23,6 +23,7 @@ public:
     void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     void mouseMoveEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
 signals:
+    void valueAccpet(int value);
 
 public slots:
 
