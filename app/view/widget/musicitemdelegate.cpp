@@ -9,12 +9,13 @@
 
 #include "musicitemdelegate.h"
 
+#include <QDebug>
 #include <QPainter>
 
 #include "../../model/musiclistmodel.h"
 
 
-QColor foregroundColor(int col, const QStyleOptionViewItem &option)
+static inline QColor foregroundColor(int col, const QStyleOptionViewItem &option)
 {
     auto headerColor = QColor(0x79, 0x79, 0x79);
 
@@ -41,7 +42,7 @@ QColor foregroundColor(int col, const QStyleOptionViewItem &option)
     return option.palette.foreground().color();
 }
 
-QFlags<Qt::AlignmentFlag> alignmentFlag(int col)
+static inline QFlags<Qt::AlignmentFlag> alignmentFlag(int col)
 {
     auto emCol = static_cast<MusicItemDelegate::MusicColumn>(col);
     switch (emCol) {
@@ -58,7 +59,7 @@ QFlags<Qt::AlignmentFlag> alignmentFlag(int col)
     return (Qt::AlignLeft | Qt::AlignVCenter);;
 }
 
-QRect colRect(int col, const QStyleOptionViewItem &option)
+static inline QRect colRect(int col, const QStyleOptionViewItem &option)
 {
     auto emCol = static_cast<MusicItemDelegate::MusicColumn>(col);
     switch (emCol) {
@@ -84,10 +85,14 @@ void MusicItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
     painter->setRenderHint(QPainter::Antialiasing);
     painter->setRenderHint(QPainter::HighQualityAntialiasing);
 
+    // TODO: alnative color
+    auto background = (index.row() % 2) == 0 ?
+                      QColor("#ffffff") : QColor("#fefefe");
+
     if (option.state & QStyle::State_Selected) {
         painter->fillRect(option.rect, option.palette.highlight());
     } else {
-        painter->fillRect(option.rect, option.palette.background());
+        painter->fillRect(option.rect, background);
     }
 
     //headerColor = qvariant_cast<QColor>(option.widget->property("headerColor"));
@@ -117,8 +122,6 @@ void MusicItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
     painter->fillRect(lineRect, QColor(0x79, 0x79, 0x79, 26));
     painter->restore();
 }
-#include <QDebug>
-
 
 inline int pixel2point(int pixel)
 {

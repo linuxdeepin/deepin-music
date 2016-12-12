@@ -7,6 +7,7 @@
     color: rgba(41,41,41,100%);
     selection-background-color: #2ca7f8;
     selection-color: white;
+    alternate-background-color: yellow;
 
     qproperty-headerColor: rgba(127,127,127,100%);
 }
