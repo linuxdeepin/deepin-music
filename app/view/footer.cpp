@@ -76,7 +76,7 @@ Footer::Footer(QWidget *parent) : QFrame(parent)
     d->progress->setValue(0);
 
     auto layout = new QHBoxLayout();
-    layout->setContentsMargins(20, 0, 20, 10);
+    layout->setContentsMargins(10, 0, 20, 10);
     layout->setSpacing(20);
 
     d->cover = new ClickableLabel;
@@ -138,7 +138,9 @@ Footer::Footer(QWidget *parent) : QFrame(parent)
     musicMetaLayout->addWidget(d->artist);
     musicMetaLayout->setSpacing(0);
     infoLayout->setMargin(0);
+    infoLayout->setSpacing(0);
     infoLayout->addWidget(d->cover, 0, Qt::AlignLeft | Qt::AlignVCenter);
+    infoLayout->addSpacing(10);
     infoLayout->addLayout(musicMetaLayout, 0);
 
     auto ctlWidget = new QWidget;
