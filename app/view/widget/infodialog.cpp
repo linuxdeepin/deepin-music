@@ -58,20 +58,21 @@ InfoDialog::InfoDialog(const MusicMeta &info, const QPixmap &coverPixmap, QWidge
 
     auto infogridLayout = new QGridLayout;
     infogridLayout->setMargin(10);
-    infogridLayout->setHorizontalSpacing(10);
+    infogridLayout->setHorizontalSpacing(5);
     infogridLayout->setVerticalSpacing(6);
 
     for (int i = 0; i < infoKeys.length(); ++i) {
         auto infoKey = new QLabel(infoKeys.value(i));
         infoKey->setObjectName("InfoKey");
-        infoKey->setFixedHeight(18);
+        infoKey->setMinimumHeight(18);
 
         auto infoValue = new QLabel(infoValues.value(i));
         infoValue->setObjectName("InfoValue");
+        infoValue->setMinimumHeight(18);
 //        infoValue->setMaximumWidth(250);
 
-        infogridLayout->addWidget(infoKey, i, 0, Qt::AlignRight);
-        infogridLayout->addWidget(infoValue, i, 1, Qt::AlignLeft);
+        infogridLayout->addWidget(infoKey, i, 0, Qt::AlignRight| Qt::AlignTop);
+        infogridLayout->addWidget(infoValue, i, 1, Qt::AlignLeft | Qt::AlignTop);
 
         if (i == infoKeys.length() - 1) {
             infoValue->setWordWrap(true);

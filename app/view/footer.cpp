@@ -22,6 +22,7 @@
 #include "../musicapp.h"
 #include "../core/playlistmanager.h"
 
+#include "widget/hoverfilter.h"
 #include "widget/slider.h"
 #include "widget/modebuttom.h"
 #include "widget/clickablelabel.h"
@@ -68,6 +69,8 @@ Footer::Footer(QWidget *parent) : QFrame(parent)
     vboxlayout->setSpacing(0);
     vboxlayout->setMargin(0);
 
+    auto hoverFilter = new HoverFilter(this);
+
     d->progress = new Slider(Qt::Horizontal);
     d->progress->setObjectName("FooterProgress");
     d->progress->setFixedHeight(12);
@@ -82,11 +85,13 @@ Footer::Footer(QWidget *parent) : QFrame(parent)
     d->cover = new ClickableLabel;
     d->cover->setObjectName("FooterCover");
     d->cover->setFixedSize(40, 40);
+    d->cover->installEventFilter(hoverFilter);
 
     d->title = new ClickableLabel;
     d->title->setObjectName("FooterTitle");
     d->title->setMaximumWidth(240);
     d->title->setText(tr("Unknow Title"));
+    d->title->installEventFilter(hoverFilter);
 
     d->artist = new ClickableLabel;
     d->artist->setObjectName("FooterArtist");

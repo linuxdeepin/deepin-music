@@ -94,7 +94,8 @@ SOURCES += \
     view/widget/clickablelabel.cpp \
     core/util/icu.cpp \
 #    core/util/filesystemwatcher.cpp \
-    core/util/inotifyengine.cpp
+    core/util/inotifyengine.cpp \
+    view/widget/hoverfilter.cpp
 
 HEADERS += \
     view/playerframe.h \
@@ -136,7 +137,8 @@ HEADERS += \
     view/widget/clickablelabel.h \
     core/util/icu.h \
 #    core/util/filesystemwatcher.h \
-    core/util/inotifyengine.h
+    core/util/inotifyengine.h \
+    view/widget/hoverfilter.h
 
 RESOURCES += \
     resource/theme/theme.qrc \

@@ -14,12 +14,11 @@ InfoDialog{
 }
 #InfoKey{
     font-size: 11px;
-    line-height: 1.18;
     text-align: right;
     color: #606060;
 }
 #InfoValue{
+    text-align: left;
     font-size: 11px;
-    line-height: 1.64;
     color: #000000;
 }
