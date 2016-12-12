@@ -12,6 +12,7 @@
 
 #include <QSlider>
 #include <QTimer>
+
 class Slider : public QSlider
 {
     Q_OBJECT

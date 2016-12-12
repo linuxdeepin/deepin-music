@@ -14,8 +14,6 @@
 #include <QTime>
 #include <QMouseEvent>
 
-#include <dslider.h>
-
 static const int s_valueUpdateDelay = 1500;
 
 Slider::Slider(QWidget *parent) : QSlider(parent)
