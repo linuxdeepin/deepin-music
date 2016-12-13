@@ -249,7 +249,7 @@ void MusicListView::showContextMenu(const QPoint &pos,
             auto index = selection->selectedRows().first();
             auto item = this->model()->item(index.row(), index.column());
             MusicMeta meta = qvariant_cast<MusicMeta>(item->data());
-            auto coverPath = QString(":/image/cover_max.png");
+            auto coverPath = QString(":/image/info_cover.png");
             QFileInfo coverfi(LyricService::coverPath(meta));
             if (coverfi.exists()) {
                 coverPath = coverfi.absoluteFilePath();

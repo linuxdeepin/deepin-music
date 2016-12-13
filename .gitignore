@@ -8,3 +8,5 @@
 *.sw*
 *.user
 build/
+*.qm
+

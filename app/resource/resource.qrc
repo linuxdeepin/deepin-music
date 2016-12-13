@@ -87,5 +87,6 @@
         <file>image/sequence_press.png</file>
         <file>image/about_icon.png</file>
         <file>image/cover_welcome.png</file>
+        <file>image/info_cover.png</file>
     </qresource>
 </RCC>
