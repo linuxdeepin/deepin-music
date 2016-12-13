@@ -23,6 +23,10 @@ int main(int argc, char *argv[])
     DWIDGET_INIT_RESOURCE();
 #endif
 
+    if (DApplication::isDXcbPlatform()) {
+        DApplication::loadDXcbPlugin();
+    }
+
     DApplication app(argc, argv);
     app.setOrganizationName("deepin");
     app.setApplicationName("deepin-music");

@@ -378,8 +378,10 @@ void Footer::onProgressChanged(qint64 value, qint64 duration)
 }
 
 #include <QFileInfo>
+#include <QDebug>
 void Footer::onCoverChanged(const MusicMeta &info, const QString &coverPath)
 {
+    qDebug()<< info.title << coverPath;
     if (info.hash != d->m_playingMeta.hash) {
         return;
     }

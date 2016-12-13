@@ -16,12 +16,17 @@
 
 class Playlist;
 class QStandardItemModel;
+class QScrollBar;
 class MusicListView : public QTableView
 {
     Q_OBJECT
     Q_PROPERTY(QColor headerColor READ headerColor WRITE setHeaderColor NOTIFY headerColorChanged)
 public:
     explicit MusicListView(QWidget *parent = 0);
+
+
+    virtual void wheelEvent(QWheelEvent *event) Q_DECL_OVERRIDE;
+    virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
 
     QStandardItemModel *model() {return m_model;}
 
@@ -44,6 +49,7 @@ public slots:
                          QSharedPointer<Playlist> selectedlist,
                          QSharedPointer<Playlist> favlist,
                          QList<QSharedPointer<Playlist> >newlist);
+
     void setHeaderColor(QColor headerColor)
     {
         if (m_headerColor == headerColor) {
@@ -55,7 +61,8 @@ public slots:
     }
 
 private:
-    QStandardItemModel *m_model = nullptr;
+    QStandardItemModel  *m_model = nullptr;
+    QScrollBar          *m_scrollBar = nullptr;
     QColor m_headerColor;
 };
 

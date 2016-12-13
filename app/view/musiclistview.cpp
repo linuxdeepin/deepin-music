@@ -9,10 +9,13 @@
 
 #include "musiclistview.h"
 
+#include <QDebug>
+#include <QResizeEvent>
 #include <QStandardItemModel>
 #include <QHeaderView>
-
-
+#include <QScrollBar>
+#include <QAction>
+#include <QMenu>
 #include <QLabel>
 #include <QHBoxLayout>
 #include <QFileInfo>
@@ -22,8 +25,6 @@
 #include <QProcess>
 
 #include <dthememanager.h>
-#include <QAction>
-#include <QMenu>
 
 #include "../musicapp.h"
 #include "../model/musiclistmodel.h"
@@ -81,7 +82,35 @@ MusicListView::MusicListView(QWidget *parent) : QTableView(parent)
     connect(this, &MusicListView::customContextMenuRequested,
             this, &MusicListView::requestCustomContextMenu);
 
+    m_scrollBar = new QScrollBar(this);
+    m_scrollBar->setOrientation(Qt::Vertical);
+    m_scrollBar->raise();
+
+    connect(m_scrollBar, &QScrollBar::valueChanged,
+    this, [ = ](int value) {
+        verticalScrollBar()->setValue(value);
+    });
     D_THEME_INIT_WIDGET(MusicListView);
+}
+
+void MusicListView::wheelEvent(QWheelEvent *event)
+{
+    QTableView::wheelEvent(event);
+
+    m_scrollBar->setSliderPosition(verticalScrollBar()->sliderPosition());
+}
+
+void MusicListView::resizeEvent(QResizeEvent *event)
+{
+    QTableView::resizeEvent(event);
+
+    auto size = event->size();
+    auto scrollBarWidth = 8;
+    m_scrollBar->resize(scrollBarWidth, size.height());
+    m_scrollBar->move(size.width() - scrollBarWidth - 2, 0);
+    m_scrollBar->setMaximum(verticalScrollBar()->maximum());
+    m_scrollBar->setMinimum(verticalScrollBar()->minimum());
+    m_scrollBar->setPageStep(verticalScrollBar()->pageStep());
 }
 
 
