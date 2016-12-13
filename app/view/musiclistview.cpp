@@ -33,7 +33,6 @@
 
 #include "widget/musicitemdelegate.h"
 #include "widget/infodialog.h"
-#include "widget/menu.h"
 #include "helper/widgethellper.h"
 
 DWIDGET_USE_NAMESPACE

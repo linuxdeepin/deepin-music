@@ -9,6 +9,7 @@
 
 #include "searchresult.h"
 
+#include <QDebug>
 #include <QVBoxLayout>
 #include <QListView>
 #include <QPushButton>
@@ -74,8 +75,8 @@ SearchResult::SearchResult(QWidget *parent) : DAbstractDialog(parent)
         m_doSearchButton->setChecked(false);
     });
 
-    connect(m_doSearchButton, &PushButton::clicked,
-    this, [ = ](bool) {
+    connect(m_doSearchButton, &PushButton::pressed,
+    this, [ = ]() {
         auto str = m_model->property("searchString").toString();
         emit searchText(str);
     });

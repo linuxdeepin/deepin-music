@@ -44,7 +44,7 @@ public:
 
     const MusicMeta playingMeta();
 
-    void setPlaylist(PlaylistPtr playlist);
+    void setPlaylist(PlaylistPtr);
     void setMode(PlayMode mode);
 
     void init() {}

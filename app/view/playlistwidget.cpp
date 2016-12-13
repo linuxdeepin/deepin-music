@@ -100,6 +100,12 @@ void PlaylistWidget::initPlaylist(QList<PlaylistPtr > playlists, PlaylistPtr las
     }
 }
 
+void PlaylistWidget::focusOutEvent(QFocusEvent *event)
+{
+    // TODO: hide
+    qDebug() << event;
+}
+
 void PlaylistWidget::onPlaylistAdded(PlaylistPtr playlist)
 {
     auto item = new QListWidgetItem;

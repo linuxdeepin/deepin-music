@@ -9,7 +9,10 @@
 
 #include "searchedit.h"
 
+#include <QDebug>
 #include <QKeyEvent>
+
+#include <DUtil>
 
 #include "searchresult.h"
 
@@ -23,9 +26,16 @@ SearchEdit::SearchEdit(QWidget *parent) : DSearchEdit(parent)
     m_result->hide();
 
     connect(m_result, &SearchResult::locateMusic,
-            this, &SearchEdit::locateMusic);
+    this, [ = ](const QString & hash) {
+//        onFocusOut();
+        emit this->locateMusic(hash);
+    });
+
     connect(m_result, &SearchResult::searchText,
-            this, &SearchEdit::searchText);
+    this, [ = ](const QString & text) {
+//        onFocusOut();
+        emit this->searchText(text);
+    });
 
     connect(this, &SearchEdit::focusOut,
             this, &SearchEdit::onFocusOut);
@@ -70,8 +80,10 @@ void SearchEdit::onFocusIn()
 
 void SearchEdit::onFocusOut()
 {
-    m_result->hide();
-    m_result->close();
+    DUtil::TimerSingleShot(50, [ this ]() {
+        m_result->hide();
+        m_result->close();
+    });
 }
 
 void SearchEdit::onTextChanged()
@@ -93,6 +105,7 @@ void SearchEdit::onTextChanged()
         auto pos = this->mapToGlobal(QPoint(0, this->height() + 2));
         m_result->show();
         m_result->move(pos);
+        m_result->setFocusPolicy(Qt::StrongFocus);
     } else {
         onFocusOut();
     }

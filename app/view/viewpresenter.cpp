@@ -7,22 +7,9 @@
  * (at your option) any later version.
  **/
 
-#ifndef PUSHBUTTON_H
-#define PUSHBUTTON_H
+#include "viewpresenter.h"
 
-#include <QPushButton>
-
-class PushButton : public QPushButton
+ViewPresenter::ViewPresenter(QObject *parent) : QObject(parent)
 {
-    Q_OBJECT
-public:
-    explicit PushButton(QWidget *parent = 0);
 
-    virtual void enterEvent(QEvent *event) Q_DECL_OVERRIDE;
-signals:
-    void entered();
-
-public slots:
-};
-
-#endif // PUSHBUTTON_H
+}

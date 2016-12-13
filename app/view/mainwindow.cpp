@@ -380,6 +380,16 @@ void PlayerFrame::binding(Presenter *presenter)
     initMenu();
 }
 
+void PlayerFrame::mousePressEvent(QMouseEvent *event)
+{
+    qDebug() << event;
+    // TODO hide all
+    if (d->playlist->isVisible())
+        emit d->footer->togglePlaylist();
+
+    DWindow::mousePressEvent(event);
+}
+
 void PlayerFrame::resizeEvent(QResizeEvent *e)
 {
     DWindow::resizeEvent(e);

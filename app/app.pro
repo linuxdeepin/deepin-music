@@ -72,7 +72,6 @@ SOURCES += \
     view/widget/slider.cpp \
     view/widget/infodialog.cpp \
     view/widget/cover.cpp \
-    view/widget/menu.cpp \
     view/widget/settingsdialog.cpp \
     view/widget/modebuttom.cpp \
     core/lyricservice.cpp \
@@ -94,7 +93,8 @@ SOURCES += \
     core/util/inotifyengine.cpp \
     view/widget/hoverfilter.cpp \
     presenter/resenter.cpp \
-    view/mainwindow.cpp
+    view/mainwindow.cpp \
+    view/viewpresenter.cpp
 
 HEADERS += \
     view/titlebar.h \
@@ -113,7 +113,6 @@ HEADERS += \
     view/widget/slider.h \
     view/widget/infodialog.h \
     view/widget/cover.h \
-    view/widget/menu.h \
     view/widget/settingsdialog.h \
     view/widget/modebuttom.h \
     core/lyricservice.h \
@@ -137,7 +136,8 @@ HEADERS += \
     core/music.h \
     core/playlist.h \
     presenter/presenter.h \
-    view/mainwindow.h
+    view/mainwindow.h \
+    view/viewpresenter.h
 
 RESOURCES += \
     resource/theme/theme.qrc \

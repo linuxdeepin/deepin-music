@@ -20,7 +20,7 @@ const MusicMeta Player::playingMeta()
     return m_playingMeta;
 }
 
-void Player::setPlaylist(PlaylistPtr playlist)
+void Player::setPlaylist(PlaylistPtr /*playlist*/)
 {
 }
 

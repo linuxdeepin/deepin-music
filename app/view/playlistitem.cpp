@@ -21,7 +21,6 @@
 #include <dthememanager.h>
 
 #include "../core/playlist.h"
-#include "widget/menu.h"
 
 DWIDGET_USE_NAMESPACE
 

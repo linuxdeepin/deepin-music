@@ -34,8 +34,9 @@ public:
     void initFooter(PlaylistPtr current, int mode);
     void binding(Presenter *presenter);
 
-    void resizeEvent(QResizeEvent *e) Q_DECL_OVERRIDE;
-    void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
+    virtual void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+    virtual void resizeEvent(QResizeEvent *e) Q_DECL_OVERRIDE;
+    virtual void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
 
     QColor titlebarTopColor() const
     {

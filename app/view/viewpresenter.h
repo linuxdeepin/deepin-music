@@ -7,20 +7,23 @@
  * (at your option) any later version.
  **/
 
-#ifndef MENU_H
-#define MENU_H
+#pragma once
 
-#include <QMenu>
+#include <QObject>
 
-class Menu : public QMenu
+class ViewPresenter : public QObject
 {
     Q_OBJECT
 public:
-    explicit Menu(QWidget *parent = 0);
+    explicit ViewPresenter(QObject *parent = 0);
 
 signals:
+    void showImportDialog(const QUrl &path);
 
-public slots:
+    void showImportView();
+    void showMusiclistView();
+    void toggleLayricView();
+
+    void hidePlaylist();
+    void showPlaylist();
 };
-
-#endif // MENU_H

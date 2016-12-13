@@ -24,6 +24,7 @@ public:
 
     void initPlaylist(QList<PlaylistPtr > playlists, PlaylistPtr last);
 
+    virtual void focusOutEvent(QFocusEvent *event) Q_DECL_OVERRIDE;
 public slots:
     void onPlaylistAdded(PlaylistPtr);
     void onCurrentChanged(PlaylistPtr playlist);
