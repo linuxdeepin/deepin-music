@@ -34,7 +34,7 @@ TitleBar::TitleBar(QWidget *parent) : QFrame(parent)
     auto search = new SearchEdit;
     search->setObjectName("TitleSearch");
     search->setFixedSize(278, 26);
-    search->setPlaceHolder(tr("Search"));
+//    search->setPlaceHolder(tr("Search"));
     search->clear();
 
     layout->addWidget(iconLabel, 0, Qt::AlignHCenter);

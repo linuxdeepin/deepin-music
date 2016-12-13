@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include "../../model/musiclistmodel.h"
+#include "../music.h"
 
 class CueParser
 {

@@ -7,7 +7,7 @@
  * (at your option) any later version.
  **/
 
-#include "playerframe.h"
+#include "mainwindow.h"
 
 #include <QDebug>
 #include <QPainter>
@@ -36,7 +36,7 @@
 #include "playlistitem.h"
 #include "musiclistwidget.h"
 
-#include "../model/musiclistmodel.h"
+#include "../core/music.h"
 #include "../core/playlist.h"
 #include "../musicapp.h"
 
@@ -123,7 +123,7 @@ PlayerFrame::~PlayerFrame()
 
 }
 
-void PlayerFrame::initMusiclist(QSharedPointer<Playlist> allmusic, QSharedPointer<Playlist> last)
+void PlayerFrame::initMusiclist(PlaylistPtr allmusic, PlaylistPtr last)
 {
     if (allmusic.isNull() || 0 == allmusic->length()) {
         d->import->show();
@@ -144,81 +144,81 @@ void PlayerFrame::initMusiclist(QSharedPointer<Playlist> allmusic, QSharedPointe
     d->musicList->onMusiclistChanged(last);
 }
 
-void PlayerFrame::initPlaylist(QList<QSharedPointer<Playlist> > playlists, QSharedPointer<Playlist> last)
+void PlayerFrame::initPlaylist(QList<PlaylistPtr > playlists, PlaylistPtr last)
 {
     d->playlist->initPlaylist(playlists, last);
 }
 
-void PlayerFrame::initFooter(QSharedPointer<Playlist> current, int mode)
+void PlayerFrame::initFooter(PlaylistPtr current, int mode)
 {
     emit d->footer->initFooter(current, mode);
 }
 
-void PlayerFrame::binding(AppPresenter *presenter)
+void PlayerFrame::binding(Presenter *presenter)
 {
 
     connect(d->title, &TitleBar::searchText,
-            presenter, &AppPresenter::onSearchText);
+            presenter, &Presenter::onSearchText);
     connect(d->title, &TitleBar::locateMusic,
-            presenter, &AppPresenter::onLocateMusic);
+            presenter, &Presenter::onLocateMusic);
 
     // Music list binding
-    connect(presenter, &AppPresenter::selectedPlaylistChanged,
+    connect(presenter, &Presenter::selectedPlaylistChanged,
             d->musicList, &MusicListWidget::onMusiclistChanged);
-    connect(presenter, &AppPresenter::musicRemoved,
+    connect(presenter, &Presenter::musicRemoved,
             d->musicList, &MusicListWidget::onMusicRemoved);
 
-    connect(presenter, &AppPresenter::musicAdded,
+    connect(presenter, &Presenter::musicAdded,
             d->musicList, &MusicListWidget::onMusicAdded);
-    connect(presenter, &AppPresenter::musiclistAdded,
+    connect(presenter, &Presenter::musiclistAdded,
             d->musicList, &MusicListWidget::onMusicListAdded);
 
-    connect(presenter, &AppPresenter::musicPlayed,
+    connect(presenter, &Presenter::musicPlayed,
             d->musicList, &MusicListWidget::onMusicPlayed);
-    connect(presenter, &AppPresenter::musiclistMenuRequested,
+    connect(presenter, &Presenter::musiclistMenuRequested,
             d->musicList, &MusicListWidget::onCustomContextMenuRequest);
 
     connect(d->musicList, &MusicListWidget::musicClicked,
-            presenter, &AppPresenter::onMusicPlay);
+            presenter, &Presenter::onMusicPlay);
     connect(d->musicList, &MusicListWidget::musicAdd,
-            presenter, &AppPresenter::onMusicAdd);
+            presenter, &Presenter::onMusicAdd);
     connect(d->musicList, &MusicListWidget::musicListRemove,
-            presenter, &AppPresenter::onMusicRemove);
+            presenter, &Presenter::onMusicRemove);
     connect(d->musicList, &MusicListWidget::musicListDelete,
-            presenter, &AppPresenter::onMusicDelete);
+            presenter, &Presenter::onMusicDelete);
 
     connect(d->musicList, &MusicListWidget::playall,
-            presenter, &AppPresenter::onPlayall);
+            presenter, &Presenter::onPlayall);
     connect(d->musicList, &MusicListWidget::requestCustomContextMenu,
-            presenter, &AppPresenter::onRequestMusiclistMenu);
+            presenter, &Presenter::onRequestMusiclistMenu);
     connect(d->musicList, &MusicListWidget::resort,
-            presenter, &AppPresenter::onResort);
+            presenter, &Presenter::onResort);
 
     // Play list bindding
-    connect(presenter, &AppPresenter::selectedPlaylistChanged,
+    connect(presenter, &Presenter::selectedPlaylistChanged,
             d->playlist, &PlaylistWidget::onCurrentChanged);
-    connect(presenter, &AppPresenter::playlistAdded,
+    connect(presenter, &Presenter::playlistAdded,
             d->playlist, &PlaylistWidget::onPlaylistAdded);
 
     connect(d->playlist, &PlaylistWidget::playall,
-            presenter, &AppPresenter::onPlayall);
+            presenter, &Presenter::onPlayall);
     connect(d->playlist, &PlaylistWidget::addPlaylist,
-            presenter, &AppPresenter::onPlaylistAdd);
+            presenter, &Presenter::onPlaylistAdd);
     connect(d->playlist, &PlaylistWidget::selectPlaylist,
-            presenter, &AppPresenter::onSelectedPlaylistChanged);
+            presenter, &Presenter::onSelectedPlaylistChanged);
 
     // Lyric
-    connect(presenter, &AppPresenter::musicPlayed,
+    connect(presenter, &Presenter::musicPlayed,
             d->lyric, &LyricView::onMusicPlayed);
-    connect(presenter, &AppPresenter::lyricSearchFinished,
+    connect(presenter, &Presenter::lyricSearchFinished,
             d->lyric, &LyricView::onLyricChanged);
-    connect(presenter, &AppPresenter::coverSearchFinished,
+    connect(presenter, &Presenter::coverSearchFinished,
             d->lyric, &LyricView::onCoverChanged);
-    connect(presenter, &AppPresenter::progrossChanged,
+    connect(presenter, &Presenter::progrossChanged,
             d->lyric, &LyricView::onProgressChanged);
-    connect(presenter, &AppPresenter::progrossChanged,
+    connect(presenter, &Presenter::progrossChanged,
             d->lyric, &LyricView::onProgressChanged);
-    connect(presenter, &AppPresenter::coverSearchFinished,
+    connect(presenter, &Presenter::coverSearchFinished,
     this, [ = ](const MusicMeta &, const QString & coverPath) {
         auto path = coverPath.isEmpty() ? ":/image/cover_max.png" : coverPath;
         QImage image = QImage(path);
@@ -230,42 +230,42 @@ void PlayerFrame::binding(AppPresenter *presenter)
             d->footer, &Footer::toggleLyric);
 
     // Footer Control
-    connect(presenter, &AppPresenter::coverSearchFinished,
+    connect(presenter, &Presenter::coverSearchFinished,
             d->footer, &Footer::onCoverChanged);
-    connect(presenter, &AppPresenter::musicPlayed,
+    connect(presenter, &Presenter::musicPlayed,
             d->footer, &Footer::onMusicPlayed);
-    connect(presenter, &AppPresenter::musicPaused,
+    connect(presenter, &Presenter::musicPaused,
             d->footer, &Footer::onMusicPause);
-    connect(presenter, &AppPresenter::musicStoped,
+    connect(presenter, &Presenter::musicStoped,
             d->footer, &Footer::onMusicStoped);
-    connect(presenter, &AppPresenter::musicAdded,
+    connect(presenter, &Presenter::musicAdded,
             d->footer, &Footer::onMusicAdded);
-    connect(presenter, &AppPresenter::musiclistAdded,
+    connect(presenter, &Presenter::musiclistAdded,
             d->footer, &Footer::onMusicListAdded);
-    connect(presenter, &AppPresenter::musicRemoved,
+    connect(presenter, &Presenter::musicRemoved,
             d->footer, &Footer::onMusicRemoved);
-    connect(presenter, &AppPresenter::progrossChanged,
+    connect(presenter, &Presenter::progrossChanged,
             d->footer, &Footer::onProgressChanged);
 
     connect(d->footer, &Footer::play,
-            presenter, &AppPresenter::onMusicPlay);
+            presenter, &Presenter::onMusicPlay);
     connect(d->footer, &Footer::resume,
-            presenter, &AppPresenter::onMusicResume);
+            presenter, &Presenter::onMusicResume);
     connect(d->footer, &Footer::pause,
-            presenter, &AppPresenter::onMusicPause);
+            presenter, &Presenter::onMusicPause);
     connect(d->footer, &Footer::prev,
-            presenter, &AppPresenter::onMusicPrev);
+            presenter, &Presenter::onMusicPrev);
     connect(d->footer, &Footer::next,
-            presenter, &AppPresenter::onMusicNext);
+            presenter, &Presenter::onMusicNext);
     connect(d->footer, &Footer::changeProgress,
-            presenter, &AppPresenter::onChangeProgress);
+            presenter, &Presenter::onChangeProgress);
     connect(d->footer, &Footer::toggleFavourite,
-            presenter, &AppPresenter::onToggleFavourite);
+            presenter, &Presenter::onToggleFavourite);
     connect(d->footer, &Footer::modeChanged,
-            presenter, &AppPresenter::onPlayModeChanged);
+            presenter, &Presenter::onPlayModeChanged);
 
     connect(d->footer, &Footer::locate,
-    this, [ = ](QSharedPointer<Playlist> playlist, const MusicMeta & info) {
+    this, [ = ](PlaylistPtr playlist, const MusicMeta & info) {
         d->musicList->onLocate(playlist, info);
         d->playlist->onCurrentChanged(playlist);
         if (d->lyric->isVisible()) {
@@ -275,14 +275,14 @@ void PlayerFrame::binding(AppPresenter *presenter)
 
     // Import bindding
     connect(d->import, &ImportWidget::importMusicDirectory,
-            presenter, &AppPresenter::onImportMusicDirectory);
+            presenter, &Presenter::onImportMusicDirectory);
     connect(d->import, &ImportWidget::importFiles,
             this, &PlayerFrame::onSelectImportFiles);
     connect(this, &PlayerFrame::importSelectFiles,
-            presenter, &AppPresenter::onImportFiles);
+            presenter, &Presenter::onImportFiles);
 
     // View control
-    connect(presenter, &AppPresenter::selectedPlaylistChanged,
+    connect(presenter, &Presenter::selectedPlaylistChanged,
     this, [ = ]() {
         if (d->lyric->isVisible()) {
             WidgetHelper::slideTop2BottomWidget(d->lyric, d->musicList, s_AnimationDelay);
@@ -292,7 +292,7 @@ void PlayerFrame::binding(AppPresenter *presenter)
         }
     });
 
-    connect(presenter, &AppPresenter::requestImportFiles,
+    connect(presenter, &Presenter::requestImportFiles,
             this, &PlayerFrame::onSelectImportFiles);
 
     connect(d->footer, &Footer::toggleLyric,
@@ -342,7 +342,7 @@ void PlayerFrame::binding(AppPresenter *presenter)
         d->playlist->setFocus();
     });
 
-    connect(presenter, &AppPresenter::setPlaylistVisible,
+    connect(presenter, &Presenter::setPlaylistVisible,
     this, [ = ](bool visible) {
         // show playlist
         if (!d->playlist->isVisible() && visible)  {
@@ -353,7 +353,7 @@ void PlayerFrame::binding(AppPresenter *presenter)
         }
     });
 
-    connect(presenter, &AppPresenter::showMusiclist,
+    connect(presenter, &Presenter::showMusiclist,
     this, [ = ]() {
         if (d->import->isVisible()) {
             WidgetHelper::slideRight2LeftWidget(d->import, d->musicList, s_AnimationDelay);
@@ -363,7 +363,7 @@ void PlayerFrame::binding(AppPresenter *presenter)
         d->musicList->show();
     });
 
-    connect(presenter, &AppPresenter::metaInfoClean,
+    connect(presenter, &Presenter::metaInfoClean,
     this, [ = ]() {
         if (d->musicList->isVisible()) {
             if (d->playlist->isVisible())  {

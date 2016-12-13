@@ -13,14 +13,13 @@
 #include <DWindow>
 #include <QScopedPointer>
 
-DWIDGET_USE_NAMESPACE
+#include "../core/music.h"
+#include "../core/playlist.h"
 
-class Playlist;
-class MusicMeta;
-class AppPresenter;
+class Presenter;
 class MusicListWidget;
 class PlayerFramePrivate;
-class PlayerFrame : public DWindow
+class PlayerFrame : public Dtk::Widget::DWindow
 {
     Q_OBJECT
 
@@ -30,10 +29,10 @@ public:
     explicit PlayerFrame(QWidget *parent = 0);
     ~PlayerFrame();
 
-    void initMusiclist(QSharedPointer<Playlist> allmusic, QSharedPointer<Playlist> last);
-    void initPlaylist(QList<QSharedPointer<Playlist> > playlists, QSharedPointer<Playlist> last);
-    void initFooter(QSharedPointer<Playlist> current, int mode);
-    void binding(AppPresenter *presenter);
+    void initMusiclist(PlaylistPtr allmusic, PlaylistPtr last);
+    void initPlaylist(QList<PlaylistPtr > playlists, PlaylistPtr last);
+    void initFooter(PlaylistPtr current, int mode);
+    void binding(Presenter *presenter);
 
     void resizeEvent(QResizeEvent *e) Q_DECL_OVERRIDE;
     void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
@@ -69,8 +68,9 @@ public slots:
 
     void setTitlebarBottomColor(QColor titlebarBottomColor)
     {
-        if (m_titlebarBottomColor == titlebarBottomColor)
+        if (m_titlebarBottomColor == titlebarBottomColor) {
             return;
+        }
 
         m_titlebarBottomColor = titlebarBottomColor;
         emit titlebarBottomColorChanged(titlebarBottomColor);

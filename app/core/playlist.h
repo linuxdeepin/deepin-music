@@ -13,7 +13,36 @@
 #include <QObject>
 #include <QSharedPointer>
 
-#include "../model/musiclistmodel.h"
+#include "music.h"
+
+class PlaylistMeta
+{
+public:
+    PlaylistMeta()
+    {
+        editmode = false;
+        readonly = false;
+        hide = false;
+        sortType = 0;
+    }
+
+    QString uuid;
+    QString displayName;
+    QString url;
+    QString icon;
+
+    int     sortType;
+    bool    editmode;
+    bool    readonly;
+    bool    hide;
+    bool    unused;
+
+    QStringList                 musicIds;
+    QMap<QString, MusicMeta>    musicMap;
+};
+
+Q_DECLARE_METATYPE(PlaylistMeta);
+
 
 class Playlist : public QObject
 {
@@ -59,7 +88,7 @@ public:
     bool isLast(const MusicMeta &info);
     bool contains(const MusicMeta &info);
     MusicMetaList allmusic();
-    void reset(const MusicMetaList&);
+    void reset(const MusicMetaList &);
 
 public slots:
     void setDisplayName(const QString &name);

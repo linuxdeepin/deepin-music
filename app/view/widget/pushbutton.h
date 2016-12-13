@@ -18,7 +18,9 @@ class PushButton : public QPushButton
 public:
     explicit PushButton(QWidget *parent = 0);
 
-    virtual void enterEvent(QEvent *event);
+    virtual void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+    virtual void mouseMoveEvent(QMouseEvent *e) Q_DECL_OVERRIDE;
+    virtual void enterEvent(QEvent *event) Q_DECL_OVERRIDE;
 
 signals:
     void entered();

@@ -21,7 +21,7 @@
 #include <dthememanager.h>
 
 #include "musiclistview.h"
-#include "../model/musiclistmodel.h"
+#include "../core/music.h"
 #include "../core/playlist.h"
 
 DWIDGET_USE_NAMESPACE
@@ -112,7 +112,7 @@ MusicListWidget::MusicListWidget(QWidget *parent) : QFrame(parent)
     });
 
     connect(m_musiclist, &MusicListView::addToPlaylist,
-    this, [ = ](QSharedPointer<Playlist> playlist, const MusicMetaList metalist) {
+    this, [ = ](PlaylistPtr playlist, const MusicMetaList metalist) {
         emit this->musicAdd(playlist, metalist);
     });
 
@@ -136,7 +136,7 @@ void MusicListWidget::resizeEvent(QResizeEvent *event)
     m_musiclist->setFixedHeight(event->size().height() - 40);
 }
 
-void MusicListWidget::onMusicPlayed(QSharedPointer<Playlist> playlist, const MusicMeta &info)
+void MusicListWidget::onMusicPlayed(PlaylistPtr playlist, const MusicMeta &info)
 {
     if (playlist != m_playlist) {
         qWarning() << "check playlist failed!"
@@ -164,7 +164,7 @@ void MusicListWidget::onMusicPlayed(QSharedPointer<Playlist> playlist, const Mus
     m_musiclist->scrollTo(index);
 }
 
-void MusicListWidget::onMusicRemoved(QSharedPointer<Playlist> playlist, const MusicMeta &info)
+void MusicListWidget::onMusicRemoved(PlaylistPtr playlist, const MusicMeta &info)
 {
     if (playlist != m_playlist) {
         qWarning() << "check playlist failed!"
@@ -213,7 +213,7 @@ void MusicListWidget::addMusicInfo(MusicListView *m_musiclist, const MusicMeta &
 }
 
 
-void MusicListWidget::setCurrentList(QSharedPointer<Playlist> playlist)
+void MusicListWidget::setCurrentList(PlaylistPtr playlist)
 {
     if (m_playlist) {
         m_playlist.data()->disconnect(this);
@@ -221,7 +221,7 @@ void MusicListWidget::setCurrentList(QSharedPointer<Playlist> playlist)
     m_playlist = playlist;
 }
 
-void MusicListWidget::onMusicAdded(QSharedPointer<Playlist> playlist, const MusicMeta &info)
+void MusicListWidget::onMusicAdded(PlaylistPtr playlist, const MusicMeta &info)
 {
     if (playlist != m_playlist) {
 //        qWarning() << "check playlist failed!"
@@ -232,14 +232,14 @@ void MusicListWidget::onMusicAdded(QSharedPointer<Playlist> playlist, const Musi
     addMusicInfo(m_musiclist, info);
 }
 
-void MusicListWidget::onMusicListAdded(QSharedPointer<Playlist> playlist, const MusicMetaList &infolist)
+void MusicListWidget::onMusicListAdded(PlaylistPtr playlist, const MusicMetaList &infolist)
 {
     for (auto &meta : infolist) {
         onMusicAdded(playlist, meta);
     }
 }
 
-void MusicListWidget::onLocate(QSharedPointer<Playlist> playlist, const MusicMeta &info)
+void MusicListWidget::onLocate(PlaylistPtr playlist, const MusicMeta &info)
 {
     if (playlist.isNull()) {
         return;
@@ -271,7 +271,7 @@ void MusicListWidget::onLocate(QSharedPointer<Playlist> playlist, const MusicMet
     }
 }
 
-void MusicListWidget::onMusiclistChanged(QSharedPointer<Playlist> playlist)
+void MusicListWidget::onMusiclistChanged(PlaylistPtr playlist)
 {
     if (playlist.isNull()) {
         qWarning() << "can not change to emptry playlist";
@@ -288,9 +288,9 @@ void MusicListWidget::onMusiclistChanged(QSharedPointer<Playlist> playlist)
 }
 
 void MusicListWidget::onCustomContextMenuRequest(const QPoint &pos,
-        QSharedPointer<Playlist> selectedlist,
-        QSharedPointer<Playlist> favlist,
-        QList<QSharedPointer<Playlist> > newlists)
+        PlaylistPtr selectedlist,
+        PlaylistPtr favlist,
+        QList<PlaylistPtr > newlists)
 {
 //    Q_ASSERT(item != nullptr);
     m_musiclist->showContextMenu(pos, selectedlist, favlist, newlists);

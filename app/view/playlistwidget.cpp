@@ -61,7 +61,7 @@ PlaylistWidget::PlaylistWidget(QWidget *parent) : QFrame(parent)
     });
 }
 
-void PlaylistWidget::initPlaylist(QList<QSharedPointer<Playlist> > playlists, QSharedPointer<Playlist> last)
+void PlaylistWidget::initPlaylist(QList<PlaylistPtr > playlists, PlaylistPtr last)
 {
     if (playlists.length() <= 0) {
         qCritical() << "playlist is empty";
@@ -100,7 +100,7 @@ void PlaylistWidget::initPlaylist(QList<QSharedPointer<Playlist> > playlists, QS
     }
 }
 
-void PlaylistWidget::onPlaylistAdded(QSharedPointer<Playlist> playlist)
+void PlaylistWidget::onPlaylistAdded(PlaylistPtr playlist)
 {
     auto item = new QListWidgetItem;
     m_listview->addItem(item);
@@ -120,7 +120,7 @@ void PlaylistWidget::onPlaylistAdded(QSharedPointer<Playlist> playlist)
 //    emit selectPlaylist(playlist);
 }
 
-void PlaylistWidget::onCurrentChanged(QSharedPointer<Playlist> playlist)
+void PlaylistWidget::onCurrentChanged(PlaylistPtr playlist)
 {
     for (int i = 0; i < m_listview->count(); ++i) {
         QListWidgetItem *item = m_listview->item(i);

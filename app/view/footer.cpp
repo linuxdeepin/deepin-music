@@ -54,7 +54,7 @@ public:
     QPushButton     *btSound    = nullptr;
     Slider          *progress   = nullptr;
 
-    QSharedPointer<Playlist>    m_playinglist;
+    PlaylistPtr    m_playinglist;
     MusicMeta                   m_playingMeta;
     int                         m_mode;
 };
@@ -248,7 +248,7 @@ Footer::Footer(QWidget *parent) : QFrame(parent)
 
     // TODO: remove fav?
     connect(this, &Footer::initFooter,
-    this, [ = ](QSharedPointer<Playlist> current, int mode) {
+    this, [ = ](PlaylistPtr current, int mode) {
         d->m_mode = mode;
         d->m_playinglist = current;
         d->btPlayMode->setMode(mode);
@@ -275,7 +275,7 @@ void Footer::enableControl(bool enable)
     d->artist->blockSignals(!enable);
 }
 
-void Footer::onMusicAdded(QSharedPointer<Playlist> playlist, const MusicMeta &info)
+void Footer::onMusicAdded(PlaylistPtr playlist, const MusicMeta &info)
 {
     if (playlist->id() == FavMusicListID)
         if (info.hash == d->m_playingMeta.hash) {
@@ -283,7 +283,7 @@ void Footer::onMusicAdded(QSharedPointer<Playlist> playlist, const MusicMeta &in
         }
 }
 
-void Footer::onMusicListAdded(QSharedPointer<Playlist> playlist, const MusicMetaList &infolist)
+void Footer::onMusicListAdded(PlaylistPtr playlist, const MusicMetaList &infolist)
 {
     if (playlist->id() == FavMusicListID)
         for (auto &meta : infolist) {
@@ -293,7 +293,7 @@ void Footer::onMusicListAdded(QSharedPointer<Playlist> playlist, const MusicMeta
         }
 }
 
-void Footer::onMusicRemoved(QSharedPointer<Playlist> playlist, const MusicMeta &info)
+void Footer::onMusicRemoved(PlaylistPtr playlist, const MusicMeta &info)
 {
     if (playlist->id() == FavMusicListID)
         if (info.hash == d->m_playingMeta.hash) {
@@ -301,7 +301,7 @@ void Footer::onMusicRemoved(QSharedPointer<Playlist> playlist, const MusicMeta &
         }
 }
 
-void Footer::onMusicPlayed(QSharedPointer<Playlist> playlist, const MusicMeta &info)
+void Footer::onMusicPlayed(PlaylistPtr playlist, const MusicMeta &info)
 {
     d->title->setText(info.title);
 
@@ -328,7 +328,7 @@ void Footer::onMusicPlayed(QSharedPointer<Playlist> playlist, const MusicMeta &i
     updateQssProperty(d->btPlay, sPropertyPlayStatus, sPlayStatusValuePlaying);
 }
 
-void Footer::onMusicPause(QSharedPointer<Playlist> playlist, const MusicMeta &meta)
+void Footer::onMusicPause(PlaylistPtr playlist, const MusicMeta &meta)
 {
     if (meta.hash != d->m_playingMeta.hash || playlist != d->m_playinglist) {
         qWarning() << "can not pasue" << d->m_playinglist << playlist
@@ -339,7 +339,7 @@ void Footer::onMusicPause(QSharedPointer<Playlist> playlist, const MusicMeta &me
     updateQssProperty(d->btPlay, sPropertyPlayStatus, status);
 }
 
-void Footer::onMusicStoped(QSharedPointer<Playlist> playlist, const MusicMeta &meta)
+void Footer::onMusicStoped(PlaylistPtr playlist, const MusicMeta &meta)
 {
     if (meta.hash != d->m_playingMeta.hash || playlist != d->m_playinglist) {
         qWarning() << "can not pasue" << d->m_playinglist << playlist

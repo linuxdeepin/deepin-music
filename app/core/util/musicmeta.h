@@ -12,11 +12,12 @@
 
 #include <QFileInfo>
 
-#include "../../model/musiclistmodel.h"
+#include "../music.h"
 
 class QFileInfo;
 namespace MusicMetaName
 {
+
 void pinyinIndex(MusicMeta &info);
 MusicMeta fromLocalFile(const QFileInfo &fileInfo, const QString &hash);
 QString hash(const QString &hash);

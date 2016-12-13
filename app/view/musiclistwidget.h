@@ -14,9 +14,9 @@
 
 #include <dcombobox.h>
 
-#include "../model/musiclistmodel.h"
+#include "../core/music.h"
+#include "../core/playlist.h"
 
-class Playlist;
 class MusicItem;
 class MusicMeta;
 class QLabel;
@@ -29,38 +29,38 @@ class MusicListWidget : public QFrame
 public:
     explicit MusicListWidget(QWidget *parent = 0);
 
-    void setCurrentList(QSharedPointer<Playlist> playlist);
+    void setCurrentList(PlaylistPtr playlist);
     virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
 
 signals:
-    void musicListRemove(QSharedPointer<Playlist> playlist, const MusicMetaList &metalist);
-    void musicListDelete(QSharedPointer<Playlist> playlist, const MusicMetaList &metalist);
+    void musicListRemove(PlaylistPtr playlist, const MusicMetaList &metalist);
+    void musicListDelete(PlaylistPtr playlist, const MusicMetaList &metalist);
 
-    void musicClicked(QSharedPointer<Playlist> playlist, const MusicMeta &info);
-    void musicAdd(QSharedPointer<Playlist> playlist, const MusicMetaList &metalist);
-    void playall(QSharedPointer<Playlist> playlist);
-    void resort(QSharedPointer<Playlist> playlist, int sortType);
+    void musicClicked(PlaylistPtr playlist, const MusicMeta &info);
+    void musicAdd(PlaylistPtr playlist, const MusicMetaList &metalist);
+    void playall(PlaylistPtr playlist);
+    void resort(PlaylistPtr playlist, int sortType);
     void requestCustomContextMenu(const QPoint &pos);
 
 public slots:
-    void onMusicPlayed(QSharedPointer<Playlist> playlist, const MusicMeta &info);
-    void onMusicRemoved(QSharedPointer<Playlist> playlist, const MusicMeta &info);
-    void onMusicAdded(QSharedPointer<Playlist> playlist, const MusicMeta &info);
-    void onMusicListAdded(QSharedPointer<Playlist> playlist, const MusicMetaList &infolist);
+    void onMusicPlayed(PlaylistPtr playlist, const MusicMeta &info);
+    void onMusicRemoved(PlaylistPtr playlist, const MusicMeta &info);
+    void onMusicAdded(PlaylistPtr playlist, const MusicMeta &info);
+    void onMusicListAdded(PlaylistPtr playlist, const MusicMetaList &infolist);
 
-    void onLocate(QSharedPointer<Playlist> playlist, const MusicMeta &info);
+    void onLocate(PlaylistPtr playlist, const MusicMeta &info);
 
-    void onMusiclistChanged(QSharedPointer<Playlist> playlist);
+    void onMusiclistChanged(PlaylistPtr playlist);
     void onCustomContextMenuRequest(const QPoint &pos,
-                                    QSharedPointer<Playlist> selectedlist,
-                                    QSharedPointer<Playlist> favlist,
-                                    QList<QSharedPointer<Playlist> >newlists);
+                                    PlaylistPtr selectedlist,
+                                    PlaylistPtr favlist,
+                                    QList<PlaylistPtr >newlists);
 signals:
     void showEmptyHits(bool empty);
 private:
     void addMusicInfo(MusicListView *m_musiclist, const MusicMeta &info);
 
-    QSharedPointer<Playlist>    m_playlist;
+    PlaylistPtr    m_playlist;
     QLabel                      *m_emptyHits    = nullptr;
     MusicListView               *m_musiclist    = nullptr;
     QStandardItemModel          *m_model        = nullptr;

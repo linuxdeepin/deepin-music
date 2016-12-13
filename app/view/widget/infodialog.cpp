@@ -17,7 +17,7 @@
 #include <dthememanager.h>
 #include <dwindowclosebutton.h>
 
-#include "../../model/musiclistmodel.h"
+#include "../../core/music.h"
 
 InfoDialog::InfoDialog(const MusicMeta &info, const QPixmap &coverPixmap, QWidget *parent) : DAbstractDialog(parent)
 {

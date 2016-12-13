@@ -7,15 +7,13 @@
  * (at your option) any later version.
  **/
 
-#ifndef PLAYER_H
-#define PLAYER_H
+#pragma once
 
 #include <QSharedPointer>
 #include <QMediaPlayer>
 
-#include "../model/musiclistmodel.h"
-
-class Playlist;
+#include "music.h"
+#include "playlist.h"
 
 class Player : public QMediaPlayer
 {
@@ -46,7 +44,7 @@ public:
 
     const MusicMeta playingMeta();
 
-    void setPlaylist(QSharedPointer<Playlist> playlist);
+    void setPlaylist(PlaylistPtr playlist);
     void setMode(PlayMode mode);
 
     void init() {}
@@ -56,13 +54,13 @@ public:
 signals:
     void progrossChanged(qint64 value, qint64 range);
     void modeChanged(PlayMode mode);
-    void musicPlayed(QSharedPointer<Playlist> playlist, const MusicMeta &meta);
+    void musicPlayed(PlaylistPtr playlist, const MusicMeta &meta);
 
 public slots:
-    void playMusic(QSharedPointer<Playlist> playlist, const MusicMeta &meta);
-    void resumeMusic(QSharedPointer<Playlist> playlist, const MusicMeta &meta);
-    void playNextMusic(QSharedPointer<Playlist> playlist, const MusicMeta &meta);
-    void playPrevMusic(QSharedPointer<Playlist> playlist, const MusicMeta &meta);
+    void playMusic(PlaylistPtr playlist, const MusicMeta &meta);
+    void resumeMusic(PlaylistPtr playlist, const MusicMeta &meta);
+    void playNextMusic(PlaylistPtr playlist, const MusicMeta &meta);
+    void playPrevMusic(PlaylistPtr playlist, const MusicMeta &meta);
     void changeProgress(qint64 value, qint64 range);
 
 private:
@@ -73,10 +71,8 @@ private:
 
     MusicMeta                   m_playingMeta;
     QStringList                 m_historyIDs;
-    QSharedPointer<Playlist>    m_playinglist;
+    PlaylistPtr    m_playinglist;
     QMap<QString, MusicMeta>    musicMap;
     qint64                      m_duration = -1;
     PlayMode                    m_mode;
 };
-
-#endif // PLAYER_H

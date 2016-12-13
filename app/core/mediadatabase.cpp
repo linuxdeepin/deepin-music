@@ -16,7 +16,7 @@
 #include <QDir>
 #include <QThread>
 
-#include "../model/musiclistmodel.h"
+#include "music.h"
 #include "../musicapp.h"
 
 static bool createConnection()

@@ -2,11 +2,6 @@ isEmpty(PREFIX){
     PREFIX = /usr
 }
 
-binary.path = $${PREFIX}/bin
-binary.files = deepin-music
-
-INSTALLS   += binary
-
 target.path = $${PREFIX}/bin/
 
 desktop_files.path = /usr/share/applications/

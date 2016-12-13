@@ -16,15 +16,15 @@
 
 #include <dutility.h>
 
-#include "presenter/apppresenter.h"
-#include "view/playerframe.h"
+#include "presenter/presenter.h"
+#include "view/mainwindow.h"
 
 using namespace Dtk::Widget;
 
 class MusicAppPrivate
 {
 public:
-    AppPresenter    *appPresenter   = nullptr;
+    Presenter    *appPresenter   = nullptr;
     PlayerFrame     *playerFrame    = nullptr;
 };
 
@@ -53,13 +53,13 @@ QString MusicApp::cachePath()
 
 void MusicApp::init()
 {
-    d->appPresenter = new AppPresenter;
+    d->appPresenter = new Presenter;
     d->playerFrame = new PlayerFrame;
 
     auto presenterWork = new QThread;
     d->appPresenter->moveToThread(presenterWork);
-    connect(presenterWork, &QThread::started, d->appPresenter, &AppPresenter::prepareData);
-    connect(d->appPresenter, &AppPresenter::dataPrepared, this, &MusicApp::onDataPrepared);
+    connect(presenterWork, &QThread::started, d->appPresenter, &Presenter::prepareData);
+    connect(d->appPresenter, &Presenter::dataPrepared, this, &MusicApp::onDataPrepared);
 
     presenterWork->start();
 }

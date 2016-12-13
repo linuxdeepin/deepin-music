@@ -3,8 +3,7 @@ DEFINES += QT_MESSAGELOGCONTEXT
 QT       += core gui widgets svg dbus multimedia multimediawidgets xml network sql
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-include($$PWD/../vendor/src/chinese2pinyin/chinese2pinyin.pri)
-include($$PWD/../vendor/src/libcue/libcue.pri)
+include($$PWD/build.pri)
 
 TEMPLATE    = app
 TARGET      = deepin-music
@@ -56,14 +55,12 @@ win32{
 
 SOURCES += \
     main.cpp \
-    view/playerframe.cpp \
     view/titlebar.cpp \
     view/footer.cpp \
     view/musiclistview.cpp \
     view/importwidget.cpp \
     view/lyricview.cpp \
     view/playlistitem.cpp \
-    presenter/apppresenter.cpp \
     musicapp.cpp \
     view/musiclistwidget.cpp \
     core/playlistmanager.cpp \
@@ -95,22 +92,20 @@ SOURCES += \
     core/util/icu.cpp \
 #    core/util/filesystemwatcher.cpp \
     core/util/inotifyengine.cpp \
-    view/widget/hoverfilter.cpp
+    view/widget/hoverfilter.cpp \
+    presenter/resenter.cpp \
+    view/mainwindow.cpp
 
 HEADERS += \
-    view/playerframe.h \
     view/titlebar.h \
     view/footer.h \
     view/musiclistview.h \
     view/importwidget.h \
     view/lyricview.h \
     view/playlistitem.h \
-    presenter/apppresenter.h \
     musicapp.h \
     view/musiclistwidget.h \
-    model/musiclistmodel.h \
     core/playlistmanager.h \
-    core/playlist.h \
     view/playlistview.h \
     view/playlistwidget.h \
     core/mediafilemonitor.h \
@@ -138,7 +133,11 @@ HEADERS += \
     core/util/icu.h \
 #    core/util/filesystemwatcher.h \
     core/util/inotifyengine.h \
-    view/widget/hoverfilter.h
+    view/widget/hoverfilter.h \
+    core/music.h \
+    core/playlist.h \
+    presenter/presenter.h \
+    view/mainwindow.h
 
 RESOURCES += \
     resource/theme/theme.qrc \

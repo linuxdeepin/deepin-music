@@ -201,7 +201,7 @@ void LyricView::setLyricLines(QString str)
     adjustLyric();
 }
 
-void LyricView::onMusicPlayed(QSharedPointer<Playlist> playlist, const MusicMeta &meta)
+void LyricView::onMusicPlayed(PlaylistPtr playlist, const MusicMeta &meta)
 {
     Q_UNUSED(playlist);
     d->m_playingMusic = meta;

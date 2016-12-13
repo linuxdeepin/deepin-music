@@ -20,7 +20,7 @@ const MusicMeta Player::playingMeta()
     return m_playingMeta;
 }
 
-void Player::setPlaylist(QSharedPointer<Playlist> playlist)
+void Player::setPlaylist(PlaylistPtr playlist)
 {
 }
 
@@ -29,7 +29,7 @@ void Player::setMode(Player::PlayMode mode)
     m_mode = mode;
 }
 
-void Player::playMusic(QSharedPointer<Playlist> playlist, const MusicMeta &info)
+void Player::playMusic(PlaylistPtr playlist, const MusicMeta &info)
 {
     MusicMeta nextInfo = info;
 
@@ -54,7 +54,7 @@ void Player::playMusic(QSharedPointer<Playlist> playlist, const MusicMeta &info)
     emit musicPlayed(playlist, nextInfo);
 }
 
-void Player::resumeMusic(QSharedPointer<Playlist> playlist, const MusicMeta &meta)
+void Player::resumeMusic(PlaylistPtr playlist, const MusicMeta &meta)
 {
     Q_ASSERT(playlist == m_playinglist);
     Q_ASSERT(meta.hash == m_playingMeta.hash);
@@ -64,7 +64,7 @@ void Player::resumeMusic(QSharedPointer<Playlist> playlist, const MusicMeta &met
     });
 }
 
-void Player::playNextMusic(QSharedPointer<Playlist> playlist, const MusicMeta &info)
+void Player::playNextMusic(PlaylistPtr playlist, const MusicMeta &info)
 {
     Q_ASSERT(playlist == m_playinglist);
 
@@ -75,7 +75,7 @@ void Player::playNextMusic(QSharedPointer<Playlist> playlist, const MusicMeta &i
     }
 }
 
-void Player::playPrevMusic(QSharedPointer<Playlist> playlist, const MusicMeta &info)
+void Player::playPrevMusic(PlaylistPtr playlist, const MusicMeta &info)
 {
     Q_ASSERT(playlist == m_playinglist);
 

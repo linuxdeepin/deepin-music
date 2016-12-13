@@ -21,8 +21,8 @@ class PlaylistManager : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(QSharedPointer<Playlist> playingPlaylist READ playingPlaylist WRITE setPlayingPlaylist NOTIFY playingPlaylistChanged)
-    Q_PROPERTY(QSharedPointer<Playlist> selectedPlaylist READ selectedPlaylist WRITE setSelectedPlaylist NOTIFY selectedPlaylistChanged)
+    Q_PROPERTY(PlaylistPtr playingPlaylist READ playingPlaylist WRITE setPlayingPlaylist NOTIFY playingPlaylistChanged)
+    Q_PROPERTY(PlaylistPtr selectedPlaylist READ selectedPlaylist WRITE setSelectedPlaylist NOTIFY selectedPlaylistChanged)
 public:
     explicit PlaylistManager(QObject *parent = 0);
     ~PlaylistManager();
@@ -30,39 +30,39 @@ public:
     QString newID();
     QString newDisplayName();
 
-    QList<QSharedPointer<Playlist> > allplaylist();
-    QSharedPointer<Playlist> playlist(const QString &id);
-    QSharedPointer<Playlist> playingPlaylist() const;
-    QSharedPointer<Playlist> selectedPlaylist() const;
+    QList<PlaylistPtr > allplaylist();
+    PlaylistPtr playlist(const QString &id);
+    PlaylistPtr playingPlaylist() const;
+    PlaylistPtr selectedPlaylist() const;
 
-    QSharedPointer<Playlist> addPlaylist(const PlaylistMeta &listinfo);
+    PlaylistPtr addPlaylist(const PlaylistMeta &listinfo);
 
     void load();
     void sync();
 
 signals:
-    void playingPlaylistChanged(QSharedPointer<Playlist> playingPlaylist);
-    void selectedPlaylistChanged(QSharedPointer<Playlist> selectedPlaylist);
-    void musicAdded(QSharedPointer<Playlist> playlist, const MusicMeta &info);
-    void musiclistAdded(QSharedPointer<Playlist> playlist, const MusicMetaList &metalist);
-    void musicRemoved(QSharedPointer<Playlist> playlist, const MusicMeta &info);
+    void playingPlaylistChanged(PlaylistPtr playingPlaylist);
+    void selectedPlaylistChanged(PlaylistPtr selectedPlaylist);
+    void musicAdded(PlaylistPtr playlist, const MusicMeta &info);
+    void musiclistAdded(PlaylistPtr playlist, const MusicMetaList &metalist);
+    void musicRemoved(PlaylistPtr playlist, const MusicMeta &info);
 
 public slots:
-    void setPlayingPlaylist(QSharedPointer<Playlist> playingPlaylist);
-    void setSelectedPlaylist(QSharedPointer<Playlist> selectedPlaylist);
+    void setPlayingPlaylist(PlaylistPtr playingPlaylist);
+    void setSelectedPlaylist(PlaylistPtr selectedPlaylist);
 
 private:
     QString getPlaylistPath(const QString &id);
-    void insertPlaylist(const QString &id, QSharedPointer<Playlist>);
+    void insertPlaylist(const QString &id, PlaylistPtr);
 
     QSettings                                   settings;
-    QSharedPointer<Playlist>                    m_playingPlaylist;
-    QSharedPointer<Playlist>                    m_selectedPlaylist;
+    PlaylistPtr                    m_playingPlaylist;
+    PlaylistPtr                    m_selectedPlaylist;
     QStringList                                 sortPlaylists;
-    QMap<QString, QSharedPointer<Playlist>>     playlists;
+    QMap<QString, PlaylistPtr>     playlists;
 };
 
-Q_DECLARE_METATYPE(QSharedPointer<Playlist>);
-Q_DECLARE_METATYPE(QList<QSharedPointer<Playlist> >);
+Q_DECLARE_METATYPE(PlaylistPtr);
+Q_DECLARE_METATYPE(QList<PlaylistPtr >);
 
 #endif // PLAYLISTMANAGER_H

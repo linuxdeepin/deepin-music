@@ -13,7 +13,7 @@
 #include <QObject>
 #include <QScopedPointer>
 
-#include "presenter/apppresenter.h"
+#include "presenter/presenter.h"
 
 class MusicAppPrivate;
 

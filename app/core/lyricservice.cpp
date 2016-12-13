@@ -21,7 +21,7 @@
 #include <QDir>
 #include <QFileInfo>
 
-#include "../model/musiclistmodel.h"
+#include "music.h"
 #include "../musicapp.h"
 
 static QString cacheLyricPath(const MusicMeta &info)

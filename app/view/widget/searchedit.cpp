@@ -14,7 +14,7 @@
 #include "searchresult.h"
 
 #include "../../core/mediadatabase.h"
-#include "../../model/musiclistmodel.h"
+#include "../../core/music.h"
 
 SearchEdit::SearchEdit(QWidget *parent) : DSearchEdit(parent)
 {

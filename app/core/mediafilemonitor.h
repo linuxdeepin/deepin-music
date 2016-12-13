@@ -26,10 +26,10 @@ public:
 
 signals:
     void fileRemoved(const QString &filepath);
-    void meidaFileImported(QSharedPointer<Playlist> playlist, MusicMetaList metalist);
+    void meidaFileImported(PlaylistPtr playlist, MusicMetaList metalist);
 
 public slots:
-    void importPlaylistFiles(QSharedPointer<Playlist> playlist, const QStringList &filelist);
+    void importPlaylistFiles(PlaylistPtr playlist, const QStringList &filelist);
     void startMonitor();
 
 private:

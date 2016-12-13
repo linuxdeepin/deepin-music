@@ -25,7 +25,7 @@
 
 DWIDGET_USE_NAMESPACE
 
-PlayListItem::PlayListItem(QSharedPointer<Playlist> playlist, QWidget *parent) : QFrame(parent)
+PlayListItem::PlayListItem(PlaylistPtr playlist, QWidget *parent) : QFrame(parent)
 {
     m_data = playlist;
     Q_ASSERT(playlist);

@@ -9,9 +9,22 @@
 
 #include "pushbutton.h"
 
+#include <QDebug>
+
 PushButton::PushButton(QWidget *parent) : QPushButton(parent)
 {
 
+}
+
+void PushButton::mousePressEvent(QMouseEvent *event)
+{
+    qDebug() << event;
+    QPushButton::mousePressEvent(event);
+}
+
+void PushButton::mouseMoveEvent(QMouseEvent *e)
+{
+//    qDebug() << e;
 }
 
 void PushButton::enterEvent(QEvent *event)

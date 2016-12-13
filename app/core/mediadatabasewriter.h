@@ -12,7 +12,8 @@
 
 #include <QObject>
 
-#include "../model/musiclistmodel.h"
+#include "music.h"
+#include "playlist.h"
 
 class MediaDatabaseWriter : public QObject
 {

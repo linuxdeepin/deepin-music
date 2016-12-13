@@ -12,27 +12,28 @@
 
 #include <QFrame>
 
-class Playlist;
+#include "../core/playlist.h"
+
 class QLineEdit;
 class PlayListItem : public QFrame
 {
     Q_OBJECT
 public:
-    explicit PlayListItem(QSharedPointer<Playlist> playlist, QWidget *parent = 0);
-    inline QSharedPointer<Playlist> data() {return m_data;}
+    explicit PlayListItem(PlaylistPtr playlist, QWidget *parent = 0);
+    inline PlaylistPtr data() {return m_data;}
 
     void mouseDoubleClickEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
 signals:
     void rename(const QString &newNameA);
     void remove();
-    void playall(QSharedPointer<Playlist> playlist);
+    void playall(PlaylistPtr playlist);
 
 public slots:
     void showContextMenu(const QPoint &pos);
 
 private:
     QLineEdit                   *m_titleedit = nullptr;
-    QSharedPointer<Playlist>    m_data;
+    PlaylistPtr    m_data;
 };
 
 #endif // PLAYLISTITEM_H

@@ -12,7 +12,7 @@
 
 #include <QObject>
 
-#include "../../model/musiclistmodel.h"
+#include "../music.h"
 
 struct WordElement {
     // Sustain time.

@@ -79,7 +79,7 @@ MediaFileMonitor::MediaFileMonitor(QObject *parent) : QObject(parent)
     }
 }
 
-void MediaFileMonitor::importPlaylistFiles(QSharedPointer<Playlist> playlist, const QStringList &filelist)
+void MediaFileMonitor::importPlaylistFiles(PlaylistPtr playlist, const QStringList &filelist)
 {
     QStringList urllist;
 

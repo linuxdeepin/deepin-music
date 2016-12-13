@@ -12,7 +12,8 @@
 
 #include <QTableView>
 
-#include "../model/musiclistmodel.h"
+#include "../core/music.h"
+#include "../core/playlist.h"
 
 class Playlist;
 class QStandardItemModel;
@@ -37,7 +38,7 @@ public:
 
 signals:
     void play(const MusicMeta &meta);
-    void addToPlaylist(QSharedPointer<Playlist> playlist, const MusicMetaList metalist);
+    void addToPlaylist(PlaylistPtr playlist, const MusicMetaList metalist);
     void removeMusicList(const MusicMetaList &metalist);
     void deleteMusicList(const MusicMetaList &metalist);
     void requestCustomContextMenu(const QPoint &pos);
@@ -46,9 +47,9 @@ signals:
 
 public slots:
     void showContextMenu(const QPoint &pos,
-                         QSharedPointer<Playlist> selectedlist,
-                         QSharedPointer<Playlist> favlist,
-                         QList<QSharedPointer<Playlist> >newlist);
+                         PlaylistPtr selectedlist,
+                         PlaylistPtr favlist,
+                         QList<PlaylistPtr >newlist);
 
     void setHeaderColor(QColor headerColor)
     {

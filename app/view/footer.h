@@ -29,16 +29,16 @@ public:
     void enableControl(bool enable = true);
 
 signals:
-    void initFooter(QSharedPointer<Playlist> current, int mode);
+    void initFooter(PlaylistPtr current, int mode);
 
     void changeProgress(qint64 value, qint64 duration);
 
-    void play(QSharedPointer<Playlist> playlist, const MusicMeta &meta);
-    void resume(QSharedPointer<Playlist> playlist, const MusicMeta &meta);
-    void pause(QSharedPointer<Playlist> playlist, const MusicMeta &meta);
-    void next(QSharedPointer<Playlist> playlist, const MusicMeta &meta);
-    void prev(QSharedPointer<Playlist> playlist, const MusicMeta &meta);
-    void locate(QSharedPointer<Playlist> playlist, const MusicMeta &meta);
+    void play(PlaylistPtr playlist, const MusicMeta &meta);
+    void resume(PlaylistPtr playlist, const MusicMeta &meta);
+    void pause(PlaylistPtr playlist, const MusicMeta &meta);
+    void next(PlaylistPtr playlist, const MusicMeta &meta);
+    void prev(PlaylistPtr playlist, const MusicMeta &meta);
+    void locate(PlaylistPtr playlist, const MusicMeta &meta);
 
     void modeChanged(int mode);
     void toggleFavourite(const MusicMeta &meta);
@@ -47,12 +47,12 @@ signals:
     void togglePlaylist();
 
 public slots:
-    void onMusicAdded(QSharedPointer<Playlist> playlist, const MusicMeta &meta);
-    void onMusicListAdded(QSharedPointer<Playlist> playlist, const MusicMetaList &metalist);
-    void onMusicRemoved(QSharedPointer<Playlist> playlist, const MusicMeta &meta);
-    void onMusicPlayed(QSharedPointer<Playlist> playlist, const MusicMeta &meta);
-    void onMusicPause(QSharedPointer<Playlist> playlist, const MusicMeta &meta);
-    void onMusicStoped(QSharedPointer<Playlist> playlist, const MusicMeta &meta);
+    void onMusicAdded(PlaylistPtr playlist, const MusicMeta &meta);
+    void onMusicListAdded(PlaylistPtr playlist, const MusicMetaList &metalist);
+    void onMusicRemoved(PlaylistPtr playlist, const MusicMeta &meta);
+    void onMusicPlayed(PlaylistPtr playlist, const MusicMeta &meta);
+    void onMusicPause(PlaylistPtr playlist, const MusicMeta &meta);
+    void onMusicStoped(PlaylistPtr playlist, const MusicMeta &meta);
     void onProgressChanged(qint64 value, qint64 duration);
     void onCoverChanged(const MusicMeta &meta, const QString &coverPath);
 

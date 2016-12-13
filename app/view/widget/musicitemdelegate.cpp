@@ -12,8 +12,7 @@
 #include <QDebug>
 #include <QPainter>
 
-#include "../../model/musiclistmodel.h"
-
+#include "../../core/music.h"
 
 static inline QColor foregroundColor(int col, const QStyleOptionViewItem &option)
 {

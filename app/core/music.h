@@ -7,8 +7,7 @@
  * (at your option) any later version.
  **/
 
-#ifndef MUSICLISTMODEL_H
-#define MUSICLISTMODEL_H
+#pragma once
 
 #include <QObject>
 #include <QString>
@@ -59,32 +58,6 @@ public:
 
 typedef QList<MusicMeta>  MusicMetaList;
 
-class PlaylistMeta
-{
-public:
-    PlaylistMeta()
-    {
-        editmode = false;
-        readonly = false;
-        hide = false;
-        sortType = 0;
-    }
-
-    QString uuid;
-    QString displayName;
-    QString url;
-    QString icon;
-
-    int     sortType;
-    bool    editmode;
-    bool    readonly;
-    bool    hide;
-    bool    unused;
-
-    QStringList                 musicIds;
-    QMap<QString, MusicMeta>    musicMap;
-};
-
 inline QString lengthString(qint64 length)
 {
     length = length / 1000;
@@ -113,6 +86,3 @@ inline QString sizeString(qint64 sizeByte)
 
 Q_DECLARE_METATYPE(MusicMeta);
 Q_DECLARE_METATYPE(MusicMetaList);
-Q_DECLARE_METATYPE(PlaylistMeta);
-
-#endif // MUSICLISTMODEL_H

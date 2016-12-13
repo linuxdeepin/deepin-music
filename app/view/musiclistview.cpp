@@ -27,7 +27,7 @@
 #include <dthememanager.h>
 
 #include "../musicapp.h"
-#include "../model/musiclistmodel.h"
+#include "../core/music.h"
 #include "../core/playlist.h"
 #include "../core/lyricservice.h"
 
@@ -115,9 +115,9 @@ void MusicListView::resizeEvent(QResizeEvent *event)
 
 
 void MusicListView::showContextMenu(const QPoint &pos,
-                                    QSharedPointer<Playlist> selectedPlaylist,
-                                    QSharedPointer<Playlist> favPlaylist,
-                                    QList<QSharedPointer<Playlist> > newPlaylists)
+                                    PlaylistPtr selectedPlaylist,
+                                    PlaylistPtr favPlaylist,
+                                    QList<PlaylistPtr > newPlaylists)
 {
     QItemSelectionModel *selection = this->selectionModel();
 
@@ -141,11 +141,11 @@ void MusicListView::showContextMenu(const QPoint &pos,
     if (hasAction) {
         playlistMenu.addSeparator();
     }
-    auto newvar = QVariant::fromValue(QSharedPointer<Playlist>());
+    auto newvar = QVariant::fromValue(PlaylistPtr());
     playlistMenu.addAction(tr("New playlist"))->setData(newvar);
 
     connect(&playlistMenu, &QMenu::triggered, this, [ = ](QAction * action) {
-        auto playlist = action->data().value<QSharedPointer<Playlist> >();
+        auto playlist = action->data().value<PlaylistPtr >();
         MusicMetaList metalist;
         for (auto &index : selection->selectedRows()) {
             auto item = this->model()->item(index.row(), index.column());

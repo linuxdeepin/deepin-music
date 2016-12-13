@@ -65,7 +65,7 @@ QString PlaylistManager::newDisplayName()
 void PlaylistManager::load()
 {
     for (auto &playlistmeta : MediaDatabase::instance()->allPlaylist()) {
-        QSharedPointer<Playlist> emptylist(new Playlist(playlistmeta));
+        PlaylistPtr emptylist(new Playlist(playlistmeta));
         emptylist->load();
         insertPlaylist(playlistmeta.uuid, emptylist);
     }
@@ -84,43 +84,43 @@ void PlaylistManager::sync()
     settings.sync();
 }
 
-QList<QSharedPointer<Playlist> > PlaylistManager::allplaylist()
+QList<PlaylistPtr > PlaylistManager::allplaylist()
 {
-    QList<QSharedPointer<Playlist> >  list;
+    QList<PlaylistPtr >  list;
     for (auto &playlist : sortPlaylists) {
         list << playlists.value(playlist);
     }
     return list;
 }
 
-QSharedPointer<Playlist> PlaylistManager::addPlaylist(const PlaylistMeta &listinfo)
+PlaylistPtr PlaylistManager::addPlaylist(const PlaylistMeta &listinfo)
 {
     PlaylistMeta saveInfo(listinfo);
     QString playlistPath = getPlaylistPath(listinfo.uuid);
     saveInfo.url = playlistPath;
-    insertPlaylist(listinfo.uuid, QSharedPointer<Playlist>(new Playlist(saveInfo)));
+    insertPlaylist(listinfo.uuid, PlaylistPtr(new Playlist(saveInfo)));
 
     MediaDatabase::addPlaylist(saveInfo);
 
     return playlists.value(listinfo.uuid);
 }
 
-QSharedPointer<Playlist> PlaylistManager::playlist(const QString &id)
+PlaylistPtr PlaylistManager::playlist(const QString &id)
 {
     return playlists.value(id);
 }
 
-QSharedPointer<Playlist> PlaylistManager::playingPlaylist() const
+PlaylistPtr PlaylistManager::playingPlaylist() const
 {
     return m_playingPlaylist;
 }
 
-QSharedPointer<Playlist> PlaylistManager::selectedPlaylist() const
+PlaylistPtr PlaylistManager::selectedPlaylist() const
 {
     return m_selectedPlaylist;
 }
 
-void PlaylistManager::setPlayingPlaylist(QSharedPointer<Playlist> currentPlaylist)
+void PlaylistManager::setPlayingPlaylist(PlaylistPtr currentPlaylist)
 {
     if (m_playingPlaylist == currentPlaylist) {
         return;
@@ -133,7 +133,7 @@ void PlaylistManager::setPlayingPlaylist(QSharedPointer<Playlist> currentPlaylis
     settings.sync();
 }
 
-void PlaylistManager::setSelectedPlaylist(QSharedPointer<Playlist> selectedPlaylist)
+void PlaylistManager::setSelectedPlaylist(PlaylistPtr selectedPlaylist)
 {
     if (m_selectedPlaylist == selectedPlaylist) {
         return;
@@ -148,7 +148,7 @@ QString PlaylistManager::getPlaylistPath(const QString &id)
     return MusicApp::configPath() + "/" + id + ".plsx";
 }
 
-void PlaylistManager::insertPlaylist(const QString &uuid, QSharedPointer<Playlist> playlist)
+void PlaylistManager::insertPlaylist(const QString &uuid, PlaylistPtr playlist)
 {
     QString deleteID = uuid;
 

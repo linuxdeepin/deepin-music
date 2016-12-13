@@ -19,13 +19,11 @@ using namespace Dtk::Widget;
 
 int main(int argc, char *argv[])
 {
+    DApplication::loadDXcbPlugin();
+
 #if defined(STATIC_LIB)
     DWIDGET_INIT_RESOURCE();
 #endif
-
-    if (DApplication::isDXcbPlatform()) {
-        DApplication::loadDXcbPlugin();
-    }
 
     DApplication app(argc, argv);
     app.setOrganizationName("deepin");
