@@ -60,7 +60,7 @@ signals:
 private:
     void addMusicInfo(MusicListView *m_musiclist, const MusicMeta &info);
 
-    PlaylistPtr    m_playlist;
+    PlaylistPtr                 m_playlist;
     QLabel                      *m_emptyHits    = nullptr;
     MusicListView               *m_musiclist    = nullptr;
     QStandardItemModel          *m_model        = nullptr;

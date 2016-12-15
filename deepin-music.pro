@@ -1,7 +1,7 @@
+TEMPLATE = subdirs
+CONFIG = ordered
 
-system($$PWD/tool/translate_generation.sh)
+include(config.pri)
 
-TEMPLATE    = subdirs
-SUBDIRS     +=  \
-                app\
-#                vendor/src/mpris
+SUBDIRS +=  app\
+            plugin \

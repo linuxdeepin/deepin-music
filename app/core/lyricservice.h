@@ -12,8 +12,12 @@
 
 #include <QObject>
 
+#include "util/singleton.h"
+
 class MusicMeta;
 class QNetworkReply;
+
+class LyricServicePrivate;
 class LyricService : public QObject
 {
     Q_OBJECT
@@ -26,9 +30,11 @@ signals:
     void coverSearchFinished(const MusicMeta &, const QString &coverPath);
 
 public slots:
-    void searchLyricCover(const MusicMeta &info);
+    void searchMeta(const MusicMeta &info);
 
 private:
+    void loadMetaSearchEnginePlugin();
+
     int searchCacheLyric(const MusicMeta &info);
     int searchCacheCover(const MusicMeta &info);
 

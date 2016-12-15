@@ -21,8 +21,13 @@
 #include <QDir>
 #include <QFileInfo>
 
+#include <metasearchengine.h>
+
 #include "music.h"
 #include "../musicapp.h"
+
+#include "playlistmanager.h"
+#include "pluginmanager.h"
 
 static QString cacheLyricPath(const MusicMeta &info)
 {
@@ -115,27 +120,42 @@ int LyricService::searchCacheCover(const MusicMeta &info)
 //! \brief LyricService::searchLyric
 //! \param info
 //!
-void LyricService::searchLyricCover(const MusicMeta &info)
+void LyricService::searchMeta(const MusicMeta &info)
 {
-    bool needlyric = false;
-    bool needCover = false;
 
-    if (0 != searchCacheLyric(info)) {
-        needlyric = true;
+    qDebug() << "requestLyricCoverSearch" << info.title;
+    auto plugins = PluginManager::instance()->getPluginListByType(DMusic::Plugin::PluginType::TypeMetaSearchEngine);
+    for (auto plugin : plugins) {
+        qDebug()  << plugin;
+        auto engine = dynamic_cast<DMusic::Plugin::MetaSearchEngine *>(plugin);
+        qDebug() << engine;
+
+        connect(engine, &DMusic::Plugin::MetaSearchEngine::coverLoaded,
+        this, [ = ](const MusicMeta & meta, const QByteArray & coverData) {
+            qDebug() << meta.title << coverData;
+            emit coverSearchFinished(meta, QString("/tmp/%1.png").arg(meta.hash));
+        });
+        engine->searchMeta(info);
     }
-    if (0 != searchCacheCover(info)) {
-        needCover = true;
-    }
-    if (!needCover && !needlyric) {
-        return;
-    }
-    if (info.artist != "Unknow Artist") {
-        if (0 != doSongArtistRequest(info, needlyric, needCover)) {
-            doSongRequest(info, needlyric, needCover);
-        }
-    } else {
-        doSongRequest(info, needlyric, needCover);
-    }
+//    bool needlyric = false;
+//    bool needCover = false;
+
+//    if (0 != searchCacheLyric(info)) {
+//        needlyric = true;
+//    }
+//    if (0 != searchCacheCover(info)) {
+//        needCover = true;
+//    }
+//    if (!needCover && !needlyric) {
+//        return;
+//    }
+//    if (info.artist != "Unknow Artist") {
+//        if (0 != doSongArtistRequest(info, needlyric, needCover)) {
+//            doSongRequest(info, needlyric, needCover);
+//        }
+//    } else {
+//        doSongRequest(info, needlyric, needCover);
+//    }
 }
 
 

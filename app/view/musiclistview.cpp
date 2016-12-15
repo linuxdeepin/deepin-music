@@ -106,7 +106,7 @@ void MusicListView::resizeEvent(QResizeEvent *event)
     auto size = event->size();
     auto scrollBarWidth = 8;
     m_scrollBar->resize(scrollBarWidth, size.height());
-    m_scrollBar->move(size.width() - scrollBarWidth - 2, 0);
+    m_scrollBar->move(size.width() - scrollBarWidth - 3, 0);
     m_scrollBar->setMaximum(verticalScrollBar()->maximum());
     m_scrollBar->setMinimum(verticalScrollBar()->minimum());
     m_scrollBar->setPageStep(verticalScrollBar()->pageStep());

@@ -12,6 +12,7 @@
 #include <DApplication>
 
 #include "core/player.h"
+#include "core/pluginmanager.h"
 #include "musicapp.h"
 
 using namespace Dtk::Util;
@@ -38,9 +39,10 @@ int main(int argc, char *argv[])
     app.setTheme("light");
     app.setWindowIcon(QIcon(":/image/deepin-music.svg"));
 
+    PluginManager::instance()->init();
+
     // For Windows, must init media player in main thread!!!
     Player::instance()->init();
     MusicApp::instance()->init();
-
     return app.exec();
 }

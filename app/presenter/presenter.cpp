@@ -19,16 +19,17 @@
 
 #include "../musicapp.h"
 #include "../core/player.h"
+#include "../core/playlist.h"
 #include "../core/playlistmanager.h"
 #include "../core/mediafilemonitor.h"
 #include "../core/lyricservice.h"
 #include "../core/mediadatabase.h"
 #include "../core/util/musicmeta.h"
 
-class AppPresenterPrivate
+class PresenterPrivate
 {
 public:
-    AppPresenterPrivate()
+    PresenterPrivate()
         : settings(MusicApp::configPath() + "/Config.ini", QSettings::IniFormat)
     {
 
@@ -41,7 +42,7 @@ public:
 };
 
 Presenter::Presenter(QObject *parent)
-    : QObject(parent), d(new AppPresenterPrivate)
+    : QObject(parent), d(new PresenterPrivate)
 {
     qRegisterMetaType<PlaylistMeta>();
     qRegisterMetaType<MusicMetaList>();
@@ -66,7 +67,7 @@ void Presenter::prepareData()
     work->start();
 
     connect(this, &Presenter::requestLyricCoverSearch,
-            d->lyricService, &LyricService::searchLyricCover);
+            d->lyricService, &LyricService::searchMeta);
     connect(d->lyricService, &LyricService::lyricSearchFinished,
             this, &Presenter::lyricSearchFinished);
     connect(d->lyricService, &LyricService::coverSearchFinished,
@@ -163,6 +164,7 @@ void Presenter::prepareData()
         MusicMeta favInfo(info);
         favInfo.favourite = d->playlistMgr->playlist(FavMusicListID)->contains(info);
         emit this->musicPlayed(playlist, favInfo);
+        qDebug() << "requestLyricCoverSearch" << info.title;
         emit this->requestLyricCoverSearch(info);
     });
 

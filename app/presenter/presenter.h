@@ -18,7 +18,7 @@
 
 class Playlist;
 
-class AppPresenterPrivate;
+class PresenterPrivate;
 class Presenter : public QObject
 {
     Q_OBJECT
@@ -126,7 +126,7 @@ signals:
     void requestLyricCoverSearch(const MusicMeta &);
 
 private:
-    QScopedPointer<AppPresenterPrivate> d;
+    QScopedPointer<PresenterPrivate> d;
 };
 
 #endif // APPPRESENTER_H

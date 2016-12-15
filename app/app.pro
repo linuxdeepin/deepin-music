@@ -1,13 +1,14 @@
-DEFINES += QT_MESSAGELOGCONTEXT
+include($$PWD/../config.pri)
+include($$PWD/build.pri)
+include($$PWD/../interface/interface.pri)
 
 QT       += core gui widgets svg dbus multimedia multimediawidgets xml network sql
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-include($$PWD/build.pri)
-
 TEMPLATE    = app
-TARGET      = deepin-music
+TARGET      = $$APP_TARGET
 CONFIG      += c++11 link_pkgconfig
+DESTDIR     = $$BUILD_DIST/bin
 
 unix{
     PKGCONFIG += dtkbase dtkutil dtkwidget taglib icu-uc icu-i18n
@@ -92,9 +93,10 @@ SOURCES += \
 #    core/util/filesystemwatcher.cpp \
     core/util/inotifyengine.cpp \
     view/widget/hoverfilter.cpp \
-    presenter/resenter.cpp \
     view/mainwindow.cpp \
-    view/viewpresenter.cpp
+    view/viewpresenter.cpp \
+    presenter/presenter.cpp \
+    core/pluginmanager.cpp
 
 HEADERS += \
     view/titlebar.h \
@@ -137,14 +139,17 @@ HEADERS += \
     core/playlist.h \
     presenter/presenter.h \
     view/mainwindow.h \
-    view/viewpresenter.h
+    view/viewpresenter.h \
+    core/pluginmanager.h \
+    core/util/singleton.h \
+    core/util/thearpool.h
 
 RESOURCES += \
     resource/theme/theme.qrc \
     resource/resource.qrc
 
 # Automating generation .qm files from .ts files
-system($$PWD/translate_generation.sh)
+system($$PWD/../tool/translate_generation.sh)
 
 TRANSLATIONS += $$PWD/translations/$${TARGET}.ts \
                 $$PWD/translations/$${TARGET}_zh_CN.ts

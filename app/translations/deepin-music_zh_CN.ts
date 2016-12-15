@@ -78,58 +78,58 @@
 <context>
     <name>MusicListView</name>
     <message>
-        <location filename="../view/musiclistview.cpp" line="116"/>
+        <location filename="../view/musiclistview.cpp" line="144"/>
         <source>New playlist</source>
         <translation>新建歌单</translation>
     </message>
     <message>
-        <location filename="../view/musiclistview.cpp" line="135"/>
-        <location filename="../view/musiclistview.cpp" line="152"/>
+        <location filename="../view/musiclistview.cpp" line="163"/>
+        <location filename="../view/musiclistview.cpp" line="180"/>
         <source>Play</source>
         <translation>播放</translation>
     </message>
     <message>
-        <location filename="../view/musiclistview.cpp" line="137"/>
+        <location filename="../view/musiclistview.cpp" line="165"/>
         <source>Add to playlist</source>
         <translation>添加到歌单</translation>
     </message>
     <message>
-        <location filename="../view/musiclistview.cpp" line="141"/>
-        <location filename="../view/musiclistview.cpp" line="159"/>
+        <location filename="../view/musiclistview.cpp" line="169"/>
+        <location filename="../view/musiclistview.cpp" line="187"/>
         <source>Display in file manager</source>
         <translation>在文件管理器中显示</translation>
     </message>
     <message>
-        <location filename="../view/musiclistview.cpp" line="143"/>
-        <location filename="../view/musiclistview.cpp" line="174"/>
+        <location filename="../view/musiclistview.cpp" line="171"/>
+        <location filename="../view/musiclistview.cpp" line="202"/>
         <source>Remove from list</source>
         <translation>从列表中删除</translation>
     </message>
     <message>
-        <location filename="../view/musiclistview.cpp" line="144"/>
-        <location filename="../view/musiclistview.cpp" line="184"/>
-        <location filename="../view/musiclistview.cpp" line="194"/>
+        <location filename="../view/musiclistview.cpp" line="172"/>
+        <location filename="../view/musiclistview.cpp" line="212"/>
+        <location filename="../view/musiclistview.cpp" line="222"/>
         <source>Delete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/musiclistview.cpp" line="148"/>
-        <location filename="../view/musiclistview.cpp" line="219"/>
+        <location filename="../view/musiclistview.cpp" line="176"/>
+        <location filename="../view/musiclistview.cpp" line="247"/>
         <source>Song info</source>
         <translation>歌曲信息</translation>
     </message>
     <message>
-        <location filename="../view/musiclistview.cpp" line="194"/>
+        <location filename="../view/musiclistview.cpp" line="222"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/musiclistview.cpp" line="204"/>
+        <location filename="../view/musiclistview.cpp" line="232"/>
         <source>Are you sure to delete %1?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/musiclistview.cpp" line="207"/>
+        <location filename="../view/musiclistview.cpp" line="235"/>
         <source>TODO: Are you sure to delete %1 songs?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -180,29 +180,29 @@
 <context>
     <name>PlayListItem</name>
     <message>
-        <location filename="../view/playlistitem.cpp" line="144"/>
+        <location filename="../view/playlistitem.cpp" line="143"/>
         <source>Play</source>
         <translation type="unfinished">播放</translation>
     </message>
     <message>
-        <location filename="../view/playlistitem.cpp" line="148"/>
+        <location filename="../view/playlistitem.cpp" line="147"/>
         <source>Rename</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/playlistitem.cpp" line="149"/>
-        <location filename="../view/playlistitem.cpp" line="172"/>
+        <location filename="../view/playlistitem.cpp" line="148"/>
+        <location filename="../view/playlistitem.cpp" line="171"/>
         <source>Delete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/playlistitem.cpp" line="166"/>
+        <location filename="../view/playlistitem.cpp" line="165"/>
         <source>
 Are you sure to delete &quot;%1&quot;?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/playlistitem.cpp" line="172"/>
+        <location filename="../view/playlistitem.cpp" line="171"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
@@ -210,47 +210,47 @@ Are you sure to delete &quot;%1&quot;?</source>
 <context>
     <name>PlayerFrame</name>
     <message>
-        <location filename="../view/playerframe.cpp" line="498"/>
+        <location filename="../view/mainwindow.cpp" line="508"/>
         <source>New songlist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/playerframe.cpp" line="506"/>
+        <location filename="../view/mainwindow.cpp" line="516"/>
         <source>Add music</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/playerframe.cpp" line="521"/>
+        <location filename="../view/mainwindow.cpp" line="531"/>
         <source>Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/playerframe.cpp" line="526"/>
+        <location filename="../view/mainwindow.cpp" line="536"/>
         <source>Deep color mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/playerframe.cpp" line="531"/>
+        <location filename="../view/mainwindow.cpp" line="541"/>
         <source>About</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/playerframe.cpp" line="533"/>
+        <location filename="../view/mainwindow.cpp" line="543"/>
         <source>Deepin Music Player is a beautiful design and simple function local music player. It supports viewing lyrics when playing, playing lossless music and creating customizable songlist, etc.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/playerframe.cpp" line="543"/>
+        <location filename="../view/mainwindow.cpp" line="553"/>
         <source>Version: 3.0</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/playerframe.cpp" line="549"/>
+        <location filename="../view/mainwindow.cpp" line="559"/>
         <source>Help</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/playerframe.cpp" line="565"/>
+        <location filename="../view/mainwindow.cpp" line="575"/>
         <source>Exit</source>
         <translation type="unfinished"></translation>
     </message>
@@ -274,8 +274,8 @@ Are you sure to delete &quot;%1&quot;?</source>
 <context>
     <name>SearchResult</name>
     <message>
-        <location filename="../view/widget/searchresult.cpp" line="43"/>
-        <location filename="../view/widget/searchresult.cpp" line="99"/>
+        <location filename="../view/widget/searchresult.cpp" line="44"/>
+        <location filename="../view/widget/searchresult.cpp" line="100"/>
         <source>Search &quot;%1&quot; in Deepin Music</source>
         <translation>在深度音乐中搜索“%1”</translation>
     </message>
@@ -283,9 +283,8 @@ Are you sure to delete &quot;%1&quot;?</source>
 <context>
     <name>TitleBar</name>
     <message>
-        <location filename="../view/titlebar.cpp" line="37"/>
         <source>Search</source>
-        <translation>搜索</translation>
+        <translation type="vanished">搜索</translation>
     </message>
 </context>
 </TS>
