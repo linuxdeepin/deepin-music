@@ -1,21 +1,20 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2016-12-15T14:39:39
+# Project created by QtCreator 2016-12-16T10:38:25
 #
 #-------------------------------------------------
 
-include($$PWD/../../config.pri)
-include($$PWD/../../interface/interface.pri)
+include($$PWD/../config.pri)
 
 QT       += network
+
 QT       -= gui
 
-TARGET      = netease-meta-search
+TARGET      = dmusic
 TEMPLATE    = lib
-CONFIG      += c++11 link_pkgconfig
-DESTDIR     = $$BUILD_DIST/lib/$$APP_TARGET/plugins
+DESTDIR     = $$BUILD_DIST/lib/
 
-DEFINES += NETEASEMETASEARCH_LIBRARY
+DEFINES += LIBDMUSIC_LIBRARY
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked as deprecated (the exact warnings
@@ -26,21 +25,16 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also make your code fail to compile if you use deprecated APIs.
 # In order to do so, uncomment the following line.
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
-DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
+#DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-SOURCES += neteasemetasearch.cpp
+SOURCES += \
+    geese.cpp
 
-HEADERS += neteasemetasearch.h \
-    neteasemetasearch_global.h
+HEADERS +=\
+        libdmusic_global.h \
+        geese.h
 
 unix {
     target.path = /usr/lib
     INSTALLS += target
 }
-
-DISTFILES += \
-    NeteaseMetaSearchEngine.json
-
-LIBS += -L$$BUILD_DIST/lib/ -ldmusic
-INCLUDEPATH += $$PWD/../../libdmusic
-DEPENDPATH += $$PWD/../../libdmusic

@@ -9,9 +9,11 @@
 
 #pragma once
 
-#include "netease-meta-search_global.h"
+#include "neteasemetasearch_global.h"
 
 #include <metasearchengine.h>
+
+#include <geese.h>
 
 class NETEASEMETASEARCHSHARED_EXPORT NeteaseMetaSearchEngine:
     public DMusic::Plugin::MetaSearchEngine
@@ -26,5 +28,8 @@ public:
     virtual DMusic::Plugin::PluginType pluginType() const;
     virtual QString pluginId() const;
     virtual void searchMeta(const MusicMeta &meta);
+
+private:
+    DMusic::Net::Geese       *m_geese = nullptr;
 };
 

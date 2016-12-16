@@ -17,17 +17,18 @@
 class MusicMeta;
 class QNetworkReply;
 
-class LyricServicePrivate;
-class LyricService : public QObject
+class LyricService : public QObject, public Singleton<LyricService>
 {
     Q_OBJECT
+
+    friend class Singleton<LyricService>;
 public:
     explicit LyricService(QObject *parent = 0);
 
     static QString coverPath(const MusicMeta &info);
 signals:
     void lyricSearchFinished(const MusicMeta &, const QString &lyricPath);
-    void coverSearchFinished(const MusicMeta &, const QString &coverPath);
+    void coverSearchFinished(const MusicMeta &, const QByteArray &coverData);
 
 public slots:
     void searchMeta(const MusicMeta &info);

@@ -73,7 +73,7 @@ signals:
 
     //! from lyricservice
     void lyricSearchFinished(const MusicMeta &, const QString &lyricPath);
-    void coverSearchFinished(const MusicMeta &, const QString &coverPath);
+    void coverSearchFinished(const MusicMeta &, const QByteArray &coverData);
 
     //! meta info
     void metaInfoClean();

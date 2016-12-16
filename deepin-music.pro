@@ -3,5 +3,6 @@ CONFIG = ordered
 
 include(config.pri)
 
-SUBDIRS +=  app\
+SUBDIRS +=  libdmusic \
+            music-player \
             plugin \

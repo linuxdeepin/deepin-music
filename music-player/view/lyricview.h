@@ -36,7 +36,7 @@ public slots:
     void onMusicPlayed(PlaylistPtr playlist, const MusicMeta &meta);
     void onProgressChanged(qint64 value, qint64 length);
     void onLyricChanged(const MusicMeta &meta, const QString &lyricPath);
-    void onCoverChanged(const MusicMeta &meta, const QString &coverPath);
+    void onCoverChanged(const MusicMeta &meta, const QByteArray &coverData);
 
 private:
     void initConnection();

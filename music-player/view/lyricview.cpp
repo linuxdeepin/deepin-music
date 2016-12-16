@@ -254,15 +254,18 @@ void LyricView::onLyricChanged(const MusicMeta &meta, const QString &lyricPath)
     setLyricLines(lyricStr);
 }
 
-void LyricView::onCoverChanged(const MusicMeta &meta, const QString &coverPath)
+void LyricView::onCoverChanged(const MusicMeta &meta, const QByteArray &coverData)
 {
+    qDebug() << d->m_playingMusic.hash << meta.hash;
+    static QPixmap defaultCover(":/image/cover_max.png");
     if (d->m_playingMusic.hash != meta.hash) {
         return;
     }
 
-    auto path = coverPath.isEmpty() ? ":/image/cover_max.png" : coverPath;
+    QPixmap coverPixmap = coverData.isNull() ?
+                          defaultCover : QPixmap::fromImage(QImage::fromData(coverData));
 
-    d->m_cover->setBackgroundUrl(path);
+    d->m_cover->setBackgroundImage(coverPixmap);
     d->m_cover->repaint();
 }
 

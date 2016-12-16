@@ -18,7 +18,6 @@ class Cover : public QWidget
     Q_PROPERTY(int radius READ radius WRITE setRadius NOTIFY radiusChanged)
     Q_PROPERTY(QColor borderColor READ borderColor WRITE setBorderColor NOTIFY borderColorChanged)
     Q_PROPERTY(QColor shadowColor READ shadowColor WRITE setShadowColor NOTIFY shadowColorChanged)
-    Q_PROPERTY(QString backgroundUrl READ backgroundUrl WRITE setBackgroundUrl NOTIFY backgroundUrlChanged)
 
 public:
     explicit Cover(QWidget *parent = 0);
@@ -29,10 +28,7 @@ public:
     {
         return m_borderColor;
     }
-    QString backgroundUrl() const
-    {
-        return m_backgroundUrl;
-    }
+
     int radius() const
     {
         return m_radius;
@@ -45,7 +41,6 @@ public:
 
 signals:
     void borderColorChanged(QColor borderColor);
-    void backgroundUrlChanged(QString backgroundUrl);
     void radiusChanged(int radius);
     void shadowColorChanged(QColor shadowColor);
 
@@ -59,16 +54,9 @@ public slots:
         m_borderColor = borderColor;
         emit borderColorChanged(borderColor);
     }
-    void setBackgroundUrl(QString backgroundUrl)
-    {
-        if (m_backgroundUrl == backgroundUrl) {
-            return;
-        }
 
-        m_backgroundUrl = backgroundUrl;
-        setBackgroundImage(QPixmap(backgroundUrl));
-        emit backgroundUrlChanged(backgroundUrl);
-    }
+    void setBackgroundImage(const QPixmap &backgroundPixmap);
+
     void setRadius(int radius)
     {
         if (m_radius == radius) {
@@ -88,7 +76,6 @@ public slots:
     }
 
 private:
-    void setBackgroundImage(const QPixmap &backgroundPixmap);
 
     int     m_radius;
     QColor  m_borderColor;

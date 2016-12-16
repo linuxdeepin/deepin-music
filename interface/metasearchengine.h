@@ -20,6 +20,7 @@ signals:
     void lyricLoaded(const MusicMeta &meta, const QByteArray &lyricData);
     void coverLoaded(const MusicMeta &meta, const QByteArray &coverData);
     void searchFinished(const MusicMeta &meta);
+    void doSearchMeta(const MusicMeta &info);
 
 public:
     virtual void searchMeta(const MusicMeta &info) = 0;

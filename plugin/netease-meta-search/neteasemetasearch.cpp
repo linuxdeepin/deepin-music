@@ -19,7 +19,7 @@
 #include <QJsonObject>
 #include <QFile>
 
-#include "../../app/core/music.h"
+#include "../../music-player/core/music.h"
 
 using namespace DMusic::Plugin;
 
@@ -42,6 +42,8 @@ struct NeteaseSong {
     QList<NeteaseArtist>    artists;
 };
 
+#include <QMimeDatabase>
+
 static int doSyncGet(const QString &rootUrl, QByteArray &result)
 {
     QNetworkRequest url;
@@ -60,7 +62,6 @@ static int doSyncGet(const QString &rootUrl, QByteArray &result)
         qWarning() << "get" << url.url() << reply->errorString();
         return errorCode;
     }
-
     result = reply->readAll();
 
     return errorCode;
@@ -99,7 +100,7 @@ static int doNeteaseSyncPost(const QString &rootUrl, const QByteArray &encodeDat
     return errorCode;
 }
 
-int downloadUrl(const QString &rootUrl, const QString &filepath)
+int downloadFile(const QString &rootUrl, const QString &filepath)
 {
     QByteArray result;
     auto ret = doSyncGet(rootUrl, result);
@@ -164,6 +165,13 @@ static QList<NeteaseSong> syncNeteaseSearch(const QString &title)
 
 NeteaseMetaSearchEngine::NeteaseMetaSearchEngine(QObject *parent): MetaSearchEngine(parent)
 {
+    m_geese = new DMusic::Net::Geese(this);
+    m_geese->setRawHeader("Content-Type", "application/x-www-form-urlencoded");
+    m_geese->setRawHeader("Cookie", "appver=1.5.0.75771;");
+    m_geese->setRawHeader("Referer", "http://music.163.com/");
+
+    connect(this, &NeteaseMetaSearchEngine::doSearchMeta,
+            this, &NeteaseMetaSearchEngine::searchMeta);
 }
 
 QString NeteaseMetaSearchEngine::pluginId() const
@@ -173,19 +181,65 @@ QString NeteaseMetaSearchEngine::pluginId() const
 
 DMusic::Plugin::PluginType NeteaseMetaSearchEngine::pluginType() const
 {
-    qDebug() << int(DMusic::Plugin::PluginType::TypeMetaSearchEngine);
     return DMusic::Plugin::PluginType::TypeMetaSearchEngine;
 }
 
 void NeteaseMetaSearchEngine::searchMeta(const MusicMeta &meta)
 {
-    auto list = syncNeteaseSearch(meta.title);
-    if (!list.isEmpty()) {
-        auto song = list.first();
-        qDebug() << "call downloadUrl " << song.album.coverUrl;
-        downloadUrl(song.album.coverUrl,  QString("/tmp/%1.png").arg(meta.hash));
-        emit coverLoaded(meta, QString("/tmp/%1.png").arg(meta.hash).toUtf8());
-    }
+    QString queryUrl = QLatin1String("http://music.163.com/api/search/pc");
+    QString queryTemplate = QLatin1String("s=%1&offset=0&limit=1&type=1");
+    QUrl params = QUrl(queryTemplate.arg(meta.album));
+
+    auto goose = m_geese->postGoose(queryUrl, params.toEncoded());
+    connect(goose, &DMusic::Net::Goose::arrive,
+    this, [ = ](int errCode, const QByteArray & data) {
+        qDebug() << "NeteaseMetaSearchEngine recive: " << errCode << data.length();
+
+        QList<NeteaseSong> neteaseSongs;
+        auto document = QJsonDocument::fromJson(data);
+        auto searchResult = document.object().value("result").toObject();
+        auto songs = searchResult.value("songs").toArray();
+        auto songCount = searchResult.value("songCount").toInt();
+
+        qDebug() << "-------------------------------------------------------\n Find " << songCount << "result";
+
+        for (auto songJson : songs) {
+            NeteaseSong neteaseSong;
+            auto song = songJson.toObject();
+            neteaseSong.id = song.value("id").toInt();
+            neteaseSong.name = song.value("name").toString();
+            auto album = song.value("album").toObject();
+            neteaseSong.album.name = album.value("name").toString();
+            neteaseSong.album.coverUrl = album.value("blurPicUrl").toString();
+            auto artists = song.value("artists").toArray();
+
+            for (auto artistJson : artists) {
+                auto artist = artistJson.toObject();
+                NeteaseArtist neArtist;
+                neArtist.name = artist.value("name").toString();
+                neteaseSong.artists << neArtist;
+            }
+            qDebug() << "++++++ Find song:";
+            qDebug() << neteaseSong.id << neteaseSong.name
+                     << neteaseSong.album.name << neteaseSong.album.coverUrl;
+            for (auto artist : neteaseSong.artists) {
+                qDebug() << artist.name;
+            }
+            qDebug() << "++++++";
+            neteaseSongs << neteaseSong;
+        }
+        qDebug() << "-------------------------------------------------------";
+
+        if (!neteaseSongs.isEmpty()) {
+            auto song = neteaseSongs.first();
+            qDebug() << "call download url:" << song.album.coverUrl;
+            connect(m_geese->getGoose(song.album.coverUrl), &DMusic::Net::Goose::arrive,
+            this, [ = ](int errCode, const QByteArray & data) {
+                qDebug() << "NeteaseMetaSearchEngine recive: " << errCode << data.length();
+                emit coverLoaded(meta, data);
+            });
+        }
+    });
 }
 
 
