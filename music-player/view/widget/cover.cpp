@@ -14,7 +14,7 @@
 #include <QDebug>
 #include <QGraphicsDropShadowEffect>
 
-Cover::Cover(QWidget *parent) : QWidget(parent)
+Cover::Cover(QWidget *parent) : ClickableLabel("", parent)
 {
     QWidget::setAttribute(Qt::WA_TranslucentBackground, true);
     m_radius = 4;

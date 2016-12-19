@@ -232,24 +232,13 @@ void LyricView::onProgressChanged(qint64 value, qint64 /*length*/)
 
 }
 
-void LyricView::onLyricChanged(const MusicMeta &meta, const QString &lyricPath)
+void LyricView::onLyricChanged(const MusicMeta &meta,  const QByteArray &lyricData)
 {
     if (d->m_playingMusic.hash != meta.hash) {
         return;
     }
 
-    if (lyricPath.isEmpty()) {
-        setLyricLines("");
-        return;
-    }
-
-    QFile lyricFile(lyricPath);
-    if (!lyricFile.open(QIODevice::ReadOnly)) {
-        setLyricLines("");
-        return;
-    }
-    auto lyricStr = QString::fromUtf8(lyricFile.readAll());
-    lyricFile.close();
+    auto lyricStr = QString::fromUtf8(lyricData);
 
     setLyricLines(lyricStr);
 }

@@ -72,7 +72,7 @@ signals:
     void progrossChanged(qint64 pos, qint64 length);
 
     //! from lyricservice
-    void lyricSearchFinished(const MusicMeta &, const QString &lyricPath);
+    void lyricSearchFinished(const MusicMeta &, const QByteArray &lyricData);
     void coverSearchFinished(const MusicMeta &, const QByteArray &coverData);
 
     //! meta info

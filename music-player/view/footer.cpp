@@ -26,6 +26,7 @@
 #include "widget/slider.h"
 #include "widget/modebuttom.h"
 #include "widget/clickablelabel.h"
+#include "widget/cover.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -41,7 +42,7 @@ static const QString sDefaultCover = ":/image/cover_welcome.png";
 class FooterPrivate
 {
 public:
-    ClickableLabel  *cover      = nullptr;
+    Cover           *cover      = nullptr;
     ClickableLabel  *title      = nullptr;
     ClickableLabel  *artist    = nullptr;
     QPushButton     *btPlay     = nullptr;
@@ -82,9 +83,10 @@ Footer::Footer(QWidget *parent) : QFrame(parent)
     layout->setContentsMargins(10, 0, 20, 10);
     layout->setSpacing(20);
 
-    d->cover = new ClickableLabel;
+    d->cover = new Cover;
     d->cover->setObjectName("FooterCover");
     d->cover->setFixedSize(40, 40);
+    d->cover->setRadius(0);
     d->cover->installEventFilter(hoverFilter);
 
     d->title = new ClickableLabel;
@@ -369,34 +371,27 @@ void Footer::onProgressChanged(qint64 value, qint64 duration)
         progress = static_cast<int>(length * value / duration);
     }
 
-    if (d->progress->signalsBlocked())
+    if (d->progress->signalsBlocked()) {
         return;
+    }
 
     d->progress->blockSignals(true);
     d->progress->setValue(progress);
     d->progress->blockSignals(false);
 }
 
-#include <QFileInfo>
-#include <QDebug>
-void Footer::onCoverChanged(const MusicMeta &info, const QString &coverPath)
+void Footer::onCoverChanged(const MusicMeta &info, const QByteArray & coverData)
 {
-    qDebug()<< info.title << coverPath;
+    qDebug() << info.title << coverData.length();
     if (info.hash != d->m_playingMeta.hash) {
         return;
     }
 
-    auto newCover = sDefaultCover;
-    if (!coverPath.isEmpty()) {
-        QFileInfo fi(coverPath);
-        if (fi.exists())
-            newCover = coverPath;
-    }
+    auto newCover = QImage::fromData(coverData);
+    if (newCover.isNull())
+        newCover = QImage(sDefaultCover);
 
-    d->cover->setStyleSheet(
-        QString("#FooterCover {image: url(%1) no-repeat center center fixed;}").arg(newCover));
-    this->style()->unpolish(d->cover);
-    this->style()->polish(d->cover);
+    d->cover->setBackgroundImage(QPixmap::fromImage(newCover));
     d->cover->repaint();
 }
 

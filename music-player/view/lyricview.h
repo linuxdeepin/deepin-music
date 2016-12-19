@@ -35,7 +35,7 @@ signals:
 public slots:
     void onMusicPlayed(PlaylistPtr playlist, const MusicMeta &meta);
     void onProgressChanged(qint64 value, qint64 length);
-    void onLyricChanged(const MusicMeta &meta, const QString &lyricPath);
+    void onLyricChanged(const MusicMeta &meta, const QByteArray &lyricData);
     void onCoverChanged(const MusicMeta &meta, const QByteArray &coverData);
 
 private:

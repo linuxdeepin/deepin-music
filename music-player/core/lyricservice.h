@@ -27,7 +27,7 @@ public:
 
     static QString coverPath(const MusicMeta &info);
 signals:
-    void lyricSearchFinished(const MusicMeta &, const QString &lyricPath);
+    void lyricSearchFinished(const MusicMeta &, const QByteArray &lyricData);
     void coverSearchFinished(const MusicMeta &, const QByteArray &coverData);
 
 public slots:

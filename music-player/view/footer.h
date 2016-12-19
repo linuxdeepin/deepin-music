@@ -54,7 +54,7 @@ public slots:
     void onMusicPause(PlaylistPtr playlist, const MusicMeta &meta);
     void onMusicStoped(PlaylistPtr playlist, const MusicMeta &meta);
     void onProgressChanged(qint64 value, qint64 duration);
-    void onCoverChanged(const MusicMeta &meta, const QString &coverPath);
+    void onCoverChanged(const MusicMeta &meta, const QByteArray &coverData);
 
 private:
     void updateQssProperty(QWidget *w, const char *name, const QVariant &value);

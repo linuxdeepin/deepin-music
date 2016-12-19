@@ -210,28 +210,31 @@ void PlayerFrame::binding(Presenter *presenter)
     // Lyric
     connect(presenter, &Presenter::musicPlayed,
             d->lyric, &LyricView::onMusicPlayed);
-/*    connect(presenter, &Presenter::lyricSearchFinished,
-            d->lyric, &LyricView::onLyricChanged)*/;
+        connect(presenter, &Presenter::lyricSearchFinished,
+                d->lyric, &LyricView::onLyricChanged);
     connect(presenter, &Presenter::coverSearchFinished,
             d->lyric, &LyricView::onCoverChanged);
     connect(presenter, &Presenter::progrossChanged,
             d->lyric, &LyricView::onProgressChanged);
     connect(presenter, &Presenter::progrossChanged,
             d->lyric, &LyricView::onProgressChanged);
-//    connect(presenter, &Presenter::coverSearchFinished,
-//    this, [ = ](const MusicMeta &, const QString & coverPath) {
-//        auto path = coverPath.isEmpty() ? ":/image/cover_max.png" : coverPath;
-//        QImage image = QImage(path);
-//        image = WidgetHelper::cropRect(image, this->size());
-//        setBackgroundImage(WidgetHelper::blurImage(image, 50));
-//        this->repaint();
-//    });
+    connect(presenter, &Presenter::coverSearchFinished,
+    this, [ = ](const MusicMeta &, const QByteArray & coverData) {
+        QImage image = QImage::fromData(coverData);
+        if (image.isNull()) {
+            return;
+        }
+
+        image = WidgetHelper::cropRect(image, this->size());
+        setBackgroundImage(WidgetHelper::blurImage(image, 50));
+        this->repaint();
+    });
     connect(d->lyric, &LyricView::hideLyricView,
             d->footer, &Footer::toggleLyric);
 
     // Footer Control
-//    connect(presenter, &Presenter::coverSearchFinished,
-//            d->footer, &Footer::onCoverChanged);
+    connect(presenter, &Presenter::coverSearchFinished,
+            d->footer, &Footer::onCoverChanged);
     connect(presenter, &Presenter::musicPlayed,
             d->footer, &Footer::onMusicPlayed);
     connect(presenter, &Presenter::musicPaused,
@@ -384,8 +387,9 @@ void PlayerFrame::mousePressEvent(QMouseEvent *event)
 {
     qDebug() << event;
     // TODO hide all
-    if (d->playlist->isVisible())
+    if (d->playlist->isVisible()) {
         emit d->footer->togglePlaylist();
+    }
 
     DWindow::mousePressEvent(event);
 }

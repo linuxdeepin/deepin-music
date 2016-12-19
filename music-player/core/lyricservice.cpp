@@ -96,6 +96,10 @@ LyricService::LyricService(QObject *parent) : QObject(parent)
         this, [ = ](const MusicMeta & meta, const QByteArray & coverData) {
             emit coverSearchFinished(meta, coverData);
         });
+        connect(engine, &DMusic::Plugin::MetaSearchEngine::lyricLoaded,
+        this, [ = ](const MusicMeta & meta, const QByteArray & coverData) {
+            emit lyricSearchFinished(meta, coverData);
+        });
     }
 }
 
@@ -112,7 +116,7 @@ int LyricService::searchCacheLyric(const MusicMeta &info)
         emit lyricSearchFinished(info, "");
         return -1;
     }
-    emit lyricSearchFinished(info, cacheLyricPath(info));
+//    emit lyricSearchFinished(info, cacheLyricPath(info));
     return 0;
 }
 

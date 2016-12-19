@@ -11,8 +11,9 @@
 #define COVER_H
 
 #include <QFrame>
+#include "clickablelabel.h"
 
-class Cover : public QWidget
+class Cover : public ClickableLabel
 {
     Q_OBJECT
     Q_PROPERTY(int radius READ radius WRITE setRadius NOTIFY radiusChanged)
