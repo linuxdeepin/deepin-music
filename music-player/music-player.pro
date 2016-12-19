@@ -12,6 +12,7 @@ DESTDIR     = $$BUILD_DIST/bin
 
 unix{
     PKGCONFIG += dtkbase dtkutil dtkwidget taglib icu-uc icu-i18n
+#    PKGCONFIG += mpris-qt5 dbusextended-qt5
 }
 
 win32{
@@ -96,7 +97,8 @@ SOURCES += \
     view/mainwindow.cpp \
     view/viewpresenter.cpp \
     presenter/presenter.cpp \
-    core/pluginmanager.cpp
+    core/pluginmanager.cpp \
+    core/dmpriscontroller.cpp
 
 HEADERS += \
     view/titlebar.h \
@@ -142,7 +144,8 @@ HEADERS += \
     view/viewpresenter.h \
     core/pluginmanager.h \
     core/util/singleton.h \
-    core/util/thearpool.h
+    core/util/thearpool.h \
+    core/dmpriscontroller.h
 
 RESOURCES += \
     resource/theme/theme.qrc \
@@ -156,7 +159,3 @@ TRANSLATIONS += $$PWD/translations/$${TARGET}.ts \
 
 include($$PWD/install.pri)
 
-#unix:!macx: LIBS += -L$$OUT_PWD/../vendor/src/mpris/ -lmpris
-
-#INCLUDEPATH += $$PWD/../vendor/src/mpris
-#DEPENDPATH += $$PWD/../vendor/src/mpris

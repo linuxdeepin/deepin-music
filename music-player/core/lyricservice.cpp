@@ -100,6 +100,8 @@ LyricService::LyricService(QObject *parent) : QObject(parent)
         this, [ = ](const MusicMeta & meta, const QByteArray & coverData) {
             emit lyricSearchFinished(meta, coverData);
         });
+//        connect(engine, &DMusic::Plugin::MetaSearchEngine::doSearchMeta,
+//                engine, &DMusic::Plugin::MetaSearchEngine::searchMeta);
     }
 }
 

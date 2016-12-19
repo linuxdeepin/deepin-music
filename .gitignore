@@ -9,4 +9,4 @@
 *.user
 build/
 *.qm
-
+dist/

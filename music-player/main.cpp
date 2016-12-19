@@ -7,9 +7,16 @@
  * (at your option) any later version.
  **/
 
+#include <QDBusError>
+#include <QDBusConnection>
+
 #include <QIcon>
 #include <DLog>
 #include <DApplication>
+
+#include <Mpris>
+#include <MprisPlayer>
+#include <MprisController>
 
 #include "core/player.h"
 #include "core/pluginmanager.h"
@@ -36,13 +43,29 @@ int main(int argc, char *argv[])
 
     app.loadTranslator();
 
+    QDBusConnection conn = QDBusConnection::sessionBus();
+    if (!conn.registerService("org.mpris.MediaPlayer2.deepinmusic")) {
+        qDebug() << "registerService Failed, maybe service exist" << conn.lastError();
+        return (0x0003);
+    }
+
+    if (!conn.registerObject("/",
+                             "org.mpris.MediaPlayer2",
+                             new Mpris(),
+                             QDBusConnection::ExportAdaptors)) {
+        qDebug() << "registerObject Failed" << conn.lastError();
+        return (0x0002);
+    }
+
+    new MprisPlayer();
+
     app.setTheme("light");
     app.setWindowIcon(QIcon(":/image/deepin-music.svg"));
 
     PluginManager::instance()->init();
-
     // For Windows, must init media player in main thread!!!
     Player::instance()->init();
     MusicApp::instance()->init();
+
     return app.exec();
 }

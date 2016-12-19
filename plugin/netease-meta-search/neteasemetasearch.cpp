@@ -108,8 +108,10 @@ NeteaseMetaSearchEngine::NeteaseMetaSearchEngine(QObject *parent): MetaSearchEng
     m_geese->setRawHeader("Cookie", "appver=1.5.0.75771;");
     m_geese->setRawHeader("Referer", "http://music.163.com/");
 
-    connect(this, &NeteaseMetaSearchEngine::doSearchMeta,
+    qDebug() << "-------------------------------------------------------";
+    connect(this, &MetaSearchEngine::doSearchMeta,
             this, &NeteaseMetaSearchEngine::searchMeta);
+    qDebug() << "-------------------------------------------------------";
 }
 
 QString NeteaseMetaSearchEngine::pluginId() const
@@ -172,6 +174,7 @@ static QByteArray toLyric(const QByteArray &data)
 
 void NeteaseMetaSearchEngine::searchMeta(const MusicMeta &meta)
 {
+    qDebug() << "searchMeta";
     QString queryUrl = QLatin1String("http://music.163.com/api/search/pc");
     QString queryTemplate = QLatin1String("s=%1&offset=0&limit=15&type=1");
     QUrl params = QUrl(queryTemplate.arg(meta.album));
@@ -180,6 +183,8 @@ void NeteaseMetaSearchEngine::searchMeta(const MusicMeta &meta)
 
     connect(anlyzer, &MetaAnalyzer::searchFinished,
     this, [ = ](const MusicMeta & meta, NeteaseSong song) {
+
+        qDebug() << "get " << "=====" << song.album.coverUrl;
         connect(m_geese->getGoose(song.album.coverUrl), &DMusic::Net::Goose::arrive,
         this, [ = ](int errCode, const QByteArray & data) {
             qDebug() << "NeteaseMetaSearchEngine recive: " << errCode << data.length();
@@ -188,6 +193,7 @@ void NeteaseMetaSearchEngine::searchMeta(const MusicMeta &meta)
 
         QString lyricUrl = QLatin1String("http://music.163.com/api/song/lyric?os=pc&id=%1&lv=-1&kv=-1&tv=-1");
         lyricUrl = lyricUrl.arg(song.id);
+        qDebug() << "get " << "=====" << lyricUrl;
         connect(m_geese->getGoose(lyricUrl), &DMusic::Net::Goose::arrive,
         this, [ = ](int errCode, const QByteArray & data) {
             qDebug() << "NeteaseMetaSearchEngine recive: " << errCode << data.length();
