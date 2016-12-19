@@ -176,7 +176,7 @@ void Presenter::prepareData()
     connect(this, &Presenter::pause, Player::instance(), &Player::pause);
     connect(this, &Presenter::stop, Player::instance(), &Player::stop);
 
-    emit dataPrepared();
+    emit dataLoaded();
 }
 
 

@@ -12,8 +12,8 @@
 
 #include <QTableView>
 
-#include "../core/music.h"
-#include "../core/playlist.h"
+#include <musicmeta.h>
+#include "../../core/playlist.h"
 
 class Playlist;
 class QStandardItemModel;

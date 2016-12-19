@@ -7,17 +7,23 @@
  * (at your option) any later version.
  **/
 
-#pragma once
+#include "label.h"
 
-#include <MprisController>
-
-class DMprisController : public MprisController
+Label::Label(QWidget *parent)
+    : Label("", parent)
 {
-    Q_OBJECT
-public:
-//    explicit DMprisController(QObject *parent = 0);
+}
 
-signals:
+Label::Label(const QString &text, QWidget *parent):
+    QLabel (text, parent)
+{
+}
 
-public slots:
-};
+Label::~Label()
+{
+}
+
+void Label::mousePressEvent(QMouseEvent * /*event*/)
+{
+    emit clicked(false);
+}

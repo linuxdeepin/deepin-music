@@ -41,7 +41,7 @@ signals:
 
     //! notify signal
 signals:
-    void dataPrepared();
+    void dataLoaded();
 
     //! ui: control
     void requestImportFiles();

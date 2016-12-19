@@ -7,8 +7,7 @@
  * (at your option) any later version.
  **/
 
-#ifndef IMPORTVIEW_H
-#define IMPORTVIEW_H
+#pragma once
 
 #include <QFrame>
 
@@ -25,4 +24,3 @@ signals:
 public slots:
 };
 
-#endif // IMPORTVIEW_H

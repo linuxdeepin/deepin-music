@@ -46,5 +46,10 @@ void ModeButton::setMode(int mode)
         return;
     }
     m_mode = mode;
+
+    this->style()->unpolish(this);
+    this->style()->polish(this);
+    this->repaint();
+
     emit modeChanged(mode);
 }

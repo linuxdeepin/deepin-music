@@ -56,96 +56,95 @@ win32{
 
 
 SOURCES += \
-    main.cpp \
-    view/titlebar.cpp \
-    view/footer.cpp \
-    view/musiclistview.cpp \
-    view/importwidget.cpp \
-    view/lyricview.cpp \
-    view/playlistitem.cpp \
-    musicapp.cpp \
-    view/musiclistwidget.cpp \
-    core/playlistmanager.cpp \
-    core/playlist.cpp \
-    view/playlistview.cpp \
-    view/playlistwidget.cpp \
-    core/mediafilemonitor.cpp \
-    core/player.cpp \
-    view/widget/slider.cpp \
-    view/widget/infodialog.cpp \
-    view/widget/cover.cpp \
-    view/widget/settingsdialog.cpp \
-    view/widget/modebuttom.cpp \
+    core/util/cueparser.cpp \
+#    core/util/filesystemwatcher.cpp \
+    core/util/icu.cpp \
+    core/util/inotifyengine.cpp \
+    core/util/lyric.cpp \
+    core/util/musicmeta.cpp \
+    core/util/pinyin.cpp \
     core/lyricservice.cpp \
     core/mediadatabase.cpp \
-    view/helper/widgethellper.cpp \
-    view/widget/searchresult.cpp \
-    view/widget/searchedit.cpp \
-    view/widget/pushbutton.cpp \
     core/mediadatabasewriter.cpp \
-    core/util/pinyin.cpp \
-    view/widget/musicitemdelegate.cpp \
-    core/util/lyric.cpp \
-    core/util/cueparser.cpp \
-    view/widget/lyriclinedelegate.cpp \
-    core/util/musicmeta.cpp \
-    view/widget/clickablelabel.cpp \
-    core/util/icu.cpp \
-#    core/util/filesystemwatcher.cpp \
-    core/util/inotifyengine.cpp \
-    view/widget/hoverfilter.cpp \
-    view/mainwindow.cpp \
-    view/viewpresenter.cpp \
-    presenter/presenter.cpp \
+    core/mediafilemonitor.cpp \
+    core/player.cpp \
+    core/playlist.cpp \
+    core/playlistmanager.cpp \
     core/pluginmanager.cpp \
-    core/dmpriscontroller.cpp
+    presenter/presenter.cpp \
+    view/helper/widgethellper.cpp \
+    view/widget/cover.cpp \
+    view/widget/hoverfilter.cpp \
+    view/widget/infodialog.cpp \
+    view/widget/lyriclinedelegate.cpp \
+    view/widget/modebuttom.cpp \
+    view/widget/musicitemdelegate.cpp \
+    view/widget/musiclistview.cpp \
+    view/widget/playlistitem.cpp \
+    view/widget/playlistview.cpp \
+    view/widget/pushbutton.cpp \
+    view/widget/searchedit.cpp \
+    view/widget/searchresult.cpp \
+    view/widget/settingsdialog.cpp \
+    view/widget/slider.cpp \
+    view/footer.cpp \
+    view/importwidget.cpp \
+    view/lyricview.cpp \
+    view/mainwindow.cpp \
+    view/musiclistwidget.cpp \
+    view/playlistwidget.cpp \
+    view/titlebar.cpp \
+    view/viewpresenter.cpp \
+    musicapp.cpp \
+    main.cpp \
+    view/widget/label.cpp
+
 
 HEADERS += \
-    view/titlebar.h \
-    view/footer.h \
-    view/musiclistview.h \
-    view/importwidget.h \
-    view/lyricview.h \
-    view/playlistitem.h \
-    musicapp.h \
-    view/musiclistwidget.h \
-    core/playlistmanager.h \
-    view/playlistview.h \
-    view/playlistwidget.h \
-    core/mediafilemonitor.h \
-    core/player.h \
-    view/widget/slider.h \
-    view/widget/infodialog.h \
-    view/widget/cover.h \
-    view/widget/settingsdialog.h \
-    view/widget/modebuttom.h \
-    core/lyricservice.h \
-    core/mediadatabase.h \
-    view/helper/widgethellper.h \
-    view/widget/searchresult.h \
-    view/widget/searchedit.h \
-    view/widget/pushbutton.h \
-    core/mediadatabasewriter.h \
-    core/util/pinyin.h \
-    view/widget/musicitemdelegate.h \
-    core/util/lyric.h \
     core/util/cueparser.h \
-    view/widget/lyriclinedelegate.h \
-    core/util/musicmeta.h \
-    view/widget/clickablelabel.h \
-    core/util/icu.h \
 #    core/util/filesystemwatcher.h \
+    core/util/icu.h \
     core/util/inotifyengine.h \
-    view/widget/hoverfilter.h \
-    core/music.h \
-    core/playlist.h \
-    presenter/presenter.h \
-    view/mainwindow.h \
-    view/viewpresenter.h \
-    core/pluginmanager.h \
+    core/util/lyric.h \
+    core/util/musicmeta.h \
+    core/util/pinyin.h \
     core/util/singleton.h \
     core/util/thearpool.h \
-    core/dmpriscontroller.h
+    core/lyricservice.h \
+    core/mediadatabase.h \
+    core/mediadatabasewriter.h \
+    core/mediafilemonitor.h \
+    core/music.h \
+    core/player.h \
+    core/playlist.h \
+    core/playlistmanager.h \
+    core/pluginmanager.h \
+    presenter/presenter.h \
+    view/helper/widgethellper.h \
+    view/widget/cover.h \
+    view/widget/hoverfilter.h \
+    view/widget/infodialog.h \
+    view/widget/lyriclinedelegate.h \
+    view/widget/modebuttom.h \
+    view/widget/musicitemdelegate.h \
+    view/widget/musiclistview.h \
+    view/widget/playlistitem.h \
+    view/widget/playlistview.h \
+    view/widget/pushbutton.h \
+    view/widget/searchedit.h \
+    view/widget/searchresult.h \
+    view/widget/settingsdialog.h \
+    view/widget/slider.h \
+    view/footer.h \
+    view/importwidget.h \
+    view/lyricview.h \
+    view/mainwindow.h \
+    view/musiclistwidget.h \
+    view/playlistwidget.h \
+    view/titlebar.h \
+    view/viewpresenter.h \
+    musicapp.h \
+    view/widget/label.h
 
 RESOURCES += \
     resource/theme/theme.qrc \
@@ -158,4 +157,3 @@ TRANSLATIONS += $$PWD/translations/$${TARGET}.ts \
                 $$PWD/translations/$${TARGET}_zh_CN.ts
 
 include($$PWD/install.pri)
-

@@ -32,7 +32,8 @@ SOURCES += \
 
 HEADERS +=\
         libdmusic_global.h \
-        geese.h
+        geese.h \
+    musicmeta.h
 
 unix {
     target.path = /usr/lib

@@ -36,8 +36,11 @@
 
 
 #FooterCover {
-    image: url(:/image/cover_welcome.png);
+    qproperty-radius: 0;
+    qproperty-borderColor: rgba(0,0,0,20%);
+    qproperty-shadowColor: rgba(0,0,0,10%);
 }
+
 #FooterTitle{
     font-size: 12px;
     color: #ffffff;

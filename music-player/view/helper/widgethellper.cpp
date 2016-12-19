@@ -59,7 +59,7 @@ QPixmap blurImage(const QImage &image, int radius)
 
 QImage cropRect(const QImage &image, QSize sz)
 {
-    QImage newImage = image.scaled(sz, Qt::KeepAspectRatioByExpanding);
+    QImage newImage = image.scaled(sz, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
     auto center = QRectF(newImage.rect()).center();
     auto topLeft = QPointF(center.x() - sz.width() / 2.0,
                            center.y() - sz.height() / 2.0);

@@ -15,7 +15,6 @@
 
 #include "libdmusic_global.h"
 
-
 namespace DMusic
 {
 namespace Net
@@ -33,9 +32,6 @@ public:
     void post(const QUrl &url, const QByteArray &data);
 signals:
     void arrive(int errCode, const QByteArray &data);
-
-public slots:
-    void depart();
 
 private:
     Geese   *m_geese = nullptr;

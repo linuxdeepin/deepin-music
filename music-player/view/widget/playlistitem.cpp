@@ -20,7 +20,7 @@
 #include <QMessageBox>
 #include <dthememanager.h>
 
-#include "../core/playlist.h"
+#include "../../core/playlist.h"
 
 DWIDGET_USE_NAMESPACE
 

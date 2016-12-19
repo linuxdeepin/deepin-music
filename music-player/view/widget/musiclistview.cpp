@@ -26,14 +26,14 @@
 
 #include <dthememanager.h>
 
-#include "../musicapp.h"
-#include "../core/music.h"
-#include "../core/playlist.h"
-#include "../core/lyricservice.h"
+#include "../../musicapp.h"
+#include "../../core/music.h"
+#include "../../core/playlist.h"
+#include "../../core/lyricservice.h"
+#include "../helper/widgethellper.h"
 
-#include "widget/musicitemdelegate.h"
-#include "widget/infodialog.h"
-#include "helper/widgethellper.h"
+#include "musicitemdelegate.h"
+#include "infodialog.h"
 
 DWIDGET_USE_NAMESPACE
 

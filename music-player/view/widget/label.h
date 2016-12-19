@@ -7,21 +7,21 @@
  * (at your option) any later version.
  **/
 
-#ifndef CLICKABLELABEL_H
-#define CLICKABLELABEL_H
+#pragma once
 
 #include <QLabel>
 
-class ClickableLabel : public QLabel
+class Label : public QLabel
 {
     Q_OBJECT
 public:
-    explicit ClickableLabel(const QString &text = "", QWidget *parent = 0);
-    ~ClickableLabel();
+    explicit Label(QWidget *parent = 0);
+    explicit Label(const QString &text, QWidget *parent = 0);
+    ~Label();
+
 signals:
     void clicked(bool);
-protected:
-    void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
-};
 
-#endif // CLICKABLELABEL_H
+protected:
+    virtual void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+};

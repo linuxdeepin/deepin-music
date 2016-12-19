@@ -16,9 +16,10 @@
 
 #include <dthememanager.h>
 
-#include "playlistview.h"
-#include "playlistitem.h"
 #include "../core/playlist.h"
+#include "viewpresenter.h"
+#include "widget/playlistview.h"
+#include "widget/playlistitem.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -47,7 +48,7 @@ PlaylistWidget::PlaylistWidget(QWidget *parent) : QFrame(parent)
     D_THEME_INIT_WIDGET(PlaylistWidget);
 
     connect(btAdd, &QPushButton::clicked, this, [ = ](bool /*checked*/) {
-        emit this->addPlaylist(true);
+        emit ViewPresenter::instance()->addPlaylist(true);
     });
 
     connect(m_listview, &PlayListView::itemClicked,
@@ -57,11 +58,11 @@ PlaylistWidget::PlaylistWidget(QWidget *parent) : QFrame(parent)
             qCritical() << "playlistItem is empty" << item << playlistItem;
             return;
         }
-        emit selectPlaylist(playlistItem->data());
+        emit ViewPresenter::instance()->selectPlaylist(playlistItem->data());
     });
 }
 
-void PlaylistWidget::initPlaylist(QList<PlaylistPtr > playlists, PlaylistPtr last)
+void PlaylistWidget::initData(QList<PlaylistPtr > playlists, PlaylistPtr last)
 {
     if (playlists.length() <= 0) {
         qCritical() << "playlist is empty";
@@ -82,7 +83,9 @@ void PlaylistWidget::initPlaylist(QList<PlaylistPtr > playlists, PlaylistPtr las
             Q_ASSERT(m_listview->count() > 0);
             m_listview->setCurrentItem(m_listview->item(0));
         });
-        connect(playlistItem, &PlayListItem::playall, this, &PlaylistWidget::playall);
+
+        connect(playlistItem, &PlayListItem::playall,
+                ViewPresenter::instance(), &ViewPresenter::playall);
 
         if (last->id() == playlist->id()) {
             current = item;
@@ -117,13 +120,13 @@ void PlaylistWidget::onPlaylistAdded(PlaylistPtr playlist)
         delete m_listview->takeItem(m_listview->row(item));
     });
 
-    connect(playlistItem, &PlayListItem::playall, this, &PlaylistWidget::playall);
+    connect(playlistItem, &PlayListItem::playall,
+            ViewPresenter::instance(), &ViewPresenter::playall);
     m_listview->scrollToBottom();
     m_listview->setCurrentItem(item);
     if (playlist->hide()) {
         m_listview->setItemHidden(item, true);
     }
-//    emit selectPlaylist(playlist);
 }
 
 void PlaylistWidget::onCurrentChanged(PlaylistPtr playlist)

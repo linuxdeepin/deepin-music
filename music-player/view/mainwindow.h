@@ -13,7 +13,6 @@
 #include <DWindow>
 #include <QScopedPointer>
 
-#include "../core/music.h"
 #include "../core/playlist.h"
 
 class Presenter;
@@ -56,6 +55,15 @@ signals:
 
 public slots:
     void onSelectImportFiles();
+
+    void toggleLyricView();
+    void togglePlaylist();
+
+    void showLyricView();
+    void showMusicListView();
+    void showImportView();
+
+    void setPlaylistVisible(bool visible);
 
     void setTitlebarColor(QColor titlebarColor)
     {

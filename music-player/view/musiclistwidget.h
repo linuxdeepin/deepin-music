@@ -7,40 +7,21 @@
  * (at your option) any later version.
  **/
 
-#ifndef MUSICLISTWIDGET_H
-#define MUSICLISTWIDGET_H
+#pragma once
 
 #include <QFrame>
 
-#include <dcombobox.h>
-
-#include "../core/music.h"
 #include "../core/playlist.h"
 
-class MusicItem;
-class MusicMeta;
-class QLabel;
-class MusicListView;
-class QStandardItemModel;
-
+class MusicListWidgetPrivate;
 class MusicListWidget : public QFrame
 {
     Q_OBJECT
 public:
     explicit MusicListWidget(QWidget *parent = 0);
+    ~MusicListWidget();
 
-    void setCurrentList(PlaylistPtr playlist);
-    virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
-
-signals:
-    void musicListRemove(PlaylistPtr playlist, const MusicMetaList &metalist);
-    void musicListDelete(PlaylistPtr playlist, const MusicMetaList &metalist);
-
-    void musicClicked(PlaylistPtr playlist, const MusicMeta &info);
-    void musicAdd(PlaylistPtr playlist, const MusicMetaList &metalist);
-    void playall(PlaylistPtr playlist);
-    void resort(PlaylistPtr playlist, int sortType);
-    void requestCustomContextMenu(const QPoint &pos);
+    void initData(PlaylistPtr playlist);
 
 public slots:
     void onMusicPlayed(PlaylistPtr playlist, const MusicMeta &info);
@@ -55,17 +36,12 @@ public slots:
                                     PlaylistPtr selectedlist,
                                     PlaylistPtr favlist,
                                     QList<PlaylistPtr >newlists);
-signals:
-    void showEmptyHits(bool empty);
-private:
-    void addMusicInfo(MusicListView *m_musiclist, const MusicMeta &info);
 
-    PlaylistPtr                 m_playlist;
-    QLabel                      *m_emptyHits    = nullptr;
-    MusicListView               *m_musiclist    = nullptr;
-    QStandardItemModel          *m_model        = nullptr;
-    Dtk::Widget::DComboBox      *m_sortCombo    = nullptr;
+protected:
+    virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
+
+private:
+    QScopedPointer<MusicListWidgetPrivate> d_ptr;
+    Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), MusicListWidget)
 };
 
-
-#endif // MUSICLISTWIDGET_H

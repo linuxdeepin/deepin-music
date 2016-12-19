@@ -7,8 +7,7 @@
  * (at your option) any later version.
  **/
 
-#ifndef FOOTER_H
-#define FOOTER_H
+#pragma once
 
 #include <QFrame>
 #include <QPointer>
@@ -16,35 +15,17 @@
 
 #include "../core/playlist.h"
 
-class MusicMeta;
-class Playlist;
 class FooterPrivate;
 class Footer : public QFrame
 {
     Q_OBJECT
 public:
     explicit Footer(QWidget *parent = 0);
+    ~Footer();
 
 public:
     void enableControl(bool enable = true);
-
-signals:
-    void initFooter(PlaylistPtr current, int mode);
-
-    void changeProgress(qint64 value, qint64 duration);
-
-    void play(PlaylistPtr playlist, const MusicMeta &meta);
-    void resume(PlaylistPtr playlist, const MusicMeta &meta);
-    void pause(PlaylistPtr playlist, const MusicMeta &meta);
-    void next(PlaylistPtr playlist, const MusicMeta &meta);
-    void prev(PlaylistPtr playlist, const MusicMeta &meta);
-    void locate(PlaylistPtr playlist, const MusicMeta &meta);
-
-    void modeChanged(int mode);
-    void toggleFavourite(const MusicMeta &meta);
-    void toggleLyric();
-    void changePlayMode(int);
-    void togglePlaylist();
+    void initData(PlaylistPtr current, int mode);
 
 public slots:
     void onMusicAdded(PlaylistPtr playlist, const MusicMeta &meta);
@@ -57,9 +38,7 @@ public slots:
     void onCoverChanged(const MusicMeta &meta, const QByteArray &coverData);
 
 private:
-    void updateQssProperty(QWidget *w, const char *name, const QVariant &value);
-
-    QSharedPointer<FooterPrivate>     d;
+    QScopedPointer<FooterPrivate> d_ptr;
+    Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), Footer)
 };
 
-#endif // FOOTER_H

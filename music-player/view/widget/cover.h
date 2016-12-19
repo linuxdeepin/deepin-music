@@ -7,82 +7,41 @@
  * (at your option) any later version.
  **/
 
-#ifndef COVER_H
-#define COVER_H
+#pragma once
 
-#include <QFrame>
-#include "clickablelabel.h"
+#include "label.h"
 
-class Cover : public ClickableLabel
+class CoverPrivate;
+class Cover : public Label
 {
     Q_OBJECT
-    Q_PROPERTY(int radius READ radius WRITE setRadius NOTIFY radiusChanged)
-    Q_PROPERTY(QColor borderColor READ borderColor WRITE setBorderColor NOTIFY borderColorChanged)
+    Q_PROPERTY(int radius READ radius WRITE setRadius)
+    Q_PROPERTY(QColor borderColor READ borderColor WRITE setBorderColor)
     Q_PROPERTY(QColor shadowColor READ shadowColor WRITE setShadowColor NOTIFY shadowColorChanged)
 
 public:
     explicit Cover(QWidget *parent = 0);
+    ~Cover();
 
-    void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
-
-    QColor borderColor() const
-    {
-        return m_borderColor;
-    }
-
-    int radius() const
-    {
-        return m_radius;
-    }
-
-    QColor shadowColor() const
-    {
-        return m_shadowColor;
-    }
-
-signals:
-    void borderColorChanged(QColor borderColor);
-    void radiusChanged(int radius);
-    void shadowColorChanged(QColor shadowColor);
+    int radius() const;
+    QColor borderColor() const;
+    QColor shadowColor() const;
 
 public slots:
-    void setBorderColor(QColor borderColor)
-    {
-        if (m_borderColor == borderColor) {
-            return;
-        }
+    void setCoverPixmap(const QPixmap &pixmap);
+    void setRadius(int radius);
+    void setBorderColor(QColor borderColor);
+    void setShadowColor(QColor shadowColor);
 
-        m_borderColor = borderColor;
-        emit borderColorChanged(borderColor);
-    }
+signals:
+    void shadowColorChanged(QColor shadowColor);
 
-    void setBackgroundImage(const QPixmap &backgroundPixmap);
-
-    void setRadius(int radius)
-    {
-        if (m_radius == radius) {
-            return;
-        }
-
-        m_radius = radius;
-        emit radiusChanged(radius);
-    }
-    void setShadowColor(QColor shadowColor)
-    {
-        if (m_shadowColor == shadowColor)
-            return;
-
-        m_shadowColor = shadowColor;
-        emit shadowColorChanged(shadowColor);
-    }
+protected:
+    virtual void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
 
 private:
-
-    int     m_radius;
-    QColor  m_borderColor;
-    QColor  m_shadowColor;
-    QString m_backgroundUrl;
-    QPixmap m_Background;
+    QScopedPointer<CoverPrivate> d_ptr;
+    Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), Cover)
+    QColor m_shadowColor;
 };
 
-#endif // COVER_H

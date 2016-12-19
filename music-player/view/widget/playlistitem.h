@@ -12,7 +12,7 @@
 
 #include <QFrame>
 
-#include "../core/playlist.h"
+#include "../../core/playlist.h"
 
 class QLineEdit;
 class PlayListItem : public QFrame

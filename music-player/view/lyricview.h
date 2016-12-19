@@ -7,13 +7,10 @@
  * (at your option) any later version.
  **/
 
-#ifndef LYRICVIEW_H
-#define LYRICVIEW_H
+#pragma once
 
 #include <QFrame>
-#include <QScopedPointer>
 
-#include "../core/music.h"
 #include "../core/playlist.h"
 
 class LyricViewPrivate;
@@ -24,24 +21,17 @@ public:
     explicit LyricView(QWidget *parent = 0);
     ~LyricView();
 
-    virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
-    void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
-
-    void setLyricLines(QString lines);
-
-signals:
-    void hideLyricView();
-
 public slots:
-    void onMusicPlayed(PlaylistPtr playlist, const MusicMeta &meta);
     void onProgressChanged(qint64 value, qint64 length);
+    void onMusicPlayed(PlaylistPtr playlist, const MusicMeta &meta);
     void onLyricChanged(const MusicMeta &meta, const QByteArray &lyricData);
     void onCoverChanged(const MusicMeta &meta, const QByteArray &coverData);
 
-private:
-    void initConnection();
-    void adjustLyric();
-    QScopedPointer<LyricViewPrivate>  d;
-};
+protected:
+    virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
+    virtual void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
 
-#endif // LYRICVIEW_H
+private:
+    QScopedPointer<LyricViewPrivate> d_ptr;
+    Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), LyricView)
+};

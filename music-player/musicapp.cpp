@@ -59,7 +59,7 @@ void MusicApp::init()
     auto presenterWork = new QThread;
     d->appPresenter->moveToThread(presenterWork);
     connect(presenterWork, &QThread::started, d->appPresenter, &Presenter::prepareData);
-    connect(d->appPresenter, &Presenter::dataPrepared, this, &MusicApp::onDataPrepared);
+    connect(d->appPresenter, &Presenter::dataLoaded, this, &MusicApp::onDataPrepared);
 
     presenterWork->start();
 }

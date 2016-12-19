@@ -1,6 +1,13 @@
 include($$PWD/../vendor/src/chinese2pinyin/chinese2pinyin.pri)
 include($$PWD/../vendor/src/libcue/libcue.pri)
 
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../libdmusic/release/ -ldmusic
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../libdmusic/debug/ -ldmusic
+else:unix: LIBS += -L$$OUT_PWD/../libdmusic/ -ldmusic
+
+INCLUDEPATH += $$PWD/../libdmusic
+DEPENDPATH += $$PWD/../libdmusic
+
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../vendor/src/dbusextended-qt/src/release/ -ldbusextended-qt5
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../vendor/src/dbusextended-qt/src/debug/ -ldbusextended-qt5
 else:unix: LIBS += -L$$BUILD_DIST/lib/ -ldbusextended-qt5

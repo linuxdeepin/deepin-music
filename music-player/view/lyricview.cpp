@@ -9,6 +9,7 @@
 
 #include "lyricview.h"
 
+#include <QDebug>
 #include <QLabel>
 #include <QFile>
 #include <QScrollArea>
@@ -28,14 +29,23 @@
 #include "widget/cover.h"
 #include "widget/lyriclinedelegate.h"
 
+#include "viewpresenter.h"
+
 DWIDGET_USE_NAMESPACE
 
-const int lyricLineHeight = 40;
-const QString defaultLyric = "No Lyric";
+static const int lyricLineHeight = 40;
+static const QString defaultLyric = "No Lyric";
+static const QString defaultCoverUrl(":/image/cover_max.png");
 
 class LyricViewPrivate
 {
 public:
+    LyricViewPrivate(LyricView *parent): q_ptr(parent) {}
+
+    void initConnection();
+    void adjustLyric();
+    void setLyricLines(QString lines);
+
     MusicMeta           m_playingMusic;
 
     int                 m_emptyOffset = 0;
@@ -46,11 +56,88 @@ public:
     Cover               *m_cover    = nullptr;
     QListView           *m_lyric    = nullptr;
     QStringListModel    *m_model    = nullptr;
+
+
+    LyricView *q_ptr;
+    Q_DECLARE_PUBLIC(LyricView);
 };
 
-LyricView::LyricView(QWidget *parent)
-    : QFrame(parent), d(new LyricViewPrivate)
+
+
+void LyricViewPrivate::initConnection()
 {
+    Q_Q(LyricView);
+    q->connect(m_hideLyric, &QPushButton::clicked,
+               ViewPresenter::instance(), &ViewPresenter::toggleLyricView);
+}
+
+void LyricViewPrivate::adjustLyric()
+{
+    Q_Q(LyricView);
+    auto itemHeight = lyricLineHeight;
+    auto maxHeight = q->height() * 9 / 10;
+    if (m_model->rowCount() * itemHeight < maxHeight) {
+        m_lyric->setFixedHeight(m_model->rowCount() * itemHeight);
+    } else {
+        m_lyric->setFixedHeight(maxHeight);
+    }
+}
+
+void LyricViewPrivate::setLyricLines(QString str)
+{
+    Q_Q(LyricView);
+    m_lyriclist = parseLrc(str);
+
+    QStringList lines;
+    if (!m_lyriclist.hasTime) {
+        lines = str.split('\n');
+    } else {
+        for (auto &ele : m_lyriclist.m_lyricElements) {
+            lines << ele.content;
+        }
+    }
+
+    if (lines.length() <= 0) {
+        lines << defaultLyric;
+    }
+
+    m_currentline = 0;
+    auto itemHeight = lyricLineHeight;
+    auto maxHeight = q->height() * 9 / 10;
+    if (lines.length() > 2) {
+        m_emptyOffset = maxHeight / itemHeight / 2;
+    } else {
+        m_emptyOffset = 0;
+    }
+
+    QStringList lyric;
+
+    for (int i = 0; i < m_emptyOffset; ++i) {
+        lyric << "";
+    }
+    for (auto line : lines) {
+        lyric << line;
+    }
+    for (int i = 0; i < m_emptyOffset; ++i) {
+        lyric << "";
+    }
+    m_model->setStringList(lyric);
+    m_lyric->setModel(m_model);
+
+    QModelIndex index = m_model->index(
+                            m_emptyOffset + m_currentline, 0, m_lyric->rootIndex());
+    m_lyric->clearSelection();
+    m_lyric->setCurrentIndex(index);
+    m_lyric->scrollTo(index, QListView::PositionAtCenter);
+    m_lyric->clearSelection();
+
+    adjustLyric();
+}
+
+LyricView::LyricView(QWidget *parent)
+    : QFrame(parent), d_ptr(new LyricViewPrivate(this))
+{
+    Q_D(LyricView);
 
     setObjectName("LyricView");
     auto layout = new QHBoxLayout(this);
@@ -59,6 +146,7 @@ LyricView::LyricView(QWidget *parent)
     d->m_cover = new Cover;
     d->m_cover->setFixedSize(200, 200);
     d->m_cover->setObjectName("LyricCover");
+    d->m_cover->setCoverPixmap(QPixmap(defaultCoverUrl));
 
     d->m_lyric = new QListView;
     d->m_lyric->setObjectName("LyricTextView");
@@ -74,7 +162,7 @@ LyricView::LyricView(QWidget *parent)
     d->m_lyric->setFlow(QListView::TopToBottom);
 
     d->m_model = new QStringListModel;
-    setLyricLines("");
+    d->setLyricLines("");
 
     d->m_lyric->setModel(d->m_model);
 
@@ -101,7 +189,7 @@ LyricView::LyricView(QWidget *parent)
 
     D_THEME_INIT_WIDGET(LyricView);
 
-    initConnection();
+    d->initConnection();
 }
 
 LyricView::~LyricView()
@@ -111,9 +199,10 @@ LyricView::~LyricView()
 
 void LyricView::resizeEvent(QResizeEvent *event)
 {
+    Q_D(LyricView);
     QWidget::resizeEvent(event);
     d->m_lyric->setFixedWidth(event->size().width() * 45 / 100);
-    adjustLyric();
+    d->adjustLyric();
 }
 
 void LyricView::paintEvent(QPaintEvent *e)
@@ -150,65 +239,18 @@ void LyricView::paintEvent(QPaintEvent *e)
 
 //    painter.fillPath(path, brush);
 }
-#include <QDebug>
-void LyricView::setLyricLines(QString str)
-{
-    d->m_lyriclist = parseLrc(str);
 
-    QStringList lines;
-    if (!d->m_lyriclist.hasTime) {
-        lines = str.split('\n');
-    } else {
-        for (auto &ele : d->m_lyriclist.m_lyricElements) {
-            lines << ele.content;
-        }
-    }
-
-    if (lines.length() <= 0) {
-        lines << defaultLyric;
-    }
-
-    d->m_currentline = 0;
-    auto itemHeight = lyricLineHeight;
-    auto maxHeight = this->height() * 9 / 10;
-    if (lines.length() > 2) {
-        d->m_emptyOffset = maxHeight / itemHeight / 2;
-    } else {
-        d->m_emptyOffset = 0;
-    }
-
-    QStringList lyric;
-
-    for (int i = 0; i < d->m_emptyOffset; ++i) {
-        lyric << "";
-    }
-    for (auto line : lines) {
-        lyric << line;
-    }
-    for (int i = 0; i < d->m_emptyOffset; ++i) {
-        lyric << "";
-    }
-    d->m_model->setStringList(lyric);
-    d->m_lyric->setModel(d->m_model);
-
-    QModelIndex index = d->m_model->index(
-                            d->m_emptyOffset + d->m_currentline, 0, d->m_lyric->rootIndex());
-    d->m_lyric->clearSelection();
-    d->m_lyric->setCurrentIndex(index);
-    d->m_lyric->scrollTo(index, QListView::PositionAtCenter);
-    d->m_lyric->clearSelection();
-
-    adjustLyric();
-}
 
 void LyricView::onMusicPlayed(PlaylistPtr playlist, const MusicMeta &meta)
 {
+    Q_D(LyricView);
     Q_UNUSED(playlist);
     d->m_playingMusic = meta;
 }
 
 void LyricView::onProgressChanged(qint64 value, qint64 /*length*/)
 {
+    Q_D(LyricView);
     auto len = d->m_lyriclist.m_lyricElements.length();
     if (!d->m_lyriclist.hasTime) {
         return;
@@ -234,42 +276,26 @@ void LyricView::onProgressChanged(qint64 value, qint64 /*length*/)
 
 void LyricView::onLyricChanged(const MusicMeta &meta,  const QByteArray &lyricData)
 {
+    Q_D(LyricView);
     if (d->m_playingMusic.hash != meta.hash) {
         return;
     }
-
     auto lyricStr = QString::fromUtf8(lyricData);
-
-    setLyricLines(lyricStr);
+    d->setLyricLines(lyricStr);
 }
 
 void LyricView::onCoverChanged(const MusicMeta &meta, const QByteArray &coverData)
 {
+    Q_D(LyricView);
     qDebug() << d->m_playingMusic.hash << meta.hash;
-    static QPixmap defaultCover(":/image/cover_max.png");
     if (d->m_playingMusic.hash != meta.hash) {
         return;
     }
 
     QPixmap coverPixmap = coverData.isNull() ?
-                          defaultCover : QPixmap::fromImage(QImage::fromData(coverData));
+                          QPixmap(defaultCoverUrl) : QPixmap::fromImage(QImage::fromData(coverData));
 
-    d->m_cover->setBackgroundImage(coverPixmap);
+    d->m_cover->setCoverPixmap(coverPixmap);
     d->m_cover->repaint();
 }
 
-void LyricView::initConnection()
-{
-    connect(d->m_hideLyric, &QPushButton::clicked, this, &LyricView::hideLyricView);
-}
-
-void LyricView::adjustLyric()
-{
-    auto itemHeight = lyricLineHeight;
-    auto maxHeight = this->height() * 9 / 10;
-    if (d->m_model->rowCount() * itemHeight < maxHeight) {
-        d->m_lyric->setFixedHeight(d->m_model->rowCount() * itemHeight);
-    } else {
-        d->m_lyric->setFixedHeight(maxHeight);
-    }
-}
