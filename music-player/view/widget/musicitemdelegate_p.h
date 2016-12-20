@@ -9,7 +9,10 @@
 
 #pragma once
 
+#include <QModelIndex>
 #include <QWidget>
+
+#include <dpicturesequenceview.h>
 
 class QStyleOptionViewItem;
 class MusicItemDelegate;
@@ -24,6 +27,9 @@ class MusicItemDelegatePrivate : public QWidget
     Q_PROPERTY(QColor highlightedBackground READ highlightedBackground WRITE setHighlightedBackground)
 
 public:
+    Dtk::Widget::DPictureSequenceView  *playingAnimation;
+    QModelIndex                         playingIndex;
+
     explicit MusicItemDelegatePrivate(MusicItemDelegate *parent = 0);
 
     inline QColor foreground(int col, const QStyleOptionViewItem &option) const;

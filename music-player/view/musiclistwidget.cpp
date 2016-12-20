@@ -35,14 +35,11 @@ public:
 
     void initConntion();
     void showEmptyHits(bool empty);
-    void addMusicInfo(MusicListView *m_musiclist, const MusicMeta &info);
 
-    PlaylistPtr         m_playlist;
     QWidget             *actionBar      = nullptr;
     QPushButton         *btPlayAll      = nullptr;
     QLabel              *m_emptyHits    = nullptr;
     MusicListView       *m_musiclist    = nullptr;
-    QStandardItemModel  *m_model        = nullptr;
     DComboBox           *m_sortCombo    = nullptr;
 
     MusicListWidget *q_ptr;
@@ -57,13 +54,13 @@ void MusicListWidgetPrivate::initConntion()
     q->connect(m_sortCombo, static_cast<void (DComboBox::*)(int)>(&DComboBox::activated),
     q, [ = ](int sortType) {
         qWarning() << "change to emptry playlist" << sortType;
-        emit ViewPresenter::instance()->resort(m_playlist, sortType);
+        emit ViewPresenter::instance()->resort(m_musiclist->playlist(), sortType);
     });
 
     q->connect(btPlayAll, &QPushButton::clicked,
     q, [ = ](bool) {
-        if (m_playlist) {
-            emit ViewPresenter::instance()->playall(m_playlist);
+        if (m_musiclist->playlist()) {
+            emit ViewPresenter::instance()->playall(m_musiclist->playlist());
         }
     });
     q->connect(m_musiclist, &MusicListView::requestCustomContextMenu,
@@ -72,11 +69,11 @@ void MusicListWidgetPrivate::initConntion()
     });
     q->connect(m_musiclist, &MusicListView::removeMusicList,
     q, [ = ](const MusicMetaList & metalist) {
-        emit ViewPresenter::instance()->musicListRemove(m_playlist, metalist);
+        emit ViewPresenter::instance()->musicListRemove(m_musiclist->playlist(), metalist);
     });
     q->connect(m_musiclist, &MusicListView::deleteMusicList,
     q, [ = ](const MusicMetaList & metalist) {
-        emit ViewPresenter::instance()->musicListDelete(m_playlist, metalist);
+        emit ViewPresenter::instance()->musicListDelete(m_musiclist->playlist(), metalist);
     });
     q->connect(m_musiclist, &MusicListView::addToPlaylist,
     q, [ = ](PlaylistPtr playlist, const MusicMetaList metalist) {
@@ -84,13 +81,14 @@ void MusicListWidgetPrivate::initConntion()
     });
     q->connect(m_musiclist, &MusicListView::doubleClicked,
     q, [ = ](const QModelIndex & index) {
-        auto item = m_musiclist->model()->item(index.row(), 0);
+        auto model = qobject_cast<QStandardItemModel *>(m_musiclist->model());
+        auto item = model->item(index.row(), 0);
         MusicMeta meta = qvariant_cast<MusicMeta>(item->data());
-        emit ViewPresenter::instance()->musicClicked(m_playlist, meta);
+        emit ViewPresenter::instance()->musicClicked(m_musiclist->playlist(), meta);
     });
     q->connect(m_musiclist, &MusicListView::play,
     q, [ = ](const MusicMeta & meta) {
-        emit ViewPresenter::instance()->musicClicked(m_playlist, meta);
+        emit ViewPresenter::instance()->musicClicked(m_musiclist->playlist(), meta);
     });
 }
 
@@ -142,8 +140,8 @@ MusicListWidget::MusicListWidget(QWidget *parent) :
     actionBarLayout->addWidget(d->btPlayAll, 0, Qt::AlignCenter);
     actionBarLayout->addStretch();
     actionBarLayout->addWidget(d->m_sortCombo, 0, Qt::AlignCenter);
+
     d->m_musiclist = new MusicListView;
-    d->m_model = d->m_musiclist->model();
     d->m_musiclist->hide();
 
     layout->addWidget(d->actionBar, 0, Qt::AlignTop);
@@ -175,158 +173,54 @@ void MusicListWidget::resizeEvent(QResizeEvent *event)
 void MusicListWidget::onMusicPlayed(PlaylistPtr playlist, const MusicMeta &meta)
 {
     Q_D(MusicListWidget);
-    if (playlist != d->m_playlist) {
-        qWarning() << "check playlist failed!"
-                   << "m_playlist:" << d->m_playlist
-                   << "playlist:" << d->m_playlist;
-        return;
-    }
-
-    // TODO: quick find
-    QModelIndex index;
-    QStandardItem *item = nullptr;
-    for (int i = 0; i < d->m_model->rowCount(); ++i) {
-        index = d->m_model->index(i, 0);
-        item = d->m_model->item(i, 0);
-        MusicMeta itemmeta = qvariant_cast<MusicMeta>(item->data());
-        if (itemmeta.hash == meta.hash) {
-            break;
-        }
-    }
-
-    if (nullptr == item) {
-        return;
-    }
-    d->m_musiclist->clearSelection();
-    d->m_musiclist->setCurrentIndex(index);
-    d->m_musiclist->scrollTo(index);
+    d->m_musiclist->onMusicPlayed(playlist, meta);
 }
 
-void MusicListWidget::onMusicRemoved(PlaylistPtr playlist, const MusicMeta &info)
+void MusicListWidget::onMusicRemoved(PlaylistPtr playlist, const MusicMeta &meta)
 {
     Q_D(MusicListWidget);
-    if (playlist != d->m_playlist) {
-        qWarning() << "check playlist failed!"
-                   << "m_playlist:" << d->m_playlist
-                   << "playlist:" << d->m_playlist;
-        return;
-    }
-
-    // TODO: quick find
-    for (int i = 0; i < d->m_model->rowCount(); ++i) {
-        auto item = d->m_model->item(i, 0);
-        MusicMeta meta = qvariant_cast<MusicMeta>(item->data());
-        if (meta.hash == info.hash) {
-            d->m_model->removeRow(i);
-            break;
-        }
-    }
-
-    d->showEmptyHits(playlist->length() == 0);
+    d->m_musiclist->onMusicRemoved(playlist, meta);
+    d->showEmptyHits(d->m_musiclist->model()->rowCount() == 0);
 }
-
-void MusicListWidgetPrivate::addMusicInfo(MusicListView *m_musiclist, const MusicMeta &info)
-{
-    Q_ASSERT(m_musiclist);
-
-    QStandardItem *newItem = new QStandardItem;
-    newItem->setData(QVariant::fromValue<MusicMeta>(info));
-    m_model->appendRow(newItem);
-    auto row = m_model->rowCount() - 1;
-    QModelIndex index = m_model->index(row, 0, QModelIndex());
-    m_model->setData(index, row);
-    index = m_model->index(row, 1, QModelIndex());
-    m_model->setData(index, info.title);
-    index = m_model->index(row, 2, QModelIndex());
-    auto artist = info.artist.isEmpty() ? MusicListWidget::tr("Unknow Artist") : info.artist;
-    m_model->setData(index, artist);
-    index = m_model->index(row, 3, QModelIndex());
-    auto album = info.album.isEmpty() ? MusicListWidget::tr("Unknow Album") : info.album;
-    m_model->setData(index, album);
-
-    index = m_model->index(row, 4, QModelIndex());
-    m_model->setData(index, lengthString(info.length));
-
-    showEmptyHits(false);
-}
-
 
 void MusicListWidget::initData(PlaylistPtr playlist)
 {
     Q_D(MusicListWidget);
-    if (d->m_playlist) {
-        d->m_playlist.data()->disconnect(this);
-    }
-    d->m_playlist = playlist;
+    d->m_musiclist->onMusiclistChanged(playlist);
+    d->m_sortCombo->setCurrentIndex(playlist->sorttype());
+    d->showEmptyHits(d->m_musiclist->model()->rowCount() == 0);
 }
 
-void MusicListWidget::onMusicAdded(PlaylistPtr playlist, const MusicMeta &info)
+void MusicListWidget::onMusicAdded(PlaylistPtr playlist, const MusicMeta &meta)
 {
     Q_D(MusicListWidget);
-    if (playlist != d->m_playlist) {
-        qWarning() << "check playlist failed!"
-                   << "m_playlist:" << d->m_playlist
-                   << "playlist:" << d->m_playlist;
-        return;
-    }
-    d->addMusicInfo(d->m_musiclist, info);
+    d->m_musiclist->onMusicAdded(playlist, meta);
+    d->showEmptyHits(false);
 }
 
 void MusicListWidget::onMusicListAdded(PlaylistPtr playlist, const MusicMetaList &infolist)
 {
-    for (auto &meta : infolist) {
-        onMusicAdded(playlist, meta);
-    }
+    Q_D(MusicListWidget);
+    d->m_musiclist->onMusicListAdded(playlist, infolist);
+    d->showEmptyHits(infolist.length() == 0);
 }
 
 void MusicListWidget::onLocate(PlaylistPtr playlist, const MusicMeta &info)
 {
     Q_D(MusicListWidget);
-    if (playlist.isNull()) {
-        return;
-    }
-
-    if (playlist != d->m_playlist) {
-        onMusiclistChanged(playlist);
-    }
-
-    QModelIndex index;
-    QStandardItem *item = nullptr;
-    for (int i = 0; i < d->m_model->rowCount(); ++i) {
-        index = d->m_model->index(i, 0);
-        item = d->m_model->item(i, 0);
-        MusicMeta meta = qvariant_cast<MusicMeta>(item->data());
-        if (meta.hash == info.hash) {
-            break;
-        }
-    }
-    if (nullptr == item) {
-        return;
-    }
-    d->m_musiclist->clearSelection();
-    d->m_musiclist->setCurrentIndex(index);
-
-    auto viewRect = QRect(QPoint(0, 0), size());
-    if (!viewRect.intersects(d->m_musiclist->visualRect(index))) {
-        d->m_musiclist->scrollTo(index, QListView::PositionAtCenter);
-    }
+    d->m_musiclist->onLocate(playlist, info);
 }
 
 void MusicListWidget::onMusiclistChanged(PlaylistPtr playlist)
 {
-    Q_D(MusicListWidget);
     if (playlist.isNull()) {
         qWarning() << "can not change to emptry playlist";
         return;
     }
-    this->initData(playlist);
-    d->m_sortCombo->setCurrentIndex(playlist->sorttype());
-    d->m_model->removeRows(0, d->m_model->rowCount());
-    for (auto &info : playlist->allmusic()) {
-        d->addMusicInfo(d->m_musiclist, info);
-    }
 
-    d->showEmptyHits(playlist->length() == 0);
+    Q_D(MusicListWidget);
+
+    initData(playlist);
 }
 
 void MusicListWidget::onCustomContextMenuRequest(const QPoint &pos,
@@ -335,6 +229,5 @@ void MusicListWidget::onCustomContextMenuRequest(const QPoint &pos,
         QList<PlaylistPtr > newlists)
 {
     Q_D(MusicListWidget);
-//    Q_ASSERT(item != nullptr);
     d->m_musiclist->showContextMenu(pos, selectedlist, favlist, newlists);
 }

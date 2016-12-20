@@ -25,8 +25,8 @@ public:
 
 public slots:
     void onMusicPlayed(PlaylistPtr playlist, const MusicMeta &info);
-    void onMusicRemoved(PlaylistPtr playlist, const MusicMeta &info);
-    void onMusicAdded(PlaylistPtr playlist, const MusicMeta &info);
+    void onMusicRemoved(PlaylistPtr playlist, const MusicMeta &meta);
+    void onMusicAdded(PlaylistPtr playlist, const MusicMeta &meta);
     void onMusicListAdded(PlaylistPtr playlist, const MusicMetaList &infolist);
 
     void onLocate(PlaylistPtr playlist, const MusicMeta &info);

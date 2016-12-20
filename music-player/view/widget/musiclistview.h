@@ -7,24 +7,20 @@
  * (at your option) any later version.
  **/
 
-#ifndef MUSICLISTVIEW_H
-#define MUSICLISTVIEW_H
+#pragma once
 
 #include <QTableView>
 
-#include <musicmeta.h>
 #include "../../core/playlist.h"
 
-class Playlist;
 class QStandardItemModel;
-class QScrollBar;
+class MusicListViewPrivate;
 class MusicListView : public QTableView
 {
     Q_OBJECT
 public:
     explicit MusicListView(QWidget *parent = 0);
-
-    QStandardItemModel *model() const {return m_model;}
+    ~MusicListView();
 
 signals:
     void play(const MusicMeta &meta);
@@ -33,7 +29,15 @@ signals:
     void deleteMusicList(const MusicMetaList &metalist);
     void requestCustomContextMenu(const QPoint &pos);
 
-public slots:
+public:
+    PlaylistPtr playlist();
+    void onMusicPlayed(PlaylistPtr playlist, const MusicMeta &meta);
+    void onMusicRemoved(PlaylistPtr playlist, const MusicMeta &meta);
+    void onMusicAdded(PlaylistPtr playlist, const MusicMeta &meta);
+    void onMusicListAdded(PlaylistPtr playlist, const MusicMetaList &metalist);
+    void onLocate(PlaylistPtr playlist, const MusicMeta &meta);
+    void onMusiclistChanged(PlaylistPtr playlist);
+
     void showContextMenu(const QPoint &pos,
                          PlaylistPtr selectedlist,
                          PlaylistPtr favlist,
@@ -45,9 +49,7 @@ protected:
     virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
 
 private:
-    // TODO: remove
-    QStandardItemModel  *m_model        = nullptr;
-    QScrollBar          *m_scrollBar    = nullptr;
-};
+    QScopedPointer<MusicListViewPrivate> d_ptr;
+    Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), MusicListView)
 
-#endif // MUSICLISTVIEW_H
+};

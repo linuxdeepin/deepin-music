@@ -25,10 +25,26 @@ public:
 
         ColumnButt,
     };
+    Q_ENUM(MusicColumn);
+
+    enum MusicItemDataRole {
+        PlayStatusRole = Qt::UserRole + 100,
+    };
+    Q_ENUM(MusicItemDataRole);
+
+    enum PlayStatus {
+        Playing = 0x0098,
+        Strop,
+    };
+    Q_ENUM(PlayStatus);
 
     MusicItemDelegate(QWidget *parent = 0);
     ~MusicItemDelegate();
 
+public:
+    void setPlayingIndex(const QModelIndex &index);
+
+public:
     virtual void initStyleOption(QStyleOptionViewItem *option, const QModelIndex &index) const;
     void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
     QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;

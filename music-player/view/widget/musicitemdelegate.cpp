@@ -29,6 +29,16 @@ MusicItemDelegatePrivate::MusicItemDelegatePrivate(MusicItemDelegate *parent):
     QWidget(nullptr), q_ptr(parent)
 {
     setObjectName("MusicItem");
+
+    playingAnimation = new Dtk::Widget::DPictureSequenceView;
+    QStringList urls;
+    auto urlTemp = QString(":/light/animation/playing/%1.png");
+    for (int i = 0; i < 94; ++i) {
+        urls << urlTemp.arg(i);
+    }
+    playingAnimation->setPictureSequence(urls);
+    playingAnimation->play();
+
     D_THEME_INIT_WIDGET(MusicItem);
 }
 
@@ -164,10 +174,11 @@ void MusicItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
     auto textColor = d->foreground(index.column(), option);
 
     if (option.state & QStyle::State_Selected) {
-        painter->fillRect(option.rect, option.palette.highlight());
-    } else {
-        painter->fillRect(option.rect, background);
+        background = d->highlightedBackground();
     }
+
+
+    painter->fillRect(option.rect, background);
 
     auto flag = alignmentFlag(index.column());
     auto rect = colRect(index.column(), option);
@@ -176,8 +187,35 @@ void MusicItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
 
     switch (index.column()) {
     case Number: {
-        auto num = numberString(index.row() + 1, option);
-        painter->drawText(rect, flag, num);
+        auto *w = const_cast<QWidget *>(option.widget);
+        bool hideAnimation = false;
+        if (!d->playingIndex.isValid()) {
+            hideAnimation = true;
+        } else {
+            auto listview = qobject_cast<MusicListView *>(w);
+            auto viewRect = QRect(QPoint(0, 0), listview->viewport()->size());
+            if (!viewRect.intersects(listview->visualRect(d->playingIndex))) {
+                hideAnimation = true;
+            }
+        }
+        if (hideAnimation) {
+            d->playingAnimation->hide();
+        }
+
+        if (d->playingIndex == index && !hideAnimation) {
+            d->playingAnimation->setParent(w);
+            d->playingAnimation->raise();
+            d->playingAnimation->play();
+            d->playingAnimation->show();
+            auto center = option.rect.center();
+            auto aniSize = d->playingAnimation->size();
+            d->playingAnimation->move(center.x() - aniSize.width() / 2, center.y() - aniSize.height() / 2);
+        } else {
+            auto num = numberString(index.row() + 1, option);
+            painter->drawText(rect, flag, num);
+        }
+
+
         break;
     }
     case Title:
@@ -189,7 +227,6 @@ void MusicItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
     default:
         break;
     }
-
 //    auto lineRect = QRect(option.rect.bottomLeft(), option.rect.bottomRight());
 //    painter->fillRect(lineRect, QColor(0x79, 0x79, 0x79, 26));
     painter->restore();
@@ -263,7 +300,12 @@ MusicItemDelegate::MusicItemDelegate(QWidget *parent)
 
 MusicItemDelegate::~MusicItemDelegate()
 {
+}
 
+void MusicItemDelegate::setPlayingIndex(const QModelIndex &index)
+{
+    Q_D(MusicItemDelegate);
+    d->playingIndex = index;
 }
 
 void MusicItemDelegate::initStyleOption(QStyleOptionViewItem *option, const QModelIndex &index) const

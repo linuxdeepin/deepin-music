@@ -42,6 +42,5 @@ protected:
 private:
     QScopedPointer<CoverPrivate> d_ptr;
     Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), Cover)
-    QColor m_shadowColor;
 };
 
