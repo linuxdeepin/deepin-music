@@ -60,42 +60,66 @@ LyricService::LyricService(QObject *parent) : QObject(parent)
         qDebug() << "load meta search engine" << engine;
         connect(engine, &DMusic::Plugin::MetaSearchEngine::coverLoaded,
         this, [ = ](const MusicMeta & meta, const QByteArray & coverData) {
+            if (coverData.length() > 0) {
+                QFile coverFile(cacheCoverPath(meta));
+                coverFile.open(QIODevice::WriteOnly);
+                coverFile.write(coverData);
+                coverFile.close();
+            }
+
             emit coverSearchFinished(meta, coverData);
         });
         connect(engine, &DMusic::Plugin::MetaSearchEngine::lyricLoaded,
-        this, [ = ](const MusicMeta & meta, const QByteArray & coverData) {
-            emit lyricSearchFinished(meta, coverData);
+        this, [ = ](const MusicMeta & meta, const QByteArray & lyricData) {
+            if (lyricData.length() > 0) {
+                QFile lyricFile(cacheLyricPath(meta));
+                lyricFile.open(QIODevice::WriteOnly);
+                lyricFile.write(lyricData);
+                lyricFile.close();
+            }
+
+            emit lyricSearchFinished(meta, lyricData);
         });
-//        connect(engine, &DMusic::Plugin::MetaSearchEngine::doSearchMeta,
-//                engine, &DMusic::Plugin::MetaSearchEngine::searchMeta);
     }
 }
 
-QString LyricService::coverPath(const MusicMeta &info)
+QByteArray LyricService::coverData(const MusicMeta &info)
 {
-    return cacheCoverPath(info);
+    QFile coverFile(cacheCoverPath(info));
+    if (coverFile.open(QIODevice::ReadOnly)) {
+        return coverFile.readAll();
+    }
+    return QByteArray();
 }
 
+QByteArray LyricService::lyricData(const MusicMeta &info)
+{
+    QFile lyricFile(cacheLyricPath(info));
+    if (lyricFile.open(QIODevice::ReadOnly)) {
+        return lyricFile.readAll();
+    }
+    return QByteArray();
+}
 
 int LyricService::searchCacheLyric(const MusicMeta &info)
 {
     QFileInfo lyric(cacheLyricPath(info));
     if (!lyric.exists() || lyric.size() < 1) {
-        emit lyricSearchFinished(info, "");
+//        emit lyricSearchFinished(info, QByteArray());
         return -1;
     }
-//    emit lyricSearchFinished(info, cacheLyricPath(info));
+    emit lyricSearchFinished(info, lyricData(info));
     return 0;
 }
 
 int LyricService::searchCacheCover(const MusicMeta &info)
 {
-    QFileInfo cover(coverPath(info));
+    QFileInfo cover(cacheCoverPath(info));
     if (!cover.exists() || cover.size() < 1) {
-        emit coverSearchFinished(info, "");
+//        emit coverSearchFinished(info, QByteArray());
         return -1;
     }
-//    emit coverSearchFinished(info, coverPath(info));
+    emit coverSearchFinished(info, coverData(info));
     return 0;
 }
 
@@ -105,30 +129,25 @@ int LyricService::searchCacheCover(const MusicMeta &info)
 //!
 void LyricService::searchMeta(const MusicMeta &info)
 {
-    qDebug() << "requestLyricCoverSearch" << info.title;
+    bool needlyric = false;
+    bool needCover = false;
+
+    if (0 != searchCacheLyric(info)) {
+        needlyric = true;
+    }
+    if (0 != searchCacheCover(info)) {
+        needCover = true;
+    }
+    if (!needCover && !needlyric) {
+        return;
+    }
+
     auto plugins = PluginManager::instance()->getPluginListByType(DMusic::Plugin::PluginType::TypeMetaSearchEngine);
     for (auto plugin : plugins) {
+        qDebug() << "search by " << plugin->pluginId() << info.title;
         auto engine = dynamic_cast<DMusic::Plugin::MetaSearchEngine *>(plugin);
         emit engine->doSearchMeta(info);
     }
-//    bool needlyric = false;
-//    bool needCover = false;
 
-//    if (0 != searchCacheLyric(info)) {
-//        needlyric = true;
-//    }
-//    if (0 != searchCacheCover(info)) {
-//        needCover = true;
-//    }
-//    if (!needCover && !needlyric) {
-//        return;
-//    }
-//    if (info.artist != "Unknow Artist") {
-//        if (0 != doSongArtistRequest(info, needlyric, needCover)) {
-//            doSongRequest(info, needlyric, needCover);
-//        }
-//    } else {
-//        doSongRequest(info, needlyric, needCover);
-//    }
 }
 

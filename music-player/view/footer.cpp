@@ -441,12 +441,11 @@ void Footer::onCoverChanged(const MusicMeta &info, const QByteArray &coverData)
         return;
     }
 
-    auto newCover = QImage::fromData(coverData);
-    if (newCover.isNull()) {
-        newCover = QImage(sDefaultCover);
-    }
+    QPixmap coverPixmap = coverData.length() > 1024 ?
+                          QPixmap::fromImage(QImage::fromData(coverData)) :
+                          QPixmap(sDefaultCover);
 
-    d->cover->setCoverPixmap(QPixmap::fromImage(newCover));
+    d->cover->setCoverPixmap(coverPixmap);
     d->cover->repaint();
 }
 

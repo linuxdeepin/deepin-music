@@ -319,12 +319,13 @@ void Presenter::onSearchText(const QString text)
     }
 }
 
-void Presenter::onLocateMusic(const QString &hash)
+void Presenter::onLocateMusicAtAll(const QString &hash)
 {
     auto allList = d->playlistMgr->playlist(AllMusicListID);
 
     d->playlistMgr->setSelectedPlaylist(allList);
-    onMusicPlay(allList, allList->music(hash));
+    emit locateMusic(allList, allList->music(hash));
+//    onMusicPlay(allList, allList->music(hash));
 }
 
 void Presenter::onPlaylistAdd(bool edit)

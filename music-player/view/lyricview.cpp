@@ -207,7 +207,7 @@ void LyricView::resizeEvent(QResizeEvent *event)
 
 void LyricView::paintEvent(QPaintEvent *e)
 {
-//    QFrame::paintEvent(e);
+    QFrame::paintEvent(e);
 
     return;
 //    QPainter painter(this);
@@ -287,13 +287,13 @@ void LyricView::onLyricChanged(const MusicMeta &meta,  const QByteArray &lyricDa
 void LyricView::onCoverChanged(const MusicMeta &meta, const QByteArray &coverData)
 {
     Q_D(LyricView);
-    qDebug() << d->m_playingMusic.hash << meta.hash;
     if (d->m_playingMusic.hash != meta.hash) {
         return;
     }
 
-    QPixmap coverPixmap = coverData.isNull() ?
-                          QPixmap(defaultCoverUrl) : QPixmap::fromImage(QImage::fromData(coverData));
+    QPixmap coverPixmap = coverData.length() > 1024 ?
+                          QPixmap::fromImage(QImage::fromData(coverData)) :
+                          QPixmap(defaultCoverUrl);
 
     d->m_cover->setCoverPixmap(coverPixmap);
     d->m_cover->repaint();

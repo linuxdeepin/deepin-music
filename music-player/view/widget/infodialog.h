@@ -7,8 +7,7 @@
  * (at your option) any later version.
  **/
 
-#ifndef INFODIALOG_H
-#define INFODIALOG_H
+#pragma once
 
 #include <ddialog.h>
 
@@ -21,9 +20,5 @@ class InfoDialog : public DAbstractDialog
 public:
     explicit InfoDialog(const MusicMeta& info, const QPixmap& coverPixmap, QWidget *parent = 0);
 
-signals:
-
-public slots:
 };
 
-#endif // INFODIALOG_H

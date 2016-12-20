@@ -34,7 +34,8 @@ void ViewPresenter::binding(Presenter *presenter)
             presenter, &Presenter::onToggleFavourite);
     connect(this, &ViewPresenter::modeChanged,
             presenter, &Presenter::onPlayModeChanged);
-
+    connect(this, &ViewPresenter::locateMusicAtAll,
+            presenter, &Presenter::onLocateMusicAtAll);
     connect(this, &ViewPresenter::musicClicked,
             presenter, &Presenter::onMusicPlay);
     connect(this, &ViewPresenter::musicAdd,
@@ -56,6 +57,8 @@ void ViewPresenter::binding(Presenter *presenter)
     connect(this, &ViewPresenter::selectPlaylist,
             presenter, &Presenter::onSelectedPlaylistChanged);
 
+    connect(presenter, &Presenter::locateMusic,
+               this, &ViewPresenter::locateMusic);
     connect(presenter, &Presenter::coverSearchFinished,
                this, &ViewPresenter::coverSearchFinished);
     connect(presenter, &Presenter::musicPlayed,

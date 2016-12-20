@@ -13,19 +13,19 @@
 #include <QList>
 
 struct NeteaseAlbum {
-    int     id;
+    int     id = 0;
     QString name;
     QString coverUrl;
 };
 
 struct NeteaseArtist {
-    int     id;
+    int     id = 0;
     QString name;
     QString avatarUrl;
 };
 
 struct NeteaseSong {
-    int                     id;
+    int                     id = 0;
     QString                 name;
     NeteaseAlbum            album;
     QList<NeteaseArtist>    artists;

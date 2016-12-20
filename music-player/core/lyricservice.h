@@ -15,8 +15,6 @@
 #include "util/singleton.h"
 
 class MusicMeta;
-class QNetworkReply;
-
 class LyricService : public QObject, public Singleton<LyricService>
 {
     Q_OBJECT
@@ -25,7 +23,9 @@ class LyricService : public QObject, public Singleton<LyricService>
 public:
     explicit LyricService(QObject *parent = 0);
 
-    static QString coverPath(const MusicMeta &info);
+    static QByteArray coverData(const MusicMeta &info);
+    static QByteArray lyricData(const MusicMeta &info);
+
 signals:
     void lyricSearchFinished(const MusicMeta &, const QByteArray &lyricData);
     void coverSearchFinished(const MusicMeta &, const QByteArray &coverData);
@@ -38,13 +38,6 @@ private:
 
     int searchCacheLyric(const MusicMeta &info);
     int searchCacheCover(const MusicMeta &info);
-
-    int doSongArtistRequest(const MusicMeta &info, bool lyric, bool cover);
-    int doSongRequest(const MusicMeta &info, bool lyric, bool cover);
-    int doLyricRequest(const MusicMeta &info, int sid);
-    int doCoverRequest(const MusicMeta &info, int aid);
-
-    int downloadUrl(const QString &url, const QString &filepath);
 };
 
 #endif // LYRICSERVICE_H

@@ -71,6 +71,7 @@ signals:
     void musicStoped(PlaylistPtr playlist, const MusicMeta &info);
     void progrossChanged(qint64 pos, qint64 length);
 
+    void locateMusic(PlaylistPtr playlist, const MusicMeta &info);
     //! from lyricservice
     void lyricSearchFinished(const MusicMeta &, const QByteArray &lyricData);
     void coverSearchFinished(const MusicMeta &, const QByteArray &coverData);
@@ -104,7 +105,7 @@ public slots:
     //! ui: menu interface
     void onRequestMusiclistMenu(const QPoint &pos);
     void onSearchText(const QString text);
-    void onLocateMusic(const QString &hash);
+    void onLocateMusicAtAll(const QString &hash);
 
     void onImportMusicDirectory();
 

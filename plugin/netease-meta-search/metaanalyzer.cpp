@@ -98,12 +98,12 @@ void MetaAnalyzer::analyzerResults()
     }
 
 
-    if (!find) {
+    if (!find && m_titleResult.length()) {
         result = m_titleResult.first();
         find = true;
     }
 
-    qDebug() << "find" << result.name << result.artists.first().name << result.album.name;
+    qDebug() << "find" << result.name << result.album.name;
     qDebug() << "fetch cover url:" << result.album.coverUrl << result.name << m_meta.title;
 
 //    connect(m_geese->getGoose(result.album.coverUrl), &DMusic::Net::Goose::arrive,

@@ -153,6 +153,7 @@ void MusicListView::onMusicPlayed(PlaylistPtr playlist, const MusicMeta &meta)
 
     // TODO
     d->m_delegate->setPlayingIndex(index);
+    update();
 }
 
 void MusicListView::onMusicRemoved(PlaylistPtr playlist, const MusicMeta &meta)
@@ -232,12 +233,12 @@ void MusicListView::onLocate(PlaylistPtr playlist, const MusicMeta &meta)
         return;
     }
     clearSelection();
-    setCurrentIndex(index);
 
     auto viewRect = QRect(QPoint(0, 0), size());
     if (!viewRect.intersects(visualRect(index))) {
         scrollTo(index, MusicListView::PositionAtCenter);
     }
+    setCurrentIndex(index);
 }
 
 void MusicListView::onMusiclistChanged(PlaylistPtr playlist)
@@ -292,10 +293,17 @@ void MusicListView::showContextMenu(const QPoint &pos,
     QPoint globalPos = this->mapToGlobal(pos);
 
     QMenu playlistMenu;
-    bool hasAction = false;
+
+    auto newvar = QVariant::fromValue(PlaylistPtr());
+
+    auto createPlaylist = playlistMenu.addAction(tr("New playlist"));
+    createPlaylist->setData(newvar);
+    createPlaylist->setIcon(QIcon(":/image/show_playlist_press.png"));
+
+    playlistMenu.addSeparator();
 
     if (selectedPlaylist != favPlaylist) {
-        hasAction = true;
+
         auto act = playlistMenu.addAction(favPlaylist->displayName());
         act->setData(QVariant::fromValue(favPlaylist));
     }
@@ -303,14 +311,9 @@ void MusicListView::showContextMenu(const QPoint &pos,
     for (auto playlist : newPlaylists) {
         auto act = playlistMenu.addAction(playlist->displayName());
         act->setData(QVariant::fromValue(playlist));
-        hasAction = true;
+
     }
 
-    if (hasAction) {
-        playlistMenu.addSeparator();
-    }
-    auto newvar = QVariant::fromValue(PlaylistPtr());
-    playlistMenu.addAction(tr("New playlist"))->setData(newvar);
 
     connect(&playlistMenu, &QMenu::triggered, this, [ = ](QAction * action) {
         auto playlist = action->data().value<PlaylistPtr >();
@@ -390,12 +393,12 @@ void MusicListView::showContextMenu(const QPoint &pos,
             warnDlg.setTextFormat(Qt::AutoText);
             warnDlg.addButtons(QStringList() << tr("Cancel") << tr("Delete"));
 
-            auto coverPath = QString(":/image/cover_max.png");
+            auto cover = QImage(QString(":/image/cover_max.png"));
             if (1 == metalist.length()) {
                 auto meta = metalist.first();
-                QFileInfo coverfi(LyricService::coverPath(meta));
-                if (coverfi.exists()) {
-                    coverPath = coverfi.absoluteFilePath();
+                auto coverData = LyricService::coverData(meta);
+                if (coverData.length() > 0) {
+                    cover = QImage::fromData(coverData);
                 }
                 warnDlg.setMessage(
                     QString(tr("Are you sure to delete %1?")).arg(meta.title));
@@ -404,9 +407,9 @@ void MusicListView::showContextMenu(const QPoint &pos,
                     QString(tr("TODO: Are you sure to delete %1 songs?")).arg(metalist.length()));
             }
 
-            auto cover = WidgetHelper::coverPixmap(coverPath, QSize(64, 64));
+            auto coverPixmap =  QPixmap::fromImage(WidgetHelper::cropRect(cover, QSize(140, 140)));
 
-            warnDlg.setIcon(QIcon(cover));
+            warnDlg.setIcon(QIcon(coverPixmap));
             if (0 == warnDlg.exec()) {
                 return;
             }
@@ -417,13 +420,16 @@ void MusicListView::showContextMenu(const QPoint &pos,
             auto index = selection->selectedRows().first();
             auto item = d->m_model->item(index.row(), index.column());
             MusicMeta meta = qvariant_cast<MusicMeta>(item->data());
-            auto coverPath = QString(":/image/info_cover.png");
-            QFileInfo coverfi(LyricService::coverPath(meta));
-            if (coverfi.exists()) {
-                coverPath = coverfi.absoluteFilePath();
+
+            auto cover = QImage(QString(":/image/info_cover.png"));
+            auto coverData = LyricService::coverData(meta);
+            if (coverData.length() > 0) {
+                cover = QImage::fromData(coverData);
             }
-            auto cover = WidgetHelper::coverPixmap(coverPath, QSize(140, 140));
-            InfoDialog dlg(meta, cover, this);
+
+            auto coverPixmap =  QPixmap::fromImage(WidgetHelper::cropRect(cover, QSize(140, 140)));
+
+            InfoDialog dlg(meta, coverPixmap, this);
             dlg.exec();
         }
     });

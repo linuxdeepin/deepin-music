@@ -51,8 +51,10 @@ InfoDialog::InfoDialog(const MusicMeta &info, const QPixmap &coverPixmap, QWidge
              << tr("File type:") << tr("Size:") << tr("Length:")
              << tr("Directory:");
 
+    QString artist = info.artist.isEmpty() ? tr("Unkonw Artist") : info.artist;
+    QString album = info.album.isEmpty() ? tr("Unkonw Album") : info.album;
     QStringList infoValues;
-    infoValues << info.title << info.artist << info.album
+    infoValues << info.title << artist << album
                << info.filetype << sizeString(info.size) << lengthString(info.length)
                << info.localPath;
 
@@ -71,7 +73,7 @@ InfoDialog::InfoDialog(const MusicMeta &info, const QPixmap &coverPixmap, QWidge
         infoValue->setMinimumHeight(18);
 //        infoValue->setMaximumWidth(250);
 
-        infogridLayout->addWidget(infoKey, i, 0, Qt::AlignRight| Qt::AlignTop);
+        infogridLayout->addWidget(infoKey, i, 0, Qt::AlignRight | Qt::AlignTop);
         infogridLayout->addWidget(infoValue, i, 1, Qt::AlignLeft | Qt::AlignTop);
 
         if (i == infoKeys.length() - 1) {
@@ -89,7 +91,7 @@ InfoDialog::InfoDialog(const MusicMeta &info, const QPixmap &coverPixmap, QWidge
     layout->addLayout(infogridLayout);
     layout->addStretch();
 
-    D_THEME_INIT_WIDGET(Widget/InfoDialog);
+    D_THEME_INIT_WIDGET(Widget / InfoDialog);
 
     connect(closeBt, &DWindowCloseButton::clicked, this, &DAbstractDialog::close);
 }

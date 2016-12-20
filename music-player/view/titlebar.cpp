@@ -16,7 +16,7 @@
 #include <dsearchedit.h>
 
 #include "widget/searchedit.h"
-
+#include "viewpresenter.h"
 DWIDGET_USE_NAMESPACE
 
 TitleBar::TitleBar(QWidget *parent) : QFrame(parent)
@@ -50,7 +50,7 @@ TitleBar::TitleBar(QWidget *parent) : QFrame(parent)
     D_THEME_INIT_WIDGET(TitleBar);
 
     connect(search, &SearchEdit::locateMusic,
-            this, &TitleBar::locateMusic);
+            ViewPresenter::instance(), &ViewPresenter::locateMusicAtAll);
     connect(search, &SearchEdit::searchText,
-            this, &TitleBar::searchText);
+            ViewPresenter::instance(), &ViewPresenter::searchText);
 }

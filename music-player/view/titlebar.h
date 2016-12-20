@@ -7,8 +7,7 @@
  * (at your option) any later version.
  **/
 
-#ifndef TITLEBAR_H
-#define TITLEBAR_H
+#pragma once
 
 #include <QFrame>
 
@@ -18,11 +17,4 @@ class TitleBar : public QFrame
 public:
     explicit TitleBar(QWidget *parent = 0);
 
-signals:
-    void searchText(const QString& text);
-    void locateMusic(const QString& hash);
-
-public slots:
 };
-
-#endif // TITLEBAR_H

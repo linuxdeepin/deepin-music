@@ -172,11 +172,6 @@ void PlayerFrame::binding(Presenter *presenter)
         showMusicListView();
     });
 
-    connect(d->title, &TitleBar::searchText,
-            presenter, &Presenter::onSearchText);
-    connect(d->title, &TitleBar::locateMusic,
-            presenter, &Presenter::onLocateMusic);
-
     // Music list binding
     connect(presenter, &Presenter::selectedPlaylistChanged,
             d->musicList, &MusicListWidget::onMusiclistChanged);
@@ -215,6 +210,11 @@ void PlayerFrame::binding(Presenter *presenter)
 
     connect(presenter, &Presenter::coverSearchFinished,
     this, [ = ](const MusicMeta &, const QByteArray & coverData) {
+        if (coverData.length() < 32) {
+            return;
+        }
+
+        qDebug() << coverData.length();
         QImage image = QImage::fromData(coverData);
         if (image.isNull()) {
             return;

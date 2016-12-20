@@ -53,7 +53,6 @@ signals:
     void requestCustomContextMenu(const QPoint &pos);
 
 signals:
-
     // view controller
     void showImportDialog(const QUrl &path);
 
@@ -64,6 +63,9 @@ signals:
     void showPlaylist();
 
     // musiclist controller
+    void searchText(const QString& text);
+    void locateMusicAtAll(const QString& hash);
+
     void locateMusic(PlaylistPtr playlist, const MusicMeta &info);
     void musicPlayed(PlaylistPtr playlist, const MusicMeta &info);
     void musicPaused(PlaylistPtr playlist, const MusicMeta &info);
