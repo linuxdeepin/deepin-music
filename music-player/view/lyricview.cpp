@@ -148,6 +148,7 @@ LyricView::LyricView(QWidget *parent)
     d->m_cover->setObjectName("LyricCover");
     d->m_cover->setCoverPixmap(QPixmap(defaultCoverUrl));
 
+    d->m_cover->hide();
     d->m_lyric = new QListView;
     d->m_lyric->setObjectName("LyricTextView");
     d->m_lyric->setStyleSheet(
@@ -207,7 +208,7 @@ void LyricView::resizeEvent(QResizeEvent *event)
 
 void LyricView::paintEvent(QPaintEvent *e)
 {
-    QFrame::paintEvent(e);
+//    QFrame::paintEvent(e);
 
     return;
 //    QPainter painter(this);

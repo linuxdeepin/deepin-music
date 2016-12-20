@@ -7,15 +7,14 @@
  * (at your option) any later version.
  **/
 
-#ifndef MUSICITEMDELEGATE_H
-#define MUSICITEMDELEGATE_H
+#pragma once
 
 #include <QStyledItemDelegate>
 
+class MusicItemDelegatePrivate;
 class MusicItemDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
-
 public:
     enum MusicColumn {
         Number  = 0,
@@ -27,24 +26,18 @@ public:
         ColumnButt,
     };
 
-    MusicItemDelegate(QWidget *parent = 0) : QStyledItemDelegate(parent) {}
+    MusicItemDelegate(QWidget *parent = 0);
+    ~MusicItemDelegate();
 
-    virtual void initStyleOption(QStyleOptionViewItem *option,
-                                 const QModelIndex &index) const;
-
-    void paint(QPainter *painter, const QStyleOptionViewItem &option,
-               const QModelIndex &index) const;
-
-    QSize sizeHint(const QStyleOptionViewItem &option,
-                   const QModelIndex &index) const;
-
-    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,
-                          const QModelIndex &index) const;
-
+    virtual void initStyleOption(QStyleOptionViewItem *option, const QModelIndex &index) const;
+    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
     void setEditorData(QWidget *editor, const QModelIndex &index) const;
+    void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
 
-    void setModelData(QWidget *editor, QAbstractItemModel *model,
-                      const QModelIndex &index) const;
+private:
+    QScopedPointer<MusicItemDelegatePrivate> d_ptr;
+    Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), MusicItemDelegate)
 };
 
-#endif // MUSICITEMDELEGATE_H

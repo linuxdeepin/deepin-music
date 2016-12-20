@@ -126,6 +126,7 @@ HEADERS += \
     view/widget/infodialog.h \
     view/widget/lyriclinedelegate.h \
     view/widget/modebuttom.h \
+    view/widget/musicitemdelegate_p.h \
     view/widget/musicitemdelegate.h \
     view/widget/musiclistview.h \
     view/widget/playlistitem.h \

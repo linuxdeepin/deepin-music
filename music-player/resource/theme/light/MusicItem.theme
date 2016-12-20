@@ -1,49 +1,8 @@
-#MusicNumber{
-    border: 1px solid transparent;
-    qproperty-alignment: AlignCenter;
-    font-size: 11px;
-    font-weight: normal;
-    font-style: normal;
-    color: #797979;
-}
-
-#MusicNumber[playstatus="active"]{
-    color: transparent;
-    image: url(:/image/playing_normal.png);
-}
-
-#MusicTitle{
-    border: 1px solid transparent;
-    qproperty-alignment: AlignLeft;
-    font-size: 12px;
-    font-weight: normal;
-    font-style: normal;
-    line-height: 1;
-}
-
-#MusciArtist{
-    border: 1px solid transparent;
-    qproperty-alignment: AlignLeft;
-    font-size: 11px;
-    font-weight: normal;
-    font-style: normal;
-    color: #292929;
-}
-
-#MusicAlbum{
-    border: 1px solid transparent;
-    qproperty-alignment: AlignLeft;
-    font-size: 11px;
-    font-weight: normal;
-    font-style: normal;
-    color: #292929;
-}
-
-#MusicLength{
-    border: 1px solid transparent;
-    qproperty-alignment: AlignRight;
-    font-size: 11px;
-    font-weight: normal;
-    font-style: normal;
-    color: #292929;
+#MusicItem {
+    qproperty-textColor: rgba(127,127,127,100%);
+    qproperty-titleColor: rgba(41,41,41,100%);
+    qproperty-highlightText: white;
+    qproperty-background: #ffffff;
+    qproperty-alternateBackground: #fbfbfb;
+    qproperty-highlightedBackground:  #2ca7f8;
 }

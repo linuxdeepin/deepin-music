@@ -127,6 +127,8 @@ void slideBottom2TopWidget(QWidget *top, QWidget *bottom, int delay)
     animation->setStartValue(topStart);
     animation->setEndValue(topEnd);
     animation->start();
+    animation->connect(animation, &QPropertyAnimation::finished,
+                       animation, &QPropertyAnimation::deleteLater);
 
     QRect bottomStart = QRect(0, top->height(), bottom->width(), bottom->height());
     QRect bottomEnd = bottomStart;
@@ -138,6 +140,10 @@ void slideBottom2TopWidget(QWidget *top, QWidget *bottom, int delay)
     animation2->setStartValue(bottomStart);
     animation2->setEndValue(bottomEnd);
     animation2->start();
+    animation2->connect(animation2, &QPropertyAnimation::finished,
+                        animation2, &QPropertyAnimation::deleteLater);
+    animation2->connect(animation2, &QPropertyAnimation::finished,
+                        top, &QWidget::hide);
 
     auto bottomOpacity = new QGraphicsOpacityEffect(bottom);
     bottom->setGraphicsEffect(bottomOpacity);
@@ -149,10 +155,15 @@ void slideBottom2TopWidget(QWidget *top, QWidget *bottom, int delay)
     animation3->setStartValue(0);
     animation3->setEndValue(1);
     animation3->start();
-    animation->connect(animation3, &QPropertyAnimation::finished,
-                       animation3, &QPropertyAnimation::deleteLater);
-    animation->connect(animation3, &QPropertyAnimation::finished,
-                       bottomOpacity, &QGraphicsOpacityEffect::deleteLater);
+    animation3->connect(animation3, &QPropertyAnimation::finished,
+                        animation3, &QPropertyAnimation::deleteLater);
+
+    animation3->connect(animation3, &QPropertyAnimation::finished,
+    bottom, [ = ]() {
+        bottom->setGraphicsEffect(nullptr);
+//        bottomOpacity->deleteLater();
+    });
+
 
     auto topOpacity = new QGraphicsOpacityEffect(top);
     top->setGraphicsEffect(topOpacity);
@@ -164,18 +175,13 @@ void slideBottom2TopWidget(QWidget *top, QWidget *bottom, int delay)
     animation4->setStartValue(1);
     animation4->setEndValue(0);
     animation4->start();
-    animation->connect(animation4, &QPropertyAnimation::finished,
-                       animation4, &QPropertyAnimation::deleteLater);
-    animation->connect(animation4, &QPropertyAnimation::finished,
-                       topOpacity, &QGraphicsOpacityEffect::deleteLater);
-
-    animation->connect(animation, &QPropertyAnimation::finished,
-                       animation, &QPropertyAnimation::deleteLater);
-    animation->connect(animation2, &QPropertyAnimation::finished,
-                       animation2, &QPropertyAnimation::deleteLater);
-    animation->connect(animation2, &QPropertyAnimation::finished,
-                       top, &QWidget::hide);
-
+    animation4->connect(animation4, &QPropertyAnimation::finished,
+                        animation4, &QPropertyAnimation::deleteLater);
+    animation4->connect(animation4, &QPropertyAnimation::finished,
+    bottom, [ = ]() {
+        top->setGraphicsEffect(nullptr);
+//        topOpacity->deleteLater();
+    });
 }
 
 void slideTop2BottomWidget(QWidget *top, QWidget *bottom, int delay)
@@ -216,10 +222,14 @@ void slideTop2BottomWidget(QWidget *top, QWidget *bottom, int delay)
     animation3->setStartValue(0);
     animation3->setEndValue(1);
     animation3->start();
-    animation->connect(animation3, &QPropertyAnimation::finished,
-                       animation3, &QPropertyAnimation::deleteLater);
-    animation->connect(animation3, &QPropertyAnimation::finished,
-                       bottomOpacity, &QGraphicsOpacityEffect::deleteLater);
+    animation3->connect(animation3, &QPropertyAnimation::finished,
+                        animation3, &QPropertyAnimation::deleteLater);
+    animation3->connect(animation3, &QPropertyAnimation::finished,
+    bottom, [ = ]() {
+        bottom->setGraphicsEffect(nullptr);
+//        bottomOpacity->deleteLater();
+    });
+
 
     auto topOpacity = new QGraphicsOpacityEffect(top);
     top->setGraphicsEffect(topOpacity);
@@ -231,10 +241,13 @@ void slideTop2BottomWidget(QWidget *top, QWidget *bottom, int delay)
     animation4->setStartValue(0.99);
     animation4->setEndValue(0);
     animation4->start();
-    animation->connect(animation4, &QPropertyAnimation::finished,
-                       animation4, &QPropertyAnimation::deleteLater);
-    animation->connect(animation4, &QPropertyAnimation::finished,
-                       topOpacity, &QGraphicsOpacityEffect::deleteLater);
+    animation4->connect(animation4, &QPropertyAnimation::finished,
+                        animation4, &QPropertyAnimation::deleteLater);
+    animation4->connect(animation4, &QPropertyAnimation::finished,
+    bottom, [ = ]() {
+        top->setGraphicsEffect(nullptr);
+//        topOpacity->deleteLater();
+    });
 
     animation->connect(animation, &QPropertyAnimation::finished,
                        animation, &QPropertyAnimation::deleteLater);

@@ -153,6 +153,8 @@ void PlayerFrame::initPlaylist(QList<PlaylistPtr > playlists, PlaylistPtr last)
 void PlayerFrame::initFooter(PlaylistPtr current, int mode)
 {
     emit d->footer->initData(current, mode);
+//    d->musicList->hide();
+//    d->lyric->hide();
 }
 
 void PlayerFrame::binding(Presenter *presenter)

@@ -11,12 +11,81 @@
 
 #include <QDebug>
 #include <QPainter>
+#include <QStandardItemModel>
 
-#include "../../core/music.h"
+#include <dthememanager.h>
+#include <musicmeta.h>
 
-static inline QColor foregroundColor(int col, const QStyleOptionViewItem &option)
+#include "musiclistview.h"
+#include "musicitemdelegate_p.h"
+
+DWIDGET_USE_NAMESPACE
+
+const int MusicItemLeftMargin = 15;
+const int MusicItemRightMargin = 20;
+const int MusicItemNumberMargin = 10;
+
+MusicItemDelegatePrivate::MusicItemDelegatePrivate(MusicItemDelegate *parent):
+    QWidget(nullptr), q_ptr(parent)
 {
-    auto headerColor = QColor(0x79, 0x79, 0x79);
+    setObjectName("MusicItem");
+    D_THEME_INIT_WIDGET(MusicItem);
+}
+
+QColor MusicItemDelegatePrivate::textColor() const
+{
+    return m_textColor;
+}
+QColor MusicItemDelegatePrivate::titleColor() const
+{
+    return m_numberColor;
+}
+QColor MusicItemDelegatePrivate::highlightText() const
+{
+    return m_highlightText;
+}
+QColor MusicItemDelegatePrivate::background() const
+{
+    return m_background;
+}
+QColor MusicItemDelegatePrivate::alternateBackground() const
+{
+    return m_alternateBackground;
+}
+QColor MusicItemDelegatePrivate::highlightedBackground() const
+{
+    return m_highlightedBackground;
+}
+void MusicItemDelegatePrivate::setTextColor(QColor textColor)
+{
+    m_textColor = textColor;
+}
+void MusicItemDelegatePrivate::setTitleColor(QColor numberColor)
+{
+    m_numberColor = numberColor;
+}
+void MusicItemDelegatePrivate::setHighlightText(QColor highlightText)
+{
+    m_highlightText = highlightText;
+}
+void MusicItemDelegatePrivate::setBackground(QColor background)
+{
+    m_background = background;
+}
+void MusicItemDelegatePrivate::setAlternateBackground(QColor alternateBackground)
+{
+    m_alternateBackground = alternateBackground;
+}
+void MusicItemDelegatePrivate::setHighlightedBackground(QColor highlightedBackground)
+{
+    m_highlightedBackground = highlightedBackground;
+}
+
+QColor MusicItemDelegatePrivate::foreground(int col, const QStyleOptionViewItem &option) const
+{
+    if (option.state & QStyle::State_Selected) {
+        return highlightText();
+    }
 
     auto emCol = static_cast<MusicItemDelegate::MusicColumn>(col);
     switch (emCol) {
@@ -24,21 +93,13 @@ static inline QColor foregroundColor(int col, const QStyleOptionViewItem &option
     case MusicItemDelegate::Artist:
     case MusicItemDelegate::Album:
     case MusicItemDelegate::Length:
-        if (option.state & QStyle::State_Selected) {
-            return option.palette.highlightedText().color();
-        } else {
-            return headerColor;
-        }
+        return textColor();
     case MusicItemDelegate::Title:
-        if (option.state & QStyle::State_Selected) {
-            return option.palette.highlightedText().color();
-        } else {
-            return option.palette.foreground().color();
-        }
+        return titleColor();
     case MusicItemDelegate::ColumnButt:
         break;
     }
-    return option.palette.foreground().color();
+    return textColor();
 }
 
 static inline QFlags<Qt::AlignmentFlag> alignmentFlag(int col)
@@ -63,30 +124,44 @@ static inline QRect colRect(int col, const QStyleOptionViewItem &option)
     auto emCol = static_cast<MusicItemDelegate::MusicColumn>(col);
     switch (emCol) {
     case MusicItemDelegate::Number:
-        return option.rect.marginsRemoved(QMargins(20, 0, 0, 0));
+        return option.rect.marginsRemoved(QMargins(MusicItemLeftMargin, 0, 0, 0));
     case MusicItemDelegate::Title:
     case MusicItemDelegate::Artist:
     case MusicItemDelegate::Album:
         return option.rect.marginsRemoved(QMargins(0, 0, 0, 0));
     case MusicItemDelegate::Length:
-        return option.rect.marginsRemoved(QMargins(0, 0, 20, 0));
+        return option.rect.marginsRemoved(QMargins(0, 0, MusicItemRightMargin, 0));
     case MusicItemDelegate::ColumnButt:
         break;
     }
     return option.rect.marginsRemoved(QMargins(0, 0, 0, 0));
 }
 
+static inline QString numberString(int row, const QStyleOptionViewItem &option)
+{
+    auto listview = qobject_cast<const MusicListView *>(option.widget);
+    auto itemCount = listview->model()->rowCount();
+    auto itemCountString = QString("%1").arg(itemCount);
+    return QString("%1").arg(int(row), itemCountString.length(), 10, QChar('0'));
+}
+
+static inline int pixel2point(int pixel)
+{
+    return pixel * 96 / 72;
+}
+
+
 void MusicItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
                               const QModelIndex &index) const
 {
-    painter->save();
+    Q_D(const MusicItemDelegate);
 
+    painter->save();
     painter->setRenderHint(QPainter::Antialiasing);
     painter->setRenderHint(QPainter::HighQualityAntialiasing);
 
-    // TODO: alnative color
-    auto background = (index.row() % 2) == 0 ?
-                      QColor("#ffffff") : QColor("#fefefe");
+    auto background = (index.row() % 2) == 0 ? d->background() : d->alternateBackground();
+    auto textColor = d->foreground(index.column(), option);
 
     if (option.state & QStyle::State_Selected) {
         painter->fillRect(option.rect, option.palette.highlight());
@@ -94,8 +169,6 @@ void MusicItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
         painter->fillRect(option.rect, background);
     }
 
-    //headerColor = qvariant_cast<QColor>(option.widget->property("headerColor"));
-    auto textColor = foregroundColor(index.column(), option);
     auto flag = alignmentFlag(index.column());
     auto rect = colRect(index.column(), option);
 
@@ -103,7 +176,7 @@ void MusicItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
 
     switch (index.column()) {
     case Number: {
-        auto num = QString("%1").arg(index.row() + 1);
+        auto num = numberString(index.row() + 1, option);
         painter->drawText(rect, flag, num);
         break;
     }
@@ -117,36 +190,24 @@ void MusicItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
         break;
     }
 
-    auto lineRect = QRect(option.rect.bottomLeft(), option.rect.bottomRight());
-    painter->fillRect(lineRect, QColor(0x79, 0x79, 0x79, 26));
+//    auto lineRect = QRect(option.rect.bottomLeft(), option.rect.bottomRight());
+//    painter->fillRect(lineRect, QColor(0x79, 0x79, 0x79, 26));
     painter->restore();
-}
-
-inline int pixel2point(int pixel)
-{
-    return pixel * 96 / 72;
 }
 
 inline int headerPointWidth(const QStyleOptionViewItem &option, const QModelIndex &index)
 {
-    auto averageWitch = option.fontMetrics.averageCharWidth();
-    auto headerWith = averageWitch * 3;
-    if (index.row() > 10000) {
-        headerWith = averageWitch * 6;
-    }
-    if (index.row() > 1000) {
-        headerWith =  averageWitch * 5;
-    }
-    if (index.row() > 100) {
-        headerWith =   averageWitch * 4;
-    }
-    return pixel2point(headerWith) + 20;
+    QFont measuringFont(option.font);
+    QFontMetrics fm(measuringFont);
+    auto headerWith = fm.width(QString("%1").arg(index.row()));
+    return pixel2point(headerWith) + MusicItemLeftMargin + MusicItemNumberMargin;
 }
 
 inline int tailPointWidth(const QStyleOptionViewItem &option)
 {
-    auto averageWitch = option.fontMetrics.averageCharWidth();
-    return pixel2point(averageWitch * 5) + 20;
+    QFont measuringFont(option.font);
+    QFontMetrics fm(measuringFont);
+    return pixel2point(fm.width("00:00")) + MusicItemRightMargin;
 }
 
 QSize MusicItemDelegate::sizeHint(const QStyleOptionViewItem &option,
@@ -192,6 +253,17 @@ void MusicItemDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
                                      const QModelIndex &index) const
 {
     QStyledItemDelegate::setModelData(editor, model, index);
+}
+
+MusicItemDelegate::MusicItemDelegate(QWidget *parent)
+    : QStyledItemDelegate(parent), d_ptr(new MusicItemDelegatePrivate(this))
+{
+
+}
+
+MusicItemDelegate::~MusicItemDelegate()
+{
+
 }
 
 void MusicItemDelegate::initStyleOption(QStyleOptionViewItem *option, const QModelIndex &index) const

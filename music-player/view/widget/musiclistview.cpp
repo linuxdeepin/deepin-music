@@ -82,6 +82,7 @@ MusicListView::MusicListView(QWidget *parent) : QTableView(parent)
             this, &MusicListView::requestCustomContextMenu);
 
     m_scrollBar = new QScrollBar(this);
+    m_scrollBar->setObjectName("MusicViewScrollBar");
     m_scrollBar->setOrientation(Qt::Vertical);
     m_scrollBar->raise();
 

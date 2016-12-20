@@ -42,40 +42,6 @@ inline QString cacheCoverPath(const MusicMeta &info)
     return cacheLyricDir + "/" + info.hash + ".jpg";
 }
 
-static int doSyncGet(const QString &rootUrl, QByteArray &result)
-{
-    QNetworkRequest url;
-    url.setUrl(rootUrl);
-
-    QScopedPointer<QNetworkAccessManager> connection(new QNetworkAccessManager);
-    QScopedPointer<QNetworkReply> reply(connection->get(url));
-
-    QEventLoop waitLoop;
-    QObject::connect(reply.data(), SIGNAL(finished()), &waitLoop, SLOT(quit()));
-    waitLoop.exec();
-
-    int errorCode = reply->error();
-    if (errorCode != 0) {
-//        qWarning() << "get" << url.url() << reply->errorString();
-        return errorCode;
-    }
-
-    result = reply->readAll();
-
-    return errorCode;
-}
-
-static int doGecimeAPI(const QString &url, QJsonObject &resultObject)
-{
-    QByteArray result;
-    auto ret = doSyncGet(url, result);
-    if (QNetworkReply::NoError != ret) {
-        return ret;
-    }
-    resultObject = QJsonDocument::fromJson(result).object();
-    return ret;
-}
-
 LyricService::LyricService(QObject *parent) : QObject(parent)
 {
     QDir cacheDir(MusicApp::cachePath() + "/lyric");

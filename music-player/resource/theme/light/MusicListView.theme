@@ -1,35 +1,9 @@
 #MusicListView{
+/* !!!! WARNING !!!!*/
+/* modify MusicItem.theme for color */
+
     border: 0px solid red;
     border-top: 1px solid rgba(0, 0, 0, 0.1);
     margin: 0 0 0 0;
     outline: none;
-    background-color: transparent;
-    color: rgba(41,41,41,100%);
-    selection-background-color: #2ca7f8;
-    selection-color: white;
-    alternate-background-color: yellow;
-
-    qproperty-headerColor: rgba(127,127,127,100%);
-}
-
-/* useless */
-#MusicListView::item {
-    color: blue;
-    height: 6px;
-    font-size: 12pt;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
-    background-color: red;
-}
-#MusicListView::item:focus {
-    border:none;
-}
-#MusicListView::item:selected:!active {
-    color: white;
-    background-color: rgba(44,167,248,100%);
-}
-#MusicListView::item:selected:active {
-    color: white;
-    background-color: rgba(255,167,248,100%);
-}
-#MusicListView::item:hover {
 }

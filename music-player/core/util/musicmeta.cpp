@@ -35,8 +35,8 @@ MusicMeta fromLocalFile(const QFileInfo &fileInfo, const QString &hash)
         return info;
     }
 
-    // TODO: fix me in windows
 #ifdef _WIN32
+    // TODO: fix me in windows
     TagLib::FileRef f(info.localPath.toStdWString().c_str());
 #else
     TagLib::FileRef f(info.localPath.toStdString().c_str());

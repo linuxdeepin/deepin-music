@@ -21,20 +21,10 @@ class QScrollBar;
 class MusicListView : public QTableView
 {
     Q_OBJECT
-    Q_PROPERTY(QColor headerColor READ headerColor WRITE setHeaderColor NOTIFY headerColorChanged)
 public:
     explicit MusicListView(QWidget *parent = 0);
 
-
-    virtual void wheelEvent(QWheelEvent *event) Q_DECL_OVERRIDE;
-    virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
-
-    QStandardItemModel *model() {return m_model;}
-
-    QColor headerColor() const
-    {
-        return m_headerColor;
-    }
+    QStandardItemModel *model() const {return m_model;}
 
 signals:
     void play(const MusicMeta &meta);
@@ -43,28 +33,21 @@ signals:
     void deleteMusicList(const MusicMetaList &metalist);
     void requestCustomContextMenu(const QPoint &pos);
 
-    void headerColorChanged(QColor headerColor);
-
 public slots:
     void showContextMenu(const QPoint &pos,
                          PlaylistPtr selectedlist,
                          PlaylistPtr favlist,
                          QList<PlaylistPtr >newlist);
 
-    void setHeaderColor(QColor headerColor)
-    {
-        if (m_headerColor == headerColor) {
-            return;
-        }
 
-        m_headerColor = headerColor;
-        emit headerColorChanged(headerColor);
-    }
+protected:
+    virtual void wheelEvent(QWheelEvent *event) Q_DECL_OVERRIDE;
+    virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
 
 private:
-    QStandardItemModel  *m_model = nullptr;
-    QScrollBar          *m_scrollBar = nullptr;
-    QColor m_headerColor;
+    // TODO: remove
+    QStandardItemModel  *m_model        = nullptr;
+    QScrollBar          *m_scrollBar    = nullptr;
 };
 
 #endif // MUSICLISTVIEW_H
