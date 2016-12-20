@@ -27,7 +27,8 @@
 
 #include "mpriscontroller.h"
 
-#include <qqmlinfo.h>
+#include <QDebug>
+//#include <qqmlinfo.h>
 
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
@@ -49,7 +50,7 @@ MprisManager::MprisManager(QObject *parent)
     QDBusConnection connection = QDBusConnection::sessionBus();
 
     if (!connection.isConnected()) {
-        qmlInfo(this) << "Failed attempting to connect to DBus";
+//        qmlInfo(this) << "Failed attempting to connect to DBus";
         return;
     }
 
@@ -168,7 +169,7 @@ void MprisManager::setCurrentService(const QString &service)
     QRegExp rx(mprisNameSpace);
     rx.setPatternSyntax(QRegExp::Wildcard);
     if (!rx.exactMatch(service)) {
-        qmlInfo(this) << service << "is not a proper Mpris2 service";
+//        qmlInfo(this) << service << "is not a proper Mpris2 service";
         return;
     }
 

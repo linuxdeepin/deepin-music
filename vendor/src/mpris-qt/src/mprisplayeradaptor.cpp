@@ -27,7 +27,7 @@
 
 #include "mprisplayer.h"
 
-#include <qqmlinfo.h>
+//#include <qqmlinfo.h>
 
 #include <QtCore/QMetaObject>
 #include <QtCore/QByteArray>
@@ -563,7 +563,7 @@ void MprisPlayerAdaptor::onMaximumRateChanged() const
     MprisPlayer * const player = static_cast<MprisPlayer *>(parent());
 
     if (player->maximumRate() < 1) {
-        qmlInfo(this) << "Maximum rate should be equal or above 1";
+//        qmlInfo(this) << "Maximum rate should be equal or above 1";
         return;
     }
 
@@ -588,7 +588,7 @@ void MprisPlayerAdaptor::onMinimumRateChanged() const
     MprisPlayer * const player = static_cast<MprisPlayer *>(parent());
 
     if (player->minimumRate() > 1) {
-        qmlInfo(this) << "Minimum rate should be equal or less than 1";
+//        qmlInfo(this) << "Minimum rate should be equal or less than 1";
         return;
     }
 
@@ -613,7 +613,7 @@ void MprisPlayerAdaptor::onRateChanged() const
     MprisPlayer * const player = static_cast<MprisPlayer *>(parent());
 
     if (player->rate() <= 0 || player->rate() < player->minimumRate() || player->rate() > player->maximumRate()) {
-        qmlInfo(this) << "Rate should never be negative or out of the minimum and maximum limits";
+//        qmlInfo(this) << "Rate should never be negative or out of the minimum and maximum limits";
         return;
     }
 

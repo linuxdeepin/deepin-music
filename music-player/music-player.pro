@@ -15,51 +15,13 @@ unix{
 #    PKGCONFIG += mpris-qt5 dbusextended-qt5
 }
 
-win32{
-    DEFINES += STATIC_LIB
-    DEFINES += TAGLIB_STATIC
-
-    INCLUDEPATH += D:\Develop\deepin-tool-kit\dwidget
-    INCLUDEPATH += D:\Develop\deepin-tool-kit\dwidget\widgets
-    INCLUDEPATH += D:\Develop\deepin-tool-kit\dwidget\platforms\windows
-
-    DEPENDPATH += D:\Develop\deepin-tool-kit\dwidget
-
-    INCLUDEPATH += D:\Develop\deepin-tool-kit\dutil
-    INCLUDEPATH += D:\Develop\deepin-tool-kit\dutil\dlog
-    DEPENDPATH += D:\Develop\deepin-tool-kit\dutil
-
-    INCLUDEPATH += D:\Develop\deepin-tool-kit\dbase
-    DEPENDPATH += D:\Develop\deepin-tool-kit\dbase
-
-    INCLUDEPATH += D:\Develop\Library\zlib\include
-    INCLUDEPATH += "C:\Program Files (x86)\taglib\include\taglib"
-
-    CONFIG(release, debug|release) {
-        LIBS += -LD:\Develop\deepin-tool-kit\build\dwidget\release -ldtkwidget
-        LIBS += -LD:\Develop\deepin-tool-kit\build\dutil\release -ldtkutil
-        LIBS += -LD:\Develop\deepin-tool-kit\build\dbase\release -ldtkbase
-        LIBS += -L"C:\Program Files (x86)\taglib\lib" -ltag
-        LIBS += -L"C:\Program Files (x86)\taglib\lib" -ltag_c
-        LIBS += -L"D:\Develop\Library\zlib-1.2.8\contrib\vstudio\vc11\x64\ZlibStatRelease" -lzlibstat
-    }
-    else:CONFIG(debug, debug|release){
-        LIBS += -LD:\Develop\deepin-tool-kit\build\dwidget\debug -ldtkwidget
-        LIBS += -LD:\Develop\deepin-tool-kit\build\dutil\debug -ldtkutil
-        LIBS += -LD:\Develop\deepin-tool-kit\build\dbase\debug -ldtkbase
-    }
-
-    INCLUDEPATH += D:\Develop\Library\icu\include
-    LIBS += -LD:\Develop\Library\icu\lib64 -licuuc
-    LIBS += -LD:\Develop\Library\icu\lib64 -licuin
-}
 
 
 SOURCES += \
     core/util/cueparser.cpp \
 #    core/util/filesystemwatcher.cpp \
+#    core/util/inotifyengine.cpp \
     core/util/icu.cpp \
-    core/util/inotifyengine.cpp \
     core/util/lyric.cpp \
     core/util/musicmeta.cpp \
     core/util/pinyin.cpp \
@@ -103,8 +65,8 @@ SOURCES += \
 HEADERS += \
     core/util/cueparser.h \
 #    core/util/filesystemwatcher.h \
+#    core/util/inotifyengine.h \
     core/util/icu.h \
-    core/util/inotifyengine.h \
     core/util/lyric.h \
     core/util/musicmeta.h \
     core/util/pinyin.h \
@@ -151,8 +113,10 @@ RESOURCES += \
     resource/theme/theme.qrc \
     resource/resource.qrc
 
+unix{
 # Automating generation .qm files from .ts files
 system($$PWD/../tool/translate_generation.sh)
+}
 
 TRANSLATIONS += $$PWD/translations/$${TARGET}.ts \
                 $$PWD/translations/$${TARGET}_zh_CN.ts

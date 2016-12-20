@@ -27,7 +27,7 @@
 
 #include "mprisplayer_p.h"
 
-#include <qqmlinfo.h>
+//#include <qqmlinfo.h>
 
 #include <QDBusConnection>
 #include <QDBusMessage>
@@ -69,9 +69,9 @@ MprisPlayer::MprisPlayer(QObject *parent)
     QDBusConnection connection = QDBusConnection::sessionBus();
 
     if (!connection.isConnected()) {
-        qmlInfo(this) << "Failed attempting to connect to DBus";
+//        qmlInfo(this) << "Failed attempting to connect to DBus";
     } else if (!connection.registerObject(mprisObjectPath, this)) {
-        qmlInfo(this) << "Failed attempting to register object path. Already registered?";
+//        qmlInfo(this) << "Failed attempting to register object path. Already registered?";
     }
 }
 
@@ -528,19 +528,19 @@ QVariantMap MprisPlayer::typeMetadata(const QVariantMap &aMetadata)
 void MprisPlayer::registerService()
 {
     if (m_serviceName.isEmpty()) {
-        qmlInfo(this) << "Failed to register service: empty service name";
+//        qmlInfo(this) << "Failed to register service: empty service name";
         return;
     }
 
     QDBusConnection connection = QDBusConnection::sessionBus();
 
     if (!connection.isConnected()) {
-        qmlInfo(this) << "Failed attempting to connect to DBus";
+//        qmlInfo(this) << "Failed attempting to connect to DBus";
         return;
     }
 
     if (!connection.registerService(QString(serviceNamePrefix).append(m_serviceName))) {
-        qmlInfo(this) << "Failed attempting to register service: " << m_serviceName << " Already taken?";
+//        qmlInfo(this) << "Failed attempting to register service: " << m_serviceName << " Already taken?";
     }
 
     return;
@@ -563,7 +563,7 @@ void MprisPlayer::notifyPropertiesChanged(const QString& interfaceName, const QV
     QDBusConnection connection = QDBusConnection::sessionBus();
 
     if (!connection.isConnected()) {
-        qmlInfo(this) << "Failed attempting to connect to DBus";
+//        qmlInfo(this) << "Failed attempting to connect to DBus";
         return;
     }
 
@@ -576,6 +576,6 @@ void MprisPlayer::notifyPropertiesChanged(const QString& interfaceName, const QV
     message.setArguments(arguments);
 
     if (!connection.send(message)) {
-        qmlInfo(this) << "Failed to send DBus property notification signal";
+//        qmlInfo(this) << "Failed to send DBus property notification signal";
     }
 }

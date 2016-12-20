@@ -7,6 +7,7 @@
  * (at your option) any later version.
  **/
 
+#include <QtDBus>
 #include <QDBusError>
 #include <QDBusConnection>
 
@@ -27,7 +28,7 @@ using namespace Dtk::Widget;
 
 int main(int argc, char *argv[])
 {
-    DApplication::loadDXcbPlugin();
+//    DApplication::loadDXcbPlugin();
 
 #if defined(STATIC_LIB)
     DWIDGET_INIT_RESOURCE();
@@ -43,6 +44,7 @@ int main(int argc, char *argv[])
 
     app.loadTranslator();
 
+#ifdef Q_OS_UNIX
     QDBusConnection conn = QDBusConnection::sessionBus();
     if (!conn.registerService("org.mpris.MediaPlayer2.deepinmusic")) {
         qDebug() << "registerService Failed, maybe service exist" << conn.lastError();
@@ -58,6 +60,7 @@ int main(int argc, char *argv[])
     }
 
     new MprisPlayer();
+#endif
 
     app.setTheme("light");
     app.setWindowIcon(QIcon(":/image/deepin-music.svg"));

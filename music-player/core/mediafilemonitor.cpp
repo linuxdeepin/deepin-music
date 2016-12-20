@@ -46,11 +46,9 @@ QStringList MediaFileMonitor::supportedFilterStringList()
 
 MediaFileMonitor::MediaFileMonitor(QObject *parent) : QObject(parent)
 {
-    m_watcher = new InotifyEngine;
-
-
-    connect(m_watcher, &InotifyEngine::fileRemoved,
-            this, &MediaFileMonitor::fileRemoved);
+//    m_watcher = new InotifyEngine;
+//    connect(m_watcher, &InotifyEngine::fileRemoved,
+//            this, &MediaFileMonitor::fileRemoved);
 
     //black list
     QHash<QString, bool> suffixBlacklist;
@@ -102,7 +100,7 @@ void MediaFileMonitor::importPlaylistFiles(PlaylistPtr playlist, const QStringLi
             if (fileInfo.suffix() == "cue") {
                 cuelist << CueParser(url);
                 // TODO: check cue invaild
-                m_watcher->addPath(fileInfo.absolutePath());
+//                m_watcher->addPath(fileInfo.absolutePath());
                 continue;
             }
 
@@ -121,7 +119,7 @@ void MediaFileMonitor::importPlaylistFiles(PlaylistPtr playlist, const QStringLi
             }
 
             metaCache << info;
-            m_watcher->addPath(fileInfo.absolutePath());
+//            m_watcher->addPath(fileInfo.absolutePath());
 
             if (metaCache.length() >= ScanCacheSize) {
                 emit MediaDatabase::instance()->addMusicMetaList(metaCache);
@@ -169,5 +167,5 @@ void MediaFileMonitor::startMonitor()
         dirs.insert(metafi.absolutePath(), metafi.absolutePath());
     }
 
-    m_watcher->addPaths(dirs.keys());
+//    m_watcher->addPaths(dirs.keys());
 }

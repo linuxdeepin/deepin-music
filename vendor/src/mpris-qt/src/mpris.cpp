@@ -25,8 +25,8 @@
 
 #include "mpris.h"
 
-#include <QQmlEngine>
-#include <QJSEngine>
+//#include <QQmlEngine>
+//#include <QJSEngine>
 
 static const char *playbackStatusStrings[] = { "Playing", "Paused", "Stopped" };
 static const char *loopStatusStrings[] = { "None", "Track", "Playlist" };

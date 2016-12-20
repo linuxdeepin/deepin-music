@@ -27,7 +27,7 @@
 
 #include "mprisplayer.h"
 
-#include <qqmlinfo.h>
+//#include <qqmlinfo.h>
 
 #include <QtCore/QMetaObject>
 #include <QtCore/QByteArray>

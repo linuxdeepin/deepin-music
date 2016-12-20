@@ -49,7 +49,7 @@ void PluginManager::loadPlugins()
     }
     qDebug() << "load plugins from" << pluginsDir.path();
 
-    for (auto libraryFile : pluginsDir.entryInfoList(QStringList() << "*.so")) {
+    for (auto libraryFile : pluginsDir.entryInfoList(QStringList() << "*.so" <<"*.dll")) {
         qDebug() << libraryFile.absoluteFilePath();
         auto loader = new QPluginLoader;
         loader->setFileName(libraryFile.absoluteFilePath());

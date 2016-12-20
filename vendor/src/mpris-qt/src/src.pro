@@ -4,7 +4,7 @@ include($$PWD/../../../../config.pri)
 TEMPLATE = lib
 CONFIG += qt link_pkgconfig
 
-QT = core dbus qml
+QT = core dbus
 
 #PKGCONFIG = dbusextended-qt5
 TARGET = $${MPRISQTLIB}
@@ -67,9 +67,7 @@ QMAKE_PKGCONFIG_INCDIR = $$headers.path
 QMAKE_PKGCONFIG_DESTDIR = pkgconfig
 QMAKE_PKGCONFIG_NAME = MprisQt
 
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../dbusextended-qt/src/release/ -ldbusextended-qt5
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../dbusextended-qt/src/debug/ -ldbusextended-qt5
-else:unix: LIBS += -L$$BUILD_DIST/lib -ldbusextended-qt5
+LIBS += -L$$BUILD_DIST/lib -ldbusextended-qt5
 
 INCLUDEPATH += $$PWD/../../dbusextended-qt/src
 DEPENDPATH += $$PWD/../../dbusextended-qt/src
