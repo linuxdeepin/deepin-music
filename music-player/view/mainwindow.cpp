@@ -49,22 +49,25 @@ static QColor s_normalTitleBottom   = QColor(0xf8, 0xf8, 0xf8, 255);
 static QColor s_lyricTitleTop       = QColor(0, 0, 0, 94);
 static QColor s_lyriclTitleBottom   = QColor(0, 0, 0, 102);
 
-class PlayerFramePrivate
+class MainWindowPrivate
 {
 public:
     QStackedWidget  *stacked    = nullptr;
     QFrame          *content    = nullptr;
     TitleBar        *title      = nullptr;
+    Footer          *footer     = nullptr;
+    PlaylistWidget  *playlist   = nullptr;
+
     ImportWidget    *import     = nullptr;
     MusicListWidget *musicList  = nullptr;
-    PlaylistWidget  *playlist   = nullptr;
-    Footer          *footer     = nullptr;
     LyricView       *lyric      = nullptr;
+
+    QWidget         *currentWidget = nullptr;
 };
 
 
-PlayerFrame::PlayerFrame(QWidget *parent)
-    : DWindow(parent), d(new PlayerFramePrivate)
+MainWindow::MainWindow(QWidget *parent)
+    : DWindow(parent), d(new MainWindowPrivate)
 {
     ViewPresenter::instance();
 
@@ -109,7 +112,7 @@ PlayerFrame::PlayerFrame(QWidget *parent)
     contentLayout->addWidget(d->stacked);
     contentLayout->addWidget(d->footer);
     setContentWidget(d->content);
-    D_THEME_INIT_WIDGET(PlayerFrame);
+    D_THEME_INIT_WIDGET(MainWindow);
 
     resize(1040, 650);
     QImage image = QImage((":/image/cover_max.png"));
@@ -119,12 +122,12 @@ PlayerFrame::PlayerFrame(QWidget *parent)
     d->footer->setFocus();
 }
 
-PlayerFrame::~PlayerFrame()
+MainWindow::~MainWindow()
 {
 
 }
 
-void PlayerFrame::initMusiclist(PlaylistPtr allmusic, PlaylistPtr last)
+void MainWindow::initMusiclist(PlaylistPtr allmusic, PlaylistPtr last)
 {
     if (allmusic.isNull() || 0 == allmusic->length()) {
         d->import->show();
@@ -145,26 +148,44 @@ void PlayerFrame::initMusiclist(PlaylistPtr allmusic, PlaylistPtr last)
     d->musicList->onMusiclistChanged(last);
 }
 
-void PlayerFrame::initPlaylist(QList<PlaylistPtr > playlists, PlaylistPtr last)
+void MainWindow::initPlaylist(QList<PlaylistPtr > playlists, PlaylistPtr last)
 {
     d->playlist->initData(playlists, last);
 }
 
-void PlayerFrame::initFooter(PlaylistPtr current, int mode)
+void MainWindow::initFooter(PlaylistPtr current, int mode)
 {
     emit d->footer->initData(current, mode);
 //    d->musicList->hide();
 //    d->lyric->hide();
 }
 
-void PlayerFrame::binding(Presenter *presenter)
+void MainWindow::binding(Presenter *presenter)
 {
     ViewPresenter::instance()->binding(presenter);
 
+    connect(ViewPresenter::instance(), &ViewPresenter::showImportView,
+            this, &MainWindow::showImportView);
     connect(ViewPresenter::instance(), &ViewPresenter::toggleLyricView,
-            this, &PlayerFrame::toggleLyricView);
+            this, &MainWindow::toggleLyricView);
     connect(ViewPresenter::instance(), &ViewPresenter::togglePlaylist,
-            this, &PlayerFrame::togglePlaylist);
+            this, &MainWindow::togglePlaylist);
+
+    connect(presenter, &Presenter::playlistAdded,
+    this, [ = ](PlaylistPtr) {
+        setPlaylistVisible(true);
+    });
+    connect(ViewPresenter::instance(), &ViewPresenter::musicStoped,
+    this, [ = ](PlaylistPtr, const MusicMeta &) {
+        QImage image = QImage((":/image/cover_max.png"));
+        image = WidgetHelper::cropRect(image, this->size());
+        setBackgroundImage(WidgetHelper::blurImage(image, 50));
+        repaint();
+    });
+    connect(ViewPresenter::instance(), &ViewPresenter::hidePlaylist,
+    this, [ = ]() {
+        setPlaylistVisible(false);
+    });
     connect(ViewPresenter::instance(), &ViewPresenter::locateMusic,
     this, [ = ](PlaylistPtr playlist, const MusicMeta & info) {
         d->musicList->onLocate(playlist, info);
@@ -185,6 +206,11 @@ void PlayerFrame::binding(Presenter *presenter)
 
     connect(presenter, &Presenter::musicPlayed,
             d->musicList, &MusicListWidget::onMusicPlayed);
+    connect(presenter, &Presenter::musicPaused,
+            d->musicList, &MusicListWidget::onMusicPause);
+    connect(presenter, &Presenter::musicStoped,
+            d->musicList, &MusicListWidget::onMusicPause);
+
     connect(presenter, &Presenter::musiclistMenuRequested,
             d->musicList, &MusicListWidget::onCustomContextMenuRequest);
 
@@ -194,7 +220,6 @@ void PlayerFrame::binding(Presenter *presenter)
             d->playlist, &PlaylistWidget::onCurrentChanged);
     connect(presenter, &Presenter::playlistAdded,
             d->playlist, &PlaylistWidget::onPlaylistAdded);
-
 
     // Lyric
     connect(presenter, &Presenter::musicPlayed,
@@ -230,34 +255,25 @@ void PlayerFrame::binding(Presenter *presenter)
     connect(d->import, &ImportWidget::importMusicDirectory,
             presenter, &Presenter::onImportMusicDirectory);
     connect(d->import, &ImportWidget::importFiles,
-            this, &PlayerFrame::onSelectImportFiles);
-    connect(this, &PlayerFrame::importSelectFiles,
+            this, &MainWindow::onSelectImportFiles);
+    connect(this, &MainWindow::importSelectFiles,
             presenter, &Presenter::onImportFiles);
 
     // View control
     connect(presenter, &Presenter::selectedPlaylistChanged,
     this, [ = ]() {
-        if (d->lyric->isVisible()) {
-            WidgetHelper::slideTop2BottomWidget(d->lyric, d->musicList, s_AnimationDelay);
-            this->disableControl();
-            d->musicList->resize(d->lyric->size());
-            d->musicList->show();
-        }
+        changeToMusicListView(true);
     });
-
     connect(presenter, &Presenter::requestImportFiles,
-            this, &PlayerFrame::onSelectImportFiles);
-
+            this, &MainWindow::onSelectImportFiles);
     connect(presenter, &Presenter::showMusiclist,
-            this, &PlayerFrame::showMusicListView);
+            this, &MainWindow::showMusicListView);
 
-    connect(presenter, &Presenter::metaInfoClean,
-            this, &PlayerFrame::showImportView);
 
     initMenu();
 }
 
-void PlayerFrame::mousePressEvent(QMouseEvent *event)
+void MainWindow::mousePressEvent(QMouseEvent *event)
 {
     qDebug() << event;
     // TODO hide all
@@ -266,7 +282,7 @@ void PlayerFrame::mousePressEvent(QMouseEvent *event)
     DWindow::mousePressEvent(event);
 }
 
-void PlayerFrame::resizeEvent(QResizeEvent *e)
+void MainWindow::resizeEvent(QResizeEvent *e)
 {
     DWindow::resizeEvent(e);
     QSize newSize = DWindow::size();
@@ -285,7 +301,7 @@ void PlayerFrame::resizeEvent(QResizeEvent *e)
     }
 }
 
-void PlayerFrame::paintEvent(QPaintEvent *e)
+void MainWindow::paintEvent(QPaintEvent *e)
 {
     {
         int radius = this->radius() ;
@@ -366,7 +382,7 @@ void PlayerFrame::paintEvent(QPaintEvent *e)
     }
 }
 
-void PlayerFrame::onSelectImportFiles()
+void MainWindow::onSelectImportFiles()
 {
     QFileDialog fileDlg;
     auto musicDir =  QStandardPaths::standardLocations(QStandardPaths::MusicLocation);
@@ -379,7 +395,7 @@ void PlayerFrame::onSelectImportFiles()
     }
 }
 
-void PlayerFrame::toggleLyricView()
+void MainWindow::toggleLyricView()
 {
     if (d->lyric->isVisible()) {
         showMusicListView();
@@ -388,58 +404,51 @@ void PlayerFrame::toggleLyricView()
     }
 }
 
-void PlayerFrame::togglePlaylist()
+void MainWindow::togglePlaylist()
 {
-    qDebug() << d->playlist->isVisible();
     setPlaylistVisible(!d->playlist->isVisible());
 }
 
-void PlayerFrame::showLyricView()
+void MainWindow::showLyricView()
 {
     m_titlebarTopColor = s_lyricTitleTop;
     m_titlebarBottomColor = s_lyriclTitleBottom;
+
+    auto current = d->currentWidget ? d->currentWidget : d->musicList;
+    d->lyric->resize(current->size());
     WidgetHelper::slideBottom2TopWidget(
-        d->musicList, d->lyric, s_AnimationDelay);
-    d->lyric->resize(d->musicList->size());
-    d->lyric->raise();
-    d->lyric->show();
+        current, d->lyric, s_AnimationDelay);
     this->repaint();
     this->disableControl();
     setPlaylistVisible(false);
+    d->currentWidget = d->lyric;
 }
 
-void PlayerFrame::showMusicListView()
+void MainWindow::showMusicListView()
 {
-    if (d->musicList->isVisible()) {
-        d->musicList->raise();
-        return;
-    }
-    m_titlebarTopColor = s_normalTitleTop;
-    m_titlebarBottomColor = s_normalTitleBottom;
-
-    WidgetHelper::slideTop2BottomWidget(
-        d->lyric, d->musicList, s_AnimationDelay);
-    d->musicList->resize(d->lyric->size());
-    d->musicList->raise();
-    d->musicList->show();
-    this->repaint();
-    this->disableControl();
-    setPlaylistVisible(false);
+    changeToMusicListView(false);
 }
 
-void PlayerFrame::showImportView()
+void MainWindow::showImportView()
 {
     setPlaylistVisible(false);
-    d->import->setFixedSize(d->musicList->size());
-    WidgetHelper::slideRight2LeftWidget(d->musicList, d->import, s_AnimationDelay);
-    disableControl();
-    d->import->show();
+    auto current = d->currentWidget ? d->currentWidget : d->musicList;
+    d->import->setFixedSize(current->size());
+
+    qDebug() << "showImportView" << current << d->import;
+    WidgetHelper::slideRight2LeftWidget(
+        current, d->import, s_AnimationDelay);
+    d->footer->enableControl(false);
+    d->currentWidget = d->import;
 }
 
-void PlayerFrame::setPlaylistVisible(bool visible)
+void MainWindow::setPlaylistVisible(bool visible)
 {
-    qDebug() << visible << d->playlist->isVisible();
     if (d->playlist->isVisible() == visible) {
+        if (visible) {
+            d->playlist->show();
+            d->playlist->raise();
+        }
         return;
     }
 
@@ -457,7 +466,30 @@ void PlayerFrame::setPlaylistVisible(bool visible)
     this->disableControl();
 }
 
-void PlayerFrame::initMenu()
+void MainWindow::changeToMusicListView(bool keepPlaylist)
+{
+    auto current = d->currentWidget ? d->currentWidget : d->lyric;
+    qDebug() << "changeToMusicListView"
+             << current << d->musicList << keepPlaylist;
+    if (d->musicList->isVisible()) {
+        d->musicList->raise();
+        setPlaylistVisible(keepPlaylist);
+        return;
+    }
+
+    m_titlebarTopColor = s_normalTitleTop;
+    m_titlebarBottomColor = s_normalTitleBottom;
+
+    d->musicList->setFixedSize(current->size());
+    WidgetHelper::slideTop2BottomWidget(
+        current, d->musicList, s_AnimationDelay);
+    this->repaint();
+    this->disableControl();
+    d->currentWidget = d->musicList;
+    setPlaylistVisible(keepPlaylist);
+}
+
+void MainWindow::initMenu()
 {
     auto m_newlist = new QAction(tr("New songlist"), this);
     connect(m_newlist, &QAction::triggered, this, [ = ](bool) {
@@ -533,7 +565,7 @@ void PlayerFrame::initMenu()
     titleBarMenu()->addAction(m_close);
 }
 
-void PlayerFrame::disableControl()
+void MainWindow::disableControl()
 {
     d->footer->enableControl(false);
     QTimer::singleShot(s_AnimationDelay, this, [ = ]() {

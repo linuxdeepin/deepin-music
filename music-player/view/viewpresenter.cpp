@@ -57,6 +57,10 @@ void ViewPresenter::binding(Presenter *presenter)
     connect(this, &ViewPresenter::selectPlaylist,
             presenter, &Presenter::onSelectedPlaylistChanged);
 
+
+    connect(presenter, &Presenter::metaInfoClean,
+            this, &ViewPresenter::showImportView);
+
     connect(presenter, &Presenter::locateMusic,
                this, &ViewPresenter::locateMusic);
     connect(presenter, &Presenter::coverSearchFinished,

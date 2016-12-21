@@ -176,6 +176,12 @@ void MusicListWidget::onMusicPlayed(PlaylistPtr playlist, const MusicMeta &meta)
     d->m_musiclist->onMusicPlayed(playlist, meta);
 }
 
+void MusicListWidget::onMusicPause(PlaylistPtr playlist, const MusicMeta &meta)
+{
+    Q_D(MusicListWidget);
+    d->m_musiclist->onMusicPause(playlist, meta);
+}
+
 void MusicListWidget::onMusicRemoved(PlaylistPtr playlist, const MusicMeta &meta)
 {
     Q_D(MusicListWidget);

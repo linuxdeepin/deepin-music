@@ -35,7 +35,6 @@ signals:
     void modeChanged(int mode);
     void changePlayMode(int);
     void toggleFavourite(const MusicMeta &meta);
-    void togglePlaylist();
 
 
 signals:
@@ -60,7 +59,8 @@ signals:
     void showMusiclistView();
     void toggleLyricView();
     void hidePlaylist();
-    void showPlaylist();
+    void togglePlaylist();
+//    void showPlaylist();
 
     // musiclist controller
     void searchText(const QString& text);

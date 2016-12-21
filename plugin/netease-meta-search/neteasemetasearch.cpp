@@ -108,10 +108,10 @@ NeteaseMetaSearchEngine::NeteaseMetaSearchEngine(QObject *parent): MetaSearchEng
     m_geese->setRawHeader("Cookie", "appver=1.5.0.75771;");
     m_geese->setRawHeader("Referer", "http://music.163.com/");
 
-    qDebug() << "-------------------------------------------------------";
+//    qDebug() << "-------------------------------------------------------";
     connect(this, &MetaSearchEngine::doSearchMeta,
             this, &NeteaseMetaSearchEngine::searchMeta);
-    qDebug() << "-------------------------------------------------------";
+//    qDebug() << "-------------------------------------------------------";
 }
 
 QString NeteaseMetaSearchEngine::pluginId() const
@@ -176,8 +176,8 @@ void NeteaseMetaSearchEngine::searchMeta(const MusicMeta &meta)
 {
     qDebug() << "searchMeta";
     QString queryUrl = QLatin1String("http://music.163.com/api/search/pc");
-    QString queryTemplate = QLatin1String("s=%1&offset=0&limit=15&type=1");
-    QUrl params = QUrl(queryTemplate.arg(meta.album));
+    QString queryTemplate = QLatin1String("s=%1&offset=0&limit=5&type=1");
+    QUrl params = QUrl(queryTemplate.arg(meta.title + meta.artist));
 
     auto anlyzer = new MetaAnalyzer(meta, m_geese);
 
@@ -211,8 +211,8 @@ void NeteaseMetaSearchEngine::searchMeta(const MusicMeta &meta)
         emit anlyzer->onGetAblumResult(neteaseSongs);
     });
 
-    queryTemplate = QLatin1String("s=%1&offset=0&limit=15&type=1");
-    params = QUrl(queryTemplate.arg(meta.title));
+    queryTemplate = QLatin1String("s=%1&offset=0&limit=5&type=1");
+    params = QUrl(queryTemplate.arg(meta.title + meta.album));
     goose = m_geese->postGoose(queryUrl, params.toEncoded());
     connect(goose, &DMusic::Net::Goose::arrive,
     this, [ = ](int errCode, const QByteArray & data) {

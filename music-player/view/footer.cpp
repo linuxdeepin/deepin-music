@@ -93,8 +93,14 @@ void FooterPrivate::initConnection()
     });
 
     q->connect(btPlay, &QPushButton::clicked, q, [ = ](bool) {
-        emit ViewPresenter::instance()->play(m_playinglist, m_playingMeta);
-
+        auto status = btPlay->property(sPropertyPlayStatus).toString();
+        if (status == sPlayStatusValuePlaying) {
+            emit ViewPresenter::instance()->pause(m_playinglist, m_playingMeta);
+        } else  if (status == sPlayStatusValuePause) {
+            emit ViewPresenter::instance()->resume(m_playinglist, m_playingMeta);
+        } else {
+            emit ViewPresenter::instance()->play(m_playinglist, m_playingMeta);
+        }
 //        if (!d->m_playinglist) {
 //            emit play(d->m_playinglist, d->m_playingMeta);
 //            return;
@@ -105,10 +111,7 @@ void FooterPrivate::initConnection()
 //            return;
 //        }
 
-//        auto status = d->btPlay->property(sPropertyPlayStatus).toString();
-//        if (status == sPlayStatusValuePlaying) {
-//            emit pause(d->m_playinglist, d->m_playingMeta);
-//        }
+
 //        if (status == sPlayStatusValueStop) {
 //            emit play(d->m_playinglist, d->m_playingMeta);
 //        }
@@ -293,6 +296,9 @@ Footer::Footer(QWidget *parent) :
     D_THEME_INIT_WIDGET(Footer);
 
     d->initConnection();
+
+    d->updateQssProperty(d->btPlay, sPropertyPlayStatus, sPlayStatusValueStop);
+    d->updateQssProperty(this, sPropertyPlayStatus, sPlayStatusValueStop);
 }
 
 Footer::~Footer()
@@ -378,13 +384,14 @@ void Footer::onMusicPlayed(PlaylistPtr playlist, const MusicMeta &info)
     d->m_playingMeta = info;
 
     d->updateQssProperty(d->btFavorite, sPropertyFavourite, info.favourite);
-    d->updateQssProperty(this, sPropertyPlayStatus, sPlayStatusValuePlaying);
     d->updateQssProperty(d->btPlay, sPropertyPlayStatus, sPlayStatusValuePlaying);
+    d->updateQssProperty(this, sPropertyPlayStatus, sPlayStatusValuePlaying);
 }
 
 void Footer::onMusicPause(PlaylistPtr playlist, const MusicMeta &meta)
 {
     Q_D(Footer);
+    qDebug() << meta.title << "pause";
     if (meta.hash != d->m_playingMeta.hash || playlist != d->m_playinglist) {
         qWarning() << "can not pasue" << d->m_playinglist << playlist
                    << d->m_playingMeta.hash << meta.hash;
@@ -403,15 +410,11 @@ void Footer::onMusicStoped(PlaylistPtr playlist, const MusicMeta &meta)
         return;
     }
 
-    auto status = sPlayStatusValueStop;
-    d->updateQssProperty(d->btPlay, sPropertyPlayStatus, status);
     onProgressChanged(0, 1);
     this->enableControl(false);
 
-    D_THEME_INIT_WIDGET(Footer);
-    this->style()->unpolish(this);
-    this->style()->polish(this);
-    this->repaint();
+    d->updateQssProperty(d->btPlay, sPropertyPlayStatus, sPlayStatusValueStop);
+    d->updateQssProperty(this, sPropertyPlayStatus, sPlayStatusValueStop);
 }
 
 void Footer::onProgressChanged(qint64 value, qint64 duration)

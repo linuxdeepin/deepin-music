@@ -105,8 +105,10 @@ void PlaylistWidget::initData(QList<PlaylistPtr > playlists, PlaylistPtr last)
 
 void PlaylistWidget::focusOutEvent(QFocusEvent *event)
 {
-    // TODO: hide
     qDebug() << event;
+    if (event && event->reason() == Qt::MouseFocusReason) {
+        emit ViewPresenter::instance()->hidePlaylist();
+    }
 }
 
 void PlaylistWidget::onPlaylistAdded(PlaylistPtr playlist)

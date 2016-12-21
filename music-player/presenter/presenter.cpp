@@ -228,6 +228,8 @@ void Presenter::onMusicRemove(PlaylistPtr playlist, const MusicMetaList &metalis
         MediaDatabase::instance()->removeMusicMetaList(metalist);
 
         if (playlist->isEmpty()) {
+            qDebug() << "meta library clean";
+//            emit musicStoped();
             emit metaInfoClean();
         }
         return;

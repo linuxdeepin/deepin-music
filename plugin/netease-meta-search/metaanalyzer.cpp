@@ -30,6 +30,7 @@ static bool similarString(QString dest, QString orig)
         }
     }
 
+    qDebug() << count * 100/ len;
     if (2 * count > len) {
         return true;
     } else {
@@ -88,7 +89,7 @@ void MetaAnalyzer::analyzerResults()
     if (!find) {
         m_titleResult = m_titleResult + m_ablumResult;
         for (auto &titleResult : m_titleResult) {
-            qDebug() << "similarString";
+            qDebug() << "similarString" << m_meta.title << titleResult.name;
             if (similarString(m_meta.title, titleResult.name)) {
                 result = titleResult;
                 find = true;

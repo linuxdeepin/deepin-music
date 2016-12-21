@@ -17,16 +17,16 @@
 
 class Presenter;
 class MusicListWidget;
-class PlayerFramePrivate;
-class PlayerFrame : public Dtk::Widget::DWindow
+class MainWindowPrivate;
+class MainWindow : public Dtk::Widget::DWindow
 {
     Q_OBJECT
 
     Q_PROPERTY(QColor titlebarTopColor READ titlebarTopColor WRITE setTitlebarColor NOTIFY titlebarColorChanged)
     Q_PROPERTY(QColor titlebarBottomColor READ titlebarBottomColor WRITE setTitlebarBottomColor NOTIFY titlebarBottomColorChanged)
 public:
-    explicit PlayerFrame(QWidget *parent = 0);
-    ~PlayerFrame();
+    explicit MainWindow(QWidget *parent = 0);
+    ~MainWindow();
 
     void initMusiclist(PlaylistPtr allmusic, PlaylistPtr last);
     void initPlaylist(QList<PlaylistPtr > playlists, PlaylistPtr last);
@@ -86,12 +86,14 @@ public slots:
     }
 
 private:
+    void changeToMusicListView(bool keepPlaylist);
+
     void initMenu();
 
     // disable control
     void disableControl();
 
-    QScopedPointer<PlayerFramePrivate> d;
+    QScopedPointer<MainWindowPrivate> d;
     QColor m_titlebarTopColor;
     QColor m_titlebarBottomColor;
 };

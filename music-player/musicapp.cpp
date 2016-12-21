@@ -25,7 +25,7 @@ class MusicAppPrivate
 {
 public:
     Presenter    *appPresenter   = nullptr;
-    PlayerFrame     *playerFrame    = nullptr;
+    MainWindow     *playerFrame    = nullptr;
 };
 
 MusicApp::MusicApp(QObject *parent)
@@ -54,7 +54,7 @@ QString MusicApp::cachePath()
 void MusicApp::init()
 {
     d->appPresenter = new Presenter;
-    d->playerFrame = new PlayerFrame;
+    d->playerFrame = new MainWindow;
 
     auto presenterWork = new QThread;
     d->appPresenter->moveToThread(presenterWork);

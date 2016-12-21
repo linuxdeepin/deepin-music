@@ -156,6 +156,19 @@ void MusicListView::onMusicPlayed(PlaylistPtr playlist, const MusicMeta &meta)
     update();
 }
 
+void MusicListView::onMusicPause(PlaylistPtr playlist, const MusicMeta &meta)
+{
+    Q_D(MusicListView);
+    if (playlist != d->m_playlist) {
+        qWarning() << "check playlist failed!"
+                   << "m_playlist:" << d->m_playlist
+                   << "playlist:" << d->m_playlist;
+        return;
+    }
+    d->m_delegate->setPlayingIndex(QModelIndex());
+    update();
+}
+
 void MusicListView::onMusicRemoved(PlaylistPtr playlist, const MusicMeta &meta)
 {
     Q_D(MusicListView);
@@ -174,6 +187,7 @@ void MusicListView::onMusicRemoved(PlaylistPtr playlist, const MusicMeta &meta)
             break;
         }
     }
+    d->m_scrollBar->setVisible(verticalScrollBar()->isVisible());
 }
 
 void MusicListView::onMusicAdded(PlaylistPtr playlist, const MusicMeta &meta)
@@ -203,6 +217,8 @@ void MusicListView::onMusicAdded(PlaylistPtr playlist, const MusicMeta &meta)
 
     index = d->m_model->index(row, 4, QModelIndex());
     d->m_model->setData(index, lengthString(meta.length));
+
+    d->m_scrollBar->setVisible(verticalScrollBar()->isVisible());
 }
 
 void MusicListView::onMusicListAdded(PlaylistPtr playlist, const MusicMetaList &metalist)
@@ -279,6 +295,7 @@ void MusicListView::resizeEvent(QResizeEvent *event)
     d->m_scrollBar->setMaximum(verticalScrollBar()->maximum());
     d->m_scrollBar->setMinimum(verticalScrollBar()->minimum());
     d->m_scrollBar->setPageStep(verticalScrollBar()->pageStep());
+    d->m_scrollBar->setVisible(verticalScrollBar()->isVisible());
 }
 
 
@@ -303,7 +320,6 @@ void MusicListView::showContextMenu(const QPoint &pos,
     playlistMenu.addSeparator();
 
     if (selectedPlaylist != favPlaylist) {
-
         auto act = playlistMenu.addAction(favPlaylist->displayName());
         act->setData(QVariant::fromValue(favPlaylist));
     }
@@ -313,7 +329,6 @@ void MusicListView::showContextMenu(const QPoint &pos,
         act->setData(QVariant::fromValue(playlist));
 
     }
-
 
     connect(&playlistMenu, &QMenu::triggered, this, [ = ](QAction * action) {
         auto playlist = action->data().value<PlaylistPtr >();

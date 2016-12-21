@@ -26,11 +26,11 @@ PluginManager::PluginManager(QObject *parent) : QObject(parent)
 
 QList<PluginInterface *> PluginManager::getPluginListByType(DMusic::Plugin::PluginType pluginType)
 {
-    qDebug() << int(pluginType);
+//    qDebug() << int(pluginType);
     QList<PluginInterface *> list;
     for (auto plugin : m_plugins) {
-        qDebug() << int(plugin->pluginType()) << int(pluginType);
-        qDebug() << plugin->pluginId();
+//        qDebug() << int(plugin->pluginType()) << int(pluginType);
+//        qDebug() << plugin->pluginId();
         if (plugin->pluginType() == pluginType) {
             list << plugin;
         }
@@ -43,20 +43,18 @@ void PluginManager::loadPlugins()
     auto relativePath = QString("../lib/%1/plugins/").arg(qApp->applicationName());
     auto appDir = QDir(qApp->applicationDirPath());
     auto pluginsDir = QDir(appDir.absoluteFilePath(relativePath));
-    qDebug() << "load plugins from" << pluginsDir.path();
     if (!pluginsDir.exists()) {
         pluginsDir = QDir(QString("/usr/lib/%1/plugins").arg(qApp->applicationName()));
     }
-    qDebug() << "load plugins from" << pluginsDir.path();
+    qDebug() << "load plugins from:" << pluginsDir.path();
 
-    for (auto libraryFile : pluginsDir.entryInfoList(QStringList() << "*.so" <<"*.dll")) {
-        qDebug() << libraryFile.absoluteFilePath();
+    for (auto libraryFile : pluginsDir.entryInfoList(QStringList() << "*.so" << "*.dll")) {
+        qDebug() << "find so file:" << libraryFile.absoluteFilePath();
         auto loader = new QPluginLoader;
         loader->setFileName(libraryFile.absoluteFilePath());
         auto instance = loader->instance();
-        qDebug() << "load" << libraryFile.absoluteFilePath() << instance;
         auto pluginInstance =  dynamic_cast<PluginInterface *>(instance);
-        qDebug() << "load" << libraryFile.absoluteFilePath() << pluginInstance;
+        qDebug() << "load instance:" << instance << pluginInstance;
         emit onPluginLoaded(loader->objectName(), pluginInstance);
         m_plugins.push_back(pluginInstance);
     }
