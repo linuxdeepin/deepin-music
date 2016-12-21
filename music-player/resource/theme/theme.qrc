@@ -110,5 +110,6 @@
         <file>light/animation/playing/91.png</file>
         <file>light/animation/playing/92.png</file>
         <file>light/animation/playing/93.png</file>
+        <file>light/image/plus.png</file>
     </qresource>
 </RCC>

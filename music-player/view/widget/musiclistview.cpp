@@ -298,7 +298,7 @@ void MusicListView::showContextMenu(const QPoint &pos,
 
     auto createPlaylist = playlistMenu.addAction(tr("New playlist"));
     createPlaylist->setData(newvar);
-    createPlaylist->setIcon(QIcon(":/image/show_playlist_press.png"));
+    createPlaylist->setIcon(QIcon(":/light/image/plus.png"));
 
     playlistMenu.addSeparator();
 

@@ -28,7 +28,7 @@ using namespace Dtk::Widget;
 
 int main(int argc, char *argv[])
 {
-//    DApplication::loadDXcbPlugin();
+    DApplication::loadDXcbPlugin();
 
 #if defined(STATIC_LIB)
     DWIDGET_INIT_RESOURCE();
