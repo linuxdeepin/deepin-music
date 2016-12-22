@@ -207,53 +207,72 @@ int Presenter::playMode()
 
 void Presenter::onMusicRemove(PlaylistPtr playlist, const MusicMetaList &metalist)
 {
-    if (playlist == d->playlistMgr->playingPlaylist() ||
-            playlist->id() == AllMusicListID) {
-        //stop music
-        for (auto &meta : metalist) {
-            if (meta.hash == Player::instance()->playingMeta().hash) {
-                emit coverSearchFinished(meta, "");
-                emit lyricSearchFinished(meta, "");
-                Player::instance()->stop();
-                emit musicStoped(d->playlistMgr->playingPlaylist(), meta);
-            }
-        }
-    }
+    auto playinglist = d->playlistMgr->playingPlaylist();
+    MusicMeta next;
 
     // TODO: do better;
     if (playlist->id() == AllMusicListID) {
         for (auto &playlist : allplaylist()) {
-            playlist->removeMusic(metalist);
+            auto meta =  playlist->removeMusic(metalist);
+            if (playlist == playinglist) {
+                next = meta;
+            }
         }
         MediaDatabase::instance()->removeMusicMetaList(metalist);
 
         if (playlist->isEmpty()) {
             qDebug() << "meta library clean";
-//            emit musicStoped();
+            onMusicStop(playlist, MusicMeta());
             emit metaInfoClean();
         }
-        return;
-
-
     }
-    playlist->removeMusic(metalist);
 
+
+    if (playlist == d->playlistMgr->playingPlaylist() ||
+            playlist->id() == AllMusicListID) {
+        //stop music
+        for (auto &meta : metalist) {
+            if (meta.hash == Player::instance()->playingMeta().hash) {
+                if (playinglist->isEmpty()) {
+                    onMusicStop(playinglist, next);
+                } else {
+                    onMusicPlay(playinglist, next);
+                }
+            }
+        }
+    }
 }
 
-void Presenter::onMusicDelete(PlaylistPtr , const MusicMetaList &metalist)
+void Presenter::onMusicDelete(PlaylistPtr playlist , const MusicMetaList &metalist)
 {
+    // find next music
+    MusicMeta next;
+    auto playinglist = d->playlistMgr->playingPlaylist();
+
     for (auto &playlist : allplaylist()) {
-        playlist->removeMusic(metalist);
+        auto meta = playlist->removeMusic(metalist);
+        if (playlist == playinglist) {
+            next = meta;
+        }
     }
+
+    if (d->playlistMgr->playlist(AllMusicListID)->isEmpty()) {
+        qDebug() << "meta library clean";
+        onMusicStop(playlist, MusicMeta());
+        emit metaInfoClean();
+    }
+
     MediaDatabase::instance()->removeMusicMetaList(metalist);
 
     QMap<QString, QString> trashFiles;
     for (auto &meta : metalist) {
+        qDebug() << meta.hash <<  Player::instance()->playingMeta().hash;
         if (meta.hash == Player::instance()->playingMeta().hash) {
-            Player::instance()->stop();
-            emit coverSearchFinished(meta, "");
-            emit lyricSearchFinished(meta, "");
-            emit musicStoped(d->playlistMgr->playingPlaylist(), meta);
+            if (playinglist->isEmpty()) {
+                onMusicStop(playinglist, next);
+            } else {
+                onMusicPlay(playinglist, next);
+            }
         }
 
         trashFiles.insert(meta.localPath, "");
@@ -261,10 +280,13 @@ void Presenter::onMusicDelete(PlaylistPtr , const MusicMetaList &metalist)
         if (!meta.cuePath.isEmpty()) {
             trashFiles.insert(meta.cuePath, "");
         }
-
     }
 
+    for (auto file : trashFiles.keys()) {
+        emit d->moniter->fileRemoved(file);
+    }
     QProcess::startDetached("gvfs-trash", trashFiles.keys());
+
 }
 
 void Presenter::onAddToPlaylist(PlaylistPtr playlist,
@@ -388,14 +410,35 @@ void Presenter::onMusicResume(PlaylistPtr playlist, const MusicMeta &info)
     emit this->musicPlayed(playlist, info);
 }
 
-void Presenter::onMusicPrev(PlaylistPtr playlist, const MusicMeta &info)
+void Presenter::onMusicStop(PlaylistPtr playlist, const MusicMeta &meta)
 {
-    emit this->playPrev(playlist, info);
+    emit coverSearchFinished(meta, "");
+    emit lyricSearchFinished(meta, "");
+    Player::instance()->stop();
+    emit this->musicStoped(playlist, meta);
 }
 
-void Presenter::onMusicNext(PlaylistPtr playlist, const MusicMeta &info)
+void Presenter::onMusicPrev(PlaylistPtr playlist, const MusicMeta &meta)
 {
-    emit this->playNext(playlist, info);
+    if (playlist->isEmpty()) {
+        emit coverSearchFinished(meta, "");
+        emit lyricSearchFinished(meta, "");
+        Player::instance()->stop();
+        emit this->musicStoped(playlist, meta);
+    }
+    emit this->playPrev(playlist, meta);
+}
+
+void Presenter::onMusicNext(PlaylistPtr playlist, const MusicMeta &meta)
+{
+    if (playlist->isEmpty()) {
+        emit coverSearchFinished(meta, "");
+        emit lyricSearchFinished(meta, "");
+        Player::instance()->stop();
+        emit this->musicStoped(playlist, meta);
+    }
+    qDebug() << "play next";
+    emit this->playNext(playlist, meta);
 }
 
 void Presenter::onToggleFavourite(const MusicMeta &info)
@@ -430,14 +473,14 @@ void Presenter::onPlayModeChanged(int mode)
 
 void Presenter::onPlayall(PlaylistPtr playlist)
 {
-    this->onMusicPlay(playlist, playlist->first());
+    onMusicPlay(playlist, playlist->first());
 }
 
 void Presenter::onResort(PlaylistPtr playlist, int sortType)
 {
     playlist->sortBy(static_cast<Playlist::SortType>(sortType));
     //store
-    emit this->selectedPlaylistChanged(playlist);
+    emit this->playlistResorted(playlist);
 }
 
 void Presenter::onImportFiles(const QStringList &filelist)

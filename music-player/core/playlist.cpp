@@ -25,114 +25,128 @@ Playlist::Playlist(const PlaylistMeta &musiclistinfo, QObject *parent)
     listmeta = musiclistinfo;
 }
 
-const MusicMeta Playlist::first()
+const MusicMeta Playlist::first() const
 {
-    return listmeta.musicMap.value(listmeta.musicIds.value(0));
+    return listmeta.metas.value(listmeta.sortMetas.value(0));
 }
 
-const MusicMeta Playlist::prev(const MusicMeta &info)
+const MusicMeta Playlist::prev(const MusicMeta &info) const
 {
-    if (0 == listmeta.musicIds.length()) {
+    if (0 == listmeta.sortMetas.length()) {
         return MusicMeta();
     }
-    auto index = listmeta.musicIds.indexOf(info.hash);
-    auto prev = (index + listmeta.musicIds.length() - 1) % listmeta.musicIds.length();
-    return listmeta.musicMap.value(listmeta.musicIds.at(prev));
+    auto index = listmeta.sortMetas.indexOf(info.hash);
+    auto prev = (index + listmeta.sortMetas.length() - 1) % listmeta.sortMetas.length();
+    return listmeta.metas.value(listmeta.sortMetas.at(prev));
 }
 
-const MusicMeta Playlist::next(const MusicMeta &info)
+const MusicMeta Playlist::next(const MusicMeta &info) const
 {
-    if (0 == listmeta.musicIds.length()) {
+    if (0 == listmeta.sortMetas.length()) {
         return MusicMeta();
     }
-    auto index = listmeta.musicIds.indexOf(info.hash);
-    auto prev = (index + 1) % listmeta.musicIds.length();
-    return listmeta.musicMap.value(listmeta.musicIds.at(prev));
+    auto index = listmeta.sortMetas.indexOf(info.hash);
+    auto prev = (index + 1) % listmeta.sortMetas.length();
+    return listmeta.metas.value(listmeta.sortMetas.at(prev));
 }
 
-const MusicMeta Playlist::music(int index)
+const MusicMeta Playlist::music(int index) const
 {
-    return listmeta.musicMap.value(listmeta.musicIds.value(index));
+    return listmeta.metas.value(listmeta.sortMetas.value(index));
 }
 
-const MusicMeta Playlist::music(const QString &id)
+const MusicMeta Playlist::music(const QString &id) const
 {
-    return listmeta.musicMap.value(id);
+    return listmeta.metas.value(id);
 }
 
-bool Playlist::isLast(const MusicMeta &info)
+const MusicMeta Playlist::playing() const
 {
-    return listmeta.musicIds.last() == info.hash;
+    return listmeta.playing;
 }
 
-bool Playlist::contains(const MusicMeta &info)
+bool Playlist::isLast(const MusicMeta &info) const
 {
-    return listmeta.musicMap.contains(info.hash);
+    return listmeta.sortMetas.last() == info.hash;
 }
 
-QString Playlist::id()
+bool Playlist::contains(const MusicMeta &info) const
+{
+    return listmeta.metas.contains(info.hash);
+}
+
+QString Playlist::id() const
 {
     return listmeta.uuid;
 }
 
-QString Playlist::displayName()
+QString Playlist::displayName() const
 {
     return listmeta.displayName;
 }
 
-QString Playlist::icon()
+QString Playlist::icon() const
 {
     return listmeta.icon;
 }
 
-bool Playlist::readonly()
+bool Playlist::readonly() const
 {
     return listmeta.readonly;
 }
 
-bool Playlist::editmode()
+bool Playlist::editmode() const
 {
     return listmeta.editmode;
 }
 
-bool Playlist::hide()
+bool Playlist::hide() const
 {
     return listmeta.hide;
 }
 
 bool Playlist::isEmpty() const
 {
-    return listmeta.musicMap.isEmpty();
+    return listmeta.metas.isEmpty();
 }
 
 int Playlist::length() const
 {
-    return listmeta.musicMap.size();
+    return listmeta.metas.size();
 }
 
-int Playlist::sorttype()
+void Playlist::play(const MusicMeta &meta)
+{
+    if (contains(meta)) {
+        listmeta.playing = meta;
+    } else {
+        listmeta.playing = MusicMeta();
+    }
+}
+
+int Playlist::sorttype() const
 {
     return listmeta.sortType;
 }
 
-MusicMetaList Playlist::allmusic()
+MusicMetaList Playlist::allmusic() const
 {
     MusicMetaList mlist;
-    for (auto id : listmeta.musicIds) {
-        mlist << listmeta.musicMap.value(id);
+    for (auto id : listmeta.sortMetas) {
+        mlist << listmeta.metas.value(id);
     }
     return mlist;
 }
 
-void Playlist::reset(const MusicMetaList &metas)\
+void Playlist::reset(const MusicMetaList &metas)
 {
-    listmeta.musicIds.clear();
-    listmeta.musicMap.clear();
+    listmeta.sortMetas.clear();
+    listmeta.metas.clear();
 
     for (auto &meta : metas)
     {
-        listmeta.musicIds << meta.hash;
-        listmeta.musicMap.insert(meta.hash, meta);
+        listmeta.sortMetas << meta.hash;
+        listmeta.metas.insert(meta.hash, meta);
     }
 }
 
@@ -150,7 +164,7 @@ void Playlist::load()
     QStringList musicIDs;
     while (query.next()) {
         auto musicID = query.value(0).toString();
-        listmeta.musicIds << musicID;
+        listmeta.sortMetas << musicID;
         musicIDs << QString("\"%1\"").arg(musicID);
     }
     auto sqlStr = QString("SELECT hash, localpath, title, artist, album, "
@@ -175,7 +189,7 @@ void Playlist::load()
         info.size = query.value(9).toInt();
         info.timestamp = query.value(10).toInt();
         info.cuePath = query.value(11).toString();
-        listmeta.musicMap.insert(info.hash, info);
+        listmeta.metas.insert(info.hash, info);
     }
     resort();
 }
@@ -199,45 +213,57 @@ void Playlist::appendMusic(const MusicMetaList &metalist)
 {
     MusicMetaList newMetalist;
     for (auto &meta : metalist) {
-        if (listmeta.musicMap.contains(meta.hash)) {
+        if (listmeta.metas.contains(meta.hash)) {
             qDebug() << "skip dump music " << meta.hash << meta.localPath;
             continue;
         }
 
         newMetalist << meta;
-        listmeta.musicIds << meta.hash;
-        listmeta.musicMap.insert(meta.hash, meta);
+        listmeta.sortMetas << meta.hash;
+        listmeta.metas.insert(meta.hash, meta);
     }
 
     emit MediaDatabase::instance()->insertMusicList(newMetalist, this->listmeta);
     emit musiclistAdded(newMetalist);
 }
 
-void Playlist::removeMusic(const MusicMetaList &metalist)
+MusicMeta Playlist::removeMusic(const MusicMetaList &metalist)
 {
+    MusicMeta next;
     QSqlDatabase::database().transaction();
-    for (auto &meta: metalist)
-        removeOneMusic(meta);
+    for (auto &meta : metalist) {
+        next = removeOneMusic(meta);
+    }
     QSqlDatabase::database().commit();
+    return next;
 }
 
-void Playlist::removeOneMusic(const MusicMeta &meta)
+MusicMeta Playlist::removeOneMusic(const MusicMeta &meta)
 {
     if (meta.hash.isEmpty()) {
         qCritical() << "Cannot remove empty id" << meta.hash << meta.title;
-        return;
+        return MusicMeta();
     }
-    if (!listmeta.musicMap.contains(meta.hash)) {
+    if (!listmeta.metas.contains(meta.hash)) {
 //        qWarning() << "no such id in playlist" << meta.hash << meta.localPath << listmeta.displayName;
-        return;
+        return MusicMeta();
     }
 
-    listmeta.musicIds.removeAll(meta.hash);
-    listmeta.musicMap.remove(meta.hash);
+    MusicMeta nextMeta;
+    auto nextPos = listmeta.sortMetas.lastIndexOf(meta.hash) + 1;
+    if (listmeta.sortMetas.length() > nextPos) {
+        nextMeta = listmeta.metas.value(listmeta.sortMetas.value(nextPos));
+    }
+    int ret = listmeta.sortMetas.removeAll(meta.hash);
+
+    Q_ASSERT(ret == 1);
+
+    listmeta.metas.remove(meta.hash);
 
     emit musicRemoved(meta);
 
     MediaDatabase::deleteMusic(meta, listmeta);
+    return nextMeta;
 }
 
 bool lessThanTimestamp(const MusicMeta &v1, const MusicMeta &v2)
@@ -312,15 +338,15 @@ void Playlist::resort()
 
     QList<MusicMeta> sortList;
 
-    for (auto id : listmeta.musicIds) {
-        sortList << listmeta.musicMap.value(id);
+    for (auto id : listmeta.sortMetas) {
+        sortList << listmeta.metas.value(id);
     }
 
     qSort(sortList.begin(), sortList.end(),
           getSortFunction(static_cast<Playlist::SortType>(listmeta.sortType)));
 
-    listmeta.musicIds.clear();
+    listmeta.sortMetas.clear();
     for (auto meta : sortList) {
-        listmeta.musicIds << meta.hash;
+        listmeta.sortMetas << meta.hash;
     }
 }

@@ -274,6 +274,18 @@ void MusicListView::onMusiclistChanged(PlaylistPtr playlist)
     for (auto &info : playlist->allmusic()) {
         onMusicAdded(d->m_playlist, info);
     }
+
+    auto playing = playlist->playing();
+    QModelIndex index;
+    QStandardItem *item = nullptr;
+    for (int i = 0; i < d->m_model->rowCount(); ++i) {
+        index = d->m_model->index(i, 0);
+        item = d->m_model->item(i, 0);
+        MusicMeta itemmeta = qvariant_cast<MusicMeta>(item->data());
+        if (itemmeta.hash == playing.hash && !playing.hash.isEmpty()) {
+            d->m_delegate->setPlayingIndex(index);
+        }
+    }
 }
 
 void MusicListView::wheelEvent(QWheelEvent *event)

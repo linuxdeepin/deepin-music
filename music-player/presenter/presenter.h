@@ -58,6 +58,7 @@ signals:
     void playlistAdded(PlaylistPtr);
     void playlistRemove(PlaylistPtr);
     void selectedPlaylistChanged(PlaylistPtr);
+    void playlistResorted(PlaylistPtr);
     void playingPlaylistChanged(PlaylistPtr);
 
     //! from playlist manager
@@ -85,9 +86,9 @@ public slots:
     void onMusicPlay(PlaylistPtr playlist, const MusicMeta &meta);
     void onMusicPause(PlaylistPtr playlist, const MusicMeta &info);
     void onMusicResume(PlaylistPtr playlist, const MusicMeta &info);
-    //void onMusicStop(PlaylistPtr playlist, const MusicInfo &info);
-    void onMusicPrev(PlaylistPtr playlist, const MusicMeta &info);
-    void onMusicNext(PlaylistPtr playlist, const MusicMeta &info);
+    void onMusicStop(PlaylistPtr playlist, const MusicMeta &info);
+    void onMusicPrev(PlaylistPtr playlist, const MusicMeta &meta);
+    void onMusicNext(PlaylistPtr playlist, const MusicMeta &meta);
     void onToggleFavourite(const MusicMeta &info);
     void onChangeProgress(qint64 value, qint64 range);
     void onPlayModeChanged(int mode);
@@ -99,7 +100,7 @@ public slots:
     //! UI: playlist manager interface
     void onAddToPlaylist(PlaylistPtr playlist, const MusicMetaList &metalist);
     void onMusicRemove(PlaylistPtr playlist, const MusicMetaList &metalist);
-    void onMusicDelete(PlaylistPtr, const MusicMetaList &metalist);
+    void onMusicDelete(PlaylistPtr playlist, const MusicMetaList &metalist);
     void onPlaylistAdd(bool edit);
     void onSelectedPlaylistChanged(PlaylistPtr playlist);
 

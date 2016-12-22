@@ -50,7 +50,7 @@ void Player::playMusic(PlaylistPtr playlist, const MusicMeta &info)
     QTimer::singleShot(100, this, [ = ]() {
         this->play();
     });
-
+    m_playinglist->play(nextInfo);
     emit musicPlayed(playlist, nextInfo);
 }
 

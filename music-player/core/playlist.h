@@ -37,8 +37,9 @@ public:
     bool    hide;
     bool    unused;
 
-    QStringList                 musicIds;
-    QMap<QString, MusicMeta>    musicMap;
+    MusicMeta                   playing;
+    QStringList                 sortMetas;
+    QMap<QString, MusicMeta>    metas;
 };
 
 Q_DECLARE_METATYPE(PlaylistMeta);
@@ -69,32 +70,35 @@ public:
 
 public:
     //! public interface
-    QString id();
-    QString displayName();
-    QString icon();
-    bool readonly();
-    bool editmode();
-    bool hide();
+    QString id() const;
+    QString displayName() const;
+    QString icon() const;
+    bool readonly() const;
+    bool editmode() const;
+    bool hide() const;
     bool isEmpty() const;
     int length() const;
-    int sorttype();
+    int sorttype() const;
 
-    const MusicMeta first();
-    const MusicMeta prev(const MusicMeta &info);
-    const MusicMeta next(const MusicMeta &info);
-    const MusicMeta music(int index);
-    const MusicMeta music(const QString &id);
+    const MusicMeta first() const;
+    const MusicMeta prev(const MusicMeta &info) const;
+    const MusicMeta next(const MusicMeta &info) const;
+    const MusicMeta music(int index) const;
+    const MusicMeta music(const QString &id) const;
+    const MusicMeta playing() const;
 
-    bool isLast(const MusicMeta &info);
-    bool contains(const MusicMeta &info);
-    MusicMetaList allmusic();
+    bool isLast(const MusicMeta &info) const;
+    bool contains(const MusicMeta &info) const;
+    MusicMetaList allmusic() const;
+
+    void play(const MusicMeta &meta);
     void reset(const MusicMetaList &);
 
 public slots:
     void setDisplayName(const QString &name);
     void appendMusic(const MusicMetaList &metalist);
-    void removeMusic(const MusicMetaList &metalist);
-    void removeOneMusic(const MusicMeta &meta);
+    MusicMeta removeMusic(const MusicMetaList &metalist);
+    MusicMeta removeOneMusic(const MusicMeta &meta);
     void sortBy(Playlist::SortType sortType);
     void resort();
 

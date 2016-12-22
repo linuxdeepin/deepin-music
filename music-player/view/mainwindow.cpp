@@ -203,6 +203,8 @@ void MainWindow::binding(Presenter *presenter)
     });
 
     // Music list binding
+    connect(presenter, &Presenter::playlistResorted,
+            d->musicList, &MusicListWidget::onMusiclistChanged);
     connect(presenter, &Presenter::selectedPlaylistChanged,
             d->musicList, &MusicListWidget::onMusiclistChanged);
     connect(presenter, &Presenter::musicRemoved,
@@ -269,6 +271,7 @@ void MainWindow::binding(Presenter *presenter)
     // View control
     connect(presenter, &Presenter::selectedPlaylistChanged,
     this, [ = ]() {
+        qDebug() << "";
         changeToMusicListView(true);
     });
     connect(presenter, &Presenter::requestImportFiles,
