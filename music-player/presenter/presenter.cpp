@@ -267,8 +267,8 @@ void Presenter::onMusicDelete(PlaylistPtr , const MusicMetaList &metalist)
     QProcess::startDetached("gvfs-trash", trashFiles.keys());
 }
 
-void Presenter::onMusicAdd(PlaylistPtr playlist,
-                              const MusicMetaList &metalist)
+void Presenter::onAddToPlaylist(PlaylistPtr playlist,
+                                const MusicMetaList &metalist)
 {
     PlaylistPtr modifiedPlaylist = playlist;
     if (playlist.isNull()) {
@@ -287,6 +287,7 @@ void Presenter::onMusicAdd(PlaylistPtr playlist,
         qCritical() << "no list" << modifiedPlaylist->id();
         return;
     }
+    emit notifyAddToPlaylist(modifiedPlaylist, metalist);
     modifiedPlaylist->appendMusic(metalist);
 }
 
@@ -402,6 +403,7 @@ void Presenter::onToggleFavourite(const MusicMeta &info)
     if (d->playlistMgr->playlist(FavMusicListID)->contains(info)) {
         d->playlistMgr->playlist(FavMusicListID)->removeOneMusic(info);
     } else {
+        emit notifyAddToPlaylist(d->playlistMgr->playlist(FavMusicListID), MusicMetaList() << info);
         d->playlistMgr->playlist(FavMusicListID)->appendMusic(MusicMetaList() << info);
     }
 }

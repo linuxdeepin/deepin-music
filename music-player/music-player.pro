@@ -59,7 +59,8 @@ SOURCES += \
     view/viewpresenter.cpp \
     musicapp.cpp \
     main.cpp \
-    view/widget/label.cpp
+    view/widget/label.cpp \
+    view/widget/tip.cpp
 
 
 HEADERS += \
@@ -107,7 +108,8 @@ HEADERS += \
     view/titlebar.h \
     view/viewpresenter.h \
     musicapp.h \
-    view/widget/label.h
+    view/widget/label.h \
+    view/widget/tip.h
 
 RESOURCES += \
     resource/theme/theme.qrc \

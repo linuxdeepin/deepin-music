@@ -111,5 +111,6 @@
         <file>light/animation/playing/92.png</file>
         <file>light/animation/playing/93.png</file>
         <file>light/image/plus.png</file>
+        <file>light/Widget/Tip.theme</file>
     </qresource>
 </RCC>

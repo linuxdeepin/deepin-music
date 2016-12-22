@@ -38,8 +38,9 @@ void ViewPresenter::binding(Presenter *presenter)
             presenter, &Presenter::onLocateMusicAtAll);
     connect(this, &ViewPresenter::musicClicked,
             presenter, &Presenter::onMusicPlay);
-    connect(this, &ViewPresenter::musicAdd,
-            presenter, &Presenter::onMusicAdd);
+    connect(this, &ViewPresenter::addToPlaylist,
+            presenter, &Presenter::onAddToPlaylist);
+
     connect(this, &ViewPresenter::musicListRemove,
             presenter, &Presenter::onMusicRemove);
     connect(this, &ViewPresenter::musicListDelete,
@@ -58,6 +59,8 @@ void ViewPresenter::binding(Presenter *presenter)
             presenter, &Presenter::onSelectedPlaylistChanged);
 
 
+    connect(presenter, &Presenter::notifyAddToPlaylist,
+            this, &ViewPresenter::notifyAddToPlaylist);
     connect(presenter, &Presenter::metaInfoClean,
             this, &ViewPresenter::showImportView);
 

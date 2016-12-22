@@ -77,7 +77,7 @@ void MusicListWidgetPrivate::initConntion()
     });
     q->connect(m_musiclist, &MusicListView::addToPlaylist,
     q, [ = ](PlaylistPtr playlist, const MusicMetaList metalist) {
-        emit ViewPresenter::instance()->musicAdd(playlist, metalist);
+        emit ViewPresenter::instance()->addToPlaylist(playlist, metalist);
     });
     q->connect(m_musiclist, &MusicListView::doubleClicked,
     q, [ = ](const QModelIndex & index) {
@@ -90,6 +90,8 @@ void MusicListWidgetPrivate::initConntion()
     q, [ = ](const MusicMeta & meta) {
         emit ViewPresenter::instance()->musicClicked(m_musiclist->playlist(), meta);
     });
+    q->connect(ViewPresenter::instance(), &ViewPresenter::musicAdded,
+               q, &MusicListWidget::onMusicAdded);
 }
 
 void MusicListWidgetPrivate::showEmptyHits(bool empty)

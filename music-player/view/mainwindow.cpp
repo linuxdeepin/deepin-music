@@ -37,6 +37,7 @@
 #include "../core/music.h"
 #include "../core/playlist.h"
 #include "../musicapp.h"
+#include "widget/tip.h"
 
 #include "helper/widgethellper.h"
 #include "viewpresenter.h"
@@ -62,6 +63,7 @@ public:
     MusicListWidget *musicList  = nullptr;
     LyricView       *lyric      = nullptr;
 
+    Tip             *tips       = nullptr;
     QWidget         *currentWidget = nullptr;
 };
 
@@ -192,6 +194,13 @@ void MainWindow::binding(Presenter *presenter)
         d->playlist->onCurrentChanged(playlist);
         showMusicListView();
     });
+    connect(ViewPresenter::instance(), &ViewPresenter::notifyAddToPlaylist,
+    this, [ = ](PlaylistPtr playlist, const MusicMetaList & metalist) {
+        auto icon = QPixmap(":/image/notify_success.png");
+        auto text =  tr("Successfully added to \"%1\"");
+        text = text.arg(playlist->displayName());
+        showTips(icon, text);
+    });
 
     // Music list binding
     connect(presenter, &Presenter::selectedPlaylistChanged,
@@ -199,8 +208,6 @@ void MainWindow::binding(Presenter *presenter)
     connect(presenter, &Presenter::musicRemoved,
             d->musicList, &MusicListWidget::onMusicRemoved);
 
-    connect(presenter, &Presenter::musicAdded,
-            d->musicList, &MusicListWidget::onMusicAdded);
     connect(presenter, &Presenter::musiclistAdded,
             d->musicList, &MusicListWidget::onMusicListAdded);
 
@@ -298,6 +305,10 @@ void MainWindow::resizeEvent(QResizeEvent *e)
         QRect start(this->width(), 0, d->playlist->width(), d->playlist->height());
         QRect end(this->width() - d->playlist->width(), 0, d->playlist->width(), d->playlist->height());
         d->playlist->setGeometry(end);
+    }
+
+    if (d->tips) {
+        d->tips->hide();
     }
 }
 
@@ -440,6 +451,18 @@ void MainWindow::showImportView()
         current, d->import, s_AnimationDelay);
     d->footer->enableControl(false);
     d->currentWidget = d->import;
+}
+
+void MainWindow::showTips(QPixmap icon, QString text)
+{
+    if (d->tips) {
+        d->tips->hide();
+        d->tips->deleteLater();
+    }
+    d->tips = new Tip(icon, text , this);
+    auto center = this->geometry().center();
+    center.setY(center.y() + height() / 2 - d->footer->height() - 40);
+    d->tips->pop(center);
 }
 
 void MainWindow::setPlaylistVisible(bool visible)

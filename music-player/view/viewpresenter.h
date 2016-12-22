@@ -47,7 +47,10 @@ signals:
     void musicListRemove(PlaylistPtr playlist, const MusicMetaList &metalist);
     void musicListDelete(PlaylistPtr playlist, const MusicMetaList &metalist);
     void musicClicked(PlaylistPtr playlist, const MusicMeta &info);
-    void musicAdd(PlaylistPtr playlist, const MusicMetaList &metalist);
+
+    void addToPlaylist(PlaylistPtr playlist, const MusicMetaList &metalist);
+    void notifyAddToPlaylist(PlaylistPtr playlist, const MusicMetaList &metalist);
+
     void resort(PlaylistPtr playlist, int sortType);
     void requestCustomContextMenu(const QPoint &pos);
 
@@ -63,8 +66,8 @@ signals:
 //    void showPlaylist();
 
     // musiclist controller
-    void searchText(const QString& text);
-    void locateMusicAtAll(const QString& hash);
+    void searchText(const QString &text);
+    void locateMusicAtAll(const QString &hash);
 
     void locateMusic(PlaylistPtr playlist, const MusicMeta &info);
     void musicPlayed(PlaylistPtr playlist, const MusicMeta &info);

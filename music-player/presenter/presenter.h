@@ -78,6 +78,7 @@ signals:
 
     //! meta info
     void metaInfoClean();
+    void notifyAddToPlaylist(PlaylistPtr playlist, const MusicMetaList &info);
 
 public slots:
     //! music control interface
@@ -96,7 +97,7 @@ public slots:
     void onResort(PlaylistPtr playlist, int sortType);
 
     //! UI: playlist manager interface
-    void onMusicAdd(PlaylistPtr playlist, const MusicMetaList &metalist);
+    void onAddToPlaylist(PlaylistPtr playlist, const MusicMetaList &metalist);
     void onMusicRemove(PlaylistPtr playlist, const MusicMetaList &metalist);
     void onMusicDelete(PlaylistPtr, const MusicMetaList &metalist);
     void onPlaylistAdd(bool edit);

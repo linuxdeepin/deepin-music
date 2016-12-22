@@ -63,6 +63,8 @@ public slots:
     void showMusicListView();
     void showImportView();
 
+    void showTips(QPixmap icon, QString text);
+
     void setPlaylistVisible(bool visible);
 
     void setTitlebarColor(QColor titlebarColor)
