@@ -298,7 +298,11 @@ void MusicListView::wheelEvent(QWheelEvent *event)
 void MusicListView::resizeEvent(QResizeEvent *event)
 {
     Q_D(MusicListView);
+    qDebug() << "++++++++++++++"<< event;
+    this->blockSignals(true);
     QTableView::resizeEvent(event);
+    this->blockSignals(false);
+    qDebug() << "--------------event"<< event;
 
     auto size = event->size();
     auto scrollBarWidth = 8;
@@ -308,6 +312,7 @@ void MusicListView::resizeEvent(QResizeEvent *event)
     d->m_scrollBar->setMinimum(verticalScrollBar()->minimum());
     d->m_scrollBar->setPageStep(verticalScrollBar()->pageStep());
 //    d->m_scrollBar->setVisible(verticalScrollBar()->isVisible());
+
 }
 
 

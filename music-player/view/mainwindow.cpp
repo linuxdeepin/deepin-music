@@ -297,18 +297,20 @@ void MainWindow::resizeEvent(QResizeEvent *e)
     DWindow::resizeEvent(e);
     QSize newSize = DWindow::size();
     d->stacked->setFixedSize(newSize.width(), newSize.height() - titlebarHeight());
-    d->musicList->setFixedSize(newSize.width(),
-                               newSize.height() - titlebarHeight() - d->footer->height() - 1);
     d->lyric->setFixedSize(newSize.width(),
+                           newSize.height() - titlebarHeight() - d->footer->height() - 1);
+    d->import->setFixedSize(newSize.width(),
                            newSize.height() - titlebarHeight() - d->footer->height() - 1);
     d->title->setFixedSize(newSize.width(), titlebarHeight() - 2);
 
     if (d->playlist->isVisible()) {
         d->playlist->resize(d->playlist->width(), d->stacked->height() - d->footer->height());
-        QRect start(this->width(), 0, d->playlist->width(), d->playlist->height());
+//        QRect start(this->width(), 0, d->playlist->width(), d->playlist->height());
         QRect end(this->width() - d->playlist->width(), 0, d->playlist->width(), d->playlist->height());
         d->playlist->setGeometry(end);
     }
+    d->musicList->setFixedSize(newSize.width(),
+                               newSize.height() - titlebarHeight() - d->footer->height() - 1);
 
     if (d->tips) {
         d->tips->hide();
@@ -494,7 +496,7 @@ void MainWindow::setPlaylistVisible(bool visible)
 
 void MainWindow::changeToMusicListView(bool keepPlaylist)
 {
-    auto current = d->currentWidget ? d->currentWidget : d->lyric;
+    auto current = d->currentWidget ? d->currentWidget : d->import;
     qDebug() << "changeToMusicListView"
              << current << d->musicList << keepPlaylist;
     if (d->musicList->isVisible()) {

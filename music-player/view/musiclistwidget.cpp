@@ -168,8 +168,7 @@ void MusicListWidget::resizeEvent(QResizeEvent *event)
     Q_D(MusicListWidget);
     // TODO: remove resize
     QWidget::resizeEvent(event);
-    d->m_musiclist->resize(event->size());
-    d->m_musiclist->setFixedHeight(event->size().height() - 40);
+    d->m_musiclist->setFixedSize(event->size().width(), event->size().height() - 40);
 }
 
 void MusicListWidget::onMusicPlayed(PlaylistPtr playlist, const MusicMeta &meta)

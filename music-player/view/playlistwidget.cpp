@@ -14,6 +14,7 @@
 #include <QPushButton>
 #include <QFocusEvent>
 
+#include <DUtil>
 #include <dthememanager.h>
 
 #include "../core/playlist.h"
@@ -59,6 +60,9 @@ PlaylistWidget::PlaylistWidget(QWidget *parent) : QFrame(parent)
             return;
         }
         emit ViewPresenter::instance()->selectPlaylist(playlistItem->data());
+        DUtil::TimerSingleShot(50, []() {
+            emit ViewPresenter::instance()->hidePlaylist();
+        });
     });
 }
 
@@ -106,8 +110,12 @@ void PlaylistWidget::initData(QList<PlaylistPtr > playlists, PlaylistPtr last)
 void PlaylistWidget::focusOutEvent(QFocusEvent *event)
 {
     qDebug() << event;
+
+    QFrame::focusOutEvent(event);
     if (event && event->reason() == Qt::MouseFocusReason) {
-        emit ViewPresenter::instance()->hidePlaylist();
+        DUtil::TimerSingleShot(50, []() {
+            emit ViewPresenter::instance()->hidePlaylist();
+        });
     }
 }
 
