@@ -397,15 +397,19 @@ void MusicListView::showContextMenu(const QPoint &pos,
         }
 
         if (action->text() == tr("Delete")) {
+            bool containsCue = false;
             MusicMetaList metalist;
             for (auto index : selection->selectedRows()) {
                 auto item = d->m_model->item(index.row(), index.column());
                 MusicMeta meta = qvariant_cast<MusicMeta>(item->data());
+                if (!meta.cuePath.isEmpty()) {
+                    containsCue = true;
+                }
                 metalist << meta;
             }
 
-            DDialog warnDlg;
-            warnDlg.setTextFormat(Qt::AutoText);
+            DDialog warnDlg(this);
+            warnDlg.setTextFormat(Qt::RichText);
             warnDlg.addButtons(QStringList() << tr("Cancel") << tr("Delete"));
 
             auto cover = QImage(QString(":/image/cover_max.png"));
@@ -419,10 +423,15 @@ void MusicListView::showContextMenu(const QPoint &pos,
                     QString(tr("Are you sure to delete %1?")).arg(meta.title));
             } else {
                 warnDlg.setMessage(
-                    QString(tr("TODO: Are you sure to delete %1 songs?")).arg(metalist.length()));
+                    QString(tr("Are you sure to delete the selected %1 songs?")).arg(metalist.length()));
+
             }
 
-            auto coverPixmap =  QPixmap::fromImage(WidgetHelper::cropRect(cover, QSize(140, 140)));
+            if (containsCue) {
+                warnDlg.setTitle(tr("Are you sure to delete the selected %1 song files?").arg(metalist.length()));
+                warnDlg.setMessage(tr("Other song of the same file will be deleted too."));
+            }
+            auto coverPixmap =  QPixmap::fromImage(WidgetHelper::cropRect(cover, QSize(64, 64)));
 
             warnDlg.setIcon(QIcon(coverPixmap));
             if (0 == warnDlg.exec()) {
