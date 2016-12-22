@@ -9,18 +9,27 @@
 
 #pragma once
 
+#include <QScopedPointer>
 #include <QFrame>
 
+class ImportWidgetPrivate;
 class ImportWidget : public QFrame
 {
     Q_OBJECT
 public:
     explicit ImportWidget(QWidget *parent = 0);
+    ~  ImportWidget();
 
 signals:
-    void importMusicDirectory();
+    void scanMusicDirectory();
     void importFiles();
 
 public slots:
+    void showWaitHint();
+    void showImportHint();
+
+private:
+    QScopedPointer<ImportWidgetPrivate> d_ptr;
+    Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), ImportWidget)
 };
 

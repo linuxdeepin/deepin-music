@@ -79,6 +79,7 @@ MediaFileMonitor::MediaFileMonitor(QObject *parent) : QObject(parent)
 
 void MediaFileMonitor::importPlaylistFiles(PlaylistPtr playlist, const QStringList &filelist)
 {
+    qDebug() << "import form"<< filelist;
     QStringList urllist;
 
     QHash<QString, bool> losslessSuffix;
@@ -156,6 +157,7 @@ void MediaFileMonitor::importPlaylistFiles(PlaylistPtr playlist, const QStringLi
     }
 
     //    qDebug() << m_watcher->directories();
+    emit scanFinished();
 }
 
 void MediaFileMonitor::startMonitor()

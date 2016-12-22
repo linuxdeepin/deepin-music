@@ -94,6 +94,15 @@ void Presenter::prepareData()
     connect(this, &Presenter::importMediaFiles,
             d->moniter, &MediaFileMonitor::importPlaylistFiles);
 
+    connect(d->moniter, &MediaFileMonitor::scanFinished,
+    this, [ = ]() {
+        qDebug() << "scanFinished";
+        if (d->playlistMgr->playlist(AllMusicListID)->isEmpty()) {
+            qDebug() << "scanFinished: meta library clean";
+            emit metaInfoClean();
+        }
+    });
+
     connect(d->moniter, &MediaFileMonitor::meidaFileImported,
     this, [ = ](PlaylistPtr playlist, MusicMetaList metalist) {
         if (playlist.isNull()) {
@@ -108,6 +117,7 @@ void Presenter::prepareData()
         }
 
         playlist->appendMusic(metalist);
+        emit meidaFilesImported(playlist, metalist);
     });
 
     connect(d->moniter, &MediaFileMonitor::fileRemoved,
@@ -488,7 +498,7 @@ void Presenter::onImportFiles(const QStringList &filelist)
 //    PlaylistPtr playlist = d->playlistMgr->playlist(AllMusicListID);
     PlaylistPtr playlist = d->playlistMgr->selectedPlaylist();
     emit importMediaFiles(playlist, filelist);
-    emit showMusiclist();
+//    emit showMusiclist();
     return;
 }
 

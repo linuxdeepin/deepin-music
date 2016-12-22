@@ -23,6 +23,7 @@
 #include <QStandardPaths>
 #include <QMenu>
 
+#include <DUtil>
 #include <dutility.h>
 #include <dthememanager.h>
 #include <DAboutDialog>
@@ -261,7 +262,7 @@ void MainWindow::binding(Presenter *presenter)
 
 
     // Import bindding
-    connect(d->import, &ImportWidget::importMusicDirectory,
+    connect(d->import, &ImportWidget::scanMusicDirectory,
             presenter, &Presenter::onImportMusicDirectory);
     connect(d->import, &ImportWidget::importFiles,
             this, &MainWindow::onSelectImportFiles);
@@ -276,8 +277,12 @@ void MainWindow::binding(Presenter *presenter)
     });
     connect(presenter, &Presenter::requestImportFiles,
             this, &MainWindow::onSelectImportFiles);
-    connect(presenter, &Presenter::showMusiclist,
-            this, &MainWindow::showMusicListView);
+    connect(presenter, &Presenter::meidaFilesImported,
+    this, [ = ](PlaylistPtr playlist, MusicMetaList metalist) {
+        DUtil::TimerSingleShot(3 * 1000, [this, playlist, metalist ]() {
+            this->showMusicListView();
+        });
+    });
 
 
     initMenu();
@@ -300,7 +305,7 @@ void MainWindow::resizeEvent(QResizeEvent *e)
     d->lyric->setFixedSize(newSize.width(),
                            newSize.height() - titlebarHeight() - d->footer->height() - 1);
     d->import->setFixedSize(newSize.width(),
-                           newSize.height() - titlebarHeight() - d->footer->height() - 1);
+                            newSize.height() - titlebarHeight() - d->footer->height() - 1);
     d->title->setFixedSize(newSize.width(), titlebarHeight() - 2);
 
     if (d->playlist->isVisible()) {
@@ -407,6 +412,7 @@ void MainWindow::onSelectImportFiles()
     fileDlg.setViewMode(QFileDialog::Detail);
     fileDlg.setFileMode(QFileDialog::Directory);
     if (QFileDialog::Accepted == fileDlg.exec()) {
+        d->import->showWaitHint();
         emit importSelectFiles(fileDlg.selectedFiles());
     }
 }
@@ -447,8 +453,14 @@ void MainWindow::showMusicListView()
 
 void MainWindow::showImportView()
 {
+    if (d->import->isVisible()) {
+        d->import->showImportHint();
+        return;
+    }
+
     setPlaylistVisible(false);
     auto current = d->currentWidget ? d->currentWidget : d->musicList;
+    d->import->showImportHint();
     d->import->setFixedSize(current->size());
 
     qDebug() << "showImportView" << current << d->import;

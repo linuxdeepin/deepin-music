@@ -38,6 +38,7 @@ public:
 signals:
     //! ui: request import dialog
     void importMediaFiles(PlaylistPtr playlist, const QStringList &filelist);
+    void meidaFilesImported(PlaylistPtr playlist, MusicMetaList metalist);
 
     //! notify signal
 signals:

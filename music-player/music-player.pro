@@ -50,7 +50,6 @@ SOURCES += \
     view/widget/settingsdialog.cpp \
     view/widget/slider.cpp \
     view/footer.cpp \
-    view/importwidget.cpp \
     view/lyricview.cpp \
     view/mainwindow.cpp \
     view/musiclistwidget.cpp \
@@ -60,7 +59,8 @@ SOURCES += \
     musicapp.cpp \
     main.cpp \
     view/widget/label.cpp \
-    view/widget/tip.cpp
+    view/widget/tip.cpp \
+    view/importwidget.cpp
 
 
 HEADERS += \
@@ -100,7 +100,6 @@ HEADERS += \
     view/widget/settingsdialog.h \
     view/widget/slider.h \
     view/footer.h \
-    view/importwidget.h \
     view/lyricview.h \
     view/mainwindow.h \
     view/musiclistwidget.h \
@@ -109,7 +108,8 @@ HEADERS += \
     view/viewpresenter.h \
     musicapp.h \
     view/widget/label.h \
-    view/widget/tip.h
+    view/widget/tip.h \
+    view/importwidget.h
 
 RESOURCES += \
     resource/theme/theme.qrc \
