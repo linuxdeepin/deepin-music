@@ -24,7 +24,6 @@
 #include "../core/music.h"
 #include "../core/playlist.h"
 #include "widget/musiclistview.h"
-#include "viewpresenter.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -54,48 +53,52 @@ void MusicListWidgetPrivate::initConntion()
     q->connect(m_sortCombo, static_cast<void (DComboBox::*)(int)>(&DComboBox::activated),
     q, [ = ](int sortType) {
         qWarning() << "change to emptry playlist" << sortType;
-        emit ViewPresenter::instance()->resort(m_musiclist->playlist(), sortType);
+        emit q->resort(m_musiclist->playlist(), sortType);
     });
 
     q->connect(btPlayAll, &QPushButton::clicked,
     q, [ = ](bool) {
         if (m_musiclist->playlist()) {
-            emit ViewPresenter::instance()->playall(m_musiclist->playlist());
+            emit q->playall(m_musiclist->playlist());
         }
     });
     q->connect(m_musiclist, &MusicListView::requestCustomContextMenu,
     q, [ = ](const QPoint & pos) {
-        emit ViewPresenter::instance()->requestCustomContextMenu(pos);
+        emit q->requestCustomContextMenu(pos);
     });
     q->connect(m_musiclist, &MusicListView::removeMusicList,
     q, [ = ](const MusicMetaList & metalist) {
-        emit ViewPresenter::instance()->musicListRemove(m_musiclist->playlist(), metalist);
+        emit q->musiclistRemove(m_musiclist->playlist(), metalist);
     });
     q->connect(m_musiclist, &MusicListView::deleteMusicList,
     q, [ = ](const MusicMetaList & metalist) {
-        emit ViewPresenter::instance()->musicListDelete(m_musiclist->playlist(), metalist);
+        emit q->musiclistDelete(m_musiclist->playlist(), metalist);
     });
     q->connect(m_musiclist, &MusicListView::addToPlaylist,
     q, [ = ](PlaylistPtr playlist, const MusicMetaList metalist) {
-        emit ViewPresenter::instance()->addToPlaylist(playlist, metalist);
+        emit q->addToPlaylist(playlist, metalist);
     });
     q->connect(m_musiclist, &MusicListView::doubleClicked,
     q, [ = ](const QModelIndex & index) {
         auto model = qobject_cast<QStandardItemModel *>(m_musiclist->model());
         auto item = model->item(index.row(), 0);
         MusicMeta meta = qvariant_cast<MusicMeta>(item->data());
-        emit ViewPresenter::instance()->musicClicked(m_musiclist->playlist(), meta);
+        emit q->musicClicked(m_musiclist->playlist(), meta);
     });
     q->connect(m_musiclist, &MusicListView::play,
     q, [ = ](const MusicMeta & meta) {
-        emit ViewPresenter::instance()->musicClicked(m_musiclist->playlist(), meta);
+        emit q->musicClicked(m_musiclist->playlist(), meta);
     });
-    q->connect(ViewPresenter::instance(), &ViewPresenter::musicAdded,
-               q, &MusicListWidget::onMusicAdded);
 }
 
 void MusicListWidgetPrivate::showEmptyHits(bool empty)
 {
+    auto playlist = m_musiclist->playlist();
+    if (playlist.isNull() || playlist->id() != SearchMusicListID) {
+        m_emptyHits->setText(MusicListWidget::tr("No Music in list"));
+    } else {
+        m_emptyHits->setText(MusicListWidget::tr("No result found"));
+    }
     actionBar->setVisible(!empty);
     m_musiclist->setVisible(!empty);
     m_emptyHits->setVisible(empty);
@@ -135,7 +138,7 @@ MusicListWidget::MusicListWidget(QWidget *parent) :
     d->m_sortCombo->addItem(tr("Artist"));
     d->m_sortCombo->addItem(tr("Album name"));
 
-    d->m_emptyHits = new QLabel(tr("No Music in list"));
+    d->m_emptyHits = new QLabel();
     d->m_emptyHits->setObjectName("MusicListEmptyHits");
     d->m_emptyHits->hide();
 
@@ -215,6 +218,7 @@ void MusicListWidget::onMusicListAdded(PlaylistPtr playlist, const MusicMetaList
 void MusicListWidget::onLocate(PlaylistPtr playlist, const MusicMeta &info)
 {
     Q_D(MusicListWidget);
+    initData(playlist);
     d->m_musiclist->onLocate(playlist, info);
 }
 

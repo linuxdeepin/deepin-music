@@ -21,6 +21,9 @@ public:
     explicit LyricView(QWidget *parent = 0);
     ~LyricView();
 
+signals:
+    void toggleLyricView();
+
 public slots:
     void onProgressChanged(qint64 value, qint64 length);
     void onMusicPlayed(PlaylistPtr playlist, const MusicMeta &meta);

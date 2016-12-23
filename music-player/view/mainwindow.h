@@ -48,10 +48,14 @@ public:
     }
 
 signals:
+    void addPlaylist(bool editmode);
     void importSelectFiles(const QStringList &filelist);
     void titlebarColorChanged(QColor titlebarTopColor);
 
     void titlebarBottomColorChanged(QColor titlebarBottomColor);
+
+public slots:
+    void onCurrentPlaylistChanged(PlaylistPtr playlist);
 
 public slots:
     void onSelectImportFiles();

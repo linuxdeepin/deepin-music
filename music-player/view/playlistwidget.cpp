@@ -18,7 +18,6 @@
 #include <dthememanager.h>
 
 #include "../core/playlist.h"
-#include "viewpresenter.h"
 #include "widget/playlistview.h"
 #include "widget/playlistitem.h"
 
@@ -49,7 +48,8 @@ PlaylistWidget::PlaylistWidget(QWidget *parent) : QFrame(parent)
     D_THEME_INIT_WIDGET(PlaylistWidget);
 
     connect(btAdd, &QPushButton::clicked, this, [ = ](bool /*checked*/) {
-        emit ViewPresenter::instance()->addPlaylist(true);
+        qDebug() << "addPlaylist(true);";
+        emit this->addPlaylist(true);
     });
 
     connect(m_listview, &PlayListView::itemClicked,
@@ -59,9 +59,9 @@ PlaylistWidget::PlaylistWidget(QWidget *parent) : QFrame(parent)
             qCritical() << "playlistItem is empty" << item << playlistItem;
             return;
         }
-        emit ViewPresenter::instance()->selectPlaylist(playlistItem->data());
-        DUtil::TimerSingleShot(50, []() {
-            emit ViewPresenter::instance()->hidePlaylist();
+        emit this->selectPlaylist(playlistItem->data());
+        DUtil::TimerSingleShot(50, [this]() {
+            emit this->hidePlaylist();
         });
     });
 }
@@ -89,7 +89,7 @@ void PlaylistWidget::initData(QList<PlaylistPtr > playlists, PlaylistPtr last)
         });
 
         connect(playlistItem, &PlayListItem::playall,
-                ViewPresenter::instance(), &ViewPresenter::playall);
+                this, &PlaylistWidget::playall);
 
         if (last->id() == playlist->id()) {
             current = item;
@@ -111,12 +111,17 @@ void PlaylistWidget::focusOutEvent(QFocusEvent *event)
 {
     qDebug() << event;
 
-    QFrame::focusOutEvent(event);
-    if (event && event->reason() == Qt::MouseFocusReason) {
-        DUtil::TimerSingleShot(50, []() {
-            emit ViewPresenter::instance()->hidePlaylist();
-        });
+    // TODO: monitor mouse position
+    QPoint mousePos = mapToParent(mapFromGlobal(QCursor::pos()));
+    if (!this->geometry().contains(mousePos)) {
+        if (event && event->reason() == Qt::MouseFocusReason) {
+            DUtil::TimerSingleShot(50, [this]() {
+                qDebug() << "hide";
+                emit this->hidePlaylist();
+            });
+        }
     }
+    QFrame::focusOutEvent(event);
 }
 
 void PlaylistWidget::onPlaylistAdded(PlaylistPtr playlist)
@@ -131,7 +136,7 @@ void PlaylistWidget::onPlaylistAdded(PlaylistPtr playlist)
     });
 
     connect(playlistItem, &PlayListItem::playall,
-            ViewPresenter::instance(), &ViewPresenter::playall);
+            this, &PlaylistWidget::playall);
     m_listview->scrollToBottom();
     m_listview->setCurrentItem(item);
     if (playlist->hide()) {

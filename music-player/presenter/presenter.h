@@ -58,7 +58,7 @@ signals:
     //! from playlist manager
     void playlistAdded(PlaylistPtr);
     void playlistRemove(PlaylistPtr);
-    void selectedPlaylistChanged(PlaylistPtr);
+    void currentPlaylistChanged(PlaylistPtr);
     void playlistResorted(PlaylistPtr);
     void playingPlaylistChanged(PlaylistPtr);
 
@@ -100,14 +100,15 @@ public slots:
 
     //! UI: playlist manager interface
     void onAddToPlaylist(PlaylistPtr playlist, const MusicMetaList &metalist);
-    void onMusicRemove(PlaylistPtr playlist, const MusicMetaList &metalist);
-    void onMusicDelete(PlaylistPtr playlist, const MusicMetaList &metalist);
+    void onMusiclistRemove(PlaylistPtr playlist, const MusicMetaList &metalist);
+    void onMusiclistDelete(PlaylistPtr playlist, const MusicMetaList &metalist);
     void onPlaylistAdd(bool edit);
     void onSelectedPlaylistChanged(PlaylistPtr playlist);
 
     //! ui: menu interface
     void onRequestMusiclistMenu(const QPoint &pos);
     void onSearchText(const QString text);
+    void onExitSearch();
     void onLocateMusicAtAll(const QString &hash);
 
     void onImportMusicDirectory();

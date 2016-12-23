@@ -55,7 +55,6 @@ SOURCES += \
     view/musiclistwidget.cpp \
     view/playlistwidget.cpp \
     view/titlebar.cpp \
-    view/viewpresenter.cpp \
     musicapp.cpp \
     main.cpp \
     view/widget/label.cpp \
@@ -105,7 +104,6 @@ HEADERS += \
     view/musiclistwidget.h \
     view/playlistwidget.h \
     view/titlebar.h \
-    view/viewpresenter.h \
     musicapp.h \
     view/widget/label.h \
     view/widget/tip.h \

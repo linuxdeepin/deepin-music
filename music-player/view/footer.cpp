@@ -9,12 +9,13 @@
 
 #include "footer.h"
 
+#include <QDebug>
 #include <QTimer>
 #include <QStyle>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QPushButton>
-#include <QDebug>
+#include <QMouseEvent>
 #include <QProgressBar>
 
 #include <dthememanager.h>
@@ -27,8 +28,6 @@
 #include "widget/modebuttom.h"
 #include "widget/label.h"
 #include "widget/cover.h"
-
-#include "viewpresenter.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -84,22 +83,22 @@ void FooterPrivate::initConnection()
     Q_Q(Footer);
 
     q->connect(btPlayMode, &ModeButton::modeChanged,
-               ViewPresenter::instance(), &ViewPresenter::modeChanged);
+               q, &Footer::modeChanged);
 
     q->connect(progress, &Slider::valueAccpet, q, [ = ](int value) {
         auto range = progress->maximum() - progress->minimum();
         Q_ASSERT(range != 0);
-        emit ViewPresenter::instance()->changeProgress(value, range);
+        emit q->changeProgress(value, range);
     });
 
     q->connect(btPlay, &QPushButton::clicked, q, [ = ](bool) {
         auto status = btPlay->property(sPropertyPlayStatus).toString();
         if (status == sPlayStatusValuePlaying) {
-            emit ViewPresenter::instance()->pause(m_playinglist, m_playingMeta);
+            emit q->pause(m_playinglist, m_playingMeta);
         } else  if (status == sPlayStatusValuePause) {
-            emit ViewPresenter::instance()->resume(m_playinglist, m_playingMeta);
+            emit q->resume(m_playinglist, m_playingMeta);
         } else {
-            emit ViewPresenter::instance()->play(m_playinglist, m_playingMeta);
+            emit q->play(m_playinglist, m_playingMeta);
         }
 //        if (!d->m_playinglist) {
 //            emit play(d->m_playinglist, d->m_playingMeta);
@@ -121,43 +120,26 @@ void FooterPrivate::initConnection()
     });
 
     q->connect(btPrev, &QPushButton::clicked, q, [ = ](bool) {
-        emit ViewPresenter::instance()->prev(m_playinglist, m_playingMeta);
+        emit q->prev(m_playinglist, m_playingMeta);
     });
     q->connect(btNext, &QPushButton::clicked, q, [ = ](bool) {
-        emit ViewPresenter::instance()->next(m_playinglist, m_playingMeta);
+        emit q->next(m_playinglist, m_playingMeta);
     });
 
     q->connect(btFavorite, &QPushButton::clicked, q, [ = ](bool) {
-        emit ViewPresenter::instance()->toggleFavourite(m_playingMeta);
+        emit q->toggleFavourite(m_playingMeta);
     });
     q->connect(title, &Label::clicked, q, [ = ](bool) {
-        emit ViewPresenter::instance()->locateMusic(m_playinglist, m_playingMeta);
+        emit q->locateMusic(m_playinglist, m_playingMeta);
     });
     q->connect(cover, &Label::clicked, btLyric, &QPushButton::clicked);
     q->connect(btLyric, &QPushButton::clicked, q, [ = ](bool) {
-        emit  ViewPresenter::instance()->toggleLyricView();
+        emit  q->toggleLyricView();
     });
     q->connect(btPlayList, &QPushButton::clicked, q, [ = ](bool) {
-        emit  ViewPresenter::instance()->togglePlaylist();
+        emit q->togglePlaylist();
     });
 
-
-    q->connect(ViewPresenter::instance(), &ViewPresenter::coverSearchFinished,
-               q, &Footer::onCoverChanged);
-    q->connect(ViewPresenter::instance(), &ViewPresenter::musicPlayed,
-               q, &Footer::onMusicPlayed);
-    q->connect(ViewPresenter::instance(), &ViewPresenter::musicPaused,
-               q, &Footer::onMusicPause);
-    q->connect(ViewPresenter::instance(), &ViewPresenter::musicStoped,
-               q, &Footer::onMusicStoped);
-    q->connect(ViewPresenter::instance(), &ViewPresenter::musicAdded,
-               q, &Footer::onMusicAdded);
-    q->connect(ViewPresenter::instance(), &ViewPresenter::musiclistAdded,
-               q, &Footer::onMusicListAdded);
-    q->connect(ViewPresenter::instance(), &ViewPresenter::musicRemoved,
-               q, &Footer::onMusicRemoved);
-    q->connect(ViewPresenter::instance(), &ViewPresenter::progrossChanged,
-               q, &Footer::onProgressChanged);
 }
 
 Footer::Footer(QWidget *parent) :
@@ -330,6 +312,14 @@ void Footer::initData(PlaylistPtr current, int mode)
     d->m_mode = mode;
     d->m_playinglist = current;
     d->btPlayMode->setMode(mode);
+}
+
+void Footer::mouseMoveEvent(QMouseEvent *event)
+{
+    Qt::MouseButton button = event->buttons() & Qt::LeftButton ? Qt::LeftButton : Qt::NoButton;
+    if (event->buttons() == Qt::LeftButton /*&& d->mousePressed*/) {
+        emit mouseMoving(button);
+    }
 }
 
 void Footer::onMusicAdded(PlaylistPtr playlist, const MusicMeta &info)

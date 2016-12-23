@@ -21,6 +21,12 @@ public:
     explicit PlaylistWidget(QWidget *parent = 0);
     void initData(QList<PlaylistPtr > playlists, PlaylistPtr last);
 
+signals:
+    void addPlaylist(bool editmode);
+    void selectPlaylist(PlaylistPtr playlist);
+    void hidePlaylist();
+    void playall(PlaylistPtr playlist);
+
 public slots:
     void onPlaylistAdded(PlaylistPtr);
     void onCurrentChanged(PlaylistPtr playlist);

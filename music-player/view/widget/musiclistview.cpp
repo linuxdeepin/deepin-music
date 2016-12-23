@@ -231,8 +231,9 @@ void MusicListView::onMusicListAdded(PlaylistPtr playlist, const MusicMetaList &
 void MusicListView::onLocate(PlaylistPtr playlist, const MusicMeta &meta)
 {
     Q_D(MusicListView);
+    qDebug() << "onLocate" << playlist->id() << d->m_playlist->id();
     if (playlist != d->m_playlist) {
-        onMusiclistChanged(playlist);
+//        initDa(playlist);
     }
 
     QModelIndex index;

@@ -29,8 +29,6 @@
 #include "widget/cover.h"
 #include "widget/lyriclinedelegate.h"
 
-#include "viewpresenter.h"
-
 DWIDGET_USE_NAMESPACE
 
 static const int lyricLineHeight = 40;
@@ -68,7 +66,7 @@ void LyricViewPrivate::initConnection()
 {
     Q_Q(LyricView);
     q->connect(m_hideLyric, &QPushButton::clicked,
-               ViewPresenter::instance(), &ViewPresenter::toggleLyricView);
+               q, &LyricView::toggleLyricView);
 }
 
 void LyricViewPrivate::adjustLyric()

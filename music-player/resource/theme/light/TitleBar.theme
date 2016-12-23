@@ -1,5 +1,14 @@
 #TitleBar {
-    border: 0px solid red;
+    border: 0px solid rgba(255,0,0,0.3);
+}
+#TitleBack{
+    border-image: url(:/image/back_normal.png);
+}
+#TitleBack:hover{
+    border-image: url(:/image/back_hover.png);
+}
+#TitleBack:pressed{
+    border-image: url(:/image/back_press.png);
 }
 
 #TitleIcon {

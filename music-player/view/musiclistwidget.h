@@ -23,6 +23,16 @@ public:
 
     void initData(PlaylistPtr playlist);
 
+signals:
+    void playall(PlaylistPtr playlist);
+    void resort(PlaylistPtr playlist, int sortType);
+    void musicClicked(PlaylistPtr playlist, const MusicMeta &info);
+
+    void requestCustomContextMenu(const QPoint &pos);
+    void addToPlaylist(PlaylistPtr playlist, const MusicMetaList &metalist);
+    void musiclistRemove(PlaylistPtr playlist, const MusicMetaList &metalist);
+    void musiclistDelete(PlaylistPtr playlist, const MusicMetaList &metalist);
+
 public slots:
     void onMusicPlayed(PlaylistPtr playlist, const MusicMeta &info);
     void onMusicPause(PlaylistPtr playlist, const MusicMeta &meta);

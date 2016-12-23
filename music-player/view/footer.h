@@ -27,6 +27,23 @@ public:
     void enableControl(bool enable = true);
     void initData(PlaylistPtr current, int mode);
 
+signals:
+    void toggleLyricView();
+    void locateMusic(PlaylistPtr playlist, const MusicMeta &info);
+
+    void play(PlaylistPtr playlist, const MusicMeta &meta);
+    void resume(PlaylistPtr playlist, const MusicMeta &meta);
+    void pause(PlaylistPtr playlist, const MusicMeta &meta);
+    void next(PlaylistPtr playlist, const MusicMeta &meta);
+    void prev(PlaylistPtr playlist, const MusicMeta &meta);
+    void changeProgress(qint64 value, qint64 duration);
+
+    void togglePlaylist();
+    void modeChanged(int);
+    void toggleFavourite(const MusicMeta &meta);
+
+    void mouseMoving(Qt::MouseButton botton);
+
 public slots:
     void onMusicAdded(PlaylistPtr playlist, const MusicMeta &meta);
     void onMusicListAdded(PlaylistPtr playlist, const MusicMetaList &metalist);
@@ -36,6 +53,9 @@ public slots:
     void onMusicStoped(PlaylistPtr playlist, const MusicMeta &meta);
     void onProgressChanged(qint64 value, qint64 duration);
     void onCoverChanged(const MusicMeta &meta, const QByteArray &coverData);
+
+protected:
+    virtual void mouseMoveEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
 
 private:
     QScopedPointer<FooterPrivate> d_ptr;

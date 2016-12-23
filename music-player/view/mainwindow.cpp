@@ -41,7 +41,6 @@
 #include "widget/tip.h"
 
 #include "helper/widgethellper.h"
-#include "viewpresenter.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -62,7 +61,7 @@ public:
 
     ImportWidget    *import     = nullptr;
     MusicListWidget *musicList  = nullptr;
-    LyricView       *lyric      = nullptr;
+    LyricView       *lyricView      = nullptr;
 
     Tip             *tips       = nullptr;
     QWidget         *currentWidget = nullptr;
@@ -72,8 +71,6 @@ public:
 MainWindow::MainWindow(QWidget *parent)
     : DWindow(parent), d(new MainWindowPrivate)
 {
-    ViewPresenter::instance();
-
     m_titlebarTopColor = s_normalTitleTop;
     m_titlebarBottomColor = s_normalTitleBottom;
 
@@ -93,7 +90,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     d->import = new ImportWidget;
     d->musicList = new MusicListWidget;
-    d->lyric = new LyricView;
+    d->lyricView = new LyricView;
     d->playlist = new PlaylistWidget(d->stacked);
     d->playlist->setFixedWidth(220);
     d->footer = new Footer;
@@ -104,10 +101,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     d->stacked->addWidget(d->import);
     d->stacked->addWidget(d->musicList);
-    d->stacked->addWidget(d->lyric);
+    d->stacked->addWidget(d->lyricView);
     d->stacked->addWidget(d->playlist);
 
-    d->lyric->hide();
+    d->lyricView->hide();
     d->import->hide();
     d->playlist->hide();
     d->musicList->hide();
@@ -123,6 +120,8 @@ MainWindow::MainWindow(QWidget *parent)
     setBackgroundImage(WidgetHelper::blurImage(image, 50));
 
     d->footer->setFocus();
+
+    connect(d->footer, &Footer::mouseMoving, this, &DX11Widget::moveWindow);
 }
 
 MainWindow::~MainWindow()
@@ -165,91 +164,133 @@ void MainWindow::initFooter(PlaylistPtr current, int mode)
 
 void MainWindow::binding(Presenter *presenter)
 {
-    ViewPresenter::instance()->binding(presenter);
+    connect(d->title, &TitleBar::locateMusicInAllMusiclist,
+            presenter, &Presenter::onLocateMusicAtAll);
+    connect(d->title, &TitleBar::search,
+            presenter, &Presenter::onSearchText);
+    connect(d->title, &TitleBar::exitSearch,
+            presenter, &Presenter::onExitSearch);
 
-    connect(ViewPresenter::instance(), &ViewPresenter::showImportView,
-            this, &MainWindow::showImportView);
-    connect(ViewPresenter::instance(), &ViewPresenter::toggleLyricView,
-            this, &MainWindow::toggleLyricView);
-    connect(ViewPresenter::instance(), &ViewPresenter::togglePlaylist,
-            this, &MainWindow::togglePlaylist);
+    connect(d->footer, &Footer::toggleLyricView, this, &MainWindow::toggleLyricView);
+    connect(d->footer, &Footer::togglePlaylist, this, &MainWindow::togglePlaylist);
 
-    connect(presenter, &Presenter::playlistAdded,
-    this, [ = ](PlaylistPtr) {
-        setPlaylistVisible(true);
-    });
-    connect(ViewPresenter::instance(), &ViewPresenter::musicStoped,
-    this, [ = ](PlaylistPtr, const MusicMeta &) {
-        QImage image = QImage((":/image/cover_max.png"));
-        image = WidgetHelper::cropRect(image, this->size());
-        setBackgroundImage(WidgetHelper::blurImage(image, 50));
-        repaint();
-    });
-    connect(ViewPresenter::instance(), &ViewPresenter::hidePlaylist,
-    this, [ = ]() {
-        setPlaylistVisible(false);
-    });
-    connect(ViewPresenter::instance(), &ViewPresenter::locateMusic,
-    this, [ = ](PlaylistPtr playlist, const MusicMeta & info) {
-        d->musicList->onLocate(playlist, info);
-        d->playlist->onCurrentChanged(playlist);
-        showMusicListView();
-    });
-    connect(ViewPresenter::instance(), &ViewPresenter::notifyAddToPlaylist,
-    this, [ = ](PlaylistPtr playlist, const MusicMetaList & metalist) {
-        auto icon = QPixmap(":/image/notify_success.png");
-        auto text =  tr("Successfully added to \"%1\"");
-        text = text.arg(playlist->displayName());
-        showTips(icon, text);
-    });
+    connect(d->footer, &Footer::changeProgress, presenter, &Presenter::onChangeProgress);
+    connect(d->footer, &Footer::locateMusic, presenter, &Presenter::locateMusic);
+    connect(d->footer, &Footer::play, presenter, &Presenter::onMusicPlay);
+    connect(d->footer, &Footer::resume, presenter, &Presenter::onMusicResume);
+    connect(d->footer, &Footer::pause, presenter, &Presenter::onMusicPause);
+    connect(d->footer, &Footer::next, presenter, &Presenter::onMusicNext);
+    connect(d->footer, &Footer::prev, presenter, &Presenter::onMusicPrev);
+    connect(d->footer, &Footer::toggleFavourite, presenter, &Presenter::onToggleFavourite);
+    connect(d->footer, &Footer::modeChanged, presenter, &Presenter::onPlayModeChanged);
 
-    // Music list binding
+    connect(presenter, &Presenter::coverSearchFinished,
+            d->footer, &Footer::onCoverChanged);
+    connect(presenter, &Presenter::musicPlayed,
+            d->footer, &Footer::onMusicPlayed);
+    connect(presenter, &Presenter::musicPaused,
+            d->footer, &Footer::onMusicPause);
+    connect(presenter, &Presenter::musicStoped,
+            d->footer, &Footer::onMusicStoped);
+    connect(presenter, &Presenter::musicAdded,
+            d->footer, &Footer::onMusicAdded);
+    connect(presenter, &Presenter::musiclistAdded,
+            d->footer, &Footer::onMusicListAdded);
+    connect(presenter, &Presenter::musicRemoved,
+            d->footer, &Footer::onMusicRemoved);
+    connect(presenter, &Presenter::progrossChanged,
+            d->footer, &Footer::onProgressChanged);
+
     connect(presenter, &Presenter::playlistResorted,
             d->musicList, &MusicListWidget::onMusiclistChanged);
-    connect(presenter, &Presenter::selectedPlaylistChanged,
+    connect(presenter, &Presenter::currentPlaylistChanged,
             d->musicList, &MusicListWidget::onMusiclistChanged);
     connect(presenter, &Presenter::musicRemoved,
             d->musicList, &MusicListWidget::onMusicRemoved);
-
     connect(presenter, &Presenter::musiclistAdded,
             d->musicList, &MusicListWidget::onMusicListAdded);
-
     connect(presenter, &Presenter::musicPlayed,
             d->musicList, &MusicListWidget::onMusicPlayed);
     connect(presenter, &Presenter::musicPaused,
             d->musicList, &MusicListWidget::onMusicPause);
     connect(presenter, &Presenter::musicStoped,
             d->musicList, &MusicListWidget::onMusicPause);
-
     connect(presenter, &Presenter::musiclistMenuRequested,
             d->musicList, &MusicListWidget::onCustomContextMenuRequest);
 
+    connect(d->musicList, &MusicListWidget::playall,
+            presenter, &Presenter::onPlayall);
+    connect(d->musicList, &MusicListWidget::resort,
+            presenter, &Presenter::onResort);
+    connect(d->musicList, &MusicListWidget::musicClicked,
+            presenter, &Presenter::onMusicPlay);
+    connect(d->musicList, &MusicListWidget::requestCustomContextMenu,
+            presenter, &Presenter::onRequestMusiclistMenu);
+    connect(d->musicList, &MusicListWidget::addToPlaylist,
+            presenter, &Presenter::onAddToPlaylist);
+    connect(d->musicList, &MusicListWidget::musiclistRemove,
+            presenter, &Presenter::onMusiclistRemove);
+    connect(d->musicList, &MusicListWidget::musiclistDelete,
+            presenter, &Presenter::onMusiclistDelete);
 
-    // Play list bindding
-    connect(presenter, &Presenter::selectedPlaylistChanged,
+    connect(d->playlist, &PlaylistWidget::addPlaylist,
+            presenter, &Presenter::onPlaylistAdd);
+    connect(d->playlist, &PlaylistWidget::selectPlaylist,
+            presenter, &Presenter::onSelectedPlaylistChanged);
+    connect(d->playlist, &PlaylistWidget::playall,
+            presenter, &Presenter::onPlayall);
+
+    connect(presenter, &Presenter::currentPlaylistChanged,
             d->playlist, &PlaylistWidget::onCurrentChanged);
     connect(presenter, &Presenter::playlistAdded,
             d->playlist, &PlaylistWidget::onPlaylistAdded);
 
-    // Lyric
-    connect(presenter, &Presenter::musicPlayed,
-            d->lyric, &LyricView::onMusicPlayed);
-    connect(presenter, &Presenter::lyricSearchFinished,
-            d->lyric, &LyricView::onLyricChanged);
-    connect(presenter, &Presenter::coverSearchFinished,
-            d->lyric, &LyricView::onCoverChanged);
-    connect(presenter, &Presenter::progrossChanged,
-            d->lyric, &LyricView::onProgressChanged);
-    connect(presenter, &Presenter::progrossChanged,
-            d->lyric, &LyricView::onProgressChanged);
 
+    connect(d->lyricView, &LyricView::toggleLyricView, this, &MainWindow::toggleLyricView);
+    connect(presenter, &Presenter::progrossChanged,
+            d->lyricView, &LyricView::onProgressChanged);
+    connect(presenter, &Presenter::musicPlayed,
+            d->lyricView, &LyricView::onMusicPlayed);
+    connect(presenter, &Presenter::lyricSearchFinished,
+            d->lyricView, &LyricView::onLyricChanged);
+    connect(presenter, &Presenter::coverSearchFinished,
+            d->lyricView, &LyricView::onCoverChanged);
+
+
+    connect(d->playlist, &PlaylistWidget::hidePlaylist,
+    this, [ = ]() {
+        setPlaylistVisible(false);
+    });
+
+    connect(presenter, &Presenter::locateMusic,
+    this, [ = ](PlaylistPtr playlist, const MusicMeta & info) {
+        d->musicList->onLocate(playlist, info);
+        d->playlist->onCurrentChanged(playlist);
+        showMusicListView();
+    });
+    connect(presenter, &Presenter::notifyAddToPlaylist,
+    this, [ = ](PlaylistPtr playlist, const MusicMetaList & /*metalist*/) {
+        auto icon = QPixmap(":/image/notify_success.png");
+        auto text =  tr("Successfully added to \"%1\"");
+        text = text.arg(playlist->displayName());
+        showTips(icon, text);
+    });
+    connect(presenter, &Presenter::currentPlaylistChanged,
+    this, [ = ](PlaylistPtr playlist) {
+        d->musicList->onMusiclistChanged(playlist);
+        d->playlist->onCurrentChanged(playlist);
+        showMusicListView();
+    });
+    connect(presenter, &Presenter::playlistAdded,
+    this, [ = ](PlaylistPtr playlist) {
+        qDebug() << playlist->id();
+        setPlaylistVisible(true);
+    });
     connect(presenter, &Presenter::coverSearchFinished,
     this, [ = ](const MusicMeta &, const QByteArray & coverData) {
         if (coverData.length() < 32) {
             return;
         }
-
-        qDebug() << coverData.length();
         QImage image = QImage::fromData(coverData);
         if (image.isNull()) {
             return;
@@ -259,21 +300,16 @@ void MainWindow::binding(Presenter *presenter)
         setBackgroundImage(WidgetHelper::blurImage(image, 50));
         this->repaint();
     });
-
-
-    // Import bindding
-    connect(d->import, &ImportWidget::scanMusicDirectory,
-            presenter, &Presenter::onImportMusicDirectory);
-    connect(d->import, &ImportWidget::importFiles,
-            this, &MainWindow::onSelectImportFiles);
-    connect(this, &MainWindow::importSelectFiles,
-            presenter, &Presenter::onImportFiles);
-
-    // View control
-    connect(presenter, &Presenter::selectedPlaylistChanged,
+    connect(presenter, &Presenter::musicStoped,
+    this, [ = ](PlaylistPtr, const MusicMeta &) {
+        QImage image = QImage((":/image/cover_max.png"));
+        image = WidgetHelper::cropRect(image, this->size());
+        setBackgroundImage(WidgetHelper::blurImage(image, 50));
+        repaint();
+    });
+    connect(presenter, &Presenter::currentPlaylistChanged,
     this, [ = ]() {
-        qDebug() << "";
-        changeToMusicListView(true);
+        changeToMusicListView(false);
     });
     connect(presenter, &Presenter::requestImportFiles,
             this, &MainWindow::onSelectImportFiles);
@@ -284,6 +320,12 @@ void MainWindow::binding(Presenter *presenter)
         });
     });
 
+    connect(d->import, &ImportWidget::scanMusicDirectory,
+            presenter, &Presenter::onImportMusicDirectory);
+    connect(d->import, &ImportWidget::importFiles,
+            this, &MainWindow::onSelectImportFiles);
+    connect(this, &MainWindow::importSelectFiles,
+            presenter, &Presenter::onImportFiles);
 
     initMenu();
 }
@@ -302,8 +344,8 @@ void MainWindow::resizeEvent(QResizeEvent *e)
     DWindow::resizeEvent(e);
     QSize newSize = DWindow::size();
     d->stacked->setFixedSize(newSize.width(), newSize.height() - titlebarHeight());
-    d->lyric->setFixedSize(newSize.width(),
-                           newSize.height() - titlebarHeight() - d->footer->height() - 1);
+    d->lyricView->setFixedSize(newSize.width(),
+                               newSize.height() - titlebarHeight() - d->footer->height() - 1);
     d->import->setFixedSize(newSize.width(),
                             newSize.height() - titlebarHeight() - d->footer->height() - 1);
     d->title->setFixedSize(newSize.width(), titlebarHeight() - 2);
@@ -403,6 +445,13 @@ void MainWindow::paintEvent(QPaintEvent *e)
     }
 }
 
+void MainWindow::onCurrentPlaylistChanged(PlaylistPtr playlist)
+{
+    if (playlist->id() != SearchMusicListID) {
+        d->title->exitSearch();
+    }
+}
+
 void MainWindow::onSelectImportFiles()
 {
     QFileDialog fileDlg;
@@ -419,7 +468,7 @@ void MainWindow::onSelectImportFiles()
 
 void MainWindow::toggleLyricView()
 {
-    if (d->lyric->isVisible()) {
+    if (d->lyricView->isVisible()) {
         showMusicListView();
     } else {
         showLyricView();
@@ -437,13 +486,13 @@ void MainWindow::showLyricView()
     m_titlebarBottomColor = s_lyriclTitleBottom;
 
     auto current = d->currentWidget ? d->currentWidget : d->musicList;
-    d->lyric->resize(current->size());
+    d->lyricView->resize(current->size());
     WidgetHelper::slideBottom2TopWidget(
-        current, d->lyric, s_AnimationDelay);
+        current, d->lyricView, s_AnimationDelay);
     this->repaint();
     this->disableControl();
     setPlaylistVisible(false);
-    d->currentWidget = d->lyric;
+    d->currentWidget = d->lyricView;
 }
 
 void MainWindow::showMusicListView()
@@ -534,7 +583,7 @@ void MainWindow::initMenu()
     auto m_newlist = new QAction(tr("New songlist"), this);
     connect(m_newlist, &QAction::triggered, this, [ = ](bool) {
         setPlaylistVisible(true);
-        emit ViewPresenter::instance()->addPlaylist(true);
+        emit this->addPlaylist(true);
     });
 
     auto m_addmusic = new QAction(tr("Add music"), this);

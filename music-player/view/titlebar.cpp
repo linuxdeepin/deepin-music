@@ -9,48 +9,120 @@
 
 #include "titlebar.h"
 
+#include <QDebug>
 #include <QLabel>
 #include <QHBoxLayout>
+#include <QPushButton>
+#include <QGraphicsOpacityEffect>
 
+#include <dutility.h>
 #include <dthememanager.h>
 #include <dsearchedit.h>
 
 #include "widget/searchedit.h"
-#include "viewpresenter.h"
+
 DWIDGET_USE_NAMESPACE
 
-TitleBar::TitleBar(QWidget *parent) : QFrame(parent)
+class TitleBarPrivate
 {
+public:
+    TitleBarPrivate(TitleBar *parent) : q_ptr(parent) {}
+
+//    void fixSearchPosition();
+
+    SearchEdit *search;
+
+    TitleBar *q_ptr;
+    Q_DECLARE_PUBLIC(TitleBar);
+};
+
+TitleBar::TitleBar(QWidget *parent) :
+    QFrame(parent), d_ptr(new TitleBarPrivate(this))
+{
+    Q_D(TitleBar);
+
     setFocusPolicy(Qt::NoFocus);
     setObjectName("TitleBar");
 
     auto layout = new QHBoxLayout(this);
-    layout->setContentsMargins(10, 5, 10, 5);
+    layout->setContentsMargins(5, 5, 10, 5);
+
+    auto leftWidget = new QWidget;
+    leftWidget->setObjectName("TitleLeft");
+    leftWidget->setFixedWidth(60);
+    auto leftLayout = new QHBoxLayout(leftWidget);
+    leftLayout->setSpacing(10);
+    leftLayout->setMargin(0);
 
     auto iconLabel = new QLabel;
     iconLabel->setObjectName("TitleIcon");
     iconLabel->setFixedSize(20, 20);
 
-    auto search = new SearchEdit;
-    search->setObjectName("TitleSearch");
-    search->setFixedSize(278, 26);
-//    search->setPlaceHolder(tr("Search"));
-    search->clear();
+    auto btBack = new QPushButton;
+    btBack->setObjectName("TitleBack");
+    btBack->setFixedSize(24, 24);
+    btBack->hide();
 
-    layout->addWidget(iconLabel, 0, Qt::AlignHCenter);
+    leftLayout->addWidget(iconLabel, 0, Qt::AlignCenter);
+    leftLayout->addWidget(btBack, 0, Qt::AlignCenter);
+    leftLayout->addStretch();
+
+    d->search = new SearchEdit();
+    d->search->setObjectName("TitleSearch");
+    d->search->setFixedSize(278, 26);
+    d->search->setPlaceHolder(tr("Search"));
+    d->search->clear();
+
+    auto rightWidget = new QWidget;
+    rightWidget->setObjectName("TitleRight");
+    rightWidget->setFixedWidth(60);
+
+    layout->addWidget(leftWidget, 0,  Qt::AlignCenter);
     layout->addStretch();
-    layout->addWidget(search, 0, Qt::AlignHCenter);
+    layout->addWidget(d->search, 0,  Qt::AlignCenter);
     layout->addStretch();
+    layout->addWidget(rightWidget, 0,  Qt::AlignCenter);
 
     auto result = this->findChild<QWidget *>("DEditInsideFrame");
     if (result) {
         result->setStyleSheet("#DEditInsideFrame{background: rgba(255,255,255,0.3);}");
     }
 
-    D_THEME_INIT_WIDGET(TitleBar);
+    connect(d->search, &SearchEdit::locateMusic, this, &TitleBar::locateMusicInAllMusiclist);
+    connect(d->search, &SearchEdit::searchText, this, &TitleBar::search);
+    connect(btBack, &QPushButton::clicked, this, &TitleBar::exitSearch);
 
-    connect(search, &SearchEdit::locateMusic,
-            ViewPresenter::instance(), &ViewPresenter::locateMusicAtAll);
-    connect(search, &SearchEdit::searchText,
-            ViewPresenter::instance(), &ViewPresenter::searchText);
+    connect(this, &TitleBar::search, this, [ = ]() {
+        btBack->show();
+//        d->fixSearchPosition();
+    });
+    connect(this, &TitleBar::exitSearch, this, [ = ]() {
+        btBack->hide();
+//        d->fixSearchPosition();
+    });
+
+    D_THEME_INIT_WIDGET(TitleBar);
 }
+
+TitleBar::~TitleBar()
+{
+
+}
+
+//void TitleBar::resizeEvent(QResizeEvent *event)
+//{
+//    Q_D(TitleBar);
+//    QFrame::resizeEvent(event);
+//    d->fixSearchPosition();
+//}
+
+//void TitleBarPrivate::fixSearchPosition()
+//{
+//    Q_Q(TitleBar);
+//    auto fixSize = QPoint(search->width() / 2, search->height() / 2);
+//    auto fixPos = q->geometry().center() - fixSize;
+//    search->setGeometry(fixPos.x(), fixPos.y(),
+//                        search->width(), search->height());
+
+//    qDebug() << fixPos << search->size() << search->parent();
+//}

@@ -13,7 +13,7 @@
 
 #MusicListEmptyHits{
     font-size: 24px;
-    color: #474747;
+    color: #d0d0d0;
 }
 
 #MusicListPlayAll{

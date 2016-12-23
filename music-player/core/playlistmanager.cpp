@@ -177,7 +177,7 @@ void PlaylistManager::insertPlaylist(const QString &uuid, PlaylistPtr playlist)
 
     connect(playlist.data(), &Playlist::musicRemoved,
     this, [ = ](const MusicMeta & info) {
-        emit musicRemoved(playlist,  info);
+        emit musicRemoved(playlist, info);
     });
 
     sortPlaylists << uuid;

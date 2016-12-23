@@ -35,6 +35,8 @@ public:
 
     }
 
+    PlaylistPtr         playlistBeforeSearch;
+
     LyricService        *lyricService;
     PlaylistManager     *playlistMgr;
     MediaFileMonitor    *moniter;
@@ -163,7 +165,7 @@ void Presenter::prepareData()
     connect(d->playlistMgr, &PlaylistManager::musicRemoved,
             this, &Presenter::musicRemoved);
     connect(d->playlistMgr, &PlaylistManager::selectedPlaylistChanged,
-            this, &Presenter::selectedPlaylistChanged);
+            this, &Presenter::currentPlaylistChanged);
 
     connect(Player::instance(), &Player::progrossChanged,
     this, [ = ](qint64 position, qint64 duration) {
@@ -215,7 +217,7 @@ int Presenter::playMode()
     return Player::instance()->mode();
 }
 
-void Presenter::onMusicRemove(PlaylistPtr playlist, const MusicMetaList &metalist)
+void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MusicMetaList &metalist)
 {
     auto playinglist = d->playlistMgr->playingPlaylist();
     MusicMeta next;
@@ -253,7 +255,7 @@ void Presenter::onMusicRemove(PlaylistPtr playlist, const MusicMetaList &metalis
     }
 }
 
-void Presenter::onMusicDelete(PlaylistPtr playlist , const MusicMetaList &metalist)
+void Presenter::onMusiclistDelete(PlaylistPtr playlist , const MusicMetaList &metalist)
 {
     // find next music
     MusicMeta next;
@@ -348,16 +350,26 @@ void Presenter::onSearchText(const QString text)
     auto resultList = MediaDatabase::searchMusicMeta(text, 1000);
     searchList->reset(resultList);
 
+    if (d->playlistMgr->selectedPlaylist()->id() != SearchMusicListID) {
+        d->playlistBeforeSearch = d->playlistMgr->selectedPlaylist();
+    }
+
     d->playlistMgr->setSelectedPlaylist(searchList);
-    if (d->playlistMgr->selectedPlaylist() == searchList) {
-        emit this->selectedPlaylistChanged(searchList);
+    emit this->currentPlaylistChanged(searchList);
+}
+
+void Presenter::onExitSearch()
+{
+    qDebug() << d->playlistBeforeSearch;
+    if (!d->playlistBeforeSearch.isNull()) {
+        d->playlistMgr->setSelectedPlaylist(d->playlistBeforeSearch);
+        emit this->currentPlaylistChanged(d->playlistBeforeSearch);
     }
 }
 
 void Presenter::onLocateMusicAtAll(const QString &hash)
 {
     auto allList = d->playlistMgr->playlist(AllMusicListID);
-
     d->playlistMgr->setSelectedPlaylist(allList);
     emit locateMusic(allList, allList->music(hash));
 //    onMusicPlay(allList, allList->music(hash));
