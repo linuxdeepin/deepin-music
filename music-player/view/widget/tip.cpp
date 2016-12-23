@@ -11,6 +11,7 @@
 
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QPainter>
 #include <QGraphicsDropShadowEffect>
 #include <QPropertyAnimation>
 #include <QGraphicsOpacityEffect>
@@ -21,16 +22,22 @@ DWIDGET_USE_NAMESPACE
 
 Tip::Tip(const QPixmap &icon, const QString &text, QWidget *parent) : QFrame(parent)
 {
+    setWindowFlags(Qt::Tool | Qt::FramelessWindowHint);
+    setAttribute(Qt::WA_TranslucentBackground);
     setObjectName("Tip");
     setFixedHeight(40);
 
     auto layout = new QHBoxLayout(this);
-    layout->setMargin(5);
+    layout->setContentsMargins(10, 0, 10, 0);
     layout->setSpacing(5);
     auto iconLabel = new QLabel;
     iconLabel->setObjectName("TipIcon");
     iconLabel->setFixedSize(icon.size());
-    iconLabel->setPixmap(icon);
+    if (icon.isNull()) {
+        iconLabel->hide();
+    } else {
+        iconLabel->setPixmap(icon);
+    }
 
     auto textLable = new QLabel(text);
     textLable->setObjectName("TipText");
@@ -38,7 +45,7 @@ Tip::Tip(const QPixmap &icon, const QString &text, QWidget *parent) : QFrame(par
     layout->addWidget(iconLabel);
     layout->addWidget(textLable);
 
-    D_THEME_INIT_WIDGET(Widget/Tip);
+    D_THEME_INIT_WIDGET(Widget / Tip);
 
     adjustSize();
 
@@ -47,6 +54,7 @@ Tip::Tip(const QPixmap &icon, const QString &text, QWidget *parent) : QFrame(par
     bodyShadow->setColor(QColor(0, 0, 0, 0.1 * 255));
     bodyShadow->setOffset(2.0, 4.0);
     this->setGraphicsEffect(bodyShadow);
+    hide();
 }
 
 void Tip::pop(QPoint center)
@@ -56,7 +64,7 @@ void Tip::pop(QPoint center)
     this->move(center);
 
     auto topOpacity = new QGraphicsOpacityEffect(this);
-    topOpacity->setOpacity(0);
+    topOpacity->setOpacity(1);
     this->setGraphicsEffect(topOpacity);
 
     QPropertyAnimation *animation4 = new QPropertyAnimation(topOpacity, "opacity");
@@ -73,4 +81,20 @@ void Tip::pop(QPoint center)
         this->setGraphicsEffect(nullptr);
         this->hide();
     });
+}
+
+void Tip::paintEvent(QPaintEvent *e)
+{
+    QFrame::paintEvent(e);
+//    return;
+    QPainter painter(this);
+    painter.setRenderHints(QPainter::Antialiasing | QPainter::HighQualityAntialiasing);
+    QPainterPath path;
+    auto rect = this->rect();
+    path.addRoundedRect(rect, 4, 4);
+    painter.fillPath(path, Qt::white);
+
+    QPen pen(QColor(0, 0, 0, 51));
+    pen.setWidth(1);
+    painter.strokePath(path, pen);
 }

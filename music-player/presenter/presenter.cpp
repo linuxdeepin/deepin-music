@@ -171,6 +171,16 @@ void Presenter::prepareData()
     this, [ = ](qint64 position, qint64 duration) {
         emit progrossChanged(position, duration);
     });
+    connect(Player::instance(), &Player::volumeChanged,
+            this, &Presenter::volumeChanged);
+    connect(Player::instance(), &Player::mutedChanged,
+    this, [ = ](bool mute) {
+        if (mute) {
+            emit this->mutedChanged(mute);
+        } else {
+            emit this->volumeChanged(Player::instance()->volume());
+        }
+    });
     connect(Player::instance(), &Player::musicPlayed,
     this, [ = ](PlaylistPtr playlist, const MusicMeta & info) {
         MusicMeta favInfo(info);
@@ -189,6 +199,8 @@ void Presenter::prepareData()
     connect(this, &Presenter::stop, Player::instance(), &Player::stop);
 
     emit dataLoaded();
+    Player::instance()->setVolume(50);
+    emit this->volumeChanged(Player::instance()->volume());
 }
 
 
@@ -483,6 +495,13 @@ void Presenter::onChangeProgress(qint64 value, qint64 range)
     emit changeProgress(value, range);
 }
 
+void Presenter::onVolumeChanged(int volume)
+{
+    Player::instance()->setVolume(volume);
+    if (volume>0)
+        Player::instance()->setMuted(false);
+}
+
 void Presenter::onPlayModeChanged(int mode)
 {
     Player::instance()->setMode(static_cast<Player::PlayMode>(mode));
@@ -491,6 +510,11 @@ void Presenter::onPlayModeChanged(int mode)
     d->settings.setValue("Mode", mode);
     d->settings.endGroup();
     d->settings.sync();
+}
+
+void Presenter::onToggleMute()
+{
+    Player::instance()->setMuted(! Player::instance()->isMuted());
 }
 
 void Presenter::onPlayall(PlaylistPtr playlist)

@@ -46,9 +46,9 @@ QStringList MediaFileMonitor::supportedFilterStringList()
 
 MediaFileMonitor::MediaFileMonitor(QObject *parent) : QObject(parent)
 {
-//    m_watcher = new InotifyEngine;
-//    connect(m_watcher, &InotifyEngine::fileRemoved,
-//            this, &MediaFileMonitor::fileRemoved);
+    m_watcher = new InotifyEngine;
+    connect(m_watcher, &InotifyEngine::fileRemoved,
+            this, &MediaFileMonitor::fileRemoved);
 
     //black list
     QHash<QString, bool> suffixBlacklist;
@@ -79,7 +79,7 @@ MediaFileMonitor::MediaFileMonitor(QObject *parent) : QObject(parent)
 
 void MediaFileMonitor::importPlaylistFiles(PlaylistPtr playlist, const QStringList &filelist)
 {
-    qDebug() << "import form"<< filelist;
+    qDebug() << "import form" << filelist;
     QStringList urllist;
 
     QHash<QString, bool> losslessSuffix;
@@ -101,7 +101,7 @@ void MediaFileMonitor::importPlaylistFiles(PlaylistPtr playlist, const QStringLi
             if (fileInfo.suffix() == "cue") {
                 cuelist << CueParser(url);
                 // TODO: check cue invaild
-//                m_watcher->addPath(fileInfo.absolutePath());
+                m_watcher->addPath(fileInfo.absolutePath());
                 continue;
             }
 
@@ -120,7 +120,7 @@ void MediaFileMonitor::importPlaylistFiles(PlaylistPtr playlist, const QStringLi
             }
 
             metaCache << info;
-//            m_watcher->addPath(fileInfo.absolutePath());
+            m_watcher->addPath(fileInfo.absolutePath());
 
             if (metaCache.length() >= ScanCacheSize) {
                 emit MediaDatabase::instance()->addMusicMetaList(metaCache);
@@ -156,7 +156,7 @@ void MediaFileMonitor::importPlaylistFiles(PlaylistPtr playlist, const QStringLi
         metaCache.clear();
     }
 
-    //    qDebug() << m_watcher->directories();
+//    qDebug() << m_watcher->directories();
     emit scanFinished();
 }
 
@@ -169,5 +169,5 @@ void MediaFileMonitor::startMonitor()
         dirs.insert(metafi.absolutePath(), metafi.absolutePath());
     }
 
-//    m_watcher->addPaths(dirs.keys());
+    m_watcher->addPaths(dirs.keys());
 }

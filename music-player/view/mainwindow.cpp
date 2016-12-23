@@ -183,6 +183,8 @@ void MainWindow::binding(Presenter *presenter)
     connect(d->footer, &Footer::prev, presenter, &Presenter::onMusicPrev);
     connect(d->footer, &Footer::toggleFavourite, presenter, &Presenter::onToggleFavourite);
     connect(d->footer, &Footer::modeChanged, presenter, &Presenter::onPlayModeChanged);
+    connect(d->footer, &Footer::volumeChanged, presenter, &Presenter::onVolumeChanged);
+    connect(d->footer, &Footer::toggleMute, presenter, &Presenter::onToggleMute);
 
     connect(presenter, &Presenter::coverSearchFinished,
             d->footer, &Footer::onCoverChanged);
@@ -200,6 +202,10 @@ void MainWindow::binding(Presenter *presenter)
             d->footer, &Footer::onMusicRemoved);
     connect(presenter, &Presenter::progrossChanged,
             d->footer, &Footer::onProgressChanged);
+    connect(presenter, &Presenter::volumeChanged,
+            d->footer, &Footer::onVolumeChanged);
+    connect(presenter, &Presenter::mutedChanged,
+            d->footer, &Footer::onMutedChanged);
 
     connect(presenter, &Presenter::playlistResorted,
             d->musicList, &MusicListWidget::onMusiclistChanged);
@@ -318,6 +324,10 @@ void MainWindow::binding(Presenter *presenter)
         DUtil::TimerSingleShot(3 * 1000, [this, playlist, metalist ]() {
             this->showMusicListView();
         });
+    });
+    connect(presenter, &Presenter::metaInfoClean,
+    this, [ = ]() {
+        showImportView();
     });
 
     connect(d->import, &ImportWidget::scanMusicDirectory,
@@ -526,8 +536,10 @@ void MainWindow::showTips(QPixmap icon, QString text)
         d->tips->deleteLater();
     }
     d->tips = new Tip(icon, text , this);
-    auto center = this->geometry().center();
-    center.setY(center.y() + height() / 2 - d->footer->height() - 40);
+    auto center = mapToGlobal(QPoint(QWidget::rect().center()));
+    center.setY(center.y() + height() / 2 - d->footer->height() - 40 - 36);
+    center = d->tips->mapFromGlobal(center);
+    center = d->tips->mapToParent(center);
     d->tips->pop(center);
 }
 

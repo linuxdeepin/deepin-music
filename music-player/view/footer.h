@@ -37,7 +37,9 @@ signals:
     void next(PlaylistPtr playlist, const MusicMeta &meta);
     void prev(PlaylistPtr playlist, const MusicMeta &meta);
     void changeProgress(qint64 value, qint64 duration);
+    void volumeChanged(int volume);
 
+    void toggleMute();
     void togglePlaylist();
     void modeChanged(int);
     void toggleFavourite(const MusicMeta &meta);
@@ -53,9 +55,12 @@ public slots:
     void onMusicStoped(PlaylistPtr playlist, const MusicMeta &meta);
     void onProgressChanged(qint64 value, qint64 duration);
     void onCoverChanged(const MusicMeta &meta, const QByteArray &coverData);
+    void onVolumeChanged(int volume);
+    void onMutedChanged(bool muted);
 
 protected:
     virtual void mouseMoveEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+    virtual bool eventFilter(QObject *obj, QEvent *event) Q_DECL_OVERRIDE;
 
 private:
     QScopedPointer<FooterPrivate> d_ptr;

@@ -36,7 +36,6 @@ SOURCES += \
     presenter/presenter.cpp \
     view/helper/widgethellper.cpp \
     view/widget/cover.cpp \
-    view/widget/hoverfilter.cpp \
     view/widget/infodialog.cpp \
     view/widget/lyriclinedelegate.cpp \
     view/widget/modebuttom.cpp \
@@ -59,7 +58,11 @@ SOURCES += \
     main.cpp \
     view/widget/label.cpp \
     view/widget/tip.cpp \
-    view/importwidget.cpp
+    view/importwidget.cpp \
+    core/util/inotifyengine.cpp \
+    view/widget/hint.cpp \
+    view/widget/soundvolume.cpp \
+    view/widget/filter.cpp
 
 
 HEADERS += \
@@ -84,7 +87,6 @@ HEADERS += \
     presenter/presenter.h \
     view/helper/widgethellper.h \
     view/widget/cover.h \
-    view/widget/hoverfilter.h \
     view/widget/infodialog.h \
     view/widget/lyriclinedelegate.h \
     view/widget/modebuttom.h \
@@ -107,7 +109,11 @@ HEADERS += \
     musicapp.h \
     view/widget/label.h \
     view/widget/tip.h \
-    view/importwidget.h
+    view/importwidget.h \
+    core/util/inotifyengine.h \
+    view/widget/hint.h \
+    view/widget/soundvolume.h \
+    view/widget/filter.h
 
 RESOURCES += \
     resource/theme/theme.qrc \

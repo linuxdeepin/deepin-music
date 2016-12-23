@@ -60,18 +60,6 @@
         <file>image/unfav_hover.png</file>
         <file>image/unfav_normal.png</file>
         <file>image/unfav_press.png</file>
-        <file>image/volume_low_hover.png</file>
-        <file>image/volume_low_normal.png</file>
-        <file>image/volume_low_press.png</file>
-        <file>image/volume_mute_hover.png</file>
-        <file>image/volume_mute_normal.png</file>
-        <file>image/volume_mute_press.png</file>
-        <file>image/volumehigh_hover.png</file>
-        <file>image/volumehigh_normal.png</file>
-        <file>image/volumehigh_press.png</file>
-        <file>image/volumemid_hover.png</file>
-        <file>image/volumemid_normal.png</file>
-        <file>image/volumemid_press.png</file>
         <file>image/input_clear_hover.png</file>
         <file>image/input_clear_normal.png</file>
         <file>image/input_clear_press.png</file>

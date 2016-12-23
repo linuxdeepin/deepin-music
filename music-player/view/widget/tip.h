@@ -20,4 +20,5 @@ public:
                  QWidget *parent = 0);
 
     void pop(QPoint center);
+    virtual void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
 };

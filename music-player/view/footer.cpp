@@ -23,11 +23,13 @@
 #include "../musicapp.h"
 #include "../core/playlistmanager.h"
 
-#include "widget/hoverfilter.h"
+#include "widget/filter.h"
 #include "widget/slider.h"
 #include "widget/modebuttom.h"
 #include "widget/label.h"
 #include "widget/cover.h"
+#include "widget/tip.h"
+#include "widget/soundvolume.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -43,9 +45,14 @@ static const QString sDefaultCover = ":/image/cover_welcome.png";
 class FooterPrivate
 {
 public:
-    FooterPrivate(Footer *parent) : q_ptr(parent) {}
+    FooterPrivate(Footer *parent) : q_ptr(parent)
+    {
+        hintFilter = new HintFilter;
+    }
 
     void updateQssProperty(QWidget *w, const char *name, const QVariant &value);
+    void installTipHint(QWidget *w, const QString &hintstr);
+    void installHint(QWidget *w, QWidget *hint);
     void initConnection();
 
     Cover           *cover      = nullptr;
@@ -60,6 +67,8 @@ public:
     ModeButton      *btPlayMode = nullptr;
     QPushButton     *btSound    = nullptr;
     Slider          *progress   = nullptr;
+    HintFilter      *hintFilter = nullptr;
+    SoundVolume     *volSlider  = nullptr;
 
     PlaylistPtr     m_playinglist;
     MusicMeta       m_playingMeta;
@@ -76,6 +85,20 @@ void FooterPrivate::updateQssProperty(QWidget *w, const char *name, const QVaria
     q->style()->unpolish(w);
     q->style()->polish(w);
     w->repaint();
+}
+
+void FooterPrivate::installTipHint(QWidget *w, const QString &hintstr)
+{
+    Q_Q(Footer);
+    auto hintWidget = new Tip(QPixmap(), hintstr, q);
+    hintWidget->setFixedHeight(24);
+    installHint(w, hintWidget);
+}
+
+void FooterPrivate::installHint(QWidget *w, QWidget *hint)
+{
+    w->setProperty("HintWidget", QVariant::fromValue<QWidget *>(hint));
+    w->installEventFilter(hintFilter);
 }
 
 void FooterPrivate::initConnection()
@@ -139,7 +162,11 @@ void FooterPrivate::initConnection()
     q->connect(btPlayList, &QPushButton::clicked, q, [ = ](bool) {
         emit q->togglePlaylist();
     });
-
+    q->connect(btSound, &QPushButton::clicked, q, [ = ](bool) {
+        emit q->toggleMute();
+    });
+    q->connect(volSlider, &SoundVolume::volumeChanged,
+               q, &Footer::volumeChanged);
 }
 
 Footer::Footer(QWidget *parent) :
@@ -218,10 +245,21 @@ Footer::Footer(QWidget *parent) :
     d->btSound = new QPushButton;
     d->btSound->setObjectName("FooterActionSound");
     d->btSound->setFixedSize(24, 24);
+    d->btSound->setProperty("volume", "mid");
 
     d->btPlayList = new QPushButton;
     d->btPlayList->setObjectName("FooterActionPlayList");
     d->btPlayList->setFixedSize(24, 24);
+
+
+    d->btSound->installEventFilter(this);
+    d->installTipHint(d->btFavorite, tr("Add to my favorites"));
+    d->installTipHint(d->btLyric, tr("Lyric"));
+    d->installTipHint(d->btPlayMode, tr("Play Mode"));
+    d->installTipHint(d->btPlayList, tr("Playlist"));
+    d->volSlider = new SoundVolume(this);
+    d->volSlider->setProperty("DelayHide", true);
+    d->installHint(d->btSound, d->volSlider);
 
     auto infoWidget = new QWidget;
     auto infoLayout = new QHBoxLayout(infoWidget);
@@ -322,6 +360,31 @@ void Footer::mouseMoveEvent(QMouseEvent *event)
     }
 }
 
+#include <QWheelEvent>
+bool Footer::eventFilter(QObject *obj, QEvent *event)
+{
+    Q_D(Footer);
+    switch (event->type()) {
+    case QEvent::Wheel: {
+        qDebug() << obj;
+        if (obj != d->btSound) {
+            return QObject::eventFilter(obj, event);
+        }
+        auto we = dynamic_cast<QWheelEvent *>(event);
+        if (we->angleDelta().y() > 0) {
+            d->volSlider->onVolumeChanged(d->volSlider->volume() + 5);
+            emit this->volumeChanged(d->volSlider->volume());
+        } else {
+            d->volSlider->onVolumeChanged(d->volSlider->volume() - 5);
+            emit this->volumeChanged(d->volSlider->volume());
+        }
+        return true;
+    }
+    default:
+        return QObject::eventFilter(obj, event);
+    }
+}
+
 void Footer::onMusicAdded(PlaylistPtr playlist, const MusicMeta &info)
 {
     Q_D(Footer);
@@ -394,15 +457,13 @@ void Footer::onMusicPause(PlaylistPtr playlist, const MusicMeta &meta)
 void Footer::onMusicStoped(PlaylistPtr playlist, const MusicMeta &meta)
 {
     Q_D(Footer);
-    if (meta.hash != d->m_playingMeta.hash || playlist != d->m_playinglist) {
-        qWarning() << "can not pasue" << d->m_playinglist << playlist
-                   << d->m_playingMeta.hash << meta.hash;
-        return;
-    }
 
     onProgressChanged(0, 1);
     this->enableControl(false);
-
+    d->title->hide();
+    d->artist->hide();
+    d->cover->setCoverPixmap(QPixmap(sDefaultCover));
+    d->cover->repaint();
     d->updateQssProperty(d->btPlay, sPropertyPlayStatus, sPlayStatusValueStop);
     d->updateQssProperty(this, sPropertyPlayStatus, sPlayStatusValueStop);
 }
@@ -440,5 +501,30 @@ void Footer::onCoverChanged(const MusicMeta &info, const QByteArray &coverData)
 
     d->cover->setCoverPixmap(coverPixmap);
     d->cover->repaint();
+}
+
+void Footer::onVolumeChanged(int volume)
+{
+    Q_D(Footer);
+    QString status = "mid";
+    if (volume > 77) {
+        status = "high";
+    } else if (volume > 33) {
+        status = "mid";
+    } else  {
+        status = "low";
+    }
+    d->updateQssProperty(d->btSound, "volume", status);
+    d->volSlider->onVolumeChanged(volume);
+}
+
+void Footer::onMutedChanged(bool muted)
+{
+    Q_D(Footer);
+    qDebug() << muted;
+    if (muted) {
+        d->updateQssProperty(d->btSound, "volume", "mute");
+        d->volSlider->onVolumeChanged(0);
+    }
 }
 

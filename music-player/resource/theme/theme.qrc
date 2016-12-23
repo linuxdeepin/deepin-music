@@ -112,5 +112,17 @@
         <file>light/animation/playing/93.png</file>
         <file>light/image/plus.png</file>
         <file>light/Widget/Tip.theme</file>
+        <file>light/image/volume_high_hover.png</file>
+        <file>light/image/volume_high_normal.png</file>
+        <file>light/image/volume_high_press.png</file>
+        <file>light/image/volume_low_hover.png</file>
+        <file>light/image/volume_low_normal.png</file>
+        <file>light/image/volume_low_press.png</file>
+        <file>light/image/volume_mid_hover.png</file>
+        <file>light/image/volume_mid_normal.png</file>
+        <file>light/image/volume_mid_press.png</file>
+        <file>light/image/volume_mute_hover.png</file>
+        <file>light/image/volume_mute_normal.png</file>
+        <file>light/image/volume_mute_press.png</file>
     </qresource>
 </RCC>

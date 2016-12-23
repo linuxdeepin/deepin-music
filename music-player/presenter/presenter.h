@@ -72,6 +72,8 @@ signals:
     void musicPaused(PlaylistPtr playlist, const MusicMeta &info);
     void musicStoped(PlaylistPtr playlist, const MusicMeta &info);
     void progrossChanged(qint64 pos, qint64 length);
+    void volumeChanged(int volume);
+    void mutedChanged(bool muted);
 
     void locateMusic(PlaylistPtr playlist, const MusicMeta &info);
     //! from lyricservice
@@ -92,7 +94,9 @@ public slots:
     void onMusicNext(PlaylistPtr playlist, const MusicMeta &meta);
     void onToggleFavourite(const MusicMeta &info);
     void onChangeProgress(qint64 value, qint64 range);
+    void onVolumeChanged(int volume);
     void onPlayModeChanged(int mode);
+    void onToggleMute();
 
     //! music list
     void onPlayall(PlaylistPtr playlist);

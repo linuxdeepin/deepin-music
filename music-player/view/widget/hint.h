@@ -7,21 +7,25 @@
  * (at your option) any later version.
  **/
 
-#ifndef HOVERFILTER_H
-#define HOVERFILTER_H
+#pragma once
 
-#include <QObject>
+#include <QScopedPointer>
+#include <QWidget>
 
-class HoverFilter : public QObject
+class HintPrivate;
+class Hint : public QWidget
 {
     Q_OBJECT
 public:
-    explicit HoverFilter(QObject *parent = 0);
+    explicit Hint(QWidget *parent = 0);
+    ~Hint();
 
-    bool eventFilter(QObject *obj, QEvent *event);
 signals:
 
 public slots:
+
+private:
+    QScopedPointer<HintPrivate> d_ptr;
+    Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), Hint)
 };
 
-#endif // HOVERFILTER_H

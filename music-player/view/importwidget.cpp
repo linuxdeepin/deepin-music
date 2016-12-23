@@ -96,7 +96,7 @@ void ImportWidget::showWaitHint()
     Q_D(ImportWidget);
     d->importButton->setDisabled(true);
     d->hideEffect->setOpacity(0);
-    d->text->setText(tr("Loading music, plase wait..."));
+    d->text->setText(tr("Loading music, please wait"));
 }
 
 void ImportWidget::showImportHint()

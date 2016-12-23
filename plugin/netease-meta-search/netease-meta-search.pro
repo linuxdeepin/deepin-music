@@ -36,11 +36,8 @@ HEADERS += neteasemetasearch.h \
     metaanalyzer.h \
     metainfo.h
 
-unix {
-    target.files += $$DESTDIR/*.so
-    target.path = /usr/lib
-    INSTALLS += target
-}
+target.path = /usr/lib/deepin-music/plugins
+INSTALLS += target
 
 DISTFILES += \
     NeteaseMetaSearchEngine.json
