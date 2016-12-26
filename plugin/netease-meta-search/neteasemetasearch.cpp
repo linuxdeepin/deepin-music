@@ -109,14 +109,21 @@ NeteaseMetaSearchEngine::NeteaseMetaSearchEngine(QObject *parent): MetaSearchEng
     m_geese->setRawHeader("Referer", "http://music.163.com/");
 
 //    qDebug() << "-------------------------------------------------------";
-    connect(this, &MetaSearchEngine::doSearchMeta,
-            this, &NeteaseMetaSearchEngine::searchMeta);
+//    connect(this, &MetaSearchEngine::doSearchMeta,
+//            this, &NeteaseMetaSearchEngine::searchMeta);
+    connect(getObject(), SIGNAL(doSearchMeta(const MusicMeta &)),
+            this, SLOT(searchMeta(const MusicMeta &)));
 //    qDebug() << "-------------------------------------------------------";
 }
 
 QString NeteaseMetaSearchEngine::pluginId() const
 {
     return "Netease-Meta-Search";
+}
+
+QObject *NeteaseMetaSearchEngine::getObject()
+{
+    return this;
 }
 
 DMusic::Plugin::PluginType NeteaseMetaSearchEngine::pluginType() const

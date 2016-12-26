@@ -23,6 +23,7 @@ signals:
     void doSearchMeta(const MusicMeta &info);
 
 public:
+    virtual QObject *getObject() = 0 ;
     virtual void searchMeta(const MusicMeta &info) = 0;
 };
 

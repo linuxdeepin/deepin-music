@@ -22,12 +22,14 @@ class NETEASEMETASEARCHSHARED_EXPORT NeteaseMetaSearchEngine:
     Q_PLUGIN_METADATA(IID "org.deepin.Music.Plugin" FILE "NeteaseMetaSearchEngine.json")
     Q_INTERFACES(DMusic::Plugin::PluginInterface)
 public:
-
     NeteaseMetaSearchEngine(QObject *parent = 0);
 
-    virtual DMusic::Plugin::PluginType pluginType() const;
-    virtual QString pluginId() const;
-    virtual void searchMeta(const MusicMeta &meta);
+    virtual DMusic::Plugin::PluginType pluginType() const Q_DECL_OVERRIDE;
+    virtual QString pluginId() const Q_DECL_OVERRIDE;
+
+public slots:
+    virtual QObject *getObject() Q_DECL_OVERRIDE;
+    virtual void searchMeta(const MusicMeta &meta) Q_DECL_OVERRIDE;
 
 private:
     DMusic::Net::Geese       *m_geese = nullptr;

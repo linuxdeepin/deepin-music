@@ -299,11 +299,11 @@ void MusicListView::wheelEvent(QWheelEvent *event)
 void MusicListView::resizeEvent(QResizeEvent *event)
 {
     Q_D(MusicListView);
-    qDebug() << "++++++++++++++"<< event;
+//    qDebug() << "++++++++++++++"<< event;
     this->blockSignals(true);
     QTableView::resizeEvent(event);
     this->blockSignals(false);
-    qDebug() << "--------------event"<< event;
+//    qDebug() << "--------------event"<< event;
 
     auto size = event->size();
     auto scrollBarWidth = 8;

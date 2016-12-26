@@ -1,7 +1,6 @@
 include($$PWD/../vendor/src/chinese2pinyin/chinese2pinyin.pri)
 include($$PWD/../vendor/src/libcue/libcue.pri)
 
-
 win32{
     DEFINES += STATIC_LIB
     DEFINES += TAGLIB_STATIC
