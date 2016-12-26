@@ -42,6 +42,9 @@ public:
         return s_app;
     }
 
+    QStringList supportedFilterStringList();
+    QStringList supportedMimeTypes();
+
     const MusicMeta playingMeta();
 
     void setPlaylist(PlaylistPtr);

@@ -14,6 +14,53 @@
 #include <QDebug>
 #include <QThread>
 #include <QTimer>
+#include <QMimeDatabase>
+
+static QMap<QString, bool>  sSupportedSuffix;
+static QStringList          sSupportedSuffixList;
+static QStringList          sSupportedFiterList;
+static QStringList          sSupportedMimeTypes;
+
+void initMiniTypes()
+{
+    //black list
+    QHash<QString, bool> suffixBlacklist;
+    suffixBlacklist.insert("m3u", true);
+
+    QHash<QString, bool> suffixWhitelist;
+    suffixWhitelist.insert("cue", true);
+
+    QMimeDatabase mdb;
+    for (auto &mt : mdb.allMimeTypes()) {
+        if (mt.name().startsWith("audio/")) {
+            sSupportedFiterList << mt.filterString();
+            for (auto &suffix : mt.suffixes()) {
+                if (suffixBlacklist.contains(suffix)) {
+                    continue;
+                }
+
+                sSupportedSuffixList << "*." + suffix;
+                sSupportedSuffix.insert(suffix, true);
+            }
+            sSupportedMimeTypes << mt.name();
+        }
+    }
+
+    for (auto &suffix : suffixWhitelist.keys()) {
+        sSupportedSuffixList << "*." + suffix;
+        sSupportedSuffix.insert(suffix, true);
+    }
+}
+
+QStringList Player::supportedFilterStringList()
+{
+    return sSupportedFiterList;
+}
+
+QStringList Player::supportedMimeTypes()
+{
+    return sSupportedMimeTypes;
+}
 
 const MusicMeta Player::playingMeta()
 {
@@ -155,6 +202,7 @@ void Player::selectPrev(const MusicMeta &info, Player::PlayMode mode)
 
 Player::Player(QObject *parent) : QMediaPlayer(parent)
 {
+    initMiniTypes();
     connect(this, &QMediaPlayer::durationChanged, this, [ = ](qint64 duration) {
         m_duration = duration;
     });

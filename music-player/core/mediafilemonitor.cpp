@@ -28,6 +28,7 @@
 #include <taglib.h>
 #include <tpropertymap.h>
 
+#include "player.h"
 #include "playlist.h"
 #include "mediadatabase.h"
 
@@ -35,47 +36,13 @@
 #include "util/musicmeta.h"
 #include "util/inotifyengine.h"
 
-static QMap<QString, bool>  sSupportedSuffix;
-static QStringList          sSupportedSuffixList;
-static QStringList          sSupportedFiterList;
-
-QStringList MediaFileMonitor::supportedFilterStringList()
-{
-    return sSupportedFiterList;
-}
-
 MediaFileMonitor::MediaFileMonitor(QObject *parent) : QObject(parent)
 {
     m_watcher = new InotifyEngine;
     connect(m_watcher, &InotifyEngine::fileRemoved,
             this, &MediaFileMonitor::fileRemoved);
-
-    //black list
-    QHash<QString, bool> suffixBlacklist;
-    suffixBlacklist.insert("m3u", true);
-
-    QHash<QString, bool> suffixWhitelist;
-    suffixWhitelist.insert("cue", true);
-
-    QMimeDatabase mdb;
-    for (auto &mt : mdb.allMimeTypes()) {
-        if (mt.name().startsWith("audio/")) {
-            sSupportedFiterList <<  mt.filterString();
-            for (auto &suffix : mt.suffixes()) {
-                if (suffixBlacklist.contains(suffix)) {
-                    continue;
-                }
-                sSupportedSuffixList << "*." + suffix;
-                sSupportedSuffix.insert(suffix, true);
-            }
-        }
-    }
-
-    for (auto &suffix : suffixWhitelist.keys()) {
-        sSupportedSuffixList << "*." + suffix;
-        sSupportedSuffix.insert(suffix, true);
-    }
 }
+
 
 void MediaFileMonitor::importPlaylistFiles(PlaylistPtr playlist, const QStringList &filelist)
 {
@@ -92,7 +59,7 @@ void MediaFileMonitor::importPlaylistFiles(PlaylistPtr playlist, const QStringLi
     MusicMetaList metaCache;
 
     for (auto &filepath : filelist) {
-        QDirIterator it(filepath, sSupportedSuffixList,
+        QDirIterator it(filepath, Player::instance()->supportedFilterStringList(),
                         QDir::Files, QDirIterator::Subdirectories);
         while (it.hasNext()) {
             QString  url = it.next();

@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
         return (0x0002);
     }
 
-    new MprisPlayer();
+    auto mprisPlayer =  new MprisPlayer();
 #endif
 
     app.setTheme("light");
@@ -69,6 +69,10 @@ int main(int argc, char *argv[])
     // For Windows, must init media player in main thread!!!
     Player::instance()->init();
     MusicApp::instance()->init();
+
+#ifdef Q_OS_UNIX
+    MusicApp::instance()->initMpris(mprisPlayer);
+#endif
 
     return app.exec();
 }

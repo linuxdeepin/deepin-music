@@ -39,6 +39,7 @@
 #include "../core/playlist.h"
 #include "../musicapp.h"
 #include "widget/tip.h"
+#include "../presenter/presenter.h"
 
 #include "helper/widgethellper.h"
 

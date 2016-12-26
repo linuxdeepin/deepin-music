@@ -7,39 +7,35 @@
  * (at your option) any later version.
  **/
 
-#ifndef MUSICAPP_H
-#define MUSICAPP_H
+#pragma once
 
 #include <QObject>
 #include <QScopedPointer>
 
-#include "presenter/presenter.h"
+#include "core/util/singleton.h"
 
+class MprisPlayer;
 class MusicAppPrivate;
-
-class MusicApp : public QObject
+class MusicApp : public QObject, public Singleton<MusicApp>
 {
     Q_OBJECT
 public:
     ~MusicApp();
 
-    static MusicApp *instance()
-    {
-        static auto s_app = new MusicApp;
-        return s_app;
-    }
-
     static QString configPath();
     static QString cachePath();
 
     void init();
+    void initMpris(MprisPlayer* mprisPlayer);
 
 public slots:
     void onDataPrepared();
+    void onQuit();
+    void onRaise();
 
 private:
+    friend class Singleton<MusicApp>;
     explicit MusicApp(QObject *parent = 0);
-    QScopedPointer<MusicAppPrivate> d;
+    QScopedPointer<MusicAppPrivate> d_ptr;
+    Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), MusicApp)
 };
-
-#endif // MUSICAPP_H

@@ -20,8 +20,6 @@ class MediaFileMonitor : public QObject
 {
     Q_OBJECT
 public:
-    static QStringList supportedFilterStringList();
-
     explicit MediaFileMonitor(QObject *parent = 0);
 
 signals:
