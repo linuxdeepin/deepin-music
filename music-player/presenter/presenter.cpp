@@ -8,14 +8,15 @@
  **/
 
 #include "presenter.h"
+#include "presenter_p.h"
 
+#include <QDebug>
 #include <QDir>
 #include <QUrl>
 #include <QThread>
 #include <QProcess>
 #include <QApplication>
 #include <QStandardPaths>
-#include <QDebug>
 
 #include "../musicapp.h"
 #include "../core/player.h"
@@ -26,25 +27,56 @@
 #include "../core/mediadatabase.h"
 #include "../core/util/musicmeta.h"
 
-class PresenterPrivate
+
+
+PresenterPrivate::PresenterPrivate(Presenter *parent)
+    : QObject(parent), q_ptr(parent)
 {
-public:
-    PresenterPrivate()
-        : settings(MusicApp::configPath() + "/Config.ini", QSettings::IniFormat)
-    {
 
-    }
+}
 
-    PlaylistPtr         playlistBeforeSearch;
+void PresenterPrivate::initData()
+{
+    Q_Q(Presenter);
 
-    LyricService        *lyricService;
-    PlaylistManager     *playlistMgr;
-    MediaFileMonitor    *moniter;
-    QSettings           settings;
-};
+    lyricService = new LyricService;
+    auto work = new QThread;
+    lyricService->moveToThread(work);
+    work->start();
+
+    moniter = new MediaFileMonitor;
+    work = new QThread;
+    moniter->moveToThread(work);
+    connect(work, &QThread::started,
+            moniter, &MediaFileMonitor::startMonitor);
+    work->start();
+
+    playlistMgr = new PlaylistManager;
+    playlistMgr->load();
+
+    //! load config
+    settings = new QSettings(MusicApp::configPath() + "/Config.ini", QSettings::IniFormat);
+    settings->beginGroup("Config");
+    auto mode = settings->value("Mode").toInt();
+    auto lastImportPath = settings->value("LastImportPath").toString();
+    settings->endGroup();
+    q->onPlayModeChanged(mode);
+
+    connect(this, &PresenterPrivate::requestMetaSearch,
+            lyricService, &LyricService::searchMeta);
+
+
+    connect(this, &PresenterPrivate::play, Player::instance(), &Player::playMeta);
+    connect(this, &PresenterPrivate::resume, Player::instance(), &Player::resume);
+    connect(this, &PresenterPrivate::playNext, Player::instance(), &Player::playNextMusic);
+    connect(this, &PresenterPrivate::playPrev, Player::instance(), &Player::playPrevMusic);
+    connect(this, &PresenterPrivate::pause, Player::instance(), &Player::pause);
+    connect(this, &PresenterPrivate::stop, Player::instance(), &Player::stop);
+}
+
 
 Presenter::Presenter(QObject *parent)
-    : QObject(parent), d(new PresenterPrivate)
+    : QObject(parent), d_ptr(new PresenterPrivate(this))
 {
     qRegisterMetaType<PlaylistMeta>();
     qRegisterMetaType<MusicMetaList>();
@@ -63,35 +95,15 @@ Presenter::~Presenter()
 
 void Presenter::prepareData()
 {
-    d->lyricService = new LyricService;
-    auto work = new QThread;
-    d->lyricService->moveToThread(work);
-    work->start();
+    Q_D(Presenter);
 
-    connect(this, &Presenter::requestLyricCoverSearch,
-            d->lyricService, &LyricService::searchMeta);
+    d->initData();
+
+
     connect(d->lyricService, &LyricService::lyricSearchFinished,
             this, &Presenter::lyricSearchFinished);
     connect(d->lyricService, &LyricService::coverSearchFinished,
             this, &Presenter::coverSearchFinished);
-
-    d->moniter = new MediaFileMonitor;
-    work = new QThread;
-    d->moniter->moveToThread(work);
-    connect(work, &QThread::started, d->moniter, &MediaFileMonitor::startMonitor);
-    work->start();
-
-    //! load playlist
-    d->playlistMgr = new PlaylistManager(this);
-    d->playlistMgr->load();
-
-    //! load config
-    d->settings.beginGroup("Config");
-    auto mode = d->settings.value("Mode").toInt();
-    auto lastImportPath = d->settings.value("LastImportPath").toString();
-    d->settings.endGroup();
-
-    onPlayModeChanged(mode);
 
     connect(this, &Presenter::importMediaFiles,
             d->moniter, &MediaFileMonitor::importPlaylistFiles);
@@ -167,7 +179,7 @@ void Presenter::prepareData()
     connect(d->playlistMgr, &PlaylistManager::selectedPlaylistChanged,
             this, &Presenter::currentPlaylistChanged);
 
-    connect(Player::instance(), &Player::progrossChanged,
+    connect(Player::instance(), &Player::positionChanged,
     this, [ = ](qint64 position, qint64 duration) {
         emit progrossChanged(position, duration);
     });
@@ -181,22 +193,14 @@ void Presenter::prepareData()
             emit this->volumeChanged(Player::instance()->volume());
         }
     });
-    connect(Player::instance(), &Player::musicPlayed,
+    connect(Player::instance(), &Player::mediaPlayed,
     this, [ = ](PlaylistPtr playlist, const MusicMeta & info) {
         MusicMeta favInfo(info);
         favInfo.favourite = d->playlistMgr->playlist(FavMusicListID)->contains(info);
         emit this->musicPlayed(playlist, favInfo);
         qDebug() << "requestLyricCoverSearch" << info.title;
-        emit this->requestLyricCoverSearch(info);
+        d->requestMetaSearch(info);
     });
-
-    connect(this, &Presenter::changeProgress, Player::instance(), &Player::changeProgress);
-    connect(this, &Presenter::play, Player::instance(), &Player::playMusic);
-    connect(this, &Presenter::resume, Player::instance(), &Player::resumeMusic);
-    connect(this, &Presenter::playNext, Player::instance(), &Player::playNextMusic);
-    connect(this, &Presenter::playPrev, Player::instance(), &Player::playPrevMusic);
-    connect(this, &Presenter::pause, Player::instance(), &Player::pause);
-    connect(this, &Presenter::stop, Player::instance(), &Player::stop);
 
     emit dataLoaded();
     Player::instance()->setVolume(50);
@@ -206,21 +210,25 @@ void Presenter::prepareData()
 
 PlaylistPtr Presenter::allMusicPlaylist()
 {
+    Q_D(Presenter);
     return d->playlistMgr->playlist(AllMusicListID);
 }
 
 PlaylistPtr Presenter::favMusicPlaylist()
 {
+    Q_D(Presenter);
     return d->playlistMgr->playlist(FavMusicListID);
 }
 
 PlaylistPtr Presenter::lastPlaylist()
 {
+    Q_D(Presenter);
     return d->playlistMgr->playingPlaylist();
 }
 
 QList<PlaylistPtr > Presenter::allplaylist()
 {
+    Q_D(Presenter);
     return d->playlistMgr->allplaylist();
 }
 
@@ -231,6 +239,7 @@ int Presenter::playMode()
 
 void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MusicMetaList &metalist)
 {
+    Q_D(Presenter);
     auto playinglist = d->playlistMgr->playingPlaylist();
     MusicMeta next;
 
@@ -256,7 +265,7 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MusicMetaList &met
             playlist->id() == AllMusicListID) {
         //stop music
         for (auto &meta : metalist) {
-            if (meta.hash == Player::instance()->playingMeta().hash) {
+            if (meta.hash == Player::instance()->activeMeta().hash) {
                 if (playinglist->isEmpty()) {
                     onMusicStop(playinglist, next);
                 } else {
@@ -269,6 +278,7 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MusicMetaList &met
 
 void Presenter::onMusiclistDelete(PlaylistPtr playlist , const MusicMetaList &metalist)
 {
+    Q_D(Presenter);
     // find next music
     MusicMeta next;
     auto playinglist = d->playlistMgr->playingPlaylist();
@@ -290,8 +300,8 @@ void Presenter::onMusiclistDelete(PlaylistPtr playlist , const MusicMetaList &me
 
     QMap<QString, QString> trashFiles;
     for (auto &meta : metalist) {
-        qDebug() << meta.hash <<  Player::instance()->playingMeta().hash;
-        if (meta.hash == Player::instance()->playingMeta().hash) {
+        qDebug() << meta.hash <<  Player::instance()->activeMeta().hash;
+        if (meta.hash == Player::instance()->activeMeta().hash) {
             if (playinglist->isEmpty()) {
                 onMusicStop(playinglist, next);
             } else {
@@ -316,6 +326,7 @@ void Presenter::onMusiclistDelete(PlaylistPtr playlist , const MusicMetaList &me
 void Presenter::onAddToPlaylist(PlaylistPtr playlist,
                                 const MusicMetaList &metalist)
 {
+    Q_D(Presenter);
     PlaylistPtr modifiedPlaylist = playlist;
     if (playlist.isNull()) {
         emit setPlaylistVisible(true);
@@ -339,11 +350,13 @@ void Presenter::onAddToPlaylist(PlaylistPtr playlist,
 
 void Presenter::onSelectedPlaylistChanged(PlaylistPtr playlist)
 {
+    Q_D(Presenter);
     d->playlistMgr->setSelectedPlaylist(playlist);
 }
 
 void Presenter::onRequestMusiclistMenu(const QPoint &pos)
 {
+    Q_D(Presenter);
     QList<PlaylistPtr > newlists = d->playlistMgr->allplaylist();
     // remove all and fav and search
     newlists.removeAll(d->playlistMgr->playlist(AllMusicListID));
@@ -358,6 +371,7 @@ void Presenter::onRequestMusiclistMenu(const QPoint &pos)
 
 void Presenter::onSearchText(const QString text)
 {
+    Q_D(Presenter);
     auto searchList = d->playlistMgr->playlist(SearchMusicListID);
     auto resultList = MediaDatabase::searchMusicMeta(text, 1000);
     searchList->reset(resultList);
@@ -372,6 +386,7 @@ void Presenter::onSearchText(const QString text)
 
 void Presenter::onExitSearch()
 {
+    Q_D(Presenter);
     qDebug() << d->playlistBeforeSearch;
     if (!d->playlistBeforeSearch.isNull()) {
         d->playlistMgr->setSelectedPlaylist(d->playlistBeforeSearch);
@@ -381,6 +396,7 @@ void Presenter::onExitSearch()
 
 void Presenter::onLocateMusicAtAll(const QString &hash)
 {
+    Q_D(Presenter);
     auto allList = d->playlistMgr->playlist(AllMusicListID);
     d->playlistMgr->setSelectedPlaylist(allList);
     emit locateMusic(allList, allList->music(hash));
@@ -389,6 +405,7 @@ void Presenter::onLocateMusicAtAll(const QString &hash)
 
 void Presenter::onPlaylistAdd(bool edit)
 {
+    Q_D(Presenter);
     PlaylistMeta info;
     info.editmode = edit;
     info.readonly = false;
@@ -401,6 +418,7 @@ void Presenter::onPlaylistAdd(bool edit)
 
 void Presenter::onMusicPlay(PlaylistPtr playlist,  const MusicMeta &meta)
 {
+    Q_D(Presenter);
     auto nextMeta = meta;
     qDebug() << "Fix me: play status";
     if (0 == d->playlistMgr->playlist(AllMusicListID)->length()) {
@@ -421,26 +439,29 @@ void Presenter::onMusicPlay(PlaylistPtr playlist,  const MusicMeta &meta)
 
     qDebug() << nextMeta.title;
 
-    if (Player::instance()->media().canonicalUrl() == QUrl::fromLocalFile(nextMeta.localPath)) {
-        emit this->play(d->playlistMgr->playingPlaylist(), nextMeta);
+    // todo:
+    if (Player::instance()->activeMeta().localPath == nextMeta.localPath) {
+        emit d->play(d->playlistMgr->playingPlaylist(), nextMeta);
         return;
     }
     qDebug() << "Fix me: play status"
              << nextMeta.hash  << nextMeta.localPath;
     // TODO: using signal;
-    Player::instance()->setPlaylist(playlist);
-    emit this->play(d->playlistMgr->playingPlaylist(), nextMeta);
+//    Player::instance()->setPlaylist(playlist);
+    emit d->play(d->playlistMgr->playingPlaylist(), nextMeta);
 }
 
 void Presenter::onMusicPause(PlaylistPtr playlist, const MusicMeta &info)
 {
-    emit this->pause();
+    Q_D(Presenter);
+    emit d->pause();
     emit musicPaused(playlist, info);
 }
 
 void Presenter::onMusicResume(PlaylistPtr playlist, const MusicMeta &info)
 {
-    emit this->resume(playlist, info);
+    Q_D(Presenter);
+    emit d->resume(playlist, info);
     emit this->musicPlayed(playlist, info);
 }
 
@@ -454,17 +475,19 @@ void Presenter::onMusicStop(PlaylistPtr playlist, const MusicMeta &meta)
 
 void Presenter::onMusicPrev(PlaylistPtr playlist, const MusicMeta &meta)
 {
+    Q_D(Presenter);
     if (playlist->isEmpty()) {
         emit coverSearchFinished(meta, "");
         emit lyricSearchFinished(meta, "");
         Player::instance()->stop();
         emit this->musicStoped(playlist, meta);
     }
-    emit this->playPrev(playlist, meta);
+    emit d->playPrev(playlist, meta);
 }
 
 void Presenter::onMusicNext(PlaylistPtr playlist, const MusicMeta &meta)
 {
+    Q_D(Presenter);
     if (playlist->isEmpty()) {
         emit coverSearchFinished(meta, "");
         emit lyricSearchFinished(meta, "");
@@ -472,11 +495,12 @@ void Presenter::onMusicNext(PlaylistPtr playlist, const MusicMeta &meta)
         emit this->musicStoped(playlist, meta);
     }
     qDebug() << "play next";
-    emit this->playNext(playlist, meta);
+    emit d->playNext(playlist, meta);
 }
 
 void Presenter::onToggleFavourite(const MusicMeta &info)
 {
+    Q_D(Presenter);
     if (d->playlistMgr->playlist(FavMusicListID)->contains(info)) {
         d->playlistMgr->playlist(FavMusicListID)->removeOneMusic(info);
     } else {
@@ -492,29 +516,32 @@ void Presenter::onChangeProgress(qint64 value, qint64 range)
 //        qCritical() << "invaild position:" << Player::instance()->media().canonicalUrl() << position;
 //    }
 //    Player::instance()->setPosition(position);
-    emit changeProgress(value, range);
+    auto position = value * Player::instance()->duration() / range;
+    Player::instance()->setPosition(position);
 }
 
 void Presenter::onVolumeChanged(int volume)
 {
     Player::instance()->setVolume(volume);
-    if (volume>0)
+    if (volume > 0) {
         Player::instance()->setMuted(false);
+    }
 }
 
 void Presenter::onPlayModeChanged(int mode)
 {
-    Player::instance()->setMode(static_cast<Player::PlayMode>(mode));
+    Q_D(Presenter);
+    Player::instance()->setMode(static_cast<Player::PlaybackMode>(mode));
 
-    d->settings.beginGroup("Config");
-    d->settings.setValue("Mode", mode);
-    d->settings.endGroup();
-    d->settings.sync();
+    d->settings->beginGroup("Config");
+    d->settings->setValue("Mode", mode);
+    d->settings->endGroup();
+    d->settings->sync();
 }
 
 void Presenter::onToggleMute()
 {
-    Player::instance()->setMuted(! Player::instance()->isMuted());
+    Player::instance()->setMuted(! Player::instance()->muted());
 }
 
 void Presenter::onPlayall(PlaylistPtr playlist)
@@ -531,6 +558,7 @@ void Presenter::onResort(PlaylistPtr playlist, int sortType)
 
 void Presenter::onImportFiles(const QStringList &filelist)
 {
+    Q_D(Presenter);
 //    PlaylistPtr playlist = d->playlistMgr->playlist(AllMusicListID);
     PlaylistPtr playlist = d->playlistMgr->selectedPlaylist();
     emit importMediaFiles(playlist, filelist);
@@ -544,4 +572,3 @@ void Presenter::onImportMusicDirectory()
     qWarning() << "scan" << musicDir;
     onImportFiles(musicDir);
 }
-

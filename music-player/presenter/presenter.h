@@ -7,8 +7,7 @@
  * (at your option) any later version.
  **/
 
-#ifndef APPPRESENTER_H
-#define APPPRESENTER_H
+#pragma once
 
 #include <QObject>
 #include <QScopedPointer>
@@ -116,26 +115,10 @@ public slots:
     void onLocateMusicAtAll(const QString &hash);
 
     void onImportMusicDirectory();
-
-public slots:
     void onImportFiles(const QStringList &filelist);
 
-    //! private
-signals:
-    //! to player backend
-    void changeProgress(qint64 value, qint64 range);
-    void play(PlaylistPtr playlist, const MusicMeta &info);
-    void resume(PlaylistPtr playlist, const MusicMeta &meta);
-    void playNext(PlaylistPtr playlist, const MusicMeta &info);
-    void playPrev(PlaylistPtr playlist, const MusicMeta &info);
-    void stop();
-    void pause();
-
-    // to lyric backend
-    void requestLyricCoverSearch(const MusicMeta &);
-
 private:
-    QScopedPointer<PresenterPrivate> d;
+    QScopedPointer<PresenterPrivate> d_ptr;
+    Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), Presenter)
 };
 
-#endif // APPPRESENTER_H

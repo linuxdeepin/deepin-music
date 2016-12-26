@@ -45,15 +45,15 @@ Tip::Tip(const QPixmap &icon, const QString &text, QWidget *parent) : QFrame(par
     layout->addWidget(iconLabel);
     layout->addWidget(textLable);
 
-    D_THEME_INIT_WIDGET(Widget / Tip);
+    D_THEME_INIT_WIDGET(Widget/Tip);
 
     adjustSize();
 
     auto *bodyShadow = new QGraphicsDropShadowEffect;
     bodyShadow->setBlurRadius(20.0);
-    bodyShadow->setColor(QColor(0, 0, 0, 0.1 * 255));
+    bodyShadow->setColor(QColor(0, 255, 0, 255));
     bodyShadow->setOffset(2.0, 4.0);
-    this->setGraphicsEffect(bodyShadow);
+//    this->setGraphicsEffect(bodyShadow);
     hide();
 }
 
@@ -86,15 +86,16 @@ void Tip::pop(QPoint center)
 void Tip::paintEvent(QPaintEvent *e)
 {
     QFrame::paintEvent(e);
-//    return;
+    return;
+
     QPainter painter(this);
     painter.setRenderHints(QPainter::Antialiasing | QPainter::HighQualityAntialiasing);
     QPainterPath path;
     auto rect = this->rect();
-    path.addRoundedRect(rect, 4, 4);
+    path.addRoundedRect(rect, 5, 5);
     painter.fillPath(path, Qt::white);
 
-    QPen pen(QColor(0, 0, 0, 51));
+    QPen pen(QColor(24, 24, 24));
     pen.setWidth(1);
     painter.strokePath(path, pen);
 }

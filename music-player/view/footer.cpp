@@ -16,6 +16,7 @@
 #include <QVBoxLayout>
 #include <QPushButton>
 #include <QMouseEvent>
+#include <QWheelEvent>
 #include <QProgressBar>
 
 #include <dthememanager.h>
@@ -354,13 +355,13 @@ void Footer::initData(PlaylistPtr current, int mode)
 
 void Footer::mouseMoveEvent(QMouseEvent *event)
 {
+    // TODO: ingore sub control
     Qt::MouseButton button = event->buttons() & Qt::LeftButton ? Qt::LeftButton : Qt::NoButton;
     if (event->buttons() == Qt::LeftButton /*&& d->mousePressed*/) {
         emit mouseMoving(button);
     }
 }
 
-#include <QWheelEvent>
 bool Footer::eventFilter(QObject *obj, QEvent *event)
 {
     Q_D(Footer);

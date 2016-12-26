@@ -128,7 +128,7 @@ void SoundVolume::paintEvent(QPaintEvent * /*event*/)
 
     const qreal radius = 4;
     const qreal triHeight = 6;
-    const qreal triWidth = 6;
+    const qreal triWidth = 8;
     const qreal height = this->height() - triHeight;
     const qreal width = this->width();
 

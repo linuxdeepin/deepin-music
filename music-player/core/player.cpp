@@ -9,11 +9,10 @@
 
 #include "player.h"
 
-#include "playlist.h"
-
 #include <QDebug>
-#include <QThread>
 #include <QTimer>
+#include <QMediaPlayer>
+
 #include <QMimeDatabase>
 
 static QMap<QString, bool>  sSupportedSuffix;
@@ -52,187 +51,241 @@ void initMiniTypes()
     }
 }
 
-QStringList Player::supportedFilterStringList()
+QStringList Player::supportedFilterStringList() const
 {
     return sSupportedFiterList;
 }
 
-QStringList Player::supportedMimeTypes()
+QStringList Player::supportedMimeTypes() const
 {
     return sSupportedMimeTypes;
 }
 
-const MusicMeta Player::playingMeta()
+class PlayerPrivate
 {
-    return m_playingMeta;
-}
-
-void Player::setPlaylist(PlaylistPtr /*playlist*/)
-{
-}
-
-void Player::setMode(Player::PlayMode mode)
-{
-    m_mode = mode;
-}
-
-void Player::playMusic(PlaylistPtr playlist, const MusicMeta &info)
-{
-    MusicMeta nextInfo = info;
-
-    m_playinglist = playlist;
-    if (info.hash.isEmpty() && this->state() == QMediaPlayer::State::StoppedState) {
-        nextInfo = m_playinglist->first();
+public:
+    PlayerPrivate(Player *parent) : q_ptr(parent)
+    {
+        qplayer = new QMediaPlayer;
+        initMiniTypes();
     }
 
-    this->blockSignals(true);
-    qDebug() << nextInfo.title;
-    setMediaMeta(nextInfo);
-    this->blockSignals(false);
+    void initConnection();
 
-    // TODO: fixme wait media ready;
+    // player property
+    bool canControl     = true;
+    bool canGoNext      = false;
+    bool canGoPrevious  = false;
+    bool canPause       = false;
+    bool canPlay        = false;
+    bool canSeek        = false;
+    bool shuffle        = false;
+//    bool mute           = false;
+//    double volume       = 0;
 
-    this->setPosition(nextInfo.offset);
+    Player::PlaybackMode    mode    = Player::RepeatAll;
+    Player::PlaybackStatus  status  = Player::InvalidPlaybackStatus;
+
+    // media property
+    QVariantMap metadata;
+    double rate;
+    double maximumRate;
+    double minimumRate;
+    qlonglong position  = 0;
+
+    QMediaPlayer    *qplayer;
+    PlaylistPtr     activePlaylist;
+    MusicMeta       activeMeta;
+
+    Player *q_ptr;
+    Q_DECLARE_PUBLIC(Player);
+};
+
+Player::Player(QObject *parent) : QObject(parent), d_ptr(new PlayerPrivate(this))
+{
+    Q_D(Player);
+    d->initConnection();
+}
+
+Player::~Player()
+{
+
+}
+
+void Player::playMeta(PlaylistPtr playlist, const MusicMeta &meta)
+{
+    Q_D(Player);
+    qDebug() << "--------" << meta.localPath;
+
+    d->qplayer->blockSignals(true);
+    d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(meta.localPath)));
+    d->qplayer->blockSignals(false);
+
+    this->setPosition(meta.offset);
 
     QTimer::singleShot(100, this, [ = ]() {
-        this->play();
+        d->qplayer->play();
     });
-    m_playinglist->play(nextInfo);
-    emit musicPlayed(playlist, nextInfo);
+    d->activePlaylist = playlist;
+    d->activeMeta = meta;
+    d->activePlaylist->play(meta);
+    emit mediaPlayed(d->activePlaylist, d->activeMeta);
 }
 
-void Player::resumeMusic(PlaylistPtr playlist, const MusicMeta &meta)
+void Player::resume(PlaylistPtr playlist, const MusicMeta &meta)
 {
-    Q_ASSERT(playlist == m_playinglist);
-    Q_ASSERT(meta.hash == m_playingMeta.hash);
-
+    Q_D(Player);
+    Q_ASSERT(playlist == d->activePlaylist);
+    Q_ASSERT(meta.hash == d->activeMeta.hash);
     QTimer::singleShot(50, this, [ = ]() {
-        this->play();
+        d->qplayer->play();
     });
 }
 
-void Player::playNextMusic(PlaylistPtr playlist, const MusicMeta &info)
+void Player::playNextMusic(PlaylistPtr playlist, const MusicMeta &meta)
 {
-    Q_ASSERT(playlist == m_playinglist);
 
-    if (m_mode == RepeatSingle) {
-        selectNext(info, RepeatAll);
-    } else {
-        selectNext(info, m_mode);
-    }
 }
 
-void Player::playPrevMusic(PlaylistPtr playlist, const MusicMeta &info)
+void Player::playPrevMusic(PlaylistPtr playlist, const MusicMeta &meta)
 {
-    Q_ASSERT(playlist == m_playinglist);
 
-    if (m_mode == RepeatSingle) {
-        selectPrev(info, RepeatAll);
-    } else {
-        selectPrev(info, m_mode);
-    }
 }
 
-void Player::setMediaMeta(const MusicMeta &info)
+void Player::pause()
 {
-    if (this->media().canonicalUrl() != QUrl::fromLocalFile(info.localPath)) {
-        QMediaPlayer::setMedia(QUrl::fromLocalFile(info.localPath));
-    }
-    m_playingMeta = info;
+
 }
 
-void Player::changeProgress(qint64 value, qint64 range)
+void Player::stop()
 {
-    Q_ASSERT(value <= range);
-    //Q_ASSERT(m_info.offset + m_info.length < QMediaPlayer::duration());
 
-    auto position = value * m_playingMeta.length / range + m_playingMeta.offset;
-    if (position < 0) {
-        qCritical() << "invaild position:" << this->media().canonicalUrl() << position;
-        return;
-    }
-    this->setPosition(position);
 }
 
-void Player::selectNext(const MusicMeta &info, PlayMode mode)
+MusicMeta Player::activeMeta() const
 {
-    if (!m_playinglist) {
-        return;
-    }
-
-    switch (mode) {
-    case RepeatAll: {
-        playMusic(m_playinglist, m_playinglist->next(info));
-        break;
-    }
-    case RepeatSingle: {
-        playMusic(m_playinglist, info);
-        break;
-    }
-    case Shuffle: {
-        int randomValue = qrand() % m_playinglist->length();
-        playMusic(m_playinglist, m_playinglist->music(randomValue));
-        break;
-    }
-    }
+    Q_D(const Player);
+    return d->activeMeta;
 }
 
-void Player::selectPrev(const MusicMeta &info, Player::PlayMode mode)
+PlaylistPtr Player::activePlaylist() const
 {
-    if (!m_playinglist) {
-        return;
-    }
-
-    switch (mode) {
-    case RepeatAll: {
-        playMusic(m_playinglist, m_playinglist->prev(info));
-        break;
-    }
-    case RepeatSingle: {
-        playMusic(m_playinglist, info);
-        break;
-    }
-    case Shuffle: {
-        int randomValue = qrand() % m_playinglist->length();
-        playMusic(m_playinglist, m_playinglist->music(randomValue));
-        break;
-    }
-    }
+    Q_D(const Player);
+    return d->activePlaylist;
 }
 
-Player::Player(QObject *parent) : QMediaPlayer(parent)
+//!
+//! \brief canControl
+//! Always be true
+bool Player::canControl() const
 {
-    initMiniTypes();
-    connect(this, &QMediaPlayer::durationChanged, this, [ = ](qint64 duration) {
-        m_duration = duration;
+    Q_D(const Player);
+    return d->canControl;
+}
+
+qlonglong Player::position() const
+{
+    Q_D(const Player);
+    return d->qplayer->position();
+}
+
+double Player::volume() const
+{
+    Q_D(const Player);
+    return d->qplayer->volume();
+}
+
+Player::PlaybackMode Player::mode() const
+{
+
+}
+
+bool Player::muted() const
+{
+    Q_D(const Player);
+    return d->qplayer->isMuted();
+}
+
+qint64 Player::duration() const
+{
+    Q_D(const Player);
+    return d->qplayer->duration();
+}
+
+void Player::setCanControl(bool canControl)
+{
+    qCritical() << "Never Changed this" << canControl;
+}
+
+void Player::setPosition(qlonglong position)
+{
+    Q_D(const Player);
+    return d->qplayer->setPosition(position);
+}
+
+void Player::setMode(Player::PlaybackMode mode)
+{
+    Q_D(Player);
+    d->mode = mode;
+}
+
+void Player::setVolume(double volume)
+{
+    Q_D(Player);
+    d->qplayer->setVolume(volume);
+}
+
+void Player::setMuted(bool mute)
+{
+    Q_D(Player);
+    d->qplayer->setMuted(mute);
+}
+
+void PlayerPrivate::initConnection()
+{
+    Q_Q(Player);
+    q->connect(qplayer, &QMediaPlayer::positionChanged,
+    q, [ = ](qint64 position) {
+        emit q->positionChanged(position, qplayer->duration());
     });
-    connect(this, &QMediaPlayer::positionChanged, this, [ = ](qint64 position) {
-        if (0 == m_playingMeta.length) {
-            return;
-        }
+    q->connect(qplayer, &QMediaPlayer::mutedChanged,
+               q, &Player::mutedChanged);
+    q->connect(qplayer, &QMediaPlayer::durationChanged,
+               q, &Player::durationChanged);
 
-        if (m_playingMeta.offset > position) {
-            return;
-        }
-
-//        qDebug() << position << m_playingMeta.offset << m_playingMeta.length;
-        if (position >= m_playingMeta.offset + m_playingMeta.length) {
-            // TODO: to next
-//            qDebug() << "auto change next music" << m_info.title;
-//            qDebug() << lengthString(m_duration)
-//                     << lengthString(position)
-//                     << lengthString(m_info.offset)
-//                     << lengthString(m_info.length) ;
-
-            this->selectNext(m_playingMeta, m_mode);
-        }
-//        qDebug() << lengthString(m_duration)
-//                 << lengthString(position)
-//                 << lengthString(m_info.offset)
-//                 << lengthString(m_info.length) ;
-        emit progrossChanged(position - m_playingMeta.offset,  m_playingMeta.length);
+    q->connect(qplayer, &QMediaPlayer::mediaStatusChanged,
+    q, [ = ](QMediaPlayer::MediaStatus status) {
+        qDebug() << status;
+//        switch (state) {
+//        case QMediaPlayer::StoppedState: {
+////            qDebug() << "auto change next music";
+////            this->selectNext(m_info, m_mode);
+////            break;
+//        }
+//        case QMediaPlayer::PlayingState:
+//        case QMediaPlayer::PausedState:
+//            break;
+//        }
     });
-    connect(this, &QMediaPlayer::stateChanged, this, [ = ](QMediaPlayer::State state) {
+
+    q->connect(qplayer, static_cast<void (QMediaPlayer::*)(QMediaPlayer::Error error)>(&QMediaPlayer::error),
+    q, [ = ](QMediaPlayer::Error error) {
+        qDebug() << error;
+//        switch (state) {
+//        case QMediaPlayer::StoppedState: {
+////            qDebug() << "auto change next music";
+////            this->selectNext(m_info, m_mode);
+////            break;
+//        }
+//        case QMediaPlayer::PlayingState:
+//        case QMediaPlayer::PausedState:
+//            break;
+//        }
+    });
+
+    q->connect(qplayer, &QMediaPlayer::stateChanged,
+    q, [ = ](QMediaPlayer::State state) {
+        qDebug() << state;
         switch (state) {
         case QMediaPlayer::StoppedState: {
 //            qDebug() << "auto change next music";

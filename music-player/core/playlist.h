@@ -48,17 +48,11 @@ Q_DECLARE_METATYPE(PlaylistMeta);
 class Playlist : public QObject
 {
     Q_OBJECT
+
     Q_PROPERTY(QString displayName READ displayName WRITE setDisplayName NOTIFY displayNameChanged)
 public:
     explicit Playlist(const PlaylistMeta &musiclistinfo, QObject *parent = 0);
 
-    enum PlayMode {
-        Order  = 0,
-        RepeatList,
-        Repeat,
-        Shufflt
-    };
-    Q_ENUM(PlayMode)
 
     enum SortType {
         SortByAddTime  = 0,

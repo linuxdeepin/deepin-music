@@ -29,7 +29,6 @@ SOURCES += \
     core/mediadatabase.cpp \
     core/mediadatabasewriter.cpp \
     core/mediafilemonitor.cpp \
-    core/player.cpp \
     core/playlist.cpp \
     core/playlistmanager.cpp \
     core/pluginmanager.cpp \
@@ -62,7 +61,9 @@ SOURCES += \
     core/util/inotifyengine.cpp \
     view/widget/hint.cpp \
     view/widget/soundvolume.cpp \
-    view/widget/filter.cpp
+    view/widget/filter.cpp \
+    core/qplayer.cpp \
+    core/player.cpp
 
 
 HEADERS += \
@@ -80,7 +81,6 @@ HEADERS += \
     core/mediadatabasewriter.h \
     core/mediafilemonitor.h \
     core/music.h \
-    core/player.h \
     core/playlist.h \
     core/playlistmanager.h \
     core/pluginmanager.h \
@@ -113,7 +113,9 @@ HEADERS += \
     core/util/inotifyengine.h \
     view/widget/hint.h \
     view/widget/soundvolume.h \
-    view/widget/filter.h
+    view/widget/filter.h \
+    core/player.h \
+    presenter/presenter_p.h
 
 RESOURCES += \
     resource/theme/theme.qrc \
