@@ -74,6 +74,7 @@ public:
     MusicMeta activeMeta() const;
     PlaylistPtr activePlaylist() const;
     QStringList supportedFilterStringList()const;
+    QStringList supportedSuffixList()const;
     QStringList supportedMimeTypes() const;
 
 signals:

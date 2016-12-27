@@ -28,7 +28,7 @@ class TitleBarPrivate
 public:
     TitleBarPrivate(TitleBar *parent) : q_ptr(parent) {}
 
-//    void fixSearchPosition();
+    void fixSearchPosition();
 
     SearchEdit *search;
 
@@ -47,9 +47,9 @@ TitleBar::TitleBar(QWidget *parent) :
     auto layout = new QHBoxLayout(this);
     layout->setContentsMargins(5, 5, 10, 5);
 
-    auto leftWidget = new QWidget;
+    auto leftWidget = new QFrame;
     leftWidget->setObjectName("TitleLeft");
-    leftWidget->setFixedWidth(60);
+    leftWidget->setFixedWidth(148);
     auto leftLayout = new QHBoxLayout(leftWidget);
     leftLayout->setSpacing(10);
     leftLayout->setMargin(0);
@@ -73,9 +73,9 @@ TitleBar::TitleBar(QWidget *parent) :
     d->search->setPlaceHolder(tr("Search"));
     d->search->clear();
 
-    auto rightWidget = new QWidget;
-    rightWidget->setObjectName("TitleRight");
-    rightWidget->setFixedWidth(60);
+    auto rightWidget = new QFrame;
+    rightWidget->setObjectName("TitleLeft");
+    rightWidget->setFixedWidth(1);
 
     layout->addWidget(leftWidget, 0,  Qt::AlignCenter);
     layout->addStretch();
@@ -108,21 +108,22 @@ TitleBar::~TitleBar()
 {
 
 }
-
-//void TitleBar::resizeEvent(QResizeEvent *event)
-//{
-//    Q_D(TitleBar);
+#include <QResizeEvent>
+void TitleBar::resizeEvent(QResizeEvent *event)
+{
+    Q_D(TitleBar);
 //    QFrame::resizeEvent(event);
+//    setFixedSize(event->size());
 //    d->fixSearchPosition();
-//}
+}
 
-//void TitleBarPrivate::fixSearchPosition()
-//{
-//    Q_Q(TitleBar);
-//    auto fixSize = QPoint(search->width() / 2, search->height() / 2);
-//    auto fixPos = q->geometry().center() - fixSize;
-//    search->setGeometry(fixPos.x(), fixPos.y(),
-//                        search->width(), search->height());
+void TitleBarPrivate::fixSearchPosition()
+{
+    Q_Q(TitleBar);
+    auto fixSize = QPoint(search->width() / 2, search->height() / 2);
+    auto fixPos = q->geometry().center() - fixSize;
+    search->setGeometry(fixPos.x(), fixPos.y(),
+                        search->width(), search->height());
 
-//    qDebug() << fixPos << search->size() << search->parent();
-//}
+    qDebug() << fixPos << search->size() << search->parent();
+}

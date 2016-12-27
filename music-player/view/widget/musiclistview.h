@@ -9,13 +9,13 @@
 
 #pragma once
 
-#include <QTableView>
+#include <QListView>
 
 #include "../../core/playlist.h"
 
 class QStandardItemModel;
 class MusicListViewPrivate;
-class MusicListView : public QTableView
+class MusicListView : public QListView
 {
     Q_OBJECT
 public:

@@ -25,6 +25,7 @@
 
 #include <DUtil>
 #include <dutility.h>
+#include <DTitlebar>
 #include <dthememanager.h>
 #include <DAboutDialog>
 
@@ -50,13 +51,16 @@ static QColor s_normalTitleTop      = QColor(255, 255, 255, 255);
 static QColor s_normalTitleBottom   = QColor(0xf8, 0xf8, 0xf8, 255);
 static QColor s_lyricTitleTop       = QColor(0, 0, 0, 94);
 static QColor s_lyriclTitleBottom   = QColor(0, 0, 0, 102);
+static const int titleBarHeight = 40;
+static const int footerHeight = 60;
 
 class MainWindowPrivate
 {
 public:
-    QStackedWidget  *stacked    = nullptr;
+//    QStackedWidget  *stacked    = nullptr;
     QFrame          *content    = nullptr;
-    TitleBar        *title      = nullptr;
+    DTitlebar       *title      = nullptr;
+    TitleBar        *titlebar   = nullptr;
     Footer          *footer     = nullptr;
     PlaylistWidget  *playlist   = nullptr;
 
@@ -70,7 +74,7 @@ public:
 
 
 MainWindow::MainWindow(QWidget *parent)
-    : DWindow(parent), d(new MainWindowPrivate)
+    : ThinWindow(parent), d(new MainWindowPrivate)
 {
     m_titlebarTopColor = s_normalTitleTop;
     m_titlebarBottomColor = s_normalTitleBottom;
@@ -78,51 +82,49 @@ MainWindow::MainWindow(QWidget *parent)
     setFocusPolicy(Qt::ClickFocus);
     setObjectName("PlayerFrame");
 
-    d->title = new TitleBar;
-    d->title->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
-    setTitlebarWidget(d->title);
-
-    d->content = new QFrame;
-    d->content->setObjectName("BackgroundWidget");
-    d->content->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    auto contentLayout = new QVBoxLayout(d->content);
+    auto contentLayout = new QStackedLayout();
+    setContentLayout(contentLayout);
+    contentLayout->setContentsMargins(20, 20, 20, 20);
     contentLayout->setMargin(0);
     contentLayout->setSpacing(0);
+
+    d->title = new DTitlebar();
+    d->titlebar = new TitleBar();
+    d->titlebar->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+    d->title->setFixedHeight(titleBarHeight);
+    d->title->setCustomWidget(d->titlebar , Qt::AlignCenter, false);
+
+//    connect(d->title, &DTitlebar::optionClicked, this, &MainWindow::optionClicked);
 
     d->import = new ImportWidget;
     d->musicList = new MusicListWidget;
     d->lyricView = new LyricView;
-    d->playlist = new PlaylistWidget(d->stacked);
+    d->playlist = new PlaylistWidget;
     d->playlist->setFixedWidth(220);
+
     d->footer = new Footer;
-    d->footer->setFixedHeight(60);
+    d->footer->setFixedHeight(footerHeight);
 
-    d->stacked = new QStackedWidget;
-    d->stacked->setObjectName("ContentWidget");
+    d->musicList->setContentsMargins(0, titleBarHeight, 0, footerHeight);
+//    d->playlist->setContentsMargins(0, titleBarHeight, 0, footerHeight);
 
-    d->stacked->addWidget(d->import);
-    d->stacked->addWidget(d->musicList);
-    d->stacked->addWidget(d->lyricView);
-    d->stacked->addWidget(d->playlist);
+    contentLayout->addWidget(d->title);
 
-    d->lyricView->hide();
-    d->import->hide();
-    d->playlist->hide();
-    d->musicList->hide();
-
-    contentLayout->addWidget(d->stacked);
+//    contentLayout->addWidget(d->titlebar);
+    contentLayout->addWidget(d->import);
+    contentLayout->addWidget(d->musicList);
+    contentLayout->addWidget(d->lyricView);
+    contentLayout->addWidget(d->playlist);
     contentLayout->addWidget(d->footer);
-    setContentWidget(d->content);
-    D_THEME_INIT_WIDGET(MainWindow);
 
-    resize(1040, 650);
-    QImage image = QImage((":/image/cover_max.png"));
-    image = WidgetHelper::cropRect(image, this->size());
-    setBackgroundImage(WidgetHelper::blurImage(image, 50));
+    D_THEME_INIT_WIDGET(MainWindow);
 
     d->footer->setFocus();
 
-    connect(d->footer, &Footer::mouseMoving, this, &DX11Widget::moveWindow);
+    connect(d->title, &DTitlebar::mouseMoving, this, &MainWindow::moveWindow);
+    connect(d->footer, &Footer::mouseMoving, this, &MainWindow::moveWindow);
+    setMinimumSize(840, 640);
+    resize(QSize(840, 640));
 }
 
 MainWindow::~MainWindow()
@@ -165,11 +167,11 @@ void MainWindow::initFooter(PlaylistPtr current, int mode)
 
 void MainWindow::binding(Presenter *presenter)
 {
-    connect(d->title, &TitleBar::locateMusicInAllMusiclist,
+    connect(d->titlebar, &TitleBar::locateMusicInAllMusiclist,
             presenter, &Presenter::onLocateMusicAtAll);
-    connect(d->title, &TitleBar::search,
+    connect(d->titlebar, &TitleBar::search,
             presenter, &Presenter::onSearchText);
-    connect(d->title, &TitleBar::exitSearch,
+    connect(d->titlebar, &TitleBar::exitSearch,
             presenter, &Presenter::onExitSearch);
 
     connect(d->footer, &Footer::toggleLyricView, this, &MainWindow::toggleLyricView);
@@ -341,34 +343,40 @@ void MainWindow::binding(Presenter *presenter)
     initMenu();
 }
 
+void MainWindow::setDefaultBackground()
+{
+    QImage image = QImage((":/image/cover_max.png"));
+    image = WidgetHelper::cropRect(image, QWidget::size());
+    setBackgroundImage(WidgetHelper::blurImage(image, 50));
+}
+
 void MainWindow::mousePressEvent(QMouseEvent *event)
 {
-    qDebug() << event;
-    // TODO hide all
+    ThinWindow::mousePressEvent(event);
     setPlaylistVisible(false);
-
-    DWindow::mousePressEvent(event);
 }
 
 void MainWindow::resizeEvent(QResizeEvent *e)
 {
-    DWindow::resizeEvent(e);
-    QSize newSize = DWindow::size();
-    d->stacked->setFixedSize(newSize.width(), newSize.height() - titlebarHeight());
-    d->lyricView->setFixedSize(newSize.width(),
-                               newSize.height() - titlebarHeight() - d->footer->height() - 1);
-    d->import->setFixedSize(newSize.width(),
-                            newSize.height() - titlebarHeight() - d->footer->height() - 1);
-    d->title->setFixedSize(newSize.width(), titlebarHeight() - 2);
+    ThinWindow::resizeEvent(e);
+    QSize newSize = ThinWindow::size();
 
-    if (d->playlist->isVisible()) {
-        d->playlist->resize(d->playlist->width(), d->stacked->height() - d->footer->height());
-//        QRect start(this->width(), 0, d->playlist->width(), d->playlist->height());
-        QRect end(this->width() - d->playlist->width(), 0, d->playlist->width(), d->playlist->height());
-        d->playlist->setGeometry(end);
-    }
-    d->musicList->setFixedSize(newSize.width(),
-                               newSize.height() - titlebarHeight() - d->footer->height() - 1);
+    d->title->raise();
+    d->title->move(0, 0);
+
+    d->lyricView->resize(newSize.width(), titleBarHeight);
+    d->titlebar->setFixedSize(newSize.width() - d->title->buttonAreaWidth() - 10, titleBarHeight);
+
+    d->lyricView->resize(newSize);
+    d->musicList->resize(newSize);
+    d->import->resize(newSize);
+
+    d->playlist->setFixedSize(220, newSize.height() - footerHeight - titleBarHeight);
+
+    d->footer->resize(newSize.width(), footerHeight);
+    d->footer->raise();
+    d->footer->show();
+    d->footer->move(0, newSize.height() - footerHeight);
 
     if (d->tips) {
         d->tips->hide();
@@ -377,6 +385,8 @@ void MainWindow::resizeEvent(QResizeEvent *e)
 
 void MainWindow::paintEvent(QPaintEvent *e)
 {
+    return ThinWindow::paintEvent(e);
+
     {
         int radius = this->radius() ;
         int windowExtern = 40 + 1 * 2;
@@ -406,10 +416,11 @@ void MainWindow::paintEvent(QPaintEvent *e)
         painter.fillPath(border, QBrush(linearGradient));
     }
 
-    DWindow::paintEvent(e);
+    ThinWindow::paintEvent(e);
 
     // draw header
     {
+        return;
         int radius = 3 ;
         int windowExtern = 40 + 1 * 2;
 
@@ -459,7 +470,7 @@ void MainWindow::paintEvent(QPaintEvent *e)
 void MainWindow::onCurrentPlaylistChanged(PlaylistPtr playlist)
 {
     if (playlist->id() != SearchMusicListID) {
-        d->title->exitSearch();
+        d->titlebar->exitSearch();
     }
 }
 
@@ -554,9 +565,10 @@ void MainWindow::setPlaylistVisible(bool visible)
         return;
     }
 
-    d->playlist->resize(d->playlist->width(), d->stacked->height() - d->footer->height());
-    QRect start(this->width(), 0, d->playlist->width(), d->playlist->height());
-    QRect end(this->width() - d->playlist->width(), 0, d->playlist->width(), d->playlist->height());
+    QRect start(this->width(), titleBarHeight,
+                d->playlist->width(), d->playlist->height());
+    QRect end(this->width() - d->playlist->width() - 40, titleBarHeight,
+              d->playlist->width(), d->playlist->height());
     if (!visible) {
         WidgetHelper::slideEdgeWidget(d->playlist, end, start, s_AnimationDelay, true);
         this->setFocus();
@@ -566,6 +578,8 @@ void MainWindow::setPlaylistVisible(bool visible)
     }
     d->playlist->raise();
     this->disableControl();
+    d->title->raise();
+    d->footer->raise();
 }
 
 void MainWindow::changeToMusicListView(bool keepPlaylist)
@@ -654,17 +668,17 @@ void MainWindow::initMenu()
         this->close();
     });
 
-    titleBarMenu()->addAction(m_newlist);
-    titleBarMenu()->addAction(m_addmusic);
-    titleBarMenu()->addSeparator();
+//    titleBarMenu()->addAction(m_newlist);
+//    titleBarMenu()->addAction(m_addmusic);
+//    titleBarMenu()->addSeparator();
 
-    titleBarMenu()->addAction(m_colorMode);
-    titleBarMenu()->addAction(m_settings);
-    titleBarMenu()->addSeparator();
+//    titleBarMenu()->addAction(m_colorMode);
+//    titleBarMenu()->addAction(m_settings);
+//    titleBarMenu()->addSeparator();
 
-    titleBarMenu()->addAction(m_about);
-    titleBarMenu()->addAction(m_help);
-    titleBarMenu()->addAction(m_close);
+//    titleBarMenu()->addAction(m_about);
+//    titleBarMenu()->addAction(m_help);
+//    titleBarMenu()->addAction(m_close);
 }
 
 void MainWindow::disableControl()

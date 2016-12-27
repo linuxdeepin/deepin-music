@@ -2,7 +2,7 @@
     qproperty-textColor: rgba(127,127,127,100%);
     qproperty-titleColor: rgba(41,41,41,100%);
     qproperty-highlightText: white;
-    qproperty-background: #ffffff;
-    qproperty-alternateBackground: #fbfbfb;
+    qproperty-background: #fbfbfb;
+    qproperty-alternateBackground: #ffffff;
     qproperty-highlightedBackground:  #2ca7f8;
 }

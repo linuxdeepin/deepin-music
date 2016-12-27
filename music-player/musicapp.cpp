@@ -69,6 +69,7 @@ void MusicApp::init()
     Q_D(MusicApp);
     d->appPresenter = new Presenter;
     d->playerFrame = new MainWindow;
+    d->playerFrame->hide();
 
     auto presenterWork = new QThread;
     d->appPresenter->moveToThread(presenterWork);
@@ -104,8 +105,11 @@ void MusicApp::onDataPrepared()
 
     d->playerFrame->binding(d->appPresenter);
 
-    DUtility::moveToCenter(d->playerFrame);
     d->playerFrame->show();
+    DUtility::moveToCenter(d->playerFrame);
+
+    d->playerFrame->resize(QSize(1040, 650));
+    d->playerFrame->setDefaultBackground();
 }
 
 void MusicApp::onQuit()

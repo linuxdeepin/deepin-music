@@ -150,8 +150,9 @@ MusicListWidget::MusicListWidget(QWidget *parent) :
     d->m_musiclist->hide();
 
     layout->addWidget(d->actionBar, 0, Qt::AlignTop);
-    layout->addWidget(d->m_musiclist, 0, Qt::AlignTop);
+    layout->addWidget(d->m_musiclist, 100, Qt::AlignTop);
     layout->addWidget(d->m_emptyHits, 0, Qt::AlignCenter);
+    layout->addStretch();
 
     D_THEME_INIT_WIDGET(MusicListWidget);
     d->m_sortCombo->setStyleSheet(
@@ -169,9 +170,10 @@ MusicListWidget::~MusicListWidget()
 void MusicListWidget::resizeEvent(QResizeEvent *event)
 {
     Q_D(MusicListWidget);
-    // TODO: remove resize
-    QWidget::resizeEvent(event);
-    d->m_musiclist->setFixedSize(event->size().width(), event->size().height() - 40);
+    QFrame::resizeEvent(event);
+    auto viewrect = QFrame::rect();
+    auto viewsize = viewrect.marginsRemoved(contentsMargins()).size();
+    d->m_musiclist->setFixedSize(viewsize.width(), viewsize.height() - 40);
 }
 
 void MusicListWidget::onMusicPlayed(PlaylistPtr playlist, const MusicMeta &meta)

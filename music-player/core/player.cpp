@@ -56,6 +56,11 @@ QStringList Player::supportedFilterStringList() const
     return sSupportedFiterList;
 }
 
+QStringList Player::supportedSuffixList() const
+{
+    return sSupportedSuffixList;
+}
+
 QStringList Player::supportedMimeTypes() const
 {
     return sSupportedMimeTypes;

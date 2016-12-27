@@ -2,8 +2,9 @@
 /* !!!! WARNING !!!!*/
 /* modify MusicItem.theme for color */
 
-    border: 0px solid red;
     border-top: 1px solid rgba(0, 0, 0, 0.1);
+    border: 0px solid red;
     margin: 0 0 0 0;
     outline: none;
 }
+#MusicListView::item{ height:36px; }

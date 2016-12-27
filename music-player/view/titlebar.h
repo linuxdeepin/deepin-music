@@ -25,7 +25,7 @@ signals:
     void locateMusicInAllMusiclist(const QString &hash);
 
 protected:
-//    virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
+    virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
 
 private:
     QScopedPointer<TitleBarPrivate> d_ptr;

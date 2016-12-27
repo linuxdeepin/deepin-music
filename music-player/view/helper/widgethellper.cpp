@@ -49,10 +49,10 @@ QPixmap blurImage(const QImage &image, int radius)
     QGraphicsBlurEffect *blur = new QGraphicsBlurEffect;
     blur->setBlurRadius(radius);
     QImage result = applyEffectToImage(image, blur);
-    int cropWidth = 20;
-    QRect rect(cropWidth, cropWidth,
-               result.width() - cropWidth * 2,
-               result.height() - cropWidth * 2);
+    auto cropFactor = 0.9;
+    QRect rect((1 - cropFactor)/2*result.width() , (1 - cropFactor)/2*result.height(),
+               result.width() *cropFactor,
+               result.height() *cropFactor);
     QImage cropped = result.copy(rect);
     return QPixmap::fromImage(cropped);
 }
@@ -130,7 +130,7 @@ void slideBottom2TopWidget(QWidget *top, QWidget *bottom, int delay)
     animation->connect(animation, &QPropertyAnimation::finished,
                        animation, &QPropertyAnimation::deleteLater);
     animation->connect(animation, &QPropertyAnimation::finished,
-                        top, &QWidget::hide);
+                       top, &QWidget::hide);
 
     QRect bottomStart = QRect(0, top->height(), bottom->width(), bottom->height());
     QRect bottomEnd = bottomStart;

@@ -14,11 +14,12 @@
 #include <QScopedPointer>
 
 #include "../core/playlist.h"
+#include "widget/thinwindow.h"
 
 class Presenter;
 class MusicListWidget;
 class MainWindowPrivate;
-class MainWindow : public Dtk::Widget::DWindow
+class MainWindow : public ThinWindow
 {
     Q_OBJECT
 
@@ -32,6 +33,8 @@ public:
     void initPlaylist(QList<PlaylistPtr > playlists, PlaylistPtr last);
     void initFooter(PlaylistPtr current, int mode);
     void binding(Presenter *presenter);
+
+    void setDefaultBackground();
 
     virtual void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     virtual void resizeEvent(QResizeEvent *e) Q_DECL_OVERRIDE;

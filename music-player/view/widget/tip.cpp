@@ -25,7 +25,6 @@ Tip::Tip(const QPixmap &icon, const QString &text, QWidget *parent) : QFrame(par
     setWindowFlags(Qt::Tool | Qt::FramelessWindowHint);
     setAttribute(Qt::WA_TranslucentBackground);
     setObjectName("Tip");
-    setFixedHeight(40);
 
     auto layout = new QHBoxLayout(this);
     layout->setContentsMargins(10, 0, 10, 0);
@@ -50,11 +49,13 @@ Tip::Tip(const QPixmap &icon, const QString &text, QWidget *parent) : QFrame(par
     adjustSize();
 
     auto *bodyShadow = new QGraphicsDropShadowEffect;
-    bodyShadow->setBlurRadius(20.0);
-    bodyShadow->setColor(QColor(0, 255, 0, 255));
+    bodyShadow->setBlurRadius(4.0);
+    bodyShadow->setColor(QColor(0, 0, 0, 12));
     bodyShadow->setOffset(2.0, 4.0);
-//    this->setGraphicsEffect(bodyShadow);
+    this->setGraphicsEffect(bodyShadow);
     hide();
+
+    setMinimumHeight(48);
 }
 
 void Tip::pop(QPoint center)
@@ -69,9 +70,11 @@ void Tip::pop(QPoint center)
 
     QPropertyAnimation *animation4 = new QPropertyAnimation(topOpacity, "opacity");
 //    animation4->setEasingCurve(QEasingCurve::InCubic);
-    animation4->setDuration(4000);
+    animation4->setDuration(2000);
     animation4->setStartValue(0);
+    animation4->setKeyValueAt(0.25, 1);
     animation4->setKeyValueAt(0.5, 1);
+    animation4->setKeyValueAt(0.75, 1);
     animation4->setEndValue(0);
     animation4->start();
     animation4->connect(animation4, &QPropertyAnimation::finished,
@@ -85,17 +88,41 @@ void Tip::pop(QPoint center)
 
 void Tip::paintEvent(QPaintEvent *e)
 {
-    QFrame::paintEvent(e);
-    return;
+    bool outer = true;
 
     QPainter painter(this);
     painter.setRenderHints(QPainter::Antialiasing | QPainter::HighQualityAntialiasing);
-    QPainterPath path;
-    auto rect = this->rect();
-    path.addRoundedRect(rect, 5, 5);
-    painter.fillPath(path, Qt::white);
+    auto radius = 4.0;
+    auto penWidthf = 1.0;
+    auto background = QBrush(Qt::white);
+    auto borderColor = QColor(0,0,0,26);
+    auto margin = 4.0;
+    auto shadowMargins = QMarginsF(margin,margin,margin,margin);
 
-    QPen pen(QColor(24, 24, 24));
-    pen.setWidth(1);
-    painter.strokePath(path, pen);
+//    QPainterPath frame;
+//    frame.addRect(rect().marginsRemoved(QMargins(1, 1, 1, 1)));
+//    painter.strokePath(frame, QPen(Qt::red));
+
+    // draw background
+    auto backgroundRect = QRectF(rect()).marginsRemoved(shadowMargins);
+    QPainterPath backgroundPath;
+    backgroundPath.addRoundedRect(backgroundRect, radius, radius);
+    painter.fillPath(backgroundPath, background);
+
+    // draw border
+    QPainterPath borderPath;
+    QRectF borderRect = QRectF(rect());
+    auto borderRadius = radius;
+    QMarginsF borderMargin(penWidthf / 2, penWidthf / 2, penWidthf / 2, penWidthf / 2);
+    if (outer) {
+        borderRadius += penWidthf / 2;
+        borderRect = borderRect.marginsAdded(borderMargin).marginsRemoved(shadowMargins);
+    } else {
+        borderRadius -= penWidthf / 2;
+        borderRect = borderRect.marginsRemoved(borderMargin).marginsRemoved(shadowMargins);
+    }
+    borderPath.addRoundedRect(borderRect, borderRadius, borderRadius);
+    QPen borderPen(borderColor);
+    borderPen.setWidthF(penWidthf);
+    painter.strokePath(borderPath, borderPen);
 }

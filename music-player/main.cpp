@@ -22,9 +22,13 @@
 #include "core/player.h"
 #include "core/pluginmanager.h"
 #include "musicapp.h"
+#include "view/widget/thinwindow.h"
 
 using namespace Dtk::Util;
 using namespace Dtk::Widget;
+
+#include <QLabel>
+#include <QLayout>
 
 int main(int argc, char *argv[])
 {

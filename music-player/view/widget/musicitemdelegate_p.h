@@ -29,10 +29,12 @@ class MusicItemDelegatePrivate : public QWidget
 public:
     Dtk::Widget::DPictureSequenceView  *playingAnimation;
     QModelIndex                         playingIndex;
+    int                                 tialWidth = -1;
 
     explicit MusicItemDelegatePrivate(MusicItemDelegate *parent = 0);
 
     inline QColor foreground(int col, const QStyleOptionViewItem &option) const;
+    inline int timePropertyWidth(const QStyleOptionViewItem &option) const;
 
     QColor textColor() const;
     QColor titleColor() const;

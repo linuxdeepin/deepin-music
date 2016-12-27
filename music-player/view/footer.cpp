@@ -92,7 +92,7 @@ void FooterPrivate::installTipHint(QWidget *w, const QString &hintstr)
 {
     Q_Q(Footer);
     auto hintWidget = new Tip(QPixmap(), hintstr, q);
-    hintWidget->setFixedHeight(24);
+    hintWidget->setFixedHeight(32);
     installHint(w, hintWidget);
 }
 

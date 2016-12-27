@@ -124,5 +124,6 @@
         <file>light/image/volume_mute_hover.png</file>
         <file>light/image/volume_mute_normal.png</file>
         <file>light/image/volume_mute_press.png</file>
+        <file>light/Widget/ThinWindow.theme</file>
     </qresource>
 </RCC>

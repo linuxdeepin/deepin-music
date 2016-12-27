@@ -2,7 +2,7 @@ include($$PWD/../config.pri)
 include($$PWD/build.pri)
 include($$PWD/../interface/interface.pri)
 
-QT       += core gui widgets svg dbus multimedia multimediawidgets xml network sql
+QT       += core gui widgets svg dbus multimedia multimediawidgets xml network sql x11extras
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TEMPLATE    = app
@@ -12,6 +12,7 @@ DESTDIR     = $$BUILD_DIST/bin
 
 unix{
     PKGCONFIG += dtkbase dtkutil dtkwidget taglib icu-uc icu-i18n
+    PKGCONFIG += x11 xext
 #    PKGCONFIG += mpris-qt5 dbusextended-qt5
 }
 
@@ -63,7 +64,9 @@ SOURCES += \
     view/widget/soundvolume.cpp \
     view/widget/filter.cpp \
     core/qplayer.cpp \
-    core/player.cpp
+    core/player.cpp \
+    view/widget/thinwindow.cpp \
+    view/helper/xutil.cpp
 
 
 HEADERS += \
@@ -115,7 +118,9 @@ HEADERS += \
     view/widget/soundvolume.h \
     view/widget/filter.h \
     core/player.h \
-    presenter/presenter_p.h
+    presenter/presenter_p.h \
+    view/widget/thinwindow.h \
+    view/helper/xutil.h
 
 RESOURCES += \
     resource/theme/theme.qrc \

@@ -52,7 +52,7 @@ public:
 };
 
 MusicListView::MusicListView(QWidget *parent)
-    : QTableView(parent), d_ptr(new MusicListViewPrivate(this))
+    : QListView(parent), d_ptr(new MusicListViewPrivate(this))
 {
     Q_D(MusicListView);
 
@@ -69,31 +69,12 @@ MusicListView::MusicListView(QWidget *parent)
     viewport()->setAcceptDrops(true);
     setDropIndicatorShown(false);
 
-    setSelectionMode(QTableView::ExtendedSelection);
+    setSelectionMode(QListView::ExtendedSelection);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-    this->horizontalHeader()->hide();
-    this->verticalHeader()->hide();
     this->setEditTriggers(QAbstractItemView::NoEditTriggers);
     this->setSelectionBehavior(QAbstractItemView::SelectRows);
-    this->setShowGrid(false);
-
-    QHeaderView *verticalHeader = this->verticalHeader();
-    verticalHeader->setSectionResizeMode(QHeaderView::Fixed);
-    verticalHeader->setDefaultSectionSize(36);
-
-    QHeaderView *headerView = this->horizontalHeader();
-    headerView->setSectionResizeMode(QHeaderView::Stretch);
-
-    for (int i = +1; i < MusicItemDelegate::ColumnButt; ++i) {
-        headerView->setSectionResizeMode(i, QHeaderView::ResizeToContents);
-    }
-    headerView->setSectionResizeMode(MusicItemDelegate::Number, QHeaderView::ResizeToContents);
-    headerView->setSectionResizeMode(MusicItemDelegate::Title, QHeaderView::Stretch);
-    headerView->setSectionResizeMode(MusicItemDelegate::Artist, QHeaderView::ResizeToContents);
-    headerView->setSectionResizeMode(MusicItemDelegate::Album, QHeaderView::ResizeToContents);
-    headerView->setSectionResizeMode(MusicItemDelegate::Length, QHeaderView::ResizeToContents);
 
     this->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this, &MusicListView::customContextMenuRequested,
@@ -205,18 +186,19 @@ void MusicListView::onMusicAdded(PlaylistPtr playlist, const MusicMeta &meta)
     d->m_model->appendRow(newItem);
     auto row = d->m_model->rowCount() - 1;
     QModelIndex index = d->m_model->index(row, 0, QModelIndex());
-    d->m_model->setData(index, row);
-    index = d->m_model->index(row, 1, QModelIndex());
-    d->m_model->setData(index, meta.title);
-    index = d->m_model->index(row, 2, QModelIndex());
-    auto artist = meta.artist.isEmpty() ? tr("Unknow Artist") : meta.artist;
-    d->m_model->setData(index, artist);
-    index = d->m_model->index(row, 3, QModelIndex());
-    auto album = meta.album.isEmpty() ? tr("Unknow Album") : meta.album;
-    d->m_model->setData(index, album);
+    d->m_model->setData(index, QVariant::fromValue<MusicMeta>(meta));
 
-    index = d->m_model->index(row, 4, QModelIndex());
-    d->m_model->setData(index, lengthString(meta.length));
+//    index = d->m_model->index(row, 1, QModelIndex());
+//    d->m_model->setData(index, meta.title);
+//    index = d->m_model->index(row, 2, QModelIndex());
+//    auto artist = meta.artist.isEmpty() ? tr("Unknow Artist") : meta.artist;
+//    d->m_model->setData(index, artist);
+//    index = d->m_model->index(row, 3, QModelIndex());
+//    auto album = meta.album.isEmpty() ? tr("Unknow Album") : meta.album;
+//    d->m_model->setData(index, album);
+
+//    index = d->m_model->index(row, 4, QModelIndex());
+//    d->m_model->setData(index, lengthString(meta.length));
 
 //    d->m_scrollBar->setVisible(verticalScrollBar()->isVisible());
 }
@@ -292,19 +274,15 @@ void MusicListView::onMusiclistChanged(PlaylistPtr playlist)
 void MusicListView::wheelEvent(QWheelEvent *event)
 {
     Q_D(MusicListView);
-    QTableView::wheelEvent(event);
+    QListView::wheelEvent(event);
     d->m_scrollBar->setSliderPosition(verticalScrollBar()->sliderPosition());
 }
 
 void MusicListView::resizeEvent(QResizeEvent *event)
 {
     Q_D(MusicListView);
-//    qDebug() << "++++++++++++++"<< event;
-    this->blockSignals(true);
-    QTableView::resizeEvent(event);
-    this->blockSignals(false);
-//    qDebug() << "--------------event"<< event;
 
+    qDebug() << event->size();
     auto size = event->size();
     auto scrollBarWidth = 8;
     d->m_scrollBar->resize(scrollBarWidth, size.height());
@@ -312,8 +290,8 @@ void MusicListView::resizeEvent(QResizeEvent *event)
     d->m_scrollBar->setMaximum(verticalScrollBar()->maximum());
     d->m_scrollBar->setMinimum(verticalScrollBar()->minimum());
     d->m_scrollBar->setPageStep(verticalScrollBar()->pageStep());
-//    d->m_scrollBar->setVisible(verticalScrollBar()->isVisible());
 
+    QListView::resizeEvent(event);
 }
 
 

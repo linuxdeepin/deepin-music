@@ -184,7 +184,7 @@ void NeteaseMetaSearchEngine::searchMeta(const MusicMeta &meta)
     qDebug() << "searchMeta";
     QString queryUrl = QLatin1String("http://music.163.com/api/search/pc");
     QString queryTemplate = QLatin1String("s=%1&offset=0&limit=5&type=1");
-    QUrl params = QUrl(queryTemplate.arg(meta.title + meta.artist));
+    QUrl params = QUrl(queryTemplate.arg(meta.title));
 
     auto anlyzer = new MetaAnalyzer(meta, m_geese);
 

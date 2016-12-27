@@ -58,11 +58,13 @@ void MediaFileMonitor::importPlaylistFiles(PlaylistPtr playlist, const QStringLi
     QList<CueParser>  cuelist;
     MusicMetaList metaCache;
 
+    qDebug() << Player::instance()->supportedSuffixList() << filelist;
     for (auto &filepath : filelist) {
-        QDirIterator it(filepath, Player::instance()->supportedFilterStringList(),
+        QDirIterator it(filepath, Player::instance()->supportedSuffixList(),
                         QDir::Files, QDirIterator::Subdirectories);
         while (it.hasNext()) {
             QString  url = it.next();
+            qDebug() << url;
 
             QFileInfo fileInfo(url);
             if (fileInfo.suffix() == "cue") {

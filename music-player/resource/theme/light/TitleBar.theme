@@ -1,6 +1,14 @@
 #TitleBar {
     border: 0px solid rgba(255,0,0,0.3);
 }
+#TitleLeft{
+    border: 0px solid rgba(255,255,255,0.3);
+}
+
+#TitleRight{
+    border: 2px solid rgba(255,0,255,0.3);
+}
+
 #TitleBack{
     border-image: url(:/image/back_normal.png);
 }
