@@ -27,8 +27,6 @@
 #include "../core/mediadatabase.h"
 #include "../core/util/musicmeta.h"
 
-
-
 PresenterPrivate::PresenterPrivate(Presenter *parent)
     : QObject(parent), q_ptr(parent)
 {
@@ -65,10 +63,9 @@ void PresenterPrivate::initData()
     connect(this, &PresenterPrivate::requestMetaSearch,
             lyricService, &LyricService::searchMeta);
 
-
     connect(this, &PresenterPrivate::play, Player::instance(), &Player::playMeta);
     connect(this, &PresenterPrivate::resume, Player::instance(), &Player::resume);
-    connect(this, &PresenterPrivate::playNext, Player::instance(), &Player::playNextMusic);
+    connect(this, &PresenterPrivate::playNext, Player::instance(), &Player::playNextMeta);
     connect(this, &PresenterPrivate::playPrev, Player::instance(), &Player::playPrevMusic);
     connect(this, &PresenterPrivate::pause, Player::instance(), &Player::pause);
     connect(this, &PresenterPrivate::stop, Player::instance(), &Player::stop);
@@ -98,7 +95,6 @@ void Presenter::prepareData()
     Q_D(Presenter);
 
     d->initData();
-
 
     connect(d->lyricService, &LyricService::lyricSearchFinished,
             this, &Presenter::lyricSearchFinished);
@@ -203,9 +199,59 @@ void Presenter::prepareData()
         d->requestMetaSearch(info);
     });
 
+    connect(Player::instance(), &Player::mediaError,
+    this, [ = ](PlaylistPtr playlist,  MusicMeta meta, Player::Error error) {
+        Q_D(Presenter);
+        qDebug() << d->syncPlayerResult;
+        if (error == Player::NoError) {
+            d->syncPlayerResult = false;
+
+            if (meta.invalid) {
+                meta.invalid = false;
+                emit musicMetaUpdate(playlist, meta);
+            }
+            return;
+        }
+
+        if (!meta.invalid) {
+            meta.invalid = true;
+            emit musicMetaUpdate(playlist, meta);
+        }
+        emit musicError(playlist, meta, error);
+        if (d->syncPlayerResult) {
+            d->syncPlayerResult = false;
+            emit notifyMusciError(playlist, meta, error);
+        } else {
+            QThread::msleep(500);
+            if (playlist->canNext()) {
+                d->playNext(playlist, meta);
+            }
+        }
+    });
+
+    connect(this, &Presenter::musicMetaUpdate,
+    this, [ = ](PlaylistPtr /*playlist*/,  MusicMeta meta) {
+        Q_D(Presenter);
+        qDebug() << "update" << meta.invalid;
+        for (auto playlist : allplaylist()) {
+            playlist->updateMeta(meta);
+        }
+        // update database
+        emit MediaDatabase::instance()->updateMusicMeta(meta);
+    });
+
     emit dataLoaded();
     Player::instance()->setVolume(50);
     emit this->volumeChanged(Player::instance()->volume());
+}
+
+void Presenter::onSyncMusicPlay(PlaylistPtr playlist, const MusicMeta &meta)
+{
+    Q_D(Presenter);
+    d->syncPlayerResult = true;
+    d->syncPlayerMeta = meta;
+
+    onMusicPlay(playlist, meta);
 }
 
 

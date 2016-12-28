@@ -200,7 +200,45 @@ void MusicListView::onMusicAdded(PlaylistPtr playlist, const MusicMeta &meta)
 //    index = d->m_model->index(row, 4, QModelIndex());
 //    d->m_model->setData(index, lengthString(meta.length));
 
-//    d->m_scrollBar->setVisible(verticalScrollBar()->isVisible());
+    //    d->m_scrollBar->setVisible(verticalScrollBar()->isVisible());
+}
+
+void MusicListView::onMusicError(PlaylistPtr playlist, const MusicMeta &meta, int error)
+{
+
+    Q_D(MusicListView);
+    qWarning() << "check playlist failed!"
+               << "m_playlist:" << d->m_playlist
+               << "playlist:" << d->m_playlist;
+
+    if (playlist != d->m_playlist) {
+        qWarning() << "check playlist failed!"
+                   << "m_playlist:" << d->m_playlist
+                   << "playlist:" << d->m_playlist;
+        return;
+    }
+
+    QModelIndex index;
+    QStandardItem *item = nullptr;
+    for (int i = 0; i < d->m_model->rowCount(); ++i) {
+        index = d->m_model->index(i, 0);
+        item = d->m_model->item(i, 0);
+        MusicMeta itemmeta = qvariant_cast<MusicMeta>(item->data());
+        if (itemmeta.hash == meta.hash) {
+            break;
+        }
+    }
+
+    if (nullptr == item) {
+        return;
+    }
+
+    qDebug() << error;
+    MusicMeta indexData = index.data().value<MusicMeta>();
+    indexData.invalid = (error != 0);
+    d->m_model->setData(index, QVariant::fromValue<MusicMeta>(indexData));
+
+    update();
 }
 
 void MusicListView::onMusicListAdded(PlaylistPtr playlist, const MusicMetaList &metalist)

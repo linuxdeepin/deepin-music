@@ -39,6 +39,8 @@ public:
 signals:
     void addMusicMeta(const MusicMeta &meta);
     void addMusicMetaList(const MusicMetaList &metalist);
+    void updateMusicMeta(const MusicMeta &meta);
+    void updateMusicMetaList(const MusicMetaList &metalist);
     void insertMusic(const MusicMeta &meta, const PlaylistMeta &playlistMeta);
     void insertMusicList(const MusicMetaList &metalist, const PlaylistMeta &playlistMeta);
     void removeMusicMetaList(const MusicMetaList &metalist);

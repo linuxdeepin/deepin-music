@@ -110,6 +110,16 @@ bool Playlist::isEmpty() const
     return listmeta.metas.isEmpty();
 }
 
+bool Playlist::canNext() const
+{
+    return listmeta.invalidMetas.size() < listmeta.metas.size();
+}
+
+bool Playlist::active() const
+{
+    return  listmeta.active;
+}
+
 int Playlist::length() const
 {
     return listmeta.metas.size();
@@ -129,6 +139,11 @@ int Playlist::sorttype() const
     return listmeta.sortType;
 }
 
+void Playlist::setActive(bool active)
+{
+    listmeta.active = active;
+}
+
 MusicMetaList Playlist::allmusic() const
 {
     MusicMetaList mlist;
@@ -143,8 +158,7 @@ void Playlist::reset(const MusicMetaList &metas)
     listmeta.sortMetas.clear();
     listmeta.metas.clear();
 
-    for (auto &meta : metas)
-    {
+    for (auto &meta : metas) {
         listmeta.sortMetas << meta.hash;
         listmeta.metas.insert(meta.hash, meta);
     }
@@ -168,7 +182,8 @@ void Playlist::load()
         musicIDs << QString("\"%1\"").arg(musicID);
     }
     auto sqlStr = QString("SELECT hash, localpath, title, artist, album, "
-                          "filetype, track, offset, length, size, timestamp, cuepath "
+                          "filetype, track, offset, length, filesize, "
+                          "timestamp, cuepath, invalid "
                           "FROM music WHERE hash IN (%1)").arg(musicIDs.join(","));
     if (!query.exec(sqlStr)) {
         qWarning() << query.lastError();
@@ -186,10 +201,17 @@ void Playlist::load()
         info.track = query.value(6).toInt();
         info.offset = query.value(7).toInt();
         info.length = query.value(8).toInt();
-        info.size = query.value(9).toInt();
+        info.filesize = query.value(9).toInt();
         info.timestamp = query.value(10).toInt();
         info.cuePath = query.value(11).toString();
+        info.invalid = query.value(12).toBool();
         listmeta.metas.insert(info.hash, info);
+        if (info.invalid) {
+            listmeta.invalidMetas.insert(info.hash, 1);
+        } else {
+            listmeta.invalidMetas.remove(info.hash);
+        }
+
     }
     resort();
 }
@@ -225,6 +247,22 @@ void Playlist::appendMusic(const MusicMetaList &metalist)
 
     emit MediaDatabase::instance()->insertMusicList(newMetalist, this->listmeta);
     emit musiclistAdded(newMetalist);
+}
+
+void Playlist::updateMeta(const MusicMeta &meta)
+{
+    if (!listmeta.metas.contains(meta.hash)) {
+        qWarning() << "no such id in playlist" << meta.hash << meta.localPath << listmeta.displayName;
+        return;
+    }
+
+    listmeta.metas.insert(meta.hash, meta);
+    // TODO : chcek and update;
+    if (meta.invalid) {
+        listmeta.invalidMetas.insert(meta.hash, 1);
+    } else {
+        listmeta.invalidMetas.remove(meta.hash);
+    }
 }
 
 MusicMeta Playlist::removeMusic(const MusicMetaList &metalist)

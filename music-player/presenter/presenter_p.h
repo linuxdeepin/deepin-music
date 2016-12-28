@@ -25,17 +25,19 @@ public:
     void initData();
 
     PlaylistPtr         playlistBeforeSearch;
+    bool                syncPlayerResult    = false;
+    MusicMeta           syncPlayerMeta;
 
-    LyricService        *lyricService;
-    PlaylistManager     *playlistMgr;
-    MediaFileMonitor    *moniter;
-    QSettings           *settings;
+    LyricService        *lyricService   = nullptr;
+    PlaylistManager     *playlistMgr    = nullptr;
+    MediaFileMonitor    *moniter        = nullptr;
+    QSettings           *settings       = nullptr;
 
     Presenter *q_ptr;
-    Q_DECLARE_PUBLIC(Presenter);
+    Q_DECLARE_PUBLIC(Presenter)
 
 signals:
-    void requestMetaSearch(const MusicMeta&);
+    void requestMetaSearch(const MusicMeta &);
 
     void play(PlaylistPtr playlist, const MusicMeta &info);
     void resume(PlaylistPtr playlist, const MusicMeta &meta);

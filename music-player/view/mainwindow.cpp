@@ -21,6 +21,7 @@
 #include <QStackedLayout>
 #include <QFileDialog>
 #include <QStandardPaths>
+#include <QMessageBox>
 #include <QMenu>
 
 #include <DUtil>
@@ -106,7 +107,7 @@ MainWindow::MainWindow(QWidget *parent)
     d->footer->setFixedHeight(footerHeight);
 
     d->musicList->setContentsMargins(0, titleBarHeight, 0, footerHeight);
-//    d->playlist->setContentsMargins(0, titleBarHeight, 0, footerHeight);
+    d->lyricView->setContentsMargins(0, titleBarHeight, 0, footerHeight);
 
     contentLayout->addWidget(d->title);
 
@@ -232,7 +233,7 @@ void MainWindow::binding(Presenter *presenter)
     connect(d->musicList, &MusicListWidget::resort,
             presenter, &Presenter::onResort);
     connect(d->musicList, &MusicListWidget::musicClicked,
-            presenter, &Presenter::onMusicPlay);
+            presenter, &Presenter::onSyncMusicPlay);
     connect(d->musicList, &MusicListWidget::requestCustomContextMenu,
             presenter, &Presenter::onRequestMusiclistMenu);
     connect(d->musicList, &MusicListWidget::addToPlaylist,
@@ -269,6 +270,22 @@ void MainWindow::binding(Presenter *presenter)
     connect(d->playlist, &PlaylistWidget::hidePlaylist,
     this, [ = ]() {
         setPlaylistVisible(false);
+    });
+
+    connect(presenter, &Presenter::notifyMusciError,
+    this, [ = ](PlaylistPtr playlist, const MusicMeta & meta, int error) {
+        DDialog warnDlg(this);
+        warnDlg.setIcon(QIcon(":/light/image/diglog_warning.png"));
+        warnDlg.setTextFormat(Qt::RichText);
+        warnDlg.setTitle(tr("File invalid or does not exist, load failed!"));
+        warnDlg.addButtons(QStringList() << tr("I got it"));
+        if (0 == warnDlg.exec()) {
+            emit d->footer->play(playlist, meta);
+        }
+    });
+    connect(presenter, &Presenter::musicError,
+    this, [ = ](PlaylistPtr playlist, const MusicMeta & meta, int error) {
+        d->musicList->onMusicError(playlist, meta, error);
     });
 
     connect(presenter, &Presenter::locateMusic,

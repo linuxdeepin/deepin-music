@@ -43,6 +43,10 @@ class Player : public QObject, public Singleton<Player>
     Q_PROPERTY(PlaybackMode mode READ mode WRITE setMode NOTIFY modeChanged)
     Q_PROPERTY(bool muted READ muted WRITE setMuted NOTIFY mutedChanged)
 
+    Q_ENUMS(PlaybackStatus)
+    Q_ENUMS(PlaybackMode)
+    Q_ENUMS(Error)
+
 public:
     enum PlaybackStatus {
         InvalidPlaybackStatus = -1,
@@ -50,15 +54,22 @@ public:
         Paused,
         Stopped
     };
-    Q_ENUM(PlaybackStatus)
 
     enum PlaybackMode {
         RepeatAll = 0,
         RepeatSingle = 1,
         Shuffle = 2,
     };
-    Q_ENUM(PlaybackMode)
 
+    enum Error {
+        NoError,
+        ResourceError,
+        FormatError,
+        NetworkError,
+        AccessDeniedError,
+        ServiceMissingError,
+        MediaIsPlaylist
+    };
     explicit Player(QObject *parent = 0);
     ~Player();
 
@@ -66,7 +77,7 @@ public:
     void init() {}
     void playMeta(PlaylistPtr playlist, const MusicMeta &meta);
     void resume(PlaylistPtr playlist, const MusicMeta &meta);
-    void playNextMusic(PlaylistPtr playlist, const MusicMeta &meta);
+    void playNextMeta(PlaylistPtr playlist, const MusicMeta &meta);
     void playPrevMusic(PlaylistPtr playlist, const MusicMeta &meta);
     void pause();
     void stop();
@@ -79,6 +90,7 @@ public:
 
 signals:
     void mediaPlayed(PlaylistPtr playlist, const MusicMeta &meta);
+    void mediaError(PlaylistPtr playlist, const MusicMeta &meta, Player::Error error);
 
 public:
     bool canControl() const;
@@ -146,4 +158,6 @@ private:
     Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), Player)
     qint64 m_duration;
 };
+
+Q_DECLARE_METATYPE(Player::Error);
 

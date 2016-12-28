@@ -47,6 +47,7 @@ static bool createConnection()
                "size INTEGER, track INTEGER, "
                "offset INTEGER, favourite INTEGER(32), "
                "localpath VARCHAR(4096), length INTEGER, "
+               "invalid INTEGER(32), "
                "cuepath VARCHAR(4096) )"
               );
 
@@ -79,6 +80,11 @@ MediaDatabase::MediaDatabase(QObject *parent) : QObject(parent)
 
     QSqlQuery query;
     query.prepare("ALTER TABLE music ADD COLUMN cuepath VARCHAR(4096);");
+    if (query.exec()) {
+        qWarning() << "sql upgrade with out error:" << query.lastError();
+    }
+
+    query.prepare("ALTER TABLE music ADD COLUMN invalid INTEGER(32);");
     if (query.exec()) {
         qWarning() << "sql upgrade with out error:" << query.lastError();
     }
@@ -174,7 +180,7 @@ static QList<MusicMeta> searchTitle(const QString &queryString)
         musicMeta.album = query.value(4).toString();
         musicMeta.filetype = query.value(5).toString();
         musicMeta.length = query.value(6).toInt();
-        musicMeta.size = query.value(7).toInt();
+        musicMeta.filesize = query.value(7).toInt();
         musicMeta.timestamp = query.value(8).toInt();
         list << musicMeta;
     }
@@ -344,6 +350,10 @@ void MediaDatabase::bind()
             m_writer, &MediaDatabaseWriter::addMusicMeta);
     connect(this, &MediaDatabase::addMusicMetaList,
             m_writer, &MediaDatabaseWriter::addMusicMetaList);
+    connect(this, &MediaDatabase::updateMusicMeta,
+            m_writer, &MediaDatabaseWriter::updateMusicMeta);
+    connect(this, &MediaDatabase::updateMusicMetaList,
+            m_writer, &MediaDatabaseWriter::updateMusicMetaList);
     connect(this, &MediaDatabase::insertMusic,
             m_writer, &MediaDatabaseWriter::insertMusic);
     connect(this, &MediaDatabase::insertMusicList,

@@ -151,6 +151,7 @@ MusicListWidget::MusicListWidget(QWidget *parent) :
 
     layout->addWidget(d->actionBar, 0, Qt::AlignTop);
     layout->addWidget(d->m_musiclist, 100, Qt::AlignTop);
+    layout->addStretch();
     layout->addWidget(d->m_emptyHits, 0, Qt::AlignCenter);
     layout->addStretch();
 
@@ -208,6 +209,12 @@ void MusicListWidget::onMusicAdded(PlaylistPtr playlist, const MusicMeta &meta)
     Q_D(MusicListWidget);
     d->m_musiclist->onMusicAdded(playlist, meta);
     d->showEmptyHits(false);
+}
+
+void MusicListWidget::onMusicError(PlaylistPtr playlist, const MusicMeta &meta, int error)
+{
+    Q_D(MusicListWidget);
+    d->m_musiclist->onMusicError(playlist, meta, error);
 }
 
 void MusicListWidget::onMusicListAdded(PlaylistPtr playlist, const MusicMetaList &infolist)

@@ -18,6 +18,7 @@
 class MusicMeta
 {
 public:
+
     QString hash;
     QString localPath;
     QString cuePath;
@@ -33,24 +34,27 @@ public:
     QString pinyinAlbumShort;
 
     QString filetype;
+
     qint64  timestamp;
-    qint64  length;//msec
+    qint64  length      = 1;//msec
     qint64  track;
-    qint64  size;
+    qint64  filesize        = 1;
 
     QString editor;
     QString composer;
     QString creator;
-    qint64  offset;//msec
+    qint64  offset      = 0;//msec
 
-    bool    favourite;
+    bool    favourite   = false;
+    bool    invalid     = false;
+
 public:
     MusicMeta()
     {
         timestamp = 0;
         length = 0;
         offset = 0;
-        size = 0;
+        filesize = 0;
         track = 0;
         favourite = false;
     }

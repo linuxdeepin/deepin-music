@@ -129,6 +129,7 @@ int LyricService::searchCacheCover(const MusicMeta &info)
 //!
 void LyricService::searchMeta(const MusicMeta &info)
 {
+    return;
     bool needlyric = false;
     bool needCover = false;
 

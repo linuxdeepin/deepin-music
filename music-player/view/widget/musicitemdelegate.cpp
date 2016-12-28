@@ -180,7 +180,7 @@ static inline QRect colRect(int col, const QStyleOptionViewItem &option)
     case MusicItemDelegate::Album:
         return QRect(40 + w / 2 + w / 4, option.rect.y(), w / 4, option.rect.height());
     case MusicItemDelegate::Length:
-        return QRect(40 + w, option.rect.y(), tailwidth-20, option.rect.height());
+        return QRect(40 + w, option.rect.y(), tailwidth - 20, option.rect.height());
     case MusicItemDelegate::ColumnButt:
         break;
     }
@@ -236,6 +236,17 @@ void MusicItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
                 d->playingAnimation->hide();
             }
 
+            if (meta.invalid) {
+                auto icon = QPixmap(":/light/image/musiclist_warning.png");
+                auto centerF = QRectF(rect).center();
+                auto iconRect = QRect(centerF.x() - icon.width()/2,
+                                      centerF.y() - icon.height()/2,
+                                      icon.width(), icon.height());
+                painter->drawPixmap(iconRect,icon);
+                d->playingAnimation->hide();
+                break;
+            }
+
             if (d->playingIndex == index && !hideAnimation) {
                 d->playingAnimation->setParent(w);
                 d->playingAnimation->raise();
@@ -254,14 +265,22 @@ void MusicItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
             painter->setFont(font12);
             painter->drawText(rect, flag, meta.title);
             break;
-        case Artist:
+        case Artist: {
             painter->setFont(font11);
-            painter->drawText(rect, flag, meta.artist);
+            auto str = meta.artist.isEmpty()?
+                        MusicListView::tr("Unknow Artist"):
+                        meta.artist;
+            painter->drawText(rect, flag, str);
             break;
-        case Album:
+        }
+        case Album: {
             painter->setFont(font11);
-            painter->drawText(rect, flag, meta.album);
+            auto str = meta.album.isEmpty()?
+                        MusicListView::tr("Unknow Album"):
+                        meta.album;
+            painter->drawText(rect, flag, str);
             break;
+        }
         case Length:
             painter->setFont(font11);
             painter->drawText(rect, flag, lengthString(meta.length));

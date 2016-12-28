@@ -24,6 +24,8 @@ public:
 public slots:
     void addMusicMeta(const MusicMeta &meta);
     void addMusicMetaList(const MusicMetaList &metalist);
+    void updateMusicMeta(const MusicMeta &meta);
+    void updateMusicMetaList(const MusicMetaList &metalist);
     void removeMusicMeta(const MusicMeta &meta);
     void removeMusicMetaList(const MusicMetaList &metalist);
 

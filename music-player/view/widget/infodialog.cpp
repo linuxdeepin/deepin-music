@@ -55,7 +55,7 @@ InfoDialog::InfoDialog(const MusicMeta &info, const QPixmap &coverPixmap, QWidge
     QString album = info.album.isEmpty() ? tr("Unkonw Album") : info.album;
     QStringList infoValues;
     infoValues << info.title << artist << album
-               << info.filetype << sizeString(info.size) << lengthString(info.length)
+               << info.filetype << sizeString(info.filesize) << lengthString(info.length)
                << info.localPath;
 
     auto infogridLayout = new QGridLayout;

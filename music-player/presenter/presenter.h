@@ -67,9 +67,12 @@ signals:
     void musicRemoved(PlaylistPtr playlist, const MusicMeta &info);
 
     //! from control
-    void musicPlayed(PlaylistPtr playlist, const MusicMeta &info);
-    void musicPaused(PlaylistPtr playlist, const MusicMeta &info);
-    void musicStoped(PlaylistPtr playlist, const MusicMeta &info);
+    void musicPlayed(PlaylistPtr playlist, const MusicMeta &meta);
+    void musicError(PlaylistPtr playlist, const MusicMeta &meta, int error);
+    void musicPaused(PlaylistPtr playlist, const MusicMeta &meta);
+    void musicStoped(PlaylistPtr playlist, const MusicMeta &meta);
+    void musicMetaUpdate(PlaylistPtr playlist, const MusicMeta &meta);
+    void notifyMusciError(PlaylistPtr playlist, const MusicMeta &meta, int error);
     void progrossChanged(qint64 pos, qint64 length);
     void volumeChanged(int volume);
     void mutedChanged(bool muted);
@@ -85,6 +88,7 @@ signals:
 
 public slots:
     //! music control interface
+    void onSyncMusicPlay(PlaylistPtr playlist, const MusicMeta &meta);
     void onMusicPlay(PlaylistPtr playlist, const MusicMeta &meta);
     void onMusicPause(PlaylistPtr playlist, const MusicMeta &info);
     void onMusicResume(PlaylistPtr playlist, const MusicMeta &info);

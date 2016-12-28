@@ -35,6 +35,7 @@ public:
     void onMusicPause(PlaylistPtr playlist, const MusicMeta &meta);
     void onMusicRemoved(PlaylistPtr playlist, const MusicMeta &meta);
     void onMusicAdded(PlaylistPtr playlist, const MusicMeta &meta);
+    void onMusicError(PlaylistPtr playlist, const MusicMeta &meta, int error);
     void onMusicListAdded(PlaylistPtr playlist, const MusicMetaList &metalist);
     void onLocate(PlaylistPtr playlist, const MusicMeta &meta);
     void onMusiclistChanged(PlaylistPtr playlist);
