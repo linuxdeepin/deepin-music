@@ -261,6 +261,8 @@ void MainWindow::binding(Presenter *presenter)
             d->playlist, &PlaylistWidget::onCurrentChanged);
     connect(presenter, &Presenter::playlistAdded,
             d->playlist, &PlaylistWidget::onPlaylistAdded);
+    connect(presenter, &Presenter::musicPlayed,
+            d->playlist, &PlaylistWidget::onMusicPlayed);
 
 
     connect(d->lyricView, &LyricView::toggleLyricView, this, &MainWindow::toggleLyricView);
@@ -541,7 +543,7 @@ void MainWindow::showLyricView()
     d->lyricView->resize(current->size());
 
     WidgetHelper::slideBottom2TopWidget(
-        current, d->lyricView, s_AnimationDelay*2);
+        current, d->lyricView, s_AnimationDelay * 2);
 
     this->disableControl();
     setPlaylistVisible(false);
@@ -607,7 +609,6 @@ void MainWindow::setPlaylistVisible(bool visible)
               d->playlist->width(), d->playlist->height());
     if (!visible) {
         WidgetHelper::slideEdgeWidget(d->playlist, end, start, s_AnimationDelay, true);
-//        d->footer->setFocus();
     } else {
         WidgetHelper::slideEdgeWidget(d->playlist, start, end, s_AnimationDelay);
         d->playlist->setFocus();

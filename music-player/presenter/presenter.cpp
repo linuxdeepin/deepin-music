@@ -200,12 +200,9 @@ void Presenter::prepareData()
     connect(Player::instance(), &Player::mediaError,
     this, [ = ](PlaylistPtr playlist,  MusicMeta meta, Player::Error error) {
         Q_D(Presenter);
-        qDebug() << "ffffffff" << error;
         emit musicError(playlist, meta, error);
         if (error == Player::NoError) {
             d->syncPlayerResult = false;
-
-            qDebug() << "ffffffff" << meta.invalid;
             if (meta.invalid) {
                 meta.invalid = false;
                 emit musicMetaUpdate(playlist, meta);
@@ -466,10 +463,16 @@ void Presenter::onMusicPlay(PlaylistPtr playlist,  const MusicMeta &meta)
 {
     Q_D(Presenter);
     auto nextMeta = meta;
-    qDebug() << "Fix me: play status";
+    qDebug() << "Fix me: play status" ;
     if (0 == d->playlistMgr->playlist(AllMusicListID)->length()) {
         emit requestImportFiles();
         return;
+    }
+
+    auto playinglist = d->playlistMgr->playingPlaylist();
+    qDebug() << "stop old list" << playinglist->id() <<playlist->id();
+    if (playinglist->id() != playlist->id()) {
+        playinglist->play(MusicMeta());
     }
 
     d->playlistMgr->setPlayingPlaylist(playlist);

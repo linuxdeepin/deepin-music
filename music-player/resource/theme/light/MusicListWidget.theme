@@ -21,9 +21,10 @@
 }
 
 #MusicListPlayAll{
+    font-size: 12px;
     padding: 0 10 0 10;
     border: none;
-    border-radius: 3px;
+    border-radius: 3.0px;
     qproperty-icon: url(:/image/play_all.png);
 }
 #MusicListPlayAll:hover{

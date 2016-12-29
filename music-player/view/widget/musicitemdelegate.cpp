@@ -58,17 +58,23 @@ MusicItemDelegatePrivate::MusicItemDelegatePrivate(MusicItemDelegate *parent):
     QWidget(nullptr), q_ptr(parent)
 {
     setObjectName("MusicItem");
-
     playingAnimation = new Dtk::Widget::DPictureSequenceView;
+    D_THEME_INIT_WIDGET(MusicItem)
+}
+
+void MusicItemDelegatePrivate::setActiveAnimationPrefix(QString prefix) const
+{
+    auto activePrefix = playingAnimation->property("ActivePrefix").toString();
+    if (activePrefix == prefix) {
+        return;
+    }
     QStringList urls;
-    auto urlTemp = QString(":/light/animation/playing/%1.png");
+    auto urlTemp = QString("%1/%2.png").arg(prefix);
     for (int i = 0; i < 94; ++i) {
         urls << urlTemp.arg(i);
     }
     playingAnimation->setPictureSequence(urls);
-    playingAnimation->play();
-
-    D_THEME_INIT_WIDGET(MusicItem);
+    playingAnimation->setProperty("ActivePrefix", prefix);
 }
 
 QColor MusicItemDelegatePrivate::textColor() const
@@ -95,6 +101,16 @@ QColor MusicItemDelegatePrivate::highlightedBackground() const
 {
     return m_highlightedBackground;
 }
+
+QString MusicItemDelegatePrivate::animationPrefix() const
+{
+    return m_aimationPrefix;
+}
+
+QString MusicItemDelegatePrivate::highlightAnimationPrefix() const
+{
+    return  m_highlightAnimationPrefix;
+}
 void MusicItemDelegatePrivate::setTextColor(QColor textColor)
 {
     m_textColor = textColor;
@@ -118,6 +134,16 @@ void MusicItemDelegatePrivate::setAlternateBackground(QColor alternateBackground
 void MusicItemDelegatePrivate::setHighlightedBackground(QColor highlightedBackground)
 {
     m_highlightedBackground = highlightedBackground;
+}
+
+void MusicItemDelegatePrivate::setAnimationPrefix(QString animationPrefix)
+{
+    m_aimationPrefix = animationPrefix;
+}
+
+void MusicItemDelegatePrivate::setHighlightAnimationPrefix(QString highlightAnimationPrefix)
+{
+    m_highlightAnimationPrefix = highlightAnimationPrefix;
 }
 
 QColor MusicItemDelegatePrivate::foreground(int col, const QStyleOptionViewItem &option) const
@@ -174,11 +200,11 @@ static inline QRect colRect(int col, const QStyleOptionViewItem &option)
     case MusicItemDelegate::Number:
         return QRect(0, option.rect.y(), 40, option.rect.height());
     case MusicItemDelegate::Title:
-        return QRect(40, option.rect.y(), w / 2 -20, option.rect.height());
+        return QRect(40, option.rect.y(), w / 2 - 20, option.rect.height());
     case MusicItemDelegate::Artist:
-        return QRect(40 + w / 2, option.rect.y(), w / 4 -20, option.rect.height());
+        return QRect(40 + w / 2, option.rect.y(), w / 4 - 20, option.rect.height());
     case MusicItemDelegate::Album:
-        return QRect(40 + w / 2 + w / 4, option.rect.y(), w / 4 -20, option.rect.height());
+        return QRect(40 + w / 2 + w / 4, option.rect.y(), w / 4 - 20, option.rect.height());
     case MusicItemDelegate::Length:
         return QRect(40 + w, option.rect.y(), tailwidth - 20, option.rect.height());
     case MusicItemDelegate::ColumnButt:
@@ -239,18 +265,25 @@ void MusicItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
             if (meta.invalid) {
                 auto icon = QPixmap(":/light/image/musiclist_warning.png");
                 auto centerF = QRectF(rect).center();
-                auto iconRect = QRect(centerF.x() - icon.width()/2,
-                                      centerF.y() - icon.height()/2,
+                auto iconRect = QRect(centerF.x() - icon.width() / 2,
+                                      centerF.y() - icon.height() / 2,
                                       icon.width(), icon.height());
-                painter->drawPixmap(iconRect,icon);
+                painter->drawPixmap(iconRect, icon);
                 d->playingAnimation->hide();
                 break;
             }
 
-            if (d->playingIndex == index && !hideAnimation) {
+            if (d->playingIndex == index && !hideAnimation ) {
+
+                if (option.state & QStyle::State_Selected) {
+                    d->setActiveAnimationPrefix(d->highlightAnimationPrefix());
+                } else {
+                    d->setActiveAnimationPrefix(d->animationPrefix());
+                }
+
                 d->playingAnimation->setParent(w);
                 d->playingAnimation->raise();
-                d->playingAnimation->play();
+                d->playingAnimation->pause();
                 d->playingAnimation->show();
                 auto center = rect.center();
                 auto aniSize = d->playingAnimation->size();
@@ -267,17 +300,17 @@ void MusicItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
             break;
         case Artist: {
             painter->setFont(font11);
-            auto str = meta.artist.isEmpty()?
-                        MusicListView::tr("Unknow Artist"):
-                        meta.artist;
+            auto str = meta.artist.isEmpty() ?
+                       MusicListView::tr("Unknow Artist") :
+                       meta.artist;
             painter->drawText(rect, flag, str);
             break;
         }
         case Album: {
             painter->setFont(font11);
-            auto str = meta.album.isEmpty()?
-                        MusicListView::tr("Unknow Album"):
-                        meta.album;
+            auto str = meta.album.isEmpty() ?
+                       MusicListView::tr("Unknow Album") :
+                       meta.album;
             painter->drawText(rect, flag, str);
             break;
         }

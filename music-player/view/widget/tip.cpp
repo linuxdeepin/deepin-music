@@ -115,7 +115,6 @@ void Tip::paintEvent(QPaintEvent *e)
 
     // draw background
     auto backgroundRect = QRectF(rect()).marginsRemoved(shadowMargins);
-    qDebug() << backgroundRect << rect() << size() << geometry() << m_interFrame->size();
     QPainterPath backgroundPath;
     backgroundPath.addRoundedRect(backgroundRect, radius, radius);
     painter.fillPath(backgroundPath, background);

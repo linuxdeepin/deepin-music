@@ -9,6 +9,7 @@
 
 #include "playlistitem.h"
 
+#include <QDebug>
 #include <QTimer>
 #include <QLabel>
 #include <QStyle>
@@ -88,6 +89,10 @@ PlayListItem::PlayListItem(PlaylistPtr playlist, QWidget *parent) : QFrame(paren
     setFixedHeight(56);
     setFixedWidth(220);
 
+    playingAnimation = new Dtk::Widget::DPictureSequenceView(this);
+
+    interLayout->addWidget(playingAnimation, 0, Qt::AlignRight);
+
     D_THEME_INIT_WIDGET(PlayListItem);
 
     connect(m_titleedit, &QLineEdit::editingFinished,
@@ -121,14 +126,42 @@ PlayListItem::PlayListItem(PlaylistPtr playlist, QWidget *parent) : QFrame(paren
 
 void PlayListItem::setActive(bool active)
 {
+    QString prefix;
     if (active) {
+        prefix = highlightAnimationPrefix();
         m_titleedit->setProperty("status", "active");
     } else {
+        prefix = animationPrefix();
         m_titleedit->setProperty("status", "");
+    }
+
+    auto activePrefix = playingAnimation->property("ActivePrefix").toString();
+    if (activePrefix != prefix) {
+
+        qDebug() <<  "change " << prefix;
+        QStringList urls;
+        auto urlTemp = QString("%1/%2.png").arg(prefix);
+        for (int i = 0; i < 94; ++i) {
+            urls << urlTemp.arg(i);
+        }
+        playingAnimation->setPictureSequence(urls);
+        playingAnimation->setProperty("ActivePrefix", prefix);
+        playingAnimation->hide();
     }
     this->style()->unpolish(m_titleedit);
     this->style()->polish(m_titleedit);
     this->repaint();
+}
+
+void PlayListItem::setPlay(bool isPaly)
+{
+    if (isPaly) {
+        playingAnimation->show();
+        playingAnimation->pause();
+    } else {
+        playingAnimation->hide();
+        playingAnimation->pause();
+    }
 }
 
 void PlayListItem::mouseDoubleClickEvent(QMouseEvent *event)

@@ -28,6 +28,7 @@ signals:
     void playall(PlaylistPtr playlist);
 
 public slots:
+    void onMusicPlayed(PlaylistPtr playlist, const MusicMeta &meta);
     void onPlaylistAdded(PlaylistPtr);
     void onCurrentChanged(PlaylistPtr playlist);
 

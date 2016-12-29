@@ -207,10 +207,6 @@ void MusicListView::onMusicError(PlaylistPtr playlist, const MusicMeta &meta, in
 {
 
     Q_D(MusicListView);
-    qWarning() << "check playlist failed!"
-               << "m_playlist:" << d->m_playlist
-               << "playlist:" << d->m_playlist;
-
     if (playlist != d->m_playlist) {
         qWarning() << "check playlist failed!"
                    << "m_playlist:" << d->m_playlist
@@ -298,12 +294,15 @@ void MusicListView::onMusiclistChanged(PlaylistPtr playlist)
 
     auto playing = playlist->playing();
     QModelIndex index;
+
+    d->m_delegate->setPlayingIndex(index);
     QStandardItem *item = nullptr;
     for (int i = 0; i < d->m_model->rowCount(); ++i) {
         index = d->m_model->index(i, 0);
         item = d->m_model->item(i, 0);
         MusicMeta itemmeta = qvariant_cast<MusicMeta>(item->data());
         if (itemmeta.hash == playing.hash && !playing.hash.isEmpty()) {
+            qDebug() << "xxxxxxxxxxxxxxxx set" << index.isValid() << i << playing.title;
             d->m_delegate->setPlayingIndex(index);
         }
     }

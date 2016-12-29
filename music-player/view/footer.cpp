@@ -115,7 +115,7 @@ void FooterPrivate::initConnection()
         emit q->changeProgress(value, range);
     });
 
-    q->connect(btPlay, &QPushButton::clicked, q, [ = ](bool) {
+    q->connect(btPlay, &QPushButton::released, q, [ = ]() {
         auto status = btPlay->property(sPropertyPlayStatus).toString();
         if (status == sPlayStatusValuePlaying) {
             emit q->pause(m_playinglist, m_playingMeta);
@@ -143,27 +143,30 @@ void FooterPrivate::initConnection()
 //        }
     });
 
-    q->connect(btPrev, &QPushButton::clicked, q, [ = ](bool) {
+    q->connect(btPrev, &QPushButton::released, q, [ = ]() {
         emit q->prev(m_playinglist, m_playingMeta);
     });
-    q->connect(btNext, &QPushButton::clicked, q, [ = ](bool) {
+    q->connect(btNext, &QPushButton::released, q, [ = ]() {
         emit q->next(m_playinglist, m_playingMeta);
     });
 
-    q->connect(btFavorite, &QPushButton::clicked, q, [ = ](bool) {
+    q->connect(btFavorite, &QPushButton::released, q, [ = ]() {
+        qDebug() << "btFavorite---------------------------";
         emit q->toggleFavourite(m_playingMeta);
     });
     q->connect(title, &Label::clicked, q, [ = ](bool) {
         emit q->locateMusic(m_playinglist, m_playingMeta);
     });
-    q->connect(cover, &Label::clicked, btLyric, &QPushButton::clicked);
-    q->connect(btLyric, &QPushButton::clicked, q, [ = ](bool) {
+    q->connect(cover, &Label::clicked, q, [ = ](bool) {
         emit  q->toggleLyricView();
     });
-    q->connect(btPlayList, &QPushButton::clicked, q, [ = ](bool) {
+    q->connect(btLyric, &QPushButton::released, q, [ = ]() {
+        emit  q->toggleLyricView();
+    });
+    q->connect(btPlayList, &QPushButton::released, q, [ = ]() {
         emit q->togglePlaylist();
     });
-    q->connect(btSound, &QPushButton::clicked, q, [ = ](bool) {
+    q->connect(btSound, &QPushButton::released, q, [ = ]() {
         emit q->toggleMute();
     });
     q->connect(volSlider, &SoundVolume::volumeChanged,

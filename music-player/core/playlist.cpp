@@ -128,10 +128,13 @@ int Playlist::length() const
 void Playlist::play(const MusicMeta &meta)
 {
     if (contains(meta)) {
+        listmeta.active = true;
         listmeta.playing = meta;
     } else {
+        listmeta.active = false;
         listmeta.playing = MusicMeta();
     }
+    qDebug() << listmeta.active  << listmeta.playing.title << listmeta.uuid;
 }
 
 int Playlist::sorttype() const

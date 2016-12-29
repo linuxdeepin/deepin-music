@@ -45,6 +45,8 @@ SearchEdit::SearchEdit(QWidget *parent) : DSearchEdit(parent)
             this, &SearchEdit::onTextChanged);
     connect(this, &SearchEdit::returnPressed,
             this, &SearchEdit::onReturnPressed);
+//    connect(this, &SearchEdit::editingFinished,
+//            this, &SearchEdit::onReturnPressed);
 }
 
 void SearchEdit::keyPressEvent(QKeyEvent *event)

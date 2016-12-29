@@ -1,3 +1,8 @@
+#PlayListItem{
+    qproperty-animationPrefix: ":/common/animation/playing/black";
+    qproperty-highlightAnimationPrefix: ":/common/animation/playing/black";
+}
+
 #PlayListIcon {
     image: url(:/image/playlist.png);
 }

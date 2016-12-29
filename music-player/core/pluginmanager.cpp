@@ -40,6 +40,7 @@ QList<PluginInterface *> PluginManager::getPluginListByType(DMusic::Plugin::Plug
 
 void PluginManager::loadPlugins()
 {
+    return;
     auto relativePath = QString("../lib/%1/plugins/").arg(qApp->applicationName());
     auto appDir = QDir(qApp->applicationDirPath());
     auto pluginsDir = QDir(appDir.absoluteFilePath(relativePath));

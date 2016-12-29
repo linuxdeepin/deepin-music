@@ -73,7 +73,7 @@ PlaylistWidget::PlaylistWidget(QWidget *parent) : QFrame(parent)
             return;
         }
         emit this->selectPlaylist(playlistItem->data());
-        DUtil::TimerSingleShot(50, [this]() {
+        DUtil::TimerSingleShot(500, [this]() {
             emit this->hidePlaylist();
         });
     });
@@ -128,6 +128,19 @@ void PlaylistWidget::initData(QList<PlaylistPtr > playlists, PlaylistPtr last)
         m_listview->setCurrentItem(current);
     } else {
         m_listview->setCurrentItem(m_listview->item(0));
+    }
+}
+
+void PlaylistWidget::onMusicPlayed(PlaylistPtr playlist, const MusicMeta &meta)
+{
+    for (int i = 0; i < m_listview->count(); ++i) {
+        QListWidgetItem *item = m_listview->item(i);
+        auto playlistItem = qobject_cast<PlayListItem *>(m_listview->itemWidget(item));
+        if (playlistItem->data()->id() == playlist->id()) {
+            playlistItem->setPlay(true);
+        } else {
+            playlistItem->setPlay(false);
+        }
     }
 }
 

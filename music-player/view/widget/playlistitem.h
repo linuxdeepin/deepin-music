@@ -13,17 +13,33 @@
 #include <QFrame>
 
 #include "../../core/playlist.h"
+#include <dpicturesequenceview.h>
 
 class QLineEdit;
 class PlayListItem : public QFrame
 {
     Q_OBJECT
+    Q_PROPERTY(QString animationPrefix READ animationPrefix WRITE setAnimationPrefix)
+    Q_PROPERTY(QString highlightAnimationPrefix READ highlightAnimationPrefix WRITE setHighlightAnimationPrefix)
 public:
     explicit PlayListItem(PlaylistPtr playlist, QWidget *parent = 0);
     inline PlaylistPtr data() {return m_data;}
 
     void setActive(bool active);
+    void setPlay(bool isPaly);
+
     void mouseDoubleClickEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+
+    QString animationPrefix() const
+    {
+        return m_animationPrefix;
+    }
+
+    QString highlightAnimationPrefix() const
+    {
+        return m_highlightAnimationPrefix;
+    }
+
 signals:
     void rename(const QString &newNameA);
     void remove();
@@ -32,9 +48,22 @@ signals:
 public slots:
     void showContextMenu(const QPoint &pos);
 
+    void setAnimationPrefix(QString animationPrefix)
+    {
+        m_animationPrefix = animationPrefix;
+    }
+
+    void setHighlightAnimationPrefix(QString highlightAnimationPrefix)
+    {
+        m_highlightAnimationPrefix = highlightAnimationPrefix;
+    }
+
 private:
+    Dtk::Widget::DPictureSequenceView  *playingAnimation;
     QLineEdit      *m_titleedit = nullptr;
     PlaylistPtr    m_data;
+    QString m_animationPrefix;
+    QString m_highlightAnimationPrefix;
 };
 
 #endif // PLAYLISTITEM_H
