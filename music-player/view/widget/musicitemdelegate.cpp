@@ -174,11 +174,11 @@ static inline QRect colRect(int col, const QStyleOptionViewItem &option)
     case MusicItemDelegate::Number:
         return QRect(0, option.rect.y(), 40, option.rect.height());
     case MusicItemDelegate::Title:
-        return QRect(40, option.rect.y(), w / 2, option.rect.height());
+        return QRect(40, option.rect.y(), w / 2 -20, option.rect.height());
     case MusicItemDelegate::Artist:
-        return QRect(40 + w / 2, option.rect.y(), w / 4, option.rect.height());
+        return QRect(40 + w / 2, option.rect.y(), w / 4 -20, option.rect.height());
     case MusicItemDelegate::Album:
-        return QRect(40 + w / 2 + w / 4, option.rect.y(), w / 4, option.rect.height());
+        return QRect(40 + w / 2 + w / 4, option.rect.y(), w / 4 -20, option.rect.height());
     case MusicItemDelegate::Length:
         return QRect(40 + w, option.rect.y(), tailwidth - 20, option.rect.height());
     case MusicItemDelegate::ColumnButt:

@@ -11,6 +11,7 @@
 
 #include <QDebug>
 
+#include <QTimer>
 #include <QEvent>
 #include <QApplication>
 #include <QCursor>
@@ -41,15 +42,55 @@ class HintFilterPrivate
 public:
     HintFilterPrivate(HintFilter *parent) : q_ptr(parent) {}
 
+    void showHint();
+
+    QTimer  *delayShowTimer = nullptr;
+
+    QWidget *parentWidget = nullptr;
     QWidget *hintWidget = nullptr;
 
     HintFilter *q_ptr;
-    Q_DECLARE_PUBLIC(HintFilter);
+    Q_DECLARE_PUBLIC(HintFilter)
 };
+
+
+void HintFilterPrivate::showHint()
+{
+    if (!parentWidget) {
+        return;
+    }
+
+    auto w = parentWidget;
+    if (hintWidget) {
+        hintWidget->hide();
+    }
+    hintWidget = w->property("HintWidget").value<QWidget *>();
+    if (!hintWidget) {
+        return;
+    }
+
+    hintWidget->show();
+    hintWidget->raise();
+
+    auto centerPos = w->mapToGlobal(w->rect().center());
+    auto sz = hintWidget->size();
+    centerPos.setX(centerPos.x()  - sz.width() / 2);
+    centerPos.setY(centerPos.y() - 32 - sz.height());
+    centerPos = hintWidget->mapFromGlobal(centerPos);
+    centerPos = hintWidget->mapToParent(centerPos);
+    hintWidget->move(centerPos);
+}
+
 
 HintFilter::HintFilter(QObject *parent)  : QObject(parent), d_ptr(new HintFilterPrivate(this))
 {
     Q_D(HintFilter);
+    d->delayShowTimer = new QTimer;
+    d->delayShowTimer->setInterval(2000);
+    connect(d->delayShowTimer, &QTimer::timeout, this, [ = ]() {
+        d->showHint();
+        d->delayShowTimer->stop();
+    });
 }
 
 HintFilter::~HintFilter()
@@ -62,45 +103,51 @@ bool HintFilter::eventFilter(QObject *obj, QEvent *event)
     Q_D(HintFilter);
     switch (event->type()) {
     case QEvent::Enter: {
-        auto w = qobject_cast<QWidget *>(obj);
-        if (!w) {
-            return true;
-        }
         if (d->hintWidget) {
             d->hintWidget->hide();
         }
-        d->hintWidget = w->property("HintWidget").value<QWidget *>();
-        if (!d->hintWidget) {
-            return true;
+
+        auto w = qobject_cast<QWidget *>(obj);
+        d->parentWidget = w;
+        if (!w) {
+            break;
         }
 
-        d->hintWidget->show();
-        d->hintWidget->raise();
+        d->hintWidget = w->property("HintWidget").value<QWidget *>();
+        if (!d->hintWidget) {
+            break;
+        }
 
-        auto centerPos = w->mapToGlobal(w->rect().center());
-        auto sz = d->hintWidget->size();
-        centerPos.setX(centerPos.x()  - sz.width() / 2);
-        centerPos.setY(centerPos.y() - 32 - sz.height());
-        centerPos = d->hintWidget->mapFromGlobal(centerPos);
-        centerPos = d->hintWidget->mapToParent(centerPos);
-        d->hintWidget->move(centerPos);
+        d->delayShowTimer->stop();
+
+        bool nodelayshow = d->hintWidget->property("NoDelayShow").toBool();
+        if (nodelayshow) {
+            d->showHint();
+        } else {
+            d->delayShowTimer->start();
+        }
 
         QApplication::setOverrideCursor(QCursor(Qt::PointingHandCursor));
-        return true;
+        break;
     }
     case QEvent::Leave:
-        qDebug() << obj << d->hintWidget << d->hintWidget->property("KeepShow");
-
         if (d->hintWidget) {
             if (!d->hintWidget->property("DelayHide").toBool()) {
                 d->hintWidget->hide();
+                d->delayShowTimer->stop();
             } else {
                 QMetaObject::invokeMethod(d->hintWidget, "deleyHide", Qt::DirectConnection);
             }
         }
         QApplication::restoreOverrideCursor();
-        return true;
+        break;
+    case QEvent::MouseButtonPress:
+        if (d->hintWidget) {
+            d->hintWidget->hide();
+            d->delayShowTimer->stop();
+        }
     default:
-        return QObject::eventFilter(obj, event);
+        break;
     }
+    return QObject::eventFilter(obj, event);
 }

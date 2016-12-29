@@ -370,7 +370,9 @@ void MainWindow::setDefaultBackground()
 void MainWindow::mousePressEvent(QMouseEvent *event)
 {
     ThinWindow::mousePressEvent(event);
-    setPlaylistVisible(false);
+    DUtil::TimerSingleShot(50, [this]() {
+        setPlaylistVisible(false);
+    });
 }
 
 void MainWindow::resizeEvent(QResizeEvent *e)
@@ -596,12 +598,12 @@ void MainWindow::setPlaylistVisible(bool visible)
               d->playlist->width(), d->playlist->height());
     if (!visible) {
         WidgetHelper::slideEdgeWidget(d->playlist, end, start, s_AnimationDelay, true);
-        this->setFocus();
+//        d->footer->setFocus();
     } else {
         WidgetHelper::slideEdgeWidget(d->playlist, start, end, s_AnimationDelay);
         d->playlist->setFocus();
+        d->playlist->raise();
     }
-    d->playlist->raise();
     this->disableControl();
     d->title->raise();
     d->footer->raise();

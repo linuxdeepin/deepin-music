@@ -4,9 +4,16 @@
     background-color: rgba(255, 255, 255, 0.9);
 }
 
+#PlaylistWidgetAddFrame{
+    border-radius: 5px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.02);
+}
 #PlaylistWidgetAdd{
     border-radius: 4px;
-    background-color:  qlineargradient( x1:0 y1:0, x2:0 y2:1, stop:0 #ffffff, stop:1 #fdfdfd);
+    background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1,
+        stop:0        rgba(255,255,255,0.6),  stop:0.05556 rgba(255,255,255,0.6),
+        stop:0.05600  rgba(255,255,255,1),    stop:1       rgba(253,253,253,1)
+    );
     border: 1px solid rgba(0, 0, 0, 0.08);
 }
 #PlaylistWidgetAdd:hover{

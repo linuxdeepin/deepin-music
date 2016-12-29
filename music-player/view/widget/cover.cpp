@@ -13,19 +13,22 @@
 #include <QPainter>
 #include <QGraphicsDropShadowEffect>
 
+static auto borderPenWidth = 1.0;
+
 class CoverPrivate
 {
 public:
     CoverPrivate(Cover *parent): q_ptr(parent) {}
 
-    int     m_radius;
+    int     m_radius        = 4;
     QColor  m_borderColor;
     QColor  m_shadowColor;
-    QString m_backgroundUrl;
     QPixmap m_Background;
 
+    QMarginsF outterMargins = QMarginsF(borderPenWidth, borderPenWidth, borderPenWidth, borderPenWidth);
+
     Cover *q_ptr;
-    Q_DECLARE_PUBLIC(Cover);
+    Q_DECLARE_PUBLIC(Cover)
 };
 
 Cover::Cover(QWidget *parent)
@@ -35,18 +38,18 @@ Cover::Cover(QWidget *parent)
 
     QWidget::setAttribute(Qt::WA_TranslucentBackground, true);
     d->m_radius = 4;
-    d->m_borderColor = QColor(0, 0, 0, 52);
-    d->m_shadowColor = QColor(0, 0, 0, 26);
+    d->m_borderColor = QColor(255, 0, 0, 152);
+    d->m_shadowColor = QColor(0, 255, 0, 126);
 
-    QGraphicsDropShadowEffect *bodyShadow = new QGraphicsDropShadowEffect;
-    bodyShadow->setBlurRadius(4.0);
-    bodyShadow->setColor(d->m_shadowColor);
-    bodyShadow->setOffset(2.0, 4.0);
-    this->setGraphicsEffect(bodyShadow);
+//    QGraphicsDropShadowEffect *bodyShadow = new QGraphicsDropShadowEffect;
+//    bodyShadow->setBlurRadius(4.0);
+//    bodyShadow->setColor(d->m_shadowColor);
+//    bodyShadow->setOffset(2.0, 4.0);
+//    this->setGraphicsEffect(bodyShadow);
 
-    connect(this, &Cover::shadowColorChanged, this, [ = ](QColor shadowColor) {
-        bodyShadow->setColor(shadowColor);
-    });
+//    connect(this, &Cover::shadowColorChanged, this, [ = ](QColor shadowColor) {
+//        bodyShadow->setColor(shadowColor);
+//    });
 }
 
 Cover::~Cover()
@@ -75,55 +78,83 @@ QColor Cover::shadowColor() const
 void Cover::paintEvent(QPaintEvent *e)
 {
     Q_D(const Cover);
-    auto radius = d->m_radius;
 
     QPainter painter(this);
-    painter.setRenderHint(QPainter::Antialiasing);
-    painter.setRenderHint(QPainter::HighQualityAntialiasing);
+    painter.setRenderHints(QPainter::Antialiasing | QPainter::HighQualityAntialiasing);
+    auto radius = d->m_radius;
+    auto innerBorderColor = d->m_borderColor;
+    auto outerBorderColor = d->m_shadowColor;
+    auto backgroundColor = QColor(255, 255, 255, 1.0 * 255);
+    auto penWidthf = borderPenWidth;
 
-    QRect windowRect = QWidget::rect();
+    // draw background
+    auto backgroundRect = QRectF(rect()).marginsRemoved(d->outterMargins);
+    if (d->m_Background.isNull()) {
+        QPainterPath backgroundPath;
+        backgroundPath.addRoundedRect(backgroundRect, radius, radius);
+        painter.fillPath(backgroundPath, backgroundColor);
+    } else {
+        painter.drawPixmap(backgroundRect.toRect(), d->m_Background);
+    }
 
-    painter.drawPixmap(0, 0, d->m_Background);
+    // draw border
+    QPainterPath innerBorderPath;
+    QRectF borderRect = QRectF(rect()).marginsRemoved(d->outterMargins);
+    auto borderRadius = radius;
+    QMarginsF borderMargin(penWidthf / 2, penWidthf / 2, penWidthf / 2, penWidthf / 2);
+    borderRadius -= penWidthf / 2;
+    borderRect = borderRect.marginsRemoved(borderMargin);
+    qDebug() << borderRect ;
+    innerBorderPath.addRoundedRect(borderRect, borderRadius, borderRadius);
+    QPen innerBorderPen(innerBorderColor);
+    innerBorderPen.setWidthF(penWidthf);
+    painter.strokePath(innerBorderPath, innerBorderPen);
 
-    QPainterPath border;
-    border.addRoundedRect(windowRect, radius, radius);
+    QPainterPath outerBorderPath;
+    borderRect = QRectF(rect()).marginsRemoved(d->outterMargins);
+    qDebug() << borderRect << d->outterMargins << borderMargin;
+    borderRadius = radius;
+    borderRadius += penWidthf / 2;
+    borderRect = borderRect.marginsAdded(borderMargin);
 
-    QPen borderPen(d->m_borderColor, 1);
-    painter.strokePath(border, borderPen);
-
-    QWidget::paintEvent(e);
+    qDebug() << borderRect ;
+    outerBorderPath.addRoundedRect(borderRect, borderRadius, borderRadius);
+    QPen outerBorderPen(outerBorderColor);
+    outerBorderPen.setWidthF(penWidthf);
+    painter.strokePath(outerBorderPath, outerBorderPen);
 }
 
 void Cover::setCoverPixmap(const QPixmap &pixmap)
 {
     Q_D(Cover);
     int radius = d->m_radius;
-    QSize sz = size();
-    QPainter::CompositionMode mode = QPainter::CompositionMode_SourceIn;
 
-    QPixmap destinationImage(sz);
-    destinationImage.fill(Qt::transparent);
+    auto coverRect = QRectF(rect()).marginsRemoved(d->outterMargins);
+    auto sz = coverRect.size().toSize();
+    QPixmap backgroundPixmap = pixmap.scaled(sz, Qt::KeepAspectRatioByExpanding);
+
+    QPixmap maskPixmap(sz);
+    maskPixmap.fill(Qt::transparent);
     QPainterPath path;
-    path.addRoundRect(QRectF(0, 0, sz.width(), sz.height()), radius);
-    QPainter bkPainter(&destinationImage);
-    bkPainter.setRenderHint(QPainter::Antialiasing);
-    bkPainter.setPen(QPen(Qt::white, 1));
+    path.addRoundedRect(QRectF(0, 0, sz.width(), sz.height()), double(radius), double(radius));
+    QPainter bkPainter(&maskPixmap);
+    bkPainter.setRenderHints(QPainter::Antialiasing | QPainter::HighQualityAntialiasing);
     bkPainter.fillPath(path, QBrush(Qt::red));
 
-    QPixmap backgroundImage = pixmap.scaled(sz, Qt::KeepAspectRatioByExpanding);
-
+    QPainter::CompositionMode mode = QPainter::CompositionMode_SourceIn;
     QImage resultImage = QImage(sz, QImage::Format_ARGB32_Premultiplied);
     QPainter painter(&resultImage);
     painter.setCompositionMode(QPainter::CompositionMode_Source);
     painter.fillRect(resultImage.rect(), Qt::transparent);
     painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
-    painter.drawImage(0, 0, destinationImage.toImage());
+    painter.drawImage(0, 0, maskPixmap.toImage());
     painter.setCompositionMode(mode);
-    painter.drawImage(0, 0, backgroundImage.toImage());
+    painter.drawImage(0, 0, backgroundPixmap.toImage());
     painter.setCompositionMode(QPainter::CompositionMode_DestinationOver);
     painter.end();
 
     d->m_Background = QPixmap::fromImage(resultImage);
+
 }
 
 void Cover::setRadius(int radius)

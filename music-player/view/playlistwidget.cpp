@@ -34,6 +34,11 @@ PlaylistWidget::PlaylistWidget(QWidget *parent) : QFrame(parent)
 
     m_listview = new PlayListView;
 
+    auto btAddFrame = new QFrame;
+    btAddFrame->setObjectName("PlaylistWidgetAddFrame");
+    auto btAddFameLayout = new QVBoxLayout(btAddFrame);
+    btAddFameLayout->setMargin(0);
+
     auto btAdd = new QPushButton();
     btAdd->setFixedSize(190, 36);
     btAdd->setObjectName("PlaylistWidgetAdd");
@@ -50,7 +55,8 @@ PlaylistWidget::PlaylistWidget(QWidget *parent) : QFrame(parent)
     m_listview->setSizePolicy(sp);
 
     layout->addWidget(m_listview, 0, Qt::AlignHCenter);
-    layout->addWidget(btAdd, 0, Qt::AlignBottom | Qt::AlignHCenter);
+    btAddFameLayout->addWidget(btAdd, 0, Qt::AlignBottom | Qt::AlignHCenter);
+    layout->addWidget(btAddFrame, 0, Qt::AlignHCenter);
 
     D_THEME_INIT_WIDGET(PlaylistWidget);
 

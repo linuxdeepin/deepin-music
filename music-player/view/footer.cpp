@@ -260,6 +260,7 @@ Footer::Footer(QWidget *parent) :
     d->installTipHint(d->btPlayList, tr("Playlist"));
     d->volSlider = new SoundVolume(this);
     d->volSlider->setProperty("DelayHide", true);
+    d->volSlider->setProperty("NoDelayShow", true);
     d->installHint(d->btSound, d->volSlider);
 
     auto infoWidget = new QWidget;

@@ -5,7 +5,7 @@
 
 #LyricCover{
     qproperty-radius: 4;
-    qproperty-borderColor: rgba(0,0,0,20%);
+    qproperty-borderColor: rgba(255,255,255,20%);
     qproperty-shadowColor: rgba(0,0,0,10%);
 }
 #LyricBack{

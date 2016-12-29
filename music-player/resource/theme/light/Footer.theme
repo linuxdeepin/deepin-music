@@ -37,8 +37,8 @@
 
 #FooterCover {
     qproperty-radius: 0;
-    qproperty-borderColor: rgba(0,0,0,20%);
-    qproperty-shadowColor: rgba(0,0,0,10%);
+    qproperty-borderColor: rgba(0,0,0,0%);
+    qproperty-shadowColor: rgba(0,0,0,0%);
 }
 
 #FooterTitle{
