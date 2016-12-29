@@ -16,6 +16,14 @@
 }
 
 #PlayListTitle {
+    color: #000000;
+    background: transparent;
+    border: none;
+    qproperty-alignment: AlignLeft;
+    font-size: 12px;
+}
+
+#PlayListTitle[status="active"] {
     color: #009aff;
     background: transparent;
     border: none;
@@ -25,6 +33,6 @@
 
 #PlayListTitle:focus {
     background-color: white;
-    border-radius: 3px;
-    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 4.0px;
+    border: 1px outset rgba(0, 0, 0, 0.08);
 }

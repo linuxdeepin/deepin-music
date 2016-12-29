@@ -57,10 +57,8 @@ public:
 
 
     LyricView *q_ptr;
-    Q_DECLARE_PUBLIC(LyricView);
+    Q_DECLARE_PUBLIC(LyricView)
 };
-
-
 
 void LyricViewPrivate::initConnection()
 {
@@ -73,7 +71,8 @@ void LyricViewPrivate::adjustLyric()
 {
     Q_Q(LyricView);
     auto itemHeight = lyricLineHeight;
-    auto maxHeight = q->height() * 9 / 10;
+    auto contentHeight = q->rect().marginsRemoved(q->contentsMargins()).height();
+    auto maxHeight = contentHeight * 92 / 100;
     if (m_model->rowCount() * itemHeight < maxHeight) {
         m_lyric->setFixedHeight(m_model->rowCount() * itemHeight);
     } else {
@@ -139,7 +138,7 @@ LyricView::LyricView(QWidget *parent)
 
     setObjectName("LyricView");
     auto layout = new QHBoxLayout(this);
-    layout->setContentsMargins(20, 20, 20, 20);
+    layout->setContentsMargins(20, 20, 20, 80);
 
     d->m_cover = new Cover;
     d->m_cover->setFixedSize(200, 200);
@@ -172,7 +171,7 @@ LyricView::LyricView(QWidget *parent)
     d->m_cover->setSizePolicy(spCover);
     layout->addWidget(d->m_cover, 0, Qt::AlignCenter);
 
-    QSizePolicy spText(QSizePolicy::Preferred, QSizePolicy::Expanding);
+    QSizePolicy spText(QSizePolicy::Preferred, QSizePolicy::Preferred);
     spText.setHorizontalStretch(20);
     spText.setVerticalStretch(100);
     d->m_lyric->setSizePolicy(spText);
@@ -185,7 +184,7 @@ LyricView::LyricView(QWidget *parent)
 
     layout->addWidget(d->m_hideLyric, 0, Qt::AlignRight | Qt::AlignTop);
 
-    D_THEME_INIT_WIDGET(LyricView);
+    D_THEME_INIT_WIDGET(LyricView)
 
     d->initConnection();
 }

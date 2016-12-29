@@ -9,6 +9,7 @@
 
 #include "tip.h"
 
+#include <QDebug>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QPainter>
@@ -25,10 +26,17 @@ Tip::Tip(const QPixmap &icon, const QString &text, QWidget *parent) : QFrame(par
     setWindowFlags(Qt::Tool | Qt::FramelessWindowHint);
     setAttribute(Qt::WA_TranslucentBackground);
     setObjectName("Tip");
+    setContentsMargins(0, 0, 0, 0);
 
     auto layout = new QHBoxLayout(this);
-    layout->setContentsMargins(10, 0, 10, 0);
-    layout->setSpacing(5);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
+
+    m_interFrame = new QFrame();
+    m_interFrame->setContentsMargins(0, 0, 0, 0);
+    auto interlayout = new QHBoxLayout(m_interFrame);
+    interlayout->setContentsMargins(10, 0, 10, 0);
+    interlayout->setSpacing(5);
     auto iconLabel = new QLabel;
     iconLabel->setObjectName("TipIcon");
     iconLabel->setFixedSize(icon.size());
@@ -41,17 +49,17 @@ Tip::Tip(const QPixmap &icon, const QString &text, QWidget *parent) : QFrame(par
     auto textLable = new QLabel(text);
     textLable->setObjectName("TipText");
 
-    layout->addWidget(iconLabel);
-    layout->addWidget(textLable);
-
+    interlayout->addWidget(iconLabel, 0, Qt::AlignVCenter);
+    interlayout->addWidget(textLable, 0, Qt::AlignVCenter);
+    layout->addWidget(m_interFrame, 0, Qt::AlignVCenter);
     D_THEME_INIT_WIDGET(Widget/Tip);
 
     adjustSize();
 
     auto *bodyShadow = new QGraphicsDropShadowEffect;
-    bodyShadow->setBlurRadius(4.0);
-    bodyShadow->setColor(QColor(0, 0, 0, 12));
-    bodyShadow->setOffset(2.0, 4.0);
+    bodyShadow->setBlurRadius(10.0);
+    bodyShadow->setColor(QColor(0, 0, 0, 0.1 * 255));
+    bodyShadow->setOffset(0, 2.0);
     this->setGraphicsEffect(bodyShadow);
     hide();
 
@@ -64,9 +72,9 @@ void Tip::pop(QPoint center)
     center = center - QPoint(width() / 2, height() / 2);
     this->move(center);
 
-    auto topOpacity = new QGraphicsOpacityEffect(this);
+    auto topOpacity = new QGraphicsOpacityEffect(m_interFrame);
     topOpacity->setOpacity(1);
-    this->setGraphicsEffect(topOpacity);
+    m_interFrame->setGraphicsEffect(topOpacity);
 
     QPropertyAnimation *animation4 = new QPropertyAnimation(topOpacity, "opacity");
 //    animation4->setEasingCurve(QEasingCurve::InCubic);
@@ -81,23 +89,25 @@ void Tip::pop(QPoint center)
                         animation4, &QPropertyAnimation::deleteLater);
     animation4->connect(animation4, &QPropertyAnimation::finished,
     this, [ = ]() {
-        this->setGraphicsEffect(nullptr);
+        m_interFrame->setGraphicsEffect(nullptr);
         this->hide();
     });
 }
 
 void Tip::paintEvent(QPaintEvent *e)
 {
+//    QFrame::paintEvent(e);
+//    return;
     bool outer = true;
 
     QPainter painter(this);
     painter.setRenderHints(QPainter::Antialiasing | QPainter::HighQualityAntialiasing);
     auto radius = 4.0;
     auto penWidthf = 1.0;
-    auto background = QBrush(Qt::white);
-    auto borderColor = QColor(0,0,0,26);
-    auto margin = 4.0;
-    auto shadowMargins = QMarginsF(margin,margin,margin,margin);
+    auto background =  QColor(255, 255, 255, 1 * 255);
+    auto borderColor = QColor(0, 0, 0, 0.05 * 255);
+    auto margin = 2.0;
+    auto shadowMargins = QMarginsF(margin, margin, margin, margin);
 
 //    QPainterPath frame;
 //    frame.addRect(rect().marginsRemoved(QMargins(1, 1, 1, 1)));
@@ -105,6 +115,7 @@ void Tip::paintEvent(QPaintEvent *e)
 
     // draw background
     auto backgroundRect = QRectF(rect()).marginsRemoved(shadowMargins);
+    qDebug() << backgroundRect << rect() << size() << geometry() << m_interFrame->size();
     QPainterPath backgroundPath;
     backgroundPath.addRoundedRect(backgroundRect, radius, radius);
     painter.fillPath(backgroundPath, background);

@@ -11,6 +11,7 @@
 
 #include <QTimer>
 #include <QLabel>
+#include <QStyle>
 #include <QLineEdit>
 #include <QMouseEvent>
 #include <QHBoxLayout>
@@ -49,7 +50,7 @@ PlayListItem::PlayListItem(PlaylistPtr playlist, QWidget *parent) : QFrame(paren
 
     m_titleedit = new QLineEdit;
     m_titleedit->setObjectName("PlayListTitle");
-    m_titleedit->setFixedHeight(20);
+    m_titleedit->setFixedHeight(24);
     m_titleedit->setMinimumWidth(140);
     m_titleedit->setText(playlist->displayName());
     m_titleedit->setProperty("HistoryValue", m_titleedit->text());
@@ -112,6 +113,18 @@ PlayListItem::PlayListItem(PlaylistPtr playlist, QWidget *parent) : QFrame(paren
             m_data.data(), &Playlist::setDisplayName);
     connect(this, &PlayListItem::remove,
             m_data.data(), &Playlist::removed);
+}
+
+void PlayListItem::setActive(bool active)
+{
+    if (active) {
+        m_titleedit->setProperty("status", "active");
+    } else {
+        m_titleedit->setProperty("status", "");
+    }
+    this->style()->unpolish(m_titleedit);
+    this->style()->polish(m_titleedit);
+    this->repaint();
 }
 
 void PlayListItem::mouseDoubleClickEvent(QMouseEvent *event)

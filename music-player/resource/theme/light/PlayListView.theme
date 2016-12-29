@@ -9,6 +9,7 @@
 }
 
 #PlayListView::item{
+    color: #009aff;
     height: 56;
 }
 #PlayListView::item:focus {

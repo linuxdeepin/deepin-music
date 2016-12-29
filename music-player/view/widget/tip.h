@@ -21,4 +21,6 @@ public:
 
     void pop(QPoint center);
     virtual void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
+
+   QFrame *m_interFrame = nullptr;
 };

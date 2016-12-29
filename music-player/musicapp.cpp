@@ -108,7 +108,7 @@ void MusicApp::onDataPrepared()
     d->playerFrame->show();
     DUtility::moveToCenter(d->playerFrame);
 
-    d->playerFrame->resize(QSize(1040, 650));
+    d->playerFrame->resize(QSize(1070, 680));
     d->playerFrame->setDefaultBackground();
 }
 

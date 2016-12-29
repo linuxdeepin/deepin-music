@@ -131,7 +131,7 @@ CueParser::CueParser(const QString &filepath)
         // TODO: hack track must < 1000
         meta.timestamp = fileMetaCache.value(meta.localPath).timestamp + meta.track;
         meta.filetype = fileMetaCache.value(meta.localPath).filetype;
-        meta.filesize = fileMetaCache.value(meta.localPath).filesize;
+        meta.size = fileMetaCache.value(meta.localPath).size;
 
         MusicMetaName::pinyinIndex(meta);
 

@@ -38,7 +38,7 @@ public:
     qint64  timestamp;
     qint64  length      = 1;//msec
     qint64  track;
-    qint64  filesize        = 1;
+    qint64  size        = 1;
 
     QString editor;
     QString composer;
@@ -54,7 +54,7 @@ public:
         timestamp = 0;
         length = 0;
         offset = 0;
-        filesize = 0;
+        size = 0;
         track = 0;
         favourite = false;
     }

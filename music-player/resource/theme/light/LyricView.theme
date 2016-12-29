@@ -1,5 +1,5 @@
 #LyricView {
-    border-radius: 4px;
+    border-radius: 3px;
     background-color: rgba(0,0,0,30%);
 }
 
@@ -16,4 +16,7 @@
 }
 #LyricBack:pressed{
     border-image: url(:/image/show_lyc_press.png);
+}
+#LyricTextView{
+border: 2px solid red;
 }

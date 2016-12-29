@@ -13,6 +13,7 @@
 #include <QVBoxLayout>
 #include <QPushButton>
 #include <QFocusEvent>
+#include <QGraphicsDropShadowEffect>
 
 #include <DUtil>
 #include <dthememanager.h>
@@ -37,6 +38,12 @@ PlaylistWidget::PlaylistWidget(QWidget *parent) : QFrame(parent)
     btAdd->setFixedSize(190, 36);
     btAdd->setObjectName("PlaylistWidgetAdd");
     btAdd->setText(tr("+ Add Playlist"));
+
+//    auto *bodyShadow = new QGraphicsDropShadowEffect;
+//    bodyShadow->setBlurRadius(4.0);
+//    bodyShadow->setColor(QColor(255, 0, 0, 112));
+//    bodyShadow->setOffset(2.0, 4.0);
+//    btAdd->setGraphicsEffect(bodyShadow);
 
     QSizePolicy sp(QSizePolicy::Preferred, QSizePolicy::Preferred);
     sp.setVerticalStretch(100);
@@ -63,6 +70,17 @@ PlaylistWidget::PlaylistWidget(QWidget *parent) : QFrame(parent)
         DUtil::TimerSingleShot(50, [this]() {
             emit this->hidePlaylist();
         });
+    });
+    connect(m_listview, &PlayListView::currentItemChanged,
+    this, [ = ](QListWidgetItem * current, QListWidgetItem * previous) {
+        auto itemWidget = qobject_cast<PlayListItem *>(m_listview->itemWidget(previous));
+        if (itemWidget) {
+            itemWidget->setActive(false);
+        }
+        itemWidget = qobject_cast<PlayListItem *>(m_listview->itemWidget(current));
+        if (itemWidget) {
+            itemWidget->setActive(true);
+        }
     });
 }
 
@@ -109,10 +127,9 @@ void PlaylistWidget::initData(QList<PlaylistPtr > playlists, PlaylistPtr last)
 
 void PlaylistWidget::focusOutEvent(QFocusEvent *event)
 {
-    qDebug() << event;
-
     // TODO: monitor mouse position
     QPoint mousePos = mapToParent(mapFromGlobal(QCursor::pos()));
+//    qDebug() << mapFromGlobal(QCursor::pos()) << mousePos;
     if (!this->geometry().contains(mousePos)) {
         if (event && event->reason() == Qt::MouseFocusReason) {
             DUtil::TimerSingleShot(50, [this]() {
@@ -151,6 +168,7 @@ void PlaylistWidget::onCurrentChanged(PlaylistPtr playlist)
         auto playlistItem = qobject_cast<PlayListItem *>(m_listview->itemWidget(item));
         if (playlistItem->data()->id() == playlist->id()) {
             m_listview->setCurrentItem(item);
+            playlistItem->setActive(true);
         }
     }
 }

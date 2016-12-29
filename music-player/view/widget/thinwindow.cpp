@@ -288,7 +288,7 @@ void ThinWindow::paintEvent(QPaintEvent *)
     QPainter painter(this);
     painter.setRenderHints(QPainter::Antialiasing | QPainter::HighQualityAntialiasing);
     auto radius = d->radius;
-    auto penWidthf = 1;
+    auto penWidthf = 1.0;
 
 //    QPainterPath frame;
 //    frame.addRect(rect().marginsRemoved(QMargins(1, 1, 1, 1)));

@@ -398,6 +398,10 @@ void MainWindow::resizeEvent(QResizeEvent *e)
     if (d->tips) {
         d->tips->hide();
     }
+//    d->lyricView->hide();
+//    d->musicList->hide();
+//    d->import->hide();
+//    d->title->hide();
 }
 
 void MainWindow::paintEvent(QPaintEvent *e)
@@ -532,6 +536,8 @@ void MainWindow::showLyricView()
     this->disableControl();
     setPlaylistVisible(false);
     d->currentWidget = d->lyricView;
+    d->title->raise();
+    d->footer->raise();
 }
 
 void MainWindow::showMusicListView()
@@ -556,6 +562,8 @@ void MainWindow::showImportView()
         current, d->import, s_AnimationDelay);
     d->footer->enableControl(false);
     d->currentWidget = d->import;
+    d->title->raise();
+    d->footer->raise();
 }
 
 void MainWindow::showTips(QPixmap icon, QString text)
@@ -620,6 +628,8 @@ void MainWindow::changeToMusicListView(bool keepPlaylist)
     this->disableControl();
     d->currentWidget = d->musicList;
     setPlaylistVisible(keepPlaylist);
+    d->title->raise();
+    d->footer->raise();
 }
 
 void MainWindow::initMenu()

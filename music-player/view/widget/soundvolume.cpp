@@ -12,6 +12,7 @@
 #include <QDebug>
 #include <QPainter>
 #include <QWheelEvent>
+#include <QGraphicsDropShadowEffect>
 #include <QVBoxLayout>
 
 #include <DUtil>
@@ -51,6 +52,12 @@ SoundVolume::SoundVolume(QWidget *parent) : QWidget(parent), d_ptr(new SoundVolu
     layout->addWidget(d->volSlider, 0, Qt::AlignCenter);
     layout->addStretch();
     setFixedSize(24, 106);
+
+    auto *bodyShadow = new QGraphicsDropShadowEffect;
+    bodyShadow->setBlurRadius(10.0);
+    bodyShadow->setColor(QColor(0, 0, 0, 0.1 * 255));
+    bodyShadow->setOffset(0, 2.0);
+    this->setGraphicsEffect(bodyShadow);
 
     connect(d->volSlider, &QSlider::valueChanged,
             this, &SoundVolume::volumeChanged);

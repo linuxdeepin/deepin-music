@@ -196,9 +196,9 @@ void MusicItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
     painter->save();
 
     QFont font11 = option.font;
-    font11.setPointSize(11);
+    font11.setPixelSize(11);
     QFont font12 = option.font;
-    font12.setPointSize(12);
+    font12.setPixelSize(12);
 
     painter->setRenderHint(QPainter::Antialiasing);
     painter->setRenderHint(QPainter::HighQualityAntialiasing);

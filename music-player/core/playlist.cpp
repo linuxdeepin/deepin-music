@@ -182,7 +182,7 @@ void Playlist::load()
         musicIDs << QString("\"%1\"").arg(musicID);
     }
     auto sqlStr = QString("SELECT hash, localpath, title, artist, album, "
-                          "filetype, track, offset, length, filesize, "
+                          "filetype, track, offset, length, size, "
                           "timestamp, cuepath, invalid "
                           "FROM music WHERE hash IN (%1)").arg(musicIDs.join(","));
     if (!query.exec(sqlStr)) {
@@ -201,7 +201,7 @@ void Playlist::load()
         info.track = query.value(6).toInt();
         info.offset = query.value(7).toInt();
         info.length = query.value(8).toInt();
-        info.filesize = query.value(9).toInt();
+        info.size = query.value(9).toInt();
         info.timestamp = query.value(10).toInt();
         info.cuePath = query.value(11).toString();
         info.invalid = query.value(12).toBool();

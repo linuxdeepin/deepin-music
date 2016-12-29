@@ -1,8 +1,8 @@
 #Footer {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
-    border-bottom-right-radius: 4px;
-    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
     background-color: rgba(0, 0, 0, 0.6);
 }
 
@@ -18,20 +18,20 @@
 #FooterProgress::add-page:horizontal {
     background: transparent;
     background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1,
-                                      stop:0     transparent,               stop:0.1 transparent,
-                                      stop:0.11  rgba(255, 255, 255, 0.15), stop:0.2 rgba(255, 255, 255, 0.15),
-                                      stop:0.21  rgba(0, 0, 0, 0.0),    stop:0.3 rgba(0, 0, 0, 0.0),
-                                      stop:0.31  rgba(0, 0, 0, 0.0),    stop:1 rgba(0, 0, 0, 0.0)
-                                      );
+        stop:0        transparent,                  stop:0.08333 transparent,
+        stop:0.08400  rgba(255, 255, 255, 0.15),    stop:0.16666 rgba(255, 255, 255, 0.15),
+        stop:0.17000  rgba(0, 0, 0, 0.0),           stop:0.24999 rgba(0, 0, 0, 0.0),
+        stop:0.25000  rgba(0, 0, 0, 0.0),           stop:1 rgba(0, 0, 0, 0.0)
+    );
 }
 #FooterProgress::sub-page:horizontal {
     background: #2ca7f8;
     background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1,
-                                      stop:0     #2ca7f8, stop:0.1 #2ca7f8,
-                                      stop:0.11  #2ca7f8, stop:0.2 #2ca7f8,
-                                      stop:0.21  rgba(0, 0, 0, 0.3),    stop:0.26 rgba(0, 0, 0, 0.3),
-                                      stop:0.31  rgba(0, 0, 0, 0.0),    stop:1 rgba(0, 0, 0, 0.0)
-                                      );
+        stop:0        #2ca7f8,              stop:0.08333 #2ca7f8,
+        stop:0.08333  #2ca7f8,              stop:0.16666 #2ca7f8,
+        stop:0.17000  rgba(0, 0, 0, 0.3),   stop:0.24999 rgba(0, 0, 0, 0.3),
+        stop:0.25000  rgba(0, 0, 0, 0.0), stop:1 rgba(0, 0, 0, 0.0)
+    );
 }
 
 

@@ -22,6 +22,7 @@ public:
     explicit PlayListItem(PlaylistPtr playlist, QWidget *parent = 0);
     inline PlaylistPtr data() {return m_data;}
 
+    void setActive(bool active);
     void mouseDoubleClickEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
 signals:
     void rename(const QString &newNameA);
@@ -32,7 +33,7 @@ public slots:
     void showContextMenu(const QPoint &pos);
 
 private:
-    QLineEdit                   *m_titleedit = nullptr;
+    QLineEdit      *m_titleedit = nullptr;
     PlaylistPtr    m_data;
 };
 

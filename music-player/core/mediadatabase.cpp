@@ -180,7 +180,7 @@ static QList<MusicMeta> searchTitle(const QString &queryString)
         musicMeta.album = query.value(4).toString();
         musicMeta.filetype = query.value(5).toString();
         musicMeta.length = query.value(6).toInt();
-        musicMeta.filesize = query.value(7).toInt();
+        musicMeta.size = query.value(7).toInt();
         musicMeta.timestamp = query.value(8).toInt();
         list << musicMeta;
     }

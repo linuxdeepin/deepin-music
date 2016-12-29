@@ -79,9 +79,9 @@ MusicMeta fromLocalFile(const QFileInfo &fileInfo, const QString &hash)
     }
 
     if (f.file()) {
-        info.filesize = f.file()->length();
+        info.size = f.file()->length();
     } else {
-        info.filesize = fileInfo.size();
+        info.size = fileInfo.size();
     }
 
     auto current = QDateTime::currentDateTime();
