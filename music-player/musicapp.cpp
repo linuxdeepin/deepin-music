@@ -110,6 +110,7 @@ void MusicApp::onDataPrepared()
 
     d->playerFrame->resize(QSize(1070, 680));
     d->playerFrame->setDefaultBackground();
+    d->playerFrame->setFocus();
 }
 
 void MusicApp::onQuit()

@@ -320,7 +320,6 @@ void MusicListView::resizeEvent(QResizeEvent *event)
 {
     Q_D(MusicListView);
 
-    qDebug() << event->size();
     auto size = event->size();
     auto scrollBarWidth = 8;
     d->m_scrollBar->resize(scrollBarWidth, size.height());

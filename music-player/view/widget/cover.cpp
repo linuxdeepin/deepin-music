@@ -104,7 +104,6 @@ void Cover::paintEvent(QPaintEvent *e)
     QMarginsF borderMargin(penWidthf / 2, penWidthf / 2, penWidthf / 2, penWidthf / 2);
     borderRadius -= penWidthf / 2;
     borderRect = borderRect.marginsRemoved(borderMargin);
-    qDebug() << borderRect ;
     innerBorderPath.addRoundedRect(borderRect, borderRadius, borderRadius);
     QPen innerBorderPen(innerBorderColor);
     innerBorderPen.setWidthF(penWidthf);
@@ -112,12 +111,10 @@ void Cover::paintEvent(QPaintEvent *e)
 
     QPainterPath outerBorderPath;
     borderRect = QRectF(rect()).marginsRemoved(d->outterMargins);
-    qDebug() << borderRect << d->outterMargins << borderMargin;
     borderRadius = radius;
     borderRadius += penWidthf / 2;
     borderRect = borderRect.marginsAdded(borderMargin);
 
-    qDebug() << borderRect ;
     outerBorderPath.addRoundedRect(borderRect, borderRadius, borderRadius);
     QPen outerBorderPen(outerBorderColor);
     outerBorderPen.setWidthF(penWidthf);

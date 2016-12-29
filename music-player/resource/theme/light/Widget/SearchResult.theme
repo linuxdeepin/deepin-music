@@ -4,31 +4,42 @@ SearchResult{
 }
 
 #SearchResultList{
-    background-color: rgba(255, 255, 255, 0.0);
+    font-size: 12px;
+    background-color: rgba(255, 255, 255, 1.0);
     border: none;
-}
-#SearchResultList::item
-{
-    height: 24px;
-    font-size: 12pt;
     border-bottom: 1px solid rgba(0, 0, 0, 0.04);
 }
+
+#SearchResultList::item {
+    background-color: rgba(255, 255, 255, 1.0);
+    height: 25px;
+    padding-left: 7px;
+}
 #SearchResultList::item:focus {
+    padding-left: 7px;
+    color: white;
     border:none;
 }
 #SearchResultList::item:selected:!active {
+    padding-left: 7px;
+    color: white;
     background-color: #2ca7f8;
 }
 #SearchResultList::item:selected:active {
+    padding-left: 7px;
+    color: white;
     background-color: #2ca7f8;
 }
 #SearchResultList::item:hover {
+    padding-left: 7px;
 }
 
 #SearchResultAction{
-    margin: 0 7 0 7;
+    font-size: 12px;
+    padding-left: 9px;
     border: none;
-    background-color: rgba(255, 255, 255, 0.0);
+    text-align:left;
+    background-color: rgba(255, 255, 255, 1.0);
 }
 #SearchResultAction:hover{
     border: none;

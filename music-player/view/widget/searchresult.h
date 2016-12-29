@@ -13,11 +13,13 @@
 #include <dabstractdialog.h>
 DWIDGET_USE_NAMESPACE
 
+#include "thinwindow.h"
+
 class QListView;
 class PushButton;
 class QStringListModel;
 
-class SearchResult : public DAbstractDialog
+class SearchResult : public ThinWindow
 {
     Q_OBJECT
 public:

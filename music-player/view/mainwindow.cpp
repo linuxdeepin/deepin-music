@@ -23,6 +23,7 @@
 #include <QStandardPaths>
 #include <QMessageBox>
 #include <QMenu>
+#include <QGraphicsDropShadowEffect>
 
 #include <DUtil>
 #include <dutility.h>
@@ -117,6 +118,12 @@ MainWindow::MainWindow(QWidget *parent)
     contentLayout->addWidget(d->lyricView);
     contentLayout->addWidget(d->playlist);
     contentLayout->addWidget(d->footer);
+
+    auto *bodyShadow = new QGraphicsDropShadowEffect;
+    bodyShadow->setBlurRadius(20.0);
+    bodyShadow->setColor(QColor(0, 0, 0, 0.10 * 255));
+    bodyShadow->setOffset(0, 5.0);
+    this->setGraphicsEffect(bodyShadow);
 
     D_THEME_INIT_WIDGET(MainWindow);
 
@@ -387,7 +394,7 @@ void MainWindow::resizeEvent(QResizeEvent *e)
     d->titlebar->setFixedSize(newSize.width() - d->title->buttonAreaWidth() - 10, titleBarHeight);
 
     d->lyricView->resize(newSize);
-    d->musicList->resize(newSize);
+    d->musicList->setFixedSize(newSize);
     d->import->resize(newSize);
 
     d->playlist->setFixedSize(220, newSize.height() - footerHeight - titleBarHeight);
@@ -532,14 +539,16 @@ void MainWindow::showLyricView()
 
     auto current = d->currentWidget ? d->currentWidget : d->musicList;
     d->lyricView->resize(current->size());
+
     WidgetHelper::slideBottom2TopWidget(
-        current, d->lyricView, s_AnimationDelay);
-    this->repaint();
+        current, d->lyricView, s_AnimationDelay*2);
+
     this->disableControl();
     setPlaylistVisible(false);
     d->currentWidget = d->lyricView;
     d->title->raise();
     d->footer->raise();
+    this->repaint();
 }
 
 void MainWindow::showMusicListView()
@@ -616,6 +625,8 @@ void MainWindow::changeToMusicListView(bool keepPlaylist)
              << current << d->musicList << keepPlaylist;
     if (d->musicList->isVisible()) {
         d->musicList->raise();
+        d->title->raise();
+        d->footer->raise();
         setPlaylistVisible(keepPlaylist);
         return;
     }

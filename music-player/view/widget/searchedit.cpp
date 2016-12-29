@@ -104,7 +104,7 @@ void SearchEdit::onTextChanged()
         m_result->autoResize();
         auto pos = this->mapToGlobal(QPoint(0, this->height() + 2));
         m_result->show();
-        m_result->move(pos);
+        m_result->move(pos.x(), pos.y()-20);
         m_result->setFocusPolicy(Qt::StrongFocus);
     } else {
         onFocusOut();

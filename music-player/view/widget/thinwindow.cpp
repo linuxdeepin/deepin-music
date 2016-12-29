@@ -94,7 +94,7 @@ ThinWindow::ThinWindow(QWidget *parent) : QWidget(parent), d_ptr(new ThinWindowP
     auto filter = new FilterMouseMove(d->contentWidget);
     d->contentWidget->installEventFilter(filter);
     filter->m_rootWidget = this;
-    D_THEME_INIT_WIDGET(Widget / ThinWindow);
+    D_THEME_INIT_WIDGET(Widget/ThinWindow);
 
 #ifdef Q_OS_LINUX
     XUtils::SetMouseTransparent(this, true);
@@ -121,7 +121,6 @@ void ThinWindow::resize(QSize sz)
 QSize ThinWindow::size() const
 {
     Q_D(const ThinWindow);
-    qDebug() << rect().size();
     return rect().size();
 }
 

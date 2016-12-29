@@ -134,8 +134,6 @@ void Presenter::prepareData()
     connect(d->moniter, &MediaFileMonitor::fileRemoved,
     this, [ = ](const QString & filepath) {
         auto metalist = MediaDatabase::searchMusicPath(filepath, std::numeric_limits<int>::max());
-        PlaylistPtr allplaylist = d->playlistMgr->playlist(AllMusicListID);
-
         qDebug() << "remove" << filepath << metalist.length();
 
         for (auto playlist : d->playlistMgr->allplaylist()) {
@@ -202,10 +200,12 @@ void Presenter::prepareData()
     connect(Player::instance(), &Player::mediaError,
     this, [ = ](PlaylistPtr playlist,  MusicMeta meta, Player::Error error) {
         Q_D(Presenter);
-        qDebug() << d->syncPlayerResult;
+        qDebug() << "ffffffff" << error;
+        emit musicError(playlist, meta, error);
         if (error == Player::NoError) {
             d->syncPlayerResult = false;
 
+            qDebug() << "ffffffff" << meta.invalid;
             if (meta.invalid) {
                 meta.invalid = false;
                 emit musicMetaUpdate(playlist, meta);
@@ -217,7 +217,6 @@ void Presenter::prepareData()
             meta.invalid = true;
             emit musicMetaUpdate(playlist, meta);
         }
-        emit musicError(playlist, meta, error);
         if (d->syncPlayerResult) {
             d->syncPlayerResult = false;
             emit notifyMusciError(playlist, meta, error);

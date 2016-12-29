@@ -252,7 +252,7 @@ void Playlist::appendMusic(const MusicMetaList &metalist)
 void Playlist::updateMeta(const MusicMeta &meta)
 {
     if (!listmeta.metas.contains(meta.hash)) {
-        qWarning() << "no such id in playlist" << meta.hash << meta.localPath << listmeta.displayName;
+//        qWarning() << "no such id in playlist" << meta.hash << meta.localPath << listmeta.displayName;
         return;
     }
 

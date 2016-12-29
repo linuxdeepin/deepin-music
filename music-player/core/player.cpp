@@ -122,11 +122,12 @@ void PlayerPrivate::initConnection()
 
     q->connect(qplayer, &QMediaPlayer::mediaStatusChanged,
     q, [ = ](QMediaPlayer::MediaStatus status) {
-        qDebug() << status;
+        qDebug() << status << activeMeta.invalid;
         switch (status) {
         case QMediaPlayer::LoadedMedia: {
             qplayer->play();
             emit q->mediaError(activePlaylist, activeMeta, Player::NoError);
+            activeMeta.invalid = false;
         }
         case QMediaPlayer::UnknownMediaStatus:
         case QMediaPlayer::NoMedia:
@@ -144,6 +145,7 @@ void PlayerPrivate::initConnection()
     q, [ = ](QMediaPlayer::Error error) {
         qWarning() << error;
         emit q->mediaError(activePlaylist, activeMeta, static_cast<Player::Error>(error));
+        activeMeta.invalid = true;
     });
 
     q->connect(qplayer, &QMediaPlayer::stateChanged,

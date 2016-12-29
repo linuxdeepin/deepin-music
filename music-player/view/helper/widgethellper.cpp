@@ -115,7 +115,6 @@ void slideBottom2TopWidget(QWidget *top, QWidget *bottom, int delay)
 {
     bottom->show();
     top->show();
-    bottom->resize(top->size());
 
     QRect topStart = QRect(0, 0, top->width(), top->height());
     QRect topEnd = topStart;
@@ -148,7 +147,6 @@ void slideBottom2TopWidget(QWidget *top, QWidget *bottom, int delay)
     auto bottomOpacity = new QGraphicsOpacityEffect(bottom);
     bottom->setGraphicsEffect(bottomOpacity);
     bottomOpacity->setOpacity(0);
-
     QPropertyAnimation *animation3 = new QPropertyAnimation(bottomOpacity, "opacity");
     animation3->setEasingCurve(QEasingCurve::InCubic);
     animation3->setDuration(delay);
@@ -163,20 +161,19 @@ void slideBottom2TopWidget(QWidget *top, QWidget *bottom, int delay)
     });
 
 
-    auto topOpacity = new QGraphicsOpacityEffect(top);
+    auto topOpacity = new QGraphicsOpacityEffect();
     top->setGraphicsEffect(topOpacity);
     topOpacity->setOpacity(1);
-
     QPropertyAnimation *animation4 = new QPropertyAnimation(topOpacity, "opacity");
     animation4->setEasingCurve(QEasingCurve::InCubic);
     animation4->setDuration(delay);
-    animation4->setStartValue(1);
+    animation4->setStartValue(0.99);
     animation4->setEndValue(0);
     animation4->start();
     animation4->connect(animation4, &QPropertyAnimation::finished,
                         animation4, &QPropertyAnimation::deleteLater);
     animation4->connect(animation4, &QPropertyAnimation::finished,
-    bottom, [ = ]() {
+    top, [ = ]() {
         top->setGraphicsEffect(nullptr);
     });
 }

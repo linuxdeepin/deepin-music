@@ -55,6 +55,10 @@ PlayListItem::PlayListItem(PlaylistPtr playlist, QWidget *parent) : QFrame(paren
     m_titleedit->setText(playlist->displayName());
     m_titleedit->setProperty("HistoryValue", m_titleedit->text());
 
+    QPalette p = m_titleedit->palette();
+    p.setBrush(QPalette::HighlightedText, QBrush(Qt::white));
+    m_titleedit->setPalette(p);
+
     m_titleedit->setDisabled(true);
     if (playlist->readonly()) {
         m_titleedit->setReadOnly(true);

@@ -17,16 +17,18 @@
 
 #include <dlistview.h>
 #include <dthememanager.h>
+#include <QGraphicsDropShadowEffect>
 
 #include "pushbutton.h"
 
-SearchResult::SearchResult(QWidget *parent) : DAbstractDialog(parent)
+SearchResult::SearchResult(QWidget *parent) : ThinWindow(parent)
 {
     setWindowFlags(Qt::Tool | Qt::FramelessWindowHint
                    | Qt::WindowStaysOnTopHint | Qt::WindowSystemMenuHint);
 
-    auto vlayout = new QVBoxLayout(this);
-    vlayout->setContentsMargins(4, 4, 4, 4);
+    auto vlayout = new QVBoxLayout();
+    setContentLayout(vlayout);
+    vlayout->setContentsMargins(0, 4, 0, 4);
     vlayout->setSpacing(0);
 
     m_searchResult = new QListView;
@@ -40,7 +42,7 @@ SearchResult::SearchResult(QWidget *parent) : DAbstractDialog(parent)
     m_doSearchButton = new PushButton;
     m_doSearchButton->setCheckable(true);
     m_doSearchButton->setObjectName("SearchResultAction");
-    m_doSearchButton->setFixedHeight(24);
+    m_doSearchButton->setFixedHeight(25);
     m_doSearchButton->setText(tr("Search \"%1\" in Deepin Music"));
     m_model = new QStringListModel;
 
@@ -61,6 +63,12 @@ SearchResult::SearchResult(QWidget *parent) : DAbstractDialog(parent)
     m_searchResult->setMinimumHeight(25);
     m_searchResult->adjustSize();
     this->adjustSize();
+
+    auto *bodyShadow = new QGraphicsDropShadowEffect;
+    bodyShadow->setBlurRadius(9.0);
+    bodyShadow->setColor(QColor(0, 0, 0, 0.15 * 255));
+    bodyShadow->setOffset(0, 4.0);
+    this->setGraphicsEffect(bodyShadow);
 
     D_THEME_INIT_WIDGET(Widget/SearchResult);
 
@@ -89,7 +97,9 @@ SearchResult::SearchResult(QWidget *parent) : DAbstractDialog(parent)
 
 void SearchResult::autoResize()
 {
-    m_searchResult->setFixedHeight(m_model->rowCount() * 25);
+    m_searchResult->setFixedHeight(m_model->rowCount() * 25+1);
+    this->setFixedHeight((m_model->rowCount() + 1) * 25 + 8 + 40+1);
+    m_searchResult->setVisible(!m_model->rowCount()==0);
     this->adjustSize();
 }
 
@@ -159,7 +169,7 @@ void SearchResult::leaveEvent(QEvent *event)
 {
     m_searchResult->setCurrentIndex(QModelIndex());
     m_doSearchButton->setChecked(false);
-    DAbstractDialog::leaveEvent(event);
+    ThinWindow::leaveEvent(event);
 }
 
 void SearchResult::onReturnPressed()

@@ -31,7 +31,8 @@
     font-size: 12px;
 }
 
-#PlayListTitle:focus {
+#PlayListTitle:focus[status="active"] {
+    color: #000000;
     background-color: white;
     border-radius: 4.0px;
     border: 1px outset rgba(0, 0, 0, 0.08);
