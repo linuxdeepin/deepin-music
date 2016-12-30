@@ -31,26 +31,29 @@
 #include <dthememanager.h>
 #include <DAboutDialog>
 
+#include <thememanager.h>
 #include "titlebar.h"
 #include "footer.h"
 #include "importwidget.h"
 #include "lyricview.h"
 #include "playlistwidget.h"
 #include "musiclistwidget.h"
+#include "widget/tip.h"
+#include "widget/titlebarwidget.h"
 
 #include "../core/music.h"
 #include "../core/playlist.h"
 #include "../musicapp.h"
-#include "widget/tip.h"
 #include "../presenter/presenter.h"
 
 #include "helper/widgethellper.h"
 
 DWIDGET_USE_NAMESPACE
 
+const QString s_PropertyViewname = "viewname";
+const QString s_PropertyViewnameLyric = "lyric";
+
 static const int s_AnimationDelay   = 350;
-static QColor s_normalTitleTop      = QColor(255, 255, 255, 255);
-static QColor s_normalTitleBottom   = QColor(0xf8, 0xf8, 0xf8, 255);
 static QColor s_lyricTitleTop       = QColor(0, 0, 0, 94);
 static QColor s_lyriclTitleBottom   = QColor(0, 0, 0, 102);
 static const int titleBarHeight = 40;
@@ -59,28 +62,26 @@ static const int footerHeight = 60;
 class MainWindowPrivate
 {
 public:
-//    QStackedWidget  *stacked    = nullptr;
-    QFrame          *content    = nullptr;
-    DTitlebar       *title      = nullptr;
-    TitleBar        *titlebar   = nullptr;
-    Footer          *footer     = nullptr;
-    PlaylistWidget  *playlist   = nullptr;
+    MainWindowPrivate()
+    {
+    }
 
-    ImportWidget    *import     = nullptr;
-    MusicListWidget *musicList  = nullptr;
+    QFrame          *content        = nullptr;
+    Titlebar        *titlebar       = nullptr;
+    TitleBarWidget  *titlebarwidget = nullptr;
+    Footer          *footer         = nullptr;
+    PlaylistWidget  *playlist       = nullptr;
+    ImportWidget    *import         = nullptr;
+    MusicListWidget *musicList      = nullptr;
     LyricView       *lyricView      = nullptr;
 
     Tip             *tips       = nullptr;
     QWidget         *currentWidget = nullptr;
 };
 
-
 MainWindow::MainWindow(QWidget *parent)
     : ThinWindow(parent), d(new MainWindowPrivate)
 {
-    m_titlebarTopColor = s_normalTitleTop;
-    m_titlebarBottomColor = s_normalTitleBottom;
-
     setFocusPolicy(Qt::ClickFocus);
     setObjectName("PlayerFrame");
 
@@ -90,11 +91,12 @@ MainWindow::MainWindow(QWidget *parent)
     contentLayout->setMargin(0);
     contentLayout->setSpacing(0);
 
-    d->title = new DTitlebar();
-    d->titlebar = new TitleBar();
-    d->titlebar->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
-    d->title->setFixedHeight(titleBarHeight);
-    d->title->setCustomWidget(d->titlebar , Qt::AlignCenter, false);
+    d->titlebar = new Titlebar();
+    d->titlebar->setObjectName("MainWindowTitlebar");
+    d->titlebarwidget = new TitleBarWidget();
+    d->titlebarwidget->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+    d->titlebar->setFixedHeight(titleBarHeight);
+    d->titlebar->setCustomWidget(d->titlebarwidget , Qt::AlignCenter, false);
 
 //    connect(d->title, &DTitlebar::optionClicked, this, &MainWindow::optionClicked);
 
@@ -110,7 +112,7 @@ MainWindow::MainWindow(QWidget *parent)
     d->musicList->setContentsMargins(0, titleBarHeight, 0, footerHeight);
     d->lyricView->setContentsMargins(0, titleBarHeight, 0, footerHeight);
 
-    contentLayout->addWidget(d->title);
+    contentLayout->addWidget(d->titlebar);
 
 //    contentLayout->addWidget(d->titlebar);
     contentLayout->addWidget(d->import);
@@ -125,11 +127,11 @@ MainWindow::MainWindow(QWidget *parent)
     bodyShadow->setOffset(0, 5.0);
     this->setGraphicsEffect(bodyShadow);
 
-    D_THEME_INIT_WIDGET(MainWindow);
+    ThemeManager::instance()->regisetrWidget(this);
 
     d->footer->setFocus();
 
-    connect(d->title, &DTitlebar::mouseMoving, this, &MainWindow::moveWindow);
+    connect(d->titlebar, &DTitlebar::mouseMoving, this, &MainWindow::moveWindow);
     connect(d->footer, &Footer::mouseMoving, this, &MainWindow::moveWindow);
     setMinimumSize(840, 640);
     resize(QSize(840, 640));
@@ -175,11 +177,11 @@ void MainWindow::initFooter(PlaylistPtr current, int mode)
 
 void MainWindow::binding(Presenter *presenter)
 {
-    connect(d->titlebar, &TitleBar::locateMusicInAllMusiclist,
+    connect(d->titlebarwidget, &TitleBarWidget::locateMusicInAllMusiclist,
             presenter, &Presenter::onLocateMusicAtAll);
-    connect(d->titlebar, &TitleBar::search,
+    connect(d->titlebarwidget, &TitleBarWidget::search,
             presenter, &Presenter::onSearchText);
-    connect(d->titlebar, &TitleBar::exitSearch,
+    connect(d->titlebarwidget, &TitleBarWidget::exitSearch,
             presenter, &Presenter::onExitSearch);
 
     connect(d->footer, &Footer::toggleLyricView, this, &MainWindow::toggleLyricView);
@@ -389,11 +391,11 @@ void MainWindow::resizeEvent(QResizeEvent *e)
     ThinWindow::resizeEvent(e);
     QSize newSize = ThinWindow::size();
 
-    d->title->raise();
-    d->title->move(0, 0);
+    d->titlebar->raise();
+    d->titlebar->move(0, 0);
 
     d->lyricView->resize(newSize.width(), titleBarHeight);
-    d->titlebar->setFixedSize(newSize.width() - d->title->buttonAreaWidth() - 10, titleBarHeight);
+    d->titlebarwidget->setFixedSize(newSize.width() - d->titlebar->buttonAreaWidth() - 10, titleBarHeight);
 
     d->lyricView->resize(newSize);
     d->musicList->setFixedSize(newSize);
@@ -417,92 +419,13 @@ void MainWindow::resizeEvent(QResizeEvent *e)
 
 void MainWindow::paintEvent(QPaintEvent *e)
 {
-    return ThinWindow::paintEvent(e);
-
-    {
-        int radius = this->radius() ;
-        int windowExtern = 40 + 1 * 2;
-
-        QPainter painter(this);
-        painter.setRenderHint(QPainter::Antialiasing);
-        painter.setRenderHint(QPainter::HighQualityAntialiasing);
-
-        QRect windowRect = QWidget::rect().marginsRemoved(
-                               QMargins(windowExtern, windowExtern - 10, windowExtern, windowExtern + 10));
-
-        QPoint topLeft(windowRect.x(), windowRect.y());
-        QPoint bottomRight(windowRect.x() + windowRect.width(), windowRect.y() + windowRect.height());
-        QPainterPath border;
-        border.addRoundedRect(windowRect, radius, radius);
-
-        QLinearGradient linearGradient(topLeft, QPoint(topLeft.x(), bottomRight.y()));
-        linearGradient.setColorAt(0.0, Qt::white);
-        linearGradient.setColorAt(0.2, Qt::white);
-        linearGradient.setColorAt(1.0, Qt::white);
-
-        QPen borderPen(QColor(0, 0, 0, 38));
-
-        painter.setRenderHint(QPainter::Antialiasing);
-        painter.setBrush(QBrush(linearGradient));
-        painter.strokePath(border, borderPen);
-        painter.fillPath(border, QBrush(linearGradient));
-    }
-
     ThinWindow::paintEvent(e);
-
-    // draw header
-    {
-        return;
-        int radius = 3 ;
-        int windowExtern = 40 + 1 * 2;
-
-        QPainter titlePainter(this);
-        titlePainter.setRenderHint(QPainter::Antialiasing);
-        titlePainter.setRenderHint(QPainter::HighQualityAntialiasing);
-
-        QRect winRect = QWidget::rect().marginsRemoved(
-                            QMargins(windowExtern, windowExtern - 10  , windowExtern, windowExtern + 10));
-
-        QPoint titleTopLeft(winRect.x(), winRect.y());
-
-        QRect topLeftRect(titleTopLeft,
-                          QPoint(winRect.x() + 2 * radius, winRect.y() + 2 * radius));
-        QRect topRightRect(QPoint(winRect.x() + winRect.width(), winRect.y()),
-                           QPoint(winRect.x() + winRect.width() - 2 * radius,
-                                  winRect.y() + 2 * radius));
-
-        QPainterPath titleBorder;
-        titleBorder.moveTo(winRect.x() + radius, winRect.y());
-        titleBorder.lineTo(winRect.x() + winRect.width() - radius, winRect.y());
-        titleBorder.arcTo(topRightRect, 90.0, 90.0);
-        titleBorder.lineTo(winRect.x() + winRect.width(), winRect.y() + radius);
-        titleBorder.lineTo(winRect.x() + winRect.width(), winRect.y() + 39);
-        titleBorder.lineTo(winRect.x(), winRect.y() + 39);
-        titleBorder.lineTo(winRect.x() , winRect.y() + radius);
-        titleBorder.arcTo(topLeftRect, 90.0, 90.0);
-        titleBorder.closeSubpath();
-
-        QLinearGradient linearGradient(QPointF(0.0, 0.0), QPointF(0.0, 1.0));
-        linearGradient.setColorAt(0.0, m_titlebarTopColor);
-        linearGradient.setColorAt(1.0, m_titlebarBottomColor);
-
-        QPen borderPen(QColor(255, 255, 255, 25));
-
-        titlePainter.setBrush(QBrush(linearGradient));
-        titlePainter.fillPath(titleBorder, QBrush(linearGradient));
-        titlePainter.strokePath(titleBorder, borderPen);
-        QLine line(titleTopLeft.x(), winRect.y() + 39,
-                   winRect.x() + winRect.width(), winRect.y() + 39);
-
-        titlePainter.setPen(QPen(QColor(0, 0, 0, 255 * 0.3), 0.5));
-        titlePainter.drawLine(line);
-    }
 }
 
 void MainWindow::onCurrentPlaylistChanged(PlaylistPtr playlist)
 {
     if (playlist->id() != SearchMusicListID) {
-        d->titlebar->exitSearch();
+        d->titlebarwidget->exitSearch();
     }
 }
 
@@ -536,26 +459,26 @@ void MainWindow::togglePlaylist()
 
 void MainWindow::showLyricView()
 {
-    m_titlebarTopColor = s_lyricTitleTop;
-    m_titlebarBottomColor = s_lyriclTitleBottom;
-
     auto current = d->currentWidget ? d->currentWidget : d->musicList;
     d->lyricView->resize(current->size());
 
     WidgetHelper::slideBottom2TopWidget(
-        current, d->lyricView, s_AnimationDelay * 2);
+        current, d->lyricView, s_AnimationDelay);
 
     this->disableControl();
     setPlaylistVisible(false);
     d->currentWidget = d->lyricView;
-    d->title->raise();
+    d->titlebar->raise();
     d->footer->raise();
-    this->repaint();
+
+    updateViewname(s_PropertyViewnameLyric);
 }
 
 void MainWindow::showMusicListView()
 {
     changeToMusicListView(false);
+
+    updateViewname("");
 }
 
 void MainWindow::showImportView()
@@ -575,8 +498,10 @@ void MainWindow::showImportView()
         current, d->import, s_AnimationDelay);
     d->footer->enableControl(false);
     d->currentWidget = d->import;
-    d->title->raise();
+    d->titlebar->raise();
     d->footer->raise();
+
+    updateViewname("");
 }
 
 void MainWindow::showTips(QPixmap icon, QString text)
@@ -615,7 +540,7 @@ void MainWindow::setPlaylistVisible(bool visible)
         d->playlist->raise();
     }
     this->disableControl();
-    d->title->raise();
+    d->titlebar->raise();
     d->footer->raise();
 }
 
@@ -626,15 +551,11 @@ void MainWindow::changeToMusicListView(bool keepPlaylist)
              << current << d->musicList << keepPlaylist;
     if (d->musicList->isVisible()) {
         d->musicList->raise();
-        d->title->raise();
+        d->titlebar->raise();
         d->footer->raise();
         setPlaylistVisible(keepPlaylist);
         return;
     }
-
-    m_titlebarTopColor = s_normalTitleTop;
-    m_titlebarBottomColor = s_normalTitleBottom;
-
     d->musicList->setFixedSize(current->size());
     WidgetHelper::slideTop2BottomWidget(
         current, d->musicList, s_AnimationDelay);
@@ -642,12 +563,13 @@ void MainWindow::changeToMusicListView(bool keepPlaylist)
     this->disableControl();
     d->currentWidget = d->musicList;
     setPlaylistVisible(keepPlaylist);
-    d->title->raise();
+    d->titlebar->raise();
     d->footer->raise();
 }
 
 void MainWindow::initMenu()
 {
+
     auto m_newlist = new QAction(tr("New songlist"), this);
     connect(m_newlist, &QAction::triggered, this, [ = ](bool) {
         setPlaylistVisible(true);
@@ -667,7 +589,13 @@ void MainWindow::initMenu()
 
     auto m_colorMode = new QAction(tr("Deep color mode"), this);
     connect(m_colorMode, &QAction::triggered, this, [ = ](bool) {
-
+        if (DThemeManager::instance()->theme() == "light") {
+            DThemeManager::instance()->setTheme("dark");
+            ThemeManager::instance()->setTheme("dark");
+        } else {
+            DThemeManager::instance()->setTheme("light");
+            ThemeManager::instance()->setTheme("light");
+        }
     });
 
     auto m_about = new QAction(tr("About"), this);
@@ -709,17 +637,20 @@ void MainWindow::initMenu()
         this->close();
     });
 
-//    titleBarMenu()->addAction(m_newlist);
-//    titleBarMenu()->addAction(m_addmusic);
-//    titleBarMenu()->addSeparator();
+    auto titleMenu = new QMenu;
+    d->titlebar->setMenu(titleMenu);
 
-//    titleBarMenu()->addAction(m_colorMode);
-//    titleBarMenu()->addAction(m_settings);
-//    titleBarMenu()->addSeparator();
+    titleMenu->addAction(m_newlist);
+    titleMenu->addAction(m_addmusic);
+    titleMenu->addSeparator();
 
-//    titleBarMenu()->addAction(m_about);
-//    titleBarMenu()->addAction(m_help);
-//    titleBarMenu()->addAction(m_close);
+    titleMenu->addAction(m_colorMode);
+    titleMenu->addAction(m_settings);
+    titleMenu->addSeparator();
+
+    titleMenu->addAction(m_about);
+    titleMenu->addAction(m_help);
+    titleMenu->addAction(m_close);
 }
 
 void MainWindow::disableControl()
@@ -728,4 +659,15 @@ void MainWindow::disableControl()
     QTimer::singleShot(s_AnimationDelay, this, [ = ]() {
         d->footer->enableControl(true);
     });
+}
+
+#include <DUtil>
+
+void MainWindow::updateViewname(const QString &vm)
+{
+    DUtil::TimerSingleShot(s_AnimationDelay / 2, [this, vm]() {
+        d->titlebar->setViewname(vm);
+        d->titlebarwidget->setViewname(vm);
+    });
+
 }

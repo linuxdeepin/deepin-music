@@ -14,13 +14,14 @@
 #include <QGridLayout>
 #include <QPushButton>
 
-#include <dthememanager.h>
 #include <dwindowclosebutton.h>
-
+#include <QDebug>
+#include <thememanager.h>
 #include "../../core/music.h"
 
 InfoDialog::InfoDialog(const MusicMeta &info, const QPixmap &coverPixmap, QWidget *parent) : DAbstractDialog(parent)
 {
+    setObjectName("InfoDialog");
     setFixedSize(320, 480);
 
     auto layout = new QVBoxLayout(this);
@@ -36,7 +37,6 @@ InfoDialog::InfoDialog(const MusicMeta &info, const QPixmap &coverPixmap, QWidge
     cover->setContentsMargins(0, 0, 0, 0);
     cover->setObjectName("InfoCover");
     cover->setFixedSize(140, 140);
-    cover->setPixmap(coverPixmap.scaled(140, 140));
 
     auto title = new QLabel(info.title);
     title->setObjectName("InfoTitle");
@@ -91,7 +91,25 @@ InfoDialog::InfoDialog(const MusicMeta &info, const QPixmap &coverPixmap, QWidge
     layout->addLayout(infogridLayout);
     layout->addStretch();
 
-    D_THEME_INIT_WIDGET(Widget/InfoDialog);
+    ThemeManager::instance()->regisetrWidget(this);
+
+    qDebug() << this->property("DefaultCover").toString();
+//    if (!coverPixmap.isNull()) {
+//        cover->setPixmap(coverPixmap.scaled(140, 140));
+//    } else {
+//        cover->setPixmap(QPixmap(defaultCover()).scaled(140, 140));
+//    }
 
     connect(closeBt, &DWindowCloseButton::clicked, this, &DAbstractDialog::close);
+}
+
+QString InfoDialog::defaultCover() const
+{
+    return this->property("DefaultCover").toString();
+}
+
+void InfoDialog::setDefaultCover(QString defaultCover)
+{
+    qDebug() << defaultCover;
+    this->setProperty("DefaultCover", defaultCover);
 }

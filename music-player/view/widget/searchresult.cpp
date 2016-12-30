@@ -16,7 +16,7 @@
 #include <QStringListModel>
 
 #include <dlistview.h>
-#include <dthememanager.h>
+#include <thememanager.h>
 #include <QGraphicsDropShadowEffect>
 
 #include "pushbutton.h"
@@ -70,7 +70,7 @@ SearchResult::SearchResult(QWidget *parent) : ThinWindow(parent)
     bodyShadow->setOffset(0, 4.0);
     this->setGraphicsEffect(bodyShadow);
 
-    D_THEME_INIT_WIDGET(Widget/SearchResult);
+    ThemeManager::instance()->regisetrWidget(this);
 
     connect(m_searchResult, &QListView::clicked,
     this, [ = ](const QModelIndex & index) {
@@ -97,9 +97,11 @@ SearchResult::SearchResult(QWidget *parent) : ThinWindow(parent)
 
 void SearchResult::autoResize()
 {
-    m_searchResult->setFixedHeight(m_model->rowCount() * 25+1);
-    this->setFixedHeight((m_model->rowCount() + 1) * 25 + 8 + 40+1);
-    m_searchResult->setVisible(!m_model->rowCount()==0);
+    qDebug() << m_searchResult->viewport()->size() << m_model->rowCount() * 25;
+    m_searchResult->setFixedHeight(m_model->rowCount() * (25+1));
+    m_searchResult->setFixedWidth(this->size().width() + 3);
+    this->setFixedHeight((m_model->rowCount() + 1) * 25 + 8 + 40 + 1);
+    m_searchResult->setVisible(!m_model->rowCount() == 0);
     this->adjustSize();
 }
 

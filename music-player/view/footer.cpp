@@ -19,7 +19,7 @@
 #include <QWheelEvent>
 #include <QProgressBar>
 
-#include <dthememanager.h>
+#include <thememanager.h>
 
 #include "../musicapp.h"
 #include "../core/playlistmanager.h"
@@ -31,8 +31,6 @@
 #include "widget/cover.h"
 #include "widget/tip.h"
 #include "widget/soundvolume.h"
-
-DWIDGET_USE_NAMESPACE
 
 static const char *sPropertyFavourite         = "fav";
 static const char *sPropertyPlayStatus        = "playstatus";
@@ -318,7 +316,7 @@ Footer::Footer(QWidget *parent) :
     d->btFavorite->hide();
     d->btLyric->hide();
 
-    D_THEME_INIT_WIDGET(Footer);
+    ThemeManager::instance()->regisetrWidget(this);
 
     d->initConnection();
 

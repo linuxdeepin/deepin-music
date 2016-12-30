@@ -11,6 +11,7 @@
 
 #include <QPainter>
 #include <QDebug>
+
 void LyricLineDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
                               const QModelIndex &index) const
 {

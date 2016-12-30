@@ -33,7 +33,9 @@ public slots:
 
 private:
     const int ScanCacheSize = 200;
+#ifdef SUPPORT_INOTIFY
     InotifyEngine  *m_watcher;
+#endif
 };
 
 #endif // MEDIAFILEMONITOR_H

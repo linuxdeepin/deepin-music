@@ -14,6 +14,8 @@
 
 #include <DUtil>
 
+#include <dthememanager.h>
+#include <thememanager.h>
 #include "searchresult.h"
 
 #include "../../core/mediadatabase.h"
@@ -22,7 +24,6 @@
 SearchEdit::SearchEdit(QWidget *parent) : DSearchEdit(parent)
 {
     m_result = new SearchResult();
-    m_result->setFixedWidth(278);
     m_result->hide();
 
     connect(m_result, &SearchResult::locateMusic,
@@ -47,6 +48,13 @@ SearchEdit::SearchEdit(QWidget *parent) : DSearchEdit(parent)
             this, &SearchEdit::onReturnPressed);
 //    connect(this, &SearchEdit::editingFinished,
 //            this, &SearchEdit::onReturnPressed);
+
+    ThemeManager::instance()->regisetrWidget(this, QStringList() << "viewname");
+}
+
+QString SearchEdit::viewname()
+{
+    return m_view;
 }
 
 void SearchEdit::keyPressEvent(QKeyEvent *event)
@@ -100,13 +108,15 @@ void SearchEdit::onTextChanged()
             titleList << meta.title;
             hashList << meta.hash;
         }
+
+        m_result->setFixedWidth(this->width() + 40);
         m_result->setSearchString(this->text());
         m_result->setResultList(titleList, hashList);
 
         m_result->autoResize();
         auto pos = this->mapToGlobal(QPoint(0, this->height() + 2));
         m_result->show();
-        m_result->move(pos.x(), pos.y()-20);
+        m_result->move(pos.x() - 20, pos.y() - 20);
         m_result->setFocusPolicy(Qt::StrongFocus);
     } else {
         onFocusOut();
@@ -127,4 +137,15 @@ void SearchEdit::onReturnPressed()
     } else {
         emit this->searchText(this->text());
     }
+}
+
+void SearchEdit::setViewname(QString viewname)
+{
+    if (m_view == viewname) {
+        return;
+    }
+
+    m_view = viewname;
+    emit viewnameChanged(viewname);
+
 }

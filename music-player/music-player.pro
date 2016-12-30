@@ -2,7 +2,7 @@ include($$PWD/../config.pri)
 include($$PWD/build.pri)
 include($$PWD/../interface/interface.pri)
 
-QT       += core gui widgets svg dbus multimedia multimediawidgets xml network sql x11extras
+QT       += core gui widgets svg dbus multimedia multimediawidgets xml network sql
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TEMPLATE    = app
@@ -11,17 +11,16 @@ CONFIG      += c++11 link_pkgconfig
 DESTDIR     = $$BUILD_DIST/bin
 
 unix{
+    QT += x11extras
     PKGCONFIG += dtkbase dtkutil dtkwidget taglib icu-uc icu-i18n
     PKGCONFIG += x11 xext
-#    PKGCONFIG += mpris-qt5 dbusextended-qt5
+#   PKGCONFIG += mpris-qt5 dbusextended-qt5
 }
 
-
+INCLUDEPATH += $$PWD/view/helper
 
 SOURCES += \
     core/util/cueparser.cpp \
-#    core/util/filesystemwatcher.cpp \
-#    core/util/inotifyengine.cpp \
     core/util/icu.cpp \
     core/util/lyric.cpp \
     core/util/musicmeta.cpp \
@@ -53,26 +52,24 @@ SOURCES += \
     view/mainwindow.cpp \
     view/musiclistwidget.cpp \
     view/playlistwidget.cpp \
-    view/titlebar.cpp \
     musicapp.cpp \
     main.cpp \
     view/widget/label.cpp \
     view/widget/tip.cpp \
     view/importwidget.cpp \
-    core/util/inotifyengine.cpp \
     view/widget/hint.cpp \
     view/widget/soundvolume.cpp \
     view/widget/filter.cpp \
     core/qplayer.cpp \
     core/player.cpp \
     view/widget/thinwindow.cpp \
-    view/helper/xutil.cpp
+    view/helper/thememanager.cpp \
+    view/titlebar.cpp \
+    view/widget/titlebarwidget.cpp
 
 
 HEADERS += \
     core/util/cueparser.h \
-#    core/util/filesystemwatcher.h \
-#    core/util/inotifyengine.h \
     core/util/icu.h \
     core/util/lyric.h \
     core/util/musicmeta.h \
@@ -108,25 +105,32 @@ HEADERS += \
     view/mainwindow.h \
     view/musiclistwidget.h \
     view/playlistwidget.h \
-    view/titlebar.h \
     musicapp.h \
     view/widget/label.h \
     view/widget/tip.h \
     view/importwidget.h \
-    core/util/inotifyengine.h \
     view/widget/hint.h \
     view/widget/soundvolume.h \
     view/widget/filter.h \
     core/player.h \
     presenter/presenter_p.h \
     view/widget/thinwindow.h \
-    view/helper/xutil.h
+    view/helper/thememanager.h \
+    view/titlebar.h \
+    view/widget/titlebarwidget.h
 
 RESOURCES += \
-    resource/theme/theme.qrc \
-    resource/resource.qrc
+    resource/theme/theme.qrc
 
 unix{
+SOURCES += \
+    view/helper/xutil.cpp \
+    core/util/inotifyengine.cpp
+
+HEADERS += \
+    view/helper/xutil.h \
+    core/util/inotifyengine.h
+
 # Automating generation .qm files from .ts files
 system($$PWD/../tool/translate_generation.sh)
 }

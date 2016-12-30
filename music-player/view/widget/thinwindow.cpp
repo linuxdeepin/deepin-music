@@ -17,8 +17,8 @@
 
 #include "../helper/xutil.h"
 
-#include <dthememanager.h>
-DWIDGET_USE_NAMESPACE;
+#include <thememanager.h>
+//DWIDGET_USE_NAMESPACE;
 
 const int WindowHandleWidth = 10;
 
@@ -42,7 +42,7 @@ public:
     XUtils::CornerEdge resizingCornerEdge = XUtils::CornerEdge::kInvalid;
 
     ThinWindow *q_ptr;
-    Q_DECLARE_PUBLIC(ThinWindow);
+    Q_DECLARE_PUBLIC(ThinWindow)
 };
 
 
@@ -94,7 +94,7 @@ ThinWindow::ThinWindow(QWidget *parent) : QWidget(parent), d_ptr(new ThinWindowP
     auto filter = new FilterMouseMove(d->contentWidget);
     d->contentWidget->installEventFilter(filter);
     filter->m_rootWidget = this;
-    D_THEME_INIT_WIDGET(Widget/ThinWindow);
+    ThemeManager::instance()->regisetrWidget(this);
 
 #ifdef Q_OS_LINUX
     XUtils::SetMouseTransparent(this, true);

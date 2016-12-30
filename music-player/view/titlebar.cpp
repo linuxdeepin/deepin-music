@@ -10,120 +10,165 @@
 #include "titlebar.h"
 
 #include <QDebug>
-#include <QLabel>
-#include <QHBoxLayout>
-#include <QPushButton>
-#include <QGraphicsOpacityEffect>
+#include <QPainter>
 
-#include <dutility.h>
-#include <dthememanager.h>
-#include <dsearchedit.h>
+#include <thememanager.h>
 
-#include "widget/searchedit.h"
+#include "mainwindow.h"
 
 DWIDGET_USE_NAMESPACE
 
-class TitleBarPrivate
+class TitlebarPrivate
 {
 public:
-    TitleBarPrivate(TitleBar *parent) : q_ptr(parent) {}
+    TitlebarPrivate(Titlebar *parent) : q_ptr(parent)
+    {
+        QLinearGradient linearGradient(QPointF(0.0, 0.0), QPointF(0.0, 1.0));
+        linearGradient.setColorAt(0.0, QColor(255, 255, 255, 255));
+        linearGradient.setColorAt(1.0,  QColor(0xf8, 0xf8, 0xf8, 255));
+        titleBackground = QBrush(linearGradient);
 
-    void fixSearchPosition();
-
-    SearchEdit *search;
-
-    TitleBar *q_ptr;
-    Q_DECLARE_PUBLIC(TitleBar);
-};
-
-TitleBar::TitleBar(QWidget *parent) :
-    QFrame(parent), d_ptr(new TitleBarPrivate(this))
-{
-    Q_D(TitleBar);
-
-    setFocusPolicy(Qt::NoFocus);
-    setObjectName("TitleBar");
-
-    auto layout = new QHBoxLayout(this);
-    layout->setContentsMargins(5, 5, 10, 5);
-
-    auto leftWidget = new QFrame;
-    leftWidget->setObjectName("TitleLeft");
-    leftWidget->setFixedWidth(148);
-    auto leftLayout = new QHBoxLayout(leftWidget);
-    leftLayout->setSpacing(10);
-    leftLayout->setMargin(0);
-
-    auto iconLabel = new QLabel;
-    iconLabel->setObjectName("TitleIcon");
-    iconLabel->setFixedSize(20, 20);
-
-    auto btBack = new QPushButton;
-    btBack->setObjectName("TitleBack");
-    btBack->setFixedSize(24, 24);
-    btBack->hide();
-
-    leftLayout->addWidget(iconLabel, 0, Qt::AlignCenter);
-    leftLayout->addWidget(btBack, 0, Qt::AlignCenter);
-    leftLayout->addStretch();
-
-    d->search = new SearchEdit();
-    d->search->setObjectName("TitleSearch");
-    d->search->setFixedSize(278, 26);
-    d->search->setPlaceHolder(tr("Search"));
-    d->search->clear();
-
-    auto rightWidget = new QFrame;
-    rightWidget->setObjectName("TitleLeft");
-    rightWidget->setFixedWidth(1);
-
-    layout->addWidget(leftWidget, 0,  Qt::AlignCenter);
-    layout->addStretch();
-    layout->addWidget(d->search, 0,  Qt::AlignCenter);
-    layout->addStretch();
-    layout->addWidget(rightWidget, 0,  Qt::AlignCenter);
-
-    auto result = this->findChild<QWidget *>("DEditInsideFrame");
-    if (result) {
-        result->setStyleSheet("#DEditInsideFrame{background: rgba(255,255,255,0.3);}");
+        borderBottom =  QColor(0, 0, 0, 0.1 * 255);
     }
 
-    connect(d->search, &SearchEdit::locateMusic, this, &TitleBar::locateMusicInAllMusiclist);
-    connect(d->search, &SearchEdit::searchText, this, &TitleBar::search);
-    connect(btBack, &QPushButton::clicked, this, &TitleBar::exitSearch);
+    void workaroundSetButtonStyle();
+    void workaroundUpdateButtonViewname();
 
-    connect(this, &TitleBar::search, this, [ = ]() {
-        btBack->show();
-//        d->fixSearchPosition();
-    });
-    connect(this, &TitleBar::exitSearch, this, [ = ]() {
-        btBack->hide();
-//        d->fixSearchPosition();
-    });
+    QBrush          titleBackground;
+    QColor          borderBottom;
+    QString         viewname;
 
-    D_THEME_INIT_WIDGET(TitleBar);
+    Titlebar *q_ptr;
+    Q_DECLARE_PUBLIC(Titlebar)
+};
+
+Titlebar::Titlebar(QWidget *parent) : DTitlebar(parent), d_ptr(new TitlebarPrivate(this))
+{
+    Q_D(Titlebar);
+    ThemeManager::instance()->regisetrWidget(this, QStringList() << s_PropertyViewname);
+    d->workaroundSetButtonStyle();
 }
 
-TitleBar::~TitleBar()
+Titlebar::~Titlebar()
 {
 
 }
-#include <QResizeEvent>
-void TitleBar::resizeEvent(QResizeEvent *event)
+
+QBrush Titlebar::background() const
 {
-    Q_D(TitleBar);
-//    QFrame::resizeEvent(event);
-//    setFixedSize(event->size());
-//    d->fixSearchPosition();
+    Q_D(const Titlebar);
+    return d->titleBackground;
 }
 
-void TitleBarPrivate::fixSearchPosition()
+QColor Titlebar::borderBottom() const
 {
-    Q_Q(TitleBar);
-    auto fixSize = QPoint(search->width() / 2, search->height() / 2);
-    auto fixPos = q->geometry().center() - fixSize;
-    search->setGeometry(fixPos.x(), fixPos.y(),
-                        search->width(), search->height());
+    Q_D(const Titlebar);
+    return d->borderBottom;
+}
 
-    qDebug() << fixPos << search->size() << search->parent();
+QString Titlebar::viewname() const
+{
+    Q_D(const Titlebar);
+    return  d->viewname;
+}
+
+void Titlebar::setBackground(QBrush titleBackground)
+{
+    Q_D(Titlebar);
+    d->titleBackground = titleBackground;
+}
+
+void Titlebar::setBorderBottom(QColor borderBottom)
+{
+    Q_D(Titlebar);
+    d->borderBottom = borderBottom;
+}
+
+void Titlebar::setViewname(QString viewname)
+
+{
+    Q_D(Titlebar);
+    if (d->viewname == viewname) {
+        return;
+    }
+
+    d->viewname = viewname;
+    d->workaroundUpdateButtonViewname();
+    emit viewnameChanged(viewname);
+}
+
+
+void Titlebar::paintEvent(QPaintEvent *)
+{
+    Q_D(const Titlebar);
+
+    auto radius = 3.5;
+    QPainter titlePainter(this);
+    titlePainter.setRenderHint(QPainter::Antialiasing);
+    titlePainter.setRenderHint(QPainter::HighQualityAntialiasing);
+
+    auto titleBarHeight = this->height() - 1;
+    QRectF winRect = rect();
+    QPointF titleTopLeft(winRect.x(), winRect.y());
+
+    QRectF topLeftRect(titleTopLeft,
+                       QPoint(winRect.x() + 2 * radius, winRect.y() + 2 * radius));
+    QRectF topRightRect(QPoint(winRect.x() + winRect.width(), winRect.y()),
+                        QPoint(winRect.x() + winRect.width() - 2 * radius,
+                               winRect.y() + 2 * radius));
+
+    QPainterPath titleBorder;
+    titleBorder.moveTo(winRect.x() + radius, winRect.y());
+    titleBorder.lineTo(winRect.x() + winRect.width() - radius, winRect.y());
+    titleBorder.arcTo(topRightRect, 90.0, 90.0);
+    titleBorder.lineTo(winRect.x() + winRect.width(), winRect.y() + radius);
+    titleBorder.lineTo(winRect.x() + winRect.width(), winRect.y() + titleBarHeight);
+    titleBorder.lineTo(winRect.x(), winRect.y() + titleBarHeight);
+    titleBorder.lineTo(winRect.x() , winRect.y() + radius);
+    titleBorder.arcTo(topLeftRect, 180.0, -90.0);
+    titleBorder.closeSubpath();
+
+    titlePainter.fillPath(titleBorder, QBrush(d->titleBackground));
+    QLine line(titleTopLeft.x(), winRect.y() + titleBarHeight + 1,
+               winRect.x() + winRect.width(), winRect.y() + titleBarHeight + 1);
+
+    titlePainter.setPen(QPen(d->borderBottom, 1.0));
+    titlePainter.drawLine(line);
+}
+
+void TitlebarPrivate::workaroundSetButtonStyle()
+{
+    Q_Q(Titlebar);
+
+    QStringList objNames;
+    objNames  << "DTitlebarDWindowMinButton"
+              << "DTitlebarDWindowMaxButton"
+              << "DTitlebarDWindowCloseButton"
+              << "DTitlebarDWindowOptionButton";
+
+    for (auto &objname : objNames) {
+        auto maxBt = q->findChild<QWidget *>(objname);
+        if (!maxBt)
+            continue;
+        maxBt->setProperty("_d_QSSFilename", "Titlebar");
+        ThemeManager::instance()->regisetrWidget(maxBt);
+    }
+}
+
+void TitlebarPrivate::workaroundUpdateButtonViewname()
+{
+    Q_Q(Titlebar);
+
+    QStringList objNames;
+    objNames  << "DTitlebarDWindowMinButton"
+              << "DTitlebarDWindowMaxButton"
+              << "DTitlebarDWindowCloseButton"
+              << "DTitlebarDWindowOptionButton";
+
+    for (auto &objname : objNames) {
+        auto maxBt = q->findChild<QWidget *>(objname);
+        if (!maxBt)
+            continue;
+        maxBt->setProperty("viewname", viewname);
+    }
 }

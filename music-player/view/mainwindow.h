@@ -7,8 +7,7 @@
  * (at your option) any later version.
  **/
 
-#ifndef PLAYERFRAME_H
-#define PLAYERFRAME_H
+#pragma once
 
 #include <DWindow>
 #include <QScopedPointer>
@@ -23,8 +22,6 @@ class MainWindow : public ThinWindow
 {
     Q_OBJECT
 
-    Q_PROPERTY(QColor titlebarTopColor READ titlebarTopColor WRITE setTitlebarColor NOTIFY titlebarColorChanged)
-    Q_PROPERTY(QColor titlebarBottomColor READ titlebarBottomColor WRITE setTitlebarBottomColor NOTIFY titlebarBottomColorChanged)
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
@@ -36,75 +33,35 @@ public:
 
     void setDefaultBackground();
 
+protected:
     virtual void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     virtual void resizeEvent(QResizeEvent *e) Q_DECL_OVERRIDE;
     virtual void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
 
-    QColor titlebarTopColor() const
-    {
-        return m_titlebarTopColor;
-    }
-
-    QColor titlebarBottomColor() const
-    {
-        return m_titlebarBottomColor;
-    }
-
 signals:
     void addPlaylist(bool editmode);
     void importSelectFiles(const QStringList &filelist);
-    void titlebarColorChanged(QColor titlebarTopColor);
-
-    void titlebarBottomColorChanged(QColor titlebarBottomColor);
-
-public slots:
-    void onCurrentPlaylistChanged(PlaylistPtr playlist);
 
 public slots:
     void onSelectImportFiles();
-
+    void onCurrentPlaylistChanged(PlaylistPtr playlist);
     void toggleLyricView();
     void togglePlaylist();
-
     void showLyricView();
     void showMusicListView();
     void showImportView();
-
     void showTips(QPixmap icon, QString text);
-
     void setPlaylistVisible(bool visible);
-
-    void setTitlebarColor(QColor titlebarColor)
-    {
-        if (m_titlebarTopColor == titlebarColor) {
-            return;
-        }
-
-        m_titlebarTopColor = titlebarColor;
-        emit titlebarColorChanged(titlebarColor);
-    }
-
-    void setTitlebarBottomColor(QColor titlebarBottomColor)
-    {
-        if (m_titlebarBottomColor == titlebarBottomColor) {
-            return;
-        }
-
-        m_titlebarBottomColor = titlebarBottomColor;
-        emit titlebarBottomColorChanged(titlebarBottomColor);
-    }
 
 private:
     void changeToMusicListView(bool keepPlaylist);
-
     void initMenu();
-
-    // disable control
     void disableControl();
+    void updateViewname(const QString &vm);
 
     QScopedPointer<MainWindowPrivate> d;
-    QColor m_titlebarTopColor;
-    QColor m_titlebarBottomColor;
+    QBrush m_titleBackground;
 };
 
-#endif // PLAYERFRAME_H
+extern const QString s_PropertyViewname;
+extern const QString s_PropertyViewnameLyric;

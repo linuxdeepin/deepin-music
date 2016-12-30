@@ -4,13 +4,11 @@
 }
 
 #ImportViewLogo {
-    image: url(:/image/deepin-music.svg);
+    image: url(:/common/image/deepin_music.svg);
 }
 
 #ImportViewText{
     font-size: 12px;
-    font-weight: normal;
-    font-style: normal;
     line-height: 1.5;
     text-align: center;
     color: #979797;
@@ -18,34 +16,11 @@
 
 #ImportViewImportButton{
     font-size: 14px;
-    font-weight: 500;
-    font-style: normal;
-    text-align: center;
-    color: red;
+    color: #0699ff;
+    border-radius: 4.0px;
     border: 1px solid;
-    border-radius: 3;
-    border-color: rgba(0, 0, 255, 50%);
-    background: transparent;
-}
-#ImportViewImportButton[normal=true]{
-    font-size: 14px;
-    font-weight: 500;
-    font-style: normal;
-    text-align: center;
-    color: black;
-    border: none;
-    background: transparent;
-    background-image: url(":/theme/light/image/button_normal.png")
-}
-#ImportViewImportButton:hover{
-    color: white;
-    background-image: url(":/theme/light/image/suggest_button_hover.png")
-}
-#ImportViewImportButton:pressed{
-    color: white;
-    background-image: url(":/theme/light/image/suggest_button_press.png")
-}
-#ImportViewImportButton:disabled{
-    color: grey;
-    background-image: url(":/theme/light/image/suggest_button_disabled.png")
+    border-color: rgba(0, 131, 255, 0.4);
+    background: qlineargradient(x1:0 y1:0, x2:0 y2:1,
+        stop:0 rgba(255,255,255,100%),  stop:1 rgba(253,253,253,100%)
+    );
 }

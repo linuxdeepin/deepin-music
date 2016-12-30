@@ -1,0 +1,10 @@
+#MusicItem {
+    qproperty-textColor: rgba(0,0,0,100%);
+    qproperty-titleColor: rgba(0,0,0,100%);
+    qproperty-highlightText: white;
+    qproperty-background: #0f0f0f;
+    qproperty-alternateBackground: #000000;
+    qproperty-highlightedBackground:  #2ca7f8;
+    qproperty-animationPrefix: ":/common/animation/playing/black";
+    qproperty-highlightAnimationPrefix: ":/common/animation/playing/white";
+}

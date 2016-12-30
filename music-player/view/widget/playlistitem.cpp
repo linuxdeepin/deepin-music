@@ -20,7 +20,7 @@
 
 #include <ddialog.h>
 #include <QMessageBox>
-#include <dthememanager.h>
+#include <thememanager.h>
 
 #include "../../core/playlist.h"
 
@@ -93,7 +93,7 @@ PlayListItem::PlayListItem(PlaylistPtr playlist, QWidget *parent) : QFrame(paren
 
     interLayout->addWidget(playingAnimation, 0, Qt::AlignRight);
 
-    D_THEME_INIT_WIDGET(PlayListItem);
+    ThemeManager::instance()->regisetrWidget(this);
 
     connect(m_titleedit, &QLineEdit::editingFinished,
     this, [ = ] {

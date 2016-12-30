@@ -18,8 +18,8 @@
 #include <QGraphicsOpacityEffect>
 
 #include <DUtil>
-#include <dthememanager.h>
-DWIDGET_USE_NAMESPACE
+
+#include <thememanager.h>
 
 Tip::Tip(const QPixmap &icon, const QString &text, QWidget *parent) : QFrame(parent)
 {
@@ -52,7 +52,7 @@ Tip::Tip(const QPixmap &icon, const QString &text, QWidget *parent) : QFrame(par
     interlayout->addWidget(iconLabel, 0, Qt::AlignVCenter);
     interlayout->addWidget(textLable, 0, Qt::AlignVCenter);
     layout->addWidget(m_interFrame, 0, Qt::AlignVCenter);
-    D_THEME_INIT_WIDGET(Widget/Tip);
+     ThemeManager::instance()->regisetrWidget(this);
 
     adjustSize();
 

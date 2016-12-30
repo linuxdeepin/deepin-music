@@ -63,19 +63,23 @@ QString MusicApp::cachePath()
     auto userCachePath = QStandardPaths::standardLocations(QStandardPaths::CacheLocation).first();
     return userCachePath;
 }
-
+#include <QDebug>
 void MusicApp::init()
 {
     Q_D(MusicApp);
     d->appPresenter = new Presenter;
+    qDebug() << "setTheme";
     d->playerFrame = new MainWindow;
     d->playerFrame->hide();
+
+    qDebug() << "setTheme";
 
     auto presenterWork = new QThread;
     d->appPresenter->moveToThread(presenterWork);
     connect(presenterWork, &QThread::started, d->appPresenter, &Presenter::prepareData);
     connect(d->appPresenter, &Presenter::dataLoaded, this, &MusicApp::onDataPrepared);
 
+    qDebug() << "setTheme";
     presenterWork->start();
 }
 

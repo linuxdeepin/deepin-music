@@ -1,0 +1,11 @@
+#MusicListView{
+/* !!!! WARNING !!!!*/
+/* modify MusicItem.theme for color */
+
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    border: 0px solid red;
+    margin: 0 0 0 0;
+    outline: none;
+    background-color: rgba(0, 0, 0, 1);
+}
+#MusicListView::item{ height:36px; }

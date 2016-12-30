@@ -24,6 +24,8 @@
 #include "musicapp.h"
 #include "view/widget/thinwindow.h"
 
+#include <thememanager.h>
+
 using namespace Dtk::Util;
 using namespace Dtk::Widget;
 
@@ -42,6 +44,8 @@ int main(int argc, char *argv[])
     app.setOrganizationName("deepin");
     app.setApplicationName("deepin-music");
     app.setApplicationVersion("3.0");
+    app.setTheme("light");
+    ThemeManager::instance()->setTheme("light");
 
     DLogManager::registerConsoleAppender();
     DLogManager::registerFileAppender();
@@ -66,13 +70,16 @@ int main(int argc, char *argv[])
     auto mprisPlayer =  new MprisPlayer();
 #endif
 
-    app.setTheme("light");
-    app.setWindowIcon(QIcon(":/image/deepin-music.svg"));
+    qDebug() << "setTheme";
+    app.setWindowIcon(QIcon(":/common/image/deepin_music.svg"));
 
     PluginManager::instance()->init();
+    qDebug() << "setTheme";
     // For Windows, must init media player in main thread!!!
     Player::instance()->init();
+    qDebug() << "setTheme";
     MusicApp::instance()->init();
+    qDebug() << "setTheme";
 
 #ifdef Q_OS_UNIX
     MusicApp::instance()->initMpris(mprisPlayer);

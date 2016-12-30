@@ -14,7 +14,7 @@
 #include <QLabel>
 #include <QGraphicsOpacityEffect>
 
-#include <dthememanager.h>
+#include <thememanager.h>
 #include <dbasebutton.h>
 
 DWIDGET_USE_NAMESPACE
@@ -30,7 +30,6 @@ public:
 
     QLabel                  *text = nullptr;
     DBaseButton             *importButton = nullptr;
-    QGraphicsOpacityEffect  *hideEffect = nullptr;
 
     ImportWidget *q_ptr;
     Q_DECLARE_PUBLIC(ImportWidget);
@@ -47,15 +46,14 @@ ImportWidget::ImportWidget(QWidget *parent) : QFrame(parent), d_ptr(new ImportWi
     logo->setFixedSize(128, 128);
     logo->setObjectName("ImportViewLogo");
 
-
+    auto btFrme = new QFrame;
+    auto btFrmeLayout = new QVBoxLayout(btFrme);
+    btFrme->setFixedSize(150, 50);
     d->importButton = new Dtk::Widget::DBaseButton;
     d->importButton->setObjectName("ImportViewImportButton");
     d->importButton->setFixedSize(130, 36);
     d->importButton->setText(tr("Add Music"));
-
-    d->hideEffect = new QGraphicsOpacityEffect(d->importButton);
-    d->importButton->setGraphicsEffect(d->hideEffect);
-    d->hideEffect->setOpacity(1);
+    btFrmeLayout->addWidget(d->importButton, 0, Qt::AlignCenter);
 
     d->text = new QLabel;
     d->text->setObjectName("ImportViewText");
@@ -67,12 +65,12 @@ ImportWidget::ImportWidget(QWidget *parent) : QFrame(parent), d_ptr(new ImportWi
     layout->addStretch();
     layout->addWidget(logo, 0, Qt::AlignCenter);
     layout->addSpacing(40);
-    layout->addWidget(d->importButton, 0, Qt::AlignCenter);
+    layout->addWidget(btFrme, 0, Qt::AlignCenter);
     layout->addSpacing(20);
     layout->addWidget(d->text, 0, Qt::AlignCenter);
     layout->addStretch();
 
-    D_THEME_INIT_WIDGET(ImportWidget);
+    ThemeManager::instance()->regisetrWidget(this);
 
     connect(d->importButton, &QPushButton::clicked,
     this, [ = ] {
@@ -95,7 +93,7 @@ void ImportWidget::showWaitHint()
 {
     Q_D(ImportWidget);
     d->importButton->setDisabled(true);
-    d->hideEffect->setOpacity(0);
+    d->importButton->hide();
     d->text->setText(tr("Loading music, please wait"));
 }
 
@@ -103,7 +101,7 @@ void ImportWidget::showImportHint()
 {
     Q_D(ImportWidget);
     d->importButton->setDisabled(false);
-    d->hideEffect->setOpacity(1);
+    d->importButton->show();
     QString linkText = QString(linkTemplate).arg(tr("Scan")).arg(tr("Scan"));
     d->text->setText(QString(tr("%1 music directory or drag & drop music file to add music")).arg(linkText));
 }

@@ -7,8 +7,7 @@
  * (at your option) any later version.
  **/
 
-#ifndef LYRICLINEDELEGATE_H
-#define LYRICLINEDELEGATE_H
+#pragma once
 
 #include <QStyledItemDelegate>
 
@@ -37,4 +36,3 @@ public:
                       const QModelIndex &index) const;
 };
 
-#endif // LYRICLINEDELEGATE_H

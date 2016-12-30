@@ -1,0 +1,22 @@
+#LyricView {
+    border-radius: 3px;
+    background-color: rgba(0,0,0,30%);
+}
+
+#LyricCover{
+    qproperty-radius: 4;
+    qproperty-borderColor: rgba(255,255,255,20%);
+    qproperty-shadowColor: rgba(0,0,0,10%);
+}
+#LyricBack{
+    border-image: url(:/image/show_lyc_normal.png);
+}
+#LyricBack:hover{
+    border-image: url(:/image/show_lyc_hover.png);
+}
+#LyricBack:pressed{
+    border-image: url(:/image/show_lyc_press.png);
+}
+#LyricTextView{
+border: 2px solid red;
+}

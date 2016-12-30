@@ -16,8 +16,7 @@
 #include <QGraphicsOpacityEffect>
 
 #include <DUtil>
-#include <dthememanager.h>
-DWIDGET_USE_NAMESPACE
+#include <thememanager.h>
 
 class HintPrivate
 {

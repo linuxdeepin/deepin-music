@@ -17,8 +17,14 @@ class MusicMeta;
 class InfoDialog : public DAbstractDialog
 {
     Q_OBJECT
-public:
-    explicit InfoDialog(const MusicMeta& info, const QPixmap& coverPixmap, QWidget *parent = 0);
+    Q_PROPERTY(QString defaultCover READ defaultCover WRITE setDefaultCover)
 
+    QString m_cover;
+public:
+    explicit InfoDialog(const MusicMeta &info, const QPixmap &coverPixmap, QWidget *parent = 0);
+
+    QString defaultCover() const;
+public slots:
+    void setDefaultCover(QString defaultCover);
 };
 

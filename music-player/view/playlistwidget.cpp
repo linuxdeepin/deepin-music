@@ -16,7 +16,7 @@
 #include <QGraphicsDropShadowEffect>
 
 #include <DUtil>
-#include <dthememanager.h>
+#include <thememanager.h>
 
 #include "../core/playlist.h"
 #include "widget/playlistview.h"
@@ -58,7 +58,7 @@ PlaylistWidget::PlaylistWidget(QWidget *parent) : QFrame(parent)
     btAddFameLayout->addWidget(btAdd, 0, Qt::AlignBottom | Qt::AlignHCenter);
     layout->addWidget(btAddFrame, 0, Qt::AlignHCenter);
 
-    D_THEME_INIT_WIDGET(PlaylistWidget);
+     ThemeManager::instance()->regisetrWidget(this);
 
     connect(btAdd, &QPushButton::clicked, this, [ = ](bool /*checked*/) {
         qDebug() << "addPlaylist(true);";

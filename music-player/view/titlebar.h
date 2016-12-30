@@ -9,25 +9,39 @@
 
 #pragma once
 
-#include <QFrame>
+#include <QScopedPointer>
+#include <dtitlebar.h>
 
-class TitleBarPrivate;
-class TitleBar : public QFrame
+class TitlebarPrivate;
+class Titlebar : public Dtk::Widget::DTitlebar
 {
     Q_OBJECT
+
+    Q_PROPERTY(QBrush background READ background WRITE setBackground)
+    Q_PROPERTY(QColor borderBottom READ borderBottom WRITE setBorderBottom)
+    Q_PROPERTY(QString viewname READ viewname WRITE setViewname NOTIFY viewnameChanged)
+
 public:
-    explicit TitleBar(QWidget *parent = 0);
-    ~TitleBar();
+    explicit Titlebar(QWidget *parent = 0);
+    ~Titlebar();
+
+    QString viewname() const;
+    QBrush background() const;
+    QColor borderBottom() const;
 
 signals:
-    void exitSearch();
-    void search(const QString &text);
-    void locateMusicInAllMusiclist(const QString &hash);
+    void viewnameChanged(QString viewname);
+
+public slots:
+    void setViewname(QString viewname);
+    void setBackground(QBrush background);
+    void setBorderBottom(QColor borderBottom);
 
 protected:
-    virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
+    virtual void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
 
 private:
-    QScopedPointer<TitleBarPrivate> d_ptr;
-    Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), TitleBar)
+    QScopedPointer<TitlebarPrivate> d_ptr;
+    Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), Titlebar)
+    QColor m_borderBottom;
 };

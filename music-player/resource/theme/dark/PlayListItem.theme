@@ -1,0 +1,44 @@
+#PlayListItem{
+    qproperty-animationPrefix: ":/common/animation/playing/black";
+    qproperty-highlightAnimationPrefix: ":/common/animation/playing/black";
+}
+
+#PlayListIcon {
+    image: url(:/image/playlist.png);
+}
+#PlayListIcon[iconName="all"] {
+    image: url(:/image/playlist_allmusic.png);
+}
+#PlayListIcon[iconName="fav"] {
+    image: url(:/image/playlist_fav.png);
+}
+
+#PlayListInterFrame{
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-top: none;
+    border-right: none;
+    border-left: none;
+}
+
+#PlayListTitle {
+    color: #000000;
+    background: transparent;
+    border: none;
+    qproperty-alignment: AlignLeft;
+    font-size: 12px;
+}
+
+#PlayListTitle[status="active"] {
+    color: #009aff;
+    background: transparent;
+    border: none;
+    qproperty-alignment: AlignLeft;
+    font-size: 12px;
+}
+
+#PlayListTitle:focus[status="active"] {
+    color: #000000;
+    background-color: white;
+    border-radius: 4.0px;
+    border: 1px outset rgba(0, 0, 0, 0.08);
+}

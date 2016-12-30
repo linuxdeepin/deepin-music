@@ -1,0 +1,40 @@
+#MusicListWidget{
+    border: 0px solid red;
+    border-radius: 4px;
+    background: transparent;
+    background-color: rgba(0, 0, 0, 1);
+}
+#MusicListActionBar{
+    background-color: rgba(0, 0, 0, 1);
+    border: 0px solid red;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+#MusicListSort{
+    border: 1px solid red;
+    background-color:  rgba(255, 255, 255, 0.4);
+}
+
+#MusicListEmptyHits{
+    font-size: 24px;
+    color: #d0d0d0;
+}
+
+#MusicListPlayAll{
+    font-size: 12px;
+    padding: 0 10 0 10;
+    border: none;
+    border-radius: 3.0px;
+    qproperty-icon: url(:/image/play_all.png);
+}
+#MusicListPlayAll:hover{
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1,
+    stop:0 rgba(255, 255, 255, 40%), stop:1 rgba(255, 255, 255, 20%));
+}
+#MusicListPlayAll:pressed{
+    color: #2ca7f8;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1,
+    stop:0 rgba(255, 255, 255, 80%), stop:1 rgba(255, 255, 255, 60%));
+}

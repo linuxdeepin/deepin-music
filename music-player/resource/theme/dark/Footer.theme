@@ -1,0 +1,198 @@
+#Footer {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+#FooterProgress::groove:horizontal {
+    background: transparent;
+    position: absolute;
+    left: 0px; right: 0px;
+}
+#FooterProgress::handle:horizontal {
+    background-color:transparent;
+    margin: 5px -5px; /* expand outside the groove */
+}
+#FooterProgress::add-page:horizontal {
+    background: transparent;
+    background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1,
+        stop:0        transparent,                  stop:0.08333 transparent,
+        stop:0.08400  rgba(255, 255, 255, 0.15),    stop:0.16666 rgba(255, 255, 255, 0.15),
+        stop:0.17000  rgba(0, 0, 0, 0.0),           stop:0.24999 rgba(0, 0, 0, 0.0),
+        stop:0.25000  rgba(0, 0, 0, 0.0),           stop:1 rgba(0, 0, 0, 0.0)
+    );
+}
+#FooterProgress::sub-page:horizontal {
+    background: #2ca7f8;
+    background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1,
+        stop:0        #2ca7f8,              stop:0.08333 #2ca7f8,
+        stop:0.08333  #2ca7f8,              stop:0.16666 #2ca7f8,
+        stop:0.17000  rgba(0, 0, 0, 0.3),   stop:0.24999 rgba(0, 0, 0, 0.3),
+        stop:0.25000  rgba(0, 0, 0, 0.0), stop:1 rgba(0, 0, 0, 0.0)
+    );
+}
+
+
+#FooterCover {
+    qproperty-radius: 0;
+    qproperty-borderColor: rgba(0,0,0,0%);
+    qproperty-shadowColor: rgba(0,0,0,0%);
+}
+
+#FooterTitle{
+    font-size: 12px;
+    color: #ffffff;
+}
+
+#FooterArtist{
+    font-size: 11px;
+    color: rgba(255,255,255,0.6);
+}
+
+#FooterActionPrev{
+    border-image: url(:/image/previous_normal.png);
+}
+#FooterActionPrev:hover{
+    border-image: url(:/image/previous_hover.png);
+}
+#FooterActionPrev:pressed{
+    border-image: url(:/image/previous_press.png);
+}
+
+#FooterActionPlay{
+    border-image: url(:/image/start_normal.png);
+}
+#FooterActionPlay:hover{
+    border-image: url(:/image/start_hover.png);
+}
+#FooterActionPlay:pressed{
+    border-image: url(:/image/start_press.png);
+}
+#FooterActionPlay[playstatus=playing]{
+    border-image: url(:/image/pause_normal.png);
+}
+#FooterActionPlay:hover[playstatus=playing]{
+    border-image: url(:/image/pause_hover.png);
+}
+#FooterActionPlay:pressed[playstatus=playing]{
+    border-image: url(:/image/pause_press.png);
+}
+
+#FooterActionNext{
+    border-image: url(:/image/next_normal.png);
+}
+#FooterActionNext:hover{
+    border-image: url(:/image/next_hover.png);
+}
+#FooterActionNext:pressed{
+    border-image: url(:/image/next_press.png);
+}
+
+#FooterActionFavorite{
+    border-image: url(:/image/fav_normal.png);
+}
+#FooterActionFavorite:hover{
+    border-image: url(:/image/fav_hover.png);
+}
+#FooterActionFavorite:pressed{
+    border-image: url(:/image/fav_press.png);
+}
+
+#FooterActionFavorite[fav=true]{
+    border-image: url(:/image/unfav_normal.png);
+}
+#FooterActionFavorite:hover[fav=true]{
+    border-image: url(:/image/unfav_hover.png);
+}
+#FooterActionFavorite:pressed[fav=true]{
+    border-image: url(:/image/unfav_press.png);
+}
+
+#FooterActionLyric{
+    border-image: url(:/image/lrc_normal.png);
+}
+#FooterActionLyric:hover{
+    border-image: url(:/image/lrc_hover.png);
+}
+#FooterActionLyric:pressed{
+    border-image: url(:/image/lrc_press.png);
+}
+
+#FooterActionPlayMode{
+    border-image: url(:/image/repeat_all_normal.png);
+}
+#FooterActionPlayMode:hover{
+    border-image: url(:/image/repeat_all_hover.png);
+}
+#FooterActionPlayMode:pressed{
+    border-image: url(:/image/repeat_all_press.png);
+}
+#FooterActionPlayMode[mode="1"]{
+    border-image: url(:/image/repeat_single_normal.png);
+}
+#FooterActionPlayMode:hover[mode="1"]{
+    border-image: url(:/image/repeat_single_hover.png);
+}
+#FooterActionPlayMode:pressed[mode="1"]{
+    border-image: url(:/image/repeat_single_press.png);
+}
+#FooterActionPlayMode[mode="2"]{
+    border-image: url(:/image/shuffle_normal.png);
+}
+#FooterActionPlayMode:hover[mode="2"]{
+    border-image: url(:/image/shuffle_hover.png);
+}
+#FooterActionPlayMode:pressed[mode="2"]{
+    border-image: url(:/image/shuffle_press.png);
+}
+
+#FooterActionSound[volume="high"]{
+    border-image: url(:/light/image/volume_high_normal.png);
+}
+#FooterActionSound:hover[volume="high"]{
+    border-image: url(:/light/image/volume_high_hover.png);
+}
+#FooterActionSound:pressed[volume="high"]{
+    border-image: url(:/light/image/volume_high_press.png);
+}
+
+#FooterActionSound[volume="mid"]{
+    border-image: url(:/light/image/volume_mid_normal.png);
+}
+#FooterActionSound:hover[volume="mid"]{
+    border-image: url(:/light/image/volume_mid_hover.png);
+}
+#FooterActionSound:pressed[volume="mid"]{
+    border-image: url(:/light/image/volume_mid_press.png);
+}
+
+#FooterActionSound[volume="low"]{
+    border-image: url(:/light/image/volume_low_normal.png);
+}
+#FooterActionSound:hover[volume="low"]{
+    border-image: url(:/light/image/volume_low_hover.png);
+}
+#FooterActionSound:pressed[volume="low"]{
+    border-image: url(:/light/image/volume_mid_press.png);
+}
+#FooterActionSound[volume="mute"]{
+    border-image: url(:/light/image/volume_mute_normal.png);
+}
+#FooterActionSound:hover[volume="mute"]{
+    border-image: url(:/light/image/volume_mute_hover.png);
+}
+#FooterActionSound:pressed[volume="mute"]{
+    border-image: url(:/light/image/volume_mute_press.png);
+}
+
+#FooterActionPlayList{
+    border-image: url(:/image/show_playlist_normal.png);
+}
+#FooterActionPlayList:hover{
+    border-image: url(:/image/show_playlist_hover.png);
+}
+#FooterActionPlayList:pressed{
+    border-image: url(:/image/show_playlist_press.png);
+}

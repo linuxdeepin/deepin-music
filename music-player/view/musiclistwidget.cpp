@@ -18,7 +18,7 @@
 #include <QResizeEvent>
 #include <QStandardItemModel>
 
-#include <dthememanager.h>
+#include <thememanager.h>
 #include <dcombobox.h>
 
 #include "../core/music.h"
@@ -155,10 +155,9 @@ MusicListWidget::MusicListWidget(QWidget *parent) :
     layout->addWidget(d->m_emptyHits, 0, Qt::AlignCenter);
     layout->addStretch();
 
-    D_THEME_INIT_WIDGET(MusicListWidget);
-    d->m_sortCombo->setStyleSheet(
-        DThemeManager::instance()->getQssForWidget("Widget/ComboBox")
-    );
+    ThemeManager::instance()->regisetrWidget(this);
+    ThemeManager::instance()->regisetrWidget(d->m_sortCombo);
+
 
     d->initConntion();
 }

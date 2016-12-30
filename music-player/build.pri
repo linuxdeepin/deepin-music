@@ -33,7 +33,11 @@ win32{
         LIBS += -LD:\Develop\deepin-tool-kit\build\dwidget\debug -ldtkwidget
         LIBS += -LD:\Develop\deepin-tool-kit\build\dutil\debug -ldtkutil
         LIBS += -LD:\Develop\deepin-tool-kit\build\dbase\debug -ldtkbase
+        LIBS += -L"C:\Program Files (x86)\taglib\lib" -ltag
+        LIBS += -L"C:\Program Files (x86)\taglib\lib" -ltag_c
+        LIBS += -L"D:\Develop\Library\zlib-1.2.8\contrib\vstudio\vc11\x64\ZlibStatRelease" -lzlibstat
     }
+
 
     INCLUDEPATH += D:\Develop\Library\icu\include
     LIBS += -LD:\Develop\Library\icu\lib64 -licuuc

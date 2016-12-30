@@ -22,14 +22,14 @@
 #include <QStringListModel>
 #include <QAbstractItemDelegate>
 
-#include <dthememanager.h>
+#include <thememanager.h>
 
 #include "../core/util/lyric.h"
 
 #include "widget/cover.h"
 #include "widget/lyriclinedelegate.h"
 
-DWIDGET_USE_NAMESPACE
+//DWIDGET_USE_NAMESPACE
 
 static const int lyricLineHeight = 40;
 static const QString defaultLyric = "No Lyric";
@@ -147,9 +147,6 @@ LyricView::LyricView(QWidget *parent)
 
     d->m_lyric = new QListView;
     d->m_lyric->setObjectName("LyricTextView");
-    d->m_lyric->setStyleSheet(
-        DThemeManager::instance()->getQssForWidget("Widget/LyricTextView")
-    );
 
     d->m_lyric->setSelectionMode(QListView::SingleSelection);
     d->m_lyric->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -184,7 +181,8 @@ LyricView::LyricView(QWidget *parent)
 
     layout->addWidget(d->m_hideLyric, 0, Qt::AlignRight | Qt::AlignTop);
 
-    D_THEME_INIT_WIDGET(LyricView)
+    ThemeManager::instance()->regisetrWidget(this);
+    ThemeManager::instance()->regisetrWidget(d->m_lyric);
 
     d->initConnection();
 }

@@ -1,0 +1,10 @@
+#Tip {
+}
+
+#TipIcon{
+}
+
+#TipText {
+    font-size: 12px;
+    color: black;
+}

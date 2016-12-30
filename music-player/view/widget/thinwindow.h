@@ -16,8 +16,8 @@ class ThinWindowPrivate;
 class ThinWindow : public QWidget
 {
     Q_OBJECT
-    Q_PROPERTY(QBrush background READ background WRITE setBackground)
     Q_PROPERTY(int radius READ radius WRITE setRadius)
+    Q_PROPERTY(QBrush background READ background WRITE setBackground)
     Q_PROPERTY(QColor borderColor READ borderColor WRITE setBorderColor)
 public:
     explicit ThinWindow(QWidget *parent = 0);

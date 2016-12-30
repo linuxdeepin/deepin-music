@@ -9,9 +9,7 @@
 
 #include "playlistview.h"
 
-#include <dthememanager.h>
-
-DWIDGET_USE_NAMESPACE
+#include <thememanager.h>
 
 PlayListView::PlayListView(QWidget *parent) : QListWidget(parent)
 {
@@ -21,5 +19,5 @@ PlayListView::PlayListView(QWidget *parent) : QListWidget(parent)
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setFocusPolicy(Qt::NoFocus);
-    D_THEME_INIT_WIDGET(PlayListView);
+     ThemeManager::instance()->regisetrWidget(this);
 }

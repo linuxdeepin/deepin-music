@@ -14,7 +14,7 @@
 #include <QPainter>
 #include <QStandardItemModel>
 
-#include <dthememanager.h>
+#include <thememanager.h>
 #include <musicmeta.h>
 
 #include "musiclistview.h"
@@ -59,7 +59,7 @@ MusicItemDelegatePrivate::MusicItemDelegatePrivate(MusicItemDelegate *parent):
 {
     setObjectName("MusicItem");
     playingAnimation = new Dtk::Widget::DPictureSequenceView;
-    D_THEME_INIT_WIDGET(MusicItem)
+    ThemeManager::instance()->regisetrWidget(this);
 }
 
 void MusicItemDelegatePrivate::setActiveAnimationPrefix(QString prefix) const
@@ -73,6 +73,7 @@ void MusicItemDelegatePrivate::setActiveAnimationPrefix(QString prefix) const
     for (int i = 0; i < 94; ++i) {
         urls << urlTemp.arg(i);
     }
+    playingAnimation->setSpeed(40);
     playingAnimation->setPictureSequence(urls);
     playingAnimation->setProperty("ActivePrefix", prefix);
 }
@@ -283,7 +284,8 @@ void MusicItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
 
                 d->playingAnimation->setParent(w);
                 d->playingAnimation->raise();
-                d->playingAnimation->pause();
+//                d->playingAnimation->pause();
+                d->playingAnimation->play();
                 d->playingAnimation->show();
                 auto center = rect.center();
                 auto aniSize = d->playingAnimation->size();

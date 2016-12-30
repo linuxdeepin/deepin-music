@@ -1,0 +1,15 @@
+#TitleBack{
+    border-image: url(:/light/image/back_normal.png);
+}
+#TitleBack:hover{
+    border-image: url(:/light/image/back_hover.png);
+}
+#TitleBack:pressed{
+    border-image: url(:/light/image/back_press.png);
+}
+
+#TitleIcon {
+    image: url(:/common/image/title_icon.png)
+}
+
+

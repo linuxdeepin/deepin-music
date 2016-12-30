@@ -24,7 +24,7 @@
 #include <QUrl>
 #include <QProcess>
 
-#include <dthememanager.h>
+#include <thememanager.h>
 
 #include "../../musicapp.h"
 #include "../../core/music.h"
@@ -70,8 +70,8 @@ MusicListView::MusicListView(QWidget *parent)
     setDropIndicatorShown(false);
 
     setSelectionMode(QListView::ExtendedSelection);
-    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 
     this->setEditTriggers(QAbstractItemView::NoEditTriggers);
     this->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -89,7 +89,7 @@ MusicListView::MusicListView(QWidget *parent)
     this, [ = ](int value) {
         verticalScrollBar()->setValue(value);
     });
-    D_THEME_INIT_WIDGET(MusicListView);
+    ThemeManager::instance()->regisetrWidget(this);
 }
 
 MusicListView::~MusicListView()
@@ -326,7 +326,7 @@ void MusicListView::resizeEvent(QResizeEvent *event)
     d->m_scrollBar->setMaximum(verticalScrollBar()->maximum());
     d->m_scrollBar->setMinimum(verticalScrollBar()->minimum());
     d->m_scrollBar->setPageStep(verticalScrollBar()->pageStep());
-
+    d->m_scrollBar->hide();
     QListView::resizeEvent(event);
 }
 
@@ -477,13 +477,13 @@ void MusicListView::showContextMenu(const QPoint &pos,
             auto item = d->m_model->item(index.row(), index.column());
             MusicMeta meta = qvariant_cast<MusicMeta>(item->data());
 
-            auto cover = QImage(QString(":/image/info_cover.png"));
+            QPixmap coverPixmap;
             auto coverData = LyricService::coverData(meta);
             if (coverData.length() > 0) {
+                QImage cover;
                 cover = QImage::fromData(coverData);
+                coverPixmap = QPixmap::fromImage(WidgetHelper::cropRect(cover, QSize(140, 140)));
             }
-
-            auto coverPixmap =  QPixmap::fromImage(WidgetHelper::cropRect(cover, QSize(140, 140)));
 
             InfoDialog dlg(meta, coverPixmap, this);
             dlg.exec();
