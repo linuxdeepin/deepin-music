@@ -42,13 +42,15 @@ class MusicListViewPrivate
 public:
     MusicListViewPrivate(MusicListView *parent): q_ptr(parent) {}
 
+    void checkScrollbarSize();
+
     PlaylistPtr         m_playlist;
     QStandardItemModel  *m_model        = nullptr;
     MusicItemDelegate   *m_delegate     = nullptr;
     QScrollBar          *m_scrollBar    = nullptr;
 
     MusicListView *q_ptr;
-    Q_DECLARE_PUBLIC(MusicListView);
+    Q_DECLARE_PUBLIC(MusicListView)
 };
 
 MusicListView::MusicListView(QWidget *parent)
@@ -168,7 +170,8 @@ void MusicListView::onMusicRemoved(PlaylistPtr playlist, const MusicMeta &meta)
             break;
         }
     }
-//    d->m_scrollBar->setVisible(verticalScrollBar()->isVisible());
+
+    d->checkScrollbarSize();
 }
 
 void MusicListView::onMusicAdded(PlaylistPtr playlist, const MusicMeta &meta)
@@ -239,9 +242,11 @@ void MusicListView::onMusicError(PlaylistPtr playlist, const MusicMeta &meta, in
 
 void MusicListView::onMusicListAdded(PlaylistPtr playlist, const MusicMetaList &metalist)
 {
+    Q_D(MusicListView);
     for (auto meta : metalist) {
         onMusicAdded(playlist, meta);
     }
+    d->checkScrollbarSize();
 }
 
 void MusicListView::onLocate(PlaylistPtr playlist, const MusicMeta &meta)
@@ -306,6 +311,7 @@ void MusicListView::onMusiclistChanged(PlaylistPtr playlist)
             d->m_delegate->setPlayingIndex(index);
         }
     }
+    d->checkScrollbarSize();
 }
 
 void MusicListView::wheelEvent(QWheelEvent *event)
@@ -318,16 +324,8 @@ void MusicListView::wheelEvent(QWheelEvent *event)
 void MusicListView::resizeEvent(QResizeEvent *event)
 {
     Q_D(MusicListView);
-
-    auto size = event->size();
-    auto scrollBarWidth = 8;
-    d->m_scrollBar->resize(scrollBarWidth, size.height());
-    d->m_scrollBar->move(size.width() - scrollBarWidth - 3, 0);
-    d->m_scrollBar->setMaximum(verticalScrollBar()->maximum());
-    d->m_scrollBar->setMinimum(verticalScrollBar()->minimum());
-    d->m_scrollBar->setPageStep(verticalScrollBar()->pageStep());
-    d->m_scrollBar->show();
     QListView::resizeEvent(event);
+    d->checkScrollbarSize();
 }
 
 
@@ -491,4 +489,27 @@ void MusicListView::showContextMenu(const QPoint &pos,
     });
 
     myMenu.exec(globalPos);
+}
+
+
+void MusicListViewPrivate::checkScrollbarSize()
+{
+    Q_Q(MusicListView);
+
+    auto itemCount = q->model()->rowCount();
+    auto size = q->size();
+    auto scrollBarWidth = 8;
+    m_scrollBar->resize(scrollBarWidth, size.height()-2);
+    m_scrollBar->move(size.width() - scrollBarWidth - 8, 0);
+    m_scrollBar->setSingleStep(1);
+    m_scrollBar->setPageStep(size.height() / 36);
+    m_scrollBar->setMinimum(0);
+
+    if (itemCount > size.height() / 36) {
+        m_scrollBar->show();
+        m_scrollBar->setMaximum(itemCount - size.height() / 36);
+    } else {
+        m_scrollBar->hide();
+        m_scrollBar->setMaximum(0);
+    }
 }
