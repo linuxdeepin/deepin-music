@@ -60,7 +60,7 @@ void MediaFileMonitor::importPlaylistFiles(PlaylistPtr playlist, const QStringLi
     QList<CueParser>  cuelist;
     MusicMetaList metaCache;
 
-    qDebug() << Player::instance()->supportedSuffixList() << filelist;
+//    qDebug() << Player::instance()->supportedSuffixList() << filelist;
     for (auto &filepath : filelist) {
         QDirIterator it(filepath, Player::instance()->supportedSuffixList(),
                         QDir::Files, QDirIterator::Subdirectories);
@@ -72,9 +72,9 @@ void MediaFileMonitor::importPlaylistFiles(PlaylistPtr playlist, const QStringLi
             if (fileInfo.suffix() == "cue") {
                 cuelist << CueParser(url);
                 // TODO: check cue invaild
-                #ifdef SUPPORT_INOTIFY
+#ifdef SUPPORT_INOTIFY
                 m_watcher->addPath(fileInfo.absolutePath());
-                #endif
+#endif
                 continue;
             }
 
@@ -116,7 +116,11 @@ void MediaFileMonitor::importPlaylistFiles(PlaylistPtr playlist, const QStringLi
     }
 
     for (auto &key : losslessMetaCache.keys()) {
-        metaCache << losslessMetaCache.value(key);
+        auto losslessMeta = losslessMetaCache.value(key);
+#ifdef SUPPORT_INOTIFY
+        m_watcher->addPath(losslessMeta.localPath);
+#endif
+        metaCache << losslessMeta;
         if (metaCache.length() >= ScanCacheSize) {
             emit MediaDatabase::instance()->addMusicMetaList(metaCache);
             emit meidaFileImported(playlist, metaCache);
@@ -143,6 +147,7 @@ void MediaFileMonitor::startMonitor()
         dirs.insert(metafi.absolutePath(), metafi.absolutePath());
     }
 
+    qDebug() << dirs;
 #ifdef SUPPORT_INOTIFY
     m_watcher->addPaths(dirs.keys());
 #endif

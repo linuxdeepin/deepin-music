@@ -124,10 +124,10 @@ void Presenter::prepareData()
         if (playlist->id() != AllMusicListID) {
             PlaylistPtr allplaylist = d->playlistMgr->playlist(AllMusicListID);
             allplaylist->appendMusic(metalist);
-
         }
 
         playlist->appendMusic(metalist);
+
         emit meidaFilesImported(playlist, metalist);
     });
 
@@ -139,7 +139,14 @@ void Presenter::prepareData()
         for (auto playlist : d->playlistMgr->allplaylist()) {
             playlist->removeMusic(metalist);
         }
+
         emit MediaDatabase::instance()->removeMusicMetaList(metalist);
+
+        if (d->playlistMgr->playlist(AllMusicListID)->isEmpty()) {
+            qDebug() << "meta library clean";
+            onMusicStop(d->playlistMgr->playingPlaylist(), MusicMeta());
+            emit metaInfoClean();
+        }
     });
 
     connect(d->playlistMgr, &PlaylistManager::playingPlaylistChanged,

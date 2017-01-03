@@ -11,6 +11,7 @@ CONFIG      += c++11 link_pkgconfig
 DESTDIR     = $$BUILD_DIST/bin
 
 unix{
+    DEFINES += SUPPORT_INOTIFY
     QT += x11extras
     PKGCONFIG += dtkbase dtkutil dtkwidget taglib icu-uc icu-i18n libavutil libavformat libavcodec
     PKGCONFIG += x11 xext
