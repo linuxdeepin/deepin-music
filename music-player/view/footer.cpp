@@ -39,8 +39,6 @@ static const QString sPlayStatusValuePlaying    = "playing";
 static const QString sPlayStatusValuePause      = "pause";
 static const QString sPlayStatusValueStop       = "stop";
 
-static const QString sDefaultCover = ":/image/cover_welcome.png";
-
 class FooterPrivate
 {
 public:
@@ -473,7 +471,7 @@ void Footer::onMusicStoped(PlaylistPtr playlist, const MusicMeta &meta)
     this->enableControl(false);
     d->title->hide();
     d->artist->hide();
-    d->cover->setCoverPixmap(QPixmap(sDefaultCover));
+    d->cover->setCoverPixmap(QPixmap(d->defaultCover));
     d->cover->repaint();
     d->updateQssProperty(d->btPlay, sPropertyPlayStatus, sPlayStatusValueStop);
     d->updateQssProperty(this, sPropertyPlayStatus, sPlayStatusValueStop);
@@ -508,7 +506,7 @@ void Footer::onCoverChanged(const MusicMeta &info, const QByteArray &coverData)
 
     QPixmap coverPixmap = coverData.length() > 1024 ?
                           QPixmap::fromImage(QImage::fromData(coverData)) :
-                          QPixmap(sDefaultCover);
+                          QPixmap(d->defaultCover);
 
     d->cover->setCoverPixmap(coverPixmap);
     d->cover->repaint();

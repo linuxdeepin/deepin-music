@@ -70,8 +70,8 @@ MusicListView::MusicListView(QWidget *parent)
     setDropIndicatorShown(false);
 
     setSelectionMode(QListView::ExtendedSelection);
-    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     this->setEditTriggers(QAbstractItemView::NoEditTriggers);
     this->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -225,7 +225,7 @@ void MusicListView::onMusicError(PlaylistPtr playlist, const MusicMeta &meta, in
         }
     }
 
-    if (nullptr == item) {
+    if (nullptr == item || !index.isValid()) {
         return;
     }
 
@@ -326,7 +326,7 @@ void MusicListView::resizeEvent(QResizeEvent *event)
     d->m_scrollBar->setMaximum(verticalScrollBar()->maximum());
     d->m_scrollBar->setMinimum(verticalScrollBar()->minimum());
     d->m_scrollBar->setPageStep(verticalScrollBar()->pageStep());
-    d->m_scrollBar->hide();
+    d->m_scrollBar->show();
     QListView::resizeEvent(event);
 }
 
@@ -444,7 +444,7 @@ void MusicListView::showContextMenu(const QPoint &pos,
             warnDlg.setTextFormat(Qt::RichText);
             warnDlg.addButtons(QStringList() << tr("Cancel") << tr("Delete"));
 
-            auto cover = QImage(QString(":/image/cover_max.png"));
+            auto cover = QImage(QString(":/common/image/del_notify.png"));
             if (1 == metalist.length()) {
                 auto meta = metalist.first();
                 auto coverData = LyricService::coverData(meta);

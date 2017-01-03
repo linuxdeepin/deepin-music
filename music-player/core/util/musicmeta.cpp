@@ -13,11 +13,23 @@
 #include <QTextCodec>
 #include <QTime>
 #include <QHash>
+#include <QDebug>
+#include <QAudioBuffer>
+#include <QMediaContent>
 
 #include <tag.h>
 #include <fileref.h>
 #include <taglib.h>
 #include <tpropertymap.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+#include <libavcodec/avcodec.h>
+#include <libavformat/avformat.h>
+#ifdef __cplusplus
+}
+#endif
 
 #include "pinyin.h"
 #include "icu.h"
@@ -76,6 +88,22 @@ MusicMeta fromLocalFile(const QFileInfo &fileInfo, const QString &hash)
     if (f.audioProperties()) {
         // msec
         info.length = f.audioProperties()->length() * 1000;
+    } else {
+        av_register_all();
+        AVFormatContext *pFormatCtx = avformat_alloc_context();
+        avformat_open_input(&pFormatCtx, info.localPath.toStdString().c_str(), NULL, NULL);
+        if (pFormatCtx) {
+            AVDictionaryEntry *tag = NULL;
+            avformat_find_stream_info(pFormatCtx, NULL);
+            while ((tag = av_dict_get(pFormatCtx->metadata, "", tag, AV_DICT_IGNORE_SUFFIX))) {
+                qDebug() << tag->key << "=" << tag->value;
+            }
+            int64_t duration = pFormatCtx->duration / 1000;
+            info.length = duration;
+        }
+
+        avformat_close_input(&pFormatCtx);
+        avformat_free_context(pFormatCtx);
     }
 
     if (f.file()) {

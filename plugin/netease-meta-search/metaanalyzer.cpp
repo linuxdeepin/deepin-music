@@ -30,7 +30,7 @@ static bool similarString(QString dest, QString orig)
         }
     }
 
-    qDebug() << count * 100/ len;
+//    qDebug() << count * 100/ len;
     if (2 * count > len) {
         return true;
     } else {
@@ -72,8 +72,8 @@ void MetaAnalyzer::analyzerResults()
         for (auto &albumResut : m_ablumResult) {
             if (titleResult.album.name == albumResut.album.name &&
                     titleResult.name == albumResut.name) {
-                qDebug() << "check" << m_meta.title  << titleResult.name <<
-                         similarString(m_meta.title, titleResult.name);
+//                qDebug() << "check" << m_meta.title  << titleResult.name <<
+//                         similarString(m_meta.title, titleResult.name);
                 if (similarString(m_meta.title, titleResult.name)) {
                     result = titleResult;
                     find = true;
@@ -89,7 +89,7 @@ void MetaAnalyzer::analyzerResults()
     if (!find) {
         m_titleResult = m_titleResult + m_ablumResult;
         for (auto &titleResult : m_titleResult) {
-            qDebug() << "similarString" << m_meta.title << titleResult.name;
+//            qDebug() << "similarString" << m_meta.title << titleResult.name;
             if (similarString(m_meta.title, titleResult.name)) {
                 result = titleResult;
                 find = true;

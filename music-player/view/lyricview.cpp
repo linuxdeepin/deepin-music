@@ -255,6 +255,12 @@ void LyricView::onMusicPlayed(PlaylistPtr playlist, const MusicMeta &meta)
     d->m_playingMusic = meta;
 }
 
+void LyricView::onMusicStop(PlaylistPtr playlist, const MusicMeta &meta)
+{
+    onLyricChanged(meta, "");
+    onCoverChanged(meta, "");
+}
+
 void LyricView::onProgressChanged(qint64 value, qint64 /*length*/)
 {
     Q_D(LyricView);

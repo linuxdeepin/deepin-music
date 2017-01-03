@@ -266,6 +266,9 @@ void Playlist::updateMeta(const MusicMeta &meta)
     } else {
         listmeta.invalidMetas.remove(meta.hash);
     }
+
+    if (listmeta.metas.value(meta.hash).length <= 0)
+        listmeta.metas.insert(meta.hash, meta);
 }
 
 MusicMeta Playlist::removeMusic(const MusicMetaList &metalist)

@@ -62,7 +62,7 @@ static const int footerHeight = 60;
 class MainWindowPrivate
 {
 public:
-    MainWindowPrivate(){}
+    MainWindowPrivate() {}
 
     Titlebar        *titlebar       = nullptr;
     TitleBarWidget  *titlebarwidget = nullptr;
@@ -72,8 +72,11 @@ public:
     MusicListWidget *musicList      = nullptr;
     LyricView       *lyricView      = nullptr;
 
+
     Tip             *tips           = nullptr;
     QWidget         *currentWidget  = nullptr;
+
+    QAction         *newSonglistAction      = nullptr;
     QString         coverBackground = ":/common/image/cover_max.png";
 };
 
@@ -143,11 +146,17 @@ MainWindow::~MainWindow()
 void MainWindow::initUI()
 {
     d->lyricView->initUI();
+
+    qDebug() << d->currentWidget;
 }
 
 void MainWindow::initMusiclist(PlaylistPtr allmusic, PlaylistPtr last)
 {
+
+    initMenu();
+
     if (allmusic.isNull() || 0 == allmusic->length()) {
+        d->newSonglistAction->setDisabled(true);
         d->import->show();
         d->footer->enableControl(false);
         d->musicList->hide();
@@ -160,6 +169,7 @@ void MainWindow::initMusiclist(PlaylistPtr allmusic, PlaylistPtr last)
         qDebug() << "init music with empty playlist:" << last;
     }
     d->import->hide();
+    d->newSonglistAction->setDisabled(false);
     d->musicList->raise();
     d->musicList->show();
     d->musicList->initData(last);
@@ -279,6 +289,8 @@ void MainWindow::binding(Presenter *presenter)
             d->lyricView, &LyricView::onLyricChanged);
     connect(presenter, &Presenter::coverSearchFinished,
             d->lyricView, &LyricView::onCoverChanged);
+    connect(presenter, &Presenter::musicStoped,
+            d->lyricView, &LyricView::onMusicStop);
 
 
     connect(d->playlist, &PlaylistWidget::hidePlaylist,
@@ -289,7 +301,7 @@ void MainWindow::binding(Presenter *presenter)
     connect(presenter, &Presenter::notifyMusciError,
     this, [ = ](PlaylistPtr playlist, const MusicMeta & meta, int error) {
         DDialog warnDlg(this);
-        warnDlg.setIcon(QIcon(":/light/image/diglog_warning.png"));
+        warnDlg.setIcon(QIcon(":/common/image/dialog_warning.png"));
         warnDlg.setTextFormat(Qt::RichText);
         warnDlg.setTitle(tr("File invalid or does not exist, load failed!"));
         warnDlg.addButtons(QStringList() << tr("I got it"));
@@ -342,10 +354,7 @@ void MainWindow::binding(Presenter *presenter)
     });
     connect(presenter, &Presenter::musicStoped,
     this, [ = ](PlaylistPtr, const MusicMeta &) {
-        QImage image = QImage((":/image/cover_max.png"));
-        image = WidgetHelper::cropRect(image, this->size());
-        setBackgroundImage(WidgetHelper::blurImage(image, 50));
-        repaint();
+        setCoverBackground(coverBackground());
     });
     connect(presenter, &Presenter::currentPlaylistChanged,
     this, [ = ]() {
@@ -370,8 +379,9 @@ void MainWindow::binding(Presenter *presenter)
             this, &MainWindow::onSelectImportFiles);
     connect(this, &MainWindow::importSelectFiles,
             presenter, &Presenter::onImportFiles);
+    connect(this, &MainWindow::addPlaylist,
+            presenter, &Presenter::onPlaylistAdd);
 
-    initMenu();
 }
 
 QString MainWindow::coverBackground() const
@@ -447,7 +457,9 @@ void MainWindow::onSelectImportFiles()
 
     fileDlg.setViewMode(QFileDialog::Detail);
     fileDlg.setFileMode(QFileDialog::Directory);
-    if (QFileDialog::Accepted == fileDlg.exec()) {
+    auto ret = fileDlg.exec();
+    qDebug() << ret;
+    if (QFileDialog::Accepted == ret) {
         d->import->showWaitHint();
         emit importSelectFiles(fileDlg.selectedFiles());
     }
@@ -511,6 +523,7 @@ void MainWindow::showImportView()
     d->titlebar->raise();
     d->footer->raise();
 
+    d->newSonglistAction->setDisabled(true);
     updateViewname("");
 }
 
@@ -575,20 +588,21 @@ void MainWindow::changeToMusicListView(bool keepPlaylist)
     setPlaylistVisible(keepPlaylist);
     d->titlebar->raise();
     d->footer->raise();
+
+    d->newSonglistAction->setDisabled(false);
 }
 
 void MainWindow::initMenu()
 {
-
-    auto m_newlist = new QAction(tr("New songlist"), this);
-    connect(m_newlist, &QAction::triggered, this, [ = ](bool) {
+    d->newSonglistAction = new QAction(tr("New songlist"), this);
+    connect(d->newSonglistAction, &QAction::triggered, this, [ = ](bool) {
+        qDebug() << "" <<  d->newSonglistAction;
         setPlaylistVisible(true);
         emit this->addPlaylist(true);
     });
 
     auto m_addmusic = new QAction(tr("Add music"), this);
     connect(m_addmusic, &QAction::triggered, this, [ = ](bool) {
-        showMusicListView();
         this->onSelectImportFiles();
     });
 
@@ -617,8 +631,8 @@ void MainWindow::initMenu()
         QString acknowledgementLink = "https://www.deepin.org/acknowledgments/deepin-music#thanks";
 
         auto *aboutDlg = new DAboutDialog(this);
-        aboutDlg->setWindowIcon(QPixmap(":/image/deepin-music.svg"));
-        aboutDlg->setProductIcon(QPixmap(":/image/about_icon.png"));
+        aboutDlg->setWindowIcon(QPixmap("::/common/image/logo.png"));
+        aboutDlg->setProductIcon(QPixmap(":/common/image/logo_96.png"));
         aboutDlg->setProductName("Deepin Music");
         aboutDlg->setVersion(tr("Version: 3.0"));
         aboutDlg->setDescription(descriptionText);
@@ -650,7 +664,7 @@ void MainWindow::initMenu()
     auto titleMenu = new QMenu;
     d->titlebar->setMenu(titleMenu);
 
-    titleMenu->addAction(m_newlist);
+    titleMenu->addAction(d->newSonglistAction);
     titleMenu->addAction(m_addmusic);
     titleMenu->addSeparator();
 
@@ -670,8 +684,6 @@ void MainWindow::disableControl()
         d->footer->enableControl(true);
     });
 }
-
-#include <DUtil>
 
 void MainWindow::updateViewname(const QString &vm)
 {

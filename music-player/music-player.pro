@@ -12,7 +12,7 @@ DESTDIR     = $$BUILD_DIST/bin
 
 unix{
     QT += x11extras
-    PKGCONFIG += dtkbase dtkutil dtkwidget taglib icu-uc icu-i18n
+    PKGCONFIG += dtkbase dtkutil dtkwidget taglib icu-uc icu-i18n libavutil libavformat libavcodec
     PKGCONFIG += x11 xext
 #   PKGCONFIG += mpris-qt5 dbusextended-qt5
 }

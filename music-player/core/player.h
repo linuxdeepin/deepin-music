@@ -89,6 +89,7 @@ public:
     QStringList supportedMimeTypes() const;
 
 signals:
+    void mediaUpdate(PlaylistPtr playlist, const MusicMeta &meta);
     void mediaPlayed(PlaylistPtr playlist, const MusicMeta &meta);
     void mediaError(PlaylistPtr playlist, const MusicMeta &meta, Player::Error error);
 

@@ -196,6 +196,8 @@ void Presenter::prepareData()
         qDebug() << "requestLyricCoverSearch" << info.title;
         d->requestMetaSearch(info);
     });
+    connect(Player::instance(), &Player::mediaUpdate,
+            this, &Presenter::musicMetaUpdate);
 
     connect(Player::instance(), &Player::mediaError,
     this, [ = ](PlaylistPtr playlist,  MusicMeta meta, Player::Error error) {
@@ -228,7 +230,7 @@ void Presenter::prepareData()
     connect(this, &Presenter::musicMetaUpdate,
     this, [ = ](PlaylistPtr /*playlist*/,  MusicMeta meta) {
         Q_D(Presenter);
-        qDebug() << "update" << meta.invalid;
+        qDebug() << "update" << meta.invalid << meta.length;
         for (auto playlist : allplaylist()) {
             playlist->updateMeta(meta);
         }
@@ -470,7 +472,7 @@ void Presenter::onMusicPlay(PlaylistPtr playlist,  const MusicMeta &meta)
     }
 
     auto playinglist = d->playlistMgr->playingPlaylist();
-    qDebug() << "stop old list" << playinglist->id() <<playlist->id();
+    qDebug() << "stop old list" << playinglist->id() << playlist->id();
     if (playinglist->id() != playlist->id()) {
         playinglist->play(MusicMeta());
     }

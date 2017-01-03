@@ -157,14 +157,14 @@ static QList<NeteaseSong> toSongList(const QByteArray &data)
             neArtist.name = artist.value("name").toString();
             neteaseSong.artists << neArtist;
         }
-        qDebug() << ">>>> Find song:";
-        qDebug() << neteaseSong.id << neteaseSong.name
-                 << neteaseSong.artists.first().name
-                 << neteaseSong.album.name;
-        for (auto artist : neteaseSong.artists) {
-            qDebug() << artist.name;
-        }
-        qDebug() << "<<<<";
+//        qDebug() << ">>>> Find song:";
+//        qDebug() << neteaseSong.id << neteaseSong.name
+//                 << neteaseSong.artists.first().name
+//                 << neteaseSong.album.name;
+//        for (auto artist : neteaseSong.artists) {
+//            qDebug() << artist.name;
+//        }
+//        qDebug() << "<<<<";
         neteaseSongs << neteaseSong;
     }
     qDebug() << "-------------------------------------------------------";

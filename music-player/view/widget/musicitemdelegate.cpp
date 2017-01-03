@@ -264,7 +264,7 @@ void MusicItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
             }
 
             if (meta.invalid) {
-                auto icon = QPixmap(":/light/image/musiclist_warning.png");
+                auto icon = QPixmap(":/common/image/warning.png");
                 auto centerF = QRectF(rect).center();
                 auto iconRect = QRect(centerF.x() - icon.width() / 2,
                                       centerF.y() - icon.height() / 2,
@@ -283,10 +283,11 @@ void MusicItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
                 }
 
                 d->playingAnimation->setParent(w);
-                d->playingAnimation->raise();
-//                d->playingAnimation->pause();
-                d->playingAnimation->play();
-                d->playingAnimation->show();
+//                d->playingAnimation->raise();
+////                d->playingAnimation->pause();
+//                d->playingAnimation->play();
+//                d->playingAnimation->show();
+                d->playingAnimation->hide();
                 auto center = rect.center();
                 auto aniSize = d->playingAnimation->size();
                 d->playingAnimation->move(center.x() - aniSize.width() / 2, center.y() - aniSize.height() / 2);

@@ -37,12 +37,12 @@ void MediaDatabaseWriter::updateMusicMeta(const MusicMeta &metalist)
     qDebug() << "updateMusicMeta beign";
     QSqlQuery query;
 
-    query.prepare("UPDATE music set invalid=:invalid where hash=:hash");
+    query.prepare("UPDATE music set invalid=:invalid, length=:length where hash=:hash");
 
     query.bindValue(":invalid", metalist.invalid);
+    query.bindValue(":length", metalist.length);
     query.bindValue(":hash", metalist.hash);
 
-    qDebug() << metalist.hash << metalist.invalid;
     if (! query.exec()) {
         qCritical() << query.lastError();
         return;

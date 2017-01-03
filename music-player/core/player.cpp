@@ -105,7 +105,7 @@ public:
     MusicMeta       activeMeta;
 
     Player *q_ptr;
-    Q_DECLARE_PUBLIC(Player);
+    Q_DECLARE_PUBLIC(Player)
 };
 
 void PlayerPrivate::initConnection()
@@ -113,7 +113,26 @@ void PlayerPrivate::initConnection()
     Q_Q(Player);
     q->connect(qplayer, &QMediaPlayer::positionChanged,
     q, [ = ](qint64 position) {
-        emit q->positionChanged(position, qplayer->duration());
+        auto duration = qplayer->duration();
+        qDebug() << lengthString(duration)
+                 << lengthString(position)
+                 << lengthString(activeMeta.offset)
+                 << lengthString(activeMeta.length)
+                 << activeMeta.title;
+
+        // fix len
+        if (activeMeta.length == 0 && duration != 0 && duration > 0) {
+            activeMeta.length = duration;
+            qDebug() << "update" << activeMeta.length;
+            emit q->mediaUpdate(activePlaylist, activeMeta);
+        }
+
+        if (position >= activeMeta.offset + activeMeta.length && qplayer->state() == QMediaPlayer::PlayingState) {
+            q->playNextMeta(activePlaylist, activeMeta);
+            return;
+        }
+
+        emit q->positionChanged(position - activeMeta.offset,  activeMeta.length);
     });
     q->connect(qplayer, &QMediaPlayer::mutedChanged,
                q, &Player::mutedChanged);
@@ -125,9 +144,16 @@ void PlayerPrivate::initConnection()
         qDebug() << status << activeMeta.invalid;
         switch (status) {
         case QMediaPlayer::LoadedMedia: {
+            qDebug() << qplayer->state();
             qplayer->play();
             emit q->mediaError(activePlaylist, activeMeta, Player::NoError);
             activeMeta.invalid = false;
+            break;
+        }
+        case QMediaPlayer::EndOfMedia: {
+            // next
+            q->playNextMeta(activePlaylist, activeMeta);
+            break;
         }
         case QMediaPlayer::UnknownMediaStatus:
         case QMediaPlayer::NoMedia:
@@ -135,7 +161,6 @@ void PlayerPrivate::initConnection()
         case QMediaPlayer::StalledMedia:
         case QMediaPlayer::BufferingMedia:
         case QMediaPlayer::BufferedMedia:
-        case QMediaPlayer::EndOfMedia:
         case QMediaPlayer::InvalidMedia:
             break;
         }
@@ -227,17 +252,21 @@ Player::~Player()
 
 void Player::playMeta(PlaylistPtr playlist, const MusicMeta &meta)
 {
+    qDebug() << "playMeta top" << meta.title;
     Q_D(Player);
-    qDebug() << "--------" << meta.localPath;
+    qDebug() << meta.title
+             << lengthString(meta.offset)
+             << lengthString(meta.offset)
+             << lengthString(meta.length);
+    d->activeMeta = meta;
 
     d->qplayer->blockSignals(true);
     d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(meta.localPath)));
     d->qplayer->blockSignals(false);
 
-    this->setPosition(meta.offset);
+    d->qplayer->setPosition(meta.offset);
 
     d->activePlaylist = playlist;
-    d->activeMeta = meta;
     d->activePlaylist->play(meta);
 
     emit mediaPlayed(d->activePlaylist, d->activeMeta);
@@ -246,6 +275,7 @@ void Player::playMeta(PlaylistPtr playlist, const MusicMeta &meta)
 void Player::resume(PlaylistPtr playlist, const MusicMeta &meta)
 {
     Q_D(Player);
+    qDebug() << "resume top";
     Q_ASSERT(playlist == d->activePlaylist);
     Q_ASSERT(meta.hash == d->activeMeta.hash);
     QTimer::singleShot(50, this, [ = ]() {
@@ -288,7 +318,11 @@ void Player::pause()
 void Player::stop()
 {
     Q_D(Player);
+    d->qplayer->blockSignals(true);
+    d->qplayer->pause();
+    d->qplayer->setMedia(QMediaContent());
     d->qplayer->stop();
+    d->qplayer->blockSignals(false);
 }
 
 MusicMeta Player::activeMeta() const
@@ -339,7 +373,11 @@ bool Player::muted() const
 qint64 Player::duration() const
 {
     Q_D(const Player);
-    return d->qplayer->duration();
+    if (d->qplayer->duration() == d->activeMeta.length) {
+        return d->qplayer->duration();
+    } else {
+        return  activeMeta().length;
+    }
 }
 
 void Player::setCanControl(bool canControl)
@@ -350,7 +388,12 @@ void Player::setCanControl(bool canControl)
 void Player::setPosition(qlonglong position)
 {
     Q_D(const Player);
-    return d->qplayer->setPosition(position);
+
+    if (d->qplayer->duration() == d->activeMeta.length) {
+        return d->qplayer->setPosition(position);
+    } else {
+        d->qplayer->setPosition(position + activeMeta().offset);
+    }
 }
 
 void Player::setMode(Player::PlaybackMode mode)

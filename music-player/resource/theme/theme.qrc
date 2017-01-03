@@ -325,15 +325,9 @@
         <file>light/image/back_press.png</file>
         <file>light/image/back_normal.png</file>
         <file>light/image/back_hover.png</file>
-        <file>light/image/search_press.png</file>
-        <file>light/image/search_normal.png</file>
-        <file>light/image/search_hover.png</file>
         <file>light/image/clear_content_press.png</file>
         <file>light/image/clear_content_normal.png</file>
         <file>light/image/clear_content_hover.png</file>
-        <file>dark/image/search_press.png</file>
-        <file>dark/image/search_normal.png</file>
-        <file>dark/image/search_hover.png</file>
         <file>dark/image/clear_content_press.png</file>
         <file>dark/image/clear_content_normal.png</file>
         <file>dark/image/clear_content_hover.png</file>
@@ -392,7 +386,6 @@
         <file>common/image/lrc_normal.png</file>
         <file>common/image/lrc_hover.png</file>
         <file>common/image/logo.png</file>
-        <file>common/image/logo-96.png</file>
         <file>common/image/info_cover.png</file>
         <file>common/image/fav_press.png</file>
         <file>common/image/fav_normal.png</file>
@@ -404,5 +397,10 @@
         <file>common/image/cover_lrc.png</file>
         <file>common/image/cover_lrc_press.png</file>
         <file>common/image/app_icon.png</file>
+        <file>light/image/search.png</file>
+        <file>dark/image/search.png</file>
+        <file>common/image/logo_96.png</file>
+        <file>common/image/dialog_warning.png</file>
+        <file>common/image/start_hover.png</file>
     </qresource>
 </RCC>
