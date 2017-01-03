@@ -40,9 +40,7 @@ public slots:
     void onMusicAdded(PlaylistPtr playlist, const MusicMeta &meta);
     void onMusicError(PlaylistPtr playlist, const MusicMeta &meta, int error);
     void onMusicListAdded(PlaylistPtr playlist, const MusicMetaList &infolist);
-
     void onLocate(PlaylistPtr playlist, const MusicMeta &info);
-
     void onMusiclistChanged(PlaylistPtr playlist);
     void onCustomContextMenuRequest(const QPoint &pos,
                                     PlaylistPtr selectedlist,

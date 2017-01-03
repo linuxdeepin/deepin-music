@@ -33,7 +33,6 @@
 
 static const int lyricLineHeight = 40;
 static const QString defaultLyric = "No Lyric";
-static const QString defaultCoverUrl(":/image/cover_max.png");
 
 class LyricViewPrivate
 {
@@ -306,7 +305,7 @@ void LyricView::onCoverChanged(const MusicMeta &meta, const QByteArray &coverDat
 
     QPixmap coverPixmap = coverData.length() > 1024 ?
                           QPixmap::fromImage(QImage::fromData(coverData)) :
-                          QPixmap(defaultCoverUrl);
+                          QPixmap(d->defaultCover);
 
     d->m_cover->setCoverPixmap(coverPixmap);
     d->m_cover->repaint();

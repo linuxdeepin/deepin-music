@@ -147,7 +147,6 @@ void MediaFileMonitor::startMonitor()
         dirs.insert(metafi.absolutePath(), metafi.absolutePath());
     }
 
-    qDebug() << dirs;
 #ifdef SUPPORT_INOTIFY
     m_watcher->addPaths(dirs.keys());
 #endif

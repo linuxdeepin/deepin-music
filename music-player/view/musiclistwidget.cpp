@@ -9,6 +9,7 @@
 
 #include "musiclistwidget.h"
 
+#include <QAction>
 #include <QThread>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -24,6 +25,7 @@
 #include "../core/music.h"
 #include "../core/playlist.h"
 #include "widget/musiclistview.h"
+#include "widget/ddropdown.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -39,10 +41,10 @@ public:
     QPushButton         *btPlayAll      = nullptr;
     QLabel              *m_emptyHits    = nullptr;
     MusicListView       *m_musiclist    = nullptr;
-    DComboBox           *m_sortCombo    = nullptr;
+    DDropdown           *m_dropdown    = nullptr;
 
     MusicListWidget *q_ptr;
-    Q_DECLARE_PUBLIC(MusicListWidget);
+    Q_DECLARE_PUBLIC(MusicListWidget)
 };
 
 
@@ -50,10 +52,10 @@ void MusicListWidgetPrivate::initConntion()
 {
     Q_Q(MusicListWidget);
 
-    q->connect(m_sortCombo, static_cast<void (DComboBox::*)(int)>(&DComboBox::activated),
-    q, [ = ](int sortType) {
-        qWarning() << "change to emptry playlist" << sortType;
-        emit q->resort(m_musiclist->playlist(), sortType);
+    q->connect(m_dropdown, &DDropdown::triggered,
+    q, [ = ](QAction * action) {
+        qWarning() << "change to emptry playlist" << action->data();
+        emit q->resort(m_musiclist->playlist(), action->data().value<Playlist::SortType>());
     });
 
     q->connect(btPlayAll, &QPushButton::clicked,
@@ -130,13 +132,14 @@ MusicListWidget::MusicListWidget(QWidget *parent) :
     d->btPlayAll->setFixedHeight(28);
     d->btPlayAll->setFocusPolicy(Qt::NoFocus);
 
-    d->m_sortCombo = new DComboBox;
-    d->m_sortCombo->setFixedHeight(24);
-    d->m_sortCombo->setObjectName("MusicListSort");
-    d->m_sortCombo->addItem(tr("Time added"));
-    d->m_sortCombo->addItem(tr("Title"));
-    d->m_sortCombo->addItem(tr("Artist"));
-    d->m_sortCombo->addItem(tr("Album name"));
+    d->m_dropdown = new DDropdown;
+    d->m_dropdown->setFixedHeight(28);
+    d->m_dropdown->setMinimumWidth(130);
+    d->m_dropdown->setObjectName("MusicListSort");
+    d->m_dropdown->addAction(tr("Time added"), QVariant::fromValue<Playlist::SortType>(Playlist::SortByAddTime));
+    d->m_dropdown->addAction(tr("Title"), QVariant::fromValue<Playlist::SortType>(Playlist::SortByTitle));
+    d->m_dropdown->addAction(tr("Artist"), QVariant::fromValue<Playlist::SortType>(Playlist::SortByArtist));
+    d->m_dropdown->addAction(tr("Album name"), QVariant::fromValue<Playlist::SortType>(Playlist::SortByAblum));
 
     d->m_emptyHits = new QLabel();
     d->m_emptyHits->setObjectName("MusicListEmptyHits");
@@ -144,7 +147,7 @@ MusicListWidget::MusicListWidget(QWidget *parent) :
 
     actionBarLayout->addWidget(d->btPlayAll, 0, Qt::AlignCenter);
     actionBarLayout->addStretch();
-    actionBarLayout->addWidget(d->m_sortCombo, 0, Qt::AlignCenter);
+    actionBarLayout->addWidget(d->m_dropdown, 0, Qt::AlignCenter);
 
     d->m_musiclist = new MusicListView;
     d->m_musiclist->hide();
@@ -156,8 +159,6 @@ MusicListWidget::MusicListWidget(QWidget *parent) :
     layout->addStretch();
 
     ThemeManager::instance()->regisetrWidget(this);
-    ThemeManager::instance()->regisetrWidget(d->m_sortCombo);
-
 
     d->initConntion();
 }
@@ -199,7 +200,13 @@ void MusicListWidget::initData(PlaylistPtr playlist)
 {
     Q_D(MusicListWidget);
     d->m_musiclist->onMusiclistChanged(playlist);
-    d->m_sortCombo->setCurrentIndex(playlist->sorttype());
+    // FIXME: dd
+
+    for (auto action : d->m_dropdown->actions()) {
+        if (action->data().toInt() == playlist->sorttype()) {
+            d->m_dropdown->setCurrentAction(action);
+        }
+    }
     d->showEmptyHits(d->m_musiclist->model()->rowCount() == 0);
 }
 

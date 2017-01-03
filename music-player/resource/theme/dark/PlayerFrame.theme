@@ -1,12 +1,2 @@
-#PlayerFrame{
-    border: 0px solid rgba(255, 0, 0,1);
-    background-color: white;
-}
-
-#BackgroundWidget {
-    border: 0px solid rgba(255, 255, 0,1);
-}
-
-#PlayerFrame::DTitlebar{
-    background-color: transparent;
+MainWindow {
 }

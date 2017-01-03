@@ -204,7 +204,6 @@
         <file>light/SearchResult.theme</file>
         <file>light/LyricTextView.theme</file>
         <file>light/InfoDialog.theme</file>
-        <file>light/MusicListSort.theme</file>
         <file>dark/TitleBarWidget.theme</file>
         <file>dark/Tip.theme</file>
         <file>dark/ThinWindow.theme</file>
@@ -402,5 +401,8 @@
         <file>common/image/logo_96.png</file>
         <file>common/image/dialog_warning.png</file>
         <file>common/image/start_hover.png</file>
+        <file>light/DDropdown.theme</file>
+        <file>light/image/dropdown_arrow.png</file>
+        <file>dark/image/dropdown_arrow.png</file>
     </qresource>
 </RCC>

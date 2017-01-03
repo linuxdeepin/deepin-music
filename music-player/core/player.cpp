@@ -114,11 +114,11 @@ void PlayerPrivate::initConnection()
     q->connect(qplayer, &QMediaPlayer::positionChanged,
     q, [ = ](qint64 position) {
         auto duration = qplayer->duration();
-        qDebug() << lengthString(duration)
-                 << lengthString(position)
-                 << lengthString(activeMeta.offset)
-                 << lengthString(activeMeta.length)
-                 << activeMeta.title;
+//        qDebug() << lengthString(duration)
+//                 << lengthString(position)
+//                 << lengthString(activeMeta.offset)
+//                 << lengthString(activeMeta.length)
+//                 << activeMeta.title;
 
         // fix len
         if (activeMeta.length == 0 && duration != 0 && duration > 0) {
@@ -410,6 +410,7 @@ void Player::setVolume(double volume)
 
 void Player::setMuted(bool mute)
 {
+    qDebug() << "setMuted" << mute;
     Q_D(Player);
     d->qplayer->setMuted(mute);
 }

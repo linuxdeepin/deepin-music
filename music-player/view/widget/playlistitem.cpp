@@ -137,8 +137,6 @@ void PlayListItem::setActive(bool active)
 
     auto activePrefix = playingAnimation->property("ActivePrefix").toString();
     if (activePrefix != prefix) {
-
-        qDebug() <<  "change " << prefix;
         QStringList urls;
         auto urlTemp = QString("%1/%2.png").arg(prefix);
         for (int i = 0; i < 94; ++i) {

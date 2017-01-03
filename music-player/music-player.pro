@@ -46,7 +46,6 @@ SOURCES += \
     view/widget/pushbutton.cpp \
     view/widget/searchedit.cpp \
     view/widget/searchresult.cpp \
-    view/widget/settingsdialog.cpp \
     view/widget/slider.cpp \
     view/footer.cpp \
     view/lyricview.cpp \
@@ -66,7 +65,9 @@ SOURCES += \
     view/widget/thinwindow.cpp \
     view/helper/thememanager.cpp \
     view/titlebar.cpp \
-    view/widget/titlebarwidget.cpp
+    view/widget/titlebarwidget.cpp \
+    view/widget/ddropdown.cpp \
+    view/widget/dsettingdialog.cpp
 
 
 HEADERS += \
@@ -99,7 +100,6 @@ HEADERS += \
     view/widget/pushbutton.h \
     view/widget/searchedit.h \
     view/widget/searchresult.h \
-    view/widget/settingsdialog.h \
     view/widget/slider.h \
     view/footer.h \
     view/lyricview.h \
@@ -118,7 +118,9 @@ HEADERS += \
     view/widget/thinwindow.h \
     view/helper/thememanager.h \
     view/titlebar.h \
-    view/widget/titlebarwidget.h
+    view/widget/titlebarwidget.h \
+    view/widget/ddropdown.h \
+    view/widget/dsettingdialog.h
 
 RESOURCES += \
     resource/theme/theme.qrc
@@ -142,5 +144,6 @@ TRANSLATIONS += $$PWD/translations/$${TARGET}.ts \
 include($$PWD/install.pri)
 
 DISTFILES += \
-    data/deepin-music.desktop
+    data/deepin-music.desktop \
+    data/deepin-music-settings.json
 

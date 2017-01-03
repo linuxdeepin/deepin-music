@@ -375,16 +375,15 @@ bool Footer::eventFilter(QObject *obj, QEvent *event)
     Q_D(Footer);
     switch (event->type()) {
     case QEvent::Wheel: {
-        qDebug() << obj;
         if (obj != d->btSound) {
             return QObject::eventFilter(obj, event);
         }
         auto we = dynamic_cast<QWheelEvent *>(event);
         if (we->angleDelta().y() > 0) {
-            d->volSlider->onVolumeChanged(d->volSlider->volume() + 5);
+            onVolumeChanged(d->volSlider->volume() + 5);
             emit this->volumeChanged(d->volSlider->volume());
         } else {
-            d->volSlider->onVolumeChanged(d->volSlider->volume() - 5);
+            onVolumeChanged(d->volSlider->volume() - 5);
             emit this->volumeChanged(d->volSlider->volume());
         }
         return true;
@@ -524,13 +523,15 @@ void Footer::onVolumeChanged(int volume)
         status = "low";
     }
     d->updateQssProperty(d->btSound, "volume", status);
+
+//    qDebug() << status;
     d->volSlider->onVolumeChanged(volume);
 }
 
 void Footer::onMutedChanged(bool muted)
 {
     Q_D(Footer);
-    qDebug() << muted;
+//    qDebug() << muted;
     if (muted) {
         d->updateQssProperty(d->btSound, "volume", "mute");
         d->volSlider->onVolumeChanged(0);

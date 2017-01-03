@@ -1,0 +1,80 @@
+{
+    "main_groups":  [
+        {
+            "key": "base",
+            "name": "Basic settings",
+            "groups": [
+                {
+                    "key": "play",
+                    "name": "Play",
+                    "options": [
+                        {
+                            "key": "auto_play",
+                            "label": "",
+                            "type": "checkbox",
+                            "value": "Automatically play when startup",
+                            "default": false
+                        },
+                        {
+                            "key": "remember_progress",
+                            "label": "",
+                            "type": "checkbox",
+                            "value": "Remember the last time when playing",
+                            "default": false
+                        },
+                        {
+                            "key": "fade_in_out",
+                            "label": "",
+                            "type": "checkbox",
+                            "value": "Enable fade in and out",
+                            "default": true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "key": "shortcuts",
+            "name": "Shortcuts",
+            "groups": [
+                {
+                    "key": "",
+                    "name": "",
+                    "options": [
+                        {
+                            "key": "play_pause",
+                            "label": "Play/Pause",
+                            "type": "shortcut",
+                            "default": "alt, P"
+                        },
+                        {
+                            "key": "previous",
+                            "label": "Previous",
+                            "type": "shortcut",
+                            "default": "alt, left"
+                        },
+                        {
+                            "key": "next",
+                            "label": "Next",
+                            "type": "shortcut",
+                            "default": "alt, right"
+                        },
+                        {
+                            "key": "volume_up",
+                            "label": "Volume up",
+                            "type": "shortcut",
+                            "default": "alt, up"
+                        },
+                        {
+                            "key": "volume_down",
+                            "label": "Volume down",
+                            "type": "shortcut",
+                            "default": "alt, down"
+                        },
+                    ]
+                }
+            ]
+
+        }
+    ]
+}

@@ -7,22 +7,25 @@
  * (at your option) any later version.
  **/
 
-#ifndef SETTINGSDIALOG_H
-#define SETTINGSDIALOG_H
+#pragma once
 
-#include <ddialog.h>
+#include <QScopedPointer>
+#include "thinwindow.h"
 
-DWIDGET_USE_NAMESPACE
-
-class SettingsDialog : public DAbstractDialog
+class DSettingDialogPrivate;
+class DSettingDialog : public ThinWindow
 {
     Q_OBJECT
 public:
-    explicit SettingsDialog(QWidget *parent = 0);
+    explicit DSettingDialog(QWidget *parent = 0);
+    ~DSettingDialog();
 
 signals:
 
 public slots:
+
+private:
+    QScopedPointer<DSettingDialogPrivate> d_ptr;
+    Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), DSettingDialog)
 };
 
-#endif // SETTINGSDIALOG_H

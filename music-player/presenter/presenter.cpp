@@ -581,7 +581,7 @@ void Presenter::onChangeProgress(qint64 value, qint64 range)
 void Presenter::onVolumeChanged(int volume)
 {
     Player::instance()->setVolume(volume);
-    if (volume > 0) {
+    if (volume > 0 && Player::instance()->muted()) {
         Player::instance()->setMuted(false);
     }
 }

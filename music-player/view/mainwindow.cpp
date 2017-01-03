@@ -146,8 +146,6 @@ MainWindow::~MainWindow()
 void MainWindow::initUI()
 {
     d->lyricView->initUI();
-
-    qDebug() << d->currentWidget;
 }
 
 void MainWindow::initMusiclist(PlaylistPtr allmusic, PlaylistPtr last)
@@ -364,7 +362,7 @@ void MainWindow::binding(Presenter *presenter)
             this, &MainWindow::onSelectImportFiles);
     connect(presenter, &Presenter::meidaFilesImported,
     this, [ = ](PlaylistPtr playlist, MusicMetaList metalist) {
-        DUtil::TimerSingleShot(3 * 1000, [this, playlist, metalist ]() {
+        DUtil::TimerSingleShot(1 * 1500, [this, playlist, metalist ]() {
             this->showMusicListView();
         });
     });
@@ -391,7 +389,6 @@ QString MainWindow::coverBackground() const
 
 void MainWindow::setCoverBackground(QString coverBackground)
 {
-    qDebug() << coverBackground;
     d->coverBackground = coverBackground;
     QImage image = QImage(coverBackground);
     image = WidgetHelper::cropRect(image, QWidget::size());
@@ -431,10 +428,6 @@ void MainWindow::resizeEvent(QResizeEvent *e)
     if (d->tips) {
         d->tips->hide();
     }
-//    d->lyricView->hide();
-//    d->musicList->hide();
-//    d->import->hide();
-//    d->title->hide();
 }
 
 void MainWindow::paintEvent(QPaintEvent *e)
@@ -457,9 +450,7 @@ void MainWindow::onSelectImportFiles()
 
     fileDlg.setViewMode(QFileDialog::Detail);
     fileDlg.setFileMode(QFileDialog::Directory);
-    auto ret = fileDlg.exec();
-    qDebug() << ret;
-    if (QFileDialog::Accepted == ret) {
+    if (QFileDialog::Accepted == fileDlg.exec()) {
         d->import->showWaitHint();
         emit importSelectFiles(fileDlg.selectedFiles());
     }
@@ -592,6 +583,8 @@ void MainWindow::changeToMusicListView(bool keepPlaylist)
     d->newSonglistAction->setDisabled(false);
 }
 
+#include "widget/dsettingdialog.h"
+
 void MainWindow::initMenu()
 {
     d->newSonglistAction = new QAction(tr("New songlist"), this);
@@ -608,7 +601,10 @@ void MainWindow::initMenu()
 
     auto m_settings = new QAction(tr("Settings"), this);
     connect(m_settings, &QAction::triggered, this, [ = ](bool) {
-
+        auto dsd = new DSettingDialog;
+        dsd->setFixedSize(880,660);
+        qDebug() << dsd;
+        dsd->show();
     });
 
     auto m_colorMode = new QAction(tr("Deep color mode"), this);

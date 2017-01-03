@@ -499,8 +499,8 @@ void MusicListViewPrivate::checkScrollbarSize()
     auto itemCount = q->model()->rowCount();
     auto size = q->size();
     auto scrollBarWidth = 8;
-    m_scrollBar->resize(scrollBarWidth, size.height()-2);
-    m_scrollBar->move(size.width() - scrollBarWidth - 8, 0);
+    m_scrollBar->resize(scrollBarWidth, size.height() - 2);
+    m_scrollBar->move(size.width() - scrollBarWidth - 2, 0);
     m_scrollBar->setSingleStep(1);
     m_scrollBar->setPageStep(size.height() / 36);
     m_scrollBar->setMinimum(0);
