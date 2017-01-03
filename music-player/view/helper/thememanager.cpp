@@ -77,6 +77,7 @@ void ThemeManager::regisetrWidget(QPointer<QWidget> widget, QStringList property
         qssFilename = meta->className();
     }
 
+//    qDebug() << qssFilename;
     widget->setStyleSheet(widget->styleSheet() + d->getQssForWidget(qssFilename));
 
 //    qDebug() << widget;

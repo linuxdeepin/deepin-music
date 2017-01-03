@@ -21,28 +21,27 @@ class MainWindowPrivate;
 class MainWindow : public ThinWindow
 {
     Q_OBJECT
+    Q_PROPERTY(QString coverBackground READ coverBackground WRITE setCoverBackground)
 
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+    void initUI();
 
     void initMusiclist(PlaylistPtr allmusic, PlaylistPtr last);
     void initPlaylist(QList<PlaylistPtr > playlists, PlaylistPtr last);
     void initFooter(PlaylistPtr current, int mode);
     void binding(Presenter *presenter);
 
-    void setDefaultBackground();
-
-protected:
-    virtual void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
-    virtual void resizeEvent(QResizeEvent *e) Q_DECL_OVERRIDE;
-    virtual void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
+    QString coverBackground() const;
 
 signals:
     void addPlaylist(bool editmode);
     void importSelectFiles(const QStringList &filelist);
 
 public slots:
+    void setCoverBackground(QString coverBackground);
     void onSelectImportFiles();
     void onCurrentPlaylistChanged(PlaylistPtr playlist);
     void toggleLyricView();
@@ -53,6 +52,11 @@ public slots:
     void showTips(QPixmap icon, QString text);
     void setPlaylistVisible(bool visible);
 
+protected:
+    virtual void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+    virtual void resizeEvent(QResizeEvent *e) Q_DECL_OVERRIDE;
+    virtual void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
+
 private:
     void changeToMusicListView(bool keepPlaylist);
     void initMenu();
@@ -60,7 +64,6 @@ private:
     void updateViewname(const QString &vm);
 
     QScopedPointer<MainWindowPrivate> d;
-    QBrush m_titleBackground;
 };
 
 extern const QString s_PropertyViewname;

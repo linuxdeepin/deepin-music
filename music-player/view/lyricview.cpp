@@ -55,6 +55,7 @@ public:
     QListView           *m_lyric    = nullptr;
     QStringListModel    *m_model    = nullptr;
 
+    QString             defaultCover;
 
     LyricView *q_ptr;
     Q_DECLARE_PUBLIC(LyricView)
@@ -143,7 +144,6 @@ LyricView::LyricView(QWidget *parent)
     d->m_cover = new Cover;
     d->m_cover->setFixedSize(200, 200);
     d->m_cover->setObjectName("LyricCover");
-    d->m_cover->setCoverPixmap(QPixmap(defaultCoverUrl));
 
     d->m_lyric = new QListView;
     d->m_lyric->setObjectName("LyricTextView");
@@ -184,12 +184,24 @@ LyricView::LyricView(QWidget *parent)
     ThemeManager::instance()->regisetrWidget(this);
     ThemeManager::instance()->regisetrWidget(d->m_lyric);
 
-    d->initConnection();
 }
 
 LyricView::~LyricView()
 {
 
+}
+
+void LyricView::initUI()
+{
+    Q_D(LyricView);
+    d->m_cover->setCoverPixmap(QPixmap(d->defaultCover));
+    d->initConnection();
+}
+
+QString LyricView::defaultCover() const
+{
+    Q_D(const LyricView);
+    return d->defaultCover;
 }
 
 void LyricView::resizeEvent(QResizeEvent *event)
@@ -292,5 +304,11 @@ void LyricView::onCoverChanged(const MusicMeta &meta, const QByteArray &coverDat
 
     d->m_cover->setCoverPixmap(coverPixmap);
     d->m_cover->repaint();
+}
+
+void LyricView::setDefaultCover(QString defaultCover)
+{
+    Q_D(LyricView);
+    d->defaultCover = defaultCover;
 }
 

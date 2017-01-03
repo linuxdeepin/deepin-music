@@ -1,5 +1,5 @@
 #InfoDialog{
-    qproperty-backgroundColor: red;
+    qproperty-backgroundColor: white;
     qproperty-borderColor: rgba(0, 0, 0, 0.2);
     qproperty-defaultCover: ":/common/image/info_cover.png";
 }

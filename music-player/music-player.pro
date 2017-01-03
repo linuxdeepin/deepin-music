@@ -132,10 +132,14 @@ HEADERS += \
     core/util/inotifyengine.h
 
 # Automating generation .qm files from .ts files
-system($$PWD/../tool/translate_generation.sh)
+    system($$PWD/../tool/translate_generation.sh)
 }
 
 TRANSLATIONS += $$PWD/translations/$${TARGET}.ts \
                 $$PWD/translations/$${TARGET}_zh_CN.ts
 
 include($$PWD/install.pri)
+
+DISTFILES += \
+    data/deepin-music.desktop
+

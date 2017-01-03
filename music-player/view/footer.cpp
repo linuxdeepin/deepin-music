@@ -73,8 +73,10 @@ public:
     MusicMeta       m_playingMeta;
     int             m_mode;
 
+    QString         defaultCover = "";
+
     Footer *q_ptr;
-    Q_DECLARE_PUBLIC(Footer);
+    Q_DECLARE_PUBLIC(Footer)
 };
 
 void FooterPrivate::updateQssProperty(QWidget *w, const char *name, const QVariant &value)
@@ -200,7 +202,6 @@ Footer::Footer(QWidget *parent) :
     d->cover->setObjectName("FooterCover");
     d->cover->setFixedSize(40, 40);
     d->cover->setRadius(0);
-    d->cover->setCoverPixmap(QPixmap(sDefaultCover));
     d->cover->installEventFilter(hoverFilter);
 
     d->title = new Label;
@@ -353,6 +354,13 @@ void Footer::initData(PlaylistPtr current, int mode)
     d->m_mode = mode;
     d->m_playinglist = current;
     d->btPlayMode->setMode(mode);
+    d->cover->setCoverPixmap(QPixmap(d->defaultCover));
+}
+
+QString Footer::defaultCover() const
+{
+    Q_D(const Footer);
+    return d->defaultCover;
 }
 
 void Footer::mouseMoveEvent(QMouseEvent *event)
@@ -529,5 +537,11 @@ void Footer::onMutedChanged(bool muted)
         d->updateQssProperty(d->btSound, "volume", "mute");
         d->volSlider->onVolumeChanged(0);
     }
+}
+
+void Footer::setDefaultCover(QString defaultCover)
+{
+    Q_D(Footer);
+    d->defaultCover = defaultCover;
 }
 

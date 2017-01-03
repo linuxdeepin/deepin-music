@@ -19,6 +19,8 @@ class FooterPrivate;
 class Footer : public QFrame
 {
     Q_OBJECT
+    Q_PROPERTY(QString defaultCover READ defaultCover WRITE setDefaultCover)
+
 public:
     explicit Footer(QWidget *parent = 0);
     ~Footer();
@@ -26,6 +28,8 @@ public:
 public:
     void enableControl(bool enable = true);
     void initData(PlaylistPtr current, int mode);
+
+    QString defaultCover() const;
 
 signals:
     void toggleLyricView();
@@ -57,6 +61,7 @@ public slots:
     void onCoverChanged(const MusicMeta &meta, const QByteArray &coverData);
     void onVolumeChanged(int volume);
     void onMutedChanged(bool muted);
+    void setDefaultCover(QString defaultCover);
 
 protected:
     virtual void mouseMoveEvent(QMouseEvent *event) Q_DECL_OVERRIDE;

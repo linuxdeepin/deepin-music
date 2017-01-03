@@ -68,18 +68,14 @@ void MusicApp::init()
 {
     Q_D(MusicApp);
     d->appPresenter = new Presenter;
-    qDebug() << "setTheme";
     d->playerFrame = new MainWindow;
     d->playerFrame->hide();
-
-    qDebug() << "setTheme";
 
     auto presenterWork = new QThread;
     d->appPresenter->moveToThread(presenterWork);
     connect(presenterWork, &QThread::started, d->appPresenter, &Presenter::prepareData);
     connect(d->appPresenter, &Presenter::dataLoaded, this, &MusicApp::onDataPrepared);
 
-    qDebug() << "setTheme";
     presenterWork->start();
 }
 
@@ -106,6 +102,7 @@ void MusicApp::onDataPrepared()
     d->playerFrame->initMusiclist(d->appPresenter->allMusicPlaylist(), d->appPresenter->lastPlaylist());
     d->playerFrame->initPlaylist(d->appPresenter->allplaylist() , d->appPresenter->lastPlaylist());
     d->playerFrame->initFooter(d->appPresenter->lastPlaylist(), d->appPresenter->playMode());
+    d->playerFrame->initUI();
 
     d->playerFrame->binding(d->appPresenter);
 
@@ -113,7 +110,7 @@ void MusicApp::onDataPrepared()
     DUtility::moveToCenter(d->playerFrame);
 
     d->playerFrame->resize(QSize(1070, 680));
-    d->playerFrame->setDefaultBackground();
+    d->playerFrame->setCoverBackground(d->playerFrame->coverBackground());
     d->playerFrame->setFocus();
 }
 

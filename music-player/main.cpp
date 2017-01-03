@@ -70,16 +70,12 @@ int main(int argc, char *argv[])
     auto mprisPlayer =  new MprisPlayer();
 #endif
 
-    qDebug() << "setTheme";
     app.setWindowIcon(QIcon(":/common/image/deepin_music.svg"));
 
     PluginManager::instance()->init();
-    qDebug() << "setTheme";
     // For Windows, must init media player in main thread!!!
     Player::instance()->init();
-    qDebug() << "setTheme";
     MusicApp::instance()->init();
-    qDebug() << "setTheme";
 
 #ifdef Q_OS_UNIX
     MusicApp::instance()->initMpris(mprisPlayer);

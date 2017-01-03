@@ -62,11 +62,8 @@ static const int footerHeight = 60;
 class MainWindowPrivate
 {
 public:
-    MainWindowPrivate()
-    {
-    }
+    MainWindowPrivate(){}
 
-    QFrame          *content        = nullptr;
     Titlebar        *titlebar       = nullptr;
     TitleBarWidget  *titlebarwidget = nullptr;
     Footer          *footer         = nullptr;
@@ -75,8 +72,9 @@ public:
     MusicListWidget *musicList      = nullptr;
     LyricView       *lyricView      = nullptr;
 
-    Tip             *tips       = nullptr;
-    QWidget         *currentWidget = nullptr;
+    Tip             *tips           = nullptr;
+    QWidget         *currentWidget  = nullptr;
+    QString         coverBackground = ":/common/image/cover_max.png";
 };
 
 MainWindow::MainWindow(QWidget *parent)
@@ -140,6 +138,11 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
 
+}
+
+void MainWindow::initUI()
+{
+    d->lyricView->initUI();
 }
 
 void MainWindow::initMusiclist(PlaylistPtr allmusic, PlaylistPtr last)
@@ -371,9 +374,16 @@ void MainWindow::binding(Presenter *presenter)
     initMenu();
 }
 
-void MainWindow::setDefaultBackground()
+QString MainWindow::coverBackground() const
 {
-    QImage image = QImage((":/image/cover_max.png"));
+    return d->coverBackground;
+}
+
+void MainWindow::setCoverBackground(QString coverBackground)
+{
+    qDebug() << coverBackground;
+    d->coverBackground = coverBackground;
+    QImage image = QImage(coverBackground);
     image = WidgetHelper::cropRect(image, QWidget::size());
     setBackgroundImage(WidgetHelper::blurImage(image, 50));
 }

@@ -17,9 +17,13 @@ class LyricViewPrivate;
 class LyricView : public QFrame
 {
     Q_OBJECT
+    Q_PROPERTY(QString defaultCover READ defaultCover WRITE setDefaultCover)
 public:
     explicit LyricView(QWidget *parent = 0);
     ~LyricView();
+
+    void initUI();
+    QString defaultCover() const;
 
 signals:
     void toggleLyricView();
@@ -29,6 +33,7 @@ public slots:
     void onMusicPlayed(PlaylistPtr playlist, const MusicMeta &meta);
     void onLyricChanged(const MusicMeta &meta, const QByteArray &lyricData);
     void onCoverChanged(const MusicMeta &meta, const QByteArray &coverData);
+    void setDefaultCover(QString defaultCover);
 
 protected:
     virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
