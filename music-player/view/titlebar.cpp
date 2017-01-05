@@ -28,7 +28,7 @@ public:
         linearGradient.setColorAt(1.0,  QColor(0xf8, 0xf8, 0xf8, 255));
         titleBackground = QBrush(linearGradient);
 
-        borderBottom =  QColor(0, 0, 0, 0.1 * 255);
+        borderBottom =  QColor(0.1 * 255,  0.1 * 255,  0.1 * 255);
     }
 
     void workaroundSetButtonStyle();
@@ -148,8 +148,9 @@ void TitlebarPrivate::workaroundSetButtonStyle()
 
     for (auto &objname : objNames) {
         auto maxBt = q->findChild<QWidget *>(objname);
-        if (!maxBt)
+        if (!maxBt) {
             continue;
+        }
         maxBt->setProperty("_d_QSSFilename", "Titlebar");
         ThemeManager::instance()->regisetrWidget(maxBt);
     }
@@ -167,8 +168,9 @@ void TitlebarPrivate::workaroundUpdateButtonViewname()
 
     for (auto &objname : objNames) {
         auto maxBt = q->findChild<QWidget *>(objname);
-        if (!maxBt)
+        if (!maxBt) {
             continue;
+        }
         maxBt->setProperty("viewname", viewname);
     }
 }

@@ -40,6 +40,7 @@
 #include "musiclistwidget.h"
 #include "widget/tip.h"
 #include "widget/titlebarwidget.h"
+#include "widget/dsettingdialog.h"
 
 #include "../core/music.h"
 #include "../core/playlist.h"
@@ -167,6 +168,7 @@ void MainWindow::initMusiclist(PlaylistPtr allmusic, PlaylistPtr last)
         qDebug() << "init music with empty playlist:" << last;
     }
     d->import->hide();
+    d->titlebarwidget->setSearchEnable(true);
     d->newSonglistAction->setDisabled(false);
     d->musicList->raise();
     d->musicList->show();
@@ -320,7 +322,7 @@ void MainWindow::binding(Presenter *presenter)
     });
     connect(presenter, &Presenter::notifyAddToPlaylist,
     this, [ = ](PlaylistPtr playlist, const MusicMetaList & /*metalist*/) {
-        auto icon = QPixmap(":/image/notify_success.png");
+        auto icon = QPixmap(":/common/image/notify_success.png");
         auto text =  tr("Successfully added to \"%1\"");
         text = text.arg(playlist->displayName());
         showTips(icon, text);
@@ -362,7 +364,7 @@ void MainWindow::binding(Presenter *presenter)
             this, &MainWindow::onSelectImportFiles);
     connect(presenter, &Presenter::meidaFilesImported,
     this, [ = ](PlaylistPtr playlist, MusicMetaList metalist) {
-        DUtil::TimerSingleShot(1 * 1500, [this, playlist, metalist ]() {
+        DUtil::TimerSingleShot(1 * 800, [this, playlist, metalist ]() {
             this->showMusicListView();
         });
     });
@@ -393,6 +395,14 @@ void MainWindow::setCoverBackground(QString coverBackground)
     QImage image = QImage(coverBackground);
     image = WidgetHelper::cropRect(image, QWidget::size());
     setBackgroundImage(WidgetHelper::blurImage(image, 50));
+
+    /////////////////
+//    this->hide();
+//    auto dsd = new DSettingDialog;
+//    dsd->setFixedSize(720,580);
+//    qDebug() << dsd;
+//    dsd->show();
+//    dsd->raise();
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *event)
@@ -416,7 +426,7 @@ void MainWindow::resizeEvent(QResizeEvent *e)
 
     d->lyricView->resize(newSize);
     d->musicList->setFixedSize(newSize);
-    d->import->resize(newSize);
+    d->import->setFixedSize(newSize);
 
     d->playlist->setFixedSize(220, newSize.height() - footerHeight - titleBarHeight);
 
@@ -513,7 +523,7 @@ void MainWindow::showImportView()
     d->currentWidget = d->import;
     d->titlebar->raise();
     d->footer->raise();
-
+    d->titlebarwidget->setSearchEnable(false);
     d->newSonglistAction->setDisabled(true);
     updateViewname("");
 }
@@ -580,6 +590,7 @@ void MainWindow::changeToMusicListView(bool keepPlaylist)
     d->titlebar->raise();
     d->footer->raise();
 
+    d->titlebarwidget->setSearchEnable(true);
     d->newSonglistAction->setDisabled(false);
 }
 
@@ -601,8 +612,9 @@ void MainWindow::initMenu()
 
     auto m_settings = new QAction(tr("Settings"), this);
     connect(m_settings, &QAction::triggered, this, [ = ](bool) {
-        auto dsd = new DSettingDialog;
-        dsd->setFixedSize(880,660);
+        auto dsd = new DSettingDialog(this);
+        dsd->setFixedSize(720,580);
+        DUtility::moveToCenter(dsd);
         qDebug() << dsd;
         dsd->show();
     });
@@ -643,7 +655,7 @@ void MainWindow::initMenu()
         if (NULL == m_manual) {
             m_manual =  new QProcess(this);
             const QString pro = "dman";
-            const QStringList args("dde");
+            const QStringList args("deepin-music");
             connect(m_manual, static_cast<void(QProcess::*)(int)>(&QProcess::finished), this, [ = ](int) {
                 m_manual->deleteLater();
                 m_manual = nullptr;

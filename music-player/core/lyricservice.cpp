@@ -86,6 +86,7 @@ LyricService::LyricService(QObject *parent) : QObject(parent)
 QByteArray LyricService::coverData(const MusicMeta &info)
 {
     QFile coverFile(cacheCoverPath(info));
+    qDebug() << cacheCoverPath(info);
     if (coverFile.open(QIODevice::ReadOnly)) {
         return coverFile.readAll();
     }

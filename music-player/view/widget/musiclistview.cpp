@@ -337,6 +337,10 @@ void MusicListView::showContextMenu(const QPoint &pos,
     Q_D(MusicListView);
     QItemSelectionModel *selection = this->selectionModel();
 
+    if (selection->selectedRows().length() <= 0) {
+        return;
+    }
+
     QPoint globalPos = this->mapToGlobal(pos);
 
     QMenu playlistMenu;
@@ -483,7 +487,10 @@ void MusicListView::showContextMenu(const QPoint &pos,
                 coverPixmap = QPixmap::fromImage(WidgetHelper::cropRect(cover, QSize(140, 140)));
             }
 
-            InfoDialog dlg(meta, coverPixmap, this);
+            InfoDialog dlg(meta, this);
+            // FIXME: qss only word after show
+            dlg.show();
+            dlg.setCoverImage(coverPixmap);
             dlg.exec();
         }
     });

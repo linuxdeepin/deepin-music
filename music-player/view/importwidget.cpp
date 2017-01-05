@@ -53,7 +53,7 @@ ImportWidget::ImportWidget(QWidget *parent) : QFrame(parent), d_ptr(new ImportWi
     d->importButton->setObjectName("ImportViewImportButton");
     d->importButton->setFixedSize(130, 36);
     d->importButton->setText(tr("Add Music"));
-    btFrmeLayout->addWidget(d->importButton, 0, Qt::AlignCenter);
+//    btFrmeLayout->addWidget(d->importButton, 0, Qt::AlignCenter);
 
     d->text = new QLabel;
     d->text->setObjectName("ImportViewText");
@@ -64,9 +64,9 @@ ImportWidget::ImportWidget(QWidget *parent) : QFrame(parent), d_ptr(new ImportWi
 
     layout->addStretch();
     layout->addWidget(logo, 0, Qt::AlignCenter);
-    layout->addSpacing(40);
-    layout->addWidget(btFrme, 0, Qt::AlignCenter);
     layout->addSpacing(20);
+    layout->addWidget(d->importButton, 0, Qt::AlignCenter);
+    layout->addSpacing(10);
     layout->addWidget(d->text, 0, Qt::AlignCenter);
     layout->addStretch();
 

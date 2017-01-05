@@ -404,5 +404,6 @@
         <file>light/DDropdown.theme</file>
         <file>light/image/dropdown_arrow.png</file>
         <file>dark/image/dropdown_arrow.png</file>
+        <file>light/DSettingDialog.theme</file>
     </qresource>
 </RCC>

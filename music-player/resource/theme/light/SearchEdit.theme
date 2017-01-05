@@ -70,6 +70,7 @@ Dtk--Widget--DSearchEdit[viewname="lyric"] QFrame#DEditInsideFrame {
     background-color: rgba(255, 255, 255, 0.15);
     border-radius: 4.0px;
     border-color: rgba(255, 255, 255, 0.05);
+    border: none;
 }
 
 Dtk--Widget--DSearchEdit[viewname="lyric"] #PlaceHolder {

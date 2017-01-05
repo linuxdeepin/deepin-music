@@ -2,7 +2,7 @@ Titlebar {
     qproperty-background: qlineargradient(x1:0 y1:0, x2:0 y2:1,
         stop:0 rgba(255,255,255,100%),  stop:1 rgba(248,248,248,100%)
     );
-    qproperty-borderBottom: rgba(0,0,0,0.1);
+    qproperty-borderBottom: rgba(0,0,0,18%);
 }
 
 Titlebar[viewname="lyric"] {

@@ -160,6 +160,7 @@ void Playlist::reset(const MusicMetaList &metas)
 {
     listmeta.sortMetas.clear();
     listmeta.metas.clear();
+    listmeta.invalidMetas.clear();
 
     for (auto &meta : metas) {
         listmeta.sortMetas << meta.hash;
@@ -303,6 +304,7 @@ MusicMeta Playlist::removeOneMusic(const MusicMeta &meta)
     Q_ASSERT(ret == 1);
 
     listmeta.metas.remove(meta.hash);
+    listmeta.invalidMetas.remove(meta.hash);
 
     emit musicRemoved(meta);
 

@@ -67,7 +67,9 @@ SOURCES += \
     view/titlebar.cpp \
     view/widget/titlebarwidget.cpp \
     view/widget/ddropdown.cpp \
-    view/widget/dsettingdialog.cpp
+    view/widget/dsettingdialog.cpp \
+    view/widget/shortcut/shortcuteditor.cpp \
+    view/widget/shortcutedit.cpp
 
 
 HEADERS += \
@@ -120,7 +122,9 @@ HEADERS += \
     view/titlebar.h \
     view/widget/titlebarwidget.h \
     view/widget/ddropdown.h \
-    view/widget/dsettingdialog.h
+    view/widget/dsettingdialog.h \
+    view/widget/shortcut/shortcuteditor.h \
+    view/widget/shortcutedit.h
 
 RESOURCES += \
     resource/theme/theme.qrc

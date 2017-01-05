@@ -105,6 +105,12 @@ TitleBarWidget::~TitleBarWidget()
 
 }
 
+void TitleBarWidget::setSearchEnable(bool enable)
+{
+    Q_D(TitleBarWidget);
+    d->search->setEnabled(enable);
+}
+
 void TitleBarWidget::setViewname(const QString &viewname)
 {
     Q_D(TitleBarWidget);

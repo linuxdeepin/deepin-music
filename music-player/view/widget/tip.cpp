@@ -63,7 +63,7 @@ Tip::Tip(const QPixmap &icon, const QString &text, QWidget *parent) : QFrame(par
     this->setGraphicsEffect(bodyShadow);
     hide();
 
-    setMinimumHeight(48);
+    setFixedHeight(40);
 }
 
 void Tip::pop(QPoint center)

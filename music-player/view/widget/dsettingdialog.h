@@ -11,6 +11,35 @@
 
 #include <QScopedPointer>
 #include "thinwindow.h"
+#include <QLabel>
+
+class NavTitle : public QLabel
+{
+    Q_OBJECT
+public:
+    explicit NavTitle(QWidget *parent = 0);
+};
+
+class NavSubTitle : public QLabel
+{
+    Q_OBJECT
+public:
+    explicit NavSubTitle(QWidget *parent = 0);
+};
+
+class ContentTitle : public QFrame
+{
+    Q_OBJECT
+public:
+    explicit ContentTitle(const QString &title, QWidget *parent = 0);
+};
+
+class ContentSubTitle : public QLabel
+{
+    Q_OBJECT
+public:
+    explicit ContentSubTitle(QWidget *parent = 0);
+};
 
 class DSettingDialogPrivate;
 class DSettingDialog : public ThinWindow
@@ -21,8 +50,12 @@ public:
     ~DSettingDialog();
 
 signals:
+    void mouseMoving(Qt::MouseButton botton);
 
 public slots:
+
+protected:
+    virtual void mouseMoveEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
 
 private:
     QScopedPointer<DSettingDialogPrivate> d_ptr;
