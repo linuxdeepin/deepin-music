@@ -26,6 +26,7 @@
 #include "../core/lyricservice.h"
 #include "../core/mediadatabase.h"
 #include "../core/util/musicmeta.h"
+#include "../core/dsettings.h"
 
 PresenterPrivate::PresenterPrivate(Presenter *parent)
     : QObject(parent), q_ptr(parent)
@@ -36,6 +37,9 @@ PresenterPrivate::PresenterPrivate(Presenter *parent)
 void PresenterPrivate::initData()
 {
     Q_Q(Presenter);
+
+    dsettings = new DSettings;
+    dsettings->loadDefault(":/data/deepin-music-settings.json");
 
     lyricService = new LyricService;
     auto work = new QThread;
@@ -51,14 +55,6 @@ void PresenterPrivate::initData()
 
     playlistMgr = new PlaylistManager;
     playlistMgr->load();
-
-    //! load config
-    settings = new QSettings(MusicApp::configPath() + "/Config.ini", QSettings::IniFormat);
-    settings->beginGroup("Config");
-    auto mode = settings->value("Mode").toInt();
-    auto lastImportPath = settings->value("LastImportPath").toString();
-    settings->endGroup();
-    q->onPlayModeChanged(mode);
 
     connect(this, &PresenterPrivate::requestMetaSearch,
             lyricService, &LyricService::searchMeta);
@@ -245,9 +241,24 @@ void Presenter::prepareData()
         emit MediaDatabase::instance()->updateMusicMeta(meta);
     });
 
+
+    auto mode = d->dsettings->option("base.play.playmode").toInt();
+    Player::instance()->setMode(static_cast<Player::PlaybackMode>(mode));
+
     emit dataLoaded();
-    Player::instance()->setVolume(50);
+}
+
+void Presenter::loadConfig()
+{
+    Q_D(Presenter);
+
+    auto volume = d->dsettings->option("base.play.volume").toInt();
+    Player::instance()->setVolume(volume);
     emit this->volumeChanged(Player::instance()->volume());
+
+    auto mute = d->dsettings->option("base.play.mute").toBool();
+    Player::instance()->setMuted(mute);
+    emit this->mutedChanged(mute);
 }
 
 void Presenter::onSyncMusicPlay(PlaylistPtr playlist, const MusicMeta &meta)
@@ -580,9 +591,12 @@ void Presenter::onChangeProgress(qint64 value, qint64 range)
 
 void Presenter::onVolumeChanged(int volume)
 {
+    Q_D(Presenter);
     Player::instance()->setVolume(volume);
+    d->dsettings->setOption("base.play.volume", volume);
     if (volume > 0 && Player::instance()->muted()) {
         Player::instance()->setMuted(false);
+        d->dsettings->setOption("base.play.mute", false);
     }
 }
 
@@ -590,16 +604,15 @@ void Presenter::onPlayModeChanged(int mode)
 {
     Q_D(Presenter);
     Player::instance()->setMode(static_cast<Player::PlaybackMode>(mode));
-
-    d->settings->beginGroup("Config");
-    d->settings->setValue("Mode", mode);
-    d->settings->endGroup();
-    d->settings->sync();
+    d->dsettings->setOption("base.play.playmode", mode);
+    d->dsettings->sync();
 }
 
 void Presenter::onToggleMute()
 {
+    Q_D(Presenter);
     Player::instance()->setMuted(! Player::instance()->muted());
+    d->dsettings->setOption("base.play.mute", Player::instance()->muted());
 }
 
 void Presenter::onPlayall(PlaylistPtr playlist)

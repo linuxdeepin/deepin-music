@@ -69,7 +69,8 @@ SOURCES += \
     view/widget/ddropdown.cpp \
     view/widget/dsettingdialog.cpp \
     view/widget/shortcut/shortcuteditor.cpp \
-    view/widget/shortcutedit.cpp
+    view/widget/shortcutedit.cpp \
+    core/dsettings.cpp
 
 
 HEADERS += \
@@ -124,10 +125,12 @@ HEADERS += \
     view/widget/ddropdown.h \
     view/widget/dsettingdialog.h \
     view/widget/shortcut/shortcuteditor.h \
-    view/widget/shortcutedit.h
+    view/widget/shortcutedit.h \
+    core/dsettings.h
 
 RESOURCES += \
-    resource/theme/theme.qrc
+    resource/theme/theme.qrc \
+    config.qrc
 
 unix{
 SOURCES += \
@@ -146,8 +149,4 @@ TRANSLATIONS += $$PWD/translations/$${TARGET}.ts \
                 $$PWD/translations/$${TARGET}_zh_CN.ts
 
 include($$PWD/install.pri)
-
-DISTFILES += \
-    data/deepin-music.desktop \
-    data/deepin-music-settings.json
 

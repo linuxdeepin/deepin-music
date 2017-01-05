@@ -14,13 +14,17 @@
     color: #979797;
 }
 
-#ImportViewImportButton{
+#ImportViewImportButton {
+    font-family: SourceHanSansSC-Medium;
     font-size: 14px;
-    color: #0699ff;
-    border-radius: 4.0px;
-    border: 1px solid;
-    border-color: rgba(0, 131, 255, 0.4);
-    background: qlineargradient(x1:0 y1:0, x2:0 y2:1,
-        stop:0 rgba(255,255,255,100%),  stop:1 rgba(253,253,253,100%)
-    );
+    color: #0599FF;
+    border-image: url(:/light/image/suggest_button_normal.png);
+}
+#ImportViewImportButton:hover {
+    color: white;
+    border-image: url(:/light/image/suggest_button_hover.png);
+}
+#ImportViewImportButton:pressed {
+    color: #2ca7f8;
+    border-image: url(:/light/image/suggest_button_press.png);
 }

@@ -36,7 +36,7 @@ public:
     MainWindow      *playerFrame    = nullptr;
 
     MusicApp *q_ptr;
-    Q_DECLARE_PUBLIC(MusicApp);
+    Q_DECLARE_PUBLIC(MusicApp)
 };
 
 
@@ -99,12 +99,15 @@ void MusicApp::initMpris(MprisPlayer *mprisPlayer)
 void MusicApp::onDataPrepared()
 {
     Q_D(MusicApp);
+
     d->playerFrame->initMusiclist(d->appPresenter->allMusicPlaylist(), d->appPresenter->lastPlaylist());
     d->playerFrame->initPlaylist(d->appPresenter->allplaylist() , d->appPresenter->lastPlaylist());
     d->playerFrame->initFooter(d->appPresenter->lastPlaylist(), d->appPresenter->playMode());
     d->playerFrame->initUI();
 
     d->playerFrame->binding(d->appPresenter);
+
+    d->appPresenter->loadConfig();
 
     d->playerFrame->show();
     DUtility::moveToCenter(d->playerFrame);

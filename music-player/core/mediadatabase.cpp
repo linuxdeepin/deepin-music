@@ -192,6 +192,7 @@ static QList<MusicMeta> searchTitle(const QString &queryString)
 
 QList<MusicMeta> MediaDatabase::searchMusicTitle(const QString &title, int limit)
 {
+    qDebug() << "search title" << title;
     auto matchReg = QString("\"%%1%\" ").arg(title);
     QString queryString = QString("SELECT hash, localpath, title, artist, album, "
                                   "filetype, track, offset, length, size, timestamp "

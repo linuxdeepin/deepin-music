@@ -405,5 +405,11 @@
         <file>light/image/dropdown_arrow.png</file>
         <file>dark/image/dropdown_arrow.png</file>
         <file>light/DSettingDialog.theme</file>
+        <file>light/image/suggest_button_press.png</file>
+        <file>light/image/suggest_button_normal.png</file>
+        <file>light/image/suggest_button_hover.png</file>
+        <file>dark/image/suggest_button_press.png</file>
+        <file>dark/image/suggest_button_normal.png</file>
+        <file>dark/image/suggest_button_hover.png</file>
     </qresource>
 </RCC>

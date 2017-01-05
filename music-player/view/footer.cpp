@@ -53,8 +53,8 @@ public:
     void initConnection();
 
     Cover           *cover      = nullptr;
-    Label  *title      = nullptr;
-    Label  *artist    = nullptr;
+    Label           *title      = nullptr;
+    Label           *artist     = nullptr;
     QPushButton     *btPlay     = nullptr;
     QPushButton     *btPrev     = nullptr;
     QPushButton     *btNext     = nullptr;
@@ -66,6 +66,8 @@ public:
     Slider          *progress   = nullptr;
     HintFilter      *hintFilter = nullptr;
     SoundVolume     *volSlider  = nullptr;
+
+    QFrame          *ctlWidget  = nullptr;
 
     PlaylistPtr     m_playinglist;
     MusicMeta       m_playingMeta;
@@ -263,7 +265,8 @@ Footer::Footer(QWidget *parent) :
     d->volSlider->setProperty("NoDelayShow", true);
     d->installHint(d->btSound, d->volSlider);
 
-    auto infoWidget = new QWidget;
+    auto infoWidget = new QFrame;
+//    infoWidget->setStyleSheet("border: 1px solid red;");
     auto infoLayout = new QHBoxLayout(infoWidget);
     auto musicMetaLayout = new QVBoxLayout;
     musicMetaLayout->addWidget(d->title);
@@ -274,14 +277,17 @@ Footer::Footer(QWidget *parent) :
     infoLayout->addWidget(d->cover, 0, Qt::AlignLeft | Qt::AlignVCenter);
     infoLayout->addSpacing(10);
     infoLayout->addLayout(musicMetaLayout, 0);
+    infoLayout->addStretch();
 
-    auto ctlWidget = new QWidget;
-    auto ctlLayout = new QHBoxLayout(ctlWidget);
+    d->ctlWidget =new QFrame(this);
+//    d->ctlWidget->setStyleSheet("border: 1px solid red;");
+    auto ctlLayout = new QHBoxLayout(d->ctlWidget);
     ctlLayout->setMargin(0);
     ctlLayout->setSpacing(30);
     ctlLayout->addWidget(d->btPrev, 0, Qt::AlignCenter);
     ctlLayout->addWidget(d->btPlay, 0, Qt::AlignCenter);
     ctlLayout->addWidget(d->btNext, 0, Qt::AlignCenter);
+    d->ctlWidget->adjustSize();
 
     auto actWidget = new QWidget;
     auto actLayout = new QHBoxLayout(actWidget);
@@ -296,12 +302,11 @@ Footer::Footer(QWidget *parent) :
     QSizePolicy sp(QSizePolicy::Preferred, QSizePolicy::Preferred);
     sp.setHorizontalStretch(33);
     infoWidget->setSizePolicy(sp);
-    ctlWidget->setSizePolicy(sp);
     actWidget->setSizePolicy(sp);
 
     layout->addWidget(infoWidget, 0, Qt::AlignLeft | Qt::AlignVCenter);
     layout->addStretch();
-    layout->addWidget(ctlWidget, 0, Qt::AlignCenter);
+//    layout->addWidget(d->ctlWidget, 0, Qt::AlignCenter);
     layout->addStretch();
     layout->addWidget(actWidget, 0, Qt::AlignRight | Qt::AlignVCenter);
 
@@ -314,6 +319,15 @@ Footer::Footer(QWidget *parent) :
     d->btNext->hide();
     d->btFavorite->hide();
     d->btLyric->hide();
+
+
+    d->btPrev->setFocusPolicy(Qt::NoFocus);
+    d->btNext->setFocusPolicy(Qt::NoFocus);
+    d->btFavorite->setFocusPolicy(Qt::NoFocus);
+    d->btLyric->setFocusPolicy(Qt::NoFocus);
+    d->btPlayMode ->setFocusPolicy(Qt::NoFocus);
+    d->btSound->setFocusPolicy(Qt::NoFocus);
+    d->btPlayList->setFocusPolicy(Qt::NoFocus);
 
     ThemeManager::instance()->regisetrWidget(this);
 
@@ -542,5 +556,16 @@ void Footer::setDefaultCover(QString defaultCover)
 {
     Q_D(Footer);
     d->defaultCover = defaultCover;
+}
+
+void Footer::resizeEvent(QResizeEvent *event)
+{
+    Q_D(Footer);
+    QFrame::resizeEvent(event);
+
+    auto center = this->rect().center() - d->ctlWidget->rect().center();
+
+    d->ctlWidget->move(center);
+    d->ctlWidget->raise();
 }
 

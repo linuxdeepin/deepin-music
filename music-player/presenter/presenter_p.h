@@ -16,6 +16,7 @@ class LyricService;
 class PlaylistManager;
 class MediaFileMonitor;
 class QSettings;
+class DSettings;
 class PresenterPrivate: public QObject
 {
     Q_OBJECT
@@ -32,6 +33,7 @@ public:
     PlaylistManager     *playlistMgr    = nullptr;
     MediaFileMonitor    *moniter        = nullptr;
     QSettings           *settings       = nullptr;
+    DSettings           *dsettings       = nullptr;
 
     Presenter *q_ptr;
     Q_DECLARE_PUBLIC(Presenter)

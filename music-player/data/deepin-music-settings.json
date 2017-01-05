@@ -12,22 +12,61 @@
                             "key": "auto_play",
                             "label": "",
                             "type": "checkbox",
-                            "value": "启动时自动播放",
+                            "checkbox_text": "启动时自动播放",
                             "default": false
                         },
                         {
                             "key": "remember_progress",
                             "label": "",
                             "type": "checkbox",
-                            "value": "启动时记住上次播放进度",
+                            "checkbox_text": "启动时记住上次播放进度",
                             "default": false
                         },
                         {
                             "key": "fade_in_out",
                             "label": "",
                             "type": "checkbox",
-                            "value": "开启淡入淡出",
+                            "checkbox_text": "开启淡入淡出",
                             "default": true
+                        },
+                        {
+                            "key": "sort_type",
+                            "label": "sort type",
+                            "hide": true,
+                            "type": "combox",
+                            "combox_list": [0,1,2,3],
+                            "default": 0
+                        },
+                        {
+                            "key": "playmode",
+                            "label": "play mode",
+                            "hide": true,
+                            "type": "combox",
+                            "combox_list": [0,1,2],
+                            "default": 0
+                        },
+                        {
+                            "key": "volume",
+                            "label": "play sound volume",
+                            "hide": true,
+                            "type": "slider",
+                            "max": 100,
+                            "min": 0,
+                            "default": 50
+                        },
+                        {
+                            "key": "mute",
+                            "label": "play sound mute",
+                            "hide": true,
+                            "type": "checkbox",
+                            "default": false
+                        },
+                        {
+                            "key": "last_import_path",
+                            "label": "Last Import Path",
+                            "hide": true,
+                            "type": "lineedit",
+                            "default": ""
                         }
                     ]
                 }
@@ -38,7 +77,7 @@
             "name": "快捷键",
             "groups": [
                 {
-                    "key": "",
+                    "key": "all",
                     "name": "",
                     "options": [
                         {

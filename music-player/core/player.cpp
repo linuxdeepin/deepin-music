@@ -114,11 +114,11 @@ void PlayerPrivate::initConnection()
     q->connect(qplayer, &QMediaPlayer::positionChanged,
     q, [ = ](qint64 position) {
         auto duration = qplayer->duration();
-//        qDebug() << lengthString(duration)
-//                 << lengthString(position)
-//                 << lengthString(activeMeta.offset)
-//                 << lengthString(activeMeta.length)
-//                 << activeMeta.title;
+        qDebug() << lengthString(duration)
+                 << lengthString(position)
+                 << lengthString(activeMeta.offset)
+                 << lengthString(activeMeta.length)
+                 << activeMeta.title;
 
         // fix len
         if (activeMeta.length == 0 && duration != 0 && duration > 0) {
@@ -128,7 +128,7 @@ void PlayerPrivate::initConnection()
         }
 
         if (position >= activeMeta.offset + activeMeta.length && qplayer->state() == QMediaPlayer::PlayingState) {
-            q->playNextMeta(activePlaylist, activeMeta);
+            selectNext(activeMeta, mode);
             return;
         }
 
@@ -152,7 +152,7 @@ void PlayerPrivate::initConnection()
         }
         case QMediaPlayer::EndOfMedia: {
             // next
-            q->playNextMeta(activePlaylist, activeMeta);
+            selectNext(activeMeta, mode);
             break;
         }
         case QMediaPlayer::UnknownMediaStatus:
@@ -252,17 +252,15 @@ Player::~Player()
 
 void Player::playMeta(PlaylistPtr playlist, const MusicMeta &meta)
 {
-    qDebug() << "playMeta top" << meta.title;
-    Q_D(Player);
-    qDebug() << meta.title
+    qDebug() << "playMeta"
+             << meta.title
              << lengthString(meta.offset)
              << lengthString(meta.offset)
              << lengthString(meta.length);
+    Q_D(Player);
     d->activeMeta = meta;
 
-    d->qplayer->blockSignals(true);
     d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(meta.localPath)));
-    d->qplayer->blockSignals(false);
 
     d->qplayer->setPosition(meta.offset);
 
@@ -270,6 +268,8 @@ void Player::playMeta(PlaylistPtr playlist, const MusicMeta &meta)
     d->activePlaylist->play(meta);
 
     emit mediaPlayed(d->activePlaylist, d->activeMeta);
+
+    qDebug() << d->qplayer->mediaStatus();
 }
 
 void Player::resume(PlaylistPtr playlist, const MusicMeta &meta)

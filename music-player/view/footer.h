@@ -64,6 +64,7 @@ public slots:
     void setDefaultCover(QString defaultCover);
 
 protected:
+    virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
     virtual void mouseMoveEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     virtual bool eventFilter(QObject *obj, QEvent *event) Q_DECL_OVERRIDE;
 

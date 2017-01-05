@@ -97,11 +97,10 @@ SearchResult::SearchResult(QWidget *parent) : ThinWindow(parent)
 
 void SearchResult::autoResize()
 {
-    qDebug() << m_searchResult->viewport()->size() << m_model->rowCount() * 25;
-    m_searchResult->setFixedHeight(m_model->rowCount() * (25+1));
+    m_searchResult->setFixedHeight(m_model->rowCount() * (25 + 1));
     m_searchResult->setFixedWidth(this->size().width() + 3);
     this->setFixedHeight((m_model->rowCount() + 1) * 25 + 8 + 40 + 1);
-    m_searchResult->setVisible(!m_model->rowCount() == 0);
+    m_searchResult->setVisible(!(0 == m_model->rowCount()));
     this->adjustSize();
 }
 

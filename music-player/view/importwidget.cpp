@@ -29,10 +29,10 @@ public:
     ImportWidgetPrivate(ImportWidget *parent) : q_ptr(parent) {}
 
     QLabel                  *text = nullptr;
-    DBaseButton             *importButton = nullptr;
+    QPushButton             *importButton = nullptr;
 
     ImportWidget *q_ptr;
-    Q_DECLARE_PUBLIC(ImportWidget);
+    Q_DECLARE_PUBLIC(ImportWidget)
 };
 
 ImportWidget::ImportWidget(QWidget *parent) : QFrame(parent), d_ptr(new ImportWidgetPrivate(this))
@@ -46,12 +46,12 @@ ImportWidget::ImportWidget(QWidget *parent) : QFrame(parent), d_ptr(new ImportWi
     logo->setFixedSize(128, 128);
     logo->setObjectName("ImportViewLogo");
 
-    auto btFrme = new QFrame;
-    auto btFrmeLayout = new QVBoxLayout(btFrme);
-    btFrme->setFixedSize(150, 50);
-    d->importButton = new Dtk::Widget::DBaseButton;
+//    auto btFrme = new QFrame;
+//    auto btFrmeLayout = new QVBoxLayout(btFrme);
+//    btFrme->setFixedSize(150, 50);
+    d->importButton = new QPushButton;
     d->importButton->setObjectName("ImportViewImportButton");
-    d->importButton->setFixedSize(130, 36);
+    d->importButton->setFixedSize(142, 42);
     d->importButton->setText(tr("Add Music"));
 //    btFrmeLayout->addWidget(d->importButton, 0, Qt::AlignCenter);
 
@@ -62,7 +62,7 @@ ImportWidget::ImportWidget(QWidget *parent) : QFrame(parent), d_ptr(new ImportWi
     QString linkText = QString(linkTemplate).arg(tr("Scan")).arg(tr("Scan"));
     d->text->setText(QString(tr("%1 music directory or drag & drop music file to add music")).arg(linkText));
 
-    layout->addStretch();
+    layout->addSpacing(200);
     layout->addWidget(logo, 0, Qt::AlignCenter);
     layout->addSpacing(20);
     layout->addWidget(d->importButton, 0, Qt::AlignCenter);

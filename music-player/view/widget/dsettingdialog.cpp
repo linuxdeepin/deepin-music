@@ -95,6 +95,7 @@ DSettingDialog::DSettingDialog(QWidget *parent) : ThinWindow(parent), d_ptr(new 
 //    layout->addStretch();
 
     setContentLayout(layout);
+
     QFile jsonFile("/home/iceyer/Development/deepin/deepin-music/music-player/data/deepin-music-settings.json");
     jsonFile.open(QIODevice::ReadOnly);
     auto jsonDoc = QJsonDocument::fromJson(jsonFile.readAll());
@@ -137,6 +138,9 @@ DSettingDialog::DSettingDialog(QWidget *parent) : ThinWindow(parent), d_ptr(new 
 
             for (auto optionJson : options) {
                 auto option = optionJson.toObject();
+                if (option.value("hide").toBool()) {
+                    continue;
+                }
                 d->contentLayout->addWidget(d->createOptionWidget(option));
             }
         }
@@ -197,23 +201,24 @@ QWidget *DSettingDialogPrivate::createOptionWidget(QJsonObject obj)
     auto labelWidget = new QLabel(label);
     labelWidget->setObjectName("OptionLabel");
     optLayout->addWidget(labelWidget, 0, 0, Qt::AlignRight);
-    optLayout->setColumnStretch(0,10);
-    optLayout->setColumnStretch(1,100);
+    optLayout->setColumnStretch(0, 10);
+    optLayout->setColumnStretch(1, 100);
+    optLayout->setColumnMinimumWidth(0, 110);
     optLayout->setHorizontalSpacing(20);
 
     qDebug() << "createOptionWidget" << label;
 
     auto optType = obj.value("type").toString();
     if (optType == "checkbox") {
-        optLayout->setColumnMinimumWidth(0,110);
-        auto value = obj.value("value").toString();
+        optLayout->setColumnMinimumWidth(0, 110);
+        auto value = obj.value("checkbox_text").toString();
         auto optCheckBox = new QCheckBox(value);
         optCheckBox->setObjectName("OptionCheckBox");
         optLayout->addWidget(optCheckBox, 0, 1, Qt::AlignLeft);
     }
 
     if (optType == "shortcut") {
-        optLayout->setColumnMinimumWidth(0,130);
+        optLayout->setColumnMinimumWidth(0, 130);
         auto optShortcut = new ShortcutEdit(QList<Qt::Key>());
         optLayout->addWidget(optShortcut, 0, 1, Qt::AlignLeft);
     }

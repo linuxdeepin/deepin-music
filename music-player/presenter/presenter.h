@@ -33,6 +33,7 @@ public:
 
     void prepareData();
 
+    void loadConfig();
     //! action signal
 signals:
     //! ui: request import dialog
