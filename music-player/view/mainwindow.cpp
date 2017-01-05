@@ -24,6 +24,7 @@
 #include <QMessageBox>
 #include <QMenu>
 #include <QGraphicsDropShadowEffect>
+#include <QStyleFactory>
 
 #include <DUtil>
 #include <dutility.h>
@@ -78,6 +79,7 @@ public:
     QWidget         *currentWidget  = nullptr;
 
     QAction         *newSonglistAction      = nullptr;
+    QAction         *colorModeAction        = nullptr;
     QString         coverBackground = ":/common/image/cover_max.png";
 };
 
@@ -341,10 +343,14 @@ void MainWindow::binding(Presenter *presenter)
     connect(presenter, &Presenter::coverSearchFinished,
     this, [ = ](const MusicMeta &, const QByteArray & coverData) {
         if (coverData.length() < 32) {
+            setCoverBackground(coverBackground());
+            this->repaint();
             return;
         }
         QImage image = QImage::fromData(coverData);
         if (image.isNull()) {
+            setCoverBackground(coverBackground());
+            this->repaint();
             return;
         }
 
@@ -612,19 +618,21 @@ void MainWindow::initMenu()
 
     auto m_settings = new QAction(tr("Settings"), this);
     connect(m_settings, &QAction::triggered, this, [ = ](bool) {
-        auto dsd = new DSettingDialog(this);
-        dsd->setFixedSize(720,580);
-        DUtility::moveToCenter(dsd);
-        qDebug() << dsd;
-        dsd->show();
+        auto configDialog = new DSettingDialog(this);
+        configDialog->setFixedSize(720, 580);
+        DUtility::moveToCenter(configDialog);
+        configDialog->show();
     });
 
-    auto m_colorMode = new QAction(tr("Deep color mode"), this);
-    connect(m_colorMode, &QAction::triggered, this, [ = ](bool) {
+    d->colorModeAction = new QAction(tr("Deep color mode"), this);
+    d->colorModeAction->setCheckable(true);
+    connect(d->colorModeAction, &QAction::triggered, this, [ = ](bool) {
         if (DThemeManager::instance()->theme() == "light") {
+            d->colorModeAction->setChecked(true);
             DThemeManager::instance()->setTheme("dark");
             ThemeManager::instance()->setTheme("dark");
         } else {
+            d->colorModeAction->setChecked(false);
             DThemeManager::instance()->setTheme("light");
             ThemeManager::instance()->setTheme("light");
         }
@@ -670,13 +678,15 @@ void MainWindow::initMenu()
     });
 
     auto titleMenu = new QMenu;
+
+    titleMenu->setStyle(QStyleFactory::create("dlight"));
     d->titlebar->setMenu(titleMenu);
 
     titleMenu->addAction(d->newSonglistAction);
     titleMenu->addAction(m_addmusic);
     titleMenu->addSeparator();
 
-    titleMenu->addAction(m_colorMode);
+    titleMenu->addAction(d->colorModeAction);
     titleMenu->addAction(m_settings);
     titleMenu->addSeparator();
 

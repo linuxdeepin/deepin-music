@@ -19,8 +19,8 @@
 
 #include "musiclistview.h"
 #include "musicitemdelegate_p.h"
-
-DWIDGET_USE_NAMESPACE
+#include "picturesequenceview.h"
+#include "../../musicapp.h"
 
 const int MusicItemLeftMargin = 15;
 const int MusicItemRightMargin = 20;
@@ -58,7 +58,7 @@ MusicItemDelegatePrivate::MusicItemDelegatePrivate(MusicItemDelegate *parent):
     QWidget(nullptr), q_ptr(parent)
 {
     setObjectName("MusicItem");
-    playingAnimation = new Dtk::Widget::DPictureSequenceView;
+    playingAnimation = new PictureSequenceView;
     ThemeManager::instance()->regisetrWidget(this);
 }
 
@@ -73,7 +73,7 @@ void MusicItemDelegatePrivate::setActiveAnimationPrefix(QString prefix) const
     for (int i = 0; i < 94; ++i) {
         urls << urlTemp.arg(i);
     }
-    playingAnimation->setSpeed(40);
+//    playingAnimation->setSpeed(40);
     playingAnimation->setPictureSequence(urls);
     playingAnimation->setProperty("ActivePrefix", prefix);
 }
@@ -274,7 +274,7 @@ void MusicItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
                 break;
             }
 
-            if (d->playingIndex == index && !hideAnimation ) {
+            if (d->playingIndex == index && !hideAnimation) {
 
                 if (option.state & QStyle::State_Selected) {
                     d->setActiveAnimationPrefix(d->highlightAnimationPrefix());
@@ -282,15 +282,17 @@ void MusicItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
                     d->setActiveAnimationPrefix(d->animationPrefix());
                 }
 
-                d->playingAnimation->setParent(w);
-//                d->playingAnimation->raise();
+//                d->playingAnimation->setParent(MusicApp::instance()->hackFrame());
+                d->playingAnimation->raise();
 ////                d->playingAnimation->pause();
-//                d->playingAnimation->play();
-//                d->playingAnimation->show();
-                d->playingAnimation->hide();
+                d->playingAnimation->start();
+                d->playingAnimation->show();
+//                d->playingAnimation->hide();
                 auto center = rect.center();
                 auto aniSize = d->playingAnimation->size();
-                d->playingAnimation->move(center.x() - aniSize.width() / 2, center.y() - aniSize.height() / 2);
+                auto newCenter = QPoint(center.x() - aniSize.width() / 2, center.y() - aniSize.height() / 2);
+                newCenter = w->mapToGlobal(newCenter);
+                d->playingAnimation->move(newCenter);
             } else {
 //                auto num = numberString(index.row() + 1, option);
 //                painter->drawText(rect, flag, num);

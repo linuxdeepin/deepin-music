@@ -21,8 +21,31 @@
 
 #include <thememanager.h>
 
-Tip::Tip(const QPixmap &icon, const QString &text, QWidget *parent) : QFrame(parent)
+class TipPrivate
 {
+public:
+    TipPrivate(Tip *parent) : q_ptr(parent) {}
+
+    void setBackgroundImage(const QPixmap &srcPixmap);
+
+    QBrush          background;
+    int             radius              = 4;
+    int             shadowWidth         = 20;
+    QMargins        shadowMargins       = QMargins(20, 20, 20, 20);
+    QColor          borderColor         = QColor(0, 0, 0, 0.2 * 255);
+
+    QFrame          *m_interFrame       = nullptr;
+
+
+    Tip *q_ptr;
+    Q_DECLARE_PUBLIC(Tip)
+};
+
+
+Tip::Tip(const QPixmap &icon, const QString &text, QWidget *parent) : QFrame(parent), d_ptr(new TipPrivate(this))
+{
+    Q_D(Tip);
+
     setWindowFlags(Qt::Tool | Qt::FramelessWindowHint);
     setAttribute(Qt::WA_TranslucentBackground);
     setObjectName("Tip");
@@ -32,9 +55,9 @@ Tip::Tip(const QPixmap &icon, const QString &text, QWidget *parent) : QFrame(par
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(0);
 
-    m_interFrame = new QFrame();
-    m_interFrame->setContentsMargins(0, 0, 0, 0);
-    auto interlayout = new QHBoxLayout(m_interFrame);
+    d->m_interFrame = new QFrame();
+    d->m_interFrame->setContentsMargins(0, 0, 0, 0);
+    auto interlayout = new QHBoxLayout(d->m_interFrame);
     interlayout->setContentsMargins(10, 0, 10, 0);
     interlayout->setSpacing(5);
     auto iconLabel = new QLabel;
@@ -51,8 +74,8 @@ Tip::Tip(const QPixmap &icon, const QString &text, QWidget *parent) : QFrame(par
 
     interlayout->addWidget(iconLabel, 0, Qt::AlignVCenter);
     interlayout->addWidget(textLable, 0, Qt::AlignVCenter);
-    layout->addWidget(m_interFrame, 0, Qt::AlignVCenter);
-     ThemeManager::instance()->regisetrWidget(this);
+    layout->addWidget(d->m_interFrame, 0, Qt::AlignVCenter);
+    ThemeManager::instance()->regisetrWidget(this);
 
     adjustSize();
 
@@ -66,15 +89,57 @@ Tip::Tip(const QPixmap &icon, const QString &text, QWidget *parent) : QFrame(par
     setFixedHeight(40);
 }
 
+Tip::~Tip()
+{
+
+}
+
+QBrush Tip::background() const
+{
+    Q_D(const Tip);
+    return d->background;
+}
+
+int Tip::radius() const
+{
+    Q_D(const Tip);
+    return d->radius;
+}
+
+QColor Tip::borderColor() const
+{
+    Q_D(const Tip);
+    return d->borderColor;
+}
+
+void Tip::setBackground(QBrush background)
+{
+    Q_D(Tip);
+    d->background = background;
+}
+
+void Tip::setRadius(int radius)
+{
+    Q_D(Tip);
+    d->radius = radius;
+}
+
+void Tip::setBorderColor(QColor borderColor)
+{
+    Q_D(Tip);
+    d->borderColor = borderColor;
+}
+
 void Tip::pop(QPoint center)
 {
+    Q_D(Tip);
     this->show();
     center = center - QPoint(width() / 2, height() / 2);
     this->move(center);
 
-    auto topOpacity = new QGraphicsOpacityEffect(m_interFrame);
+    auto topOpacity = new QGraphicsOpacityEffect(d->m_interFrame);
     topOpacity->setOpacity(1);
-    m_interFrame->setGraphicsEffect(topOpacity);
+    d->m_interFrame->setGraphicsEffect(topOpacity);
 
     QPropertyAnimation *animation4 = new QPropertyAnimation(topOpacity, "opacity");
 //    animation4->setEasingCurve(QEasingCurve::InCubic);
@@ -89,23 +154,24 @@ void Tip::pop(QPoint center)
                         animation4, &QPropertyAnimation::deleteLater);
     animation4->connect(animation4, &QPropertyAnimation::finished,
     this, [ = ]() {
-        m_interFrame->setGraphicsEffect(nullptr);
+        d->m_interFrame->setGraphicsEffect(nullptr);
         this->hide();
     });
 }
 
-void Tip::paintEvent(QPaintEvent *e)
+void Tip::paintEvent(QPaintEvent *)
 {
+    Q_D(Tip);
 //    QFrame::paintEvent(e);
 //    return;
     bool outer = true;
 
     QPainter painter(this);
     painter.setRenderHints(QPainter::Antialiasing | QPainter::HighQualityAntialiasing);
-    auto radius = 4.0;
+    auto radius = d->radius;
     auto penWidthf = 1.0;
-    auto background =  QColor(255, 255, 255, 1 * 255);
-    auto borderColor = QColor(0, 0, 0, 0.05 * 255);
+    auto background =  d->background;
+    auto borderColor = d->borderColor;
     auto margin = 2.0;
     auto shadowMargins = QMarginsF(margin, margin, margin, margin);
 

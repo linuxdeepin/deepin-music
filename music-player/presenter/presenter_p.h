@@ -32,7 +32,6 @@ public:
     LyricService        *lyricService   = nullptr;
     PlaylistManager     *playlistMgr    = nullptr;
     MediaFileMonitor    *moniter        = nullptr;
-    QSettings           *settings       = nullptr;
     DSettings           *dsettings       = nullptr;
 
     Presenter *q_ptr;

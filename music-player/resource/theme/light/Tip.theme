@@ -1,4 +1,7 @@
 #Tip {
+    qproperty-background: rgba(255,255,255, 100%);
+    qproperty-borderColor: rgba(255,255,255,5%);
+    qproperty-radius: 4.0;
 }
 
 #TipIcon{

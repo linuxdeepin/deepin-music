@@ -318,11 +318,11 @@ void Player::pause()
 void Player::stop()
 {
     Q_D(Player);
-    d->qplayer->blockSignals(true);
+//    d->qplayer->blockSignals(true);
     d->qplayer->pause();
     d->qplayer->setMedia(QMediaContent());
     d->qplayer->stop();
-    d->qplayer->blockSignals(false);
+//    d->qplayer->blockSignals(false);
 }
 
 MusicMeta Player::activeMeta() const

@@ -12,8 +12,7 @@
 #include <QModelIndex>
 #include <QWidget>
 
-#include <dpicturesequenceview.h>
-
+class PictureSequenceView;
 class QStyleOptionViewItem;
 class MusicItemDelegate;
 class MusicItemDelegatePrivate : public QWidget
@@ -29,7 +28,7 @@ class MusicItemDelegatePrivate : public QWidget
     Q_PROPERTY(QString highlightAnimationPrefix READ highlightAnimationPrefix WRITE setHighlightAnimationPrefix)
 
 public:
-    Dtk::Widget::DPictureSequenceView  *playingAnimation;
+    PictureSequenceView                 *playingAnimation;
     QModelIndex                         playingIndex;
     int                                 tialWidth = -1;
 

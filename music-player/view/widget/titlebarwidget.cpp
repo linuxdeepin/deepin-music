@@ -21,6 +21,7 @@
 #include <dsearchedit.h>
 
 #include "searchedit.h"
+#include "picturesequenceview.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -58,6 +59,14 @@ TitleBarWidget::TitleBarWidget(QWidget *parent) :
     auto iconLabel = new QLabel;
     iconLabel->setObjectName("TitleIcon");
     iconLabel->setFixedSize(20, 20);
+
+    auto playingAnimation = new PictureSequenceView;
+    QStringList urls;
+    auto urlTemp = QString("%1/%2.png").arg(":/common/animation/playing/black");
+    for (int i = 0; i < 94; ++i) {
+        urls << urlTemp.arg(i);
+    }
+    playingAnimation->setPictureSequence(urls);
 
     auto btBack = new QPushButton;
     btBack->setObjectName("TitleBack");
@@ -97,6 +106,7 @@ TitleBarWidget::TitleBarWidget(QWidget *parent) :
 //        d->fixSearchPosition();
     });
 
+    playingAnimation->start();
      ThemeManager::instance()->regisetrWidget(this);
 }
 

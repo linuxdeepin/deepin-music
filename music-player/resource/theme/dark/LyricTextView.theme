@@ -1,32 +1,13 @@
 #LyricTextView{
-    border: 0px solid red;
-    alignment: center;
-    font-size: 16px;
-    font-weight: normal;
-    font-style: normal;
-    line-height: 1.88;
     color: rgba(255,255,255,50%);
+    font-size: 16px;
     background-color: transparent;
-    outline: none;
-    selection-background-color:red;
-    selection-color: white;
+    border: none;
 }
 #LyricTextView::item {
     height: 40px;
-    font-size: 16px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
-    background-color: red;
 }
-#LyricTextView::item:focus {
-    border:none;
-}
-#LyricTextView::item:selected:!active {
+#LyricTextView::item:selected {
     color: white;
     background-color: rgba(44,167,248,100%);
-}
-#LyricTextView::item:selected:active {
-    color: white;
-    background-color: rgba(255,167,248,100%);
-}
-#LyricTextView::item:hover {
 }

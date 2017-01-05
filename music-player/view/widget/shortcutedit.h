@@ -17,18 +17,18 @@ class ShortcutEdit : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ShortcutEdit(QList<Qt::Key> keys, QWidget *parent = 0);
+    explicit ShortcutEdit(QWidget *parent = 0);
     ~ShortcutEdit();
 
+    void setShortCut(QStringList shortcut);
 signals:
-
-public slots:
+    void shortcutChanged(QStringList shortcut);
 
 protected:
-    virtual void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
+    virtual void paintEvent(QPaintEvent *) Q_DECL_OVERRIDE;
     virtual void focusInEvent(QFocusEvent *e) Q_DECL_OVERRIDE;
     virtual void focusOutEvent(QFocusEvent *e) Q_DECL_OVERRIDE;
-//    virtual void keyPressEvent(QKeyEvent *e) Q_DECL_OVERRIDE;
+    virtual void keyPressEvent(QKeyEvent *e) Q_DECL_OVERRIDE;
 
 private:
     QScopedPointer<ShortcutEditPrivate> d_ptr;

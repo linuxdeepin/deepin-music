@@ -84,31 +84,31 @@
                             "key": "play_pause",
                             "label": "播放/暂停",
                             "type": "shortcut",
-                            "default": "alt, P"
+                            "default": ["201326592", "80"]
                         },
                         {
                             "key": "previous",
                             "label": "上一首",
                             "type": "shortcut",
-                            "default": "alt, left"
+                            "default":  ["201326592", "16777234"]
                         },
                         {
                             "key": "next",
                             "label": "下一首",
                             "type": "shortcut",
-                            "default": "alt, right"
+                            "default":  ["201326592", "16777236"]
                         },
                         {
                             "key": "volume_up",
                             "label": "音量增大",
                             "type": "shortcut",
-                            "default": "alt, up"
+                            "default":  ["201326592", "16777235"]
                         },
                         {
                             "key": "volume_down",
                             "label": "音量减小",
                             "type": "shortcut",
-                            "default": "alt, down"
+                            "default":  ["201326592", "16777237"]
                         }
                     ]
                 }

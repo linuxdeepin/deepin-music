@@ -32,6 +32,8 @@ using namespace Dtk::Widget;
 #include <QLabel>
 #include <QLayout>
 
+extern void qt_x11_set_global_double_buffer(bool);
+
 int main(int argc, char *argv[])
 {
     DApplication::loadDXcbPlugin();

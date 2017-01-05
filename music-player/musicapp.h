@@ -28,6 +28,7 @@ public:
     void init();
     void initMpris(MprisPlayer* mprisPlayer);
 
+    QWidget *hackFrame();
 public slots:
     void onDataPrepared();
     void onQuit();

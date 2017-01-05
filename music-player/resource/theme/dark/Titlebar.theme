@@ -1,0 +1,71 @@
+Titlebar {
+    qproperty-background: qlineargradient(x1:0 y1:0, x2:0 y2:1,
+        stop:0 rgba(0,0,0,85%),  stop:1 rgba(0,0,0,85%)
+    );
+    qproperty-borderBottom: rgba(0,0,0,100%);
+}
+
+Titlebar[viewname="lyric"] {
+    qproperty-background: qlineargradient(x1:0 y1:0, x2:0 y2:1,
+        stop:0 rgba(0,0,0,20%),  stop:1 rgba(0,0,0,20%)
+    );
+    qproperty-borderBottom: rgba(0,0,0,50%);
+}
+
+/* ------ #DTitlebarDWindowOptionButton  ------ */
+#DTitlebarDWindowOptionButton {
+qproperty-normalPic: url(:/images/dark/images/window_option_normal.png);
+qproperty-hoverPic: url(:/images/dark/images/window_option_hover.png);
+qproperty-pressPic: url(:/images/dark/images/window_option_press.png);
+}
+#DTitlebarDWindowOptionButton[viewname="lyric"] {
+qproperty-normalPic: url(:/images/dark/images/window_option_normal.png);
+qproperty-hoverPic: url(:/images/dark/images/window_option_hover.png);
+qproperty-pressPic: url(:/images/dark/images/window_option_press.png);
+}
+
+/* ------ #DTitlebarDWindowMinButton ------ */
+#DTitlebarDWindowMinButton {
+qproperty-normalPic: url(:/images/dark/images/window_min_normal.png);
+qproperty-hoverPic: url(:/images/dark/images/window_min_hover.png);
+qproperty-pressPic: url(:/images/dark/images/window_min_press.png);
+}
+#DTitlebarDWindowMinButton[viewname="lyric"] {
+qproperty-normalPic: url(:/images/dark/images/window_min_normal.png);
+qproperty-hoverPic: url(:/images/dark/images/window_min_hover.png);
+qproperty-pressPic: url(:/images/dark/images/window_min_press.png);
+}
+
+/* ------ #DTitlebarDWindowMaxButton ------ */
+#DTitlebarDWindowMaxButton[isMaximized=true] {
+qproperty-normalPic: url(:/images/dark/images/window_max_normal.png);
+qproperty-hoverPic: url(:/images/dark/images/window_max_hover.png);
+qproperty-pressPic: url(:/images/dark/images/window_max_press.png);
+}
+#DTitlebarDWindowMaxButton[isMaximized=false] {
+qproperty-normalPic: url(:/images/dark/images/window_unmax_normal.png);
+qproperty-hoverPic: url(:/images/dark/images/window_unmax_hover.png);
+qproperty-pressPic: url(:/images/dark/images/window_unmax_press.png);
+}
+#DTitlebarDWindowMaxButton[isMaximized=true][viewname="lyric"] {
+qproperty-normalPic: url(:/images/dark/images/window_max_normal.png);
+qproperty-hoverPic: url(:/images/dark/images/window_max_hover.png);
+qproperty-pressPic: url(:/images/dark/images/window_max_press.png);
+}
+#DTitlebarDWindowMaxButton[isMaximized=false][viewname="lyric"] {
+qproperty-normalPic: url(:/images/dark/images/window_unmax_normal.png);
+qproperty-hoverPic: url(:/images/dark/images/window_unmax_hover.png);
+qproperty-pressPic: url(:/images/dark/images/window_unmax_press.png);
+}
+
+/* ------ #DTitlebarDWindowCloseButton ------ */
+#DTitlebarDWindowCloseButton {
+qproperty-normalPic: url(:/images/dark/images/window_close_normal.png);
+qproperty-hoverPic: url(:/images/dark/images/window_close_hover.png);
+qproperty-pressPic: url(:/images/dark/images/window_close_press.png);
+}
+#DTitlebarDWindowCloseButton[viewname="lyric"] {
+qproperty-normalPic: url(:/images/dark/images/window_close_normal.png);
+qproperty-hoverPic: url(:/images/dark/images/window_close_hover.png);
+qproperty-pressPic: url(:/images/dark/images/window_close_press.png);
+}

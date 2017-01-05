@@ -1,5 +1,5 @@
 #ImportWidget {
-    background-color: rgba(255,255,255,1);
+    background-color: rgba(32,32,32,1);
     border-radius: 4px;
 }
 
@@ -9,8 +9,6 @@
 
 #ImportViewText{
     font-size: 12px;
-    font-weight: normal;
-    font-style: normal;
     line-height: 1.5;
     text-align: center;
     color: #979797;

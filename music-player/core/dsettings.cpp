@@ -25,7 +25,7 @@ class DSettingsPrivate
 public:
     DSettingsPrivate(DSettings *parent) : q_ptr(parent)
     {
-        settings = new QSettings(MusicApp::configPath() + "/nConfig.ini", QSettings::IniFormat);
+        settings = new QSettings(MusicApp::configPath() + "/config.ini", QSettings::IniFormat);
     }
 
     QSettings           *settings       = nullptr;
@@ -84,6 +84,7 @@ void DSettings::reset()
         d->settings->beginGroup(optKey);
         auto optDefault = d->settings->value("default");
         d->settings->setValue("value", optDefault);
+        emit optionChange(optKey, optDefault);
         d->settings->endGroup();
     }
 }

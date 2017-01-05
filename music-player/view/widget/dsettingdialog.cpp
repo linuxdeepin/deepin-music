@@ -26,16 +26,21 @@
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QJsonValue>
+#include <QPushButton>
 
 #include <dwindowclosebutton.h>
 #include "shortcutedit.h"
 
 #include "../helper/thememanager.h"
+#include "../../core/dsettings.h"
 
 class DSettingDialogPrivate
 {
 public:
-    DSettingDialogPrivate(DSettingDialog *parent) : q_ptr(parent) {}
+    DSettingDialogPrivate(DSettingDialog *parent) : q_ptr(parent)
+    {
+        dsettings = DSettings::instance();
+    }
 
     QFrame              *leftFrame;
     QListWidget         *navbar;
@@ -47,8 +52,9 @@ public:
     QScrollArea         *content;
     QVBoxLayout         *contentLayout;
 
+    DSettings           *dsettings = nullptr;
 
-    QWidget *createOptionWidget(QJsonObject obj);
+    QWidget *createOptionWidget(QJsonObject obj, const QString &key);
 
     DSettingDialog *q_ptr;
     Q_DECLARE_PUBLIC(DSettingDialog)
@@ -104,6 +110,8 @@ DSettingDialog::DSettingDialog(QWidget *parent) : ThinWindow(parent), d_ptr(new 
     for (auto groupJson : mainGroups.toArray()) {
         auto group = groupJson.toObject();
         auto groupTitle = new NavTitle();
+        auto groupKey = group.value("key").toString();
+
         groupTitle->setText(group.value("name").toString());
         groupTitle->setObjectName("GroupTitle");
         groupTitle->setContentsMargins(30, 0, 0, 0);
@@ -117,10 +125,11 @@ DSettingDialog::DSettingDialog(QWidget *parent) : ThinWindow(parent), d_ptr(new 
 
         for (auto subGroupJson : group.value("groups").toArray()) {
             auto subGroup = subGroupJson.toObject();
-            auto subOptionTitle = subGroup.value("name").toString();
-            if (!subOptionTitle.isEmpty()) {
+            auto subGroupName = subGroup.value("name").toString();
+            auto subGroupKey = subGroup.value("key").toString();
+            if (!subGroupName.isEmpty()) {
                 auto subGroupTitle = new NavSubTitle();
-                subGroupTitle->setText(subOptionTitle);
+                subGroupTitle->setText(subGroupName);
                 subGroupTitle->setContentsMargins(50, 0, 0, 0);
                 subGroupTitle->setFixedHeight(30);
                 auto item = new QListWidgetItem;
@@ -129,10 +138,9 @@ DSettingDialog::DSettingDialog(QWidget *parent) : ThinWindow(parent), d_ptr(new 
                 subGroupTitle->setObjectName("SubGroupTitle");
 
                 auto subGroupContentTitle = new ContentSubTitle();
-                subGroupContentTitle->setText(subOptionTitle);
+                subGroupContentTitle->setText(subGroupName);
                 d->contentLayout->addWidget(subGroupContentTitle);
             }
-
 
             auto options = subGroup.value("options").toArray();
 
@@ -141,12 +149,27 @@ DSettingDialog::DSettingDialog(QWidget *parent) : ThinWindow(parent), d_ptr(new 
                 if (option.value("hide").toBool()) {
                     continue;
                 }
-                d->contentLayout->addWidget(d->createOptionWidget(option));
+                auto optionKey = option.value("key").toString();
+                auto key = QString("%1.%2.%3").arg(groupKey).arg(subGroupKey).arg(optionKey);
+                d->contentLayout->addWidget(d->createOptionWidget(option, key));
             }
         }
     }
 
+    auto resetBt = new QPushButton(tr("Restore to default"));
+    resetBt->setObjectName("DSettingDialogReset");
+    resetBt->setFixedSize(310, 36);
+
+    d->contentLayout->addSpacing(40);
+    d->contentLayout->addWidget(resetBt, 0, Qt::AlignCenter);
     d->contentLayout->addStretch();
+
+    connect(resetBt, &QPushButton::released,
+    this, [ = ]() {
+        d->dsettings->reset();
+    });
+
+    // FIXME: use delagate
     connect(d->navbar, &QListWidget::currentItemChanged,
     this, [ = ](QListWidgetItem * current, QListWidgetItem * previous) {
         auto widget = d->navbar->itemWidget(previous);
@@ -187,8 +210,9 @@ DSettingDialog::~DSettingDialog()
 }
 
 #include <QGridLayout>
-QWidget *DSettingDialogPrivate::createOptionWidget(QJsonObject obj)
+QWidget *DSettingDialogPrivate::createOptionWidget(QJsonObject obj, const QString &key)
 {
+    Q_Q(DSettingDialog);
     auto optWidget = new QFrame;
     optWidget->setObjectName("OptionFrame");
 
@@ -215,12 +239,40 @@ QWidget *DSettingDialogPrivate::createOptionWidget(QJsonObject obj)
         auto optCheckBox = new QCheckBox(value);
         optCheckBox->setObjectName("OptionCheckBox");
         optLayout->addWidget(optCheckBox, 0, 1, Qt::AlignLeft);
+
+        optCheckBox->setChecked(dsettings->option(key).toBool());
+        q->connect(optCheckBox, &QCheckBox::stateChanged,
+        q, [ = ](int status) {
+            dsettings->setOption(key, status == Qt::Checked);
+        });
+        q->connect(dsettings, &DSettings::optionChange,
+        optCheckBox, [ = ](const QString & ckey, const QVariant & value) {
+            if (ckey != key) {
+                return;
+            }
+            optCheckBox->setChecked(value.toBool());
+        });
     }
 
     if (optType == "shortcut") {
         optLayout->setColumnMinimumWidth(0, 130);
-        auto optShortcut = new ShortcutEdit(QList<Qt::Key>());
+        auto optShortcut = new ShortcutEdit();
         optLayout->addWidget(optShortcut, 0, 1, Qt::AlignLeft);
+
+        optShortcut->setShortCut(dsettings->option(key).toStringList());
+        q->connect(optShortcut, &ShortcutEdit::shortcutChanged,
+        q, [ = ](QStringList keys) {
+            dsettings->setOption(key, (keys));
+        });
+        q->connect(dsettings, &DSettings::optionChange,
+        optShortcut, [ = ](const QString & ckey, const QVariant & value) {
+//            qDebug() << ckey << key << value;
+            if (ckey != key) {
+                return;
+            }
+            optShortcut->setShortCut(value.toStringList());
+            optShortcut->repaint();
+        });
     }
     return  optWidget;
 }

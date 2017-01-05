@@ -18,6 +18,8 @@
 #include <DUtil>
 #include <dslider.h>
 
+#include <thememanager.h>
+
 using namespace Dtk::Widget;
 
 class SoundVolumePrivate
@@ -28,13 +30,20 @@ public:
     bool        mouseIn     = false;
     QSlider     *volSlider  = nullptr;
 
+    QBrush          background;
+    int             radius              = 4;
+    QColor          borderColor         = QColor(0, 0, 0, 0.2 * 255);
+
     SoundVolume *q_ptr;
-    Q_DECLARE_PUBLIC(SoundVolume);
+
+    Q_DECLARE_PUBLIC(SoundVolume)
 };
 
 SoundVolume::SoundVolume(QWidget *parent) : QWidget(parent), d_ptr(new SoundVolumePrivate(this))
 {
     Q_D(SoundVolume);
+    setObjectName("SoundVolume");
+
     setWindowFlags(Qt::Tool | Qt::FramelessWindowHint);
     setAttribute(Qt::WA_TranslucentBackground);
     setFixedSize(40, 106);
@@ -59,6 +68,8 @@ SoundVolume::SoundVolume(QWidget *parent) : QWidget(parent), d_ptr(new SoundVolu
     bodyShadow->setOffset(0, 2.0);
     this->setGraphicsEffect(bodyShadow);
 
+    ThemeManager::instance()->regisetrWidget(this);
+
     connect(d->volSlider, &QSlider::valueChanged,
             this, &SoundVolume::volumeChanged);
 }
@@ -72,6 +83,42 @@ int SoundVolume::volume() const
 {
     Q_D(const SoundVolume);
     return d->volSlider->value();
+}
+
+QBrush SoundVolume::background() const
+{
+    Q_D(const SoundVolume);
+    return d->background;
+}
+
+int SoundVolume::radius() const
+{
+    Q_D(const SoundVolume);
+    return d->radius;
+}
+
+QColor SoundVolume::borderColor() const
+{
+    Q_D(const SoundVolume);
+    return d->borderColor;
+}
+
+void SoundVolume::setBackground(QBrush background)
+{
+    Q_D(SoundVolume);
+    d->background = background;
+}
+
+void SoundVolume::setRadius(int radius)
+{
+    Q_D(SoundVolume);
+    d->radius = radius;
+}
+
+void SoundVolume::setBorderColor(QColor borderColor)
+{
+    Q_D(SoundVolume);
+    d->borderColor = borderColor;
 }
 
 void SoundVolume::deleyHide()
@@ -129,11 +176,16 @@ void SoundVolume::wheelEvent(QWheelEvent *event)
 
 void SoundVolume::paintEvent(QPaintEvent * /*event*/)
 {
+    Q_D(const SoundVolume);
     QPainter painter(this);
     painter.setRenderHints(QPainter::Antialiasing | QPainter::HighQualityAntialiasing);
     QPainterPath path;
 
-    const qreal radius = 4;
+    auto penWidthf = 1.0;
+    auto background =  d->background;
+    auto borderColor = d->borderColor;
+
+    const qreal radius = d->radius;;
     const qreal triHeight = 6;
     const qreal triWidth = 8;
     const qreal height = this->height() - triHeight;
@@ -164,9 +216,13 @@ void SoundVolume::paintEvent(QPaintEvent * /*event*/)
     path.arcTo(topRightRect, 180.0, -90.0);
     path.lineTo(radius, 0.0);
 
-    painter.fillPath(path, Qt::white);
+    // FIXME: light: white
+//    painter.fillPath(path, QColor(49, 49, 49));
+    painter.fillPath(path, background);
 
-    QPen pen(QColor(0, 0, 0, 51));
-    pen.setWidth(1);
+    // FIXME: light: QColor(0, 0, 0, 51)
+//    QPen pen(QColor(0, 0, 0, 0.1 * 255));
+    QPen pen(borderColor);
+    pen.setWidth(penWidthf);
     painter.strokePath(path, pen);
 }

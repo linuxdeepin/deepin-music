@@ -96,6 +96,13 @@ void MusicApp::initMpris(MprisPlayer *mprisPlayer)
             this, &MusicApp::onRaise);
 }
 
+QWidget* MusicApp::hackFrame()
+{
+
+    Q_D(MusicApp);
+    return d->playerFrame;
+}
+
 void MusicApp::onDataPrepared()
 {
     Q_D(MusicApp);

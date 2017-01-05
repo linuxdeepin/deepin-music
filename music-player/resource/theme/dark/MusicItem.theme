@@ -1,9 +1,9 @@
 #MusicItem {
-    qproperty-textColor: rgba(0,0,0,100%);
-    qproperty-titleColor: rgba(0,0,0,100%);
+    qproperty-textColor: rgba(255,255,255,70%);
+    qproperty-titleColor: white;
     qproperty-highlightText: white;
-    qproperty-background: #0f0f0f;
-    qproperty-alternateBackground: #000000;
+    qproperty-background:  rgba(0,0,0,100%);
+    qproperty-alternateBackground: rgba(127,127,127,0%);
     qproperty-highlightedBackground:  #2ca7f8;
     qproperty-animationPrefix: ":/common/animation/playing/black";
     qproperty-highlightAnimationPrefix: ":/common/animation/playing/white";

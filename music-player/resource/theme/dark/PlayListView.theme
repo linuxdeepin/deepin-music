@@ -12,9 +12,6 @@
     color: #009aff;
     height: 56;
 }
-#PlayListView::item:focus {
-    border:none;
-}
 #PlayListView::item:selected:!active {
     color: white;
     background-color: qlineargradient(x1:0 y1:0, x2:1 y2:0,
@@ -26,6 +23,4 @@
     background-color: qlineargradient(x1:0 y1:0, x2:1 y2:0,
                                       stop:0    #2aa6f8, stop:0.015 #2aa6f8,
                                       stop:0.0155 rgba(42, 166, 248, 20%), stop:1 rgba(42, 166, 248, 20%));
-}
-#PlayListView::item:hover {
 }

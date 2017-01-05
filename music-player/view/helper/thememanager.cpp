@@ -78,12 +78,17 @@ void ThemeManager::regisetrWidget(QPointer<QWidget> widget, QStringList property
     }
 
 //    qDebug() << qssFilename;
+    widget->style()->unpolish(widget);
     widget->style()->polish(widget);
-    widget->setStyleSheet(widget->styleSheet() + d->getQssForWidget(qssFilename));
+    widget->setStyleSheet(d->getQssForWidget(qssFilename));
 
 //    qDebug() << widget;
     connect(this, &ThemeManager::themeChanged, this, [ = ](QString theme) {
-        widget->setStyleSheet(widget->styleSheet() + d->getQssForWidget(qssFilename));
+//        qDebug() << widget << "++++++++++";
+        widget->style()->unpolish(widget);
+        widget->style()->polish(widget);
+        widget->setStyleSheet(d->getQssForWidget(qssFilename));
+//        qDebug() << widget << "----------";
     });
 
     for (auto property : propertys) {
@@ -115,8 +120,7 @@ void ThemeManager::setTheme(const QString theme)
     if (d->activeTheme != theme) {
         d->activeTheme = theme;
 
-        // FIXME: check style plugin is load.
-        // FIXME: use what prifix ?
+        // FIXME: check style plugin is load. use what prifix ?
         if (QStyle *style = QStyleFactory::create("d" + theme)) {
             qApp->setStyle(style);
         }

@@ -17,6 +17,7 @@
 #include <QMouseEvent>
 #include <QHBoxLayout>
 #include <QMenu>
+#include <QStyleFactory>
 
 #include <ddialog.h>
 #include <QMessageBox>
@@ -56,9 +57,11 @@ PlayListItem::PlayListItem(PlaylistPtr playlist, QWidget *parent) : QFrame(paren
     m_titleedit->setText(playlist->displayName());
     m_titleedit->setProperty("HistoryValue", m_titleedit->text());
 
-    QPalette p = m_titleedit->palette();
-    p.setBrush(QPalette::HighlightedText, QBrush(Qt::white));
-    m_titleedit->setPalette(p);
+//    QPalette p = m_titleedit->palette();
+//    //FIXME : theme light
+//    p.setBrush(QPalette::HighlightedText, QBrush(Qt::white));
+//    p.setBrush(QPalette::Background, QBrush(QColor(255,255,255,0.15*255)));
+//    m_titleedit->setPalette(p);
 
     m_titleedit->setDisabled(true);
     if (playlist->readonly()) {
@@ -188,6 +191,7 @@ void PlayListItem::showContextMenu(const QPoint &pos)
     QPoint globalPos = this->mapToGlobal(pos);
 
     QMenu menu;
+    menu.setStyle(QStyleFactory::create("dlight"));
     auto playact = menu.addAction(tr("Play"));
     playact->setDisabled(0 == m_data->length());
 

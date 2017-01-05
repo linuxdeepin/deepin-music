@@ -70,7 +70,8 @@ SOURCES += \
     view/widget/dsettingdialog.cpp \
     view/widget/shortcut/shortcuteditor.cpp \
     view/widget/shortcutedit.cpp \
-    core/dsettings.cpp
+    core/dsettings.cpp \
+    view/widget/picturesequenceview.cpp
 
 
 HEADERS += \
@@ -126,7 +127,8 @@ HEADERS += \
     view/widget/dsettingdialog.h \
     view/widget/shortcut/shortcuteditor.h \
     view/widget/shortcutedit.h \
-    core/dsettings.h
+    core/dsettings.h \
+    view/widget/picturesequenceview.h
 
 RESOURCES += \
     resource/theme/theme.qrc \

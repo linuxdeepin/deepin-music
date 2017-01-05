@@ -1,10 +1,10 @@
-InfoDialog{
+#InfoDialog{
     qproperty-backgroundColor: white;
     qproperty-borderColor: rgba(0, 0, 0, 0.2);
+    qproperty-defaultCover: ":/common/image/info_cover.png";
 }
+
 #InfoTitle{
-    width: 260px;
-    height: 18px;
     font-size: 12px;
     text-align: center;
 }

@@ -38,7 +38,7 @@ void PresenterPrivate::initData()
 {
     Q_Q(Presenter);
 
-    dsettings = new DSettings;
+    dsettings = DSettings::instance();
     dsettings->loadDefault(":/data/deepin-music-settings.json");
 
     lyricService = new LyricService;
@@ -306,6 +306,9 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MusicMetaList &met
     auto playinglist = d->playlistMgr->playingPlaylist();
     MusicMeta next;
 
+    qDebug() << "remove " << playlist->id() << metalist.length();
+
+
     // TODO: do better;
     if (playlist->id() == AllMusicListID) {
         for (auto &playlist : allplaylist()) {
@@ -314,18 +317,21 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MusicMetaList &met
                 next = meta;
             }
         }
-        MediaDatabase::instance()->removeMusicMetaList(metalist);
 
         if (playlist->isEmpty()) {
             qDebug() << "meta library clean";
             onMusicStop(playlist, MusicMeta());
             emit metaInfoClean();
         }
+
+        MediaDatabase::instance()->removeMusicMetaList(metalist);
+    } else {
+        playlist->removeMusic(metalist);
     }
 
 
-    if (playlist == d->playlistMgr->playingPlaylist() ||
-            playlist->id() == AllMusicListID) {
+    if (playlist == d->playlistMgr->playingPlaylist()
+            || playlist->id() == AllMusicListID) {
         //stop music
         for (auto &meta : metalist) {
             if (meta.hash == Player::instance()->activeMeta().hash) {
@@ -414,6 +420,7 @@ void Presenter::onAddToPlaylist(PlaylistPtr playlist,
 void Presenter::onSelectedPlaylistChanged(PlaylistPtr playlist)
 {
     Q_D(Presenter);
+    qDebug() << "select playlist" << playlist->id();
     d->playlistMgr->setSelectedPlaylist(playlist);
 }
 

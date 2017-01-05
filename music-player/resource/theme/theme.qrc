@@ -411,5 +411,17 @@
         <file>dark/image/suggest_button_press.png</file>
         <file>dark/image/suggest_button_normal.png</file>
         <file>dark/image/suggest_button_hover.png</file>
+        <file>common/animation/playing/black/animation.gif</file>
+        <file>dark/DDropdown.theme</file>
+        <file>dark/Titlebar.theme</file>
+        <file>dark/image/back_press.png</file>
+        <file>dark/image/back_normal.png</file>
+        <file>dark/image/back_hover.png</file>
+        <file>dark/image/playlist.png</file>
+        <file>dark/image/playlist_fav.png</file>
+        <file>dark/image/playlist_allmusic.png</file>
+        <file>light/image/plus.png</file>
+        <file>dark/SoundVolume.theme</file>
+        <file>light/SoundVolume.theme</file>
     </qresource>
 </RCC>

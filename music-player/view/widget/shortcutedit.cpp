@@ -9,8 +9,10 @@
 
 #include "shortcutedit.h"
 
+#include <QDebug>
 #include <QPainter>
 #include <QKeySequence>
+#include <QKeyEvent>
 
 namespace
 {
@@ -25,6 +27,16 @@ const QColor NORMAL_BORDER_COLOR = QColor(0, 0, 0, 255 * 0.08);
 
 }
 
+static bool isModifiersKey(int key)
+{
+    QList<int> keys;
+    keys << Qt::Key_Shift;
+    keys << Qt::Key_Control;
+    keys << Qt::Key_Alt;
+    keys << Qt::Key_Meta;
+
+    return keys.contains(key);
+}
 
 class ShortcutEditPrivate
 {
@@ -34,7 +46,9 @@ public:
     QSize stringSize(const QString &str) const;
     QRectF drawTextRect(const QRect &lastRect, const QString &str, QPainter &painter) const;
 
-    QList<Qt::Key>          keys;
+    Qt::KeyboardModifiers   keyModifiers    = Qt::NoModifier;
+    Qt::Key                 key             = Qt::Key_unknown;
+    bool                    canSet          = true;
 
     QColor          borderColor = NORMAL_BORDER_COLOR;
 
@@ -42,11 +56,9 @@ public:
     Q_DECLARE_PUBLIC(ShortcutEdit)
 };
 
-ShortcutEdit::ShortcutEdit(QList<Qt::Key> keys, QWidget *parent) : QWidget(parent), d_ptr(new ShortcutEditPrivate(this))
+ShortcutEdit::ShortcutEdit(QWidget *parent) : QWidget(parent), d_ptr(new ShortcutEditPrivate(this))
 {
     Q_D(ShortcutEdit);
-    d->keys = keys;
-    d->keys << Qt::Key_F1 << Qt::Key_F2;
     setFixedSize(MAX_WIDTH, MAX_HEIGHT);
     setFocusPolicy(Qt::ClickFocus);
 }
@@ -56,7 +68,21 @@ ShortcutEdit::~ShortcutEdit()
 
 }
 
-void ShortcutEdit::paintEvent(QPaintEvent *e)
+void ShortcutEdit::setShortCut(QStringList shortcut)
+{
+    Q_D(ShortcutEdit);
+    auto modifiers = shortcut.value(0);
+    if (!modifiers.isEmpty()) {
+        d->keyModifiers = static_cast<Qt::KeyboardModifier>(modifiers.toInt());
+    }
+
+    auto key = shortcut.value(1);
+    if (!key.isEmpty()) {
+        d->key = static_cast<Qt::Key>(key.toInt());
+    }
+}
+
+void ShortcutEdit::paintEvent(QPaintEvent *)
 {
     Q_D(const ShortcutEdit);
     QPainter painter(this);
@@ -67,8 +93,11 @@ void ShortcutEdit::paintEvent(QPaintEvent *e)
 //    QString s = m_shortcut.replace("Return", "Enter");
 //    QStringList keys = s.split("+", QString::SkipEmptyParts);
     QStringList keys;
-    for (auto key : d->keys) {
-        keys << QKeySequence(key).toString();
+    if (d->keyModifiers != Qt::NoModifier) {
+        keys << QKeySequence(d->keyModifiers).toString().split("+", QString::SkipEmptyParts);
+    }
+    if (d->key != Qt::Key_unknown) {
+        keys << QKeySequence(d->key).toString();
     }
 
     if (keys.isEmpty()) {
@@ -80,6 +109,7 @@ void ShortcutEdit::paintEvent(QPaintEvent *e)
         painter.setPen(QPen(QColor(48, 48, 48, 0.4 * 255)));
         painter.drawText(tR, tr("Please enter a new shortcut"));
     } else {
+
         QRectF lastRect(1, 0, 0, 0);
         for (QString key : keys) {
             painter.save();
@@ -116,7 +146,37 @@ void ShortcutEdit::focusOutEvent(QFocusEvent *e)
     d->borderColor = NORMAL_BORDER_COLOR;
     this->update();
 
-//    m_shortcut = m_shortcut.isEmpty() ? defaultValue() : m_shortcut;
+    //    m_shortcut = m_shortcut.isEmpty() ? defaultValue() : m_shortcut;
+}
+
+void ShortcutEdit::keyPressEvent(QKeyEvent *e)
+{
+    Q_D(ShortcutEdit);
+    if (e->key() != Qt::Key_Backspace) {
+        if (isModifiersKey(e->key()) || ! d->canSet) {
+            return;
+        }
+        d->canSet = false;
+        if (e->key() == Qt::Key_Delete) {
+            d->keyModifiers = e->modifiers();
+            d->key = static_cast<Qt::Key>(e->key());
+        } else {
+            d->keyModifiers = e->modifiers();
+            d->key = static_cast<Qt::Key>(e->key());
+        }
+    } else {
+        d->canSet = true;
+        d->key = Qt::Key_unknown;
+        d->keyModifiers = Qt::NoModifier;
+    }
+
+    QStringList keys;
+    keys << QString("%1").arg(d->keyModifiers);
+    keys << QString("%1").arg(d->key);
+
+    shortcutChanged(keys);
+
+    this->update();
 }
 
 QSize ShortcutEditPrivate::stringSize(const QString &str) const

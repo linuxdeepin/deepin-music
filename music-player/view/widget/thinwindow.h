@@ -29,9 +29,9 @@ public:
     QSize size() const;
     QRect rect() const;
 
-    QBrush background() const;
     int radius() const;
     QColor borderColor() const;
+    QBrush background() const;
 
 public slots:
     void showMinimized();

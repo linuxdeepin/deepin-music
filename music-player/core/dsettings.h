@@ -12,8 +12,10 @@
 #include <QObject>
 #include <QScopedPointer>
 
+#include "util/singleton.h"
+
 class DSettingsPrivate;
-class DSettings : public QObject
+class DSettings : public QObject, public Singleton<DSettings>
 {
     Q_OBJECT
 public:
@@ -32,6 +34,7 @@ public slots:
     void setOption(const QString &key, const QVariant &value);
 
 private:
+    friend Singleton<DSettings>;
     QScopedPointer<DSettingsPrivate> d_ptr;
     Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), DSettings)
 };

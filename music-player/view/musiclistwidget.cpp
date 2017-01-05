@@ -123,7 +123,7 @@ MusicListWidget::MusicListWidget(QWidget *parent) :
     d->actionBar->hide();
 
     auto actionBarLayout = new QHBoxLayout(d->actionBar);
-    actionBarLayout->setContentsMargins(10, 0, 20, 0);
+    actionBarLayout->setContentsMargins(10, 0, 8, 0);
     actionBarLayout->setSpacing(0);
 
     d->btPlayAll = new QPushButton;
@@ -200,7 +200,6 @@ void MusicListWidget::initData(PlaylistPtr playlist)
 {
     Q_D(MusicListWidget);
     d->m_musiclist->onMusiclistChanged(playlist);
-    // FIXME: dd
 
     for (auto action : d->m_dropdown->actions()) {
         if (action->data().toInt() == playlist->sorttype()) {

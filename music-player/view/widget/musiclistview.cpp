@@ -23,6 +23,7 @@
 #include <QStyle>
 #include <QUrl>
 #include <QProcess>
+#include <QStyleFactory>
 
 #include <thememanager.h>
 
@@ -344,6 +345,7 @@ void MusicListView::showContextMenu(const QPoint &pos,
     QPoint globalPos = this->mapToGlobal(pos);
 
     QMenu playlistMenu;
+    playlistMenu.setStyle(QStyleFactory::create("dlight"));
 
     auto newvar = QVariant::fromValue(PlaylistPtr());
 
@@ -379,6 +381,7 @@ void MusicListView::showContextMenu(const QPoint &pos,
     bool singleSelect = (1 == selection->selectedRows().length());
 
     QMenu myMenu;
+    myMenu.setStyle(QStyleFactory::create("dlight"));
 
     if (singleSelect) {
         myMenu.addAction(tr("Play"));
@@ -496,6 +499,13 @@ void MusicListView::showContextMenu(const QPoint &pos,
     });
 
     myMenu.exec(globalPos);
+}
+
+void MusicListView::paintEvent(QPaintEvent *e)
+{
+
+//    qDebug() << "" << e->rect() << e->region();
+    QListView::paintEvent(e);
 }
 
 

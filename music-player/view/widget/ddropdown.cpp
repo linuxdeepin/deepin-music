@@ -48,9 +48,9 @@ DDropdown::DDropdown(QWidget *parent) : QFrame(parent), d_ptr(new DDropdownPriva
     d->dropdown->setFixedSize(9,5);
 
     layout->addStretch();
+    layout->addStretch();
     layout->addWidget(d->text, 0, Qt::AlignCenter);
     layout->addWidget(d->dropdown, 0, Qt::AlignCenter);
-    layout->addStretch();
 
     connect(d->menu, &QMenu::triggered, this, [ = ](QAction * action) {
         d->text->setText(action->text());
