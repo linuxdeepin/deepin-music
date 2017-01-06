@@ -41,7 +41,6 @@ PictureSequenceView::PictureSequenceView(QWidget *parent) : QLabel(parent), d_pt
             return ;
         d->currentIndex = (d->currentIndex + 1) % d->sequencePixmaps.length();
         this->setPixmap(d->sequencePixmaps.value(d->currentIndex));
-//        this->update();
     });
 }
 
@@ -52,7 +51,7 @@ PictureSequenceView::~PictureSequenceView()
 
 void PictureSequenceView::paintEvent(QPaintEvent *e)
 {
-
+    QLabel::paintEvent(e);
 }
 
 void PictureSequenceView::start()
@@ -78,7 +77,6 @@ void PictureSequenceView::setPictureSequence(const QStringList &sequence)
         d->sequencePixmaps << QPixmap(url);
     }
     this->setPixmap(d->sequencePixmaps.first());
-    this->repaint();
 }
 
 void PictureSequenceView::stop()

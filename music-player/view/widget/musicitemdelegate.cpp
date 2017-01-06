@@ -282,16 +282,14 @@ void MusicItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
                     d->setActiveAnimationPrefix(d->animationPrefix());
                 }
 
-//                d->playingAnimation->setParent(MusicApp::instance()->hackFrame());
+                d->playingAnimation->setParent(w);
                 d->playingAnimation->raise();
-////                d->playingAnimation->pause();
-                d->playingAnimation->start();
+                d->playingAnimation->stop();
                 d->playingAnimation->show();
-//                d->playingAnimation->hide();
                 auto center = rect.center();
                 auto aniSize = d->playingAnimation->size();
                 auto newCenter = QPoint(center.x() - aniSize.width() / 2, center.y() - aniSize.height() / 2);
-                newCenter = w->mapToGlobal(newCenter);
+//                newCenter = w->mapToGlobal(newCenter);
                 d->playingAnimation->move(newCenter);
             } else {
 //                auto num = numberString(index.row() + 1, option);

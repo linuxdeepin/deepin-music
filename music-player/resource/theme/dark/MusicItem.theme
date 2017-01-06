@@ -5,6 +5,6 @@
     qproperty-background:  rgba(0,0,0,100%);
     qproperty-alternateBackground: rgba(127,127,127,0%);
     qproperty-highlightedBackground:  #2ca7f8;
-    qproperty-animationPrefix: ":/common/animation/playing/black";
+    qproperty-animationPrefix: ":/common/animation/playing/white";
     qproperty-highlightAnimationPrefix: ":/common/animation/playing/white";
 }
