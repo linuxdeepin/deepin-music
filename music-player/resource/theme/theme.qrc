@@ -423,5 +423,6 @@
         <file>light/image/plus.png</file>
         <file>dark/SoundVolume.theme</file>
         <file>light/SoundVolume.theme</file>
+        <file>dark/DSettingDialog.theme</file>
     </qresource>
 </RCC>

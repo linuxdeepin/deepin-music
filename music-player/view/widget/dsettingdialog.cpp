@@ -20,6 +20,7 @@
 #include <QMouseEvent>
 #include <QCheckBox>
 #include <QStyle>
+#include <QStyleFactory>
 
 #include <QFile>
 #include <QJsonDocument>
@@ -190,6 +191,8 @@ DSettingDialog::DSettingDialog(QWidget *parent) : ThinWindow(parent), d_ptr(new 
     });
 
     ThemeManager::instance()->regisetrWidget(this);
+    closeBt->setStyle(QStyleFactory::create("dlight"));
+    resetBt->setStyle(QStyleFactory::create("dlight"));
 
     connect(this, &DSettingDialog::mouseMoving, this, &DSettingDialog::moveWindow);
     connect(closeBt, &Dtk::Widget::DWindowCloseButton::clicked, this, &DSettingDialog::close);
@@ -252,6 +255,7 @@ QWidget *DSettingDialogPrivate::createOptionWidget(QJsonObject obj, const QStrin
             }
             optCheckBox->setChecked(value.toBool());
         });
+        optCheckBox->setStyle(QStyleFactory::create("dlight"));
     }
 
     if (optType == "shortcut") {
@@ -273,6 +277,7 @@ QWidget *DSettingDialogPrivate::createOptionWidget(QJsonObject obj, const QStrin
             optShortcut->setShortCut(value.toStringList());
             optShortcut->repaint();
         });
+        optShortcut->setStyle(QStyleFactory::create("dlight"));
     }
     return  optWidget;
 }
@@ -281,6 +286,7 @@ NavSubTitle::NavSubTitle(QWidget *parent): QLabel(parent)
 {
     setObjectName("NavSubTitle");
     setProperty("_d_QSSFilename", "DSettingDialog");
+    setFixedHeight(30);
     ThemeManager::instance()->regisetrWidget(this);
 }
 
@@ -288,6 +294,7 @@ NavTitle::NavTitle(QWidget *parent): QLabel(parent)
 {
     setObjectName("NavTitle");
     setProperty("_d_QSSFilename", "DSettingDialog");
+    setFixedHeight(30);
     ThemeManager::instance()->regisetrWidget(this);
 }
 
@@ -317,6 +324,6 @@ ContentSubTitle::ContentSubTitle(QWidget *parent): QLabel(parent)
 {
     setObjectName("ContentSubTitle");
     setProperty("_d_QSSFilename", "DSettingDialog");
-    setFixedHeight(30);
+    setFixedHeight(0);
     ThemeManager::instance()->regisetrWidget(this);
 }
