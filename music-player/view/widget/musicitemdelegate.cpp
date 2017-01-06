@@ -8,6 +8,7 @@
  **/
 
 #include "musicitemdelegate.h"
+#include "musicitemdelegate_p.h"
 
 #include <QDebug>
 #include <QFont>
@@ -17,10 +18,9 @@
 #include <thememanager.h>
 #include <musicmeta.h>
 
-#include "musiclistview.h"
-#include "musicitemdelegate_p.h"
 #include "picturesequenceview.h"
-#include "../../musicapp.h"
+
+#include "musiclistview.h"
 
 const int MusicItemLeftMargin = 15;
 const int MusicItemRightMargin = 20;
@@ -248,21 +248,8 @@ void MusicItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
         painter->setPen(textColor);
         switch (col) {
         case Number: {
-            auto *w = const_cast<QWidget *>(option.widget);
-            bool hideAnimation = false;
-            if (!d->playingIndex.isValid()) {
-                hideAnimation = true;
-            } else {
-                auto listview = qobject_cast<MusicListView *>(w);
-                auto viewRect = QRect(QPoint(0, 0), listview->viewport()->size());
-                if (!viewRect.intersects(listview->visualRect(d->playingIndex))) {
-                    hideAnimation = true;
-                }
-            }
-            if (hideAnimation) {
-                d->playingAnimation->hide();
-            }
-
+            auto *listview = qobject_cast<MusicListView *>(const_cast<QWidget *>(option.widget));
+            auto activeMeta = listview->activeMeta();
             if (meta.invalid) {
                 auto icon = QPixmap(":/common/image/warning.png");
                 auto centerF = QRectF(rect).center();
@@ -274,23 +261,26 @@ void MusicItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
                 break;
             }
 
-            if (d->playingIndex == index && !hideAnimation) {
-
+            if (activeMeta.hash == meta.hash) {
+                auto prefix = d->animationPrefix();
                 if (option.state & QStyle::State_Selected) {
-                    d->setActiveAnimationPrefix(d->highlightAnimationPrefix());
-                } else {
-                    d->setActiveAnimationPrefix(d->animationPrefix());
+                    prefix = d->highlightAnimationPrefix();
                 }
-
-                d->playingAnimation->setParent(w);
-                d->playingAnimation->raise();
-                d->playingAnimation->stop();
-                d->playingAnimation->show();
-                auto center = rect.center();
-                auto aniSize = d->playingAnimation->size();
-                auto newCenter = QPoint(center.x() - aniSize.width() / 2, center.y() - aniSize.height() / 2);
-//                newCenter = w->mapToGlobal(newCenter);
-                d->playingAnimation->move(newCenter);
+                auto icon = QPixmap(prefix + "/0.png");
+                auto centerF = QRectF(rect).center();
+                auto iconRect = QRect(centerF.x() - icon.width() / 2,
+                                      centerF.y() - icon.height() / 2,
+                                      icon.width(), icon.height());
+                painter->drawPixmap(iconRect, icon);
+//                d->playingAnimation->setParent(listview);
+//                d->playingAnimation->raise();
+//                d->playingAnimation->stop();
+//                d->playingAnimation->show();
+//                auto center = rect.center();
+//                auto aniSize = d->playingAnimation->size();
+//                auto newCenter = QPoint(center.x() - aniSize.width() / 2, center.y() - aniSize.height() / 2);
+////                newCenter = w->mapToGlobal(newCenter);
+//                d->playingAnimation->move(newCenter);
             } else {
 //                auto num = numberString(index.row() + 1, option);
 //                painter->drawText(rect, flag, num);
@@ -385,12 +375,6 @@ MusicItemDelegate::MusicItemDelegate(QWidget *parent)
 
 MusicItemDelegate::~MusicItemDelegate()
 {
-}
-
-void MusicItemDelegate::setPlayingIndex(const QModelIndex &index)
-{
-    Q_D(MusicItemDelegate);
-    d->playingIndex = index;
 }
 
 void MusicItemDelegate::initStyleOption(QStyleOptionViewItem *option, const QModelIndex &index) const

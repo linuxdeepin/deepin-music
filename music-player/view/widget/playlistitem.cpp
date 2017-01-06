@@ -151,7 +151,7 @@ void PlayListItem::setActive(bool active)
     }
     this->style()->unpolish(m_titleedit);
     this->style()->polish(m_titleedit);
-    this->repaint();
+    this->update();
 }
 
 void PlayListItem::setPlay(bool isPaly)

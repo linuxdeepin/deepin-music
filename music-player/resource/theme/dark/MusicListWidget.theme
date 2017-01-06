@@ -20,13 +20,13 @@
     qproperty-icon: url(:/common/image/play_all.png);
 }
 #MusicListPlayAll:hover{
-    border: 1px solid rgba(0, 0, 0, 0.08);
+    border: 0px solid rgba(0, 0, 0, 0.2);
     background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1,
     stop:0 rgba(255, 255, 255, 40%), stop:1 rgba(255, 255, 255, 20%));
 }
 #MusicListPlayAll:pressed{
     color: #2ca7f8;
-    border: 1px solid rgba(0, 0, 0, 0.08);
+    border: 0px solid rgba(255, 255, 255, 0.2);
     background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1,
     stop:0 rgba(255, 255, 255, 80%), stop:1 rgba(255, 255, 255, 60%));
 }

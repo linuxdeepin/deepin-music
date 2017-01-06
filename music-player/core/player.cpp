@@ -159,8 +159,8 @@ void PlayerPrivate::initConnection()
         case QMediaPlayer::NoMedia:
         case QMediaPlayer::LoadingMedia:
         case QMediaPlayer::StalledMedia:
-        case QMediaPlayer::BufferingMedia:
         case QMediaPlayer::BufferedMedia:
+        case QMediaPlayer::BufferingMedia:
         case QMediaPlayer::InvalidMedia:
             break;
         }
@@ -270,6 +270,14 @@ void Player::playMeta(PlaylistPtr playlist, const MusicMeta &meta)
     emit mediaPlayed(d->activePlaylist, d->activeMeta);
 
     qDebug() << d->qplayer->mediaStatus();
+    if (d->qplayer->mediaStatus() == QMediaPlayer::BufferedMedia) {
+        QTimer::singleShot(100, this, [ = ]() {
+            qDebug() << d->qplayer->state();
+            d->qplayer->play();
+            emit mediaError(d->activePlaylist, d->activeMeta, Player::NoError);
+            d->activeMeta.invalid = false;
+        });
+    }
 }
 
 void Player::resume(PlaylistPtr playlist, const MusicMeta &meta)

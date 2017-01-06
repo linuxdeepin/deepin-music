@@ -136,6 +136,6 @@ void ThemeManager::updateQss()
         w->style()->unpolish(w);
         w->setStyleSheet(w->styleSheet());
         w->style()->polish(w);
-        w->repaint();
+        w->update();
     }
 }

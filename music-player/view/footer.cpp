@@ -85,7 +85,7 @@ void FooterPrivate::updateQssProperty(QWidget *w, const char *name, const QVaria
     w->setProperty(name, value);
     q->style()->unpolish(w);
     q->style()->polish(w);
-    w->repaint();
+    w->update();
 }
 
 void FooterPrivate::installTipHint(QWidget *w, const QString &hintstr)
@@ -485,7 +485,7 @@ void Footer::onMusicStoped(PlaylistPtr playlist, const MusicMeta &meta)
     d->title->hide();
     d->artist->hide();
     d->cover->setCoverPixmap(QPixmap(d->defaultCover));
-    d->cover->repaint();
+    d->cover->update();
     d->updateQssProperty(d->btPlay, sPropertyPlayStatus, sPlayStatusValueStop);
     d->updateQssProperty(this, sPropertyPlayStatus, sPlayStatusValueStop);
 }
@@ -522,7 +522,7 @@ void Footer::onCoverChanged(const MusicMeta &info, const QByteArray &coverData)
                           QPixmap(d->defaultCover);
 
     d->cover->setCoverPixmap(coverPixmap);
-    d->cover->repaint();
+    d->cover->update();
 }
 
 void Footer::onVolumeChanged(int volume)

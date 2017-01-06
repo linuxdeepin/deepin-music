@@ -29,7 +29,6 @@ class MusicItemDelegatePrivate : public QWidget
 
 public:
     PictureSequenceView                 *playingAnimation;
-    QModelIndex                         playingIndex;
     int                                 tialWidth = -1;
 
     explicit MusicItemDelegatePrivate(MusicItemDelegate *parent = 0);

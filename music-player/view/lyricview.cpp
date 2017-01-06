@@ -308,7 +308,7 @@ void LyricView::onCoverChanged(const MusicMeta &meta, const QByteArray &coverDat
                           QPixmap(d->defaultCover);
 
     d->m_cover->setCoverPixmap(coverPixmap);
-    d->m_cover->repaint();
+    d->m_cover->update();
 }
 
 void LyricView::setDefaultCover(QString defaultCover)

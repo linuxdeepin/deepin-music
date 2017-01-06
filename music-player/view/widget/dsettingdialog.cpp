@@ -178,14 +178,14 @@ DSettingDialog::DSettingDialog(QWidget *parent) : ThinWindow(parent), d_ptr(new 
             widget->setProperty("status", "");
             widget->style()->unpolish(widget);
             widget->style()->polish(widget);
-            widget->repaint();
+            widget->update();
         }
         widget = d->navbar->itemWidget(current);
         if (widget) {
             widget->setProperty("status", "active");
             widget->style()->unpolish(widget);
             widget->style()->polish(widget);
-            widget->repaint();
+            widget->update();
         }
         d->navbar->setCurrentItem(current);
     });
@@ -275,7 +275,7 @@ QWidget *DSettingDialogPrivate::createOptionWidget(QJsonObject obj, const QStrin
                 return;
             }
             optShortcut->setShortCut(value.toStringList());
-            optShortcut->repaint();
+            optShortcut->update();
         });
         optShortcut->setStyle(QStyleFactory::create("dlight"));
     }

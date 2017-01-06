@@ -344,19 +344,19 @@ void MainWindow::binding(Presenter *presenter)
     this, [ = ](const MusicMeta &, const QByteArray & coverData) {
         if (coverData.length() < 32) {
             setCoverBackground(coverBackground());
-            this->repaint();
+            this->update();
             return;
         }
         QImage image = QImage::fromData(coverData);
         if (image.isNull()) {
             setCoverBackground(coverBackground());
-            this->repaint();
+            this->update();
             return;
         }
 
         image = WidgetHelper::cropRect(image, this->size());
         setBackgroundImage(WidgetHelper::blurImage(image, 50));
-        this->repaint();
+        this->update();
     });
     connect(presenter, &Presenter::musicStoped,
     this, [ = ](PlaylistPtr, const MusicMeta &) {
@@ -589,7 +589,7 @@ void MainWindow::changeToMusicListView(bool keepPlaylist)
     d->musicList->setFixedSize(current->size());
     WidgetHelper::slideTop2BottomWidget(
         current, d->musicList, s_AnimationDelay);
-    this->repaint();
+    this->update();
     this->disableControl();
     d->currentWidget = d->musicList;
     setPlaylistVisible(keepPlaylist);

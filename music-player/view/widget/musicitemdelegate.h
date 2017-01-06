@@ -42,9 +42,6 @@ public:
     ~MusicItemDelegate();
 
 public:
-    void setPlayingIndex(const QModelIndex &index);
-
-public:
     virtual void initStyleOption(QStyleOptionViewItem *option, const QModelIndex &index) const;
     void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
     QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;

@@ -106,6 +106,15 @@ PlaylistPtr MusicListView::playlist()
     return d->m_playlist;
 }
 
+const MusicMeta MusicListView::activeMeta()
+{
+    Q_D(MusicListView);
+    if (d->m_playlist->active()) {
+        return d->m_playlist->playing();
+    }
+    return MusicMeta();
+}
+
 void MusicListView::onMusicPlayed(PlaylistPtr playlist, const MusicMeta &meta)
 {
     Q_D(MusicListView);
@@ -135,8 +144,6 @@ void MusicListView::onMusicPlayed(PlaylistPtr playlist, const MusicMeta &meta)
     setCurrentIndex(index);
     scrollTo(index);
 
-    // TODO
-    d->m_delegate->setPlayingIndex(index);
     update();
 }
 
@@ -149,7 +156,6 @@ void MusicListView::onMusicPause(PlaylistPtr playlist, const MusicMeta &meta)
                    << "playlist:" << d->m_playlist;
         return;
     }
-    d->m_delegate->setPlayingIndex(QModelIndex());
     update();
 }
 
@@ -298,20 +304,6 @@ void MusicListView::onMusiclistChanged(PlaylistPtr playlist)
         onMusicAdded(d->m_playlist, info);
     }
 
-    auto playing = playlist->playing();
-    QModelIndex index;
-
-    d->m_delegate->setPlayingIndex(index);
-    QStandardItem *item = nullptr;
-    for (int i = 0; i < d->m_model->rowCount(); ++i) {
-        index = d->m_model->index(i, 0);
-        item = d->m_model->item(i, 0);
-        MusicMeta itemmeta = qvariant_cast<MusicMeta>(item->data());
-        if (itemmeta.hash == playing.hash && !playing.hash.isEmpty()) {
-            qDebug() << "xxxxxxxxxxxxxxxx set" << index.isValid() << i << playing.title;
-            d->m_delegate->setPlayingIndex(index);
-        }
-    }
     d->checkScrollbarSize();
 }
 

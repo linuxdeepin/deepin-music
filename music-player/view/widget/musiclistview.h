@@ -31,6 +31,8 @@ signals:
 
 public:
     PlaylistPtr playlist();
+    const MusicMeta activeMeta();
+
     void onMusicPlayed(PlaylistPtr playlist, const MusicMeta &meta);
     void onMusicPause(PlaylistPtr playlist, const MusicMeta &meta);
     void onMusicRemoved(PlaylistPtr playlist, const MusicMeta &meta);

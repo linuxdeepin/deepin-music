@@ -98,7 +98,7 @@ void SearchEdit::onFocusOut()
 
 void SearchEdit::onTextChanged()
 {
-    auto text = QString(this->text()).remove(" ");
+    auto text = QString(this->text()).remove(" ").remove("\r").remove("\n");
     if (text.length() >= 2) {
         auto resultList = MediaDatabase::searchMusicTitle(text, 10);
         QStringList titleList;
@@ -109,8 +109,9 @@ void SearchEdit::onTextChanged()
             hashList << meta.hash;
         }
 
+        auto searchtext = QString(this->text()).remove("\r").remove("\n");
         m_result->setFixedWidth(this->width() + 40);
-        m_result->setSearchString(this->text());
+        m_result->setSearchString(searchtext);
         m_result->setResultList(titleList, hashList);
 
         m_result->autoResize();
