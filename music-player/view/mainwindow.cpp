@@ -159,6 +159,7 @@ void MainWindow::initMusiclist(PlaylistPtr allmusic, PlaylistPtr last)
     if (allmusic.isNull() || 0 == allmusic->length()) {
         d->newSonglistAction->setDisabled(true);
         d->import->show();
+        d->titlebarwidget->setSearchEnable(false);
         d->footer->enableControl(false);
         d->musicList->hide();
         qWarning() << "no music in all music list" << allmusic;

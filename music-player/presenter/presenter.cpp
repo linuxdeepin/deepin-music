@@ -599,12 +599,13 @@ void Presenter::onChangeProgress(qint64 value, qint64 range)
 void Presenter::onVolumeChanged(int volume)
 {
     Q_D(Presenter);
+//    qDebug() << "change play volumr" << volume;
     Player::instance()->setVolume(volume);
-    d->dsettings->setOption("base.play.volume", volume);
     if (volume > 0 && Player::instance()->muted()) {
         Player::instance()->setMuted(false);
         d->dsettings->setOption("base.play.mute", false);
     }
+    d->dsettings->setOption("base.play.volume", volume);
 }
 
 void Presenter::onPlayModeChanged(int mode)

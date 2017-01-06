@@ -61,6 +61,7 @@ void MetaAnalyzer::onGetAblumResult(QList<NeteaseSong> songlist)
 
 void MetaAnalyzer::analyzerResults()
 {
+    qDebug() << "***********************" << m_titleResultGet << m_ablumResultGet;
     if (!m_titleResultGet || !m_ablumResultGet) {
         return;
     }
@@ -114,6 +115,9 @@ void MetaAnalyzer::analyzerResults()
 //    });
 
     emit searchFinished(m_meta, result);
+
+//    qDebug() << "delete analyer" ;
+//    this->deleteLater();
 }
 
 

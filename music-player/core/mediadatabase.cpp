@@ -184,6 +184,7 @@ static QList<MusicMeta> searchTitle(const QString &queryString)
         musicMeta.length = query.value(8).toInt();
         musicMeta.size = query.value(9).toInt();
         musicMeta.timestamp = query.value(10).toInt();
+        musicMeta.invalid = query.value(11).toBool();
         list << musicMeta;
     }
 
@@ -195,7 +196,8 @@ QList<MusicMeta> MediaDatabase::searchMusicTitle(const QString &title, int limit
     qDebug() << "search title" << title;
     auto matchReg = QString("\"%%1%\" ").arg(title);
     QString queryString = QString("SELECT hash, localpath, title, artist, album, "
-                                  "filetype, track, offset, length, size, timestamp "
+                                  "filetype, track, offset, length, size, "
+                                  "timestamp, invalid "
                                   "FROM music WHERE "
                                   "title LIKE  " + matchReg +
                                   "OR py_title LIKE  " + matchReg +
@@ -209,7 +211,8 @@ QList<MusicMeta> MediaDatabase::searchMusicMeta(const QString &title, int limit)
 {
     auto matchReg = QString("\"%%1%\" ").arg(title);
     QString queryString = QString("SELECT hash, localpath, title, artist, album, "
-                                  "filetype, track, offset, length, size, timestamp "
+                                  "filetype, track, offset, length, size, "
+                                  "timestamp, invalid "
                                   "FROM music WHERE "
                                   "title LIKE  " + matchReg +
                                   "OR py_title LIKE  " + matchReg +

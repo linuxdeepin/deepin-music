@@ -134,6 +134,8 @@ void PlayerPrivate::initConnection()
 
         emit q->positionChanged(position - activeMeta.offset,  activeMeta.length);
     });
+//    q->connect(qplayer, &QMediaPlayer::volumeChanged,
+//               q, &Player::volumeChanged);
     q->connect(qplayer, &QMediaPlayer::mutedChanged,
                q, &Player::mutedChanged);
     q->connect(qplayer, &QMediaPlayer::durationChanged,

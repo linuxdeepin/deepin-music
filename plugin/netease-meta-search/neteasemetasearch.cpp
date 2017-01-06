@@ -186,9 +186,8 @@ void NeteaseMetaSearchEngine::searchMeta(const MusicMeta &meta)
     QString queryTemplate = QLatin1String("s=%1&offset=0&limit=5&type=1");
     QUrl params = QUrl(queryTemplate.arg(meta.title));
 
-    auto anlyzer = new MetaAnalyzer(meta, m_geese);
-
-    connect(anlyzer, &MetaAnalyzer::searchFinished,
+    auto anlyzer = QSharedPointer<MetaAnalyzer>(new MetaAnalyzer(meta, m_geese));
+    connect(anlyzer.data(), &MetaAnalyzer::searchFinished,
     this, [ = ](const MusicMeta & meta, NeteaseSong song) {
 
         qDebug() << "get " << "=====" << song.album.coverUrl;
@@ -206,16 +205,18 @@ void NeteaseMetaSearchEngine::searchMeta(const MusicMeta &meta)
             qDebug() << "NeteaseMetaSearchEngine recive: " << errCode << data.length();
             emit this->lyricLoaded(meta, toLyric(data));
         });
-
-        anlyzer->deleteLater();
     });
-    auto goose = m_geese->postGoose(queryUrl, params.toEncoded());
 
+    auto goose = m_geese->postGoose(queryUrl, params.toEncoded());
     connect(goose, &DMusic::Net::Goose::arrive,
     this, [ = ](int errCode, const QByteArray & data) {
-        qDebug() << "NeteaseMetaSearchEngine Resut: " << errCode;
+        qDebug() << "NeteaseMetaSearchEngine Resut: " << errCode << anlyzer;
+        if (anlyzer.isNull()) {
+            return;
+        }
         auto neteaseSongs = toSongList(data);
-        emit anlyzer->onGetAblumResult(neteaseSongs);
+        anlyzer->onGetAblumResult(neteaseSongs);
+        goose->deleteLater();
     });
 
     queryTemplate = QLatin1String("s=%1&offset=0&limit=5&type=1");
@@ -223,9 +224,13 @@ void NeteaseMetaSearchEngine::searchMeta(const MusicMeta &meta)
     goose = m_geese->postGoose(queryUrl, params.toEncoded());
     connect(goose, &DMusic::Net::Goose::arrive,
     this, [ = ](int errCode, const QByteArray & data) {
-        qDebug() << "NeteaseMetaSearchEngine Resut: " << errCode;
+        qDebug() << "NeteaseMetaSearchEngine Resut: " << errCode << anlyzer;
+        if (anlyzer.isNull()) {
+            return;
+        }
         auto neteaseSongs = toSongList(data);
-        emit anlyzer->onGetTitleResult(neteaseSongs);
+        anlyzer->onGetTitleResult(neteaseSongs);
+        goose->deleteLater();
     });
 }
 

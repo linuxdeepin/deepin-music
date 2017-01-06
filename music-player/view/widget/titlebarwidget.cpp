@@ -58,7 +58,7 @@ TitleBarWidget::TitleBarWidget(QWidget *parent) :
 
     auto iconLabel = new QLabel;
     iconLabel->setObjectName("TitleIcon");
-    iconLabel->setFixedSize(20, 20);
+    iconLabel->setFixedSize(24, 24);
 
     auto playingAnimation = new PictureSequenceView;
     QStringList urls;

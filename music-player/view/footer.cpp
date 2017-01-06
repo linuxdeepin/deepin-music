@@ -169,8 +169,10 @@ void FooterPrivate::initConnection()
     q->connect(btSound, &QPushButton::released, q, [ = ]() {
         emit q->toggleMute();
     });
-    q->connect(volSlider, &SoundVolume::volumeChanged,
-               q, &Footer::volumeChanged);
+    q->connect(volSlider, &SoundVolume::volumeChanged, q, [ = ](int vol) {
+        q->onVolumeChanged(vol);
+        emit q->volumeChanged(vol);
+    });
 }
 
 Footer::Footer(QWidget *parent) :
@@ -279,7 +281,7 @@ Footer::Footer(QWidget *parent) :
     infoLayout->addLayout(musicMetaLayout, 0);
     infoLayout->addStretch();
 
-    d->ctlWidget =new QFrame(this);
+    d->ctlWidget = new QFrame(this);
 //    d->ctlWidget->setStyleSheet("border: 1px solid red;");
     auto ctlLayout = new QHBoxLayout(d->ctlWidget);
     ctlLayout->setMargin(0);
@@ -394,10 +396,18 @@ bool Footer::eventFilter(QObject *obj, QEvent *event)
         }
         auto we = dynamic_cast<QWheelEvent *>(event);
         if (we->angleDelta().y() > 0) {
-            onVolumeChanged(d->volSlider->volume() + 5);
+            auto vol = d->volSlider->volume() + 3;
+            if (vol > 100) {
+                vol = 100;
+            }
+            onVolumeChanged(vol);
             emit this->volumeChanged(d->volSlider->volume());
         } else {
-            onVolumeChanged(d->volSlider->volume() - 5);
+            auto vol = d->volSlider->volume() - 3;
+            if (vol < 0) {
+                vol = 0;
+            }
+            onVolumeChanged(vol);
             emit this->volumeChanged(d->volSlider->volume());
         }
         return true;
@@ -538,7 +548,7 @@ void Footer::onVolumeChanged(int volume)
     }
     d->updateQssProperty(d->btSound, "volume", status);
 
-//    qDebug() << status;
+//    qDebug() << status << volume;
     d->volSlider->onVolumeChanged(volume);
 }
 
