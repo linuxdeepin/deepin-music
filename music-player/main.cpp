@@ -55,21 +55,9 @@ int main(int argc, char *argv[])
     app.loadTranslator();
 
 #ifdef Q_OS_UNIX
-    QDBusConnection conn = QDBusConnection::sessionBus();
-    if (!conn.registerService("org.mpris.MediaPlayer2.deepinmusic")) {
-        qDebug() << "registerService Failed, maybe service exist" << conn.lastError();
-        return (0x0003);
-    }
-
-    if (!conn.registerObject("/",
-                             "org.mpris.MediaPlayer2",
-                             new Mpris(),
-                             QDBusConnection::ExportAdaptors)) {
-        qDebug() << "registerObject Failed" << conn.lastError();
-        return (0x0002);
-    }
-
+    auto serviceName = "deepinmusic";
     auto mprisPlayer =  new MprisPlayer();
+    mprisPlayer->setServiceName(serviceName);
 #endif
 
     app.setWindowIcon(QIcon(":/common/image/deepin_music.svg"));

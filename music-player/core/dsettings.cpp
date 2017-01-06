@@ -36,6 +36,7 @@ public:
 
 DSettings::DSettings(QObject *parent) : QObject(parent), d_ptr(new DSettingsPrivate(this))
 {
+    loadDefault(":/data/deepin-music-settings.json");
 }
 
 DSettings::~DSettings()

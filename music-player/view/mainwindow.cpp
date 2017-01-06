@@ -42,6 +42,7 @@
 #include "widget/tip.h"
 #include "widget/titlebarwidget.h"
 #include "widget/dsettingdialog.h"
+#include "core/dsettings.h"
 
 #include "../core/music.h"
 #include "../core/playlist.h"
@@ -627,6 +628,8 @@ void MainWindow::initMenu()
 
     d->colorModeAction = new QAction(tr("Deep color mode"), this);
     d->colorModeAction->setCheckable(true);
+    d->colorModeAction->setChecked(DSettings::instance()->option("base.play.theme").toString() == "dark");
+
     connect(d->colorModeAction, &QAction::triggered, this, [ = ](bool) {
         if (DThemeManager::instance()->theme() == "light") {
             d->colorModeAction->setChecked(true);
@@ -637,6 +640,7 @@ void MainWindow::initMenu()
             DThemeManager::instance()->setTheme("light");
             ThemeManager::instance()->setTheme("light");
         }
+        DSettings::instance()->setOption("base.play.theme", DThemeManager::instance()->theme());
     });
 
     auto m_about = new QAction(tr("About"), this);

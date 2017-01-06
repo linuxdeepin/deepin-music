@@ -83,6 +83,11 @@ LyricService::LyricService(QObject *parent) : QObject(parent)
     }
 }
 
+QUrl LyricService::coverUrl(const MusicMeta &info)
+{
+    return QUrl::fromLocalFile(cacheCoverPath(info));
+}
+
 QByteArray LyricService::coverData(const MusicMeta &info)
 {
     QFile coverFile(cacheCoverPath(info));

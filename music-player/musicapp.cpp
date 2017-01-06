@@ -9,19 +9,22 @@
 
 #include "musicapp.h"
 
+#include <QDebug>
 #include <QTimer>
 #include <QThread>
-#include <QApplication>
 #include <QStandardPaths>
 
 #include <MprisPlayer>
 
+#include <DApplication>
 #include <dutility.h>
 
 #include "presenter/presenter.h"
 #include "view/mainwindow.h"
 #include "core/player.h"
+#include "core/dsettings.h"
 #include "core/mediafilemonitor.h"
+#include "view/helper/thememanager.h"
 
 using namespace Dtk::Widget;
 
@@ -63,11 +66,19 @@ QString MusicApp::cachePath()
     auto userCachePath = QStandardPaths::standardLocations(QStandardPaths::CacheLocation).first();
     return userCachePath;
 }
-#include <QDebug>
+
 void MusicApp::init()
 {
     Q_D(MusicApp);
     d->appPresenter = new Presenter;
+
+    // setTheme
+    auto theme = DSettings::instance()->option("base.play.theme").toString();
+    qDebug() << "set Theme" << theme;
+    auto dApp = qobject_cast<DApplication *>(qApp);
+    dApp->setTheme(theme);
+    ThemeManager::instance()->setTheme(theme);
+
     d->playerFrame = new MainWindow;
     d->playerFrame->hide();
 
@@ -81,6 +92,7 @@ void MusicApp::init()
 
 void MusicApp::initMpris(MprisPlayer *mprisPlayer)
 {
+    Q_D(MusicApp);
     mprisPlayer->setSupportedMimeTypes(Player::instance()->supportedMimeTypes());
     mprisPlayer->setSupportedUriSchemes(QStringList() << "file");
     mprisPlayer->setCanQuit(true);
@@ -88,15 +100,24 @@ void MusicApp::initMpris(MprisPlayer *mprisPlayer)
     mprisPlayer->setCanSetFullscreen(false);
     mprisPlayer->setHasTrackList(false);
     mprisPlayer->setDesktopEntry("/usr/share/applications/deepin-music.desktop");
+//        mprisPlayer->setDesktopEntry("deepin-music");
     mprisPlayer->setIdentity("Deepin Music Player");
+
+    mprisPlayer->setCanControl(true);
+    mprisPlayer->setCanPlay(true);
+    mprisPlayer->setCanGoNext(true);
+    mprisPlayer->setCanGoPrevious(true);
+    mprisPlayer->setCanPause(true);
 
     connect(mprisPlayer, &MprisPlayer::quitRequested,
             this, &MusicApp::onQuit);
     connect(mprisPlayer, &MprisPlayer::raiseRequested,
             this, &MusicApp::onRaise);
+
+    d->appPresenter->initMpris(mprisPlayer);
 }
 
-QWidget* MusicApp::hackFrame()
+QWidget *MusicApp::hackFrame()
 {
 
     Q_D(MusicApp);
@@ -117,9 +138,9 @@ void MusicApp::onDataPrepared()
     d->appPresenter->loadConfig();
 
     d->playerFrame->show();
-    DUtility::moveToCenter(d->playerFrame);
 
     d->playerFrame->resize(QSize(1070, 680));
+    DUtility::moveToCenter(d->playerFrame);
     d->playerFrame->setCoverBackground(d->playerFrame->coverBackground());
     d->playerFrame->setFocus();
 }

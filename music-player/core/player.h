@@ -75,6 +75,7 @@ public:
 
 public:
     void init() {}
+
     void playMeta(PlaylistPtr playlist, const MusicMeta &meta);
     void resume(PlaylistPtr playlist, const MusicMeta &meta);
     void playNextMeta(PlaylistPtr playlist, const MusicMeta &meta);

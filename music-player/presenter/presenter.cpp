@@ -39,7 +39,6 @@ void PresenterPrivate::initData()
     Q_Q(Presenter);
 
     dsettings = DSettings::instance();
-    dsettings->loadDefault(":/data/deepin-music-settings.json");
 
     lyricService = new LyricService;
     auto work = new QThread;
@@ -132,8 +131,25 @@ void Presenter::prepareData()
         auto metalist = MediaDatabase::searchMusicPath(filepath, std::numeric_limits<int>::max());
         qDebug() << "remove" << filepath << metalist.length();
 
+
+        MusicMeta next;
+        auto playinglist = d->playlistMgr->playingPlaylist();
         for (auto playlist : d->playlistMgr->allplaylist()) {
-            playlist->removeMusic(metalist);
+            auto meta = playlist->removeMusic(metalist);
+            if (playlist == playinglist) {
+                next = meta;
+            }
+        }
+
+        for (auto &meta : metalist) {
+            qDebug() << meta.hash <<  Player::instance()->activeMeta().hash;
+            if (meta.hash == Player::instance()->activeMeta().hash) {
+                if (playinglist->isEmpty()) {
+                    onMusicStop(playinglist, next);
+                } else {
+                    onMusicPlay(playinglist, next);
+                }
+            }
         }
 
         emit MediaDatabase::instance()->removeMusicMetaList(metalist);
@@ -490,6 +506,9 @@ void Presenter::onMusicPlay(PlaylistPtr playlist,  const MusicMeta &meta)
 {
     Q_D(Presenter);
     auto nextMeta = meta;
+    if (playlist.isNull())
+        playlist = d->playlistMgr->playlist(AllMusicListID);
+
     qDebug() << "Fix me: play status" ;
     if (0 == d->playlistMgr->playlist(AllMusicListID)->length()) {
         emit requestImportFiles();
@@ -650,4 +669,79 @@ void Presenter::onImportMusicDirectory()
     auto musicDir =  QStandardPaths::standardLocations(QStandardPaths::MusicLocation);
     qWarning() << "scan" << musicDir;
     onImportFiles(musicDir);
+}
+
+
+void Presenter::initMpris(MprisPlayer *mprisPlayer)
+{
+    if (!mprisPlayer) {
+        return;
+    }
+
+    Q_D(Presenter);
+
+    auto player = Player::instance();
+
+    connect(this, &Presenter::musicPlayed, this, [ = ](PlaylistPtr playlist, const MusicMeta & meta) {
+        QVariantMap metadata;
+        metadata.insert(Mpris::metadataToString(Mpris::Title), meta.title);
+        metadata.insert(Mpris::metadataToString(Mpris::Artist), meta.artist);
+        metadata.insert(Mpris::metadataToString(Mpris::Album), meta.album);
+        metadata.insert(Mpris::metadataToString(Mpris::Length), meta.length / 1000);
+//        mprisPlayer->setCanSeek(true);
+        mprisPlayer->setMetadata(metadata);
+        mprisPlayer->setLoopStatus(Mpris::Playlist);
+        mprisPlayer->setPlaybackStatus(Mpris::Playing);
+        mprisPlayer->setVolume(double(player->volume()) / 100.0);
+    });
+
+    connect(mprisPlayer, &MprisPlayer::playRequested,
+    this, [ = ]() {
+        onMusicPlay(player->activePlaylist(), player->activeMeta());
+        mprisPlayer->setPlaybackStatus(Mpris::Playing);
+    });
+
+    connect(mprisPlayer, &MprisPlayer::pauseRequested,
+    this, [ = ]() {
+        onMusicPause(player->activePlaylist(), player->activeMeta());
+        mprisPlayer->setPlaybackStatus(Mpris::Paused);
+    });
+
+    connect(mprisPlayer, &MprisPlayer::nextRequested,
+    this, [ = ]() {
+        onMusicNext(player->activePlaylist(), player->activeMeta());
+        mprisPlayer->setPlaybackStatus(Mpris::Playing);
+    });
+
+    connect(mprisPlayer, &MprisPlayer::previousRequested,
+    this, [ = ]() {
+        onMusicPrev(player->activePlaylist(), player->activeMeta());
+        mprisPlayer->setPlaybackStatus(Mpris::Playing);
+    });
+
+    connect(mprisPlayer, &MprisPlayer::volumeRequested,
+    this, [ = ](double volume) {
+        onVolumeChanged(volume * 100);
+    });
+
+    connect(this, &Presenter::volumeChanged,
+    this, [ = ](int volume) {
+        mprisPlayer->setVolume(volume / 100.0);
+    });
+
+    connect(this, &Presenter::progrossChanged,
+    this, [ = ](qint64 pos, qint64 length) {
+        mprisPlayer->setPosition(pos);
+    });
+
+    connect(this, &Presenter::coverSearchFinished,
+    this, [ = ](const MusicMeta & meta, const QByteArray & coverData) {
+        if (player->activeMeta().hash != meta.hash) {
+            return;
+        }
+
+        QVariantMap metadata = mprisPlayer->metadata();
+        metadata.insert(Mpris::metadataToString(Mpris::ArtUrl), LyricService::coverUrl(meta));
+        mprisPlayer->setMetadata(metadata);
+    });
 }

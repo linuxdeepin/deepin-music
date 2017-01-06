@@ -23,6 +23,7 @@ class LyricService : public QObject, public Singleton<LyricService>
 public:
     explicit LyricService(QObject *parent = 0);
 
+    static QUrl coverUrl(const MusicMeta &info);
     static QByteArray coverData(const MusicMeta &info);
     static QByteArray lyricData(const MusicMeta &info);
 

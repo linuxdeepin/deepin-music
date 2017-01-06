@@ -62,6 +62,13 @@
                             "default": false
                         },
                         {
+                            "key": "theme",
+                            "label": "deepin theme",
+                            "hide": true,
+                            "type": "dropbox",
+                            "default": "light"
+                        },
+                        {
                             "key": "last_import_path",
                             "label": "Last Import Path",
                             "hide": true,

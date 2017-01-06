@@ -12,6 +12,7 @@
 #include <QDebug>
 #include <QTimer>
 #include <QMediaPlayer>
+#include "lyricservice.h"
 
 #include <QMimeDatabase>
 
@@ -114,11 +115,11 @@ void PlayerPrivate::initConnection()
     q->connect(qplayer, &QMediaPlayer::positionChanged,
     q, [ = ](qint64 position) {
         auto duration = qplayer->duration();
-        qDebug() << lengthString(duration)
-                 << lengthString(position)
-                 << lengthString(activeMeta.offset)
-                 << lengthString(activeMeta.length)
-                 << activeMeta.title;
+//        qDebug() << lengthString(duration)
+//                 << lengthString(position)
+//                 << lengthString(activeMeta.offset)
+//                 << lengthString(activeMeta.length)
+//                 << activeMeta.title;
 
         // fix len
         if (activeMeta.length == 0 && duration != 0 && duration > 0) {
@@ -134,8 +135,8 @@ void PlayerPrivate::initConnection()
 
         emit q->positionChanged(position - activeMeta.offset,  activeMeta.length);
     });
-//    q->connect(qplayer, &QMediaPlayer::volumeChanged,
-//               q, &Player::volumeChanged);
+    q->connect(qplayer, &QMediaPlayer::volumeChanged,
+               q, &Player::volumeChanged);
     q->connect(qplayer, &QMediaPlayer::mutedChanged,
                q, &Player::mutedChanged);
     q->connect(qplayer, &QMediaPlayer::durationChanged,
@@ -251,6 +252,7 @@ Player::~Player()
 {
 
 }
+
 
 void Player::playMeta(PlaylistPtr playlist, const MusicMeta &meta)
 {
@@ -415,7 +417,9 @@ void Player::setMode(Player::PlaybackMode mode)
 void Player::setVolume(double volume)
 {
     Q_D(Player);
+    d->qplayer->blockSignals(true);
     d->qplayer->setVolume(volume);
+    d->qplayer->blockSignals(false);
 }
 
 void Player::setMuted(bool mute)

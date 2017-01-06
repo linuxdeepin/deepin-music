@@ -7,10 +7,8 @@
 }
 
 #Navbar {
+    background: white;
     border: none;
-}
-QListView::item {
-height: 30px;
 }
 #Navbar::item {
     height: 30px;

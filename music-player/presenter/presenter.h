@@ -15,6 +15,8 @@
 #include "../core/music.h"
 #include "../core/playlist.h"
 
+#include <MprisPlayer>
+
 class Playlist;
 
 class PresenterPrivate;
@@ -30,6 +32,9 @@ public:
     PlaylistPtr lastPlaylist();
     QList<PlaylistPtr > allplaylist();
     int playMode();
+
+
+    void initMpris(MprisPlayer* mprisPlayer);
 
     void prepareData();
 
