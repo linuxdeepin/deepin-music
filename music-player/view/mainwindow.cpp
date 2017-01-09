@@ -426,16 +426,6 @@ void MainWindow::setCoverBackground(QString coverBackground)
 void MainWindow::mousePressEvent(QMouseEvent *event)
 {
     ThinWindow::mousePressEvent(event);
-
-    QPoint mousePos = event->pos();
-    auto geometry = d->playlist->geometry().marginsAdded(QMargins(0, 0, 20, 20));
-
-    if (!geometry.contains(mousePos)) {
-        DUtil::TimerSingleShot(50, [this]() {
-            qDebug() << "hide playlist" ;
-            setPlaylistVisible(false);
-        });
-    }
 }
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *e)
@@ -466,8 +456,22 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *e)
                 return true;
             }
         }
-
-
+    }
+    if (e->type() == QEvent::MouseButtonPress) {
+        QMouseEvent *me = static_cast<QMouseEvent *>(e);
+        qDebug() << obj << me->pos();
+        if (obj->objectName() == this->objectName() || this->objectName()+"Window" == obj->objectName()) {
+            qDebug() << me->pos() << QCursor::pos();
+            QPoint mousePos = me->pos();
+            auto geometry = d->playlist->geometry().marginsAdded(QMargins(0, 0, 20, 20));
+            qDebug() << geometry << mousePos;
+            if (!geometry.contains(mousePos)) {
+                DUtil::TimerSingleShot(50, [this]() {
+                    qDebug() << "hide playlist" ;
+                    setPlaylistVisible(false);
+                });
+            }
+        }
     }
     return qApp->eventFilter(obj, e);
 }
@@ -564,7 +568,6 @@ void MainWindow::showLyricView()
 void MainWindow::showMusicListView()
 {
     changeToMusicListView(false);
-
     updateViewname("");
 }
 
@@ -610,6 +613,7 @@ void MainWindow::setPlaylistVisible(bool visible)
 {
     if (d->playlist->isVisible() == visible) {
         if (visible) {
+            d->playlist->setFocus();
             d->playlist->show();
             d->playlist->raise();
         }
@@ -622,6 +626,7 @@ void MainWindow::setPlaylistVisible(bool visible)
               d->playlist->width(), d->playlist->height());
     if (!visible) {
         WidgetHelper::slideEdgeWidget(d->playlist, end, start, s_AnimationDelay, true);
+        d->footer->setFocus();
     } else {
         d->playlist->setFocus();
         WidgetHelper::slideEdgeWidget(d->playlist, start, end, s_AnimationDelay);

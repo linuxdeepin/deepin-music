@@ -69,13 +69,11 @@ PlayListItem::PlayListItem(PlaylistPtr playlist, QWidget *parent) : QFrame(paren
     }
 
     if (playlist->editmode()) {
-        // TODO: for qt5.3
         m_titleedit->setEnabled(true);
-        QTimer::singleShot(2100, this, [ = ] {
-            m_titleedit->setFocus(Qt::MouseFocusReason);
-//            m_titleedit->setCursorPosition(0);
-//            m_titleedit->setSelection(0, m_titleedit->text().length());
-            qDebug() << "add edit playlist 9999999999999999999999999999999";
+        QTimer::singleShot(100, this, [ = ] {
+            m_titleedit->setFocus();
+            m_titleedit->setCursorPosition(0);
+            m_titleedit->setSelection(0, m_titleedit->text().length());
         });
     }
 

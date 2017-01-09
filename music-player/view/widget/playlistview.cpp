@@ -18,6 +18,5 @@ PlayListView::PlayListView(QWidget *parent) : QListWidget(parent)
     setSelectionMode(QListView::SingleSelection);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    setFocusPolicy(Qt::NoFocus);
     ThemeManager::instance()->regisetrWidget(this);
 }

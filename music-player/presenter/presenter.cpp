@@ -531,13 +531,14 @@ void Presenter::onAddToPlaylist(PlaylistPtr playlist,
         info.displayName = d->playlistMgr->newDisplayName();
         modifiedPlaylist = d->playlistMgr->addPlaylist(info);
         emit playlistAdded(d->playlistMgr->playlist(info.uuid));
+    } else {
+        emit notifyAddToPlaylist(modifiedPlaylist, metalist);
     }
 
     if (d->playlistMgr->playlist(modifiedPlaylist->id()).isNull()) {
         qCritical() << "no list" << modifiedPlaylist->id();
         return;
     }
-    emit notifyAddToPlaylist(modifiedPlaylist, metalist);
     modifiedPlaylist->appendMusic(metalist);
 }
 
