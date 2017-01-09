@@ -18,6 +18,7 @@
 #include <QLabel>
 #include <QResizeEvent>
 #include <QStandardItemModel>
+#include <QMimeData>
 
 #include <thememanager.h>
 #include <dcombobox.h>
@@ -91,10 +92,6 @@ void MusicListWidgetPrivate::initConntion()
     q, [ = ](const MusicMeta & meta) {
         emit q->musicClicked(m_musiclist->playlist(), meta);
     });
-    q->connect(m_musiclist, &MusicListView::importSelectFiles,
-    q, [ = ](PlaylistPtr playlist, const QStringList & urllist) {
-        emit q->importSelectFiles(playlist, urllist);
-    });
 }
 
 void MusicListWidgetPrivate::showEmptyHits(bool empty)
@@ -116,6 +113,7 @@ MusicListWidget::MusicListWidget(QWidget *parent) :
     Q_D(MusicListWidget);
 
     setObjectName("MusicListWidget");
+    setAcceptDrops(true);
 
     auto layout = new QVBoxLayout(this);
     layout->setContentsMargins(0, 0, 0, 0);
@@ -170,6 +168,46 @@ MusicListWidget::MusicListWidget(QWidget *parent) :
 MusicListWidget::~MusicListWidget()
 {
 
+}
+
+void MusicListWidget::dragEnterEvent(QDragEnterEvent *event)
+{
+    qDebug() << event;
+    if (event->mimeData()->hasFormat("text/uri-list")) {
+        event->setDropAction(Qt::CopyAction);
+        event->acceptProposedAction();
+        return;
+    }
+
+    QFrame::dragEnterEvent(event);
+}
+
+void MusicListWidget::dragMoveEvent(QDragMoveEvent *)
+{
+
+}
+
+void MusicListWidget::dragLeaveEvent(QDragLeaveEvent *)
+{
+
+}
+
+void MusicListWidget::dropEvent(QDropEvent *event)
+{
+    Q_D(MusicListWidget);
+    if (!event->mimeData()->hasFormat("text/uri-list")) {
+        return;
+    }
+
+    auto urls = event->mimeData()->urls();
+    QStringList localpaths;
+    for (auto &url : urls) {
+        localpaths << url.toLocalFile();
+    }
+
+    if (!localpaths.isEmpty() && !d->m_musiclist->playlist().isNull()) {
+        emit importSelectFiles(d->m_musiclist->playlist(), localpaths);
+    }
 }
 
 void MusicListWidget::resizeEvent(QResizeEvent *event)

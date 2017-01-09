@@ -24,7 +24,6 @@
 #include <QUrl>
 #include <QProcess>
 #include <QStyleFactory>
-#include <QMimeData>
 
 #include <thememanager.h>
 
@@ -68,10 +67,10 @@ MusicListView::MusicListView(QWidget *parent)
     d->m_delegate = new MusicItemDelegate;
     setItemDelegate(d->m_delegate);
 
-    setAcceptDrops(true);
-    setDragDropMode(QAbstractItemView::DropOnly);
-    viewport()->setAcceptDrops(true);
-    setDropIndicatorShown(false);
+//    setAcceptDrops(true);
+//    setDragDropMode(QAbstractItemView::DropOnly);
+//    viewport()->setAcceptDrops(true);
+//    setDropIndicatorShown(false);
 
     setSelectionMode(QListView::ExtendedSelection);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -494,45 +493,6 @@ void MusicListView::showContextMenu(const QPoint &pos,
     });
 
     myMenu.exec(globalPos);
-}
-
-void MusicListView::dragEnterEvent(QDragEnterEvent *event)
-{
-    if (event->mimeData()->hasFormat("text/uri-list")) {
-        event->setDropAction(Qt::CopyAction);
-        event->acceptProposedAction();
-        return;
-    }
-
-    QAbstractItemView::dragEnterEvent(event);
-}
-
-void MusicListView::dragMoveEvent(QDragMoveEvent *event)
-{
-
-}
-
-void MusicListView::dragLeaveEvent(QDragLeaveEvent *event)
-{
-
-}
-
-void MusicListView::dropEvent(QDropEvent *event)
-{
-    Q_D(MusicListView);
-    if (!event->mimeData()->hasFormat("text/uri-list")) {
-        return;
-    }
-
-    auto urls = event->mimeData()->urls();
-    QStringList localpaths;
-    for (auto &url : urls) {
-        localpaths << url.toLocalFile();
-    }
-
-    if (!localpaths.isEmpty() && !d->m_playlist.isNull()) {
-        emit importSelectFiles(d->m_playlist, localpaths);
-    }
 }
 
 void MusicListView::paintEvent(QPaintEvent *e)

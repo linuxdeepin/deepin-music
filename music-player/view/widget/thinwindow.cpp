@@ -38,6 +38,7 @@ public:
     QBrush          background;
     int             radius              = 4;
     int             shadowWidth         = 20;
+    bool            borderInside        = false;
     QMargins        shadowMargins       = QMargins(20, 20, 20, 20);
     int             resizeHandleWidth   = WindowHandleWidth;
     bool            resizable           = true;
@@ -164,6 +165,12 @@ QPoint ThinWindow::shadowOffset() const
     return d->shadowOffset;
 }
 
+bool ThinWindow::borderInside() const
+{
+    Q_D(const ThinWindow);
+    return d->borderInside;
+}
+
 int ThinWindow::radius() const
 {
     Q_D(const ThinWindow);
@@ -279,6 +286,18 @@ void ThinWindow::setShadowOffset(QPoint shadowOffset)
     emit shadowOffsetChanged(shadowOffset);
 }
 
+void ThinWindow::setBorderInside(bool borderInside)
+{
+    Q_D(ThinWindow);
+
+    if (d->borderInside == borderInside) {
+        return;
+    }
+
+    d->borderInside = borderInside;
+    emit borderInsideChanged(borderInside);
+}
+
 void ThinWindow::mouseMoveEvent(QMouseEvent *event)
 {
 #ifdef Q_OS_LINUX
@@ -341,7 +360,7 @@ void ThinWindow::paintEvent(QPaintEvent *)
 {
     Q_D(const ThinWindow);
 
-    bool outer = true;
+    bool outer = !d->borderInside;
 
     QPainter painter(this);
     painter.setRenderHints(QPainter::Antialiasing | QPainter::HighQualityAntialiasing);

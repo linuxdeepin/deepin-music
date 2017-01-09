@@ -19,6 +19,7 @@ class ThinWindow : public QWidget
     Q_PROPERTY(int radius READ radius WRITE setRadius)
     Q_PROPERTY(QBrush background READ background WRITE setBackground)
     Q_PROPERTY(QColor borderColor READ borderColor WRITE setBorderColor)
+    Q_PROPERTY(bool borderInside READ borderInside WRITE setBorderInside NOTIFY borderInsideChanged)
     Q_PROPERTY(QColor shadowColor READ shadowColor WRITE setShadowColor NOTIFY shadowColorChanged)
     Q_PROPERTY(QPoint shadowOffset READ shadowOffset WRITE setShadowOffset NOTIFY shadowOffsetChanged)
 public:
@@ -36,6 +37,7 @@ public:
     QBrush background() const;
     QColor shadowColor() const;
     QPoint shadowOffset() const;
+    bool borderInside() const;
 
 public slots:
     void showMinimized();
@@ -52,10 +54,12 @@ public slots:
     void setBorderColor(QColor borderColor);
     void setShadowColor(QColor shadowColor);
     void setShadowOffset(QPoint shadowOffset);
+    void setBorderInside(bool borderInside);
 
 signals:
     void shadowColorChanged(QColor shadowColor);
     void shadowOffsetChanged(QPoint shadowOffset);
+    void borderInsideChanged(bool borderInside);
 
 protected:
     virtual void mouseMoveEvent(QMouseEvent *event) Q_DECL_OVERRIDE;

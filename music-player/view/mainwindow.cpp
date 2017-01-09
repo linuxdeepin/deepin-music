@@ -388,6 +388,13 @@ void MainWindow::binding(Presenter *presenter)
             presenter, &Presenter::onImportMusicDirectory);
     connect(d->import, &ImportWidget::importFiles,
             this, &MainWindow::onSelectImportFiles);
+
+    connect(d->import, &ImportWidget::importSelectFiles,
+    this, [ = ](const QStringList & urllist) {
+        d->import->showWaitHint();
+        emit this->importSelectFiles(urllist);
+    });
+
     connect(this, &MainWindow::importSelectFiles,
             presenter, &Presenter::onImportFiles);
     connect(this, &MainWindow::addPlaylist,
@@ -509,7 +516,7 @@ void MainWindow::onSelectImportFiles()
     fileDlg.setDirectory(musicDir.first());
 
     fileDlg.setViewMode(QFileDialog::Detail);
-    fileDlg.setFileMode(QFileDialog::Directory);
+    fileDlg.setFileMode(QFileDialog::DirectoryOnly);
     if (QFileDialog::Accepted == fileDlg.exec()) {
         d->import->showWaitHint();
         emit importSelectFiles(fileDlg.selectedFiles());
@@ -609,8 +616,8 @@ void MainWindow::setPlaylistVisible(bool visible)
     if (!visible) {
         WidgetHelper::slideEdgeWidget(d->playlist, end, start, s_AnimationDelay, true);
     } else {
-        WidgetHelper::slideEdgeWidget(d->playlist, start, end, s_AnimationDelay);
         d->playlist->setFocus();
+        WidgetHelper::slideEdgeWidget(d->playlist, start, end, s_AnimationDelay);
         d->playlist->raise();
     }
     this->disableControl();

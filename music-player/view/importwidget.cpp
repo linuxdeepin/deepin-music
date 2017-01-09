@@ -12,6 +12,8 @@
 #include <QVBoxLayout>
 #include <QFileDialog>
 #include <QLabel>
+#include <QDragEnterEvent>
+#include <QMimeData>
 #include <QGraphicsOpacityEffect>
 
 #include <thememanager.h>
@@ -40,6 +42,8 @@ ImportWidget::ImportWidget(QWidget *parent) : QFrame(parent), d_ptr(new ImportWi
     Q_D(ImportWidget);
 
     setObjectName("ImportWidget");
+    setAcceptDrops(true);
+
     auto layout = new QVBoxLayout(this);
 
     auto logo = new QLabel;
@@ -104,4 +108,42 @@ void ImportWidget::showImportHint()
     d->importButton->show();
     QString linkText = QString(linkTemplate).arg(tr("Scan")).arg(tr("Scan"));
     d->text->setText(QString(tr("%1 music directory or drag & drop music file to add music")).arg(linkText));
+}
+
+void ImportWidget::dragEnterEvent(QDragEnterEvent *event)
+{
+    if (event->mimeData()->hasFormat("text/uri-list")) {
+        event->setDropAction(Qt::CopyAction);
+        event->acceptProposedAction();
+        return;
+    }
+
+    QFrame::dragEnterEvent(event);
+}
+
+void ImportWidget::dragMoveEvent(QDragMoveEvent *)
+{
+
+}
+
+void ImportWidget::dragLeaveEvent(QDragLeaveEvent *)
+{
+
+}
+
+void ImportWidget::dropEvent(QDropEvent *event)
+{
+    if (!event->mimeData()->hasFormat("text/uri-list")) {
+        return;
+    }
+
+    auto urls = event->mimeData()->urls();
+    QStringList localpaths;
+    for (auto &url : urls) {
+        localpaths << url.toLocalFile();
+    }
+
+    if (!localpaths.isEmpty()) {
+        emit importSelectFiles(localpaths);
+    }
 }

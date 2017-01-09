@@ -56,7 +56,8 @@ PlaylistWidget::PlaylistWidget(QWidget *parent) : QFrame(parent)
 
     layout->addWidget(m_listview, 0, Qt::AlignHCenter);
     btAddFameLayout->addWidget(btAdd, 0, Qt::AlignBottom | Qt::AlignHCenter);
-    layout->addWidget(btAddFrame, 0, Qt::AlignHCenter);
+    layout->addWidget(btAddFrame, 0, Qt::AlignHCenter|Qt::AlignBottom);
+    layout->addStretch();
 
      ThemeManager::instance()->regisetrWidget(this);
 

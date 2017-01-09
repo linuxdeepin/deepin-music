@@ -105,7 +105,7 @@ DSettingDialog::DSettingDialog(QWidget *parent) : ThinWindow(parent), d_ptr(new 
 
     setContentLayout(layout);
 
-    QFile jsonFile("/home/iceyer/Development/deepin/deepin-music/music-player/data/deepin-music-settings.json");
+    QFile jsonFile(":/data/deepin-music-settings.json");
     jsonFile.open(QIODevice::ReadOnly);
     auto jsonDoc = QJsonDocument::fromJson(jsonFile.readAll());
     auto mainGroups = jsonDoc.object().value("main_groups");

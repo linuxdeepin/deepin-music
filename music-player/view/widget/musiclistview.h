@@ -28,7 +28,6 @@ signals:
     void removeMusicList(const MusicMetaList &metalist);
     void deleteMusicList(const MusicMetaList &metalist);
     void requestCustomContextMenu(const QPoint &pos);
-    void importSelectFiles(PlaylistPtr playlist, const QStringList &urllist);
 
 public:
     PlaylistPtr playlist();
@@ -50,10 +49,6 @@ public:
 
 
 protected:
-    virtual void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
-    virtual void dragMoveEvent(QDragMoveEvent *event) Q_DECL_OVERRIDE;
-    virtual void dragLeaveEvent(QDragLeaveEvent *event) Q_DECL_OVERRIDE;
-    virtual void dropEvent(QDropEvent *event) Q_DECL_OVERRIDE;
     virtual void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
     virtual void wheelEvent(QWheelEvent *event) Q_DECL_OVERRIDE;
     virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;

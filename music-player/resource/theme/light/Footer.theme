@@ -20,7 +20,7 @@
     background: transparent;
     background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1,
         stop:0        transparent,                  stop:0.08333 transparent,
-        stop:0.08400  rgba(255, 255, 255, 0.15),    stop:0.16666 rgba(255, 255, 255, 0.15),
+        stop:0.08400  rgba(255, 255, 255, 0.08),    stop:0.16666 rgba(255, 255, 255, 0.08),
         stop:0.17000  rgba(0, 0, 0, 0.0),           stop:0.24999 rgba(0, 0, 0, 0.0),
         stop:0.25000  rgba(0, 0, 0, 0.0),           stop:1 rgba(0, 0, 0, 0.0)
     );

@@ -23,10 +23,17 @@ public:
 signals:
     void scanMusicDirectory();
     void importFiles();
+    void importSelectFiles(const QStringList &urllist);
 
 public slots:
     void showWaitHint();
     void showImportHint();
+
+protected:
+    virtual void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
+    virtual void dragMoveEvent(QDragMoveEvent *event) Q_DECL_OVERRIDE;
+    virtual void dragLeaveEvent(QDragLeaveEvent *event) Q_DECL_OVERRIDE;
+    virtual void dropEvent(QDropEvent *event) Q_DECL_OVERRIDE;
 
 private:
     QScopedPointer<ImportWidgetPrivate> d_ptr;
