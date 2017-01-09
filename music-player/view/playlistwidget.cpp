@@ -29,6 +29,7 @@ PlaylistWidget::PlaylistWidget(QWidget *parent) : QFrame(parent)
     setObjectName("PlaylistWidget");
 
     auto layout = new QVBoxLayout(this);
+    setFocusPolicy(Qt::ClickFocus);
     layout->setContentsMargins(0, 0, 0, 15);
     layout->setSpacing(15);
 
@@ -36,6 +37,7 @@ PlaylistWidget::PlaylistWidget(QWidget *parent) : QFrame(parent)
 
     auto btAddFrame = new QFrame;
     btAddFrame->setObjectName("PlaylistWidgetAddFrame");
+    btAddFrame->setFocusPolicy(Qt::NoFocus);
     auto btAddFameLayout = new QVBoxLayout(btAddFrame);
     btAddFameLayout->setMargin(0);
 
@@ -150,10 +152,11 @@ void PlaylistWidget::focusOutEvent(QFocusEvent *event)
     // TODO: monitor mouse position
     QPoint mousePos = mapToParent(mapFromGlobal(QCursor::pos()));
 //    qDebug() << mapFromGlobal(QCursor::pos()) << mousePos;
+//    qDebug() << event->reason();
     if (!this->geometry().contains(mousePos)) {
         if (event && event->reason() == Qt::MouseFocusReason) {
             DUtil::TimerSingleShot(50, [this]() {
-                qDebug() << "hide";
+                qDebug() << "self lost focus hide";
                 emit this->hidePlaylist();
             });
         }

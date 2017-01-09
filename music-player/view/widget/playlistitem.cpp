@@ -54,7 +54,6 @@ PlayListItem::PlayListItem(PlaylistPtr playlist, QWidget *parent) : QFrame(paren
     m_titleedit->setObjectName("PlayListTitle");
     m_titleedit->setFixedHeight(24);
     m_titleedit->setMaximumWidth(160);
-    m_titleedit->setText(playlist->displayName());
     m_titleedit->setMaxLength(255);
     m_titleedit->setProperty("HistoryValue", m_titleedit->text());
 
@@ -91,12 +90,22 @@ PlayListItem::PlayListItem(PlaylistPtr playlist, QWidget *parent) : QFrame(paren
     setFixedWidth(220);
 
     playingAnimation = new Dtk::Widget::DPictureSequenceView(this);
-    playingAnimation->setFixedSize(17,13);
+    playingAnimation->setFixedSize(17, 13);
     interLayout->addWidget(playingAnimation);
     interLayout->addSpacing(5);
     playingAnimation->hide();
 
     ThemeManager::instance()->regisetrWidget(this);
+
+    // TODO: wtf
+//    QFont font(m_titleedit->font());
+//    font.setPointSize(12);
+//    qDebug() << font << m_titleedit->width();
+//    QFontMetrics fm(font);
+//    m_titleedit->setText(fm.elidedText(QString(playlist->displayName()),
+//                                       Qt::ElideMiddle, 140));
+    m_titleedit->setText(playlist->displayName());
+    //    m_titleedit->adjustSize();
 
     connect(m_titleedit, &QLineEdit::editingFinished,
     this, [ = ] {
@@ -214,12 +223,12 @@ void PlayListItem::showContextMenu(const QPoint &pos)
         }
 
         if (action->text() == "Delete") {
-            QString message = QString(tr("\nAre you sure to delete \"%1\"?")).arg(m_titleedit->text());
+            QString message = QString(tr("Are you sure to delete this playlist?")).arg(m_titleedit->text());
 
             DDialog warnDlg;
-            warnDlg.setIcon(QIcon(":/image/notify_fail.png"));
+            warnDlg.setIcon(QIcon(":/common/image/notify_fail.png"));
             warnDlg.setTextFormat(Qt::AutoText);
-            warnDlg.setMessage(message);
+            warnDlg.setTitle(message);
             warnDlg.addButtons(QStringList() << tr("Cancel") << tr("Delete"));
             if (0 == warnDlg.exec()) {
                 return;

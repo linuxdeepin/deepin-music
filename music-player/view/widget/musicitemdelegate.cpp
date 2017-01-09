@@ -194,7 +194,7 @@ static inline QFlags<Qt::AlignmentFlag> alignmentFlag(int col)
 static inline QRect colRect(int col, const QStyleOptionViewItem &option)
 {
     static auto tailwidth  = tailPointWidth(option) + 20;
-    auto w = option.rect.width() - 40 - tailwidth;
+    auto w = option.rect.width() - 0 - tailwidth;
 
     auto emCol = static_cast<MusicItemDelegate::MusicColumn>(col);
     switch (emCol) {
@@ -207,7 +207,7 @@ static inline QRect colRect(int col, const QStyleOptionViewItem &option)
     case MusicItemDelegate::Album:
         return QRect(40 + w / 2 + w / 4, option.rect.y(), w / 4 - 20, option.rect.height());
     case MusicItemDelegate::Length:
-        return QRect(40 + w, option.rect.y(), tailwidth - 20, option.rect.height());
+        return QRect( w, option.rect.y(), tailwidth - 20, option.rect.height());
     case MusicItemDelegate::ColumnButt:
         break;
     }
@@ -287,16 +287,23 @@ void MusicItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
             }
             break;
         }
-        case Title:
+        case Title: {
             painter->setFont(font12);
-            painter->drawText(rect, flag, meta.title);
+            QFont font(font12);
+            QFontMetrics fm(font);
+            auto text = fm.elidedText(meta.title, Qt::ElideRight, rect.width());
+            painter->drawText(rect, flag, text);
             break;
+        }
         case Artist: {
             painter->setFont(font11);
             auto str = meta.artist.isEmpty() ?
                        MusicListView::tr("Unknow Artist") :
                        meta.artist;
-            painter->drawText(rect, flag, str);
+            QFont font(font11);
+            QFontMetrics fm(font);
+            auto text = fm.elidedText(str, Qt::ElideRight, rect.width());
+            painter->drawText(rect, flag, text);
             break;
         }
         case Album: {
@@ -304,7 +311,10 @@ void MusicItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
             auto str = meta.album.isEmpty() ?
                        MusicListView::tr("Unknow Album") :
                        meta.album;
-            painter->drawText(rect, flag, str);
+            QFont font(font11);
+            QFontMetrics fm(font);
+            auto text = fm.elidedText(str, Qt::ElideRight, rect.width());
+            painter->drawText(rect, flag, text);
             break;
         }
         case Length:

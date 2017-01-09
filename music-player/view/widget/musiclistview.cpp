@@ -353,9 +353,12 @@ void MusicListView::showContextMenu(const QPoint &pos,
     }
 
     for (auto playlist : newPlaylists) {
-        auto act = playlistMenu.addAction(playlist->displayName());
+        QFont font(playlistMenu.font());
+        QFontMetrics fm(font);
+        auto text = fm.elidedText(QString(playlist->displayName().replace("&", "&&")),
+                                  Qt::ElideRight, 140);
+        auto act = playlistMenu.addAction(text);
         act->setData(QVariant::fromValue(playlist));
-
     }
 
     connect(&playlistMenu, &QMenu::triggered, this, [ = ](QAction * action) {

@@ -426,9 +426,16 @@ void MainWindow::setCoverBackground(QString coverBackground)
 void MainWindow::mousePressEvent(QMouseEvent *event)
 {
     ThinWindow::mousePressEvent(event);
-    DUtil::TimerSingleShot(50, [this]() {
-        setPlaylistVisible(false);
-    });
+
+    QPoint mousePos = event->pos();
+    auto geometry = d->playlist->geometry().marginsAdded(QMargins(0, 0, 20, 20));
+
+    if (!geometry.contains(mousePos)) {
+        DUtil::TimerSingleShot(50, [this]() {
+            qDebug() << "hide playlist" ;
+            setPlaylistVisible(false);
+        });
+    }
 }
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *e)
@@ -705,7 +712,7 @@ void MainWindow::initMenu()
         aboutDlg->setProductIcon(QPixmap(":/common/image/logo_96.png"));
         aboutDlg->setProductName("Deepin Music");
         aboutDlg->setVersion(tr("Version: 3.0"));
-        aboutDlg->setDescription(descriptionText);
+        aboutDlg->setDescription(descriptionText + "\n");
         aboutDlg->setAcknowledgementLink(acknowledgementLink);
         aboutDlg->show();
     });
