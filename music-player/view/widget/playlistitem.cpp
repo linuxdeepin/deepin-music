@@ -53,9 +53,9 @@ PlayListItem::PlayListItem(PlaylistPtr playlist, QWidget *parent) : QFrame(paren
     m_titleedit = new QLineEdit;
     m_titleedit->setObjectName("PlayListTitle");
     m_titleedit->setFixedHeight(24);
-    m_titleedit->setMinimumWidth(140);
+    m_titleedit->setMaximumWidth(160);
     m_titleedit->setText(playlist->displayName());
-    m_titleedit->setMaxLength(40);
+    m_titleedit->setMaxLength(255);
     m_titleedit->setProperty("HistoryValue", m_titleedit->text());
 
 //    QPalette p = m_titleedit->palette();
@@ -81,12 +81,8 @@ PlayListItem::PlayListItem(PlaylistPtr playlist, QWidget *parent) : QFrame(paren
 
     interLayout->addWidget(icon, 0, Qt::AlignCenter);
     interLayout->addSpacing(10);
-
-    QSizePolicy spTitle(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    spTitle.setHorizontalStretch(100);
-    m_titleedit->setSizePolicy(spTitle);
-
     interLayout->addWidget(m_titleedit, 0, Qt::AlignRight);
+    interLayout->addStretch();
 
     layout->addWidget(interFrame);
 
@@ -94,8 +90,10 @@ PlayListItem::PlayListItem(PlaylistPtr playlist, QWidget *parent) : QFrame(paren
     setFixedWidth(220);
 
     playingAnimation = new Dtk::Widget::DPictureSequenceView(this);
-
-    interLayout->addWidget(playingAnimation, 0, Qt::AlignRight);
+    playingAnimation->setFixedSize(17,13);
+    interLayout->addWidget(playingAnimation);
+    interLayout->addSpacing(5);
+    playingAnimation->hide();
 
     ThemeManager::instance()->regisetrWidget(this);
 

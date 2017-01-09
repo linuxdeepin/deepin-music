@@ -6,6 +6,16 @@
     border-right: 1px solid rgba(0, 0, 0, 0.1);
 }
 
+#WindowCloseButton {
+border-image: url(:/images/light/images/window_close_normal.png);
+}
+#WindowCloseButton:hover {
+border-image: url(:/images/light/images/window_close_hover.png);
+}
+#WindowCloseButton:pressed {
+border-image: url(:/images/light/images/window_close_press.png);
+}
+
 #Navbar {
     border: none;
 }
