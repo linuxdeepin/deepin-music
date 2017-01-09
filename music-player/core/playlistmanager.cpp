@@ -73,13 +73,12 @@ void PlaylistManager::load()
     auto all = playlist(AllMusicListID);
     if (!all.isNull()) {
         all->setDisplayName("");
-        qDebug() << tr("All Music");
         all->setDisplayName(tr("All Music"));
     }
     auto fav = playlist(FavMusicListID);
     if (!fav.isNull()) {
-        fav->setDisplayName("");
-        fav->setDisplayName(tr("Favourite Music"));
+        fav->setDisplayName("My favorites");
+        fav->setDisplayName(tr("My favorites"));
     }
 
     auto currentTitle = AllMusicListID;
@@ -169,6 +168,11 @@ void PlaylistManager::insertPlaylist(const QString &uuid, PlaylistPtr playlist)
         if (m_playingPlaylist.isNull() || m_playingPlaylist->id() == deleteID)
         {
             setPlayingPlaylist(this->playlist(AllMusicListID));
+        }
+
+        if (m_selectedPlaylist.isNull() || m_selectedPlaylist->id() == deleteID)
+        {
+            setSelectedPlaylist(this->playlist(AllMusicListID));
         }
 
         sortPlaylists.removeAll(deleteID);

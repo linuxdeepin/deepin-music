@@ -95,6 +95,13 @@ void Presenter::prepareData()
             this, &Presenter::lyricSearchFinished);
     connect(d->lyricService, &LyricService::coverSearchFinished,
             this, &Presenter::coverSearchFinished);
+    connect(d->lyricService, &LyricService::contextSearchFinished,
+            this, &Presenter::contextSearchFinished);
+
+    connect(this, &Presenter::requestContextSearch,
+            d->lyricService, &LyricService::searchContext);
+    connect(this, &Presenter::changeMetaCache,
+            d->lyricService, &LyricService::onChangeMetaCache);
 
     connect(this, &Presenter::importMediaFiles,
             d->moniter, &MediaFileMonitor::importPlaylistFiles);

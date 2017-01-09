@@ -43,6 +43,11 @@ public:
     QString editor;
     QString composer;
     QString creator;
+
+    QString searchID;
+    QString searchCoverUrl;
+    QString searchLyricUrl;
+
     qint64  offset      = 0;//msec
 
     bool    favourite   = false;

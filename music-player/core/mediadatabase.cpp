@@ -99,7 +99,7 @@ MediaDatabase::MediaDatabase(QObject *parent) : QObject(parent)
         addPlaylist(playlistMeta);
     }
 
-    playlistMeta.displayName = "Favourite Music";
+    playlistMeta.displayName = "My favorites";
     playlistMeta.uuid = "fav";
     playlistMeta.icon = "fav";
     playlistMeta.readonly = true;

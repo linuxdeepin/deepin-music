@@ -221,7 +221,7 @@ void PlayListItem::showContextMenu(const QPoint &pos)
         }
 
         if (action->text() == tr("Delete")) {
-            QString message = QString(tr("Are you sure to delete this playlist?")).arg(m_titleedit->text());
+            QString message = QString(tr("Are you sure to delete this playlist?"));
 
             DDialog warnDlg;
             warnDlg.setIcon(QIcon(":/common/image/del_notify.png"));

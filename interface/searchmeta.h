@@ -27,6 +27,7 @@ struct NeteaseArtist {
 struct NeteaseSong {
     int                     id = 0;
     QString                 name;
+    int                     length = 0;
     NeteaseAlbum            album;
     QList<NeteaseArtist>    artists;
 };

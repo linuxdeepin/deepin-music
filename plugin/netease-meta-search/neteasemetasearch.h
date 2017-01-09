@@ -30,6 +30,7 @@ public:
 public slots:
     virtual QObject *getObject() Q_DECL_OVERRIDE;
     virtual void searchMeta(const MusicMeta &meta) Q_DECL_OVERRIDE;
+    virtual void searchContext(const QString &context);
 
 private:
     DMusic::Net::Geese       *m_geese = nullptr;

@@ -92,8 +92,11 @@ signals:
 
     void locateMusic(PlaylistPtr playlist, const MusicMeta &info);
     //! from lyricservice
+    void requestContextSearch(const QString &context);
     void lyricSearchFinished(const MusicMeta &, const QByteArray &lyricData);
     void coverSearchFinished(const MusicMeta &, const QByteArray &coverData);
+    void contextSearchFinished(const QString &context, const MusicMetaList &metalist);
+    void changeMetaCache(const MusicMeta &meta);
 
     //! meta info
     void metaInfoClean();

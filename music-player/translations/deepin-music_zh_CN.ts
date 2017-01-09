@@ -228,10 +228,6 @@
         <source>Quit</source>
         <translation>退出</translation>
     </message>
-    <message>
-        <source>Exit</source>
-        <translation type="vanished">退出</translation>
-    </message>
 </context>
 <context>
     <name>MusicListView</name>

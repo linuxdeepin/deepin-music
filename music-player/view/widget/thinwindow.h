@@ -22,6 +22,8 @@ class ThinWindow : public QWidget
     Q_PROPERTY(bool borderInside READ borderInside WRITE setBorderInside NOTIFY borderInsideChanged)
     Q_PROPERTY(QColor shadowColor READ shadowColor WRITE setShadowColor NOTIFY shadowColorChanged)
     Q_PROPERTY(QPoint shadowOffset READ shadowOffset WRITE setShadowOffset NOTIFY shadowOffsetChanged)
+    Q_PROPERTY(int shadowWidth READ shadowWidth WRITE setShadowWidth NOTIFY shadowWidthChanged)
+
 public:
     explicit ThinWindow(QWidget *parent = 0);
     ~ThinWindow();
@@ -38,6 +40,7 @@ public:
     QColor shadowColor() const;
     QPoint shadowOffset() const;
     bool borderInside() const;
+    int shadowWidth() const;
 
 public slots:
     void showMinimized();
@@ -55,11 +58,13 @@ public slots:
     void setShadowColor(QColor shadowColor);
     void setShadowOffset(QPoint shadowOffset);
     void setBorderInside(bool borderInside);
+    void setShadowWidth(int shadowWidth);
 
 signals:
     void shadowColorChanged(QColor shadowColor);
     void shadowOffsetChanged(QPoint shadowOffset);
     void borderInsideChanged(bool borderInside);
+    void shadowWidthChanged(int shadowWidth);
 
 protected:
     virtual void mouseMoveEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
@@ -71,6 +76,7 @@ protected:
 private:
     QScopedPointer<ThinWindowPrivate> d_ptr;
     Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), ThinWindow)
+    int m_shadowWidth;
 };
 
 class FilterMouseMove : public QObject

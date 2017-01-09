@@ -13,6 +13,8 @@
 #include <QObject>
 
 #include "util/singleton.h"
+#include <musicmeta.h>
+#include <geese.h>
 
 class MusicMeta;
 class LyricService : public QObject, public Singleton<LyricService>
@@ -30,15 +32,21 @@ public:
 signals:
     void lyricSearchFinished(const MusicMeta &, const QByteArray &lyricData);
     void coverSearchFinished(const MusicMeta &, const QByteArray &coverData);
+    void contextSearchFinished(const QString &context, const MusicMetaList &metalist);
 
 public slots:
     void searchMeta(const MusicMeta &info);
+    void searchContext(const QString &context);
+    void onChangeMetaCache(const MusicMeta &meta);
 
 private:
     void loadMetaSearchEnginePlugin();
 
     int searchCacheLyric(const MusicMeta &info);
     int searchCacheCover(const MusicMeta &info);
+
+
+    DMusic::Net::Geese       *m_geese = nullptr;
 };
 
 #endif // LYRICSERVICE_H

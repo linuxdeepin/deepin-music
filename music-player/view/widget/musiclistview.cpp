@@ -378,32 +378,38 @@ void MusicListView::showContextMenu(const QPoint &pos,
     QMenu myMenu;
     myMenu.setStyle(QStyleFactory::create("dlight"));
 
+    QAction *playAction = nullptr;
     if (singleSelect) {
-        myMenu.addAction(tr("Play"));
+        playAction = myMenu.addAction(tr("Play"));
     }
     myMenu.addAction(tr("Add to playlist"))->setMenu(&playlistMenu);
     myMenu.addSeparator();
 
+    QAction *displayAction = nullptr;
     if (singleSelect) {
-        myMenu.addAction(tr("Display in file manager"));
+        displayAction = myMenu.addAction(tr("Display in file manager"));
     }
-    myMenu.addAction(tr("Remove from list"));
-    myMenu.addAction(tr("Delete"));
 
+    auto removeAction = myMenu.addAction(tr("Remove from playlist"));
+    auto deleteAction = myMenu.addAction(tr("Delete from local disk"));
+
+    QAction *songAction = nullptr;
     if (singleSelect) {
         myMenu.addSeparator();
-        myMenu.addAction(tr("Song info"));
+        songAction = myMenu.addAction(tr("Song info"));
     }
 
-    connect(&myMenu, &QMenu::triggered, this, [ = ](QAction * action) {
-        if (action->text() == tr("Play")) {
+    if (playAction) {
+        connect(playAction, &QAction::triggered, this, [ = ](bool) {
             auto index = selection->selectedRows().first();
             auto item = d->m_model->item(index.row(), index.column());
             MusicMeta meta = qvariant_cast<MusicMeta>(item->data());
             emit play(meta);
-        }
+        });
+    }
 
-        if (action->text() == tr("Display in file manager")) {
+    if (displayAction) {
+        connect(displayAction, &QAction::triggered, this, [ = ](bool) {
             auto index = selection->selectedRows().first();
             auto item = d->m_model->item(index.row(), index.column());
             MusicMeta meta = qvariant_cast<MusicMeta>(item->data());
@@ -416,9 +422,11 @@ void MusicListView::showContextMenu(const QPoint &pos,
             } else {
                 QProcess::startDetached("gvfs-open" , QStringList() << dirUrl.toString());
             }
-        }
+        });
+    }
 
-        if (action->text() == tr("Remove from list")) {
+    if (removeAction) {
+        connect(removeAction, &QAction::triggered, this, [ = ](bool) {
             MusicMetaList metalist;
             for (auto index : selection->selectedRows()) {
                 auto item = d->m_model->item(index.row(), index.column());
@@ -426,9 +434,11 @@ void MusicListView::showContextMenu(const QPoint &pos,
                 metalist << meta;
             }
             emit removeMusicList(metalist);
-        }
+        });
+    }
 
-        if (action->text() == tr("Delete")) {
+    if (deleteAction) {
+        connect(deleteAction, &QAction::triggered, this, [ = ](bool) {
             bool containsCue = false;
             MusicMetaList metalist;
             for (auto index : selection->selectedRows()) {
@@ -471,9 +481,11 @@ void MusicListView::showContextMenu(const QPoint &pos,
                 return;
             }
             emit deleteMusicList(metalist);
-        }
+        });
+    }
 
-        if (action->text() == tr("Song info")) {
+    if (songAction) {
+        connect(songAction, &QAction::triggered, this, [ = ](bool) {
             auto index = selection->selectedRows().first();
             auto item = d->m_model->item(index.row(), index.column());
             MusicMeta meta = qvariant_cast<MusicMeta>(item->data());
@@ -493,8 +505,8 @@ void MusicListView::showContextMenu(const QPoint &pos,
             dlg.setCoverImage(coverPixmap);
             dlg.updateLabelSize();
             dlg.exec();
-        }
-    });
+        });
+    }
 
     myMenu.exec(globalPos);
 }

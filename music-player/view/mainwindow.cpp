@@ -115,8 +115,8 @@ MainWindow::MainWindow(QWidget *parent)
     d->footer = new Footer;
     d->footer->setFixedHeight(footerHeight);
 
-    d->musicList->setContentsMargins(0, titleBarHeight, 0, footerHeight);
-    d->lyricView->setContentsMargins(0, titleBarHeight, 0, footerHeight);
+    d->musicList->setContentsMargins(0, titleBarHeight-1, 0, footerHeight);
+    d->lyricView->setContentsMargins(0, titleBarHeight-1, 0, footerHeight);
 
     contentLayout->addWidget(d->titlebar);
 
@@ -288,6 +288,13 @@ void MainWindow::binding(Presenter *presenter)
 
 
     connect(d->lyricView, &LyricView::toggleLyricView, this, &MainWindow::toggleLyricView);
+
+    connect(d->lyricView, &LyricView::requestContextSearch,
+            presenter, &Presenter::requestContextSearch);
+    connect(d->lyricView, &LyricView::changeMetaCache,
+            presenter, &Presenter::changeMetaCache);
+    connect(presenter, &Presenter::contextSearchFinished,
+            d->lyricView, &LyricView::contextSearchFinished);
     connect(presenter, &Presenter::progrossChanged,
             d->lyricView, &LyricView::onProgressChanged);
     connect(presenter, &Presenter::musicPlayed,
@@ -459,12 +466,12 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *e)
     }
     if (e->type() == QEvent::MouseButtonPress) {
         QMouseEvent *me = static_cast<QMouseEvent *>(e);
-        qDebug() << obj << me->pos();
-        if (obj->objectName() == this->objectName() || this->objectName()+"Window" == obj->objectName()) {
-            qDebug() << me->pos() << QCursor::pos();
+//        qDebug() << obj << me->pos();
+        if (obj->objectName() == this->objectName() || this->objectName() + "Window" == obj->objectName()) {
+//            qDebug() << me->pos() << QCursor::pos();
             QPoint mousePos = me->pos();
             auto geometry = d->playlist->geometry().marginsAdded(QMargins(0, 0, 20, 20));
-            qDebug() << geometry << mousePos;
+//            qDebug() << geometry << mousePos;
             if (!geometry.contains(mousePos)) {
                 DUtil::TimerSingleShot(50, [this]() {
                     qDebug() << "hide playlist" ;
@@ -473,12 +480,18 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *e)
             }
         }
     }
+
+    if (e->type() == QEvent::MouseButtonRelease) {
+        QMouseEvent *me = static_cast<QMouseEvent *>(e);
+        //        qDebug() << obj << me->pos();
+        if (obj->objectName() == this->objectName() || this->objectName() + "Window" == obj->objectName()) {
+            QPoint mousePos = me->pos();
+            qDebug() << "release" << me->pos() << QCursor::pos();
+            d->lyricView->checkHiddenSearch(mousePos);
+        }
+
+    }
     return qApp->eventFilter(obj, e);
-}
-
-void MainWindow::keyReleaseEvent(QKeyEvent *e)
-{
-
 }
 
 void MainWindow::resizeEvent(QResizeEvent *e)
@@ -487,9 +500,8 @@ void MainWindow::resizeEvent(QResizeEvent *e)
     QSize newSize = ThinWindow::size();
 
     d->titlebar->raise();
-    d->titlebar->move(0, 0);
+    d->titlebar->move(0, 1);
 
-    d->lyricView->resize(newSize.width(), titleBarHeight);
     d->titlebarwidget->setFixedSize(newSize.width() - d->titlebar->buttonAreaWidth() - 10, titleBarHeight);
 
     d->lyricView->resize(newSize);
@@ -622,7 +634,7 @@ void MainWindow::setPlaylistVisible(bool visible)
 
     QRect start(this->width(), titleBarHeight,
                 d->playlist->width(), d->playlist->height());
-    QRect end(this->width() - d->playlist->width() - 40, titleBarHeight,
+    QRect end(this->width() - d->playlist->width() - this->shadowWidth() * 2, titleBarHeight,
               d->playlist->width(), d->playlist->height());
     if (!visible) {
         WidgetHelper::slideEdgeWidget(d->playlist, end, start, s_AnimationDelay, true);
@@ -662,8 +674,6 @@ void MainWindow::changeToMusicListView(bool keepPlaylist)
     d->titlebarwidget->setSearchEnable(true);
     d->newSonglistAction->setDisabled(false);
 }
-
-#include "widget/dsettingdialog.h"
 
 void MainWindow::initMenu()
 {

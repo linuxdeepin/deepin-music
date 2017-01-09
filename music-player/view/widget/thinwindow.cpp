@@ -37,9 +37,9 @@ public:
     QWidget         *contentWidget = nullptr;
     QBrush          background;
     int             radius              = 4;
-    int             shadowWidth         = 20;
+    int             shadowWidth         = 40;
     bool            borderInside        = false;
-    QMargins        shadowMargins       = QMargins(20, 20, 20, 20);
+    QMargins        shadowMargins       = QMargins(40, 40, 40, 40);
     int             resizeHandleWidth   = WindowHandleWidth;
     bool            resizable           = true;
     QColor          borderColor         = QColor(0, 0, 0, 0.2 * 255);
@@ -60,7 +60,7 @@ void ThinWindowPrivate::drawShadowPixmap()
 //    auto w = qobject_cast<QWidget *>(q);
     QPixmap pixmap(q->size());
     pixmap.fill(Qt::black);
-    shadowPixmap = QPixmap::fromImage(Dtk::Widget::DUtility::dropShadow(pixmap, 20, shadowColor));
+    shadowPixmap = QPixmap::fromImage(Dtk::Widget::DUtility::dropShadow(pixmap, 40, shadowColor));
 }
 
 void ThinWindowPrivate::setBackgroundImage(const QPixmap &srcPixmap)
@@ -169,6 +169,12 @@ bool ThinWindow::borderInside() const
 {
     Q_D(const ThinWindow);
     return d->borderInside;
+}
+
+int ThinWindow::shadowWidth() const
+{
+    Q_D(const ThinWindow);
+    return d->shadowWidth;
 }
 
 int ThinWindow::radius() const
@@ -298,6 +304,18 @@ void ThinWindow::setBorderInside(bool borderInside)
     emit borderInsideChanged(borderInside);
 }
 
+void ThinWindow::setShadowWidth(int shadowWidth)
+{
+    Q_D(ThinWindow);
+
+    if (d->shadowWidth == shadowWidth) {
+        return;
+    }
+
+    d->shadowWidth = shadowWidth;
+    emit shadowWidthChanged(shadowWidth);
+}
+
 void ThinWindow::mouseMoveEvent(QMouseEvent *event)
 {
 #ifdef Q_OS_LINUX
@@ -367,7 +385,7 @@ void ThinWindow::paintEvent(QPaintEvent *)
     auto radius = d->radius;
     auto penWidthf = 1.0;
 
-    painter.drawPixmap(0, 0, d->shadowPixmap);
+    painter.drawPixmap(0, 8, d->shadowPixmap);
 //    QPainterPath frame;
 //    frame.addRect(rect().marginsRemoved(QMargins(1, 1, 1, 1)));
 //    painter.strokePath(frame, QPen(Qt::red));

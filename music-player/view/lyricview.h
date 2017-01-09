@@ -24,17 +24,22 @@ public:
 
     void initUI();
     QString defaultCover() const;
+    void checkHiddenSearch(QPoint mousePos);
 
 signals:
     void toggleLyricView();
+    void requestContextSearch(const QString &context);
+    void changeMetaCache(const MusicMeta &meta);
 
 public slots:
     void onProgressChanged(qint64 value, qint64 length);
     void onMusicPlayed(PlaylistPtr playlist, const MusicMeta &meta);
-    void onMusicStop(PlaylistPtr playlist, const MusicMeta &meta);
+    void onMusicStop(PlaylistPtr, const MusicMeta &meta);
     void onLyricChanged(const MusicMeta &meta, const QByteArray &lyricData);
     void onCoverChanged(const MusicMeta &meta, const QByteArray &coverData);
     void setDefaultCover(QString defaultCover);
+
+    void contextSearchFinished(const QString &context, const QList<MusicMeta> &metalist);
 
 protected:
     virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;

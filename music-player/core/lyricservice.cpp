@@ -44,6 +44,7 @@ inline QString cacheCoverPath(const MusicMeta &info)
 
 LyricService::LyricService(QObject *parent) : QObject(parent)
 {
+    m_geese  =  new DMusic::Net::Geese(this);
     QDir cacheDir(MusicApp::cachePath() + "/lyric");
     if (!cacheDir.exists()) {
         cacheDir.mkpath(".");
@@ -79,6 +80,12 @@ LyricService::LyricService(QObject *parent) : QObject(parent)
             }
 
             emit lyricSearchFinished(meta, lyricData);
+        });
+
+        void ();
+        connect(engine, &DMusic::Plugin::MetaSearchEngine::contextSearchFinished,
+        this, [ = ](const QString & context, const MusicMetaList &metalist) {
+            emit  contextSearchFinished(context, metalist);
         });
     }
 }
@@ -154,6 +161,50 @@ void LyricService::searchMeta(const MusicMeta &info)
         auto engine = dynamic_cast<DMusic::Plugin::MetaSearchEngine *>(plugin);
         emit engine->doSearchMeta(info);
     }
+
+}
+
+void LyricService::searchContext(const QString &context)
+{
+    auto plugins = PluginManager::instance()->getPluginListByType(DMusic::Plugin::PluginType::TypeMetaSearchEngine);
+    for (auto plugin : plugins) {
+        qDebug() << "search by " << plugin->pluginId() << context;
+        auto engine = dynamic_cast<DMusic::Plugin::MetaSearchEngine *>(plugin);
+        emit engine->doSearchContext(context);
+    }
+}
+
+void LyricService::onChangeMetaCache(const MusicMeta &meta)
+{
+    qDebug() << "change" << meta.searchCoverUrl << meta.searchLyricUrl;
+    connect(m_geese->getGoose(meta.searchCoverUrl), &DMusic::Net::Goose::arrive,
+    this, [ = ](int errCode, const QByteArray & coverData) {
+        qDebug() << "onChangeMetaCache recive: " << errCode << coverData.length();
+        if (coverData.length() > 0) {
+            QFile coverFile(cacheCoverPath(meta));
+            coverFile.open(QIODevice::WriteOnly);
+            coverFile.write(coverData);
+            coverFile.close();
+        }
+        emit coverSearchFinished(meta, coverData);
+    });
+
+    connect(m_geese->getGoose(meta.searchLyricUrl), &DMusic::Net::Goose::arrive,
+    this, [ = ](int errCode, const QByteArray & data) {
+        qDebug() << "onChangeMetaCache recive: " << errCode << data.length();
+        auto document = QJsonDocument::fromJson(data);
+        auto lrc = document.object().value("lrc").toObject();
+        auto lrcData =  lrc.value("lyric").toString().toUtf8();
+
+        if (lrcData.length() > 0) {
+            QFile lyricFile(cacheLyricPath(meta));
+            lyricFile.open(QIODevice::WriteOnly);
+            lyricFile.write(lrcData);
+            lyricFile.close();
+        }
+
+        emit lyricSearchFinished(meta, lrcData);
+    });
 
 }
 

@@ -110,14 +110,14 @@ void SearchEdit::onTextChanged()
         }
 
         auto searchtext = QString(this->text()).remove("\r").remove("\n");
-        m_result->setFixedWidth(this->width() + 40);
+        m_result->setFixedWidth(this->width() + 80);
         m_result->setSearchString(searchtext);
         m_result->setResultList(titleList, hashList);
 
         m_result->autoResize();
         auto pos = this->mapToGlobal(QPoint(0, this->height() + 2));
         m_result->show();
-        m_result->move(pos.x() - 20, pos.y() - 20);
+        m_result->move(pos.x() - 40, pos.y() - 40);
         m_result->setFocusPolicy(Qt::StrongFocus);
     } else {
         onFocusOut();

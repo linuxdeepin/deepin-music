@@ -3,6 +3,8 @@
 #include <QObject>
 #include "plugininterface.h"
 
+#include "../music-player/core/music.h"
+
 class MusicMeta;
 
 namespace DMusic
@@ -19,8 +21,12 @@ public:
 signals:
     void lyricLoaded(const MusicMeta &meta, const QByteArray &lyricData);
     void coverLoaded(const MusicMeta &meta, const QByteArray &coverData);
-    void searchFinished(const MusicMeta &meta);
+
+    void metaSearchFinished(const MusicMeta &meta);
     void doSearchMeta(const MusicMeta &info);
+
+    void contextSearchFinished(const QString &context, const MusicMetaList &metalist);
+    void doSearchContext(const QString &context);
 
 public:
     virtual QObject *getObject() = 0 ;

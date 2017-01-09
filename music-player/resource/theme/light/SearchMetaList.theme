@@ -1,0 +1,18 @@
+SearchMetaList{
+    color: #009aff;
+    border-radius: 4.0px;
+    background-color: rgba(255, 255, 255, 0.1);
+    outline:none;
+    border: none;
+}
+
+SearchMetaList::item{
+    border: none;
+    color: #009aff;
+    background-color: transparent;
+    height: 52px;
+}
+SearchMetaList::item:selected {
+    color: white;
+    background-color: rgba(255, 255, 255, 0.15);
+}

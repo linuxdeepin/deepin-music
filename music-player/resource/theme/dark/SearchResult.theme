@@ -8,7 +8,8 @@ SearchResult{
     font-size: 12px;
     margin: 0;
     border: none;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    background-color: rgba(255, 255, 255, 1.0);
 }
 
 #SearchResultList::item {
@@ -18,6 +19,7 @@ SearchResult{
 }
 #SearchResultList::item:selected {
     color: white;
+    border: none;
     background-color: #2ca7f8;
 }
 
@@ -31,6 +33,7 @@ SearchResult{
 }
 #SearchResultAction:checked{
     color: white;
+    border: none;
     background-color: #2ca7f8;
 }
 

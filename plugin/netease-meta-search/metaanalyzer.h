@@ -15,7 +15,7 @@
 #include "../../music-player/core/music.h"
 #include <geese.h>
 
-#include "metainfo.h"
+#include <searchmeta.h>
 
 class MetaAnalyzer : public QObject
 {

@@ -424,5 +424,13 @@
         <file>dark/SoundVolume.theme</file>
         <file>light/SoundVolume.theme</file>
         <file>dark/DSettingDialog.theme</file>
+        <file>light/SearchMetaList.theme</file>
+        <file>light/SearchMetaItem.theme</file>
+        <file>common/image/select.png</file>
+        <file>common/image/lrc_search_press.png</file>
+        <file>common/image/lrc_search_normal.png</file>
+        <file>common/image/lrc_search_hover.png</file>
+        <file>dark/SearchMetaList.theme</file>
+        <file>dark/SearchMetaItem.theme</file>
     </qresource>
 </RCC>

@@ -71,7 +71,9 @@ SOURCES += \
     view/widget/shortcut/shortcuteditor.cpp \
     view/widget/shortcutedit.cpp \
     core/dsettings.cpp \
-    view/widget/picturesequenceview.cpp
+    view/widget/picturesequenceview.cpp \
+    view/widget/searchmetalist.cpp \
+    view/widget/searchmetaitem.cpp
 
 
 HEADERS += \
@@ -128,7 +130,9 @@ HEADERS += \
     view/widget/shortcut/shortcuteditor.h \
     view/widget/shortcutedit.h \
     core/dsettings.h \
-    view/widget/picturesequenceview.h
+    view/widget/picturesequenceview.h \
+    view/widget/searchmetalist.h \
+    view/widget/searchmetaitem.h
 
 RESOURCES += \
     resource/theme/theme.qrc \

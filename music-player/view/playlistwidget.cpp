@@ -44,7 +44,7 @@ PlaylistWidget::PlaylistWidget(QWidget *parent) : QFrame(parent)
     auto btAdd = new QPushButton();
     btAdd->setFixedSize(190, 36);
     btAdd->setObjectName("PlaylistWidgetAdd");
-    btAdd->setText(tr("+ Add Playlist"));
+    btAdd->setText(tr("+ Crate a new playlist"));
 
 //    auto *bodyShadow = new QGraphicsDropShadowEffect;
 //    bodyShadow->setBlurRadius(4.0);

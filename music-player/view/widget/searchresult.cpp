@@ -99,7 +99,7 @@ void SearchResult::autoResize()
 {
     m_searchResult->setFixedHeight(m_model->rowCount() * (25 + 1));
     m_searchResult->setFixedWidth(this->size().width() + 3);
-    this->setFixedHeight((m_model->rowCount() + 1) * 25 + 8 + 40 + 1);
+    this->setFixedHeight((m_model->rowCount() + 1) * 25 + 8 + 80 +1+1);
     m_searchResult->setVisible(!(0 == m_model->rowCount()));
     this->adjustSize();
 }

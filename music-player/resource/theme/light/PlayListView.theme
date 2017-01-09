@@ -7,7 +7,7 @@
 
 #PlayListView::item{
     color: #009aff;
-    height: 56;
+    height: 56px;
 }
 #PlayListView::item:selected:!active {
     color: white;

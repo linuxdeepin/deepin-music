@@ -2,8 +2,8 @@
     qproperty-textColor: rgba(255,255,255,70%);
     qproperty-titleColor: white;
     qproperty-highlightText: white;
-    qproperty-background: #000000;
-    qproperty-alternateBackground: #1c1c1c;
+    qproperty-background: #1c1c1c;
+    qproperty-alternateBackground: #202020;
     qproperty-highlightedBackground:  #2ca7f8;
     qproperty-animationPrefix: ":/common/animation/playing/white";
     qproperty-highlightAnimationPrefix: ":/common/animation/playing/white";

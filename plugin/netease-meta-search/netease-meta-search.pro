@@ -33,8 +33,7 @@ SOURCES += neteasemetasearch.cpp \
 
 HEADERS += neteasemetasearch.h \
     neteasemetasearch_global.h \
-    metaanalyzer.h \
-    metainfo.h
+    metaanalyzer.h
 
 target.path = /usr/lib/deepin-music/plugins
 INSTALLS += target
