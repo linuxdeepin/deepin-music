@@ -52,8 +52,8 @@ InfoDialog::InfoDialog(const MusicMeta &info, QWidget *parent) : DAbstractDialog
              << tr("File type:") << tr("Size:") << tr("Length:")
              << tr("Directory:");
 
-    QString artist = info.artist.isEmpty() ? tr("Unkonw Artist") : info.artist;
-    QString album = info.album.isEmpty() ? tr("Unkonw Album") : info.album;
+    QString artist = info.artist.isEmpty() ? tr("Unkonw artist") : info.artist;
+    QString album = info.album.isEmpty() ? tr("Unkonw album") : info.album;
     QStringList infoValues;
     infoValues << info.title << artist << album
                << info.filetype << sizeString(info.size) << lengthString(info.length)

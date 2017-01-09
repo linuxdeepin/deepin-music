@@ -70,6 +70,18 @@ void PlaylistManager::load()
         insertPlaylist(playlistmeta.uuid, emptylist);
     }
 
+    auto all = playlist(AllMusicListID);
+    if (!all.isNull()) {
+        all->setDisplayName("");
+        qDebug() << tr("All Music");
+        all->setDisplayName(tr("All Music"));
+    }
+    auto fav = playlist(FavMusicListID);
+    if (!fav.isNull()) {
+        fav->setDisplayName("");
+        fav->setDisplayName(tr("Favourite Music"));
+    }
+
     auto currentTitle = AllMusicListID;
     m_playingPlaylist = playlist(currentTitle);
     if (m_playingPlaylist.isNull()) {

@@ -2,31 +2,31 @@
     "main_groups": [
         {
             "key": "base",
-            "name": "基础设置",
+            "name": "Basic settings",
             "groups": [
                 {
                     "key": "play",
-                    "name": "播放",
+                    "name": "Play",
                     "options": [
                         {
                             "key": "auto_play",
                             "label": "",
                             "type": "checkbox",
-                            "checkbox_text": "启动时自动播放",
+                            "checkbox_text": "Automatically play when startup",
                             "default": false
                         },
                         {
                             "key": "remember_progress",
                             "label": "",
                             "type": "checkbox",
-                            "checkbox_text": "启动时记住上次播放进度",
+                            "checkbox_text": "Remember the last time when playing",
                             "default": false
                         },
                         {
                             "key": "fade_in_out",
                             "label": "",
                             "type": "checkbox",
-                            "checkbox_text": "开启淡入淡出",
+                            "checkbox_text": "Enable fade in and out",
                             "default": true
                         },
                         {
@@ -102,7 +102,7 @@
         },
         {
             "key": "shortcuts",
-            "name": "快捷键",
+            "name": "Shortcuts",
             "groups": [
                 {
                     "key": "all",
@@ -110,31 +110,31 @@
                     "options": [
                         {
                             "key": "play_pause",
-                            "label": "播放/暂停",
+                            "label": "Play/Pause",
                             "type": "shortcut",
                             "default": ["201326592", "80"]
                         },
                         {
                             "key": "previous",
-                            "label": "上一首",
+                            "label": "Previous",
                             "type": "shortcut",
                             "default":  ["201326592", "16777234"]
                         },
                         {
                             "key": "next",
-                            "label": "下一首",
+                            "label": "Next",
                             "type": "shortcut",
                             "default":  ["201326592", "16777236"]
                         },
                         {
                             "key": "volume_up",
-                            "label": "音量增大",
+                            "label": "Volume up",
                             "type": "shortcut",
                             "default":  ["201326592", "16777235"]
                         },
                         {
                             "key": "volume_down",
-                            "label": "音量减小",
+                            "label": "Volume down",
                             "type": "shortcut",
                             "default":  ["201326592", "16777237"]
                         }

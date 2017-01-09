@@ -667,7 +667,7 @@ void MainWindow::changeToMusicListView(bool keepPlaylist)
 
 void MainWindow::initMenu()
 {
-    d->newSonglistAction = new QAction(tr("New songlist"), this);
+    d->newSonglistAction = new QAction(tr("New playlist"), this);
     connect(d->newSonglistAction, &QAction::triggered, this, [ = ](bool) {
         qDebug() << "" <<  d->newSonglistAction;
         setPlaylistVisible(true);
@@ -738,7 +738,7 @@ void MainWindow::initMenu()
         }
     });
 
-    QAction *m_close = new QAction(tr("Exit"), this);
+    QAction *m_close = new QAction(tr("Quit"), this);
     connect(m_close, &QAction::triggered, this, [ = ](bool) {
         this->close();
     });

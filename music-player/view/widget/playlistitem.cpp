@@ -208,10 +208,10 @@ void PlayListItem::showContextMenu(const QPoint &pos)
     }
 
     connect(&menu, &QMenu::triggered, this, [ = ](QAction * action) {
-        if (action->text() == "Play") {
+        if (action->text() == tr("Play")) {
             emit this->playall(m_data);
         }
-        if (action->text() == "Rename") {
+        if (action->text() == tr("Rename")) {
             QTimer::singleShot(0, this, [ = ] {
                 m_titleedit->setEnabled(true);
                 m_titleedit->setFocus();
@@ -220,11 +220,11 @@ void PlayListItem::showContextMenu(const QPoint &pos)
             });
         }
 
-        if (action->text() == "Delete") {
+        if (action->text() == tr("Delete")) {
             QString message = QString(tr("Are you sure to delete this playlist?")).arg(m_titleedit->text());
 
             DDialog warnDlg;
-            warnDlg.setIcon(QIcon(":/common/image/notify_fail.png"));
+            warnDlg.setIcon(QIcon(":/common/image/del_notify.png"));
             warnDlg.setTextFormat(Qt::AutoText);
             warnDlg.setTitle(message);
             warnDlg.addButtons(QStringList() << tr("Cancel") << tr("Delete"));

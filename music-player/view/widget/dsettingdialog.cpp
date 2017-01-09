@@ -35,6 +35,19 @@
 #include "../helper/thememanager.h"
 #include "../../core/dsettings.h"
 
+
+const QString titleBaseSettins = DSettingDialog::tr("Basic settings");
+const QString titlePlay = DSettingDialog::tr("Play");
+const QString titleShortcut = DSettingDialog::tr("Shortcuts");
+const QString textAutoPlay = DSettingDialog::tr("Automatically play when startup");
+const QString textLastPlay = DSettingDialog::tr("Remember the last time when playing");
+const QString textFadeInOut = DSettingDialog::tr("Enable fade in and out");
+const QString textPlayPause = DSettingDialog::tr("Play/Pause");
+const QString textNext = DSettingDialog::tr("Next");
+const QString textPrev = DSettingDialog::tr("Previous");
+const QString textVolumeUp = DSettingDialog::tr("Volume up");
+const QString textVolumeDown = DSettingDialog::tr("Volume down");
+
 class DSettingDialogPrivate
 {
 public:
@@ -96,7 +109,7 @@ DSettingDialog::DSettingDialog(QWidget *parent) : ThinWindow(parent), d_ptr(new 
 
     auto closeBt = new QPushButton;
     closeBt->setObjectName("WindowCloseButton");
-    closeBt->setFixedSize(27,23);
+    closeBt->setFixedSize(27, 23);
     d->rightLayout->addWidget(closeBt, 0, Qt::AlignVCenter | Qt::AlignRight);
     d->rightLayout->addWidget(d->content);
 
@@ -115,7 +128,7 @@ DSettingDialog::DSettingDialog(QWidget *parent) : ThinWindow(parent), d_ptr(new 
         auto groupTitle = new NavTitle();
         auto groupKey = group.value("key").toString();
 
-        groupTitle->setText(group.value("name").toString());
+        groupTitle->setText(tr(group.value("name").toString().toStdString().c_str()));
         groupTitle->setObjectName("GroupTitle");
         groupTitle->setContentsMargins(30, 0, 0, 0);
         groupTitle->setFixedHeight(30);
@@ -123,7 +136,7 @@ DSettingDialog::DSettingDialog(QWidget *parent) : ThinWindow(parent), d_ptr(new 
         d->navbar->addItem(item);
         d->navbar->setItemWidget(item, groupTitle);
 
-        auto groubTitle = new ContentTitle(group.value("name").toString());
+        auto groubTitle = new ContentTitle(tr(group.value("name").toString().toStdString().c_str()));
         d->contentLayout->addWidget(groubTitle);
 
         for (auto subGroupJson : group.value("groups").toArray()) {
@@ -132,7 +145,7 @@ DSettingDialog::DSettingDialog(QWidget *parent) : ThinWindow(parent), d_ptr(new 
             auto subGroupKey = subGroup.value("key").toString();
             if (!subGroupName.isEmpty()) {
                 auto subGroupTitle = new NavSubTitle();
-                subGroupTitle->setText(subGroupName);
+                subGroupTitle->setText(tr(subGroupName.toStdString().c_str()));
                 subGroupTitle->setContentsMargins(50, 0, 0, 0);
                 subGroupTitle->setFixedHeight(30);
                 auto item = new QListWidgetItem;
@@ -198,6 +211,7 @@ DSettingDialog::DSettingDialog(QWidget *parent) : ThinWindow(parent), d_ptr(new 
 
     connect(this, &DSettingDialog::mouseMoving, this, &DSettingDialog::moveWindow);
     connect(closeBt, &QPushButton::clicked, this, &DSettingDialog::close);
+
 }
 
 void DSettingDialog::mouseMoveEvent(QMouseEvent *event)
@@ -227,7 +241,7 @@ QWidget *DSettingDialogPrivate::createOptionWidget(QJsonObject obj, const QStrin
 //    optLayout->set(0, 160);
 
     auto label = obj.value("label").toString();
-    auto labelWidget = new QLabel(label);
+    auto labelWidget = new QLabel(DSettingDialog::tr(label.toStdString().c_str()));
     labelWidget->setObjectName("OptionLabel");
     optLayout->addWidget(labelWidget, 0, 0, Qt::AlignRight);
     optLayout->setColumnStretch(0, 10);
@@ -241,7 +255,7 @@ QWidget *DSettingDialogPrivate::createOptionWidget(QJsonObject obj, const QStrin
     if (optType == "checkbox") {
         optLayout->setColumnMinimumWidth(0, 110);
         auto value = obj.value("checkbox_text").toString();
-        auto optCheckBox = new QCheckBox(value);
+        auto optCheckBox = new QCheckBox(DSettingDialog::tr(value.toStdString().c_str()));
         optCheckBox->setObjectName("OptionCheckBox");
         optLayout->addWidget(optCheckBox, 0, 1, Qt::AlignLeft);
 
