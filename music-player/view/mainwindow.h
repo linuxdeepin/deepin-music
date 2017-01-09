@@ -53,7 +53,9 @@ public slots:
     void setPlaylistVisible(bool visible);
 
 protected:
+    bool eventFilter(QObject *obj, QEvent *e);
     virtual void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+    virtual void keyReleaseEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
     virtual void resizeEvent(QResizeEvent *e) Q_DECL_OVERRIDE;
     virtual void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
 

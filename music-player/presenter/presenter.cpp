@@ -316,6 +316,69 @@ int Presenter::playMode()
     return Player::instance()->mode();
 }
 
+void Presenter::volumeup()
+{
+    onVolumeChanged(Player::instance()->volume() + 5);
+    emit volumeChanged(Player::instance()->volume());
+}
+
+void Presenter::volumedown()
+{
+    onVolumeChanged(Player::instance()->volume() - 5);
+    emit volumeChanged(Player::instance()->volume());
+}
+
+void Presenter::togglePaly()
+{
+    Q_D(Presenter);
+    auto alllist = d->playlistMgr->playlist(AllMusicListID);
+    auto activeList = Player::instance()->activePlaylist();
+    auto activeMeta = Player::instance()->activeMeta();
+    if (activeList.isNull()) {
+        onPlayall(alllist);
+        return;
+    }
+    qDebug() << Player::instance()->status();
+    switch (Player::instance()->status()) {
+    case Player::Stopped:
+        onMusicPlay(activeList, activeMeta);
+        break;
+    case Player::Playing:
+        onMusicPause(activeList, activeMeta);
+        break;
+    case Player::Paused:
+        onMusicResume(activeList, activeMeta);
+        break;
+    }
+
+}
+
+void Presenter::next()
+{
+    Q_D(Presenter);
+    auto alllist = d->playlistMgr->playlist(AllMusicListID);
+    auto activeList = Player::instance()->activePlaylist();
+    auto activeMeta = Player::instance()->activeMeta();
+    if (activeList.isNull()) {
+        onPlayall(alllist);
+        return;
+    }
+    onMusicNext(activeList, activeMeta);
+}
+
+void Presenter::prev()
+{
+    Q_D(Presenter);
+    auto alllist = d->playlistMgr->playlist(AllMusicListID);
+    auto activeList = Player::instance()->activePlaylist();
+    auto activeMeta = Player::instance()->activeMeta();
+    if (activeList.isNull()) {
+        onPlayall(alllist);
+        return;
+    }
+    onMusicPrev(activeList, activeMeta);
+}
+
 void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MusicMetaList &metalist)
 {
     Q_D(Presenter);
@@ -506,8 +569,9 @@ void Presenter::onMusicPlay(PlaylistPtr playlist,  const MusicMeta &meta)
 {
     Q_D(Presenter);
     auto nextMeta = meta;
-    if (playlist.isNull())
+    if (playlist.isNull()) {
         playlist = d->playlistMgr->playlist(AllMusicListID);
+    }
 
     qDebug() << "Fix me: play status" ;
     if (0 == d->playlistMgr->playlist(AllMusicListID)->length()) {

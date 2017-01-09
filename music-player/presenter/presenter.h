@@ -32,6 +32,11 @@ public:
     PlaylistPtr lastPlaylist();
     QList<PlaylistPtr > allplaylist();
     int playMode();
+    void volumeup();
+    void volumedown();
+    void togglePaly();
+    void next();
+    void prev();
 
 
     void initMpris(MprisPlayer* mprisPlayer);

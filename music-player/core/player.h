@@ -50,9 +50,9 @@ class Player : public QObject, public Singleton<Player>
 public:
     enum PlaybackStatus {
         InvalidPlaybackStatus = -1,
+        Stopped = 0,
         Playing,
         Paused,
-        Stopped
     };
 
     enum PlaybackMode {
@@ -82,6 +82,7 @@ public:
     void playPrevMusic(PlaylistPtr playlist, const MusicMeta &meta);
     void pause();
     void stop();
+    PlaybackStatus status();
 
     MusicMeta activeMeta() const;
     PlaylistPtr activePlaylist() const;

@@ -15,18 +15,23 @@
 #include <QPainter>
 #include <QHBoxLayout>
 
+#include <dutility.h>
+
 #include "../helper/xutil.h"
 
 #include <thememanager.h>
 //DWIDGET_USE_NAMESPACE;
 
 const int WindowHandleWidth = 10;
+const QColor MormalShadowColor = QColor(0, 0, 0, 255 * 0.15);
+const QColor ActiveShadowColor = QColor(0, 0, 0, 255 * 0.3);
 
 class ThinWindowPrivate
 {
 public:
     ThinWindowPrivate(ThinWindow *parent) : q_ptr(parent) {}
 
+    void drawShadowPixmap();
     void setBackgroundImage(const QPixmap &srcPixmap);
 
     QWidget         *contentWidget = nullptr;
@@ -38,6 +43,9 @@ public:
     bool            resizable           = true;
     QColor          borderColor         = QColor(0, 0, 0, 0.2 * 255);
     QPixmap         backgrounpImage     = QPixmap();
+    QPixmap         shadowPixmap        = QPixmap();
+    QColor          shadowColor         = ActiveShadowColor;
+    QPoint          shadowOffset;
 
     XUtils::CornerEdge resizingCornerEdge = XUtils::CornerEdge::kInvalid;
 
@@ -45,6 +53,14 @@ public:
     Q_DECLARE_PUBLIC(ThinWindow)
 };
 
+void ThinWindowPrivate::drawShadowPixmap()
+{
+    Q_Q(ThinWindow);
+//    auto w = qobject_cast<QWidget *>(q);
+    QPixmap pixmap(q->size());
+    pixmap.fill(Qt::black);
+    shadowPixmap = QPixmap::fromImage(Dtk::Widget::DUtility::dropShadow(pixmap, 20, shadowColor));
+}
 
 void ThinWindowPrivate::setBackgroundImage(const QPixmap &srcPixmap)
 {
@@ -136,6 +152,18 @@ QBrush ThinWindow::background() const
     return d->background;
 }
 
+QColor ThinWindow::shadowColor() const
+{
+    Q_D(const ThinWindow);
+    return d->shadowColor;
+}
+
+QPoint ThinWindow::shadowOffset() const
+{
+    Q_D(const ThinWindow);
+    return d->shadowOffset;
+}
+
 int ThinWindow::radius() const
 {
     Q_D(const ThinWindow);
@@ -221,6 +249,36 @@ void ThinWindow::setBorderColor(QColor borderColor)
     d->borderColor = borderColor;
 }
 
+void ThinWindow::setShadowColor(QColor shadowColor)
+{
+    Q_D(ThinWindow);
+
+    if (d->shadowColor == shadowColor) {
+        return;
+    }
+
+    d->shadowColor = shadowColor;
+
+    d->drawShadowPixmap();
+    update();
+
+    emit shadowColorChanged(shadowColor);
+}
+
+void ThinWindow::setShadowOffset(QPoint shadowOffset)
+{
+    Q_D(ThinWindow);
+
+    if (d->shadowOffset == shadowOffset) {
+        return;
+    }
+    d->shadowOffset = shadowOffset;
+
+    update();
+
+    emit shadowOffsetChanged(shadowOffset);
+}
+
 void ThinWindow::mouseMoveEvent(QMouseEvent *event)
 {
 #ifdef Q_OS_LINUX
@@ -275,6 +333,7 @@ void ThinWindow::resizeEvent(QResizeEvent *e)
     auto resizeHandleWidth = d->resizable ? d->resizeHandleWidth : 0;
     XUtils::SetWindowExtents(this, d->shadowMargins, resizeHandleWidth);
 #endif
+    d->drawShadowPixmap();
     QWidget::resizeEvent(e);
 }
 
@@ -289,6 +348,7 @@ void ThinWindow::paintEvent(QPaintEvent *)
     auto radius = d->radius;
     auto penWidthf = 1.0;
 
+    painter.drawPixmap(0, 0, d->shadowPixmap);
 //    QPainterPath frame;
 //    frame.addRect(rect().marginsRemoved(QMargins(1, 1, 1, 1)));
 //    painter.strokePath(frame, QPen(Qt::red));

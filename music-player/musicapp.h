@@ -26,9 +26,9 @@ public:
     static QString cachePath();
 
     void init();
-    void initMpris(MprisPlayer* mprisPlayer);
+    void initMpris(MprisPlayer *mprisPlayer);
 
-    QWidget *hackFrame();
+    void triggerShortcutAction(const QString &optKey);
 public slots:
     void onDataPrepared();
     void onQuit();

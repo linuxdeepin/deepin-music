@@ -117,12 +117,27 @@ void MusicApp::initMpris(MprisPlayer *mprisPlayer)
     d->appPresenter->initMpris(mprisPlayer);
 }
 
-QWidget *MusicApp::hackFrame()
-{
 
+void MusicApp::triggerShortcutAction(const QString &optKey)
+{
     Q_D(MusicApp);
-    return d->playerFrame;
+    if (optKey  == "shortcuts.all.volume_up") {
+        d->appPresenter->volumeup();
+    }
+    if (optKey  == "shortcuts.all.volume_down") {
+        d->appPresenter->volumedown();
+    }
+    if (optKey  == "shortcuts.all.next") {
+        d->appPresenter->next();
+    }
+    if (optKey  == "shortcuts.all.play_pause") {
+        d->appPresenter->togglePaly();
+    }
+    if (optKey  == "shortcuts.all.previous") {
+        d->appPresenter->prev();
+    }
 }
+
 
 void MusicApp::onDataPrepared()
 {
@@ -137,12 +152,13 @@ void MusicApp::onDataPrepared()
 
     d->appPresenter->loadConfig();
 
-    d->playerFrame->show();
-
     d->playerFrame->resize(QSize(1070, 680));
+    d->playerFrame->show();
     DUtility::moveToCenter(d->playerFrame);
     d->playerFrame->setCoverBackground(d->playerFrame->coverBackground());
     d->playerFrame->setFocus();
+
+    qApp->installEventFilter(d->playerFrame);
 }
 
 void MusicApp::onQuit()

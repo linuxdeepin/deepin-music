@@ -82,6 +82,7 @@ public:
     QAction         *newSonglistAction      = nullptr;
     QAction         *colorModeAction        = nullptr;
     QString         coverBackground = ":/common/image/cover_max.png";
+
 };
 
 MainWindow::MainWindow(QWidget *parent)
@@ -421,6 +422,45 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
     });
 }
 
+bool MainWindow::eventFilter(QObject *obj, QEvent *e)
+{
+    if (e->type() == QEvent::KeyPress) {
+        QKeyEvent *ke = static_cast<QKeyEvent *>(e);
+
+        auto keyModifiers = ke->modifiers();
+        auto key = static_cast<Qt::Key>(ke->key());
+
+        QStringList sclist;
+        sclist << "shortcuts.all.next"
+               << "shortcuts.all.play_pause"
+               << "shortcuts.all.previous"
+               << "shortcuts.all.volume_down"
+               << "shortcuts.all.volume_up";
+
+        for (auto optkey : sclist) {
+            auto shortcut = DSettings::instance()->option(optkey).toStringList();
+            auto modifiersstr = shortcut.value(0);
+            auto scmodifiers = static_cast<Qt::KeyboardModifier>(modifiersstr.toInt());
+            auto keystr = shortcut.value(1);
+            auto sckey = static_cast<Qt::Key>(keystr.toInt());
+
+            if (scmodifiers == keyModifiers && key == sckey && !ke->isAutoRepeat()) {
+                qDebug() << "match " << optkey << ke->count() <<ke->isAutoRepeat();
+                MusicApp::instance()->triggerShortcutAction(optkey);
+                return true;
+            }
+        }
+
+
+    }
+    return qApp->eventFilter(obj, e);
+}
+
+void MainWindow::keyReleaseEvent(QKeyEvent *e)
+{
+
+}
+
 void MainWindow::resizeEvent(QResizeEvent *e)
 {
     ThinWindow::resizeEvent(e);
@@ -618,7 +658,7 @@ void MainWindow::initMenu()
         this->onSelectImportFiles();
     });
 
-    auto m_settings = new QAction(tr("Settings"), this);
+    auto m_settings = new QAction(tr("Settings&&"), this);
     connect(m_settings, &QAction::triggered, this, [ = ](bool) {
         auto configDialog = new DSettingDialog(this);
         configDialog->setFixedSize(720, 580);
