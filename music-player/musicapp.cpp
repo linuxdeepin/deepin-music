@@ -158,6 +158,8 @@ void MusicApp::onDataPrepared()
     d->playerFrame->setCoverBackground(d->playerFrame->coverBackground());
     d->playerFrame->setFocus();
 
+    d->appPresenter->postAction();
+
     qApp->installEventFilter(d->playerFrame);
 }
 

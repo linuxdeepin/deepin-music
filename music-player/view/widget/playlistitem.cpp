@@ -55,6 +55,7 @@ PlayListItem::PlayListItem(PlaylistPtr playlist, QWidget *parent) : QFrame(paren
     m_titleedit->setFixedHeight(24);
     m_titleedit->setMinimumWidth(140);
     m_titleedit->setText(playlist->displayName());
+    m_titleedit->setMaxLength(40);
     m_titleedit->setProperty("HistoryValue", m_titleedit->text());
 
 //    QPalette p = m_titleedit->palette();

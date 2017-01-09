@@ -30,7 +30,7 @@ InfoDialog::InfoDialog(const MusicMeta &info, QWidget *parent) : DAbstractDialog
 
     auto closeBt = new DWindowCloseButton;
     closeBt->setObjectName("InfoClose");
-    closeBt->setFixedSize(24, 24);
+    closeBt->setFixedSize(27, 23);
     closeBt->setAttribute(Qt::WA_NoMousePropagation);
 
     m_cover = new QLabel;

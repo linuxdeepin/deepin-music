@@ -4,6 +4,16 @@
     qproperty-defaultCover: ":/common/image/info_cover.png";
 }
 
+#InfoClose {
+border-image: url(:/images/light/images/window_close_normal.png);
+}
+#InfoClose:hover {
+border-image: url(:/images/light/images/window_close_hover.png);
+}
+#InfoClose:pressed {
+border-image: url(:/images/light/images/window_close_press.png);
+}
+
 #InfoTitle{
     font-size: 12px;
     text-align: center;

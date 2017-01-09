@@ -91,6 +91,10 @@ void MusicListWidgetPrivate::initConntion()
     q, [ = ](const MusicMeta & meta) {
         emit q->musicClicked(m_musiclist->playlist(), meta);
     });
+    q->connect(m_musiclist, &MusicListView::importSelectFiles,
+    q, [ = ](PlaylistPtr playlist, const QStringList & urllist) {
+        emit q->importSelectFiles(playlist, urllist);
+    });
 }
 
 void MusicListWidgetPrivate::showEmptyHits(bool empty)

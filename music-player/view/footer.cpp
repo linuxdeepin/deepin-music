@@ -185,7 +185,7 @@ Footer::Footer(QWidget *parent) :
 
     auto vboxlayout = new QVBoxLayout(this);
     vboxlayout->setSpacing(0);
-    vboxlayout->setMargin(0);
+    vboxlayout->setContentsMargins(0,0,0,2);
 
     auto hoverFilter = new HoverFilter(this);
 
@@ -268,15 +268,15 @@ Footer::Footer(QWidget *parent) :
     d->installHint(d->btSound, d->volSlider);
 
     auto infoWidget = new QFrame;
-//    infoWidget->setStyleSheet("border: 1px solid red;");
     auto infoLayout = new QHBoxLayout(infoWidget);
     auto musicMetaLayout = new QVBoxLayout;
+    infoLayout->setMargin(0);
+    infoLayout->setSpacing(0);
+
     musicMetaLayout->addWidget(d->title);
     musicMetaLayout->addWidget(d->artist);
     musicMetaLayout->setSpacing(0);
-    infoLayout->setMargin(0);
-    infoLayout->setSpacing(0);
-    infoLayout->addWidget(d->cover, 0, Qt::AlignLeft | Qt::AlignVCenter);
+    infoLayout->addWidget(d->cover);
     infoLayout->addSpacing(10);
     infoLayout->addLayout(musicMetaLayout, 0);
     infoLayout->addStretch();

@@ -24,6 +24,7 @@ public:
 
 signals:
     void fileRemoved(const QString &filepath);
+    void insertToPlaylist(const QString &hash, PlaylistPtr playlist);
     void meidaFileImported(PlaylistPtr playlist, MusicMetaList metalist);
     void scanFinished();
 

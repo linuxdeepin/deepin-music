@@ -108,6 +108,20 @@ void Presenter::prepareData()
         }
     });
 
+    connect(d->moniter, &MediaFileMonitor::insertToPlaylist,
+    this, [ = ](const QString & hash, PlaylistPtr playlist) {
+        auto allplaylist = d->playlistMgr->playlist(AllMusicListID);
+        auto meta = allplaylist->music(hash);
+
+        PlaylistPtr modifiedPlaylist = playlist;
+        if (d->playlistMgr->playlist(modifiedPlaylist->id()).isNull()) {
+            qCritical() << "no list" << modifiedPlaylist->id();
+            return;
+        }
+        modifiedPlaylist->appendMusic(MusicMetaList() << meta);
+    });
+
+
     connect(d->moniter, &MediaFileMonitor::meidaFileImported,
     this, [ = ](PlaylistPtr playlist, MusicMetaList metalist) {
         qDebug() << "improt" << metalist.length();
@@ -195,6 +209,7 @@ void Presenter::prepareData()
 
     connect(Player::instance(), &Player::positionChanged,
     this, [ = ](qint64 position, qint64 duration) {
+        DSettings::instance()->setOption("base.play.last_position", position);
         emit progrossChanged(position, duration);
     });
     connect(Player::instance(), &Player::volumeChanged,
@@ -275,6 +290,36 @@ void Presenter::loadConfig()
     auto mute = d->dsettings->option("base.play.mute").toBool();
     Player::instance()->setMuted(mute);
     emit this->mutedChanged(mute);
+}
+
+void Presenter::postAction()
+{
+    Q_D(Presenter);
+    auto lastPlaylist = d->playlistMgr->playingPlaylist();
+    auto lastMeta = lastPlaylist->first();
+    auto position = 0;
+
+    if (DSettings::instance()->option("base.play.remember_progress").toBool()) {
+        auto lastPlaylistId = DSettings::instance()->option("base.play.last_playlist").toString();
+        if (!d->playlistMgr->playlist(lastPlaylistId).isNull()) {
+            lastPlaylist = d->playlistMgr->playlist(lastPlaylistId);
+        }
+        lastMeta = lastPlaylist->first();
+        auto lastMetaId = DSettings::instance()->option("base.play.last_meta").toString();
+        MusicMeta meta;
+        meta.hash = lastMetaId;
+        if (lastPlaylist->contains(meta)) {
+            lastMeta = lastPlaylist->music(lastMetaId);
+        }
+
+        position = DSettings::instance()->option("base.play.last_position").toInt();
+    }
+
+    if (DSettings::instance()->option("base.play.auto_play").toBool()) {
+        onSelectedPlaylistChanged(lastPlaylist);
+        onSyncMusicPlay(lastPlaylist, lastMeta);
+        Player::instance()->setPosition(position);
+    }
 }
 
 void Presenter::onSyncMusicPlay(PlaylistPtr playlist, const MusicMeta &meta)
@@ -597,6 +642,11 @@ void Presenter::onMusicPlay(PlaylistPtr playlist,  const MusicMeta &meta)
     }
 
     qDebug() << nextMeta.title;
+
+    //save config
+    auto activePlaylist = d->playlistMgr->playingPlaylist();
+    DSettings::instance()->setOption("base.play.last_playlist", activePlaylist->id());
+    DSettings::instance()->setOption("base.play.last_meta", nextMeta.hash);
 
     // todo:
     if (Player::instance()->activeMeta().localPath == nextMeta.localPath) {

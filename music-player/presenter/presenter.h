@@ -44,6 +44,8 @@ public:
     void prepareData();
 
     void loadConfig();
+
+    void postAction();
     //! action signal
 signals:
     //! ui: request import dialog

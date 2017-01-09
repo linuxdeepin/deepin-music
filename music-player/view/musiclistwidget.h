@@ -32,6 +32,7 @@ signals:
     void addToPlaylist(PlaylistPtr playlist, const MusicMetaList &metalist);
     void musiclistRemove(PlaylistPtr playlist, const MusicMetaList &metalist);
     void musiclistDelete(PlaylistPtr playlist, const MusicMetaList &metalist);
+    void importSelectFiles(PlaylistPtr playlist, QStringList urllist);
 
 public slots:
     void onMusicPlayed(PlaylistPtr playlist, const MusicMeta &info);

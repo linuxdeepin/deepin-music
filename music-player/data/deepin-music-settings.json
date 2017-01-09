@@ -69,6 +69,27 @@
                             "default": "light"
                         },
                         {
+                            "key": "last_playlist",
+                            "label": "",
+                            "hide": true,
+                            "type": "dropbox",
+                            "default": "all"
+                        },
+                        {
+                            "key": "last_meta",
+                            "label": "",
+                            "hide": true,
+                            "type": "dropbox",
+                            "default": ""
+                        },
+                        {
+                            "key": "last_position",
+                            "label": "by ms",
+                            "hide": true,
+                            "type": "slider",
+                            "default": "0"
+                        },
+                        {
                             "key": "last_import_path",
                             "label": "Last Import Path",
                             "hide": true,

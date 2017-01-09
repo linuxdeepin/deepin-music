@@ -48,8 +48,7 @@ MediaFileMonitor::MediaFileMonitor(QObject *parent) : QObject(parent)
 
 void MediaFileMonitor::importPlaylistFiles(PlaylistPtr playlist, const QStringList &filelist)
 {
-    qDebug() << "import form" << filelist;
-    QStringList urllist;
+    qDebug() << "import form" << filelist << "to" << playlist;
 
     QHash<QString, bool> losslessSuffix;
     losslessSuffix.insert("flac", true);
@@ -60,15 +59,59 @@ void MediaFileMonitor::importPlaylistFiles(PlaylistPtr playlist, const QStringLi
     QList<CueParser>  cuelist;
     MusicMetaList metaCache;
 
-//    qDebug() << Player::instance()->supportedSuffixList() << filelist;
+    qDebug() << Player::instance()->supportedSuffixList();
     for (auto &filepath : filelist) {
-        QDirIterator it(filepath, Player::instance()->supportedSuffixList(),
-                        QDir::Files, QDirIterator::Subdirectories);
-        while (it.hasNext()) {
-            QString  url = it.next();
-            qDebug() << url;
+        QFileInfo fileInfo(filepath);
+        if (fileInfo.isDir()) {
+            QDirIterator it(filepath, Player::instance()->supportedSuffixList(),
+                            QDir::Files, QDirIterator::Subdirectories);
+            while (it.hasNext()) {
+                QString  url = it.next();
+                qDebug() << url;
 
-            QFileInfo fileInfo(url);
+                QFileInfo fileInfo(url);
+                if (fileInfo.suffix() == "cue") {
+                    cuelist << CueParser(url);
+                    // TODO: check cue invaild
+#ifdef SUPPORT_INOTIFY
+                    m_watcher->addPath(fileInfo.absolutePath());
+#endif
+                    continue;
+                }
+
+                auto hash = QString(QCryptographicHash::hash(url.toUtf8(),
+                                    QCryptographicHash::Md5).toHex());
+                if (MediaDatabase::instance()->musicMetaExist(hash)) {
+                    emit insertToPlaylist(hash, playlist);
+                    continue;
+                }
+
+                MusicMeta info = MusicMetaName::fromLocalFile(fileInfo, hash);
+
+                //check is lossless file
+                if (losslessSuffix.contains(fileInfo.suffix())) {
+                    losslessMetaCache.insert(info.localPath, info);
+                    continue;
+                }
+
+                metaCache << info;
+#ifdef SUPPORT_INOTIFY
+                m_watcher->addPath(fileInfo.absolutePath());
+#endif
+                if (metaCache.length() >= ScanCacheSize) {
+                    emit MediaDatabase::instance()->addMusicMetaList(metaCache);
+                    emit meidaFileImported(playlist, metaCache);
+                    metaCache.clear();
+                }
+            }
+        } else {
+            QString  url = filepath;
+            auto suffix = QString("*.%1").arg(fileInfo.suffix());
+            if (!Player::instance()->supportedSuffixList().contains(suffix)) {
+                qDebug() << "skip" << suffix;
+                continue;
+            }
+
             if (fileInfo.suffix() == "cue") {
                 cuelist << CueParser(url);
                 // TODO: check cue invaild
@@ -81,6 +124,7 @@ void MediaFileMonitor::importPlaylistFiles(PlaylistPtr playlist, const QStringLi
             auto hash = QString(QCryptographicHash::hash(url.toUtf8(),
                                 QCryptographicHash::Md5).toHex());
             if (MediaDatabase::instance()->musicMetaExist(hash)) {
+                emit insertToPlaylist(hash, playlist);
                 continue;
             }
 

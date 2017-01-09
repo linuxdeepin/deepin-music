@@ -269,6 +269,8 @@ void MainWindow::binding(Presenter *presenter)
             presenter, &Presenter::onMusiclistRemove);
     connect(d->musicList, &MusicListWidget::musiclistDelete,
             presenter, &Presenter::onMusiclistDelete);
+    connect(d->musicList, &MusicListWidget::importSelectFiles,
+            presenter, &Presenter::importMediaFiles);
 
     connect(d->playlist, &PlaylistWidget::addPlaylist,
             presenter, &Presenter::onPlaylistAdd);
@@ -445,7 +447,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *e)
             auto sckey = static_cast<Qt::Key>(keystr.toInt());
 
             if (scmodifiers == keyModifiers && key == sckey && !ke->isAutoRepeat()) {
-                qDebug() << "match " << optkey << ke->count() <<ke->isAutoRepeat();
+                qDebug() << "match " << optkey << ke->count() << ke->isAutoRepeat();
                 MusicApp::instance()->triggerShortcutAction(optkey);
                 return true;
             }
@@ -502,7 +504,7 @@ void MainWindow::onCurrentPlaylistChanged(PlaylistPtr playlist)
 
 void MainWindow::onSelectImportFiles()
 {
-    QFileDialog fileDlg;
+    QFileDialog fileDlg(this);
     auto musicDir =  QStandardPaths::standardLocations(QStandardPaths::MusicLocation);
     fileDlg.setDirectory(musicDir.first());
 
@@ -658,7 +660,7 @@ void MainWindow::initMenu()
         this->onSelectImportFiles();
     });
 
-    auto m_settings = new QAction(tr("Settings&&"), this);
+    auto m_settings = new QAction(tr("Settings"), this);
     connect(m_settings, &QAction::triggered, this, [ = ](bool) {
         auto configDialog = new DSettingDialog(this);
         configDialog->setFixedSize(720, 580);

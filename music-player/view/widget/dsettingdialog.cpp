@@ -94,7 +94,9 @@ DSettingDialog::DSettingDialog(QWidget *parent) : ThinWindow(parent), d_ptr(new 
     d->content->setObjectName("Content");
     d->contentLayout = new QVBoxLayout(d->content);
 
-    auto closeBt = new Dtk::Widget::DWindowCloseButton;
+    auto closeBt = new QPushButton;
+    closeBt->setObjectName("WindowCloseButton");
+    closeBt->setFixedSize(27,23);
     d->rightLayout->addWidget(closeBt, 0, Qt::AlignVCenter | Qt::AlignRight);
     d->rightLayout->addWidget(d->content);
 
@@ -195,7 +197,7 @@ DSettingDialog::DSettingDialog(QWidget *parent) : ThinWindow(parent), d_ptr(new 
     resetBt->setStyle(QStyleFactory::create("dlight"));
 
     connect(this, &DSettingDialog::mouseMoving, this, &DSettingDialog::moveWindow);
-    connect(closeBt, &Dtk::Widget::DWindowCloseButton::clicked, this, &DSettingDialog::close);
+    connect(closeBt, &QPushButton::clicked, this, &DSettingDialog::close);
 }
 
 void DSettingDialog::mouseMoveEvent(QMouseEvent *event)

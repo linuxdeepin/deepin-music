@@ -24,6 +24,7 @@
 #include <QUrl>
 #include <QProcess>
 #include <QStyleFactory>
+#include <QMimeData>
 
 #include <thememanager.h>
 
@@ -438,6 +439,7 @@ void MusicListView::showContextMenu(const QPoint &pos,
             }
 
             DDialog warnDlg(this);
+            warnDlg.setStyle(QStyleFactory::create("dlight"));
             warnDlg.setTextFormat(Qt::RichText);
             warnDlg.addButtons(QStringList() << tr("Cancel") << tr("Delete"));
 
@@ -483,6 +485,7 @@ void MusicListView::showContextMenu(const QPoint &pos,
             }
 
             InfoDialog dlg(meta, this);
+            dlg.setStyle(QStyleFactory::create("dlight"));
             // FIXME: qss only word after show
             dlg.show();
             dlg.setCoverImage(coverPixmap);
@@ -491,6 +494,45 @@ void MusicListView::showContextMenu(const QPoint &pos,
     });
 
     myMenu.exec(globalPos);
+}
+
+void MusicListView::dragEnterEvent(QDragEnterEvent *event)
+{
+    if (event->mimeData()->hasFormat("text/uri-list")) {
+        event->setDropAction(Qt::CopyAction);
+        event->acceptProposedAction();
+        return;
+    }
+
+    QAbstractItemView::dragEnterEvent(event);
+}
+
+void MusicListView::dragMoveEvent(QDragMoveEvent *event)
+{
+
+}
+
+void MusicListView::dragLeaveEvent(QDragLeaveEvent *event)
+{
+
+}
+
+void MusicListView::dropEvent(QDropEvent *event)
+{
+    Q_D(MusicListView);
+    if (!event->mimeData()->hasFormat("text/uri-list")) {
+        return;
+    }
+
+    auto urls = event->mimeData()->urls();
+    QStringList localpaths;
+    for (auto &url : urls) {
+        localpaths << url.toLocalFile();
+    }
+
+    if (!localpaths.isEmpty() && !d->m_playlist.isNull()) {
+        emit importSelectFiles(d->m_playlist, localpaths);
+    }
 }
 
 void MusicListView::paintEvent(QPaintEvent *e)
