@@ -6,6 +6,7 @@
     border: 0px solid red;
     margin: 0 0 0 0;
     outline: none;
+    background: #000000;
 }
 
 #MusicListView::item{

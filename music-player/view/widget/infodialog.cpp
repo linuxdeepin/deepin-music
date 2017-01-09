@@ -22,7 +22,7 @@
 InfoDialog::InfoDialog(const MusicMeta &info, QWidget *parent) : DAbstractDialog(parent)
 {
     setObjectName("InfoDialog");
-    setFixedSize(320, 480);
+    setFixedWidth(320);
 
     auto layout = new QVBoxLayout(this);
     layout->setSpacing(0);
@@ -40,7 +40,8 @@ InfoDialog::InfoDialog(const MusicMeta &info, QWidget *parent) : DAbstractDialog
 
     auto title = new QLabel(info.title);
     title->setObjectName("InfoTitle");
-    title->setFixedHeight(18);
+    title->setFixedWidth(300);
+    title->setWordWrap(true);
 
     auto split = new QLabel();
     split->setObjectName("InfoSplit");
@@ -58,10 +59,15 @@ InfoDialog::InfoDialog(const MusicMeta &info, QWidget *parent) : DAbstractDialog
                << info.filetype << sizeString(info.size) << lengthString(info.length)
                << info.localPath;
 
-    auto infogridLayout = new QGridLayout;
-    infogridLayout->setMargin(10);
+    m_infogridFrame = new QFrame;
+    m_infogridFrame->setMaximumWidth(300);
+    m_infogridFrame->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    auto infogridLayout = new QGridLayout(m_infogridFrame);
+    infogridLayout->setMargin(0);
     infogridLayout->setHorizontalSpacing(5);
     infogridLayout->setVerticalSpacing(6);
+    infogridLayout->setColumnStretch(0, 10);
+    infogridLayout->setColumnStretch(1, 100);
 
     for (int i = 0; i < infoKeys.length(); ++i) {
         auto infoKey = new QLabel(infoKeys.value(i));
@@ -69,16 +75,15 @@ InfoDialog::InfoDialog(const MusicMeta &info, QWidget *parent) : DAbstractDialog
         infoKey->setMinimumHeight(18);
 
         auto infoValue = new QLabel(infoValues.value(i));
+        infoValue->setWordWrap(true);
         infoValue->setObjectName("InfoValue");
         infoValue->setMinimumHeight(18);
 //        infoValue->setMaximumWidth(250);
+        infoValue->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        m_valueList << infoValue;
 
-        infogridLayout->addWidget(infoKey, i, 0, Qt::AlignRight | Qt::AlignTop);
-        infogridLayout->addWidget(infoValue, i, 1, Qt::AlignLeft | Qt::AlignTop);
-
-        if (i == infoKeys.length() - 1) {
-            infoValue->setWordWrap(true);
-        }
+        infogridLayout->addWidget(infoKey);
+        infogridLayout->addWidget(infoValue);
     }
 
     layout->addWidget(closeBt, 0, Qt::AlignTop | Qt::AlignRight);
@@ -88,12 +93,24 @@ InfoDialog::InfoDialog(const MusicMeta &info, QWidget *parent) : DAbstractDialog
     layout->addWidget(title, 0, Qt::AlignCenter);
     layout->addSpacing(19);
     layout->addWidget(split, 0, Qt::AlignCenter);
-    layout->addLayout(infogridLayout);
+    layout->addSpacing(10);
+    layout->addWidget(m_infogridFrame, 0, Qt::AlignCenter);
+    layout->addSpacing(10);
     layout->addStretch();
 
     ThemeManager::instance()->regisetrWidget(this);
 
+
     connect(closeBt, &DWindowCloseButton::clicked, this, &DAbstractDialog::close);
+}
+
+void InfoDialog::updateLabelSize()
+{
+    m_infogridFrame->adjustSize();
+    for (auto label : m_valueList) {
+        label->adjustSize();
+    }
+    adjustSize();
 }
 
 QString InfoDialog::defaultCover() const
@@ -110,7 +127,7 @@ void InfoDialog::setCoverImage(const QPixmap &coverPixmap)
 {
     if (!coverPixmap.isNull()) {
         m_cover->setPixmap(coverPixmap.scaled(140, 140));
-   }else {
+    } else {
         m_cover->setPixmap(QPixmap(defaultCover()).scaled(140, 140));
     }
 }

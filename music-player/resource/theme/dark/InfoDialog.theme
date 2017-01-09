@@ -23,11 +23,15 @@ border-image: url(:/images/light/images/window_close_press.png);
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 #InfoKey{
+    border: 1px solid transparent;
+    qproperty-alignment: AlignRight;
     font-size: 11px;
     text-align: right;
     color: #606060;
 }
 #InfoValue{
+    border: 1px solid transparent;
+    qproperty-alignment: AlignLeft;
     text-align: left;
     font-size: 11px;
     color: #000000;

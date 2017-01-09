@@ -13,15 +13,21 @@
 
 DWIDGET_USE_NAMESPACE
 
+class QFrame;
+class QLabel;
 class MusicMeta;
 class InfoDialog : public DAbstractDialog
 {
     Q_OBJECT
     Q_PROPERTY(QString defaultCover READ defaultCover WRITE setDefaultCover)
 
+    QFrame *m_infogridFrame = nullptr;
+    QList<QLabel *> m_valueList;
     QLabel *m_cover = nullptr;
 public:
     explicit InfoDialog(const MusicMeta &info, QWidget *parent = 0);
+
+    void updateLabelSize();
 
     QString defaultCover() const;
 public slots:
