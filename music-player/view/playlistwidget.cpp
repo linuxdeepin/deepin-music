@@ -102,6 +102,12 @@ void PlaylistWidget::initData(QList<PlaylistPtr > playlists, PlaylistPtr last)
 
     QListWidgetItem *current = nullptr;
     for (auto &playlist : playlists) {
+        if (playlist->hide()) {
+            continue;
+        }
+
+        qDebug() << "init with" << playlist->id() << playlist->displayName();
+
         auto item = new QListWidgetItem;
         m_listview->addItem(item);
         m_listview->setItemWidget(item, new PlayListItem(playlist));
@@ -122,9 +128,6 @@ void PlaylistWidget::initData(QList<PlaylistPtr > playlists, PlaylistPtr last)
             current = item;
         }
 
-        if (playlist->hide()) {
-            m_listview->setItemHidden(item, true);
-        }
     }
 
     if (current) {
@@ -166,9 +169,14 @@ void PlaylistWidget::focusOutEvent(QFocusEvent *event)
 
 void PlaylistWidget::onPlaylistAdded(PlaylistPtr playlist)
 {
+    if (playlist->hide()) {
+        return;
+    }
+
     auto item = new QListWidgetItem;
     m_listview->addItem(item);
     m_listview->setItemWidget(item, new PlayListItem(playlist));
+
     auto playlistItem = qobject_cast<PlayListItem *>(m_listview->itemWidget(item));
     connect(playlistItem, &PlayListItem::remove, this, [ = ]() {
         m_listview->removeItemWidget(item);
@@ -177,11 +185,9 @@ void PlaylistWidget::onPlaylistAdded(PlaylistPtr playlist)
 
     connect(playlistItem, &PlayListItem::playall,
             this, &PlaylistWidget::playall);
-    m_listview->scrollToBottom();
+
     m_listview->setCurrentItem(item);
-    if (playlist->hide()) {
-        m_listview->setItemHidden(item, true);
-    }
+
 }
 
 void PlaylistWidget::onCurrentChanged(PlaylistPtr playlist)

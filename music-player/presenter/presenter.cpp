@@ -182,6 +182,15 @@ void Presenter::prepareData()
         }
     });
 
+    connect(d->playlistMgr, &PlaylistManager::playlistRemove,
+    this, [ = ](PlaylistPtr playlist) {
+        auto playinglist = d->playlistMgr->playingPlaylist();
+        if (playinglist.isNull() || playinglist->id() == playlist->id()) {
+            d->playlistMgr->setPlayingPlaylist(d->playlistMgr->playlist(AllMusicListID));
+            onPlayall(d->playlistMgr->playlist(AllMusicListID));
+        }
+    });
+
     connect(d->playlistMgr, &PlaylistManager::playingPlaylistChanged,
     this, [ = ](PlaylistPtr playlist) {
         emit playingPlaylistChanged(playlist);
@@ -210,7 +219,10 @@ void Presenter::prepareData()
     });
 
     connect(d->playlistMgr, &PlaylistManager::musicRemoved,
-            this, &Presenter::musicRemoved);
+    this, [ = ](PlaylistPtr playlist, const MusicMeta & meta) {
+        emit this->musicRemoved(playlist, meta);
+    });
+
     connect(d->playlistMgr, &PlaylistManager::selectedPlaylistChanged,
             this, &Presenter::currentPlaylistChanged);
 

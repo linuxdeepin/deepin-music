@@ -46,6 +46,7 @@ signals:
     void musicAdded(PlaylistPtr playlist, const MusicMeta &info);
     void musiclistAdded(PlaylistPtr playlist, const MusicMetaList &metalist);
     void musicRemoved(PlaylistPtr playlist, const MusicMeta &info);
+    void playlistRemove(PlaylistPtr playlist);
 
 public slots:
     void setPlayingPlaylist(PlaylistPtr playingPlaylist);

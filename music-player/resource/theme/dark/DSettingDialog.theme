@@ -103,17 +103,30 @@ ContentSubTitle{
     color: #303030;
 }
 
-#DSettingDialogReset{
-    font-family: SourceHanSansSC;
-    font-size: 14px;
-    font-weight: 500;
-    font-style: normal;
-    text-align: center;
+
+#DSettingDialogReset {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                stop:0 #FFFFFF, stop:1 #FBFBFB);
+    border-color: rgba(0, 131, 255, 0.4);
+    border-radius: 4;
+    border-style: solid;
+    border-width: 1;
+    outline: none;
+    padding: 3px 24px 4px 24px;
     color: #0699ff;
+    font-size: 14px;
 }
+
 #DSettingDialogReset:hover {
-    color: white;
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+            stop:0 #8ccfff, stop:1 #4bb8ff);
+    color: #FFFFFF;
+    border-color: rgba(0, 117, 243, 0.2);
 }
+
 #DSettingDialogReset:pressed {
-    color: #2ca7f8;
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+            stop:0 #0b8cff, stop:1 #0aa1ff);
+    color: #FFFFFF;
+    border-color: rgba(29, 129, 255, 0.3);
 }

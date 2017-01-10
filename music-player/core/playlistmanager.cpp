@@ -165,16 +165,13 @@ void PlaylistManager::insertPlaylist(const QString &uuid, PlaylistPtr playlist)
 
     connect(playlist.data(), &Playlist::removed,
     this, [ = ] {
-        if (m_playingPlaylist.isNull() || m_playingPlaylist->id() == deleteID)
-        {
-            setPlayingPlaylist(this->playlist(AllMusicListID));
-        }
+        qDebug() << deleteID << m_playingPlaylist;
+        emit playlistRemove(playlist);
 
         if (m_selectedPlaylist.isNull() || m_selectedPlaylist->id() == deleteID)
         {
             setSelectedPlaylist(this->playlist(AllMusicListID));
         }
-
         sortPlaylists.removeAll(deleteID);
         PlaylistMeta listmeta;
         listmeta.uuid = deleteID;

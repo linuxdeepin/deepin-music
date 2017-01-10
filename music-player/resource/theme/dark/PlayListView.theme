@@ -1,6 +1,5 @@
 #PlayListView{
     color: #009aff;
-    border: 0px solid rgba(255, 0, 0, 0.7);
     background-color: rgba(255, 255, 255, 0.0);
     show-decoration-selected: 1;
     selection-color: red;

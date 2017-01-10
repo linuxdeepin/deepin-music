@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
     DLogManager::registerConsoleAppender();
     DLogManager::registerFileAppender();
 
-    app.loadTranslator(QList<QLocale>() << QLocale("en_US"));
+    app.loadTranslator();
 
 #ifdef Q_OS_UNIX
     auto serviceName = "deepinmusic";
