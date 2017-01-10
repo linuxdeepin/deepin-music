@@ -10,6 +10,8 @@
 #MusicListEmptyHits{
     font-size: 24px;
     color: #d0d0d0;
+    qproperty-alignment: AlignCenter;
+    background-color: rgba(32, 32, 32, 1);
 }
 
 #MusicListPlayAll{

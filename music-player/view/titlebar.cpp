@@ -107,7 +107,7 @@ void Titlebar::paintEvent(QPaintEvent *)
     titlePainter.setRenderHint(QPainter::Antialiasing);
     titlePainter.setRenderHint(QPainter::HighQualityAntialiasing);
 
-    auto titleBarHeight = this->height() - 1;
+    auto titleBarHeight = this->height() ;
     QRectF winRect = rect();
     QPointF titleTopLeft(winRect.x(), winRect.y());
 
@@ -129,11 +129,17 @@ void Titlebar::paintEvent(QPaintEvent *)
     titleBorder.closeSubpath();
 
     titlePainter.fillPath(titleBorder, QBrush(d->titleBackground));
-    QLine line(titleTopLeft.x(), winRect.y() + titleBarHeight + 1,
-               winRect.x() + winRect.width(), winRect.y() + titleBarHeight + 1);
+    QLine line(titleTopLeft.x(), winRect.y() + titleBarHeight ,
+               winRect.x() + winRect.width(), winRect.y() + titleBarHeight);
 
     titlePainter.setPen(QPen(d->borderBottom, 1.0));
     titlePainter.drawLine(line);
+
+
+    QLine lineOut(titleTopLeft.x()+radius, winRect.y() +  1,
+                  winRect.x() + winRect.width()-radius, winRect.y() + 1);
+    titlePainter.setPen(QPen(QColor(255, 255, 255, 0.05 * 255), 1.0));
+    titlePainter.drawLine(lineOut);
 }
 
 void TitlebarPrivate::workaroundSetButtonStyle()

@@ -2,7 +2,7 @@ Source: deepin-music
 Section: sound
 Priority: extra
 Maintainer: Deepin Sysdev <sysdev@deepin.com>
-Build-Depends: debhelper, qt5-default, pkg-config, libqt5svg5-dev, qtmultimedia5-dev, bison,
+Build-Depends: debhelper, qt5-default, pkg-config, qttools5-dev-tools, libqt5svg5-dev, qtmultimedia5-dev, bison,
                 flex, libdtkbase-dev, libdtkutil-dev, libdtkwidget-dev, libtag1-dev, libicu-dev,
                 libavutil-dev, libavformat-dev, libavcodec-dev
 Standards-Version: 3.9.2

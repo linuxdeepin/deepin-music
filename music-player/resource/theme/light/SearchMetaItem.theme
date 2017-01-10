@@ -23,7 +23,7 @@ SearchMetaItem {
     background-color: transparent;
     border-image: url(:/common/image/none.png);
 }
-#SearchMetaItemCheck:checked{
+#SearchMetaItemCheck[active=true]{
     border-image: url(:/common/image/select.png);
 }
 

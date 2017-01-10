@@ -11,7 +11,9 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QLabel>
+#include <QVariant>
 #include <QPushButton>
+#include <QStyle>
 
 #include <thememanager.h>
 
@@ -23,7 +25,7 @@ public:
     QLabel      *metaTitle   = nullptr;
     QLabel      *metaArtist  = nullptr;
     QLabel      *metaLength  = nullptr;
-    QPushButton *checkedBt   = nullptr;
+    QLabel      *checkedBt   = nullptr;
 
     SearchMetaItem *q_ptr;
     Q_DECLARE_PUBLIC(SearchMetaItem)
@@ -53,10 +55,9 @@ SearchMetaItem::SearchMetaItem(QWidget *parent) : QFrame(parent), d_ptr(new Sear
     metaInfoLayout->addWidget(d->metaTitle);
     metaInfoLayout->addWidget(d->metaArtist);
 
-    d->checkedBt = new QPushButton;
+    d->checkedBt = new QLabel;
     d->checkedBt->setObjectName("SearchMetaItemCheck");
     d->checkedBt->setFixedSize(16, 16);
-    d->checkedBt->setCheckable(true);
 
     d->metaLength = new QLabel;
     d->metaLength->setObjectName("SearchMetaItemLength");
@@ -82,8 +83,11 @@ void SearchMetaItem::initUI(const MusicMeta &meta)
     d->metaLength->setText(lengthString(meta.length));
 }
 
-void SearchMetaItem::setChecked(bool check)
+void SearchMetaItem::setChecked( bool check)
 {
     Q_D(SearchMetaItem);
-    d->checkedBt->setChecked(check);
+    d->checkedBt->setProperty("active", check);
+    d->checkedBt->style()->unpolish(d->checkedBt);
+    d->checkedBt->style()->polish(d->checkedBt);
+    d->checkedBt->update();
 }

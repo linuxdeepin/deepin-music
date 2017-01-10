@@ -470,7 +470,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *e)
         if (obj->objectName() == this->objectName() || this->objectName() + "Window" == obj->objectName()) {
 //            qDebug() << me->pos() << QCursor::pos();
             QPoint mousePos = me->pos();
-            auto geometry = d->playlist->geometry().marginsAdded(QMargins(0, 0, 20, 20));
+            auto geometry = d->playlist->geometry().marginsAdded(QMargins(0, 0, 40, 40));
 //            qDebug() << geometry << mousePos;
             if (!geometry.contains(mousePos)) {
                 DUtil::TimerSingleShot(50, [this]() {
@@ -481,7 +481,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *e)
         }
     }
 
-    if (e->type() == QEvent::MouseButtonRelease) {
+    if (e->type() == QEvent::MouseButtonPress) {
         QMouseEvent *me = static_cast<QMouseEvent *>(e);
         //        qDebug() << obj << me->pos();
         if (obj->objectName() == this->objectName() || this->objectName() + "Window" == obj->objectName()) {

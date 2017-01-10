@@ -255,20 +255,22 @@ LyricView::LyricView(QWidget *parent)
 
     connect(d->m_showSearch, &QPushButton::clicked,
     this, [ = ](bool) {
-        if (d->searchMetaFrame->isVisible()) {
-            d->searchMetaFrame->hide();
-            d->m_cover->show();
-            d->m_showSearch->show();
-            d->m_exitSearch->hide();
-        } else {
-            searchMetaTitle->setText(d->m_playingMusic.title);
-            searchMetaArtist->setText(d->m_playingMusic.artist);
-            d->searchMetaList->clear();
-            d-> m_cover->hide();
-            d->searchMetaFrame->show();
-            d->m_showSearch->hide();
-            d->m_exitSearch->show();
-        }
+        searchMetaTitle->setText(d->m_playingMusic.title);
+        searchMetaArtist->setText(d->m_playingMusic.artist);
+        d->searchMetaList->clear();
+        d-> m_cover->hide();
+        d->searchMetaFrame->show();
+        d->m_showSearch->hide();
+        d->m_exitSearch->show();
+    });
+
+    connect(d->m_exitSearch, &QPushButton::clicked,
+    this, [ = ](bool) {
+
+        d->searchMetaFrame->hide();
+        d->m_cover->show();
+        d->m_showSearch->show();
+        d->m_exitSearch->hide();
     });
 
     connect(searchMetaButton, &QPushButton::clicked,
@@ -330,8 +332,11 @@ void LyricView::checkHiddenSearch(QPoint mousePos)
         return;
     }
 
-    auto geometry = d->searchMetaFrame->geometry().marginsAdded(QMargins(0, 0, 20, 20));
-    if (!geometry.contains(mousePos)) {
+    auto geometry = d->searchMetaFrame->geometry().marginsAdded(QMargins(0, 0, 40, 40));
+    auto btGeometry = d->m_exitSearch->rect();
+    auto btPos = d->m_exitSearch->mapFromGlobal(QCursor::pos());
+    qDebug() << btGeometry << btPos;
+    if (!geometry.contains(mousePos) && !btGeometry.contains(btPos)) {
         d->searchMetaFrame->hide();
         d->m_cover->show();
         d->m_exitSearch->hide();

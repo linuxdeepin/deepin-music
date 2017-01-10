@@ -16,7 +16,7 @@ dman.files = $$PWD/dman/*
 translations.path = $${PREFIX}/share/$${TARGET}/translations
 translations.files = $$PWD/translations/*.qm
 
-INSTALLS += target desktop_files services dman translations
+INSTALLS += target translations desktop_files services dman
 
 GitVersion = $$system(git rev-parse HEAD)
 DEFINES += GIT_VERSION=\\\"$$GitVersion\\\"
