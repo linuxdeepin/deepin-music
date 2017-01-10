@@ -38,6 +38,7 @@ public slots:
     void onLyricChanged(const MusicMeta &meta, const QByteArray &lyricData);
     void onCoverChanged(const MusicMeta &meta, const QByteArray &coverData);
     void setDefaultCover(QString defaultCover);
+    void onUpdateMetaCodec(const MusicMeta &meta);
 
     void contextSearchFinished(const QString &context, const QList<MusicMeta> &metalist);
 

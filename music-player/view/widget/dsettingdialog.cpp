@@ -76,7 +76,6 @@ public:
 
 DSettingDialog::DSettingDialog(QWidget *parent) : ThinWindow(parent), d_ptr(new DSettingDialogPrivate(this))
 {
-#include <QCheckBox>
     Q_D(DSettingDialog);
     setObjectName("DSettingDialog");
 
@@ -172,7 +171,7 @@ DSettingDialog::DSettingDialog(QWidget *parent) : ThinWindow(parent), d_ptr(new 
         }
     }
 
-    auto resetBt = new QPushButton(tr("Restore to default"));
+    auto resetBt = new QPushButton(DSettingDialog::tr("Restore to default"));
     resetBt->setObjectName("DSettingDialogReset");
     resetBt->setFixedSize(310, 36);
 

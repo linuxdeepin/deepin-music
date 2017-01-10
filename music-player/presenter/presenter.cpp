@@ -309,9 +309,6 @@ void Presenter::loadConfig()
     auto mute = d->dsettings->option("base.play.mute").toBool();
     Player::instance()->setMuted(mute);
     emit this->mutedChanged(mute);
-
-    auto fadeInOut = d->dsettings->option("base.play.fade_in_out").toBool();
-    Player::instance()->setFadeInOut(fadeInOut);
 }
 
 void Presenter::postAction()
@@ -335,6 +332,17 @@ void Presenter::postAction()
         }
 
         position = DSettings::instance()->option("base.play.last_position").toInt();
+        onSelectedPlaylistChanged(lastPlaylist);
+        emit locateMusic(lastPlaylist, lastMeta);
+        emit musicPlayed(lastPlaylist, lastMeta);
+        emit musicPaused(lastPlaylist, lastMeta);
+        Player::instance()->setPlayOnLoaded(false);
+        Player::instance()->setFadeInOut(false);
+        Player::instance()->loadMedia(lastPlaylist, lastMeta);
+        Player::instance()->pause();
+        Player::instance()->setPosition(position);
+
+        emit d->requestMetaSearch(lastMeta);
     }
 
     if (DSettings::instance()->option("base.play.auto_play").toBool() && !lastPlaylist->isEmpty()) {
@@ -342,6 +350,10 @@ void Presenter::postAction()
         onSyncMusicPlay(lastPlaylist, lastMeta);
         Player::instance()->setPosition(position);
     }
+
+
+    auto fadeInOut = d->dsettings->option("base.play.fade_in_out").toBool();
+    Player::instance()->setFadeInOut(fadeInOut);
 }
 
 void Presenter::onSyncMusicPlay(PlaylistPtr playlist, const MusicMeta &meta)
@@ -636,6 +648,9 @@ void Presenter::onPlaylistAdd(bool edit)
 void Presenter::onMusicPlay(PlaylistPtr playlist,  const MusicMeta &meta)
 {
     Q_D(Presenter);
+
+    Player::instance()->setPlayOnLoaded(true);
+
     auto nextMeta = meta;
     if (playlist.isNull()) {
         playlist = d->playlistMgr->playlist(AllMusicListID);

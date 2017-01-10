@@ -467,6 +467,17 @@ void LyricView::setDefaultCover(QString defaultCover)
     d->defaultCover = defaultCover;
 }
 
+void LyricView::onUpdateMetaCodec(const MusicMeta &meta)
+{
+    Q_D(LyricView);
+
+    if (d->m_playingMusic.hash == meta.hash) {
+        d->m_playingMusic.title = meta.title;
+        d->m_playingMusic.artist = meta.artist;
+        d->m_playingMusic.album = meta.album;
+    }
+}
+
 void LyricView::contextSearchFinished(const QString &context, const QList<MusicMeta> &metalist)
 {
     Q_D(LyricView);

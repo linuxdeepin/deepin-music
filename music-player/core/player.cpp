@@ -109,6 +109,8 @@ public:
     PlaylistPtr     activePlaylist;
     MusicMeta       activeMeta;
 
+    bool            playOnLoad  = true;
+
     bool                fadeInOut           = true;
     double              fadeInOutFactor     = 1.0;
     QPropertyAnimation  *fadeInAnimation    = nullptr;
@@ -180,7 +182,9 @@ void PlayerPrivate::initConnection()
         switch (status) {
         case QMediaPlayer::LoadedMedia: {
             qDebug() << qplayer->state();
-            qplayer->play();
+            if (playOnLoad) {
+                qplayer->play();
+            }
             emit q->mediaError(activePlaylist, activeMeta, Player::NoError);
             activeMeta.invalid = false;
 
@@ -298,6 +302,24 @@ Player::Player(QObject *parent) : QObject(parent), d_ptr(new PlayerPrivate(this)
 Player::~Player()
 {
 
+}
+
+void Player::loadMedia(PlaylistPtr playlist, const MusicMeta &meta)
+{
+    qDebug() << "loadMedia"
+             << meta.title
+             << lengthString(meta.offset)
+             << lengthString(meta.offset)
+             << lengthString(meta.length);
+    Q_D(Player);
+    d->activeMeta = meta;
+
+    d->qplayer->blockSignals(true);
+    d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(meta.localPath)));
+    d->qplayer->blockSignals(false);
+
+    d->activePlaylist = playlist;
+    d->activePlaylist->play(meta);
 }
 
 
@@ -504,6 +526,12 @@ bool Player::fadeInOut() const
     return d->fadeInOut;
 }
 
+bool Player::playOnLoaded() const
+{
+    Q_D(const Player);
+    return d->playOnLoad;
+}
+
 void Player::setCanControl(bool canControl)
 {
     qCritical() << "Never Changed this" << canControl;
@@ -559,4 +587,10 @@ void Player::setFadeInOut(bool fadeInOut)
 {
     Q_D(Player);
     d->fadeInOut = fadeInOut;
+}
+
+void Player::setPlayOnLoaded(bool playOnLoaded)
+{
+    Q_D(Player);
+    d->playOnLoad = playOnLoaded;
 }

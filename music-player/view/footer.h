@@ -61,6 +61,7 @@ public slots:
     void onCoverChanged(const MusicMeta &meta, const QByteArray &coverData);
     void onVolumeChanged(int volume);
     void onMutedChanged(bool muted);
+    void onUpdateMetaCodec(const MusicMeta &meta);
     void setDefaultCover(QString defaultCover);
 
 protected:

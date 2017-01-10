@@ -58,6 +58,11 @@
         <source>Volume down</source>
         <translation>音量减小</translation>
     </message>
+    <message>
+        <location filename="../view/widget/dsettingdialog.cpp" line="174"/>
+        <source>Restore to default</source>
+        <translation>恢复默认</translation>
+    </message>
 </context>
 <context>
     <name>Footer</name>
@@ -111,9 +116,9 @@
 <context>
     <name>ImportWidget</name>
     <message>
-        <location filename="../view/importwidget.cpp" line="59"/>
+        <location filename="../view/importwidget.cpp" line="60"/>
         <source>Add Music</source>
-        <translation>Add Music</translation>
+        <translation>添加音乐</translation>
     </message>
     <message>
         <location filename="../view/importwidget.cpp" line="66"/>
@@ -299,12 +304,12 @@
         <translation type="vanished">从列表中删除</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="492"/>
+        <location filename="../view/widget/musiclistview.cpp" line="494"/>
         <source>Delete</source>
         <translation>删除</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="426"/>
+        <location filename="../view/widget/musiclistview.cpp" line="428"/>
         <source>Song info</source>
         <translation>歌曲信息</translation>
     </message>
@@ -319,32 +324,32 @@
         <translation>从本地删除</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="422"/>
+        <location filename="../view/widget/musiclistview.cpp" line="424"/>
         <source>Text Encoding</source>
         <translation>编码方式</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="492"/>
+        <location filename="../view/widget/musiclistview.cpp" line="494"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="502"/>
+        <location filename="../view/widget/musiclistview.cpp" line="504"/>
         <source>Are you sure to delete %1?</source>
         <translation>您确定要删除 %1 吗？</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="505"/>
+        <location filename="../view/widget/musiclistview.cpp" line="507"/>
         <source>Are you sure to delete the selected %1 songs?</source>
         <translation>您确定要删除选中的%1首歌曲吗？</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="510"/>
+        <location filename="../view/widget/musiclistview.cpp" line="512"/>
         <source>Are you sure to delete the selected %1 song files?</source>
         <translation>您确定要删除选中的%1个歌曲文件吗？</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="511"/>
+        <location filename="../view/widget/musiclistview.cpp" line="513"/>
         <source>Other song of the same file will be deleted too.</source>
         <translation>同文件下的其他歌曲文件也将会被删除。</translation>
     </message>
@@ -429,7 +434,7 @@
     <message>
         <location filename="../view/widget/playlistitem.cpp" line="224"/>
         <source>Are you sure to delete this playlist?</source>
-        <translation></translation>
+        <translation>您确定要删除此歌单吗？</translation>
     </message>
     <message>
         <location filename="../view/widget/playlistitem.cpp" line="230"/>
@@ -491,9 +496,8 @@
 <context>
     <name>ShortcutEditor</name>
     <message>
-        <location filename="../view/widget/shortcut/shortcuteditor.cpp" line="67"/>
         <source>Please enter a new shortcut</source>
-        <translation>请输入快捷键</translation>
+        <translation type="vanished">请输入快捷键</translation>
     </message>
 </context>
 <context>

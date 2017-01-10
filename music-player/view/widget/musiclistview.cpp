@@ -433,6 +433,7 @@ void MusicListView::showContextMenu(const QPoint &pos,
             emit updateMetaCodec(updateMeta);
             qDebug() << codec;
             d->m_model->setData(index, QVariant::fromValue<MusicMeta>(updateMeta));
+            item->setData(QVariant::fromValue<MusicMeta>(updateMeta));
             this->update();
         });
     }

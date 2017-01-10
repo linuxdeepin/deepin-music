@@ -196,12 +196,14 @@ void LyricService::onChangeMetaCache(const MusicMeta &meta)
         auto lrc = document.object().value("lrc").toObject();
         auto lrcData =  lrc.value("lyric").toString().toUtf8();
 
-        if (lrcData.length() > 0) {
-            QFile lyricFile(cacheLyricPath(meta));
-            lyricFile.open(QIODevice::WriteOnly);
-            lyricFile.write(lrcData);
-            lyricFile.close();
+        if (lrcData.length() <= 0) {
+            lrcData = "                           ";
         }
+
+        QFile lyricFile(cacheLyricPath(meta));
+        lyricFile.open(QIODevice::WriteOnly);
+        lyricFile.write(lrcData);
+        lyricFile.close();
 
         emit lyricSearchFinished(meta, lrcData);
     });

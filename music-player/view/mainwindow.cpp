@@ -115,8 +115,8 @@ MainWindow::MainWindow(QWidget *parent)
     d->footer = new Footer;
     d->footer->setFixedHeight(footerHeight);
 
-    d->musicList->setContentsMargins(0, titleBarHeight-1, 0, footerHeight);
-    d->lyricView->setContentsMargins(0, titleBarHeight-1, 0, footerHeight);
+    d->musicList->setContentsMargins(0, titleBarHeight - 1, 0, footerHeight);
+    d->lyricView->setContentsMargins(0, titleBarHeight - 1, 0, footerHeight);
 
     contentLayout->addWidget(d->titlebar);
 
@@ -237,6 +237,12 @@ void MainWindow::binding(Presenter *presenter)
             d->footer, &Footer::onVolumeChanged);
     connect(presenter, &Presenter::mutedChanged,
             d->footer, &Footer::onMutedChanged);
+
+
+    connect(d->musicList, &MusicListWidget::updateMetaCodec,
+             d->footer, &Footer::onUpdateMetaCodec);
+    connect(d->musicList, &MusicListWidget::updateMetaCodec,
+             d->lyricView, &LyricView::onUpdateMetaCodec);
 
     connect(presenter, &Presenter::playlistResorted,
             d->musicList, &MusicListWidget::onMusiclistChanged);
@@ -409,6 +415,10 @@ void MainWindow::binding(Presenter *presenter)
     connect(this, &MainWindow::addPlaylist,
             presenter, &Presenter::onPlaylistAdd);
 
+    connect(d->titlebar, &Titlebar::closeClicked, this, [ = ]() {
+        qApp->exit(0);
+    });
+
 }
 
 QString MainWindow::coverBackground() const
@@ -492,6 +502,12 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *e)
             d->lyricView->checkHiddenSearch(mousePos);
         }
 
+    }
+
+    if (e->type() == QEvent::Close) {
+        if (obj->objectName() == this->objectName()) {
+            exit(0);
+        }
     }
     return qApp->eventFilter(obj, e);
 }

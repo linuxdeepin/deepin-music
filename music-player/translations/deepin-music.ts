@@ -58,6 +58,11 @@
         <source>Volume down</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="../view/widget/dsettingdialog.cpp" line="174"/>
+        <source>Restore to default</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Footer</name>
@@ -111,7 +116,7 @@
 <context>
     <name>ImportWidget</name>
     <message>
-        <location filename="../view/importwidget.cpp" line="59"/>
+        <location filename="../view/importwidget.cpp" line="60"/>
         <source>Add Music</source>
         <translation type="unfinished"></translation>
     </message>
@@ -295,12 +300,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="492"/>
+        <location filename="../view/widget/musiclistview.cpp" line="494"/>
         <source>Delete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="426"/>
+        <location filename="../view/widget/musiclistview.cpp" line="428"/>
         <source>Song info</source>
         <translation type="unfinished"></translation>
     </message>
@@ -315,32 +320,32 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="422"/>
+        <location filename="../view/widget/musiclistview.cpp" line="424"/>
         <source>Text Encoding</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="492"/>
+        <location filename="../view/widget/musiclistview.cpp" line="494"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="502"/>
+        <location filename="../view/widget/musiclistview.cpp" line="504"/>
         <source>Are you sure to delete %1?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="505"/>
+        <location filename="../view/widget/musiclistview.cpp" line="507"/>
         <source>Are you sure to delete the selected %1 songs?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="510"/>
+        <location filename="../view/widget/musiclistview.cpp" line="512"/>
         <source>Are you sure to delete the selected %1 song files?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="511"/>
+        <location filename="../view/widget/musiclistview.cpp" line="513"/>
         <source>Other song of the same file will be deleted too.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -464,14 +469,6 @@
     <name>ShortcutEdit</name>
     <message>
         <location filename="../view/widget/shortcutedit.cpp" line="110"/>
-        <source>Please enter a new shortcut</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>ShortcutEditor</name>
-    <message>
-        <location filename="../view/widget/shortcut/shortcuteditor.cpp" line="67"/>
         <source>Please enter a new shortcut</source>
         <translation type="unfinished"></translation>
     </message>

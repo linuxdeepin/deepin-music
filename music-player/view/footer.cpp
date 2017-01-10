@@ -189,7 +189,7 @@ Footer::Footer(QWidget *parent) :
 
     auto vboxlayout = new QVBoxLayout(this);
     vboxlayout->setSpacing(0);
-    vboxlayout->setContentsMargins(0,0,0,2);
+    vboxlayout->setContentsMargins(0, 0, 0, 2);
 
     auto hoverFilter = new HoverFilter(this);
 
@@ -566,6 +566,19 @@ void Footer::onMutedChanged(bool muted)
     if (muted) {
         d->updateQssProperty(d->btSound, "volume", "mute");
         d->volSlider->onVolumeChanged(0);
+    }
+}
+
+void Footer::onUpdateMetaCodec(const MusicMeta &meta)
+{
+    Q_D(Footer);
+    if (d->m_playingMeta.hash == meta.hash) {
+        d->title->setText(meta.title);
+        if (!meta.artist.isEmpty()) {
+            d->artist->setText(meta.artist);
+        } else {
+            d->artist->setText(tr("Unknow Artist"));
+        }
     }
 }
 

@@ -13,8 +13,9 @@ DESTDIR     = $$BUILD_DIST/bin
 unix{
     DEFINES += SUPPORT_INOTIFY
     QT += x11extras
-    PKGCONFIG += dtkbase dtkutil dtkwidget taglib icu-uc icu-i18n libavutil libavformat libavcodec
+    PKGCONFIG += taglib icu-uc icu-i18n libavutil libavformat libavcodec
     PKGCONFIG += x11 xext
+    PKGCONFIG += dtkbase-0-2 dtkutil-0-2 dtkwidget-0-2
 #   PKGCONFIG += mpris-qt5 dbusextended-qt5
 }
 
@@ -68,7 +69,6 @@ SOURCES += \
     view/widget/titlebarwidget.cpp \
     view/widget/ddropdown.cpp \
     view/widget/dsettingdialog.cpp \
-    view/widget/shortcut/shortcuteditor.cpp \
     view/widget/shortcutedit.cpp \
     core/dsettings.cpp \
     view/widget/picturesequenceview.cpp \
@@ -127,7 +127,6 @@ HEADERS += \
     view/widget/titlebarwidget.h \
     view/widget/ddropdown.h \
     view/widget/dsettingdialog.h \
-    view/widget/shortcut/shortcuteditor.h \
     view/widget/shortcutedit.h \
     core/dsettings.h \
     view/widget/picturesequenceview.h \
@@ -155,4 +154,3 @@ TRANSLATIONS += $$PWD/translations/$${TARGET}.ts \
                 $$PWD/translations/$${TARGET}_zh_CN.ts
 
 include($$PWD/install.pri)
-

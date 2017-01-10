@@ -44,6 +44,7 @@ class Player : public QObject, public Singleton<Player>
     Q_PROPERTY(bool muted READ muted WRITE setMuted NOTIFY mutedChanged)
     Q_PROPERTY(double fadeInOutFactor READ fadeInOutFactor WRITE setFadeInOutFactor NOTIFY fadeInOutFactorChanged)
     Q_PROPERTY(bool fadeInOut READ fadeInOut WRITE setFadeInOut NOTIFY fadeInOutChanged)
+    Q_PROPERTY(bool playOnLoaded READ playOnLoaded WRITE setPlayOnLoaded NOTIFY playOnLoadedChanged)
 
     Q_ENUMS(PlaybackStatus)
     Q_ENUMS(PlaybackMode)
@@ -78,6 +79,7 @@ public:
 public:
     void init() {}
 
+    void loadMedia(PlaylistPtr playlist, const MusicMeta &meta);
     void playMeta(PlaylistPtr playlist, const MusicMeta &meta);
     void resume(PlaylistPtr playlist, const MusicMeta &meta);
     void playNextMeta(PlaylistPtr playlist, const MusicMeta &meta);
@@ -118,6 +120,7 @@ public:
     qint64 duration() const;
     double fadeInOutFactor() const;
     bool fadeInOut() const;
+    bool playOnLoaded() const;
 
 signals:
     void canControlChanged(bool canControl);
@@ -140,6 +143,7 @@ signals:
     void durationChanged(qint64 duration);
     void fadeInOutFactorChanged(double fadeInOutFactor);
     void fadeInOutChanged(bool fadeInOut);
+    void playOnLoadedChanged(bool playOnLoaded);
 
 public slots:
     void setCanControl(bool canControl);
@@ -161,12 +165,12 @@ public slots:
     void setMuted(bool muted);
     void setFadeInOutFactor(double fadeInOutFactor);
     void setFadeInOut(bool fadeInOut);
+    void setPlayOnLoaded(bool playOnLoaded);
 
 private:
     friend class Singleton<Player>;
     QScopedPointer<PlayerPrivate> d_ptr;
     Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), Player)
-    bool m_fadeInOut;
 };
 
 Q_DECLARE_METATYPE(Player::Error);

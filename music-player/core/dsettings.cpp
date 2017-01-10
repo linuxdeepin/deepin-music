@@ -62,8 +62,10 @@ void DSettings::loadDefault(const QString &jsonFileName)
             for (auto optionJson :  subGroup.value("options").toArray()) {
                 auto option = optionJson.toObject();
                 auto optionKey = option.value("key").toString();
+                auto canReset = !option.contains("reset") ? true : option.value("reset").toBool();
                 d->settings->beginGroup(QString("%1.%2.%3").arg(groupTitle).arg(subGroupTitle).arg(optionKey));
                 d->settings->setValue("default", option.value("default").toVariant());
+                d->settings->setValue("reset", canReset);
                 d->settings->endGroup();
                 qDebug() << option.value("default") << QString("%1.%2.%3").arg(groupTitle).arg(subGroupTitle).arg(optionKey);
             }
@@ -84,7 +86,10 @@ void DSettings::reset()
     for (auto optKey : d->settings->childGroups()) {
         d->settings->beginGroup(optKey);
         auto optDefault = d->settings->value("default");
-        d->settings->setValue("value", optDefault);
+        auto reset = ! d->settings->contains("reset") ? true : d->settings->value("reset").toBool();
+        if (reset) {
+            d->settings->setValue("value", optDefault);
+        }
         emit optionChange(optKey, optDefault);
         d->settings->endGroup();
     }
