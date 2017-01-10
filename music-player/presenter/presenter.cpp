@@ -322,7 +322,7 @@ void Presenter::postAction()
         position = DSettings::instance()->option("base.play.last_position").toInt();
     }
 
-    if (DSettings::instance()->option("base.play.auto_play").toBool()) {
+    if (DSettings::instance()->option("base.play.auto_play").toBool() && !lastPlaylist->isEmpty()) {
         onSelectedPlaylistChanged(lastPlaylist);
         onSyncMusicPlay(lastPlaylist, lastMeta);
         Player::instance()->setPosition(position);

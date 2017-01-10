@@ -21,7 +21,7 @@ SearchMetaItem {
 
 #SearchMetaItemCheck{
     background-color: transparent;
-    border-image: url(:/common/image/fav_hover.png);
+    border-image: url(:/common/image/none.png);
 }
 #SearchMetaItemCheck:checked{
     border-image: url(:/common/image/select.png);

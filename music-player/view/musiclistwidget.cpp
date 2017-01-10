@@ -217,6 +217,7 @@ void MusicListWidget::resizeEvent(QResizeEvent *event)
     auto viewrect = QFrame::rect();
     auto viewsize = viewrect.marginsRemoved(contentsMargins()).size();
     d->m_musiclist->setFixedSize(viewsize.width(), viewsize.height() - 40);
+    d->m_emptyHits->setFixedSize(viewsize.width(), viewsize.height());
 }
 
 void MusicListWidget::onMusicPlayed(PlaylistPtr playlist, const MusicMeta &meta)

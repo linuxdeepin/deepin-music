@@ -109,7 +109,7 @@ void DSettings::setOption(const QString &key, const QVariant &value)
 {
     Q_D(DSettings);
     d->settings->beginGroup(key);
-    qDebug() << key;
+//    qDebug() << key;
     d->settings->setValue("value", value);
     d->settings->endGroup();
 
