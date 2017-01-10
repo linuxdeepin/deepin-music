@@ -167,64 +167,92 @@
     </message>
 </context>
 <context>
+    <name>LyricView</name>
+    <message>
+        <location filename="../view/lyricview.cpp" line="162"/>
+        <source>Search Lyric</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/lyricview.cpp" line="166"/>
+        <source>Title</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/lyricview.cpp" line="171"/>
+        <source>Artist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/lyricview.cpp" line="176"/>
+        <source>Search</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/lyricview.cpp" line="217"/>
+        <source>Back</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
-        <location filename="../view/mainwindow.cpp" line="313"/>
+        <location filename="../view/mainwindow.cpp" line="320"/>
         <source>File invalid or does not exist, load failed!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/mainwindow.cpp" line="314"/>
+        <location filename="../view/mainwindow.cpp" line="321"/>
         <source>I got it</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/mainwindow.cpp" line="333"/>
+        <location filename="../view/mainwindow.cpp" line="340"/>
         <source>Successfully added to &quot;%1&quot;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/mainwindow.cpp" line="670"/>
+        <location filename="../view/mainwindow.cpp" line="680"/>
         <source>New playlist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/mainwindow.cpp" line="677"/>
+        <location filename="../view/mainwindow.cpp" line="687"/>
         <source>Add music</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/mainwindow.cpp" line="682"/>
+        <location filename="../view/mainwindow.cpp" line="692"/>
         <source>Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/mainwindow.cpp" line="690"/>
+        <location filename="../view/mainwindow.cpp" line="700"/>
         <source>Deep color mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/mainwindow.cpp" line="707"/>
+        <location filename="../view/mainwindow.cpp" line="717"/>
         <source>About</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/mainwindow.cpp" line="709"/>
+        <location filename="../view/mainwindow.cpp" line="719"/>
         <source>Deepin Music Player is a beautiful design and simple function local music player. It supports viewing lyrics when playing, playing lossless music and creating customizable songlist, etc.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/mainwindow.cpp" line="719"/>
+        <location filename="../view/mainwindow.cpp" line="729"/>
         <source>Version: 3.0</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/mainwindow.cpp" line="725"/>
+        <location filename="../view/mainwindow.cpp" line="735"/>
         <source>Help</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/mainwindow.cpp" line="741"/>
+        <location filename="../view/mainwindow.cpp" line="751"/>
         <source>Quit</source>
         <translation type="unfinished"></translation>
     </message>
@@ -237,63 +265,62 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="382"/>
-        <location filename="../view/widget/musiclistview.cpp" line="399"/>
+        <location filename="../view/widget/musiclistview.cpp" line="383"/>
         <source>Play</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="384"/>
+        <location filename="../view/widget/musiclistview.cpp" line="385"/>
         <source>Add to playlist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="388"/>
-        <location filename="../view/widget/musiclistview.cpp" line="406"/>
+        <location filename="../view/widget/musiclistview.cpp" line="390"/>
         <source>Display in file manager</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="390"/>
-        <location filename="../view/widget/musiclistview.cpp" line="421"/>
-        <source>Remove from list</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/widget/musiclistview.cpp" line="391"/>
-        <location filename="../view/widget/musiclistview.cpp" line="431"/>
-        <location filename="../view/widget/musiclistview.cpp" line="446"/>
+        <location filename="../view/widget/musiclistview.cpp" line="456"/>
         <source>Delete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="395"/>
-        <location filename="../view/widget/musiclistview.cpp" line="476"/>
+        <location filename="../view/widget/musiclistview.cpp" line="399"/>
         <source>Song info</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="446"/>
-        <source>Cancel</source>
+        <location filename="../view/widget/musiclistview.cpp" line="393"/>
+        <source>Remove from playlist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/musiclistview.cpp" line="394"/>
+        <source>Delete from local disk</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="456"/>
+        <source>Cancel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/musiclistview.cpp" line="466"/>
         <source>Are you sure to delete %1?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="459"/>
+        <location filename="../view/widget/musiclistview.cpp" line="469"/>
         <source>Are you sure to delete the selected %1 songs?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="464"/>
+        <location filename="../view/widget/musiclistview.cpp" line="474"/>
         <source>Are you sure to delete the selected %1 song files?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="465"/>
+        <location filename="../view/widget/musiclistview.cpp" line="475"/>
         <source>Other song of the same file will be deleted too.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -387,13 +414,12 @@
     </message>
     <message>
         <location filename="../core/playlistmanager.cpp" line="76"/>
-        <location filename="../core/playlistmanager.cpp" line="77"/>
         <source>All Music</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/playlistmanager.cpp" line="82"/>
-        <source>Favourite Music</source>
+        <location filename="../core/playlistmanager.cpp" line="81"/>
+        <source>My favorites</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -401,7 +427,7 @@
     <name>PlaylistWidget</name>
     <message>
         <location filename="../view/playlistwidget.cpp" line="47"/>
-        <source>+ Add Playlist</source>
+        <source>+ Crate a new playlist</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

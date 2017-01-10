@@ -7,32 +7,21 @@
  * (at your option) any later version.
  **/
 
-#include <QtDBus>
-#include <QDBusError>
-#include <QDBusConnection>
-
 #include <QIcon>
+
 #include <DLog>
 #include <DApplication>
 
-#include <Mpris>
 #include <MprisPlayer>
-#include <MprisController>
 
 #include "core/player.h"
 #include "core/pluginmanager.h"
 #include "musicapp.h"
-#include "view/widget/thinwindow.h"
 
 #include <thememanager.h>
 
 using namespace Dtk::Util;
 using namespace Dtk::Widget;
-
-#include <QLabel>
-#include <QLayout>
-
-extern void qt_x11_set_global_double_buffer(bool);
 
 int main(int argc, char *argv[])
 {
@@ -52,7 +41,7 @@ int main(int argc, char *argv[])
     DLogManager::registerConsoleAppender();
     DLogManager::registerFileAppender();
 
-    app.loadTranslator(QList<QLocale>() << QLocale("en_US"));
+    app.loadTranslator();
 
 #ifdef Q_OS_UNIX
     auto serviceName = "deepinmusic";
