@@ -62,33 +62,48 @@
 <context>
     <name>Footer</name>
     <message>
-        <location filename="../view/footer.cpp" line="212"/>
+        <location filename="../view/footer.cpp" line="216"/>
         <source>Unknow Title</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/footer.cpp" line="218"/>
-        <location filename="../view/footer.cpp" line="457"/>
+        <location filename="../view/footer.cpp" line="222"/>
+        <location filename="../view/footer.cpp" line="464"/>
         <source>Unknow Artist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/footer.cpp" line="261"/>
+        <location filename="../view/footer.cpp" line="265"/>
+        <source>Previous</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/footer.cpp" line="266"/>
+        <source>Next</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/footer.cpp" line="267"/>
+        <source>Play/Pause</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/footer.cpp" line="268"/>
         <source>Add to my favorites</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/footer.cpp" line="262"/>
+        <location filename="../view/footer.cpp" line="269"/>
         <source>Lyric</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/footer.cpp" line="263"/>
+        <location filename="../view/footer.cpp" line="270"/>
         <source>Play Mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/footer.cpp" line="264"/>
+        <location filename="../view/footer.cpp" line="271"/>
         <source>Playlist</source>
         <translation type="unfinished"></translation>
     </message>
@@ -121,47 +136,47 @@
 <context>
     <name>InfoDialog</name>
     <message>
-        <location filename="../view/widget/infodialog.cpp" line="51"/>
+        <location filename="../view/widget/infodialog.cpp" line="83"/>
         <source>Title:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/infodialog.cpp" line="51"/>
+        <location filename="../view/widget/infodialog.cpp" line="83"/>
         <source>Artist:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/infodialog.cpp" line="51"/>
+        <location filename="../view/widget/infodialog.cpp" line="83"/>
         <source>Album:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/infodialog.cpp" line="52"/>
+        <location filename="../view/widget/infodialog.cpp" line="84"/>
         <source>File type:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/infodialog.cpp" line="52"/>
+        <location filename="../view/widget/infodialog.cpp" line="84"/>
         <source>Size:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/infodialog.cpp" line="52"/>
+        <location filename="../view/widget/infodialog.cpp" line="84"/>
         <source>Length:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/infodialog.cpp" line="53"/>
+        <location filename="../view/widget/infodialog.cpp" line="85"/>
         <source>Directory:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/infodialog.cpp" line="55"/>
+        <location filename="../view/widget/infodialog.cpp" line="87"/>
         <source>Unkonw artist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/infodialog.cpp" line="56"/>
+        <location filename="../view/widget/infodialog.cpp" line="88"/>
         <source>Unkonw album</source>
         <translation type="unfinished"></translation>
     </message>

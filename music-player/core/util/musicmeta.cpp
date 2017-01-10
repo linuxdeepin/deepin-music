@@ -85,11 +85,9 @@ MusicMeta fromLocalFile(const QFileInfo &fileInfo, const QString &hash)
         }
     }
 
-    if (f.audioProperties()) {
-        // msec
-        info.length = f.audioProperties()->length() * 1000;
-    } else {
+    {
         av_register_all();
+
         AVFormatContext *pFormatCtx = avformat_alloc_context();
         avformat_open_input(&pFormatCtx, info.localPath.toStdString().c_str(), NULL, NULL);
         if (pFormatCtx) {
@@ -104,6 +102,11 @@ MusicMeta fromLocalFile(const QFileInfo &fileInfo, const QString &hash)
 
         avformat_close_input(&pFormatCtx);
         avformat_free_context(pFormatCtx);
+    }
+
+    if (f.audioProperties() && 0 == info.length) {
+        // msec
+        info.length = f.audioProperties()->length() * 1000;
     }
 
     if (f.file()) {

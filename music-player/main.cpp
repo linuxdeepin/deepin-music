@@ -35,13 +35,20 @@ int main(int argc, char *argv[])
     app.setOrganizationName("deepin");
     app.setApplicationName("deepin-music");
     app.setApplicationVersion("3.0");
+
     app.setTheme("light");
     ThemeManager::instance()->setTheme("light");
 
     DLogManager::registerConsoleAppender();
     DLogManager::registerFileAppender();
 
+    if (!app.setSingleInstance("deepinmusic")) {
+        qDebug()<< "another deppin music has started";
+        exit(0);
+    }
+
     app.loadTranslator();
+
 
 #ifdef Q_OS_UNIX
     auto serviceName = "deepinmusic";

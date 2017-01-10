@@ -262,6 +262,9 @@ Footer::Footer(QWidget *parent) :
 
 
     d->btSound->installEventFilter(this);
+    d->installTipHint(d->btPrev, tr("Previous"));
+    d->installTipHint(d->btNext, tr("Next"));
+    d->installTipHint(d->btPlay, tr("Play/Pause"));
     d->installTipHint(d->btFavorite, tr("Add to my favorites"));
     d->installTipHint(d->btLyric, tr("Lyric"));
     d->installTipHint(d->btPlayMode, tr("Play Mode"));
