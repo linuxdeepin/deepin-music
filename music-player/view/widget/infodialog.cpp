@@ -47,44 +47,11 @@ InfoDialog::InfoDialog(const MusicMeta &info, QWidget *parent) : DAbstractDialog
     split->setObjectName("InfoSplit");
     split->setFixedSize(300, 1);
 
-    QStringList infoKeys;
-    infoKeys << tr("Title:") << tr("Artist:") << tr("Album:")
-             << tr("File type:") << tr("Size:") << tr("Length:")
-             << tr("Directory:");
-
-    QString artist = info.artist.isEmpty() ? tr("Unkonw artist") : info.artist;
-    QString album = info.album.isEmpty() ? tr("Unkonw album") : info.album;
-    QStringList infoValues;
-    infoValues << info.title << artist << album
-               << info.filetype << sizeString(info.size) << lengthString(info.length)
-               << info.localPath;
 
     m_infogridFrame = new QFrame;
     m_infogridFrame->setMaximumWidth(300);
     m_infogridFrame->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    auto infogridLayout = new QGridLayout(m_infogridFrame);
-    infogridLayout->setMargin(0);
-    infogridLayout->setHorizontalSpacing(5);
-    infogridLayout->setVerticalSpacing(6);
-    infogridLayout->setColumnStretch(0, 10);
-    infogridLayout->setColumnStretch(1, 100);
 
-    for (int i = 0; i < infoKeys.length(); ++i) {
-        auto infoKey = new QLabel(infoKeys.value(i));
-        infoKey->setObjectName("InfoKey");
-        infoKey->setMinimumHeight(18);
-
-        auto infoValue = new QLabel(infoValues.value(i));
-        infoValue->setWordWrap(true);
-        infoValue->setObjectName("InfoValue");
-        infoValue->setMinimumHeight(18);
-//        infoValue->setMaximumWidth(250);
-        infoValue->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-        m_valueList << infoValue;
-
-        infogridLayout->addWidget(infoKey);
-        infogridLayout->addWidget(infoValue);
-    }
 
     layout->addWidget(closeBt, 0, Qt::AlignTop | Qt::AlignRight);
     layout->addSpacing(43);
@@ -100,16 +67,63 @@ InfoDialog::InfoDialog(const MusicMeta &info, QWidget *parent) : DAbstractDialog
 
     ThemeManager::instance()->regisetrWidget(this);
 
-
     connect(closeBt, &DWindowCloseButton::clicked, this, &DAbstractDialog::close);
+}
+
+void InfoDialog::initUI(const MusicMeta &info)
+{
+    auto infogridLayout = new QGridLayout(m_infogridFrame);
+    infogridLayout->setMargin(0);
+    infogridLayout->setHorizontalSpacing(5);
+    infogridLayout->setVerticalSpacing(5);
+    infogridLayout->setColumnStretch(0, 10);
+    infogridLayout->setColumnStretch(1, 100);
+
+    QStringList infoKeys;
+    infoKeys << tr("Title:") << tr("Artist:") << tr("Album:")
+             << tr("File type:") << tr("Size:") << tr("Length:")
+             << tr("Directory:");
+
+    QString artist = info.artist.isEmpty() ? tr("Unkonw artist") : info.artist;
+    QString album = info.album.isEmpty() ? tr("Unkonw album") : info.album;
+    QStringList infoValues;
+    infoValues << info.title << artist << album
+               << info.filetype << sizeString(info.size) << lengthString(info.length)
+               << info.localPath;
+
+    for (int i = 0; i < infoKeys.length(); ++i) {
+        auto infoKey = new QLabel(infoKeys.value(i));
+        infoKey->setObjectName("InfoKey");
+        infoKey->setMinimumHeight(18);
+//        infoKey->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        auto infoValue = new QLabel(infoValues.value(i));
+        infoValue->setWordWrap(true);
+        infoValue->setObjectName("InfoValue");
+        infoValue->setMinimumHeight(18);
+//        infoValue->setContentsMargins(5,0,5,0);
+        infoValue->setMinimumWidth(200);
+        infoValue->setMaximumWidth(220);
+        infoValue->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        infoValue->adjustSize();
+        m_valueList << infoValue;
+
+        infogridLayout->addWidget(infoKey);
+        infogridLayout->addWidget(infoValue);
+    }
 }
 
 void InfoDialog::updateLabelSize()
 {
-    m_infogridFrame->adjustSize();
+    auto h = 0;
+    qDebug() << m_valueList.length();
     for (auto label : m_valueList) {
         label->adjustSize();
+        qDebug() << label->size() << label->text();
+        h += label->size().height()+6;
     }
+    m_infogridFrame->setFixedHeight(h);
+    m_infogridFrame->adjustSize();
     adjustSize();
 }
 

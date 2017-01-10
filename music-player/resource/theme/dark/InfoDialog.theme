@@ -5,18 +5,19 @@
 }
 
 #InfoClose {
-border-image: url(:/images/light/images/window_close_normal.png);
+    border-image: url(:/images/light/images/window_close_normal.png);
 }
 #InfoClose:hover {
-border-image: url(:/images/light/images/window_close_hover.png);
+    border-image: url(:/images/light/images/window_close_hover.png);
 }
 #InfoClose:pressed {
-border-image: url(:/images/light/images/window_close_press.png);
+    border-image: url(:/images/light/images/window_close_press.png);
 }
 
 #InfoTitle{
+    qproperty-alignment: AlignCenter;
+    color: black;
     font-size: 12px;
-    text-align: center;
 }
 #InfoSplit{
     border-top: 1px solid rgba(0, 0, 0, 0.1);

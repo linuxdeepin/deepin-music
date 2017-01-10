@@ -503,6 +503,7 @@ void MusicListView::showContextMenu(const QPoint &pos,
             // FIXME: qss only word after show
             dlg.show();
             dlg.setCoverImage(coverPixmap);
+            dlg.initUI(meta);
             dlg.updateLabelSize();
             dlg.exec();
         });

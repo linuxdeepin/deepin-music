@@ -27,6 +27,7 @@ class InfoDialog : public DAbstractDialog
 public:
     explicit InfoDialog(const MusicMeta &info, QWidget *parent = 0);
 
+    void initUI(const MusicMeta &info);
     void updateLabelSize();
 
     QString defaultCover() const;

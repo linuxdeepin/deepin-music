@@ -539,7 +539,7 @@ void MainWindow::onSelectImportFiles()
     fileDlg.setDirectory(musicDir.first());
 
     fileDlg.setViewMode(QFileDialog::Detail);
-    fileDlg.setFileMode(QFileDialog::Directory);
+    fileDlg.setFileMode(QFileDialog::DirectoryOnly);
     if (QFileDialog::Accepted == fileDlg.exec()) {
         d->import->showWaitHint();
         emit importSelectFiles(fileDlg.selectedFiles());
