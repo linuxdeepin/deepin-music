@@ -12,6 +12,7 @@
 #include <QCryptographicHash>
 #include <QTextCodec>
 #include <QTime>
+#include <QFile>
 #include <QHash>
 #include <QDebug>
 #include <QAudioBuffer>
@@ -36,6 +37,71 @@ extern "C" {
 
 namespace MusicMetaName
 {
+
+QList<QByteArray> detectCodec(const MusicMeta &info)
+{
+    if (info.cuePath.isEmpty()) {
+#ifdef _WIN32
+        // TODO: fix me in windows
+        TagLib::FileRef f(info.localPath.toStdWString().c_str());
+#else
+        TagLib::FileRef f(info.localPath.toStdString().c_str());
+#endif
+        TagLib::Tag *tag = f.tag();
+        if (tag) {
+            bool encode = true;
+            encode &= tag->title().isNull() ? true : tag->title().isLatin1();
+            encode &= tag->artist().isNull() ? true : tag->artist().isLatin1();
+            encode &= tag->album().isNull() ? true : tag->album().isLatin1();
+            auto detectString = tag->album() + tag->artist() + tag->title();
+            auto detectByte = QByteArray(detectString.toCString());
+            return ICU::codeName(detectByte);
+        } else {
+            return QList<QByteArray>();
+        }
+    } else {
+        QFile cueFile(info.cuePath);
+        if (!cueFile.open(QIODevice::ReadOnly)) { return QList<QByteArray>(); }
+
+        QByteArray cueByte = cueFile.readAll();
+        cueFile.close();
+        return ICU::codeName(cueByte);
+    }
+    return QList<QByteArray>();
+}
+
+void updateCodec(MusicMeta &meta, QByteArray codecName)
+{
+    if (meta.cuePath.isEmpty()) {
+#ifdef _WIN32
+        // TODO: fix me in windows
+        TagLib::FileRef f(info.localPath.toStdWString().c_str());
+#else
+        TagLib::FileRef f(meta.localPath.toStdString().c_str());
+#endif
+        TagLib::Tag *tag = f.tag();
+        if (tag) {
+            bool encode = true;
+            encode &= tag->title().isNull() ? true : tag->title().isLatin1();
+            encode &= tag->artist().isNull() ? true : tag->artist().isLatin1();
+            encode &= tag->album().isNull() ? true : tag->album().isLatin1();
+
+            QTextCodec *codec = QTextCodec::codecForName(codecName);
+            if (encode && codec) {
+                meta.album = codec->toUnicode(tag->album().toCString());
+                meta.artist = codec->toUnicode(tag->artist().toCString());
+                meta.title = codec->toUnicode(tag->title().toCString());
+                qDebug() << meta.album << meta.artist  << meta.title;
+            }
+
+            qDebug() << f.file()->name();
+            if (meta.title.isEmpty() && f.file()) {
+                meta.title = f.file()->name();
+            }
+        }
+    }
+}
+
 
 MusicMeta fromLocalFile(const QFileInfo &fileInfo, const QString &hash)
 {
@@ -67,7 +133,7 @@ MusicMeta fromLocalFile(const QFileInfo &fileInfo, const QString &hash)
 
         auto detectString = tag->album() + tag->artist() + tag->title();
         auto detectByte = QByteArray(detectString.toCString());
-        QByteArray codeName = ICU::codeName(detectByte);
+        QByteArray codeName = ICU::codeName(detectByte).value(0);
         QTextCodec *codec = QTextCodec::codecForName(codeName);
 
 //                    Localized encode, current only GB18030 is used.

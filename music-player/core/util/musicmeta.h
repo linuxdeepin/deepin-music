@@ -19,6 +19,8 @@ namespace MusicMetaName
 {
 
 void pinyinIndex(MusicMeta &info);
+QList<QByteArray> detectCodec(const MusicMeta &info);
+void updateCodec( MusicMeta &info, QByteArray codecName);
 MusicMeta fromLocalFile(const QFileInfo &fileInfo, const QString &hash);
 QString hash(const QString &hash);
 

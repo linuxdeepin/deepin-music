@@ -47,7 +47,7 @@ CueParser::CueParser(const QString &filepath)
     QByteArray cueByte = cueFile.readAll();
     cueFile.close();
 
-    QByteArray codeName = ICU::codeName(cueByte);
+    QByteArray codeName = ICU::codeName(cueByte).value(0);
     QTextCodec *codec = QTextCodec::codecForName(codeName);
     if (!codec) {
         codec = QTextCodec::codecForLocale();

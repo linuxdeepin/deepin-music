@@ -24,6 +24,7 @@ public:
 
 signals:
     void play(const MusicMeta &meta);
+    void updateMetaCodec(const MusicMeta &meta);
     void addToPlaylist(PlaylistPtr playlist, const MusicMetaList metalist);
     void removeMusicList(const MusicMetaList &metalist);
     void deleteMusicList(const MusicMetaList &metalist);

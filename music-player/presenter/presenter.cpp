@@ -776,6 +776,12 @@ void Presenter::onToggleMute()
     d->dsettings->setOption("base.play.mute", Player::instance()->muted());
 }
 
+void Presenter::onUpdateMetaCodec(const MusicMeta &meta)
+{
+    Q_D(Presenter);
+    emit musicMetaUpdate(d->playlistMgr->playingPlaylist(), meta);
+}
+
 void Presenter::onPlayall(PlaylistPtr playlist)
 {
     onMusicPlay(playlist, playlist->first());

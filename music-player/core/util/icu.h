@@ -6,7 +6,7 @@
 namespace ICU
 {
 
-QByteArray codeName(const QByteArray& cueByte);
+QList<QByteArray> codeName(const QByteArray& cueByte);
 
 }
 #endif // ICU_H

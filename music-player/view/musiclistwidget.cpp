@@ -92,6 +92,11 @@ void MusicListWidgetPrivate::initConntion()
     q, [ = ](const MusicMeta & meta) {
         emit q->musicClicked(m_musiclist->playlist(), meta);
     });
+
+    q->connect(m_musiclist, &MusicListView::updateMetaCodec,
+    q, [ = ](const MusicMeta & meta) {
+        emit q->updateMetaCodec(meta);
+    });
 }
 
 void MusicListWidgetPrivate::showEmptyHits(bool empty)

@@ -24,6 +24,7 @@
 #include <QUrl>
 #include <QProcess>
 #include <QStyleFactory>
+#include <QTextCodec>
 
 #include <thememanager.h>
 
@@ -31,6 +32,7 @@
 #include "../../core/music.h"
 #include "../../core/playlist.h"
 #include "../../core/lyricservice.h"
+#include "../../core/util/musicmeta.h"
 #include "../helper/widgethellper.h"
 
 #include "musicitemdelegate.h"
@@ -394,9 +396,46 @@ void MusicListView::showContextMenu(const QPoint &pos,
     auto deleteAction = myMenu.addAction(tr("Delete from local disk"));
 
     QAction *songAction = nullptr;
+
+    QMenu textCodecMenu;
+    textCodecMenu.setStyle(QStyleFactory::create("dlight"));
+
     if (singleSelect) {
+        auto index = selection->selectedRows().first();
+        auto item = d->m_model->item(index.row(), index.column());
+        MusicMeta meta = qvariant_cast<MusicMeta>(item->data());
+        QList<QByteArray> codecList = MusicMetaName::detectCodec(meta);
+
+        auto defaultCodec = QTextCodec::codecForLocale()->name();
+        qDebug() << defaultCodec << codecList.length();
+
+        codecList.removeAll(defaultCodec);
+
+        auto act = textCodecMenu.addAction(defaultCodec);
+        act->setData(QVariant::fromValue(defaultCodec));
+        textCodecMenu.addSeparator();
+
+        for (auto codec : codecList) {
+            auto act = textCodecMenu.addAction(codec);
+            act->setData(QVariant::fromValue(codec));
+        }
+
+        if (codecList.length() > 0) {
+            myMenu.addSeparator();
+            myMenu.addAction(tr("Text Encoding"))->setMenu(&textCodecMenu);
+        }
+
         myMenu.addSeparator();
         songAction = myMenu.addAction(tr("Song info"));
+        connect(&textCodecMenu, &QMenu::triggered, this, [ = ](QAction * action) {
+            auto codec = action->data().toByteArray();
+            MusicMeta updateMeta = meta;
+            MusicMetaName::updateCodec(updateMeta, codec);
+            emit updateMetaCodec(updateMeta);
+            qDebug() << codec;
+            d->m_model->setData(index, QVariant::fromValue<MusicMeta>(updateMeta));
+            this->update();
+        });
     }
 
     if (playAction) {

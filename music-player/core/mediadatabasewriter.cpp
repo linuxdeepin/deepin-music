@@ -8,6 +8,7 @@
  **/
 
 #include "mediadatabasewriter.h"
+#include "util/musicmeta.h"
 
 #include <QSqlDatabase>
 #include <QSqlQuery>
@@ -32,16 +33,33 @@ void MediaDatabaseWriter::addMusicMetaList(const MusicMetaList &metalist)
     //    qDebug() << "addMusicMetaList end";
 }
 
-void MediaDatabaseWriter::updateMusicMeta(const MusicMeta &metalist)
+void MediaDatabaseWriter::updateMusicMeta(const MusicMeta &meta)
 {
+    MusicMeta saveMeta = meta;
+    MusicMetaName::pinyinIndex(saveMeta);
+
     qDebug() << "updateMusicMeta beign";
     QSqlQuery query;
 
-    query.prepare("UPDATE music set invalid=:invalid, length=:length where hash=:hash");
+    query.prepare("UPDATE music set "
+                  "invalid=:invalid, length=:length, "
+                  "title=:title, artist=:artist, album=:album, "
+                  "py_title=:py_title, py_title_short=:py_title_short, py_artist=:py_artist, "
+                  "py_artist_short=:py_artist_short, py_album=:py_album, py_album_short=:py_album_short "
+                  "where hash=:hash");
 
-    query.bindValue(":invalid", metalist.invalid);
-    query.bindValue(":length", metalist.length);
-    query.bindValue(":hash", metalist.hash);
+    query.bindValue(":invalid", saveMeta.invalid);
+    query.bindValue(":length", saveMeta.length);
+    query.bindValue(":title", saveMeta.title);
+    query.bindValue(":artist", saveMeta.artist);
+    query.bindValue(":album", saveMeta.album);
+    query.bindValue(":py_title", saveMeta.pinyinTitle);
+    query.bindValue(":py_title_short", saveMeta.pinyinTitleShort);
+    query.bindValue(":py_artist", saveMeta.pinyinArtist);
+    query.bindValue(":py_artist_short", saveMeta.pinyinArtistShort);
+    query.bindValue(":py_album", saveMeta.pinyinAlbum);
+    query.bindValue(":py_album_short", saveMeta.pinyinAlbumShort);
+    query.bindValue(":hash", saveMeta.hash);
 
     if (! query.exec()) {
         qCritical() << query.lastError();

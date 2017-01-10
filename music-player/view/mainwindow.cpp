@@ -255,6 +255,8 @@ void MainWindow::binding(Presenter *presenter)
     connect(presenter, &Presenter::musiclistMenuRequested,
             d->musicList, &MusicListWidget::onCustomContextMenuRequest);
 
+    connect(d->musicList, &MusicListWidget::updateMetaCodec,
+            presenter, &Presenter::onUpdateMetaCodec);
     connect(d->musicList, &MusicListWidget::playall,
             presenter, &Presenter::onPlayall);
     connect(d->musicList, &MusicListWidget::resort,
@@ -473,8 +475,8 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *e)
             auto geometry = d->playlist->geometry().marginsAdded(QMargins(0, 0, 40, 40));
 //            qDebug() << geometry << mousePos;
             if (!geometry.contains(mousePos)) {
+                qDebug() << "hide playlist" << me->pos() << QCursor::pos() << obj;
                 DUtil::TimerSingleShot(50, [this]() {
-                    qDebug() << "hide playlist" ;
                     setPlaylistVisible(false);
                 });
             }
@@ -486,7 +488,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *e)
         //        qDebug() << obj << me->pos();
         if (obj->objectName() == this->objectName() || this->objectName() + "Window" == obj->objectName()) {
             QPoint mousePos = me->pos();
-            qDebug() << "release" << me->pos() << QCursor::pos();
+            qDebug() << "lyricView checkHiddenSearch" << me->pos() << QCursor::pos() << obj;
             d->lyricView->checkHiddenSearch(mousePos);
         }
 

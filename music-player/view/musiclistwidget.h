@@ -27,6 +27,7 @@ signals:
     void playall(PlaylistPtr playlist);
     void resort(PlaylistPtr playlist, int sortType);
     void musicClicked(PlaylistPtr playlist, const MusicMeta &info);
+    void updateMetaCodec(const MusicMeta &meta);
 
     void requestCustomContextMenu(const QPoint &pos);
     void addToPlaylist(PlaylistPtr playlist, const MusicMetaList &metalist);

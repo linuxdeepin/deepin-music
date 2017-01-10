@@ -117,6 +117,8 @@ public slots:
     void onPlayModeChanged(int mode);
     void onToggleMute();
 
+    void onUpdateMetaCodec(const MusicMeta &meta);
+
     //! music list
     void onPlayall(PlaylistPtr playlist);
     void onResort(PlaylistPtr playlist, int sortType);
