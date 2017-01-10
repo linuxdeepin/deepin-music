@@ -406,21 +406,20 @@ void MusicListView::showContextMenu(const QPoint &pos,
         MusicMeta meta = qvariant_cast<MusicMeta>(item->data());
         QList<QByteArray> codecList = MusicMetaName::detectCodec(meta);
 
-        auto defaultCodec = QTextCodec::codecForLocale()->name();
-        qDebug() << defaultCodec << codecList.length();
+//        auto defaultCodec = QTextCodec::codecForLocale()->name();
+//        qDebug() << defaultCodec << codecList.length();
 
-        codecList.removeAll(defaultCodec);
-
-        auto act = textCodecMenu.addAction(defaultCodec);
-        act->setData(QVariant::fromValue(defaultCodec));
-        textCodecMenu.addSeparator();
+//        codecList.removeAll(defaultCodec);
+//        auto act = textCodecMenu.addAction(defaultCodec);
+//        act->setData(QVariant::fromValue(defaultCodec));
+//        textCodecMenu.addSeparator();
 
         for (auto codec : codecList) {
             auto act = textCodecMenu.addAction(codec);
             act->setData(QVariant::fromValue(codec));
         }
 
-        if (codecList.length() > 0) {
+        if (codecList.length() > 1) {
             myMenu.addSeparator();
             myMenu.addAction(tr("Text Encoding"))->setMenu(&textCodecMenu);
         }

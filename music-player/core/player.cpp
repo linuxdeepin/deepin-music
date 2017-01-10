@@ -12,6 +12,7 @@
 #include <QDebug>
 #include <QTimer>
 #include <QMediaPlayer>
+#include <QPropertyAnimation>
 #include "lyricservice.h"
 
 #include <QMimeDatabase>
@@ -20,6 +21,8 @@ static QMap<QString, bool>  sSupportedSuffix;
 static QStringList          sSupportedSuffixList;
 static QStringList          sSupportedFiterList;
 static QStringList          sSupportedMimeTypes;
+
+static const int sFadeInOutAnimationDuration = 400; //ms
 
 void initMiniTypes()
 {
@@ -102,8 +105,14 @@ public:
     qlonglong position  = 0;
 
     QMediaPlayer    *qplayer;
+    double          volume              = 50.0;
     PlaylistPtr     activePlaylist;
     MusicMeta       activeMeta;
+
+    bool                fadeInOut           = true;
+    double              fadeInOutFactor     = 1.0;
+    QPropertyAnimation  *fadeInAnimation    = nullptr;
+    QPropertyAnimation  *fadeOutAnimation   = nullptr;
 
     Player *q_ptr;
     Q_DECLARE_PUBLIC(Player)
@@ -133,10 +142,33 @@ void PlayerPrivate::initConnection()
             return;
         }
 
+//        qDebug() << position << sFadeInOutAnimationDuration << activeMeta.offset << activeMeta.length;
+//        qDebug() << position/1000 << sFadeInOutAnimationDuration << activeMeta.offset/1000 << activeMeta.length/1000;
+
+//        if (position + (sFadeInOutAnimationDuration) >= activeMeta.offset + activeMeta.length) {
+//            qDebug() << "start fade out";
+//            if (fadeInOut&& !fadeOutAnimation) {
+//                fadeOutAnimation = new QPropertyAnimation(q, "fadeInOutFactor");
+//                fadeOutAnimation->setStartValue(1.0000);
+//                fadeOutAnimation->setKeyValueAt(0.9999, 0.1000);
+//                fadeOutAnimation->setEndValue(1.0000);
+//                fadeOutAnimation->setDuration(sFadeInOutAnimationDuration);
+//                q->connect(fadeOutAnimation, &QPropertyAnimation::finished,
+//                q, [ = ]() {
+//                    fadeOutAnimation->deleteLater();
+//                    fadeOutAnimation = nullptr;
+//                });
+//                fadeOutAnimation->start();
+//            }
+//        }
+
         emit q->positionChanged(position - activeMeta.offset,  activeMeta.length);
     });
     q->connect(qplayer, &QMediaPlayer::volumeChanged,
-               q, &Player::volumeChanged);
+    q, [ = ](int volume) {
+        qDebug() << volume;
+        emit q->volumeChanged(volume / fadeInOutFactor);
+    });
     q->connect(qplayer, &QMediaPlayer::mutedChanged,
                q, &Player::mutedChanged);
     q->connect(qplayer, &QMediaPlayer::durationChanged,
@@ -151,6 +183,21 @@ void PlayerPrivate::initConnection()
             qplayer->play();
             emit q->mediaError(activePlaylist, activeMeta, Player::NoError);
             activeMeta.invalid = false;
+
+//            if (fadeInOut && !fadeInAnimation) {
+//                qDebug() << "start fade in";
+//                fadeInAnimation = new QPropertyAnimation(q, "fadeInOutFactor");
+//                fadeInAnimation->setStartValue(0.10000);
+//                fadeInAnimation->setEndValue(1.0000);
+//                fadeInAnimation->setDuration(sFadeInOutAnimationDuration);
+//                q->connect(fadeInAnimation, &QPropertyAnimation::finished,
+//                q, [ = ]() {
+//                    fadeInAnimation->deleteLater();
+//                    fadeInAnimation = nullptr;
+//                });
+//                fadeInAnimation->start();
+//            }
+
             break;
         }
         case QMediaPlayer::EndOfMedia: {
@@ -290,9 +337,29 @@ void Player::resume(PlaylistPtr playlist, const MusicMeta &meta)
     qDebug() << "resume top";
     Q_ASSERT(playlist == d->activePlaylist);
     Q_ASSERT(meta.hash == d->activeMeta.hash);
+
     QTimer::singleShot(50, this, [ = ]() {
         d->qplayer->play();
     });
+
+    if (d->fadeOutAnimation) {
+        d->fadeOutAnimation->stop();
+        d->fadeOutAnimation->deleteLater();
+        d->fadeOutAnimation = nullptr;
+    }
+    if (d->fadeInOut && !d->fadeInAnimation) {
+        qDebug() << "start fade in";
+        d->fadeInAnimation = new QPropertyAnimation(this, "fadeInOutFactor");
+        d->fadeInAnimation->setStartValue(0.10000);
+        d->fadeInAnimation->setEndValue(1.0000);
+        d->fadeInAnimation->setDuration(sFadeInOutAnimationDuration);
+        connect(d->fadeInAnimation, &QPropertyAnimation::finished,
+        this, [ = ]() {
+            d->fadeInAnimation->deleteLater();
+            d->fadeInAnimation = nullptr;
+        });
+        d->fadeInAnimation->start();
+    }
 }
 
 void Player::playNextMeta(PlaylistPtr playlist, const MusicMeta &meta)
@@ -324,7 +391,32 @@ void Player::playPrevMusic(PlaylistPtr playlist, const MusicMeta &meta)
 void Player::pause()
 {
     Q_D(Player);
-    d->qplayer->pause();
+
+    qDebug() << "start fade puse";
+
+    if (d->fadeInAnimation) {
+        d->fadeInAnimation->stop();
+        d->fadeInAnimation->deleteLater();
+        d->fadeInAnimation = nullptr;
+    }
+
+    if (d->fadeInOut && !d->fadeOutAnimation) {
+        d->fadeOutAnimation = new QPropertyAnimation(this, "fadeInOutFactor");
+        d->fadeOutAnimation->setStartValue(1.0000);
+        d->fadeOutAnimation->setKeyValueAt(0.9999, 0.1000);
+        d->fadeOutAnimation->setEndValue(1.0000);
+        d->fadeOutAnimation->setDuration(sFadeInOutAnimationDuration);
+        connect(d->fadeOutAnimation, &QPropertyAnimation::finished,
+        this, [ = ]() {
+            d->fadeOutAnimation->deleteLater();
+            d->fadeOutAnimation = nullptr;
+            d->qplayer->pause();
+        });
+        d->fadeOutAnimation->start();
+    } else {
+        d->qplayer->pause();
+        setFadeInOutFactor(1.0);
+    }
 }
 
 void Player::stop()
@@ -373,7 +465,9 @@ qlonglong Player::position() const
 double Player::volume() const
 {
     Q_D(const Player);
-    return d->qplayer->volume();
+    return d->volume;
+
+//    return d->qplayer->volume() * d->fadeInOutFactor;
 }
 
 Player::PlaybackMode Player::mode() const
@@ -396,6 +490,18 @@ qint64 Player::duration() const
     } else {
         return  activeMeta().length;
     }
+}
+
+double Player::fadeInOutFactor() const
+{
+    Q_D(const Player);
+    return d->fadeInOutFactor;
+}
+
+bool Player::fadeInOut() const
+{
+    Q_D(const Player);
+    return d->fadeInOut;
 }
 
 void Player::setCanControl(bool canControl)
@@ -423,8 +529,10 @@ void Player::setMode(Player::PlaybackMode mode)
 void Player::setVolume(double volume)
 {
     Q_D(Player);
+    d->volume = volume;
+
     d->qplayer->blockSignals(true);
-    d->qplayer->setVolume(volume);
+    d->qplayer->setVolume(d->volume * d->fadeInOutFactor);
     d->qplayer->blockSignals(false);
 }
 
@@ -433,4 +541,22 @@ void Player::setMuted(bool mute)
     qDebug() << "setMuted" << mute;
     Q_D(Player);
     d->qplayer->setMuted(mute);
+}
+
+void Player::setFadeInOutFactor(double fadeInOutFactor)
+{
+    Q_D(Player);
+    d->fadeInOutFactor = fadeInOutFactor;
+//    qDebug() << "setFadeInOutFactor" << fadeInOutFactor
+//             << d->volume *d->fadeInOutFactor << d->volume;
+    d->qplayer->blockSignals(true);
+    d->qplayer->setVolume(d->volume * d->fadeInOutFactor);
+    d->qplayer->blockSignals(false);
+
+}
+
+void Player::setFadeInOut(bool fadeInOut)
+{
+    Q_D(Player);
+    d->fadeInOut = fadeInOut;
 }

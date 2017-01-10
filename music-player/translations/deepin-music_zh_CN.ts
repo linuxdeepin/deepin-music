@@ -224,7 +224,7 @@
     <message>
         <location filename="../view/mainwindow.cpp" line="342"/>
         <source>Successfully added to &quot;%1&quot;</source>
-        <translation>成功添加到\&quot;%1\&quot;</translation>
+        <translation>成功添加到&quot;%1&quot;</translation>
     </message>
     <message>
         <location filename="../view/mainwindow.cpp" line="682"/>

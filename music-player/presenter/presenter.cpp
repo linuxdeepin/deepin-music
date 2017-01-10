@@ -309,6 +309,9 @@ void Presenter::loadConfig()
     auto mute = d->dsettings->option("base.play.mute").toBool();
     Player::instance()->setMuted(mute);
     emit this->mutedChanged(mute);
+
+    auto fadeInOut = d->dsettings->option("base.play.fade_in_out").toBool();
+    Player::instance()->setFadeInOut(fadeInOut);
 }
 
 void Presenter::postAction()
