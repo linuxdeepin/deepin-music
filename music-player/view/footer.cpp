@@ -166,12 +166,16 @@ void FooterPrivate::initConnection()
     q->connect(btPlayList, &QPushButton::released, q, [ = ]() {
         emit q->togglePlaylist();
     });
-    q->connect(btSound, &QPushButton::released, q, [ = ]() {
+    q->connect(btSound, &QPushButton::pressed, q, [ = ]() {
         emit q->toggleMute();
     });
     q->connect(volSlider, &SoundVolume::volumeChanged, q, [ = ](int vol) {
         q->onVolumeChanged(vol);
         emit q->volumeChanged(vol);
+    });
+
+    q->connect(q, &Footer::mouseMoving, q, [ = ](Qt::MouseButton) {
+        hintFilter->hideAll();
     });
 }
 

@@ -98,6 +98,15 @@ HintFilter::~HintFilter()
 
 }
 
+void HintFilter::hideAll()
+{
+    Q_D(HintFilter);
+    if (d->hintWidget) {
+        d->hintWidget->hide();
+        d->delayShowTimer->stop();
+    }
+}
+
 bool HintFilter::eventFilter(QObject *obj, QEvent *event)
 {
     Q_D(HintFilter);

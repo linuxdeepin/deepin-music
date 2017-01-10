@@ -30,6 +30,7 @@ public:
     HintFilter(QObject *parent = 0);
     ~HintFilter();
 
+    void hideAll();
     bool eventFilter(QObject *obj, QEvent *event);
 private:
     QScopedPointer<HintFilterPrivate> d_ptr;

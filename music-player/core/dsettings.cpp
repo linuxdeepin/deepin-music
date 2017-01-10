@@ -94,6 +94,7 @@ QVariant DSettings::option(const QString &key)
 {
     Q_D(DSettings);
     d->settings->beginGroup(key);
+
     QVariant value;
     if (d->settings->contains("value")) {
         value = d->settings->value("value");
@@ -108,6 +109,7 @@ void DSettings::setOption(const QString &key, const QVariant &value)
 {
     Q_D(DSettings);
     d->settings->beginGroup(key);
+    qDebug() << key;
     d->settings->setValue("value", value);
     d->settings->endGroup();
 
