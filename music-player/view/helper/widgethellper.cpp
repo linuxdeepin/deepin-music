@@ -150,8 +150,8 @@ void slideBottom2TopWidget(QWidget *top, QWidget *bottom, int delay)
     QPropertyAnimation *animation3 = new QPropertyAnimation(bottomOpacity, "opacity");
     animation3->setEasingCurve(QEasingCurve::InCubic);
     animation3->setDuration(delay);
-    animation3->setStartValue(0);
-    animation3->setEndValue(1);
+    animation3->setStartValue(0.0);
+    animation3->setEndValue(1.0);
     animation3->start();
     animation3->connect(animation3, &QPropertyAnimation::finished,
                         animation3, &QPropertyAnimation::deleteLater);
@@ -167,8 +167,8 @@ void slideBottom2TopWidget(QWidget *top, QWidget *bottom, int delay)
     QPropertyAnimation *animation4 = new QPropertyAnimation(topOpacity, "opacity");
     animation4->setEasingCurve(QEasingCurve::InCubic);
     animation4->setDuration(delay);
-    animation4->setStartValue(0.99);
-    animation4->setEndValue(0);
+    animation4->setStartValue(1.0);
+    animation4->setEndValue(0.0);
     animation4->start();
     animation4->connect(animation4, &QPropertyAnimation::finished,
                         animation4, &QPropertyAnimation::deleteLater);
@@ -219,8 +219,8 @@ void slideTop2BottomWidget(QWidget *top, QWidget *bottom, int delay)
     QPropertyAnimation *animation3 = new QPropertyAnimation(bottomOpacity, "opacity");
     animation3->setEasingCurve(QEasingCurve::InCubic);
     animation3->setDuration(delay);
-    animation3->setStartValue(0);
-    animation3->setEndValue(1);
+    animation3->setStartValue(0.0);
+    animation3->setEndValue(1.0);
     animation3->start();
     animation3->connect(animation3, &QPropertyAnimation::finished,
                         animation3, &QPropertyAnimation::deleteLater);
@@ -237,8 +237,8 @@ void slideTop2BottomWidget(QWidget *top, QWidget *bottom, int delay)
     QPropertyAnimation *animation4 = new QPropertyAnimation(topOpacity, "opacity");
     animation4->setEasingCurve(QEasingCurve::InCubic);
     animation4->setDuration(delay);
-    animation4->setStartValue(0.99);
-    animation4->setEndValue(0);
+    animation4->setStartValue(1.0);
+    animation4->setEndValue(0.0);
     animation4->start();
     animation4->connect(animation4, &QPropertyAnimation::finished,
                         animation4, &QPropertyAnimation::deleteLater);

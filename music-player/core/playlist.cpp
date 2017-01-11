@@ -294,6 +294,9 @@ MusicMeta Playlist::removeOneMusic(const MusicMeta &meta)
         return MusicMeta();
     }
 
+    if (listmeta.playing.hash == meta.hash)
+        listmeta.playing = MusicMeta();
+
     MusicMeta nextMeta;
     auto nextPos = listmeta.sortMetas.lastIndexOf(meta.hash) + 1;
     if (listmeta.sortMetas.length() > nextPos) {

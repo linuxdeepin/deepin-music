@@ -291,7 +291,7 @@ void MusicItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
             painter->setFont(font12);
             QFont font(font12);
             QFontMetrics fm(font);
-            auto text = fm.elidedText(meta.title, Qt::ElideRight, rect.width());
+            auto text = fm.elidedText(meta.title, Qt::ElideMiddle, rect.width());
             painter->drawText(rect, flag, text);
             break;
         }
@@ -302,7 +302,7 @@ void MusicItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
                        meta.artist;
             QFont font(font11);
             QFontMetrics fm(font);
-            auto text = fm.elidedText(str, Qt::ElideRight, rect.width());
+            auto text = fm.elidedText(str, Qt::ElideMiddle, rect.width());
             painter->drawText(rect, flag, text);
             break;
         }
@@ -313,7 +313,7 @@ void MusicItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
                        meta.album;
             QFont font(font11);
             QFontMetrics fm(font);
-            auto text = fm.elidedText(str, Qt::ElideRight, rect.width());
+            auto text = fm.elidedText(str, Qt::ElideMiddle, rect.width());
             painter->drawText(rect, flag, text);
             break;
         }

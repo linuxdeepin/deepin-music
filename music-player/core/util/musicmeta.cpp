@@ -34,6 +34,7 @@ extern "C" {
 
 #include "pinyin.h"
 #include "icu.h"
+#include "cueparser.h"
 
 namespace MusicMetaName
 {
@@ -99,6 +100,17 @@ void updateCodec(MusicMeta &meta, QByteArray codecName)
                 meta.title = f.file()->name();
             }
         }
+    } else {
+//        qDebug() << "check" << meta.cuePath;
+        CueParser parser(meta.cuePath, codecName);
+        for (auto cueMeta : parser.metalist) {
+//            qDebug() << "check" << cueMeta.hash << meta.hash;
+            if (cueMeta.hash == meta.hash) {
+                meta.title = cueMeta.title;
+                meta.artist = cueMeta.artist;
+                meta.album = cueMeta.album;
+            }
+        }
     }
 }
 
@@ -157,11 +169,11 @@ MusicMeta fromLocalFile(const QFileInfo &fileInfo, const QString &hash)
         AVFormatContext *pFormatCtx = avformat_alloc_context();
         avformat_open_input(&pFormatCtx, info.localPath.toStdString().c_str(), NULL, NULL);
         if (pFormatCtx) {
-            AVDictionaryEntry *tag = NULL;
+//            AVDictionaryEntry *tag = NULL;
             avformat_find_stream_info(pFormatCtx, NULL);
-            while ((tag = av_dict_get(pFormatCtx->metadata, "", tag, AV_DICT_IGNORE_SUFFIX))) {
-                qDebug() << tag->key << "=" << tag->value;
-            }
+//            while ((tag = av_dict_get(pFormatCtx->metadata, "", tag, AV_DICT_IGNORE_SUFFIX))) {
+//                qDebug() << tag->key << "=" << tag->value;
+//            }
             int64_t duration = pFormatCtx->duration / 1000;
             info.length = duration;
         }

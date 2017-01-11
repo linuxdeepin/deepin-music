@@ -22,6 +22,8 @@ class MainWindow : public ThinWindow
 {
     Q_OBJECT
     Q_PROPERTY(QString coverBackground READ coverBackground WRITE setCoverBackground)
+    Q_PROPERTY(QString viewname READ viewname WRITE setViewname NOTIFY viewnameChanged)
+
 
 public:
     explicit MainWindow(QWidget *parent = 0);
@@ -35,10 +37,12 @@ public:
     void binding(Presenter *presenter);
 
     QString coverBackground() const;
+    QString viewname() const;
 
 signals:
     void addPlaylist(bool editmode);
     void importSelectFiles(const QStringList &filelist);
+    void viewnameChanged(QString viewname);
 
 public slots:
     void setCoverBackground(QString coverBackground);
@@ -51,6 +55,7 @@ public slots:
     void showImportView();
     void showTips(QPixmap icon, QString text);
     void setPlaylistVisible(bool visible);
+    void setViewname(QString viewname);
 
 protected:
     virtual bool eventFilter(QObject *obj, QEvent *e) Q_DECL_OVERRIDE;
@@ -61,7 +66,7 @@ protected:
 private:
     void changeToMusicListView(bool keepPlaylist);
     void initMenu();
-    void disableControl();
+    void disableControl(int delay = 350);
     void updateViewname(const QString &vm);
 
     QScopedPointer<MainWindowPrivate> d;

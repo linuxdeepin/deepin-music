@@ -382,7 +382,7 @@ void ThinWindow::paintEvent(QPaintEvent *)
 
     QPainter painter(this);
     painter.setRenderHints(QPainter::Antialiasing | QPainter::HighQualityAntialiasing);
-    auto radius = d->radius;
+    auto radius = (windowState() == Qt::WindowMaximized) ? 0 : d->radius;
     auto penWidthf = 1.0;
 
     painter.drawPixmap(0, 8, d->shadowPixmap);

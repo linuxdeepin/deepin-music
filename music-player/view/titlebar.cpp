@@ -28,7 +28,7 @@ public:
         linearGradient.setColorAt(1.0,  QColor(0xf8, 0xf8, 0xf8, 255));
         titleBackground = QBrush(linearGradient);
 
-        borderBottom =  QColor(0.1 * 255,  0.1 * 255,  0.1 * 255);
+        borderShadowTop =  QColor(0.1 * 255,  0.1 * 255,  0.1 * 255);
     }
 
     void workaroundSetButtonStyle();
@@ -36,6 +36,7 @@ public:
 
     QBrush          titleBackground;
     QColor          borderBottom;
+    QColor          borderShadowTop;
     QString         viewname;
 
     Titlebar *q_ptr;
@@ -66,6 +67,12 @@ QColor Titlebar::borderBottom() const
     return d->borderBottom;
 }
 
+QColor Titlebar::borderShadowTop() const
+{
+    Q_D(const Titlebar);
+    return d->borderShadowTop;
+}
+
 QString Titlebar::viewname() const
 {
     Q_D(const Titlebar);
@@ -82,6 +89,12 @@ void Titlebar::setBorderBottom(QColor borderBottom)
 {
     Q_D(Titlebar);
     d->borderBottom = borderBottom;
+}
+
+void Titlebar::setBorderShadowTop(QColor borderShadowTop)
+{
+    Q_D(Titlebar);
+    d->borderShadowTop = borderShadowTop;
 }
 
 void Titlebar::setViewname(QString viewname)
@@ -135,10 +148,9 @@ void Titlebar::paintEvent(QPaintEvent *)
     titlePainter.setPen(QPen(d->borderBottom, 1.0));
     titlePainter.drawLine(line);
 
-
     QLine lineOut(titleTopLeft.x()+radius, winRect.y() +  1,
                   winRect.x() + winRect.width()-radius, winRect.y() + 1);
-    titlePainter.setPen(QPen(QColor(255, 255, 255, 0.05 * 255), 1.0));
+    titlePainter.setPen(QPen(d->borderShadowTop, 1.0));
     titlePainter.drawLine(lineOut);
 }
 

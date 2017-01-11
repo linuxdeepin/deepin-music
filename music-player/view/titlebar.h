@@ -19,6 +19,7 @@ class Titlebar : public Dtk::Widget::DTitlebar
 
     Q_PROPERTY(QBrush background READ background WRITE setBackground)
     Q_PROPERTY(QColor borderBottom READ borderBottom WRITE setBorderBottom)
+    Q_PROPERTY(QColor borderShadowTop READ borderShadowTop WRITE setBorderShadowTop)
     Q_PROPERTY(QString viewname READ viewname WRITE setViewname NOTIFY viewnameChanged)
 
 public:
@@ -28,6 +29,7 @@ public:
     QString viewname() const;
     QBrush background() const;
     QColor borderBottom() const;
+    QColor borderShadowTop() const;
 
 signals:
     void viewnameChanged(QString viewname);
@@ -36,6 +38,7 @@ public slots:
     void setViewname(QString viewname);
     void setBackground(QBrush background);
     void setBorderBottom(QColor borderBottom);
+    void setBorderShadowTop(QColor borderShadowTop);
 
 protected:
     virtual void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;

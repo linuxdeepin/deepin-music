@@ -26,7 +26,7 @@ public:
     QWidget *centerWidget;
 
     Hint *q_ptr;
-    Q_DECLARE_PUBLIC(Hint);
+    Q_DECLARE_PUBLIC(Hint)
 };
 
 Hint::Hint(QWidget *parent) : QWidget(parent), d_ptr(new HintPrivate(this))

@@ -77,6 +77,7 @@ public:
 DSettingDialog::DSettingDialog(QWidget *parent) : ThinWindow(parent), d_ptr(new DSettingDialogPrivate(this))
 {
     Q_D(DSettingDialog);
+    setWindowModality(Qt::WindowModal);
     setObjectName("DSettingDialog");
 
     auto layout = new QHBoxLayout();

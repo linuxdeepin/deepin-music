@@ -56,7 +56,7 @@ DWIDGET_USE_NAMESPACE
 const QString s_PropertyViewname = "viewname";
 const QString s_PropertyViewnameLyric = "lyric";
 
-static const int s_AnimationDelay   = 350;
+static const int s_AnimationDelay   = 350 * 1;
 static QColor s_lyricTitleTop       = QColor(0, 0, 0, 94);
 static QColor s_lyriclTitleBottom   = QColor(0, 0, 0, 102);
 static const int titleBarHeight = 40;
@@ -81,8 +81,8 @@ public:
 
     QAction         *newSonglistAction      = nullptr;
     QAction         *colorModeAction        = nullptr;
-    QString         coverBackground = ":/common/image/cover_max.png";
-
+    QString         coverBackground         = ":/common/image/cover_max.png";
+    QString         viewname                = "";
 };
 
 MainWindow::MainWindow(QWidget *parent)
@@ -127,13 +127,13 @@ MainWindow::MainWindow(QWidget *parent)
     contentLayout->addWidget(d->playlist);
     contentLayout->addWidget(d->footer);
 
-    auto *bodyShadow = new QGraphicsDropShadowEffect;
-    bodyShadow->setBlurRadius(20.0);
-    bodyShadow->setColor(QColor(0, 0, 0, 0.10 * 255));
-    bodyShadow->setOffset(0, 5.0);
-    this->setGraphicsEffect(bodyShadow);
+//    auto *bodyShadow = new QGraphicsDropShadowEffect;
+//    bodyShadow->setBlurRadius(20.0);
+//    bodyShadow->setColor(QColor(0, 0, 0, 0.10 * 255));
+//    bodyShadow->setOffset(0, 5.0);
+//    this->setGraphicsEffect(bodyShadow);
 
-    ThemeManager::instance()->regisetrWidget(this);
+    ThemeManager::instance()->regisetrWidget(this, QStringList() << s_PropertyViewname);
 
     d->footer->setFocus();
 
@@ -240,9 +240,9 @@ void MainWindow::binding(Presenter *presenter)
 
 
     connect(d->musicList, &MusicListWidget::updateMetaCodec,
-             d->footer, &Footer::onUpdateMetaCodec);
+            d->footer, &Footer::onUpdateMetaCodec);
     connect(d->musicList, &MusicListWidget::updateMetaCodec,
-             d->lyricView, &LyricView::onUpdateMetaCodec);
+            d->lyricView, &LyricView::onUpdateMetaCodec);
 
     connect(presenter, &Presenter::playlistResorted,
             d->musicList, &MusicListWidget::onMusiclistChanged);
@@ -345,8 +345,11 @@ void MainWindow::binding(Presenter *presenter)
     connect(presenter, &Presenter::notifyAddToPlaylist,
     this, [ = ](PlaylistPtr playlist, const MusicMetaList & /*metalist*/) {
         auto icon = QPixmap(":/common/image/notify_success.png");
-        auto text =  tr("Successfully added to \"%1\"");
-        text = text.arg(playlist->displayName());
+
+        QFont font(this->font());
+        QFontMetrics fm(font);
+        auto displayName = fm.elidedText(playlist->displayName(), Qt::ElideMiddle, 300);
+        auto text =  tr("Successfully added to \"%1\"").arg(displayName);
         showTips(icon, text);
     });
     connect(presenter, &Presenter::currentPlaylistChanged,
@@ -424,6 +427,11 @@ void MainWindow::binding(Presenter *presenter)
 QString MainWindow::coverBackground() const
 {
     return d->coverBackground;
+}
+
+QString MainWindow::viewname() const
+{
+    return d->viewname;
 }
 
 void MainWindow::setCoverBackground(QString coverBackground)
@@ -540,6 +548,7 @@ void MainWindow::resizeEvent(QResizeEvent *e)
 
 void MainWindow::paintEvent(QPaintEvent *e)
 {
+//    d->titlebar->hide();
     ThinWindow::paintEvent(e);
 }
 
@@ -581,10 +590,10 @@ void MainWindow::togglePlaylist()
 void MainWindow::showLyricView()
 {
     auto current = d->currentWidget ? d->currentWidget : d->musicList;
-    d->lyricView->resize(current->size());
+//    d->lyricView->resize(current->size());
 
     WidgetHelper::slideBottom2TopWidget(
-        current, d->lyricView, s_AnimationDelay);
+        current,  d->lyricView, s_AnimationDelay);
 
     this->disableControl();
     setPlaylistVisible(false);
@@ -631,6 +640,7 @@ void MainWindow::showTips(QPixmap icon, QString text)
         d->tips->hide();
         d->tips->deleteLater();
     }
+
     d->tips = new Tip(icon, text , this);
     auto center = mapToGlobal(QPoint(QWidget::rect().center()));
     center.setY(center.y() + height() / 2 - d->footer->height() - 40 - 36);
@@ -650,21 +660,32 @@ void MainWindow::setPlaylistVisible(bool visible)
         return;
     }
 
+    double factor = 0.6;
     QRect start(this->width(), titleBarHeight,
                 d->playlist->width(), d->playlist->height());
     QRect end(this->width() - d->playlist->width() - this->shadowWidth() * 2, titleBarHeight,
               d->playlist->width(), d->playlist->height());
     if (!visible) {
-        WidgetHelper::slideEdgeWidget(d->playlist, end, start, s_AnimationDelay, true);
+        WidgetHelper::slideEdgeWidget(d->playlist, end, start, s_AnimationDelay * factor, true);
         d->footer->setFocus();
     } else {
         d->playlist->setFocus();
-        WidgetHelper::slideEdgeWidget(d->playlist, start, end, s_AnimationDelay);
+        WidgetHelper::slideEdgeWidget(d->playlist, start, end, s_AnimationDelay * factor);
         d->playlist->raise();
     }
-    this->disableControl();
+    this->disableControl(s_AnimationDelay * factor);
     d->titlebar->raise();
     d->footer->raise();
+}
+
+void MainWindow::setViewname(QString viewname)
+{
+    if (d->viewname == viewname) {
+        return;
+    }
+
+    d->viewname = viewname;
+    emit viewnameChanged(viewname);
 }
 
 void MainWindow::changeToMusicListView(bool keepPlaylist)
@@ -741,6 +762,7 @@ void MainWindow::initMenu()
         QString acknowledgementLink = "https://www.deepin.org/acknowledgments/deepin-music#thanks";
 
         auto *aboutDlg = new DAboutDialog(this);
+        aboutDlg->setWindowModality(Qt::WindowModal);
         aboutDlg->setWindowIcon(QPixmap("::/common/image/logo.png"));
         aboutDlg->setProductIcon(QPixmap(":/common/image/logo_96.png"));
         aboutDlg->setProductName("Deepin Music");
@@ -789,7 +811,7 @@ void MainWindow::initMenu()
     titleMenu->addAction(m_close);
 }
 
-void MainWindow::disableControl()
+void MainWindow::disableControl(int delay)
 {
     d->footer->enableControl(false);
     QTimer::singleShot(s_AnimationDelay, this, [ = ]() {
@@ -800,6 +822,7 @@ void MainWindow::disableControl()
 void MainWindow::updateViewname(const QString &vm)
 {
     DUtil::TimerSingleShot(s_AnimationDelay / 2, [this, vm]() {
+        this->setViewname(vm);
         d->titlebar->setViewname(vm);
         d->titlebarwidget->setViewname(vm);
     });

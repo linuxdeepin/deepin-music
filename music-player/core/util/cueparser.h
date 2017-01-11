@@ -15,6 +15,8 @@ class CueParser
 {
 public:
     explicit CueParser(const QString &filepath);
+    explicit CueParser(const QString &filepath, QByteArray codeName);
+
 
     MusicMetaList metalist;
     QString musicFilePath;

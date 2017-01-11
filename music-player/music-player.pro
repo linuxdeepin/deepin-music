@@ -16,6 +16,7 @@ unix{
     PKGCONFIG += taglib icu-uc icu-i18n libavutil libavformat libavcodec
     PKGCONFIG += x11 xext
     PKGCONFIG += dtkbase-0-2 dtkutil-0-2 dtkwidget-0-2
+#    PKGCONFIG += dtkbase dtkutil dtkwidget
 #   PKGCONFIG += mpris-qt5 dbusextended-qt5
 }
 

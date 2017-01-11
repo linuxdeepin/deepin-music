@@ -358,7 +358,7 @@ void MusicListView::showContextMenu(const QPoint &pos,
         QFont font(playlistMenu.font());
         QFontMetrics fm(font);
         auto text = fm.elidedText(QString(playlist->displayName().replace("&", "&&")),
-                                  Qt::ElideRight, 140);
+                                  Qt::ElideMiddle, 160);
         auto act = playlistMenu.addAction(text);
         act->setData(QVariant::fromValue(playlist));
     }
@@ -413,6 +413,14 @@ void MusicListView::showContextMenu(const QPoint &pos,
 //        auto act = textCodecMenu.addAction(defaultCodec);
 //        act->setData(QVariant::fromValue(defaultCodec));
 //        textCodecMenu.addSeparator();
+
+//        qDebug() << codecList;
+//        codecList << "GB18030" << "Big5"
+//                  << "IBM420_ltr" << "UTF-16BE"
+//                  << "UTF-16LE" << "EUC-JP"
+//                  << "EUC-KR" << "ISO-8859-1"
+//                  << "windows-1256" << "windows-1251"
+//                  << "Shift_JIS" << "GB18030" << "EUC-JP" << "EUC-KR" << "Big5";
 
         for (auto codec : codecList) {
             auto act = textCodecMenu.addAction(codec);

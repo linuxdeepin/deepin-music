@@ -66,7 +66,7 @@ ImportWidget::ImportWidget(QWidget *parent) : QFrame(parent), d_ptr(new ImportWi
     QString linkText = QString(linkTemplate).arg(tr("Scan")).arg(tr("Scan"));
     d->text->setText(QString(tr("%1 music directory or drag & drop music file to add music")).arg(linkText));
 
-    layout->addSpacing(200);
+    layout->addStretch();
     layout->addWidget(logo, 0, Qt::AlignCenter);
     layout->addSpacing(20);
     layout->addWidget(d->importButton, 0, Qt::AlignCenter);

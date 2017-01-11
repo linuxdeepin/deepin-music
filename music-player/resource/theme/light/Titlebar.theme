@@ -3,6 +3,7 @@ Titlebar {
         stop:0 rgba(255,255,255,100%),  stop:1 rgba(248,248,248,100%)
     );
     qproperty-borderBottom: rgba(0,0,0,10%);
+    qproperty-borderShadowTop: rgba(255,255,255,5%);
 }
 
 Titlebar[viewname="lyric"] {
@@ -10,6 +11,7 @@ Titlebar[viewname="lyric"] {
         stop:0 rgba(0,0,0,20%),  stop:1 rgba(0,0,0,20%)
     );
     qproperty-borderBottom: rgba(0,0,0,20%);
+    qproperty-borderShadowTop: rgba(255,255,255,5%);
 }
 
 /* ------ #DTitlebarDWindowOptionButton  ------ */

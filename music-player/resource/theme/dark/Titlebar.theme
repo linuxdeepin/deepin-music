@@ -1,8 +1,9 @@
 Titlebar {
-qproperty-background: qlineargradient(x1:0 y1:0, x2:0 y2:1,
-    stop:0 rgba(0,0,0,85%),  stop:1 rgba(0,0,0,85%)
-);
-qproperty-borderBottom: rgba(0,0,0,50%);
+    qproperty-background: qlineargradient(x1:0 y1:0, x2:0 y2:1,
+        stop:0 rgba(0,0,0,85%),  stop:1 rgba(0,0,0,85%)
+    );
+    qproperty-borderBottom: rgba(0,0,0,50%);
+    qproperty-borderShadowTop: rgba(255,255,255,5%);
 }
 
 Titlebar[viewname="lyric"] {
@@ -10,6 +11,7 @@ Titlebar[viewname="lyric"] {
         stop:0 rgba(0,0,0,20%),  stop:1 rgba(0,0,0,20%)
     );
     qproperty-borderBottom: rgba(0,0,0,30%);
+    qproperty-borderShadowTop: rgba(255,255,255,5%);
 }
 
 /* ------ #DTitlebarDWindowOptionButton  ------ */

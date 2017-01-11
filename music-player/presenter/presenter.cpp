@@ -314,11 +314,13 @@ void Presenter::loadConfig()
 void Presenter::postAction()
 {
     Q_D(Presenter);
+    auto allplaylist = d->playlistMgr->playlist(AllMusicListID);
     auto lastPlaylist = d->playlistMgr->playingPlaylist();
     auto lastMeta = lastPlaylist->first();
     auto position = 0;
+    auto isMetaLibClear = allplaylist->isEmpty();
 
-    if (DSettings::instance()->option("base.play.remember_progress").toBool()) {
+    if (DSettings::instance()->option("base.play.remember_progress").toBool() && !isMetaLibClear) {
         auto lastPlaylistId = DSettings::instance()->option("base.play.last_playlist").toString();
         if (!d->playlistMgr->playlist(lastPlaylistId).isNull()) {
             lastPlaylist = d->playlistMgr->playlist(lastPlaylistId);
@@ -345,9 +347,10 @@ void Presenter::postAction()
         emit d->requestMetaSearch(lastMeta);
     }
 
-    if (DSettings::instance()->option("base.play.auto_play").toBool() && !lastPlaylist->isEmpty()) {
+    if (DSettings::instance()->option("base.play.auto_play").toBool() && !lastPlaylist->isEmpty() && !isMetaLibClear) {
         onSelectedPlaylistChanged(lastPlaylist);
         onSyncMusicPlay(lastPlaylist, lastMeta);
+        Player::instance()->resume(lastPlaylist, lastMeta);
         Player::instance()->setPosition(position);
     }
 
@@ -649,13 +652,12 @@ void Presenter::onMusicPlay(PlaylistPtr playlist,  const MusicMeta &meta)
 {
     Q_D(Presenter);
 
-    Player::instance()->setPlayOnLoaded(true);
-
     auto nextMeta = meta;
     if (playlist.isNull()) {
         playlist = d->playlistMgr->playlist(AllMusicListID);
     }
 
+    Player::instance()->setPlayOnLoaded(true);
     qDebug() << "Fix me: play status" ;
     if (0 == d->playlistMgr->playlist(AllMusicListID)->length()) {
         emit requestImportFiles();
@@ -680,11 +682,6 @@ void Presenter::onMusicPlay(PlaylistPtr playlist,  const MusicMeta &meta)
     }
 
     qDebug() << nextMeta.title;
-
-    //save config
-    auto activePlaylist = d->playlistMgr->playingPlaylist();
-    DSettings::instance()->setOption("base.play.last_playlist", activePlaylist->id());
-    DSettings::instance()->setOption("base.play.last_meta", nextMeta.hash);
 
     // todo:
     if (Player::instance()->activeMeta().localPath == nextMeta.localPath) {

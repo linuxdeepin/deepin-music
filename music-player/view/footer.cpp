@@ -163,7 +163,7 @@ void FooterPrivate::initConnection()
     q->connect(btLyric, &QPushButton::released, q, [ = ]() {
         emit  q->toggleLyricView();
     });
-    q->connect(btPlayList, &QPushButton::clicked, q, [ = ](bool) {
+    q->connect(btPlayList, &QPushButton::released, q, [ = ]() {
         emit q->togglePlaylist();
     });
     q->connect(btSound, &QPushButton::pressed, q, [ = ]() {

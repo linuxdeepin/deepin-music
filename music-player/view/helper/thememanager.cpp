@@ -24,6 +24,7 @@ public:
 
     QString getQssForWidget(QString className);
 
+    QString                     prefix      = ":";
     QString                     activeTheme;
     QList<QPointer<QWidget> >   widgetList;
 
@@ -33,8 +34,6 @@ public:
 
 QString ThemeManagerPrivate::getQssForWidget(QString className)
 {
-    // FIXME: support any prefix is QFile support
-    const QString prefix = ":";
     QString qss;
 
     auto filename = QString("%1/%2/%3.theme").arg(prefix).arg(activeTheme).arg(className);
@@ -85,8 +84,9 @@ void ThemeManager::regisetrWidget(QPointer<QWidget> widget, QStringList property
 //    qDebug() << widget;
     connect(this, &ThemeManager::themeChanged, this, [ = ](QString theme) {
 //        qDebug() << widget << "++++++++++";
-        if (widget.isNull())
+        if (widget.isNull()) {
             return ;
+        }
 
         widget->style()->unpolish(widget);
         widget->style()->polish(widget);
@@ -130,6 +130,12 @@ void ThemeManager::setTheme(const QString theme)
 
         emit themeChanged(theme);
     }
+}
+
+void ThemeManager::setPrefix(const QString prefix)
+{
+    Q_D(ThemeManager);
+    d->prefix = prefix;
 }
 
 void ThemeManager::updateQss()

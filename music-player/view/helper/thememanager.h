@@ -9,6 +9,7 @@
 
 #pragma once
 
+#include <QtGlobal>
 #include <QObject>
 #include <QScopedPointer>
 #include <QPointer>
@@ -31,6 +32,8 @@ public:
 
 public slots:
     void setTheme(const QString theme);
+    void setPrefix(const QString prefix);
+    // TODO: move to ThemeManagerPrivate
     void updateQss();
 
 signals:

@@ -74,9 +74,11 @@ void MusicApp::init()
 
     // setTheme
     auto theme = DSettings::instance()->option("base.play.theme").toString();
+    auto themePrefix = DSettings::instance()->option("base.play.theme_prefix").toString();
     qDebug() << "set Theme" << theme;
     auto dApp = qobject_cast<DApplication *>(qApp);
     dApp->setTheme(theme);
+    ThemeManager::instance()->setPrefix(themePrefix);
     ThemeManager::instance()->setTheme(theme);
 
     d->playerFrame = new MainWindow;

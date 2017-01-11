@@ -41,6 +41,7 @@
                         {
                             "key": "playmode",
                             "label": "play mode",
+                            "reset": false,
                             "hide": true,
                             "type": "combox",
                             "combox_list": [0,1,2],
@@ -71,6 +72,13 @@
                             "reset": false,
                             "type": "dropbox",
                             "default": "light"
+                        },
+                        {
+                            "key": "theme_prefix",
+                            "label": "deepin theme path",
+                            "hide": true,
+                            "type": "dropbox",
+                            "default": ":"
                         },
                         {
                             "key": "last_playlist",

@@ -14,6 +14,7 @@
 #include <QMediaPlayer>
 #include <QPropertyAnimation>
 #include "lyricservice.h"
+#include "dsettings.h"
 
 #include <QMimeDatabase>
 
@@ -351,6 +352,9 @@ void Player::playMeta(PlaylistPtr playlist, const MusicMeta &meta)
             d->activeMeta.invalid = false;
         });
     }
+
+    DSettings::instance()->setOption("base.play.last_playlist", d->activePlaylist->id());
+    DSettings::instance()->setOption("base.play.last_meta", d->activeMeta.hash);
 }
 
 void Player::resume(PlaylistPtr playlist, const MusicMeta &meta)
@@ -360,6 +364,7 @@ void Player::resume(PlaylistPtr playlist, const MusicMeta &meta)
     Q_ASSERT(playlist == d->activePlaylist);
     Q_ASSERT(meta.hash == d->activeMeta.hash);
 
+    setPlayOnLoaded(true);
     QTimer::singleShot(50, this, [ = ]() {
         d->qplayer->play();
     });
@@ -390,6 +395,7 @@ void Player::playNextMeta(PlaylistPtr playlist, const MusicMeta &meta)
     Q_ASSERT(playlist == d->activePlaylist);
     Q_ASSERT(meta.hash == d->activeMeta.hash);
 
+    setPlayOnLoaded(true);
     if (d->mode == RepeatSingle) {
         d->selectNext(meta, RepeatAll);
     } else {
@@ -403,6 +409,7 @@ void Player::playPrevMusic(PlaylistPtr playlist, const MusicMeta &meta)
     Q_ASSERT(playlist == d->activePlaylist);
     Q_ASSERT(meta.hash == d->activeMeta.hash);
 
+    setPlayOnLoaded(true);
     if (d->mode == RepeatSingle) {
         d->selectPrev(meta, RepeatAll);
     } else {
