@@ -104,7 +104,7 @@ int downloadFile(const QString &rootUrl, const QString &filepath)
 
 NeteaseMetaSearchEngine::NeteaseMetaSearchEngine(QObject *parent): MetaSearchEngine(parent)
 {
-    qRegisterMetaType<QList<MusicMeta> >();
+    qRegisterMetaType<QList<MediaMeta> >();
 
     m_geese = new DMusic::Net::Geese(this);
     m_geese->setRawHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -114,8 +114,8 @@ NeteaseMetaSearchEngine::NeteaseMetaSearchEngine(QObject *parent): MetaSearchEng
 //    qDebug() << "-------------------------------------------------------";
 //    connect(this, &MetaSearchEngine::doSearchMeta,
 //            this, &NeteaseMetaSearchEngine::searchMeta);
-    connect(getObject(), SIGNAL(doSearchMeta(const MusicMeta &)),
-            this, SLOT(searchMeta(const MusicMeta &)));
+    connect(getObject(), SIGNAL(doSearchMeta(const MediaMeta &)),
+            this, SLOT(searchMeta(const MediaMeta &)));
     connect(getObject(), SIGNAL(doSearchContext(const QString &)),
             this, SLOT(searchContext(const QString &)));
 //    qDebug() << "-------------------------------------------------------";
@@ -186,7 +186,7 @@ static QByteArray toLyric(const QByteArray &data)
 
 }
 
-void NeteaseMetaSearchEngine::searchMeta(const MusicMeta &meta)
+void NeteaseMetaSearchEngine::searchMeta(const MediaMeta &meta)
 {
     qDebug() << "searchMeta";
     QString queryUrl = QLatin1String("http://music.163.com/api/search/pc");
@@ -195,7 +195,7 @@ void NeteaseMetaSearchEngine::searchMeta(const MusicMeta &meta)
 
     auto anlyzer = QSharedPointer<MetaAnalyzer>(new MetaAnalyzer(meta, m_geese));
     connect(anlyzer.data(), &MetaAnalyzer::searchFinished,
-    this, [ = ](const MusicMeta & meta, NeteaseSong song) {
+    this, [ = ](const MediaMeta & meta, NeteaseSong song) {
         auto searchMeta = meta;
         searchMeta.searchID = QString("%1").arg(song.id);
         qDebug() << "get " << "=====" << song.album.coverUrl;
@@ -256,7 +256,7 @@ void NeteaseMetaSearchEngine::searchContext(const QString &context)
         auto neteaseSongs = toSongList(data);
         MusicMetaList metalist;
         for (auto &song : neteaseSongs) {
-            MusicMeta meta;
+            MediaMeta meta;
             meta.searchID = QString("%1").arg(song.id);
             meta.title = song.name;
             meta.artist = song.album.name;

@@ -1,3 +1,7 @@
+TitleBarWidget {
+    border: 0px solid rgba(29, 129, 255, 1);
+}
+
 #TitleBack{
     border-image: url(:/light/image/back_normal.png);
 }

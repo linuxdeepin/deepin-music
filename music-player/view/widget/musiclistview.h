@@ -13,7 +13,6 @@
 
 #include "../../core/playlist.h"
 
-class QStandardItemModel;
 class MusicListViewPrivate;
 class MusicListView : public QListView
 {
@@ -22,35 +21,28 @@ public:
     explicit MusicListView(QWidget *parent = 0);
     ~MusicListView();
 
+    MetaPtr activingMeta() const;
+    QModelIndex findIndex(const MetaPtr meta);
+
 signals:
-    void play(const MusicMeta &meta);
-    void updateMetaCodec(const MusicMeta &meta);
-    void addToPlaylist(PlaylistPtr playlist, const MusicMetaList metalist);
-    void removeMusicList(const MusicMetaList &metalist);
-    void deleteMusicList(const MusicMetaList &metalist);
+    void addToPlaylist(PlaylistPtr playlist, const MetaPtrList &metalist);
+    void removeMusicList(const MetaPtrList  &metalist);
+    void deleteMusicList(const MetaPtrList  &metalist);
+    void playMedia(const MetaPtr meta);
     void requestCustomContextMenu(const QPoint &pos);
 
 public:
-    PlaylistPtr playlist();
-    const MusicMeta activeMeta();
-
-    void onMusicPlayed(PlaylistPtr playlist, const MusicMeta &meta);
-    void onMusicPause(PlaylistPtr playlist, const MusicMeta &meta);
-    void onMusicRemoved(PlaylistPtr playlist, const MusicMeta &meta);
-    void onMusicAdded(PlaylistPtr playlist, const MusicMeta &meta);
-    void onMusicError(PlaylistPtr playlist, const MusicMeta &meta, int error);
-    void onMusicListAdded(PlaylistPtr playlist, const MusicMetaList &metalist);
-    void onLocate(PlaylistPtr playlist, const MusicMeta &meta);
     void onMusiclistChanged(PlaylistPtr playlist);
-
+    void onMusicListAdded(const MetaPtrList metalist);
+    void onMusicListRemoved(const MetaPtrList metalist);
+    void onMusicError(const MetaPtr meta, int error);
+    void onLocate(const MetaPtr meta);
     void showContextMenu(const QPoint &pos,
-                         PlaylistPtr selectedlist,
-                         PlaylistPtr favlist,
-                         QList<PlaylistPtr >newlist);
-
+                        PlaylistPtr selectedPlaylist,
+                        PlaylistPtr favPlaylist,
+                        QList<PlaylistPtr > newPlaylists);
 
 protected:
-    virtual void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
     virtual void wheelEvent(QWheelEvent *event) Q_DECL_OVERRIDE;
     virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
 

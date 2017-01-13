@@ -11,11 +11,13 @@
 
 #include <ddialog.h>
 
+#include <mediameta.h>
+
 DWIDGET_USE_NAMESPACE
 
 class QFrame;
 class QLabel;
-class MusicMeta;
+class MediaMeta;
 class InfoDialog : public DAbstractDialog
 {
     Q_OBJECT
@@ -25,9 +27,9 @@ class InfoDialog : public DAbstractDialog
     QList<QLabel *> m_valueList;
     QLabel *m_cover = nullptr;
 public:
-    explicit InfoDialog(const MusicMeta &info, QWidget *parent = 0);
+    explicit InfoDialog(const MetaPtr meta, QWidget *parent = 0);
 
-    void initUI(const MusicMeta &info);
+    void initUI(const MetaPtr meta);
     void updateLabelSize();
 
     QString defaultCover() const;

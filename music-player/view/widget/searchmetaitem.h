@@ -12,6 +12,8 @@
 #include <QScopedPointer>
 #include <QFrame>
 
+#include <searchmeta.h>
+
 #include "../../core/playlist.h"
 
 class SearchMetaItemPrivate;
@@ -22,7 +24,7 @@ public:
     explicit SearchMetaItem(QWidget *parent = 0);
     ~SearchMetaItem();
 
-    void initUI(const MusicMeta& meta);
+    void initUI(const NeteaseSong& meta);
     void setChecked(bool check);
 
 signals:

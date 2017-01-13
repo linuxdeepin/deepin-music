@@ -7,12 +7,11 @@
  * (at your option) any later version.
  **/
 
-#ifndef LYRIC_H
-#define LYRIC_H
+#pragma once
 
 #include <QObject>
 
-#include "../music.h"
+#include <mediameta.h>
 
 struct WordElement {
     // Sustain time.
@@ -69,10 +68,9 @@ public:
     explicit Lyric();
 
     bool        hasTime;
-    MusicMeta   m_meta;
+    MediaMeta   m_meta;
     QList<LrcElement> m_lyricElements;
 };
 
 Lyric parseLrc(QString &rawLyric);
 
-#endif // LYRIC_H

@@ -12,8 +12,8 @@
 #include "neteasemetasearch_global.h"
 
 #include <metasearchengine.h>
-
-#include <geese.h>
+#include <mediameta.h>
+#include <net/geese.h>
 
 class NETEASEMETASEARCHSHARED_EXPORT NeteaseMetaSearchEngine:
     public DMusic::Plugin::MetaSearchEngine
@@ -29,7 +29,7 @@ public:
 
 public slots:
     virtual QObject *getObject() Q_DECL_OVERRIDE;
-    virtual void searchMeta(const MusicMeta &meta) Q_DECL_OVERRIDE;
+    virtual void searchMeta(const MetaPtr meta) Q_DECL_OVERRIDE;
     virtual void searchContext(const QString &context);
 
 private:

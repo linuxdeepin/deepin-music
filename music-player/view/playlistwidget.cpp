@@ -137,7 +137,7 @@ void PlaylistWidget::initData(QList<PlaylistPtr > playlists, PlaylistPtr last)
     }
 }
 
-void PlaylistWidget::onMusicPlayed(PlaylistPtr playlist, const MusicMeta &meta)
+void PlaylistWidget::onMusicPlayed(PlaylistPtr playlist, const MetaPtr)
 {
     for (int i = 0; i < m_listview->count(); ++i) {
         QListWidgetItem *item = m_listview->item(i);

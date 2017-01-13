@@ -14,11 +14,11 @@
 #include <QScopedPointer>
 #include <QPointer>
 
-#include "../../core/util/singleton.h"
+#include <util/singleton.h>
 
 class QWidget;
 class ThemeManagerPrivate;
-class ThemeManager : public QObject, public Singleton<ThemeManager>
+class ThemeManager : public QObject, public DMusic::DSingleton<ThemeManager>
 {
     Q_OBJECT
 public:
@@ -41,7 +41,7 @@ signals:
 
 private:
 
-    friend class Singleton<ThemeManager>;
+    friend class DMusic::DSingleton<ThemeManager>;
     QScopedPointer<ThemeManagerPrivate> d_ptr;
     Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), ThemeManager)
 };

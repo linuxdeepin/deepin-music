@@ -39,6 +39,7 @@ QString ThemeManagerPrivate::getQssForWidget(QString className)
     auto filename = QString("%1/%2/%3.theme").arg(prefix).arg(activeTheme).arg(className);
     QFile themeFile(filename);
 
+    qDebug() << "load: " <<filename;
     if (themeFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
         qss = themeFile.readAll();
         themeFile.close();

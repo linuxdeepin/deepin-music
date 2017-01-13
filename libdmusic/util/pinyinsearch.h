@@ -8,22 +8,13 @@
  **/
 
 #pragma once
-#include <memory>
 
-using namespace std;
+#include <QStringList>
 
-template <class T>
-class Singleton
+namespace DMusic
 {
-public:
-    static inline T *instance() {
-        static T*  _instance = new T;
-        return _instance;
-    }
-
-protected:
-    Singleton(void) {}
-    ~Singleton(void) {}
-    Singleton(const Singleton &) {}
-    Singleton &operator= (const Singleton &) {}
-};
+namespace PinyinSearch
+{
+QStringList simpleChineseSplit(QString &pinyin);
+}
+}

@@ -2,7 +2,7 @@ include($$PWD/../config.pri)
 include($$PWD/build.pri)
 include($$PWD/../interface/interface.pri)
 
-QT       += core gui widgets svg dbus multimedia multimediawidgets xml network sql
+QT       += core gui widgets svg multimedia multimediawidgets xml network sql dbus
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TEMPLATE    = app
@@ -13,9 +13,10 @@ DESTDIR     = $$BUILD_DIST/bin
 unix{
     DEFINES += SUPPORT_INOTIFY
     QT += x11extras
-    PKGCONFIG += taglib icu-uc icu-i18n libavutil libavformat libavcodec
+    PKGCONFIG += icu-uc icu-i18n libavutil libavformat libavcodec
     PKGCONFIG += x11 xext
-    PKGCONFIG += dtkbase-0-2 dtkutil-0-2 dtkwidget-0-2
+    PKGCONFIG += dtkbase dtkutil dtkwidget
+    PKGCONFIG += dtksettings dtksettingsview
 #    PKGCONFIG += dtkbase dtkutil dtkwidget
 #   PKGCONFIG += mpris-qt5 dbusextended-qt5
 }
@@ -23,18 +24,11 @@ unix{
 INCLUDEPATH += $$PWD/view/helper
 
 SOURCES += \
-    core/util/cueparser.cpp \
-    core/util/icu.cpp \
     core/util/lyric.cpp \
-    core/util/musicmeta.cpp \
-    core/util/pinyin.cpp \
-    core/lyricservice.cpp \
     core/mediadatabase.cpp \
     core/mediadatabasewriter.cpp \
-    core/mediafilemonitor.cpp \
     core/playlist.cpp \
     core/playlistmanager.cpp \
-    core/pluginmanager.cpp \
     presenter/presenter.cpp \
     view/helper/widgethellper.cpp \
     view/widget/cover.cpp \
@@ -49,50 +43,45 @@ SOURCES += \
     view/widget/searchedit.cpp \
     view/widget/searchresult.cpp \
     view/widget/slider.cpp \
-    view/footer.cpp \
-    view/lyricview.cpp \
-    view/mainwindow.cpp \
-    view/musiclistwidget.cpp \
-    view/playlistwidget.cpp \
     musicapp.cpp \
     main.cpp \
     view/widget/label.cpp \
     view/widget/tip.cpp \
-    view/importwidget.cpp \
     view/widget/hint.cpp \
     view/widget/soundvolume.cpp \
     view/widget/filter.cpp \
-    core/qplayer.cpp \
     core/player.cpp \
     view/widget/thinwindow.cpp \
     view/helper/thememanager.cpp \
-    view/titlebar.cpp \
     view/widget/titlebarwidget.cpp \
     view/widget/ddropdown.cpp \
     view/widget/dsettingdialog.cpp \
-    view/widget/shortcutedit.cpp \
-    core/dsettings.cpp \
     view/widget/picturesequenceview.cpp \
     view/widget/searchmetalist.cpp \
-    view/widget/searchmetaitem.cpp
+    view/widget/searchmetaitem.cpp \
+    core/medialibrary.cpp \
+    core/util/global.cpp \
+    core/metasearchservice.cpp \
+    core/settings.cpp \
+    core/pluginmanager.cpp \
+    view/importwidget.cpp \
+    view/titlebar.cpp \
+    view/musiclistwidget.cpp \
+    view/footer.cpp \
+    view/lyricview.cpp \
+    view/playlistwidget.cpp \
+    view/mainframe.cpp
+#    view/mainwindow.cpp \
 
 
 HEADERS += \
-    core/util/cueparser.h \
-    core/util/icu.h \
     core/util/lyric.h \
-    core/util/musicmeta.h \
-    core/util/pinyin.h \
-    core/util/singleton.h \
     core/util/thearpool.h \
-    core/lyricservice.h \
     core/mediadatabase.h \
     core/mediadatabasewriter.h \
-    core/mediafilemonitor.h \
     core/music.h \
     core/playlist.h \
     core/playlistmanager.h \
-    core/pluginmanager.h \
     presenter/presenter.h \
     view/helper/widgethellper.h \
     view/widget/cover.h \
@@ -108,11 +97,6 @@ HEADERS += \
     view/widget/searchedit.h \
     view/widget/searchresult.h \
     view/widget/slider.h \
-    view/footer.h \
-    view/lyricview.h \
-    view/mainwindow.h \
-    view/musiclistwidget.h \
-    view/playlistwidget.h \
     musicapp.h \
     view/widget/label.h \
     view/widget/tip.h \
@@ -128,11 +112,20 @@ HEADERS += \
     view/widget/titlebarwidget.h \
     view/widget/ddropdown.h \
     view/widget/dsettingdialog.h \
-    view/widget/shortcutedit.h \
-    core/dsettings.h \
     view/widget/picturesequenceview.h \
     view/widget/searchmetalist.h \
-    view/widget/searchmetaitem.h
+    view/widget/searchmetaitem.h \
+    core/medialibrary.h \
+    core/util/global.h \
+    core/metasearchservice.h \
+    core/settings.h \
+    core/pluginmanager.h \
+    view/musiclistwidget.h \
+    view/footer.h \
+    view/lyricview.h \
+    view/playlistwidget.h \
+    view/mainframe.h \
+#    view/mainwindow.h \
 
 RESOURCES += \
     resource/theme/theme.qrc \

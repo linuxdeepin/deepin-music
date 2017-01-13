@@ -100,13 +100,13 @@ void SearchEdit::onTextChanged()
 {
     auto text = QString(this->text()).remove(" ").remove("\r").remove("\n");
     if (text.length() >= 2) {
-        auto resultList = MediaDatabase::searchMusicTitle(text, 10);
+        auto resultList = MediaDatabase::searchMediaTitle(text, 10);
         QStringList titleList;
         QStringList hashList;
 
         for (auto &meta : resultList) {
-            titleList << meta.title;
-            hashList << meta.hash;
+            titleList << meta->title;
+            hashList << meta->hash;
         }
 
         auto searchtext = QString(this->text()).remove("\r").remove("\n");

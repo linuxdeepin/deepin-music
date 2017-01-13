@@ -9,15 +9,29 @@
 
 #pragma once
 
-#include "../music.h"
+#include <QSharedPointer>
+#include "../mediameta.h"
 
-class CueParser
+namespace DMusic
+{
+
+class CueParserPrivate;
+class LIBDMUSICSHARED_EXPORT CueParser
 {
 public:
     explicit CueParser(const QString &filepath);
     explicit CueParser(const QString &filepath, QByteArray codeName);
+    ~CueParser();
 
+    MetaPtrList metalist() const;
+    QString     mediaFilepath() const;
+    QString     cueFilepath() const;
 
-    MusicMetaList metalist;
-    QString musicFilePath;
+private:
+    QScopedPointer<CueParserPrivate> d_ptr;
+    Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), CueParser)
 };
+
+typedef QSharedPointer<CueParser>  CueParserPtr;
+
+}

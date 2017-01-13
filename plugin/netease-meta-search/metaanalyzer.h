@@ -12,8 +12,8 @@
 #include <QObject>
 #include <QTimer>
 
-#include "../../music-player/core/music.h"
-#include <geese.h>
+#include <mediameta.h>
+#include <net/geese.h>
 
 #include <searchmeta.h>
 
@@ -34,7 +34,7 @@ private:
     void analyzerResults();
 
     DMusic::Net::Geese  *m_geese = nullptr;
-    MusicMeta           m_meta;
+    MediaMeta           m_meta;
 
     bool                m_titleResultGet = false;
     QList<NeteaseSong>  m_titleResult;

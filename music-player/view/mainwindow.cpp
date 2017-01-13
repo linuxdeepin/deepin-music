@@ -42,19 +42,14 @@
 #include "widget/tip.h"
 #include "widget/titlebarwidget.h"
 #include "widget/dsettingdialog.h"
-#include "core/dsettings.h"
 
-#include "../core/music.h"
+#include "core/settings.h"
 #include "../core/playlist.h"
 #include "../musicapp.h"
 #include "../presenter/presenter.h"
-
 #include "helper/widgethellper.h"
 
 DWIDGET_USE_NAMESPACE
-
-const QString s_PropertyViewname = "viewname";
-const QString s_PropertyViewnameLyric = "lyric";
 
 static const int s_AnimationDelay   = 350 * 1;
 static QColor s_lyricTitleTop       = QColor(0, 0, 0, 94);
@@ -71,7 +66,7 @@ public:
     TitleBarWidget  *titlebarwidget = nullptr;
     Footer          *footer         = nullptr;
     PlaylistWidget  *playlist       = nullptr;
-    ImportWidget    *import         = nullptr;
+    ImportWidget    *importWidget         = nullptr;
     MusicListWidget *musicList      = nullptr;
     LyricView       *lyricView      = nullptr;
 
@@ -88,8 +83,6 @@ public:
 MainWindow::MainWindow(QWidget *parent)
     : ThinWindow(parent), d(new MainWindowPrivate)
 {
-    setFocusPolicy(Qt::ClickFocus);
-    setObjectName("PlayerFrame");
 
     auto contentLayout = new QStackedLayout();
     setContentLayout(contentLayout);
@@ -97,16 +90,9 @@ MainWindow::MainWindow(QWidget *parent)
     contentLayout->setMargin(0);
     contentLayout->setSpacing(0);
 
-    d->titlebar = new Titlebar();
-    d->titlebar->setObjectName("MainWindowTitlebar");
-    d->titlebarwidget = new TitleBarWidget();
-    d->titlebarwidget->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
-    d->titlebar->setFixedHeight(titleBarHeight);
-    d->titlebar->setCustomWidget(d->titlebarwidget , Qt::AlignCenter, false);
-
 //    connect(d->title, &DTitlebar::optionClicked, this, &MainWindow::optionClicked);
 
-    d->import = new ImportWidget;
+    d->importWidget = new ImportWidget;
     d->musicList = new MusicListWidget;
     d->lyricView = new LyricView;
     d->playlist = new PlaylistWidget;
@@ -121,7 +107,7 @@ MainWindow::MainWindow(QWidget *parent)
     contentLayout->addWidget(d->titlebar);
 
 //    contentLayout->addWidget(d->titlebar);
-    contentLayout->addWidget(d->import);
+    contentLayout->addWidget(d->importWidget);
     contentLayout->addWidget(d->musicList);
     contentLayout->addWidget(d->lyricView);
     contentLayout->addWidget(d->playlist);
@@ -133,12 +119,9 @@ MainWindow::MainWindow(QWidget *parent)
 //    bodyShadow->setOffset(0, 5.0);
 //    this->setGraphicsEffect(bodyShadow);
 
-    ThemeManager::instance()->regisetrWidget(this, QStringList() << s_PropertyViewname);
 
     d->footer->setFocus();
 
-    connect(d->titlebar, &DTitlebar::mouseMoving, this, &MainWindow::moveWindow);
-    connect(d->footer, &Footer::mouseMoving, this, &MainWindow::moveWindow);
     setMinimumSize(840, 640);
     resize(QSize(840, 640));
 }
@@ -160,7 +143,7 @@ void MainWindow::initMusiclist(PlaylistPtr allmusic, PlaylistPtr last)
 
     if (allmusic.isNull() || 0 == allmusic->length()) {
         d->newSonglistAction->setDisabled(true);
-        d->import->show();
+        d->importWidget->show();
         d->titlebarwidget->setSearchEnable(false);
         d->footer->enableControl(false);
         d->musicList->hide();
@@ -172,7 +155,7 @@ void MainWindow::initMusiclist(PlaylistPtr allmusic, PlaylistPtr last)
     if (last.isNull() || 0 == last->length()) {
         qDebug() << "init music with empty playlist:" << last;
     }
-    d->import->hide();
+    d->importWidget->hide();
     d->titlebarwidget->setSearchEnable(true);
     d->newSonglistAction->setDisabled(false);
     d->musicList->raise();
@@ -195,19 +178,14 @@ void MainWindow::initFooter(PlaylistPtr current, int mode)
 
 void MainWindow::binding(Presenter *presenter)
 {
-    connect(d->titlebarwidget, &TitleBarWidget::locateMusicInAllMusiclist,
-            presenter, &Presenter::onLocateMusicAtAll);
-    connect(d->titlebarwidget, &TitleBarWidget::search,
-            presenter, &Presenter::onSearchText);
-    connect(d->titlebarwidget, &TitleBarWidget::exitSearch,
-            presenter, &Presenter::onExitSearch);
+
 
     connect(d->footer, &Footer::toggleLyricView, this, &MainWindow::toggleLyricView);
     connect(d->footer, &Footer::togglePlaylist, this, &MainWindow::togglePlaylist);
 
     connect(d->footer, &Footer::changeProgress, presenter, &Presenter::onChangeProgress);
     connect(d->footer, &Footer::locateMusic, presenter, &Presenter::locateMusic);
-    connect(d->footer, &Footer::play, presenter, &Presenter::onMusicPlay);
+    connect(d->footer, &Footer::play, presenter, &Presenter::onSyncMusicPlay);
     connect(d->footer, &Footer::resume, presenter, &Presenter::onMusicResume);
     connect(d->footer, &Footer::pause, presenter, &Presenter::onMusicPause);
     connect(d->footer, &Footer::next, presenter, &Presenter::onMusicNext);
@@ -227,7 +205,7 @@ void MainWindow::binding(Presenter *presenter)
             d->footer, &Footer::onMusicStoped);
     connect(presenter, &Presenter::musicAdded,
             d->footer, &Footer::onMusicAdded);
-    connect(presenter, &Presenter::musiclistAdded,
+    connect(presenter, &Presenter::musicListAdded,
             d->footer, &Footer::onMusicListAdded);
     connect(presenter, &Presenter::musicRemoved,
             d->footer, &Footer::onMusicRemoved);
@@ -244,13 +222,13 @@ void MainWindow::binding(Presenter *presenter)
     connect(d->musicList, &MusicListWidget::updateMetaCodec,
             d->lyricView, &LyricView::onUpdateMetaCodec);
 
-    connect(presenter, &Presenter::playlistResorted,
+    connect(presenter, &Presenter::musicListResorted,
             d->musicList, &MusicListWidget::onMusiclistChanged);
-    connect(presenter, &Presenter::currentPlaylistChanged,
+    connect(presenter, &Presenter::currentMusicListChanged,
             d->musicList, &MusicListWidget::onMusiclistChanged);
     connect(presenter, &Presenter::musicRemoved,
             d->musicList, &MusicListWidget::onMusicRemoved);
-    connect(presenter, &Presenter::musiclistAdded,
+    connect(presenter, &Presenter::musicListAdded,
             d->musicList, &MusicListWidget::onMusicListAdded);
     connect(presenter, &Presenter::musicPlayed,
             d->musicList, &MusicListWidget::onMusicPlayed);
@@ -258,7 +236,7 @@ void MainWindow::binding(Presenter *presenter)
             d->musicList, &MusicListWidget::onMusicPause);
     connect(presenter, &Presenter::musicStoped,
             d->musicList, &MusicListWidget::onMusicPause);
-    connect(presenter, &Presenter::musiclistMenuRequested,
+    connect(presenter, &Presenter::requestMusicListMenu,
             d->musicList, &MusicListWidget::onCustomContextMenuRequest);
 
     connect(d->musicList, &MusicListWidget::updateMetaCodec,
@@ -267,7 +245,7 @@ void MainWindow::binding(Presenter *presenter)
             presenter, &Presenter::onPlayall);
     connect(d->musicList, &MusicListWidget::resort,
             presenter, &Presenter::onResort);
-    connect(d->musicList, &MusicListWidget::musicClicked,
+    connect(d->musicList, &MusicListWidget::playMedia,
             presenter, &Presenter::onSyncMusicPlay);
     connect(d->musicList, &MusicListWidget::requestCustomContextMenu,
             presenter, &Presenter::onRequestMusiclistMenu);
@@ -278,16 +256,16 @@ void MainWindow::binding(Presenter *presenter)
     connect(d->musicList, &MusicListWidget::musiclistDelete,
             presenter, &Presenter::onMusiclistDelete);
     connect(d->musicList, &MusicListWidget::importSelectFiles,
-            presenter, &Presenter::importMediaFiles);
+            presenter, &Presenter::requestImportPaths);
 
     connect(d->playlist, &PlaylistWidget::addPlaylist,
             presenter, &Presenter::onPlaylistAdd);
     connect(d->playlist, &PlaylistWidget::selectPlaylist,
-            presenter, &Presenter::onSelectedPlaylistChanged);
+            presenter, &Presenter::onCurrentPlaylistChanged);
     connect(d->playlist, &PlaylistWidget::playall,
             presenter, &Presenter::onPlayall);
 
-    connect(presenter, &Presenter::currentPlaylistChanged,
+    connect(presenter, &Presenter::currentMusicListChanged,
             d->playlist, &PlaylistWidget::onCurrentChanged);
     connect(presenter, &Presenter::playlistAdded,
             d->playlist, &PlaylistWidget::onPlaylistAdded);
@@ -300,7 +278,7 @@ void MainWindow::binding(Presenter *presenter)
     connect(d->lyricView, &LyricView::requestContextSearch,
             presenter, &Presenter::requestContextSearch);
     connect(d->lyricView, &LyricView::changeMetaCache,
-            presenter, &Presenter::changeMetaCache);
+            presenter, &Presenter::onChangeSearchMetaCache);
     connect(presenter, &Presenter::contextSearchFinished,
             d->lyricView, &LyricView::contextSearchFinished);
     connect(presenter, &Presenter::progrossChanged,
@@ -352,7 +330,7 @@ void MainWindow::binding(Presenter *presenter)
         auto text =  tr("Successfully added to \"%1\"").arg(displayName);
         showTips(icon, text);
     });
-    connect(presenter, &Presenter::currentPlaylistChanged,
+    connect(presenter, &Presenter::currentMusicListChanged,
     this, [ = ](PlaylistPtr playlist) {
         d->musicList->onMusiclistChanged(playlist);
         d->playlist->onCurrentChanged(playlist);
@@ -385,7 +363,7 @@ void MainWindow::binding(Presenter *presenter)
     this, [ = ](PlaylistPtr, const MusicMeta &) {
         setCoverBackground(coverBackground());
     });
-    connect(presenter, &Presenter::currentPlaylistChanged,
+    connect(presenter, &Presenter::currentMusicListChanged,
     this, [ = ]() {
         changeToMusicListView(false);
     });
@@ -397,20 +375,9 @@ void MainWindow::binding(Presenter *presenter)
             this->showMusicListView();
         });
     });
-    connect(presenter, &Presenter::metaInfoClean,
+    connect(presenter, &Presenter::metaLibraryClean,
     this, [ = ]() {
         showImportView();
-    });
-
-    connect(d->import, &ImportWidget::scanMusicDirectory,
-            presenter, &Presenter::onImportMusicDirectory);
-    connect(d->import, &ImportWidget::importFiles,
-            this, &MainWindow::onSelectImportFiles);
-
-    connect(d->import, &ImportWidget::importSelectFiles,
-    this, [ = ](const QStringList & urllist) {
-        d->import->showWaitHint();
-        emit this->importSelectFiles(urllist);
     });
 
     connect(this, &MainWindow::importSelectFiles,
@@ -418,37 +385,17 @@ void MainWindow::binding(Presenter *presenter)
     connect(this, &MainWindow::addPlaylist,
             presenter, &Presenter::onPlaylistAdd);
 
-    connect(d->titlebar, &Titlebar::closeClicked, this, [ = ]() {
-        qApp->exit(0);
-    });
 
 }
 
-QString MainWindow::coverBackground() const
-{
-    return d->coverBackground;
-}
+
 
 QString MainWindow::viewname() const
 {
     return d->viewname;
 }
 
-void MainWindow::setCoverBackground(QString coverBackground)
-{
-    d->coverBackground = coverBackground;
-    QImage image = QImage(coverBackground);
-    image = WidgetHelper::cropRect(image, QWidget::size());
-    setBackgroundImage(WidgetHelper::blurImage(image, 50));
 
-    /////////////////
-//    this->hide();
-//    auto dsd = new DSettingDialog;
-//    dsd->setFixedSize(720,580);
-//    qDebug() << dsd;
-//    dsd->show();
-//    dsd->raise();
-}
 
 void MainWindow::mousePressEvent(QMouseEvent *event)
 {
@@ -532,7 +479,7 @@ void MainWindow::resizeEvent(QResizeEvent *e)
 
     d->lyricView->resize(newSize);
     d->musicList->setFixedSize(newSize);
-    d->import->setFixedSize(newSize);
+    d->importWidget->setFixedSize(newSize);
 
     d->playlist->setFixedSize(220, newSize.height() - footerHeight - titleBarHeight);
 
@@ -559,19 +506,6 @@ void MainWindow::onCurrentPlaylistChanged(PlaylistPtr playlist)
     }
 }
 
-void MainWindow::onSelectImportFiles()
-{
-    QFileDialog fileDlg(this);
-    auto musicDir =  QStandardPaths::standardLocations(QStandardPaths::MusicLocation);
-    fileDlg.setDirectory(musicDir.first());
-
-    fileDlg.setViewMode(QFileDialog::Detail);
-    fileDlg.setFileMode(QFileDialog::DirectoryOnly);
-    if (QFileDialog::Accepted == fileDlg.exec()) {
-        d->import->showWaitHint();
-        emit importSelectFiles(fileDlg.selectedFiles());
-    }
-}
 
 void MainWindow::toggleLyricView()
 {
@@ -612,21 +546,21 @@ void MainWindow::showMusicListView()
 
 void MainWindow::showImportView()
 {
-    if (d->import->isVisible()) {
-        d->import->showImportHint();
+    if (d->importWidget->isVisible()) {
+        d->importWidget->showImportHint();
         return;
     }
 
     setPlaylistVisible(false);
     auto current = d->currentWidget ? d->currentWidget : d->musicList;
-    d->import->showImportHint();
-    d->import->setFixedSize(current->size());
+    d->importWidget->showImportHint();
+    d->importWidget->setFixedSize(current->size());
 
-    qDebug() << "showImportView" << current << d->import;
+    qDebug() << "showImportView" << current << d->importWidget;
     WidgetHelper::slideRight2LeftWidget(
-        current, d->import, s_AnimationDelay);
+        current, d->importWidget, s_AnimationDelay);
     d->footer->enableControl(false);
-    d->currentWidget = d->import;
+    d->currentWidget = d->importWidget;
     d->titlebar->raise();
     d->footer->raise();
     d->titlebarwidget->setSearchEnable(false);
@@ -690,7 +624,7 @@ void MainWindow::setViewname(QString viewname)
 
 void MainWindow::changeToMusicListView(bool keepPlaylist)
 {
-    auto current = d->currentWidget ? d->currentWidget : d->import;
+    auto current = d->currentWidget ? d->currentWidget : d->importWidget;
     qDebug() << "changeToMusicListView"
              << current << d->musicList << keepPlaylist;
     if (d->musicList->isVisible()) {
@@ -716,99 +650,7 @@ void MainWindow::changeToMusicListView(bool keepPlaylist)
 
 void MainWindow::initMenu()
 {
-    d->newSonglistAction = new QAction(tr("New playlist"), this);
-    connect(d->newSonglistAction, &QAction::triggered, this, [ = ](bool) {
-        qDebug() << "" <<  d->newSonglistAction;
-        setPlaylistVisible(true);
-        emit this->addPlaylist(true);
-    });
 
-    auto m_addmusic = new QAction(tr("Add music"), this);
-    connect(m_addmusic, &QAction::triggered, this, [ = ](bool) {
-        this->onSelectImportFiles();
-    });
-
-    auto m_settings = new QAction(tr("Settings"), this);
-    connect(m_settings, &QAction::triggered, this, [ = ](bool) {
-        auto configDialog = new DSettingDialog(this);
-        configDialog->setFixedSize(720, 580);
-        DUtility::moveToCenter(configDialog);
-        configDialog->show();
-    });
-
-    d->colorModeAction = new QAction(tr("Deep color mode"), this);
-    d->colorModeAction->setCheckable(true);
-    d->colorModeAction->setChecked(DSettings::instance()->option("base.play.theme").toString() == "dark");
-
-    connect(d->colorModeAction, &QAction::triggered, this, [ = ](bool) {
-        if (DThemeManager::instance()->theme() == "light") {
-            d->colorModeAction->setChecked(true);
-            DThemeManager::instance()->setTheme("dark");
-            ThemeManager::instance()->setTheme("dark");
-        } else {
-            d->colorModeAction->setChecked(false);
-            DThemeManager::instance()->setTheme("light");
-            ThemeManager::instance()->setTheme("light");
-        }
-        DSettings::instance()->setOption("base.play.theme", DThemeManager::instance()->theme());
-    });
-
-    auto m_about = new QAction(tr("About"), this);
-    connect(m_about, &QAction::triggered, this, [ = ](bool) {
-        QString descriptionText = tr("Deepin Music Player is a beautiful design and "
-                                     "simple function local music player. "
-                                     "It supports viewing lyrics when playing, "
-                                     "playing lossless music and creating customizable songlist, etc.");
-        QString acknowledgementLink = "https://www.deepin.org/acknowledgments/deepin-music#thanks";
-
-        auto *aboutDlg = new DAboutDialog(this);
-        aboutDlg->setWindowModality(Qt::WindowModal);
-        aboutDlg->setWindowIcon(QPixmap("::/common/image/logo.png"));
-        aboutDlg->setProductIcon(QPixmap(":/common/image/logo_96.png"));
-        aboutDlg->setProductName("Deepin Music");
-        aboutDlg->setVersion(tr("Version: 3.0"));
-        aboutDlg->setDescription(descriptionText + "\n");
-        aboutDlg->setAcknowledgementLink(acknowledgementLink);
-        aboutDlg->show();
-    });
-
-    QAction *m_help = new QAction(tr("Help"), this);
-    connect(m_help, &QAction::triggered,
-    this, [ = ](bool) {
-        static QProcess *m_manual = nullptr;
-        if (NULL == m_manual) {
-            m_manual =  new QProcess(this);
-            const QString pro = "dman";
-            const QStringList args("deepin-music");
-            connect(m_manual, static_cast<void(QProcess::*)(int)>(&QProcess::finished), this, [ = ](int) {
-                m_manual->deleteLater();
-                m_manual = nullptr;
-            });
-            m_manual->start(pro, args);
-        }
-    });
-
-    QAction *m_close = new QAction(tr("Quit"), this);
-    connect(m_close, &QAction::triggered, this, [ = ](bool) {
-        this->close();
-    });
-
-    auto titleMenu = new QMenu;
-
-    titleMenu->setStyle(QStyleFactory::create("dlight"));
-    d->titlebar->setMenu(titleMenu);
-
-    titleMenu->addAction(d->newSonglistAction);
-    titleMenu->addAction(m_addmusic);
-    titleMenu->addSeparator();
-
-    titleMenu->addAction(d->colorModeAction);
-    titleMenu->addAction(m_settings);
-    titleMenu->addSeparator();
-
-    titleMenu->addAction(m_about);
-    titleMenu->addAction(m_help);
-    titleMenu->addAction(m_close);
 }
 
 void MainWindow::disableControl(int delay)

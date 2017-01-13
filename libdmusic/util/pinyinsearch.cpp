@@ -7,12 +7,13 @@
  * (at your option) any later version.
  **/
 
-#include "pinyin.h"
+#include "pinyinsearch.h"
 
 #include "../../../vendor/src/chinese2pinyin/chinese2pinyin.h"
 
-
-namespace Pinyin
+namespace DMusic
+{
+namespace PinyinSearch
 {
 
 inline bool isAlphabeta(const QChar &c)
@@ -69,4 +70,5 @@ QStringList simpleChineseSplit(QString &pinyin)
     return wordList;
 }
 
+}
 }

@@ -26,13 +26,13 @@ const int MusicItemLeftMargin = 15;
 const int MusicItemRightMargin = 20;
 const int MusicItemNumberMargin = 10;
 
-static inline QString numberString(int row, const QStyleOptionViewItem &option)
-{
-    auto listview = qobject_cast<const MusicListView *>(option.widget);
-    auto itemCount = listview->model()->rowCount();
-    auto itemCountString = QString("%1").arg(itemCount);
-    return QString("%1").arg(int(row), itemCountString.length(), 10, QChar('0'));
-}
+//static inline QString numberString(int row, const QStyleOptionViewItem &option)
+//{
+//    auto listview = qobject_cast<const MusicListView *>(option.widget);
+//    auto itemCount = listview->model()->rowCount();
+//    auto itemCountString = QString("%1").arg(itemCount);
+//    return QString("%1").arg(int(row), itemCountString.length(), 10, QChar('0'));
+//}
 
 static inline int pixel2point(int pixel)
 {
@@ -240,7 +240,7 @@ void MusicItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
 //    painter->setPen(Qt::red);
 //    painter->drawRect(option.rect);
 
-    auto meta = index.data().value<MusicMeta>();
+    auto meta = index.data().value<MetaPtr>();
     for (int col = 0; col < ColumnButt; ++col) {
         auto textColor = d->foreground(col, option);
         auto flag = alignmentFlag(col);
@@ -249,8 +249,9 @@ void MusicItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
         switch (col) {
         case Number: {
             auto *listview = qobject_cast<MusicListView *>(const_cast<QWidget *>(option.widget));
-            auto activeMeta = listview->activeMeta();
-            if (meta.invalid) {
+            // Fixme:
+            auto activeMeta =listview->activingMeta();
+            if (meta->invalid) {
                 auto icon = QPixmap(":/common/image/warning.png");
                 auto centerF = QRectF(rect).center();
                 auto iconRect = QRect(centerF.x() - icon.width() / 2,
@@ -261,17 +262,17 @@ void MusicItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
                 break;
             }
 
-            if (activeMeta.hash == meta.hash) {
+            if (activeMeta == meta) {
                 auto prefix = d->animationPrefix();
                 if (option.state & QStyle::State_Selected) {
                     prefix = d->highlightAnimationPrefix();
                 }
                 auto icon = QPixmap(prefix + "/0.png");
                 auto centerF = QRectF(rect).center();
-                auto iconRect = QRect(centerF.x() - icon.width() / 2,
+                auto iconRect = QRectF(centerF.x() - icon.width() / 2,
                                       centerF.y() - icon.height() / 2,
                                       icon.width(), icon.height());
-                painter->drawPixmap(iconRect, icon);
+                painter->drawPixmap(iconRect.toRect(), icon);
 //                d->playingAnimation->setParent(listview);
 //                d->playingAnimation->raise();
 //                d->playingAnimation->stop();
@@ -291,15 +292,15 @@ void MusicItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
             painter->setFont(font12);
             QFont font(font12);
             QFontMetrics fm(font);
-            auto text = fm.elidedText(meta.title, Qt::ElideMiddle, rect.width());
+            auto text = fm.elidedText(meta->title, Qt::ElideMiddle, rect.width());
             painter->drawText(rect, flag, text);
             break;
         }
         case Artist: {
             painter->setFont(font11);
-            auto str = meta.artist.isEmpty() ?
+            auto str = meta->artist.isEmpty() ?
                        MusicListView::tr("Unknow artist") :
-                       meta.artist;
+                       meta->artist;
             QFont font(font11);
             QFontMetrics fm(font);
             auto text = fm.elidedText(str, Qt::ElideMiddle, rect.width());
@@ -308,9 +309,9 @@ void MusicItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
         }
         case Album: {
             painter->setFont(font11);
-            auto str = meta.album.isEmpty() ?
+            auto str = meta->album.isEmpty() ?
                        MusicListView::tr("Unknow album") :
-                       meta.album;
+                       meta->album;
             QFont font(font11);
             QFontMetrics fm(font);
             auto text = fm.elidedText(str, Qt::ElideMiddle, rect.width());
@@ -319,7 +320,7 @@ void MusicItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
         }
         case Length:
             painter->setFont(font11);
-            painter->drawText(rect, flag, lengthString(meta.length));
+            painter->drawText(rect, flag, DMusic::lengthString(meta->length));
             break;
         default:
             break;

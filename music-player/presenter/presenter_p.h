@@ -10,40 +10,43 @@
 #pragma once
 
 #include "../core/playlist.h"
+#include "../core/settings.h"
 
 class Presenter;
-class LyricService;
+class MetaSearchService;
 class PlaylistManager;
-class MediaFileMonitor;
-class QSettings;
-class DSettings;
+class Player;
+class MediaLibrary;
 class PresenterPrivate: public QObject
 {
     Q_OBJECT
 public:
     PresenterPrivate(Presenter *parent = nullptr);
 
-    void initData();
+    void initBackend();
 
     PlaylistPtr         playlistBeforeSearch;
-    bool                syncPlayerResult    = false;
-    MusicMeta           syncPlayerMeta;
+    PlaylistPtr         currentPlaylist;
 
-    LyricService        *lyricService   = nullptr;
+    bool                syncPlayerResult    = false;
+    MetaPtr             syncPlayerMeta;
+
+    MetaSearchService   *lyricService   = nullptr;
     PlaylistManager     *playlistMgr    = nullptr;
-    MediaFileMonitor    *moniter        = nullptr;
-    DSettings           *dsettings       = nullptr;
+    Player              *player         = nullptr;
+    MediaLibrary        *library        = nullptr;
+    QPointer<Dtk::Settings> settings;
 
     Presenter *q_ptr;
     Q_DECLARE_PUBLIC(Presenter)
 
 signals:
-    void requestMetaSearch(const MusicMeta &);
+    void requestMetaSearch(const MetaPtr );
 
-    void play(PlaylistPtr playlist, const MusicMeta &info);
-    void resume(PlaylistPtr playlist, const MusicMeta &meta);
-    void playNext(PlaylistPtr playlist, const MusicMeta &info);
-    void playPrev(PlaylistPtr playlist, const MusicMeta &info);
+    void play(PlaylistPtr playlist, const MetaPtr info);
+    void resume(PlaylistPtr playlist, const MetaPtr meta);
+    void playNext(PlaylistPtr playlist, const MetaPtr info);
+    void playPrev(PlaylistPtr playlist, const MetaPtr info);
     void stop();
     void pause();
 };

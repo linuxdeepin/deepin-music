@@ -13,8 +13,7 @@
 #include <QTimer>
 #include <QMediaPlayer>
 #include <QPropertyAnimation>
-#include "lyricservice.h"
-#include "dsettings.h"
+#include "metasearchservice.h"
 
 #include <QMimeDatabase>
 
@@ -81,8 +80,8 @@ public:
     }
 
     void initConnection();
-    void selectPrev(const MusicMeta &info, Player::PlaybackMode mode);
-    void selectNext(const MusicMeta &info, Player::PlaybackMode mode);
+    void selectPrev(const MetaPtr info, Player::PlaybackMode mode);
+    void selectNext(const MetaPtr info, Player::PlaybackMode mode);
 
     // player property
     bool canControl     = true;
@@ -108,7 +107,7 @@ public:
     QMediaPlayer    *qplayer;
     double          volume              = 50.0;
     PlaylistPtr     activePlaylist;
-    MusicMeta       activeMeta;
+    MetaPtr         activeMeta;
 
     bool            playOnLoad  = true;
 
@@ -126,29 +125,32 @@ void PlayerPrivate::initConnection()
     Q_Q(Player);
     q->connect(qplayer, &QMediaPlayer::positionChanged,
     q, [ = ](qint64 position) {
+        if (activeMeta.isNull())
+            return;
+
         auto duration = qplayer->duration();
-//        qDebug() << lengthString(duration)
-//                 << lengthString(position)
-//                 << lengthString(activeMeta.offset)
-//                 << lengthString(activeMeta.length)
-//                 << activeMeta.title;
+        qDebug() << DMusic::lengthString(duration)
+                 << DMusic::lengthString(position)
+                 << DMusic::lengthString(activeMeta->offset)
+                 << DMusic::lengthString(activeMeta->length)
+                 << activeMeta->title;
 
         // fix len
-        if (activeMeta.length == 0 && duration != 0 && duration > 0) {
-            activeMeta.length = duration;
-            qDebug() << "update" << activeMeta.length;
+        if (activeMeta->length == 0 && duration != 0 && duration > 0) {
+            activeMeta->length = duration;
+            qDebug() << "update" << activeMeta->length;
             emit q->mediaUpdate(activePlaylist, activeMeta);
         }
 
-        if (position >= activeMeta.offset + activeMeta.length && qplayer->state() == QMediaPlayer::PlayingState) {
+        if (position >= activeMeta->offset + activeMeta->length && qplayer->state() == QMediaPlayer::PlayingState) {
             selectNext(activeMeta, mode);
             return;
         }
 
-//        qDebug() << position << sFadeInOutAnimationDuration << activeMeta.offset << activeMeta.length;
-//        qDebug() << position/1000 << sFadeInOutAnimationDuration << activeMeta.offset/1000 << activeMeta.length/1000;
+//        qDebug() << position << sFadeInOutAnimationDuration << activeMeta->offset << activeMeta->length;
+//        qDebug() << position/1000 << sFadeInOutAnimationDuration << activeMeta->offset/1000 << activeMeta->length/1000;
 
-//        if (position + (sFadeInOutAnimationDuration) >= activeMeta.offset + activeMeta.length) {
+//        if (position + (sFadeInOutAnimationDuration) >= activeMeta->offset + activeMeta->length) {
 //            qDebug() << "start fade out";
 //            if (fadeInOut&& !fadeOutAnimation) {
 //                fadeOutAnimation = new QPropertyAnimation(q, "fadeInOutFactor");
@@ -165,7 +167,7 @@ void PlayerPrivate::initConnection()
 //            }
 //        }
 
-        emit q->positionChanged(position - activeMeta.offset,  activeMeta.length);
+        emit q->positionChanged(position - activeMeta->offset,  activeMeta->length);
     });
     q->connect(qplayer, &QMediaPlayer::volumeChanged,
     q, [ = ](int volume) {
@@ -179,7 +181,7 @@ void PlayerPrivate::initConnection()
 
     q->connect(qplayer, &QMediaPlayer::mediaStatusChanged,
     q, [ = ](QMediaPlayer::MediaStatus status) {
-        qDebug() << status << activeMeta.invalid;
+        qDebug() << status << activeMeta->invalid;
         switch (status) {
         case QMediaPlayer::LoadedMedia: {
             qDebug() << qplayer->state();
@@ -187,7 +189,7 @@ void PlayerPrivate::initConnection()
                 qplayer->play();
             }
             emit q->mediaError(activePlaylist, activeMeta, Player::NoError);
-            activeMeta.invalid = false;
+            activeMeta->invalid = false;
 
 //            if (fadeInOut && !fadeInAnimation) {
 //                qDebug() << "start fade in";
@@ -225,7 +227,7 @@ void PlayerPrivate::initConnection()
     q, [ = ](QMediaPlayer::Error error) {
         qWarning() << error;
         emit q->mediaError(activePlaylist, activeMeta, static_cast<Player::Error>(error));
-        activeMeta.invalid = true;
+        activeMeta->invalid = true;
     });
 
     q->connect(qplayer, &QMediaPlayer::stateChanged,
@@ -244,7 +246,7 @@ void PlayerPrivate::initConnection()
     });
 }
 
-void PlayerPrivate::selectNext(const MusicMeta &info, Player::PlaybackMode mode)
+void PlayerPrivate::selectNext(const MetaPtr info, Player::PlaybackMode mode)
 {
     Q_Q(Player);
     if (!activePlaylist) {
@@ -268,8 +270,7 @@ void PlayerPrivate::selectNext(const MusicMeta &info, Player::PlaybackMode mode)
     }
 }
 
-
-void PlayerPrivate::selectPrev(const MusicMeta &info, Player::PlaybackMode mode)
+void PlayerPrivate::selectPrev(const MetaPtr info, Player::PlaybackMode mode)
 {
     Q_Q(Player);
     if (!activePlaylist) {
@@ -305,38 +306,37 @@ Player::~Player()
 
 }
 
-void Player::loadMedia(PlaylistPtr playlist, const MusicMeta &meta)
+void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta)
 {
     qDebug() << "loadMedia"
-             << meta.title
-             << lengthString(meta.offset)
-             << lengthString(meta.offset)
-             << lengthString(meta.length);
+             << meta->title
+             << DMusic::lengthString(meta->offset)
+             << DMusic::lengthString(meta->offset)
+             << DMusic::lengthString(meta->length);
     Q_D(Player);
     d->activeMeta = meta;
 
     d->qplayer->blockSignals(true);
-    d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(meta.localPath)));
+    d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(meta->localPath)));
     d->qplayer->blockSignals(false);
 
     d->activePlaylist = playlist;
     d->activePlaylist->play(meta);
 }
 
-
-void Player::playMeta(PlaylistPtr playlist, const MusicMeta &meta)
+void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
 {
     qDebug() << "playMeta"
-             << meta.title
-             << lengthString(meta.offset)
-             << lengthString(meta.offset)
-             << lengthString(meta.length);
+             << meta->title
+             << DMusic::lengthString(meta->offset)
+             << DMusic::lengthString(meta->offset)
+             << DMusic::lengthString(meta->length);
     Q_D(Player);
     d->activeMeta = meta;
 
-    d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(meta.localPath)));
+    d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(meta->localPath)));
 
-    d->qplayer->setPosition(meta.offset);
+    d->qplayer->setPosition(meta->offset);
 
     d->activePlaylist = playlist;
     d->activePlaylist->play(meta);
@@ -349,20 +349,20 @@ void Player::playMeta(PlaylistPtr playlist, const MusicMeta &meta)
             qDebug() << d->qplayer->state();
             d->qplayer->play();
             emit mediaError(d->activePlaylist, d->activeMeta, Player::NoError);
-            d->activeMeta.invalid = false;
+            d->activeMeta->invalid = false;
         });
     }
 
-    DSettings::instance()->setOption("base.play.last_playlist", d->activePlaylist->id());
-    DSettings::instance()->setOption("base.play.last_meta", d->activeMeta.hash);
+//    DSettings::instance()->setOption("base.play.last_playlist", d->activePlaylist->id());
+//    DSettings::instance()->setOption("base.play.last_meta", d->activeMeta->hash);
 }
 
-void Player::resume(PlaylistPtr playlist, const MusicMeta &meta)
+void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(Player);
     qDebug() << "resume top";
     Q_ASSERT(playlist == d->activePlaylist);
-    Q_ASSERT(meta.hash == d->activeMeta.hash);
+    Q_ASSERT(meta->hash == d->activeMeta->hash);
 
     setPlayOnLoaded(true);
     QTimer::singleShot(50, this, [ = ]() {
@@ -389,11 +389,11 @@ void Player::resume(PlaylistPtr playlist, const MusicMeta &meta)
     }
 }
 
-void Player::playNextMeta(PlaylistPtr playlist, const MusicMeta &meta)
+void Player::playNextMeta(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(Player);
     Q_ASSERT(playlist == d->activePlaylist);
-    Q_ASSERT(meta.hash == d->activeMeta.hash);
+    Q_ASSERT(meta->hash == d->activeMeta->hash);
 
     setPlayOnLoaded(true);
     if (d->mode == RepeatSingle) {
@@ -403,11 +403,11 @@ void Player::playNextMeta(PlaylistPtr playlist, const MusicMeta &meta)
     }
 }
 
-void Player::playPrevMusic(PlaylistPtr playlist, const MusicMeta &meta)
+void Player::playPrevMusic(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(Player);
     Q_ASSERT(playlist == d->activePlaylist);
-    Q_ASSERT(meta.hash == d->activeMeta.hash);
+    Q_ASSERT(meta->hash == d->activeMeta->hash);
 
     setPlayOnLoaded(true);
     if (d->mode == RepeatSingle) {
@@ -464,7 +464,15 @@ Player::PlaybackStatus Player::status()
     return static_cast<PlaybackStatus>(d->qplayer->state());
 }
 
-MusicMeta Player::activeMeta() const
+bool Player::isActiveMeta(MetaPtr meta) const
+{
+    Q_D(const Player);
+    return  !meta.isNull()
+            && ! d->activeMeta.isNull()
+            && (meta->hash == d->activeMeta->hash);
+}
+
+MetaPtr Player::activeMeta() const
 {
     Q_D(const Player);
     return d->activeMeta;
@@ -491,7 +499,7 @@ qlonglong Player::position() const
     return d->qplayer->position();
 }
 
-double Player::volume() const
+int Player::volume() const
 {
     Q_D(const Player);
     return d->volume;
@@ -514,10 +522,13 @@ bool Player::muted() const
 qint64 Player::duration() const
 {
     Q_D(const Player);
-    if (d->qplayer->duration() == d->activeMeta.length) {
+    if (d->activeMeta.isNull())
+        return 0;
+
+    if (d->qplayer->duration() == d->activeMeta->length) {
         return d->qplayer->duration();
     } else {
-        return  activeMeta().length;
+        return  d->activeMeta->length;
     }
 }
 
@@ -548,10 +559,13 @@ void Player::setPosition(qlonglong position)
 {
     Q_D(const Player);
 
-    if (d->qplayer->duration() == d->activeMeta.length) {
+    if (d->activeMeta.isNull())
+        return;
+
+    if (d->qplayer->duration() == d->activeMeta->length) {
         return d->qplayer->setPosition(position);
     } else {
-        d->qplayer->setPosition(position + activeMeta().offset);
+        d->qplayer->setPosition(position + d->activeMeta->offset);
     }
 }
 

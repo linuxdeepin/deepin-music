@@ -10,20 +10,19 @@
 #include "musicapp.h"
 
 #include <QDebug>
-#include <QTimer>
 #include <QThread>
-#include <QStandardPaths>
 
 #include <MprisPlayer>
 
 #include <DApplication>
 #include <dutility.h>
 
-#include "presenter/presenter.h"
-#include "view/mainwindow.h"
+#include <option.h>
+
 #include "core/player.h"
-#include "core/dsettings.h"
-#include "core/mediafilemonitor.h"
+#include "core/settings.h"
+#include "presenter/presenter.h"
+#include "view/mainframe.h"
 #include "view/helper/thememanager.h"
 
 using namespace Dtk::Widget;
@@ -36,7 +35,7 @@ public:
     }
 
     Presenter       *appPresenter   = nullptr;
-    MainWindow      *playerFrame    = nullptr;
+    MainFrame      *playerFrame    = nullptr;
 
     MusicApp *q_ptr;
     Q_DECLARE_PUBLIC(MusicApp)
@@ -55,33 +54,21 @@ MusicApp::~MusicApp()
 
 }
 
-QString MusicApp::configPath()
-{
-    auto userConfigPath = QStandardPaths::standardLocations(QStandardPaths::ConfigLocation).first();
-    return userConfigPath + "/" + qApp->organizationName() + "/" + qApp->applicationName();
-}
-
-QString MusicApp::cachePath()
-{
-    auto userCachePath = QStandardPaths::standardLocations(QStandardPaths::CacheLocation).first();
-    return userCachePath;
-}
-
 void MusicApp::init()
 {
     Q_D(MusicApp);
     d->appPresenter = new Presenter;
 
     // setTheme
-    auto theme = DSettings::instance()->option("base.play.theme").toString();
-    auto themePrefix = DSettings::instance()->option("base.play.theme_prefix").toString();
+    auto theme = Settings::instance()->value("base.play.theme").toString();
+    auto themePrefix = Settings::instance()->value("base.play.theme_prefix").toString();
     qDebug() << "set Theme" << theme;
     auto dApp = qobject_cast<DApplication *>(qApp);
     dApp->setTheme(theme);
     ThemeManager::instance()->setPrefix(themePrefix);
     ThemeManager::instance()->setTheme(theme);
 
-    d->playerFrame = new MainWindow;
+    d->playerFrame = new MainFrame;
     d->playerFrame->hide();
 
     auto presenterWork = new QThread;
@@ -124,10 +111,10 @@ void MusicApp::triggerShortcutAction(const QString &optKey)
 {
     Q_D(MusicApp);
     if (optKey  == "shortcuts.all.volume_up") {
-        d->appPresenter->volumeup();
+        d->appPresenter->volumeUp();
     }
     if (optKey  == "shortcuts.all.volume_down") {
-        d->appPresenter->volumedown();
+        d->appPresenter->volumeDown();
     }
     if (optKey  == "shortcuts.all.next") {
         d->appPresenter->next();
@@ -145,14 +132,14 @@ void MusicApp::onDataPrepared()
 {
     Q_D(MusicApp);
 
-    d->playerFrame->initMusiclist(d->appPresenter->allMusicPlaylist(), d->appPresenter->lastPlaylist());
-    d->playerFrame->initPlaylist(d->appPresenter->allplaylist() , d->appPresenter->lastPlaylist());
-    d->playerFrame->initFooter(d->appPresenter->lastPlaylist(), d->appPresenter->playMode());
-    d->playerFrame->initUI();
+//    d->playerFrame->initMusiclist(d->appPresenter->allMusicPlaylist(), d->appPresenter->lastPlaylist());
+//    d->playerFrame->initPlaylist(d->appPresenter->allplaylist() , d->appPresenter->lastPlaylist());
+//    d->playerFrame->initFooter(d->appPresenter->lastPlaylist(), d->appPresenter->playMode());
+//    d->playerFrame->initUI();
 
-    d->playerFrame->binding(d->appPresenter);
+   d->playerFrame->binding(d->appPresenter);
 
-    d->appPresenter->loadConfig();
+//    d->appPresenter->loadConfig();
 
     d->playerFrame->resize(QSize(1070, 680));
     d->playerFrame->show();
@@ -161,6 +148,9 @@ void MusicApp::onDataPrepared()
     d->playerFrame->setFocus();
 
     d->appPresenter->postAction();
+
+
+    d->playerFrame->setMinimumSize(QSize(870, 480));
 
     qApp->installEventFilter(d->playerFrame);
 }

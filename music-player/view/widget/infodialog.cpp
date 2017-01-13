@@ -19,7 +19,7 @@
 #include <thememanager.h>
 #include "../../core/music.h"
 
-InfoDialog::InfoDialog(const MusicMeta &info, QWidget *parent) : DAbstractDialog(parent)
+InfoDialog::InfoDialog(const MetaPtr meta, QWidget *parent) : DAbstractDialog(parent)
 {
     setObjectName("InfoDialog");
     setFixedWidth(320);
@@ -38,7 +38,7 @@ InfoDialog::InfoDialog(const MusicMeta &info, QWidget *parent) : DAbstractDialog
     m_cover->setObjectName("InfoCover");
     m_cover->setFixedSize(140, 140);
 
-    auto title = new QLabel(info.title);
+    auto title = new QLabel(meta->title);
     title->setObjectName("InfoTitle");
     title->setFixedWidth(300);
     title->setWordWrap(true);
@@ -70,7 +70,7 @@ InfoDialog::InfoDialog(const MusicMeta &info, QWidget *parent) : DAbstractDialog
     connect(closeBt, &DWindowCloseButton::clicked, this, &DAbstractDialog::close);
 }
 
-void InfoDialog::initUI(const MusicMeta &info)
+void InfoDialog::initUI(const MetaPtr meta)
 {
     auto infogridLayout = new QGridLayout(m_infogridFrame);
     infogridLayout->setMargin(0);
@@ -84,12 +84,12 @@ void InfoDialog::initUI(const MusicMeta &info)
              << tr("File type:") << tr("Size:") << tr("Length:")
              << tr("Directory:");
 
-    QString artist = info.artist.isEmpty() ? tr("Unkonw artist") : info.artist;
-    QString album = info.album.isEmpty() ? tr("Unkonw album") : info.album;
+    QString artist = meta->artist.isEmpty() ? tr("Unkonw artist") : meta->artist;
+    QString album = meta->album.isEmpty() ? tr("Unkonw album") : meta->album;
     QStringList infoValues;
-    infoValues << info.title << artist << album
-               << info.filetype << sizeString(info.size) << lengthString(info.length)
-               << info.localPath;
+    infoValues << meta->title << artist << album
+               << meta->filetype << DMusic::sizeString(meta->size) << DMusic::lengthString(meta->length)
+               << meta->localPath;
 
     for (int i = 0; i < infoKeys.length(); ++i) {
         auto infoKey = new QLabel(infoKeys.value(i));

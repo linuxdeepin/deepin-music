@@ -58,7 +58,7 @@ public slots:
 private:
     void prepare(QNetworkRequest &request);
 
-    Q_DISABLE_COPY(Geese);
+    Q_DISABLE_COPY(Geese)
     QScopedPointer<GeesePrivate>  d;
 };
 

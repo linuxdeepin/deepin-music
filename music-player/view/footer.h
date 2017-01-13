@@ -33,35 +33,34 @@ public:
 
 signals:
     void toggleLyricView();
-    void locateMusic(PlaylistPtr playlist, const MusicMeta &info);
+    void locateMusic(PlaylistPtr playlist, const MetaPtr meta);
 
-    void play(PlaylistPtr playlist, const MusicMeta &meta);
-    void resume(PlaylistPtr playlist, const MusicMeta &meta);
-    void pause(PlaylistPtr playlist, const MusicMeta &meta);
-    void next(PlaylistPtr playlist, const MusicMeta &meta);
-    void prev(PlaylistPtr playlist, const MusicMeta &meta);
+    void play(PlaylistPtr playlist, const MetaPtr meta);
+    void resume(PlaylistPtr playlist, const MetaPtr meta);
+    void pause(PlaylistPtr playlist, const MetaPtr meta);
+    void next(PlaylistPtr playlist, const MetaPtr meta);
+    void prev(PlaylistPtr playlist, const MetaPtr meta);
     void changeProgress(qint64 value, qint64 duration);
     void volumeChanged(int volume);
 
     void toggleMute();
     void togglePlaylist();
     void modeChanged(int);
-    void toggleFavourite(const MusicMeta &meta);
+    void toggleFavourite(const MetaPtr meta);
 
     void mouseMoving(Qt::MouseButton botton);
 
 public slots:
-    void onMusicAdded(PlaylistPtr playlist, const MusicMeta &meta);
-    void onMusicListAdded(PlaylistPtr playlist, const MusicMetaList &metalist);
-    void onMusicRemoved(PlaylistPtr playlist, const MusicMeta &meta);
-    void onMusicPlayed(PlaylistPtr playlist, const MusicMeta &meta);
-    void onMusicPause(PlaylistPtr playlist, const MusicMeta &meta);
-    void onMusicStoped(PlaylistPtr playlist, const MusicMeta &meta);
+    void onMusicListAdded(PlaylistPtr playlist, const MetaPtrList metalist);
+    void onMusicListRemoved(PlaylistPtr playlist, const MetaPtrList metalist);
+    void onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta);
+    void onMusicPause(PlaylistPtr playlist, const MetaPtr meta);
+    void onMusicStoped(PlaylistPtr playlist, const MetaPtr meta);
     void onProgressChanged(qint64 value, qint64 duration);
-    void onCoverChanged(const MusicMeta &meta, const QByteArray &coverData);
+    void onCoverChanged(const MetaPtr meta, const QByteArray &coverData);
     void onVolumeChanged(int volume);
     void onMutedChanged(bool muted);
-    void onUpdateMetaCodec(const MusicMeta &meta);
+    void onUpdateMetaCodec(const MetaPtr meta);
     void setDefaultCover(QString defaultCover);
 
 protected:

@@ -1,5 +1,5 @@
 {
-    "main_groups": [
+    "groups": [
         {
             "key": "base",
             "name": "Basic settings",
@@ -10,28 +10,28 @@
                     "options": [
                         {
                             "key": "auto_play",
-                            "label": "",
+                            "name": "",
                             "type": "checkbox",
-                            "checkbox_text": "Automatically play when startup",
+                            "text": "Automatically play when startup",
                             "default": false
                         },
                         {
                             "key": "remember_progress",
-                            "label": "",
+                            "name": "",
                             "type": "checkbox",
-                            "checkbox_text": "Remember the last time when playing",
+                            "text": "Remember the last time when playing",
                             "default": false
                         },
                         {
                             "key": "fade_in_out",
-                            "label": "",
+                            "name": "",
                             "type": "checkbox",
-                            "checkbox_text": "Enable fade in and out",
+                            "text": "Enable fade in and out",
                             "default": true
                         },
                         {
                             "key": "sort_type",
-                            "label": "sort type",
+                            "name": "sort type",
                             "hide": true,
                             "reset": false,
                             "type": "combox",
@@ -40,7 +40,7 @@
                         },
                         {
                             "key": "playmode",
-                            "label": "play mode",
+                            "name": "play mode",
                             "reset": false,
                             "hide": true,
                             "type": "combox",
@@ -49,7 +49,7 @@
                         },
                         {
                             "key": "volume",
-                            "label": "play sound volume",
+                            "name": "play sound volume",
                             "reset": false,
                             "hide": true,
                             "type": "slider",
@@ -59,7 +59,7 @@
                         },
                         {
                             "key": "mute",
-                            "label": "play sound mute",
+                            "name": "play sound mute",
                             "hide": true,
                             "reset": false,
                             "type": "checkbox",
@@ -67,7 +67,7 @@
                         },
                         {
                             "key": "theme",
-                            "label": "deepin theme",
+                            "name": "deepin theme",
                             "hide": true,
                             "reset": false,
                             "type": "dropbox",
@@ -75,35 +75,35 @@
                         },
                         {
                             "key": "theme_prefix",
-                            "label": "deepin theme path",
+                            "name": "deepin theme path",
                             "hide": true,
                             "type": "dropbox",
                             "default": ":"
                         },
                         {
                             "key": "last_playlist",
-                            "label": "",
+                            "name": "",
                             "hide": true,
                             "type": "dropbox",
                             "default": "all"
                         },
                         {
                             "key": "last_meta",
-                            "label": "",
+                            "name": "",
                             "hide": true,
                             "type": "dropbox",
                             "default": ""
                         },
                         {
                             "key": "last_position",
-                            "label": "by ms",
+                            "name": "by ms",
                             "hide": true,
                             "type": "slider",
                             "default": "0"
                         },
                         {
                             "key": "last_import_path",
-                            "label": "Last Import Path",
+                            "name": "Last Import Path",
                             "hide": true,
                             "reset": false,
                             "type": "lineedit",
@@ -123,31 +123,31 @@
                     "options": [
                         {
                             "key": "play_pause",
-                            "label": "Play/Pause",
+                            "name": "Play/Pause",
                             "type": "shortcut",
                             "default": ["201326592", "80"]
                         },
                         {
                             "key": "previous",
-                            "label": "Previous",
+                            "name": "Previous",
                             "type": "shortcut",
                             "default":  ["201326592", "16777234"]
                         },
                         {
                             "key": "next",
-                            "label": "Next",
+                            "name": "Next",
                             "type": "shortcut",
                             "default":  ["201326592", "16777236"]
                         },
                         {
                             "key": "volume_up",
-                            "label": "Volume up",
+                            "name": "Volume up",
                             "type": "shortcut",
                             "default":  ["201326592", "16777235"]
                         },
                         {
                             "key": "volume_down",
-                            "label": "Volume down",
+                            "name": "Volume down",
                             "type": "shortcut",
                             "default":  ["201326592", "16777237"]
                         }

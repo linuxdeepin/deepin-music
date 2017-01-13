@@ -8,7 +8,6 @@
  **/
 
 #include "mediadatabasewriter.h"
-#include "util/musicmeta.h"
 
 #include <QSqlDatabase>
 #include <QSqlQuery>
@@ -17,28 +16,27 @@
 #include <QDir>
 #include <QThread>
 
+#include <mediameta.h>
+
 MediaDatabaseWriter::MediaDatabaseWriter(QObject *parent) : QObject(parent)
 {
 
 }
 
-void MediaDatabaseWriter::addMusicMetaList(const MusicMetaList &metalist)
+void MediaDatabaseWriter::addMediaMetaList(const MetaPtrList metalist)
 {
-//    qDebug() << "addMusicMetaList beign";
+//    qDebug() << "addMediaMetaList beign";
     QSqlDatabase::database().transaction();
     for (auto &meta : metalist) {
-        addMusicMeta(meta);
+        addMediaMeta(meta);
     }
     QSqlDatabase::database().commit();
-    //    qDebug() << "addMusicMetaList end";
+    //    qDebug() << "addMediaMetaList end";
 }
 
-void MediaDatabaseWriter::updateMusicMeta(const MusicMeta &meta)
+void MediaDatabaseWriter::updateMediaMeta(const MetaPtr meta)
 {
-    MusicMeta saveMeta = meta;
-    MusicMetaName::pinyinIndex(saveMeta);
-
-    qDebug() << "updateMusicMeta beign";
+    qDebug() << "updateMediaMeta beign";
     QSqlQuery query;
 
     query.prepare("UPDATE music set "
@@ -48,54 +46,58 @@ void MediaDatabaseWriter::updateMusicMeta(const MusicMeta &meta)
                   "py_artist_short=:py_artist_short, py_album=:py_album, py_album_short=:py_album_short "
                   "where hash=:hash");
 
-    query.bindValue(":invalid", saveMeta.invalid);
-    query.bindValue(":length", saveMeta.length);
-    query.bindValue(":title", saveMeta.title);
-    query.bindValue(":artist", saveMeta.artist);
-    query.bindValue(":album", saveMeta.album);
-    query.bindValue(":py_title", saveMeta.pinyinTitle);
-    query.bindValue(":py_title_short", saveMeta.pinyinTitleShort);
-    query.bindValue(":py_artist", saveMeta.pinyinArtist);
-    query.bindValue(":py_artist_short", saveMeta.pinyinArtistShort);
-    query.bindValue(":py_album", saveMeta.pinyinAlbum);
-    query.bindValue(":py_album_short", saveMeta.pinyinAlbumShort);
-    query.bindValue(":hash", saveMeta.hash);
+    query.bindValue(":invalid", meta->invalid);
+    query.bindValue(":length", meta->length);
+    query.bindValue(":title", meta->title);
+    query.bindValue(":artist", meta->artist);
+    query.bindValue(":album", meta->album);
+    query.bindValue(":py_title", meta->pinyinTitle);
+    query.bindValue(":py_title_short", meta->pinyinTitleShort);
+    query.bindValue(":py_artist", meta->pinyinArtist);
+    query.bindValue(":py_artist_short", meta->pinyinArtistShort);
+    query.bindValue(":py_album", meta->pinyinAlbum);
+    query.bindValue(":py_album_short", meta->pinyinAlbumShort);
+    query.bindValue(":hash", meta->hash);
 
     if (! query.exec()) {
         qCritical() << query.lastError();
         return;
     }
-    qDebug() << "updateMusicMeta end";
+    qDebug() << "updateMediaMeta end";
 }
 
-void MediaDatabaseWriter::updateMusicMetaList(const MusicMetaList &metalist)
+void MediaDatabaseWriter::updateMediaMetaList(const MetaPtrList metalist)
 {
-
+    QSqlDatabase::database().transaction();
+    for (auto &meta : metalist) {
+        updateMediaMeta(meta);
+    }
+    QSqlDatabase::database().commit();
 }
 
-void MediaDatabaseWriter::removeMusicMeta(const MusicMeta &meta)
+void MediaDatabaseWriter::removeMediaMeta(const MetaPtr meta)
 {
     QSqlQuery query;
-    QString sqlstring = QString("DELETE FROM music WHERE hash = '%1'").arg(meta.hash);
+    QString sqlstring = QString("DELETE FROM music WHERE hash = '%1'").arg(meta->hash);
     if (! query.exec(sqlstring)) {
         qWarning() << query.lastError();
         return;
     }
 }
 
-void MediaDatabaseWriter::removeMusicMetaList(const MusicMetaList &metalist)
+void MediaDatabaseWriter::removeMediaMetaList(const MetaPtrList metalist)
 {
     QSqlDatabase::database().transaction();
     for (auto &meta : metalist) {
-        removeMusicMeta(meta);
+        removeMediaMeta(meta);
     }
     QSqlDatabase::database().commit();
 }
 
 
-void MediaDatabaseWriter::addMusicMeta(const MusicMeta &metalist)
+void MediaDatabaseWriter::addMediaMeta(const MetaPtr meta)
 {
-//    qDebug() << "addMusicMeta beign";
+//    qDebug() << "addMediaMeta beign";
     QSqlQuery query;
     query.prepare("INSERT INTO music ("
                   "hash, timestamp, title, artist, album, "
@@ -109,35 +111,35 @@ void MediaDatabaseWriter::addMusicMeta(const MusicMeta &metalist)
                   ":py_title, :py_title_short, :py_artist, :py_artist_short, "
                   ":py_album, :py_album_short, :cuepath "
                   ")");
-    query.bindValue(":hash", metalist.hash);
-    query.bindValue(":timestamp", metalist.timestamp);
-    query.bindValue(":title", metalist.title);
-    query.bindValue(":artist", metalist.artist);
-    query.bindValue(":album", metalist.album);
-    query.bindValue(":filetype", metalist.filetype);
-    query.bindValue(":size", metalist.size);
-    query.bindValue(":track", metalist.track);
-    query.bindValue(":offset", metalist.offset);
-    query.bindValue(":favourite", metalist.favourite);
-    query.bindValue(":localpath", metalist.localPath);
-    query.bindValue(":length", metalist.length);
-    query.bindValue(":py_title", metalist.pinyinTitle);
-    query.bindValue(":py_title_short", metalist.pinyinTitleShort);
-    query.bindValue(":py_artist", metalist.pinyinArtist);
-    query.bindValue(":py_artist_short", metalist.pinyinArtistShort);
-    query.bindValue(":py_album", metalist.pinyinAlbum);
-    query.bindValue(":py_album_short", metalist.pinyinAlbumShort);
-    query.bindValue(":cuepath", metalist.cuePath);
+    query.bindValue(":hash", meta->hash);
+    query.bindValue(":timestamp", meta->timestamp);
+    query.bindValue(":title", meta->title);
+    query.bindValue(":artist", meta->artist);
+    query.bindValue(":album", meta->album);
+    query.bindValue(":filetype", meta->filetype);
+    query.bindValue(":size", meta->size);
+    query.bindValue(":track", meta->track);
+    query.bindValue(":offset", meta->offset);
+    query.bindValue(":favourite", meta->favourite);
+    query.bindValue(":localpath", meta->localPath);
+    query.bindValue(":length", meta->length);
+    query.bindValue(":py_title", meta->pinyinTitle);
+    query.bindValue(":py_title_short", meta->pinyinTitleShort);
+    query.bindValue(":py_artist", meta->pinyinArtist);
+    query.bindValue(":py_artist_short", meta->pinyinArtistShort);
+    query.bindValue(":py_album", meta->pinyinAlbum);
+    query.bindValue(":py_album_short", meta->pinyinAlbumShort);
+    query.bindValue(":cuepath", meta->cuePath);
 
     if (! query.exec()) {
         qCritical() << query.lastError();
         return;
     }
-//    qDebug() << "addMusicMeta end";
+//    qDebug() << "addMediaMeta end";
 }
 
 
-void MediaDatabaseWriter::insertMusic(const MusicMeta &meta,
+void MediaDatabaseWriter::insertMusic(const MetaPtr meta,
                                       const PlaylistMeta &playlistMeta)
 {
 //    qDebug() << "insertMusic begin";
@@ -150,7 +152,7 @@ void MediaDatabaseWriter::insertMusic(const MusicMeta &meta,
                                 "WHERE music_id = :music_id)").arg(playlistMeta.uuid);
     query.prepare(sqlstring);
     query.bindValue(":playlist_id", playlistMeta.uuid);
-    query.bindValue(":music_id", meta.hash);
+    query.bindValue(":music_id", meta->hash);
     query.bindValue(":sort_id", 0);
 
     if (! query.exec()) {
@@ -160,7 +162,7 @@ void MediaDatabaseWriter::insertMusic(const MusicMeta &meta,
 //    qDebug() << "insertMusic end";
 }
 
-void MediaDatabaseWriter::insertMusicList(const MusicMetaList &metalist, const PlaylistMeta &playlistMeta)
+void MediaDatabaseWriter::insertMusicList(const MetaPtrList metalist, const PlaylistMeta &playlistMeta)
 {
 //    qDebug() << "insertMusicList beign";
     QSqlDatabase::database().transaction();
@@ -170,3 +172,4 @@ void MediaDatabaseWriter::insertMusicList(const MusicMetaList &metalist, const P
     QSqlDatabase::database().commit();
 //    qDebug() << "insertMusicList end";
 }
+

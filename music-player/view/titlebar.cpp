@@ -14,7 +14,7 @@
 
 #include <thememanager.h>
 
-#include "mainwindow.h"
+#include "mainframe.h"
 
 DWIDGET_USE_NAMESPACE
 

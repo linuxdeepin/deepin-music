@@ -12,10 +12,9 @@
 #include <QObject>
 #include <QScopedPointer>
 
-#include "../core/music.h"
-#include "../core/playlist.h"
-
 #include <MprisPlayer>
+
+#include "../core/playlist.h"
 
 class Playlist;
 
@@ -27,116 +26,108 @@ public:
     explicit Presenter(QObject *parent = 0);
     ~Presenter();
 
-    PlaylistPtr allMusicPlaylist();
-    PlaylistPtr favMusicPlaylist();
-    PlaylistPtr lastPlaylist();
+    void initMpris(MprisPlayer* mprisPlayer);
+    void prepareData();
+    void postAction();
+
     QList<PlaylistPtr > allplaylist();
-    int playMode();
-    void volumeup();
-    void volumedown();
+
+public slots:
+    void volumeUp();
+    void volumeDown();
     void togglePaly();
     void next();
     void prev();
 
+    void requestImportPaths(PlaylistPtr playlist, const QStringList &filelist);
 
-    void initMpris(MprisPlayer* mprisPlayer);
-
-    void prepareData();
-
-    void loadConfig();
-
-    void postAction();
-    //! action signal
-signals:
-    //! ui: request import dialog
-    void importMediaFiles(PlaylistPtr playlist, const QStringList &filelist);
-    void meidaFilesImported(PlaylistPtr playlist, MusicMetaList metalist);
-
-    //! notify signal
 signals:
     void dataLoaded();
 
-    //! ui: control
-    void requestImportFiles();
-    void setPlaylistVisible(bool visible);
-    void showMusiclist();
+signals:
+    //! ui: request import dialog
+    void meidaFilesImported(PlaylistPtr playlist, MetaPtrList metalist);
 
-    //! ui: menu
-    void musiclistMenuRequested(const QPoint &pos,
-                                PlaylistPtr selectedlist,
-                                PlaylistPtr favlist,
-                                QList<PlaylistPtr >newlists);
+    //! ui: control
+    // TODO: need path
+    void requestImportFiles();
+    void showPlaylist(bool visible);
+    void showMusicList(PlaylistPtr playlist);
 
     //! from playlist manager
     void playlistAdded(PlaylistPtr);
     void playlistRemove(PlaylistPtr);
-    void currentPlaylistChanged(PlaylistPtr);
-    void playlistResorted(PlaylistPtr);
-    void playingPlaylistChanged(PlaylistPtr);
+    void activePlaylistChanged(PlaylistPtr);
 
-    //! from playlist manager
-    void musicAdded(PlaylistPtr playlist, const MusicMeta &info);
-    void musiclistAdded(PlaylistPtr playlist, const MusicMetaList &metalist);
-    void musicRemoved(PlaylistPtr playlist, const MusicMeta &info);
+    //! from music manager
+    void locateMusic(PlaylistPtr, const MetaPtr);
+    void currentMusicListChanged(PlaylistPtr);
+    void musicListResorted(PlaylistPtr);
+    void musicListAdded(PlaylistPtr playlist, const MetaPtrList metalist);
+    void musicListRemoved(PlaylistPtr playlist, const MetaPtrList metalist);
+    void requestMusicListMenu(const QPoint &pos,
+                                PlaylistPtr selectedlist,
+                                PlaylistPtr favlist,
+                                QList<PlaylistPtr >newlists);
 
     //! from control
-    void musicPlayed(PlaylistPtr playlist, const MusicMeta &meta);
-    void musicError(PlaylistPtr playlist, const MusicMeta &meta, int error);
-    void musicPaused(PlaylistPtr playlist, const MusicMeta &meta);
-    void musicStoped(PlaylistPtr playlist, const MusicMeta &meta);
-    void musicMetaUpdate(PlaylistPtr playlist, const MusicMeta &meta);
-    void notifyMusciError(PlaylistPtr playlist, const MusicMeta &meta, int error);
+    void musicPlayed(PlaylistPtr playlist, const MetaPtr meta);
+    void musicError(PlaylistPtr playlist, const MetaPtr meta, int error);
+    void musicPaused(PlaylistPtr playlist, const MetaPtr meta);
+    void musicStoped(PlaylistPtr playlist, const MetaPtr meta);
+    void musicMetaUpdate(PlaylistPtr playlist, const MetaPtr meta);
     void progrossChanged(qint64 pos, qint64 length);
     void volumeChanged(int volume);
     void mutedChanged(bool muted);
 
-    void locateMusic(PlaylistPtr playlist, const MusicMeta &info);
     //! from lyricservice
     void requestContextSearch(const QString &context);
-    void lyricSearchFinished(const MusicMeta &, const QByteArray &lyricData);
-    void coverSearchFinished(const MusicMeta &, const QByteArray &coverData);
-    void contextSearchFinished(const QString &context, const MusicMetaList &metalist);
-    void changeMetaCache(const MusicMeta &meta);
+    void lyricSearchFinished(const MetaPtr , const QByteArray &lyricData);
+    void coverSearchFinished(const MetaPtr , const QByteArray &coverData);
+    void contextSearchFinished(const QString &context, const MetaPtrList metalist);
 
     //! meta info
-    void metaInfoClean();
-    void notifyAddToPlaylist(PlaylistPtr playlist, const MusicMetaList &info);
+    void metaLibraryClean();
+    void notifyMusciError(PlaylistPtr playlist, const MetaPtr meta, int error);
+    void notifyAddToPlaylist(PlaylistPtr playlist, const MetaPtrList info);
 
 public slots:
     //! music control interface
-    void onSyncMusicPlay(PlaylistPtr playlist, const MusicMeta &meta);
-    void onMusicPlay(PlaylistPtr playlist, const MusicMeta &meta);
-    void onMusicPause(PlaylistPtr playlist, const MusicMeta &info);
-    void onMusicResume(PlaylistPtr playlist, const MusicMeta &info);
-    void onMusicStop(PlaylistPtr playlist, const MusicMeta &info);
-    void onMusicPrev(PlaylistPtr playlist, const MusicMeta &meta);
-    void onMusicNext(PlaylistPtr playlist, const MusicMeta &meta);
-    void onToggleFavourite(const MusicMeta &info);
+    void onSyncMusicPlay(PlaylistPtr playlist, const MetaPtr meta);
+    void onMusicPlay(PlaylistPtr playlist, const MetaPtr meta);
+    void onMusicPause(PlaylistPtr playlist, const MetaPtr info);
+    void onMusicResume(PlaylistPtr playlist, const MetaPtr info);
+    void onMusicStop(PlaylistPtr playlist, const MetaPtr info);
+    void onMusicPrev(PlaylistPtr playlist, const MetaPtr meta);
+    void onMusicNext(PlaylistPtr playlist, const MetaPtr meta);
+
+    void onToggleFavourite(const MetaPtr meta);
     void onChangeProgress(qint64 value, qint64 range);
     void onVolumeChanged(int volume);
     void onPlayModeChanged(int mode);
     void onToggleMute();
 
-    void onUpdateMetaCodec(const MusicMeta &meta);
+    void onUpdateMetaCodec(const MetaPtr meta);
 
     //! music list
     void onPlayall(PlaylistPtr playlist);
     void onResort(PlaylistPtr playlist, int sortType);
 
     //! UI: playlist manager interface
-    void onAddToPlaylist(PlaylistPtr playlist, const MusicMetaList &metalist);
-    void onMusiclistRemove(PlaylistPtr playlist, const MusicMetaList &metalist);
-    void onMusiclistDelete(PlaylistPtr playlist, const MusicMetaList &metalist);
+    void onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metalist);
+    void onMusiclistDelete(PlaylistPtr playlist, const MetaPtrList metalist);
+    void onAddToPlaylist(PlaylistPtr playlist, const MetaPtrList metalist);
     void onPlaylistAdd(bool edit);
-    void onSelectedPlaylistChanged(PlaylistPtr playlist);
+    void onCurrentPlaylistChanged(PlaylistPtr playlist);
 
     //! ui: menu interface
     void onRequestMusiclistMenu(const QPoint &pos);
     void onSearchText(const QString text);
     void onExitSearch();
     void onLocateMusicAtAll(const QString &hash);
+    void onChangeSearchMetaCache(const MetaPtr meta);
 
-    void onImportMusicDirectory();
+    void onScanMusicDirectory();
     void onImportFiles(const QStringList &filelist);
 
 private:

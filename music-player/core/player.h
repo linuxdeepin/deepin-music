@@ -16,11 +16,11 @@
 
 #include <Mpris>
 
-#include "core/util/singleton.h"
+#include <util/singleton.h>
 #include "playlist.h"
 
 class PlayerPrivate;
-class Player : public QObject, public Singleton<Player>
+class Player : public QObject, public DMusic::DSingleton<Player>
 {
     Q_OBJECT
 
@@ -79,25 +79,26 @@ public:
 public:
     void init() {}
 
-    void loadMedia(PlaylistPtr playlist, const MusicMeta &meta);
-    void playMeta(PlaylistPtr playlist, const MusicMeta &meta);
-    void resume(PlaylistPtr playlist, const MusicMeta &meta);
-    void playNextMeta(PlaylistPtr playlist, const MusicMeta &meta);
-    void playPrevMusic(PlaylistPtr playlist, const MusicMeta &meta);
+    void loadMedia(PlaylistPtr playlist, const MetaPtr meta);
+    void playMeta(PlaylistPtr playlist, const MetaPtr meta);
+    void resume(PlaylistPtr playlist, const MetaPtr meta);
+    void playNextMeta(PlaylistPtr playlist, const MetaPtr meta);
+    void playPrevMusic(PlaylistPtr playlist, const MetaPtr meta);
     void pause();
     void stop();
     PlaybackStatus status();
 
-    MusicMeta activeMeta() const;
+    bool isActiveMeta(MetaPtr meta) const;
+    MetaPtr activeMeta() const;
     PlaylistPtr activePlaylist() const;
     QStringList supportedFilterStringList()const;
     QStringList supportedSuffixList()const;
     QStringList supportedMimeTypes() const;
 
 signals:
-    void mediaUpdate(PlaylistPtr playlist, const MusicMeta &meta);
-    void mediaPlayed(PlaylistPtr playlist, const MusicMeta &meta);
-    void mediaError(PlaylistPtr playlist, const MusicMeta &meta, Player::Error error);
+    void mediaUpdate(PlaylistPtr playlist, const MetaPtr meta);
+    void mediaPlayed(PlaylistPtr playlist, const MetaPtr meta);
+    void mediaError(PlaylistPtr playlist, const MetaPtr meta, Player::Error error);
 
 public:
     bool canControl() const;
@@ -114,7 +115,7 @@ public:
     qlonglong position() const;
 //    double rate() const;
 //    bool shuffle() const;
-    double volume() const;
+    int volume() const;
     PlaybackMode mode() const;
     bool muted() const;
     qint64 duration() const;
@@ -168,10 +169,10 @@ public slots:
     void setPlayOnLoaded(bool playOnLoaded);
 
 private:
-    friend class Singleton<Player>;
+    friend class DMusic::DSingleton<Player>;
     QScopedPointer<PlayerPrivate> d_ptr;
     Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), Player)
 };
 
-Q_DECLARE_METATYPE(Player::Error);
+Q_DECLARE_METATYPE(Player::Error)
 

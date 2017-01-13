@@ -7,39 +7,12 @@
  * (at your option) any later version.
  **/
 
-#ifndef PLAYLIST_H
-#define PLAYLIST_H
+#pragma once
 
 #include <QObject>
 #include <QSharedPointer>
 
-#include "music.h"
-
-class PlaylistMeta
-{
-public:
-    PlaylistMeta(){}
-
-    QString uuid;
-    QString displayName;
-    QString url;
-    QString icon;
-
-    int     sortType    = 0;
-    bool    editmode    = false;
-    bool    readonly    = false;
-    bool    hide        = false;
-    bool    active      = false;
-    bool    unused      = false;
-
-    MusicMeta                   playing;
-    QStringList                 sortMetas;
-
-    QMap<QString, MusicMeta>    metas;
-    QMap<QString, int>          invalidMetas;
-};
-
-Q_DECLARE_METATYPE(PlaylistMeta);
+#include <playlistmeta.h>
 
 class Playlist : public QObject
 {
@@ -74,26 +47,26 @@ public:
     bool active() const;
     void setActive(bool active);
 
-    const MusicMeta first() const;
-    const MusicMeta prev(const MusicMeta &info) const;
-    const MusicMeta next(const MusicMeta &info) const;
-    const MusicMeta music(int index) const;
-    const MusicMeta music(const QString &id) const;
-    const MusicMeta playing() const;
+    const MetaPtr first() const;
+    const MetaPtr prev(const MetaPtr meta) const;
+    const MetaPtr next(const MetaPtr info) const;
+    const MetaPtr music(int index) const;
+    const MetaPtr music(const QString &id) const;
+    const MetaPtr playing() const;
 
-    bool isLast(const MusicMeta &info) const;
-    bool contains(const MusicMeta &info) const;
-    MusicMetaList allmusic() const;
+    bool isLast(const MetaPtr meta) const;
+    bool contains(const MetaPtr meta) const;
+    MetaPtrList allmusic() const;
 
-    void play(const MusicMeta &meta);
-    void reset(const MusicMetaList &);
+    void play(const MetaPtr meta);
+    void reset(const MetaPtrList );
 
 public slots:
     void setDisplayName(const QString &name);
-    void appendMusic(const MusicMetaList &metalist);
-    void updateMeta(const MusicMeta &meta);
-    MusicMeta removeMusic(const MusicMetaList &metalist);
-    MusicMeta removeOneMusic(const MusicMeta &meta);
+    void appendMusicList(const MetaPtrList metalist);
+    MetaPtr removeMusicList(const MetaPtrList metalist);
+    MetaPtr removeOneMusic(const MetaPtr meta);
+    void updateMeta(const MetaPtr meta);
     void sortBy(Playlist::SortType sortType);
     void resort();
 
@@ -101,21 +74,23 @@ public:
     void load();
 
 signals:
-    void musiclistAdded(const MusicMetaList &metalist);
-    void musicAdded(const MusicMeta &info);
-    void musicRemoved(const MusicMeta &info);
+    void musiclistAdded(const MetaPtrList metalist);
+    void musiclistRemoved(const MetaPtrList metalist);
     void removed();
     void displayNameChanged(QString displayName);
 
 private:
-    Q_DISABLE_COPY(Playlist);
-    PlaylistMeta   listmeta;
+    Q_DISABLE_COPY(Playlist)
+
+    PlaylistMeta   playlistMeta;
 };
 
 typedef QSharedPointer<Playlist> PlaylistPtr;
+
+Q_DECLARE_METATYPE(PlaylistPtr)
+Q_DECLARE_METATYPE(QList<PlaylistPtr>)
 
 extern const QString AllMusicListID;
 extern const QString FavMusicListID;
 extern const QString SearchMusicListID;
 
-#endif // PLAYLIST_H

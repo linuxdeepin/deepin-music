@@ -36,7 +36,6 @@ public:
     void initFooter(PlaylistPtr current, int mode);
     void binding(Presenter *presenter);
 
-    QString coverBackground() const;
     QString viewname() const;
 
 signals:
@@ -45,7 +44,6 @@ signals:
     void viewnameChanged(QString viewname);
 
 public slots:
-    void setCoverBackground(QString coverBackground);
     void onSelectImportFiles();
     void onCurrentPlaylistChanged(PlaylistPtr playlist);
     void toggleLyricView();
@@ -65,12 +63,9 @@ protected:
 
 private:
     void changeToMusicListView(bool keepPlaylist);
-    void initMenu();
+
     void disableControl(int delay = 350);
     void updateViewname(const QString &vm);
 
     QScopedPointer<MainWindowPrivate> d;
 };
-
-extern const QString s_PropertyViewname;
-extern const QString s_PropertyViewnameLyric;

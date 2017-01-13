@@ -9,13 +9,9 @@
 
 #include "playlistmanager.h"
 
-#include <QFileInfo>
 #include <QDebug>
 #include <QUuid>
-#include <QApplication>
-#include <QThread>
 
-#include "../musicapp.h"
 #include "mediadatabase.h"
 
 const QString AllMusicListID = "all";
@@ -25,14 +21,27 @@ const QString NewMusicListID = "new";
 
 static PlaylistMeta emptyInfo;
 
-PlaylistManager::PlaylistManager(QObject *parent)
-    : QObject(parent), settings(MusicApp::configPath() + "/playlist.ini", QSettings::IniFormat)
+class PlaylistManagerPrivate
 {
+public:
+    PlaylistManagerPrivate(PlaylistManager *parent) : q_ptr(parent){}
+
+    QStringList                 sortPlaylists;
+    QMap<QString, PlaylistPtr>  playlists;
+
+    PlaylistManager *q_ptr;
+    Q_DECLARE_PUBLIC(PlaylistManager)
+};
+
+PlaylistManager::PlaylistManager(QObject *parent) :
+    QObject(parent), d_ptr(new PlaylistManagerPrivate(this))
+{
+
 }
 
 PlaylistManager::~PlaylistManager()
 {
-    settings.sync();
+
 }
 
 QString PlaylistManager::newID()
@@ -64,7 +73,7 @@ QString PlaylistManager::newDisplayName()
 
 void PlaylistManager::load()
 {
-    for (auto &playlistmeta : MediaDatabase::instance()->allPlaylist()) {
+    for (auto &playlistmeta : MediaDatabase::instance()->allPlaylistMeta()) {
         PlaylistPtr emptylist(new Playlist(playlistmeta));
         emptylist->load();
         insertPlaylist(playlistmeta.uuid, emptylist);
@@ -80,119 +89,67 @@ void PlaylistManager::load()
         fav->setDisplayName("My favorites");
         fav->setDisplayName(tr("My favorites"));
     }
-
-    auto currentTitle = AllMusicListID;
-    m_playingPlaylist = playlist(currentTitle);
-    if (m_playingPlaylist.isNull()) {
-        qWarning() << "change to default all playlist";
-        m_playingPlaylist = playlist(AllMusicListID);
-    }
-    m_selectedPlaylist = m_playingPlaylist;
-}
-
-void PlaylistManager::sync()
-{
-    settings.sync();
 }
 
 QList<PlaylistPtr > PlaylistManager::allplaylist()
 {
+    Q_D(PlaylistManager);
+
     QList<PlaylistPtr >  list;
-    for (auto &playlist : sortPlaylists) {
-        list << playlists.value(playlist);
+    for (auto &playlist : d->sortPlaylists) {
+        list << d->playlists.value(playlist);
     }
     return list;
 }
 
 PlaylistPtr PlaylistManager::addPlaylist(const PlaylistMeta &listinfo)
 {
+    Q_D(PlaylistManager);
     PlaylistMeta saveInfo(listinfo);
-    QString playlistPath = getPlaylistPath(listinfo.uuid);
-    saveInfo.url = playlistPath;
     insertPlaylist(listinfo.uuid, PlaylistPtr(new Playlist(saveInfo)));
 
     MediaDatabase::addPlaylist(saveInfo);
 
-    return playlists.value(listinfo.uuid);
+    return d->playlists.value(listinfo.uuid);
 }
 
 PlaylistPtr PlaylistManager::playlist(const QString &id)
 {
-    return playlists.value(id);
-}
-
-PlaylistPtr PlaylistManager::playingPlaylist() const
-{
-    return m_playingPlaylist;
-}
-
-PlaylistPtr PlaylistManager::selectedPlaylist() const
-{
-    return m_selectedPlaylist;
-}
-
-void PlaylistManager::setPlayingPlaylist(PlaylistPtr currentPlaylist)
-{
-    if (m_playingPlaylist == currentPlaylist) {
-        return;
-    }
-    m_playingPlaylist = currentPlaylist;
-    emit playingPlaylistChanged(currentPlaylist);
-    settings.beginGroup("PlaylistManager");
-    settings.setValue("Current", m_playingPlaylist->id());
-    settings.endGroup();
-    settings.sync();
-}
-
-void PlaylistManager::setSelectedPlaylist(PlaylistPtr selectedPlaylist)
-{
-    if (m_selectedPlaylist == selectedPlaylist) {
-        return;
-    }
-
-    m_selectedPlaylist = selectedPlaylist;
-    emit selectedPlaylistChanged(selectedPlaylist);
-}
-
-QString PlaylistManager::getPlaylistPath(const QString &id)
-{
-    return MusicApp::configPath() + "/" + id + ".plsx";
+    Q_D(PlaylistManager);
+    return d->playlists.value(id);
 }
 
 void PlaylistManager::insertPlaylist(const QString &uuid, PlaylistPtr playlist)
 {
+    Q_D(PlaylistManager);
     QString deleteID = uuid;
 
     connect(playlist.data(), &Playlist::removed,
     this, [ = ] {
-        qDebug() << deleteID << m_playingPlaylist;
+        qDebug() << "remove playlist" << deleteID;
         emit playlistRemove(playlist);
 
-        if (m_selectedPlaylist.isNull() || m_selectedPlaylist->id() == deleteID)
-        {
-            setSelectedPlaylist(this->playlist(AllMusicListID));
-        }
-        sortPlaylists.removeAll(deleteID);
+        d->sortPlaylists.removeAll(deleteID);
         PlaylistMeta listmeta;
         listmeta.uuid = deleteID;
         MediaDatabase::removePlaylist(listmeta);
     });
 
-    connect(playlist.data(), &Playlist::musicAdded,
-    this, [ = ](const MusicMeta & info) {
-        emit musicAdded(playlist,  info);
-    });
+//    connect(playlist.data(), &Playlist::musicAdded,
+//    this, [ = ](const MetaPtr meta) {
+//        emit musicAdded(playlist, meta);
+//    });
 
     connect(playlist.data(), &Playlist::musiclistAdded,
-    this, [ = ](const MusicMetaList & info) {
-        emit musiclistAdded(playlist, info);
+    this, [ = ](const MetaPtrList metalist) {
+        emit musiclistAdded(playlist, metalist);
     });
 
-    connect(playlist.data(), &Playlist::musicRemoved,
-    this, [ = ](const MusicMeta & info) {
-        emit musicRemoved(playlist, info);
+    connect(playlist.data(), &Playlist::musiclistRemoved,
+    this, [ = ](const MetaPtrList metalist) {
+        emit musiclistRemoved(playlist, metalist);
     });
 
-    sortPlaylists << uuid;
-    playlists.insert(uuid, playlist);
+    d->sortPlaylists << uuid;
+    d->playlists.insert(uuid, playlist);
 }

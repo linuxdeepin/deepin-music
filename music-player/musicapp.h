@@ -12,18 +12,15 @@
 #include <QObject>
 #include <QScopedPointer>
 
-#include "core/util/singleton.h"
+#include <util/singleton.h>
 
 class MprisPlayer;
 class MusicAppPrivate;
-class MusicApp : public QObject, public Singleton<MusicApp>
+class MusicApp : public QObject, public DMusic::DSingleton<MusicApp>
 {
     Q_OBJECT
 public:
     ~MusicApp();
-
-    static QString configPath();
-    static QString cachePath();
 
     void init();
     void initMpris(MprisPlayer *mprisPlayer);
@@ -35,8 +32,8 @@ public slots:
     void onRaise();
 
 private:
-    friend class Singleton<MusicApp>;
-    explicit MusicApp(QObject *parent = 0);
+    MusicApp(QObject *parent = nullptr);
+    friend class DMusic::DSingleton<MusicApp>;
     QScopedPointer<MusicAppPrivate> d_ptr;
     Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), MusicApp)
 };

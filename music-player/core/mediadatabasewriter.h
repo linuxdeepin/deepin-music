@@ -7,13 +7,12 @@
  * (at your option) any later version.
  **/
 
-#ifndef MEDIADATABASEWRITER_H
-#define MEDIADATABASEWRITER_H
+#pragma once
 
 #include <QObject>
 
-#include "music.h"
-#include "playlist.h"
+#include <mediameta.h>
+#include <playlistmeta.h>
 
 class MediaDatabaseWriter : public QObject
 {
@@ -22,20 +21,14 @@ public:
     explicit MediaDatabaseWriter(QObject *parent = 0);
 
 public slots:
-    void addMusicMeta(const MusicMeta &meta);
-    void addMusicMetaList(const MusicMetaList &metalist);
-    void updateMusicMeta(const MusicMeta &meta);
-    void updateMusicMetaList(const MusicMetaList &metalist);
-    void removeMusicMeta(const MusicMeta &meta);
-    void removeMusicMetaList(const MusicMetaList &metalist);
+    void addMediaMeta(const MetaPtr meta);
+    void addMediaMetaList(const MetaPtrList metalist);
+    void updateMediaMeta(const MetaPtr meta);
+    void updateMediaMetaList(const MetaPtrList metalist);
+    void removeMediaMeta(const MetaPtr meta);
+    void removeMediaMetaList(const MetaPtrList metalist);
 
-    void insertMusic(const MusicMeta &meta, const PlaylistMeta &playlistMeta);
-    void insertMusicList(const MusicMetaList &metalist, const PlaylistMeta &playlistMeta);
-//    static void addPlaylist(const PlaylistMeta &playlistMeta);
-//    static void updatePlaylist(const PlaylistMeta &playlistMeta);
-//    static void removePlaylist(const PlaylistMeta &playlistMeta);
-//    static void deleteMusic(const MusicMeta &meta, const PlaylistMeta &playlistMeta);
+    void insertMusic(const MetaPtr meta, const PlaylistMeta &playlistMeta);
+    void insertMusicList(const MetaPtrList metalist, const PlaylistMeta &playlistMeta);
 };
 
-
-#endif // MEDIADATABASEWRITER_H

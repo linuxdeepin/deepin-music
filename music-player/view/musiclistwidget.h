@@ -21,29 +21,26 @@ public:
     explicit MusicListWidget(QWidget *parent = 0);
     ~MusicListWidget();
 
-    void initData(PlaylistPtr playlist);
-
 signals:
     void playall(PlaylistPtr playlist);
     void resort(PlaylistPtr playlist, int sortType);
-    void musicClicked(PlaylistPtr playlist, const MusicMeta &info);
-    void updateMetaCodec(const MusicMeta &meta);
+    void playMedia(PlaylistPtr playlist, const MetaPtr meta);
+    void updateMetaCodec(const MetaPtr meta);
 
     void requestCustomContextMenu(const QPoint &pos);
-    void addToPlaylist(PlaylistPtr playlist, const MusicMetaList &metalist);
-    void musiclistRemove(PlaylistPtr playlist, const MusicMetaList &metalist);
-    void musiclistDelete(PlaylistPtr playlist, const MusicMetaList &metalist);
+    void addToPlaylist(PlaylistPtr playlist, const MetaPtrList  &metalist);
+    void musiclistRemove(PlaylistPtr playlist, const MetaPtrList  &metalist);
+    void musiclistDelete(PlaylistPtr playlist, const MetaPtrList  &metalist);
     void importSelectFiles(PlaylistPtr playlist, QStringList urllist);
 
 public slots:
-    void onMusicPlayed(PlaylistPtr playlist, const MusicMeta &info);
-    void onMusicPause(PlaylistPtr playlist, const MusicMeta &meta);
-    void onMusicRemoved(PlaylistPtr playlist, const MusicMeta &meta);
-    void onMusicAdded(PlaylistPtr playlist, const MusicMeta &meta);
-    void onMusicError(PlaylistPtr playlist, const MusicMeta &meta, int error);
-    void onMusicListAdded(PlaylistPtr playlist, const MusicMetaList &infolist);
-    void onLocate(PlaylistPtr playlist, const MusicMeta &info);
     void onMusiclistChanged(PlaylistPtr playlist);
+    void onMusicPlayed(PlaylistPtr playlist, const MetaPtr info);
+    void onMusicPause(PlaylistPtr playlist, const MetaPtr meta);
+    void onMusicError(PlaylistPtr playlist, const MetaPtr meta, int error);
+    void onMusicListAdded(PlaylistPtr playlist, const MetaPtrList metalist);
+    void onMusicListRemoved(PlaylistPtr playlist, const MetaPtrList metalist);
+    void onLocate(PlaylistPtr playlist, const MetaPtr info);
     void onCustomContextMenuRequest(const QPoint &pos,
                                     PlaylistPtr selectedlist,
                                     PlaylistPtr favlist,

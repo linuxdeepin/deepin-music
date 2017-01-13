@@ -9,6 +9,8 @@
 
 #include "geese.h"
 
+#include <QDebug>
+
 #include <QNetworkRequest>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
@@ -18,7 +20,6 @@ namespace DMusic
 {
 namespace Net
 {
-
 
 Goose::Goose(Geese *geese)
 {

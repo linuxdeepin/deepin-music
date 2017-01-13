@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 include($$PWD/../config.pri)
+include($$PWD/../vendor/src/build.pri)
 
 QT       += network
 
@@ -13,6 +14,11 @@ QT       -= gui
 TARGET      = dmusic
 TEMPLATE    = lib
 DESTDIR     = $$BUILD_DIST/lib/
+CONFIG      += c++11 link_pkgconfig
+
+unix {
+PKGCONFIG += icu-uc icu-i18n libavutil libavformat libavcodec
+}
 
 DEFINES += LIBDMUSIC_LIBRARY
 
@@ -28,14 +34,27 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    geese.cpp
+    mediameta.cpp \
+    metadetector.cpp \
+    util/cueparser.cpp \
+    util/pinyinsearch.cpp \
+    net/geese.cpp \
+    util/encodingdetector.cpp
 
 HEADERS +=\
-        libdmusic_global.h \
-        geese.h \
-    musicmeta.h
+    libdmusic_global.h \
+    mediameta.h \
+    metadetector.h \
+    util/singleton.h \
+    util/cueparser.h \
+    util/pinyinsearch.h \
+    net/geese.h \
+    util/encodingdetector.h \
+    playlistmeta.h
 
 unix {
+    PKGCONFIG += libcue
     target.path = /usr/lib
     INSTALLS += target
 }
+

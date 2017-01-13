@@ -75,12 +75,12 @@ SearchMetaItem::~SearchMetaItem()
 {
 }
 
-void SearchMetaItem::initUI(const MusicMeta &meta)
+void SearchMetaItem::initUI(const NeteaseSong &meta)
 {
     Q_D(SearchMetaItem);
-    d->metaTitle->setText(meta.title);
-    d->metaArtist->setText(meta.artist);
-    d->metaLength->setText(lengthString(meta.length));
+    d->metaTitle->setText(meta.name);
+    d->metaArtist->setText(meta.artists.first().name);
+    d->metaLength->setText(DMusic::lengthString(meta.length));
 }
 
 void SearchMetaItem::setChecked( bool check)

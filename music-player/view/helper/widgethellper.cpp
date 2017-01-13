@@ -108,7 +108,6 @@ void slideRight2LeftWidget(QWidget *left, QWidget *right, int delay)
                         animation2, &QPropertyAnimation::deleteLater);
     animation2->connect(animation2, &QPropertyAnimation::finished,
                         left, &QWidget::hide);
-
 }
 
 void slideBottom2TopWidget(QWidget *top, QWidget *bottom, int delay)

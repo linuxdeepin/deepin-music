@@ -7,54 +7,52 @@
  * (at your option) any later version.
  **/
 
-#ifndef MEDIADATABASE_H
-#define MEDIADATABASE_H
+#pragma once
 
 #include <QObject>
 
+#include <util/singleton.h>
+#include <playlistmeta.h>
+
 #include "mediadatabasewriter.h"
 
-class MediaDatabase : public QObject
+class MediaDatabase : public QObject, public DMusic::DSingleton<MediaDatabase>
 {
     Q_OBJECT
 public:
     explicit MediaDatabase(QObject *parent = 0);
 
-    static MediaDatabase* instance() {
-        static auto s_instance = new MediaDatabase;
-        return s_instance;
-    }
-
     //! music meta query interface
-    bool musicMetaExist(const QString &hash);
-    static QList<MusicMeta> searchMusicTitle(const QString &title, int limit);
-    static QList<MusicMeta> searchMusicMeta(const QString &title, int limit);
-    static QList<MusicMeta> searchMusicPath(const QString &title, int limit);
+    bool mediaMetaExist(const QString &hash);
+    QList<MediaMeta> allmetas();
+    static MetaPtrList searchMediaTitle(const QString &title, int limit);
+    static MetaPtrList searchMediaMeta(const QString &title, int limit);
+    static MetaPtrList searchMediaPath(const QString &title, int limit);
 
     //! sync query interface
     static QStringList allPlaylistDisplayName();
-    QList<PlaylistMeta> allPlaylist();
+    QList<PlaylistMeta> allPlaylistMeta();
     bool playlistExist(const QString &uuid);
 
 signals:
-    void addMusicMeta(const MusicMeta &meta);
-    void addMusicMetaList(const MusicMetaList &metalist);
-    void updateMusicMeta(const MusicMeta &meta);
-    void updateMusicMetaList(const MusicMetaList &metalist);
-    void insertMusic(const MusicMeta &meta, const PlaylistMeta &playlistMeta);
-    void insertMusicList(const MusicMetaList &metalist, const PlaylistMeta &playlistMeta);
-    void removeMusicMetaList(const MusicMetaList &metalist);
+    void addMediaMeta(const MetaPtr meta);
+    void addMediaMetaList(const MetaPtrList metalist);
+    void updateMediaMeta(const MetaPtr meta);
+    void updateMediaMetaList(const MetaPtrList metalist);
+    void insertMusic(const MetaPtr meta, const PlaylistMeta &playlistMeta);
+    void insertMusicList(const MetaPtrList metalist, const PlaylistMeta &playlistMeta);
+    void removeMediaMetaList(const MetaPtrList metalist);
 
 public slots:
     static void addPlaylist(const PlaylistMeta &playlistMeta);
     static void updatePlaylist(const PlaylistMeta &playlistMeta);
     static void removePlaylist(const PlaylistMeta &playlistMeta);
-    static void deleteMusic(const MusicMeta &meta, const PlaylistMeta &playlistMeta);
+    static void deleteMusic(const MetaPtr meta, const PlaylistMeta &playlistMeta);
 
 private:
     void bind();
 
+    friend class DMusic::DSingleton<MediaDatabase>;
     MediaDatabaseWriter *m_writer;
 };
 
-#endif // MEDIADATABASE_H

@@ -9,29 +9,31 @@
 
 #include "mediadatabase.h"
 
+#include <QDebug>
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QSqlError>
-#include <QDebug>
 #include <QDir>
 #include <QThread>
 
-#include "music.h"
-#include "../musicapp.h"
+#include <mediameta.h>
+
+#include "util/global.h"
+#include "medialibrary.h"
 
 static bool createConnection()
 {
-    QDir cacheDir(MusicApp::cachePath());
+    QDir cacheDir(Global::cacheDir());
     if (!cacheDir.exists()) {
         cacheDir.mkpath(".");
     }
-    QString cachePath = MusicApp::cachePath() + "/mediameta.sqlite";
+    QString cachePath = Global::cacheDir() + "/mediameta.sqlite";
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName(cachePath);
 
     if (!db.open()) {
         qCritical() << db.lastError()
-                    << MusicApp::cachePath()
+                    << Global::cacheDir()
                     << cachePath;
         return false;
     }
@@ -137,7 +139,7 @@ QStringList MediaDatabase::allPlaylistDisplayName()
     return list;
 }
 
-QList<PlaylistMeta> MediaDatabase::allPlaylist()
+QList<PlaylistMeta> MediaDatabase::allPlaylistMeta()
 {
     QList<PlaylistMeta> list;
     QSqlQuery query;
@@ -161,37 +163,29 @@ QList<PlaylistMeta> MediaDatabase::allPlaylist()
     return list;
 }
 
-static QList<MusicMeta> searchTitle(const QString &queryString)
+static MetaPtrList searchTitle(const QString &queryString)
 {
-    QList<MusicMeta> list;
+    MetaPtrList metalist;
+
     QSqlQuery query;
     query.prepare(queryString);
     if (! query.exec()) {
         qCritical() << query.lastError();
-        return list;
+        return metalist;
     }
 
     while (query.next()) {
-        MusicMeta musicMeta;
-        musicMeta.hash = query.value(0).toString();
-        musicMeta.localPath = query.value(1).toString();
-        musicMeta.title = query.value(2).toString();
-        musicMeta.artist = query.value(3).toString();
-        musicMeta.album = query.value(4).toString();
-        musicMeta.filetype = query.value(5).toString();
-        musicMeta.track = query.value(6).toInt();
-        musicMeta.offset = query.value(7).toInt();
-        musicMeta.length = query.value(8).toInt();
-        musicMeta.size = query.value(9).toInt();
-        musicMeta.timestamp = query.value(10).toInt();
-        musicMeta.invalid = query.value(11).toBool();
-        list << musicMeta;
+        auto hash = query.value(0).toString();
+        auto meta = MediaLibrary::instance()->meta(hash);
+        if (meta.isNull())
+            continue;
+        metalist << meta;
     }
 
-    return list;
+    return metalist;
 }
 
-QList<MusicMeta> MediaDatabase::searchMusicTitle(const QString &title, int limit)
+MetaPtrList MediaDatabase::searchMediaTitle(const QString &title, int limit)
 {
     qDebug() << "search title" << title;
     auto matchReg = QString("\"%%1%\" ").arg(title);
@@ -207,7 +201,7 @@ QList<MusicMeta> MediaDatabase::searchMusicTitle(const QString &title, int limit
     return searchTitle(queryString);
 }
 
-QList<MusicMeta> MediaDatabase::searchMusicMeta(const QString &title, int limit)
+MetaPtrList MediaDatabase::searchMediaMeta(const QString &title, int limit)
 {
     auto matchReg = QString("\"%%1%\" ").arg(title);
     QString queryString = QString("SELECT hash, localpath, title, artist, album, "
@@ -228,7 +222,7 @@ QList<MusicMeta> MediaDatabase::searchMusicMeta(const QString &title, int limit)
     return searchTitle(queryString);
 }
 
-QList<MusicMeta> MediaDatabase::searchMusicPath(const QString &path, int limit)
+MetaPtrList MediaDatabase::searchMediaPath(const QString &path, int limit)
 {
     auto matchReg = QString("\"%%1%\" ").arg(path);
     QString queryString = QString("SELECT hash, localpath, title, artist, album, "
@@ -311,11 +305,14 @@ void MediaDatabase::removePlaylist(const PlaylistMeta &playlistMeta)
     }
 }
 
-void MediaDatabase::deleteMusic(const MusicMeta &meta, const PlaylistMeta &playlistMeta)
+void MediaDatabase::deleteMusic(const MetaPtr meta, const PlaylistMeta &playlistMeta)
 {
+    if (meta.isNull())
+        return;
+
     QSqlQuery query;
     QString sqlstring = QString("DELETE FROM playlist_%1 WHERE music_id = '%2'")
-                        .arg(playlistMeta.uuid).arg(meta.hash);
+                        .arg(playlistMeta.uuid).arg(meta->hash);
     if (! query.exec(sqlstring)) {
         qWarning() << query.lastError();
         return;
@@ -336,7 +333,7 @@ bool MediaDatabase::playlistExist(const QString &uuid)
     return query.value(0).toInt() > 0;
 }
 
-bool MediaDatabase::musicMetaExist(const QString &hash)
+bool MediaDatabase::mediaMetaExist(const QString &hash)
 {
     QSqlQuery query;
     query.prepare("SELECT COUNT(*) FROM music where hash = :hash");
@@ -350,22 +347,58 @@ bool MediaDatabase::musicMetaExist(const QString &hash)
     return query.value(0).toInt() > 0;
 }
 
+QList<MediaMeta> MediaDatabase::allmetas()
+{
+    QList<MediaMeta> metalist;
+    QString queryString = QString("SELECT hash, localpath, title, artist, album, "
+                                  "filetype, track, offset, length, size, "
+                                  "timestamp, invalid "
+                                  "FROM music");
+
+    QSqlQuery query;
+    query.prepare(queryString);
+    if (! query.exec()) {
+        qCritical() << query.lastError();
+        return metalist;
+    }
+
+    while (query.next()) {
+        MediaMeta meta;
+        meta.hash = query.value(0).toString();
+        meta.localPath = query.value(1).toString();
+        meta.title = query.value(2).toString();
+        meta.artist = query.value(3).toString();
+        meta.album = query.value(4).toString();
+        meta.filetype = query.value(5).toString();
+        meta.track = query.value(6).toInt();
+        meta.offset = query.value(7).toInt();
+        meta.length = query.value(8).toInt();
+        meta.size = query.value(9).toInt();
+        meta.timestamp = query.value(10).toInt();
+        meta.invalid = query.value(11).toBool();
+
+        metalist << meta;
+    }
+
+    return metalist;
+}
+
 void MediaDatabase::bind()
 {
-    connect(this, &MediaDatabase::addMusicMeta,
-            m_writer, &MediaDatabaseWriter::addMusicMeta);
-    connect(this, &MediaDatabase::addMusicMetaList,
-            m_writer, &MediaDatabaseWriter::addMusicMetaList);
-    connect(this, &MediaDatabase::updateMusicMeta,
-            m_writer, &MediaDatabaseWriter::updateMusicMeta);
-    connect(this, &MediaDatabase::updateMusicMetaList,
-            m_writer, &MediaDatabaseWriter::updateMusicMetaList);
+    connect(this, &MediaDatabase::addMediaMeta,
+            m_writer, &MediaDatabaseWriter::addMediaMeta);
+    connect(this, &MediaDatabase::addMediaMetaList,
+            m_writer, &MediaDatabaseWriter::addMediaMetaList);
+    connect(this, &MediaDatabase::updateMediaMeta,
+            m_writer, &MediaDatabaseWriter::updateMediaMeta);
+    connect(this, &MediaDatabase::updateMediaMetaList,
+            m_writer, &MediaDatabaseWriter::updateMediaMetaList);
     connect(this, &MediaDatabase::insertMusic,
             m_writer, &MediaDatabaseWriter::insertMusic);
     connect(this, &MediaDatabase::insertMusicList,
             m_writer, &MediaDatabaseWriter::insertMusicList);
-    connect(this, &MediaDatabase::removeMusicMetaList,
-            m_writer, &MediaDatabaseWriter::removeMusicMetaList);
+    connect(this, &MediaDatabase::removeMediaMetaList,
+            m_writer, &MediaDatabaseWriter::removeMediaMetaList);
 }
 
 

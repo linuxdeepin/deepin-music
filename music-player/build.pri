@@ -1,47 +1,49 @@
-include($$PWD/../vendor/src/chinese2pinyin/chinese2pinyin.pri)
-include($$PWD/../vendor/src/libcue/libcue.pri)
-
 win32{
     DEFINES += STATIC_LIB
-    DEFINES += TAGLIB_STATIC
 
-    INCLUDEPATH += D:\Develop\deepin-tool-kit\dwidget
-    INCLUDEPATH += D:\Develop\deepin-tool-kit\dwidget\widgets
-    INCLUDEPATH += D:\Develop\deepin-tool-kit\dwidget\platforms\windows
+    # Deepin tool kit
+    DTK_INCLUDE = D:\Develop\Library\deepin-tool-kit
+    DTK_DEPEND  = D:\Develop\Library\deepin-tool-kit
+    DTK_LIBRARY = D:\Develop\Library\deepin-tool-kit\build
 
-    DEPENDPATH += D:\Develop\deepin-tool-kit\dwidget
+    INCLUDEPATH += $$DTK_INCLUDE\dwidget
+    INCLUDEPATH += $$DTK_INCLUDE\dwidget\widgets
+    INCLUDEPATH += $$DTK_INCLUDE\dwidget\platforms\windows
 
-    INCLUDEPATH += D:\Develop\deepin-tool-kit\dutil
-    INCLUDEPATH += D:\Develop\deepin-tool-kit\dutil\dlog
-    DEPENDPATH += D:\Develop\deepin-tool-kit\dutil
+    DEPENDPATH  += $$DTK_DEPEND\dwidget
 
-    INCLUDEPATH += D:\Develop\deepin-tool-kit\dbase
-    DEPENDPATH += D:\Develop\deepin-tool-kit\dbase
+    INCLUDEPATH += $$DTK_INCLUDE\dutil
+    INCLUDEPATH += $$DTK_INCLUDE\dutil\dlog
+    DEPENDPATH  += $$DTK_DEPEND\dutil
 
-    INCLUDEPATH += D:\Develop\Library\zlib\include
-    INCLUDEPATH += "C:\Program Files (x86)\taglib\include\taglib"
+    INCLUDEPATH += $$DTK_INCLUDE\dbase
+    DEPENDPATH  += $$DTK_DEPEND\dbase
+
 
     CONFIG(release, debug|release) {
-        LIBS += -LD:\Develop\deepin-tool-kit\build\dwidget\release -ldtkwidget
-        LIBS += -LD:\Develop\deepin-tool-kit\build\dutil\release -ldtkutil
-        LIBS += -LD:\Develop\deepin-tool-kit\build\dbase\release -ldtkbase
-        LIBS += -L"C:\Program Files (x86)\taglib\lib" -ltag
-        LIBS += -L"C:\Program Files (x86)\taglib\lib" -ltag_c
-        LIBS += -L"D:\Develop\Library\zlib-1.2.8\contrib\vstudio\vc11\x64\ZlibStatRelease" -lzlibstat
+        LIBS += -L$$DTK_LIBRARY\dwidget\release -ldtkwidget
+        LIBS += -L$$DTK_LIBRARY\dutil\release -ldtkutil
+        LIBS += -L$$DTK_LIBRARY\dbase\release -ldtkbase
     }
     else:CONFIG(debug, debug|release){
-        LIBS += -LD:\Develop\deepin-tool-kit\build\dwidget\debug -ldtkwidget
-        LIBS += -LD:\Develop\deepin-tool-kit\build\dutil\debug -ldtkutil
-        LIBS += -LD:\Develop\deepin-tool-kit\build\dbase\debug -ldtkbase
-        LIBS += -L"C:\Program Files (x86)\taglib\lib" -ltag
-        LIBS += -L"C:\Program Files (x86)\taglib\lib" -ltag_c
-        LIBS += -L"D:\Develop\Library\zlib-1.2.8\contrib\vstudio\vc11\x64\ZlibStatRelease" -lzlibstat
+        LIBS += -L$$DTK_LIBRARY\dwidget\debug -ldtkwidget
+        LIBS += -L$$DTK_LIBRARY\dutil\debug -ldtkutil
+        LIBS += -L$$DTK_LIBRARY\dbase\debug -ldtkbase
     }
 
+    # icu
+    ICU_ROOT = D:\Develop\Library\icu
+    INCLUDEPATH += $$ICU_ROOT\include
+    LIBS += -L$$ICU_ROOT\lib -licuuc
+    LIBS += -L$$ICU_ROOT\lib -licuin
 
-    INCLUDEPATH += D:\Develop\Library\icu\include
-    LIBS += -LD:\Develop\Library\icu\lib64 -licuuc
-    LIBS += -LD:\Develop\Library\icu\lib64 -licuin
+    # ffmpeg
+    FFMPEG_ROOT = D:\Develop\Library\ffmpeg-3.2.2-win32-dev
+    INCLUDEPATH += $$FFMPEG_ROOT\include
+    LIBS += -L$$FFMPEG_ROOT\lib -lavcodec
+    LIBS += -L$$FFMPEG_ROOT\lib -lavformat
+    LIBS += -L$$FFMPEG_ROOT\lib -lavutil
+
 }
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../libdmusic/release/ -ldmusic

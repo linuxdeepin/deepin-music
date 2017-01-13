@@ -7,16 +7,16 @@
  * (at your option) any later version.
  **/
 
-#ifndef PINYIN_H
-#define PINYIN_H
+#pragma once
 
-#include <QStringList>
+#include <QList>
+#include "libdmusic_global.h"
 
-namespace Pinyin
+namespace DMusic
 {
-
-QStringList simpleChineseSplit(QString &pinyin);
-
+class LIBDMUSICSHARED_EXPORT EncodingDetector
+{
+public:
+    static QList<QByteArray> detectEncodings (const QByteArray& rawData);
 };
-
-#endif // PINYIN_H
+}

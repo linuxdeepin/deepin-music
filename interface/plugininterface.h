@@ -12,7 +12,7 @@
 #include <QObject>
 #include <QtGlobal>
 
-class MusicMeta;
+class MediaMeta;
 
 namespace DMusic
 {

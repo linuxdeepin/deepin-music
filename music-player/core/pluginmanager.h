@@ -23,10 +23,10 @@ enum class PluginType;
 }
 }
 
-class PluginManager : public QObject, public Singleton<PluginManager>
+class PluginManager : public QObject, public DMusic::DSingleton<PluginManager>
 {
     Q_OBJECT
-    friend class Singleton<PluginManager>;
+    friend class DMusic::DSingleton<PluginManager>;
 
 public:
     explicit PluginManager(QObject *parent = 0);

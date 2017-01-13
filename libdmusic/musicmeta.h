@@ -9,89 +9,35 @@
 
 #pragma once
 
-#include <QObject>
-#include <QString>
-#include <QStringList>
-#include <QMap>
-#include <QTime>
+//#include <QObject>
+//#include <QString>
+//#include <QStringList>
+//#include <QMap>
+//#include <QTime>
 
-class MusicMeta
-{
-public:
+//inline QString lengthString(qint64 length)
+//{
+//    length = length / 1000;
+//    QTime t(static_cast<int>(length / 3600), length % 3600 / 60, length % 60);
+//    return t.toString("mm:ss");
+//}
 
-    QString hash;
-    QString localPath;
-    QString cuePath;
-    QString title;
-    QString artist;
-    QString album;
+//inline QString sizeString(qint64 sizeByte)
+//{
+//    QString text;
+//    if (sizeByte < 1024) {
+//        text.sprintf("%.1fB", sizeByte / 1.0);
+//        return text;
+//    }
+//    if (sizeByte < 1024 * 1024) {
+//        text.sprintf("%.1fK", sizeByte / 1024.0);
+//        return text;
+//    }
+//    if (sizeByte < 1024 * 1024 * 1024) {
+//        text.sprintf("%.1fM", sizeByte / 1024.0 / 1024.0);
+//        return text;
+//    }
+//    text.sprintf("%.1fG", sizeByte / 1024.0 / 1024.0 / 1024.0);
+//    return text;
+//}
 
-    QString pinyinTitle;
-    QString pinyinTitleShort;
-    QString pinyinArtist;
-    QString pinyinArtistShort;
-    QString pinyinAlbum;
-    QString pinyinAlbumShort;
-
-    QString filetype;
-
-    qint64  timestamp;
-    qint64  length      = 1;//msec
-    qint64  track;
-    qint64  size        = 1;
-
-    QString editor;
-    QString composer;
-    QString creator;
-
-    QString searchID;
-    QString searchCoverUrl;
-    QString searchLyricUrl;
-
-    qint64  offset      = 0;//msec
-
-    bool    favourite   = false;
-    bool    invalid     = false;
-
-public:
-    MusicMeta()
-    {
-        timestamp = 0;
-        length = 0;
-        offset = 0;
-        size = 0;
-        track = 0;
-        favourite = false;
-    }
-};
-
-typedef QList<MusicMeta>  MusicMetaList;
-
-inline QString lengthString(qint64 length)
-{
-    length = length / 1000;
-    QTime t(static_cast<int>(length / 3600), length % 3600 / 60, length % 60);
-    return t.toString("mm:ss");
-}
-
-inline QString sizeString(qint64 sizeByte)
-{
-    QString text;
-    if (sizeByte < 1024) {
-        text.sprintf("%.1fB", sizeByte / 1.0);
-        return text;
-    }
-    if (sizeByte < 1024 * 1024) {
-        text.sprintf("%.1fK", sizeByte / 1024.0);
-        return text;
-    }
-    if (sizeByte < 1024 * 1024 * 1024) {
-        text.sprintf("%.1fM", sizeByte / 1024.0 / 1024.0);
-        return text;
-    }
-    text.sprintf("%.1fG", sizeByte / 1024.0 / 1024.0 / 1024.0);
-    return text;
-}
-
-Q_DECLARE_METATYPE(MusicMeta);
-Q_DECLARE_METATYPE(MusicMetaList);

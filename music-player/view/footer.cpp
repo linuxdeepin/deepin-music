@@ -70,7 +70,7 @@ public:
     QFrame          *ctlWidget  = nullptr;
 
     PlaylistPtr     m_playinglist;
-    MusicMeta       m_playingMeta;
+    MetaPtr         m_playingMeta;
     int             m_mode;
 
     QString         defaultCover = "";
@@ -274,19 +274,19 @@ Footer::Footer(QWidget *parent) :
     d->volSlider->setProperty("NoDelayShow", true);
     d->installHint(d->btSound, d->volSlider);
 
-    auto infoWidget = new QFrame;
-    auto infoLayout = new QHBoxLayout(infoWidget);
+    auto metaWidget = new QFrame;
+    auto metaLayout = new QHBoxLayout(metaWidget);
     auto musicMetaLayout = new QVBoxLayout;
-    infoLayout->setMargin(0);
-    infoLayout->setSpacing(0);
+    metaLayout->setMargin(0);
+    metaLayout->setSpacing(0);
 
     musicMetaLayout->addWidget(d->title);
     musicMetaLayout->addWidget(d->artist);
     musicMetaLayout->setSpacing(0);
-    infoLayout->addWidget(d->cover);
-    infoLayout->addSpacing(10);
-    infoLayout->addLayout(musicMetaLayout, 0);
-    infoLayout->addStretch();
+    metaLayout->addWidget(d->cover);
+    metaLayout->addSpacing(10);
+    metaLayout->addLayout(musicMetaLayout, 0);
+    metaLayout->addStretch();
 
     d->ctlWidget = new QFrame(this);
 //    d->ctlWidget->setStyleSheet("border: 1px solid red;");
@@ -310,10 +310,10 @@ Footer::Footer(QWidget *parent) :
 
     QSizePolicy sp(QSizePolicy::Preferred, QSizePolicy::Preferred);
     sp.setHorizontalStretch(33);
-    infoWidget->setSizePolicy(sp);
+    metaWidget->setSizePolicy(sp);
     actWidget->setSizePolicy(sp);
 
-    layout->addWidget(infoWidget, 0, Qt::AlignLeft | Qt::AlignVCenter);
+    layout->addWidget(metaWidget, 0, Qt::AlignLeft | Qt::AlignVCenter);
     layout->addStretch();
 //    layout->addWidget(d->ctlWidget, 0, Qt::AlignCenter);
     layout->addStretch();
@@ -329,7 +329,6 @@ Footer::Footer(QWidget *parent) :
     d->btFavorite->hide();
     d->btLyric->hide();
 
-
     d->btPrev->setFocusPolicy(Qt::NoFocus);
     d->btNext->setFocusPolicy(Qt::NoFocus);
     d->btFavorite->setFocusPolicy(Qt::NoFocus);
@@ -344,6 +343,7 @@ Footer::Footer(QWidget *parent) :
 
     d->updateQssProperty(d->btPlay, sPropertyPlayStatus, sPlayStatusValueStop);
     d->updateQssProperty(this, sPropertyPlayStatus, sPlayStatusValueStop);
+    d->cover->setCoverPixmap(QPixmap(d->defaultCover));
 }
 
 Footer::~Footer()
@@ -375,7 +375,6 @@ void Footer::initData(PlaylistPtr current, int mode)
     d->m_mode = mode;
     d->m_playinglist = current;
     d->btPlayMode->setMode(mode);
-    d->cover->setCoverPixmap(QPixmap(d->defaultCover));
 }
 
 QString Footer::defaultCover() const
@@ -424,42 +423,35 @@ bool Footer::eventFilter(QObject *obj, QEvent *event)
     }
 }
 
-void Footer::onMusicAdded(PlaylistPtr playlist, const MusicMeta &info)
+void Footer::onMusicListAdded(PlaylistPtr playlist, const MetaPtrList metalist)
 {
     Q_D(Footer);
     if (playlist->id() == FavMusicListID)
-        if (info.hash == d->m_playingMeta.hash) {
-            d->updateQssProperty(d->btFavorite, sPropertyFavourite, true);
-        }
-}
-
-void Footer::onMusicListAdded(PlaylistPtr playlist, const MusicMetaList &infolist)
-{
-    Q_D(Footer);
-    if (playlist->id() == FavMusicListID)
-        for (auto &meta : infolist) {
-            if (meta.hash == d->m_playingMeta.hash) {
+        for (auto &meta : metalist) {
+            if (meta->hash == d->m_playingMeta->hash) {
                 d->updateQssProperty(d->btFavorite, sPropertyFavourite, true);
             }
         }
 }
 
-void Footer::onMusicRemoved(PlaylistPtr playlist, const MusicMeta &info)
+void Footer::onMusicListRemoved(PlaylistPtr playlist, const MetaPtrList metalist)
 {
     Q_D(Footer);
     if (playlist->id() == FavMusicListID)
-        if (info.hash == d->m_playingMeta.hash) {
-            d->updateQssProperty(d->btFavorite, sPropertyFavourite, false);
+        for (auto &meta : metalist) {
+            if (meta == d->m_playingMeta) {
+                d->updateQssProperty(d->btFavorite, sPropertyFavourite, false);
+            }
         }
 }
 
-void Footer::onMusicPlayed(PlaylistPtr playlist, const MusicMeta &info)
+void Footer::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(Footer);
-    d->title->setText(info.title);
+    d->title->setText(meta->title);
 
-    if (!info.artist.isEmpty()) {
-        d->artist->setText(info.artist);
+    if (!meta->artist.isEmpty()) {
+        d->artist->setText(meta->artist);
     } else {
         d->artist->setText(tr("Unknow Artist"));
     }
@@ -473,29 +465,32 @@ void Footer::onMusicPlayed(PlaylistPtr playlist, const MusicMeta &info)
     d->btLyric->show();
 
     d->m_playinglist = playlist;
-    d->m_playingMeta = info;
+    d->m_playingMeta = meta;
 
-    d->updateQssProperty(d->btFavorite, sPropertyFavourite, info.favourite);
+    d->updateQssProperty(d->btFavorite, sPropertyFavourite, meta->favourite);
     d->updateQssProperty(d->btPlay, sPropertyPlayStatus, sPlayStatusValuePlaying);
     d->updateQssProperty(this, sPropertyPlayStatus, sPlayStatusValuePlaying);
 }
 
-void Footer::onMusicPause(PlaylistPtr playlist, const MusicMeta &meta)
+void Footer::onMusicPause(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(Footer);
-    qDebug() << meta.title << "pause";
-    if (meta.hash != d->m_playingMeta.hash || playlist != d->m_playinglist) {
+    qDebug() << meta->title << "pause";
+    if (meta->hash != d->m_playingMeta->hash || playlist != d->m_playinglist) {
         qWarning() << "can not pasue" << d->m_playinglist << playlist
-                   << d->m_playingMeta.hash << meta.hash;
+                   << d->m_playingMeta->hash << meta->hash;
         return;
     }
     auto status = sPlayStatusValuePause;
     d->updateQssProperty(d->btPlay, sPropertyPlayStatus, status);
 }
 
-void Footer::onMusicStoped(PlaylistPtr playlist, const MusicMeta &meta)
+void Footer::onMusicStoped(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(Footer);
+
+    Q_UNUSED(playlist);
+    Q_UNUSED(meta);
 
     onProgressChanged(0, 1);
     this->enableControl(false);
@@ -527,10 +522,10 @@ void Footer::onProgressChanged(qint64 value, qint64 duration)
     d->progress->blockSignals(false);
 }
 
-void Footer::onCoverChanged(const MusicMeta &info, const QByteArray &coverData)
+void Footer::onCoverChanged(const MetaPtr meta, const QByteArray &coverData)
 {
     Q_D(Footer);
-    if (info.hash != d->m_playingMeta.hash) {
+    if (meta != d->m_playingMeta) {
         return;
     }
 
@@ -569,13 +564,13 @@ void Footer::onMutedChanged(bool muted)
     }
 }
 
-void Footer::onUpdateMetaCodec(const MusicMeta &meta)
+void Footer::onUpdateMetaCodec(const MetaPtr meta)
 {
     Q_D(Footer);
-    if (d->m_playingMeta.hash == meta.hash) {
-        d->title->setText(meta.title);
-        if (!meta.artist.isEmpty()) {
-            d->artist->setText(meta.artist);
+    if (d->m_playingMeta->hash == meta->hash) {
+        d->title->setText(meta->title);
+        if (!meta->artist.isEmpty()) {
+            d->artist->setText(meta->artist);
         } else {
             d->artist->setText(tr("Unknow Artist"));
         }

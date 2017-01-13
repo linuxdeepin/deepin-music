@@ -9,6 +9,6 @@
 
 namespace Pinyin {
 QString Chinese2Pinyin(const QString& words);
-};
+}
 
 #endif  // SERVICE_BACKEND_CHINESE2PINYIN_H_
