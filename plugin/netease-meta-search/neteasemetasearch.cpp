@@ -201,7 +201,7 @@ void NeteaseMetaSearchEngine::searchMeta(const MusicMeta &meta)
         qDebug() << "get " << "=====" << song.album.coverUrl;
         connect(m_geese->getGoose(song.album.coverUrl), &DMusic::Net::Goose::arrive,
         this, [ = ](int errCode, const QByteArray & data) {
-            qDebug() << "NeteaseMetaSearchEngine recive: " << errCode << data.length();
+            qDebug() << "NeteaseMetaSearchEngine received: " << errCode << data.length();
             emit this->coverLoaded(searchMeta, data);
         });
 
@@ -212,7 +212,7 @@ void NeteaseMetaSearchEngine::searchMeta(const MusicMeta &meta)
         this, [ = ](int errCode, const QByteArray & data) {
             auto searchMeta = meta;
             searchMeta.searchID = QString("%1").arg(song.id);
-            qDebug() << "NeteaseMetaSearchEngine recive: " << errCode << data.length();
+            qDebug() << "NeteaseMetaSearchEngine received: " << errCode << data.length();
             emit this->lyricLoaded(searchMeta, toLyric(data));
         });
     });
@@ -220,7 +220,7 @@ void NeteaseMetaSearchEngine::searchMeta(const MusicMeta &meta)
     auto goose = m_geese->postGoose(queryUrl, params.toEncoded());
     connect(goose, &DMusic::Net::Goose::arrive,
     this, [ = ](int errCode, const QByteArray & data) {
-        qDebug() << "NeteaseMetaSearchEngine Resut: " << errCode << anlyzer;
+        qDebug() << "NeteaseMetaSearchEngine Result: " << errCode << anlyzer;
         if (errCode != QNetworkReply::NoError || anlyzer.isNull()) {
             return;
         }
@@ -234,7 +234,7 @@ void NeteaseMetaSearchEngine::searchMeta(const MusicMeta &meta)
     goose = m_geese->postGoose(queryUrl, params.toEncoded());
     connect(goose, &DMusic::Net::Goose::arrive,
     this, [ = ](int errCode, const QByteArray & data) {
-        qDebug() << "NeteaseMetaSearchEngine Resut: " << errCode << anlyzer;
+        qDebug() << "NeteaseMetaSearchEngine Result: " << errCode << anlyzer;
         if (errCode != QNetworkReply::NoError || anlyzer.isNull()) {
             return;
         }
@@ -252,7 +252,7 @@ void NeteaseMetaSearchEngine::searchContext(const QString &context)
     auto goose = m_geese->postGoose(queryUrl, params.toEncoded());
     connect(goose, &DMusic::Net::Goose::arrive,
     this, [ = ](int errCode, const QByteArray & data) {
-        qDebug() << "NeteaseMetaSearchEngine Resut: " << errCode;
+        qDebug() << "NeteaseMetaSearchEngine Result: " << errCode;
         auto neteaseSongs = toSongList(data);
         MusicMetaList metalist;
         for (auto &song : neteaseSongs) {

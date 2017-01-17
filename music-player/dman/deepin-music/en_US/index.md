@@ -107,7 +107,7 @@ User can add, delete and view info of the local music in Deepin Music.
 ### Search music
 
 1. At the top of the Deepin Music interface, click on ** Search **.
-2. in the search box, enter the keywords, the result will show on the main interface, user can locate the music quickly.
+2. In the search box, enter the keywords, the result will show on the main interface, user can locate the music quickly.
 
 
 ### Add music to my favorites
@@ -149,7 +149,7 @@ To show the playlist interface, click ![list_icon](icon/list_icon.png) on the bo
 
 ### Play playlist
 
-To play a existing playlist, user can
+To play an existing playlist, user can
  - Double click on the playlist.
  - Right click on the playlist and select ** Play **.
 

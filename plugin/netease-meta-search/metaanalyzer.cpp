@@ -70,9 +70,9 @@ void MetaAnalyzer::analyzerResults()
 
     NeteaseSong result;
     for (auto &titleResult : m_titleResult) {
-        for (auto &albumResut : m_ablumResult) {
-            if (titleResult.album.name == albumResut.album.name &&
-                    titleResult.name == albumResut.name) {
+        for (auto &albumResult : m_ablumResult) {
+            if (titleResult.album.name == albumResult.album.name &&
+                    titleResult.name == albumResult.name) {
 //                qDebug() << "check" << m_meta.title  << titleResult.name <<
 //                         similarString(m_meta.title, titleResult.name);
                 if (similarString(m_meta.title, titleResult.name)) {
@@ -110,7 +110,7 @@ void MetaAnalyzer::analyzerResults()
 
 //    connect(m_geese->getGoose(result.album.coverUrl), &DMusic::Net::Goose::arrive,
 //    this, [ = ](int errCode, const QByteArray & data) {
-//        qDebug() << "NeteaseMetaSearchEngine recive: " << errCode << data.length();
+//        qDebug() << "NeteaseMetaSearchEngine received: " << errCode << data.length();
 //        emit this->coverLoaded(m_meta, data);
 //    });
 
@@ -129,7 +129,7 @@ void MetaAnalyzer::analyzerResults()
 //    qDebug() << "fetch cover url:" << song.album.coverUrl;
 //    connect(m_geese->getGoose(song.album.coverUrl), &DMusic::Net::Goose::arrive,
 //    this, [ = ](int errCode, const QByteArray & data) {
-//        qDebug() << "NeteaseMetaSearchEngine recive: " << errCode << data.length();
+//        qDebug() << "NeteaseMetaSearchEngine received: " << errCode << data.length();
 //        emit this->coverLoaded(m_meta, data);
 //    });
 //}
@@ -141,7 +141,7 @@ void MetaAnalyzer::analyzerResults()
 //            qDebug() << "fetch cover url:" << song.album.coverUrl;
 //            connect(m_geese->getGoose(song.album.coverUrl), &DMusic::Net::Goose::arrive,
 //            this, [ = ](int errCode, const QByteArray & data) {
-//                qDebug() << "NeteaseMetaSearchEngine recive: " << errCode << data.length();
+//                qDebug() << "NeteaseMetaSearchEngine received: " << errCode << data.length();
 //                emit this->coverLoaded(m_meta, data);
 //            });
 //            return;
@@ -152,7 +152,7 @@ void MetaAnalyzer::analyzerResults()
 //    qDebug() << "fetch cover url:" << song.album.coverUrl;
 //    connect(m_geese->getGoose(song.album.coverUrl), &DMusic::Net::Goose::arrive,
 //    this, [ = ](int errCode, const QByteArray & data) {
-//        qDebug() << "NeteaseMetaSearchEngine recive: " << errCode << data.length();
+//        qDebug() << "NeteaseMetaSearchEngine received: " << errCode << data.length();
 //        emit this->coverLoaded(m_meta, data);
 //    });
 //    return;

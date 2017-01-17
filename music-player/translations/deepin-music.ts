@@ -452,7 +452,7 @@
     <name>PlaylistWidget</name>
     <message>
         <location filename="../view/playlistwidget.cpp" line="47"/>
-        <source>+ Crate a new playlist</source>
+        <source>+ Create a new playlist</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -131,7 +131,7 @@ void Presenter::prepareData()
 
     connect(d->moniter, &MediaFileMonitor::meidaFileImported,
     this, [ = ](PlaylistPtr playlist, MusicMetaList metalist) {
-        qDebug() << "improt" << metalist.length();
+        qDebug() << "import" << metalist.length();
         if (playlist.isNull()) {
             qCritical() << "add music to empty playlist." << metalist.length();
             return;

@@ -179,7 +179,7 @@ void LyricService::onChangeMetaCache(const MusicMeta &meta)
     qDebug() << "change" << meta.searchCoverUrl << meta.searchLyricUrl;
     connect(m_geese->getGoose(meta.searchCoverUrl), &DMusic::Net::Goose::arrive,
     this, [ = ](int errCode, const QByteArray & coverData) {
-        qDebug() << "onChangeMetaCache recive: " << errCode << coverData.length();
+        qDebug() << "onChangeMetaCache received: " << errCode << coverData.length();
         if (coverData.length() > 0) {
             QFile coverFile(cacheCoverPath(meta));
             coverFile.open(QIODevice::WriteOnly);
@@ -191,7 +191,7 @@ void LyricService::onChangeMetaCache(const MusicMeta &meta)
 
     connect(m_geese->getGoose(meta.searchLyricUrl), &DMusic::Net::Goose::arrive,
     this, [ = ](int errCode, const QByteArray & data) {
-        qDebug() << "onChangeMetaCache recive: " << errCode << data.length();
+        qDebug() << "onChangeMetaCache received: " << errCode << data.length();
         auto document = QJsonDocument::fromJson(data);
         auto lrc = document.object().value("lrc").toObject();
         auto lrcData =  lrc.value("lyric").toString().toUtf8();

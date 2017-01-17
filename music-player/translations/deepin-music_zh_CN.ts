@@ -472,7 +472,7 @@
     </message>
     <message>
         <location filename="../view/playlistwidget.cpp" line="47"/>
-        <source>+ Crate a new playlist</source>
+        <source>+ Create a new playlist</source>
         <translation>创建新歌单</translation>
     </message>
 </context>
