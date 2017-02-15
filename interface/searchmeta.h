@@ -11,23 +11,32 @@
 
 #include <QString>
 #include <QList>
+#include <QObject>
 
-struct NeteaseAlbum {
+namespace DMusic
+{
+
+struct SearchAlbum {
     int     id = 0;
     QString name;
     QString coverUrl;
 };
 
-struct NeteaseArtist {
+struct SearchArtist {
     int     id = 0;
     QString name;
     QString avatarUrl;
 };
 
-struct NeteaseSong {
+struct SearchMeta {
     int                     id = 0;
     QString                 name;
     int                     length = 0;
-    NeteaseAlbum            album;
-    QList<NeteaseArtist>    artists;
+    SearchAlbum             album;
+    QList<SearchArtist>     artists;
 };
+
+}
+
+Q_DECLARE_METATYPE(DMusic::SearchMeta)
+Q_DECLARE_METATYPE(QList<DMusic::SearchMeta>)

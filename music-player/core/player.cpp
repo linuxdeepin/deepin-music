@@ -129,11 +129,11 @@ void PlayerPrivate::initConnection()
             return;
 
         auto duration = qplayer->duration();
-        qDebug() << DMusic::lengthString(duration)
-                 << DMusic::lengthString(position)
-                 << DMusic::lengthString(activeMeta->offset)
-                 << DMusic::lengthString(activeMeta->length)
-                 << activeMeta->title;
+//        qDebug() << DMusic::lengthString(duration)
+//                 << DMusic::lengthString(position)
+//                 << DMusic::lengthString(activeMeta->offset)
+//                 << DMusic::lengthString(activeMeta->length)
+//                 << activeMeta->title;
 
         // fix len
         if (activeMeta->length == 0 && duration != 0 && duration > 0) {

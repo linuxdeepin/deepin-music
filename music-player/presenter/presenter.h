@@ -15,6 +15,7 @@
 #include <MprisPlayer>
 
 #include "../core/playlist.h"
+#include <searchmeta.h>
 
 class Playlist;
 
@@ -26,7 +27,7 @@ public:
     explicit Presenter(QObject *parent = 0);
     ~Presenter();
 
-    void initMpris(MprisPlayer* mprisPlayer);
+    void initMpris(MprisPlayer *mprisPlayer);
     void prepareData();
     void postAction();
 
@@ -66,9 +67,9 @@ signals:
     void musicListAdded(PlaylistPtr playlist, const MetaPtrList metalist);
     void musicListRemoved(PlaylistPtr playlist, const MetaPtrList metalist);
     void requestMusicListMenu(const QPoint &pos,
-                                PlaylistPtr selectedlist,
-                                PlaylistPtr favlist,
-                                QList<PlaylistPtr >newlists);
+                              PlaylistPtr selectedlist,
+                              PlaylistPtr favlist,
+                              QList<PlaylistPtr >newlists);
 
     //! from control
     void musicPlayed(PlaylistPtr playlist, const MetaPtr meta);
@@ -82,9 +83,9 @@ signals:
 
     //! from lyricservice
     void requestContextSearch(const QString &context);
-    void lyricSearchFinished(const MetaPtr , const QByteArray &lyricData);
-    void coverSearchFinished(const MetaPtr , const QByteArray &coverData);
-    void contextSearchFinished(const QString &context, const MetaPtrList metalist);
+    void lyricSearchFinished(const MetaPtr ,  const DMusic::SearchMeta &song, const QByteArray &lyricData);
+    void coverSearchFinished(const MetaPtr , const DMusic::SearchMeta &song, const QByteArray &coverData);
+    void contextSearchFinished(const QString &context, const QList<DMusic::SearchMeta> &metalist);
 
     //! meta info
     void metaLibraryClean();

@@ -4,6 +4,7 @@
 #include "plugininterface.h"
 
 #include <mediameta.h>
+#include <searchmeta.h>
 
 class MediaMeta;
 
@@ -19,13 +20,17 @@ public:
     explicit MetaSearchEngine(QObject *parent = 0) : QObject(parent) {}
 
 signals:
-    void lyricLoaded(const MetaPtr meta, const QByteArray &lyricData);
-    void coverLoaded(const MetaPtr meta, const QByteArray &coverData);
+    void lyricLoaded(const MetaPtr meta,
+                     const DMusic::SearchMeta &search,
+                     const QByteArray &lyricData);
+    void coverLoaded(const MetaPtr meta,
+                     const DMusic::SearchMeta &search,
+                     const QByteArray &coverData);
 
     void metaSearchFinished(const MetaPtr meta);
     void doSearchMeta(const MetaPtr meta);
 
-    void contextSearchFinished(const QString &context, const QList<MediaMeta> &metalist);
+    void contextSearchFinished(const QString &context, const QList<SearchMeta> &metalist);
     void doSearchContext(const QString &context);
 
 public:

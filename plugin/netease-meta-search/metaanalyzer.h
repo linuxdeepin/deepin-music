@@ -21,25 +21,26 @@ class MetaAnalyzer : public QObject
 {
     Q_OBJECT
 public:
-    explicit MetaAnalyzer(const MusicMeta &meta, DMusic::Net::Geese *geese, QObject *parent = 0);
+    explicit MetaAnalyzer(const MetaPtr meta, DMusic::Net::Geese *geese, QObject *parent = 0);
 
 signals:
-    void searchFinished(const MusicMeta &meta, NeteaseSong song);
+    void searchFinished(const MetaPtr meta, DMusic::SearchMeta song);
 
 public slots:
-    void onGetTitleResult(QList<NeteaseSong> songlist);
-    void onGetAblumResult(QList<NeteaseSong> songlist);
+    void onGetTitleResult(QList<DMusic::SearchMeta> songlist);
+    void onGetAblumResult(QList<DMusic::SearchMeta> songlist);
 
 private:
     void analyzerResults();
 
     DMusic::Net::Geese  *m_geese = nullptr;
-    MediaMeta           m_meta;
+    MetaPtr             m_meta;
 
     bool                m_titleResultGet = false;
-    QList<NeteaseSong>  m_titleResult;
+    QList<DMusic::SearchMeta>   m_titleResult;
+
     bool                m_ablumResultGet = false;
-    QList<NeteaseSong>  m_ablumResult;
+    QList<DMusic::SearchMeta>   m_ablumResult;
     QTimer              m_delayTimer;
 };
 

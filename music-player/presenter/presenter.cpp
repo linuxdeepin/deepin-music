@@ -29,6 +29,8 @@
 #include "../core/settings.h"
 #include "../core/medialibrary.h"
 
+using namespace DMusic;
+
 static void startInNewThread(QObject *obj)
 {
     auto work = new QThread;
@@ -88,6 +90,9 @@ Presenter::Presenter(QObject *parent)
     qRegisterMetaType<PlaylistMeta>();
     qRegisterMetaType<PlaylistPtr>();
     qRegisterMetaType<QList<PlaylistPtr>>();
+
+    qRegisterMetaType<QList<SearchMeta> >();
+    qRegisterMetaType<SearchMeta>();
 
 }
 
@@ -153,15 +158,15 @@ void Presenter::prepareData()
 
     //    });
 
-//    connect(d->lyricService, &MetaSearchService::lyricSearchFinished,
-//            this, &Presenter::lyricSearchFinished);
-//    connect(d->lyricService, &MetaSearchService::coverSearchFinished,
-//            this, &Presenter::coverSearchFinished);
-//    connect(d->lyricService, &MetaSearchService::contextSearchFinished,
-//            this, &Presenter::contextSearchFinished);
+    connect(d->lyricService, &MetaSearchService::lyricSearchFinished,
+            this, &Presenter::lyricSearchFinished);
+    connect(d->lyricService, &MetaSearchService::coverSearchFinished,
+            this, &Presenter::coverSearchFinished);
+    connect(d->lyricService, &MetaSearchService::contextSearchFinished,
+            this, &Presenter::contextSearchFinished);
 
-//    connect(this, &Presenter::requestContextSearch,
-//            d->lyricService, &MetaSearchService::searchContext);
+    connect(this, &Presenter::requestContextSearch,
+            d->lyricService, &MetaSearchService::searchContext);
 //    connect(this, &Presenter::onChangeSearchMetaCache,
 //            d->lyricService, &MetaSearchService::onChangeMetaCache);
 
@@ -735,8 +740,8 @@ void Presenter::onMusicResume(PlaylistPtr playlist, const MetaPtr info)
 void Presenter::onMusicStop(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(Presenter);
-    emit coverSearchFinished(meta, "");
-    emit lyricSearchFinished(meta, "");
+    emit coverSearchFinished(meta, SearchMeta(), "");
+    emit lyricSearchFinished(meta, SearchMeta(), "");
     d->player->stop();
     emit this->musicStoped(playlist, meta);
 }
@@ -745,8 +750,8 @@ void Presenter::onMusicPrev(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(Presenter);
     if (playlist->isEmpty()) {
-        emit coverSearchFinished(meta, "");
-        emit lyricSearchFinished(meta, "");
+        emit coverSearchFinished(meta, SearchMeta(), "");
+        emit lyricSearchFinished(meta, SearchMeta(), "");
         d->player->stop();
         emit this->musicStoped(playlist, meta);
     }
@@ -757,8 +762,8 @@ void Presenter::onMusicNext(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(Presenter);
     if (playlist->isEmpty()) {
-        emit coverSearchFinished(meta, "");
-        emit lyricSearchFinished(meta, "");
+        emit coverSearchFinished(meta, SearchMeta(), "");
+        emit lyricSearchFinished(meta, SearchMeta(), "");
         d->player->stop();
         emit this->musicStoped(playlist, meta);
     }
@@ -917,7 +922,7 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
     });
 
     connect(this, &Presenter::coverSearchFinished,
-    this, [ = ](const MetaPtr  meta, const QByteArray & coverData) {
+    this, [ = ](const MetaPtr  meta, const DMusic::SearchMeta & song, const QByteArray & coverData) {
         if (player->activeMeta().isNull() || meta.isNull()) {
             return;
         }

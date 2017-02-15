@@ -75,7 +75,7 @@ SearchMetaItem::~SearchMetaItem()
 {
 }
 
-void SearchMetaItem::initUI(const NeteaseSong &meta)
+void SearchMetaItem::initUI(const DMusic::SearchMeta &meta)
 {
     Q_D(SearchMetaItem);
     d->metaTitle->setText(meta.name);

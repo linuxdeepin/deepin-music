@@ -14,6 +14,7 @@
 
 #include <util/singleton.h>
 #include <mediameta.h>
+#include <searchmeta.h>
 
 class MetaSearchServicePrivate;
 class MetaSearchService : public QObject, public DMusic::DSingleton<MetaSearchService>
@@ -30,9 +31,9 @@ public:
     static QByteArray lyricData(const MetaPtr meta);
 
 signals:
-    void lyricSearchFinished(const MetaPtr meta, const QByteArray &lyricData);
-    void coverSearchFinished(const MetaPtr meta, const QByteArray &coverData);
-    void contextSearchFinished(const QString &context, const QList<MediaMeta> &metalist);
+    void lyricSearchFinished(const MetaPtr meta, const DMusic::SearchMeta & song, const QByteArray &lyricData);
+    void coverSearchFinished(const MetaPtr meta, const DMusic::SearchMeta & song,const QByteArray &coverData);
+    void contextSearchFinished(const QString &context, const QList<DMusic::SearchMeta> &metalist);
 
 public slots:
     void searchMeta(const MetaPtr meta);

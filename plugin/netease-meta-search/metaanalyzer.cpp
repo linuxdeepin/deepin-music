@@ -38,21 +38,21 @@ static bool similarString(QString dest, QString orig)
     }
 }
 
-MetaAnalyzer::MetaAnalyzer(const MusicMeta &meta, DMusic::Net::Geese *geese, QObject *parent) : QObject(parent)
+MetaAnalyzer::MetaAnalyzer(const MetaPtr meta, DMusic::Net::Geese *geese, QObject *parent) : QObject(parent)
 {
     m_geese = geese;
     m_meta = meta;
     m_delayTimer.setInterval(500);
 }
 
-void MetaAnalyzer::onGetTitleResult(QList<NeteaseSong> songlist)
+void MetaAnalyzer::onGetTitleResult(QList<DMusic::SearchMeta> songlist)
 {
     m_titleResult = songlist;
     m_titleResultGet = true;
     analyzerResults();
 }
 
-void MetaAnalyzer::onGetAblumResult(QList<NeteaseSong> songlist)
+void MetaAnalyzer::onGetAblumResult(QList<DMusic::SearchMeta> songlist)
 {
     m_ablumResult = songlist;
     m_ablumResultGet = true;
@@ -68,14 +68,14 @@ void MetaAnalyzer::analyzerResults()
 
     bool find = false;
 
-    NeteaseSong result;
+    DMusic::SearchMeta result;
     for (auto &titleResult : m_titleResult) {
         for (auto &albumResult : m_ablumResult) {
             if (titleResult.album.name == albumResult.album.name &&
                     titleResult.name == albumResult.name) {
 //                qDebug() << "check" << m_meta.title  << titleResult.name <<
 //                         similarString(m_meta.title, titleResult.name);
-                if (similarString(m_meta.title, titleResult.name)) {
+                if (!m_meta.isNull() && similarString(m_meta->title, titleResult.name)) {
                     result = titleResult;
                     find = true;
                     break;
@@ -91,7 +91,7 @@ void MetaAnalyzer::analyzerResults()
         m_titleResult = m_titleResult + m_ablumResult;
         for (auto &titleResult : m_titleResult) {
 //            qDebug() << "similarString" << m_meta.title << titleResult.name;
-            if (similarString(m_meta.title, titleResult.name)) {
+            if (!m_meta.isNull() && similarString(m_meta->title, titleResult.name)) {
                 result = titleResult;
                 find = true;
                 break;
@@ -106,7 +106,7 @@ void MetaAnalyzer::analyzerResults()
     }
 
     qDebug() << "find" << result.name << result.album.name;
-    qDebug() << "fetch cover url:" << result.album.coverUrl << result.name << m_meta.title;
+    qDebug() << "fetch cover url:" << result.album.coverUrl << result.name << m_meta;
 
 //    connect(m_geese->getGoose(result.album.coverUrl), &DMusic::Net::Goose::arrive,
 //    this, [ = ](int errCode, const QByteArray & data) {

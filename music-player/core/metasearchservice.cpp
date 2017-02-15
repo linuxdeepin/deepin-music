@@ -23,7 +23,7 @@
 class MetaSearchServicePrivate
 {
 public:
-    MetaSearchServicePrivate(MetaSearchService *parent) : q_ptr(parent){}
+    MetaSearchServicePrivate(MetaSearchService *parent) : q_ptr(parent) {}
 
     int searchCacheLyric(const MetaPtr meta);
     int searchCacheCover(const MetaPtr meta);
@@ -72,7 +72,7 @@ MetaSearchService::MetaSearchService(QObject *parent) :
         auto engine = dynamic_cast<DMusic::Plugin::MetaSearchEngine *>(plugin);
         qDebug() << "load meta search engine" << engine;
         connect(engine, &DMusic::Plugin::MetaSearchEngine::coverLoaded,
-        this, [ = ](const MetaPtr  meta, const QByteArray & coverData) {
+        this, [ = ](const MetaPtr  meta, const DMusic::SearchMeta & search, const QByteArray & coverData) {
             if (coverData.length() > 0) {
                 QFile coverFile(cacheCoverPath(meta));
                 coverFile.open(QIODevice::WriteOnly);
@@ -80,10 +80,10 @@ MetaSearchService::MetaSearchService(QObject *parent) :
                 coverFile.close();
             }
 
-            emit coverSearchFinished(meta, coverData);
+            emit coverSearchFinished(meta, search, coverData);
         });
         connect(engine, &DMusic::Plugin::MetaSearchEngine::lyricLoaded,
-        this, [ = ](const MetaPtr  meta, const QByteArray & lyricData) {
+        this, [ = ](const MetaPtr  meta, const DMusic::SearchMeta & search, const QByteArray & lyricData) {
             if (lyricData.length() > 0) {
                 QFile lyricFile(cacheLyricPath(meta));
                 lyricFile.open(QIODevice::WriteOnly);
@@ -91,12 +91,12 @@ MetaSearchService::MetaSearchService(QObject *parent) :
                 lyricFile.close();
             }
 
-            emit lyricSearchFinished(meta, lyricData);
+            emit lyricSearchFinished(meta, search, lyricData);
         });
 
         void ();
         connect(engine, &DMusic::Plugin::MetaSearchEngine::contextSearchFinished,
-        this, [ = ](const QString & context, const QList<MediaMeta> &metalist) {
+        this, [ = ](const QString & context, const QList<DMusic::SearchMeta> &metalist) {
             emit  contextSearchFinished(context, metalist);
         });
     }
@@ -141,7 +141,7 @@ int MetaSearchServicePrivate::searchCacheLyric(const MetaPtr meta)
 //        emit lyricSearchFinished(meta, QByteArray());
         return -1;
     }
-    emit q->lyricSearchFinished(meta, MetaSearchService::lyricData(meta));
+    emit q->lyricSearchFinished(meta, DMusic::SearchMeta(), MetaSearchService::lyricData(meta));
     return 0;
 }
 
@@ -153,7 +153,7 @@ int MetaSearchServicePrivate::searchCacheCover(const MetaPtr meta)
 //        emit coverSearchFinished(meta, QByteArray());
         return -1;
     }
-    emit q->coverSearchFinished(meta, MetaSearchService::coverData(meta));
+    emit q->coverSearchFinished(meta, DMusic::SearchMeta(), MetaSearchService::coverData(meta));
     return 0;
 }
 
@@ -209,7 +209,7 @@ void MetaSearchService::onChangeMetaCache(const MetaPtr meta)
             coverFile.write(coverData);
             coverFile.close();
         }
-        emit coverSearchFinished(meta, coverData);
+        emit coverSearchFinished(meta, DMusic::SearchMeta(), coverData);
     });
 
     connect(d->m_geese->getGoose(meta->searchLyricUrl), &DMusic::Net::Goose::arrive,
@@ -228,7 +228,7 @@ void MetaSearchService::onChangeMetaCache(const MetaPtr meta)
         lyricFile.write(lrcData);
         lyricFile.close();
 
-        emit lyricSearchFinished(meta, lrcData);
+        emit lyricSearchFinished(meta, DMusic::SearchMeta(), lrcData);
     });
 
 }

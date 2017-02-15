@@ -42,16 +42,15 @@ class LyricViewPrivate
 public:
     LyricViewPrivate(LyricView *parent): q_ptr(parent) {}
 
+    bool checkMeta();
     void initConnection();
     void adjustLyric();
     void setLyricLines(QString lines);
     void showCover();
     void showSearch();
 
-    MetaPtr           m_playingMusic;
-
-    NeteaseSong       lyricSearchMeta;
-    NeteaseSong       coverSearchMeta;
+    MetaPtr             activingMeta;
+    DMusic::SearchMeta  searchMeta;
 
     int                 m_emptyOffset = 0;
     int                 m_currentline = 0;
@@ -255,9 +254,11 @@ LyricView::LyricView(QWidget *parent)
 
     connect(d->m_showSearch, &QPushButton::clicked,
     this, [ = ](bool) {
-        searchMetaTitle->setText(d->m_playingMusic->title);
-        searchMetaArtist->setText(d->m_playingMusic->artist);
+        Q_ASSERT(!d->activingMeta.isNull());
+        searchMetaTitle->setText(d->activingMeta->title);
+        searchMetaArtist->setText(d->activingMeta->artist);
         d->searchMetaList->clear();
+
         d-> m_cover->hide();
         d->searchMetaFrame->show();
         d->m_showSearch->hide();
@@ -280,17 +281,18 @@ LyricView::LyricView(QWidget *parent)
     });
 
     connect(d->searchMetaList, &SearchMetaList::itemClicked,
-    this, [ = ](QListWidgetItem * item) {
-        auto playlistItem = qobject_cast<SearchMetaItem *>(d->searchMetaList->itemWidget(item));
-        if (!playlistItem) {
-            qCritical() << "SearchMetaItem is empty" << item << playlistItem;
-            return;
-        }
-        // fixme:
-        auto meta = playlistItem->property("musicMeta").value<MetaPtr>();
-        meta->hash = d->m_playingMusic->hash;
-        emit changeMetaCache(meta);
+    this, [ = ](QListWidgetItem * /*item*/) {
+//        auto playlistItem = qobject_cast<SearchMetaItem *>(d->searchMetaList->itemWidget(item));
+//        if (!playlistItem) {
+//            qCritical() << "SearchMetaItem is empty" << item << playlistItem;
+//            return;
+//        }
+//        // fixme:
+//        auto meta = playlistItem->property("musicMeta").value<DMusic::SearchMeta>();
+//        meta->hash = d->m_playingMusic->hash;
+//        emit changeMetaCache(d->activingMeta);
     });
+
     connect(d->searchMetaList, &SearchMetaList::currentItemChanged,
     this, [ = ](QListWidgetItem * current, QListWidgetItem * previous) {
         auto itemWidget = qobject_cast<SearchMetaItem *>(d->searchMetaList->itemWidget(previous));
@@ -398,15 +400,15 @@ void LyricView::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(LyricView);
     Q_UNUSED(playlist);
-    d->m_playingMusic = meta;
+    d->activingMeta = meta;
     d->m_showSearch->setDisabled(false);
 }
 
 void LyricView::onMusicStop(PlaylistPtr /*playlist*/, const MetaPtr meta)
 {
     Q_D(LyricView);
-    onLyricChanged(meta, "");
-    onCoverChanged(meta, "");
+    onLyricChanged(meta, DMusic::SearchMeta(), "");
+    onCoverChanged(meta, DMusic::SearchMeta(), "");
     d->m_showSearch->setDisabled(true);
 }
 
@@ -436,10 +438,11 @@ void LyricView::onProgressChanged(qint64 value, qint64 /*length*/)
 
 }
 
-void LyricView::onLyricChanged(const MetaPtr meta,  const QByteArray &lyricData)
+void LyricView::onLyricChanged(const MetaPtr meta, const DMusic::SearchMeta &searchResult,  const QByteArray &lyricData)
 {
     Q_D(LyricView);
-    if (d->m_playingMusic != meta) {
+//    d->checkMeta()
+    if (d->activingMeta != meta) {
         return;
     }
 //    d->lyricSearchMeta = meta;
@@ -447,10 +450,11 @@ void LyricView::onLyricChanged(const MetaPtr meta,  const QByteArray &lyricData)
     d->setLyricLines(lyricStr);
 }
 
-void LyricView::onCoverChanged(const MetaPtr meta, const QByteArray &coverData)
+void LyricView::onCoverChanged(const MetaPtr meta,  const DMusic::SearchMeta &song, const QByteArray &coverData)
 {
     Q_D(LyricView);
-    if (d->m_playingMusic != meta) {
+    qDebug() << d->activingMeta << meta;
+    if (d->activingMeta != meta) {
         return;
     }
 //    d->coverSearchMeta = meta;
@@ -479,7 +483,7 @@ void LyricView::onUpdateMetaCodec(const MetaPtr meta)
 //    }
 }
 
-void LyricView::contextSearchFinished(const QString &context, const QList<MediaMeta> &metalist)
+void LyricView::onContextSearchFinished(const QString &context, const QList<DMusic::SearchMeta> &metalist)
 {
     Q_D(LyricView);
     d->searchMetaList->clear();

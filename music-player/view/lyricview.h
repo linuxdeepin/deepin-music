@@ -12,6 +12,7 @@
 #include <QFrame>
 
 #include "../core/playlist.h"
+#include <searchmeta.h>
 
 class LyricViewPrivate;
 class LyricView : public QFrame
@@ -35,12 +36,18 @@ public slots:
     void onProgressChanged(qint64 value, qint64 length);
     void onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta);
     void onMusicStop(PlaylistPtr, const MetaPtr meta);
-    void onLyricChanged(const MetaPtr meta, const QByteArray &lyricData);
-    void onCoverChanged(const MetaPtr meta, const QByteArray &coverData);
+
+    void onLyricChanged(const MetaPtr meta,
+                        const DMusic::SearchMeta &searchResult,
+                        const QByteArray &lyricData);
+    void onCoverChanged(const MetaPtr meta,
+                        const DMusic::SearchMeta &song,
+                        const QByteArray &coverData);
+    void onContextSearchFinished(const QString &context,
+                                 const QList<DMusic::SearchMeta> &metalist);
+
     void setDefaultCover(QString defaultCover);
     void onUpdateMetaCodec(const MetaPtr meta);
-
-    void contextSearchFinished(const QString &context, const QList<MediaMeta> &metalist);
 
 protected:
     virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;

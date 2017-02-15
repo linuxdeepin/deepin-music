@@ -24,7 +24,7 @@ public:
     explicit SearchMetaItem(QWidget *parent = 0);
     ~SearchMetaItem();
 
-    void initUI(const NeteaseSong& meta);
+    void initUI(const DMusic::SearchMeta& meta);
     void setChecked(bool check);
 
 signals:

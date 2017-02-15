@@ -239,7 +239,7 @@ void MainFramePrivate::slideToLyricView()
     titlebar->raise();
     footer->raise();
 
-//    updateViewname(s_PropertyViewnameLyric);
+    updateViewname(s_PropertyViewnameLyric);
 }
 
 void MainFramePrivate:: slideToImportView()
@@ -267,7 +267,7 @@ void MainFramePrivate:: slideToImportView()
 
     titlebarwidget->setSearchEnable(false);
     newSonglistAction->setDisabled(true);
-//    updateViewname("");
+    updateViewname("");
 }
 
 void MainFramePrivate:: slideToMusicListView(bool keepPlaylist)
@@ -297,6 +297,8 @@ void MainFramePrivate:: slideToMusicListView(bool keepPlaylist)
 
     titlebarwidget->setSearchEnable(true);
     newSonglistAction->setDisabled(false);
+
+    updateViewname("");
 }
 
 void MainFramePrivate::toggleLyricView()
@@ -418,6 +420,29 @@ void MainFrame::binding(Presenter *presenter)
         d->titlebarwidget->setSearchEnable(true);
     });
 
+    connect(presenter, &Presenter::coverSearchFinished,
+    this, [ = ](const MetaPtr, const DMusic::SearchMeta &, const QByteArray & coverData) {
+        if (coverData.length() < 32) {
+            setCoverBackground(coverBackground());
+            this->update();
+            return;
+        }
+        QImage image = QImage::fromData(coverData);
+        if (image.isNull()) {
+            setCoverBackground(coverBackground());
+            this->update();
+            return;
+        }
+
+        image = WidgetHelper::cropRect(image, this->size());
+        setBackgroundImage(WidgetHelper::blurImage(image, 50));
+        this->update();
+    });
+    connect(presenter, &Presenter::musicStoped,
+    this, [ = ](PlaylistPtr, const MetaPtr) {
+        setCoverBackground(coverBackground());
+    });
+
     connect(presenter, &Presenter::metaLibraryClean,
     this, [ = ]() {
         d->slideToImportView();
@@ -463,6 +488,18 @@ void MainFrame::binding(Presenter *presenter)
             d->musicList,  &MusicListWidget::onMusicListRemoved);
     connect(presenter, &Presenter::locateMusic,
             d->musicList,  &MusicListWidget::onLocate);
+
+    connect(presenter, &Presenter::musicPlayed,
+            d->lyricWidget, &LyricView::onMusicPlayed);
+    connect(presenter, &Presenter::coverSearchFinished,
+            d->lyricWidget, &LyricView::onCoverChanged);
+    connect(presenter, &Presenter::contextSearchFinished,
+            d->lyricWidget, &LyricView::onContextSearchFinished);
+
+
+    connect(d->lyricWidget,  &LyricView::requestContextSearch,
+            presenter, &Presenter::requestContextSearch);
+
 
     // footer
     connect(d->footer, &Footer::toggleLyricView,
@@ -538,7 +575,7 @@ void MainFrame::binding(Presenter *presenter)
     connect(d->playlistWidget,  &PlaylistWidget::playall,
             presenter, &Presenter::onPlayall);
     connect(d->playlistWidget,  &PlaylistWidget::hidePlaylist,
-            this, [=](){
+    this, [ = ]() {
         d->setPlaylistVisible(false);
     });
 }

@@ -14,6 +14,7 @@
 #include <QLabel>
 
 #include "../core/playlist.h"
+#include <searchmeta.h>
 
 class FooterPrivate;
 class Footer : public QFrame
@@ -57,7 +58,7 @@ public slots:
     void onMusicPause(PlaylistPtr playlist, const MetaPtr meta);
     void onMusicStoped(PlaylistPtr playlist, const MetaPtr meta);
     void onProgressChanged(qint64 value, qint64 duration);
-    void onCoverChanged(const MetaPtr meta, const QByteArray &coverData);
+    void onCoverChanged(const MetaPtr meta, const DMusic::SearchMeta &song, const QByteArray &coverData);
     void onVolumeChanged(int volume);
     void onMutedChanged(bool muted);
     void onUpdateMetaCodec(const MetaPtr meta);

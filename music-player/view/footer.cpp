@@ -522,7 +522,7 @@ void Footer::onProgressChanged(qint64 value, qint64 duration)
     d->progress->blockSignals(false);
 }
 
-void Footer::onCoverChanged(const MetaPtr meta, const QByteArray &coverData)
+void Footer::onCoverChanged(const MetaPtr meta, const DMusic::SearchMeta &song, const QByteArray &coverData)
 {
     Q_D(Footer);
     if (meta != d->m_playingMeta) {
