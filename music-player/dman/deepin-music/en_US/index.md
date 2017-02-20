@@ -104,11 +104,14 @@ User can add, delete and view info of the local music in Deepin Music.
  - Click on ** Scan ** at the bottom of the initial main interface.
 2. In the popup window, choose the file and folder to scan the music files, click on ** Add ** to confirm the operation.
 
+![0|addmusic](png/addmusic.png)
+
 ### Search music
 
 1. At the top of the Deepin Music interface, click on ** Search **.
-2. In the search box, enter the keywords, the result will show on the main interface, user can locate the music quickly.
+2. in the search box, enter the keywords, the result will show on the main interface, user can locate the music quickly.
 
+![1|searchmusic](png/searchmusic.png)
 
 ### Add music to my favorites
 
@@ -122,21 +125,26 @@ In Deepin Music interface, click on ![collect](icon/collect.svg) to add music to
 2. Click on ** Remove from playlist ** to remove the music from the playlist, the music file will still on the local disk.
 3. Click on ** Delete from local disk ** to remove the music from the playlist and delete the music file from local disk. User should also confirm the operation in the popup window. 
 
+![0|remove](png/remove.png)
+
 ### View music info
 
 1. In Deepin Music interface, right click the music.
 2. Click on ** Song info **, user can view the information of the music.
+
+![0|info](png/info.png)
 
 ### Display in file manager
 
 1. In Deepin Music interface, right click the music.
 2. Click on ** Display in file manager **, user can view the the music file on file manager.
 
+![0|infile](png/infile.png)
 
 ## Playlist Management|../common/icon_playlist.svg|
 
 In Deepin Music interface, user can add, delete, rename playlist and add music to the playlist.
-To show the playlist interface, click ![list_icon](icon/list_icon.png) on the bottom.
+To show the playlist interface, click ![list_icon](icon/list_icon.svg) on the bottom.
 
 ### Add playlist
 
@@ -145,19 +153,25 @@ To show the playlist interface, click ![list_icon](icon/list_icon.png) on the bo
  - Click on ![menu](icon/icon_menu.svg) to enter ** Main Menu ** and click on ** New Playlist **.
  - Right click on the music and click on ** Add to playlist ** > ** New playlist **.
 2. Enter the name of the playlist.
-3. Click on the blank area of the Deepin Music to confirm the name.
+3. Click on the blank area of the Deepin Music, or press **![Enter](icon/Enter.svg)** key to confirm the name.
+
+![0|addlist](png/addlist.png)
 
 ### Play playlist
 
-To play an existing playlist, user can
+To play a existing playlist, user can
  - Double click on the playlist.
  - Right click on the playlist and select ** Play **.
+
+![0|play](png/play.png)
 
 ### Rename playlist
 
 1. To rename an existing playlist, right click on the playlist and select ** Rename **.
 2. Enter the name of the playlist.
-3. Click on the blank area of the Deepin Music to confirm the name.
+3. Click on the blank area of the Deepin Music, or press **![Enter](icon/Enter.svg)** key to confirm the name.
+
+![0|renamelist](png/renamelist.png)
 
 ### Add music to the playlist
 
@@ -165,10 +179,14 @@ To add a music to the playlist, right click on the music and click on ** Add to 
  - Choose one of the existing playlist.
  - User can also choose ** New Playlist ** to add to a new playlist.
 
+![0|addtolist](png/addtolist.png)
+
 ### Delete playlist
 
 1. To delete an existing playlist, right click on the playlist and select ** Delete **.
 2. In the popup window, select ** Delete ** to confirm the operation.
+
+![0|deletelist](png/deletelist.png)
 
 
 ## Main Menu|../common/icon_optionsetting.svg|
@@ -185,8 +203,11 @@ In Deepin Music interface, click on ![menu](icon/icon_menu.svg) to enter ** Main
    - Check ** Enable fade in and out **, to enable fade in and out when Deepin Music played/stopped.
    - Change ** Lyrics saving location **.
 3. In ** Shortcuts Settings **, user can:
+   - Check ** Enable Shortcuts **, to enable shortcut keys.
    - Redefine all shortcuts.
    - Click on ** Restore to default ** to restore all shortcuts to the default.
+
+![0|control](png/control.png)
 
 ### Help
 

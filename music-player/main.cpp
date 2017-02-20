@@ -32,6 +32,9 @@ int main(int argc, char *argv[])
 #endif
 
     DApplication app(argc, argv);
+
+    qDebug() << app.arguments();
+
     app.setOrganizationName("deepin");
     app.setApplicationName("deepin-music");
     app.setApplicationVersion("3.0");
@@ -48,7 +51,7 @@ int main(int argc, char *argv[])
     }
 
     app.loadTranslator();
-
+    app.setApplicationDisplayName(DApplication::tr("Deepin Music"));
 
 #ifdef Q_OS_UNIX
     auto serviceName = "deepinmusic";

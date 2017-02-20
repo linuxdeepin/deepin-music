@@ -31,6 +31,7 @@ public:
     QBrush background() const;
 
 public slots:
+    void setText(const QString text);
     void setBackground(QBrush background);
     void setRadius(int radius);
     void setBorderColor(QColor borderColor);

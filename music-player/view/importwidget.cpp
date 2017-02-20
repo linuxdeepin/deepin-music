@@ -23,7 +23,7 @@ DWIDGET_USE_NAMESPACE
 
 #include "../musicapp.h"
 
-const QString linkTemplate = "<a href='%1' style='text-decoration: none;'>%2</a>";
+const QString linkTemplate = "<a href='%1' style='text-decoration: none; color: #0082FA; '>%2</a>";
 
 class ImportWidgetPrivate
 {

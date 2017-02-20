@@ -32,6 +32,7 @@ public:
 
     void hideAll();
     bool eventFilter(QObject *obj, QEvent *event);
+    void showHitsFor(QWidget *w, QWidget *hint);
 private:
     QScopedPointer<HintFilterPrivate> d_ptr;
     Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), HintFilter)

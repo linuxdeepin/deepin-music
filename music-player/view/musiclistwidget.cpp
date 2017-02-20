@@ -251,10 +251,10 @@ void MusicListWidget::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
     if (!index.isValid()) {
         return;
     }
-     d->musiclist->clearSelection();
-     d->musiclist->setCurrentIndex(index);
-     d->musiclist->scrollTo(index);
-     d->musiclist->update();
+    d->musiclist->clearSelection();
+    d->musiclist->setCurrentIndex(index);
+    d->musiclist->scrollTo(index);
+    d->musiclist->update();
 }
 
 void MusicListWidget::onMusicPause(PlaylistPtr playlist, const MetaPtr meta)
@@ -270,8 +270,9 @@ void MusicListWidget::onMusicListRemoved(PlaylistPtr playlist, const MetaPtrList
 {
     Q_D(MusicListWidget);
 
-    if (playlist != d->currentPlaylist)
+    if (playlist != d->currentPlaylist) {
         return;
+    }
 
     d->musiclist->onMusicListRemoved(metalist);
     d->showEmptyHits(d->musiclist->model()->rowCount() == 0);
@@ -291,7 +292,7 @@ void MusicListWidget::onMusicListAdded(PlaylistPtr playlist, const MetaPtrList m
     if (playlist != d->currentPlaylist)
         return
 
-    d->musiclist->onMusicListAdded(metalist);
+            d->musiclist->onMusicListAdded(metalist);
     d->showEmptyHits(metalist.length() == 0);
 }
 
@@ -314,6 +315,7 @@ void MusicListWidget::onMusiclistChanged(PlaylistPtr playlist)
     Q_D(MusicListWidget);
 
     d->currentPlaylist = playlist;
+    d->btPlayAll->setText(playlist->displayName());
     d->initData(playlist);
 }
 

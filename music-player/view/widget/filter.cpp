@@ -42,7 +42,7 @@ class HintFilterPrivate
 public:
     HintFilterPrivate(HintFilter *parent) : q_ptr(parent) {}
 
-    void showHint();
+    void showHint(QWidget *hint);
 
     QTimer  *delayShowTimer = nullptr;
 
@@ -54,23 +54,26 @@ public:
 };
 
 
-void HintFilterPrivate::showHint()
+void HintFilterPrivate::showHint(QWidget *hint)
 {
     if (!parentWidget) {
         return;
     }
 
     auto w = parentWidget;
+
     if (hintWidget) {
         hintWidget->hide();
     }
-    hintWidget = w->property("HintWidget").value<QWidget *>();
+    hintWidget = hint;
+    //    w->property("HintWidget").value<QWidget *>();
     if (!hintWidget) {
         return;
     }
 
     hintWidget->show();
     hintWidget->raise();
+    hintWidget->adjustSize();
 
     auto centerPos = w->mapToGlobal(w->rect().center());
     auto sz = hintWidget->size();
@@ -87,7 +90,10 @@ HintFilter::HintFilter(QObject *parent)  : QObject(parent), d_ptr(new HintFilter
     d->delayShowTimer = new QTimer;
     d->delayShowTimer->setInterval(1000);
     connect(d->delayShowTimer, &QTimer::timeout, this, [ = ]() {
-        d->showHint();
+        if (d->parentWidget) {
+            auto hint = d->parentWidget->property("HintWidget").value<QWidget *>();
+            d->showHint(hint);
+        }
         d->delayShowTimer->stop();
     });
 }
@@ -130,7 +136,7 @@ bool HintFilter::eventFilter(QObject *obj, QEvent *event)
 
         bool nodelayshow = d->hintWidget->property("NoDelayShow").toBool();
         if (nodelayshow) {
-            d->showHint();
+            d->showHint(d->hintWidget);
         } else {
             d->delayShowTimer->start();
         }
@@ -158,4 +164,27 @@ bool HintFilter::eventFilter(QObject *obj, QEvent *event)
         break;
     }
     return QObject::eventFilter(obj, event);
+}
+
+void HintFilter::showHitsFor(QWidget *w, QWidget *hint)
+{
+    Q_D(HintFilter);
+    if (d->hintWidget) {
+        d->hintWidget->hide();
+    }
+
+    d->parentWidget = w;
+    if (!w) {
+        return;
+    }
+
+    d->hintWidget = hint;
+    if (!d->hintWidget) {
+        return;
+    }
+
+    d->delayShowTimer->stop();
+
+    d->showHint(hint);
+    QApplication::setOverrideCursor(QCursor(Qt::PointingHandCursor));
 }

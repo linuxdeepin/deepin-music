@@ -106,8 +106,28 @@ void FooterPrivate::initConnection()
 {
     Q_Q(Footer);
 
+    auto hintWidget = new Tip(QPixmap(), "play mode", q);
+    hintWidget->setFixedHeight(32);
+    btPlayMode->setProperty("ClickHintWidget", QVariant::fromValue<QWidget *>(hintWidget));
     q->connect(btPlayMode, &ModeButton::modeChanged,
-               q, &Footer::modeChanged);
+    q, [ = ](int mode) {
+        auto hintWidget = btPlayMode->property("ClickHintWidget").value<Tip *>();
+        QString playmode;
+        switch (mode) {
+        case 0:
+            playmode = Footer::tr("Repeat All");
+            break;
+        case 1:
+            playmode = Footer::tr("Repeat Single");
+            break;
+        case 2:
+            playmode = Footer::tr("Shuffle");
+            break;
+        }
+        hintWidget->setText(playmode);
+        hintFilter->showHitsFor(btPlayMode, hintWidget);
+        emit q->modeChanged(mode);
+    });
 
     q->connect(progress, &Slider::valueAccpet, q, [ = ](int value) {
         auto range = progress->maximum() - progress->minimum();

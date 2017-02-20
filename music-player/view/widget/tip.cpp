@@ -34,6 +34,7 @@ public:
     QMargins        shadowMargins       = QMargins(20, 20, 20, 20);
     QColor          borderColor         = QColor(0, 0, 0, 0.2 * 255);
 
+    QLabel          *textLable          = nullptr;
     QFrame          *m_interFrame       = nullptr;
 
 
@@ -69,11 +70,11 @@ Tip::Tip(const QPixmap &icon, const QString &text, QWidget *parent) : QFrame(par
         iconLabel->setPixmap(icon);
     }
 
-    auto textLable = new QLabel(text);
-    textLable->setObjectName("TipText");
+    d->textLable = new QLabel(text);
+    d->textLable->setObjectName("TipText");
 
     interlayout->addWidget(iconLabel, 0, Qt::AlignVCenter);
-    interlayout->addWidget(textLable, 0, Qt::AlignVCenter);
+    interlayout->addWidget(d->textLable, 0, Qt::AlignVCenter);
     layout->addWidget(d->m_interFrame, 0, Qt::AlignVCenter);
     ThemeManager::instance()->regisetrWidget(this);
 
@@ -98,6 +99,12 @@ QBrush Tip::background() const
 {
     Q_D(const Tip);
     return d->background;
+}
+
+void Tip::setText(const QString text)
+{
+    Q_D(const Tip);
+    d->textLable->setText(text);
 }
 
 int Tip::radius() const
