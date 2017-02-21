@@ -229,13 +229,14 @@ void Playlist::setDisplayName(const QString &name)
 void Playlist::appendMusicList(const MetaPtrList metalist)
 {
     MetaPtrList newMetalist;
-    for (auto &meta : metalist) {
+    for (auto meta : metalist) {
         if (playlistMeta.metas.contains(meta->hash)) {
             qDebug() << "skip dump music " << meta->hash << meta->localPath;
             continue;
         }
 
         newMetalist << meta;
+        qDebug() << meta;
         playlistMeta.sortMetas << meta->hash;
         playlistMeta.metas.insert(meta->hash, meta);
     }

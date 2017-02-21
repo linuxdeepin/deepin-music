@@ -50,6 +50,7 @@ class Player : public QObject, public DMusic::DSingleton<Player>
     Q_ENUMS(PlaybackMode)
     Q_ENUMS(Error)
 
+
 public:
     enum PlaybackStatus {
         InvalidPlaybackStatus = -1,
@@ -73,6 +74,9 @@ public:
         ServiceMissingError,
         MediaIsPlaylist
     };
+
+    static const int VolumeStep = 10;
+
     explicit Player(QObject *parent = 0);
     ~Player();
 
@@ -134,7 +138,7 @@ signals:
 //    void maximumRateChanged(double maximumRate);
 //    void metadataChanged(QVariantMap metadata);
 //    void minimumRateChanged(double minimumRate);
-//    void playbackStatusChanged(PlaybackStatus playbackStatus);
+    void playbackStatusChanged(Player::PlaybackStatus playbackStatus);
     void positionChanged(qlonglong position, qlonglong length);
 //    void rateChanged(double rate);
 //    void shuffleChanged(bool shuffle);
@@ -175,4 +179,5 @@ private:
 };
 
 Q_DECLARE_METATYPE(Player::Error)
+Q_DECLARE_METATYPE(Player::PlaybackStatus)
 

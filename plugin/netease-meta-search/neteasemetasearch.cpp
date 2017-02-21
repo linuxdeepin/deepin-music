@@ -29,7 +29,6 @@
 using namespace DMusic;
 using namespace DMusic::Plugin;
 
-
 static int doSyncGet(const QString &rootUrl, QByteArray &result)
 {
     QNetworkRequest url;

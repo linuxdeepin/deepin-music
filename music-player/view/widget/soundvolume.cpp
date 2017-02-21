@@ -20,6 +20,8 @@
 
 #include <thememanager.h>
 
+#include "core/player.h"
+
 using namespace Dtk::Widget;
 
 class SoundVolumePrivate
@@ -27,14 +29,12 @@ class SoundVolumePrivate
 public:
     SoundVolumePrivate(SoundVolume *parent) : q_ptr(parent) {}
 
-    bool        mouseIn     = false;
-    QSlider     *volSlider  = nullptr;
-
-    QBrush          background;
-    int             radius              = 4;
-    QColor          borderColor         = QColor(0, 0, 0, 0.2 * 255);
-
     SoundVolume *q_ptr;
+    QSlider     *volSlider  = nullptr;
+    QBrush      background;
+    QColor      borderColor = QColor(0, 0, 0,  255 * 2 / 10);
+    int         radius      = 4;
+    bool        mouseIn     = false;
 
     Q_DECLARE_PUBLIC(SoundVolume)
 };
@@ -54,6 +54,7 @@ SoundVolume::SoundVolume(QWidget *parent) : QWidget(parent), d_ptr(new SoundVolu
     d->volSlider = new QSlider(Qt::Vertical);
     d->volSlider->setMinimum(0);
     d->volSlider->setMaximum(100);
+    d->volSlider->setSingleStep(Player::VolumeStep);
     d->volSlider->setValue(50);
     d->volSlider->setFixedHeight(90);
 
@@ -64,7 +65,7 @@ SoundVolume::SoundVolume(QWidget *parent) : QWidget(parent), d_ptr(new SoundVolu
 
     auto *bodyShadow = new QGraphicsDropShadowEffect;
     bodyShadow->setBlurRadius(10.0);
-    bodyShadow->setColor(QColor(0, 0, 0, 0.1 * 255));
+    bodyShadow->setColor(QColor(0, 0, 0,  255 / 10));
     bodyShadow->setOffset(0, 2.0);
     this->setGraphicsEffect(bodyShadow);
 

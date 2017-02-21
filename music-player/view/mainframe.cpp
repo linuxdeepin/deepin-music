@@ -16,6 +16,8 @@
 #include <QStyleFactory>
 #include <QFileDialog>
 #include <QStandardPaths>
+#include <QApplication>
+#include <QKeyEvent>
 
 #include <DUtil>
 #include <dutility.h>
@@ -25,6 +27,7 @@
 
 #include "../presenter/presenter.h"
 #include "../core/settings.h"
+#include "../musicapp.h"
 
 #include "titlebar.h"
 #include "importwidget.h"
@@ -448,6 +451,15 @@ void MainFrame::binding(Presenter *presenter)
         d->slideToImportView();
     });
 
+    connect(presenter, &Presenter::musicPlayed,
+    this, [ = ](PlaylistPtr playlist, const MetaPtr meta) {
+        Q_ASSERT(!playlist.isNull());
+        Q_ASSERT(!meta.isNull());
+
+        qApp->setApplicationDisplayName(playlist->displayName());
+        this->setWindowTitle(meta->title);
+    });
+
     connect(presenter, &Presenter::meidaFilesImported,
     this, [ = ](PlaylistPtr playlist, const MetaPtrList) {
         d->slideToMusicListView(false);
@@ -559,8 +571,6 @@ void MainFrame::binding(Presenter *presenter)
 //    connect(presenter, &Presenter::coverSearchFinished,
 //            d->footer,  &Footer::setDefaultCover);
 
-
-
     // playlist
     connect(presenter, &Presenter::playlistAdded,
             d->playlistWidget,  &PlaylistWidget::onPlaylistAdded);
@@ -606,15 +616,91 @@ void MainFrame::onSelectImportFiles()
 {
     Q_D(const MainFrame);
     QFileDialog fileDlg(this);
-    auto musicDir =  QStandardPaths::standardLocations(QStandardPaths::MusicLocation);
-    fileDlg.setDirectory(musicDir.first());
+
+    auto lastImportPath = Settings::instance()->value("base.play.last_import_path").toString();
+
+    auto lastImportDir = QDir(lastImportPath);
+    if (!lastImportDir.exists()) {
+        lastImportPath =  QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first();
+    }
+    fileDlg.setDirectory(lastImportPath);
 
     fileDlg.setViewMode(QFileDialog::Detail);
     fileDlg.setFileMode(QFileDialog::DirectoryOnly);
     if (QFileDialog::Accepted == fileDlg.exec()) {
         d->importWidget->showWaitHint();
+        Settings::instance()->setOption("base.play.last_import_path",  fileDlg.directory().path());
         emit importSelectFiles(fileDlg.selectedFiles());
     }
+}
+
+bool MainFrame::eventFilter(QObject *obj, QEvent *e)
+{
+    Q_D(const MainFrame);
+
+    if (e->type() == QEvent::KeyPress) {
+        QKeyEvent *ke = static_cast<QKeyEvent *>(e);
+
+        auto keyModifiers = ke->modifiers();
+        auto key = static_cast<Qt::Key>(ke->key());
+
+        QStringList sclist;
+        sclist << "shortcuts.all.next"
+               << "shortcuts.all.play_pause"
+               << "shortcuts.all.previous"
+               << "shortcuts.all.volume_down"
+               << "shortcuts.all.volume_up";
+
+        for (auto optkey : sclist) {
+            auto shortcut = Settings::instance()->value(optkey).toStringList();
+            auto modifiersstr = shortcut.value(0);
+            auto scmodifiers = static_cast<Qt::KeyboardModifier>(modifiersstr.toInt());
+            auto keystr = shortcut.value(1);
+            auto sckey = static_cast<Qt::Key>(keystr.toInt());
+
+            if (scmodifiers == keyModifiers && key == sckey && !ke->isAutoRepeat()) {
+                qDebug() << "match " << optkey << ke->count() << ke->isAutoRepeat();
+                MusicApp::instance()->triggerShortcutAction(optkey);
+                return true;
+            }
+        }
+    }
+    if (e->type() == QEvent::MouseButtonPress) {
+        QMouseEvent *me = static_cast<QMouseEvent *>(e);
+        //        qDebug() << obj << me->pos();
+        if (obj->objectName() == this->objectName() || this->objectName() + "Window" == obj->objectName()) {
+            //            qDebug() << me->pos() << QCursor::pos();
+            QPoint mousePos = me->pos();
+            auto geometry = d->playlistWidget->geometry().marginsAdded(QMargins(0, 0, 40, 40));
+            //            qDebug() << geometry << mousePos;
+            if (!geometry.contains(mousePos)) {
+                qDebug() << "hide playlist" << me->pos() << QCursor::pos() << obj;
+                DUtil::TimerSingleShot(50, [this]() {
+                    this->d_func()->setPlaylistVisible(false);
+                });
+            }
+        }
+    }
+
+    if (e->type() == QEvent::MouseButtonPress) {
+        QMouseEvent *me = static_cast<QMouseEvent *>(e);
+        //        qDebug() << obj << me->pos();
+        if (obj->objectName() == this->objectName() || this->objectName() + "Window" == obj->objectName()) {
+            QPoint mousePos = me->pos();
+            qDebug() << "lyricView checkHiddenSearch" << me->pos() << QCursor::pos() << obj;
+            d->lyricWidget->checkHiddenSearch(mousePos);
+        }
+
+    }
+
+    if (e->type() == QEvent::Close) {
+        if (obj->objectName() == this->objectName()) {
+            exit(0);
+        }
+    }
+    return qApp->eventFilter(obj, e);
+
+
 }
 
 void MainFrame::resizeEvent(QResizeEvent *e)

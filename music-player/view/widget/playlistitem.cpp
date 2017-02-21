@@ -103,6 +103,8 @@ PlayListItem::PlayListItem(PlaylistPtr playlist, QWidget *parent) : QFrame(paren
 //    m_titleedit->setText(fm.elidedText(QString(playlist->displayName()),
 //                                       Qt::ElideMiddle, 140));
     m_titleedit->setText(playlist->displayName());
+    m_titleedit->setMaxLength(40);
+    m_titleedit->setProperty("HistoryValue", m_titleedit->text());
     //    m_titleedit->adjustSize();
 
     connect(m_titleedit, &QLineEdit::editingFinished,

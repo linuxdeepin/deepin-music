@@ -46,8 +46,6 @@ PresenterPrivate::PresenterPrivate(Presenter *parent)
 
 void PresenterPrivate::initBackend()
 {
-    Q_Q(Presenter);
-
     MediaDatabase::instance();
 
     player = Player::instance();
@@ -417,14 +415,14 @@ QList<PlaylistPtr > Presenter::allplaylist()
 void Presenter::volumeUp()
 {
     Q_D(Presenter);
-    onVolumeChanged(d->player->volume() + 5);
+    onVolumeChanged(d->player->volume() + Player::VolumeStep);
     emit volumeChanged(d->player->volume());
 }
 
 void Presenter::volumeDown()
 {
     Q_D(Presenter);
-    onVolumeChanged(d->player->volume() - 5);
+    onVolumeChanged(d->player->volume() - Player::VolumeStep);
     emit volumeChanged(d->player->volume());
 }
 
@@ -582,6 +580,8 @@ void Presenter::onAddToPlaylist(PlaylistPtr playlist,
                                 const MetaPtrList metalist)
 {
     Q_D(Presenter);
+
+    qDebug() << metalist.first();
     PlaylistPtr modifiedPlaylist = playlist;
     if (playlist.isNull()) {
         emit showPlaylist(true);
@@ -869,6 +869,22 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
 
     auto player = d->player;
 
+    connect(player, &Player::playbackStatusChanged,
+    this, [ = ](Player::PlaybackStatus playbackStatus) {
+        switch (playbackStatus) {
+        case Player::InvalidPlaybackStatus:
+        case Player::Stopped:
+            mprisPlayer->setPlaybackStatus(Mpris::Stopped);
+            break;
+        case Player::Playing:
+            mprisPlayer->setPlaybackStatus(Mpris::Playing);
+            break;
+        case Player::Paused:
+            mprisPlayer->setPlaybackStatus(Mpris::Paused);
+            break;
+        }
+    });
+
     connect(this, &Presenter::musicPlayed, this, [ = ](PlaylistPtr playlist, const MetaPtr meta) {
         if (meta.isNull()) {
             return;
@@ -882,13 +898,38 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
 //        mprisPlayer->setCanSeek(true);
         mprisPlayer->setMetadata(metadata);
         mprisPlayer->setLoopStatus(Mpris::Playlist);
-        mprisPlayer->setPlaybackStatus(Mpris::Playing);
+        mprisPlayer->setPlaybackStatus(Mpris::Stopped);
         mprisPlayer->setVolume(double(player->volume()) / 100.0);
+    });
+
+    connect(mprisPlayer, &MprisPlayer::playPauseRequested,
+    this, [ = ]() {
+        qCritical() << "it seems not call playbackStatusChanged";
+        switch (d->player->status()) {
+        case Player::InvalidPlaybackStatus:
+        case Player::Stopped:
+            onMusicPlay(player->activePlaylist(), player->activeMeta());
+            mprisPlayer->setPlaybackStatus(Mpris::Playing);
+            break;
+
+        case Player::Playing:
+            onMusicPause(player->activePlaylist(), player->activeMeta());
+            mprisPlayer->setPlaybackStatus(Mpris::Paused);
+            break;
+        case Player::Paused:
+            onMusicResume(player->activePlaylist(), player->activeMeta());
+            mprisPlayer->setPlaybackStatus(Mpris::Playing);
+            break;
+        }
     });
 
     connect(mprisPlayer, &MprisPlayer::playRequested,
     this, [ = ]() {
-        onMusicPlay(player->activePlaylist(), player->activeMeta());
+        if (d->player->status() == Player::Paused) {
+            onMusicResume(player->activePlaylist(), player->activeMeta());
+        } else {
+            onMusicPlay(player->activePlaylist(), player->activeMeta());
+        }
         mprisPlayer->setPlaybackStatus(Mpris::Playing);
     });
 

@@ -326,9 +326,9 @@ void MusicListView::showContextMenu(const QPoint &pos,
         auto playlist = action->data().value<PlaylistPtr >();
         MetaPtrList metalist;
         for (auto &index : selection->selectedRows()) {
-            auto item = d->model->item(index.row(), index.column());
-            if (item) {
-                metalist << qvariant_cast<MetaPtr>(item->data());
+            auto meta = qvariant_cast<MetaPtr>(d->model->data(index));
+            if (!meta.isNull()) {
+                metalist << meta;
             }
         }
         emit addToPlaylist(playlist, metalist);
@@ -361,8 +361,7 @@ void MusicListView::showContextMenu(const QPoint &pos,
 
     if (singleSelect) {
         auto index = selection->selectedRows().first();
-        auto item = d->model->item(index.row(), index.column());
-        MetaPtr meta = qvariant_cast<MetaPtr>(item->data());
+        auto meta = qvariant_cast<MetaPtr>(d->model->data(index));
         QList<QByteArray> codecList = DMusic::detectMetaEncodings(meta);
 
 //        auto defaultCodec = QTextCodec::codecForLocale()->name();

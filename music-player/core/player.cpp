@@ -125,8 +125,9 @@ void PlayerPrivate::initConnection()
     Q_Q(Player);
     q->connect(qplayer, &QMediaPlayer::positionChanged,
     q, [ = ](qint64 position) {
-        if (activeMeta.isNull())
+        if (activeMeta.isNull()) {
             return;
+        }
 
         auto duration = qplayer->duration();
 //        qDebug() << DMusic::lengthString(duration)
@@ -169,6 +170,22 @@ void PlayerPrivate::initConnection()
 
         emit q->positionChanged(position - activeMeta->offset,  activeMeta->length);
     });
+
+    q->connect(qplayer, &QMediaPlayer::stateChanged,
+    q, [ = ](QMediaPlayer::State newState) {
+        switch (newState) {
+        case QMediaPlayer::StoppedState:
+            emit q->playbackStatusChanged(Player::Stopped);
+            break;
+        case QMediaPlayer::PlayingState:
+            emit q->playbackStatusChanged(Player::Playing);
+            break;
+        case QMediaPlayer::PausedState:
+            emit q->playbackStatusChanged(Player::Paused);
+            break;
+        }
+    });
+
     q->connect(qplayer, &QMediaPlayer::volumeChanged,
     q, [ = ](int volume) {
         qDebug() << volume;
@@ -298,6 +315,8 @@ Player::Player(QObject *parent) : QObject(parent), d_ptr(new PlayerPrivate(this)
 {
     Q_D(Player);
     qRegisterMetaType<Player::Error>();
+    qRegisterMetaType<Player::PlaybackStatus>();
+
     d->initConnection();
 }
 
@@ -522,8 +541,9 @@ bool Player::muted() const
 qint64 Player::duration() const
 {
     Q_D(const Player);
-    if (d->activeMeta.isNull())
+    if (d->activeMeta.isNull()) {
         return 0;
+    }
 
     if (d->qplayer->duration() == d->activeMeta->length) {
         return d->qplayer->duration();
@@ -559,8 +579,9 @@ void Player::setPosition(qlonglong position)
 {
     Q_D(const Player);
 
-    if (d->activeMeta.isNull())
+    if (d->activeMeta.isNull()) {
         return;
+    }
 
     if (d->qplayer->duration() == d->activeMeta->length) {
         return d->qplayer->setPosition(position);

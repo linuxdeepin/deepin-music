@@ -23,6 +23,7 @@
 
 #include "../musicapp.h"
 #include "../core/playlistmanager.h"
+#include "../core/player.h"
 
 #include "widget/filter.h"
 #include "widget/slider.h"
@@ -408,14 +409,14 @@ bool Footer::eventFilter(QObject *obj, QEvent *event)
         }
         auto we = dynamic_cast<QWheelEvent *>(event);
         if (we->angleDelta().y() > 0) {
-            auto vol = d->volSlider->volume() + 3;
+            auto vol = d->volSlider->volume() + Player::VolumeStep;
             if (vol > 100) {
                 vol = 100;
             }
             onVolumeChanged(vol);
             emit this->volumeChanged(d->volSlider->volume());
         } else {
-            auto vol = d->volSlider->volume() - 3;
+            auto vol = d->volSlider->volume() - Player::VolumeStep;
             if (vol < 0) {
                 vol = 0;
             }
