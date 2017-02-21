@@ -534,7 +534,8 @@ void MainFrame::binding(Presenter *presenter)
     connect(d->footer,  &Footer::toggleFavourite,
             presenter, &Presenter::onToggleFavourite);
 
-
+    connect(presenter, &Presenter::modeChanged,
+            d->footer,  &Footer::onModeChange);
     connect(presenter, &Presenter::musicListAdded,
             d->footer,  &Footer::onMusicListAdded);
     connect(presenter, &Presenter::musicListRemoved,
@@ -578,6 +579,12 @@ void MainFrame::binding(Presenter *presenter)
     this, [ = ]() {
         d->setPlaylistVisible(false);
     });
+}
+
+void MainFrame::focusMusicList()
+{
+    Q_D(const MainFrame);
+    d->musicList->setFocus();
 }
 
 QString MainFrame::coverBackground() const
@@ -636,5 +643,17 @@ void MainFrame::resizeEvent(QResizeEvent *e)
 
 //    if (d->tips) {
 //        d->tips->hide();
-//    }
+    //    }
+}
+
+void MainFrame::closeEvent(QCloseEvent *event)
+{
+    Settings::instance()->setOption("base.play.geometry", saveGeometry());
+    Settings::instance()->setOption("base.play.state", int(windowState()));
+    Settings::instance()->sync();
+
+    qDebug() << this->geometry() << this->windowState();
+    DUtil::TimerSingleShot(300, [this, event]() {
+        ThinWindow::closeEvent(event);
+    });
 }

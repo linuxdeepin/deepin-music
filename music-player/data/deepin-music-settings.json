@@ -20,7 +20,7 @@
                             "name": "",
                             "type": "checkbox",
                             "text": "Remember the last time when playing",
-                            "default": false
+                            "default": true
                         },
                         {
                             "key": "fade_in_out",
@@ -35,8 +35,22 @@
                             "hide": true,
                             "reset": false,
                             "type": "combox",
-                            "combox_list": [0,1,2,3],
+                            "items": [0,1,2,3],
                             "default": 0
+                        },
+                        {
+                            "key": "geometry",
+                            "name": "Geometry",
+                            "hide": true,
+                            "reset": false,
+                            "type": "rect"
+                        },
+                        {
+                            "key": "state",
+                            "name": "Window State",
+                            "hide": true,
+                            "reset": false,
+                            "type": "combox"
                         },
                         {
                             "key": "playmode",

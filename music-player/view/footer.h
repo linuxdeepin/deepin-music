@@ -61,6 +61,7 @@ public slots:
     void onCoverChanged(const MetaPtr meta, const DMusic::SearchMeta &song, const QByteArray &coverData);
     void onVolumeChanged(int volume);
     void onMutedChanged(bool muted);
+    void onModeChange(int mode);
     void onUpdateMetaCodec(const MetaPtr meta);
     void setDefaultCover(QString defaultCover);
 

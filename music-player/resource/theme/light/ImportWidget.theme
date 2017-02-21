@@ -4,7 +4,7 @@
 }
 
 #ImportViewLogo {
-    image: url(:/common/image/deepin_music.svg);
+    image: url(:/common/image/deepin-music.svg);
 }
 
 #ImportViewText{

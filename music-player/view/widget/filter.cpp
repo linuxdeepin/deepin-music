@@ -17,6 +17,8 @@
 #include <QCursor>
 #include <QWidget>
 
+#include <DUtil>
+
 HoverFilter::HoverFilter(QObject *parent) : QObject(parent)
 {
 
@@ -59,29 +61,28 @@ void HintFilterPrivate::showHint(QWidget *hint)
     if (!parentWidget) {
         return;
     }
-
     auto w = parentWidget;
-
-    if (hintWidget) {
+    if (hintWidget && hintWidget != hint) {
         hintWidget->hide();
     }
     hintWidget = hint;
-    //    w->property("HintWidget").value<QWidget *>();
     if (!hintWidget) {
         return;
     }
 
+    hintWidget->adjustSize();
     hintWidget->show();
     hintWidget->raise();
-    hintWidget->adjustSize();
 
-    auto centerPos = w->mapToGlobal(w->rect().center());
-    auto sz = hintWidget->size();
-    centerPos.setX(centerPos.x()  - sz.width() / 2);
-    centerPos.setY(centerPos.y() - 32 - sz.height());
-    centerPos = hintWidget->mapFromGlobal(centerPos);
-    centerPos = hintWidget->mapToParent(centerPos);
-    hintWidget->move(centerPos);
+    DUtil::TimerSingleShot(10, [w, this]() {
+        auto centerPos = w->mapToGlobal(w->rect().center());
+        auto sz = hintWidget->size();
+        centerPos.setX(centerPos.x()  - sz.width() / 2);
+        centerPos.setY(centerPos.y() - 32 - sz.height());
+        centerPos = hintWidget->mapFromGlobal(centerPos);
+        centerPos = hintWidget->mapToParent(centerPos);
+        hintWidget->move(centerPos);
+    });
 }
 
 HintFilter::HintFilter(QObject *parent)  : QObject(parent), d_ptr(new HintFilterPrivate(this))
@@ -160,8 +161,6 @@ bool HintFilter::eventFilter(QObject *obj, QEvent *event)
             d->hintWidget->hide();
             d->delayShowTimer->stop();
         }
-    default:
-        break;
     }
     return QObject::eventFilter(obj, event);
 }

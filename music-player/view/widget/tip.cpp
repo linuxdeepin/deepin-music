@@ -72,6 +72,7 @@ Tip::Tip(const QPixmap &icon, const QString &text, QWidget *parent) : QFrame(par
 
     d->textLable = new QLabel(text);
     d->textLable->setObjectName("TipText");
+    d->textLable->setAlignment(Qt::AlignCenter);
 
     interlayout->addWidget(iconLabel, 0, Qt::AlignVCenter);
     interlayout->addWidget(d->textLable, 0, Qt::AlignVCenter);

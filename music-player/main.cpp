@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
     mprisPlayer->setServiceName(serviceName);
 #endif
 
-    app.setWindowIcon(QIcon(":/common/image/deepin_music.svg"));
+    app.setWindowIcon(QIcon(":/common/image/deepin-music.svg"));
 
     PluginManager::instance()->init();
     // For Windows, must init media player in main thread!!!

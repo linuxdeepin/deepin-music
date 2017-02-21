@@ -62,7 +62,7 @@ void MusicApp::init()
     // setTheme
     auto theme = Settings::instance()->value("base.play.theme").toString();
     auto themePrefix = Settings::instance()->value("base.play.theme_prefix").toString();
-    qDebug() << "set Theme" << theme;
+
     auto dApp = qobject_cast<DApplication *>(qApp);
     dApp->setTheme(theme);
     ThemeManager::instance()->setPrefix(themePrefix);
@@ -132,26 +132,27 @@ void MusicApp::onDataPrepared()
 {
     Q_D(MusicApp);
 
-//    d->playerFrame->initMusiclist(d->appPresenter->allMusicPlaylist(), d->appPresenter->lastPlaylist());
-//    d->playerFrame->initPlaylist(d->appPresenter->allplaylist() , d->appPresenter->lastPlaylist());
-//    d->playerFrame->initFooter(d->appPresenter->lastPlaylist(), d->appPresenter->playMode());
-//    d->playerFrame->initUI();
+    d->playerFrame->binding(d->appPresenter);
 
-   d->playerFrame->binding(d->appPresenter);
+    auto geometry = Settings::instance()->value("base.play.geometry").toByteArray();
+    auto state = Settings::instance()->value("base.play.state").toInt();
+    if (geometry.isEmpty()) {
+        d->playerFrame->resize(QSize(1070, 680));
+        d->playerFrame->show();
+        DUtility::moveToCenter(d->playerFrame);
+    } else {
+        d->playerFrame->show();
+        d->playerFrame->restoreGeometry(geometry);
+        d->playerFrame->setWindowState(static_cast<Qt::WindowStates >(state));
+        qDebug() << d->playerFrame->geometry() << d->playerFrame->windowState();
+    }
 
-//    d->appPresenter->loadConfig();
-
-    d->playerFrame->resize(QSize(1070, 680));
-    d->playerFrame->show();
-    DUtility::moveToCenter(d->playerFrame);
     d->playerFrame->setCoverBackground(d->playerFrame->coverBackground());
     d->playerFrame->setFocus();
 
     d->appPresenter->postAction();
-
-
     d->playerFrame->setMinimumSize(QSize(870, 480));
-
+    d->playerFrame->focusMusicList();
     qApp->installEventFilter(d->playerFrame);
 }
 

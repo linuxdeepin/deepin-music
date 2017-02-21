@@ -34,6 +34,7 @@ public:
 
     void addMedia(const MetaPtr meta);
     void checkScrollbarSize();
+    void removeSelection(QItemSelectionModel *selection);
 
     PlaylistPtr         currentPlaylist;
     QStandardItemModel  *model        = nullptr;
@@ -89,8 +90,9 @@ MetaPtr MusicListView::activingMeta() const
 {
     Q_D(const MusicListView);
 
-    if (d->currentPlaylist.isNull() )
+    if (d->currentPlaylist.isNull()) {
         return MetaPtr();
+    }
 
     return d->currentPlaylist->playing();
 }
@@ -104,8 +106,9 @@ QModelIndex MusicListView::findIndex(const MetaPtr meta)
     for (int i = 0; i < d->model->rowCount(); ++i) {
         index = d->model->index(i, 0);
         auto itemMeta = qvariant_cast<MetaPtr>(d->model->data(index));
-        if (itemMeta.isNull())
+        if (itemMeta.isNull()) {
             continue;
+        }
 
         if (itemMeta->hash == meta->hash) {
             break;
@@ -118,9 +121,10 @@ void MusicListView::onMusicListRemoved(const MetaPtrList metalist)
 {
     Q_D(MusicListView);
 
-    for (auto meta: metalist) {
-        if (meta.isNull())
+    for (auto meta : metalist) {
+        if (meta.isNull()) {
             continue;
+        }
 
         for (int i = 0; i < d->model->rowCount(); ++i) {
             auto index = d->model->index(i, 0);
@@ -210,6 +214,30 @@ void MusicListView::resizeEvent(QResizeEvent *event)
     d->checkScrollbarSize();
 }
 
+void MusicListView::keyPressEvent(QKeyEvent *event)
+{
+    Q_D(MusicListView);
+    switch (event->modifiers()) {
+    case Qt::NoModifier:
+        switch (event->key()) {
+        case Qt::Key_Delete:
+            QItemSelectionModel *selection = this->selectionModel();
+            d->removeSelection(selection);
+            break;
+        }
+        break;
+    case Qt::ShiftModifier:
+        switch (event->key()) {
+        case Qt::Key_Delete:
+            break;
+        }
+        break;
+    default: break;
+    }
+
+    QAbstractItemView::keyPressEvent(event);
+}
+
 void MusicListViewPrivate::addMedia(const MetaPtr meta)
 {
     QStandardItem *newItem = new QStandardItem;
@@ -240,6 +268,19 @@ void MusicListViewPrivate::checkScrollbarSize()
         vscrollBar->hide();
         vscrollBar->setMaximum(0);
     }
+}
+
+void MusicListViewPrivate::removeSelection(QItemSelectionModel *selection)
+{
+    Q_ASSERT(selection != nullptr);
+    Q_Q(MusicListView);
+
+    MetaPtrList metalist;
+    for (auto index : selection->selectedRows()) {
+        auto meta = qvariant_cast<MetaPtr>(model->data(index));
+        metalist << meta;
+    }
+    emit q->removeMusicList(metalist);
 }
 
 void MusicListView::showContextMenu(const QPoint &pos,
@@ -392,12 +433,8 @@ void MusicListView::showContextMenu(const QPoint &pos,
 
     if (removeAction) {
         connect(removeAction, &QAction::triggered, this, [ = ](bool) {
-            MetaPtrList metalist;
-            for (auto index : selection->selectedRows()) {
-                auto meta = qvariant_cast<MetaPtr>(d->model->data(index));
-                metalist << meta;
-            }
-            emit removeMusicList(metalist);
+            \
+            d->removeSelection(selection);
         });
     }
 

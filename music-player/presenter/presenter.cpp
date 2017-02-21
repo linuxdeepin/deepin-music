@@ -336,6 +336,9 @@ void Presenter::postAction()
     d->player->setMuted(mute);
     emit this->mutedChanged(mute);
 
+    auto playmode = d->settings->value("base.play.playmode").toInt();
+    emit this->modeChanged(playmode);
+
     auto allplaylist = d->playlistMgr->playlist(AllMusicListID);
     auto lastPlaylist = d->player->activePlaylist();
     if (lastPlaylist.isNull()) {
@@ -812,6 +815,7 @@ void Presenter::onPlayModeChanged(int mode)
     d->player->setMode(static_cast<Player::PlaybackMode>(mode));
     d->settings->setOption("base.play.playmode", mode);
     d->settings->sync();
+    emit this->modeChanged(mode);
 }
 
 void Presenter::onToggleMute()

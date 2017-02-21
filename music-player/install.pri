@@ -16,7 +16,10 @@ dman.files = $$PWD/dman/*
 translations.path = $${PREFIX}/share/$${TARGET}/translations
 translations.files = $$PWD/translations/*.qm
 
-INSTALLS += target translations desktop_files services dman
+hicolor.path =  $${PREFIX}/share/icons/hicolor/scalable/apps
+hicolor.files = $$PWD/resource/theme/common/image/deepin-music.svg
+
+INSTALLS += target translations desktop_files services dman hicolor
 
 GitVersion = $$system(git rev-parse HEAD)
 DEFINES += GIT_VERSION=\\\"$$GitVersion\\\"

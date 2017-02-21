@@ -80,6 +80,7 @@ signals:
     void progrossChanged(qint64 pos, qint64 length);
     void volumeChanged(int volume);
     void mutedChanged(bool muted);
+    void modeChanged(int);
 
     //! from lyricservice
     void requestContextSearch(const QString &context);

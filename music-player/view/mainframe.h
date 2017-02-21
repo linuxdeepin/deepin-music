@@ -24,6 +24,7 @@ public:
 
     void binding(Presenter *presenter);
 
+    void focusMusicList();
     QString coverBackground() const;
 signals:
     void importSelectFiles(const QStringList &filelist);
@@ -34,6 +35,7 @@ public slots:
 
 protected:
     virtual void resizeEvent(QResizeEvent *e) Q_DECL_OVERRIDE;
+    virtual void closeEvent(QCloseEvent *event) Q_DECL_OVERRIDE;
 
 private:
     QScopedPointer<MainFramePrivate> d_ptr;

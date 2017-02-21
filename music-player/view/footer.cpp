@@ -71,9 +71,10 @@ public:
 
     PlaylistPtr     m_playinglist;
     MetaPtr         m_playingMeta;
-    int             m_mode;
 
     QString         defaultCover = "";
+
+    int             m_mode;
 
     Footer *q_ptr;
     Q_DECLARE_PUBLIC(Footer)
@@ -106,27 +107,12 @@ void FooterPrivate::initConnection()
 {
     Q_Q(Footer);
 
-    auto hintWidget = new Tip(QPixmap(), "play mode", q);
-    hintWidget->setFixedHeight(32);
-    btPlayMode->setProperty("ClickHintWidget", QVariant::fromValue<QWidget *>(hintWidget));
     q->connect(btPlayMode, &ModeButton::modeChanged,
     q, [ = ](int mode) {
-        auto hintWidget = btPlayMode->property("ClickHintWidget").value<Tip *>();
-        QString playmode;
-        switch (mode) {
-        case 0:
-            playmode = Footer::tr("Repeat All");
-            break;
-        case 1:
-            playmode = Footer::tr("Repeat Single");
-            break;
-        case 2:
-            playmode = Footer::tr("Shuffle");
-            break;
-        }
-        hintWidget->setText(playmode);
-        hintFilter->showHitsFor(btPlayMode, hintWidget);
         emit q->modeChanged(mode);
+
+        auto hintWidget = btPlayMode->property("HintWidget").value<Tip *>();
+        hintFilter->showHitsFor(btPlayMode, hintWidget);
     });
 
     q->connect(progress, &Slider::valueAccpet, q, [ = ](int value) {
@@ -581,6 +567,36 @@ void Footer::onMutedChanged(bool muted)
     if (muted) {
         d->updateQssProperty(d->btSound, "volume", "mute");
         d->volSlider->onVolumeChanged(0);
+    }
+}
+
+void Footer::onModeChange(int mode)
+{
+    Q_D(Footer);
+
+    if (d->m_mode == mode) {
+        return;
+    }
+    d->btPlayMode->blockSignals(true);
+    d->btPlayMode->setMode(mode);
+    d->btPlayMode->blockSignals(false);
+    d->m_mode = mode;
+
+    auto hintWidget = d->btPlayMode->property("HintWidget").value<Tip *>();
+    QString playmode;
+    switch (mode) {
+    case 0:
+        playmode = Footer::tr("Repeat All");
+        break;
+    case 1:
+        playmode = Footer::tr("Repeat Single");
+        break;
+    case 2:
+        playmode = Footer::tr("Shuffle");
+        break;
+    }
+    if (hintWidget) {
+        hintWidget->setText(playmode);
     }
 }
 

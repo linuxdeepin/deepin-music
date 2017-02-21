@@ -45,6 +45,7 @@ public:
 protected:
     virtual void wheelEvent(QWheelEvent *event) Q_DECL_OVERRIDE;
     virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
+    virtual void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
 
 private:
     QScopedPointer<MusicListViewPrivate> d_ptr;

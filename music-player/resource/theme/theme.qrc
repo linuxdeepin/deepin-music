@@ -320,7 +320,7 @@
         <file>common/animation/playing/blue/1.png</file>
         <file>common/animation/playing/blue/0.png</file>
         <file>common/image/title_icon.png</file>
-        <file>common/image/deepin_music.svg</file>
+        <file>common/image/deepin-music.svg</file>
         <file>light/image/back_press.png</file>
         <file>light/image/back_normal.png</file>
         <file>light/image/back_hover.png</file>
