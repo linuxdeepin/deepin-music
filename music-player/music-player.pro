@@ -70,7 +70,8 @@ SOURCES += \
     view/footer.cpp \
     view/lyricview.cpp \
     view/playlistwidget.cpp \
-    view/mainframe.cpp
+    view/mainframe.cpp \
+    view/widget/listview.cpp
 #    view/mainwindow.cpp \
 
 
@@ -126,6 +127,7 @@ HEADERS += \
     view/playlistwidget.h \
     view/mainframe.h \
 #    view/mainwindow.h \
+    view/widget/listview.h
 
 RESOURCES += \
     resource/theme/theme.qrc \
@@ -141,7 +143,7 @@ HEADERS += \
     core/util/inotifyengine.h
 
 # Automating generation .qm files from .ts files
-    system($$PWD/../tool/translate_generation.sh)
+    system(python $$PWD/../tool/translate_generation.py $$PWD)
 }
 
 TRANSLATIONS += $$PWD/translations/$${TARGET}.ts \

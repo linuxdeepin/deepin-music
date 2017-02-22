@@ -15,8 +15,10 @@ PlayListView::PlayListView(QWidget *parent) : QListWidget(parent)
 {
     setObjectName("PlayListView");
 
+    QScrollBar          *vscrollBar    = nullptr;
+
     setSelectionMode(QListView::SingleSelection);
-    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     ThemeManager::instance()->regisetrWidget(this);
 }

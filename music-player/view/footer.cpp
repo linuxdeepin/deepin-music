@@ -76,6 +76,7 @@ public:
     QString         defaultCover = "";
 
     int             m_mode;
+    bool            enableMove = false;
 
     Footer *q_ptr;
     Q_DECLARE_PUBLIC(Footer)
@@ -390,11 +391,35 @@ QString Footer::defaultCover() const
     return d->defaultCover;
 }
 
+
+void Footer::mousePressEvent(QMouseEvent *event)
+{
+    Q_D(Footer);
+    QFrame::mousePressEvent(event);
+    auto subCtlPos = d->progress->mapFromParent(event->pos());
+    if (d->progress->rect().contains(subCtlPos)
+            || !this->rect().contains(event->pos())) {
+        d->enableMove = false;
+        return;
+    }
+    d->enableMove = true;
+}
+
+void Footer::mouseReleaseEvent(QMouseEvent *event)
+{
+    Q_D(Footer);
+    QFrame::mouseReleaseEvent(event);
+    d->enableMove = false;
+}
+
 void Footer::mouseMoveEvent(QMouseEvent *event)
 {
     // TODO: ingore sub control
+    Q_D(Footer);
+    QFrame::mouseMoveEvent(event);
+
     Qt::MouseButton button = event->buttons() & Qt::LeftButton ? Qt::LeftButton : Qt::NoButton;
-    if (event->buttons() == Qt::LeftButton /*&& d->mousePressed*/) {
+    if ( d->enableMove && event->buttons() == Qt::LeftButton /*&& d->mousePressed*/) {
         emit mouseMoving(button);
     }
 }
@@ -630,4 +655,5 @@ void Footer::resizeEvent(QResizeEvent *event)
     d->ctlWidget->move(center);
     d->ctlWidget->raise();
 }
+
 

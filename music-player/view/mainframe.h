@@ -31,6 +31,7 @@ signals:
 
 public slots:
     void setCoverBackground(QString coverBackground);
+    void onSelectImportDirectory();
     void onSelectImportFiles();
 
 protected:

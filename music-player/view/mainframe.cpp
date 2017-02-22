@@ -27,6 +27,7 @@
 
 #include "../presenter/presenter.h"
 #include "../core/settings.h"
+#include "../core/player.h"
 #include "../musicapp.h"
 
 #include "titlebar.h"
@@ -96,6 +97,11 @@ void MainFramePrivate::initMenu()
 
     auto addmusic = new QAction(MainFrame::tr("Add music"), q);
     q->connect(addmusic, &QAction::triggered, q, [ = ](bool) {
+        q->onSelectImportDirectory();
+    });
+
+    auto addmusicfiles = new QAction(MainFrame::tr("Add music file"), q);
+    q->connect(addmusicfiles, &QAction::triggered, q, [ = ](bool) {
         q->onSelectImportFiles();
     });
 
@@ -103,7 +109,7 @@ void MainFramePrivate::initMenu()
     q->connect(settings, &QAction::triggered, q, [ = ](bool) {
         auto configDialog = new Dtk::Widget::DSettingsDialog(q);
         configDialog->setStyle(QStyleFactory::create("dlight"));
-        configDialog->setFixedSize(720, 580);
+        configDialog->setFixedSize(720, 520);
         configDialog->updateSettings(Settings::instance());
         Dtk::Widget::DUtility::moveToCenter(configDialog);
         configDialog->exec();
@@ -172,6 +178,7 @@ void MainFramePrivate::initMenu()
 
     titleMenu->addAction(newSonglistAction);
     titleMenu->addAction(addmusic);
+    titleMenu->addAction(addmusicfiles);
     titleMenu->addSeparator();
 
     titleMenu->addAction(colorModeAction);
@@ -405,7 +412,7 @@ void MainFrame::binding(Presenter *presenter)
     connect(d->importWidget, &ImportWidget::scanMusicDirectory,
             presenter, &Presenter::onScanMusicDirectory);
     connect(d->importWidget, &ImportWidget::importFiles,
-            this, &MainFrame::onSelectImportFiles);
+            this, &MainFrame::onSelectImportDirectory);
     connect(d->importWidget, &ImportWidget::importSelectFiles,
     this, [ = ](const QStringList & urllist) {
         d->importWidget->showWaitHint();
@@ -612,7 +619,7 @@ void MainFrame::setCoverBackground(QString coverBackground)
     setBackgroundImage(WidgetHelper::blurImage(image, 50));
 }
 
-void MainFrame::onSelectImportFiles()
+void MainFrame::onSelectImportDirectory()
 {
     Q_D(const MainFrame);
     QFileDialog fileDlg(this);
@@ -626,7 +633,34 @@ void MainFrame::onSelectImportFiles()
     fileDlg.setDirectory(lastImportPath);
 
     fileDlg.setViewMode(QFileDialog::Detail);
-    fileDlg.setFileMode(QFileDialog::DirectoryOnly);
+    fileDlg.setFileMode(QFileDialog::Directory);
+    if (QFileDialog::Accepted == fileDlg.exec()) {
+        d->importWidget->showWaitHint();
+        Settings::instance()->setOption("base.play.last_import_path",  fileDlg.directory().path());
+        emit importSelectFiles(fileDlg.selectedFiles());
+    }
+}
+
+void MainFrame::onSelectImportFiles()
+{
+    Q_D(const MainFrame);
+    QFileDialog fileDlg(this);
+
+    auto lastImportPath = Settings::instance()->value("base.play.last_import_path").toString();
+
+    auto lastImportDir = QDir(lastImportPath);
+    if (!lastImportDir.exists()) {
+        lastImportPath =  QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first();
+    }
+    fileDlg.setDirectory(lastImportPath);
+
+    QString selfilter = tr("Music (%1)");
+    selfilter = selfilter.arg(Player::instance()->supportedSuffixList().join(" "));
+    fileDlg.setViewMode(QFileDialog::Detail);
+    fileDlg.setFileMode(QFileDialog::ExistingFiles);
+
+    fileDlg.setNameFilter(selfilter);
+    fileDlg.selectNameFilter(selfilter);
     if (QFileDialog::Accepted == fileDlg.exec()) {
         d->importWidget->showWaitHint();
         Settings::instance()->setOption("base.play.last_import_path",  fileDlg.directory().path());

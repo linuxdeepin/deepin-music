@@ -58,10 +58,10 @@ PlaylistWidget::PlaylistWidget(QWidget *parent) : QFrame(parent)
 
     layout->addWidget(m_listview, 0, Qt::AlignHCenter);
     btAddFameLayout->addWidget(btAdd, 0, Qt::AlignBottom | Qt::AlignHCenter);
-    layout->addWidget(btAddFrame, 0, Qt::AlignHCenter|Qt::AlignBottom);
+    layout->addWidget(btAddFrame, 0, Qt::AlignHCenter | Qt::AlignBottom);
     layout->addStretch();
 
-     ThemeManager::instance()->regisetrWidget(this);
+    ThemeManager::instance()->regisetrWidget(this);
 
     connect(btAdd, &QPushButton::clicked, this, [ = ](bool /*checked*/) {
         qDebug() << "addPlaylist(true);";

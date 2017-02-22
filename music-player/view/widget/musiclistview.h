@@ -9,12 +9,12 @@
 
 #pragma once
 
-#include <QListView>
+#include "listview.h"
 
 #include "../../core/playlist.h"
 
 class MusicListViewPrivate;
-class MusicListView : public QListView
+class MusicListView : public ListView
 {
     Q_OBJECT
 public:
@@ -38,13 +38,11 @@ public:
     void onMusicError(const MetaPtr meta, int error);
     void onLocate(const MetaPtr meta);
     void showContextMenu(const QPoint &pos,
-                        PlaylistPtr selectedPlaylist,
-                        PlaylistPtr favPlaylist,
-                        QList<PlaylistPtr > newPlaylists);
+                         PlaylistPtr selectedPlaylist,
+                         PlaylistPtr favPlaylist,
+                         QList<PlaylistPtr > newPlaylists);
 
 protected:
-    virtual void wheelEvent(QWheelEvent *event) Q_DECL_OVERRIDE;
-    virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
     virtual void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
 
 private:

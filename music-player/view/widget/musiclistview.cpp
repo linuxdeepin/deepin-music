@@ -33,20 +33,18 @@ public:
     MusicListViewPrivate(MusicListView *parent): q_ptr(parent) {}
 
     void addMedia(const MetaPtr meta);
-    void checkScrollbarSize();
     void removeSelection(QItemSelectionModel *selection);
 
     PlaylistPtr         currentPlaylist;
     QStandardItemModel  *model        = nullptr;
     MusicItemDelegate   *delegate     = nullptr;
-    QScrollBar          *vscrollBar    = nullptr;
 
     MusicListView *q_ptr;
     Q_DECLARE_PUBLIC(MusicListView)
 };
 
 MusicListView::MusicListView(QWidget *parent)
-    : QListView(parent), d_ptr(new MusicListViewPrivate(this))
+    : ListView(parent), d_ptr(new MusicListViewPrivate(this))
 {
     Q_D(MusicListView);
 
@@ -69,15 +67,6 @@ MusicListView::MusicListView(QWidget *parent)
     connect(this, &MusicListView::customContextMenuRequested,
             this, &MusicListView::requestCustomContextMenu);
 
-    d->vscrollBar = new QScrollBar(this);
-    d->vscrollBar->setObjectName("MusicListViewScrollBar");
-    d->vscrollBar->setOrientation(Qt::Vertical);
-    d->vscrollBar->raise();
-
-    connect(d->vscrollBar, &QScrollBar::valueChanged,
-    this, [ = ](int value) {
-        verticalScrollBar()->setValue(value);
-    });
     ThemeManager::instance()->regisetrWidget(this);
 }
 
@@ -139,7 +128,7 @@ void MusicListView::onMusicListRemoved(const MetaPtrList metalist)
             }
         }
     }
-    d->checkScrollbarSize();
+    updateScrollbar();
 }
 
 void MusicListView::onMusicError(const MetaPtr meta, int error)
@@ -163,7 +152,7 @@ void MusicListView::onMusicListAdded(const MetaPtrList metalist)
     for (auto meta : metalist) {
         d->addMedia(meta);
     }
-    d->checkScrollbarSize();
+    updateScrollbar();
 }
 
 void MusicListView::onLocate(const MetaPtr meta)
@@ -197,21 +186,7 @@ void MusicListView::onMusiclistChanged(PlaylistPtr playlist)
     }
 
     d->currentPlaylist = playlist;
-    d->checkScrollbarSize();
-}
-
-void MusicListView::wheelEvent(QWheelEvent *event)
-{
-    Q_D(MusicListView);
-    QListView::wheelEvent(event);
-    d->vscrollBar->setSliderPosition(verticalScrollBar()->sliderPosition());
-}
-
-void MusicListView::resizeEvent(QResizeEvent *event)
-{
-    Q_D(MusicListView);
-    QListView::resizeEvent(event);
-    d->checkScrollbarSize();
+    updateScrollbar();
 }
 
 void MusicListView::keyPressEvent(QKeyEvent *event)
@@ -248,27 +223,6 @@ void MusicListViewPrivate::addMedia(const MetaPtr meta)
     model->setData(index, QVariant::fromValue<MetaPtr>(meta));
 }
 
-void MusicListViewPrivate::checkScrollbarSize()
-{
-    Q_Q(MusicListView);
-
-    auto itemCount = q->model()->rowCount();
-    auto size = q->size();
-    auto scrollBarWidth = 8;
-    vscrollBar->resize(scrollBarWidth, size.height() - 2);
-    vscrollBar->move(size.width() - scrollBarWidth - 2, 0);
-    vscrollBar->setSingleStep(1);
-    vscrollBar->setPageStep(size.height() / 36);
-    vscrollBar->setMinimum(0);
-
-    if (itemCount > size.height() / 36) {
-        vscrollBar->show();
-        vscrollBar->setMaximum(itemCount - size.height() / 36);
-    } else {
-        vscrollBar->hide();
-        vscrollBar->setMaximum(0);
-    }
-}
 
 void MusicListViewPrivate::removeSelection(QItemSelectionModel *selection)
 {
