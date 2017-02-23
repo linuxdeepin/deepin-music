@@ -199,6 +199,10 @@ void MainFramePrivate::initMenu()
 void MainFramePrivate::initUI()
 {
     Q_Q(MainFrame);
+
+    q->setFocusPolicy(Qt::ClickFocus);
+    q->setObjectName("PlayerFrame");
+
     titlebar = new Titlebar;
     titlebar->setObjectName("MainWindowTitlebar");
     titlebarwidget = new TitleBarWidget;
@@ -385,23 +389,18 @@ void MainFramePrivate::updateViewname(const QString &vm)
 
 void MainFramePrivate::showInfoDialog(const MetaPtr meta)
 {
-    // FIXME: qss only work after show
     infoDialog->show();
     infoDialog->updateInfo(meta);
-//    infoDialog->exec();
 }
 
 MainFrame::MainFrame(QWidget *parent) :
     ThinWindow(parent), d_ptr(new MainFramePrivate(this))
 {
     Q_D(MainFrame);
-
-    setFocusPolicy(Qt::ClickFocus);
-    setObjectName("PlayerFrame");
+    ThemeManager::instance()->regisetrWidget(this, QStringList() << s_PropertyViewname);
 
     d->initUI();
     d->initMenu();
-    ThemeManager::instance()->regisetrWidget(this, QStringList() << s_PropertyViewname);
 }
 
 MainFrame::~MainFrame()

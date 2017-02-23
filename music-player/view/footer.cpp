@@ -18,6 +18,7 @@
 #include <QMouseEvent>
 #include <QWheelEvent>
 #include <QProgressBar>
+#include <QStackedLayout>
 
 #include <thememanager.h>
 
@@ -65,8 +66,10 @@ public:
     ModeButton      *btPlayMode = nullptr;
     QPushButton     *btSound    = nullptr;
     Slider          *progress   = nullptr;
-    HintFilter      *hintFilter = nullptr;
     SoundVolume     *volSlider  = nullptr;
+
+    HintFilter          *hintFilter         = nullptr;
+    HoverShadowFilter   *hoverShadowFilter  = nullptr;
 
     QFrame          *ctlWidget  = nullptr;
 
@@ -165,9 +168,6 @@ void FooterPrivate::initConnection()
     q->connect(title, &Label::clicked, q, [ = ](bool) {
         emit q->locateMusic(m_playinglist, m_playingMeta);
     });
-    q->connect(cover, &Label::clicked, q, [ = ](bool) {
-        emit  q->toggleLyricView();
-    });
     q->connect(btLyric, &QPushButton::released, q, [ = ]() {
         emit  q->toggleLyricView();
     });
@@ -212,17 +212,27 @@ Footer::Footer(QWidget *parent) :
     layout->setContentsMargins(10, 0, 20, 10);
     layout->setSpacing(20);
 
+    auto stackedLayout = new QStackedLayout;
+    stackedLayout->setStackingMode(QStackedLayout::StackAll);
+
     d->cover = new Cover;
     d->cover->setObjectName("FooterCover");
     d->cover->setFixedSize(40, 40);
     d->cover->setRadius(0);
-    d->cover->installEventFilter(hoverFilter);
+
+    auto coverHoverBt = new QPushButton();
+    coverHoverBt->setObjectName("FooterCoverHover");
+    coverHoverBt->setFixedSize(40, 40);
+
+    stackedLayout->addWidget(d->cover);
+    stackedLayout->addWidget(coverHoverBt);
+    coverHoverBt->installEventFilter(hoverFilter);
 
     d->title = new Label;
     d->title->setObjectName("FooterTitle");
     d->title->setMaximumWidth(240);
     d->title->setText(tr("Unknow Title"));
-    d->title->installEventFilter(hoverFilter);
+//    d->title->installEventFilter(hoverFilter);
 
     d->artist = new Label;
     d->artist->setObjectName("FooterArtist");
@@ -268,6 +278,8 @@ Footer::Footer(QWidget *parent) :
     d->btPlayList->setObjectName("FooterActionPlayList");
     d->btPlayList->setFixedSize(24, 24);
 
+    d->hoverShadowFilter = new HoverShadowFilter;
+    d->title->installEventFilter(d->hoverShadowFilter);
 
     d->btSound->installEventFilter(this);
     d->installTipHint(d->btPrev, tr("Previous"));
@@ -291,7 +303,8 @@ Footer::Footer(QWidget *parent) :
     musicMetaLayout->addWidget(d->title);
     musicMetaLayout->addWidget(d->artist);
     musicMetaLayout->setSpacing(0);
-    metaLayout->addWidget(d->cover);
+//    metaLayout->addWidget(d->cover);
+    metaLayout->addLayout(stackedLayout);
     metaLayout->addSpacing(10);
     metaLayout->addLayout(musicMetaLayout, 0);
     metaLayout->addStretch();
@@ -348,6 +361,10 @@ Footer::Footer(QWidget *parent) :
     ThemeManager::instance()->regisetrWidget(this);
 
     d->initConnection();
+
+    connect(coverHoverBt, &QPushButton::clicked, this, [ = ](bool) {
+        emit toggleLyricView();
+    });
 
     d->updateQssProperty(d->btPlay, sPropertyPlayStatus, sPlayStatusValueStop);
     d->updateQssProperty(this, sPropertyPlayStatus, sPlayStatusValueStop);
@@ -419,7 +436,7 @@ void Footer::mouseMoveEvent(QMouseEvent *event)
     QFrame::mouseMoveEvent(event);
 
     Qt::MouseButton button = event->buttons() & Qt::LeftButton ? Qt::LeftButton : Qt::NoButton;
-    if ( d->enableMove && event->buttons() == Qt::LeftButton /*&& d->mousePressed*/) {
+    if (d->enableMove && event->buttons() == Qt::LeftButton /*&& d->mousePressed*/) {
         emit mouseMoving(button);
     }
 }
@@ -480,7 +497,10 @@ void Footer::onMusicListRemoved(PlaylistPtr playlist, const MetaPtrList metalist
 void Footer::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(Footer);
-    d->title->setText(meta->title);
+
+    QFontMetrics fm(d->title->font());
+    auto text = fm.elidedText(meta->title, Qt::ElideMiddle, d->title->maximumWidth());
+    d->title->setText(text);
 
     if (!meta->artist.isEmpty()) {
         d->artist->setText(meta->artist);

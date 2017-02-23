@@ -13,9 +13,11 @@
 
 #include <QTimer>
 #include <QEvent>
-#include <QApplication>
 #include <QCursor>
 #include <QWidget>
+#include <QGraphicsDropShadowEffect>
+#include <QGraphicsDropShadowEffect>
+#include <QApplication>
 
 #include <DUtil>
 
@@ -186,4 +188,34 @@ void HintFilter::showHitsFor(QWidget *w, QWidget *hint)
 
     d->showHint(hint);
     QApplication::setOverrideCursor(QCursor(Qt::PointingHandCursor));
+}
+
+HoverShadowFilter::HoverShadowFilter(QObject *parent): QObject(parent)
+{
+
+}
+
+bool HoverShadowFilter::eventFilter(QObject *obj, QEvent *event)
+{
+    switch (event->type()) {
+    case QEvent::Enter: {
+        auto w = qobject_cast<QWidget *>(obj);
+        auto shadow = new QGraphicsDropShadowEffect(w);
+        shadow->setBlurRadius(8);
+        shadow->setOffset(0,0);
+        shadow->setColor(Qt::white);
+        w->setGraphicsEffect(shadow);
+        QApplication::setOverrideCursor(QCursor(Qt::PointingHandCursor));
+        return true;
+    }
+    case QEvent::Leave: {
+        auto w = qobject_cast<QWidget *>(obj);
+        w->graphicsEffect()->deleteLater();
+        w->setGraphicsEffect(nullptr);
+        QApplication::restoreOverrideCursor();
+        return true;
+    }
+    default:
+        return QObject::eventFilter(obj, event);
+    }
 }

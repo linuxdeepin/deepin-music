@@ -3,6 +3,10 @@
     qproperty-borderColor: rgba(0, 0, 0, 0.2);
 }
 
+#InfoCover{
+    background: transparent;
+    border:none;
+}
 #InfoTitle{
     font-size: 12px;
     qproperty-alignment: AlignCenter;

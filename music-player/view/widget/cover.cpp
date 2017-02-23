@@ -84,7 +84,7 @@ void Cover::paintEvent(QPaintEvent *e)
     auto radius = d->m_radius;
     auto innerBorderColor = d->m_borderColor;
     auto outerBorderColor = d->m_shadowColor;
-    auto backgroundColor = QColor(255, 255, 255, 1.0 * 255);
+    auto backgroundColor = QColor(255, 255, 255, 255);
     auto penWidthf = borderPenWidth;
 
     // draw background
@@ -151,7 +151,6 @@ void Cover::setCoverPixmap(const QPixmap &pixmap)
     painter.end();
 
     d->m_Background = QPixmap::fromImage(resultImage);
-
 }
 
 void Cover::setRadius(int radius)

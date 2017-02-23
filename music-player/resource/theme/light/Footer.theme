@@ -41,6 +41,19 @@
     qproperty-shadowColor: rgba(0,0,0,0%);
 }
 
+#FooterCoverHover {
+    border: none;
+    background-color: rgba(0,0,0,0%);
+}
+#FooterCoverHover:hover {
+    background-color: rgba(0,0,0,30%);
+    border-image: url(:/common/image/cover_lrc.png);
+}
+#FooterCoverHover:pressed {
+    background-color: rgba(0,0,0,30%);
+    border-image: url(:/common/image/cover_lrc_press.png);
+}
+
 #FooterTitle{
     font-size: 12px;
     color: #ffffff;

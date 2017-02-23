@@ -18,7 +18,14 @@ class HoverFilter : public QObject
 public:
     explicit HoverFilter(QObject *parent = 0);
     bool eventFilter(QObject *obj, QEvent *event);
+};
 
+class HoverShadowFilter : public QObject
+{
+    Q_OBJECT
+public:
+    explicit HoverShadowFilter(QObject *parent = 0);
+    bool eventFilter(QObject *obj, QEvent *event);
 };
 
 

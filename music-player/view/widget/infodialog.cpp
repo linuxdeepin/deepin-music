@@ -23,6 +23,8 @@
 
 DWIDGET_USE_NAMESPACE
 
+static const int CoverSize = 142;
+
 class InfoDialogPrivate
 {
 public:
@@ -62,7 +64,7 @@ void InfoDialogPrivate::initUI()
     m_cover = new QLabel;
     m_cover->setContentsMargins(0, 0, 0, 0);
     m_cover->setObjectName("InfoCover");
-    m_cover->setFixedSize(140, 140);
+    m_cover->setFixedSize(CoverSize, CoverSize);
 
     m_title = new QLabel;
     m_title->setObjectName("InfoTitle");
@@ -174,9 +176,9 @@ void InfoDialog::updateInfo(const MetaPtr meta)
     if (coverData.length() > 0) {
         QImage cover;
         cover = QImage::fromData(coverData);
-        coverPixmap = QPixmap::fromImage(WidgetHelper::cropRect(cover, QSize(140, 140)));
+        coverPixmap = QPixmap::fromImage(WidgetHelper::cropRect(cover, QSize(CoverSize, CoverSize)));
     }
-    d->m_cover->setPixmap(coverPixmap);
+    d->m_cover->setPixmap(coverPixmap.scaled(CoverSize,CoverSize));
     d->updateLabelSize();
 
     d->m_title->setFocus();
