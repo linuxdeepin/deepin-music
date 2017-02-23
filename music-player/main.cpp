@@ -8,6 +8,10 @@
  **/
 
 #include <QIcon>
+#include <QUrl>
+#include <QProcess>
+#include <QDBusInterface>
+#include <QCommandLineParser>
 
 #include <DLog>
 #include <DApplication>
@@ -16,6 +20,7 @@
 
 #include "core/player.h"
 #include "core/pluginmanager.h"
+#include "core/settings.h"
 #include "musicapp.h"
 
 #include <thememanager.h>
@@ -33,6 +38,19 @@ int main(int argc, char *argv[])
 
     DApplication app(argc, argv);
 
+    QCommandLineParser parser;
+    parser.setApplicationDescription("Deepin music player.");
+    parser.addHelpOption();
+    parser.addVersionOption();
+
+    parser.addPositionalArgument("file", QCoreApplication::tr("Music file path"));
+    parser.process(app);
+
+    QString toOpenFile;
+    if (1 == parser.positionalArguments().length()) {
+        // import and playser
+        toOpenFile = parser.positionalArguments().first();
+    }
     qDebug() << app.arguments();
 
     app.setOrganizationName("deepin");
@@ -46,7 +64,16 @@ int main(int argc, char *argv[])
     DLogManager::registerFileAppender();
 
     if (!app.setSingleInstance("deepinmusic")) {
-        qDebug()<< "another deppin music has started";
+        qDebug() << "another deppin music has started";
+        if (!toOpenFile.isEmpty()) {
+            QFileInfo fi(toOpenFile);
+            QUrl url = QUrl::fromLocalFile(fi.absoluteFilePath());
+            QDBusInterface iface("org.mpris.MediaPlayer2.deepinmusic",
+                                 "/org/mpris/MediaPlayer2",
+                                 "org.mpris.MediaPlayer2.Player",
+                                 QDBusConnection::sessionBus());
+            /*auto reply = */iface.asyncCall("OpenUri", url.toString());
+        }
         exit(0);
     }
 
@@ -69,6 +96,14 @@ int main(int argc, char *argv[])
 #ifdef Q_OS_UNIX
     MusicApp::instance()->initMpris(mprisPlayer);
 #endif
+
+    if (!toOpenFile.isEmpty()) {
+        auto fi = QFileInfo(toOpenFile);
+        auto url = QUrl::fromLocalFile(fi.absoluteFilePath());
+        qDebug() <<  Settings::instance();
+        Settings::instance()->setOption("base.play.to_open_uri", url.toString());
+        Settings::instance()->sync();
+    }
 
     return app.exec();
 }

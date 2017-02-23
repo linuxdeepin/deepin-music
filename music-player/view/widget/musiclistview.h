@@ -29,6 +29,7 @@ signals:
     void removeMusicList(const MetaPtrList  &metalist);
     void deleteMusicList(const MetaPtrList  &metalist);
     void playMedia(const MetaPtr meta);
+    void showInfoDialog(const MetaPtr meta);
     void requestCustomContextMenu(const QPoint &pos);
 
 public:

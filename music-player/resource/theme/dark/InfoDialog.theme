@@ -1,7 +1,6 @@
 #InfoDialog{
     qproperty-backgroundColor: white;
     qproperty-borderColor: rgba(0, 0, 0, 0.2);
-    qproperty-defaultCover: ":/common/image/info_cover.png";
 }
 
 #InfoClose {
@@ -26,13 +25,11 @@
     border: 1px solid transparent;
     qproperty-alignment: AlignRight;
     font-size: 11px;
-    text-align: right;
     color: #606060;
 }
 #InfoValue{
     border: 1px solid transparent;
     qproperty-alignment: AlignLeft;
-    text-align: left;
     font-size: 11px;
     color: #000000;
 }

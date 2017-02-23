@@ -10,31 +10,21 @@
 #pragma once
 
 #include <ddialog.h>
-
 #include <mediameta.h>
 
-DWIDGET_USE_NAMESPACE
-
-class QFrame;
-class QLabel;
-class MediaMeta;
-class InfoDialog : public DAbstractDialog
+class InfoDialogPrivate;
+class InfoDialog : public Dtk::Widget::DAbstractDialog
 {
     Q_OBJECT
-    Q_PROPERTY(QString defaultCover READ defaultCover WRITE setDefaultCover)
 
-    QFrame *m_infogridFrame = nullptr;
-    QList<QLabel *> m_valueList;
-    QLabel *m_cover = nullptr;
 public:
-    explicit InfoDialog(const MetaPtr meta, QWidget *parent = 0);
+    explicit InfoDialog(QWidget *parent = 0);
+    ~InfoDialog();
 
-    void initUI(const MetaPtr meta);
-    void updateLabelSize();
+    void updateInfo(const MetaPtr meta);
 
-    QString defaultCover() const;
-public slots:
-    void setDefaultCover(QString defaultCover);
-    void setCoverImage(const QPixmap &coverPixmap);
+private:
+    QScopedPointer<InfoDialogPrivate> d_ptr;
+    Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), InfoDialog)
 };
 

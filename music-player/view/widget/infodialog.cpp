@@ -9,55 +9,79 @@
 
 #include "infodialog.h"
 
+#include <QDebug>
 #include <QLabel>
 #include <QVBoxLayout>
 #include <QGridLayout>
 #include <QPushButton>
 
 #include <dwindowclosebutton.h>
-#include <QDebug>
 #include <thememanager.h>
-#include "../../core/music.h"
 
-InfoDialog::InfoDialog(const MetaPtr meta, QWidget *parent) : DAbstractDialog(parent)
+#include "../../core/metasearchservice.h"
+#include "../helper/widgethellper.h"
+
+DWIDGET_USE_NAMESPACE
+
+class InfoDialogPrivate
 {
-    setObjectName("InfoDialog");
-    setFixedWidth(320);
+public:
+    InfoDialogPrivate(InfoDialog *parent) : q_ptr(parent) {}
 
-    auto layout = new QVBoxLayout(this);
+    void initUI();
+    void initConnection();
+    void updateLabelSize();
+
+    QFrame *m_infogridFrame = nullptr;
+    QList<QLabel *> m_valueList;
+    QLabel *m_cover = nullptr;
+    QLabel *m_title = nullptr;
+
+    InfoDialog *q_ptr;
+    Q_DECLARE_PUBLIC(InfoDialog)
+};
+
+
+void InfoDialogPrivate::initUI()
+{
+    Q_Q(InfoDialog);
+
+    q->setObjectName("InfoDialog");
+    q->setFixedWidth(320);
+    q->setWindowFlags(q->windowFlags() | Qt::WindowStaysOnTopHint);
+
+    auto layout = new QVBoxLayout(q);
     layout->setSpacing(0);
     layout->setMargin(5);
 
     auto closeBt = new DWindowCloseButton;
     closeBt->setObjectName("InfoClose");
     closeBt->setFixedSize(27, 23);
-    closeBt->setAttribute(Qt::WA_NoMousePropagation);
+//    closeBt->setAttribute(Qt::WA_NoMousePropagation);
 
     m_cover = new QLabel;
     m_cover->setContentsMargins(0, 0, 0, 0);
     m_cover->setObjectName("InfoCover");
     m_cover->setFixedSize(140, 140);
 
-    auto title = new QLabel(meta->title);
-    title->setObjectName("InfoTitle");
-    title->setFixedWidth(300);
-    title->setWordWrap(true);
+    m_title = new QLabel;
+    m_title->setObjectName("InfoTitle");
+    m_title->setFixedWidth(300);
+    m_title->setWordWrap(true);
 
     auto split = new QLabel();
     split->setObjectName("InfoSplit");
     split->setFixedSize(300, 1);
 
-
     m_infogridFrame = new QFrame;
     m_infogridFrame->setMaximumWidth(300);
     m_infogridFrame->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-
 
     layout->addWidget(closeBt, 0, Qt::AlignTop | Qt::AlignRight);
     layout->addSpacing(43);
     layout->addWidget(m_cover, 0, Qt::AlignCenter);
     layout->addSpacing(13);
-    layout->addWidget(title, 0, Qt::AlignCenter);
+    layout->addWidget(m_title, 0, Qt::AlignCenter);
     layout->addSpacing(19);
     layout->addWidget(split, 0, Qt::AlignCenter);
     layout->addSpacing(10);
@@ -65,13 +89,6 @@ InfoDialog::InfoDialog(const MetaPtr meta, QWidget *parent) : DAbstractDialog(pa
     layout->addSpacing(10);
     layout->addStretch();
 
-    ThemeManager::instance()->regisetrWidget(this);
-
-    connect(closeBt, &DWindowCloseButton::clicked, this, &DAbstractDialog::close);
-}
-
-void InfoDialog::initUI(const MetaPtr meta)
-{
     auto infogridLayout = new QGridLayout(m_infogridFrame);
     infogridLayout->setMargin(0);
     infogridLayout->setHorizontalSpacing(5);
@@ -80,16 +97,11 @@ void InfoDialog::initUI(const MetaPtr meta)
     infogridLayout->setColumnStretch(1, 100);
 
     QStringList infoKeys;
-    infoKeys << tr("Title:") << tr("Artist:") << tr("Album:")
-             << tr("File type:") << tr("Size:") << tr("Length:")
-             << tr("Directory:");
+    infoKeys << InfoDialog::tr("Title:") << InfoDialog::tr("Artist:")
+             << InfoDialog::tr("Album:") << InfoDialog::tr("File type:")
+             << InfoDialog::tr("Size:") << InfoDialog::tr("Length:")
+             << InfoDialog::tr("Directory:");
 
-    QString artist = meta->artist.isEmpty() ? tr("Unkonw artist") : meta->artist;
-    QString album = meta->album.isEmpty() ? tr("Unkonw album") : meta->album;
-    QStringList infoValues;
-    infoValues << meta->title << artist << album
-               << meta->filetype << DMusic::sizeString(meta->size) << DMusic::lengthString(meta->length)
-               << meta->localPath;
 
     for (int i = 0; i < infoKeys.length(); ++i) {
         auto infoKey = new QLabel(infoKeys.value(i));
@@ -97,7 +109,7 @@ void InfoDialog::initUI(const MetaPtr meta)
         infoKey->setMinimumHeight(18);
 //        infoKey->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
 
-        auto infoValue = new QLabel(infoValues.value(i));
+        auto infoValue = new QLabel(/*infoValues.value(i)*/);
         infoValue->setWordWrap(true);
         infoValue->setObjectName("InfoValue");
         infoValue->setMinimumHeight(18);
@@ -111,37 +123,61 @@ void InfoDialog::initUI(const MetaPtr meta)
         infogridLayout->addWidget(infoKey);
         infogridLayout->addWidget(infoValue);
     }
+
+    q->connect(closeBt, &DWindowCloseButton::clicked, q, &DAbstractDialog::hide);
 }
 
-void InfoDialog::updateLabelSize()
+void InfoDialogPrivate::updateLabelSize()
 {
+    Q_Q(InfoDialog);
     auto h = 0;
-    qDebug() << m_valueList.length();
     for (auto label : m_valueList) {
         label->adjustSize();
-        qDebug() << label->size() << label->text();
-        h += label->size().height()+6;
+        h += label->size().height() + 6;
     }
     m_infogridFrame->setFixedHeight(h);
     m_infogridFrame->adjustSize();
-    adjustSize();
+    q->adjustSize();
 }
 
-QString InfoDialog::defaultCover() const
+InfoDialog::InfoDialog(QWidget *parent)
+    : DAbstractDialog(parent), d_ptr(new InfoDialogPrivate(this))
 {
-    return this->property("DefaultCover").toString();
+    Q_D(InfoDialog);
+    ThemeManager::instance()->regisetrWidget(this);
+    d->initUI();
 }
 
-void InfoDialog::setDefaultCover(QString defaultCover)
+InfoDialog::~InfoDialog()
 {
-    this->setProperty("DefaultCover", defaultCover);
+
 }
 
-void InfoDialog::setCoverImage(const QPixmap &coverPixmap)
+void InfoDialog::updateInfo(const MetaPtr meta)
 {
-    if (!coverPixmap.isNull()) {
-        m_cover->setPixmap(coverPixmap.scaled(140, 140));
-    } else {
-        m_cover->setPixmap(QPixmap(defaultCover()).scaled(140, 140));
+    Q_D(InfoDialog);
+    QString artist = meta->artist.isEmpty() ? tr("Unkonw artist") : meta->artist;
+    QString album = meta->album.isEmpty() ? tr("Unkonw album") : meta->album;
+    QStringList infoValues;
+    infoValues << meta->title << artist << album
+               << meta->filetype << DMusic::sizeString(meta->size) << DMusic::lengthString(meta->length)
+               << meta->localPath;
+
+    for (int i = 0; i < d->m_valueList.length(); ++i) {
+        d->m_valueList.value(i)->setText(infoValues.value(i));
     }
+
+    d->m_title->setText(meta->title);
+
+    auto coverPixmap = QPixmap(":/common/image/info_cover.png");
+    auto coverData = MetaSearchService::coverData(meta);
+    if (coverData.length() > 0) {
+        QImage cover;
+        cover = QImage::fromData(coverData);
+        coverPixmap = QPixmap::fromImage(WidgetHelper::cropRect(cover, QSize(140, 140)));
+    }
+    d->m_cover->setPixmap(coverPixmap);
+    d->updateLabelSize();
+
+    d->m_title->setFocus();
 }

@@ -30,6 +30,7 @@ public:
     void initMpris(MprisPlayer *mprisPlayer);
     void prepareData();
     void postAction();
+    void openUri(const QUrl &uri);
 
     QList<PlaylistPtr > allplaylist();
 
@@ -115,7 +116,7 @@ public slots:
     void onPlayall(PlaylistPtr playlist);
     void onResort(PlaylistPtr playlist, int sortType);
 
-    //! UI: playlist manager interface
+    //! ui: playlist manager interface
     void onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metalist);
     void onMusiclistDelete(PlaylistPtr playlist, const MetaPtrList metalist);
     void onAddToPlaylist(PlaylistPtr playlist, const MetaPtrList metalist);

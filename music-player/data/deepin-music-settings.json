@@ -53,6 +53,11 @@
                             "type": "combox"
                         },
                         {
+                            "key": "to_open_uri",
+                            "hide": true,
+                            "reset": false
+                        },
+                        {
                             "key": "playmode",
                             "name": "play mode",
                             "reset": false,

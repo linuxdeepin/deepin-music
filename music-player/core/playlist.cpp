@@ -386,7 +386,7 @@ void Playlist::resort()
 
     QList<MetaPtr> sortList;
 
-    for (auto id : playlistMeta.sortMetas) {
+    for (auto id : playlistMeta.metas.keys()) {
         qDebug() << playlistMeta.metas.value(id) << id;
         sortList << playlistMeta.metas.value(id);
     }

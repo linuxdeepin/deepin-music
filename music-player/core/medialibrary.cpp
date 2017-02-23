@@ -28,21 +28,22 @@ public:
         losslessSuffixs.insert("wav", true);
 
         auto suffixList = Player::instance()->supportedSuffixList();
-        for (auto suffix: suffixList)
+        for (auto suffix : suffixList) {
             supportedSuffixs.insert(suffix, true);
+        }
 
 //        qDebug() << supportedSuffixs;
 
 #ifdef SUPPORT_INOTIFY
-      watcher = new InotifyEngine;
+        watcher = new InotifyEngine;
 #endif
     }
 
     MetaPtr createMeta(const QFileInfo &fileInfo);
 
     MetaPtr importMeta(const QString &filepath,
-                     QMap<QString, MetaPtr> &losslessMetaCache,
-                     QList<DMusic::CueParserPtr> &cuelist);
+                       QMap<QString, MetaPtr> &losslessMetaCache,
+                       QList<DMusic::CueParserPtr> &cuelist);
 
     void startMonitor()
     {
@@ -56,9 +57,9 @@ public:
             dirs.insert(metafi.absolutePath(), metafi.absolutePath());
         }
 
-    #ifdef SUPPORT_INOTIFY
+#ifdef SUPPORT_INOTIFY
         watcher->addPaths(dirs.keys());
-    #endif
+#endif
 
 //        for (auto meta : metas) {
 //            qDebug() << meta->title;
@@ -91,8 +92,8 @@ MetaPtr MediaLibraryPrivate::createMeta(const QFileInfo &fileinfo)
 }
 
 MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
-                                      QMap<QString, MetaPtr> &losslessMetaCache,
-                                      QList<DMusic::CueParserPtr> &cuelist)
+                                        QMap<QString, MetaPtr> &losslessMetaCache,
+                                        QList<DMusic::CueParserPtr> &cuelist)
 {
     QFileInfo fileInfo(filepath);
     auto suffix = QString("*.%1").arg(fileInfo.suffix());
@@ -115,7 +116,7 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
     if (MediaLibrary::instance()->contains(hash)) {
         // FIXME: insertToPlaylist;
         //emit insertToPlaylist(hash, playlist);
-        qDebug() << "exit" << hash <<MediaLibrary::instance()->meta(hash);
+        qDebug() << "exit" << hash << MediaLibrary::instance()->meta(hash);
         return MediaLibrary::instance()->meta(hash);
     }
 
@@ -159,6 +160,50 @@ bool MediaLibrary::contains(const QString &hash)
     return d->metas.contains(hash);
 }
 
+MetaPtrList MediaLibrary::importFile(const QString &filepath)
+{
+    Q_D(MediaLibrary);
+    QFileInfo fileInfo(filepath);
+
+    auto suffix = QString("*.%1").arg(fileInfo.suffix());
+    if (!d->supportedSuffixs.contains(suffix)) {
+        qWarning() << "skip" << suffix << filepath;
+        return MetaPtrList();
+    }
+
+    if (fileInfo.suffix() == "cue") {
+        auto cue = DMusic::CueParserPtr(new DMusic::CueParser(filepath));
+        if (cue.isNull()) {
+            qCritical() << "parse cue file error:" << filepath;
+            return MetaPtrList();
+        }
+#ifdef SUPPORT_INOTIFY
+        d->watcher->addPath(fileInfo.absolutePath());
+        d->watcher->addPath(cue->mediaFilepath());
+#endif
+        for (auto meta: cue->metalist()) {
+            d->metas.insert(meta->hash, meta);
+        }
+        return cue->metalist();
+    }
+
+    auto hash = DMusic::filepathHash(filepath.toUtf8());
+    if (MediaLibrary::instance()->contains(hash)) {
+        // FIXME: insertToPlaylist;
+        //emit insertToPlaylist(hash, playlist);
+        qDebug() << "exit" << hash << MediaLibrary::instance()->meta(hash);
+        return MetaPtrList() << MediaLibrary::instance()->meta(hash);
+    }
+
+    auto meta = d->createMeta(fileInfo);
+
+    d->metas.insert(meta->hash, meta);
+#ifdef SUPPORT_INOTIFY
+    d->watcher->addPath(fileInfo.absolutePath());
+#endif
+    return MetaPtrList() << meta;
+}
+
 void MediaLibrary::startMonitor()
 {
     Q_D(MediaLibrary);
@@ -198,13 +243,14 @@ void MediaLibrary::importMedias(const QString &jobid, const QStringList &urllist
             }
         } else {
             auto meta = d->importMeta(filepath, losslessMetaCache, cuelist);
-            if (meta.isNull())
+            if (meta.isNull()) {
                 continue;
+            }
 
             metaCache << meta;
             if (metaCache.length() >= ScanCacheSize) {
-                    emit MediaDatabase::instance()->addMediaMetaList(metaCache);
-                    emit meidaFileImported(jobid, metaCache);
+                emit MediaDatabase::instance()->addMediaMetaList(metaCache);
+                emit meidaFileImported(jobid, metaCache);
                 metaCache.clear();
             }
         }

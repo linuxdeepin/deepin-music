@@ -106,6 +106,10 @@ void MusicListWidgetPrivate::initConntion()
     q, [ = ](const MetaPtr meta) {
         emit q->playMedia(currentPlaylist, meta);
     });
+    q->connect(musiclist, &MusicListView::showInfoDialog,
+    q, [ = ](const MetaPtr meta) {
+        emit q->showInfoDialog(meta);
+    });
 //    q->connect(musiclist, &MusicListView::updateMetaCodec,
 //    q, [ = ](const MetaPtr  meta) {
 //        emit q->updateMetaCodec(meta);

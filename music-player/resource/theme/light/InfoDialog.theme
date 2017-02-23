@@ -1,7 +1,6 @@
 #InfoDialog{
     qproperty-backgroundColor: white;
     qproperty-borderColor: rgba(0, 0, 0, 0.2);
-    qproperty-defaultCover: ":/common/image/info_cover.png";
 }
 
 #InfoTitle{
@@ -22,6 +21,4 @@
     qproperty-alignment: AlignLeft;
     font-size: 11px;
     color: #000000;
-    padding-bottom: 0px;
-    line-height:150%
 }

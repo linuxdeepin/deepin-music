@@ -25,7 +25,6 @@
 #include "../helper/thememanager.h"
 
 #include "musicitemdelegate.h"
-#include "infodialog.h"
 
 class MusicListViewPrivate
 {
@@ -440,22 +439,7 @@ void MusicListView::showContextMenu(const QPoint &pos,
         connect(songAction, &QAction::triggered, this, [ = ](bool) {
             auto index = selection->selectedRows().first();
             auto meta = qvariant_cast<MetaPtr>(d->model->data(index));
-            QPixmap coverPixmap;
-            auto coverData = MetaSearchService::coverData(meta);
-            if (coverData.length() > 0) {
-                QImage cover;
-                cover = QImage::fromData(coverData);
-                coverPixmap = QPixmap::fromImage(WidgetHelper::cropRect(cover, QSize(140, 140)));
-            }
-
-            InfoDialog dlg(meta, this);
-            dlg.setStyle(QStyleFactory::create("dlight"));
-            // FIXME: qss only work after show
-            dlg.show();
-            dlg.setCoverImage(coverPixmap);
-            dlg.initUI(meta);
-            dlg.updateLabelSize();
-            dlg.exec();
+            emit showInfoDialog(meta);
         });
     }
 

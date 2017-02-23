@@ -17,6 +17,7 @@ public:
     MetaPtr meta(const QString& hash);
     bool contains(const QString& hash);
 
+    MetaPtrList importFile(const QString &filepath);
 signals:
     void mediaClean();
     void scanFinished(const QString& jobid);

@@ -167,6 +167,7 @@ CueParser::CueParser(const QString &filepath) : CueParser(filepath, "") {}
 
 CueParser::CueParser(const QString &filepath, QByteArray codeName) : d_ptr(new CueParserPrivate(this))
 {
+    // TODO: check cue invaild
     Q_D(CueParser);
 
     QFile cueFile(filepath);

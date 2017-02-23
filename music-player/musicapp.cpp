@@ -106,6 +106,12 @@ void MusicApp::initMpris(MprisPlayer *mprisPlayer)
     d->appPresenter->initMpris(mprisPlayer);
 }
 
+void MusicApp::openUri(const QUrl &uri)
+{
+    Q_D(MusicApp);
+    d->appPresenter->openUri(uri);
+}
+
 
 void MusicApp::triggerShortcutAction(const QString &optKey)
 {

@@ -26,9 +26,15 @@
 #include <dsettingsdialog.h>
 
 #include "../presenter/presenter.h"
+#include "../core/metasearchservice.h"
 #include "../core/settings.h"
 #include "../core/player.h"
 #include "../musicapp.h"
+
+#include "widget/titlebarwidget.h"
+#include "widget/infodialog.h"
+#include "helper/widgethellper.h"
+#include "helper/thememanager.h"
 
 #include "titlebar.h"
 #include "importwidget.h"
@@ -36,10 +42,6 @@
 #include "playlistwidget.h"
 #include "lyricview.h"
 #include "footer.h"
-
-#include "widget/titlebarwidget.h"
-#include "helper/widgethellper.h"
-#include "helper/thememanager.h"
 
 const QString s_PropertyViewname = "viewname";
 const QString s_PropertyViewnameLyric = "lyric";
@@ -49,10 +51,7 @@ static const int AnimationDelay = 400; //ms
 class MainFramePrivate
 {
 public:
-    MainFramePrivate(MainFrame *parent) : q_ptr(parent)
-    {
-
-    }
+    MainFramePrivate(MainFrame *parent) : q_ptr(parent) {}
 
     void initUI();
     void initMenu();
@@ -66,6 +65,9 @@ public:
     void disableControl(int delay = 350);
     void updateViewname(const QString &vm);
 
+    //! ui: show info dialog
+    void showInfoDialog(const MetaPtr meta);
+
 
     QWidget         *currentWidget  = nullptr;
     Titlebar        *titlebar       = nullptr;
@@ -75,6 +77,8 @@ public:
     LyricView       *lyricWidget    = nullptr;
     PlaylistWidget  *playlistWidget = nullptr;
     Footer          *footer         = nullptr;
+
+    InfoDialog      *infoDialog     = nullptr;
 
     QAction         *newSonglistAction      = nullptr;
     QAction         *colorModeAction        = nullptr;
@@ -227,6 +231,10 @@ void MainFramePrivate::initUI()
     contentLayout->addWidget(playlistWidget);
     contentLayout->addWidget(footer);
 
+    infoDialog = new InfoDialog;
+    infoDialog->setStyle(QStyleFactory::create("dlight"));
+    infoDialog->hide();
+
     titlebarwidget->setSearchEnable(false);
     importWidget->show();
     footer->show();
@@ -375,6 +383,14 @@ void MainFramePrivate::updateViewname(const QString &vm)
     });
 }
 
+void MainFramePrivate::showInfoDialog(const MetaPtr meta)
+{
+    // FIXME: qss only work after show
+    infoDialog->show();
+    infoDialog->updateInfo(meta);
+//    infoDialog->exec();
+}
+
 MainFrame::MainFrame(QWidget *parent) :
     ThinWindow(parent), d_ptr(new MainFramePrivate(this))
 {
@@ -471,6 +487,12 @@ void MainFrame::binding(Presenter *presenter)
     this, [ = ](PlaylistPtr playlist, const MetaPtrList) {
         d->slideToMusicListView(false);
         d->musicList->onMusiclistChanged(playlist);
+    });
+
+
+    connect(d->musicList, &MusicListWidget::showInfoDialog,
+            this, [=](const MetaPtr meta){
+        d->showInfoDialog(meta);
     });
 
     // MusicList

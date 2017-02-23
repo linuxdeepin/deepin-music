@@ -24,6 +24,7 @@ public:
 
     void init();
     void initMpris(MprisPlayer *mprisPlayer);
+    void openUri(const QUrl &uri);
 
     void triggerShortcutAction(const QString &optKey);
 public slots:

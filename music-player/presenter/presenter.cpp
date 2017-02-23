@@ -375,11 +375,18 @@ void Presenter::postAction()
         emit d->requestMetaSearch(lastMeta);
     }
 
-    if (d->settings->value("base.play.auto_play").toBool() && !lastPlaylist->isEmpty() && !isMetaLibClear) {
-        onCurrentPlaylistChanged(lastPlaylist);
-        onSyncMusicPlay(lastPlaylist, lastMeta);
-        d->player->resume(lastPlaylist, lastMeta);
-        d->player->setPosition(position);
+    QString toOpenUri = d->settings->value("base.play.to_open_uri").toString();
+    if (!toOpenUri.isEmpty()) {
+        Settings::instance()->setOption("base.play.to_open_uri", "");
+        Settings::instance()->sync();
+        this->openUri(QUrl(toOpenUri));
+    } else {
+        if (d->settings->value("base.play.auto_play").toBool() && !lastPlaylist->isEmpty() && !isMetaLibClear) {
+            onCurrentPlaylistChanged(lastPlaylist);
+            onSyncMusicPlay(lastPlaylist, lastMeta);
+            d->player->resume(lastPlaylist, lastMeta);
+            d->player->setPosition(position);
+        }
     }
 
     auto fadeInOut = d->settings->value("base.play.fade_in_out").toBool();
@@ -395,6 +402,21 @@ void Presenter::postAction()
     }
 
     emit currentMusicListChanged(lastPlaylist);
+}
+
+void Presenter::openUri(const QUrl &uri)
+{
+    Q_D(Presenter);
+    auto localfile = uri.toLocalFile();
+    // open url
+    qDebug() << "open url" << localfile;
+    auto metas = MediaLibrary::instance()->importFile(localfile);
+    if (0 == metas.length()) {
+        qCritical() << "openUriRequested" << uri;
+    }
+    auto list = d->playlistMgr->playlist(AllMusicListID);
+    this->onAddToPlaylist(list, metas);
+    this->onSyncMusicPlay(list, metas.first());
 }
 
 void Presenter::onSyncMusicPlay(PlaylistPtr playlist, const MetaPtr meta)
@@ -921,6 +943,11 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
             mprisPlayer->setPlaybackStatus(Mpris::Playing);
             break;
         }
+    });
+
+    connect(mprisPlayer, &MprisPlayer::openUriRequested,
+    this, [ = ](const QUrl & uri) {
+        this->openUri(uri);
     });
 
     connect(mprisPlayer, &MprisPlayer::playRequested,
