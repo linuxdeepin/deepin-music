@@ -303,7 +303,6 @@ Footer::Footer(QWidget *parent) :
     musicMetaLayout->addWidget(d->title);
     musicMetaLayout->addWidget(d->artist);
     musicMetaLayout->setSpacing(0);
-//    metaLayout->addWidget(d->cover);
     metaLayout->addLayout(stackedLayout);
     metaLayout->addSpacing(10);
     metaLayout->addLayout(musicMetaLayout, 0);

@@ -405,7 +405,8 @@ void MusicListView::showContextMenu(const QPoint &pos,
             Dtk::Widget::DDialog warnDlg(this);
             warnDlg.setStyle(QStyleFactory::create("dlight"));
             warnDlg.setTextFormat(Qt::RichText);
-            warnDlg.addButtons(QStringList() << tr("Cancel") << tr("Delete"));
+            warnDlg.addButton(tr("Cancel1"), true , Dtk::Widget::DDialog::ButtonWarning);
+            warnDlg.addButton(tr("Delete2"), false, Dtk::Widget::DDialog::ButtonNormal);
 
             auto cover = QImage(QString(":/common/image/del_notify.png"));
             if (1 == metalist.length()) {

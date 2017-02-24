@@ -229,7 +229,9 @@ void PlayListItem::showContextMenu(const QPoint &pos)
             warnDlg.setIcon(QIcon(":/common/image/del_notify.png"));
             warnDlg.setTextFormat(Qt::AutoText);
             warnDlg.setTitle(message);
-            warnDlg.addButtons(QStringList() << tr("Cancel") << tr("Delete"));
+            warnDlg.addButton(tr("Cancel"), false, Dtk::Widget::DDialog::ButtonNormal);
+            warnDlg.addButton(tr("Delete"), true , Dtk::Widget::DDialog::ButtonWarning);
+
             if (0 == warnDlg.exec()) {
                 return;
             }

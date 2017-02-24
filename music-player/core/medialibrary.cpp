@@ -181,7 +181,7 @@ MetaPtrList MediaLibrary::importFile(const QString &filepath)
         d->watcher->addPath(fileInfo.absolutePath());
         d->watcher->addPath(cue->mediaFilepath());
 #endif
-        for (auto meta: cue->metalist()) {
+        for (auto meta : cue->metalist()) {
             d->metas.insert(meta->hash, meta);
         }
         return cue->metalist();
@@ -215,9 +215,10 @@ void MediaLibrary::importMedias(const QString &jobid, const QStringList &urllist
     Q_D(MediaLibrary);
     qDebug() << "import form" << urllist << "to" << jobid;
 
-    QMap<QString, MetaPtr>    losslessMetaCache;
-    QList<DMusic::CueParserPtr>    cuelist;
-    MetaPtrList              metaCache;
+    int                             mediaCount  = 0;
+    QMap<QString, MetaPtr>          losslessMetaCache;
+    QList<DMusic::CueParserPtr>     cuelist;
+    MetaPtrList                     metaCache;
 
     for (auto &filepath : urllist) {
         QFileInfo fileInfo(filepath);
@@ -249,6 +250,7 @@ void MediaLibrary::importMedias(const QString &jobid, const QStringList &urllist
 
             metaCache << meta;
             if (metaCache.length() >= ScanCacheSize) {
+                mediaCount += metaCache.length();
                 emit MediaDatabase::instance()->addMediaMetaList(metaCache);
                 emit meidaFileImported(jobid, metaCache);
                 metaCache.clear();
@@ -261,6 +263,7 @@ void MediaLibrary::importMedias(const QString &jobid, const QStringList &urllist
         metaCache += cue->metalist();
 
         if (metaCache.length() >= ScanCacheSize) {
+            mediaCount += metaCache.length();
             emit MediaDatabase::instance()->addMediaMetaList(metaCache);
             emit meidaFileImported(jobid, metaCache);
             metaCache.clear();
@@ -274,6 +277,7 @@ void MediaLibrary::importMedias(const QString &jobid, const QStringList &urllist
 #endif
         metaCache << losslessMeta;
         if (metaCache.length() >= ScanCacheSize) {
+            mediaCount += metaCache.length();
             emit MediaDatabase::instance()->addMediaMetaList(metaCache);
             emit meidaFileImported(jobid, metaCache);
             metaCache.clear();
@@ -282,12 +286,13 @@ void MediaLibrary::importMedias(const QString &jobid, const QStringList &urllist
 
     qDebug() << metaCache.length();
     if (metaCache.length() > 0) {
+        mediaCount += metaCache.length();
         emit MediaDatabase::instance()->addMediaMetaList(metaCache);
         emit meidaFileImported(jobid, metaCache);
         metaCache.clear();
     }
 
     qDebug() << "scanFinished" << jobid;
-    emit scanFinished(jobid);
+    emit scanFinished(jobid, mediaCount);
 }
 

@@ -91,6 +91,7 @@ signals:
 
     //! meta info
     void metaLibraryClean();
+    void scanFinished(const QString& jobid, int mediaCount);
     void notifyMusciError(PlaylistPtr playlist, const MetaPtr meta, int error);
     void notifyAddToPlaylist(PlaylistPtr playlist, const MetaPtrList info);
 

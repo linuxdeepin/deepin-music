@@ -123,11 +123,13 @@ void Presenter::prepareData()
     });
 
     connect(d->library, &MediaLibrary::scanFinished,
-    this, [ = ](const QString & playlistId) {
+    this, [ = ](const QString & playlistId, int mediaCount) {
         qDebug() << "scanFinished";
         if (d->playlistMgr->playlist(AllMusicListID)->isEmpty()) {
             qDebug() << "scanFinished: meta library clean";
             emit metaLibraryClean();
+        } else {
+            emit scanFinished(playlistId, mediaCount);
         }
     });
 

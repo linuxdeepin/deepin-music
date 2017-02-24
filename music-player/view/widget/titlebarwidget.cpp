@@ -14,6 +14,8 @@
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <QResizeEvent>
+#include <QApplication>
+#include <QFocusEvent>
 #include <QGraphicsOpacityEffect>
 
 #include <dutility.h>
@@ -103,16 +105,26 @@ TitleBarWidget::TitleBarWidget(QWidget *parent) :
     });
     connect(this, &TitleBarWidget::exitSearch, this, [ = ]() {
         btBack->hide();
+        clearSearch();
 //        d->fixSearchPosition();
     });
 
     playingAnimation->start();
-     ThemeManager::instance()->regisetrWidget(this);
+    ThemeManager::instance()->regisetrWidget(this);
 }
 
 TitleBarWidget::~TitleBarWidget()
 {
+}
 
+void TitleBarWidget::clearSearch()
+{
+    Q_D(TitleBarWidget);
+    d->search->clear();
+    auto edit = d->search->findChild<QWidget *>("Edit");
+    if (edit) {
+        QApplication::postEvent(edit, new QFocusEvent(QEvent::FocusOut, Qt::MouseFocusReason));
+    }
 }
 
 void TitleBarWidget::setSearchEnable(bool enable)
@@ -129,7 +141,7 @@ void TitleBarWidget::setViewname(const QString &viewname)
 
 void TitleBarWidget::resizeEvent(QResizeEvent *event)
 {
-    Q_D(TitleBarWidget);
+//    Q_D(TitleBarWidget);
     QFrame::resizeEvent(event);
 }
 

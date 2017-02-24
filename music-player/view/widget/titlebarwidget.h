@@ -19,6 +19,7 @@ public:
     explicit TitleBarWidget(QWidget *parent = 0);
     ~TitleBarWidget();
 
+    void clearSearch();
     void setSearchEnable(bool enable = true);
     void setViewname(const QString &viewname);
 signals:

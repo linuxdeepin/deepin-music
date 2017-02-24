@@ -20,7 +20,7 @@ public:
     MetaPtrList importFile(const QString &filepath);
 signals:
     void mediaClean();
-    void scanFinished(const QString& jobid);
+    void scanFinished(const QString& jobid, int mediaCount);
     void meidaFileImported(const QString& jobid, MetaPtrList metalist);
 
 public slots:

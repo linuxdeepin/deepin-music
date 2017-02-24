@@ -24,6 +24,7 @@
 #include <dthememanager.h>
 #include <daboutdialog.h>
 #include <dsettingsdialog.h>
+#include <ddialog.h>
 
 #include "../presenter/presenter.h"
 #include "../core/metasearchservice.h"
@@ -471,6 +472,23 @@ void MainFrame::binding(Presenter *presenter)
     connect(presenter, &Presenter::metaLibraryClean,
     this, [ = ]() {
         d->slideToImportView();
+        d->titlebarwidget->clearSearch();
+    });
+
+    connect(presenter, &Presenter::scanFinished,
+    this, [ = ](const QString& /*jobid*/, int mediaCount) {
+        if (0 == mediaCount) {
+            QString message = QString(tr("No local music"));
+            Dtk::Widget::DDialog warnDlg;
+            warnDlg.setIcon(QIcon(":/common/image/dialog_warning.png"));
+            warnDlg.setTextFormat(Qt::AutoText);
+            warnDlg.setTitle(message);
+            warnDlg.addButtons(QStringList() << tr("Ok"));
+            warnDlg.setDefaultButton(0);
+            if (0 == warnDlg.exec()) {
+                return;
+            }
+        }
     });
 
     connect(presenter, &Presenter::musicPlayed,
@@ -748,11 +766,11 @@ bool MainFrame::eventFilter(QObject *obj, QEvent *e)
 
     }
 
-    if (e->type() == QEvent::Close) {
-        if (obj->objectName() == this->objectName()) {
-            exit(0);
-        }
-    }
+//    if (e->type() == QEvent::Close) {
+//        if (obj->objectName() == this->objectName()) {
+//            exit(0);
+//        }
+//    }
     return qApp->eventFilter(obj, e);
 
 
