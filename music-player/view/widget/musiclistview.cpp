@@ -24,7 +24,8 @@
 #include "../helper/widgethellper.h"
 #include "../helper/thememanager.h"
 
-#include "musicitemdelegate.h"
+#include "delegate/musicitemdelegate.h"
+#include "model/musiclistmodel.h"
 
 class MusicListViewPrivate
 {
@@ -34,8 +35,7 @@ public:
     void addMedia(const MetaPtr meta);
     void removeSelection(QItemSelectionModel *selection);
 
-    PlaylistPtr         currentPlaylist;
-    QStandardItemModel  *model        = nullptr;
+    MusiclistModel      *model        = nullptr;
     MusicItemDelegate   *delegate     = nullptr;
 
     MusicListView *q_ptr;
@@ -47,26 +47,40 @@ MusicListView::MusicListView(QWidget *parent)
 {
     Q_D(MusicListView);
 
+    ThemeManager::instance()->regisetrWidget(this);
+
     setObjectName("MusicListView");
 
-    d->model = new QStandardItemModel(0, 5, this);
+    d->model = new MusiclistModel(0, 1, this);
     setModel(d->model);
 
     d->delegate = new MusicItemDelegate;
     setItemDelegate(d->delegate);
 
+    setDragEnabled(true);
+    viewport()->setAcceptDrops(true);
+    setDropIndicatorShown(true);
+    setDragDropOverwriteMode(false);
+    setVerticalScrollMode(QAbstractItemView::ScrollPerItem);
+    setHorizontalScrollMode(QAbstractItemView::ScrollPerItem);
+    setDefaultDropAction(Qt::MoveAction);
+    setDragDropMode(QAbstractItemView::InternalMove);
+    setMovement(QListView::Free);
+
     setSelectionMode(QListView::ExtendedSelection);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-
-    this->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    this->setSelectionBehavior(QAbstractItemView::SelectRows);
-
-    this->setContextMenuPolicy(Qt::CustomContextMenu);
+    setEditTriggers(QAbstractItemView::NoEditTriggers);
+    setSelectionBehavior(QAbstractItemView::SelectRows);
+    setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this, &MusicListView::customContextMenuRequested,
             this, &MusicListView::requestCustomContextMenu);
 
-    ThemeManager::instance()->regisetrWidget(this);
+    connect(this, &MusicListView::doubleClicked,
+    this, [ = ](const QModelIndex & index) {
+        MetaPtr meta = d->model->meta(index);
+        emit playMedia(meta);
+    });
 }
 
 MusicListView::~MusicListView()
@@ -78,11 +92,17 @@ MetaPtr MusicListView::activingMeta() const
 {
     Q_D(const MusicListView);
 
-    if (d->currentPlaylist.isNull()) {
+    if (d->model->playlist().isNull()) {
         return MetaPtr();
     }
 
-    return d->currentPlaylist->playing();
+    return d->model->playlist()->playing();
+}
+
+PlaylistPtr MusicListView::playlist() const
+{
+    Q_D(const MusicListView);
+    return d->model->playlist();
 }
 
 QModelIndex MusicListView::findIndex(const MetaPtr meta)
@@ -90,19 +110,7 @@ QModelIndex MusicListView::findIndex(const MetaPtr meta)
     Q_ASSERT(!meta.isNull());
     Q_D(MusicListView);
 
-    QModelIndex index;
-    for (int i = 0; i < d->model->rowCount(); ++i) {
-        index = d->model->index(i, 0);
-        auto itemMeta = qvariant_cast<MetaPtr>(d->model->data(index));
-        if (itemMeta.isNull()) {
-            continue;
-        }
-
-        if (itemMeta->hash == meta->hash) {
-            break;
-        }
-    }
-    return index;
+    return d->model->findIndex(meta);
 }
 
 void MusicListView::onMusicListRemoved(const MetaPtrList metalist)
@@ -116,13 +124,8 @@ void MusicListView::onMusicListRemoved(const MetaPtrList metalist)
 
         for (int i = 0; i < d->model->rowCount(); ++i) {
             auto index = d->model->index(i, 0);
-            auto itemMeta = qvariant_cast<MetaPtr>(d->model->data(index));
-            if (itemMeta.isNull()) {
-                qCritical() << "index" << index << i;
-                continue;
-            }
-
-            if (meta->hash == itemMeta->hash) {
+            auto itemHash = d->model->data(index).toString();
+            if (itemHash == meta->hash) {
                 d->model->removeRow(i);
             }
         }
@@ -181,10 +184,11 @@ void MusicListView::onMusiclistChanged(PlaylistPtr playlist)
 
     d->model->removeRows(0, d->model->rowCount());
     for (auto meta : playlist->allmusic()) {
+//        qDebug() << meta->hash << meta->title;
         d->addMedia(meta);
     }
 
-    d->currentPlaylist = playlist;
+    d->model->setPlaylist(playlist);
     updateScrollbar();
 }
 
@@ -219,9 +223,8 @@ void MusicListViewPrivate::addMedia(const MetaPtr meta)
 
     auto row = model->rowCount() - 1;
     QModelIndex index = model->index(row, 0, QModelIndex());
-    model->setData(index, QVariant::fromValue<MetaPtr>(meta));
+    model->setData(index, meta->hash);
 }
-
 
 void MusicListViewPrivate::removeSelection(QItemSelectionModel *selection)
 {
@@ -230,7 +233,7 @@ void MusicListViewPrivate::removeSelection(QItemSelectionModel *selection)
 
     MetaPtrList metalist;
     for (auto index : selection->selectedRows()) {
-        auto meta = qvariant_cast<MetaPtr>(model->data(index));
+        auto meta = model->meta(index);
         metalist << meta;
     }
     emit q->removeMusicList(metalist);
@@ -361,15 +364,14 @@ void MusicListView::showContextMenu(const QPoint &pos,
     if (playAction) {
         connect(playAction, &QAction::triggered, this, [ = ](bool) {
             auto index = selection->selectedRows().first();
-            auto meta = qvariant_cast<MetaPtr>(d->model->data(index));
-            emit playMedia(meta);
+            emit playMedia(d->model->meta(index));
         });
     }
 
     if (displayAction) {
         connect(displayAction, &QAction::triggered, this, [ = ](bool) {
             auto index = selection->selectedRows().first();
-            auto meta = qvariant_cast<MetaPtr>(d->model->data(index));
+            auto meta = d->model->meta(index);
 
             auto dirUrl = QUrl::fromLocalFile(QFileInfo(meta->localPath).absoluteDir().absolutePath());
             QFileInfo ddefilemanger("/usr/bin/dde-file-manager");
@@ -385,7 +387,6 @@ void MusicListView::showContextMenu(const QPoint &pos,
 
     if (removeAction) {
         connect(removeAction, &QAction::triggered, this, [ = ](bool) {
-            \
             d->removeSelection(selection);
         });
     }
@@ -395,7 +396,7 @@ void MusicListView::showContextMenu(const QPoint &pos,
             bool containsCue = false;
             MetaPtrList metalist;
             for (auto index : selection->selectedRows()) {
-                auto meta = qvariant_cast<MetaPtr>(d->model->data(index));
+                auto meta = d->model->meta(index);
                 if (!meta->cuePath.isEmpty()) {
                     containsCue = true;
                 }
@@ -439,11 +440,48 @@ void MusicListView::showContextMenu(const QPoint &pos,
     if (songAction) {
         connect(songAction, &QAction::triggered, this, [ = ](bool) {
             auto index = selection->selectedRows().first();
-            auto meta = qvariant_cast<MetaPtr>(d->model->data(index));
+            auto meta = d->model->meta(index);
             emit showInfoDialog(meta);
         });
     }
 
     myMenu.exec(globalPos);
+}
+
+void MusicListView::dragEnterEvent(QDragEnterEvent *event)
+{
+    ListView::dragEnterEvent(event);
+}
+
+void MusicListView::startDrag(Qt::DropActions supportedActions)
+{
+    Q_D(MusicListView);
+
+    MetaPtrList list;
+    for (auto index : selectionModel()->selectedIndexes()) {
+        list << d->model->meta(index);
+    }
+
+    setAutoScroll(false);
+    ListView::startDrag(supportedActions);
+    setAutoScroll(true);
+
+    QMap<QString, int> hashIndexs;
+    for (int i = 0; i < d->model->rowCount(); ++i) {
+        auto index = d->model->index(i, 0);
+        auto hash = d->model->data(index).toString();
+        Q_ASSERT(!hash.isEmpty());
+        hashIndexs.insert(hash, i);
+    }
+    d->model->playlist()->saveSort(hashIndexs);
+    emit customSort();
+
+    // TODO: use selection
+    for (auto meta : list) {
+        if (!meta.isNull()) {
+            auto index = this->findIndex(meta);
+            this->selectionModel()->select(index, QItemSelectionModel::Select);
+        }
+    }
 }
 

@@ -497,6 +497,9 @@ void Footer::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(Footer);
 
+    qDebug() << "FFFFFFFFFFFFFFF"
+             << playlist->displayName();
+
     QFontMetrics fm(d->title->font());
     auto text = fm.elidedText(meta->title, Qt::ElideMiddle, d->title->maximumWidth());
     d->title->setText(text);

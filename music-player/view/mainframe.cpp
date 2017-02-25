@@ -464,19 +464,36 @@ void MainFrame::binding(Presenter *presenter)
         setBackgroundImage(WidgetHelper::blurImage(image, 50));
         this->update();
     });
+
     connect(presenter, &Presenter::musicStoped,
     this, [ = ](PlaylistPtr, const MetaPtr) {
         setCoverBackground(coverBackground());
     });
 
+    connect(presenter, &Presenter::notifyMusciError,
+    this, [ = ](PlaylistPtr playlist, const MetaPtr  meta, int /*error*/) {
+        Dtk::Widget::DDialog warnDlg(this);
+        warnDlg.setIcon(QIcon(":/common/image/dialog_warning.png"));
+        warnDlg.setTextFormat(Qt::RichText);
+        warnDlg.setTitle(tr("File invalid or does not exist, load failed!"));
+        warnDlg.addButtons(QStringList() << tr("I got it"));
+        if (0 == warnDlg.exec()) {
+            if (playlist->canNext()) {
+                emit d->footer->next(playlist, meta);
+            }
+        }
+    });
+
     connect(presenter, &Presenter::metaLibraryClean,
     this, [ = ]() {
+        qDebug() << "metaLibraryClean ----------------";
         d->slideToImportView();
         d->titlebarwidget->clearSearch();
     });
 
     connect(presenter, &Presenter::scanFinished,
-    this, [ = ](const QString& /*jobid*/, int mediaCount) {
+    this, [ = ](const QString & /*jobid*/, int mediaCount) {
+        qDebug() << "scanFinished----------------";
         if (0 == mediaCount) {
             QString message = QString(tr("No local music"));
             Dtk::Widget::DDialog warnDlg;
@@ -508,7 +525,7 @@ void MainFrame::binding(Presenter *presenter)
 
 
     connect(d->musicList, &MusicListWidget::showInfoDialog,
-            this, [=](const MetaPtr meta){
+    this, [ = ](const MetaPtr meta) {
         d->showInfoDialog(meta);
     });
 
@@ -529,9 +546,14 @@ void MainFrame::binding(Presenter *presenter)
             presenter, &Presenter::onMusiclistRemove);
     connect(d->musicList, &MusicListWidget::musiclistDelete,
             presenter, &Presenter::onMusiclistDelete);
-//    connect(d->musicList, &MusicListWidget::importSelectFiles,
-//            presenter, &Presenter::onImportFiles);
 
+    connect(d->musicList, &MusicListWidget::importSelectFiles,
+    this, [ = ](PlaylistPtr playlist, QStringList urllist) {
+        presenter->requestImportPaths(playlist, urllist);
+    });
+
+    connect(presenter, &Presenter::musicListResorted,
+            d->musicList, &MusicListWidget::onMusiclistChanged);
     connect(presenter, &Presenter::requestMusicListMenu,
             d->musicList,  &MusicListWidget::onCustomContextMenuRequest);
     connect(presenter, &Presenter::currentMusicListChanged,
@@ -747,7 +769,7 @@ bool MainFrame::eventFilter(QObject *obj, QEvent *e)
             auto geometry = d->playlistWidget->geometry().marginsAdded(QMargins(0, 0, 40, 40));
             //            qDebug() << geometry << mousePos;
             if (!geometry.contains(mousePos)) {
-                qDebug() << "hide playlist" << me->pos() << QCursor::pos() << obj;
+//                qDebug() << "hide playlist" << me->pos() << QCursor::pos() << obj;
                 DUtil::TimerSingleShot(50, [this]() {
                     this->d_func()->setPlaylistVisible(false);
                 });
@@ -760,7 +782,7 @@ bool MainFrame::eventFilter(QObject *obj, QEvent *e)
         //        qDebug() << obj << me->pos();
         if (obj->objectName() == this->objectName() || this->objectName() + "Window" == obj->objectName()) {
             QPoint mousePos = me->pos();
-            qDebug() << "lyricView checkHiddenSearch" << me->pos() << QCursor::pos() << obj;
+//            qDebug() << "lyricView checkHiddenSearch" << me->pos() << QCursor::pos() << obj;
             d->lyricWidget->checkHiddenSearch(mousePos);
         }
 

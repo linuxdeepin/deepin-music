@@ -10,6 +10,7 @@
 #pragma once
 
 #include <QObject>
+#include <QMap>
 #include <QSharedPointer>
 
 #include <playlistmeta.h>
@@ -27,9 +28,16 @@ public:
         SortByAddTime  = 0,
         SortByTitle,
         SortByArtist,
-        SortByAblum
+        SortByAblum,
+        SortByCustom,
     };
     Q_ENUM(SortType)
+
+    enum OrderType {
+        Ascending = 0,
+        Descending,
+    };
+    Q_ENUM(OrderType)
 
 public:
     //! public interface
@@ -54,12 +62,13 @@ public:
     const MetaPtr music(const QString &id) const;
     const MetaPtr playing() const;
 
+    int index(const QString &hash);
     bool isLast(const MetaPtr meta) const;
     bool contains(const MetaPtr meta) const;
     MetaPtrList allmusic() const;
 
     void play(const MetaPtr meta);
-    void reset(const MetaPtrList );
+    void reset(const MetaPtrList);
 
 public slots:
     void setDisplayName(const QString &name);
@@ -69,6 +78,7 @@ public slots:
     void updateMeta(const MetaPtr meta);
     void sortBy(Playlist::SortType sortType);
     void resort();
+    void saveSort(QMap<QString, int> hashIndexs);
 
 public:
     void load();

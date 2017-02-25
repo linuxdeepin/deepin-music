@@ -11,6 +11,7 @@
 
 #include <QDebug>
 #include <QTimer>
+#include <QMimeDatabase>
 #include <QMediaPlayer>
 #include <QPropertyAnimation>
 #include "metasearchservice.h"
@@ -201,12 +202,13 @@ void PlayerPrivate::initConnection()
         qDebug() << status << activeMeta->invalid;
         switch (status) {
         case QMediaPlayer::LoadedMedia: {
-            qDebug() << qplayer->state();
+            qDebug() << qplayer->state()
+                     << qplayer->media().canonicalResource().mimeType();
             if (playOnLoad) {
                 qplayer->play();
             }
             emit q->mediaError(activePlaylist, activeMeta, Player::NoError);
-            activeMeta->invalid = false;
+//            activeMeta->invalid = false;
 
 //            if (fadeInOut && !fadeInAnimation) {
 //                qDebug() << "start fade in";
@@ -229,9 +231,21 @@ void PlayerPrivate::initConnection()
             selectNext(activeMeta, mode);
             break;
         }
+
+        case QMediaPlayer::LoadingMedia: {
+            Q_ASSERT(!activeMeta.isNull());
+            QMimeDatabase db;
+            QMimeType type = db.mimeTypeForFile(activeMeta->localPath, QMimeDatabase::MatchContent); \
+            if (!sSupportedMimeTypes.contains(type.name())) {
+                qplayer->pause();
+                emit q->mediaError(activePlaylist, activeMeta, Player::FormatError);
+//                activeMeta->invalid = true;
+                return;
+            }
+            break;
+        }
         case QMediaPlayer::UnknownMediaStatus:
         case QMediaPlayer::NoMedia:
-        case QMediaPlayer::LoadingMedia:
         case QMediaPlayer::StalledMedia:
         case QMediaPlayer::BufferedMedia:
         case QMediaPlayer::BufferingMedia:
@@ -243,19 +257,17 @@ void PlayerPrivate::initConnection()
     q->connect(qplayer, static_cast<void (QMediaPlayer::*)(QMediaPlayer::Error error)>(&QMediaPlayer::error),
     q, [ = ](QMediaPlayer::Error error) {
         qWarning() << error;
-        emit q->mediaError(activePlaylist, activeMeta, static_cast<Player::Error>(error));
-        activeMeta->invalid = true;
+        if (!activeMeta->invalid) {
+            emit q->mediaError(activePlaylist, activeMeta, static_cast<Player::Error>(error));
+        }
+//        activeMeta->invalid = true;
     });
 
     q->connect(qplayer, &QMediaPlayer::stateChanged,
     q, [ = ](QMediaPlayer::State state) {
         qDebug() << state;
         switch (state) {
-        case QMediaPlayer::StoppedState: {
-//            qDebug() << "auto change next music";
-//            this->selectNext(m_info, m_mode);
-//            break;
-        }
+        case QMediaPlayer::StoppedState:
         case QMediaPlayer::PlayingState:
         case QMediaPlayer::PausedState:
             break;
@@ -352,9 +364,7 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
              << DMusic::lengthString(meta->length);
     Q_D(Player);
     d->activeMeta = meta;
-
     d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(meta->localPath)));
-
     d->qplayer->setPosition(meta->offset);
 
     d->activePlaylist = playlist;
@@ -362,18 +372,13 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
 
     emit mediaPlayed(d->activePlaylist, d->activeMeta);
 
-    qDebug() << d->qplayer->mediaStatus();
     if (d->qplayer->mediaStatus() == QMediaPlayer::BufferedMedia) {
         QTimer::singleShot(100, this, [ = ]() {
-            qDebug() << d->qplayer->state();
             d->qplayer->play();
             emit mediaError(d->activePlaylist, d->activeMeta, Player::NoError);
-            d->activeMeta->invalid = false;
+//            d->activeMeta->invalid = false;
         });
     }
-
-//    DSettings::instance()->setOption("base.play.last_playlist", d->activePlaylist->id());
-//    DSettings::instance()->setOption("base.play.last_meta", d->activeMeta->hash);
 }
 
 void Player::resume(PlaylistPtr playlist, const MetaPtr meta)
@@ -608,7 +613,6 @@ void Player::setVolume(double volume)
 
 void Player::setMuted(bool mute)
 {
-    qDebug() << "setMuted" << mute;
     Q_D(Player);
     d->qplayer->setMuted(mute);
 }

@@ -14,11 +14,15 @@
 PlayListView::PlayListView(QWidget *parent) : QListWidget(parent)
 {
     setObjectName("PlayListView");
+    ThemeManager::instance()->regisetrWidget(this);
 
-    QScrollBar          *vscrollBar    = nullptr;
+    setDragEnabled(true);
+    viewport()->setAcceptDrops(true);
+    setDropIndicatorShown(true);
+    setDefaultDropAction(Qt::MoveAction);
+    setDragDropMode(QAbstractItemView::DragOnly);
 
     setSelectionMode(QListView::SingleSelection);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    ThemeManager::instance()->regisetrWidget(this);
 }

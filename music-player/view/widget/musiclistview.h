@@ -22,6 +22,7 @@ public:
     ~MusicListView();
 
     MetaPtr activingMeta() const;
+    PlaylistPtr playlist() const;
     QModelIndex findIndex(const MetaPtr meta);
 
 signals:
@@ -31,6 +32,7 @@ signals:
     void playMedia(const MetaPtr meta);
     void showInfoDialog(const MetaPtr meta);
     void requestCustomContextMenu(const QPoint &pos);
+    void customSort();
 
 public:
     void onMusiclistChanged(PlaylistPtr playlist);
@@ -44,6 +46,8 @@ public:
                          QList<PlaylistPtr > newPlaylists);
 
 protected:
+    virtual void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
+    virtual void startDrag(Qt::DropActions supportedActions) Q_DECL_OVERRIDE;
     virtual void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
 
 private:

@@ -28,7 +28,7 @@
 #include "../core/util/lyric.h"
 
 #include "widget/cover.h"
-#include "widget/lyriclinedelegate.h"
+#include "widget/delegate/lyriclinedelegate.h"
 #include "widget/searchmetalist.h"
 #include "widget/searchmetaitem.h"
 

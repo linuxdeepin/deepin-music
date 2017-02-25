@@ -46,15 +46,15 @@ void PluginManager::loadPlugins()
     if (!pluginsDir.exists()) {
         pluginsDir = QDir(QString("/usr/lib/%1/plugins").arg(qApp->applicationName()));
     }
-    qDebug() << "load plugins from:" << pluginsDir.path();
+    qDebug() << "load plugin from:" << pluginsDir.path();
 
     for (auto libraryFile : pluginsDir.entryInfoList(QStringList() << "*.so" << "*.dll")) {
-        qDebug() << "find so file:" << libraryFile.absoluteFilePath();
+        qDebug() << "load plugin so file:" << libraryFile.absoluteFilePath();
         auto loader = new QPluginLoader;
         loader->setFileName(libraryFile.absoluteFilePath());
         auto instance = loader->instance();
         auto pluginInstance =  dynamic_cast<PluginInterface *>(instance);
-        qDebug() << "load instance:" << instance << pluginInstance;
+        qDebug() << "load plugin instance:" << instance << pluginInstance;
         emit onPluginLoaded(loader->objectName(), pluginInstance);
         m_plugins.push_back(pluginInstance);
     }

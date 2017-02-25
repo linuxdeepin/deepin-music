@@ -163,6 +163,10 @@ bool HintFilter::eventFilter(QObject *obj, QEvent *event)
             d->hintWidget->hide();
             d->delayShowTimer->stop();
         }
+
+        break;
+    default:
+        break;
     }
     return QObject::eventFilter(obj, event);
 }

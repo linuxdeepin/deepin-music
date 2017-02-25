@@ -28,7 +28,6 @@ class MusicItemDelegatePrivate : public QWidget
     Q_PROPERTY(QString highlightAnimationPrefix READ highlightAnimationPrefix WRITE setHighlightAnimationPrefix)
 
 public:
-    PictureSequenceView                 *playingAnimation;
     int                                 tialWidth = -1;
 
     explicit MusicItemDelegatePrivate(MusicItemDelegate *parent = 0);

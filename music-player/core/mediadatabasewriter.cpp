@@ -145,7 +145,7 @@ void MediaDatabaseWriter::insertMusic(const MetaPtr meta,
 //    qDebug() << "insertMusic begin";
     QSqlQuery query;
     QString sqlstring = QString("INSERT INTO playlist_%1 "
-                                "(music_id, playlist_id, sortid) "
+                                "(music_id, playlist_id, sort_id) "
                                 "SELECT :music_id, :playlist_id, :sort_id "
                                 "WHERE NOT EXISTS("
                                 "SELECT * FROM playlist_%1 "

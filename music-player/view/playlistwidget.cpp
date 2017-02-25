@@ -13,7 +13,6 @@
 #include <QVBoxLayout>
 #include <QPushButton>
 #include <QFocusEvent>
-#include <QGraphicsDropShadowEffect>
 
 #include <DUtil>
 #include <thememanager.h>
@@ -45,12 +44,6 @@ PlaylistWidget::PlaylistWidget(QWidget *parent) : QFrame(parent)
     btAdd->setFixedSize(190, 36);
     btAdd->setObjectName("PlaylistWidgetAdd");
     btAdd->setText(tr("+ Create a new playlist"));
-
-//    auto *bodyShadow = new QGraphicsDropShadowEffect;
-//    bodyShadow->setBlurRadius(4.0);
-//    bodyShadow->setColor(QColor(255, 0, 0, 112));
-//    bodyShadow->setOffset(2.0, 4.0);
-//    btAdd->setGraphicsEffect(bodyShadow);
 
     QSizePolicy sp(QSizePolicy::Preferred, QSizePolicy::Preferred);
     sp.setVerticalStretch(100);
@@ -176,6 +169,12 @@ void PlaylistWidget::onPlaylistAdded(PlaylistPtr playlist)
     auto item = new QListWidgetItem;
     m_listview->addItem(item);
     m_listview->setItemWidget(item, new PlayListItem(playlist));
+
+//   disable drag
+//    if (playlist->id() == AllMusicListID || playlist->id() == FavMusicListID) {
+//        item->setFlags(item->flags() & ~Qt::ItemIsDragEnabled);
+//    }
+//    qDebug() << "pppppppp" << item->flags();
 
     auto playlistItem = qobject_cast<PlayListItem *>(m_listview->itemWidget(item));
     connect(playlistItem, &PlayListItem::remove, this, [ = ]() {

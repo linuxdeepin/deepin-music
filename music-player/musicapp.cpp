@@ -41,8 +41,6 @@ public:
     Q_DECLARE_PUBLIC(MusicApp)
 };
 
-
-
 MusicApp::MusicApp(QObject *parent)
     : QObject(parent), d_ptr(new MusicAppPrivate(this))
 {
@@ -150,7 +148,7 @@ void MusicApp::onDataPrepared()
         d->playerFrame->show();
         d->playerFrame->restoreGeometry(geometry);
         d->playerFrame->setWindowState(static_cast<Qt::WindowStates >(state));
-        qDebug() << d->playerFrame->geometry() << d->playerFrame->windowState();
+//        qDebug() << d->playerFrame->geometry() << d->playerFrame->windowState();
     }
 
     d->playerFrame->setCoverBackground(d->playerFrame->coverBackground());

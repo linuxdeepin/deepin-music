@@ -66,7 +66,6 @@ DDropdown::DDropdown(QWidget *parent) : QFrame(parent), d_ptr(new DDropdownPriva
         d->menu->exec();
     });
 
-
     ThemeManager::instance()->regisetrWidget(this);
 }
 

@@ -48,8 +48,6 @@ public:
     void startMonitor()
     {
         auto metalist = MediaDatabase::instance()->allmetas();
-
-        qDebug() << metalist.length();
         QMap<QString, QString> dirs;
         for (auto &meta : metalist) {
             QFileInfo metafi(meta.localPath);
@@ -148,15 +146,21 @@ MediaLibrary::~MediaLibrary()
 
 }
 
+bool MediaLibrary::isEmpty() const
+{
+    Q_D(const MediaLibrary);
+    return d->metas.isEmpty();
+}
+
 MetaPtr MediaLibrary::meta(const QString &hash)
 {
     Q_D(MediaLibrary);
     return d->metas.value(hash);
 }
 
-bool MediaLibrary::contains(const QString &hash)
+bool MediaLibrary::contains(const QString &hash) const
 {
-    Q_D(MediaLibrary);
+    Q_D(const MediaLibrary);
     return d->metas.contains(hash);
 }
 

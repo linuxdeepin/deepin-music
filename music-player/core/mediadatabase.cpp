@@ -61,10 +61,126 @@ static bool createConnection()
 
     query.exec("CREATE TABLE IF NOT EXISTS playlist (uuid TEXT primary key not null, "
                "displayname VARCHAR(4096), "
-               "icon VARCHAR(256), readonly INTEGER,"
-               "hide INTEGER, sortType INTEGER)");
+               "icon VARCHAR(256), readonly INTEGER, "
+               "hide INTEGER, sort_type INTEGER, "
+               "order_type INTEGER )");
+
+    query.exec("CREATE TABLE IF NOT EXISTS info (uuid TEXT primary key not null, "
+               "version INTEGER )");
 
     return true;
+}
+
+static const QString DatabaseUUID = "0fcbd091-2356-161c-9026-f49779f9c71c40";
+
+int databaseVersion()
+{
+    QSqlQuery query;
+    query.prepare("SELECT version FROM info where uuid = :uuid;");
+    query.bindValue(":uuid", DatabaseUUID);
+    if (!query.exec()) {
+        qWarning() << query.lastError();
+        return -1;
+    }
+
+    while (query.next()) {
+        auto version =  query.value(0).toInt();
+        return version;
+    }
+    return -1;
+}
+
+int updateDatabaseVersion(int version)
+{
+    QSqlQuery query;
+
+    query.prepare("INSERT INTO info ("
+                  "uuid, version "
+                  ") "
+                  "VALUES ("
+                  ":uuid, :version "
+                  ")");
+    query.bindValue(":version", version);
+    query.bindValue(":uuid", DatabaseUUID);
+    query.exec();
+    qWarning() << query.lastError();
+
+    query.prepare("UPDATE info SET version = :version where uuid = :uuid; ");
+    query.bindValue(":version", version);
+    query.bindValue(":uuid", DatabaseUUID);
+
+    if (!query.exec()) {
+        qWarning() << query.lastError();
+        return -1;
+    }
+
+    return version;
+}
+
+void megrateToVserion_0()
+{
+    // FIXME: remove old
+    QSqlDatabase::database().transaction();
+    QSqlQuery query;
+    qWarning() << "sql upgrade with error:" << query.lastError().type();
+    query.prepare("ALTER TABLE music ADD COLUMN cuepath VARCHAR(4096);");
+    if (!query.exec()) {
+        qWarning() << "sql upgrade with error:" << query.lastError().type();
+    }
+
+    query.prepare("ALTER TABLE music ADD COLUMN invalid INTEGER(32);");
+    if (!query.exec()) {
+        qWarning() << "sql upgrade with error:" << query.lastError().type();
+    }
+
+    query.prepare("ALTER TABLE playlist ADD COLUMN order_type INTEGER(32);");
+    if (!query.exec()) {
+        qWarning() << "sql upgrade with error:" << query.lastError().type();
+    }
+
+    query.prepare("ALTER TABLE playlist ADD COLUMN sort_type INTEGER(32);");
+    if (!query.exec()) {
+        qWarning() << "sql upgrade with error:" << query.lastError().type();
+    }
+
+    QStringList list;
+    query.prepare("SELECT uuid FROM playlist;");
+    if (!query.exec()) {
+        qWarning() << "sql upgrade with error:" << query.lastError().type();
+    }
+    while (query.next()) {
+        list <<  query.value(0).toString();
+    }
+
+    for (auto uuid : list) {
+        auto sqlStr = QString("ALTER TABLE playlist_%1  ADD COLUMN sort_id INTEGER(32);").arg(uuid);
+        query.prepare(sqlStr);
+        if (!query.exec()) {
+            qWarning() << "sql upgrade playlist with error:" << query.lastError().type();
+        }
+    }
+
+    updateDatabaseVersion(0);
+    QSqlDatabase::database().commit();
+}
+
+typedef void (*MargeFunctionn)();
+
+void margeDatabase()
+{
+    QMap<int, MargeFunctionn> margeFuncs;
+    margeFuncs.insert(0, megrateToVserion_0);
+
+    int currentVersion = databaseVersion();
+
+    QList<int> sortVer = margeFuncs.keys();
+    qSort(sortVer.begin(), sortVer.end());
+
+    for (auto ver : sortVer) {
+        if (ver > currentVersion) {
+            margeFuncs.value(ver)();
+        }
+    }
 }
 
 MediaDatabase::MediaDatabase(QObject *parent) : QObject(parent)
@@ -78,19 +194,9 @@ MediaDatabase::MediaDatabase(QObject *parent) : QObject(parent)
 
     bind();
 
+    margeDatabase();
+
     QSqlDatabase::database().transaction();
-
-    QSqlQuery query;
-    query.prepare("ALTER TABLE music ADD COLUMN cuepath VARCHAR(4096);");
-    if (query.exec()) {
-        qWarning() << "sql upgrade with out error:" << query.lastError();
-    }
-
-    query.prepare("ALTER TABLE music ADD COLUMN invalid INTEGER(32);");
-    if (query.exec()) {
-        qWarning() << "sql upgrade with out error:" << query.lastError();
-    }
-
     PlaylistMeta playlistMeta;
     playlistMeta.uuid = "all";
     playlistMeta.displayName = "All Music";
@@ -143,7 +249,8 @@ QList<PlaylistMeta> MediaDatabase::allPlaylistMeta()
 {
     QList<PlaylistMeta> list;
     QSqlQuery query;
-    query.prepare("SELECT uuid, displayname, icon, readonly, hide, sortType FROM playlist");
+    query.prepare("SELECT uuid, displayname, icon, readonly, hide, "
+                  "sort_type order_type FROM playlist");
 
     if (!query.exec()) {
         qWarning() << query.lastError();
@@ -158,6 +265,7 @@ QList<PlaylistMeta> MediaDatabase::allPlaylistMeta()
         playlistMeta.readonly = query.value(3).toBool();
         playlistMeta.hide = query.value(4).toBool();
         playlistMeta.sortType = query.value(5).toInt();
+        playlistMeta.orderType = query.value(6).toInt();
         list << playlistMeta;
     }
     return list;
@@ -177,8 +285,9 @@ static MetaPtrList searchTitle(const QString &queryString)
     while (query.next()) {
         auto hash = query.value(0).toString();
         auto meta = MediaLibrary::instance()->meta(hash);
-        if (meta.isNull())
+        if (meta.isNull()) {
             continue;
+        }
         metalist << meta;
     }
 
@@ -240,18 +349,18 @@ void MediaDatabase::addPlaylist(const PlaylistMeta &playlistMeta)
     QSqlQuery query;
     query.prepare("INSERT INTO playlist ("
                   "uuid, displayname, icon, readonly, hide, "
-                  "sortType "
+                  "sort_type "
                   ") "
                   "VALUES ("
                   ":uuid, :displayname, :icon, :readonly, :hide, "
-                  ":sortType "
+                  ":sort_type "
                   ")");
     query.bindValue(":uuid", playlistMeta.uuid);
     query.bindValue(":displayname", playlistMeta.displayName);
     query.bindValue(":icon", playlistMeta.icon);
     query.bindValue(":readonly", playlistMeta.readonly);
     query.bindValue(":hide", playlistMeta.hide);
-    query.bindValue(":sortType", playlistMeta.sortType);
+    query.bindValue(":sort_type", playlistMeta.sortType);
 
     if (! query.exec()) {
         qWarning() << query.lastError();
@@ -260,7 +369,7 @@ void MediaDatabase::addPlaylist(const PlaylistMeta &playlistMeta)
 
     QString sqlstring = QString("CREATE TABLE IF NOT EXISTS playlist_%1 ("
                                 "music_id TEXT primary key not null, "
-                                "playlist_id TEXT, sortid INTEGER"
+                                "playlist_id TEXT, sort_id INTEGER"
                                 ")").arg(playlistMeta.uuid);
     if (! query.exec(sqlstring)) {
         qWarning() << query.lastError();
@@ -274,14 +383,16 @@ void MediaDatabase::updatePlaylist(const PlaylistMeta &playlistMeta)
     query.prepare("UPDATE playlist "
                   "SET displayname = :displayname, icon = :icon, "
                   "readonly = :readonly, hide = :hide, "
-                  "sortType = :sortType "
+                  "order_type = :order_type, "
+                  "sort_type = :sort_type "
                   "WHERE uuid = :uuid;");
     query.bindValue(":uuid", playlistMeta.uuid);
     query.bindValue(":displayname", playlistMeta.displayName);
     query.bindValue(":icon", playlistMeta.icon);
     query.bindValue(":readonly", playlistMeta.readonly);
     query.bindValue(":hide", playlistMeta.hide);
-    query.bindValue(":sortType", playlistMeta.sortType);
+    query.bindValue(":order_type", playlistMeta.orderType);
+    query.bindValue(":sort_type", playlistMeta.sortType);
 
     if (! query.exec()) {
         qWarning() << query.lastError();
@@ -307,8 +418,9 @@ void MediaDatabase::removePlaylist(const PlaylistMeta &playlistMeta)
 
 void MediaDatabase::deleteMusic(const MetaPtr meta, const PlaylistMeta &playlistMeta)
 {
-    if (meta.isNull())
+    if (meta.isNull()) {
         return;
+    }
 
     QSqlQuery query;
     QString sqlstring = QString("DELETE FROM playlist_%1 WHERE music_id = '%2'")

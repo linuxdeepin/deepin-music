@@ -20,18 +20,18 @@ public:
     QString displayName;
     QString icon;
 
-    int     sortType    = 0;
-    bool    editmode    = false;
-    bool    readonly    = false;
-    bool    hide        = false;
-    bool    active      = false;
-    bool    unused      = false;
-
     MetaPtr                  playing;
     QStringList              sortMetas;
 
     QMap<QString, MetaPtr>   metas;
     QMap<QString, int>       invalidMetas;
+
+    int     sortType    = 0;
+    int     orderType   = 0;
+    bool    editmode    = false;
+    bool    readonly    = false;
+    bool    hide        = false;
+    bool    active      = false;
 };
 
 Q_DECLARE_METATYPE(PlaylistMeta)

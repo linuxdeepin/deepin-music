@@ -17,8 +17,6 @@ unix{
     PKGCONFIG += x11 xext
     PKGCONFIG += dtkbase dtkutil dtkwidget
     PKGCONFIG += dtksettings dtksettingsview
-#    PKGCONFIG += dtkbase dtkutil dtkwidget
-#   PKGCONFIG += mpris-qt5 dbusextended-qt5
 }
 
 INCLUDEPATH += $$PWD/view/helper
@@ -33,9 +31,7 @@ SOURCES += \
     view/helper/widgethellper.cpp \
     view/widget/cover.cpp \
     view/widget/infodialog.cpp \
-    view/widget/lyriclinedelegate.cpp \
     view/widget/modebuttom.cpp \
-    view/widget/musicitemdelegate.cpp \
     view/widget/musiclistview.cpp \
     view/widget/playlistitem.cpp \
     view/widget/playlistview.cpp \
@@ -43,11 +39,8 @@ SOURCES += \
     view/widget/searchedit.cpp \
     view/widget/searchresult.cpp \
     view/widget/slider.cpp \
-    musicapp.cpp \
-    main.cpp \
     view/widget/label.cpp \
     view/widget/tip.cpp \
-    view/widget/hint.cpp \
     view/widget/soundvolume.cpp \
     view/widget/filter.cpp \
     core/player.cpp \
@@ -55,8 +48,6 @@ SOURCES += \
     view/helper/thememanager.cpp \
     view/widget/titlebarwidget.cpp \
     view/widget/ddropdown.cpp \
-    view/widget/dsettingdialog.cpp \
-    view/widget/picturesequenceview.cpp \
     view/widget/searchmetalist.cpp \
     view/widget/searchmetaitem.cpp \
     core/medialibrary.cpp \
@@ -64,18 +55,23 @@ SOURCES += \
     core/metasearchservice.cpp \
     core/settings.cpp \
     core/pluginmanager.cpp \
+    view/widget/listview.cpp \
+    view/mainframe.cpp \
     view/importwidget.cpp \
     view/titlebar.cpp \
     view/musiclistwidget.cpp \
     view/footer.cpp \
     view/lyricview.cpp \
     view/playlistwidget.cpp \
-    view/mainframe.cpp \
-    view/widget/listview.cpp
-#    view/mainwindow.cpp \
+    musicapp.cpp \
+    main.cpp \
+    view/widget/model/musiclistmodel.cpp \
+    view/widget/delegate/lyriclinedelegate.cpp \
+    view/widget/delegate/musicitemdelegate.cpp
 
 
 HEADERS += \
+    musicapp.h \
     core/util/lyric.h \
     core/util/thearpool.h \
     core/mediadatabase.h \
@@ -87,10 +83,7 @@ HEADERS += \
     view/helper/widgethellper.h \
     view/widget/cover.h \
     view/widget/infodialog.h \
-    view/widget/lyriclinedelegate.h \
     view/widget/modebuttom.h \
-    view/widget/musicitemdelegate_p.h \
-    view/widget/musicitemdelegate.h \
     view/widget/musiclistview.h \
     view/widget/playlistitem.h \
     view/widget/playlistview.h \
@@ -98,11 +91,9 @@ HEADERS += \
     view/widget/searchedit.h \
     view/widget/searchresult.h \
     view/widget/slider.h \
-    musicapp.h \
     view/widget/label.h \
     view/widget/tip.h \
     view/importwidget.h \
-    view/widget/hint.h \
     view/widget/soundvolume.h \
     view/widget/filter.h \
     core/player.h \
@@ -112,8 +103,6 @@ HEADERS += \
     view/titlebar.h \
     view/widget/titlebarwidget.h \
     view/widget/ddropdown.h \
-    view/widget/dsettingdialog.h \
-    view/widget/picturesequenceview.h \
     view/widget/searchmetalist.h \
     view/widget/searchmetaitem.h \
     core/medialibrary.h \
@@ -126,8 +115,11 @@ HEADERS += \
     view/lyricview.h \
     view/playlistwidget.h \
     view/mainframe.h \
-#    view/mainwindow.h \
-    view/widget/listview.h
+    view/widget/listview.h \
+    view/widget/model/musiclistmodel.h \
+    view/widget/delegate/lyriclinedelegate.h \
+    view/widget/delegate/musicitemdelegate_p.h \
+    view/widget/delegate/musicitemdelegate.h
 
 RESOURCES += \
     resource/theme/theme.qrc \
