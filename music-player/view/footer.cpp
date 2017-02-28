@@ -497,9 +497,6 @@ void Footer::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(Footer);
 
-    qDebug() << "FFFFFFFFFFFFFFF"
-             << playlist->displayName();
-
     QFontMetrics fm(d->title->font());
     auto text = fm.elidedText(meta->title, Qt::ElideMiddle, d->title->maximumWidth());
     d->title->setText(text);
@@ -529,7 +526,6 @@ void Footer::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
 void Footer::onMusicPause(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(Footer);
-    qDebug() << meta->title << "pause";
     if (meta->hash != d->m_playingMeta->hash || playlist != d->m_playinglist) {
         qWarning() << "can not pasue" << d->m_playinglist << playlist
                    << d->m_playingMeta->hash << meta->hash;

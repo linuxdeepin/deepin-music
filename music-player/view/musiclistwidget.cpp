@@ -83,6 +83,7 @@ void MusicListWidgetPrivate::initConntion()
     q->connect(musiclist, &MusicListView::customSort,
     q, [ = ]() {
         dropdown->setCurrentAction(customAction);
+        emit q->resort(musiclist->playlist(), customAction->data().value<Playlist::SortType>());
     });
 
     q->connect(musiclist, &MusicListView::requestCustomContextMenu,

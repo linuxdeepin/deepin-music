@@ -61,13 +61,15 @@ SOURCES += \
     view/titlebar.cpp \
     view/musiclistwidget.cpp \
     view/footer.cpp \
-    view/lyricview.cpp \
     view/playlistwidget.cpp \
     musicapp.cpp \
     main.cpp \
     view/widget/model/musiclistmodel.cpp \
     view/widget/delegate/lyriclinedelegate.cpp \
-    view/widget/delegate/musicitemdelegate.cpp
+    view/widget/delegate/musicitemdelegate.cpp \
+    view/lyricwidget.cpp \
+    view/widget/lyricview.cpp \
+    view/widget/titeledit.cpp
 
 
 HEADERS += \
@@ -112,14 +114,16 @@ HEADERS += \
     core/pluginmanager.h \
     view/musiclistwidget.h \
     view/footer.h \
-    view/lyricview.h \
     view/playlistwidget.h \
     view/mainframe.h \
     view/widget/listview.h \
     view/widget/model/musiclistmodel.h \
     view/widget/delegate/lyriclinedelegate.h \
     view/widget/delegate/musicitemdelegate_p.h \
-    view/widget/delegate/musicitemdelegate.h
+    view/widget/delegate/musicitemdelegate.h \
+    view/lyricwidget.h \
+    view/widget/lyricview.h \
+    view/widget/titeledit.h
 
 RESOURCES += \
     resource/theme/theme.qrc \

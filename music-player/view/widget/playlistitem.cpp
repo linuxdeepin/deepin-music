@@ -23,7 +23,9 @@
 #include <QMessageBox>
 #include <thememanager.h>
 
-#include "../../core/playlist.h"
+#include "core/playlist.h"
+
+#include "titeledit.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -50,7 +52,7 @@ PlayListItem::PlayListItem(PlaylistPtr playlist, QWidget *parent) : QFrame(paren
     icon->setFixedSize(48, 48);
     icon->setProperty("iconName", playlist->icon());
 
-    m_titleedit = new QLineEdit;
+    m_titleedit = new TitelEdit;
     m_titleedit->setObjectName("PlayListTitle");
     m_titleedit->setFixedHeight(24);
     m_titleedit->setMaximumWidth(160);
@@ -176,7 +178,7 @@ void PlayListItem::setPlay(bool isPaly)
 
 void PlayListItem::mouseDoubleClickEvent(QMouseEvent *event)
 {
-    QFrame::mouseDoubleClickEvent(event);
+//    QFrame::mouseDoubleClickEvent(event);
 
     auto lineeditMousePos = m_titleedit->mapFromParent(event->pos());
     if (!m_titleedit->rect().contains(lineeditMousePos)) {
@@ -188,9 +190,9 @@ void PlayListItem::mouseDoubleClickEvent(QMouseEvent *event)
     }
 
     QTimer::singleShot(0, this, [ = ] {
-        m_titleedit->setEnabled(true);
-        m_titleedit->setFocus();
-        m_titleedit->setCursorPosition(m_titleedit->text().length());
+//        m_titleedit->setEnabled(true);
+//        m_titleedit->setFocus();
+//        m_titleedit->setCursorPosition(m_titleedit->text().length());
     });
 }
 

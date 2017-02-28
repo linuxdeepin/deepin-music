@@ -42,14 +42,26 @@ MetaSearchService::~MetaSearchService()
 static QString cacheLyricPath(const MetaPtr meta)
 {
     auto cacheLyricDir = Global::cacheDir() + "/lyric";
-    return cacheLyricDir + "/" + meta->hash + ".lyric";
+    return cacheLyricDir + "/" + meta->searchID + ".lyric";
 }
 
 inline QString cacheCoverPath(const MetaPtr meta)
 {
     auto cacheLyricDir =  Global::cacheDir() + "/cover";
     // TODO: key is what?
-    return cacheLyricDir + "/" + meta->hash + ".jpg";
+    return cacheLyricDir + "/" + meta->searchID + ".cover";
+}
+
+static QString cacheLyricPath(const QString &searchID)
+{
+    auto cacheLyricDir = Global::cacheDir() + "/lyric";
+    return cacheLyricDir + "/" + searchID + ".lyric";
+}
+inline QString cacheCoverPath(const QString &searchID)
+{
+    auto cacheLyricDir =  Global::cacheDir() + "/cover";
+    // TODO: key is what?
+    return cacheLyricDir + "/" + searchID + ".cover";
 }
 
 MetaSearchService::MetaSearchService(QObject *parent) :
@@ -74,7 +86,7 @@ MetaSearchService::MetaSearchService(QObject *parent) :
         connect(engine, &DMusic::Plugin::MetaSearchEngine::coverLoaded,
         this, [ = ](const MetaPtr  meta, const DMusic::SearchMeta & search, const QByteArray & coverData) {
             if (coverData.length() > 0) {
-                QFile coverFile(cacheCoverPath(meta));
+                QFile coverFile(cacheCoverPath(search.id));
                 coverFile.open(QIODevice::WriteOnly);
                 coverFile.write(coverData);
                 coverFile.close();
@@ -85,7 +97,7 @@ MetaSearchService::MetaSearchService(QObject *parent) :
         connect(engine, &DMusic::Plugin::MetaSearchEngine::lyricLoaded,
         this, [ = ](const MetaPtr  meta, const DMusic::SearchMeta & search, const QByteArray & lyricData) {
             if (lyricData.length() > 0) {
-                QFile lyricFile(cacheLyricPath(meta));
+                QFile lyricFile(cacheLyricPath(search.id));
                 lyricFile.open(QIODevice::WriteOnly);
                 lyricFile.write(lyricData);
                 lyricFile.close();
@@ -138,10 +150,9 @@ int MetaSearchServicePrivate::searchCacheLyric(const MetaPtr meta)
     Q_Q(MetaSearchService);
     QFileInfo lyric(cacheLyricPath(meta));
     if (!lyric.exists() || lyric.size() < 1) {
-//        emit lyricSearchFinished(meta, QByteArray());
         return -1;
     }
-    emit q->lyricSearchFinished(meta, DMusic::SearchMeta(), MetaSearchService::lyricData(meta));
+    emit q->lyricSearchFinished(meta, DMusic::SearchMeta(meta->searchID), MetaSearchService::lyricData(meta));
     return 0;
 }
 
@@ -150,10 +161,9 @@ int MetaSearchServicePrivate::searchCacheCover(const MetaPtr meta)
     Q_Q(MetaSearchService);
     QFileInfo cover(cacheCoverPath(meta));
     if (!cover.exists() || cover.size() < 1) {
-//        emit coverSearchFinished(meta, QByteArray());
         return -1;
     }
-    emit q->coverSearchFinished(meta, DMusic::SearchMeta(), MetaSearchService::coverData(meta));
+    emit q->coverSearchFinished(meta, DMusic::SearchMeta(meta->searchID), MetaSearchService::coverData(meta));
     return 0;
 }
 
@@ -196,11 +206,11 @@ void MetaSearchService::searchContext(const QString &context)
     }
 }
 
-void MetaSearchService::onChangeMetaCache(const MetaPtr meta)
+void MetaSearchService::onChangeMetaCache(const MetaPtr meta, const DMusic::SearchMeta &search)
 {
     Q_D(MetaSearchService);
-    qDebug() << "change" << meta->searchCoverUrl << meta->searchLyricUrl;
-    connect(d->m_geese->getGoose(meta->searchCoverUrl), &DMusic::Net::Goose::arrive,
+    qDebug() << "change" << search.album.coverUrl << search.id;
+    connect(d->m_geese->getGoose(search.album.coverUrl), &DMusic::Net::Goose::arrive,
     this, [ = ](int errCode, const QByteArray & coverData) {
         qDebug() << "onChangeMetaCache received: " << errCode << coverData.length();
         if (coverData.length() > 0) {
@@ -209,10 +219,13 @@ void MetaSearchService::onChangeMetaCache(const MetaPtr meta)
             coverFile.write(coverData);
             coverFile.close();
         }
-        emit coverSearchFinished(meta, DMusic::SearchMeta(), coverData);
+        emit coverSearchFinished(meta, search, coverData);
     });
 
-    connect(d->m_geese->getGoose(meta->searchLyricUrl), &DMusic::Net::Goose::arrive,
+    // TODO: call plugin to do this
+    QString lyricUrl = QLatin1String("http://music.163.com/api/song/lyric?os=pc&id=%1&lv=-1&kv=-1&tv=-1");
+    lyricUrl = lyricUrl.arg(QString(search.id).remove("netease_"));
+    connect(d->m_geese->getGoose(lyricUrl), &DMusic::Net::Goose::arrive,
     this, [ = ](int errCode, const QByteArray & data) {
         qDebug() << "onChangeMetaCache received: " << errCode << data.length();
         auto document = QJsonDocument::fromJson(data);
@@ -228,7 +241,7 @@ void MetaSearchService::onChangeMetaCache(const MetaPtr meta)
         lyricFile.write(lrcData);
         lyricFile.close();
 
-        emit lyricSearchFinished(meta, DMusic::SearchMeta(), lrcData);
+        emit lyricSearchFinished(meta, search, lrcData);
     });
 
 }

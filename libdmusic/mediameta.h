@@ -47,8 +47,6 @@ public:
     QString creator;
 
     QString searchID;
-    QString searchCoverUrl;
-    QString searchLyricUrl;
 
     bool    favourite   = false;
     bool    invalid     = false;

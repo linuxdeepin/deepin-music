@@ -11,6 +11,7 @@
 
 #include "../core/playlist.h"
 #include "../core/settings.h"
+#include "searchmeta.h"
 
 class Presenter;
 class MetaSearchService;
@@ -42,6 +43,7 @@ public:
 
 signals:
     void requestMetaSearch(const MetaPtr );
+    void requestChangeMetaCache(const MetaPtr meta, const DMusic::SearchMeta &search);
 
     void play(PlaylistPtr playlist, const MetaPtr info);
     void resume(PlaylistPtr playlist, const MetaPtr meta);

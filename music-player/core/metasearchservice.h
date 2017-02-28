@@ -38,7 +38,7 @@ signals:
 public slots:
     void searchMeta(const MetaPtr meta);
     void searchContext(const QString &context);
-    void onChangeMetaCache(const MetaPtr meta);
+    void onChangeMetaCache(const MetaPtr meta, const DMusic::SearchMeta &search);
 
 private:
     friend class DMusic::DSingleton<MetaSearchService>;

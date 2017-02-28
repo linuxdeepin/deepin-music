@@ -15,7 +15,7 @@
 #include "../../core/playlist.h"
 #include <dpicturesequenceview.h>
 
-class QLineEdit;
+class TitelEdit;
 class PlayListItem : public QFrame
 {
     Q_OBJECT
@@ -60,7 +60,7 @@ public slots:
 
 private:
     Dtk::Widget::DPictureSequenceView  *playingAnimation;
-    QLineEdit      *m_titleedit = nullptr;
+    TitelEdit      *m_titleedit = nullptr;
     PlaylistPtr    m_data;
     QString m_animationPrefix;
     QString m_highlightAnimationPrefix;

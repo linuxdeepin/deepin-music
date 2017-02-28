@@ -11,17 +11,18 @@
 
 #include <QFrame>
 
-#include "../core/playlist.h"
 #include <searchmeta.h>
+#include "core/playlist.h"
 
-class LyricViewPrivate;
-class LyricView : public QFrame
+class LyricWidgetPrivate;
+class LyricWidget : public QFrame
 {
     Q_OBJECT
     Q_PROPERTY(QString defaultCover READ defaultCover WRITE setDefaultCover)
+
 public:
-    explicit LyricView(QWidget *parent = 0);
-    ~LyricView();
+    explicit LyricWidget(QWidget *parent = 0);
+    ~LyricWidget();
 
     void initUI();
     QString defaultCover() const;
@@ -30,7 +31,7 @@ public:
 signals:
     void toggleLyricView();
     void requestContextSearch(const QString &context);
-    void changeMetaCache(const MetaPtr meta);
+    void changeMetaCache(const MetaPtr meta, const DMusic::SearchMeta &search);
 
 public slots:
     void onProgressChanged(qint64 value, qint64 length);
@@ -38,11 +39,12 @@ public slots:
     void onMusicStop(PlaylistPtr, const MetaPtr meta);
 
     void onLyricChanged(const MetaPtr meta,
-                        const DMusic::SearchMeta &searchResult,
+                        const DMusic::SearchMeta &search,
                         const QByteArray &lyricData);
     void onCoverChanged(const MetaPtr meta,
-                        const DMusic::SearchMeta &song,
+                        const DMusic::SearchMeta &search,
                         const QByteArray &coverData);
+
     void onContextSearchFinished(const QString &context,
                                  const QList<DMusic::SearchMeta> &metalist);
 
@@ -54,6 +56,6 @@ protected:
     virtual void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
 
 private:
-    QScopedPointer<LyricViewPrivate> d_ptr;
-    Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), LyricView)
+    QScopedPointer<LyricWidgetPrivate> d_ptr;
+    Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), LyricWidget)
 };

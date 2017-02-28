@@ -67,6 +67,8 @@ void PresenterPrivate::initBackend()
 
     connect(this, &PresenterPrivate::requestMetaSearch,
             lyricService, &MetaSearchService::searchMeta);
+    connect(this, &PresenterPrivate::requestChangeMetaCache,
+            lyricService, &MetaSearchService::onChangeMetaCache);
 
     connect(this, &PresenterPrivate::play, player, &Player::playMeta);
     connect(this, &PresenterPrivate::resume, player, &Player::resume);
@@ -108,7 +110,7 @@ Presenter::Presenter(QObject *parent)
     qRegisterMetaType<PlaylistPtr>();
     qRegisterMetaType<QList<PlaylistPtr>>();
 
-    qRegisterMetaType<QList<SearchMeta> >();
+    qRegisterMetaType<QList<SearchMeta>>();
     qRegisterMetaType<SearchMeta>();
 }
 
@@ -180,7 +182,17 @@ void Presenter::prepareData()
     connect(d->lyricService, &MetaSearchService::lyricSearchFinished,
             this, &Presenter::lyricSearchFinished);
     connect(d->lyricService, &MetaSearchService::coverSearchFinished,
-            this, &Presenter::coverSearchFinished);
+    this, [ = ](const MetaPtr meta, const DMusic::SearchMeta & search, const QByteArray & coverData) {
+        if (search.id != meta->searchID) {
+            // save search id
+            qDebug() << "update search id " << search.id;
+            meta->searchID = search.id;
+            meta->updateSearchIndex();
+            emit MediaDatabase::instance()->updateMediaMeta(meta);
+        }
+        emit coverSearchFinished(meta, search, coverData);
+    });
+
     connect(d->lyricService, &MetaSearchService::contextSearchFinished,
             this, &Presenter::contextSearchFinished);
 
@@ -705,9 +717,18 @@ void Presenter::onLocateMusicAtAll(const QString &hash)
     //    onMusicPlay(allList, allList->music(hash));
 }
 
-void Presenter::onChangeSearchMetaCache(const MetaPtr meta)
+void Presenter::onChangeSearchMetaCache(const MetaPtr meta, const DMusic::SearchMeta &search)
 {
+    Q_D(Presenter);
 
+    if (meta->searchID != search.id) {
+        qDebug() << "update search id " << search.id;
+        meta->searchID = search.id;
+        meta->updateSearchIndex();
+        emit MediaDatabase::instance()->updateMediaMeta(meta);
+    }
+
+    emit d->requestChangeMetaCache(meta, search);
 }
 
 void Presenter::onPlaylistAdd(bool edit)

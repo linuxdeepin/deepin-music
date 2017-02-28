@@ -336,6 +336,25 @@ MetaPtr Playlist::removeOneMusic(const MetaPtr meta)
     return nextMeta;
 }
 
+inline bool startWithHanzi(const QString &text)
+{
+    const QVector<uint> list = text.toUcs4();
+    return !list.isEmpty() && list.first() >= 0x4e00 && list.first() <= 0x9fbf;
+}
+
+bool lessCompareByString(const QString &str1, const QString &str2)
+{
+    if (startWithHanzi(str1)) {
+        if (!startWithHanzi(str2)) {
+            return false;
+        }
+    } else if (startWithHanzi(str2)) {
+        return true;
+    }
+
+    return collator.compare(str1, str2) < 0;
+}
+
 bool lessThanTimestamp(const MetaPtr v1, const MetaPtr v2)
 {
     Q_ASSERT(!v1.isNull());
@@ -359,8 +378,9 @@ bool lessThanTitile(const MetaPtr v1, const MetaPtr v2)
         return true;
     }
     qDebug() << v1->title << v2->title << collator.compare(v1->title , v2->title);
-    return collator.compare(v1->title , v2->title) < 0;
+    return lessCompareByString(v1->title , v2->title);
 }
+
 bool moreThanTitile(const MetaPtr v1, const MetaPtr v2)
 {
     return !lessThanTitile(v1, v2);
@@ -376,7 +396,7 @@ bool lessThanArtist(const MetaPtr v1, const MetaPtr v2)
     if (v2->artist.isEmpty()) {
         return true;
     }
-    return collator.compare(v1->artist , v2->artist) < 0;
+    return lessCompareByString(v1->artist , v2->artist);
 }
 bool moreThanArtist(const MetaPtr v1, const MetaPtr v2)
 {
@@ -394,7 +414,7 @@ bool lessThanAblum(const MetaPtr v1, const MetaPtr v2)
     if (v2->album.isEmpty()) {
         return true;
     }
-    return collator.compare(v1->album , v2->album) < 0;
+    return lessCompareByString(v1->album , v2->album);
 }
 bool moreThanAblum(const MetaPtr v1, const MetaPtr v2)
 {
@@ -457,28 +477,32 @@ void Playlist::resort()
     collator.setNumericMode(true);
     collator.setCaseSensitivity(Qt::CaseInsensitive);
 
-    QList<MetaPtr> sortList;
-
-    for (auto id : playlistMeta.metas.keys()) {
-//        qDebug() << playlistMeta.metas.value(id) << id;
-        sortList << playlistMeta.metas.value(id);
-    }
-
     auto sortType = static_cast<Playlist::SortType>(playlistMeta.sortType);
     auto orderType = static_cast<Playlist::OrderType>(playlistMeta.orderType);
-    qSort(sortList.begin(), sortList.end(),
-          getSortFunction(sortType, orderType));
+    if (sortType != Playlist::SortByCustom) {
+        QList<MetaPtr> sortList;
 
-    QMap<QString, int> hashIndexs;
-    for (auto i = 0; i < sortList.length(); ++i) {
-        hashIndexs.insert(sortList.value(i)->hash, i);
+        for (auto id : playlistMeta.metas.keys()) {
+//        qDebug() << playlistMeta.metas.value(id) << id;
+            sortList << playlistMeta.metas.value(id);
+        }
+
+        qSort(sortList.begin(), sortList.end(),
+              getSortFunction(sortType, orderType));
+
+        QMap<QString, int> hashIndexs;
+        for (auto i = 0; i < sortList.length(); ++i) {
+            hashIndexs.insert(sortList.value(i)->hash, i);
+        }
+
+        saveSort(hashIndexs);
     }
-    saveSort(hashIndexs);
 }
 
 void Playlist::saveSort(QMap<QString, int> hashIndexs)
 {
     QSqlDatabase::database().transaction();
+
 
     QMap<int, QString> sortHashs;
 

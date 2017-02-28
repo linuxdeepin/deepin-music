@@ -29,11 +29,14 @@ struct SearchArtist {
 };
 
 struct SearchMeta {
-    int                     id = 0;
+    QString                 id;
     QString                 name;
-    int                     length = 0;
     SearchAlbum             album;
     QList<SearchArtist>     artists;
+    int                     length = 0;
+
+    SearchMeta(){}
+    SearchMeta(const QString &id): id(id) {}
 };
 
 }

@@ -107,6 +107,7 @@ NeteaseMetaSearchEngine::NeteaseMetaSearchEngine(QObject *parent): MetaSearchEng
     qRegisterMetaType<QList<MediaMeta> >();
     qRegisterMetaType<QList<DMusic::SearchMeta> >();
     qRegisterMetaType<DMusic::SearchMeta>();
+    qRegisterMetaType<QList<SearchMeta>>();
 
     m_geese = new DMusic::Net::Geese(this);
     m_geese->setRawHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -147,24 +148,24 @@ static QList<SearchMeta> toSongList(const QByteArray &data)
     auto songs = searchResult.value("songs").toArray();
     auto songCount = searchResult.value("songCount").toInt();
 
-    qDebug() << "-------------------------------------------------------\n Find " << songCount << "result";
+    qDebug() << "--------\n Find " << songCount << "result";
     for (auto songJson : songs) {
-        SearchMeta SearchMeta;
+        SearchMeta searchMeta;
         auto song = songJson.toObject();
         auto length = song.value("bMusic").toObject().value("playTime").toInt();
-        SearchMeta.id = song.value("id").toInt();
-        SearchMeta.name = song.value("name").toString();
-        SearchMeta.length = length;
+        searchMeta.id = QString("netease_%1").arg(song.value("id").toInt());
+        searchMeta.name = song.value("name").toString();
+        searchMeta.length = length;
         auto album = song.value("album").toObject();
-        SearchMeta.album.name = album.value("name").toString();
-        SearchMeta.album.coverUrl = album.value("blurPicUrl").toString();
+        searchMeta.album.name = album.value("name").toString();
+        searchMeta.album.coverUrl = album.value("blurPicUrl").toString();
         auto artists = song.value("artists").toArray();
 
         for (auto artistJson : artists) {
             auto artist = artistJson.toObject();
             SearchArtist neArtist;
             neArtist.name = artist.value("name").toString();
-            SearchMeta.artists << neArtist;
+            searchMeta.artists << neArtist;
         }
 //        qDebug() << ">>>> Find song:";
 //        qDebug() << SearchMeta.id << SearchMeta.name
@@ -174,9 +175,9 @@ static QList<SearchMeta> toSongList(const QByteArray &data)
 //            qDebug() << artist.name;
 //        }
 //        qDebug() << "<<<<";
-        SearchMetas << SearchMeta;
+        SearchMetas << searchMeta;
     }
-    qDebug() << "-------------------------------------------------------";
+    qDebug() << "--------";
     return SearchMetas;
 }
 
@@ -203,7 +204,7 @@ void NeteaseMetaSearchEngine::searchMeta(const MetaPtr meta)
     auto anlyzer = QSharedPointer<MetaAnalyzer>(new MetaAnalyzer(meta, m_geese));
     connect(anlyzer.data(), &MetaAnalyzer::searchFinished,
     this, [ = ](const MetaPtr meta, SearchMeta song) {
-        qDebug() << "get " << "=====" << song.album.coverUrl;
+        qDebug() << "get " << "=====" << song.album.coverUrl << song.id;
         connect(m_geese->getGoose(song.album.coverUrl), &DMusic::Net::Goose::arrive,
         this, [ = ](int errCode, const QByteArray & data) {
             qDebug() << "NeteaseMetaSearchEngine received: " << errCode << data.length();
@@ -212,11 +213,11 @@ void NeteaseMetaSearchEngine::searchMeta(const MetaPtr meta)
         });
 
         QString lyricUrl = QLatin1String("http://music.163.com/api/song/lyric?os=pc&id=%1&lv=-1&kv=-1&tv=-1");
-        lyricUrl = lyricUrl.arg(song.id);
+        lyricUrl = lyricUrl.arg(QString(song.id).remove("netease_"));
         qDebug() << "get " << "=====" << lyricUrl;
         connect(m_geese->getGoose(lyricUrl), &DMusic::Net::Goose::arrive,
         this, [ = ](int errCode, const QByteArray & data) {
-            qDebug() << "NeteaseMetaSearchEngine received: " << errCode << data.length();
+            qDebug() << "NeteaseMetaSearchEngine received: " << errCode << song.id << data.length();
             emit this->lyricLoaded(meta, song, toLyric(data));
         });
     });
@@ -228,8 +229,8 @@ void NeteaseMetaSearchEngine::searchMeta(const MetaPtr meta)
         if (errCode != QNetworkReply::NoError || anlyzer.isNull()) {
             return;
         }
-        auto SearchMetas = toSongList(data);
-        anlyzer->onGetAblumResult(SearchMetas);
+        auto searchMetas = toSongList(data);
+        anlyzer->onGetAblumResult(searchMetas);
         goose->deleteLater();
     });
 
@@ -242,8 +243,8 @@ void NeteaseMetaSearchEngine::searchMeta(const MetaPtr meta)
         if (errCode != QNetworkReply::NoError || anlyzer.isNull()) {
             return;
         }
-        auto SearchMetas = toSongList(data);
-        anlyzer->onGetTitleResult(SearchMetas);
+        auto searchMetas = toSongList(data);
+        anlyzer->onGetTitleResult(searchMetas);
         goose->deleteLater();
     });
 }
@@ -256,23 +257,10 @@ void NeteaseMetaSearchEngine::searchContext(const QString &context)
     auto goose = m_geese->postGoose(queryUrl, params.toEncoded());
     connect(goose, &DMusic::Net::Goose::arrive,
     this, [ = ](int errCode, const QByteArray & data) {
-        qDebug() << "NeteaseMetaSearchEngine Result: " << errCode;
+        qDebug() << "NeteaseMetaSearchEngine errcode: " << errCode;
         auto searchMetas = toSongList(data);
-//        QList metalist;
-//        for (auto &song : SearchMetas) {
-//            MediaMeta meta;
-//            meta.searchID = QString("%1").arg(song.id);
-//            meta.title = song.name;
-//            meta.artist = song.album.name;
-//            meta.length = song.length;
-//            meta.searchCoverUrl = song.album.coverUrl;
-//            QString lyricUrl = QLatin1String("http://music.163.com/api/song/lyric?os=pc&id=%1&lv=-1&kv=-1&tv=-1");
-//            meta.searchLyricUrl = lyricUrl.arg(song.id);
-//            metalist << meta;
-//        }
-        qDebug() << "contextSearchFinished        xxxxxxxxxxxxxxx";
+        qDebug() << "contextSearchFinished with " << searchMetas.length() << "result";
         emit this->contextSearchFinished(context, searchMetas);
-        qDebug() << "contextSearchFinished xxxxxxxxxxxxxxxxx";
 
         goose->deleteLater();
     });

@@ -41,7 +41,7 @@
 #include "importwidget.h"
 #include "musiclistwidget.h"
 #include "playlistwidget.h"
-#include "lyricview.h"
+#include "lyricwidget.h"
 #include "footer.h"
 
 const QString s_PropertyViewname = "viewname";
@@ -75,7 +75,7 @@ public:
     TitleBarWidget  *titlebarwidget = nullptr;
     ImportWidget    *importWidget   = nullptr;
     MusicListWidget *musicList      = nullptr;
-    LyricView       *lyricWidget    = nullptr;
+    LyricWidget       *lyricWidget    = nullptr;
     PlaylistWidget  *playlistWidget = nullptr;
     Footer          *footer         = nullptr;
 
@@ -215,7 +215,7 @@ void MainFramePrivate::initUI()
     musicList = new MusicListWidget;
     musicList->setContentsMargins(0, titlebar->height(), 0, FooterHeight);
 
-    lyricWidget = new LyricView;
+    lyricWidget = new LyricWidget;
     lyricWidget->setContentsMargins(0, titlebar->height(), 0, FooterHeight);
 
     playlistWidget = new PlaylistWidget;
@@ -350,7 +350,14 @@ void MainFramePrivate::setPlaylistVisible(bool visible)
         return;
     }
 
+    auto ismoving = playlistWidget->property("moving").toBool();
+    if (ismoving) {
+        return;
+    }
+
+    playlistWidget->setProperty("moving", true);
     auto titleBarHeight = titlebar->height();
+
     double factor = 0.6;
     QRect start(q->width(), titleBarHeight,
                 playlistWidget->width(), playlistWidget->height());
@@ -367,6 +374,10 @@ void MainFramePrivate::setPlaylistVisible(bool visible)
     disableControl(AnimationDelay * factor);
     titlebar->raise();
     footer->raise();
+
+    QTimer::singleShot(AnimationDelay * factor*1, q, [ = ]() {
+        playlistWidget->setProperty("moving", false);
+    });
 }
 
 void MainFramePrivate::disableControl(int delay)
@@ -570,15 +581,19 @@ void MainFrame::binding(Presenter *presenter)
             d->musicList,  &MusicListWidget::onLocate);
 
     connect(presenter, &Presenter::musicPlayed,
-            d->lyricWidget, &LyricView::onMusicPlayed);
+            d->lyricWidget, &LyricWidget::onMusicPlayed);
     connect(presenter, &Presenter::coverSearchFinished,
-            d->lyricWidget, &LyricView::onCoverChanged);
+            d->lyricWidget, &LyricWidget::onCoverChanged);
+    connect(presenter, &Presenter::lyricSearchFinished,
+            d->lyricWidget, &LyricWidget::onLyricChanged);
     connect(presenter, &Presenter::contextSearchFinished,
-            d->lyricWidget, &LyricView::onContextSearchFinished);
+            d->lyricWidget, &LyricWidget::onContextSearchFinished);
 
 
-    connect(d->lyricWidget,  &LyricView::requestContextSearch,
+    connect(d->lyricWidget,  &LyricWidget::requestContextSearch,
             presenter, &Presenter::requestContextSearch);
+    connect(d->lyricWidget, &LyricWidget::changeMetaCache,
+            presenter, &Presenter::onChangeSearchMetaCache);
 
 
     // footer

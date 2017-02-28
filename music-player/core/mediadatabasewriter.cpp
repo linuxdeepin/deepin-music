@@ -40,12 +40,13 @@ void MediaDatabaseWriter::updateMediaMeta(const MetaPtr meta)
     QSqlQuery query;
 
     query.prepare("UPDATE music set "
-                  "invalid=:invalid, length=:length, "
+                  "invalid=:invalid, length=:length, search_id=:search_id, "
                   "title=:title, artist=:artist, album=:album, "
                   "py_title=:py_title, py_title_short=:py_title_short, py_artist=:py_artist, "
                   "py_artist_short=:py_artist_short, py_album=:py_album, py_album_short=:py_album_short "
                   "where hash=:hash");
 
+    query.bindValue(":search_id", meta->searchID);
     query.bindValue(":invalid", meta->invalid);
     query.bindValue(":length", meta->length);
     query.bindValue(":title", meta->title);

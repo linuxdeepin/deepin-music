@@ -49,6 +49,7 @@ static bool createConnection()
                "size INTEGER, track INTEGER, "
                "offset INTEGER, favourite INTEGER(32), "
                "localpath VARCHAR(4096), length INTEGER, "
+               "search_id VARCHAR(256), "
                "invalid INTEGER(32), "
                "cuepath VARCHAR(4096) )"
               );
@@ -133,6 +134,11 @@ void megrateToVserion_0()
         qWarning() << "sql upgrade with error:" << query.lastError().type();
     }
 
+    query.prepare("ALTER TABLE music ADD COLUMN search_id VARCHAR(256);");
+    if (!query.exec()) {
+        qWarning() << "sql upgrade with error:" << query.lastError().type();
+    }
+
     query.prepare("ALTER TABLE playlist ADD COLUMN order_type INTEGER(32);");
     if (!query.exec()) {
         qWarning() << "sql upgrade with error:" << query.lastError().type();
@@ -172,6 +178,7 @@ void margeDatabase()
     margeFuncs.insert(0, megrateToVserion_0);
 
     int currentVersion = databaseVersion();
+//    currentVersion = -1;
 
     QList<int> sortVer = margeFuncs.keys();
     qSort(sortVer.begin(), sortVer.end());
@@ -194,7 +201,7 @@ MediaDatabase::MediaDatabase(QObject *parent) : QObject(parent)
 
     bind();
 
-    margeDatabase();
+//    margeDatabase();
 
     QSqlDatabase::database().transaction();
     PlaylistMeta playlistMeta;
@@ -464,7 +471,7 @@ QList<MediaMeta> MediaDatabase::allmetas()
     QList<MediaMeta> metalist;
     QString queryString = QString("SELECT hash, localpath, title, artist, album, "
                                   "filetype, track, offset, length, size, "
-                                  "timestamp, invalid "
+                                  "timestamp, invalid, search_id "
                                   "FROM music");
 
     QSqlQuery query;
@@ -488,7 +495,7 @@ QList<MediaMeta> MediaDatabase::allmetas()
         meta.size = query.value(9).toInt();
         meta.timestamp = query.value(10).toInt();
         meta.invalid = query.value(11).toBool();
-
+        meta.searchID = query.value(12).toString();
         metalist << meta;
     }
 

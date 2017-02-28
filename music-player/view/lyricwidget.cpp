@@ -7,7 +7,7 @@
  * (at your option) any later version.
  **/
 
-#include "lyricview.h"
+#include "lyricwidget.h"
 
 #include <QDebug>
 #include <QLabel>
@@ -28,21 +28,21 @@
 #include "../core/util/lyric.h"
 
 #include "widget/cover.h"
-#include "widget/delegate/lyriclinedelegate.h"
 #include "widget/searchmetalist.h"
 #include "widget/searchmetaitem.h"
+#include "widget/lyricview.h"
 
 //DWIDGET_USE_NAMESPACE
 
 static const int lyricLineHeight = 40;
 static const QString defaultLyric = "No Lyric";
 
-class LyricViewPrivate
+class LyricWidgetPrivate
 {
 public:
-    LyricViewPrivate(LyricView *parent): q_ptr(parent) {}
+    LyricWidgetPrivate(LyricWidget *parent): q_ptr(parent) {}
 
-    bool checkMeta();
+    bool checkSearchMeta();
     void initConnection();
     void adjustLyric();
     void setLyricLines(QString lines);
@@ -61,25 +61,31 @@ public:
     QPushButton         *m_exitSearch       = nullptr;
     QFrame              *searchMetaFrame    = nullptr;
     Cover               *m_cover            = nullptr;
-    QListView           *m_lyric            = nullptr;
+
+    LyricView           *m_lyric            = nullptr;
     QStringListModel    *m_model            = nullptr;
 
     QString             defaultCover;
 
-    LyricView *q_ptr;
-    Q_DECLARE_PUBLIC(LyricView)
+    LyricWidget *q_ptr;
+    Q_DECLARE_PUBLIC(LyricWidget)
 };
 
-void LyricViewPrivate::initConnection()
+bool LyricWidgetPrivate::checkSearchMeta()
 {
-    Q_Q(LyricView);/*
+    return true;
+}
+
+void LyricWidgetPrivate::initConnection()
+{
+    Q_Q(LyricWidget);/*
     q->connect(m_hideLyric, &QPushButton::clicked,
                q, &LyricView::toggleLyricView);*/
 }
 
-void LyricViewPrivate::adjustLyric()
+void LyricWidgetPrivate::adjustLyric()
 {
-    Q_Q(LyricView);
+    Q_Q(LyricWidget);
     auto itemHeight = lyricLineHeight;
     auto contentHeight = q->rect().marginsRemoved(q->contentsMargins()).height();
     auto maxHeight = contentHeight * 92 / 100;
@@ -90,9 +96,9 @@ void LyricViewPrivate::adjustLyric()
     }
 }
 
-void LyricViewPrivate::setLyricLines(QString str)
+void LyricWidgetPrivate::setLyricLines(QString str)
 {
-    Q_Q(LyricView);
+    Q_Q(LyricWidget);
     m_lyriclist = parseLrc(str);
 
     QStringList lines;
@@ -141,10 +147,10 @@ void LyricViewPrivate::setLyricLines(QString str)
     adjustLyric();
 }
 
-LyricView::LyricView(QWidget *parent)
-    : QFrame(parent), d_ptr(new LyricViewPrivate(this))
+LyricWidget::LyricWidget(QWidget *parent)
+    : QFrame(parent), d_ptr(new LyricWidgetPrivate(this))
 {
-    Q_D(LyricView);
+    Q_D(LyricWidget);
 
     setObjectName("LyricView");
     auto layout = new QHBoxLayout(this);
@@ -193,13 +199,12 @@ LyricView::LyricView(QWidget *parent)
     d->m_cover->setFixedSize(200, 200);
     d->m_cover->setObjectName("LyricCover");
 
-    d->m_lyric = new QListView;
+    d->m_lyric = new LyricView;
     d->m_lyric->setObjectName("LyricTextView");
 
     d->m_lyric->setSelectionMode(QListView::SingleSelection);
     d->m_lyric->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     d->m_lyric->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    d->m_lyric->setItemDelegate(new LyricLineDelegate);
     d->m_lyric->setEditTriggers(QAbstractItemView::NoEditTriggers);
     d->m_lyric->setFlow(QListView::TopToBottom);
 
@@ -281,16 +286,15 @@ LyricView::LyricView(QWidget *parent)
     });
 
     connect(d->searchMetaList, &SearchMetaList::itemClicked,
-    this, [ = ](QListWidgetItem * /*item*/) {
-//        auto playlistItem = qobject_cast<SearchMetaItem *>(d->searchMetaList->itemWidget(item));
-//        if (!playlistItem) {
-//            qCritical() << "SearchMetaItem is empty" << item << playlistItem;
-//            return;
-//        }
-//        // fixme:
-//        auto meta = playlistItem->property("musicMeta").value<DMusic::SearchMeta>();
-//        meta->hash = d->m_playingMusic->hash;
-//        emit changeMetaCache(d->activingMeta);
+    this, [ = ](QListWidgetItem * item) {
+        auto searchItem = qobject_cast<SearchMetaItem *>(d->searchMetaList->itemWidget(item));
+        if (!searchItem) {
+            qCritical() << "SearchMetaItem is empty" << item << searchItem;
+            return;
+        }
+        // fixme:
+        auto search = searchItem->property("musicMeta").value<DMusic::SearchMeta>();
+        emit changeMetaCache(d->activingMeta, search);
     });
 
     connect(d->searchMetaList, &SearchMetaList::currentItemChanged,
@@ -310,27 +314,27 @@ LyricView::LyricView(QWidget *parent)
 
 }
 
-LyricView::~LyricView()
+LyricWidget::~LyricWidget()
 {
 
 }
 
-void LyricView::initUI()
+void LyricWidget::initUI()
 {
-    Q_D(LyricView);
+    Q_D(LyricWidget);
     d->m_cover->setCoverPixmap(QPixmap(d->defaultCover));
     d->initConnection();
 }
 
-QString LyricView::defaultCover() const
+QString LyricWidget::defaultCover() const
 {
-    Q_D(const LyricView);
+    Q_D(const LyricWidget);
     return d->defaultCover;
 }
 
-void LyricView::checkHiddenSearch(QPoint mousePos)
+void LyricWidget::checkHiddenSearch(QPoint mousePos)
 {
-    Q_D(LyricView);
+    Q_D(LyricWidget);
     if (!this->isVisible() || !d->searchMetaFrame->isVisible()) {
         return;
     }
@@ -347,9 +351,9 @@ void LyricView::checkHiddenSearch(QPoint mousePos)
     }
 }
 
-void LyricView::resizeEvent(QResizeEvent *event)
+void LyricWidget::resizeEvent(QResizeEvent *event)
 {
-    Q_D(LyricView);
+    Q_D(LyricWidget);
     QWidget::resizeEvent(event);
 
     d->m_lyric->setFixedWidth(event->size().width() * 45 / 100);
@@ -360,7 +364,7 @@ void LyricView::resizeEvent(QResizeEvent *event)
     d->searchMetaFrame->setFixedHeight(maxHeight);
 }
 
-void LyricView::paintEvent(QPaintEvent *e)
+void LyricWidget::paintEvent(QPaintEvent *e)
 {
     QFrame::paintEvent(e);
 
@@ -396,25 +400,25 @@ void LyricView::paintEvent(QPaintEvent *e)
 }
 
 
-void LyricView::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
+void LyricWidget::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
 {
-    Q_D(LyricView);
+    Q_D(LyricWidget);
     Q_UNUSED(playlist);
     d->activingMeta = meta;
     d->m_showSearch->setDisabled(false);
 }
 
-void LyricView::onMusicStop(PlaylistPtr /*playlist*/, const MetaPtr meta)
+void LyricWidget::onMusicStop(PlaylistPtr /*playlist*/, const MetaPtr meta)
 {
-    Q_D(LyricView);
+    Q_D(LyricWidget);
     onLyricChanged(meta, DMusic::SearchMeta(), "");
     onCoverChanged(meta, DMusic::SearchMeta(), "");
     d->m_showSearch->setDisabled(true);
 }
 
-void LyricView::onProgressChanged(qint64 value, qint64 /*length*/)
+void LyricWidget::onProgressChanged(qint64 value, qint64 /*length*/)
 {
-    Q_D(LyricView);
+    Q_D(LyricWidget);
     auto len = d->m_lyriclist.m_lyricElements.length();
     if (!d->m_lyriclist.hasTime) {
         return;
@@ -435,29 +439,28 @@ void LyricView::onProgressChanged(qint64 value, qint64 /*length*/)
     d->m_lyric->clearSelection();
     d->m_lyric->setCurrentIndex(index);
     d->m_lyric->scrollTo(index, QListView::PositionAtCenter);
-
 }
 
-void LyricView::onLyricChanged(const MetaPtr meta, const DMusic::SearchMeta &searchResult,  const QByteArray &lyricData)
+void LyricWidget::onLyricChanged(const MetaPtr meta, const DMusic::SearchMeta &search,  const QByteArray &lyricData)
 {
-    Q_D(LyricView);
-//    d->checkMeta()
+    Q_D(LyricWidget);
     if (d->activingMeta != meta) {
         return;
     }
-//    d->lyricSearchMeta = meta;
+    d->searchMeta = search;
+
     auto lyricStr = QString::fromUtf8(lyricData);
     d->setLyricLines(lyricStr);
 }
 
-void LyricView::onCoverChanged(const MetaPtr meta,  const DMusic::SearchMeta &song, const QByteArray &coverData)
+void LyricWidget::onCoverChanged(const MetaPtr meta,  const DMusic::SearchMeta &search, const QByteArray &coverData)
 {
-    Q_D(LyricView);
-    qDebug() << d->activingMeta << meta;
+    Q_D(LyricWidget);
     if (d->activingMeta != meta) {
         return;
     }
-//    d->coverSearchMeta = meta;
+
+    d->searchMeta = search;
     QPixmap coverPixmap = coverData.length() > 1024 ?
                           QPixmap::fromImage(QImage::fromData(coverData)) :
                           QPixmap(d->defaultCover);
@@ -466,15 +469,15 @@ void LyricView::onCoverChanged(const MetaPtr meta,  const DMusic::SearchMeta &so
     d->m_cover->update();
 }
 
-void LyricView::setDefaultCover(QString defaultCover)
+void LyricWidget::setDefaultCover(QString defaultCover)
 {
-    Q_D(LyricView);
+    Q_D(LyricWidget);
     d->defaultCover = defaultCover;
 }
 
-void LyricView::onUpdateMetaCodec(const MetaPtr meta)
+void LyricWidget::onUpdateMetaCodec(const MetaPtr meta)
 {
-    Q_D(LyricView);
+    Q_D(LyricWidget);
 
 //    if (d->m_playingMusic == meta) {
 //        d->m_playingMusic.title = meta.title;
@@ -483,31 +486,30 @@ void LyricView::onUpdateMetaCodec(const MetaPtr meta)
 //    }
 }
 
-void LyricView::onContextSearchFinished(const QString &context, const QList<DMusic::SearchMeta> &metalist)
+void LyricWidget::onContextSearchFinished(const QString &context, const QList<DMusic::SearchMeta> &metalist)
 {
-    Q_D(LyricView);
+    Q_D(LyricWidget);
     d->searchMetaList->clear();
 
 //    qDebug() << d->lyricSearchMeta.searchID;
 //    qDebug() << d->coverSearchMeta.searchID;
 
-//    QListWidgetItem *current = nullptr;
-//    for (auto &meta : metalist) {
-//        qDebug() << "add " << meta.hash;
-//        qDebug() << d->lyricSearchMeta.searchID << meta.searchID;
-//        auto item = new QListWidgetItem;
-//        auto itemWidget = new SearchMetaItem;
-//        itemWidget->initUI(meta);
-//        if (d->lyricSearchMeta.searchID == meta.searchID) {
-//            current = item;
-//        }
-//        itemWidget->setProperty("musicMeta", QVariant::fromValue<MusicMeta>(meta));
-//        d->searchMetaList->addItem(item);
-//        d->searchMetaList->setItemWidget(item, itemWidget);
-//    }
-//    if (current) {
-//        d->searchMetaList->setCurrentItem(current);
-//    }
+    QListWidgetItem *current = nullptr;
+    for (auto &meta : metalist) {
+        ;
+        auto item = new QListWidgetItem;
+        auto itemWidget = new SearchMetaItem;
+        itemWidget->initUI(meta);
+        if (d->searchMeta.id == meta.id) {
+            current = item;
+        }
+        itemWidget->setProperty("musicMeta", QVariant::fromValue<DMusic::SearchMeta>(meta));
+        d->searchMetaList->addItem(item);
+        d->searchMetaList->setItemWidget(item, itemWidget);
+    }
+    if (current) {
+        d->searchMetaList->setCurrentItem(current);
+    }
 }
 
 

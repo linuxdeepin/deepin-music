@@ -30,7 +30,7 @@ signals:
     void metaSearchFinished(const MetaPtr meta);
     void doSearchMeta(const MetaPtr meta);
 
-    void contextSearchFinished(const QString &context, const QList<SearchMeta> &metalist);
+    void contextSearchFinished(const QString &context, const QList<DMusic::SearchMeta> &metalist);
     void doSearchContext(const QString &context);
 
 public:

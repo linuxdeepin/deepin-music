@@ -129,7 +129,7 @@ public slots:
     void onSearchText(const QString text);
     void onExitSearch();
     void onLocateMusicAtAll(const QString &hash);
-    void onChangeSearchMetaCache(const MetaPtr meta);
+    void onChangeSearchMetaCache(const MetaPtr meta, const DMusic::SearchMeta &search);
 
     void onScanMusicDirectory();
     void onImportFiles(const QStringList &filelist);
