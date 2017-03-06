@@ -668,6 +668,8 @@ void MainFrame::binding(Presenter *presenter)
             presenter, &Presenter::onCurrentPlaylistChanged);
     connect(d->playlistWidget,  &PlaylistWidget::playall,
             presenter, &Presenter::onPlayall);
+    connect(d->playlistWidget,  &PlaylistWidget::customResort,
+            presenter, &Presenter::onCustomResort);
     connect(d->playlistWidget,  &PlaylistWidget::hidePlaylist,
     this, [ = ]() {
         d->setPlaylistVisible(false);

@@ -668,6 +668,12 @@ void Presenter::onCurrentPlaylistChanged(PlaylistPtr playlist)
     emit currentMusicListChanged(d->currentPlaylist);
 }
 
+void Presenter::onCustomResort(const QStringList &uuids)
+{
+    Q_D(Presenter);
+    d->playlistMgr->onCustomResort(uuids);
+}
+
 void Presenter::onRequestMusiclistMenu(const QPoint &pos)
 {
     Q_D(Presenter);

@@ -26,6 +26,7 @@ signals:
     void selectPlaylist(PlaylistPtr playlist);
     void hidePlaylist();
     void playall(PlaylistPtr playlist);
+    void customResort(const QStringList &uuids);
 
 public slots:
     void onMusicPlayed(PlaylistPtr playlist, const MetaPtr);

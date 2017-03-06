@@ -50,7 +50,8 @@ public:
     bool isEmpty() const;
     bool canNext() const;
     int length() const;
-    int sorttype() const;
+    int sortType() const;
+    uint sortID() const;
 
     bool active() const;
     void setActive(bool active);

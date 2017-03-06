@@ -123,6 +123,7 @@ public slots:
     void onAddToPlaylist(PlaylistPtr playlist, const MetaPtrList metalist);
     void onPlaylistAdd(bool edit);
     void onCurrentPlaylistChanged(PlaylistPtr playlist);
+    void onCustomResort(const QStringList& uuids);
 
     //! ui: menu interface
     void onRequestMusiclistMenu(const QPoint &pos);

@@ -56,7 +56,7 @@ void MusicListWidgetPrivate::initData(PlaylistPtr playlist)
     musiclist->onMusiclistChanged(playlist);
 
     for (auto action : dropdown->actions()) {
-        if (action->data().toInt() == playlist->sorttype()) {
+        if (action->data().toInt() == playlist->sortType()) {
             dropdown->setCurrentAction(action);
         }
     }

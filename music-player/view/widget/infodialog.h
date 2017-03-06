@@ -21,6 +21,7 @@ public:
     explicit InfoDialog(QWidget *parent = 0);
     ~InfoDialog();
 
+    void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
     void updateInfo(const MetaPtr meta);
 
 private:

@@ -84,6 +84,10 @@ PlaylistWidget::PlaylistWidget(QWidget *parent) : QFrame(parent)
             itemWidget->setActive(true);
         }
     });
+    connect(m_listview, &PlayListView::customResort,
+    this, [ = ](const QStringList & uuids) {
+        emit this->customResort(uuids);
+    });
 }
 
 void PlaylistWidget::initData(QList<PlaylistPtr > playlists, PlaylistPtr last)
@@ -111,6 +115,7 @@ void PlaylistWidget::initData(QList<PlaylistPtr > playlists, PlaylistPtr last)
             delete m_listview->takeItem(m_listview->row(item));
             // remote to firest
             Q_ASSERT(m_listview->count() > 0);
+            m_listview->updateScrollbar();
             m_listview->setCurrentItem(m_listview->item(0));
         });
 
@@ -128,6 +133,7 @@ void PlaylistWidget::initData(QList<PlaylistPtr > playlists, PlaylistPtr last)
     } else {
         m_listview->setCurrentItem(m_listview->item(0));
     }
+    m_listview->updateScrollbar();
 }
 
 void PlaylistWidget::onMusicPlayed(PlaylistPtr playlist, const MetaPtr)
@@ -186,7 +192,7 @@ void PlaylistWidget::onPlaylistAdded(PlaylistPtr playlist)
             this, &PlaylistWidget::playall);
 
     m_listview->setCurrentItem(item);
-
+    m_listview->updateScrollbar();
 }
 
 void PlaylistWidget::onCurrentChanged(PlaylistPtr playlist)

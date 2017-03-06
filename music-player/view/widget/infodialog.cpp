@@ -15,6 +15,10 @@
 #include <QGridLayout>
 #include <QPushButton>
 
+#include <DApplication>
+#include "dplatformwindowhandle.h"
+#include "dblureffectwidget.h"
+
 #include <dwindowclosebutton.h>
 #include <thememanager.h>
 
@@ -34,6 +38,7 @@ public:
     void initConnection();
     void updateLabelSize();
 
+    DBlurEffectWidget *bgBlurWidget = Q_NULLPTR;
     QFrame *m_infogridFrame = nullptr;
     QList<QLabel *> m_valueList;
     QLabel *m_cover = nullptr;
@@ -127,6 +132,19 @@ void InfoDialogPrivate::initUI()
     }
 
     q->connect(closeBt, &DWindowCloseButton::clicked, q, &DAbstractDialog::hide);
+
+
+    if (qApp->isDXcbPlatform()) {
+        bgBlurWidget = new DBlurEffectWidget(q);
+        bgBlurWidget->lower();
+        bgBlurWidget->setBlendMode(DBlurEffectWidget::BehindWindowBlend);
+        bgBlurWidget->setVisible(DPlatformWindowHandle::hasBlurWindow());
+
+        DPlatformWindowHandle::connectWindowManagerChangedSignal(q, [ = ] {
+            bgBlurWidget->setVisible(DPlatformWindowHandle::hasBlurWindow());
+        });
+    }
+
 }
 
 void InfoDialogPrivate::updateLabelSize()
@@ -155,6 +173,13 @@ InfoDialog::~InfoDialog()
 
 }
 
+void InfoDialog::resizeEvent(QResizeEvent *event)
+{
+    Q_D(InfoDialog);
+    Dtk::Widget::DAbstractDialog::resizeEvent(event);
+    d->bgBlurWidget->resize(this->size());
+}
+
 void InfoDialog::updateInfo(const MetaPtr meta)
 {
     Q_D(InfoDialog);
@@ -178,7 +203,7 @@ void InfoDialog::updateInfo(const MetaPtr meta)
         cover = QImage::fromData(coverData);
         coverPixmap = QPixmap::fromImage(WidgetHelper::cropRect(cover, QSize(CoverSize, CoverSize)));
     }
-    d->m_cover->setPixmap(coverPixmap.scaled(CoverSize,CoverSize));
+    d->m_cover->setPixmap(coverPixmap.scaled(CoverSize, CoverSize));
     d->updateLabelSize();
 
     d->m_title->setFocus();

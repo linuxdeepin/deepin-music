@@ -19,7 +19,6 @@ public:
     TitelEdit(QWidget *parent=nullptr);
     ~TitelEdit();
 
-    void mouseDoubleClickEvent(QMouseEvent *) Q_DECL_OVERRIDE;
 private:
     QScopedPointer<TitelEditPrivate> d_ptr;
     Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), TitelEdit)

@@ -27,6 +27,8 @@
 
 #include "titeledit.h"
 
+static int LineEditWidth = 105;
+
 DWIDGET_USE_NAMESPACE
 
 PlayListItem::PlayListItem(PlaylistPtr playlist, QWidget *parent) : QFrame(parent)
@@ -57,13 +59,8 @@ PlayListItem::PlayListItem(PlaylistPtr playlist, QWidget *parent) : QFrame(paren
     m_titleedit->setFixedHeight(24);
     m_titleedit->setMaximumWidth(160);
     m_titleedit->setMaxLength(255);
-    m_titleedit->setProperty("HistoryValue", m_titleedit->text());
-
-//    QPalette p = m_titleedit->palette();
-//    //FIXME : theme light
-//    p.setBrush(QPalette::HighlightedText, QBrush(Qt::white));
-//    p.setBrush(QPalette::Background, QBrush(QColor(255,255,255,0.15*255)));
-//    m_titleedit->setPalette(p);
+    m_titleedit->setMaxLength(40);
+    m_titleedit->setProperty("EditValue", playlist->displayName());
 
     m_titleedit->setDisabled(true);
     if (playlist->readonly()) {
@@ -98,29 +95,31 @@ PlayListItem::PlayListItem(PlaylistPtr playlist, QWidget *parent) : QFrame(paren
     ThemeManager::instance()->regisetrWidget(this);
 
     // TODO: wtf
-//    QFont font(m_titleedit->font());
-//    font.setPointSize(12);
-//    qDebug() << font << m_titleedit->width();
-//    QFontMetrics fm(font);
-//    m_titleedit->setText(fm.elidedText(QString(playlist->displayName()),
-//                                       Qt::ElideMiddle, 140));
-    m_titleedit->setText(playlist->displayName());
-    m_titleedit->setMaxLength(40);
-    m_titleedit->setProperty("HistoryValue", m_titleedit->text());
-    //    m_titleedit->adjustSize();
+    QFont font(m_titleedit->font());
+    QFontMetrics fm(font);
+    m_titleedit->setText(fm.elidedText(QString(playlist->displayName()),
+                                       Qt::ElideMiddle, LineEditWidth));
 
     connect(m_titleedit, &QLineEdit::editingFinished,
     this, [ = ] {
+        qDebug() << "editingFinished";
         if (m_titleedit->text().isEmpty())
         {
-            m_titleedit->setText(m_titleedit->property("HistoryValue").toString());
+            m_titleedit->setText(m_titleedit->property("EditValue").toString());
         } else {
             emit this->rename(m_titleedit->text());
-            m_titleedit->setProperty("HistoryValue", m_titleedit->text());
+            m_titleedit->setProperty("EditValue",m_titleedit->text());
         }
+
+        qDebug() << m_titleedit->text();
+        QFont font(m_titleedit->font());
+        QFontMetrics fm(font);
+        m_titleedit->setText(fm.elidedText(QString(m_titleedit->text()),
+                                           Qt::ElideMiddle, LineEditWidth));
 
         m_titleedit->setEnabled(false);
     });
+
     connect(m_titleedit, &QLineEdit::returnPressed,
     this, [ = ] {
         m_titleedit->blockSignals(true);
@@ -217,6 +216,9 @@ void PlayListItem::showContextMenu(const QPoint &pos)
         }
         if (action->text() == tr("Rename")) {
             QTimer::singleShot(0, this, [ = ] {
+                auto value = m_titleedit->property("EditValue").toString();
+                qDebug() << value;
+                m_titleedit->setText(value);
                 m_titleedit->setEnabled(true);
                 m_titleedit->setFocus();
                 m_titleedit->setCursorPosition(0);

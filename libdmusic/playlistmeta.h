@@ -28,6 +28,8 @@ public:
 
     int     sortType    = 0;
     int     orderType   = 0;
+
+    uint     sortID;
     bool    editmode    = false;
     bool    readonly    = false;
     bool    hide        = false;

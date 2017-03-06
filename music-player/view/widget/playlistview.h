@@ -10,14 +10,27 @@
 #pragma once
 
 #include <QListWidget>
+#include <QScopedPointer>
 
+class PlayListViewPrivate;
 class PlayListView : public QListWidget
 {
     Q_OBJECT
 public:
     explicit PlayListView(QWidget *parent = 0);
+    ~PlayListView();
+
+    void updateScrollbar();
 
 signals:
+    void customResort(const QStringList &uuids);
 
-public slots:
+protected:
+    virtual void wheelEvent(QWheelEvent *event) Q_DECL_OVERRIDE;
+    virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
+    virtual void startDrag(Qt::DropActions supportedActions) Q_DECL_OVERRIDE;
+
+private:
+    QScopedPointer<PlayListViewPrivate> d_ptr;
+    Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), PlayListView)
 };

@@ -28,8 +28,10 @@ public:
     PlaylistPtr playlist(const QString &id);
 
     PlaylistPtr addPlaylist(const PlaylistMeta &listinfo);
+    void onCustomResort(QStringList uuids);
 
     void load();
+    void save();
 
 signals:
     void musiclistAdded(PlaylistPtr playlist, const MetaPtrList metalist);

@@ -29,7 +29,3 @@ TitelEdit::~TitelEdit()
 {
 
 }
-
-void TitelEdit::mouseDoubleClickEvent(QMouseEvent *e)
-{
-}

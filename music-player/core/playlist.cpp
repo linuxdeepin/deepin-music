@@ -144,9 +144,14 @@ void Playlist::play(const MetaPtr meta)
     }
 }
 
-int Playlist::sorttype() const
+int Playlist::sortType() const
 {
     return playlistMeta.sortType;
+}
+
+uint Playlist::sortID() const
+{
+    return playlistMeta.sortID;
 }
 
 void Playlist::setActive(bool active)

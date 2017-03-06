@@ -64,6 +64,7 @@ static bool createConnection()
                "displayname VARCHAR(4096), "
                "icon VARCHAR(256), readonly INTEGER, "
                "hide INTEGER, sort_type INTEGER, "
+               "sort_id INTEGER, "
                "order_type INTEGER )");
 
     query.exec("CREATE TABLE IF NOT EXISTS info (uuid TEXT primary key not null, "
@@ -149,6 +150,11 @@ void megrateToVserion_0()
         qWarning() << "sql upgrade with error:" << query.lastError().type();
     }
 
+    query.prepare("ALTER TABLE playlist ADD COLUMN sort_id INTEGER(32);");
+    if (!query.exec()) {
+        qWarning() << "sql upgrade with error:" << query.lastError().type();
+    }
+
     QStringList list;
     query.prepare("SELECT uuid FROM playlist;");
     if (!query.exec()) {
@@ -201,7 +207,7 @@ MediaDatabase::MediaDatabase(QObject *parent) : QObject(parent)
 
     bind();
 
-//    margeDatabase();
+    margeDatabase();
 
     QSqlDatabase::database().transaction();
     PlaylistMeta playlistMeta;
@@ -228,6 +234,7 @@ MediaDatabase::MediaDatabase(QObject *parent) : QObject(parent)
     playlistMeta.icon = "search";
     playlistMeta.readonly = true;
     playlistMeta.hide = true;
+    playlistMeta.sortID = uint(-1);
     if (!playlistExist("search")) {
         addPlaylist(playlistMeta);
     }
@@ -257,7 +264,7 @@ QList<PlaylistMeta> MediaDatabase::allPlaylistMeta()
     QList<PlaylistMeta> list;
     QSqlQuery query;
     query.prepare("SELECT uuid, displayname, icon, readonly, hide, "
-                  "sort_type order_type FROM playlist");
+                  "sort_type, order_type, sort_id FROM playlist");
 
     if (!query.exec()) {
         qWarning() << query.lastError();
@@ -273,6 +280,7 @@ QList<PlaylistMeta> MediaDatabase::allPlaylistMeta()
         playlistMeta.hide = query.value(4).toBool();
         playlistMeta.sortType = query.value(5).toInt();
         playlistMeta.orderType = query.value(6).toInt();
+        playlistMeta.sortID = query.value(7).toUInt();
         list << playlistMeta;
     }
     return list;
