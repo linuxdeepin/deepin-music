@@ -55,10 +55,11 @@ public slots:
     void onMusicListAdded(PlaylistPtr playlist, const MetaPtrList metalist);
     void onMusicListRemoved(PlaylistPtr playlist, const MetaPtrList metalist);
     void onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta);
+    void onMusicError(PlaylistPtr playlist, const MetaPtr meta, int error);
     void onMusicPause(PlaylistPtr playlist, const MetaPtr meta);
     void onMusicStoped(PlaylistPtr playlist, const MetaPtr meta);
     void onProgressChanged(qint64 value, qint64 duration);
-    void onCoverChanged(const MetaPtr meta, const DMusic::SearchMeta &song, const QByteArray &coverData);
+    void onCoverChanged(const MetaPtr meta, const DMusic::SearchMeta &, const QByteArray &coverData);
     void onVolumeChanged(int volume);
     void onMutedChanged(bool muted);
     void onModeChange(int mode);

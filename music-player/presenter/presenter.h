@@ -62,6 +62,7 @@ signals:
     void activePlaylistChanged(PlaylistPtr);
 
     //! from music manager
+    void playNext(PlaylistPtr playlist, const MetaPtr meta);
     void locateMusic(PlaylistPtr, const MetaPtr);
     void currentMusicListChanged(PlaylistPtr);
     void musicListResorted(PlaylistPtr);
@@ -93,15 +94,19 @@ signals:
     void metaLibraryClean();
     void scanFinished(const QString& jobid, int mediaCount);
     void notifyMusciError(PlaylistPtr playlist, const MetaPtr meta, int error);
-    void notifyAddToPlaylist(PlaylistPtr playlist, const MetaPtrList info);
+    void notifyAddToPlaylist(PlaylistPtr playlist, const MetaPtrList metalist);
 
 public slots:
     //! music control interface
     void onSyncMusicPlay(PlaylistPtr playlist, const MetaPtr meta);
+    void onSyncMusicResume(PlaylistPtr playlist, const MetaPtr meta);
+    void onSyncMusicPrev(PlaylistPtr playlist, const MetaPtr meta);
+    void onSyncMusicNext(PlaylistPtr playlist, const MetaPtr meta);
+
     void onMusicPlay(PlaylistPtr playlist, const MetaPtr meta);
-    void onMusicPause(PlaylistPtr playlist, const MetaPtr info);
-    void onMusicResume(PlaylistPtr playlist, const MetaPtr info);
-    void onMusicStop(PlaylistPtr playlist, const MetaPtr info);
+    void onMusicPause(PlaylistPtr playlist, const MetaPtr meta);
+    void onMusicResume(PlaylistPtr playlist, const MetaPtr meta);
+    void onMusicStop(PlaylistPtr playlist, const MetaPtr meta);
     void onMusicPrev(PlaylistPtr playlist, const MetaPtr meta);
     void onMusicNext(PlaylistPtr playlist, const MetaPtr meta);
 

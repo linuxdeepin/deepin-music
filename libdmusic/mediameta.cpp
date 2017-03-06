@@ -25,6 +25,16 @@ void MediaMeta::updateSearchIndex()
     }
 }
 
+void MediaMeta::updateCodec(const QByteArray &codec)
+{
+    QFileInfo cueFi(this->cuePath);
+    if (cueFi.exists()) {
+        MetaDetector::updateCueFileTagCodec(this, cueFi, codec);
+    } else {
+        MetaDetector::updateMediaFileTagCodec(this, codec, true);
+    }
+}
+
 MediaMeta MediaMeta::fromLocalFile(const QFileInfo &fileInfo)
 {
     MediaMeta meta;
@@ -35,19 +45,19 @@ MediaMeta MediaMeta::fromLocalFile(const QFileInfo &fileInfo)
 
 namespace DMusic
 {
- QString filepathHash(const QString &filepath)
+QString filepathHash(const QString &filepath)
 {
     return QString(QCryptographicHash::hash(filepath.toLatin1(), QCryptographicHash::Md5).toHex());
 }
 
- QString lengthString(qint64 length)
+QString lengthString(qint64 length)
 {
     length = length / 1000;
     QTime t(static_cast<int>(length / 3600), length % 3600 / 60, length % 60);
     return t.toString("mm:ss");
 }
 
- QString sizeString(qint64 sizeByte)
+QString sizeString(qint64 sizeByte)
 {
     QString text;
     if (sizeByte < 1024) {
@@ -64,11 +74,11 @@ namespace DMusic
     }
     text.sprintf("%.1fG", sizeByte / 1024.0 / 1024.0 / 1024.0);
     return text;
- }
+}
 
 QList<QByteArray> detectMetaEncodings(MetaPtr meta)
 {
-    return  QList<QByteArray>();
+    return  MetaDetector::detectEncodings(meta);
 }
 
 }

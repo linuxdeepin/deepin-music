@@ -31,7 +31,7 @@ public:
     void onCustomResort(QStringList uuids);
 
     void load();
-    void save();
+    void saveSortOrder();
 
 signals:
     void musiclistAdded(PlaylistPtr playlist, const MetaPtrList metalist);

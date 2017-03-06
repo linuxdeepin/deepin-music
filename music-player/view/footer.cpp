@@ -74,7 +74,7 @@ public:
     QFrame          *ctlWidget  = nullptr;
 
     PlaylistPtr     m_playinglist;
-    MetaPtr         m_playingMeta;
+    MetaPtr         activingMeta;
 
     QString         defaultCover = "";
 
@@ -129,11 +129,11 @@ void FooterPrivate::initConnection()
     q->connect(btPlay, &QPushButton::released, q, [ = ]() {
         auto status = btPlay->property(sPropertyPlayStatus).toString();
         if (status == sPlayStatusValuePlaying) {
-            emit q->pause(m_playinglist, m_playingMeta);
+            emit q->pause(m_playinglist, activingMeta);
         } else  if (status == sPlayStatusValuePause) {
-            emit q->resume(m_playinglist, m_playingMeta);
+            emit q->resume(m_playinglist, activingMeta);
         } else {
-            emit q->play(m_playinglist, m_playingMeta);
+            emit q->play(m_playinglist, activingMeta);
         }
 //        if (!d->m_playinglist) {
 //            emit play(d->m_playinglist, d->m_playingMeta);
@@ -155,18 +155,18 @@ void FooterPrivate::initConnection()
     });
 
     q->connect(btPrev, &QPushButton::released, q, [ = ]() {
-        emit q->prev(m_playinglist, m_playingMeta);
+        emit q->prev(m_playinglist, activingMeta);
     });
     q->connect(btNext, &QPushButton::released, q, [ = ]() {
-        emit q->next(m_playinglist, m_playingMeta);
+        emit q->next(m_playinglist, activingMeta);
     });
 
     q->connect(btFavorite, &QPushButton::released, q, [ = ]() {
         qDebug() << "btFavorite---------------------------";
-        emit q->toggleFavourite(m_playingMeta);
+        emit q->toggleFavourite(activingMeta);
     });
     q->connect(title, &Label::clicked, q, [ = ](bool) {
-        emit q->locateMusic(m_playinglist, m_playingMeta);
+        emit q->locateMusic(m_playinglist, activingMeta);
     });
     q->connect(btLyric, &QPushButton::released, q, [ = ]() {
         emit  q->toggleLyricView();
@@ -476,7 +476,7 @@ void Footer::onMusicListAdded(PlaylistPtr playlist, const MetaPtrList metalist)
     Q_D(Footer);
     if (playlist->id() == FavMusicListID)
         for (auto &meta : metalist) {
-            if (meta->hash == d->m_playingMeta->hash) {
+            if (meta->hash == d->activingMeta->hash) {
                 d->updateQssProperty(d->btFavorite, sPropertyFavourite, true);
             }
         }
@@ -487,7 +487,7 @@ void Footer::onMusicListRemoved(PlaylistPtr playlist, const MetaPtrList metalist
     Q_D(Footer);
     if (playlist->id() == FavMusicListID)
         for (auto &meta : metalist) {
-            if (meta == d->m_playingMeta) {
+            if (meta == d->activingMeta) {
                 d->updateQssProperty(d->btFavorite, sPropertyFavourite, false);
             }
         }
@@ -496,6 +496,7 @@ void Footer::onMusicListRemoved(PlaylistPtr playlist, const MetaPtrList metalist
 void Footer::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(Footer);
+    qDebug() << "update status" << playlist << meta << "error";
 
     QFontMetrics fm(d->title->font());
     auto text = fm.elidedText(meta->title, Qt::ElideMiddle, d->title->maximumWidth());
@@ -516,19 +517,41 @@ void Footer::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
     d->btLyric->show();
 
     d->m_playinglist = playlist;
-    d->m_playingMeta = meta;
+    d->activingMeta = meta;
 
     d->updateQssProperty(d->btFavorite, sPropertyFavourite, meta->favourite);
-    d->updateQssProperty(d->btPlay, sPropertyPlayStatus, sPlayStatusValuePlaying);
-    d->updateQssProperty(this, sPropertyPlayStatus, sPlayStatusValuePlaying);
+
+    if (!meta->invalid) {
+        d->updateQssProperty(d->btPlay, sPropertyPlayStatus, sPlayStatusValuePlaying);
+        d->updateQssProperty(this, sPropertyPlayStatus, sPlayStatusValuePlaying);
+    }
 }
+
+void Footer::onMusicError(PlaylistPtr playlist, const MetaPtr meta, int error)
+{
+    Q_D(Footer);
+
+    if (d->activingMeta && d->m_playinglist) {
+        if (meta != d->activingMeta || playlist != d->m_playinglist) {
+            return;
+        }
+    }
+
+    if (0 == error) {
+        return;
+    }
+
+    auto status = sPlayStatusValuePause;
+    d->updateQssProperty(d->btPlay, sPropertyPlayStatus, status);
+}
+
 
 void Footer::onMusicPause(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(Footer);
-    if (meta->hash != d->m_playingMeta->hash || playlist != d->m_playinglist) {
+    if (meta->hash != d->activingMeta->hash || playlist != d->m_playinglist) {
         qWarning() << "can not pasue" << d->m_playinglist << playlist
-                   << d->m_playingMeta->hash << meta->hash;
+                   << d->activingMeta->hash << meta->hash;
         return;
     }
     auto status = sPlayStatusValuePause;
@@ -543,7 +566,7 @@ void Footer::onMusicStoped(PlaylistPtr playlist, const MetaPtr meta)
     Q_UNUSED(meta);
 
     onProgressChanged(0, 1);
-    this->enableControl(false);
+//    this->enableControl(false);
     d->title->hide();
     d->artist->hide();
     d->cover->setCoverPixmap(QPixmap(d->defaultCover));
@@ -572,10 +595,10 @@ void Footer::onProgressChanged(qint64 value, qint64 duration)
     d->progress->blockSignals(false);
 }
 
-void Footer::onCoverChanged(const MetaPtr meta, const DMusic::SearchMeta &song, const QByteArray &coverData)
+void Footer::onCoverChanged(const MetaPtr meta, const DMusic::SearchMeta &, const QByteArray &coverData)
 {
     Q_D(Footer);
-    if (meta != d->m_playingMeta) {
+    if (meta != d->activingMeta) {
         return;
     }
 
@@ -630,10 +653,10 @@ void Footer::onModeChange(int mode)
     QString playmode;
     switch (mode) {
     case 0:
-        playmode = Footer::tr("Repeat All");
+        playmode = Footer::tr("Repeat list");
         break;
     case 1:
-        playmode = Footer::tr("Repeat Single");
+        playmode = Footer::tr("Repeat");
         break;
     case 2:
         playmode = Footer::tr("Shuffle");
@@ -647,7 +670,7 @@ void Footer::onModeChange(int mode)
 void Footer::onUpdateMetaCodec(const MetaPtr meta)
 {
     Q_D(Footer);
-    if (d->m_playingMeta->hash == meta->hash) {
+    if (d->activingMeta && d->activingMeta == meta) {
         d->title->setText(meta->title);
         if (!meta->artist.isEmpty()) {
             d->artist->setText(meta->artist);
@@ -673,5 +696,3 @@ void Footer::resizeEvent(QResizeEvent *event)
     d->ctlWidget->move(center);
     d->ctlWidget->raise();
 }
-
-

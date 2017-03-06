@@ -38,11 +38,11 @@ public:
     void initConnection();
     void updateLabelSize();
 
-    DBlurEffectWidget *bgBlurWidget = Q_NULLPTR;
-    QFrame *m_infogridFrame = nullptr;
-    QList<QLabel *> m_valueList;
-    QLabel *m_cover = nullptr;
-    QLabel *m_title = nullptr;
+    DBlurEffectWidget   *bgBlurWidget   = nullptr;
+    QFrame              *infoGridFrame  = nullptr;
+    QLabel              *cover          = nullptr;
+    QLabel              *title          = nullptr;
+    QList<QLabel *>     valueList;
 
     InfoDialog *q_ptr;
     Q_DECLARE_PUBLIC(InfoDialog)
@@ -64,39 +64,38 @@ void InfoDialogPrivate::initUI()
     auto closeBt = new DWindowCloseButton;
     closeBt->setObjectName("InfoClose");
     closeBt->setFixedSize(27, 23);
-//    closeBt->setAttribute(Qt::WA_NoMousePropagation);
 
-    m_cover = new QLabel;
-    m_cover->setContentsMargins(0, 0, 0, 0);
-    m_cover->setObjectName("InfoCover");
-    m_cover->setFixedSize(CoverSize, CoverSize);
+    cover = new QLabel;
+    cover->setContentsMargins(0, 0, 0, 0);
+    cover->setObjectName("InfoCover");
+    cover->setFixedSize(CoverSize, CoverSize);
 
-    m_title = new QLabel;
-    m_title->setObjectName("InfoTitle");
-    m_title->setFixedWidth(300);
-    m_title->setWordWrap(true);
+    title = new QLabel;
+    title->setObjectName("InfoTitle");
+    title->setFixedWidth(300);
+    title->setWordWrap(true);
 
     auto split = new QLabel();
     split->setObjectName("InfoSplit");
     split->setFixedSize(300, 1);
 
-    m_infogridFrame = new QFrame;
-    m_infogridFrame->setMaximumWidth(300);
-    m_infogridFrame->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    infoGridFrame = new QFrame;
+    infoGridFrame->setMaximumWidth(300);
+    infoGridFrame->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     layout->addWidget(closeBt, 0, Qt::AlignTop | Qt::AlignRight);
     layout->addSpacing(43);
-    layout->addWidget(m_cover, 0, Qt::AlignCenter);
+    layout->addWidget(cover, 0, Qt::AlignCenter);
     layout->addSpacing(13);
-    layout->addWidget(m_title, 0, Qt::AlignCenter);
+    layout->addWidget(title, 0, Qt::AlignCenter);
     layout->addSpacing(19);
     layout->addWidget(split, 0, Qt::AlignCenter);
     layout->addSpacing(10);
-    layout->addWidget(m_infogridFrame, 0, Qt::AlignCenter);
+    layout->addWidget(infoGridFrame, 0, Qt::AlignCenter);
     layout->addSpacing(10);
     layout->addStretch();
 
-    auto infogridLayout = new QGridLayout(m_infogridFrame);
+    auto infogridLayout = new QGridLayout(infoGridFrame);
     infogridLayout->setMargin(0);
     infogridLayout->setHorizontalSpacing(5);
     infogridLayout->setVerticalSpacing(5);
@@ -109,23 +108,20 @@ void InfoDialogPrivate::initUI()
              << InfoDialog::tr("Size:") << InfoDialog::tr("Length:")
              << InfoDialog::tr("Directory:");
 
-
     for (int i = 0; i < infoKeys.length(); ++i) {
         auto infoKey = new QLabel(infoKeys.value(i));
         infoKey->setObjectName("InfoKey");
         infoKey->setMinimumHeight(18);
-//        infoKey->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
 
-        auto infoValue = new QLabel(/*infoValues.value(i)*/);
+        auto infoValue = new QLabel();
         infoValue->setWordWrap(true);
         infoValue->setObjectName("InfoValue");
         infoValue->setMinimumHeight(18);
-//        infoValue->setContentsMargins(5,0,5,0);
         infoValue->setMinimumWidth(200);
         infoValue->setMaximumWidth(220);
         infoValue->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
         infoValue->adjustSize();
-        m_valueList << infoValue;
+        valueList << infoValue;
 
         infogridLayout->addWidget(infoKey);
         infogridLayout->addWidget(infoValue);
@@ -133,9 +129,9 @@ void InfoDialogPrivate::initUI()
 
     q->connect(closeBt, &DWindowCloseButton::clicked, q, &DAbstractDialog::hide);
 
-
     if (qApp->isDXcbPlatform()) {
         bgBlurWidget = new DBlurEffectWidget(q);
+        bgBlurWidget->setMaskColor(QColor(255, 255, 255));
         bgBlurWidget->lower();
         bgBlurWidget->setBlendMode(DBlurEffectWidget::BehindWindowBlend);
         bgBlurWidget->setVisible(DPlatformWindowHandle::hasBlurWindow());
@@ -151,12 +147,12 @@ void InfoDialogPrivate::updateLabelSize()
 {
     Q_Q(InfoDialog);
     auto h = 0;
-    for (auto label : m_valueList) {
+    for (auto label : valueList) {
         label->adjustSize();
         h += label->size().height() + 6;
     }
-    m_infogridFrame->setFixedHeight(h);
-    m_infogridFrame->adjustSize();
+    infoGridFrame->setFixedHeight(h);
+    infoGridFrame->adjustSize();
     q->adjustSize();
 }
 
@@ -190,11 +186,11 @@ void InfoDialog::updateInfo(const MetaPtr meta)
                << meta->filetype << DMusic::sizeString(meta->size) << DMusic::lengthString(meta->length)
                << meta->localPath;
 
-    for (int i = 0; i < d->m_valueList.length(); ++i) {
-        d->m_valueList.value(i)->setText(infoValues.value(i));
+    for (int i = 0; i < d->valueList.length(); ++i) {
+        d->valueList.value(i)->setText(infoValues.value(i));
     }
 
-    d->m_title->setText(meta->title);
+    d->title->setText(meta->title);
 
     auto coverPixmap = QPixmap(":/common/image/info_cover.png");
     auto coverData = MetaSearchService::coverData(meta);
@@ -203,8 +199,8 @@ void InfoDialog::updateInfo(const MetaPtr meta)
         cover = QImage::fromData(coverData);
         coverPixmap = QPixmap::fromImage(WidgetHelper::cropRect(cover, QSize(CoverSize, CoverSize)));
     }
-    d->m_cover->setPixmap(coverPixmap.scaled(CoverSize, CoverSize));
+    d->cover->setPixmap(coverPixmap.scaled(CoverSize, CoverSize));
     d->updateLabelSize();
 
-    d->m_title->setFocus();
+    d->title->setFocus();
 }

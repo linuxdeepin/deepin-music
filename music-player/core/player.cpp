@@ -36,7 +36,7 @@ void initMiniTypes()
 
     QMimeDatabase mdb;
     for (auto &mt : mdb.allMimeTypes()) {
-        if (mt.name().startsWith("audio/")) {
+        if (mt.name().startsWith("audio/") || mt.name().startsWith("video/")) {
             sSupportedFiterList << mt.filterString();
             for (auto &suffix : mt.suffixes()) {
                 if (suffixBlacklist.contains(suffix)) {
@@ -46,6 +46,9 @@ void initMiniTypes()
                 sSupportedSuffixList << "*." + suffix;
                 sSupportedSuffix.insert(suffix, true);
             }
+            sSupportedMimeTypes << mt.name();
+        }
+        if (mt.name().startsWith("video/")) {
             sSupportedMimeTypes << mt.name();
         }
     }
@@ -237,6 +240,7 @@ void PlayerPrivate::initConnection()
             QMimeDatabase db;
             QMimeType type = db.mimeTypeForFile(activeMeta->localPath, QMimeDatabase::MatchContent); \
             if (!sSupportedMimeTypes.contains(type.name())) {
+                qDebug() << "unsupport mime type" << type << activePlaylist << activeMeta;
                 qplayer->pause();
                 emit q->mediaError(activePlaylist, activeMeta, Player::FormatError);
 //                activeMeta->invalid = true;
@@ -256,7 +260,7 @@ void PlayerPrivate::initConnection()
 
     q->connect(qplayer, static_cast<void (QMediaPlayer::*)(QMediaPlayer::Error error)>(&QMediaPlayer::error),
     q, [ = ](QMediaPlayer::Error error) {
-        qWarning() << error;
+        qWarning() << error << activePlaylist << activeMeta;
         if (!activeMeta->invalid) {
             emit q->mediaError(activePlaylist, activeMeta, static_cast<Player::Error>(error));
         }
@@ -346,12 +350,11 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta)
              << DMusic::lengthString(meta->length);
     Q_D(Player);
     d->activeMeta = meta;
+    d->activePlaylist = playlist;
 
     d->qplayer->blockSignals(true);
     d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(meta->localPath)));
     d->qplayer->blockSignals(false);
-
-    d->activePlaylist = playlist;
     d->activePlaylist->play(meta);
 }
 
@@ -362,12 +365,13 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
              << DMusic::lengthString(meta->offset)
              << DMusic::lengthString(meta->offset)
              << DMusic::lengthString(meta->length);
+
     Q_D(Player);
+    d->activePlaylist = playlist;
+
     d->activeMeta = meta;
     d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(meta->localPath)));
     d->qplayer->setPosition(meta->offset);
-
-    d->activePlaylist = playlist;
     d->activePlaylist->play(meta);
 
     emit mediaPlayed(d->activePlaylist, d->activeMeta);

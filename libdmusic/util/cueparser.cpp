@@ -91,6 +91,7 @@ void CueParserPrivate::parseCue(const QByteArray &data,  QByteArray codeName)
     QMap<QString, MediaMeta> fileMetaCache;
     QMap<QString, bool> fileExist;
 
+    QFileInfo cueFi(cueFilepath);
     for (int i = 0; i < ival; ++i) {
         auto meta = MetaPtr(new MediaMeta);
         meta->track = i + 1;
@@ -104,14 +105,16 @@ void CueParserPrivate::parseCue(const QByteArray &data,  QByteArray codeName)
         if (nullptr == val) {
             continue;
         }
-        meta->localPath = cueFilepath + "/" + val;
+        meta->localPath = cueFi.path() + "/" + val;
         meta->cuePath = cueFilepath;
 
         if (!fileMetaCache.contains(meta->localPath)) {
             QFileInfo media(meta->localPath);
-            auto mediaMeta = MediaMeta::fromLocalFile(media);
-            fileMetaCache.insert(meta->localPath, mediaMeta);
-            fileExist.insert(meta->localPath, media.exists());
+//            if (media.exists()) {
+                auto mediaMeta = MediaMeta::fromLocalFile(media);
+                fileMetaCache.insert(meta->localPath, mediaMeta);
+                fileExist.insert(meta->localPath, media.exists());
+//            }
         }
 
         if (!fileExist.value(meta->localPath)) {

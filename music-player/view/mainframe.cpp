@@ -34,6 +34,7 @@
 
 #include "widget/titlebarwidget.h"
 #include "widget/infodialog.h"
+#include "widget/tip.h"
 #include "helper/widgethellper.h"
 #include "helper/thememanager.h"
 
@@ -63,6 +64,7 @@ public:
     void slideToImportView();
     void slideToLyricView();
     void slideToMusicListView(bool keepPlaylist);
+    void showTips(QPixmap icon, QString text);
     void disableControl(int delay = 350);
     void updateViewname(const QString &vm);
 
@@ -70,6 +72,7 @@ public:
     void showInfoDialog(const MetaPtr meta);
 
 
+    Tip             *tips           = nullptr;
     QWidget         *currentWidget  = nullptr;
     Titlebar        *titlebar       = nullptr;
     TitleBarWidget  *titlebarwidget = nullptr;
@@ -324,6 +327,22 @@ void MainFramePrivate:: slideToMusicListView(bool keepPlaylist)
     updateViewname("");
 }
 
+void MainFramePrivate::showTips(QPixmap icon, QString text)
+{
+    Q_Q(MainFrame);
+    if (tips) {
+        tips->hide();
+        tips->deleteLater();
+    }
+
+    tips = new Tip(icon, text , q);
+    auto center = q->mapToGlobal(QPoint(q->rect().center()));
+    center.setY(center.y() + q->height() / 2 - footer->height() - 40 - 36);
+    center = tips->mapFromGlobal(center);
+    center = tips->mapToParent(center);
+    tips->pop(center);
+}
+
 void MainFramePrivate::toggleLyricView()
 {
     if (lyricWidget->isVisible()) {
@@ -375,7 +394,7 @@ void MainFramePrivate::setPlaylistVisible(bool visible)
     titlebar->raise();
     footer->raise();
 
-    QTimer::singleShot(AnimationDelay * factor*1, q, [ = ]() {
+    QTimer::singleShot(AnimationDelay * factor * 1, q, [ = ]() {
         playlistWidget->setProperty("moving", false);
     });
 }
@@ -446,6 +465,20 @@ void MainFrame::binding(Presenter *presenter)
         emit importSelectFiles(urllist);
     });
 
+    connect(presenter, &Presenter::notifyAddToPlaylist,
+    this, [ = ](PlaylistPtr playlist, const MetaPtrList) {
+        auto icon = QPixmap(":/common/image/notify_success.png");
+        QFontMetrics fm(font());
+        auto displayName = fm.elidedText(playlist->displayName(), Qt::ElideMiddle, 300);
+        auto text = tr("Successfully added to \"%1\"").arg(displayName);
+        d->showTips(icon, text);
+    });
+
+    connect(presenter, &Presenter::showPlaylist,
+    this, [ = ](bool show) {
+        d->setPlaylistVisible(show);
+    });
+
     connect(presenter, &Presenter::showMusicList,
     this, [ = ](PlaylistPtr playlist) {
         auto current = d->currentWidget ? d->currentWidget : d->importWidget;
@@ -490,7 +523,7 @@ void MainFrame::binding(Presenter *presenter)
         warnDlg.addButtons(QStringList() << tr("I got it"));
         if (0 == warnDlg.exec()) {
             if (playlist->canNext()) {
-                emit d->footer->next(playlist, meta);
+                emit presenter->playNext(playlist, meta);
             }
         }
     });
@@ -534,13 +567,17 @@ void MainFrame::binding(Presenter *presenter)
         d->musicList->onMusiclistChanged(playlist);
     });
 
+    connect(presenter, &Presenter::requestImportFiles,
+    this, [ = ]() {
+        onSelectImportDirectory();
+    });
 
+    // MusicList
     connect(d->musicList, &MusicListWidget::showInfoDialog,
     this, [ = ](const MetaPtr meta) {
         d->showInfoDialog(meta);
     });
 
-    // MusicList
     connect(d->musicList, &MusicListWidget::playall,
             presenter, &Presenter::onPlayall);
     connect(d->musicList, &MusicListWidget::resort,
@@ -562,6 +599,8 @@ void MainFrame::binding(Presenter *presenter)
     this, [ = ](PlaylistPtr playlist, QStringList urllist) {
         presenter->requestImportPaths(playlist, urllist);
     });
+    connect(d->musicList, &MusicListWidget::updateMetaCodec,
+            d->footer, &Footer::onUpdateMetaCodec);
 
     connect(presenter, &Presenter::musicListResorted,
             d->musicList, &MusicListWidget::onMusiclistChanged);
@@ -611,13 +650,13 @@ void MainFrame::binding(Presenter *presenter)
     connect(d->footer,  &Footer::play,
             presenter, &Presenter::onSyncMusicPlay);
     connect(d->footer,  &Footer::resume,
-            presenter, &Presenter::onMusicResume);
+            presenter, &Presenter::onSyncMusicResume);
     connect(d->footer,  &Footer::pause,
             presenter, &Presenter::onMusicPause);
     connect(d->footer,  &Footer::next,
-            presenter, &Presenter::onMusicNext);
+            presenter, &Presenter::onSyncMusicNext);
     connect(d->footer,  &Footer::prev,
-            presenter, &Presenter::onMusicPrev);
+            presenter, &Presenter::onSyncMusicPrev);
     connect(d->footer,  &Footer::changeProgress,
             presenter, &Presenter::onChangeProgress);
     connect(d->footer,  &Footer::volumeChanged,
@@ -649,6 +688,8 @@ void MainFrame::binding(Presenter *presenter)
             d->footer,  &Footer::onVolumeChanged);
     connect(presenter, &Presenter::mutedChanged,
             d->footer,  &Footer::onMutedChanged);
+    connect(presenter, &Presenter::musicError,
+            d->footer,  &Footer::onMusicError);
 //    connect(presenter, &Presenter::,
 //            d->footer,  &Footer::onUpdateMetaCodec);
 //    connect(presenter, &Presenter::coverSearchFinished,
@@ -841,16 +882,23 @@ void MainFrame::resizeEvent(QResizeEvent *e)
 
 //    if (d->tips) {
 //        d->tips->hide();
-    //    }
+//    }
 }
+
+#include <unistd.h>
 
 void MainFrame::closeEvent(QCloseEvent *event)
 {
-    Settings::instance()->setOption("base.play.geometry", saveGeometry());
+    hide();
+
     Settings::instance()->setOption("base.play.state", int(windowState()));
+    Settings::instance()->setOption("base.play.geometry", saveGeometry());
     Settings::instance()->sync();
 
-    qDebug() << this->geometry() << this->windowState();
+    // TODO: syncfs
+    sync();
+
+//    qDebug() << "store state:" << windowState() << "gometry:" << geometry();
     DUtil::TimerSingleShot(300, [this, event]() {
         ThinWindow::closeEvent(event);
     });

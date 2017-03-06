@@ -9,7 +9,7 @@
         <file>light/PlaylistWidget.theme</file>
         <file>light/PlayListItem.theme</file>
         <file>light/MusicListWidget.theme</file>
-        <file>light/PlayerFrame.theme</file>
+        <file>light/MainFrame.theme</file>
         <file>light/PlayListView.theme</file>
         <file>common/animation/playing/white/93.png</file>
         <file>common/animation/playing/white/92.png</file>
@@ -211,7 +211,7 @@
         <file>dark/PlaylistWidget.theme</file>
         <file>dark/PlayListView.theme</file>
         <file>dark/PlayListItem.theme</file>
-        <file>dark/PlayerFrame.theme</file>
+        <file>dark/MainFrame.theme</file>
         <file>dark/MusicListWidget.theme</file>
         <file>dark/MusicListView.theme</file>
         <file>dark/MusicListSort.theme</file>

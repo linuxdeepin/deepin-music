@@ -271,7 +271,6 @@ void Playlist::appendMusicList(const MetaPtrList metalist)
         }
 
         newMetalist << meta;
-        qDebug() << meta;
         playlistMeta.sortMetas << meta->hash;
         playlistMeta.metas.insert(meta->hash, meta);
     }
@@ -382,7 +381,7 @@ bool lessThanTitile(const MetaPtr v1, const MetaPtr v2)
     if (v2->title.isEmpty()) {
         return true;
     }
-    qDebug() << v1->title << v2->title << collator.compare(v1->title , v2->title);
+//    qDebug() << v1->title << v2->title << collator.compare(v1->title , v2->title);
     return lessCompareByString(v1->title , v2->title);
 }
 

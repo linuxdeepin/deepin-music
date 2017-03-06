@@ -212,6 +212,7 @@ void MediaLibrary::startMonitor()
 {
     Q_D(MediaLibrary);
     d->startMonitor();
+    MetaDetector::instance();
 }
 
 void MediaLibrary::importMedias(const QString &jobid, const QStringList &urllist)
@@ -265,6 +266,11 @@ void MediaLibrary::importMedias(const QString &jobid, const QStringList &urllist
     for (auto &cue : cuelist) {
         losslessMetaCache.remove(cue->mediaFilepath());
         metaCache += cue->metalist();
+        // insert to library
+
+        for (auto meta : cue->metalist()) {
+            d->metas.insert(meta->hash, meta);
+        }
 
         if (metaCache.length() >= ScanCacheSize) {
             mediaCount += metaCache.length();
@@ -276,10 +282,13 @@ void MediaLibrary::importMedias(const QString &jobid, const QStringList &urllist
 
     for (auto &key : losslessMetaCache.keys()) {
         auto losslessMeta = losslessMetaCache.value(key);
+
 #ifdef SUPPORT_INOTIFY
         d->watcher->addPath(losslessMeta->localPath);
 #endif
         metaCache << losslessMeta;
+
+        d->metas.insert(losslessMeta->hash, losslessMeta);
         if (metaCache.length() >= ScanCacheSize) {
             mediaCount += metaCache.length();
             emit MediaDatabase::instance()->addMediaMetaList(metaCache);

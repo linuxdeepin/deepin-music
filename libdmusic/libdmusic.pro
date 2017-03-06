@@ -17,7 +17,7 @@ DESTDIR     = $$BUILD_DIST/lib/
 CONFIG      += c++11 link_pkgconfig
 
 unix {
-PKGCONFIG += icu-uc icu-i18n libavutil libavformat libavcodec
+PKGCONFIG += icu-uc icu-i18n libavutil libavformat libavcodec taglib
 }
 
 DEFINES += LIBDMUSIC_LIBRARY

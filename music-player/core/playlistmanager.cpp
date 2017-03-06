@@ -29,17 +29,12 @@ class PlaylistManagerPrivate
 public:
     PlaylistManagerPrivate(PlaylistManager *parent) : q_ptr(parent) {}
 
-    uint indexUUID(const QString &uuid)
+    inline uint indexUUID(const QString &uuid)
     {
-        for (auto sortID : sortUUID.keys()) {
-            if (sortUUID.value(sortID) == uuid) {
-                return sortID;
-            }
-        }
-        return uint(-1);
+        return sortUUIDs.indexOf(uuid);
     }
 
-    QMap<uint, QString>          sortUUID;
+    QStringList                 sortUUIDs;
     QMap<QString, PlaylistPtr>  playlists;
 
     PlaylistManager *q_ptr;
@@ -93,19 +88,25 @@ void PlaylistManager::load()
         insertPlaylist(playlistmeta.uuid, emptylist);
     }
 
-    // fix sort
-    if (d->sortUUID.size() != d->playlists.size()) {
-        // restrot
-        d->sortUUID.clear();
-
-        uint sortID = 0;
-        for (auto playlist : d->playlists.values()) {
-            d->sortUUID.insert(sortID, playlist->id());
-            ++sortID;
-        }
-        this->save();
+    QMap<uint, QString> sortUUIDs;
+    for (auto playlist : d->playlists) {
+        sortUUIDs.insert(playlist->sortID(), playlist->id());
     }
 
+    if (sortUUIDs.size() != d->playlists.size()) {
+        // restrot
+        qWarning() << "order crash, restrot";
+        d->sortUUIDs.clear();
+
+        for (auto playlist : d->playlists.values()) {
+            d->sortUUIDs <<  playlist->id();
+        }
+        this->saveSortOrder();
+    } else {
+        for (auto sortID = 0; sortID < sortUUIDs.size(); ++sortID) {
+            d->sortUUIDs << sortUUIDs.value(static_cast<uint>(sortID));
+        }
+    }
 
     auto all = playlist(AllMusicListID);
     if (!all.isNull()) {
@@ -119,21 +120,17 @@ void PlaylistManager::load()
     }
 }
 
-void PlaylistManager::save()
+void PlaylistManager::saveSortOrder()
 {
     Q_D(PlaylistManager);
 
-    QList<PlaylistPtr >  list;
-    for (auto &playlist : d->sortUUID) {
-        list << d->playlists.value(playlist);
-    }
-
+    qDebug() << d->sortUUIDs;
     QSqlDatabase::database().transaction();
 
-    for (auto sortID : d->sortUUID.keys()) {
-        auto uuid = d->sortUUID.value(sortID);
+    for (int sortID = 0; sortID < d->sortUUIDs.length(); ++sortID) {
+        auto uuid = d->sortUUIDs.value(sortID);
         QSqlQuery query;
-        query.prepare(QString("UPDATE playlist SET sort_id = :sort_id WHERE uuid = :uuid; ").arg(uuid));
+        query.prepare(QString("UPDATE playlist SET sort_id = :sort_id WHERE uuid = :uuid; "));
         query.bindValue(":sort_id", sortID);
         query.bindValue(":uuid", uuid);
         if (! query.exec()) {
@@ -149,8 +146,8 @@ QList<PlaylistPtr > PlaylistManager::allplaylist()
     Q_D(PlaylistManager);
 
     QList<PlaylistPtr >  list;
-    for (auto &playlist : d->sortUUID) {
-        list << d->playlists.value(playlist);
+    for (auto &uuid : d->sortUUIDs) {
+        list << d->playlists.value(uuid);
     }
     return list;
 }
@@ -159,26 +156,25 @@ PlaylistPtr PlaylistManager::addPlaylist(const PlaylistMeta &listinfo)
 {
     Q_D(PlaylistManager);
     PlaylistMeta saveInfo(listinfo);
+    saveInfo.sortID = d->sortUUIDs.length();
     insertPlaylist(listinfo.uuid, PlaylistPtr(new Playlist(saveInfo)));
-
     MediaDatabase::addPlaylist(saveInfo);
-
     return d->playlists.value(listinfo.uuid);
 }
 
-void PlaylistManager::onCustomResort( QStringList uuids)
+void PlaylistManager::onCustomResort(QStringList uuids)
 {
     Q_D(PlaylistManager);
     Q_ASSERT(uuids.length() == d->playlists.size() - 1);
 
-    uuids << playlist(SearchMusicListID)->id();
+    uuids.push_front(playlist(SearchMusicListID)->id());
 
-    d->sortUUID.clear();
-    for (uint sortID = 0; sortID < uuids.length(); ++sortID) {
-        d->sortUUID.insert(sortID, uuids.value(sortID));
+    d->sortUUIDs.clear();
+    for (auto sortID = 0; sortID < uuids.length(); ++sortID) {
+        d->sortUUIDs << uuids.value(sortID);
     }
 
-    this->save();
+    this->saveSortOrder();
 }
 
 PlaylistPtr PlaylistManager::playlist(const QString &id)
@@ -192,17 +188,18 @@ void PlaylistManager::insertPlaylist(const QString &uuid, PlaylistPtr playlist)
     Q_D(PlaylistManager);
     QString deleteID = uuid;
 
-    d->sortUUID.insert(playlist->sortID(), uuid);
     d->playlists.insert(uuid, playlist);
 
     connect(playlist.data(), &Playlist::removed,
     this, [ = ] {
-        qDebug() << "remove playlist" << deleteID;
+        qDebug() << "remove playlist" << deleteID << d->playlists.size();
         emit playlistRemove(playlist);
-        d->sortUUID.remove(d->indexUUID(uuid));
+        d->playlists.remove(uuid);
+        d->sortUUIDs.removeAll(uuid);
         PlaylistMeta listmeta;
         listmeta.uuid = deleteID;
         MediaDatabase::removePlaylist(listmeta);
+        this->saveSortOrder();
     });
 
     connect(playlist.data(), &Playlist::musiclistAdded,

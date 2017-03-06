@@ -53,6 +53,7 @@ public:
 
 public:
     void updateSearchIndex();
+    void updateCodec(const QByteArray &codec);
 
     static MediaMeta fromLocalFile(const QFileInfo &fileInfo);
 };

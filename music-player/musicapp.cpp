@@ -140,6 +140,8 @@ void MusicApp::onDataPrepared()
 
     auto geometry = Settings::instance()->value("base.play.geometry").toByteArray();
     auto state = Settings::instance()->value("base.play.state").toInt();
+
+//    qDebug() << "restore state:" << state << "gometry:" << geometry;
     if (geometry.isEmpty()) {
         d->playerFrame->resize(QSize(1070, 680));
         d->playerFrame->show();
@@ -148,7 +150,6 @@ void MusicApp::onDataPrepared()
         d->playerFrame->show();
         d->playerFrame->restoreGeometry(geometry);
         d->playerFrame->setWindowState(static_cast<Qt::WindowStates >(state));
-//        qDebug() << d->playerFrame->geometry() << d->playerFrame->windowState();
     }
 
     d->playerFrame->setCoverBackground(d->playerFrame->coverBackground());

@@ -3,6 +3,7 @@
 #include <QDebug>
 
 #include <QTextCodec>
+#include <QLocale>
 #include <QTime>
 #include <QFileInfo>
 #include <QHash>
@@ -16,12 +17,156 @@ extern "C" {
 }
 #endif
 
+#include <taglib/tag.h>
+#include <taglib/fileref.h>
+#include <taglib/taglib.h>
+#include <taglib/tpropertymap.h>
+#include <unicode/ucnv.h>
+
 #include "util/encodingdetector.h"
 #include "util/cueparser.h"
 
+static QMap<QString, QByteArray> localeCodes;
+
 MetaDetector::MetaDetector()
 {
-    qDebug() << "av_register_all";
+    localeCodes.insert("zh_CN", "GB18030");
+}
+
+
+QList<QByteArray> MetaDetector::detectEncodings(const QByteArray &rawData)
+{
+    auto icuCodes = DMusic::EncodingDetector::detectEncodings(rawData);
+    auto localeCode = localeCodes.value(QLocale::system().name());
+
+    if (icuCodes.contains(localeCode)) {
+        icuCodes.removeAll(localeCode);
+    }
+
+    if (!localeCode.isEmpty()) {
+        icuCodes.push_front(localeCode);
+    }
+    return icuCodes;
+}
+
+void MetaDetector::updateCueFileTagCodec(MediaMeta *meta, const QFileInfo &/*cueFi*/, const QByteArray &codec)
+{
+    Q_ASSERT(meta != nullptr);
+    DMusic::CueParser cueParser(meta->cuePath, codec);
+    // TODO: parse may be failed for diff code
+    for (auto cueMeta: cueParser.metalist()) {
+        if (meta->hash == cueMeta->hash) {
+            meta->title = cueMeta->title;
+            meta->artist = cueMeta->artist;
+            meta->album = cueMeta->album;
+        }
+    }
+}
+
+void MetaDetector::updateMediaFileTagCodec(MediaMeta *meta, const QByteArray &codecName, bool forceEncode)
+{
+    Q_ASSERT(meta != nullptr);
+
+    if (meta->localPath.isEmpty()) {
+        qCritical() << "meta localPath is empty:" << meta->title << meta->hash;
+        return ;
+    }
+
+    QByteArray detectByte;
+    QByteArray detectCodec = codecName;
+
+#ifdef _WIN32
+    TagLib::FileRef f(meta->localPath.toStdWString().c_str());
+#else
+    TagLib::FileRef f(meta->localPath.toStdString().c_str());
+#endif
+    TagLib::Tag *tag = f.tag();
+
+    if (!tag) {
+        qCritical() << "TagLib: open file failed:" << meta->localPath;
+        return;
+    }
+
+    bool encode = true;
+    encode &= tag->title().isNull() ? true : tag->title().isLatin1();
+    encode &= tag->artist().isNull() ? true : tag->artist().isLatin1();
+    encode &= tag->album().isNull() ? true : tag->album().isLatin1();
+
+    if (forceEncode) {
+        encode = true;
+    }
+
+    if (encode) {
+        if (detectCodec.isEmpty()) {
+            detectByte += tag->title().toCString();
+            detectByte += tag->artist().toCString();
+            detectByte += tag->album().toCString();
+            detectCodec = detectEncodings(detectByte).value(0);
+//            qDebug() << "detect codec" << detectEncodings(detectByte);
+        }
+
+//        qDebug() << "convert to" << detectCodec;
+//        QTextCodec *codec = QTextCodec::codecForName(detectCodec);
+//        meta->album = codec->toUnicode(tag->album().to8Bit().c_str());
+//        meta->artist = codec->toUnicode(tag->artist().to8Bit().c_str());
+//        meta->title = codec->toUnicode(tag->title().to8Bit().c_str());
+
+//#ifndef true
+//        qDebug() << "convert to" << detectCodec << QTextCodec::availableCodecs();
+        const size_t buflen = 1024 * 10;
+        char buf[buflen];
+        UErrorCode err = U_ZERO_ERROR;
+        int32_t len = ucnv_convert("utf-8", detectCodec, buf, buflen, tag->title().toCString(), -1, &err);
+        meta->title = QString::fromUtf8(buf);
+//        qDebug() << len <<  QString::fromUtf8(buf) << buf << u_errorName(err);
+
+        err = U_ZERO_ERROR;
+        len = ucnv_convert("utf-8", detectCodec, buf, buflen, tag->artist().toCString(), -1, &err);
+        meta->artist = QString::fromUtf8(buf);
+//        qDebug() << len <<  QString::fromUtf8(buf) << buf << u_errorName(err);
+
+        err = U_ZERO_ERROR;
+        len = ucnv_convert("utf-8", detectCodec, buf, buflen, tag->album().toCString(), -1, &err);
+        meta->album = QString::fromUtf8(buf);
+//        qDebug() << len <<  QString::fromUtf8(buf) << buf << u_errorName(err);
+        Q_UNUSED(len);
+//#endif
+    } else {
+        meta->album = TStringToQString(tag->album());
+        meta->artist = TStringToQString(tag->artist());
+        meta->title = TStringToQString(tag->title());
+    }
+}
+
+QList<QByteArray> MetaDetector::detectEncodings(const MetaPtr meta)
+{
+    if (meta->localPath.isEmpty()) {
+        return QList<QByteArray>() << "UTF-8";
+    }
+    QByteArray                  detectByte;
+
+    if (!meta->cuePath.isEmpty()) {
+        QFile cueFile(meta->cuePath);
+        if (cueFile.open(QIODevice::ReadOnly)) {
+            detectByte =  cueFile.readAll();
+            return detectEncodings(detectByte);
+        }
+    }
+
+#ifdef _WIN32
+    TagLib::FileRef f(meta->localPath.toStdWString().c_str());
+#else
+    TagLib::FileRef f(meta->localPath.toStdString().c_str());
+#endif
+    TagLib::Tag *tag = f.tag();
+
+    if (tag) {
+        detectByte += tag->title().toCString();
+        detectByte += tag->artist().toCString();
+        detectByte += tag->album().toCString();
+    }
+
+    return detectEncodings(detectByte);
 }
 
 void MetaDetector::updateMetaFromLocalfile(MediaMeta *meta, const QFileInfo &fileInfo)
@@ -33,40 +178,18 @@ void MetaDetector::updateMetaFromLocalfile(MediaMeta *meta, const QFileInfo &fil
         return ;
     }
 
-    QMap<QString, QByteArray>   tags;
-    QByteArray                  detectByte;
-
     av_register_all();
     AVFormatContext *pFormatCtx = avformat_alloc_context();
     avformat_open_input(&pFormatCtx, meta->localPath.toStdString().c_str(), NULL, NULL);
     if (pFormatCtx) {
-        AVDictionaryEntry *tag = NULL;
         avformat_find_stream_info(pFormatCtx, NULL);
-        while ((tag = av_dict_get(pFormatCtx->metadata, "", tag, AV_DICT_IGNORE_SUFFIX))) {
-            qDebug() << "FFMPEG: get tag: " << tag->key << "=" << tag->value;
-            tags.insert(tag->key, tag->value);
-            detectByte += tag->value;
-        }
         int64_t duration = pFormatCtx->duration / 1000;
         meta->length = duration;
     }
-
     avformat_close_input(&pFormatCtx);
     avformat_free_context(pFormatCtx);
 
-    QByteArray codeName = DMusic::EncodingDetector::detectEncodings(detectByte).value(0);
-    QTextCodec *codec = QTextCodec::codecForName(codeName);
-
-    if (codec) {
-        meta->album = codec->toUnicode(tags.value("album"));
-        meta->artist = codec->toUnicode(tags.value("artist"));
-        meta->title = codec->toUnicode(tags.value("title"));
-    } else {
-        // UTF8 encoded.
-        meta->album = tags.value("album");
-        meta->artist = tags.value("artist");
-        meta->title = tags.value("title");
-    }
+    updateMediaFileTagCodec(meta, "", false);
 
     meta->size = fileInfo.size();
 

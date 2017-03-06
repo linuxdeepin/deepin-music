@@ -104,18 +104,16 @@ void MusicListWidgetPrivate::initConntion()
     });
     q->connect(musiclist, &MusicListView::playMedia,
     q, [ = ](const MetaPtr meta) {
-        qDebug() << "ttttttttttttttttttttttttttttttttttttttt"
-                 << musiclist->playlist()->displayName();
         emit q->playMedia(musiclist->playlist(), meta);
     });
     q->connect(musiclist, &MusicListView::showInfoDialog,
     q, [ = ](const MetaPtr meta) {
         emit q->showInfoDialog(meta);
     });
-//    q->connect(musiclist, &MusicListView::updateMetaCodec,
-//    q, [ = ](const MetaPtr  meta) {
-//        emit q->updateMetaCodec(meta);
-//    });
+    q->connect(musiclist, &MusicListView::updateMetaCodec,
+    q, [ = ](const MetaPtr  meta) {
+        emit q->updateMetaCodec(meta);
+    });
 }
 
 void MusicListWidgetPrivate::showEmptyHits(bool empty)

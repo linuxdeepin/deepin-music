@@ -42,15 +42,13 @@
                             "key": "geometry",
                             "name": "Geometry",
                             "hide": true,
-                            "reset": false,
-                            "type": "rect"
+                            "reset": false
                         },
                         {
                             "key": "state",
                             "name": "Window State",
                             "hide": true,
-                            "reset": false,
-                            "type": "combox"
+                            "reset": false
                         },
                         {
                             "key": "to_open_uri",

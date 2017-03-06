@@ -176,12 +176,28 @@ void megrateToVserion_0()
     QSqlDatabase::database().commit();
 }
 
+void megrateToVserion_1()
+{
+    // FIXME: remove old
+    QSqlDatabase::database().transaction();
+    QSqlQuery query;
+
+    query.prepare("ALTER TABLE playlist ADD COLUMN sort_id INTEGER(32);");
+    if (!query.exec()) {
+        qWarning() << "sql upgrade with error:" << query.lastError().type();
+    }
+
+    updateDatabaseVersion(1);
+    QSqlDatabase::database().commit();
+}
+
 typedef void (*MargeFunctionn)();
 
 void margeDatabase()
 {
     QMap<int, MargeFunctionn> margeFuncs;
     margeFuncs.insert(0, megrateToVserion_0);
+    margeFuncs.insert(1, megrateToVserion_1);
 
     int currentVersion = databaseVersion();
 //    currentVersion = -1;
@@ -364,11 +380,11 @@ void MediaDatabase::addPlaylist(const PlaylistMeta &playlistMeta)
     QSqlQuery query;
     query.prepare("INSERT INTO playlist ("
                   "uuid, displayname, icon, readonly, hide, "
-                  "sort_type "
+                  "sort_type, order_type, sort_id "
                   ") "
                   "VALUES ("
                   ":uuid, :displayname, :icon, :readonly, :hide, "
-                  ":sort_type "
+                  ":sort_type, :order_type, :sort_id "
                   ")");
     query.bindValue(":uuid", playlistMeta.uuid);
     query.bindValue(":displayname", playlistMeta.displayName);
@@ -376,6 +392,8 @@ void MediaDatabase::addPlaylist(const PlaylistMeta &playlistMeta)
     query.bindValue(":readonly", playlistMeta.readonly);
     query.bindValue(":hide", playlistMeta.hide);
     query.bindValue(":sort_type", playlistMeta.sortType);
+    query.bindValue(":order_type", playlistMeta.orderType);
+    query.bindValue(":sort_id", playlistMeta.sortID);
 
     if (! query.exec()) {
         qWarning() << query.lastError();
@@ -479,7 +497,7 @@ QList<MediaMeta> MediaDatabase::allmetas()
     QList<MediaMeta> metalist;
     QString queryString = QString("SELECT hash, localpath, title, artist, album, "
                                   "filetype, track, offset, length, size, "
-                                  "timestamp, invalid, search_id "
+                                  "timestamp, invalid, search_id, cuepath "
                                   "FROM music");
 
     QSqlQuery query;
@@ -504,6 +522,7 @@ QList<MediaMeta> MediaDatabase::allmetas()
         meta.timestamp = query.value(10).toInt();
         meta.invalid = query.value(11).toBool();
         meta.searchID = query.value(12).toString();
+        meta.cuePath = query.value(13).toString();
         metalist << meta;
     }
 

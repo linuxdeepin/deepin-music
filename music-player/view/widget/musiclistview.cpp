@@ -81,6 +81,14 @@ MusicListView::MusicListView(QWidget *parent)
         MetaPtr meta = d->model->meta(index);
         emit playMedia(meta);
     });
+
+    // For debug
+//    connect(selectionModel(), &QItemSelectionModel::selectionChanged,
+//    this, [ = ](const QItemSelection & /*selected*/, const QItemSelection & deselected) {
+//        if (!deselected.isEmpty()) {
+//            qDebug() << "cancel" << deselected;
+//        }
+//    });
 }
 
 MusicListView::~MusicListView()
@@ -133,12 +141,12 @@ void MusicListView::onMusicListRemoved(const MetaPtrList metalist)
     updateScrollbar();
 }
 
-void MusicListView::onMusicError(const MetaPtr meta, int error)
+void MusicListView::onMusicError(const MetaPtr meta, int /*error*/)
 {
     Q_ASSERT(!meta.isNull());
-    Q_D(MusicListView);
+//    Q_D(MusicListView);
 
-    qDebug() << error;
+//    qDebug() << error;
 //    QModelIndex index = findIndex(meta);
 
 //    auto indexData = index.data().value<MetaPtr>();
@@ -280,9 +288,10 @@ void MusicListView::showContextMenu(const QPoint &pos,
 
     connect(&playlistMenu, &QMenu::triggered, this, [ = ](QAction * action) {
         auto playlist = action->data().value<PlaylistPtr >();
+        qDebug() << playlist;
         MetaPtrList metalist;
         for (auto &index : selection->selectedRows()) {
-            auto meta = qvariant_cast<MetaPtr>(d->model->data(index));
+            auto meta = d->model->meta(index);
             if (!meta.isNull()) {
                 metalist << meta;
             }
@@ -317,9 +326,8 @@ void MusicListView::showContextMenu(const QPoint &pos,
 
     if (singleSelect) {
         auto index = selection->selectedRows().first();
-        auto meta = qvariant_cast<MetaPtr>(d->model->data(index));
+        auto meta = d->model->meta(index);
         QList<QByteArray> codecList = DMusic::detectMetaEncodings(meta);
-
 //        auto defaultCodec = QTextCodec::codecForLocale()->name();
 //        qDebug() << defaultCodec << codecList.length();
 
@@ -335,7 +343,8 @@ void MusicListView::showContextMenu(const QPoint &pos,
 //                  << "EUC-KR" << "ISO-8859-1"
 //                  << "windows-1256" << "windows-1251"
 //                  << "Shift_JIS" << "GB18030" << "EUC-JP" << "EUC-KR" << "Big5";
-
+//        codecList << "utf-8" ;
+//        codecList << "latin1" <<"";
         for (auto codec : codecList) {
             auto act = textCodecMenu.addAction(codec);
             act->setData(QVariant::fromValue(codec));
@@ -350,14 +359,9 @@ void MusicListView::showContextMenu(const QPoint &pos,
         songAction = myMenu.addAction(tr("Song info"));
 
         connect(&textCodecMenu, &QMenu::triggered, this, [ = ](QAction * action) {
-//            auto codec = action->data().toByteArray();
-//            MetaPtr updateMeta = meta;
-//            MusicMetaName::updateCodec(updateMeta, codec);
-//            emit updateMetaCodec(updateMeta);
-//            qDebug() << codec;
-//            d->model->setData(index, QVariant::fromValue<MediaMeta>(updateMeta));
-//            item->setData(QVariant::fromValue<MediaMeta>(updateMeta));
-//            this->update();
+            auto codec = action->data().toByteArray();
+            meta->updateCodec(codec);
+            emit updateMetaCodec(meta);
         });
     }
 
@@ -406,8 +410,8 @@ void MusicListView::showContextMenu(const QPoint &pos,
             Dtk::Widget::DDialog warnDlg(this);
             warnDlg.setStyle(QStyleFactory::create("dlight"));
             warnDlg.setTextFormat(Qt::RichText);
-            warnDlg.addButton(tr("Cancel1"), true , Dtk::Widget::DDialog::ButtonWarning);
-            warnDlg.addButton(tr("Delete2"), false, Dtk::Widget::DDialog::ButtonNormal);
+            warnDlg.addButton(tr("Cancel"), true , Dtk::Widget::DDialog::ButtonWarning);
+            warnDlg.addButton(tr("Delete"), false, Dtk::Widget::DDialog::ButtonNormal);
 
             auto cover = QImage(QString(":/common/image/del_notify.png"));
             if (1 == metalist.length()) {
@@ -476,12 +480,15 @@ void MusicListView::startDrag(Qt::DropActions supportedActions)
     d->model->playlist()->saveSort(hashIndexs);
     emit customSort();
 
-    // TODO: use selection
+    QItemSelection selection;
     for (auto meta : list) {
         if (!meta.isNull()) {
             auto index = this->findIndex(meta);
-            this->selectionModel()->select(index, QItemSelectionModel::Select);
+            selection.append(QItemSelectionRange(index));
         }
+    }
+    if (!selection.isEmpty()) {
+        selectionModel()->select(selection, QItemSelectionModel::Select);
     }
 }
 
