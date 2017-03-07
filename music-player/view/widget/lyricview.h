@@ -20,9 +20,10 @@ public:
     explicit LyricView(QWidget *parent = 0);
     ~LyricView();
 
-signals:
+    bool viewMode() const;
+    int optical() const;
 
-public slots:
+    virtual void wheelEvent(QWheelEvent *event) Q_DECL_OVERRIDE;
 
 private:
     QScopedPointer<LyricViewPrivate> d_ptr;

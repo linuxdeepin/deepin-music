@@ -22,7 +22,7 @@ class ThemeManagerPrivate
 public:
     ThemeManagerPrivate(ThemeManager *parent) : q_ptr(parent) {}
 
-    QString getQssForWidget(QString className);
+    QString getQssForWidget(QString theme, QString className);
 
     QString                     prefix      = ":";
     QString                     activeTheme;
@@ -32,11 +32,14 @@ public:
     Q_DECLARE_PUBLIC(ThemeManager)
 };
 
-QString ThemeManagerPrivate::getQssForWidget(QString className)
+QString ThemeManagerPrivate::getQssForWidget(QString theme, QString className)
 {
     QString qss;
 
-    auto filename = QString("%1/%2/%3.theme").arg(prefix).arg(activeTheme).arg(className);
+    if (theme.isEmpty()) {
+        theme = activeTheme;
+    }
+    auto filename = QString("%1/%2/%3.theme").arg(prefix).arg(theme).arg(className);
     QFile themeFile(filename);
 
 //    qDebug() << "load: " <<filename;
@@ -68,6 +71,7 @@ void ThemeManager::regisetrWidget(QPointer<QWidget> widget, QStringList property
     // set theme
     auto meta = widget->metaObject();
     auto qssFilename = widget->property("_d_QSSFilename").toString();
+    auto themename = widget->property("_d_QSSThemename").toString();
 
     if (qssFilename.isEmpty()) {
         qssFilename = widget->objectName();
@@ -80,7 +84,7 @@ void ThemeManager::regisetrWidget(QPointer<QWidget> widget, QStringList property
 //    qDebug() << qssFilename;
     widget->style()->unpolish(widget);
     widget->style()->polish(widget);
-    widget->setStyleSheet(d->getQssForWidget(qssFilename));
+    widget->setStyleSheet(d->getQssForWidget(themename, qssFilename));
 
 //    qDebug() << widget;
     connect(this, &ThemeManager::themeChanged, this, [ = ](QString theme) {
@@ -91,7 +95,7 @@ void ThemeManager::regisetrWidget(QPointer<QWidget> widget, QStringList property
 
         widget->style()->unpolish(widget);
         widget->style()->polish(widget);
-        widget->setStyleSheet(d->getQssForWidget(qssFilename));
+        widget->setStyleSheet(d->getQssForWidget(theme, qssFilename));
 //        qDebug() << widget << "----------";
     });
 

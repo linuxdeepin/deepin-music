@@ -9,6 +9,13 @@
 
 #include "lyricview.h"
 
+#include <QDebug>
+#include <QPaintEvent>
+#include <QPainter>
+#include <QScrollBar>
+#include <QTimer>
+#include <QPropertyAnimation>
+
 #include "delegate/lyriclinedelegate.h"
 
 class LyricViewPrivate
@@ -16,7 +23,9 @@ class LyricViewPrivate
 public:
     LyricViewPrivate(LyricView *parent) : q_ptr(parent) {}
 
-    LyricLineDelegate *delegate = nullptr;
+    LyricLineDelegate   *delegate   = nullptr;
+    bool                viewMode    = false;
+    QTimer              *viewTimer  = nullptr;
 
     LyricView *q_ptr;
     Q_DECLARE_PUBLIC(LyricView)
@@ -26,11 +35,56 @@ LyricView::LyricView(QWidget *parent) :
     QListView(parent), d_ptr(new LyricViewPrivate(this))
 {
     Q_D(LyricView);
-    d->delegate = new LyricLineDelegate;
+    d->delegate = new LyricLineDelegate(this);
     setItemDelegate(d->delegate);
+
+    d->viewTimer = new QTimer;
+    d->viewTimer->setInterval(5 * 1000);
+
+    setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+    setSelectionMode(QListView::NoSelection);
+    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setEditTriggers(QAbstractItemView::NoEditTriggers);
+    setFlow(QListView::TopToBottom);
+
+
+    connect(d->viewTimer, &QTimer::timeout,
+    this, [ = ]() {
+        d->viewMode = false;
+        update();
+    });
 }
 
 LyricView::~LyricView()
 {
 
+}
+
+bool LyricView::viewMode() const
+{
+    Q_D(const LyricView);
+    return d->viewMode;
+}
+
+int LyricView::optical() const
+{
+    return this->property("id_optical").toInt();
+}
+
+void LyricView::wheelEvent(QWheelEvent *event)
+{
+    Q_D(LyricView);
+    QListView::wheelEvent(event);
+    d->viewTimer->stop();
+    d->viewTimer->start();
+
+//    if (!d->viewMode) {
+//        QPropertyAnimation *animation = new QPropertyAnimation(this, "id_optical");
+//        animation->setDuration(400);
+//        animation->setStartValue(0);
+//        animation->setEndValue(52);
+//        animation->start();
+//    }
+    d->viewMode = true;
 }

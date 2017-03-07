@@ -9,14 +9,17 @@
 
 #pragma once
 
+#include <QScopedPointer>
 #include <QStyledItemDelegate>
 
+class LyricLineDelegatePrivate;
 class LyricLineDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
 
 public:
-    LyricLineDelegate(QWidget *parent = 0) : QStyledItemDelegate(parent) {}
+    LyricLineDelegate(QWidget *parent = 0);
+    ~LyricLineDelegate();
 
     virtual void initStyleOption(QStyleOptionViewItem *option,
                                  const QModelIndex &index) const;
@@ -34,5 +37,9 @@ public:
 
     void setModelData(QWidget *editor, QAbstractItemModel *model,
                       const QModelIndex &index) const;
+
+private:
+    QScopedPointer<LyricLineDelegatePrivate> d_ptr;
+    Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), LyricLineDelegate)
 };
 

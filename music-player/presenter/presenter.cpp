@@ -373,6 +373,7 @@ void Presenter::openUri(const QUrl &uri)
     auto metas = MediaLibrary::instance()->importFile(localfile);
     if (0 == metas.length()) {
         qCritical() << "openUriRequested" << uri;
+        return;
     }
     auto list = d->playlistMgr->playlist(AllMusicListID);
     emit MediaLibrary::instance()->meidaFileImported(AllMusicListID, metas);

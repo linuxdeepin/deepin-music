@@ -12,6 +12,18 @@
 #include <QPainter>
 #include <QDebug>
 
+
+class LyricLineDelegatePrivate
+{
+public:
+    explicit LyricLineDelegatePrivate(LyricLineDelegate *parent): q_ptr(parent) {}
+
+    QWidget *parentWidget;
+
+    LyricLineDelegate *q_ptr;
+    Q_DECLARE_PUBLIC(LyricLineDelegate)
+};
+
 void LyricLineDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
                               const QModelIndex &index) const
 {
@@ -22,8 +34,12 @@ void LyricLineDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
     painter->fillRect(option.rect, option.palette.background());
     painter->setBrush(option.palette.foreground());
 
+//    painter->setPen(Qt::blue);
+//    painter->drawRect(option.rect);
+
     if (option.state & QStyle::State_Selected) {
         painter->setPen(option.palette.highlightedText().color());
+//        painter->setPen(Qt::blue);
     } else {
         painter->setPen(option.palette.foreground().color());
     }
@@ -35,6 +51,8 @@ void LyricLineDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
 QSize LyricLineDelegate::sizeHint(const QStyleOptionViewItem &option,
                                   const QModelIndex &index) const
 {
+    Q_D(const LyricLineDelegate);
+
     auto sh = QStyledItemDelegate::sizeHint(option, index);
     return sh;
 }
@@ -61,8 +79,19 @@ void LyricLineDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
     QStyledItemDelegate::setModelData(editor, model, index);
 }
 
+LyricLineDelegate::LyricLineDelegate(QWidget *parent): QStyledItemDelegate(parent), d_ptr(new LyricLineDelegatePrivate(this))
+{
+    Q_D(LyricLineDelegate);
+    d->parentWidget = parent;
+}
+
+LyricLineDelegate::~LyricLineDelegate()
+{
+
+}
+
 void LyricLineDelegate::initStyleOption(QStyleOptionViewItem *option, const QModelIndex &index) const
 {
     QStyledItemDelegate::initStyleOption(option, index);
-    option->state = option->state & ~QStyle::State_HasFocus;
+    option->state = option->state /*& ~QStyle::State_HasFocus*/;
 }

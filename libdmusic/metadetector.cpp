@@ -30,6 +30,7 @@ static QMap<QString, QByteArray> localeCodes;
 
 MetaDetector::MetaDetector()
 {
+    av_register_all();
     localeCodes.insert("zh_CN", "GB18030");
 }
 
@@ -178,7 +179,6 @@ void MetaDetector::updateMetaFromLocalfile(MediaMeta *meta, const QFileInfo &fil
         return ;
     }
 
-    av_register_all();
     AVFormatContext *pFormatCtx = avformat_alloc_context();
     avformat_open_input(&pFormatCtx, meta->localPath.toStdString().c_str(), NULL, NULL);
     if (pFormatCtx) {

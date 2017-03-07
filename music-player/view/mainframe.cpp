@@ -115,8 +115,16 @@ void MainFramePrivate::initMenu()
 
     auto settings = new QAction(MainFrame::tr("Settings"), q);
     q->connect(settings, &QAction::triggered, q, [ = ](bool) {
+ Dtk::Widget::DThemeManager::instance()->blockSignals(true);
+//        Dtk::Widget::DThemeManager::instance()->setTheme("light");
         auto configDialog = new Dtk::Widget::DSettingsDialog(q);
         configDialog->setStyle(QStyleFactory::create("dlight"));
+//        configDialog->setProperty("_d_QSSFilename","/dialogs/DSettingsDialog");
+//        configDialog->setProperty("_d_QSSThemename","light");
+//        ThemeManager::instance()->regisetrWidget(configDialog);
+
+//        Dtk::Widget::DThemeManager::instance()->setTheme("dark");
+//        Dtk::Widget::DThemeManager::instance()->blockSignals(false);
         configDialog->setFixedSize(720, 520);
         configDialog->updateSettings(Settings::instance());
         Dtk::Widget::DUtility::moveToCenter(configDialog);
@@ -641,6 +649,8 @@ void MainFrame::binding(Presenter *presenter)
     connect(presenter, &Presenter::locateMusic,
             d->musicList,  &MusicListWidget::onLocate);
 
+    connect(presenter, &Presenter::progrossChanged,
+            d->lyricWidget, &LyricWidget::onProgressChanged);
     connect(presenter, &Presenter::musicPlayed,
             d->lyricWidget, &LyricWidget::onMusicPlayed);
     connect(presenter, &Presenter::coverSearchFinished,

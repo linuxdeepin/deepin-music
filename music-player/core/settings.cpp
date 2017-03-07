@@ -24,12 +24,10 @@ QPointer<Dtk::Settings> Settings::appSettings()
 
     // TODO: fix in dtksettings
     if (needInit) {
-        settings->reset();
         settings->setOption("base.play.remember_progress", false);
         settings->setOption("base.play.remember_progress", true);
         settings->setOption("base.play.last_playlist", "");
         settings->setOption("base.play.last_playlist", "all");
-        settings->sync();
     }
 
     return settings.data();
