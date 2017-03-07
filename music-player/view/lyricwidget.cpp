@@ -411,8 +411,14 @@ void LyricWidget::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
 void LyricWidget::onMusicStop(PlaylistPtr /*playlist*/, const MetaPtr meta)
 {
     Q_D(LyricWidget);
-    onLyricChanged(meta, DMusic::SearchMeta(), "");
-    onCoverChanged(meta, DMusic::SearchMeta(), "");
+
+    auto lyricStr = QString::fromUtf8("");
+    d->setLyricLines(lyricStr);
+
+    QPixmap coverPixmap = QPixmap(d->defaultCover);
+    d->m_cover->setCoverPixmap(coverPixmap);
+    d->m_cover->update();
+
     d->m_showSearch->setDisabled(true);
 }
 
@@ -475,9 +481,9 @@ void LyricWidget::setDefaultCover(QString defaultCover)
     d->defaultCover = defaultCover;
 }
 
-void LyricWidget::onUpdateMetaCodec(const MetaPtr meta)
+void LyricWidget::onUpdateMetaCodec(const MetaPtr /*meta*/)
 {
-    Q_D(LyricWidget);
+//    Q_D(LyricWidget);
 
 //    if (d->m_playingMusic == meta) {
 //        d->m_playingMusic.title = meta.title;

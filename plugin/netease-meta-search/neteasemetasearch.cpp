@@ -148,7 +148,7 @@ static QList<SearchMeta> toSongList(const QByteArray &data)
     auto songs = searchResult.value("songs").toArray();
     auto songCount = searchResult.value("songCount").toInt();
 
-    qDebug() << "--------\n Find " << songCount << "result";
+//    qDebug() << "--------\n Find " << songCount << "result";
     for (auto songJson : songs) {
         SearchMeta searchMeta;
         auto song = songJson.toObject();
@@ -177,7 +177,7 @@ static QList<SearchMeta> toSongList(const QByteArray &data)
 //        qDebug() << "<<<<";
         SearchMetas << searchMeta;
     }
-    qDebug() << "--------";
+//    qDebug() << "--------";
     return SearchMetas;
 }
 
@@ -209,7 +209,6 @@ void NeteaseMetaSearchEngine::searchMeta(const MetaPtr meta)
         this, [ = ](int errCode, const QByteArray & data) {
             qDebug() << "NeteaseMetaSearchEngine received: " << errCode << data.length();
             emit this->coverLoaded(meta, song, data);
-            qDebug() << "end --- NeteaseMetaSearchEngine received: " << errCode << data.length();
         });
 
         QString lyricUrl = QLatin1String("http://music.163.com/api/song/lyric?os=pc&id=%1&lv=-1&kv=-1&tv=-1");
@@ -225,7 +224,7 @@ void NeteaseMetaSearchEngine::searchMeta(const MetaPtr meta)
     auto goose = m_geese->postGoose(queryUrl, params.toEncoded());
     connect(goose, &DMusic::Net::Goose::arrive,
     this, [ = ](int errCode, const QByteArray & data) {
-        qDebug() << "NeteaseMetaSearchEngine Result: " << errCode << anlyzer;
+//        qDebug() << "NeteaseMetaSearchEngine Result: " << errCode << anlyzer;
         if (errCode != QNetworkReply::NoError || anlyzer.isNull()) {
             return;
         }
@@ -239,7 +238,7 @@ void NeteaseMetaSearchEngine::searchMeta(const MetaPtr meta)
     goose = m_geese->postGoose(queryUrl, params.toEncoded());
     connect(goose, &DMusic::Net::Goose::arrive,
     this, [ = ](int errCode, const QByteArray & data) {
-        qDebug() << "NeteaseMetaSearchEngine Result: " << errCode << anlyzer;
+//        qDebug() << "NeteaseMetaSearchEngine Result: " << errCode << anlyzer;
         if (errCode != QNetworkReply::NoError || anlyzer.isNull()) {
             return;
         }

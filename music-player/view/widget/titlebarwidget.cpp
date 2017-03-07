@@ -33,7 +33,8 @@ public:
 
     void fixSearchPosition();
 
-    SearchEdit *search;
+    SearchEdit  *search = nullptr;
+    QPushButton *btBack = nullptr;
 
     TitleBarWidget *q_ptr;
     Q_DECLARE_PUBLIC(TitleBarWidget)
@@ -63,13 +64,13 @@ TitleBarWidget::TitleBarWidget(QWidget *parent) :
     iconLabel->setObjectName("TitleIcon");
     iconLabel->setFixedSize(24, 24);
 
-    auto btBack = new QPushButton;
-    btBack->setObjectName("TitleBack");
-    btBack->setFixedSize(24, 24);
-    btBack->hide();
+    d->btBack = new QPushButton;
+    d->btBack->setObjectName("TitleBack");
+    d->btBack->setFixedSize(24, 24);
+    d->btBack->hide();
 
     leftLayout->addWidget(iconLabel, 0, Qt::AlignCenter);
-    leftLayout->addWidget(btBack, 0, Qt::AlignCenter);
+    leftLayout->addWidget(d->btBack, 0, Qt::AlignCenter);
     leftLayout->addStretch();
 
     d->search = new SearchEdit();
@@ -90,14 +91,14 @@ TitleBarWidget::TitleBarWidget(QWidget *parent) :
 
     connect(d->search, &SearchEdit::locateMusic, this, &TitleBarWidget::locateMusicInAllMusiclist);
     connect(d->search, &SearchEdit::searchText, this, &TitleBarWidget::search);
-    connect(btBack, &QPushButton::clicked, this, &TitleBarWidget::exitSearch);
+    connect(d->btBack, &QPushButton::clicked, this, &TitleBarWidget::searchExited);
 
     connect(this, &TitleBarWidget::search, this, [ = ]() {
-        btBack->show();
+        d->btBack->show();
 //        d->fixSearchPosition();
     });
-    connect(this, &TitleBarWidget::exitSearch, this, [ = ]() {
-        btBack->hide();
+    connect(this, &TitleBarWidget::searchExited, this, [ = ]() {
+        d->btBack->hide();
         clearSearch();
 //        d->fixSearchPosition();
     });
@@ -105,6 +106,13 @@ TitleBarWidget::TitleBarWidget(QWidget *parent) :
 
 TitleBarWidget::~TitleBarWidget()
 {
+}
+
+void TitleBarWidget::exitSearch()
+{
+    Q_D(TitleBarWidget);
+    d->btBack->hide();
+    clearSearch();
 }
 
 void TitleBarWidget::clearSearch()

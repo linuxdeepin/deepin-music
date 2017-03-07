@@ -61,7 +61,7 @@ void MetaAnalyzer::onGetAblumResult(QList<DMusic::SearchMeta> songlist)
 
 void MetaAnalyzer::analyzerResults()
 {
-    qDebug() << "***********************" << m_titleResultGet << m_ablumResultGet;
+//    qDebug() << "***********************" << m_titleResultGet << m_ablumResultGet;
     if (!m_titleResultGet || !m_ablumResultGet) {
         return;
     }
@@ -105,8 +105,8 @@ void MetaAnalyzer::analyzerResults()
         find = true;
     }
 
-    qDebug() << "find" << result.name << result.album.name;
-    qDebug() << "fetch cover url:" << result.album.coverUrl << result.name << m_meta;
+//    qDebug() << "find" << result.name << result.album.name;
+//    qDebug() << "fetch cover url:" << result.album.coverUrl << result.name << m_meta;
 
 //    connect(m_geese->getGoose(result.album.coverUrl), &DMusic::Net::Goose::arrive,
 //    this, [ = ](int errCode, const QByteArray & data) {

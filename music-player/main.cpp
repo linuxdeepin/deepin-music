@@ -9,6 +9,7 @@
 
 #include <QIcon>
 #include <QUrl>
+#include <QThread>
 #include <QProcess>
 #include <QDBusInterface>
 #include <QCommandLineParser>
@@ -91,6 +92,14 @@ int main(int argc, char *argv[])
     PluginManager::instance()->init();
     // For Windows, must init media player in main thread!!!
     Player::instance()->init();
+
+#ifdef Q_OS_UNIX
+    auto playThread = new QThread;
+    playThread->setPriority(QThread::HighestPriority);
+    Player::instance()->moveToThread(playThread);
+    playThread->start();
+#endif
+
     MusicApp::instance()->init();
 
 #ifdef Q_OS_UNIX

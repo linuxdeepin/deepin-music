@@ -51,6 +51,10 @@ void initMiniTypes()
         if (mt.name().startsWith("video/")) {
             sSupportedMimeTypes << mt.name();
         }
+
+        if (mt.name().startsWith("application/octet-stream")) {
+            sSupportedMimeTypes << mt.name();
+        }
     }
 
     for (auto &suffix : suffixWhitelist.keys()) {

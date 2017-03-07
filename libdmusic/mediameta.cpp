@@ -53,8 +53,13 @@ QString filepathHash(const QString &filepath)
 QString lengthString(qint64 length)
 {
     length = length / 1000;
-    QTime t(static_cast<int>(length / 3600), length % 3600 / 60, length % 60);
-    return t.toString("mm:ss");
+    int hour = static_cast<int>(length / 3600);
+    QTime t(0, length % 3600 / 60, length % 60);
+    if (hour > 0) {
+        return QString("%1:%2").arg(hour).arg(t.toString("mm:ss"));
+    } else {
+        return t.toString("mm:ss");
+    }
 }
 
 QString sizeString(qint64 sizeByte)

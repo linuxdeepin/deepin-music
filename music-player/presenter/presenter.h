@@ -38,6 +38,7 @@ public slots:
     void volumeUp();
     void volumeDown();
     void togglePaly();
+    void pause();
     void next();
     void prev();
 

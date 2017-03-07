@@ -156,7 +156,7 @@ void MusicApp::onDataPrepared()
     d->playerFrame->setFocus();
 
     d->appPresenter->postAction();
-    d->playerFrame->setMinimumSize(QSize(870, 480));
+    d->playerFrame->setMinimumSize(QSize(720, 480));
     d->playerFrame->focusMusicList();
     qApp->installEventFilter(d->playerFrame);
 }

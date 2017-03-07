@@ -19,11 +19,12 @@ public:
     explicit TitleBarWidget(QWidget *parent = 0);
     ~TitleBarWidget();
 
+    void exitSearch();
     void clearSearch();
     void setSearchEnable(bool enable = true);
     void setViewname(const QString &viewname);
 signals:
-    void exitSearch();
+    void searchExited();
     void search(const QString &text);
     void locateMusicInAllMusiclist(const QString &hash);
 

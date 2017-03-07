@@ -57,6 +57,8 @@ public:
     Cover           *cover      = nullptr;
     Label           *title      = nullptr;
     Label           *artist     = nullptr;
+
+    QPushButton     *btCover    = nullptr;
     QPushButton     *btPlay     = nullptr;
     QPushButton     *btPrev     = nullptr;
     QPushButton     *btNext     = nullptr;
@@ -162,7 +164,6 @@ void FooterPrivate::initConnection()
     });
 
     q->connect(btFavorite, &QPushButton::released, q, [ = ]() {
-        qDebug() << "btFavorite---------------------------";
         emit q->toggleFavourite(activingMeta);
     });
     q->connect(title, &Label::clicked, q, [ = ](bool) {
@@ -220,13 +221,13 @@ Footer::Footer(QWidget *parent) :
     d->cover->setFixedSize(40, 40);
     d->cover->setRadius(0);
 
-    auto coverHoverBt = new QPushButton();
-    coverHoverBt->setObjectName("FooterCoverHover");
-    coverHoverBt->setFixedSize(40, 40);
+    d->btCover = new QPushButton();
+    d->btCover->setObjectName("FooterCoverHover");
+    d->btCover->setFixedSize(40, 40);
 
     stackedLayout->addWidget(d->cover);
-    stackedLayout->addWidget(coverHoverBt);
-    coverHoverBt->installEventFilter(hoverFilter);
+    stackedLayout->addWidget(d->btCover);
+    d->btCover->installEventFilter(hoverFilter);
 
     d->title = new Label;
     d->title->setObjectName("FooterTitle");
@@ -361,7 +362,7 @@ Footer::Footer(QWidget *parent) :
 
     d->initConnection();
 
-    connect(coverHoverBt, &QPushButton::clicked, this, [ = ](bool) {
+    connect(d->btCover, &QPushButton::clicked, this, [ = ](bool) {
         emit toggleLyricView();
     });
 
@@ -379,6 +380,7 @@ void Footer::enableControl(bool enable)
 {
     Q_D(Footer);
 
+    d->btCover->setEnabled(enable);
     d->btPrev->setEnabled(enable);
     d->btNext->setEnabled(enable);
     d->btFavorite->setEnabled(enable);
@@ -476,7 +478,7 @@ void Footer::onMusicListAdded(PlaylistPtr playlist, const MetaPtrList metalist)
     Q_D(Footer);
     if (playlist->id() == FavMusicListID)
         for (auto &meta : metalist) {
-            if (meta->hash == d->activingMeta->hash) {
+            if (d->activingMeta && meta == d->activingMeta) {
                 d->updateQssProperty(d->btFavorite, sPropertyFavourite, true);
             }
         }
@@ -545,7 +547,6 @@ void Footer::onMusicError(PlaylistPtr playlist, const MetaPtr meta, int error)
     d->updateQssProperty(d->btPlay, sPropertyPlayStatus, status);
 }
 
-
 void Footer::onMusicPause(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(Footer);
@@ -566,13 +567,24 @@ void Footer::onMusicStoped(PlaylistPtr playlist, const MetaPtr meta)
     Q_UNUSED(meta);
 
     onProgressChanged(0, 1);
-//    this->enableControl(false);
     d->title->hide();
     d->artist->hide();
+    d->btFavorite->hide();
+
     d->cover->setCoverPixmap(QPixmap(d->defaultCover));
     d->cover->update();
     d->updateQssProperty(d->btPlay, sPropertyPlayStatus, sPlayStatusValueStop);
     d->updateQssProperty(this, sPropertyPlayStatus, sPlayStatusValueStop);
+}
+
+void Footer::onMediaLibraryClean()
+{
+    Q_D(Footer);
+    d->btPrev->hide();
+    d->btNext->hide();
+    d->btFavorite->hide();
+    d->btLyric->hide();
+    enableControl(false);
 }
 
 void Footer::onProgressChanged(qint64 value, qint64 duration)

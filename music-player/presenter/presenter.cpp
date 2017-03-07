@@ -220,6 +220,7 @@ void Presenter::prepareData()
     connect(d->player, &Player::mediaPlayed,
     this, [ = ](PlaylistPtr playlist, const MetaPtr meta) {
         d->settings->setOption("base.play.last_meta", meta->hash);
+        d->settings->setOption("base.play.last_playlist", playlist->id());
 
         MetaPtr favInfo(meta);
         favInfo->favourite = d->playlistMgr->playlist(FavMusicListID)->contains(meta);
@@ -294,7 +295,7 @@ void Presenter::postAction()
     emit this->modeChanged(playmode);
 
     auto allplaylist = d->playlistMgr->playlist(AllMusicListID);
-    auto lastPlaylist = d->player->activePlaylist();
+    auto lastPlaylist = allplaylist;
     if (lastPlaylist.isNull()) {
         lastPlaylist = allplaylist;
     }
@@ -308,9 +309,11 @@ void Presenter::postAction()
         if (!d->playlistMgr->playlist(lastPlaylistId).isNull()) {
             lastPlaylist = d->playlistMgr->playlist(lastPlaylistId);
         }
-        lastMeta = lastPlaylist->first();
+        Q_ASSERT(!lastPlaylist.isNull());
+
         auto lastMetaId = d->settings->value("base.play.last_meta").toString();
-        auto lastMeta = MediaLibrary::instance()->meta(lastMetaId);
+        lastMeta = MediaLibrary::instance()->meta(lastMetaId);
+
         if (lastPlaylist->contains(lastMeta)) {
             lastMeta = lastPlaylist->music(lastMetaId);
         } else {
@@ -339,10 +342,10 @@ void Presenter::postAction()
         this->openUri(QUrl(toOpenUri));
     } else {
         if (d->settings->value("base.play.auto_play").toBool() && !lastPlaylist->isEmpty() && !isMetaLibClear) {
+            qDebug() << lastPlaylist->id() << lastPlaylist->displayName();
             onCurrentPlaylistChanged(lastPlaylist);
             onSyncMusicPlay(lastPlaylist, lastMeta);
-            d->player->resume(lastPlaylist, lastMeta);
-            d->player->setPosition(position);
+//            emit d->resume(lastPlaylist, lastMeta);
         }
     }
 
@@ -454,6 +457,16 @@ void Presenter::togglePaly()
         break;
     }
 
+}
+
+void Presenter::pause()
+{
+    Q_D(Presenter);
+    auto activeList = d->player->activePlaylist();
+    auto activeMeta = d->player->activeMeta();
+    if (activeList && activeMeta) {
+        onMusicPause(activeList, activeMeta);
+    }
 }
 
 void Presenter::next()

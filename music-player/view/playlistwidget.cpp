@@ -197,12 +197,17 @@ void PlaylistWidget::onPlaylistAdded(PlaylistPtr playlist)
 
 void PlaylistWidget::onCurrentChanged(PlaylistPtr playlist)
 {
+    if (playlist) {
+        m_listview->setCurrentItem(nullptr);
+    }
     for (int i = 0; i < m_listview->count(); ++i) {
         QListWidgetItem *item = m_listview->item(i);
         auto playlistItem = qobject_cast<PlayListItem *>(m_listview->itemWidget(item));
         if (playlistItem->data()->id() == playlist->id()) {
             m_listview->setCurrentItem(item);
             playlistItem->setActive(true);
+        } else {
+            playlistItem->setActive(false);
         }
     }
 }

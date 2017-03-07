@@ -55,9 +55,9 @@ void Goose::post(const QUrl &url, const QByteArray &data)
 
     connect(reply, &QNetworkReply::finished,
     this, [ = ]() {
-        QMimeDatabase mdb;
-        auto contentType = reply->header(QNetworkRequest::ContentTypeHeader).toString();
-        qDebug() << mdb.mimeTypeForName(contentType);
+//        QMimeDatabase mdb;
+//        auto contentType = reply->header(QNetworkRequest::ContentTypeHeader).toString();
+//        qDebug() << mdb.mimeTypeForName(contentType);
         emit arrive(QNetworkReply::NoError, reply->readAll());
     });
 

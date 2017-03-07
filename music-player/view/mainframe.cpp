@@ -315,7 +315,7 @@ void MainFramePrivate:: slideToMusicListView(bool keepPlaylist)
     WidgetHelper::slideTop2BottomWidget(
         current, musicList, AnimationDelay);
     q->update();
-//    q->disableControl();
+    disableControl(AnimationDelay);
     currentWidget = musicList;
 //    setPlaylistVisible(keepPlaylist);
     titlebar->raise();
@@ -452,7 +452,7 @@ void MainFrame::binding(Presenter *presenter)
             presenter, &Presenter::onLocateMusicAtAll);
     connect(d->titlebarwidget, &TitleBarWidget::search,
             presenter, &Presenter::onSearchText);
-    connect(d->titlebarwidget, &TitleBarWidget::exitSearch,
+    connect(d->titlebarwidget, &TitleBarWidget::searchExited,
             presenter, &Presenter::onExitSearch);
 
     connect(d->importWidget, &ImportWidget::scanMusicDirectory,
@@ -511,6 +511,7 @@ void MainFrame::binding(Presenter *presenter)
 
     connect(presenter, &Presenter::musicStoped,
     this, [ = ](PlaylistPtr, const MetaPtr) {
+        qDebug() << "--------------- stop";
         setCoverBackground(coverBackground());
     });
 
@@ -533,6 +534,7 @@ void MainFrame::binding(Presenter *presenter)
         qDebug() << "metaLibraryClean ----------------";
         d->slideToImportView();
         d->titlebarwidget->clearSearch();
+        d->footer->onMediaLibraryClean();
     });
 
     connect(presenter, &Presenter::scanFinished,
@@ -570,6 +572,26 @@ void MainFrame::binding(Presenter *presenter)
     connect(presenter, &Presenter::requestImportFiles,
     this, [ = ]() {
         onSelectImportDirectory();
+    });
+
+    connect(presenter, &Presenter::currentMusicListChanged,
+    this, [ = ](PlaylistPtr playlist) {
+        if (playlist && playlist->id() != SearchMusicListID) {
+            d->titlebarwidget->exitSearch();
+        }
+        if (d->lyricWidget->isVisible()) {
+            d->slideToMusicListView(false);
+        }
+    });
+
+    connect(d->footer,  &Footer::locateMusic,
+    this, [ = ](PlaylistPtr playlist, const MetaPtr) {
+        if (playlist && playlist->id() != SearchMusicListID) {
+            d->titlebarwidget->exitSearch();
+        }
+        if (d->lyricWidget->isVisible()) {
+            d->slideToMusicListView(false);
+        }
     });
 
     // MusicList
@@ -627,7 +649,8 @@ void MainFrame::binding(Presenter *presenter)
             d->lyricWidget, &LyricWidget::onLyricChanged);
     connect(presenter, &Presenter::contextSearchFinished,
             d->lyricWidget, &LyricWidget::onContextSearchFinished);
-
+    connect(presenter, &Presenter::musicStoped,
+            d->lyricWidget,  &LyricWidget::onMusicStop);
 
     connect(d->lyricWidget,  &LyricWidget::requestContextSearch,
             presenter, &Presenter::requestContextSearch);
@@ -644,6 +667,7 @@ void MainFrame::binding(Presenter *presenter)
     this, [ = ]() {
         d->togglePlaylist();
     });
+
 
     connect(d->footer,  &Footer::locateMusic,
             d->musicList, &MusicListWidget::onLocate);
@@ -690,10 +714,6 @@ void MainFrame::binding(Presenter *presenter)
             d->footer,  &Footer::onMutedChanged);
     connect(presenter, &Presenter::musicError,
             d->footer,  &Footer::onMusicError);
-//    connect(presenter, &Presenter::,
-//            d->footer,  &Footer::onUpdateMetaCodec);
-//    connect(presenter, &Presenter::coverSearchFinished,
-//            d->footer,  &Footer::setDefaultCover);
 
     // playlist
     connect(presenter, &Presenter::playlistAdded,
@@ -852,8 +872,6 @@ bool MainFrame::eventFilter(QObject *obj, QEvent *e)
 //        }
 //    }
     return qApp->eventFilter(obj, e);
-
-
 }
 
 void MainFrame::resizeEvent(QResizeEvent *e)
@@ -880,9 +898,9 @@ void MainFrame::resizeEvent(QResizeEvent *e)
     d->footer->resize(newSize.width(), FooterHeight);
     d->footer->move(0, newSize.height() - FooterHeight);
 
-//    if (d->tips) {
-//        d->tips->hide();
-//    }
+    if (d->tips) {
+        d->tips->hide();
+    }
 }
 
 #include <unistd.h>
@@ -898,7 +916,7 @@ void MainFrame::closeEvent(QCloseEvent *event)
     // TODO: syncfs
     sync();
 
-//    qDebug() << "store state:" << windowState() << "gometry:" << geometry();
+    // qDebug() << "store state:" << windowState() << "gometry:" << geometry();
     DUtil::TimerSingleShot(300, [this, event]() {
         ThinWindow::closeEvent(event);
     });
