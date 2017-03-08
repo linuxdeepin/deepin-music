@@ -115,7 +115,7 @@ void MainFramePrivate::initMenu()
 
     auto settings = new QAction(MainFrame::tr("Settings"), q);
     q->connect(settings, &QAction::triggered, q, [ = ](bool) {
- Dtk::Widget::DThemeManager::instance()->blockSignals(true);
+        Dtk::Widget::DThemeManager::instance()->blockSignals(true);
 //        Dtk::Widget::DThemeManager::instance()->setTheme("light");
         auto configDialog = new Dtk::Widget::DSettingsDialog(q);
 //        configDialog->setStyle(QStyleFactory::create("dlight"));
@@ -123,7 +123,7 @@ void MainFramePrivate::initMenu()
 //        configDialog->setProperty("_d_QSSThemename","light");
 //        ThemeManager::instance()->regisetrWidget(configDialog);
 
-        Dtk::Widget::DThemeManager::instance()->setTheme("dark");
+//        Dtk::Widget::DThemeManager::instance()->setTheme("dark");
 //        Dtk::Widget::DThemeManager::instance()->blockSignals(false);
         configDialog->setFixedSize(720, 520);
         configDialog->updateSettings(Settings::instance());
@@ -572,9 +572,12 @@ void MainFrame::binding(Presenter *presenter)
     });
 
     connect(presenter, &Presenter::meidaFilesImported,
-    this, [ = ](PlaylistPtr playlist, const MetaPtrList) {
+    this, [ = ](PlaylistPtr playlist, const MetaPtrList metalist) {
         d->slideToMusicListView(false);
         d->musicList->onMusiclistChanged(playlist);
+        if (!metalist.isEmpty()) {
+            d->musicList->setCustomSortType();
+        }
     });
 
     connect(presenter, &Presenter::requestImportFiles,

@@ -193,6 +193,12 @@ MusicListWidget::~MusicListWidget()
 {
 }
 
+void MusicListWidget::setCustomSortType()
+{
+    Q_D(MusicListWidget);
+    d->dropdown->setCurrentAction(d->customAction);
+}
+
 void MusicListWidget::dragEnterEvent(QDragEnterEvent *event)
 {
     QFrame::dragEnterEvent(event);

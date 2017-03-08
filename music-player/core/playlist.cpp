@@ -202,6 +202,7 @@ void Playlist::load()
         }
     }
 
+    // remove invalid meta
     auto sortIDs = sortHashs.keys();
     qSort(sortIDs.begin(), sortIDs.end());
 
@@ -211,22 +212,12 @@ void Playlist::load()
     }
     playlistMeta.sortMetas << toAppendMusicHashs;
 
-    QStringList selectKeys;
+
+    QStringList toRemoveMusicHashs;
     for (auto hash : playlistMeta.sortMetas) {
-        selectKeys << QString("\"%1\"").arg(hash);
-    }
-
-    auto sqlStr = QString("SELECT hash "
-                          "FROM music WHERE hash IN (%1)").arg(selectKeys.join(","));
-    if (!query.exec(sqlStr)) {
-        qWarning() << query.lastError();
-        return;
-    }
-
-    while (query.next()) {
-        auto hash = query.value(0).toString();
         auto meta = MediaLibrary::instance()->meta(hash);
         if (meta.isNull()) {
+            toRemoveMusicHashs << hash;
             continue;
         }
         playlistMeta.metas.insert(hash, meta);
@@ -237,7 +228,11 @@ void Playlist::load()
         }
     }
 
-    if (toAppendMusicHashs.length() != 0) {
+    for (auto removeHash : toRemoveMusicHashs) {
+        playlistMeta.sortMetas.removeOne(removeHash);
+    }
+
+    if (!toAppendMusicHashs.isEmpty() || !toRemoveMusicHashs.isEmpty()) {
         QMap<QString, int> hashIndexs;
         for (auto i = 0; i < playlistMeta.sortMetas.length(); ++i) {
             hashIndexs.insert(playlistMeta.sortMetas.value(i), i);

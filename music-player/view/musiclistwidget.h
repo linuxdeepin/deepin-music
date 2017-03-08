@@ -21,19 +21,7 @@ public:
     explicit MusicListWidget(QWidget *parent = 0);
     ~MusicListWidget();
 
-signals:
-    void playall(PlaylistPtr playlist);
-    void resort(PlaylistPtr playlist, int sortType);
-    void playMedia(PlaylistPtr playlist, const MetaPtr meta);
-    void showInfoDialog(const MetaPtr meta);
-    void updateMetaCodec(const MetaPtr meta);
-
-    void requestCustomContextMenu(const QPoint &pos);
-    void addToPlaylist(PlaylistPtr playlist, const MetaPtrList  &metalist);
-    void musiclistRemove(PlaylistPtr playlist, const MetaPtrList  &metalist);
-    void musiclistDelete(PlaylistPtr playlist, const MetaPtrList  &metalist);
-    void importSelectFiles(PlaylistPtr playlist, QStringList urllist);
-
+    void setCustomSortType();
 public slots:
     void onMusiclistChanged(PlaylistPtr playlist);
     void onMusicPlayed(PlaylistPtr playlist, const MetaPtr info);
@@ -46,6 +34,19 @@ public slots:
                                     PlaylistPtr selectedlist,
                                     PlaylistPtr favlist,
                                     QList<PlaylistPtr >newlists);
+
+signals:
+    void playall(PlaylistPtr playlist);
+    void resort(PlaylistPtr playlist, int sortType);
+    void playMedia(PlaylistPtr playlist, const MetaPtr meta);
+    void showInfoDialog(const MetaPtr meta);
+    void updateMetaCodec(const MetaPtr meta);
+
+    void requestCustomContextMenu(const QPoint &pos);
+    void addToPlaylist(PlaylistPtr playlist, const MetaPtrList  &metalist);
+    void musiclistRemove(PlaylistPtr playlist, const MetaPtrList  &metalist);
+    void musiclistDelete(PlaylistPtr playlist, const MetaPtrList  &metalist);
+    void importSelectFiles(PlaylistPtr playlist, QStringList urllist);
 
 protected:
     virtual void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
