@@ -4,7 +4,8 @@ Priority: extra
 Maintainer: Deepin Sysdev <sysdev@deepin.com>
 Build-Depends: debhelper, qt5-default, pkg-config, qttools5-dev-tools, libqt5svg5-dev, qtmultimedia5-dev, bison,
                 flex, libdtkbase-dev, libdtkutil-dev, libdtkwidget-dev, libtag1-dev, libicu-dev, libcue-dev,
-                libavutil-dev, libavformat-dev, libavcodec-dev, libdtksettings-dev, libdtksettingsview-dev
+                libavutil-dev, libavformat-dev, libavcodec-dev, libdtksettings-dev, libdtksettingsview-dev,
+                python, git
 Standards-Version: 3.9.2
 Homepage: http://www.deepin.com/
 
