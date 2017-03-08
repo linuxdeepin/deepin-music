@@ -364,6 +364,11 @@ Footer::Footer(QWidget *parent) :
 
     connect(d->btCover, &QPushButton::clicked, this, [ = ](bool) {
         emit toggleLyricView();
+        if (d->btCover->property("viewname").toString() != "lyric") {
+            d->updateQssProperty(d->btCover, "viewname", "lyric");
+        } else {
+            d->updateQssProperty(d->btCover, "viewname", "musiclist");
+        }
     });
 
     d->updateQssProperty(d->btPlay, sPropertyPlayStatus, sPlayStatusValueStop);
