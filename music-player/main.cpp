@@ -95,9 +95,9 @@ int main(int argc, char *argv[])
 
 #ifdef Q_OS_UNIX
     auto playThread = new QThread;
-    playThread->setPriority(QThread::HighestPriority);
     Player::instance()->moveToThread(playThread);
     playThread->start();
+    playThread->setPriority(QThread::HighestPriority);
 #endif
 
     MusicApp::instance()->init();

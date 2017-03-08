@@ -425,7 +425,6 @@ void Player::playNextMeta(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(Player);
     Q_ASSERT(playlist == d->activePlaylist);
-    Q_ASSERT(meta->hash == d->activeMeta->hash);
 
     setPlayOnLoaded(true);
     if (d->mode == RepeatSingle) {

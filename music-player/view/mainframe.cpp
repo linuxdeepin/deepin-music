@@ -118,12 +118,12 @@ void MainFramePrivate::initMenu()
  Dtk::Widget::DThemeManager::instance()->blockSignals(true);
 //        Dtk::Widget::DThemeManager::instance()->setTheme("light");
         auto configDialog = new Dtk::Widget::DSettingsDialog(q);
-        configDialog->setStyle(QStyleFactory::create("dlight"));
+//        configDialog->setStyle(QStyleFactory::create("dlight"));
 //        configDialog->setProperty("_d_QSSFilename","/dialogs/DSettingsDialog");
 //        configDialog->setProperty("_d_QSSThemename","light");
 //        ThemeManager::instance()->regisetrWidget(configDialog);
 
-//        Dtk::Widget::DThemeManager::instance()->setTheme("dark");
+        Dtk::Widget::DThemeManager::instance()->setTheme("dark");
 //        Dtk::Widget::DThemeManager::instance()->blockSignals(false);
         configDialog->setFixedSize(720, 520);
         configDialog->updateSettings(Settings::instance());
