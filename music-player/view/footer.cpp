@@ -498,7 +498,6 @@ void Footer::onMusicListRemoved(PlaylistPtr playlist, const MetaPtrList metalist
 void Footer::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(Footer);
-    qDebug() << "update status" << playlist << meta << "error";
 
     QFontMetrics fm(d->title->font());
     auto text = fm.elidedText(meta->title, Qt::ElideMiddle, d->title->maximumWidth());

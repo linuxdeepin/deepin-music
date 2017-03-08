@@ -109,7 +109,6 @@ int main(int argc, char *argv[])
     if (!toOpenFile.isEmpty()) {
         auto fi = QFileInfo(toOpenFile);
         auto url = QUrl::fromLocalFile(fi.absoluteFilePath());
-        qDebug() <<  Settings::instance();
         Settings::instance()->setOption("base.play.to_open_uri", url.toString());
         Settings::instance()->sync();
     }

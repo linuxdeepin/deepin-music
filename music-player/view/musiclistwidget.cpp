@@ -298,18 +298,13 @@ void MusicListWidget::onMusicListAdded(PlaylistPtr playlist, const MetaPtrList m
     d->showEmptyHits(metalist.length() == 0);
 }
 
-void MusicListWidget::onLocate(PlaylistPtr playlist, const MetaPtr info)
+void MusicListWidget::onLocate(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(MusicListWidget);
-    Q_UNUSED(playlist);
-
-    qDebug() << d->musiclist->playlist()->displayName()
-             << playlist->displayName();
-
     if (d->musiclist->playlist() != playlist) {
         d->initData(playlist);
     }
-    d->musiclist->onLocate(info);
+    d->musiclist->onLocate(meta);
 }
 
 void MusicListWidget::onMusiclistChanged(PlaylistPtr playlist)

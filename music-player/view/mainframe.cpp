@@ -312,14 +312,11 @@ void MainFramePrivate:: slideToMusicListView(bool keepPlaylist)
     Q_Q(MainFrame);
 
     auto current = currentWidget ? currentWidget : importWidget;
-    qDebug() << "changeToMusicListView"
-             << current << musicList << keepPlaylist;
-
     if (musicList->isVisible()) {
         musicList->raise();
         titlebar->raise();
         footer->raise();
-//        setPlaylistVisible(keepPlaylist);
+        setPlaylistVisible(keepPlaylist);
         return;
     }
     musicList->setFixedSize(current->size());
@@ -328,13 +325,13 @@ void MainFramePrivate:: slideToMusicListView(bool keepPlaylist)
     q->update();
     disableControl(AnimationDelay);
     currentWidget = musicList;
-//    setPlaylistVisible(keepPlaylist);
+    setPlaylistVisible(keepPlaylist);
     titlebar->raise();
     footer->raise();
 
     titlebarwidget->setSearchEnable(true);
     newSonglistAction->setDisabled(false);
-
+    footer->setFocus();
     updateViewname("");
 }
 

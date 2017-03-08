@@ -76,7 +76,7 @@ void MusicApp::init()
 
     presenterWork->start();
 
-    qDebug() << "Trace:" << "start prepare data";
+    qDebug() << "TRACE:" << "start prepare data";
 }
 
 void MusicApp::initMpris(MprisPlayer *mprisPlayer)
@@ -137,7 +137,7 @@ void MusicApp::triggerShortcutAction(const QString &optKey)
 void MusicApp::onDataPrepared()
 {
     Q_D(MusicApp);
-    qDebug() << "Trace:" << "data prepared";
+    qDebug() << "TRACE:" << "data prepared";
 
     d->playerFrame->binding(d->appPresenter);
 

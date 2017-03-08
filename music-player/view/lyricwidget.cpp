@@ -124,8 +124,6 @@ void LyricWidgetPrivate::setLyricLines(QString str)
     emptyLineOffset = height / itemHeight / 2 + 1;
 
     QStringList lyric;
-    qDebug() << "insett" << emptyLineOffset << height / itemHeight;
-
     for (int i = 0; i < emptyLineOffset; ++i) {
         lyric << QString("  ");
     }

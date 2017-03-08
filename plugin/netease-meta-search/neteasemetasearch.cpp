@@ -186,17 +186,14 @@ static QByteArray toLyric(const QByteArray &data)
     auto document = QJsonDocument::fromJson(data);
     auto lrc = document.object().value("lrc").toObject();
     return lrc.value("lyric").toString().toUtf8();
-
 }
 
 void NeteaseMetaSearchEngine::searchMeta(const MetaPtr meta)
 {
-    qDebug() << "call search meta" << meta;
     if (meta.isNull()) {
         return;
     }
 
-    qDebug() << "searchMeta";
     QString queryUrl = QLatin1String("http://music.163.com/api/search/pc");
     QString queryTemplate = QLatin1String("s=%1&offset=0&limit=5&type=1");
     QUrl params = QUrl(queryTemplate.arg(meta->title));
@@ -204,19 +201,19 @@ void NeteaseMetaSearchEngine::searchMeta(const MetaPtr meta)
     auto anlyzer = QSharedPointer<MetaAnalyzer>(new MetaAnalyzer(meta, m_geese));
     connect(anlyzer.data(), &MetaAnalyzer::searchFinished,
     this, [ = ](const MetaPtr meta, SearchMeta song) {
-        qDebug() << "get " << "=====" << song.album.coverUrl << song.id;
+        qDebug() << "GTE" << song.id << "cover:" << song.album.coverUrl ;
         connect(m_geese->getGoose(song.album.coverUrl), &DMusic::Net::Goose::arrive,
         this, [ = ](int errCode, const QByteArray & data) {
-            qDebug() << "NeteaseMetaSearchEngine received: " << errCode << data.length();
+            qDebug() << "netease cover respone:" << errCode << "with body size:" << data.length();
             emit this->coverLoaded(meta, song, data);
         });
 
         QString lyricUrl = QLatin1String("http://music.163.com/api/song/lyric?os=pc&id=%1&lv=-1&kv=-1&tv=-1");
         lyricUrl = lyricUrl.arg(QString(song.id).remove("netease_"));
-        qDebug() << "get " << "=====" << lyricUrl;
+        qDebug() << "GTE" << song.id << "lyric:" << lyricUrl;
         connect(m_geese->getGoose(lyricUrl), &DMusic::Net::Goose::arrive,
         this, [ = ](int errCode, const QByteArray & data) {
-            qDebug() << "NeteaseMetaSearchEngine received: " << errCode << song.id << data.length();
+            qDebug() << "netease lyric respone:" << errCode << "with body size:" << data.length();
             emit this->lyricLoaded(meta, song, toLyric(data));
         });
     });
@@ -224,7 +221,6 @@ void NeteaseMetaSearchEngine::searchMeta(const MetaPtr meta)
     auto goose = m_geese->postGoose(queryUrl, params.toEncoded());
     connect(goose, &DMusic::Net::Goose::arrive,
     this, [ = ](int errCode, const QByteArray & data) {
-//        qDebug() << "NeteaseMetaSearchEngine Result: " << errCode << anlyzer;
         if (errCode != QNetworkReply::NoError || anlyzer.isNull()) {
             return;
         }
@@ -238,7 +234,6 @@ void NeteaseMetaSearchEngine::searchMeta(const MetaPtr meta)
     goose = m_geese->postGoose(queryUrl, params.toEncoded());
     connect(goose, &DMusic::Net::Goose::arrive,
     this, [ = ](int errCode, const QByteArray & data) {
-//        qDebug() << "NeteaseMetaSearchEngine Result: " << errCode << anlyzer;
         if (errCode != QNetworkReply::NoError || anlyzer.isNull()) {
             return;
         }
@@ -260,7 +255,6 @@ void NeteaseMetaSearchEngine::searchContext(const QString &context)
         auto searchMetas = toSongList(data);
         qDebug() << "contextSearchFinished with " << searchMetas.length() << "result";
         emit this->contextSearchFinished(context, searchMetas);
-
         goose->deleteLater();
     });
 }

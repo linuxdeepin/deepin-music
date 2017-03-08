@@ -55,7 +55,7 @@ void MetaDetector::updateCueFileTagCodec(MediaMeta *meta, const QFileInfo &/*cue
     Q_ASSERT(meta != nullptr);
     DMusic::CueParser cueParser(meta->cuePath, codec);
     // TODO: parse may be failed for diff code
-    for (auto cueMeta: cueParser.metalist()) {
+    for (auto cueMeta : cueParser.metalist()) {
         if (meta->hash == cueMeta->hash) {
             meta->title = cueMeta->title;
             meta->artist = cueMeta->artist;
@@ -75,7 +75,7 @@ void MetaDetector::updateMediaFileTagCodec(MediaMeta *meta, const QByteArray &co
 
     QByteArray detectByte;
     QByteArray detectCodec = codecName;
-
+    auto mediaPath = QStringToTString(meta->localPath);
 #ifdef _WIN32
     TagLib::FileRef f(meta->localPath.toStdWString().c_str());
 #else
@@ -83,8 +83,12 @@ void MetaDetector::updateMediaFileTagCodec(MediaMeta *meta, const QByteArray &co
 #endif
     TagLib::Tag *tag = f.tag();
 
+    if (!f.file()) {
+        qCritical() << "TagLib: open file failed:" << meta->localPath << f.file();
+    }
+
     if (!tag) {
-        qCritical() << "TagLib: open file failed:" << meta->localPath;
+        qWarning() << "TagLib: no tag for media file" << meta->localPath;
         return;
     }
 

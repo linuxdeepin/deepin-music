@@ -29,7 +29,7 @@ public slots:
     void onMusicError(PlaylistPtr playlist, const MetaPtr meta, int error);
     void onMusicListAdded(PlaylistPtr playlist, const MetaPtrList metalist);
     void onMusicListRemoved(PlaylistPtr playlist, const MetaPtrList metalist);
-    void onLocate(PlaylistPtr playlist, const MetaPtr info);
+    void onLocate(PlaylistPtr playlist, const MetaPtr meta);
     void onCustomContextMenuRequest(const QPoint &pos,
                                     PlaylistPtr selectedlist,
                                     PlaylistPtr favlist,

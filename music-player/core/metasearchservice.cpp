@@ -127,9 +127,7 @@ QUrl MetaSearchService::lyricUrl(const MetaPtr meta)
 QByteArray MetaSearchService::coverData(const MetaPtr meta)
 {
     Q_ASSERT(!meta.isNull());
-
     QFile coverFile(cacheCoverPath(meta));
-    qDebug() << cacheCoverPath(meta);
     if (coverFile.open(QIODevice::ReadOnly)) {
         return coverFile.readAll();
     }
@@ -189,11 +187,9 @@ void MetaSearchService::searchMeta(const MetaPtr meta)
 
     auto plugins = PluginManager::instance()->getPluginListByType(DMusic::Plugin::PluginType::TypeMetaSearchEngine);
     for (auto plugin : plugins) {
-        qDebug() << "search by " << plugin->pluginId() << meta->title;
         auto engine = dynamic_cast<DMusic::Plugin::MetaSearchEngine *>(plugin);
         emit engine->doSearchMeta(meta);
     }
-
 }
 
 void MetaSearchService::searchContext(const QString &context)

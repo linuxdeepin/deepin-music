@@ -49,25 +49,26 @@ PresenterPrivate::PresenterPrivate(Presenter *parent)
 void PresenterPrivate::initBackend()
 {
     MediaDatabase::instance();
+    qDebug() << "TRACE:" << "database init finished";
 
     player = Player::instance();
-    qDebug() << "Trace:" << "player init finished";
+    qDebug() << "TRACE:" << "player init finished";
 
     settings = Settings::instance();
-    qDebug() << "Trace:" << "Settings init finished";
+    qDebug() << "TRACE:" << "Settings init finished";
 
     lyricService = new MetaSearchService;
     startInNewThread(lyricService);
-    qDebug() << "Trace:" << "lyricService init finished";
+    qDebug() << "TRACE:" << "lyricService init finished";
 
     library = MediaLibrary::instance();
     library->startMonitor();
     startInNewThread(library);
-    qDebug() << "Trace:" << "library init finished";
+    qDebug() << "TRACE:" << "library init finished";
 
     playlistMgr = new PlaylistManager;
     playlistMgr->load();
-    qDebug() << "Trace:" << "playlistMgr init finished";
+    qDebug() << "TRACE:" << "playlistMgr init finished";
 
     currentPlaylist = playlistMgr->playlist(AllMusicListID);
 
@@ -132,7 +133,7 @@ void Presenter::prepareData()
 
     d->initBackend();
 
-    qDebug() << "Trace:" << "initBackend finished";
+    qDebug() << "TRACE:" << "initBackend finished";
 
     connect(d->library, &MediaLibrary::meidaFileImported,
     this, [ = ](const QString & playlistId, MetaPtrList metalist) {
@@ -168,8 +169,6 @@ void Presenter::prepareData()
     connect(d->lyricService, &MetaSearchService::coverSearchFinished,
     this, [ = ](const MetaPtr meta, const DMusic::SearchMeta & search, const QByteArray & coverData) {
         if (search.id != meta->searchID) {
-            // save search id
-            qDebug() << "update search id " << search.id;
             meta->searchID = search.id;
             meta->updateSearchIndex();
             emit MediaDatabase::instance()->updateMediaMeta(meta);
@@ -234,7 +233,6 @@ void Presenter::prepareData()
         MetaPtr favInfo(meta);
         favInfo->favourite = d->playlistMgr->playlist(FavMusicListID)->contains(meta);
         emit this->musicPlayed(playlist, favInfo);
-        qDebug() << "requestLyricCoverSearch" << meta->title;
         d->requestMetaSearch(meta);
     });
 
@@ -258,6 +256,7 @@ void Presenter::prepareData()
             emit musicMetaUpdate(playlist, meta);
         }
 
+        qDebug() << "nnnnnnnnnnn" << d->syncPlayerResult << error;
         if (d->syncPlayerResult) {
             d->syncPlayerResult = false;
             emit notifyMusciError(playlist, meta, error);
@@ -347,7 +346,7 @@ void Presenter::postAction()
     if (!toOpenUri.isEmpty()) {
         Settings::instance()->setOption("base.play.to_open_uri", "");
         Settings::instance()->sync();
-        this->openUri(QUrl(toOpenUri));
+        openUri(QUrl(toOpenUri));
     } else {
         if (d->settings->value("base.play.auto_play").toBool() && !lastPlaylist->isEmpty() && !isMetaLibClear) {
             qDebug() << lastPlaylist->id() << lastPlaylist->displayName();
@@ -385,8 +384,9 @@ void Presenter::openUri(const QUrl &uri)
     }
     auto list = d->playlistMgr->playlist(AllMusicListID);
     emit MediaLibrary::instance()->meidaFileImported(AllMusicListID, metas);
-    this->onAddToPlaylist(list, metas);
-    this->onSyncMusicPlay(list, metas.first());
+    onAddToPlaylist(list, metas);
+    onSyncMusicPlay(list, metas.first());
+    onCurrentPlaylistChanged(list);
 }
 
 void Presenter::onSyncMusicPlay(PlaylistPtr playlist, const MetaPtr meta)
@@ -759,8 +759,9 @@ void Presenter::onMusicPlay(PlaylistPtr playlist,  const MetaPtr meta)
     Q_ASSERT(!toPlayMeta.isNull());
     Q_ASSERT(!playlist.isNull());
 
-    qDebug() << "play" << playlist->displayName() << playlist->length();
-    qDebug() << toPlayMeta->title << toPlayMeta->hash;
+    qDebug() << "play" << playlist->displayName()
+             << "( count:" << playlist->length() << ")"
+             << toPlayMeta->title << toPlayMeta->hash;
     emit d->play(playlist, toPlayMeta);
 }
 
@@ -928,13 +929,15 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
         if (meta.isNull()) {
             return;
         }
+        // TODO: support mpris playlist
+        Q_UNUSED(playlist);
 
         QVariantMap metadata;
         metadata.insert(Mpris::metadataToString(Mpris::Title), meta->title);
         metadata.insert(Mpris::metadataToString(Mpris::Artist), meta->artist);
         metadata.insert(Mpris::metadataToString(Mpris::Album), meta->album);
         metadata.insert(Mpris::metadataToString(Mpris::Length), meta->length / 1000);
-//        mprisPlayer->setCanSeek(true);
+        //mprisPlayer->setCanSeek(true);
         mprisPlayer->setMetadata(metadata);
         mprisPlayer->setLoopStatus(Mpris::Playlist);
         mprisPlayer->setPlaybackStatus(Mpris::Stopped);
@@ -964,7 +967,7 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
 
     connect(mprisPlayer, &MprisPlayer::openUriRequested,
     this, [ = ](const QUrl & uri) {
-        this->openUri(uri);
+        openUri(uri);
     });
 
     connect(mprisPlayer, &MprisPlayer::playRequested,
@@ -1006,12 +1009,12 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
     });
 
     connect(this, &Presenter::progrossChanged,
-    this, [ = ](qint64 pos, qint64 length) {
+    this, [ = ](qint64 pos, qint64) {
         mprisPlayer->setPosition(pos);
     });
 
     connect(this, &Presenter::coverSearchFinished,
-    this, [ = ](const MetaPtr  meta, const DMusic::SearchMeta & song, const QByteArray & coverData) {
+    this, [ = ](const MetaPtr meta, const DMusic::SearchMeta &, const QByteArray &) {
         if (player->activeMeta().isNull() || meta.isNull()) {
             return;
         }

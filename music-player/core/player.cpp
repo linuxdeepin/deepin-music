@@ -83,7 +83,7 @@ class PlayerPrivate
 public:
     PlayerPrivate(Player *parent) : q_ptr(parent)
     {
-        qplayer = new QMediaPlayer;
+        qplayer = new QMediaPlayer(parent);
         initMiniTypes();
     }
 
@@ -131,6 +131,7 @@ public:
 void PlayerPrivate::initConnection()
 {
     Q_Q(Player);
+
     q->connect(qplayer, &QMediaPlayer::positionChanged,
     q, [ = ](qint64 position) {
         if (activeMeta.isNull()) {
@@ -196,7 +197,6 @@ void PlayerPrivate::initConnection()
 
     q->connect(qplayer, &QMediaPlayer::volumeChanged,
     q, [ = ](int volume) {
-        qDebug() << volume;
         emit q->volumeChanged(volume / fadeInOutFactor);
     });
     q->connect(qplayer, &QMediaPlayer::mutedChanged,
@@ -206,31 +206,12 @@ void PlayerPrivate::initConnection()
 
     q->connect(qplayer, &QMediaPlayer::mediaStatusChanged,
     q, [ = ](QMediaPlayer::MediaStatus status) {
-        qDebug() << status << activeMeta->invalid;
         switch (status) {
         case QMediaPlayer::LoadedMedia: {
-            qDebug() << qplayer->state()
-                     << qplayer->media().canonicalResource().mimeType();
             if (playOnLoad) {
                 qplayer->play();
             }
             emit q->mediaError(activePlaylist, activeMeta, Player::NoError);
-//            activeMeta->invalid = false;
-
-//            if (fadeInOut && !fadeInAnimation) {
-//                qDebug() << "start fade in";
-//                fadeInAnimation = new QPropertyAnimation(q, "fadeInOutFactor");
-//                fadeInAnimation->setStartValue(0.10000);
-//                fadeInAnimation->setEndValue(1.0000);
-//                fadeInAnimation->setDuration(sFadeInOutAnimationDuration);
-//                q->connect(fadeInAnimation, &QPropertyAnimation::finished,
-//                q, [ = ]() {
-//                    fadeInAnimation->deleteLater();
-//                    fadeInAnimation = nullptr;
-//                });
-//                fadeInAnimation->start();
-//            }
-
             break;
         }
         case QMediaPlayer::EndOfMedia: {
@@ -265,15 +246,11 @@ void PlayerPrivate::initConnection()
     q->connect(qplayer, static_cast<void (QMediaPlayer::*)(QMediaPlayer::Error error)>(&QMediaPlayer::error),
     q, [ = ](QMediaPlayer::Error error) {
         qWarning() << error << activePlaylist << activeMeta;
-        if (!activeMeta->invalid) {
-            emit q->mediaError(activePlaylist, activeMeta, static_cast<Player::Error>(error));
-        }
-//        activeMeta->invalid = true;
+        emit q->mediaError(activePlaylist, activeMeta, static_cast<Player::Error>(error));
     });
 
     q->connect(qplayer, &QMediaPlayer::stateChanged,
     q, [ = ](QMediaPlayer::State state) {
-        qDebug() << state;
         switch (state) {
         case QMediaPlayer::StoppedState:
         case QMediaPlayer::PlayingState:
@@ -349,8 +326,7 @@ void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta)
 {
     qDebug() << "loadMedia"
              << meta->title
-             << DMusic::lengthString(meta->offset)
-             << DMusic::lengthString(meta->offset)
+             << DMusic::lengthString(meta->offset) << "/"
              << DMusic::lengthString(meta->length);
     Q_D(Player);
     d->activeMeta = meta;
@@ -366,8 +342,7 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
 {
     qDebug() << "playMeta"
              << meta->title
-             << DMusic::lengthString(meta->offset)
-             << DMusic::lengthString(meta->offset)
+             << DMusic::lengthString(meta->offset) << "/"
              << DMusic::lengthString(meta->length);
 
     Q_D(Player);
@@ -451,8 +426,6 @@ void Player::playPrevMusic(PlaylistPtr playlist, const MetaPtr meta)
 void Player::pause()
 {
     Q_D(Player);
-
-    qDebug() << "start fade puse";
 
     if (d->fadeInAnimation) {
         d->fadeInAnimation->stop();
