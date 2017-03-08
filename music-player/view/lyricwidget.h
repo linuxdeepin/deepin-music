@@ -36,7 +36,7 @@ signals:
 public slots:
     void onProgressChanged(qint64 value, qint64 length);
     void onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta);
-    void onMusicStop(PlaylistPtr, const MetaPtr meta);
+    void onMusicStop(PlaylistPtr, const MetaPtr);
 
     void onLyricChanged(const MetaPtr meta,
                         const DMusic::SearchMeta &search,

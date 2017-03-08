@@ -52,39 +52,6 @@ static int doSyncGet(const QString &rootUrl, QByteArray &result)
     return errorCode;
 }
 
-/*!
- * \brief doSyncPost
- * \param rootUrl
- * \param result
- * \return
- *  Cookie: appver=1.5.0.75771;
-    Referer: http://music.163.com/
- */
-static int doNeteaseSyncPost(const QString &rootUrl, const QByteArray &encodeData, QByteArray &result)
-{
-    QNetworkRequest request(rootUrl);
-    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
-    request.setRawHeader("Cookie", "appver=1.5.0.75771;");
-    request.setRawHeader("Referer", "http://music.163.com/");
-
-    QScopedPointer<QNetworkAccessManager> connection(new QNetworkAccessManager);
-    QScopedPointer<QNetworkReply> reply(connection->post(request, encodeData));
-
-    QEventLoop waitLoop;
-    QObject::connect(reply.data(), SIGNAL(finished()), &waitLoop, SLOT(quit()));
-    waitLoop.exec();
-
-    int errorCode = reply->error();
-    if (errorCode != 0) {
-        qWarning() << "get" << request.url() << reply->errorString() << errorCode;
-        return errorCode;
-    }
-
-    result = reply->readAll();
-
-    return errorCode;
-}
-
 int downloadFile(const QString &rootUrl, const QString &filepath)
 {
     QByteArray result;
@@ -146,8 +113,7 @@ static QList<SearchMeta> toSongList(const QByteArray &data)
     auto document = QJsonDocument::fromJson(data);
     auto searchResult = document.object().value("result").toObject();
     auto songs = searchResult.value("songs").toArray();
-    auto songCount = searchResult.value("songCount").toInt();
-
+//    auto songCount = searchResult.value("songCount").toInt();
 //    qDebug() << "--------\n Find " << songCount << "result";
     for (auto songJson : songs) {
         SearchMeta searchMeta;

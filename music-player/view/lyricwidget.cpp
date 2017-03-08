@@ -402,7 +402,7 @@ void LyricWidget::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
     d->m_showSearch->setDisabled(false);
 }
 
-void LyricWidget::onMusicStop(PlaylistPtr /*playlist*/, const MetaPtr meta)
+void LyricWidget::onMusicStop(PlaylistPtr /*playlist*/, const MetaPtr /*meta*/)
 {
     Q_D(LyricWidget);
 
@@ -495,9 +495,11 @@ void LyricWidget::onContextSearchFinished(const QString &context, const QList<DM
     Q_D(LyricWidget);
     d->searchMetaList->clear();
 
+    //TODO: check context
+    Q_UNUSED(context);
+
     QListWidgetItem *current = nullptr;
     for (auto &meta : metalist) {
-        ;
         auto item = new QListWidgetItem;
         auto itemWidget = new SearchMetaItem;
         itemWidget->initUI(meta);

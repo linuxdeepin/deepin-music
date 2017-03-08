@@ -161,7 +161,7 @@ void MainFramePrivate::initMenu()
         aboutDlg->setWindowModality(Qt::WindowModal);
         aboutDlg->setWindowIcon(QPixmap("::/common/image/logo.png"));
         aboutDlg->setProductIcon(QPixmap(":/common/image/logo_96.png"));
-        aboutDlg->setProductName("Deepin Music");
+        aboutDlg->setProductName(MainFrame::tr("Deepin Music"));
         aboutDlg->setVersion(MainFrame::tr("Version: 3.0"));
         aboutDlg->setDescription(descriptionText + "\n");
         aboutDlg->setAcknowledgementLink(acknowledgementLink);

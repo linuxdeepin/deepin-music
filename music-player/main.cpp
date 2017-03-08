@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
     }
 
     app.loadTranslator();
-    app.setApplicationDisplayName(DApplication::tr("Deepin Music"));
+
 
 #ifdef Q_OS_UNIX
     auto serviceName = "deepinmusic";
@@ -88,11 +88,12 @@ int main(int argc, char *argv[])
 #endif
 
     app.setWindowIcon(QIcon(":/common/image/deepin-music.svg"));
+    app.setApplicationDisplayName(QObject::tr("Deepin Music"));
 
     PluginManager::instance()->init();
-    // For Windows, must init media player in main thread!!!
     Player::instance()->init();
 
+    // For Windows, must init media player in main thread!!!
 #ifdef Q_OS_UNIX
     auto playThread = new QThread;
     Player::instance()->moveToThread(playThread);
