@@ -69,7 +69,8 @@ SOURCES += \
     view/widget/delegate/musicitemdelegate.cpp \
     view/lyricwidget.cpp \
     view/widget/lyricview.cpp \
-    view/widget/titeledit.cpp
+    view/widget/titeledit.cpp \
+    view/widget/settingsdialog.cpp
 
 
 HEADERS += \

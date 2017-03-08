@@ -38,7 +38,7 @@ public:
     void initConnection();
     void updateLabelSize();
 
-    DBlurEffectWidget   *bgBlurWidget   = nullptr;
+//    DBlurEffectWidget   *bgBlurWidget   = nullptr;
     QFrame              *infoGridFrame  = nullptr;
     QLabel              *cover          = nullptr;
     QLabel              *title          = nullptr;
@@ -129,17 +129,17 @@ void InfoDialogPrivate::initUI()
 
     q->connect(closeBt, &DWindowCloseButton::clicked, q, &DAbstractDialog::hide);
 
-    if (qApp->isDXcbPlatform()) {
-        bgBlurWidget = new DBlurEffectWidget(q);
-        bgBlurWidget->setMaskColor(QColor(255, 255, 255));
-        bgBlurWidget->lower();
-        bgBlurWidget->setBlendMode(DBlurEffectWidget::BehindWindowBlend);
-        bgBlurWidget->setVisible(DPlatformWindowHandle::hasBlurWindow());
+//    if (qApp->isDXcbPlatform()) {
+//        bgBlurWidget = new DBlurEffectWidget(q);
+//        bgBlurWidget->setMaskColor(QColor(255, 255, 255));
+//        bgBlurWidget->lower();
+//        bgBlurWidget->setBlendMode(DBlurEffectWidget::BehindWindowBlend);
+//        bgBlurWidget->setVisible(DPlatformWindowHandle::hasBlurWindow());
 
-        DPlatformWindowHandle::connectWindowManagerChangedSignal(q, [ = ] {
-            bgBlurWidget->setVisible(DPlatformWindowHandle::hasBlurWindow());
-        });
-    }
+//        DPlatformWindowHandle::connectWindowManagerChangedSignal(q, [ = ] {
+//            bgBlurWidget->setVisible(DPlatformWindowHandle::hasBlurWindow());
+//        });
+//    }
 
 }
 
@@ -173,7 +173,7 @@ void InfoDialog::resizeEvent(QResizeEvent *event)
 {
     Q_D(InfoDialog);
     Dtk::Widget::DAbstractDialog::resizeEvent(event);
-    d->bgBlurWidget->resize(this->size());
+//    d->bgBlurWidget->resize(this->size());
 }
 
 void InfoDialog::updateInfo(const MetaPtr meta)

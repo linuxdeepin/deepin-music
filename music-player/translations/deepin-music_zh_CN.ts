@@ -225,32 +225,32 @@
         <translation>退出</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="482"/>
+        <location filename="../view/mainframe.cpp" line="481"/>
         <source>Successfully added to &quot;%1&quot;</source>
         <translation>成功添加到“%1”</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="532"/>
+        <location filename="../view/mainframe.cpp" line="531"/>
         <source>File invalid or does not exist, load failed!</source>
         <translation>文件无效或不存在，加载失败！</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="533"/>
+        <location filename="../view/mainframe.cpp" line="532"/>
         <source>I got it</source>
         <translation>我知道了</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="553"/>
+        <location filename="../view/mainframe.cpp" line="552"/>
         <source>No local music</source>
         <translation>本地没有歌曲</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="558"/>
+        <location filename="../view/mainframe.cpp" line="557"/>
         <source>Ok</source>
         <translation>确定</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="810"/>
+        <location filename="../view/mainframe.cpp" line="809"/>
         <source>Music (%1)</source>
         <translation>音乐 (%1)</translation>
     </message>
@@ -453,6 +453,116 @@
         <location filename="../main.cpp" line="91"/>
         <source>Deepin Music</source>
         <translation>深度音乐</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="5"/>
+        <source>Automatically play when startup</source>
+        <translation>启动时自动播放</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="6"/>
+        <source>Enable fade in and out</source>
+        <translation>开启淡入淡出</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="7"/>
+        <source>Geometry</source>
+        <translation>记住位置</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="8"/>
+        <source>Last Import Path</source>
+        <translation>最近导入路径</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="9"/>
+        <source>by ms</source>
+        <translation>毫秒</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="10"/>
+        <source>play sound mute</source>
+        <translation>播放禁音</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="11"/>
+        <source>play mode</source>
+        <translation>播放模式</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="12"/>
+        <source>Remember the last time when playing</source>
+        <translation>启动时记住上次播放进度</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="13"/>
+        <source>sort type</source>
+        <translation>排序类型</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="14"/>
+        <source>Window State</source>
+        <translation>窗口状态</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="15"/>
+        <source>deepin theme</source>
+        <translation>主题</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="16"/>
+        <source>deepin theme path</source>
+        <translation>主题路径</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="17"/>
+        <source>play sound volume</source>
+        <translation>播放音量</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="18"/>
+        <source>Basic settings</source>
+        <translation>基础设置</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="19"/>
+        <source>Play</source>
+        <translation>播放</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="20"/>
+        <source>Shortcuts</source>
+        <translation>快捷键</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="21"/>
+        <source>Restore to default</source>
+        <translation>恢复默认</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="22"/>
+        <source>Next</source>
+        <translation>下一首</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="23"/>
+        <source>Play/Pause</source>
+        <translation>播放/暂停</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="24"/>
+        <source>Previous</source>
+        <translation>上一首</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="25"/>
+        <source>Volume down</source>
+        <translation>音量减小</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="26"/>
+        <source>Volume up</source>
+        <translation>音量增大</translation>
     </message>
 </context>
 <context>

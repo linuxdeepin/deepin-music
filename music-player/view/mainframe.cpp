@@ -900,8 +900,7 @@ void MainFrame::resizeEvent(QResizeEvent *e)
     d->titlebar->resize(newSize.width(), titleBarHeight);
     d->titlebarwidget->setFixedSize(newSize.width() - d->titlebar->buttonAreaWidth() - 60, titleBarHeight);
 
-    d->importWidget->resize(newSize);
-
+    d->importWidget->setFixedSize(newSize);
     d->lyricWidget->resize(newSize);
     d->musicList->setFixedSize(newSize);
 
