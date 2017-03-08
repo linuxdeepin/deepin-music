@@ -82,6 +82,7 @@ QString PlaylistManager::newDisplayName()
 void PlaylistManager::load()
 {
     Q_D(PlaylistManager);
+
     for (auto &playlistmeta : MediaDatabase::instance()->allPlaylistMeta()) {
         PlaylistPtr emptylist(new Playlist(playlistmeta));
         emptylist->load();
@@ -109,14 +110,14 @@ void PlaylistManager::load()
     }
 
     auto all = playlist(AllMusicListID);
-    if (!all.isNull()) {
-        all->setDisplayName("");
-        all->setDisplayName(tr("All Music"));
+    auto trAllName = tr("All Music");
+    if (!all.isNull() && all->displayName() != trAllName) {
+        all->setDisplayName(trAllName);
     }
     auto fav = playlist(FavMusicListID);
-    if (!fav.isNull()) {
-        fav->setDisplayName("My favorites");
-        fav->setDisplayName(tr("My favorites"));
+    auto trFavName = tr("My favorites");
+    if (!fav.isNull() && fav->displayName() != trFavName) {
+        fav->setDisplayName(trFavName);
     }
 }
 

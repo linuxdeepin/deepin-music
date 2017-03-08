@@ -51,19 +51,23 @@ void PresenterPrivate::initBackend()
     MediaDatabase::instance();
 
     player = Player::instance();
+    qDebug() << "Trace:" << "player init finished";
 
     settings = Settings::instance();
+    qDebug() << "Trace:" << "Settings init finished";
 
     lyricService = new MetaSearchService;
     startInNewThread(lyricService);
+    qDebug() << "Trace:" << "lyricService init finished";
 
     library = MediaLibrary::instance();
     library->startMonitor();
-
     startInNewThread(library);
+    qDebug() << "Trace:" << "library init finished";
 
     playlistMgr = new PlaylistManager;
     playlistMgr->load();
+    qDebug() << "Trace:" << "playlistMgr init finished";
 
     currentPlaylist = playlistMgr->playlist(AllMusicListID);
 
@@ -128,6 +132,8 @@ void Presenter::prepareData()
 
     d->initBackend();
 
+    qDebug() << "Trace:" << "initBackend finished";
+
     connect(d->library, &MediaLibrary::meidaFileImported,
     this, [ = ](const QString & playlistId, MetaPtrList metalist) {
         auto playlist = d->playlistMgr->playlist(playlistId);
@@ -158,6 +164,7 @@ void Presenter::prepareData()
 
     connect(d->lyricService, &MetaSearchService::lyricSearchFinished,
             this, &Presenter::lyricSearchFinished);
+
     connect(d->lyricService, &MetaSearchService::coverSearchFinished,
     this, [ = ](const MetaPtr meta, const DMusic::SearchMeta & search, const QByteArray & coverData) {
         if (search.id != meta->searchID) {
@@ -206,8 +213,10 @@ void Presenter::prepareData()
         d->settings->setOption("base.play.last_position", position);
         emit progrossChanged(position, duration);
     });
+
     connect(d->player, &Player::volumeChanged,
             this, &Presenter::volumeChanged);
+
     connect(d->player, &Player::mutedChanged,
     this, [ = ](bool mute) {
         if (mute) {
@@ -272,7 +281,6 @@ void Presenter::prepareData()
         meta->updateSearchIndex();
         emit MediaDatabase::instance()->updateMediaMeta(meta);
     });
-
 
     connect(this, &Presenter::playNext, this, &Presenter::onMusicNext);
 

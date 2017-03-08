@@ -502,7 +502,6 @@ void Playlist::saveSort(QMap<QString, int> hashIndexs)
 {
     QSqlDatabase::database().transaction();
 
-
     QMap<int, QString> sortHashs;
 
     for (auto hash :  hashIndexs.keys()) {

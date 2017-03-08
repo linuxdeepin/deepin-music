@@ -233,6 +233,7 @@ void MainFramePrivate::initUI()
 
     footer = new Footer;
     footer->setFixedHeight(FooterHeight);
+    footer->enableControl(false);
 
     auto contentLayout = new QStackedLayout();
     q->setContentLayout(contentLayout);
@@ -282,12 +283,14 @@ void MainFramePrivate:: slideToImportView()
 
     if (importWidget->isVisible()) {
         importWidget->showImportHint();
+        footer->enableControl(false);
         return;
     }
 
 //    setPlaylistVisible(false);
     auto current = currentWidget ? currentWidget : musicList;
     importWidget->showImportHint();
+    footer->enableControl(false);
     importWidget->setFixedSize(current->size());
 
     qDebug() << "show importWidget" << current << importWidget;

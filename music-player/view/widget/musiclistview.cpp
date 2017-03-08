@@ -125,6 +125,7 @@ void MusicListView::onMusicListRemoved(const MetaPtrList metalist)
 {
     Q_D(MusicListView);
 
+    setAutoScroll(false);
     for (auto meta : metalist) {
         if (meta.isNull()) {
             continue;
@@ -139,6 +140,7 @@ void MusicListView::onMusicListRemoved(const MetaPtrList metalist)
         }
     }
     updateScrollbar();
+    setAutoScroll(true);
 }
 
 void MusicListView::onMusicError(const MetaPtr meta, int /*error*/)
