@@ -529,6 +529,7 @@ void MainFrame::binding(Presenter *presenter)
         warnDlg.setTextFormat(Qt::RichText);
         warnDlg.setTitle(tr("File invalid or does not exist, load failed!"));
         warnDlg.addButtons(QStringList() << tr("I got it"));
+        warnDlg.setDefaultButton(0);
         if (0 == warnDlg.exec()) {
             if (playlist->canNext()) {
                 emit presenter->playNext(playlist, meta);
@@ -547,7 +548,7 @@ void MainFrame::binding(Presenter *presenter)
     this, [ = ](const QString & /*jobid*/, int mediaCount) {
         if (0 == mediaCount) {
             QString message = QString(tr("No local music"));
-            Dtk::Widget::DDialog warnDlg;
+            Dtk::Widget::DDialog warnDlg(this);
             warnDlg.setIcon(QIcon(":/common/image/dialog_warning.png"));
             warnDlg.setTextFormat(Qt::AutoText);
             warnDlg.setTitle(message);
