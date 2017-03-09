@@ -842,7 +842,7 @@ bool MainFrame::eventFilter(QObject *obj, QEvent *e)
             auto sckey = static_cast<Qt::Key>(keystr.toInt());
 
             if (scmodifiers == keyModifiers && key == sckey && !ke->isAutoRepeat()) {
-                qDebug() << "match " << optkey << ke->count() << ke->isAutoRepeat();
+//                qDebug() << "match " << optkey << ke->count() << ke->isAutoRepeat();
                 MusicApp::instance()->triggerShortcutAction(optkey);
                 return true;
             }

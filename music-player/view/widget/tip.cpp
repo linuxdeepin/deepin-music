@@ -47,7 +47,7 @@ Tip::Tip(const QPixmap &icon, const QString &text, QWidget *parent) : QFrame(par
 {
     Q_D(Tip);
 
-    setWindowFlags(Qt::Tool | Qt::FramelessWindowHint);
+    setWindowFlags(Qt::ToolTip | Qt::FramelessWindowHint);
     setAttribute(Qt::WA_TranslucentBackground);
     setObjectName("Tip");
     setContentsMargins(0, 0, 0, 0);
