@@ -31,10 +31,10 @@ bool HoverFilter::eventFilter(QObject *obj, QEvent *event)
     switch (event->type()) {
     case QEvent::Enter:
         QApplication::setOverrideCursor(QCursor(Qt::PointingHandCursor));
-        return true;
+        return QObject::eventFilter(obj, event);;
     case QEvent::Leave:
         QApplication::restoreOverrideCursor();
-        return true;
+        return QObject::eventFilter(obj, event);;
     default:
         return QObject::eventFilter(obj, event);
     }
@@ -206,18 +206,18 @@ bool HoverShadowFilter::eventFilter(QObject *obj, QEvent *event)
         auto w = qobject_cast<QWidget *>(obj);
         auto shadow = new QGraphicsDropShadowEffect(w);
         shadow->setBlurRadius(8);
-        shadow->setOffset(0,0);
+        shadow->setOffset(0, 0);
         shadow->setColor(Qt::white);
         w->setGraphicsEffect(shadow);
         QApplication::setOverrideCursor(QCursor(Qt::PointingHandCursor));
-        return true;
+        return QObject::eventFilter(obj, event);
     }
     case QEvent::Leave: {
         auto w = qobject_cast<QWidget *>(obj);
         w->graphicsEffect()->deleteLater();
         w->setGraphicsEffect(nullptr);
         QApplication::restoreOverrideCursor();
-        return true;
+        return QObject::eventFilter(obj, event);
     }
     default:
         return QObject::eventFilter(obj, event);

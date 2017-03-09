@@ -330,23 +330,7 @@ void MusicListView::showContextMenu(const QPoint &pos,
         auto index = selection->selectedRows().first();
         auto meta = d->model->meta(index);
         QList<QByteArray> codecList = DMusic::detectMetaEncodings(meta);
-//        auto defaultCodec = QTextCodec::codecForLocale()->name();
-//        qDebug() << defaultCodec << codecList.length();
-
-//        codecList.removeAll(defaultCodec);
-//        auto act = textCodecMenu.addAction(defaultCodec);
-//        act->setData(QVariant::fromValue(defaultCodec));
-//        textCodecMenu.addSeparator();
-
-//        qDebug() << codecList;
-//        codecList << "GB18030" << "Big5"
-//                  << "IBM420_ltr" << "UTF-16BE"
-//                  << "UTF-16LE" << "EUC-JP"
-//                  << "EUC-KR" << "ISO-8859-1"
-//                  << "windows-1256" << "windows-1251"
-//                  << "Shift_JIS" << "GB18030" << "EUC-JP" << "EUC-KR" << "Big5";
 //        codecList << "utf-8" ;
-//        codecList << "latin1" <<"";
         for (auto codec : codecList) {
             auto act = textCodecMenu.addAction(codec);
             act->setData(QVariant::fromValue(codec));

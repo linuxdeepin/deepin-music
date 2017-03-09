@@ -584,6 +584,14 @@ void Player::setMode(Player::PlaybackMode mode)
 void Player::setVolume(double volume)
 {
     Q_D(Player);
+    if (volume > 100) {
+        volume = 100;
+    }
+
+    if (volume < 0) {
+        volume = 0;
+    }
+
     d->volume = volume;
 
     d->qplayer->blockSignals(true);

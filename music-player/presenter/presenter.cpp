@@ -256,7 +256,6 @@ void Presenter::prepareData()
             emit musicMetaUpdate(playlist, meta);
         }
 
-        qDebug() << "nnnnnnnnnnn" << d->syncPlayerResult << error;
         if (d->syncPlayerResult) {
             d->syncPlayerResult = false;
             emit notifyMusciError(playlist, meta, error);
@@ -839,8 +838,9 @@ void Presenter::onChangeProgress(qint64 value, qint64 range)
 void Presenter::onVolumeChanged(int volume)
 {
     Q_D(Presenter);
-//    qDebug() << "change play volumr" << volume;
+
     d->player->setVolume(volume);
+    qDebug() << "change play volume" << d->player->volume();
     if (volume > 0 && d->player->muted()) {
         d->player->setMuted(false);
         d->settings->setOption("base.play.mute", false);
