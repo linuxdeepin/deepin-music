@@ -94,7 +94,7 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
                                         QList<DMusic::CueParserPtr> &cuelist)
 {
     QFileInfo fileInfo(filepath);
-    auto suffix = QString("*.%1").arg(fileInfo.suffix());
+    auto suffix = QString("*.%1").arg(fileInfo.suffix()).toLower();
     if (!supportedSuffixs.contains(suffix)) {
         qWarning() << "skip" << suffix << filepath;
         return MetaPtr();
