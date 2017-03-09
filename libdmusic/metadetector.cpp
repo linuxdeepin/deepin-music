@@ -187,13 +187,15 @@ void MetaDetector::updateMetaFromLocalfile(MediaMeta *meta, const QFileInfo &fil
     if (meta->localPath.isEmpty()) {
         return ;
     }
-
+    meta->length = 0;
     AVFormatContext *pFormatCtx = avformat_alloc_context();
     avformat_open_input(&pFormatCtx, meta->localPath.toStdString().c_str(), NULL, NULL);
     if (pFormatCtx) {
         avformat_find_stream_info(pFormatCtx, NULL);
         int64_t duration = pFormatCtx->duration / 1000;
-        meta->length = duration;
+        if (duration > 0) {
+            meta->length = duration;
+        }
     }
     avformat_close_input(&pFormatCtx);
     avformat_free_context(pFormatCtx);
