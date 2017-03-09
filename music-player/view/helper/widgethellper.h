@@ -7,8 +7,7 @@
  * (at your option) any later version.
  **/
 
-#ifndef WIDGETHELLPER_H
-#define WIDGETHELLPER_H
+#pragma once
 
 #include <QPixmap>
 #include <QImage>
@@ -18,13 +17,12 @@ namespace WidgetHelper
 
 QPixmap blurImage(const QImage &image, int radius);
 QImage cropRect(const QImage &image, QSize sz);
-QPixmap coverPixmap(const QString& coverPath, QSize sz);
+QPixmap coverPixmap(const QString &coverPath, QSize sz);
 
 void slideRight2LeftWidget(QWidget *left, QWidget *right, int delay);
 void slideBottom2TopWidget(QWidget *top, QWidget *bottom, int delay);
 void slideTop2BottomWidget(QWidget *top, QWidget *bottom, int delay);
 void slideEdgeWidget(QWidget *right, QRect start, QRect end, int delay, bool hide = false);
 
+void workaround_updateStyle(QWidget *parent, const QString &theme);
 }
-
-#endif // WIDGETHELLPER_H

@@ -26,7 +26,9 @@ public:
 
     void focusMusicList();
     QString coverBackground() const;
+
 signals:
+    void addPlaylist(bool );
     void importSelectFiles(const QStringList &filelist);
 
 public slots:

@@ -18,6 +18,7 @@
 #include <QGraphicsOpacityEffect>
 #include <QPainter>
 #include <QWidget>
+#include <QStyleFactory>
 
 QT_BEGIN_NAMESPACE
 extern Q_WIDGETS_EXPORT void qt_blurImage(QPainter *p, QImage &blurImage, qreal radius, bool quality, bool alphaOnly, int transposed = 0);
@@ -50,7 +51,7 @@ QPixmap blurImage(const QImage &image, int radius)
     blur->setBlurRadius(radius);
     QImage result = applyEffectToImage(image, blur);
     auto cropFactor = 0.9;
-    QRect rect((1 - cropFactor)/2*result.width() , (1 - cropFactor)/2*result.height(),
+    QRect rect((1 - cropFactor) / 2 * result.width() , (1 - cropFactor) / 2 * result.height(),
                result.width() *cropFactor,
                result.height() *cropFactor);
     QImage cropped = result.copy(rect);
@@ -270,4 +271,19 @@ QPixmap coverPixmap(const QString &coverPath, QSize sz)
     return QPixmap::fromImage(cropRect(QImage(coverPath), sz));
 }
 
-};
+void workaround_updateStyle(QWidget *parent, const QString &theme)
+{
+    parent->setStyle(QStyleFactory::create(theme));
+    for (auto obj : parent->children()) {
+        auto w = qobject_cast<QWidget *>(obj);
+        if (!w) {
+            continue;
+        }
+
+        qDebug() << "update widget style" << w << theme;
+        workaround_updateStyle(w, theme);
+    }
+
+}
+
+}

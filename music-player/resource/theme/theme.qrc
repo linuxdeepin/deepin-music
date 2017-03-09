@@ -435,5 +435,6 @@
         <file>common/image/none.png</file>
         <file>common/image/hide_lyc_press.png</file>
         <file>common/image/hide_lyc.png</file>
+        <file>dark/DSettingsDialog.theme</file>
     </qresource>
 </RCC>

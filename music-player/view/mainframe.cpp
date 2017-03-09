@@ -98,9 +98,8 @@ void MainFramePrivate::initMenu()
     Q_Q(MainFrame);
     newSonglistAction = new QAction(MainFrame::tr("New playlist"), q);
     q->connect(newSonglistAction, &QAction::triggered, q, [ = ](bool) {
-//        qDebug() << "" <<  newSonglistAction;
-//        setPlaylistVisible(true);
-//        emit q->addPlaylist(true);
+        setPlaylistVisible(true);
+        emit q->addPlaylist(true);
     });
 
     auto addmusic = new QAction(MainFrame::tr("Add music"), q);
@@ -115,18 +114,15 @@ void MainFramePrivate::initMenu()
 
     auto settings = new QAction(MainFrame::tr("Settings"), q);
     q->connect(settings, &QAction::triggered, q, [ = ](bool) {
-        Dtk::Widget::DThemeManager::instance()->blockSignals(true);
-//        Dtk::Widget::DThemeManager::instance()->setTheme("light");
         auto configDialog = new Dtk::Widget::DSettingsDialog(q);
-//        configDialog->setStyle(QStyleFactory::create("dlight"));
-//        configDialog->setProperty("_d_QSSFilename","/dialogs/DSettingsDialog");
-//        configDialog->setProperty("_d_QSSThemename","light");
-//        ThemeManager::instance()->regisetrWidget(configDialog);
+        configDialog->setProperty("_d_QSSThemename", "dark");
+        configDialog->setProperty("_d_QSSFilename", "DSettingsDialog");
+        ThemeManager::instance()->regisetrWidget(configDialog);
 
-//        Dtk::Widget::DThemeManager::instance()->setTheme("dark");
-//        Dtk::Widget::DThemeManager::instance()->blockSignals(false);
         configDialog->setFixedSize(720, 520);
         configDialog->updateSettings(Settings::instance());
+
+        WidgetHelper::workaround_updateStyle(configDialog, "dlight");
         Dtk::Widget::DUtility::moveToCenter(configDialog);
         configDialog->exec();
         Settings::instance()->sync();
@@ -158,6 +154,7 @@ void MainFramePrivate::initMenu()
         QString acknowledgementLink = "https://www.deepin.org/acknowledgments/deepin-music#thanks";
 
         auto *aboutDlg = new Dtk::Widget::DAboutDialog(q);
+
         aboutDlg->setWindowModality(Qt::WindowModal);
         aboutDlg->setWindowIcon(QPixmap("::/common/image/logo.png"));
         aboutDlg->setProductIcon(QPixmap(":/common/image/logo_96.png"));
@@ -166,6 +163,8 @@ void MainFramePrivate::initMenu()
         aboutDlg->setDescription(descriptionText + "\n");
         aboutDlg->setAcknowledgementLink(acknowledgementLink);
         aboutDlg->show();
+
+        WidgetHelper::workaround_updateStyle(aboutDlg, "dlight");
     });
 
     QAction *help = new QAction(MainFrame::tr("Help"), q);
@@ -452,6 +451,7 @@ void MainFrame::binding(Presenter *presenter)
     Q_D(MainFrame);
 
     connect(this, &MainFrame::importSelectFiles, presenter, &Presenter::onImportFiles);
+    connect(this, &MainFrame::addPlaylist, presenter, &Presenter::onPlaylistAdd);
 
     connect(d->titlebar, &Titlebar::mouseMoving, this, &MainFrame::moveWindow);
     connect(d->footer, &Footer::mouseMoving, this, &MainFrame::moveWindow);
@@ -519,7 +519,6 @@ void MainFrame::binding(Presenter *presenter)
 
     connect(presenter, &Presenter::musicStoped,
     this, [ = ](PlaylistPtr, const MetaPtr) {
-        qDebug() << "--------------- stop";
         setCoverBackground(coverBackground());
     });
 
@@ -539,7 +538,6 @@ void MainFrame::binding(Presenter *presenter)
 
     connect(presenter, &Presenter::metaLibraryClean,
     this, [ = ]() {
-        qDebug() << "metaLibraryClean ----------------";
         d->slideToImportView();
         d->titlebarwidget->clearSearch();
         d->footer->onMediaLibraryClean();
@@ -547,7 +545,6 @@ void MainFrame::binding(Presenter *presenter)
 
     connect(presenter, &Presenter::scanFinished,
     this, [ = ](const QString & /*jobid*/, int mediaCount) {
-        qDebug() << "scanFinished----------------";
         if (0 == mediaCount) {
             QString message = QString(tr("No local music"));
             Dtk::Widget::DDialog warnDlg;
