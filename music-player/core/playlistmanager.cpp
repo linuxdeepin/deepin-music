@@ -95,14 +95,22 @@ void PlaylistManager::load()
     }
 
     if (sortUUIDs.size() != d->playlists.size()) {
-        // restrot
-        qWarning() << "order crash, restrot";
+        qWarning() << "playlist order crash, restrot";
         d->sortUUIDs.clear();
+        d->sortUUIDs << SearchMusicListID << AllMusicListID << FavMusicListID;
 
+        QStringList sortUUIDs;
         for (auto playlist : d->playlists.values()) {
-            d->sortUUIDs <<  playlist->id();
+            sortUUIDs <<  playlist->id();
         }
-        this->saveSortOrder();
+
+        sortUUIDs.removeAll(SearchMusicListID);
+        sortUUIDs.removeAll(AllMusicListID);
+        sortUUIDs.removeAll(FavMusicListID);
+
+        d->sortUUIDs << sortUUIDs;
+
+        saveSortOrder();
     } else {
         for (auto sortID = 0; sortID < sortUUIDs.size(); ++sortID) {
             d->sortUUIDs << sortUUIDs.value(static_cast<uint>(sortID));
@@ -158,6 +166,7 @@ PlaylistPtr PlaylistManager::addPlaylist(const PlaylistMeta &listinfo)
     Q_D(PlaylistManager);
     PlaylistMeta saveInfo(listinfo);
     saveInfo.sortID = d->sortUUIDs.length();
+    d->sortUUIDs << saveInfo.uuid;
     insertPlaylist(listinfo.uuid, PlaylistPtr(new Playlist(saveInfo)));
     MediaDatabase::addPlaylist(saveInfo);
     return d->playlists.value(listinfo.uuid);

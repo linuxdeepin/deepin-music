@@ -200,7 +200,6 @@ void margeDatabase()
     margeFuncs.insert(1, megrateToVserion_1);
 
     int currentVersion = databaseVersion();
-//    currentVersion = -1;
 
     QList<int> sortVer = margeFuncs.keys();
     qSort(sortVer.begin(), sortVer.end());
@@ -232,6 +231,7 @@ MediaDatabase::MediaDatabase(QObject *parent) : QObject(parent)
     playlistMeta.icon = "all";
     playlistMeta.readonly = true;
     playlistMeta.hide = false;
+    playlistMeta.sortID = 1;
     if (!playlistExist("all")) {
         addPlaylist(playlistMeta);
     }
@@ -241,6 +241,7 @@ MediaDatabase::MediaDatabase(QObject *parent) : QObject(parent)
     playlistMeta.icon = "fav";
     playlistMeta.readonly = true;
     playlistMeta.hide = false;
+    playlistMeta.sortID = 2;
     if (!playlistExist("fav")) {
         addPlaylist(playlistMeta);
     }
@@ -250,7 +251,7 @@ MediaDatabase::MediaDatabase(QObject *parent) : QObject(parent)
     playlistMeta.icon = "search";
     playlistMeta.readonly = true;
     playlistMeta.hide = true;
-    playlistMeta.sortID = uint(-1);
+    playlistMeta.sortID = 0;
     if (!playlistExist("search")) {
         addPlaylist(playlistMeta);
     }
