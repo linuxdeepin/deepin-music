@@ -243,6 +243,7 @@ void Presenter::prepareData()
         emit musicError(playlist, meta, error);
 
         if (error == Player::NoError) {
+            qDebug() << "set d->syncPlayerResult false " << meta->title;
             d->syncPlayerResult = false;
             if (meta->invalid) {
                 meta->invalid = false;
@@ -256,7 +257,9 @@ void Presenter::prepareData()
             emit musicMetaUpdate(playlist, meta);
         }
 
+        qDebug() << "check d->syncPlayerResult false " << d->syncPlayerResult << meta->title;
         if (d->syncPlayerResult) {
+            qDebug() << "set d->syncPlayerResult false " << meta->title;
             d->syncPlayerResult = false;
             emit notifyMusciError(playlist, meta, error);
         } else {
@@ -808,7 +811,6 @@ void Presenter::onMusicNext(PlaylistPtr playlist, const MetaPtr meta)
         d->player->stop();
         emit this->musicStoped(playlist, meta);
     }
-    qDebug() << "play next";
     emit d->playNext(playlist, meta);
 }
 

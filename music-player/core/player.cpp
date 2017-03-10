@@ -84,6 +84,7 @@ public:
     PlayerPrivate(Player *parent) : q_ptr(parent)
     {
         qplayer = new QMediaPlayer(parent);
+        qplayer->setAudioRole(QAudio::MusicRole);
         initMiniTypes();
     }
 
@@ -99,28 +100,22 @@ public:
     bool canPlay        = false;
     bool canSeek        = false;
     bool shuffle        = false;
-//    bool mute           = false;
+    bool mute           = false; // unused
 //    double volume       = 0;
 
     Player::PlaybackMode    mode    = Player::RepeatAll;
     Player::PlaybackStatus  status  = Player::InvalidPlaybackStatus;
 
-    // media property
-    QVariantMap metadata;
-    double rate;
-    double maximumRate;
-    double minimumRate;
-    qlonglong position  = 0;
 
     QMediaPlayer    *qplayer;
-    double          volume              = 50.0;
     PlaylistPtr     activePlaylist;
     MetaPtr         activeMeta;
 
+    double          volume      = 50.0;
     bool            playOnLoad  = true;
+    bool            fadeInOut   = true;
+    double          fadeInOutFactor     = 1.0;
 
-    bool                fadeInOut           = true;
-    double              fadeInOutFactor     = 1.0;
     QPropertyAnimation  *fadeInAnimation    = nullptr;
     QPropertyAnimation  *fadeOutAnimation   = nullptr;
 
@@ -144,6 +139,10 @@ void PlayerPrivate::initConnection()
 //                 << DMusic::lengthString(activeMeta->offset)
 //                 << DMusic::lengthString(activeMeta->length)
 //                 << activeMeta->title;
+
+        if (position > 1 && activeMeta->invalid) {
+            emit q->mediaError(activePlaylist, activeMeta, Player::NoError);
+        }
 
         // fix len
         if (activeMeta->length == 0 && duration != 0 && duration > 0) {
@@ -206,12 +205,23 @@ void PlayerPrivate::initConnection()
 
     q->connect(qplayer, &QMediaPlayer::mediaStatusChanged,
     q, [ = ](QMediaPlayer::MediaStatus status) {
+//        qDebug() << "change " << status;
         switch (status) {
         case QMediaPlayer::LoadedMedia: {
+            //wtf the QMediaPlayer can play image format, 233333333
+            QMimeDatabase db;
+            QMimeType type = db.mimeTypeForFile(activeMeta->localPath, QMimeDatabase::MatchContent);
+            if (!sSupportedMimeTypes.contains(type.name())) {
+                qDebug() << "unsupport mime type" << type << activePlaylist << activeMeta;
+                qplayer->pause();
+                qplayer->stop();
+                emit q->mediaError(activePlaylist, activeMeta, Player::FormatError);
+                return;
+            }
+
             if (playOnLoad) {
                 qplayer->play();
             }
-            emit q->mediaError(activePlaylist, activeMeta, Player::NoError);
             break;
         }
         case QMediaPlayer::EndOfMedia: {
@@ -222,15 +232,7 @@ void PlayerPrivate::initConnection()
 
         case QMediaPlayer::LoadingMedia: {
             Q_ASSERT(!activeMeta.isNull());
-            QMimeDatabase db;
-            QMimeType type = db.mimeTypeForFile(activeMeta->localPath, QMimeDatabase::MatchContent); \
-            if (!sSupportedMimeTypes.contains(type.name())) {
-                qDebug() << "unsupport mime type" << type << activePlaylist << activeMeta;
-                qplayer->pause();
-                emit q->mediaError(activePlaylist, activeMeta, Player::FormatError);
-//                activeMeta->invalid = true;
-                return;
-            }
+
             break;
         }
         case QMediaPlayer::UnknownMediaStatus:
@@ -251,6 +253,7 @@ void PlayerPrivate::initConnection()
 
     q->connect(qplayer, &QMediaPlayer::stateChanged,
     q, [ = ](QMediaPlayer::State state) {
+//        qDebug() << "change " << state;
         switch (state) {
         case QMediaPlayer::StoppedState:
         case QMediaPlayer::PlayingState:
@@ -358,8 +361,6 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
     if (d->qplayer->mediaStatus() == QMediaPlayer::BufferedMedia) {
         QTimer::singleShot(100, this, [ = ]() {
             d->qplayer->play();
-            emit mediaError(d->activePlaylist, d->activeMeta, Player::NoError);
-//            d->activeMeta->invalid = false;
         });
     }
 }
@@ -506,9 +507,7 @@ qlonglong Player::position() const
 int Player::volume() const
 {
     Q_D(const Player);
-    return d->volume;
-
-//    return d->qplayer->volume() * d->fadeInOutFactor;
+    return static_cast<int>(d->volume);
 }
 
 Player::PlaybackMode Player::mode() const

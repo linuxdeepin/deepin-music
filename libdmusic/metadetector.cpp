@@ -144,7 +144,7 @@ void MetaDetector::updateMediaFileTagCodec(MediaMeta *meta, const QByteArray &co
 
     if (meta->title.isEmpty()) {
         QFileInfo localFi(meta->localPath);
-        meta->title = localFi.baseName();
+        meta->title = localFi.completeBaseName();
     }
 }
 
@@ -210,7 +210,7 @@ void MetaDetector::updateMetaFromLocalfile(MediaMeta *meta, const QFileInfo &fil
     meta->filetype = fileInfo.suffix();
 
     if (meta->title.isEmpty()) {
-        meta->title = fileInfo.baseName();
+        meta->title = fileInfo.completeBaseName();
     }
 
     meta->updateSearchIndex();

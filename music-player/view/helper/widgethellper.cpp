@@ -280,7 +280,7 @@ void workaround_updateStyle(QWidget *parent, const QString &theme)
             continue;
         }
 
-        qDebug() << "update widget style" << w << theme;
+//        qDebug() << "update widget style" << w << theme;
         workaround_updateStyle(w, theme);
     }
 
