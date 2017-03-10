@@ -151,7 +151,7 @@ void PlayerPrivate::initConnection()
             emit q->mediaUpdate(activePlaylist, activeMeta);
         }
 
-        if (position >= activeMeta->offset + activeMeta->length && qplayer->state() == QMediaPlayer::PlayingState) {
+        if (position >= activeMeta->offset + activeMeta->length + 300 && qplayer->state() == QMediaPlayer::PlayingState) {
             selectNext(activeMeta, mode);
             return;
         }

@@ -95,13 +95,19 @@ MetaSearchService::MetaSearchService(QObject *parent) :
             emit coverSearchFinished(meta, search, coverData);
         });
         connect(engine, &DMusic::Plugin::MetaSearchEngine::lyricLoaded,
-        this, [ = ](const MetaPtr  meta, const DMusic::SearchMeta & search, const QByteArray & lyricData) {
+        this, [ = ](const MetaPtr  meta, const DMusic::SearchMeta & search,  QByteArray lyricData) {
             if (lyricData.length() > 0) {
-                QFile lyricFile(cacheLyricPath(search.id));
-                lyricFile.open(QIODevice::WriteOnly);
-                lyricFile.write(lyricData);
-                lyricFile.close();
+            } else {
+                // can not found lyric, write empty
+                qWarning() << "no lyric for this song";
+                lyricData = "                           ";
             }
+
+
+            QFile lyricFile(cacheLyricPath(search.id));
+            lyricFile.open(QIODevice::WriteOnly);
+            lyricFile.write(lyricData);
+            lyricFile.close();
 
             emit lyricSearchFinished(meta, search, lyricData);
         });

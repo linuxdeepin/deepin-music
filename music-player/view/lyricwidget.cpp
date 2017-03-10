@@ -463,7 +463,7 @@ void LyricWidget::onCoverChanged(const MetaPtr meta,  const DMusic::SearchMeta &
 void LyricWidget::setDefaultCover(QString defaultCover)
 {
     Q_D(LyricWidget);
-    qDebug() << "set" << defaultCover;
+//    qDebug() << "set" << defaultCover;
     d->defaultCover = defaultCover;
 }
 
