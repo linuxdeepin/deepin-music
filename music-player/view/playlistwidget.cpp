@@ -63,6 +63,7 @@ PlaylistWidget::PlaylistWidget(QWidget *parent) : QFrame(parent)
 
     connect(m_listview, &PlayListView::itemClicked,
     this, [ = ](QListWidgetItem * item) {
+        this->setEnabled(false);
         auto playlistItem = qobject_cast<PlayListItem *>(m_listview->itemWidget(item));
         if (!playlistItem) {
             qCritical() << "playlistItem is empty" << item << playlistItem;
@@ -70,6 +71,7 @@ PlaylistWidget::PlaylistWidget(QWidget *parent) : QFrame(parent)
         }
         emit this->selectPlaylist(playlistItem->data());
         DUtil::TimerSingleShot(500, [this]() {
+            this->setEnabled(true);
             emit this->hidePlaylist();
         });
     });

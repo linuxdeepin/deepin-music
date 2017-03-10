@@ -21,6 +21,7 @@ public:
     ~PlayListView();
 
     void updateScrollbar();
+    void showContextMenu(const QPoint &pos);
 
 signals:
     void customResort(const QStringList &uuids);

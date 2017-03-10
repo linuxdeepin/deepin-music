@@ -94,6 +94,8 @@ void PlaylistManager::load()
         sortUUIDs.insert(playlist->sortID(), playlist->id());
     }
 
+    QSqlDatabase::database().transaction();
+
     if (sortUUIDs.size() != d->playlists.size()) {
         qWarning() << "playlist order crash, restrot";
         d->sortUUIDs.clear();
@@ -122,11 +124,19 @@ void PlaylistManager::load()
     if (!all.isNull() && all->displayName() != trAllName) {
         all->setDisplayName(trAllName);
     }
+
     auto fav = playlist(FavMusicListID);
     auto trFavName = tr("My favorites");
     if (!fav.isNull() && fav->displayName() != trFavName) {
         fav->setDisplayName(trFavName);
     }
+
+    auto search = playlist(SearchMusicListID);
+    auto searchName = tr("Search result");
+    if (!search.isNull() && search->displayName() != searchName) {
+        search->setDisplayName(searchName);
+    }
+    QSqlDatabase::database().commit();
 }
 
 void PlaylistManager::saveSortOrder()
@@ -134,7 +144,6 @@ void PlaylistManager::saveSortOrder()
     Q_D(PlaylistManager);
 
     qDebug() << d->sortUUIDs;
-    QSqlDatabase::database().transaction();
 
     for (int sortID = 0; sortID < d->sortUUIDs.length(); ++sortID) {
         auto uuid = d->sortUUIDs.value(sortID);
@@ -146,8 +155,6 @@ void PlaylistManager::saveSortOrder()
             qDebug() << query.lastError();
         }
     }
-
-    QSqlDatabase::database().commit();
 }
 
 QList<PlaylistPtr > PlaylistManager::allplaylist()
@@ -184,7 +191,9 @@ void PlaylistManager::onCustomResort(QStringList uuids)
         d->sortUUIDs << uuids.value(sortID);
     }
 
-    this->saveSortOrder();
+    QSqlDatabase::database().transaction();
+    saveSortOrder();
+    QSqlDatabase::database().commit();
 }
 
 PlaylistPtr PlaylistManager::playlist(const QString &id)
@@ -208,8 +217,11 @@ void PlaylistManager::insertPlaylist(const QString &uuid, PlaylistPtr playlist)
         d->sortUUIDs.removeAll(uuid);
         PlaylistMeta listmeta;
         listmeta.uuid = deleteID;
+
+        QSqlDatabase::database().transaction();
         MediaDatabase::removePlaylist(listmeta);
-        this->saveSortOrder();
+        saveSortOrder();
+        QSqlDatabase::database().commit();
     });
 
     connect(playlist.data(), &Playlist::musiclistAdded,

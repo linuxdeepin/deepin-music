@@ -381,6 +381,9 @@ void MainFramePrivate::setPlaylistVisible(bool visible)
         return;
     }
 
+    qDebug() << "start move";
+
+    playlistWidget->setEnabled(false);
     playlistWidget->setProperty("moving", true);
     auto titleBarHeight = titlebar->height();
 
@@ -412,6 +415,7 @@ void MainFramePrivate::disableControl(int delay)
     footer->enableControl(false);
     QTimer::singleShot(delay, q, [ = ]() {
         footer->enableControl(true);
+        playlistWidget->setEnabled(true);
     });
 }
 
@@ -849,16 +853,13 @@ bool MainFrame::eventFilter(QObject *obj, QEvent *e)
             }
         }
     }
+
     if (e->type() == QEvent::MouseButtonPress) {
         QMouseEvent *me = static_cast<QMouseEvent *>(e);
-        //        qDebug() << obj << me->pos();
         if (obj->objectName() == this->objectName() || this->objectName() + "Window" == obj->objectName()) {
-            //            qDebug() << me->pos() << QCursor::pos();
             QPoint mousePos = me->pos();
             auto geometry = d->playlistWidget->geometry().marginsAdded(QMargins(0, 0, 40, 40));
-            //            qDebug() << geometry << mousePos;
             if (!geometry.contains(mousePos)) {
-//                qDebug() << "hide playlist" << me->pos() << QCursor::pos() << obj;
                 DUtil::TimerSingleShot(50, [this]() {
                     this->d_func()->setPlaylistVisible(false);
                 });
@@ -868,20 +869,13 @@ bool MainFrame::eventFilter(QObject *obj, QEvent *e)
 
     if (e->type() == QEvent::MouseButtonPress) {
         QMouseEvent *me = static_cast<QMouseEvent *>(e);
-        //        qDebug() << obj << me->pos();
         if (obj->objectName() == this->objectName() || this->objectName() + "Window" == obj->objectName()) {
             QPoint mousePos = me->pos();
 //            qDebug() << "lyricView checkHiddenSearch" << me->pos() << QCursor::pos() << obj;
             d->lyricWidget->checkHiddenSearch(mousePos);
         }
-
     }
 
-//    if (e->type() == QEvent::Close) {
-//        if (obj->objectName() == this->objectName()) {
-//            exit(0);
-//        }
-//    }
     return qApp->eventFilter(obj, e);
 }
 

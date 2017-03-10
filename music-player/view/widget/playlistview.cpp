@@ -10,7 +10,10 @@
 #include "playlistview.h"
 
 #include <QDebug>
+#include <QMenu>
 #include <QScrollBar>
+#include <QStyleFactory>
+
 #include <thememanager.h>
 
 #include "playlistitem.h"
@@ -72,6 +75,10 @@ PlayListView::PlayListView(QWidget *parent) : QListWidget(parent), d_ptr(new Pla
     d->vscrollBar->setOrientation(Qt::Vertical);
     d->vscrollBar->raise();
 
+    setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(this, &PlayListView::customContextMenuRequested,
+            this, &PlayListView::showContextMenu);
+
     connect(d->vscrollBar, &QScrollBar::valueChanged,
     this, [ = ](int value) {
         verticalScrollBar()->setValue(value);
@@ -116,4 +123,72 @@ void PlayListView::updateScrollbar()
 {
     Q_D(PlayListView);
     d->checkScrollbarSize();
+}
+
+
+void PlayListView::showContextMenu(const QPoint &pos)
+{
+    //find parent
+    auto playlistWidget = this->parentWidget();
+    for (int i = 0; i < 10; ++i) {
+        if (!playlistWidget) {
+            break;
+        }
+
+        if (playlistWidget->objectName() == "PlaylistWidget") {
+            break;
+        }
+        playlistWidget = playlistWidget->parentWidget();
+    }
+
+    if (playlistWidget && !playlistWidget->isEnabled()) {
+        return;
+    }
+
+    // get select
+    auto items = this->selectedItems();
+    if (items.length() != 1) {
+        return;
+    }
+
+    auto item = qobject_cast<PlayListItem *>(itemWidget(items.first()));
+    if (!item) {
+        return;
+    }
+    auto m_data = item->data();
+    if (!m_data) {
+        return;
+    }
+
+    auto itemPos = item->mapFromParent(pos);
+    if (!item->rect().contains(itemPos)) {
+        return;
+    }
+
+    QPoint globalPos = this->mapToGlobal(pos);
+
+    QMenu menu;
+    menu.setStyle(QStyleFactory::create("dlight"));
+    auto playact = menu.addAction(tr("Play"));
+    playact->setDisabled(0 == m_data->length());
+
+    if (m_data->id() != AllMusicListID && m_data->id() != FavMusicListID) {
+        menu.addAction(tr("Rename"));
+        menu.addAction(tr("Delete"));
+    }
+
+    connect(&menu, &QMenu::triggered, this, [ = ](QAction * action) {
+        if (action->text() == tr("Play")) {
+            emit item->playall(m_data);
+        }
+        if (action->text() == tr("Rename")) {
+            item->onRename();
+
+        }
+        if (action->text() == tr("Delete")) {
+            item->onDelete();
+        }
+    });
+
+    menu.exec(globalPos);
 }

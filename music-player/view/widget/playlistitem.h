@@ -46,7 +46,8 @@ signals:
     void playall(PlaylistPtr playlist);
 
 public slots:
-    void showContextMenu(const QPoint &pos);
+    void onDelete();
+    void onRename();
 
     void setAnimationPrefix(QString animationPrefix)
     {

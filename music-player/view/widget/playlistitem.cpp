@@ -36,6 +36,8 @@ PlayListItem::PlayListItem(PlaylistPtr playlist, QWidget *parent) : QFrame(paren
     m_data = playlist;
     Q_ASSERT(playlist);
 
+    ThemeManager::instance()->regisetrWidget(this);
+
     setObjectName("PlayListItem");
 
     auto layout = new QHBoxLayout(this);
@@ -92,30 +94,28 @@ PlayListItem::PlayListItem(PlaylistPtr playlist, QWidget *parent) : QFrame(paren
     interLayout->addSpacing(5);
     playingAnimation->hide();
 
-    ThemeManager::instance()->regisetrWidget(this);
-
     // TODO: wtf
     QFont font(m_titleedit->font());
+    font.setPixelSize(12);
     QFontMetrics fm(font);
     m_titleedit->setText(fm.elidedText(QString(playlist->displayName()),
                                        Qt::ElideMiddle, LineEditWidth));
 
     connect(m_titleedit, &QLineEdit::editingFinished,
     this, [ = ] {
-        qDebug() << "editingFinished";
         if (m_titleedit->text().isEmpty())
         {
             m_titleedit->setText(m_titleedit->property("EditValue").toString());
         } else {
             emit this->rename(m_titleedit->text());
-            m_titleedit->setProperty("EditValue",m_titleedit->text());
+            m_titleedit->setProperty("EditValue", m_titleedit->text());
         }
 
-        qDebug() << m_titleedit->text();
         QFont font(m_titleedit->font());
+        font.setPixelSize(12);
         QFontMetrics fm(font);
         m_titleedit->setText(fm.elidedText(QString(m_titleedit->text()),
-                                           Qt::ElideMiddle, LineEditWidth));
+        Qt::ElideMiddle, LineEditWidth));
 
         m_titleedit->setEnabled(false);
     });
@@ -126,10 +126,6 @@ PlayListItem::PlayListItem(PlaylistPtr playlist, QWidget *parent) : QFrame(paren
         this->setFocus();
         m_titleedit->blockSignals(false);
     });
-
-    this->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(this, &PlayListItem::customContextMenuRequested,
-            this, &PlayListItem::showContextMenu);
 
     connect(this, &PlayListItem::rename,
             m_data.data(), &Playlist::setDisplayName);
@@ -195,53 +191,33 @@ void PlayListItem::mouseDoubleClickEvent(QMouseEvent *event)
     });
 }
 
-
-void PlayListItem::showContextMenu(const QPoint &pos)
+void PlayListItem::onDelete()
 {
-    QPoint globalPos = this->mapToGlobal(pos);
+    QString message = QString(tr("Are you sure to delete this playlist?"));
 
-    QMenu menu;
-    menu.setStyle(QStyleFactory::create("dlight"));
-    auto playact = menu.addAction(tr("Play"));
-    playact->setDisabled(0 == m_data->length());
+    DDialog warnDlg(this);
+    warnDlg.setIcon(QIcon(":/common/image/del_notify.png"));
+    warnDlg.setTextFormat(Qt::AutoText);
+    warnDlg.setTitle(message);
+    warnDlg.addButton(tr("Cancel"), false, Dtk::Widget::DDialog::ButtonNormal);
+    warnDlg.addButton(tr("Delete"), true , Dtk::Widget::DDialog::ButtonWarning);
 
-    if (m_data->id() != AllMusicListID && m_data->id() != FavMusicListID) {
-        menu.addAction(tr("Rename"));
-        menu.addAction(tr("Delete"));
+    if (0 == warnDlg.exec()) {
+        return;
     }
-
-    connect(&menu, &QMenu::triggered, this, [ = ](QAction * action) {
-        if (action->text() == tr("Play")) {
-            emit this->playall(m_data);
-        }
-        if (action->text() == tr("Rename")) {
-            QTimer::singleShot(0, this, [ = ] {
-                auto value = m_titleedit->property("EditValue").toString();
-                qDebug() << value;
-                m_titleedit->setText(value);
-                m_titleedit->setEnabled(true);
-                m_titleedit->setFocus();
-                m_titleedit->setCursorPosition(0);
-                m_titleedit->setSelection(0, m_titleedit->text().length());
-            });
-        }
-
-        if (action->text() == tr("Delete")) {
-            QString message = QString(tr("Are you sure to delete this playlist?"));
-
-            DDialog warnDlg(this);
-            warnDlg.setIcon(QIcon(":/common/image/del_notify.png"));
-            warnDlg.setTextFormat(Qt::AutoText);
-            warnDlg.setTitle(message);
-            warnDlg.addButton(tr("Cancel"), false, Dtk::Widget::DDialog::ButtonNormal);
-            warnDlg.addButton(tr("Delete"), true , Dtk::Widget::DDialog::ButtonWarning);
-
-            if (0 == warnDlg.exec()) {
-                return;
-            }
-            emit this->remove();
-        }
-    });
-
-    menu.exec(globalPos);
+    emit this->remove();
 }
+
+void PlayListItem::onRename()
+{
+    QTimer::singleShot(1, this, [ = ] {
+        auto value = m_titleedit->property("EditValue").toString();
+        qDebug() << value;
+        m_titleedit->setText(value);
+        m_titleedit->setEnabled(true);
+        m_titleedit->setFocus();
+        m_titleedit->setCursorPosition(0);
+        m_titleedit->setSelection(0, m_titleedit->text().length());
+    });
+}
+
