@@ -215,6 +215,18 @@ void MediaLibrary::startMonitor()
     MetaDetector::instance();
 }
 
+void MediaLibrary::removeMediaMetaList(const MetaPtrList metalist)
+{
+    Q_D(MediaLibrary);
+    for (auto meta : metalist) {
+        if (meta.isNull()) {
+            qCritical() << "invaild meta" << meta;
+        }
+
+        d->metas.remove(meta->hash);
+    }
+}
+
 void MediaLibrary::importMedias(const QString &jobid, const QStringList &urllist)
 {
     Q_D(MediaLibrary);

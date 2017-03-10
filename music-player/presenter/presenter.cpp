@@ -314,7 +314,6 @@ void Presenter::postAction()
     auto isMetaLibClear = MediaLibrary::instance()->isEmpty();
 
     if (d->settings->value("base.play.remember_progress").toBool() && !isMetaLibClear) {
-
         d->syncPlayerResult = true;
 
         auto lastPlaylistId = d->settings->value("base.play.last_playlist").toString();
@@ -322,6 +321,9 @@ void Presenter::postAction()
             lastPlaylist = d->playlistMgr->playlist(lastPlaylistId);
         }
         Q_ASSERT(!lastPlaylist.isNull());
+        if (lastPlaylist->id() == SearchMusicListID) {
+            lastPlaylist = allplaylist;
+        }
 
         auto lastMetaId = d->settings->value("base.play.last_meta").toString();
         lastMeta = MediaLibrary::instance()->meta(lastMetaId);
@@ -337,11 +339,13 @@ void Presenter::postAction()
             onCurrentPlaylistChanged(lastPlaylist);
             emit locateMusic(lastPlaylist, lastMeta);
             emit musicPlayed(lastPlaylist, lastMeta);
+
             d->player->setPlayOnLoaded(false);
             d->player->setFadeInOut(false);
             d->player->loadMedia(lastPlaylist, lastMeta);
             d->player->pause();
             d->player->setPosition(position);
+
             emit musicPaused(lastPlaylist, lastMeta);
             emit d->requestMetaSearch(lastMeta);
         }
@@ -539,6 +543,7 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
         }
 
         MediaDatabase::instance()->removeMediaMetaList(metalist);
+        d->library->removeMediaMetaList(metalist);
     } else {
         next = playlist->removeMusicList(metalist);
     }
@@ -603,7 +608,7 @@ void Presenter::onMusiclistDelete(PlaylistPtr playlist , const MetaPtrList metal
 // FIXME:        emit d->moniter->fileRemoved(file);
     }
     QProcess::startDetached("gvfs-trash", trashFiles.keys());
-
+    d->library->removeMediaMetaList(metalist);
 }
 
 void Presenter::onAddToPlaylist(PlaylistPtr playlist,

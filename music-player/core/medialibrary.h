@@ -26,6 +26,7 @@ signals:
 
 public slots:
     void startMonitor();
+    void removeMediaMetaList(const MetaPtrList metalist);
     void importMedias(const QString &jobid, const QStringList &urllist);
 
 private:
