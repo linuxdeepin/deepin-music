@@ -551,7 +551,7 @@ void MainFrame::binding(Presenter *presenter)
     connect(presenter, &Presenter::scanFinished,
     this, [ = ](const QString & /*jobid*/, int mediaCount) {
         if (0 == mediaCount) {
-            QString message = QString(tr("No local music"));
+            QString message = QString(tr("Import failed, no vaild music file found!"));
             Dtk::Widget::DDialog warnDlg(this);
             warnDlg.setIcon(QIcon(":/common/image/dialog_warning.png"));
             warnDlg.setTextFormat(Qt::AutoText);
@@ -750,6 +750,7 @@ void MainFrame::binding(Presenter *presenter)
     this, [ = ]() {
         d->setPlaylistVisible(false);
     });
+
 }
 
 void MainFrame::focusMusicList()
@@ -764,6 +765,13 @@ QString MainFrame::coverBackground() const
     return d->coverBackground;
 }
 
+void MainFrame::updateUI()
+{
+    Q_D(MainFrame);
+    setCoverBackground(coverBackground());
+    d->lyricWidget->updateUI();
+}
+
 void MainFrame::setCoverBackground(QString coverBackground)
 {
     Q_D(MainFrame);
@@ -771,6 +779,7 @@ void MainFrame::setCoverBackground(QString coverBackground)
     QImage image = QImage(coverBackground);
     image = WidgetHelper::cropRect(image, QWidget::size());
     setBackgroundImage(WidgetHelper::blurImage(image, 50));
+    d->lyricWidget->updateUI();
 }
 
 void MainFrame::onSelectImportDirectory()

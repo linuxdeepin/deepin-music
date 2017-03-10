@@ -32,6 +32,7 @@ signals:
     void importSelectFiles(const QStringList &filelist);
 
 public slots:
+    void updateUI();
     void setCoverBackground(QString coverBackground);
     void onSelectImportDirectory();
     void onSelectImportFiles();

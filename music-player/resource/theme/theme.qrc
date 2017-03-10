@@ -5,7 +5,7 @@
         <file>light/ImportWidget.theme</file>
         <file>light/MusicListView.theme</file>
         <file>light/MusicItem.theme</file>
-        <file>light/LyricView.theme</file>
+        <file>light/LyricWidget.theme</file>
         <file>light/PlaylistWidget.theme</file>
         <file>light/PlayListItem.theme</file>
         <file>light/MusicListWidget.theme</file>
@@ -202,7 +202,6 @@
         <file>light/Tip.theme</file>
         <file>light/ThinWindow.theme</file>
         <file>light/SearchResult.theme</file>
-        <file>light/LyricTextView.theme</file>
         <file>light/InfoDialog.theme</file>
         <file>dark/TitleBarWidget.theme</file>
         <file>dark/Tip.theme</file>
@@ -217,8 +216,7 @@
         <file>dark/MusicListSort.theme</file>
         <file>dark/MusicItem.theme</file>
         <file>dark/Menu.theme</file>
-        <file>dark/LyricView.theme</file>
-        <file>dark/LyricTextView.theme</file>
+        <file>dark/LyricWidget.theme</file>
         <file>dark/InfoDialog.theme</file>
         <file>dark/ImportWidget.theme</file>
         <file>dark/Footer.theme</file>
@@ -436,5 +434,7 @@
         <file>common/image/hide_lyc_press.png</file>
         <file>common/image/hide_lyc.png</file>
         <file>dark/DSettingsDialog.theme</file>
+        <file>light/LyricTextView.theme</file>
+        <file>dark/LyricTextView.theme</file>
     </qresource>
 </RCC>

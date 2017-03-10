@@ -269,7 +269,7 @@ Footer::Footer(QWidget *parent) :
     d->installTipHint(d->btPlay, tr("Play/Pause"));
     d->installTipHint(d->btFavorite, tr("Add to my favorites"));
     d->installTipHint(d->btLyric, tr("Lyric"));
-    d->installTipHint(d->btPlayMode, tr("R"));
+    d->installTipHint(d->btPlayMode, tr("Play Mode"));
     d->installTipHint(d->btPlayList, tr("Playlist"));
     d->volSlider = new SoundVolume(this);
     d->volSlider->setProperty("DelayHide", true);

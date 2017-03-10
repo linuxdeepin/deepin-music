@@ -246,7 +246,7 @@ MediaDatabase::MediaDatabase(QObject *parent) : QObject(parent)
         addPlaylist(playlistMeta);
     }
 
-    playlistMeta.displayName = "Search Music";
+    playlistMeta.displayName = "Search result";
     playlistMeta.uuid = "search";
     playlistMeta.icon = "search";
     playlistMeta.readonly = true;

@@ -43,7 +43,6 @@ public:
     LyricWidgetPrivate(LyricWidget *parent): q_ptr(parent) {}
 
     bool checkSearchMeta();
-    void initConnection();
     void adjustLyric();
     void setLyricLines(QString lines);
     void showCover();
@@ -76,13 +75,6 @@ bool LyricWidgetPrivate::checkSearchMeta()
     return true;
 }
 
-void LyricWidgetPrivate::initConnection()
-{
-    Q_Q(LyricWidget);/*
-    q->connect(m_hideLyric, &QPushButton::clicked,
-               q, &LyricView::toggleLyricView);*/
-}
-
 void LyricWidgetPrivate::adjustLyric()
 {
     Q_Q(LyricWidget);
@@ -96,13 +88,10 @@ void LyricWidgetPrivate::adjustLyric()
     }
 
     lyricview->setFixedHeight(maxRow * itemHeight);
-
-    // TODO: remove
 }
 
 void LyricWidgetPrivate::setLyricLines(QString str)
 {
-    Q_Q(LyricWidget);
     m_lyriclist = parseLrc(str);
 
     QStringList lines;
@@ -146,8 +135,9 @@ LyricWidget::LyricWidget(QWidget *parent)
     : QFrame(parent), d_ptr(new LyricWidgetPrivate(this))
 {
     Q_D(LyricWidget);
+    ThemeManager::instance()->regisetrWidget(this);
 
-    setObjectName("LyricView");
+    setObjectName("LyricWidget");
     auto layout = new QHBoxLayout(this);
     layout->setContentsMargins(20, 20, 20, 20);
 
@@ -243,7 +233,6 @@ LyricWidget::LyricWidget(QWidget *parent)
 
     layout->addWidget(btFrame);
 
-    ThemeManager::instance()->regisetrWidget(this);
     ThemeManager::instance()->regisetrWidget(d->lyricview);
 
     connect(d->m_showSearch, &QPushButton::clicked,
@@ -296,7 +285,6 @@ LyricWidget::LyricWidget(QWidget *parent)
             itemWidget->setChecked(true);
         }
     });
-
 }
 
 LyricWidget::~LyricWidget()
@@ -304,11 +292,10 @@ LyricWidget::~LyricWidget()
 
 }
 
-void LyricWidget::initUI()
+void LyricWidget::updateUI()
 {
     Q_D(LyricWidget);
     d->m_cover->setCoverPixmap(QPixmap(d->defaultCover));
-    d->initConnection();
 }
 
 QString LyricWidget::defaultCover() const
@@ -476,6 +463,7 @@ void LyricWidget::onCoverChanged(const MetaPtr meta,  const DMusic::SearchMeta &
 void LyricWidget::setDefaultCover(QString defaultCover)
 {
     Q_D(LyricWidget);
+    qDebug() << "set" << defaultCover;
     d->defaultCover = defaultCover;
 }
 

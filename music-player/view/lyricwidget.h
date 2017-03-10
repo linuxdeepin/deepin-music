@@ -24,7 +24,7 @@ public:
     explicit LyricWidget(QWidget *parent = 0);
     ~LyricWidget();
 
-    void initUI();
+    void updateUI();
     QString defaultCover() const;
     void checkHiddenSearch(QPoint mousePos);
 

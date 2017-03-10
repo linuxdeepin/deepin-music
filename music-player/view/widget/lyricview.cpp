@@ -78,13 +78,5 @@ void LyricView::wheelEvent(QWheelEvent *event)
     QListView::wheelEvent(event);
     d->viewTimer->stop();
     d->viewTimer->start();
-
-//    if (!d->viewMode) {
-//        QPropertyAnimation *animation = new QPropertyAnimation(this, "id_optical");
-//        animation->setDuration(400);
-//        animation->setStartValue(0);
-//        animation->setEndValue(52);
-//        animation->start();
-//    }
     d->viewMode = true;
 }

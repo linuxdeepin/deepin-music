@@ -155,7 +155,7 @@ void MusicApp::onDataPrepared()
         d->playerFrame->setWindowState(static_cast<Qt::WindowStates >(state));
     }
 
-    d->playerFrame->setCoverBackground(d->playerFrame->coverBackground());
+    d->playerFrame->updateUI();
     d->playerFrame->setFocus();
 
     d->appPresenter->postAction();
