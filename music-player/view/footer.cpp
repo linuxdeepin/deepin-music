@@ -69,19 +69,18 @@ public:
     QPushButton     *btSound    = nullptr;
     Slider          *progress   = nullptr;
     SoundVolume     *volSlider  = nullptr;
+    QFrame          *ctlWidget  = nullptr;
 
     HintFilter          *hintFilter         = nullptr;
     HoverShadowFilter   *hoverShadowFilter  = nullptr;
 
-    QFrame          *ctlWidget  = nullptr;
-
-    PlaylistPtr     m_playinglist;
+    PlaylistPtr     activingPlaylist;
     MetaPtr         activingMeta;
 
-    QString         defaultCover = "";
+    QString         defaultCover    = "";
 
-    int             m_mode;
-    bool            enableMove = false;
+    int             mode            = -1;
+    bool            enableMove      = false;
 
     Footer *q_ptr;
     Q_DECLARE_PUBLIC(Footer)
@@ -117,7 +116,6 @@ void FooterPrivate::initConnection()
     q->connect(btPlayMode, &ModeButton::modeChanged,
     q, [ = ](int mode) {
         emit q->modeChanged(mode);
-
         auto hintWidget = btPlayMode->property("HintWidget").value<Tip *>();
         hintFilter->showHitsFor(btPlayMode, hintWidget);
     });
@@ -131,43 +129,26 @@ void FooterPrivate::initConnection()
     q->connect(btPlay, &QPushButton::released, q, [ = ]() {
         auto status = btPlay->property(sPropertyPlayStatus).toString();
         if (status == sPlayStatusValuePlaying) {
-            emit q->pause(m_playinglist, activingMeta);
+            emit q->pause(activingPlaylist, activingMeta);
         } else  if (status == sPlayStatusValuePause) {
-            emit q->resume(m_playinglist, activingMeta);
+            emit q->resume(activingPlaylist, activingMeta);
         } else {
-            emit q->play(m_playinglist, activingMeta);
+            emit q->play(activingPlaylist, activingMeta);
         }
-//        if (!d->m_playinglist) {
-//            emit play(d->m_playinglist, d->m_playingMeta);
-//            return;
-//        }
-
-//        if (d->m_playinglist && 0 == d->m_playinglist->length()) {
-//            emit play(d->m_playinglist, d->m_playingMeta);
-//            return;
-//        }
-
-
-//        if (status == sPlayStatusValueStop) {
-//            emit play(d->m_playinglist, d->m_playingMeta);
-//        }
-//        if (status == sPlayStatusValuePause) {
-//            emit resume(d->m_playinglist, d->m_playingMeta);
-//        }
     });
 
     q->connect(btPrev, &QPushButton::released, q, [ = ]() {
-        emit q->prev(m_playinglist, activingMeta);
+        emit q->prev(activingPlaylist, activingMeta);
     });
     q->connect(btNext, &QPushButton::released, q, [ = ]() {
-        emit q->next(m_playinglist, activingMeta);
+        emit q->next(activingPlaylist, activingMeta);
     });
 
     q->connect(btFavorite, &QPushButton::released, q, [ = ]() {
         emit q->toggleFavourite(activingMeta);
     });
     q->connect(title, &Label::clicked, q, [ = ](bool) {
-        emit q->locateMusic(m_playinglist, activingMeta);
+        emit q->locateMusic(activingPlaylist, activingMeta);
     });
     q->connect(btLyric, &QPushButton::released, q, [ = ]() {
         emit  q->toggleLyricView();
@@ -288,7 +269,7 @@ Footer::Footer(QWidget *parent) :
     d->installTipHint(d->btPlay, tr("Play/Pause"));
     d->installTipHint(d->btFavorite, tr("Add to my favorites"));
     d->installTipHint(d->btLyric, tr("Lyric"));
-    d->installTipHint(d->btPlayMode, tr("Play Mode"));
+    d->installTipHint(d->btPlayMode, tr("R"));
     d->installTipHint(d->btPlayList, tr("Playlist"));
     d->volSlider = new SoundVolume(this);
     d->volSlider->setProperty("DelayHide", true);
@@ -403,8 +384,8 @@ void Footer::enableControl(bool enable)
 void Footer::initData(PlaylistPtr current, int mode)
 {
     Q_D(Footer);
-    d->m_mode = mode;
-    d->m_playinglist = current;
+    d->mode = mode;
+    d->activingPlaylist = current;
     d->btPlayMode->setMode(mode);
 }
 
@@ -522,7 +503,7 @@ void Footer::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
     d->btFavorite->show();
     d->btLyric->show();
 
-    d->m_playinglist = playlist;
+    d->activingPlaylist = playlist;
     d->activingMeta = meta;
 
     d->updateQssProperty(d->btFavorite, sPropertyFavourite, meta->favourite);
@@ -537,8 +518,8 @@ void Footer::onMusicError(PlaylistPtr playlist, const MetaPtr meta, int error)
 {
     Q_D(Footer);
 
-    if (d->activingMeta && d->m_playinglist) {
-        if (meta != d->activingMeta || playlist != d->m_playinglist) {
+    if (d->activingMeta && d->activingPlaylist) {
+        if (meta != d->activingMeta || playlist != d->activingPlaylist) {
             return;
         }
     }
@@ -554,8 +535,8 @@ void Footer::onMusicError(PlaylistPtr playlist, const MetaPtr meta, int error)
 void Footer::onMusicPause(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(Footer);
-    if (meta->hash != d->activingMeta->hash || playlist != d->m_playinglist) {
-        qWarning() << "can not pasue" << d->m_playinglist << playlist
+    if (meta->hash != d->activingMeta->hash || playlist != d->activingPlaylist) {
+        qWarning() << "can not pasue" << d->activingPlaylist << playlist
                    << d->activingMeta->hash << meta->hash;
         return;
     }
@@ -657,17 +638,19 @@ void Footer::onModeChange(int mode)
 {
     Q_D(Footer);
 
-    if (d->m_mode == mode) {
+    qDebug() << "change play mode to" << mode;
+    if (d->mode == mode) {
         return;
     }
     d->btPlayMode->blockSignals(true);
     d->btPlayMode->setMode(mode);
     d->btPlayMode->blockSignals(false);
-    d->m_mode = mode;
+    d->mode = mode;
 
     auto hintWidget = d->btPlayMode->property("HintWidget").value<Tip *>();
     QString playmode;
     switch (mode) {
+    default:
     case 0:
         playmode = Footer::tr("Repeat list");
         break;
