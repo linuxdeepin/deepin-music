@@ -243,7 +243,7 @@ void Presenter::prepareData()
         emit musicError(playlist, meta, error);
 
         if (error == Player::NoError) {
-            qDebug() << "set d->syncPlayerResult false " << meta->title;
+//            qDebug() << "set d->syncPlayerResult false " << meta->title;
             d->syncPlayerResult = false;
             if (meta->invalid) {
                 meta->invalid = false;
@@ -257,13 +257,13 @@ void Presenter::prepareData()
             emit musicMetaUpdate(playlist, meta);
         }
 
-        qDebug() << "check d->syncPlayerResult false " << d->syncPlayerResult << meta->title;
+//        qDebug() << "check d->syncPlayerResult false " << d->syncPlayerResult << meta->title;
         if (d->syncPlayerResult) {
-            qDebug() << "set d->syncPlayerResult false " << meta->title;
+//            qDebug() << "set d->syncPlayerResult false " << meta->title;
             d->syncPlayerResult = false;
             emit notifyMusciError(playlist, meta, error);
         } else {
-            qDebug() << "next" << playlist->displayName() << playlist->canNext();
+//            qDebug() << "next" << playlist->displayName() << playlist->canNext();
             if (playlist->canNext()) {
                 DUtil::TimerSingleShot(800, [d, playlist, meta]() {
                     d->playNext(playlist, meta);
@@ -314,6 +314,9 @@ void Presenter::postAction()
     auto isMetaLibClear = MediaLibrary::instance()->isEmpty();
 
     if (d->settings->value("base.play.remember_progress").toBool() && !isMetaLibClear) {
+
+        d->syncPlayerResult = true;
+
         auto lastPlaylistId = d->settings->value("base.play.last_playlist").toString();
         if (!d->playlistMgr->playlist(lastPlaylistId).isNull()) {
             lastPlaylist = d->playlistMgr->playlist(lastPlaylistId);
@@ -334,12 +337,12 @@ void Presenter::postAction()
             onCurrentPlaylistChanged(lastPlaylist);
             emit locateMusic(lastPlaylist, lastMeta);
             emit musicPlayed(lastPlaylist, lastMeta);
-            emit musicPaused(lastPlaylist, lastMeta);
             d->player->setPlayOnLoaded(false);
             d->player->setFadeInOut(false);
             d->player->loadMedia(lastPlaylist, lastMeta);
             d->player->pause();
             d->player->setPosition(position);
+            emit musicPaused(lastPlaylist, lastMeta);
             emit d->requestMetaSearch(lastMeta);
         }
     }
@@ -353,8 +356,7 @@ void Presenter::postAction()
         if (d->settings->value("base.play.auto_play").toBool() && !lastPlaylist->isEmpty() && !isMetaLibClear) {
             qDebug() << lastPlaylist->id() << lastPlaylist->displayName();
             onCurrentPlaylistChanged(lastPlaylist);
-            onSyncMusicPlay(lastPlaylist, lastMeta);
-//            emit d->resume(lastPlaylist, lastMeta);
+            onMusicResume(lastPlaylist, lastMeta);
         }
     }
 

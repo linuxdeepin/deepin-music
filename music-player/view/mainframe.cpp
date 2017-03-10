@@ -534,8 +534,9 @@ void MainFrame::binding(Presenter *presenter)
         warnDlg.setTitle(tr("File invalid or does not exist, load failed!"));
         warnDlg.addButtons(QStringList() << tr("I got it"));
         warnDlg.setDefaultButton(0);
+
         if (0 == warnDlg.exec()) {
-            if (playlist->canNext()) {
+            if (playlist->canNext() && playlist->playing() == meta) {
                 emit presenter->playNext(playlist, meta);
             }
         }
