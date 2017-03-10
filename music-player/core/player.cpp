@@ -266,7 +266,7 @@ void PlayerPrivate::initConnection()
 void PlayerPrivate::selectNext(const MetaPtr info, Player::PlaybackMode mode)
 {
     Q_Q(Player);
-    if (!activePlaylist) {
+    if (!activePlaylist || activePlaylist->isEmpty()) {
         return;
     }
 
@@ -290,7 +290,7 @@ void PlayerPrivate::selectNext(const MetaPtr info, Player::PlaybackMode mode)
 void PlayerPrivate::selectPrev(const MetaPtr info, Player::PlaybackMode mode)
 {
     Q_Q(Player);
-    if (!activePlaylist) {
+    if (!activePlaylist || activePlaylist->isEmpty()) {
         return;
     }
 

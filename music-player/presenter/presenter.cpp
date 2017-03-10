@@ -312,6 +312,7 @@ void Presenter::postAction()
     auto lastMeta = lastPlaylist->first();
     auto position = 0;
     auto isMetaLibClear = MediaLibrary::instance()->isEmpty();
+    isMetaLibClear |= allplaylist->isEmpty();
 
     if (d->settings->value("base.play.remember_progress").toBool() && !isMetaLibClear) {
         d->syncPlayerResult = true;

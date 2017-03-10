@@ -252,6 +252,13 @@ void MusicListWidget::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
     if (!index.isValid()) {
         return;
     }
+
+    auto selectedIndexes = d->musiclist->selectionModel()->selectedIndexes();
+    if (selectedIndexes.size() > 1) {
+        d->musiclist->update();
+        return;
+    }
+
     d->musiclist->clearSelection();
     d->musiclist->setCurrentIndex(index);
     d->musiclist->scrollTo(index);

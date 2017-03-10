@@ -907,6 +907,9 @@ void MainFrame::resizeEvent(QResizeEvent *e)
     d->musicList->setFixedSize(newSize);
 
     d->playlistWidget->setFixedSize(220, newSize.height() - FooterHeight - titleBarHeight);
+    if (d->playlistWidget->isVisible()) {
+        d->playlistWidget->hide();
+    }
 
     d->footer->raise();
     d->footer->resize(newSize.width(), FooterHeight);

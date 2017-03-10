@@ -555,6 +555,7 @@ void Footer::onMusicStoped(PlaylistPtr playlist, const MetaPtr meta)
     d->title->hide();
     d->artist->hide();
     d->btFavorite->hide();
+    d->activingMeta = MetaPtr();
 
     d->cover->setCoverPixmap(QPixmap(d->defaultCover));
     d->cover->update();

@@ -120,7 +120,8 @@ bool Playlist::isEmpty() const
 
 bool Playlist::canNext() const
 {
-    return playlistMeta.invalidMetas.size() < playlistMeta.metas.size();
+    return playlistMeta.invalidMetas.size() < playlistMeta.metas.size()
+           && playlistMeta.metas.size() > 0;
 }
 
 bool Playlist::active() const
