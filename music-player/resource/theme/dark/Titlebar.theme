@@ -40,24 +40,24 @@ qproperty-pressPic: url(:/images/dark/images/window_min_press.png);
 
 /* ------ #DTitlebarDWindowMaxButton ------ */
 #DTitlebarDWindowMaxButton[isMaximized=true] {
-qproperty-normalPic: url(:/images/dark/images/window_max_normal.png);
-qproperty-hoverPic: url(:/images/dark/images/window_max_hover.png);
-qproperty-pressPic: url(:/images/dark/images/window_max_press.png);
+qproperty-normalPic: url(:/images/dark/images/window_unmax_normal.png);
+qproperty-hoverPic: url(:/images/dark/images/window_unmax_hover.png);
+qproperty-pressPic: url(:/images/dark/images/window_unmax_press.png);
 }
 #DTitlebarDWindowMaxButton[isMaximized=false] {
-qproperty-normalPic: url(:/images/dark/images/window_unmax_normal.png);
-qproperty-hoverPic: url(:/images/dark/images/window_unmax_hover.png);
-qproperty-pressPic: url(:/images/dark/images/window_unmax_press.png);
-}
-#DTitlebarDWindowMaxButton[isMaximized=true][viewname="lyric"] {
 qproperty-normalPic: url(:/images/dark/images/window_max_normal.png);
 qproperty-hoverPic: url(:/images/dark/images/window_max_hover.png);
 qproperty-pressPic: url(:/images/dark/images/window_max_press.png);
 }
-#DTitlebarDWindowMaxButton[isMaximized=false][viewname="lyric"] {
+#DTitlebarDWindowMaxButton[isMaximized=true][viewname="lyric"] {
 qproperty-normalPic: url(:/images/dark/images/window_unmax_normal.png);
 qproperty-hoverPic: url(:/images/dark/images/window_unmax_hover.png);
 qproperty-pressPic: url(:/images/dark/images/window_unmax_press.png);
+}
+#DTitlebarDWindowMaxButton[isMaximized=false][viewname="lyric"] {
+qproperty-normalPic: url(:/images/dark/images/window_max_normal.png);
+qproperty-hoverPic: url(:/images/dark/images/window_max_hover.png);
+qproperty-pressPic: url(:/images/dark/images/window_max_press.png);
 }
 
 /* ------ #DTitlebarDWindowCloseButton ------ */
