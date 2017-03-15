@@ -801,8 +801,9 @@ void Presenter::onMusicStop(PlaylistPtr playlist, const MetaPtr meta)
 void Presenter::onMusicPrev(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(Presenter);
-    if (playlist.isNull())
+    if (playlist.isNull()) {
         return;
+    }
 
     if (playlist->isEmpty()) {
         emit coverSearchFinished(meta, SearchMeta(), "");
@@ -816,8 +817,9 @@ void Presenter::onMusicPrev(PlaylistPtr playlist, const MetaPtr meta)
 void Presenter::onMusicNext(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(Presenter);
-    if (playlist.isNull())
+    if (playlist.isNull()) {
         return;
+    }
 
     if (playlist->isEmpty()) {
         emit coverSearchFinished(meta, SearchMeta(), "");
@@ -923,7 +925,7 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
 
     Q_D(Presenter);
 
-    auto player = d->player;
+    auto player = Player::instance();
 
     connect(player, &Player::playbackStatusChanged,
     this, [ = ](Player::PlaybackStatus playbackStatus) {
@@ -988,8 +990,9 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
 
     connect(mprisPlayer, &MprisPlayer::playRequested,
     this, [ = ]() {
-        if (d->player->activePlaylist().isNull())
+        if (d->player->activePlaylist().isNull()) {
             return;
+        }
 
         if (d->player->status() == Player::Paused) {
             onMusicResume(player->activePlaylist(), player->activeMeta());
@@ -1001,8 +1004,9 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
 
     connect(mprisPlayer, &MprisPlayer::pauseRequested,
     this, [ = ]() {
-        if (d->player->activePlaylist().isNull())
+        if (d->player->activePlaylist().isNull()) {
             return;
+        }
 
         onMusicPause(player->activePlaylist(), player->activeMeta());
         mprisPlayer->setPlaybackStatus(Mpris::Paused);
@@ -1010,8 +1014,9 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
 
     connect(mprisPlayer, &MprisPlayer::nextRequested,
     this, [ = ]() {
-        if (d->player->activePlaylist().isNull())
+        if (d->player->activePlaylist().isNull()) {
             return;
+        }
 
         onMusicNext(player->activePlaylist(), player->activeMeta());
         mprisPlayer->setPlaybackStatus(Mpris::Playing);
@@ -1019,8 +1024,9 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
 
     connect(mprisPlayer, &MprisPlayer::previousRequested,
     this, [ = ]() {
-        if (d->player->activePlaylist().isNull())
+        if (d->player->activePlaylist().isNull()) {
             return;
+        }
 
         onMusicPrev(player->activePlaylist(), player->activeMeta());
         mprisPlayer->setPlaybackStatus(Mpris::Playing);
