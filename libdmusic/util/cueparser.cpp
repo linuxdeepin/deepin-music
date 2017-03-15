@@ -16,17 +16,28 @@
 
 extern "C" {
 #include <libcue/libcue.h>
-#include <libcue/time.h>
 }
 
 #include "encodingdetector.h"
 
+namespace Libcue {
+
+void time_frame_to_msf(long frame, int *m, int *s, int *f)
+{
+    *f = frame % 75;           /* 0 <= frames <= 74 */
+    frame /= 75;
+    *s = frame % 60;          /* 0 <= seconds <= 59 */
+    frame /= 60;
+    *m = frame;               /* 0 <= minutes */
+}
+
+}
+
 qint64 timeframe2mtime(long frame)
 {
     int m, s, f;
-    time_frame_to_msf(frame, &m, &s, &f);
+    Libcue::time_frame_to_msf(frame, &m, &s, &f);
     auto a =  m * 60 * 1000 + s * 1000 + f * 1000 / 75;
-
     return a;
 }
 
