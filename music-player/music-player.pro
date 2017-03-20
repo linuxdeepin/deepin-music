@@ -16,7 +16,7 @@ unix{
     PKGCONFIG += icu-uc icu-i18n libavutil libavformat libavcodec
     PKGCONFIG += x11 xext
     PKGCONFIG += dtkbase-0-2 dtkutil-0-2 dtkwidget-0-2
-    PKGCONFIG += dtksettings dtksettingsview
+    PKGCONFIG += dtksettings-0-2 dtksettingsview-0-2
 }
 
 INCLUDEPATH += $$PWD/view/helper

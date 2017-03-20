@@ -7,7 +7,7 @@ Build-Depends: debhelper,  python, pkg-config, qttools5-dev-tools,
                 libtag1-dev, libicu-dev, libcue-dev,
                 libavutil-dev, libavformat-dev, libavcodec-dev,
                 libdtkbase-0.2-dev, libdtkutil-0.2-dev, libdtkwidget-0.2-dev,
-                libdtksettings-dev, libdtksettingsview-dev
+                libdtksettings-0.2-dev, libdtksettingsview-0.2-dev
 Standards-Version: 3.9.2
 Homepage: http://www.deepin.com/
 
