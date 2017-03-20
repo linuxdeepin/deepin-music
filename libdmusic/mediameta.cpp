@@ -47,7 +47,7 @@ namespace DMusic
 {
 QString filepathHash(const QString &filepath)
 {
-    return QString(QCryptographicHash::hash(filepath.toLatin1(), QCryptographicHash::Md5).toHex());
+    return QString(QCryptographicHash::hash(filepath.toUtf8(), QCryptographicHash::Md5).toHex());
 }
 
 QString lengthString(qint64 length)

@@ -110,7 +110,7 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
         return MetaPtr();
     }
 
-    auto hash = DMusic::filepathHash(filepath.toUtf8());
+    auto hash = DMusic::filepathHash(filepath);
     if (MediaLibrary::instance()->contains(hash)) {
         // FIXME: insertToPlaylist;
         //emit insertToPlaylist(hash, playlist);
@@ -191,7 +191,7 @@ MetaPtrList MediaLibrary::importFile(const QString &filepath)
         return cue->metalist();
     }
 
-    auto hash = DMusic::filepathHash(filepath.toUtf8());
+    auto hash = DMusic::filepathHash(filepath);
     if (MediaLibrary::instance()->contains(hash)) {
         // FIXME: insertToPlaylist;
         //emit insertToPlaylist(hash, playlist);
