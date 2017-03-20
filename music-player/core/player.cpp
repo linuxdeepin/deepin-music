@@ -83,9 +83,6 @@ class PlayerPrivate
 public:
     PlayerPrivate(Player *parent) : q_ptr(parent)
     {
-        qplayer = new QMediaPlayer(parent);
-        qplayer->setAudioRole(QAudio::MusicRole);
-        initMiniTypes();
     }
 
     void initConnection();
@@ -126,6 +123,10 @@ public:
 void PlayerPrivate::initConnection()
 {
     Q_Q(Player);
+
+    qplayer = new QMediaPlayer(q);
+    qplayer->setAudioRole(QAudio::MusicRole);
+    initMiniTypes();
 
     q->connect(qplayer, &QMediaPlayer::positionChanged,
     q, [ = ](qint64 position) {
@@ -313,6 +314,10 @@ void PlayerPrivate::selectPrev(const MetaPtr info, Player::PlaybackMode mode)
 
 Player::Player(QObject *parent) : QObject(parent), d_ptr(new PlayerPrivate(this))
 {
+}
+
+void Player::init()
+{
     Q_D(Player);
     qRegisterMetaType<Player::Error>();
     qRegisterMetaType<Player::PlaybackStatus>();
@@ -322,8 +327,15 @@ Player::Player(QObject *parent) : QObject(parent), d_ptr(new PlayerPrivate(this)
 
 Player::~Player()
 {
+    qDebug() << "destroy Player";
+    Q_D(Player);
+    d->qplayer->stop();
+    d->qplayer->deleteLater();
 
+    delete d->qplayer;
+    qDebug() << "Player destroyed";
 }
+
 
 void Player::loadMedia(PlaylistPtr playlist, const MetaPtr meta)
 {
@@ -414,7 +426,6 @@ void Player::playPrevMusic(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(Player);
     Q_ASSERT(playlist == d->activePlaylist);
-    Q_ASSERT(meta->hash == d->activeMeta->hash);
 
     setPlayOnLoaded(true);
     if (d->mode == RepeatSingle) {

@@ -14,20 +14,40 @@
 #include <QDBusInterface>
 #include <QCommandLineParser>
 
+#include <MprisPlayer>
+
 #include <DLog>
 #include <DApplication>
 
-#include <MprisPlayer>
+#include <thememanager.h>
 
+#include "core/mediadatabase.h"
+#include "core/medialibrary.h"
+#include "core/metasearchservice.h"
 #include "core/player.h"
 #include "core/pluginmanager.h"
 #include "core/settings.h"
+#include "core/util/threadpool.h"
 #include "musicapp.h"
-
-#include <thememanager.h>
+#include <metadetector.h>
 
 using namespace Dtk::Util;
 using namespace Dtk::Widget;
+
+void SingletonInit()
+{
+    MetaDetector::init();
+    ThreadPool::instance();
+
+    AppSettings::instance();
+    ThemeManager::instance();
+    MusicApp::instance();
+
+    Player::instance();
+
+}
+
+#include <unistd.h>
 
 int main(int argc, char *argv[])
 {
@@ -38,6 +58,7 @@ int main(int argc, char *argv[])
 #endif
 
     DApplication app(argc, argv);
+
 
     QCommandLineParser parser;
     parser.setApplicationDescription("Deepin music player.");
@@ -57,13 +78,15 @@ int main(int argc, char *argv[])
     app.setOrganizationName("deepin");
     app.setApplicationName("deepin-music");
     app.setApplicationVersion("3.0");
-
+    app.loadTranslator();
     app.setTheme("light");
-    ThemeManager::instance()->setTheme("light");
 
     DLogManager::registerConsoleAppender();
     DLogManager::registerFileAppender();
 
+    SingletonInit();
+
+    ThemeManager::instance()->setTheme("light");
     if (!app.setSingleInstance("deepinmusic")) {
         qDebug() << "another deppin music has started";
         if (!toOpenFile.isEmpty()) {
@@ -78,24 +101,16 @@ int main(int argc, char *argv[])
         exit(0);
     }
 
-    app.loadTranslator();
-
-
-#ifdef Q_OS_UNIX
-    auto serviceName = "deepinmusic";
-    auto mprisPlayer =  new MprisPlayer();
-    mprisPlayer->setServiceName(serviceName);
-#endif
-
     app.setWindowIcon(QIcon(":/common/image/deepin-music.svg"));
     app.setApplicationDisplayName(QObject::tr("Deepin Music"));
 
+    AppSettings::instance()->init();
     PluginManager::instance()->init();
-    Player::instance()->init();
 
     // For Windows, must init media player in main thread!!!
+    Player::instance()->init();
 #ifdef Q_OS_UNIX
-    auto playThread = new QThread;
+    auto playThread = ThreadPool::instance()->newThread();
     Player::instance()->moveToThread(playThread);
     playThread->start();
     playThread->setPriority(QThread::HighestPriority);
@@ -103,16 +118,38 @@ int main(int argc, char *argv[])
 
     MusicApp::instance()->init();
 
+
 #ifdef Q_OS_UNIX
+    auto serviceName = "deepinmusic";
+    auto mprisPlayer =  new MprisPlayer();
+    mprisPlayer->setServiceName(serviceName);
+//#endif
+//#ifdef Q_OS_UNIX
     MusicApp::instance()->initMpris(mprisPlayer);
 #endif
 
     if (!toOpenFile.isEmpty()) {
         auto fi = QFileInfo(toOpenFile);
         auto url = QUrl::fromLocalFile(fi.absoluteFilePath());
-        Settings::instance()->setOption("base.play.to_open_uri", url.toString());
-        Settings::instance()->sync();
+        AppSettings::instance()->setOption("base.play.to_open_uri", url.toString());
+        AppSettings::instance()->sync();
     }
+
+    app.setQuitOnLastWindowClosed(false);
+    app.connect(&app, &QApplication::lastWindowClosed,
+    &app, [ = ]() {
+        qDebug() << "sync config start";
+        AppSettings::instance()->sync();
+        sync();
+        ThreadPool::instance()->deleteLater();
+        qDebug() << "sync config finish";
+    });
+
+    app.connect(ThreadPool::instance(), &QObject::destroyed,
+    &app, [ = ]() {
+        qDebug() << "app exit";
+        qApp->quit();
+    });
 
     return app.exec();
 }

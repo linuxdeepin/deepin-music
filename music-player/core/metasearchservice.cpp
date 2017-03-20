@@ -20,24 +20,6 @@
 #include "util/global.h"
 #include "pluginmanager.h"
 
-class MetaSearchServicePrivate
-{
-public:
-    MetaSearchServicePrivate(MetaSearchService *parent) : q_ptr(parent) {}
-
-    int searchCacheLyric(const MetaPtr meta);
-    int searchCacheCover(const MetaPtr meta);
-
-    DMusic::Net::Geese       *m_geese = nullptr;
-
-    MetaSearchService *q_ptr;
-    Q_DECLARE_PUBLIC(MetaSearchService)
-};
-
-MetaSearchService::~MetaSearchService()
-{
-
-}
 
 static QString cacheLyricPath(const MetaPtr meta)
 {
@@ -64,8 +46,21 @@ inline QString cacheCoverPath(const QString &searchID)
     return cacheLyricDir + "/" + searchID + ".cover";
 }
 
-MetaSearchService::MetaSearchService(QObject *parent) :
-    QObject(parent), d_ptr(new MetaSearchServicePrivate(this))
+class MetaSearchServicePrivate
+{
+public:
+    MetaSearchServicePrivate(MetaSearchService *parent) : q_ptr(parent) {}
+
+    int searchCacheLyric(const MetaPtr meta);
+    int searchCacheCover(const MetaPtr meta);
+
+    DMusic::Net::Geese       *m_geese = nullptr;
+
+    MetaSearchService *q_ptr;
+    Q_DECLARE_PUBLIC(MetaSearchService)
+};
+
+void MetaSearchService::init()
 {
     Q_D(MetaSearchService);
     d->m_geese  =  new DMusic::Net::Geese(this);
@@ -118,6 +113,17 @@ MetaSearchService::MetaSearchService(QObject *parent) :
             emit  contextSearchFinished(context, metalist);
         });
     }
+}
+
+MetaSearchService::~MetaSearchService()
+{
+
+}
+
+
+MetaSearchService::MetaSearchService(QObject *parent) :
+    QObject(parent), d_ptr(new MetaSearchServicePrivate(this))
+{
 }
 
 QUrl MetaSearchService::coverUrl(const MetaPtr meta)

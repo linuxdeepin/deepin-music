@@ -16,7 +16,7 @@
 #include "player.h"
 #include "mediadatabase.h"
 
-const static int ScanCacheSize = 200;
+const static int ScanCacheSize = 20;
 
 class MediaLibraryPrivate
 {
@@ -137,7 +137,6 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
 MediaLibrary::MediaLibrary(QObject *parent) :
     QObject(parent), d_ptr(new MediaLibraryPrivate(this))
 {
-    Q_D(MediaLibrary);
 }
 
 
@@ -208,11 +207,11 @@ MetaPtrList MediaLibrary::importFile(const QString &filepath)
     return MetaPtrList() << meta;
 }
 
-void MediaLibrary::startMonitor()
+void MediaLibrary::init()
 {
     Q_D(MediaLibrary);
     d->startMonitor();
-    MetaDetector::instance();
+    MetaDetector::init();
 }
 
 void MediaLibrary::removeMediaMetaList(const MetaPtrList metalist)

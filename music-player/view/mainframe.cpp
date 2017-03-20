@@ -120,17 +120,17 @@ void MainFramePrivate::initMenu()
         ThemeManager::instance()->regisetrWidget(configDialog);
 
         configDialog->setFixedSize(720, 520);
-        configDialog->updateSettings(Settings::instance());
+        configDialog->updateSettings(AppSettings::instance()->settings());
 
         WidgetHelper::workaround_updateStyle(configDialog, "dlight");
         Dtk::Widget::DUtility::moveToCenter(configDialog);
         configDialog->exec();
-        Settings::instance()->sync();
+        AppSettings::instance()->sync();
     });
 
     colorModeAction = new QAction(MainFrame::tr("Deep color mode"), q);
     colorModeAction->setCheckable(true);
-    colorModeAction->setChecked(Settings::instance()->value("base.play.theme").toString() == "dark");
+    colorModeAction->setChecked(AppSettings::instance()->value("base.play.theme").toString() == "dark");
 
     q->connect(colorModeAction, &QAction::triggered, q, [ = ](bool) {
         if (Dtk::Widget::DThemeManager::instance()->theme() == "light") {
@@ -142,7 +142,7 @@ void MainFramePrivate::initMenu()
             Dtk::Widget::DThemeManager::instance()->setTheme("light");
             ThemeManager::instance()->setTheme("light");
         }
-        Settings::instance()->setOption("base.play.theme", Dtk::Widget::DThemeManager::instance()->theme());
+        AppSettings::instance()->setOption("base.play.theme", Dtk::Widget::DThemeManager::instance()->theme());
     });
 
     auto about = new QAction(MainFrame::tr("About"), q);
@@ -788,7 +788,7 @@ void MainFrame::onSelectImportDirectory()
     Q_D(const MainFrame);
     QFileDialog fileDlg(this);
 
-    auto lastImportPath = Settings::instance()->value("base.play.last_import_path").toString();
+    auto lastImportPath = AppSettings::instance()->value("base.play.last_import_path").toString();
 
     auto lastImportDir = QDir(lastImportPath);
     if (!lastImportDir.exists()) {
@@ -800,7 +800,7 @@ void MainFrame::onSelectImportDirectory()
     fileDlg.setFileMode(QFileDialog::Directory);
     if (QFileDialog::Accepted == fileDlg.exec()) {
         d->importWidget->showWaitHint();
-        Settings::instance()->setOption("base.play.last_import_path",  fileDlg.directory().path());
+        AppSettings::instance()->setOption("base.play.last_import_path",  fileDlg.directory().path());
         emit importSelectFiles(fileDlg.selectedFiles());
     }
 }
@@ -810,7 +810,7 @@ void MainFrame::onSelectImportFiles()
     Q_D(const MainFrame);
     QFileDialog fileDlg(this);
 
-    auto lastImportPath = Settings::instance()->value("base.play.last_import_path").toString();
+    auto lastImportPath = AppSettings::instance()->value("base.play.last_import_path").toString();
 
     auto lastImportDir = QDir(lastImportPath);
     if (!lastImportDir.exists()) {
@@ -827,7 +827,7 @@ void MainFrame::onSelectImportFiles()
     fileDlg.selectNameFilter(selfilter);
     if (QFileDialog::Accepted == fileDlg.exec()) {
         d->importWidget->showWaitHint();
-        Settings::instance()->setOption("base.play.last_import_path",  fileDlg.directory().path());
+        AppSettings::instance()->setOption("base.play.last_import_path",  fileDlg.directory().path());
         emit importSelectFiles(fileDlg.selectedFiles());
     }
 }
@@ -850,7 +850,7 @@ bool MainFrame::eventFilter(QObject *obj, QEvent *e)
                << "shortcuts.all.volume_up";
 
         for (auto optkey : sclist) {
-            auto shortcut = Settings::instance()->value(optkey).toStringList();
+            auto shortcut = AppSettings::instance()->value(optkey).toStringList();
             auto modifiersstr = shortcut.value(0);
             auto scmodifiers = static_cast<Qt::KeyboardModifier>(modifiersstr.toInt());
             auto keystr = shortcut.value(1);
@@ -920,21 +920,11 @@ void MainFrame::resizeEvent(QResizeEvent *e)
     }
 }
 
-#include <unistd.h>
-
 void MainFrame::closeEvent(QCloseEvent *event)
 {
-    hide();
-
-    Settings::instance()->setOption("base.play.state", int(windowState()));
-    Settings::instance()->setOption("base.play.geometry", saveGeometry());
-    Settings::instance()->sync();
-
-    // TODO: syncfs
-    sync();
-
-    // qDebug() << "store state:" << windowState() << "gometry:" << geometry();
-    DUtil::TimerSingleShot(300, [this, event]() {
-        ThinWindow::closeEvent(event);
-    });
+    MusicApp::instance()->deleteLater();
+    AppSettings::instance()->setOption("base.play.state", int(windowState()));
+    AppSettings::instance()->setOption("base.play.geometry", saveGeometry());
+    //    qDebug() << "store state:" << windowState() << "gometry:" << geometry();
+    ThinWindow::closeEvent(event);
 }

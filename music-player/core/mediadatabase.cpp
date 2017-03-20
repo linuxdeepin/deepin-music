@@ -14,11 +14,11 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QDir>
-#include <QThread>
 
 #include <mediameta.h>
 
 #include "util/global.h"
+#include  "util/threadpool.h"
 #include "medialibrary.h"
 
 static bool createConnection()
@@ -213,10 +213,14 @@ void margeDatabase()
 
 MediaDatabase::MediaDatabase(QObject *parent) : QObject(parent)
 {
+}
+
+void MediaDatabase::init()
+{
     createConnection();
 
     m_writer = new MediaDatabaseWriter;
-    auto work = new QThread;
+    auto work = ThreadPool::instance()->newThread();
     m_writer->moveToThread(work);
     work->start();
 

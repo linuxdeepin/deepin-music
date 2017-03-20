@@ -69,13 +69,13 @@ SOURCES += \
     view/lyricwidget.cpp \
     view/widget/lyricview.cpp \
     view/widget/titeledit.cpp \
-    view/widget/settingsdialog.cpp
+    view/widget/settingsdialog.cpp \
+    core/util/threadpool.cpp
 
 
 HEADERS += \
     musicapp.h \
     core/util/lyric.h \
-    core/util/thearpool.h \
     core/mediadatabase.h \
     core/mediadatabasewriter.h \
     core/music.h \
@@ -123,7 +123,8 @@ HEADERS += \
     view/widget/delegate/musicitemdelegate.h \
     view/lyricwidget.h \
     view/widget/lyricview.h \
-    view/widget/titeledit.h
+    view/widget/titeledit.h \
+    core/util/threadpool.h
 
 RESOURCES += \
     resource/theme/theme.qrc \

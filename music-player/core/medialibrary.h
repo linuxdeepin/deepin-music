@@ -25,7 +25,7 @@ signals:
     void meidaFileImported(const QString &jobid, MetaPtrList metalist);
 
 public slots:
-    void startMonitor();
+    void init();
     void removeMediaMetaList(const MetaPtrList metalist);
     void importMedias(const QString &jobid, const QStringList &urllist);
 

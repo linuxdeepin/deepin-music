@@ -12,22 +12,25 @@
 #include <util/singleton.h>
 #include <settings.h>
 
-class Settings :public Dtk::Settings, public DMusic::DSingleton<Settings>
+class AppSettings : public QObject, public DMusic::DSingleton<AppSettings>
 {
     Q_OBJECT
 public:
-    explicit Settings(QObject *parent = 0);
+    explicit AppSettings(QObject *parent = 0);
 
-    static QPointer<Dtk::Settings> instance() {
-        static auto setting = appSettings();
-        return setting;
-    }
+    void init();
+    QPointer<Dtk::Settings> settings() const;
+
+    void sync();
+    QVariant value(const QString &key) const;
+    void setOption(const QString &key, const QVariant &value);
+
 signals:
 
 public slots:
 
 private:
-    static QPointer<Dtk::Settings> appSettings();
+    QPointer<Dtk::Settings> m_settings;
 
-    friend class DMusic::DSingleton<Settings>;
+    friend class DMusic::DSingleton<AppSettings>;
 };

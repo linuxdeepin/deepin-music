@@ -5,30 +5,42 @@
 #include <QFileInfo>
 #include <qsettingbackend.h>
 #include "util/global.h"
+#include "util/threadpool.h"
 
 #include <QDebug>
 
-Settings::Settings(QObject *parent) :
-    Dtk::Settings(parent)
+AppSettings::AppSettings(QObject *parent) :
+    QObject(parent)
 {
 
 }
 
-QPointer<Dtk::Settings> Settings::appSettings()
+void AppSettings::init()
 {
-    auto settings = Dtk::Settings::fromJsonFile(":/data/deepin-music-settings.json");
+    m_settings = Dtk::Settings::fromJsonFile(":/data/deepin-music-settings.json");
     auto configFilepath = Global::configPath() + "/config.ini";
-//    auto needInit = !QFileInfo::exists(configFilepath);
     auto backend = new Dtk::QSettingBackend(configFilepath);
-    settings->setBackend(backend);
+    m_settings->setBackend(backend);
 
-    // TODO: fix in dtksettings
-//    if (needInit) {
-//        settings->setOption("base.play.remember_progress", false);
-//        settings->setOption("base.play.remember_progress", true);
-//        settings->setOption("base.play.last_playlist", "");
-//        settings->setOption("base.play.last_playlist", "all");
-//    }
+    ThreadPool::instance()->manager(backend->thread());
+}
 
-    return settings.data();
+QPointer<Dtk::Settings> AppSettings::settings() const
+{
+    return m_settings;
+}
+
+void AppSettings::sync()
+{
+    m_settings->sync();
+}
+
+QVariant AppSettings::value(const QString &key) const
+{
+    return m_settings->value(key);
+}
+
+void AppSettings::setOption(const QString &key, const QVariant &value)
+{
+    m_settings->setOption(key, value);
 }

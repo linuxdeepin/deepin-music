@@ -21,6 +21,7 @@ class MediaDatabase : public QObject, public DMusic::DSingleton<MediaDatabase>
     Q_OBJECT
 public:
     explicit MediaDatabase(QObject *parent = 0);
+    void init();
 
     //! music meta query interface
     bool mediaMetaExist(const QString &hash);

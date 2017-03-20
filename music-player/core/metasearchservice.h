@@ -22,7 +22,7 @@ class MetaSearchService : public QObject, public DMusic::DSingleton<MetaSearchSe
     Q_OBJECT
 
 public:
-    explicit MetaSearchService(QObject *parent = 0);
+    void init();
     ~MetaSearchService();
 
     static QUrl coverUrl(const MetaPtr meta);
@@ -41,6 +41,8 @@ public slots:
     void onChangeMetaCache(const MetaPtr meta, const DMusic::SearchMeta &search);
 
 private:
+    explicit MetaSearchService(QObject *parent = 0);
+
     friend class DMusic::DSingleton<MetaSearchService>;
 
     QScopedPointer<MetaSearchServicePrivate> d_ptr;

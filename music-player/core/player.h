@@ -81,7 +81,7 @@ public:
     ~Player();
 
 public:
-    void init() {}
+    void init();
 
     void loadMedia(PlaylistPtr playlist, const MetaPtr meta);
     void playMeta(PlaylistPtr playlist, const MetaPtr meta);

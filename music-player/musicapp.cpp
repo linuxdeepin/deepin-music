@@ -10,7 +10,6 @@
 #include "musicapp.h"
 
 #include <QDebug>
-#include <QThread>
 
 #include <MprisPlayer>
 
@@ -21,6 +20,7 @@
 
 #include "core/player.h"
 #include "core/settings.h"
+#include "core/util/threadpool.h"
 #include "presenter/presenter.h"
 #include "view/mainframe.h"
 #include "view/helper/thememanager.h"
@@ -49,27 +49,34 @@ MusicApp::MusicApp(QObject *parent)
 
 MusicApp::~MusicApp()
 {
+    Q_D(MusicApp);
 
+    qDebug() << "destory MusicApp";
+    d->appPresenter->deleteLater();
+//    d->playerFrame->deleteLater();
+    qDebug() << "MusicApp destoryed";
+
+//    ThreadPool::instance()->deleteLater();
 }
 
 void MusicApp::init()
 {
     Q_D(MusicApp);
-    d->appPresenter = new Presenter;
+    d->appPresenter = new Presenter(this);
 
     // setTheme
-    auto theme = Settings::instance()->value("base.play.theme").toString();
-    auto themePrefix = Settings::instance()->value("base.play.theme_prefix").toString();
+    auto theme = AppSettings::instance()->value("base.play.theme").toString();
+    auto themePrefix = AppSettings::instance()->value("base.play.theme_prefix").toString();
 
     auto dApp = qobject_cast<DApplication *>(qApp);
     dApp->setTheme(theme);
     ThemeManager::instance()->setPrefix(themePrefix);
     ThemeManager::instance()->setTheme(theme);
 
-    d->playerFrame = new MainFrame;
+    d->playerFrame = new MainFrame();
     d->playerFrame->hide();
 
-    auto presenterWork = new QThread;
+    auto presenterWork = ThreadPool::instance()->newThread();
     d->appPresenter->moveToThread(presenterWork);
     connect(presenterWork, &QThread::started, d->appPresenter, &Presenter::prepareData);
     connect(d->appPresenter, &Presenter::dataLoaded, this, &MusicApp::onDataPrepared);
@@ -133,16 +140,16 @@ void MusicApp::triggerShortcutAction(const QString &optKey)
     }
 }
 
-
 void MusicApp::onDataPrepared()
 {
     Q_D(MusicApp);
+
     qDebug() << "TRACE:" << "data prepared";
 
     d->playerFrame->binding(d->appPresenter);
 
-    auto geometry = Settings::instance()->value("base.play.geometry").toByteArray();
-    auto state = Settings::instance()->value("base.play.state").toInt();
+    auto geometry = AppSettings::instance()->value("base.play.geometry").toByteArray();
+    auto state = AppSettings::instance()->value("base.play.state").toInt();
 
 //    qDebug() << "restore state:" << state << "gometry:" << geometry;
     if (geometry.isEmpty()) {
@@ -167,7 +174,9 @@ void MusicApp::onDataPrepared()
 void MusicApp::onQuit()
 {
     Q_D(MusicApp);
-    d->playerFrame->close();
+//    d->appPresenter->deleteLater();
+//    d->playerFrame->deleteLater();
+//    this->deleteLater();
 }
 
 void MusicApp::onRaise()

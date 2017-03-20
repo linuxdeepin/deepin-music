@@ -5,10 +5,10 @@
 #include <mediameta.h>
 
 class QFileInfo;
-class LIBDMUSICSHARED_EXPORT MetaDetector: public DMusic::DSingleton<MetaDetector>
+class LIBDMUSICSHARED_EXPORT MetaDetector
 {
 public:
-    MetaDetector();
+    static void init();
 
     static QList<QByteArray> detectEncodings(const MetaPtr meta);
     static QList<QByteArray> detectEncodings(const QByteArray &rawData);

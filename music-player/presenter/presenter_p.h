@@ -36,13 +36,13 @@ public:
     PlaylistManager     *playlistMgr    = nullptr;
     Player              *player         = nullptr;
     MediaLibrary        *library        = nullptr;
-    QPointer<Dtk::Settings> settings;
+    AppSettings *settings;
 
     Presenter *q_ptr;
     Q_DECLARE_PUBLIC(Presenter)
 
 signals:
-    void requestMetaSearch(const MetaPtr );
+    void requestMetaSearch(const MetaPtr);
     void requestChangeMetaCache(const MetaPtr meta, const DMusic::SearchMeta &search);
 
     void play(PlaylistPtr playlist, const MetaPtr info);

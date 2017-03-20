@@ -28,7 +28,7 @@ extern "C" {
 
 static QMap<QString, QByteArray> localeCodes;
 
-MetaDetector::MetaDetector()
+void MetaDetector::init()
 {
     av_register_all();
     localeCodes.insert("zh_CN", "GB18030");

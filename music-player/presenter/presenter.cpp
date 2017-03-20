@@ -30,15 +30,9 @@
 #include "../core/mediadatabase.h"
 #include "../core/settings.h"
 #include "../core/medialibrary.h"
+#include "../core/util/threadpool.h"
 
 using namespace DMusic;
-
-static void startInNewThread(QObject *obj)
-{
-    auto work = new QThread;
-    obj->moveToThread(work);
-    work->start();
-}
 
 PresenterPrivate::PresenterPrivate(Presenter *parent)
     : QObject(parent), q_ptr(parent)
@@ -48,22 +42,25 @@ PresenterPrivate::PresenterPrivate(Presenter *parent)
 
 void PresenterPrivate::initBackend()
 {
-    MediaDatabase::instance();
+    MediaDatabase::instance()->init();
+    ThreadPool::instance()->moveToNewThread(MediaDatabase::instance());
+
     qDebug() << "TRACE:" << "database init finished";
 
     player = Player::instance();
     qDebug() << "TRACE:" << "player init finished";
 
-    settings = Settings::instance();
+    settings = AppSettings::instance();
     qDebug() << "TRACE:" << "Settings init finished";
 
-    lyricService = new MetaSearchService;
-    startInNewThread(lyricService);
+    lyricService = MetaSearchService::instance();
+    lyricService->init();
+    ThreadPool::instance()->moveToNewThread(MetaSearchService::instance());
     qDebug() << "TRACE:" << "lyricService init finished";
 
     library = MediaLibrary::instance();
-    library->startMonitor();
-    startInNewThread(library);
+    library->init();
+    ThreadPool::instance()->moveToNewThread(MediaLibrary::instance());
     qDebug() << "TRACE:" << "library init finished";
 
     playlistMgr = new PlaylistManager;
@@ -107,8 +104,6 @@ QDataStream &operator>>(QDataStream &dataStream, MetaPtr &objectA)
 Presenter::Presenter(QObject *parent)
     : QObject(parent), d_ptr(new PresenterPrivate(this))
 {
-    MediaDatabase::instance();
-
     qRegisterMetaType<MetaPtr>();
     qRegisterMetaTypeStreamOperators<MetaPtr>();
     qRegisterMetaType<MetaPtrList>();
@@ -124,6 +119,16 @@ Presenter::Presenter(QObject *parent)
 Presenter::~Presenter()
 {
 
+    Q_D(Presenter);
+
+    qDebug() << "destory presenter";
+    // close gstreamer
+    d->player->stop();
+    d->player->deleteLater();
+    d->lyricService->deleteLater();
+    d->library->deleteLater();
+    d->settings->deleteLater();
+    qDebug() << "Presenter destoryed";
 }
 
 
@@ -354,8 +359,8 @@ void Presenter::postAction()
 
     QString toOpenUri = d->settings->value("base.play.to_open_uri").toString();
     if (!toOpenUri.isEmpty()) {
-        Settings::instance()->setOption("base.play.to_open_uri", "");
-        Settings::instance()->sync();
+        AppSettings::instance()->setOption("base.play.to_open_uri", "");
+        AppSettings::instance()->sync();
         openUri(QUrl(toOpenUri));
     } else {
         if (d->settings->value("base.play.auto_play").toBool() && !lastPlaylist->isEmpty() && !isMetaLibClear) {
