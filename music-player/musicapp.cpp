@@ -62,7 +62,7 @@ MusicApp::~MusicApp()
 void MusicApp::init()
 {
     Q_D(MusicApp);
-    d->appPresenter = new Presenter(this);
+    d->appPresenter = new Presenter;
 
     // setTheme
     auto theme = AppSettings::instance()->value("base.play.theme").toString();

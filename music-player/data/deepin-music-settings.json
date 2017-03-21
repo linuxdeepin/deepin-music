@@ -12,21 +12,21 @@
                             "key": "auto_play",
                             "name": "",
                             "type": "checkbox",
-                            "text": "Automatically play when startup",
+                            "text": "Autoplay",
                             "default": false
                         },
                         {
                             "key": "remember_progress",
                             "name": "",
                             "type": "checkbox",
-                            "text": "Remember the last time when playing",
+                            "text": "Resume play from last position",
                             "default": true
                         },
                         {
                             "key": "fade_in_out",
                             "name": "",
                             "type": "checkbox",
-                            "text": "Enable fade in and out",
+                            "text": "Enable fade",
                             "default": true
                         },
                         {

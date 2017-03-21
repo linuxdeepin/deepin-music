@@ -16,12 +16,13 @@
 #include <QMimeData>
 #include <QGraphicsOpacityEffect>
 
-#include <thememanager.h>
 #include <dbasebutton.h>
+
+#include "view/helper/thememanager.h"
+#include "musicapp.h"
 
 DWIDGET_USE_NAMESPACE
 
-#include "../musicapp.h"
 
 const QString linkTemplate = "<a href='%1' style='text-decoration: none; color: #0082FA; '>%2</a>";
 
@@ -98,7 +99,7 @@ void ImportWidget::showWaitHint()
     Q_D(ImportWidget);
     d->importButton->setDisabled(true);
     d->importButton->hide();
-    d->text->setText(tr("Loading music, please wait"));
+    d->text->setText(tr("Loading music, please wait..."));
 }
 
 void ImportWidget::showImportHint()

@@ -41,7 +41,7 @@ void ThreadPool::quitAll()
     for (auto thread : m_pool) {
 //        qDebug() << thread;
         thread->quit();
-        thread->wait();
+        thread->wait(2000);
     }
     qDebug() << "all thread quit";
 }

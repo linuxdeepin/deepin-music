@@ -120,7 +120,7 @@ void MusicListWidgetPrivate::showEmptyHits(bool empty)
 {
     auto playlist = musiclist->playlist();
     if (playlist.isNull() || playlist->id() != SearchMusicListID) {
-        emptyHits->setText(MusicListWidget::tr("No Music in list"));
+        emptyHits->setText(MusicListWidget::tr("No Music"));
     } else {
         emptyHits->setText(MusicListWidget::tr("No result found"));
     }

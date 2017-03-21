@@ -105,8 +105,8 @@ void InfoDialogPrivate::initUI()
     QStringList infoKeys;
     infoKeys << InfoDialog::tr("Title:") << InfoDialog::tr("Artist:")
              << InfoDialog::tr("Album:") << InfoDialog::tr("File type:")
-             << InfoDialog::tr("Size:") << InfoDialog::tr("Length:")
-             << InfoDialog::tr("Directory:");
+             << InfoDialog::tr("Size:") << InfoDialog::tr("Duration:")
+             << InfoDialog::tr("File path:");
 
     for (int i = 0; i < infoKeys.length(); ++i) {
         auto infoKey = new QLabel(infoKeys.value(i));

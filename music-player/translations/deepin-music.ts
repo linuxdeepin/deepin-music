@@ -11,7 +11,7 @@
     <message>
         <location filename="../view/footer.cpp" line="222"/>
         <location filename="../view/footer.cpp" line="495"/>
-        <location filename="../view/footer.cpp" line="677"/>
+        <location filename="../view/footer.cpp" line="678"/>
         <source>Unknow Artist</source>
         <translation type="unfinished"></translation>
     </message>
@@ -32,7 +32,17 @@
     </message>
     <message>
         <location filename="../view/footer.cpp" line="270"/>
-        <source>Add to my favorites</source>
+        <source>Favorite</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/footer.cpp" line="656"/>
+        <source>Repeat Playlist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/footer.cpp" line="659"/>
+        <source>Repeat Song</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -51,17 +61,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/footer.cpp" line="655"/>
-        <source>Repeat list</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/footer.cpp" line="658"/>
-        <source>Repeat</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/footer.cpp" line="661"/>
+        <location filename="../view/footer.cpp" line="662"/>
         <source>Shuffle</source>
         <translation type="unfinished"></translation>
     </message>
@@ -69,25 +69,25 @@
 <context>
     <name>ImportWidget</name>
     <message>
-        <location filename="../view/importwidget.cpp" line="60"/>
+        <location filename="../view/importwidget.cpp" line="61"/>
         <source>Add Music</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/importwidget.cpp" line="66"/>
-        <location filename="../view/importwidget.cpp" line="109"/>
-        <source>Scan</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/importwidget.cpp" line="67"/>
         <location filename="../view/importwidget.cpp" line="110"/>
+        <source>Scan</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/importwidget.cpp" line="68"/>
+        <location filename="../view/importwidget.cpp" line="111"/>
         <source>%1 music directory or drag &amp; drop music file to add music</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/importwidget.cpp" line="101"/>
-        <source>Loading music, please wait</source>
+        <location filename="../view/importwidget.cpp" line="102"/>
+        <source>Loading music, please wait...</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -120,12 +120,12 @@
     </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="108"/>
-        <source>Length:</source>
+        <source>Duration:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="109"/>
-        <source>Directory:</source>
+        <source>File path:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -142,27 +142,27 @@
 <context>
     <name>LyricWidget</name>
     <message>
-        <location filename="../view/lyricwidget.cpp" line="162"/>
+        <location filename="../view/lyricwidget.cpp" line="152"/>
         <source>Search Lyric</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/lyricwidget.cpp" line="166"/>
+        <location filename="../view/lyricwidget.cpp" line="156"/>
         <source>Title</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/lyricwidget.cpp" line="171"/>
+        <location filename="../view/lyricwidget.cpp" line="161"/>
         <source>Artist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/lyricwidget.cpp" line="176"/>
+        <location filename="../view/lyricwidget.cpp" line="166"/>
         <source>Search</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/lyricwidget.cpp" line="210"/>
+        <location filename="../view/lyricwidget.cpp" line="200"/>
         <source>Back</source>
         <translation type="unfinished"></translation>
     </message>
@@ -201,56 +201,56 @@
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="150"/>
-        <source>Deepin Music Player is a beautiful design and simple function local music player. It supports viewing lyrics when playing, playing lossless music and creating customizable songlist, etc.</source>
+        <source>Deepin Music Player is a local  music player with beautiful design and simple functions. It supports viewing lyrics when playing, playing lossless music and customize playlist, etc.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="161"/>
+        <location filename="../view/mainframe.cpp" line="183"/>
+        <source>Exit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/mainframe.cpp" line="531"/>
+        <source>File invalid or does not exist, failed to load!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/mainframe.cpp" line="552"/>
+        <source>Failed to import, no vaild music file found!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/mainframe.cpp" line="158"/>
         <source>Deepin Music</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="162"/>
+        <location filename="../view/mainframe.cpp" line="159"/>
         <source>Version: 3.0</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="170"/>
+        <location filename="../view/mainframe.cpp" line="167"/>
         <source>Help</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="186"/>
-        <source>Quit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/mainframe.cpp" line="485"/>
+        <location filename="../view/mainframe.cpp" line="482"/>
         <source>Successfully added to &quot;%1&quot;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="534"/>
-        <source>File invalid or does not exist, load failed!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/mainframe.cpp" line="535"/>
+        <location filename="../view/mainframe.cpp" line="532"/>
         <source>I got it</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="554"/>
-        <source>Import failed, no vaild music file found!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/mainframe.cpp" line="559"/>
+        <location filename="../view/mainframe.cpp" line="557"/>
         <source>Ok</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="811"/>
+        <location filename="../view/mainframe.cpp" line="818"/>
         <source>Music (%1)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -308,23 +308,19 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="410"/>
+        <location filename="../view/widget/musiclistview.cpp" line="409"/>
         <source>Are you sure to delete %1?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="413"/>
+        <location filename="../view/widget/musiclistview.cpp" line="411"/>
+        <location filename="../view/widget/musiclistview.cpp" line="415"/>
         <source>Are you sure to delete the selected %1 songs?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="417"/>
-        <source>Are you sure to delete the selected %1 song files?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/widget/musiclistview.cpp" line="418"/>
-        <source>Other song of the same file will be deleted too.</source>
+        <location filename="../view/widget/musiclistview.cpp" line="416"/>
+        <source>The song files contained will also be deleted</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -340,6 +336,11 @@
 </context>
 <context>
     <name>MusicListWidget</name>
+    <message>
+        <location filename="../view/musiclistwidget.cpp" line="123"/>
+        <source>No Music</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message>
         <location filename="../view/musiclistwidget.cpp" line="125"/>
         <source>No result found</source>
@@ -373,11 +374,6 @@
     <message>
         <location filename="../view/musiclistwidget.cpp" line="167"/>
         <source>Custom</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/musiclistwidget.cpp" line="123"/>
-        <source>No Music in list</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -454,7 +450,7 @@
 <context>
     <name>QCoreApplication</name>
     <message>
-        <location filename="../main.cpp" line="47"/>
+        <location filename="../main.cpp" line="68"/>
         <source>Music file path</source>
         <translation type="unfinished"></translation>
     </message>
@@ -462,18 +458,8 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../main.cpp" line="91"/>
+        <location filename="../main.cpp" line="105"/>
         <source>Deepin Music</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="5"/>
-        <source>Automatically play when startup</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="6"/>
-        <source>Enable fade in and out</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -502,8 +488,18 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="5"/>
+        <source>Autoplay</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="6"/>
+        <source>Enable fade</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../view/widget/settingsdialog.cpp" line="12"/>
-        <source>Remember the last time when playing</source>
+        <source>Resume play from last position</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -512,67 +508,67 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="14"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="18"/>
         <source>Window State</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="15"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="19"/>
         <source>deepin theme</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="16"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="20"/>
         <source>deepin theme path</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="17"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="21"/>
         <source>play sound volume</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="18"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="22"/>
         <source>Basic settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="19"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="23"/>
         <source>Play</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="20"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="24"/>
         <source>Shortcuts</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="21"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="25"/>
         <source>Restore to default</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="22"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="26"/>
         <source>Next</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="23"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="27"/>
         <source>Play/Pause</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="24"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="28"/>
         <source>Previous</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="25"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="29"/>
         <source>Volume down</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="26"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="30"/>
         <source>Volume up</source>
         <translation type="unfinished"></translation>
     </message>

@@ -406,17 +406,16 @@ void MusicListView::showContextMenu(const QPoint &pos,
                 if (coverData.length() > 0) {
                     cover = QImage::fromData(coverData);
                 }
-                warnDlg.setMessage(
-                    QString(tr("Are you sure to delete %1?")).arg(meta->title));
+                warnDlg.setMessage(QString(tr("Are you sure to delete %1?")).arg(meta->title));
             } else {
-                warnDlg.setMessage(
-                    QString(tr("Are you sure to delete the selected %1 songs?")).arg(metalist.length()));
+                warnDlg.setMessage(QString(tr("Are you sure to delete the selected %1 songs?")).arg(metalist.length()));
             }
 
             if (containsCue) {
-                warnDlg.setTitle(tr("Are you sure to delete the selected %1 song files?").arg(metalist.length()));
-                warnDlg.setMessage(tr("Other song of the same file will be deleted too."));
+                warnDlg.setTitle(tr("Are you sure to delete the selected %1 songs?").arg(metalist.length()));
+                warnDlg.setMessage(tr("The song files contained will also be deleted"));
             }
+            //Deleting the current song will also delete the song files contained
             auto coverPixmap =  QPixmap::fromImage(WidgetHelper::cropRect(cover, QSize(64, 64)));
 
             warnDlg.setIcon(QIcon(coverPixmap));

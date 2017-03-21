@@ -143,13 +143,14 @@ int main(int argc, char *argv[])
         sync();
         ThreadPool::instance()->deleteLater();
         qDebug() << "sync config finish";
+
     });
 
     app.connect(ThreadPool::instance(), &QObject::destroyed,
     &app, [ = ]() {
         qDebug() << "app exit";
-        qApp->quit();
         exit(0);
+        qApp->quit();
     });
 
     return app.exec();

@@ -147,10 +147,7 @@ void MainFramePrivate::initMenu()
 
     auto about = new QAction(MainFrame::tr("About"), q);
     q->connect(about, &QAction::triggered, q, [ = ](bool) {
-        QString descriptionText = MainFrame::tr("Deepin Music Player is a beautiful design and "
-                                                "simple function local music player. "
-                                                "It supports viewing lyrics when playing, "
-                                                "playing lossless music and creating customizable songlist, etc.");
+        QString descriptionText = MainFrame::tr("Deepin Music Player is a local  music player with beautiful design and simple functions. It supports viewing lyrics when playing, playing lossless music and customize playlist, etc.");
         QString acknowledgementLink = "https://www.deepin.org/acknowledgments/deepin-music#thanks";
 
         auto *aboutDlg = new Dtk::Widget::DAboutDialog(q);
@@ -183,7 +180,7 @@ void MainFramePrivate::initMenu()
         }
     });
 
-    QAction *m_close = new QAction(MainFrame::tr("Quit"), q);
+    QAction *m_close = new QAction(MainFrame::tr("Exit"), q);
     q->connect(m_close, &QAction::triggered, q, [ = ](bool) {
         q->close();
     });
@@ -531,7 +528,7 @@ void MainFrame::binding(Presenter *presenter)
         Dtk::Widget::DDialog warnDlg(this);
         warnDlg.setIcon(QIcon(":/common/image/dialog_warning.png"));
         warnDlg.setTextFormat(Qt::RichText);
-        warnDlg.setTitle(tr("File invalid or does not exist, load failed!"));
+        warnDlg.setTitle(tr("File invalid or does not exist, failed to load!"));
         warnDlg.addButtons(QStringList() << tr("I got it"));
         warnDlg.setDefaultButton(0);
 
@@ -552,7 +549,7 @@ void MainFrame::binding(Presenter *presenter)
     connect(presenter, &Presenter::scanFinished,
     this, [ = ](const QString & /*jobid*/, int mediaCount) {
         if (0 == mediaCount) {
-            QString message = QString(tr("Import failed, no vaild music file found!"));
+            QString message = QString(tr("Failed to import, no vaild music file found!"));
             Dtk::Widget::DDialog warnDlg(this);
             warnDlg.setIcon(QIcon(":/common/image/dialog_warning.png"));
             warnDlg.setTextFormat(Qt::AutoText);

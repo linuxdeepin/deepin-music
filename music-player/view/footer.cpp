@@ -267,7 +267,7 @@ Footer::Footer(QWidget *parent) :
     d->installTipHint(d->btPrev, tr("Previous"));
     d->installTipHint(d->btNext, tr("Next"));
     d->installTipHint(d->btPlay, tr("Play/Pause"));
-    d->installTipHint(d->btFavorite, tr("Add to my favorites"));
+    d->installTipHint(d->btFavorite, tr("Favorite"));
     d->installTipHint(d->btLyric, tr("Lyric"));
     d->installTipHint(d->btPlayMode, tr("Play Mode"));
     d->installTipHint(d->btPlayList, tr("Playlist"));
@@ -653,10 +653,10 @@ void Footer::onModeChange(int mode)
     switch (mode) {
     default:
     case 0:
-        playmode = Footer::tr("Repeat list");
+        playmode = Footer::tr("Repeat Playlist");
         break;
     case 1:
-        playmode = Footer::tr("Repeat");
+        playmode = Footer::tr("Repeat Song");
         break;
     case 2:
         playmode = Footer::tr("Shuffle");
