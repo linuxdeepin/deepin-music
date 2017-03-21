@@ -149,6 +149,7 @@ int main(int argc, char *argv[])
     &app, [ = ]() {
         qDebug() << "app exit";
         qApp->quit();
+        exit(0);
     });
 
     return app.exec();

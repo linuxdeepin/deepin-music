@@ -152,7 +152,8 @@ void PlayerPrivate::initConnection()
             emit q->mediaUpdate(activePlaylist, activeMeta);
         }
 
-        if (position >= activeMeta->offset + activeMeta->length + 300 && qplayer->state() == QMediaPlayer::PlayingState) {
+        if (position >= activeMeta->offset + activeMeta->length + 1800 && qplayer->state() == QMediaPlayer::PlayingState) {
+            qDebug() << "WARN!!! change to next by position change";
             selectNext(activeMeta, mode);
             return;
         }
