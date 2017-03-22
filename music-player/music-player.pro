@@ -15,7 +15,7 @@ unix{
     QT += x11extras
     PKGCONFIG += icu-uc icu-i18n libavutil libavformat libavcodec
     PKGCONFIG += x11 xext
-    PKGCONFIG += dtkwidget-0-2 dtksettingsview-0-2 dtksettings-0-2 dtkutil-0-2 dtkbase-0-2
+    PKGCONFIG += dtkwidget dtksettingsview dtksettings dtkutil dtkbase
 }
 
 INCLUDEPATH += $$PWD/view/helper

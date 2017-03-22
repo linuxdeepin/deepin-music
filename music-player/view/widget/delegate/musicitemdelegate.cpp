@@ -296,7 +296,7 @@ void MusicItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
         case Artist: {
             painter->setFont(font11);
             auto str = meta->artist.isEmpty() ?
-                       MusicListView::tr("Unknow artist") :
+                       MusicListView::tr("Unknown artist") :
                        meta->artist;
             QFont font(font11);
             QFontMetrics fm(font);
@@ -307,7 +307,7 @@ void MusicItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
         case Album: {
             painter->setFont(font11);
             auto str = meta->album.isEmpty() ?
-                       MusicListView::tr("Unknow album") :
+                       MusicListView::tr("Unknown album") :
                        meta->album;
             QFont font(font11);
             QFontMetrics fm(font);

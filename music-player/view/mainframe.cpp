@@ -554,7 +554,7 @@ void MainFrame::binding(Presenter *presenter)
             warnDlg.setIcon(QIcon(":/common/image/dialog_warning.png"));
             warnDlg.setTextFormat(Qt::AutoText);
             warnDlg.setTitle(message);
-            warnDlg.addButtons(QStringList() << tr("Ok"));
+            warnDlg.addButtons(QStringList() << tr("OK"));
             warnDlg.setDefaultButton(0);
             if (0 == warnDlg.exec()) {
                 return;

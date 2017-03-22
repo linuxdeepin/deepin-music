@@ -213,13 +213,13 @@ Footer::Footer(QWidget *parent) :
     d->title = new Label;
     d->title->setObjectName("FooterTitle");
     d->title->setMaximumWidth(240);
-    d->title->setText(tr("Unknow Title"));
+    d->title->setText(tr("Unknown Title"));
 //    d->title->installEventFilter(hoverFilter);
 
     d->artist = new Label;
     d->artist->setObjectName("FooterArtist");
     d->artist->setMaximumWidth(240);
-    d->artist->setText(tr("Unknow Artist"));
+    d->artist->setText(tr("Unknown artist"));
 
     d->btPlay = new QPushButton;
     d->btPlay->setObjectName("FooterActionPlay");
@@ -268,7 +268,7 @@ Footer::Footer(QWidget *parent) :
     d->installTipHint(d->btNext, tr("Next"));
     d->installTipHint(d->btPlay, tr("Play/Pause"));
     d->installTipHint(d->btFavorite, tr("Favorite"));
-    d->installTipHint(d->btLyric, tr("Lyric"));
+    d->installTipHint(d->btLyric, tr("Lyrics"));
     d->installTipHint(d->btPlayMode, tr("Play Mode"));
     d->installTipHint(d->btPlayList, tr("Playlist"));
     d->volSlider = new SoundVolume(this);
@@ -492,7 +492,7 @@ void Footer::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
     if (!meta->artist.isEmpty()) {
         d->artist->setText(meta->artist);
     } else {
-        d->artist->setText(tr("Unknow Artist"));
+        d->artist->setText(tr("Unknown artist"));
     }
 
     this->enableControl(true);
@@ -675,7 +675,7 @@ void Footer::onUpdateMetaCodec(const MetaPtr meta)
         if (!meta->artist.isEmpty()) {
             d->artist->setText(meta->artist);
         } else {
-            d->artist->setText(tr("Unknow Artist"));
+            d->artist->setText(tr("Unknown artist"));
         }
     }
 }

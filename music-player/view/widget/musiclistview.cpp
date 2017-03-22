@@ -338,7 +338,7 @@ void MusicListView::showContextMenu(const QPoint &pos,
 
         if (codecList.length() > 1) {
             myMenu.addSeparator();
-            myMenu.addAction(tr("Text Encoding"))->setMenu(&textCodecMenu);
+            myMenu.addAction(tr("Encoding"))->setMenu(&textCodecMenu);
         }
 
         myMenu.addSeparator();
@@ -413,9 +413,8 @@ void MusicListView::showContextMenu(const QPoint &pos,
 
             if (containsCue) {
                 warnDlg.setTitle(tr("Are you sure to delete the selected %1 songs?").arg(metalist.length()));
-                warnDlg.setMessage(tr("The song files contained will also be deleted"));
+                warnDlg.setMessage(tr("Deleting the current song will also delete the song files contained"));
             }
-            //Deleting the current song will also delete the song files contained
             auto coverPixmap =  QPixmap::fromImage(WidgetHelper::cropRect(cover, QSize(64, 64)));
 
             warnDlg.setIcon(QIcon(coverPixmap));

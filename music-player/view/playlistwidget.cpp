@@ -43,7 +43,7 @@ PlaylistWidget::PlaylistWidget(QWidget *parent) : QFrame(parent)
     auto btAdd = new QPushButton();
     btAdd->setFixedSize(190, 36);
     btAdd->setObjectName("PlaylistWidgetAdd");
-    btAdd->setText(tr("+ Create a new playlist"));
+    btAdd->setText("+ " + tr("New playlist"));
 
     QSizePolicy sp(QSizePolicy::Preferred, QSizePolicy::Preferred);
     sp.setVerticalStretch(100);

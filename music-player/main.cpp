@@ -65,7 +65,8 @@ int main(int argc, char *argv[])
     parser.addHelpOption();
     parser.addVersionOption();
 
-    parser.addPositionalArgument("file", QCoreApplication::tr("Music file path"));
+    // TODO add transfix for terminal
+    parser.addPositionalArgument("file", "Music file path");
     parser.process(app);
 
     QString toOpenFile;
@@ -149,8 +150,8 @@ int main(int argc, char *argv[])
     app.connect(ThreadPool::instance(), &QObject::destroyed,
     &app, [ = ]() {
         qDebug() << "app exit";
-        exit(0);
-        qApp->quit();
+//        exit(0);
+//        qApp->quit();
     });
 
     return app.exec();

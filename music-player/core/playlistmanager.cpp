@@ -64,7 +64,7 @@ QString PlaylistManager::newDisplayName()
         existName.insert(name, name);
     }
 
-    QString temp = tr("New Playlist");
+    QString temp = tr("New playlist");
     if (!existName.contains(temp)) {
         return temp;
     }
