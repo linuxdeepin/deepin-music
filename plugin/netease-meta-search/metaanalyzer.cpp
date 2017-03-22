@@ -116,7 +116,7 @@ void MetaAnalyzer::analyzerResults()
 
     emit searchFinished(m_meta, result);
 
-//    qDebug() << "delete analyer" ;
+//    qDebug() << "delete analyzer" ;
 //    this->deleteLater();
 }
 
