@@ -119,6 +119,16 @@
         <translation>文件路径：</translation>
     </message>
     <message>
+        <location filename="../view/widget/infodialog.cpp" line="182"/>
+        <source>Unknown artist</source>
+        <translation>未知歌手</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/infodialog.cpp" line="183"/>
+        <source>Unknown album</source>
+        <translation>未知专辑</translation>
+    </message>
+    <message>
         <location filename="../view/widget/infodialog.cpp" line="108"/>
         <source>Size:</source>
         <translation>文件大小：</translation>
@@ -127,16 +137,6 @@
         <location filename="../view/widget/infodialog.cpp" line="108"/>
         <source>Duration:</source>
         <translation>时长：</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/infodialog.cpp" line="182"/>
-        <source>Unkonw artist</source>
-        <translation>未知歌手</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/infodialog.cpp" line="183"/>
-        <source>Unkonw album</source>
-        <translation>未知专辑</translation>
     </message>
 </context>
 <context>

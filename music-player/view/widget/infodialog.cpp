@@ -179,8 +179,8 @@ void InfoDialog::resizeEvent(QResizeEvent *event)
 void InfoDialog::updateInfo(const MetaPtr meta)
 {
     Q_D(InfoDialog);
-    QString artist = meta->artist.isEmpty() ? tr("Unkonw artist") : meta->artist;
-    QString album = meta->album.isEmpty() ? tr("Unkonw album") : meta->album;
+    QString artist = meta->artist.isEmpty() ? tr("Unknown artist") : meta->artist;
+    QString album = meta->album.isEmpty() ? tr("Unknown album") : meta->album;
     QStringList infoValues;
     infoValues << meta->title << artist << album
                << meta->filetype << DMusic::sizeString(meta->size) << DMusic::lengthString(meta->length)

@@ -119,6 +119,16 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../view/widget/infodialog.cpp" line="182"/>
+        <source>Unknown artist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/infodialog.cpp" line="183"/>
+        <source>Unknown album</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../view/widget/infodialog.cpp" line="108"/>
         <source>Size:</source>
         <translation type="unfinished"></translation>
@@ -126,16 +136,6 @@
     <message>
         <location filename="../view/widget/infodialog.cpp" line="108"/>
         <source>Duration:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/widget/infodialog.cpp" line="182"/>
-        <source>Unkonw artist</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/widget/infodialog.cpp" line="183"/>
-        <source>Unkonw album</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
