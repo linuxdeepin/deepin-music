@@ -29,12 +29,16 @@ HoverFilter::HoverFilter(QObject *parent) : QObject(parent)
 bool HoverFilter::eventFilter(QObject *obj, QEvent *event)
 {
     switch (event->type()) {
-    case QEvent::Enter:
-        QApplication::setOverrideCursor(QCursor(Qt::PointingHandCursor));
-        return QObject::eventFilter(obj, event);;
-    case QEvent::Leave:
-        QApplication::restoreOverrideCursor();
-        return QObject::eventFilter(obj, event);;
+    case QEvent::Enter: {
+        auto w = qobject_cast<QWidget *>(obj);
+        w->setCursor(QCursor(Qt::PointingHandCursor));
+        return QObject::eventFilter(obj, event);
+    }
+    case QEvent::Leave: {
+        auto w = qobject_cast<QWidget *>(obj);
+        w->unsetCursor();
+        return QObject::eventFilter(obj, event);
+    }
     default:
         return QObject::eventFilter(obj, event);
     }
@@ -144,10 +148,10 @@ bool HintFilter::eventFilter(QObject *obj, QEvent *event)
             d->delayShowTimer->start();
         }
 
-        QApplication::setOverrideCursor(QCursor(Qt::PointingHandCursor));
+        d->parentWidget->setCursor(QCursor(Qt::PointingHandCursor));
         break;
     }
-    case QEvent::Leave:
+    case QEvent::Leave: {
         if (d->hintWidget) {
             if (!d->hintWidget->property("DelayHide").toBool()) {
                 d->hintWidget->hide();
@@ -155,9 +159,15 @@ bool HintFilter::eventFilter(QObject *obj, QEvent *event)
             } else {
                 QMetaObject::invokeMethod(d->hintWidget, "deleyHide", Qt::DirectConnection);
             }
+
         }
-        QApplication::restoreOverrideCursor();
+        auto w = qobject_cast<QWidget *>(obj);
+        if (w) {
+            w->unsetCursor();
+        }
+
         break;
+    }
     case QEvent::MouseButtonPress:
         if (d->hintWidget) {
             d->hintWidget->hide();
@@ -191,7 +201,8 @@ void HintFilter::showHitsFor(QWidget *w, QWidget *hint)
     d->delayShowTimer->stop();
 
     d->showHint(hint);
-    QApplication::setOverrideCursor(QCursor(Qt::PointingHandCursor));
+
+    d->hintWidget->setCursor(QCursor(Qt::PointingHandCursor));
 }
 
 HoverShadowFilter::HoverShadowFilter(QObject *parent): QObject(parent)
@@ -209,14 +220,14 @@ bool HoverShadowFilter::eventFilter(QObject *obj, QEvent *event)
         shadow->setOffset(0, 0);
         shadow->setColor(Qt::white);
         w->setGraphicsEffect(shadow);
-        QApplication::setOverrideCursor(QCursor(Qt::PointingHandCursor));
+        w->setCursor(QCursor(Qt::PointingHandCursor));
         return QObject::eventFilter(obj, event);
     }
     case QEvent::Leave: {
         auto w = qobject_cast<QWidget *>(obj);
         w->graphicsEffect()->deleteLater();
         w->setGraphicsEffect(nullptr);
-        QApplication::restoreOverrideCursor();
+        w->unsetCursor();
         return QObject::eventFilter(obj, event);
     }
     default:

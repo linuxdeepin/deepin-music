@@ -1,13 +1,9 @@
-#PlayerFrame {
-    qproperty-background: white;
+#MainFrame {
     qproperty-borderColor: rgba(0,0,0,10%);
     qproperty-borderInside: false;
-    qproperty-radius: 4.0px;
 }
 
-#PlayerFrame[viewname="lyric"] {
-    qproperty-background: white;
+#MainFrame[viewname="lyric"] {
     qproperty-borderColor: rgba(0,0,0,30%);
     qproperty-borderInside: true;
-    qproperty-radius: 4.0px;
 }

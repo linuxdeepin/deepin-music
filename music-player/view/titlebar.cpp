@@ -47,6 +47,7 @@ Titlebar::Titlebar(QWidget *parent) : DTitlebar(parent), d_ptr(new TitlebarPriva
 {
     Q_D(Titlebar);
     ThemeManager::instance()->regisetrWidget(this, QStringList() << s_PropertyViewname);
+
     d->workaroundSetButtonStyle();
 }
 
@@ -115,7 +116,7 @@ void Titlebar::paintEvent(QPaintEvent *)
 {
     Q_D(const Titlebar);
 
-    auto radius = 3.5;
+    auto radius = 0;
     QPainter titlePainter(this);
     titlePainter.setRenderHint(QPainter::Antialiasing);
     titlePainter.setRenderHint(QPainter::HighQualityAntialiasing);

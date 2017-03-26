@@ -55,7 +55,7 @@ QPixmap blurImage(const QImage &image, int radius)
                result.width() *cropFactor,
                result.height() *cropFactor);
     QImage cropped = result.copy(rect);
-    return QPixmap::fromImage(cropped);
+    return QPixmap::fromImage(cropped).scaled(image.size());
 }
 
 QImage cropRect(const QImage &image, QSize sz)

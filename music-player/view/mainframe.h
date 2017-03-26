@@ -11,11 +11,11 @@
 
 #include <QScopedPointer>
 
-#include "widget/thinwindow.h"
+#include "DMainWindow"
 
 class Presenter;
 class MainFramePrivate;
-class MainFrame : public ThinWindow
+class MainFrame : public Dtk::Widget::DMainWindow
 {
     Q_OBJECT
 public:
