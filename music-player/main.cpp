@@ -79,7 +79,26 @@ int main(int argc, char *argv[])
     app.setOrganizationName("deepin");
     app.setApplicationName("deepin-music");
     app.setApplicationVersion("3.0");
+    
+#ifdef SNAP_APP
+    qDebug() << "Oh my godness!";
+
+    // Load the qml files
+    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+    QString SNAP = env.value("SNAP");
+
+    QTranslator* translator = new QTranslator();
+    if (translator->load("deepin-music_zh_CN.qm", SNAP + "/usr/share/deepin-music/translations")) {
+        app.installTranslator(translator);
+    }
+
+    if (translator->load("deepin-music.qm", SNAP + "/usr/share/deepin-music/translations")) {
+        app.installTranslator(translator);
+    }
+#else
     app.loadTranslator();
+#endif
+    
     app.setTheme("light");
 
     DLogManager::registerConsoleAppender();
@@ -149,9 +168,13 @@ int main(int argc, char *argv[])
 
     app.connect(ThreadPool::instance(), &QObject::destroyed,
     &app, [ = ]() {
-        qDebug() << "app exit";
+#ifdef SNAP_APP
+        exit(0);
+        qApp->quit();
+#else
 //        exit(0);
 //        qApp->quit();
+#endif
     });
 
     return app.exec();
