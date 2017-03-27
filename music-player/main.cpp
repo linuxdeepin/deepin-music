@@ -26,12 +26,11 @@
 #include "core/util/threadpool.h"
 #include "thememanager.h"
 #include "musicapp.h"
+#include <metadetector.h>
+#include <QProcessEnvironment>
 
 #ifdef Q_OS_LINUX
 #include <unistd.h>
-#endif
-#ifdef Q_OS_WIN
-//#include <QFontDatabase>
 #endif
 
 using namespace Dtk::Core;

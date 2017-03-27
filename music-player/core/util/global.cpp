@@ -2,6 +2,7 @@
 
 #include <QCoreApplication>
 #include <QStandardPaths>
+#include <QProcessEnvironment>
 
 QString Global::configPath()
 {
