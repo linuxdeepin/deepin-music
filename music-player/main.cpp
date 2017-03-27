@@ -67,6 +67,38 @@ int main(int argc, char *argv[])
         toOpenFile = parser.positionalArguments().first();
     }
 
+    app.setOrganizationName("deepin");
+    app.setApplicationName("deepin-music");
+    app.setApplicationVersion("3.0");
+
+#ifdef SNAP_APP
+    qDebug() << "Oh my godness!";
+
+    // Load the qml files
+    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+    QString SNAP = env.value("SNAP");
+
+    QTranslator* translator = new QTranslator();
+    if (translator->load("deepin-music_zh_CN.qm", SNAP + "/usr/share/deepin-music/translations")) {
+        app.installTranslator(translator);
+    }
+
+    if (translator->load("deepin-music.qm", SNAP + "/usr/share/deepin-music/translations")) {
+        app.installTranslator(translator);
+    }
+#else
+    app.loadTranslator();
+#endif
+
+    app.setTheme("light");
+
+    DLogManager::registerConsoleAppender();
+    DLogManager::registerFileAppender();
+
+    SingletonInit();
+
+    ThemeManager::instance()->setTheme("light");
+
     if (!app.setSingleInstance("deepinmusic")) {
         qDebug() << "another deppin music has started";
         if (!toOpenFile.isEmpty()) {

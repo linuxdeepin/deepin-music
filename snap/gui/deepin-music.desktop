@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Terminal=false
+Exec=deepin-music
+Name=Deepin Music
+Icon=${SNAP}/meta/gui/icon.png

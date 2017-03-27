@@ -1,0 +1,50 @@
+name: deepin-music
+version: '0.1'
+summary: deepin-music
+description: |
+  This is deepin-music snap application
+
+grade: stable
+confinement: strict
+
+apps:
+  deepin-music:
+    command: desktop-launch $SNAP/usr/bin/deepin-music
+    plugs:
+      - network
+      - unity7
+      - x11
+      - home
+      - opengl
+      - pulseaudio
+      - browser-support
+      - network-bind
+
+parts:
+  app:
+    source: .
+    plugin: qmake
+    qt-version: qt5
+    build-packages:
+      - libtag1-dev
+      - libcue-dev
+      - qttools5-dev-tools
+    options:
+      - DEFINES+= SNAP_APP
+    stage-packages:
+      - overlay-scrollbar-gtk2
+      - libgail-3-0
+      - libatk-bridge2.0-0
+      - libatk-adaptor
+      - unity-gtk2-module:amd64
+      - libcanberra-gtk-module:amd64
+      - fonts-wqy-zenhei
+      - libqt5sql5-sqlite:amd64
+      - libqt5multimedia5
+      - libqt5multimedia5-plugins
+      - libqt5multimediawidgets5
+      - gstreamer1.0-plugins-base
+      - gstreamer1.0-plugins-good
+      - gstreamer1.0-plugins-bad
+      - gstreamer1.0-plugins-ugly
+    after: [desktop-qt5]
