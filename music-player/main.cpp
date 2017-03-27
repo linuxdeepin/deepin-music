@@ -30,6 +30,7 @@
 #include "core/util/threadpool.h"
 #include "musicapp.h"
 #include <metadetector.h>
+#include <QProcessEnvironment>
 
 using namespace Dtk::Util;
 using namespace Dtk::Widget;
