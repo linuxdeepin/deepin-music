@@ -25,7 +25,7 @@ MediaDatabaseWriter::MediaDatabaseWriter(QObject *parent) : QObject(parent)
 
 void MediaDatabaseWriter::addMediaMetaList(const MetaPtrList metalist)
 {
-//    qDebug() << "addMediaMetaList beign";
+//    qDebug() << "addMediaMetaList begin";
     QSqlDatabase::database().transaction();
     for (auto &meta : metalist) {
         addMediaMeta(meta);
@@ -36,7 +36,7 @@ void MediaDatabaseWriter::addMediaMetaList(const MetaPtrList metalist)
 
 void MediaDatabaseWriter::updateMediaMeta(const MetaPtr meta)
 {
-    qDebug() << "updateMediaMeta beign";
+    qDebug() << "updateMediaMeta begin";
     QSqlQuery query;
 
     query.prepare("UPDATE music set "
@@ -98,7 +98,7 @@ void MediaDatabaseWriter::removeMediaMetaList(const MetaPtrList metalist)
 
 void MediaDatabaseWriter::addMediaMeta(const MetaPtr meta)
 {
-//    qDebug() << "addMediaMeta beign";
+//    qDebug() << "addMediaMeta begin";
     QSqlQuery query;
     query.prepare("INSERT INTO music ("
                   "hash, timestamp, title, artist, album, "
@@ -165,7 +165,7 @@ void MediaDatabaseWriter::insertMusic(const MetaPtr meta,
 
 void MediaDatabaseWriter::insertMusicList(const MetaPtrList metalist, const PlaylistMeta &playlistMeta)
 {
-//    qDebug() << "insertMusicList beign";
+//    qDebug() << "insertMusicList begin";
     QSqlDatabase::database().transaction();
     for (auto &meta : metalist) {
         insertMusic(meta, playlistMeta);
