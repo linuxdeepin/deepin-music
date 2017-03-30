@@ -34,6 +34,11 @@ void MetaDetector::init()
     localeCodes.insert("zh_CN", "GB18030");
 }
 
+#if QT_VERSION >= 0x040000
+# define QStringToTString(s) TagLib::String(s.toUtf8().data(), TagLib::String::UTF8)
+#else
+# define QStringToTString(s) TagLib::String(s.utf8().data(), TagLib::String::UTF8)
+#endif
 
 QList<QByteArray> MetaDetector::detectEncodings(const QByteArray &rawData)
 {
