@@ -7,7 +7,7 @@
  * (at your option) any later version.
  **/
 
-#include "footer.h"
+#include "footerwidget.h"
 
 #include <QDebug>
 #include <QTimer>

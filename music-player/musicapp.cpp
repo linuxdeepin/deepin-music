@@ -86,9 +86,12 @@ void MusicApp::init()
     qDebug() << "TRACE:" << "start prepare data";
 }
 
-void MusicApp::initMpris(MprisPlayer *mprisPlayer)
+void MusicApp::initMpris(const QString &serviceName)
 {
     Q_D(MusicApp);
+    auto mprisPlayer =  new MprisPlayer();
+    mprisPlayer->setServiceName(serviceName);
+
     mprisPlayer->setSupportedMimeTypes(Player::instance()->supportedMimeTypes());
     mprisPlayer->setSupportedUriSchemes(QStringList() << "file");
     mprisPlayer->setCanQuit(true);

@@ -58,7 +58,6 @@ public slots:
     void onMusicError(PlaylistPtr playlist, const MetaPtr meta, int error);
     void onMusicPause(PlaylistPtr playlist, const MetaPtr meta);
     void onMusicStoped(PlaylistPtr playlist, const MetaPtr meta);
-    void onMediaLibraryClean();
     void onProgressChanged(qint64 value, qint64 duration);
     void onCoverChanged(const MetaPtr meta, const DMusic::SearchMeta &, const QByteArray &coverData);
     void onVolumeChanged(int volume);
@@ -66,6 +65,7 @@ public slots:
     void onModeChange(int mode);
     void onUpdateMetaCodec(const MetaPtr meta);
     void setDefaultCover(QString defaultCover);
+    void onMediaLibraryClean();
 
 protected:
     virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;

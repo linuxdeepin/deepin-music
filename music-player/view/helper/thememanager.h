@@ -9,11 +9,9 @@
 
 #pragma once
 
-#include <QtGlobal>
 #include <QObject>
-#include <QScopedPointer>
 #include <QPointer>
-
+#include <QScopedPointer>
 #include <util/singleton.h>
 
 class QWidget;
@@ -22,12 +20,9 @@ class ThemeManager : public QObject, public DMusic::DSingleton<ThemeManager>
 {
     Q_OBJECT
 public:
-    explicit ThemeManager(QObject *parent = 0);
     ~ThemeManager();
 
     void regisetrWidget(QPointer<QWidget> widget, QStringList propertys = QStringList());
-
-public:
     QString theme() const;
 
 public slots:
@@ -40,8 +35,9 @@ signals:
     void themeChanged(QString theme);
 
 private:
-
+    explicit ThemeManager(QObject *parent = 0);
     friend class DMusic::DSingleton<ThemeManager>;
+
     QScopedPointer<ThemeManagerPrivate> d_ptr;
     Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), ThemeManager)
 };

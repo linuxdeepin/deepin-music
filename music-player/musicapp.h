@@ -11,7 +11,6 @@
 
 #include <QObject>
 #include <QScopedPointer>
-
 #include <util/singleton.h>
 
 class MprisPlayer;
@@ -23,10 +22,11 @@ public:
     ~MusicApp();
 
     void init();
-    void initMpris(MprisPlayer *mprisPlayer);
+    void initMpris(const QString &serviceName);
     void openUri(const QUrl &uri);
 
     void triggerShortcutAction(const QString &optKey);
+
 public slots:
     void onDataPrepared();
     void onQuit();
@@ -35,6 +35,7 @@ public slots:
 private:
     MusicApp(QObject *parent = nullptr);
     friend class DMusic::DSingleton<MusicApp>;
+
     QScopedPointer<MusicAppPrivate> d_ptr;
     Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), MusicApp)
 };

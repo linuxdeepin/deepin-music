@@ -16,6 +16,7 @@
 #include <QStyle>
 #include <QWidget>
 #include <QApplication>
+#include <dthememanager.h>
 
 class ThemeManagerPrivate
 {
@@ -135,6 +136,7 @@ void ThemeManager::setTheme(const QString theme)
 
         emit themeChanged(theme);
     }
+    Dtk::Widget::DThemeManager::instance()->setTheme(theme);
 }
 
 void ThemeManager::setPrefix(const QString prefix)

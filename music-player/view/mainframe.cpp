@@ -22,7 +22,6 @@
 
 #include <DUtil>
 #include <dutility.h>
-#include <dthememanager.h>
 #include <daboutdialog.h>
 #include <dsettingsdialog.h>
 #include <ddialog.h>
@@ -44,7 +43,7 @@
 #include "musiclistwidget.h"
 #include "playlistwidget.h"
 #include "lyricwidget.h"
-#include "footer.h"
+#include "footerwidget.h"
 
 const QString s_PropertyViewname = "viewname";
 const QString s_PropertyViewnameLyric = "lyric";
@@ -137,16 +136,14 @@ void MainFramePrivate::initMenu()
     colorModeAction->setChecked(AppSettings::instance()->value("base.play.theme").toString() == "dark");
 
     q->connect(colorModeAction, &QAction::triggered, q, [ = ](bool) {
-        if (Dtk::Widget::DThemeManager::instance()->theme() == "light") {
+        if (ThemeManager::instance()->theme() == "light") {
             colorModeAction->setChecked(true);
-            Dtk::Widget::DThemeManager::instance()->setTheme("dark");
             ThemeManager::instance()->setTheme("dark");
         } else {
             colorModeAction->setChecked(false);
-            Dtk::Widget::DThemeManager::instance()->setTheme("light");
             ThemeManager::instance()->setTheme("light");
         }
-        AppSettings::instance()->setOption("base.play.theme", Dtk::Widget::DThemeManager::instance()->theme());
+        AppSettings::instance()->setOption("base.play.theme", ThemeManager::instance()->theme());
     });
 
     auto about = new QAction(MainFrame::tr("About"), q);

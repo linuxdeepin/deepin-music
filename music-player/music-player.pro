@@ -59,7 +59,6 @@ SOURCES += \
     view/importwidget.cpp \
     view/titlebar.cpp \
     view/musiclistwidget.cpp \
-    view/footer.cpp \
     view/playlistwidget.cpp \
     musicapp.cpp \
     main.cpp \
@@ -70,7 +69,8 @@ SOURCES += \
     view/widget/lyricview.cpp \
     view/widget/titeledit.cpp \
     view/widget/settingsdialog.cpp \
-    core/util/threadpool.cpp
+    core/util/threadpool.cpp \
+    view/footerwidget.cpp
 
 HEADERS += \
     musicapp.h \
@@ -112,7 +112,6 @@ HEADERS += \
     core/settings.h \
     core/pluginmanager.h \
     view/musiclistwidget.h \
-    view/footer.h \
     view/playlistwidget.h \
     view/mainframe.h \
     view/widget/listview.h \
@@ -123,7 +122,8 @@ HEADERS += \
     view/lyricwidget.h \
     view/widget/lyricview.h \
     view/widget/titeledit.h \
-    core/util/threadpool.h
+    core/util/threadpool.h \
+    view/footerwidget.h
 
 RESOURCES += \
     resource/theme/theme.qrc \
