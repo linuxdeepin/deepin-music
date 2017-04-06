@@ -9,9 +9,9 @@ ThreadPool::ThreadPool(QObject *parent) : QObject(parent)
 
 ThreadPool::~ThreadPool()
 {
-    qDebug() << "destory ThreadPool";
+    qDebug() << "destroy ThreadPool";
     quitAll();
-    qDebug() << "ThreadPool destoryed";
+    qDebug() << "ThreadPool destroyed";
 
 }
 

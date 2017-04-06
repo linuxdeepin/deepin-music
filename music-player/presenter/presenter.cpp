@@ -121,14 +121,14 @@ Presenter::~Presenter()
 
     Q_D(Presenter);
 
-    qDebug() << "destory presenter";
+    qDebug() << "destroy presenter";
     // close gstreamer
     d->player->stop();
 //    d->player->deleteLater();
 //    d->lyricService->deleteLater();
 //    d->library->deleteLater();
 //    d->settings->deleteLater();
-    qDebug() << "Presenter destoryed";
+    qDebug() << "Presenter destroyed";
 }
 
 

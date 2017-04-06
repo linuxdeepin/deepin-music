@@ -51,10 +51,10 @@ MusicApp::~MusicApp()
 {
     Q_D(MusicApp);
 
-    qDebug() << "destory MusicApp";
+    qDebug() << "destroy MusicApp";
     d->appPresenter->deleteLater();
 //    d->playerFrame->deleteLater();
-    qDebug() << "MusicApp destoryed";
+    qDebug() << "MusicApp destroyed";
 
 //    ThreadPool::instance()->deleteLater();
 }
