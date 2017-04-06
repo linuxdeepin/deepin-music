@@ -1,67 +1,67 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="zh_CN" version="2.1">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="ru" version="2.1">
 <context>
     <name>Footer</name>
     <message>
         <location filename="../view/footer.cpp" line="267"/>
         <source>Previous</source>
-        <translation>上一首</translation>
+        <translation>Предыдущий</translation>
     </message>
     <message>
         <location filename="../view/footer.cpp" line="268"/>
         <source>Next</source>
-        <translation>下一首</translation>
+        <translation>Следующий</translation>
     </message>
     <message>
         <location filename="../view/footer.cpp" line="269"/>
         <source>Play/Pause</source>
-        <translation>播放/暂停</translation>
+        <translation>Воспроизведение / Пауза</translation>
     </message>
     <message>
         <location filename="../view/footer.cpp" line="270"/>
         <source>Favorite</source>
-        <translation>收藏</translation>
+        <translation>Избранное</translation>
     </message>
     <message>
         <location filename="../view/footer.cpp" line="271"/>
         <source>Lyrics</source>
-        <translation>歌词</translation>
+        <translation>Текст песни</translation>
     </message>
     <message>
         <location filename="../view/footer.cpp" line="656"/>
         <source>Repeat Playlist</source>
-        <translation>列表循环</translation>
+        <translation>Повтор Списка воспроизведения</translation>
     </message>
     <message>
         <location filename="../view/footer.cpp" line="659"/>
         <source>Repeat Song</source>
-        <translation>单曲循环</translation>
+        <translation>Повтор Песни</translation>
     </message>
     <message>
         <location filename="../view/footer.cpp" line="216"/>
         <source>Unknown Title</source>
-        <translation>未知名称</translation>
+        <translation>Неизвестный Название</translation>
     </message>
     <message>
         <location filename="../view/footer.cpp" line="222"/>
         <location filename="../view/footer.cpp" line="495"/>
         <location filename="../view/footer.cpp" line="678"/>
         <source>Unknown artist</source>
-        <translation>未知歌手</translation>
+        <translation>Неизвестный исполнитель</translation>
     </message>
     <message>
         <location filename="../view/footer.cpp" line="272"/>
         <source>Play Mode</source>
-        <translation>播放模式</translation>
+        <translation>Режим Воспроизведения</translation>
     </message>
     <message>
         <location filename="../view/footer.cpp" line="273"/>
         <source>Playlist</source>
-        <translation>歌单</translation>
+        <translation>Список воспроизведения</translation>
     </message>
     <message>
         <location filename="../view/footer.cpp" line="662"/>
         <source>Shuffle</source>
-        <translation>随机播放</translation>
+        <translation>Перемешать</translation>
     </message>
 </context>
 <context>
@@ -69,24 +69,24 @@
     <message>
         <location filename="../view/importwidget.cpp" line="61"/>
         <source>Add Music</source>
-        <translation>添加音乐</translation>
+        <translation>Добавить музыку</translation>
     </message>
     <message>
         <location filename="../view/importwidget.cpp" line="67"/>
         <location filename="../view/importwidget.cpp" line="110"/>
         <source>Scan</source>
-        <translation>扫描</translation>
+        <translation>Сканирование</translation>
     </message>
     <message>
         <location filename="../view/importwidget.cpp" line="68"/>
         <location filename="../view/importwidget.cpp" line="111"/>
         <source>%1 music directory or drag &amp; drop music file to add music</source>
-        <translation>您可以%1音乐目录或拖拽音乐文件添加音乐</translation>
+        <translation>% 1 музыкальный каталог или перетащите музыкальный файл, чтобы добавить музыку</translation>
     </message>
     <message>
         <location filename="../view/importwidget.cpp" line="102"/>
         <source>Loading music, please wait...</source>
-        <translation>正在加载音乐，请稍候……</translation>
+        <translation>Загрузка музыки, пожалуйста ждите...</translation>
     </message>
 </context>
 <context>
@@ -94,47 +94,47 @@
     <message>
         <location filename="../view/widget/infodialog.cpp" line="106"/>
         <source>Title:</source>
-        <translation>歌曲：</translation>
+        <translation>Название</translation>
     </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="106"/>
         <source>Artist:</source>
-        <translation>歌手：</translation>
+        <translation>Исполнитель</translation>
     </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="107"/>
         <source>Album:</source>
-        <translation>专辑：</translation>
+        <translation>Альбом:</translation>
     </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="107"/>
         <source>Type:</source>
-        <translation>文件类型</translation>
+        <translation>Тип:</translation>
     </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="109"/>
         <source>Path:</source>
-        <translation>文件路径</translation>
+        <translation>Путь:</translation>
     </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="108"/>
         <source>Size:</source>
-        <translation>文件大小：</translation>
+        <translation>Размер:</translation>
     </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="108"/>
         <source>Duration:</source>
-        <translation>时长：</translation>
+        <translation>Продолжительность:</translation>
     </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="182"/>
         <source>Unkonw artist</source>
-        <translation>未知歌手</translation>
+        <translation>Неизвестный исполнитель</translation>
     </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="183"/>
         <source>Unkonw album</source>
-        <translation>未知专辑</translation>
+        <translation>Неизвестный альбом</translation>
     </message>
 </context>
 <context>
@@ -142,27 +142,27 @@
     <message>
         <location filename="../view/lyricwidget.cpp" line="152"/>
         <source>Search lyrics</source>
-        <translation>搜索歌词</translation>
+        <translation>Поиск текстов песен</translation>
     </message>
     <message>
         <location filename="../view/lyricwidget.cpp" line="156"/>
         <source>Title</source>
-        <translation>歌曲名称</translation>
+        <translation>Название</translation>
     </message>
     <message>
         <location filename="../view/lyricwidget.cpp" line="161"/>
         <source>Artist</source>
-        <translation>歌手名称</translation>
+        <translation>Исполнитель</translation>
     </message>
     <message>
         <location filename="../view/lyricwidget.cpp" line="166"/>
         <source>Search</source>
-        <translation>搜索</translation>
+        <translation>Поиск</translation>
     </message>
     <message>
         <location filename="../view/lyricwidget.cpp" line="200"/>
         <source>Back</source>
-        <translation>返回</translation>
+        <translation>Назад</translation>
     </message>
 </context>
 <context>
@@ -170,87 +170,87 @@
     <message>
         <location filename="../view/mainframe.cpp" line="99"/>
         <source>New playlist</source>
-        <translation>新建歌单</translation>
+        <translation>Новый список воспроизведения</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="105"/>
         <source>Add music</source>
-        <translation>添加音乐</translation>
+        <translation>Добавить музыку</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="110"/>
         <source>Add music file</source>
-        <translation>添加音乐文件</translation>
+        <translation>Добавить музыкальный файл</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="115"/>
         <source>Settings</source>
-        <translation>设置</translation>
+        <translation>Настройки</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="131"/>
         <source>Deep color mode</source>
-        <translation>深色模式</translation>
+        <translation>Режим глубокого цвета</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="148"/>
         <source>About</source>
-        <translation>关于</translation>
+        <translation>О программе </translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="150"/>
         <source>Deepin Music Player is a local  music player with beautiful design and simple functions. It supports viewing lyrics when playing, playing lossless music and customize playlist, etc.</source>
-        <translation>深度音乐是一款设计美观，功能简洁的本地音乐播放器。支持播放时查看歌词、播放无损音乐、自定义创建歌单等功能。</translation>
+        <translation>Музыкальный проигрыватель Deepin - локальный музыкальный плеер с красивым дизайном и простыми функциями. Он поддерживает просмотр текстов во время воспроизведения, проигрывание музыки без потерь и настройку списка воспроизведения и т. д.</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="183"/>
         <source>Exit</source>
-        <translation>退出</translation>
+        <translation>Выход</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="531"/>
         <source>File invalid or does not exist, failed to load!</source>
-        <translation>文件无效或不存在，加载失败！</translation>
+        <translation>Файл недействителен или не существует, не удалось загрузить!</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="552"/>
         <source>Failed to import, no vaild music file found!</source>
-        <translation>导入失败，未找到有效的音乐文件！</translation>
+        <translation>Не удалось импортировать, не найден действительный музыкальный файл!</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="557"/>
         <source>OK</source>
-        <translation>确定</translation>
+        <translation>OK</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="158"/>
         <source>Deepin Music</source>
-        <translation>深度音乐</translation>
+        <translation>Музыкальный проигрыватель Deepin</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="159"/>
         <source>Version: 3.0</source>
-        <translation>版本：3.0</translation>
+        <translation>Версия: 3.0</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="167"/>
         <source>Help</source>
-        <translation>帮助</translation>
+        <translation>Помощь</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="482"/>
         <source>Successfully added to &quot;%1&quot;</source>
-        <translation>成功添加到“%1”</translation>
+        <translation>Успешно добавлено &quot;%1&quot;</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="532"/>
         <source>I got it</source>
-        <translation>我知道了</translation>
+        <translation>Я получил это</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="818"/>
         <source>Music (%1)</source>
-        <translation>音乐 (%1)</translation>
+        <translation>Музыка (%1)</translation>
     </message>
 </context>
 <context>
@@ -258,78 +258,78 @@
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="271"/>
         <source>New playlist</source>
-        <translation>新建歌单</translation>
+        <translation>Новый список воспроизведения</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="311"/>
         <source>Play</source>
-        <translation>播放</translation>
+        <translation>Воспроизведение</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="313"/>
         <source>Add to playlist</source>
-        <translation>添加到歌单</translation>
+        <translation>Добавить список воспроизведения</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="318"/>
         <source>Display in file manager</source>
-        <translation>在文件管理器中显示</translation>
+        <translation>Отобразить в менеджере файлов</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="345"/>
         <source>Song info</source>
-        <translation>歌曲信息</translation>
+        <translation>Информация о песне</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="321"/>
         <source>Remove from playlist</source>
-        <translation>从歌单中删除</translation>
+        <translation>Удалить из списка воспроизведения</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="322"/>
         <source>Delete from local disk</source>
-        <translation>从本地删除</translation>
+        <translation>Удалить из локального диска</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="341"/>
         <source>Encoding</source>
-        <translation>编码方式</translation>
+        <translation>Кодировка</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="399"/>
         <source>Cancel</source>
-        <translation>取消</translation>
+        <translation>Отмена</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="400"/>
         <source>Delete</source>
-        <translation>删除</translation>
+        <translation>Удалить</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="409"/>
         <source>Are you sure to delete %1?</source>
-        <translation>您确定要删除 %1 吗？</translation>
+        <translation>Вы уверены, что хотите удалить %1?</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="411"/>
         <location filename="../view/widget/musiclistview.cpp" line="415"/>
         <source>Are you sure to delete the selected %1 songs?</source>
-        <translation>您确定要删除选中的%1首歌曲吗？</translation>
+        <translation>Вы уверены, что хотите удалить выбранные %1 песни?</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="416"/>
         <source>Deleting the current song will also delete the song files contained</source>
-        <translation>删除当前歌曲将会删除所包含的歌曲文件</translation>
+        <translation>При удалении текущей песни звуковые файлы также будут удалены</translation>
     </message>
     <message>
         <location filename="../view/widget/delegate/musicitemdelegate.cpp" line="299"/>
         <source>Unknown artist</source>
-        <translation>未知歌手</translation>
+        <translation>Неизвестный исполнитель</translation>
     </message>
     <message>
         <location filename="../view/widget/delegate/musicitemdelegate.cpp" line="310"/>
         <source>Unknown album</source>
-        <translation>未知专辑</translation>
+        <translation>Неизвестный альбом</translation>
     </message>
 </context>
 <context>
@@ -337,42 +337,42 @@
     <message>
         <location filename="../view/musiclistwidget.cpp" line="123"/>
         <source>No Music</source>
-        <translation>当前歌单为</translation>
+        <translation>Нет Музыки</translation>
     </message>
     <message>
         <location filename="../view/musiclistwidget.cpp" line="125"/>
         <source>No result found</source>
-        <translation>无搜索结果</translation>
+        <translation>Ничего не найдено</translation>
     </message>
     <message>
         <location filename="../view/musiclistwidget.cpp" line="155"/>
         <source>Play All</source>
-        <translation>播放所有</translation>
+        <translation>Воспроизвести все</translation>
     </message>
     <message>
         <location filename="../view/musiclistwidget.cpp" line="163"/>
         <source>Time added</source>
-        <translation>添加时间</translation>
+        <translation>Время добавлено</translation>
     </message>
     <message>
         <location filename="../view/musiclistwidget.cpp" line="164"/>
         <source>Title</source>
-        <translation>歌曲名称</translation>
+        <translation>Название</translation>
     </message>
     <message>
         <location filename="../view/musiclistwidget.cpp" line="165"/>
         <source>Artist</source>
-        <translation>歌手名称</translation>
+        <translation>Исполнитель</translation>
     </message>
     <message>
         <location filename="../view/musiclistwidget.cpp" line="166"/>
         <source>Album name</source>
-        <translation>专辑名称</translation>
+        <translation>Название альбома</translation>
     </message>
     <message>
         <location filename="../view/musiclistwidget.cpp" line="167"/>
         <source>Custom</source>
-        <translation>自定义</translation>
+        <translation>Собственный</translation>
     </message>
 </context>
 <context>
@@ -380,17 +380,17 @@
     <message>
         <location filename="../view/widget/playlistitem.cpp" line="203"/>
         <source>Delete</source>
-        <translation>删除</translation>
+        <translation>Удалить</translation>
     </message>
     <message>
         <location filename="../view/widget/playlistitem.cpp" line="196"/>
         <source>Are you sure to delete this playlist?</source>
-        <translation>您确定要删除此歌单吗？</translation>
+        <translation>Вы уверены, что хотите удалить список воспроизведения?</translation>
     </message>
     <message>
         <location filename="../view/widget/playlistitem.cpp" line="202"/>
         <source>Cancel</source>
-        <translation>取消</translation>
+        <translation>Отмена</translation>
     </message>
 </context>
 <context>
@@ -399,19 +399,19 @@
         <location filename="../view/widget/playlistview.cpp" line="172"/>
         <location filename="../view/widget/playlistview.cpp" line="181"/>
         <source>Play</source>
-        <translation>播放</translation>
+        <translation>Воспроизведение</translation>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="176"/>
         <location filename="../view/widget/playlistview.cpp" line="184"/>
         <source>Rename</source>
-        <translation>重命名</translation>
+        <translation>Переименовать</translation>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="177"/>
         <location filename="../view/widget/playlistview.cpp" line="188"/>
         <source>Delete</source>
-        <translation>删除</translation>
+        <translation>Удалить</translation>
     </message>
 </context>
 <context>
@@ -419,22 +419,22 @@
     <message>
         <location filename="../core/playlistmanager.cpp" line="67"/>
         <source>New playlist</source>
-        <translation>新建歌单</translation>
+        <translation>Новый список воспроизведения</translation>
     </message>
     <message>
         <location filename="../core/playlistmanager.cpp" line="123"/>
         <source>All Music</source>
-        <translation>所有音乐</translation>
+        <translation>Вся Музыка</translation>
     </message>
     <message>
         <location filename="../core/playlistmanager.cpp" line="129"/>
         <source>My favorites</source>
-        <translation>我的收藏</translation>
+        <translation>Избранное</translation>
     </message>
     <message>
         <location filename="../core/playlistmanager.cpp" line="135"/>
         <source>Search result</source>
-        <translation>搜索结果</translation>
+        <translation>Результат поиска</translation>
     </message>
 </context>
 <context>
@@ -442,7 +442,7 @@
     <message>
         <location filename="../view/playlistwidget.cpp" line="46"/>
         <source>New playlist</source>
-        <translation>新建歌单</translation>
+        <translation>Новый список воспроизведения</translation>
     </message>
 </context>
 <context>
@@ -450,67 +450,67 @@
     <message>
         <location filename="../main.cpp" line="106"/>
         <source>Deepin Music</source>
-        <translation>深度音乐</translation>
+        <translation>Музыкальный проигрыватель Deepin</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="5"/>
         <source>Autoplay</source>
-        <translation>启动时自动播放</translation>
+        <translation>Автовоспроизведение</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="6"/>
         <source>Enable fade</source>
-        <translation>开启淡入淡出</translation>
+        <translation>Включить замирание</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="7"/>
         <source>Resume play from last position</source>
-        <translation>启动时记住上次播放进度</translation>
+        <translation>Продолжить воспроизведение с последней позиции</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="8"/>
         <source>Basic settings</source>
-        <translation>基础设置</translation>
+        <translation>Основные настройки</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="9"/>
         <source>Play</source>
-        <translation>播放</translation>
+        <translation>Воспроизведение</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="10"/>
         <source>Shortcuts</source>
-        <translation>快捷键</translation>
+        <translation>Горячие клавиши</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="11"/>
         <source>Restore to default</source>
-        <translation>恢复默认</translation>
+        <translation>Восстановить </translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="12"/>
         <source>Next</source>
-        <translation>下一首</translation>
+        <translation>Следующий</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="13"/>
         <source>Play/Pause</source>
-        <translation>播放/暂停</translation>
+        <translation>Воспроизведение / Пауза</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="14"/>
         <source>Previous</source>
-        <translation>上一首</translation>
+        <translation>Предыдущий</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="15"/>
         <source>Volume down</source>
-        <translation>音量减小</translation>
+        <translation>Тише</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="16"/>
         <source>Volume up</source>
-        <translation>音量增大</translation>
+        <translation>Громче</translation>
     </message>
 </context>
 <context>
@@ -519,7 +519,7 @@
         <location filename="../view/widget/searchresult.cpp" line="46"/>
         <location filename="../view/widget/searchresult.cpp" line="111"/>
         <source>Search &quot;%1&quot; in Deepin Music</source>
-        <translation>在深度音乐中搜索“%1”</translation>
+        <translation>Поиск %1 в Музыкальном проигрывателе Deepin</translation>
     </message>
 </context>
 <context>
@@ -527,7 +527,7 @@
     <message>
         <location filename="../view/widget/titlebarwidget.cpp" line="79"/>
         <source>Search</source>
-        <translation>搜索</translation>
+        <translation>Поиск</translation>
     </message>
 </context>
 </TS>
