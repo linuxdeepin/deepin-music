@@ -102,11 +102,11 @@ int main(int argc, char *argv[])
 
     AppSettings::instance()->init();
     PluginManager::instance()->init();
+    Player::instance()->init();
     MusicApp::instance()->init();
 #ifdef Q_OS_UNIX
     MusicApp::instance()->initMpris(serviceName);
 #endif
-    Player::instance()->init();
 
     app.connect(&app, &QApplication::lastWindowClosed,
     &app, [ = ]() {
@@ -114,7 +114,6 @@ int main(int argc, char *argv[])
         AppSettings::instance()->sync();
         sync();
         qDebug() << "sync config finish";
-//        qApp->quit();
     });
 
     if (!toOpenFile.isEmpty()) {

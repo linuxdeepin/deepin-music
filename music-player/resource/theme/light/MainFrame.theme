@@ -1,9 +1,7 @@
 #MainFrame {
     qproperty-borderColor: rgba(0,0,0,10%);
-    qproperty-borderInside: false;
 }
 
 #MainFrame[viewname="lyric"] {
     qproperty-borderColor: rgba(0,0,0,30%);
-    qproperty-borderInside: true;
 }

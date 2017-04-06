@@ -16,7 +16,7 @@
 #include "player.h"
 #include "mediadatabase.h"
 
-const static int ScanCacheSize = 20;
+const static int ScanCacheSize = 50;
 
 class MediaLibraryPrivate
 {
@@ -96,7 +96,7 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
     QFileInfo fileInfo(filepath);
     auto suffix = QString("*.%1").arg(fileInfo.suffix()).toLower();
     if (!supportedSuffixs.contains(suffix)) {
-        qWarning() << "skip" << suffix << filepath;
+        qWarning() << "skip" << suffix << filepath << supportedSuffixs;
         return MetaPtr();
     }
 
@@ -130,7 +130,6 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
 #ifdef SUPPORT_INOTIFY
     watcher->addPath(fileInfo.absolutePath());
 #endif
-    qDebug() << meta;
     return meta;
 }
 
@@ -253,6 +252,7 @@ void MediaLibrary::importMedias(const QString &jobid, const QStringList &urllist
 
                 metaCache << meta;
                 if (metaCache.length() >= ScanCacheSize) {
+                    mediaCount += metaCache.length();
                     emit MediaDatabase::instance()->addMediaMetaList(metaCache);
                     emit meidaFileImported(jobid, metaCache);
                     metaCache.clear();
@@ -308,7 +308,6 @@ void MediaLibrary::importMedias(const QString &jobid, const QStringList &urllist
         }
     }
 
-    qDebug() << metaCache.length();
     if (metaCache.length() > 0) {
         mediaCount += metaCache.length();
         emit MediaDatabase::instance()->addMediaMetaList(metaCache);
@@ -316,7 +315,7 @@ void MediaLibrary::importMedias(const QString &jobid, const QStringList &urllist
         metaCache.clear();
     }
 
-    qDebug() << "scanFinished" << jobid;
+    qDebug() << "scanFinished" << jobid << "with media count:" << mediaCount;
     emit scanFinished(jobid, mediaCount);
 }
 

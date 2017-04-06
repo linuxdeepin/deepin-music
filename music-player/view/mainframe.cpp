@@ -49,6 +49,7 @@ const QString s_PropertyViewname = "viewname";
 const QString s_PropertyViewnameLyric = "lyric";
 static const int FooterHeight = 60;
 static const int AnimationDelay = 400; //ms
+static const int BlurRadius = 25; //ms
 
 using namespace Dtk::Widget;
 
@@ -512,7 +513,7 @@ void MainFrame::binding(Presenter *presenter)
             return;
         }
 
-        d->coverImage = WidgetHelper::blurImage(image, 50).toImage();
+        d->coverImage = WidgetHelper::blurImage(image, BlurRadius).toImage();
         image = WidgetHelper::cropRect(d->coverImage, size());
         QPalette palette;
         palette.setBrush(QPalette::Background, image);
@@ -777,8 +778,9 @@ void MainFrame::setCoverBackground(QString coverBackground)
     Q_D(MainFrame);
     d->coverBackground = coverBackground;
     QImage image = QImage(coverBackground);
-    d->coverImage = WidgetHelper::blurImage(image, 50).toImage();
+    image = WidgetHelper::blurImage(image, BlurRadius).toImage();
     image = WidgetHelper::cropRect(image, size());
+    d->coverImage = image;
 
     QPalette palette;
     palette.setBrush(QPalette::Background, image);
@@ -923,10 +925,12 @@ void MainFrame::resizeEvent(QResizeEvent *e)
         d->tips->hide();
     }
 
-    auto image = WidgetHelper::cropRect(d->coverImage, size());
-    QPalette palette;
-    palette.setBrush(QPalette::Background, image);
-    setPalette(palette);
+    if (!d->coverImage.isNull()) {
+        auto image = WidgetHelper::cropRect(d->coverImage, size());
+        QPalette palette;
+        palette.setBrush(QPalette::Background, image);
+        setPalette(palette);
+    }
 }
 
 void MainFrame::closeEvent(QCloseEvent *event)

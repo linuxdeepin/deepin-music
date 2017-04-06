@@ -124,10 +124,10 @@ Presenter::~Presenter()
     qDebug() << "destory presenter";
     // close gstreamer
     d->player->stop();
-    d->player->deleteLater();
-    d->lyricService->deleteLater();
-    d->library->deleteLater();
-    d->settings->deleteLater();
+//    d->player->deleteLater();
+//    d->lyricService->deleteLater();
+//    d->library->deleteLater();
+//    d->settings->deleteLater();
     qDebug() << "Presenter destoryed";
 }
 
@@ -163,6 +163,7 @@ void Presenter::prepareData()
             qDebug() << "scanFinished: meta library clean";
             emit metaLibraryClean();
         }
+
         if (0 == mediaCount) {
             emit scanFinished(playlistId, mediaCount);
         }
