@@ -307,6 +307,7 @@ void Presenter::postAction()
     emit this->mutedChanged(mute);
 
     auto playmode = d->settings->value("base.play.playmode").toInt();
+    d->player->setMode(static_cast<Player::PlaybackMode>(playmode));
     emit this->modeChanged(playmode);
 
     auto allplaylist = d->playlistMgr->playlist(AllMusicListID);
