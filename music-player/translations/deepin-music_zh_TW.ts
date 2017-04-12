@@ -19,7 +19,7 @@
     <message>
         <location filename="../view/footer.cpp" line="270"/>
         <source>Favorite</source>
-        <translation>加入我的最愛</translation>
+        <translation>加到我的最愛</translation>
     </message>
     <message>
         <location filename="../view/footer.cpp" line="271"/>
@@ -86,7 +86,7 @@
     <message>
         <location filename="../view/importwidget.cpp" line="102"/>
         <source>Loading music, please wait...</source>
-        <translation>正在載入音樂，請稍等…</translation>
+        <translation>正在載入音樂，請稍候…</translation>
     </message>
 </context>
 <context>
@@ -480,7 +480,7 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="10"/>
         <source>Shortcuts</source>
-        <translation>捷徑鍵</translation>
+        <translation>快速鍵</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="11"/>
