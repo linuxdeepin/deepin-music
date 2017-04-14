@@ -2,7 +2,7 @@
 
 ## Overview|../common/icon_overview.svg|
 
-Deepin Music is an application developed by Deepin Technology Team which focused on local music playing. It brings all brand new UI design, extreme playing experience, and it has local music scanning and lyric sync functions, etc.
+Deepin Music is a local music playing application with brand new UI design and extreme playing experience developed by Deepin Technology. It's featured with local music scanning and lyric sync functions, etc.
 
 ## Guide|../common/icon_guide.svg|
 
@@ -17,17 +17,17 @@ You can run, close and create a shortcut for Deepin Music by the following ways.
  - Click on **Send to dock** to fix the application on dock.
  - Click on **Add to startup** to add the application to startup, it will automatically run when the system starts up.
 
-> ![notes](icon/notes.svg): If Deepin Music has docked on the dock, you can also click on the application icon to run Deepin Music.
+> ![notes](icon/notes.svg): If Deepin Music has been fixed on Dock, you can also click on its icon to run.
 
 ### Exit Deepin Music
 
 - In Deepin Music interface, click on ![close](icon/close_icon.svg) to exit Deepin Music.
-- Right click on the Deepin Music application icon on the dock, select ** Close all ** to exit Music.
-- Click on ![Settings](icon/icon_menu.svg) and select ** Exit ** to exit Deepin Music.
+- Right click on the Deepin Music application icon on the dock, select **Close All** to exit Music.
+- Click on ![Settings](icon/icon_menu.svg) and select **Exit** to exit Deepin Music.
 
 ## Main Interface|../common/icon_localmusic.svg|
 
-By using the button on the main interface, user can do commn playing operations, viewing playlist and song info.
+On the main interface, you can do common playing operations, view playlist and song info.
 
 ![1|main](png/main.png)
 
@@ -37,22 +37,22 @@ By using the button on the main interface, user can do commn playing operations,
         <tr>
             <td>1</td>
             <td>Search box</td>
-            <td>User can search music quickly by search box.</td>
+            <td>Users can search music quickly by search box.</td>
         </tr>
         <tr>
             <td>2</td>
             <td>Main menu</td>
-            <td>User can add playlist, add music, set options, view manual and  information, and exit the application by main menu.</td>
+            <td>Users can add playlist, add music, set options, view manual and  information, and exit the application by main menu.</td>
         </tr>
 		<tr>
             <td>3</td>
             <td>Sort options</td>
-            <td>User can sort the list by time added, title, artist or album name.</td>
+            <td>Users can sort the list by time added, title, artist or album name.</td>
         </tr>
 		<tr>
             <td>4</td>
             <td>Play box</td>
-            <td>Show now playing, cover and album name.</td>
+            <td>Show seek bar, cover and album name.</td>
         </tr>
 			<tr>
             <td>5</td>
@@ -72,12 +72,12 @@ By using the button on the main interface, user can do commn playing operations,
 		<tr>
             <td>8</td>
             <td>Lyrics</td>
-            <td>Click to switch to the Lyrics interface, click again to exit the interface.</td>
+            <td>Click to switch to the lyrics interface, click again to close lyrics.</td>
         </tr>
 			<tr>
             <td>9</td>
             <td>Play mode</td>
-            <td>Click to switch the play mode, including repeat list, repeat and shuffle.</td>
+            <td>Click to switch the play mode, including repeat playlist, repeat song and shuffle.</td>
         </tr>
 			<tr>
             <td>10</td>
@@ -94,135 +94,182 @@ By using the button on the main interface, user can do commn playing operations,
 
 ## Common Operations|../common/icon_commoncoperat.svg|
 
-User can add, delete and view info of the local music in Deepin Music.
+You can add, delete and view info of the local music in Deepin Music.
 
-### Add music
+### Add Music
 
-1. In Deepin Music interface, user can 
- - Click on ![menu](icon/icon_menu.svg) > ** Add music **.
- - Click on ** Add music ** on the initial main interface.
- - Click on ** Scan ** at the bottom of the initial main interface.
-2. In the popup window, choose the file and folder to scan the music files, click on ** Add ** to confirm the operation.
+On Deepin Music interface, you can: 
+- Click on **Add Music** to add a music folder.
+- Click on **Scan** to scan music directory.
+- Click on ![menu](icon/icon_menu.svg) > **Add music** to add a music folder.
+- Click on ![menu](icon/icon_menu.svg) > **Add music file** to add a music file.
 
 ![0|addmusic](png/addmusic.png)
 
-### Search music
+> ![notes](icon/notes.svg): You can also drag and drop music file to Deepin Music interface to add.
 
-1. At the top of the Deepin Music interface, click on ** Search **.
-2. in the search box, enter the keywords, the result will show on the main interface, user can locate the music quickly.
+### Search Music
+
+1. At the top of the Deepin Music interface, click on **Search**.
+2. Enter the keywords in search box, then the result will be shown on the interface and you can locate the music quickly.
 
 ![1|searchmusic](png/searchmusic.png)
 
-### Add music to my favorites
+### Add Music to My Favorites
 
-In Deepin Music interface, click on ![collect](icon/collect.svg) to add music to my favorites playlist.
+On Deepin Music interface, click on ![collect](icon/collect.svg) to add music to my favorites.
 
-> ![notes](icon/notes.svg): User can also right click on the music, click on ** Add to playlist ** > ** My Favorites ** to finish this task.
+> ![notes](icon/notes.svg): You can also right click on the music, and click on **Add to playlist** > **My Favorites** to finish this task.
 
-### Delete music
 
-1. In Deepin Music interface, to delete a music from the playlist, right click on the music.
-2. Click on ** Remove from playlist ** to remove the music from the playlist, the music file will still on the local disk.
-3. Click on ** Delete from local disk ** to remove the music from the playlist and delete the music file from local disk. User should also confirm the operation in the popup window. 
+### Display in File Manager
 
-![0|remove](png/remove.png)
-
-### View music info
-
-1. In Deepin Music interface, right click the music.
-2. Click on ** Song info **, user can view the information of the music.
-
-![0|info](png/info.png)
-
-### Display in file manager
-
-1. In Deepin Music interface, right click the music.
-2. Click on ** Display in file manager **, user can view the the music file on file manager.
+1. On Deepin Music interface, right click the music.
+2. Click on **Display in file manager**, you can view the the music file in Deepin File Manager.
 
 ![0|infile](png/infile.png)
 
+### Delete Music
+
+On Deepin Music interface, right click on the music, you can:
+- Click on **Remove from playlist** to remove from the playlist, but the music file will be still on the local disk.
+- Click on **Delete from local disk** to remove from the playlist and delete from local disk. There will be a prompt to confirm the operation in the popup window. 
+
+![0|remove](png/remove.png)
+
+
+### Encoding
+
+1. On Deepin Music interface, right click the music.
+2. Click on **Encoding**, you can select the encoding you want.
+
+![0|encoding](png/encoding.png)
+
+
+### View Music Info
+
+1. On Deepin Music interface, right click the music.
+2. Click on **Song info**, you can view the detailed music information.
+
+![0|info](png/info.png)
+
+
 ## Playlist Management|../common/icon_playlist.svg|
 
-In Deepin Music interface, user can add, delete, rename playlist and add music to the playlist.
-To show the playlist interface, click ![list_icon](icon/list_icon.svg) on the bottom.
+On Deepin Music interface, you can create, delete, rename playlist and add music to the playlist.
 
-### Add playlist
 
-1. To add a new playlist, user can
- - Click on ** Add playlist ** on the bottom of the playlist interface.
- - Click on ![menu](icon/icon_menu.svg) to enter ** Main Menu ** and click on ** New Playlist **.
- - Right click on the music and click on ** Add to playlist ** > ** New playlist **.
-2. Enter the name of the playlist.
-3. Click on the blank area of the Deepin Music, or press **![Enter](icon/Enter.svg)** key to confirm the name.
+### Create a New Playlist
+
+1. To create a new playlist, you can:
+ - Click on ![list_icon](icon/list_icon.svg), then click on **New playlist**.
+ - Click on ![menu](icon/icon_menu.svg) to select **New Playlist**.
+ - Right click on the music and click on **Add to playlist** > **New playlist**.
+2. Enter a name of the playlist.
+3. Click on the blank area or press **![Enter](icon/Enter.svg)** key to confirm.
 
 ![0|addlist](png/addlist.png)
 
-### Play playlist
+### Rename Playlist
 
-To play a existing playlist, user can
- - Double click on the playlist.
- - Right click on the playlist and select ** Play **.
-
-![0|play](png/play.png)
-
-### Rename playlist
-
-1. To rename an existing playlist, right click on the playlist and select ** Rename **.
-2. Enter the name of the playlist.
-3. Click on the blank area of the Deepin Music, or press **![Enter](icon/Enter.svg)** key to confirm the name.
+1. On Deepin Music interface, click on ![list_icon](icon/list_icon.svg).
+2. Right click on the playlist to select **Rename**.
+3. Enter the name of the playlist.
+4. Click on the blank area of the Deepin Music, or press **![Enter](icon/Enter.svg)** key to confirm the name.
 
 ![0|renamelist](png/renamelist.png)
 
-### Add music to the playlist
+### Add Music to Playlist
 
-To add a music to the playlist, right click on the music and click on ** Add to playlist ** 
- - Choose one of the existing playlist.
- - User can also choose ** New Playlist ** to add to a new playlist.
+1. On Deepin Music interface, select a music you want to add.
+2. Right click to select **Add to playlist** > **Playlist name**.
+
+
+> ![notes](icon/notes.svg): You can also select ** New Playlist ** to add the music to a new playlist.
 
 ![0|addtolist](png/addtolist.png)
 
-### Delete playlist
+### Remove Music from Playlist
 
-1. To delete an existing playlist, right click on the playlist and select ** Delete **.
-2. In the popup window, select ** Delete ** to confirm the operation.
+1. On Deepin Music interface, select a music you want to remove.
+2. Right click to select **Remove from playlist**.
+
+![0|remove](png/remove.png)
+
+
+### Delete Playlist
+
+1. On Deepin Music interface, click on ![list_icon](icon/list_icon.svg).
+2. Right click on the playlist to select **Delete**.
+3. In the popup window, select **Delete** to confirm the operation.
 
 ![0|deletelist](png/deletelist.png)
 
 
 ## Main Menu|../common/icon_optionsetting.svg|
 
-In ** Main Menu **, user can add new playlists/songs, set the options, view information on Deepin Music and Exit the application.
-In Deepin Music interface, click on ![menu](icon/icon_menu.svg) to enter ** Main Menu **.
+You can add new playlists/songs, set the options, view or exit Deepin Music.
 
-### Settings
 
-1. In ** Main Menu **, click on ** Settings **  to enter ** Settings **.
-2. In ** Basic Settings **, user can:
-   - Check ** Automatically play when startup **, to automatically play when Deepin Music startup.
-   - Check ** Remember the last time when playing **, to play when the last time Deepin Music played.
-   - Check ** Enable fade in and out **, to enable fade in and out when Deepin Music played/stopped.
-   - Change ** Lyrics saving location **.
-3. In ** Shortcuts Settings **, user can:
-   - Check ** Enable Shortcuts **, to enable shortcut keys.
-   - Redefine all shortcuts.
-   - Click on ** Restore to default ** to restore all shortcuts to the default.
+### Basic Settings
+
+1. On Deepin Music interface, click on ![menu](icon/icon_menu.svg).
+2. Select **Settings** > **Basic settings**.
+3. In the option **Play**, you can:
+ - Check the box of **Autoplay**, the music will be played automatically when Deepin Music runs.
+ - Check the box of **Resume play from last position**, the music will be played automatically from last positon played when Deepin Music runs.
+ -  Check the box of **Enable fade**, the music will fade in and out when Deepin Music runs.
+
 
 ![0|control](png/control.png)
 
-### Help
 
-In ** Main Menu **, click on ** Help ** to view this manual.
+### Shortcuts Settings
 
-![1|heip](png/help.png)
+1. On Deepin Music interface, click on ![menu](icon/icon_menu.svg).
+2. Select **Settings** > **Shortcuts**.
+3. Then you can set the shortcuts of Play/Pause, Previous, next, Volume up and Volume down.
+
+> ![notes](icon/notes.svg): You can also click on ** Restore to default ** to restore all settings.
+
+
+### Deep Color Mode
+
+The theme of Deepin Music is light, you can click on **Deep color mode** to swith.
+
+1. On Deepin Music interface, click on ![menu](icon/icon_menu.svg) in the top right corner.
+
+2. Click on **Deep color mode** to swith the theme of Deepin Music.
+
+![0|color](png/color.png)
 
 
 ### About
 
-In ** Main Menu **, click on ** About ** to view the version and introduction of Deepin Music.
+You can click on **About** to view the introduction of Deepin Music.
+
+1. On Deepin Music interface, click on ![menu](icon/icon_menu.svg) in the top right corner.
+
+2. Click on **About** to view the introduction of Deepin Music.
 
 ![0|about](png/about.png)
 
 
+### Help
+
+You can click on **Help** to view the manual.
+
+1. On Deepin Music interface, click on ![menu](icon/icon_menu.svg) in the top right corner.
+
+2. Click on **Help** to view the manual of Deepin Music.
+
+![1|heip](png/help.png)
+
+
 ### Exit
 
-In ** Main Menu **, click on ** Exit ** to exit Deepin Music.
+You can click on **Exit** to exit Deepin Music.
+
+1. On Deepin Music interface, click on ![menu](icon/icon_menu.svg) in the top right corner.
+
+2. Click on **Exit** to exit.
