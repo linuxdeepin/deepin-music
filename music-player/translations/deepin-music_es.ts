@@ -170,7 +170,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="99"/>
         <source>New playlist</source>
-        <translation>Nueva lista reproducción</translation>
+        <translation>Nueva lista de reproducción</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="105"/>
@@ -180,7 +180,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="110"/>
         <source>Add music file</source>
-        <translation>Agregar archivo música</translation>
+        <translation>Agregar archivo de música</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="115"/>
@@ -190,7 +190,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="131"/>
         <source>Deep color mode</source>
-        <translation>Modo color oscuro</translation>
+        <translation>Modo color profundo</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="148"/>
@@ -200,7 +200,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="150"/>
         <source>Deepin Music Player is a local  music player with beautiful design and simple functions. It supports viewing lyrics when playing, playing lossless music and customize playlist, etc.</source>
-        <translation>Deepin Music Player es un reproductor de música local con un hermoso diseño y funciones sencillas. Es compatible con ver las letras al reproducir, reproducir música sin pérdida y personalizar la lista de reproducción, etc.</translation>
+        <translation>Deepin Music Player es un reproductor de música local con un hermoso diseño y funciones sencillas. Soporta visualización de letra al reproducir, reproducción de música sin pérdida y personalizar lista de reproducción, etc.</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="183"/>
@@ -210,12 +210,12 @@
     <message>
         <location filename="../view/mainframe.cpp" line="531"/>
         <source>File invalid or does not exist, failed to load!</source>
-        <translation>Archivo inválido o no existe, fallo al cargar!</translation>
+        <translation>Archivo inválido o no inexistente, fallo al cargar!</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="552"/>
         <source>Failed to import, no vaild music file found!</source>
-        <translation>Fallo al importar, no se encontró ningún archivo de música válido</translation>
+        <translation>Fallo al importar, no se encontró ningún archivo de música válido!</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="557"/>
@@ -230,7 +230,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="159"/>
         <source>Version: 3.0</source>
-        <translation>Version: 3.0</translation>
+        <translation>Versión: 3.0</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="167"/>
@@ -245,7 +245,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="532"/>
         <source>I got it</source>
-        <translation>Entiendo</translation>
+        <translation>Lo tengo</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="818"/>
@@ -258,7 +258,7 @@
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="271"/>
         <source>New playlist</source>
-        <translation>Nueva lista reproducción</translation>
+        <translation>Nueva lista de reproducción</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="311"/>
@@ -268,7 +268,7 @@
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="313"/>
         <source>Add to playlist</source>
-        <translation>Añadir a la Lista de Reproduccion</translation>
+        <translation>Añadir a la Lista de Reproducción</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="318"/>
@@ -314,7 +314,7 @@
         <location filename="../view/widget/musiclistview.cpp" line="411"/>
         <location filename="../view/widget/musiclistview.cpp" line="415"/>
         <source>Are you sure to delete the selected %1 songs?</source>
-        <translation>¿Esta seguro de borrar estas %1 canciones ?</translation>
+        <translation>¿Esta seguro de borrar las %1 canciones seleccionadas ?</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="416"/>
@@ -367,7 +367,7 @@
     <message>
         <location filename="../view/musiclistwidget.cpp" line="166"/>
         <source>Album name</source>
-        <translation>Nombre de álbum</translation>
+        <translation>Nombre del álbum</translation>
     </message>
     <message>
         <location filename="../view/musiclistwidget.cpp" line="167"/>
@@ -419,7 +419,7 @@
     <message>
         <location filename="../core/playlistmanager.cpp" line="67"/>
         <source>New playlist</source>
-        <translation>Nueva lista reproducción</translation>
+        <translation>Nueva lista de reproducción</translation>
     </message>
     <message>
         <location filename="../core/playlistmanager.cpp" line="123"/>
@@ -442,7 +442,7 @@
     <message>
         <location filename="../view/playlistwidget.cpp" line="46"/>
         <source>New playlist</source>
-        <translation>Nueva lista reproducción</translation>
+        <translation>Nueva lista de reproducción</translation>
     </message>
 </context>
 <context>

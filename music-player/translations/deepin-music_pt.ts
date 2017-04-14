@@ -75,13 +75,13 @@
         <location filename="../view/importwidget.cpp" line="67"/>
         <location filename="../view/importwidget.cpp" line="110"/>
         <source>Scan</source>
-        <translation>Scanar</translation>
+        <translation>Pesquise</translation>
     </message>
     <message>
         <location filename="../view/importwidget.cpp" line="68"/>
         <location filename="../view/importwidget.cpp" line="111"/>
         <source>%1 music directory or drag &amp; drop music file to add music</source>
-        <translation>%1 diretório de música ou arraste &amp; largue o ficheiro de som para adicionar à música</translation>
+        <translation>%1 no diretório música ou arraste e largue um ficheiro de som para adicionar músicas</translation>
     </message>
     <message>
         <location filename="../view/importwidget.cpp" line="102"/>
