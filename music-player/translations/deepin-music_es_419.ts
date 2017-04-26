@@ -225,7 +225,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="158"/>
         <source>Deepin Music</source>
-        <translation>Música de Deepin</translation>
+        <translation>Deepin Music</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="159"/>
@@ -519,7 +519,7 @@
         <location filename="../view/widget/searchresult.cpp" line="46"/>
         <location filename="../view/widget/searchresult.cpp" line="111"/>
         <source>Search &quot;%1&quot; in Deepin Music</source>
-        <translation>Buscar &quot;%1&quot; en Deepin Musica</translation>
+        <translation>Buscar &quot;%1&quot; en Deepin Music</translation>
     </message>
 </context>
 <context>

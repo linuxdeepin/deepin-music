@@ -1,67 +1,67 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="ru" version="2.1">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="bg" version="2.1">
 <context>
     <name>Footer</name>
     <message>
         <location filename="../view/footer.cpp" line="267"/>
         <source>Previous</source>
-        <translation>Предыдущий</translation>
+        <translation>Предишно</translation>
     </message>
     <message>
         <location filename="../view/footer.cpp" line="268"/>
         <source>Next</source>
-        <translation>Следующий</translation>
+        <translation>Следващ</translation>
     </message>
     <message>
         <location filename="../view/footer.cpp" line="269"/>
         <source>Play/Pause</source>
-        <translation>Воспроизведение / Пауза</translation>
+        <translation>Пускане/Задържане</translation>
     </message>
     <message>
         <location filename="../view/footer.cpp" line="270"/>
         <source>Favorite</source>
-        <translation>Избранное</translation>
+        <translation>Любими</translation>
     </message>
     <message>
         <location filename="../view/footer.cpp" line="271"/>
         <source>Lyrics</source>
-        <translation>Текст песни</translation>
+        <translation>Текстове на песни</translation>
     </message>
     <message>
         <location filename="../view/footer.cpp" line="656"/>
         <source>Repeat Playlist</source>
-        <translation>Повтор Списка воспроизведения</translation>
+        <translation>Повтори списъка</translation>
     </message>
     <message>
         <location filename="../view/footer.cpp" line="659"/>
         <source>Repeat Song</source>
-        <translation>Повтор Песни</translation>
+        <translation>Повтаряне на песен</translation>
     </message>
     <message>
         <location filename="../view/footer.cpp" line="216"/>
         <source>Unknown Title</source>
-        <translation>Неизвестный Название</translation>
+        <translation>Непознато заглавие</translation>
     </message>
     <message>
         <location filename="../view/footer.cpp" line="222"/>
         <location filename="../view/footer.cpp" line="495"/>
         <location filename="../view/footer.cpp" line="678"/>
         <source>Unknown artist</source>
-        <translation>Неизвестный исполнитель</translation>
+        <translation>Неизвестен изпълнител</translation>
     </message>
     <message>
         <location filename="../view/footer.cpp" line="272"/>
         <source>Play Mode</source>
-        <translation>Режим Воспроизведения</translation>
+        <translation>Режим на възпроизвеждане</translation>
     </message>
     <message>
         <location filename="../view/footer.cpp" line="273"/>
         <source>Playlist</source>
-        <translation>Список воспроизведения</translation>
+        <translation>Списък</translation>
     </message>
     <message>
         <location filename="../view/footer.cpp" line="662"/>
         <source>Shuffle</source>
-        <translation>Перемешать</translation>
+        <translation>Разбъркано</translation>
     </message>
 </context>
 <context>
@@ -69,24 +69,24 @@
     <message>
         <location filename="../view/importwidget.cpp" line="61"/>
         <source>Add Music</source>
-        <translation>Добавить музыку</translation>
+        <translation>Добави музика</translation>
     </message>
     <message>
         <location filename="../view/importwidget.cpp" line="67"/>
         <location filename="../view/importwidget.cpp" line="110"/>
         <source>Scan</source>
-        <translation>Сканирование</translation>
+        <translation>Сканирай</translation>
     </message>
     <message>
         <location filename="../view/importwidget.cpp" line="68"/>
         <location filename="../view/importwidget.cpp" line="111"/>
         <source>%1 music directory or drag &amp; drop music file to add music</source>
-        <translation>%1 музыкальный каталог или перетащите музыкальный файл, чтобы добавить музыку</translation>
+        <translation>%1 папка c музика или влачете и пуснете файл, за да добавите музука</translation>
     </message>
     <message>
         <location filename="../view/importwidget.cpp" line="102"/>
         <source>Loading music, please wait...</source>
-        <translation>Загрузка музыки, пожалуйста ждите...</translation>
+        <translation>Зареждане с музика, почакайте…</translation>
     </message>
 </context>
 <context>
@@ -94,17 +94,17 @@
     <message>
         <location filename="../view/widget/infodialog.cpp" line="106"/>
         <source>Title:</source>
-        <translation>Название</translation>
+        <translation>Название:</translation>
     </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="106"/>
         <source>Artist:</source>
-        <translation>Исполнитель</translation>
+        <translation>Изпълнител:</translation>
     </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="107"/>
         <source>Album:</source>
-        <translation>Альбом:</translation>
+        <translation>Албум:</translation>
     </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="107"/>
@@ -114,7 +114,7 @@
     <message>
         <location filename="../view/widget/infodialog.cpp" line="109"/>
         <source>Path:</source>
-        <translation>Путь:</translation>
+        <translation>Път:</translation>
     </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="108"/>
@@ -124,17 +124,17 @@
     <message>
         <location filename="../view/widget/infodialog.cpp" line="108"/>
         <source>Duration:</source>
-        <translation>Продолжительность:</translation>
+        <translation>Времетраене:</translation>
     </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="182"/>
         <source>Unkonw artist</source>
-        <translation>Неизвестный исполнитель</translation>
+        <translation>Непознат артист</translation>
     </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="183"/>
         <source>Unkonw album</source>
-        <translation>Неизвестный альбом</translation>
+        <translation>Непознат албум</translation>
     </message>
 </context>
 <context>
@@ -142,27 +142,27 @@
     <message>
         <location filename="../view/lyricwidget.cpp" line="152"/>
         <source>Search lyrics</source>
-        <translation>Поиск текстов песен</translation>
+        <translation>Търсене на текст</translation>
     </message>
     <message>
         <location filename="../view/lyricwidget.cpp" line="156"/>
         <source>Title</source>
-        <translation>Название</translation>
+        <translation>Заглавие</translation>
     </message>
     <message>
         <location filename="../view/lyricwidget.cpp" line="161"/>
         <source>Artist</source>
-        <translation>Исполнитель</translation>
+        <translation>Изпълнител</translation>
     </message>
     <message>
         <location filename="../view/lyricwidget.cpp" line="166"/>
         <source>Search</source>
-        <translation>Поиск</translation>
+        <translation>Търсене</translation>
     </message>
     <message>
         <location filename="../view/lyricwidget.cpp" line="200"/>
         <source>Back</source>
-        <translation>Назад</translation>
+        <translation>Върни</translation>
     </message>
 </context>
 <context>
@@ -170,17 +170,17 @@
     <message>
         <location filename="../view/mainframe.cpp" line="99"/>
         <source>New playlist</source>
-        <translation>Новый список воспроизведения</translation>
+        <translation>Нов списък</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="105"/>
         <source>Add music</source>
-        <translation>Добавить музыку</translation>
+        <translation>Добави музика</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="110"/>
         <source>Add music file</source>
-        <translation>Добавить музыкальный файл</translation>
+        <translation>добави музикален файл</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="115"/>
@@ -190,42 +190,42 @@
     <message>
         <location filename="../view/mainframe.cpp" line="131"/>
         <source>Deep color mode</source>
-        <translation>Режим глубокого цвета</translation>
+        <translation>Deep цветови режим</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="148"/>
         <source>About</source>
-        <translation>О программе </translation>
+        <translation>Относно:</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="150"/>
         <source>Deepin Music Player is a local  music player with beautiful design and simple functions. It supports viewing lyrics when playing, playing lossless music and customize playlist, etc.</source>
-        <translation>Музыкальный проигрыватель Deepin - локальный музыкальный плеер с красивым дизайном и простыми функциями. Он поддерживает просмотр текстов во время воспроизведения, проигрывание музыки без потерь и настройку списка воспроизведения и т. д.</translation>
+        <translation>Deepin Music Player е плеър с красим дизайн и опростени функции. Поддържа показване на текст при просвирване, музика без загуба на качество, потребителски списъци и др.</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="183"/>
         <source>Exit</source>
-        <translation>Выход</translation>
+        <translation>Изход</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="531"/>
         <source>File invalid or does not exist, failed to load!</source>
-        <translation>Файл недействителен или не существует, не удалось загрузить!</translation>
+        <translation>Невалиден или липсващ файл, неузпешно зареждане!</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="552"/>
         <source>Failed to import, no vaild music file found!</source>
-        <translation>Не удалось импортировать, не найден действительный музыкальный файл!</translation>
+        <translation>Неуспешен импорт, няма открита музика!</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="557"/>
         <source>OK</source>
-        <translation>OK</translation>
+        <translation>Да</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="158"/>
         <source>Deepin Music</source>
-        <translation>Музыкальный проигрыватель Deepin</translation>
+        <translation>Deepin Музика</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="159"/>
@@ -235,22 +235,22 @@
     <message>
         <location filename="../view/mainframe.cpp" line="167"/>
         <source>Help</source>
-        <translation>Помощь</translation>
+        <translation>Помощ</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="482"/>
         <source>Successfully added to &quot;%1&quot;</source>
-        <translation>Успешно добавлено &quot;%1&quot;</translation>
+        <translation>Успешно добавено към &quot;%1&quot;</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="532"/>
         <source>I got it</source>
-        <translation>Я получил это</translation>
+        <translation>Разбрах.</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="818"/>
         <source>Music (%1)</source>
-        <translation>Музыка (%1)</translation>
+        <translation>Музика (%1)</translation>
     </message>
 </context>
 <context>
@@ -258,78 +258,78 @@
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="271"/>
         <source>New playlist</source>
-        <translation>Новый список воспроизведения</translation>
+        <translation>Нов списък</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="311"/>
         <source>Play</source>
-        <translation>Воспроизведение</translation>
+        <translation>Изпълнение</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="313"/>
         <source>Add to playlist</source>
-        <translation>Добавить список воспроизведения</translation>
+        <translation>Добави към списъка</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="318"/>
         <source>Display in file manager</source>
-        <translation>Отобразить в менеджере файлов</translation>
+        <translation>Покачи в файловия мениджър</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="345"/>
         <source>Song info</source>
-        <translation>Информация о песне</translation>
+        <translation>Инфомация за песента</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="321"/>
         <source>Remove from playlist</source>
-        <translation>Удалить из списка воспроизведения</translation>
+        <translation>Премахване от списъка</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="322"/>
         <source>Delete from local disk</source>
-        <translation>Удалить из локального диска</translation>
+        <translation>Изтрий от диска</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="341"/>
         <source>Encoding</source>
-        <translation>Кодировка</translation>
+        <translation>Кодиране</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="399"/>
         <source>Cancel</source>
-        <translation>Отмена</translation>
+        <translation>Отказ</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="400"/>
         <source>Delete</source>
-        <translation>Удалить</translation>
+        <translation>Изтриване</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="409"/>
         <source>Are you sure to delete %1?</source>
-        <translation>Вы уверены, что хотите удалить %1?</translation>
+        <translation>Наистина ли изтривате %1?</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="411"/>
         <location filename="../view/widget/musiclistview.cpp" line="415"/>
         <source>Are you sure to delete the selected %1 songs?</source>
-        <translation>Вы уверены, что хотите удалить выбранные %1 песни?</translation>
+        <translation>Сигурни ли се в изтриването на %1 песни?</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="416"/>
         <source>Deleting the current song will also delete the song files contained</source>
-        <translation>При удалении текущей песни звуковые файлы также будут удалены</translation>
+        <translation>Изтриването на текущата песен ще я изтрие и самият файл</translation>
     </message>
     <message>
         <location filename="../view/widget/delegate/musicitemdelegate.cpp" line="299"/>
         <source>Unknown artist</source>
-        <translation>Неизвестный исполнитель</translation>
+        <translation>Неизвестен изпълнител</translation>
     </message>
     <message>
         <location filename="../view/widget/delegate/musicitemdelegate.cpp" line="310"/>
         <source>Unknown album</source>
-        <translation>Неизвестный альбом</translation>
+        <translation>Неизвестен албум</translation>
     </message>
 </context>
 <context>
@@ -337,42 +337,42 @@
     <message>
         <location filename="../view/musiclistwidget.cpp" line="123"/>
         <source>No Music</source>
-        <translation>Нет Музыки</translation>
+        <translation>Няма музика</translation>
     </message>
     <message>
         <location filename="../view/musiclistwidget.cpp" line="125"/>
         <source>No result found</source>
-        <translation>Ничего не найдено</translation>
+        <translation>Няма резултат</translation>
     </message>
     <message>
         <location filename="../view/musiclistwidget.cpp" line="155"/>
         <source>Play All</source>
-        <translation>Воспроизвести все</translation>
+        <translation>Пусни всички</translation>
     </message>
     <message>
         <location filename="../view/musiclistwidget.cpp" line="163"/>
         <source>Time added</source>
-        <translation>Время добавлено</translation>
+        <translation>Добавено на</translation>
     </message>
     <message>
         <location filename="../view/musiclistwidget.cpp" line="164"/>
         <source>Title</source>
-        <translation>Название</translation>
+        <translation>Заглавие</translation>
     </message>
     <message>
         <location filename="../view/musiclistwidget.cpp" line="165"/>
         <source>Artist</source>
-        <translation>Исполнитель</translation>
+        <translation>Изпълнител</translation>
     </message>
     <message>
         <location filename="../view/musiclistwidget.cpp" line="166"/>
         <source>Album name</source>
-        <translation>Название альбома</translation>
+        <translation>Име на албум</translation>
     </message>
     <message>
         <location filename="../view/musiclistwidget.cpp" line="167"/>
         <source>Custom</source>
-        <translation>Собственный</translation>
+        <translation>Потребителски</translation>
     </message>
 </context>
 <context>
@@ -380,17 +380,17 @@
     <message>
         <location filename="../view/widget/playlistitem.cpp" line="203"/>
         <source>Delete</source>
-        <translation>Удалить</translation>
+        <translation>Изтриване</translation>
     </message>
     <message>
         <location filename="../view/widget/playlistitem.cpp" line="196"/>
         <source>Are you sure to delete this playlist?</source>
-        <translation>Вы уверены, что хотите удалить список воспроизведения?</translation>
+        <translation>Ще изтриете ли този списък?</translation>
     </message>
     <message>
         <location filename="../view/widget/playlistitem.cpp" line="202"/>
         <source>Cancel</source>
-        <translation>Отмена</translation>
+        <translation>Отказ</translation>
     </message>
 </context>
 <context>
@@ -399,19 +399,19 @@
         <location filename="../view/widget/playlistview.cpp" line="172"/>
         <location filename="../view/widget/playlistview.cpp" line="181"/>
         <source>Play</source>
-        <translation>Воспроизведение</translation>
+        <translation>Изпълнение</translation>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="176"/>
         <location filename="../view/widget/playlistview.cpp" line="184"/>
         <source>Rename</source>
-        <translation>Переименовать</translation>
+        <translation>Преименуване</translation>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="177"/>
         <location filename="../view/widget/playlistview.cpp" line="188"/>
         <source>Delete</source>
-        <translation>Удалить</translation>
+        <translation>Изтриване</translation>
     </message>
 </context>
 <context>
@@ -419,22 +419,22 @@
     <message>
         <location filename="../core/playlistmanager.cpp" line="67"/>
         <source>New playlist</source>
-        <translation>Новый список воспроизведения</translation>
+        <translation>Нов списък</translation>
     </message>
     <message>
         <location filename="../core/playlistmanager.cpp" line="123"/>
         <source>All Music</source>
-        <translation>Вся Музыка</translation>
+        <translation>Цялата музика</translation>
     </message>
     <message>
         <location filename="../core/playlistmanager.cpp" line="129"/>
         <source>My favorites</source>
-        <translation>Избранное</translation>
+        <translation>Любимите ми</translation>
     </message>
     <message>
         <location filename="../core/playlistmanager.cpp" line="135"/>
         <source>Search result</source>
-        <translation>Результат поиска</translation>
+        <translation>Резултати от търсене</translation>
     </message>
 </context>
 <context>
@@ -442,7 +442,7 @@
     <message>
         <location filename="../view/playlistwidget.cpp" line="46"/>
         <source>New playlist</source>
-        <translation>Новый список воспроизведения</translation>
+        <translation>Нов списък</translation>
     </message>
 </context>
 <context>
@@ -450,67 +450,67 @@
     <message>
         <location filename="../main.cpp" line="106"/>
         <source>Deepin Music</source>
-        <translation>Музыкальный проигрыватель Deepin</translation>
+        <translation>Deepin Музика</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="5"/>
         <source>Autoplay</source>
-        <translation>Автовоспроизведение</translation>
+        <translation>Автомачисно тръгване</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="6"/>
         <source>Enable fade</source>
-        <translation>Включить замирание</translation>
+        <translation>Разрешено заглъхване</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="7"/>
         <source>Resume play from last position</source>
-        <translation>Продолжить воспроизведение с последней позиции</translation>
+        <translation>Пусни от последната позиция</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="8"/>
         <source>Basic settings</source>
-        <translation>Основные настройки</translation>
+        <translation>Основни настройки</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="9"/>
         <source>Play</source>
-        <translation>Воспроизведение</translation>
+        <translation>Изпълнение</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="10"/>
         <source>Shortcuts</source>
-        <translation>Горячие клавиши</translation>
+        <translation>Кратки пътища</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="11"/>
         <source>Restore to default</source>
-        <translation>Восстановить </translation>
+        <translation>Възстанови</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="12"/>
         <source>Next</source>
-        <translation>Следующий</translation>
+        <translation>Следващ</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="13"/>
         <source>Play/Pause</source>
-        <translation>Воспроизведение / Пауза</translation>
+        <translation>Пускане/Задържане</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="14"/>
         <source>Previous</source>
-        <translation>Предыдущий</translation>
+        <translation>Предишно</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="15"/>
         <source>Volume down</source>
-        <translation>Тише</translation>
+        <translation>Намаляване</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="16"/>
         <source>Volume up</source>
-        <translation>Громче</translation>
+        <translation>Увеличаване</translation>
     </message>
 </context>
 <context>
@@ -519,7 +519,7 @@
         <location filename="../view/widget/searchresult.cpp" line="46"/>
         <location filename="../view/widget/searchresult.cpp" line="111"/>
         <source>Search &quot;%1&quot; in Deepin Music</source>
-        <translation>Поиск %1 в Музыкальном проигрывателе Deepin</translation>
+        <translation>Търси &quot;%1&quot; в Deepin Music</translation>
     </message>
 </context>
 <context>
@@ -527,7 +527,7 @@
     <message>
         <location filename="../view/widget/titlebarwidget.cpp" line="79"/>
         <source>Search</source>
-        <translation>Поиск</translation>
+        <translation>Търсене</translation>
     </message>
 </context>
 </TS>

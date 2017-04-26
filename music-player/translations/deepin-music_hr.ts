@@ -61,7 +61,7 @@
     <message>
         <location filename="../view/footer.cpp" line="662"/>
         <source>Shuffle</source>
-        <translation type="unfinished"/>
+        <translation>Izmješaj</translation>
     </message>
 </context>
 <context>
@@ -81,7 +81,7 @@
         <location filename="../view/importwidget.cpp" line="68"/>
         <location filename="../view/importwidget.cpp" line="111"/>
         <source>%1 music directory or drag &amp; drop music file to add music</source>
-        <translation type="unfinished"/>
+        <translation>%1 mapu sa glazbom ili povucite i spustite glazbene datoteke kako biste dodali glazbu</translation>
     </message>
     <message>
         <location filename="../view/importwidget.cpp" line="102"/>
@@ -190,7 +190,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="131"/>
         <source>Deep color mode</source>
-        <translation type="unfinished"/>
+        <translation>Način rada u boji</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="148"/>
@@ -200,7 +200,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="150"/>
         <source>Deepin Music Player is a local  music player with beautiful design and simple functions. It supports viewing lyrics when playing, playing lossless music and customize playlist, etc.</source>
-        <translation type="unfinished"/>
+        <translation>Deepin svirač glazbe je lokalni svirač glazbe prelijepog dizajna i jednostavnih funkcija. Podržava prikazivanje teksta pjesama prilikom izvođenja, izvođenje lossless glazbe, prilagodbu popisa izvođenja, itd.</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="183"/>
@@ -210,12 +210,12 @@
     <message>
         <location filename="../view/mainframe.cpp" line="531"/>
         <source>File invalid or does not exist, failed to load!</source>
-        <translation type="unfinished"/>
+        <translation>Datoteka nije ispravna ili ne postoji, pogreška prilikom učitavanja!</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="552"/>
         <source>Failed to import, no vaild music file found!</source>
-        <translation type="unfinished"/>
+        <translation>Pogreška prilikom uvoza, nisu pronađene ispravne glazbene datoteke!</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="557"/>
@@ -245,7 +245,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="532"/>
         <source>I got it</source>
-        <translation type="unfinished"/>
+        <translation>Shvaćam</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="818"/>
@@ -293,7 +293,7 @@
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="341"/>
         <source>Encoding</source>
-        <translation type="unfinished"/>
+        <translation>Enkodiranje</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="399"/>
@@ -319,7 +319,7 @@
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="416"/>
         <source>Deleting the current song will also delete the song files contained</source>
-        <translation type="unfinished"/>
+        <translation>Brisanje trenutne pjesme će također izbrisati i glazbenu datoteku pjesme.</translation>
     </message>
     <message>
         <location filename="../view/widget/delegate/musicitemdelegate.cpp" line="299"/>
@@ -460,7 +460,7 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="6"/>
         <source>Enable fade</source>
-        <translation type="unfinished"/>
+        <translation>Omogući nestajanje</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="7"/>

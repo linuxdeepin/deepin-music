@@ -240,7 +240,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="482"/>
         <source>Successfully added to &quot;%1&quot;</source>
-        <translation type="unfinished"/>
+        <translation>Успішно додано до &quot;%1&quot;</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="532"/>
@@ -273,12 +273,12 @@
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="318"/>
         <source>Display in file manager</source>
-        <translation type="unfinished"/>
+        <translation>Відобразити у файловому менеджері</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="345"/>
         <source>Song info</source>
-        <translation type="unfinished"/>
+        <translation>Інформація про пісню</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="321"/>
@@ -288,12 +288,12 @@
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="322"/>
         <source>Delete from local disk</source>
-        <translation type="unfinished"/>
+        <translation>Видалити з локального диску</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="341"/>
         <source>Encoding</source>
-        <translation type="unfinished"/>
+        <translation>Кодування</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="399"/>
@@ -352,7 +352,7 @@
     <message>
         <location filename="../view/musiclistwidget.cpp" line="163"/>
         <source>Time added</source>
-        <translation type="unfinished"/>
+        <translation>Час додано</translation>
     </message>
     <message>
         <location filename="../view/musiclistwidget.cpp" line="164"/>
@@ -460,12 +460,12 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="6"/>
         <source>Enable fade</source>
-        <translation type="unfinished"/>
+        <translation>Увімкнути затухання</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="7"/>
         <source>Resume play from last position</source>
-        <translation type="unfinished"/>
+        <translation>Відновити програвання з останньої позиції</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="8"/>
@@ -485,7 +485,7 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="11"/>
         <source>Restore to default</source>
-        <translation type="unfinished"/>
+        <translation>Відновити за замовчуванням</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="12"/>
@@ -519,7 +519,7 @@
         <location filename="../view/widget/searchresult.cpp" line="46"/>
         <location filename="../view/widget/searchresult.cpp" line="111"/>
         <source>Search &quot;%1&quot; in Deepin Music</source>
-        <translation type="unfinished"/>
+        <translation>Пошук &quot;%1&quot; у Deepin Музика</translation>
     </message>
 </context>
 <context>
