@@ -319,7 +319,7 @@
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="416"/>
         <source>Deleting the current song will also delete the song files contained</source>
-        <translation type="unfinished"/>
+        <translation>Supprimer la chanson supprimera également le fichier</translation>
     </message>
     <message>
         <location filename="../view/widget/delegate/musicitemdelegate.cpp" line="299"/>
