@@ -34,6 +34,9 @@ void initMiniTypes()
     QHash<QString, bool> suffixWhitelist;
     suffixWhitelist.insert("cue", true);
 
+    QStringList  mimeTypeWhiteList;
+    mimeTypeWhiteList << "application/vnd.ms-asf";
+
     QMimeDatabase mdb;
     for (auto &mt : mdb.allMimeTypes()) {
         if (mt.name().startsWith("audio/") || mt.name().startsWith("video/")) {
@@ -56,6 +59,8 @@ void initMiniTypes()
             sSupportedMimeTypes << mt.name();
         }
     }
+
+    sSupportedMimeTypes << mimeTypeWhiteList;
 
     for (auto &suffix : suffixWhitelist.keys()) {
         sSupportedSuffixList << "*." + suffix;
