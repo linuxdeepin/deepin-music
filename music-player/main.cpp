@@ -18,6 +18,7 @@
 
 #include <metadetector.h>
 
+#include "view/mainframe.h"
 #include "core/mediadatabase.h"
 #include "core/medialibrary.h"
 #include "core/metasearchservice.h"
@@ -90,6 +91,14 @@ int main(int argc, char *argv[])
     app.loadTranslator();
     app.setTheme("light");
 
+    // set about info
+    QString descriptionText = MainFrame::tr("Deepin Music Player is a local  music player with beautiful design and simple functions. It supports viewing lyrics when playing, playing lossless music and customize playlist, etc.");
+    QString acknowledgementLink = "https://www.deepin.org/acknowledgments/deepin-music#thanks";
+    app.setProductName(QApplication::tr("Deepin Music"));
+    app.setApplicationAcknowledgementPage(acknowledgementLink);
+    app.setProductIcon(QPixmap(":/common/image/logo_96.png"));
+    app.setApplicationDescription(descriptionText);
+
     DLogManager::registerConsoleAppender();
     DLogManager::registerFileAppender();
 
@@ -101,7 +110,6 @@ int main(int argc, char *argv[])
     app.setApplicationDisplayName(QObject::tr("Deepin Music"));
 
     AppSettings::instance()->init();
-    PluginManager::instance()->init();
     Player::instance()->init();
     MusicApp::instance()->init();
 #ifdef Q_OS_UNIX

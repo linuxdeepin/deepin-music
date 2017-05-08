@@ -25,6 +25,7 @@
 #include <daboutdialog.h>
 #include <dsettingsdialog.h>
 #include <ddialog.h>
+#include <DApplication>
 
 #include "../presenter/presenter.h"
 #include "../core/metasearchservice.h"
@@ -147,41 +148,6 @@ void MainFramePrivate::initMenu()
         AppSettings::instance()->setOption("base.play.theme", ThemeManager::instance()->theme());
     });
 
-    auto about = new QAction(MainFrame::tr("About"), q);
-    q->connect(about, &QAction::triggered, q, [ = ](bool) {
-        QString descriptionText = MainFrame::tr("Deepin Music Player is a local  music player with beautiful design and simple functions. It supports viewing lyrics when playing, playing lossless music and customize playlist, etc.");
-        QString acknowledgementLink = "https://www.deepin.org/acknowledgments/deepin-music#thanks";
-
-        auto *aboutDlg = new Dtk::Widget::DAboutDialog(q);
-
-        aboutDlg->setWindowModality(Qt::WindowModal);
-        aboutDlg->setWindowIcon(QPixmap("::/common/image/logo.png"));
-        aboutDlg->setProductIcon(QPixmap(":/common/image/logo_96.png"));
-        aboutDlg->setProductName(MainFrame::tr("Deepin Music"));
-        aboutDlg->setVersion(MainFrame::tr("Version: 3.0"));
-        aboutDlg->setDescription(descriptionText + "\n");
-        aboutDlg->setAcknowledgementLink(acknowledgementLink);
-        aboutDlg->show();
-
-        WidgetHelper::workaround_updateStyle(aboutDlg, "dlight");
-    });
-
-    QAction *help = new QAction(MainFrame::tr("Help"), q);
-    q->connect(help, &QAction::triggered,
-    q, [ = ](bool) {
-        static QProcess *m_manual = nullptr;
-        if (NULL == m_manual) {
-            m_manual =  new QProcess(q);
-            const QString pro = "dman";
-            const QStringList args("deepin-music");
-            m_manual->connect(m_manual, static_cast<void(QProcess::*)(int)>(&QProcess::finished), q, [ = ](int) {
-                m_manual->deleteLater();
-                m_manual = nullptr;
-            });
-            m_manual->start(pro, args);
-        }
-    });
-
     QAction *m_close = new QAction(MainFrame::tr("Exit"), q);
     q->connect(m_close, &QAction::triggered, q, [ = ](bool) {
         q->close();
@@ -198,10 +164,6 @@ void MainFramePrivate::initMenu()
     titleMenu->addAction(colorModeAction);
     titleMenu->addAction(settings);
     titleMenu->addSeparator();
-
-    titleMenu->addAction(about);
-    titleMenu->addAction(help);
-    titleMenu->addAction(m_close);
 
     titlebar->setMenu(titleMenu);
 }

@@ -42,6 +42,7 @@ public:
     Q_DECLARE_PUBLIC(Presenter)
 
 signals:
+    void requestInitPlugin();
     void requestMetaSearch(const MetaPtr);
     void requestChangeMetaCache(const MetaPtr meta, const DMusic::SearchMeta &search);
 

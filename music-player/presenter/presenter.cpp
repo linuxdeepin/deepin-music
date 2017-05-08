@@ -30,6 +30,7 @@
 #include "../core/mediadatabase.h"
 #include "../core/settings.h"
 #include "../core/medialibrary.h"
+#include "../core/pluginmanager.h"
 #include "../core/util/threadpool.h"
 
 using namespace DMusic;
@@ -42,6 +43,11 @@ PresenterPrivate::PresenterPrivate(Presenter *parent)
 
 void PresenterPrivate::initBackend()
 {
+    auto pm = PluginManager::instance();
+    connect(this, &PresenterPrivate::requestInitPlugin,
+            pm, &PluginManager::init);
+    ThreadPool::instance()->moveToNewThread(pm);
+
     MediaDatabase::instance()->init();
     ThreadPool::instance()->moveToNewThread(MediaDatabase::instance());
 
@@ -297,6 +303,7 @@ void Presenter::prepareData()
 void Presenter::postAction()
 {
     Q_D(Presenter);
+    emit d->requestInitPlugin();
 
     auto volume = d->settings->value("base.play.volume").toInt();
     d->player->setVolume(volume);
