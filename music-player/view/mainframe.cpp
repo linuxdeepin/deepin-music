@@ -402,6 +402,19 @@ MainFrame::MainFrame(QWidget *parent) :
 
     d->initUI();
     d->initMenu();
+
+    // TODO: workaround
+    if (ThemeManager::instance()->theme() == "dark") {
+        this->setBorderColor(QColor("#101010"));
+    }
+    connect(ThemeManager::instance(), &ThemeManager::themeChanged,
+    this, [ = ](QString theme) {
+        if (theme == "dark") {
+            this->setBorderColor(QColor("#101010"));
+        } else {
+            this->setBorderColor(Qt::white);
+        }
+    });
 }
 
 MainFrame::~MainFrame()
