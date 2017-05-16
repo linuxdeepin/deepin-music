@@ -1,6 +1,7 @@
 SearchResult{
-    qproperty-background:  rgba(255, 255,255, 1);
-    qproperty-borderColor: rgba(0, 0, 0, 0.1);
+    border: 0px solid rgba(0, 0, 0, 0.5);
+    border-radius: 4.0px;
+    background-color: rgba(255, 255,255, 1);
 }
 
 #SearchResultList{

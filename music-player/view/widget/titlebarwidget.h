@@ -11,6 +11,7 @@
 
 #include <QFrame>
 
+class SearchResult;
 class TitleBarWidgetPrivate;
 class TitleBarWidget : public QFrame
 {
@@ -22,6 +23,7 @@ public:
     void exitSearch();
     void clearSearch();
     void setSearchEnable(bool enable = true);
+    void setResultWidget(SearchResult *);
     void setViewname(const QString &viewname);
 signals:
     void searchExited();

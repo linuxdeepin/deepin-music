@@ -1,5 +1,6 @@
 #MainFrame {
     qproperty-borderColor: rgba(0,0,0,10%);
+    background-color: transparent;
 }
 
 #MainFrame[viewname="lyric"] {

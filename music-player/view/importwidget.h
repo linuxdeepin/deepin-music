@@ -18,7 +18,7 @@ class ImportWidget : public QFrame
     Q_OBJECT
 public:
     explicit ImportWidget(QWidget *parent = 0);
-    ~  ImportWidget();
+    ~ImportWidget();
 
 signals:
     void scanMusicDirectory();

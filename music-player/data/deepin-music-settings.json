@@ -51,6 +51,13 @@
                             "reset": false
                         },
                         {
+                            "key": "media_count",
+                            "name": "Media Count",
+                            "hide": true,
+                            "reset": false,
+                            "default": 0
+                        },
+                        {
                             "key": "to_open_uri",
                             "hide": true,
                             "reset": false

@@ -1,5 +1,4 @@
 #LyricWidget {
-    border-radius: 4.0px;
     background-color: rgba(0,0,0,30%);
     qproperty-defaultCover: ":/common/image/cover_max.png";
 }

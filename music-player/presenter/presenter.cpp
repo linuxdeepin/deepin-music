@@ -19,8 +19,10 @@
 #include <QStandardPaths>
 
 #include <option.h>
-
 #include <DUtil>
+
+#include <plugininterface.h>
+#include <metadetector.h>
 
 #include "../musicapp.h"
 #include "../core/player.h"
@@ -43,6 +45,10 @@ PresenterPrivate::PresenterPrivate(Presenter *parent)
 
 void PresenterPrivate::initBackend()
 {
+    Q_Q(Presenter);
+
+    MetaDetector::init();
+
     auto pm = PluginManager::instance();
     connect(this, &PresenterPrivate::requestInitPlugin,
             pm, &PluginManager::init);
@@ -54,15 +60,10 @@ void PresenterPrivate::initBackend()
     qDebug() << "TRACE:" << "database init finished";
 
     player = Player::instance();
+    player->init();
     qDebug() << "TRACE:" << "player init finished";
 
     settings = AppSettings::instance();
-    qDebug() << "TRACE:" << "Settings init finished";
-
-    lyricService = MetaSearchService::instance();
-    lyricService->init();
-    ThreadPool::instance()->moveToNewThread(MetaSearchService::instance());
-    qDebug() << "TRACE:" << "lyricService init finished";
 
     library = MediaLibrary::instance();
     library->init();
@@ -75,17 +76,50 @@ void PresenterPrivate::initBackend()
 
     currentPlaylist = playlistMgr->playlist(AllMusicListID);
 
-    connect(this, &PresenterPrivate::requestMetaSearch,
-            lyricService, &MetaSearchService::searchMeta);
-    connect(this, &PresenterPrivate::requestChangeMetaCache,
-            lyricService, &MetaSearchService::onChangeMetaCache);
-
     connect(this, &PresenterPrivate::play, player, &Player::playMeta);
     connect(this, &PresenterPrivate::resume, player, &Player::resume);
     connect(this, &PresenterPrivate::playNext, player, &Player::playNextMeta);
     connect(this, &PresenterPrivate::playPrev, player, &Player::playPrevMusic);
     connect(this, &PresenterPrivate::pause, player, &Player::pause);
     connect(this, &PresenterPrivate::stop, player, &Player::stop);
+
+    connect(pm, &PluginManager::onPluginLoaded,
+    this, [ = ](const QString & objectName, DMusic::Plugin::PluginInterface * instance) {
+        if (instance && instance->pluginType() == DMusic::Plugin::PluginType::TypeMetaSearchEngine) {
+            qDebug() << "load plugins" << objectName;
+            lyricService = MetaSearchService::instance();
+            qDebug() << "TRACE:" << "lyricService init finished";
+            lyricService->init();
+
+            connect(lyricService, &MetaSearchService::coverSearchFinished,
+            this, [ = ](const MetaPtr meta, const DMusic::SearchMeta & search, const QByteArray & coverData) {
+                if (search.id != meta->searchID) {
+                    meta->searchID = search.id;
+                    meta->updateSearchIndex();
+                    emit MediaDatabase::instance()->updateMediaMeta(meta);
+                }
+                emit q->coverSearchFinished(meta, search, coverData);
+            });
+
+            connect(this, &PresenterPrivate::requestMetaSearch,
+                    lyricService, &MetaSearchService::searchMeta);
+            connect(this, &PresenterPrivate::requestChangeMetaCache,
+                    lyricService, &MetaSearchService::onChangeMetaCache);
+            connect(lyricService, &MetaSearchService::lyricSearchFinished,
+                    q, &Presenter::lyricSearchFinished);
+            connect(lyricService, &MetaSearchService::contextSearchFinished,
+                    q, &Presenter::contextSearchFinished);
+            connect(q, &Presenter::requestContextSearch,
+                    lyricService, &MetaSearchService::searchContext);
+
+            ThreadPool::instance()->moveToNewThread(MetaSearchService::instance());
+
+            auto activeMeta = Player::instance()->activeMeta();
+            if (activeMeta) {
+                emit requestMetaSearch(activeMeta);
+            }
+        }
+    });
 }
 
 QDataStream &operator<<(QDataStream &dataStream, const MetaPtr &objectA)
@@ -124,16 +158,10 @@ Presenter::Presenter(QObject *parent)
 
 Presenter::~Presenter()
 {
-
     Q_D(Presenter);
-
-    qDebug() << "destroy presenter";
+    qDebug() << "destroy Presenter";
     // close gstreamer
     d->player->stop();
-//    d->player->deleteLater();
-//    d->lyricService->deleteLater();
-//    d->library->deleteLater();
-//    d->settings->deleteLater();
     qDebug() << "Presenter destroyed";
 }
 
@@ -142,8 +170,8 @@ void Presenter::prepareData()
 {
     Q_D(Presenter);
 
+    QThread::sleep(10);
     d->initBackend();
-
     qDebug() << "TRACE:" << "initBackend finished";
 
     connect(d->library, &MediaLibrary::meidaFileImported,
@@ -174,25 +202,6 @@ void Presenter::prepareData()
             emit scanFinished(playlistId, mediaCount);
         }
     });
-
-    connect(d->lyricService, &MetaSearchService::lyricSearchFinished,
-            this, &Presenter::lyricSearchFinished);
-
-    connect(d->lyricService, &MetaSearchService::coverSearchFinished,
-    this, [ = ](const MetaPtr meta, const DMusic::SearchMeta & search, const QByteArray & coverData) {
-        if (search.id != meta->searchID) {
-            meta->searchID = search.id;
-            meta->updateSearchIndex();
-            emit MediaDatabase::instance()->updateMediaMeta(meta);
-        }
-        emit coverSearchFinished(meta, search, coverData);
-    });
-
-    connect(d->lyricService, &MetaSearchService::contextSearchFinished,
-            this, &Presenter::contextSearchFinished);
-
-    connect(this, &Presenter::requestContextSearch,
-            d->lyricService, &MetaSearchService::searchContext);
 
     connect(d->playlistMgr, &PlaylistManager::musiclistAdded,
     this, [ = ](PlaylistPtr playlist, const MetaPtrList metalist) {
@@ -362,7 +371,6 @@ void Presenter::postAction()
             d->player->setPosition(position);
 
             emit musicPaused(lastPlaylist, lastMeta);
-            emit d->requestMetaSearch(lastMeta);
         }
     }
 

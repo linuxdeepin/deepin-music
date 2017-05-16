@@ -16,8 +16,6 @@
 #include <DLog>
 #include <DApplication>
 
-#include <metadetector.h>
-
 #include "view/mainframe.h"
 #include "core/mediadatabase.h"
 #include "core/medialibrary.h"
@@ -36,12 +34,10 @@ using namespace Dtk::Widget;
 
 void SingletonInit()
 {
-    MetaDetector::init();
     ThreadPool::instance();
 
     AppSettings::instance();
     ThemeManager::instance();
-    MusicApp::instance();
 
     Player::instance();
 }
@@ -56,6 +52,12 @@ int main(int argc, char *argv[])
 #endif
 
     DApplication app(argc, argv);
+    app.setOrganizationName("deepin");
+    app.setApplicationName("deepin-music");
+    app.setApplicationVersion("3.0");
+
+    DLogManager::registerConsoleAppender();
+    DLogManager::registerFileAppender();
 
     QCommandLineParser parser;
     parser.setApplicationDescription("Deepin music player.");
@@ -64,6 +66,7 @@ int main(int argc, char *argv[])
     parser.addPositionalArgument("file", "Music file path");
     parser.process(app);
 
+    // handle open file
     QString toOpenFile;
     if (1 == parser.positionalArguments().length()) {
         // import and playser
@@ -85,24 +88,7 @@ int main(int argc, char *argv[])
         exit(0);
     }
 
-    app.setOrganizationName("deepin");
-    app.setApplicationName("deepin-music");
-    app.setApplicationVersion("3.0");
     app.loadTranslator();
-    app.setTheme("light");
-
-    // set about info
-    QString descriptionText = MainFrame::tr("Deepin Music Player is a local  music player with beautiful design and simple functions. It supports viewing lyrics when playing, playing lossless music and customize playlist, etc.");
-    QString acknowledgementLink = "https://www.deepin.org/acknowledgments/deepin-music#thanks";
-    app.setProductName(QApplication::tr("Deepin Music"));
-    app.setApplicationAcknowledgementPage(acknowledgementLink);
-    app.setProductIcon(QPixmap(":/common/image/logo_96.png"));
-    app.setApplicationDescription(descriptionText);
-
-    DLogManager::registerConsoleAppender();
-    DLogManager::registerFileAppender();
-
-    SingletonInit();
 
     ThemeManager::instance()->setTheme("light");
 
@@ -110,19 +96,6 @@ int main(int argc, char *argv[])
     app.setApplicationDisplayName(QObject::tr("Deepin Music"));
 
     AppSettings::instance()->init();
-    Player::instance()->init();
-    MusicApp::instance()->init();
-#ifdef Q_OS_UNIX
-    MusicApp::instance()->initMpris(serviceName);
-#endif
-
-    app.connect(&app, &QApplication::lastWindowClosed,
-    &app, [ = ]() {
-        qDebug() << "sync config start";
-        AppSettings::instance()->sync();
-        sync();
-        qDebug() << "sync config finish";
-    });
 
     if (!toOpenFile.isEmpty()) {
         auto fi = QFileInfo(toOpenFile);
@@ -130,6 +103,17 @@ int main(int argc, char *argv[])
         AppSettings::instance()->setOption("base.play.to_open_uri", url.toString());
         AppSettings::instance()->sync();
     }
+
+    MusicApp music;
+    music.init();
+
+    app.connect(&app, &QApplication::lastWindowClosed,
+    &app, [ = ]() {
+        qDebug() << "sync config start";
+        AppSettings::instance()->sync();
+        sync();
+        qDebug() << "sync config finish, app exit";
+    });
 
     return app.exec();
 }

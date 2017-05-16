@@ -89,15 +89,13 @@ void ThemeManager::regisetrWidget(QPointer<QWidget> widget, QStringList property
 
 //    qDebug() << widget;
     connect(this, &ThemeManager::themeChanged, this, [ = ](QString theme) {
-//        qDebug() << widget << "++++++++++";
         if (widget.isNull()) {
             return ;
         }
 
+        widget->setStyleSheet(d->getQssForWidget(theme, qssFilename));
         widget->style()->unpolish(widget);
         widget->style()->polish(widget);
-        widget->setStyleSheet(d->getQssForWidget(theme, qssFilename));
-//        qDebug() << widget << "----------";
     });
 
     for (auto property : propertys) {
@@ -127,6 +125,7 @@ void ThemeManager::setTheme(const QString theme)
     Q_D(ThemeManager);
 
     if (d->activeTheme != theme) {
+        Dtk::Widget::DThemeManager::instance()->setTheme(theme);
         d->activeTheme = theme;
 
         // FIXME: check style plugin is load. use what prifix ?
@@ -136,7 +135,6 @@ void ThemeManager::setTheme(const QString theme)
 
         emit themeChanged(theme);
     }
-    Dtk::Widget::DThemeManager::instance()->setTheme(theme);
 }
 
 void ThemeManager::setPrefix(const QString prefix)
@@ -148,9 +146,10 @@ void ThemeManager::setPrefix(const QString prefix)
 void ThemeManager::updateQss()
 {
     QWidget *w = qobject_cast<QWidget *>(sender());
+//    qDebug() << w;
     if (w) {
-        w->style()->unpolish(w);
         w->setStyleSheet(w->styleSheet());
+        w->style()->unpolish(w);
         w->style()->polish(w);
         w->update();
     }

@@ -43,12 +43,13 @@ public:
 };
 
 
-Tip::Tip(const QPixmap &icon, const QString &text, QWidget *parent) : QFrame(parent), d_ptr(new TipPrivate(this))
+Tip::Tip(const QPixmap &icon, const QString &text, QWidget *parent)
+    : QFrame(parent), d_ptr(new TipPrivate(this))
 {
     Q_D(Tip);
 
-    setWindowFlags(Qt::ToolTip | Qt::FramelessWindowHint);
-    setAttribute(Qt::WA_TranslucentBackground);
+//    setWindowFlags(Qt::ToolTip | Qt::FramelessWindowHint);
+//    setAttribute(Qt::WA_TranslucentBackground);
     setObjectName("Tip");
     setContentsMargins(0, 0, 0, 0);
 
@@ -56,7 +57,7 @@ Tip::Tip(const QPixmap &icon, const QString &text, QWidget *parent) : QFrame(par
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(0);
 
-    d->m_interFrame = new QFrame();
+    d->m_interFrame = new QFrame(this);
     d->m_interFrame->setContentsMargins(0, 0, 0, 0);
     auto interlayout = new QHBoxLayout(d->m_interFrame);
     interlayout->setContentsMargins(10, 0, 10, 0);

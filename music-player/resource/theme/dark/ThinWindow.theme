@@ -1,7 +1,0 @@
-ThinWindow {
-    qproperty-background: white;
-    qproperty-borderColor: rgba(0,0,0,0.4);
-    qproperty-borderInside: true;
-    qproperty-radius: 4.0px;
-}
-

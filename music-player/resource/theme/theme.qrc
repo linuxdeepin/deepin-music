@@ -200,12 +200,10 @@
         <file>common/animation/playing/black/1.png</file>
         <file>common/animation/playing/black/0.png</file>
         <file>light/Tip.theme</file>
-        <file>light/ThinWindow.theme</file>
         <file>light/SearchResult.theme</file>
         <file>light/InfoDialog.theme</file>
         <file>dark/TitleBarWidget.theme</file>
         <file>dark/Tip.theme</file>
-        <file>dark/ThinWindow.theme</file>
         <file>dark/SearchResult.theme</file>
         <file>dark/PlaylistWidget.theme</file>
         <file>dark/PlayListView.theme</file>
@@ -215,7 +213,6 @@
         <file>dark/MusicListView.theme</file>
         <file>dark/MusicListSort.theme</file>
         <file>dark/MusicItem.theme</file>
-        <file>dark/Menu.theme</file>
         <file>dark/LyricWidget.theme</file>
         <file>dark/InfoDialog.theme</file>
         <file>dark/ImportWidget.theme</file>
@@ -402,7 +399,6 @@
         <file>light/DDropdown.theme</file>
         <file>light/image/dropdown_arrow.png</file>
         <file>dark/image/dropdown_arrow.png</file>
-        <file>light/DSettingDialog.theme</file>
         <file>light/image/suggest_button_press.png</file>
         <file>light/image/suggest_button_normal.png</file>
         <file>light/image/suggest_button_hover.png</file>
@@ -421,7 +417,6 @@
         <file>light/image/plus.png</file>
         <file>dark/SoundVolume.theme</file>
         <file>light/SoundVolume.theme</file>
-        <file>dark/DSettingDialog.theme</file>
         <file>light/SearchMetaList.theme</file>
         <file>light/SearchMetaItem.theme</file>
         <file>common/image/select.png</file>
@@ -436,5 +431,9 @@
         <file>dark/DSettingsDialog.theme</file>
         <file>light/LyricTextView.theme</file>
         <file>dark/LyricTextView.theme</file>
+        <file>common/image/water_front.png</file>
+        <file>common/image/water_back.png</file>
+        <file>light/LoadWidget.theme</file>
+        <file>dark/LoadWidget.theme</file>
     </qresource>
 </RCC>

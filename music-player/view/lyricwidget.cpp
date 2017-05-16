@@ -135,9 +135,8 @@ LyricWidget::LyricWidget(QWidget *parent)
     : QFrame(parent), d_ptr(new LyricWidgetPrivate(this))
 {
     Q_D(LyricWidget);
-    ThemeManager::instance()->regisetrWidget(this);
-
     setObjectName("LyricWidget");
+
     auto layout = new QHBoxLayout(this);
     layout->setContentsMargins(20, 20, 20, 20);
 
@@ -233,8 +232,6 @@ LyricWidget::LyricWidget(QWidget *parent)
 
     layout->addWidget(btFrame);
 
-    ThemeManager::instance()->regisetrWidget(d->lyricview);
-
     connect(d->m_showSearch, &QPushButton::clicked,
     this, [ = ](bool) {
         Q_ASSERT(!d->activingMeta.isNull());
@@ -285,6 +282,10 @@ LyricWidget::LyricWidget(QWidget *parent)
             itemWidget->setChecked(true);
         }
     });
+
+
+    ThemeManager::instance()->regisetrWidget(this);
+    ThemeManager::instance()->regisetrWidget(d->lyricview);
 }
 
 LyricWidget::~LyricWidget()

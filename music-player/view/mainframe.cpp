@@ -36,6 +36,7 @@
 #include "widget/titlebarwidget.h"
 #include "widget/infodialog.h"
 #include "widget/tip.h"
+#include "widget/searchresult.h"
 #include "helper/widgethellper.h"
 #include "helper/thememanager.h"
 
@@ -45,6 +46,7 @@
 #include "playlistwidget.h"
 #include "lyricwidget.h"
 #include "footerwidget.h"
+#include "loadwidget.h"
 
 const QString s_PropertyViewname = "viewname";
 const QString s_PropertyViewnameLyric = "lyric";
@@ -59,7 +61,8 @@ class MainFramePrivate
 public:
     MainFramePrivate(MainFrame *parent) : q_ptr(parent) {}
 
-    void initUI();
+    void initUI(bool showLoading);
+    void postInitUI();
     void initMenu();
 
     void setPlaylistVisible(bool visible);
@@ -70,16 +73,20 @@ public:
     void slideToMusicListView(bool keepPlaylist);
     void showTips(QPixmap icon, QString text);
     void disableControl(int delay = 350);
+    void updateSize(QSize newSize);
     void updateViewname(const QString &vm);
 
     //! ui: show info dialog
     void showInfoDialog(const MetaPtr meta);
 
     QWidget         *centralWidget  = nullptr;
+    QStackedLayout  *contentLayout  = nullptr;
     Titlebar        *titlebar       = nullptr;
     Tip             *tips           = nullptr;
+    SearchResult    *searchResult   = nullptr;
     TitleBarWidget  *titlebarwidget = nullptr;
     ImportWidget    *importWidget   = nullptr;
+    LoadWidget      *loadWidget     = nullptr;
     MusicListWidget *musicList      = nullptr;
     LyricWidget     *lyricWidget    = nullptr;
     PlaylistWidget  *playlistWidget = nullptr;
@@ -91,7 +98,8 @@ public:
     QAction         *newSonglistAction      = nullptr;
     QAction         *colorModeAction        = nullptr;
     QString         coverBackground         = ":/common/image/cover_max.png";
-    QImage          coverImage;
+    QImage          originCoverImage;
+    QImage          currentCoverImage;
     QString         viewname                = "";
 
     MainFrame *q_ptr;
@@ -101,6 +109,7 @@ public:
 void MainFramePrivate::initMenu()
 {
     Q_Q(MainFrame);
+
     newSonglistAction = new QAction(MainFrame::tr("New playlist"), q);
     q->connect(newSonglistAction, &QAction::triggered, q, [ = ](bool) {
         setPlaylistVisible(true);
@@ -153,7 +162,7 @@ void MainFramePrivate::initMenu()
         q->close();
     });
 
-    auto titleMenu = new QMenu;
+    auto titleMenu = new QMenu(q);
     titleMenu->setStyle(QStyleFactory::create("dlight"));
 
     titleMenu->addAction(newSonglistAction);
@@ -168,21 +177,66 @@ void MainFramePrivate::initMenu()
     titlebar->setMenu(titleMenu);
 }
 
-void MainFramePrivate::initUI()
+void MainFramePrivate::initUI(bool showLoading)
 {
+    showLoading = true;
     Q_Q(MainFrame);
-
     q->setFocusPolicy(Qt::ClickFocus);
-    q->setObjectName("MainFrame");
 
-    titlebar =  new Titlebar;
-    q->setMenuWidget(titlebar);
-
-    titlebarwidget = new TitleBarWidget;
+    titlebarwidget = new TitleBarWidget(q);
     titlebarwidget->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+
+    titlebar =  new Titlebar(q);
     titlebar->setCustomWidget(titlebarwidget , Qt::AlignLeft, false);
 
-    importWidget = new ImportWidget;
+    q->setMenuWidget(titlebar);
+
+    centralWidget = new QWidget(q);
+    contentLayout = new QStackedLayout(centralWidget);
+    contentLayout->setContentsMargins(20, 20, 20, 20);
+    contentLayout->setMargin(0);
+    contentLayout->setSpacing(0);
+    q->setCentralWidget(centralWidget);
+
+    loadWidget = new LoadWidget(q);
+    importWidget = new ImportWidget(q);
+
+    footer = new Footer(q);
+    footer->setFixedHeight(FooterHeight);
+    footer->enableControl(false);
+
+    contentLayout->addWidget(titlebar);
+    contentLayout->addWidget(loadWidget);
+    contentLayout->addWidget(importWidget);
+    contentLayout->addWidget(footer);
+
+    if (showLoading) {
+        loadWidget->show();
+        importWidget->hide();
+    } else {
+        loadWidget->hide();
+        importWidget->show();
+    }
+    footer->show();
+}
+
+void MainFramePrivate::postInitUI()
+{
+    Q_Q(MainFrame);
+//    auto flags = titlebar->windowFlags() | Qt::WindowSystemMenuHint;
+//    titlebar->setWindowFlags(flags);
+    // set about info
+    QString descriptionText = MainFrame::tr("Deepin Music Player is a local  music player with beautiful design and simple functions. It supports viewing lyrics when playing, playing lossless music and customize playlist, etc.");
+    QString acknowledgementLink = "https://www.deepin.org/acknowledgments/deepin-music#thanks";
+    qApp->setProductName(QApplication::tr("Deepin Music"));
+    qApp->setApplicationAcknowledgementPage(acknowledgementLink);
+    qApp->setProductIcon(QPixmap(":/common/image/logo_96.png"));
+    qApp->setApplicationDescription(descriptionText);
+
+    searchResult = new SearchResult(q);
+    titlebarwidget->setResultWidget(searchResult);
+    loadWidget->hide();
+
     musicList = new MusicListWidget;
     musicList->setContentsMargins(0, titlebar->height(), 0, FooterHeight);
 
@@ -191,23 +245,10 @@ void MainFramePrivate::initUI()
 
     playlistWidget = new PlaylistWidget;
 
-    footer = new Footer;
-    footer->setFixedHeight(FooterHeight);
-    footer->enableControl(false);
-
-    centralWidget = new QWidget;
-    auto contentLayout = new QStackedLayout(centralWidget);
-    q->setCentralWidget(centralWidget);
-    contentLayout->setContentsMargins(20, 20, 20, 20);
-    contentLayout->setMargin(0);
-    contentLayout->setSpacing(0);
-
-    contentLayout->addWidget(titlebar);
     contentLayout->addWidget(importWidget);
     contentLayout->addWidget(musicList);
     contentLayout->addWidget(lyricWidget);
     contentLayout->addWidget(playlistWidget);
-    contentLayout->addWidget(footer);
 
     infoDialog = new InfoDialog;
     infoDialog->setStyle(QStyleFactory::create("dlight"));
@@ -217,11 +258,12 @@ void MainFramePrivate::initUI()
     importWidget->show();
     footer->show();
     footer->setFocus();
+    updateSize(q->size());
 }
 
 void MainFramePrivate::slideToLyricView()
 {
-    Q_Q(MainFrame);
+//    Q_Q(MainFrame);
 
     auto current = currentWidget ? currentWidget : musicList;
     WidgetHelper::slideBottom2TopWidget(
@@ -238,7 +280,7 @@ void MainFramePrivate::slideToLyricView()
 
 void MainFramePrivate:: slideToImportView()
 {
-    Q_Q(MainFrame);
+//    Q_Q(MainFrame);
 
     if (importWidget->isVisible()) {
         importWidget->showImportHint();
@@ -304,7 +346,7 @@ void MainFramePrivate::showTips(QPixmap icon, QString text)
 
     tips = new Tip(icon, text , q);
     auto center = q->mapToGlobal(QPoint(q->rect().center()));
-    center.setY(center.y() + q->height() / 2 - footer->height() - 40 - 36);
+    center.setY(center.y() + q->height() / 2 - footer->height() - 40);
     center = tips->mapFromGlobal(center);
     center = tips->mapToParent(center);
     tips->pop(center);
@@ -341,7 +383,7 @@ void MainFramePrivate::setPlaylistVisible(bool visible)
         return;
     }
 
-    qDebug() << "start move";
+//    qDebug() << "start move";
 
     playlistWidget->setEnabled(false);
     playlistWidget->setProperty("moving", true);
@@ -379,10 +421,49 @@ void MainFramePrivate::disableControl(int delay)
     });
 }
 
+void MainFramePrivate::updateSize(QSize newSize)
+{
+    if (loadWidget) {
+        loadWidget->setFixedSize(newSize);
+        loadWidget->raise();
+    }
+
+    if (searchResult) {
+        searchResult->hide();
+    }
+
+    auto titleBarHeight =  titlebar->height();
+    titlebar->raise();
+    titlebar->move(0, 0);
+    titlebar->resize(newSize.width(), titleBarHeight);
+    titlebarwidget->setFixedSize(newSize.width() - titlebar->buttonAreaWidth() - 60, titleBarHeight);
+
+    importWidget->setFixedSize(newSize);
+
+    if (lyricWidget) {
+        lyricWidget->resize(newSize);
+        musicList->setFixedSize(newSize);
+
+        playlistWidget->setFixedSize(220, newSize.height() - FooterHeight - titleBarHeight);
+        if (playlistWidget->isVisible()) {
+            playlistWidget->hide();
+        }
+    }
+
+    footer->raise();
+    footer->resize(newSize.width(), FooterHeight);
+    footer->move(0, newSize.height() - FooterHeight);
+
+    if (tips) {
+        tips->hide();
+    }
+}
+
 void MainFramePrivate::updateViewname(const QString &vm)
 {
     Q_Q(MainFrame);
     DUtil::TimerSingleShot(AnimationDelay / 2, [this, q, vm]() {
+        q->setViewname(vm);
         titlebar->setViewname(vm);
         titlebarwidget->setViewname(vm);
     });
@@ -397,29 +478,32 @@ void MainFramePrivate::showInfoDialog(const MetaPtr meta)
 MainFrame::MainFrame(QWidget *parent) :
     DMainWindow(parent), d_ptr(new MainFramePrivate(this))
 {
-    Q_D(MainFrame);
+//    Q_D(MainFrame);
+    setObjectName("MainFrame");
     ThemeManager::instance()->regisetrWidget(this, QStringList() << s_PropertyViewname);
-
-    d->initUI();
-    d->initMenu();
-
-    // TODO: workaround
-    if (ThemeManager::instance()->theme() == "dark") {
-        this->setBorderColor(QColor("#101010"));
-    }
-    connect(ThemeManager::instance(), &ThemeManager::themeChanged,
-    this, [ = ](QString theme) {
-        if (theme == "dark") {
-            this->setBorderColor(QColor("#101010"));
-        } else {
-            this->setBorderColor(Qt::white);
-        }
-    });
+    initUI(true);
 }
 
 MainFrame::~MainFrame()
 {
 
+}
+
+void MainFrame::initUI(bool showLoading)
+{
+    Q_D(MainFrame);
+    d->initUI(showLoading);
+    d->initMenu();
+}
+
+void MainFrame::postInitUI()
+{
+    Q_D(MainFrame);
+
+    setMinimumSize(QSize(720, 480));
+    d->postInitUI();
+    updateUI();
+    focusMusicList();
 }
 
 void MainFrame::binding(Presenter *presenter)
@@ -488,11 +572,8 @@ void MainFrame::binding(Presenter *presenter)
             return;
         }
 
-        d->coverImage = WidgetHelper::blurImage(image, BlurRadius).toImage();
-        image = WidgetHelper::cropRect(d->coverImage, size());
-        QPalette palette;
-        palette.setBrush(QPalette::Background, image);
-        setPalette(palette);
+        d->originCoverImage = WidgetHelper::blurImage(image, BlurRadius).toImage();
+        d->currentCoverImage = WidgetHelper::cropRect(d->originCoverImage, size());
         update();
     });
 
@@ -741,6 +822,12 @@ QString MainFrame::coverBackground() const
     return d->coverBackground;
 }
 
+QString MainFrame::viewname() const
+{
+    Q_D(const MainFrame);
+    return d->viewname;
+}
+
 void MainFrame::updateUI()
 {
     Q_D(MainFrame);
@@ -753,13 +840,8 @@ void MainFrame::setCoverBackground(QString coverBackground)
     Q_D(MainFrame);
     d->coverBackground = coverBackground;
     QImage image = QImage(coverBackground);
-    image = WidgetHelper::blurImage(image, BlurRadius).toImage();
-    image = WidgetHelper::cropRect(image, size());
-    d->coverImage = image;
-
-    QPalette palette;
-    palette.setBrush(QPalette::Background, image);
-    setPalette(palette);
+    d->originCoverImage = WidgetHelper::blurImage(image, BlurRadius).toImage();
+    d->currentCoverImage = WidgetHelper::cropRect(d->originCoverImage, size());
 
     d->lyricWidget->updateUI();
 }
@@ -813,6 +895,16 @@ void MainFrame::onSelectImportFiles()
     }
 }
 
+void MainFrame::setViewname(QString viewname)
+{
+    Q_D(MainFrame);
+    if (d->viewname == viewname) {
+        return;
+    }
+    d->viewname = viewname;
+    emit viewnameChanged(d->viewname);
+}
+
 bool MainFrame::eventFilter(QObject *obj, QEvent *e)
 {
     Q_D(const MainFrame);
@@ -839,7 +931,7 @@ bool MainFrame::eventFilter(QObject *obj, QEvent *e)
 
             if (scmodifiers == keyModifiers && key == sckey && !ke->isAutoRepeat()) {
 //                qDebug() << "match " << optkey << ke->count() << ke->isAutoRepeat();
-                MusicApp::instance()->triggerShortcutAction(optkey);
+                emit triggerShortcutAction(optkey);
                 return true;
             }
         }
@@ -872,47 +964,30 @@ bool MainFrame::eventFilter(QObject *obj, QEvent *e)
 
 void MainFrame::resizeEvent(QResizeEvent *e)
 {
-    Q_D(const MainFrame);
+    Q_D(MainFrame);
 
     DMainWindow::resizeEvent(e);
     QSize newSize = DMainWindow::size();
+    d->updateSize(newSize);
 
-    auto titleBarHeight =  d->titlebar->height();
-    d->titlebar->raise();
-    d->titlebar->move(0, 0);
-    d->titlebar->resize(newSize.width(), titleBarHeight);
-    d->titlebarwidget->setFixedSize(newSize.width() - d->titlebar->buttonAreaWidth() - 60, titleBarHeight);
-
-    d->importWidget->setFixedSize(newSize);
-    d->lyricWidget->resize(newSize);
-    d->musicList->setFixedSize(newSize);
-
-    d->playlistWidget->setFixedSize(220, newSize.height() - FooterHeight - titleBarHeight);
-    if (d->playlistWidget->isVisible()) {
-        d->playlistWidget->hide();
-    }
-
-    d->footer->raise();
-    d->footer->resize(newSize.width(), FooterHeight);
-    d->footer->move(0, newSize.height() - FooterHeight);
-
-    if (d->tips) {
-        d->tips->hide();
-    }
-
-    if (!d->coverImage.isNull()) {
-        auto image = WidgetHelper::cropRect(d->coverImage, size());
-        QPalette palette;
-        palette.setBrush(QPalette::Background, image);
-        setPalette(palette);
+    if (!d->originCoverImage.isNull()) {
+        d->currentCoverImage = WidgetHelper::cropRect(d->originCoverImage, size());
     }
 }
 
 void MainFrame::closeEvent(QCloseEvent *event)
 {
-    MusicApp::instance()->deleteLater();
     AppSettings::instance()->setOption("base.play.state", int(windowState()));
     AppSettings::instance()->setOption("base.play.geometry", saveGeometry());
     //    qDebug() << "store state:" << windowState() << "gometry:" << geometry();
     DMainWindow::closeEvent(event);
+}
+
+void MainFrame::paintEvent(QPaintEvent *e)
+{
+    Q_D(MainFrame);
+    QPainter p(this);
+
+    p.drawImage(rect(), d->currentCoverImage);
+    DMainWindow::paintEvent(e);
 }

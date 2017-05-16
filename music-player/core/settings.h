@@ -25,12 +25,7 @@ public:
     QVariant value(const QString &key) const;
     void setOption(const QString &key, const QVariant &value);
 
-signals:
-
-public slots:
-
 private:
     QPointer<Dtk::Settings> m_settings;
-
     friend class DMusic::DSingleton<AppSettings>;
 };

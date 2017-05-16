@@ -1,0 +1,10 @@
+LoadWidget {
+    background-color: rgba(32,32,32,1);
+}
+
+#LoadWidgetLabel{
+    font-size: 12px;
+    line-height: 1.5;
+    text-align: center;
+    color: #979797;
+}

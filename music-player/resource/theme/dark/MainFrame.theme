@@ -1,0 +1,8 @@
+#MainFrame{
+    qproperty-borderColor: rgba(16,16,16,80%);
+    background-color: transparent;
+}
+
+#MainFrame[viewname="lyric"] {
+    qproperty-borderColor: rgba(16,16,16,70%);
+}

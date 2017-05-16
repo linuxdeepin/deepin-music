@@ -76,9 +76,6 @@ void HintFilterPrivate::showHint(QWidget *hint)
         return;
     }
 
-    hintWidget->adjustSize();
-    hintWidget->show();
-    hintWidget->raise();
 
     DUtil::TimerSingleShot(10, [w, this]() {
         auto centerPos = w->mapToGlobal(w->rect().center());
@@ -88,6 +85,9 @@ void HintFilterPrivate::showHint(QWidget *hint)
         centerPos = hintWidget->mapFromGlobal(centerPos);
         centerPos = hintWidget->mapToParent(centerPos);
         hintWidget->move(centerPos);
+        hintWidget->show();
+        hintWidget->adjustSize();
+        hintWidget->raise();
     });
 }
 

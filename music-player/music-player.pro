@@ -43,7 +43,6 @@ SOURCES += \
     view/widget/soundvolume.cpp \
     view/widget/filter.cpp \
     core/player.cpp \
-    view/widget/thinwindow.cpp \
     view/helper/thememanager.cpp \
     view/widget/titlebarwidget.cpp \
     view/widget/ddropdown.cpp \
@@ -70,7 +69,9 @@ SOURCES += \
     view/widget/titeledit.cpp \
     view/widget/settingsdialog.cpp \
     core/util/threadpool.cpp \
-    view/footerwidget.cpp
+    view/footerwidget.cpp \
+    view/widget/waterprogress.cpp \
+    view/loadwidget.cpp
 
 HEADERS += \
     musicapp.h \
@@ -99,7 +100,6 @@ HEADERS += \
     view/widget/filter.h \
     core/player.h \
     presenter/presenter_p.h \
-    view/widget/thinwindow.h \
     view/helper/thememanager.h \
     view/titlebar.h \
     view/widget/titlebarwidget.h \
@@ -123,7 +123,9 @@ HEADERS += \
     view/widget/lyricview.h \
     view/widget/titeledit.h \
     core/util/threadpool.h \
-    view/footerwidget.h
+    view/footerwidget.h \
+    view/widget/waterprogress.h \
+    view/loadwidget.h
 
 RESOURCES += \
     resource/theme/theme.qrc \

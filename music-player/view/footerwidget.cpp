@@ -98,7 +98,8 @@ void FooterPrivate::updateQssProperty(QWidget *w, const char *name, const QVaria
 void FooterPrivate::installTipHint(QWidget *w, const QString &hintstr)
 {
     Q_Q(Footer);
-    auto hintWidget = new Tip(QPixmap(), hintstr, q);
+    // TODO: parent must be mainframe
+    auto hintWidget = new Tip(QPixmap(), hintstr, q->parentWidget());
     hintWidget->setFixedHeight(32);
     installHint(w, hintWidget);
 }
@@ -177,6 +178,8 @@ Footer::Footer(QWidget *parent) :
     setFocusPolicy(Qt::ClickFocus);
     setObjectName("Footer");
 
+    ThemeManager::instance()->regisetrWidget(this);
+
     auto vboxlayout = new QVBoxLayout(this);
     vboxlayout->setSpacing(0);
     vboxlayout->setContentsMargins(0, 0, 0, 2);
@@ -197,7 +200,7 @@ Footer::Footer(QWidget *parent) :
     auto stackedLayout = new QStackedLayout;
     stackedLayout->setStackingMode(QStackedLayout::StackAll);
 
-    d->cover = new Cover;
+    d->cover = new Cover(this);
     d->cover->setObjectName("FooterCover");
     d->cover->setFixedSize(40, 40);
     d->cover->setRadius(0);
@@ -271,7 +274,8 @@ Footer::Footer(QWidget *parent) :
     d->installTipHint(d->btLyric, tr("Lyrics"));
     d->installTipHint(d->btPlayMode, tr("Play Mode"));
     d->installTipHint(d->btPlayList, tr("Playlist"));
-    d->volSlider = new SoundVolume(this);
+    d->volSlider = new SoundVolume(this->parentWidget());
+    d->volSlider->hide();
     d->volSlider->setProperty("DelayHide", true);
     d->volSlider->setProperty("NoDelayShow", true);
     d->installHint(d->btSound, d->volSlider);
@@ -338,8 +342,6 @@ Footer::Footer(QWidget *parent) :
     d->btPlayMode ->setFocusPolicy(Qt::NoFocus);
     d->btSound->setFocusPolicy(Qt::NoFocus);
     d->btPlayList->setFocusPolicy(Qt::NoFocus);
-
-    ThemeManager::instance()->regisetrWidget(this);
 
     d->initConnection();
 

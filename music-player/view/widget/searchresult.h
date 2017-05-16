@@ -13,20 +13,20 @@
 #include <dabstractdialog.h>
 DWIDGET_USE_NAMESPACE
 
-#include "thinwindow.h"
+#include <QFrame>
 
 class QListView;
 class PushButton;
 class QStringListModel;
 
-class SearchResult : public ThinWindow
+class SearchResult : public QFrame
 {
     Q_OBJECT
 public:
     explicit SearchResult(QWidget *parent = 0);
     void autoResize();
 
-    void setSearchString(const QString& str);
+    void setSearchString(const QString &str);
     void setResultList(const QStringList &titlelist, const QStringList &hashlist);
 
     bool isSelected();
@@ -35,8 +35,8 @@ public:
 
     virtual void leaveEvent(QEvent *event) Q_DECL_OVERRIDE;
 signals:
-    void locateMusic(const QString& hash);
-    void searchText(const QString& text);
+    void locateMusic(const QString &hash);
+    void searchText(const QString &text);
 
 public slots:
     void onReturnPressed();

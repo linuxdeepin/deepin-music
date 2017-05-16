@@ -21,14 +21,13 @@
 
 #include "pushbutton.h"
 
-SearchResult::SearchResult(QWidget *parent) : ThinWindow(parent)
+SearchResult::SearchResult(QWidget *parent) : QFrame(parent)
 {
-    setWindowFlags(Qt::Tool | Qt::FramelessWindowHint
-                   | Qt::WindowStaysOnTopHint | Qt::WindowSystemMenuHint);
+    ThemeManager::instance()->regisetrWidget(this);
 
     auto vlayout = new QVBoxLayout();
-    setContentLayout(vlayout);
-    vlayout->setContentsMargins(0, 4, 0, 4);
+    setLayout(vlayout);
+    vlayout->setContentsMargins(0, 4, 0, 3);
     vlayout->setSpacing(0);
 
     m_searchResult = new QListView;
@@ -56,21 +55,20 @@ SearchResult::SearchResult(QWidget *parent) : ThinWindow(parent)
     m_model->setStringList(a);
     m_searchResult->setModel(m_model);
 
-    vlayout->addWidget(m_searchResult, 0, Qt::AlignCenter);
-    vlayout->addWidget(m_doSearchButton);
+    vlayout->addWidget(m_searchResult, 0, Qt::AlignHCenter | Qt::AlignTop);
+    vlayout->addSpacing(1);
+    vlayout->addWidget(m_doSearchButton, 0, Qt::AlignHCenter | Qt::AlignVCenter);
+    vlayout->addSpacing(1);
 
     this->setMinimumHeight(25);
     m_searchResult->setMinimumHeight(25);
     m_searchResult->adjustSize();
-    this->adjustSize();
 
     auto *bodyShadow = new QGraphicsDropShadowEffect;
     bodyShadow->setBlurRadius(9.0);
     bodyShadow->setColor(QColor(0, 0, 0, 0.15 * 255));
     bodyShadow->setOffset(0, 4.0);
-    this->setGraphicsEffect(bodyShadow);
-
-    ThemeManager::instance()->regisetrWidget(this);
+//    this->setGraphicsEffect(bodyShadow);
 
     connect(m_searchResult, &QListView::clicked,
     this, [ = ](const QModelIndex & index) {
@@ -97,11 +95,16 @@ SearchResult::SearchResult(QWidget *parent) : ThinWindow(parent)
 
 void SearchResult::autoResize()
 {
-    m_searchResult->setFixedHeight(m_model->rowCount() * (25 + 1));
-    m_searchResult->setFixedWidth(this->size().width() + 3);
-    this->setFixedHeight((m_model->rowCount() + 1) * 25 + 8 + 80 +1+1);
+    m_searchResult->setFixedHeight(m_model->rowCount() * (25) + 2);
+    m_searchResult->setFixedWidth(this->size().width() - 2);
+    m_doSearchButton->setFixedWidth(this->size().width() - 2);
+
+    qDebug() << m_doSearchButton->rect() << m_searchResult->rect();
+    this->setFixedHeight(m_searchResult->height() + 25 + 8 + 3);
     m_searchResult->setVisible(!(0 == m_model->rowCount()));
     this->adjustSize();
+    qDebug() << this->height();
+    m_searchResult->raise();
 }
 
 void SearchResult::setSearchString(const QString &str)
@@ -170,7 +173,7 @@ void SearchResult::leaveEvent(QEvent *event)
 {
     m_searchResult->setCurrentIndex(QModelIndex());
     m_doSearchButton->setChecked(false);
-    ThinWindow::leaveEvent(event);
+    QFrame::leaveEvent(event);
 }
 
 void SearchResult::onReturnPressed()

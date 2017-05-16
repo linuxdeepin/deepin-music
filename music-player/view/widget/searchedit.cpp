@@ -13,17 +13,33 @@
 #include <QKeyEvent>
 
 #include <DUtil>
-
-#include <dthememanager.h>
 #include <thememanager.h>
-#include "searchresult.h"
 
 #include "../../core/mediadatabase.h"
 #include "../../core/music.h"
+#include "searchresult.h"
+
+DWIDGET_USE_NAMESPACE
 
 SearchEdit::SearchEdit(QWidget *parent) : DSearchEdit(parent)
 {
-    m_result = new SearchResult();
+    ThemeManager::instance()->regisetrWidget(this, QStringList() << "viewname");
+
+    connect(this, &SearchEdit::focusOut,
+            this, &SearchEdit::onFocusOut);
+//    connect(this, &SearchEdit::focusIn,
+//            this, &SearchEdit::onFocusIn);
+    connect(this, &SearchEdit::textChanged,
+            this, &SearchEdit::onTextChanged);
+    connect(this, &SearchEdit::returnPressed,
+            this, &SearchEdit::onReturnPressed);
+//    connect(this, &SearchEdit::editingFinished,
+//            this, &SearchEdit::onReturnPressed);
+}
+
+void SearchEdit::setResultWidget(SearchResult *result)
+{
+    m_result = result;
     m_result->hide();
 
     connect(m_result, &SearchResult::locateMusic,
@@ -37,19 +53,6 @@ SearchEdit::SearchEdit(QWidget *parent) : DSearchEdit(parent)
 //        onFocusOut();
         emit this->searchText(text);
     });
-
-    connect(this, &SearchEdit::focusOut,
-            this, &SearchEdit::onFocusOut);
-//    connect(this, &SearchEdit::focusIn,
-//            this, &SearchEdit::onFocusIn);
-    connect(this, &SearchEdit::textChanged,
-            this, &SearchEdit::onTextChanged);
-    connect(this, &SearchEdit::returnPressed,
-            this, &SearchEdit::onReturnPressed);
-//    connect(this, &SearchEdit::editingFinished,
-//            this, &SearchEdit::onReturnPressed);
-
-    ThemeManager::instance()->regisetrWidget(this, QStringList() << "viewname");
 }
 
 QString SearchEdit::viewname()
@@ -110,15 +113,16 @@ void SearchEdit::onTextChanged()
         }
 
         auto searchtext = QString(this->text()).remove("\r").remove("\n");
-        m_result->setFixedWidth(this->width() + 80);
+        m_result->setFixedWidth(this->width() + 40);
         m_result->setSearchString(searchtext);
         m_result->setResultList(titleList, hashList);
 
         m_result->autoResize();
-        auto pos = this->mapToGlobal(QPoint(0, this->height() + 2));
         m_result->show();
-        m_result->move(pos.x() - 40, pos.y() - 40);
+        // parent is MainFrame
+        m_result->move(parentWidget()->rect().width() / 2  - 80 , 40 - 4);
         m_result->setFocusPolicy(Qt::StrongFocus);
+        m_result->raise();
     } else {
         onFocusOut();
     }

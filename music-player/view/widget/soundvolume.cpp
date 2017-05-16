@@ -44,8 +44,8 @@ SoundVolume::SoundVolume(QWidget *parent) : QWidget(parent), d_ptr(new SoundVolu
     Q_D(SoundVolume);
     setObjectName("SoundVolume");
 
-    setWindowFlags(Qt::ToolTip | Qt::FramelessWindowHint);
-    setAttribute(Qt::WA_TranslucentBackground);
+//    setWindowFlags(Qt::ToolTip | Qt::FramelessWindowHint);
+//    setAttribute(Qt::WA_TranslucentBackground);
     setFixedSize(40, 106);
     auto layout = new QVBoxLayout(this);
     layout->setContentsMargins(0, 5, 0, 11);

@@ -7,15 +7,12 @@
  * (at your option) any later version.
  **/
 
-#ifndef SEARCHEDIT_H
-#define SEARCHEDIT_H
+#pragma once
 
 #include <dsearchedit.h>
 
-DWIDGET_USE_NAMESPACE
-
 class SearchResult;
-class SearchEdit : public DSearchEdit
+class SearchEdit : public Dtk::Widget::DSearchEdit
 {
     Q_OBJECT
     Q_PROPERTY(QString viewname READ viewname WRITE setViewname NOTIFY viewnameChanged)
@@ -24,6 +21,7 @@ public:
     explicit SearchEdit(QWidget *parent = 0);
 
 public:
+    void setResultWidget(SearchResult *);
     QString viewname();
 
 signals:
@@ -48,6 +46,3 @@ private:
     SearchResult    *m_result = nullptr;
     QString         m_view;
 };
-
-
-#endif // SEARCHEDIT_H

@@ -19,7 +19,6 @@
 #include <dbasebutton.h>
 
 #include "view/helper/thememanager.h"
-#include "musicapp.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -41,8 +40,10 @@ public:
 ImportWidget::ImportWidget(QWidget *parent) : QFrame(parent), d_ptr(new ImportWidgetPrivate(this))
 {
     Q_D(ImportWidget);
-
     setObjectName("ImportWidget");
+
+    ThemeManager::instance()->regisetrWidget(this);
+
     setAcceptDrops(true);
 
     auto layout = new QVBoxLayout(this);
@@ -74,8 +75,6 @@ ImportWidget::ImportWidget(QWidget *parent) : QFrame(parent), d_ptr(new ImportWi
     layout->addSpacing(10);
     layout->addWidget(d->text, 0, Qt::AlignCenter);
     layout->addStretch();
-
-    ThemeManager::instance()->regisetrWidget(this);
 
     connect(d->importButton, &QPushButton::clicked,
     this, [ = ] {

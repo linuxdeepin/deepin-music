@@ -21,8 +21,7 @@ void AppSettings::init()
     auto configFilepath = Global::configPath() + "/config.ini";
     auto backend = new Dtk::QSettingBackend(configFilepath);
     m_settings->setBackend(backend);
-
-    ThreadPool::instance()->manager(backend->thread());
+//    ThreadPool::instance()->manager(backend->thread());
 }
 
 QPointer<Dtk::Settings> AppSettings::settings() const

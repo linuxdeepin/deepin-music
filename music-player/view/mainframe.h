@@ -10,7 +10,6 @@
 #pragma once
 
 #include <QScopedPointer>
-
 #include "DMainWindow"
 
 class Presenter;
@@ -18,20 +17,27 @@ class MainFramePrivate;
 class MainFrame : public Dtk::Widget::DMainWindow
 {
     Q_OBJECT
+    Q_PROPERTY(QString viewname READ viewname WRITE setViewname NOTIFY viewnameChanged)
 public:
     explicit MainFrame(QWidget *parent = 0);
     ~MainFrame();
 
+    void initUI(bool showLoading);
+    void postInitUI();
     void binding(Presenter *presenter);
 
     void focusMusicList();
     QString coverBackground() const;
+    QString viewname() const;
 
 signals:
-    void addPlaylist(bool );
+    void viewnameChanged(QString viewname);
+    void addPlaylist(bool);
     void importSelectFiles(const QStringList &filelist);
+    void triggerShortcutAction(const QString &optKey);
 
 public slots:
+    void setViewname(QString viewname);
     void updateUI();
     void setCoverBackground(QString coverBackground);
     void onSelectImportDirectory();
@@ -41,6 +47,7 @@ protected:
     virtual bool eventFilter(QObject *obj, QEvent *e) Q_DECL_OVERRIDE;
     virtual void resizeEvent(QResizeEvent *e) Q_DECL_OVERRIDE;
     virtual void closeEvent(QCloseEvent *event) Q_DECL_OVERRIDE;
+    virtual void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
 
 private:
     QScopedPointer<MainFramePrivate> d_ptr;

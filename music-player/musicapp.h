@@ -15,27 +15,17 @@
 
 class MprisPlayer;
 class MusicAppPrivate;
-class MusicApp : public QObject, public DMusic::DSingleton<MusicApp>
+class MusicApp : public QObject
 {
     Q_OBJECT
 public:
+    MusicApp(QObject *parent = nullptr);
     ~MusicApp();
 
     void init();
-    void initMpris(const QString &serviceName);
-    void openUri(const QUrl &uri);
-
-    void triggerShortcutAction(const QString &optKey);
-
-public slots:
-    void onDataPrepared();
-    void onQuit();
-    void onRaise();
+    void show();
 
 private:
-    MusicApp(QObject *parent = nullptr);
-    friend class DMusic::DSingleton<MusicApp>;
-
     QScopedPointer<MusicAppPrivate> d_ptr;
     Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), MusicApp)
 };

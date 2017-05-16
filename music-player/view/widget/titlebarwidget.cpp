@@ -44,11 +44,10 @@ TitleBarWidget::TitleBarWidget(QWidget *parent) :
     QFrame(parent), d_ptr(new TitleBarWidgetPrivate(this))
 {
     Q_D(TitleBarWidget);
-
-    ThemeManager::instance()->regisetrWidget(this);
-
     setFocusPolicy(Qt::NoFocus);
     setObjectName("TitleBarWidget");
+
+    ThemeManager::instance()->regisetrWidget(this);
 
     auto layout = new QHBoxLayout(this);
     layout->setContentsMargins(5, 5, 10, 5);
@@ -73,7 +72,7 @@ TitleBarWidget::TitleBarWidget(QWidget *parent) :
     leftLayout->addWidget(d->btBack, 0, Qt::AlignCenter);
     leftLayout->addStretch();
 
-    d->search = new SearchEdit();
+    d->search = new SearchEdit(this);
     d->search->setObjectName("TitleSearch");
     d->search->setFixedSize(278, 26);
     d->search->setPlaceHolder(tr("Search"));
@@ -129,6 +128,12 @@ void TitleBarWidget::setSearchEnable(bool enable)
 {
     Q_D(TitleBarWidget);
     d->search->setEnabled(enable);
+}
+
+void TitleBarWidget::setResultWidget(SearchResult *r)
+{
+    Q_D(TitleBarWidget);
+    d->search->setResultWidget(r);
 }
 
 void TitleBarWidget::setViewname(const QString &viewname)
