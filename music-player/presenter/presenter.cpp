@@ -170,7 +170,7 @@ void Presenter::prepareData()
 {
     Q_D(Presenter);
 
-    QThread::sleep(10);
+//    QThread::sleep(10);
     d->initBackend();
     qDebug() << "TRACE:" << "initBackend finished";
 
@@ -371,6 +371,9 @@ void Presenter::postAction()
             d->player->setPosition(position);
 
             emit musicPaused(lastPlaylist, lastMeta);
+            if (d->lyricService) {
+                emit d->requestMetaSearch(lastMeta);
+            }
         }
     }
 
