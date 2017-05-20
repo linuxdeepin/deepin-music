@@ -63,6 +63,7 @@ MusicItemDelegatePrivate::MusicItemDelegatePrivate(MusicItemDelegate *parent):
 
 void MusicItemDelegatePrivate::setActiveAnimationPrefix(QString prefix) const
 {
+    Q_UNUSED(prefix);
 //    auto activePrefix = playingAnimation->property("ActivePrefix").toString();
 //    if (activePrefix == prefix) {
 //        return;
@@ -385,8 +386,7 @@ MusicItemDelegate::~MusicItemDelegate()
 
 void MusicItemDelegate::initStyleOption(QStyleOptionViewItem *option, const QModelIndex &index) const
 {
-    Q_D(const MusicItemDelegate);
+//    Q_D(const MusicItemDelegate);
     QStyledItemDelegate::initStyleOption(option, index);
     option->state = option->state & ~QStyle::State_HasFocus;
-
 }

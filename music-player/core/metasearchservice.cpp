@@ -9,6 +9,7 @@
 
 #include "metasearchservice.h"
 
+#include <QDebug>
 #include <QUrl>
 #include <QDir>
 #include <QJsonDocument>
@@ -98,7 +99,6 @@ void MetaSearchService::init()
                 lyricData = "                           ";
             }
 
-
             QFile lyricFile(cacheLyricPath(search.id));
             lyricFile.open(QIODevice::WriteOnly);
             lyricFile.write(lyricData);
@@ -107,7 +107,6 @@ void MetaSearchService::init()
             emit lyricSearchFinished(meta, search, lyricData);
         });
 
-        void ();
         connect(engine, &DMusic::Plugin::MetaSearchEngine::contextSearchFinished,
         this, [ = ](const QString & context, const QList<DMusic::SearchMeta> &metalist) {
             emit  contextSearchFinished(context, metalist);
@@ -253,4 +252,3 @@ void MetaSearchService::onChangeMetaCache(const MetaPtr meta, const DMusic::Sear
     });
 
 }
-

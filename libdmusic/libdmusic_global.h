@@ -12,6 +12,12 @@
 
 #include <QtCore/qglobal.h>
 
+//#if defined(STATIC_LIB)
+//#  define LIBDMUSICSHARED_EXPORT
+//#else
+
+//#endif
+
 #if defined(LIBDMUSIC_LIBRARY)
 #  define LIBDMUSICSHARED_EXPORT Q_DECL_EXPORT
 #else

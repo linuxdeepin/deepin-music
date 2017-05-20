@@ -455,6 +455,8 @@ LessThanFunctionPtr getSortFunction(Playlist::SortType sortType, Playlist::Order
         }
         break;
     }
+    qCritical() << "show not sort by invaild typr" << sortType << orderType;
+    return &lessThanTitile;
 }
 
 void Playlist::sortBy(Playlist::SortType sortType)

@@ -67,8 +67,12 @@ void MusicAppPrivate::initMpris(const QString &serviceName)
     mprisPlayer->setCanGoPrevious(true);
     mprisPlayer->setCanPause(true);
 
-    q->connect(mprisPlayer, &MprisPlayer::quitRequested, q, [ = ]() {onQuit();});
-    q->connect(mprisPlayer, &MprisPlayer::raiseRequested, q, [ = ]() {onRaise();});
+    q->connect(mprisPlayer, &MprisPlayer::quitRequested, q, [ = ]() {
+        onQuit();
+    });
+    q->connect(mprisPlayer, &MprisPlayer::raiseRequested, q, [ = ]() {
+        onRaise();
+    });
 
     presenter->initMpris(mprisPlayer);
 }
@@ -160,7 +164,7 @@ void MusicApp::init()
     ThemeManager::instance()->setTheme(theme);
 
 //    auto mediaCount = AppSettings::instance()->value("base.play.media_count").toInt();
-    auto mediaCount = 1;
+//    auto mediaCount = 1;
     qDebug() << "TRACE:" << "create MainFrame";
     d->playerFrame = new MainFrame();
 //    d->playerFrame->initUI(0 != mediaCount);
@@ -171,7 +175,9 @@ void MusicApp::init()
     auto presenterWork = ThreadPool::instance()->newThread();
     d->presenter->moveToThread(presenterWork);
     connect(presenterWork, &QThread::started, d->presenter, &Presenter::prepareData);
-    connect(d->presenter, &Presenter::dataLoaded, this, [ = ]() {d->onDataPrepared();});
+    connect(d->presenter, &Presenter::dataLoaded, this, [ = ]() {
+        d->onDataPrepared();
+    });
 
     presenterWork->start();
     qDebug() << "TRACE:" << "start prepare data";

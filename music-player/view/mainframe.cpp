@@ -102,6 +102,8 @@ public:
     QImage          currentCoverImage;
     QString         viewname                = "";
 
+    QPoint              m_LastMousePos;
+
     MainFrame *q_ptr;
     Q_DECLARE_PUBLIC(MainFrame)
 };
@@ -515,6 +517,21 @@ void MainFrame::binding(Presenter *presenter)
 
 //    connect(d->titlebar, &Titlebar::mouseMoving, this, &MainFrame::moveWindow);
 //    connect(d->footer, &Footer::mouseMoving, this, &MainFrame::moveWindow);
+
+
+#ifdef Q_OS_WIN
+    connect(d->titlebar, &Titlebar::mousePosMoving,
+    this, [ = ](Qt::MouseButton /*botton*/, QPoint pos) {
+        move(pos - d->m_LastMousePos);
+    });
+
+    connect(d->titlebar, &Titlebar::mousePosPressed,
+    this, [ = ](Qt::MouseButtons /*botton*/, QPoint pos) {
+        // TODO: fix margin
+        pos.setY(pos.y() - 10);
+        d->m_LastMousePos = pos - this->mapToParent(this->pos());
+    });
+#endif
 
     connect(d->titlebarwidget, &TitleBarWidget::locateMusicInAllMusiclist,
             presenter, &Presenter::onLocateMusicAtAll);

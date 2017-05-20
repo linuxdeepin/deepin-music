@@ -1,44 +1,49 @@
 win32{
     DEFINES += STATIC_LIB
+    DEFINES += TAGLIB_STATIC
 
-    # Deepin tool kit
-    DTK_INCLUDE = D:\Develop\Library\deepin-tool-kit
-    DTK_DEPEND  = D:\Develop\Library\deepin-tool-kit
-    DTK_LIBRARY = D:\Develop\Library\deepin-tool-kit\build
+    INCLUDEPATH += $$PWD
+	include($$PWD/../vendor/src/libcue/libcue.pri)
 
-    INCLUDEPATH += $$DTK_INCLUDE\dwidget
-    INCLUDEPATH += $$DTK_INCLUDE\dwidget\widgets
-    INCLUDEPATH += $$DTK_INCLUDE\dwidget\platforms\windows
+    LIBRARY_DIR=D:\Develop\Library\thrid
 
-    DEPENDPATH  += $$DTK_DEPEND\dwidget
+    DTK_INCLUDE = $${INCLUDE_INSTALL_DIR}\libdtk-1.0
+    DTK_DEPEND  = $${INCLUDE_INSTALL_DIR}\libdtk-1.0
+    DTK_LIBRARY = $${LIB_INSTALL_DIR}
 
-    INCLUDEPATH += $$DTK_INCLUDE\dutil
-    INCLUDEPATH += $$DTK_INCLUDE\dutil\dlog
-    DEPENDPATH  += $$DTK_DEPEND\dutil
+    #dtkwidget
+    INCLUDEPATH += $$DTK_INCLUDE\DWidget
+    DEPENDPATH  += $$DTK_DEPEND\DWidget
+    LIBS += -L$$DTK_LIBRARY -ldtkwidget
+    #dtksettingsview
+    INCLUDEPATH += $$DTK_INCLUDE\DSettingsView
+    DEPENDPATH  += $$DTK_DEPEND\DSettingsView
+    LIBS += -L$$DTK_LIBRARY -ldtksettingsview
+    #dtksettings
+    INCLUDEPATH += $$DTK_INCLUDE\DSettings
+    DEPENDPATH  += $$DTK_DEPEND\DSettings
+    LIBS += -L$$DTK_LIBRARY -ldtksettings
+    #dtkutil
+    INCLUDEPATH += $$DTK_INCLUDE\DUtil
+    DEPENDPATH  += $$DTK_DEPEND\DUtil
+    LIBS += -L$$DTK_LIBRARY -ldtkutil
+    #dtkbase
+    INCLUDEPATH += $$DTK_INCLUDE\DBase
+    DEPENDPATH  += $$DTK_DEPEND\DBase
+    LIBS += -L$$DTK_LIBRARY -ldtkbase
 
-    INCLUDEPATH += $$DTK_INCLUDE\dbase
-    DEPENDPATH  += $$DTK_DEPEND\dbase
-
-
-    CONFIG(release, debug|release) {
-        LIBS += -L$$DTK_LIBRARY\dwidget\release -ldtkwidget
-        LIBS += -L$$DTK_LIBRARY\dutil\release -ldtkutil
-        LIBS += -L$$DTK_LIBRARY\dbase\release -ldtkbase
-    }
-    else:CONFIG(debug, debug|release){
-        LIBS += -L$$DTK_LIBRARY\dwidget\debug -ldtkwidget
-        LIBS += -L$$DTK_LIBRARY\dutil\debug -ldtkutil
-        LIBS += -L$$DTK_LIBRARY\dbase\debug -ldtkbase
-    }
+    #taglib
+    INCLUDEPATH += $$INCLUDE_INSTALL_DIR
+	LIBS += -L$$LIB_INSTALL_DIR -ltag -ltag_c -lzlibstatic
 
     # icu
-    ICU_ROOT = D:\Develop\Library\icu
+    ICU_ROOT = $${LIBRARY_DIR}\icu
     INCLUDEPATH += $$ICU_ROOT\include
     LIBS += -L$$ICU_ROOT\lib -licuuc
     LIBS += -L$$ICU_ROOT\lib -licuin
 
     # ffmpeg
-    FFMPEG_ROOT = D:\Develop\Library\ffmpeg-3.2.2-win32-dev
+    FFMPEG_ROOT = $${LIBRARY_DIR}\ffmpeg-3.2.2-win32-dev
     INCLUDEPATH += $$FFMPEG_ROOT\include
     LIBS += -L$$FFMPEG_ROOT\lib -lavcodec
     LIBS += -L$$FFMPEG_ROOT\lib -lavformat

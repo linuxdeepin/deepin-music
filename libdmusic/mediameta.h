@@ -68,10 +68,10 @@ Q_DECLARE_METATYPE(MetaPtrList)
 namespace DMusic
 {
 
-QString filepathHash(const QString &filepath);
-QString sizeString(qint64 sizeByte);
-QString lengthString(qint64 length);
-QList<QByteArray> detectMetaEncodings(MetaPtr meta);
+QString LIBDMUSICSHARED_EXPORT filepathHash(const QString &filepath);
+QString LIBDMUSICSHARED_EXPORT sizeString(qint64 sizeByte);
+QString LIBDMUSICSHARED_EXPORT lengthString(qint64 length);
+QList<QByteArray> LIBDMUSICSHARED_EXPORT detectMetaEncodings(MetaPtr meta);
 
 }
 

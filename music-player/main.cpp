@@ -27,29 +27,24 @@
 #include "thememanager.h"
 #include "musicapp.h"
 
+#ifdef Q_OS_LINUX
 #include <unistd.h>
+#endif
+#ifdef Q_OS_WIN
+//#include <QFontDatabase>
+#endif
 
 using namespace Dtk::Util;
 using namespace Dtk::Widget;
 
-void SingletonInit()
-{
-    ThreadPool::instance();
-
-    AppSettings::instance();
-    ThemeManager::instance();
-
-    Player::instance();
-}
-
-
 int main(int argc, char *argv[])
 {
-    DApplication::loadDXcbPlugin();
-
 #if defined(STATIC_LIB)
     DWIDGET_INIT_RESOURCE();
+    QCoreApplication::addLibraryPath(".");
 #endif
+    DApplication::loadDXcbPlugin();
+
 
     DApplication app(argc, argv);
     app.setOrganizationName("deepin");
@@ -69,12 +64,10 @@ int main(int argc, char *argv[])
     // handle open file
     QString toOpenFile;
     if (1 == parser.positionalArguments().length()) {
-        // import and playser
         toOpenFile = parser.positionalArguments().first();
     }
 
-    auto serviceName = "deepinmusic";
-    if (!app.setSingleInstance(serviceName)) {
+    if (!app.setSingleInstance("deepinmusic")) {
         qDebug() << "another deppin music has started";
         if (!toOpenFile.isEmpty()) {
             QFileInfo fi(toOpenFile);
@@ -90,18 +83,20 @@ int main(int argc, char *argv[])
 
     app.loadTranslator();
 
-    ThemeManager::instance()->setTheme("light");
-
+//    qDebug() << QFontDatabase().families();
+//    QFont ft("");
+//    ft.setPixelSize(14);
+//    ft.setStyleStrategy(QFont::PreferAntialias);
+//    ft.setHintingPreference(QFont::PreferFullHinting);
+//    app.setFont(ft);
     app.setWindowIcon(QIcon(":/common/image/deepin-music.svg"));
     app.setApplicationDisplayName(QObject::tr("Deepin Music"));
 
     AppSettings::instance()->init();
-
     if (!toOpenFile.isEmpty()) {
         auto fi = QFileInfo(toOpenFile);
         auto url = QUrl::fromLocalFile(fi.absoluteFilePath());
         AppSettings::instance()->setOption("base.play.to_open_uri", url.toString());
-        AppSettings::instance()->sync();
     }
 
     MusicApp music;
@@ -111,7 +106,9 @@ int main(int argc, char *argv[])
     &app, [ = ]() {
         qDebug() << "sync config start";
         AppSettings::instance()->sync();
+#ifdef Q_OS_LINUX
         sync();
+#endif
         qDebug() << "sync config finish, app exit";
     });
 

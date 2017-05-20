@@ -21,6 +21,7 @@ extern "C" {
 #include <taglib/fileref.h>
 #include <taglib/taglib.h>
 #include <taglib/tpropertymap.h>
+
 #include <unicode/ucnv.h>
 
 #include "util/encodingdetector.h"

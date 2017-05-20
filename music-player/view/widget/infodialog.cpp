@@ -171,7 +171,7 @@ InfoDialog::~InfoDialog()
 
 void InfoDialog::resizeEvent(QResizeEvent *event)
 {
-    Q_D(InfoDialog);
+//    Q_D(InfoDialog);
     Dtk::Widget::DAbstractDialog::resizeEvent(event);
 //    d->bgBlurWidget->resize(this->size());
 }
