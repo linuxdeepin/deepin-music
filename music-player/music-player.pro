@@ -141,7 +141,7 @@ HEADERS += \
     core/util/inotifyengine.h
 
 # Automating generation .qm files from .ts files
-    system(python $$PWD/../tool/translate_generation.py $$PWD)
+    !system(python $$PWD/../tool/translate_generation.py $$PWD): error("Failed to generate translation")
 }
 
 TRANSLATIONS += $$PWD/translations/$${TARGET}.ts \
