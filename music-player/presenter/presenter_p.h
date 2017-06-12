@@ -46,6 +46,8 @@ signals:
     void requestMetaSearch(const MetaPtr);
     void requestChangeMetaCache(const MetaPtr meta, const DMusic::SearchMeta &search);
 
+    void updateMprisVolume(int volume);
+
     void play(PlaylistPtr playlist, const MetaPtr info);
     void resume(PlaylistPtr playlist, const MetaPtr meta);
     void playNext(PlaylistPtr playlist, const MetaPtr info);

@@ -589,7 +589,7 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
     }
 }
 
-void Presenter::onMusiclistDelete(PlaylistPtr playlist , const MetaPtrList metalist)
+void Presenter::onMusiclistDelete(PlaylistPtr playlist, const MetaPtrList metalist)
 {
     Q_D(Presenter);
 
@@ -889,6 +889,7 @@ void Presenter::onVolumeChanged(int volume)
         d->settings->setOption("base.play.mute", false);
     }
     d->settings->setOption("base.play.volume", volume);
+    emit d->updateMprisVolume(volume);
 }
 
 void Presenter::onPlayModeChanged(int mode)
@@ -905,6 +906,12 @@ void Presenter::onToggleMute()
     Q_D(Presenter);
     d->player->setMuted(! d->player->muted());
     d->settings->setOption("base.play.mute", d->player->muted());
+
+    if (d->player->muted()) {
+        emit d->updateMprisVolume(0);
+    } else {
+        emit d->updateMprisVolume(d->player->volume());
+    }
 }
 
 void Presenter::onUpdateMetaCodec(const MetaPtr meta)
@@ -1060,9 +1067,10 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
     connect(mprisPlayer, &MprisPlayer::volumeRequested,
     this, [ = ](double volume) {
         onVolumeChanged(volume * 100);
+        emit this->volumeChanged(volume * 100);
     });
 
-    connect(this, &Presenter::volumeChanged,
+    connect(d, &PresenterPrivate::updateMprisVolume,
     this, [ = ](int volume) {
         mprisPlayer->setVolume(volume / 100.0);
     });
