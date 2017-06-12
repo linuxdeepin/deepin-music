@@ -76,7 +76,7 @@ Name[zh_TW]=深度音樂
 Type=Application
 
 [Next Shortcut Group]
-Exec=dbus-send --print-reply --dest=org.mpris.MediaPlayer2.deepinmusic /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next
+Exec=dbus-send --print-reply --dest=org.mpris.MediaPlayer2.DeepinMusic /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next
 Name=Next track
 Name[am]=የሚቀጥለውን ተረኛ
 Name[ar]=المسار التالي
@@ -115,7 +115,7 @@ Name[zh_HK]=下一首歌曲
 Name[zh_TW]=下一首
 
 [PlayPause Shortcut Group]
-Exec=dbus-send --print-reply --dest=org.mpris.MediaPlayer2.deepinmusic /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause
+Exec=dbus-send --print-reply --dest=org.mpris.MediaPlayer2.DeepinMusic /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause
 Name=Play/Pause track
 Name[am]=ተረኛ ማጫወቻ/ማስቆሚያ
 Name[ar]=تشغيل / إيقاف المسار
@@ -153,7 +153,7 @@ Name[zh_CN]=暂停/继续
 Name[zh_TW]=暫停/播放
 
 [Previous Shortcut Group]
-Exec=dbus-send --print-reply --dest=org.mpris.MediaPlayer2.deepinmusic /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous
+Exec=dbus-send --print-reply --dest=org.mpris.MediaPlayer2.DeepinMusic /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous
 Name=Previous track
 Name[am]=ቀደም ያለው ተረኛ
 Name[ar]=المسار السابق
