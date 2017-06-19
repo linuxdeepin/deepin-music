@@ -188,8 +188,8 @@ void MainFramePrivate::initUI(bool showLoading)
     titlebarwidget = new TitleBarWidget(q);
     titlebarwidget->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
 
-    titlebar =  new Titlebar(q);
-    titlebar->setCustomWidget(titlebarwidget , Qt::AlignLeft, false);
+    titlebar =  new Titlebar();
+    titlebar->setCustomWidget(titlebarwidget, Qt::AlignLeft, false);
 
     q->setMenuWidget(titlebar);
 
@@ -346,7 +346,7 @@ void MainFramePrivate::showTips(QPixmap icon, QString text)
         tips->deleteLater();
     }
 
-    tips = new Tip(icon, text , q);
+    tips = new Tip(icon, text, q);
     auto center = q->mapToGlobal(QPoint(q->rect().center()));
     center.setY(center.y() + q->height() / 2 - footer->height() - 40);
     center = tips->mapFromGlobal(center);

@@ -65,9 +65,12 @@ qproperty-pressPic: url(:/images/dark/images/window_max_press.png);
 qproperty-normalPic: url(:/images/dark/images/window_close_normal.png);
 qproperty-hoverPic: url(:/images/dark/images/window_close_hover.png);
 qproperty-pressPic: url(:/images/dark/images/window_close_press.png);
+padding-right: 6px;
+
 }
 #DTitlebarDWindowCloseButton[viewname="lyric"] {
 qproperty-normalPic: url(:/images/dark/images/window_close_normal.png);
 qproperty-hoverPic: url(:/images/dark/images/window_close_hover.png);
 qproperty-pressPic: url(:/images/dark/images/window_close_press.png);
+padding-right: 6px;
 }
