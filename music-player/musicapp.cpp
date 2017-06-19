@@ -98,11 +98,17 @@ void MusicAppPrivate::triggerShortcutAction(const QString &optKey)
 
 void MusicAppPrivate::onDataPrepared()
 {
+    Q_Q(MusicApp);
     qDebug() << "TRACE:" << "data prepared";
 
     playerFrame->postInitUI();
     playerFrame->binding(presenter);
     qApp->installEventFilter(playerFrame);
+    playerFrame->connect(playerFrame, &MainFrame::triggerShortcutAction,
+    q, [ = ](const QString & optKey) {
+        this->triggerShortcutAction(optKey);
+    });
+
     presenter->postAction();
 
     initMpris("DeepinMusic");
