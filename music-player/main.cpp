@@ -83,12 +83,6 @@ int main(int argc, char *argv[])
 
     app.loadTranslator();
 
-//    qDebug() << QFontDatabase().families();
-//    QFont ft("");
-//    ft.setPixelSize(14);
-//    ft.setStyleStrategy(QFont::PreferAntialias);
-//    ft.setHintingPreference(QFont::PreferFullHinting);
-//    app.setFont(ft);
     app.setWindowIcon(QIcon(":/common/image/deepin-music.svg"));
     app.setApplicationDisplayName(QObject::tr("Deepin Music"));
 
