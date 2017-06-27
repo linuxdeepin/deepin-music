@@ -337,7 +337,7 @@
     <message>
         <location filename="../view/musiclistwidget.cpp" line="123"/>
         <source>No Music</source>
-        <translation>当前歌单为</translation>
+        <translation>当前歌单为空</translation>
     </message>
     <message>
         <location filename="../view/musiclistwidget.cpp" line="125"/>

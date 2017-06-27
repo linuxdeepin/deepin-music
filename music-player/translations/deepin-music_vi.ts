@@ -162,7 +162,7 @@
     <message>
         <location filename="../view/lyricwidget.cpp" line="200"/>
         <source>Back</source>
-        <translation type="unfinished"/>
+        <translation>Trở lại</translation>
     </message>
 </context>
 <context>

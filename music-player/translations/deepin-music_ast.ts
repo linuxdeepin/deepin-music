@@ -114,7 +114,7 @@
     <message>
         <location filename="../view/widget/infodialog.cpp" line="109"/>
         <source>Path:</source>
-        <translation type="unfinished"/>
+        <translation>Camín:</translation>
     </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="108"/>
