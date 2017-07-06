@@ -15,11 +15,12 @@
 
 class MprisPlayer;
 class MusicAppPrivate;
+class MainFrame;
 class MusicApp : public QObject
 {
     Q_OBJECT
 public:
-    MusicApp(QObject *parent = nullptr);
+    MusicApp(MainFrame* frame, QObject *parent = nullptr);
     ~MusicApp();
 
     void init();

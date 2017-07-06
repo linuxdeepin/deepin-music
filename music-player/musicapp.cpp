@@ -129,10 +129,11 @@ void MusicAppPrivate::onRaise()
 }
 
 
-MusicApp::MusicApp(QObject *parent)
+MusicApp::MusicApp(MainFrame *frame, QObject *parent)
     : QObject(parent), d_ptr(new MusicAppPrivate(this))
 {
-
+    Q_D(MusicApp);
+    d->playerFrame = frame;
 }
 
 MusicApp::~MusicApp()
@@ -171,8 +172,8 @@ void MusicApp::init()
 
 //    auto mediaCount = AppSettings::instance()->value("base.play.media_count").toInt();
 //    auto mediaCount = 1;
+    d->playerFrame->initUI(true);
     qDebug() << "TRACE:" << "create MainFrame";
-    d->playerFrame = new MainFrame();
 //    d->playerFrame->initUI(0 != mediaCount);
     show();
 

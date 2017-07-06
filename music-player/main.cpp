@@ -93,8 +93,10 @@ int main(int argc, char *argv[])
         AppSettings::instance()->setOption("base.play.to_open_uri", url.toString());
     }
 
-    MusicApp music;
-    music.init();
+    // DMainWindow must create on main function, so it can deconstruction before QApplication
+    MainFrame mainframe;
+    MusicApp *music = new MusicApp(&mainframe);
+    music->init();
 
     app.connect(&app, &QApplication::lastWindowClosed,
     &app, [ = ]() {
