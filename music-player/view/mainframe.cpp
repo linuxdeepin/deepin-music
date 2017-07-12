@@ -118,12 +118,12 @@ void MainFramePrivate::initMenu()
         emit q->addPlaylist(true);
     });
 
-    auto addmusic = new QAction(MainFrame::tr("Add music"), q);
+    auto addmusic = new QAction(MainFrame::tr("Add folder"), q);
     q->connect(addmusic, &QAction::triggered, q, [ = ](bool) {
         q->onSelectImportDirectory();
     });
 
-    auto addmusicfiles = new QAction(MainFrame::tr("Add music file"), q);
+    auto addmusicfiles = new QAction(MainFrame::tr("Add file"), q);
     q->connect(addmusicfiles, &QAction::triggered, q, [ = ](bool) {
         q->onSelectImportFiles();
     });
@@ -144,7 +144,7 @@ void MainFramePrivate::initMenu()
         AppSettings::instance()->sync();
     });
 
-    colorModeAction = new QAction(MainFrame::tr("Deep color mode"), q);
+    colorModeAction = new QAction(MainFrame::tr("Dark theme"), q);
     colorModeAction->setCheckable(true);
     colorModeAction->setChecked(AppSettings::instance()->value("base.play.theme").toString() == "dark");
 
@@ -877,7 +877,7 @@ void MainFrame::onSelectImportDirectory()
     fileDlg.setDirectory(lastImportPath);
 
     fileDlg.setViewMode(QFileDialog::Detail);
-    fileDlg.setFileMode(QFileDialog::Directory);
+    fileDlg.setFileMode(QFileDialog::DirectoryOnly);
     if (QFileDialog::Accepted == fileDlg.exec()) {
         d->importWidget->showWaitHint();
         AppSettings::instance()->setOption("base.play.last_import_path",  fileDlg.directory().path());

@@ -655,10 +655,10 @@ void Footer::onModeChange(int mode)
     switch (mode) {
     default:
     case 0:
-        playmode = Footer::tr("Repeat Playlist");
+        playmode = Footer::tr("List Loop");
         break;
     case 1:
-        playmode = Footer::tr("Repeat Song");
+        playmode = Footer::tr("Single Loop");
         break;
     case 2:
         playmode = Footer::tr("Shuffle");

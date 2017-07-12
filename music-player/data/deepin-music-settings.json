@@ -2,7 +2,7 @@
     "groups": [
         {
             "key": "base",
-            "name": "Basic settings",
+            "name": "Basic",
             "groups": [
                 {
                     "key": "play",
@@ -19,7 +19,7 @@
                             "key": "remember_progress",
                             "name": "",
                             "type": "checkbox",
-                            "text": "Resume play from last position",
+                            "text": "Remember playback position",
                             "default": true
                         },
                         {

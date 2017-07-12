@@ -163,13 +163,6 @@ void MusicApp::init()
 {
     Q_D(MusicApp);
 
-    // set theme
-    qDebug() << "TRACE:" << "set theme";
-    auto theme = AppSettings::instance()->value("base.play.theme").toString();
-    auto themePrefix = AppSettings::instance()->value("base.play.theme_prefix").toString();
-    ThemeManager::instance()->setPrefix(themePrefix);
-    ThemeManager::instance()->setTheme(theme);
-
 //    auto mediaCount = AppSettings::instance()->value("base.play.media_count").toInt();
 //    auto mediaCount = 1;
     d->playerFrame->initUI(true);

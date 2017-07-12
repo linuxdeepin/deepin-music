@@ -59,7 +59,7 @@ ImportWidget::ImportWidget(QWidget *parent) : QFrame(parent), d_ptr(new ImportWi
     d->importButton->setObjectName("ImportViewImportButton");
     d->importButton->setFixedSize(142, 42);
 //    btFrmeLayout->addWidget(d->importButton, 0, Qt::AlignCenter);
-    d->importButton->setText(tr("Add Music"));
+    d->importButton->setText(tr("Add folder"));
 
     d->text = new QLabel;
     d->text->setObjectName("ImportViewText");

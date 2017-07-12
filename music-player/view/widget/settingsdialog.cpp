@@ -4,8 +4,8 @@ void GenerateSettingTranslate()
 {
     auto base_play_auto_playText = QObject::tr("Autoplay");
     auto base_play_fade_in_outText = QObject::tr("Enable fade");
-    auto base_play_remember_progressText = QObject::tr("Resume play from last position");
-    auto group_baseName = QObject::tr("Basic settings");
+    auto base_play_remember_progressText = QObject::tr("Remember playback position");
+    auto group_baseName = QObject::tr("Basic");
     auto group_base_playName = QObject::tr("Play");
     auto group_shortcutsName = QObject::tr("Shortcuts");
     auto reset_button_name = QObject::tr("Restore to default");

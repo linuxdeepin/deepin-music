@@ -93,6 +93,12 @@ int main(int argc, char *argv[])
         AppSettings::instance()->setOption("base.play.to_open_uri", url.toString());
     }
 
+    // set theme
+    qDebug() << "TRACE:" << "set theme";
+    auto theme = AppSettings::instance()->value("base.play.theme").toString();
+    auto themePrefix = AppSettings::instance()->value("base.play.theme_prefix").toString();
+    ThemeManager::instance()->setPrefix(themePrefix);
+    ThemeManager::instance()->setTheme(theme);
     // DMainWindow must create on main function, so it can deconstruction before QApplication
     MainFrame mainframe;
     MusicApp *music = new MusicApp(&mainframe);
