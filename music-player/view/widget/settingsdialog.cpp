@@ -8,7 +8,8 @@ void GenerateSettingTranslate()
     auto group_baseName = QObject::tr("Basic");
     auto group_base_playName = QObject::tr("Play");
     auto group_shortcutsName = QObject::tr("Shortcuts");
-    auto reset_button_name = QObject::tr("Restore to default");
+    auto reset_button_name = QObject::tr("Restore Defaults");
+    auto reset_button_name_old = QObject::tr("Restore to default");
     auto shortcuts_all_nextName = QObject::tr("Next");
     auto shortcuts_all_play_pauseName = QObject::tr("Play/Pause");
     auto shortcuts_all_previousName = QObject::tr("Previous");

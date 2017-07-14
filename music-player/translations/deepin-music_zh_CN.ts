@@ -482,31 +482,36 @@
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="11"/>
-        <source>Restore to default</source>
+        <source>Restore Defaults</source>
         <translation>恢复默认</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="12"/>
+        <source>Restore to default</source>
+        <translation>恢复默认</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="13"/>
         <source>Next</source>
         <translation>下一首</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="13"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="14"/>
         <source>Play/Pause</source>
         <translation>播放/暂停</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="14"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="15"/>
         <source>Previous</source>
         <translation>上一首</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="15"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="16"/>
         <source>Volume down</source>
         <translation>音量减小</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="16"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="17"/>
         <source>Volume up</source>
         <translation>音量增大</translation>
     </message>

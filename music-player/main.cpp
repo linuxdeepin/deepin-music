@@ -72,7 +72,7 @@ int main(int argc, char *argv[])
         if (!toOpenFile.isEmpty()) {
             QFileInfo fi(toOpenFile);
             QUrl url = QUrl::fromLocalFile(fi.absoluteFilePath());
-            QDBusInterface iface("org.mpris.MediaPlayer2.deepinmusic",
+            QDBusInterface iface("org.mpris.MediaPlayer2.DeepinMusic",
                                  "/org/mpris/MediaPlayer2",
                                  "org.mpris.MediaPlayer2.Player",
                                  QDBusConnection::sessionBus());

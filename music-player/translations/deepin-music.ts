@@ -482,31 +482,36 @@
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="11"/>
-        <source>Restore to default</source>
+        <source>Restore Defaults</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="12"/>
-        <source>Next</source>
+        <source>Restore to default</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="13"/>
-        <source>Play/Pause</source>
+        <source>Next</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="14"/>
-        <source>Previous</source>
+        <source>Play/Pause</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="15"/>
-        <source>Volume down</source>
+        <source>Previous</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="16"/>
+        <source>Volume down</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="17"/>
         <source>Volume up</source>
         <translation type="unfinished"></translation>
     </message>
