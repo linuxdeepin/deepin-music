@@ -54,9 +54,15 @@ INSTALL_HEADERS = \
 OTHER_FILES += org.mpris.MediaPlayer2.xml \
     org.mpris.MediaPlayer2.Player.xml
 
-target.path = $$[QT_INSTALL_LIBS]
+isEmpty(PREFIX){
+    target.path = $$[QT_INSTALL_LIBS]
+    headers.path = $$[QT_INSTALL_HEADERS]/MprisQt
+} else {
+    target.path = $${PREFIX}/lib
+    headers.path = $${PREFIX}/include/MprisQt
+}
+
 headers.files = $$INSTALL_HEADERS
-headers.path = $$[QT_INSTALL_HEADERS]/MprisQt
 prf.files = $${TARGET}.prf
 prf.path = $$[QMAKE_MKSPECS]/features
 INSTALLS += target headers prf

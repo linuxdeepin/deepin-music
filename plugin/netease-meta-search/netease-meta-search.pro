@@ -35,7 +35,7 @@ HEADERS += neteasemetasearch.h \
     neteasemetasearch_global.h \
     metaanalyzer.h
 
-target.path = /usr/lib/deepin-music/plugins
+target.path = $${PREFIX}/lib/deepin-music/plugins
 INSTALLS += target
 
 DISTFILES += \

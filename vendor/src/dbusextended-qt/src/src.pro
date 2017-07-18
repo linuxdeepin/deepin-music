@@ -34,12 +34,18 @@ INSTALL_HEADERS = \
     dbusextended.h \
     dbusextendedabstractinterface.h
 
-target.path = $$[QT_INSTALL_LIBS]
+isEmpty(PREFIX){
+    target.path = $$[QT_INSTALL_LIBS]
+    headers.path = $$[QT_INSTALL_HEADERS]/MprisQt
+} else {
+    target.path = $${PREFIX}/lib
+    headers.path = $${PREFIX}/include/DBusExtended
+}
+
 headers.files = $$INSTALL_HEADERS
-headers.path = $$[QT_INSTALL_HEADERS]/DBusExtended
 prf.files = $${TARGET}.prf
 prf.path = $$[QMAKE_MKSPECS]/features
-INSTALLS += target headers prf
+INSTALLS += target headers
 
 QMAKE_PKGCONFIG_LIBDIR = $$target.path
 QMAKE_PKGCONFIG_INCDIR = $$headers.path

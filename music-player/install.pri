@@ -4,13 +4,13 @@ isEmpty(PREFIX){
 
 target.path = $${PREFIX}/bin/
 
-desktop_files.path = /usr/share/applications/
+desktop_files.path = $${PREFIX}/share/applications/
 desktop_files.files = $$PWD/data/*.desktop
 
-services.path = /usr/share/dbus-1/services
+services.path = $${PREFIX}/share/dbus-1/services
 services.files = $$PWD/data/*.service
 
-dman.path = /usr/share/dman/
+dman.path = $${PREFIX}/share/dman/
 dman.files = $$PWD/dman/*
 
 translations.path = $${PREFIX}/share/$${TARGET}/translations

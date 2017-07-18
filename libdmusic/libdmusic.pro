@@ -54,7 +54,7 @@ HEADERS +=\
 
 unix {
     PKGCONFIG += libcue
-    target.path = /usr/lib
+    target.path = $${PREFIX}/lib
     INSTALLS += target
 }
 
