@@ -978,6 +978,11 @@ bool MainFrame::eventFilter(QObject *obj, QEvent *e)
 
     return qApp->eventFilter(obj, e);
 }
+void MainFrame::enterEvent(QEvent *e)
+{
+//    setCursor(QCursor(Qt::PointingHandCursor));
+    DMainWindow::enterEvent(e);
+}
 
 void MainFrame::resizeEvent(QResizeEvent *e)
 {

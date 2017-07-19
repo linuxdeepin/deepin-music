@@ -44,6 +44,7 @@ public slots:
     void onSelectImportFiles();
 
 protected:
+    virtual void enterEvent(QEvent *event) Q_DECL_OVERRIDE;
     virtual bool eventFilter(QObject *obj, QEvent *e) Q_DECL_OVERRIDE;
     virtual void resizeEvent(QResizeEvent *e) Q_DECL_OVERRIDE;
     virtual void closeEvent(QCloseEvent *event) Q_DECL_OVERRIDE;

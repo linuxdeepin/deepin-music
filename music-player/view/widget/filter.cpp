@@ -31,12 +31,16 @@ bool HoverFilter::eventFilter(QObject *obj, QEvent *event)
     switch (event->type()) {
     case QEvent::Enter: {
         auto w = qobject_cast<QWidget *>(obj);
-        w->setCursor(QCursor(Qt::PointingHandCursor));
+        w->setCursor(QCursor(Qt::WaitCursor));
+        qDebug() << "set cursor" << w << w->cursor();
+        QApplication::setOverrideCursor(Qt::WaitCursor);
         return QObject::eventFilter(obj, event);
     }
     case QEvent::Leave: {
         auto w = qobject_cast<QWidget *>(obj);
+        qDebug() << "unset cursor" << w;
         w->unsetCursor();
+        QApplication::restoreOverrideCursor();
         return QObject::eventFilter(obj, event);
     }
     default:

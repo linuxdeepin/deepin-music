@@ -3,13 +3,7 @@ host = https://www.transifex.com
 minimum_perc = 80
 mode = developer
 
-[deepin-music.deepin-music]
-file_filter = music-player/translations/deepin-music_<lang>.ts
-source_file = music-player/translations/deepin-music.ts
-source_lang = en
-type = TS
-
-[deepin-music.deepin-musicdesktop]
+[deepin-music.deepin-music_desktop]
 source_file = music-player/data/deepin-music.desktop
 source_lang = en
 type = DESKTOP
