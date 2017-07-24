@@ -9,7 +9,7 @@
     <message>
         <location filename="../view/footer.cpp" line="268"/>
         <source>Next</source>
-        <translation type="unfinished"/>
+        <translation>كېيىنكى </translation>
     </message>
     <message>
         <location filename="../view/footer.cpp" line="269"/>
@@ -109,7 +109,7 @@
     <message>
         <location filename="../view/widget/infodialog.cpp" line="107"/>
         <source>Type:</source>
-        <translation type="unfinished"/>
+        <translation>تىپى: </translation>
     </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="109"/>
@@ -157,7 +157,7 @@
     <message>
         <location filename="../view/lyricwidget.cpp" line="166"/>
         <source>Search</source>
-        <translation type="unfinished"/>
+        <translation>ئىزدەش</translation>
     </message>
     <message>
         <location filename="../view/lyricwidget.cpp" line="200"/>
@@ -490,7 +490,7 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="12"/>
         <source>Next</source>
-        <translation type="unfinished"/>
+        <translation>كېيىنكى </translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="13"/>
@@ -527,7 +527,7 @@
     <message>
         <location filename="../view/widget/titlebarwidget.cpp" line="79"/>
         <source>Search</source>
-        <translation type="unfinished"/>
+        <translation>ئىزدەش</translation>
     </message>
 </context>
 </TS>

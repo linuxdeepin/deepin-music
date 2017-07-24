@@ -19,7 +19,7 @@
     <message>
         <location filename="../view/footer.cpp" line="270"/>
         <source>Favorite</source>
-        <translation type="unfinished"/>
+        <translation>お気に入り</translation>
     </message>
     <message>
         <location filename="../view/footer.cpp" line="271"/>
@@ -104,7 +104,7 @@
     <message>
         <location filename="../view/widget/infodialog.cpp" line="107"/>
         <source>Album:</source>
-        <translation type="unfinished"/>
+        <translation>アルバム</translation>
     </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="107"/>
@@ -162,7 +162,7 @@
     <message>
         <location filename="../view/lyricwidget.cpp" line="200"/>
         <source>Back</source>
-        <translation type="unfinished"/>
+        <translation>戻る</translation>
     </message>
 </context>
 <context>
@@ -230,7 +230,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="159"/>
         <source>Version: 3.0</source>
-        <translation type="unfinished"/>
+        <translation>バンジョー: 3.0</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="167"/>
@@ -245,7 +245,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="532"/>
         <source>I got it</source>
-        <translation type="unfinished"/>
+        <translation>了解</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="818"/>
@@ -278,7 +278,7 @@
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="345"/>
         <source>Song info</source>
-        <translation type="unfinished"/>
+        <translation>音楽情報</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="321"/>
@@ -337,7 +337,7 @@
     <message>
         <location filename="../view/musiclistwidget.cpp" line="123"/>
         <source>No Music</source>
-        <translation type="unfinished"/>
+        <translation>音楽は有りません</translation>
     </message>
     <message>
         <location filename="../view/musiclistwidget.cpp" line="125"/>
@@ -424,7 +424,7 @@
     <message>
         <location filename="../core/playlistmanager.cpp" line="123"/>
         <source>All Music</source>
-        <translation type="unfinished"/>
+        <translation>全ての音楽</translation>
     </message>
     <message>
         <location filename="../core/playlistmanager.cpp" line="129"/>

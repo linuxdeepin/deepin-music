@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="ms">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="ms" version="2.1">
     <context>
         <name>desktop</name>
         <message>
@@ -11,7 +9,7 @@
         <message>
             <location filename="Desktop Entry]GenericName" line="0"/>
             <source>Music Player</source>
-            <translation type="unfinished"/>
+            <translation>Pemain Muzik</translation>
         </message>
         <message>
             <location filename="Next Shortcut Group]Name" line="0"/>

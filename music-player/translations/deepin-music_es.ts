@@ -69,7 +69,7 @@
     <message>
         <location filename="../view/importwidget.cpp" line="61"/>
         <source>Add Music</source>
-        <translation>Agregar Música </translation>
+        <translation>Añadir música </translation>
     </message>
     <message>
         <location filename="../view/importwidget.cpp" line="67"/>
@@ -81,7 +81,7 @@
         <location filename="../view/importwidget.cpp" line="68"/>
         <location filename="../view/importwidget.cpp" line="111"/>
         <source>%1 music directory or drag &amp; drop music file to add music</source>
-        <translation>%1 Directorio de música o arrastrar y soltar archivo de música para agregar música</translation>
+        <translation>%1 directorio de música o arrastre y suelte el archivo musical para añadir música</translation>
     </message>
     <message>
         <location filename="../view/importwidget.cpp" line="102"/>
@@ -200,7 +200,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="150"/>
         <source>Deepin Music Player is a local  music player with beautiful design and simple functions. It supports viewing lyrics when playing, playing lossless music and customize playlist, etc.</source>
-        <translation>Deepin Music Player es un reproductor de música local con un hermoso diseño y funciones sencillas. Soporta visualización de letra al reproducir, reproducción de música sin pérdida y personalizar lista de reproducción, etc.</translation>
+        <translation>Música Deepin es un reproductor de música local con un hermoso diseño y funciones sencillas. Soporta visualización de letra al reproducir, reproducción de música sin pérdida y personalizar lista de reproducción, etc.</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="183"/>
@@ -210,12 +210,12 @@
     <message>
         <location filename="../view/mainframe.cpp" line="531"/>
         <source>File invalid or does not exist, failed to load!</source>
-        <translation>Archivo inválido o no inexistente, fallo al cargar!</translation>
+        <translation>Archivo no válido o existente, ¡error al cargar!</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="552"/>
         <source>Failed to import, no vaild music file found!</source>
-        <translation>Fallo al importar, no se encontró ningún archivo de música válido!</translation>
+        <translation>Error al importar, ¡ningún archivo de música fue encontrado!</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="557"/>
@@ -303,7 +303,7 @@
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="400"/>
         <source>Delete</source>
-        <translation>Eliminar</translation>
+        <translation>Borrar</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="409"/>
@@ -319,12 +319,12 @@
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="416"/>
         <source>Deleting the current song will also delete the song files contained</source>
-        <translation>Eliminar la canción actual también eliminará los archivos de canción contenidos</translation>
+        <translation>Al borrar la canción actual también se eliminarán los archivos musicales contenidos</translation>
     </message>
     <message>
         <location filename="../view/widget/delegate/musicitemdelegate.cpp" line="299"/>
         <source>Unknown artist</source>
-        <translation>Artista Desconocido</translation>
+        <translation>Artista desconocido</translation>
     </message>
     <message>
         <location filename="../view/widget/delegate/musicitemdelegate.cpp" line="310"/>
@@ -347,7 +347,7 @@
     <message>
         <location filename="../view/musiclistwidget.cpp" line="155"/>
         <source>Play All</source>
-        <translation>Reproducir Todo</translation>
+        <translation>Reproducir todo</translation>
     </message>
     <message>
         <location filename="../view/musiclistwidget.cpp" line="163"/>

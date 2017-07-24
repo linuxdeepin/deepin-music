@@ -1,17 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="ro">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="ro" version="2.1">
     <context>
         <name>desktop</name>
         <message>
             <location filename="Desktop Entry]Name" line="0"/>
             <source>Deepin Music</source>
-            <translation type="unfinished"/>
+            <translation> Player-ul muzical Deepin</translation>
         </message>
         <message>
             <location filename="Desktop Entry]GenericName" line="0"/>
             <source>Music Player</source>
-            <translation type="unfinished"/>
+            <translation>Player-ul muzical</translation>
         </message>
         <message>
             <location filename="Next Shortcut Group]Name" line="0"/>
