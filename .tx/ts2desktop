@@ -1,0 +1,4 @@
+DESKTOP_TEMP_FILE=deepin-music.desktop.tmp
+DESKTOP_SOURCE_FILE=music-player/data/deepin-music.desktop 
+DESKTOP_DEST_FILE=music-player/data/deepin-music.desktop 
+DESKTOP_TS_DIR=music-player/translations/desktop
