@@ -14,9 +14,10 @@
 #include <MprisPlayer>
 
 #include <DApplication>
-#include <dutility.h>
+#include <DWidgetUtil>
 
-#include <option.h>
+
+#include <DSettingsOption>
 
 #include "core/player.h"
 #include "core/settings.h"
@@ -150,7 +151,7 @@ void MusicApp::show()
     if (geometry.isEmpty()) {
         d->playerFrame->resize(QSize(1070, 680));
         d->playerFrame->show();
-        DUtility::moveToCenter(d->playerFrame);
+        Dtk::Widget::moveToCenter(d->playerFrame);
     } else {
         d->playerFrame->restoreGeometry(geometry);
         d->playerFrame->setWindowState(static_cast<Qt::WindowStates >(state));

@@ -10,7 +10,7 @@
 #pragma once
 
 #include <util/singleton.h>
-#include <settings.h>
+#include <DSettings>
 
 class AppSettings : public QObject, public DMusic::DSingleton<AppSettings>
 {
@@ -19,13 +19,13 @@ public:
     explicit AppSettings(QObject *parent = 0);
 
     void init();
-    QPointer<Dtk::Settings> settings() const;
+    QPointer<Dtk::Core::DSettings> settings() const;
 
     void sync();
     QVariant value(const QString &key) const;
     void setOption(const QString &key, const QVariant &value);
 
 private:
-    QPointer<Dtk::Settings> m_settings;
+    QPointer<Dtk::Core::DSettings> m_settings;
     friend class DMusic::DSingleton<AppSettings>;
 };

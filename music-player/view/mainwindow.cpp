@@ -27,7 +27,7 @@
 #include <QStyleFactory>
 
 #include <DUtil>
-#include <dutility.h>
+#include <DWidgetUtil>
 #include <DTitlebar>
 #include <dthememanager.h>
 #include <DAboutDialog>

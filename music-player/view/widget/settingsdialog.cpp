@@ -1,4 +1,4 @@
-#include <settings.h>
+#include <DSettings>
 
 void GenerateSettingTranslate()
 {
