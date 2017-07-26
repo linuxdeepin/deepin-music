@@ -1,5 +1,6 @@
 #include "settings.h"
-#include "option.h"
+
+#include <DSettingsOption>
 
 #include <QFile>
 #include <QFileInfo>
@@ -17,14 +18,14 @@ AppSettings::AppSettings(QObject *parent) :
 
 void AppSettings::init()
 {
-    m_settings = Dtk::Settings::fromJsonFile(":/data/deepin-music-settings.json");
+    m_settings = Dtk::Core::DSettings::fromJsonFile(":/data/deepin-music-settings.json");
     auto configFilepath = Global::configPath() + "/config.ini";
-    auto backend = new Dtk::QSettingBackend(configFilepath);
+    auto backend = new Dtk::Core::QSettingBackend(configFilepath);
     m_settings->setBackend(backend);
 //    ThreadPool::instance()->manager(backend->thread());
 }
 
-QPointer<Dtk::Settings> AppSettings::settings() const
+QPointer<Dtk::Core::DSettings> AppSettings::settings() const
 {
     return m_settings;
 }

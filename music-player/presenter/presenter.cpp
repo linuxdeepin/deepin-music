@@ -18,7 +18,7 @@
 #include <QApplication>
 #include <QStandardPaths>
 
-#include <option.h>
+#include <DSettingsOption>
 #include <DUtil>
 
 #include <plugininterface.h>

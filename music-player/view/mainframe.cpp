@@ -21,7 +21,7 @@
 #include <QPainter>
 
 #include <DUtil>
-#include <dutility.h>
+#include <DWidgetUtil>
 #include <daboutdialog.h>
 #include <dsettingsdialog.h>
 #include <ddialog.h>
@@ -139,7 +139,7 @@ void MainFramePrivate::initMenu()
         configDialog->updateSettings(AppSettings::instance()->settings());
 
         WidgetHelper::workaround_updateStyle(configDialog, "dlight");
-        Dtk::Widget::DUtility::moveToCenter(configDialog);
+        Dtk::Widget::moveToCenter(configDialog);
         configDialog->exec();
         AppSettings::instance()->sync();
     });

@@ -18,7 +18,7 @@
 #include <QFocusEvent>
 #include <QGraphicsOpacityEffect>
 
-#include <dutility.h>
+#include <DWidgetUtil>
 #include <thememanager.h>
 #include <dsearchedit.h>
 

@@ -17,14 +17,14 @@ win32{
     INCLUDEPATH += $$DTK_INCLUDE\DWidget
     DEPENDPATH  += $$DTK_DEPEND\DWidget
     LIBS += -L$$DTK_LIBRARY -ldtkwidget
-    #dtkutil
+    #
     INCLUDEPATH += $$DTK_INCLUDE\DUtil
     DEPENDPATH  += $$DTK_DEPEND\DUtil
-    LIBS += -L$$DTK_LIBRARY -ldtkutil
-    #dtkbase
+    LIBS += -L$$DTK_LIBRARY -l
+    #
     INCLUDEPATH += $$DTK_INCLUDE\DBase
     DEPENDPATH  += $$DTK_DEPEND\DBase
-    LIBS += -L$$DTK_LIBRARY -ldtkbase
+    LIBS += -L$$DTK_LIBRARY -l
 
     #taglib
     INCLUDEPATH += $$INCLUDE_INSTALL_DIR
