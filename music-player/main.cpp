@@ -12,9 +12,13 @@
 #include <QDBusInterface>
 #include <QDBusPendingCall>
 #include <QCommandLineParser>
+#include <QProcessEnvironment>
 
 #include <DLog>
+#include <DStandardPaths>
 #include <DApplication>
+
+#include <metadetector.h>
 
 #include "view/mainframe.h"
 #include "core/mediadatabase.h"
@@ -26,8 +30,6 @@
 #include "core/util/threadpool.h"
 #include "thememanager.h"
 #include "musicapp.h"
-#include <metadetector.h>
-#include <QProcessEnvironment>
 
 #ifdef Q_OS_LINUX
 #include <unistd.h>
@@ -38,12 +40,15 @@ using namespace Dtk::Widget;
 
 int main(int argc, char *argv[])
 {
+#ifdef SNAP_APP
+    DStandardPaths::setMode(DStandardPaths::Snap);
+#endif
+
 #if defined(STATIC_LIB)
     DWIDGET_INIT_RESOURCE();
     QCoreApplication::addLibraryPath(".");
 #endif
     DApplication::loadDXcbPlugin();
-
 
     DApplication app(argc, argv);
     app.setOrganizationName("deepin");
@@ -66,37 +71,7 @@ int main(int argc, char *argv[])
         toOpenFile = parser.positionalArguments().first();
     }
 
-    app.setOrganizationName("deepin");
-    app.setApplicationName("deepin-music");
-    app.setApplicationVersion("3.0");
-
-#ifdef SNAP_APP
-    qDebug() << "Oh my godness!";
-
-    // Load the qml files
-    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
-    QString SNAP = env.value("SNAP");
-
-    QTranslator* translator = new QTranslator();
-    if (translator->load("deepin-music_zh_CN.qm", SNAP + "/usr/share/deepin-music/translations")) {
-        app.installTranslator(translator);
-    }
-
-    if (translator->load("deepin-music.qm", SNAP + "/usr/share/deepin-music/translations")) {
-        app.installTranslator(translator);
-    }
-#else
     app.loadTranslator();
-#endif
-
-    app.setTheme("light");
-
-    DLogManager::registerConsoleAppender();
-    DLogManager::registerFileAppender();
-
-    SingletonInit();
-
-    ThemeManager::instance()->setTheme("light");
 
     if (!app.setSingleInstance("deepinmusic")) {
         qDebug() << "another deppin music has started";
@@ -112,11 +87,6 @@ int main(int argc, char *argv[])
         exit(0);
     }
 
-    app.loadTranslator();
-
-    app.setWindowIcon(QIcon(":/common/image/deepin-music.svg"));
-    app.setApplicationDisplayName(QObject::tr("Deepin Music"));
-
     AppSettings::instance()->init();
     if (!toOpenFile.isEmpty()) {
         auto fi = QFileInfo(toOpenFile);
@@ -130,6 +100,7 @@ int main(int argc, char *argv[])
     auto themePrefix = AppSettings::instance()->value("base.play.theme_prefix").toString();
     ThemeManager::instance()->setPrefix(themePrefix);
     ThemeManager::instance()->setTheme(theme);
+
     // DMainWindow must create on main function, so it can deconstruction before QApplication
     MainFrame mainframe;
     MusicApp *music = new MusicApp(&mainframe);
@@ -144,6 +115,9 @@ int main(int argc, char *argv[])
 #endif
         qDebug() << "sync config finish, app exit";
     });
+
+    app.setWindowIcon(QIcon(":/common/image/deepin-music.svg"));
+    app.setApplicationDisplayName(QObject::tr("Deepin Music"));
 
     return app.exec();
 }
