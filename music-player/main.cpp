@@ -73,6 +73,10 @@ int main(int argc, char *argv[])
 
     app.loadTranslator();
 
+    // !!! MUST setApplicationDisplayName before DMainWindow create
+    app.setApplicationDisplayName(QObject::tr("Deepin Music"));
+    app.setWindowIcon(QIcon(":/common/image/deepin-music.svg"));
+
     if (!app.setSingleInstance("deepinmusic")) {
         qDebug() << "another deppin music has started";
         if (!toOpenFile.isEmpty()) {
@@ -116,8 +120,6 @@ int main(int argc, char *argv[])
         qDebug() << "sync config finish, app exit";
     });
 
-    app.setWindowIcon(QIcon(":/common/image/deepin-music.svg"));
-    app.setApplicationDisplayName(QObject::tr("Deepin Music"));
 
     return app.exec();
 }
