@@ -165,45 +165,39 @@ bool MediaLibrary::contains(const QString &hash) const
 MetaPtrList MediaLibrary::importFile(const QString &filepath)
 {
     Q_D(MediaLibrary);
-    QFileInfo fileInfo(filepath);
+    qDebug() << "import file" << filepath;
 
-    auto suffix = QString("*.%1").arg(fileInfo.suffix());
-    if (!d->supportedSuffixs.contains(suffix)) {
-        qWarning() << "skip" << suffix << filepath;
-        return MetaPtrList();
+    QMap<QString, MetaPtr>          losslessMetaCache;
+    QList<DMusic::CueParserPtr>     cuelist;
+    MetaPtrList                     metaList;
+
+    auto meta = d->importMeta(filepath, losslessMetaCache, cuelist);
+    if (!meta.isNull()) {
+        metaList << meta;
     }
 
-    if (fileInfo.suffix() == "cue") {
-        auto cue = DMusic::CueParserPtr(new DMusic::CueParser(filepath));
-        if (cue.isNull()) {
-            qCritical() << "parse cue file error:" << filepath;
-            return MetaPtrList();
-        }
-#ifdef SUPPORT_INOTIFY
-        d->watcher->addPath(fileInfo.absolutePath());
-        d->watcher->addPath(cue->mediaFilepath());
-#endif
+    for (auto &cue : cuelist) {
+        losslessMetaCache.remove(cue->mediaFilepath());
+        metaList += cue->metalist();
+        // insert to library
         for (auto meta : cue->metalist()) {
             d->metas.insert(meta->hash, meta);
         }
-        return cue->metalist();
     }
 
-    auto hash = DMusic::filepathHash(filepath);
-    if (MediaLibrary::instance()->contains(hash)) {
-        // FIXME: insertToPlaylist;
-        //emit insertToPlaylist(hash, playlist);
-        qDebug() << "exit" << hash << MediaLibrary::instance()->meta(hash);
-        return MetaPtrList() << MediaLibrary::instance()->meta(hash);
-    }
-
-    auto meta = d->createMeta(fileInfo);
-
-    d->metas.insert(meta->hash, meta);
+    for (auto &key : losslessMetaCache.keys()) {
+        auto losslessMeta = losslessMetaCache.value(key);
 #ifdef SUPPORT_INOTIFY
-    d->watcher->addPath(fileInfo.absolutePath());
+        d->watcher->addPath(losslessMeta->localPath);
 #endif
-    return MetaPtrList() << meta;
+        metaList << losslessMeta;
+        d->metas.insert(losslessMeta->hash, losslessMeta);
+    }
+
+
+    qDebug() << "importFile" << "with media count:" << metaList.length();
+    emit MediaDatabase::instance()->addMediaMetaList(metaList);
+    return metaList;
 }
 
 void MediaLibrary::init()
