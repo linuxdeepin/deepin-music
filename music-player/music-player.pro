@@ -71,7 +71,8 @@ SOURCES += \
     core/util/threadpool.cpp \
     view/footerwidget.cpp \
     view/widget/waterprogress.cpp \
-    view/loadwidget.cpp
+    view/loadwidget.cpp \
+    view/widget/closeconfirmdialog.cpp
 
 HEADERS += \
     musicapp.h \
@@ -125,7 +126,8 @@ HEADERS += \
     core/util/threadpool.h \
     view/footerwidget.h \
     view/widget/waterprogress.h \
-    view/loadwidget.h
+    view/loadwidget.h \
+    view/widget/closeconfirmdialog.h
 
 RESOURCES += \
     resource/theme/theme.qrc \

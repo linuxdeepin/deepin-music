@@ -85,7 +85,7 @@ void ThemeManager::regisetrWidget(QPointer<QWidget> widget, QStringList property
 //    qDebug() << qssFilename;
     widget->style()->unpolish(widget);
     widget->style()->polish(widget);
-    widget->setStyleSheet(d->getQssForWidget(themename, qssFilename));
+    widget->setStyleSheet(widget->styleSheet() + d->getQssForWidget(themename, qssFilename));
 
 //    qDebug() << widget;
     connect(this, &ThemeManager::themeChanged, this, [ = ](QString theme) {

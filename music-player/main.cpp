@@ -31,10 +31,6 @@
 #include "thememanager.h"
 #include "musicapp.h"
 
-#ifdef Q_OS_LINUX
-#include <unistd.h>
-#endif
-
 using namespace Dtk::Core;
 using namespace Dtk::Widget;
 
@@ -111,15 +107,15 @@ int main(int argc, char *argv[])
     music->init();
 
     app.connect(&app, &QApplication::lastWindowClosed,
-    &app, [ = ]() {
-        qDebug() << "sync config start";
-        AppSettings::instance()->sync();
-#ifdef Q_OS_LINUX
-        sync();
-#endif
-        qDebug() << "sync config finish, app exit";
+    &mainframe, [ & ]() {
+        auto quit = AppSettings::instance()->value("base.close.quit_action").toInt();
+        if (quit == 1) {
+            mainframe.onQuit();
+            app.quit();
+        }
     });
 
+    app.setQuitOnLastWindowClosed(false);
 
     return app.exec();
 }

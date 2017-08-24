@@ -19,6 +19,7 @@
 #include <QApplication>
 #include <QKeyEvent>
 #include <QPainter>
+#include <QSystemTrayIcon>
 
 #include <DUtil>
 #include <DWidgetUtil>
@@ -37,6 +38,7 @@
 #include "widget/infodialog.h"
 #include "widget/tip.h"
 #include "widget/searchresult.h"
+#include "widget/closeconfirmdialog.h"
 #include "helper/widgethellper.h"
 #include "helper/thememanager.h"
 
@@ -47,6 +49,10 @@
 #include "lyricwidget.h"
 #include "footerwidget.h"
 #include "loadwidget.h"
+
+#ifdef Q_OS_LINUX
+#include <unistd.h>
+#endif
 
 const QString s_PropertyViewname = "viewname";
 const QString s_PropertyViewnameLyric = "lyric";
@@ -506,6 +512,45 @@ void MainFrame::postInitUI()
     d->postInitUI();
     updateUI();
     focusMusicList();
+
+    auto playAction = new QAction(tr("Play/Pause"), this);
+    auto prevAction = new QAction(tr("Previous"), this);
+    auto nextAction = new QAction(tr("&Next"), this);
+    auto quitAction = new QAction(tr("&Quit"), this);
+
+    auto trayIconMenu = new QMenu(this);
+    trayIconMenu->addAction(playAction);
+    trayIconMenu->addAction(prevAction);
+    trayIconMenu->addAction(nextAction);
+    trayIconMenu->addSeparator();
+    trayIconMenu->addAction(quitAction);
+
+    auto trayIcon = new QSystemTrayIcon(this);
+    trayIcon->setIcon(QIcon(":/common/image/deepin-music.svg"));
+    trayIcon->setContextMenu(trayIconMenu);
+    trayIcon->show();
+
+    connect(playAction, &QAction::triggered,
+    this, [ = ]() {
+        Q_EMIT triggerShortcutAction("shortcuts.all.play_pause");
+    });
+    connect(prevAction, &QAction::triggered,
+    this, [ = ]() {
+        Q_EMIT triggerShortcutAction("shortcuts.all.previous");
+    });
+    connect(nextAction, &QAction::triggered,
+    this, [ = ]() {
+        Q_EMIT triggerShortcutAction("shortcuts.all.next");
+    });
+    connect(quitAction, &QAction::triggered,
+    this, [ = ]() {
+        onQuit();
+        qApp->quit();
+    });
+    connect(trayIcon, &QSystemTrayIcon::activated,
+    this, [ = ](QSystemTrayIcon::ActivationReason /*reason*/) {
+        show();
+    });
 }
 
 void MainFrame::binding(Presenter *presenter)
@@ -517,7 +562,6 @@ void MainFrame::binding(Presenter *presenter)
 
 //    connect(d->titlebar, &Titlebar::mouseMoving, this, &MainFrame::moveWindow);
 //    connect(d->footer, &Footer::mouseMoving, this, &MainFrame::moveWindow);
-
 
 #ifdef Q_OS_WIN
     connect(d->titlebar, &Titlebar::mousePosMoving,
@@ -912,6 +956,16 @@ void MainFrame::onSelectImportFiles()
     }
 }
 
+void MainFrame::onQuit()
+{
+    qDebug() << "sync config start";
+    AppSettings::instance()->sync();
+#ifdef Q_OS_LINUX
+    sync();
+#endif
+    qDebug() << "sync config finish, app exit";
+}
+
 void MainFrame::setViewname(QString viewname)
 {
     Q_D(MainFrame);
@@ -948,7 +1002,7 @@ bool MainFrame::eventFilter(QObject *obj, QEvent *e)
 
             if (scmodifiers == keyModifiers && key == sckey && !ke->isAutoRepeat()) {
 //                qDebug() << "match " << optkey << ke->count() << ke->isAutoRepeat();
-                emit triggerShortcutAction(optkey);
+                Q_EMIT triggerShortcutAction(optkey);
                 return true;
             }
         }
@@ -999,9 +1053,24 @@ void MainFrame::resizeEvent(QResizeEvent *e)
 
 void MainFrame::closeEvent(QCloseEvent *event)
 {
+    auto askCloseAction = AppSettings::instance()->value("base.close.ask_close_action").toBool();
+    if (askCloseAction) {
+        CloseConfirmDialog ccd(this);
+        connect(&ccd, &CloseConfirmDialog::quitAction,
+        this, [ = ](bool ask, int quitAction) {
+            qDebug() << "set" << ask << quitAction;
+            AppSettings::instance()->setOption("base.close.ask_close_action", ask);
+            AppSettings::instance()->setOption("base.close.quit_action", quitAction);
+        });
+
+        if (0 == ccd.exec()) {
+            event->ignore();
+            return;
+        }
+    }
+
     AppSettings::instance()->setOption("base.play.state", int(windowState()));
     AppSettings::instance()->setOption("base.play.geometry", saveGeometry());
-    //    qDebug() << "store state:" << windowState() << "gometry:" << geometry();
     DMainWindow::closeEvent(event);
 }
 

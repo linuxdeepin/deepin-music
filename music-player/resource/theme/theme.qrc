@@ -435,5 +435,7 @@
         <file>common/image/water_back.png</file>
         <file>light/LoadWidget.theme</file>
         <file>dark/LoadWidget.theme</file>
+        <file>light/CloseConfirmDialog.theme</file>
+        <file>dark/CloseConfirmDialog.theme</file>
     </qresource>
 </RCC>

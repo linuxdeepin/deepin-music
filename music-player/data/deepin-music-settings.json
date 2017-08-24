@@ -10,49 +10,44 @@
                     "options": [
                         {
                             "key": "auto_play",
-                            "name": "",
+                            "name": " ",
                             "type": "checkbox",
                             "text": "Autoplay",
                             "default": false
                         },
                         {
                             "key": "remember_progress",
-                            "name": "",
+                            "name": " ",
                             "type": "checkbox",
                             "text": "Remember playback position",
                             "default": true
                         },
                         {
                             "key": "fade_in_out",
-                            "name": "",
+                            "name": " ",
                             "type": "checkbox",
                             "text": "Enable fade",
                             "default": true
                         },
                         {
                             "key": "sort_type",
-                            "name": "sort type",
                             "hide": true,
                             "reset": false,
-                            "type": "combox",
                             "items": [0,1,2,3],
                             "default": 0
                         },
                         {
                             "key": "geometry",
-                            "name": "Geometry",
                             "hide": true,
                             "reset": false
                         },
                         {
                             "key": "state",
-                            "name": "Window State",
                             "hide": true,
                             "reset": false
                         },
                         {
                             "key": "media_count",
-                            "name": "Media Count",
                             "hide": true,
                             "reset": false,
                             "default": 0
@@ -64,74 +59,75 @@
                         },
                         {
                             "key": "playmode",
-                            "name": "play mode",
                             "reset": false,
                             "hide": true,
-                            "type": "combox",
                             "combox_list": [0,1,2],
                             "default": 0
                         },
                         {
                             "key": "volume",
-                            "name": "play sound volume",
                             "reset": false,
                             "hide": true,
-                            "type": "slider",
                             "max": 100,
                             "min": 0,
                             "default": 50
                         },
                         {
                             "key": "mute",
-                            "name": "play sound mute",
                             "hide": true,
                             "reset": false,
-                            "type": "checkbox",
                             "default": false
                         },
                         {
                             "key": "theme",
-                            "name": "deepin theme",
                             "hide": true,
                             "reset": false,
-                            "type": "dropbox",
                             "default": "light"
                         },
                         {
                             "key": "theme_prefix",
-                            "name": "deepin theme path",
                             "hide": true,
-                            "type": "dropbox",
                             "default": ":"
                         },
                         {
                             "key": "last_playlist",
-                            "name": "",
                             "hide": true,
-                            "type": "dropbox",
                             "default": "all"
                         },
                         {
                             "key": "last_meta",
-                            "name": "",
                             "hide": true,
-                            "type": "dropbox",
                             "default": ""
                         },
                         {
                             "key": "last_position",
-                            "name": "by ms",
+                            "comment": "by ms",
                             "hide": true,
-                            "type": "slider",
                             "default": "0"
                         },
                         {
                             "key": "last_import_path",
-                            "name": "Last Import Path",
                             "hide": true,
                             "reset": false,
-                            "type": "lineedit",
                             "default": ""
+                        }
+                    ]
+                },
+                {
+                    "key": "close",
+                    "name": "Close Main Window",
+                    "options": [
+                        {
+                            "key": "ask_close_action",
+                            "hide": true,
+                            "default": true
+                        },
+                        {
+                            "key": "quit_action",
+                            "name": " ",
+                            "type": "radiogroup",
+                            "items": ["Minimize to system tray","Exit Deepin Music"],
+                            "default": 0
                         }
                     ]
                 }

@@ -100,7 +100,7 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
         return MetaPtr();
     }
 
-    if (fileInfo.suffix() == "cue") {
+    if (fileInfo.suffix().toLower() == "cue") {
         cuelist << DMusic::CueParserPtr(new DMusic::CueParser(filepath));
         // TODO: check cue invaild
 #ifdef SUPPORT_INOTIFY
