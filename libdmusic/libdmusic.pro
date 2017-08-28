@@ -54,7 +54,7 @@ HEADERS +=\
 
 unix {
     PKGCONFIG += libcue
-    target.path = $${PREFIX}/lib
+    target.path = $$[QT_INSTALL_LIBS]
     INSTALLS += target
 }
 
