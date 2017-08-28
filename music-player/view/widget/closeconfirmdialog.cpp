@@ -13,6 +13,9 @@ class CloseConfirmDialogPrivate
 public:
     CloseConfirmDialogPrivate(CloseConfirmDialog *parent) : q_ptr(parent) {}
 
+    QRadioButton    *exitBt     = Q_NULLPTR;
+    QCheckBox       *remember   = Q_NULLPTR;
+
     CloseConfirmDialog *q_ptr;
     Q_DECLARE_PUBLIC(CloseConfirmDialog)
 };
@@ -35,24 +38,24 @@ CloseConfirmDialog::CloseConfirmDialog(QWidget *parent) :
     actionSelectionGroup->setContentsMargins(0, 0, 0, 0);
     actionSelectionGroup->setObjectName("CloseConfirmDialogSelectionGroup");
 
-    auto exitBt = new QRadioButton(tr("Exit"));
-    exitBt->setObjectName("CloseConfirmDialogExit");
+    d->exitBt = new QRadioButton(tr("Exit"));
+    d->exitBt->setObjectName("CloseConfirmDialogExit");
     auto miniBt = new QRadioButton(tr("Minimize to system tray"));
     miniBt->setObjectName("CloseConfirmDialogMini");
     auto vbox = new QHBoxLayout;
     vbox->setContentsMargins(0, 0, 0, 0);
-    vbox->addWidget(exitBt);
+    vbox->addWidget(d->exitBt);
     vbox->addWidget(miniBt);
     vbox->addStretch(1);
     actionSelectionGroup->setLayout(vbox);
 
-    auto remember = new QCheckBox(tr("Never ask again"));
+    d->remember = new QCheckBox(tr("Never ask again"));
 
     contentLayout->addWidget(groupLabel, 0, Qt::AlignLeft);
     contentLayout->addSpacing(4);
     contentLayout->addWidget(actionSelectionGroup, 0, Qt::AlignLeft);
     contentLayout->addSpacing(10);
-    contentLayout->addWidget(remember, 0, Qt::AlignLeft);
+    contentLayout->addWidget(d->remember, 0, Qt::AlignLeft);
 
     setIcon(QIcon(":/common/image/deepin-music.svg"));
     addContent(contentFrame);
@@ -60,29 +63,27 @@ CloseConfirmDialog::CloseConfirmDialog(QWidget *parent) :
     addButton(tr("Cancel"), false, ButtonNormal);
     addButton(tr("OK"), true, ButtonRecommend);
 
-    remember->setChecked(!AppSettings::instance()->value("base.close.ask_close_action").toBool());
-    if (1 == AppSettings::instance()->value("base.close.quit_action").toInt()) {
-        exitBt->setChecked(true);
+    d->remember->setChecked(!AppSettings::instance()->value("base.close.ask_close_action").toBool());
+    if (1 == AppSettings::instance()->value("base.close.close_action").toInt()) {
+        d->exitBt->setChecked(true);
     } else {
         miniBt->setChecked(true);
     }
-
-    connect(exitBt, &QRadioButton::clicked, this, [ = ]() {
-        bool ask = !remember->isChecked();
-        Q_EMIT quitAction(ask, 1);
-    });
-    connect(miniBt, &QRadioButton::clicked, this, [ = ]() {
-        bool ask = !remember->isChecked();
-        Q_EMIT quitAction(ask, 0);
-    });
-    connect(remember, &QCheckBox::toggled, this, [ = ]() {
-        bool ask = !remember->isChecked();
-        int action = exitBt->isChecked() ? 1 : 0;
-        Q_EMIT quitAction(ask, action);
-    });
 }
 
 CloseConfirmDialog::~CloseConfirmDialog()
 {
 
+}
+
+bool CloseConfirmDialog::isRemember() const
+{
+    Q_D(const CloseConfirmDialog);
+    return d->remember->isChecked();
+}
+
+int CloseConfirmDialog::closeAction() const
+{
+    Q_D(const CloseConfirmDialog);
+    return d->exitBt->isChecked() ? 1 : 0;
 }

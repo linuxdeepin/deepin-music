@@ -115,7 +115,7 @@ int main(int argc, char *argv[])
 
     app.connect(&app, &QApplication::lastWindowClosed,
     &mainframe, [ & ]() {
-        auto quit = AppSettings::instance()->value("base.close.quit_action").toInt();
+        auto quit = AppSettings::instance()->value("base.close.close_action").toInt();
         if (quit == 1) {
             mainframe.onQuit();
             app.quit();

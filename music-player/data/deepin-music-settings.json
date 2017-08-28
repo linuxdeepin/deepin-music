@@ -123,7 +123,7 @@
                             "default": true
                         },
                         {
-                            "key": "quit_action",
+                            "key": "close_action",
                             "name": " ",
                             "type": "radiogroup",
                             "items": ["Minimize to system tray","Exit Deepin Music"],

@@ -1058,16 +1058,12 @@ void MainFrame::closeEvent(QCloseEvent *event)
     auto askCloseAction = AppSettings::instance()->value("base.close.ask_close_action").toBool();
     if (askCloseAction) {
         CloseConfirmDialog ccd(this);
-        connect(&ccd, &CloseConfirmDialog::quitAction,
-        this, [ = ](bool ask, int quitAction) {
-            qDebug() << "set" << ask << quitAction;
-            AppSettings::instance()->setOption("base.close.ask_close_action", ask);
-            AppSettings::instance()->setOption("base.close.quit_action", quitAction);
-        });
-
         if (0 == ccd.exec()) {
             event->ignore();
             return;
+        } else {
+            AppSettings::instance()->setOption("base.close.ask_close_action", !ccd.isRemember());
+            AppSettings::instance()->setOption("base.close.close_action", ccd.closeAction());
         }
     }
 

@@ -12,8 +12,8 @@ public:
     explicit CloseConfirmDialog(QWidget *parent = 0);
     ~CloseConfirmDialog();
 
-Q_SIGNALS:
-    void quitAction(bool ask, int quitAction);
+    bool isRemember() const;
+    int closeAction() const;
 
 public Q_SLOTS:
 
