@@ -77,7 +77,7 @@ CloseConfirmDialog::CloseConfirmDialog(QWidget *parent) :
     });
     connect(remember, &QCheckBox::toggled, this, [ = ]() {
         bool ask = !remember->isChecked();
-        int action = exitBt->isChecked() ? 0 : 1;
+        int action = exitBt->isChecked() ? 1 : 0;
         Q_EMIT quitAction(ask, action);
     });
 }

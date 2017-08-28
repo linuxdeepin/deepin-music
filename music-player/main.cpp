@@ -84,6 +84,13 @@ int main(int argc, char *argv[])
                                  QDBusConnection::sessionBus());
             iface.asyncCall("OpenUri", url.toString());
         }
+
+        // show deepin-music
+        QDBusInterface iface("org.mpris.MediaPlayer2.DeepinMusic",
+                             "/org/mpris/MediaPlayer2",
+                             "org.mpris.MediaPlayer2",
+                             QDBusConnection::sessionBus());
+        iface.asyncCall("Raise");
         exit(0);
     }
 

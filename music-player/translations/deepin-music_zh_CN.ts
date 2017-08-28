@@ -256,16 +256,6 @@
         <translation type="unfinished">上一首</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="518"/>
-        <source>&amp;Next</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/mainframe.cpp" line="519"/>
-        <source>&amp;Quit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../view/mainframe.cpp" line="651"/>
         <source>File invalid or does not exist, failed to load!</source>
         <translation>文件无效或不存在，加载失败！</translation>
@@ -284,6 +274,16 @@
         <location filename="../view/mainframe.cpp" line="602"/>
         <source>Successfully added to &quot;%1&quot;</source>
         <translation>成功添加到“%1”</translation>
+    </message>
+    <message>
+        <location filename="../view/mainframe.cpp" line="518"/>
+        <source>Next</source>
+        <translation type="unfinished">下一首</translation>
+    </message>
+    <message>
+        <location filename="../view/mainframe.cpp" line="519"/>
+        <source>Quit</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="652"/>

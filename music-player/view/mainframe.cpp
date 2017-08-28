@@ -548,8 +548,10 @@ void MainFrame::postInitUI()
         qApp->quit();
     });
     connect(trayIcon, &QSystemTrayIcon::activated,
-    this, [ = ](QSystemTrayIcon::ActivationReason /*reason*/) {
-        show();
+    this, [ = ](QSystemTrayIcon::ActivationReason reason) {
+        if (QSystemTrayIcon::Trigger == reason) {
+            setVisible(!isVisible());
+        }
     });
 }
 
