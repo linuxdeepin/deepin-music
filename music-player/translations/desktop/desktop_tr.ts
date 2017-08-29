@@ -4,7 +4,7 @@
         <message>
             <location filename="Desktop Entry]Name" line="0"/>
             <source>Deepin Music</source>
-            <translation>Deepin Müzik Oynatıcısı</translation>
+            <translation>Deepin Müzik</translation>
         </message>
         <message>
             <location filename="Desktop Entry]GenericName" line="0"/>
@@ -19,12 +19,12 @@
         <message>
             <location filename="Desktop Entry]Comment" line="0"/>
             <source>Play your music collection</source>
-            <translation>Müzik koleksiyonunu oynat</translation>
+            <translation>Müzik koleksiyonunuzu oynat</translation>
         </message>
         <message>
             <location filename="PlayPause Shortcut Group]Name" line="0"/>
             <source>Play/Pause track</source>
-            <translation>Oynat/Duraklat parça</translation>
+            <translation> Parçayı Oynat/Duraklat</translation>
         </message>
         <message>
             <location filename="Previous Shortcut Group]Name" line="0"/>

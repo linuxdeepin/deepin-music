@@ -1,37 +1,35 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="zh_CN">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="zh_CN" version="2.1">
 <context>
     <name>CloseConfirmDialog</name>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="34"/>
         <source>Please select your operation</source>
-        <translation type="unfinished"></translation>
+        <translation>请选择您的操作</translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="41"/>
         <source>Exit</source>
-        <translation type="unfinished">退出</translation>
+        <translation>退出</translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="43"/>
         <source>Minimize to system tray</source>
-        <translation type="unfinished"></translation>
+        <translation>最小化到系统托盘</translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="52"/>
         <source>Never ask again</source>
-        <translation type="unfinished"></translation>
+        <translation>不再询问</translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="63"/>
         <source>Cancel</source>
-        <translation type="unfinished">取消</translation>
+        <translation>取消</translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="64"/>
         <source>OK</source>
-        <translation type="unfinished">确定</translation>
+        <translation>确定</translation>
     </message>
 </context>
 <context>
@@ -86,12 +84,12 @@
     <message>
         <location filename="../view/footerwidget.cpp" line="658"/>
         <source>List Loop</source>
-        <translation type="unfinished"></translation>
+        <translation>列表循环</translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="661"/>
         <source>Single Loop</source>
-        <translation type="unfinished"></translation>
+        <translation>单曲循环</translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="664"/>
@@ -104,7 +102,7 @@
     <message>
         <location filename="../view/importwidget.cpp" line="62"/>
         <source>Add folder</source>
-        <translation type="unfinished"></translation>
+        <translation>添加文件夹</translation>
     </message>
     <message>
         <location filename="../view/importwidget.cpp" line="68"/>
@@ -154,12 +152,12 @@
     <message>
         <location filename="../view/widget/infodialog.cpp" line="182"/>
         <source>Unknown artist</source>
-        <translation type="unfinished">未知歌手</translation>
+        <translation>未知歌手</translation>
     </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="183"/>
         <source>Unknown album</source>
-        <translation type="unfinished">未知专辑</translation>
+        <translation>未知专辑</translation>
     </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="108"/>
@@ -177,7 +175,7 @@
     <message>
         <location filename="../view/loadwidget.cpp" line="26"/>
         <source>Loading...</source>
-        <translation type="unfinished"></translation>
+        <translation>加载中......</translation>
     </message>
 </context>
 <context>
@@ -234,32 +232,32 @@
     <message>
         <location filename="../view/mainframe.cpp" line="127"/>
         <source>Add folder</source>
-        <translation type="unfinished"></translation>
+        <translation>添加文件夹</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="132"/>
         <source>Add file</source>
-        <translation type="unfinished"></translation>
+        <translation>添加文件</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="153"/>
         <source>Dark theme</source>
-        <translation type="unfinished"></translation>
+        <translation>深色主题</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="516"/>
         <source>Play/Pause</source>
-        <translation type="unfinished">播放/暂停</translation>
+        <translation>播放/暂停</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="517"/>
         <source>Previous</source>
-        <translation type="unfinished">上一首</translation>
+        <translation>上一首</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="653"/>
         <source>Invalid or non-existent file</source>
-        <translation type="unfinished"></translation>
+        <translation>文件无效或不存在</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="674"/>
@@ -280,7 +278,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="518"/>
         <source>Next</source>
-        <translation type="unfinished">下一首</translation>
+        <translation>下一首</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="947"/>
@@ -485,7 +483,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="239"/>
         <source>Deepin Music</source>
-        <translation type="unfinished">深度音乐</translation>
+        <translation>深度音乐</translation>
     </message>
 </context>
 <context>
@@ -494,6 +492,16 @@
         <location filename="../main.cpp" line="73"/>
         <source>Deepin Music</source>
         <translation>深度音乐</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="5"/>
+        <source>Minimize to system tray</source>
+        <translation>最小化到系统托盘</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="6"/>
+        <source>Exit Deepin Music</source>
+        <translation>退出深度音乐</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="7"/>
@@ -506,9 +514,19 @@
         <translation>开启淡入淡出</translation>
     </message>
     <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="9"/>
+        <source>Remember playback position</source>
+        <translation>启动时记住上次播放进度</translation>
+    </message>
+    <message>
         <location filename="../view/widget/settingsdialog.cpp" line="10"/>
         <source>Close Main Window</source>
-        <translation type="unfinished"></translation>
+        <translation>关闭主窗口</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="11"/>
+        <source>Basic</source>
+        <translation>基础设置</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="12"/>
@@ -521,29 +539,9 @@
         <translation>快捷键</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="5"/>
-        <source>Minimize to system tray</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="6"/>
-        <source>Exit Deepin Music</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="9"/>
-        <source>Remember playback position</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="11"/>
-        <source>Basic</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../view/widget/settingsdialog.cpp" line="14"/>
         <source>Restore Defaults</source>
-        <translation type="unfinished"></translation>
+        <translation>恢复默认</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="15"/>

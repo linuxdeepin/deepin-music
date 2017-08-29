@@ -4,12 +4,12 @@
         <message>
             <location filename="Desktop Entry]Name" line="0"/>
             <source>Deepin Music</source>
-            <translation>دييبن صوتيات</translation>
+            <translation>موسيقى دييبن </translation>
         </message>
         <message>
             <location filename="Desktop Entry]GenericName" line="0"/>
             <source>Music Player</source>
-            <translation>مشغل الصوتيات</translation>
+            <translation>مشغل موسيقى</translation>
         </message>
         <message>
             <location filename="Next Shortcut Group]Name" line="0"/>

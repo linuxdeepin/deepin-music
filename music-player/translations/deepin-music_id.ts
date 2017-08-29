@@ -1,92 +1,125 @@
 <?xml version="1.0" ?><!DOCTYPE TS><TS language="id" version="2.1">
 <context>
+    <name>CloseConfirmDialog</name>
+    <message>
+        <location filename="../view/widget/closeconfirmdialog.cpp" line="34"/>
+        <source>Please select your operation</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../view/widget/closeconfirmdialog.cpp" line="41"/>
+        <source>Exit</source>
+        <translation>Keluar</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/closeconfirmdialog.cpp" line="43"/>
+        <source>Minimize to system tray</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../view/widget/closeconfirmdialog.cpp" line="52"/>
+        <source>Never ask again</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../view/widget/closeconfirmdialog.cpp" line="63"/>
+        <source>Cancel</source>
+        <translation>Batal</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/closeconfirmdialog.cpp" line="64"/>
+        <source>OK</source>
+        <translation>OK</translation>
+    </message>
+</context>
+<context>
     <name>Footer</name>
     <message>
-        <location filename="../view/footer.cpp" line="267"/>
+        <location filename="../view/footerwidget.cpp" line="270"/>
         <source>Previous</source>
         <translation>Sebelumnya</translation>
     </message>
     <message>
-        <location filename="../view/footer.cpp" line="268"/>
+        <location filename="../view/footerwidget.cpp" line="271"/>
         <source>Next</source>
         <translation>Selanjutnya</translation>
     </message>
     <message>
-        <location filename="../view/footer.cpp" line="269"/>
+        <location filename="../view/footerwidget.cpp" line="272"/>
         <source>Play/Pause</source>
         <translation>Mainkan/Jeda</translation>
     </message>
     <message>
-        <location filename="../view/footer.cpp" line="270"/>
+        <location filename="../view/footerwidget.cpp" line="273"/>
         <source>Favorite</source>
-        <translation type="unfinished"/>
+        <translation>Favorit</translation>
     </message>
     <message>
-        <location filename="../view/footer.cpp" line="271"/>
+        <location filename="../view/footerwidget.cpp" line="274"/>
         <source>Lyrics</source>
         <translation>Lirik</translation>
     </message>
     <message>
-        <location filename="../view/footer.cpp" line="656"/>
-        <source>Repeat Playlist</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../view/footer.cpp" line="659"/>
-        <source>Repeat Song</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../view/footer.cpp" line="216"/>
+        <location filename="../view/footerwidget.cpp" line="219"/>
         <source>Unknown Title</source>
-        <translation type="unfinished"/>
+        <translation>Judul tidak diketahui</translation>
     </message>
     <message>
-        <location filename="../view/footer.cpp" line="222"/>
-        <location filename="../view/footer.cpp" line="495"/>
-        <location filename="../view/footer.cpp" line="678"/>
+        <location filename="../view/footerwidget.cpp" line="225"/>
+        <location filename="../view/footerwidget.cpp" line="497"/>
+        <location filename="../view/footerwidget.cpp" line="680"/>
         <source>Unknown artist</source>
         <translation>Artis tidak diketahui</translation>
     </message>
     <message>
-        <location filename="../view/footer.cpp" line="272"/>
+        <location filename="../view/footerwidget.cpp" line="275"/>
         <source>Play Mode</source>
-        <translation type="unfinished"/>
+        <translation>Mode main</translation>
     </message>
     <message>
-        <location filename="../view/footer.cpp" line="273"/>
+        <location filename="../view/footerwidget.cpp" line="276"/>
         <source>Playlist</source>
         <translation>Daftar Putar</translation>
     </message>
     <message>
-        <location filename="../view/footer.cpp" line="662"/>
-        <source>Shuffle</source>
+        <location filename="../view/footerwidget.cpp" line="658"/>
+        <source>List Loop</source>
         <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../view/footerwidget.cpp" line="661"/>
+        <source>Single Loop</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../view/footerwidget.cpp" line="664"/>
+        <source>Shuffle</source>
+        <translation>Acak</translation>
     </message>
 </context>
 <context>
     <name>ImportWidget</name>
     <message>
-        <location filename="../view/importwidget.cpp" line="61"/>
-        <source>Add Music</source>
-        <translation type="unfinished"/>
+        <location filename="../view/importwidget.cpp" line="62"/>
+        <source>Add folder</source>
+        <translation>Tambah folder</translation>
     </message>
     <message>
-        <location filename="../view/importwidget.cpp" line="67"/>
-        <location filename="../view/importwidget.cpp" line="110"/>
+        <location filename="../view/importwidget.cpp" line="68"/>
+        <location filename="../view/importwidget.cpp" line="109"/>
         <source>Scan</source>
         <translation>Pindai</translation>
     </message>
     <message>
-        <location filename="../view/importwidget.cpp" line="68"/>
-        <location filename="../view/importwidget.cpp" line="111"/>
+        <location filename="../view/importwidget.cpp" line="69"/>
+        <location filename="../view/importwidget.cpp" line="110"/>
         <source>%1 music directory or drag &amp; drop music file to add music</source>
-        <translation type="unfinished"/>
+        <translation>%1 direktori musik atau seret dan lepas berkas musik untuk menambah musik</translation>
     </message>
     <message>
-        <location filename="../view/importwidget.cpp" line="102"/>
+        <location filename="../view/importwidget.cpp" line="101"/>
         <source>Loading music, please wait...</source>
-        <translation type="unfinished"/>
+        <translation>Memuat musik, mohon menunggu...</translation>
     </message>
 </context>
 <context>
@@ -104,7 +137,7 @@
     <message>
         <location filename="../view/widget/infodialog.cpp" line="107"/>
         <source>Album:</source>
-        <translation type="unfinished"/>
+        <translation>Album:</translation>
     </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="107"/>
@@ -114,7 +147,17 @@
     <message>
         <location filename="../view/widget/infodialog.cpp" line="109"/>
         <source>Path:</source>
-        <translation type="unfinished"/>
+        <translation>Jejak:</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/infodialog.cpp" line="182"/>
+        <source>Unknown artist</source>
+        <translation>Artis tidak diketahui</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/infodialog.cpp" line="183"/>
+        <source>Unknown album</source>
+        <translation>Album tidak diketahui</translation>
     </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="108"/>
@@ -124,133 +167,123 @@
     <message>
         <location filename="../view/widget/infodialog.cpp" line="108"/>
         <source>Duration:</source>
-        <translation type="unfinished"/>
+        <translation>Durasi:</translation>
     </message>
+</context>
+<context>
+    <name>LoadWidget</name>
     <message>
-        <location filename="../view/widget/infodialog.cpp" line="182"/>
-        <source>Unkonw artist</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../view/widget/infodialog.cpp" line="183"/>
-        <source>Unkonw album</source>
-        <translation type="unfinished"/>
+        <location filename="../view/loadwidget.cpp" line="26"/>
+        <source>Loading...</source>
+        <translation>Memuat...</translation>
     </message>
 </context>
 <context>
     <name>LyricWidget</name>
     <message>
-        <location filename="../view/lyricwidget.cpp" line="152"/>
+        <location filename="../view/lyricwidget.cpp" line="151"/>
         <source>Search lyrics</source>
-        <translation type="unfinished"/>
+        <translation>Cari lirik</translation>
     </message>
     <message>
-        <location filename="../view/lyricwidget.cpp" line="156"/>
+        <location filename="../view/lyricwidget.cpp" line="155"/>
         <source>Title</source>
         <translation>Judul</translation>
     </message>
     <message>
-        <location filename="../view/lyricwidget.cpp" line="161"/>
+        <location filename="../view/lyricwidget.cpp" line="160"/>
         <source>Artist</source>
         <translation>Artis</translation>
     </message>
     <message>
-        <location filename="../view/lyricwidget.cpp" line="166"/>
+        <location filename="../view/lyricwidget.cpp" line="165"/>
         <source>Search</source>
         <translation>Cari</translation>
     </message>
     <message>
-        <location filename="../view/lyricwidget.cpp" line="200"/>
+        <location filename="../view/lyricwidget.cpp" line="199"/>
         <source>Back</source>
-        <translation type="unfinished"/>
+        <translation>Kembali</translation>
     </message>
 </context>
 <context>
     <name>MainFrame</name>
     <message>
-        <location filename="../view/mainframe.cpp" line="99"/>
+        <location filename="../view/mainframe.cpp" line="121"/>
         <source>New playlist</source>
-        <translation type="unfinished"/>
+        <translation>Daftar putar baru</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="105"/>
-        <source>Add music</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../view/mainframe.cpp" line="110"/>
-        <source>Add music file</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../view/mainframe.cpp" line="115"/>
+        <location filename="../view/mainframe.cpp" line="137"/>
         <source>Settings</source>
         <translation>Pengaturan</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="131"/>
-        <source>Deep color mode</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../view/mainframe.cpp" line="148"/>
-        <source>About</source>
-        <translation>Tentang</translation>
-    </message>
-    <message>
-        <location filename="../view/mainframe.cpp" line="150"/>
+        <location filename="../view/mainframe.cpp" line="237"/>
         <source>Deepin Music Player is a local  music player with beautiful design and simple functions. It supports viewing lyrics when playing, playing lossless music and customize playlist, etc.</source>
-        <translation type="unfinished"/>
+        <translation>Deepin Music Player adalah pemutar musik lokal dengan desain indah dan fungsi sederhana. Deepin Music Player mendukung tampilan lirik ketika dimainkan, memainkan musik nirrugi dan penyesuaian daftar putar, dan lain sebagainya.</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="183"/>
+        <location filename="../view/mainframe.cpp" line="168"/>
+        <location filename="../view/mainframe.cpp" line="519"/>
         <source>Exit</source>
         <translation>Keluar</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="531"/>
-        <source>File invalid or does not exist, failed to load!</source>
+        <location filename="../view/mainframe.cpp" line="127"/>
+        <source>Add folder</source>
+        <translation>Tambah folder</translation>
+    </message>
+    <message>
+        <location filename="../view/mainframe.cpp" line="132"/>
+        <source>Add file</source>
+        <translation>Tambah berkas</translation>
+    </message>
+    <message>
+        <location filename="../view/mainframe.cpp" line="153"/>
+        <source>Dark theme</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="552"/>
+        <location filename="../view/mainframe.cpp" line="516"/>
+        <source>Play/Pause</source>
+        <translation>Mainkan/Jeda</translation>
+    </message>
+    <message>
+        <location filename="../view/mainframe.cpp" line="517"/>
+        <source>Previous</source>
+        <translation>Sebelumnya</translation>
+    </message>
+    <message>
+        <location filename="../view/mainframe.cpp" line="653"/>
+        <source>Invalid or non-existent file</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../view/mainframe.cpp" line="674"/>
         <source>Failed to import, no vaild music file found!</source>
-        <translation type="unfinished"/>
+        <translation>Gagal mengimpor, tidak ada musik valid ditemukan!</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="557"/>
+        <location filename="../view/mainframe.cpp" line="654"/>
+        <location filename="../view/mainframe.cpp" line="679"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="158"/>
-        <source>Deepin Music</source>
-        <translation>Musik Deepin</translation>
-    </message>
-    <message>
-        <location filename="../view/mainframe.cpp" line="159"/>
-        <source>Version: 3.0</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../view/mainframe.cpp" line="167"/>
-        <source>Help</source>
-        <translation>Bantuan</translation>
-    </message>
-    <message>
-        <location filename="../view/mainframe.cpp" line="482"/>
+        <location filename="../view/mainframe.cpp" line="604"/>
         <source>Successfully added to &quot;%1&quot;</source>
-        <translation type="unfinished"/>
+        <translation>Berhasil menambahkan ke &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="532"/>
-        <source>I got it</source>
-        <translation type="unfinished"/>
+        <location filename="../view/mainframe.cpp" line="518"/>
+        <source>Next</source>
+        <translation>Selanjutnya</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="818"/>
+        <location filename="../view/mainframe.cpp" line="947"/>
         <source>Music (%1)</source>
-        <translation type="unfinished"/>
+        <translation>Musik (%1)</translation>
     </message>
 </context>
 <context>
@@ -258,7 +291,7 @@
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="271"/>
         <source>New playlist</source>
-        <translation type="unfinished"/>
+        <translation>Daftar putar baru</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="311"/>
@@ -268,17 +301,17 @@
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="313"/>
         <source>Add to playlist</source>
-        <translation type="unfinished"/>
+        <translation>Tambahkan ke daftar putar</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="318"/>
         <source>Display in file manager</source>
-        <translation type="unfinished"/>
+        <translation>Tampilkan dalam manajer berkas</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="345"/>
         <source>Song info</source>
-        <translation type="unfinished"/>
+        <translation>Info lagu</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="321"/>
@@ -288,12 +321,12 @@
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="322"/>
         <source>Delete from local disk</source>
-        <translation type="unfinished"/>
+        <translation>Hapus dari disk lokal</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="341"/>
         <source>Encoding</source>
-        <translation type="unfinished"/>
+        <translation>Menyandi</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="399"/>
@@ -308,26 +341,26 @@
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="409"/>
         <source>Are you sure to delete %1?</source>
-        <translation type="unfinished"/>
+        <translation>Apakah Anda yakin untuk menghapus %1?</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="411"/>
         <location filename="../view/widget/musiclistview.cpp" line="415"/>
         <source>Are you sure to delete the selected %1 songs?</source>
-        <translation type="unfinished"/>
+        <translation>Apakah Anda yakin menghapus lagu terpilih %1?</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="416"/>
         <source>Deleting the current song will also delete the song files contained</source>
-        <translation type="unfinished"/>
+        <translation>Menghapus lagu saat ini juga akan menghapus berkas lagu</translation>
     </message>
     <message>
-        <location filename="../view/widget/delegate/musicitemdelegate.cpp" line="299"/>
+        <location filename="../view/widget/delegate/musicitemdelegate.cpp" line="302"/>
         <source>Unknown artist</source>
         <translation>Artis tidak diketahui</translation>
     </message>
     <message>
-        <location filename="../view/widget/delegate/musicitemdelegate.cpp" line="310"/>
+        <location filename="../view/widget/delegate/musicitemdelegate.cpp" line="313"/>
         <source>Unknown album</source>
         <translation>Album tidak diketahui</translation>
     </message>
@@ -337,12 +370,12 @@
     <message>
         <location filename="../view/musiclistwidget.cpp" line="123"/>
         <source>No Music</source>
-        <translation type="unfinished"/>
+        <translation>Tidak ada musik</translation>
     </message>
     <message>
         <location filename="../view/musiclistwidget.cpp" line="125"/>
         <source>No result found</source>
-        <translation type="unfinished"/>
+        <translation>Tidak ada hasil ditemukan</translation>
     </message>
     <message>
         <location filename="../view/musiclistwidget.cpp" line="155"/>
@@ -352,7 +385,7 @@
     <message>
         <location filename="../view/musiclistwidget.cpp" line="163"/>
         <source>Time added</source>
-        <translation type="unfinished"/>
+        <translation>Waktu ditambahkan</translation>
     </message>
     <message>
         <location filename="../view/musiclistwidget.cpp" line="164"/>
@@ -367,7 +400,7 @@
     <message>
         <location filename="../view/musiclistwidget.cpp" line="166"/>
         <source>Album name</source>
-        <translation type="unfinished"/>
+        <translation>Nama album</translation>
     </message>
     <message>
         <location filename="../view/musiclistwidget.cpp" line="167"/>
@@ -385,7 +418,7 @@
     <message>
         <location filename="../view/widget/playlistitem.cpp" line="196"/>
         <source>Are you sure to delete this playlist?</source>
-        <translation type="unfinished"/>
+        <translation>Apakah Anda yakin menghapus daftar lagu?</translation>
     </message>
     <message>
         <location filename="../view/widget/playlistitem.cpp" line="202"/>
@@ -419,22 +452,22 @@
     <message>
         <location filename="../core/playlistmanager.cpp" line="67"/>
         <source>New playlist</source>
-        <translation type="unfinished"/>
+        <translation>Daftar putar baru</translation>
     </message>
     <message>
         <location filename="../core/playlistmanager.cpp" line="123"/>
         <source>All Music</source>
-        <translation type="unfinished"/>
+        <translation>Semua musik</translation>
     </message>
     <message>
         <location filename="../core/playlistmanager.cpp" line="129"/>
         <source>My favorites</source>
-        <translation type="unfinished"/>
+        <translation>Favorit saya</translation>
     </message>
     <message>
         <location filename="../core/playlistmanager.cpp" line="135"/>
         <source>Search result</source>
-        <translation type="unfinished"/>
+        <translation>Hasil pencarian</translation>
     </message>
 </context>
 <context>
@@ -442,73 +475,96 @@
     <message>
         <location filename="../view/playlistwidget.cpp" line="46"/>
         <source>New playlist</source>
-        <translation type="unfinished"/>
+        <translation>Daftar putar baru</translation>
+    </message>
+</context>
+<context>
+    <name>QApplication</name>
+    <message>
+        <location filename="../view/mainframe.cpp" line="239"/>
+        <source>Deepin Music</source>
+        <translation>Musik Deepin</translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../main.cpp" line="106"/>
+        <location filename="../main.cpp" line="73"/>
         <source>Deepin Music</source>
         <translation>Musik Deepin</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="5"/>
-        <source>Autoplay</source>
+        <source>Minimize to system tray</source>
         <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="6"/>
-        <source>Enable fade</source>
+        <source>Exit Deepin Music</source>
         <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="7"/>
-        <source>Resume play from last position</source>
-        <translation type="unfinished"/>
+        <source>Autoplay</source>
+        <translation>Mainkan otomatis</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="8"/>
-        <source>Basic settings</source>
-        <translation>Pengaturan dasar</translation>
+        <source>Enable fade</source>
+        <translation>Aktifkan pudar</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="9"/>
+        <source>Remember playback position</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="10"/>
+        <source>Close Main Window</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="11"/>
+        <source>Basic</source>
+        <translation>Dasar</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/settingsdialog.cpp" line="12"/>
         <source>Play</source>
         <translation>Putar</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="10"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="13"/>
         <source>Shortcuts</source>
         <translation>Jalan pintas</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="11"/>
-        <source>Restore to default</source>
+        <location filename="../view/widget/settingsdialog.cpp" line="14"/>
+        <source>Restore Defaults</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="12"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="15"/>
         <source>Next</source>
         <translation>Selanjutnya</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="13"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="16"/>
         <source>Play/Pause</source>
         <translation>Mainkan/Jeda</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="14"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="17"/>
         <source>Previous</source>
         <translation>Sebelumnya</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="15"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="18"/>
         <source>Volume down</source>
         <translation>Turunkan Volume</translation>
     </message>
     <message>
-        <location filename="../view/widget/settingsdialog.cpp" line="16"/>
+        <location filename="../view/widget/settingsdialog.cpp" line="19"/>
         <source>Volume up</source>
         <translation>Naikkan Volume</translation>
     </message>
@@ -516,16 +572,16 @@
 <context>
     <name>SearchResult</name>
     <message>
-        <location filename="../view/widget/searchresult.cpp" line="46"/>
-        <location filename="../view/widget/searchresult.cpp" line="111"/>
+        <location filename="../view/widget/searchresult.cpp" line="45"/>
+        <location filename="../view/widget/searchresult.cpp" line="114"/>
         <source>Search &quot;%1&quot; in Deepin Music</source>
-        <translation type="unfinished"/>
+        <translation>Cari &quot;%1&quot; dalam Musik Deepin</translation>
     </message>
 </context>
 <context>
     <name>TitleBarWidget</name>
     <message>
-        <location filename="../view/widget/titlebarwidget.cpp" line="79"/>
+        <location filename="../view/widget/titlebarwidget.cpp" line="78"/>
         <source>Search</source>
         <translation>Cari</translation>
     </message>

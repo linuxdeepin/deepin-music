@@ -14,7 +14,7 @@
         <message>
             <location filename="Next Shortcut Group]Name" line="0"/>
             <source>Next track</source>
-            <translation type="unfinished"/>
+            <translation>Następna ścieżka</translation>
         </message>
         <message>
             <location filename="Desktop Entry]Comment" line="0"/>
@@ -24,12 +24,12 @@
         <message>
             <location filename="PlayPause Shortcut Group]Name" line="0"/>
             <source>Play/Pause track</source>
-            <translation type="unfinished"/>
+            <translation>Odtwórz/Wstrzymaj ścieżkę</translation>
         </message>
         <message>
             <location filename="Previous Shortcut Group]Name" line="0"/>
             <source>Previous track</source>
-            <translation type="unfinished"/>
+            <translation>Poprzednia ścieżka</translation>
         </message>
     </context>
 </TS>
