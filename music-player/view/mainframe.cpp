@@ -650,8 +650,8 @@ void MainFrame::binding(Presenter *presenter)
         Dtk::Widget::DDialog warnDlg(this);
         warnDlg.setIcon(QIcon(":/common/image/dialog_warning.png"));
         warnDlg.setTextFormat(Qt::RichText);
-        warnDlg.setTitle(tr("File invalid or does not exist, failed to load!"));
-        warnDlg.addButtons(QStringList() << tr("I got it"));
+        warnDlg.setTitle(tr("Invalid or non-existent file"));
+        warnDlg.addButtons(QStringList() << tr("OK"));
         warnDlg.setDefaultButton(0);
 
         if (0 == warnDlg.exec()) {

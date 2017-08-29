@@ -4,32 +4,32 @@
 <context>
     <name>CloseConfirmDialog</name>
     <message>
-        <location filename="../view/widget/closeconfirmdialog.cpp" line="31"/>
+        <location filename="../view/widget/closeconfirmdialog.cpp" line="34"/>
         <source>Please select your operation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/closeconfirmdialog.cpp" line="38"/>
+        <location filename="../view/widget/closeconfirmdialog.cpp" line="41"/>
         <source>Exit</source>
         <translation type="unfinished">退出</translation>
     </message>
     <message>
-        <location filename="../view/widget/closeconfirmdialog.cpp" line="40"/>
+        <location filename="../view/widget/closeconfirmdialog.cpp" line="43"/>
         <source>Minimize to system tray</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/closeconfirmdialog.cpp" line="49"/>
+        <location filename="../view/widget/closeconfirmdialog.cpp" line="52"/>
         <source>Never ask again</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/widget/closeconfirmdialog.cpp" line="60"/>
+        <location filename="../view/widget/closeconfirmdialog.cpp" line="63"/>
         <source>Cancel</source>
         <translation type="unfinished">取消</translation>
     </message>
     <message>
-        <location filename="../view/widget/closeconfirmdialog.cpp" line="61"/>
+        <location filename="../view/widget/closeconfirmdialog.cpp" line="64"/>
         <source>OK</source>
         <translation type="unfinished">确定</translation>
     </message>
@@ -256,22 +256,23 @@
         <translation type="unfinished">上一首</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="651"/>
-        <source>File invalid or does not exist, failed to load!</source>
-        <translation>文件无效或不存在，加载失败！</translation>
+        <location filename="../view/mainframe.cpp" line="653"/>
+        <source>Invalid or non-existent file</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="672"/>
+        <location filename="../view/mainframe.cpp" line="674"/>
         <source>Failed to import, no vaild music file found!</source>
         <translation>导入失败，未找到有效的音乐文件！</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="677"/>
+        <location filename="../view/mainframe.cpp" line="654"/>
+        <location filename="../view/mainframe.cpp" line="679"/>
         <source>OK</source>
         <translation>确定</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="602"/>
+        <location filename="../view/mainframe.cpp" line="604"/>
         <source>Successfully added to &quot;%1&quot;</source>
         <translation>成功添加到“%1”</translation>
     </message>
@@ -286,12 +287,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="652"/>
-        <source>I got it</source>
-        <translation>我知道了</translation>
-    </message>
-    <message>
-        <location filename="../view/mainframe.cpp" line="945"/>
+        <location filename="../view/mainframe.cpp" line="947"/>
         <source>Music (%1)</source>
         <translation>音乐 (%1)</translation>
     </message>
