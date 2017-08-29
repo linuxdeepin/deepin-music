@@ -227,6 +227,7 @@
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="168"/>
+        <location filename="../view/mainframe.cpp" line="519"/>
         <source>Exit</source>
         <translation type="unfinished"></translation>
     </message>
@@ -279,11 +280,6 @@
     <message>
         <location filename="../view/mainframe.cpp" line="518"/>
         <source>Next</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../view/mainframe.cpp" line="519"/>
-        <source>Quit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

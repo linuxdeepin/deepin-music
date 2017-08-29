@@ -516,7 +516,7 @@ void MainFrame::postInitUI()
     auto playAction = new QAction(tr("Play/Pause"), this);
     auto prevAction = new QAction(tr("Previous"), this);
     auto nextAction = new QAction(tr("Next"), this);
-    auto quitAction = new QAction(tr("Quit"), this);
+    auto quitAction = new QAction(tr("Exit"), this);
 
     auto trayIconMenu = new QMenu(this);
     trayIconMenu->addAction(playAction);
