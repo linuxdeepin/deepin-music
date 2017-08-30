@@ -30,6 +30,7 @@ CloseConfirmDialog::CloseConfirmDialog(QWidget *parent) :
     auto contentFrame = new QFrame;
     auto contentLayout = new QVBoxLayout(contentFrame);
     contentLayout->setSpacing(0);
+    contentLayout->setContentsMargins(4, 4, 4, 0);
 
     auto groupLabel = new QLabel(tr("Please select your operation"));
     groupLabel->setObjectName("CloseConfirmDialogLabel");
@@ -54,7 +55,7 @@ CloseConfirmDialog::CloseConfirmDialog(QWidget *parent) :
     contentLayout->addWidget(groupLabel, 0, Qt::AlignLeft);
     contentLayout->addSpacing(4);
     contentLayout->addWidget(actionSelectionGroup, 0, Qt::AlignLeft);
-    contentLayout->addSpacing(10);
+    contentLayout->addSpacing(6);
     contentLayout->addWidget(d->remember, 0, Qt::AlignLeft);
 
     setIcon(QIcon(":/common/image/deepin-music.svg"));

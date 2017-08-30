@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
     DApplication app(argc, argv);
     app.setOrganizationName("deepin");
     app.setApplicationName("deepin-music");
-    app.setApplicationVersion("3.0");
+    app.setApplicationVersion("3.1");
 
     DLogManager::registerConsoleAppender();
     DLogManager::registerFileAppender();
