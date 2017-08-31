@@ -19,11 +19,26 @@ You can run, close and create a shortcut for Deepin Music by the following ways.
 
 > ![notes](icon/notes.svg): If Deepin Music has been fixed on Dock, you can also click on its icon to run.
 
+### Minimize to System Tray
+
+1. On Deepin Music interface, click on ![close](icon/close_icon.svg), select **Minimize to system tray**.
+2. Deepin Music will be minimized to tray;
+3. Right click on the Deepin Music application icon in the tray, you can:
+ - Click on **Play/Pause** to play/pause the song;
+ - Click on **Previous** to play previous song;
+ - Click on **Next** to play next song.
+ - Click on **Exit** to exit Deepin Music.
+
+
+![0|ask](png/ask.png)
+
+
 ### Exit Deepin Music
 
-- In Deepin Music interface, click on ![close](icon/close_icon.svg) to exit Deepin Music.
-- Right click on the Deepin Music application icon on the dock, select **Close All** to exit Music.
+- On Deepin Music interface, click on ![close](icon/close_icon.svg), and select  **Exit** to exit Deepin Music.
+- Right click on the Deepin Music application icon on Dock, select **Close All** to exit Music.
 - Click on ![Settings](icon/icon_menu.svg) and select **Exit** to exit Deepin Music.
+
 
 ## Main Interface|../common/icon_localmusic.svg|
 
@@ -96,15 +111,15 @@ On the main interface, you can do common playing operations, view playlist and s
 
 You can add, delete and view info of the local music in Deepin Music.
 
-### Add Music
+### Add File
 
 On Deepin Music interface, you can: 
-- Click on **Add Music** to add a music folder.
+- Click on **Add folder** to add a music folder.
 - Click on **Scan** to scan music directory.
-- Click on ![menu](icon/icon_menu.svg) > **Add music** to add a music folder.
-- Click on ![menu](icon/icon_menu.svg) > **Add music file** to add a music file.
+- Click on ![menu](icon/icon_menu.svg) > **Add folder** to add a music folder.
+- Click on ![menu](icon/icon_menu.svg) > **Add file** to add a music file.
 
-![0|addmusic](png/addmusic.png)
+![0|add](png/add.png)
 
 > ![notes](icon/notes.svg): You can also drag and drop music file to Deepin Music interface to add.
 
@@ -217,31 +232,34 @@ You can add new playlists/songs, set the options, view or exit Deepin Music.
 2. Select **Settings** > **Basic settings**.
 3. In the option **Play**, you can:
  - Check the box of **Autoplay**, the music will be played automatically when Deepin Music runs.
- - Check the box of **Resume play from last position**, the music will be played automatically from last positon played when Deepin Music runs.
- -  Check the box of **Enable fade**, the music will fade in and out when Deepin Music runs.
+ - Check the box of **Remember playback position**, the music will be played automatically from last positon played when Deepin Music runs.
+ - Check the box of **Enable fade**, the music will fade in and out when Deepin Music runs.
+4. In the option of **Close Main Window**, you can:
+ - Select **Minimize to system tray** to minimize Deepin Music to tray.
+ - Select **Exit Deepin Music** to exit.
 
 
-![0|control](png/control.png)
+![0|settings](png/settings.png)
 
 
 ### Shortcuts Settings
 
 1. On Deepin Music interface, click on ![menu](icon/icon_menu.svg).
 2. Select **Settings** > **Shortcuts**.
-3. Then you can set the shortcuts of Play/Pause, Previous, next, Volume up and Volume down.
+3. Then you can set the shortcuts of Play/Pause, Previous, Next, Volume up and Volume down.
 
-> ![notes](icon/notes.svg): You can also click on ** Restore to default ** to restore all settings.
+> ![notes](icon/notes.svg): You can also click on **Restore Defaults** to restore all settings.
 
 
-### Deep Color Mode
+### Switch Theme
 
-The theme of Deepin Music is light, you can click on **Deep color mode** to swith.
+The theme of Deepin Music is light, you can click on **Dark theme** to swith.
 
 1. On Deepin Music interface, click on ![menu](icon/icon_menu.svg) in the top right corner.
 
-2. Click on **Deep color mode** to swith the theme of Deepin Music.
+2. Click on **Dark theme** to swith the theme of Deepin Music.
 
-![0|color](png/color.png)
+![0|theme](png/theme.png)
 
 
 ### About
@@ -250,7 +268,7 @@ You can click on **About** to view the introduction of Deepin Music.
 
 1. On Deepin Music interface, click on ![menu](icon/icon_menu.svg) in the top right corner.
 
-2. Click on **About** to view the introduction of Deepin Music.
+2. Click on **About** to view the introduction of Deepin Music.s
 
 ![0|about](png/about.png)
 
