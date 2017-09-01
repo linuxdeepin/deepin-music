@@ -24,7 +24,6 @@
 #include <DUtil>
 #include <DWidgetUtil>
 #include <daboutdialog.h>
-#include <dsettingsdialog.h>
 #include <ddialog.h>
 #include <DApplication>
 
@@ -49,6 +48,8 @@
 #include "lyricwidget.h"
 #include "footerwidget.h"
 #include "loadwidget.h"
+
+#include "dtk2/dsettingsdialog.h"
 
 #ifdef Q_OS_LINUX
 #include <unistd.h>
@@ -136,7 +137,7 @@ void MainFramePrivate::initMenu()
 
     auto settings = new QAction(MainFrame::tr("Settings"), q);
     q->connect(settings, &QAction::triggered, q, [ = ](bool) {
-        auto configDialog = new Dtk::Widget::DSettingsDialog(q);
+        auto configDialog = new dm::DSettingsDialog(q);
         configDialog->setProperty("_d_QSSThemename", "dark");
         configDialog->setProperty("_d_QSSFilename", "DSettingsDialog");
         ThemeManager::instance()->regisetrWidget(configDialog);
