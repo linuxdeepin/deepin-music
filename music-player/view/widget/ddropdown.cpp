@@ -51,13 +51,13 @@ DDropdown::DDropdown(QWidget *parent) : QFrame(parent), d_ptr(new DDropdownPriva
     setObjectName("DDropdown");
 
     auto layout = new QHBoxLayout(this);
-    layout->setContentsMargins(15,0,15,0);
+    layout->setContentsMargins(15, 0, 15, 0);
     d->menu = new QMenu;
     d->text = new QLabel("undefined");
     d->text->setObjectName("DDropdownText");
     d->dropdown = new QLabel;
     d->dropdown->setObjectName("DDropdownIcon");
-    d->dropdown->setFixedSize(9,5);
+    d->dropdown->setFixedSize(9, 5);
 
     layout->addStretch();
     layout->addStretch();
@@ -73,7 +73,6 @@ DDropdown::DDropdown(QWidget *parent) : QFrame(parent), d_ptr(new DDropdownPriva
     this, [ = ]() {
         auto center = this->mapToGlobal(this->rect().topLeft());
         center.setY(center.y() + this->height() + 5);
-        d->menu->setFixedWidth(this->width());
         d->menu->move(center);
         d->menu->exec();
     });
