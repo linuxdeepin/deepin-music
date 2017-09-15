@@ -71,16 +71,7 @@ SOURCES += \
     core/util/threadpool.cpp \
     view/footerwidget.cpp \
     view/loadwidget.cpp \
-    view/widget/closeconfirmdialog.cpp \
-    view/dtk2/settings/widgetfactory.cpp \
-    view/dtk2/settings/shortcutedit.cpp \
-    view/dtk2/settings/navigationdelegate.cpp \
-    view/dtk2/settings/navigation.cpp \
-    view/dtk2/settings/contenttitle.cpp \
-    view/dtk2/settings/content.cpp \
-    view/dtk2/settings/combobox.cpp \
-    view/dtk2/settings/buttongroup.cpp \
-    view/dtk2/dsettingsdialog.cpp
+    view/widget/closeconfirmdialog.cpp
 
 HEADERS += \
     musicapp.h \
@@ -134,16 +125,7 @@ HEADERS += \
     core/util/threadpool.h \
     view/footerwidget.h \
     view/loadwidget.h \
-    view/widget/closeconfirmdialog.h \
-    view/dtk2/settings/widgetfactory.h \
-    view/dtk2/settings/shortcutedit.h \
-    view/dtk2/settings/navigationdelegate.h \
-    view/dtk2/settings/navigation.h \
-    view/dtk2/settings/contenttitle.h \
-    view/dtk2/settings/content.h \
-    view/dtk2/settings/combobox.h \
-    view/dtk2/settings/buttongroup.h \
-    view/dtk2/dsettingsdialog.h
+    view/widget/closeconfirmdialog.h
 
 RESOURCES += \
     resource/theme/theme.qrc \
