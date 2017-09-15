@@ -24,25 +24,18 @@
 #include <QVBoxLayout>
 #include <QLabel>
 
-#include "widget/waterprogress.h"
+#include <DWaterProgress>
+
 #include "view/helper/thememanager.h"
 
-class LoadWidgetPrivate
-{
-public:
-    LoadWidgetPrivate(LoadWidget *parent) : q_ptr(parent) {}
-
-    LoadWidget *q_ptr;
-    Q_DECLARE_PUBLIC(LoadWidget)
-};
+DWIDGET_USE_NAMESPACE
 
 LoadWidget::LoadWidget(QWidget *parent) :
-    QFrame(parent), d_ptr(new LoadWidgetPrivate(this))
+    QFrame(parent)
 {
-//    setObjectName("LoadWidget");
     ThemeManager::instance()->regisetrWidget(this);
 
-    auto water = new WaterProgress(this);
+    auto water = new DWaterProgress(this);
 
     auto label = new QLabel(tr("Loading..."));
     label->setObjectName("LoadWidgetLabel");
@@ -57,7 +50,3 @@ LoadWidget::LoadWidget(QWidget *parent) :
     vbox->addStretch();
 }
 
-LoadWidget::~LoadWidget()
-{
-
-}

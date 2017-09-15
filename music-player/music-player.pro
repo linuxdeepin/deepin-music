@@ -70,7 +70,6 @@ SOURCES += \
     view/widget/settingsdialog.cpp \
     core/util/threadpool.cpp \
     view/footerwidget.cpp \
-    view/widget/waterprogress.cpp \
     view/loadwidget.cpp \
     view/widget/closeconfirmdialog.cpp \
     view/dtk2/settings/widgetfactory.cpp \
@@ -134,7 +133,6 @@ HEADERS += \
     view/widget/titeledit.h \
     core/util/threadpool.h \
     view/footerwidget.h \
-    view/widget/waterprogress.h \
     view/loadwidget.h \
     view/widget/closeconfirmdialog.h \
     view/dtk2/settings/widgetfactory.h \

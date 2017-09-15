@@ -431,8 +431,6 @@
         <file>dark/DSettingsDialog.theme</file>
         <file>light/LyricTextView.theme</file>
         <file>dark/LyricTextView.theme</file>
-        <file>common/image/water_front.png</file>
-        <file>common/image/water_back.png</file>
         <file>light/LoadWidget.theme</file>
         <file>dark/LoadWidget.theme</file>
         <file>light/CloseConfirmDialog.theme</file>
