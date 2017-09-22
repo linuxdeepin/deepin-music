@@ -271,7 +271,7 @@ void MainFramePrivate::postInitUI()
     contentLayout->addWidget(lyricWidget);
     contentLayout->addWidget(playlistWidget);
 
-    infoDialog = new InfoDialog;
+    infoDialog = new InfoDialog(q);
     infoDialog->setStyle(QStyleFactory::create("dlight"));
     infoDialog->hide();
 

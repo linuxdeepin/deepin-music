@@ -60,14 +60,13 @@ public:
     Q_DECLARE_PUBLIC(InfoDialog)
 };
 
-
 void InfoDialogPrivate::initUI()
 {
     Q_Q(InfoDialog);
 
     q->setObjectName("InfoDialog");
     q->setFixedWidth(320);
-    q->setWindowFlags(q->windowFlags() | Qt::WindowStaysOnTopHint);
+//    q->setWindowFlags(q->windowFlags() | Qt::WindowStaysOnTopHint);
 
     auto layout = new QVBoxLayout(q);
     layout->setSpacing(0);
