@@ -100,11 +100,8 @@ PlayListItem::PlayListItem(PlaylistPtr playlist, QWidget *parent) : QFrame(paren
     setFixedHeight(56);
     setFixedWidth(220);
 
-    playingAnimation = new Dtk::Widget::DPictureSequenceView(this);
-    playingAnimation->setFixedSize(17, 13);
-    interLayout->addWidget(playingAnimation);
     interLayout->addSpacing(5);
-    playingAnimation->hide();
+
 
     // TODO: wtf
     QFont font(m_titleedit->font());
@@ -149,23 +146,9 @@ void PlayListItem::setActive(bool active)
 {
     QString prefix;
     if (active) {
-        prefix = highlightAnimationPrefix();
         m_titleedit->setProperty("status", "active");
     } else {
-        prefix = animationPrefix();
         m_titleedit->setProperty("status", "");
-    }
-
-    auto activePrefix = playingAnimation->property("ActivePrefix").toString();
-    if (activePrefix != prefix) {
-        QStringList urls;
-        auto urlTemp = QString("%1/%2.png").arg(prefix);
-        for (int i = 0; i < 94; ++i) {
-            urls << urlTemp.arg(i);
-        }
-        playingAnimation->setPictureSequence(urls);
-        playingAnimation->setProperty("ActivePrefix", prefix);
-        playingAnimation->hide();
     }
     this->style()->unpolish(m_titleedit);
     this->style()->polish(m_titleedit);
@@ -175,11 +158,7 @@ void PlayListItem::setActive(bool active)
 void PlayListItem::setPlay(bool isPaly)
 {
     if (isPaly) {
-        playingAnimation->show();
-        playingAnimation->pause();
     } else {
-        playingAnimation->hide();
-        playingAnimation->pause();
     }
 }
 
@@ -208,7 +187,7 @@ void PlayListItem::onDelete()
     QString message = QString(tr("Are you sure to delete this playlist?"));
 
     DDialog warnDlg(this);
-    warnDlg.setIcon(QIcon(":/common/image/del_notify.png"));
+    warnDlg.setIcon(QIcon(":/common/image/del_notify.svg"));
     warnDlg.setTextFormat(Qt::AutoText);
     warnDlg.setTitle(message);
     warnDlg.addButton(tr("Cancel"), false, Dtk::Widget::DDialog::ButtonNormal);

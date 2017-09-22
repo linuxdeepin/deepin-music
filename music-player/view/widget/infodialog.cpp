@@ -204,14 +204,16 @@ void InfoDialog::updateInfo(const MetaPtr meta)
 
     d->title->setText(meta->title);
 
-    auto coverPixmap = QPixmap(":/common/image/info_cover.png");
+    auto pixmapSize = static_cast<int>(CoverSize * d->cover->devicePixelRatioF());
+    auto coverPixmap = QIcon(":/common/image/info_cover.svg").pixmap(QSize(pixmapSize, pixmapSize));
+    QImage cover = coverPixmap.toImage();
     auto coverData = MetaSearchService::coverData(meta);
     if (coverData.length() > 0) {
-        QImage cover;
         cover = QImage::fromData(coverData);
-        coverPixmap = QPixmap::fromImage(WidgetHelper::cropRect(cover, QSize(CoverSize, CoverSize)));
     }
-    d->cover->setPixmap(coverPixmap.scaled(CoverSize, CoverSize));
+    coverPixmap = QPixmap::fromImage(WidgetHelper::cropRect(cover, QSize(pixmapSize, pixmapSize)));
+    coverPixmap.setDevicePixelRatio(d->cover->devicePixelRatioF());
+    d->cover->setPixmap(coverPixmap);
     d->updateLabelSize();
 
     d->title->setFocus();

@@ -43,11 +43,11 @@
 }
 #FooterCoverHover:hover {
     background-color: rgba(0,0,0,30%);
-    border-image: url(:/common/image/cover_lrc.png);
+    border-image: url(:/common/image/show_lyc_hover.png);
 }
 #FooterCoverHover:pressed {
     background-color: rgba(0,0,0,30%);
-    border-image: url(:/common/image/cover_lrc_press.png);
+    border-image: url(:/common/image/show_lyc_press.png);
 }
 
 #FooterCoverHover[viewname="lyric"] {

@@ -282,7 +282,7 @@ void MusicListView::showContextMenu(const QPoint &pos,
 
     auto createPlaylist = playlistMenu.addAction(tr("New playlist"));
     createPlaylist->setData(newvar);
-    createPlaylist->setIcon(QIcon(":/light/image/plus.png"));
+    createPlaylist->setIcon(QIcon(":/light/image/plus.svg"));
 
     playlistMenu.addSeparator();
 
@@ -411,7 +411,7 @@ void MusicListView::showContextMenu(const QPoint &pos,
             warnDlg.addButton(tr("Cancel"), true , Dtk::Widget::DDialog::ButtonWarning);
             warnDlg.addButton(tr("Delete"), false, Dtk::Widget::DDialog::ButtonNormal);
 
-            auto cover = QImage(QString(":/common/image/del_notify.png"));
+            auto cover = QImage(QString(":/common/image/del_notify.svg"));
             if (1 == metalist.length()) {
                 auto meta = metalist.first();
                 auto coverData = MetaSearchService::coverData(meta);

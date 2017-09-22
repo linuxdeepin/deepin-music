@@ -9,7 +9,7 @@
 }
 
 #TitleIcon {
-    image: url(:/common/image/title_icon.png)
+    image: url(:/common/image/app_icon.png)
 }
 
 

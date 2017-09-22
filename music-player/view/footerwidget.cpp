@@ -219,7 +219,7 @@ Footer::Footer(QWidget *parent) :
 
     d->btCover = new QPushButton();
     d->btCover->setObjectName("FooterCoverHover");
-    d->btCover->setFixedSize(40, 40);
+//    d->btCover->setFixedSize(40, 40);
 
     stackedLayout->addWidget(d->cover);
     stackedLayout->addWidget(d->btCover);

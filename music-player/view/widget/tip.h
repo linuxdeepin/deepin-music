@@ -31,7 +31,7 @@ class Tip : public QFrame
     Q_PROPERTY(QBrush background READ background WRITE setBackground)
     Q_PROPERTY(QColor borderColor READ borderColor WRITE setBorderColor)
 public:
-    explicit Tip(const QPixmap &icon,
+    explicit Tip(const QIcon &icon,
                  const QString &text,
                  QWidget *parent = 0);
     ~Tip();

@@ -87,7 +87,7 @@ QColor Cover::shadowColor() const
     return  d->m_shadowColor ;
 }
 
-void Cover::paintEvent(QPaintEvent *e)
+void Cover::paintEvent(QPaintEvent *)
 {
     Q_D(const Cover);
 
@@ -138,8 +138,10 @@ void Cover::setCoverPixmap(const QPixmap &pixmap)
     Q_D(Cover);
     int radius = d->m_radius;
 
+    auto ratio = this->devicePixelRatioF();
     auto coverRect = QRectF(rect()).marginsRemoved(d->outterMargins);
-    auto sz = coverRect.size().toSize();
+    auto sz = coverRect.size().toSize() * ratio;
+
     QPixmap backgroundPixmap = pixmap.scaled(sz, Qt::KeepAspectRatioByExpanding);
 
     QPixmap maskPixmap(sz);

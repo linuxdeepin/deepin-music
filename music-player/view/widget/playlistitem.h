@@ -72,7 +72,7 @@ public slots:
     }
 
 private:
-    Dtk::Widget::DPictureSequenceView  *playingAnimation;
+//    Dtk::Widget::DPictureSequenceView  *playingAnimation;
     TitelEdit      *m_titleedit = nullptr;
     PlaylistPtr    m_data;
     QString m_animationPrefix;

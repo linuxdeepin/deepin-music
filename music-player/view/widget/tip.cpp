@@ -28,6 +28,7 @@
 #include <QGraphicsDropShadowEffect>
 #include <QPropertyAnimation>
 #include <QGraphicsOpacityEffect>
+#include <QIcon>
 
 #include <DUtil>
 
@@ -55,13 +56,11 @@ public:
 };
 
 
-Tip::Tip(const QPixmap &icon, const QString &text, QWidget *parent)
+Tip::Tip(const QIcon &icon, const QString &text, QWidget *parent)
     : QFrame(parent), d_ptr(new TipPrivate(this))
 {
     Q_D(Tip);
 
-//    setWindowFlags(Qt::ToolTip | Qt::FramelessWindowHint);
-//    setAttribute(Qt::WA_TranslucentBackground);
     setObjectName("Tip");
     setContentsMargins(0, 0, 0, 0);
 
@@ -76,11 +75,10 @@ Tip::Tip(const QPixmap &icon, const QString &text, QWidget *parent)
     interlayout->setSpacing(5);
     auto iconLabel = new QLabel;
     iconLabel->setObjectName("TipIcon");
-    iconLabel->setFixedSize(icon.size());
     if (icon.isNull()) {
         iconLabel->hide();
     } else {
-        iconLabel->setPixmap(icon);
+        iconLabel->setPixmap(icon.pixmap(24, 24));
     }
 
     d->textLable = new QLabel(text);
@@ -96,9 +94,10 @@ Tip::Tip(const QPixmap &icon, const QString &text, QWidget *parent)
 
     auto *bodyShadow = new QGraphicsDropShadowEffect;
     bodyShadow->setBlurRadius(10.0);
-    bodyShadow->setColor(QColor(0, 0, 0, 0.1 * 255));
+    bodyShadow->setColor(QColor(0, 0, 0, 255 / 10));
     bodyShadow->setOffset(0, 2.0);
-    this->setGraphicsEffect(bodyShadow);
+    setGraphicsEffect(bodyShadow);
+
     hide();
 
     setFixedHeight(40);

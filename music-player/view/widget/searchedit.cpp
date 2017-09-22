@@ -35,8 +35,9 @@ DWIDGET_USE_NAMESPACE
 
 SearchEdit::SearchEdit(QWidget *parent) : DSearchEdit(parent)
 {
+    // Why qss not work if not call show
+    show();
     ThemeManager::instance()->regisetrWidget(this, QStringList() << "viewname");
-
     connect(this, &SearchEdit::focusOut,
             this, &SearchEdit::onFocusOut);
 //    connect(this, &SearchEdit::focusIn,
@@ -132,7 +133,7 @@ void SearchEdit::onTextChanged()
         m_result->autoResize();
         m_result->show();
         // parent is MainFrame
-        m_result->move(parentWidget()->rect().width() / 2  - 80 , 40 - 4);
+        m_result->move(parentWidget()->rect().width() / 2  - 80, 40 - 4);
         m_result->setFocusPolicy(Qt::StrongFocus);
         m_result->raise();
     } else {
@@ -164,5 +165,4 @@ void SearchEdit::setViewname(QString viewname)
 
     m_view = viewname;
     emit viewnameChanged(viewname);
-
 }

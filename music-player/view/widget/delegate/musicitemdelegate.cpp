@@ -81,7 +81,7 @@ void MusicItemDelegatePrivate::setActiveAnimationPrefix(QString prefix) const
 //        return;
 //    }
 //    QStringList urls;
-//    auto urlTemp = QString("%1/%2.png").arg(prefix);
+//    auto urlTemp = QString("%1/%2.svg").arg(prefix);
 //    for (int i = 0; i < 94; ++i) {
 //        urls << urlTemp.arg(i);
 //    }
@@ -276,7 +276,7 @@ void MusicItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
             // Fixme:
             auto activeMeta = listview->activingMeta();
             if (!meta.isNull() && meta->invalid) {
-                auto icon = QPixmap(":/common/image/warning.png");
+                auto icon = QPixmap(":/common/image/warning.svg");
                 auto centerF = QRectF(rect).center();
                 auto iconRect = QRect(centerF.x() - icon.width() / 2,
                                       centerF.y() - icon.height() / 2,
@@ -291,7 +291,7 @@ void MusicItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
                 if (option.state & QStyle::State_Selected) {
                     prefix = d->highlightAnimationPrefix();
                 }
-                auto icon = QPixmap(prefix + "/0.png");
+                auto icon = QPixmap(prefix + "/0.svg");
                 auto centerF = QRectF(rect).center();
                 auto iconRect = QRectF(centerF.x() - icon.width() / 2,
                                        centerF.y() - icon.height() / 2,

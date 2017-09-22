@@ -90,7 +90,7 @@ public:
     void slideToImportView();
     void slideToLyricView();
     void slideToMusicListView(bool keepPlaylist);
-    void showTips(QPixmap icon, QString text);
+    void showTips(QIcon icon, QString text);
     void disableControl(int delay = 350);
     void updateSize(QSize newSize);
     void updateViewname(const QString &vm);
@@ -116,7 +116,7 @@ public:
 
     QAction         *newSonglistAction      = nullptr;
     QAction         *colorModeAction        = nullptr;
-    QString         coverBackground         = ":/common/image/cover_max.png";
+    QString         coverBackground         = ":/common/image/cover_max.svg";
     QImage          originCoverImage;
     QImage          currentCoverImage;
     QString         viewname                = "";
@@ -251,7 +251,7 @@ void MainFramePrivate::postInitUI()
     QString acknowledgementLink = "https://www.deepin.org/acknowledgments/deepin-music#thanks";
     qApp->setProductName(QApplication::tr("Deepin Music"));
     qApp->setApplicationAcknowledgementPage(acknowledgementLink);
-    qApp->setProductIcon(QPixmap(":/common/image/logo_96.png"));
+    qApp->setProductIcon(QIcon(":/common/image/app_icon.svg").pixmap(96, 96));
     qApp->setApplicationDescription(descriptionText);
 
     searchResult = new SearchResult(q);
@@ -357,7 +357,7 @@ void MainFramePrivate:: slideToMusicListView(bool keepPlaylist)
     updateViewname("");
 }
 
-void MainFramePrivate::showTips(QPixmap icon, QString text)
+void MainFramePrivate::showTips(QIcon icon, QString text)
 {
     Q_Q(MainFrame);
     if (tips) {
@@ -611,7 +611,7 @@ void MainFrame::binding(Presenter *presenter)
 
     connect(presenter, &Presenter::notifyAddToPlaylist,
     this, [ = ](PlaylistPtr playlist, const MetaPtrList) {
-        auto icon = QPixmap(":/common/image/notify_success.png");
+        auto icon = QIcon(":/common/image/notify_success.svg");
         QFontMetrics fm(font());
         auto displayName = fm.elidedText(playlist->displayName(), Qt::ElideMiddle, 300);
         auto text = tr("Successfully added to \"%1\"").arg(displayName);
@@ -661,7 +661,7 @@ void MainFrame::binding(Presenter *presenter)
     connect(presenter, &Presenter::notifyMusciError,
     this, [ = ](PlaylistPtr playlist, const MetaPtr  meta, int /*error*/) {
         Dtk::Widget::DDialog warnDlg(this);
-        warnDlg.setIcon(QIcon(":/common/image/dialog_warning.png"));
+        warnDlg.setIcon(QIcon(":/common/image/dialog_warning.svg"));
         warnDlg.setTextFormat(Qt::RichText);
         warnDlg.setTitle(tr("Invalid or non-existent file"));
         warnDlg.addButtons(QStringList() << tr("OK"));
@@ -686,7 +686,7 @@ void MainFrame::binding(Presenter *presenter)
         if (0 == mediaCount) {
             QString message = QString(tr("Failed to import, no vaild music file found!"));
             Dtk::Widget::DDialog warnDlg(this);
-            warnDlg.setIcon(QIcon(":/common/image/dialog_warning.png"));
+            warnDlg.setIcon(QIcon(":/common/image/dialog_warning.svg"));
             warnDlg.setTextFormat(Qt::AutoText);
             warnDlg.setTitle(message);
             warnDlg.addButtons(QStringList() << tr("OK"));
