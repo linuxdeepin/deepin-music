@@ -130,18 +130,17 @@ void Titlebar::paintEvent(QPaintEvent *)
 
     auto radius = 0;
     QPainter titlePainter(this);
-    titlePainter.setRenderHint(QPainter::Antialiasing);
-    titlePainter.setRenderHint(QPainter::HighQualityAntialiasing);
+    titlePainter.setRenderHints(QPainter::Antialiasing);
 
     auto titleBarHeight = this->height() ;
     QRectF winRect = rect();
     QPointF titleTopLeft(winRect.x(), winRect.y());
 
     QRectF topLeftRect(titleTopLeft,
-                       QPoint(winRect.x() + 2 * radius, winRect.y() + 2 * radius));
-    QRectF topRightRect(QPoint(winRect.x() + winRect.width(), winRect.y()),
-                        QPoint(winRect.x() + winRect.width() - 2 * radius,
-                               winRect.y() + 2 * radius));
+                       QPointF(winRect.x() + 2 * radius, winRect.y() + 2 * radius));
+    QRectF topRightRect(QPointF(winRect.x() + winRect.width(), winRect.y()),
+                        QPointF(winRect.x() + winRect.width() - 2 * radius,
+                                winRect.y() + 2 * radius));
 
     QPainterPath titleBorder;
     titleBorder.moveTo(winRect.x() + radius, winRect.y());
@@ -150,19 +149,19 @@ void Titlebar::paintEvent(QPaintEvent *)
     titleBorder.lineTo(winRect.x() + winRect.width(), winRect.y() + radius);
     titleBorder.lineTo(winRect.x() + winRect.width(), winRect.y() + titleBarHeight);
     titleBorder.lineTo(winRect.x(), winRect.y() + titleBarHeight);
-    titleBorder.lineTo(winRect.x() , winRect.y() + radius);
+    titleBorder.lineTo(winRect.x(), winRect.y() + radius);
     titleBorder.arcTo(topLeftRect, 180.0, -90.0);
     titleBorder.closeSubpath();
 
     titlePainter.fillPath(titleBorder, QBrush(d->titleBackground));
-    QLine line(titleTopLeft.x(), winRect.y() + titleBarHeight ,
-               winRect.x() + winRect.width(), winRect.y() + titleBarHeight);
+    QLineF line(titleTopLeft.x(), winRect.y() + titleBarHeight,
+                winRect.x() + winRect.width(), winRect.y() + titleBarHeight);
 
     titlePainter.setPen(QPen(d->borderBottom, 1.0));
     titlePainter.drawLine(line);
 
-    QLine lineOut(titleTopLeft.x()+radius, winRect.y() +  1,
-                  winRect.x() + winRect.width()-radius, winRect.y() + 1);
+    QLineF lineOut(titleTopLeft.x() + radius, winRect.y(),
+                   winRect.x() + winRect.width() - radius, winRect.y());
     titlePainter.setPen(QPen(d->borderShadowTop, 1.0));
     titlePainter.drawLine(lineOut);
 }
