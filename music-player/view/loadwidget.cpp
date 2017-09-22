@@ -36,6 +36,9 @@ LoadWidget::LoadWidget(QWidget *parent) :
     ThemeManager::instance()->regisetrWidget(this);
 
     auto water = new DWaterProgress(this);
+    water->setValue(50);
+    water->setTextVisible(false);
+    water->start();
 
     auto label = new QLabel(tr("Loading..."));
     label->setObjectName("LoadWidgetLabel");
