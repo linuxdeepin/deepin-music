@@ -416,11 +416,11 @@ void Footer::mousePressEvent(QMouseEvent *event)
     QFrame::mousePressEvent(event);
     auto subCtlPos = d->progress->mapFromParent(event->pos());
     if (d->progress->rect().contains(subCtlPos)
-            || !this->rect().contains(event->pos())) {
+            /*|| !this->rect().contains(event->pos())*/) {
         d->enableMove = false;
-        return;
+    } else {
+        d->enableMove = true;
     }
-    d->enableMove = true;
 }
 
 void Footer::mouseReleaseEvent(QMouseEvent *event)
@@ -432,13 +432,11 @@ void Footer::mouseReleaseEvent(QMouseEvent *event)
 
 void Footer::mouseMoveEvent(QMouseEvent *event)
 {
-    // TODO: ingore sub control
     Q_D(Footer);
-    QFrame::mouseMoveEvent(event);
-
     Qt::MouseButton button = event->buttons() & Qt::LeftButton ? Qt::LeftButton : Qt::NoButton;
-    if (d->enableMove && event->buttons() == Qt::LeftButton /*&& d->mousePressed*/) {
+    if (d->enableMove && d->enableMove && event->buttons() == Qt::LeftButton) {
         emit mouseMoving(button);
+        QFrame::mouseMoveEvent(event);
     }
 }
 
