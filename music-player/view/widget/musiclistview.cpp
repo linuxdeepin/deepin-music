@@ -30,7 +30,9 @@
 #include <QResizeEvent>
 #include <QStandardItemModel>
 #include <QScrollBar>
+
 #include <ddialog.h>
+#include <DDesktopServices>
 
 #include "../../core/metasearchservice.h"
 #include "../helper/widgethellper.h"
@@ -374,16 +376,8 @@ void MusicListView::showContextMenu(const QPoint &pos,
         connect(displayAction, &QAction::triggered, this, [ = ](bool) {
             auto index = selection->selectedRows().first();
             auto meta = d->model->meta(index);
-
-            auto dirUrl = QUrl::fromLocalFile(QFileInfo(meta->localPath).absoluteDir().absolutePath());
-            QFileInfo ddefilemanger("/usr/bin/dde-file-manager");
-            if (ddefilemanger.exists()) {
-                auto dirFile = QUrl::fromLocalFile(QFileInfo(meta->localPath).absoluteFilePath());
-                auto url = QString("%1?selectUrl=%2").arg(dirUrl.toString()).arg(dirFile.toString());
-                QProcess::startDetached("dde-file-manager" , QStringList() << url);
-            } else {
-                QProcess::startDetached("gvfs-open" , QStringList() << dirUrl.toString());
-            }
+            auto dirUrl = QUrl::fromLocalFile(meta->localPath);
+            Dtk::Widget::DDesktopServices::showFileItem(dirUrl);
         });
     }
 
@@ -408,7 +402,7 @@ void MusicListView::showContextMenu(const QPoint &pos,
             Dtk::Widget::DDialog warnDlg(this);
             warnDlg.setStyle(QStyleFactory::create("dlight"));
             warnDlg.setTextFormat(Qt::RichText);
-            warnDlg.addButton(tr("Cancel"), true , Dtk::Widget::DDialog::ButtonWarning);
+            warnDlg.addButton(tr("Cancel"), true, Dtk::Widget::DDialog::ButtonWarning);
             warnDlg.addButton(tr("Delete"), false, Dtk::Widget::DDialog::ButtonNormal);
 
             auto cover = QImage(QString(":/common/image/del_notify.svg"));
