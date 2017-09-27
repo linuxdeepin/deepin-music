@@ -276,13 +276,13 @@ void MusicItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
             // Fixme:
             auto activeMeta = listview->activingMeta();
             if (!meta.isNull() && meta->invalid) {
-                auto icon = QPixmap(":/common/image/warning.svg");
+                auto sz = QSizeF(15, 15);
+                auto icon = QIcon(":/common/image/warning.svg").pixmap(sz.toSize());
                 auto centerF = QRectF(rect).center();
-                auto iconRect = QRect(centerF.x() - icon.width() / 2,
-                                      centerF.y() - icon.height() / 2,
-                                      icon.width(), icon.height());
-                painter->drawPixmap(iconRect, icon);
-//                d->playingAnimation->hide();
+                auto iconRect = QRectF(centerF.x() - sz.width() / 2,
+                                       centerF.y() - sz.height() / 2,
+                                       sz.width(), sz.height());
+                painter->drawPixmap(iconRect, icon, QRectF());
                 break;
             }
 
