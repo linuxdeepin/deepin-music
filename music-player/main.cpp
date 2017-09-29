@@ -109,6 +109,7 @@ int main(int argc, char *argv[])
     }
 
     AppSettings::instance()->init();
+    Player::instance()->init();
     if (!toOpenFile.isEmpty()) {
         auto fi = QFileInfo(toOpenFile);
         auto url = QUrl::fromLocalFile(fi.absoluteFilePath());
