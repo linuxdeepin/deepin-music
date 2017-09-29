@@ -1,6 +1,6 @@
 #LyricWidget {
     background-color: rgba(0,0,0,30%);
-    qproperty-defaultCover: ":/common/image/cover_max.png";
+    qproperty-defaultCover: ":/common/image/cover_max.svg";
 }
 
 #LyricCover{
@@ -67,13 +67,13 @@
 }
 
 #ShowSearch{
-    border-image: url(:/common/image/lrc_search_hover.png);
+    border-image: url(:/common/image/lrc_search_hover.svg);
 }
 #ShowSearch:hover{
-    border-image: url(:/common/image/lrc_search_hover.png);
+    border-image: url(:/common/image/lrc_search_hover.svg);
 }
 #ShowSearch:pressed{
-    border-image: url(:/common/image/lrc_search_press.png);
+    border-image: url(:/common/image/lrc_search_press.svg);
 }
 
 #ExitSearch{

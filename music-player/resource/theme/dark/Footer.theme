@@ -1,7 +1,7 @@
 #Footer {
     border-radius: 0;
     background-color: rgba(0, 0, 0, 0.8);
-    qproperty-defaultCover: ":/common/image/cover_welcome.png";
+    qproperty-defaultCover: ":/common/image/cover_welcome.svg";
 }
 
 #FooterProgress::groove:horizontal {
@@ -44,11 +44,11 @@
 }
 #FooterCoverHover:hover {
     background-color: rgba(0,0,0,30%);
-    border-image: url(:/common/image/show_lyc_hover.png);
+    border-image: url(:/common/image/show_lyc_hover.svg);
 }
 #FooterCoverHover:pressed {
     background-color: rgba(0,0,0,30%);
-    border-image: url(:/common/image/show_lyc_press.png);
+    border-image: url(:/common/image/show_lyc_press.svg);
 }
 
 #FooterCoverHover[viewname="lyric"] {
@@ -57,11 +57,11 @@
 }
 #FooterCoverHover[viewname="lyric"]:hover {
     background-color: rgba(0,0,0,30%);
-    border-image: url(:/common/image/hide_lyc.png);
+    border-image: url(:/common/image/hide_lyc.svg);
 }
 #FooterCoverHover[viewname="lyric"]:pressed {
     background-color: rgba(0,0,0,30%);
-    border-image: url(:/common/image/hide_lyc_press.png);
+    border-image: url(:/common/image/hide_lyc_press.svg);
 }
 
 
@@ -76,147 +76,147 @@
 }
 
 #FooterActionPrev{
-    border-image: url(:/common/image/previous_normal.png);
+    border-image: url(:/common/image/previous_normal.svg);
 }
 #FooterActionPrev:hover{
-    border-image: url(:/common/image/previous_hover.png);
+    border-image: url(:/common/image/previous_hover.svg);
 }
 #FooterActionPrev:pressed{
-    border-image: url(:/common/image/previous_press.png);
+    border-image: url(:/common/image/previous_press.svg);
 }
 
 #FooterActionPlay{
-    border-image: url(:/common/image/start_normal.png);
+    border-image: url(:/common/image/start_normal.svg);
 }
 #FooterActionPlay:hover{
-    border-image: url(:/common/image/start_hover.png);
+    border-image: url(:/common/image/start_hover.svg);
 }
 #FooterActionPlay:pressed{
-    border-image: url(:/common/image/start_press.png);
+    border-image: url(:/common/image/start_press.svg);
 }
 #FooterActionPlay[playstatus=playing]{
-    border-image: url(:/common/image/pause_normal.png);
+    border-image: url(:/common/image/pause_normal.svg);
 }
 #FooterActionPlay:hover[playstatus=playing]{
-    border-image: url(:/common/image/pause_hover.png);
+    border-image: url(:/common/image/pause_hover.svg);
 }
 #FooterActionPlay:pressed[playstatus=playing]{
-    border-image: url(:/common/image/pause_press.png);
+    border-image: url(:/common/image/pause_press.svg);
 }
 
 #FooterActionNext{
-    border-image: url(:/common/image/next_normal.png);
+    border-image: url(:/common/image/next_normal.svg);
 }
 #FooterActionNext:hover{
-    border-image: url(:/common/image/next_hover.png);
+    border-image: url(:/common/image/next_hover.svg);
 }
 #FooterActionNext:pressed{
-    border-image: url(:/common/image/next_press.png);
+    border-image: url(:/common/image/next_press.svg);
 }
 
 #FooterActionFavorite{
-    border-image: url(:/common/image/fav_normal.png);
+    border-image: url(:/common/image/fav_normal.svg);
 }
 #FooterActionFavorite:hover{
-    border-image: url(:/common/image/fav_hover.png);
+    border-image: url(:/common/image/fav_hover.svg);
 }
 #FooterActionFavorite:pressed{
-    border-image: url(:/common/image/fav_press.png);
+    border-image: url(:/common/image/fav_press.svg);
 }
 
 #FooterActionFavorite[fav=true]{
-    border-image: url(:/common/image/unfav_normal.png);
+    border-image: url(:/common/image/unfav_normal.svg);
 }
 #FooterActionFavorite:hover[fav=true]{
-    border-image: url(:/common/image/unfav_hover.png);
+    border-image: url(:/common/image/unfav_hover.svg);
 }
 #FooterActionFavorite:pressed[fav=true]{
-    border-image: url(:/common/image/unfav_press.png);
+    border-image: url(:/common/image/unfav_press.svg);
 }
 
 #FooterActionLyric{
-    border-image: url(:/common/image/lrc_normal.png);
+    border-image: url(:/common/image/lrc_normal.svg);
 }
 #FooterActionLyric:hover{
-    border-image: url(:/common/image/lrc_hover.png);
+    border-image: url(:/common/image/lrc_hover.svg);
 }
 #FooterActionLyric:pressed{
-    border-image: url(:/common/image/lrc_press.png);
+    border-image: url(:/common/image/lrc_press.svg);
 }
 
 #FooterActionPlayMode{
-    border-image: url(:/common/image/repeat_all_normal.png);
+    border-image: url(:/common/image/repeat_all_normal.svg);
 }
 #FooterActionPlayMode:hover{
-    border-image: url(:/common/image/repeat_all_hover.png);
+    border-image: url(:/common/image/repeat_all_hover.svg);
 }
 #FooterActionPlayMode:pressed{
-    border-image: url(:/common/image/repeat_all_press.png);
+    border-image: url(:/common/image/repeat_all_press.svg);
 }
 #FooterActionPlayMode[mode="1"]{
-    border-image: url(:/common/image/repeat_single_normal.png);
+    border-image: url(:/common/image/repeat_single_normal.svg);
 }
 #FooterActionPlayMode:hover[mode="1"]{
-    border-image: url(:/common/image/repeat_single_hover.png);
+    border-image: url(:/common/image/repeat_single_hover.svg);
 }
 #FooterActionPlayMode:pressed[mode="1"]{
-    border-image: url(:/common/image/repeat_single_press.png);
+    border-image: url(:/common/image/repeat_single_press.svg);
 }
 #FooterActionPlayMode[mode="2"]{
-    border-image: url(:/common/image/shuffle_normal.png);
+    border-image: url(:/common/image/shuffle_normal.svg);
 }
 #FooterActionPlayMode:hover[mode="2"]{
-    border-image: url(:/common/image/shuffle_hover.png);
+    border-image: url(:/common/image/shuffle_hover.svg);
 }
 #FooterActionPlayMode:pressed[mode="2"]{
-    border-image: url(:/common/image/shuffle_press.png);
+    border-image: url(:/common/image/shuffle_press.svg);
 }
 
 #FooterActionSound[volume="high"]{
-    border-image: url(:/common/image/volume_high_normal.png);
+    border-image: url(:/common/image/volume_high_normal.svg);
 }
 #FooterActionSound:hover[volume="high"]{
-    border-image: url(:/common/image/volume_high_hover.png);
+    border-image: url(:/common/image/volume_high_hover.svg);
 }
 #FooterActionSound:pressed[volume="high"]{
-    border-image: url(:/common/image/volume_high_press.png);
+    border-image: url(:/common/image/volume_high_press.svg);
 }
 
 #FooterActionSound[volume="mid"]{
-    border-image: url(:/common/image/volume_mid_normal.png);
+    border-image: url(:/common/image/volume_mid_normal.svg);
 }
 #FooterActionSound:hover[volume="mid"]{
-    border-image: url(:/common/image/volume_mid_hover.png);
+    border-image: url(:/common/image/volume_mid_hover.svg);
 }
 #FooterActionSound:pressed[volume="mid"]{
-    border-image: url(:/common/image/volume_mid_press.png);
+    border-image: url(:/common/image/volume_mid_press.svg);
 }
 
 #FooterActionSound[volume="low"]{
-    border-image: url(:/common/image/volume_low_normal.png);
+    border-image: url(:/common/image/volume_low_normal.svg);
 }
 #FooterActionSound:hover[volume="low"]{
-    border-image: url(:/common/image/volume_low_hover.png);
+    border-image: url(:/common/image/volume_low_hover.svg);
 }
 #FooterActionSound:pressed[volume="low"]{
-    border-image: url(:/common/image/volume_mid_press.png);
+    border-image: url(:/common/image/volume_mid_press.svg);
 }
 #FooterActionSound[volume="mute"]{
-    border-image: url(:/common/image/volume_mute_normal.png);
+    border-image: url(:/common/image/volume_mute_normal.svg);
 }
 #FooterActionSound:hover[volume="mute"]{
-    border-image: url(:/common/image/volume_mute_hover.png);
+    border-image: url(:/common/image/volume_mute_hover.svg);
 }
 #FooterActionSound:pressed[volume="mute"]{
-    border-image: url(:/common/image/volume_mute_press.png);
+    border-image: url(:/common/image/volume_mute_press.svg);
 }
 
 #FooterActionPlayList{
-    border-image: url(:/common/image/show_playlist_normal.png);
+    border-image: url(:/common/image/show_playlist_normal.svg);
 }
 #FooterActionPlayList:hover{
-    border-image: url(:/common/image/show_playlist_hover.png);
+    border-image: url(:/common/image/show_playlist_hover.svg);
 }
 #FooterActionPlayList:pressed{
-    border-image: url(:/common/image/show_playlist_press.png);
+    border-image: url(:/common/image/show_playlist_press.svg);
 }

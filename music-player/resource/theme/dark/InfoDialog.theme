@@ -4,13 +4,13 @@
 }
 
 #InfoClose {
-    border-image: url(:/images/light/images/window_close_normal.png);
+    border-image: url(:/images/light/images/window_close_normal.svg);
 }
 #InfoClose:hover {
-    border-image: url(:/images/light/images/window_close_hover.png);
+    border-image: url(:/images/light/images/window_close_hover.svg);
 }
 #InfoClose:pressed {
-    border-image: url(:/images/light/images/window_close_press.png);
+    border-image: url(:/images/light/images/window_close_press.svg);
 }
 
 #InfoTitle{

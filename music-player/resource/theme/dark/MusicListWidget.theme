@@ -19,7 +19,7 @@
     padding: 0 10 0 10;
     border: none;
     border-radius: 3.0px;
-    qproperty-icon: url(:/common/image/play_all.png);
+    qproperty-icon: url(:/common/image/play_all.svg);
 }
 #MusicListPlayAll:hover{
     border: 0px solid rgba(0, 0, 0, 0.2);

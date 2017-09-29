@@ -8,14 +8,14 @@ Dtk--Widget--DSearchEdit {
 Dtk--Widget--DSearchEdit #SearchIcon {
     margin: 2 -1 2 4 px;
     background-color:transparent;
-    border-image:url(:/light/image/search.png);
+    border-image:url(:/light/image/search.svg);
 }
 
 Dtk--Widget--DSearchEdit #ClearIcon {
     background-color:transparent;
-    qproperty-normalPic:url(:/light/image/input_clear_normal.png);
-    qproperty-hoverPic:url(:/light/image/input_clear_hover.png);
-    qproperty-pressPic:url(:/light/image/input_clear_press.png);
+    qproperty-normalPic:url(:/light/image/input_clear_normal.svg);
+    qproperty-hoverPic:url(:/light/image/input_clear_hover.svg);
+    qproperty-pressPic:url(:/light/image/input_clear_press.svg);
 }
 
 Dtk--Widget--DSearchEdit #Edit {
@@ -47,14 +47,14 @@ Dtk--Widget--DSearchEdit[viewname="lyric"] {
 Dtk--Widget--DSearchEdit[viewname="lyric"] #SearchIcon {
     margin: 2 -1 2 4 px;
     background-color:transparent;
-    border-image:url(:/dark/image/search.png);
+    border-image:url(:/dark/image/search.svg);
 }
 
 Dtk--Widget--DSearchEdit[viewname="lyric"] #ClearIcon {
     background-color:transparent;
-    qproperty-normalPic:url(:/dark/image/input_clear_normal.png);
-    qproperty-hoverPic:url(:/dark/image/input_clear_hover.png);
-    qproperty-pressPic:url(:/dark/image/input_clear_press.png);
+    qproperty-normalPic:url(:/dark/image/input_clear_normal.svg);
+    qproperty-hoverPic:url(:/dark/image/input_clear_hover.svg);
+    qproperty-pressPic:url(:/dark/image/input_clear_press.svg);
 }
 
 Dtk--Widget--DSearchEdit[viewname="lyric"] #Edit {

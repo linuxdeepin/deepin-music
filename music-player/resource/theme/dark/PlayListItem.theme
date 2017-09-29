@@ -4,13 +4,13 @@
 }
 
 #PlayListIcon {
-    image: url(:/dark/image/playlist.png);
+    image: url(:/dark/image/playlist.svg);
 }
 #PlayListIcon[iconName="all"] {
-    image: url(:/dark/image/playlist_allmusic.png);
+    image: url(:/dark/image/playlist_allmusic.svg);
 }
 #PlayListIcon[iconName="fav"] {
-    image: url(:/dark/image/playlist_fav.png);
+    image: url(:/dark/image/playlist_fav.svg);
 }
 
 #PlayListInterFrame{

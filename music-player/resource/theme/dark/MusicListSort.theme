@@ -6,9 +6,9 @@ Dtk--Widget--DComboBox {
     color: #b4b4b4;
     font-size: 12px;
 
-    qproperty-insensitiveTickImg: url(:/images/dark/images/tick_insensitive.png);
-    qproperty-hoverTickImg: url(:/images/dark/images/tick_hover.png);
-    qproperty-normalTickImg: url(:/images/dark/images/tick_hover.png);
+    qproperty-insensitiveTickImg: url(:/images/dark/images/tick_insensitive.svg);
+    qproperty-hoverTickImg: url(:/images/dark/images/tick_hover.svg);
+    qproperty-normalTickImg: url(:/images/dark/images/tick_hover.svg);
 
     background-color: rgba(255, 255, 255, 26);/*use as outside border*/
 }
@@ -55,11 +55,11 @@ Dtk--Widget--DComboBox::drop-down {
 }
 
 Dtk--Widget--DComboBox::down-arrow {
-    image: url(:/images/dark/images/arrow_down_normal.png);
+    image: url(:/images/dark/images/arrow_down_normal.svg);
 }
 
 Dtk--Widget--DComboBox::down-arrow:hover {
-    image: url(:/images/dark/images/arrow_down_hover.png);
+    image: url(:/images/dark/images/arrow_down_hover.svg);
 }
 
 QAbstractItemView Dtk--Widget--DComboBoxItem {
@@ -110,7 +110,7 @@ QFrame#ComboboxPopupTopEnd {
     border-top-left-radius: 4;
     border-top-right-radius: 4;
 
-    background: transparent url(:/images/dark/images/combobox_up_arrow.png);
+    background: transparent url(:/images/dark/images/combobox_up_arrow.svg);
     background-repeat: no-repeat;
     background-position: center;
 }
@@ -121,7 +121,7 @@ QFrame#ComboboxPopupBottomEnd {
     border-bottom-left-radius: 4;
     border-bottom-right-radius: 4;
 
-    background: transparent url(:/images/dark/images/combobox_down_arrow.png);
+    background: transparent url(:/images/dark/images/combobox_down_arrow.svg);
     background-repeat: no-repeat;
     background-position: center;
 }

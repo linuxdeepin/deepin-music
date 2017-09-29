@@ -11,5 +11,5 @@
 }
 
 #DDropdownIcon{
-    border-image: url(:/dark/image/dropdown_arrow.png);
+    border-image: url(:/dark/image/dropdown_arrow.svg);
 }

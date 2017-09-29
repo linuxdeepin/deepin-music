@@ -21,10 +21,10 @@ SearchMetaItem {
 
 #SearchMetaItemCheck{
     background-color: transparent;
-    border-image: url(:/common/image/none.png);
+    border-image: url(:/common/image/none.svg);
 }
 #SearchMetaItemCheck[active=true]{
-    border-image: url(:/common/image/select.png);
+    border-image: url(:/common/image/select.svg);
 }
 
 #SearchMetaItemLength{
