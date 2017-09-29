@@ -239,6 +239,9 @@ void MainFramePrivate::initUI(bool showLoading)
         importWidget->show();
     }
     footer->show();
+
+    infoDialog = new InfoDialog(q);
+    infoDialog->hide();
 }
 
 void MainFramePrivate::postInitUI()
@@ -270,10 +273,6 @@ void MainFramePrivate::postInitUI()
     contentLayout->addWidget(musicList);
     contentLayout->addWidget(lyricWidget);
     contentLayout->addWidget(playlistWidget);
-
-    infoDialog = new InfoDialog(q);
-    infoDialog->setStyle(QStyleFactory::create("dlight"));
-    infoDialog->hide();
 
     titlebarwidget->setSearchEnable(false);
     importWidget->show();
@@ -499,10 +498,8 @@ void MainFramePrivate::showInfoDialog(const MetaPtr meta)
 MainFrame::MainFrame(QWidget *parent) :
     DMainWindow(parent), d_ptr(new MainFramePrivate(this))
 {
-//    Q_D(MainFrame);
     setObjectName("MainFrame");
     ThemeManager::instance()->regisetrWidget(this, QStringList() << s_PropertyViewname);
-    initUI(true);
 }
 
 MainFrame::~MainFrame()

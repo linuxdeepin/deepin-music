@@ -3,6 +3,12 @@
     qproperty-borderColor: rgba(0, 0, 0, 0.2);
 }
 
+#InfoClose {
+    qproperty-normalPic: url(:/images/light/images/window/close_normal.svg);
+    qproperty-hoverPic: url(:/images/light/images/window/close_hover.svg);
+    qproperty-pressPic: url(:/images/light/images/window/close_press.svg);
+}
+
 #InfoCover{
     background: transparent;
     border:none;

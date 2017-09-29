@@ -72,7 +72,7 @@ void InfoDialogPrivate::initUI()
     layout->setSpacing(0);
     layout->setMargin(5);
 
-    auto closeBt = new DWindowCloseButton;
+    auto closeBt = new DImageButton;
     closeBt->setObjectName("InfoClose");
     closeBt->setFixedSize(27, 23);
 
@@ -131,7 +131,6 @@ void InfoDialogPrivate::initUI()
         infoValue->setMinimumWidth(200);
         infoValue->setMaximumWidth(220);
         infoValue->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-        infoValue->adjustSize();
         valueList << infoValue;
 
         infogridLayout->addWidget(infoKey);
