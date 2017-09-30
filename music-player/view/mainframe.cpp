@@ -202,6 +202,7 @@ void MainFramePrivate::initUI(bool showLoading)
 {
     showLoading = true;
     Q_Q(MainFrame);
+    q->setMinimumSize(QSize(720, 480));
     q->setFocusPolicy(Qt::ClickFocus);
 
     titlebarwidget = new TitleBarWidget(q);
@@ -247,9 +248,7 @@ void MainFramePrivate::initUI(bool showLoading)
 void MainFramePrivate::postInitUI()
 {
     Q_Q(MainFrame);
-//    auto flags = titlebar->windowFlags() | Qt::WindowSystemMenuHint;
-//    titlebar->setWindowFlags(flags);
-    // set about info
+
     QString descriptionText = MainFrame::tr("Deepin Music Player is a local  music player with beautiful design and simple functions. It supports viewing lyrics when playing, playing lossless music and customize playlist, etc.");
     QString acknowledgementLink = "https://www.deepin.org/acknowledgments/deepin-music#thanks";
     qApp->setProductName(QApplication::tr("Deepin Music"));
@@ -403,30 +402,28 @@ void MainFramePrivate::setPlaylistVisible(bool visible)
         return;
     }
 
-//    qDebug() << "start move";
-
     playlistWidget->setEnabled(false);
     playlistWidget->setProperty("moving", true);
     auto titleBarHeight = titlebar->height();
 
-    double factor = 0.6;
+    int delay = AnimationDelay * 6 / 10;
     QRect start(q->width(), titleBarHeight,
                 playlistWidget->width(), playlistWidget->height());
     QRect end(q->width() - playlistWidget->width(), titleBarHeight,
               playlistWidget->width(), playlistWidget->height());
     if (!visible) {
-        WidgetHelper::slideEdgeWidget(playlistWidget, end, start, AnimationDelay * factor, true);
+        WidgetHelper::slideEdgeWidget(playlistWidget, end, start, delay, true);
         footer->setFocus();
     } else {
         playlistWidget->setFocus();
-        WidgetHelper::slideEdgeWidget(playlistWidget, start, end, AnimationDelay * factor);
+        WidgetHelper::slideEdgeWidget(playlistWidget, start, end, delay);
         playlistWidget->raise();
     }
-    disableControl(AnimationDelay * factor);
+    disableControl(delay);
     titlebar->raise();
     footer->raise();
 
-    QTimer::singleShot(AnimationDelay * factor * 1, q, [ = ]() {
+    QTimer::singleShot(delay * 1, q, [ = ]() {
         playlistWidget->setProperty("moving", false);
     });
 }
@@ -518,7 +515,6 @@ void MainFrame::postInitUI()
 {
     Q_D(MainFrame);
 
-    setMinimumSize(QSize(720, 480));
     d->postInitUI();
     updateUI();
     focusMusicList();

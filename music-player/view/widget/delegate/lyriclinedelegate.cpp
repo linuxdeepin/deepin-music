@@ -55,7 +55,9 @@ void LyricLineDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
     } else {
         painter->setPen(option.palette.foreground().color());
     }
-    painter->drawText(option.rect, Qt::AlignCenter, index.data().toString());
+    painter->drawText(option.rect,
+                      Qt::AlignCenter | Qt::TextWordWrap,
+                      index.data().toString());
 
     painter->restore();
 }
@@ -63,9 +65,16 @@ void LyricLineDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
 QSize LyricLineDelegate::sizeHint(const QStyleOptionViewItem &option,
                                   const QModelIndex &index) const
 {
-    Q_D(const LyricLineDelegate);
-
     auto sh = QStyledItemDelegate::sizeHint(option, index);
+    QFontMetrics fm(option.font);
+    auto textWidth = fm.width(index.data().toString());
+    auto widgetWidth = option.widget->width();
+    auto row =  textWidth / widgetWidth;
+    if (textWidth > row * widgetWidth) {
+        row += 1;
+    }
+    auto height = row * 16 + sh.height() - 16;
+    sh.setHeight(height);
     return sh;
 }
 
