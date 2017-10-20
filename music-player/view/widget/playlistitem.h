@@ -31,8 +31,8 @@ class TitelEdit;
 class PlayListItem : public QFrame
 {
     Q_OBJECT
-    Q_PROPERTY(QString animationPrefix READ animationPrefix WRITE setAnimationPrefix)
-    Q_PROPERTY(QString highlightAnimationPrefix READ highlightAnimationPrefix WRITE setHighlightAnimationPrefix)
+    Q_PROPERTY(QString playingIcon READ playingIcon WRITE setPlayingIcon)
+    Q_PROPERTY(QString highlightPlayingIcon READ highlightPlayingIcon WRITE setHighlightPlayingIcon)
 public:
     explicit PlayListItem(PlaylistPtr playlist, QWidget *parent = 0);
     inline PlaylistPtr data() {return m_data;}
@@ -42,14 +42,14 @@ public:
 
     void mouseDoubleClickEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
 
-    QString animationPrefix() const
+    QString playingIcon() const
     {
-        return m_animationPrefix;
+        return m_playingIcon;
     }
 
-    QString highlightAnimationPrefix() const
+    QString highlightPlayingIcon() const
     {
-        return m_highlightAnimationPrefix;
+        return m_highlightPlayingIcon;
     }
 
 signals:
@@ -61,22 +61,22 @@ public slots:
     void onDelete();
     void onRename();
 
-    void setAnimationPrefix(QString animationPrefix)
+    void setPlayingIcon(QString playingIcon)
     {
-        m_animationPrefix = animationPrefix;
+        m_playingIcon = playingIcon;
     }
 
-    void setHighlightAnimationPrefix(QString highlightAnimationPrefix)
+    void setHighlightPlayingIcon(QString highlightPlayingIcon)
     {
-        m_highlightAnimationPrefix = highlightAnimationPrefix;
+        m_highlightPlayingIcon = highlightPlayingIcon;
     }
 
 private:
 //    Dtk::Widget::DPictureSequenceView  *playingAnimation;
     TitelEdit      *m_titleedit = nullptr;
     PlaylistPtr    m_data;
-    QString m_animationPrefix;
-    QString m_highlightAnimationPrefix;
+    QString m_playingIcon;
+    QString m_highlightPlayingIcon;
 };
 
 #endif // PLAYLISTITEM_H

@@ -5,6 +5,6 @@
     qproperty-background: #fbfbfb;
     qproperty-alternateBackground: #ffffff;
     qproperty-highlightedBackground:  #2ca7f8;
-    qproperty-animationPrefix: ":/common/animation/playing/black";
-    qproperty-highlightAnimationPrefix: ":/common/animation/playing/white";
+    qproperty-playingIcon: ":/common/image/playing_normal.svg";
+    qproperty-highlightPlayingIcon: ":/common/image/playing_active.svg";
 }

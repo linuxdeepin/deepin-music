@@ -36,8 +36,8 @@ class MusicItemDelegatePrivate : public QWidget
     Q_PROPERTY(QColor background READ background WRITE setBackground)
     Q_PROPERTY(QColor alternateBackground READ alternateBackground WRITE setAlternateBackground)
     Q_PROPERTY(QColor highlightedBackground READ highlightedBackground WRITE setHighlightedBackground)
-    Q_PROPERTY(QString animationPrefix READ animationPrefix WRITE setAnimationPrefix)
-    Q_PROPERTY(QString highlightAnimationPrefix READ highlightAnimationPrefix WRITE setHighlightAnimationPrefix)
+    Q_PROPERTY(QString playingIcon READ playingIcon WRITE setPlayingIcon)
+    Q_PROPERTY(QString highlightPlayingIcon READ highlightPlayingIcon WRITE setHighlightPlayingIcon)
 
 public:
     int                                 tialWidth = -1;
@@ -54,8 +54,8 @@ public:
     QColor background() const;
     QColor alternateBackground() const;
     QColor highlightedBackground() const;
-    QString animationPrefix() const;
-    QString highlightAnimationPrefix() const;
+    QString playingIcon() const;
+    QString highlightPlayingIcon() const;
 
 public slots:
     void setTextColor(QColor textColor);
@@ -64,8 +64,8 @@ public slots:
     void setBackground(QColor background);
     void setAlternateBackground(QColor alternateBackground);
     void setHighlightedBackground(QColor highlightedBackground);
-    void setAnimationPrefix(QString animationPrefix);
-    void setHighlightAnimationPrefix(QString highlightAnimationPrefix);
+    void setPlayingIcon(QString playingIcon);
+    void setHighlightPlayingIcon(QString highlightPlayingIcon);
 
 private:
     QColor m_textColor;
@@ -75,7 +75,7 @@ private:
     QColor m_alternateBackground;
     QColor m_highlightedBackground;
     QString m_aimationPrefix;
-    QString m_highlightAnimationPrefix;
+    QString m_highlightPlayingIcon;
 
     MusicItemDelegate *q_ptr;
     Q_DECLARE_PUBLIC(MusicItemDelegate)

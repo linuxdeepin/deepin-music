@@ -115,14 +115,14 @@ QColor MusicItemDelegatePrivate::highlightedBackground() const
     return m_highlightedBackground;
 }
 
-QString MusicItemDelegatePrivate::animationPrefix() const
+QString MusicItemDelegatePrivate::playingIcon() const
 {
     return m_aimationPrefix;
 }
 
-QString MusicItemDelegatePrivate::highlightAnimationPrefix() const
+QString MusicItemDelegatePrivate::highlightPlayingIcon() const
 {
-    return  m_highlightAnimationPrefix;
+    return  m_highlightPlayingIcon;
 }
 void MusicItemDelegatePrivate::setTextColor(QColor textColor)
 {
@@ -149,14 +149,14 @@ void MusicItemDelegatePrivate::setHighlightedBackground(QColor highlightedBackgr
     m_highlightedBackground = highlightedBackground;
 }
 
-void MusicItemDelegatePrivate::setAnimationPrefix(QString animationPrefix)
+void MusicItemDelegatePrivate::setPlayingIcon(QString playingIcon)
 {
-    m_aimationPrefix = animationPrefix;
+    m_aimationPrefix = playingIcon;
 }
 
-void MusicItemDelegatePrivate::setHighlightAnimationPrefix(QString highlightAnimationPrefix)
+void MusicItemDelegatePrivate::setHighlightPlayingIcon(QString highlightPlayingIcon)
 {
-    m_highlightAnimationPrefix = highlightAnimationPrefix;
+    m_highlightPlayingIcon = highlightPlayingIcon;
 }
 
 QColor MusicItemDelegatePrivate::foreground(int col, const QStyleOptionViewItem &option) const
@@ -287,11 +287,11 @@ void MusicItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
             }
 
             if (activeMeta == meta) {
-                auto prefix = d->animationPrefix();
+                auto playingIcon = d->playingIcon();
                 if (option.state & QStyle::State_Selected) {
-                    prefix = d->highlightAnimationPrefix();
+                    playingIcon = d->highlightPlayingIcon();
                 }
-                auto icon = QPixmap(prefix + "/0.svg");
+                auto icon = QPixmap(playingIcon);
                 auto centerF = QRectF(rect).center();
                 auto iconRect = QRectF(centerF.x() - icon.width() / 2,
                                        centerF.y() - icon.height() / 2,

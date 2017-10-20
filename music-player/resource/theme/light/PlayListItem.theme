@@ -1,6 +1,6 @@
 #PlayListItem{
-    qproperty-animationPrefix: ":/common/animation/playing/blue";
-    qproperty-highlightAnimationPrefix: ":/common/animation/playing/blue";
+    qproperty-playingIcon: ":/common/animation/playing/blue";
+    qproperty-highlightPlayingIcon: ":/common/animation/playing/blue";
 }
 
 #PlayListIcon {

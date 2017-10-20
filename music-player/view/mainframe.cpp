@@ -253,7 +253,7 @@ void MainFramePrivate::postInitUI()
     QString acknowledgementLink = "https://www.deepin.org/acknowledgments/deepin-music#thanks";
     qApp->setProductName(QApplication::tr("Deepin Music"));
     qApp->setApplicationAcknowledgementPage(acknowledgementLink);
-    qApp->setProductIcon(QIcon(":/common/image/app_icon.svg").pixmap(96, 96));
+    qApp->setProductIcon(QIcon(":/common/image/app_icon.svg"));
     qApp->setApplicationDescription(descriptionText);
 
     searchResult = new SearchResult(q);
