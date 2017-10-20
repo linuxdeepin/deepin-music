@@ -192,9 +192,9 @@ Footer::Footer(QWidget *parent) :
 
     ThemeManager::instance()->regisetrWidget(this);
 
-    auto vboxlayout = new QVBoxLayout(this);
-    vboxlayout->setSpacing(0);
-    vboxlayout->setContentsMargins(0, 0, 0, 2);
+    auto mainVBoxlayout = new QVBoxLayout(this);
+    mainVBoxlayout->setSpacing(0);
+    mainVBoxlayout->setContentsMargins(0, 0, 0, 0);
 
     auto hoverFilter = new HoverFilter(this);
 
@@ -206,7 +206,7 @@ Footer::Footer(QWidget *parent) :
     d->progress->setValue(0);
 
     auto layout = new QHBoxLayout();
-    layout->setContentsMargins(10, 0, 20, 10);
+    layout->setContentsMargins(10, 0, 20, 0);
     layout->setSpacing(20);
 
     auto stackedLayout = new QStackedLayout;
@@ -292,15 +292,17 @@ Footer::Footer(QWidget *parent) :
     d->volSlider->setProperty("NoDelayShow", true);
     d->installHint(d->btSound, d->volSlider);
 
-    auto metaWidget = new QFrame;
-    auto metaLayout = new QHBoxLayout(metaWidget);
     auto musicMetaLayout = new QVBoxLayout;
-    metaLayout->setMargin(0);
-    metaLayout->setSpacing(0);
-
+    musicMetaLayout->setContentsMargins(0, 0, 0, 0);
+    musicMetaLayout->setSpacing(0);
     musicMetaLayout->addWidget(d->title);
     musicMetaLayout->addWidget(d->artist);
-    musicMetaLayout->setSpacing(0);
+
+    auto metaWidget = new QFrame;
+//    metaWidget->setStyleSheet("border: 1px solid red;");
+    auto metaLayout = new QHBoxLayout(metaWidget);
+    metaLayout->setContentsMargins(0, 0, 0, 0);
+    metaLayout->setSpacing(0);
     metaLayout->addLayout(stackedLayout);
     metaLayout->addSpacing(10);
     metaLayout->addLayout(musicMetaLayout, 0);
@@ -337,8 +339,10 @@ Footer::Footer(QWidget *parent) :
     layout->addStretch();
     layout->addWidget(actWidget, 0, Qt::AlignRight | Qt::AlignVCenter);
 
-    vboxlayout->addWidget(d->progress);
-    vboxlayout->addLayout(layout);
+    mainVBoxlayout->addWidget(d->progress);
+    mainVBoxlayout->addSpacing(4);
+    mainVBoxlayout->addLayout(layout);
+    mainVBoxlayout->addSpacing(9);
 
     d->title->hide();
     d->artist->hide();
@@ -374,6 +378,12 @@ Footer::Footer(QWidget *parent) :
 Footer::~Footer()
 {
 
+}
+
+int Footer::progressExtentHeight() const
+{
+    Q_D(const Footer);
+    return (d->progress->height() - 2) / 2;
 }
 
 void Footer::enableControl(bool enable)
@@ -703,7 +713,8 @@ void Footer::resizeEvent(QResizeEvent *event)
     Q_D(Footer);
     QFrame::resizeEvent(event);
 
-    auto center = this->rect().center() - d->ctlWidget->rect().center();
+    auto fix = progressExtentHeight();
+    auto center = rect().marginsRemoved(QMargins(0, fix, 0, 0)).center() - d->ctlWidget->rect().center();
 
     d->ctlWidget->move(center);
     d->ctlWidget->raise();

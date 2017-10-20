@@ -224,7 +224,7 @@ void MainFramePrivate::initUI(bool showLoading)
     importWidget = new ImportWidget(q);
 
     footer = new Footer(q);
-    footer->setFixedHeight(FooterHeight);
+    footer->setFixedHeight(FooterHeight + footer->progressExtentHeight());
     footer->enableControl(false);
 
     contentLayout->addWidget(titlebar);
@@ -453,9 +453,11 @@ void MainFramePrivate::updateSize(QSize newSize)
     titlebar->raise();
     titlebar->move(0, 0);
     titlebar->resize(newSize.width(), titleBarHeight);
-    titlebarwidget->setFixedSize(newSize.width() - titlebar->buttonAreaWidth() - 60, titleBarHeight);
+    titlebarwidget->setFixedSize(newSize.width() - titlebar->buttonAreaWidth() - FooterHeight, titleBarHeight);
 
     importWidget->setFixedSize(newSize);
+
+    auto progressExtHeight = footer->progressExtentHeight();
 
     if (lyricWidget) {
         lyricWidget->resize(newSize);
@@ -468,8 +470,8 @@ void MainFramePrivate::updateSize(QSize newSize)
     }
 
     footer->raise();
-    footer->resize(newSize.width(), FooterHeight);
-    footer->move(0, newSize.height() - FooterHeight);
+    footer->resize(newSize.width(), FooterHeight + progressExtHeight);
+    footer->move(0, newSize.height() - FooterHeight - progressExtHeight);
 
     if (tips) {
         tips->hide();
