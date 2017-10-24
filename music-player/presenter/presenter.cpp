@@ -73,7 +73,6 @@ void PresenterPrivate::initBackend()
     qDebug() << "TRACE:" << "database init finished";
 
     player = Player::instance();
-    player->init();
     qDebug() << "TRACE:" << "player init finished";
 
     settings = AppSettings::instance();
@@ -283,6 +282,7 @@ void Presenter::prepareData()
                 meta->invalid = false;
                 emit musicMetaUpdate(playlist, meta);
             }
+            d->continueErrorCount = 0;
             return;
         }
 
@@ -291,15 +291,16 @@ void Presenter::prepareData()
             emit musicMetaUpdate(playlist, meta);
         }
 
-//        qDebug() << "check d->syncPlayerResult false " << d->syncPlayerResult << meta->title;
+//        qDebug() << "check d->syncPlayerResult" << d->syncPlayerResult << meta->title;
         if (d->syncPlayerResult) {
 //            qDebug() << "set d->syncPlayerResult false " << meta->title;
             d->syncPlayerResult = false;
             emit notifyMusciError(playlist, meta, error);
         } else {
 //            qDebug() << "next" << playlist->displayName() << playlist->canNext();
-            if (playlist->canNext()) {
+            if (playlist->canNext() && d->continueErrorCount < 5) {
                 DUtil::TimerSingleShot(800, [d, playlist, meta]() {
+                    ++d->continueErrorCount;
                     d->playNext(playlist, meta);
                 });
             }
@@ -440,6 +441,7 @@ void Presenter::onSyncMusicPlay(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(Presenter);
     d->syncPlayerResult = true;
+    d->continueErrorCount = 0;
     d->syncPlayerMeta = meta;
     onMusicPlay(playlist, meta);
 }
@@ -448,6 +450,7 @@ void Presenter::onSyncMusicResume(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(Presenter);
     d->syncPlayerResult = true;
+    d->continueErrorCount = 0;
     d->syncPlayerMeta = meta;
     onMusicResume(playlist, meta);
 }
@@ -456,6 +459,7 @@ void Presenter::onSyncMusicPrev(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(Presenter);
     d->syncPlayerResult = true;
+    d->continueErrorCount = 0;
     d->syncPlayerMeta = meta;
     onMusicPrev(playlist, meta);
 }
@@ -464,6 +468,7 @@ void Presenter::onSyncMusicNext(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(Presenter);
     d->syncPlayerResult = true;
+    d->continueErrorCount = 0;
     d->syncPlayerMeta = meta;
     onMusicNext(playlist, meta);
 }

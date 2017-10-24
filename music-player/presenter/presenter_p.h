@@ -42,6 +42,7 @@ public:
     PlaylistPtr         currentPlaylist;
 
     bool                syncPlayerResult    = false;
+    int                 continueErrorCount  = 0;
     MetaPtr             syncPlayerMeta;
 
     MetaSearchService   *lyricService   = nullptr;
