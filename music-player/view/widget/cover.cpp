@@ -143,7 +143,8 @@ void Cover::setCoverPixmap(const QPixmap &pixmap)
     auto sz = coverRect.size().toSize() * ratio;
 
     QPixmap backgroundPixmap = pixmap.scaled(sz, Qt::KeepAspectRatioByExpanding);
-
+    // TODO: fix ratio by Dtk::Widget::DHiDPIHelper
+    backgroundPixmap.setDevicePixelRatio(1);
     QPixmap maskPixmap(sz);
     maskPixmap.fill(Qt::transparent);
     QPainterPath path;

@@ -100,6 +100,7 @@ class PlayerPrivate
 public:
     PlayerPrivate(Player *parent) : q_ptr(parent)
     {
+        qplayer = new QMediaPlayer();
     }
 
     void initConnection();
@@ -141,7 +142,6 @@ void PlayerPrivate::initConnection()
 {
     Q_Q(Player);
 
-    qplayer = new QMediaPlayer(q);
     qplayer->setAudioRole(QAudio::MusicRole);
     initMiniTypes();
 

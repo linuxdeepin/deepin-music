@@ -31,6 +31,7 @@
 #include <QStandardPaths>
 
 #include <DSettingsOption>
+#include <DDesktopServices>
 #include <DUtil>
 
 #include <plugininterface.h>
@@ -511,7 +512,6 @@ void Presenter::togglePaly()
     case Player::InvalidPlaybackStatus:
         break;
     }
-
 }
 
 void Presenter::pause()
@@ -626,8 +626,8 @@ void Presenter::onMusiclistDelete(PlaylistPtr playlist, const MetaPtrList metali
 
     QMap<QString, QString> trashFiles;
     for (auto &meta : metalist) {
-        qDebug() << meta->hash <<  d->player->activeMeta()->hash;
-        if (meta->hash == d->player->activeMeta()->hash) {
+        if (d->player->activeMeta() &&
+                (meta->hash == d->player->activeMeta()->hash)) {
             if (playinglist->isEmpty()) {
                 onMusicStop(playinglist, next);
             } else {
@@ -645,7 +645,11 @@ void Presenter::onMusiclistDelete(PlaylistPtr playlist, const MetaPtrList metali
     for (auto file : trashFiles.keys()) {
 // FIXME:        emit d->moniter->fileRemoved(file);
     }
+#ifdef FLATPAK_SUPPORT
+    Dtk::Widget::DDesktopServices::trash(trashFiles.keys());
+#else
     QProcess::startDetached("gvfs-trash", trashFiles.keys());
+#endif
     d->library->removeMediaMetaList(metalist);
 }
 

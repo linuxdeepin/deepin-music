@@ -33,6 +33,7 @@
 #include <QStackedLayout>
 
 #include <thememanager.h>
+#include <DHiDPIHelper>
 
 #include "../musicapp.h"
 #include "../core/playlistmanager.h"
@@ -372,7 +373,7 @@ Footer::Footer(QWidget *parent) :
 
     d->updateQssProperty(d->btPlay, sPropertyPlayStatus, sPlayStatusValueStop);
     d->updateQssProperty(this, sPropertyPlayStatus, sPlayStatusValueStop);
-    d->cover->setCoverPixmap(QPixmap(d->defaultCover));
+    d->cover->setCoverPixmap(Dtk::Widget::DHiDPIHelper::loadNxPixmap(d->defaultCover));
 }
 
 Footer::~Footer()
@@ -579,7 +580,7 @@ void Footer::onMusicStoped(PlaylistPtr playlist, const MetaPtr meta)
     d->btFavorite->hide();
     d->activingMeta = MetaPtr();
 
-    d->cover->setCoverPixmap(QPixmap(d->defaultCover));
+    d->cover->setCoverPixmap(Dtk::Widget::DHiDPIHelper::loadNxPixmap(d->defaultCover));
     d->cover->update();
     d->updateQssProperty(d->btPlay, sPropertyPlayStatus, sPlayStatusValueStop);
     d->updateQssProperty(this, sPropertyPlayStatus, sPlayStatusValueStop);
@@ -624,8 +625,7 @@ void Footer::onCoverChanged(const MetaPtr meta, const DMusic::SearchMeta &, cons
 
     QPixmap coverPixmap = coverData.length() > 1024 ?
                           QPixmap::fromImage(QImage::fromData(coverData)) :
-                          QPixmap(d->defaultCover);
-
+                          Dtk::Widget::DHiDPIHelper::loadNxPixmap(d->defaultCover);
     d->cover->setCoverPixmap(coverPixmap);
     d->cover->update();
 }
