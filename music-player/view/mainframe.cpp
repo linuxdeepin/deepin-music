@@ -952,10 +952,11 @@ void MainFrame::onSelectImportFiles()
     }
     fileDlg.setDirectory(lastImportPath);
 
-    QString selfilter = tr("Music (%1)");
+    QString selfilter = tr("All music") + (" (%1)");
     selfilter = selfilter.arg(Player::instance()->supportedSuffixList().join(" "));
     fileDlg.setViewMode(QFileDialog::Detail);
     fileDlg.setFileMode(QFileDialog::ExistingFiles);
+    fileDlg.setOption(QFileDialog::HideNameFilterDetails);
 
     fileDlg.setNameFilter(selfilter);
     fileDlg.selectNameFilter(selfilter);
