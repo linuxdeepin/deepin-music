@@ -171,7 +171,9 @@ void PlayerPrivate::initConnection()
 
         if (position >= activeMeta->offset + activeMeta->length + 1800 && qplayer->state() == QMediaPlayer::PlayingState) {
             qDebug() << "WARN!!! change to next by position change";
-            selectNext(activeMeta, mode);
+            QTimer::singleShot(10, [ = ]() {
+                selectNext(activeMeta, mode);
+            });
             return;
         }
 
