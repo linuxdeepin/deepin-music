@@ -88,7 +88,7 @@ int main(int argc, char *argv[])
     app.setWindowIcon(QIcon(":/common/image/deepin-music.svg"));
 
     if (!app.setSingleInstance("deepinmusic")) {
-        qDebug() << "another deppin music has started";
+        qDebug() << "another deepin music has started";
         if (!toOpenFile.isEmpty()) {
             QFileInfo fi(toOpenFile);
             QUrl url = QUrl::fromLocalFile(fi.absoluteFilePath());
