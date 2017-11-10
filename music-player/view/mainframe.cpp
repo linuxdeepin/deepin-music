@@ -558,7 +558,15 @@ void MainFrame::postInitUI()
     connect(trayIcon, &QSystemTrayIcon::activated,
     this, [ = ](QSystemTrayIcon::ActivationReason reason) {
         if (QSystemTrayIcon::Trigger == reason) {
-            setVisible(!isVisible());
+            if (isMinimized()) {
+                // FIXME: why??? showNormal not work if do not hide and show
+                setVisible(false);
+                setVisible(true);
+
+                showNormal();
+            } else {
+                showMinimized();
+            }
         }
     });
 }
