@@ -123,7 +123,7 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
 
     if (fileInfo.suffix().toLower() == "cue") {
         cuelist << DMusic::CueParserPtr(new DMusic::CueParser(filepath));
-        // TODO: check cue invaild
+        // TODO: check cue invalid
 #ifdef SUPPORT_INOTIFY
         watcher->addPath(fileInfo.absolutePath());
 #endif
@@ -233,7 +233,7 @@ void MediaLibrary::removeMediaMetaList(const MetaPtrList metalist)
     Q_D(MediaLibrary);
     for (auto meta : metalist) {
         if (meta.isNull()) {
-            qCritical() << "invaild meta" << meta;
+            qCritical() << "invalid meta" << meta;
         }
 
         d->metas.remove(meta->hash);

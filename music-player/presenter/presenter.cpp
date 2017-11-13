@@ -892,7 +892,7 @@ void Presenter::onChangeProgress(qint64 value, qint64 range)
     Q_D(Presenter);
 //    auto position = value * d->player->duration() / range;
 //    if (position < 0) {
-//        qCritical() << "invaild position:" << d->player->media().canonicalUrl() << position;
+//        qCritical() << "invalid position:" << d->player->media().canonicalUrl() << position;
 //    }
 //    d->player->setPosition(position);
     auto position = value * d->player->duration() / range;

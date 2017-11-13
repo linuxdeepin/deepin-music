@@ -43,7 +43,7 @@
 //public:
 
 //    enum PlayStatus {
-//        Invaild = 0,
+//        Invalid = 0,
 //        Stop,
 //        Playing,
 //        Pause
