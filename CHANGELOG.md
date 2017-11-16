@@ -1,3 +1,14 @@
+<a name="3.1.7.1"></a>
+## 3.1.7.1 (2017-11-16)
+
+
+#### Bug Fixes
+
+*   showNormal not work ([bb22dc99](bb22dc99))
+*   crash when selectNext on qt 5.9 ([bed9d856](bed9d856))
+
+
+
 <a name="3.1.7"></a>
 ## 3.1.7 (2017-11-06)
 
