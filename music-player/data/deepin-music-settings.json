@@ -1,14 +1,11 @@
 {
-    "groups": [
-        {
+    "groups": [{
             "key": "base",
             "name": "Basic",
-            "groups": [
-                {
+            "groups": [{
                     "key": "play",
                     "name": "Play",
-                    "options": [
-                        {
+                    "options": [{
                             "key": "auto_play",
                             "name": " ",
                             "type": "checkbox",
@@ -33,7 +30,7 @@
                             "key": "sort_type",
                             "hide": true,
                             "reset": false,
-                            "items": [0,1,2,3],
+                            "items": [0, 1, 2, 3],
                             "default": 0
                         },
                         {
@@ -61,7 +58,7 @@
                             "key": "playmode",
                             "reset": false,
                             "hide": true,
-                            "combox_list": [0,1,2],
+                            "combox_list": [0, 1, 2],
                             "default": 0
                         },
                         {
@@ -116,8 +113,7 @@
                 {
                     "key": "close",
                     "name": "Close Main Window",
-                    "options": [
-                        {
+                    "options": [{
                             "key": "ask_close_action",
                             "hide": true,
                             "default": true
@@ -126,7 +122,7 @@
                             "key": "close_action",
                             "name": " ",
                             "type": "radiogroup",
-                            "items": ["Minimize to system tray","Exit Deepin Music"],
+                            "items": ["Minimize to system tray", "Exit Deepin Music"],
                             "default": 0
                         }
                     ]
@@ -136,44 +132,41 @@
         {
             "key": "shortcuts",
             "name": "Shortcuts",
-            "groups": [
-                {
-                    "key": "all",
-                    "name": "",
-                    "options": [
-                        {
-                            "key": "play_pause",
-                            "name": "Play/Pause",
-                            "type": "shortcut",
-                            "default": ["201326592", "80"]
-                        },
-                        {
-                            "key": "previous",
-                            "name": "Previous",
-                            "type": "shortcut",
-                            "default":  ["201326592", "16777234"]
-                        },
-                        {
-                            "key": "next",
-                            "name": "Next",
-                            "type": "shortcut",
-                            "default":  ["201326592", "16777236"]
-                        },
-                        {
-                            "key": "volume_up",
-                            "name": "Volume up",
-                            "type": "shortcut",
-                            "default":  ["201326592", "16777235"]
-                        },
-                        {
-                            "key": "volume_down",
-                            "name": "Volume down",
-                            "type": "shortcut",
-                            "default":  ["201326592", "16777237"]
-                        }
-                    ]
-                }
-            ]
+            "groups": [{
+                "key": "all",
+                "name": "",
+                "options": [{
+                        "key": "play_pause",
+                        "name": "Play/Pause",
+                        "type": "shortcut",
+                        "default": ["67108864", "80"]
+                    },
+                    {
+                        "key": "previous",
+                        "name": "Previous",
+                        "type": "shortcut",
+                        "default": ["67108864", "16777234"]
+                    },
+                    {
+                        "key": "next",
+                        "name": "Next",
+                        "type": "shortcut",
+                        "default": ["67108864", "16777236"]
+                    },
+                    {
+                        "key": "volume_up",
+                        "name": "Volume up",
+                        "type": "shortcut",
+                        "default": ["67108864", "16777235"]
+                    },
+                    {
+                        "key": "volume_down",
+                        "name": "Volume down",
+                        "type": "shortcut",
+                        "default": ["67108864", "16777237"]
+                    }
+                ]
+            }]
         }
     ]
 }
