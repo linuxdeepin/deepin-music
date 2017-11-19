@@ -62,7 +62,7 @@
     <message>
         <location filename="../view/footerwidget.cpp" line="219"/>
         <source>Unknown Title</source>
-        <translation>Titulo desconhecido</translation>
+        <translation>Título desconhecido</translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="225"/>
@@ -188,7 +188,7 @@
     <message>
         <location filename="../view/lyricwidget.cpp" line="155"/>
         <source>Title</source>
-        <translation>Titulo</translation>
+        <translation>Título</translation>
     </message>
     <message>
         <location filename="../view/lyricwidget.cpp" line="160"/>
@@ -390,7 +390,7 @@
     <message>
         <location filename="../view/musiclistwidget.cpp" line="164"/>
         <source>Title</source>
-        <translation>Titulo</translation>
+        <translation>Título</translation>
     </message>
     <message>
         <location filename="../view/musiclistwidget.cpp" line="165"/>
