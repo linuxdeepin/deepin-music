@@ -4,7 +4,7 @@
         <message>
             <location filename="Desktop Entry]Name" line="0"/>
             <source>Deepin Music</source>
-            <translation>Deepin Musikafspiller</translation>
+            <translation>Deepin musik</translation>
         </message>
         <message>
             <location filename="Desktop Entry]GenericName" line="0"/>
@@ -24,7 +24,7 @@
         <message>
             <location filename="PlayPause Shortcut Group]Name" line="0"/>
             <source>Play/Pause track</source>
-            <translation>Afspil/Pause-spor</translation>
+            <translation>Afspil/pause spor</translation>
         </message>
         <message>
             <location filename="Previous Shortcut Group]Name" line="0"/>

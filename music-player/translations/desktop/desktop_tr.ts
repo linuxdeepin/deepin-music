@@ -19,7 +19,7 @@
         <message>
             <location filename="Desktop Entry]Comment" line="0"/>
             <source>Play your music collection</source>
-            <translation>Müzik koleksiyonunuzu oynat</translation>
+            <translation>Müzik koleksiyonunuzu oynatın</translation>
         </message>
         <message>
             <location filename="PlayPause Shortcut Group]Name" line="0"/>

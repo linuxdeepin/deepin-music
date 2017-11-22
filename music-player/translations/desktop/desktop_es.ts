@@ -4,12 +4,12 @@
         <message>
             <location filename="Desktop Entry]Name" line="0"/>
             <source>Deepin Music</source>
-            <translation>Reproductor Deepin Music</translation>
+            <translation>Reproductor Deepin</translation>
         </message>
         <message>
             <location filename="Desktop Entry]GenericName" line="0"/>
             <source>Music Player</source>
-            <translation>Reproductor de Música</translation>
+            <translation>Reproductor de música</translation>
         </message>
         <message>
             <location filename="Next Shortcut Group]Name" line="0"/>

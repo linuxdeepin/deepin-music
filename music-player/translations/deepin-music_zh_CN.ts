@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="zh_CN">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="zh_CN" version="2.1">
 <context>
     <name>CloseConfirmDialog</name>
     <message>
@@ -269,7 +267,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="955"/>
         <source>All music</source>
-        <translation>全部音乐</translation>
+        <translation>所有音乐</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="662"/>

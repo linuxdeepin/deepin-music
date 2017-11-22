@@ -14,7 +14,7 @@
         <message>
             <location filename="Next Shortcut Group]Name" line="0"/>
             <source>Next track</source>
-            <translation>Próximo</translation>
+            <translation>Próxima</translation>
         </message>
         <message>
             <location filename="Desktop Entry]Comment" line="0"/>

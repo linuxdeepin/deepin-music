@@ -4,32 +4,32 @@
         <message>
             <location filename="Desktop Entry]Name" line="0"/>
             <source>Deepin Music</source>
-            <translation>Deepin Music</translation>
+            <translation>Música del Deepin</translation>
         </message>
         <message>
             <location filename="Desktop Entry]GenericName" line="0"/>
             <source>Music Player</source>
-            <translation>Music Player</translation>
+            <translation>Reproductor de música</translation>
         </message>
         <message>
             <location filename="Next Shortcut Group]Name" line="0"/>
             <source>Next track</source>
-            <translation type="unfinished"/>
+            <translation>Pista següent</translation>
         </message>
         <message>
             <location filename="Desktop Entry]Comment" line="0"/>
             <source>Play your music collection</source>
-            <translation>Reproduir la teva col·lecció de música</translation>
+            <translation>Reproduïu la col·lecció de música</translation>
         </message>
         <message>
             <location filename="PlayPause Shortcut Group]Name" line="0"/>
             <source>Play/Pause track</source>
-            <translation type="unfinished"/>
+            <translation>Reprodueix / pausa la pista</translation>
         </message>
         <message>
             <location filename="Previous Shortcut Group]Name" line="0"/>
             <source>Previous track</source>
-            <translation type="unfinished"/>
+            <translation>Pista anterior</translation>
         </message>
     </context>
 </TS>

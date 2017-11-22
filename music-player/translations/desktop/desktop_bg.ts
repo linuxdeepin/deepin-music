@@ -24,7 +24,7 @@
         <message>
             <location filename="PlayPause Shortcut Group]Name" line="0"/>
             <source>Play/Pause track</source>
-            <translation>Пускане/Пауза на песен</translation>
+            <translation>Изпълнение/Пауза на записа</translation>
         </message>
         <message>
             <location filename="Previous Shortcut Group]Name" line="0"/>
