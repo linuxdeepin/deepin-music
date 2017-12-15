@@ -77,6 +77,7 @@ public:
     QStringListModel    *m_model            = nullptr;
 
     QString             defaultCover;
+    QColor              backgroundColor;
 
     LyricWidget *q_ptr;
     Q_DECLARE_PUBLIC(LyricWidget)
@@ -137,7 +138,7 @@ void LyricWidgetPrivate::setLyricLines(QString str)
     m_model->setStringList(lyric);
     lyricview->setModel(m_model);
 
-    QModelIndex index = m_model->index(emptyLineOffset , 0, lyricview->rootIndex());
+    QModelIndex index = m_model->index(emptyLineOffset, 0, lyricview->rootIndex());
     lyricview->selectionModel()->clearSelection();
     lyricview->selectionModel()->select(index, QItemSelectionModel::Select);
     lyricview->scrollTo(index, QListView::PositionAtCenter);
@@ -336,6 +337,12 @@ void LyricWidget::checkHiddenSearch(QPoint mousePos)
     }
 }
 
+QColor LyricWidget::backgroundColor() const
+{
+    Q_D(const LyricWidget);
+    return d->backgroundColor;
+}
+
 
 void LyricWidget::paintEvent(QPaintEvent *e)
 {
@@ -419,6 +426,13 @@ void LyricWidget::onMusicStop(PlaylistPtr /*playlist*/, const MetaPtr /*meta*/)
 void LyricWidget::onProgressChanged(qint64 value, qint64 /*length*/)
 {
     Q_D(LyricWidget);
+
+    qDebug() << d->backgroundColor;
+    QPalette p = palette();
+    p.setColor(QPalette::Background, d->backgroundColor);
+    setPalette(p);
+
+
     auto len = d->m_lyriclist.m_lyricElements.length();
 
     if (!d->m_lyriclist.hasTime) {
@@ -489,6 +503,12 @@ void LyricWidget::onUpdateMetaCodec(const MetaPtr /*meta*/)
 //        d->m_playingMusic.artist = meta.artist;
 //        d->m_playingMusic.album = meta.album;
 //    }
+}
+
+void LyricWidget::setBackgroundColor(QColor backgroundColor)
+{
+    Q_D(LyricWidget);
+    d->backgroundColor = backgroundColor;
 }
 
 void LyricWidget::onContextSearchFinished(const QString &context, const QList<DMusic::SearchMeta> &metalist)

@@ -31,6 +31,7 @@ class LyricWidget : public QFrame
 {
     Q_OBJECT
     Q_PROPERTY(QString defaultCover READ defaultCover WRITE setDefaultCover)
+    Q_PROPERTY(QColor backgroundColor READ backgroundColor WRITE setBackgroundColor)
 
 public:
     explicit LyricWidget(QWidget *parent = 0);
@@ -38,7 +39,9 @@ public:
 
     void updateUI();
     QString defaultCover() const;
+    QColor backgroundColor() const;
     void checkHiddenSearch(QPoint mousePos);
+
 
 signals:
     void toggleLyricView();
@@ -61,6 +64,7 @@ public slots:
                                  const QList<DMusic::SearchMeta> &metalist);
 
     void setDefaultCover(QString defaultCover);
+    void setBackgroundColor(QColor backgroundColor);
     void onUpdateMetaCodec(const MetaPtr meta);
 
 protected:

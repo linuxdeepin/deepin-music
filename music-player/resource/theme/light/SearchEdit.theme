@@ -2,7 +2,7 @@ Dtk--Widget--DSearchEdit {
     border-radius: 4.0px;
     padding: 1px;
     padding-bottom: 0px;
-    background: rgba(0, 0, 0, 0.1);
+    background: rgba(0, 0, 0, 10%);
 }
 
 Dtk--Widget--DSearchEdit #SearchIcon {
