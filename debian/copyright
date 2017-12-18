@@ -1,14 +1,8 @@
-Format: http://dep.debian.net/deps/dep5
-Upstream-Name: deepin-music-player
-Source: http://www.linuxdeepin.com
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: deepin-music
 
 Files: *
-Copyright: 2012 huoshaohui@linudeepin.com
-           2011-2012 wangyong@deepin.com
-License: GPL-3+
-
-Files: debian/*
-Copyright: Deepin Sysdev <sysdev@deepin.com>
+Copyright: 2017 Deepin Technology Co., Ltd.
 License: GPL-3+
  This package is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
