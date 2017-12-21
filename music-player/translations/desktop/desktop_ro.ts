@@ -9,7 +9,7 @@
         <message>
             <location filename="Desktop Entry]GenericName" line="0"/>
             <source>Music Player</source>
-            <translation>Player-ul muzical</translation>
+            <translation>Player muzical</translation>
         </message>
         <message>
             <location filename="Next Shortcut Group]Name" line="0"/>

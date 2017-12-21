@@ -385,7 +385,7 @@
     <message>
         <location filename="../view/musiclistwidget.cpp" line="175"/>
         <source>Time added</source>
-        <translation>Время добавлено</translation>
+        <translation>Время добавления</translation>
     </message>
     <message>
         <location filename="../view/musiclistwidget.cpp" line="176"/>

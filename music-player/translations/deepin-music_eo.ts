@@ -536,7 +536,7 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="34"/>
         <source>Shortcuts</source>
-        <translation type="unfinished"/>
+        <translation>Fulmoklavoj</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="35"/>

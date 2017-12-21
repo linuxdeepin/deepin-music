@@ -105,7 +105,7 @@ GenericName[nl]=Muziekspeler
 GenericName[pl]=Odtwarzacz muzyki
 GenericName[pt]=Reprodutor de Música
 GenericName[pt_BR]=Reprodutor de músicas
-GenericName[ro]=Player-ul muzical
+GenericName[ro]=Player muzical
 GenericName[ru]=Музыкальный Проигрыватель
 GenericName[sk]=Hudobný prehrávač
 GenericName[sl]=Glasbeni predvajalnik
@@ -161,7 +161,7 @@ Name[nb]=Deepin Musikk
 Name[nl]=Deepin Muziekspeler
 Name[pl]=Muzyka Deepin
 Name[pl_PL]=Odtwarzacz muzyki Deepin
-Name[pt]=Música Deepin
+Name[pt]=Deepin Music
 Name[pt_BR]=Deepin Music
 Name[pt_PT]=Reprodutor de Música Deepin
 Name[ro]= Player-ul muzical Deepin
@@ -185,6 +185,7 @@ Name=Next track
 # Translations:
 # Do not manually modify!
 Name[am]=የሚቀጥለውን ተረኛ
+Name[am_ET]=የሚቀጥለው ተረኛ
 Name[ar]=المسار التالي
 Name[ast]=Pista siguiente
 Name[bg]=Следваща песен
@@ -223,6 +224,7 @@ Name[ro]=Melodia următoare
 Name[ru]=Следующая дорожка
 Name[sk]=Ďalšia stopa
 Name[sl]=Naslednja skladba
+Name[sr]=Следећа нумера
 Name[tr]=Sonraki parça
 Name[uk]=Наступний трек
 Name[zh_CN]=下一首
@@ -236,6 +238,7 @@ Name=Play/Pause track
 # Translations:
 # Do not manually modify!
 Name[am]=ተረኛ ማጫወቻ/ማስቆሚያ
+Name[am_ET]=ተረኛ ማጫወቻ/ማስቆሚያ
 Name[ar]=تشغيل / إيقاف المسار
 Name[ast]=Reproducir/posar pista
 Name[bg]=Изпълнение/Пауза на записа
@@ -274,6 +277,7 @@ Name[ro]=Redare/Pauză melodia
 Name[ru]=Воспроизведение/Пауза дорожки
 Name[sk]=Prehrávať/Pozastaviť skladbu
 Name[sl]=Predvajaj/Zaustavi skladbo
+Name[sr]=Пусти/Паузирај нумеру
 Name[tr]= Parçayı Oynat/Duraklat
 Name[uk]=Відтворити/Призупинити трек
 Name[zh_CN]=暂停/继续
@@ -286,6 +290,7 @@ Name=Previous track
 # Translations:
 # Do not manually modify!
 Name[am]=ቀደም ያለው ተረኛ
+Name[am_ET]=ያለፈው ተረኛ
 Name[ar]=المسار السابق
 Name[ast]=Pista previa
 Name[bg]=Предишна песен
@@ -324,6 +329,7 @@ Name[ro]=Melodia anterioară
 Name[ru]=Предыдущая дорожка
 Name[sk]=Predchádzajúca stopa
 Name[sl]=Prejšnja skladba
+Name[sr]=Претходна нумера
 Name[tr]=Önceki parça
 Name[uk]=Попередній трек
 Name[zh_CN]=上一首

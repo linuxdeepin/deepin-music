@@ -9,7 +9,7 @@
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="63"/>
         <source>Exit</source>
-        <translation>Forlad</translation>
+        <translation>Afslut</translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="65"/>
@@ -175,7 +175,7 @@
     <message>
         <location filename="../view/loadwidget.cpp" line="43"/>
         <source>Loading...</source>
-        <translation>Loader...</translation>
+        <translation>Indlæser...</translation>
     </message>
 </context>
 <context>
@@ -227,7 +227,7 @@
         <location filename="../view/mainframe.cpp" line="181"/>
         <location filename="../view/mainframe.cpp" line="527"/>
         <source>Exit</source>
-        <translation>Forlad</translation>
+        <translation>Afslut</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="140"/>

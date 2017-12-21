@@ -4,7 +4,7 @@
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="56"/>
         <source>Please select your operation</source>
-        <translation type="unfinished"/>
+        <translation>እባክዎን የ እርስዎን ተግባር ይምረጡ</translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="63"/>
@@ -14,12 +14,12 @@
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="65"/>
         <source>Minimize to system tray</source>
-        <translation type="unfinished"/>
+        <translation>ወደ ስርአቱ ትሪ ማሳነሻ</translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="74"/>
         <source>Never ask again</source>
-        <translation type="unfinished"/>
+        <translation>በድጋሚ አትጠይቀኝ</translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="85"/>
@@ -52,7 +52,7 @@
     <message>
         <location filename="../view/footerwidget.cpp" line="286"/>
         <source>Favorite</source>
-        <translation type="unfinished"/>
+        <translation>የምወዳቸው</translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="287"/>
@@ -62,7 +62,7 @@
     <message>
         <location filename="../view/footerwidget.cpp" line="232"/>
         <source>Unknown Title</source>
-        <translation type="unfinished"/>
+        <translation>ያልታወቀ አርእስት</translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="238"/>
@@ -74,7 +74,7 @@
     <message>
         <location filename="../view/footerwidget.cpp" line="288"/>
         <source>Play Mode</source>
-        <translation type="unfinished"/>
+        <translation>ማጫወቻ ዘዴ</translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="289"/>
@@ -84,17 +84,17 @@
     <message>
         <location filename="../view/footerwidget.cpp" line="678"/>
         <source>List Loop</source>
-        <translation type="unfinished"/>
+        <translation>ዝርዝር ዙር</translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="681"/>
         <source>Single Loop</source>
-        <translation type="unfinished"/>
+        <translation>ነጠላ ዙር</translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="684"/>
         <source>Shuffle</source>
-        <translation type="unfinished"/>
+        <translation>መበወዣ</translation>
     </message>
 </context>
 <context>
@@ -114,12 +114,12 @@
         <location filename="../view/importwidget.cpp" line="81"/>
         <location filename="../view/importwidget.cpp" line="122"/>
         <source>%1 music directory or drag &amp; drop music file to add music</source>
-        <translation type="unfinished"/>
+        <translation>%1 የ ሙዚቃ ዳይሬክቶሪ ወይንም መጎተቻ &amp; መጣያ የ ሙዚቃ ፋይል ወደ  ሙዚቃ ውስጥ ለ መጨመር</translation>
     </message>
     <message>
         <location filename="../view/importwidget.cpp" line="113"/>
         <source>Loading music, please wait...</source>
-        <translation type="unfinished"/>
+        <translation>እባክዎን ይቆዩ በ መጫን ላይ ነው...</translation>
     </message>
 </context>
 <context>
@@ -137,7 +137,7 @@
     <message>
         <location filename="../view/widget/infodialog.cpp" line="118"/>
         <source>Album:</source>
-        <translation type="unfinished"/>
+        <translation>አልበም:</translation>
     </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="118"/>
@@ -167,7 +167,7 @@
     <message>
         <location filename="../view/widget/infodialog.cpp" line="119"/>
         <source>Duration:</source>
-        <translation type="unfinished"/>
+        <translation>የሚፈጀው ጊዜ</translation>
     </message>
 </context>
 <context>
@@ -175,7 +175,7 @@
     <message>
         <location filename="../view/loadwidget.cpp" line="43"/>
         <source>Loading...</source>
-        <translation type="unfinished"/>
+        <translation>በ መጫን ላይ...</translation>
     </message>
 </context>
 <context>
@@ -183,7 +183,7 @@
     <message>
         <location filename="../view/lyricwidget.cpp" line="163"/>
         <source>Search lyrics</source>
-        <translation type="unfinished"/>
+        <translation>ግጥሞች መፈለጊያ</translation>
     </message>
     <message>
         <location filename="../view/lyricwidget.cpp" line="167"/>
@@ -203,7 +203,7 @@
     <message>
         <location filename="../view/lyricwidget.cpp" line="211"/>
         <source>Back</source>
-        <translation type="unfinished"/>
+        <translation>ወደ ኋላ</translation>
     </message>
 </context>
 <context>
@@ -211,7 +211,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="134"/>
         <source>New playlist</source>
-        <translation type="unfinished"/>
+        <translation>አዲስ የ ማጫወቻ ዝርዝር</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="150"/>
@@ -221,7 +221,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="252"/>
         <source>Deepin Music Player is a local  music player with beautiful design and simple functions. It supports viewing lyrics when playing, playing lossless music and customize playlist, etc.</source>
-        <translation type="unfinished"/>
+        <translation>ዲፕኢን የ ሙዚቃ ማጫወቻ ቀላል ዘመናዊ የሙዚቃ ማጫወቻ ነው: እንዲሁም ይደግፋል ንዑስ አርእስት ማሳያ ለ ዘፈን ግጥም: እና እርስዎ እንደፈለጉ ማስተካከል ይችላሉ</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="181"/>
@@ -242,7 +242,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="166"/>
         <source>Dark theme</source>
-        <translation type="unfinished"/>
+        <translation>ጥቁር ገጽታ</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="524"/>
@@ -257,17 +257,17 @@
     <message>
         <location filename="../view/mainframe.cpp" line="661"/>
         <source>Invalid or non-existent file</source>
-        <translation type="unfinished"/>
+        <translation>ዋጋ የሌለው ምንም ይልነበረ ፋይል</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="682"/>
         <source>Failed to import, no vaild music file found!</source>
-        <translation type="unfinished"/>
+        <translation>ማምጣት አልተቻለም: ምንም ዋጋ ያለው ፋይል አልተገኘም</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="955"/>
         <source>All music</source>
-        <translation type="unfinished"/>
+        <translation>ሁሉንም ሙዚቃ</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="662"/>
@@ -278,7 +278,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="612"/>
         <source>Successfully added to &quot;%1&quot;</source>
-        <translation type="unfinished"/>
+        <translation>ተሳክቶ ተጨምሯል ወደ &quot;%1&quot;</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="526"/>
@@ -291,7 +291,7 @@
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="285"/>
         <source>New playlist</source>
-        <translation type="unfinished"/>
+        <translation>አዲስ የ ማጫወቻ ዝርዝር</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="325"/>
@@ -301,17 +301,17 @@
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="327"/>
         <source>Add to playlist</source>
-        <translation type="unfinished"/>
+        <translation>ወደ ዝርዝር ማጫወቻ መጨመሪያ</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="332"/>
         <source>Display in file manager</source>
-        <translation type="unfinished"/>
+        <translation>በ ፋይል አስተዳዳሪ እስጥ ማሳያ</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="359"/>
         <source>Song info</source>
-        <translation type="unfinished"/>
+        <translation>የ ዘፈን መረጃ</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="335"/>
@@ -321,7 +321,7 @@
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="336"/>
         <source>Delete from local disk</source>
-        <translation type="unfinished"/>
+        <translation>ከ አካባቢ ዲስክ ውስጥ ማጥፊያ</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="355"/>
@@ -347,12 +347,12 @@
         <location filename="../view/widget/musiclistview.cpp" line="417"/>
         <location filename="../view/widget/musiclistview.cpp" line="421"/>
         <source>Are you sure to delete the selected %1 songs?</source>
-        <translation type="unfinished"/>
+        <translation>በ እርግጥ የ ተመረጠውን %1 ዘፈን ማጥፋት ይፈልጋሉ?</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="422"/>
         <source>Deleting the current song will also delete the song files contained</source>
-        <translation type="unfinished"/>
+        <translation>የ አሁኑን ዘፈን ማጥፋት እንዲሁም የ ዘፈኑን ፋይሎች የ ያዙትን ያጠፋል</translation>
     </message>
     <message>
         <location filename="../view/widget/delegate/musicitemdelegate.cpp" line="314"/>
@@ -370,12 +370,12 @@
     <message>
         <location filename="../view/musiclistwidget.cpp" line="135"/>
         <source>No Music</source>
-        <translation type="unfinished"/>
+        <translation>ሙዚቃ የለም</translation>
     </message>
     <message>
         <location filename="../view/musiclistwidget.cpp" line="137"/>
         <source>No result found</source>
-        <translation type="unfinished"/>
+        <translation>ምንም ውጤት አልተገኘም</translation>
     </message>
     <message>
         <location filename="../view/musiclistwidget.cpp" line="167"/>
@@ -385,7 +385,7 @@
     <message>
         <location filename="../view/musiclistwidget.cpp" line="175"/>
         <source>Time added</source>
-        <translation type="unfinished"/>
+        <translation>የ ተጨመረበት ጊዜ</translation>
     </message>
     <message>
         <location filename="../view/musiclistwidget.cpp" line="176"/>
@@ -400,7 +400,7 @@
     <message>
         <location filename="../view/musiclistwidget.cpp" line="178"/>
         <source>Album name</source>
-        <translation type="unfinished"/>
+        <translation>የ አልበም ስም</translation>
     </message>
     <message>
         <location filename="../view/musiclistwidget.cpp" line="179"/>
@@ -418,7 +418,7 @@
     <message>
         <location filename="../view/widget/playlistitem.cpp" line="187"/>
         <source>Are you sure to delete this playlist?</source>
-        <translation type="unfinished"/>
+        <translation>በ እርግጥ የ ማጫወቻ ዝርዝር ማጥፋት ይፈልጋሉ?</translation>
     </message>
     <message>
         <location filename="../view/widget/playlistitem.cpp" line="193"/>
@@ -452,22 +452,22 @@
     <message>
         <location filename="../core/playlistmanager.cpp" line="79"/>
         <source>New playlist</source>
-        <translation type="unfinished"/>
+        <translation>አዲስ የ ማጫወቻ ዝርዝር</translation>
     </message>
     <message>
         <location filename="../core/playlistmanager.cpp" line="135"/>
         <source>All Music</source>
-        <translation type="unfinished"/>
+        <translation>ሁሉንም ሙዚቃ</translation>
     </message>
     <message>
         <location filename="../core/playlistmanager.cpp" line="141"/>
         <source>My favorites</source>
-        <translation type="unfinished"/>
+        <translation>የምወዳቸው</translation>
     </message>
     <message>
         <location filename="../core/playlistmanager.cpp" line="147"/>
         <source>Search result</source>
-        <translation type="unfinished"/>
+        <translation>የ መፈለጊያ ውጤት</translation>
     </message>
 </context>
 <context>
@@ -475,7 +475,7 @@
     <message>
         <location filename="../view/playlistwidget.cpp" line="58"/>
         <source>New playlist</source>
-        <translation type="unfinished"/>
+        <translation>አዲስ የ ማጫወቻ ዝርዝር</translation>
     </message>
 </context>
 <context>
@@ -496,12 +496,12 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="26"/>
         <source>Minimize to system tray</source>
-        <translation type="unfinished"/>
+        <translation>ወደ ስርአቱ ትሪ ማሳነሻ</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="27"/>
         <source>Exit Deepin Music</source>
-        <translation type="unfinished"/>
+        <translation>ከ ዲፕኢን ሙዚቃ መውጫ</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="28"/>
@@ -511,17 +511,17 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="29"/>
         <source>Enable fade</source>
-        <translation type="unfinished"/>
+        <translation>ማፍዘዣ ማስቻያ</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="30"/>
         <source>Remember playback position</source>
-        <translation type="unfinished"/>
+        <translation>የ መልሶ ማጫወቻ ቦታ አስታውስ</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="31"/>
         <source>Close Main Window</source>
-        <translation type="unfinished"/>
+        <translation>ዋናውን መስኮት መዝጊያ</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="32"/>
@@ -575,7 +575,7 @@
         <location filename="../view/widget/searchresult.cpp" line="57"/>
         <location filename="../view/widget/searchresult.cpp" line="126"/>
         <source>Search &quot;%1&quot; in Deepin Music</source>
-        <translation type="unfinished"/>
+        <translation>መፈለጊያ &quot;%1&quot; በ ዲፕኢን ሙዚቃ ማጫወቻ ውስጥ</translation>
     </message>
 </context>
 <context>

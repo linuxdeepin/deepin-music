@@ -69,7 +69,7 @@
         <location filename="../view/footerwidget.cpp" line="518"/>
         <location filename="../view/footerwidget.cpp" line="700"/>
         <source>Unknown artist</source>
-        <translation>Artista Desconocido</translation>
+        <translation>Artista desconocido</translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="288"/>
@@ -79,12 +79,12 @@
     <message>
         <location filename="../view/footerwidget.cpp" line="289"/>
         <source>Playlist</source>
-        <translation>Lista de Reproducción</translation>
+        <translation>Lista de reproducción</translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="678"/>
         <source>List Loop</source>
-        <translation>bucle de lista</translation>
+        <translation>Lista en bucle</translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="681"/>
@@ -221,7 +221,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="252"/>
         <source>Deepin Music Player is a local  music player with beautiful design and simple functions. It supports viewing lyrics when playing, playing lossless music and customize playlist, etc.</source>
-        <translation>Música Deepin es un reproductor de música local con un hermoso diseño y funciones sencillas. Soporta visualización de letra al reproducir, reproducción de música sin pérdida y personalizar lista de reproducción, etc.</translation>
+        <translation>Reproductor Deepin es un reproductor para música local de hermoso diseño y funciones sencillas. Soporta visualización de letra al reproducir, reproducción de música sin pérdida y personalizar lista de reproducción, etc.</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="181"/>
@@ -267,7 +267,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="955"/>
         <source>All music</source>
-        <translation type="unfinished"/>
+        <translation>Toda la música</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="662"/>
@@ -483,7 +483,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="254"/>
         <source>Deepin Music</source>
-        <translation>Reproductor Deepin Music</translation>
+        <translation>Reproductor Deepin</translation>
     </message>
 </context>
 <context>
@@ -491,7 +491,7 @@
     <message>
         <location filename="../main.cpp" line="87"/>
         <source>Deepin Music</source>
-        <translation>Música Deepin</translation>
+        <translation>Reproductor Deepin</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="26"/>

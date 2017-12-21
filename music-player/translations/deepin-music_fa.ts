@@ -4,7 +4,7 @@
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="56"/>
         <source>Please select your operation</source>
-        <translation type="unfinished"/>
+        <translation>لطفا عملیات خود را انتخاب کنید</translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="63"/>

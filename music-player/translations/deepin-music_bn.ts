@@ -405,7 +405,7 @@
     <message>
         <location filename="../view/musiclistwidget.cpp" line="179"/>
         <source>Custom</source>
-        <translation type="unfinished"/>
+        <translation>প্রথা</translation>
     </message>
 </context>
 <context>

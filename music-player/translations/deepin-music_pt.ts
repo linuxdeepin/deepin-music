@@ -221,7 +221,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="252"/>
         <source>Deepin Music Player is a local  music player with beautiful design and simple functions. It supports viewing lyrics when playing, playing lossless music and customize playlist, etc.</source>
-        <translation>O Reprodutor de Música Deepin é um reprodutor de música local com funções simples e de design bonito. Suporta visualização de letras da música enquanto toca, reproduz música sem perda de qualidade e listas de reprodução personalizadas, etc.</translation>
+        <translation>O Deepin Music Player é um reprodutor de música local com funções simples e de design bonito. Suporta visualização de letras da música enquanto toca, reproduz música sem perda de qualidade e listas de reprodução personalizadas, etc.</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="181"/>
@@ -483,7 +483,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="254"/>
         <source>Deepin Music</source>
-        <translation>Música Deepin</translation>
+        <translation>Deepin Music</translation>
     </message>
 </context>
 <context>
@@ -575,7 +575,7 @@
         <location filename="../view/widget/searchresult.cpp" line="57"/>
         <location filename="../view/widget/searchresult.cpp" line="126"/>
         <source>Search &quot;%1&quot; in Deepin Music</source>
-        <translation>Pesquisar &quot;%1&quot; no Reprodutor de Música Deepin</translation>
+        <translation>Pesquisar &quot;%1&quot; no Deepin Music</translation>
     </message>
 </context>
 <context>

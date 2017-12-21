@@ -4,7 +4,7 @@
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="56"/>
         <source>Please select your operation</source>
-        <translation type="unfinished"/>
+        <translation>Selectare operațiune</translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="63"/>
@@ -14,22 +14,22 @@
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="65"/>
         <source>Minimize to system tray</source>
-        <translation type="unfinished"/>
+        <translation>Minimalizare</translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="74"/>
         <source>Never ask again</source>
-        <translation type="unfinished"/>
+        <translation>Nu mai întreba</translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="85"/>
         <source>Cancel</source>
-        <translation>Anulează</translation>
+        <translation>Anulare</translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="86"/>
         <source>OK</source>
-        <translation>OK</translation>
+        <translation>Ok</translation>
     </message>
 </context>
 <context>
@@ -52,7 +52,7 @@
     <message>
         <location filename="../view/footerwidget.cpp" line="286"/>
         <source>Favorite</source>
-        <translation type="unfinished"/>
+        <translation>Favorite</translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="287"/>
@@ -62,7 +62,7 @@
     <message>
         <location filename="../view/footerwidget.cpp" line="232"/>
         <source>Unknown Title</source>
-        <translation type="unfinished"/>
+        <translation>Titlu necunoscut</translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="238"/>
@@ -74,7 +74,7 @@
     <message>
         <location filename="../view/footerwidget.cpp" line="288"/>
         <source>Play Mode</source>
-        <translation type="unfinished"/>
+        <translation>Mod redare</translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="289"/>
@@ -84,17 +84,17 @@
     <message>
         <location filename="../view/footerwidget.cpp" line="678"/>
         <source>List Loop</source>
-        <translation type="unfinished"/>
+        <translation>Redare lista fără pauză</translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="681"/>
         <source>Single Loop</source>
-        <translation type="unfinished"/>
+        <translation>Redare melodia fără pauză</translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="684"/>
         <source>Shuffle</source>
-        <translation type="unfinished"/>
+        <translation>Amestecare</translation>
     </message>
 </context>
 <context>
@@ -102,7 +102,7 @@
     <message>
         <location filename="../view/importwidget.cpp" line="74"/>
         <source>Add folder</source>
-        <translation>Adaugă director</translation>
+        <translation>Adăugare director</translation>
     </message>
     <message>
         <location filename="../view/importwidget.cpp" line="80"/>
@@ -114,12 +114,12 @@
         <location filename="../view/importwidget.cpp" line="81"/>
         <location filename="../view/importwidget.cpp" line="122"/>
         <source>%1 music directory or drag &amp; drop music file to add music</source>
-        <translation type="unfinished"/>
+        <translation>%1 director muzică sau trageți și plaseați fișiere pentru a adăuga melodii</translation>
     </message>
     <message>
         <location filename="../view/importwidget.cpp" line="113"/>
         <source>Loading music, please wait...</source>
-        <translation type="unfinished"/>
+        <translation>Se încarcă muzica, așteptați...</translation>
     </message>
 </context>
 <context>
@@ -132,12 +132,12 @@
     <message>
         <location filename="../view/widget/infodialog.cpp" line="117"/>
         <source>Artist:</source>
-        <translation>Artist</translation>
+        <translation>Artist:</translation>
     </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="118"/>
         <source>Album:</source>
-        <translation type="unfinished"/>
+        <translation>Album:</translation>
     </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="118"/>
@@ -147,17 +147,17 @@
     <message>
         <location filename="../view/widget/infodialog.cpp" line="120"/>
         <source>Path:</source>
-        <translation type="unfinished"/>
+        <translation>Cale fișier:</translation>
     </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="192"/>
         <source>Unknown artist</source>
-        <translation>Artist Necunoscut</translation>
+        <translation>Artist necunoscut</translation>
     </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="193"/>
         <source>Unknown album</source>
-        <translation>Album Necunoscut</translation>
+        <translation>Album necunoscut</translation>
     </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="119"/>
@@ -167,7 +167,7 @@
     <message>
         <location filename="../view/widget/infodialog.cpp" line="119"/>
         <source>Duration:</source>
-        <translation type="unfinished"/>
+        <translation>Durată:</translation>
     </message>
 </context>
 <context>
@@ -175,7 +175,7 @@
     <message>
         <location filename="../view/loadwidget.cpp" line="43"/>
         <source>Loading...</source>
-        <translation>Incărcare...</translation>
+        <translation>Se încarcă...</translation>
     </message>
 </context>
 <context>
@@ -183,7 +183,7 @@
     <message>
         <location filename="../view/lyricwidget.cpp" line="163"/>
         <source>Search lyrics</source>
-        <translation type="unfinished"/>
+        <translation>Căutare versuri</translation>
     </message>
     <message>
         <location filename="../view/lyricwidget.cpp" line="167"/>
@@ -203,7 +203,7 @@
     <message>
         <location filename="../view/lyricwidget.cpp" line="211"/>
         <source>Back</source>
-        <translation type="unfinished"/>
+        <translation>Înapoi</translation>
     </message>
 </context>
 <context>
@@ -211,7 +211,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="134"/>
         <source>New playlist</source>
-        <translation type="unfinished"/>
+        <translation>Lista de redare nouă</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="150"/>
@@ -221,7 +221,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="252"/>
         <source>Deepin Music Player is a local  music player with beautiful design and simple functions. It supports viewing lyrics when playing, playing lossless music and customize playlist, etc.</source>
-        <translation type="unfinished"/>
+        <translation> Player-ul muzical Deepin are un design atrăgător și funcții simple. Poate afișa versuri în timpul redării, reda muzică fără compresie și personaliza liste de redare, etc.</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="181"/>
@@ -232,17 +232,17 @@
     <message>
         <location filename="../view/mainframe.cpp" line="140"/>
         <source>Add folder</source>
-        <translation>Adaugă director</translation>
+        <translation>Adăugare dosar</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="145"/>
         <source>Add file</source>
-        <translation>Adaugă fișier</translation>
+        <translation>Adăugare fișier</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="166"/>
         <source>Dark theme</source>
-        <translation type="unfinished"/>
+        <translation>Fundal întunecat</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="524"/>
@@ -257,28 +257,28 @@
     <message>
         <location filename="../view/mainframe.cpp" line="661"/>
         <source>Invalid or non-existent file</source>
-        <translation type="unfinished"/>
+        <translation>Invalid sau inexistent</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="682"/>
         <source>Failed to import, no vaild music file found!</source>
-        <translation type="unfinished"/>
+        <translation>Importarea a eșuat, nu s-a găsit un fișier de muzică valid</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="955"/>
         <source>All music</source>
-        <translation type="unfinished"/>
+        <translation>Toate melodiile</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="662"/>
         <location filename="../view/mainframe.cpp" line="687"/>
         <source>OK</source>
-        <translation>OK</translation>
+        <translation>Ok</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="612"/>
         <source>Successfully added to &quot;%1&quot;</source>
-        <translation type="unfinished"/>
+        <translation>%1 adăugat cu succes</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="526"/>
@@ -291,7 +291,7 @@
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="285"/>
         <source>New playlist</source>
-        <translation type="unfinished"/>
+        <translation>Lista de redare nouă</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="325"/>
@@ -301,68 +301,68 @@
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="327"/>
         <source>Add to playlist</source>
-        <translation type="unfinished"/>
+        <translation>Adăugare la lista de redare</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="332"/>
         <source>Display in file manager</source>
-        <translation type="unfinished"/>
+        <translation>Deschidere în managerul de fișiere</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="359"/>
         <source>Song info</source>
-        <translation type="unfinished"/>
+        <translation>Informație melodie</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="335"/>
         <source>Remove from playlist</source>
-        <translation>Scoate de pe lista de redare</translation>
+        <translation>Scoatere din lista de redare</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="336"/>
         <source>Delete from local disk</source>
-        <translation type="unfinished"/>
+        <translation>Ștergere de pe disk-ul local</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="355"/>
         <source>Encoding</source>
-        <translation type="unfinished"/>
+        <translation>Compresie</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="405"/>
         <source>Cancel</source>
-        <translation>Anulează</translation>
+        <translation>Anulare</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="406"/>
         <source>Delete</source>
-        <translation>Șterge</translation>
+        <translation>Ștergere</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="415"/>
         <source>Are you sure to delete %1?</source>
-        <translation type="unfinished"/>
+        <translation>Doriți să ștergeți %1?</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="417"/>
         <location filename="../view/widget/musiclistview.cpp" line="421"/>
         <source>Are you sure to delete the selected %1 songs?</source>
-        <translation type="unfinished"/>
+        <translation>Doriți să ștergeți %1 melodii?</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="422"/>
         <source>Deleting the current song will also delete the song files contained</source>
-        <translation type="unfinished"/>
+        <translation>Ștergerea melodiei curente va determina ștergerea fișierelor conținute de aceasta</translation>
     </message>
     <message>
         <location filename="../view/widget/delegate/musicitemdelegate.cpp" line="314"/>
         <source>Unknown artist</source>
-        <translation>Artist Necunoscut</translation>
+        <translation>Artist necunoscut</translation>
     </message>
     <message>
         <location filename="../view/widget/delegate/musicitemdelegate.cpp" line="325"/>
         <source>Unknown album</source>
-        <translation>Album Necunoscut</translation>
+        <translation>Album necunoscut</translation>
     </message>
 </context>
 <context>
@@ -370,22 +370,22 @@
     <message>
         <location filename="../view/musiclistwidget.cpp" line="135"/>
         <source>No Music</source>
-        <translation type="unfinished"/>
+        <translation>Nici o melodie</translation>
     </message>
     <message>
         <location filename="../view/musiclistwidget.cpp" line="137"/>
         <source>No result found</source>
-        <translation type="unfinished"/>
+        <translation>Nu s-a găsit un rezultat</translation>
     </message>
     <message>
         <location filename="../view/musiclistwidget.cpp" line="167"/>
         <source>Play All</source>
-        <translation>Redare Tot</translation>
+        <translation>Redare toate</translation>
     </message>
     <message>
         <location filename="../view/musiclistwidget.cpp" line="175"/>
         <source>Time added</source>
-        <translation type="unfinished"/>
+        <translation>Timp adăugat</translation>
     </message>
     <message>
         <location filename="../view/musiclistwidget.cpp" line="176"/>
@@ -400,12 +400,12 @@
     <message>
         <location filename="../view/musiclistwidget.cpp" line="178"/>
         <source>Album name</source>
-        <translation type="unfinished"/>
+        <translation>Nume album</translation>
     </message>
     <message>
         <location filename="../view/musiclistwidget.cpp" line="179"/>
         <source>Custom</source>
-        <translation>Personalizare</translation>
+        <translation>Personalizat</translation>
     </message>
 </context>
 <context>
@@ -413,17 +413,17 @@
     <message>
         <location filename="../view/widget/playlistitem.cpp" line="194"/>
         <source>Delete</source>
-        <translation>Șterge</translation>
+        <translation>Ștergere</translation>
     </message>
     <message>
         <location filename="../view/widget/playlistitem.cpp" line="187"/>
         <source>Are you sure to delete this playlist?</source>
-        <translation type="unfinished"/>
+        <translation>Doriți să ștergeți lista de redare?</translation>
     </message>
     <message>
         <location filename="../view/widget/playlistitem.cpp" line="193"/>
         <source>Cancel</source>
-        <translation>Anulează</translation>
+        <translation>Anulare</translation>
     </message>
 </context>
 <context>
@@ -444,7 +444,7 @@
         <location filename="../view/widget/playlistview.cpp" line="189"/>
         <location filename="../view/widget/playlistview.cpp" line="200"/>
         <source>Delete</source>
-        <translation>Șterge</translation>
+        <translation>Ștergere</translation>
     </message>
 </context>
 <context>
@@ -452,22 +452,22 @@
     <message>
         <location filename="../core/playlistmanager.cpp" line="79"/>
         <source>New playlist</source>
-        <translation type="unfinished"/>
+        <translation>Lista de redare nouă</translation>
     </message>
     <message>
         <location filename="../core/playlistmanager.cpp" line="135"/>
         <source>All Music</source>
-        <translation type="unfinished"/>
+        <translation>Toate melodiile</translation>
     </message>
     <message>
         <location filename="../core/playlistmanager.cpp" line="141"/>
         <source>My favorites</source>
-        <translation type="unfinished"/>
+        <translation>Favoritele mele</translation>
     </message>
     <message>
         <location filename="../core/playlistmanager.cpp" line="147"/>
         <source>Search result</source>
-        <translation type="unfinished"/>
+        <translation>Rezultat căutare</translation>
     </message>
 </context>
 <context>
@@ -475,7 +475,7 @@
     <message>
         <location filename="../view/playlistwidget.cpp" line="58"/>
         <source>New playlist</source>
-        <translation type="unfinished"/>
+        <translation>Lista de redare nouă</translation>
     </message>
 </context>
 <context>
@@ -496,37 +496,37 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="26"/>
         <source>Minimize to system tray</source>
-        <translation type="unfinished"/>
+        <translation>Minimalizare</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="27"/>
         <source>Exit Deepin Music</source>
-        <translation type="unfinished"/>
+        <translation>Închidere</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="28"/>
         <source>Autoplay</source>
-        <translation type="unfinished"/>
+        <translation>Auto-redare</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="29"/>
         <source>Enable fade</source>
-        <translation type="unfinished"/>
+        <translation>Activare tranziție sonoră între melodii</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="30"/>
         <source>Remember playback position</source>
-        <translation type="unfinished"/>
+        <translation>Memorare poziție redare</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="31"/>
         <source>Close Main Window</source>
-        <translation type="unfinished"/>
+        <translation>Închidere fereastră principală</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="32"/>
         <source>Basic</source>
-        <translation type="unfinished"/>
+        <translation>Simplu</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="33"/>
@@ -536,12 +536,12 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="34"/>
         <source>Shortcuts</source>
-        <translation type="unfinished"/>
+        <translation>Scurtături</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="35"/>
         <source>Restore Defaults</source>
-        <translation type="unfinished"/>
+        <translation>Restaurare setări implicite</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="36"/>
@@ -561,12 +561,12 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="39"/>
         <source>Volume down</source>
-        <translation>Micşorarea volumului</translation>
+        <translation>Scade volumul</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="40"/>
         <source>Volume up</source>
-        <translation>Mărirea volumului</translation>
+        <translation>Crește volumul</translation>
     </message>
 </context>
 <context>
@@ -575,7 +575,7 @@
         <location filename="../view/widget/searchresult.cpp" line="57"/>
         <location filename="../view/widget/searchresult.cpp" line="126"/>
         <source>Search &quot;%1&quot; in Deepin Music</source>
-        <translation type="unfinished"/>
+        <translation>Caută &quot;%1&quot; în player-ul muzical Deepin</translation>
     </message>
 </context>
 <context>

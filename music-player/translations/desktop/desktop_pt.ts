@@ -4,7 +4,7 @@
         <message>
             <location filename="Desktop Entry]Name" line="0"/>
             <source>Deepin Music</source>
-            <translation>Música Deepin</translation>
+            <translation>Deepin Music</translation>
         </message>
         <message>
             <location filename="Desktop Entry]GenericName" line="0"/>

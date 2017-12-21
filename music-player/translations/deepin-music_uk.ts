@@ -24,7 +24,7 @@
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="85"/>
         <source>Cancel</source>
-        <translation>Відмінити</translation>
+        <translation>Скасувати</translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="86"/>
@@ -84,12 +84,12 @@
     <message>
         <location filename="../view/footerwidget.cpp" line="678"/>
         <source>List Loop</source>
-        <translation type="unfinished"/>
+        <translation>Зациклити список</translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="681"/>
         <source>Single Loop</source>
-        <translation type="unfinished"/>
+        <translation>Зациклити</translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="684"/>
@@ -102,7 +102,7 @@
     <message>
         <location filename="../view/importwidget.cpp" line="74"/>
         <source>Add folder</source>
-        <translation>Додати папку</translation>
+        <translation>Додати теку</translation>
     </message>
     <message>
         <location filename="../view/importwidget.cpp" line="80"/>
@@ -232,7 +232,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="140"/>
         <source>Add folder</source>
-        <translation>Додати папку</translation>
+        <translation>Додати теку</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="145"/>
@@ -242,7 +242,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="166"/>
         <source>Dark theme</source>
-        <translation type="unfinished"/>
+        <translation>Темна тема</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="524"/>
@@ -267,7 +267,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="955"/>
         <source>All music</source>
-        <translation type="unfinished"/>
+        <translation>Уся музика</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="662"/>
@@ -526,7 +526,7 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="32"/>
         <source>Basic</source>
-        <translation type="unfinished"/>
+        <translation>Основний</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="33"/>
