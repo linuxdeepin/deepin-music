@@ -1,9 +1,13 @@
 #!/usr/bin/make -f
 
 export QT_SELECT=5
+VERSION ?= $(shell dpkg-parsechangelog -ldebian/changelog -SVersion | awk -F'-' '{print $$1}')
 
 %:
 	dh $@ --parallel
+
+override_dh_auto_configure:
+	dh_auto_configure -- DEFINES+="VERSION=$(VERSION)"
 
 override_dh_auto_install:
 	dh_auto_install -- PREFIX=/usr

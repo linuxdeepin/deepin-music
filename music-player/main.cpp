@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
     app.setAttribute(Qt::AA_EnableHighDpiScaling);
     app.setOrganizationName("deepin");
     app.setApplicationName("deepin-music");
-    app.setApplicationVersion("3.1");
+    app.setApplicationVersion(DApplication::buildVersion("3.1"));
 
     DLogManager::registerConsoleAppender();
     DLogManager::registerFileAppender();
