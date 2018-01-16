@@ -84,12 +84,12 @@
     <message>
         <location filename="../view/footerwidget.cpp" line="678"/>
         <source>List Loop</source>
-        <translation type="unfinished"/>
+        <translation>Repitición del llistáu</translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="681"/>
         <source>Single Loop</source>
-        <translation type="unfinished"/>
+        <translation>Una repitición</translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="684"/>
@@ -267,7 +267,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="955"/>
         <source>All music</source>
-        <translation type="unfinished"/>
+        <translation>Tola música</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="662"/>

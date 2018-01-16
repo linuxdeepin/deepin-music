@@ -4,7 +4,7 @@
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="56"/>
         <source>Please select your operation</source>
-        <translation type="unfinished"/>
+        <translation>Por favor, selecciona a túa operación</translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="63"/>
@@ -19,7 +19,7 @@
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="74"/>
         <source>Never ask again</source>
-        <translation type="unfinished"/>
+        <translation>Non volver a preguntar de novo</translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="85"/>
@@ -221,7 +221,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="252"/>
         <source>Deepin Music Player is a local  music player with beautiful design and simple functions. It supports viewing lyrics when playing, playing lossless music and customize playlist, etc.</source>
-        <translation type="unfinished"/>
+        <translation>O reproductor de Música é un reproductor con funcións simples e un bonito deseño. Poderás ver a letra mentras escoitas a canción, escoitar música sen perdida de calidade no sonido e personalizar unha lista de reproducción entre outras moitas funcionalidades.</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="181"/>
@@ -242,7 +242,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="166"/>
         <source>Dark theme</source>
-        <translation type="unfinished"/>
+        <translation>Tema Escuro</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="524"/>
@@ -267,7 +267,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="955"/>
         <source>All music</source>
-        <translation type="unfinished"/>
+        <translation>Toda a música</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="662"/>
@@ -385,7 +385,7 @@
     <message>
         <location filename="../view/musiclistwidget.cpp" line="175"/>
         <source>Time added</source>
-        <translation type="unfinished"/>
+        <translation>Tempo engadido</translation>
     </message>
     <message>
         <location filename="../view/musiclistwidget.cpp" line="176"/>
@@ -501,7 +501,7 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="27"/>
         <source>Exit Deepin Music</source>
-        <translation type="unfinished"/>
+        <translation>Saír de Música</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="28"/>
@@ -521,7 +521,7 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="31"/>
         <source>Close Main Window</source>
-        <translation type="unfinished"/>
+        <translation>Pechar a Xanela Principal</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="32"/>
@@ -541,7 +541,7 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="35"/>
         <source>Restore Defaults</source>
-        <translation type="unfinished"/>
+        <translation>Restablecer o predefinido</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="36"/>

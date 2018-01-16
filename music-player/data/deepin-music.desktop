@@ -179,9 +179,7 @@ Name[zh_CN]=深度音乐
 Name[zh_HK]=Deepin 音樂
 Name[zh_TW]=Deepin 音樂
 
-[X-Next-Shortcut-Group]
-Exec=dbus-send --print-reply --dest=org.mpris.MediaPlayer2.DeepinMusic /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next
-Name=Next track
+[Next Shortcut Group]
 
 # Translations:
 # Do not manually modify!
@@ -205,6 +203,7 @@ Name[es_ES]=Siguiente Pista
 Name[es_PE]=Pista siguiente
 Name[fi]=Seuraava raita
 Name[fr]=Piste Suivante
+Name[gl_ES]=Seguinte pista
 Name[he]=הקטע הבא
 Name[hr]=Slijedeći zapis
 Name[hu]=Következő szám
@@ -232,9 +231,7 @@ Name[zh_CN]=下一首
 Name[zh_HK]=下一首歌曲
 Name[zh_TW]=下一曲
 
-[X-PlayPause-Shortcut-Group]
-Exec=dbus-send --print-reply --dest=org.mpris.MediaPlayer2.DeepinMusic /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause
-Name=Play/Pause track
+[PlayPause Shortcut Group]
 
 # Translations:
 # Do not manually modify!
@@ -258,6 +255,7 @@ Name[es_ES]=Play/Pause Pista
 Name[es_PE]=Reproducir/Pausar pista
 Name[fi]=Toista/Pysäytä raita
 Name[fr]=Lire/Pause le fichier
+Name[gl_ES]=Reproducir/Pausar pista
 Name[he]=נגן/הפסק קטע
 Name[hr]=Izvodi/pauziraj zapis
 Name[hu]=Szám lejátszása/Szüneteltetése
@@ -284,9 +282,7 @@ Name[uk]=Відтворити/Призупинити трек
 Name[zh_CN]=暂停/继续
 Name[zh_TW]=播放／暫停
 
-[X-Previous-Shortcut-Group]
-Exec=dbus-send --print-reply --dest=org.mpris.MediaPlayer2.DeepinMusic /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous
-Name=Previous track
+[Previous Shortcut Group]
 
 # Translations:
 # Do not manually modify!
@@ -310,6 +306,7 @@ Name[es_ES]=Anterior Pista
 Name[es_PE]=Pista anterior
 Name[fi]=Edellinen raita
 Name[fr]=Piste précédente
+Name[gl_ES]=Pista anterior
 Name[he]=הקטע הקודם
 Name[hr]=Prethodni zapis
 Name[hu]=Előző szám
@@ -336,4 +333,16 @@ Name[uk]=Попередній трек
 Name[zh_CN]=上一首
 Name[zh_HK]=上一首歌曲
 Name[zh_TW]=上一曲
+
+[X-Next-Shortcut-Group]
+Exec=dbus-send --print-reply --dest=org.mpris.MediaPlayer2.DeepinMusic /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next
+Name=Next track
+
+[X-PlayPause-Shortcut-Group]
+Exec=dbus-send --print-reply --dest=org.mpris.MediaPlayer2.DeepinMusic /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause
+Name=Play/Pause track
+
+[X-Previous-Shortcut-Group]
+Exec=dbus-send --print-reply --dest=org.mpris.MediaPlayer2.DeepinMusic /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous
+Name=Previous track
 
