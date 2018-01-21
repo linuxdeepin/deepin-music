@@ -121,7 +121,16 @@ void SearchEdit::onTextChanged()
         QStringList hashList;
 
         for (auto &meta : resultList) {
-            titleList << meta->title;
+            QString artist = meta->artist.trimmed();
+            if ( !artist.isEmpty() )
+            {
+                titleList << QString("%0 - %1").arg(artist).arg(meta->title);
+            }
+            else
+            {
+                titleList << meta->title;
+            }
+
             hashList << meta->hash;
         }
 
