@@ -1,35 +1,39 @@
-#InfoDialog{
-    qproperty-backgroundColor: white;
-    qproperty-borderColor: rgba(0, 0, 0, 0.2);
+#InfoDialog {
+  qproperty-backgroundColor: white;
+  qproperty-borderColor: rgba(0, 0, 0, 0.2);
 }
 
 #InfoClose {
-    qproperty-normalPic: url(:/images/light/images/window/close_normal.svg);
-    qproperty-hoverPic: url(:/images/light/images/window/close_hover.svg);
-    qproperty-pressPic: url(:/images/light/images/window/close_press.svg);
+  qproperty-normalPic: url(:/images/light/images/window/close_normal.svg);
+  qproperty-hoverPic: url(:/images/light/images/window/close_hover.svg);
+  qproperty-pressPic: url(:/images/light/images/window/close_press.svg);
 }
 
-#InfoCover{
-    background: transparent;
-    border:none;
+#InfoCover {
+  background: transparent;
+  border: none;
 }
-#InfoTitle{
-    font-size: 12px;
-    qproperty-alignment: AlignCenter;
-    color: black;
+
+#InfoTitle {
+  font-size: 12px;
+  qproperty-alignment: AlignCenter;
+  color: black;
 }
-#InfoSplit{
-    border-top: 1px solid rgba(0, 0, 0, 10%);
+
+#InfoSplit {
+  border-top: 1px solid rgba(0, 0, 0, 10%);
 }
-#InfoKey{
-    border: 1px solid transparent;
-    qproperty-alignment: AlignRight;
-    font-size: 11px;
-    color: #606060;
+
+#InfoKey {
+  border: 1px solid transparent;
+  qproperty-alignment: AlignRight;
+  font-size: 11px;
+  color: #606060;
 }
-#InfoValue{
-    border: 1px solid transparent;
-    qproperty-alignment: AlignLeft;
-    font-size: 11px;
-    color: #000000;
+
+#InfoValue {
+  border: 1px solid transparent;
+  qproperty-alignment: AlignLeft;
+  font-size: 11px;
+  color: #000000;
 }

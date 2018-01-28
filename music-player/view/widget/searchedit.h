@@ -27,34 +27,25 @@ class SearchResult;
 class SearchEdit : public Dtk::Widget::DSearchEdit
 {
     Q_OBJECT
-    Q_PROPERTY(QString viewname READ viewname WRITE setViewname NOTIFY viewnameChanged)
-
 public:
     explicit SearchEdit(QWidget *parent = 0);
 
 public:
     void setResultWidget(SearchResult *);
-    QString viewname();
 
 signals:
-    void viewnameChanged(QString viewname);
     void searchText(const QString &text);
     void locateMusic(const QString &hash);
 
 public slots:
-//    void setMode(QString mode);
-
     void onFocusIn();
     void onFocusOut();
     void onTextChanged();
     void onReturnPressed();
-
-    void setViewname(QString viewname);
 
 protected:
     virtual void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
 
 private:
     SearchResult    *m_result = nullptr;
-    QString         m_view;
 };

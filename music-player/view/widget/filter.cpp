@@ -95,14 +95,15 @@ void HintFilterPrivate::showHint(QWidget *hint)
 
     DUtil::TimerSingleShot(10, [w, this]() {
         auto centerPos = w->mapToGlobal(w->rect().center());
+        hintWidget->show();
+        hintWidget->adjustSize();
+
         auto sz = hintWidget->size();
         centerPos.setX(centerPos.x()  - sz.width() / 2);
         centerPos.setY(centerPos.y() - 32 - sz.height());
         centerPos = hintWidget->mapFromGlobal(centerPos);
         centerPos = hintWidget->mapToParent(centerPos);
         hintWidget->move(centerPos);
-        hintWidget->show();
-        hintWidget->adjustSize();
         hintWidget->raise();
     });
 }

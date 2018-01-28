@@ -32,9 +32,10 @@
 #include <QProgressBar>
 #include <QStackedLayout>
 
-#include <thememanager.h>
 #include <DHiDPIHelper>
+#include <DToast>
 
+#include "thememanager.h"
 #include "../musicapp.h"
 #include "../core/playlistmanager.h"
 #include "../core/player.h"
@@ -44,7 +45,6 @@
 #include "widget/modebuttom.h"
 #include "widget/label.h"
 #include "widget/cover.h"
-#include "widget/tip.h"
 #include "widget/soundvolume.h"
 
 static const char *sPropertyFavourite         = "fav";
@@ -112,7 +112,8 @@ void FooterPrivate::installTipHint(QWidget *w, const QString &hintstr)
 {
     Q_Q(Footer);
     // TODO: parent must be mainframe
-    auto hintWidget = new Tip(QPixmap(), hintstr, q->parentWidget());
+    auto hintWidget = new Dtk::Widget::DToast(q->parentWidget());
+    hintWidget->setText(hintstr);
     hintWidget->setFixedHeight(32);
     installHint(w, hintWidget);
 }
@@ -130,7 +131,7 @@ void FooterPrivate::initConnection()
     q->connect(btPlayMode, &ModeButton::modeChanged,
     q, [ = ](int mode) {
         emit q->modeChanged(mode);
-        auto hintWidget = btPlayMode->property("HintWidget").value<Tip *>();
+        auto hintWidget = btPlayMode->property("HintWidget").value<Dtk::Widget::DToast *>();
         hintFilter->showHitsFor(btPlayMode, hintWidget);
     });
 
@@ -670,7 +671,7 @@ void Footer::onModeChange(int mode)
     d->btPlayMode->blockSignals(false);
     d->mode = mode;
 
-    auto hintWidget = d->btPlayMode->property("HintWidget").value<Tip *>();
+    auto hintWidget = d->btPlayMode->property("HintWidget").value<Dtk::Widget::DToast *>();
     QString playmode;
     switch (mode) {
     default:

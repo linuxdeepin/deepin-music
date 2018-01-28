@@ -29,7 +29,6 @@ class MainFramePrivate;
 class MainFrame : public Dtk::Widget::DMainWindow
 {
     Q_OBJECT
-    Q_PROPERTY(QString viewname READ viewname WRITE setViewname NOTIFY viewnameChanged)
 public:
     explicit MainFrame(QWidget *parent = 0);
     ~MainFrame();
@@ -40,16 +39,13 @@ public:
 
     void focusMusicList();
     QString coverBackground() const;
-    QString viewname() const;
 
 signals:
-    void viewnameChanged(QString viewname);
     void addPlaylist(bool);
     void importSelectFiles(const QStringList &filelist);
     void triggerShortcutAction(const QString &optKey);
 
 public slots:
-    void setViewname(QString viewname);
     void updateUI();
     void setCoverBackground(QString coverBackground);
     void onSelectImportDirectory();

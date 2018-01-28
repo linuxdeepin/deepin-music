@@ -1,75 +1,84 @@
-Titlebar {
-    qproperty-background: qlineargradient(x1:0 y1:0, x2:0 y2:1,
-        stop:0 rgba(255,255,255,100%),  stop:1 rgba(248,248,248,100%)
-    );
-    qproperty-borderBottom: rgba(0,0,0,10%);
-    qproperty-borderShadowTop: rgba(255,255,255,5%);
+Dtk--Widget--DTitlebar {
+  background: qlineargradient(x1: 1, y1: 0, x2: 1, y2: 1, stop: 0 rgba(255, 255, 255, 100%), stop: 1 rgba(248, 248, 248, 100%));
+  border-bottom: 1px solid rgba(0, 0, 0, 10%);
 }
 
-Titlebar[viewname="lyric"] {
-    qproperty-background: qlineargradient(x1:0 y1:0, x2:0 y2:1,
-        stop:0 rgba(0,0,0,20%),  stop:1 rgba(0,0,0,20%)
-    );
-    qproperty-borderBottom: rgba(0,0,0,20%);
-    qproperty-borderShadowTop: rgba(255,255,255,5%);
+Dtk--Widget--DTitlebar[viewname="lyric"] {
+  background: qlineargradient(x1: 0 y1: 0, x2: 0 y2: 1, stop: 0 rgba(0, 0, 0, 20%), stop: 1 rgba(0, 0, 0, 20%));
+  border-top: 1px solid rgba(255, 255, 255, 5%);
+  border-bottom: 1px solid rgba(0, 0, 0, 10%);
 }
+
 
 /* ------ #DTitlebarDWindowOptionButton  ------ */
+
 #DTitlebarDWindowOptionButton {
-    qproperty-normalPic: url(:/light/image/window/menu_normal.svg);
-    qproperty-hoverPic: url(:/light/image/window/menu_hover.svg);
-    qproperty-pressPic: url(:/light/image/window/menu_press.svg);
+  qproperty-normalPic: url(:/light/image/window/menu_normal.svg);
+  qproperty-hoverPic: url(:/light/image/window/menu_hover.svg);
+  qproperty-pressPic: url(:/light/image/window/menu_press.svg);
 }
+
 #DTitlebarDWindowOptionButton[viewname="lyric"] {
-    qproperty-normalPic: url(:/dark/image/window/menu_normal.svg);
-    qproperty-hoverPic: url(:/dark/image/window/menu_hover.svg);
-    qproperty-pressPic: url(:/dark/image/window/menu_press.svg);
+  qproperty-normalPic: url(:/dark/image/window/menu_normal.svg);
+  qproperty-hoverPic: url(:/dark/image/window/menu_hover.svg);
+  qproperty-pressPic: url(:/dark/image/window/menu_press.svg);
 }
+
 
 /* ------ #DTitlebarDWindowMinButton ------ */
+
 #DTitlebarDWindowMinButton {
-    qproperty-normalPic: url(:/light/image/window/minimise_normal.svg);
-    qproperty-hoverPic: url(:/light/image/window/minimise_hover.svg);
-    qproperty-pressPic: url(:/light/image/window/minimise_press.svg);
+  qproperty-normalPic: url(:/light/image/window/minimise_normal.svg);
+  qproperty-hoverPic: url(:/light/image/window/minimise_hover.svg);
+  qproperty-pressPic: url(:/light/image/window/minimise_press.svg);
 }
+
 #DTitlebarDWindowMinButton[viewname="lyric"] {
-    qproperty-normalPic: url(:/dark/image/window/minimise_normal.svg);
-    qproperty-hoverPic: url(:/dark/image/window/minimise_hover.svg);
-    qproperty-pressPic: url(:/dark/image/window/minimise_press.svg);
+  qproperty-normalPic: url(:/dark/image/window/minimise_normal.svg);
+  qproperty-hoverPic: url(:/dark/image/window/minimise_hover.svg);
+  qproperty-pressPic: url(:/dark/image/window/minimise_press.svg);
 }
+
 
 /* ------ #DTitlebarDWindowMaxButton ------ */
+
 #DTitlebarDWindowMaxButton[isMaximized=true] {
-    qproperty-normalPic: url(:/light/image/window/unmaximize_normal.svg);
-    qproperty-hoverPic: url(:/light/image/window/unmaximize_hover.svg);
-    qproperty-pressPic: url(:/light/image/window/unmaximize_press.svg);
-}
-#DTitlebarDWindowMaxButton[isMaximized=false] {
-    qproperty-normalPic: url(:/light/image/window/maximize_normal.svg);
-    qproperty-hoverPic: url(:/light/image/window/maximize_hover.svg);
-    qproperty-pressPic: url(:/light/image/window/maximize_press.svg);
-}
-#DTitlebarDWindowMaxButton[isMaximized=true][viewname="lyric"] {
-    qproperty-normalPic: url(:/dark/image/window/unmaximize_normal.svg);
-    qproperty-hoverPic: url(:/dark/image/window/unmaximize_hover.svg);
-    qproperty-pressPic: url(:/dark/image/window/unmaximize_press.svg);
-}
-#DTitlebarDWindowMaxButton[isMaximized=false][viewname="lyric"] {
-    qproperty-normalPic: url(:/dark/image/window/maximize_normal.svg);
-    qproperty-hoverPic: url(:/dark/image/window/maximize_hover.svg);
-    qproperty-pressPic: url(:/dark/image/window/maximize_press.svg);
+  qproperty-normalPic: url(:/light/image/window/unmaximize_normal.svg);
+  qproperty-hoverPic: url(:/light/image/window/unmaximize_hover.svg);
+  qproperty-pressPic: url(:/light/image/window/unmaximize_press.svg);
 }
 
-/* ------ #DTitlebarDWindowCloseButton ------ */
-#DTitlebarDWindowCloseButton {
-    qproperty-normalPic: url(:/light/image/window/close_normal.svg);
-    qproperty-hoverPic: url(:/light/image/window/close_hover.svg);
-    qproperty-pressPic: url(:/light/image/window/close_press.svg);
-    padding-right: 6px;
+#DTitlebarDWindowMaxButton[isMaximized=false] {
+  qproperty-normalPic: url(:/light/image/window/maximize_normal.svg);
+  qproperty-hoverPic: url(:/light/image/window/maximize_hover.svg);
+  qproperty-pressPic: url(:/light/image/window/maximize_press.svg);
 }
+
+#DTitlebarDWindowMaxButton[isMaximized=true][viewname="lyric"] {
+  qproperty-normalPic: url(:/dark/image/window/unmaximize_normal.svg);
+  qproperty-hoverPic: url(:/dark/image/window/unmaximize_hover.svg);
+  qproperty-pressPic: url(:/dark/image/window/unmaximize_press.svg);
+}
+
+#DTitlebarDWindowMaxButton[isMaximized=false][viewname="lyric"] {
+  qproperty-normalPic: url(:/dark/image/window/maximize_normal.svg);
+  qproperty-hoverPic: url(:/dark/image/window/maximize_hover.svg);
+  qproperty-pressPic: url(:/dark/image/window/maximize_press.svg);
+}
+
+
+/* ------ #DTitlebarDWindowCloseButton ------ */
+
+#DTitlebarDWindowCloseButton {
+  qproperty-normalPic: url(:/light/image/window/close_normal.svg);
+  qproperty-hoverPic: url(:/light/image/window/close_hover.svg);
+  qproperty-pressPic: url(:/light/image/window/close_press.svg);
+  padding-right: 6px;
+}
+
 #DTitlebarDWindowCloseButton[viewname="lyric"] {
-    qproperty-normalPic: url(:/dark/image/window/close_normal.svg);
-    qproperty-hoverPic: url(:/dark/image/window/close_hover.svg);
-    qproperty-pressPic: url(:/dark/image/window/close_press.svg);
-    padding-right: 6px;
+  qproperty-normalPic: url(:/dark/image/window/close_normal.svg);
+  qproperty-hoverPic: url(:/dark/image/window/close_hover.svg);
+  qproperty-pressPic: url(:/dark/image/window/close_press.svg);
+  padding-right: 6px;
 }

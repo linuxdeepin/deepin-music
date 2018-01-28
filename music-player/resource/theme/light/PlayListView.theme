@@ -1,23 +1,21 @@
-#PlayListView{
-    color: #009aff;
-    border: 0px solid rgba(255, 0, 0, 0.7);
-    background-color: rgba(255, 255, 255, 0.0);
-    outline:none;
+#PlayListView {
+  color: #009aff;
+  border: 0px solid rgba(255, 0, 0, 0.7);
+  background-color: rgba(255, 255, 255, 0.0);
+  outline: none;
 }
 
-#PlayListView::item{
-    color: #009aff;
-    height: 56px;
+#PlayListView::item {
+  color: #009aff;
+  height: 56px;
 }
+
 #PlayListView::item:selected:!active {
-    color: white;
-    background-color: qlineargradient(x1:0 y1:0, x2:1 y2:0,
-                                      stop:0    #2aa6f8, stop:0.015 #2aa6f8,
-                                      stop:0.0155 rgba(42, 166, 248, 20%), stop:1 rgba(42, 166, 248, 20%));
+  color: white;
+  background-color: qlineargradient(x1: 0 y1: 0, x2: 1 y2: 0, stop: 0 #2aa6f8, stop: 0.015 #2aa6f8, stop: 0.0155 rgba(42, 166, 248, 20%), stop: 1 rgba(42, 166, 248, 20%));
 }
+
 #PlayListView::item:selected:active {
-    color: white;
-    background-color: qlineargradient(x1:0 y1:0, x2:1 y2:0,
-                                      stop:0    #2aa6f8, stop:0.015 #2aa6f8,
-                                      stop:0.0155 rgba(42, 166, 248, 20%), stop:1 rgba(42, 166, 248, 20%));
+  color: white;
+  background-color: qlineargradient(x1: 0 y1: 0, x2: 1 y2: 0, stop: 0 #2aa6f8, stop: 0.015 #2aa6f8, stop: 0.0155 rgba(42, 166, 248, 20%), stop: 1 rgba(42, 166, 248, 20%));
 }

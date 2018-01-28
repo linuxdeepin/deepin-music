@@ -1,37 +1,38 @@
-SearchResult{
-    border: 1px solid rgba(0, 0, 0, 10%);
-    border-radius: 4px;
-    background-color: rgba(255, 255,255, 1);
+SearchResult {
+  border: 1px solid rgba(0, 0, 0, 10%);
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 1);
 }
 
-#SearchResultList{
-    color: black;
-    font-size: 12px;
-    margin: 0;
-    border: none;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+#SearchResultList {
+  color: black;
+  font-size: 12px;
+  margin: 0;
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
 }
 
 #SearchResultList::item {
-    background-color: rgba(255, 255, 255, 1.0);
-    height: 25px;
-    padding-left: 7px;
+  background-color: rgba(255, 255, 255, 1.0);
+  height: 25px;
+  padding-left: 7px;
 }
+
 #SearchResultList::item:selected {
-    color: white;
-    background-color: #2ca7f8;
+  color: white;
+  background-color: #2ca7f8;
 }
 
-#SearchResultAction{
-    color: black;
-    font-size: 12px;
-    padding-left: 9px;
-    text-align:left;
-    border: none;
-    background-color: rgba(255, 255, 255, 1.0);
-}
-#SearchResultAction:checked{
-    color: white;
-    background-color: #2ca7f8;
+#SearchResultAction {
+  color: black;
+  font-size: 12px;
+  padding-left: 9px;
+  text-align: left;
+  border: none;
+  background-color: rgba(255, 255, 255, 1.0);
 }
 
+#SearchResultAction:checked {
+  color: white;
+  background-color: #2ca7f8;
+}

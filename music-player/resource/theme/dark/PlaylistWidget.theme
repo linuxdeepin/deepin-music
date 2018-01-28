@@ -1,43 +1,37 @@
-#PlaylistWidget{
-    border: 1px solid rgba(0, 0, 0, 10%);
-    border-top: none;
-    background-color: rgba(37, 37, 37, 0.9);
+#PlaylistWidget {
+  border: 1px solid rgba(0, 0, 0, 10%);
+  border-top: none;
+  background-color: rgba(37, 37, 37, 0.9);
 }
 
-#PlaylistWidgetAddFrame{
-    border-radius: 5px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.02);
+#PlaylistWidgetAddFrame {
+  border-radius: 5px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.02);
 }
 
-#PlaylistWidgetAdd{
-    outline: none;
-    font-size: 12px;
-    border-radius: 4px;
-    color: white;
-    background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1,
-        stop:0.0000  rgba(255, 255, 255, 0.20),    stop:1.0000 rgba(255, 255, 255, 0.20)
-    );
-    border: 0px solid rgba(29, 129, 255, 0.5);
-}
-#PlaylistWidgetAdd:hover{
-    color: white;
-    background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1,
-        stop:0.0000  rgba(255, 255, 255, 0.30),    stop:1.0000 rgba(255, 255, 255, 0.30)
-    );
-    border: 0px solid rgba(29, 129, 255, 0.3);
-}
-#PlaylistWidgetAdd:pressed{
-    color: #2ca7f8;
-    background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1,
-        stop:0.0000  rgba(255, 255, 255, 0.10),    stop:1.0000 rgba(255, 255, 255, 0.10)
-    );
-    border: 0px solid rgba(0, 0, 0, 0.08);
-}
-#PlaylistWidgetAdd:disabled{
-    color: rgba(255,255,255,40%);
-    background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1,
-        stop:0.0000  rgba(255, 255, 255, 0.08),    stop:1.0000 rgba(255, 255, 255, 0.08)
-    );
-    border: 0px solid rgba(29, 129, 255, 0.5);
+#PlaylistWidgetAdd {
+  outline: none;
+  font-size: 12px;
+  border-radius: 4px;
+  color: white;
+  background-color: qlineargradient(x1: 0 y1: 0, x2: 0 y2: 1, stop: 0.0000 rgba(255, 255, 255, 0.20), stop: 1.0000 rgba(255, 255, 255, 0.20));
+  border: 0px solid rgba(29, 129, 255, 0.5);
 }
 
+#PlaylistWidgetAdd:hover {
+  color: white;
+  background-color: qlineargradient(x1: 0 y1: 0, x2: 0 y2: 1, stop: 0.0000 rgba(255, 255, 255, 0.30), stop: 1.0000 rgba(255, 255, 255, 0.30));
+  border: 0px solid rgba(29, 129, 255, 0.3);
+}
+
+#PlaylistWidgetAdd:pressed {
+  color: #2ca7f8;
+  background-color: qlineargradient(x1: 0 y1: 0, x2: 0 y2: 1, stop: 0.0000 rgba(255, 255, 255, 0.10), stop: 1.0000 rgba(255, 255, 255, 0.10));
+  border: 0px solid rgba(0, 0, 0, 0.08);
+}
+
+#PlaylistWidgetAdd:disabled {
+  color: rgba(255, 255, 255, 40%);
+  background-color: qlineargradient(x1: 0 y1: 0, x2: 0 y2: 1, stop: 0.0000 rgba(255, 255, 255, 0.08), stop: 1.0000 rgba(255, 255, 255, 0.08));
+  border: 0px solid rgba(29, 129, 255, 0.5);
+}

@@ -1,0 +1,20 @@
+TitlebarWidget {
+  border: none;
+  background: transparent;
+}
+
+#TitleBack {
+  border-image: url(:/light/image/back_normal.svg);
+}
+
+#TitleBack:hover {
+  border-image: url(:/light/image/back_hover.svg);
+}
+
+#TitleBack:pressed {
+  border-image: url(:/light/image/back_press.svg);
+}
+
+#TitleIcon {
+  image: url(:/common/image/app_icon.svg)
+}

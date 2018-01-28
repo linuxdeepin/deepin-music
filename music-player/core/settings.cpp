@@ -63,5 +63,6 @@ QVariant AppSettings::value(const QString &key) const
 
 void AppSettings::setOption(const QString &key, const QVariant &value)
 {
+    qDebug() << "setOption" << key << value;
     m_settings->setOption(key, value);
 }

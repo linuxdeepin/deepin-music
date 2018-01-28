@@ -1,5 +1,3 @@
-include($$PWD/chinese2pinyin/chinese2pinyin.pri)
-
 win32{
     DEFINES += STATIC_LIB
     DEFINES += TAGLIB_STATIC

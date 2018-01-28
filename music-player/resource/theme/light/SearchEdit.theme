@@ -1,81 +1,82 @@
 Dtk--Widget--DSearchEdit {
-    border-radius: 4.0px;
-    padding: 1px;
-    padding-bottom: 0px;
-    background: rgba(0, 0, 0, 10%);
+  border-radius: 4.0px;
+  padding: 1px;
+  padding-bottom: 0px;
+  background: rgba(0, 0, 0, 10%);
 }
 
 Dtk--Widget--DSearchEdit #SearchIcon {
-    margin: 2 -1 2 4 px;
-    background-color:transparent;
-    border-image:url(:/light/image/search.svg);
+  margin: 2 -1 2 4 px;
+  background-color: transparent;
+  border-image: url(:/light/image/search.svg);
 }
 
 Dtk--Widget--DSearchEdit #ClearIcon {
-    background-color:transparent;
-    qproperty-normalPic:url(:/light/image/input_clear_normal.svg);
-    qproperty-hoverPic:url(:/light/image/input_clear_hover.svg);
-    qproperty-pressPic:url(:/light/image/input_clear_press.svg);
+  background-color: transparent;
+  qproperty-normalPic: url(:/light/image/input_clear_normal.svg);
+  qproperty-hoverPic: url(:/light/image/input_clear_hover.svg);
+  qproperty-pressPic: url(:/light/image/input_clear_press.svg);
 }
 
 Dtk--Widget--DSearchEdit #Edit {
-    color:#303030;
-    font-size:12px;
-    padding-right:15px;
-    border: none;
-    background-color:transparent;
+  color: #303030;
+  font-size: 12px;
+  padding-right: 15px;
+  border: none;
+  background-color: transparent;
 }
 
 Dtk--Widget--DSearchEdit QFrame#DEditInsideFrame {
-    border: 0px solid rgba(0, 0, 255, 0.0);
-    border-radius: 3px;
-    background-color: white;
+  border: 0px solid rgba(0, 0, 255, 0.0);
+  border-radius: 3px;
+  background-color: white;
 }
 
 Dtk--Widget--DSearchEdit #PlaceHolder {
-    font-size:12px;
-    color:#303030;
-    margin:0 0 0 3px;
+  font-size: 12px;
+  color: #303030;
+  margin: 0 0 0 3px;
 }
 
+
 /*-----------------------------------*/
+
 Dtk--Widget--DSearchEdit[viewname="lyric"] {
-    border-radius: 4.0px;
-    background-color:transparent;
+  border-radius: 4.0px;
+  background-color: transparent;
 }
 
 Dtk--Widget--DSearchEdit[viewname="lyric"] #SearchIcon {
-    margin: 2 -1 2 4 px;
-    background-color:transparent;
-    border-image:url(:/dark/image/search.svg);
+  margin: 2 -1 2 4 px;
+  background-color: transparent;
+  border-image: url(:/dark/image/search.svg);
 }
 
 Dtk--Widget--DSearchEdit[viewname="lyric"] #ClearIcon {
-    background-color:transparent;
-    qproperty-normalPic:url(:/dark/image/input_clear_normal.svg);
-    qproperty-hoverPic:url(:/dark/image/input_clear_hover.svg);
-    qproperty-pressPic:url(:/dark/image/input_clear_press.svg);
+  background-color: transparent;
+  qproperty-normalPic: url(:/dark/image/input_clear_normal.svg);
+  qproperty-hoverPic: url(:/dark/image/input_clear_hover.svg);
+  qproperty-pressPic: url(:/dark/image/input_clear_press.svg);
 }
 
 Dtk--Widget--DSearchEdit[viewname="lyric"] #Edit {
-    font-size:12px;
-    color:white;
-    padding-right:15px;
-    border: 5px solid;
-    border-color: transparent;
-    background-color:transparent;
+  font-size: 12px;
+  color: white;
+  padding-right: 15px;
+  border: 5px solid;
+  border-color: transparent;
+  background-color: transparent;
 }
 
 Dtk--Widget--DSearchEdit[viewname="lyric"] QFrame#DEditInsideFrame {
-    background-color: rgba(255, 255, 255, 0.15);
-    border-radius: 4.0px;
-    border-color: rgba(255, 255, 255, 0.05);
-    border: none;
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 4.0px;
+  border-color: rgba(255, 255, 255, 0.05);
+  border: none;
 }
 
 Dtk--Widget--DSearchEdit[viewname="lyric"] #PlaceHolder {
-    color:white;
-    margin:0 0 0 3px;
-    font-size:12px;
+  color: white;
+  margin: 0 0 0 3px;
+  font-size: 12px;
 }
-

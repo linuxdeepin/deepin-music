@@ -38,6 +38,7 @@
 #include <daboutdialog.h>
 #include <ddialog.h>
 #include <DApplication>
+#include <dtoast.h>
 
 #include "../presenter/presenter.h"
 #include "../core/metasearchservice.h"
@@ -47,7 +48,6 @@
 
 #include "widget/titlebarwidget.h"
 #include "widget/infodialog.h"
-#include "widget/tip.h"
 #include "widget/searchresult.h"
 #include "widget/closeconfirmdialog.h"
 #include "helper/widgethellper.h"
@@ -94,16 +94,18 @@ public:
     void disableControl(int delay = 350);
     void updateSize(QSize newSize);
     void updateViewname(const QString &vm);
+    void updateTitlebarViewname(const QString &vm);
+    void overrideTitlebarStyle();
 
     //! ui: show info dialog
     void showInfoDialog(const MetaPtr meta);
 
     QWidget         *centralWidget  = nullptr;
     QStackedLayout  *contentLayout  = nullptr;
-    Titlebar        *titlebar       = nullptr;
-    Tip             *tips           = nullptr;
+    DTitlebar       *titlebar       = nullptr;
+    DToast          *tips           = nullptr;
     SearchResult    *searchResult   = nullptr;
-    TitleBarWidget  *titlebarwidget = nullptr;
+    TitlebarWidget  *titlebarwidget = nullptr;
     ImportWidget    *importWidget   = nullptr;
     LoadWidget      *loadWidget     = nullptr;
     MusicListWidget *musicList      = nullptr;
@@ -205,13 +207,12 @@ void MainFramePrivate::initUI(bool showLoading)
     q->setMinimumSize(QSize(720, 480));
     q->setFocusPolicy(Qt::ClickFocus);
 
-    titlebarwidget = new TitleBarWidget(q);
+    titlebarwidget = new TitlebarWidget(q);
     titlebarwidget->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
 
-    titlebar =  new Titlebar();
+    titlebar = q->titlebar();
     titlebar->setCustomWidget(titlebarwidget, Qt::AlignLeft, false);
-
-    q->setMenuWidget(titlebar);
+    overrideTitlebarStyle();
 
     centralWidget = new QWidget(q);
     contentLayout = new QStackedLayout(centralWidget);
@@ -363,12 +364,16 @@ void MainFramePrivate::showTips(QIcon icon, QString text)
         tips->deleteLater();
     }
 
-    tips = new Tip(icon, text, q);
+    tips = new DToast(q);
+    tips->setIcon(icon);
+    tips->setText(text);
+    tips->pop();
     auto center = q->mapToGlobal(QPoint(q->rect().center()));
+    center.setX(center.x() - tips->width() / 2);
     center.setY(center.y() + q->height() / 2 - footer->height() - 40);
     center = tips->mapFromGlobal(center);
     center = tips->mapToParent(center);
-    tips->pop(center);
+    tips->move(center);
 }
 
 void MainFramePrivate::toggleLyricView()
@@ -482,10 +487,53 @@ void MainFramePrivate::updateViewname(const QString &vm)
 {
     Q_Q(MainFrame);
     DUtil::TimerSingleShot(AnimationDelay / 2, [this, q, vm]() {
-        q->setViewname(vm);
-        titlebar->setViewname(vm);
-        titlebarwidget->setViewname(vm);
+        updateTitlebarViewname(vm);
     });
+}
+
+void MainFramePrivate::updateTitlebarViewname(const QString &vm)
+{
+    Q_Q(MainFrame);
+
+    q->setProperty("viewname", vm);
+    titlebar->setProperty("viewname", vm);
+    titlebarwidget->setViewname(vm);
+    QStringList objNames;
+    objNames  << "DTitlebarDWindowMinButton"
+              << "DTitlebarDWindowMaxButton"
+              << "DTitlebarDWindowCloseButton"
+              << "DTitlebarDWindowOptionButton";
+
+    for (auto &objname : objNames) {
+        auto titlebarBt = q->titlebar()->findChild<QWidget *>(objname);
+        if (!titlebarBt) {
+            continue;
+        }
+        titlebarBt->setProperty("viewname", vm);
+    }
+}
+
+void MainFramePrivate::overrideTitlebarStyle()
+{
+    Q_Q(MainFrame);
+
+    titlebar->setObjectName("Titlebar");
+    ThemeManager::instance()->regisetrWidget(titlebar, {"viewname"});
+
+    QStringList objNames;
+    objNames  << "DTitlebarDWindowMinButton"
+              << "DTitlebarDWindowMaxButton"
+              << "DTitlebarDWindowCloseButton"
+              << "DTitlebarDWindowOptionButton";
+
+    for (auto &objname : objNames) {
+        auto titlebarBt = titlebar->findChild<QWidget *>(objname);
+        if (!titlebarBt) {
+            continue;
+        }
+        titlebarBt->setProperty("_d_QSSFilename", "Titlebar");
+        ThemeManager::instance()->regisetrWidget(titlebarBt, {"viewname"});
+    }
 }
 
 void MainFramePrivate::showInfoDialog(const MetaPtr meta)
@@ -595,11 +643,11 @@ void MainFrame::binding(Presenter *presenter)
     });
 #endif
 
-    connect(d->titlebarwidget, &TitleBarWidget::locateMusicInAllMusiclist,
+    connect(d->titlebarwidget, &TitlebarWidget::locateMusicInAllMusiclist,
             presenter, &Presenter::onLocateMusicAtAll);
-    connect(d->titlebarwidget, &TitleBarWidget::search,
+    connect(d->titlebarwidget, &TitlebarWidget::search,
             presenter, &Presenter::onSearchText);
-    connect(d->titlebarwidget, &TitleBarWidget::searchExited,
+    connect(d->titlebarwidget, &TitlebarWidget::searchExited,
             presenter, &Presenter::onExitSearch);
 
     connect(d->importWidget, &ImportWidget::scanMusicDirectory,
@@ -901,12 +949,6 @@ QString MainFrame::coverBackground() const
     return d->coverBackground;
 }
 
-QString MainFrame::viewname() const
-{
-    Q_D(const MainFrame);
-    return d->viewname;
-}
-
 void MainFrame::updateUI()
 {
     Q_D(MainFrame);
@@ -983,16 +1025,6 @@ void MainFrame::onQuit()
     sync();
 #endif
     qDebug() << "sync config finish, app exit";
-}
-
-void MainFrame::setViewname(QString viewname)
-{
-    Q_D(MainFrame);
-    if (d->viewname == viewname) {
-        return;
-    }
-    d->viewname = viewname;
-    emit viewnameChanged(d->viewname);
 }
 
 bool MainFrame::eventFilter(QObject *obj, QEvent *e)

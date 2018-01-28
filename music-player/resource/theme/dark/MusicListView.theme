@@ -1,14 +1,15 @@
-
 /* !!!! WARNING !!!!*/
+
+
 /* modify MusicItem.theme for color */
 
-#MusicListView{
-    border: 0px solid red;
-    margin: 0 0 0 0;
-    outline: none;
-    background: #202020;
+#MusicListView {
+  border: 0px solid red;
+  margin: 0 0 0 0;
+  outline: none;
+  background: #202020;
 }
 
-#MusicListView::item{
-    height:36px;
+#MusicListView::item {
+  height: 36px;
 }

@@ -10,3 +10,4 @@
 build/
 *.qm
 dist/
+.vscode

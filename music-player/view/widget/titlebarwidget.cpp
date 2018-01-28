@@ -38,28 +38,28 @@
 
 DWIDGET_USE_NAMESPACE
 
-class TitleBarWidgetPrivate
+class TitlebarWidgetPrivate
 {
 public:
-    TitleBarWidgetPrivate(TitleBarWidget *parent) : q_ptr(parent) {}
+    TitlebarWidgetPrivate(TitlebarWidget *parent) : q_ptr(parent) {}
 
     void fixSearchPosition();
 
     SearchEdit  *search = nullptr;
     QPushButton *btBack = nullptr;
 
-    TitleBarWidget *q_ptr;
-    Q_DECLARE_PUBLIC(TitleBarWidget)
+    TitlebarWidget *q_ptr;
+    Q_DECLARE_PUBLIC(TitlebarWidget)
 };
 
-TitleBarWidget::TitleBarWidget(QWidget *parent) :
-    QFrame(parent), d_ptr(new TitleBarWidgetPrivate(this))
+TitlebarWidget::TitlebarWidget(QWidget *parent) :
+    QFrame(parent), d_ptr(new TitlebarWidgetPrivate(this))
 {
-    Q_D(TitleBarWidget);
+    Q_D(TitlebarWidget);
     setFocusPolicy(Qt::NoFocus);
-    setObjectName("TitleBarWidget");
+    setObjectName("TitlebarWidget");
 
-    ThemeManager::instance()->regisetrWidget(this);
+    ThemeManager::instance()->regisetrWidget(this, {"viewname"});
 
     auto layout = new QHBoxLayout(this);
     layout->setContentsMargins(5, 5, 10, 5);
@@ -100,35 +100,35 @@ TitleBarWidget::TitleBarWidget(QWidget *parent) :
     layout->addStretch();
     layout->addWidget(rightWidget, 0,  Qt::AlignCenter);
 
-    connect(d->search, &SearchEdit::locateMusic, this, &TitleBarWidget::locateMusicInAllMusiclist);
-    connect(d->search, &SearchEdit::searchText, this, &TitleBarWidget::search);
-    connect(d->btBack, &QPushButton::clicked, this, &TitleBarWidget::searchExited);
+    connect(d->search, &SearchEdit::locateMusic, this, &TitlebarWidget::locateMusicInAllMusiclist);
+    connect(d->search, &SearchEdit::searchText, this, &TitlebarWidget::search);
+    connect(d->btBack, &QPushButton::clicked, this, &TitlebarWidget::searchExited);
 
-    connect(this, &TitleBarWidget::search, this, [ = ]() {
+    connect(this, &TitlebarWidget::search, this, [ = ]() {
         d->btBack->show();
 //        d->fixSearchPosition();
     });
-    connect(this, &TitleBarWidget::searchExited, this, [ = ]() {
+    connect(this, &TitlebarWidget::searchExited, this, [ = ]() {
         d->btBack->hide();
         clearSearch();
 //        d->fixSearchPosition();
     });
 }
 
-TitleBarWidget::~TitleBarWidget()
+TitlebarWidget::~TitlebarWidget()
 {
 }
 
-void TitleBarWidget::exitSearch()
+void TitlebarWidget::exitSearch()
 {
-    Q_D(TitleBarWidget);
+    Q_D(TitlebarWidget);
     d->btBack->hide();
     clearSearch();
 }
 
-void TitleBarWidget::clearSearch()
+void TitlebarWidget::clearSearch()
 {
-    Q_D(TitleBarWidget);
+    Q_D(TitlebarWidget);
     d->search->clear();
     auto edit = d->search->findChild<QWidget *>("Edit");
     if (edit) {
@@ -136,33 +136,33 @@ void TitleBarWidget::clearSearch()
     }
 }
 
-void TitleBarWidget::setSearchEnable(bool enable)
+void TitlebarWidget::setSearchEnable(bool enable)
 {
-    Q_D(TitleBarWidget);
+    Q_D(TitlebarWidget);
     d->search->setEnabled(enable);
 }
 
-void TitleBarWidget::setResultWidget(SearchResult *r)
+void TitlebarWidget::setResultWidget(SearchResult *r)
 {
-    Q_D(TitleBarWidget);
+    Q_D(TitlebarWidget);
     d->search->setResultWidget(r);
 }
 
-void TitleBarWidget::setViewname(const QString &viewname)
+void TitlebarWidget::setViewname(const QString &viewname)
 {
-    Q_D(TitleBarWidget);
-    d->search->setViewname(viewname);
+    Q_D(TitlebarWidget);
+    d->search->setProperty("viewname", viewname);
 }
 
-void TitleBarWidget::resizeEvent(QResizeEvent *event)
+void TitlebarWidget::resizeEvent(QResizeEvent *event)
 {
-//    Q_D(TitleBarWidget);
+//    Q_D(TitlebarWidget);
     QFrame::resizeEvent(event);
 }
 
-void TitleBarWidgetPrivate::fixSearchPosition()
+void TitlebarWidgetPrivate::fixSearchPosition()
 {
-    Q_Q(TitleBarWidget);
+    Q_Q(TitlebarWidget);
     auto fixSize = QPoint(search->width() / 2, search->height() / 2);
     auto fixPos = q->geometry().center() - fixSize;
     search->setGeometry(fixPos.x(), fixPos.y(),

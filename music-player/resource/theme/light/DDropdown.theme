@@ -1,15 +1,15 @@
 #MusicListSort {
-    border: none;
+  border: none;
 }
 
 #MusicListSort[status="hover"] {
-    border-radius: 4.0px;
+  border-radius: 4.0px;
 }
 
 #DDropdownText {
-    font-size: 12px;
+  font-size: 12px;
 }
 
-#DDropdownIcon{
-    border-image: url(:/light/image/dropdown_arrow.svg);
+#DDropdownIcon {
+  border-image: url(:/light/image/dropdown_arrow.svg);
 }

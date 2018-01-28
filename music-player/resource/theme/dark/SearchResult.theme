@@ -1,40 +1,41 @@
-SearchResult{
-    border: 0px solid rgba(0, 0, 0, 0.5);
-    border-radius: 4.0px;
-    background-color: rgba(255, 255,255, 1);
+SearchResult {
+  border: 0px solid rgba(0, 0, 0, 0.5);
+  border-radius: 4.0px;
+  background-color: rgba(255, 255, 255, 1);
 }
 
-#SearchResultList{
-    color: black;
-    font-size: 12px;
-    margin: 0;
-    border: none;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    background-color: rgba(255, 255, 255, 1.0);
+#SearchResultList {
+  color: black;
+  font-size: 12px;
+  margin: 0;
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  background-color: rgba(255, 255, 255, 1.0);
 }
 
 #SearchResultList::item {
-    background-color: rgba(255, 255, 255, 1.0);
-    height: 25px;
-    padding-left: 7px;
+  background-color: rgba(255, 255, 255, 1.0);
+  height: 25px;
+  padding-left: 7px;
 }
+
 #SearchResultList::item:selected {
-    color: white;
-    border: none;
-    background-color: #2ca7f8;
+  color: white;
+  border: none;
+  background-color: #2ca7f8;
 }
 
-#SearchResultAction{
-    color: black;
-    font-size: 12px;
-    padding-left: 9px;
-    text-align:left;
-    border: none;
-    background-color: rgba(255, 255, 255, 1.0);
-}
-#SearchResultAction:checked{
-    color: white;
-    border: none;
-    background-color: #2ca7f8;
+#SearchResultAction {
+  color: black;
+  font-size: 12px;
+  padding-left: 9px;
+  text-align: left;
+  border: none;
+  background-color: rgba(255, 255, 255, 1.0);
 }
 
+#SearchResultAction:checked {
+  color: white;
+  border: none;
+  background-color: #2ca7f8;
+}

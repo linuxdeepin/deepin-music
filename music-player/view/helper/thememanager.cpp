@@ -23,6 +23,7 @@
 
 #include <QDebug>
 #include <QFile>
+#include <QDynamicPropertyChangeEvent>
 #include <QMetaProperty>
 #include <QStyleFactory>
 #include <QStyle>
@@ -39,7 +40,7 @@ public:
 
     QString                     prefix      = ":";
     QString                     activeTheme;
-    QList<QPointer<QWidget> >   widgetList;
+    QMap<QPointer<QWidget>, QStringList >   watchedWidgetPropertys;
 
     ThemeManager *q_ptr;
     Q_DECLARE_PUBLIC(ThemeManager)
@@ -55,7 +56,6 @@ QString ThemeManagerPrivate::getQssForWidget(QString theme, QString className)
     auto filename = QString("%1/%2/%3.theme").arg(prefix).arg(theme).arg(className);
     QFile themeFile(filename);
 
-//    qDebug() << "load: " <<filename;
     if (themeFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
         qss = themeFile.readAll();
         themeFile.close();
@@ -79,7 +79,6 @@ ThemeManager::~ThemeManager()
 void ThemeManager::regisetrWidget(QPointer<QWidget> widget, QStringList propertys)
 {
     Q_D(ThemeManager);
-    d->widgetList.push_back(widget);
 
     // set theme
     auto meta = widget->metaObject();
@@ -94,6 +93,7 @@ void ThemeManager::regisetrWidget(QPointer<QWidget> widget, QStringList property
         qssFilename = meta->className();
     }
 
+    qDebug() << widget;
 //    qDebug() << qssFilename;
     widget->style()->unpolish(widget);
     widget->style()->polish(widget);
@@ -110,19 +110,9 @@ void ThemeManager::regisetrWidget(QPointer<QWidget> widget, QStringList property
         widget->style()->polish(widget);
     });
 
-    for (auto property : propertys) {
-        auto propertyIndex = meta->indexOfProperty(property.toLatin1().data());
-//        qDebug() << propertyIndex << property << meta->propertyCount();
-//        for (int i =0; i < meta->propertyCount(); ++i){
-//            qDebug() << meta->property(i).name();
-//        }
-        if (-1 == propertyIndex) {
-            continue;
-        }
-
-//        qDebug() << "connect " << meta->property(propertyIndex).notifySignal().name();
-        connect(widget, meta->property(propertyIndex).notifySignal(),
-                this, metaObject()->method(metaObject()->indexOfMethod("updateQss()")));
+    if (!propertys.isEmpty()) {
+        widget->installEventFilter(this);
+        d->watchedWidgetPropertys.insert(widget, propertys);
     }
 }
 
@@ -155,14 +145,26 @@ void ThemeManager::setPrefix(const QString prefix)
     d->prefix = prefix;
 }
 
-void ThemeManager::updateQss()
+bool ThemeManager::eventFilter(QObject *watched, QEvent *event)
 {
-    QWidget *w = qobject_cast<QWidget *>(sender());
-//    qDebug() << w;
-    if (w) {
-        w->setStyleSheet(w->styleSheet());
-        w->style()->unpolish(w);
-        w->style()->polish(w);
-        w->update();
+    Q_D(ThemeManager);
+    if (event->type() == QEvent::DynamicPropertyChange) {
+        auto propEvent = reinterpret_cast<QDynamicPropertyChangeEvent *>(event);
+        auto widget = qobject_cast<QWidget *>(watched);
+        if (propEvent && widget) {
+            auto propName = QString::fromLatin1(propEvent->propertyName().data());
+            if (d->watchedWidgetPropertys.contains(widget)) {
+                auto props = d->watchedWidgetPropertys.value(widget);
+                if (props.contains(propName)) {
+                    if (widget) {
+                        widget->setStyleSheet(widget->styleSheet());
+                        widget->style()->unpolish(widget);
+                        widget->style()->polish(widget);
+                        widget->update();
+                    }
+                }
+            }
+        }
     }
+    return QObject::eventFilter(watched, event);
 }

@@ -1,34 +1,38 @@
-#PlayListItem{
-    qproperty-playingIcon: ":/common/animation/playing/blue";
-    qproperty-highlightPlayingIcon: ":/common/animation/playing/blue";
+#PlayListItem {
+  qproperty-playingIcon: ":/common/animation/playing/blue";
+  qproperty-highlightPlayingIcon: ":/common/animation/playing/blue";
 }
 
 #PlayListIcon {
-    image: url(:/dark/image/playlist.svg);
-}
-#PlayListIcon[iconName="all"] {
-    image: url(:/dark/image/playlist_allmusic.svg);
-}
-#PlayListIcon[iconName="fav"] {
-    image: url(:/dark/image/playlist_fav.svg);
+  image: url(:/dark/image/playlist.svg);
 }
 
-#PlayListInterFrame{
-    border: none;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+#PlayListIcon[iconName="all"] {
+  image: url(:/dark/image/playlist_allmusic.svg);
+}
+
+#PlayListIcon[iconName="fav"] {
+  image: url(:/dark/image/playlist_fav.svg);
+}
+
+#PlayListInterFrame {
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 #PlayListTitle {
-    qproperty-alignment: AlignLeft;
-    font-size: 12px;
-    border: none;
-    color: #afafaf;
-    background: transparent;
+  qproperty-alignment: AlignLeft;
+  font-size: 12px;
+  border: none;
+  color: #afafaf;
+  background: transparent;
 }
+
 #PlayListTitle[status="active"] {
-    color: #009aff;
+  color: #009aff;
 }
+
 #PlayListTitle:focus[status="active"] {
-    background: rgba(255, 255, 255, 0.15);
-    border-radius: 4.0px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4.0px;
 }

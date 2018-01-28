@@ -39,7 +39,6 @@ SOURCES += \
     view/widget/searchresult.cpp \
     view/widget/slider.cpp \
     view/widget/label.cpp \
-    view/widget/tip.cpp \
     view/widget/soundvolume.cpp \
     view/widget/filter.cpp \
     core/player.cpp \
@@ -94,7 +93,6 @@ HEADERS += \
     view/widget/searchresult.h \
     view/widget/slider.h \
     view/widget/label.h \
-    view/widget/tip.h \
     view/importwidget.h \
     view/widget/soundvolume.h \
     view/widget/filter.h \
@@ -133,11 +131,9 @@ RESOURCES += \
 
 unix{
 SOURCES += \
-    view/helper/xutil.cpp \
     core/util/inotifyengine.cpp
 
 HEADERS += \
-    view/helper/xutil.h \
     core/util/inotifyengine.h
 
 # Automating generation .qm files from .ts files

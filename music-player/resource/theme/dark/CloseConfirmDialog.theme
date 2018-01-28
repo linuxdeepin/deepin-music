@@ -1,20 +1,24 @@
-#CloseConfirmDialogLabel{
-    margin-left: 2px;
-    font-size: 13px;
-    font-weight: 500;
-    color: black;
-    border: none;
+#CloseConfirmDialogLabel {
+  margin-left: 2px;
+  font-size: 13px;
+  font-weight: 500;
+  color: black;
+  border: none;
 }
-QGroupBox{
-    color: black;
-    border: none;
+
+QGroupBox {
+  color: black;
+  border: none;
 }
-QRadioButton{
-    font-size: 12px;
-    color: black;
+
+QRadioButton {
+  font-size: 12px;
+  color: black;
 }
-QCheckBox{
-    margin-left: 2px;
-    font-size: 12px;
-    color: black;;
+
+QCheckBox {
+  margin-left: 2px;
+  font-size: 12px;
+  color: black;
+  ;
 }

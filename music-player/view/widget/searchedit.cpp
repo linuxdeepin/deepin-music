@@ -68,11 +68,6 @@ void SearchEdit::setResultWidget(SearchResult *result)
     });
 }
 
-QString SearchEdit::viewname()
-{
-    return m_view;
-}
-
 void SearchEdit::keyPressEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_Up) {
@@ -155,14 +150,4 @@ void SearchEdit::onReturnPressed()
     } else {
         emit this->searchText(this->text());
     }
-}
-
-void SearchEdit::setViewname(QString viewname)
-{
-    if (m_view == viewname) {
-        return;
-    }
-
-    m_view = viewname;
-    emit viewnameChanged(viewname);
 }

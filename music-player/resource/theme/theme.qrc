@@ -154,9 +154,8 @@
         <file>dark/SearchMetaList.theme</file>
         <file>dark/SearchResult.theme</file>
         <file>dark/SoundVolume.theme</file>
-        <file>dark/Tip.theme</file>
         <file>dark/Titlebar.theme</file>
-        <file>dark/TitleBarWidget.theme</file>
+        <file>dark/TitlebarWidget.theme</file>
         <file>light/image/back_hover.svg</file>
         <file>light/image/back_normal.svg</file>
         <file>light/image/back_press.svg</file>
@@ -192,9 +191,8 @@
         <file>light/SearchMetaList.theme</file>
         <file>light/SearchResult.theme</file>
         <file>light/SoundVolume.theme</file>
-        <file>light/Tip.theme</file>
         <file>light/Titlebar.theme</file>
-        <file>light/TitleBarWidget.theme</file>
+        <file>light/TitlebarWidget.theme</file>
         <file>theme.qrc</file>
     </qresource>
 </RCC>

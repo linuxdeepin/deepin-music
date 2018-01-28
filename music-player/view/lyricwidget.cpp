@@ -149,6 +149,7 @@ LyricWidget::LyricWidget(QWidget *parent)
 {
     Q_D(LyricWidget);
     setObjectName("LyricWidget");
+    ThemeManager::instance()->regisetrWidget(this);
 
     auto layout = new QHBoxLayout(this);
     layout->setContentsMargins(20, 20, 20, 20);
@@ -198,6 +199,7 @@ LyricWidget::LyricWidget(QWidget *parent)
 
     d->lyricview = new LyricView();
     d->lyricview->setObjectName("LyricTextView");
+    ThemeManager::instance()->regisetrWidget(d->lyricview);
 
     d->m_model = new QStringListModel;
     d->setLyricLines("");
@@ -295,10 +297,6 @@ LyricWidget::LyricWidget(QWidget *parent)
             itemWidget->setChecked(true);
         }
     });
-
-
-    ThemeManager::instance()->regisetrWidget(this);
-    ThemeManager::instance()->regisetrWidget(d->lyricview);
 }
 
 LyricWidget::~LyricWidget()
@@ -431,7 +429,6 @@ void LyricWidget::onProgressChanged(qint64 value, qint64 /*length*/)
     QPalette p = palette();
     p.setColor(QPalette::Background, d->backgroundColor);
     setPalette(p);
-
 
     auto len = d->m_lyriclist.m_lyricElements.length();
 

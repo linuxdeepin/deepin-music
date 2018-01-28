@@ -37,14 +37,15 @@ public:
     void regisetrWidget(QPointer<QWidget> widget, QStringList propertys = QStringList());
     QString theme() const;
 
-public slots:
+public Q_SLOTS:
     void setTheme(const QString theme);
     void setPrefix(const QString prefix);
-    // TODO: move to ThemeManagerPrivate
-    void updateQss();
 
-signals:
+Q_SIGNALS:
     void themeChanged(QString theme);
+
+protected:
+    bool eventFilter(QObject *watched, QEvent *event);
 
 private:
     explicit ThemeManager(QObject *parent = 0);

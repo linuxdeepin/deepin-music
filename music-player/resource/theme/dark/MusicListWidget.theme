@@ -1,34 +1,34 @@
-#MusicListWidget{
-    border-radius: 4px;
-    background-color: rgba(32, 32, 32, 0);
+#MusicListWidget {
+  border-radius: 4px;
+  background-color: rgba(32, 32, 32, 0);
 }
 
-#MusicListActionBar{
-    background-color: rgba(32, 32, 32, 1);
+#MusicListActionBar {
+  background-color: rgba(32, 32, 32, 1);
 }
 
-#MusicListEmptyHits{
-    font-size: 24px;
-    color: #d0d0d0;
-    qproperty-alignment: AlignCenter;
-    background-color: rgba(32, 32, 32, 1);
+#MusicListEmptyHits {
+  font-size: 24px;
+  color: #d0d0d0;
+  qproperty-alignment: AlignCenter;
+  background-color: rgba(32, 32, 32, 1);
 }
 
-#MusicListPlayAll{
-    font-size: 12px;
-    padding: 0 10 0 10;
-    border: none;
-    border-radius: 3.0px;
-    qproperty-icon: url(:/common/image/play_all.svg);
+#MusicListPlayAll {
+  font-size: 12px;
+  padding: 0 10 0 10;
+  border: none;
+  border-radius: 3.0px;
+  qproperty-icon: url(:/common/image/play_all.svg);
 }
-#MusicListPlayAll:hover{
-    border: 0px solid rgba(0, 0, 0, 0.2);
-    background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1,
-    stop:0 rgba(255, 255, 255, 20%), stop:1 rgba(255, 255, 255, 20%));
+
+#MusicListPlayAll:hover {
+  border: 0px solid rgba(0, 0, 0, 0.2);
+  background-color: qlineargradient(x1: 0 y1: 0, x2: 0 y2: 1, stop: 0 rgba(255, 255, 255, 20%), stop: 1 rgba(255, 255, 255, 20%));
 }
-#MusicListPlayAll:pressed{
-    color: #2ca7f8;
-    border: 0px solid rgba(255, 255, 255, 0.2);
-    background-color: qlineargradient(x1:0 y1:0, x2:0 y2:1,
-    stop:0 rgba(255, 255, 255, 10%), stop:1 rgba(255, 255, 255, 10%));
+
+#MusicListPlayAll:pressed {
+  color: #2ca7f8;
+  border: 0px solid rgba(255, 255, 255, 0.2);
+  background-color: qlineargradient(x1: 0 y1: 0, x2: 0 y2: 1, stop: 0 rgba(255, 255, 255, 10%), stop: 1 rgba(255, 255, 255, 10%));
 }

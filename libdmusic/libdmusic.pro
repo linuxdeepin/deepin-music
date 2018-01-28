@@ -17,6 +17,7 @@ DESTDIR     = $$BUILD_DIST/lib/
 CONFIG      += c++11 link_pkgconfig
 
 unix {
+PKGCONFIG += dtkcore
 PKGCONFIG += icu-uc icu-i18n libavutil libavformat libavcodec taglib
 }
 
