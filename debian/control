@@ -13,7 +13,8 @@ Homepage: http://www.deepin.org/
 Package: deepin-music
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends},
- gstreamer1.0-libav, gstreamer1.0-plugins-good, gstreamer1.0-plugins-ugly
+ gstreamer1.0-libav, gstreamer1.0-plugins-base, gstreamer1.0-plugins-good,
+ gstreamer1.0-plugins-bad, gstreamer1.0-plugins-ugly, gstreamer1.0-pulseaudio
 Description: Awesome music player with brilliant and tweakful UI
  Deepin-UI based, gstreamer front-end, with features likes search music
  by pinyin,quanpin, colorful lyrics supports, and more powerful
