@@ -33,9 +33,9 @@
 #include <QStackedLayout>
 
 #include <DHiDPIHelper>
+#include <DThemeManager>
 #include <DToast>
 
-#include "thememanager.h"
 #include "../musicapp.h"
 #include "../core/playlistmanager.h"
 #include "../core/player.h"
@@ -46,6 +46,8 @@
 #include "widget/label.h"
 #include "widget/cover.h"
 #include "widget/soundvolume.h"
+
+DWIDGET_USE_NAMESPACE
 
 static const char *sPropertyFavourite         = "fav";
 static const char *sPropertyPlayStatus        = "playstatus";
@@ -113,6 +115,7 @@ void FooterPrivate::installTipHint(QWidget *w, const QString &hintstr)
     Q_Q(Footer);
     // TODO: parent must be mainframe
     auto hintWidget = new Dtk::Widget::DToast(q->parentWidget());
+    hintWidget->setContentsMargins(0,0,0,0);
     hintWidget->setText(hintstr);
     hintWidget->setFixedHeight(32);
     installHint(w, hintWidget);
@@ -192,7 +195,7 @@ Footer::Footer(QWidget *parent) :
     setFocusPolicy(Qt::ClickFocus);
     setObjectName("Footer");
 
-    ThemeManager::instance()->regisetrWidget(this);
+    DThemeManager::instance()->registerWidget(this);
 
     auto mainVBoxlayout = new QVBoxLayout(this);
     mainVBoxlayout->setSpacing(0);

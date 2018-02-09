@@ -30,7 +30,7 @@
 #include <DUtil>
 #include <dslider.h>
 
-#include <thememanager.h>
+#include <DThemeManager>
 
 #include "core/player.h"
 
@@ -81,7 +81,7 @@ SoundVolume::SoundVolume(QWidget *parent) : QWidget(parent), d_ptr(new SoundVolu
     bodyShadow->setOffset(0, 2.0);
     this->setGraphicsEffect(bodyShadow);
 
-    ThemeManager::instance()->regisetrWidget(this);
+    DThemeManager::instance()->registerWidget(this);
 
     connect(d->volSlider, &QSlider::valueChanged,
             this, &SoundVolume::volumeChanged);

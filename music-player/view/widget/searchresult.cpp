@@ -28,14 +28,14 @@
 #include <QStringListModel>
 
 #include <dlistview.h>
-#include <thememanager.h>
+#include <DThemeManager>
 #include <QGraphicsDropShadowEffect>
 
 #include "pushbutton.h"
 
 SearchResult::SearchResult(QWidget *parent) : QFrame(parent)
 {
-    ThemeManager::instance()->regisetrWidget(this);
+    DThemeManager::instance()->registerWidget(this);
 
     auto vlayout = new QVBoxLayout();
     setLayout(vlayout);

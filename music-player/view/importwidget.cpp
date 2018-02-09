@@ -30,10 +30,9 @@
 
 #include <dbasebutton.h>
 
-#include "view/helper/thememanager.h"
+#include <DThemeManager>
 
 DWIDGET_USE_NAMESPACE
-
 
 const QString linkTemplate = "<a href='%1' style='text-decoration: none; color: #0082FA; '>%2</a>";
 
@@ -54,7 +53,7 @@ ImportWidget::ImportWidget(QWidget *parent) : QFrame(parent), d_ptr(new ImportWi
     Q_D(ImportWidget);
     setObjectName("ImportWidget");
 
-    ThemeManager::instance()->regisetrWidget(this);
+    DThemeManager::instance()->registerWidget(this);
 
     setAcceptDrops(true);
 

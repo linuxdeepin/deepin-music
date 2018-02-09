@@ -42,7 +42,6 @@ public:
     QColor backgroundColor() const;
     void checkHiddenSearch(QPoint mousePos);
 
-
 signals:
     void toggleLyricView();
     void requestContextSearch(const QString &context);

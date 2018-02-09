@@ -38,7 +38,8 @@
 #include <daboutdialog.h>
 #include <ddialog.h>
 #include <DApplication>
-#include <dtoast.h>
+#include <DThemeManager>
+#include <DToast>
 
 #include "../presenter/presenter.h"
 #include "../core/metasearchservice.h"
@@ -51,7 +52,6 @@
 #include "widget/searchresult.h"
 #include "widget/closeconfirmdialog.h"
 #include "helper/widgethellper.h"
-#include "helper/thememanager.h"
 
 #include "titlebar.h"
 #include "importwidget.h"
@@ -66,6 +66,8 @@
 #ifdef Q_OS_LINUX
 #include <unistd.h>
 #endif
+
+DWIDGET_USE_NAMESPACE
 
 const QString s_PropertyViewname = "viewname";
 const QString s_PropertyViewnameLyric = "lyric";
@@ -154,7 +156,7 @@ void MainFramePrivate::initMenu()
         auto configDialog = new DSettingsDialog(q);
         configDialog->setProperty("_d_QSSThemename", "dark");
         configDialog->setProperty("_d_QSSFilename", "DSettingsDialog");
-        ThemeManager::instance()->regisetrWidget(configDialog);
+        DThemeManager::instance()->registerWidget(configDialog);
 
         configDialog->setFixedSize(720, 520);
         configDialog->updateSettings(AppSettings::instance()->settings());
@@ -170,14 +172,14 @@ void MainFramePrivate::initMenu()
     colorModeAction->setChecked(AppSettings::instance()->value("base.play.theme").toString() == "dark");
 
     q->connect(colorModeAction, &QAction::triggered, q, [ = ](bool) {
-        if (ThemeManager::instance()->theme() == "light") {
+        if (DThemeManager::instance()->theme() == "light") {
             colorModeAction->setChecked(true);
-            ThemeManager::instance()->setTheme("dark");
+            DThemeManager::instance()->setTheme("dark");
         } else {
             colorModeAction->setChecked(false);
-            ThemeManager::instance()->setTheme("light");
+            DThemeManager::instance()->setTheme("light");
         }
-        AppSettings::instance()->setOption("base.play.theme", ThemeManager::instance()->theme());
+        AppSettings::instance()->setOption("base.play.theme", DThemeManager::instance()->theme());
     });
 
     QAction *m_close = new QAction(MainFrame::tr("Exit"), q);
@@ -212,6 +214,7 @@ void MainFramePrivate::initUI(bool showLoading)
 
     titlebar = q->titlebar();
     titlebar->setCustomWidget(titlebarwidget, Qt::AlignLeft, false);
+//    titlebar->setBackgroundTransparent(true);
     overrideTitlebarStyle();
 
     centralWidget = new QWidget(q);
@@ -515,10 +518,8 @@ void MainFramePrivate::updateTitlebarViewname(const QString &vm)
 
 void MainFramePrivate::overrideTitlebarStyle()
 {
-    Q_Q(MainFrame);
-
     titlebar->setObjectName("Titlebar");
-    ThemeManager::instance()->regisetrWidget(titlebar, {"viewname"});
+    DThemeManager::instance()->registerWidget(titlebar, "Titlebar", QStringList({"viewname"}));
 
     QStringList objNames;
     objNames  << "DTitlebarDWindowMinButton"
@@ -532,7 +533,7 @@ void MainFramePrivate::overrideTitlebarStyle()
             continue;
         }
         titlebarBt->setProperty("_d_QSSFilename", "Titlebar");
-        ThemeManager::instance()->regisetrWidget(titlebarBt, {"viewname"});
+        DThemeManager::instance()->registerWidget(titlebarBt, QStringList({"viewname"}));
     }
 }
 
@@ -546,7 +547,7 @@ MainFrame::MainFrame(QWidget *parent) :
     DMainWindow(parent), d_ptr(new MainFramePrivate(this))
 {
     setObjectName("MainFrame");
-    ThemeManager::instance()->regisetrWidget(this, QStringList() << s_PropertyViewname);
+    DThemeManager::instance()->registerWidget(this, QStringList() << s_PropertyViewname);
 }
 
 MainFrame::~MainFrame()

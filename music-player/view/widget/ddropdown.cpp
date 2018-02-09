@@ -28,7 +28,9 @@
 #include <QMouseEvent>
 #include <QLabel>
 
-#include <thememanager.h>
+#include <DThemeManager>
+
+DWIDGET_USE_NAMESPACE
 
 class DDropdownPrivate
 {
@@ -77,7 +79,7 @@ DDropdown::DDropdown(QWidget *parent) : QFrame(parent), d_ptr(new DDropdownPriva
         d->menu->exec();
     });
 
-    ThemeManager::instance()->regisetrWidget(this);
+    DThemeManager::instance()->registerWidget(this);
 }
 
 DDropdown::~DDropdown()

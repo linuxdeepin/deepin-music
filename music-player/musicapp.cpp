@@ -36,7 +36,7 @@
 #include "core/util/threadpool.h"
 #include "presenter/presenter.h"
 #include "view/mainframe.h"
-#include "view/helper/thememanager.h"
+#include <DThemeManager>
 
 using namespace Dtk::Widget;
 

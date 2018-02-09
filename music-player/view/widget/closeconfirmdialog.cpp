@@ -27,8 +27,12 @@
 #include <QRadioButton>
 #include <QBoxLayout>
 
-#include "thememanager.h"
+#include <DThemeManager>
+
 #include "core/settings.h"
+
+DWIDGET_USE_NAMESPACE
+
 class CloseConfirmDialogPrivate
 {
 public:
@@ -46,7 +50,7 @@ CloseConfirmDialog::CloseConfirmDialog(QWidget *parent) :
 {
     Q_D(CloseConfirmDialog);
 
-    ThemeManager::instance()->regisetrWidget(this);
+    DThemeManager::instance()->registerWidget(this);
 
     auto contentFrame = new QFrame;
     auto contentLayout = new QVBoxLayout(contentFrame);

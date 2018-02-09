@@ -42,7 +42,6 @@ SOURCES += \
     view/widget/soundvolume.cpp \
     view/widget/filter.cpp \
     core/player.cpp \
-    view/helper/thememanager.cpp \
     view/widget/titlebarwidget.cpp \
     view/widget/ddropdown.cpp \
     view/widget/searchmetalist.cpp \
@@ -98,7 +97,6 @@ HEADERS += \
     view/widget/filter.h \
     core/player.h \
     presenter/presenter_p.h \
-    view/helper/thememanager.h \
     view/titlebar.h \
     view/widget/titlebarwidget.h \
     view/widget/ddropdown.h \
@@ -115,7 +113,6 @@ HEADERS += \
     view/widget/listview.h \
     view/widget/model/musiclistmodel.h \
     view/widget/delegate/lyriclinedelegate.h \
-    view/widget/delegate/musicitemdelegate_p.h \
     view/widget/delegate/musicitemdelegate.h \
     view/lyricwidget.h \
     view/widget/lyricview.h \
@@ -123,7 +120,8 @@ HEADERS += \
     core/util/threadpool.h \
     view/footerwidget.h \
     view/loadwidget.h \
-    view/widget/closeconfirmdialog.h
+    view/widget/closeconfirmdialog.h \
+    view/widget/delegate/musicitemdelegate_p.h
 
 RESOURCES += \
     resource/theme/theme.qrc \

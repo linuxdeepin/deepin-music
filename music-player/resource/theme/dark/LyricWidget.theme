@@ -1,5 +1,5 @@
 #LyricWidget {
-  background: rgba(0, 0, 0, 50%);
+  qproperty-backgroundColor: rgba(0, 0, 0, 50%);
   qproperty-defaultCover: ":/common/image/cover_max.svg";
 }
 

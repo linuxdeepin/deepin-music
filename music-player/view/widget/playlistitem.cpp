@@ -33,7 +33,7 @@
 
 #include <ddialog.h>
 #include <QMessageBox>
-#include <thememanager.h>
+#include <DThemeManager>
 
 #include "core/playlist.h"
 
@@ -48,7 +48,7 @@ PlayListItem::PlayListItem(PlaylistPtr playlist, QWidget *parent) : QFrame(paren
     m_data = playlist;
     Q_ASSERT(playlist);
 
-    ThemeManager::instance()->regisetrWidget(this);
+    DThemeManager::instance()->registerWidget(this);
 
     setObjectName("PlayListItem");
 

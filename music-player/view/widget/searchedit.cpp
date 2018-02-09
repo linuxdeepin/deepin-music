@@ -25,7 +25,7 @@
 #include <QKeyEvent>
 
 #include <DUtil>
-#include <thememanager.h>
+#include <DThemeManager>
 
 #include "../../core/mediadatabase.h"
 #include "../../core/music.h"
@@ -37,7 +37,7 @@ SearchEdit::SearchEdit(QWidget *parent) : DSearchEdit(parent)
 {
     // Why qss not work if not call show
     show();
-    ThemeManager::instance()->regisetrWidget(this, QStringList() << "viewname");
+    DThemeManager::instance()->registerWidget(this, QStringList() << "viewname");
     connect(this, &SearchEdit::focusOut,
             this, &SearchEdit::onFocusOut);
 //    connect(this, &SearchEdit::focusIn,

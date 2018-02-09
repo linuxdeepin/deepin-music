@@ -33,13 +33,15 @@
 
 #include <ddialog.h>
 #include <DDesktopServices>
+#include <DThemeManager>
 
 #include "../../core/metasearchservice.h"
 #include "../helper/widgethellper.h"
-#include "../helper/thememanager.h"
 
 #include "delegate/musicitemdelegate.h"
 #include "model/musiclistmodel.h"
+
+DWIDGET_USE_NAMESPACE
 
 class MusicListViewPrivate
 {
@@ -61,7 +63,7 @@ MusicListView::MusicListView(QWidget *parent)
 {
     Q_D(MusicListView);
 
-    ThemeManager::instance()->regisetrWidget(this);
+    DThemeManager::instance()->registerWidget(this);
 
     setObjectName("MusicListView");
 

@@ -24,7 +24,7 @@
 #include <QDebug>
 #include <QPainter>
 
-#include <thememanager.h>
+#include <DThemeManager>
 
 #include "mainframe.h"
 
@@ -58,7 +58,7 @@ public:
 Titlebar::Titlebar(QWidget *parent) : DTitlebar(parent), d_ptr(new TitlebarPrivate(this))
 {
     Q_D(Titlebar);
-    ThemeManager::instance()->regisetrWidget(this, QStringList() << s_PropertyViewname);
+    DThemeManager::instance()->registerWidget(this, QStringList() << s_PropertyViewname);
 
     d->workaroundSetButtonStyle();
 }
@@ -182,7 +182,7 @@ void TitlebarPrivate::workaroundSetButtonStyle()
             continue;
         }
         maxBt->setProperty("_d_QSSFilename", "Titlebar");
-        ThemeManager::instance()->regisetrWidget(maxBt);
+        DThemeManager::instance()->registerWidget(maxBt);
     }
 }
 

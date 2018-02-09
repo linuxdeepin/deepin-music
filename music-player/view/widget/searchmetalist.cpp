@@ -21,7 +21,9 @@
 
 #include "searchmetalist.h"
 
-#include <thememanager.h>
+#include <DThemeManager>
+
+DWIDGET_USE_NAMESPACE
 
 class SearchMetaListPrivate
 {
@@ -38,7 +40,7 @@ SearchMetaList::SearchMetaList(QWidget *parent) : QListWidget(parent), d_ptr(new
     setSelectionMode(QListView::SingleSelection);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    ThemeManager::instance()->regisetrWidget(this);
+    DThemeManager::instance()->registerWidget(this);
 }
 
 SearchMetaList::~SearchMetaList()

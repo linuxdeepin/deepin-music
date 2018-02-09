@@ -27,7 +27,9 @@
 #include <QPushButton>
 #include <QStyle>
 
-#include <thememanager.h>
+#include <DThemeManager>
+
+DWIDGET_USE_NAMESPACE
 
 class SearchMetaItemPrivate
 {
@@ -80,7 +82,7 @@ SearchMetaItem::SearchMetaItem(QWidget *parent) : QFrame(parent), d_ptr(new Sear
     interLayout->addWidget(d->metaLength);
 
     layout->addWidget(interFrame);
-    ThemeManager::instance()->regisetrWidget(this);
+    DThemeManager::instance()->registerWidget(this);
 }
 
 SearchMetaItem::~SearchMetaItem()

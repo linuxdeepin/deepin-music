@@ -31,7 +31,7 @@
 #include <QGraphicsOpacityEffect>
 
 #include <DWidgetUtil>
-#include <thememanager.h>
+#include <DThemeManager>
 #include <dsearchedit.h>
 
 #include "searchedit.h"
@@ -59,7 +59,7 @@ TitlebarWidget::TitlebarWidget(QWidget *parent) :
     setFocusPolicy(Qt::NoFocus);
     setObjectName("TitlebarWidget");
 
-    ThemeManager::instance()->regisetrWidget(this, {"viewname"});
+    DThemeManager::instance()->registerWidget(this, QStringList({"viewname"}));
 
     auto layout = new QHBoxLayout(this);
     layout->setContentsMargins(5, 5, 10, 5);

@@ -26,14 +26,14 @@
 
 #include <DWaterProgress>
 
-#include "view/helper/thememanager.h"
+#include <DThemeManager>
 
 DWIDGET_USE_NAMESPACE
 
 LoadWidget::LoadWidget(QWidget *parent) :
     QFrame(parent)
 {
-    ThemeManager::instance()->regisetrWidget(this);
+    DThemeManager::instance()->registerWidget(this);
 
     auto water = new DWaterProgress(this);
     water->setValue(50);

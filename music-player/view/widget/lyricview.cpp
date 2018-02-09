@@ -28,7 +28,11 @@
 #include <QTimer>
 #include <QPropertyAnimation>
 
+#include <DThemeManager>
+
 #include "delegate/lyriclinedelegate.h"
+
+DWIDGET_USE_NAMESPACE
 
 class LyricViewPrivate
 {
@@ -47,6 +51,8 @@ LyricView::LyricView(QWidget *parent) :
     QListView(parent), d_ptr(new LyricViewPrivate(this))
 {
     Q_D(LyricView);
+    DThemeManager::instance()->registerWidget(this);
+
     d->delegate = new LyricLineDelegate(this);
     setItemDelegate(d->delegate);
 

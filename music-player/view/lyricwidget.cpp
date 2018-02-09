@@ -35,7 +35,7 @@
 #include <QAbstractItemDelegate>
 #include <QLineEdit>
 
-#include <thememanager.h>
+#include <DThemeManager>
 
 #include "../core/util/lyric.h"
 
@@ -44,7 +44,7 @@
 #include "widget/searchmetaitem.h"
 #include "widget/lyricview.h"
 
-//DWIDGET_USE_NAMESPACE
+DWIDGET_USE_NAMESPACE
 
 static const int LyricLineHeight = 40;
 static const QString defaultLyric = "No Lyric";
@@ -148,8 +148,9 @@ LyricWidget::LyricWidget(QWidget *parent)
     : QFrame(parent), d_ptr(new LyricWidgetPrivate(this))
 {
     Q_D(LyricWidget);
+    DThemeManager::instance()->registerWidget(this);
+
     setObjectName("LyricWidget");
-    ThemeManager::instance()->regisetrWidget(this);
 
     auto layout = new QHBoxLayout(this);
     layout->setContentsMargins(20, 20, 20, 20);
@@ -198,8 +199,6 @@ LyricWidget::LyricWidget(QWidget *parent)
     d->m_cover->setObjectName("LyricCover");
 
     d->lyricview = new LyricView();
-    d->lyricview->setObjectName("LyricTextView");
-    ThemeManager::instance()->regisetrWidget(d->lyricview);
 
     d->m_model = new QStringListModel;
     d->setLyricLines("");

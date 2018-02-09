@@ -1,4 +1,4 @@
-#MusicItem {
+#MusicItemStyleProxy {
   qproperty-textColor: rgba(255, 255, 255, 70%);
   qproperty-titleColor: white;
   qproperty-highlightText: white;
