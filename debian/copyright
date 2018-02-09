@@ -2,7 +2,7 @@ Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: deepin-music
 
 Files: *
-Copyright: 2017 Deepin Technology Co., Ltd.
+Copyright: 2018 Wuhan Deepin Technology Co., Ltd.
 License: GPL-3+
  This package is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
