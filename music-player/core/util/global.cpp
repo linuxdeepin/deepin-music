@@ -28,13 +28,13 @@ DCORE_USE_NAMESPACE;
 
 QString Global::configPath()
 {
-    auto userConfigPath = DStandardPaths::standardLocations(QStandardPaths::ConfigLocation).first();
-    return userConfigPath + "/" + qApp->organizationName() + "/" + qApp->applicationName();
+    auto userConfigPath = DStandardPaths::standardLocations(QStandardPaths::AppConfigLocation).value(0);
+    return userConfigPath;
 }
 
 QString Global::cacheDir()
 {
-    auto userCachePath = DStandardPaths::standardLocations(QStandardPaths::CacheLocation).first();
+    auto userCachePath = DStandardPaths::standardLocations(QStandardPaths::CacheLocation).value(0);
     return userCachePath;
 }
 

@@ -29,7 +29,7 @@
 
 #include <DThemeManager>
 
-#include "core/settings.h"
+#include "core/musicsettings.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -89,8 +89,8 @@ CloseConfirmDialog::CloseConfirmDialog(QWidget *parent) :
     addButton(tr("Cancel"), false, ButtonNormal);
     addButton(tr("OK"), true, ButtonRecommend);
 
-    d->remember->setChecked(!AppSettings::instance()->value("base.close.ask_close_action").toBool());
-    if (1 == AppSettings::instance()->value("base.close.close_action").toInt()) {
+    d->remember->setChecked(!MusicSettings::value("base.close.ask_close_action").toBool());
+    if (1 == MusicSettings::value("base.close.close_action").toInt()) {
         d->exitBt->setChecked(true);
     } else {
         miniBt->setChecked(true);

@@ -43,7 +43,7 @@
 #include "../core/playlistmanager.h"
 #include "../core/metasearchservice.h"
 #include "../core/mediadatabase.h"
-#include "../core/settings.h"
+#include "../core/musicsettings.h"
 #include "../core/medialibrary.h"
 #include "../core/pluginmanager.h"
 #include "../core/util/threadpool.h"
@@ -75,7 +75,7 @@ void PresenterPrivate::initBackend()
     player = Player::instance();
     qDebug() << "TRACE:" << "player init finished";
 
-    settings = AppSettings::instance();
+    settings = MusicSettings::instance();
 
     library = MediaLibrary::instance();
     library->init();
@@ -134,25 +134,6 @@ void PresenterPrivate::initBackend()
     });
 }
 
-QDataStream &operator<<(QDataStream &dataStream, const MetaPtr &objectA)
-{
-    auto ptr = objectA.data();
-    auto ptrval = reinterpret_cast<qulonglong>(ptr);
-    auto var = QVariant::fromValue(ptrval);
-    dataStream << var;
-    return  dataStream;
-}
-
-QDataStream &operator>>(QDataStream &dataStream, MetaPtr &objectA)
-{
-    QVariant var;
-    dataStream >> var;
-    qulonglong ptrval = var.toULongLong();
-    auto ptr = reinterpret_cast<MediaMeta *>(ptrval);
-    objectA = MetaPtr(ptr);
-    return dataStream;
-}
-
 Presenter::Presenter(QObject *parent)
     : QObject(parent), d_ptr(new PresenterPrivate(this))
 {
@@ -170,13 +151,17 @@ Presenter::Presenter(QObject *parent)
 
 Presenter::~Presenter()
 {
-    Q_D(Presenter);
-    qDebug() << "destroy Presenter";
-    // close gstreamer
-    d->player->stop();
     qDebug() << "Presenter destroyed";
 }
 
+void Presenter::handleQuit()
+{
+    Q_D(Presenter);
+    qDebug() << "handleQuit";
+
+    d->settings->setOption("base.play.last_position", d->lastPlayPosition);
+    d->player->stop();
+}
 
 void Presenter::prepareData()
 {
@@ -242,7 +227,7 @@ void Presenter::prepareData()
 
     connect(d->player, &Player::positionChanged,
     this, [ = ](qint64 position, qint64 duration) {
-        d->settings->setOption("base.play.last_position", position);
+        d->lastPlayPosition = position;
         emit progrossChanged(position, duration);
     });
 
@@ -374,6 +359,7 @@ void Presenter::postAction()
 
         if (!lastMeta.isNull()) {
             position = d->settings->value("base.play.last_position").toInt();
+            d->lastPlayPosition = position;
             onCurrentPlaylistChanged(lastPlaylist);
             emit locateMusic(lastPlaylist, lastMeta);
             emit musicPlayed(lastPlaylist, lastMeta);
@@ -393,8 +379,8 @@ void Presenter::postAction()
 
     QString toOpenUri = d->settings->value("base.play.to_open_uri").toString();
     if (!toOpenUri.isEmpty()) {
-        AppSettings::instance()->setOption("base.play.to_open_uri", "");
-        AppSettings::instance()->sync();
+        MusicSettings::setOption("base.play.to_open_uri", "");
+        MusicSettings::sync();
         openUri(QUrl(toOpenUri));
     } else {
         if (d->settings->value("base.play.auto_play").toBool() && !lastPlaylist->isEmpty() && !isMetaLibClear) {

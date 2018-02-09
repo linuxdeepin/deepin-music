@@ -38,7 +38,7 @@
 #include "core/metasearchservice.h"
 #include "core/player.h"
 #include "core/pluginmanager.h"
-#include "core/settings.h"
+#include "core/musicsettings.h"
 #include "core/util/threadpool.h"
 #include <DThemeManager>
 #include "musicapp.h"
@@ -108,17 +108,17 @@ int main(int argc, char *argv[])
         exit(0);
     }
 
-    AppSettings::instance()->init();
+    MusicSettings::init();
     Player::instance()->init();
     if (!toOpenFile.isEmpty()) {
         auto fi = QFileInfo(toOpenFile);
         auto url = QUrl::fromLocalFile(fi.absoluteFilePath());
-        AppSettings::instance()->setOption("base.play.to_open_uri", url.toString());
+        MusicSettings::setOption("base.play.to_open_uri", url.toString());
     }
 
     // set theme
     qDebug() << "TRACE:" << "set theme";
-    auto theme = AppSettings::instance()->value("base.play.theme").toString();
+    auto theme = MusicSettings::value("base.play.theme").toString();
 //    auto themePrefix = AppSettings::instance()->value("base.play.theme_prefix").toString();
 //    DThemeManager::instance()->setPrefix(themePrefix);
     DThemeManager::instance()->setTheme(theme);
@@ -130,10 +130,9 @@ int main(int argc, char *argv[])
 
     app.connect(&app, &QApplication::lastWindowClosed,
     &mainframe, [ & ]() {
-        auto quit = AppSettings::instance()->value("base.close.close_action").toInt();
+        auto quit = MusicSettings::value("base.close.close_action").toInt();
         if (quit == 1) {
-            mainframe.onQuit();
-            app.quit();
+            music->quit();
         }
     });
 

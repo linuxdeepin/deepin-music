@@ -25,6 +25,7 @@
 
 #include <QObject>
 #include <QString>
+#include <QVariant>
 #include <QSharedPointer>
 
 class QFileInfo;
@@ -72,6 +73,25 @@ public:
 
 typedef QSharedPointer<MediaMeta>   MetaPtr;
 typedef QList<MetaPtr>              MetaPtrList;
+
+inline  QDataStream &operator<<(QDataStream &dataStream, const MetaPtr &objectA)
+{
+    auto ptr = objectA.data();
+    auto ptrval = reinterpret_cast<qulonglong>(ptr);
+    auto var = QVariant::fromValue(ptrval);
+    dataStream << var;
+    return  dataStream;
+}
+
+inline QDataStream &operator>>(QDataStream &dataStream, MetaPtr &objectA)
+{
+    QVariant var;
+    dataStream >> var;
+    qulonglong ptrval = var.toULongLong();
+    auto ptr = reinterpret_cast<MediaMeta *>(ptrval);
+    objectA = MetaPtr(ptr);
+    return dataStream;
+}
 
 Q_DECLARE_METATYPE(MediaMeta)
 Q_DECLARE_METATYPE(MetaPtr)

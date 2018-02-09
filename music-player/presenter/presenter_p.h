@@ -22,7 +22,7 @@
 #pragma once
 
 #include "../core/playlist.h"
-#include "../core/settings.h"
+#include "../core/musicsettings.h"
 #include "searchmeta.h"
 
 class Presenter;
@@ -43,13 +43,14 @@ public:
 
     bool                syncPlayerResult    = false;
     int                 continueErrorCount  = 0;
+    qint64              lastPlayPosition    = 0;
     MetaPtr             syncPlayerMeta;
 
     MetaSearchService   *lyricService   = nullptr;
     PlaylistManager     *playlistMgr    = nullptr;
     Player              *player         = nullptr;
     MediaLibrary        *library        = nullptr;
-    AppSettings *settings;
+    MusicSettings         *settings       = nullptr;
 
     Presenter *q_ptr;
     Q_DECLARE_PUBLIC(Presenter)

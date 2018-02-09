@@ -21,18 +21,24 @@
 
 #pragma once
 
-#include <QScopedPointer>
-#include <QLineEdit>
+#include <util/singleton.h>
+#include <DSettings>
 
-class TitelEditPrivate;
-class TitelEdit: public QLineEdit
+class MusicSettings : public QObject, public DMusic::DSingleton<MusicSettings>
 {
+    Q_OBJECT
 public:
-    TitelEdit(QWidget *parent=nullptr);
-    ~TitelEdit();
+    explicit MusicSettings(QObject *parent = 0);
+    ~MusicSettings();
+
+    static void init();
+    static QPointer<Dtk::Core::DSettings> settings();
+
+    static void sync();
+    static QVariant value(const QString &key);
+    static void setOption(const QString &key, const QVariant &value);
 
 private:
-    QScopedPointer<TitelEditPrivate> d_ptr;
-    Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), TitelEdit)
+    static QPointer<Dtk::Core::DSettings> m_settings;
+    friend class DMusic::DSingleton<MusicSettings>;
 };
-

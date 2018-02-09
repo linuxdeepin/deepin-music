@@ -37,6 +37,7 @@ public:
 
     void init();
     void show();
+    void quit();
 
 private:
     QScopedPointer<MusicAppPrivate> d_ptr;

@@ -43,7 +43,7 @@
 
 #include "../presenter/presenter.h"
 #include "../core/metasearchservice.h"
-#include "../core/settings.h"
+#include "../core/musicsettings.h"
 #include "../core/player.h"
 #include "../musicapp.h"
 
@@ -62,10 +62,6 @@
 #include "loadwidget.h"
 
 #include <DSettingsDialog>
-
-#ifdef Q_OS_LINUX
-#include <unistd.h>
-#endif
 
 DWIDGET_USE_NAMESPACE
 
@@ -159,17 +155,17 @@ void MainFramePrivate::initMenu()
         DThemeManager::instance()->registerWidget(configDialog);
 
         configDialog->setFixedSize(720, 520);
-        configDialog->updateSettings(AppSettings::instance()->settings());
+        configDialog->updateSettings(MusicSettings::settings());
 
         WidgetHelper::workaround_updateStyle(configDialog, "dlight");
         Dtk::Widget::moveToCenter(configDialog);
         configDialog->exec();
-        AppSettings::instance()->sync();
+        MusicSettings::sync();
     });
 
     colorModeAction = new QAction(MainFrame::tr("Dark theme"), q);
     colorModeAction->setCheckable(true);
-    colorModeAction->setChecked(AppSettings::instance()->value("base.play.theme").toString() == "dark");
+    colorModeAction->setChecked(MusicSettings::value("base.play.theme").toString() == "dark");
 
     q->connect(colorModeAction, &QAction::triggered, q, [ = ](bool) {
         if (DThemeManager::instance()->theme() == "light") {
@@ -179,7 +175,7 @@ void MainFramePrivate::initMenu()
             colorModeAction->setChecked(false);
             DThemeManager::instance()->setTheme("light");
         }
-        AppSettings::instance()->setOption("base.play.theme", DThemeManager::instance()->theme());
+        MusicSettings::setOption("base.play.theme", DThemeManager::instance()->theme());
     });
 
     QAction *m_close = new QAction(MainFrame::tr("Exit"), q);
@@ -601,8 +597,7 @@ void MainFrame::postInitUI()
     });
     connect(quitAction, &QAction::triggered,
     this, [ = ]() {
-        onQuit();
-        qApp->quit();
+        Q_EMIT requitQuit();
     });
     connect(trayIcon, &QSystemTrayIcon::activated,
     this, [ = ](QSystemTrayIcon::ActivationReason reason) {
@@ -973,7 +968,7 @@ void MainFrame::onSelectImportDirectory()
     Q_D(const MainFrame);
     QFileDialog fileDlg(this);
 
-    auto lastImportPath = AppSettings::instance()->value("base.play.last_import_path").toString();
+    auto lastImportPath = MusicSettings::value("base.play.last_import_path").toString();
 
     auto lastImportDir = QDir(lastImportPath);
     if (!lastImportDir.exists()) {
@@ -985,7 +980,7 @@ void MainFrame::onSelectImportDirectory()
     fileDlg.setFileMode(QFileDialog::DirectoryOnly);
     if (QFileDialog::Accepted == fileDlg.exec()) {
         d->importWidget->showWaitHint();
-        AppSettings::instance()->setOption("base.play.last_import_path",  fileDlg.directory().path());
+        MusicSettings::setOption("base.play.last_import_path",  fileDlg.directory().path());
         emit importSelectFiles(fileDlg.selectedFiles());
     }
 }
@@ -995,7 +990,7 @@ void MainFrame::onSelectImportFiles()
     Q_D(const MainFrame);
     QFileDialog fileDlg(this);
 
-    auto lastImportPath = AppSettings::instance()->value("base.play.last_import_path").toString();
+    auto lastImportPath = MusicSettings::value("base.play.last_import_path").toString();
 
     auto lastImportDir = QDir(lastImportPath);
     if (!lastImportDir.exists()) {
@@ -1013,19 +1008,9 @@ void MainFrame::onSelectImportFiles()
     fileDlg.selectNameFilter(selfilter);
     if (QFileDialog::Accepted == fileDlg.exec()) {
         d->importWidget->showWaitHint();
-        AppSettings::instance()->setOption("base.play.last_import_path",  fileDlg.directory().path());
+        MusicSettings::setOption("base.play.last_import_path",  fileDlg.directory().path());
         emit importSelectFiles(fileDlg.selectedFiles());
     }
-}
-
-void MainFrame::onQuit()
-{
-    qDebug() << "sync config start";
-    AppSettings::instance()->sync();
-#ifdef Q_OS_LINUX
-    sync();
-#endif
-    qDebug() << "sync config finish, app exit";
 }
 
 bool MainFrame::eventFilter(QObject *obj, QEvent *e)
@@ -1046,7 +1031,7 @@ bool MainFrame::eventFilter(QObject *obj, QEvent *e)
                << "shortcuts.all.volume_up";
 
         for (auto optkey : sclist) {
-            auto shortcut = AppSettings::instance()->value(optkey).toStringList();
+            auto shortcut = MusicSettings::value(optkey).toStringList();
             auto modifiersstr = shortcut.value(0);
             auto scmodifiers = static_cast<Qt::KeyboardModifier>(modifiersstr.toInt());
             auto keystr = shortcut.value(1);
@@ -1105,20 +1090,23 @@ void MainFrame::resizeEvent(QResizeEvent *e)
 
 void MainFrame::closeEvent(QCloseEvent *event)
 {
-    auto askCloseAction = AppSettings::instance()->value("base.close.ask_close_action").toBool();
+    auto askCloseAction = MusicSettings::value("base.close.ask_close_action").toBool();
     if (askCloseAction) {
         CloseConfirmDialog ccd(this);
-        if (0 == ccd.exec()) {
+        auto ret = ccd.exec();
+        if (0 == ret) {
             event->ignore();
             return;
         } else {
-            AppSettings::instance()->setOption("base.close.ask_close_action", !ccd.isRemember());
-            AppSettings::instance()->setOption("base.close.close_action", ccd.closeAction());
+            qDebug() << "closeAction" << MusicSettings::value("base.close.close_action");
+            MusicSettings::setOption("base.close.ask_close_action", !ccd.isRemember());
+            MusicSettings::setOption("base.close.close_action", ccd.closeAction());
+            qDebug() << "closeAction" << MusicSettings::value("base.close.close_action");
         }
     }
 
-    AppSettings::instance()->setOption("base.play.state", int(windowState()));
-    AppSettings::instance()->setOption("base.play.geometry", saveGeometry());
+    MusicSettings::setOption("base.play.state", int(windowState()));
+    MusicSettings::setOption("base.play.geometry", saveGeometry());
     DMainWindow::closeEvent(event);
 }
 

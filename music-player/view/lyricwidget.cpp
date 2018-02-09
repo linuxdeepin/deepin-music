@@ -424,7 +424,6 @@ void LyricWidget::onProgressChanged(qint64 value, qint64 /*length*/)
 {
     Q_D(LyricWidget);
 
-    qDebug() << d->backgroundColor;
     QPalette p = palette();
     p.setColor(QPalette::Background, d->backgroundColor);
     setPalette(p);

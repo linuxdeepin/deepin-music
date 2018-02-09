@@ -30,14 +30,13 @@
 #include <QHBoxLayout>
 #include <QMenu>
 #include <QStyleFactory>
+#include <QLineEdit>
 
 #include <ddialog.h>
 #include <QMessageBox>
 #include <DThemeManager>
 
 #include "core/playlist.h"
-
-#include "titeledit.h"
 
 static int LineEditWidth = 105;
 
@@ -68,7 +67,7 @@ PlayListItem::PlayListItem(PlaylistPtr playlist, QWidget *parent) : QFrame(paren
     icon->setFixedSize(48, 48);
     icon->setProperty("iconName", playlist->icon());
 
-    m_titleedit = new TitelEdit;
+    m_titleedit = new QLineEdit;
     m_titleedit->setObjectName("PlayListTitle");
     m_titleedit->setFixedHeight(24);
     m_titleedit->setMaximumWidth(160);

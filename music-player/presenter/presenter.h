@@ -42,6 +42,7 @@ public:
     void initMpris(MprisPlayer *mprisPlayer);
     void prepareData();
     void postAction();
+    void handleQuit();
     void openUri(const QUrl &uri);
 
     QList<PlaylistPtr > allplaylist();

@@ -21,22 +21,24 @@
 
 #include "musicapp.h"
 
+#ifdef Q_OS_LINUX
+#include <unistd.h>
+#endif
+
 #include <QDebug>
 
 #include <MprisPlayer>
 
 #include <DApplication>
 #include <DWidgetUtil>
-
-
 #include <DSettingsOption>
+#include <DThemeManager>
 
 #include "core/player.h"
-#include "core/settings.h"
+#include "core/musicsettings.h"
 #include "core/util/threadpool.h"
 #include "presenter/presenter.h"
 #include "view/mainframe.h"
-#include <DThemeManager>
 
 using namespace Dtk::Widget;
 
@@ -147,6 +149,8 @@ MusicApp::MusicApp(MainFrame *frame, QObject *parent)
 {
     Q_D(MusicApp);
     d->playerFrame = frame;
+
+    connect(d->playerFrame, &MainFrame::requitQuit, this, &MusicApp::quit);
 }
 
 MusicApp::~MusicApp()
@@ -156,8 +160,8 @@ MusicApp::~MusicApp()
 void MusicApp::show()
 {
     Q_D(MusicApp);
-    auto geometry = AppSettings::instance()->value("base.play.geometry").toByteArray();
-    auto state = AppSettings::instance()->value("base.play.state").toInt();
+    auto geometry = MusicSettings::value("base.play.geometry").toByteArray();
+    auto state = MusicSettings::value("base.play.state").toInt();
     qDebug() << "restore state:" << state << "gometry:" << geometry;
 
     if (geometry.isEmpty()) {
@@ -170,6 +174,19 @@ void MusicApp::show()
     }
     d->playerFrame->show();
     d->playerFrame->setFocus();
+}
+
+void MusicApp::quit()
+{
+    Q_D(MusicApp);
+    d->presenter->handleQuit();
+    qDebug() << "sync config start";
+    MusicSettings::sync();
+#ifdef Q_OS_LINUX
+    sync();
+#endif
+    qDebug() << "sync config finish, app exit";
+    qApp->quit();
 }
 
 void MusicApp::init()

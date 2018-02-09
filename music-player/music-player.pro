@@ -15,10 +15,11 @@ unix{
     QT += x11extras
     PKGCONFIG += icu-uc icu-i18n libavutil libavformat libavcodec
     PKGCONFIG += x11 xext
-    PKGCONFIG += dtkwidget 
+    PKGCONFIG += dtkwidget
 }
 
 INCLUDEPATH += $$PWD/view/helper
+INCLUDEPATH += $$PWD/core
 
 SOURCES += \
     core/util/lyric.cpp \
@@ -49,7 +50,6 @@ SOURCES += \
     core/medialibrary.cpp \
     core/util/global.cpp \
     core/metasearchservice.cpp \
-    core/settings.cpp \
     core/pluginmanager.cpp \
     view/widget/listview.cpp \
     view/mainframe.cpp \
@@ -64,12 +64,12 @@ SOURCES += \
     view/widget/delegate/musicitemdelegate.cpp \
     view/lyricwidget.cpp \
     view/widget/lyricview.cpp \
-    view/widget/titeledit.cpp \
     view/widget/settingsdialog.cpp \
     core/util/threadpool.cpp \
     view/footerwidget.cpp \
     view/loadwidget.cpp \
-    view/widget/closeconfirmdialog.cpp
+    view/widget/closeconfirmdialog.cpp \
+    core/musicsettings.cpp
 
 HEADERS += \
     musicapp.h \
@@ -105,7 +105,6 @@ HEADERS += \
     core/medialibrary.h \
     core/util/global.h \
     core/metasearchservice.h \
-    core/settings.h \
     core/pluginmanager.h \
     view/musiclistwidget.h \
     view/playlistwidget.h \
@@ -116,12 +115,12 @@ HEADERS += \
     view/widget/delegate/musicitemdelegate.h \
     view/lyricwidget.h \
     view/widget/lyricview.h \
-    view/widget/titeledit.h \
     core/util/threadpool.h \
     view/footerwidget.h \
     view/loadwidget.h \
     view/widget/closeconfirmdialog.h \
-    view/widget/delegate/musicitemdelegate_p.h
+    view/widget/delegate/musicitemdelegate_p.h \
+    core/musicsettings.h
 
 RESOURCES += \
     resource/theme/theme.qrc \

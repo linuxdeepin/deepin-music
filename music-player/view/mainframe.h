@@ -41,6 +41,7 @@ public:
     QString coverBackground() const;
 
 signals:
+    void requitQuit();
     void addPlaylist(bool);
     void importSelectFiles(const QStringList &filelist);
     void triggerShortcutAction(const QString &optKey);
@@ -50,7 +51,6 @@ public slots:
     void setCoverBackground(QString coverBackground);
     void onSelectImportDirectory();
     void onSelectImportFiles();
-    void onQuit();
 
 protected:
     virtual void enterEvent(QEvent *event) Q_DECL_OVERRIDE;

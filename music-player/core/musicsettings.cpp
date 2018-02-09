@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "settings.h"
+#include "musicsettings.h"
 
 #include <DSettingsOption>
 
@@ -31,38 +31,43 @@
 
 #include <QDebug>
 
-AppSettings::AppSettings(QObject *parent) :
+QPointer<Dtk::Core::DSettings> MusicSettings::m_settings = nullptr;
+
+MusicSettings::MusicSettings(QObject *parent) :
     QObject(parent)
 {
 
 }
 
-void AppSettings::init()
+MusicSettings::~MusicSettings()
+{
+    qDebug() << "destory";
+}
+
+void MusicSettings::init()
 {
     m_settings = Dtk::Core::DSettings::fromJsonFile(":/data/deepin-music-settings.json");
     auto configFilepath = Global::configPath() + "/config.ini";
     auto backend = new Dtk::Core::QSettingBackend(configFilepath);
     m_settings->setBackend(backend);
-//    ThreadPool::instance()->manager(backend->thread());
 }
 
-QPointer<Dtk::Core::DSettings> AppSettings::settings() const
+QPointer<Dtk::Core::DSettings> MusicSettings::settings()
 {
     return m_settings;
 }
 
-void AppSettings::sync()
+void MusicSettings::sync()
 {
     m_settings->sync();
 }
 
-QVariant AppSettings::value(const QString &key) const
+QVariant MusicSettings::value(const QString &key)
 {
     return m_settings->value(key);
 }
 
-void AppSettings::setOption(const QString &key, const QVariant &value)
+void MusicSettings::setOption(const QString &key, const QVariant &value)
 {
-    qDebug() << "setOption" << key << value;
     m_settings->setOption(key, value);
 }
