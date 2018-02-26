@@ -3,10 +3,10 @@ Section: sound
 Priority: extra
 Maintainer: Deepin Packages Builder <packages@deepin.com>
 Build-Depends: debhelper,  python, pkg-config, qttools5-dev-tools,
-                libqt5svg5-dev, qtmultimedia5-dev,
-                libtag1-dev, libicu-dev, libcue-dev,
-                libavutil-dev, libavformat-dev, libavcodec-dev,
-                libdtkwidget-dev
+ libqt5svg5-dev, qtmultimedia5-dev,
+ libtag1-dev, libicu-dev, libcue-dev,
+ libavutil-dev, libavformat-dev, libavcodec-dev,
+ libdtkwidget-dev
 Standards-Version: 3.9.8
 Homepage: http://www.deepin.org/
 
@@ -14,7 +14,8 @@ Package: deepin-music
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends},
  gstreamer1.0-libav, gstreamer1.0-plugins-base, gstreamer1.0-plugins-good,
- gstreamer1.0-plugins-bad, gstreamer1.0-plugins-ugly, gstreamer1.0-pulseaudio
+ gstreamer1.0-plugins-bad, gstreamer1.0-plugins-ugly, gstreamer1.0-pulseaudio,
+ libqt5sql5-sqlite, libqt5multimedia5-plugins
 Description: Awesome music player with brilliant and tweakful UI
  Deepin-UI based, gstreamer front-end, with features likes search music
  by pinyin,quanpin, colorful lyrics supports, and more powerful
