@@ -187,7 +187,9 @@ bool HintFilter::eventFilter(QObject *obj, QEvent *event)
     }
     case QEvent::MouseButtonPress:
         if (d->hintWidget) {
-            d->hintWidget->hide();
+            if (!d->hintWidget->property("_dm_keep_on_click").toBool()) {
+                d->hintWidget->hide();
+            }
             d->delayShowTimer->stop();
         }
 
