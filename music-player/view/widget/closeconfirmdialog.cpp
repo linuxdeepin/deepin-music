@@ -21,6 +21,7 @@
 
 #include "closeconfirmdialog.h"
 
+#include <QStyle>
 #include <QLabel>
 #include <QCheckBox>
 #include <QGroupBox>
@@ -95,6 +96,8 @@ CloseConfirmDialog::CloseConfirmDialog(QWidget *parent) :
     } else {
         miniBt->setChecked(true);
     }
+
+    style()->polish(this);
 }
 
 CloseConfirmDialog::~CloseConfirmDialog()
