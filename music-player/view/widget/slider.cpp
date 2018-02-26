@@ -47,7 +47,7 @@ void Slider::mouseReleaseEvent(QMouseEvent *event)
 {
     this->blockSignals(false);
     QSlider::mouseReleaseEvent(event);
-    emit valueAccpet(value());
+    Q_EMIT valueAccpet(value());
 }
 
 void Slider::mousePressEvent(QMouseEvent *event)

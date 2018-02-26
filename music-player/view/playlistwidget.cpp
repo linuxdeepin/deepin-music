@@ -70,7 +70,7 @@ PlaylistWidget::PlaylistWidget(QWidget *parent) : QFrame(parent)
 
     connect(btAdd, &QPushButton::clicked, this, [ = ](bool /*checked*/) {
         qDebug() << "addPlaylist(true);";
-        emit this->addPlaylist(true);
+        Q_EMIT this->addPlaylist(true);
     });
 
     connect(m_listview, &PlayListView::itemClicked,
@@ -81,10 +81,10 @@ PlaylistWidget::PlaylistWidget(QWidget *parent) : QFrame(parent)
             qCritical() << "playlistItem is empty" << item << playlistItem;
             return;
         }
-        emit this->selectPlaylist(playlistItem->data());
+        Q_EMIT this->selectPlaylist(playlistItem->data());
         DUtil::TimerSingleShot(500, [this]() {
             this->setEnabled(true);
-            emit this->hidePlaylist();
+            Q_EMIT this->hidePlaylist();
         });
     });
     connect(m_listview, &PlayListView::currentItemChanged,
@@ -100,7 +100,7 @@ PlaylistWidget::PlaylistWidget(QWidget *parent) : QFrame(parent)
     });
     connect(m_listview, &PlayListView::customResort,
     this, [ = ](const QStringList & uuids) {
-        emit this->customResort(uuids);
+        Q_EMIT this->customResort(uuids);
     });
 }
 
@@ -173,7 +173,7 @@ void PlaylistWidget::focusOutEvent(QFocusEvent *event)
         if (event && event->reason() == Qt::MouseFocusReason) {
             DUtil::TimerSingleShot(50, [this]() {
                 qDebug() << "self lost focus hide";
-                emit this->hidePlaylist();
+                Q_EMIT this->hidePlaylist();
             });
         }
     }

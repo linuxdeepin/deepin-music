@@ -224,7 +224,7 @@ void PlaylistManager::insertPlaylist(const QString &uuid, PlaylistPtr playlist)
     connect(playlist.data(), &Playlist::removed,
     this, [ = ] {
         qDebug() << "remove playlist" << deleteID << d->playlists.size();
-        emit playlistRemove(playlist);
+        Q_EMIT playlistRemove(playlist);
         d->playlists.remove(uuid);
         d->sortUUIDs.removeAll(uuid);
         PlaylistMeta listmeta;
@@ -238,11 +238,11 @@ void PlaylistManager::insertPlaylist(const QString &uuid, PlaylistPtr playlist)
 
     connect(playlist.data(), &Playlist::musiclistAdded,
     this, [ = ](const MetaPtrList metalist) {
-        emit musiclistAdded(playlist, metalist);
+        Q_EMIT musiclistAdded(playlist, metalist);
     });
 
     connect(playlist.data(), &Playlist::musiclistRemoved,
     this, [ = ](const MetaPtrList metalist) {
-        emit musiclistRemoved(playlist, metalist);
+        Q_EMIT musiclistRemoved(playlist, metalist);
     });
 }

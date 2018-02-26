@@ -42,6 +42,7 @@ signals:
     void triggered(QAction *action);
 
 public slots:
+    void setText(const QString &text);
     void setCurrentAction(QAction *action);
     QAction *addAction(const QString &item, const QVariant &var);
     void setStatus(QString status);

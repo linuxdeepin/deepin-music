@@ -58,13 +58,13 @@ void SearchEdit::setResultWidget(SearchResult *result)
     connect(m_result, &SearchResult::locateMusic,
     this, [ = ](const QString & hash) {
 //        onFocusOut();
-        emit this->locateMusic(hash);
+        Q_EMIT this->locateMusic(hash);
     });
 
     connect(m_result, &SearchResult::searchText,
     this, [ = ](const QString & text) {
 //        onFocusOut();
-        emit this->searchText(text);
+        Q_EMIT this->searchText(text);
     });
 }
 
@@ -148,6 +148,6 @@ void SearchEdit::onReturnPressed()
     if (m_result->isSelected()) {
         m_result->onReturnPressed();
     } else {
-        emit this->searchText(this->text());
+        Q_EMIT this->searchText(this->text());
     }
 }

@@ -134,7 +134,7 @@ MetaPtr MediaLibraryPrivate::importMeta(const QString &filepath,
     auto hash = DMusic::filepathHash(filepath);
     if (MediaLibrary::instance()->contains(hash)) {
         // FIXME: insertToPlaylist;
-        //emit insertToPlaylist(hash, playlist);
+        //Q_EMIT insertToPlaylist(hash, playlist);
         qDebug() << "exit" << hash << MediaLibrary::instance()->meta(hash);
         return MediaLibrary::instance()->meta(hash);
     }
@@ -217,7 +217,7 @@ MetaPtrList MediaLibrary::importFile(const QString &filepath)
 
 
     qDebug() << "importFile" << "with media count:" << metaList.length();
-    emit MediaDatabase::instance()->addMediaMetaList(metaList);
+    Q_EMIT MediaDatabase::instance()->addMediaMetaList(metaList);
     return metaList;
 }
 
@@ -268,8 +268,8 @@ void MediaLibrary::importMedias(const QString &jobid, const QStringList &urllist
                 metaCache << meta;
                 if (metaCache.length() >= ScanCacheSize) {
                     mediaCount += metaCache.length();
-                    emit MediaDatabase::instance()->addMediaMetaList(metaCache);
-                    emit meidaFileImported(jobid, metaCache);
+                    Q_EMIT MediaDatabase::instance()->addMediaMetaList(metaCache);
+                    Q_EMIT meidaFileImported(jobid, metaCache);
                     metaCache.clear();
                 }
             }
@@ -282,8 +282,8 @@ void MediaLibrary::importMedias(const QString &jobid, const QStringList &urllist
             metaCache << meta;
             if (metaCache.length() >= ScanCacheSize) {
                 mediaCount += metaCache.length();
-                emit MediaDatabase::instance()->addMediaMetaList(metaCache);
-                emit meidaFileImported(jobid, metaCache);
+                Q_EMIT MediaDatabase::instance()->addMediaMetaList(metaCache);
+                Q_EMIT meidaFileImported(jobid, metaCache);
                 metaCache.clear();
             }
         }
@@ -300,8 +300,8 @@ void MediaLibrary::importMedias(const QString &jobid, const QStringList &urllist
 
         if (metaCache.length() >= ScanCacheSize) {
             mediaCount += metaCache.length();
-            emit MediaDatabase::instance()->addMediaMetaList(metaCache);
-            emit meidaFileImported(jobid, metaCache);
+            Q_EMIT MediaDatabase::instance()->addMediaMetaList(metaCache);
+            Q_EMIT meidaFileImported(jobid, metaCache);
             metaCache.clear();
         }
     }
@@ -317,20 +317,20 @@ void MediaLibrary::importMedias(const QString &jobid, const QStringList &urllist
         d->metas.insert(losslessMeta->hash, losslessMeta);
         if (metaCache.length() >= ScanCacheSize) {
             mediaCount += metaCache.length();
-            emit MediaDatabase::instance()->addMediaMetaList(metaCache);
-            emit meidaFileImported(jobid, metaCache);
+            Q_EMIT MediaDatabase::instance()->addMediaMetaList(metaCache);
+            Q_EMIT meidaFileImported(jobid, metaCache);
             metaCache.clear();
         }
     }
 
     if (metaCache.length() > 0) {
         mediaCount += metaCache.length();
-        emit MediaDatabase::instance()->addMediaMetaList(metaCache);
-        emit meidaFileImported(jobid, metaCache);
+        Q_EMIT MediaDatabase::instance()->addMediaMetaList(metaCache);
+        Q_EMIT meidaFileImported(jobid, metaCache);
         metaCache.clear();
     }
 
     qDebug() << "scanFinished" << jobid << "with media count:" << mediaCount;
-    emit scanFinished(jobid, mediaCount);
+    Q_EMIT scanFinished(jobid, mediaCount);
 }
 

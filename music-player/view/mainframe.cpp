@@ -134,7 +134,7 @@ void MainFramePrivate::initMenu()
     newSonglistAction = new QAction(MainFrame::tr("New playlist"), q);
     q->connect(newSonglistAction, &QAction::triggered, q, [ = ](bool) {
         setPlaylistVisible(true);
-        emit q->addPlaylist(true);
+        Q_EMIT q->addPlaylist(true);
     });
 
     auto addmusic = new QAction(MainFrame::tr("Add folder"), q);
@@ -585,19 +585,19 @@ void MainFrame::postInitUI()
 
     connect(playAction, &QAction::triggered,
     this, [ = ]() {
-        Q_EMIT triggerShortcutAction("shortcuts.all.play_pause");
+        Q_EMIT  triggerShortcutAction("shortcuts.all.play_pause");
     });
     connect(prevAction, &QAction::triggered,
     this, [ = ]() {
-        Q_EMIT triggerShortcutAction("shortcuts.all.previous");
+        Q_EMIT  triggerShortcutAction("shortcuts.all.previous");
     });
     connect(nextAction, &QAction::triggered,
     this, [ = ]() {
-        Q_EMIT triggerShortcutAction("shortcuts.all.next");
+        Q_EMIT  triggerShortcutAction("shortcuts.all.next");
     });
     connect(quitAction, &QAction::triggered,
     this, [ = ]() {
-        Q_EMIT requitQuit();
+        Q_EMIT  requitQuit();
     });
     connect(trayIcon, &QSystemTrayIcon::activated,
     this, [ = ](QSystemTrayIcon::ActivationReason reason) {
@@ -653,7 +653,7 @@ void MainFrame::binding(Presenter *presenter)
     connect(d->importWidget, &ImportWidget::importSelectFiles,
     this, [ = ](const QStringList & urllist) {
         d->importWidget->showWaitHint();
-        emit importSelectFiles(urllist);
+        Q_EMIT importSelectFiles(urllist);
     });
 
     connect(presenter, &Presenter::notifyAddToPlaylist,
@@ -716,7 +716,7 @@ void MainFrame::binding(Presenter *presenter)
 
         if (0 == warnDlg.exec()) {
             if (playlist->canNext() && playlist->playing() == meta) {
-                emit presenter->playNext(playlist, meta);
+                Q_EMIT presenter->playNext(playlist, meta);
             }
         }
     });
@@ -981,7 +981,7 @@ void MainFrame::onSelectImportDirectory()
     if (QFileDialog::Accepted == fileDlg.exec()) {
         d->importWidget->showWaitHint();
         MusicSettings::setOption("base.play.last_import_path",  fileDlg.directory().path());
-        emit importSelectFiles(fileDlg.selectedFiles());
+        Q_EMIT importSelectFiles(fileDlg.selectedFiles());
     }
 }
 
@@ -1009,7 +1009,7 @@ void MainFrame::onSelectImportFiles()
     if (QFileDialog::Accepted == fileDlg.exec()) {
         d->importWidget->showWaitHint();
         MusicSettings::setOption("base.play.last_import_path",  fileDlg.directory().path());
-        emit importSelectFiles(fileDlg.selectedFiles());
+        Q_EMIT importSelectFiles(fileDlg.selectedFiles());
     }
 }
 
@@ -1039,7 +1039,7 @@ bool MainFrame::eventFilter(QObject *obj, QEvent *e)
 
             if (scmodifiers == keyModifiers && key == sckey && !ke->isAutoRepeat()) {
 //                qDebug() << "match " << optkey << ke->count() << ke->isAutoRepeat();
-                Q_EMIT triggerShortcutAction(optkey);
+                Q_EMIT  triggerShortcutAction(optkey);
                 return true;
             }
         }

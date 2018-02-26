@@ -123,10 +123,10 @@ void MetaAnalyzer::analyzerResults()
 //    connect(m_geese->getGoose(result.album.coverUrl), &DMusic::Net::Goose::arrive,
 //    this, [ = ](int errCode, const QByteArray & data) {
 //        qDebug() << "NeteaseMetaSearchEngine received: " << errCode << data.length();
-//        emit this->coverLoaded(m_meta, data);
+//        Q_EMIT this->coverLoaded(m_meta, data);
 //    });
 
-    emit searchFinished(m_meta, result);
+    Q_EMIT searchFinished(m_meta, result);
 
 //    qDebug() << "delete analyzer" ;
 //    this->deleteLater();
@@ -142,7 +142,7 @@ void MetaAnalyzer::analyzerResults()
 //    connect(m_geese->getGoose(song.album.coverUrl), &DMusic::Net::Goose::arrive,
 //    this, [ = ](int errCode, const QByteArray & data) {
 //        qDebug() << "NeteaseMetaSearchEngine received: " << errCode << data.length();
-//        emit this->coverLoaded(m_meta, data);
+//        Q_EMIT this->coverLoaded(m_meta, data);
 //    });
 //}
 
@@ -154,7 +154,7 @@ void MetaAnalyzer::analyzerResults()
 //            connect(m_geese->getGoose(song.album.coverUrl), &DMusic::Net::Goose::arrive,
 //            this, [ = ](int errCode, const QByteArray & data) {
 //                qDebug() << "NeteaseMetaSearchEngine received: " << errCode << data.length();
-//                emit this->coverLoaded(m_meta, data);
+//                Q_EMIT this->coverLoaded(m_meta, data);
 //            });
 //            return;
 //        }
@@ -165,7 +165,7 @@ void MetaAnalyzer::analyzerResults()
 //    connect(m_geese->getGoose(song.album.coverUrl), &DMusic::Net::Goose::arrive,
 //    this, [ = ](int errCode, const QByteArray & data) {
 //        qDebug() << "NeteaseMetaSearchEngine received: " << errCode << data.length();
-//        emit this->coverLoaded(m_meta, data);
+//        Q_EMIT this->coverLoaded(m_meta, data);
 //    });
 //    return;
 //}

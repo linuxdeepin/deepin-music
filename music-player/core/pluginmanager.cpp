@@ -67,7 +67,7 @@ void PluginManager::loadPlugins()
         auto instance = loader->instance();
         auto pluginInstance =  dynamic_cast<PluginInterface *>(instance);
         qDebug() << "load plugin instance:" << instance << pluginInstance;
-        emit onPluginLoaded(pluginInstance->pluginId(), pluginInstance);
+        Q_EMIT onPluginLoaded(pluginInstance->pluginId(), pluginInstance);
         m_plugins.push_back(pluginInstance);
     }
 }

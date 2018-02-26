@@ -283,8 +283,8 @@ void Playlist::appendMusicList(const MetaPtrList metalist)
         playlistMeta.metas.insert(meta->hash, meta);
     }
 
-    emit MediaDatabase::instance()->insertMusicList(newMetalist, this->playlistMeta);
-    emit musiclistAdded(newMetalist);
+    Q_EMIT MediaDatabase::instance()->insertMusicList(newMetalist, this->playlistMeta);
+    Q_EMIT musiclistAdded(newMetalist);
 }
 
 void Playlist::updateMeta(const MetaPtr meta)
@@ -312,7 +312,7 @@ MetaPtr Playlist::removeMusicList(const MetaPtrList metalist)
         next = removeOneMusic(meta);
     }
     QSqlDatabase::database().commit();
-    emit musiclistRemoved(metalist);
+    Q_EMIT musiclistRemoved(metalist);
     return next;
 }
 

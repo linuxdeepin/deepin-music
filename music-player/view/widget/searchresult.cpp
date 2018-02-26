@@ -85,7 +85,7 @@ SearchResult::SearchResult(QWidget *parent) : QFrame(parent)
     connect(m_searchResult, &QListView::clicked,
     this, [ = ](const QModelIndex & index) {
         auto hashlist = m_model->property("hashlist").toStringList();
-        emit locateMusic(hashlist.value(index.row()));
+        Q_EMIT locateMusic(hashlist.value(index.row()));
     });
     connect(m_searchResult, &QListView::entered,
     this, [ = ](const QModelIndex & index) {
@@ -96,7 +96,7 @@ SearchResult::SearchResult(QWidget *parent) : QFrame(parent)
     connect(m_doSearchButton, &PushButton::pressed,
     this, [ = ]() {
         auto str = m_model->property("searchString").toString();
-        emit searchText(str);
+        Q_EMIT searchText(str);
     });
     connect(m_doSearchButton, &PushButton::entered,
     this, [ = ]() {
@@ -191,10 +191,10 @@ void SearchResult::leaveEvent(QEvent *event)
 void SearchResult::onReturnPressed()
 {
     if (m_doSearchButton->isChecked()) {
-        emit this->searchText(m_model->property("searchString").toString());
+        Q_EMIT this->searchText(m_model->property("searchString").toString());
     } else {
         auto hashlist = m_model->property("hashlist").toStringList();
         auto selectedRow = m_searchResult->currentIndex().row();
-        emit locateMusic(hashlist.value(selectedRow));
+        Q_EMIT locateMusic(hashlist.value(selectedRow));
     }
 }

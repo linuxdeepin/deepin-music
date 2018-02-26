@@ -64,12 +64,17 @@ public:
 
 void MusicListWidgetPrivate::initData(PlaylistPtr playlist)
 {
+    Q_Q(MusicListWidget);
     btPlayAll->setText(playlist->displayName());
     musiclist->onMusiclistChanged(playlist);
 
-    for (auto action : dropdown->actions()) {
-        if (action->data().toInt() == playlist->sortType()) {
-            dropdown->setCurrentAction(action);
+    if (playlist->sortType() == Playlist::SortByCustom) {
+        q->setCustomSortType();
+    } else {
+        for (auto action : dropdown->actions()) {
+            if (action->data().toInt() == playlist->sortType()) {
+                dropdown->setCurrentAction(action);
+            }
         }
     }
     showEmptyHits(musiclist->model()->rowCount() == 0);
@@ -82,49 +87,49 @@ void MusicListWidgetPrivate::initConntion()
     q->connect(dropdown, &DDropdown::triggered,
     q, [ = ](QAction * action) {
         dropdown->setCurrentAction(action);
-        emit q->resort(musiclist->playlist(), action->data().value<Playlist::SortType>());
+        Q_EMIT q->resort(musiclist->playlist(), action->data().value<Playlist::SortType>());
     });
 
     q->connect(btPlayAll, &QPushButton::clicked,
     q, [ = ](bool) {
         if (musiclist->playlist()) {
-            emit q->playall(musiclist->playlist());
+            Q_EMIT q->playall(musiclist->playlist());
         }
     });
 
     q->connect(musiclist, &MusicListView::customSort,
     q, [ = ]() {
-        dropdown->setCurrentAction(customAction);
-        emit q->resort(musiclist->playlist(), customAction->data().value<Playlist::SortType>());
+        q->setCustomSortType();
+        Q_EMIT q->resort(musiclist->playlist(), Playlist::SortByCustom);
     });
 
     q->connect(musiclist, &MusicListView::requestCustomContextMenu,
     q, [ = ](const QPoint & pos) {
-        emit q->requestCustomContextMenu(pos);
+        Q_EMIT q->requestCustomContextMenu(pos);
     });
     q->connect(musiclist, &MusicListView::removeMusicList,
     q, [ = ](const MetaPtrList  & metalist) {
-        emit q->musiclistRemove(musiclist->playlist(), metalist);
+        Q_EMIT q->musiclistRemove(musiclist->playlist(), metalist);
     });
     q->connect(musiclist, &MusicListView::deleteMusicList,
     q, [ = ](const MetaPtrList & metalist) {
-        emit q->musiclistDelete(musiclist->playlist(), metalist);
+        Q_EMIT q->musiclistDelete(musiclist->playlist(), metalist);
     });
     q->connect(musiclist, &MusicListView::addToPlaylist,
     q, [ = ](PlaylistPtr playlist, const MetaPtrList  metalist) {
-        emit q->addToPlaylist(playlist, metalist);
+        Q_EMIT q->addToPlaylist(playlist, metalist);
     });
     q->connect(musiclist, &MusicListView::playMedia,
     q, [ = ](const MetaPtr meta) {
-        emit q->playMedia(musiclist->playlist(), meta);
+        Q_EMIT q->playMedia(musiclist->playlist(), meta);
     });
     q->connect(musiclist, &MusicListView::showInfoDialog,
     q, [ = ](const MetaPtr meta) {
-        emit q->showInfoDialog(meta);
+        Q_EMIT q->showInfoDialog(meta);
     });
     q->connect(musiclist, &MusicListView::updateMetaCodec,
     q, [ = ](const MetaPtr  meta) {
-        emit q->updateMetaCodec(meta);
+        Q_EMIT q->updateMetaCodec(meta);
     });
 }
 
@@ -178,8 +183,8 @@ MusicListWidget::MusicListWidget(QWidget *parent) :
     d->dropdown->addAction(tr("Title"), QVariant::fromValue<Playlist::SortType>(Playlist::SortByTitle));
     d->dropdown->addAction(tr("Artist"), QVariant::fromValue<Playlist::SortType>(Playlist::SortByArtist));
     d->dropdown->addAction(tr("Album name"), QVariant::fromValue<Playlist::SortType>(Playlist::SortByAblum));
-    d->customAction = d->dropdown->addAction(tr("Custom"), QVariant::fromValue<Playlist::SortType>(Playlist::SortByCustom));
-    d->customAction->setDisabled(true);
+//    d->customAction = d->dropdown->addAction(tr("Custom"), QVariant::fromValue<Playlist::SortType>(Playlist::SortByCustom));
+//    d->customAction->setDisabled(true);
 
     d->emptyHits = new QLabel();
     d->emptyHits->setObjectName("MusicListEmptyHits");
@@ -208,7 +213,8 @@ MusicListWidget::~MusicListWidget()
 void MusicListWidget::setCustomSortType()
 {
     Q_D(MusicListWidget);
-    d->dropdown->setCurrentAction(d->customAction);
+    d->dropdown->setCurrentAction(nullptr);
+    d->dropdown->setText(tr("Custom"));
 }
 
 void MusicListWidget::dragEnterEvent(QDragEnterEvent *event)
@@ -238,7 +244,7 @@ void MusicListWidget::dropEvent(QDropEvent *event)
     }
 
     if (!localpaths.isEmpty() && !d->musiclist->playlist().isNull()) {
-        emit importSelectFiles(d->musiclist->playlist(), localpaths);
+        Q_EMIT importSelectFiles(d->musiclist->playlist(), localpaths);
     }
 }
 

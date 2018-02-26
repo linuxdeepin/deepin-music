@@ -108,9 +108,9 @@ void PresenterPrivate::initBackend()
                 if (search.id != meta->searchID) {
                     meta->searchID = search.id;
                     meta->updateSearchIndex();
-                    emit MediaDatabase::instance()->updateMediaMeta(meta);
+                    Q_EMIT MediaDatabase::instance()->updateMediaMeta(meta);
                 }
-                emit q->coverSearchFinished(meta, search, coverData);
+                Q_EMIT q->coverSearchFinished(meta, search, coverData);
             });
 
             connect(this, &PresenterPrivate::requestMetaSearch,
@@ -128,7 +128,7 @@ void PresenterPrivate::initBackend()
 
             auto activeMeta = Player::instance()->activeMeta();
             if (activeMeta) {
-                emit requestMetaSearch(activeMeta);
+                Q_EMIT requestMetaSearch(activeMeta);
             }
         }
     });
@@ -184,7 +184,7 @@ void Presenter::prepareData()
             allplaylist->appendMusicList(metalist);
         }
         playlist->appendMusicList(metalist);
-        emit meidaFilesImported(playlist, metalist);
+        Q_EMIT meidaFilesImported(playlist, metalist);
     });
 
     connect(d->library, &MediaLibrary::scanFinished,
@@ -192,11 +192,11 @@ void Presenter::prepareData()
         qDebug() << "scanFinished";
         if (d->playlistMgr->playlist(AllMusicListID)->isEmpty()) {
             qDebug() << "scanFinished: meta library clean";
-            emit metaLibraryClean();
+            Q_EMIT metaLibraryClean();
         }
 
         if (0 == mediaCount) {
-            emit scanFinished(playlistId, mediaCount);
+            Q_EMIT scanFinished(playlistId, mediaCount);
         }
     });
 
@@ -208,13 +208,13 @@ void Presenter::prepareData()
             auto meta = metalist.at(i);
             slice << meta;
             if (i % 30 == 0) {
-                emit musicListAdded(playlist, slice);
+                Q_EMIT musicListAdded(playlist, slice);
                 slice.clear();
                 QThread::msleep(233);
             }
         }
         if (slice.length() > 0) {
-            emit musicListAdded(playlist, slice);
+            Q_EMIT musicListAdded(playlist, slice);
             slice.clear();
         }
     });
@@ -222,13 +222,13 @@ void Presenter::prepareData()
     connect(d->playlistMgr, &PlaylistManager::musiclistRemoved,
     this, [ = ](PlaylistPtr playlist, const MetaPtrList metalist) {
         qDebug() << playlist << playlist->id();
-        emit musicListRemoved(playlist, metalist);
+        Q_EMIT musicListRemoved(playlist, metalist);
     });
 
     connect(d->player, &Player::positionChanged,
     this, [ = ](qint64 position, qint64 duration) {
         d->lastPlayPosition = position;
-        emit progrossChanged(position, duration);
+        Q_EMIT progrossChanged(position, duration);
     });
 
     connect(d->player, &Player::volumeChanged,
@@ -237,9 +237,9 @@ void Presenter::prepareData()
     connect(d->player, &Player::mutedChanged,
     this, [ = ](bool mute) {
         if (mute) {
-            emit this->mutedChanged(mute);
+            Q_EMIT this->mutedChanged(mute);
         } else {
-            emit this->volumeChanged(d->player->volume());
+            Q_EMIT this->volumeChanged(d->player->volume());
         }
     });
 
@@ -250,7 +250,7 @@ void Presenter::prepareData()
 
         MetaPtr favInfo(meta);
         favInfo->favourite = d->playlistMgr->playlist(FavMusicListID)->contains(meta);
-        emit this->musicPlayed(playlist, favInfo);
+        Q_EMIT this->musicPlayed(playlist, favInfo);
         d->requestMetaSearch(meta);
     });
 
@@ -258,14 +258,14 @@ void Presenter::prepareData()
     this, [ = ](PlaylistPtr playlist, const MetaPtr meta, Player::Error error) {
         Q_D(Presenter);
         Q_ASSERT(!playlist.isNull());
-        emit musicError(playlist, meta, error);
+        Q_EMIT musicError(playlist, meta, error);
 
         if (error == Player::NoError) {
 //            qDebug() << "set d->syncPlayerResult false " << meta->title;
             d->syncPlayerResult = false;
             if (meta->invalid) {
                 meta->invalid = false;
-                emit musicMetaUpdate(playlist, meta);
+                Q_EMIT musicMetaUpdate(playlist, meta);
             }
             d->continueErrorCount = 0;
             return;
@@ -273,14 +273,14 @@ void Presenter::prepareData()
 
         if (!meta->invalid) {
             meta->invalid = true;
-            emit musicMetaUpdate(playlist, meta);
+            Q_EMIT musicMetaUpdate(playlist, meta);
         }
 
 //        qDebug() << "check d->syncPlayerResult" << d->syncPlayerResult << meta->title;
         if (d->syncPlayerResult) {
 //            qDebug() << "set d->syncPlayerResult false " << meta->title;
             d->syncPlayerResult = false;
-            emit notifyMusciError(playlist, meta, error);
+            Q_EMIT notifyMusciError(playlist, meta, error);
         } else {
 //            qDebug() << "next" << playlist->displayName() << playlist->canNext();
             if (playlist->canNext() && d->continueErrorCount < 5) {
@@ -300,30 +300,30 @@ void Presenter::prepareData()
         }
         // update database
         meta->updateSearchIndex();
-        emit MediaDatabase::instance()->updateMediaMeta(meta);
+        Q_EMIT MediaDatabase::instance()->updateMediaMeta(meta);
     });
 
     connect(this, &Presenter::playNext, this, &Presenter::onMusicNext);
 
-    emit dataLoaded();
+    Q_EMIT dataLoaded();
 }
 
 void Presenter::postAction()
 {
     Q_D(Presenter);
-    emit d->requestInitPlugin();
+    Q_EMIT d->requestInitPlugin();
 
     auto volume = d->settings->value("base.play.volume").toInt();
     d->player->setVolume(volume);
-    emit this->volumeChanged(d->player->volume());
+    Q_EMIT this->volumeChanged(d->player->volume());
 
     auto mute = d->settings->value("base.play.mute").toBool();
     d->player->setMuted(mute);
-    emit this->mutedChanged(mute);
+    Q_EMIT this->mutedChanged(mute);
 
     auto playmode = d->settings->value("base.play.playmode").toInt();
     d->player->setMode(static_cast<Player::PlaybackMode>(playmode));
-    emit this->modeChanged(playmode);
+    Q_EMIT this->modeChanged(playmode);
 
     auto allplaylist = d->playlistMgr->playlist(AllMusicListID);
     auto lastPlaylist = allplaylist;
@@ -361,8 +361,8 @@ void Presenter::postAction()
             position = d->settings->value("base.play.last_position").toInt();
             d->lastPlayPosition = position;
             onCurrentPlaylistChanged(lastPlaylist);
-            emit locateMusic(lastPlaylist, lastMeta);
-            emit musicPlayed(lastPlaylist, lastMeta);
+            Q_EMIT locateMusic(lastPlaylist, lastMeta);
+            Q_EMIT musicPlayed(lastPlaylist, lastMeta);
 
             d->player->setPlayOnLoaded(false);
             d->player->setFadeInOut(false);
@@ -370,9 +370,9 @@ void Presenter::postAction()
             d->player->pause();
             d->player->setPosition(position);
 
-            emit musicPaused(lastPlaylist, lastMeta);
+            Q_EMIT musicPaused(lastPlaylist, lastMeta);
             if (d->lyricService) {
-                emit d->requestMetaSearch(lastMeta);
+                Q_EMIT d->requestMetaSearch(lastMeta);
             }
         }
     }
@@ -394,15 +394,15 @@ void Presenter::postAction()
     d->player->setFadeInOut(fadeInOut);
 
     if (!isMetaLibClear) {
-        emit showMusicList(allplaylist);
+        Q_EMIT showMusicList(allplaylist);
     }
 
     // Add playlist
     for (auto playlist : d->playlistMgr->allplaylist()) {
-        emit playlistAdded(playlist);
+        Q_EMIT playlistAdded(playlist);
     }
 
-    emit currentMusicListChanged(lastPlaylist);
+    Q_EMIT currentMusicListChanged(lastPlaylist);
 }
 
 void Presenter::openUri(const QUrl &uri)
@@ -417,7 +417,7 @@ void Presenter::openUri(const QUrl &uri)
         return;
     }
     auto list = d->playlistMgr->playlist(AllMusicListID);
-    emit MediaLibrary::instance()->meidaFileImported(AllMusicListID, metas);
+    Q_EMIT MediaLibrary::instance()->meidaFileImported(AllMusicListID, metas);
     onAddToPlaylist(list, metas);
     onSyncMusicPlay(list, metas.first());
     onCurrentPlaylistChanged(list);
@@ -469,14 +469,14 @@ void Presenter::volumeUp()
 {
     Q_D(Presenter);
     onVolumeChanged(d->player->volume() + Player::VolumeStep);
-    emit volumeChanged(d->player->volume());
+    Q_EMIT volumeChanged(d->player->volume());
 }
 
 void Presenter::volumeDown()
 {
     Q_D(Presenter);
     onVolumeChanged(d->player->volume() - Player::VolumeStep);
-    emit volumeChanged(d->player->volume());
+    Q_EMIT volumeChanged(d->player->volume());
 }
 
 void Presenter::togglePaly()
@@ -568,7 +568,7 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
         if (playlist->isEmpty()) {
             qDebug() << "meta library clean";
             onMusicStop(playlist, next);
-            emit metaLibraryClean();
+            Q_EMIT metaLibraryClean();
         }
 
         MediaDatabase::instance()->removeMediaMetaList(metalist);
@@ -610,7 +610,7 @@ void Presenter::onMusiclistDelete(PlaylistPtr playlist, const MetaPtrList metali
     if (d->playlistMgr->playlist(AllMusicListID)->isEmpty()) {
         qDebug() << "meta library clean";
         onMusicStop(playlist, MetaPtr());
-        emit metaLibraryClean();
+        Q_EMIT metaLibraryClean();
     }
 
     MediaDatabase::instance()->removeMediaMetaList(metalist);
@@ -634,7 +634,7 @@ void Presenter::onMusiclistDelete(PlaylistPtr playlist, const MetaPtrList metali
     }
 
     for (auto file : trashFiles.keys()) {
-// FIXME:        emit d->moniter->fileRemoved(file);
+// FIXME:        Q_EMIT d->moniter->fileRemoved(file);
     }
 #ifdef FLATPAK_SUPPORT
     Dtk::Widget::DDesktopServices::trash(trashFiles.keys());
@@ -651,7 +651,7 @@ void Presenter::onAddToPlaylist(PlaylistPtr playlist,
 
     PlaylistPtr modifiedPlaylist = playlist;
     if (playlist.isNull()) {
-        emit showPlaylist(true);
+        Q_EMIT showPlaylist(true);
 
         PlaylistMeta info;
         info.editmode = true;
@@ -659,9 +659,9 @@ void Presenter::onAddToPlaylist(PlaylistPtr playlist,
         info.uuid = d->playlistMgr->newID();
         info.displayName = d->playlistMgr->newDisplayName();
         modifiedPlaylist = d->playlistMgr->addPlaylist(info);
-        emit playlistAdded(d->playlistMgr->playlist(info.uuid));
+        Q_EMIT playlistAdded(d->playlistMgr->playlist(info.uuid));
     } else {
-        emit notifyAddToPlaylist(modifiedPlaylist, metalist);
+        Q_EMIT notifyAddToPlaylist(modifiedPlaylist, metalist);
     }
 
     if (d->playlistMgr->playlist(modifiedPlaylist->id()).isNull()) {
@@ -676,7 +676,7 @@ void Presenter::onCurrentPlaylistChanged(PlaylistPtr playlist)
     Q_D(Presenter);
     Q_ASSERT(!playlist.isNull());
     d->currentPlaylist = playlist;
-    emit currentMusicListChanged(d->currentPlaylist);
+    Q_EMIT currentMusicListChanged(d->currentPlaylist);
 }
 
 void Presenter::onCustomResort(const QStringList &uuids)
@@ -697,7 +697,7 @@ void Presenter::onRequestMusiclistMenu(const QPoint &pos)
     auto selectedlist = d->currentPlaylist;
     auto favlist = d->playlistMgr->playlist(FavMusicListID);
 
-    emit this->requestMusicListMenu(pos, selectedlist, favlist, newlists);
+    Q_EMIT this->requestMusicListMenu(pos, selectedlist, favlist, newlists);
 }
 
 void Presenter::onSearchText(const QString text)
@@ -712,7 +712,7 @@ void Presenter::onSearchText(const QString text)
     }
 
     d->currentPlaylist = searchList;
-    emit this->currentMusicListChanged(searchList);
+    Q_EMIT this->currentMusicListChanged(searchList);
 }
 
 void Presenter::onExitSearch()
@@ -721,7 +721,7 @@ void Presenter::onExitSearch()
     qDebug() << d->playlistBeforeSearch;
     if (!d->playlistBeforeSearch.isNull()) {
         d->currentPlaylist = d->playlistBeforeSearch;
-        emit this->currentMusicListChanged(d->playlistBeforeSearch);
+        Q_EMIT this->currentMusicListChanged(d->playlistBeforeSearch);
     }
 }
 
@@ -730,7 +730,7 @@ void Presenter::onLocateMusicAtAll(const QString &hash)
     Q_D(Presenter);
     auto allList = d->playlistMgr->playlist(AllMusicListID);
     d->currentPlaylist = allList;
-    emit locateMusic(allList, allList->music(hash));
+    Q_EMIT locateMusic(allList, allList->music(hash));
     //    onMusicPlay(allList, allList->music(hash));
 }
 
@@ -742,10 +742,10 @@ void Presenter::onChangeSearchMetaCache(const MetaPtr meta, const DMusic::Search
         qDebug() << "update search id " << search.id;
         meta->searchID = search.id;
         meta->updateSearchIndex();
-        emit MediaDatabase::instance()->updateMediaMeta(meta);
+        Q_EMIT MediaDatabase::instance()->updateMediaMeta(meta);
     }
 
-    emit d->requestChangeMetaCache(meta, search);
+    Q_EMIT d->requestChangeMetaCache(meta, search);
 }
 
 void Presenter::onPlaylistAdd(bool edit)
@@ -758,7 +758,7 @@ void Presenter::onPlaylistAdd(bool edit)
     info.displayName = d->playlistMgr->newDisplayName();
     d->playlistMgr->addPlaylist(info);
 
-    emit playlistAdded(d->playlistMgr->playlist(info.uuid));
+    Q_EMIT playlistAdded(d->playlistMgr->playlist(info.uuid));
 }
 
 void Presenter::onMusicPlay(PlaylistPtr playlist,  const MetaPtr meta)
@@ -772,7 +772,7 @@ void Presenter::onMusicPlay(PlaylistPtr playlist,  const MetaPtr meta)
 
     d->player->setPlayOnLoaded(true);
     if (0 == d->playlistMgr->playlist(AllMusicListID)->length()) {
-        emit requestImportFiles();
+        Q_EMIT requestImportFiles();
         return;
     }
 
@@ -804,30 +804,30 @@ void Presenter::onMusicPlay(PlaylistPtr playlist,  const MetaPtr meta)
     qDebug() << "play" << playlist->displayName()
              << "( count:" << playlist->length() << ")"
              << toPlayMeta->title << toPlayMeta->hash;
-    emit d->play(playlist, toPlayMeta);
+    Q_EMIT d->play(playlist, toPlayMeta);
 }
 
 void Presenter::onMusicPause(PlaylistPtr playlist, const MetaPtr info)
 {
     Q_D(Presenter);
-    emit d->pause();
-    emit musicPaused(playlist, info);
+    Q_EMIT d->pause();
+    Q_EMIT musicPaused(playlist, info);
 }
 
 void Presenter::onMusicResume(PlaylistPtr playlist, const MetaPtr info)
 {
     Q_D(Presenter);
-    emit d->resume(playlist, info);
-    emit this->musicPlayed(playlist, info);
+    Q_EMIT d->resume(playlist, info);
+    Q_EMIT this->musicPlayed(playlist, info);
 }
 
 void Presenter::onMusicStop(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(Presenter);
-    emit coverSearchFinished(meta, SearchMeta(), "");
-    emit lyricSearchFinished(meta, SearchMeta(), "");
+    Q_EMIT coverSearchFinished(meta, SearchMeta(), "");
+    Q_EMIT lyricSearchFinished(meta, SearchMeta(), "");
     d->player->stop();
-    emit this->musicStoped(playlist, meta);
+    Q_EMIT this->musicStoped(playlist, meta);
 }
 
 void Presenter::onMusicPrev(PlaylistPtr playlist, const MetaPtr meta)
@@ -838,12 +838,12 @@ void Presenter::onMusicPrev(PlaylistPtr playlist, const MetaPtr meta)
     }
 
     if (playlist->isEmpty()) {
-        emit coverSearchFinished(meta, SearchMeta(), "");
-        emit lyricSearchFinished(meta, SearchMeta(), "");
+        Q_EMIT coverSearchFinished(meta, SearchMeta(), "");
+        Q_EMIT lyricSearchFinished(meta, SearchMeta(), "");
         d->player->stop();
-        emit this->musicStoped(playlist, meta);
+        Q_EMIT this->musicStoped(playlist, meta);
     }
-    emit d->playPrev(playlist, meta);
+    Q_EMIT d->playPrev(playlist, meta);
 }
 
 void Presenter::onMusicNext(PlaylistPtr playlist, const MetaPtr meta)
@@ -854,12 +854,12 @@ void Presenter::onMusicNext(PlaylistPtr playlist, const MetaPtr meta)
     }
 
     if (playlist->isEmpty()) {
-        emit coverSearchFinished(meta, SearchMeta(), "");
-        emit lyricSearchFinished(meta, SearchMeta(), "");
+        Q_EMIT coverSearchFinished(meta, SearchMeta(), "");
+        Q_EMIT lyricSearchFinished(meta, SearchMeta(), "");
         d->player->stop();
-        emit this->musicStoped(playlist, meta);
+        Q_EMIT this->musicStoped(playlist, meta);
     }
-    emit d->playNext(playlist, meta);
+    Q_EMIT d->playNext(playlist, meta);
 }
 
 void Presenter::onToggleFavourite(const MetaPtr meta)
@@ -868,7 +868,7 @@ void Presenter::onToggleFavourite(const MetaPtr meta)
     if (d->playlistMgr->playlist(FavMusicListID)->contains(meta)) {
         d->playlistMgr->playlist(FavMusicListID)->removeMusicList(MetaPtrList() << meta);
     } else {
-        emit notifyAddToPlaylist(d->playlistMgr->playlist(FavMusicListID), MetaPtrList() << meta);
+        Q_EMIT notifyAddToPlaylist(d->playlistMgr->playlist(FavMusicListID), MetaPtrList() << meta);
         d->playlistMgr->playlist(FavMusicListID)->appendMusicList(MetaPtrList() << meta);
     }
 }
@@ -896,7 +896,7 @@ void Presenter::onVolumeChanged(int volume)
         d->settings->setOption("base.play.mute", false);
     }
     d->settings->setOption("base.play.volume", volume);
-    emit d->updateMprisVolume(volume);
+    Q_EMIT d->updateMprisVolume(volume);
 }
 
 void Presenter::onPlayModeChanged(int mode)
@@ -905,7 +905,7 @@ void Presenter::onPlayModeChanged(int mode)
     d->player->setMode(static_cast<Player::PlaybackMode>(mode));
     d->settings->setOption("base.play.playmode", mode);
     d->settings->sync();
-    emit this->modeChanged(mode);
+    Q_EMIT this->modeChanged(mode);
 }
 
 void Presenter::onToggleMute()
@@ -915,16 +915,16 @@ void Presenter::onToggleMute()
     d->settings->setOption("base.play.mute", d->player->muted());
 
     if (d->player->muted()) {
-        emit d->updateMprisVolume(0);
+        Q_EMIT d->updateMprisVolume(0);
     } else {
-        emit d->updateMprisVolume(d->player->volume());
+        Q_EMIT d->updateMprisVolume(d->player->volume());
     }
 }
 
 void Presenter::onUpdateMetaCodec(const MetaPtr meta)
 {
     Q_D(Presenter);
-    emit musicMetaUpdate(d->player->activePlaylist(), meta);
+    Q_EMIT musicMetaUpdate(d->player->activePlaylist(), meta);
 }
 
 void Presenter::onPlayall(PlaylistPtr playlist)
@@ -936,7 +936,7 @@ void Presenter::onResort(PlaylistPtr playlist, int sortType)
 {
     playlist->sortBy(static_cast<Playlist::SortType>(sortType));
     if (playlist->sortType() != Playlist::SortByCustom) {
-        emit this->musicListResorted(playlist);
+        Q_EMIT this->musicListResorted(playlist);
     }
 }
 
@@ -1074,7 +1074,7 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
     connect(mprisPlayer, &MprisPlayer::volumeRequested,
     this, [ = ](double volume) {
         onVolumeChanged(volume * 100);
-        emit this->volumeChanged(volume * 100);
+        Q_EMIT this->volumeChanged(volume * 100);
     });
 
     connect(d, &PresenterPrivate::updateMprisVolume,

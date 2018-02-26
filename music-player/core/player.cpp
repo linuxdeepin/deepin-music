@@ -159,14 +159,14 @@ void PlayerPrivate::initConnection()
 //                 << activeMeta->title;
 
         if (position > 1 && activeMeta->invalid) {
-            emit q->mediaError(activePlaylist, activeMeta, Player::NoError);
+            Q_EMIT q->mediaError(activePlaylist, activeMeta, Player::NoError);
         }
 
         // fix len
         if (activeMeta->length == 0 && duration != 0 && duration > 0) {
             activeMeta->length = duration;
             qDebug() << "update" << activeMeta->length;
-            emit q->mediaUpdate(activePlaylist, activeMeta);
+            Q_EMIT q->mediaUpdate(activePlaylist, activeMeta);
         }
 
         if (position >= activeMeta->offset + activeMeta->length + 1800 && qplayer->state() == QMediaPlayer::PlayingState) {
@@ -197,27 +197,27 @@ void PlayerPrivate::initConnection()
 //            }
 //        }
 
-        emit q->positionChanged(position - activeMeta->offset,  activeMeta->length);
+        Q_EMIT q->positionChanged(position - activeMeta->offset,  activeMeta->length);
     });
 
     q->connect(qplayer, &QMediaPlayer::stateChanged,
     q, [ = ](QMediaPlayer::State newState) {
         switch (newState) {
         case QMediaPlayer::StoppedState:
-            emit q->playbackStatusChanged(Player::Stopped);
+            Q_EMIT q->playbackStatusChanged(Player::Stopped);
             break;
         case QMediaPlayer::PlayingState:
-            emit q->playbackStatusChanged(Player::Playing);
+            Q_EMIT q->playbackStatusChanged(Player::Playing);
             break;
         case QMediaPlayer::PausedState:
-            emit q->playbackStatusChanged(Player::Paused);
+            Q_EMIT q->playbackStatusChanged(Player::Paused);
             break;
         }
     });
 
     q->connect(qplayer, &QMediaPlayer::volumeChanged,
     q, [ = ](int volume) {
-        emit q->volumeChanged(volume / fadeInOutFactor);
+        Q_EMIT q->volumeChanged(volume / fadeInOutFactor);
     });
     q->connect(qplayer, &QMediaPlayer::mutedChanged,
                q, &Player::mutedChanged);
@@ -236,7 +236,7 @@ void PlayerPrivate::initConnection()
                 qDebug() << "unsupport mime type" << type << activePlaylist << activeMeta;
                 qplayer->pause();
                 qplayer->stop();
-                emit q->mediaError(activePlaylist, activeMeta, Player::FormatError);
+                Q_EMIT q->mediaError(activePlaylist, activeMeta, Player::FormatError);
                 return;
             }
 
@@ -269,7 +269,7 @@ void PlayerPrivate::initConnection()
     q->connect(qplayer, static_cast<void (QMediaPlayer::*)(QMediaPlayer::Error error)>(&QMediaPlayer::error),
     q, [ = ](QMediaPlayer::Error error) {
         qWarning() << error << activePlaylist << activeMeta;
-        emit q->mediaError(activePlaylist, activeMeta, static_cast<Player::Error>(error));
+        Q_EMIT q->mediaError(activePlaylist, activeMeta, static_cast<Player::Error>(error));
     });
 
     q->connect(qplayer, &QMediaPlayer::stateChanged,
@@ -388,7 +388,7 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
     d->qplayer->setPosition(meta->offset);
     d->activePlaylist->play(meta);
 
-    emit mediaPlayed(d->activePlaylist, d->activeMeta);
+    Q_EMIT mediaPlayed(d->activePlaylist, d->activeMeta);
 
     if (d->qplayer->mediaStatus() == QMediaPlayer::BufferedMedia) {
         QTimer::singleShot(100, this, [ = ]() {

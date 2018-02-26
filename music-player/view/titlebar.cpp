@@ -120,7 +120,7 @@ void Titlebar::setViewname(QString viewname)
 
     d->viewname = viewname;
     d->workaroundUpdateButtonViewname();
-    emit viewnameChanged(viewname);
+    Q_EMIT viewnameChanged(viewname);
 }
 
 

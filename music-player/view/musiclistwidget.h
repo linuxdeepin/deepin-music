@@ -30,7 +30,7 @@ class MusicListWidget : public QFrame
 {
     Q_OBJECT
 public:
-    explicit MusicListWidget(QWidget *parent = 0);
+    explicit MusicListWidget(QWidget *parent = Q_NULLPTR);
     ~MusicListWidget();
 
     void setCustomSortType();

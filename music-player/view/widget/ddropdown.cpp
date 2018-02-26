@@ -68,7 +68,7 @@ DDropdown::DDropdown(QWidget *parent) : QFrame(parent), d_ptr(new DDropdownPriva
 
     connect(d->menu, &QMenu::triggered, this, [ = ](QAction * action) {
         d->text->setText(action->text());
-        emit this->triggered(action);
+        Q_EMIT this->triggered(action);
     });
 
     connect(this, &DDropdown::requestContextMenu,
@@ -99,6 +99,12 @@ QList<QAction *> DDropdown::actions() const
     return d->menu->actions();
 }
 
+void DDropdown::setText(const QString &text)
+{
+    Q_D(DDropdown);
+    d->text->setText(text);
+}
+
 void DDropdown::setCurrentAction(QAction *action)
 {
     Q_D(DDropdown);
@@ -108,6 +114,10 @@ void DDropdown::setCurrentAction(QAction *action)
         }
         d->text->setText(action->text());
         action->setChecked(true);
+    } else {
+        for (auto action : d->menu->actions()) {
+            action->setChecked(false);
+        }
     }
 }
 
@@ -149,7 +159,7 @@ void DDropdown::leaveEvent(QEvent *event)
 void DDropdown::mouseReleaseEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton) {
-        emit requestContextMenu();
+        Q_EMIT requestContextMenu();
     }
     QFrame::mouseReleaseEvent(event);
 }

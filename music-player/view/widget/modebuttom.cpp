@@ -63,5 +63,5 @@ void ModeButton::setMode(int mode)
     this->style()->polish(this);
     this->update();
 
-    emit modeChanged(mode);
+    Q_EMIT modeChanged(mode);
 }

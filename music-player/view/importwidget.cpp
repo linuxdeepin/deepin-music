@@ -89,13 +89,13 @@ ImportWidget::ImportWidget(QWidget *parent) : QFrame(parent), d_ptr(new ImportWi
 
     connect(d->importButton, &QPushButton::clicked,
     this, [ = ] {
-        emit this->importFiles();
+        Q_EMIT this->importFiles();
     });
 
     connect(d->text, &QLabel::linkActivated,
     this, [ = ](const QString & /*link*/) {
         showWaitHint();
-        emit this->scanMusicDirectory();
+        Q_EMIT this->scanMusicDirectory();
     });
 }
 
@@ -155,6 +155,6 @@ void ImportWidget::dropEvent(QDropEvent *event)
     }
 
     if (!localpaths.isEmpty()) {
-        emit importSelectFiles(localpaths);
+        Q_EMIT importSelectFiles(localpaths);
     }
 }

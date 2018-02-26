@@ -47,13 +47,13 @@ void Goose::get(const QUrl &url)
 
     connect(reply, &QNetworkReply::finished,
     this, [ = ]() {
-        emit arrive(QNetworkReply::NoError, reply->readAll());
+        Q_EMIT arrive(QNetworkReply::NoError, reply->readAll());
     });
 
     connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error),
     this, [ = ](QNetworkReply::NetworkError error) {
         qWarning() << "Goose: get" << reply->errorString();
-        emit arrive(error, reply->readAll());
+        Q_EMIT arrive(error, reply->readAll());
     });
 
 }
@@ -70,13 +70,13 @@ void Goose::post(const QUrl &url, const QByteArray &data)
 //        QMimeDatabase mdb;
 //        auto contentType = reply->header(QNetworkRequest::ContentTypeHeader).toString();
 //        qDebug() << mdb.mimeTypeForName(contentType);
-        emit arrive(QNetworkReply::NoError, reply->readAll());
+        Q_EMIT arrive(QNetworkReply::NoError, reply->readAll());
     });
 
     connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error),
     this, [ = ](QNetworkReply::NetworkError error) {
         qWarning() << "Goose: get" << reply->errorString();
-        emit arrive(error, reply->readAll());
+        Q_EMIT arrive(error, reply->readAll());
     });
 }
 

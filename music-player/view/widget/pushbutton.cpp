@@ -31,5 +31,5 @@ PushButton::PushButton(QWidget *parent) : QPushButton(parent)
 void PushButton::enterEvent(QEvent *event)
 {
     QPushButton::enterEvent(event);
-    emit entered();
+    Q_EMIT entered();
 }

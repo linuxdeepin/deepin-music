@@ -17,7 +17,7 @@ DESTDIR     = $$BUILD_DIST/lib/$$APP_TARGET/plugins
 
 DEFINES += NETEASEMETASEARCH_LIBRARY
 
-# The following define makes your compiler emit warnings if you use
+# The following define makes your compiler Q_EMIT warnings if you use
 # any feature of Qt which as been marked as deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
 # deprecated API in order to know how to port your code away from it.

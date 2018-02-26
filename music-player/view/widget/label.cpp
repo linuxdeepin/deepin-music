@@ -37,5 +37,5 @@ Label::~Label()
 
 void Label::mousePressEvent(QMouseEvent * /*event*/)
 {
-    emit clicked(false);
+    Q_EMIT clicked(false);
 }

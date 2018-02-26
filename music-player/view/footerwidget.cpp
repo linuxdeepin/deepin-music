@@ -133,7 +133,7 @@ void FooterPrivate::initConnection()
 
     q->connect(btPlayMode, &ModeButton::modeChanged,
     q, [ = ](int mode) {
-        emit q->modeChanged(mode);
+        Q_EMIT q->modeChanged(mode);
         auto hintWidget = btPlayMode->property("HintWidget").value<Dtk::Widget::DToast *>();
         hintFilter->showHitsFor(btPlayMode, hintWidget);
     });
@@ -141,45 +141,45 @@ void FooterPrivate::initConnection()
     q->connect(progress, &Slider::valueAccpet, q, [ = ](int value) {
         auto range = progress->maximum() - progress->minimum();
         Q_ASSERT(range != 0);
-        emit q->changeProgress(value, range);
+        Q_EMIT q->changeProgress(value, range);
     });
 
     q->connect(btPlay, &QPushButton::released, q, [ = ]() {
         auto status = btPlay->property(sPropertyPlayStatus).toString();
         if (status == sPlayStatusValuePlaying) {
-            emit q->pause(activingPlaylist, activingMeta);
+            Q_EMIT q->pause(activingPlaylist, activingMeta);
         } else  if (status == sPlayStatusValuePause) {
-            emit q->resume(activingPlaylist, activingMeta);
+            Q_EMIT q->resume(activingPlaylist, activingMeta);
         } else {
-            emit q->play(activingPlaylist, activingMeta);
+            Q_EMIT q->play(activingPlaylist, activingMeta);
         }
     });
 
     q->connect(btPrev, &QPushButton::released, q, [ = ]() {
-        emit q->prev(activingPlaylist, activingMeta);
+        Q_EMIT q->prev(activingPlaylist, activingMeta);
     });
     q->connect(btNext, &QPushButton::released, q, [ = ]() {
-        emit q->next(activingPlaylist, activingMeta);
+        Q_EMIT q->next(activingPlaylist, activingMeta);
     });
 
     q->connect(btFavorite, &QPushButton::released, q, [ = ]() {
-        emit q->toggleFavourite(activingMeta);
+        Q_EMIT q->toggleFavourite(activingMeta);
     });
     q->connect(title, &Label::clicked, q, [ = ](bool) {
-        emit q->locateMusic(activingPlaylist, activingMeta);
+        Q_EMIT q->locateMusic(activingPlaylist, activingMeta);
     });
     q->connect(btLyric, &QPushButton::released, q, [ = ]() {
-        emit  q->toggleLyricView();
+        Q_EMIT  q->toggleLyricView();
     });
     q->connect(btPlayList, &QPushButton::released, q, [ = ]() {
-        emit q->togglePlaylist();
+        Q_EMIT q->togglePlaylist();
     });
     q->connect(btSound, &QPushButton::pressed, q, [ = ]() {
-        emit q->toggleMute();
+        Q_EMIT q->toggleMute();
     });
     q->connect(volSlider, &SoundVolume::volumeChanged, q, [ = ](int vol) {
         q->onVolumeChanged(vol);
-        emit q->volumeChanged(vol);
+        Q_EMIT q->volumeChanged(vol);
     });
 
     q->connect(q, &Footer::mouseMoving, q, [ = ](Qt::MouseButton) {
@@ -367,7 +367,7 @@ Footer::Footer(QWidget *parent) :
     d->initConnection();
 
     connect(d->btCover, &QPushButton::clicked, this, [ = ](bool) {
-        emit toggleLyricView();
+        Q_EMIT toggleLyricView();
         if (d->btCover->property("viewname").toString() != "lyric") {
             d->updateQssProperty(d->btCover, "viewname", "lyric");
         } else {
@@ -450,7 +450,7 @@ void Footer::mouseMoveEvent(QMouseEvent *event)
     Q_D(Footer);
     Qt::MouseButton button = event->buttons() & Qt::LeftButton ? Qt::LeftButton : Qt::NoButton;
     if (d->enableMove && d->enableMove && event->buttons() == Qt::LeftButton) {
-        emit mouseMoving(button);
+        Q_EMIT mouseMoving(button);
         QFrame::mouseMoveEvent(event);
     }
 }
@@ -470,14 +470,14 @@ bool Footer::eventFilter(QObject *obj, QEvent *event)
                 vol = 100;
             }
             onVolumeChanged(vol);
-            emit this->volumeChanged(d->volSlider->volume());
+            Q_EMIT this->volumeChanged(d->volSlider->volume());
         } else {
             auto vol = d->volSlider->volume() - Player::VolumeStep;
             if (vol < 0) {
                 vol = 0;
             }
             onVolumeChanged(vol);
-            emit this->volumeChanged(d->volSlider->volume());
+            Q_EMIT this->volumeChanged(d->volSlider->volume());
         }
         return true;
     }

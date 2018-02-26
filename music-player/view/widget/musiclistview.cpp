@@ -95,7 +95,7 @@ MusicListView::MusicListView(QWidget *parent)
     connect(this, &MusicListView::doubleClicked,
     this, [ = ](const QModelIndex & index) {
         MetaPtr meta = d->model->meta(index);
-        emit playMedia(meta);
+        Q_EMIT playMedia(meta);
     });
 
     // For debug
@@ -262,7 +262,7 @@ void MusicListViewPrivate::removeSelection(QItemSelectionModel *selection)
         auto meta = model->meta(index);
         metalist << meta;
     }
-    emit q->removeMusicList(metalist);
+    Q_EMIT q->removeMusicList(metalist);
 }
 
 void MusicListView::showContextMenu(const QPoint &pos,
@@ -314,7 +314,7 @@ void MusicListView::showContextMenu(const QPoint &pos,
                 metalist << meta;
             }
         }
-        emit addToPlaylist(playlist, metalist);
+        Q_EMIT addToPlaylist(playlist, metalist);
     });
 
     bool singleSelect = (1 == selection->selectedRows().length());
@@ -363,14 +363,14 @@ void MusicListView::showContextMenu(const QPoint &pos,
         connect(&textCodecMenu, &QMenu::triggered, this, [ = ](QAction * action) {
             auto codec = action->data().toByteArray();
             meta->updateCodec(codec);
-            emit updateMetaCodec(meta);
+            Q_EMIT updateMetaCodec(meta);
         });
     }
 
     if (playAction) {
         connect(playAction, &QAction::triggered, this, [ = ](bool) {
             auto index = selection->selectedRows().first();
-            emit playMedia(d->model->meta(index));
+            Q_EMIT playMedia(d->model->meta(index));
         });
     }
 
@@ -429,7 +429,7 @@ void MusicListView::showContextMenu(const QPoint &pos,
             if (0 == warnDlg.exec()) {
                 return;
             }
-            emit deleteMusicList(metalist);
+            Q_EMIT deleteMusicList(metalist);
         });
     }
 
@@ -437,7 +437,7 @@ void MusicListView::showContextMenu(const QPoint &pos,
         connect(songAction, &QAction::triggered, this, [ = ](bool) {
             auto index = selection->selectedRows().first();
             auto meta = d->model->meta(index);
-            emit showInfoDialog(meta);
+            Q_EMIT showInfoDialog(meta);
         });
     }
 
@@ -470,7 +470,7 @@ void MusicListView::startDrag(Qt::DropActions supportedActions)
         hashIndexs.insert(hash, i);
     }
     d->model->playlist()->saveSort(hashIndexs);
-    emit customSort();
+    Q_EMIT customSort();
 
     QItemSelection selection;
     for (auto meta : list) {

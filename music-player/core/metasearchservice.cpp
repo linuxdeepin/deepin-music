@@ -100,7 +100,7 @@ void MetaSearchService::init()
                 coverFile.close();
             }
 
-            emit coverSearchFinished(meta, search, coverData);
+            Q_EMIT coverSearchFinished(meta, search, coverData);
         });
         connect(engine, &DMusic::Plugin::MetaSearchEngine::lyricLoaded,
         this, [ = ](const MetaPtr  meta, const DMusic::SearchMeta & search,  QByteArray lyricData) {
@@ -116,12 +116,12 @@ void MetaSearchService::init()
             lyricFile.write(lyricData);
             lyricFile.close();
 
-            emit lyricSearchFinished(meta, search, lyricData);
+            Q_EMIT lyricSearchFinished(meta, search, lyricData);
         });
 
         connect(engine, &DMusic::Plugin::MetaSearchEngine::contextSearchFinished,
         this, [ = ](const QString & context, const QList<DMusic::SearchMeta> &metalist) {
-            emit  contextSearchFinished(context, metalist);
+            Q_EMIT  contextSearchFinished(context, metalist);
         });
     }
 }
@@ -173,7 +173,7 @@ int MetaSearchServicePrivate::searchCacheLyric(const MetaPtr meta)
     if (!lyric.exists() || lyric.size() < 1) {
         return -1;
     }
-    emit q->lyricSearchFinished(meta, DMusic::SearchMeta(meta->searchID), MetaSearchService::lyricData(meta));
+    Q_EMIT q->lyricSearchFinished(meta, DMusic::SearchMeta(meta->searchID), MetaSearchService::lyricData(meta));
     return 0;
 }
 
@@ -184,7 +184,7 @@ int MetaSearchServicePrivate::searchCacheCover(const MetaPtr meta)
     if (!cover.exists() || cover.size() < 1) {
         return -1;
     }
-    emit q->coverSearchFinished(meta, DMusic::SearchMeta(meta->searchID), MetaSearchService::coverData(meta));
+    Q_EMIT q->coverSearchFinished(meta, DMusic::SearchMeta(meta->searchID), MetaSearchService::coverData(meta));
     return 0;
 }
 
@@ -211,7 +211,7 @@ void MetaSearchService::searchMeta(const MetaPtr meta)
     auto plugins = PluginManager::instance()->getPluginListByType(DMusic::Plugin::PluginType::TypeMetaSearchEngine);
     for (auto plugin : plugins) {
         auto engine = dynamic_cast<DMusic::Plugin::MetaSearchEngine *>(plugin);
-        emit engine->doSearchMeta(meta);
+        Q_EMIT engine->doSearchMeta(meta);
     }
 }
 
@@ -221,7 +221,7 @@ void MetaSearchService::searchContext(const QString &context)
     for (auto plugin : plugins) {
         qDebug() << "search by " << plugin->pluginId() << context;
         auto engine = dynamic_cast<DMusic::Plugin::MetaSearchEngine *>(plugin);
-        emit engine->doSearchContext(context);
+        Q_EMIT engine->doSearchContext(context);
     }
 }
 
@@ -238,7 +238,7 @@ void MetaSearchService::onChangeMetaCache(const MetaPtr meta, const DMusic::Sear
             coverFile.write(coverData);
             coverFile.close();
         }
-        emit coverSearchFinished(meta, search, coverData);
+        Q_EMIT coverSearchFinished(meta, search, coverData);
     });
 
     // TODO: call plugin to do this
@@ -260,7 +260,7 @@ void MetaSearchService::onChangeMetaCache(const MetaPtr meta, const DMusic::Sear
         lyricFile.write(lrcData);
         lyricFile.close();
 
-        emit lyricSearchFinished(meta, search, lrcData);
+        Q_EMIT lyricSearchFinished(meta, search, lrcData);
     });
 
 }

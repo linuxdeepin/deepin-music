@@ -115,7 +115,7 @@ PlayListItem::PlayListItem(PlaylistPtr playlist, QWidget *parent) : QFrame(paren
         {
             m_titleedit->setText(m_titleedit->property("EditValue").toString());
         } else {
-            emit this->rename(m_titleedit->text());
+            Q_EMIT this->rename(m_titleedit->text());
             m_titleedit->setProperty("EditValue", m_titleedit->text());
         }
 
@@ -195,7 +195,7 @@ void PlayListItem::onDelete()
     if (0 == warnDlg.exec()) {
         return;
     }
-    emit this->remove();
+    Q_EMIT this->remove();
 }
 
 void PlayListItem::onRename()

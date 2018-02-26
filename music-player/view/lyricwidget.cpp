@@ -270,7 +270,7 @@ LyricWidget::LyricWidget(QWidget *parent)
     connect(searchMetaButton, &QPushButton::clicked,
     this, [ = ](bool) {
         auto context = searchMetaTitle->text() + " " + searchMetaArtist->text();
-        emit requestContextSearch(context);
+        Q_EMIT requestContextSearch(context);
     });
 
     connect(d->searchMetaList, &SearchMetaList::itemClicked,
@@ -282,7 +282,7 @@ LyricWidget::LyricWidget(QWidget *parent)
         }
         // fixme:
         auto search = searchItem->property("musicMeta").value<DMusic::SearchMeta>();
-        emit changeMetaCache(d->activingMeta, search);
+        Q_EMIT changeMetaCache(d->activingMeta, search);
     });
 
     connect(d->searchMetaList, &SearchMetaList::currentItemChanged,

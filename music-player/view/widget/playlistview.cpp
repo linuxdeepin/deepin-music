@@ -130,7 +130,7 @@ void PlayListView::startDrag(Qt::DropActions supportedActions)
         auto playlistItem = qobject_cast<PlayListItem *>(this->itemWidget(item));
         uuids << playlistItem->data()->id();
     }
-    emit customResort(uuids);
+    Q_EMIT customResort(uuids);
 }
 
 void PlayListView::updateScrollbar()
@@ -193,7 +193,7 @@ void PlayListView::showContextMenu(const QPoint &pos)
 
     connect(&menu, &QMenu::triggered, this, [ = ](QAction * action) {
         if (action->text() == tr("Play")) {
-            emit item->playall(m_data);
+            Q_EMIT item->playall(m_data);
         }
         if (action->text() == tr("Rename")) {
             item->onRename();
