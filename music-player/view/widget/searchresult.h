@@ -35,7 +35,7 @@ class SearchResult : public QFrame
 {
     Q_OBJECT
 public:
-    explicit SearchResult(QWidget *parent = 0);
+    explicit SearchResult(QWidget *parent = Q_NULLPTR);
     void autoResize();
 
     void setSearchString(const QString &str);

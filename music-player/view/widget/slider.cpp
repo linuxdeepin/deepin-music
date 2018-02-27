@@ -26,15 +26,24 @@
 #include <QTime>
 #include <QMouseEvent>
 
+#include <DThemeManager>
+
+DWIDGET_USE_NAMESPACE
+
 static const int s_valueUpdateDelay = 1500;
 
 Slider::Slider(QWidget *parent) : QSlider(parent)
 {
-    setTracking(false);
+    DThemeManager::registerWidget(this, QStringList({"hover", "viewname"}));
+//    setMouseTracking(true);
+//    setTracking(false);
 }
 
 Slider::Slider(Qt::Orientation orientation, QWidget *parent): QSlider(orientation, parent)
 {
+    DThemeManager::registerWidget(this, QStringList({"hover", "viewname"}));
+//    setMouseTracking(true);
+//    setTracking(false);
     m_delaySetValueTimer.setInterval(s_valueUpdateDelay);
 //    connect(&m_delaySetValueTimer, &QTimer::timeout,
 //    this, [ = ]() {
@@ -80,6 +89,20 @@ void Slider::mouseMoveEvent(QMouseEvent *event)
 //    m_delaySetValueTimer.start();
     setSliderPosition(value);
     QSlider::mouseMoveEvent(event);
+}
+
+void Slider::enterEvent(QEvent *event)
+{
+    setProperty("hover", true);
+    Q_EMIT hoverd(true);
+    QSlider::enterEvent(event);
+}
+
+void Slider::leaveEvent(QEvent *event)
+{
+    setProperty("hover", false);
+    Q_EMIT hoverd(false);
+    QSlider::leaveEvent(event);
 }
 
 void Slider::wheelEvent(QWheelEvent *e)

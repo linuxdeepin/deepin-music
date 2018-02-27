@@ -30,7 +30,7 @@ class PlaylistWidget : public QFrame
 {
     Q_OBJECT
 public:
-    explicit PlaylistWidget(QWidget *parent = 0);
+    explicit PlaylistWidget(QWidget *parent = Q_NULLPTR);
     void initData(QList<PlaylistPtr > playlists, PlaylistPtr last);
 
 signals:

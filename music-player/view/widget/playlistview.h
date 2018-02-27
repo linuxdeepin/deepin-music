@@ -29,7 +29,7 @@ class PlayListView : public QListWidget
 {
     Q_OBJECT
 public:
-    explicit PlayListView(QWidget *parent = 0);
+    explicit PlayListView(QWidget *parent = Q_NULLPTR);
     ~PlayListView();
 
     void updateScrollbar();

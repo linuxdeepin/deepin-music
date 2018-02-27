@@ -28,7 +28,7 @@ class PushButton : public QPushButton
 {
     Q_OBJECT
 public:
-    explicit PushButton(QWidget *parent = 0);
+    explicit PushButton(QWidget *parent = Q_NULLPTR);
 
     virtual void enterEvent(QEvent *event) Q_DECL_OVERRIDE;
 signals:

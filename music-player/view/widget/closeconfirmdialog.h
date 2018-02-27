@@ -30,7 +30,7 @@ class CloseConfirmDialog : public Dtk::Widget::DDialog
 {
     Q_OBJECT
 public:
-    explicit CloseConfirmDialog(QWidget *parent = 0);
+    explicit CloseConfirmDialog(QWidget *parent = Q_NULLPTR);
     ~CloseConfirmDialog();
 
     bool isRemember() const;

@@ -1,29 +1,12 @@
 #Footer {
   border-radius: 0;
-  background-color: qlineargradient(x1: 0 y1: 0, x2: 0 y2: 1, stop: 0.00000 rgba(0, 0, 0, 0.0), stop: 0.07692 rgba(0, 0, 0, 0.0), stop: 0.09230 rgba(0, 0, 0, 0.8), stop: 1.00000 rgba(0, 0, 0, 0.8));
   qproperty-defaultCover: ":/common/image/cover_welcome.svg";
+  background-color: rgba(0, 0, 0, 0%);
 }
 
-#FooterProgress::groove:horizontal {
-  background: transparent;
-  position: absolute;
-  left: 0px;
-  right: 0px;
-}
-
-#FooterProgress::handle:horizontal {
-  background: transparent;
-  margin: 5px -5px;
-}
-
-#FooterProgress::add-page:horizontal {
-  background: transparent;
-  background-color: qlineargradient(x1: 0 y1: 0, x2: 0 y2: 1, stop: 0 rgba(0, 0, 0, 0.0), stop: 0.41666 rgba(0, 0, 0, 0.0), stop: 0.41667 rgba(0, 0, 0, 0.8) stop: 0.50000 rgba(0, 0, 0, 0.8), stop: 0.50000 rgba(255, 255, 255, 0.08), stop: 0.58333 rgba(255, 255, 255, 0.08), stop: 0.58334 rgba(0, 0, 0, 0.0), stop: 0.66666 rgba(0, 0, 0, 0.0), stop: 0.66667 rgba(0, 0, 0, 0.0), stop: 1 rgba(0, 0, 0, 0.0));
-}
-
-#FooterProgress::sub-page:horizontal {
-  background: #2ca7f8;
-  background-color: qlineargradient(x1: 0 y1: 0, x2: 0 y2: 1, stop: 0 rgba(0, 0, 0, 0.0), stop: 0.41666 rgba(0, 0, 0, 0.0), stop: 0.41667 #2ca7f8, stop: 0.50000 #2ca7f8, stop: 0.50000 #2ca7f8, stop: 0.58333 #2ca7f8, stop: 0.58334 rgba(0, 0, 0, 0.3), stop: 0.66666 rgba(0, 0, 0, 0.3), stop: 0.66667 rgba(0, 0, 0, 0.0), stop: 1 rgba(0, 0, 0, 0.0));
+#FooterControlFrame {
+  border: 0px solid blue;
+  background-color: rgba(0, 0, 0, 0.8);
 }
 
 #FooterCover {

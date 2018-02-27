@@ -29,7 +29,7 @@ class LyricView : public QListView
 {
     Q_OBJECT
 public:
-    explicit LyricView(QWidget *parent = 0);
+    explicit LyricView(QWidget *parent = Q_NULLPTR);
     ~LyricView();
 
     bool viewMode() const;

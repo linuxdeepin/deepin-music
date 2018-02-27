@@ -35,7 +35,7 @@ class Footer : public QFrame
     Q_PROPERTY(QString defaultCover READ defaultCover WRITE setDefaultCover)
 
 public:
-    explicit Footer(QWidget *parent = 0);
+    explicit Footer(QWidget *parent = nullptr);
     ~Footer();
 
 public:
@@ -43,6 +43,7 @@ public:
     void enableControl(bool enable = true);
     void initData(PlaylistPtr current, int mode);
 
+    void setViewname(const QString &viewname);
     QString defaultCover() const;
 
 signals:
@@ -62,6 +63,7 @@ signals:
     void modeChanged(int);
     void toggleFavourite(const MetaPtr meta);
 
+    void progressHoverd(bool);
     void mouseMoving(Qt::MouseButton botton);
 
 public slots:

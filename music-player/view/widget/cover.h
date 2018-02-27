@@ -32,7 +32,7 @@ class Cover : public Label
     Q_PROPERTY(QColor shadowColor READ shadowColor WRITE setShadowColor NOTIFY shadowColorChanged)
 
 public:
-    explicit Cover(QWidget *parent = 0);
+    explicit Cover(QWidget *parent = Q_NULLPTR);
     ~Cover();
 
     int radius() const;

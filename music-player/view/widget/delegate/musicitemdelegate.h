@@ -50,7 +50,7 @@ public:
     };
     Q_ENUM(PlayStatus)
 
-    MusicItemDelegate(QWidget *parent = 0);
+    MusicItemDelegate(QWidget *parent = Q_NULLPTR);
     ~MusicItemDelegate();
 
 public:

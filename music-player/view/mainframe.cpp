@@ -69,7 +69,7 @@ const QString s_PropertyViewname = "viewname";
 const QString s_PropertyViewnameLyric = "lyric";
 static const int FooterHeight = 60;
 static const int AnimationDelay = 400; //ms
-static const int BlurRadius = 25; //ms
+static const int BlurRadius = 25;
 
 using namespace Dtk::Widget;
 
@@ -462,7 +462,6 @@ void MainFramePrivate::updateSize(QSize newSize)
     importWidget->setFixedSize(newSize);
 
     auto progressExtHeight = footer->progressExtentHeight();
-
     if (lyricWidget) {
         lyricWidget->resize(newSize);
         musicList->setFixedSize(newSize);
@@ -475,6 +474,7 @@ void MainFramePrivate::updateSize(QSize newSize)
 
     footer->raise();
     footer->resize(newSize.width(), FooterHeight + progressExtHeight);
+    footer->setFixedHeight(FooterHeight + progressExtHeight);
     footer->move(0, newSize.height() - FooterHeight - progressExtHeight);
 
     if (tips) {
@@ -485,8 +485,14 @@ void MainFramePrivate::updateSize(QSize newSize)
 void MainFramePrivate::updateViewname(const QString &vm)
 {
     Q_Q(MainFrame);
-    DUtil::TimerSingleShot(AnimationDelay / 2, [this, q, vm]() {
+    if (vm == "lyric") {
+        footer->setViewname(vm);
+    }
+    DUtil::TimerSingleShot(AnimationDelay / 2, [this, vm]() {
         updateTitlebarViewname(vm);
+    });
+    DUtil::TimerSingleShot(AnimationDelay * (q->height() - footer->height() + 24) / q->height(), [this, vm]() {
+        footer->setViewname(vm);
     });
 }
 
@@ -886,6 +892,15 @@ void MainFrame::binding(Presenter *presenter)
             presenter, &Presenter::onPlayModeChanged);
     connect(d->footer,  &Footer::toggleFavourite,
             presenter, &Presenter::onToggleFavourite);
+
+    connect(d->footer,  &Footer::progressHoverd,
+    this, [ = ](bool hover) {
+        if (hover) {
+            d->musicList->setContentsMargins(0, d->titlebar->height(), 0, FooterHeight + d->footer->progressExtentHeight());
+        } else {
+            d->musicList->setContentsMargins(0, d->titlebar->height(), 0, FooterHeight);
+        }
+    });
 
     connect(presenter, &Presenter::modeChanged,
             d->footer,  &Footer::onModeChange);

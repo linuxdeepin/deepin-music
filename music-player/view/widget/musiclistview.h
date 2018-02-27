@@ -30,7 +30,7 @@ class MusicListView : public ListView
 {
     Q_OBJECT
 public:
-    explicit MusicListView(QWidget *parent = 0);
+    explicit MusicListView(QWidget *parent = Q_NULLPTR);
     ~MusicListView();
 
     MetaPtr activingMeta() const;

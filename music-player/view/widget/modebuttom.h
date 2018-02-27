@@ -30,7 +30,7 @@ class ModeButton : public QPushButton
     Q_PROPERTY(int mode READ mode WRITE setMode NOTIFY modeChanged)
 
 public:
-    explicit ModeButton(QWidget *parent = 0);
+    explicit ModeButton(QWidget *parent = Q_NULLPTR);
 
     void setModeIcons(const QStringList &modeIcons);
     int mode() const;

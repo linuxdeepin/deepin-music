@@ -193,5 +193,7 @@
         <file>light/LyricView.theme</file>
         <file>dark/MusicItemStyleProxy.theme</file>
         <file>light/MusicItemStyleProxy.theme</file>
+        <file>light/Slider.theme</file>
+        <file>dark/Slider.theme</file>
     </qresource>
 </RCC>

@@ -27,8 +27,8 @@ class Label : public QLabel
 {
     Q_OBJECT
 public:
-    explicit Label(QWidget *parent = 0);
-    explicit Label(const QString &text, QWidget *parent = 0);
+    explicit Label(QWidget *parent = Q_NULLPTR);
+    explicit Label(const QString &text, QWidget *parent = Q_NULLPTR);
     ~Label();
 
 signals:

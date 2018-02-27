@@ -30,7 +30,7 @@ class InfoDialog : public Dtk::Widget::DAbstractDialog
     Q_OBJECT
 
 public:
-    explicit InfoDialog(QWidget *parent = 0);
+    explicit InfoDialog(QWidget *parent = Q_NULLPTR);
     ~InfoDialog();
 
     void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;

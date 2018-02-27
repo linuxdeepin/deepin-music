@@ -34,7 +34,7 @@ class LyricWidget : public QFrame
     Q_PROPERTY(QColor backgroundColor READ backgroundColor WRITE setBackgroundColor)
 
 public:
-    explicit LyricWidget(QWidget *parent = 0);
+    explicit LyricWidget(QWidget *parent = Q_NULLPTR);
     ~LyricWidget();
 
     void updateUI();

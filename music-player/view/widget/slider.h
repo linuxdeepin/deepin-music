@@ -29,14 +29,18 @@ class Slider : public QSlider
 {
     Q_OBJECT
 public:
-    explicit Slider(QWidget *parent = 0);
+    explicit Slider(QWidget *parent = Q_NULLPTR);
     explicit Slider(Qt::Orientation orientation, QWidget *parent = Q_NULLPTR);
 
     void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     void mouseMoveEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+    void enterEvent(QEvent *event) Q_DECL_OVERRIDE;
+    void leaveEvent(QEvent *event) Q_DECL_OVERRIDE;
     void wheelEvent(QWheelEvent *e) Q_DECL_OVERRIDE;
+
 signals:
+    void hoverd(bool);
     void valueAccpet(int value);
 
 public slots:

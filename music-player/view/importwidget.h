@@ -29,7 +29,7 @@ class ImportWidget : public QFrame
 {
     Q_OBJECT
 public:
-    explicit ImportWidget(QWidget *parent = 0);
+    explicit ImportWidget(QWidget *parent = Q_NULLPTR);
     ~ImportWidget();
 
 signals:

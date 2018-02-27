@@ -29,7 +29,7 @@ class TitlebarWidget : public QFrame
 {
     Q_OBJECT
 public:
-    explicit TitlebarWidget(QWidget *parent = 0);
+    explicit TitlebarWidget(QWidget *parent = Q_NULLPTR);
     ~TitlebarWidget();
 
     void exitSearch();

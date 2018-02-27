@@ -30,7 +30,7 @@ class MainFrame : public Dtk::Widget::DMainWindow
 {
     Q_OBJECT
 public:
-    explicit MainFrame(QWidget *parent = 0);
+    explicit MainFrame(QWidget *parent = Q_NULLPTR);
     ~MainFrame();
 
     void initUI(bool showLoading);

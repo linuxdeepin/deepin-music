@@ -33,7 +33,7 @@ class SearchMetaItem : public QFrame
 {
     Q_OBJECT
 public:
-    explicit SearchMetaItem(QWidget *parent = 0);
+    explicit SearchMetaItem(QWidget *parent = Q_NULLPTR);
     ~SearchMetaItem();
 
     void initUI(const DMusic::SearchMeta& meta);

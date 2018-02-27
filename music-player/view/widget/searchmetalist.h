@@ -29,7 +29,7 @@ class SearchMetaList : public QListWidget
 {
     Q_OBJECT
 public:
-    explicit SearchMetaList(QWidget *parent = 0);
+    explicit SearchMetaList(QWidget *parent = Q_NULLPTR);
     ~SearchMetaList();
 
 signals:

@@ -27,6 +27,6 @@ class LoadWidget : public QFrame
 {
     Q_OBJECT
 public:
-    explicit LoadWidget(QWidget *parent = 0);
+    explicit LoadWidget(QWidget *parent = Q_NULLPTR);
 };
 

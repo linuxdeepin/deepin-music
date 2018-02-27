@@ -28,7 +28,7 @@ class SearchEdit : public Dtk::Widget::DSearchEdit
 {
     Q_OBJECT
 public:
-    explicit SearchEdit(QWidget *parent = 0);
+    explicit SearchEdit(QWidget *parent = Q_NULLPTR);
 
 public:
     void setResultWidget(SearchResult *);

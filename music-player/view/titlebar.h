@@ -35,7 +35,7 @@ class Titlebar : public Dtk::Widget::DTitlebar
     Q_PROPERTY(QString viewname READ viewname WRITE setViewname NOTIFY viewnameChanged)
 
 public:
-    explicit Titlebar(QWidget *parent = 0);
+    explicit Titlebar(QWidget *parent = Q_NULLPTR);
     ~Titlebar();
 
     QString viewname() const;

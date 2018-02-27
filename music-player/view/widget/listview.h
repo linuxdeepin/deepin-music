@@ -29,7 +29,7 @@ class ListView : public QListView
 {
     Q_OBJECT
 public:
-    explicit ListView(QWidget *parent = 0);
+    explicit ListView(QWidget *parent = Q_NULLPTR);
     ~ListView();
 
 protected:

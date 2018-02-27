@@ -115,7 +115,7 @@ void FooterPrivate::installTipHint(QWidget *w, const QString &hintstr)
     Q_Q(Footer);
     // TODO: parent must be mainframe
     auto hintWidget = new Dtk::Widget::DToast(q->parentWidget());
-    hintWidget->setContentsMargins(0,0,0,0);
+    hintWidget->setContentsMargins(0, 0, 0, 0);
     hintWidget->setText(hintstr);
     hintWidget->setFixedHeight(32);
     installHint(w, hintWidget);
@@ -142,6 +142,9 @@ void FooterPrivate::initConnection()
         auto range = progress->maximum() - progress->minimum();
         Q_ASSERT(range != 0);
         Q_EMIT q->changeProgress(value, range);
+    });
+    q->connect(progress, &Slider::hoverd, q, [ = ](bool value) {
+        Q_EMIT q->progressHoverd(value);
     });
 
     q->connect(btPlay, &QPushButton::released, q, [ = ]() {
@@ -205,7 +208,8 @@ Footer::Footer(QWidget *parent) :
 
     d->progress = new Slider(Qt::Horizontal);
     d->progress->setObjectName("FooterProgress");
-    d->progress->setFixedHeight(12);
+    d->progress->setFixedHeight(6);
+//    d->progress->setFixedHeight(30);
     d->progress->setMinimum(0);
     d->progress->setMaximum(1000);
     d->progress->setValue(0);
@@ -345,9 +349,14 @@ Footer::Footer(QWidget *parent) :
     layout->addWidget(actWidget, 0, Qt::AlignRight | Qt::AlignVCenter);
 
     mainVBoxlayout->addWidget(d->progress);
-    mainVBoxlayout->addSpacing(4);
-    mainVBoxlayout->addLayout(layout);
-    mainVBoxlayout->addSpacing(9);
+
+    auto controlFrame = new QFrame;
+    controlFrame->setObjectName("FooterControlFrame");
+    controlFrame->setFixedHeight(60 - d->progress->height() / 2);
+    controlFrame->setLayout(layout);
+
+    mainVBoxlayout->addStretch();
+    mainVBoxlayout->addWidget(controlFrame);
 
     d->title->hide();
     d->artist->hide();
@@ -388,7 +397,7 @@ Footer::~Footer()
 int Footer::progressExtentHeight() const
 {
     Q_D(const Footer);
-    return (d->progress->height() - 2) / 2;
+    return (d->progress->height()) / 2;
 }
 
 void Footer::enableControl(bool enable)
@@ -418,12 +427,18 @@ void Footer::initData(PlaylistPtr current, int mode)
     d->btPlayMode->setMode(mode);
 }
 
+void Footer::setViewname(const QString &viewname)
+{
+    Q_D(Footer);
+    setProperty("viewname", viewname);
+    d->progress->setProperty("viewname", viewname);
+}
+
 QString Footer::defaultCover() const
 {
     Q_D(const Footer);
     return d->defaultCover;
 }
-
 
 void Footer::mousePressEvent(QMouseEvent *event)
 {

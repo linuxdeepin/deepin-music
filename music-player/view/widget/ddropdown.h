@@ -30,7 +30,7 @@ class DDropdown : public QFrame
     Q_OBJECT
     Q_PROPERTY(QString status READ status WRITE setStatus NOTIFY statusChanged)
 public:
-    explicit DDropdown(QWidget *parent = 0);
+    explicit DDropdown(QWidget *parent = Q_NULLPTR);
     ~DDropdown();
 
     QString status() const;
