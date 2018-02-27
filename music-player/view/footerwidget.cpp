@@ -115,7 +115,7 @@ void FooterPrivate::installTipHint(QWidget *w, const QString &hintstr)
     Q_Q(Footer);
     // TODO: parent must be mainframe
     auto hintWidget = new Dtk::Widget::DToast(q->parentWidget());
-    hintWidget->setContentsMargins(0, 0, 0, 0);
+    hintWidget->layout()->setContentsMargins(10, 0, 10, 0);
     hintWidget->setText(hintstr);
     hintWidget->setFixedHeight(32);
     installHint(w, hintWidget);

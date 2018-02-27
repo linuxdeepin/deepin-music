@@ -45,15 +45,17 @@ void Goose::get(const QUrl &url)
     m_geese->prepare(request);
     auto reply = m_geese->get(request);
 
-    connect(reply, &QNetworkReply::finished,
+    reply->connect(reply, &QNetworkReply::finished,
     this, [ = ]() {
         Q_EMIT arrive(QNetworkReply::NoError, reply->readAll());
+        reply->deleteLater();
     });
 
-    connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error),
-    this, [ = ](QNetworkReply::NetworkError error) {
+    reply->connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error),
+    reply, [ = ](QNetworkReply::NetworkError error) {
         qWarning() << "Goose: get" << reply->errorString();
         Q_EMIT arrive(error, reply->readAll());
+        reply->deleteLater();
     });
 
 }
@@ -71,12 +73,14 @@ void Goose::post(const QUrl &url, const QByteArray &data)
 //        auto contentType = reply->header(QNetworkRequest::ContentTypeHeader).toString();
 //        qDebug() << mdb.mimeTypeForName(contentType);
         Q_EMIT arrive(QNetworkReply::NoError, reply->readAll());
+        reply->deleteLater();
     });
 
     connect(reply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error),
     this, [ = ](QNetworkReply::NetworkError error) {
         qWarning() << "Goose: get" << reply->errorString();
         Q_EMIT arrive(error, reply->readAll());
+        reply->deleteLater();
     });
 }
 
