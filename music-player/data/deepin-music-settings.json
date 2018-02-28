@@ -139,31 +139,31 @@
                         "key": "play_pause",
                         "name": "Play/Pause",
                         "type": "shortcut",
-                        "default": ["67108864", "80"]
+                        "default": "Ctrl+P"
                     },
                     {
                         "key": "previous",
                         "name": "Previous",
                         "type": "shortcut",
-                        "default": ["67108864", "16777234"]
+                        "default": "Ctrl+Left"
                     },
                     {
                         "key": "next",
                         "name": "Next",
                         "type": "shortcut",
-                        "default": ["67108864", "16777236"]
+                        "default": "Ctrl+Right"
                     },
                     {
                         "key": "volume_up",
                         "name": "Volume up",
                         "type": "shortcut",
-                        "default": ["67108864", "16777235"]
+                        "default": "Ctrl+Up"
                     },
                     {
                         "key": "volume_down",
                         "name": "Volume down",
                         "type": "shortcut",
-                        "default": ["67108864", "16777237"]
+                        "default":"Ctrl+Down"
                     }
                 ]
             }]

@@ -157,12 +157,63 @@ MusicApp::~MusicApp()
 {
 }
 
+void dumpGeometry(const QByteArray &geometry)
+{
+    if (geometry.size() < 4) {
+        return;
+    }
+    QDataStream stream(geometry);
+    stream.setVersion(QDataStream::Qt_4_0);
+
+    const quint32 magicNumber = 0x1D9D0CB;
+    quint32 storedMagicNumber;
+    stream >> storedMagicNumber;
+    if (storedMagicNumber != magicNumber) {
+        return;
+    }
+
+    const quint16 currentMajorVersion = 2;
+    quint16 majorVersion = 0;
+    quint16 minorVersion = 0;
+
+    stream >> majorVersion >> minorVersion;
+
+    if (majorVersion > currentMajorVersion) {
+        return;
+    }
+    // (Allow all minor versions.)
+
+    QRect restoredFrameGeometry;
+    QRect restoredNormalGeometry;
+    qint32 restoredScreenNumber;
+    quint8 maximized;
+    quint8 fullScreen;
+    qint32 restoredScreenWidth = 0;
+
+    stream >> restoredFrameGeometry
+           >> restoredNormalGeometry
+           >> restoredScreenNumber
+           >> maximized
+           >> fullScreen;
+
+    qDebug() << "restore geometry:" << restoredFrameGeometry
+             << restoredNormalGeometry
+             << restoredScreenNumber
+             << maximized
+             << fullScreen;
+
+    if (majorVersion > 1) {
+        stream >> restoredScreenWidth;
+    }
+}
+
 void MusicApp::show()
 {
     Q_D(MusicApp);
     auto geometry = MusicSettings::value("base.play.geometry").toByteArray();
     auto state = MusicSettings::value("base.play.state").toInt();
-    qDebug() << "restore state:" << state << "gometry:" << geometry;
+    qDebug() << "restore state:" << state;
+    dumpGeometry(geometry);
 
     if (geometry.isEmpty()) {
         d->playerFrame->resize(QSize(1070, 680));

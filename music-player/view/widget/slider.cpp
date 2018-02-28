@@ -23,33 +23,75 @@
 
 #include <QDebug>
 
-#include <QTime>
 #include <QMouseEvent>
+#include <QStyle>
+#include <QVariantAnimation>
 
 #include <DThemeManager>
 
 DWIDGET_USE_NAMESPACE
 
-static const int s_valueUpdateDelay = 1500;
-
-Slider::Slider(QWidget *parent) : QSlider(parent)
+class SliderPrivate
 {
-    DThemeManager::registerWidget(this, QStringList({"hover", "viewname"}));
-//    setMouseTracking(true);
-//    setTracking(false);
+public:
+    SliderPrivate(Slider *parent) : q_ptr(parent) {}
+
+    QVariantAnimation *currentAnimation = Q_NULLPTR;
+    QString themeTemplate;
+
+    QString updateQSS(qreal value);
+
+    Slider *q_ptr;
+    Q_DECLARE_PUBLIC(Slider)
+};
+
+Slider::Slider(Qt::Orientation orientation, QWidget *parent) :
+    QSlider(orientation, parent), dd_ptr(new SliderPrivate(this))
+{
+    Q_D(Slider);
+
+    d->themeTemplate = DThemeManager::instance()->getQssForWidget(this);
+
+    connect(DThemeManager::instance(), &DThemeManager::themeChanged,
+    this, [ = ]() {
+        d->themeTemplate = DThemeManager::instance()->getQssForWidget(this);
+    });
+
+    connect(this, &Slider::hoverd, this, [ = ](bool hovered) {
+        if (d->currentAnimation) {
+            d->currentAnimation->stop();
+            d->currentAnimation->deleteLater();
+            d->currentAnimation = Q_NULLPTR;
+        }
+
+        d->currentAnimation = new QVariantAnimation;
+        d->currentAnimation->setStartValue(hovered ? 0.0 : 1.0);
+        d->currentAnimation->setEndValue(hovered ? 1.0 : 0.0);
+        d->currentAnimation->setDuration(150);
+
+        connect(d->currentAnimation, &QVariantAnimation::valueChanged,
+        this, [ = ](const QVariant & value) {
+            setStyleSheet(d->updateQSS(value.toReal()));
+
+            style()->unpolish(this);
+            style()->polish(this);
+        });
+        d->currentAnimation->start();
+    });
 }
 
-Slider::Slider(Qt::Orientation orientation, QWidget *parent): QSlider(orientation, parent)
+Slider::~Slider()
 {
-    DThemeManager::registerWidget(this, QStringList({"hover", "viewname"}));
-//    setMouseTracking(true);
-//    setTracking(false);
-    m_delaySetValueTimer.setInterval(s_valueUpdateDelay);
-//    connect(&m_delaySetValueTimer, &QTimer::timeout,
-//    this, [ = ]() {
-//        m_delaySetValueTimer.stop();
-//        this->blockSignals(false);
-//    });
+
+}
+
+void Slider::resizeEvent(QResizeEvent *event)
+{
+    Q_D(Slider);
+    QSlider::resizeEvent(event);
+    if (!d->currentAnimation) {
+        setStyleSheet(d->updateQSS(0));
+    }
 }
 
 void Slider::mouseReleaseEvent(QMouseEvent *event)
@@ -71,8 +113,6 @@ void Slider::mousePressEvent(QMouseEvent *event)
         }
     }
     this->blockSignals(true);
-    // Block QSlider event;
-//    QSlider::mousePressEvent(event);
 }
 
 void Slider::mouseMoveEvent(QMouseEvent *event)
@@ -85,10 +125,7 @@ void Slider::mouseMoveEvent(QMouseEvent *event)
     }
 
     auto value = (event->x() - this->x()) * valueRange / this->width();
-//    m_delaySetValueTimer.stop();
-//    m_delaySetValueTimer.start();
     setSliderPosition(value);
-    QSlider::mouseMoveEvent(event);
 }
 
 void Slider::enterEvent(QEvent *event)
@@ -108,4 +145,24 @@ void Slider::leaveEvent(QEvent *event)
 void Slider::wheelEvent(QWheelEvent *e)
 {
     e->accept();
+}
+
+QString SliderPrivate::updateQSS(qreal value)
+{
+    Q_Q(Slider);
+    auto delta = 0.00001;
+    qreal h = q->height();
+    qreal realH = h * (1.0 + value) / 2.0 ;
+    Q_EMIT q->realHeightChanged(realH);
+    auto v2 = (h - realH) / h;
+    auto v1 = v2 - delta;
+    v1 = (v1 < 0) ? 0 : v1;
+    auto v4 = (h - 1.0) / h;
+    auto v3 = v4 - delta;
+    auto v6 = (h - realH + 1.0) / h;
+    auto v5 = v6 - delta;
+    auto v7 = v4 - delta;
+//    qDebug() << themeTemplate.arg(v1).arg(v2).arg(v3).arg(v4).arg(v5).arg(v6).arg(v7);
+    return themeTemplate.arg(v1).arg(v2).arg(v3).arg(v4).arg(v5).arg(v6).arg(v7);
+
 }

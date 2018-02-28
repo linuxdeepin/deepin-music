@@ -143,8 +143,8 @@ void FooterPrivate::initConnection()
         Q_ASSERT(range != 0);
         Q_EMIT q->changeProgress(value, range);
     });
-    q->connect(progress, &Slider::hoverd, q, [ = ](bool value) {
-        Q_EMIT q->progressHoverd(value);
+    q->connect(progress, &Slider::realHeightChanged, q, [ = ](qreal value) {
+        Q_EMIT q->progressRealHeightChanged(value);
     });
 
     q->connect(btPlay, &QPushButton::released, q, [ = ]() {
@@ -209,7 +209,6 @@ Footer::Footer(QWidget *parent) :
     d->progress = new Slider(Qt::Horizontal);
     d->progress->setObjectName("FooterProgress");
     d->progress->setFixedHeight(6);
-//    d->progress->setFixedHeight(30);
     d->progress->setMinimum(0);
     d->progress->setMaximum(1000);
     d->progress->setValue(0);

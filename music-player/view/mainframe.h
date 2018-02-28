@@ -31,7 +31,7 @@ class MainFrame : public Dtk::Widget::DMainWindow
     Q_OBJECT
 public:
     explicit MainFrame(QWidget *parent = Q_NULLPTR);
-    ~MainFrame();
+    ~MainFrame() Q_DECL_OVERRIDE;
 
     void initUI(bool showLoading);
     void postInitUI();

@@ -54,7 +54,6 @@ SOURCES += \
     view/widget/listview.cpp \
     view/mainframe.cpp \
     view/importwidget.cpp \
-    view/titlebar.cpp \
     view/musiclistwidget.cpp \
     view/playlistwidget.cpp \
     musicapp.cpp \
@@ -97,7 +96,6 @@ HEADERS += \
     view/widget/filter.h \
     core/player.h \
     presenter/presenter_p.h \
-    view/titlebar.h \
     view/widget/titlebarwidget.h \
     view/widget/ddropdown.h \
     view/widget/searchmetalist.h \

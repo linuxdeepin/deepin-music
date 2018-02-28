@@ -40,6 +40,7 @@
 #include <DApplication>
 #include <DThemeManager>
 #include <DToast>
+#include <DTitlebar>
 
 #include "../presenter/presenter.h"
 #include "../core/metasearchservice.h"
@@ -53,7 +54,6 @@
 #include "widget/closeconfirmdialog.h"
 #include "helper/widgethellper.h"
 
-#include "titlebar.h"
 #include "importwidget.h"
 #include "musiclistwidget.h"
 #include "playlistwidget.h"
@@ -521,7 +521,7 @@ void MainFramePrivate::updateTitlebarViewname(const QString &vm)
 void MainFramePrivate::overrideTitlebarStyle()
 {
     titlebar->setObjectName("Titlebar");
-    DThemeManager::instance()->registerWidget(titlebar, "Titlebar", QStringList({"viewname"}));
+    DThemeManager::registerWidget(titlebar, "Titlebar", QStringList({"viewname"}));
 
     QStringList objNames;
     objNames  << "DTitlebarDWindowMinButton"
@@ -534,8 +534,7 @@ void MainFramePrivate::overrideTitlebarStyle()
         if (!titlebarBt) {
             continue;
         }
-        titlebarBt->setProperty("_d_QSSFilename", "Titlebar");
-        DThemeManager::instance()->registerWidget(titlebarBt, QStringList({"viewname"}));
+        DThemeManager::registerWidget(titlebarBt, "Titlebar", QStringList({"viewname"}));
     }
 }
 
@@ -893,13 +892,12 @@ void MainFrame::binding(Presenter *presenter)
     connect(d->footer,  &Footer::toggleFavourite,
             presenter, &Presenter::onToggleFavourite);
 
-    connect(d->footer,  &Footer::progressHoverd,
-    this, [ = ](bool hover) {
-        if (hover) {
-            d->musicList->setContentsMargins(0, d->titlebar->height(), 0, FooterHeight + d->footer->progressExtentHeight());
-        } else {
-            d->musicList->setContentsMargins(0, d->titlebar->height(), 0, FooterHeight);
-        }
+    connect(d->footer,  &Footer::progressRealHeightChanged,
+    this, [ = ](qreal realHeight) {
+        int margin = FooterHeight
+                     - d->footer->progressExtentHeight()
+                     + static_cast<int>(realHeight);
+        d->musicList->setContentsMargins(0, d->titlebar->height(), 0, margin);
     });
 
     connect(presenter, &Presenter::modeChanged,

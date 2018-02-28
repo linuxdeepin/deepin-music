@@ -63,7 +63,7 @@ signals:
     void modeChanged(int);
     void toggleFavourite(const MetaPtr meta);
 
-    void progressHoverd(bool);
+    void progressRealHeightChanged(qreal height);
     void mouseMoving(Qt::MouseButton botton);
 
 public slots:

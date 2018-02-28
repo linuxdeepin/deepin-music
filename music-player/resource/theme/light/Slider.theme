@@ -1,3 +1,8 @@
+/*
+  config backgroud
+  %1: margin start
+  %2: real background start
+*/
 Slider::groove:horizontal {
   background: transparent;
   position: absolute;
@@ -5,17 +10,10 @@ Slider::groove:horizontal {
   right: 0px;
   background-color: qlineargradient(x1: 0 y1: 0, x2: 0 y2: 1,
     stop: 0 rgba(0, 0, 0, 0),
-    stop: 0.49999 rgba(0, 0, 0, 0),
-    stop: 0.50000 rgba(0, 0, 0, 0.6),
+    stop: %1 rgba(0, 0, 0, 0),
+    stop: %2 rgba(0, 0, 0, 0.6),
     stop: 1 rgba(0, 0, 0, 0.6)
   );
-}
-Slider::groove:horizontal[hover=true] {
-  background: transparent;
-  position: absolute;
-  left: 0px;
-  right: 0px;
-  background-color: rgba(0, 0, 0, 0.6);
 }
 Slider::groove:horizontal[viewname="lyric"] {
   background: transparent;
@@ -24,65 +22,50 @@ Slider::groove:horizontal[viewname="lyric"] {
   right: 0px;
   background-color: qlineargradient(x1: 0 y1: 0, x2: 0 y2: 1,
     stop: 0 rgba(0, 0, 0, 0.0),
-    stop: 0.49999 rgba(0, 0, 0, 0.0),
-    stop: 0.50000 rgba(0, 0, 0, 0.6),
+    stop: %1 rgba(0, 0, 0, 0.0),
+    stop: %2 rgba(0, 0, 0, 0.6),
     stop: 1 rgba(0, 0, 0, 0.6)
   );
 }
-Slider::groove:horizontal[hover=true][viewname="lyric"] {
-  background: transparent;
-  position: absolute;
-  left: 0px;
-  right: 0px;
-  background-color: rgba(0, 0, 0, 0.6);
-}
 
-
-Slider::handle:horizontal {
-  background: transparent;
-  margin: 5px -5px;
-}
-
-Slider::add-page:horizontal {
-  background: transparent;
-  background-color: qlineargradient(x1: 0 y1: 0, x2: 0 y2: 1,
-    stop: 0 rgba(0, 0, 0, 0.0),
-    stop: 0.66666 rgba(0, 0, 0, 0.0),
-    stop: 0.66667 rgba(255, 255, 255, 0.08),
-    stop: 0.83333 rgba(255, 255, 255, 0.08),
-    stop: 0.83334 rgba(0, 0, 0, 0.0),
-    stop: 1 rgba(0, 0, 0, 0.0)
-  );
-}
-Slider::add-page:horizontal[hover=true] {
-  background: transparent;
-  background-color: qlineargradient(x1: 0 y1: 0, x2: 0 y2: 1,
-    stop: 0 rgba(0, 0, 0, 0.0),
-    stop: 0.33333 rgba(0, 0, 0, 0.0),
-    stop: 0.33334 rgba(255, 255, 255, 0.08),
-    stop: 0.66666 rgba(255, 255, 255, 0.08),
-    stop: 0.66667 rgba(0, 0, 0, 0.0),
-    stop: 1 rgba(0, 0, 0, 0.0)
-  );
-}
-
+/*
+  config used
+  %3: progress used end;
+  %4: bottom start, always 1px;
+*/
 Slider::sub-page:horizontal {
   background: #2ca7f8;
   background-color: qlineargradient(x1: 0 y1: 0, x2: 0 y2: 1,
     stop: 0 rgba(0, 0, 0, 0.0),
-    stop: 0.49999 rgba(0, 0, 0, 0.0),
-    stop: 0.50000 #2ca7f8, stop: 0.50000 #2ca7f8,
-    stop: 0.83333 #2ca7f8, stop: 0.58333 #2ca7f8,
-    stop: 0.83334 rgba(0, 0, 0, 0.3),
+    stop: %1 rgba(0, 0, 0, 0.0),
+    stop: %2 #2ca7f8,
+    stop: %3 #2ca7f8,
+    stop: %4 rgba(0, 0, 0, 0.3),
     stop: 1 rgba(0, 0, 0, 0.3)
   );
 }
-Slider::sub-page:horizontal[hover=true] {
-  background: #2ca7f8;
+
+/*
+  config remind
+  %5: top end, always 1px;
+  %6: remind center start;
+  %7: remind center end;
+*/
+Slider::add-page:horizontal {
+  background: transparent;
   background-color: qlineargradient(x1: 0 y1: 0, x2: 0 y2: 1,
-    stop: 0.00000 #2ca7f8, stop: 0.50000 #2ca7f8,
-    stop: 0.83333 #2ca7f8, stop: 0.58333 #2ca7f8,
-    stop: 0.83334 rgba(0, 0, 0, 0.3),
-    stop: 1 rgba(0, 0, 0, 0.3)
+    stop: 0 rgba(0, 0, 0, 0.0),
+    stop: %1 rgba(0, 0, 0, 0.0),
+    stop: %2 rgba(0, 0, 0, 0.3),
+    stop: %5 rgba(0, 0, 0, 0.3),
+    stop: %6 rgba(255, 255, 255, 0.1),
+    stop: %7 rgba(255, 255, 255, 0.1),
+    stop: %4 rgba(0, 0, 0, 0),
+    stop: 1 rgba(0, 0, 0, 0)
   );
+}
+
+Slider::handle:horizontal {
+  background: transparent;
+  margin: 5px -5px;
 }

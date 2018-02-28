@@ -1,6 +1,7 @@
 #LyricWidget {
   qproperty-backgroundColor: rgba(0, 0, 0, 50%);
   qproperty-defaultCover: ":/common/image/cover_max.svg";
+  background-color: rgba(0, 0, 0, 50%);
 }
 
 #LyricCover {
