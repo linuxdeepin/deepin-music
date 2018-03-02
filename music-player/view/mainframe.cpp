@@ -608,15 +608,18 @@ void MainFrame::postInitUI()
     connect(trayIcon, &QSystemTrayIcon::activated,
     this, [ = ](QSystemTrayIcon::ActivationReason reason) {
         if (QSystemTrayIcon::Trigger == reason) {
-            if (isMinimized()) {
-                showNormal();
+            if (isVisible()) {
+                if (isMinimized()) {
+                    showNormal();
+                    // when window flags changed, should call hide() and show()
+                    hide();
+                    show();
+                } else {
+                    showMinimized();
+                }
             } else {
-                showMinimized();
+                showNormal();
             }
-
-            // when window flags changed, should can hide and show
-            hide();
-            show();
         }
     });
 }
@@ -1131,12 +1134,8 @@ void MainFrame::closeEvent(QCloseEvent *event)
         MusicSettings::setOption("base.play.state", int(windowState()));
         MusicSettings::setOption("base.play.geometry", saveGeometry());
         DMainWindow::closeEvent(event);
-    } else {
-        event->ignore();
-        showMinimized();
-        hide();
-        show();
     }
+    DMainWindow::closeEvent(event);
 }
 
 void MainFrame::paintEvent(QPaintEvent *e)

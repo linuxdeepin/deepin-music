@@ -157,8 +157,6 @@ Presenter::~Presenter()
 void Presenter::handleQuit()
 {
     Q_D(Presenter);
-    qDebug() << "handleQuit";
-
     d->settings->setOption("base.play.last_position", d->lastPlayPosition);
     d->player->stop();
 }
