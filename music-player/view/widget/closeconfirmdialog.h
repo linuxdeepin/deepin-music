@@ -30,6 +30,11 @@ class CloseConfirmDialog : public Dtk::Widget::DDialog
 {
     Q_OBJECT
 public:
+    enum CloseAction{
+        MiniOnClose = 0,
+        QuitOnClose = 1,
+    };
+
     explicit CloseConfirmDialog(QWidget *parent = Q_NULLPTR);
     ~CloseConfirmDialog();
 

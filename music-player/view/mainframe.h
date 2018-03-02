@@ -60,8 +60,8 @@ protected:
     virtual void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
 
 private:
-    QScopedPointer<MainFramePrivate> d_ptr;
-    Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), MainFrame)
+    QScopedPointer<MainFramePrivate> dd_ptr;
+    Q_DECLARE_PRIVATE_D(qGetPtrHelper(dd_ptr), MainFrame)
 };
 
 extern const QString s_PropertyViewname;

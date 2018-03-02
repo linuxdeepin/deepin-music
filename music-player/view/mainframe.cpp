@@ -41,6 +41,7 @@
 #include <DThemeManager>
 #include <DToast>
 #include <DTitlebar>
+#include <dimagebutton.h>
 
 #include "../presenter/presenter.h"
 #include "../core/metasearchservice.h"
@@ -545,7 +546,7 @@ void MainFramePrivate::showInfoDialog(const MetaPtr meta)
 }
 
 MainFrame::MainFrame(QWidget *parent) :
-    DMainWindow(parent), d_ptr(new MainFramePrivate(this))
+    DMainWindow(parent), dd_ptr(new MainFramePrivate(this))
 {
     setObjectName("MainFrame");
     DThemeManager::instance()->registerWidget(this, QStringList() << s_PropertyViewname);
@@ -608,14 +609,14 @@ void MainFrame::postInitUI()
     this, [ = ](QSystemTrayIcon::ActivationReason reason) {
         if (QSystemTrayIcon::Trigger == reason) {
             if (isMinimized()) {
-                // FIXME: why??? showNormal not work if do not hide and show
-                setVisible(false);
-                setVisible(true);
-
                 showNormal();
             } else {
                 showMinimized();
             }
+
+            // when window flags changed, should can hide and show
+            hide();
+            show();
         }
     });
 }
@@ -1106,21 +1107,36 @@ void MainFrame::closeEvent(QCloseEvent *event)
     auto askCloseAction = MusicSettings::value("base.close.ask_close_action").toBool();
     if (askCloseAction) {
         CloseConfirmDialog ccd(this);
-        auto ret = ccd.exec();
-        if (0 == ret) {
+        // fix close style
+        auto titlebarBt = titlebar()->findChild<QWidget *>("DTitlebarDWindowCloseButton");
+        auto closeBt = qobject_cast<DImageButton *>(titlebarBt);
+        if (closeBt) {
+            closeBt->setState(DImageButton::Normal);
+        }
+
+        auto clickedButtonIndex = ccd.exec();
+        qDebug() << "clickedButtonIndex:" << clickedButtonIndex;
+        // 1 is confirm button
+        if (1 != clickedButtonIndex) {
+            // fix button style
             event->ignore();
             return;
-        } else {
-            qDebug() << "closeAction" << MusicSettings::value("base.close.close_action");
-            MusicSettings::setOption("base.close.ask_close_action", !ccd.isRemember());
-            MusicSettings::setOption("base.close.close_action", ccd.closeAction());
-            qDebug() << "closeAction" << MusicSettings::value("base.close.close_action");
         }
+        MusicSettings::setOption("base.close.ask_close_action", !ccd.isRemember());
+        MusicSettings::setOption("base.close.close_action", ccd.closeAction());
     }
 
-    MusicSettings::setOption("base.play.state", int(windowState()));
-    MusicSettings::setOption("base.play.geometry", saveGeometry());
-    DMainWindow::closeEvent(event);
+    auto closeAction = MusicSettings::value("base.close.close_action").toInt();
+    if (CloseConfirmDialog::QuitOnClose == closeAction) {
+        MusicSettings::setOption("base.play.state", int(windowState()));
+        MusicSettings::setOption("base.play.geometry", saveGeometry());
+        DMainWindow::closeEvent(event);
+    } else {
+        event->ignore();
+        showMinimized();
+        hide();
+        show();
+    }
 }
 
 void MainFrame::paintEvent(QPaintEvent *e)
