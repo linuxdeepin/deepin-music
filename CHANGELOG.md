@@ -1,3 +1,32 @@
+<a name="3.1.8"></a>
+## 3.1.8 (2018-03-06)
+
+
+#### Features
+
+*   support sliber animation ([5088cd98](https://github.com/linuxdeepin/deepin-music/commit/5088cd9848fbda3ecaafa0a6823b398de6937d53))
+*   auto resize progress ([b4869ba9](https://github.com/linuxdeepin/deepin-music/commit/b4869ba99dff452a8c1cf90e0b508e58601e5a43))
+*   hide custom sort from menu ([ddc4b609](https://github.com/linuxdeepin/deepin-music/commit/ddc4b60934f2692eb9e3870f59f2726bd8bc1a05))
+*   keep sound hint when clicked ([d1a7c9ad](https://github.com/linuxdeepin/deepin-music/commit/d1a7c9adacd8ce1f23c6c58a84d1ecc7c15198fa))
+*   sync progress on close ([3a0ff320](https://github.com/linuxdeepin/deepin-music/commit/3a0ff320a014e81b5eedec65c3a32b359fcd6f1c))
+*   use DThemeManger ([f3e9659e](https://github.com/linuxdeepin/deepin-music/commit/f3e9659e8c4997c16314e9239eb6dcdefeb14612))
+*   add manual id ([d21100f9](https://github.com/linuxdeepin/deepin-music/commit/d21100f941a4e11d3ff5b3fda4e0e44e9d303784))
+*   add VERSION configure option to define app version. ([ae4c1fed](https://github.com/linuxdeepin/deepin-music/commit/ae4c1fed06ae0cd8ea1c681ed022cd2b333d0540))
+
+#### Bug Fixes
+
+*   hide dock icon when close to minitray ([18459921](https://github.com/linuxdeepin/deepin-music/commit/184599216faa3c9945cf0f1ed0792f9ab9c76b82))
+*   try hide/show to make windowFlags change effect ([7ce74ffd](https://github.com/linuxdeepin/deepin-music/commit/7ce74ffd6b14527805d8c68d2b9035e50b987e69))
+*   network changed reset cover data ([2fb24abb](https://github.com/linuxdeepin/deepin-music/commit/2fb24abb333d32d230d402708e142064cae43306))
+*   qss not work for CloseConfirmDialog ([76c10c2c](https://github.com/linuxdeepin/deepin-music/commit/76c10c2ce04511fb51069a4e7537b31a9b627067))
+*   add missing depends libqt5sql5-sqlite libqt5multimedia5-plugins ([c338d86d](https://github.com/linuxdeepin/deepin-music/commit/c338d86df98236362b77d34f9a87a60812d46c9b))
+*   add missing depends ([972ea100](https://github.com/linuxdeepin/deepin-music/commit/972ea10011f361faa32ef6ccc105b0bd36f5dd66))
+*   add depends gstreamer1.0-plugins-ugly ([b0a28734](https://github.com/linuxdeepin/deepin-music/commit/b0a287348638831e7c0d4afd728f5663068c90bc))
+*   Adapt lintian ([fe242955](https://github.com/linuxdeepin/deepin-music/commit/fe2429559e7c95e17e6c42f9eb8b38a89723744c))
+*   work for qss repaint in hidpi ([49f5b1ba](https://github.com/linuxdeepin/deepin-music/commit/49f5b1ba3c6023b564cf721e8d8d87203c48b285))
+
+
+
 <a name="3.1.7.2"></a>
 ## 3.1.7.2 (2017-11-23)
 
