@@ -1,3 +1,14 @@
+<a name="3.1.8.1"></a>
+## 3.1.8.1 (2018-03-12)
+
+
+#### Bug Fixes
+
+*   add missing depends gstreamer1.0-fluendo-mp3 ([5065d227](https://github.com/linuxdeepin/deepin-music/commit/5065d227292d882926d5cfbd28ae1c31cbcbb6f9))
+*   shortcut not work ([145883f9](https://github.com/linuxdeepin/deepin-music/commit/145883f93a3f3d462ade584bfbeda69f5154029e))
+
+
+
 <a name="3.1.8"></a>
 ## 3.1.8 (2018-03-06)
 
