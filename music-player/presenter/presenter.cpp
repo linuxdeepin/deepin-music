@@ -134,6 +134,16 @@ void PresenterPrivate::initBackend()
     });
 }
 
+void PresenterPrivate::notifyMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
+{
+    Q_Q(Presenter);
+
+    MetaPtr favInfo(meta);
+    favInfo->favourite = playlistMgr->playlist(FavMusicListID)->contains(meta);
+//    qDebug() << FavMusicListID << meta->title << favInfo->favourite;
+    Q_EMIT q->musicPlayed(playlist, favInfo);
+}
+
 Presenter::Presenter(QObject *parent)
     : QObject(parent), d_ptr(new PresenterPrivate(this))
 {
@@ -245,10 +255,7 @@ void Presenter::prepareData()
     this, [ = ](PlaylistPtr playlist, const MetaPtr meta) {
         d->settings->setOption("base.play.last_meta", meta->hash);
         d->settings->setOption("base.play.last_playlist", playlist->id());
-
-        MetaPtr favInfo(meta);
-        favInfo->favourite = d->playlistMgr->playlist(FavMusicListID)->contains(meta);
-        Q_EMIT this->musicPlayed(playlist, favInfo);
+        d->notifyMusicPlayed(playlist, meta);
         d->requestMetaSearch(meta);
     });
 
@@ -360,7 +367,7 @@ void Presenter::postAction()
             d->lastPlayPosition = position;
             onCurrentPlaylistChanged(lastPlaylist);
             Q_EMIT locateMusic(lastPlaylist, lastMeta);
-            Q_EMIT musicPlayed(lastPlaylist, lastMeta);
+            d->notifyMusicPlayed(lastPlaylist, lastMeta);
 
             d->player->setPlayOnLoaded(false);
             d->player->setFadeInOut(false);
@@ -816,7 +823,7 @@ void Presenter::onMusicResume(PlaylistPtr playlist, const MetaPtr info)
 {
     Q_D(Presenter);
     Q_EMIT d->resume(playlist, info);
-    Q_EMIT this->musicPlayed(playlist, info);
+    d->notifyMusicPlayed(playlist, info);
 }
 
 void Presenter::onMusicStop(PlaylistPtr playlist, const MetaPtr meta)

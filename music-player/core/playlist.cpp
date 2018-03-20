@@ -92,6 +92,7 @@ bool Playlist::isLast(const MetaPtr meta) const
 
 bool Playlist::contains(const MetaPtr meta) const
 {
+//    qDebug() << meta->hash << playlistMeta.metas;
     return !meta.isNull() && playlistMeta.metas.contains(meta->hash);
 }
 
@@ -390,7 +391,7 @@ bool lessThanTitile(const MetaPtr v1, const MetaPtr v2)
         return true;
     }
 //    qDebug() << v1->title << v2->title << collator.compare(v1->title , v2->title);
-    return lessCompareByString(v1->title , v2->title);
+    return lessCompareByString(v1->title, v2->title);
 }
 
 bool moreThanTitile(const MetaPtr v1, const MetaPtr v2)
@@ -408,7 +409,7 @@ bool lessThanArtist(const MetaPtr v1, const MetaPtr v2)
     if (v2->artist.isEmpty()) {
         return true;
     }
-    return lessCompareByString(v1->artist , v2->artist);
+    return lessCompareByString(v1->artist, v2->artist);
 }
 bool moreThanArtist(const MetaPtr v1, const MetaPtr v2)
 {
@@ -426,7 +427,7 @@ bool lessThanAblum(const MetaPtr v1, const MetaPtr v2)
     if (v2->album.isEmpty()) {
         return true;
     }
-    return lessCompareByString(v1->album , v2->album);
+    return lessCompareByString(v1->album, v2->album);
 }
 bool moreThanAblum(const MetaPtr v1, const MetaPtr v2)
 {
