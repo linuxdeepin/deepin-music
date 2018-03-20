@@ -297,7 +297,7 @@ void Playlist::updateMeta(const MetaPtr meta)
     }
 
     playlistMeta.metas.insert(meta->hash, meta);
-    // TODO : chcek and update;
+    // TODO : check and update;
     if (meta->invalid) {
         playlistMeta.invalidMetas.insert(meta->hash, 1);
     } else {
