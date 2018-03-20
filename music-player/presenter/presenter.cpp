@@ -641,11 +641,13 @@ void Presenter::onMusiclistDelete(PlaylistPtr playlist, const MetaPtrList metali
     for (auto file : trashFiles.keys()) {
 // FIXME:        Q_EMIT d->moniter->fileRemoved(file);
     }
-#ifdef FLATPAK_SUPPORT
-    Dtk::Widget::DDesktopServices::trash(trashFiles.keys());
-#else
-    QProcess::startDetached("gvfs-trash", trashFiles.keys());
-#endif
+
+    if (!qEnvironmentVariableIsEmpty("FLATPAK_APPID")) {
+        Dtk::Widget::DDesktopServices::trash(trashFiles.keys());
+    } else {
+        QProcess::startDetached("gvfs-trash", trashFiles.keys());
+    }
+
     d->library->removeMediaMetaList(metalist);
 }
 
