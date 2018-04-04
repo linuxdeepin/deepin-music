@@ -2,32 +2,32 @@
 <context>
     <name>CloseConfirmDialog</name>
     <message>
-        <location filename="../view/widget/closeconfirmdialog.cpp" line="56"/>
+        <location filename="../view/widget/closeconfirmdialog.cpp" line="61"/>
         <source>Please select your operation</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../view/widget/closeconfirmdialog.cpp" line="63"/>
+        <location filename="../view/widget/closeconfirmdialog.cpp" line="68"/>
         <source>Exit</source>
         <translation>יציאה</translation>
     </message>
     <message>
-        <location filename="../view/widget/closeconfirmdialog.cpp" line="65"/>
+        <location filename="../view/widget/closeconfirmdialog.cpp" line="70"/>
         <source>Minimize to system tray</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../view/widget/closeconfirmdialog.cpp" line="74"/>
+        <location filename="../view/widget/closeconfirmdialog.cpp" line="79"/>
         <source>Never ask again</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../view/widget/closeconfirmdialog.cpp" line="85"/>
+        <location filename="../view/widget/closeconfirmdialog.cpp" line="90"/>
         <source>Cancel</source>
         <translation>ביטול</translation>
     </message>
     <message>
-        <location filename="../view/widget/closeconfirmdialog.cpp" line="86"/>
+        <location filename="../view/widget/closeconfirmdialog.cpp" line="91"/>
         <source>OK</source>
         <translation>אישור</translation>
     </message>
@@ -35,64 +35,64 @@
 <context>
     <name>Footer</name>
     <message>
-        <location filename="../view/footerwidget.cpp" line="283"/>
+        <location filename="../view/footerwidget.cpp" line="290"/>
         <source>Previous</source>
         <translation>הקודם</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="284"/>
+        <location filename="../view/footerwidget.cpp" line="291"/>
         <source>Next</source>
         <translation>הבא</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="285"/>
+        <location filename="../view/footerwidget.cpp" line="292"/>
         <source>Play/Pause</source>
         <translation>נגינה/השהיה</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="286"/>
+        <location filename="../view/footerwidget.cpp" line="293"/>
         <source>Favorite</source>
         <translation>הוספה למועדפים</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="287"/>
+        <location filename="../view/footerwidget.cpp" line="294"/>
         <source>Lyrics</source>
         <translation>מילים</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="232"/>
+        <location filename="../view/footerwidget.cpp" line="239"/>
         <source>Unknown Title</source>
         <translation>אין כותרת</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="238"/>
-        <location filename="../view/footerwidget.cpp" line="518"/>
-        <location filename="../view/footerwidget.cpp" line="700"/>
+        <location filename="../view/footerwidget.cpp" line="245"/>
+        <location filename="../view/footerwidget.cpp" line="536"/>
+        <location filename="../view/footerwidget.cpp" line="718"/>
         <source>Unknown artist</source>
         <translation>אמן לא ידוע</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="288"/>
+        <location filename="../view/footerwidget.cpp" line="295"/>
         <source>Play Mode</source>
         <translation>מצב נגינה</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="289"/>
+        <location filename="../view/footerwidget.cpp" line="296"/>
         <source>Playlist</source>
         <translation>רשימת נגינה</translation>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="678"/>
+        <location filename="../view/footerwidget.cpp" line="696"/>
         <source>List Loop</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="681"/>
+        <location filename="../view/footerwidget.cpp" line="699"/>
         <source>Single Loop</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../view/footerwidget.cpp" line="684"/>
+        <location filename="../view/footerwidget.cpp" line="702"/>
         <source>Shuffle</source>
         <translation>ערבול</translation>
     </message>
@@ -100,24 +100,24 @@
 <context>
     <name>ImportWidget</name>
     <message>
-        <location filename="../view/importwidget.cpp" line="74"/>
+        <location filename="../view/importwidget.cpp" line="73"/>
         <source>Add folder</source>
         <translation>הוסף תיקייה</translation>
     </message>
     <message>
-        <location filename="../view/importwidget.cpp" line="80"/>
-        <location filename="../view/importwidget.cpp" line="121"/>
+        <location filename="../view/importwidget.cpp" line="79"/>
+        <location filename="../view/importwidget.cpp" line="120"/>
         <source>Scan</source>
         <translation>סריקה</translation>
     </message>
     <message>
-        <location filename="../view/importwidget.cpp" line="81"/>
-        <location filename="../view/importwidget.cpp" line="122"/>
+        <location filename="../view/importwidget.cpp" line="80"/>
+        <location filename="../view/importwidget.cpp" line="121"/>
         <source>%1 music directory or drag &amp; drop music file to add music</source>
         <translation>%1 תיקיית מוזיקה או שניתן לגרור ולשחרר קובץ מוזיקה כדי להוסיף מוזיקה</translation>
     </message>
     <message>
-        <location filename="../view/importwidget.cpp" line="113"/>
+        <location filename="../view/importwidget.cpp" line="112"/>
         <source>Loading music, please wait...</source>
         <translation>המוזיקה נטענת, נא להמתין…</translation>
     </message>
@@ -181,27 +181,27 @@
 <context>
     <name>LyricWidget</name>
     <message>
-        <location filename="../view/lyricwidget.cpp" line="163"/>
+        <location filename="../view/lyricwidget.cpp" line="166"/>
         <source>Search lyrics</source>
         <translation>חיפוש מילות השיר</translation>
     </message>
     <message>
-        <location filename="../view/lyricwidget.cpp" line="167"/>
+        <location filename="../view/lyricwidget.cpp" line="170"/>
         <source>Title</source>
         <translation>שם</translation>
     </message>
     <message>
-        <location filename="../view/lyricwidget.cpp" line="172"/>
+        <location filename="../view/lyricwidget.cpp" line="175"/>
         <source>Artist</source>
         <translation>אמן</translation>
     </message>
     <message>
-        <location filename="../view/lyricwidget.cpp" line="177"/>
+        <location filename="../view/lyricwidget.cpp" line="180"/>
         <source>Search</source>
         <translation>חיפוש</translation>
     </message>
     <message>
-        <location filename="../view/lyricwidget.cpp" line="211"/>
+        <location filename="../view/lyricwidget.cpp" line="213"/>
         <source>Back</source>
         <translation>חזרה</translation>
     </message>
@@ -209,79 +209,79 @@
 <context>
     <name>MainFrame</name>
     <message>
-        <location filename="../view/mainframe.cpp" line="134"/>
+        <location filename="../view/mainframe.cpp" line="135"/>
         <source>New playlist</source>
         <translation>רשימת נגינה חדשה</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="150"/>
+        <location filename="../view/mainframe.cpp" line="151"/>
         <source>Settings</source>
         <translation>הגדרות</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="252"/>
+        <location filename="../view/mainframe.cpp" line="253"/>
         <source>Deepin Music Player is a local  music player with beautiful design and simple functions. It supports viewing lyrics when playing, playing lossless music and customize playlist, etc.</source>
         <translation>נגן המוזיקה Deepin הוא נגן מוזיקה מקומי עם עיצוב מרהיב ותכונות פשוטות. הנגן תומך במילות השירים בעת הנגינה, נגינת מוזיקה ללא אבדן איכות, התאמת רשימת הנגינה ועוד.</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="181"/>
-        <location filename="../view/mainframe.cpp" line="527"/>
+        <location filename="../view/mainframe.cpp" line="182"/>
+        <location filename="../view/mainframe.cpp" line="578"/>
         <source>Exit</source>
         <translation>יציאה</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="140"/>
+        <location filename="../view/mainframe.cpp" line="141"/>
         <source>Add folder</source>
         <translation>הוסף תיקייה</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="145"/>
+        <location filename="../view/mainframe.cpp" line="146"/>
         <source>Add file</source>
         <translation>הוסף קובץ</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="166"/>
+        <location filename="../view/mainframe.cpp" line="167"/>
         <source>Dark theme</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="524"/>
+        <location filename="../view/mainframe.cpp" line="575"/>
         <source>Play/Pause</source>
         <translation>נגינה/השהיה</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="525"/>
+        <location filename="../view/mainframe.cpp" line="576"/>
         <source>Previous</source>
         <translation>הקודם</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="661"/>
+        <location filename="../view/mainframe.cpp" line="722"/>
         <source>Invalid or non-existent file</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="682"/>
+        <location filename="../view/mainframe.cpp" line="743"/>
         <source>Failed to import, no vaild music file found!</source>
         <translation>יבוא הקובץ נכשל, לא נמצא קובץ מוזיקה תקין!</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="955"/>
+        <location filename="../view/mainframe.cpp" line="1018"/>
         <source>All music</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="662"/>
-        <location filename="../view/mainframe.cpp" line="687"/>
+        <location filename="../view/mainframe.cpp" line="723"/>
+        <location filename="../view/mainframe.cpp" line="748"/>
         <source>OK</source>
         <translation>אישור</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="612"/>
+        <location filename="../view/mainframe.cpp" line="673"/>
         <source>Successfully added to &quot;%1&quot;</source>
         <translation>נוסף בהצלחה אל „%1“</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="526"/>
+        <location filename="../view/mainframe.cpp" line="577"/>
         <source>Next</source>
         <translation>הבא</translation>
     </message>
@@ -289,78 +289,78 @@
 <context>
     <name>MusicListView</name>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="285"/>
+        <location filename="../view/widget/musiclistview.cpp" line="287"/>
         <source>New playlist</source>
         <translation>רשימת נגינה חדשה</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="325"/>
+        <location filename="../view/widget/musiclistview.cpp" line="327"/>
         <source>Play</source>
         <translation>נגינה</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="327"/>
+        <location filename="../view/widget/musiclistview.cpp" line="329"/>
         <source>Add to playlist</source>
         <translation>הוספה לרשימת נגינה</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="332"/>
+        <location filename="../view/widget/musiclistview.cpp" line="334"/>
         <source>Display in file manager</source>
         <translation>הצגה במנהל הקבצים</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="359"/>
+        <location filename="../view/widget/musiclistview.cpp" line="361"/>
         <source>Song info</source>
         <translation>פרטי השיר</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="335"/>
+        <location filename="../view/widget/musiclistview.cpp" line="337"/>
         <source>Remove from playlist</source>
         <translation>הסרה מרשימת נגינה</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="336"/>
+        <location filename="../view/widget/musiclistview.cpp" line="338"/>
         <source>Delete from local disk</source>
         <translation>מחיקה מהכונן המקומי</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="355"/>
+        <location filename="../view/widget/musiclistview.cpp" line="357"/>
         <source>Encoding</source>
         <translation>קידוד</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="405"/>
+        <location filename="../view/widget/musiclistview.cpp" line="407"/>
         <source>Cancel</source>
         <translation>ביטול</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="406"/>
+        <location filename="../view/widget/musiclistview.cpp" line="408"/>
         <source>Delete</source>
         <translation>מחיקה</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="415"/>
+        <location filename="../view/widget/musiclistview.cpp" line="417"/>
         <source>Are you sure to delete %1?</source>
         <translation>למחוק את %1?</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="417"/>
-        <location filename="../view/widget/musiclistview.cpp" line="421"/>
+        <location filename="../view/widget/musiclistview.cpp" line="419"/>
+        <location filename="../view/widget/musiclistview.cpp" line="423"/>
         <source>Are you sure to delete the selected %1 songs?</source>
         <translation>למחוק את %1 השירים הנבחרים?</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="422"/>
+        <location filename="../view/widget/musiclistview.cpp" line="424"/>
         <source>Deleting the current song will also delete the song files contained</source>
         <translation>מחיקת השיר הנוכחי תמחוק גם את קובצי השירים שבתוכו</translation>
     </message>
     <message>
-        <location filename="../view/widget/delegate/musicitemdelegate.cpp" line="314"/>
+        <location filename="../view/widget/delegate/musicitemdelegate.cpp" line="299"/>
         <source>Unknown artist</source>
         <translation>אמן לא ידוע</translation>
     </message>
     <message>
-        <location filename="../view/widget/delegate/musicitemdelegate.cpp" line="325"/>
+        <location filename="../view/widget/delegate/musicitemdelegate.cpp" line="310"/>
         <source>Unknown album</source>
         <translation>אלבום לא ידוע</translation>
     </message>
@@ -368,42 +368,42 @@
 <context>
     <name>MusicListWidget</name>
     <message>
-        <location filename="../view/musiclistwidget.cpp" line="135"/>
+        <location filename="../view/musiclistwidget.cpp" line="140"/>
         <source>No Music</source>
         <translation>אין מוזיקה</translation>
     </message>
     <message>
-        <location filename="../view/musiclistwidget.cpp" line="137"/>
+        <location filename="../view/musiclistwidget.cpp" line="142"/>
         <source>No result found</source>
         <translation>לא נמצאו תוצאות</translation>
     </message>
     <message>
-        <location filename="../view/musiclistwidget.cpp" line="167"/>
+        <location filename="../view/musiclistwidget.cpp" line="174"/>
         <source>Play All</source>
         <translation>לנגן הכול</translation>
     </message>
     <message>
-        <location filename="../view/musiclistwidget.cpp" line="175"/>
+        <location filename="../view/musiclistwidget.cpp" line="182"/>
         <source>Time added</source>
         <translation>מועד ההוספה</translation>
     </message>
     <message>
-        <location filename="../view/musiclistwidget.cpp" line="176"/>
+        <location filename="../view/musiclistwidget.cpp" line="183"/>
         <source>Title</source>
         <translation>שם</translation>
     </message>
     <message>
-        <location filename="../view/musiclistwidget.cpp" line="177"/>
+        <location filename="../view/musiclistwidget.cpp" line="184"/>
         <source>Artist</source>
         <translation>אמן</translation>
     </message>
     <message>
-        <location filename="../view/musiclistwidget.cpp" line="178"/>
+        <location filename="../view/musiclistwidget.cpp" line="185"/>
         <source>Album name</source>
         <translation>שם האלבום</translation>
     </message>
     <message>
-        <location filename="../view/musiclistwidget.cpp" line="179"/>
+        <location filename="../view/musiclistwidget.cpp" line="217"/>
         <source>Custom</source>
         <translation>בהתאמה אישית</translation>
     </message>
@@ -411,17 +411,17 @@
 <context>
     <name>PlayListItem</name>
     <message>
-        <location filename="../view/widget/playlistitem.cpp" line="194"/>
+        <location filename="../view/widget/playlistitem.cpp" line="193"/>
         <source>Delete</source>
         <translation>מחיקה</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistitem.cpp" line="187"/>
+        <location filename="../view/widget/playlistitem.cpp" line="186"/>
         <source>Are you sure to delete this playlist?</source>
         <translation>למחוק את רשימת הנגינה הזו?</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistitem.cpp" line="193"/>
+        <location filename="../view/widget/playlistitem.cpp" line="192"/>
         <source>Cancel</source>
         <translation>ביטול</translation>
     </message>
@@ -429,20 +429,20 @@
 <context>
     <name>PlayListView</name>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="184"/>
-        <location filename="../view/widget/playlistview.cpp" line="193"/>
+        <location filename="../view/widget/playlistview.cpp" line="186"/>
+        <location filename="../view/widget/playlistview.cpp" line="195"/>
         <source>Play</source>
         <translation>נגינה</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="188"/>
-        <location filename="../view/widget/playlistview.cpp" line="196"/>
+        <location filename="../view/widget/playlistview.cpp" line="190"/>
+        <location filename="../view/widget/playlistview.cpp" line="198"/>
         <source>Rename</source>
         <translation>שינוי שם</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistview.cpp" line="189"/>
-        <location filename="../view/widget/playlistview.cpp" line="200"/>
+        <location filename="../view/widget/playlistview.cpp" line="191"/>
+        <location filename="../view/widget/playlistview.cpp" line="202"/>
         <source>Delete</source>
         <translation>מחיקה</translation>
     </message>
@@ -481,7 +481,7 @@
 <context>
     <name>QApplication</name>
     <message>
-        <location filename="../view/mainframe.cpp" line="254"/>
+        <location filename="../view/mainframe.cpp" line="255"/>
         <source>Deepin Music</source>
         <translation>נגן מוסיקה Deepin</translation>
     </message>
@@ -579,7 +579,7 @@
     </message>
 </context>
 <context>
-    <name>TitleBarWidget</name>
+    <name>TitlebarWidget</name>
     <message>
         <location filename="../view/widget/titlebarwidget.cpp" line="90"/>
         <source>Search</source>

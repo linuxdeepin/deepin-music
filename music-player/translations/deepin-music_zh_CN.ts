@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="zh_CN">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="zh_CN" version="2.1">
 <context>
     <name>CloseConfirmDialog</name>
     <message>
@@ -578,13 +576,6 @@
         <location filename="../view/widget/searchresult.cpp" line="126"/>
         <source>Search &quot;%1&quot; in Deepin Music</source>
         <translation>在深度音乐中搜索“%1”</translation>
-    </message>
-</context>
-<context>
-    <name>TitleBarWidget</name>
-    <message>
-        <source>Search</source>
-        <translation type="vanished">搜索</translation>
     </message>
 </context>
 <context>
