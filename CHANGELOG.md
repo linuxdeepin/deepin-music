@@ -1,3 +1,17 @@
+<a name="3.1.8.2"></a>
+## 3.1.8.2 (2018-04-08)
+
+
+#### Bug Fixes
+
+*   fav status disappear ([2feb298c](https://github.com/linuxdeepin/deepin-music/commit/2feb298cae2ab898d0552e4e60441f344d010262))
+
+#### Features
+
+*   trash file with dde-file-manager dbus in flatpak ([91f664a1](https://github.com/linuxdeepin/deepin-music/commit/91f664a1b8e027fcf3627a63f19581970bff8ffc))
+
+
+
 <a name="3.1.8.1"></a>
 ## 3.1.8.1 (2018-03-12)
 
