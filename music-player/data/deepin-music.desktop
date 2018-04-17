@@ -180,7 +180,9 @@ Name[zh_CN]=深度音乐
 Name[zh_HK]=Deepin 音樂
 Name[zh_TW]=Deepin 音樂
 
-[Next Shortcut Group]
+[X-Next Shortcut Group]
+Exec=dbus-send --print-reply --dest=org.mpris.MediaPlayer2.DeepinMusic /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next
+Name=Next track
 
 # Translations:
 # Do not manually modify!
@@ -232,7 +234,9 @@ Name[zh_CN]=下一首
 Name[zh_HK]=下一首歌曲
 Name[zh_TW]=下一曲
 
-[PlayPause Shortcut Group]
+[X-PlayPause Shortcut Group]
+Exec=dbus-send --print-reply --dest=org.mpris.MediaPlayer2.DeepinMusic /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause
+Name=Play/Pause track
 
 # Translations:
 # Do not manually modify!
@@ -283,7 +287,9 @@ Name[uk]=Відтворити/Призупинити трек
 Name[zh_CN]=暂停/继续
 Name[zh_TW]=播放／暫停
 
-[Previous Shortcut Group]
+[X-Previous Shortcut Group]
+Exec=dbus-send --print-reply --dest=org.mpris.MediaPlayer2.DeepinMusic /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous
+Name=Previous track
 
 # Translations:
 # Do not manually modify!
@@ -334,16 +340,3 @@ Name[uk]=Попередній трек
 Name[zh_CN]=上一首
 Name[zh_HK]=上一首歌曲
 Name[zh_TW]=上一曲
-
-[X-Next-Shortcut-Group]
-Exec=dbus-send --print-reply --dest=org.mpris.MediaPlayer2.DeepinMusic /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next
-Name=Next track
-
-[X-PlayPause-Shortcut-Group]
-Exec=dbus-send --print-reply --dest=org.mpris.MediaPlayer2.DeepinMusic /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause
-Name=Play/Pause track
-
-[X-Previous-Shortcut-Group]
-Exec=dbus-send --print-reply --dest=org.mpris.MediaPlayer2.DeepinMusic /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous
-Name=Previous track
-
