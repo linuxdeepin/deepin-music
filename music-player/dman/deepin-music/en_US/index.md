@@ -232,7 +232,7 @@ You can add new playlists/songs, set the options, view or exit Deepin Music.
 2. Select **Settings** > **Basic settings**.
 3. In the option **Play**, you can:
  - Check the box of **Autoplay**, the music will be played automatically when Deepin Music runs.
- - Check the box of **Remember playback position**, the music will be played automatically from last positon played when Deepin Music runs.
+ - Check the box of **Remember playback position**, the music will be played automatically from last position played when Deepin Music runs.
  - Check the box of **Enable fade**, the music will fade in and out when Deepin Music runs.
 4. In the option of **Close Main Window**, you can:
  - Select **Minimize to system tray** to minimize Deepin Music to tray.
