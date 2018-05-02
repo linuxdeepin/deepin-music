@@ -380,7 +380,7 @@ bool moreThanTimestamp(const MetaPtr v1, const MetaPtr v2)
     return !lessThanTimestamp(v1, v2);
 }
 
-bool lessThanTitile(const MetaPtr v1, const MetaPtr v2)
+bool lessThanTitle(const MetaPtr v1, const MetaPtr v2)
 {
     Q_ASSERT(!v1.isNull());
     Q_ASSERT(!v2.isNull());
@@ -394,9 +394,9 @@ bool lessThanTitile(const MetaPtr v1, const MetaPtr v2)
     return lessCompareByString(v1->title, v2->title);
 }
 
-bool moreThanTitile(const MetaPtr v1, const MetaPtr v2)
+bool moreThanTitle(const MetaPtr v1, const MetaPtr v2)
 {
-    return !lessThanTitile(v1, v2);
+    return !lessThanTitle(v1, v2);
 }
 
 bool lessThanArtist(const MetaPtr v1, const MetaPtr v2)
@@ -444,7 +444,7 @@ LessThanFunctionPtr getSortFunction(Playlist::SortType sortType, Playlist::Order
         case Playlist::SortByAddTime :
             return &lessThanTimestamp;
         case Playlist::SortByTitle :
-            return &lessThanTitile;
+            return &lessThanTitle;
         case Playlist::SortByArtist :
             return &lessThanArtist;
         case Playlist::SortByAblum :
@@ -458,7 +458,7 @@ LessThanFunctionPtr getSortFunction(Playlist::SortType sortType, Playlist::Order
         case Playlist::SortByAddTime :
             return &moreThanTimestamp;
         case Playlist::SortByTitle :
-            return &moreThanTitile;
+            return &moreThanTitle;
         case Playlist::SortByArtist :
             return &moreThanArtist;
         case Playlist::SortByAblum :
@@ -469,7 +469,7 @@ LessThanFunctionPtr getSortFunction(Playlist::SortType sortType, Playlist::Order
         break;
     }
     qCritical() << "show not sort by invalid typr" << sortType << orderType;
-    return &lessThanTitile;
+    return &lessThanTitle;
 }
 
 void Playlist::sortBy(Playlist::SortType sortType)
