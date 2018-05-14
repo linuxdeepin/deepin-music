@@ -1,3 +1,19 @@
+<a name="3.1.8.3"></a>
+## 3.1.8.3 (2018-05-14)
+
+
+#### Bug Fixes
+
+*   update mpris status ([87934402](https://github.com/linuxdeepin/deepin-music/commit/8793440212a8e5677462d8feaf4d2c4b51aedc3a))
+*   dock not support group ([03de3cdb](https://github.com/linuxdeepin/deepin-music/commit/03de3cdb5cb5da89ddc87981eca99653a45ff6bd))
+*   fav status disappear ([2feb298c](https://github.com/linuxdeepin/deepin-music/commit/2feb298cae2ab898d0552e4e60441f344d010262))
+
+#### Features
+
+*   trash file with dde-file-manager dbus in flatpak ([91f664a1](https://github.com/linuxdeepin/deepin-music/commit/91f664a1b8e027fcf3627a63f19581970bff8ffc))
+
+
+
 <a name="3.1.8.1"></a>
 ## 3.1.8.1 (2018-03-12)
 
