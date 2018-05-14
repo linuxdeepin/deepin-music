@@ -27,6 +27,7 @@
 #include <QString>
 #include <QVariant>
 #include <QSharedPointer>
+#include <QUrl>
 
 class QFileInfo;
 
@@ -60,6 +61,7 @@ public:
     QString creator;
 
     QString searchID;
+    QUrl    coverUrl;
 
     bool    favourite   = false;
     bool    invalid     = false;

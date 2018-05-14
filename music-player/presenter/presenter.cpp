@@ -110,6 +110,7 @@ void PresenterPrivate::initBackend()
                     meta->updateSearchIndex();
                     Q_EMIT MediaDatabase::instance()->updateMediaMeta(meta);
                 }
+                meta->coverUrl = MetaSearchService::coverUrl(meta);
                 Q_EMIT q->coverSearchFinished(meta, search, coverData);
             });
 
@@ -1001,6 +1002,8 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
         metadata.insert(Mpris::metadataToString(Mpris::Artist), meta->artist);
         metadata.insert(Mpris::metadataToString(Mpris::Album), meta->album);
         metadata.insert(Mpris::metadataToString(Mpris::Length), meta->length / 1000);
+        metadata.insert(Mpris::metadataToString(Mpris::ArtUrl), meta->coverUrl);
+
         //mprisPlayer->setCanSeek(true);
         mprisPlayer->setMetadata(metadata);
         mprisPlayer->setLoopStatus(Mpris::Playlist);
@@ -1027,6 +1030,13 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
             mprisPlayer->setPlaybackStatus(Mpris::Playing);
             break;
         }
+    });
+
+    connect(mprisPlayer, &MprisPlayer::stopRequested,
+    this, [ = ]() {
+        onMusicStop(player->activePlaylist(), player->activeMeta());
+        mprisPlayer->setPlaybackStatus(Mpris::Stopped);
+        mprisPlayer->setMetadata(QVariantMap());
     });
 
     connect(mprisPlayer, &MprisPlayer::openUriRequested,
@@ -1096,6 +1106,7 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
 
     connect(this, &Presenter::coverSearchFinished,
     this, [ = ](const MetaPtr meta, const DMusic::SearchMeta &, const QByteArray &) {
+        meta->coverUrl = MetaSearchService::coverUrl(meta);
         if (player->activeMeta().isNull() || meta.isNull()) {
             return;
         }
@@ -1104,7 +1115,7 @@ void Presenter::initMpris(MprisPlayer *mprisPlayer)
         }
 
         QVariantMap metadata = mprisPlayer->metadata();
-        metadata.insert(Mpris::metadataToString(Mpris::ArtUrl), MetaSearchService::coverUrl(meta));
+        metadata.insert(Mpris::metadataToString(Mpris::ArtUrl), meta->coverUrl);
         mprisPlayer->setMetadata(metadata);
     });
 }
