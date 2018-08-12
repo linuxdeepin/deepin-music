@@ -1,3 +1,13 @@
+<a name="3.1.8.4"></a>
+## 3.1.8.4 (2018-08-12)
+
+
+#### Features
+
+*   refactor ([4c70ffdb](https://github.com/linuxdeepin/deepin-music/commit/4c70ffdb51296201e7be025cf73f4182d6851747))
+
+
+
 <a name="3.1.8.3"></a>
 ## 3.1.8.3 (2018-05-14)
 
