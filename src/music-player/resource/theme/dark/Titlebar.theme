@@ -14,72 +14,70 @@ Dtk--Widget--DTitlebar[viewname="lyric"] {
 /* ------ #DTitlebarDWindowOptionButton  ------ */
 
 #DTitlebarDWindowOptionButton {
-  qproperty-normalPic: url(:/dark/image/window/menu_normal.svg);
-  qproperty-hoverPic: url(:/dark/image/window/menu_hover.svg);
-  qproperty-pressPic: url(:/dark/image/window/menu_press.svg);
+  qproperty-normalPic: url(:/images/dark/images/window/menu_normal.svg);
+  qproperty-hoverPic: url(:/images/dark/images/window/menu_hover.svg);
+  qproperty-pressPic: url(:/images/dark/images/window/menu_press.svg);
 }
 
 #DTitlebarDWindowOptionButton[viewname="lyric"] {
-  qproperty-normalPic: url(:/dark/image/window/menu_normal.svg);
-  qproperty-hoverPic: url(:/dark/image/window/menu_hover.svg);
-  qproperty-pressPic: url(:/dark/image/window/menu_press.svg);
+  qproperty-normalPic: url(:/images/dark/images/window/menu_normal.svg);
+  qproperty-hoverPic: url(:/images/dark/images/window/menu_hover.svg);
+  qproperty-pressPic: url(:/images/dark/images/window/menu_press.svg);
 }
 
 
 /* ------ #DTitlebarDWindowMinButton ------ */
 
 #DTitlebarDWindowMinButton {
-  qproperty-normalPic: url(:/dark/image/window/minimise_normal.svg);
-  qproperty-hoverPic: url(:/dark/image/window/minimise_hover.svg);
-  qproperty-pressPic: url(:/dark/image/window/minimise_press.svg);
+  qproperty-normalPic: url(:/images/dark/images/window/minimize_normal.svg);
+  qproperty-hoverPic: url(:/images/dark/images/window/minimize_hover.svg);
+  qproperty-pressPic: url(:/images/dark/images/window/minimize_press.svg);
 }
 
 #DTitlebarDWindowMinButton[viewname="lyric"] {
-  qproperty-normalPic: url(:/dark/image/window/minimise_normal.svg);
-  qproperty-hoverPic: url(:/dark/image/window/minimise_hover.svg);
-  qproperty-pressPic: url(:/dark/image/window/minimise_press.svg);
+  qproperty-normalPic: url(:/images/dark/images/window/minimize_normal.svg);
+  qproperty-hoverPic: url(:/images/dark/images/window/minimize_hover.svg);
+  qproperty-pressPic: url(:/images/dark/images/window/minimize_press.svg);
 }
 
 
 /* ------ #DTitlebarDWindowMaxButton ------ */
 
 #DTitlebarDWindowMaxButton[isMaximized=true] {
-  qproperty-normalPic: url(:/dark/image/window/unmaximize_normal.svg);
-  qproperty-hoverPic: url(:/dark/image/window/unmaximize_hover.svg);
-  qproperty-pressPic: url(:/dark/image/window/unmaximize_press.svg);
+  qproperty-normalPic: url(:/images/dark/images/window/unmaximize_normal.svg);
+  qproperty-hoverPic: url(:/images/dark/images/window/unmaximize_hover.svg);
+  qproperty-pressPic: url(:/images/dark/images/window/unmaximize_press.svg);
 }
 
 #DTitlebarDWindowMaxButton[isMaximized=false] {
-  qproperty-normalPic: url(:/dark/image/window/maximize_normal.svg);
-  qproperty-hoverPic: url(:/dark/image/window/maximize_hover.svg);
-  qproperty-pressPic: url(:/dark/image/window/maximize_press.svg);
+  qproperty-normalPic: url(:/images/dark/images/window/maximize_normal.svg);
+  qproperty-hoverPic: url(:/images/dark/images/window/maximize_hover.svg);
+  qproperty-pressPic: url(:/images/dark/images/window/maximize_press.svg);
 }
 
 #DTitlebarDWindowMaxButton[isMaximized=true][viewname="lyric"] {
-  qproperty-normalPic: url(:/dark/image/window/unmaximize_normal.svg);
-  qproperty-hoverPic: url(:/dark/image/window/unmaximize_hover.svg);
-  qproperty-pressPic: url(:/dark/image/window/unmaximize_press.svg);
+  qproperty-normalPic: url(:/images/dark/images/window/unmaximize_normal.svg);
+  qproperty-hoverPic: url(:/images/dark/images/window/unmaximize_hover.svg);
+  qproperty-pressPic: url(:/images/dark/images/window/unmaximize_press.svg);
 }
 
 #DTitlebarDWindowMaxButton[isMaximized=false][viewname="lyric"] {
-  qproperty-normalPic: url(:/dark/image/window/maximize_normal.svg);
-  qproperty-hoverPic: url(:/dark/image/window/maximize_hover.svg);
-  qproperty-pressPic: url(:/dark/image/window/maximize_press.svg);
+  qproperty-normalPic: url(:/images/dark/images/window/maximize_normal.svg);
+  qproperty-hoverPic: url(:/images/dark/images/window/maximize_hover.svg);
+  qproperty-pressPic: url(:/images/dark/images/window/maximize_press.svg);
 }
 
 
 /* ------ #DTitlebarDWindowCloseButton ------ */
 
 #DTitlebarDWindowCloseButton {
-  qproperty-normalPic: url(:/dark/image/window/close_normal.svg);
-  qproperty-hoverPic: url(:/dark/image/window/close_hover.svg);
-  qproperty-pressPic: url(:/dark/image/window/close_press.svg);
-  padding-right: 6px;
+  qproperty-normalPic: url(:/images/dark/images/window/close_normal.svg);
+  qproperty-hoverPic: url(:/images/dark/images/window/close_hover.svg);
+  qproperty-pressPic: url(:/images/dark/images/window/close_press.svg);
 }
 
 #DTitlebarDWindowCloseButton[viewname="lyric"] {
-  qproperty-normalPic: url(:/dark/image/window/close_normal.svg);
-  qproperty-hoverPic: url(:/dark/image/window/close_hover.svg);
-  qproperty-pressPic: url(:/dark/image/window/close_press.svg);
-  padding-right: 6px;
+  qproperty-normalPic: url(:/images/dark/images/window/close_normal.svg);
+  qproperty-hoverPic: url(:/images/dark/images/window/close_hover.svg);
+  qproperty-pressPic: url(:/images/dark/images/window/close_press.svg);
 }

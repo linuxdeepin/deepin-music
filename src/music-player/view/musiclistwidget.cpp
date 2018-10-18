@@ -21,6 +21,7 @@
 
 #include "musiclistwidget.h"
 
+#include <QDebug>
 #include <QAction>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -32,7 +33,6 @@
 #include <QStandardItemModel>
 
 #include <DThemeManager>
-#include <dcombobox.h>
 
 #include "../core/music.h"
 #include "../core/playlist.h"
