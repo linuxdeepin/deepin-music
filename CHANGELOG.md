@@ -1,3 +1,17 @@
+<a name="3.1.8.5"></a>
+## 3.1.8.5 (2018-10-26)
+
+
+#### Bug Fixes
+
+*   extrend close button area ([07149b51](https://github.com/linuxdeepin/deepin-music/commit/07149b51a27354cce215586884155e7c8d9cf590))
+
+#### Features
+
+*   disable keyboardSearch ([46c2fecb](https://github.com/linuxdeepin/deepin-music/commit/46c2fecb7b7b2f3b68930241499a95a361ad6344))
+
+
+
 <a name="3.1.8.4"></a>
 ## 3.1.8.4 (2018-08-12)
 
