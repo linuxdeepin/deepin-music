@@ -242,6 +242,14 @@ void MusicListView::keyPressEvent(QKeyEvent *event)
     QAbstractItemView::keyPressEvent(event);
 }
 
+void MusicListView::keyboardSearch(const QString &search)
+{
+    Q_UNUSED(search);
+// Disable keyborad serach
+//    qDebug() << search;
+//    QAbstractItemView::keyboardSearch(search);
+}
+
 void MusicListViewPrivate::addMedia(const MetaPtr meta)
 {
     QStandardItem *newItem = new QStandardItem;
