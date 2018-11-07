@@ -231,10 +231,8 @@ void MediaDatabase::init()
 {
     createConnection();
 
+    // sqlite must run in one thread!!!
     m_writer = new MediaDatabaseWriter;
-    auto work = ThreadPool::instance()->newThread();
-    m_writer->moveToThread(work);
-    work->start();
 
     bind();
 
