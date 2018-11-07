@@ -14,12 +14,12 @@
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="70"/>
         <source>Minimize to system tray</source>
-        <translation type="unfinished"/>
+        <translation>Minimer til systemfeltet</translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="79"/>
         <source>Never ask again</source>
-        <translation type="unfinished"/>
+        <translation>Ikke spør igjen</translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="90"/>
@@ -242,7 +242,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="167"/>
         <source>Dark theme</source>
-        <translation type="unfinished"/>
+        <translation>Mørkt tema</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="575"/>
@@ -257,7 +257,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="722"/>
         <source>Invalid or non-existent file</source>
-        <translation type="unfinished"/>
+        <translation>Ugyldig eller ikke-eksisterende fil</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="743"/>
@@ -267,7 +267,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="1018"/>
         <source>All music</source>
-        <translation type="unfinished"/>
+        <translation>All musikk</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="723"/>
@@ -301,12 +301,12 @@
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="329"/>
         <source>Add to playlist</source>
-        <translation type="unfinished"/>
+        <translation>Legg til i spilleliste</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="334"/>
         <source>Display in file manager</source>
-        <translation type="unfinished"/>
+        <translation>Vis i filutforsker</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="361"/>
@@ -321,7 +321,7 @@
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="338"/>
         <source>Delete from local disk</source>
-        <translation type="unfinished"/>
+        <translation>Slett fra lokal disk</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="357"/>
@@ -400,7 +400,7 @@
     <message>
         <location filename="../view/musiclistwidget.cpp" line="185"/>
         <source>Album name</source>
-        <translation type="unfinished"/>
+        <translation>Albumnavn</translation>
     </message>
     <message>
         <location filename="../view/musiclistwidget.cpp" line="217"/>
@@ -457,17 +457,17 @@
     <message>
         <location filename="../core/playlistmanager.cpp" line="135"/>
         <source>All Music</source>
-        <translation type="unfinished"/>
+        <translation>All musikk</translation>
     </message>
     <message>
         <location filename="../core/playlistmanager.cpp" line="141"/>
         <source>My favorites</source>
-        <translation type="unfinished"/>
+        <translation>Mine favoritter</translation>
     </message>
     <message>
         <location filename="../core/playlistmanager.cpp" line="147"/>
         <source>Search result</source>
-        <translation type="unfinished"/>
+        <translation>Søkeresultat</translation>
     </message>
 </context>
 <context>
@@ -496,17 +496,17 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="26"/>
         <source>Minimize to system tray</source>
-        <translation type="unfinished"/>
+        <translation>Minimer til oppgavelinje</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="27"/>
         <source>Exit Deepin Music</source>
-        <translation type="unfinished"/>
+        <translation>Avslutt Deepin Musikk</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="28"/>
         <source>Autoplay</source>
-        <translation type="unfinished"/>
+        <translation>Autoavspilling</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="29"/>
@@ -516,7 +516,7 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="30"/>
         <source>Remember playback position</source>
-        <translation type="unfinished"/>
+        <translation>Husk avspillingsposisjon</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="31"/>
@@ -541,7 +541,7 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="35"/>
         <source>Restore Defaults</source>
-        <translation type="unfinished"/>
+        <translation>Gjenopprett Standard</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="36"/>

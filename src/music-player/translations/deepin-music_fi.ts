@@ -147,7 +147,7 @@
     <message>
         <location filename="../view/widget/infodialog.cpp" line="120"/>
         <source>Path:</source>
-        <translation type="unfinished"/>
+        <translation>Polku:</translation>
     </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="192"/>
@@ -326,7 +326,7 @@
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="357"/>
         <source>Encoding</source>
-        <translation type="unfinished"/>
+        <translation>Tavuesitys</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="407"/>
@@ -526,7 +526,7 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="32"/>
         <source>Basic</source>
-        <translation type="unfinished"/>
+        <translation>Perusasetukset</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="33"/>
@@ -536,12 +536,12 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="34"/>
         <source>Shortcuts</source>
-        <translation type="unfinished"/>
+        <translation>Pikanäppäimet</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="35"/>
         <source>Restore Defaults</source>
-        <translation type="unfinished"/>
+        <translation>Palauta Oletusasetukset</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="36"/>

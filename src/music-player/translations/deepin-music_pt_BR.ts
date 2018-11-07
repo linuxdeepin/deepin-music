@@ -221,7 +221,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="253"/>
         <source>Deepin Music Player is a local  music player with beautiful design and simple functions. It supports viewing lyrics when playing, playing lossless music and customize playlist, etc.</source>
-        <translation>Deepin Music Player é um player de música local com um belo design e funções simples. Suporta a visualização de letras na reprodução, reproduz música sem perdas, personaliza a playlist, etc. </translation>
+        <translation>Música é um player local com um belo design e funções simples. Suporta a visualização de letras na reprodução, reproduz música sem perdas, personaliza a playlist, etc.</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="182"/>
@@ -242,7 +242,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="167"/>
         <source>Dark theme</source>
-        <translation>Tema dark</translation>
+        <translation>Tema Escuro</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="575"/>
@@ -483,7 +483,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="255"/>
         <source>Deepin Music</source>
-        <translation>Deepin Music</translation>
+        <translation>Música</translation>
     </message>
 </context>
 <context>
@@ -491,7 +491,7 @@
     <message>
         <location filename="../main.cpp" line="87"/>
         <source>Deepin Music</source>
-        <translation>Deepin Music</translation>
+        <translation>Música</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="26"/>
@@ -501,7 +501,7 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="27"/>
         <source>Exit Deepin Music</source>
-        <translation>Sair do Deepin Music</translation>
+        <translation>Sair</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="28"/>
@@ -575,7 +575,7 @@
         <location filename="../view/widget/searchresult.cpp" line="57"/>
         <location filename="../view/widget/searchresult.cpp" line="126"/>
         <source>Search &quot;%1&quot; in Deepin Music</source>
-        <translation>Pesquisar &quot;%1&quot; no Deepin Music</translation>
+        <translation>Pesquisar &quot;%1&quot;</translation>
     </message>
 </context>
 <context>

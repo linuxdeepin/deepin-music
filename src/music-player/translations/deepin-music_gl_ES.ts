@@ -14,7 +14,7 @@
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="70"/>
         <source>Minimize to system tray</source>
-        <translation type="unfinished"/>
+        <translation>Minimizar na bandexa</translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="79"/>
@@ -84,12 +84,12 @@
     <message>
         <location filename="../view/footerwidget.cpp" line="696"/>
         <source>List Loop</source>
-        <translation type="unfinished"/>
+        <translation>Lista en bucle</translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="699"/>
         <source>Single Loop</source>
-        <translation type="unfinished"/>
+        <translation>Un só bucle</translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="702"/>
@@ -114,7 +114,7 @@
         <location filename="../view/importwidget.cpp" line="80"/>
         <location filename="../view/importwidget.cpp" line="121"/>
         <source>%1 music directory or drag &amp; drop music file to add music</source>
-        <translation type="unfinished"/>
+        <translation>%1 directorio de música ou arrastra e solta o ficheiro musical para engadir música</translation>
     </message>
     <message>
         <location filename="../view/importwidget.cpp" line="112"/>
@@ -216,12 +216,12 @@
     <message>
         <location filename="../view/mainframe.cpp" line="151"/>
         <source>Settings</source>
-        <translation>Configuración</translation>
+        <translation>Axustes</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="253"/>
         <source>Deepin Music Player is a local  music player with beautiful design and simple functions. It supports viewing lyrics when playing, playing lossless music and customize playlist, etc.</source>
-        <translation>O reproductor de Música é un reproductor con funcións simples e un bonito deseño. Poderás ver a letra mentras escoitas a canción, escoitar música sen perdida de calidade no sonido e personalizar unha lista de reproducción entre outras moitas funcionalidades.</translation>
+        <translation>O reproductor de Música é un reproductor con funcións simples e un bonito deseño. Poderás ver a letra mentres escoitas a canción, escoitar música sen perdas de calidade no son e personalizar unha lista de reproducción entre outras moitas funcionalidades.</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="182"/>
@@ -257,12 +257,12 @@
     <message>
         <location filename="../view/mainframe.cpp" line="722"/>
         <source>Invalid or non-existent file</source>
-        <translation type="unfinished"/>
+        <translation>O ficheiro non é válido ou non existe</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="743"/>
         <source>Failed to import, no vaild music file found!</source>
-        <translation>Faiou a importación, non se encontrou un arquivo de música válido!</translation>
+        <translation>Fallo na importación, non se atopou un ficheiro de música válido!</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="1018"/>
@@ -352,7 +352,7 @@
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="424"/>
         <source>Deleting the current song will also delete the song files contained</source>
-        <translation type="unfinished"/>
+        <translation>Ao eliminar a canción actual eliminarase tamén o ficheiro</translation>
     </message>
     <message>
         <location filename="../view/widget/delegate/musicitemdelegate.cpp" line="299"/>
@@ -496,7 +496,7 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="26"/>
         <source>Minimize to system tray</source>
-        <translation type="unfinished"/>
+        <translation>Minimizar na bandexa</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="27"/>
@@ -511,12 +511,12 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="29"/>
         <source>Enable fade</source>
-        <translation type="unfinished"/>
+        <translation>Activar esvaecemento</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="30"/>
         <source>Remember playback position</source>
-        <translation type="unfinished"/>
+        <translation>Recordar a posición de reprodución</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="31"/>

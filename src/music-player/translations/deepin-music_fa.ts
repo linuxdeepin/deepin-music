@@ -4,7 +4,7 @@
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="61"/>
         <source>Please select your operation</source>
-        <translation>لطفا عملیات خود را انتخاب کنید</translation>
+        <translation>می خواهید چه کاری انجام دهید؟</translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="68"/>
@@ -19,7 +19,7 @@
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="79"/>
         <source>Never ask again</source>
-        <translation type="unfinished"/>
+        <translation>دیگر در این مورد سوال نپرس</translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="90"/>
@@ -37,7 +37,7 @@
     <message>
         <location filename="../view/footerwidget.cpp" line="290"/>
         <source>Previous</source>
-        <translation>پیشین</translation>
+        <translation>قبلی</translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="291"/>
@@ -62,14 +62,14 @@
     <message>
         <location filename="../view/footerwidget.cpp" line="239"/>
         <source>Unknown Title</source>
-        <translation type="unfinished"/>
+        <translation>عنوان نام مشخص</translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="245"/>
         <location filename="../view/footerwidget.cpp" line="536"/>
         <location filename="../view/footerwidget.cpp" line="718"/>
         <source>Unknown artist</source>
-        <translation type="unfinished"/>
+        <translation>هنرمند ناشناخته</translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="295"/>
@@ -84,17 +84,17 @@
     <message>
         <location filename="../view/footerwidget.cpp" line="696"/>
         <source>List Loop</source>
-        <translation type="unfinished"/>
+        <translation>تکرار لیست</translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="699"/>
         <source>Single Loop</source>
-        <translation type="unfinished"/>
+        <translation>تکرار یک مورد</translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="702"/>
         <source>Shuffle</source>
-        <translation type="unfinished"/>
+        <translation>تصادفی</translation>
     </message>
 </context>
 <context>
@@ -102,13 +102,13 @@
     <message>
         <location filename="../view/importwidget.cpp" line="73"/>
         <source>Add folder</source>
-        <translation type="unfinished"/>
+        <translation>پوشه جدید</translation>
     </message>
     <message>
         <location filename="../view/importwidget.cpp" line="79"/>
         <location filename="../view/importwidget.cpp" line="120"/>
         <source>Scan</source>
-        <translation type="unfinished"/>
+        <translation>بررسی</translation>
     </message>
     <message>
         <location filename="../view/importwidget.cpp" line="80"/>
@@ -152,12 +152,12 @@
     <message>
         <location filename="../view/widget/infodialog.cpp" line="192"/>
         <source>Unknown artist</source>
-        <translation type="unfinished"/>
+        <translation>هنرمند ناشناخته</translation>
     </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="193"/>
         <source>Unknown album</source>
-        <translation type="unfinished"/>
+        <translation>آلبوم نامشخص</translation>
     </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="119"/>
@@ -232,17 +232,17 @@
     <message>
         <location filename="../view/mainframe.cpp" line="141"/>
         <source>Add folder</source>
-        <translation type="unfinished"/>
+        <translation>پوشه جدید</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="146"/>
         <source>Add file</source>
-        <translation type="unfinished"/>
+        <translation>اضافه کردن فایل</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="167"/>
         <source>Dark theme</source>
-        <translation type="unfinished"/>
+        <translation>تم مشکی</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="575"/>
@@ -257,17 +257,17 @@
     <message>
         <location filename="../view/mainframe.cpp" line="722"/>
         <source>Invalid or non-existent file</source>
-        <translation type="unfinished"/>
+        <translation>فایل وجود ندارد یا نامعتبر است</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="743"/>
         <source>Failed to import, no vaild music file found!</source>
-        <translation type="unfinished"/>
+        <translation>اضافه کردن ناموفق ، فایل صوتی وجود ندارد!</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="1018"/>
         <source>All music</source>
-        <translation type="unfinished"/>
+        <translation>تمام آهنگ ها</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="723"/>
@@ -301,27 +301,27 @@
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="329"/>
         <source>Add to playlist</source>
-        <translation type="unfinished"/>
+        <translation>اضافه کردن به لیست پخش</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="334"/>
         <source>Display in file manager</source>
-        <translation type="unfinished"/>
+        <translation>نمایش درمدیریت فایل</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="361"/>
         <source>Song info</source>
-        <translation type="unfinished"/>
+        <translation>اطلاعات صدا</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="337"/>
         <source>Remove from playlist</source>
-        <translation type="unfinished"/>
+        <translation>حذف از لیست پخش</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="338"/>
         <source>Delete from local disk</source>
-        <translation type="unfinished"/>
+        <translation>حذف از دیسک محلی</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="357"/>
@@ -341,13 +341,13 @@
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="417"/>
         <source>Are you sure to delete %1?</source>
-        <translation type="unfinished"/>
+        <translation>برای حذف %1 اطمینان دارید؟</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="419"/>
         <location filename="../view/widget/musiclistview.cpp" line="423"/>
         <source>Are you sure to delete the selected %1 songs?</source>
-        <translation type="unfinished"/>
+        <translation>برای حذف موارد %1 اطمینان دارید؟</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="424"/>
@@ -357,12 +357,12 @@
     <message>
         <location filename="../view/widget/delegate/musicitemdelegate.cpp" line="299"/>
         <source>Unknown artist</source>
-        <translation type="unfinished"/>
+        <translation>هنرمند ناشناخته</translation>
     </message>
     <message>
         <location filename="../view/widget/delegate/musicitemdelegate.cpp" line="310"/>
         <source>Unknown album</source>
-        <translation type="unfinished"/>
+        <translation>آلبوم نامشخص</translation>
     </message>
 </context>
 <context>
@@ -438,7 +438,7 @@
         <location filename="../view/widget/playlistview.cpp" line="190"/>
         <location filename="../view/widget/playlistview.cpp" line="198"/>
         <source>Rename</source>
-        <translation type="unfinished"/>
+        <translation>تغییر نام</translation>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="191"/>
@@ -462,7 +462,7 @@
     <message>
         <location filename="../core/playlistmanager.cpp" line="141"/>
         <source>My favorites</source>
-        <translation type="unfinished"/>
+        <translation>مورد علاقه</translation>
     </message>
     <message>
         <location filename="../core/playlistmanager.cpp" line="147"/>
@@ -521,7 +521,7 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="31"/>
         <source>Close Main Window</source>
-        <translation type="unfinished"/>
+        <translation>بستن پنجره اصلی</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="32"/>
@@ -536,7 +536,7 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="34"/>
         <source>Shortcuts</source>
-        <translation type="unfinished"/>
+        <translation>میانبر</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="35"/>

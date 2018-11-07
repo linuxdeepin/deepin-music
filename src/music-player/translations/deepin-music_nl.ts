@@ -4,7 +4,7 @@
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="61"/>
         <source>Please select your operation</source>
-        <translation>Selecteer alstublieft uw handeling</translation>
+        <translation>Selecteer een handeling</translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="68"/>
@@ -19,7 +19,7 @@
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="79"/>
         <source>Never ask again</source>
-        <translation>Niet opnieuw vragen</translation>
+        <translation>Nooit meer vragen</translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="90"/>
@@ -29,7 +29,7 @@
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="91"/>
         <source>OK</source>
-        <translation>OK</translation>
+        <translation>Oké</translation>
     </message>
 </context>
 <context>
@@ -57,12 +57,12 @@
     <message>
         <location filename="../view/footerwidget.cpp" line="294"/>
         <source>Lyrics</source>
-        <translation>Songteksten</translation>
+        <translation>Songtekst</translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="239"/>
         <source>Unknown Title</source>
-        <translation>Onbekende Titel</translation>
+        <translation>Onbekende titel</translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="245"/>
@@ -84,7 +84,7 @@
     <message>
         <location filename="../view/footerwidget.cpp" line="696"/>
         <source>List Loop</source>
-        <translation>Herhaling lijst</translation>
+        <translation>Lijst herhalen</translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="699"/>
@@ -94,7 +94,7 @@
     <message>
         <location filename="../view/footerwidget.cpp" line="702"/>
         <source>Shuffle</source>
-        <translation>Shuffle</translation>
+        <translation>Willekeurig</translation>
     </message>
 </context>
 <context>
@@ -114,12 +114,12 @@
         <location filename="../view/importwidget.cpp" line="80"/>
         <location filename="../view/importwidget.cpp" line="121"/>
         <source>%1 music directory or drag &amp; drop music file to add music</source>
-        <translation>%1 muziekmap of drag &amp; drop muziekbestanden om muziek toe te voegen</translation>
+        <translation>%1 muziekmap of versleep muziekbestanden hierheen om ze toe te voegen</translation>
     </message>
     <message>
         <location filename="../view/importwidget.cpp" line="112"/>
         <source>Loading music, please wait...</source>
-        <translation>Muziek wordt geladen, even geduld...</translation>
+        <translation>Bezig met laden van muziek; even geduld...</translation>
     </message>
 </context>
 <context>
@@ -183,7 +183,7 @@
     <message>
         <location filename="../view/lyricwidget.cpp" line="166"/>
         <source>Search lyrics</source>
-        <translation>Zoek songtekst</translation>
+        <translation>Songtekst zoeken</translation>
     </message>
     <message>
         <location filename="../view/lyricwidget.cpp" line="170"/>
@@ -221,7 +221,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="253"/>
         <source>Deepin Music Player is a local  music player with beautiful design and simple functions. It supports viewing lyrics when playing, playing lossless music and customize playlist, etc.</source>
-        <translation>Deepin Music Player speelt locale muziekbestanden af, (ook lossless formaten), ondersteunt het opvragen van songteksten, aangepaste afspeellijsten, en meer.  Veel plezier met deze moderne en intuïtieve audioplayer!</translation>
+        <translation>Deepin Muziek is een lokale muziekspeler met een prachtig ontwerp en eenvoudige functies. Er is ondersteuning voor het tonen van songteksten, afspelen van lossless muziek, aanpassen van de afspeellijst, etc.</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="182"/>
@@ -257,12 +257,12 @@
     <message>
         <location filename="../view/mainframe.cpp" line="722"/>
         <source>Invalid or non-existent file</source>
-        <translation>Ongeldig of niet bestaand bestand</translation>
+        <translation>Ongeldig of niet-bestaand bestand</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="743"/>
         <source>Failed to import, no vaild music file found!</source>
-        <translation>Importeren mislukt, geen geldig muziekbestand gevonden!</translation>
+        <translation>Importeren mislukt; geen geldig muziekbestand gevonden!</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="1018"/>
@@ -273,12 +273,12 @@
         <location filename="../view/mainframe.cpp" line="723"/>
         <location filename="../view/mainframe.cpp" line="748"/>
         <source>OK</source>
-        <translation>OK</translation>
+        <translation>Oké</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="673"/>
         <source>Successfully added to &quot;%1&quot;</source>
-        <translation>Succesvol toegevoegd aan &quot;%1&quot;</translation>
+        <translation>Toegevoegd aan &quot;%1&quot;</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="577"/>
@@ -306,12 +306,12 @@
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="334"/>
         <source>Display in file manager</source>
-        <translation>Weergeven in bestandsbeheerder</translation>
+        <translation>Tonen in bestandsbeheerder</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="361"/>
         <source>Song info</source>
-        <translation>Nummer info</translation>
+        <translation>Nummerinformatie</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="337"/>
@@ -341,18 +341,18 @@
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="417"/>
         <source>Are you sure to delete %1?</source>
-        <translation>Weet u zeker dat u %1 wilt verwijderen?</translation>
+        <translation>Weet je zeker dat je %1 wilt verwijderen?</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="419"/>
         <location filename="../view/widget/musiclistview.cpp" line="423"/>
         <source>Are you sure to delete the selected %1 songs?</source>
-        <translation>Bent u zeker dat u de %1 geselecteerde nummers wil verwijderen?</translation>
+        <translation>Weet je zeker dat je de %1 gekozen nummers wilt verwijderen?</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="424"/>
         <source>Deleting the current song will also delete the song files contained</source>
-        <translation>Het huidige nummer verwijderen verwijdert ook de audiobestanden die het bevat</translation>
+        <translation>Door het huidige nummer te verwijderen, worden ook de bijbehorende muziekbestanden verwijderd</translation>
     </message>
     <message>
         <location filename="../view/widget/delegate/musicitemdelegate.cpp" line="299"/>
@@ -380,12 +380,12 @@
     <message>
         <location filename="../view/musiclistwidget.cpp" line="174"/>
         <source>Play All</source>
-        <translation>Alles afspele</translation>
+        <translation>Alles afspelen</translation>
     </message>
     <message>
         <location filename="../view/musiclistwidget.cpp" line="182"/>
         <source>Time added</source>
-        <translation>Tijd toegevoegd</translation>
+        <translation>Toegevoegd om</translation>
     </message>
     <message>
         <location filename="../view/musiclistwidget.cpp" line="183"/>
@@ -418,7 +418,7 @@
     <message>
         <location filename="../view/widget/playlistitem.cpp" line="186"/>
         <source>Are you sure to delete this playlist?</source>
-        <translation>Bent u zeker dat u deze afspeellijst wil verwijderen?</translation>
+        <translation>Weet je zeker dat je deze afspeellijst wilt verwijderen?</translation>
     </message>
     <message>
         <location filename="../view/widget/playlistitem.cpp" line="192"/>
@@ -438,7 +438,7 @@
         <location filename="../view/widget/playlistview.cpp" line="190"/>
         <location filename="../view/widget/playlistview.cpp" line="198"/>
         <source>Rename</source>
-        <translation>Hernoemen</translation>
+        <translation>Naam wijzigen</translation>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="191"/>
@@ -483,7 +483,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="255"/>
         <source>Deepin Music</source>
-        <translation>Deepin Muziekspeler</translation>
+        <translation>Deepin Muziek</translation>
     </message>
 </context>
 <context>
@@ -501,7 +501,7 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="27"/>
         <source>Exit Deepin Music</source>
-        <translation>Deepin Music Afsluiten</translation>
+        <translation>Deepin Muziek afsluiten</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="28"/>
@@ -575,7 +575,7 @@
         <location filename="../view/widget/searchresult.cpp" line="57"/>
         <location filename="../view/widget/searchresult.cpp" line="126"/>
         <source>Search &quot;%1&quot; in Deepin Music</source>
-        <translation>Zoek &quot;%1&quot; in Deepin Music</translation>
+        <translation>Zoek &quot;%1&quot; in Deepin Muziek</translation>
     </message>
 </context>
 <context>

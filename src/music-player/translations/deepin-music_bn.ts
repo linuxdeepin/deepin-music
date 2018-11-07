@@ -198,12 +198,12 @@
     <message>
         <location filename="../view/lyricwidget.cpp" line="180"/>
         <source>Search</source>
-        <translation type="unfinished"/>
+        <translation>খুঁজুন</translation>
     </message>
     <message>
         <location filename="../view/lyricwidget.cpp" line="213"/>
         <source>Back</source>
-        <translation type="unfinished"/>
+        <translation>ফিরে যান</translation>
     </message>
 </context>
 <context>
@@ -336,7 +336,7 @@
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="408"/>
         <source>Delete</source>
-        <translation type="unfinished"/>
+        <translation>মুছে ফেলুন</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="417"/>
@@ -413,7 +413,7 @@
     <message>
         <location filename="../view/widget/playlistitem.cpp" line="193"/>
         <source>Delete</source>
-        <translation type="unfinished"/>
+        <translation>মুছে ফেলুন</translation>
     </message>
     <message>
         <location filename="../view/widget/playlistitem.cpp" line="186"/>
@@ -444,7 +444,7 @@
         <location filename="../view/widget/playlistview.cpp" line="191"/>
         <location filename="../view/widget/playlistview.cpp" line="202"/>
         <source>Delete</source>
-        <translation type="unfinished"/>
+        <translation>মুছে ফেলুন</translation>
     </message>
 </context>
 <context>
@@ -584,7 +584,7 @@
     <message>
         <location filename="../view/widget/titlebarwidget.cpp" line="90"/>
         <source>Search</source>
-        <translation type="unfinished"/>
+        <translation>খুঁজুন</translation>
     </message>
 </context>
 </TS>

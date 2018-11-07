@@ -267,7 +267,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="1018"/>
         <source>All music</source>
-        <translation type="unfinished"/>
+        <translation>Sva glazba</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="723"/>

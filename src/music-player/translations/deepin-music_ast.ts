@@ -385,7 +385,7 @@
     <message>
         <location filename="../view/musiclistwidget.cpp" line="182"/>
         <source>Time added</source>
-        <translation type="unfinished"/>
+        <translation>Data d&apos;amiestu</translation>
     </message>
     <message>
         <location filename="../view/musiclistwidget.cpp" line="183"/>

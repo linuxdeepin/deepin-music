@@ -4,7 +4,7 @@
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="61"/>
         <source>Please select your operation</source>
-        <translation>Lütfen işleminizi seçiniz</translation>
+        <translation>Lütfen yapmak istediğiniz işlemi seçin</translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="68"/>
@@ -14,17 +14,17 @@
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="70"/>
         <source>Minimize to system tray</source>
-        <translation>Sistem tepsisinde küçült</translation>
+        <translation>Sistem tepsisine küçült</translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="79"/>
         <source>Never ask again</source>
-        <translation>Bir daha asla sorma</translation>
+        <translation>Bir daha sorma</translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="90"/>
         <source>Cancel</source>
-        <translation>İptal et</translation>
+        <translation>İptal</translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="91"/>
@@ -52,7 +52,7 @@
     <message>
         <location filename="../view/footerwidget.cpp" line="293"/>
         <source>Favorite</source>
-        <translation>Favori</translation>
+        <translation>Sık kullanılanlara ekle</translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="294"/>
@@ -62,14 +62,14 @@
     <message>
         <location filename="../view/footerwidget.cpp" line="239"/>
         <source>Unknown Title</source>
-        <translation>Bilinmeyen Başlık</translation>
+        <translation>Başlık Bilinmiyor</translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="245"/>
         <location filename="../view/footerwidget.cpp" line="536"/>
         <location filename="../view/footerwidget.cpp" line="718"/>
         <source>Unknown artist</source>
-        <translation>Bilinmeyen sanatçı</translation>
+        <translation>Sanatçı bilinmiyor</translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="295"/>
@@ -89,7 +89,7 @@
     <message>
         <location filename="../view/footerwidget.cpp" line="699"/>
         <source>Single Loop</source>
-        <translation>Tek Döngü</translation>
+        <translation>Parça Döngüsü</translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="702"/>
@@ -114,12 +114,12 @@
         <location filename="../view/importwidget.cpp" line="80"/>
         <location filename="../view/importwidget.cpp" line="121"/>
         <source>%1 music directory or drag &amp; drop music file to add music</source>
-        <translation>%1 müzik eklemek için müzik dizini veya müzik dosyasını sürükleyip bırakınız</translation>
+        <translation>Müzik eklemek için Müzik klasörünü %1 ya da müzik dosyasını sürükleyip bırakın</translation>
     </message>
     <message>
         <location filename="../view/importwidget.cpp" line="112"/>
         <source>Loading music, please wait...</source>
-        <translation>Müzik yükleniyor, lütfen bekleyiniz...</translation>
+        <translation>Müzikler yükleniyor, lütfen bekleyin...</translation>
     </message>
 </context>
 <context>
@@ -152,12 +152,12 @@
     <message>
         <location filename="../view/widget/infodialog.cpp" line="192"/>
         <source>Unknown artist</source>
-        <translation>Bilinmeyen sanatçı</translation>
+        <translation>Sanatçı bilinmiyor</translation>
     </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="193"/>
         <source>Unknown album</source>
-        <translation>Bilinmeyen albüm</translation>
+        <translation>Albüm bilinmiyor</translation>
     </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="119"/>
@@ -183,7 +183,7 @@
     <message>
         <location filename="../view/lyricwidget.cpp" line="166"/>
         <source>Search lyrics</source>
-        <translation>Şarkı sözü ara</translation>
+        <translation>Şarkı sözü arama</translation>
     </message>
     <message>
         <location filename="../view/lyricwidget.cpp" line="170"/>
@@ -198,7 +198,7 @@
     <message>
         <location filename="../view/lyricwidget.cpp" line="180"/>
         <source>Search</source>
-        <translation>Ara</translation>
+        <translation>Arama</translation>
     </message>
     <message>
         <location filename="../view/lyricwidget.cpp" line="213"/>
@@ -221,7 +221,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="253"/>
         <source>Deepin Music Player is a local  music player with beautiful design and simple functions. It supports viewing lyrics when playing, playing lossless music and customize playlist, etc.</source>
-        <translation>Deepin Müzik Çalar, güzel tasarımı ve basit işlevleri olan yerel bir müzik çalar. Oynatırken, şarkı sözlerini görüntülemeyi, kayıpsız müzik çalmayı ve çalma listesini özelleştirmeyi destekliyor.</translation>
+        <translation>Deepin Müzik Oynatıcı, güzel tasarımı ve basit özellikleri olan yerel bir müzik oynatma uygulamasıdır. Oynatma sırasında şarkı sözlerini görüntüleme, kayıpsız müzikleri çalabilme ve oynatma listesini düzenleme gibi çeşitli özellikler sunar.</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="182"/>
@@ -237,7 +237,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="146"/>
         <source>Add file</source>
-        <translation>Dosya Ekle</translation>
+        <translation>Dosya ekle</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="167"/>
@@ -257,12 +257,12 @@
     <message>
         <location filename="../view/mainframe.cpp" line="722"/>
         <source>Invalid or non-existent file</source>
-        <translation>Geçersiz veya varolmayan dosya</translation>
+        <translation>Dosya geçersiz ya da bulunamadı</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="743"/>
         <source>Failed to import, no vaild music file found!</source>
-        <translation>Alınamadı, geçerli bir müzik dosyası bulunamadı!</translation>
+        <translation>İçe aktarılamadı, geçerli bir müzik dosyası bulunamadı!</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="1018"/>
@@ -278,7 +278,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="673"/>
         <source>Successfully added to &quot;%1&quot;</source>
-        <translation>&quot;%1&quot; e başarıyla eklendi</translation>
+        <translation>&quot;%1&quot; üzerine eklendi</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="577"/>
@@ -306,12 +306,12 @@
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="334"/>
         <source>Display in file manager</source>
-        <translation>Dosya yöneticide göster</translation>
+        <translation>Dosya yöneticisinde görüntüle</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="361"/>
         <source>Song info</source>
-        <translation>Şarkı bilgisi</translation>
+        <translation>Şarkı bilgileri</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="337"/>
@@ -331,7 +331,7 @@
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="407"/>
         <source>Cancel</source>
-        <translation>İptal et</translation>
+        <translation>İptal</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="408"/>
@@ -341,28 +341,28 @@
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="417"/>
         <source>Are you sure to delete %1?</source>
-        <translation>%1 &apos;i silmek istediğinizden emin misiniz ?</translation>
+        <translation>%1 ögesini silmek istediğinize emin misiniz?</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="419"/>
         <location filename="../view/widget/musiclistview.cpp" line="423"/>
         <source>Are you sure to delete the selected %1 songs?</source>
-        <translation>Seçilen %1 şarkıyı silmek istediğinizden emin misiniz ?</translation>
+        <translation>%1 seçilmiş şarkıyı silmek istediğinize emin misiniz?</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="424"/>
         <source>Deleting the current song will also delete the song files contained</source>
-        <translation>Mevcut şarkıyı silmek, içerdiği şarkı dosyalarını da silecek</translation>
+        <translation>Geçerli şarkıyı silmek, şarkı içeriği dosyalarını da silecek</translation>
     </message>
     <message>
         <location filename="../view/widget/delegate/musicitemdelegate.cpp" line="299"/>
         <source>Unknown artist</source>
-        <translation>Bilinmeyen sanatçı</translation>
+        <translation>Sanatçı bilinmiyor</translation>
     </message>
     <message>
         <location filename="../view/widget/delegate/musicitemdelegate.cpp" line="310"/>
         <source>Unknown album</source>
-        <translation>Bilinmeyen albüm</translation>
+        <translation>Albüm bilinmiyor</translation>
     </message>
 </context>
 <context>
@@ -370,17 +370,17 @@
     <message>
         <location filename="../view/musiclistwidget.cpp" line="140"/>
         <source>No Music</source>
-        <translation>Müzik yok</translation>
+        <translation>Henüz Bir Müzik Yok</translation>
     </message>
     <message>
         <location filename="../view/musiclistwidget.cpp" line="142"/>
         <source>No result found</source>
-        <translation>Sonuç bulunamadı</translation>
+        <translation>Herhangi bir sonuç bulunamadı</translation>
     </message>
     <message>
         <location filename="../view/musiclistwidget.cpp" line="174"/>
         <source>Play All</source>
-        <translation>Hepsini Oynat</translation>
+        <translation>Tümünü Oynat</translation>
     </message>
     <message>
         <location filename="../view/musiclistwidget.cpp" line="182"/>
@@ -418,12 +418,12 @@
     <message>
         <location filename="../view/widget/playlistitem.cpp" line="186"/>
         <source>Are you sure to delete this playlist?</source>
-        <translation>Bu oynatma listesini silmek istediğinizden emin misiniz ?</translation>
+        <translation>Bu oynatma listesini silmek istediğinize emin misiniz?</translation>
     </message>
     <message>
         <location filename="../view/widget/playlistitem.cpp" line="192"/>
         <source>Cancel</source>
-        <translation>İptal et</translation>
+        <translation>İptal</translation>
     </message>
 </context>
 <context>
@@ -462,7 +462,7 @@
     <message>
         <location filename="../core/playlistmanager.cpp" line="141"/>
         <source>My favorites</source>
-        <translation>Favorilerim</translation>
+        <translation>Sık kullandıklarım</translation>
     </message>
     <message>
         <location filename="../core/playlistmanager.cpp" line="147"/>
@@ -496,12 +496,12 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="26"/>
         <source>Minimize to system tray</source>
-        <translation>Sistem tepsisinde küçült</translation>
+        <translation>Sistem tepsisine küçült</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="27"/>
         <source>Exit Deepin Music</source>
-        <translation>Deepin Müzik&apos;den Çık</translation>
+        <translation>Deepin Müzik Uygulamasından Çık</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="28"/>
@@ -511,12 +511,12 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="29"/>
         <source>Enable fade</source>
-        <translation>Solmaya izin ver</translation>
+        <translation>Kısma kullanılsın</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="30"/>
         <source>Remember playback position</source>
-        <translation>Çalma konumunu hatırla</translation>
+        <translation>Oynatma konumu hatırlansın</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="31"/>
@@ -541,7 +541,7 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="35"/>
         <source>Restore Defaults</source>
-        <translation>Varsayılanı Geri Yükle</translation>
+        <translation>Varsayılanları Geri Yükle</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="36"/>
@@ -561,12 +561,12 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="39"/>
         <source>Volume down</source>
-        <translation>Sesi kıs</translation>
+        <translation>Sesi azalt</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="40"/>
         <source>Volume up</source>
-        <translation>Sesi yükselt</translation>
+        <translation>Sesi arttır</translation>
     </message>
 </context>
 <context>
@@ -575,7 +575,7 @@
         <location filename="../view/widget/searchresult.cpp" line="57"/>
         <location filename="../view/widget/searchresult.cpp" line="126"/>
         <source>Search &quot;%1&quot; in Deepin Music</source>
-        <translation>Deepin Müzik&apos;de &quot;%1&quot; ara</translation>
+        <translation>Deepin Müzik üzerinde &quot;%1&quot; ara</translation>
     </message>
 </context>
 <context>

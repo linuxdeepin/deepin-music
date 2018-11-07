@@ -203,7 +203,7 @@
     <message>
         <location filename="../view/lyricwidget.cpp" line="213"/>
         <source>Back</source>
-        <translation type="unfinished"/>
+        <translation>Πίσω</translation>
     </message>
 </context>
 <context>
@@ -541,7 +541,7 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="35"/>
         <source>Restore Defaults</source>
-        <translation type="unfinished"/>
+        <translation>Ανάκτηση Προεπιλογών</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="36"/>

@@ -203,7 +203,7 @@
     <message>
         <location filename="../view/lyricwidget.cpp" line="213"/>
         <source>Back</source>
-        <translation type="unfinished"/>
+        <translation>वापस</translation>
     </message>
 </context>
 <context>
@@ -536,7 +536,7 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="34"/>
         <source>Shortcuts</source>
-        <translation type="unfinished"/>
+        <translation>शॉर्टकट</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="35"/>
