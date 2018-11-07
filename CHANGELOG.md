@@ -1,3 +1,13 @@
+<a name="3.1.8.6"></a>
+## 3.1.8.6 (2018-11-07)
+
+
+#### Bug Fixes
+
+*   write datebase error ([4fa4ef03](https://github.com/linuxdeepin/deepin-music/commit/4fa4ef03ba64599486d8a16ecda72a351bc3765e))
+
+
+
 <a name="3.1.8.5"></a>
 ## 3.1.8.5 (2018-10-26)
 
