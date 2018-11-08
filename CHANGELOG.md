@@ -1,3 +1,13 @@
+<a name="3.1.9"></a>
+## 3.1.9 (2018-11-08)
+
+
+#### Bug Fixes
+
+*   pull tx failed ([0457b68a](https://github.com/linuxdeepin/deepin-music/commit/0457b68ac8fe40e3c976c9097f49ac3c66068c1f))
+
+
+
 <a name="3.1.8.6"></a>
 ## 3.1.8.6 (2018-11-07)
 
