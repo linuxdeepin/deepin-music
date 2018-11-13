@@ -987,10 +987,15 @@ void MainFrame::onSelectImportDirectory()
 
     auto lastImportPath = MusicSettings::value("base.play.last_import_path").toString();
 
-    auto lastImportDir = QDir(lastImportPath);
-    if (!lastImportDir.exists()) {
+    QDir lastImportDir = QDir(lastImportPath);
+    if (!lastImportDir.exists() && !lastImportPath.isEmpty()) {
         lastImportPath =  QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first();
+    } else {
+        // blumia: always use the path from QDir, QDir also accept relative path string and it will pass
+        //         the `QDir::exists()` checking
+        lastImportPath = lastImportDir.absolutePath();
     }
+
     fileDlg.setDirectory(lastImportPath);
 
     fileDlg.setViewMode(QFileDialog::Detail);
