@@ -29,6 +29,9 @@
 #include "metasearchservice.h"
 
 #include <QMimeDatabase>
+#include <DRecentManager>
+
+DCORE_USE_NAMESPACE
 
 static QMap<QString, bool>  sSupportedSuffix;
 static QStringList          sSupportedSuffixList;
@@ -387,6 +390,11 @@ void Player::playMeta(PlaylistPtr playlist, const MetaPtr meta)
     d->qplayer->setMedia(QMediaContent(QUrl::fromLocalFile(meta->localPath)));
     d->qplayer->setPosition(meta->offset);
     d->activePlaylist->play(meta);
+
+    DRecentData data;
+    data.appName = "Deepin Music";
+    data.appExec = "deepin-music";
+    DRecentManager::addItem(meta->localPath, data);
 
     Q_EMIT mediaPlayed(d->activePlaylist, d->activeMeta);
 
