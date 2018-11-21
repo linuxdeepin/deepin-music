@@ -14,7 +14,7 @@
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="70"/>
         <source>Minimize to system tray</source>
-        <translation type="unfinished"/>
+        <translation>کوچک نمایی</translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="79"/>
@@ -114,7 +114,7 @@
         <location filename="../view/importwidget.cpp" line="80"/>
         <location filename="../view/importwidget.cpp" line="121"/>
         <source>%1 music directory or drag &amp; drop music file to add music</source>
-        <translation type="unfinished"/>
+        <translation>%1 پوشه آهنگ و یا با استفاده از درگ و دراپ فایل موسیقی را اضافه نمایید</translation>
     </message>
     <message>
         <location filename="../view/importwidget.cpp" line="112"/>
@@ -278,7 +278,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="673"/>
         <source>Successfully added to &quot;%1&quot;</source>
-        <translation type="unfinished"/>
+        <translation>با موفقیت به &quot;1%&quot; افزوده شد.</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="577"/>
@@ -326,7 +326,7 @@
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="357"/>
         <source>Encoding</source>
-        <translation type="unfinished"/>
+        <translation>کدگذاری</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="407"/>
@@ -352,7 +352,7 @@
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="424"/>
         <source>Deleting the current song will also delete the song files contained</source>
-        <translation type="unfinished"/>
+        <translation>حذف آهنگ فعلی سبب حذف فایل های آهنگ موجود خواهد شد.</translation>
     </message>
     <message>
         <location filename="../view/widget/delegate/musicitemdelegate.cpp" line="299"/>
@@ -370,7 +370,7 @@
     <message>
         <location filename="../view/musiclistwidget.cpp" line="140"/>
         <source>No Music</source>
-        <translation type="unfinished"/>
+        <translation>بدون موسیقی</translation>
     </message>
     <message>
         <location filename="../view/musiclistwidget.cpp" line="142"/>
@@ -385,7 +385,7 @@
     <message>
         <location filename="../view/musiclistwidget.cpp" line="182"/>
         <source>Time added</source>
-        <translation type="unfinished"/>
+        <translation>زمان افزوده شد</translation>
     </message>
     <message>
         <location filename="../view/musiclistwidget.cpp" line="183"/>
@@ -418,7 +418,7 @@
     <message>
         <location filename="../view/widget/playlistitem.cpp" line="186"/>
         <source>Are you sure to delete this playlist?</source>
-        <translation type="unfinished"/>
+        <translation>برای حذف این لیست پخش اطمینان دارید؟</translation>
     </message>
     <message>
         <location filename="../view/widget/playlistitem.cpp" line="192"/>
@@ -496,12 +496,12 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="26"/>
         <source>Minimize to system tray</source>
-        <translation type="unfinished"/>
+        <translation>کوچک نمایی</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="27"/>
         <source>Exit Deepin Music</source>
-        <translation type="unfinished"/>
+        <translation>خروج</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="28"/>
@@ -511,12 +511,12 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="29"/>
         <source>Enable fade</source>
-        <translation type="unfinished"/>
+        <translation>فعال سازی حالت محو</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="30"/>
         <source>Remember playback position</source>
-        <translation type="unfinished"/>
+        <translation>بازیابی موقعیت پخش</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="31"/>
@@ -526,7 +526,7 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="32"/>
         <source>Basic</source>
-        <translation type="unfinished"/>
+        <translation>پایه ای</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="33"/>
@@ -541,7 +541,7 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="35"/>
         <source>Restore Defaults</source>
-        <translation type="unfinished"/>
+        <translation>بازگرداندن پیش فرض ها</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="36"/>
@@ -575,7 +575,7 @@
         <location filename="../view/widget/searchresult.cpp" line="57"/>
         <location filename="../view/widget/searchresult.cpp" line="126"/>
         <source>Search &quot;%1&quot; in Deepin Music</source>
-        <translation type="unfinished"/>
+        <translation>جستجوی &quot;1%&quot; در موسیقی دیپین</translation>
     </message>
 </context>
 <context>

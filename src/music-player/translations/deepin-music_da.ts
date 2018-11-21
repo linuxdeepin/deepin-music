@@ -352,7 +352,7 @@
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="424"/>
         <source>Deleting the current song will also delete the song files contained</source>
-        <translation>Hvis den aktuelle sang slettes vil det også slettes de indeholdte sangfiler</translation>
+        <translation>Hvis den nuværende sang slettes vil det også slettes de indeholdte sangfiler</translation>
     </message>
     <message>
         <location filename="../view/widget/delegate/musicitemdelegate.cpp" line="299"/>
