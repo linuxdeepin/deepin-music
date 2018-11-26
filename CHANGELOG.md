@@ -1,3 +1,18 @@
+<a name="3.1.10"></a>
+## 3.1.10 (2018-11-26)
+
+
+#### Bug Fixes
+
+*   avoid set a empty path to QFileDialog ([c6c46e6a](https://github.com/linuxdeepin/deepin-music/commit/c6c46e6a6eb78225874582adba247087989b8be2))
+
+#### Features
+
+*   support X-Deepin-Vendor ([9731274c](https://github.com/linuxdeepin/deepin-music/commit/9731274cf48febb6cad1b0568524fd3635f637f7))
+*   support the recent file spec. ([b4c128f6](https://github.com/linuxdeepin/deepin-music/commit/b4c128f60a25343f4443231be69ab670d1c05e6f))
+
+
+
 <a name="3.1.9"></a>
 ## 3.1.9 (2018-11-08)
 
