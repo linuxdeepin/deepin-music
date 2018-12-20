@@ -274,6 +274,7 @@ void Playlist::appendMusicList(const MetaPtrList metalist)
 {
     MetaPtrList newMetalist;
     for (auto meta : metalist) {
+        // TODO: Get called multiple times, maybe because multi-thread. Should find out why.
         if (playlistMeta.metas.contains(meta->hash)) {
             qDebug() << "skip dump music " << meta->hash << meta->localPath;
             continue;

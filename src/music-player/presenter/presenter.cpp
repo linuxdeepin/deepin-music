@@ -423,8 +423,9 @@ void Presenter::openUri(const QUrl &uri)
         return;
     }
     auto list = d->playlistMgr->playlist(AllMusicListID);
-    Q_EMIT MediaLibrary::instance()->meidaFileImported(AllMusicListID, metas);
     onAddToPlaylist(list, metas);
+    Q_EMIT MediaLibrary::instance()->meidaFileImported(AllMusicListID, metas);
+
     onSyncMusicPlay(list, metas.first());
     onCurrentPlaylistChanged(list);
 }
