@@ -1,3 +1,13 @@
+<a name="3.1.12"></a>
+## 3.1.12 (2018-12-21)
+
+
+#### Bug Fixes
+
+*   multiple duplicated items when open via associated file ([d4bf361c](https://github.com/linuxdeepin/deepin-music/commit/d4bf361cfe9364233d8afa20aef5da6d90f185e2))
+
+
+
 <a name="3.1.11"></a>
 ## 3.1.11 (2018-11-27)
 
