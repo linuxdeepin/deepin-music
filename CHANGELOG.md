@@ -1,3 +1,13 @@
+<a name="3.1.13"></a>
+## 3.1.13 (2018-12-27)
+
+
+#### Bug Fixes
+
+*   last opened path check ([5def1504](https://github.com/linuxdeepin/deepin-music/commit/5def15043cc3355771ae2e091e801a1a925d039b))
+
+
+
 <a name="3.1.12"></a>
 ## 3.1.12 (2018-12-21)
 
