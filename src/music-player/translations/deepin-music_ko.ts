@@ -203,7 +203,7 @@
     <message>
         <location filename="../view/lyricwidget.cpp" line="213"/>
         <source>Back</source>
-        <translation type="unfinished"/>
+        <translation>뒤로 가기</translation>
     </message>
 </context>
 <context>

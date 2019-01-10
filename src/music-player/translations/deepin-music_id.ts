@@ -4,7 +4,7 @@
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="61"/>
         <source>Please select your operation</source>
-        <translation type="unfinished"/>
+        <translation>Mohon pilih operasi anda</translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="68"/>
@@ -14,12 +14,12 @@
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="70"/>
         <source>Minimize to system tray</source>
-        <translation type="unfinished"/>
+        <translation>Kecilkan ke baki sistem</translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="79"/>
         <source>Never ask again</source>
-        <translation type="unfinished"/>
+        <translation>Jangan tanya lagi</translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="90"/>
@@ -89,7 +89,7 @@
     <message>
         <location filename="../view/footerwidget.cpp" line="699"/>
         <source>Single Loop</source>
-        <translation type="unfinished"/>
+        <translation>Putar sekali</translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="702"/>
@@ -242,7 +242,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="167"/>
         <source>Dark theme</source>
-        <translation type="unfinished"/>
+        <translation>Tema gelap</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="575"/>
@@ -257,17 +257,17 @@
     <message>
         <location filename="../view/mainframe.cpp" line="722"/>
         <source>Invalid or non-existent file</source>
-        <translation type="unfinished"/>
+        <translation>Tidak valid dan berkas tidak ada</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="743"/>
         <source>Failed to import, no vaild music file found!</source>
-        <translation>Gagal mengimpor, tidak ada musik valid ditemukan!</translation>
+        <translation>Gagal mengimpor, tidak ada berkas musik valid ditemukan!</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="1018"/>
         <source>All music</source>
-        <translation type="unfinished"/>
+        <translation>Semua musik</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="723"/>
@@ -496,12 +496,12 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="26"/>
         <source>Minimize to system tray</source>
-        <translation type="unfinished"/>
+        <translation>Kecilkan ke baki sistem</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="27"/>
         <source>Exit Deepin Music</source>
-        <translation type="unfinished"/>
+        <translation>Keluar Deepin Musik</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="28"/>
@@ -516,12 +516,12 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="30"/>
         <source>Remember playback position</source>
-        <translation type="unfinished"/>
+        <translation>Mengingat posisi playback</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="31"/>
         <source>Close Main Window</source>
-        <translation type="unfinished"/>
+        <translation>Tutup Jendela Utama</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="32"/>
@@ -541,7 +541,7 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="35"/>
         <source>Restore Defaults</source>
-        <translation type="unfinished"/>
+        <translation>Pulihkan baku</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="36"/>

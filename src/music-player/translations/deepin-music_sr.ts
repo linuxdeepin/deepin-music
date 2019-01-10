@@ -79,7 +79,7 @@
     <message>
         <location filename="../view/footerwidget.cpp" line="296"/>
         <source>Playlist</source>
-        <translation>Листа за пуштање</translation>
+        <translation>Листа пуштања</translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="696"/>
@@ -211,7 +211,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="135"/>
         <source>New playlist</source>
-        <translation>Нова листа за пуштање</translation>
+        <translation>Нова листа пуштања</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="151"/>
@@ -221,7 +221,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="253"/>
         <source>Deepin Music Player is a local  music player with beautiful design and simple functions. It supports viewing lyrics when playing, playing lossless music and customize playlist, etc.</source>
-        <translation>Дипин Музика је локалани пуштач музике украшен прелепим дизајном и једноставним функцијама. Подржава преглед текста током пуштања песме, пуштање музике без губитака, уређивање листа за пуштање итд.</translation>
+        <translation>Дипин Музика је локалани пуштач музике украшен прелепим дизајном и једноставним функцијама. Подржава преглед текста током пуштања песме, пуштање музике без губитака, уређивање листа пуштања итд.</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="182"/>
@@ -291,7 +291,7 @@
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="287"/>
         <source>New playlist</source>
-        <translation>Нова листа за пуштање</translation>
+        <translation>Нова листа пуштања</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="327"/>
@@ -301,7 +301,7 @@
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="329"/>
         <source>Add to playlist</source>
-        <translation>Додај у листу за пуштање</translation>
+        <translation>Додај у листу пуштања</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="334"/>
@@ -316,7 +316,7 @@
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="337"/>
         <source>Remove from playlist</source>
-        <translation>Уклони из листе за пуштање</translation>
+        <translation>Уклони из листе пуштања</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="338"/>
@@ -418,7 +418,7 @@
     <message>
         <location filename="../view/widget/playlistitem.cpp" line="186"/>
         <source>Are you sure to delete this playlist?</source>
-        <translation>Заиста желите да обришете листу за пуштање?</translation>
+        <translation>Заиста желите да обришете листу пуштања?</translation>
     </message>
     <message>
         <location filename="../view/widget/playlistitem.cpp" line="192"/>
@@ -452,7 +452,7 @@
     <message>
         <location filename="../core/playlistmanager.cpp" line="79"/>
         <source>New playlist</source>
-        <translation>Нова листа за пуштање</translation>
+        <translation>Нова листа пуштања</translation>
     </message>
     <message>
         <location filename="../core/playlistmanager.cpp" line="135"/>
@@ -475,7 +475,7 @@
     <message>
         <location filename="../view/playlistwidget.cpp" line="58"/>
         <source>New playlist</source>
-        <translation>Нова листа за пуштање</translation>
+        <translation>Нова листа пуштања</translation>
     </message>
 </context>
 <context>
