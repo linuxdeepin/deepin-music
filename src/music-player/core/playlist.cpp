@@ -26,6 +26,7 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QCollator>
+#include <QTime>
 
 #include "medialibrary.h"
 #include "mediadatabase.h"
@@ -36,6 +37,7 @@ Playlist::Playlist(const PlaylistMeta &musiclistinfo, QObject *parent)
     : QObject(parent)
 {
     playlistMeta = musiclistinfo;
+    shuffleSeed = static_cast<int>(QTime::currentTime().msecsSinceStartOfDay());
 }
 
 const MetaPtr Playlist::first() const
@@ -61,6 +63,78 @@ const MetaPtr Playlist::next(const MetaPtr meta) const
     auto index = playlistMeta.sortMetas.indexOf(meta->hash);
     auto prev = (index + 1) % playlistMeta.sortMetas.length();
     return playlistMeta.metas.value(playlistMeta.sortMetas.at(prev));
+}
+
+const MetaPtrList shuffle(MetaPtrList &&musiclist, int seed)
+{
+    auto size = musiclist.size();
+    auto mid = size / 2;
+    // Preprocess: reorder musiclist with seed
+    // to make sure music in the first half and second half is different every playlist
+    // and same in the same playlist: for shuffle uniformity
+    for (auto i = 0; i < size; ++i)
+        musiclist.swap(i, seed % size);
+
+    for (auto i = 0; i < mid; ++i)
+        musiclist.swap(i, std::rand() % mid);
+    for (auto i = mid; i < size; ++i)
+        musiclist.swap(i, mid + (std::rand() % (size - mid)));
+    return musiclist;
+}
+
+const MetaPtr Playlist::shuffleNext(const MetaPtr meta)
+{
+    if (0 == playlistMeta.sortMetas.length() || meta.isNull()) {
+        return MetaPtr();
+    }
+    if (shuffleList.isEmpty()) {
+        shuffleList = shuffle(allmusic(), shuffleSeed);
+    }
+    if (meta == shuffleList.last())
+        return shuffleTurn(true);
+    auto offset = shuffleList.indexOf(meta) + 1;
+    // just ignore removed music
+    for (auto i = shuffleList.begin() + offset; i < shuffleList.end(); ++i)
+        if (contains(*i))
+            return *i;
+    return shuffleTurn(true);
+}
+
+const MetaPtr Playlist::shufflePrev(const MetaPtr meta)
+{
+    if (0 == playlistMeta.sortMetas.length() || meta.isNull()) {
+        return MetaPtr();
+    }
+    if (shuffleList.isEmpty()) {
+        shuffleList = shuffle(allmusic(), shuffleSeed);
+    }
+    if (meta == shuffleList.first())
+        return shuffleTurn(false);
+    auto offset = shuffleList.length() - shuffleList.indexOf(meta);
+    for (auto i = shuffleList.rbegin() + offset; i < shuffleList.rend(); ++i)
+        if (contains(*i))
+            return *i;
+    return shuffleTurn(false);
+}
+
+const MetaPtr Playlist::shuffleTurn(bool forward)
+{
+    std::swap(shuffleList, shuffleHistory);
+    switch (shuffleHistoryState) {
+    case ShuffleHistoryState::Empty:
+        shuffleList = shuffle(allmusic(), shuffleSeed);
+        break;
+    case ShuffleHistoryState::Prev:
+        if (forward)
+            shuffleList = shuffle(allmusic(), shuffleSeed);
+        break;
+    case ShuffleHistoryState::Next:
+        if (!forward)
+            shuffleList = shuffle(allmusic(), shuffleSeed);
+        break;
+    }
+    shuffleHistoryState = forward ? ShuffleHistoryState::Prev : ShuffleHistoryState::Next;
+    return forward ? shuffleList.first() : shuffleList.last();
 }
 
 const MetaPtr Playlist::music(int index) const

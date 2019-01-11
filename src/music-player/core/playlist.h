@@ -71,6 +71,8 @@ public:
     const MetaPtr first() const;
     const MetaPtr prev(const MetaPtr meta) const;
     const MetaPtr next(const MetaPtr info) const;
+    const MetaPtr shufflePrev(const MetaPtr meta);
+    const MetaPtr shuffleNext(const MetaPtr meta);
     const MetaPtr music(int index) const;
     const MetaPtr music(const QString &id) const;
     const MetaPtr playing() const;
@@ -105,7 +107,19 @@ signals:
 private:
     Q_DISABLE_COPY(Playlist)
 
-    PlaylistMeta   playlistMeta;
+    enum class ShuffleHistoryState {
+        Empty,
+        Prev,
+        Next,
+    };
+
+    PlaylistMeta playlistMeta;
+    MetaPtrList shuffleList;
+    MetaPtrList shuffleHistory;
+    ShuffleHistoryState shuffleHistoryState = ShuffleHistoryState::Empty;
+    int shuffleSeed;
+
+    const MetaPtr shuffleTurn(bool forward);
 };
 
 typedef QSharedPointer<Playlist> PlaylistPtr;

@@ -304,8 +304,7 @@ void PlayerPrivate::selectNext(const MetaPtr info, Player::PlaybackMode mode)
         break;
     }
     case Player::Shuffle: {
-        int randomValue = qrand() % activePlaylist->length();
-        q->playMeta(activePlaylist, activePlaylist->music(randomValue));
+        q->playMeta(activePlaylist, activePlaylist->shuffleNext(info));
         break;
     }
     }
@@ -328,8 +327,7 @@ void PlayerPrivate::selectPrev(const MetaPtr info, Player::PlaybackMode mode)
         break;
     }
     case Player::Shuffle: {
-        int randomValue = qrand() % activePlaylist->length();
-        q->playMeta(activePlaylist, activePlaylist->music(randomValue));
+        q->playMeta(activePlaylist, activePlaylist->shufflePrev(info));
         break;
     }
     }
