@@ -41,8 +41,12 @@ namespace WidgetHelper
 
 QImage applyEffectToImage(const QImage src, QGraphicsEffect *effect, int extent = 0)
 {
-    if (src.isNull()) { return QImage(); }
-    if (!effect) { return src; }
+    if (src.isNull()) {
+        return QImage();
+    }
+    if (!effect) {
+        return src;
+    }
     QGraphicsScene scene;
     QGraphicsPixmapItem item;
     item.setPixmap(QPixmap::fromImage(src));
@@ -63,7 +67,7 @@ QPixmap blurImage(const QImage &image, int radius)
     blur->setBlurRadius(radius);
     QImage result = applyEffectToImage(image, blur);
     auto cropFactor = 0.9;
-    QRect rect((1 - cropFactor) / 2 * result.width() , (1 - cropFactor) / 2 * result.height(),
+    QRect rect((1 - cropFactor) / 2 * result.width(), (1 - cropFactor) / 2 * result.height(),
                result.width() *cropFactor,
                result.height() *cropFactor);
     QImage cropped = result.copy(rect);

@@ -51,7 +51,7 @@ inline QString toChinese(const QString &c)
 {
     QString pinyin = Dtk::Core::Chinese2Pinyin(c);
     if (pinyin.length() >= 2
-            && isNumber(pinyin.at(pinyin.length() - 1))) {
+        && isNumber(pinyin.at(pinyin.length() - 1))) {
         return pinyin.left(pinyin.length() - 1);
     }
     return pinyin;

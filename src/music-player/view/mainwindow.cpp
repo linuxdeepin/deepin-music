@@ -587,7 +587,7 @@ void MainWindow::showTips(QPixmap icon, QString text)
         d->tips->deleteLater();
     }
 
-    d->tips = new Tip(icon, text , this);
+    d->tips = new Tip(icon, text, this);
     auto center = mapToGlobal(QPoint(QWidget::rect().center()));
     center.setY(center.y() + height() / 2 - d->footer->height() - 40 - 36);
     center = d->tips->mapFromGlobal(center);

@@ -47,7 +47,7 @@ struct SearchMeta {
     QList<SearchArtist>     artists;
     int                     length = 0;
 
-    SearchMeta(){}
+    SearchMeta() {}
     SearchMeta(const QString &id): id(id) {}
 };
 

@@ -84,7 +84,7 @@ void MetaAnalyzer::analyzerResults()
     for (auto &titleResult : m_titleResult) {
         for (auto &albumResult : m_ablumResult) {
             if (titleResult.album.name == albumResult.album.name &&
-                    titleResult.name == albumResult.name) {
+                titleResult.name == albumResult.name) {
 //                qDebug() << "check" << m_meta.title  << titleResult.name <<
 //                         similarString(m_meta.title, titleResult.name);
                 if (!m_meta.isNull() && similarString(m_meta->title, titleResult.name)) {

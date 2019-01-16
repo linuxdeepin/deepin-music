@@ -58,7 +58,9 @@ class MprisRootInterface: public DBusExtendedAbstractInterface
     Q_OBJECT
 public:
     static inline const char *staticInterfaceName()
-    { return "org.mpris.MediaPlayer2"; }
+    {
+        return "org.mpris.MediaPlayer2";
+    }
 
 public:
     MprisRootInterface(const QString &service, const QString &path, const QDBusConnection &connection, QObject *parent = 0);
@@ -67,41 +69,62 @@ public:
 
     Q_PROPERTY(bool CanQuit READ canQuit NOTIFY canQuitChanged)
     inline bool canQuit()
-    { return qvariant_cast< bool >(internalPropGet("CanQuit", &m_canQuit)); }
+    {
+        return qvariant_cast< bool >(internalPropGet("CanQuit", &m_canQuit));
+    }
 
     Q_PROPERTY(bool CanRaise READ canRaise NOTIFY canRaiseChanged)
     inline bool canRaise()
-    { return qvariant_cast< bool >(internalPropGet("CanRaise", &m_canRaise)); }
+    {
+        return qvariant_cast< bool >(internalPropGet("CanRaise", &m_canRaise));
+    }
 
     Q_PROPERTY(bool CanSetFullscreen READ canSetFullscreen NOTIFY canSetFullscreenChanged)
     inline bool canSetFullscreen()
-    { return qvariant_cast< bool >(internalPropGet("CanSetFullscreen", &m_canSetFullscreen)); }
+    {
+        return qvariant_cast< bool >(internalPropGet("CanSetFullscreen", &m_canSetFullscreen));
+    }
 
     Q_PROPERTY(QString DesktopEntry READ desktopEntry NOTIFY desktopEntryChanged)
     inline QString desktopEntry()
-    { return qvariant_cast< QString >(internalPropGet("DesktopEntry", &m_desktopEntry)); }
+    {
+        return qvariant_cast< QString >(internalPropGet("DesktopEntry", &m_desktopEntry));
+    }
 
     Q_PROPERTY(bool Fullscreen READ fullscreen WRITE setFullscreen NOTIFY fullscreenChanged)
     inline bool fullscreen()
-    { return qvariant_cast< bool >(internalPropGet("Fullscreen", &m_fullscreen)); }
+    {
+        return qvariant_cast< bool >(internalPropGet("Fullscreen", &m_fullscreen));
+    }
     inline void setFullscreen(bool value)
-    { m_fullscreen = value; internalPropSet("Fullscreen", QVariant::fromValue(value), &m_fullscreen); }
+    {
+        m_fullscreen = value;
+        internalPropSet("Fullscreen", QVariant::fromValue(value), &m_fullscreen);
+    }
 
     Q_PROPERTY(bool HasTrackList READ hasTrackList NOTIFY hasTrackListChanged)
     inline bool hasTrackList()
-    { return qvariant_cast< bool >(internalPropGet("HasTrackList", &m_hasTrackList)); }
+    {
+        return qvariant_cast< bool >(internalPropGet("HasTrackList", &m_hasTrackList));
+    }
 
     Q_PROPERTY(QString Identity READ identity NOTIFY identityChanged)
     inline QString identity()
-    { return qvariant_cast< QString >(internalPropGet("Identity", &m_identity)); }
+    {
+        return qvariant_cast< QString >(internalPropGet("Identity", &m_identity));
+    }
 
     Q_PROPERTY(QStringList SupportedMimeTypes READ supportedMimeTypes NOTIFY supportedMimeTypesChanged)
     inline QStringList supportedMimeTypes()
-    { return qvariant_cast< QStringList >(internalPropGet("SupportedMimeTypes", &m_supportedMimeTypes)); }
+    {
+        return qvariant_cast< QStringList >(internalPropGet("SupportedMimeTypes", &m_supportedMimeTypes));
+    }
 
     Q_PROPERTY(QStringList SupportedUriSchemes READ supportedUriSchemes NOTIFY supportedUriSchemesChanged)
     inline QStringList supportedUriSchemes()
-    { return qvariant_cast< QStringList >(internalPropGet("SupportedUriSchemes", &m_supportedUriSchemes)); }
+    {
+        return qvariant_cast< QStringList >(internalPropGet("SupportedUriSchemes", &m_supportedUriSchemes));
+    }
 
 public Q_SLOTS: // METHODS
     inline QDBusPendingReply<> Quit()
@@ -142,10 +165,12 @@ private:
     QStringList m_supportedMimeTypes;
 };
 
-namespace org {
-    namespace mpris {
-        typedef ::MprisRootInterface MediaPlayer2;
-    }
+namespace org
+{
+namespace mpris
+{
+typedef ::MprisRootInterface MediaPlayer2;
+}
 }
 
 
@@ -157,7 +182,9 @@ class MprisPlayerInterface: public DBusExtendedAbstractInterface
     Q_OBJECT
 public:
     static inline const char *staticInterfaceName()
-    { return "org.mpris.MediaPlayer2.Player"; }
+    {
+        return "org.mpris.MediaPlayer2.Player";
+    }
 
 public:
     MprisPlayerInterface(const QString &service, const QString &path, const QDBusConnection &connection, QObject *parent = 0);
@@ -166,71 +193,113 @@ public:
 
     Q_PROPERTY(bool CanControl READ canControl NOTIFY canControlChanged)
     inline bool canControl()
-    { return qvariant_cast< bool >(internalPropGet("CanControl", &m_canControl)); }
+    {
+        return qvariant_cast< bool >(internalPropGet("CanControl", &m_canControl));
+    }
 
     Q_PROPERTY(bool CanGoNext READ canGoNext NOTIFY canGoNextChanged)
     inline bool canGoNext()
-    { return qvariant_cast< bool >(internalPropGet("CanGoNext", &m_canGoNext)); }
+    {
+        return qvariant_cast< bool >(internalPropGet("CanGoNext", &m_canGoNext));
+    }
 
     Q_PROPERTY(bool CanGoPrevious READ canGoPrevious NOTIFY canGoPreviousChanged)
     inline bool canGoPrevious()
-    { return qvariant_cast< bool >(internalPropGet("CanGoPrevious", &m_canGoPrevious)); }
+    {
+        return qvariant_cast< bool >(internalPropGet("CanGoPrevious", &m_canGoPrevious));
+    }
 
     Q_PROPERTY(bool CanPause READ canPause NOTIFY canPauseChanged)
     inline bool canPause()
-    { return qvariant_cast< bool >(internalPropGet("CanPause", &m_canPause)); }
+    {
+        return qvariant_cast< bool >(internalPropGet("CanPause", &m_canPause));
+    }
 
     Q_PROPERTY(bool CanPlay READ canPlay NOTIFY canPlayChanged)
     inline bool canPlay()
-    { return qvariant_cast< bool >(internalPropGet("CanPlay", &m_canPlay)); }
+    {
+        return qvariant_cast< bool >(internalPropGet("CanPlay", &m_canPlay));
+    }
 
     Q_PROPERTY(bool CanSeek READ canSeek NOTIFY canSeekChanged)
     inline bool canSeek()
-    { return qvariant_cast< bool >(internalPropGet("CanSeek", &m_canSeek)); }
+    {
+        return qvariant_cast< bool >(internalPropGet("CanSeek", &m_canSeek));
+    }
 
     Q_PROPERTY(QString LoopStatus READ loopStatus WRITE setLoopStatus NOTIFY loopStatusChanged)
     inline QString loopStatus()
-    { return qvariant_cast< QString >(internalPropGet("LoopStatus", &m_loopStatus)); }
+    {
+        return qvariant_cast< QString >(internalPropGet("LoopStatus", &m_loopStatus));
+    }
     inline void setLoopStatus(const QString &value)
-    { m_loopStatus = value; internalPropSet("LoopStatus", QVariant::fromValue(value), &m_loopStatus); }
+    {
+        m_loopStatus = value;
+        internalPropSet("LoopStatus", QVariant::fromValue(value), &m_loopStatus);
+    }
 
     Q_PROPERTY(double MaximumRate READ maximumRate NOTIFY maximumRateChanged)
     inline double maximumRate()
-    { return qvariant_cast< double >(internalPropGet("MaximumRate", &m_maximumRate)); }
+    {
+        return qvariant_cast< double >(internalPropGet("MaximumRate", &m_maximumRate));
+    }
 
     Q_PROPERTY(QVariantMap Metadata READ metadata NOTIFY metadataChanged)
     inline QVariantMap metadata()
-    { return qvariant_cast< QVariantMap >(internalPropGet("Metadata", &m_metadata)); }
+    {
+        return qvariant_cast< QVariantMap >(internalPropGet("Metadata", &m_metadata));
+    }
 
     Q_PROPERTY(double MinimumRate READ minimumRate NOTIFY minimumRateChanged)
     inline double minimumRate()
-    { return qvariant_cast< double >(internalPropGet("MinimumRate", &m_minimumRate)); }
+    {
+        return qvariant_cast< double >(internalPropGet("MinimumRate", &m_minimumRate));
+    }
 
     Q_PROPERTY(QString PlaybackStatus READ playbackStatus NOTIFY playbackStatusChanged)
     inline QString playbackStatus()
-    { return qvariant_cast< QString >(internalPropGet("PlaybackStatus", &m_playbackStatus)); }
+    {
+        return qvariant_cast< QString >(internalPropGet("PlaybackStatus", &m_playbackStatus));
+    }
 
     Q_PROPERTY(qlonglong Position READ position NOTIFY positionChanged)
     inline qlonglong position()
-    { return qvariant_cast< qlonglong >(internalPropGet("Position", &m_position)); }
+    {
+        return qvariant_cast< qlonglong >(internalPropGet("Position", &m_position));
+    }
 
     Q_PROPERTY(double Rate READ rate WRITE setRate NOTIFY rateChanged)
     inline double rate()
-    { return qvariant_cast< double >(internalPropGet("Rate", &m_rate)); }
+    {
+        return qvariant_cast< double >(internalPropGet("Rate", &m_rate));
+    }
     inline void setRate(double value)
-    { m_rate = value; internalPropSet("Rate", QVariant::fromValue(value), &m_rate); }
+    {
+        m_rate = value;
+        internalPropSet("Rate", QVariant::fromValue(value), &m_rate);
+    }
 
     Q_PROPERTY(bool Shuffle READ shuffle WRITE setShuffle NOTIFY shuffleChanged)
     inline bool shuffle()
-    { return qvariant_cast< bool >(internalPropGet("Shuffle", &m_shuffle)); }
+    {
+        return qvariant_cast< bool >(internalPropGet("Shuffle", &m_shuffle));
+    }
     inline void setShuffle(bool value)
-    { m_shuffle = value; internalPropSet("Shuffle", QVariant::fromValue(value), &m_shuffle); }
+    {
+        m_shuffle = value;
+        internalPropSet("Shuffle", QVariant::fromValue(value), &m_shuffle);
+    }
 
     Q_PROPERTY(double Volume READ volume WRITE setVolume NOTIFY volumeChanged)
     inline double volume()
-    { return qvariant_cast< double >(internalPropGet("Volume", &m_volume)); }
+    {
+        return qvariant_cast< double >(internalPropGet("Volume", &m_volume));
+    }
     inline void setVolume(double value)
-    { m_volume = value; internalPropSet("Volume", QVariant::fromValue(value), &m_volume); }
+    {
+        m_volume = value;
+        internalPropSet("Volume", QVariant::fromValue(value), &m_volume);
+    }
 
 public Q_SLOTS: // METHODS
     inline QDBusPendingReply<> Next()
@@ -329,8 +398,9 @@ private:
     double m_volume;
 };
 
-namespace MediaPlayer2 {
-    typedef ::MprisPlayerInterface Player;
+namespace MediaPlayer2
+{
+typedef ::MprisPlayerInterface Player;
 }
 
 #endif /* MPRISROOTINTERFACE_P_H */

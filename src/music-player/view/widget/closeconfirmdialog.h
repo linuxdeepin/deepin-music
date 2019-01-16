@@ -30,7 +30,7 @@ class CloseConfirmDialog : public Dtk::Widget::DDialog
 {
     Q_OBJECT
 public:
-    enum CloseAction{
+    enum CloseAction {
         MiniOnClose = 0,
         QuitOnClose = 1,
     };

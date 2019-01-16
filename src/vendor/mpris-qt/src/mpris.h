@@ -90,9 +90,16 @@ public:
     Q_INVOKABLE static QString metadataToString(Metadata metadata);
 
 private:
-    template<class T, int N> static int arraySize(T (&)[N]) { return N; };
-    template<typename T, typename U> struct is_same { static const bool value = false; };
-    template<typename T> struct is_same<T,T> { static const bool value = true; };
+    template<class T, int N> static int arraySize(T(&)[N])
+    {
+        return N;
+    };
+    template<typename T, typename U> struct is_same {
+        static const bool value = false;
+    };
+    template<typename T> struct is_same<T, T> {
+        static const bool value = true;
+    };
     template<typename T> static void getEnumStringsAndSize(const char ***strings, int *size);
     template<typename T> static QString enumerationToString(T enumeration);
     template<typename T> static T enumerationFromString(const QString &string);

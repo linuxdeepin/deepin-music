@@ -30,7 +30,7 @@ ModeButton::ModeButton(QWidget *parent) : QPushButton(parent)
         if (0 == m_modeIcons.length()) {
             return;
         }
-        setMode( (m_mode + 1) % m_modeIcons.length());
+        setMode((m_mode + 1) % m_modeIcons.length());
 
         this->style()->unpolish(this);
         this->style()->polish(this);

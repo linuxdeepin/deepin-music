@@ -58,7 +58,7 @@ SearchMetaItem::SearchMetaItem(QWidget *parent) : QFrame(parent), d_ptr(new Sear
     interLayout->setMargin(0);
 
     auto metaInfoLayout = new QVBoxLayout;
-    metaInfoLayout->setContentsMargins(10,10,10,10);
+    metaInfoLayout->setContentsMargins(10, 10, 10, 10);
     metaInfoLayout->setSpacing(5);
 
     d->metaTitle = new QLabel;
@@ -97,7 +97,7 @@ void SearchMetaItem::initUI(const DMusic::SearchMeta &meta)
     d->metaLength->setText(DMusic::lengthString(meta.length));
 }
 
-void SearchMetaItem::setChecked( bool check)
+void SearchMetaItem::setChecked(bool check)
 {
     Q_D(SearchMetaItem);
     d->checkedBt->setProperty("active", check);

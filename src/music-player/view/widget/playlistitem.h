@@ -35,7 +35,10 @@ class PlayListItem : public QFrame
     Q_PROPERTY(QString highlightPlayingIcon READ highlightPlayingIcon WRITE setHighlightPlayingIcon)
 public:
     explicit PlayListItem(PlaylistPtr playlist, QWidget *parent = Q_NULLPTR);
-    inline PlaylistPtr data() {return m_data;}
+    inline PlaylistPtr data()
+    {
+        return m_data;
+    }
 
     void setActive(bool active);
     void setPlay(bool isPaly);

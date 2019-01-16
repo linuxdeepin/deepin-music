@@ -54,10 +54,16 @@ public:
     ~DBusExtendedPendingCallWatcher();
 
     Q_PROPERTY(QString AsyncProperty READ asyncProperty)
-    inline QString asyncProperty() const { return m_asyncProperty; }
+    inline QString asyncProperty() const
+    {
+        return m_asyncProperty;
+    }
 
     Q_PROPERTY(QVariant PreviousValue READ previousValue)
-    inline QVariant previousValue() const { return m_previousValue; }
+    inline QVariant previousValue() const
+    {
+        return m_previousValue;
+    }
 
 private:
     QString m_asyncProperty;

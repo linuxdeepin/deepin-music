@@ -42,7 +42,7 @@ Lyric parseLrc(QString &rawLyric)
     lyric.hasTime = true;
 
     // Parse each line of content.
-    foreach(const QString & line, lrc.split(QChar('\n'))) {
+    foreach (const QString & line, lrc.split(QChar('\n'))) {
         if (line.length() == 0) {
             continue;
         }
@@ -107,7 +107,7 @@ Lyric parseLrc(QString &rawLyric)
             QString words(line.mid(pos));
 
             // Store all time tags.
-            foreach(int time_tag, lrc_time_tags) {
+            foreach (int time_tag, lrc_time_tags) {
                 LrcElement lrc_element;
                 lrc_element.start = time_tag;
                 lrc_element.content = words;
@@ -121,7 +121,7 @@ Lyric parseLrc(QString &rawLyric)
 
     // TODO(xushaohua):Add durations to lrc_element.
     for (auto iter = lyric.m_lyricElements.begin(); iter != lyric.m_lyricElements.end();
-            ++iter) {
+         ++iter) {
         if ((iter + 1) != lyric.m_lyricElements.end()) {
             (*iter).duration = (* (iter + 1)).start - (*iter).start;
         } else {
@@ -132,7 +132,7 @@ Lyric parseLrc(QString &rawLyric)
     // Add offset to each lrc_element.
     if (lyric.m_meta.offset != 0) {
         for (auto iter = lyric.m_lyricElements.begin(); iter != lyric.m_lyricElements.end();
-                ++iter) {
+             ++iter) {
             (*iter).start += lyric.m_meta.offset;
         }
     }

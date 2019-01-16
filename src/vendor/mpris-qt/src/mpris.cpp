@@ -84,8 +84,8 @@ template <typename T> QString Mpris::enumerationToString(T enumeration)
     getEnumStringsAndSize<T>(&strings, &size);
 
     return enumeration >= 0 && enumeration < size
-                                             ? QString(QLatin1String(strings[enumeration]))
-                                             : QString();
+           ? QString(QLatin1String(strings[enumeration]))
+           : QString();
 }
 template QString Mpris::enumerationToString<Mpris::LoopStatus>(Mpris::LoopStatus enumeration);
 template QString Mpris::enumerationToString<Mpris::PlaybackStatus>(Mpris::PlaybackStatus enumeration);

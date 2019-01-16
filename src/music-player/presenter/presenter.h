@@ -100,8 +100,8 @@ signals:
 
     //! from lyricservice
     void requestContextSearch(const QString &context);
-    void lyricSearchFinished(const MetaPtr ,  const DMusic::SearchMeta &song, const QByteArray &lyricData);
-    void coverSearchFinished(const MetaPtr , const DMusic::SearchMeta &song, const QByteArray &coverData);
+    void lyricSearchFinished(const MetaPtr,  const DMusic::SearchMeta &song, const QByteArray &lyricData);
+    void coverSearchFinished(const MetaPtr, const DMusic::SearchMeta &song, const QByteArray &coverData);
     void contextSearchFinished(const QString &context, const QList<DMusic::SearchMeta> &metalist);
 
     //! meta info

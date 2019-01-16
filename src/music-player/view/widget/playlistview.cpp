@@ -54,7 +54,7 @@ void PlayListViewPrivate::checkScrollbarSize()
     auto scrollBarWidth = 8;
     auto itemHeight = 56;
     vscrollBar->resize(scrollBarWidth, size.height() - 2);
-    vscrollBar->move(size.width() - scrollBarWidth , 0);
+    vscrollBar->move(size.width() - scrollBarWidth, 0);
     vscrollBar->setSingleStep(1);
     vscrollBar->setPageStep(size.height() / itemHeight);
 

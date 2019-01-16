@@ -443,7 +443,7 @@ void MprisPlayer::setShuffle(bool shuffle)
         return;
     }
 
-    m_shuffle= shuffle;
+    m_shuffle = shuffle;
     emit shuffleChanged();
 }
 
@@ -568,8 +568,8 @@ void MprisPlayer::notifyPropertiesChanged(const QString& interfaceName, const QV
     }
 
     QDBusMessage message = QDBusMessage::createSignal(mprisObjectPath,
-                                                      dBusPropertiesInterface,
-                                                      dBusPropertiesChangedSignal);
+                           dBusPropertiesInterface,
+                           dBusPropertiesChangedSignal);
 
     QList<QVariant> arguments;
     arguments << QVariant(interfaceName) << QVariant(changedProperties) << QVariant(invalidatedProperties);

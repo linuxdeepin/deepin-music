@@ -42,15 +42,30 @@ public:
     virtual ~DBusExtendedAbstractInterface();
 
     Q_PROPERTY(bool sync READ sync WRITE setSync)
-    inline bool sync() const { return m_sync; }
-    inline void setSync(bool sync) { m_sync = sync; }
+    inline bool sync() const
+    {
+        return m_sync;
+    }
+    inline void setSync(bool sync)
+    {
+        m_sync = sync;
+    }
 
     Q_PROPERTY(bool useCache READ useCache WRITE setUseCache)
-    inline bool useCache() const { return m_useCache; }
-    inline void setUseCache(bool useCache) { m_useCache = useCache; }
+    inline bool useCache() const
+    {
+        return m_useCache;
+    }
+    inline void setUseCache(bool useCache)
+    {
+        m_useCache = useCache;
+    }
 
     void getAllProperties();
-    inline QDBusError lastExtendedError() const { return m_lastExtendedError; };
+    inline QDBusError lastExtendedError() const
+    {
+        return m_lastExtendedError;
+    };
 
 protected:
     DBusExtendedAbstractInterface(const QString &service,

@@ -32,7 +32,8 @@ extern "C" {
 
 #include "encodingdetector.h"
 
-namespace Libcue {
+namespace Libcue
+{
 
 void time_frame_to_msf(long frame, int *m, int *s, int *f)
 {
@@ -134,9 +135,9 @@ void CueParserPrivate::parseCue(const QByteArray &data,  QByteArray codeName)
         if (!fileMetaCache.contains(meta->localPath)) {
             QFileInfo media(meta->localPath);
 //            if (media.exists()) {
-                auto mediaMeta = MediaMeta::fromLocalFile(media);
-                fileMetaCache.insert(meta->localPath, mediaMeta);
-                fileExist.insert(meta->localPath, media.exists());
+            auto mediaMeta = MediaMeta::fromLocalFile(media);
+            fileMetaCache.insert(meta->localPath, mediaMeta);
+            fileExist.insert(meta->localPath, media.exists());
 //            }
         }
 
@@ -197,7 +198,9 @@ CueParser::CueParser(const QString &filepath, QByteArray codeName) : d_ptr(new C
     Q_D(CueParser);
 
     QFile cueFile(filepath);
-    if (!cueFile.open(QIODevice::ReadOnly)) { return; }
+    if (!cueFile.open(QIODevice::ReadOnly)) {
+        return;
+    }
 
     QByteArray cueByte = cueFile.readAll();
     cueFile.close();

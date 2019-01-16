@@ -29,6 +29,6 @@ namespace DMusic
 class LIBDMUSICSHARED_EXPORT EncodingDetector
 {
 public:
-    static QList<QByteArray> detectEncodings (const QByteArray& rawData);
+    static QList<QByteArray> detectEncodings(const QByteArray& rawData);
 };
 }

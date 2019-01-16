@@ -37,7 +37,7 @@
 class MprisRootAdaptor;
 class MprisPlayerAdaptor;
 class MPRIS_QT_EXPORT MprisPlayer : public QObject,
-                                    protected QDBusContext
+    protected QDBusContext
 {
     Q_OBJECT
     Q_PROPERTY(QString serviceName READ serviceName WRITE setServiceName NOTIFY serviceNameChanged)

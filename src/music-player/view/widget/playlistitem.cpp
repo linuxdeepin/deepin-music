@@ -114,7 +114,8 @@ PlayListItem::PlayListItem(PlaylistPtr playlist, QWidget *parent) : QFrame(paren
         if (m_titleedit->text().isEmpty())
         {
             m_titleedit->setText(m_titleedit->property("EditValue").toString());
-        } else {
+        } else
+        {
             Q_EMIT this->rename(m_titleedit->text());
             m_titleedit->setProperty("EditValue", m_titleedit->text());
         }
@@ -123,7 +124,7 @@ PlayListItem::PlayListItem(PlaylistPtr playlist, QWidget *parent) : QFrame(paren
         font.setPixelSize(12);
         QFontMetrics fm(font);
         m_titleedit->setText(fm.elidedText(QString(m_titleedit->text()),
-        Qt::ElideMiddle, LineEditWidth));
+                                           Qt::ElideMiddle, LineEditWidth));
 
         m_titleedit->setEnabled(false);
     });
@@ -190,7 +191,7 @@ void PlayListItem::onDelete()
     warnDlg.setTextFormat(Qt::AutoText);
     warnDlg.setTitle(message);
     warnDlg.addButton(tr("Cancel"), false, Dtk::Widget::DDialog::ButtonNormal);
-    warnDlg.addButton(tr("Delete"), true , Dtk::Widget::DDialog::ButtonWarning);
+    warnDlg.addButton(tr("Delete"), true, Dtk::Widget::DDialog::ButtonWarning);
 
     if (0 == warnDlg.exec()) {
         return;

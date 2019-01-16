@@ -445,7 +445,7 @@ void Footer::mousePressEvent(QMouseEvent *event)
     QFrame::mousePressEvent(event);
     auto subCtlPos = d->progress->mapFromParent(event->pos());
     if (d->progress->rect().contains(subCtlPos)
-            /*|| !this->rect().contains(event->pos())*/) {
+        /*|| !this->rect().contains(event->pos())*/) {
         d->enableMove = false;
     } else {
         d->enableMove = true;

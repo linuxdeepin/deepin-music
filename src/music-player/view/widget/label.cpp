@@ -27,7 +27,7 @@ Label::Label(QWidget *parent)
 }
 
 Label::Label(const QString &text, QWidget *parent):
-    QLabel (text, parent)
+    QLabel(text, parent)
 {
 }
 

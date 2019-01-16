@@ -585,7 +585,7 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
     }
 
     if (playlist == d->player->activePlaylist()
-            || playlist->id() == AllMusicListID) {
+        || playlist->id() == AllMusicListID) {
         //stop music
         for (auto &meta : metalist) {
             if (d->player->isActiveMeta(meta)) {
@@ -625,7 +625,7 @@ void Presenter::onMusiclistDelete(PlaylistPtr playlist, const MetaPtrList metali
     QMap<QString, QString> trashFiles;
     for (auto &meta : metalist) {
         if (d->player->activeMeta() &&
-                (meta->hash == d->player->activeMeta()->hash)) {
+            (meta->hash == d->player->activeMeta()->hash)) {
             if (playinglist->isEmpty()) {
                 onMusicStop(playinglist, next);
             } else {

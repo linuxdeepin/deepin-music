@@ -43,7 +43,10 @@ class PluginManager : public QObject, public DMusic::DSingleton<PluginManager>
 public:
     explicit PluginManager(QObject *parent = 0);
 
-    void init() {loadPlugins();}
+    void init()
+    {
+        loadPlugins();
+    }
 
     QList<DMusic::Plugin::PluginInterface *> getPluginListByType(DMusic::Plugin::PluginType pluginType);
 
