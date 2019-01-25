@@ -1,3 +1,13 @@
+<a name="3.1.14"></a>
+## 3.1.14 (2019-01-25)
+
+
+#### Bug Fixes
+
+*   avoid using dpkg-parsechangelog ([d730e277](https://github.com/linuxdeepin/deepin-music/commit/d730e2778b925a0f4323d9a224321bc66572106c))
+
+
+
 <a name="3.1.13"></a>
 ## 3.1.13 (2018-12-27)
 
