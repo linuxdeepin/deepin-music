@@ -95,6 +95,7 @@ public:
     void updateViewname(const QString &vm);
     void updateTitlebarViewname(const QString &vm);
     void overrideTitlebarStyle();
+    const QString getLastImportPath() const;
 
     //! ui: show info dialog
     void showInfoDialog(const MetaPtr meta);
@@ -537,6 +538,22 @@ void MainFramePrivate::overrideTitlebarStyle()
         }
         DThemeManager::registerWidget(titlebarBt, "Titlebar", QStringList({"viewname"}));
     }
+}
+
+const QString MainFramePrivate::getLastImportPath() const
+{
+    QString lastImportPath = MusicSettings::value("base.play.last_import_path").toString();
+
+    QDir lastImportDir = QDir(lastImportPath);
+    if (!lastImportDir.exists() || lastImportPath.isEmpty()) {
+        lastImportPath =  QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first();
+    } else {
+        // blumia: always use the path from QDir, QDir also accept relative path string and it will pass
+        //         the `QDir::exists()` checking
+        lastImportPath = lastImportDir.absolutePath();
+    }
+
+    return lastImportPath;
 }
 
 void MainFramePrivate::showInfoDialog(const MetaPtr meta)
@@ -985,16 +1002,7 @@ void MainFrame::onSelectImportDirectory()
     Q_D(const MainFrame);
     QFileDialog fileDlg(this);
 
-    auto lastImportPath = MusicSettings::value("base.play.last_import_path").toString();
-
-    QDir lastImportDir = QDir(lastImportPath);
-    if (!lastImportDir.exists() || lastImportPath.isEmpty()) {
-        lastImportPath =  QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first();
-    } else {
-        // blumia: always use the path from QDir, QDir also accept relative path string and it will pass
-        //         the `QDir::exists()` checking
-        lastImportPath = lastImportDir.absolutePath();
-    }
+    QString lastImportPath = d->getLastImportPath();
 
     fileDlg.setDirectory(lastImportPath);
 
@@ -1012,12 +1020,8 @@ void MainFrame::onSelectImportFiles()
     Q_D(const MainFrame);
     QFileDialog fileDlg(this);
 
-    auto lastImportPath = MusicSettings::value("base.play.last_import_path").toString();
+    QString lastImportPath = d->getLastImportPath();
 
-    auto lastImportDir = QDir(lastImportPath);
-    if (!lastImportDir.exists()) {
-        lastImportPath =  QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first();
-    }
     fileDlg.setDirectory(lastImportPath);
 
     QString selfilter = tr("All music") + (" (%1)");
