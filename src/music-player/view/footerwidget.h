@@ -64,7 +64,7 @@ signals:
     void toggleFavourite(const MetaPtr meta);
 
     void progressRealHeightChanged(qreal height);
-    void mouseMoving(Qt::MouseButton botton);
+    void mouseMoving(Qt::MouseButton button);
 
 public slots:
     void onMusicListAdded(PlaylistPtr playlist, const MetaPtrList metalist);

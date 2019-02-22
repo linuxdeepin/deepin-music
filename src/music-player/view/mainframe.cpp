@@ -653,12 +653,12 @@ void MainFrame::binding(Presenter *presenter)
 
 #ifdef Q_OS_WIN
     connect(d->titlebar, &Titlebar::mousePosMoving,
-    this, [ = ](Qt::MouseButton /*botton*/, QPoint pos) {
+    this, [ = ](Qt::MouseButton /*button*/, QPoint pos) {
         move(pos - d->m_LastMousePos);
     });
 
     connect(d->titlebar, &Titlebar::mousePosPressed,
-    this, [ = ](Qt::MouseButtons /*botton*/, QPoint pos) {
+    this, [ = ](Qt::MouseButtons /*button*/, QPoint pos) {
         // TODO: fix margin
         pos.setY(pos.y() - 10);
         d->m_LastMousePos = pos - this->mapToParent(this->pos());
