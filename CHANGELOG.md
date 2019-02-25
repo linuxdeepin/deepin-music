@@ -1,3 +1,13 @@
+<a name="3.1.15"></a>
+## 3.1.15 (2019-02-25)
+
+
+#### Bug Fixes
+
+*   wrong path when last import path is empty ([1b489a52](https://github.com/linuxdeepin/deepin-music/commit/1b489a52b88015b392fd76916d9c3c6cd5fb33d7))
+
+
+
 <a name="3.1.14"></a>
 ## 3.1.14 (2019-01-25)
 
