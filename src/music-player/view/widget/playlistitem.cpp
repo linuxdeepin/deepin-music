@@ -82,7 +82,7 @@ PlayListItem::PlayListItem(PlaylistPtr playlist, QWidget *parent) : QFrame(paren
 
     if (playlist->editmode()) {
         m_titleedit->setEnabled(true);
-        QTimer::singleShot(100, this, [ = ] {
+        QTimer::singleShot(200, this, [ = ] {
             m_titleedit->setFocus();
             m_titleedit->setCursorPosition(0);
             m_titleedit->setSelection(0, m_titleedit->text().length());
