@@ -1,3 +1,14 @@
+<a name="3.1.16"></a>
+## 3.1.16 (2019-03-27)
+
+
+#### Bug Fixes
+
+*   do init MPRIS first ([08b8e06e](https://github.com/linuxdeepin/deepin-music/commit/08b8e06ef99c88bbcba3271192244755fce22f61))
+*   shuffle is not random ([fc9b6fa0](https://github.com/linuxdeepin/deepin-music/commit/fc9b6fa0fad1960ef5ddd6f25898649bd1f663e7))
+
+
+
 <a name="3.1.15"></a>
 ## 3.1.15 (2019-02-25)
 
