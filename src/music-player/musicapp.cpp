@@ -124,9 +124,9 @@ void MusicAppPrivate::onDataPrepared()
         this->triggerShortcutAction(optKey);
     });
 
-    presenter->postAction();
-
     initMpris("DeepinMusic");
+
+    presenter->postAction();
 }
 
 void MusicAppPrivate::onQuit()
