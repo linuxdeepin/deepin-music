@@ -251,7 +251,7 @@ void MainFramePrivate::postInitUI()
 {
     Q_Q(MainFrame);
 
-    QString descriptionText = MainFrame::tr("Deepin Music Player is a local  music player with beautiful design and simple functions. It supports viewing lyrics when playing, playing lossless music and customize playlist, etc.");
+    QString descriptionText = MainFrame::tr("Deepin Music is a beautiful and simple music player that plays local audios. It supports viewing lyrics during playback, playing lossless audio and playlist customization, etc.");
     QString acknowledgementLink = "https://www.deepin.org/acknowledgments/deepin-music#thanks";
     qApp->setProductName(QApplication::tr("Deepin Music"));
     qApp->setApplicationAcknowledgementPage(acknowledgementLink);

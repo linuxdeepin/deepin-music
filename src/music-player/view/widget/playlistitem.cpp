@@ -184,7 +184,7 @@ void PlayListItem::mouseDoubleClickEvent(QMouseEvent *event)
 
 void PlayListItem::onDelete()
 {
-    QString message = QString(tr("Are you sure to delete this playlist?"));
+    QString message = QString(tr("Are you sure you want to delete this playlist?"));
 
     DDialog warnDlg(this);
     warnDlg.setIcon(QIcon(":/common/image/del_notify.svg"));

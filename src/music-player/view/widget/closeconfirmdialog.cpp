@@ -76,7 +76,7 @@ CloseConfirmDialog::CloseConfirmDialog(QWidget *parent) :
     vbox->addStretch(1);
     actionSelectionGroup->setLayout(vbox);
 
-    d->remember = new QCheckBox(tr("Never ask again"));
+    d->remember = new QCheckBox(tr("Do not ask again"));
 
     contentLayout->addWidget(groupLabel, 0, Qt::AlignLeft);
     contentLayout->addSpacing(4);
