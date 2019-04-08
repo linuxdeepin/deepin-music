@@ -236,7 +236,7 @@ void PlayerPrivate::initConnection()
             QMimeDatabase db;
             QMimeType type = db.mimeTypeForFile(activeMeta->localPath, QMimeDatabase::MatchContent);
             if (!sSupportedMimeTypes.contains(type.name())) {
-                qDebug() << "unsupport mime type" << type << activePlaylist << activeMeta;
+                qDebug() << "unsupported mime type" << type << activePlaylist << activeMeta;
                 qplayer->pause();
                 qplayer->stop();
                 Q_EMIT q->mediaError(activePlaylist, activeMeta, Player::FormatError);
