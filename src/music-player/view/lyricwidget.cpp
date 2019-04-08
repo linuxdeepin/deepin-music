@@ -163,7 +163,7 @@ LyricWidget::LyricWidget(QWidget *parent)
 
     auto searchMetaHeader = new QLabel;
     searchMetaHeader->setObjectName("SearchMetaHeader");
-    searchMetaHeader->setText(tr("Search lyrics"));
+    searchMetaHeader->setText(tr("Find lyrics"));
 
     auto searchMetaTitle = new QLineEdit;
     searchMetaTitle->setObjectName("SearchMetaTitle");
