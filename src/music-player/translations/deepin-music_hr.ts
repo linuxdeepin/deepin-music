@@ -18,8 +18,8 @@
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="79"/>
-        <source>Never ask again</source>
-        <translation>Nikad više ne pitaj</translation>
+        <source>Do not ask again</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="90"/>
@@ -182,8 +182,8 @@
     <name>LyricWidget</name>
     <message>
         <location filename="../view/lyricwidget.cpp" line="166"/>
-        <source>Search lyrics</source>
-        <translation>Traži stihove</translation>
+        <source>Find lyrics</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../view/lyricwidget.cpp" line="170"/>
@@ -209,79 +209,79 @@
 <context>
     <name>MainFrame</name>
     <message>
-        <location filename="../view/mainframe.cpp" line="135"/>
+        <location filename="../view/mainframe.cpp" line="136"/>
         <source>New playlist</source>
         <translation>Nova lista izvođenja</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="151"/>
+        <location filename="../view/mainframe.cpp" line="152"/>
         <source>Settings</source>
         <translation>Postavke</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="253"/>
-        <source>Deepin Music Player is a local  music player with beautiful design and simple functions. It supports viewing lyrics when playing, playing lossless music and customize playlist, etc.</source>
-        <translation>Deepin svirač glazbe je lokalni svirač glazbe prelijepog dizajna i jednostavnih funkcija. Podržava prikazivanje teksta pjesama prilikom izvođenja, izvođenje lossless glazbe, prilagodbu popisa izvođenja, itd.</translation>
-    </message>
-    <message>
-        <location filename="../view/mainframe.cpp" line="182"/>
-        <location filename="../view/mainframe.cpp" line="578"/>
+        <location filename="../view/mainframe.cpp" line="183"/>
+        <location filename="../view/mainframe.cpp" line="595"/>
         <source>Exit</source>
         <translation>Izađi</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="141"/>
+        <location filename="../view/mainframe.cpp" line="142"/>
         <source>Add folder</source>
         <translation>Dodaj mapu</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="146"/>
+        <location filename="../view/mainframe.cpp" line="147"/>
         <source>Add file</source>
         <translation>Dodaj datoteku</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="167"/>
+        <location filename="../view/mainframe.cpp" line="168"/>
         <source>Dark theme</source>
         <translation>Tamna tema</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="575"/>
+        <location filename="../view/mainframe.cpp" line="254"/>
+        <source>Deepin Music is a beautiful and simple music player that plays local audios. It supports viewing lyrics during playback, playing lossless audio and playlist customization, etc.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../view/mainframe.cpp" line="592"/>
         <source>Play/Pause</source>
         <translation>Reprodukcija/Pauza</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="576"/>
+        <location filename="../view/mainframe.cpp" line="593"/>
         <source>Previous</source>
         <translation>Prijašnje</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="722"/>
+        <location filename="../view/mainframe.cpp" line="739"/>
         <source>Invalid or non-existent file</source>
         <translation>Neispravna ili nepostojeća datoteka</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="743"/>
+        <location filename="../view/mainframe.cpp" line="760"/>
         <source>Failed to import, no vaild music file found!</source>
         <translation>Pogreška prilikom uvoza, nisu pronađene ispravne glazbene datoteke!</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1018"/>
+        <location filename="../view/mainframe.cpp" line="1027"/>
         <source>All music</source>
         <translation>Sva glazba</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="723"/>
-        <location filename="../view/mainframe.cpp" line="748"/>
+        <location filename="../view/mainframe.cpp" line="740"/>
+        <location filename="../view/mainframe.cpp" line="765"/>
         <source>OK</source>
         <translation>U redu</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="673"/>
+        <location filename="../view/mainframe.cpp" line="690"/>
         <source>Successfully added to &quot;%1&quot;</source>
         <translation>Uspješno dodano u  &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="577"/>
+        <location filename="../view/mainframe.cpp" line="594"/>
         <source>Next</source>
         <translation>Slijedeće</translation>
     </message>
@@ -289,68 +289,68 @@
 <context>
     <name>MusicListView</name>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="287"/>
+        <location filename="../view/widget/musiclistview.cpp" line="295"/>
         <source>New playlist</source>
         <translation>Nova lista izvođenja</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="327"/>
+        <location filename="../view/widget/musiclistview.cpp" line="335"/>
         <source>Play</source>
         <translation>Reprodukcija</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="329"/>
+        <location filename="../view/widget/musiclistview.cpp" line="337"/>
         <source>Add to playlist</source>
         <translation>Dodaj na list uizvođenja</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="334"/>
+        <location filename="../view/widget/musiclistview.cpp" line="342"/>
         <source>Display in file manager</source>
         <translation>Prikaži u upravitelju datotekama</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="361"/>
+        <location filename="../view/widget/musiclistview.cpp" line="369"/>
         <source>Song info</source>
         <translation>Informacije o pjesmi</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="337"/>
+        <location filename="../view/widget/musiclistview.cpp" line="425"/>
+        <source>Are you sure you want to delete %1?</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../view/widget/musiclistview.cpp" line="427"/>
+        <location filename="../view/widget/musiclistview.cpp" line="431"/>
+        <source>Are you sure you want to delete the selected %1 songs?</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../view/widget/musiclistview.cpp" line="345"/>
         <source>Remove from playlist</source>
         <translation>Ukloni sa liste izvođenja</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="338"/>
+        <location filename="../view/widget/musiclistview.cpp" line="346"/>
         <source>Delete from local disk</source>
         <translation>Izbriši sa lokalnog diska</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="357"/>
+        <location filename="../view/widget/musiclistview.cpp" line="365"/>
         <source>Encoding</source>
         <translation>Enkodiranje</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="407"/>
+        <location filename="../view/widget/musiclistview.cpp" line="415"/>
         <source>Cancel</source>
         <translation>Otkaži</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="408"/>
+        <location filename="../view/widget/musiclistview.cpp" line="416"/>
         <source>Delete</source>
         <translation>Obriši</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="417"/>
-        <source>Are you sure to delete %1?</source>
-        <translation>Jeste li sigurni da želite izbrisati %1?</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/musiclistview.cpp" line="419"/>
-        <location filename="../view/widget/musiclistview.cpp" line="423"/>
-        <source>Are you sure to delete the selected %1 songs?</source>
-        <translation>Jeste li sigurni da želite izbrisati odabranih %1 pjesama?</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/musiclistview.cpp" line="424"/>
+        <location filename="../view/widget/musiclistview.cpp" line="432"/>
         <source>Deleting the current song will also delete the song files contained</source>
         <translation>Brisanje trenutne pjesme će također izbrisati i glazbenu datoteku pjesme.</translation>
     </message>
@@ -411,17 +411,17 @@
 <context>
     <name>PlayListItem</name>
     <message>
-        <location filename="../view/widget/playlistitem.cpp" line="193"/>
+        <location filename="../view/widget/playlistitem.cpp" line="187"/>
+        <source>Are you sure you want to delete this playlist?</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../view/widget/playlistitem.cpp" line="194"/>
         <source>Delete</source>
         <translation>Obriši</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistitem.cpp" line="186"/>
-        <source>Are you sure to delete this playlist?</source>
-        <translation>Jeste li sigurni da želite izbrisati listu izvođenja?</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/playlistitem.cpp" line="192"/>
+        <location filename="../view/widget/playlistitem.cpp" line="193"/>
         <source>Cancel</source>
         <translation>Otkaži</translation>
     </message>
@@ -481,7 +481,7 @@
 <context>
     <name>QApplication</name>
     <message>
-        <location filename="../view/mainframe.cpp" line="255"/>
+        <location filename="../view/mainframe.cpp" line="256"/>
         <source>Deepin Music</source>
         <translation>Deepin glazba</translation>
     </message>
@@ -510,8 +510,8 @@
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="29"/>
-        <source>Enable fade</source>
-        <translation>Omogući nestajanje</translation>
+        <source>Enable fade in/out</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="30"/>
