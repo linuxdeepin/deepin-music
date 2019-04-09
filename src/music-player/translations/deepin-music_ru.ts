@@ -18,8 +18,8 @@
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="79"/>
-        <source>Never ask again</source>
-        <translation>Никогда больше не спрашивать</translation>
+        <source>Do not ask again</source>
+        <translation>Не спрашивать больше</translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="90"/>
@@ -182,8 +182,8 @@
     <name>LyricWidget</name>
     <message>
         <location filename="../view/lyricwidget.cpp" line="166"/>
-        <source>Search lyrics</source>
-        <translation>Поиск текстов песен</translation>
+        <source>Find lyrics</source>
+        <translation>Найти текст песни</translation>
     </message>
     <message>
         <location filename="../view/lyricwidget.cpp" line="170"/>
@@ -209,79 +209,79 @@
 <context>
     <name>MainFrame</name>
     <message>
-        <location filename="../view/mainframe.cpp" line="135"/>
+        <location filename="../view/mainframe.cpp" line="136"/>
         <source>New playlist</source>
         <translation>Новый список воспроизведения</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="151"/>
+        <location filename="../view/mainframe.cpp" line="152"/>
         <source>Settings</source>
         <translation>Настройки</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="253"/>
-        <source>Deepin Music Player is a local  music player with beautiful design and simple functions. It supports viewing lyrics when playing, playing lossless music and customize playlist, etc.</source>
-        <translation>Музыкальный проигрыватель Deepin - локальный музыкальный плеер с красивым дизайном и простыми функциями. Он поддерживает просмотр текстов во время воспроизведения, проигрывание музыки без потерь и настройку списка воспроизведения и т. д.</translation>
-    </message>
-    <message>
-        <location filename="../view/mainframe.cpp" line="182"/>
-        <location filename="../view/mainframe.cpp" line="578"/>
+        <location filename="../view/mainframe.cpp" line="183"/>
+        <location filename="../view/mainframe.cpp" line="595"/>
         <source>Exit</source>
         <translation>Выход</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="141"/>
+        <location filename="../view/mainframe.cpp" line="142"/>
         <source>Add folder</source>
         <translation>Добавить папку</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="146"/>
+        <location filename="../view/mainframe.cpp" line="147"/>
         <source>Add file</source>
         <translation>Добавить файл</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="167"/>
+        <location filename="../view/mainframe.cpp" line="168"/>
         <source>Dark theme</source>
         <translation>Темная тема</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="575"/>
+        <location filename="../view/mainframe.cpp" line="254"/>
+        <source>Deepin Music is a beautiful and simple music player that plays local audios. It supports viewing lyrics during playback, playing lossless audio and playlist customization, etc.</source>
+        <translation>Музыкальный Проигрыватель Deepin - это красивый и простой музыкальный проигрыватель, который воспроизводит локальные аудиозаписи. Он поддерживает просмотр текста во время воспроизведения, проигрывание аудио без потерь, настройку списка воспроизведения и т. д.</translation>
+    </message>
+    <message>
+        <location filename="../view/mainframe.cpp" line="592"/>
         <source>Play/Pause</source>
         <translation>Воспроизведение / Пауза</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="576"/>
+        <location filename="../view/mainframe.cpp" line="593"/>
         <source>Previous</source>
         <translation>Предыдущий</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="722"/>
+        <location filename="../view/mainframe.cpp" line="739"/>
         <source>Invalid or non-existent file</source>
         <translation>Недопустимый или несуществующий файл</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="743"/>
+        <location filename="../view/mainframe.cpp" line="760"/>
         <source>Failed to import, no vaild music file found!</source>
         <translation>Не удалось импортировать, не найден действительный музыкальный файл!</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1018"/>
+        <location filename="../view/mainframe.cpp" line="1027"/>
         <source>All music</source>
         <translation>Вся музыка</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="723"/>
-        <location filename="../view/mainframe.cpp" line="748"/>
+        <location filename="../view/mainframe.cpp" line="740"/>
+        <location filename="../view/mainframe.cpp" line="765"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="673"/>
+        <location filename="../view/mainframe.cpp" line="690"/>
         <source>Successfully added to &quot;%1&quot;</source>
         <translation>Успешно добавлено &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="577"/>
+        <location filename="../view/mainframe.cpp" line="594"/>
         <source>Next</source>
         <translation>Следующий</translation>
     </message>
@@ -289,68 +289,68 @@
 <context>
     <name>MusicListView</name>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="287"/>
+        <location filename="../view/widget/musiclistview.cpp" line="295"/>
         <source>New playlist</source>
         <translation>Новый список воспроизведения</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="327"/>
+        <location filename="../view/widget/musiclistview.cpp" line="335"/>
         <source>Play</source>
         <translation>Воспроизведение</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="329"/>
+        <location filename="../view/widget/musiclistview.cpp" line="337"/>
         <source>Add to playlist</source>
         <translation>Добавить список воспроизведения</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="334"/>
+        <location filename="../view/widget/musiclistview.cpp" line="342"/>
         <source>Display in file manager</source>
         <translation>Отобразить в менеджере файлов</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="361"/>
+        <location filename="../view/widget/musiclistview.cpp" line="369"/>
         <source>Song info</source>
         <translation>Информация о песне</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="337"/>
+        <location filename="../view/widget/musiclistview.cpp" line="425"/>
+        <source>Are you sure you want to delete %1?</source>
+        <translation>Вы уверены, что хотите удалить %1?</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/musiclistview.cpp" line="427"/>
+        <location filename="../view/widget/musiclistview.cpp" line="431"/>
+        <source>Are you sure you want to delete the selected %1 songs?</source>
+        <translation>Вы уверены, что хотите удалить выбранные %1 песни?</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/musiclistview.cpp" line="345"/>
         <source>Remove from playlist</source>
         <translation>Удалить из списка воспроизведения</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="338"/>
+        <location filename="../view/widget/musiclistview.cpp" line="346"/>
         <source>Delete from local disk</source>
         <translation>Удалить из локального диска</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="357"/>
+        <location filename="../view/widget/musiclistview.cpp" line="365"/>
         <source>Encoding</source>
         <translation>Кодировка</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="407"/>
+        <location filename="../view/widget/musiclistview.cpp" line="415"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="408"/>
+        <location filename="../view/widget/musiclistview.cpp" line="416"/>
         <source>Delete</source>
         <translation>Удалить</translation>
     </message>
     <message>
-        <location filename="../view/widget/musiclistview.cpp" line="417"/>
-        <source>Are you sure to delete %1?</source>
-        <translation>Вы уверены, что хотите удалить %1?</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/musiclistview.cpp" line="419"/>
-        <location filename="../view/widget/musiclistview.cpp" line="423"/>
-        <source>Are you sure to delete the selected %1 songs?</source>
-        <translation>Вы уверены, что хотите удалить выбранные %1 песни?</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/musiclistview.cpp" line="424"/>
+        <location filename="../view/widget/musiclistview.cpp" line="432"/>
         <source>Deleting the current song will also delete the song files contained</source>
         <translation>При удалении текущей песни звуковые файлы также будут удалены</translation>
     </message>
@@ -411,17 +411,17 @@
 <context>
     <name>PlayListItem</name>
     <message>
-        <location filename="../view/widget/playlistitem.cpp" line="193"/>
+        <location filename="../view/widget/playlistitem.cpp" line="187"/>
+        <source>Are you sure you want to delete this playlist?</source>
+        <translation>Вы действительно хотите удалить этот список воспроизведения?</translation>
+    </message>
+    <message>
+        <location filename="../view/widget/playlistitem.cpp" line="194"/>
         <source>Delete</source>
         <translation>Удалить</translation>
     </message>
     <message>
-        <location filename="../view/widget/playlistitem.cpp" line="186"/>
-        <source>Are you sure to delete this playlist?</source>
-        <translation>Вы уверены, что хотите удалить список воспроизведения?</translation>
-    </message>
-    <message>
-        <location filename="../view/widget/playlistitem.cpp" line="192"/>
+        <location filename="../view/widget/playlistitem.cpp" line="193"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>
@@ -481,7 +481,7 @@
 <context>
     <name>QApplication</name>
     <message>
-        <location filename="../view/mainframe.cpp" line="255"/>
+        <location filename="../view/mainframe.cpp" line="256"/>
         <source>Deepin Music</source>
         <translation>Музыкальный проигрыватель Deepin</translation>
     </message>
@@ -510,8 +510,8 @@
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="29"/>
-        <source>Enable fade</source>
-        <translation>Включить замирание</translation>
+        <source>Enable fade in/out</source>
+        <translation>Включить замирание вход/выход</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="30"/>
