@@ -138,7 +138,10 @@ void MusicAppPrivate::onQuit()
 
 void MusicAppPrivate::onRaise()
 {
-    playerFrame->show();
+    // blumia: call show() will not bring it up (at least it's not working under dde-kwin),
+    //         so we need call showNormal() here.
+    // playerFrame->show();
+    playerFrame->showNormal();
     playerFrame->raise();
     playerFrame->activateWindow();
 }
