@@ -1,2 +1,2 @@
 TEMPLATE    = subdirs
-SUBDIRS     += netease-meta-search
+#SUBDIRS     += netease-meta-search
