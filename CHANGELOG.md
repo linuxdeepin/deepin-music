@@ -1,3 +1,14 @@
+<a name="3.1.18"></a>
+## 3.1.18 (2019-06-01)
+
+
+#### Bug Fixes
+
+*   no longer build netease meta search plugin ([903b7f7a](https://github.com/linuxdeepin/deepin-music/commit/903b7f7a65df87c397bc464bb88c0ae6e0772c65))
+*   should showNormal() when onRaise triggered ([848474b3](https://github.com/linuxdeepin/deepin-music/commit/848474b31bfd0f4abe1a6cf9a1ccba1aedc6a962))
+
+
+
 <a name="3.1.17.1"></a>
 ## 3.1.17.1 (2019-04-19)
 
