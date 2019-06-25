@@ -147,7 +147,7 @@
     <message>
         <location filename="../view/widget/infodialog.cpp" line="120"/>
         <source>Path:</source>
-        <translation type="unfinished"/>
+        <translation>パス:</translation>
     </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="192"/>
@@ -337,7 +337,7 @@
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="365"/>
         <source>Encoding</source>
-        <translation type="unfinished"/>
+        <translation>エンコーディング</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="415"/>

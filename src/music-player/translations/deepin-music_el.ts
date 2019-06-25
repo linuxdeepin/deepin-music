@@ -4,7 +4,7 @@
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="61"/>
         <source>Please select your operation</source>
-        <translation type="unfinished"/>
+        <translation>Παρακαλώ επιλέξτε την ενέργειά σας</translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="68"/>
@@ -14,12 +14,12 @@
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="70"/>
         <source>Minimize to system tray</source>
-        <translation type="unfinished"/>
+        <translation>Ελαχιστοποίηση στη γραμμή εργασιών</translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="79"/>
         <source>Do not ask again</source>
-        <translation type="unfinished"/>
+        <translation>Μην ερωτήσεις ξανά</translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="90"/>
@@ -52,7 +52,7 @@
     <message>
         <location filename="../view/footerwidget.cpp" line="293"/>
         <source>Favorite</source>
-        <translation type="unfinished"/>
+        <translation>Αγαπημένα</translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="294"/>
@@ -62,7 +62,7 @@
     <message>
         <location filename="../view/footerwidget.cpp" line="239"/>
         <source>Unknown Title</source>
-        <translation type="unfinished"/>
+        <translation>Άγνωστος Τίτλος</translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="245"/>
@@ -74,7 +74,7 @@
     <message>
         <location filename="../view/footerwidget.cpp" line="295"/>
         <source>Play Mode</source>
-        <translation type="unfinished"/>
+        <translation>Λειτουργία αναπαραγωγής</translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="296"/>
@@ -119,7 +119,7 @@
     <message>
         <location filename="../view/importwidget.cpp" line="112"/>
         <source>Loading music, please wait...</source>
-        <translation type="unfinished"/>
+        <translation>Φόρτωση μουσικής, παρακαλώ περιμένετε...</translation>
     </message>
 </context>
 <context>
@@ -137,7 +137,7 @@
     <message>
         <location filename="../view/widget/infodialog.cpp" line="118"/>
         <source>Album:</source>
-        <translation type="unfinished"/>
+        <translation>Άλμπουμ:</translation>
     </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="118"/>
@@ -167,7 +167,7 @@
     <message>
         <location filename="../view/widget/infodialog.cpp" line="119"/>
         <source>Duration:</source>
-        <translation type="unfinished"/>
+        <translation>Διάρκεια:</translation>
     </message>
 </context>
 <context>
@@ -183,7 +183,7 @@
     <message>
         <location filename="../view/lyricwidget.cpp" line="166"/>
         <source>Find lyrics</source>
-        <translation type="unfinished"/>
+        <translation>Αναζήτηση στίχων</translation>
     </message>
     <message>
         <location filename="../view/lyricwidget.cpp" line="170"/>
@@ -211,7 +211,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="136"/>
         <source>New playlist</source>
-        <translation type="unfinished"/>
+        <translation>Νέα λίστα αναπαραγωγής</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="152"/>
@@ -237,12 +237,12 @@
     <message>
         <location filename="../view/mainframe.cpp" line="168"/>
         <source>Dark theme</source>
-        <translation type="unfinished"/>
+        <translation>Σκούρο θέμα</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="254"/>
         <source>Deepin Music is a beautiful and simple music player that plays local audios. It supports viewing lyrics during playback, playing lossless audio and playlist customization, etc.</source>
-        <translation type="unfinished"/>
+        <translation>Η Μουσική Deepin είναι ένα όμορφο και εύκολο πρόγραμμα αναπαραγωγής μουσικής όπου παίζει τοπικά αρχεία ήχου. Υποστηρίζει προβολή στίχων κατά τη διάρκεια αναπαραγωγής, χωρίς απώλειες ήχου και προσαρμοσμένη λίστα αναπαραγωγής κτλ. </translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="592"/>
@@ -257,17 +257,17 @@
     <message>
         <location filename="../view/mainframe.cpp" line="739"/>
         <source>Invalid or non-existent file</source>
-        <translation type="unfinished"/>
+        <translation>Άκυρο ή μη-υπάρχων αρχείο</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="760"/>
         <source>Failed to import, no vaild music file found!</source>
-        <translation type="unfinished"/>
+        <translation>Αποτυχία εισαγωγής, δεν βρέθηκε έγκυρο αρχείο μουσικής!</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="1027"/>
         <source>All music</source>
-        <translation type="unfinished"/>
+        <translation>Όλη η μουσική</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="740"/>
@@ -278,7 +278,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="690"/>
         <source>Successfully added to &quot;%1&quot;</source>
-        <translation type="unfinished"/>
+        <translation>Προστέθηκε με επιτυχία στο &quot;%1&quot;</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="594"/>
@@ -291,7 +291,7 @@
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="295"/>
         <source>New playlist</source>
-        <translation type="unfinished"/>
+        <translation>Νέα λίστα αναπαραγωγής</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="335"/>
@@ -301,28 +301,28 @@
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="337"/>
         <source>Add to playlist</source>
-        <translation type="unfinished"/>
+        <translation>Προσθήκη σε λίστα αναπαραγωγής</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="342"/>
         <source>Display in file manager</source>
-        <translation type="unfinished"/>
+        <translation>Προβολή στη διαχείριση αρχείων</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="369"/>
         <source>Song info</source>
-        <translation type="unfinished"/>
+        <translation>Πληροφορίες τραγουδιού</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="425"/>
         <source>Are you sure you want to delete %1?</source>
-        <translation type="unfinished"/>
+        <translation>Είστε βέβαιος ότι θέλετε να διαγράψετε %1;</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="427"/>
         <location filename="../view/widget/musiclistview.cpp" line="431"/>
         <source>Are you sure you want to delete the selected %1 songs?</source>
-        <translation type="unfinished"/>
+        <translation>Είστε βέβαιοι ότι θέλετε να διαγράψετε αυτό το %1 τραγουδιών;</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="345"/>
@@ -332,7 +332,7 @@
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="346"/>
         <source>Delete from local disk</source>
-        <translation type="unfinished"/>
+        <translation>Διαγραφή από τον τοπικό δίσκο</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="365"/>
@@ -452,12 +452,12 @@
     <message>
         <location filename="../core/playlistmanager.cpp" line="79"/>
         <source>New playlist</source>
-        <translation type="unfinished"/>
+        <translation>Νέα λίστα αναπαραγωγής</translation>
     </message>
     <message>
         <location filename="../core/playlistmanager.cpp" line="135"/>
         <source>All Music</source>
-        <translation type="unfinished"/>
+        <translation>Όλη η μουσική</translation>
     </message>
     <message>
         <location filename="../core/playlistmanager.cpp" line="141"/>
@@ -475,7 +475,7 @@
     <message>
         <location filename="../view/playlistwidget.cpp" line="58"/>
         <source>New playlist</source>
-        <translation type="unfinished"/>
+        <translation>Νέα λίστα αναπαραγωγής</translation>
     </message>
 </context>
 <context>
@@ -496,17 +496,17 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="26"/>
         <source>Minimize to system tray</source>
-        <translation type="unfinished"/>
+        <translation>Ελαχιστοποίηση στη γραμμή εργασιών</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="27"/>
         <source>Exit Deepin Music</source>
-        <translation type="unfinished"/>
+        <translation>Έξοδος Μουσικής Deepin</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="28"/>
         <source>Autoplay</source>
-        <translation type="unfinished"/>
+        <translation>Αυτόματη αναπαραγωγή</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="29"/>
