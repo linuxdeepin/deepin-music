@@ -19,7 +19,7 @@
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="79"/>
         <source>Do not ask again</source>
-        <translation type="unfinished"/>
+        <translation>Bir daha sorma</translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="90"/>
@@ -183,7 +183,7 @@
     <message>
         <location filename="../view/lyricwidget.cpp" line="166"/>
         <source>Find lyrics</source>
-        <translation type="unfinished"/>
+        <translation>Şarkı sözlerini bul</translation>
     </message>
     <message>
         <location filename="../view/lyricwidget.cpp" line="170"/>
@@ -242,7 +242,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="254"/>
         <source>Deepin Music is a beautiful and simple music player that plays local audios. It supports viewing lyrics during playback, playing lossless audio and playlist customization, etc.</source>
-        <translation type="unfinished"/>
+        <translation>Deepin Müzik, güzel tasarımı ve basit özellikleri olan yerel bir müzik oynatma uygulamasıdır. Oynatma sırasında şarkı sözlerini görüntüleme, kayıpsız ses dosyalarını çalabilme ve oynatma listesini düzenleme gibi çeşitli özellikleri bulunur.</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="592"/>
@@ -316,13 +316,13 @@
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="425"/>
         <source>Are you sure you want to delete %1?</source>
-        <translation type="unfinished"/>
+        <translation>%1 ögesini silmek istediğinize emin misiniz?</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="427"/>
         <location filename="../view/widget/musiclistview.cpp" line="431"/>
         <source>Are you sure you want to delete the selected %1 songs?</source>
-        <translation type="unfinished"/>
+        <translation>%1 seçilmiş şarkıyı silmek istediğinize emin misiniz?</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="345"/>
@@ -370,12 +370,12 @@
     <message>
         <location filename="../view/musiclistwidget.cpp" line="140"/>
         <source>No Music</source>
-        <translation>Henüz Bir Müzik Yok</translation>
+        <translation>Müzik Yok</translation>
     </message>
     <message>
         <location filename="../view/musiclistwidget.cpp" line="142"/>
         <source>No result found</source>
-        <translation>Herhangi bir sonuç bulunamadı</translation>
+        <translation>Sonuç bulunamadı</translation>
     </message>
     <message>
         <location filename="../view/musiclistwidget.cpp" line="174"/>
@@ -413,7 +413,7 @@
     <message>
         <location filename="../view/widget/playlistitem.cpp" line="187"/>
         <source>Are you sure you want to delete this playlist?</source>
-        <translation type="unfinished"/>
+        <translation>Bu oynatma listesini silmek istediğinize emin misiniz?</translation>
     </message>
     <message>
         <location filename="../view/widget/playlistitem.cpp" line="194"/>
@@ -501,7 +501,7 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="27"/>
         <source>Exit Deepin Music</source>
-        <translation>Deepin Müzik Uygulamasından Çık</translation>
+        <translation>Deepin Müzik&apos;den Çık</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="28"/>
@@ -511,7 +511,7 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="29"/>
         <source>Enable fade in/out</source>
-        <translation type="unfinished"/>
+        <translation>Geçişlerde kısma/açma kullanılsın</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="30"/>
@@ -566,7 +566,7 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="40"/>
         <source>Volume up</source>
-        <translation>Sesi arttır</translation>
+        <translation>Sesi yükselt</translation>
     </message>
 </context>
 <context>

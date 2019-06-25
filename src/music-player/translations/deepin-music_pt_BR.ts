@@ -47,7 +47,7 @@
     <message>
         <location filename="../view/footerwidget.cpp" line="292"/>
         <source>Play/Pause</source>
-        <translation>Play/Pause</translation>
+        <translation>Reproduzir/Pausar</translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="293"/>
@@ -296,7 +296,7 @@
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="335"/>
         <source>Play</source>
-        <translation>Play</translation>
+        <translation>Reproduzir</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="337"/>
@@ -432,7 +432,7 @@
         <location filename="../view/widget/playlistview.cpp" line="186"/>
         <location filename="../view/widget/playlistview.cpp" line="195"/>
         <source>Play</source>
-        <translation>Play</translation>
+        <translation>Reproduzir</translation>
     </message>
     <message>
         <location filename="../view/widget/playlistview.cpp" line="190"/>
@@ -551,7 +551,7 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="37"/>
         <source>Play/Pause</source>
-        <translation>Play/Pause</translation>
+        <translation>Reproduzir/Pausar</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="38"/>

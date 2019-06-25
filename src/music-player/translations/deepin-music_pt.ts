@@ -19,7 +19,7 @@
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="79"/>
         <source>Do not ask again</source>
-        <translation type="unfinished"/>
+        <translation>Não voltar a perguntar</translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="90"/>
@@ -183,7 +183,7 @@
     <message>
         <location filename="../view/lyricwidget.cpp" line="166"/>
         <source>Find lyrics</source>
-        <translation type="unfinished"/>
+        <translation>Encontrar letras de música</translation>
     </message>
     <message>
         <location filename="../view/lyricwidget.cpp" line="170"/>
@@ -242,7 +242,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="254"/>
         <source>Deepin Music is a beautiful and simple music player that plays local audios. It supports viewing lyrics during playback, playing lossless audio and playlist customization, etc.</source>
-        <translation type="unfinished"/>
+        <translation>O Deepin Music é um reprodutor de música local com funções simples e de design bonito. Suporta a visualização de letras da música enquanto toca, reproduz música sem perda de qualidade e listas de reprodução personalizadas, etc.</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="592"/>
@@ -316,13 +316,13 @@
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="425"/>
         <source>Are you sure you want to delete %1?</source>
-        <translation type="unfinished"/>
+        <translation>Tem a certeza que deseja eliminar %1?</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="427"/>
         <location filename="../view/widget/musiclistview.cpp" line="431"/>
         <source>Are you sure you want to delete the selected %1 songs?</source>
-        <translation type="unfinished"/>
+        <translation>Tem a certeza que deseja eliminar as %1 faixas selecionadas?</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="345"/>
@@ -413,7 +413,7 @@
     <message>
         <location filename="../view/widget/playlistitem.cpp" line="187"/>
         <source>Are you sure you want to delete this playlist?</source>
-        <translation type="unfinished"/>
+        <translation>Tem a certeza que deseja eliminar esta lista de reprodução?</translation>
     </message>
     <message>
         <location filename="../view/widget/playlistitem.cpp" line="194"/>
@@ -511,7 +511,7 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="29"/>
         <source>Enable fade in/out</source>
-        <translation type="unfinished"/>
+        <translation>Ativar desvanecimento</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="30"/>

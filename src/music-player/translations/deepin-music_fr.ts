@@ -19,7 +19,7 @@
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="79"/>
         <source>Do not ask again</source>
-        <translation type="unfinished"/>
+        <translation>Ne plus demander</translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="90"/>
@@ -47,7 +47,7 @@
     <message>
         <location filename="../view/footerwidget.cpp" line="292"/>
         <source>Play/Pause</source>
-        <translation>Lecture / Pause</translation>
+        <translation>Lecture / Pause</translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="293"/>
@@ -127,17 +127,17 @@
     <message>
         <location filename="../view/widget/infodialog.cpp" line="117"/>
         <source>Title:</source>
-        <translation>Titre:</translation>
+        <translation>Titre :</translation>
     </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="117"/>
         <source>Artist:</source>
-        <translation>Artiste:</translation>
+        <translation>Artiste :</translation>
     </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="118"/>
         <source>Album:</source>
-        <translation>Album:</translation>
+        <translation>Album :</translation>
     </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="118"/>
@@ -147,7 +147,7 @@
     <message>
         <location filename="../view/widget/infodialog.cpp" line="120"/>
         <source>Path:</source>
-        <translation>Chemin:</translation>
+        <translation>Chemin :</translation>
     </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="192"/>
@@ -167,7 +167,7 @@
     <message>
         <location filename="../view/widget/infodialog.cpp" line="119"/>
         <source>Duration:</source>
-        <translation>Durée:</translation>
+        <translation>Durée :</translation>
     </message>
 </context>
 <context>
@@ -183,7 +183,7 @@
     <message>
         <location filename="../view/lyricwidget.cpp" line="166"/>
         <source>Find lyrics</source>
-        <translation type="unfinished"/>
+        <translation>Trouver les paroles</translation>
     </message>
     <message>
         <location filename="../view/lyricwidget.cpp" line="170"/>
@@ -242,12 +242,12 @@
     <message>
         <location filename="../view/mainframe.cpp" line="254"/>
         <source>Deepin Music is a beautiful and simple music player that plays local audios. It supports viewing lyrics during playback, playing lossless audio and playlist customization, etc.</source>
-        <translation type="unfinished"/>
+        <translation>Deepin Music est un lecteur de musique simple et élégant qui joue des médias locaux. Il prend en charge la visualisation des paroles pendant la lecture, la lecture d’audio sans perte de qualité, la personnalisation de la liste de lecture, etc...</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="592"/>
         <source>Play/Pause</source>
-        <translation>Lecture / Pause</translation>
+        <translation>Lecture / Pause</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="593"/>
@@ -257,12 +257,12 @@
     <message>
         <location filename="../view/mainframe.cpp" line="739"/>
         <source>Invalid or non-existent file</source>
-        <translation>fichier non valide ou inexistant</translation>
+        <translation>Fichier invalide ou inexistant</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="760"/>
         <source>Failed to import, no vaild music file found!</source>
-        <translation>Pas de fichiers musicaux trouvés!</translation>
+        <translation>Import échoué, aucun fichier valide trouvé !</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="1027"/>
@@ -316,13 +316,13 @@
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="425"/>
         <source>Are you sure you want to delete %1?</source>
-        <translation type="unfinished"/>
+        <translation>Êtes-vous sûr de vouloir supprimer %1 ?</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="427"/>
         <location filename="../view/widget/musiclistview.cpp" line="431"/>
         <source>Are you sure you want to delete the selected %1 songs?</source>
-        <translation type="unfinished"/>
+        <translation>Êtes-vous sûr de vouloir supprimer les %1 chansons sélectionnées ?</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="345"/>
@@ -413,7 +413,7 @@
     <message>
         <location filename="../view/widget/playlistitem.cpp" line="187"/>
         <source>Are you sure you want to delete this playlist?</source>
-        <translation type="unfinished"/>
+        <translation>Êtes-vous sûr de vouloir supprimer cette liste de lecture ?</translation>
     </message>
     <message>
         <location filename="../view/widget/playlistitem.cpp" line="194"/>
@@ -483,7 +483,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="256"/>
         <source>Deepin Music</source>
-        <translation>Deepin Musique</translation>
+        <translation>Deepin Music</translation>
     </message>
 </context>
 <context>
@@ -491,7 +491,7 @@
     <message>
         <location filename="../main.cpp" line="87"/>
         <source>Deepin Music</source>
-        <translation>Deepin Musique</translation>
+        <translation>Deepin Music</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="26"/>
@@ -501,7 +501,7 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="27"/>
         <source>Exit Deepin Music</source>
-        <translation>Quitter Deepin Musique</translation>
+        <translation>Quitter Deepin Music</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="28"/>
@@ -511,7 +511,7 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="29"/>
         <source>Enable fade in/out</source>
-        <translation type="unfinished"/>
+        <translation>Activer le fondu</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="30"/>
@@ -551,7 +551,7 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="37"/>
         <source>Play/Pause</source>
-        <translation>Lecture / Pause</translation>
+        <translation>Lecture / Pause</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="38"/>
@@ -575,7 +575,7 @@
         <location filename="../view/widget/searchresult.cpp" line="57"/>
         <location filename="../view/widget/searchresult.cpp" line="126"/>
         <source>Search &quot;%1&quot; in Deepin Music</source>
-        <translation>Checher &quot;%1&quot; dans Deepin Musique</translation>
+        <translation>Checher &quot;%1&quot; dans Deepin Music</translation>
     </message>
 </context>
 <context>
