@@ -29,14 +29,16 @@
 #include <QFileInfo>
 #include <QHash>
 
+#ifndef DISABLE_LIBAV
 #ifdef __cplusplus
 extern "C" {
-#endif
+#endif // __cplusplus
 #include <libavcodec/avcodec.h>
 #include <libavformat/avformat.h>
 #ifdef __cplusplus
 }
-#endif
+#endif // __cplusplus
+#endif // DISABLE_LIBAV
 
 #include <taglib/tag.h>
 #include <taglib/fileref.h>
@@ -52,7 +54,9 @@ static QMap<QString, QByteArray> localeCodes;
 
 void MetaDetector::init()
 {
+#ifndef DISABLE_LIBAV
     av_register_all();
+#endif // DISABLE_LIBAV
     localeCodes.insert("zh_CN", "GB18030");
 }
 
@@ -215,6 +219,8 @@ void MetaDetector::updateMetaFromLocalfile(MediaMeta *meta, const QFileInfo &fil
         return ;
     }
     meta->length = 0;
+
+#ifndef DISABLE_LIBAV
     AVFormatContext *pFormatCtx = avformat_alloc_context();
     avformat_open_input(&pFormatCtx, meta->localPath.toStdString().c_str(), NULL, NULL);
     if (pFormatCtx) {
@@ -226,6 +232,7 @@ void MetaDetector::updateMetaFromLocalfile(MediaMeta *meta, const QFileInfo &fil
     }
     avformat_close_input(&pFormatCtx);
     avformat_free_context(pFormatCtx);
+#endif // DISABLE_LIBAV
 
     updateMediaFileTagCodec(meta, "", false);
 

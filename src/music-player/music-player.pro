@@ -15,9 +15,15 @@ DESTDIR     = $$BUILD_DIST/bin
 unix{
     DEFINES += SUPPORT_INOTIFY
     QT += x11extras
-    PKGCONFIG += icu-uc icu-i18n libavutil libavformat libavcodec
+    PKGCONFIG += icu-uc icu-i18n
     PKGCONFIG += x11 xext
     PKGCONFIG += dtkwidget
+
+    CONFIG(ENABLE_LIBAV) {
+        PKGCONFIG += libavutil libavformat libavcodec
+    } else {
+        DEFINES += DISABLE_LIBAV
+    }
 }
 
 INCLUDEPATH += $$PWD/view/helper
