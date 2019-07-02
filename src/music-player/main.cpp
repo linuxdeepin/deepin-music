@@ -108,8 +108,9 @@ int main(int argc, char *argv[])
         exit(0);
     }
 
-    // set theme
     MusicSettings::init();
+
+    // set theme
     qDebug() << "TRACE:" << "set theme";
     auto theme = MusicSettings::value("base.play.theme").toString();
 //    auto themePrefix = AppSettings::instance()->value("base.play.theme_prefix").toString();
