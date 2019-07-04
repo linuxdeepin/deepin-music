@@ -122,7 +122,12 @@ int main(int argc, char *argv[])
     MusicApp *music = new MusicApp(&mainframe);
     music->init();
 
-    Player::instance()->init();
+    // blumia: init player *after* window shows up. It's vary dirty but can make deepin-music
+    //         launch time 100% faster on loongson.
+    QTimer::singleShot(10, [](){
+        Player::instance()->init();
+    });
+
     if (!toOpenFile.isEmpty()) {
         auto fi = QFileInfo(toOpenFile);
         auto url = QUrl::fromLocalFile(fi.absoluteFilePath());
