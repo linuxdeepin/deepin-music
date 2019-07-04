@@ -109,12 +109,6 @@ int main(int argc, char *argv[])
     }
 
     MusicSettings::init();
-    Player::instance()->init();
-    if (!toOpenFile.isEmpty()) {
-        auto fi = QFileInfo(toOpenFile);
-        auto url = QUrl::fromLocalFile(fi.absoluteFilePath());
-        MusicSettings::setOption("base.play.to_open_uri", url.toString());
-    }
 
     // set theme
     qDebug() << "TRACE:" << "set theme";
@@ -127,6 +121,13 @@ int main(int argc, char *argv[])
     MainFrame mainframe;
     MusicApp *music = new MusicApp(&mainframe);
     music->init();
+
+    Player::instance()->init();
+    if (!toOpenFile.isEmpty()) {
+        auto fi = QFileInfo(toOpenFile);
+        auto url = QUrl::fromLocalFile(fi.absoluteFilePath());
+        MusicSettings::setOption("base.play.to_open_uri", url.toString());
+    }
 
     app.connect(&app, &QApplication::lastWindowClosed,
     &mainframe, [ & ]() {
