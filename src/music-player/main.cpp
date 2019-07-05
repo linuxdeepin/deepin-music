@@ -87,6 +87,24 @@ int main(int argc, char *argv[])
     app.setApplicationDisplayName(QObject::tr("Deepin Music"));
     app.setWindowIcon(QIcon(":/common/image/deepin-music.svg"));
 
+    MusicSettings::init();
+
+    // set theme
+    qDebug() << "TRACE:" << "set theme";
+    auto theme = MusicSettings::value("base.play.theme").toString();
+//    auto themePrefix = AppSettings::instance()->value("base.play.theme_prefix").toString();
+//    DThemeManager::instance()->setPrefix(themePrefix);
+    DThemeManager::instance()->setTheme(theme);
+
+    // DMainWindow must create on main function, so it can deconstruction before QApplication
+    MainFrame mainframe;
+    MusicApp *music = new MusicApp(&mainframe);
+    music->initUI();
+
+    Player::instance()->init();
+
+    music->initConnection();
+
     if (!app.setSingleInstance("deepinmusic")) {
         qDebug() << "another deepin music has started";
         if (!toOpenFile.isEmpty()) {
@@ -108,21 +126,6 @@ int main(int argc, char *argv[])
         exit(0);
     }
 
-    MusicSettings::init();
-
-    // set theme
-    qDebug() << "TRACE:" << "set theme";
-    auto theme = MusicSettings::value("base.play.theme").toString();
-//    auto themePrefix = AppSettings::instance()->value("base.play.theme_prefix").toString();
-//    DThemeManager::instance()->setPrefix(themePrefix);
-    DThemeManager::instance()->setTheme(theme);
-
-    // DMainWindow must create on main function, so it can deconstruction before QApplication
-    MainFrame mainframe;
-    MusicApp *music = new MusicApp(&mainframe);
-    music->init();
-
-    Player::instance()->init();
     if (!toOpenFile.isEmpty()) {
         auto fi = QFileInfo(toOpenFile);
         auto url = QUrl::fromLocalFile(fi.absoluteFilePath());

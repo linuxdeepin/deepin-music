@@ -35,7 +35,8 @@ public:
     MusicApp(MainFrame* frame, QObject *parent = nullptr);
     ~MusicApp();
 
-    void init();
+    void initUI();
+    void initConnection();
     void show();
     void quit();
 
