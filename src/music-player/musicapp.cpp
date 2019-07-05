@@ -243,7 +243,7 @@ void MusicApp::quit()
     qApp->quit();
 }
 
-void MusicApp::init()
+void MusicApp::initUI()
 {
     Q_D(MusicApp);
 
@@ -253,6 +253,11 @@ void MusicApp::init()
     qDebug() << "TRACE:" << "create MainFrame";
 //    d->playerFrame->initUI(0 != mediaCount);
     show();
+}
+
+void MusicApp::initConnection()
+{
+    Q_D(MusicApp);
 
     qDebug() << "TRACE:" << "create Presenter";
     d->presenter = new Presenter;
