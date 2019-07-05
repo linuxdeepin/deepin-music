@@ -561,7 +561,7 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="39"/>
         <source>Volume down</source>
-        <translation>Baisser le volume</translation>
+        <translation>Diminuer le volume</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="40"/>

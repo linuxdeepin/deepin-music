@@ -19,7 +19,7 @@
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="79"/>
         <source>Do not ask again</source>
-        <translation type="unfinished"/>
+        <translation>Spørg ikke igen</translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="90"/>
@@ -183,7 +183,7 @@
     <message>
         <location filename="../view/lyricwidget.cpp" line="166"/>
         <source>Find lyrics</source>
-        <translation type="unfinished"/>
+        <translation>Find sangtekster</translation>
     </message>
     <message>
         <location filename="../view/lyricwidget.cpp" line="170"/>
@@ -316,13 +316,13 @@
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="425"/>
         <source>Are you sure you want to delete %1?</source>
-        <translation type="unfinished"/>
+        <translation>Er du sikker på, at du vil slette %1?</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="427"/>
         <location filename="../view/widget/musiclistview.cpp" line="431"/>
         <source>Are you sure you want to delete the selected %1 songs?</source>
-        <translation type="unfinished"/>
+        <translation>Er du sikker på, at du vil slette de %1 valgte sange?</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="345"/>
@@ -413,7 +413,7 @@
     <message>
         <location filename="../view/widget/playlistitem.cpp" line="187"/>
         <source>Are you sure you want to delete this playlist?</source>
-        <translation type="unfinished"/>
+        <translation>Er du sikker på, at du vil slette afspilningslisten?</translation>
     </message>
     <message>
         <location filename="../view/widget/playlistitem.cpp" line="194"/>
@@ -511,7 +511,7 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="29"/>
         <source>Enable fade in/out</source>
-        <translation type="unfinished"/>
+        <translation>Aktivér fade ind/ud</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="30"/>

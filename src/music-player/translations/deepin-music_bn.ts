@@ -562,7 +562,7 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="39"/>
         <source>Volume down</source>
-        <translation type="unfinished"/>
+        <translation>শব্দ কমান</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="40"/>
