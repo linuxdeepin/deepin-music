@@ -242,7 +242,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="254"/>
         <source>Deepin Music is a beautiful and simple music player that plays local audios. It supports viewing lyrics during playback, playing lossless audio and playlist customization, etc.</source>
-        <translation type="unfinished"/>
+        <translation>Deepin musik er en smuk og simpel musikafspiller som afspiller lokal lyd. Den understøtter visning af sangtekster under afspilning, afspilning af tabsfri lyd, tilpasning af afspilningsliste, osv.</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="592"/>

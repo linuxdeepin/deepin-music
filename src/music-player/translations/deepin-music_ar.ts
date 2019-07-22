@@ -19,7 +19,7 @@
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="79"/>
         <source>Do not ask again</source>
-        <translation type="unfinished"/>
+        <translation>عدم العرض مرة أخرى</translation>
     </message>
     <message>
         <location filename="../view/widget/closeconfirmdialog.cpp" line="90"/>
@@ -183,7 +183,7 @@
     <message>
         <location filename="../view/lyricwidget.cpp" line="166"/>
         <source>Find lyrics</source>
-        <translation type="unfinished"/>
+        <translation>اعثر على الكلمات</translation>
     </message>
     <message>
         <location filename="../view/lyricwidget.cpp" line="170"/>
@@ -242,7 +242,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="254"/>
         <source>Deepin Music is a beautiful and simple music player that plays local audios. It supports viewing lyrics during playback, playing lossless audio and playlist customization, etc.</source>
-        <translation type="unfinished"/>
+        <translation>موسيقى ديبين هو مشغل موسيقى أنيق وبسيط لتشغيل الملفات الصوتية المحلية. يدعم عرض الكلمات خلال التشغيل، يشغل الأصوات بتكامل مع تنسيق القوائم، الخ.</translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="592"/>
@@ -262,7 +262,7 @@
     <message>
         <location filename="../view/mainframe.cpp" line="760"/>
         <source>Failed to import, no vaild music file found!</source>
-        <translation>تعذر الاستيراد ! إذ لم يتم العثور على ملف موسيقى صالح </translation>
+        <translation>تعذر الاستيراد، إذ لم يتم العثور على ملف موسيقى صالح </translation>
     </message>
     <message>
         <location filename="../view/mainframe.cpp" line="1027"/>
@@ -316,13 +316,13 @@
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="425"/>
         <source>Are you sure you want to delete %1?</source>
-        <translation type="unfinished"/>
+        <translation>هل أنت متأكد من حذف %1؟</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="427"/>
         <location filename="../view/widget/musiclistview.cpp" line="431"/>
         <source>Are you sure you want to delete the selected %1 songs?</source>
-        <translation type="unfinished"/>
+        <translation>هل أنت متأكد من حذف الأغاني %1 المختارة؟</translation>
     </message>
     <message>
         <location filename="../view/widget/musiclistview.cpp" line="345"/>
@@ -413,7 +413,7 @@
     <message>
         <location filename="../view/widget/playlistitem.cpp" line="187"/>
         <source>Are you sure you want to delete this playlist?</source>
-        <translation type="unfinished"/>
+        <translation>هل أنت متأكد من حذف هذه القائمة؟</translation>
     </message>
     <message>
         <location filename="../view/widget/playlistitem.cpp" line="194"/>
@@ -511,7 +511,7 @@
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="29"/>
         <source>Enable fade in/out</source>
-        <translation type="unfinished"/>
+        <translation>تفعيل تأثير دخول/خروج</translation>
     </message>
     <message>
         <location filename="../view/widget/settingsdialog.cpp" line="30"/>

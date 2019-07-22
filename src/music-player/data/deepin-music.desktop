@@ -176,7 +176,7 @@ Name=Next track
 # Translations:
 # Do not manually modify!
 Name[am_ET]=የሚቀጥለው ተረኛ
-Name[ar]=المسار التالي
+Name[ar]=الموسيقى التالية
 Name[ast]=Pista siguiente
 Name[bg]=Следваща песен
 Name[ca]=Pista següent
@@ -225,7 +225,7 @@ Name=Play/Pause track
 # Translations:
 # Do not manually modify!
 Name[am_ET]=ተረኛ ማጫወቻ/ማስቆሚያ
-Name[ar]=تشغيل / إيقاف المسار
+Name[ar]=تشغيل / إيقاف الموسيقى
 Name[ast]=Reproducir/posar pista
 Name[bg]=Изпълнение/Пауза на записа
 Name[ca]=Reprodueix / pausa la pista
@@ -274,7 +274,7 @@ Name=Previous track
 # Translations:
 # Do not manually modify!
 Name[am_ET]=ያለፈው ተረኛ
-Name[ar]=المسار السابق
+Name[ar]=الموسيقى السابقة
 Name[ast]=Pista previa
 Name[bg]=Предишна песен
 Name[ca]=Pista anterior
