@@ -40,9 +40,6 @@ SOURCES += \
     view/widget/cover.cpp \
     view/widget/infodialog.cpp \
     view/widget/modebuttom.cpp \
-    view/widget/musiclistview.cpp \
-    view/widget/playlistitem.cpp \
-    view/widget/playlistview.cpp \
     view/widget/pushbutton.cpp \
     view/widget/searchedit.cpp \
     view/widget/searchresult.cpp \
@@ -62,13 +59,9 @@ SOURCES += \
     view/widget/listview.cpp \
     view/mainframe.cpp \
     view/importwidget.cpp \
-    view/musiclistwidget.cpp \
-    view/playlistwidget.cpp \
     musicapp.cpp \
     main.cpp \
-    view/widget/model/musiclistmodel.cpp \
     view/widget/delegate/lyriclinedelegate.cpp \
-    view/widget/delegate/musicitemdelegate.cpp \
     view/lyricwidget.cpp \
     view/widget/lyricview.cpp \
     view/widget/settingsdialog.cpp \
@@ -76,7 +69,15 @@ SOURCES += \
     view/footerwidget.cpp \
     view/loadwidget.cpp \
     view/widget/closeconfirmdialog.cpp \
-    core/musicsettings.cpp
+    core/musicsettings.cpp \
+    view/playlistwidget.cpp \
+    view/widget/playlistview.cpp \
+    view/widget/delegate/playitemdelegate.cpp \
+    view/widget/model/playlistmodel.cpp \
+    view/musiclistwidget.cpp \
+    view/widget/musiclistview.cpp \
+    view/widget/musiclistitem.cpp \
+    view/musiclistdatawidget.cpp
 
 HEADERS += \
     musicapp.h \
@@ -91,9 +92,6 @@ HEADERS += \
     view/widget/cover.h \
     view/widget/infodialog.h \
     view/widget/modebuttom.h \
-    view/widget/musiclistview.h \
-    view/widget/playlistitem.h \
-    view/widget/playlistview.h \
     view/widget/pushbutton.h \
     view/widget/searchedit.h \
     view/widget/searchresult.h \
@@ -112,21 +110,25 @@ HEADERS += \
     core/util/global.h \
     core/metasearchservice.h \
     core/pluginmanager.h \
-    view/musiclistwidget.h \
-    view/playlistwidget.h \
     view/mainframe.h \
     view/widget/listview.h \
-    view/widget/model/musiclistmodel.h \
     view/widget/delegate/lyriclinedelegate.h \
-    view/widget/delegate/musicitemdelegate.h \
     view/lyricwidget.h \
     view/widget/lyricview.h \
     core/util/threadpool.h \
     view/footerwidget.h \
     view/loadwidget.h \
     view/widget/closeconfirmdialog.h \
-    view/widget/delegate/musicitemdelegate_p.h \
-    core/musicsettings.h
+    core/musicsettings.h \
+    view/playlistwidget.h \
+    view/widget/delegate/playitemdelegate.h \
+    view/widget/model/playlistmodel.h \
+    view/widget/playlistview.h \
+    view/widget/delegate/playitemdelegate_p.h \
+    view/musiclistwidget.h \
+    view/widget/musiclistview.h \
+    view/widget/musiclistitem.h \
+    view/musiclistdatawidget.h
 
 RESOURCES += \
     resource/theme/theme.qrc \

@@ -29,6 +29,8 @@
 
 #include "mediadatabase.h"
 
+const QString AlbumMusicListID = "album";
+const QString ArtistMusicListID = "artist";
 const QString AllMusicListID = "all";
 const QString FavMusicListID = "fav";
 const QString SearchMusicListID = "search";
@@ -111,7 +113,7 @@ void PlaylistManager::load()
     if (sortUUIDs.size() != d->playlists.size()) {
         qWarning() << "playlist order crash, restrot";
         d->sortUUIDs.clear();
-        d->sortUUIDs << SearchMusicListID << AllMusicListID << FavMusicListID;
+        d->sortUUIDs << SearchMusicListID << AlbumMusicListID << ArtistMusicListID << AllMusicListID << FavMusicListID;
 
         QStringList sortUUIDs;
         for (auto playlist : d->playlists.values()) {
@@ -119,6 +121,8 @@ void PlaylistManager::load()
         }
 
         sortUUIDs.removeAll(SearchMusicListID);
+        sortUUIDs.removeAll(AlbumMusicListID);
+        sortUUIDs.removeAll(ArtistMusicListID);
         sortUUIDs.removeAll(AllMusicListID);
         sortUUIDs.removeAll(FavMusicListID);
 
@@ -129,6 +133,18 @@ void PlaylistManager::load()
         for (auto sortID = 0; sortID < sortUUIDs.size(); ++sortID) {
             d->sortUUIDs << sortUUIDs.value(static_cast<uint>(sortID));
         }
+    }
+
+    auto album = playlist(AlbumMusicListID);
+    auto trAlbumName = tr("Album");
+    if (!album.isNull() && album->displayName() != trAlbumName) {
+        album->setDisplayName(trAlbumName);
+    }
+
+    auto artist = playlist(ArtistMusicListID);
+    auto trArtistName = tr("Artist");
+    if (!artist.isNull() && artist->displayName() != trArtistName) {
+        artist->setDisplayName(trArtistName);
     }
 
     auto all = playlist(AllMusicListID);

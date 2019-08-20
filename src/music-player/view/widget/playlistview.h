@@ -21,29 +21,51 @@
 
 #pragma once
 
-#include <QListWidget>
-#include <QScopedPointer>
+#include "listview.h"
+
+#include "../../core/playlist.h"
 
 class PlayListViewPrivate;
-class PlayListView : public QListWidget
+class PlayListView : public ListView
 {
     Q_OBJECT
 public:
     explicit PlayListView(QWidget *parent = Q_NULLPTR);
     ~PlayListView();
 
-    void updateScrollbar();
-    void showContextMenu(const QPoint &pos);
+    MetaPtr activingMeta() const;
+    PlaylistPtr playlist() const;
+    QModelIndex findIndex(const MetaPtr meta);
 
 signals:
-    void customResort(const QStringList &uuids);
+    void addToPlaylist(PlaylistPtr playlist, const MetaPtrList &metalist);
+    void removeMusicList(const MetaPtrList  &metalist);
+    void deleteMusicList(const MetaPtrList  &metalist);
+    void playMedia(const MetaPtr meta);
+    void updateMetaCodec(const MetaPtr meta);
+    void showInfoDialog(const MetaPtr meta);
+    void requestCustomContextMenu(const QPoint &pos);
+    void customSort();
+
+public:
+    void onMusiclistChanged(PlaylistPtr playlist);
+    void onMusicListAdded(const MetaPtrList metalist);
+    void onMusicListRemoved(const MetaPtrList metalist);
+    void onMusicError(const MetaPtr meta, int error);
+    void onLocate(const MetaPtr meta);
+    void showContextMenu(const QPoint &pos,
+                         PlaylistPtr selectedPlaylist,
+                         PlaylistPtr favPlaylist,
+                         QList<PlaylistPtr > newPlaylists);
 
 protected:
-    virtual void wheelEvent(QWheelEvent *event) Q_DECL_OVERRIDE;
-    virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
+    virtual void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
     virtual void startDrag(Qt::DropActions supportedActions) Q_DECL_OVERRIDE;
+    virtual void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
+    virtual void keyboardSearch(const QString &search) Q_DECL_OVERRIDE;
 
 private:
     QScopedPointer<PlayListViewPrivate> d_ptr;
     Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), PlayListView)
+
 };

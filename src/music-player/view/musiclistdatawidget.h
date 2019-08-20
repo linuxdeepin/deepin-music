@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 ~ 2018 Wuhan Deepin Technology Co., Ltd.
+ * Copyright (C) 2016 ~ 2018 Wuhan Deepin Technology Co., Ltd.
  *
  * Author:     Iceyer <me@iceyer.net>
  *
@@ -21,23 +21,29 @@
 
 #pragma once
 
-#include <QImage>
+#include <QFrame>
 
-#include "util/singleton.h"
+#include "../core/playlist.h"
 
-#include <mediameta.h>
-
-class QFileInfo;
-class LIBDMUSICSHARED_EXPORT MetaDetector
+class MusicListDataWidgetPrivate;
+class MusicListDataWidget : public QFrame
 {
+    Q_OBJECT
 public:
-    static void init();
+    explicit MusicListDataWidget(QWidget *parent = Q_NULLPTR);
+    ~MusicListDataWidget();
 
-    static QList<QByteArray> detectEncodings(const MetaPtr meta);
-    static QList<QByteArray> detectEncodings(const QByteArray &rawData);
+    void setCustomSortType(PlaylistPtr playlist);
 
-    static void updateCueFileTagCodec(MediaMeta *meta, const QFileInfo &, const QByteArray &codec);
-    static void updateMediaFileTagCodec(MediaMeta *meta, const QByteArray &codec, bool forceEncode);
-    static void updateMetaFromLocalfile(MediaMeta *meta, const QFileInfo &fileInfo);
-    static QByteArray getCoverData(const QString &path);
+public slots:
+    void onMusiclistChanged(PlaylistPtr playlist);
+
+signals:
+    void playall(PlaylistPtr playlist);
+    void resort(PlaylistPtr playlist, int sortType);
+
+private:
+    QScopedPointer<MusicListDataWidgetPrivate> d_ptr;
+    Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), MusicListDataWidget)
 };
+

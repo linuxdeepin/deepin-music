@@ -22,207 +22,338 @@
 #include "playlistwidget.h"
 
 #include <QDebug>
+#include <QAction>
 #include <QVBoxLayout>
+#include <QHBoxLayout>
 #include <QPushButton>
-#include <QFocusEvent>
+#include <QComboBox>
+#include <QLabel>
+#include <QMimeData>
+#include <QResizeEvent>
+#include <QStandardItemModel>
 
-#include <DUtil>
 #include <DThemeManager>
 
+#include "../core/music.h"
 #include "../core/playlist.h"
 #include "widget/playlistview.h"
-#include "widget/playlistitem.h"
+#include "widget/ddropdown.h"
 
 DWIDGET_USE_NAMESPACE
 
-PlaylistWidget::PlaylistWidget(QWidget *parent) : QFrame(parent)
+class PlayListWidgetPrivate
 {
-    setObjectName("PlaylistWidget");
+public:
+    PlayListWidgetPrivate(PlayListWidget *parent) : q_ptr(parent) {}
 
-    auto layout = new QVBoxLayout(this);
-    setFocusPolicy(Qt::ClickFocus);
-    layout->setContentsMargins(0, 0, 0, 15);
-    layout->setSpacing(15);
+    void initData(PlaylistPtr playlist);
+    void initConntion();
+    void showEmptyHits(bool empty);
 
-    m_listview = new PlayListView;
+    QLabel              *emptyHits      = nullptr;
+    QWidget             *actionBar      = nullptr;
+    QPushButton         *btPlayAll      = nullptr;
+    DDropdown           *dropdown       = nullptr;
+    PlayListView        *playListView   = nullptr;
+    QAction             *customAction   = nullptr;
 
-    auto btAddFrame = new QFrame;
-    btAddFrame->setObjectName("PlaylistWidgetAddFrame");
-    btAddFrame->setFocusPolicy(Qt::NoFocus);
-    auto btAddFameLayout = new QVBoxLayout(btAddFrame);
-    btAddFameLayout->setMargin(0);
+    PlayListWidget *q_ptr;
+    Q_DECLARE_PUBLIC(PlayListWidget)
+};
 
-    auto btAdd = new QPushButton();
-    btAdd->setFixedSize(190, 36);
-    btAdd->setObjectName("PlaylistWidgetAdd");
-    btAdd->setText("+ " + tr("New playlist"));
 
-    QSizePolicy sp(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    sp.setVerticalStretch(100);
-    m_listview->setSizePolicy(sp);
+void PlayListWidgetPrivate::initData(PlaylistPtr playlist)
+{
+    Q_Q(PlayListWidget);
+    btPlayAll->setText(playlist->displayName());
+    playListView->onMusiclistChanged(playlist);
 
-    layout->addWidget(m_listview, 0, Qt::AlignHCenter);
-    btAddFameLayout->addWidget(btAdd, 0, Qt::AlignBottom | Qt::AlignHCenter);
-    layout->addWidget(btAddFrame, 0, Qt::AlignHCenter | Qt::AlignBottom);
-    layout->addStretch();
+    if (playlist->sortType() == Playlist::SortByCustom) {
+        q->setCustomSortType();
+    } else {
+        for (auto action : dropdown->actions()) {
+            if (action->data().toInt() == playlist->sortType()) {
+                dropdown->setCurrentAction(action);
+            }
+        }
+    }
+    showEmptyHits(playListView->model()->rowCount() == 0);
+}
+
+void PlayListWidgetPrivate::initConntion()
+{
+    Q_Q(PlayListWidget);
+
+    q->connect(dropdown, &DDropdown::triggered,
+    q, [ = ](QAction * action) {
+        dropdown->setCurrentAction(action);
+        Q_EMIT q->resort(playListView->playlist(), action->data().value<Playlist::SortType>());
+    });
+
+    q->connect(btPlayAll, &QPushButton::clicked,
+    q, [ = ](bool) {
+        if (playListView->playlist()) {
+            Q_EMIT q->playall(playListView->playlist());
+        }
+    });
+
+    q->connect(playListView, &PlayListView::customSort,
+    q, [ = ]() {
+        q->setCustomSortType();
+        Q_EMIT q->resort(playListView->playlist(), Playlist::SortByCustom);
+    });
+
+    q->connect(playListView, &PlayListView::requestCustomContextMenu,
+    q, [ = ](const QPoint & pos) {
+        Q_EMIT q->requestCustomContextMenu(pos);
+    });
+    q->connect(playListView, &PlayListView::removeMusicList,
+    q, [ = ](const MetaPtrList  & metalist) {
+        Q_EMIT q->musiclistRemove(playListView->playlist(), metalist);
+    });
+    q->connect(playListView, &PlayListView::deleteMusicList,
+    q, [ = ](const MetaPtrList & metalist) {
+        Q_EMIT q->musiclistDelete(playListView->playlist(), metalist);
+    });
+    q->connect(playListView, &PlayListView::addToPlaylist,
+    q, [ = ](PlaylistPtr playlist, const MetaPtrList  metalist) {
+        Q_EMIT q->addToPlaylist(playlist, metalist);
+    });
+    q->connect(playListView, &PlayListView::playMedia,
+    q, [ = ](const MetaPtr meta) {
+        Q_EMIT q->playMedia(playListView->playlist(), meta);
+    });
+    q->connect(playListView, &PlayListView::showInfoDialog,
+    q, [ = ](const MetaPtr meta) {
+        Q_EMIT q->showInfoDialog(meta);
+    });
+    q->connect(playListView, &PlayListView::updateMetaCodec,
+    q, [ = ](const MetaPtr  meta) {
+        Q_EMIT q->updateMetaCodec(meta);
+    });
+}
+
+void PlayListWidgetPrivate::showEmptyHits(bool empty)
+{
+    auto playlist = playListView->playlist();
+    if (playlist.isNull() || playlist->id() != SearchMusicListID) {
+        emptyHits->setText(PlayListWidget::tr("No Music"));
+    } else {
+        emptyHits->setText(PlayListWidget::tr("No result found"));
+    }
+    actionBar->setVisible(!empty);
+    playListView->setVisible(!empty);
+    emptyHits->setVisible(empty);
+}
+
+PlayListWidget::PlayListWidget(QWidget *parent) :
+    QFrame(parent), d_ptr(new PlayListWidgetPrivate(this))
+{
+    Q_D(PlayListWidget);
 
     DThemeManager::instance()->registerWidget(this);
 
-    connect(btAdd, &QPushButton::clicked, this, [ = ](bool /*checked*/) {
-        qDebug() << "addPlaylist(true);";
-        Q_EMIT this->addPlaylist(true);
-    });
+    setObjectName("PlayListWidget");
+    setAcceptDrops(true);
 
-    connect(m_listview, &PlayListView::itemClicked,
-    this, [ = ](QListWidgetItem * item) {
-        this->setEnabled(false);
-        auto playlistItem = qobject_cast<PlayListItem *>(m_listview->itemWidget(item));
-        if (!playlistItem) {
-            qCritical() << "playlistItem is empty" << item << playlistItem;
-            return;
-        }
-        Q_EMIT this->selectPlaylist(playlistItem->data());
-        DUtil::TimerSingleShot(500, [this]() {
-            this->setEnabled(true);
-            Q_EMIT this->hidePlaylist();
-        });
-    });
-    connect(m_listview, &PlayListView::currentItemChanged,
-    this, [ = ](QListWidgetItem * current, QListWidgetItem * previous) {
-        auto itemWidget = qobject_cast<PlayListItem *>(m_listview->itemWidget(previous));
-        if (itemWidget) {
-            itemWidget->setActive(false);
-        }
-        itemWidget = qobject_cast<PlayListItem *>(m_listview->itemWidget(current));
-        if (itemWidget) {
-            itemWidget->setActive(true);
-        }
-    });
-    connect(m_listview, &PlayListView::customResort,
-    this, [ = ](const QStringList & uuids) {
-        Q_EMIT this->customResort(uuids);
-    });
+    auto layout = new QVBoxLayout(this);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
+
+    d->actionBar = new QFrame;
+    d->actionBar->setFixedHeight(40);
+    d->actionBar->setObjectName("PlayListActionBar");
+    d->actionBar->hide();
+
+    auto actionBarLayout = new QHBoxLayout(d->actionBar);
+    actionBarLayout->setContentsMargins(10, 0, 8, 0);
+    actionBarLayout->setSpacing(0);
+
+    d->btPlayAll = new QPushButton;
+    d->btPlayAll->setObjectName("PlayListPlayAll");
+    d->btPlayAll->setText(tr("Play All"));
+    d->btPlayAll->setFixedHeight(28);
+    d->btPlayAll->setFocusPolicy(Qt::NoFocus);
+
+    d->dropdown = new DDropdown;
+    d->dropdown->setFixedHeight(28);
+    d->dropdown->setMinimumWidth(130);
+    d->dropdown->setObjectName("PlayListSort");
+    d->dropdown->addAction(tr("Time added"), QVariant::fromValue<Playlist::SortType>(Playlist::SortByAddTime));
+    d->dropdown->addAction(tr("Title"), QVariant::fromValue<Playlist::SortType>(Playlist::SortByTitle));
+    d->dropdown->addAction(tr("Artist"), QVariant::fromValue<Playlist::SortType>(Playlist::SortByArtist));
+    d->dropdown->addAction(tr("Album name"), QVariant::fromValue<Playlist::SortType>(Playlist::SortByAblum));
+//    d->customAction = d->dropdown->addAction(tr("Custom"), QVariant::fromValue<Playlist::SortType>(Playlist::SortByCustom));
+//    d->customAction->setDisabled(true);
+
+    d->emptyHits = new QLabel();
+    d->emptyHits->setObjectName("PlayListEmptyHits");
+    d->emptyHits->hide();
+
+    actionBarLayout->addWidget(d->btPlayAll, 0, Qt::AlignCenter);
+    actionBarLayout->addStretch();
+    actionBarLayout->addWidget(d->dropdown, 0, Qt::AlignCenter);
+
+    d->playListView = new PlayListView;
+    d->playListView->hide();
+
+    layout->addWidget(d->actionBar, 0, Qt::AlignTop);
+    layout->addWidget(d->playListView, 100, Qt::AlignTop);
+    layout->addStretch();
+    layout->addWidget(d->emptyHits, 0, Qt::AlignCenter);
+    layout->addStretch();
+
+    d->initConntion();
 }
 
-void PlaylistWidget::initData(QList<PlaylistPtr > playlists, PlaylistPtr last)
+PlayListWidget::~PlayListWidget()
 {
-    if (playlists.length() <= 0) {
-        qCritical() << "playlist is empty";
+}
+
+void PlayListWidget::setCustomSortType()
+{
+    Q_D(PlayListWidget);
+    d->dropdown->setCurrentAction(nullptr);
+    d->dropdown->setText(tr("Custom"));
+}
+
+void PlayListWidget::dragEnterEvent(QDragEnterEvent *event)
+{
+    QFrame::dragEnterEvent(event);
+    if (event->mimeData()->hasFormat("text/uri-list")) {
+        qDebug() << "acceptProposedAction" << event;
+        event->setDropAction(Qt::CopyAction);
+        event->acceptProposedAction();
+        return;
+    }
+}
+
+void PlayListWidget::dropEvent(QDropEvent *event)
+{
+    QFrame::dropEvent(event);
+    Q_D(PlayListWidget);
+
+    if (!event->mimeData()->hasFormat("text/uri-list")) {
         return;
     }
 
-    QListWidgetItem *current = nullptr;
-    for (auto &playlist : playlists) {
-        if (playlist->hide()) {
-            continue;
-        }
-
-        qDebug() << "init with" << playlist->id() << playlist->displayName();
-
-        auto item = new QListWidgetItem;
-        m_listview->addItem(item);
-        m_listview->setItemWidget(item, new PlayListItem(playlist));
-
-        auto playlistItem = qobject_cast<PlayListItem *>(m_listview->itemWidget(item));
-        connect(playlistItem, &PlayListItem::remove, this, [ = ]() {
-            m_listview->removeItemWidget(item);
-            delete m_listview->takeItem(m_listview->row(item));
-            // remote to firest
-            Q_ASSERT(m_listview->count() > 0);
-            m_listview->updateScrollbar();
-            m_listview->setCurrentItem(m_listview->item(0));
-        });
-
-        connect(playlistItem, &PlayListItem::playall,
-                this, &PlaylistWidget::playall);
-
-        if (last->id() == playlist->id()) {
-            current = item;
-        }
-
+    auto urls = event->mimeData()->urls();
+    QStringList localpaths;
+    for (auto &url : urls) {
+        localpaths << url.toLocalFile();
     }
 
-    if (current) {
-        m_listview->setCurrentItem(current);
-    } else {
-        m_listview->setCurrentItem(m_listview->item(0));
-    }
-    m_listview->updateScrollbar();
-}
-
-void PlaylistWidget::onMusicPlayed(PlaylistPtr playlist, const MetaPtr)
-{
-    for (int i = 0; i < m_listview->count(); ++i) {
-        QListWidgetItem *item = m_listview->item(i);
-        auto playlistItem = qobject_cast<PlayListItem *>(m_listview->itemWidget(item));
-        if (playlistItem->data()->id() == playlist->id()) {
-            playlistItem->setPlay(true);
-        } else {
-            playlistItem->setPlay(false);
-        }
+    if (!localpaths.isEmpty() && !d->playListView->playlist().isNull()) {
+        Q_EMIT importSelectFiles(d->playListView->playlist(), localpaths);
     }
 }
 
-void PlaylistWidget::focusOutEvent(QFocusEvent *event)
+void PlayListWidget::resizeEvent(QResizeEvent *event)
 {
-    // TODO: monitor mouse position
-    QPoint mousePos = mapToParent(mapFromGlobal(QCursor::pos()));
-//    qDebug() << mapFromGlobal(QCursor::pos()) << mousePos;
-//    qDebug() << event->reason();
-    if (!this->geometry().contains(mousePos)) {
-        if (event && event->reason() == Qt::MouseFocusReason) {
-            DUtil::TimerSingleShot(50, [this]() {
-                qDebug() << "self lost focus hide";
-                Q_EMIT this->hidePlaylist();
-            });
-        }
-    }
-    QFrame::focusOutEvent(event);
+    Q_D(PlayListWidget);
+    QFrame::resizeEvent(event);
+    auto viewrect = QFrame::rect();
+    auto viewsize = viewrect.marginsRemoved(contentsMargins()).size();
+    d->playListView->setFixedSize(viewsize.width(), viewsize.height() - 40);
+    d->emptyHits->setFixedSize(viewsize.width(), viewsize.height());
 }
 
-void PlaylistWidget::onPlaylistAdded(PlaylistPtr playlist)
+void PlayListWidget::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
 {
-    if (playlist->hide()) {
+    Q_D(PlayListWidget);
+
+    if (playlist != d->playListView->playlist()) {
+        d->initData(playlist);
+    }
+
+    if (playlist != d->playListView->playlist() || meta.isNull()) {
         return;
     }
 
-    auto item = new QListWidgetItem;
-    m_listview->addItem(item);
-    m_listview->setItemWidget(item, new PlayListItem(playlist));
+    QModelIndex index = d->playListView->findIndex(meta);
+    if (!index.isValid()) {
+        return;
+    }
 
-//   disable drag
-//    if (playlist->id() == AllMusicListID || playlist->id() == FavMusicListID) {
-//        item->setFlags(item->flags() & ~Qt::ItemIsDragEnabled);
-//    }
-//    qDebug() << "pppppppp" << item->flags();
+    auto selectedIndexes = d->playListView->selectionModel()->selectedIndexes();
+    if (selectedIndexes.size() > 1) {
+        d->playListView->update();
+        return;
+    }
 
-    auto playlistItem = qobject_cast<PlayListItem *>(m_listview->itemWidget(item));
-    connect(playlistItem, &PlayListItem::remove, this, [ = ]() {
-        m_listview->removeItemWidget(item);
-        delete m_listview->takeItem(m_listview->row(item));
-    });
-
-    connect(playlistItem, &PlayListItem::playall,
-            this, &PlaylistWidget::playall);
-
-    m_listview->setCurrentItem(item);
-    m_listview->updateScrollbar();
+    d->playListView->clearSelection();
+    d->playListView->setCurrentIndex(index);
+    d->playListView->scrollTo(index);
+    d->playListView->update();
 }
 
-void PlaylistWidget::onCurrentChanged(PlaylistPtr playlist)
+void PlayListWidget::onMusicPause(PlaylistPtr playlist, const MetaPtr meta)
 {
-    if (playlist) {
-        m_listview->setCurrentItem(nullptr);
+    Q_D(PlayListWidget);
+    if (playlist != d->playListView->playlist() || meta.isNull()) {
+        return;
     }
-    for (int i = 0; i < m_listview->count(); ++i) {
-        QListWidgetItem *item = m_listview->item(i);
-        auto playlistItem = qobject_cast<PlayListItem *>(m_listview->itemWidget(item));
-        if (playlistItem->data()->id() == playlist->id()) {
-            m_listview->setCurrentItem(item);
-            playlistItem->setActive(true);
-        } else {
-            playlistItem->setActive(false);
-        }
+    d->playListView->update();
+}
+
+void PlayListWidget::onMusicListRemoved(PlaylistPtr playlist, const MetaPtrList metalist)
+{
+    Q_D(PlayListWidget);
+
+    if (playlist != d->playListView->playlist()) {
+        return;
     }
+
+    d->playListView->onMusicListRemoved(metalist);
+    d->showEmptyHits(d->playListView->model()->rowCount() == 0);
+}
+
+void PlayListWidget::onMusicError(PlaylistPtr playlist, const MetaPtr meta, int error)
+{
+    Q_D(PlayListWidget);
+    Q_UNUSED(playlist);
+    d->playListView->onMusicError(meta, error);
+}
+
+void PlayListWidget::onMusicListAdded(PlaylistPtr playlist, const MetaPtrList metalist)
+{
+    Q_D(PlayListWidget);
+
+    if (playlist != d->playListView->playlist()) {
+        return;
+    }
+
+    d->playListView->onMusicListAdded(metalist);
+    d->showEmptyHits(metalist.length() == 0);
+}
+
+void PlayListWidget::onLocate(PlaylistPtr playlist, const MetaPtr meta)
+{
+    Q_D(PlayListWidget);
+    if (d->playListView->playlist() != playlist) {
+        d->initData(playlist);
+    }
+    d->playListView->onLocate(meta);
+}
+
+void PlayListWidget::onMusiclistChanged(PlaylistPtr playlist)
+{
+    if (playlist.isNull()) {
+        qWarning() << "can not change to emptry playlist";
+        return;
+    }
+
+    Q_D(PlayListWidget);
+
+    d->initData(playlist);
+}
+
+void PlayListWidget::onCustomContextMenuRequest(const QPoint &pos,
+                                                PlaylistPtr selectedlist,
+                                                PlaylistPtr favlist,
+                                                QList<PlaylistPtr > newlists)
+{
+    Q_D(PlayListWidget);
+    d->playListView->showContextMenu(pos, selectedlist, favlist, newlists);
 }
 

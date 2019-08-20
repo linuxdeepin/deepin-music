@@ -28,6 +28,7 @@
 #include <QTime>
 #include <QFileInfo>
 #include <QHash>
+#include <QBuffer>
 
 #ifndef DISABLE_LIBAV
 #ifdef __cplusplus
@@ -248,4 +249,39 @@ void MetaDetector::updateMetaFromLocalfile(MediaMeta *meta, const QFileInfo &fil
     }
 
     meta->updateSearchIndex();
+}
+
+QByteArray MetaDetector::getCoverData(const QString &path)
+{
+    QByteArray byteArray;
+#ifndef DISABLE_LIBAV
+    if(!path.isEmpty()){
+        AVFormatContext *pFormatCtx = avformat_alloc_context();
+        avformat_open_input(&pFormatCtx, path.toStdString().c_str(), NULL, NULL);
+
+        QImage image;
+        if (pFormatCtx) {
+            avformat_find_stream_info(pFormatCtx, NULL);
+            if (pFormatCtx->iformat->read_header(pFormatCtx) >= 0) {
+                for (int i = 0; i < pFormatCtx->nb_streams; i++){
+                    if (pFormatCtx->streams[i]->disposition & AV_DISPOSITION_ATTACHED_PIC) {
+                        AVPacket pkt = pFormatCtx->streams[i]->attached_pic;
+                        image = QImage::fromData((uchar*)pkt.data, pkt.size);
+                        break;
+                    }
+                }
+             }
+        }
+        if(!image.isNull()){
+            QBuffer buffer(&byteArray);
+            buffer.open(QIODevice::WriteOnly);
+            image.save(&buffer, "jpg");
+        }
+
+        avformat_close_input(&pFormatCtx);
+        avformat_free_context(pFormatCtx);
+    }
+#endif // DISABLE_LIBAV
+
+    return byteArray;
 }

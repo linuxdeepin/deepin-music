@@ -35,10 +35,13 @@
 #include <DHiDPIHelper>
 #include <DThemeManager>
 #include <DToast>
+#include <DPushButton>
+#include <metadetector.h>
 
 #include "../musicapp.h"
 #include "../core/playlistmanager.h"
 #include "../core/player.h"
+#include "../core/metasearchservice.h"
 
 #include "widget/filter.h"
 #include "widget/slider.h"
@@ -73,7 +76,7 @@ public:
     Label           *title      = nullptr;
     Label           *artist     = nullptr;
 
-    QPushButton     *btCover    = nullptr;
+    DPushButton     *btCover    = nullptr;
     QPushButton     *btPlay     = nullptr;
     QPushButton     *btPrev     = nullptr;
     QPushButton     *btNext     = nullptr;
@@ -225,7 +228,7 @@ Footer::Footer(QWidget *parent) :
     d->cover->setFixedSize(40, 40);
     d->cover->setRadius(0);
 
-    d->btCover = new QPushButton();
+    d->btCover = new DPushButton();
     d->btCover->setObjectName("FooterCoverHover");
 //    d->btCover->setFixedSize(40, 40);
 
@@ -282,6 +285,7 @@ Footer::Footer(QWidget *parent) :
     d->btPlayList = new QPushButton;
     d->btPlayList->setObjectName("FooterActionPlayList");
     d->btPlayList->setFixedSize(24, 24);
+//    d->btPlayList->hide();
 
     d->hoverShadowFilter = new HoverShadowFilter;
     d->title->installEventFilter(d->hoverShadowFilter);
@@ -341,9 +345,8 @@ Footer::Footer(QWidget *parent) :
     metaWidget->setSizePolicy(sp);
     actWidget->setSizePolicy(sp);
 
+    layout->addWidget(d->ctlWidget, 0, Qt::AlignLeft | Qt::AlignVCenter);
     layout->addWidget(metaWidget, 0, Qt::AlignLeft | Qt::AlignVCenter);
-    layout->addStretch();
-//    layout->addWidget(d->ctlWidget, 0, Qt::AlignCenter);
     layout->addStretch();
     layout->addWidget(actWidget, 0, Qt::AlignRight | Qt::AlignVCenter);
 
@@ -445,7 +448,7 @@ void Footer::mousePressEvent(QMouseEvent *event)
     QFrame::mousePressEvent(event);
     auto subCtlPos = d->progress->mapFromParent(event->pos());
     if (d->progress->rect().contains(subCtlPos)
-        /*|| !this->rect().contains(event->pos())*/) {
+            /*|| !this->rect().contains(event->pos())*/) {
         d->enableMove = false;
     } else {
         d->enableMove = true;
@@ -535,6 +538,14 @@ void Footer::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
     } else {
         d->artist->setText(tr("Unknown artist"));
     }
+
+    QImage cover(d->defaultCover);
+    auto coverData = MetaSearchService::coverData(meta);
+    if (coverData.length() > 0) {
+        cover = QImage::fromData(coverData);
+    }
+    d->cover->setCoverPixmap(QPixmap::fromImage(cover));
+    d->cover->update();
 
     this->enableControl(true);
     d->title->show();
@@ -731,9 +742,9 @@ void Footer::resizeEvent(QResizeEvent *event)
     Q_D(Footer);
     QFrame::resizeEvent(event);
 
-    auto fix = progressExtentHeight();
-    auto center = rect().marginsRemoved(QMargins(0, fix, 0, 0)).center() - d->ctlWidget->rect().center();
+    //auto fix = progressExtentHeight();
+    //auto center = rect().marginsRemoved(QMargins(0, fix, 0, 0)).center() - d->ctlWidget->rect().center();
 
-    d->ctlWidget->move(center);
-    d->ctlWidget->raise();
+    //d->ctlWidget->move(center);
+    //d->ctlWidget->raise();
 }

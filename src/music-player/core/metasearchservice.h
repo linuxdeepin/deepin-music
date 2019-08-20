@@ -23,6 +23,7 @@
 
 #include <QObject>
 #include <QScopedPointer>
+#include <QImage>
 
 #include <util/singleton.h>
 #include <mediameta.h>

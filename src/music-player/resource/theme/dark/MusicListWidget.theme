@@ -1,34 +1,37 @@
 #MusicListWidget {
-  border-radius: 4px;
-  background-color: rgba(32, 32, 32, 0);
+  border: 1px solid rgba(0, 0, 0, 10%);
+  border-top: none;
+  background-color: rgba(37, 37, 37, 0.9);
 }
 
-#MusicListActionBar {
-  background-color: rgba(32, 32, 32, 1);
+#MusicListWidgetAddFrame {
+  border-radius: 5px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.02);
 }
 
-#MusicListEmptyHits {
-  font-size: 24px;
-  color: #d0d0d0;
-  qproperty-alignment: AlignCenter;
-  background-color: rgba(32, 32, 32, 1);
-}
-
-#MusicListPlayAll {
+#MusicListWidgetAdd {
+  outline: none;
   font-size: 12px;
-  padding: 0 10 0 10;
-  border: none;
-  border-radius: 3.0px;
-  qproperty-icon: url(:/common/image/play_all.svg);
+  border-radius: 4px;
+  color: white;
+  background-color: qlineargradient(x1: 0 y1: 0, x2: 0 y2: 1, stop: 0.0000 rgba(255, 255, 255, 0.20), stop: 1.0000 rgba(255, 255, 255, 0.20));
+  border: 0px solid rgba(29, 129, 255, 0.5);
 }
 
-#MusicListPlayAll:hover {
-  border: 0px solid rgba(0, 0, 0, 0.2);
-  background-color: qlineargradient(x1: 0 y1: 0, x2: 0 y2: 1, stop: 0 rgba(255, 255, 255, 20%), stop: 1 rgba(255, 255, 255, 20%));
+#MusicListWidgetAdd:hover {
+  color: white;
+  background-color: qlineargradient(x1: 0 y1: 0, x2: 0 y2: 1, stop: 0.0000 rgba(255, 255, 255, 0.30), stop: 1.0000 rgba(255, 255, 255, 0.30));
+  border: 0px solid rgba(29, 129, 255, 0.3);
 }
 
-#MusicListPlayAll:pressed {
+#MusicListWidgetAdd:pressed {
   color: #2ca7f8;
-  border: 0px solid rgba(255, 255, 255, 0.2);
-  background-color: qlineargradient(x1: 0 y1: 0, x2: 0 y2: 1, stop: 0 rgba(255, 255, 255, 10%), stop: 1 rgba(255, 255, 255, 10%));
+  background-color: qlineargradient(x1: 0 y1: 0, x2: 0 y2: 1, stop: 0.0000 rgba(255, 255, 255, 0.10), stop: 1.0000 rgba(255, 255, 255, 0.10));
+  border: 0px solid rgba(0, 0, 0, 0.08);
+}
+
+#MusicListWidgetAdd:disabled {
+  color: rgba(255, 255, 255, 40%);
+  background-color: qlineargradient(x1: 0 y1: 0, x2: 0 y2: 1, stop: 0.0000 rgba(255, 255, 255, 0.08), stop: 1.0000 rgba(255, 255, 255, 0.08));
+  border: 0px solid rgba(29, 129, 255, 0.5);
 }

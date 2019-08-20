@@ -240,12 +240,32 @@ void MediaDatabase::init()
 
     QSqlDatabase::database().transaction();
     PlaylistMeta playlistMeta;
+    playlistMeta.uuid = "album";
+    playlistMeta.displayName = "Album";
+    playlistMeta.icon = "album";
+    playlistMeta.readonly = true;
+    playlistMeta.hide = false;
+    playlistMeta.sortID = 1;
+    if (!playlistExist("album")) {
+        addPlaylist(playlistMeta);
+    }
+
+    playlistMeta.uuid = "artist";
+    playlistMeta.displayName = "Artist";
+    playlistMeta.icon = "artist";
+    playlistMeta.readonly = true;
+    playlistMeta.hide = false;
+    playlistMeta.sortID = 2;
+    if (!playlistExist("artist")) {
+        addPlaylist(playlistMeta);
+    }
+
     playlistMeta.uuid = "all";
     playlistMeta.displayName = "All Music";
     playlistMeta.icon = "all";
     playlistMeta.readonly = true;
     playlistMeta.hide = false;
-    playlistMeta.sortID = 1;
+    playlistMeta.sortID = 3;
     if (!playlistExist("all")) {
         addPlaylist(playlistMeta);
     }
@@ -255,7 +275,7 @@ void MediaDatabase::init()
     playlistMeta.icon = "fav";
     playlistMeta.readonly = true;
     playlistMeta.hide = false;
-    playlistMeta.sortID = 2;
+    playlistMeta.sortID = 4;
     if (!playlistExist("fav")) {
         addPlaylist(playlistMeta);
     }

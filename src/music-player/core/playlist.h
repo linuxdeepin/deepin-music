@@ -127,6 +127,8 @@ typedef QSharedPointer<Playlist> PlaylistPtr;
 Q_DECLARE_METATYPE(PlaylistPtr)
 Q_DECLARE_METATYPE(QList<PlaylistPtr>)
 
+extern const QString AlbumMusicListID;
+extern const QString ArtistMusicListID;
 extern const QString AllMusicListID;
 extern const QString FavMusicListID;
 extern const QString SearchMusicListID;

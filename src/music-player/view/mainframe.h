@@ -37,7 +37,7 @@ public:
     void postInitUI();
     void binding(Presenter *presenter);
 
-    void focusMusicList();
+    void focusPlayList();
     QString coverBackground() const;
 
 signals:

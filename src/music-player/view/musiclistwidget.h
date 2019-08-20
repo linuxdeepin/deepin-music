@@ -25,50 +25,33 @@
 
 #include "../core/playlist.h"
 
-class MusicListWidgetPrivate;
+class MusicListView;
+class MusicListDataWidget;
 class MusicListWidget : public QFrame
 {
     Q_OBJECT
 public:
     explicit MusicListWidget(QWidget *parent = Q_NULLPTR);
-    ~MusicListWidget();
-
-    void setCustomSortType();
-public slots:
-    void onMusiclistChanged(PlaylistPtr playlist);
-    void onMusicPlayed(PlaylistPtr playlist, const MetaPtr info);
-    void onMusicPause(PlaylistPtr playlist, const MetaPtr meta);
-    void onMusicError(PlaylistPtr playlist, const MetaPtr meta, int error);
-    void onMusicListAdded(PlaylistPtr playlist, const MetaPtrList metalist);
-    void onMusicListRemoved(PlaylistPtr playlist, const MetaPtrList metalist);
-    void onLocate(PlaylistPtr playlist, const MetaPtr meta);
-    void onCustomContextMenuRequest(const QPoint &pos,
-                                    PlaylistPtr selectedlist,
-                                    PlaylistPtr favlist,
-                                    QList<PlaylistPtr >newlists);
+    void initData(QList<PlaylistPtr > playlists, PlaylistPtr last);
 
 signals:
+    void addPlaylist(bool editmode);
+    void selectPlaylist(PlaylistPtr playlist);
+    void hidePlaylist();
     void playall(PlaylistPtr playlist);
-    void resort(PlaylistPtr playlist, int sortType);
-    void playMedia(PlaylistPtr playlist, const MetaPtr meta);
-    void showInfoDialog(const MetaPtr meta);
-    void updateMetaCodec(const MetaPtr meta);
+    void customResort(const QStringList &uuids);
 
-    void requestCustomContextMenu(const QPoint &pos);
-    void addToPlaylist(PlaylistPtr playlist, const MetaPtrList  &metalist);
-    void musiclistRemove(PlaylistPtr playlist, const MetaPtrList  &metalist);
-    void musiclistDelete(PlaylistPtr playlist, const MetaPtrList  &metalist);
-    void importSelectFiles(PlaylistPtr playlist, QStringList urllist);
+public slots:
+    void onMusicPlayed(PlaylistPtr playlist, const MetaPtr);
+    void onPlaylistAdded(PlaylistPtr);
+    void onCurrentChanged(PlaylistPtr playlist);
 
 protected:
-    virtual void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
-//    virtual void dragMoveEvent(QDragMoveEvent *event) Q_DECL_OVERRIDE;
-//    virtual void dragLeaveEvent(QDragLeaveEvent *event) Q_DECL_OVERRIDE;
-    virtual void dropEvent(QDropEvent *event) Q_DECL_OVERRIDE;
-    virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
+    virtual void focusOutEvent(QFocusEvent *event) Q_DECL_OVERRIDE;
 
 private:
-    QScopedPointer<MusicListWidgetPrivate> d_ptr;
-    Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), MusicListWidget)
+    MusicListView         *m_dataBaseListview;
+    MusicListView         *m_customizeListview;
+    MusicListDataWidget   *m_dataListView;
 };
 

@@ -7,7 +7,7 @@
 include($$PWD/../config.pri)
 
 QT  += network
-QT  -= gui
+#QT  -= gui
 QT  += dtkcore
 
 TARGET      = dmusic

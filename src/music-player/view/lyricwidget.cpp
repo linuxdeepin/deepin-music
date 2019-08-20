@@ -38,6 +38,7 @@
 #include <DThemeManager>
 
 #include "../core/util/lyric.h"
+#include "../core/metasearchservice.h"
 
 #include "widget/cover.h"
 #include "widget/searchmetalist.h"
@@ -404,17 +405,30 @@ void LyricWidget::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
     Q_UNUSED(playlist);
     d->activingMeta = meta;
     d->m_showSearch->setDisabled(false);
+
+    QImage cover(d->defaultCover);
+    auto coverData = MetaSearchService::coverData(meta);
+    if (coverData.length() > 0) {
+        cover = QImage::fromData(coverData);
+    }
+
+    d->m_cover->setCoverPixmap(QPixmap::fromImage(cover));
+    d->m_cover->update();
 }
 
-void LyricWidget::onMusicStop(PlaylistPtr /*playlist*/, const MetaPtr /*meta*/)
+void LyricWidget::onMusicStop(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(LyricWidget);
 
     auto lyricStr = QString::fromUtf8("");
     d->setLyricLines(lyricStr);
 
-    QPixmap coverPixmap = QPixmap(d->defaultCover);
-    d->m_cover->setCoverPixmap(coverPixmap);
+    QImage cover(d->defaultCover);
+    auto coverData = MetaSearchService::coverData(meta);
+    if (coverData.length() > 0) {
+        cover = QImage::fromData(coverData);
+    }
+    d->m_cover->setCoverPixmap(QPixmap::fromImage(cover));
     d->m_cover->update();
 
     d->m_showSearch->setDisabled(true);
@@ -474,11 +488,12 @@ void LyricWidget::onCoverChanged(const MetaPtr meta,  const DMusic::SearchMeta &
     }
 
     d->searchMeta = search;
-    QPixmap coverPixmap = coverData.length() > 1024 ?
-                          QPixmap::fromImage(QImage::fromData(coverData)) :
-                          QPixmap(d->defaultCover);
 
-    d->m_cover->setCoverPixmap(coverPixmap);
+    QImage cover(d->defaultCover);
+    if (coverData.length() > 0) {
+        cover = QImage::fromData(coverData);
+    }
+    d->m_cover->setCoverPixmap(QPixmap::fromImage(cover));
     d->m_cover->update();
 }
 

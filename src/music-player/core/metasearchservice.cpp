@@ -32,7 +32,7 @@
 
 #include "util/global.h"
 #include "pluginmanager.h"
-
+#include <metadetector.h>
 
 static QString cacheLyricPath(const MetaPtr meta)
 {
@@ -149,12 +149,16 @@ QUrl MetaSearchService::lyricUrl(const MetaPtr meta)
 
 QByteArray MetaSearchService::coverData(const MetaPtr meta)
 {
-    Q_ASSERT(!meta.isNull());
-    QFile coverFile(cacheCoverPath(meta));
-    if (coverFile.open(QIODevice::ReadOnly)) {
-        return coverFile.readAll();
+//    Q_ASSERT(!meta.isNull());
+//    QFile coverFile(cacheCoverPath(meta));
+//    if (coverFile.open(QIODevice::ReadOnly)) {
+//        return coverFile.readAll();
+//    }
+    QByteArray byteArray;
+    if(meta){
+        byteArray = MetaDetector::getCoverData(meta->localPath);
     }
-    return QByteArray();
+    return byteArray;
 }
 
 QByteArray MetaSearchService::lyricData(const MetaPtr meta)
