@@ -33,8 +33,8 @@
 #include <QStandardItemModel>
 
 #include <DThemeManager>
-#include <DLabel>
-#include <DPushButton>
+#include <dlabel.h>
+#include <dpushbutton.h>
 
 #include "widget/playlistview.h"
 #include "widget/ddropdown.h"
@@ -140,8 +140,19 @@ void MusicListDataWidgetPrivate::initConntion()
     q->connect(btPlayAll, &QPushButton::clicked,
     q, [ = ](bool) {
         if (musicListView->playlist()) {
-            Q_EMIT q->playall(musicListView->playlist());
+            PlaylistPtr curPlayList = musicListView->playlist();
+            curPlayList->play(curPlayList->first());
+            Q_EMIT q->playall(curPlayList);
+            initData(curPlayList);
         }
+    });
+
+    q->connect(musicListView, &PlayListView::playMedia,
+    q, [ = ](const MetaPtr meta) {
+        PlaylistPtr curPlayList = musicListView->playlist();
+        curPlayList->play(meta);
+        initData(curPlayList);
+        Q_EMIT q->playMedia(musicListView->playlist(), meta);
     });
 
 }

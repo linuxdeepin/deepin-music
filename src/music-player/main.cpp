@@ -63,7 +63,12 @@ int main(int argc, char *argv[])
     app.setAttribute(Qt::AA_EnableHighDpiScaling);
     app.setOrganizationName("deepin");
     app.setApplicationName("deepin-music");
-    app.setApplicationVersion(DApplication::buildVersion("3.1"));
+    //app.setApplicationVersion(DApplication::buildVersion("3.1"));
+    const QDate buildDate = QLocale( QLocale::English ).toDate( QString(__DATE__).replace("  ", " 0"), "MMM dd yyyy");
+    QString t_date = buildDate.toString("MMdd");
+    // Version Time
+    app.setApplicationVersion(DApplication::buildVersion(t_date));
+
 
     DLogManager::registerConsoleAppender();
     DLogManager::registerFileAppender();

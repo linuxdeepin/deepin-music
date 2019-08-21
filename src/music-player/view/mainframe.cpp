@@ -701,6 +701,7 @@ void MainFrame::binding(Presenter *presenter)
         //d->playListWidget->show();
         d->musicListWidget->resize(current->size());
         d->musicListWidget->show();
+        d->currentWidget = d->musicListWidget;
         d->importWidget->hide();
         d->playListWidget->onMusiclistChanged(playlist);
         d->disableControl(false);
@@ -960,6 +961,8 @@ void MainFrame::binding(Presenter *presenter)
             presenter, &Presenter::onPlayall);
     connect(d->musicListWidget,  &MusicListWidget::customResort,
             presenter, &Presenter::onCustomResort);
+    connect(d->musicListWidget, &MusicListWidget::playMedia,
+            presenter, &Presenter::onSyncMusicPlay);
 //    connect(d->musicListWidget,  &MusicListWidget::hidePlaylist,
 //    this, [ = ]() {
 //        d->setPlaylistVisible(false);

@@ -165,6 +165,10 @@ MusicListWidget::MusicListWidget(QWidget *parent) : QFrame(parent)
 //        Q_EMIT this->selectPlaylist(playlist);
         Q_EMIT this->playall(playlist);
     });
+    connect(m_dataListView, &MusicListDataWidget::playMedia,
+    this, [ = ](PlaylistPtr playlist, const MetaPtr meta) {
+        Q_EMIT this->playMedia(playlist, meta);
+    });
 }
 
 void MusicListWidget::initData(QList<PlaylistPtr > playlists, PlaylistPtr last)

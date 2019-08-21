@@ -41,6 +41,7 @@ public slots:
 signals:
     void playall(PlaylistPtr playlist);
     void resort(PlaylistPtr playlist, int sortType);
+    void playMedia(PlaylistPtr playlist, const MetaPtr meta);
 
 private:
     QScopedPointer<MusicListDataWidgetPrivate> d_ptr;
