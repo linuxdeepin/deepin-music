@@ -27,6 +27,32 @@
 
 #include <playlistmeta.h>
 
+class PlayMusicType
+{
+public:
+    QString         name;
+    QByteArray      icon;
+
+    PlaylistMeta    playlistMeta;
+};
+typedef QSharedPointer<PlayMusicType>   PlayMusicTypePtr;
+typedef QList<PlayMusicTypePtr>         PlayMusicTypePtrList;
+
+class PlayMusicTypePtrListData
+{
+public:
+    QStringList              sortMetas;
+
+    QMap<QString, PlayMusicTypePtr>   metas;
+
+    int     sortType    = 0;
+};
+
+Q_DECLARE_METATYPE(PlayMusicType)
+Q_DECLARE_METATYPE(PlayMusicTypePtr)
+Q_DECLARE_METATYPE(PlayMusicTypePtrList)
+Q_DECLARE_METATYPE(PlayMusicTypePtrListData)
+
 class Playlist : public QObject
 {
     Q_OBJECT
@@ -81,6 +107,7 @@ public:
     bool isLast(const MetaPtr meta) const;
     bool contains(const MetaPtr meta) const;
     MetaPtrList allmusic() const;
+    PlayMusicTypePtrList playMusicTypePtrList() const;
 
     void play(const MetaPtr meta);
     void reset(const MetaPtrList);
@@ -94,6 +121,9 @@ public slots:
     void sortBy(Playlist::SortType sortType);
     void resort();
     void saveSort(QMap<QString, int> hashIndexs);
+
+    void metaListToPlayMusicTypePtrList(Playlist::SortType sortType, const MetaPtrList metalist);
+    void playMusicTypeToMeta();
 
 public:
     void load();
@@ -114,6 +144,7 @@ private:
     };
 
     PlaylistMeta playlistMeta;
+    PlayMusicTypePtrListData playMusicTypePtrListData;
     MetaPtrList shuffleList;
     MetaPtrList shuffleHistory;
     ShuffleHistoryState shuffleHistoryState = ShuffleHistoryState::Empty;

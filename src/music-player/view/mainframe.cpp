@@ -952,6 +952,12 @@ void MainFrame::binding(Presenter *presenter)
             d->musicListWidget,  &MusicListWidget::onMusicPlayed);
     connect(presenter, &Presenter::currentMusicListChanged,
             d->musicListWidget,  &MusicListWidget::onCurrentChanged);
+    connect(presenter, &Presenter::musicListResorted,
+            d->musicListWidget, &MusicListWidget::onMusiclistChanged);
+    connect(presenter, &Presenter::musicListAdded,
+            d->musicListWidget,  &MusicListWidget::onMusicListAdded);
+    connect(presenter, &Presenter::musicListRemoved,
+            d->musicListWidget,  &MusicListWidget::onMusicListRemoved);
 
     connect(d->musicListWidget,  &MusicListWidget::addPlaylist,
             presenter, &Presenter::onPlaylistAdd);

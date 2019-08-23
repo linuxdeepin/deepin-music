@@ -87,6 +87,10 @@ void PresenterPrivate::initBackend()
     qDebug() << "TRACE:" << "playlistMgr init finished";
 
     currentPlaylist = playlistMgr->playlist(AllMusicListID);
+    PlaylistPtr albumPlaylist = playlistMgr->playlist(AlbumMusicListID);
+    albumPlaylist->metaListToPlayMusicTypePtrList(Playlist::SortByAblum, currentPlaylist->allmusic());
+    PlaylistPtr artistPlaylist = playlistMgr->playlist(ArtistMusicListID);
+    artistPlaylist->metaListToPlayMusicTypePtrList(Playlist::SortByArtist, currentPlaylist->allmusic());
 
     connect(this, &PresenterPrivate::play, player, &Player::playMeta);
     connect(this, &PresenterPrivate::resume, player, &Player::resume);
@@ -193,6 +197,16 @@ void Presenter::prepareData()
             allplaylist->appendMusicList(metalist);
         }
         playlist->appendMusicList(metalist);
+        if (playlist->id() == AllMusicListID) {
+            PlaylistPtr albumPlaylist = d->playlistMgr->playlist(AlbumMusicListID);
+            PlaylistPtr artistPlaylist = d->playlistMgr->playlist(ArtistMusicListID);
+            if (albumPlaylist) {
+                albumPlaylist->metaListToPlayMusicTypePtrList(Playlist::SortByAblum, playlist->allmusic());
+            }
+            if (artistPlaylist) {
+                artistPlaylist->metaListToPlayMusicTypePtrList(Playlist::SortByAblum, playlist->allmusic());
+            }
+        }
         Q_EMIT meidaFilesImported(playlist, metalist);
     });
 
@@ -577,6 +591,14 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
             onMusicStop(playlist, next);
             Q_EMIT metaLibraryClean();
         }
+        PlaylistPtr albumPlaylist = d->playlistMgr->playlist(AlbumMusicListID);
+        PlaylistPtr artistPlaylist = d->playlistMgr->playlist(ArtistMusicListID);
+        if (albumPlaylist) {
+            albumPlaylist->metaListToPlayMusicTypePtrList(Playlist::SortByAblum, playlist->allmusic());
+        }
+        if (artistPlaylist) {
+            artistPlaylist->metaListToPlayMusicTypePtrList(Playlist::SortByAblum, playlist->allmusic());
+        }
 
         MediaDatabase::instance()->removeMediaMetaList(metalist);
         d->library->removeMediaMetaList(metalist);
@@ -585,7 +607,7 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
     }
 
     if (playlist == d->player->activePlaylist()
-        || playlist->id() == AllMusicListID) {
+            || playlist->id() == AllMusicListID) {
         //stop music
         for (auto &meta : metalist) {
             if (d->player->isActiveMeta(meta)) {
@@ -625,7 +647,7 @@ void Presenter::onMusiclistDelete(PlaylistPtr playlist, const MetaPtrList metali
     QMap<QString, QString> trashFiles;
     for (auto &meta : metalist) {
         if (d->player->activeMeta() &&
-            (meta->hash == d->player->activeMeta()->hash)) {
+                (meta->hash == d->player->activeMeta()->hash)) {
             if (playinglist->isEmpty()) {
                 onMusicStop(playinglist, next);
             } else {

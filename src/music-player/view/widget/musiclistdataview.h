@@ -21,31 +21,26 @@
 
 #pragma once
 
-#include <QFrame>
+#include "listview.h"
 
-#include "../core/playlist.h"
+#include "../../core/playlist.h"
 
-class MusicListDataWidgetPrivate;
-class MusicListDataWidget : public QFrame
+class MusicListDataViewPrivate;
+class MusicListDataView : public ListView
 {
     Q_OBJECT
 public:
-    explicit MusicListDataWidget(QWidget *parent = Q_NULLPTR);
-    ~MusicListDataWidget();
+    explicit MusicListDataView(QWidget *parent = Q_NULLPTR);
+    ~MusicListDataView();
 
-    void setCustomSortType(PlaylistPtr playlist);
+    PlaylistPtr playlist() const;
 
-public slots:
+    void setViewModeFlag(QListView::ViewMode mode);
+
+public:
     void onMusiclistChanged(PlaylistPtr playlist);
-    void onMusiclistUpdate();
-
-signals:
-    void playall(PlaylistPtr playlist);
-    void resort(PlaylistPtr playlist, int sortType);
-    void playMedia(PlaylistPtr playlist, const MetaPtr meta);
 
 private:
-    QScopedPointer<MusicListDataWidgetPrivate> d_ptr;
-    Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), MusicListDataWidget)
+    QScopedPointer<MusicListDataViewPrivate> d_ptr;
+    Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), MusicListDataView)
 };
-

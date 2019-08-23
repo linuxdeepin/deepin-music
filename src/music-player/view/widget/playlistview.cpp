@@ -236,7 +236,8 @@ void PlayListView::keyPressEvent(QKeyEvent *event)
             break;
         }
         break;
-    default: break;
+    default:
+        break;
     }
 
     QAbstractItemView::keyPressEvent(event);
@@ -274,9 +275,9 @@ void PlayListViewPrivate::removeSelection(QItemSelectionModel *selection)
 }
 
 void PlayListView::showContextMenu(const QPoint &pos,
-                                    PlaylistPtr selectedPlaylist,
-                                    PlaylistPtr favPlaylist,
-                                    QList<PlaylistPtr> newPlaylists)
+                                   PlaylistPtr selectedPlaylist,
+                                   PlaylistPtr favPlaylist,
+                                   QList<PlaylistPtr> newPlaylists)
 {
     Q_D(PlayListView);
     QItemSelectionModel *selection = this->selectionModel();

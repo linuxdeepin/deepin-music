@@ -37,6 +37,7 @@
 #include <dpushbutton.h>
 
 #include "widget/playlistview.h"
+#include "widget/musiclistdataview.h"
 #include "widget/ddropdown.h"
 
 DWIDGET_USE_NAMESPACE
@@ -48,7 +49,7 @@ public:
 
     void initData(PlaylistPtr playlist);
     void initConntion();
-    void showEmptyHits(bool empty);
+    void showEmptyHits();
 
     DLabel              *emptyHits      = nullptr;
     QWidget             *actionBar      = nullptr;
@@ -60,8 +61,11 @@ public:
     DLabel              *infoLabel      = nullptr;
     DPushButton         *btIconMode     = nullptr;
     DPushButton         *btlistMode     = nullptr;
+    MusicListDataView   *albumListView = nullptr;
+    MusicListDataView   *artistListView = nullptr;
     PlayListView        *musicListView  = nullptr;
     QAction             *customAction   = nullptr;
+    PlaylistPtr         curPlaylist     = nullptr;
 
     MusicListDataWidget *q_ptr;
     Q_DECLARE_PUBLIC(MusicListDataWidget)
@@ -72,28 +76,82 @@ void MusicListDataWidgetPrivate::initData(PlaylistPtr playlist)
 {
     Q_Q(MusicListDataWidget);
 
+    curPlaylist = playlist;
     titleLabel->setText(playlist->displayName());
     DDropdown *t_curDropdown = nullptr;
     if (playlist->id() == AlbumMusicListID) {
+        PlayMusicTypePtrList playMusicTypePtrList = playlist->playMusicTypePtrList();
+        int musicCount = 0;
+        for (auto action : playMusicTypePtrList) {
+            musicCount += action->playlistMeta.sortMetas.size();
+        }
+        QString infoStr;
+        if (musicCount == 0) {
+            infoStr = MusicListDataWidget::tr("   No songs");
+        } else if (musicCount == 1) {
+            infoStr = MusicListDataWidget::tr("   1 album-1 song");
+        } else {
+            infoStr = MusicListDataWidget::tr("   %1 album-%2 songs").arg(playMusicTypePtrList.size()).arg(musicCount);
+            if (playMusicTypePtrList.size() == 1) {
+                infoStr = MusicListDataWidget::tr("   %1 album-%2 songs").arg(playMusicTypePtrList.size()).arg(musicCount);
+            } else {
+                infoStr = MusicListDataWidget::tr("   %1 albums-%2 songs").arg(playMusicTypePtrList.size()).arg(musicCount);
+            }
+        }
+        infoLabel->setText(infoStr);
+
         //update dropdown
         albumDropdown->show();
         artistDropdown->hide();
         musicDropdown->hide();
+
+        albumListView->show();
+        artistListView->hide();
+        musicListView->hide();
+
         t_curDropdown = albumDropdown;
+
+        albumListView->onMusiclistChanged(playlist);
     } else if (playlist->id() == ArtistMusicListID) {
+        PlayMusicTypePtrList playMusicTypePtrList = playlist->playMusicTypePtrList();
+        int musicCount = 0;
+        for (auto action : playMusicTypePtrList) {
+            musicCount += action->playlistMeta.sortMetas.size();
+        }
+        QString infoStr;
+        if (musicCount == 0) {
+            infoStr = MusicListDataWidget::tr("   No songs");
+        } else if (musicCount == 1) {
+            infoStr = MusicListDataWidget::tr("   1 artist-1 song");
+        } else {
+            if (playMusicTypePtrList.size() == 1) {
+                infoStr = MusicListDataWidget::tr("   %1 artist-%2 songs").arg(playMusicTypePtrList.size()).arg(musicCount);
+            } else {
+                infoStr = MusicListDataWidget::tr("   %1 artists-%2 songs").arg(playMusicTypePtrList.size()).arg(musicCount);
+            }
+        }
+        infoLabel->setText(infoStr);
+
         //update dropdown
         albumDropdown->hide();
         artistDropdown->show();
         musicDropdown->hide();
+
+        albumListView->hide();
+        artistListView->show();
+        musicListView->hide();
+
         t_curDropdown = artistDropdown;
+
+        artistListView->onMusiclistChanged(playlist);
     } else {
         QString infoStr;
         if (playlist->allmusic().size() == 0) {
-            infoStr = q->tr("   No songs");
+            infoStr = MusicListDataWidget::tr("   No songs");
         } else if (playlist->allmusic().size() == 1) {
-            infoStr = q->tr("   1 song");
+            infoStr = MusicListDataWidget::tr("   1 song");
         } else {
-            infoStr = q->tr("   %1 songs").arg(playlist->allmusic().size());
+            infoStr = MusicListDataWidget::tr("   %1 songs").arg(playlist->allmusic().size());
         }
         infoLabel->setText(infoStr);
 
@@ -101,9 +159,15 @@ void MusicListDataWidgetPrivate::initData(PlaylistPtr playlist)
         albumDropdown->hide();
         artistDropdown->hide();
         musicDropdown->show();
+
+        albumListView->hide();
+        artistListView->hide();
+        musicListView->show();
+
         t_curDropdown = musicDropdown;
+
+        musicListView->onMusiclistChanged(playlist);
     }
-    musicListView->onMusiclistChanged(playlist);
 
     if (playlist->sortType() == Playlist::SortByCustom) {
         q->setCustomSortType(playlist);
@@ -114,7 +178,7 @@ void MusicListDataWidgetPrivate::initData(PlaylistPtr playlist)
             }
         }
     }
-    showEmptyHits(musicListView->model()->rowCount() == 0);
+    showEmptyHits();
 }
 
 void MusicListDataWidgetPrivate::initConntion()
@@ -139,11 +203,29 @@ void MusicListDataWidgetPrivate::initConntion()
 
     q->connect(btPlayAll, &QPushButton::clicked,
     q, [ = ](bool) {
-        if (musicListView->playlist()) {
-            PlaylistPtr curPlayList = musicListView->playlist();
-            curPlayList->play(curPlayList->first());
-            Q_EMIT q->playall(curPlayList);
-            initData(curPlayList);
+        if (albumListView->isVisible()) {
+            PlaylistPtr curPlayList = albumListView->playlist();
+            if (curPlayList) {
+                curPlayList->playMusicTypeToMeta();
+                curPlayList->play(curPlayList->first());
+                Q_EMIT q->playall(curPlayList);
+                initData(curPlayList);
+            }
+        } else if (artistListView->isVisible()) {
+            PlaylistPtr curPlayList = artistListView->playlist();
+            if (curPlayList) {
+                curPlayList->playMusicTypeToMeta();
+                curPlayList->play(curPlayList->first());
+                Q_EMIT q->playall(curPlayList);
+                initData(curPlayList);
+            }
+        } else {
+            if (musicListView->playlist()) {
+                PlaylistPtr curPlayList = musicListView->playlist();
+                curPlayList->play(curPlayList->first());
+                Q_EMIT q->playall(curPlayList);
+                initData(curPlayList);
+            }
         }
     });
 
@@ -155,19 +237,65 @@ void MusicListDataWidgetPrivate::initConntion()
         Q_EMIT q->playMedia(musicListView->playlist(), meta);
     });
 
+    q->connect(btIconMode, &QPushButton::clicked,
+    q, [ = ](bool) {
+        if (albumListView->isVisible()) {
+            albumListView->setViewModeFlag(QListView::IconMode);
+        } else if (artistListView->isVisible()) {
+            artistListView->setViewModeFlag(QListView::IconMode);
+        }
+    });
+    q->connect(btlistMode, &QPushButton::clicked,
+    q, [ = ](bool) {
+        if (albumListView->isVisible()) {
+            albumListView->setViewModeFlag(QListView::ListMode);
+        } else if (artistListView->isVisible()) {
+            artistListView->setViewModeFlag(QListView::ListMode);
+        }
+    });
 }
 
-void MusicListDataWidgetPrivate::showEmptyHits(bool empty)
+void MusicListDataWidgetPrivate::showEmptyHits()
 {
-    auto playlist = musicListView->playlist();
-    if (playlist.isNull() || playlist->id() != SearchMusicListID) {
-        emptyHits->setText(MusicListDataWidget::tr("No Music"));
+    if (albumListView->isVisible()) {
+        auto playlist = artistListView->playlist();
+        if (playlist.isNull() || playlist->id() != SearchMusicListID) {
+            emptyHits->setText(MusicListDataWidget::tr("No Music"));
+        } else {
+            emptyHits->setText(MusicListDataWidget::tr("No result found"));
+        }
+        bool empty = false;//playlist.isNull();
+        actionBar->setVisible(!empty);
+        albumListView->setVisible(!empty);
+        artistListView->setVisible(false);
+        musicListView->setVisible(false);
+        emptyHits->setVisible(empty);
+    } else if (artistListView->isVisible()) {
+        auto playlist = artistListView->playlist();
+        if (playlist.isNull() || playlist->id() != SearchMusicListID) {
+            emptyHits->setText(MusicListDataWidget::tr("No Music"));
+        } else {
+            emptyHits->setText(MusicListDataWidget::tr("No result found"));
+        }
+        bool empty = false;//playlist.isNull();
+        actionBar->setVisible(!empty);
+        artistListView->setVisible(!empty);
+        albumListView->setVisible(false);
+        musicListView->setVisible(false);
+        emptyHits->setVisible(empty);
     } else {
-        emptyHits->setText(MusicListDataWidget::tr("No result found"));
+        auto playlist = musicListView->playlist();
+        if (playlist.isNull() || playlist->id() != SearchMusicListID) {
+            emptyHits->setText(MusicListDataWidget::tr("No Music"));
+        } else {
+            emptyHits->setText(MusicListDataWidget::tr("No result found"));
+        }
+        bool empty = playlist.isNull();
+        actionBar->setVisible(!empty);
+        artistListView->setVisible(false);
+        musicListView->setVisible(!empty);
+        emptyHits->setVisible(empty);
     }
-    actionBar->setVisible(!empty);
-    musicListView->setVisible(!empty);
-    emptyHits->setVisible(empty);
 }
 
 MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
@@ -238,7 +366,7 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     d->btPlayAll = new DPushButton;
     d->btPlayAll->setObjectName("MusicListDataPlayAll");
     d->btPlayAll->setText(tr("Play All"));
-    d->btPlayAll->setFixedHeight(28);
+    d->btPlayAll->setFixedHeight(36);
     d->btPlayAll->setFocusPolicy(Qt::NoFocus);
 
     d->infoLabel = new DLabel;
@@ -247,12 +375,16 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
 
     d->btIconMode = new DPushButton(":/common/image/picturelist_normal.svg", ":/common/image/picturelist_hover.svg",
                                     ":/common/image/picturelist_press.svg");
-    d->btIconMode->setFixedSize(24, 24);
+    d->btIconMode->setFixedSize(36, 36);
     d->btIconMode->setObjectName("MusicListDataWidgetIconMode");
+    d->btIconMode->setCheckable(true);
+    d->btIconMode->setChecked(true);
+
     d->btlistMode = new DPushButton(":/common/image/textlist_normal.svg", ":/common/image/textlist_hover.svg",
                                     ":/common/image/textlist_press.svg");
-    d->btlistMode->setFixedSize(24, 24);
+    d->btlistMode->setFixedSize(36, 36);
     d->btlistMode->setObjectName("MusicListDataWidgetListMode");
+    d->btlistMode->setCheckable(true);
 
     actionInfoBarLayout->addWidget(d->btPlayAll, 0, Qt::AlignVCenter);
     actionInfoBarLayout->addWidget(d->infoLabel, 0, Qt::AlignLeft | Qt::AlignVCenter);
@@ -267,9 +399,16 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     d->emptyHits->setObjectName("MusicListDataEmptyHits");
     d->emptyHits->hide();
 
+    d->albumListView = new MusicListDataView;
+    d->artistListView = new MusicListDataView;
     d->musicListView = new PlayListView;
+    d->musicListView->hide();
 
     layout->addWidget(d->actionBar, 0, Qt::AlignTop);
+    layout->addWidget(d->albumListView, 100);
+    layout->addStretch();
+    layout->addWidget(d->artistListView, 100);
+    layout->addStretch();
     layout->addWidget(d->musicListView, 100);
     layout->addStretch();
     layout->addWidget(d->emptyHits, 0, Qt::AlignCenter);
@@ -308,5 +447,11 @@ void MusicListDataWidget::onMusiclistChanged(PlaylistPtr playlist)
     Q_D(MusicListDataWidget);
 
     d->initData(playlist);
+}
+
+void MusicListDataWidget::onMusiclistUpdate()
+{
+    Q_D(MusicListDataWidget);
+    d->initData(d->curPlaylist);
 }
 

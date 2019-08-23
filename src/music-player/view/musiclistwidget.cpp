@@ -315,3 +315,18 @@ void MusicListWidget::onCurrentChanged(PlaylistPtr playlist)
     }
 }
 
+void MusicListWidget::onMusiclistChanged(PlaylistPtr playlist)
+{
+    m_dataListView->onMusiclistChanged(playlist);
+}
+
+void MusicListWidget::onMusicListAdded(PlaylistPtr playlist, const MetaPtrList metalist)
+{
+    m_dataListView->onMusiclistUpdate();
+}
+
+void MusicListWidget::onMusicListRemoved(PlaylistPtr playlist, const MetaPtrList metalist)
+{
+    m_dataListView->onMusiclistUpdate();
+}
+

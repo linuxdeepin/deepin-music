@@ -8,6 +8,5 @@
 *.sw*
 *.user
 build/
-*.qm
 dist/
 .vscode

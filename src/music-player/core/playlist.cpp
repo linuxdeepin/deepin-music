@@ -28,6 +28,8 @@
 #include <QCollator>
 #include <QTime>
 
+#include "../core/metasearchservice.h"
+
 #include "medialibrary.h"
 #include "mediadatabase.h"
 
@@ -252,6 +254,15 @@ MetaPtrList Playlist::allmusic() const
     MetaPtrList mlist;
     for (auto id : playlistMeta.sortMetas) {
         mlist << playlistMeta.metas.value(id);
+    }
+    return mlist;
+}
+
+PlayMusicTypePtrList Playlist::playMusicTypePtrList() const
+{
+    PlayMusicTypePtrList mlist;
+    for (auto id : playMusicTypePtrListData.sortMetas) {
+        mlist << playMusicTypePtrListData.metas.value(id);
     }
     return mlist;
 }
@@ -611,5 +622,66 @@ void Playlist::saveSort(QMap<QString, int> hashIndexs)
     playlistMeta.sortMetas.clear();
     for (auto i = 0; i < sortHashs.size(); ++i) {
         playlistMeta.sortMetas << sortHashs.value(i);
+    }
+}
+
+void Playlist::metaListToPlayMusicTypePtrList(Playlist::SortType sortType, const MetaPtrList metalist)
+{
+    playMusicTypePtrListData.sortMetas.clear();
+    playMusicTypePtrListData.metas.clear();
+    if (sortType == SortByAblum) {
+        for (auto meta : metalist) {
+            if (playMusicTypePtrListData.metas.contains(meta->album)) {
+                if (playMusicTypePtrListData.metas[meta->album]->playlistMeta.metas.contains(meta->hash)) {
+                    qDebug() << "skip dump music " << meta->hash << meta->localPath;
+                    continue;
+                }
+                if (playMusicTypePtrListData.metas[meta->artist]->icon.isNull())
+                    playMusicTypePtrListData.metas[meta->artist]->icon = MetaSearchService::coverData(meta);
+                playMusicTypePtrListData.metas[meta->album]->playlistMeta.sortMetas << meta->hash;
+                playMusicTypePtrListData.metas[meta->album]->playlistMeta.metas.insert(meta->hash, meta);
+            } else {
+                PlayMusicTypePtr t_playMusicTypePtr(new PlayMusicType);
+                t_playMusicTypePtr->name = meta->album;
+                t_playMusicTypePtr->icon = MetaSearchService::coverData(meta);
+                t_playMusicTypePtr->playlistMeta.sortMetas << meta->hash;
+                t_playMusicTypePtr->playlistMeta.metas.insert(meta->hash, meta);
+                playMusicTypePtrListData.sortMetas << meta->album;
+                playMusicTypePtrListData.metas.insert(meta->album, t_playMusicTypePtr);
+            }
+        }
+    } else if (sortType == SortByArtist) {
+        for (auto meta : metalist) {
+            if (playMusicTypePtrListData.metas.contains(meta->artist)) {
+                if (playMusicTypePtrListData.metas[meta->artist]->playlistMeta.metas.contains(meta->hash)) {
+                    qDebug() << "skip dump music " << meta->hash << meta->localPath;
+                    continue;
+                }
+                if (playMusicTypePtrListData.metas[meta->artist]->icon.isNull())
+                    playMusicTypePtrListData.metas[meta->artist]->icon = MetaSearchService::coverData(meta);
+                playMusicTypePtrListData.metas[meta->artist]->playlistMeta.sortMetas << meta->hash;
+                playMusicTypePtrListData.metas[meta->artist]->playlistMeta.metas.insert(meta->hash, meta);
+            } else {
+                PlayMusicTypePtr t_playMusicTypePtr(new PlayMusicType);
+                t_playMusicTypePtr->name = meta->artist;
+                t_playMusicTypePtr->icon = MetaSearchService::coverData(meta);
+                t_playMusicTypePtr->playlistMeta.sortMetas << meta->hash;
+                t_playMusicTypePtr->playlistMeta.metas.insert(meta->hash, meta);
+                playMusicTypePtrListData.sortMetas << meta->artist;
+                playMusicTypePtrListData.metas.insert(meta->artist, t_playMusicTypePtr);
+            }
+        }
+    }
+}
+
+void Playlist::playMusicTypeToMeta()
+{
+    playlistMeta.sortMetas.clear();
+    playlistMeta.metas.clear();
+    for (auto meta : playMusicTypePtrListData.metas) {
+        for (auto hashCode : meta->playlistMeta.sortMetas) {
+            playlistMeta.sortMetas << hashCode;
+            playlistMeta.metas.insert(hashCode, meta->playlistMeta.metas[hashCode]);
+        }
     }
 }

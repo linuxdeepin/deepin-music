@@ -77,7 +77,10 @@ SOURCES += \
     view/musiclistwidget.cpp \
     view/widget/musiclistview.cpp \
     view/widget/musiclistitem.cpp \
-    view/musiclistdatawidget.cpp
+    view/musiclistdatawidget.cpp \
+    view/widget/musiclistdataview.cpp \
+    view/widget/model/musiclistdatamodel.cpp \
+    view/widget/delegate/musiclistdatadelegate.cpp
 
 HEADERS += \
     musicapp.h \
@@ -128,7 +131,10 @@ HEADERS += \
     view/musiclistwidget.h \
     view/widget/musiclistview.h \
     view/widget/musiclistitem.h \
-    view/musiclistdatawidget.h
+    view/musiclistdatawidget.h \
+    view/widget/musiclistdataview.h \
+    view/widget/model/musiclistdatamodel.h \
+    view/widget/delegate/musiclistdatadelegate.h
 
 RESOURCES += \
     resource/theme/theme.qrc \

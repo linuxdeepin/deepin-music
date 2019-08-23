@@ -68,6 +68,7 @@ int main(int argc, char *argv[])
     QString t_date = buildDate.toString("MMdd");
     // Version Time
     app.setApplicationVersion(DApplication::buildVersion(t_date));
+    //app.setStyle("chameleon");
 
 
     DLogManager::registerConsoleAppender();
