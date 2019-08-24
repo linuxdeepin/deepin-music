@@ -30,6 +30,7 @@
 #include <DApplication>
 #include "dplatformwindowhandle.h"
 #include "dblureffectwidget.h"
+#include <dimagebutton.h>
 
 #include <dwindowclosebutton.h>
 #include <DThemeManager>
@@ -137,7 +138,7 @@ void InfoDialogPrivate::initUI()
         infogridLayout->addWidget(infoValue);
     }
 
-    q->connect(closeBt, &DWindowCloseButton::clicked, q, &DAbstractDialog::hide);
+    q->connect(closeBt, &DImageButton::clicked, q, &DAbstractDialog::hide);
 
 //    if (qApp->isDXcbPlatform()) {
 //        bgBlurWidget = new DBlurEffectWidget(q);
