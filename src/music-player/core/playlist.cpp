@@ -631,44 +631,52 @@ void Playlist::metaListToPlayMusicTypePtrList(Playlist::SortType sortType, const
     playMusicTypePtrListData.metas.clear();
     if (sortType == SortByAblum) {
         for (auto meta : metalist) {
-            if (playMusicTypePtrListData.metas.contains(meta->album)) {
-                if (playMusicTypePtrListData.metas[meta->album]->playlistMeta.metas.contains(meta->hash)) {
+            QString albumStr = meta->album;
+            if (albumStr.isEmpty()) {
+                albumStr = tr("Unknown album");
+            }
+            if (playMusicTypePtrListData.metas.contains(albumStr)) {
+                if (playMusicTypePtrListData.metas[albumStr]->playlistMeta.metas.contains(meta->hash)) {
                     qDebug() << "skip dump music " << meta->hash << meta->localPath;
                     continue;
                 }
-                if (playMusicTypePtrListData.metas[meta->artist]->icon.isNull())
-                    playMusicTypePtrListData.metas[meta->artist]->icon = MetaSearchService::coverData(meta);
-                playMusicTypePtrListData.metas[meta->album]->playlistMeta.sortMetas << meta->hash;
-                playMusicTypePtrListData.metas[meta->album]->playlistMeta.metas.insert(meta->hash, meta);
+                if (playMusicTypePtrListData.metas[albumStr]->icon.isNull())
+                    playMusicTypePtrListData.metas[albumStr]->icon = MetaSearchService::coverData(meta);
+                playMusicTypePtrListData.metas[albumStr]->playlistMeta.sortMetas << meta->hash;
+                playMusicTypePtrListData.metas[albumStr]->playlistMeta.metas.insert(meta->hash, meta);
             } else {
                 PlayMusicTypePtr t_playMusicTypePtr(new PlayMusicType);
-                t_playMusicTypePtr->name = meta->album;
+                t_playMusicTypePtr->name = albumStr;
                 t_playMusicTypePtr->icon = MetaSearchService::coverData(meta);
                 t_playMusicTypePtr->playlistMeta.sortMetas << meta->hash;
                 t_playMusicTypePtr->playlistMeta.metas.insert(meta->hash, meta);
-                playMusicTypePtrListData.sortMetas << meta->album;
-                playMusicTypePtrListData.metas.insert(meta->album, t_playMusicTypePtr);
+                playMusicTypePtrListData.sortMetas << albumStr;
+                playMusicTypePtrListData.metas.insert(albumStr, t_playMusicTypePtr);
             }
         }
     } else if (sortType == SortByArtist) {
         for (auto meta : metalist) {
-            if (playMusicTypePtrListData.metas.contains(meta->artist)) {
-                if (playMusicTypePtrListData.metas[meta->artist]->playlistMeta.metas.contains(meta->hash)) {
+            QString artistStr = meta->artist;
+            if (artistStr.isEmpty()) {
+                artistStr = tr("Unknown artist");
+            }
+            if (playMusicTypePtrListData.metas.contains(artistStr)) {
+                if (playMusicTypePtrListData.metas[artistStr]->playlistMeta.metas.contains(meta->hash)) {
                     qDebug() << "skip dump music " << meta->hash << meta->localPath;
                     continue;
                 }
-                if (playMusicTypePtrListData.metas[meta->artist]->icon.isNull())
-                    playMusicTypePtrListData.metas[meta->artist]->icon = MetaSearchService::coverData(meta);
-                playMusicTypePtrListData.metas[meta->artist]->playlistMeta.sortMetas << meta->hash;
-                playMusicTypePtrListData.metas[meta->artist]->playlistMeta.metas.insert(meta->hash, meta);
+                if (playMusicTypePtrListData.metas[artistStr]->icon.isNull())
+                    playMusicTypePtrListData.metas[artistStr]->icon = MetaSearchService::coverData(meta);
+                playMusicTypePtrListData.metas[artistStr]->playlistMeta.sortMetas << meta->hash;
+                playMusicTypePtrListData.metas[artistStr]->playlistMeta.metas.insert(meta->hash, meta);
             } else {
                 PlayMusicTypePtr t_playMusicTypePtr(new PlayMusicType);
-                t_playMusicTypePtr->name = meta->artist;
+                t_playMusicTypePtr->name = artistStr;
                 t_playMusicTypePtr->icon = MetaSearchService::coverData(meta);
                 t_playMusicTypePtr->playlistMeta.sortMetas << meta->hash;
                 t_playMusicTypePtr->playlistMeta.metas.insert(meta->hash, meta);
-                playMusicTypePtrListData.sortMetas << meta->artist;
-                playMusicTypePtrListData.metas.insert(meta->artist, t_playMusicTypePtr);
+                playMusicTypePtrListData.sortMetas << artistStr;
+                playMusicTypePtrListData.metas.insert(artistStr, t_playMusicTypePtr);
             }
         }
     }
