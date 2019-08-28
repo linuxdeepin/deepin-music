@@ -71,7 +71,7 @@
         <location filename="../view/footerwidget.cpp" line="539"/>
         <location filename="../view/footerwidget.cpp" line="729"/>
         <source>Unknown artist</source>
-        <translation>未知歌手</translation>
+        <translation>未知演唱者</translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="299"/>
@@ -134,7 +134,7 @@
     <message>
         <location filename="../view/widget/infodialog.cpp" line="118"/>
         <source>Artist:</source>
-        <translation>歌手：</translation>
+        <translation>演唱者：</translation>
     </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="119"/>
@@ -154,7 +154,7 @@
     <message>
         <location filename="../view/widget/infodialog.cpp" line="193"/>
         <source>Unknown artist</source>
-        <translation>未知歌手</translation>
+        <translation>未知演唱者</translation>
     </message>
     <message>
         <location filename="../view/widget/infodialog.cpp" line="194"/>
@@ -195,7 +195,7 @@
     <message>
         <location filename="../view/lyricwidget.cpp" line="176"/>
         <source>Artist</source>
-        <translation>歌手名称</translation>
+        <translation>演唱者</translation>
     </message>
     <message>
         <location filename="../view/lyricwidget.cpp" line="181"/>
@@ -393,7 +393,7 @@
         <location filename="../view/musiclistdatawidget.cpp" line="344"/>
         <location filename="../view/musiclistdatawidget.cpp" line="353"/>
         <source>Artist</source>
-        <translation>歌手名称</translation>
+        <translation>演唱者</translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="352"/>
@@ -676,7 +676,7 @@
     <message>
         <location filename="../view/widget/delegate/playitemdelegate.cpp" line="313"/>
         <source>Unknown artist</source>
-        <translation>未知歌手</translation>
+        <translation>未知演唱者</translation>
     </message>
     <message>
         <location filename="../view/widget/delegate/playitemdelegate.cpp" line="324"/>
@@ -714,7 +714,7 @@
     <message>
         <location filename="../view/playlistwidget.cpp" line="184"/>
         <source>Artist</source>
-        <translation>歌手名称</translation>
+        <translation>演唱者</translation>
     </message>
     <message>
         <location filename="../view/playlistwidget.cpp" line="185"/>
@@ -737,7 +737,7 @@
     <message>
         <location filename="../core/playlist.cpp" line="661"/>
         <source>Unknown artist</source>
-        <translation>未知歌手</translation>
+        <translation>未知演唱者</translation>
     </message>
 </context>
 <context>
@@ -755,7 +755,7 @@
     <message>
         <location filename="../core/playlistmanager.cpp" line="145"/>
         <source>Artist</source>
-        <translation>歌手名称</translation>
+        <translation>演唱者</translation>
     </message>
     <message>
         <location filename="../core/playlistmanager.cpp" line="151"/>
