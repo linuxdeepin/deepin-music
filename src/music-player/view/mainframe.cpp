@@ -783,7 +783,7 @@ void MainFrame::binding(Presenter *presenter)
 
     connect(presenter, &Presenter::meidaFilesImported,
     this, [ = ](PlaylistPtr playlist, const MetaPtrList metalist) {
-        d->setPlayListVisible(true);
+        //d->setPlayListVisible(true);
         d->playListWidget->onMusiclistChanged(playlist);
         if (!metalist.isEmpty()) {
             d->playListWidget->setCustomSortType();
