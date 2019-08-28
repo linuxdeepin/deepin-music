@@ -49,7 +49,7 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
 {
     Q_D(const MusicListDataDelegate);
 
-    QStyledItemDelegate::paint(painter, option, index);
+    //QStyledItemDelegate::paint(painter, option, index);
 
     auto listview = qobject_cast<const MusicListDataView *>(option.widget);
     PlaylistPtr playlistPtr = listview->playlist();
@@ -70,7 +70,7 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             //background = option.palette.highlight();
         }
 
-        painter->fillRect(option.rect, background);
+        //painter->fillRect(option.rect, background);
 
         int borderWidth = 10;
         QRect rect = option.rect.adjusted(borderWidth, borderWidth, -borderWidth, -borderWidth);

@@ -32,6 +32,7 @@ class PlayMusicType
 public:
     QString         name;
     QByteArray      icon;
+    qint64          timestamp   = 0;    // addTime;
 
     PlaylistMeta    playlistMeta;
 };
@@ -124,6 +125,7 @@ public slots:
 
     void metaListToPlayMusicTypePtrList(Playlist::SortType sortType, const MetaPtrList metalist);
     void playMusicTypeToMeta();
+    void sortPlayMusicTypePtrListData(int sortType);
 
 public:
     void load();

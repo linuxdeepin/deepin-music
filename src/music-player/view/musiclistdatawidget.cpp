@@ -188,12 +188,16 @@ void MusicListDataWidgetPrivate::initConntion()
     q->connect(albumDropdown, &DDropdown::triggered,
     q, [ = ](QAction * action) {
         albumDropdown->setCurrentAction(action);
-        Q_EMIT q->resort(musicListView->playlist(), action->data().value<Playlist::SortType>());
+        int t_sortType = action->data().toInt() == 0 ? 0 : 1;
+        albumListView->playlist()->sortPlayMusicTypePtrListData(t_sortType);
+        Q_EMIT q->resort(albumListView->playlist(), action->data().value<Playlist::SortType>());
     });
     q->connect(artistDropdown, &DDropdown::triggered,
     q, [ = ](QAction * action) {
         artistDropdown->setCurrentAction(action);
-        Q_EMIT q->resort(musicListView->playlist(), action->data().value<Playlist::SortType>());
+        int t_sortType = action->data().toInt() == 0 ? 0 : 1;
+        artistListView->playlist()->sortPlayMusicTypePtrListData(t_sortType);
+        Q_EMIT q->resort(artistListView->playlist(), action->data().value<Playlist::SortType>());
     });
     q->connect(musicDropdown, &DDropdown::triggered,
     q, [ = ](QAction * action) {
@@ -243,6 +247,8 @@ void MusicListDataWidgetPrivate::initConntion()
             albumListView->setViewModeFlag(QListView::IconMode);
         } else if (artistListView->isVisible()) {
             artistListView->setViewModeFlag(QListView::IconMode);
+        } else {
+            musicListView->setViewModeFlag(QListView::IconMode);
         }
     });
     q->connect(btlistMode, &QPushButton::clicked,
@@ -251,6 +257,8 @@ void MusicListDataWidgetPrivate::initConntion()
             albumListView->setViewModeFlag(QListView::ListMode);
         } else if (artistListView->isVisible()) {
             artistListView->setViewModeFlag(QListView::ListMode);
+        } else {
+            musicListView->setViewModeFlag(QListView::ListMode);
         }
     });
 }

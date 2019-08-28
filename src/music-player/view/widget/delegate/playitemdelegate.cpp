@@ -218,7 +218,57 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 {
     auto listview = qobject_cast<const PlayListView *>(option.widget);
     if (listview->viewMode() == QListView::IconMode) {
-        QStyledItemDelegate::paint(painter, option, index);
+        //QStyledItemDelegate::paint(painter, option, index);
+
+        auto hash = index.data().toString();
+        auto meta = MediaLibrary::instance()->meta(hash);
+
+        painter->save();
+        painter->setRenderHint(QPainter::Antialiasing);
+        painter->setRenderHint(QPainter::HighQualityAntialiasing);
+
+        auto background = option.palette.background();
+
+        if (option.state & QStyle::State_Selected) {
+            //background = option.palette.highlight();
+        }
+
+        painter->fillRect(option.rect, background);
+
+        int borderWidth = 10;
+        QRect rect = option.rect.adjusted(borderWidth, borderWidth, -borderWidth, -borderWidth);
+        QPainterPath roundRectPath;
+        roundRectPath.addRoundRect(rect, 10, 10);
+        painter->setClipPath(roundRectPath);
+
+        auto icon = option.icon;
+        auto value = index.data(Qt::DecorationRole);
+        if (value.type() == QVariant::Icon) {
+            icon = qvariant_cast<QIcon>(value);
+        }
+        painter->drawPixmap(option.rect, icon.pixmap(option.rect.width(), option.rect.width()));
+
+        QRect fillRect(option.rect.x() + borderWidth, option.rect.y() + option.rect.height() * 2 / 3, option.rect.width() - borderWidth * 2, option.rect.height() / 3 - borderWidth);
+        QColor fillColor(128, 128, 128, 220);
+        painter->fillRect(fillRect, fillColor);
+
+        QFont font = option.font;
+        font.setPixelSize(12);
+        painter->setFont(font);
+        QFontMetrics fm(font);
+        fillRect.adjust(5, 0, -5, 0);
+        auto text = fm.elidedText(meta->title, Qt::ElideMiddle, fillRect.width());
+        painter->setPen(Qt::white);
+        painter->drawText(fillRect, Qt::AlignLeft | Qt::AlignVCenter, meta->title);
+
+        QBrush t_fillBrush(QColor(128, 128, 128, 0));
+        if (option.state & QStyle::State_HasFocus) {
+            t_fillBrush = QBrush(QColor(128, 128, 128, 90));
+        }
+        painter->fillRect(option.rect, t_fillBrush);
+
+        painter->restore();
+
         return;
     }
 
@@ -344,6 +394,11 @@ QSize PlayItemDelegate::sizeHint(const QStyleOptionViewItem &option,
                                  const QModelIndex &index) const
 {
     Q_D(const PlayItemDelegate);
+
+    auto listview = qobject_cast<const PlayListView *>(option.widget);
+    if (listview->viewMode() == QListView::IconMode) {
+        return QStyledItemDelegate::sizeHint(option, index);
+    }
 
     auto baseSize = QStyledItemDelegate::sizeHint(option, index);
     return  QSize(baseSize.width() / 5, baseSize.height());

@@ -573,30 +573,53 @@ void Playlist::sortBy(Playlist::SortType sortType)
     resort();
 }
 
+void Playlist::sortPlayMusicTypePtrListData(int sortType)
+{
+    QList<PlayMusicTypePtr> sortList;
+    for (auto id : playMusicTypePtrListData.metas.keys()) {
+        sortList << playMusicTypePtrListData.metas.value(id);
+    }
+    if (sortType == 0) {
+        qSort(sortList.begin(), sortList.end(), [ = ](PlayMusicTypePtr p1, PlayMusicTypePtr p2) {
+            return lessCompareByString(p1->name, p2->name);
+        });
+    } else {
+        qSort(sortList.begin(), sortList.end(), [ = ](PlayMusicTypePtr p1, PlayMusicTypePtr p2) {
+            return p1->timestamp < p2->timestamp;
+        });
+    }
+    playMusicTypePtrListData.sortMetas.clear();
+    for (auto i = 0; i < sortList.size(); ++i) {
+        playMusicTypePtrListData.sortMetas << sortList[i]->name;
+    }
+}
+
 void Playlist::resort()
 {
-    collator.setNumericMode(true);
-    collator.setCaseSensitivity(Qt::CaseInsensitive);
+    if (playlistMeta.uuid != AlbumMusicListID || playlistMeta.uuid != ArtistMusicListID) {
+        collator.setNumericMode(true);
+        collator.setCaseSensitivity(Qt::CaseInsensitive);
 
-    auto sortType = static_cast<Playlist::SortType>(playlistMeta.sortType);
-    auto orderType = static_cast<Playlist::OrderType>(playlistMeta.orderType);
-    if (sortType != Playlist::SortByCustom) {
-        QList<MetaPtr> sortList;
+        auto sortType = static_cast<Playlist::SortType>(playlistMeta.sortType);
+        auto orderType = static_cast<Playlist::OrderType>(playlistMeta.orderType);
+        if (sortType != Playlist::SortByCustom) {
+            QList<MetaPtr> sortList;
 
-        for (auto id : playlistMeta.metas.keys()) {
-//        qDebug() << playlistMeta.metas.value(id) << id;
-            sortList << playlistMeta.metas.value(id);
+            for (auto id : playlistMeta.metas.keys()) {
+                //        qDebug() << playlistMeta.metas.value(id) << id;
+                sortList << playlistMeta.metas.value(id);
+            }
+
+            qSort(sortList.begin(), sortList.end(),
+                  getSortFunction(sortType, orderType));
+
+            QMap<QString, int> hashIndexs;
+            for (auto i = 0; i < sortList.length(); ++i) {
+                hashIndexs.insert(sortList.value(i)->hash, i);
+            }
+
+            saveSort(hashIndexs);
         }
-
-        qSort(sortList.begin(), sortList.end(),
-              getSortFunction(sortType, orderType));
-
-        QMap<QString, int> hashIndexs;
-        for (auto i = 0; i < sortList.length(); ++i) {
-            hashIndexs.insert(sortList.value(i)->hash, i);
-        }
-
-        saveSort(hashIndexs);
     }
 }
 
@@ -642,12 +665,15 @@ void Playlist::metaListToPlayMusicTypePtrList(Playlist::SortType sortType, const
                 }
                 if (playMusicTypePtrListData.metas[albumStr]->icon.isNull())
                     playMusicTypePtrListData.metas[albumStr]->icon = MetaSearchService::coverData(meta);
+                if (playMusicTypePtrListData.metas[albumStr]->timestamp > meta->timestamp)
+                    playMusicTypePtrListData.metas[albumStr]->timestamp = meta->timestamp;
                 playMusicTypePtrListData.metas[albumStr]->playlistMeta.sortMetas << meta->hash;
                 playMusicTypePtrListData.metas[albumStr]->playlistMeta.metas.insert(meta->hash, meta);
             } else {
                 PlayMusicTypePtr t_playMusicTypePtr(new PlayMusicType);
                 t_playMusicTypePtr->name = albumStr;
                 t_playMusicTypePtr->icon = MetaSearchService::coverData(meta);
+                t_playMusicTypePtr->timestamp = meta->timestamp;
                 t_playMusicTypePtr->playlistMeta.sortMetas << meta->hash;
                 t_playMusicTypePtr->playlistMeta.metas.insert(meta->hash, meta);
                 playMusicTypePtrListData.sortMetas << albumStr;
@@ -667,12 +693,15 @@ void Playlist::metaListToPlayMusicTypePtrList(Playlist::SortType sortType, const
                 }
                 if (playMusicTypePtrListData.metas[artistStr]->icon.isNull())
                     playMusicTypePtrListData.metas[artistStr]->icon = MetaSearchService::coverData(meta);
+                if (playMusicTypePtrListData.metas[artistStr]->timestamp > meta->timestamp)
+                    playMusicTypePtrListData.metas[artistStr]->timestamp = meta->timestamp;
                 playMusicTypePtrListData.metas[artistStr]->playlistMeta.sortMetas << meta->hash;
                 playMusicTypePtrListData.metas[artistStr]->playlistMeta.metas.insert(meta->hash, meta);
             } else {
                 PlayMusicTypePtr t_playMusicTypePtr(new PlayMusicType);
                 t_playMusicTypePtr->name = artistStr;
                 t_playMusicTypePtr->icon = MetaSearchService::coverData(meta);
+                t_playMusicTypePtr->timestamp = meta->timestamp;
                 t_playMusicTypePtr->playlistMeta.sortMetas << meta->hash;
                 t_playMusicTypePtr->playlistMeta.metas.insert(meta->hash, meta);
                 playMusicTypePtrListData.sortMetas << artistStr;
@@ -680,6 +709,7 @@ void Playlist::metaListToPlayMusicTypePtrList(Playlist::SortType sortType, const
             }
         }
     }
+    sortPlayMusicTypePtrListData(playMusicTypePtrListData.sortType);
 }
 
 void Playlist::playMusicTypeToMeta()

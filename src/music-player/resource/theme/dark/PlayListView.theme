@@ -10,6 +10,6 @@
   background: #202020;
 }
 
-#PlayListView::item {
+/* #PlayListView::item {
   height: 36px;
-}
+}*/

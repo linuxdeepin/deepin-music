@@ -37,6 +37,8 @@ public:
     PlaylistPtr playlist() const;
     QModelIndex findIndex(const MetaPtr meta);
 
+    void setViewModeFlag(QListView::ViewMode mode);
+
 signals:
     void addToPlaylist(PlaylistPtr playlist, const MetaPtrList &metalist);
     void removeMusicList(const MetaPtrList  &metalist);

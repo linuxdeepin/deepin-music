@@ -5,6 +5,6 @@ PlayListView {
   background-color: rgba(255, 255, 255, 1);
 }
 
-PlayListView::item {
+/*PlayListView::item {
   height: 36px;
-}
+}*/

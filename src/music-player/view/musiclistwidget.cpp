@@ -28,6 +28,7 @@
 #include <QListWidget>
 #include <DLabel>
 #include <DPushButton>
+#include <DFloatingButton>
 
 #include <DUtil>
 #include <DThemeManager>
@@ -62,9 +63,8 @@ MusicListWidget::MusicListWidget(QWidget *parent) : QFrame(parent)
     customizeLabel->setObjectName("MusicListWidgetCustomizeLabel");
     customizeLabel->setMargin(8);
 
-    DPushButton *addListBtn = new DPushButton;
-    addListBtn->setText("+");
-    addListBtn->setFixedSize(24, 24);
+    auto *addListBtn = new DFloatingButton("+");
+    addListBtn->setFixedSize(28, 28);
     addListBtn->setFocusPolicy(Qt::NoFocus);
 
     auto customizeLayout = new QHBoxLayout(this);
@@ -168,6 +168,10 @@ MusicListWidget::MusicListWidget(QWidget *parent) : QFrame(parent)
     connect(m_dataListView, &MusicListDataWidget::playMedia,
     this, [ = ](PlaylistPtr playlist, const MetaPtr meta) {
         Q_EMIT this->playMedia(playlist, meta);
+    });
+    connect(m_dataListView, &MusicListDataWidget::resort,
+    this, [ = ](PlaylistPtr playlist, int sortType) {
+        Q_EMIT this->resort(playlist, sortType);
     });
 }
 

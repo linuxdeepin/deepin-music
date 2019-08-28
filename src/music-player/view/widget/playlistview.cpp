@@ -137,6 +137,18 @@ QModelIndex PlayListView::findIndex(const MetaPtr meta)
     return d->model->findIndex(meta);
 }
 
+void PlayListView::setViewModeFlag(QListView::ViewMode mode)
+{
+    if (mode == QListView::IconMode) {
+        setIconSize( QSize(150, 150) );
+        setGridSize( QSize(150, 150) );
+    } else {
+        setIconSize( QSize(36, 36) );
+        setGridSize( QSize(36, 36) );
+    }
+    setViewMode(mode);
+}
+
 void PlayListView::onMusicListRemoved(const MetaPtrList metalist)
 {
     Q_D(PlayListView);
@@ -254,6 +266,13 @@ void PlayListView::keyboardSearch(const QString &search)
 void PlayListViewPrivate::addMedia(const MetaPtr meta)
 {
     QStandardItem *newItem = new QStandardItem;
+    QImage cover(":/common/image/cover_max.svg");
+    auto coverData = MetaSearchService::coverData(meta);
+    if (coverData.length() > 0) {
+        cover = QImage::fromData(coverData);
+    }
+    QIcon icon = QIcon(QPixmap::fromImage(cover));
+    newItem->setIcon(icon);
     model->appendRow(newItem);
 
     auto row = model->rowCount() - 1;

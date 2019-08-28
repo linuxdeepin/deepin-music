@@ -41,6 +41,7 @@ signals:
     void playall(PlaylistPtr playlist);
     void customResort(const QStringList &uuids);
     void playMedia(PlaylistPtr playlist, const MetaPtr meta);
+    void resort(PlaylistPtr playlist, int sortType);
 
 public slots:
     void onMusicPlayed(PlaylistPtr playlist, const MetaPtr);
