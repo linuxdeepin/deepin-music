@@ -210,9 +210,10 @@ void MainFramePrivate::initUI(bool showLoading)
     titlebarwidget->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
 
     titlebar = q->titlebar();
-    titlebar->setCustomWidget(titlebarwidget, Qt::AlignLeft, false);
+    //titlebar->setCustomWidget(titlebarwidget, Qt::AlignLeft, false);
+    titlebar->addWidget(titlebarwidget, Qt::AlignLeft);
 //    titlebar->setBackgroundTransparent(true);
-    overrideTitlebarStyle();
+    //overrideTitlebarStyle();
 
     centralWidget = new QWidget(q);
     contentLayout = new QStackedLayout(centralWidget);
@@ -959,6 +960,8 @@ void MainFrame::binding(Presenter *presenter)
     connect(presenter, &Presenter::musicListRemoved,
             d->musicListWidget,  &MusicListWidget::onMusicListRemoved);
 
+    connect(d->musicListWidget, &MusicListWidget::resort,
+            presenter, &Presenter::onResort);
     connect(d->musicListWidget,  &MusicListWidget::addPlaylist,
             presenter, &Presenter::onPlaylistAdd);
     connect(d->musicListWidget,  &MusicListWidget::selectPlaylist,

@@ -118,6 +118,7 @@ int main(int argc, char *argv[])
 
     // set theme
     qDebug() << "TRACE:" << "set theme";
+    MusicSettings::setOption("base.play.theme", "light");
     auto theme = MusicSettings::value("base.play.theme").toString();
 //    auto themePrefix = AppSettings::instance()->value("base.play.theme_prefix").toString();
 //    DThemeManager::instance()->setPrefix(themePrefix);
@@ -146,7 +147,9 @@ int main(int argc, char *argv[])
         }
     });
 
-    app.setQuitOnLastWindowClosed(false);
+    app.setTheme("light");
+    app.setQuitOnLastWindowClosed(true);
+    app.setStyle("chameleon");
 
     return app.exec();
 }
