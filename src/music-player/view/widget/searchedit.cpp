@@ -38,8 +38,8 @@ SearchEdit::SearchEdit(QWidget *parent) : DSearchEdit(parent)
     // Why qss not work if not call show
     show();
     DThemeManager::instance()->registerWidget(this, QStringList() << "viewname");
-    connect(this, &SearchEdit::focusOut,
-            this, &SearchEdit::onFocusOut);
+//    connect(this, &SearchEdit::focusOut,
+//            this, &SearchEdit::onFocusOut);
 //    connect(this, &SearchEdit::focusIn,
 //            this, &SearchEdit::onFocusIn);
     connect(this, &SearchEdit::textChanged,
