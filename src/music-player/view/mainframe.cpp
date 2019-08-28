@@ -155,7 +155,7 @@ void MainFramePrivate::initMenu()
         configDialog->setProperty("_d_QSSFilename", "DSettingsDialog");
         DThemeManager::instance()->registerWidget(configDialog);
 
-        configDialog->setFixedSize(720, 520);
+        configDialog->setFixedSize(720, 550);
         configDialog->updateSettings(MusicSettings::settings());
 
         WidgetHelper::workaround_updateStyle(configDialog, "dlight");
@@ -192,7 +192,7 @@ void MainFramePrivate::initMenu()
     titleMenu->addAction(addmusicfiles);
     titleMenu->addSeparator();
 
-    titleMenu->addAction(colorModeAction);
+    //titleMenu->addAction(colorModeAction);
     titleMenu->addAction(settings);
     titleMenu->addSeparator();
 
