@@ -50,6 +50,7 @@ public slots:
     void onMusiclistChanged(PlaylistPtr playlist);
     void onMusicListAdded(PlaylistPtr playlist, const MetaPtrList metalist);
     void onMusicListRemoved(PlaylistPtr playlist, const MetaPtrList metalist);
+    void onMusiclistUpdate();
 
 protected:
     virtual void focusOutEvent(QFocusEvent *event) Q_DECL_OVERRIDE;

@@ -597,7 +597,7 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
             albumPlaylist->metaListToPlayMusicTypePtrList(Playlist::SortByAblum, playlist->allmusic());
         }
         if (artistPlaylist) {
-            artistPlaylist->metaListToPlayMusicTypePtrList(Playlist::SortByAblum, playlist->allmusic());
+            artistPlaylist->metaListToPlayMusicTypePtrList(Playlist::SortByArtist, playlist->allmusic());
         }
 
         MediaDatabase::instance()->removeMediaMetaList(metalist);

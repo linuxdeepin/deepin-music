@@ -705,6 +705,7 @@ void MainFrame::binding(Presenter *presenter)
         d->currentWidget = d->musicListWidget;
         d->importWidget->hide();
         d->playListWidget->onMusiclistChanged(playlist);
+        d->musicListWidget->onMusiclistChanged(playlist);
         d->disableControl(false);
         d->titlebarwidget->setSearchEnable(true);
     });
@@ -785,6 +786,9 @@ void MainFrame::binding(Presenter *presenter)
     this, [ = ](PlaylistPtr playlist, const MetaPtrList metalist) {
         //d->setPlayListVisible(true);
         d->playListWidget->onMusiclistChanged(playlist);
+        d->musicListWidget->onMusiclistUpdate();
+        d->disableControl(true);
+        d->slideToMusicListView(true);
         if (!metalist.isEmpty()) {
             d->playListWidget->setCustomSortType();
         }

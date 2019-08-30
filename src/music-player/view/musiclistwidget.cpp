@@ -334,3 +334,8 @@ void MusicListWidget::onMusicListRemoved(PlaylistPtr playlist, const MetaPtrList
     m_dataListView->onMusiclistUpdate();
 }
 
+void MusicListWidget::onMusiclistUpdate()
+{
+    m_dataListView->onMusiclistUpdate();
+}
+

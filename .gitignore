@@ -7,6 +7,7 @@
 *INFO#
 *.sw*
 *.user
+*.qm
 build/
 dist/
 .vscode

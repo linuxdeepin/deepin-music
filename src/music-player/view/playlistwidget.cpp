@@ -181,7 +181,7 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
     d->dropdown->setObjectName("PlayListSort");
     d->dropdown->addAction(tr("Time added"), QVariant::fromValue<Playlist::SortType>(Playlist::SortByAddTime));
     d->dropdown->addAction(tr("Title"), QVariant::fromValue<Playlist::SortType>(Playlist::SortByTitle));
-    d->dropdown->addAction(tr("Artist"), QVariant::fromValue<Playlist::SortType>(Playlist::SortByArtist));
+    d->dropdown->addAction(tr("Artist name"), QVariant::fromValue<Playlist::SortType>(Playlist::SortByArtist));
     d->dropdown->addAction(tr("Album name"), QVariant::fromValue<Playlist::SortType>(Playlist::SortByAblum));
 //    d->customAction = d->dropdown->addAction(tr("Custom"), QVariant::fromValue<Playlist::SortType>(Playlist::SortByCustom));
 //    d->customAction->setDisabled(true);
