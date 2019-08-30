@@ -105,7 +105,7 @@ void MusicListDataWidgetPrivate::initData(PlaylistPtr playlist)
         artistDropdown->hide();
         musicDropdown->hide();
 
-        albumListView->raise();
+        albumListView->show();
         artistListView->hide();
         musicListView->hide();
 
@@ -265,7 +265,7 @@ void MusicListDataWidgetPrivate::initConntion()
 
 void MusicListDataWidgetPrivate::showEmptyHits()
 {
-    if (albumListView->isVisible()) {
+    if (!curPlaylist.isNull() && curPlaylist->id() == AlbumMusicListID) {
         auto playlist = artistListView->playlist();
         if (playlist.isNull() || playlist->id() != SearchMusicListID) {
             emptyHits->setText(MusicListDataWidget::tr("No Music"));
@@ -278,7 +278,7 @@ void MusicListDataWidgetPrivate::showEmptyHits()
         artistListView->setVisible(false);
         musicListView->setVisible(false);
         emptyHits->setVisible(empty);
-    } else if (artistListView->isVisible()) {
+    } else if (!curPlaylist.isNull() && curPlaylist->id() == ArtistMusicListID) {
         auto playlist = artistListView->playlist();
         if (playlist.isNull() || playlist->id() != SearchMusicListID) {
             emptyHits->setText(MusicListDataWidget::tr("No Music"));
