@@ -23,6 +23,7 @@
 
 #include <QPainter>
 #include <QDebug>
+#include <QDate>
 
 #include "../musiclistdataview.h"
 
@@ -107,31 +108,118 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
         painter->restore();
 
     } else {
-        QStyledItemDelegate::paint(painter, option, index);
-
         auto playMusicTypePtrList = playlistPtr->playMusicTypePtrList();
         auto PlayMusicTypePtr = playMusicTypePtrList[index.row()];
-
-        int sortMetasSize = PlayMusicTypePtr->playlistMeta.sortMetas.size();
-        QString infoStr;
-        if (sortMetasSize == 0) {
-            infoStr = tr("   No songs");
-        } else if (sortMetasSize == 1) {
-            infoStr = tr("   1 song");
-        } else {
-            infoStr = tr("   %1 songs").arg(sortMetasSize);
-        }
 
         painter->save();
         painter->setRenderHint(QPainter::Antialiasing);
         painter->setRenderHint(QPainter::HighQualityAntialiasing);
 
-        QFont measuringFont(option.font);
-        QFontMetrics fm(measuringFont);
-        auto tailwidth = pixel2point(fm.width(infoStr)) + PlayItemRightMargin  + 20;
-        auto w = option.rect.width() - 0 - tailwidth;
-        QRect rect(w, option.rect.y(), tailwidth - 20, option.rect.height());
-        painter->drawText(rect, Qt::AlignRight | Qt::AlignVCenter, infoStr);
+        auto background = option.palette.background();
+        if (option.state & QStyle::State_Selected) {
+            background = option.palette.highlight();
+        }
+        painter->fillRect(option.rect, background);
+
+        if (PlayMusicTypePtr->extraName.isEmpty()) {
+            //QStyledItemDelegate::paint(painter, option, index);
+
+            QFont font11 = option.font;
+            font11.setPixelSize(11);
+            QFont font12 = option.font;
+            font12.setPixelSize(12);
+
+            QFontMetrics songsFm(font12);
+            auto tailwidth = pixel2point(songsFm.width("0000-00-00")) + PlayItemRightMargin  + 20;
+            auto w = option.rect.width() - 0 - tailwidth;
+
+            //icon
+            QRect numRect(0, option.rect.y(), 40, option.rect.height());
+            auto icon = option.icon;
+            auto value = index.data(Qt::DecorationRole);
+            if (value.type() == QVariant::Icon) {
+                icon = qvariant_cast<QIcon>(value);
+            }
+            painter->save();
+            QPainterPath clipPath;
+            clipPath.addEllipse(numRect.adjusted(4, 4, -4, -4));
+            painter->setClipPath(clipPath);
+            painter->drawPixmap(numRect, icon.pixmap(numRect.width(), numRect.width()));
+            painter->restore();
+
+            //name
+            QRect nameRect(40, option.rect.y(), w / 2 - 20, option.rect.height());
+            painter->setFont(font12);
+            auto nameText = songsFm.elidedText(PlayMusicTypePtr->name, Qt::ElideMiddle, nameRect.width());
+            painter->drawText(nameRect, Qt::AlignLeft | Qt::AlignVCenter, nameText);
+
+            int sortMetasSize = PlayMusicTypePtr->playlistMeta.sortMetas.size();
+            QString infoStr;
+            if (sortMetasSize == 0) {
+                infoStr = tr("   No songs");
+            } else if (sortMetasSize == 1) {
+                infoStr = tr("   1 song");
+            } else {
+                infoStr = tr("   %1 songs").arg(sortMetasSize);
+            }
+
+            QFont measuringFont(option.font);
+            QRect rect(w, option.rect.y(), tailwidth - 20, option.rect.height());
+            painter->drawText(rect, Qt::AlignRight | Qt::AlignVCenter, infoStr);
+
+        } else {
+            QFont font11 = option.font;
+            font11.setPixelSize(11);
+            QFont font12 = option.font;
+            font12.setPixelSize(12);
+
+            QFontMetrics songsFm(font12);
+            auto tailwidth = pixel2point(songsFm.width("0000-00-00")) + PlayItemRightMargin  + 20;
+            auto w = option.rect.width() - 0 - tailwidth;
+
+            //num
+            QRect numRect(0, option.rect.y(), 40, option.rect.height());
+            painter->setFont(font11);
+            auto str = QString("%1").arg(index.row() + 1);
+            QFont font(font11);
+            QFontMetrics fm(font);
+            auto text = fm.elidedText(str, Qt::ElideMiddle, numRect.width());
+            painter->drawText(numRect, Qt::AlignCenter, text);
+
+            //name
+            QRect nameRect(40, option.rect.y(), w / 2 - 20, option.rect.height());
+            painter->setFont(font12);
+            auto nameText = songsFm.elidedText(PlayMusicTypePtr->name, Qt::ElideMiddle, nameRect.width());
+            painter->drawText(nameRect, Qt::AlignLeft | Qt::AlignVCenter, nameText);
+
+            //extraname
+            QRect extraRect(40 + w / 2, option.rect.y(), w / 4 - 20, option.rect.height());
+            painter->setFont(font12);
+            auto extraText = songsFm.elidedText(PlayMusicTypePtr->extraName, Qt::ElideMiddle, extraRect.width());
+            painter->drawText(extraRect, Qt::AlignLeft | Qt::AlignVCenter, extraText);
+
+            //songs
+            int sortMetasSize = PlayMusicTypePtr->playlistMeta.sortMetas.size();
+            QString infoStr;
+            if (sortMetasSize == 0) {
+                infoStr = tr("   No songs");
+            } else if (sortMetasSize == 1) {
+                infoStr = tr("   1 song");
+            } else {
+                infoStr = tr("   %1 songs").arg(sortMetasSize);
+            }
+            painter->save();
+            QFont measuringFont(font12);
+            QRect songsRect(40 + w / 2 + w / 4, option.rect.y(), w / 4 - 20, option.rect.height());
+            painter->drawText(songsRect, Qt::AlignLeft | Qt::AlignVCenter, infoStr);
+            painter->restore();
+
+            //day
+            QRect dayRect(w, option.rect.y(), tailwidth - 20, option.rect.height());
+            painter->setFont(font12);
+            QString dayStr = QDateTime::fromMSecsSinceEpoch(PlayMusicTypePtr->timestamp / (qint64)1000).toString("yyyy-yy-dd");
+            painter->drawText(dayRect, Qt::AlignRight | Qt::AlignVCenter, dayStr);
+        }
 
         painter->restore();
     }

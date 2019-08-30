@@ -31,6 +31,7 @@ class PlayMusicType
 {
 public:
     QString         name;
+    QString         extraName;
     QByteArray      icon;
     qint64          timestamp   = 0;    // addTime;
 

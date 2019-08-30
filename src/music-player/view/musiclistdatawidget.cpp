@@ -105,7 +105,7 @@ void MusicListDataWidgetPrivate::initData(PlaylistPtr playlist)
         artistDropdown->hide();
         musicDropdown->hide();
 
-        albumListView->show();
+        albumListView->raise();
         artistListView->hide();
         musicListView->hide();
 

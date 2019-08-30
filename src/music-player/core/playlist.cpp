@@ -658,6 +658,10 @@ void Playlist::metaListToPlayMusicTypePtrList(Playlist::SortType sortType, const
             if (albumStr.isEmpty()) {
                 albumStr = tr("Unknown album");
             }
+            QString artistStr = meta->artist;
+            if (artistStr.isEmpty()) {
+                artistStr = tr("Unknown artist");
+            }
             if (playMusicTypePtrListData.metas.contains(albumStr)) {
                 if (playMusicTypePtrListData.metas[albumStr]->playlistMeta.metas.contains(meta->hash)) {
                     qDebug() << "skip dump music " << meta->hash << meta->localPath;
@@ -665,13 +669,14 @@ void Playlist::metaListToPlayMusicTypePtrList(Playlist::SortType sortType, const
                 }
                 if (playMusicTypePtrListData.metas[albumStr]->icon.isNull())
                     playMusicTypePtrListData.metas[albumStr]->icon = MetaSearchService::coverData(meta);
-                if (playMusicTypePtrListData.metas[albumStr]->timestamp > meta->timestamp)
+                if (playMusicTypePtrListData.metas[albumStr]->timestamp < meta->timestamp)
                     playMusicTypePtrListData.metas[albumStr]->timestamp = meta->timestamp;
                 playMusicTypePtrListData.metas[albumStr]->playlistMeta.sortMetas << meta->hash;
                 playMusicTypePtrListData.metas[albumStr]->playlistMeta.metas.insert(meta->hash, meta);
             } else {
                 PlayMusicTypePtr t_playMusicTypePtr(new PlayMusicType);
                 t_playMusicTypePtr->name = albumStr;
+                t_playMusicTypePtr->extraName = artistStr;
                 t_playMusicTypePtr->icon = MetaSearchService::coverData(meta);
                 t_playMusicTypePtr->timestamp = meta->timestamp;
                 t_playMusicTypePtr->playlistMeta.sortMetas << meta->hash;
@@ -693,7 +698,7 @@ void Playlist::metaListToPlayMusicTypePtrList(Playlist::SortType sortType, const
                 }
                 if (playMusicTypePtrListData.metas[artistStr]->icon.isNull())
                     playMusicTypePtrListData.metas[artistStr]->icon = MetaSearchService::coverData(meta);
-                if (playMusicTypePtrListData.metas[artistStr]->timestamp > meta->timestamp)
+                if (playMusicTypePtrListData.metas[artistStr]->timestamp < meta->timestamp)
                     playMusicTypePtrListData.metas[artistStr]->timestamp = meta->timestamp;
                 playMusicTypePtrListData.metas[artistStr]->playlistMeta.sortMetas << meta->hash;
                 playMusicTypePtrListData.metas[artistStr]->playlistMeta.metas.insert(meta->hash, meta);
