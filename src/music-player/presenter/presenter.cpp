@@ -204,7 +204,7 @@ void Presenter::prepareData()
                 albumPlaylist->metaListToPlayMusicTypePtrList(Playlist::SortByAblum, playlist->allmusic());
             }
             if (artistPlaylist) {
-                artistPlaylist->metaListToPlayMusicTypePtrList(Playlist::SortByAblum, playlist->allmusic());
+                artistPlaylist->metaListToPlayMusicTypePtrList(Playlist::SortByArtist, playlist->allmusic());
             }
         }
         Q_EMIT meidaFilesImported(playlist, metalist);
