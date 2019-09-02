@@ -186,7 +186,8 @@ void MusicListView::showContextMenu(const QPoint &pos)
     auto playact = menu.addAction(tr("Play"));
     playact->setDisabled(0 == m_data->length());
 
-    if (m_data->id() != AllMusicListID && m_data->id() != FavMusicListID) {
+    if (m_data->id() != AllMusicListID && m_data->id() != AlbumMusicListID &&
+            m_data->id() != ArtistMusicListID && m_data->id() != FavMusicListID) {
         menu.addAction(tr("Rename"));
         menu.addAction(tr("Delete"));
     }
