@@ -54,13 +54,14 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
 
     auto listview = qobject_cast<const MusicListDataView *>(option.widget);
     PlaylistPtr playlistPtr = listview->playlist();
+    auto playMusicTypePtrList = playlistPtr->playMusicTypePtrList();
+    if (index.row() >= playMusicTypePtrList.size()) {
+        return;
+    }
+    auto PlayMusicTypePtr = playMusicTypePtrList[index.row()];
 
     if (listview->viewMode() == QListView::IconMode) {
         //QStyledItemDelegate::paint(painter, option, index);
-
-        auto playMusicTypePtrList = playlistPtr->playMusicTypePtrList();
-        auto PlayMusicTypePtr = playMusicTypePtrList[index.row()];
-
         painter->save();
         painter->setRenderHint(QPainter::Antialiasing);
         painter->setRenderHint(QPainter::HighQualityAntialiasing);
@@ -108,9 +109,6 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
         painter->restore();
 
     } else {
-        auto playMusicTypePtrList = playlistPtr->playMusicTypePtrList();
-        auto PlayMusicTypePtr = playMusicTypePtrList[index.row()];
-
         painter->save();
         painter->setRenderHint(QPainter::Antialiasing);
         painter->setRenderHint(QPainter::HighQualityAntialiasing);
