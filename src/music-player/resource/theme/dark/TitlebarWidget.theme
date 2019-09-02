@@ -9,7 +9,3 @@
 #TitleBack:pressed {
   border-image: url(:/dark/image/back_press.svg);
 }
-
-#TitleIcon {
-  image: url(:/common/image/app_icon.svg)
-}

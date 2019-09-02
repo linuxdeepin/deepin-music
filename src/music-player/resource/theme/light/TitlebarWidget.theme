@@ -14,7 +14,3 @@ TitlebarWidget {
 #TitleBack:pressed {
   border-image: url(:/light/image/back_press.svg);
 }
-
-#TitleIcon {
-  image: url(:/common/image/app_icon.svg)
-}

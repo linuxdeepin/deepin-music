@@ -307,7 +307,7 @@
     <message>
         <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="122"/>
         <source>   %1 songs</source>
-        <translation>   %1首歌</translation>
+        <translation>   %1首歌曲</translation>
     </message>
 </context>
 <context>
@@ -322,43 +322,43 @@
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="92"/>
         <source>   1 album-1 song</source>
-        <translation>  1张专辑-1首歌</translation>
+        <translation>  1张专辑-1首歌曲</translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="94"/>
         <location filename="../view/musiclistdatawidget.cpp" line="96"/>
         <source>   %1 album-%2 songs</source>
-        <translation>   %1 张专辑-%2 首歌</translation>
+        <translation>   %1 张专辑-%2 首歌曲</translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="98"/>
         <source>   %1 albums-%2 songs</source>
-        <translation>   %1 张专辑-%2 首歌</translation>
+        <translation>   %1 张专辑-%2 首歌曲</translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="125"/>
         <source>   1 artist-1 song</source>
-        <translation>  1位演唱者-1首歌</translation>
+        <translation>  1位演唱者-1首歌曲</translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="128"/>
         <source>   %1 artist-%2 songs</source>
-        <translation>  %1位演唱者-%2首歌</translation>
+        <translation>  %1位演唱者-%2首歌曲</translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="130"/>
         <source>   %1 artists-%2 songs</source>
-        <translation>  %1位演唱者-%2首歌</translation>
+        <translation>  %1位演唱者-%2首歌曲</translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="152"/>
         <source>   1 song</source>
-        <translation>   1首歌</translation>
+        <translation>   1首歌曲</translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="154"/>
         <source>   %1 songs</source>
-        <translation>   %1首歌</translation>
+        <translation>   %1首歌曲</translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="271"/>
@@ -411,7 +411,7 @@
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="376"/>
         <source>Play All</source>
-        <translation>播放所有</translation>
+        <translation>播放全部</translation>
     </message>
     <message>
         <location filename="../view/musiclistdatawidget.cpp" line="445"/>
@@ -707,7 +707,7 @@
     <message>
         <location filename="../view/playlistwidget.cpp" line="174"/>
         <source>Play All</source>
-        <translation>播放所有</translation>
+        <translation>播放全部</translation>
     </message>
     <message>
         <location filename="../view/playlistwidget.cpp" line="182"/>
