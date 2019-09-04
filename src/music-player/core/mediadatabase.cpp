@@ -554,7 +554,7 @@ QList<MediaMeta> MediaDatabase::allmetas()
         meta.offset = query.value(7).toInt();
         meta.length = query.value(8).toInt();
         meta.size = query.value(9).toInt();
-        meta.timestamp = query.value(10).toInt();
+        meta.timestamp = query.value(10).toLongLong();
         meta.invalid = query.value(11).toBool();
         meta.searchID = query.value(12).toString();
         meta.cuePath = query.value(13).toString();
