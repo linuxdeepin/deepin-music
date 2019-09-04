@@ -87,18 +87,43 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
         }
         painter->drawPixmap(option.rect, icon.pixmap(option.rect.width(), option.rect.width()));
 
-        QRect fillRect(option.rect.x() + borderWidth, option.rect.y() + option.rect.height() * 2 / 3, option.rect.width() - borderWidth * 2, option.rect.height() / 3 - borderWidth);
-        QColor fillColor(128, 128, 128, 220);
-        painter->fillRect(fillRect, fillColor);
+        if (PlayMusicTypePtr->extraName.isEmpty()) {
+            QRect fillRect(option.rect.x() + borderWidth, option.rect.y() + option.rect.height() * 2 / 3, option.rect.width() - borderWidth * 2, option.rect.height() / 3 - borderWidth);
+            QColor fillColor(128, 128, 128, 220);
+            painter->fillRect(fillRect, fillColor);
 
-        QFont font = option.font;
-        font.setPixelSize(12);
-        painter->setFont(font);
-        QFontMetrics fm(font);
-        fillRect.adjust(5, 0, -5, 0);
-        auto text = fm.elidedText(PlayMusicTypePtr->name, Qt::ElideMiddle, fillRect.width());
-        painter->setPen(Qt::white);
-        painter->drawText(fillRect, Qt::AlignLeft | Qt::AlignVCenter, PlayMusicTypePtr->name);
+            QFont font = option.font;
+            font.setPixelSize(12);
+            painter->setFont(font);
+            QFontMetrics fm(font);
+            fillRect.adjust(5, 0, -5, 0);
+            auto text = fm.elidedText(PlayMusicTypePtr->name, Qt::ElideMiddle, fillRect.width());
+            painter->setPen(Qt::white);
+            painter->drawText(fillRect, Qt::AlignLeft | Qt::AlignVCenter, text);
+        } else {
+            int startHeight = option.rect.y() + option.rect.height() * 2 / 3;
+            int fillAllHeight = option.rect.height() / 3 - borderWidth;
+
+            QRect fillRect(option.rect.x() + borderWidth, startHeight, option.rect.width() - borderWidth * 2, fillAllHeight);
+            QColor fillColor(128, 128, 128, 220);
+            painter->fillRect(fillRect, fillColor);
+
+            QFont font = option.font;
+            font.setPixelSize(12);
+            painter->setFont(font);
+            QFontMetrics fm(font);
+
+            QRect nameFillRect(option.rect.x() + borderWidth, startHeight, option.rect.width() - borderWidth * 2, fillAllHeight / 2);
+            auto nameText = fm.elidedText(PlayMusicTypePtr->name, Qt::ElideMiddle, fillRect.width());
+            painter->setPen(Qt::white);
+            painter->drawText(nameFillRect, Qt::AlignLeft | Qt::AlignVCenter, nameText);
+
+            QRect extraNameFillRect(option.rect.x() + borderWidth, startHeight + fillAllHeight / 2, option.rect.width() - borderWidth * 2, fillAllHeight / 2);
+            auto extraNameText = fm.elidedText(PlayMusicTypePtr->extraName, Qt::ElideMiddle, fillRect.width());
+            painter->setPen(Qt::white);
+            painter->drawText(extraNameFillRect, Qt::AlignLeft | Qt::AlignTop, extraNameText);
+        }
+
 
         QBrush t_fillBrush(QColor(128, 128, 128, 0));
         if (option.state & QStyle::State_HasFocus) {
