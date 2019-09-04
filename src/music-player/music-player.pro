@@ -17,7 +17,7 @@ unix{
     QT += x11extras
     PKGCONFIG += icu-uc icu-i18n
     PKGCONFIG += x11 xext
-    PKGCONFIG += dtkwidget
+    QT += dtkwidget
 
     CONFIG(ENABLE_LIBAV) {
         PKGCONFIG += libavutil libavformat libavcodec

@@ -28,7 +28,7 @@
 #include <QMimeData>
 #include <QGraphicsOpacityEffect>
 
-#include <dbasebutton.h>
+#include <DPushButton>
 
 #include <DThemeManager>
 

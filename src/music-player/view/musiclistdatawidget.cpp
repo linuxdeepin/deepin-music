@@ -33,8 +33,8 @@
 #include <QStandardItemModel>
 
 #include <DThemeManager>
-#include <dlabel.h>
-#include <dpushbutton.h>
+#include <DLabel>
+#include <DPushButton>
 
 #include "widget/playlistview.h"
 #include "widget/musiclistdataview.h"
@@ -381,15 +381,15 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     d->infoLabel->setObjectName("MusicListDataTitle");
     d->infoLabel->setText(tr("All Music"));
 
-    d->btIconMode = new DPushButton(":/common/image/picturelist_normal.svg", ":/common/image/picturelist_hover.svg",
-                                    ":/common/image/picturelist_press.svg");
+    d->btIconMode = new DPushButton();
+    d->btIconMode->setStyleSheet("border-image: url(:/common/image/picturelist_normal.svg);");
     d->btIconMode->setFixedSize(36, 36);
     d->btIconMode->setObjectName("MusicListDataWidgetIconMode");
     d->btIconMode->setCheckable(true);
     d->btIconMode->setChecked(true);
 
-    d->btlistMode = new DPushButton(":/common/image/textlist_normal.svg", ":/common/image/textlist_hover.svg",
-                                    ":/common/image/textlist_press.svg");
+    d->btlistMode = new DPushButton();
+    d->btlistMode->setStyleSheet("border-image: url(:/common/image/textlist_normal.svg);");
     d->btlistMode->setFixedSize(36, 36);
     d->btlistMode->setObjectName("MusicListDataWidgetListMode");
     d->btlistMode->setCheckable(true);
