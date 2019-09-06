@@ -297,17 +297,17 @@
     <message>
         <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="118"/>
         <source>   No songs</source>
-        <translation>   无歌曲</translation>
+        <translation>   无</translation>
     </message>
     <message>
         <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="120"/>
         <source>   1 song</source>
-        <translation>   1首歌</translation>
+        <translation>   1首</translation>
     </message>
     <message>
         <location filename="../view/widget/delegate/musiclistdatadelegate.cpp" line="122"/>
         <source>   %1 songs</source>
-        <translation>   %1首歌曲</translation>
+        <translation>   %1首</translation>
     </message>
 </context>
 <context>
