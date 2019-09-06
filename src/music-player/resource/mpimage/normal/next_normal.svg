@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="36px" height="36px" viewBox="0 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 56.2 (81672) - https://sketch.com -->
+    <title>next_normal</title>
+    <desc>Created with Sketch.</desc>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="按钮规范" transform="translate(-601.000000, -138.000000)" fill="#000000">
+            <g id="编组" transform="translate(519.000000, 131.000000)">
+                <g id="next_normal" transform="translate(80.000000, 5.000000)">
+                    <polygon id="rect1141-5备份" stroke="#FFFFFF" opacity="0" points="-9.47390314e-14 0 40 0 40 40 -9.47390314e-14 40"></polygon>
+                    <path d="M25.99995,16.9970589 L25.99995,23.785998 C25.99995,25.4392064 24.8544588,26.0830345 23.4414239,25.2195131 L18.0996114,21.9550722 C16.6802769,21.0877011 16.6865765,19.691506 18.0996114,18.8279847 L23.4414239,15.5635437 C24.8607584,14.6961727 25.99995,15.341829 25.99995,16.9970589 Z M25.0141401,24.0055103 L24.9966826,16.7911864 C24.9953281,16.2314135 24.6136905,16.0191043 24.1442446,16.3059879 L18.306654,19.8734044 C17.8408007,20.1580925 17.838335,20.6259731 18.3091709,20.9135412 L24.1640473,24.4894693 C24.63128,24.7748367 25.0154828,24.5603616 25.0141401,24.0055103 Z M15,25.8915284 L15,14.8915284 L16,14.8915284 L16,25.8915284 L15,25.8915284 Z" id="Combined-Shape" fill-rule="nonzero" transform="translate(20.499975, 20.391528) scale(-1, 1) translate(-20.499975, -20.391528) "></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

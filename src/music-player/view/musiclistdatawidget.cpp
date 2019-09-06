@@ -32,13 +32,13 @@
 #include <QResizeEvent>
 #include <QStandardItemModel>
 
-#include <DThemeManager>
 #include <DLabel>
 #include <DPushButton>
 
 #include "widget/playlistview.h"
 #include "widget/musiclistdataview.h"
 #include "widget/ddropdown.h"
+#include "widget/musicimagebutton.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -59,9 +59,9 @@ public:
     DDropdown           *musicDropdown  = nullptr;
     DPushButton         *btPlayAll      = nullptr;
     DLabel              *infoLabel      = nullptr;
-    DPushButton         *btIconMode     = nullptr;
-    DPushButton         *btlistMode     = nullptr;
-    MusicListDataView   *albumListView = nullptr;
+    MusicImageButton    *btIconMode     = nullptr;
+    MusicImageButton    *btlistMode     = nullptr;
+    MusicListDataView   *albumListView  = nullptr;
     MusicListDataView   *artistListView = nullptr;
     PlayListView        *musicListView  = nullptr;
     QAction             *customAction   = nullptr;
@@ -311,8 +311,6 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
 {
     Q_D(MusicListDataWidget);
 
-    DThemeManager::instance()->registerWidget(this);
-
     setObjectName("MusicListDataWidget");
     setAcceptDrops(true);
 
@@ -372,6 +370,8 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     actionInfoBarLayout->setSpacing(0);
 
     d->btPlayAll = new DPushButton;
+    d->btPlayAll->setStyleSheet("background-color: rgb(255,0, 0);color: white");
+    d->btPlayAll->setIcon(QIcon(":/mpimage/normal/play_all_normal.svg"));
     d->btPlayAll->setObjectName("MusicListDataPlayAll");
     d->btPlayAll->setText(tr("Play All"));
     d->btPlayAll->setFixedHeight(36);
@@ -381,15 +381,17 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     d->infoLabel->setObjectName("MusicListDataTitle");
     d->infoLabel->setText(tr("All Music"));
 
-    d->btIconMode = new DPushButton();
-    d->btIconMode->setStyleSheet("border-image: url(:/common/image/picturelist_normal.svg);");
+    d->btIconMode = new MusicImageButton(":/mpimage/normal/picture_list_normal.svg",
+                                         ":/mpimage/hover/picture_list_hover.svg",
+                                         ":/mpimage/press/picture_list_press.svg");
     d->btIconMode->setFixedSize(36, 36);
     d->btIconMode->setObjectName("MusicListDataWidgetIconMode");
     d->btIconMode->setCheckable(true);
     d->btIconMode->setChecked(true);
 
-    d->btlistMode = new DPushButton();
-    d->btlistMode->setStyleSheet("border-image: url(:/common/image/textlist_normal.svg);");
+    d->btlistMode = new MusicImageButton(":/mpimage/normal/text_list_normal.svg",
+                                         ":/mpimage/hover/text_list_hover.svg",
+                                         ":/mpimage/press/text_list_press.svg");
     d->btlistMode->setFixedSize(36, 36);
     d->btlistMode->setObjectName("MusicListDataWidgetListMode");
     d->btlistMode->setCheckable(true);

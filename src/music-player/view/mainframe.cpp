@@ -210,7 +210,7 @@ void MainFramePrivate::initUI(bool showLoading)
     titlebarwidget->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
 
     titlebar = q->titlebar();
-    titlebar->setIcon(QIcon(":/common/image/app_icon.svg"));    //titlebar->setCustomWidget(titlebarwidget, Qt::AlignLeft, false);
+    titlebar->setIcon(QIcon(":/mpimage/deepin_music_player.svg"));    //titlebar->setCustomWidget(titlebarwidget, Qt::AlignLeft, false);
     titlebar->addWidget(titlebarwidget, Qt::AlignLeft);
 //    titlebar->setBackgroundTransparent(true);
     //overrideTitlebarStyle();

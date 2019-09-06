@@ -102,6 +102,7 @@ MusicListWidget::MusicListWidget(QWidget *parent) : QFrame(parent)
             return;
         }
 
+        m_customizeListview->clearSelection();
         m_dataListView->onMusiclistChanged(playlistItem->data());
 //        Q_EMIT this->selectPlaylist(playlistItem->data());
         DUtil::TimerSingleShot(500, [this]() {
@@ -135,6 +136,7 @@ MusicListWidget::MusicListWidget(QWidget *parent) : QFrame(parent)
             return;
         }
 
+        m_dataBaseListview->clearSelection();
         m_dataListView->onMusiclistChanged(playlistItem->data());
 //        Q_EMIT this->selectPlaylist(playlistItem->data());
         DUtil::TimerSingleShot(500, [this]() {
