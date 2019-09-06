@@ -1,9 +1,9 @@
 /*
  * Copyright (C) 2016 ~ 2018 Wuhan Deepin Technology Co., Ltd.
  *
- * Author:     Iceyer <me@iceyer.net>
+ * Author:     yub.wang <yub.wang@deepin.io>
  *
- * Maintainer: Iceyer <me@iceyer.net>
+ * Maintainer: yub.wang <yub.wang@deepin.io>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,33 +19,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef MODEBUTTOM_H
-#define MODEBUTTOM_H
+#include "musicpixmapbutton.h"
 
-#include <QPushButton>
+#include <QDebug>
+#include <QPainter>
+#include <QRect>
 
-class ModeButton : public QPushButton
+MusicPixmapButton::MusicPixmapButton(QWidget *parent)
+    : QPushButton(parent)
 {
-    Q_OBJECT
-    Q_PROPERTY(int mode READ mode WRITE setMode NOTIFY modeChanged)
+}
 
-public:
-    explicit ModeButton(QWidget *parent = Q_NULLPTR);
+void MusicPixmapButton::paintEvent(QPaintEvent *event)
+{
+    QPainter painter(this);
+    painter.save();
 
-    void setModeIcons(const QStringList &modeIcons);
-    int mode() const;
-signals:
-    void modeChanged(int mode);
+    painter.drawPixmap(rect(), icon().pixmap(rect().width(), rect().height()));
 
-public slots:
-    void setMode(int mode);
+    painter.restore();
+}
 
-protected:
-    void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
-
-private:
-    int         m_mode;
-    QStringList m_modeIcons;
-};
-
-#endif // MODEBUTTOM_H

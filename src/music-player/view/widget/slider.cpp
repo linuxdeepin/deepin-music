@@ -104,8 +104,8 @@ void Slider::mouseReleaseEvent(QMouseEvent *event)
 void Slider::mousePressEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton
-        || event->button() == Qt::MiddleButton
-        || event->button() == Qt::RightButton) {
+            || event->button() == Qt::MiddleButton
+            || event->button() == Qt::RightButton) {
         if (orientation() == Qt::Vertical) {
             setSliderPosition(minimum() + ((maximum() - minimum()) * (height() - event->y())) / height()) ;
         } else {

@@ -122,7 +122,7 @@ int main(int argc, char *argv[])
     auto theme = MusicSettings::value("base.play.theme").toString();
 //    auto themePrefix = AppSettings::instance()->value("base.play.theme_prefix").toString();
 //    DThemeManager::instance()->setPrefix(themePrefix);
-    DThemeManager::instance()->setTheme(theme);
+    //DThemeManager::instance()->setTheme(theme);
 
     // DMainWindow must create on main function, so it can deconstruction before QApplication
     MainFrame mainframe;

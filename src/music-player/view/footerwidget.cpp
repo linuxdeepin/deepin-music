@@ -33,7 +33,6 @@
 #include <QStackedLayout>
 
 #include <DHiDPIHelper>
-#include <DThemeManager>
 #include <DToast>
 #include <DPushButton>
 #include <metadetector.h>
@@ -49,6 +48,8 @@
 #include "widget/label.h"
 #include "widget/cover.h"
 #include "widget/soundvolume.h"
+#include "widget/musicimagebutton.h"
+#include "widget/musicpixmapbutton.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -72,22 +73,21 @@ public:
     void installHint(QWidget *w, QWidget *hint);
     void initConnection();
 
-    Cover           *cover      = nullptr;
     Label           *title      = nullptr;
     Label           *artist     = nullptr;
 
-    DPushButton     *btCover    = nullptr;
-    QPushButton     *btPlay     = nullptr;
-    QPushButton     *btPrev     = nullptr;
-    QPushButton     *btNext     = nullptr;
-    QPushButton     *btFavorite = nullptr;
-    QPushButton     *btLyric    = nullptr;
-    QPushButton     *btPlayList = nullptr;
-    ModeButton      *btPlayMode = nullptr;
-    QPushButton     *btSound    = nullptr;
-    Slider          *progress   = nullptr;
-    SoundVolume     *volSlider  = nullptr;
-    QFrame          *ctlWidget  = nullptr;
+    MusicPixmapButton *btCover    = nullptr;
+    MusicImageButton  *btPlay     = nullptr;
+    MusicImageButton  *btPrev     = nullptr;
+    MusicImageButton  *btNext     = nullptr;
+    MusicImageButton  *btFavorite = nullptr;
+    MusicImageButton  *btLyric    = nullptr;
+    MusicImageButton  *btPlayList = nullptr;
+    ModeButton        *btPlayMode = nullptr;
+    MusicImageButton  *btSound    = nullptr;
+    Slider            *progress   = nullptr;
+    SoundVolume       *volSlider  = nullptr;
+    QFrame            *ctlWidget  = nullptr;
 
     HintFilter          *hintFilter         = nullptr;
     HoverShadowFilter   *hoverShadowFilter  = nullptr;
@@ -95,7 +95,7 @@ public:
     PlaylistPtr     activingPlaylist;
     MetaPtr         activingMeta;
 
-    QString         defaultCover    = "";
+    QString         defaultCover    = ":/common/image/info_cover.svg";
 
     int             mode            = -1;
     bool            enableMove      = false;
@@ -201,7 +201,7 @@ Footer::Footer(QWidget *parent) :
     setFocusPolicy(Qt::ClickFocus);
     setObjectName("Footer");
 
-    DThemeManager::instance()->registerWidget(this);
+    //DThemeManager::instance()->registerWidget(this);
 
     auto mainVBoxlayout = new QVBoxLayout(this);
     mainVBoxlayout->setSpacing(0);
@@ -220,21 +220,9 @@ Footer::Footer(QWidget *parent) :
     layout->setContentsMargins(10, 0, 20, 0);
     layout->setSpacing(20);
 
-    auto stackedLayout = new QStackedLayout;
-    stackedLayout->setStackingMode(QStackedLayout::StackAll);
-
-    d->cover = new Cover(this);
-    d->cover->setObjectName("FooterCover");
-    d->cover->setFixedSize(40, 40);
-    d->cover->setRadius(0);
-
-    d->btCover = new DPushButton();
+    d->btCover = new MusicPixmapButton();
     d->btCover->setObjectName("FooterCoverHover");
-//    d->btCover->setFixedSize(40, 40);
-
-    stackedLayout->addWidget(d->cover);
-    stackedLayout->addWidget(d->btCover);
-    d->btCover->installEventFilter(hoverFilter);
+    d->btCover->setFixedSize(40, 40);
 
     d->title = new Label;
     d->title->setObjectName("FooterTitle");
@@ -247,44 +235,77 @@ Footer::Footer(QWidget *parent) :
     d->artist->setMaximumWidth(240);
     d->artist->setText(tr("Unknown artist"));
 
-    d->btPlay = new QPushButton;
+    d->btPlay = new MusicImageButton(":/mpimage/normal/play_normal.svg",
+                                     ":/mpimage/hover/play_hover.svg",
+                                     ":/mpimage/press/play_press.svg");
+    d->btPlay->setPropertyPic(sPropertyPlayStatus, sPlayStatusValuePlaying,
+                              ":/mpimage/normal/suspend_normal.svg",
+                              ":/mpimage/hover/suspend_hover.svg",
+                              ":/mpimage/press/suspend_press.svg");
     d->btPlay->setObjectName("FooterActionPlay");
-    d->btPlay->setFixedSize(30, 30);
+    d->btPlay->setFixedSize(36, 36);
 
-    d->btPrev = new QPushButton;
+    d->btPrev = new MusicImageButton(":/mpimage/normal/last_normal.svg",
+                                     ":/mpimage/hover/last_hover.svg",
+                                     ":/mpimage/press/last_press.svg");
     d->btPrev->setObjectName("FooterActionPrev");
-    d->btPrev->setFixedSize(30, 30);
+    d->btPrev->setFixedSize(36, 36);
 
-    d->btNext = new QPushButton;
+    d->btNext = new MusicImageButton(":/mpimage/normal/next_normal.svg",
+                                     ":/mpimage/hover/next_hover.svg",
+                                     ":/mpimage/press/next_press.svg");
     d->btNext->setObjectName("FooterActionNext");
-    d->btNext->setFixedSize(30, 30);
+    d->btNext->setFixedSize(36, 36);
 
-    d->btFavorite = new QPushButton;
+    d->btFavorite = new MusicImageButton(":/mpimage/normal/collection_normal.svg",
+                                         ":/mpimage/hover/collection_hover.svg",
+                                         ":/mpimage/press/collection_press.svg");
+    d->btFavorite->setPropertyPic(sPropertyFavourite, QVariant(true),
+                                  ":/mpimage/normal/my_collection_normal.svg",
+                                  ":/mpimage/hover/my_collection_hover.svg",
+                                  ":/mpimage/press/my_collection_press.svg");
     d->btFavorite->setObjectName("FooterActionFavorite");
-    d->btFavorite->setFixedSize(24, 24);
+    d->btFavorite->setFixedSize(30, 30);
 
-    d->btLyric = new QPushButton;
+    d->btLyric = new MusicImageButton(":/mpimage/normal/lyric_normal.svg",
+                                      ":/mpimage/hover/lyric_hover.svg",
+                                      ":/mpimage/press/lyric_press.svg");
     d->btLyric->setObjectName("FooterActionLyric");
-    d->btLyric->setFixedSize(24, 24);
+    d->btLyric->setFixedSize(36, 36);
 
     QStringList modes;
-    modes /*<< ":/image/sequence"*/
-            << ":/image/repeat_all"
-            << ":/image/repeat_single"
-            << ":/image/shuffle";
+    modes << ":/mpimage/normal/sequential_loop_normal.svg"
+          << ":/mpimage/normal/single_tune_circulation_normal.svg"
+          << ":/mpimage/normal/cross_cycling_normal.svg";
     d->btPlayMode = new ModeButton;
     d->btPlayMode->setObjectName("FooterActionPlayMode");
-    d->btPlayMode->setFixedSize(24, 24);
+    d->btPlayMode->setFixedSize(36, 36);
     d->btPlayMode->setModeIcons(modes);
 
-    d->btSound = new QPushButton;
+    d->btSound = new MusicImageButton(":/mpimage/normal/volume_normal.svg",
+                                      ":/mpimage/hover/volume_hover.svg",
+                                      ":/mpimage/press/volume_press.svg");
+    d->btSound->setPropertyPic("btSound", QVariant("mid"),
+                               ":/mpimage/normal/volume_lessen_normal.svg",
+                               ":/mpimage/hover/volume_lessen_hover.svg",
+                               ":/mpimage/press/volume_lessen_press.svg");
+    d->btSound->setPropertyPic("btSound", QVariant("low"),
+                               ":/mpimage/normal/volume_add_normal.svg",
+                               ":/mpimage/hover/volume_add_hover.svg",
+                               ":/mpimage/press/volume_add_press.svg");
+    d->btSound->setPropertyPic("btSound", QVariant("mute"),
+                               ":/mpimage/normal/mute_normal.svg",
+                               ":/mpimage/hover/mute_hover.svg",
+                               ":/mpimage/press/mute_press.svg");
     d->btSound->setObjectName("FooterActionSound");
-    d->btSound->setFixedSize(24, 24);
+    d->btSound->setFixedSize(36, 36);
     d->btSound->setProperty("volume", "mid");
 
-    d->btPlayList = new QPushButton;
+    d->btPlayList = new MusicImageButton(":/mpimage/normal/famous_ballad_normal.svg",
+                                         ":/mpimage/hover/famous_ballad_hover.svg",
+                                         ":/mpimage/press/famous_ballad_press.svg");
     d->btPlayList->setObjectName("FooterActionPlayList");
-    d->btPlayList->setFixedSize(24, 24);
+    d->btPlayList->setFixedSize(36, 36);
 //    d->btPlayList->hide();
 
     d->hoverShadowFilter = new HoverShadowFilter;
@@ -315,7 +336,7 @@ Footer::Footer(QWidget *parent) :
     auto metaLayout = new QHBoxLayout(metaWidget);
     metaLayout->setContentsMargins(0, 0, 0, 0);
     metaLayout->setSpacing(0);
-    metaLayout->addLayout(stackedLayout);
+    metaLayout->addWidget(d->btCover);
     metaLayout->addSpacing(10);
     metaLayout->addLayout(musicMetaLayout, 0);
     metaLayout->addStretch();
@@ -388,7 +409,7 @@ Footer::Footer(QWidget *parent) :
 
     d->updateQssProperty(d->btPlay, sPropertyPlayStatus, sPlayStatusValueStop);
     d->updateQssProperty(this, sPropertyPlayStatus, sPlayStatusValueStop);
-    d->cover->setCoverPixmap(Dtk::Widget::DHiDPIHelper::loadNxPixmap(d->defaultCover));
+    d->btCover->setIcon(Dtk::Widget::DHiDPIHelper::loadNxPixmap(d->defaultCover));
 }
 
 Footer::~Footer()
@@ -416,7 +437,7 @@ void Footer::enableControl(bool enable)
     d->btSound->setEnabled(enable);
     d->progress->setEnabled(enable);
 
-    d->cover->blockSignals(!enable);
+    d->btCover->blockSignals(!enable);
     d->title->blockSignals(!enable);
     d->artist->blockSignals(!enable);
 }
@@ -544,8 +565,8 @@ void Footer::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
     if (coverData.length() > 0) {
         cover = QImage::fromData(coverData);
     }
-    d->cover->setCoverPixmap(QPixmap::fromImage(cover));
-    d->cover->update();
+    d->btCover->setIcon(QPixmap::fromImage(cover));
+    d->btCover->update();
 
     this->enableControl(true);
     d->title->show();
@@ -609,8 +630,8 @@ void Footer::onMusicStoped(PlaylistPtr playlist, const MetaPtr meta)
     d->btFavorite->hide();
     d->activingMeta = MetaPtr();
 
-    d->cover->setCoverPixmap(Dtk::Widget::DHiDPIHelper::loadNxPixmap(d->defaultCover));
-    d->cover->update();
+    d->btCover->setIcon(Dtk::Widget::DHiDPIHelper::loadNxPixmap(d->defaultCover));
+    d->btCover->update();
     d->updateQssProperty(d->btPlay, sPropertyPlayStatus, sPlayStatusValueStop);
     d->updateQssProperty(this, sPropertyPlayStatus, sPlayStatusValueStop);
 }
@@ -655,8 +676,8 @@ void Footer::onCoverChanged(const MetaPtr meta, const DMusic::SearchMeta &, cons
     QPixmap coverPixmap = coverData.length() > 1024 ?
                           QPixmap::fromImage(QImage::fromData(coverData)) :
                           Dtk::Widget::DHiDPIHelper::loadNxPixmap(d->defaultCover);
-    d->cover->setCoverPixmap(coverPixmap);
-    d->cover->update();
+    d->btCover->setIcon(coverPixmap);
+    d->btCover->update();
 }
 
 void Footer::onVolumeChanged(int volume)
