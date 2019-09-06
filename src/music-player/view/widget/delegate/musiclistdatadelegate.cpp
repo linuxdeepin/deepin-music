@@ -240,7 +240,7 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             //day
             QRect dayRect(w, option.rect.y(), tailwidth - 20, option.rect.height());
             painter->setFont(font12);
-            QString dayStr = QDateTime::fromMSecsSinceEpoch(PlayMusicTypePtr->timestamp / (qint64)1000).toString("yyyy-yy-dd");
+            QString dayStr = QDateTime::fromMSecsSinceEpoch(PlayMusicTypePtr->timestamp / (qint64)1000).toString("yyyy-MM-dd");
             painter->drawText(dayRect, Qt::AlignRight | Qt::AlignVCenter, dayStr);
         }
 
