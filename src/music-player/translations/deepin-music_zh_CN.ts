@@ -81,7 +81,7 @@
     <message>
         <location filename="../view/footerwidget.cpp" line="300"/>
         <source>Playlist</source>
-        <translation>歌单</translation>
+        <translation>播放列表</translation>
     </message>
     <message>
         <location filename="../view/footerwidget.cpp" line="707"/>
