@@ -23,15 +23,26 @@
 
 #include <QScopedPointer>
 #include <QPushButton>
+#include <QMap>
+#include <QVariant>
 
 class MusicImageButton : public QPushButton
 {
+    struct MusicPicPathInfo {
+        QString normalPicPath;
+        QString hoverPicPath;
+        QString pressPicPath;
+    };
+
     Q_OBJECT
 public:
     explicit MusicImageButton(QWidget *parent = Q_NULLPTR);
 
     MusicImageButton(const QString &normalPic, const QString &hoverPic,
                      const QString &pressPic, QWidget *parent = 0);
+
+    void setPropertyPic(QString propertyName, const QVariant &value, const QString &normalPic, const QString &hoverPic,
+                        const QString &pressPic);
 
 protected:
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
@@ -41,8 +52,7 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
 
 private:
-    QString             normalPicPath  = "";
-    QString             hoverPicPath   = "";
-    QString             pressPicPath   = "";
-    char                status         = 0;
+    char                                              status = 0;
+    MusicPicPathInfo                                  defaultPicPath;
+    QPair<QString, QMap<QVariant, MusicPicPathInfo> >  propertyPicPaths;
 };

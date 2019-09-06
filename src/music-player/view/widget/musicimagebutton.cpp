@@ -33,22 +33,65 @@ MusicImageButton::MusicImageButton(const QString &normalPic, const QString &hove
                                    const QString &pressPic, QWidget *parent)
     : QPushButton (parent)
 {
-    normalPicPath = normalPic;
-    hoverPicPath = hoverPic;
-    pressPicPath = pressPic;
+    defaultPicPath.normalPicPath = normalPic;
+    defaultPicPath.hoverPicPath = hoverPic;
+    defaultPicPath.pressPicPath = pressPic;
+}
+
+void MusicImageButton::setPropertyPic(QString propertyName, const QVariant &value,
+                                      const QString &normalPic, const QString &hoverPic, const QString &pressPic)
+{
+    MusicPicPathInfo curPicPath;
+    curPicPath.normalPicPath = normalPic;
+    curPicPath.hoverPicPath = hoverPic;
+    curPicPath.pressPicPath = pressPic;
+
+    if (propertyPicPaths.first == propertyName && propertyPicPaths.second.contains(value)) {
+        propertyPicPaths.second[value] = curPicPath;
+    } else {
+        QMap<QVariant, MusicPicPathInfo> curPicPathInfo;
+        curPicPathInfo.insert(value, curPicPath);
+        propertyPicPaths.first = propertyName;
+        propertyPicPaths.second = curPicPathInfo;
+    }
 }
 
 void MusicImageButton::paintEvent(QPaintEvent *event)
 {
-    if (normalPicPath.isEmpty()) {
+    if (defaultPicPath.normalPicPath.isEmpty()) {
         QPushButton::paintEvent(event);
         return;
     }
-    QString curPicPath = normalPicPath;
-    if (status == 1 && !hoverPicPath.isEmpty()) {
-        curPicPath = hoverPicPath;
-    } else if (status == 2 && !pressPicPath.isEmpty()) {
-        curPicPath = hoverPicPath;
+
+    QString curPicPath = defaultPicPath.normalPicPath;
+    if (propertyPicPaths.first.isEmpty() || !propertyPicPaths.second.contains(property(propertyPicPaths.first.toStdString().data()))) {
+        QString curPropertyPicPathStr;
+        if (status == 1 && !defaultPicPath.hoverPicPath.isEmpty()) {
+            curPropertyPicPathStr = defaultPicPath.hoverPicPath;
+        } else if (status == 2 && !defaultPicPath.pressPicPath.isEmpty()) {
+            curPropertyPicPathStr = defaultPicPath.pressPicPath;
+        }
+        if (!curPropertyPicPathStr.isEmpty()) {
+            curPicPath = curPropertyPicPathStr;
+        }
+    } else {
+        QVariant value = property(propertyPicPaths.first.toStdString().data());
+        MusicPicPathInfo curPropertyPicPath = propertyPicPaths.second[value];
+        QString curPropertyPicPathStr;
+        if (status == 1 && !defaultPicPath.hoverPicPath.isEmpty()) {
+            curPropertyPicPathStr = curPropertyPicPath.hoverPicPath;
+        } else if (status == 2 && !defaultPicPath.pressPicPath.isEmpty()) {
+            curPropertyPicPathStr = curPropertyPicPath.pressPicPath;
+        } else {
+            curPropertyPicPathStr = curPropertyPicPath.normalPicPath;
+        }
+        if (!curPropertyPicPathStr.isEmpty()) {
+            curPicPath = curPropertyPicPathStr;
+        }
+    }
+    QPixmap pixmap(curPicPath);
+    if (pixmap.isNull()) {
+        pixmap = QPixmap(defaultPicPath.normalPicPath);
     }
 
     QPainter painter(this);
@@ -56,8 +99,7 @@ void MusicImageButton::paintEvent(QPaintEvent *event)
     painter.setRenderHint(QPainter::Antialiasing);
     painter.setRenderHint(QPainter::HighQualityAntialiasing);
 
-    QPixmap pixmap(curPicPath);
-    painter.drawPixmap(rect(), pixmap, rect());
+    painter.drawPixmap(rect(), pixmap);
 
     painter.restore();
 }

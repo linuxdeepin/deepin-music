@@ -1,9 +1,9 @@
 /*
  * Copyright (C) 2016 ~ 2018 Wuhan Deepin Technology Co., Ltd.
  *
- * Author:     Iceyer <me@iceyer.net>
+ * Author:     yub.wang <yub.wang@deepin.io>
  *
- * Maintainer: Iceyer <me@iceyer.net>
+ * Maintainer: yub.wang <yub.wang@deepin.io>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,33 +19,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef MODEBUTTOM_H
-#define MODEBUTTOM_H
+#pragma once
 
 #include <QPushButton>
 
-class ModeButton : public QPushButton
+class MusicPixmapButton : public QPushButton
 {
     Q_OBJECT
-    Q_PROPERTY(int mode READ mode WRITE setMode NOTIFY modeChanged)
-
 public:
-    explicit ModeButton(QWidget *parent = Q_NULLPTR);
-
-    void setModeIcons(const QStringList &modeIcons);
-    int mode() const;
-signals:
-    void modeChanged(int mode);
-
-public slots:
-    void setMode(int mode);
+    explicit MusicPixmapButton(QWidget *parent = Q_NULLPTR);
 
 protected:
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
 
-private:
-    int         m_mode;
-    QStringList m_modeIcons;
 };
-
-#endif // MODEBUTTOM_H

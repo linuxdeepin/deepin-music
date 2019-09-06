@@ -22,6 +22,7 @@
 #include "modebuttom.h"
 
 #include <QStyle>
+#include <QPainter>
 
 ModeButton::ModeButton(QWidget *parent) : QPushButton(parent)
 {
@@ -64,4 +65,19 @@ void ModeButton::setMode(int mode)
     this->update();
 
     Q_EMIT modeChanged(mode);
+}
+
+void ModeButton::paintEvent(QPaintEvent *event)
+{
+    QString curPicPath = m_modeIcons[m_mode];
+    QPixmap pixmap(curPicPath);
+
+    QPainter painter(this);
+    painter.save();
+    painter.setRenderHint(QPainter::Antialiasing);
+    painter.setRenderHint(QPainter::HighQualityAntialiasing);
+
+    painter.drawPixmap(rect(), pixmap, pixmap.rect());
+
+    painter.restore();
 }
