@@ -73,7 +73,7 @@ private:
     QColor m_background;
     QColor m_alternateBackground;
     QColor m_highlightedBackground;
-    QString m_aimationPrefix;
+    QString m_aimationPrefix = ":/common/image/playing_normal.svg";
     QString m_highlightPlayingIcon;
 
     PlayItemDelegate *q_ptr;
