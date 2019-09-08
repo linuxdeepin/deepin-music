@@ -43,8 +43,8 @@ void LyricLineDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
     painter->setRenderHint(QPainter::Antialiasing);
     painter->setRenderHint(QPainter::HighQualityAntialiasing);
 
-    painter->fillRect(option.rect, option.palette.background());
-    painter->setBrush(option.palette.foreground());
+//    painter->fillRect(option.rect, option.palette.background());
+//    painter->setBrush(option.palette.foreground());
 
 //    painter->setPen(Qt::blue);
 //    painter->drawRect(option.rect);
@@ -79,8 +79,8 @@ QSize LyricLineDelegate::sizeHint(const QStyleOptionViewItem &option,
 }
 
 QWidget *LyricLineDelegate::createEditor(QWidget *parent,
-        const QStyleOptionViewItem &option,
-        const QModelIndex &index) const
+                                         const QStyleOptionViewItem &option,
+                                         const QModelIndex &index) const
 
 {
     return QStyledItemDelegate::createEditor(parent, option, index);

@@ -22,10 +22,12 @@
 #pragma once
 
 #include <QScopedPointer>
-#include <QListWidget>
+#include <DListWidget>
+
+DWIDGET_USE_NAMESPACE
 
 class SearchMetaListPrivate;
-class SearchMetaList : public QListWidget
+class SearchMetaList : public DListWidget
 {
     Q_OBJECT
 public:

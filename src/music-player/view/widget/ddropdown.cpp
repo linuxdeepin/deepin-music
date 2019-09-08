@@ -22,31 +22,27 @@
 #include "ddropdown.h"
 
 #include <QDebug>
-#include <QMenu>
 #include <QHBoxLayout>
-#include <QStyle>
 #include <QMouseEvent>
-#include <QLabel>
 
-#include <DThemeManager>
-
-DWIDGET_USE_NAMESPACE
+#include <DLabel>
+#include <DMenu>
 
 class DDropdownPrivate
 {
 public:
     DDropdownPrivate(DDropdown *parent) : q_ptr(parent) {}
 
-    QMenu       *menu       = nullptr;
-    QLabel      *text       = nullptr;
-    QLabel      *dropdown   = nullptr;
+    DMenu       *menu       = nullptr;
+    DLabel      *text       = nullptr;
+    DLabel      *dropdown   = nullptr;
     QString     status;
 
     DDropdown *q_ptr;
     Q_DECLARE_PUBLIC(DDropdown)
 };
 
-DDropdown::DDropdown(QWidget *parent) : QFrame(parent), d_ptr(new DDropdownPrivate(this))
+DDropdown::DDropdown(QWidget *parent) : DFrame(parent), d_ptr(new DDropdownPrivate(this))
 {
     Q_D(DDropdown);
 
@@ -54,10 +50,10 @@ DDropdown::DDropdown(QWidget *parent) : QFrame(parent), d_ptr(new DDropdownPriva
 
     auto layout = new QHBoxLayout(this);
     layout->setContentsMargins(15, 0, 15, 0);
-    d->menu = new QMenu;
-    d->text = new QLabel("undefined");
+    d->menu = new DMenu;
+    d->text = new DLabel("undefined");
     d->text->setObjectName("DDropdownText");
-    d->dropdown = new QLabel;
+    d->dropdown = new DLabel;
     d->dropdown->setObjectName("DDropdownIcon");
     d->dropdown->setFixedSize(9, 5);
 
@@ -66,7 +62,7 @@ DDropdown::DDropdown(QWidget *parent) : QFrame(parent), d_ptr(new DDropdownPriva
     layout->addWidget(d->text, 0, Qt::AlignCenter);
     layout->addWidget(d->dropdown, 0, Qt::AlignCenter);
 
-    connect(d->menu, &QMenu::triggered, this, [ = ](QAction * action) {
+    connect(d->menu, &DMenu::triggered, this, [ = ](QAction * action) {
         d->text->setText(action->text());
         Q_EMIT this->triggered(action);
     });
@@ -78,8 +74,6 @@ DDropdown::DDropdown(QWidget *parent) : QFrame(parent), d_ptr(new DDropdownPriva
         d->menu->move(center);
         d->menu->exec();
     });
-
-    DThemeManager::instance()->registerWidget(this);
 }
 
 DDropdown::~DDropdown()
@@ -139,20 +133,16 @@ void DDropdown::setStatus(QString status)
 void DDropdown::enterEvent(QEvent *event)
 {
     setStatus("hover");
-    QFrame::enterEvent(event);
+    DFrame::enterEvent(event);
 
-    this->style()->unpolish(this);
-    this->style()->polish(this);
     update();
 }
 
 void DDropdown::leaveEvent(QEvent *event)
 {
     setStatus("");
-    QFrame::leaveEvent(event);
+    DFrame::leaveEvent(event);
 
-    this->style()->unpolish(this);
-    this->style()->polish(this);
     update();
 }
 
@@ -161,5 +151,5 @@ void DDropdown::mouseReleaseEvent(QMouseEvent *event)
     if (event->button() == Qt::LeftButton) {
         Q_EMIT requestContextMenu();
     }
-    QFrame::mouseReleaseEvent(event);
+    DFrame::mouseReleaseEvent(event);
 }

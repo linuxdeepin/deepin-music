@@ -22,7 +22,7 @@
 #pragma once
 
 #include <QScopedPointer>
-#include <QFrame>
+#include <DFrame>
 
 class SoundVolumePrivate;
 class SoundVolume : public QWidget

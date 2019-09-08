@@ -21,11 +21,13 @@
 
 #pragma once
 
-#include <QFrame>
+#include <DFrame>
+
+DWIDGET_USE_NAMESPACE
 
 class SearchResult;
 class TitlebarWidgetPrivate;
-class TitlebarWidget : public QFrame
+class TitlebarWidget : public DWidget
 {
     Q_OBJECT
 public:

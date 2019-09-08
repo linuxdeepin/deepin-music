@@ -24,11 +24,10 @@
 #include <QDebug>
 #include <QPaintEvent>
 #include <QPainter>
-#include <QScrollBar>
 #include <QTimer>
 #include <QPropertyAnimation>
 
-#include <DThemeManager>
+#include <DScrollBar>
 
 #include "delegate/lyriclinedelegate.h"
 
@@ -48,10 +47,9 @@ public:
 };
 
 LyricView::LyricView(QWidget *parent) :
-    QListView(parent), d_ptr(new LyricViewPrivate(this))
+    DListView(parent), d_ptr(new LyricViewPrivate(this))
 {
     Q_D(LyricView);
-    DThemeManager::instance()->registerWidget(this);
 
     d->delegate = new LyricLineDelegate(this);
     setItemDelegate(d->delegate);
@@ -64,7 +62,7 @@ LyricView::LyricView(QWidget *parent) :
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setEditTriggers(QAbstractItemView::NoEditTriggers);
-    setFlow(QListView::TopToBottom);
+    //setFlow(QListView::TopToBottom);
 
 
     connect(d->viewTimer, &QTimer::timeout,

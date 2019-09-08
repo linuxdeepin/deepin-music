@@ -21,13 +21,15 @@
 
 #pragma once
 
-#include <QFrame>
+#include <DFrame>
 
 #include <searchmeta.h>
 #include "core/playlist.h"
 
+DWIDGET_USE_NAMESPACE
+
 class LyricWidgetPrivate;
-class LyricWidget : public QFrame
+class LyricWidget : public DFrame
 {
     Q_OBJECT
     Q_PROPERTY(QString defaultCover READ defaultCover WRITE setDefaultCover)

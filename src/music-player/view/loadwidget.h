@@ -21,9 +21,11 @@
 
 #pragma once
 
-#include <QFrame>
+#include <DFrame>
 
-class LoadWidget : public QFrame
+DWIDGET_USE_NAMESPACE
+
+class LoadWidget : public DFrame
 {
     Q_OBJECT
 public:

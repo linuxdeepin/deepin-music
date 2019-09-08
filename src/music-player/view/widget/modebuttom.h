@@ -22,9 +22,11 @@
 #ifndef MODEBUTTOM_H
 #define MODEBUTTOM_H
 
-#include <QPushButton>
+#include <DPushButton>
 
-class ModeButton : public QPushButton
+DWIDGET_USE_NAMESPACE
+
+class ModeButton : public DPushButton
 {
     Q_OBJECT
     Q_PROPERTY(int mode READ mode WRITE setMode NOTIFY modeChanged)

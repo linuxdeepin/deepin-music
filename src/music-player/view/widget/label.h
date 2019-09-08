@@ -21,9 +21,11 @@
 
 #pragma once
 
-#include <QLabel>
+#include <DLabel>
 
-class Label : public QLabel
+DWIDGET_USE_NAMESPACE
+
+class Label : public DLabel
 {
     Q_OBJECT
 public:

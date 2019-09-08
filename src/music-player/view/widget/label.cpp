@@ -22,12 +22,12 @@
 #include "label.h"
 
 Label::Label(QWidget *parent)
-    : Label("", parent)
+    : DLabel("", parent)
 {
 }
 
 Label::Label(const QString &text, QWidget *parent):
-    QLabel(text, parent)
+    DLabel(text, parent)
 {
 }
 

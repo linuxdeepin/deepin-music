@@ -26,7 +26,7 @@
 #include <QTimer>
 #include <QEvent>
 #include <QCursor>
-#include <QWidget>
+#include <DWidget>
 #include <QGraphicsDropShadowEffect>
 #include <QGraphicsDropShadowEffect>
 #include <QApplication>

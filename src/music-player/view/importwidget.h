@@ -22,10 +22,12 @@
 #pragma once
 
 #include <QScopedPointer>
-#include <QFrame>
+#include <DFrame>
+
+DWIDGET_USE_NAMESPACE
 
 class ImportWidgetPrivate;
-class ImportWidget : public QFrame
+class ImportWidget : public DFrame
 {
     Q_OBJECT
 public:

@@ -22,11 +22,14 @@
 #pragma once
 
 #include <QScopedPointer>
-#include <QPushButton>
 #include <QMap>
 #include <QVariant>
 
-class MusicImageButton : public QPushButton
+#include <DPushButton>
+
+DWIDGET_USE_NAMESPACE
+
+class MusicImageButton : public DPushButton
 {
     struct MusicPicPathInfo {
         QString normalPicPath;

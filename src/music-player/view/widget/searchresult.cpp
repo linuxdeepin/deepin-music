@@ -23,26 +23,22 @@
 
 #include <QDebug>
 #include <QVBoxLayout>
-#include <QListView>
-#include <QPushButton>
+#include <DPushButton>
 #include <QStringListModel>
 
 #include <dlistview.h>
-#include <DThemeManager>
 #include <QGraphicsDropShadowEffect>
 
 #include "pushbutton.h"
 
-SearchResult::SearchResult(QWidget *parent) : QFrame(parent)
+SearchResult::SearchResult(QWidget *parent) : DFrame(parent)
 {
-    DThemeManager::instance()->registerWidget(this);
-
     auto vlayout = new QVBoxLayout();
     setLayout(vlayout);
     vlayout->setContentsMargins(0, 4, 0, 3);
     vlayout->setSpacing(0);
 
-    m_searchResult = new QListView;
+    m_searchResult = new DListView;
     m_searchResult->setMouseTracking(true);
     m_searchResult->setObjectName("SearchResultList");
     m_searchResult->setSelectionMode(QListView::SingleSelection);
@@ -185,7 +181,7 @@ void SearchResult::leaveEvent(QEvent *event)
 {
     m_searchResult->setCurrentIndex(QModelIndex());
     m_doSearchButton->setChecked(false);
-    QFrame::leaveEvent(event);
+    DFrame::leaveEvent(event);
 }
 
 void SearchResult::onReturnPressed()

@@ -22,10 +22,12 @@
 #pragma once
 
 #include <QScopedPointer>
-#include <QListView>
+#include <DListView>
+
+DWIDGET_USE_NAMESPACE
 
 class ListViewPrivate;
-class ListView : public QListView
+class ListView : public DListView
 {
     Q_OBJECT
 public:

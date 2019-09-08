@@ -36,8 +36,7 @@ QT_BEGIN_NAMESPACE
 extern Q_WIDGETS_EXPORT void qt_blurImage(QPainter *p, QImage &blurImage, qreal radius, bool quality, bool alphaOnly, int transposed = 0);
 QT_END_NAMESPACE
 
-namespace WidgetHelper
-{
+namespace WidgetHelper {
 
 QImage applyEffectToImage(const QImage src, QGraphicsEffect *effect, int extent = 0)
 {
@@ -289,7 +288,6 @@ QPixmap coverPixmap(const QString &coverPath, QSize sz)
 
 void workaround_updateStyle(QWidget *parent, const QString &theme)
 {
-    parent->setStyle(QStyleFactory::create(theme));
     for (auto obj : parent->children()) {
         auto w = qobject_cast<QWidget *>(obj);
         if (!w) {

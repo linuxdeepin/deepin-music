@@ -24,7 +24,7 @@
 #include <QStyle>
 #include <QPainter>
 
-ModeButton::ModeButton(QWidget *parent) : QPushButton(parent)
+ModeButton::ModeButton(QWidget *parent) : DPushButton(parent)
 {
     m_mode = 0;
     connect(this, &ModeButton::clicked, this, [ = ]() {

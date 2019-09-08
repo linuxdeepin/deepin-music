@@ -21,9 +21,11 @@
 
 #pragma once
 
-#include <QPushButton>
+#include <DPushButton>
 
-class MusicPixmapButton : public QPushButton
+DWIDGET_USE_NAMESPACE
+
+class MusicPixmapButton : public DPushButton
 {
     Q_OBJECT
 public:

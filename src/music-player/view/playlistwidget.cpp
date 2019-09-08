@@ -25,14 +25,13 @@
 #include <QAction>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
-#include <QPushButton>
-#include <QComboBox>
-#include <QLabel>
 #include <QMimeData>
 #include <QResizeEvent>
 #include <QStandardItemModel>
 
-#include <DThemeManager>
+#include <DPushButton>
+#include <DComboBox>
+#include <DLabel>
 
 #include "../core/music.h"
 #include "../core/playlist.h"
@@ -50,9 +49,9 @@ public:
     void initConntion();
     void showEmptyHits(bool empty);
 
-    QLabel              *emptyHits      = nullptr;
-    QWidget             *actionBar      = nullptr;
-    QPushButton         *btPlayAll      = nullptr;
+    DLabel              *emptyHits      = nullptr;
+    DWidget             *actionBar      = nullptr;
+    DPushButton         *btPlayAll      = nullptr;
     DDropdown           *dropdown       = nullptr;
     PlayListView        *playListView   = nullptr;
     QAction             *customAction   = nullptr;
@@ -90,7 +89,7 @@ void PlayListWidgetPrivate::initConntion()
         Q_EMIT q->resort(playListView->playlist(), action->data().value<Playlist::SortType>());
     });
 
-    q->connect(btPlayAll, &QPushButton::clicked,
+    q->connect(btPlayAll, &DPushButton::clicked,
     q, [ = ](bool) {
         if (playListView->playlist()) {
             Q_EMIT q->playall(playListView->playlist());
@@ -147,11 +146,9 @@ void PlayListWidgetPrivate::showEmptyHits(bool empty)
 }
 
 PlayListWidget::PlayListWidget(QWidget *parent) :
-    QFrame(parent), d_ptr(new PlayListWidgetPrivate(this))
+    DWidget(parent), d_ptr(new PlayListWidgetPrivate(this))
 {
     Q_D(PlayListWidget);
-
-    DThemeManager::instance()->registerWidget(this);
 
     setObjectName("PlayListWidget");
     setAcceptDrops(true);
@@ -160,7 +157,11 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(0);
 
-    d->actionBar = new QFrame;
+    d->actionBar = new DWidget;
+    d->actionBar->setAutoFillBackground(true);
+    auto palette = d->actionBar->palette();
+    palette.setColor(DPalette::Background, Qt::white);
+    d->actionBar->setPalette(palette);
     d->actionBar->setFixedHeight(40);
     d->actionBar->setObjectName("PlayListActionBar");
     d->actionBar->hide();
@@ -169,7 +170,7 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
     actionBarLayout->setContentsMargins(10, 0, 8, 0);
     actionBarLayout->setSpacing(0);
 
-    d->btPlayAll = new QPushButton;
+    d->btPlayAll = new DPushButton;
     d->btPlayAll->setObjectName("PlayListPlayAll");
     d->btPlayAll->setText(tr("Play All"));
     d->btPlayAll->setFixedHeight(28);
@@ -186,7 +187,7 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
 //    d->customAction = d->dropdown->addAction(tr("Custom"), QVariant::fromValue<Playlist::SortType>(Playlist::SortByCustom));
 //    d->customAction->setDisabled(true);
 
-    d->emptyHits = new QLabel();
+    d->emptyHits = new DLabel();
     d->emptyHits->setObjectName("PlayListEmptyHits");
     d->emptyHits->hide();
 
@@ -219,7 +220,7 @@ void PlayListWidget::setCustomSortType()
 
 void PlayListWidget::dragEnterEvent(QDragEnterEvent *event)
 {
-    QFrame::dragEnterEvent(event);
+    DWidget::dragEnterEvent(event);
     if (event->mimeData()->hasFormat("text/uri-list")) {
         qDebug() << "acceptProposedAction" << event;
         event->setDropAction(Qt::CopyAction);
@@ -230,7 +231,7 @@ void PlayListWidget::dragEnterEvent(QDragEnterEvent *event)
 
 void PlayListWidget::dropEvent(QDropEvent *event)
 {
-    QFrame::dropEvent(event);
+    DWidget::dropEvent(event);
     Q_D(PlayListWidget);
 
     if (!event->mimeData()->hasFormat("text/uri-list")) {
@@ -251,8 +252,8 @@ void PlayListWidget::dropEvent(QDropEvent *event)
 void PlayListWidget::resizeEvent(QResizeEvent *event)
 {
     Q_D(PlayListWidget);
-    QFrame::resizeEvent(event);
-    auto viewrect = QFrame::rect();
+    DWidget::resizeEvent(event);
+    auto viewrect = DWidget::rect();
     auto viewsize = viewrect.marginsRemoved(contentsMargins()).size();
     d->playListView->setFixedSize(viewsize.width(), viewsize.height() - 40);
     d->emptyHits->setFixedSize(viewsize.width(), viewsize.height());

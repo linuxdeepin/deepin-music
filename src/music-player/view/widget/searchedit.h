@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include <dsearchedit.h>
+#include <DSearchEdit>
 
 class SearchResult;
 class SearchEdit : public Dtk::Widget::DSearchEdit

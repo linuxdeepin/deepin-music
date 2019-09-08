@@ -22,13 +22,13 @@
 #include "closeconfirmdialog.h"
 
 #include <QStyle>
-#include <QLabel>
-#include <QCheckBox>
 #include <QGroupBox>
-#include <QRadioButton>
 #include <QBoxLayout>
 
-#include <DThemeManager>
+#include <DFrame>
+#include <DLabel>
+#include <DCheckBox>
+#include <DRadioButton>
 
 #include "core/musicsettings.h"
 
@@ -39,8 +39,8 @@ class CloseConfirmDialogPrivate
 public:
     CloseConfirmDialogPrivate(CloseConfirmDialog *parent) : q_ptr(parent) {}
 
-    QRadioButton    *exitBt     = Q_NULLPTR;
-    QCheckBox       *remember   = Q_NULLPTR;
+    DRadioButton    *exitBt     = Q_NULLPTR;
+    DCheckBox       *remember   = Q_NULLPTR;
 
     CloseConfirmDialog *q_ptr;
     Q_DECLARE_PUBLIC(CloseConfirmDialog)
@@ -51,23 +51,21 @@ CloseConfirmDialog::CloseConfirmDialog(QWidget *parent) :
 {
     Q_D(CloseConfirmDialog);
 
-    DThemeManager::instance()->registerWidget(this);
-
-    auto contentFrame = new QFrame;
+    auto contentFrame = new DFrame;
     auto contentLayout = new QVBoxLayout(contentFrame);
     contentLayout->setSpacing(0);
     contentLayout->setContentsMargins(4, 4, 4, 0);
 
-    auto groupLabel = new QLabel(tr("Please select your operation"));
+    auto groupLabel = new DLabel(tr("Please select your operation"));
     groupLabel->setObjectName("CloseConfirmDialogLabel");
 
     auto actionSelectionGroup = new QGroupBox();
     actionSelectionGroup->setContentsMargins(0, 0, 0, 0);
     actionSelectionGroup->setObjectName("CloseConfirmDialogSelectionGroup");
 
-    d->exitBt = new QRadioButton(tr("Exit"));
+    d->exitBt = new DRadioButton(tr("Exit"));
     d->exitBt->setObjectName("CloseConfirmDialogExit");
-    auto miniBt = new QRadioButton(tr("Minimize to system tray"));
+    auto miniBt = new DRadioButton(tr("Minimize to system tray"));
     miniBt->setObjectName("CloseConfirmDialogMini");
     auto vbox = new QHBoxLayout;
     vbox->setContentsMargins(0, 0, 0, 0);
@@ -76,7 +74,7 @@ CloseConfirmDialog::CloseConfirmDialog(QWidget *parent) :
     vbox->addStretch(1);
     actionSelectionGroup->setLayout(vbox);
 
-    d->remember = new QCheckBox(tr("Do not ask again"));
+    d->remember = new DCheckBox(tr("Do not ask again"));
 
     contentLayout->addWidget(groupLabel, 0, Qt::AlignLeft);
     contentLayout->addSpacing(4);

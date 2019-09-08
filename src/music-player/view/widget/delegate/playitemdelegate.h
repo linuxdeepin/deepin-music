@@ -21,7 +21,9 @@
 
 #pragma once
 
-#include <QStyledItemDelegate>
+#include <DStyledItemDelegate>
+
+DWIDGET_USE_NAMESPACE
 
 class PlayItemDelegatePrivate;
 class PlayItemDelegate : public QStyledItemDelegate

@@ -22,20 +22,19 @@
 #include "lyricwidget.h"
 
 #include <QDebug>
-#include <QLabel>
 #include <QFile>
 #include <QScrollArea>
-#include <QPushButton>
 #include <QHBoxLayout>
-#include <QListView>
 #include <QPainter>
 #include <QResizeEvent>
 #include <QPaintEvent>
 #include <QStringListModel>
 #include <QAbstractItemDelegate>
-#include <QLineEdit>
 
-#include <DThemeManager>
+#include <QListView>
+#include <DPushButton>
+#include <DLineEdit>
+#include <DLabel>
 
 #include "../core/util/lyric.h"
 #include "../core/metasearchservice.h"
@@ -44,6 +43,7 @@
 #include "widget/searchmetalist.h"
 #include "widget/searchmetaitem.h"
 #include "widget/lyricview.h"
+#include "widget/musicimagebutton.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -69,15 +69,15 @@ public:
     Lyric               m_lyriclist;
 
     SearchMetaList      *searchMetaList     = nullptr;
-    QPushButton         *m_showSearch       = nullptr;
-    QPushButton         *m_exitSearch       = nullptr;
-    QFrame              *searchMetaFrame    = nullptr;
+    MusicImageButton    *m_showSearch       = nullptr;
+    DPushButton         *m_exitSearch       = nullptr;
+    DFrame              *searchMetaFrame    = nullptr;
     Cover               *m_cover            = nullptr;
 
     LyricView           *lyricview            = nullptr;
     QStringListModel    *m_model            = nullptr;
 
-    QString             defaultCover;
+    QString             defaultCover = ":/common/image/cover_max.svg";
     QColor              backgroundColor;
 
     LyricWidget *q_ptr;
@@ -146,37 +146,36 @@ void LyricWidgetPrivate::setLyricLines(QString str)
 }
 
 LyricWidget::LyricWidget(QWidget *parent)
-    : QFrame(parent), d_ptr(new LyricWidgetPrivate(this))
+    : DFrame(parent), d_ptr(new LyricWidgetPrivate(this))
 {
     Q_D(LyricWidget);
-    DThemeManager::instance()->registerWidget(this);
 
     setObjectName("LyricWidget");
 
     auto layout = new QHBoxLayout(this);
     layout->setContentsMargins(20, 20, 20, 20);
 
-    d->searchMetaFrame = new QFrame;
+    d->searchMetaFrame = new DFrame;
     d->searchMetaFrame->setObjectName("SearchMetaFrame");
     d->searchMetaFrame->setFixedWidth(300);
     auto searchMetaLayout = new QVBoxLayout(d->searchMetaFrame);
     searchMetaLayout->setSpacing(20);
 
-    auto searchMetaHeader = new QLabel;
+    auto searchMetaHeader = new DLabel;
     searchMetaHeader->setObjectName("SearchMetaHeader");
     searchMetaHeader->setText(tr("Find lyrics"));
 
-    auto searchMetaTitle = new QLineEdit;
+    auto searchMetaTitle = new DLineEdit;
     searchMetaTitle->setObjectName("SearchMetaTitle");
     searchMetaTitle->setPlaceholderText(tr("Title"));
     searchMetaTitle->setFixedHeight(34);
 
-    auto searchMetaArtist = new QLineEdit;
+    auto searchMetaArtist = new DLineEdit;
     searchMetaArtist->setObjectName("SearchMetaArtist");
     searchMetaArtist->setPlaceholderText(tr("Artist"));
     searchMetaArtist->setFixedHeight(34);
 
-    auto searchMetaButton = new QPushButton;
+    auto searchMetaButton = new DPushButton;
     searchMetaButton->setObjectName("SearchMetaButton");
     searchMetaButton->setText(tr("Search"));
     searchMetaButton->setFixedHeight(34);
@@ -206,14 +205,16 @@ LyricWidget::LyricWidget(QWidget *parent)
 
     d->lyricview->setModel(d->m_model);
 
-    d->m_showSearch = new QPushButton;
+    d->m_showSearch = new MusicImageButton(":/common/image/lrc_search_hover.svg",
+                                           ":/common/image/lrc_search_hover.svg",
+                                           ":/common/image/lrc_search_hover.svg");
     d->m_showSearch->setObjectName("ShowSearch");
 
-    d->m_exitSearch = new QPushButton;
+    d->m_exitSearch = new DPushButton;
     d->m_exitSearch->setObjectName("ExitSearch");
     d->m_exitSearch->setText(tr("Back"));
 
-    auto btFrame = new QFrame;
+    auto btFrame = new DFrame;
     btFrame->setFixedWidth(50);
     auto btLayout = new QVBoxLayout(btFrame);
     btLayout->addWidget(d->m_showSearch, 0, Qt::AlignRight | Qt::AlignTop);
@@ -247,7 +248,7 @@ LyricWidget::LyricWidget(QWidget *parent)
 
     layout->addWidget(btFrame);
 
-    connect(d->m_showSearch, &QPushButton::clicked,
+    connect(d->m_showSearch, &DPushButton::clicked,
     this, [ = ](bool) {
         Q_ASSERT(!d->activingMeta.isNull());
         searchMetaTitle->setText(d->activingMeta->title);
@@ -260,7 +261,7 @@ LyricWidget::LyricWidget(QWidget *parent)
         d->m_exitSearch->show();
     });
 
-    connect(d->m_exitSearch, &QPushButton::clicked,
+    connect(d->m_exitSearch, &DPushButton::clicked,
     this, [ = ](bool) {
         d->searchMetaFrame->hide();
         d->m_cover->show();
@@ -268,7 +269,7 @@ LyricWidget::LyricWidget(QWidget *parent)
         d->m_exitSearch->hide();
     });
 
-    connect(searchMetaButton, &QPushButton::clicked,
+    connect(searchMetaButton, &DPushButton::clicked,
     this, [ = ](bool) {
         auto context = searchMetaTitle->text() + " " + searchMetaArtist->text();
         Q_EMIT requestContextSearch(context);
@@ -346,7 +347,7 @@ void LyricWidget::paintEvent(QPaintEvent *e)
 {
     Q_D(LyricWidget);
 
-    QFrame::paintEvent(e);
+    DFrame::paintEvent(e);
 
     if (!d->lyricview->viewMode()) {
         return;
@@ -438,8 +439,8 @@ void LyricWidget::onProgressChanged(qint64 value, qint64 /*length*/)
 {
     Q_D(LyricWidget);
 
-    QPalette p = palette();
-    p.setColor(QPalette::Background, d->backgroundColor);
+    DPalette p = palette();
+    p.setColor(DPalette::Background, d->backgroundColor);
     setPalette(p);
 
     auto len = d->m_lyriclist.m_lyricElements.length();

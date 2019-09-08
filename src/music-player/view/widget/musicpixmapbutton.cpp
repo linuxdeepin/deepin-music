@@ -26,7 +26,7 @@
 #include <QRect>
 
 MusicPixmapButton::MusicPixmapButton(QWidget *parent)
-    : QPushButton(parent)
+    : DPushButton(parent)
 {
 }
 

@@ -82,7 +82,8 @@ SOURCES += \
     view/widget/model/musiclistdatamodel.cpp \
     view/widget/delegate/musiclistdatadelegate.cpp \
     view/widget/musicimagebutton.cpp \
-    view/widget/musicpixmapbutton.cpp
+    view/widget/musicpixmapbutton.cpp \
+    view/widget/musiclistviewitem.cpp
 
 HEADERS += \
     musicapp.h \
@@ -138,7 +139,8 @@ HEADERS += \
     view/widget/model/musiclistdatamodel.h \
     view/widget/delegate/musiclistdatadelegate.h \
     view/widget/musicimagebutton.h \
-    view/widget/musicpixmapbutton.h
+    view/widget/musicpixmapbutton.h \
+    view/widget/musiclistviewitem.h
 
 RESOURCES += \
     resource/theme/theme.qrc \

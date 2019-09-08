@@ -23,13 +23,13 @@
 
 #include <QDebug>
 
-PushButton::PushButton(QWidget *parent) : QPushButton(parent)
+PushButton::PushButton(QWidget *parent) : DPushButton(parent)
 {
 
 }
 
 void PushButton::enterEvent(QEvent *event)
 {
-    QPushButton::enterEvent(event);
+    DPushButton::enterEvent(event);
     Q_EMIT entered();
 }

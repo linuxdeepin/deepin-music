@@ -21,13 +21,16 @@
 
 #pragma once
 
-#include <QFrame>
+#include <DFrame>
+#include <DLineEdit>
 
-#include "../../core/playlist.h"
 #include <dpicturesequenceview.h>
 
-class QLineEdit;
-class MusicListItem : public QFrame
+#include "../../core/playlist.h"
+
+DWIDGET_USE_NAMESPACE
+
+class MusicListItem : public DFrame
 {
     Q_OBJECT
     Q_PROPERTY(QString playingIcon READ playingIcon WRITE setPlayingIcon)
@@ -75,7 +78,7 @@ public slots:
 
 private:
 //    Dtk::Widget::DPictureSequenceView  *playingAnimation;
-    QLineEdit      *m_titleedit = nullptr;
+    DLineEdit      *m_titleedit = nullptr;
     PlaylistPtr    m_data;
     QString m_playingIcon;
     QString m_highlightPlayingIcon;

@@ -22,25 +22,22 @@
 #include "loadwidget.h"
 
 #include <QVBoxLayout>
-#include <QLabel>
+
+#include <DLabel>
 
 #include <DWaterProgress>
-
-#include <DThemeManager>
 
 DWIDGET_USE_NAMESPACE
 
 LoadWidget::LoadWidget(QWidget *parent) :
-    QFrame(parent)
+    DFrame(parent)
 {
-    DThemeManager::instance()->registerWidget(this);
-
     auto water = new DWaterProgress(this);
     water->setValue(50);
     water->setTextVisible(false);
     water->start();
 
-    auto label = new QLabel(tr("Loading..."));
+    auto label = new DLabel(tr("Loading..."));
     label->setObjectName("LoadWidgetLabel");
 
     auto vbox = new QVBoxLayout;

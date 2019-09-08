@@ -40,7 +40,6 @@
 #include "core/pluginmanager.h"
 #include "core/musicsettings.h"
 #include "core/util/threadpool.h"
-#include <DThemeManager>
 #include "musicapp.h"
 
 using namespace Dtk::Core;
@@ -120,9 +119,6 @@ int main(int argc, char *argv[])
     qDebug() << "TRACE:" << "set theme";
     MusicSettings::setOption("base.play.theme", "light");
     auto theme = MusicSettings::value("base.play.theme").toString();
-//    auto themePrefix = AppSettings::instance()->value("base.play.theme_prefix").toString();
-//    DThemeManager::instance()->setPrefix(themePrefix);
-    //DThemeManager::instance()->setTheme(theme);
 
     // DMainWindow must create on main function, so it can deconstruction before QApplication
     MainFrame mainframe;
@@ -147,9 +143,9 @@ int main(int argc, char *argv[])
         }
     });
 
-    app.setTheme("light");
+    //app.setTheme("light");
     app.setQuitOnLastWindowClosed(true);
-    app.setStyle("chameleon");
+    //app.setStyle("chameleon");
 
     return app.exec();
 }

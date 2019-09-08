@@ -25,13 +25,13 @@
 #include <QPainter>
 
 MusicImageButton::MusicImageButton(QWidget *parent)
-    : QPushButton(parent)
+    : DPushButton(parent)
 {
 }
 
 MusicImageButton::MusicImageButton(const QString &normalPic, const QString &hoverPic,
                                    const QString &pressPic, QWidget *parent)
-    : QPushButton (parent)
+    : DPushButton (parent)
 {
     defaultPicPath.normalPicPath = normalPic;
     defaultPicPath.hoverPicPath = hoverPic;
@@ -59,7 +59,7 @@ void MusicImageButton::setPropertyPic(QString propertyName, const QVariant &valu
 void MusicImageButton::paintEvent(QPaintEvent *event)
 {
     if (defaultPicPath.normalPicPath.isEmpty()) {
-        QPushButton::paintEvent(event);
+        DPushButton::paintEvent(event);
         return;
     }
 
@@ -107,23 +107,23 @@ void MusicImageButton::paintEvent(QPaintEvent *event)
 void MusicImageButton::enterEvent(QEvent *event)
 {
     status = 1;
-    QPushButton::enterEvent(event);
+    DPushButton::enterEvent(event);
 }
 
 void MusicImageButton::leaveEvent(QEvent *event)
 {
     status = 0;
-    QPushButton::leaveEvent(event);
+    DPushButton::leaveEvent(event);
 }
 
 void MusicImageButton::mousePressEvent(QMouseEvent *event)
 {
     status = 2;
-    QPushButton::mousePressEvent(event);
+    DPushButton::mousePressEvent(event);
 }
 
 void MusicImageButton::mouseReleaseEvent(QMouseEvent *event)
 {
     status = 0;
-    QPushButton::mouseReleaseEvent(event);
+    DPushButton::mouseReleaseEvent(event);
 }
