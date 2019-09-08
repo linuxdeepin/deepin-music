@@ -23,7 +23,8 @@
 
 #include <QScopedPointer>
 #include <dabstractdialog.h>
-#include <ddialog.h>
+
+#include <DDialog>
 
 class CloseConfirmDialogPrivate;
 class CloseConfirmDialog : public Dtk::Widget::DDialog

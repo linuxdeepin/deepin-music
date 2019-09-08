@@ -25,13 +25,14 @@
 #include <dabstractdialog.h>
 DWIDGET_USE_NAMESPACE
 
-#include <QFrame>
+#include <DFrame>
 
-class QListView;
+#include <DListView>
+
 class PushButton;
 class QStringListModel;
 
-class SearchResult : public QFrame
+class SearchResult : public DFrame
 {
     Q_OBJECT
 public:
@@ -54,7 +55,7 @@ public slots:
     void onReturnPressed();
 
 private:
-    QListView           *m_searchResult = nullptr;
+    DListView           *m_searchResult = nullptr;
     PushButton          *m_doSearchButton = nullptr;
     QStringListModel    *m_model = nullptr;
 };

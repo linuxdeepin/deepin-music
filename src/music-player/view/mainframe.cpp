@@ -25,8 +25,6 @@
 #include <QAction>
 #include <QProcess>
 #include <QStackedLayout>
-#include <QStyleFactory>
-#include <QFileDialog>
 #include <QStandardPaths>
 #include <QApplication>
 #include <QKeyEvent>
@@ -35,13 +33,13 @@
 
 #include <DUtil>
 #include <DWidgetUtil>
-#include <daboutdialog.h>
-#include <ddialog.h>
+#include <DAboutDialog>
+#include <DDialog>
 #include <DApplication>
-#include <DThemeManager>
 #include <DToast>
 #include <DTitlebar>
-#include <dimagebutton.h>
+#include <DImageButton>
+#include <DFileDialog>
 
 #include "../presenter/presenter.h"
 #include "../core/metasearchservice.h"
@@ -100,7 +98,7 @@ public:
     //! ui: show info dialog
     void showInfoDialog(const MetaPtr meta);
 
-    QWidget         *centralWidget  = nullptr;
+    DWidget         *centralWidget  = nullptr;
     QStackedLayout  *contentLayout  = nullptr;
     DTitlebar       *titlebar       = nullptr;
     DToast          *tips           = nullptr;
@@ -113,7 +111,7 @@ public:
     Footer          *footer         = nullptr;
     MusicListWidget *musicListWidget = nullptr;
 
-    QWidget         *currentWidget  = nullptr;
+    DWidget         *currentWidget  = nullptr;
     InfoDialog      *infoDialog     = nullptr;
 
     QAction         *newSonglistAction      = nullptr;
@@ -153,7 +151,6 @@ void MainFramePrivate::initMenu()
         auto configDialog = new DSettingsDialog(q);
         configDialog->setProperty("_d_QSSThemename", "dark");
         configDialog->setProperty("_d_QSSFilename", "DSettingsDialog");
-        DThemeManager::instance()->registerWidget(configDialog);
 
         configDialog->setFixedSize(720, 550);
         configDialog->updateSettings(MusicSettings::settings());
@@ -169,14 +166,14 @@ void MainFramePrivate::initMenu()
     colorModeAction->setChecked(MusicSettings::value("base.play.theme").toString() == "dark");
 
     q->connect(colorModeAction, &QAction::triggered, q, [ = ](bool) {
-        if (DThemeManager::instance()->theme() == "light") {
+        /*if (DThemeManager::instance()->theme() == "light") {
             colorModeAction->setChecked(true);
             DThemeManager::instance()->setTheme("dark");
         } else {
             colorModeAction->setChecked(false);
             DThemeManager::instance()->setTheme("light");
         }
-        MusicSettings::setOption("base.play.theme", DThemeManager::instance()->theme());
+        MusicSettings::setOption("base.play.theme", DThemeManager::instance()->theme());*/
     });
 
     QAction *m_close = new QAction(MainFrame::tr("Exit"), q);
@@ -184,9 +181,7 @@ void MainFramePrivate::initMenu()
         q->close();
     });
 
-    auto titleMenu = new QMenu(q);
-    titleMenu->setStyle(QStyleFactory::create("dlight"));
-
+    auto titleMenu = new DMenu(q);
     titleMenu->addAction(newSonglistAction);
     titleMenu->addAction(addmusic);
     titleMenu->addAction(addmusicfiles);
@@ -522,7 +517,6 @@ void MainFramePrivate::updateTitlebarViewname(const QString &vm)
 void MainFramePrivate::overrideTitlebarStyle()
 {
     titlebar->setObjectName("Titlebar");
-    DThemeManager::registerWidget(titlebar, "Titlebar", QStringList({"viewname"}));
 
     QStringList objNames;
     objNames  << "DTitlebarDWindowMinButton"
@@ -535,7 +529,6 @@ void MainFramePrivate::overrideTitlebarStyle()
         if (!titlebarBt) {
             continue;
         }
-        DThemeManager::registerWidget(titlebarBt, "Titlebar", QStringList({"viewname"}));
     }
 }
 
@@ -565,7 +558,6 @@ MainFrame::MainFrame(QWidget *parent) :
     DMainWindow(parent), dd_ptr(new MainFramePrivate(this))
 {
     setObjectName("MainFrame");
-    DThemeManager::instance()->registerWidget(this, QStringList() << s_PropertyViewname);
 }
 
 MainFrame::~MainFrame()
@@ -593,7 +585,7 @@ void MainFrame::postInitUI()
     auto nextAction = new QAction(tr("Next"), this);
     auto quitAction = new QAction(tr("Exit"), this);
 
-    auto trayIconMenu = new QMenu(this);
+    auto trayIconMenu = new DMenu(this);
     trayIconMenu->addAction(playAction);
     trayIconMenu->addAction(prevAction);
     trayIconMenu->addAction(nextAction);
@@ -1016,15 +1008,15 @@ void MainFrame::setCoverBackground(QString coverBackground)
 void MainFrame::onSelectImportDirectory()
 {
     Q_D(const MainFrame);
-    QFileDialog fileDlg(this);
+    DFileDialog fileDlg(this);
 
     QString lastImportPath = d->getLastImportPath();
 
     fileDlg.setDirectory(lastImportPath);
 
-    fileDlg.setViewMode(QFileDialog::Detail);
-    fileDlg.setFileMode(QFileDialog::DirectoryOnly);
-    if (QFileDialog::Accepted == fileDlg.exec()) {
+    fileDlg.setViewMode(DFileDialog::Detail);
+    fileDlg.setFileMode(DFileDialog::DirectoryOnly);
+    if (DFileDialog::Accepted == fileDlg.exec()) {
         d->importWidget->showWaitHint();
         MusicSettings::setOption("base.play.last_import_path",  fileDlg.directory().path());
         Q_EMIT importSelectFiles(fileDlg.selectedFiles());
@@ -1034,7 +1026,7 @@ void MainFrame::onSelectImportDirectory()
 void MainFrame::onSelectImportFiles()
 {
     Q_D(const MainFrame);
-    QFileDialog fileDlg(this);
+    DFileDialog fileDlg(this);
 
     QString lastImportPath = d->getLastImportPath();
 
@@ -1042,13 +1034,13 @@ void MainFrame::onSelectImportFiles()
 
     QString selfilter = tr("All music") + (" (%1)");
     selfilter = selfilter.arg(Player::instance()->supportedSuffixList().join(" "));
-    fileDlg.setViewMode(QFileDialog::Detail);
-    fileDlg.setFileMode(QFileDialog::ExistingFiles);
-    fileDlg.setOption(QFileDialog::HideNameFilterDetails);
+    fileDlg.setViewMode(DFileDialog::Detail);
+    fileDlg.setFileMode(DFileDialog::ExistingFiles);
+    fileDlg.setOption(DFileDialog::HideNameFilterDetails);
 
     fileDlg.setNameFilter(selfilter);
     fileDlg.selectNameFilter(selfilter);
-    if (QFileDialog::Accepted == fileDlg.exec()) {
+    if (DFileDialog::Accepted == fileDlg.exec()) {
         d->importWidget->showWaitHint();
         MusicSettings::setOption("base.play.last_import_path",  fileDlg.directory().path());
         Q_EMIT importSelectFiles(fileDlg.selectedFiles());

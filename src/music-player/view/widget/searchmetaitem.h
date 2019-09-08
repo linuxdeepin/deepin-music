@@ -22,21 +22,23 @@
 #pragma once
 
 #include <QScopedPointer>
-#include <QFrame>
+#include <DFrame>
 
 #include <searchmeta.h>
 
 #include "../../core/playlist.h"
 
+DWIDGET_USE_NAMESPACE
+
 class SearchMetaItemPrivate;
-class SearchMetaItem : public QFrame
+class SearchMetaItem : public DFrame
 {
     Q_OBJECT
 public:
     explicit SearchMetaItem(QWidget *parent = Q_NULLPTR);
     ~SearchMetaItem();
 
-    void initUI(const DMusic::SearchMeta& meta);
+    void initUI(const DMusic::SearchMeta &meta);
     void setChecked(bool check);
 
 signals:

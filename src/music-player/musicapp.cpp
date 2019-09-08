@@ -32,7 +32,6 @@
 #include <DApplication>
 #include <DWidgetUtil>
 #include <DSettingsOption>
-#include <DThemeManager>
 
 #include "core/player.h"
 #include "core/musicsettings.h"

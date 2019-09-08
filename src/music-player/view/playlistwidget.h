@@ -21,12 +21,14 @@
 
 #pragma once
 
-#include <QFrame>
+#include <DFrame>
 
 #include "../core/playlist.h"
 
+DWIDGET_USE_NAMESPACE
+
 class PlayListWidgetPrivate;
-class PlayListWidget : public QFrame
+class PlayListWidget : public DWidget
 {
     Q_OBJECT
 public:

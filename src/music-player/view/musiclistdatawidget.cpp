@@ -25,15 +25,14 @@
 #include <QAction>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
-#include <QPushButton>
-#include <QComboBox>
-#include <QLabel>
 #include <QMimeData>
 #include <QResizeEvent>
 #include <QStandardItemModel>
 
 #include <DLabel>
 #include <DPushButton>
+#include <DComboBox>
+#include <DLabel>
 
 #include "widget/playlistview.h"
 #include "widget/musiclistdataview.h"
@@ -52,7 +51,7 @@ public:
     void showEmptyHits();
 
     DLabel              *emptyHits      = nullptr;
-    QWidget             *actionBar      = nullptr;
+    DWidget             *actionBar      = nullptr;
     DLabel              *titleLabel     = nullptr;
     DDropdown           *albumDropdown  = nullptr;
     DDropdown           *artistDropdown = nullptr;
@@ -205,7 +204,7 @@ void MusicListDataWidgetPrivate::initConntion()
         Q_EMIT q->resort(musicListView->playlist(), action->data().value<Playlist::SortType>());
     });
 
-    q->connect(btPlayAll, &QPushButton::clicked,
+    q->connect(btPlayAll, &DPushButton::clicked,
     q, [ = ](bool) {
         if (albumListView->isVisible()) {
             PlaylistPtr curPlayList = albumListView->playlist();
@@ -241,7 +240,7 @@ void MusicListDataWidgetPrivate::initConntion()
         Q_EMIT q->playMedia(musicListView->playlist(), meta);
     });
 
-    q->connect(btIconMode, &QPushButton::clicked,
+    q->connect(btIconMode, &DPushButton::clicked,
     q, [ = ](bool) {
         if (albumListView->isVisible()) {
             albumListView->setViewModeFlag(QListView::IconMode);
@@ -251,7 +250,7 @@ void MusicListDataWidgetPrivate::initConntion()
             musicListView->setViewModeFlag(QListView::IconMode);
         }
     });
-    q->connect(btlistMode, &QPushButton::clicked,
+    q->connect(btlistMode, &DPushButton::clicked,
     q, [ = ](bool) {
         if (albumListView->isVisible()) {
             albumListView->setViewModeFlag(QListView::ListMode);
@@ -307,7 +306,7 @@ void MusicListDataWidgetPrivate::showEmptyHits()
 }
 
 MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
-    QFrame(parent), d_ptr(new MusicListDataWidgetPrivate(this))
+    DWidget(parent), d_ptr(new MusicListDataWidgetPrivate(this))
 {
     Q_D(MusicListDataWidget);
 
@@ -318,7 +317,11 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     layout->setContentsMargins(0, 0, 8, 0);
     layout->setSpacing(0);
 
-    d->actionBar = new QFrame;
+    d->actionBar = new DFrame;
+    d->actionBar->setAutoFillBackground(true);
+    auto palette = d->actionBar->palette();
+    palette.setColor(DPalette::Background, Qt::white);
+    d->actionBar->setPalette(palette);
     d->actionBar->setFixedHeight(80);
     d->actionBar->setObjectName("MusicListDataActionBar");
 
@@ -370,7 +373,11 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     actionInfoBarLayout->setSpacing(0);
 
     d->btPlayAll = new DPushButton;
-    d->btPlayAll->setStyleSheet("background-color: rgb(255,0, 0);color: white");
+    auto playAllPalette = d->btPlayAll->palette();
+    playAllPalette.setColor(DPalette::ButtonText, Qt::white);
+    playAllPalette.setColor(DPalette::Dark, QColor(Qt::red));
+    playAllPalette.setColor(DPalette::Light, QColor(Qt::red));
+    d->btPlayAll->setPalette(playAllPalette);
     d->btPlayAll->setIcon(QIcon(":/mpimage/normal/play_all_normal.svg"));
     d->btPlayAll->setObjectName("MusicListDataPlayAll");
     d->btPlayAll->setText(tr("Play All"));

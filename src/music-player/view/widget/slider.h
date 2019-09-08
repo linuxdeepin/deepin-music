@@ -22,10 +22,12 @@
 #pragma once
 
 #include <QScopedPointer>
-#include <QSlider>
+#include <DSlider>
+
+DWIDGET_USE_NAMESPACE
 
 class SliderPrivate;
-class Slider : public QSlider
+class Slider : public DSlider
 {
     Q_OBJECT
 public:

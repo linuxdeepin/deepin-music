@@ -22,80 +22,62 @@
 #include "musiclistview.h"
 
 #include <QDebug>
-#include <QMenu>
-#include <QScrollBar>
-#include <QStyleFactory>
+#include <DMenu>
+#include <DDialog>
 
-#include <DThemeManager>
+#include <DScrollBar>
 
-#include "musiclistitem.h"
+#include "musiclistviewitem.h"
 
-DWIDGET_USE_NAMESPACE
-
-class MusicListViewPrivate
+MusicListView::MusicListView(QWidget *parent) : DListWidget(parent)
 {
-public:
-    MusicListViewPrivate(MusicListView *parent) : q_ptr(parent) {}
-
-    void checkScrollbarSize();
-
-    QScrollBar          *vscrollBar   = nullptr;
-
-    MusicListView *q_ptr;
-    Q_DECLARE_PUBLIC(MusicListView)
-};
-
-void MusicListViewPrivate::checkScrollbarSize()
-{
-    Q_Q(MusicListView);
-
-    auto itemCount = q->model()->rowCount();
-    auto size = q->size();
-    auto scrollBarWidth = 8;
-    auto itemHeight = 56;
-    vscrollBar->resize(scrollBarWidth, size.height() - 2);
-    vscrollBar->move(size.width() - scrollBarWidth, 0);
-    vscrollBar->setSingleStep(1);
-    vscrollBar->setPageStep(size.height() / itemHeight);
-
-    if (itemCount > size.height() / itemHeight) {
-        vscrollBar->show();
-        vscrollBar->setMaximum(itemCount - size.height() / itemHeight);
-    } else {
-        vscrollBar->hide();
-        vscrollBar->setMaximum(0);
-    }
-}
-
-MusicListView::MusicListView(QWidget *parent) : QListWidget(parent), d_ptr(new MusicListViewPrivate(this))
-{
-    Q_D(MusicListView);
-
-    setObjectName("MusicListView");
-    DThemeManager::instance()->registerWidget(this);
-
     setDragEnabled(true);
     viewport()->setAcceptDrops(true);
     setDropIndicatorShown(true);
     setDefaultDropAction(Qt::MoveAction);
     setDragDropMode(QAbstractItemView::DragOnly);
+    setIconSize( QSize(40, 40) );
+    setGridSize( QSize(40, 40) );
 
     setSelectionMode(QListView::SingleSelection);
-    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-
-    d->vscrollBar = new QScrollBar(this);
-    d->vscrollBar->setObjectName("MusicListViewScrollBar");
-    d->vscrollBar->setOrientation(Qt::Vertical);
-    d->vscrollBar->raise();
 
     setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this, &MusicListView::customContextMenuRequested,
             this, &MusicListView::showContextMenu);
 
-    connect(d->vscrollBar, &QScrollBar::valueChanged,
-    this, [ = ](int value) {
-        verticalScrollBar()->setValue(value);
+    connect(this, &MusicListView::itemSelectionChanged,
+    this, [ = ]() {
+        for (int i = 0; i < count(); i++) {
+            QListWidgetItem *item = this->item(i);
+            if (this->isPersistentEditorOpen(item))
+                closePersistentEditor(item);
+        }
+    });
+
+    connect(this, &MusicListView::itemChanged,
+    this, [ = ](QListWidgetItem * item) {
+        MusicListViewItem *playlistItem = dynamic_cast<MusicListViewItem *>(item);
+        if (playlistItem->data()->displayName() != playlistItem->text()) {
+            if (playlistItem->text().isEmpty()) {
+                playlistItem->setText(playlistItem->data()->displayName());
+            } else {
+                bool existFlag = false;
+                for (int i = 0; i < count(); i++) {
+                    QListWidgetItem *curItem = this->item(i);
+                    if (curItem != item)
+                        continue;
+                    if (playlistItem->data()->displayName() == playlistItem->text()) {
+                        existFlag = true;
+                    }
+                }
+                if (existFlag) {
+                    playlistItem->setText(playlistItem->data()->displayName());
+                } else {
+                    Q_EMIT playlistItem->data()->displayNameChanged(playlistItem->text());
+                }
+            }
+        }
     });
 }
 
@@ -104,68 +86,40 @@ MusicListView::~MusicListView()
 
 }
 
-void MusicListView::wheelEvent(QWheelEvent *event)
-{
-    Q_D(MusicListView);
-    QListWidget::wheelEvent(event);
-    d->vscrollBar->setSliderPosition(verticalScrollBar()->sliderPosition());
-}
-
-void MusicListView::resizeEvent(QResizeEvent *event)
-{
-    Q_D(MusicListView);
-    QListWidget::resizeEvent(event);
-    d->checkScrollbarSize();
-}
-
 void MusicListView::startDrag(Qt::DropActions supportedActions)
 {
-    QListWidget::startDrag(supportedActions);
+    DListWidget::startDrag(supportedActions);
     qDebug() << "drag end";
 
     QStringList uuids;
 
     for (int i = 0; i < this->count(); ++i) {
         QListWidgetItem *item = this->item(i);
-        auto playlistItem = qobject_cast<MusicListItem *>(this->itemWidget(item));
+        MusicListViewItem *playlistItem = dynamic_cast<MusicListViewItem *>(item);
         uuids << playlistItem->data()->id();
     }
     Q_EMIT customResort(uuids);
 }
 
-void MusicListView::updateScrollbar()
+void MusicListView::mousePressEvent(QMouseEvent *event)
 {
-    Q_D(MusicListView);
-    d->checkScrollbarSize();
+    for (int i = 0; i < count(); i++) {
+        QListWidgetItem *item = this->item(i);
+        if (this->isPersistentEditorOpen(item))
+            closePersistentEditor(item);
+    }
+    DListWidget::mousePressEvent(event);
 }
-
 
 void MusicListView::showContextMenu(const QPoint &pos)
 {
-    //find parent
-    auto playlistWidget = this->parentWidget();
-    for (int i = 0; i < 10; ++i) {
-        if (!playlistWidget) {
-            break;
-        }
-
-        if (playlistWidget->objectName() == "PlaylistWidget") {
-            break;
-        }
-        playlistWidget = playlistWidget->parentWidget();
-    }
-
-    if (playlistWidget && !playlistWidget->isEnabled()) {
-        return;
-    }
-
     // get select
     auto items = this->selectedItems();
     if (items.length() != 1) {
         return;
     }
 
-    auto item = qobject_cast<MusicListItem *>(itemWidget(items.first()));
+    MusicListViewItem *item = dynamic_cast<MusicListViewItem *>(items.first());
     if (!item) {
         return;
     }
@@ -174,15 +128,9 @@ void MusicListView::showContextMenu(const QPoint &pos)
         return;
     }
 
-    auto itemPos = item->mapFromParent(pos);
-    if (!item->rect().contains(itemPos)) {
-        return;
-    }
-
     QPoint globalPos = this->mapToGlobal(pos);
 
-    QMenu menu;
-    menu.setStyle(QStyleFactory::create("dlight"));
+    DMenu menu;
     auto playact = menu.addAction(tr("Play"));
     playact->setDisabled(0 == m_data->length());
 
@@ -190,18 +138,31 @@ void MusicListView::showContextMenu(const QPoint &pos)
             m_data->id() != ArtistMusicListID && m_data->id() != FavMusicListID) {
         menu.addAction(tr("Rename"));
         menu.addAction(tr("Delete"));
+    } else if (m_data->id() == AlbumMusicListID && m_data->id() == ArtistMusicListID) {
+        playact->setDisabled(m_data->playMusicTypePtrList().size() == 0);
     }
 
-    connect(&menu, &QMenu::triggered, this, [ = ](QAction * action) {
+    connect(&menu, &DMenu::triggered, this, [ = ](QAction * action) {
         if (action->text() == tr("Play")) {
-            Q_EMIT item->playall(m_data);
+            Q_EMIT playall(m_data);
         }
         if (action->text() == tr("Rename")) {
-            item->onRename();
-
+            openPersistentEditor(item);
         }
         if (action->text() == tr("Delete")) {
-            item->onDelete();
+            QString message = QString(tr("Are you sure you want to delete this playlist?"));
+
+            DDialog warnDlg(this);
+            warnDlg.setIcon(QIcon(":/common/image/del_notify.svg"));
+            warnDlg.setTextFormat(Qt::AutoText);
+            warnDlg.setTitle(message);
+            warnDlg.addButton(tr("Cancel"), false, Dtk::Widget::DDialog::ButtonNormal);
+            warnDlg.addButton(tr("Delete"), true, Dtk::Widget::DDialog::ButtonWarning);
+            if (0 != warnDlg.exec()) {
+                delete takeItem(row(item));
+                Q_EMIT m_data->removed();
+            }
+
         }
     });
 

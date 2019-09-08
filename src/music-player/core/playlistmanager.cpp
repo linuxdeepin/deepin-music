@@ -251,6 +251,12 @@ void PlaylistManager::insertPlaylist(const QString &uuid, PlaylistPtr playlist)
         saveSortOrder();
         QSqlDatabase::database().commit();
     });
+    connect(playlist.data(), &Playlist::displayNameChanged,
+    this, [ = ] (QString displayName) {
+        QSqlDatabase::database().transaction();
+        playlist.data()->setDisplayName(displayName);
+        QSqlDatabase::database().commit();
+    });
 
     connect(playlist.data(), &Playlist::musiclistAdded,
     this, [ = ](const MetaPtrList metalist) {

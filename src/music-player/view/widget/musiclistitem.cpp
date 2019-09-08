@@ -23,31 +23,24 @@
 
 #include <QDebug>
 #include <QTimer>
-#include <QLabel>
-#include <QStyle>
-#include <QLineEdit>
 #include <QMouseEvent>
 #include <QHBoxLayout>
-#include <QMenu>
-#include <QStyleFactory>
-#include <QLineEdit>
+
+#include <DLineEdit>
+#include <DLabel>
+#include <DMenu>
 
 #include <ddialog.h>
 #include <QMessageBox>
-#include <DThemeManager>
 
 #include "core/playlist.h"
 
 static int LineEditWidth = 105;
 
-DWIDGET_USE_NAMESPACE
-
-MusicListItem::MusicListItem(PlaylistPtr playlist, QWidget *parent) : QFrame(parent)
+MusicListItem::MusicListItem(PlaylistPtr playlist, QWidget *parent) : DFrame(parent)
 {
     m_data = playlist;
     Q_ASSERT(playlist);
-
-    DThemeManager::instance()->registerWidget(this);
 
     setObjectName("MusicListItem");
 
@@ -55,19 +48,19 @@ MusicListItem::MusicListItem(PlaylistPtr playlist, QWidget *parent) : QFrame(par
     layout->setContentsMargins(10, 0, 10, 0);
     layout->setSpacing(0);
 
-    auto interFrame = new QFrame;
+    auto interFrame = new DFrame;
     interFrame->setObjectName("MusicListInterFrame");
 
     auto interLayout = new QHBoxLayout(interFrame);
     interLayout->setContentsMargins(0, 0, 0, 0);
     interLayout->setSpacing(0);
 
-    auto icon = new QLabel;
+    auto icon = new DLabel;
     icon->setObjectName("MusicListIcon");
     icon->setFixedSize(48, 48);
     icon->setProperty("iconName", playlist->icon());
 
-    m_titleedit = new QLineEdit;
+    m_titleedit = new DLineEdit;
     m_titleedit->setObjectName("MusicListTitle");
     m_titleedit->setFixedHeight(24);
     m_titleedit->setMaximumWidth(160);
@@ -109,7 +102,7 @@ MusicListItem::MusicListItem(PlaylistPtr playlist, QWidget *parent) : QFrame(par
     m_titleedit->setText(fm.elidedText(QString(playlist->displayName()),
                                        Qt::ElideMiddle, LineEditWidth));
 
-    connect(m_titleedit, &QLineEdit::editingFinished,
+    connect(m_titleedit, &DLineEdit::editingFinished,
     this, [ = ] {
         if (m_titleedit->text().isEmpty())
         {
@@ -129,7 +122,7 @@ MusicListItem::MusicListItem(PlaylistPtr playlist, QWidget *parent) : QFrame(par
         m_titleedit->setEnabled(false);
     });
 
-    connect(m_titleedit, &QLineEdit::returnPressed,
+    connect(m_titleedit, &DLineEdit::returnPressed,
     this, [ = ] {
         m_titleedit->blockSignals(true);
         this->setFocus();
@@ -150,8 +143,6 @@ void MusicListItem::setActive(bool active)
     } else {
         m_titleedit->setProperty("status", "");
     }
-    this->style()->unpolish(m_titleedit);
-    this->style()->polish(m_titleedit);
     this->update();
 }
 
@@ -164,7 +155,7 @@ void MusicListItem::setPlay(bool isPaly)
 
 void MusicListItem::mouseDoubleClickEvent(QMouseEvent *event)
 {
-//    QFrame::mouseDoubleClickEvent(event);
+//    DFrame::mouseDoubleClickEvent(event);
 
     auto lineeditMousePos = m_titleedit->mapFromParent(event->pos());
     if (!m_titleedit->rect().contains(lineeditMousePos)) {

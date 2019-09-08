@@ -22,18 +22,17 @@
 #include "musiclistdataview.h"
 
 #include <QDebug>
-#include <QMenu>
 #include <QDir>
 #include <QProcess>
 #include <QFileInfo>
-#include <QStyleFactory>
 #include <QResizeEvent>
 #include <QStandardItemModel>
-#include <QScrollBar>
 
-#include <ddialog.h>
+#include <DMenu>
+#include <DDialog>
 #include <DDesktopServices>
-#include <DThemeManager>
+#include <DScrollBar>
+
 
 #include "../../core/metasearchservice.h"
 #include "../helper/widgethellper.h"
@@ -79,8 +78,6 @@ MusicListDataView::MusicListDataView(QWidget *parent)
     : ListView(parent), d_ptr(new MusicListDataViewPrivate(this))
 {
     Q_D(MusicListDataView);
-
-    DThemeManager::instance()->registerWidget(this);
 
     setObjectName("MusicListDataView");
 

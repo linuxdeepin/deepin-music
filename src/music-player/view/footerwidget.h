@@ -21,15 +21,16 @@
 
 #pragma once
 
-#include <QFrame>
+#include <DBlurEffectWidget>
 #include <QPointer>
-#include <QLabel>
 
 #include "../core/playlist.h"
 #include <searchmeta.h>
 
+DWIDGET_USE_NAMESPACE
+
 class FooterPrivate;
-class Footer : public QFrame
+class Footer : public DBlurEffectWidget
 {
     Q_OBJECT
     Q_PROPERTY(QString defaultCover READ defaultCover WRITE setDefaultCover)

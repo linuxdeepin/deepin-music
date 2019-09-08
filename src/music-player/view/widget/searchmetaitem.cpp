@@ -22,37 +22,33 @@
 #include "searchmetaitem.h"
 #include <QHBoxLayout>
 #include <QVBoxLayout>
-#include <QLabel>
 #include <QVariant>
-#include <QPushButton>
-#include <QStyle>
 
-#include <DThemeManager>
-
-DWIDGET_USE_NAMESPACE
+#include <DPushButton>
+#include <DLabel>
 
 class SearchMetaItemPrivate
 {
 public:
     SearchMetaItemPrivate(SearchMetaItem *parent) : q_ptr(parent) {}
 
-    QLabel      *metaTitle   = nullptr;
-    QLabel      *metaArtist  = nullptr;
-    QLabel      *metaLength  = nullptr;
-    QLabel      *checkedBt   = nullptr;
+    DLabel      *metaTitle   = nullptr;
+    DLabel      *metaArtist  = nullptr;
+    DLabel      *metaLength  = nullptr;
+    DLabel      *checkedBt   = nullptr;
 
     SearchMetaItem *q_ptr;
     Q_DECLARE_PUBLIC(SearchMetaItem)
 };
 
-SearchMetaItem::SearchMetaItem(QWidget *parent) : QFrame(parent), d_ptr(new SearchMetaItemPrivate(this))
+SearchMetaItem::SearchMetaItem(QWidget *parent) : DFrame(parent), d_ptr(new SearchMetaItemPrivate(this))
 {
     Q_D(SearchMetaItem);
     setObjectName("SearchMetaItem");
     auto layout = new QHBoxLayout(this);
     layout->setContentsMargins(10, 0, 10, 0);
 
-    auto interFrame = new QFrame();
+    auto interFrame = new DFrame();
     interFrame->setObjectName("SearchMetaItemInterFrame");
     auto interLayout = new QHBoxLayout(interFrame);
     interLayout->setMargin(0);
@@ -61,19 +57,19 @@ SearchMetaItem::SearchMetaItem(QWidget *parent) : QFrame(parent), d_ptr(new Sear
     metaInfoLayout->setContentsMargins(10, 10, 10, 10);
     metaInfoLayout->setSpacing(5);
 
-    d->metaTitle = new QLabel;
+    d->metaTitle = new DLabel;
     d->metaTitle->setObjectName("SearchMetaItemTitle");
-    d->metaArtist = new QLabel;
+    d->metaArtist = new DLabel;
     d->metaArtist->setObjectName("SearchMetaItemArtist");
 
     metaInfoLayout->addWidget(d->metaTitle);
     metaInfoLayout->addWidget(d->metaArtist);
 
-    d->checkedBt = new QLabel;
+    d->checkedBt = new DLabel;
     d->checkedBt->setObjectName("SearchMetaItemCheck");
     d->checkedBt->setFixedSize(16, 16);
 
-    d->metaLength = new QLabel;
+    d->metaLength = new DLabel;
     d->metaLength->setObjectName("SearchMetaItemLength");
 
     interLayout->addLayout(metaInfoLayout);
@@ -82,7 +78,6 @@ SearchMetaItem::SearchMetaItem(QWidget *parent) : QFrame(parent), d_ptr(new Sear
     interLayout->addWidget(d->metaLength);
 
     layout->addWidget(interFrame);
-    DThemeManager::instance()->registerWidget(this);
 }
 
 SearchMetaItem::~SearchMetaItem()
@@ -101,7 +96,5 @@ void SearchMetaItem::setChecked(bool check)
 {
     Q_D(SearchMetaItem);
     d->checkedBt->setProperty("active", check);
-    d->checkedBt->style()->unpolish(d->checkedBt);
-    d->checkedBt->style()->polish(d->checkedBt);
     d->checkedBt->update();
 }

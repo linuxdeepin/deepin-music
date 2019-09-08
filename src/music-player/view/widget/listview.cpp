@@ -21,7 +21,7 @@
 
 #include "listview.h"
 
-#include <QScrollBar>
+#include <DScrollBar>
 
 class ListViewPrivate
 {
@@ -30,7 +30,7 @@ public:
 
     void checkScrollbarSize();
 
-    QScrollBar          *vscrollBar   = nullptr;
+    DScrollBar          *vscrollBar   = nullptr;
 
     ListView *q_ptr;
     Q_DECLARE_PUBLIC(ListView)
@@ -59,16 +59,16 @@ void ListViewPrivate::checkScrollbarSize()
 }
 
 ListView::ListView(QWidget *parent) :
-    QListView(parent), d_ptr(new ListViewPrivate(this))
+    DListView(parent), d_ptr(new ListViewPrivate(this))
 {
     Q_D(ListView);
 
-    d->vscrollBar = new QScrollBar(this);
+    d->vscrollBar = new DScrollBar(this);
     d->vscrollBar->setObjectName("MusicListViewScrollBar");
     d->vscrollBar->setOrientation(Qt::Vertical);
     d->vscrollBar->raise();
 
-    connect(d->vscrollBar, &QScrollBar::valueChanged,
+    connect(d->vscrollBar, &DScrollBar::valueChanged,
     this, [ = ](int value) {
         verticalScrollBar()->setValue(value);
     });

@@ -24,12 +24,7 @@
 #include <QDebug>
 
 #include <QMouseEvent>
-#include <QStyle>
 #include <QVariantAnimation>
-
-#include <DThemeManager>
-
-DWIDGET_USE_NAMESPACE
 
 class SliderPrivate
 {
@@ -46,16 +41,9 @@ public:
 };
 
 Slider::Slider(Qt::Orientation orientation, QWidget *parent) :
-    QSlider(orientation, parent), dd_ptr(new SliderPrivate(this))
+    DSlider(orientation, parent), dd_ptr(new SliderPrivate(this))
 {
     Q_D(Slider);
-
-    d->themeTemplate = DThemeManager::instance()->getQssForWidget(this);
-
-    connect(DThemeManager::instance(), &DThemeManager::themeChanged,
-    this, [ = ]() {
-        d->themeTemplate = DThemeManager::instance()->getQssForWidget(this);
-    });
 
     connect(this, &Slider::hoverd, this, [ = ](bool hovered) {
         if (d->currentAnimation) {
@@ -72,9 +60,6 @@ Slider::Slider(Qt::Orientation orientation, QWidget *parent) :
         connect(d->currentAnimation, &QVariantAnimation::valueChanged,
         this, [ = ](const QVariant & value) {
             setStyleSheet(d->updateQSS(value.toReal()));
-
-            style()->unpolish(this);
-            style()->polish(this);
         });
         d->currentAnimation->start();
     });
@@ -88,7 +73,7 @@ Slider::~Slider()
 void Slider::resizeEvent(QResizeEvent *event)
 {
     Q_D(Slider);
-    QSlider::resizeEvent(event);
+    DSlider::resizeEvent(event);
     if (!d->currentAnimation) {
         setStyleSheet(d->updateQSS(0));
     }
@@ -97,7 +82,7 @@ void Slider::resizeEvent(QResizeEvent *event)
 void Slider::mouseReleaseEvent(QMouseEvent *event)
 {
     this->blockSignals(false);
-    QSlider::mouseReleaseEvent(event);
+    DSlider::mouseReleaseEvent(event);
     Q_EMIT valueAccpet(value());
 }
 
@@ -132,14 +117,14 @@ void Slider::enterEvent(QEvent *event)
 {
     setProperty("hover", true);
     Q_EMIT hoverd(true);
-    QSlider::enterEvent(event);
+    DSlider::enterEvent(event);
 }
 
 void Slider::leaveEvent(QEvent *event)
 {
     setProperty("hover", false);
     Q_EMIT hoverd(false);
-    QSlider::leaveEvent(event);
+    DSlider::leaveEvent(event);
 }
 
 void Slider::wheelEvent(QWheelEvent *e)

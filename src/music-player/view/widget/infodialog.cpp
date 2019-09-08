@@ -22,18 +22,16 @@
 #include "infodialog.h"
 
 #include <QDebug>
-#include <QLabel>
 #include <QVBoxLayout>
 #include <QGridLayout>
-#include <QPushButton>
 
 #include <DApplication>
 #include "dplatformwindowhandle.h"
 #include "dblureffectwidget.h"
-#include <dimagebutton.h>
+#include <DImageButton>
+#include <DFrame>
 
 #include <dwindowclosebutton.h>
-#include <DThemeManager>
 
 #include "../../core/metasearchservice.h"
 #include "../helper/widgethellper.h"
@@ -52,10 +50,10 @@ public:
     void updateLabelSize();
 
 //    DBlurEffectWidget   *bgBlurWidget   = nullptr;
-    QFrame              *infoGridFrame  = nullptr;
-    QLabel              *cover          = nullptr;
-    QLabel              *title          = nullptr;
-    QList<QLabel *>     valueList;
+    DFrame              *infoGridFrame  = nullptr;
+    DLabel              *cover          = nullptr;
+    DLabel              *title          = nullptr;
+    QList<DLabel *>     valueList;
 
     InfoDialog *q_ptr;
     Q_DECLARE_PUBLIC(InfoDialog)
@@ -77,21 +75,21 @@ void InfoDialogPrivate::initUI()
     closeBt->setObjectName("InfoClose");
     closeBt->setFixedSize(27, 23);
 
-    cover = new QLabel;
+    cover = new DLabel;
     cover->setContentsMargins(0, 0, 0, 0);
     cover->setObjectName("InfoCover");
     cover->setFixedSize(CoverSize, CoverSize);
 
-    title = new QLabel;
+    title = new DLabel;
     title->setObjectName("InfoTitle");
     title->setFixedWidth(300);
     title->setWordWrap(true);
 
-    auto split = new QLabel();
+    auto split = new DLabel();
     split->setObjectName("InfoSplit");
     split->setFixedSize(300, 1);
 
-    infoGridFrame = new QFrame;
+    infoGridFrame = new DFrame;
     infoGridFrame->setMaximumWidth(300);
     infoGridFrame->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
@@ -121,11 +119,11 @@ void InfoDialogPrivate::initUI()
              << InfoDialog::tr("Path:");
 
     for (int i = 0; i < infoKeys.length(); ++i) {
-        auto infoKey = new QLabel(infoKeys.value(i));
+        auto infoKey = new DLabel(infoKeys.value(i));
         infoKey->setObjectName("InfoKey");
         infoKey->setMinimumHeight(18);
 
-        auto infoValue = new QLabel();
+        auto infoValue = new DLabel();
         infoValue->setWordWrap(true);
         infoValue->setObjectName("InfoValue");
         infoValue->setMinimumHeight(18);
@@ -171,7 +169,6 @@ InfoDialog::InfoDialog(QWidget *parent)
     : DAbstractDialog(parent), d_ptr(new InfoDialogPrivate(this))
 {
     Q_D(InfoDialog);
-    DThemeManager::instance()->registerWidget(this);
     d->initUI();
 }
 

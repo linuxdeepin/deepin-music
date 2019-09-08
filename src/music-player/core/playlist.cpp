@@ -344,6 +344,7 @@ void Playlist::setDisplayName(const QString &name)
 {
     playlistMeta.displayName = name;
 
+    QSqlDatabase::database().transaction();
     QSqlQuery query;
     query.prepare("UPDATE playlist SET displayname = :displayname WHERE uuid= :uuid");
     query.bindValue(":displayname", playlistMeta.displayName);
@@ -353,6 +354,7 @@ void Playlist::setDisplayName(const QString &name)
         qWarning() << query.lastError();
         return;
     }
+    QSqlDatabase::database().commit();
 }
 
 void Playlist::appendMusicList(const MetaPtrList metalist)

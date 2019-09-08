@@ -22,18 +22,17 @@
 #include "playlistview.h"
 
 #include <QDebug>
-#include <QMenu>
+#include <DMenu>
 #include <QDir>
 #include <QProcess>
 #include <QFileInfo>
 #include <QStyleFactory>
 #include <QResizeEvent>
 #include <QStandardItemModel>
-#include <QScrollBar>
 
-#include <ddialog.h>
+#include <DDialog>
 #include <DDesktopServices>
-#include <DThemeManager>
+#include <DScrollBar>
 
 #include "../../core/metasearchservice.h"
 #include "../helper/widgethellper.h"
@@ -59,11 +58,9 @@ public:
 };
 
 PlayListView::PlayListView(QWidget *parent)
-    : ListView(parent), d_ptr(new PlayListViewPrivate(this))
+    : DListView(parent), d_ptr(new PlayListViewPrivate(this))
 {
     Q_D(PlayListView);
-
-    DThemeManager::instance()->registerWidget(this);
 
     setObjectName("PlayListView");
 
@@ -167,7 +164,7 @@ void PlayListView::onMusicListRemoved(const MetaPtrList metalist)
             }
         }
     }
-    updateScrollbar();
+    //updateScrollbar();
     setAutoScroll(true);
 }
 
@@ -192,7 +189,7 @@ void PlayListView::onMusicListAdded(const MetaPtrList metalist)
     for (auto meta : metalist) {
         d->addMedia(meta);
     }
-    updateScrollbar();
+    //updateScrollbar();
 }
 
 void PlayListView::onLocate(const MetaPtr meta)
@@ -227,7 +224,7 @@ void PlayListView::onMusiclistChanged(PlaylistPtr playlist)
     }
 
     d->model->setPlaylist(playlist);
-    updateScrollbar();
+    //updateScrollbar();
 }
 
 void PlayListView::keyPressEvent(QKeyEvent *event)
@@ -307,9 +304,7 @@ void PlayListView::showContextMenu(const QPoint &pos,
 
     QPoint globalPos = this->mapToGlobal(pos);
 
-    QMenu playlistMenu;
-    playlistMenu.setStyle(QStyleFactory::create("dlight"));
-
+    DMenu playlistMenu;
     auto newvar = QVariant::fromValue(PlaylistPtr());
 
     auto createPlaylist = playlistMenu.addAction(tr("New playlist"));
@@ -332,7 +327,7 @@ void PlayListView::showContextMenu(const QPoint &pos,
         act->setData(QVariant::fromValue(playlist));
     }
 
-    connect(&playlistMenu, &QMenu::triggered, this, [ = ](QAction * action) {
+    connect(&playlistMenu, &DMenu::triggered, this, [ = ](QAction * action) {
         auto playlist = action->data().value<PlaylistPtr >();
         qDebug() << playlist;
         MetaPtrList metalist;
@@ -347,9 +342,7 @@ void PlayListView::showContextMenu(const QPoint &pos,
 
     bool singleSelect = (1 == selection->selectedRows().length());
 
-    QMenu myMenu;
-    myMenu.setStyle(QStyleFactory::create("dlight"));
-
+    DMenu myMenu;
     QAction *playAction = nullptr;
     if (singleSelect) {
         playAction = myMenu.addAction(tr("Play"));
@@ -367,9 +360,7 @@ void PlayListView::showContextMenu(const QPoint &pos,
 
     QAction *songAction = nullptr;
 
-    QMenu textCodecMenu;
-    textCodecMenu.setStyle(QStyleFactory::create("dlight"));
-
+    DMenu textCodecMenu;
     if (singleSelect) {
         auto index = selection->selectedRows().first();
         auto meta = d->model->meta(index);
@@ -388,7 +379,7 @@ void PlayListView::showContextMenu(const QPoint &pos,
         myMenu.addSeparator();
         songAction = myMenu.addAction(tr("Song info"));
 
-        connect(&textCodecMenu, &QMenu::triggered, this, [ = ](QAction * action) {
+        connect(&textCodecMenu, &DMenu::triggered, this, [ = ](QAction * action) {
             auto codec = action->data().toByteArray();
             meta->updateCodec(codec);
             Q_EMIT updateMetaCodec(meta);
@@ -430,7 +421,6 @@ void PlayListView::showContextMenu(const QPoint &pos,
             }
 
             Dtk::Widget::DDialog warnDlg(this);
-            warnDlg.setStyle(QStyleFactory::create("dlight"));
             warnDlg.setTextFormat(Qt::RichText);
             warnDlg.addButton(tr("Cancel"), true, Dtk::Widget::DDialog::ButtonWarning);
             warnDlg.addButton(tr("Delete"), false, Dtk::Widget::DDialog::ButtonNormal);
@@ -474,7 +464,7 @@ void PlayListView::showContextMenu(const QPoint &pos,
 
 void PlayListView::dragEnterEvent(QDragEnterEvent *event)
 {
-    ListView::dragEnterEvent(event);
+    DListView::dragEnterEvent(event);
 }
 
 void PlayListView::startDrag(Qt::DropActions supportedActions)
@@ -487,7 +477,7 @@ void PlayListView::startDrag(Qt::DropActions supportedActions)
     }
 
     setAutoScroll(false);
-    ListView::startDrag(supportedActions);
+    DListView::startDrag(supportedActions);
     setAutoScroll(true);
 
     QMap<QString, int> hashIndexs;

@@ -23,18 +23,17 @@
 
 #include <QDebug>
 #include <QTimer>
-#include <QStyle>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
-#include <QPushButton>
 #include <QMouseEvent>
 #include <QWheelEvent>
-#include <QProgressBar>
 #include <QStackedLayout>
 
 #include <DHiDPIHelper>
 #include <DToast>
 #include <DPushButton>
+#include <DProgressBar>
+
 #include <metadetector.h>
 
 #include "../musicapp.h"
@@ -50,8 +49,6 @@
 #include "widget/soundvolume.h"
 #include "widget/musicimagebutton.h"
 #include "widget/musicpixmapbutton.h"
-
-DWIDGET_USE_NAMESPACE
 
 static const char *sPropertyFavourite         = "fav";
 static const char *sPropertyPlayStatus        = "playstatus";
@@ -87,7 +84,7 @@ public:
     MusicImageButton  *btSound    = nullptr;
     Slider            *progress   = nullptr;
     SoundVolume       *volSlider  = nullptr;
-    QFrame            *ctlWidget  = nullptr;
+    DFrame            *ctlWidget  = nullptr;
 
     HintFilter          *hintFilter         = nullptr;
     HoverShadowFilter   *hoverShadowFilter  = nullptr;
@@ -108,8 +105,6 @@ void FooterPrivate::updateQssProperty(QWidget *w, const char *name, const QVaria
 {
     Q_Q(Footer);
     w->setProperty(name, value);
-    q->style()->unpolish(w);
-    q->style()->polish(w);
     w->update();
 }
 
@@ -150,7 +145,7 @@ void FooterPrivate::initConnection()
         Q_EMIT q->progressRealHeightChanged(value);
     });
 
-    q->connect(btPlay, &QPushButton::released, q, [ = ]() {
+    q->connect(btPlay, &DPushButton::released, q, [ = ]() {
         auto status = btPlay->property(sPropertyPlayStatus).toString();
         if (status == sPlayStatusValuePlaying) {
             Q_EMIT q->pause(activingPlaylist, activingMeta);
@@ -161,26 +156,26 @@ void FooterPrivate::initConnection()
         }
     });
 
-    q->connect(btPrev, &QPushButton::released, q, [ = ]() {
+    q->connect(btPrev, &DPushButton::released, q, [ = ]() {
         Q_EMIT q->prev(activingPlaylist, activingMeta);
     });
-    q->connect(btNext, &QPushButton::released, q, [ = ]() {
+    q->connect(btNext, &DPushButton::released, q, [ = ]() {
         Q_EMIT q->next(activingPlaylist, activingMeta);
     });
 
-    q->connect(btFavorite, &QPushButton::released, q, [ = ]() {
+    q->connect(btFavorite, &DPushButton::released, q, [ = ]() {
         Q_EMIT q->toggleFavourite(activingMeta);
     });
     q->connect(title, &Label::clicked, q, [ = ](bool) {
         Q_EMIT q->locateMusic(activingPlaylist, activingMeta);
     });
-    q->connect(btLyric, &QPushButton::released, q, [ = ]() {
+    q->connect(btLyric, &DPushButton::released, q, [ = ]() {
         Q_EMIT  q->toggleLyricView();
     });
-    q->connect(btPlayList, &QPushButton::released, q, [ = ]() {
+    q->connect(btPlayList, &DPushButton::released, q, [ = ]() {
         Q_EMIT q->togglePlaylist();
     });
-    q->connect(btSound, &QPushButton::pressed, q, [ = ]() {
+    q->connect(btSound, &DPushButton::pressed, q, [ = ]() {
         Q_EMIT q->toggleMute();
     });
     q->connect(volSlider, &SoundVolume::volumeChanged, q, [ = ](int vol) {
@@ -194,14 +189,14 @@ void FooterPrivate::initConnection()
 }
 
 Footer::Footer(QWidget *parent) :
-    QFrame(parent), d_ptr(new FooterPrivate(this))
+    DBlurEffectWidget(parent), d_ptr(new FooterPrivate(this))
 {
     Q_D(Footer);
 
     setFocusPolicy(Qt::ClickFocus);
     setObjectName("Footer");
-
-    //DThemeManager::instance()->registerWidget(this);
+    setMode(DBlurEffectWidget::GaussianBlur);
+    setMaskColor(QColor(0, 0, 0, 75));
 
     auto mainVBoxlayout = new QVBoxLayout(this);
     mainVBoxlayout->setSpacing(0);
@@ -301,9 +296,9 @@ Footer::Footer(QWidget *parent) :
     d->btSound->setFixedSize(36, 36);
     d->btSound->setProperty("volume", "mid");
 
-    d->btPlayList = new MusicImageButton(":/mpimage/normal/famous_ballad_normal.svg",
-                                         ":/mpimage/hover/famous_ballad_hover.svg",
-                                         ":/mpimage/press/famous_ballad_press.svg");
+    d->btPlayList = new MusicImageButton(":/mpimage/normal/playlist_normal.svg",
+                                         ":/mpimage/hover/playlist_hover.svg",
+                                         ":/mpimage/press/playlist_press.svg");
     d->btPlayList->setObjectName("FooterActionPlayList");
     d->btPlayList->setFixedSize(36, 36);
 //    d->btPlayList->hide();
@@ -331,7 +326,7 @@ Footer::Footer(QWidget *parent) :
     musicMetaLayout->addWidget(d->title);
     musicMetaLayout->addWidget(d->artist);
 
-    auto metaWidget = new QFrame;
+    auto metaWidget = new DFrame;
 //    metaWidget->setStyleSheet("border: 1px solid red;");
     auto metaLayout = new QHBoxLayout(metaWidget);
     metaLayout->setContentsMargins(0, 0, 0, 0);
@@ -341,7 +336,7 @@ Footer::Footer(QWidget *parent) :
     metaLayout->addLayout(musicMetaLayout, 0);
     metaLayout->addStretch();
 
-    d->ctlWidget = new QFrame(this);
+    d->ctlWidget = new DFrame(this);
 //    d->ctlWidget->setStyleSheet("border: 1px solid red;");
     auto ctlLayout = new QHBoxLayout(d->ctlWidget);
     ctlLayout->setMargin(0);
@@ -373,7 +368,7 @@ Footer::Footer(QWidget *parent) :
 
     mainVBoxlayout->addWidget(d->progress);
 
-    auto controlFrame = new QFrame;
+    auto controlFrame = new DFrame;
     controlFrame->setObjectName("FooterControlFrame");
     controlFrame->setFixedHeight(60 - d->progress->height() / 2);
     controlFrame->setLayout(layout);
@@ -398,7 +393,7 @@ Footer::Footer(QWidget *parent) :
 
     d->initConnection();
 
-    connect(d->btCover, &QPushButton::clicked, this, [ = ](bool) {
+    connect(d->btCover, &DPushButton::clicked, this, [ = ](bool) {
         Q_EMIT toggleLyricView();
         if (d->btCover->property("viewname").toString() != "lyric") {
             d->updateQssProperty(d->btCover, "viewname", "lyric");
@@ -466,7 +461,7 @@ QString Footer::defaultCover() const
 void Footer::mousePressEvent(QMouseEvent *event)
 {
     Q_D(Footer);
-    QFrame::mousePressEvent(event);
+    DWidget::mousePressEvent(event);
     auto subCtlPos = d->progress->mapFromParent(event->pos());
     if (d->progress->rect().contains(subCtlPos)
             /*|| !this->rect().contains(event->pos())*/) {
@@ -479,7 +474,7 @@ void Footer::mousePressEvent(QMouseEvent *event)
 void Footer::mouseReleaseEvent(QMouseEvent *event)
 {
     Q_D(Footer);
-    QFrame::mouseReleaseEvent(event);
+    DWidget::mouseReleaseEvent(event);
     d->enableMove = false;
 }
 
@@ -489,7 +484,7 @@ void Footer::mouseMoveEvent(QMouseEvent *event)
     Qt::MouseButton button = event->buttons() & Qt::LeftButton ? Qt::LeftButton : Qt::NoButton;
     if (d->enableMove && d->enableMove && event->buttons() == Qt::LeftButton) {
         Q_EMIT mouseMoving(button);
-        QFrame::mouseMoveEvent(event);
+        DWidget::mouseMoveEvent(event);
     }
 }
 
@@ -761,7 +756,7 @@ void Footer::setDefaultCover(QString defaultCover)
 void Footer::resizeEvent(QResizeEvent *event)
 {
     Q_D(Footer);
-    QFrame::resizeEvent(event);
+    DWidget::resizeEvent(event);
 
     //auto fix = progressExtentHeight();
     //auto center = rect().marginsRemoved(QMargins(0, fix, 0, 0)).center() - d->ctlWidget->rect().center();

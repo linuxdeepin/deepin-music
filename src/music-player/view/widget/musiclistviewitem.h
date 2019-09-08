@@ -21,26 +21,19 @@
 
 #pragma once
 
-#include <QScopedPointer>
-#include <DListView>
+#include <QListWidgetItem>
 
-DWIDGET_USE_NAMESPACE
+#include "../../core/playlist.h"
 
-class LyricViewPrivate;
-class LyricView : public DListView
+class MusicListViewItem : public QListWidgetItem
 {
-    Q_OBJECT
 public:
-    explicit LyricView(QWidget *parent = Q_NULLPTR);
-    ~LyricView();
-
-    bool viewMode() const;
-    int optical() const;
-
-    virtual void wheelEvent(QWheelEvent *event) Q_DECL_OVERRIDE;
+    explicit MusicListViewItem(PlaylistPtr playlist, QListWidget *parent = Q_NULLPTR);
+    inline PlaylistPtr data()
+    {
+        return m_data;
+    }
 
 private:
-    QScopedPointer<LyricViewPrivate> d_ptr;
-    Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), LyricView)
+    PlaylistPtr    m_data;
 };
-

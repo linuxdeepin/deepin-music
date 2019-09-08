@@ -21,11 +21,13 @@
 
 #pragma once
 
-#include <QListWidget>
-#include <QScopedPointer>
+#include <DListWidget>
 
-class MusicListViewPrivate;
-class MusicListView : public QListWidget
+#include "../../core/playlist.h"
+
+DWIDGET_USE_NAMESPACE
+
+class MusicListView : public DListWidget
 {
     Q_OBJECT
 public:
@@ -36,14 +38,11 @@ public:
     void showContextMenu(const QPoint &pos);
 
 signals:
+    void playall(PlaylistPtr playlist);
     void customResort(const QStringList &uuids);
 
 protected:
-    virtual void wheelEvent(QWheelEvent *event) Q_DECL_OVERRIDE;
-    virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
     virtual void startDrag(Qt::DropActions supportedActions) Q_DECL_OVERRIDE;
+    void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
 
-private:
-    QScopedPointer<MusicListViewPrivate> d_ptr;
-    Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), MusicListView)
 };

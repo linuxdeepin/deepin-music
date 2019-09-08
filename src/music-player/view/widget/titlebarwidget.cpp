@@ -22,17 +22,16 @@
 #include "titlebarwidget.h"
 
 #include <QDebug>
-#include <QLabel>
 #include <QHBoxLayout>
-#include <QPushButton>
 #include <QResizeEvent>
 #include <QApplication>
 #include <QFocusEvent>
 #include <QGraphicsOpacityEffect>
 
 #include <DWidgetUtil>
-#include <DThemeManager>
-#include <dsearchedit.h>
+#include <DPushButton>
+#include <DSearchEdit>
+#include <DLabel>
 
 #include "searchedit.h"
 
@@ -46,36 +45,34 @@ public:
     void fixSearchPosition();
 
     SearchEdit  *search = nullptr;
-    QPushButton *btBack = nullptr;
+    DPushButton *btBack = nullptr;
 
     TitlebarWidget *q_ptr;
     Q_DECLARE_PUBLIC(TitlebarWidget)
 };
 
 TitlebarWidget::TitlebarWidget(QWidget *parent) :
-    QFrame(parent), d_ptr(new TitlebarWidgetPrivate(this))
+    DWidget(parent), d_ptr(new TitlebarWidgetPrivate(this))
 {
     Q_D(TitlebarWidget);
     setFocusPolicy(Qt::NoFocus);
     setObjectName("TitlebarWidget");
 
-    DThemeManager::instance()->registerWidget(this, QStringList({"viewname"}));
-
     auto layout = new QHBoxLayout(this);
     layout->setContentsMargins(5, 5, 10, 5);
 
-    auto leftWidget = new QFrame;
+    auto leftWidget = new DFrame;
     leftWidget->setObjectName("TitleLeft");
     leftWidget->setFixedWidth(148);
     auto leftLayout = new QHBoxLayout(leftWidget);
     leftLayout->setSpacing(10);
     leftLayout->setMargin(0);
 
-    auto iconLabel = new QLabel;
+    auto iconLabel = new DLabel;
     iconLabel->setObjectName("TitleIcon");
     iconLabel->setFixedSize(24, 24);
 
-    d->btBack = new QPushButton;
+    d->btBack = new DPushButton;
     d->btBack->setObjectName("TitleBack");
     d->btBack->setFixedSize(24, 24);
     d->btBack->hide();
@@ -90,7 +87,7 @@ TitlebarWidget::TitlebarWidget(QWidget *parent) :
     d->search->setPlaceHolder(tr("Search"));
     d->search->clear();
 
-    auto rightWidget = new QFrame;
+    auto rightWidget = new DFrame;
     rightWidget->setObjectName("TitleLeft");
     rightWidget->setFixedWidth(1);
 
@@ -102,7 +99,7 @@ TitlebarWidget::TitlebarWidget(QWidget *parent) :
 
     connect(d->search, &SearchEdit::locateMusic, this, &TitlebarWidget::locateMusicInAllMusiclist);
     connect(d->search, &SearchEdit::searchText, this, &TitlebarWidget::search);
-    connect(d->btBack, &QPushButton::clicked, this, &TitlebarWidget::searchExited);
+    connect(d->btBack, &DPushButton::clicked, this, &TitlebarWidget::searchExited);
 
     connect(this, &TitlebarWidget::search, this, [ = ]() {
         d->btBack->show();
@@ -157,7 +154,7 @@ void TitlebarWidget::setViewname(const QString &viewname)
 void TitlebarWidget::resizeEvent(QResizeEvent *event)
 {
 //    Q_D(TitlebarWidget);
-    QFrame::resizeEvent(event);
+    DWidget::resizeEvent(event);
 }
 
 void TitlebarWidgetPrivate::fixSearchPosition()

@@ -22,10 +22,12 @@
 #pragma once
 
 #include <QScopedPointer>
-#include <QFrame>
+#include <DFrame>
+
+DWIDGET_USE_NAMESPACE
 
 class DDropdownPrivate;
-class DDropdown : public QFrame
+class DDropdown : public DFrame
 {
     Q_OBJECT
     Q_PROPERTY(QString status READ status WRITE setStatus NOTIFY statusChanged)

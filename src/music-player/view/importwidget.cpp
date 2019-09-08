@@ -22,15 +22,13 @@
 #include "importwidget.h"
 
 #include <QVBoxLayout>
-#include <QFileDialog>
-#include <QLabel>
 #include <QDragEnterEvent>
 #include <QMimeData>
 #include <QGraphicsOpacityEffect>
 
+#include <DFileDialog>
+#include <DLabel>
 #include <DPushButton>
-
-#include <DThemeManager>
 
 DWIDGET_USE_NAMESPACE
 
@@ -41,38 +39,36 @@ class ImportWidgetPrivate
 public:
     ImportWidgetPrivate(ImportWidget *parent) : q_ptr(parent) {}
 
-    QLabel                  *text = nullptr;
-    QPushButton             *importButton = nullptr;
+    DLabel                  *text = nullptr;
+    DPushButton             *importButton = nullptr;
 
     ImportWidget *q_ptr;
     Q_DECLARE_PUBLIC(ImportWidget)
 };
 
-ImportWidget::ImportWidget(QWidget *parent) : QFrame(parent), d_ptr(new ImportWidgetPrivate(this))
+ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent), d_ptr(new ImportWidgetPrivate(this))
 {
     Q_D(ImportWidget);
     setObjectName("ImportWidget");
-
-    DThemeManager::instance()->registerWidget(this);
 
     setAcceptDrops(true);
 
     auto layout = new QVBoxLayout(this);
 
-    auto logo = new QLabel;
+    auto logo = new DLabel;
     logo->setFixedSize(128, 128);
     logo->setObjectName("ImportViewLogo");
 
-//    auto btFrme = new QFrame;
+//    auto btFrme = new DFrame;
 //    auto btFrmeLayout = new QVBoxLayout(btFrme);
 //    btFrme->setFixedSize(150, 50);
-    d->importButton = new QPushButton;
+    d->importButton = new DPushButton;
     d->importButton->setObjectName("ImportViewImportButton");
     d->importButton->setFixedSize(142, 42);
 //    btFrmeLayout->addWidget(d->importButton, 0, Qt::AlignCenter);
     d->importButton->setText(tr("Add Music"));
 
-    d->text = new QLabel;
+    d->text = new DLabel;
     d->text->setObjectName("ImportViewText");
     d->text->setFixedHeight(24);
     d->text->setOpenExternalLinks(false);
@@ -87,12 +83,12 @@ ImportWidget::ImportWidget(QWidget *parent) : QFrame(parent), d_ptr(new ImportWi
     layout->addWidget(d->text, 0, Qt::AlignCenter);
     layout->addStretch();
 
-    connect(d->importButton, &QPushButton::clicked,
+    connect(d->importButton, &DPushButton::clicked,
     this, [ = ] {
         Q_EMIT this->importFiles();
     });
 
-    connect(d->text, &QLabel::linkActivated,
+    connect(d->text, &DLabel::linkActivated,
     this, [ = ](const QString & /*link*/) {
         showWaitHint();
         Q_EMIT this->scanMusicDirectory();
@@ -129,7 +125,7 @@ void ImportWidget::dragEnterEvent(QDragEnterEvent *event)
         return;
     }
 
-    QFrame::dragEnterEvent(event);
+    DFrame::dragEnterEvent(event);
 }
 
 void ImportWidget::dragMoveEvent(QDragMoveEvent *)

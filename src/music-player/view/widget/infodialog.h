@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include <ddialog.h>
+#include <DDialog>
 #include <mediameta.h>
 
 class InfoDialogPrivate;

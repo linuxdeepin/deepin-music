@@ -23,42 +23,41 @@
 
 #include <QDebug>
 #include <QVBoxLayout>
-#include <QPushButton>
 #include <QFocusEvent>
-#include <QListWidget>
+
+#include <DListWidget>
 #include <DLabel>
 #include <DPushButton>
 #include <DFloatingButton>
 
 #include <DUtil>
-#include <DThemeManager>
 
 #include "../core/playlist.h"
 #include "widget/musiclistview.h"
-#include "widget/musiclistitem.h"
+#include "widget/musiclistviewitem.h"
 #include "musiclistdatawidget.h"
 
-DWIDGET_USE_NAMESPACE
-
-MusicListWidget::MusicListWidget(QWidget *parent) : QFrame(parent)
+MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
 {
     setObjectName("MusicListWidget");
 
     auto layout = new QHBoxLayout(this);
     setFocusPolicy(Qt::ClickFocus);
-    layout->setContentsMargins(0, 0, 0, 15);
-    layout->setSpacing(15);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
 
     auto musicLayout = new QVBoxLayout(this);
-    musicLayout->setContentsMargins(0, 0, 0, 15);
-    musicLayout->setSpacing(15);
+    musicLayout->setContentsMargins(0, 0, 0, 0);
+    musicLayout->setSpacing(0);
 
     DLabel *dataBaseLabel = new DLabel;
+    dataBaseLabel->setFixedHeight(40);
     dataBaseLabel->setText(tr("DataBase"));
     dataBaseLabel->setObjectName("MusicListWidgetDataBase");
     dataBaseLabel->setMargin(8);
 
     DLabel *customizeLabel = new DLabel;
+    customizeLabel->setFixedHeight(40);
     customizeLabel->setText(tr("Play List"));
     customizeLabel->setObjectName("MusicListWidgetCustomizeLabel");
     customizeLabel->setMargin(8);
@@ -73,20 +72,17 @@ MusicListWidget::MusicListWidget(QWidget *parent) : QFrame(parent)
     customizeLayout->addWidget(addListBtn, 0, Qt::AlignRight);
 
     m_dataBaseListview = new MusicListView;
-    m_dataBaseListview->setFixedHeight(230);
+    m_dataBaseListview->setFixedHeight(162);
     m_customizeListview = new MusicListView;
     m_dataListView = new MusicListDataWidget;
 
     musicLayout->addWidget(dataBaseLabel, 0, Qt::AlignVCenter);
     musicLayout->addWidget(m_dataBaseListview, 0, Qt::AlignTop);
     musicLayout->addLayout(customizeLayout);
-    musicLayout->addWidget(m_customizeListview, 100, Qt::AlignTop);
+    musicLayout->addWidget(m_customizeListview);
 
     layout->addLayout(musicLayout, 0);
     layout->addWidget(m_dataListView, 100);
-    layout->addStretch();
-
-    DThemeManager::instance()->registerWidget(this);
 
     connect(addListBtn, &DPushButton::clicked, this, [ = ](bool /*checked*/) {
         qDebug() << "addPlaylist(true);";
@@ -96,7 +92,7 @@ MusicListWidget::MusicListWidget(QWidget *parent) : QFrame(parent)
     connect(m_dataBaseListview, &MusicListView::itemClicked,
     this, [ = ](QListWidgetItem * item) {
         this->setEnabled(false);
-        auto playlistItem = qobject_cast<MusicListItem *>(m_dataBaseListview->itemWidget(item));
+        auto playlistItem = dynamic_cast<MusicListViewItem *>(item);
         if (!playlistItem) {
             qCritical() << "playlistItem is empty" << item << playlistItem;
             return;
@@ -112,13 +108,9 @@ MusicListWidget::MusicListWidget(QWidget *parent) : QFrame(parent)
     });
     connect(m_dataBaseListview, &MusicListView::currentItemChanged,
     this, [ = ](QListWidgetItem * current, QListWidgetItem * previous) {
-        auto itemWidget = qobject_cast<MusicListItem *>(m_dataBaseListview->itemWidget(previous));
+        auto itemWidget = dynamic_cast<MusicListViewItem *>(previous);
+        itemWidget = dynamic_cast<MusicListViewItem *>(current);
         if (itemWidget) {
-            itemWidget->setActive(false);
-        }
-        itemWidget = qobject_cast<MusicListItem *>(m_dataBaseListview->itemWidget(current));
-        if (itemWidget) {
-            itemWidget->setActive(true);
             m_dataListView->onMusiclistChanged(itemWidget->data());
         }
     });
@@ -126,11 +118,19 @@ MusicListWidget::MusicListWidget(QWidget *parent) : QFrame(parent)
     this, [ = ](const QStringList & uuids) {
         Q_EMIT this->customResort(uuids);
     });
+    connect(m_dataBaseListview, &MusicListView::playall,
+    this, [ = ](PlaylistPtr playlist) {
+        if (playlist->id() == AlbumMusicListID || playlist->id() == ArtistMusicListID) {
+            playlist->playMusicTypeToMeta();
+            playlist->play(playlist->first());
+        }
+        Q_EMIT this->playall(playlist);
+    });
 
     connect(m_customizeListview, &MusicListView::itemClicked,
     this, [ = ](QListWidgetItem * item) {
         this->setEnabled(false);
-        auto playlistItem = qobject_cast<MusicListItem *>(m_customizeListview->itemWidget(item));
+        auto playlistItem = dynamic_cast<MusicListViewItem *>(item);
         if (!playlistItem) {
             qCritical() << "playlistItem is empty" << item << playlistItem;
             return;
@@ -146,19 +146,18 @@ MusicListWidget::MusicListWidget(QWidget *parent) : QFrame(parent)
     });
     connect(m_customizeListview, &MusicListView::currentItemChanged,
     this, [ = ](QListWidgetItem * current, QListWidgetItem * previous) {
-        auto itemWidget = qobject_cast<MusicListItem *>(m_customizeListview->itemWidget(previous));
+        auto itemWidget = dynamic_cast<MusicListViewItem *>(current);
         if (itemWidget) {
-            itemWidget->setActive(false);
-        }
-        itemWidget = qobject_cast<MusicListItem *>(m_customizeListview->itemWidget(current));
-        if (itemWidget) {
-            itemWidget->setActive(true);
             m_dataListView->onMusiclistChanged(itemWidget->data());
         }
     });
     connect(m_customizeListview, &MusicListView::customResort,
     this, [ = ](const QStringList & uuids) {
         Q_EMIT this->customResort(uuids);
+    });
+    connect(m_customizeListview, &MusicListView::playall,
+    this, [ = ](PlaylistPtr playlist) {
+        Q_EMIT this->playall(playlist);
     });
 
     //musiclistdatawidget
@@ -184,7 +183,8 @@ void MusicListWidget::initData(QList<PlaylistPtr > playlists, PlaylistPtr last)
         return;
     }
 
-    QListWidgetItem *current = nullptr;
+    QListWidgetItem *currentDataBaseItem = nullptr;
+    QListWidgetItem *currentcustomizeItem = nullptr;
     for (auto &playlist : playlists) {
         if (playlist->hide()) {
             continue;
@@ -192,47 +192,35 @@ void MusicListWidget::initData(QList<PlaylistPtr > playlists, PlaylistPtr last)
 
         qDebug() << "init with" << playlist->id() << playlist->displayName();
 
-        auto item = new QListWidgetItem;
-        m_dataBaseListview->addItem(item);
-        m_dataBaseListview->setItemWidget(item, new MusicListItem(playlist));
-
-        auto playlistItem = qobject_cast<MusicListItem *>(m_dataBaseListview->itemWidget(item));
-        connect(playlistItem, &MusicListItem::remove, this, [ = ]() {
-            m_dataBaseListview->removeItemWidget(item);
-            delete m_dataBaseListview->takeItem(m_dataBaseListview->row(item));
-            // remote to firest
-            Q_ASSERT(m_dataBaseListview->count() > 0);
-            m_dataBaseListview->updateScrollbar();
-            m_dataBaseListview->setCurrentItem(m_dataBaseListview->item(0));
-        });
-
-        connect(playlistItem, &MusicListItem::playall,
-                this, &MusicListWidget::playall);
-
-        if (last->id() == playlist->id()) {
-            current = item;
+        auto item = new MusicListViewItem(playlist);
+        if (playlist->id() == AlbumMusicListID || playlist->id() == ArtistMusicListID ||
+                playlist->id() == AllMusicListID || playlist->id() == FavMusicListID ) {
+            m_dataBaseListview->addItem(item);
+            if (playlist->playing())
+                currentDataBaseItem = item;
+        } else {
+            m_customizeListview->addItem(item);
+            currentcustomizeItem = item;
         }
 
     }
 
-    if (current) {
-        m_dataBaseListview->setCurrentItem(current);
-    } else {
+    if (currentDataBaseItem) {
+        m_dataBaseListview->setCurrentItem(currentDataBaseItem);
+    }
+    if (currentcustomizeItem) {
+        m_dataBaseListview->setCurrentItem(currentcustomizeItem);
+    }
+    if (currentDataBaseItem == nullptr && currentcustomizeItem == nullptr) {
         m_dataBaseListview->setCurrentItem(m_dataBaseListview->item(0));
     }
-    m_dataBaseListview->updateScrollbar();
 }
 
 void MusicListWidget::onMusicPlayed(PlaylistPtr playlist, const MetaPtr)
 {
     for (int i = 0; i < m_dataBaseListview->count(); ++i) {
         QListWidgetItem *item = m_dataBaseListview->item(i);
-        auto playlistItem = qobject_cast<MusicListItem *>(m_dataBaseListview->itemWidget(item));
-        if (playlistItem->data()->id() == playlist->id()) {
-            playlistItem->setPlay(true);
-        } else {
-            playlistItem->setPlay(false);
-        }
+        auto playlistItem = dynamic_cast<MusicListViewItem *>(item);
     }
 }
 
@@ -240,8 +228,6 @@ void MusicListWidget::focusOutEvent(QFocusEvent *event)
 {
     // TODO: monitor mouse position
     QPoint mousePos = mapToParent(mapFromGlobal(QCursor::pos()));
-//    qDebug() << mapFromGlobal(QCursor::pos()) << mousePos;
-//    qDebug() << event->reason();
     if (!this->geometry().contains(mousePos)) {
         if (event && event->reason() == Qt::MouseFocusReason) {
             DUtil::TimerSingleShot(50, [this]() {
@@ -250,7 +236,7 @@ void MusicListWidget::focusOutEvent(QFocusEvent *event)
             });
         }
     }
-    QFrame::focusOutEvent(event);
+    DWidget::focusOutEvent(event);
 }
 
 void MusicListWidget::onPlaylistAdded(PlaylistPtr playlist)
@@ -259,35 +245,12 @@ void MusicListWidget::onPlaylistAdded(PlaylistPtr playlist)
         return;
     }
 
-    auto item = new QListWidgetItem;
-
+    auto item = new MusicListViewItem(playlist);
     if (playlist->id() == AlbumMusicListID || playlist->id() == ArtistMusicListID ||
-            playlist->id() == AllMusicListID || playlist->id() == FavMusicListID) {
+            playlist->id() == AllMusicListID || playlist->id() == FavMusicListID ) {
         m_dataBaseListview->addItem(item);
-        m_dataBaseListview->setItemWidget(item, new MusicListItem(playlist));
-        if (playlist->playing())
-            m_dataBaseListview->setCurrentItem(item);
-        m_dataBaseListview->updateScrollbar();
-
-        auto playlistItem = qobject_cast<MusicListItem *>(m_dataBaseListview->itemWidget(item));
-        connect(playlistItem, &MusicListItem::playall,
-                this, &MusicListWidget::playall);
     } else {
         m_customizeListview->addItem(item);
-        m_customizeListview->setItemWidget(item, new MusicListItem(playlist));
-
-        auto playlistItem = qobject_cast<MusicListItem *>(m_customizeListview->itemWidget(item));
-        connect(playlistItem, &MusicListItem::remove, this, [ = ]() {
-            m_customizeListview->removeItemWidget(item);
-            delete m_customizeListview->takeItem(m_customizeListview->row(item));
-        });
-
-        connect(playlistItem, &MusicListItem::playall,
-                this, &MusicListWidget::playall);
-
-        if (playlist->playing())
-            m_customizeListview->setCurrentItem(item);
-        m_customizeListview->updateScrollbar();
     }
     if (playlist->playing())
         m_dataListView->onMusiclistChanged(playlist);
@@ -296,28 +259,20 @@ void MusicListWidget::onPlaylistAdded(PlaylistPtr playlist)
 void MusicListWidget::onCurrentChanged(PlaylistPtr playlist)
 {
     if (playlist) {
-        m_dataBaseListview->setCurrentItem(nullptr);
-        m_customizeListview->setCurrentItem(nullptr);
+        m_dataBaseListview->clearSelection();
+        m_customizeListview->clearSelection();
     }
     for (int i = 0; i < m_dataBaseListview->count(); ++i) {
         QListWidgetItem *item = m_dataBaseListview->item(i);
-        auto playlistItem = qobject_cast<MusicListItem *>(m_dataBaseListview->itemWidget(item));
-        if (playlistItem->data()->id() == playlist->id()) {
+        auto playlistItem = dynamic_cast<MusicListViewItem *>(item);
+        if (playlist == playlistItem->data())
             m_dataBaseListview->setCurrentItem(item);
-            playlistItem->setActive(true);
-        } else {
-            playlistItem->setActive(false);
-        }
     }
     for (int i = 0; i < m_customizeListview->count(); ++i) {
         QListWidgetItem *item = m_customizeListview->item(i);
-        auto playlistItem = qobject_cast<MusicListItem *>(m_customizeListview->itemWidget(item));
-        if (playlistItem->data()->id() == playlist->id()) {
+        auto playlistItem = dynamic_cast<MusicListViewItem *>(item);
+        if (playlist == playlistItem->data())
             m_customizeListview->setCurrentItem(item);
-            playlistItem->setActive(true);
-        } else {
-            playlistItem->setActive(false);
-        }
     }
 }
 
@@ -328,11 +283,15 @@ void MusicListWidget::onMusiclistChanged(PlaylistPtr playlist)
 
 void MusicListWidget::onMusicListAdded(PlaylistPtr playlist, const MetaPtrList metalist)
 {
+    Q_UNUSED(playlist)
+    Q_UNUSED(metalist)
     m_dataListView->onMusiclistUpdate();
 }
 
 void MusicListWidget::onMusicListRemoved(PlaylistPtr playlist, const MetaPtrList metalist)
 {
+    Q_UNUSED(playlist)
+    Q_UNUSED(metalist)
     m_dataListView->onMusiclistUpdate();
 }
 

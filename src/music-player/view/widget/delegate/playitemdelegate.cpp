@@ -27,8 +27,6 @@
 #include <QPainter>
 #include <QStandardItemModel>
 
-#include <DThemeManager>
-
 #include <musicmeta.h>
 
 #include "../playlistview.h"
@@ -72,7 +70,6 @@ PlayItemDelegatePrivate::PlayItemDelegatePrivate(PlayItemDelegate *parent):
     QWidget(nullptr), q_ptr(parent)
 {
     setObjectName("PlayItemStyleProxy");
-    DThemeManager::instance()->registerWidget(this, "PlayItemStyleProxy");
 }
 
 QColor PlayItemDelegatePrivate::textColor() const
@@ -284,10 +281,10 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
     painter->setRenderHint(QPainter::Antialiasing);
     painter->setRenderHint(QPainter::HighQualityAntialiasing);
 
-    auto background = (index.row() % 2) == 0 ? d->background() : d->alternateBackground();
+    auto background = (index.row() % 2) == 0 ? option.palette.background() : option.palette.alternateBase();
 
     if (option.state & QStyle::State_Selected) {
-        background = d->highlightedBackground();
+        background = option.palette.highlight();
     }
 
     if (option.state & QStyle::State_HasFocus) {

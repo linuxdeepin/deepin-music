@@ -21,10 +21,6 @@
 
 #include "searchmetalist.h"
 
-#include <DThemeManager>
-
-DWIDGET_USE_NAMESPACE
-
 class SearchMetaListPrivate
 {
 public:
@@ -34,13 +30,12 @@ public:
     Q_DECLARE_PUBLIC(SearchMetaList)
 };
 
-SearchMetaList::SearchMetaList(QWidget *parent) : QListWidget(parent), d_ptr(new SearchMetaListPrivate(this))
+SearchMetaList::SearchMetaList(QWidget *parent) : DListWidget(parent), d_ptr(new SearchMetaListPrivate(this))
 {
     setObjectName("SearchMetaList");
     setSelectionMode(QListView::SingleSelection);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    DThemeManager::instance()->registerWidget(this);
 }
 
 SearchMetaList::~SearchMetaList()

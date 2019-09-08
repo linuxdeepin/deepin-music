@@ -28,9 +28,7 @@
 #include <QVBoxLayout>
 
 #include <DUtil>
-#include <dslider.h>
-
-#include <DThemeManager>
+#include <DSlider>
 
 #include "core/player.h"
 
@@ -42,7 +40,7 @@ public:
     SoundVolumePrivate(SoundVolume *parent) : q_ptr(parent) {}
 
     SoundVolume *q_ptr;
-    QSlider     *volSlider  = nullptr;
+    DSlider     *volSlider  = nullptr;
     QBrush      background;
     QColor      borderColor = QColor(0, 0, 0,  255 * 2 / 10);
     int         radius      = 4;
@@ -62,17 +60,18 @@ SoundVolume::SoundVolume(QWidget *parent) : QWidget(parent), d_ptr(new SoundVolu
     layout->setContentsMargins(0, 5, 0, 11);
     layout->setSpacing(0);
 
-    d->volSlider = new QSlider(Qt::Vertical);
+    d->volSlider = new DSlider(Qt::Vertical);
     d->volSlider->setMinimum(0);
     d->volSlider->setMaximum(100);
     d->volSlider->setSingleStep(Player::VolumeStep);
     d->volSlider->setValue(50);
     d->volSlider->setFixedHeight(90);
+    d->volSlider->setFixedWidth(24);
 
     layout->addStretch();
     layout->addWidget(d->volSlider, 0, Qt::AlignCenter);
     layout->addStretch();
-    setFixedSize(24, 106);
+    setFixedSize(40, 106);
 
     auto *bodyShadow = new QGraphicsDropShadowEffect;
     bodyShadow->setBlurRadius(10.0);
@@ -80,9 +79,7 @@ SoundVolume::SoundVolume(QWidget *parent) : QWidget(parent), d_ptr(new SoundVolu
     bodyShadow->setOffset(0, 2.0);
     this->setGraphicsEffect(bodyShadow);
 
-    DThemeManager::instance()->registerWidget(this);
-
-    connect(d->volSlider, &QSlider::valueChanged,
+    connect(d->volSlider, &DSlider::valueChanged,
             this, &SoundVolume::volumeChanged);
 }
 

@@ -21,12 +21,14 @@
 
 #pragma once
 
-#include "listview.h"
+#include <DListView>
 
 #include "../../core/playlist.h"
 
+DWIDGET_USE_NAMESPACE
+
 class PlayListViewPrivate;
-class PlayListView : public ListView
+class PlayListView : public DListView
 {
     Q_OBJECT
 public:
