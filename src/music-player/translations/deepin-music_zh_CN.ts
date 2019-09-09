@@ -271,7 +271,7 @@
         <translation>导入失败，未找到有效的音乐文件！</translation>
     </message>
     <message>
-        <location filename="../view/mainframe.cpp" line="1035"/>
+        <location filename="../view/mainframe.cpp" line="1032"/>
         <source>All music</source>
         <translation>所有音乐</translation>
     </message>
@@ -705,48 +705,70 @@
 <context>
     <name>PlayListWidget</name>
     <message>
-        <location filename="../view/playlistwidget.cpp" line="139"/>
+        <location filename="../view/playlistwidget.cpp" line="129"/>
         <source>No Music</source>
         <translation>当前歌单为空</translation>
     </message>
     <message>
-        <location filename="../view/playlistwidget.cpp" line="141"/>
+        <location filename="../view/playlistwidget.cpp" line="131"/>
         <source>No result found</source>
         <translation>无搜索结果</translation>
     </message>
     <message>
-        <location filename="../view/playlistwidget.cpp" line="175"/>
+        <location filename="../view/playlistwidget.cpp" line="165"/>
+        <source>Play List</source>
+        <translation>播放列表</translation>
+    </message>
+    <message>
+        <location filename="../view/playlistwidget.cpp" line="180"/>
+        <source>Clear List</source>
+        <translation>清空列表</translation>
+    </message>
+    <message>
         <source>Play All</source>
-        <translation>播放全部</translation>
+        <translation type="vanished">播放全部</translation>
     </message>
     <message>
-        <location filename="../view/playlistwidget.cpp" line="183"/>
         <source>Time added</source>
-        <translation>添加时间</translation>
+        <translation type="vanished">添加时间</translation>
     </message>
     <message>
-        <location filename="../view/playlistwidget.cpp" line="184"/>
         <source>Title</source>
-        <translation>歌曲名称</translation>
+        <translation type="vanished">歌曲名称</translation>
     </message>
     <message>
-        <location filename="../view/playlistwidget.cpp" line="185"/>
         <source>Artist name</source>
-        <translation>歌手名称</translation>
+        <translation type="vanished">歌手名称</translation>
     </message>
     <message>
         <source>Artist</source>
         <translation type="vanished">演唱者</translation>
     </message>
     <message>
-        <location filename="../view/playlistwidget.cpp" line="186"/>
         <source>Album name</source>
-        <translation>专辑名称</translation>
+        <translation type="vanished">专辑名称</translation>
     </message>
     <message>
-        <location filename="../view/playlistwidget.cpp" line="218"/>
         <source>Custom</source>
-        <translation>自定义</translation>
+        <translation type="vanished">自定义</translation>
+    </message>
+</context>
+<context>
+    <name>PlayListWidgetPrivate</name>
+    <message>
+        <location filename="../view/playlistwidget.cpp" line="72"/>
+        <source>No songs</source>
+        <translation>无歌曲</translation>
+    </message>
+    <message>
+        <location filename="../view/playlistwidget.cpp" line="74"/>
+        <source>1 song</source>
+        <translation>1首歌曲</translation>
+    </message>
+    <message>
+        <location filename="../view/playlistwidget.cpp" line="76"/>
+        <source>%1 songs</source>
+        <translation>%1首歌曲</translation>
     </message>
 </context>
 <context>

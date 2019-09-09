@@ -781,9 +781,6 @@ void MainFrame::binding(Presenter *presenter)
         d->musicListWidget->onMusiclistUpdate();
         d->disableControl(true);
         d->slideToMusicListView(true);
-        if (!metalist.isEmpty()) {
-            d->playListWidget->setCustomSortType();
-        }
     });
 
     connect(presenter, &Presenter::requestImportFiles,
