@@ -49,10 +49,11 @@ public:
     void initConntion();
     void showEmptyHits(bool empty);
 
+    DLabel              *titleLabel     = nullptr;
+    DLabel              *infoLabel      = nullptr;
     DLabel              *emptyHits      = nullptr;
     DWidget             *actionBar      = nullptr;
-    DPushButton         *btPlayAll      = nullptr;
-    DDropdown           *dropdown       = nullptr;
+    DPushButton         *btClearAll     = nullptr;
     PlayListView        *playListView   = nullptr;
     QAction             *customAction   = nullptr;
 
@@ -64,18 +65,19 @@ public:
 void PlayListWidgetPrivate::initData(PlaylistPtr playlist)
 {
     Q_Q(PlayListWidget);
-    btPlayAll->setText(playlist->displayName());
+
+    QString infoStr;
+    int sortMetasSize = playlist->allmusic().size();
+    if (sortMetasSize == 0) {
+        infoStr = q_ptr->tr("No songs");
+    } else if (sortMetasSize == 1) {
+        infoStr = q_ptr->tr("1 song");
+    } else {
+        infoStr = q_ptr->tr("%1 songs").arg(sortMetasSize);
+    }
+    infoLabel->setText(infoStr);
     playListView->onMusiclistChanged(playlist);
 
-    if (playlist->sortType() == Playlist::SortByCustom) {
-        q->setCustomSortType();
-    } else {
-        for (auto action : dropdown->actions()) {
-            if (action->data().toInt() == playlist->sortType()) {
-                dropdown->setCurrentAction(action);
-            }
-        }
-    }
     showEmptyHits(playListView->model()->rowCount() == 0);
 }
 
@@ -83,23 +85,11 @@ void PlayListWidgetPrivate::initConntion()
 {
     Q_Q(PlayListWidget);
 
-    q->connect(dropdown, &DDropdown::triggered,
-    q, [ = ](QAction * action) {
-        dropdown->setCurrentAction(action);
-        Q_EMIT q->resort(playListView->playlist(), action->data().value<Playlist::SortType>());
-    });
-
-    q->connect(btPlayAll, &DPushButton::clicked,
+    q->connect(btClearAll, &DPushButton::clicked,
     q, [ = ](bool) {
         if (playListView->playlist()) {
-            Q_EMIT q->playall(playListView->playlist());
+            Q_EMIT q->musiclistRemove(playListView->playlist(), playListView->playlist()->allmusic());
         }
-    });
-
-    q->connect(playListView, &PlayListView::customSort,
-    q, [ = ]() {
-        q->setCustomSortType();
-        Q_EMIT q->resort(playListView->playlist(), Playlist::SortByCustom);
     });
 
     q->connect(playListView, &PlayListView::requestCustomContextMenu,
@@ -153,7 +143,7 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
     setObjectName("PlayListWidget");
     setAcceptDrops(true);
 
-    auto layout = new QVBoxLayout(this);
+    auto layout = new QHBoxLayout(this);
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(0);
 
@@ -162,38 +152,50 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
     auto palette = d->actionBar->palette();
     palette.setColor(DPalette::Background, Qt::white);
     d->actionBar->setPalette(palette);
-    d->actionBar->setFixedHeight(40);
+    d->actionBar->setFixedWidth(200);
     d->actionBar->setObjectName("PlayListActionBar");
     d->actionBar->hide();
 
-    auto actionBarLayout = new QHBoxLayout(d->actionBar);
-    actionBarLayout->setContentsMargins(10, 0, 8, 0);
+    auto actionBarLayout = new QVBoxLayout(d->actionBar);
+    actionBarLayout->setContentsMargins(20, 0, 8, 0);
     actionBarLayout->setSpacing(0);
 
-    d->btPlayAll = new DPushButton;
-    d->btPlayAll->setObjectName("PlayListPlayAll");
-    d->btPlayAll->setText(tr("Play All"));
-    d->btPlayAll->setFixedHeight(28);
-    d->btPlayAll->setFocusPolicy(Qt::NoFocus);
+    d->titleLabel = new DLabel();
+    d->titleLabel->setMargin(4);
+    d->titleLabel->setText(tr("Play List"));
+    d->infoLabel = new DLabel();
+    d->infoLabel->setMargin(4);
+    auto infoFont = d->infoLabel->font();
+    infoFont.setPointSize(10);
+    d->infoLabel->setFont(infoFont);
 
-    d->dropdown = new DDropdown;
-    d->dropdown->setFixedHeight(28);
-    d->dropdown->setMinimumWidth(130);
-    d->dropdown->setObjectName("PlayListSort");
-    d->dropdown->addAction(tr("Time added"), QVariant::fromValue<Playlist::SortType>(Playlist::SortByAddTime));
-    d->dropdown->addAction(tr("Title"), QVariant::fromValue<Playlist::SortType>(Playlist::SortByTitle));
-    d->dropdown->addAction(tr("Artist name"), QVariant::fromValue<Playlist::SortType>(Playlist::SortByArtist));
-    d->dropdown->addAction(tr("Album name"), QVariant::fromValue<Playlist::SortType>(Playlist::SortByAblum));
-//    d->customAction = d->dropdown->addAction(tr("Custom"), QVariant::fromValue<Playlist::SortType>(Playlist::SortByCustom));
-//    d->customAction->setDisabled(true);
+    d->btClearAll = new DPushButton;
+    d->btClearAll->setIcon(QIcon(":/mpimage/normal/clear_list_normal.svg"));
+    auto playAllPalette = d->btClearAll->palette();
+    playAllPalette.setColor(DPalette::ButtonText, Qt::white);
+    playAllPalette.setColor(DPalette::Dark, QColor(Qt::darkGray));
+    playAllPalette.setColor(DPalette::Light, QColor(Qt::darkGray));
+    d->btClearAll->setPalette(playAllPalette);
+    d->btClearAll->setObjectName("PlayListPlayAll");
+    d->btClearAll->setText(tr("Clear List"));
+    d->btClearAll->setFocusPolicy(Qt::NoFocus);
+    d->btClearAll->setFixedHeight(36);
 
     d->emptyHits = new DLabel();
     d->emptyHits->setObjectName("PlayListEmptyHits");
     d->emptyHits->hide();
 
-    actionBarLayout->addWidget(d->btPlayAll, 0, Qt::AlignCenter);
+    auto emptyLabel = new DListView();
+    emptyLabel->setAutoFillBackground(true);
+    auto emptyLabelPalette = d->actionBar->palette();
+    emptyLabelPalette.setColor(DPalette::Background, Qt::white);
+    emptyLabel->setPalette(emptyLabelPalette);
+
+    actionBarLayout->addWidget(d->titleLabel);
+    actionBarLayout->addWidget(d->infoLabel);
+    actionBarLayout->addWidget(d->btClearAll, 0, Qt::AlignLeft);
     actionBarLayout->addStretch();
-    actionBarLayout->addWidget(d->dropdown, 0, Qt::AlignCenter);
+    actionBarLayout->addWidget(emptyLabel);
 
     d->playListView = new PlayListView;
     d->playListView->hide();
@@ -209,13 +211,6 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
 
 PlayListWidget::~PlayListWidget()
 {
-}
-
-void PlayListWidget::setCustomSortType()
-{
-    Q_D(PlayListWidget);
-    d->dropdown->setCurrentAction(nullptr);
-    d->dropdown->setText(tr("Custom"));
 }
 
 void PlayListWidget::dragEnterEvent(QDragEnterEvent *event)
