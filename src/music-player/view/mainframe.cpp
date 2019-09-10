@@ -938,6 +938,8 @@ void MainFrame::binding(Presenter *presenter)
             d->footer,  &Footer::onMutedChanged);
     connect(presenter, &Presenter::musicError,
             d->footer,  &Footer::onMusicError);
+    connect(presenter, &Presenter::audioBufferProbed,
+            d->footer,  &Footer::audioBufferProbed);
 
     // musiclist
     connect(presenter, &Presenter::playlistAdded,

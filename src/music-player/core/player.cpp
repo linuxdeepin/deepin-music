@@ -26,6 +26,7 @@
 #include <QMimeDatabase>
 #include <QMediaPlayer>
 #include <QPropertyAnimation>
+#include <QAudioProbe>
 #include "metasearchservice.h"
 
 #include <QMimeDatabase>
@@ -104,6 +105,7 @@ public:
     PlayerPrivate(Player *parent) : q_ptr(parent)
     {
         qplayer = new QMediaPlayer();
+        qProbe = new QAudioProbe();
     }
 
     void initConnection();
@@ -126,6 +128,7 @@ public:
 
 
     QMediaPlayer    *qplayer;
+    QAudioProbe     *qProbe;
     PlaylistPtr     activePlaylist;
     MetaPtr         activeMeta;
 
@@ -146,6 +149,11 @@ void PlayerPrivate::initConnection()
     Q_Q(Player);
 
     qplayer->setAudioRole(QAudio::MusicRole);
+    if (qProbe->setSource(qplayer)) {
+        q->connect(qProbe, &QAudioProbe::audioBufferProbed, q, [ = ](const QAudioBuffer & buffer) {
+            Q_EMIT q->audioBufferProbed(buffer);
+        } );
+    }
     initMiniTypes();
 
     q->connect(qplayer, &QMediaPlayer::positionChanged,

@@ -66,16 +66,8 @@ void PlayListWidgetPrivate::initData(PlaylistPtr playlist)
 {
     Q_Q(PlayListWidget);
 
-    QString infoStr;
-    int sortMetasSize = playlist->allmusic().size();
-    if (sortMetasSize == 0) {
-        infoStr = q_ptr->tr("No songs");
-    } else if (sortMetasSize == 1) {
-        infoStr = q_ptr->tr("1 song");
-    } else {
-        infoStr = q_ptr->tr("%1 songs").arg(sortMetasSize);
-    }
-    infoLabel->setText(infoStr);
+    q->updateInfo(playlist);
+
     playListView->onMusiclistChanged(playlist);
 
     showEmptyHits(playListView->model()->rowCount() == 0);
@@ -211,6 +203,21 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
 
 PlayListWidget::~PlayListWidget()
 {
+}
+
+void PlayListWidget::updateInfo(PlaylistPtr playlist)
+{
+    Q_D(PlayListWidget);
+    QString infoStr;
+    int sortMetasSize = playlist->allmusic().size();
+    if (sortMetasSize == 0) {
+        infoStr = tr("No songs");
+    } else if (sortMetasSize == 1) {
+        infoStr = tr("1 song");
+    } else {
+        infoStr = tr("%1 songs").arg(sortMetasSize);
+    }
+    d->infoLabel->setText(infoStr);
 }
 
 void PlayListWidget::dragEnterEvent(QDragEnterEvent *event)
