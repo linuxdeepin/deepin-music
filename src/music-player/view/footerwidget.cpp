@@ -49,6 +49,7 @@
 #include "widget/soundvolume.h"
 #include "widget/musicimagebutton.h"
 #include "widget/musicpixmapbutton.h"
+#include "widget/waveform.h"
 
 static const char *sPropertyFavourite         = "fav";
 static const char *sPropertyPlayStatus        = "playstatus";
@@ -85,6 +86,7 @@ public:
     Slider            *progress   = nullptr;
     SoundVolume       *volSlider  = nullptr;
     DFrame            *ctlWidget  = nullptr;
+    Waveform          *waveform   = nullptr;
 
     HintFilter          *hintFilter         = nullptr;
     HoverShadowFilter   *hoverShadowFilter  = nullptr;
@@ -186,6 +188,8 @@ void FooterPrivate::initConnection()
     q->connect(q, &Footer::mouseMoving, q, [ = ](Qt::MouseButton) {
         hintFilter->hideAll();
     });
+
+    q->connect(q, &Footer::audioBufferProbed, waveform, &Waveform::onAudioBufferProbed);
 }
 
 Footer::Footer(QWidget *parent) :
@@ -334,7 +338,6 @@ Footer::Footer(QWidget *parent) :
     metaLayout->addWidget(d->btCover);
     metaLayout->addSpacing(10);
     metaLayout->addLayout(musicMetaLayout, 0);
-    metaLayout->addStretch();
 
     d->ctlWidget = new DFrame(this);
 //    d->ctlWidget->setStyleSheet("border: 1px solid red;");
@@ -346,6 +349,9 @@ Footer::Footer(QWidget *parent) :
     ctlLayout->addWidget(d->btNext, 0, Qt::AlignCenter);
     d->ctlWidget->adjustSize();
 
+    d->waveform = new Waveform;
+    d->waveform->adjustSize();
+
     auto actWidget = new QWidget;
     auto actLayout = new QHBoxLayout(actWidget);
     actLayout->setMargin(0);
@@ -356,14 +362,14 @@ Footer::Footer(QWidget *parent) :
     actLayout->addWidget(d->btSound, 0, Qt::AlignRight | Qt::AlignVCenter);
     actLayout->addWidget(d->btPlayList, 0, Qt::AlignRight | Qt::AlignVCenter);
 
-    QSizePolicy sp(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    sp.setHorizontalStretch(33);
-    metaWidget->setSizePolicy(sp);
-    actWidget->setSizePolicy(sp);
+//    QSizePolicy sp(QSizePolicy::Preferred, QSizePolicy::Preferred);
+//    sp.setHorizontalStretch(33);
+//    metaWidget->setSizePolicy(sp);
+//    actWidget->setSizePolicy(sp);
 
-    layout->addWidget(d->ctlWidget, 0, Qt::AlignLeft | Qt::AlignVCenter);
-    layout->addWidget(metaWidget, 0, Qt::AlignLeft | Qt::AlignVCenter);
-    layout->addStretch();
+    layout->addWidget(d->ctlWidget);
+    layout->addWidget(metaWidget);
+    layout->addWidget(d->waveform, 100);
     layout->addWidget(actWidget, 0, Qt::AlignRight | Qt::AlignVCenter);
 
     mainVBoxlayout->addWidget(d->progress);

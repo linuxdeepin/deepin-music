@@ -35,6 +35,8 @@ public:
     explicit PlayListWidget(QWidget *parent = Q_NULLPTR);
     ~PlayListWidget();
 
+    void updateInfo(PlaylistPtr playlist);
+
 public slots:
     void onMusiclistChanged(PlaylistPtr playlist);
     void onMusicPlayed(PlaylistPtr playlist, const MetaPtr info);

@@ -31,6 +31,7 @@
 #include <util/singleton.h>
 #include "playlist.h"
 
+class QAudioBuffer;
 class PlayerPrivate;
 class Player : public QObject, public DMusic::DSingleton<Player>
 {
@@ -161,6 +162,7 @@ signals:
     void fadeInOutFactorChanged(double fadeInOutFactor);
     void fadeInOutChanged(bool fadeInOut);
     void playOnLoadedChanged(bool playOnLoaded);
+    void audioBufferProbed(const QAudioBuffer &buffer);
 
 public slots:
     void setCanControl(bool canControl);

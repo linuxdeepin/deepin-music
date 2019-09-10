@@ -27,6 +27,8 @@
 #include "../core/playlist.h"
 #include <searchmeta.h>
 
+class QAudioBuffer;
+
 DWIDGET_USE_NAMESPACE
 
 class FooterPrivate;
@@ -66,6 +68,8 @@ signals:
 
     void progressRealHeightChanged(qreal height);
     void mouseMoving(Qt::MouseButton button);
+
+    void audioBufferProbed(const QAudioBuffer &buffer);
 
 public slots:
     void onMusicListAdded(PlaylistPtr playlist, const MetaPtrList metalist);

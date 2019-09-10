@@ -74,6 +74,9 @@ void PresenterPrivate::initBackend()
 
     player = Player::instance();
     qDebug() << "TRACE:" << "player init finished";
+    connect(player, &Player::audioBufferProbed, q, [ = ](const QAudioBuffer & buffer) {
+        Q_EMIT q->audioBufferProbed(buffer);
+    } );
 
     settings = MusicSettings::instance();
 

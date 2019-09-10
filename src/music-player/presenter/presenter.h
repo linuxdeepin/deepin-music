@@ -29,6 +29,8 @@
 #include "../core/playlist.h"
 #include <searchmeta.h>
 
+class QAudioBuffer;
+
 class Playlist;
 
 class PresenterPrivate;
@@ -61,6 +63,9 @@ signals:
     void dataLoaded();
 
 signals:
+    //! player
+    void audioBufferProbed(const QAudioBuffer &buffer);
+
     //! ui: request import dialog
     void meidaFilesImported(PlaylistPtr playlist, MetaPtrList metalist);
 
@@ -106,7 +111,7 @@ signals:
 
     //! meta info
     void metaLibraryClean();
-    void scanFinished(const QString& jobid, int mediaCount);
+    void scanFinished(const QString &jobid, int mediaCount);
     void notifyMusciError(PlaylistPtr playlist, const MetaPtr meta, int error);
     void notifyAddToPlaylist(PlaylistPtr playlist, const MetaPtrList metalist);
 
@@ -142,7 +147,7 @@ public slots:
     void onAddToPlaylist(PlaylistPtr playlist, const MetaPtrList metalist);
     void onPlaylistAdd(bool edit);
     void onCurrentPlaylistChanged(PlaylistPtr playlist);
-    void onCustomResort(const QStringList& uuids);
+    void onCustomResort(const QStringList &uuids);
 
     //! ui: menu interface
     void onRequestMusiclistMenu(const QPoint &pos);
