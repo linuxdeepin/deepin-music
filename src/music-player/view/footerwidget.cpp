@@ -379,7 +379,7 @@ Footer::Footer(QWidget *parent) :
     controlFrame->setFixedHeight(60 - d->progress->height() / 2);
     controlFrame->setLayout(layout);
 
-    mainVBoxlayout->addStretch();
+    //mainVBoxlayout->addStretch();
     mainVBoxlayout->addWidget(controlFrame);
 
     d->title->hide();

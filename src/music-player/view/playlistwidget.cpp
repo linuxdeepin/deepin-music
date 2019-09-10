@@ -132,6 +132,11 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
 {
     Q_D(PlayListWidget);
 
+    setAutoFillBackground(true);
+    auto plPalette = palette();
+    plPalette.setColor(DPalette::Background, Qt::white);
+    setPalette(plPalette);
+
     setObjectName("PlayListWidget");
     setAcceptDrops(true);
 
@@ -177,17 +182,10 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
     d->emptyHits->setObjectName("PlayListEmptyHits");
     d->emptyHits->hide();
 
-    auto emptyLabel = new DListView();
-    emptyLabel->setAutoFillBackground(true);
-    auto emptyLabelPalette = d->actionBar->palette();
-    emptyLabelPalette.setColor(DPalette::Background, Qt::white);
-    emptyLabel->setPalette(emptyLabelPalette);
-
     actionBarLayout->addWidget(d->titleLabel);
     actionBarLayout->addWidget(d->infoLabel);
     actionBarLayout->addWidget(d->btClearAll, 0, Qt::AlignLeft);
     actionBarLayout->addStretch();
-    actionBarLayout->addWidget(emptyLabel);
 
     d->playListView = new PlayListView;
     d->playListView->hide();

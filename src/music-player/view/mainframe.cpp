@@ -212,7 +212,7 @@ void MainFramePrivate::initUI(bool showLoading)
 
     centralWidget = new QWidget(q);
     contentLayout = new QStackedLayout(centralWidget);
-    contentLayout->setContentsMargins(20, 20, 20, 20);
+    contentLayout->setContentsMargins(20, 20, 20, 0);
     contentLayout->setMargin(0);
     contentLayout->setSpacing(0);
     q->setCentralWidget(centralWidget);
