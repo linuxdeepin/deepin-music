@@ -59,7 +59,8 @@ Slider::Slider(Qt::Orientation orientation, QWidget *parent) :
 
         connect(d->currentAnimation, &QVariantAnimation::valueChanged,
         this, [ = ](const QVariant & value) {
-            setStyleSheet(d->updateQSS(value.toReal()));
+            //setStyleSheet(d->updateQSS(value.toReal()));
+            d->updateQSS(value.toReal());
         });
         d->currentAnimation->start();
     });
@@ -75,7 +76,8 @@ void Slider::resizeEvent(QResizeEvent *event)
     Q_D(Slider);
     DSlider::resizeEvent(event);
     if (!d->currentAnimation) {
-        setStyleSheet(d->updateQSS(0));
+        //setStyleSheet(d->updateQSS(0));
+        d->updateQSS(0);
     }
 }
 
