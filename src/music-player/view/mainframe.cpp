@@ -776,7 +776,7 @@ void MainFrame::binding(Presenter *presenter)
 
     connect(presenter, &Presenter::meidaFilesImported,
     this, [ = ](PlaylistPtr playlist, const MetaPtrList metalist) {
-        //d->setPlayListVisible(true);
+        d->setPlayListVisible(false);
         d->playListWidget->onMusiclistChanged(playlist);
         d->musicListWidget->onMusiclistUpdate();
         d->disableControl(true);
