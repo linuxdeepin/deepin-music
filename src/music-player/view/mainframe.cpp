@@ -55,7 +55,7 @@
 
 #include "importwidget.h"
 #include "playlistwidget.h"
-#include "lyricwidget.h"
+#include "musiclyricwidget.h"
 #include "footerwidget.h"
 #include "loadwidget.h"
 #include "musiclistwidget.h"
@@ -98,28 +98,28 @@ public:
     //! ui: show info dialog
     void showInfoDialog(const MetaPtr meta);
 
-    DWidget         *centralWidget  = nullptr;
-    QStackedLayout  *contentLayout  = nullptr;
-    DTitlebar       *titlebar       = nullptr;
-    DToast          *tips           = nullptr;
-    SearchResult    *searchResult   = nullptr;
-    TitlebarWidget  *titlebarwidget = nullptr;
-    ImportWidget    *importWidget   = nullptr;
-    LoadWidget      *loadWidget     = nullptr;
-    PlayListWidget  *playListWidget = nullptr;
-    LyricWidget     *lyricWidget    = nullptr;
-    Footer          *footer         = nullptr;
-    MusicListWidget *musicListWidget = nullptr;
+    DWidget             *centralWidget          = nullptr;
+    QStackedLayout      *contentLayout          = nullptr;
+    DTitlebar           *titlebar               = nullptr;
+    DToast              *tips                   = nullptr;
+    SearchResult        *searchResult           = nullptr;
+    TitlebarWidget      *titlebarwidget         = nullptr;
+    ImportWidget        *importWidget           = nullptr;
+    LoadWidget          *loadWidget             = nullptr;
+    PlayListWidget      *playListWidget         = nullptr;
+    MUsicLyricWidget    *lyricWidget            = nullptr;
+    Footer              *footer                 = nullptr;
+    MusicListWidget     *musicListWidget        = nullptr;
 
-    DWidget         *currentWidget  = nullptr;
-    InfoDialog      *infoDialog     = nullptr;
+    DWidget             *currentWidget          = nullptr;
+    InfoDialog          *infoDialog             = nullptr;
 
-    QAction         *newSonglistAction      = nullptr;
-    QAction         *colorModeAction        = nullptr;
-    QString         coverBackground         = ":/common/image/cover_max.svg";
-    QImage          originCoverImage;
-    QImage          currentCoverImage;
-    QString         viewname                = "";
+    QAction             *newSonglistAction      = nullptr;
+    QAction             *colorModeAction        = nullptr;
+    QString             coverBackground         = ":/common/image/cover_max.svg";
+    QImage              originCoverImage;
+    QImage              currentCoverImage;
+    QString             viewname                = "";
 
     QPoint              m_LastMousePos;
 
@@ -260,7 +260,7 @@ void MainFramePrivate::postInitUI()
     playListWidget = new PlayListWidget;
     playListWidget->setContentsMargins(0, titlebar->height(), 0, FooterHeight);
 
-    lyricWidget = new LyricWidget;
+    lyricWidget = new MUsicLyricWidget;
     lyricWidget->setContentsMargins(0, titlebar->height(), 0, FooterHeight);
 
     musicListWidget = new MusicListWidget;
@@ -856,21 +856,21 @@ void MainFrame::binding(Presenter *presenter)
             d->playListWidget,  &PlayListWidget::onLocate);
 
     connect(presenter, &Presenter::progrossChanged,
-            d->lyricWidget, &LyricWidget::onProgressChanged);
+            d->lyricWidget, &MUsicLyricWidget::onProgressChanged);
     connect(presenter, &Presenter::musicPlayed,
-            d->lyricWidget, &LyricWidget::onMusicPlayed);
+            d->lyricWidget, &MUsicLyricWidget::onMusicPlayed);
     connect(presenter, &Presenter::coverSearchFinished,
-            d->lyricWidget, &LyricWidget::onCoverChanged);
+            d->lyricWidget, &MUsicLyricWidget::onCoverChanged);
     connect(presenter, &Presenter::lyricSearchFinished,
-            d->lyricWidget, &LyricWidget::onLyricChanged);
+            d->lyricWidget, &MUsicLyricWidget::onLyricChanged);
     connect(presenter, &Presenter::contextSearchFinished,
-            d->lyricWidget, &LyricWidget::onContextSearchFinished);
+            d->lyricWidget, &MUsicLyricWidget::onContextSearchFinished);
     connect(presenter, &Presenter::musicStoped,
-            d->lyricWidget,  &LyricWidget::onMusicStop);
+            d->lyricWidget,  &MUsicLyricWidget::onMusicStop);
 
-    connect(d->lyricWidget,  &LyricWidget::requestContextSearch,
+    connect(d->lyricWidget,  &MUsicLyricWidget::requestContextSearch,
             presenter, &Presenter::requestContextSearch);
-    connect(d->lyricWidget, &LyricWidget::changeMetaCache,
+    connect(d->lyricWidget, &MUsicLyricWidget::changeMetaCache,
             presenter, &Presenter::onChangeSearchMetaCache);
 
 

@@ -138,13 +138,19 @@ void FooterPrivate::initConnection()
         hintFilter->showHitsFor(btPlayMode, hintWidget);
     });
 
-    q->connect(progress, &Slider::valueAccpet, q, [ = ](int value) {
-        auto range = progress->maximum() - progress->minimum();
-        Q_ASSERT(range != 0);
-        Q_EMIT q->changeProgress(value, range);
-    });
+//    q->connect(progress, &Slider::valueAccpet, q, [ = ](int value) {
+//        auto range = progress->maximum() - progress->minimum();
+//        Q_ASSERT(range != 0);
+//        Q_EMIT q->changeProgress(value, range);
+//    });
     q->connect(progress, &Slider::realHeightChanged, q, [ = ](qreal value) {
         Q_EMIT q->progressRealHeightChanged(value);
+    });
+
+    q->connect(waveform, &Waveform::valueAccpet, q, [ = ](int value) {
+        auto range = waveform->maximum() - waveform->minimum();
+        Q_ASSERT(range != 0);
+        Q_EMIT q->changeProgress(value, range);
     });
 
     q->connect(btPlay, &DPushButton::released, q, [ = ]() {
@@ -349,7 +355,10 @@ Footer::Footer(QWidget *parent) :
     ctlLayout->addWidget(d->btNext, 0, Qt::AlignCenter);
     d->ctlWidget->adjustSize();
 
-    d->waveform = new Waveform;
+    d->waveform = new Waveform(Qt::Horizontal);
+    d->waveform->setMinimum(0);
+    d->waveform->setMaximum(1000);
+    d->waveform->setValue(0);
     d->waveform->adjustSize();
 
     auto actWidget = new QWidget;
@@ -665,6 +674,10 @@ void Footer::onProgressChanged(qint64 value, qint64 duration)
     d->progress->blockSignals(true);
     d->progress->setValue(progress);
     d->progress->blockSignals(false);
+
+    d->waveform->blockSignals(true);
+    d->waveform->setValue(progress);
+    d->waveform->blockSignals(false);
 }
 
 void Footer::onCoverChanged(const MetaPtr meta, const DMusic::SearchMeta &, const QByteArray &coverData)

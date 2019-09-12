@@ -35,11 +35,12 @@ const int Waveform::SAMPLE_DURATION = 30;
 const int Waveform::WAVE_WIDTH = 2;
 const int Waveform::WAVE_DURATION = 4;
 
-Waveform::Waveform(QWidget *parent) : DWidget(parent)
+Waveform::Waveform(Qt::Orientation orientation, QWidget *parent) : DSlider(orientation, parent)
 {
     QSizePolicy sp(QSizePolicy::Preferred, QSizePolicy::Preferred);
     setSizePolicy(sp);
     setFixedHeight(40);
+    maxSampleNum = 500;
 }
 
 void Waveform::paintEvent(QPaintEvent *)
@@ -55,26 +56,34 @@ void Waveform::paintEvent(QPaintEvent *)
     }
 
     int volume = 0;
+    double curWidth = rect().width() * (value() * 1.0) / (maximum() - minimum());
+    QColor fillColor(Qt::darkGray);
     for (int i = 0; i < sampleList.size(); i++) {
-        volume = sampleList[i] * rect().height() * 2;
+        volume = sampleList[i] * rect().height();
 
+        if (curWidth > i * WAVE_DURATION) {
+            fillColor = Qt::black;
+        } else {
+            fillColor = Qt::darkGray;
+        }
         if (volume == 0) {
             QPainterPath path;
             path.addRect(QRectF(rect().x() + i * WAVE_DURATION, rect().y() + (rect().height() - 1), WAVE_DURATION, 1));
-            painter.fillPath(path, QColor(Qt::darkGray));
+            painter.fillPath(path, fillColor);
         } else {
             QRect sampleRect(rect().x() + i * WAVE_DURATION, rect().y() + (rect().height() - 1), WAVE_WIDTH, -qAbs(volume));
-            painter.fillRect(sampleRect, QColor(Qt::darkGray));
+            painter.fillRect(sampleRect, fillColor);
         }
     }
 
     if (sampleList.size() < rect().width() / WAVE_DURATION) {
+        fillColor = Qt::darkGray;
         QPainterPath path;
         path.addRect(QRectF(rect().x() + sampleList.size() * WAVE_DURATION,
                             rect().y() + (rect().height() - 1),
                             rect().width() - (rect().x() + sampleList.size() * WAVE_DURATION),
                             1));
-        painter.fillPath(path, QColor(Qt::darkGray));
+        painter.fillPath(path, fillColor);
     }
 }
 
@@ -88,7 +97,9 @@ void Waveform::onAudioBufferProbed(const QAudioBuffer &buffer)
     for (auto value : getBufferLevels(buffer)) {
         sampleList.push_front(value);
     }
-    for (int i = sampleList.size(); i >= 1000; i--) {
+    if (width() > maxSampleNum)
+        maxSampleNum = width();
+    for (int i = sampleList.size(); i >= maxSampleNum; i--) {
         sampleList.removeLast();
     }
     update();
@@ -198,4 +209,38 @@ qreal Waveform::getPeakValue(const QAudioFormat &format)
     }
 
     return qreal(0);
+}
+
+void Waveform::mouseReleaseEvent(QMouseEvent *event)
+{
+    this->blockSignals(false);
+    DSlider::mouseReleaseEvent(event);
+    Q_EMIT valueAccpet(value());
+}
+
+void Waveform::mousePressEvent(QMouseEvent *event)
+{
+    if (event->button() == Qt::LeftButton
+            || event->button() == Qt::MiddleButton
+            || event->button() == Qt::RightButton) {
+        if (orientation() == Qt::Vertical) {
+            setSliderPosition(minimum() + ((maximum() - minimum()) * (height() - event->y())) / height()) ;
+        } else {
+            setSliderPosition(minimum() + ((maximum() - minimum()) * (event->x())) / (width()));
+        }
+    }
+    this->blockSignals(true);
+}
+
+void Waveform::mouseMoveEvent(QMouseEvent *event)
+{
+    auto valueRange = this->maximum()  - this->minimum();
+    auto viewRange = this->width();
+
+    if (0 == viewRange) {
+        return;
+    }
+
+    auto value = (event->x() - this->x()) * valueRange / this->width();
+    setSliderPosition(value);
 }

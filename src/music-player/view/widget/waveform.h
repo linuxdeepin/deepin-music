@@ -24,14 +24,14 @@
 #ifndef WAVEFORM_H
 #define WAVEFORM_H
 
-#include <DWidget>
+#include <DSlider>
 
 DWIDGET_USE_NAMESPACE
 
 class QAudioBuffer;
 class QAudioFormat;
 
-class Waveform : public DWidget
+class Waveform : public DSlider
 {
     Q_OBJECT
 
@@ -40,7 +40,7 @@ class Waveform : public DWidget
     static const int WAVE_DURATION;
 
 public:
-    Waveform(QWidget *parent = 0);
+    Waveform(Qt::Orientation orientation, QWidget *parent = 0);
 
     static qreal getPeakValue(const QAudioFormat &format);
     static QVector<qreal> getBufferLevels(const QAudioBuffer &buffer);
@@ -50,14 +50,21 @@ public:
 
     void clearWave();
 
+Q_SIGNALS:
+    void valueAccpet(int value);
+
 public slots:
     void onAudioBufferProbed(const QAudioBuffer &buffer);
 
 protected:
-    void paintEvent(QPaintEvent *event);
+    void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
+    void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+    void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+    void mouseMoveEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
 
 private:
     QList<float> sampleList;
+    int          maxSampleNum;
 };
 
 #endif

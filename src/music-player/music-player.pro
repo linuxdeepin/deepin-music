@@ -84,7 +84,10 @@ SOURCES += \
     view/widget/musicimagebutton.cpp \
     view/widget/musicpixmapbutton.cpp \
     view/widget/musiclistviewitem.cpp \
-    view/widget/waveform.cpp
+    view/widget/waveform.cpp \
+    core/util/musiclyric.cpp \
+    view/widget/lyriclabel.cpp \
+    view/musiclyricwidget.cpp
 
 HEADERS += \
     musicapp.h \
@@ -142,7 +145,10 @@ HEADERS += \
     view/widget/musicimagebutton.h \
     view/widget/musicpixmapbutton.h \
     view/widget/musiclistviewitem.h \
-    view/widget/waveform.h
+    view/widget/waveform.h \
+    core/util/musiclyric.h \
+    view/widget/lyriclabel.h \
+    view/musiclyricwidget.h
 
 RESOURCES += \
     resource/theme/theme.qrc \
