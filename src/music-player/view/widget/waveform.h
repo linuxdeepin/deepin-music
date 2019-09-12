@@ -58,6 +58,7 @@ protected:
 
 private:
     QList<float> sampleList;
+    int          maxSampleNum;
 };
 
 #endif

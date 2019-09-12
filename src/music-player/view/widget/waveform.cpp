@@ -40,6 +40,7 @@ Waveform::Waveform(QWidget *parent) : DWidget(parent)
     QSizePolicy sp(QSizePolicy::Preferred, QSizePolicy::Preferred);
     setSizePolicy(sp);
     setFixedHeight(40);
+    maxSampleNum = 500;
 }
 
 void Waveform::paintEvent(QPaintEvent *)
@@ -56,7 +57,7 @@ void Waveform::paintEvent(QPaintEvent *)
 
     int volume = 0;
     for (int i = 0; i < sampleList.size(); i++) {
-        volume = sampleList[i] * rect().height() * 2;
+        volume = sampleList[i] * rect().height();
 
         if (volume == 0) {
             QPainterPath path;
@@ -88,7 +89,9 @@ void Waveform::onAudioBufferProbed(const QAudioBuffer &buffer)
     for (auto value : getBufferLevels(buffer)) {
         sampleList.push_front(value);
     }
-    for (int i = sampleList.size(); i >= 1000; i--) {
+    if (width() > maxSampleNum)
+        maxSampleNum = width();
+    for (int i = sampleList.size(); i >= maxSampleNum; i--) {
         sampleList.removeLast();
     }
     update();
