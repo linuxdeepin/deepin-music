@@ -50,6 +50,7 @@ public slots:
     void setRadius(int radius);
     void setBorderColor(QColor borderColor);
 
+    void slotTheme(int type);
 protected:
     virtual void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
     virtual void enterEvent(QEvent *event) Q_DECL_OVERRIDE;

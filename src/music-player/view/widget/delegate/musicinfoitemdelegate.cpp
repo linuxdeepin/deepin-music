@@ -279,9 +279,6 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
 
             if (activeMeta == meta) {
                 auto playingIcon = listview->getPlayPixmap();
-                if (option.state & QStyle::State_Selected) {
-                    playingIcon = d->highlightPlayingIcon();
-                }
                 auto icon = QPixmap(playingIcon);
                 auto centerF = QRectF(rect).center();
                 auto iconRect = QRectF(centerF.x() - icon.width() / 2,

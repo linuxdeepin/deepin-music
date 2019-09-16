@@ -240,3 +240,16 @@ void SoundVolume::paintEvent(QPaintEvent * /*event*/)
     pen.setWidth(penWidthf);
     painter.strokePath(path, pen);
 }
+void SoundVolume::slotTheme(int type)
+{
+    Q_D(const SoundVolume);
+    QString rStr;
+    if (type == 1) {
+        rStr = "light";
+    } else {
+        rStr = "dark";
+    }
+    d->volSlider->setRightIcon(DHiDPIHelper::loadNxPixmap(QString(":/mpimage/%1/normal/volume_add_normal.svg").arg(rStr)));
+    d->volSlider->setLeftIcon(DHiDPIHelper::loadNxPixmap(QString(":/mpimage/%1/normal/volume_lessen_normal.svg").arg(rStr)));
+
+}

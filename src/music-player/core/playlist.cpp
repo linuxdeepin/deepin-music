@@ -29,6 +29,7 @@
 #include <QTime>
 
 #include "../core/metasearchservice.h"
+#include "util/pinyinsearch.h"
 
 #include "medialibrary.h"
 #include "mediadatabase.h"
@@ -448,21 +449,29 @@ MetaPtr Playlist::removeOneMusic(const MetaPtr meta)
         return MetaPtr();
     }
     if (id() == AlbumMusicListID ) {
-        if (playMusicTypePtrListData.metas.contains(meta->album)) {
-            playMusicTypePtrListData.metas[meta->album]->playlistMeta.sortMetas.removeOne(meta->hash);
-            playMusicTypePtrListData.metas[meta->album]->playlistMeta.metas.remove(meta->hash);
-            if (playMusicTypePtrListData.metas[meta->album]->playlistMeta.metas.isEmpty()) {
-                playMusicTypePtrListData.sortMetas.removeOne(meta->album);
-                playMusicTypePtrListData.metas.remove(meta->album);
+        QString albumStr = meta->album;
+        if (albumStr.isEmpty()) {
+            albumStr = tr("Unknown album");
+        }
+        if (playMusicTypePtrListData.metas.contains(albumStr)) {
+            playMusicTypePtrListData.metas[albumStr]->playlistMeta.sortMetas.removeOne(meta->hash);
+            playMusicTypePtrListData.metas[albumStr]->playlistMeta.metas.remove(meta->hash);
+            if (playMusicTypePtrListData.metas[albumStr]->playlistMeta.metas.isEmpty()) {
+                playMusicTypePtrListData.sortMetas.removeOne(albumStr);
+                playMusicTypePtrListData.metas.remove(albumStr);
             }
         }
     } else if (id() == ArtistMusicListID) {
-        if (playMusicTypePtrListData.metas.contains(meta->artist)) {
-            playMusicTypePtrListData.metas[meta->artist]->playlistMeta.sortMetas.removeOne(meta->hash);
-            playMusicTypePtrListData.metas[meta->artist]->playlistMeta.metas.remove(meta->hash);
-            if (playMusicTypePtrListData.metas[meta->artist]->playlistMeta.metas.isEmpty()) {
-                playMusicTypePtrListData.sortMetas.removeOne(meta->artist);
-                playMusicTypePtrListData.metas.remove(meta->artist);
+        QString artistStr = meta->album;
+        if (artistStr.isEmpty()) {
+            artistStr = tr("Unknown artist");;
+        }
+        if (playMusicTypePtrListData.metas.contains(artistStr)) {
+            playMusicTypePtrListData.metas[artistStr]->playlistMeta.sortMetas.removeOne(meta->hash);
+            playMusicTypePtrListData.metas[artistStr]->playlistMeta.metas.remove(meta->hash);
+            if (playMusicTypePtrListData.metas[artistStr]->playlistMeta.metas.isEmpty()) {
+                playMusicTypePtrListData.sortMetas.removeOne(artistStr);
+                playMusicTypePtrListData.metas.remove(artistStr);
             }
         }
     }
@@ -499,15 +508,20 @@ inline bool startWithHanzi(const QString &text)
 
 bool lessCompareByString(const QString &str1, const QString &str2)
 {
-    if (startWithHanzi(str1)) {
-        if (!startWithHanzi(str2)) {
-            return false;
-        }
-    } else if (startWithHanzi(str2)) {
-        return true;
-    }
+//    if (startWithHanzi(str1)) {
+//        if (!startWithHanzi(str2)) {
+//            return false;
+//        }
+//    } else if (startWithHanzi(str2)) {
+//        return true;
+//    }
 
-    return collator.compare(str1, str2) < 0;
+    QString curStr1(str1), curStr2(str2);
+    QStringList strList1 = DMusic::PinyinSearch::simpleChineseSplit(curStr1);
+    QStringList strList2 = DMusic::PinyinSearch::simpleChineseSplit(curStr2);
+
+    QString endStr1 = strList1.join(""), enStr2 = strList2.join("");
+    return collator.compare(endStr1, enStr2) < 0;
 }
 
 bool lessThanTimestamp(const MetaPtr v1, const MetaPtr v2)
@@ -788,7 +802,7 @@ void Playlist::metaListToPlayMusicTypePtrList(Playlist::SortType sortType, const
 
 void Playlist::playMusicTypeToMeta(QString name)
 {
-    removeMusicList(allmusic());
+    //removeMusicList(allmusic());
     playlistMeta.sortMetas.clear();
     playlistMeta.metas.clear();
     MetaPtrList mlist;

@@ -129,8 +129,10 @@ void MusicListView::addMusicList(PlaylistPtr playlist, bool addFlag)
 
     auto item = new DStandardItem(icon, playlist->displayName());
     model->appendRow(item);
-    if (addFlag)
-        openPersistentEditor(model->index(item->row(), 0));
+    if (addFlag) {
+        edit(model->index(item->row(), 0));
+        setCurrentItem(item);
+    }
 
     allPlaylists.append(playlist);
 }
@@ -292,7 +294,10 @@ void MusicListView::showContextMenu(const QPoint &pos)
         menu.addAction(tr("Delete"));
     }
     if (m_data->id() == AlbumMusicListID || m_data->id() == ArtistMusicListID) {
-        playact->setDisabled(m_data->playMusicTypePtrList().size() == 0);
+        if (playact != nullptr)
+            playact->setDisabled(m_data->playMusicTypePtrList().size() == 0);
+        if (pauseact != nullptr)
+            pauseact->setDisabled(m_data->playMusicTypePtrList().size() == 0);
     }
 
     connect(&menu, &DMenu::triggered, this, [ = ](QAction * action) {
@@ -303,7 +308,7 @@ void MusicListView::showContextMenu(const QPoint &pos)
             Q_EMIT pause(m_data, m_data->playing());
         }
         if (action->text() == tr("Rename")) {
-            openPersistentEditor(indexes.first());
+            edit(indexes.first());
         }
         if (action->text() == tr("Delete")) {
             QString message = QString(tr("Are you sure you want to delete this playlist?"));
@@ -314,7 +319,7 @@ void MusicListView::showContextMenu(const QPoint &pos)
             warnDlg.setTitle(message);
             warnDlg.addButton(tr("Cancel"), false, Dtk::Widget::DDialog::ButtonNormal);
             warnDlg.addButton(tr("Delete"), true, Dtk::Widget::DDialog::ButtonWarning);
-            if (0 != warnDlg.exec()) {
+            if (1 == warnDlg.exec()) {
                 allPlaylists.removeAt(item->row());
                 model->removeRow(item->row());
                 //delete model->takeItem(item->row());

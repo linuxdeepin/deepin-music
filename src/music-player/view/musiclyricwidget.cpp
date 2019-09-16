@@ -46,7 +46,8 @@
 #include "widget/searchlyricswidget.h"
 #include "widget/lyriclabel.h"
 #include "widget/musicimagebutton.h"
-
+#include "musicsettings.h"
+#include <DGuiApplicationHelper>
 DGUI_USE_NAMESPACE
 
 static const int LyricLineHeight = 40;
@@ -281,6 +282,15 @@ void MUsicLyricWidget::slotonsearchresult(QString path)
 void MUsicLyricWidget::slotTheme(int type)
 {
     Q_D(MUsicLyricWidget);
+
+    if (type == 0)
+        type = DGuiApplicationHelper::instance()->themeType();
+    QString rStr;
+    if (type == 1) {
+        rStr = "light";
+    } else {
+        rStr = "dark";
+    }
     if (type == 1) {
         auto palette = this->palette();
         palette.setColor(DPalette::Background, QColor("#F8F8F8"));
@@ -290,7 +300,16 @@ void MUsicLyricWidget::slotTheme(int type)
         palette.setColor(DPalette::Background, QColor("#252525"));
         setPalette(palette);
     }
+    d->serachbt->setPropertyPic(QString(":/mpimage/%1/normal/search_normal.svg").arg(rStr),
+                                QString(":/mpimage/%1/normal/search_normal.svg").arg(rStr),
+                                QString(":/mpimage/%1/normal/search_normal.svg").arg(rStr));
+
+    d->serachbt->setPropertyPic("typeName", false, QString(":/mpimage/%1/normal/back_normal.svg").arg(rStr),
+                                QString(":/mpimage/%1/normal/back_normal.svg").arg(rStr),
+                                QString(":/mpimage/%1/normal/back_normal.svg").arg(rStr));
+
     d->searchLyricsWidget->setThemeType(type);
+    d->lyricview->slotTheme(type);
 }
 
 void MUsicLyricWidget::onContextSearchFinished(const QString &context, const QList<DMusic::SearchMeta> &metalist)

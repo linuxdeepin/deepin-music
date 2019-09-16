@@ -31,7 +31,7 @@
 #include <DPushButton>
 #include <DHiDPIHelper>
 #include <DPalette>
-
+#include "musicsettings.h"
 DGUI_USE_NAMESPACE
 
 const QString linkTemplate = "<a href='%1'>%2</a>";
@@ -43,7 +43,7 @@ public:
 
     DLabel                  *text = nullptr;
     DPushButton             *importButton = nullptr;
-
+    DLabel                  *logo;
     ImportWidget *q_ptr;
     Q_DECLARE_PUBLIC(ImportWidget)
 };
@@ -59,10 +59,10 @@ ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent), d_ptr(new ImportWi
     auto layout = new QVBoxLayout(this);
     layout->setMargin(0);
 
-    auto logo = new DLabel;
-    logo->setFixedSize(128, 128);
-    logo->setObjectName("ImportViewLogo");
-    logo->setPixmap(DHiDPIHelper::loadNxPixmap(":/mpimage/light/import_music.svg"));
+    d->logo = new DLabel;
+    d->logo->setFixedSize(128, 128);
+    d->logo->setObjectName("ImportViewLogo");
+    d->logo->setPixmap(DHiDPIHelper::loadNxPixmap(":/mpimage/light/import_music.svg"));
 
     d->importButton = new DPushButton;
     auto importButtonFont = d->importButton->font();
@@ -94,7 +94,7 @@ ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent), d_ptr(new ImportWi
 
     layout->setSpacing(0);
     layout->addStretch();
-    layout->addWidget(logo, 0, Qt::AlignCenter);
+    layout->addWidget(d->logo, 0, Qt::AlignCenter);
     layout->addSpacing(20);
     layout->addWidget(d->importButton, 0, Qt::AlignCenter);
     layout->addSpacing(10);
@@ -111,6 +111,11 @@ ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent), d_ptr(new ImportWi
         showWaitHint();
         Q_EMIT this->scanMusicDirectory();
     });
+    bool themeFlag = false;
+    int themeType = MusicSettings::value("base.play.theme").toInt(&themeFlag);
+    if (!themeFlag)
+        themeType = 1;
+    slotTheme(themeType);
 }
 
 ImportWidget::~ImportWidget()
@@ -171,4 +176,41 @@ void ImportWidget::dropEvent(QDropEvent *event)
     if (!localpaths.isEmpty()) {
         Q_EMIT importSelectFiles(localpaths);
     }
+}
+void ImportWidget::slotTheme(int type)
+{
+    Q_D(ImportWidget);
+    QString rStr;
+    if (type == 1) {
+        rStr = "light";
+        auto pl = d->importButton->palette();
+        pl.setColor(DPalette::Dark, QColor("#0098FF"));
+        pl.setColor(DPalette::Light, QColor("#25B7FF"));
+        pl.setColor(DPalette::ButtonText, QColor("#FFFFFF"));
+        QColor sbcolor("#000000");
+        sbcolor.setAlphaF(0);
+        pl.setColor(DPalette::Shadow, sbcolor);
+        d->importButton->setPalette(pl);
+
+        DPalette pa = d->text->palette();
+        pa.setColor(DPalette::WindowText, "#777777");
+        d->text->setPalette(pa);
+        d->text->setForegroundRole(DPalette::WindowText);
+    } else {
+        rStr = "dark";
+        auto pl = d->importButton->palette();
+        pl.setColor(DPalette::Dark, QColor("#0056C1"));
+        pl.setColor(DPalette::Light, QColor("#004C9C"));
+        pl.setColor(DPalette::ButtonText, QColor("#B8D3FF"));
+        QColor sbcolor("#0091FF");
+        sbcolor.setAlphaF(0.1);
+        pl.setColor(DPalette::Shadow, sbcolor);
+        d->importButton->setPalette(pl);
+
+        DPalette pa = d->text->palette();
+        pa.setColor(DPalette::WindowText, "#798190");
+        d->text->setPalette(pa);
+        d->text->setForegroundRole(DPalette::WindowText);
+    }
+    d->logo->setPixmap(DHiDPIHelper::loadNxPixmap(QString(":/mpimage/%1/import_music.svg").arg(rStr)));
 }

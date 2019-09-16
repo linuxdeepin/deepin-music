@@ -309,7 +309,7 @@ void MusicListDataWidgetPrivate::initConntion()
         int t_sortType = action->data().toInt() == 0 ? 1 : 0;
         albumListView->playlist()->changePlayMusicTypeOrderType();
         albumListView->playlist()->sortPlayMusicTypePtrListData(t_sortType);
-        //Q_EMIT q->resort(albumListView->playlist(), action->data().value<Playlist::SortType>());
+        Q_EMIT q->resort(albumListView->playlist(), action->data().value<Playlist::SortType>());
     });
     q->connect(artistDropdown, &DDropdown::triggered,
     q, [ = ](QAction * action) {
@@ -317,7 +317,7 @@ void MusicListDataWidgetPrivate::initConntion()
         int t_sortType = action->data().toInt() == 0 ? 1 : 0;
         artistListView->playlist()->changePlayMusicTypeOrderType();
         artistListView->playlist()->sortPlayMusicTypePtrListData(t_sortType);
-        //Q_EMIT q->resort(artistListView->playlist(), action->data().value<Playlist::SortType>());
+        Q_EMIT q->resort(artistListView->playlist(), action->data().value<Playlist::SortType>());
     });
     q->connect(musicDropdown, &DDropdown::triggered,
     q, [ = ](QAction * action) {
@@ -366,6 +366,11 @@ void MusicListDataWidgetPrivate::initConntion()
         initData(curPlayList);
         Q_EMIT q->playMedia(albumListView->playlist(), meta);
     });
+    q->connect(albumListView, &MusicListDataView::resume,
+    q, [ = ](const MetaPtr meta) {
+        PlaylistPtr curPlayList = albumListView->playlist();
+        Q_EMIT q->resume(albumListView->playlist(), meta);
+    });
 
     q->connect(albumListView, &MusicListDataView::pause,
     q, [ = ](PlaylistPtr playlist, const MetaPtr meta) {
@@ -406,6 +411,12 @@ void MusicListDataWidgetPrivate::initConntion()
         Q_EMIT q->playMedia(artistListView->playlist(), meta);
     });
 
+    q->connect(artistListView, &MusicListDataView::resume,
+    q, [ = ](const MetaPtr meta) {
+        PlaylistPtr curPlayList = artistListView->playlist();
+        Q_EMIT q->resume(artistListView->playlist(), meta);
+    });
+
     q->connect(artistListView, &MusicListDataView::pause,
     q, [ = ](PlaylistPtr playlist, const MetaPtr meta) {
         Q_EMIT q->pause(playlist, meta);
@@ -443,6 +454,12 @@ void MusicListDataWidgetPrivate::initConntion()
         curPlayList->play(meta);
         initData(curPlayList);
         Q_EMIT q->playMedia(musicListView->playlist(), meta);
+    });
+
+    q->connect(musicListView, &PlayListView::resume,
+    q, [ = ](const MetaPtr meta) {
+        PlaylistPtr curPlayList = musicListView->playlist();
+        Q_EMIT q->resume(musicListView->playlist(), meta);
     });
 
     q->connect(musicListView, &PlayListView::pause,
@@ -565,7 +582,7 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     layout->setContentsMargins(0, 0, 8, 0);
     layout->setSpacing(0);
 
-    d->actionBar = new DFrame;
+    d->actionBar = new DWidget;
     d->actionBar->setFixedHeight(80);
     d->actionBar->setObjectName("MusicListDataActionBar");
 
@@ -763,8 +780,10 @@ void MusicListDataWidget::onMusicPlayed(PlaylistPtr playlist, const MetaPtr Meta
     Q_D(MusicListDataWidget);
     d->albumListView->setPlaying(Meta);
     d->artistListView->setPlaying(Meta);
+    d->musicListView->setPlaying(Meta);
     d->albumListView->update();
     d->artistListView->update();
+    d->musicListView->update();
 }
 
 void MusicListDataWidget::slotTheme(int type)
@@ -783,6 +802,22 @@ void MusicListDataWidget::slotTheme(int type)
         palette.setColor(DPalette::Background, background);
         setPalette(palette);
 
+        auto titleLabelPalette = d->infoLabel->palette();
+        titleLabelPalette.setColor(DPalette::ButtonText, ("#777777"));
+        d->titleLabel->setPalette(titleLabelPalette);
+        d->titleLabel->setForegroundRole(DPalette::ButtonText);
+
+        auto playAllPalette = d->btPlayAll->palette();
+        playAllPalette.setColor(DPalette::ButtonText, Qt::white);
+        playAllPalette.setColor(DPalette::Dark, QColor("#FD5E5E"));
+        playAllPalette.setColor(DPalette::Light, QColor("#ED5656"));
+        d->btPlayAll->setPalette(playAllPalette);
+
+        auto infoLabelPalette = d->infoLabel->palette();
+        infoLabelPalette.setColor(DPalette::ButtonText, ("#777777"));
+        d->infoLabel->setPalette(infoLabelPalette);
+        d->infoLabel->setForegroundRole(DPalette::ButtonText);
+
 //        auto playAllPalette = d->btPlayAll->palette();
 //        playAllPalette.setColor(DPalette::Dark, QColor("#FD5E5E"));
 //        playAllPalette.setColor(DPalette::Light, QColor("#ED5656"));
@@ -792,6 +827,21 @@ void MusicListDataWidget::slotTheme(int type)
         QColor background("#252525");
         palette.setColor(DPalette::Background, background);
         setPalette(palette);
+        auto titleLabelPalette = d->infoLabel->palette();
+        titleLabelPalette.setColor(DPalette::ButtonText, ("#FFFFFF"));
+        d->titleLabel->setPalette(titleLabelPalette);
+        d->titleLabel->setForegroundRole(DPalette::ButtonText);
+
+        auto playAllPalette = d->btPlayAll->palette();
+        playAllPalette.setColor(DPalette::ButtonText, "#FFFFFF");
+        playAllPalette.setColor(DPalette::Dark, QColor("#A51B1B"));
+        playAllPalette.setColor(DPalette::Light, QColor("#DA2D2D"));
+        d->btPlayAll->setPalette(playAllPalette);
+
+        auto infoLabelPalette = d->infoLabel->palette();
+        infoLabelPalette.setColor(DPalette::ButtonText, ("#C0C6D4"));
+        d->infoLabel->setPalette(infoLabelPalette);
+        d->infoLabel->setForegroundRole(DPalette::ButtonText);
 
 //        auto playAllPalette = d->btPlayAll->palette();
 //        playAllPalette.setColor(DPalette::Dark, QColor("#DA2D2D"));

@@ -31,6 +31,7 @@ class QAudioBuffer;
 
 DWIDGET_USE_NAMESPACE
 
+class PlayListWidget;
 class FooterPrivate;
 class Footer : public DBlurEffectWidget
 {
@@ -50,6 +51,10 @@ public:
 
     void setLyricButtonChecked(bool flag);
     void setPlaylistButtonChecked(bool flag);
+
+    PlayListWidget *getPlayListWidget();
+    void showPlayListWidget(int width, int height, bool changFlag = false);
+    bool getShowPlayListFlag();
 
 signals:
     void toggleLyricView();

@@ -37,7 +37,7 @@ const int WaveformScale::WAVE_TEXTWIDTH = 38;
 WaveformScale::WaveformScale(QWidget *parent) : DFrame(parent)
 {
     setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint);
-    setFixedSize(56, 95);
+    setFixedSize(56, 105);
     setObjectName("WaveformScale");
 }
 

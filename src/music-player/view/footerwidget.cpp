@@ -52,6 +52,7 @@
 #include "widget/musicimagebutton.h"
 #include "widget/musicpixmapbutton.h"
 #include "widget/waveform.h"
+#include "playlistwidget.h"
 
 static const char *sPropertyFavourite         = "fav";
 static const char *sPropertyPlayStatus        = "playstatus";
@@ -75,6 +76,7 @@ public:
     void installHint(QWidget *w, QWidget *hint);
     void initConnection();
 
+    DBlurEffectWidget *forwardWidget = nullptr;
     Label           *title      = nullptr;
     Label           *artist     = nullptr;
 
@@ -90,6 +92,8 @@ public:
     SoundVolume       *volSlider  = nullptr;
     DButtonBox        *ctlWidget  = nullptr;
     Waveform          *waveform   = nullptr;
+    PlayListWidget    *playListWidget         = nullptr;
+    bool              showPlaylistFlag        = false;
 
     HintFilter          *hintFilter         = nullptr;
     HoverShadowFilter   *hoverShadowFilter  = nullptr;
@@ -205,28 +209,39 @@ Footer::Footer(QWidget *parent) :
 {
     Q_D(Footer);
 
-    setFixedHeight(70);
+    //setFixedHeight(70);
     setFocusPolicy(Qt::ClickFocus);
     setObjectName("Footer");
 
     setBlurRectXRadius(18);
     setBlurRectYRadius(18);
     setRadius(30);
-    setMode(DBlurEffectWidget::GaussianBlur);
     setBlurEnabled(true);
-    setBlendMode(DBlurEffectWidget::InWindowBlend);
-    QColor maskColor("#F7F7F7");
-    maskColor.setAlphaF(0.6);
-    setMaskColor(maskColor);
-    setMaskAlpha(255);
+    QColor backMaskColor(200, 200, 200);
+    setMaskColor(backMaskColor);
 
-    auto mainVBoxlayout = new QVBoxLayout(this);
+    d->forwardWidget = new DBlurEffectWidget(this);
+    d->forwardWidget->setBlurRectXRadius(18);
+    d->forwardWidget->setBlurRectYRadius(18);
+    d->forwardWidget->setRadius(30);
+    d->forwardWidget->setMode(DBlurEffectWidget::GaussianBlur);
+    d->forwardWidget->setBlurEnabled(true);
+    QColor maskColor(200, 200, 200, 170);
+    d->forwardWidget->setMaskColor(maskColor);
+
+    auto backLayout = new QVBoxLayout(this);
+    backLayout->setSpacing(0);
+    backLayout->setContentsMargins(0, 0, 0, 0);
+    backLayout->addWidget(d->forwardWidget);
+
+    auto mainVBoxlayout = new QVBoxLayout(d->forwardWidget);
     mainVBoxlayout->setSpacing(0);
-    mainVBoxlayout->setContentsMargins(0, 0, 0, 0);
+    mainVBoxlayout->setContentsMargins(0, 0, 0, 10);
 
     auto hoverFilter = new HoverFilter(this);
 
-    auto layout = new QHBoxLayout();
+    auto downWidget = new DWidget();
+    auto layout = new QHBoxLayout(downWidget);
     layout->setContentsMargins(10, 0, 10, 0);
     layout->setSpacing(10);
 
@@ -253,19 +268,19 @@ Footer::Footer(QWidget *parent) :
     d->artist->setMaximumWidth(140);
     d->artist->setText(tr("Unknown artist"));
 
-    d->btPlay = new DButtonBoxButton("");
-    d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/play_normal.svg"));
+    d->btPlay = new DButtonBoxButton(QStyle::SP_MediaPlay);
+    //d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/play_normal.svg"));
     d->btPlay->setIconSize(QSize(36, 36));
     d->btPlay->setFixedSize(40, 50);
 
-    d->btPrev = new DButtonBoxButton("");
-    d->btPrev->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/last_normal.svg"));
+    d->btPrev = new DButtonBoxButton(QStyle::SP_MediaSeekBackward);
+    //d->btPrev->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/last_normal.svg"));
     d->btPrev->setIconSize(QSize(36, 36));
     d->btPrev->setObjectName("FooterActionPrev");
     d->btPrev->setFixedSize(40, 50);
 
-    d->btNext = new DButtonBoxButton("");
-    d->btNext->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/next_normal.svg"));
+    d->btNext = new DButtonBoxButton(QStyle::SP_MediaSeekForward);
+    //d->btNext->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/next_normal.svg"));
     d->btNext->setIconSize(QSize(36, 36));
     d->btNext->setObjectName("FooterActionNext");
     d->btNext->setFixedSize(40, 50);
@@ -355,9 +370,7 @@ Footer::Footer(QWidget *parent) :
     musicMetaLayout->addWidget(d->artist);
     musicMetaLayout->addStretch(100);
 
-    auto metaWidget = new DFrame;
-//    metaWidget->setStyleSheet("border: 1px solid red;");
-    auto metaLayout = new QHBoxLayout(metaWidget);
+    auto metaLayout = new QHBoxLayout(this);
     metaLayout->setContentsMargins(0, 0, 0, 0);
     metaLayout->setSpacing(10);
     metaLayout->addWidget(d->btCover);
@@ -393,17 +406,16 @@ Footer::Footer(QWidget *parent) :
 //    actWidget->setSizePolicy(sp);
 
     layout->addWidget(d->ctlWidget, 0);
-    layout->addWidget(metaWidget);
+    layout->addLayout(metaLayout);
     layout->addWidget(d->waveform, 100);
     layout->addWidget(actWidget, 0, Qt::AlignRight | Qt::AlignVCenter);
 
-    auto controlFrame = new DFrame;
-    controlFrame->setObjectName("FooterControlFrame");
-    controlFrame->setFixedHeight(60);
-    controlFrame->setLayout(layout);
+    d->playListWidget = new PlayListWidget;
+    d->playListWidget->setContentsMargins(0, 0, 0, 0);
+    d->playListWidget->hide();
 
-    //mainVBoxlayout->addStretch();
-    mainVBoxlayout->addWidget(controlFrame);
+    mainVBoxlayout->addWidget(d->playListWidget);
+    mainVBoxlayout->addWidget(downWidget, 0, Qt::AlignBottom);
 
     d->title->hide();
     d->artist->hide();
@@ -508,6 +520,47 @@ void Footer::setPlaylistButtonChecked(bool flag)
         d->btPlayList->setChecked(flag);
         d->btPlayList->blockSignals(false);
     }
+}
+
+PlayListWidget *Footer::getPlayListWidget()
+{
+    Q_D(const Footer);
+    return d->playListWidget;
+}
+
+void Footer::showPlayListWidget(int width, int height, bool changFlag)
+{
+    Q_D(Footer);
+    if (changFlag) {
+        if (d->showPlaylistFlag) {
+            d->playListWidget->hide();
+            setFixedSize(width - 20, 70);
+            move(10, height - 80);
+            resize(width - 20, 70);
+        } else {
+            d->playListWidget->show();
+            setFixedSize(width - 20, 413);
+            move(10, height - 423);
+            resize(width - 20, 413);
+        }
+        d->showPlaylistFlag = (!d->showPlaylistFlag);
+    } else {
+        if (d->showPlaylistFlag) {
+            setFixedSize(width - 20, 413);
+            move(10, height - 423);
+            resize(width - 20, 413);
+        } else {
+            setFixedSize(width - 20, 70);
+            move(10, height - 80);
+            resize(width - 20, 70);
+        }
+    }
+}
+
+bool Footer::getShowPlayListFlag()
+{
+    Q_D(const Footer);
+    return d->showPlaylistFlag;
 }
 
 void Footer::mousePressEvent(QMouseEvent *event)
@@ -627,7 +680,7 @@ void Footer::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
         coverImage = cover.copy((cover.width() - imageWidth) / 2, 0, imageWidth, imageheight);
     }
 
-    setSourceImage(coverImage);
+    d->forwardWidget->setSourceImage(coverImage);
 
     this->enableControl(true);
     d->title->show();
@@ -741,16 +794,16 @@ void Footer::slotTheme(int type)
     Q_D(Footer);
     QString rStr;
     if (type == 1) {
-        QColor maskColor("#F7F7F7");
-        maskColor.setAlphaF(0.6);
-        setMaskColor(maskColor);
-        setMaskAlpha(255);
+        QColor backMaskColor(200, 200, 200);
+        setMaskColor(backMaskColor);
+        QColor maskColor(200, 200, 200, 170);
+        d->forwardWidget->setMaskColor(maskColor);
         rStr = "light";
     } else {
-        QColor maskColor("#202020");
-        maskColor.setAlphaF(0.5);
-        setMaskColor(maskColor);
-        setMaskAlpha(255);
+        QColor backMaskColor(56, 56, 56);
+        setMaskColor(backMaskColor);
+        QColor maskColor(56, 56, 56, 170);
+        d->forwardWidget->setMaskColor(maskColor);
         rStr = "dark";
     }
     d->m_type = type;
@@ -793,6 +846,8 @@ void Footer::slotTheme(int type)
 
     d->btPlayMode->setModeIcons(modes);
     d->waveform->setThemeType(type);
+    d->volSlider->slotTheme(type);
+    d->playListWidget->slotTheme(type);
 }
 
 void Footer::onProgressChanged(qint64 value, qint64 duration)
@@ -922,5 +977,5 @@ void Footer::resizeEvent(QResizeEvent *event)
         int imageheight = cover.height();
         coverImage = cover.copy((cover.width() - imageWidth) / 2, 0, imageWidth, imageheight);
     }
-    setSourceImage(coverImage);
+    d->forwardWidget->setSourceImage(coverImage);
 }

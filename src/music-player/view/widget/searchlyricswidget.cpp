@@ -10,6 +10,7 @@
 
 #include "util/musiclyric.h"
 #include <DPalette>
+#include "musicsettings.h"
 DGUI_USE_NAMESPACE
 
 SearchLyricsWidget::SearchLyricsWidget(QString path, QWidget *parent)
@@ -37,7 +38,7 @@ void SearchLyricsWidget::setThemeType(int type)
         DPalette WidgetPl = palette();
         WidgetPl.setColor(DPalette::Background, QColor("#FFFFFF"));
         setPalette(WidgetPl);
-
+        setBackgroundRole(DPalette::Background);
         DPalette pl = m_search->palette();
         pl.setColor(DPalette::ButtonText, QColor("#414D68"));
         pl.setColor(DPalette::Light, QColor("#E6E6E6"));
@@ -46,20 +47,43 @@ void SearchLyricsWidget::setThemeType(int type)
         sbcolor.setAlphaF(0.08);
         pl.setColor(DPalette::Shadow, sbcolor);
         m_search->setPalette(pl);
+
+        DPalette pa = m_title->palette();
+        pa.setColor(DPalette::WindowText, "#001A2E");
+        m_title->setPalette(pa);
+        m_title->setForegroundRole(DPalette::WindowText);
+
+        DPalette listWidgetPl = m_listWidget->palette();
+        listWidgetPl.setColor(DPalette::Background, QColor("#FFFFFF"));
+        m_listWidget->setPalette(listWidgetPl);
     } else {
         DPalette WidgetPl = palette();
-        WidgetPl.setColor(DPalette::Background, QColor("#252525"));
+        QColor tcolor = "#FFFFFF";
+        tcolor.setAlphaF(0.05);
+        WidgetPl.setColor(DPalette::Background, tcolor);
         setPalette(WidgetPl);
+        setBackgroundRole(DPalette::Background);
 
         DPalette pl = m_search->palette();
         pl.setColor(DPalette::ButtonText, QColor("#C0C6D4"));
-        pl.setColor(DPalette::Light, QColor("#454545"));
-        pl.setColor(DPalette::Dark, QColor("#454545"));
+        pl.setColor(DPalette::Light, QColor("#484848"));
+        pl.setColor(DPalette::Dark, QColor("#414141"));
         QColor sbcolor("#000000");
         sbcolor.setAlphaF(0.08);
         pl.setColor(DPalette::Shadow, sbcolor);
         m_search->setPalette(pl);
+
+
+        DPalette pa = m_title->palette();
+        pa.setColor(DPalette::WindowText, "#FFFFFF");
+        m_title->setPalette(pa);
+        m_title->setForegroundRole(DPalette::WindowText);
+
+        DPalette listWidgetPl = m_listWidget->palette();
+        listWidgetPl.setColor(DPalette::Background, tcolor);
+        m_listWidget->setPalette(listWidgetPl);
     }
+    searchLyrics();
 }
 
 void SearchLyricsWidget::initUI()
@@ -74,17 +98,18 @@ void SearchLyricsWidget::initUI()
     layout->setSpacing(0);
     layout->setMargin(0);
     layout->setContentsMargins(10, 10, 10, 6);
-    DLabel *title = new DLabel;
+    m_title = new DLabel;
     QFont font;
     font.setFamily("SourceHanSansSC-Bold");
     font.setPixelSize(17);
-    title->setFont(font);
-    title->setText(tr("Search Lyrics"));
-    title->setAlignment(Qt::AlignCenter | Qt::AlignVCenter);
-    title->setFixedHeight(30);
-    DPalette pa = title->palette();
+    m_title->setFont(font);
+    m_title->setText(tr("Search Lyrics"));
+    m_title->setAlignment(Qt::AlignCenter | Qt::AlignVCenter);
+    m_title->setFixedHeight(30);
+    DPalette pa = m_title->palette();
     pa.setColor(DPalette::WindowText, "#001A2E");
-    title->setPalette(pa);
+    m_title->setPalette(pa);
+    m_title->setForegroundRole(DPalette::WindowText);
 
     m_keyWord->setClearButtonEnabled(false);
     m_singer->setClearButtonEnabled(false);
@@ -106,7 +131,7 @@ void SearchLyricsWidget::initUI()
     // m_search->setFlat(true);
     connect(m_search, &DPushButton::clicked, this, &SearchLyricsWidget::searchLyrics);
 
-    layout->addWidget(title);
+    layout->addWidget(m_title);
     layout->addSpacing(10);
     layout->addWidget(m_keyWord);
     layout->addSpacing(10);
@@ -151,14 +176,37 @@ void SearchLyricsWidget::createList()
         DLabel *singerName = new DLabel(frame);
         DLabel *duration = new DLabel(frame);
 
-        DPalette lyricNamepl = lyricNmae->palette();
-        lyricNamepl.setColor(DPalette::WindowText, QColor("#414D68"));
-        lyricNmae->setPalette(lyricNamepl);
 
-        DPalette singerNamepl = singerName->palette();
-        singerNamepl.setColor(DPalette::WindowText, QColor("#526A7F"));
-        singerName->setPalette(singerNamepl);
-        duration->setPalette(singerNamepl);
+        bool themeFlag = false;
+        int themeType = MusicSettings::value("base.play.theme").toInt(&themeFlag);
+        if (!themeFlag)
+            themeType = 1;
+        if (themeType == 1) {
+            DPalette lyricNamepl = lyricNmae->palette();
+            lyricNamepl.setColor(DPalette::WindowText, QColor("#414D68"));
+            lyricNmae->setPalette(lyricNamepl);
+            lyricNmae->setForegroundRole(DPalette::WindowText);
+
+            DPalette singerNamepl = singerName->palette();
+            singerNamepl.setColor(DPalette::WindowText, QColor("#526A7F"));
+            singerName->setPalette(singerNamepl);
+            singerName->setForegroundRole(DPalette::WindowText);
+            duration->setPalette(singerNamepl);
+            duration->setForegroundRole(DPalette::WindowText);
+        } else {
+            DPalette lyricNamepl = lyricNmae->palette();
+            lyricNamepl.setColor(DPalette::WindowText, QColor("#C0C6D4"));
+            lyricNmae->setPalette(lyricNamepl);
+            lyricNmae->setForegroundRole(DPalette::WindowText);
+
+            DPalette singerNamepl = singerName->palette();
+            singerNamepl.setColor(DPalette::WindowText, QColor("#6D7C88"));
+            singerName->setPalette(singerNamepl);
+            singerName->setForegroundRole(DPalette::WindowText);
+            duration->setPalette(singerNamepl);
+            duration->setForegroundRole(DPalette::WindowText);
+        }
+
 
         lyricNmae->setText(m_lyricList[i].lyricsName);
         QFont font;

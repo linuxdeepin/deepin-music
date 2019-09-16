@@ -67,7 +67,7 @@ public slots:
     void setDefaultCover(QString defaultCover);
     void setBackgroundColor(QColor backgroundColor);
     void onUpdateMetaCodec(const MetaPtr meta);
-
+    void slotTheme(int type);
 protected:
     virtual void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
     virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;

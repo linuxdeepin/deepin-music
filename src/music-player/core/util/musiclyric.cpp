@@ -209,11 +209,15 @@ void MusicLyric::getFromFileOld(QString dir)
 
 bool MusicLyric::getHeadFromFile(QString dir)
 {
+    QString codeStr = getFileCodex(dir);
     QFile file(dir);
     if (!file.open(QIODevice::ReadOnly))
         return false;
+    QTextCodec *codec = QTextCodec::codecForName(codeStr.toStdString().c_str());
     while (!file.atEnd()) {
-        this->line.push_back(file.readLine());
+        QByteArray arr = file.readLine();
+        QString str = codec->toUnicode(arr);
+        this->line.push_back(str);
     }
     file.close();
     return true;

@@ -102,7 +102,11 @@ MusicListInfoView::MusicListInfoView(QWidget *parent)
     connect(this, &MusicListInfoView::doubleClicked,
     this, [ = ](const QModelIndex & index) {
         MetaPtr meta = d->model->meta(index);
-        Q_EMIT playMedia(meta);
+        if (meta == playlist()->playing()) {
+            Q_EMIT resume(meta);
+        } else {
+            Q_EMIT playMedia(meta);
+        }
     });
 }
 
@@ -171,6 +175,7 @@ void MusicListInfoView::setPlayPixmap(QPixmap pixmap)
 {
     Q_D(MusicListInfoView);
     d->playingPixmap = pixmap;
+    update();
 }
 
 QPixmap MusicListInfoView::getPlayPixmap() const
@@ -434,7 +439,11 @@ void MusicListInfoView::showContextMenu(const QPoint &pos,
     if (playAction) {
         connect(playAction, &QAction::triggered, this, [ = ](bool) {
             auto index = selection->selectedRows().first();
-            Q_EMIT playMedia(d->model->meta(index));
+            if (d->model->meta(index) == playlist()->playing()) {
+                Q_EMIT resume(d->model->meta(index));
+            } else {
+                Q_EMIT playMedia(d->model->meta(index));
+            }
         });
     }
 

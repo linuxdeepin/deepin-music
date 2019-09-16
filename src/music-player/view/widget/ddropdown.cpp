@@ -43,7 +43,7 @@ public:
     Q_DECLARE_PUBLIC(DDropdown)
 };
 
-DDropdown::DDropdown(QWidget *parent) : DFrame(parent), d_ptr(new DDropdownPrivate(this))
+DDropdown::DDropdown(QWidget *parent) : DWidget(parent), d_ptr(new DDropdownPrivate(this))
 {
     Q_D(DDropdown);
 
@@ -158,7 +158,7 @@ void DDropdown::setStatus(QString status)
 void DDropdown::enterEvent(QEvent *event)
 {
     setStatus("hover");
-    DFrame::enterEvent(event);
+    DWidget::enterEvent(event);
 
     update();
 }
@@ -166,7 +166,7 @@ void DDropdown::enterEvent(QEvent *event)
 void DDropdown::leaveEvent(QEvent *event)
 {
     setStatus("");
-    DFrame::leaveEvent(event);
+    DWidget::leaveEvent(event);
 
     update();
 }
@@ -176,5 +176,5 @@ void DDropdown::mouseReleaseEvent(QMouseEvent *event)
     if (event->button() == Qt::LeftButton) {
         Q_EMIT requestContextMenu();
     }
-    DFrame::mouseReleaseEvent(event);
+    DWidget::mouseReleaseEvent(event);
 }

@@ -55,6 +55,7 @@ public:
     PlaylistModel      *model        = nullptr;
     PlayItemDelegate   *delegate     = nullptr;
     int                 themeType    = 1;
+    MetaPtr             playing       = nullptr;
 
     MetaPtrList         playMetaPtrList;
     QPixmap              playingPixmap = QPixmap(":/mpimage/light/music1.svg");
@@ -84,6 +85,7 @@ PlayListView::PlayListView(QWidget *parent)
     //setHorizontalScrollMode(QAbstractItemView::ScrollPerItem);
     setDefaultDropAction(Qt::MoveAction);
     setDragDropMode(QAbstractItemView::InternalMove);
+    setDragEnabled(true);
     setMovement(QListView::Free);
 
     setViewModeFlag(QListView::ListMode);
@@ -103,7 +105,11 @@ PlayListView::PlayListView(QWidget *parent)
     connect(this, &PlayListView::doubleClicked,
     this, [ = ](const QModelIndex & index) {
         MetaPtr meta = d->model->meta(index);
-        Q_EMIT playMedia(meta);
+        if (meta == playlist()->playing()) {
+            Q_EMIT resume(meta);
+        } else {
+            Q_EMIT playMedia(meta);
+        }
     });
 
     // For debug
@@ -128,7 +134,11 @@ MetaPtr PlayListView::activingMeta() const
         return MetaPtr();
     }
 
-    return d->model->playlist()->playing();
+    if (d->playing == nullptr) {
+        return d->model->playlist()->playing();
+    } else {
+        return d->playing;
+    }
 }
 
 PlaylistPtr PlayListView::playlist() const
@@ -143,6 +153,12 @@ QModelIndex PlayListView::findIndex(const MetaPtr meta)
     Q_D(PlayListView);
 
     return d->model->findIndex(meta);
+}
+
+void PlayListView::setPlaying(const MetaPtr meta)
+{
+    Q_D(PlayListView);
+    d->playing = meta;
 }
 
 void PlayListView::setViewModeFlag(QListView::ViewMode mode)
@@ -482,7 +498,11 @@ void PlayListView::showContextMenu(const QPoint &pos,
     if (playAction) {
         connect(playAction, &QAction::triggered, this, [ = ](bool) {
             auto index = selection->selectedRows().first();
-            Q_EMIT playMedia(d->model->meta(index));
+            if (d->model->meta(index) == playlist()->playing()) {
+                Q_EMIT resume(d->model->meta(index));
+            } else {
+                Q_EMIT playMedia(d->model->meta(index));
+            }
         });
     }
 

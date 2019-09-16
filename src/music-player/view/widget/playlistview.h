@@ -38,6 +38,7 @@ public:
     MetaPtr activingMeta() const;
     PlaylistPtr playlist() const;
     QModelIndex findIndex(const MetaPtr meta);
+    void setPlaying(const MetaPtr meta);
 
     void setViewModeFlag(QListView::ViewMode mode);
 
@@ -54,6 +55,7 @@ signals:
     void removeMusicList(const MetaPtrList  &metalist);
     void deleteMusicList(const MetaPtrList  &metalist);
     void playMedia(const MetaPtr meta);
+    void resume(const MetaPtr meta);
     void pause(const MetaPtr meta);
     void updateMetaCodec(const MetaPtr meta);
     void showInfoDialog(const MetaPtr meta);

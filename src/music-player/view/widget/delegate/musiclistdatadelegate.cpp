@@ -95,6 +95,10 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
         if (PlayMusicTypePtr->extraName.isEmpty()) {
             QColor fillColor(0, 0, 0);
             fillColor.setAlphaF(0.3);
+            if (listview->getThemeType() == 2) {
+                fillColor = "#000000";
+                fillColor.setAlphaF(0.3);
+            }
             //draw playing
             if (listview->playing() != nullptr && listview->playing()->artist == PlayMusicTypePtr->name) {
                 QRect fillPlayingRect(rect.x(), rect.y() + rect.height() - 64, rect.width(), 28);
@@ -118,7 +122,10 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
         } else {
             QColor fillColor(0, 0, 0);
             fillColor.setAlphaF(0.3);
-
+            if (listview->getThemeType() == 2) {
+                fillColor = "#000000";
+                fillColor.setAlphaF(0.3);
+            }
             //draw playing
             if (listview->playing() != nullptr && listview->playing()->album == PlayMusicTypePtr->name) {
                 QRect fillPlayingRect(rect.x(), rect.y() + rect.height() - 83, rect.width(), 39);

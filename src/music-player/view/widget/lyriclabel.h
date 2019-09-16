@@ -37,6 +37,7 @@ protected:
     bool isScrolled;
     bool dosignal;
     bool     m_FadeFlag = false;
+    int      m_themetype = 1;
 };
 
 class MusicLyric;
@@ -64,7 +65,7 @@ signals:
 public slots:
     void postionChanged(qint64 pos);
     void setPostion(qint64 pos);
-
+    void slotTheme(int type);
 protected slots:
     void changeToEvent(int index);
     void changeFont();

@@ -1010,7 +1010,8 @@ void Presenter::onResort(PlaylistPtr playlist, int sortType)
 void Presenter::onImportFiles(const QStringList &filelist)
 {
     Q_D(Presenter);
-    PlaylistPtr playlist = d->currentPlaylist;
+    //PlaylistPtr playlist = d->currentPlaylist;
+    PlaylistPtr playlist = d->playlistMgr->playlist(AllMusicListID);
     requestImportPaths(playlist, filelist);
     return;
 }

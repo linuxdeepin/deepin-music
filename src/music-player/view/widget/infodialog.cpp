@@ -32,6 +32,7 @@
 #include <DImageButton>
 #include <DFrame>
 #include <DFloatingWidget>
+#include <DHiDPIHelper>
 
 #include <dwindowclosebutton.h>
 
@@ -75,8 +76,7 @@ void InfoDialogPrivate::initUI()
     layout->setMargin(5);
 
     auto closeBt = new DImageButton;
-    closeBt->setPixmap(QPixmap(":/mpimage/light/normal/close_normal.svg"));
-    closeBt->setObjectName("InfoClose");
+    closeBt->setPixmap(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/close_normal.svg"));
     closeBt->setFixedSize(27, 23);
 
     cover = new Cover;
@@ -223,6 +223,13 @@ void InfoDialog::updateInfo(const MetaPtr meta)
 
     for (int i = 0; i < d->valueList.length(); ++i) {
         d->valueList.value(i)->setText(infoValues.value(i));
+        QFontMetrics fm(d->valueList.value(i)->font());
+        QRect rec = fm.boundingRect( d->valueList.value(i)->text());
+        int labelRow = d->valueList.value(i)->height() / 14;
+        if (rec.width() > d->valueList.value(i)->width() * labelRow) {
+            int row = rec.width() / d->valueList.value(i)->width() + 1;
+            d->valueList.value(i)->setFixedHeight(row * rec.height());
+        }
     }
 
     QFileInfo fileInfo(meta->localPath);
@@ -258,11 +265,11 @@ void InfoDialog::setThemeType(int type)
         d->infoGridFrame->setPalette(pl);
     } else {
         DPalette pl = d->infoGridFrame->palette();
-        QColor windowColor("#252525");
-        windowColor.setAlphaF(0.7);
+        QColor windowColor("#FFFFFF");
+        windowColor.setAlphaF(0.05);
         pl.setColor(DPalette::Window, windowColor);
-        QColor sbcolor("#000000");
-        sbcolor.setAlphaF(0.05);
+        QColor sbcolor("#FFFFFF");
+        sbcolor.setAlphaF(0.1);
         pl.setColor(DPalette::Shadow, sbcolor);
         d->infoGridFrame->setPalette(pl);
     }

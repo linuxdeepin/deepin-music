@@ -43,6 +43,7 @@ public slots:
     void showWaitHint();
     void showImportHint();
 
+    void slotTheme(int type);
 protected:
     virtual void dragEnterEvent(QDragEnterEvent *event) Q_DECL_OVERRIDE;
     virtual void dragMoveEvent(QDragMoveEvent *event) Q_DECL_OVERRIDE;

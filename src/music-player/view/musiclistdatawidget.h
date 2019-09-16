@@ -55,6 +55,7 @@ signals:
     void playall(PlaylistPtr playlist);
     void resort(PlaylistPtr playlist, int sortType);
     void playMedia(PlaylistPtr playlist, const MetaPtr meta);
+    void resume(PlaylistPtr playlist, const MetaPtr meta);
     void pause(PlaylistPtr playlist, const MetaPtr meta);
     void modeChanged(int);
 

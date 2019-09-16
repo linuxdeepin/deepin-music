@@ -39,6 +39,7 @@
 #include "../core/musicsettings.h"
 #include "widget/playlistview.h"
 #include "widget/ddropdown.h"
+#include <DGuiApplicationHelper>
 
 DWIDGET_USE_NAMESPACE
 DGUI_USE_NAMESPACE
@@ -110,6 +111,10 @@ void PlayListWidgetPrivate::initConntion()
     q, [ = ](const MetaPtr meta) {
         Q_EMIT q->playMedia(playListView->playlist(), meta);
     });
+    q->connect(playListView, &PlayListView::resume,
+    q, [ = ](const MetaPtr meta) {
+        Q_EMIT q->resume(playListView->playlist(), meta);
+    });
     q->connect(playListView, &PlayListView::pause,
     q, [ = ](const MetaPtr meta) {
         Q_EMIT q->pause(playListView->playlist(), meta);
@@ -137,23 +142,11 @@ void PlayListWidgetPrivate::showEmptyHits(bool empty)
 }
 
 PlayListWidget::PlayListWidget(QWidget *parent) :
-    DBlurEffectWidget(parent), d_ptr(new PlayListWidgetPrivate(this))
+    DWidget(parent), d_ptr(new PlayListWidgetPrivate(this))
 {
     Q_D(PlayListWidget);
 
-    setBlurRectXRadius(18);
-    setBlurRectYRadius(18);
-    setRadius(30);
-
-    //setAutoFillBackground(true);
-
-    setMode(DBlurEffectWidget::GaussianBlur);
-    setBlurEnabled(true);
-    //setBlendMode(DBlurEffectWidget::BehindWindowBlend);
-    setMaskColor(QColor(200, 200, 200, 170));
-    //setMaskAlpha(140);
-
-    setObjectName("PlayListWidget");
+    setFixedHeight(314);
     setAcceptDrops(true);
 
     auto layout = new QHBoxLayout(this);
@@ -387,12 +380,46 @@ void PlayListWidget::onCustomContextMenuRequest(const QPoint &pos,
 void PlayListWidget::slotTheme(int type)
 {
     Q_D(PlayListWidget);
+    if (type == 0)
+        type = DGuiApplicationHelper::instance()->themeType();
     if (type == 1) {
-        QColor maskColor(200, 200, 200, 170);
-        setMaskColor(maskColor);
+        auto titleLabelPalette = d->infoLabel->palette();
+        titleLabelPalette.setColor(DPalette::ButtonText, ("#000000"));
+        d->titleLabel->setPalette(titleLabelPalette);
+        d->titleLabel->setForegroundRole(DPalette::ButtonText);
+
+        auto infoLabelPalette = d->infoLabel->palette();
+        infoLabelPalette.setColor(DPalette::ButtonText, ("#777777"));
+        d->infoLabel->setPalette(infoLabelPalette);
+        d->infoLabel->setForegroundRole(DPalette::ButtonText);
+
+        DPalette pl = d->btClearAll ->palette();
+        pl.setColor(DPalette::ButtonText, QColor("#FFFFFF"));
+        pl.setColor(DPalette::Light, QColor("#646464"));
+        pl.setColor(DPalette::Dark, QColor("#5C5C5C"));
+        QColor sbcolor("#000000");
+        sbcolor.setAlphaF(0.08);
+        pl.setColor(DPalette::Shadow, sbcolor);
+        d->btClearAll->setPalette(pl);
     } else {
-        QColor maskColor(56, 56, 56, 170);
-        setMaskColor(maskColor);
+        auto titleLabelPalette = d->infoLabel->palette();
+        titleLabelPalette.setColor(DPalette::ButtonText, ("#FFFFFF"));
+        d->titleLabel->setPalette(titleLabelPalette);
+        d->titleLabel->setForegroundRole(DPalette::ButtonText);
+
+        auto infoLabelPalette = d->infoLabel->palette();
+        infoLabelPalette.setColor(DPalette::ButtonText, ("#C0C6D4"));
+        d->infoLabel->setPalette(infoLabelPalette);
+        d->infoLabel->setForegroundRole(DPalette::ButtonText);
+
+        DPalette pl = d->btClearAll->palette();
+        pl.setColor(DPalette::ButtonText, QColor("#FFFFFF"));
+        pl.setColor(DPalette::Light, QColor("#555454"));
+        pl.setColor(DPalette::Dark, QColor("#414141"));
+        QColor sbcolor("#000000");
+        sbcolor.setAlphaF(0.08);
+        pl.setColor(DPalette::Shadow, sbcolor);
+        d->btClearAll->setPalette(pl);
     }
     d->playListView->setThemeType(type);
 }

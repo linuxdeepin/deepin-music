@@ -60,7 +60,7 @@ private:
     void initUI();
     void initConnection();
     void createList();
-
+    DLabel *m_title;
     DPushButton             *m_search;
     DListWidget             *m_listWidget;
     DLineEdit               *m_keyWord;

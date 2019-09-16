@@ -129,6 +129,11 @@ MusicListDataView::MusicListDataView(QWidget *parent)
         Q_EMIT playMedia(meta);
     });
 
+    connect(d->musciListDialog, &MusicListDialog::resume,
+    this, [ = ](const MetaPtr meta) {
+        Q_EMIT resume(meta);
+    });
+
     connect(d->musciListDialog, &MusicListDialog::addToPlaylist,
     this, [ = ](PlaylistPtr playlist, const MetaPtrList  & metalist) {
         Q_EMIT addToPlaylist(playlist, metalist);
@@ -223,6 +228,7 @@ void MusicListDataView::setPlayPixmap(QPixmap pixmap)
 {
     Q_D(MusicListDataView);
     d->playingPixmap = pixmap;
+    d->musciListDialog->setPlayPixmap(pixmap);
     update();
 }
 

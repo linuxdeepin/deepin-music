@@ -513,7 +513,13 @@ void LyricWidget::onUpdateMetaCodec(const MetaPtr /*meta*/)
 //        d->m_playingMusic.title = meta.title;
 //        d->m_playingMusic.artist = meta.artist;
 //        d->m_playingMusic.album = meta.album;
-//    }
+    //    }
+}
+
+void LyricWidget::slotTheme(int type)
+{
+    Q_D(LyricWidget);
+
 }
 
 void LyricWidget::setBackgroundColor(QColor backgroundColor)

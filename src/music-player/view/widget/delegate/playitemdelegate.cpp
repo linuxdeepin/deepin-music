@@ -258,7 +258,11 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
         font.setPixelSize(13);
         painter->setFont(font);
         QFontMetrics fm(font);
-
+        QColor nameColor = "#000000";
+        if (listview->getThemeType() == 2) {
+            nameColor = "#C0C6D4";
+        }
+        painter->setPen(nameColor);
         QRect nameFillRect(option.rect.x(), startHeight, option.rect.width(), fillAllHeight / 2);
         nameFillRect.adjust(8, 0, -7, 0);
         auto nameText = fm.elidedText(meta->title, Qt::ElideRight, 140);
@@ -266,6 +270,8 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 
         font.setPixelSize(11);
         painter->setFont(font);
+        nameColor.setAlphaF(0.6);
+        painter->setPen(nameColor);
         QRect extraNameFillRect(option.rect.x(), startHeight + fillAllHeight / 2, 99, 16);
         extraNameFillRect.adjust(8, 0, -7, 0);
         auto extraNameText = fm.elidedText(meta->artist, Qt::ElideRight, 99);
@@ -276,6 +282,10 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
         painter->save();
         QColor timeFillColor("#232323");
         timeFillColor.setAlphaF(0.3);
+        if (listview->getThemeType() == 2) {
+            timeFillColor = "#DCDCDC";
+            timeFillColor.setAlphaF(0.3);
+        }
         painter->setPen(Qt::NoPen);
         painter->setBrush(timeFillColor);
         painter->drawRoundedRect(timeFillRect, 10, 10);
@@ -283,7 +293,11 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 
         font.setPixelSize(12);
         painter->setFont(font);
-        painter->setPen(Qt::white);
+        QColor timedColor = Qt::white;
+        if (listview->getThemeType() == 2) {
+            timedColor = "#C0C6D4";
+        }
+        painter->setPen(timedColor);
         auto timeText = fm.elidedText(DMusic::lengthString(meta->length), Qt::ElideRight, 38);
         painter->drawText(timeFillRect, Qt::AlignHCenter | Qt::AlignTop, timeText);
 

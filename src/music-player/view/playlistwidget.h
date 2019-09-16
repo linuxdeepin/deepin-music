@@ -21,14 +21,14 @@
 
 #pragma once
 
-#include <DBlurEffectWidget>
+#include <DWidget>
 
 #include "../core/playlist.h"
 
 DWIDGET_USE_NAMESPACE
 
 class PlayListWidgetPrivate;
-class PlayListWidget : public DBlurEffectWidget
+class PlayListWidget : public DWidget
 {
     Q_OBJECT
 public:
@@ -57,6 +57,7 @@ signals:
     void playall(PlaylistPtr playlist);
     void resort(PlaylistPtr playlist, int sortType);
     void playMedia(PlaylistPtr playlist, const MetaPtr meta);
+    void resume(PlaylistPtr playlist, const MetaPtr meta);
     void pause(PlaylistPtr playlist, const MetaPtr meta);
     void showInfoDialog(const MetaPtr meta);
     void updateMetaCodec(const MetaPtr meta);

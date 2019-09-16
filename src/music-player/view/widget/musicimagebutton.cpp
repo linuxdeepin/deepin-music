@@ -128,15 +128,18 @@ void MusicImageButton::paintEvent(QPaintEvent *event)
         pixmap = DHiDPIHelper::loadNxPixmap(defaultPicPath.normalPicPath);
     }
 
+    pixmap.setDevicePixelRatio(devicePixelRatioF());
     QPainter painter(this);
     painter.save();
     painter.setRenderHint(QPainter::Antialiasing);
     painter.setRenderHint(QPainter::HighQualityAntialiasing);
+    painter.setRenderHint(QPainter::SmoothPixmapTransform);
 
     int pixmapWidth = pixmap.rect().width();
     int pixmapHeight = pixmap.rect().height();
     QRect pixmapRect((rect().width() - pixmapWidth) / 2, (rect().height() - pixmapHeight) / 2, pixmapWidth, pixmapHeight);
-    painter.drawPixmap(pixmapRect, pixmap);
+    pixmapRect = pixmapRect.intersected(rect());
+    painter.drawPixmap(pixmapRect, pixmap, QRect(0, 0, pixmapWidth, pixmapHeight));
 
     painter.restore();
 }

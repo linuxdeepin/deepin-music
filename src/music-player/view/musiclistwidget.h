@@ -29,6 +29,7 @@ DWIDGET_USE_NAMESPACE
 
 class MusicListView;
 class MusicListDataWidget;
+class MusicImageButton;
 class MusicListWidget : public DWidget
 {
     Q_OBJECT
@@ -43,6 +44,7 @@ signals:
     void playall(PlaylistPtr playlist);
     void customResort(const QStringList &uuids);
     void playMedia(PlaylistPtr playlist, const MetaPtr meta);
+    void resume(PlaylistPtr playlist, const MetaPtr meta);
     void pause(PlaylistPtr playlist, const MetaPtr meta);
     void resort(PlaylistPtr playlist, int sortType);
     void selectedPlaylistChange(PlaylistPtr playlist);
@@ -80,6 +82,7 @@ private:
     MusicListView         *m_dataBaseListview;
     MusicListView         *m_customizeListview;
     MusicListDataWidget   *m_dataListView;
+    MusicImageButton     *m_addListBtn;
     DWidget               *leftFrame;
     DLabel                *dataBaseLabel;
     DLabel                *customizeLabel;

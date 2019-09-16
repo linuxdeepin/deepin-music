@@ -13,6 +13,7 @@
 
 #include "../../core/util/musiclyric.h"
 #include "../../core/musicsettings.h"
+#include "musicsettings.h"
 #define WHEEL_SCROLL_OFFSET 50000.0
 
 #include <QDebug>
@@ -27,7 +28,7 @@ LyricLabel::LyricLabel(bool touch, QWidget *parent)
     lyricFont->setFamily("SourceHanSansSC-Normal");
     lyricFont->setPixelSize(16);
     lyricNormal = new QColor("#526A7F");
-    lyricHighlight = new QColor("#000000 ");
+    lyricHighlight = new QColor("#000000");
     connect(this, SIGNAL(changeTo(int)), this, SLOT(changeToEvent(int)));
 
     m_FadeFlag = MusicSettings::value("base.play.fade_in_out").toBool();
@@ -123,6 +124,19 @@ void LyricLabel::setPostion(qint64 pos)
 {
     int index = lyric->getIndex(pos);
     this->setCurrentIndex(index);
+}
+
+void LyricLabel::slotTheme(int type)
+{
+    m_themetype = type;
+    if (type == 1) {
+        *lyricNormal =  QColor("#526A7F");
+        *lyricHighlight =  QColor("#000000");
+    } else {
+        *lyricNormal =  QColor("#C0C6D4");
+        *lyricHighlight =  QColor("#FFFFFF");
+    }
+    update();
 }
 
 void LyricLabel::changeToEvent(int index)
@@ -331,10 +345,18 @@ void AbstractWheelWidget::paintEvent(QPaintEvent *event)
                 t = 255 - t * t * 220 / len / len; //220是255-y得到,y为边界透明度
                 if (t < 0) t = 0;
                 //qDebug() << "a值:" << t << endl;
-                if (m_FadeFlag) {
-                    painter.setPen(QColor(255, 255, 255, t));
+                if (m_themetype == 1) {
+                    if (m_FadeFlag) {
+                        painter.setPen(QColor(255, 255, 255, t));
+                    } else {
+                        painter.setPen(QColor(255, 255, 255, 255));
+                    }
                 } else {
-                    painter.setPen(QColor(255, 255, 255, 255));
+                    if (m_FadeFlag) {
+                        painter.setPen(QColor(0, 0, 0, t));
+                    } else {
+                        painter.setPen(QColor("#FFFFFF"));
+                    }
                 }
                 paintItem(&painter, itemNum, QRect(6, h / 2 + i * iH - m_itemOffset - iH / 2, w - 6, iH ));
             }

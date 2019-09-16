@@ -332,7 +332,7 @@ void Waveform::updateScaleSize()
     curValue = allDuration * (value() * 1.0) / (maximum() - minimum());
 
     auto wavePos = mapToParent(QPoint(curWidth - waveScaleWidth / 2, 0));
-    wavePos.ry() = -25;
+    wavePos.ry() = -35;
     wavePos = ((QWidget *)parent())->mapToGlobal(wavePos);
     wavePos = mainWindow->mapFromGlobal(wavePos);
 
