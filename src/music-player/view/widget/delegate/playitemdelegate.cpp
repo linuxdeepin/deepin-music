@@ -287,13 +287,11 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
         background = option.palette.dark();
     }
 
-    if (option.state & QStyle::State_HasFocus) {
-//        background = Qt::red;
-    }
-
     painter->fillRect(option.rect, background);
-//    painter->setPen(Qt::red);
-//    painter->drawRect(option.rect);
+
+    int rowCount = listview->model()->rowCount();
+    auto rowCountSize = QString::number(rowCount).size();
+    rowCountSize = qMax(rowCountSize, 2);
 
     auto hash = index.data().toString();
     auto meta = MediaLibrary::instance()->meta(hash);
@@ -344,7 +342,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 
             } else {
                 painter->setFont(font11);
-                auto str = QString("%1").arg(index.row() + 1);
+                auto str = QString("%1").arg(index.row() + 1, rowCountSize, 10, QLatin1Char('0'));
                 QFont font(font11);
                 QFontMetrics fm(font);
                 auto text = fm.elidedText(str, Qt::ElideMiddle, rect.width());

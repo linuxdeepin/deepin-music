@@ -36,10 +36,13 @@
 #include "widget/musiclistview.h"
 #include "widget/musiclistviewitem.h"
 #include "musiclistdatawidget.h"
+#include "widget/musicimagebutton.h"
 
 MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
 {
     setObjectName("MusicListWidget");
+
+    setAutoFillBackground(true);
 
     auto layout = new QHBoxLayout(this);
     setFocusPolicy(Qt::ClickFocus);
@@ -62,7 +65,9 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
     customizeLabel->setObjectName("MusicListWidgetCustomizeLabel");
     customizeLabel->setMargin(8);
 
-    auto *addListBtn = new DFloatingButton("+");
+    auto *addListBtn = new MusicImageButton(":/mpimage/light/normal/add_normal.svg",
+                                            ":/mpimage/light/hover/add_hover.svg",
+                                            ":/mpimage/light/press/add_press.svg");
     addListBtn->setFixedSize(28, 28);
     addListBtn->setFocusPolicy(Qt::NoFocus);
 
@@ -86,6 +91,7 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
 
     connect(addListBtn, &DPushButton::clicked, this, [ = ](bool /*checked*/) {
         qDebug() << "addPlaylist(true);";
+        addFlag = true;
         Q_EMIT this->addPlaylist(true);
     });
 
@@ -158,6 +164,10 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
     connect(m_customizeListview, &MusicListView::playall,
     this, [ = ](PlaylistPtr playlist) {
         Q_EMIT this->playall(playlist);
+    });
+    connect(m_customizeListview, &MusicListView::displayNameChanged,
+    this, [ = ]() {
+        m_dataListView->onMusiclistUpdate();
     });
 
     //musiclistdatawidget
@@ -275,6 +285,11 @@ void MusicListWidget::onPlaylistAdded(PlaylistPtr playlist)
         m_dataBaseListview->addItem(item);
     } else {
         m_customizeListview->addItem(item);
+        if (addFlag) {
+            m_customizeListview->clearSelection();
+            m_customizeListview->openPersistentEditor(item);
+        }
+        addFlag = false;
     }
     if (playlist->playing())
         m_dataListView->onMusiclistChanged(playlist);
@@ -309,7 +324,7 @@ void MusicListWidget::onMusicListAdded(PlaylistPtr playlist, const MetaPtrList m
 {
     Q_UNUSED(playlist)
     Q_UNUSED(metalist)
-    m_dataListView->onMusiclistUpdate();
+    m_dataListView->onMusicListAdded(playlist, metalist);
 }
 
 void MusicListWidget::onMusicListRemoved(PlaylistPtr playlist, const MetaPtrList metalist)

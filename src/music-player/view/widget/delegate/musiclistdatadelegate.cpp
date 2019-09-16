@@ -197,6 +197,10 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             QFont font12 = option.font;
             font12.setPixelSize(12);
 
+            int rowCount = listview->model()->rowCount();
+            auto rowCountSize = QString::number(rowCount).size();
+            rowCountSize = qMax(rowCountSize, 2);
+
             QFontMetrics songsFm(font12);
             auto tailwidth = pixel2point(songsFm.width("0000-00-00")) + PlayItemRightMargin  + 20;
             auto w = option.rect.width() - 0 - tailwidth;
@@ -204,7 +208,7 @@ void MusicListDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             //num
             QRect numRect(0, option.rect.y(), 40, option.rect.height());
             painter->setFont(font11);
-            auto str = QString("%1").arg(index.row() + 1);
+            auto str = QString("%1").arg(index.row() + 1, rowCountSize, 10, QLatin1Char('0'));
             QFont font(font11);
             QFontMetrics fm(font);
             auto text = fm.elidedText(str, Qt::ElideMiddle, numRect.width());

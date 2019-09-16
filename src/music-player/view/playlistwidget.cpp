@@ -135,9 +135,6 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
     Q_D(PlayListWidget);
 
     setAutoFillBackground(true);
-    auto plPalette = palette();
-    plPalette.setColor(DPalette::Background, Qt::white);
-    setPalette(plPalette);
 
     setObjectName("PlayListWidget");
     setAcceptDrops(true);
@@ -147,10 +144,6 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
     layout->setSpacing(0);
 
     d->actionBar = new DWidget;
-    d->actionBar->setAutoFillBackground(true);
-    auto palette = d->actionBar->palette();
-    palette.setColor(DPalette::Background, Qt::white);
-    d->actionBar->setPalette(palette);
     d->actionBar->setFixedWidth(200);
     d->actionBar->setObjectName("PlayListActionBar");
 
@@ -168,7 +161,7 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
     d->infoLabel->setFont(infoFont);
 
     d->btClearAll = new DPushButton;
-    d->btClearAll->setIcon(QIcon(":/mpimage/normal/clear_list_normal.svg"));
+    d->btClearAll->setIcon(QIcon(":/mpimage/light/normal/clear_list_normal.svg"));
     auto playAllPalette = d->btClearAll->palette();
     playAllPalette.setColor(DPalette::ButtonText, Qt::white);
     playAllPalette.setColor(DPalette::Dark, QColor(Qt::darkGray));

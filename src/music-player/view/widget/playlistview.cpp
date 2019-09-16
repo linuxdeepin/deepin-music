@@ -307,12 +307,6 @@ void PlayListView::showContextMenu(const QPoint &pos,
     DMenu playlistMenu;
     auto newvar = QVariant::fromValue(PlaylistPtr());
 
-    auto createPlaylist = playlistMenu.addAction(tr("New playlist"));
-    createPlaylist->setData(newvar);
-    createPlaylist->setIcon(QIcon(":/light/image/plus.svg"));
-
-    playlistMenu.addSeparator();
-
     if (selectedPlaylist != favPlaylist) {
         auto act = playlistMenu.addAction(favPlaylist->displayName());
         act->setData(QVariant::fromValue(favPlaylist));
@@ -326,6 +320,11 @@ void PlayListView::showContextMenu(const QPoint &pos,
         auto act = playlistMenu.addAction(text);
         act->setData(QVariant::fromValue(playlist));
     }
+
+    playlistMenu.addSeparator();
+
+    auto createPlaylist = playlistMenu.addAction(tr("New playlist"));
+    createPlaylist->setData(newvar);
 
     connect(&playlistMenu, &DMenu::triggered, this, [ = ](QAction * action) {
         auto playlist = action->data().value<PlaylistPtr >();

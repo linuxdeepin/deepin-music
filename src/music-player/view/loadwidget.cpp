@@ -32,6 +32,8 @@ DWIDGET_USE_NAMESPACE
 LoadWidget::LoadWidget(QWidget *parent) :
     DFrame(parent)
 {
+    setAutoFillBackground(true);
+
     auto water = new DWaterProgress(this);
     water->setValue(50);
     water->setTextVisible(false);

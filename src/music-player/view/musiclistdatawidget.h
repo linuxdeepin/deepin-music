@@ -39,6 +39,7 @@ public:
 
 public slots:
     void onMusiclistChanged(PlaylistPtr playlist);
+    void onMusicListAdded(PlaylistPtr playlist, const MetaPtrList metalist);
     void onMusiclistUpdate();
 
     void onCustomContextMenuRequest(const QPoint &pos,

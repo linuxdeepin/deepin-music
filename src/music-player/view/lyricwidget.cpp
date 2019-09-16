@@ -167,12 +167,12 @@ LyricWidget::LyricWidget(QWidget *parent)
 
     auto searchMetaTitle = new DLineEdit;
     searchMetaTitle->setObjectName("SearchMetaTitle");
-    searchMetaTitle->setPlaceholderText(tr("Title"));
+    searchMetaTitle->lineEdit()->setPlaceholderText(tr("Title"));
     searchMetaTitle->setFixedHeight(34);
 
     auto searchMetaArtist = new DLineEdit;
     searchMetaArtist->setObjectName("SearchMetaArtist");
-    searchMetaArtist->setPlaceholderText(tr("Artist"));
+    searchMetaArtist->lineEdit()->setPlaceholderText(tr("Artist"));
     searchMetaArtist->setFixedHeight(34);
 
     auto searchMetaButton = new DPushButton;

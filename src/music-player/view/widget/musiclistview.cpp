@@ -31,11 +31,6 @@
 
 MusicListView::MusicListView(QWidget *parent) : DListWidget(parent)
 {
-//    setDragEnabled(true);
-//    viewport()->setAcceptDrops(true);
-//    setDropIndicatorShown(true);
-//    setDefaultDropAction(Qt::MoveAction);
-//    setDragDropMode(QAbstractItemView::DragOnly);
     setIconSize( QSize(40, 40) );
     setGridSize( QSize(40, 40) );
 
@@ -74,7 +69,9 @@ MusicListView::MusicListView(QWidget *parent) : DListWidget(parent)
                 if (existFlag) {
                     playlistItem->setText(playlistItem->data()->displayName());
                 } else {
+                    playlistItem->data()->setDisplayName(playlistItem->text());
                     Q_EMIT playlistItem->data()->displayNameChanged(playlistItem->text());
+                    Q_EMIT displayNameChanged();
                 }
             }
         }

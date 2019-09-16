@@ -73,5 +73,6 @@ private:
     MusicListView         *m_dataBaseListview;
     MusicListView         *m_customizeListview;
     MusicListDataWidget   *m_dataListView;
+    bool                   addFlag = false;
 };
 

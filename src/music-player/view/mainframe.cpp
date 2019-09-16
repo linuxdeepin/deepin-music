@@ -204,7 +204,7 @@ void MainFramePrivate::initUI(bool showLoading)
     titlebar = q->titlebar();
     titlebar->setFixedHeight(50);
     titlebar->setTitle(MainFrame::tr("Deepin Music"));
-    titlebar->setIcon(QIcon(":/mpimage/deepin_music_player.svg"));    //titlebar->setCustomWidget(titlebarwidget, Qt::AlignLeft, false);
+    titlebar->setIcon(QIcon(":/mpimage/light/deepin_music_player.svg"));    //titlebar->setCustomWidget(titlebarwidget, Qt::AlignLeft, false);
     titlebar->addWidget(titlebarwidget, Qt::AlignLeft);
 //    titlebar->setBackgroundTransparent(true);
     //overrideTitlebarStyle();
@@ -234,7 +234,7 @@ void MainFramePrivate::initUI(bool showLoading)
         loadWidget->hide();
         importWidget->show();
     }
-    footer->show();
+    footer->hide();
 
     infoDialog = new InfoDialog(q);
     infoDialog->hide();
@@ -271,7 +271,7 @@ void MainFramePrivate::postInitUI()
 
     titlebarwidget->setSearchEnable(false);
     importWidget->show();
-    footer->show();
+    footer->hide();
     footer->setFocus();
     updateSize(q->size());
 }
@@ -317,7 +317,7 @@ void MainFramePrivate:: slideToImportView()
     footer->enableControl(false);
     currentWidget = importWidget;
     titlebar->raise();
-    footer->raise();
+    footer->hide();
 
     titlebarwidget->setSearchEnable(false);
     newSonglistAction->setDisabled(true);
@@ -342,6 +342,7 @@ void MainFramePrivate:: slideToMusicListView(bool keepPlaylist)
     disableControl(AnimationDelay);
     currentWidget = musicListWidget;
     titlebar->raise();
+    footer->show();
     footer->raise();
 
     titlebarwidget->setSearchEnable(true);
@@ -415,6 +416,7 @@ void MainFramePrivate::disableControl(int delay)
     Q_Q(MainFrame);
     footer->enableControl(false);
     QTimer::singleShot(delay, q, [ = ]() {
+        footer->show();
         footer->enableControl(true);
         playListWidget->setEnabled(true);
     });
@@ -1017,7 +1019,7 @@ void MainFrame::onSelectImportDirectory()
     fileDlg.setDirectory(lastImportPath);
 
     fileDlg.setViewMode(DFileDialog::Detail);
-    fileDlg.setFileMode(DFileDialog::Directory);
+    fileDlg.setFileMode(DFileDialog::ExistingFiles);
     if (DFileDialog::Accepted == fileDlg.exec()) {
         d->importWidget->showWaitHint();
         MusicSettings::setOption("base.play.last_import_path",  fileDlg.directory().path());

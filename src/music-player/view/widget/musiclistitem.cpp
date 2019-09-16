@@ -57,28 +57,28 @@ MusicListItem::MusicListItem(PlaylistPtr playlist, QWidget *parent) : DFrame(par
 
     auto icon = new DLabel;
     icon->setObjectName("MusicListIcon");
-    icon->setFixedSize(48, 48);
+    icon->setFixedSize(24, 24);
     icon->setProperty("iconName", playlist->icon());
 
     m_titleedit = new DLineEdit;
     m_titleedit->setObjectName("MusicListTitle");
     m_titleedit->setFixedHeight(24);
     m_titleedit->setMaximumWidth(160);
-    m_titleedit->setMaxLength(255);
-    m_titleedit->setMaxLength(40);
+    m_titleedit->lineEdit()->setMaxLength(255);
+    m_titleedit->lineEdit()->setMaxLength(40);
     m_titleedit->setProperty("EditValue", playlist->displayName());
 
     m_titleedit->setDisabled(true);
     if (playlist->readonly()) {
-        m_titleedit->setReadOnly(true);
+        m_titleedit->lineEdit()->setReadOnly(true);
     }
 
     if (playlist->editmode()) {
         m_titleedit->setEnabled(true);
         QTimer::singleShot(200, this, [ = ] {
             m_titleedit->setFocus();
-            m_titleedit->setCursorPosition(0);
-            m_titleedit->setSelection(0, m_titleedit->text().length());
+            m_titleedit->lineEdit()->setCursorPosition(0);
+            m_titleedit->lineEdit()->setSelection(0, m_titleedit->text().length());
         });
     }
 
@@ -162,7 +162,7 @@ void MusicListItem::mouseDoubleClickEvent(QMouseEvent *event)
         return;
     }
 
-    if (m_titleedit->isReadOnly()) {
+    if (m_titleedit->lineEdit()->isReadOnly()) {
         return;
     }
 
@@ -198,8 +198,8 @@ void MusicListItem::onRename()
         m_titleedit->setText(value);
         m_titleedit->setEnabled(true);
         m_titleedit->setFocus();
-        m_titleedit->setCursorPosition(0);
-        m_titleedit->setSelection(0, m_titleedit->text().length());
+        m_titleedit->lineEdit()->setCursorPosition(0);
+        m_titleedit->lineEdit()->setSelection(0, m_titleedit->text().length());
     });
 }
 

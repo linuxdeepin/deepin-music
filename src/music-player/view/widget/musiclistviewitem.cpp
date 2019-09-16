@@ -41,17 +41,17 @@ MusicListViewItem::MusicListViewItem(PlaylistPtr playlist, QListWidget *parent) 
     m_data = playlist;
     Q_ASSERT(playlist);
 
-    QIcon icon(":/mpimage/normal/famous_ballad_normal.svg");
+    QIcon icon(":/mpimage/light/normal/famous_ballad_normal.svg");
     if (playlist->id() == AlbumMusicListID) {
-        icon = QIcon(":/mpimage/normal/album_normal.svg");
+        icon = QIcon(":/mpimage/light/normal/album_normal.svg");
     } else if (playlist->id() == ArtistMusicListID) {
-        icon = QIcon(":/mpimage/normal/singer_normal.svg");
+        icon = QIcon(":/mpimage/light/normal/singer_normal.svg");
     } else if (playlist->id() == AllMusicListID) {
-        icon = QIcon(":/mpimage/normal/all_music_normal.svg");
+        icon = QIcon(":/mpimage/light/normal/all_music_normal.svg");
     } else if (playlist->id() == FavMusicListID) {
-        icon = QIcon(":/mpimage/normal/my_collection_normal.svg");
+        icon = QIcon(":/mpimage/light/normal/my_collection_normal.svg");
     } else {
-        icon = QIcon(":/mpimage/normal/famous_ballad_normal.svg");
+        icon = QIcon(":/mpimage/light/normal/famous_ballad_normal.svg");
     }
     setIcon(icon);
 

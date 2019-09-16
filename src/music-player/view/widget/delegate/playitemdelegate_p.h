@@ -73,8 +73,8 @@ private:
     QColor m_background;
     QColor m_alternateBackground;
     QColor m_highlightedBackground;
-    QString m_aimationPrefix = ":/mpimage/music1.svg";
-    QString m_highlightPlayingIcon = ":/mpimage/music1.svg";
+    QString m_aimationPrefix = ":/mpimage/light/music1.svg";
+    QString m_highlightPlayingIcon = ":/mpimage/light/music1.svg";
 
     PlayItemDelegate *q_ptr;
     Q_DECLARE_PUBLIC(PlayItemDelegate)

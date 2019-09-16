@@ -76,7 +76,11 @@ void MusicListDataWidgetPrivate::initData(PlaylistPtr playlist)
     Q_Q(MusicListDataWidget);
 
     curPlaylist = playlist;
-    titleLabel->setText(playlist->displayName());
+
+    QFontMetrics titleFm(titleLabel->font());
+    auto text = titleFm.elidedText(playlist->displayName(), Qt::ElideRight, 300);
+    titleLabel->setText(text);
+    titleLabel->setToolTip(playlist->displayName());
     DDropdown *t_curDropdown = nullptr;
     if (playlist->id() == AlbumMusicListID) {
         PlayMusicTypePtrList playMusicTypePtrList = playlist->playMusicTypePtrList();
@@ -365,20 +369,12 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     setAcceptDrops(true);
 
     setAutoFillBackground(true);
-    auto palette = this->palette();
-    QColor BackgroundColor("#FFFFFF");
-    palette.setColor(DPalette::Background, BackgroundColor);
-    setPalette(palette);
 
     auto layout = new QVBoxLayout(this);
     layout->setContentsMargins(0, 0, 8, 0);
     layout->setSpacing(0);
 
     d->actionBar = new DFrame;
-    d->actionBar->setAutoFillBackground(true);
-    auto actionBarPalette = d->actionBar->palette();
-    actionBarPalette.setColor(DPalette::Background, Qt::white);
-    d->actionBar->setPalette(actionBarPalette);
     d->actionBar->setFixedHeight(80);
     d->actionBar->setObjectName("MusicListDataActionBar");
 
@@ -391,6 +387,12 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     actionTileBarLayout->setSpacing(0);
 
     d->titleLabel = new DLabel;
+    auto titleFont = d->titleLabel->font();
+    titleFont.setFamily("SourceHanSansSC-Medium");
+    titleFont.setPixelSize(24);
+    d->titleLabel->setFont(titleFont);
+    d->titleLabel->setFixedHeight(36);
+    d->titleLabel->setFixedWidth(300);
     d->titleLabel->setObjectName("MusicListDataTitle");
     d->titleLabel->setText(tr("All Music"));
 
@@ -438,7 +440,7 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     playAllPalette.setColor(DPalette::Dark, QColor(Qt::red));
     playAllPalette.setColor(DPalette::Light, QColor(Qt::red));
     d->btPlayAll->setPalette(playAllPalette);
-    d->btPlayAll->setIcon(QIcon(":/mpimage/normal/play_all_normal.svg"));
+    d->btPlayAll->setIcon(QIcon(":/mpimage/light/normal/play_all_normal.svg"));
     d->btPlayAll->setObjectName("MusicListDataPlayAll");
     d->btPlayAll->setText(tr("Play All"));
     d->btPlayAll->setFixedHeight(36);
@@ -448,19 +450,19 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     d->infoLabel->setObjectName("MusicListDataTitle");
     d->infoLabel->setText(tr("All Music"));
 
-    d->btIconMode = new MusicImageButton(":/mpimage/normal/picture_list_normal.svg",
-                                         ":/mpimage/hover/picture_list_hover.svg",
-                                         ":/mpimage/press/picture_list_press.svg",
-                                         ":/mpimage/checked/picture_list_checked.svg");
+    d->btIconMode = new MusicImageButton(":/mpimage/light/normal/picture_list_normal.svg",
+                                         ":/mpimage/light/hover/picture_list_hover.svg",
+                                         ":/mpimage/light/press/picture_list_press.svg",
+                                         ":/mpimage/light/active/picture_list_active.svg");
     d->btIconMode->setFixedSize(36, 36);
     d->btIconMode->setObjectName("MusicListDataWidgetIconMode");
     d->btIconMode->setCheckable(true);
     d->btIconMode->setChecked(true);
 
-    d->btlistMode = new MusicImageButton(":/mpimage/normal/text_list_normal.svg",
-                                         ":/mpimage/hover/text_list_hover.svg",
-                                         ":/mpimage/press/text_list_press.svg",
-                                         ":/mpimage/checked/text_list_checked.svg");
+    d->btlistMode = new MusicImageButton(":/mpimage/light/normal/text_list_normal.svg",
+                                         ":/mpimage/light/hover/text_list_hover.svg",
+                                         ":/mpimage/light/press/text_list_press.svg",
+                                         ":/mpimage/light/active/text_list_active.svg");
     d->btlistMode->setFixedSize(36, 36);
     d->btlistMode->setObjectName("MusicListDataWidgetListMode");
     d->btlistMode->setCheckable(true);
@@ -526,6 +528,12 @@ void MusicListDataWidget::onMusiclistChanged(PlaylistPtr playlist)
     Q_D(MusicListDataWidget);
 
     d->initData(playlist);
+}
+
+void MusicListDataWidget::onMusicListAdded(PlaylistPtr playlist, const MetaPtrList metalist)
+{
+    Q_D(MusicListDataWidget);
+    d->initData(d->curPlaylist);
 }
 
 void MusicListDataWidget::onMusiclistUpdate()

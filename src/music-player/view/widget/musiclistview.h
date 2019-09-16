@@ -40,6 +40,7 @@ public:
 signals:
     void playall(PlaylistPtr playlist);
     void customResort(const QStringList &uuids);
+    void displayNameChanged();
 
 protected:
     virtual void startDrag(Qt::DropActions supportedActions) Q_DECL_OVERRIDE;

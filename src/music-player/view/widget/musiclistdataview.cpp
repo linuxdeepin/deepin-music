@@ -90,6 +90,9 @@ MusicListDataView::MusicListDataView(QWidget *parent)
     setViewModeFlag(QListView::ListMode);
     setResizeMode( QListView::Adjust );
     setMovement( QListView::Static );
+
+    setSelectionMode(QListView::ExtendedSelection);
+    setSelectionBehavior(QAbstractItemView::SelectRows);
 }
 
 MusicListDataView::~MusicListDataView()

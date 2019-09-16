@@ -29,8 +29,10 @@
 #include <DFileDialog>
 #include <DLabel>
 #include <DPushButton>
+#include <DHiDPIHelper>
+#include <DPalette>
 
-DWIDGET_USE_NAMESPACE
+DGUI_USE_NAMESPACE
 
 const QString linkTemplate = "<a href='%1' style='text-decoration: none; color: #0082FA; '>%2</a>";
 
@@ -52,29 +54,44 @@ ImportWidget::ImportWidget(QWidget *parent) : DFrame(parent), d_ptr(new ImportWi
     setObjectName("ImportWidget");
 
     setAcceptDrops(true);
+    setAutoFillBackground(true);
 
     auto layout = new QVBoxLayout(this);
+    layout->setMargin(0);
 
     auto logo = new DLabel;
     logo->setFixedSize(128, 128);
     logo->setObjectName("ImportViewLogo");
+    logo->setPixmap(DHiDPIHelper::loadNxPixmap(":/mpimage/light/import_music.svg"));
 
-//    auto btFrme = new DFrame;
-//    auto btFrmeLayout = new QVBoxLayout(btFrme);
-//    btFrme->setFixedSize(150, 50);
     d->importButton = new DPushButton;
+    auto importButtonFont = d->importButton->font();
+    importButtonFont.setFamily("SourceHanSansSC-Normal");
+    importButtonFont.setPixelSize(14);
+    d->importButton->setFont(importButtonFont);
+    auto pl = d->importButton->palette();
+    pl.setColor(DPalette::Dark, QColor("#0098FF"));
+    pl.setColor(DPalette::Light, QColor("#25B7FF"));
+    pl.setColor(DPalette::ButtonText, QColor("#FFFFFF"));
+    QColor sbcolor("#000000");
+    sbcolor.setAlphaF(0);
+    pl.setColor(DPalette::Shadow, sbcolor);
+    d->importButton->setPalette(pl);
     d->importButton->setObjectName("ImportViewImportButton");
-    d->importButton->setFixedSize(142, 42);
-//    btFrmeLayout->addWidget(d->importButton, 0, Qt::AlignCenter);
+    d->importButton->setFixedSize(302, 36);
     d->importButton->setText(tr("Add Music"));
+    d->importButton->setFocusPolicy(Qt::NoFocus);
 
     d->text = new DLabel;
     d->text->setObjectName("ImportViewText");
-    d->text->setFixedHeight(24);
-    d->text->setOpenExternalLinks(false);
-    QString linkText = QString(linkTemplate).arg(tr("Scan")).arg(tr("Scan"));
-    d->text->setText(QString(tr("%1 music directory or drag & drop music file to add music")).arg(linkText));
+    auto textFont = d->text->font();
+    textFont.setFamily("SourceHanSansSC-Normal");
+    textFont.setPixelSize(12);
+    d->text->setFont(textFont);
+    d->text->setFixedHeight(18);
+    d->text->setText(tr("You can scan music catalogs or drag and drop music files to add music"));
 
+    layout->setSpacing(0);
     layout->addStretch();
     layout->addWidget(logo, 0, Qt::AlignCenter);
     layout->addSpacing(20);
@@ -113,8 +130,7 @@ void ImportWidget::showImportHint()
     Q_D(ImportWidget);
     d->importButton->setDisabled(false);
     d->importButton->show();
-    QString linkText = QString(linkTemplate).arg(tr("Scan")).arg(tr("Scan"));
-    d->text->setText(QString(tr("%1 music directory or drag & drop music file to add music")).arg(linkText));
+    d->text->setText(tr("You can scan music catalogs or drag and drop music files to add music"));
 }
 
 void ImportWidget::dragEnterEvent(QDragEnterEvent *event)
