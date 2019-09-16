@@ -30,7 +30,6 @@
 #include <QStackedLayout>
 
 #include <DHiDPIHelper>
-#include <DToast>
 #include <DPushButton>
 #include <DProgressBar>
 
@@ -114,8 +113,8 @@ void FooterPrivate::installTipHint(QWidget *w, const QString &hintstr)
 {
     Q_Q(Footer);
     // TODO: parent must be mainframe
-    auto hintWidget = new Dtk::Widget::DToast(q->parentWidget());
-    hintWidget->layout()->setContentsMargins(10, 0, 10, 0);
+    auto hintWidget = new DLabel(q->parentWidget());
+    //hintWidget->layout()->setContentsMargins(10, 0, 10, 0);
     hintWidget->setText(hintstr);
     hintWidget->setFixedHeight(32);
     installHint(w, hintWidget);
@@ -134,7 +133,7 @@ void FooterPrivate::initConnection()
     q->connect(btPlayMode, &ModeButton::modeChanged,
     q, [ = ](int mode) {
         Q_EMIT q->modeChanged(mode);
-        auto hintWidget = btPlayMode->property("HintWidget").value<Dtk::Widget::DToast *>();
+        auto hintWidget = btPlayMode->property("HintWidget").value<DLabel *>();
         hintFilter->showHitsFor(btPlayMode, hintWidget);
     });
 
@@ -734,7 +733,7 @@ void Footer::onModeChange(int mode)
     d->btPlayMode->blockSignals(false);
     d->mode = mode;
 
-    auto hintWidget = d->btPlayMode->property("HintWidget").value<Dtk::Widget::DToast *>();
+    auto hintWidget = d->btPlayMode->property("HintWidget").value<DLabel *>();
     QString playmode;
     switch (mode) {
     default:

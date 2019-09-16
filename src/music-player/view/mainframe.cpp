@@ -36,7 +36,6 @@
 #include <DAboutDialog>
 #include <DDialog>
 #include <DApplication>
-#include <DToast>
 #include <DTitlebar>
 #include <DImageButton>
 #include <DFileDialog>
@@ -87,7 +86,6 @@ public:
     void slideToImportView();
     void slideToLyricView();
     void slideToMusicListView(bool keepPlaylist);
-    void showTips(QIcon icon, QString text);
     void disableControl(int delay = 350);
     void updateSize(QSize newSize);
     void updateViewname(const QString &vm);
@@ -101,7 +99,6 @@ public:
     DWidget             *centralWidget          = nullptr;
     QStackedLayout      *contentLayout          = nullptr;
     DTitlebar           *titlebar               = nullptr;
-    DToast              *tips                   = nullptr;
     SearchResult        *searchResult           = nullptr;
     TitlebarWidget      *titlebarwidget         = nullptr;
     ImportWidget        *importWidget           = nullptr;
@@ -352,26 +349,6 @@ void MainFramePrivate:: slideToMusicListView(bool keepPlaylist)
     updateViewname("");
 }
 
-void MainFramePrivate::showTips(QIcon icon, QString text)
-{
-    Q_Q(MainFrame);
-    if (tips) {
-        tips->hide();
-        tips->deleteLater();
-    }
-
-    tips = new DToast(q);
-    tips->setIcon(icon);
-    tips->setText(text);
-    tips->pop();
-    auto center = q->mapToGlobal(QPoint(q->rect().center()));
-    center.setX(center.x() - tips->width() / 2);
-    center.setY(center.y() + q->height() / 2 - footer->height() - 40);
-    center = tips->mapFromGlobal(center);
-    center = tips->mapToParent(center);
-    tips->move(center);
-}
-
 void MainFramePrivate::toggleLyricView()
 {
     playListWidget->hide();
@@ -472,10 +449,6 @@ void MainFramePrivate::updateSize(QSize newSize)
     footer->resize(newSize.width(), FooterHeight + progressExtHeight);
     footer->setFixedHeight(FooterHeight + progressExtHeight);
     footer->move(0, newSize.height() - FooterHeight - progressExtHeight);
-
-    if (tips) {
-        tips->hide();
-    }
 }
 
 void MainFramePrivate::updateViewname(const QString &vm)
@@ -679,7 +652,7 @@ void MainFrame::binding(Presenter *presenter)
         QFontMetrics fm(font());
         auto displayName = fm.elidedText(playlist->displayName(), Qt::ElideMiddle, 300);
         auto text = tr("Successfully added to \"%1\"").arg(displayName);
-        d->showTips(icon, text);
+        this->sendMessage(icon, text);
     });
 
 //    connect(presenter, &Presenter::showPlaylist,
