@@ -56,6 +56,15 @@ void MediaMeta::updateCodec(const QByteArray &codec)
     }
 }
 
+QByteArray MediaMeta::getCoverData()
+{
+    if (!loadCover) {
+        coverData = MetaDetector::getCoverData(localPath);
+    }
+    loadCover = true;
+    return coverData;
+}
+
 MediaMeta MediaMeta::fromLocalFile(const QFileInfo &fileInfo)
 {
     MediaMeta meta;
@@ -64,8 +73,7 @@ MediaMeta MediaMeta::fromLocalFile(const QFileInfo &fileInfo)
     return  meta;
 }
 
-namespace DMusic
-{
+namespace DMusic {
 QString filepathHash(const QString &filepath)
 {
     return QString(QCryptographicHash::hash(filepath.toUtf8(), QCryptographicHash::Md5).toHex());

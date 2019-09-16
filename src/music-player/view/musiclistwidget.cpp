@@ -111,7 +111,11 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
     layout->addWidget(leftFrame, 0);
     layout->addWidget(m_dataListView, 100);
 
-    slotTheme(MusicSettings::value("base.play.theme").toInt());
+    bool themeFlag = false;
+    int themeType = MusicSettings::value("base.play.theme").toInt(&themeFlag);
+    if (!themeFlag)
+        themeType = 1;
+    slotTheme(themeType);
 
     connect(addListBtn, &DPushButton::clicked, this, [ = ](bool /*checked*/) {
         qDebug() << "addPlaylist(true);";
@@ -142,9 +146,9 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
             m_customizeListview->clearSelection();
             m_customizeListview->closeAllPersistentEditor();
             m_dataListView->onMusiclistChanged(curPtr);
-            DUtil::TimerSingleShot(500, [this]() {
-                Q_EMIT this->hidePlaylist();
-            });
+//            DUtil::TimerSingleShot(500, [this]() {
+//                Q_EMIT this->hidePlaylist();
+//            });
             curPtr->setSearchStr("");
             Q_EMIT selectedPlaylistChange(curPtr);
         }
@@ -189,9 +193,9 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
             m_dataBaseListview->clearSelection();
             m_dataBaseListview->closeAllPersistentEditor();
             m_dataListView->onMusiclistChanged(curPtr);
-            DUtil::TimerSingleShot(500, [this]() {
-                Q_EMIT this->hidePlaylist();
-            });
+//            DUtil::TimerSingleShot(500, [this]() {
+//                Q_EMIT this->hidePlaylist();
+//            });
             curPtr->setSearchStr("");
             Q_EMIT selectedPlaylistChange(curPtr);
         }
@@ -303,6 +307,7 @@ void MusicListWidget::onPlaylistAdded(PlaylistPtr playlist)
             playlist->id() == AllMusicListID || playlist->id() == FavMusicListID ) {
         m_dataBaseListview->addMusicList(playlist);
     } else {
+        m_customizeListview->closeAllPersistentEditor();
         m_customizeListview->addMusicList(playlist, addFlag);
         addFlag = false;
     }

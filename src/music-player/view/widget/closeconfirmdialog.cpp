@@ -54,13 +54,18 @@ CloseConfirmDialog::CloseConfirmDialog(QWidget *parent) :
     auto contentFrame = new DFrame;
     auto contentLayout = new QVBoxLayout(contentFrame);
     contentLayout->setSpacing(0);
-    contentLayout->setContentsMargins(4, 4, 4, 0);
+    contentLayout->setContentsMargins(0, 0, 0, 0);
 
     auto groupLabel = new DLabel(tr("Please select your operation"));
     groupLabel->setObjectName("CloseConfirmDialogLabel");
 
+    auto groupLabelFont = groupLabel->font();
+    groupLabelFont.setFamily("SourceHanSansSC-Medium");
+    groupLabelFont.setPixelSize(14);
+    groupLabel->setFont(groupLabelFont);
+
     auto actionSelectionGroup = new QGroupBox();
-    actionSelectionGroup->setContentsMargins(0, 0, 0, 0);
+    actionSelectionGroup->setContentsMargins(0, 0, 4, 0);
     actionSelectionGroup->setObjectName("CloseConfirmDialogSelectionGroup");
 
     d->exitBt = new DRadioButton(tr("Exit"));
@@ -71,10 +76,17 @@ CloseConfirmDialog::CloseConfirmDialog(QWidget *parent) :
     vbox->setContentsMargins(0, 0, 0, 0);
     vbox->addWidget(d->exitBt);
     vbox->addWidget(miniBt);
-    vbox->addStretch(1);
     actionSelectionGroup->setLayout(vbox);
 
     d->remember = new DCheckBox(tr("Do not ask again"));
+
+    auto font = d->exitBt->font();
+    font.setFamily("SourceHanSansSC-Medium");
+    font.setPixelSize(14);
+
+    d->exitBt->setFont(font);
+    miniBt->setFont(font);
+    d->remember->setFont(font);
 
     contentLayout->addWidget(groupLabel, 0, Qt::AlignLeft);
     contentLayout->addSpacing(4);
@@ -82,7 +94,7 @@ CloseConfirmDialog::CloseConfirmDialog(QWidget *parent) :
     contentLayout->addSpacing(6);
     contentLayout->addWidget(d->remember, 0, Qt::AlignLeft);
 
-    setIcon(QIcon(":/common/image/deepin-music.svg"));
+    setIcon(QIcon::fromTheme("deepin-music"));
     addContent(contentFrame);
 
     addButton(tr("Cancel"), false, ButtonNormal);

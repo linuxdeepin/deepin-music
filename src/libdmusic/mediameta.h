@@ -63,12 +63,16 @@ public:
     QString searchID;
     QUrl    coverUrl;
 
+    QByteArray coverData;
+
     bool    favourite   = false;
     bool    invalid     = false;
+    bool    loadCover   = false;
 
 public:
     void updateSearchIndex();
     void updateCodec(const QByteArray &codec);
+    QByteArray getCoverData();
 
     static MediaMeta fromLocalFile(const QFileInfo &fileInfo);
 };
@@ -99,8 +103,7 @@ Q_DECLARE_METATYPE(MediaMeta)
 Q_DECLARE_METATYPE(MetaPtr)
 Q_DECLARE_METATYPE(MetaPtrList)
 
-namespace DMusic
-{
+namespace DMusic {
 
 QString LIBDMUSICSHARED_EXPORT filepathHash(const QString &filepath);
 QString LIBDMUSICSHARED_EXPORT sizeString(qint64 sizeByte);

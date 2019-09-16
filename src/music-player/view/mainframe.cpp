@@ -175,9 +175,13 @@ void MainFramePrivate::initMenu()
         MusicSettings::sync();
     });
 
+    bool themeFlag = false;
+    int themeType = MusicSettings::value("base.play.theme").toInt(&themeFlag);
+    if (!themeFlag)
+        themeType = 1;
     colorModeAction = new QAction(MainFrame::tr("Dark theme"), q);
     colorModeAction->setCheckable(true);
-    colorModeAction->setChecked(MusicSettings::value("base.play.theme").toInt() == 2);
+    colorModeAction->setChecked(themeType == 2);
 
     q->connect(colorModeAction, &QAction::triggered, q, [ = ](bool) {
         /*if (DThemeManager::instance()->theme() == "light") {
@@ -246,7 +250,11 @@ void MainFramePrivate::initUI(bool showLoading)
     footer->hide();
 
     infoDialog = new InfoDialog(q);
-    infoDialog->setThemeType(MusicSettings::value("base.play.theme").toInt());
+    bool themeFlag = false;
+    int themeType = MusicSettings::value("base.play.theme").toInt(&themeFlag);
+    if (!themeFlag)
+        themeType = 1;
+    infoDialog->setThemeType(themeType);
     infoDialog->hide();
 }
 

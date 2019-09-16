@@ -433,7 +433,11 @@ Footer::Footer(QWidget *parent) :
     d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/play_normal.svg"));
     d->btCover->setIcon(Dtk::Widget::DHiDPIHelper::loadNxPixmap(d->defaultCover));
 
-    slotTheme(MusicSettings::value("base.play.theme").toInt());
+    bool themeFlag = false;
+    int themeType = MusicSettings::value("base.play.theme").toInt(&themeFlag);
+    if (!themeFlag)
+        themeType = 1;
+    slotTheme(themeType);
 }
 
 Footer::~Footer()

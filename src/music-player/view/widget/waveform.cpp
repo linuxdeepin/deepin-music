@@ -279,6 +279,7 @@ void Waveform::onProgressChanged(qint64 value, qint64 duration)
     blockSignals(true);
     setValue(progress);
     blockSignals(false);
+    update();
 }
 
 void Waveform::updateScaleSize()

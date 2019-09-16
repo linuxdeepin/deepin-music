@@ -98,6 +98,8 @@ MusicListDataView::MusicListDataView(QWidget *parent)
     setViewModeFlag(QListView::ListMode);
     setResizeMode( QListView::Adjust );
     setMovement( QListView::Static );
+    setLayoutMode(QListView::Batched);
+    setBatchSize(20);
 
     d->musciListDialog = new MusicListDialog(this);
 

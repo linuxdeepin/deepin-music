@@ -287,12 +287,12 @@ void MusicListInfoView::keyboardSearch(const QString &search)
 void MusicListInfoViewPrivate::addMedia(const MetaPtr meta)
 {
     QStandardItem *newItem = new QStandardItem;
-    QImage cover(":/common/image/cover_max.svg");
-    auto coverData = MetaSearchService::coverData(meta);
+    QPixmap cover(":/common/image/cover_max.svg");
+    auto coverData = meta->getCoverData();
     if (coverData.length() > 0) {
-        cover = QImage::fromData(coverData);
+        cover = QPixmap::fromImage(QImage::fromData(coverData));
     }
-    QIcon icon = QIcon(QPixmap::fromImage(cover));
+    QIcon icon = QIcon(cover);
     newItem->setIcon(icon);
     model->appendRow(newItem);
 

@@ -221,7 +221,11 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
 
     d->initConntion();
 
-    slotTheme(MusicSettings::value("base.play.theme").toInt());
+    bool themeFlag = false;
+    int themeType = MusicSettings::value("base.play.theme").toInt(&themeFlag);
+    if (!themeFlag)
+        themeType = 1;
+    slotTheme(themeType);
 }
 
 PlayListWidget::~PlayListWidget()

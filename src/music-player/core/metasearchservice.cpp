@@ -155,8 +155,8 @@ QByteArray MetaSearchService::coverData(const MetaPtr meta)
 //        return coverFile.readAll();
 //    }
     QByteArray byteArray;
-    if(meta){
-        byteArray = MetaDetector::getCoverData(meta->localPath);
+    if (meta) {
+        byteArray = meta->getCoverData();
     }
     return byteArray;
 }

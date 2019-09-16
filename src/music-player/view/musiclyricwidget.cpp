@@ -116,7 +116,11 @@ MUsicLyricWidget::MUsicLyricWidget(QWidget *parent)
     layout->addWidget(d->lyricview, 4);
     layout->addLayout(searchlayout, 1);
 
-    slotTheme(MusicSettings::value("base.play.theme").toInt());
+    bool themeFlag = false;
+    int themeType = MusicSettings::value("base.play.theme").toInt(&themeFlag);
+    if (!themeFlag)
+        themeType = 1;
+    slotTheme(themeType);
 
     connect(d->serachbt, &DPushButton::clicked, this, &MUsicLyricWidget::onsearchBt);
     connect(d->searchLyricsWidget, &SearchLyricsWidget::lyricPath, this, &MUsicLyricWidget::slotonsearchresult);

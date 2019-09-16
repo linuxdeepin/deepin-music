@@ -91,7 +91,7 @@
                             "key": "theme",
                             "hide": true,
                             "reset": false,
-                            "default": "light"
+                            "default": 1
                         },
                         {
                             "key": "theme_prefix",
@@ -119,6 +119,28 @@
                             "hide": true,
                             "reset": false,
                             "default": ""
+                        }
+                    ]
+                },
+                {
+                    "key": "close",
+                    "name": "Close Main Window",
+                    "hide": true,
+                    "options": [
+                        {
+                            "key": "ask_close_action",
+                            "hide": true,
+                            "default": true
+                        },
+                        {
+                            "key": "close_action",
+                            "name": " ",
+                            "type": "radiogroup",
+                            "items": [
+                                "Minimize to system tray",
+                                "Exit Deepin Music"
+                            ],
+                            "default": 0
                         }
                     ]
                 }

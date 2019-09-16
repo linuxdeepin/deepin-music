@@ -40,6 +40,11 @@ MusicListView::MusicListView(QWidget *parent) : DListView(parent)
     delegate->setBackgroundType(DStyledItemDelegate::NoBackground);
     setItemDelegate(delegate);
 
+    auto font = this->font();
+    font.setFamily("SourceHanSansSC-Medium");
+    font.setPixelSize(14);
+    setFont(font);
+
     setIconSize( QSize(20, 20) );
     setGridSize( QSize(40, 40) );
     setSpacing(10);
