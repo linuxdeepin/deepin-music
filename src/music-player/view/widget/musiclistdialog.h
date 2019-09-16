@@ -38,6 +38,7 @@ public:
     ~MusicListDialog();
 
     void setPlayMusicData(PlaylistPtr playlist, PlayMusicTypePtr playMusicType);
+    void setPlaying(const MetaPtr);
 
     void showContextMenu(const QPoint &pos,
                          PlaylistPtr selectedPlaylist,

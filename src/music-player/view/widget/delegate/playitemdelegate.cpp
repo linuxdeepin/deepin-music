@@ -428,31 +428,33 @@ QSize PlayItemDelegate::sizeHint(const QStyleOptionViewItem &option,
 {
     Q_D(const PlayItemDelegate);
 
-    auto listview = qobject_cast<const PlayListView *>(option.widget);
-    if (listview->viewMode() == QListView::IconMode) {
-        return QStyledItemDelegate::sizeHint(option, index);
-    }
+    return QStyledItemDelegate::sizeHint(option, index);
 
-    auto baseSize = QStyledItemDelegate::sizeHint(option, index);
-    return  QSize(baseSize.width() / 5, baseSize.height());
-//    auto headerWidth = headerPointWidth(option, index);
-    auto headerWidth = 17 + 10 + 10 + 4;
-    auto tialWidth = d->timePropertyWidth(option);
-    auto w = option.widget->width() - headerWidth - tialWidth;
-    Q_ASSERT(w > 0);
-    switch (index.column()) {
-    case 0:
-        return  QSize(headerWidth, baseSize.height());
-    case 1:
-        return  QSize(w / 2, baseSize.height());
-    case 2:
-    case 3:
-        return  QSize(w / 4, baseSize.height());
-    case 4:
-        return  QSize(tialWidth, baseSize.height());
-    }
+//    auto listview = qobject_cast<const PlayListView *>(option.widget);
+//    if (listview->viewMode() == QListView::IconMode) {
+//        return QStyledItemDelegate::sizeHint(option, index);
+//    }
 
-    return baseSize;
+//    auto baseSize = QStyledItemDelegate::sizeHint(option, index);
+//    return  QSize(baseSize.width() / 5, baseSize.height());
+////    auto headerWidth = headerPointWidth(option, index);
+//    auto headerWidth = 17 + 10 + 10 + 4;
+//    auto tialWidth = d->timePropertyWidth(option);
+//    auto w = option.widget->width() - headerWidth - tialWidth;
+//    Q_ASSERT(w > 0);
+//    switch (index.column()) {
+//    case 0:
+//        return  QSize(headerWidth, baseSize.height());
+//    case 1:
+//        return  QSize(w / 2, baseSize.height());
+//    case 2:
+//    case 3:
+//        return  QSize(w / 4, baseSize.height());
+//    case 4:
+//        return  QSize(tialWidth, baseSize.height());
+//    }
+
+//    return baseSize;
 }
 
 QWidget *PlayItemDelegate::createEditor(QWidget *parent,

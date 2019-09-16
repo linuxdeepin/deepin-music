@@ -61,7 +61,7 @@ private:
     DLineEdit               *m_keyWord;
     DLineEdit               *m_singer;
     QString                  m_path;
-    QButtonGroup*            m_group;
+    QButtonGroup            *m_group;
     QVector<lyric>           m_lyricList;
 };
 

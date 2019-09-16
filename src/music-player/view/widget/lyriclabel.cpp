@@ -12,7 +12,7 @@
 #include <DPalette>
 
 #include "../../core/util/musiclyric.h"
-
+#include "../../core/musicsettings.h"
 #define WHEEL_SCROLL_OFFSET 50000.0
 
 #include <QDebug>
@@ -30,6 +30,7 @@ LyricLabel::LyricLabel(bool touch, QWidget *parent)
     lyricHighlight = new QColor("#000000 ");
     connect(this, SIGNAL(changeTo(int)), this, SLOT(changeToEvent(int)));
 
+    m_FadeFlag = MusicSettings::value("base.play.fade_in_out").toBool();
     /* MyMenu *menu = new MyMenu(this);
      QAction *selectLyric = new QAction("关联本地歌词", menu);
      QAction *fontSelect = new QAction("字体设置", menu);
@@ -63,8 +64,10 @@ void LyricLabel::paintItem(QPainter *painter, int index, const QRect &rect)
         QPoint leftpos = rect.bottomLeft();
         QPoint rightpos = rect.bottomRight();
         rightpos.setX(rightpos.x() - 3);
-        leftpos.setY(leftpos.y() - rect.height() / 2);
-        rightpos.setY(rightpos.y() - rect.height() / 2);
+        leftpos.setY(leftpos.y() - 16);
+        rightpos.setY(rightpos.y() - 16);
+        //leftpos.setY(leftpos.y() - rect.height() / 2);
+        //rightpos.setY(rightpos.y() - rect.height() / 2);
         painter->save();
         QPointF triangle1[3] = {QPointF(leftpos.x(), leftpos.y() * 1.0 + 4.5), QPointF(leftpos.x(), leftpos.y() * 1.0 - 4.5), QPointF(leftpos.x() + 9, leftpos.y())}; //1
         QPointF triangle2[3] = {QPointF(rightpos.x(), rightpos.y() * 1.0 + 4.5), QPointF(rightpos.x(), rightpos.y() * 1.0 - 4.5), QPointF(rightpos.x() - 9, rightpos.y())}; //1
@@ -328,7 +331,11 @@ void AbstractWheelWidget::paintEvent(QPaintEvent *event)
                 t = 255 - t * t * 220 / len / len; //220是255-y得到,y为边界透明度
                 if (t < 0) t = 0;
                 //qDebug() << "a值:" << t << endl;
-                painter.setPen(QColor(255, 255, 255, t));
+                if (m_FadeFlag) {
+                    painter.setPen(QColor(255, 255, 255, t));
+                } else {
+                    painter.setPen(QColor(255, 255, 255, 255));
+                }
                 paintItem(&painter, itemNum, QRect(6, h / 2 + i * iH - m_itemOffset - iH / 2, w - 6, iH ));
             }
         }

@@ -25,14 +25,16 @@
 #include <dabstractdialog.h>
 DWIDGET_USE_NAMESPACE
 
-#include <DFrame>
+#include <DFloatingWidget>
 
 #include <DListView>
+
+#include "../core/playlist.h"
 
 class PushButton;
 class QStringListModel;
 
-class SearchResult : public DFrame
+class SearchResult : public DFloatingWidget
 {
     Q_OBJECT
 public:
@@ -42,7 +44,6 @@ public:
     void setSearchString(const QString &str);
     void setResultList(const QStringList &titlelist, const QStringList &hashlist);
 
-    bool isSelected();
     void selectUp();
     void selectDown();
 
@@ -53,11 +54,12 @@ signals:
 
 public slots:
     void onReturnPressed();
+    void selectPlaylist(PlaylistPtr playlistPtr);
 
 private:
     DListView           *m_searchResult = nullptr;
-    PushButton          *m_doSearchButton = nullptr;
     QStringListModel    *m_model = nullptr;
+    PlaylistPtr         playlist = nullptr;
 };
 
 #endif // SEARCHRESULTLIST_H

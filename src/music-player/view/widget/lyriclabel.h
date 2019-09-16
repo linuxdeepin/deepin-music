@@ -36,6 +36,7 @@ protected:
     qreal m_lastY;
     bool isScrolled;
     bool dosignal;
+    bool     m_FadeFlag = false;
 };
 
 class MusicLyric;

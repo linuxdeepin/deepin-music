@@ -46,6 +46,7 @@ public:
     bool    readonly    = false;
     bool    hide        = false;
     bool    active      = false;
+    bool    playStatus  = false;
 };
 
 Q_DECLARE_METATYPE(PlaylistMeta)

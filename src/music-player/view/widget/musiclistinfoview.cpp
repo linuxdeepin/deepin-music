@@ -55,6 +55,8 @@ public:
 
     QString                  curName      = "";
 
+    MetaPtr                 playing       = nullptr;
+
     MusicListInfoView *q_ptr;
     Q_DECLARE_PUBLIC(MusicListInfoView)
 };
@@ -136,6 +138,18 @@ QString MusicListInfoView::curName() const
 {
     Q_D(const MusicListInfoView);
     return d->curName;
+}
+
+void MusicListInfoView::setPlaying(const MetaPtr meta)
+{
+    Q_D(MusicListInfoView);
+    d->playing = meta;
+}
+
+MetaPtr MusicListInfoView::playing() const
+{
+    Q_D(const MusicListInfoView);
+    return d->playing;
 }
 
 void MusicListInfoView::onMusicListRemoved(const MetaPtrList metalist)

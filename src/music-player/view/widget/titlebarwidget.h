@@ -23,6 +23,8 @@
 
 #include <DFrame>
 
+#include "../core/playlist.h"
+
 DWIDGET_USE_NAMESPACE
 
 class SearchResult;
@@ -39,6 +41,10 @@ public:
     void setSearchEnable(bool enable = true);
     void setResultWidget(SearchResult *);
     void setViewname(const QString &viewname);
+
+public slots:
+    void selectPlaylist(PlaylistPtr playlistPtr);
+
 signals:
     void searchExited();
     void search(const QString &text);

@@ -23,6 +23,8 @@
 
 #include <DSearchEdit>
 
+#include "../core/playlist.h"
+
 class SearchResult;
 class SearchEdit : public Dtk::Widget::DSearchEdit
 {
@@ -42,10 +44,12 @@ public slots:
     void onFocusOut();
     void onTextChanged();
     void onReturnPressed();
+    void selectPlaylist(PlaylistPtr playlistPtr);
 
 protected:
     virtual void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
 
 private:
     SearchResult    *m_result = nullptr;
+    PlaylistPtr      playlist = nullptr;
 };

@@ -155,6 +155,15 @@ void MUsicLyricWidget::resizeEvent(QResizeEvent *event)
     QWidget::resizeEvent(event);
 }
 
+void MUsicLyricWidget::mousePressEvent(QMouseEvent *event)
+{
+    Q_D(MUsicLyricWidget);
+    if (d->serachflag && !d->searchLyricsWidget->rect().contains(event->pos())) {
+        onsearchBt();
+    }
+    QWidget::mousePressEvent(event);
+}
+
 void MUsicLyricWidget::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
 {
     Q_D(MUsicLyricWidget);
@@ -248,7 +257,12 @@ void MUsicLyricWidget::onsearchBt()
         d->serachbt->setProperty("typeName", false);
         d->m_cover->hide();
         d->searchLyricsWidget->show();
-        d->searchLyricsWidget->setDefault(d->activingMeta->title, d->activingMeta->artist);
+        if (d->activingMeta != nullptr) {
+            d->searchLyricsWidget->setDefault(d->activingMeta->title, d->activingMeta->artist);
+        } else {
+            d->searchLyricsWidget->setDefault("", "");
+        }
+
         m_leftLayout->setContentsMargins(51, 21, 51, 19);
     } else {
         d->serachbt->setProperty("typeName", true);

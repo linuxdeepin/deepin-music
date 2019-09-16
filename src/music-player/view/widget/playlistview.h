@@ -41,11 +41,14 @@ public:
 
     void setViewModeFlag(QListView::ViewMode mode);
 
+    MetaPtrList playMetaPtrList() const;
+
 signals:
     void addToPlaylist(PlaylistPtr playlist, const MetaPtrList &metalist);
     void removeMusicList(const MetaPtrList  &metalist);
     void deleteMusicList(const MetaPtrList  &metalist);
     void playMedia(const MetaPtr meta);
+    void pause(const MetaPtr meta);
     void updateMetaCodec(const MetaPtr meta);
     void showInfoDialog(const MetaPtr meta);
     void requestCustomContextMenu(const QPoint &pos);

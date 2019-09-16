@@ -195,17 +195,9 @@ void MainFramePrivate::initUI(bool showLoading)
 {
     showLoading = true;
     Q_Q(MainFrame);
-    q->setMinimumSize(QSize(1074, 680));
+    q->setMinimumSize(QSize(800, 600));
     q->setFocusPolicy(Qt::ClickFocus);
 
-    titlebarwidget = new TitlebarWidget(q);
-    titlebarwidget->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
-
-    titlebar = q->titlebar();
-    titlebar->setFixedHeight(50);
-    titlebar->setTitle(MainFrame::tr("Deepin Music"));
-    titlebar->setIcon(QIcon(":/mpimage/light/deepin_music_player.svg"));    //titlebar->setCustomWidget(titlebarwidget, Qt::AlignLeft, false);
-    titlebar->addWidget(titlebarwidget, Qt::AlignLeft);
 //    titlebar->setBackgroundTransparent(true);
     //overrideTitlebarStyle();
 
@@ -248,13 +240,9 @@ void MainFramePrivate::postInitUI()
     QString acknowledgementLink = "https://www.deepin.org/acknowledgments/deepin-music#thanks";
     qApp->setProductName(QApplication::tr("Deepin Music"));
     qApp->setApplicationAcknowledgementPage(acknowledgementLink);
-    QIcon t_icon = QIcon::fromTheme("deepin-music");
-    //qApp->setProductIcon(QIcon(":/common/image/app_icon.svg"));
-    qApp->setProductIcon(t_icon);
+    qApp->setProductIcon(QIcon(":/common/image/app_icon.svg"));
     qApp->setApplicationDescription(descriptionText);
 
-    searchResult = new SearchResult(q);
-    titlebarwidget->setResultWidget(searchResult);
     loadWidget->hide();
 
     playListWidget = new PlayListWidget;
@@ -290,6 +278,7 @@ void MainFramePrivate::slideToLyricView()
 
 //    q->disableControl();
 //    setPlaylistVisible(false);
+    musicListWidget->setVisible(false);
     currentWidget = lyricWidget;
     titlebar->raise();
     footer->setLyricButtonChecked(true);
@@ -366,6 +355,7 @@ void MainFramePrivate::toggleLyricView()
     if (lyricWidget->isVisible()) {
         slideToMusicListView(false);
     } else {
+        titlebarwidget->setSearchEnable(false);
         slideToLyricView();
     }
 }
@@ -544,6 +534,19 @@ MainFrame::MainFrame(QWidget *parent) :
     DMainWindow(parent), dd_ptr(new MainFramePrivate(this))
 {
     setObjectName("MainFrame");
+
+    Q_D(MainFrame);
+    d->titlebarwidget = new TitlebarWidget(this);
+    d->titlebarwidget->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+    d->searchResult = new SearchResult(this);
+    d->searchResult->hide();
+    d->titlebarwidget->setResultWidget(d->searchResult);
+
+    d->titlebar = titlebar();
+    d->titlebar->setFixedHeight(50);
+    d->titlebar->setTitle(MainFrame::tr("Deepin Music"));
+    d->titlebar->setIcon(QIcon(":/mpimage/light/deepin_music_player.svg"));    //titlebar->setCustomWidget(titlebarwidget, Qt::AlignLeft, false);
+    d->titlebar->addWidget(d->titlebarwidget, Qt::AlignLeft);
 }
 
 MainFrame::~MainFrame()
@@ -957,6 +960,8 @@ void MainFrame::binding(Presenter *presenter)
             presenter, &Presenter::onMusiclistRemove);
     connect(d->playListWidget, &PlayListWidget::musiclistDelete,
             presenter, &Presenter::onMusiclistDelete);
+    connect(d->playListWidget,  &PlayListWidget::pause,
+            presenter, &Presenter::onMusicPause);
 
     connect(d->musicListWidget, &MusicListWidget::showInfoDialog,
     this, [ = ](const MetaPtr meta) {
@@ -977,6 +982,8 @@ void MainFrame::binding(Presenter *presenter)
             presenter, &Presenter::onCustomResort);
     connect(d->musicListWidget, &MusicListWidget::playMedia,
             presenter, &Presenter::onSyncMusicPlay);
+    connect(d->musicListWidget,  &MusicListWidget::pause,
+            presenter, &Presenter::onMusicPause);
     connect(d->musicListWidget, &MusicListWidget::updateMetaCodec,
             presenter, &Presenter::onUpdateMetaCodec);
     connect(d->musicListWidget, &MusicListWidget::addToPlaylist,
@@ -985,6 +992,10 @@ void MainFrame::binding(Presenter *presenter)
             presenter, &Presenter::onMusiclistRemove);
     connect(d->musicListWidget, &MusicListWidget::musiclistDelete,
             presenter, &Presenter::onMusiclistDelete);
+    connect(d->musicListWidget, &MusicListWidget::selectedPlaylistChange,
+            d->searchResult, &SearchResult::selectPlaylist);
+    connect(d->musicListWidget, &MusicListWidget::selectedPlaylistChange,
+            d->titlebarwidget, &TitlebarWidget::selectPlaylist);
 //    connect(d->musicListWidget,  &MusicListWidget::hidePlaylist,
 //    this, [ = ]() {
 //        d->setPlaylistVisible(false);

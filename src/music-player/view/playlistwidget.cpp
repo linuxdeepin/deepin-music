@@ -109,6 +109,10 @@ void PlayListWidgetPrivate::initConntion()
     q, [ = ](const MetaPtr meta) {
         Q_EMIT q->playMedia(playListView->playlist(), meta);
     });
+    q->connect(playListView, &PlayListView::pause,
+    q, [ = ](const MetaPtr meta) {
+        Q_EMIT q->pause(playListView->playlist(), meta);
+    });
     q->connect(playListView, &PlayListView::showInfoDialog,
     q, [ = ](const MetaPtr meta) {
         Q_EMIT q->showInfoDialog(meta);

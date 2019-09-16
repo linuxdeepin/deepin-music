@@ -408,8 +408,22 @@ void Presenter::postAction()
     } else {
         if (d->settings->value("base.play.auto_play").toBool() && !lastPlaylist->isEmpty() && !isMetaLibClear) {
             qDebug() << lastPlaylist->id() << lastPlaylist->displayName();
-            onCurrentPlaylistChanged(lastPlaylist);
-            onMusicResume(lastPlaylist, lastMeta);
+            if (d->settings->value("base.play.remember_progress").toBool() && !isMetaLibClear) {
+                onCurrentPlaylistChanged(lastPlaylist);
+                onMusicResume(lastPlaylist, lastMeta);
+            } else {
+                d->lastPlayPosition = 0;
+                onCurrentPlaylistChanged(lastPlaylist);
+                Q_EMIT locateMusic(lastPlaylist, lastMeta);
+                d->notifyMusicPlayed(lastPlaylist, lastMeta);
+
+                d->player->setPlayOnLoaded(false);
+                d->player->setFadeInOut(false);
+                d->player->loadMedia(lastPlaylist, lastMeta);
+
+                onMusicResume(lastPlaylist, lastMeta);
+            }
+
         }
     }
 
@@ -840,12 +854,14 @@ void Presenter::onMusicPlay(PlaylistPtr playlist,  const MetaPtr meta)
     qDebug() << "play" << playlist->displayName()
              << "( count:" << playlist->length() << ")"
              << toPlayMeta->title << toPlayMeta->hash;
+    playlist->setPlayingStatus(true);
     Q_EMIT d->play(playlist, toPlayMeta);
 }
 
 void Presenter::onMusicPause(PlaylistPtr playlist, const MetaPtr info)
 {
     Q_D(Presenter);
+    playlist->setPlayingStatus(false);
     Q_EMIT d->pause();
     Q_EMIT musicPaused(playlist, info);
 }
@@ -853,6 +869,7 @@ void Presenter::onMusicPause(PlaylistPtr playlist, const MetaPtr info)
 void Presenter::onMusicResume(PlaylistPtr playlist, const MetaPtr info)
 {
     Q_D(Presenter);
+    playlist->setPlayingStatus(true);
     Q_EMIT d->resume(playlist, info);
     d->notifyMusicPlayed(playlist, info);
 }
@@ -863,6 +880,7 @@ void Presenter::onMusicStop(PlaylistPtr playlist, const MetaPtr meta)
     Q_EMIT coverSearchFinished(meta, SearchMeta(), "");
     Q_EMIT lyricSearchFinished(meta, SearchMeta(), "");
     d->player->stop();
+    playlist->setPlayingStatus(false);
     Q_EMIT this->musicStoped(playlist, meta);
 }
 

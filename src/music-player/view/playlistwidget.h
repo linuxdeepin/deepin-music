@@ -54,6 +54,7 @@ signals:
     void playall(PlaylistPtr playlist);
     void resort(PlaylistPtr playlist, int sortType);
     void playMedia(PlaylistPtr playlist, const MetaPtr meta);
+    void pause(PlaylistPtr playlist, const MetaPtr meta);
     void showInfoDialog(const MetaPtr meta);
     void updateMetaCodec(const MetaPtr meta);
 

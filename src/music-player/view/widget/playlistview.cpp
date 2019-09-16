@@ -52,6 +52,7 @@ public:
 
     PlaylistModel      *model        = nullptr;
     PlayItemDelegate   *delegate     = nullptr;
+    MetaPtrList         playMetaPtrList;
 
     PlayListView *q_ptr;
     Q_DECLARE_PUBLIC(PlayListView)
@@ -83,7 +84,7 @@ PlayListView::PlayListView(QWidget *parent)
     setViewModeFlag(QListView::ListMode);
 
     setSelectionMode(QListView::ExtendedSelection);
-    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    //setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setEditTriggers(QAbstractItemView::NoEditTriggers);
     setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -150,6 +151,12 @@ void PlayListView::setViewModeFlag(QListView::ViewMode mode)
     setViewMode(mode);
 }
 
+MetaPtrList PlayListView::playMetaPtrList() const
+{
+    Q_D(const PlayListView);
+    return d->playMetaPtrList;
+}
+
 void PlayListView::onMusicListRemoved(const MetaPtrList metalist)
 {
     Q_D(PlayListView);
@@ -198,6 +205,8 @@ void PlayListView::onMusicListAdded(const MetaPtrList metalist)
 
 void PlayListView::onLocate(const MetaPtr meta)
 {
+    if (meta == nullptr)
+        return;
     QModelIndex index = findIndex(meta);
     if (!index.isValid()) {
         return;
@@ -222,9 +231,13 @@ void PlayListView::onMusiclistChanged(PlaylistPtr playlist)
     }
 
     d->model->removeRows(0, d->model->rowCount());
+    d->playMetaPtrList.clear();
     for (auto meta : playlist->allmusic()) {
 //        qDebug() << meta->hash << meta->title;
-        d->addMedia(meta);
+        if (playlist->searchStr().isEmpty() || meta->title.contains(playlist->searchStr())) {
+            d->addMedia(meta);
+            d->playMetaPtrList.append(meta);
+        }
     }
 
     d->model->setPlaylist(playlist);
@@ -350,8 +363,15 @@ void PlayListView::showContextMenu(const QPoint &pos,
 
     DMenu myMenu;
     QAction *playAction = nullptr;
+    QAction *pauseAction = nullptr;
     if (singleSelect) {
-        playAction = myMenu.addAction(tr("Play"));
+        auto activeMeta = activingMeta();
+        auto meta = d->model->meta(selection->selectedRows().first());
+        if (d->model->playlist()->playingStatus() && activeMeta == meta) {
+            pauseAction = myMenu.addAction(tr("Pause"));
+        } else {
+            playAction = myMenu.addAction(tr("Play"));
+        }
     }
     myMenu.addAction(tr("Add to playlist"))->setMenu(&playlistMenu);
     myMenu.addSeparator();
@@ -396,6 +416,13 @@ void PlayListView::showContextMenu(const QPoint &pos,
         connect(playAction, &QAction::triggered, this, [ = ](bool) {
             auto index = selection->selectedRows().first();
             Q_EMIT playMedia(d->model->meta(index));
+        });
+    }
+
+    if (pauseAction) {
+        connect(pauseAction, &QAction::triggered, this, [ = ](bool) {
+            auto index = selection->selectedRows().first();
+            Q_EMIT pause(d->model->meta(index));
         });
     }
 

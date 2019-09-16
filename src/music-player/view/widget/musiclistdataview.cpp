@@ -56,6 +56,7 @@ public:
     MetaPtr                 playing       = nullptr;
 
     MusicListDialog        *musciListDialog = nullptr;
+    PlayMusicTypePtrList    curPlayMusicTypePtrList;
 
     MusicListDataView *q_ptr;
     Q_DECLARE_PUBLIC(MusicListDataView)
@@ -108,6 +109,7 @@ MusicListDataView::MusicListDataView(QWidget *parent)
         auto PlayMusicTypePtr = playMusicTypePtrList[index.row()];
 
         d->musciListDialog->setPlayMusicData(curPlaylist, PlayMusicTypePtr);
+        d->musciListDialog->setPlaying(playing());
         d->musciListDialog->exec();
     });
 
@@ -172,6 +174,7 @@ void MusicListDataView::setPlaying(const MetaPtr meta)
 {
     Q_D(MusicListDataView);
     d->playing = meta;
+    d->musciListDialog->setPlaying(playing());
 }
 
 MetaPtr MusicListDataView::playing() const
@@ -186,6 +189,12 @@ void MusicListDataView::showContextMenu(const QPoint &pos, PlaylistPtr selectedP
     d->musciListDialog->showContextMenu(pos, selectedPlaylist, favPlaylist, newPlaylists);
 }
 
+PlayMusicTypePtrList MusicListDataView::playMusicTypePtrList() const
+{
+    Q_D(const MusicListDataView);
+    return d->curPlayMusicTypePtrList;
+}
+
 void MusicListDataView::onMusiclistChanged(PlaylistPtr playlist)
 {
     Q_D(MusicListDataView);
@@ -197,8 +206,13 @@ void MusicListDataView::onMusiclistChanged(PlaylistPtr playlist)
 
     d->model->removeRows(0, d->model->rowCount());
 
+    QString searchStr = playlist->searchStr();
+    d->curPlayMusicTypePtrList.clear();
     for (auto meta : playlist->playMusicTypePtrList()) {
-        d->addPlayMusicTypePtr(meta);
+        if (searchStr.isEmpty() || meta->name.contains(searchStr)) {
+            d->addPlayMusicTypePtr(meta);
+            d->curPlayMusicTypePtrList.append(meta);
+        }
     }
 
     d->model->setPlaylist(playlist);

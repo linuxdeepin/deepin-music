@@ -235,7 +235,7 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
         QColor brightTextColor(option.palette.highlight().color());
         auto flag = alignmentFlag(col);
         auto rect = colRect(col, option);
-        auto activeMeta = listview->activingMeta();
+        auto activeMeta = listview->playing();
         if (activeMeta == meta) {
             painter->setPen(brightTextColor);
         } else {
@@ -243,7 +243,6 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
         }
         switch (col) {
         case Number: {
-            auto *listview = qobject_cast<MusicListInfoView *>(const_cast<QWidget *>(option.widget));
             // Fixme:
             if (!meta.isNull() && meta->invalid) {
                 auto sz = QSizeF(15, 15);

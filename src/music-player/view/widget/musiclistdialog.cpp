@@ -283,6 +283,12 @@ void MusicListDialog::setPlayMusicData(PlaylistPtr playlist, PlayMusicTypePtr pl
     d->musicListInfoView->onMusiclistChanged(playlist, name);
 }
 
+void MusicListDialog::setPlaying(const MetaPtr Meta)
+{
+    Q_D(MusicListDialog);
+    d->musicListInfoView->setPlaying(Meta);
+}
+
 void MusicListDialog::showContextMenu(const QPoint &pos, PlaylistPtr selectedPlaylist, PlaylistPtr favPlaylist, QList<PlaylistPtr> newPlaylists)
 {
     Q_D(MusicListDialog);

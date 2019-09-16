@@ -39,6 +39,8 @@ public:
     PlaylistPtr playlist() const;
     QModelIndex findIndex(const MetaPtr meta);
     QString curName() const;
+    void setPlaying(const MetaPtr meta);
+    MetaPtr playing() const;
 
 signals:
     void addToPlaylist(PlaylistPtr playlist, const MetaPtrList &metalist);

@@ -45,7 +45,6 @@ public:
     void fixSearchPosition();
 
     SearchEdit  *search = nullptr;
-    DPushButton *btBack = nullptr;
 
     TitlebarWidget *q_ptr;
     Q_DECLARE_PUBLIC(TitlebarWidget)
@@ -63,27 +62,21 @@ TitlebarWidget::TitlebarWidget(QWidget *parent) :
 
     auto leftWidget = new DFrame;
     leftWidget->setObjectName("TitleLeft");
-    leftWidget->setFixedWidth(148);
+    leftWidget->setFixedWidth(200);
     auto leftLayout = new QHBoxLayout(leftWidget);
     leftLayout->setSpacing(10);
     leftLayout->setMargin(0);
 
     auto iconLabel = new DLabel;
     iconLabel->setObjectName("TitleIcon");
-    iconLabel->setFixedSize(24, 24);
-
-    d->btBack = new DPushButton;
-    d->btBack->setObjectName("TitleBack");
-    d->btBack->setFixedSize(24, 24);
-    d->btBack->hide();
+    iconLabel->setFixedSize(32, 32);
 
     leftLayout->addWidget(iconLabel, 0, Qt::AlignCenter);
-    leftLayout->addWidget(d->btBack, 0, Qt::AlignCenter);
     leftLayout->addStretch();
 
     d->search = new SearchEdit(this);
     d->search->setObjectName("TitleSearch");
-    d->search->setFixedSize(278, 40);
+    d->search->setFixedSize(354, 40);
     d->search->setPlaceHolder(tr("Search"));
     d->search->clear();
 
@@ -99,17 +92,6 @@ TitlebarWidget::TitlebarWidget(QWidget *parent) :
 
     connect(d->search, &SearchEdit::locateMusic, this, &TitlebarWidget::locateMusicInAllMusiclist);
     connect(d->search, &SearchEdit::searchText, this, &TitlebarWidget::search);
-    connect(d->btBack, &DPushButton::clicked, this, &TitlebarWidget::searchExited);
-
-    connect(this, &TitlebarWidget::search, this, [ = ]() {
-        d->btBack->show();
-//        d->fixSearchPosition();
-    });
-    connect(this, &TitlebarWidget::searchExited, this, [ = ]() {
-        d->btBack->hide();
-        clearSearch();
-//        d->fixSearchPosition();
-    });
 }
 
 TitlebarWidget::~TitlebarWidget()
@@ -119,7 +101,6 @@ TitlebarWidget::~TitlebarWidget()
 void TitlebarWidget::exitSearch()
 {
     Q_D(TitlebarWidget);
-    d->btBack->hide();
     clearSearch();
 }
 
@@ -149,6 +130,12 @@ void TitlebarWidget::setViewname(const QString &viewname)
 {
     Q_D(TitlebarWidget);
     d->search->setProperty("viewname", viewname);
+}
+
+void TitlebarWidget::selectPlaylist(PlaylistPtr playlistPtr)
+{
+    Q_D(TitlebarWidget);
+    d->search->selectPlaylist(playlistPtr);
 }
 
 void TitlebarWidget::resizeEvent(QResizeEvent *event)

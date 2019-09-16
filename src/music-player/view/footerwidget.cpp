@@ -299,17 +299,17 @@ Footer::Footer(QWidget *parent) :
     d->btSound = new MusicImageButton(":/mpimage/light/normal/volume_normal.svg",
                                       ":/mpimage/light/hover/volume_hover.svg",
                                       ":/mpimage/light/press/volume_press.svg");
-    d->btSound->setPropertyPic("btSound", QVariant("mid"),
+    d->btSound->setPropertyPic("volume", QVariant("mid"),
                                ":/mpimage/light/normal/volume_lessen_normal.svg",
                                ":/mpimage/light/hover/volume_lessen_hover.svg",
                                ":/mpimage/light/press/volume_lessen_press.svg");
-    d->btSound->setPropertyPic("btSound", QVariant("low"),
+    d->btSound->setPropertyPic("volume", QVariant("low"),
                                ":/mpimage/light/normal/volume_add_normal.svg",
                                ":/mpimage/light/hover/volume_add_hover.svg",
                                ":/mpimage/light/press/volume_add_press.svg");
-    d->btSound->setPropertyPic("btSound", QVariant("mute"),
+    d->btSound->setPropertyPic("volume", QVariant("mute"),
                                ":/mpimage/light/normal/mute_normal.svg",
-                               ":/mpimage/light/hover/mute_hover.svg",
+                               ":/mpimage/light/normal/mute_normal.svg",
                                ":/mpimage/light/press/mute_press.svg");
     d->btSound->setObjectName("FooterActionSound");
     d->btSound->setFixedSize(50, 50);
@@ -602,6 +602,8 @@ void Footer::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
     }
     d->btCover->setIcon(QPixmap::fromImage(cover));
     d->btCover->update();
+
+    setSourceImage(cover);
 
     this->enableControl(true);
     d->title->show();

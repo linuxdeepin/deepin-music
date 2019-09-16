@@ -100,27 +100,6 @@ MetaPtr PlaylistModel::meta(const QModelIndex &index, int role) const
     return MediaLibrary::instance()->meta(hash);
 }
 
-//#include <QMimeData>
-
-//bool PlaylistModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent)
-//{
-//    if (action == Qt::IgnoreAction)
-//        return true;
-
-//    if (!data->hasFormat("text/uri-list"))
-//        return false;
-
-//    if (column > 0)
-//        return false;
-
-//    int beginRow;
-
-//    if (row != -1)
-//        beginRow = row;
-//    else if (parent.isValid())
-//        beginRow = parent.row();
-//}
-
 Qt::DropActions PlaylistModel::supportedDropActions() const
 {
 //    return QAbstractItemModel::supportedDropActions();

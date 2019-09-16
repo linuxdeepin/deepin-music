@@ -184,6 +184,10 @@ void MusicListDataWidgetPrivate::initData(PlaylistPtr playlist)
 
         t_curDropdown = musicDropdown;
 
+        if (musicListView->viewMode() != (playlist->viewMode())) {
+            musicListView->setViewModeFlag((QListView::ViewMode)playlist->viewMode());
+        }
+
         if (musicListView->viewMode() == QListView::IconMode) {
             btIconMode->setChecked(true);
             btlistMode->setChecked(false);
@@ -308,6 +312,11 @@ void MusicListDataWidgetPrivate::initConntion()
         Q_EMIT q->playMedia(artistListView->playlist(), meta);
     });
 
+    q->connect(musicListView, &PlayListView::pause,
+    q, [ = ](const MetaPtr meta) {
+        Q_EMIT q->pause(musicListView->playlist(), meta);
+    });
+
     q->connect(artistListView, &MusicListDataView::addToPlaylist,
     q, [ = ](PlaylistPtr playlist, const MetaPtrList  & metalist) {
         Q_EMIT q->addToPlaylist(playlist, metalist);
@@ -369,6 +378,7 @@ void MusicListDataWidgetPrivate::initConntion()
         } else if (artistListView->isVisible()) {
             artistListView->setViewModeFlag(QListView::IconMode);
         } else {
+            musicListView->playlist()->setViewMode(1);
             musicListView->setViewModeFlag(QListView::IconMode);
         }
         btIconMode->setChecked(true);
@@ -381,6 +391,7 @@ void MusicListDataWidgetPrivate::initConntion()
         } else if (artistListView->isVisible()) {
             artistListView->setViewModeFlag(QListView::ListMode);
         } else {
+            musicListView->playlist()->setViewMode(0);
             musicListView->setViewModeFlag(QListView::ListMode);
         }
         btIconMode->setChecked(false);
@@ -570,14 +581,10 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     d->musicListView->hide();
 
     layout->addWidget(d->actionBar, 0, Qt::AlignTop);
+    layout->addWidget(d->emptyHits, 100, Qt::AlignCenter);
     layout->addWidget(d->albumListView, 100);
-    layout->addStretch();
     layout->addWidget(d->artistListView, 100);
-    layout->addStretch();
     layout->addWidget(d->musicListView, 100);
-    layout->addStretch();
-    layout->addWidget(d->emptyHits, 0, Qt::AlignCenter);
-    layout->addStretch();
 
     d->initConntion();
 }
@@ -611,6 +618,7 @@ void MusicListDataWidget::onMusiclistChanged(PlaylistPtr playlist)
 
     Q_D(MusicListDataWidget);
 
+    playlist->setSearchStr("");
     d->initData(playlist);
 }
 
@@ -624,6 +632,26 @@ void MusicListDataWidget::onMusiclistUpdate()
 {
     Q_D(MusicListDataWidget);
     d->initData(d->curPlaylist);
+
+    int t_count = 0;
+    if (d->curPlaylist->id() == AlbumMusicListID ) {
+        t_count = d->albumListView->playMusicTypePtrList().size();
+    } else if (d->curPlaylist->id() == ArtistMusicListID) {
+        t_count = d->artistListView->playMusicTypePtrList().size();
+    } else {
+        t_count = d->musicListView->playMetaPtrList().size();
+    }
+
+    if (t_count == 0 && !d->curPlaylist->searchStr().isEmpty()) {
+        d->emptyHits->setText(tr("No result found"));
+        d->albumListView->setVisible(false);
+        d->artistListView->setVisible(false);
+        d->musicListView->setVisible(false);
+        d->emptyHits->setVisible(true);
+    } else {
+        d->emptyHits->setText("");
+        d->emptyHits->hide();
+    }
 }
 
 void MusicListDataWidget::onMusicPlayed(PlaylistPtr playlist, const MetaPtr Meta)

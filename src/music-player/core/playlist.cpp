@@ -154,6 +154,16 @@ const MetaPtr Playlist::playing() const
     return playlistMeta.playing;
 }
 
+bool Playlist::playingStatus() const
+{
+    return playlistMeta.playStatus;
+}
+
+void Playlist::setPlayingStatus(bool status)
+{
+    playlistMeta.playStatus = status;
+}
+
 int Playlist::index(const QString &hash)
 {
     // FIXME: improve performance
@@ -282,6 +292,26 @@ void Playlist::reset(const MetaPtrList metalist)
 void Playlist::changePlayMusicTypeOrderType()
 {
     playMusicTypePtrListData.orderType = playMusicTypePtrListData.orderType == 0 ? 1 : 0;
+}
+
+void Playlist::setSearchStr(const QString &str)
+{
+    searchData = str;
+}
+
+QString Playlist::searchStr() const
+{
+    return searchData;
+}
+
+void Playlist::setViewMode(const int &mode)
+{
+    viewModeFlag = mode;
+}
+
+int Playlist::viewMode() const
+{
+    return viewModeFlag;
 }
 
 void Playlist::load()

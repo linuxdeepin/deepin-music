@@ -46,6 +46,14 @@ SearchEdit::SearchEdit(QWidget *parent) : DSearchEdit(parent)
             this, &SearchEdit::onReturnPressed);
 //    connect(this, &SearchEdit::editingFinished,
 //            this, &SearchEdit::onReturnPressed);
+    connect(this, &SearchEdit::focusChanged,
+    this, [ = ](bool onFocus) {
+        if (!onFocus) {
+            m_result->hide();
+        } else {
+            onTextChanged();
+        }
+    });
 }
 
 void SearchEdit::setResultWidget(SearchResult *result)
@@ -108,25 +116,18 @@ void SearchEdit::onFocusOut()
 void SearchEdit::onTextChanged()
 {
     auto text = QString(this->text()).remove(" ").remove("\r").remove("\n");
-    if (text.length() >= 2) {
-        auto resultList = MediaDatabase::searchMediaTitle(text, 10);
-        QStringList titleList;
-        QStringList hashList;
-
-        for (auto &meta : resultList) {
-            titleList << meta->title;
-            hashList << meta->hash;
-        }
-
+    if (text.length() >= 1) {
         auto searchtext = QString(this->text()).remove("\r").remove("\n");
-        m_result->setFixedWidth(this->width() + 40);
+        QRect rect = this->rect();
         m_result->setSearchString(searchtext);
-        m_result->setResultList(titleList, hashList);
+        //m_result->setResultList(titleList, hashList);
 
         m_result->autoResize();
         m_result->show();
         // parent is MainFrame
-        m_result->move(parentWidget()->rect().width() / 2  - 80, 40 - 4);
+        QPoint bottomLeft = rect.bottomLeft();
+        bottomLeft = mapTo(parentWidget()->parentWidget(), bottomLeft);
+        m_result->move(bottomLeft.x(), bottomLeft.y());
         m_result->setFocusPolicy(Qt::StrongFocus);
         m_result->raise();
     } else {
@@ -137,15 +138,18 @@ void SearchEdit::onTextChanged()
 void SearchEdit::onReturnPressed()
 {
     auto text = QString(this->text()).remove(" ");
-    if (text.isEmpty()) {
-        return;
-    }
+//    if (text.isEmpty()) {
+//        return;
+//    }
 
     onFocusOut();
 
-    if (m_result->isSelected()) {
-        m_result->onReturnPressed();
-    } else {
-        Q_EMIT this->searchText(this->text());
-    }
+    if (playlist != nullptr)
+        playlist->setSearchStr(text);
+    Q_EMIT this->searchText(this->text());
+}
+
+void SearchEdit::selectPlaylist(PlaylistPtr playlistPtr)
+{
+    playlist = playlistPtr;
 }

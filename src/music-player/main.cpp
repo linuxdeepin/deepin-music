@@ -142,9 +142,9 @@ int main(int argc, char *argv[])
 
     // !!! MUST setApplicationDisplayName before DMainWindow create
     app.setApplicationDisplayName(QObject::tr("Deepin Music"));
-    QIcon t_icon = QIcon::fromTheme("deepin-music");
     //app.setWindowIcon(QIcon(":/common/image/deepin-music.svg"));
-    app.setWindowIcon(t_icon);
+    QIcon icon = QIcon::fromTheme("deepin-music");
+    app.setProductIcon(icon);
 
     if (!app.setSingleInstance("deepinmusic")) {
         qDebug() << "another deepin music has started";
@@ -194,6 +194,7 @@ int main(int argc, char *argv[])
     app.connect(&app, &QApplication::lastWindowClosed,
     &mainframe, [ & ]() {
         auto quit = MusicSettings::value("base.close.close_action").toInt();
+        quit = 1;
         if (quit == 1) {
             music->quit();
         }

@@ -44,6 +44,8 @@ public:
                          PlaylistPtr favPlaylist,
                          QList<PlaylistPtr > newPlaylists);
 
+    PlayMusicTypePtrList playMusicTypePtrList() const;
+
 signals:
     void requestCustomContextMenu(const QPoint &pos);
     void playMedia(const MetaPtr meta);

@@ -74,9 +74,10 @@ public slots:
     void slotonsearchresult(QString path);
 protected:
     virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
+    virtual void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
 
 private:
-    QHBoxLayout* m_leftLayout;
+    QHBoxLayout *m_leftLayout;
     QScopedPointer<MUsicLyricWidgetPrivate> d_ptr;
     Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), MUsicLyricWidget)
 };

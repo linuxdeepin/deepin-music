@@ -34,10 +34,9 @@ void SearchLyricsWidget::initUI()
 {
     setFixedWidth(370);
 
-    setAutoFillBackground(true);
-    auto plPalette = palette();
-    plPalette.setColor(DPalette::Background, Qt::white);
-    setPalette(plPalette);
+    DPalette WidgetPl = palette();
+    WidgetPl.setColor(DPalette::Background, QColor("#FFFFFF"));
+    setPalette(WidgetPl);
 
     auto layout = new QVBoxLayout(this);
     layout->setSpacing(0);
@@ -80,7 +79,9 @@ void SearchLyricsWidget::initUI()
 
     connect(m_listWidget, &DListWidget::clicked, this, &SearchLyricsWidget::mySelection);
     connect(m_group, static_cast<void(QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked),
-        [=](int id){ mySelectionIndex(id);});
+    [ = ](int id) {
+        mySelectionIndex(id);
+    });
 }
 
 void SearchLyricsWidget::createList()
@@ -147,7 +148,7 @@ void SearchLyricsWidget::searchLyrics()
         return;
     m_lyricList.clear();
     m_listWidget->clear();
-    QList<QAbstractButton*> buttonList = m_group->buttons();
+    QList<QAbstractButton *> buttonList = m_group->buttons();
     for (int i = 0; i < buttonList.size(); ++i)
         m_group->removeButton(buttonList.at(i));
     QDir dir(m_path);

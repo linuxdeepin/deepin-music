@@ -2,6 +2,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <QFileDialog>
+#include <QTextCodec>
 
 #include <QDebug>
 
@@ -33,6 +34,61 @@ qint64 MusicLyric::getPostion(int index)
         return 0;
 }
 
+void MusicLyric::getFromFile(QString dir)
+{
+    qDebug() << "Lyric dir:" << dir << endl;
+    this->filedir = dir;
+    //this->offset
+    this->line.clear();
+    this->postion.clear();
+    //先使用暴力的字符串匹配，还不会正则表达式
+    //时间复杂度O(n)
+    QFile file(dir);
+    if (!file.exists()) return;
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        return;
+    QTextStream read(&file);
+    qint64 mm;
+    double ss = 0.0;
+    QMap<qint64, QString> ans;
+    while (!read.atEnd()) {
+        QString lineStr = read.readLine();
+        if (lineStr.isEmpty() || lineStr[0] != '[')
+            continue;
+        QStringList curLineList = lineStr.split('[');
+        for (auto curLineStr : curLineList) {
+
+            QStringList lineList = curLineStr.split(']');
+            if (lineList.isEmpty() || lineList[0].size() < 3)
+                continue;
+
+            QString str;
+            if (lineList.size() == 2)
+                str = lineList[1];
+            QString t_timeStr = lineList[0].remove(0, 1);
+            QStringList t_timelist = t_timeStr.split(':');
+            if (t_timelist.size() != 2)
+                continue;
+            bool flag = false;
+            mm = t_timelist[0].toLongLong(&flag, 10);
+            if (flag ) {
+                ss = t_timelist[1].toDouble(&flag);
+                if (flag) {
+                    qint64  curtime = (qint64)(ss * 1000) + mm * 60 * 1000;
+                    ans.insert(curtime, str);
+                }
+            }
+        }
+
+    }
+
+    QMap<qint64, QString>::iterator it;
+    for (it = ans.begin(); it != ans.end(); ++it) {
+        this->postion.push_back(it.key());
+        this->line.push_back(it.value());
+    }
+}
+
 /*
 #标识标签(ID-tags)
 格式："[标识名:值]"。大小写等价。
@@ -46,7 +102,7 @@ qint64 MusicLyric::getPostion(int index)
 格式："[mm:ss]"或"[mm:ss.fff]"（分钟：秒）。数字必须为非负整数。
 时间标签需位于某行歌词中的句首部分，一行歌词可以包含多个时间标签。
 */
-void MusicLyric::getFromFile(QString dir)
+void MusicLyric::getFromFileOld(QString dir)
 {
     qDebug() << "Lyric dir:" << dir << endl;
     this->filedir = dir;
@@ -57,7 +113,8 @@ void MusicLyric::getFromFile(QString dir)
     //时间复杂度O(n)
     QFile file(dir);
     if (!file.exists()) return;
-    file.open(QIODevice::ReadOnly | QIODevice::Text);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        return;
     QTextStream read(&file);
     QChar ch;
     bool flag;
@@ -118,9 +175,9 @@ void MusicLyric::getFromFile(QString dir)
 bool MusicLyric::getHeadFromFile(QString dir)
 {
     QFile file(dir);
-    if(!file.open(QIODevice::ReadOnly))
+    if (!file.open(QIODevice::ReadOnly))
         return false;
-    while(!file.atEnd()) {
+    while (!file.atEnd()) {
         this->line.push_back(file.readLine());
     }
     file.close();

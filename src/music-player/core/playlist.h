@@ -105,6 +105,8 @@ public:
     const MetaPtr music(int index) const;
     const MetaPtr music(const QString &id) const;
     const MetaPtr playing() const;
+    bool playingStatus() const;
+    void setPlayingStatus(bool Status);
 
     int index(const QString &hash);
     bool isLast(const MetaPtr meta) const;
@@ -116,6 +118,12 @@ public:
     void reset(const MetaPtrList);
 
     void changePlayMusicTypeOrderType();
+
+    void setSearchStr(const QString &str);
+    QString searchStr() const;
+
+    void setViewMode(const int &mode);
+    int viewMode() const;
 
 public slots:
     void setDisplayName(const QString &name);
@@ -155,6 +163,8 @@ private:
     MetaPtrList shuffleHistory;
     ShuffleHistoryState shuffleHistoryState = ShuffleHistoryState::Empty;
     int shuffleSeed;
+    QString     searchData;
+    int         viewModeFlag = 0;
 
     const MetaPtr shuffleTurn(bool forward);
 };

@@ -43,7 +43,9 @@ signals:
     void playall(PlaylistPtr playlist);
     void customResort(const QStringList &uuids);
     void playMedia(PlaylistPtr playlist, const MetaPtr meta);
+    void pause(PlaylistPtr playlist, const MetaPtr meta);
     void resort(PlaylistPtr playlist, int sortType);
+    void selectedPlaylistChange(PlaylistPtr playlist);
 
     void requestCustomContextMenu(const QPoint &pos, char type);
     void addToPlaylist(PlaylistPtr playlist, const MetaPtrList  &metalist);
@@ -70,6 +72,7 @@ public slots:
 
 protected:
     virtual void focusOutEvent(QFocusEvent *event) Q_DECL_OVERRIDE;
+    virtual void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
 
 private:
     MusicListView         *m_dataBaseListview;
