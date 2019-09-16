@@ -41,7 +41,6 @@
 #include "../core/metasearchservice.h"
 
 #include "widget/filter.h"
-#include "widget/slider.h"
 #include "widget/modebuttom.h"
 #include "widget/label.h"
 #include "widget/cover.h"
@@ -82,7 +81,6 @@ public:
     MusicImageButton  *btPlayList = nullptr;
     ModeButton        *btPlayMode = nullptr;
     MusicImageButton  *btSound    = nullptr;
-    Slider            *progress   = nullptr;
     SoundVolume       *volSlider  = nullptr;
     DFrame            *ctlWidget  = nullptr;
     Waveform          *waveform   = nullptr;
@@ -143,9 +141,6 @@ void FooterPrivate::initConnection()
 //        Q_ASSERT(range != 0);
 //        Q_EMIT q->changeProgress(value, range);
 //    });
-    q->connect(progress, &Slider::realHeightChanged, q, [ = ](qreal value) {
-        Q_EMIT q->progressRealHeightChanged(value);
-    });
 
     q->connect(waveform, &Waveform::valueAccpet, q, [ = ](int value) {
         auto range = waveform->maximum() - waveform->minimum();
@@ -213,13 +208,6 @@ Footer::Footer(QWidget *parent) :
     mainVBoxlayout->setContentsMargins(0, 0, 0, 0);
 
     auto hoverFilter = new HoverFilter(this);
-
-    d->progress = new Slider(Qt::Horizontal);
-    d->progress->setObjectName("FooterProgress");
-    d->progress->setFixedHeight(6);
-    d->progress->setMinimum(0);
-    d->progress->setMaximum(1000);
-    d->progress->setValue(0);
 
     auto layout = new QHBoxLayout();
     layout->setContentsMargins(10, 0, 20, 0);
@@ -381,11 +369,9 @@ Footer::Footer(QWidget *parent) :
     layout->addWidget(d->waveform, 100);
     layout->addWidget(actWidget, 0, Qt::AlignRight | Qt::AlignVCenter);
 
-    mainVBoxlayout->addWidget(d->progress);
-
     auto controlFrame = new DFrame;
     controlFrame->setObjectName("FooterControlFrame");
-    controlFrame->setFixedHeight(60 - d->progress->height() / 2);
+    controlFrame->setFixedHeight(60);
     controlFrame->setLayout(layout);
 
     //mainVBoxlayout->addStretch();
@@ -430,7 +416,7 @@ Footer::~Footer()
 int Footer::progressExtentHeight() const
 {
     Q_D(const Footer);
-    return (d->progress->height()) / 2;
+    return 0;
 }
 
 void Footer::enableControl(bool enable)
@@ -445,7 +431,7 @@ void Footer::enableControl(bool enable)
     d->btPlayList->setEnabled(enable);
     d->btPlayMode->setEnabled(enable);
     d->btSound->setEnabled(enable);
-    d->progress->setEnabled(enable);
+    d->waveform->setEnabled(enable);
 
     d->btCover->blockSignals(!enable);
     d->title->blockSignals(!enable);
@@ -464,7 +450,7 @@ void Footer::setViewname(const QString &viewname)
 {
     Q_D(Footer);
     setProperty("viewname", viewname);
-    d->progress->setProperty("viewname", viewname);
+    d->waveform->setProperty("viewname", viewname);
 }
 
 QString Footer::defaultCover() const
@@ -477,8 +463,8 @@ void Footer::mousePressEvent(QMouseEvent *event)
 {
     Q_D(Footer);
     DWidget::mousePressEvent(event);
-    auto subCtlPos = d->progress->mapFromParent(event->pos());
-    if (d->progress->rect().contains(subCtlPos)
+    auto subCtlPos = d->waveform->mapFromParent(event->pos());
+    if (d->waveform->rect().contains(subCtlPos)
             /*|| !this->rect().contains(event->pos())*/) {
         d->enableMove = false;
     } else {
@@ -659,7 +645,7 @@ void Footer::onMediaLibraryClean()
 void Footer::onProgressChanged(qint64 value, qint64 duration)
 {
     Q_D(Footer);
-    auto length = d->progress->maximum() - d->progress->minimum();
+    auto length = d->waveform->maximum() - d->waveform->minimum();
     Q_ASSERT(length != 0);
 
     auto progress = 0;
@@ -667,13 +653,9 @@ void Footer::onProgressChanged(qint64 value, qint64 duration)
         progress = static_cast<int>(length * value / duration);
     }
 
-    if (d->progress->signalsBlocked()) {
+    if (d->waveform->signalsBlocked()) {
         return;
     }
-
-    d->progress->blockSignals(true);
-    d->progress->setValue(progress);
-    d->progress->blockSignals(false);
 
     d->waveform->blockSignals(true);
     d->waveform->setValue(progress);

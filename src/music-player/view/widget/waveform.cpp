@@ -41,6 +41,7 @@ Waveform::Waveform(Qt::Orientation orientation, QWidget *parent) : DSlider(orien
     setSizePolicy(sp);
     setFixedHeight(40);
     maxSampleNum = 500;
+    enterFlag = false;
 }
 
 void Waveform::paintEvent(QPaintEvent *)
@@ -48,6 +49,7 @@ void Waveform::paintEvent(QPaintEvent *)
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, true);
 
+    painter.save();
     qreal devicePixelRatio = qApp->devicePixelRatio();
     if (devicePixelRatio > 1.0) {
         painter.setClipRect(QRect(rect().x(), rect().y(), rect().width() - 1, rect().height()));
@@ -85,6 +87,12 @@ void Waveform::paintEvent(QPaintEvent *)
                             1));
         painter.fillPath(path, fillColor);
     }
+    if (enterFlag) {
+        QPainterPath path;
+        path.addRect(QRectF(rect().x() + curWidth, rect().y(), WAVE_DURATION, rect().height()));
+        painter.fillPath(path, QColor("#FF5736"));
+    }
+    painter.restore();
 }
 
 void Waveform::clearWave()
@@ -243,4 +251,16 @@ void Waveform::mouseMoveEvent(QMouseEvent *event)
 
     auto value = (event->x() - this->x()) * valueRange / this->width();
     setSliderPosition(value);
+}
+
+void Waveform::enterEvent(QEvent *event)
+{
+    enterFlag = true;
+    DSlider::enterEvent(event);
+}
+
+void Waveform::leaveEvent(QEvent *event)
+{
+    enterFlag = false;
+    DSlider::leaveEvent(event);
 }
