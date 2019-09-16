@@ -75,13 +75,14 @@ PlayListView::PlayListView(QWidget *parent)
     //viewport()->setAcceptDrops(true);
     setDropIndicatorShown(true);
     setDragDropOverwriteMode(false);
-    setVerticalScrollMode(QAbstractItemView::ScrollPerItem);
-    setHorizontalScrollMode(QAbstractItemView::ScrollPerItem);
+    //setVerticalScrollMode(QAbstractItemView::ScrollPerItem);
+    //setHorizontalScrollMode(QAbstractItemView::ScrollPerItem);
     setDefaultDropAction(Qt::MoveAction);
     setDragDropMode(QAbstractItemView::InternalMove);
     setMovement(QListView::Free);
 
     setViewModeFlag(QListView::ListMode);
+    setResizeMode(QListView::Adjust);
 
     setSelectionMode(QListView::ExtendedSelection);
     //setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -234,7 +235,7 @@ void PlayListView::onMusiclistChanged(PlaylistPtr playlist)
     d->playMetaPtrList.clear();
     for (auto meta : playlist->allmusic()) {
 //        qDebug() << meta->hash << meta->title;
-        if (playlist->searchStr().isEmpty() || meta->title.contains(playlist->searchStr())) {
+        if (playlist->searchStr().isEmpty() || meta->title.contains(playlist->searchStr(), Qt::CaseInsensitive)) {
             d->addMedia(meta);
             d->playMetaPtrList.append(meta);
         }

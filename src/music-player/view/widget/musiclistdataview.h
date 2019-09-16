@@ -49,6 +49,7 @@ public:
 signals:
     void requestCustomContextMenu(const QPoint &pos);
     void playMedia(const MetaPtr meta);
+    void pause(PlaylistPtr playlist, const MetaPtr meta);
     void addToPlaylist(PlaylistPtr playlist, const MetaPtrList  &metalist);
     void musiclistRemove(const MetaPtrList  &metalist);
     void musiclistDelete(const MetaPtrList  &metalist);

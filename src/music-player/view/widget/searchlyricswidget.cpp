@@ -41,18 +41,23 @@ void SearchLyricsWidget::initUI()
     auto layout = new QVBoxLayout(this);
     layout->setSpacing(0);
     layout->setMargin(0);
+    layout->setContentsMargins(10, 10, 10, 6);
     DLabel *title = new DLabel;
     QFont font;
     font.setFamily("SourceHanSansSC-Bold");
     font.setPixelSize(17);
-    title->setText(tr("Search Lyrics"));
     title->setFont(font);
+    title->setText(tr("Search Lyrics"));
     title->setAlignment(Qt::AlignCenter | Qt::AlignVCenter);
-    title->setFixedHeight(36);
+    title->setFixedHeight(30);
     DPalette pa = title->palette();
     pa.setColor(DPalette::WindowText, "#001A2E");
     title->setPalette(pa);
 
+    m_keyWord->setClearButtonEnabled(false);
+    m_singer->setClearButtonEnabled(false);
+    m_keyWord->lineEdit()->setPlaceholderText(tr("Song name"));
+    m_singer->lineEdit()->setPlaceholderText(tr("Singer name"));
     m_keyWord->setFixedHeight(36);
     m_singer->setFixedHeight(36);
     m_search->setText(tr("Search"));
@@ -70,10 +75,16 @@ void SearchLyricsWidget::initUI()
     connect(m_search, &DPushButton::clicked, this, &SearchLyricsWidget::searchLyrics);
 
     layout->addWidget(title);
+    layout->addSpacing(10);
     layout->addWidget(m_keyWord);
+    layout->addSpacing(10);
     layout->addWidget(m_singer);
+    layout->addSpacing(20);
     layout->addWidget(m_search);
+    layout->addSpacing(30);
     layout->addWidget(m_listWidget);
+    m_listWidget->setFrameShape(QListWidget::NoFrame);
+    m_listWidget->setContentsMargins(0, 0, 0, 0);
 
     setLayout(layout);
 
@@ -88,10 +99,10 @@ void SearchLyricsWidget::createList()
 {
     for (int i = 0; i < m_lyricList.size(); ++i) {
         QListWidgetItem *listItem = new QListWidgetItem;
-        listItem->setSizeHint(QSize(340, 64));
+        listItem->setSizeHint(QSize(330, 64));
         m_listWidget->addItem(listItem);
         DFrame *frame = new DFrame;
-        frame->setFixedSize(340, 64);
+        frame->setFixedSize(330, 64);
 
         // DPalette framepl = frame->palette();
         //framepl.setColor(DPalette::Window, DPalette::Window);

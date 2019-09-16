@@ -34,6 +34,37 @@ qint64 MusicLyric::getPostion(int index)
         return 0;
 }
 
+static QString getFileCodex(QString dir)
+{
+    QFile fin(dir);
+    QString code;
+    if (!fin.open(QIODevice::ReadOnly))
+        return code;
+
+    unsigned char  s2;
+    fin.read((char *)&s2, sizeof(s2));
+    int p = s2 << 8;
+    fin.read((char *)&s2, sizeof(s2));
+    p += s2;
+
+    switch (p) {
+    case 0xfffe:  //65534
+        code = "Unicode";
+        break;
+    case 0xfeff://65279
+        code = "Unicode big endian";
+        break;
+    case 0xefbb://61371
+        code = "UTF-8";
+        break;
+    default:
+        code = "GB18030";
+    }
+    fin.close();
+
+    return code;
+}
+
 void MusicLyric::getFromFile(QString dir)
 {
     qDebug() << "Lyric dir:" << dir << endl;
@@ -43,11 +74,15 @@ void MusicLyric::getFromFile(QString dir)
     this->postion.clear();
     //先使用暴力的字符串匹配，还不会正则表达式
     //时间复杂度O(n)
+    QString codeStr = getFileCodex(dir);
     QFile file(dir);
     if (!file.exists()) return;
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         return;
     QTextStream read(&file);
+    if (!codeStr.isEmpty()) {
+        read.setCodec(QTextCodec::codecForName(codeStr.toStdString().c_str()));
+    }
     qint64 mm;
     double ss = 0.0;
     QMap<qint64, QString> ans;

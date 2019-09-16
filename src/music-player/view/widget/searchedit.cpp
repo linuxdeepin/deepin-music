@@ -50,6 +50,7 @@ SearchEdit::SearchEdit(QWidget *parent) : DSearchEdit(parent)
     this, [ = ](bool onFocus) {
         if (!onFocus) {
             m_result->hide();
+            onReturnPressed();
         } else {
             onTextChanged();
         }
@@ -70,7 +71,8 @@ void SearchEdit::setResultWidget(SearchResult *result)
     connect(m_result, &SearchResult::searchText,
     this, [ = ](const QString & text) {
 //        onFocusOut();
-        Q_EMIT this->searchText(text);
+        setText(text);
+        onReturnPressed();
     });
 }
 
@@ -119,8 +121,27 @@ void SearchEdit::onTextChanged()
     if (text.length() >= 1) {
         auto searchtext = QString(this->text()).remove("\r").remove("\n");
         QRect rect = this->rect();
+
+        QStringList curList;
+        if (playlist->id() == AlbumMusicListID || playlist->id() == ArtistMusicListID) {
+            PlayMusicTypePtrList playMusicTypePtrList = playlist->playMusicTypePtrList();
+
+            for (auto action : playMusicTypePtrList) {
+                if (!curList.contains(action->name))
+                    curList.append(action->name);
+            }
+        } else {
+            for (auto action : playlist->allmusic()) {
+                if (!curList.contains(action->title))
+                    curList.append(action->title);
+            }
+        }
+        curList = curList.filter(searchtext, Qt::CaseInsensitive);
+        if (curList.size() > 10)
+            curList = curList.mid(0, 10);
+
         m_result->setSearchString(searchtext);
-        //m_result->setResultList(titleList, hashList);
+        m_result->setResultList(curList, QStringList());
 
         m_result->autoResize();
         m_result->show();

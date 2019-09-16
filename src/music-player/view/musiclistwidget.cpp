@@ -154,6 +154,10 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
         }
         Q_EMIT this->playall(playlist);
     });
+    connect(m_dataBaseListview, &MusicListView::pause,
+    this, [ = ](PlaylistPtr playlist, const MetaPtr meta) {
+        Q_EMIT this->pause(playlist, meta);
+    });
 
     connect(m_customizeListview, &MusicListView::itemPressed,
     this, [ = ](QListWidgetItem * item) {
@@ -192,6 +196,10 @@ MusicListWidget::MusicListWidget(QWidget *parent) : DWidget(parent)
     connect(m_customizeListview, &MusicListView::displayNameChanged,
     this, [ = ]() {
         m_dataListView->onMusiclistUpdate();
+    });
+    connect(m_customizeListview, &MusicListView::pause,
+    this, [ = ](PlaylistPtr playlist, const MetaPtr meta) {
+        Q_EMIT this->pause(playlist, meta);
     });
 
     //musiclistdatawidget

@@ -68,7 +68,7 @@ void MusicListDataViewPrivate::addPlayMusicTypePtr(const PlayMusicTypePtr TypePt
     QStandardItem *newItem = new QStandardItem;
     QIcon icon(defaultCover);
     if (!TypePtr->icon.isEmpty()) {
-        icon = QIcon(QPixmap::fromImage(QImage::fromData(TypePtr->icon)));
+        icon = QIcon(QPixmap::fromImage(QImage::fromData(TypePtr->icon).scaled(170, 170)));
     }
     newItem->setIcon(icon);
     model->appendRow(newItem);
@@ -143,6 +143,11 @@ MusicListDataView::MusicListDataView(QWidget *parent)
         Q_EMIT modeChanged(mode);
     });
 
+    connect(d->musciListDialog, &MusicListDialog::pause,
+    this, [ = ](const MetaPtr meta) {
+        Q_EMIT pause(playlist(), meta);
+    });
+
     setSelectionMode(QListView::ExtendedSelection);
     setSelectionBehavior(QAbstractItemView::SelectRows);
 }
@@ -209,7 +214,7 @@ void MusicListDataView::onMusiclistChanged(PlaylistPtr playlist)
     QString searchStr = playlist->searchStr();
     d->curPlayMusicTypePtrList.clear();
     for (auto meta : playlist->playMusicTypePtrList()) {
-        if (searchStr.isEmpty() || meta->name.contains(searchStr)) {
+        if (searchStr.isEmpty() || meta->name.contains(searchStr, Qt::CaseInsensitive)) {
             d->addPlayMusicTypePtr(meta);
             d->curPlayMusicTypePtrList.append(meta);
         }

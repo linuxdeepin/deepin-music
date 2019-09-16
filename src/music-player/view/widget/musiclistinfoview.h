@@ -51,6 +51,7 @@ signals:
     void showInfoDialog(const MetaPtr meta);
     void requestCustomContextMenu(const QPoint &pos);
     void customSort();
+    void pause(const MetaPtr meta);
 
 public:
     void onMusiclistChanged(PlaylistPtr playlist, const QString name);

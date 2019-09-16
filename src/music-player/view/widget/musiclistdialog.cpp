@@ -232,6 +232,10 @@ void MusicListDialogPrivate::initConnection()
         infoDialog->updateInfo(meta);
     });
 
+    q->connect(musicListInfoView, &MusicListInfoView::pause,
+    q, [ = ](const MetaPtr meta) {
+        Q_EMIT q->pause(meta);
+    });
 }
 
 MusicListDialog::MusicListDialog(QWidget *parent)

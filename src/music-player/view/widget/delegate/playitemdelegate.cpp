@@ -351,7 +351,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
             // Fixme:
             if (!meta.isNull() && meta->invalid) {
                 auto sz = QSizeF(15, 15);
-                auto icon = QIcon(":/common/image/warning.svg").pixmap(sz.toSize());
+                auto icon = QIcon(":/mpimage/light/warning.svg").pixmap(sz.toSize());
                 auto centerF = QRectF(rect).center();
                 auto iconRect = QRectF(centerF.x() - sz.width() / 2,
                                        centerF.y() - sz.height() / 2,

@@ -144,6 +144,7 @@ void MusicListInfoView::setPlaying(const MetaPtr meta)
 {
     Q_D(MusicListInfoView);
     d->playing = meta;
+    update();
 }
 
 MetaPtr MusicListInfoView::playing() const
@@ -356,8 +357,14 @@ void MusicListInfoView::showContextMenu(const QPoint &pos,
 
     DMenu myMenu;
     QAction *playAction = nullptr;
+    QAction *pauseAction = nullptr;
     if (singleSelect) {
-        playAction = myMenu.addAction(tr("Play"));
+        auto meta = d->model->meta(selection->selectedRows().first());
+        if (d->model->playlist()->playingStatus() && d->playing == meta) {
+            pauseAction = myMenu.addAction(tr("Pause"));
+        } else {
+            playAction = myMenu.addAction(tr("Play"));
+        }
     }
     myMenu.addAction(tr("Add to playlist"))->setMenu(&playlistMenu);
     myMenu.addSeparator();
@@ -402,6 +409,13 @@ void MusicListInfoView::showContextMenu(const QPoint &pos,
         connect(playAction, &QAction::triggered, this, [ = ](bool) {
             auto index = selection->selectedRows().first();
             Q_EMIT playMedia(d->model->meta(index));
+        });
+    }
+
+    if (pauseAction) {
+        connect(pauseAction, &QAction::triggered, this, [ = ](bool) {
+            auto index = selection->selectedRows().first();
+            Q_EMIT pause(d->model->meta(index));
         });
     }
 

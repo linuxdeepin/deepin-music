@@ -65,12 +65,16 @@ SearchResult::SearchResult(QWidget *parent) : DFloatingWidget(parent)
     this, [ = ](const QModelIndex & index) {
         auto hashlist = m_model->property("hashlist").toStringList();
         Q_EMIT locateMusic(hashlist.value(index.row()));
+        Q_EMIT searchText(m_model->stringList()[index.row()]);
     });
 }
 
 void SearchResult::autoResize()
 {
-    m_searchResult->setFixedHeight(m_model->rowCount() * 34 + 2);
+    int rowCount = m_model->rowCount();
+    if (rowCount > 10)
+        rowCount = 10;
+    m_searchResult->setFixedHeight(rowCount * 34 + 2);
 
     setFixedHeight(m_searchResult->height() + 11);
 
@@ -83,21 +87,6 @@ void SearchResult::autoResize()
 void SearchResult::setSearchString(const QString &str)
 {
     m_model->setProperty("searchString", str);
-    //playlist
-    QStringList curList;
-    if (playlist->id() == AlbumMusicListID || playlist->id() == ArtistMusicListID) {
-        PlayMusicTypePtrList playMusicTypePtrList = playlist->playMusicTypePtrList();
-
-        for (auto action : playMusicTypePtrList) {
-            curList.append(action->name);
-        }
-    } else {
-        for (auto action : playlist->allmusic()) {
-            curList.append(action->title);
-        }
-    }
-    curList = curList.filter(str);
-    m_model->setStringList(curList);
 }
 
 void SearchResult::setResultList(const QStringList &titlelist, const QStringList &hashlist)

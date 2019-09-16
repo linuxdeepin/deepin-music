@@ -137,8 +137,15 @@ void MusicListView::showContextMenu(const QPoint &pos)
     QPoint globalPos = this->mapToGlobal(pos);
 
     DMenu menu;
-    auto playact = menu.addAction(tr("Play"));
-    playact->setDisabled(0 == m_data->length());
+    QAction *playact = nullptr;
+    QAction *pauseact = nullptr;
+    if (m_data->playingStatus() && m_data->playing() != nullptr) {
+        pauseact = menu.addAction(tr("Pause"));
+        pauseact->setDisabled(0 == m_data->length());
+    } else {
+        playact = menu.addAction(tr("Play"));
+        playact->setDisabled(0 == m_data->length());
+    }
 
     if (m_data->id() != AllMusicListID && m_data->id() != AlbumMusicListID &&
             m_data->id() != ArtistMusicListID && m_data->id() != FavMusicListID) {
@@ -152,6 +159,9 @@ void MusicListView::showContextMenu(const QPoint &pos)
     connect(&menu, &DMenu::triggered, this, [ = ](QAction * action) {
         if (action->text() == tr("Play")) {
             Q_EMIT playall(m_data);
+        }
+        if (action->text() == tr("Pause")) {
+            Q_EMIT pause(m_data, m_data->playing());
         }
         if (action->text() == tr("Rename")) {
             openPersistentEditor(item);

@@ -41,6 +41,7 @@ signals:
     void playall(PlaylistPtr playlist);
     void customResort(const QStringList &uuids);
     void displayNameChanged();
+    void pause(PlaylistPtr playlist, const MetaPtr meta);
 
 protected:
     virtual void startDrag(Qt::DropActions supportedActions) Q_DECL_OVERRIDE;

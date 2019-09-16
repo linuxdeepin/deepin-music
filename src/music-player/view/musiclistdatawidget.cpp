@@ -76,6 +76,7 @@ void MusicListDataWidgetPrivate::initData(PlaylistPtr playlist)
     Q_Q(MusicListDataWidget);
 
     curPlaylist = playlist;
+    QString searchStr = playlist->searchStr();
 
     QFontMetrics titleFm(titleLabel->font());
     auto text = titleFm.elidedText(playlist->displayName(), Qt::ElideRight, 300);
@@ -85,8 +86,12 @@ void MusicListDataWidgetPrivate::initData(PlaylistPtr playlist)
     if (playlist->id() == AlbumMusicListID) {
         PlayMusicTypePtrList playMusicTypePtrList = playlist->playMusicTypePtrList();
         int musicCount = 0;
+        int musicListCount = 0;
         for (auto action : playMusicTypePtrList) {
-            musicCount += action->playlistMeta.sortMetas.size();
+            if (searchStr.isEmpty() || action->name.contains(searchStr, Qt::CaseInsensitive)) {
+                musicCount += action->playlistMeta.sortMetas.size();
+                musicListCount++;
+            }
         }
         QString infoStr;
         if (musicCount == 0) {
@@ -94,11 +99,11 @@ void MusicListDataWidgetPrivate::initData(PlaylistPtr playlist)
         } else if (musicCount == 1) {
             infoStr = MusicListDataWidget::tr("   1 album-1 song");
         } else {
-            infoStr = MusicListDataWidget::tr("   %1 album-%2 songs").arg(playMusicTypePtrList.size()).arg(musicCount);
+            infoStr = MusicListDataWidget::tr("   %1 album-%2 songs").arg(musicListCount).arg(musicCount);
             if (playMusicTypePtrList.size() == 1) {
-                infoStr = MusicListDataWidget::tr("   %1 album-%2 songs").arg(playMusicTypePtrList.size()).arg(musicCount);
+                infoStr = MusicListDataWidget::tr("   %1 album-%2 songs").arg(musicListCount).arg(musicCount);
             } else {
-                infoStr = MusicListDataWidget::tr("   %1 albums-%2 songs").arg(playMusicTypePtrList.size()).arg(musicCount);
+                infoStr = MusicListDataWidget::tr("   %1 albums-%2 songs").arg(musicListCount).arg(musicCount);
             }
         }
         infoLabel->setText(infoStr);
@@ -126,8 +131,12 @@ void MusicListDataWidgetPrivate::initData(PlaylistPtr playlist)
     } else if (playlist->id() == ArtistMusicListID) {
         PlayMusicTypePtrList playMusicTypePtrList = playlist->playMusicTypePtrList();
         int musicCount = 0;
+        int musicListCount = 0;
         for (auto action : playMusicTypePtrList) {
-            musicCount += action->playlistMeta.sortMetas.size();
+            if (searchStr.isEmpty() || action->name.contains(searchStr, Qt::CaseInsensitive)) {
+                musicCount += action->playlistMeta.sortMetas.size();
+                musicListCount++;
+            }
         }
         QString infoStr;
         if (musicCount == 0) {
@@ -136,9 +145,9 @@ void MusicListDataWidgetPrivate::initData(PlaylistPtr playlist)
             infoStr = MusicListDataWidget::tr("   1 artist-1 song");
         } else {
             if (playMusicTypePtrList.size() == 1) {
-                infoStr = MusicListDataWidget::tr("   %1 artist-%2 songs").arg(playMusicTypePtrList.size()).arg(musicCount);
+                infoStr = MusicListDataWidget::tr("   %1 artist-%2 songs").arg(musicListCount).arg(musicCount);
             } else {
-                infoStr = MusicListDataWidget::tr("   %1 artists-%2 songs").arg(playMusicTypePtrList.size()).arg(musicCount);
+                infoStr = MusicListDataWidget::tr("   %1 artists-%2 songs").arg(musicListCount).arg(musicCount);
             }
         }
         infoLabel->setText(infoStr);
@@ -164,12 +173,18 @@ void MusicListDataWidgetPrivate::initData(PlaylistPtr playlist)
         artistListView->onMusiclistChanged(playlist);
     } else {
         QString infoStr;
+        int musicCount = 0;
+        for (auto action : playlist->allmusic()) {
+            if (searchStr.isEmpty() || action->title.contains(searchStr, Qt::CaseInsensitive)) {
+                musicCount ++;
+            }
+        }
         if (playlist->allmusic().size() == 0) {
             infoStr = MusicListDataWidget::tr("   No songs");
         } else if (playlist->allmusic().size() == 1) {
             infoStr = MusicListDataWidget::tr("   1 song");
         } else {
-            infoStr = MusicListDataWidget::tr("   %1 songs").arg(playlist->allmusic().size());
+            infoStr = MusicListDataWidget::tr("   %1 songs").arg(musicCount);
         }
         infoLabel->setText(infoStr);
 
@@ -278,6 +293,11 @@ void MusicListDataWidgetPrivate::initConntion()
         Q_EMIT q->playMedia(albumListView->playlist(), meta);
     });
 
+    q->connect(albumListView, &MusicListDataView::pause,
+    q, [ = ](PlaylistPtr playlist, const MetaPtr meta) {
+        Q_EMIT q->pause(playlist, meta);
+    });
+
     q->connect(albumListView, &MusicListDataView::addToPlaylist,
     q, [ = ](PlaylistPtr playlist, const MetaPtrList  & metalist) {
         Q_EMIT q->addToPlaylist(playlist, metalist);
@@ -312,6 +332,11 @@ void MusicListDataWidgetPrivate::initConntion()
         Q_EMIT q->playMedia(artistListView->playlist(), meta);
     });
 
+    q->connect(artistListView, &MusicListDataView::pause,
+    q, [ = ](PlaylistPtr playlist, const MetaPtr meta) {
+        Q_EMIT q->pause(playlist, meta);
+    });
+
     q->connect(musicListView, &PlayListView::pause,
     q, [ = ](const MetaPtr meta) {
         Q_EMIT q->pause(musicListView->playlist(), meta);
@@ -344,6 +369,11 @@ void MusicListDataWidgetPrivate::initConntion()
         curPlayList->play(meta);
         initData(curPlayList);
         Q_EMIT q->playMedia(musicListView->playlist(), meta);
+    });
+
+    q->connect(musicListView, &PlayListView::pause,
+    q, [ = ](const MetaPtr meta) {
+        Q_EMIT q->pause(musicListView->playlist(), meta);
     });
 
     q->connect(musicListView, &PlayListView::requestCustomContextMenu,

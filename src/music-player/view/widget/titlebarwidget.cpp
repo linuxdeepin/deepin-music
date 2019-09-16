@@ -62,7 +62,7 @@ TitlebarWidget::TitlebarWidget(QWidget *parent) :
 
     auto leftWidget = new DFrame;
     leftWidget->setObjectName("TitleLeft");
-    leftWidget->setFixedWidth(200);
+    leftWidget->setFixedWidth(100);
     auto leftLayout = new QHBoxLayout(leftWidget);
     leftLayout->setSpacing(10);
     leftLayout->setMargin(0);

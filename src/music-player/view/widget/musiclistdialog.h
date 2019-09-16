@@ -52,6 +52,7 @@ signals:
     void musiclistRemove(const MetaPtrList  &metalist);
     void musiclistDelete(const MetaPtrList  &metalist);
     void modeChanged(int);
+    void pause(const MetaPtr meta);
 
 private:
     QScopedPointer<MusicListDialogPrivate> d_ptr;
