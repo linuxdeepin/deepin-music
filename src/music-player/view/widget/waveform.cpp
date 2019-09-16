@@ -42,10 +42,11 @@ Waveform::Waveform(Qt::Orientation orientation, QWidget *widget, QWidget *parent
     QSizePolicy sp(QSizePolicy::Preferred, QSizePolicy::Preferred);
     setSizePolicy(sp);
     setFixedHeight(40);
-    maxSampleNum = 500;
+    maxSampleNum = 20;
     slider()->hide();
 
     waveformScale = new WaveformScale(mainWindow);
+    waveformScale->setAttribute(Qt::WA_TransparentForMouseEvents, true);
     waveformScale->hide();
 }
 
@@ -65,17 +66,18 @@ void Waveform::paintEvent(QPaintEvent *)
 
     int volume = 0;
     double curWidth = rect().width() * (value() * 1.0) / (maximum() - minimum());
-    QColor fillColor(Qt::darkGray);
+    //draw left
+    QColor fillColor(Qt::black);
+    if (themeType == 2)
+        fillColor = QColor("#FFFFFF");
+    painter.save();
+    if (devicePixelRatio > 1.0) {
+        painter.setClipRect(QRect(rect().x(), rect().y(), curWidth - 1, rect().height()));
+    } else {
+        painter.setClipRect(QRect(rect().x(), rect().y(), curWidth, rect().height()));
+    }
     for (int i = 0; i < sampleList.size(); i++) {
         volume = sampleList[i] * rect().height();
-
-        if (curWidth > i * WAVE_DURATION) {
-            fillColor = Qt::black;
-            if (themeType == 2)
-                fillColor = QColor("#FFFFFF");
-        } else {
-            fillColor = Qt::darkGray;
-        }
         if (volume == 0) {
             QPainterPath path;
             path.addRect(QRectF(rect().x() + i * WAVE_DURATION, rect().y() + (rect().height() - 1), WAVE_DURATION, 1));
@@ -85,16 +87,46 @@ void Waveform::paintEvent(QPaintEvent *)
             painter.fillRect(sampleRect, fillColor);
         }
     }
+    if (sampleList.size() < curWidth / WAVE_DURATION) {
+        QPainterPath path;
+        path.addRect(QRectF(rect().x() + sampleList.size() * WAVE_DURATION,
+                            rect().y() + (rect().height() - 1),
+                            curWidth - (sampleList.size() * WAVE_DURATION),
+                            1));
+        painter.fillPath(path, fillColor);
+    }
+    painter.restore();
 
+    //draw right
+    fillColor = QColor(Qt::darkGray);
+    painter.save();
+    if (devicePixelRatio > 1.0) {
+        painter.setClipRect(QRect(rect().x() + curWidth - 1, rect().y(), rect().width() - (curWidth - 1), rect().height()));
+    } else {
+        painter.setClipRect(QRect(rect().x() + curWidth, rect().y(), rect().width() - curWidth, rect().height()));
+    }
+    for (int i = 0; i < sampleList.size(); i++) {
+        volume = sampleList[i] * rect().height();
+        if (volume == 0) {
+            QPainterPath path;
+            path.addRect(QRectF(rect().x() + i * WAVE_DURATION, rect().y() + (rect().height() - 1), WAVE_DURATION, 1));
+            painter.fillPath(path, fillColor);
+        } else {
+            QRect sampleRect(rect().x() + i * WAVE_DURATION, rect().y() + (rect().height() - 1), WAVE_WIDTH, -qAbs(volume));
+            painter.fillRect(sampleRect, fillColor);
+        }
+    }
     if (sampleList.size() < rect().width() / WAVE_DURATION) {
         fillColor = Qt::darkGray;
         QPainterPath path;
         path.addRect(QRectF(rect().x() + sampleList.size() * WAVE_DURATION,
                             rect().y() + (rect().height() - 1),
-                            rect().width() - (rect().x() + sampleList.size() * WAVE_DURATION),
+                            rect().width() - (sampleList.size() * WAVE_DURATION),
                             1));
         painter.fillPath(path, fillColor);
     }
+    painter.restore();
+
     painter.restore();
 }
 
@@ -106,15 +138,17 @@ void Waveform::clearWave()
 void Waveform::onAudioBufferProbed(const QAudioBuffer &buffer)
 {
     for (auto value : getBufferLevels(buffer)) {
-        sampleList.push_front(value);
+        reciveSampleList.push_front(value);
     }
     if (width() > maxSampleNum)
         maxSampleNum = width();
-    for (int i = sampleList.size(); i >= maxSampleNum; i--) {
-        sampleList.removeLast();
+    if (reciveSampleList.size() == maxSampleNum) {
+        sampleList = reciveSampleList;
+        reciveSampleList.clear();
     }
-    update();
-    updateScaleSize();
+
+//    updateScaleSize();
+//    update();
 }
 
 // returns the audio level for each channel
@@ -280,6 +314,7 @@ void Waveform::onProgressChanged(qint64 value, qint64 duration)
     setValue(progress);
     blockSignals(false);
     update();
+    updateScaleSize();
 }
 
 void Waveform::updateScaleSize()
@@ -295,7 +330,7 @@ void Waveform::updateScaleSize()
 
     waveformScale->move(wavePos.x(), wavePos.y());
     waveformScale->setValue(curValue);
-    waveformScale->setAttribute(Qt::WA_TransparentForMouseEvents, true);
+    waveformScale->update();
 }
 
 void Waveform::setThemeType(int type)

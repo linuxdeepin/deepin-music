@@ -134,7 +134,7 @@ int main(int argc, char *argv[])
     MusicApp *music = new MusicApp(&mainframe);
     music->initUI();
 
-    Player::instance()->init();
+    //Player::instance()->init();
 
     music->initConnection();
 

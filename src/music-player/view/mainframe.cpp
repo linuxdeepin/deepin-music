@@ -266,7 +266,7 @@ void MainFramePrivate::postInitUI()
     QString acknowledgementLink = "https://www.deepin.org/acknowledgments/deepin-music#thanks";
     qApp->setProductName(QApplication::tr("Deepin Music"));
     qApp->setApplicationAcknowledgementPage(acknowledgementLink);
-    qApp->setProductIcon(QIcon(":/common/image/app_icon.svg"));
+    qApp->setProductIcon(QIcon::fromTheme("deepin-music"));
     qApp->setApplicationDescription(descriptionText);
 
     loadWidget->hide();
@@ -299,6 +299,7 @@ void MainFramePrivate::slideToLyricView()
 
     footer->setPlaylistButtonChecked(false);
     auto current = currentWidget ? currentWidget : playListWidget;
+    lyricWidget->setFixedSize(current->size());
     WidgetHelper::slideBottom2TopWidget(
         current,  lyricWidget, AnimationDelay);
 
@@ -468,7 +469,7 @@ void MainFramePrivate::updateSize(QSize newSize)
     importWidget->setFixedSize(newSize);
 
     if (lyricWidget) {
-        lyricWidget->resize(newSize);
+        lyricWidget->setFixedSize(newSize);
         musicListWidget->setFixedSize(newSize);
         playListWidget->move(0, newSize.height() - 384);
         playListWidget->setFixedSize(QSize(newSize.width(), 384));

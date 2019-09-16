@@ -47,7 +47,7 @@ MusicListView::MusicListView(QWidget *parent) : DListView(parent)
 
     setIconSize( QSize(20, 20) );
     setGridSize( QSize(40, 40) );
-    setSpacing(10);
+    setItemSize(QSize(40, 40));
 
     setFrameShape(QFrame::NoFrame);
     setAutoFillBackground(true);

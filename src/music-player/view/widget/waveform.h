@@ -72,6 +72,7 @@ protected:
 private:
     QWidget      *mainWindow;
     QList<float> sampleList;
+    QList<float> reciveSampleList;
     int          maxSampleNum;
     qint64       curValue = 0;
     qint64       allDuration = 1;

@@ -265,6 +265,7 @@ void MusicApp::initConnection()
     connect(presenterWork, &QThread::started, d->presenter, &Presenter::prepareData);
     connect(d->presenter, &Presenter::dataLoaded, this, [ = ]() {
         d->onDataPrepared();
+        Player::instance()->init();
     });
 
     presenterWork->start();

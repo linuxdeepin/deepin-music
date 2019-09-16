@@ -610,7 +610,19 @@ void Footer::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
     d->btCover->setIcon(QPixmap::fromImage(cover));
     d->btCover->update();
 
-    setSourceImage(cover);
+    //cut image
+    double windowScale = (width() * 1.0) / height();
+    int imageWidth = cover.height() * windowScale;
+    QImage coverImage;
+    if (imageWidth > cover.width()) {
+        int imageheight = cover.width() / windowScale;
+        coverImage = cover.copy(0, (cover.height() - imageheight) / 2, cover.width(), imageheight);
+    } else {
+        int imageheight = cover.height();
+        coverImage = cover.copy((cover.width() - imageWidth) / 2, 0, imageWidth, imageheight);
+    }
+
+    setSourceImage(coverImage);
 
     this->enableControl(true);
     d->title->show();
@@ -821,4 +833,24 @@ void Footer::resizeEvent(QResizeEvent *event)
 
     //d->ctlWidget->move(center);
     //d->ctlWidget->raise();
+
+    QImage cover(d->defaultCover);
+    if (d->activingMeta != nullptr) {
+        auto coverData = MetaSearchService::coverData(d->activingMeta);
+        if (coverData.length() > 0) {
+            cover = QImage::fromData(coverData);
+        }
+    }
+    //cut image
+    double windowScale = (width() * 1.0) / height();
+    int imageWidth = cover.height() * windowScale;
+    QImage coverImage;
+    if (imageWidth > cover.width()) {
+        int imageheight = cover.width() / windowScale;
+        coverImage = cover.copy(0, (cover.height() - imageheight) / 2, cover.width(), imageheight);
+    } else {
+        int imageheight = cover.height();
+        coverImage = cover.copy((cover.width() - imageWidth) / 2, 0, imageWidth, imageheight);
+    }
+    setSourceImage(coverImage);
 }

@@ -158,7 +158,6 @@ void PlayerPrivate::initConnection()
             Q_EMIT q->audioBufferProbed(buffer);
         } );
     }
-    initMiniTypes();
 
     q->connect(qplayer, &QMediaPlayer::positionChanged,
     q, [ = ](qint64 position) {
@@ -300,7 +299,8 @@ void PlayerPrivate::initConnection()
 
     q->connect(&fileSystemWatcher, &QFileSystemWatcher::fileChanged,
     q, [ = ](const QString & path) {
-        Q_EMIT q->mediaError(activePlaylist, activeMeta, Player::ResourceError);
+        if (!QFile::exists(path))
+            Q_EMIT q->mediaError(activePlaylist, activeMeta, Player::ResourceError);
     });
 }
 
@@ -352,6 +352,7 @@ void PlayerPrivate::selectPrev(const MetaPtr info, Player::PlaybackMode mode)
 
 Player::Player(QObject *parent) : QObject(parent), d_ptr(new PlayerPrivate(this))
 {
+    initMiniTypes();
 }
 
 void Player::init()

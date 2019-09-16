@@ -23,7 +23,7 @@
 
 #include <QHBoxLayout>
 
-#include <DFrame>
+#include <DWidget>
 
 #include <searchmeta.h>
 #include "core/playlist.h"
@@ -31,11 +31,10 @@
 DWIDGET_USE_NAMESPACE
 
 class MUsicLyricWidgetPrivate;
-class MUsicLyricWidget : public DFrame
+class MUsicLyricWidget : public DWidget
 {
     Q_OBJECT
     Q_PROPERTY(QString defaultCover READ defaultCover WRITE setDefaultCover)
-    Q_PROPERTY(QColor backgroundColor READ backgroundColor WRITE setBackgroundColor)
 
 public:
     explicit MUsicLyricWidget(QWidget *parent = Q_NULLPTR);
@@ -43,7 +42,6 @@ public:
 
     void updateUI();
     QString defaultCover() const;
-    QColor backgroundColor() const;
     void checkHiddenSearch(QPoint mousePos);
 
 signals:
@@ -67,7 +65,6 @@ public slots:
                                  const QList<DMusic::SearchMeta> &metalist);
 
     void setDefaultCover(QString defaultCover);
-    void setBackgroundColor(QColor backgroundColor);
     void onUpdateMetaCodec(const MetaPtr meta);
 
     void onsearchBt();

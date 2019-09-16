@@ -67,7 +67,6 @@ public:
     MusicImageButton         *serachbt = nullptr;
 
     QString             defaultCover = ":/common/image/cover_max.svg";
-    QColor              backgroundColor;
 
     bool               serachflag = false;
 
@@ -76,9 +75,14 @@ public:
 };
 
 MUsicLyricWidget::MUsicLyricWidget(QWidget *parent)
-    : DFrame(parent), d_ptr(new MUsicLyricWidgetPrivate(this))
+    : DWidget(parent), d_ptr(new MUsicLyricWidgetPrivate(this))
 {
     Q_D(MUsicLyricWidget);
+
+    setAutoFillBackground(true);
+    auto palette = this->palette();
+    palette.setColor(DPalette::Background, QColor("#F8F8F8"));
+    setPalette(palette);
 
     auto layout = new QHBoxLayout(this);
     layout->setContentsMargins(20, 20, 20, 20);
@@ -149,13 +153,6 @@ void MUsicLyricWidget::checkHiddenSearch(QPoint mousePos)
 
 }
 
-QColor MUsicLyricWidget::backgroundColor() const
-{
-    Q_D(const MUsicLyricWidget);
-    return d->backgroundColor;
-}
-
-
 void MUsicLyricWidget::resizeEvent(QResizeEvent *event)
 {
     Q_D(MUsicLyricWidget);
@@ -208,10 +205,6 @@ void MUsicLyricWidget::onMusicStop(PlaylistPtr playlist, const MetaPtr meta)
 void MUsicLyricWidget::onProgressChanged(qint64 value, qint64 /*length*/)
 {
     Q_D(MUsicLyricWidget);
-
-    DPalette p = this->palette();
-    p.setColor(DPalette::Background, d->backgroundColor);
-    setPalette(p);
 
     d->lyricview->postionChanged(value);
 }
@@ -288,13 +281,16 @@ void MUsicLyricWidget::slotonsearchresult(QString path)
 void MUsicLyricWidget::slotTheme(int type)
 {
     Q_D(MUsicLyricWidget);
+    if (type == 1) {
+        auto palette = this->palette();
+        palette.setColor(DPalette::Background, QColor("#F8F8F8"));
+        setPalette(palette);
+    } else {
+        auto palette = this->palette();
+        palette.setColor(DPalette::Background, QColor("#252525"));
+        setPalette(palette);
+    }
     d->searchLyricsWidget->setThemeType(type);
-}
-
-void MUsicLyricWidget::setBackgroundColor(QColor backgroundColor)
-{
-    Q_D(MUsicLyricWidget);
-    d->backgroundColor = backgroundColor;
 }
 
 void MUsicLyricWidget::onContextSearchFinished(const QString &context, const QList<DMusic::SearchMeta> &metalist)
