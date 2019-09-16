@@ -202,6 +202,8 @@ void MainFramePrivate::initUI(bool showLoading)
     titlebarwidget->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
 
     titlebar = q->titlebar();
+    titlebar->setFixedHeight(50);
+    titlebar->setTitle(MainFrame::tr("Deepin Music"));
     titlebar->setIcon(QIcon(":/mpimage/deepin_music_player.svg"));    //titlebar->setCustomWidget(titlebarwidget, Qt::AlignLeft, false);
     titlebar->addWidget(titlebarwidget, Qt::AlignLeft);
 //    titlebar->setBackgroundTransparent(true);
@@ -1015,6 +1017,7 @@ void MainFrame::onSelectImportDirectory()
     fileDlg.setDirectory(lastImportPath);
 
     fileDlg.setViewMode(DFileDialog::Detail);
+    fileDlg.setFileMode(DFileDialog::Directory);
     if (DFileDialog::Accepted == fileDlg.exec()) {
         d->importWidget->showWaitHint();
         MusicSettings::setOption("base.play.last_import_path",  fileDlg.directory().path());

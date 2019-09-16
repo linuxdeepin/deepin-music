@@ -302,6 +302,7 @@ void PlayListWidget::onMusicListRemoved(PlaylistPtr playlist, const MetaPtrList 
 
     d->playListView->onMusicListRemoved(metalist);
     d->showEmptyHits(d->playListView->model()->rowCount() == 0);
+    updateInfo(playlist);
 }
 
 void PlayListWidget::onMusicError(PlaylistPtr playlist, const MetaPtr meta, int error)
@@ -321,6 +322,7 @@ void PlayListWidget::onMusicListAdded(PlaylistPtr playlist, const MetaPtrList me
 
     d->playListView->onMusicListAdded(metalist);
     d->showEmptyHits(metalist.length() == 0);
+    updateInfo(playlist);
 }
 
 void PlayListWidget::onLocate(PlaylistPtr playlist, const MetaPtr meta)

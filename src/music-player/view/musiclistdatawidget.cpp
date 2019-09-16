@@ -364,15 +364,21 @@ MusicListDataWidget::MusicListDataWidget(QWidget *parent) :
     setObjectName("MusicListDataWidget");
     setAcceptDrops(true);
 
+    setAutoFillBackground(true);
+    auto palette = this->palette();
+    QColor BackgroundColor("#FFFFFF");
+    palette.setColor(DPalette::Background, BackgroundColor);
+    setPalette(palette);
+
     auto layout = new QVBoxLayout(this);
     layout->setContentsMargins(0, 0, 8, 0);
     layout->setSpacing(0);
 
     d->actionBar = new DFrame;
     d->actionBar->setAutoFillBackground(true);
-    auto palette = d->actionBar->palette();
-    palette.setColor(DPalette::Background, Qt::white);
-    d->actionBar->setPalette(palette);
+    auto actionBarPalette = d->actionBar->palette();
+    actionBarPalette.setColor(DPalette::Background, Qt::white);
+    d->actionBar->setPalette(actionBarPalette);
     d->actionBar->setFixedHeight(80);
     d->actionBar->setObjectName("MusicListDataActionBar");
 

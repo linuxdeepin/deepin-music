@@ -48,6 +48,8 @@ public:
     void setPropertyPic(QString propertyName, const QVariant &value, const QString &normalPic, const QString &hoverPic,
                         const QString &pressPic);
 
+    void setTransparent(bool flag);
+
 protected:
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
     void enterEvent(QEvent *event) Q_DECL_OVERRIDE;
@@ -56,7 +58,8 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
 
 private:
-    char                                              status = 0;
-    MusicPicPathInfo                                  defaultPicPath;
+    char                                               status                  = 0;
+    MusicPicPathInfo                                   defaultPicPath;
+    bool                                               transparent             = true;
     QPair<QString, QMap<QVariant, MusicPicPathInfo> >  propertyPicPaths;
 };

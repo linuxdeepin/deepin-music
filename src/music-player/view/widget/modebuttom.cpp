@@ -24,6 +24,11 @@
 #include <QStyle>
 #include <QPainter>
 
+#include <DHiDPIHelper>
+#include <DPalette>
+
+DGUI_USE_NAMESPACE
+
 ModeButton::ModeButton(QWidget *parent) : DPushButton(parent)
 {
     m_mode = 0;
@@ -35,6 +40,12 @@ ModeButton::ModeButton(QWidget *parent) : DPushButton(parent)
 
         this->update();
     });
+
+    auto pl = this->palette();
+    QColor sbcolor("#000000");
+    sbcolor.setAlphaF(0.05);
+    pl.setColor(DPalette::Shadow, sbcolor);
+    setPalette(pl);
 }
 
 void ModeButton::setModeIcons(const QStringList &modeIcons)
@@ -47,6 +58,11 @@ void ModeButton::setModeIcons(const QStringList &modeIcons)
 int ModeButton::mode() const
 {
     return m_mode;
+}
+
+void ModeButton::setTransparent(bool flag)
+{
+    transparent = flag;
 }
 
 void ModeButton::setMode(int mode)
@@ -63,15 +79,22 @@ void ModeButton::setMode(int mode)
 
 void ModeButton::paintEvent(QPaintEvent *event)
 {
+    if (!transparent) {
+        DPushButton::paintEvent(event);
+    }
+
     QString curPicPath = m_modeIcons[m_mode];
-    QPixmap pixmap(curPicPath);
+    QPixmap pixmap = DHiDPIHelper::loadNxPixmap(curPicPath);
 
     QPainter painter(this);
     painter.save();
     painter.setRenderHint(QPainter::Antialiasing);
     painter.setRenderHint(QPainter::HighQualityAntialiasing);
 
-    painter.drawPixmap(rect(), pixmap, pixmap.rect());
+    int pixmapWidth = pixmap.rect().width();
+    int pixmapHeight = pixmap.rect().height();
+    QRect pixmapRect((rect().width() - pixmapWidth) / 2, (rect().height() - pixmapHeight) / 2, pixmapWidth, pixmapHeight);
+    painter.drawPixmap(pixmapRect, pixmap);
 
     painter.restore();
 }

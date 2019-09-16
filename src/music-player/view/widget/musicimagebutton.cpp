@@ -24,6 +24,11 @@
 #include <QDebug>
 #include <QPainter>
 
+#include <DHiDPIHelper>
+#include <DPalette>
+
+DGUI_USE_NAMESPACE
+
 MusicImageButton::MusicImageButton(QWidget *parent)
     : DPushButton(parent)
 {
@@ -37,6 +42,12 @@ MusicImageButton::MusicImageButton(const QString &normalPic, const QString &hove
     defaultPicPath.hoverPicPath = hoverPic;
     defaultPicPath.pressPicPath = pressPic;
     defaultPicPath.checkedPicPath = checkedPic;
+
+    auto pl = this->palette();
+    QColor sbcolor("#000000");
+    sbcolor.setAlphaF(0.05);
+    pl.setColor(DPalette::Shadow, sbcolor);
+    setPalette(pl);
 }
 
 void MusicImageButton::setPropertyPic(QString propertyName, const QVariant &value,
@@ -57,11 +68,15 @@ void MusicImageButton::setPropertyPic(QString propertyName, const QVariant &valu
     }
 }
 
+void MusicImageButton::setTransparent(bool flag)
+{
+    transparent = flag;
+}
+
 void MusicImageButton::paintEvent(QPaintEvent *event)
 {
-    if (defaultPicPath.normalPicPath.isEmpty()) {
+    if (!transparent) {
         DPushButton::paintEvent(event);
-        return;
     }
 
     QString curPicPath = defaultPicPath.normalPicPath;
@@ -95,9 +110,9 @@ void MusicImageButton::paintEvent(QPaintEvent *event)
             curPicPath = curPropertyPicPathStr;
         }
     }
-    QPixmap pixmap(curPicPath);
+    QPixmap pixmap = DHiDPIHelper::loadNxPixmap(curPicPath);
     if (pixmap.isNull()) {
-        pixmap = QPixmap(defaultPicPath.normalPicPath);
+        pixmap = DHiDPIHelper::loadNxPixmap(defaultPicPath.normalPicPath);
     }
 
     QPainter painter(this);
@@ -105,7 +120,10 @@ void MusicImageButton::paintEvent(QPaintEvent *event)
     painter.setRenderHint(QPainter::Antialiasing);
     painter.setRenderHint(QPainter::HighQualityAntialiasing);
 
-    painter.drawPixmap(rect(), pixmap);
+    int pixmapWidth = pixmap.rect().width();
+    int pixmapHeight = pixmap.rect().height();
+    QRect pixmapRect((rect().width() - pixmapWidth) / 2, (rect().height() - pixmapHeight) / 2, pixmapWidth, pixmapHeight);
+    painter.drawPixmap(pixmapRect, pixmap);
 
     painter.restore();
 }

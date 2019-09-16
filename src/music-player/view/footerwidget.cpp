@@ -32,6 +32,9 @@
 #include <DHiDPIHelper>
 #include <DPushButton>
 #include <DProgressBar>
+#include <DFloatingWidget>
+#include <DPalette>
+#include <DButtonBox>
 
 #include <metadetector.h>
 
@@ -56,6 +59,8 @@ static const QString sPlayStatusValuePlaying    = "playing";
 static const QString sPlayStatusValuePause      = "pause";
 static const QString sPlayStatusValueStop       = "stop";
 
+DGUI_USE_NAMESPACE
+
 class FooterPrivate
 {
 public:
@@ -73,16 +78,16 @@ public:
     Label           *artist     = nullptr;
 
     MusicPixmapButton *btCover    = nullptr;
-    MusicImageButton  *btPlay     = nullptr;
-    MusicImageButton  *btPrev     = nullptr;
-    MusicImageButton  *btNext     = nullptr;
+    DButtonBoxButton  *btPlay     = nullptr;
+    DButtonBoxButton  *btPrev     = nullptr;
+    DButtonBoxButton  *btNext     = nullptr;
     MusicImageButton  *btFavorite = nullptr;
     MusicImageButton  *btLyric    = nullptr;
     MusicImageButton  *btPlayList = nullptr;
     ModeButton        *btPlayMode = nullptr;
     MusicImageButton  *btSound    = nullptr;
     SoundVolume       *volSlider  = nullptr;
-    DFrame            *ctlWidget  = nullptr;
+    DButtonBox        *ctlWidget  = nullptr;
     Waveform          *waveform   = nullptr;
 
     HintFilter          *hintFilter         = nullptr;
@@ -228,27 +233,22 @@ Footer::Footer(QWidget *parent) :
     d->artist->setMaximumWidth(240);
     d->artist->setText(tr("Unknown artist"));
 
-    d->btPlay = new MusicImageButton(":/mpimage/normal/play_normal.svg",
-                                     ":/mpimage/hover/play_hover.svg",
-                                     ":/mpimage/press/play_press.svg");
-    d->btPlay->setPropertyPic(sPropertyPlayStatus, sPlayStatusValuePlaying,
-                              ":/mpimage/normal/suspend_normal.svg",
-                              ":/mpimage/hover/suspend_hover.svg",
-                              ":/mpimage/press/suspend_press.svg");
-    d->btPlay->setObjectName("FooterActionPlay");
-    d->btPlay->setFixedSize(36, 36);
+    d->btPlay = new DButtonBoxButton("");
+    d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/normal/play_normal.svg"));
+    d->btPlay->setIconSize(QSize(36, 36));
+    d->btPlay->setFixedSize(40, 50);
 
-    d->btPrev = new MusicImageButton(":/mpimage/normal/last_normal.svg",
-                                     ":/mpimage/hover/last_hover.svg",
-                                     ":/mpimage/press/last_press.svg");
+    d->btPrev = new DButtonBoxButton("");
+    d->btPrev->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/normal/last_normal.svg"));
+    d->btPrev->setIconSize(QSize(36, 36));
     d->btPrev->setObjectName("FooterActionPrev");
-    d->btPrev->setFixedSize(36, 36);
+    d->btPrev->setFixedSize(40, 50);
 
-    d->btNext = new MusicImageButton(":/mpimage/normal/next_normal.svg",
-                                     ":/mpimage/hover/next_hover.svg",
-                                     ":/mpimage/press/next_press.svg");
+    d->btNext = new DButtonBoxButton("");
+    d->btNext->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/normal/next_normal.svg"));
+    d->btNext->setIconSize(QSize(36, 36));
     d->btNext->setObjectName("FooterActionNext");
-    d->btNext->setFixedSize(36, 36);
+    d->btNext->setFixedSize(40, 50);
 
     d->btFavorite = new MusicImageButton(":/mpimage/normal/collection_normal.svg",
                                          ":/mpimage/hover/collection_hover.svg",
@@ -258,13 +258,16 @@ Footer::Footer(QWidget *parent) :
                                   ":/mpimage/hover/my_collection_hover.svg",
                                   ":/mpimage/press/my_collection_press.svg");
     d->btFavorite->setObjectName("FooterActionFavorite");
-    d->btFavorite->setFixedSize(30, 30);
+    d->btFavorite->setFixedSize(50, 50);
+    d->btFavorite->setTransparent(false);
 
     d->btLyric = new MusicImageButton(":/mpimage/normal/lyric_normal.svg",
                                       ":/mpimage/hover/lyric_hover.svg",
                                       ":/mpimage/press/lyric_press.svg");
     d->btLyric->setObjectName("FooterActionLyric");
-    d->btLyric->setFixedSize(36, 36);
+    d->btLyric->setFixedSize(50, 50);
+    d->btLyric->setTransparent(false);
+    d->btLyric->setCheckable(true);
 
     QStringList modes;
     modes << ":/mpimage/normal/sequential_loop_normal.svg"
@@ -272,8 +275,9 @@ Footer::Footer(QWidget *parent) :
           << ":/mpimage/normal/cross_cycling_normal.svg";
     d->btPlayMode = new ModeButton;
     d->btPlayMode->setObjectName("FooterActionPlayMode");
-    d->btPlayMode->setFixedSize(36, 36);
+    d->btPlayMode->setFixedSize(50, 50);
     d->btPlayMode->setModeIcons(modes);
+    d->btPlayMode->setTransparent(false);
 
     d->btSound = new MusicImageButton(":/mpimage/normal/volume_normal.svg",
                                       ":/mpimage/hover/volume_hover.svg",
@@ -291,14 +295,16 @@ Footer::Footer(QWidget *parent) :
                                ":/mpimage/hover/mute_hover.svg",
                                ":/mpimage/press/mute_press.svg");
     d->btSound->setObjectName("FooterActionSound");
-    d->btSound->setFixedSize(36, 36);
+    d->btSound->setFixedSize(50, 50);
+    d->btSound->setTransparent(false);
     d->btSound->setProperty("volume", "mid");
 
     d->btPlayList = new MusicImageButton(":/mpimage/normal/playlist_normal.svg",
                                          ":/mpimage/hover/playlist_hover.svg",
                                          ":/mpimage/press/playlist_press.svg");
     d->btPlayList->setObjectName("FooterActionPlayList");
-    d->btPlayList->setFixedSize(36, 36);
+    d->btPlayList->setFixedSize(50, 50);
+    d->btPlayList->setTransparent(false);
 //    d->btPlayList->hide();
 
     d->hoverShadowFilter = new HoverShadowFilter;
@@ -333,15 +339,13 @@ Footer::Footer(QWidget *parent) :
     metaLayout->addSpacing(10);
     metaLayout->addLayout(musicMetaLayout, 0);
 
-    d->ctlWidget = new DFrame(this);
-//    d->ctlWidget->setStyleSheet("border: 1px solid red;");
-    auto ctlLayout = new QHBoxLayout(d->ctlWidget);
-    ctlLayout->setMargin(0);
-    ctlLayout->setSpacing(30);
-    ctlLayout->addWidget(d->btPrev, 0, Qt::AlignCenter);
-    ctlLayout->addWidget(d->btPlay, 0, Qt::AlignCenter);
-    ctlLayout->addWidget(d->btNext, 0, Qt::AlignCenter);
-    d->ctlWidget->adjustSize();
+    d->ctlWidget = new DButtonBox(this);
+    d->ctlWidget->setFixedSize(120, 50);
+    QList<DButtonBoxButton *> allCtlButtons;
+    allCtlButtons.append(d->btPrev);
+    allCtlButtons.append(d->btPlay);
+    allCtlButtons.append(d->btNext);
+    d->ctlWidget->setButtonList(allCtlButtons, false);
 
     d->waveform = new Waveform(Qt::Horizontal, (QWidget *)parent, this);
     d->waveform->setMinimum(0);
@@ -385,6 +389,7 @@ Footer::Footer(QWidget *parent) :
     d->btLyric->hide();
 
     d->btPrev->setFocusPolicy(Qt::NoFocus);
+    d->btPlay->setFocusPolicy(Qt::NoFocus);
     d->btNext->setFocusPolicy(Qt::NoFocus);
     d->btFavorite->setFocusPolicy(Qt::NoFocus);
     d->btLyric->setFocusPolicy(Qt::NoFocus);
@@ -403,8 +408,7 @@ Footer::Footer(QWidget *parent) :
         }
     });
 
-    d->updateQssProperty(d->btPlay, sPropertyPlayStatus, sPlayStatusValueStop);
-    d->updateQssProperty(this, sPropertyPlayStatus, sPlayStatusValueStop);
+    d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/normal/play_normal.svg"));
     d->btCover->setIcon(Dtk::Widget::DHiDPIHelper::loadNxPixmap(d->defaultCover));
 }
 
@@ -574,6 +578,9 @@ void Footer::onMusicPlayed(PlaylistPtr playlist, const MetaPtr meta)
     if (!meta->invalid) {
         d->updateQssProperty(d->btPlay, sPropertyPlayStatus, sPlayStatusValuePlaying);
         d->updateQssProperty(this, sPropertyPlayStatus, sPlayStatusValuePlaying);
+        d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/normal/suspend_normal.svg"));
+    } else {
+        d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/normal/play_normal.svg"));
     }
 }
 
@@ -593,6 +600,7 @@ void Footer::onMusicError(PlaylistPtr playlist, const MetaPtr meta, int error)
 
     auto status = sPlayStatusValuePause;
     d->updateQssProperty(d->btPlay, sPropertyPlayStatus, status);
+    d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/normal/play_normal.svg"));
 }
 
 void Footer::onMusicPause(PlaylistPtr playlist, const MetaPtr meta)
@@ -605,6 +613,7 @@ void Footer::onMusicPause(PlaylistPtr playlist, const MetaPtr meta)
     }
     auto status = sPlayStatusValuePause;
     d->updateQssProperty(d->btPlay, sPropertyPlayStatus, status);
+    d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/normal/play_normal.svg"));
 }
 
 void Footer::onMusicStoped(PlaylistPtr playlist, const MetaPtr meta)
@@ -624,6 +633,7 @@ void Footer::onMusicStoped(PlaylistPtr playlist, const MetaPtr meta)
     d->btCover->update();
     d->updateQssProperty(d->btPlay, sPropertyPlayStatus, sPlayStatusValueStop);
     d->updateQssProperty(this, sPropertyPlayStatus, sPlayStatusValueStop);
+    d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/normal/play_normal.svg"));
 }
 
 void Footer::onMediaLibraryClean()

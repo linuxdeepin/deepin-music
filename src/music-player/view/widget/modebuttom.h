@@ -36,6 +36,7 @@ public:
 
     void setModeIcons(const QStringList &modeIcons);
     int mode() const;
+    void setTransparent(bool flag);
 signals:
     void modeChanged(int mode);
 
@@ -47,6 +48,7 @@ protected:
 
 private:
     int         m_mode;
+    bool        transparent  = true;
     QStringList m_modeIcons;
 };
 
