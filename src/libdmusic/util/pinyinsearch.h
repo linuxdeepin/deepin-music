@@ -23,10 +23,8 @@
 
 #include <QStringList>
 
-namespace DMusic
-{
-namespace PinyinSearch
-{
+namespace DMusic {
+namespace PinyinSearch {
 QStringList simpleChineseSplit(QString &pinyin);
 }
 }

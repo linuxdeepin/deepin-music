@@ -243,3 +243,27 @@ void InfoDialog::updateInfo(const MetaPtr meta)
 
     d->title->setFocus();
 }
+
+void InfoDialog::setThemeType(int type)
+{
+    Q_D(InfoDialog);
+    if (type == 1) {
+        DPalette pl = d->infoGridFrame->palette();
+        QColor windowColor("#FFFFFF");
+        windowColor.setAlphaF(0.7);
+        pl.setColor(DPalette::Window, windowColor);
+        QColor sbcolor("#000000");
+        sbcolor.setAlphaF(0.05);
+        pl.setColor(DPalette::Shadow, sbcolor);
+        d->infoGridFrame->setPalette(pl);
+    } else {
+        DPalette pl = d->infoGridFrame->palette();
+        QColor windowColor("#252525");
+        windowColor.setAlphaF(0.7);
+        pl.setColor(DPalette::Window, windowColor);
+        QColor sbcolor("#000000");
+        sbcolor.setAlphaF(0.05);
+        pl.setColor(DPalette::Shadow, sbcolor);
+        d->infoGridFrame->setPalette(pl);
+    }
+}

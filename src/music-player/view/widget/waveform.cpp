@@ -71,6 +71,8 @@ void Waveform::paintEvent(QPaintEvent *)
 
         if (curWidth > i * WAVE_DURATION) {
             fillColor = Qt::black;
+            if (themeType == 2)
+                fillColor = QColor("#FFFFFF");
         } else {
             fillColor = Qt::darkGray;
         }
@@ -293,6 +295,11 @@ void Waveform::updateScaleSize()
     waveformScale->move(wavePos.x(), wavePos.y());
     waveformScale->setValue(curValue);
     waveformScale->setAttribute(Qt::WA_TransparentForMouseEvents, true);
+}
+
+void Waveform::setThemeType(int type)
+{
+    themeType = type;
 }
 
 void Waveform::enterEvent(QEvent *event)

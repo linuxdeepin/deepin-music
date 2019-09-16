@@ -203,9 +203,11 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
     painter->save();
 
     QFont font11 = option.font;
+    font11.setFamily("SourceHanSansSC-Normal");
     font11.setPixelSize(11);
-    QFont font12 = option.font;
-    font12.setPixelSize(12);
+    QFont font14 = option.font;
+    font14.setFamily("SourceHanSansSC-Normal");
+    font14.setPixelSize(14);
 
     painter->setRenderHint(QPainter::Antialiasing);
     painter->setRenderHint(QPainter::HighQualityAntialiasing);
@@ -230,6 +232,12 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
         return;
     }
 
+    QColor nameColor("#090909"), otherColor("#797979");
+    if (listview->getThemeType() == 2) {
+        nameColor = QColor("#FFFFFF");
+        otherColor = QColor("#C0C6D4");
+    }
+
     for (int col = 0; col < 3; ++col) {
         auto textColor = d->foreground(col, option);
         QColor brightTextColor(option.palette.highlight().color());
@@ -237,13 +245,14 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
         auto rect = colRect(col, option);
         auto activeMeta = listview->playing();
         if (activeMeta == meta) {
-            painter->setPen(brightTextColor);
-        } else {
-            painter->setPen(textColor);
+            nameColor = QColor("#2CA7F8");
+            otherColor = QColor("#2CA7F8");
+            font14.setFamily("SourceHanSansSC-Medium");
         }
         switch (col) {
         case Number: {
             // Fixme:
+            painter->setPen(otherColor);
             if (!meta.isNull() && meta->invalid) {
                 auto sz = QSizeF(15, 15);
                 auto icon = QIcon(":/mpimage/light/warning.svg").pixmap(sz.toSize());
@@ -278,14 +287,16 @@ void MusicInfoItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             break;
         }
         case Title: {
-            painter->setFont(font12);
-            QFont font(font12);
+            painter->setPen(nameColor);
+            painter->setFont(font14);
+            QFont font(font14);
             QFontMetrics fm(font);
             auto text = fm.elidedText(meta->title, Qt::ElideMiddle, rect.width());
             painter->drawText(rect, flag, text);
             break;
         }
         case Length:
+            painter->setPen(otherColor);
             painter->setFont(font11);
             painter->drawText(rect, flag, DMusic::lengthString(meta->length));
             break;

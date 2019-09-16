@@ -52,6 +52,7 @@ public:
 
     MusiclistInfomodel      *model        = nullptr;
     MusicInfoItemDelegate   *delegate     = nullptr;
+    int                     themeType     = 1;
 
     QString                  curName      = "";
 
@@ -151,6 +152,18 @@ MetaPtr MusicListInfoView::playing() const
 {
     Q_D(const MusicListInfoView);
     return d->playing;
+}
+
+void MusicListInfoView::setThemeType(int type)
+{
+    Q_D(MusicListInfoView);
+    d->themeType = type;
+}
+
+int MusicListInfoView::getThemeType() const
+{
+    Q_D(const MusicListInfoView);
+    return d->themeType;
 }
 
 void MusicListInfoView::onMusicListRemoved(const MetaPtrList metalist)

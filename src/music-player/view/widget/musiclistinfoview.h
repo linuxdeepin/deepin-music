@@ -42,6 +42,9 @@ public:
     void setPlaying(const MetaPtr meta);
     MetaPtr playing() const;
 
+    void setThemeType(int type);
+    int getThemeType() const;
+
 signals:
     void addToPlaylist(PlaylistPtr playlist, const MetaPtrList &metalist);
     void removeMusicList(const MetaPtrList  &metalist);

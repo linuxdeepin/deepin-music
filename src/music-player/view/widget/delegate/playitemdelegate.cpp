@@ -306,9 +306,11 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
     painter->save();
 
     QFont font11 = option.font;
+    font11.setFamily("SourceHanSansSC-Normal");
     font11.setPixelSize(11);
-    QFont font12 = option.font;
-    font12.setPixelSize(12);
+    QFont font14 = option.font;
+    font14.setFamily("SourceHanSansSC-Normal");
+    font14.setPixelSize(14);
 
     painter->setRenderHint(QPainter::Antialiasing);
     painter->setRenderHint(QPainter::HighQualityAntialiasing);
@@ -334,19 +336,24 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 //        qFatal(msg.toStdString().c_str());
     }
 
+    QColor nameColor("#090909"), otherColor("#797979");
+    if (listview->getThemeType() == 2) {
+        nameColor = QColor("#FFFFFF");
+        otherColor = QColor("#C0C6D4");
+    }
+
     for (int col = 0; col < ColumnButt; ++col) {
-        auto textColor = d->foreground(col, option);
-        QColor brightTextColor(option.palette.highlight().color());
         auto flag = alignmentFlag(col);
         auto rect = colRect(col, option);
         auto activeMeta = listview->activingMeta();
         if (activeMeta == meta) {
-            painter->setPen(brightTextColor);
-        } else {
-            painter->setPen(textColor);
+            nameColor = QColor("#2CA7F8");
+            otherColor = QColor("#2CA7F8");
+            font14.setFamily("SourceHanSansSC-Medium");
         }
         switch (col) {
         case Number: {
+            painter->setPen(otherColor);
             auto *listview = qobject_cast<PlayListView *>(const_cast<QWidget *>(option.widget));
             // Fixme:
             if (!meta.isNull() && meta->invalid) {
@@ -383,14 +390,16 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
             break;
         }
         case Title: {
-            painter->setFont(font12);
-            QFont font(font12);
+            painter->setPen(nameColor);
+            painter->setFont(font14);
+            QFont font(font14);
             QFontMetrics fm(font);
             auto text = fm.elidedText(meta->title, Qt::ElideMiddle, rect.width());
             painter->drawText(rect, flag, text);
             break;
         }
         case Artist: {
+            painter->setPen(otherColor);
             painter->setFont(font11);
             auto str = meta->artist.isEmpty() ?
                        PlayListView::tr("Unknown artist") :
@@ -402,6 +411,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
             break;
         }
         case Album: {
+            painter->setPen(otherColor);
             painter->setFont(font11);
             auto str = meta->album.isEmpty() ?
                        PlayListView::tr("Unknown album") :
@@ -413,6 +423,7 @@ void PlayItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
             break;
         }
         case Length:
+            painter->setPen(otherColor);
             painter->setFont(font11);
             painter->drawText(rect, flag, DMusic::lengthString(meta->length));
             break;

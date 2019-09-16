@@ -37,6 +37,7 @@
 #include <DPushButton>
 
 #include "../core/util/lyric.h"
+#include "../core/musicsettings.h"
 #include "../core/metasearchservice.h"
 
 #include "widget/cover.h"
@@ -114,6 +115,8 @@ MUsicLyricWidget::MUsicLyricWidget(QWidget *parent)
     layout->addLayout(m_leftLayout, 4);
     layout->addWidget(d->lyricview, 4);
     layout->addLayout(searchlayout, 1);
+
+    slotTheme(MusicSettings::value("base.play.theme").toInt());
 
     connect(d->serachbt, &DPushButton::clicked, this, &MUsicLyricWidget::onsearchBt);
     connect(d->searchLyricsWidget, &SearchLyricsWidget::lyricPath, this, &MUsicLyricWidget::slotonsearchresult);
@@ -276,6 +279,12 @@ void MUsicLyricWidget::slotonsearchresult(QString path)
 {
     Q_D(MUsicLyricWidget);
     d->lyricview->getFromFile(path);
+}
+
+void MUsicLyricWidget::slotTheme(int type)
+{
+    Q_D(MUsicLyricWidget);
+    d->searchLyricsWidget->setThemeType(type);
 }
 
 void MUsicLyricWidget::setBackgroundColor(QColor backgroundColor)

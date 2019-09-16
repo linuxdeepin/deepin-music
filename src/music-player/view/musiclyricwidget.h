@@ -72,6 +72,9 @@ public slots:
 
     void onsearchBt();
     void slotonsearchresult(QString path);
+
+    void slotTheme(int type);
+
 protected:
     virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
     virtual void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;

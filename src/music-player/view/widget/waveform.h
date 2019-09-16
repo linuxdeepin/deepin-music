@@ -52,6 +52,7 @@ public:
     void clearWave();
 
     void updateScaleSize();
+    void setThemeType(int type);
 
 Q_SIGNALS:
     void valueAccpet(int value);
@@ -74,6 +75,7 @@ private:
     int          maxSampleNum;
     qint64       curValue = 0;
     qint64       allDuration = 1;
+    int          themeType = 1;
     WaveformScale *waveformScale;
 };
 

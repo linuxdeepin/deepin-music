@@ -26,6 +26,8 @@
 
 #include <DUtil>
 
+#include "util/pinyinsearch.h"
+
 #include "../../core/mediadatabase.h"
 #include "../../core/music.h"
 #include "searchresult.h"
@@ -115,6 +117,11 @@ void SearchEdit::onFocusOut()
     });
 }
 
+inline bool isChinese(const QChar &c)
+{
+    return c.unicode() < 0x9FBF && c.unicode() > 0x4E00;
+}
+
 void SearchEdit::onTextChanged()
 {
     auto text = QString(this->text()).remove(" ").remove("\r").remove("\n");
@@ -136,12 +143,29 @@ void SearchEdit::onTextChanged()
                     curList.append(action->title);
             }
         }
-        curList = curList.filter(searchtext, Qt::CaseInsensitive);
-        if (curList.size() > 10)
-            curList = curList.mid(0, 10);
+        QStringList filterList;
+        if (text.length() == 1) {
+            if (isChinese(searchtext[0])) {
+                auto searchtextList = DMusic::PinyinSearch::simpleChineseSplit(searchtext);
+                if (searchtextList.size() == 1) {
+                    searchtext = searchtextList.first();
+                }
+            }
+            for (auto curText : curList) {
+                auto curTextList = DMusic::PinyinSearch::simpleChineseSplit(curText);
+                if (!curTextList.isEmpty() && curTextList.first().contains(searchtext, Qt::CaseInsensitive)) {
+                    filterList.append(curText);
+                }
+            }
+        } else {
+            filterList = curList.filter(searchtext, Qt::CaseInsensitive);
+        }
+
+        if (filterList.size() > 10)
+            filterList = filterList.mid(0, 10);
 
         m_result->setSearchString(searchtext);
-        m_result->setResultList(curList, QStringList());
+        m_result->setResultList(filterList, QStringList());
 
         m_result->autoResize();
         m_result->show();

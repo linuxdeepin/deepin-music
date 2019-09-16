@@ -42,6 +42,7 @@
 #include "../core/playlistmanager.h"
 #include "../core/player.h"
 #include "../core/metasearchservice.h"
+#include "../core/musicsettings.h"
 
 #include "widget/filter.h"
 #include "widget/modebuttom.h"
@@ -431,6 +432,8 @@ Footer::Footer(QWidget *parent) :
 
     d->btPlay->setIcon(DHiDPIHelper::loadNxPixmap(":/mpimage/light/normal/play_normal.svg"));
     d->btCover->setIcon(Dtk::Widget::DHiDPIHelper::loadNxPixmap(d->defaultCover));
+
+    slotTheme(MusicSettings::value("base.play.theme").toInt());
 }
 
 Footer::~Footer()
@@ -687,6 +690,23 @@ void Footer::onMediaLibraryClean()
     d->btFavorite->hide();
     d->btLyric->hide();
     enableControl(false);
+}
+
+void Footer::slotTheme(int type)
+{
+    Q_D(Footer);
+    if (type == 1) {
+        QColor maskColor("#F7F7F7");
+        maskColor.setAlphaF(0.6);
+        setMaskColor(maskColor);
+        setMaskAlpha(255);
+    } else {
+        QColor maskColor("#202020");
+        maskColor.setAlphaF(0.5);
+        setMaskColor(maskColor);
+        setMaskAlpha(255);
+    }
+    d->waveform->setThemeType(type);
 }
 
 void Footer::onProgressChanged(qint64 value, qint64 duration)

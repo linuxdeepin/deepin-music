@@ -60,7 +60,7 @@ TitlebarWidget::TitlebarWidget(QWidget *parent) :
     auto layout = new QHBoxLayout(this);
     layout->setContentsMargins(5, 5, 10, 5);
 
-    auto leftWidget = new DFrame;
+    auto leftWidget = new DWidget;
     leftWidget->setObjectName("TitleLeft");
     leftWidget->setFixedWidth(100);
     auto leftLayout = new QHBoxLayout(leftWidget);
@@ -80,7 +80,7 @@ TitlebarWidget::TitlebarWidget(QWidget *parent) :
     d->search->setPlaceHolder(tr("Search"));
     d->search->clear();
 
-    auto rightWidget = new DFrame;
+    auto rightWidget = new DWidget;
     rightWidget->setObjectName("TitleLeft");
     rightWidget->setFixedWidth(1);
 

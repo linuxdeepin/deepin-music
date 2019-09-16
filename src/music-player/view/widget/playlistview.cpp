@@ -34,6 +34,8 @@
 #include <DDesktopServices>
 #include <DScrollBar>
 
+#include "util/pinyinsearch.h"
+
 #include "../../core/metasearchservice.h"
 #include "../helper/widgethellper.h"
 
@@ -52,6 +54,8 @@ public:
 
     PlaylistModel      *model        = nullptr;
     PlayItemDelegate   *delegate     = nullptr;
+    int                 themeType    = 1;
+
     MetaPtrList         playMetaPtrList;
 
     PlayListView *q_ptr;
@@ -158,6 +162,18 @@ MetaPtrList PlayListView::playMetaPtrList() const
     return d->playMetaPtrList;
 }
 
+void PlayListView::setThemeType(int type)
+{
+    Q_D(PlayListView);
+    d->themeType = type;
+}
+
+int PlayListView::getThemeType() const
+{
+    Q_D(const PlayListView);
+    return d->themeType;
+}
+
 void PlayListView::onMusicListRemoved(const MetaPtrList metalist)
 {
     Q_D(PlayListView);
@@ -222,6 +238,11 @@ void PlayListView::onLocate(const MetaPtr meta)
     setCurrentIndex(index);
 }
 
+inline bool isChinese(const QChar &c)
+{
+    return c.unicode() < 0x9FBF && c.unicode() > 0x4E00;
+}
+
 void PlayListView::onMusiclistChanged(PlaylistPtr playlist)
 {
     Q_D(PlayListView);
@@ -233,11 +254,33 @@ void PlayListView::onMusiclistChanged(PlaylistPtr playlist)
 
     d->model->removeRows(0, d->model->rowCount());
     d->playMetaPtrList.clear();
+
+    QString searchStr = playlist->searchStr();
+    if (searchStr.size() == 1) {
+        if (isChinese(searchStr[0])) {
+            auto searchtextList = DMusic::PinyinSearch::simpleChineseSplit(searchStr);
+            if (searchtextList.size() == 1) {
+                searchStr = searchtextList.first();
+            }
+        }
+    }
     for (auto meta : playlist->allmusic()) {
-//        qDebug() << meta->hash << meta->title;
-        if (playlist->searchStr().isEmpty() || meta->title.contains(playlist->searchStr(), Qt::CaseInsensitive)) {
+        if (playlist->searchStr().isEmpty()) {
             d->addMedia(meta);
             d->playMetaPtrList.append(meta);
+        } else {
+            if (playlist->searchStr().size() == 1) {
+                auto curTextList = DMusic::PinyinSearch::simpleChineseSplit(meta->title);
+                if (!curTextList.isEmpty() && curTextList.first().contains(searchStr, Qt::CaseInsensitive)) {
+                    d->addMedia(meta);
+                    d->playMetaPtrList.append(meta);
+                }
+            } else {
+                if (meta->title.contains(searchStr, Qt::CaseInsensitive)) {
+                    d->addMedia(meta);
+                    d->playMetaPtrList.append(meta);
+                }
+            }
         }
     }
 

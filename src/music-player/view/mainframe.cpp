@@ -79,7 +79,7 @@ public:
     void initUI(bool showLoading);
     void postInitUI();
     void initMenu();
-
+    void setTheme(int type);
     void setPlayListVisible(bool visible);
     void toggleLyricView();
     void togglePlaylist();
@@ -123,12 +123,29 @@ public:
     MainFrame *q_ptr;
     Q_DECLARE_PUBLIC(MainFrame)
 };
+void MainFramePrivate::setTheme(int type)
+{
+    Q_Q(MainFrame);
+    if (type == 0) {
+        type = DGuiApplicationHelper::instance()->themeType();
+    }
+    if (type == 1) {
 
+
+    } else {
+
+    }
+    musicListWidget->slotTheme(type);
+    footer->slotTheme(type);
+    lyricWidget->slotTheme(type);
+    infoDialog->setThemeType(type);
+}
 void MainFramePrivate::initMenu()
 {
     Q_Q(MainFrame);
 
     newSonglistAction = new QAction(MainFrame::tr("New playlist"), q);
+    newSonglistAction->setEnabled(false);
     q->connect(newSonglistAction, &QAction::triggered, q, [ = ](bool) {
         Q_EMIT q->addPlaylist(true);
     });
@@ -160,7 +177,7 @@ void MainFramePrivate::initMenu()
 
     colorModeAction = new QAction(MainFrame::tr("Dark theme"), q);
     colorModeAction->setCheckable(true);
-    colorModeAction->setChecked(MusicSettings::value("base.play.theme").toString() == "dark");
+    colorModeAction->setChecked(MusicSettings::value("base.play.theme").toInt() == 2);
 
     q->connect(colorModeAction, &QAction::triggered, q, [ = ](bool) {
         /*if (DThemeManager::instance()->theme() == "light") {
@@ -229,6 +246,7 @@ void MainFramePrivate::initUI(bool showLoading)
     footer->hide();
 
     infoDialog = new InfoDialog(q);
+    infoDialog->setThemeType(MusicSettings::value("base.play.theme").toInt());
     infoDialog->hide();
 }
 
@@ -541,6 +559,7 @@ MainFrame::MainFrame(QWidget *parent) :
     d->searchResult = new SearchResult(this);
     d->searchResult->hide();
     d->titlebarwidget->setResultWidget(d->searchResult);
+    d->titlebarwidget->hide();
 
     d->titlebar = titlebar();
     d->titlebar->setFixedHeight(50);
@@ -1020,6 +1039,7 @@ void MainFrame::updateUI()
     Q_D(MainFrame);
     setCoverBackground(coverBackground());
     d->lyricWidget->updateUI();
+    d->titlebarwidget->show();
 }
 
 void MainFrame::setCoverBackground(QString coverBackground)
@@ -1073,6 +1093,12 @@ void MainFrame::onSelectImportFiles()
         MusicSettings::setOption("base.play.last_import_path",  fileDlg.directory().path());
         Q_EMIT importSelectFiles(fileDlg.selectedFiles());
     }
+}
+
+void MainFrame::slotTheme(int type)
+{
+    Q_D(MainFrame);
+    d->setTheme(type);
 }
 
 bool MainFrame::eventFilter(QObject *obj, QEvent *e)

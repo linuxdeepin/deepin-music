@@ -610,14 +610,6 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
             onMusicStop(playlist, next);
             Q_EMIT metaLibraryClean();
         }
-        PlaylistPtr albumPlaylist = d->playlistMgr->playlist(AlbumMusicListID);
-        PlaylistPtr artistPlaylist = d->playlistMgr->playlist(ArtistMusicListID);
-        if (albumPlaylist) {
-            albumPlaylist->metaListToPlayMusicTypePtrList(Playlist::SortByAblum, playlist->allmusic());
-        }
-        if (artistPlaylist) {
-            artistPlaylist->metaListToPlayMusicTypePtrList(Playlist::SortByArtist, playlist->allmusic());
-        }
 
         MediaDatabase::instance()->removeMediaMetaList(metalist);
         d->library->removeMediaMetaList(metalist);
@@ -634,14 +626,6 @@ void Presenter::onMusiclistRemove(PlaylistPtr playlist, const MetaPtrList metali
             qDebug() << "meta library clean";
             onMusicStop(playlist, next);
             Q_EMIT metaLibraryClean();
-        }
-        PlaylistPtr albumPlaylist = d->playlistMgr->playlist(AlbumMusicListID);
-        PlaylistPtr artistPlaylist = d->playlistMgr->playlist(ArtistMusicListID);
-        if (albumPlaylist) {
-            albumPlaylist->metaListToPlayMusicTypePtrList(Playlist::SortByAblum, curPlaylist->allmusic());
-        }
-        if (artistPlaylist) {
-            artistPlaylist->metaListToPlayMusicTypePtrList(Playlist::SortByArtist, curPlaylist->allmusic());
         }
 
         MediaDatabase::instance()->removeMediaMetaList(metalist);
@@ -681,14 +665,6 @@ void Presenter::onMusiclistDelete(PlaylistPtr playlist, const MetaPtrList metali
     }
 
     auto allMusicList = d->playlistMgr->playlist(AllMusicListID);
-    PlaylistPtr albumPlaylist = d->playlistMgr->playlist(AlbumMusicListID);
-    PlaylistPtr artistPlaylist = d->playlistMgr->playlist(ArtistMusicListID);
-    if (albumPlaylist) {
-        albumPlaylist->metaListToPlayMusicTypePtrList(Playlist::SortByAblum, allMusicList->allmusic());
-    }
-    if (artistPlaylist) {
-        artistPlaylist->metaListToPlayMusicTypePtrList(Playlist::SortByArtist, allMusicList->allmusic());
-    }
 
     if (allMusicList->isEmpty()) {
         qDebug() << "meta library clean";

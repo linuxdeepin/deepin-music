@@ -36,6 +36,7 @@
 
 #include "../core/music.h"
 #include "../core/playlist.h"
+#include "../core/musicsettings.h"
 #include "widget/playlistview.h"
 #include "widget/ddropdown.h"
 
@@ -148,11 +149,11 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
 
     setMode(DBlurEffectWidget::GaussianBlur);
     setBlurEnabled(true);
-    setBlendMode(DBlurEffectWidget::BehindWindowBlend);
+    setBlendMode(DBlurEffectWidget::InWindowBlend);
     QColor maskColor("#F7F7F7");
     maskColor.setAlphaF(0.6);
     setMaskColor(maskColor);
-    setMaskAlpha(255);
+    //setMaskAlpha(255);
 
     setObjectName("PlayListWidget");
     setAcceptDrops(true);
@@ -219,6 +220,8 @@ PlayListWidget::PlayListWidget(QWidget *parent) :
     layout->addWidget(d->emptyHits);
 
     d->initConntion();
+
+    slotTheme(MusicSettings::value("base.play.theme").toInt());
 }
 
 PlayListWidget::~PlayListWidget()
@@ -377,5 +380,20 @@ void PlayListWidget::onCustomContextMenuRequest(const QPoint &pos,
 {
     Q_D(PlayListWidget);
     d->playListView->showContextMenu(pos, selectedlist, favlist, newlists);
+}
+
+void PlayListWidget::slotTheme(int type)
+{
+    Q_D(PlayListWidget);
+    if (type == 1) {
+        QColor maskColor("#F7F7F7");
+        maskColor.setAlphaF(0.6);
+        setMaskColor(maskColor);
+    } else {
+        QColor maskColor("#252525");
+        maskColor.setAlphaF(0.6);
+        setMaskColor(maskColor);
+    }
+    d->playListView->setThemeType(type);
 }
 

@@ -21,30 +21,45 @@
 
 #pragma once
 
-#include <DListWidget>
+#include <DListView>
 
 #include "../../core/playlist.h"
 
 DWIDGET_USE_NAMESPACE
 
-class MusicListView : public DListWidget
+class MusicListView : public DListView
 {
     Q_OBJECT
 public:
     explicit MusicListView(QWidget *parent = Q_NULLPTR);
     ~MusicListView();
 
-    void updateScrollbar();
     void showContextMenu(const QPoint &pos);
+
+    void addMusicList(PlaylistPtr playlist, bool addFlag = false);
+
+    QStandardItem *item(int row, int column = 0) const;
+    void setCurrentItem ( QStandardItem *item );
+
+    PlaylistPtr playlistPtr(const QModelIndex &index);
+    PlaylistPtr playlistPtr(QStandardItem *item);
+
+    void setCurPlaylist(QStandardItem *item);
+
+    void closeAllPersistentEditor();
 
 signals:
     void playall(PlaylistPtr playlist);
     void customResort(const QStringList &uuids);
     void displayNameChanged();
     void pause(PlaylistPtr playlist, const MetaPtr meta);
+    void currentChanged(const QModelIndex &current, const QModelIndex &previous) Q_DECL_OVERRIDE;
 
 protected:
-    virtual void startDrag(Qt::DropActions supportedActions) Q_DECL_OVERRIDE;
+//    virtual void startDrag(Qt::DropActions supportedActions) Q_DECL_OVERRIDE;
     void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
-
+private:
+    QList<PlaylistPtr >  allPlaylists;
+    QStandardItemModel   *model           = nullptr;
+    DStyledItemDelegate  *delegate        = nullptr;
 };

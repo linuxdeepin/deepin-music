@@ -298,3 +298,21 @@ void MusicListDialog::showContextMenu(const QPoint &pos, PlaylistPtr selectedPla
     Q_D(MusicListDialog);
     d->musicListInfoView->showContextMenu(pos, selectedPlaylist, favPlaylist, newPlaylists);
 }
+
+void MusicListDialog::setThemeType(int type)
+{
+    Q_D(MusicListDialog);
+    if (type == 1) {
+        auto palette = this->palette();
+        QColor BackgroundColor("#F8F8F8");
+        palette.setColor(DPalette::Background, BackgroundColor);
+        setPalette(palette);
+    } else {
+        auto palette = this->palette();
+        QColor BackgroundColor("#252525");
+        palette.setColor(DPalette::Background, BackgroundColor);
+        setPalette(palette);
+    }
+    d->musicListInfoView->setThemeType(type);
+    d->infoDialog->setThemeType(type);
+}

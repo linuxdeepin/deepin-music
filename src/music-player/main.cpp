@@ -171,10 +171,11 @@ int main(int argc, char *argv[])
 
     // set theme
     qDebug() << "TRACE:" << "set theme";
-    MusicSettings::setOption("base.play.theme", "light");
-    auto theme = MusicSettings::value("base.play.theme").toString();
-
-    DGuiApplicationHelper::instance()->setPaletteType(getThemeTypeSetting());
+    bool isOk = false;
+    int theme = MusicSettings::value("base.play.theme").toInt(&isOk);
+    if (!isOk)
+        theme = 1;
+    DGuiApplicationHelper::instance()->setPaletteType((DGuiApplicationHelper::ColorType)theme);
 
     // DMainWindow must create on main function, so it can deconstruction before QApplication
     MainFrame mainframe;
@@ -209,8 +210,12 @@ int main(int argc, char *argv[])
     [] (DGuiApplicationHelper::ColorType type) {
         qDebug() << type;
         // 保存程序的主题设置  type : 0,系统主题， 1,浅色主题， 2,深色主题
-        saveThemeTypeSetting(type);
+        //saveThemeTypeSetting(type);
+        MusicSettings::setOption("base.play.theme", (int)type);
+        DGuiApplicationHelper::instance()->setPaletteType(type);
     });
 
+    QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::paletteTypeChanged,
+                     &mainframe, &MainFrame::slotTheme);
     return app.exec();
 }

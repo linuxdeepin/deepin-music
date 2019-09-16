@@ -22,12 +22,44 @@ SearchLyricsWidget::SearchLyricsWidget(QString path, QWidget *parent)
       m_path(path)
 {
     initUI();
+    initConnection();
 }
 
 void SearchLyricsWidget::setDefault(QString song, QString singer)
 {
     m_keyWord->lineEdit()->setText(song);
     m_singer->lineEdit()->setText(singer);
+}
+
+void SearchLyricsWidget::setThemeType(int type)
+{
+    if (type == 1) {
+        DPalette WidgetPl = palette();
+        WidgetPl.setColor(DPalette::Background, QColor("#FFFFFF"));
+        setPalette(WidgetPl);
+
+        DPalette pl = m_search->palette();
+        pl.setColor(DPalette::ButtonText, QColor("#414D68"));
+        pl.setColor(DPalette::Light, QColor("#E6E6E6"));
+        pl.setColor(DPalette::Dark, QColor("#E3E3E3"));
+        QColor sbcolor("#000000");
+        sbcolor.setAlphaF(0.08);
+        pl.setColor(DPalette::Shadow, sbcolor);
+        m_search->setPalette(pl);
+    } else {
+        DPalette WidgetPl = palette();
+        WidgetPl.setColor(DPalette::Background, QColor("#252525"));
+        setPalette(WidgetPl);
+
+        DPalette pl = m_search->palette();
+        pl.setColor(DPalette::ButtonText, QColor("#C0C6D4"));
+        pl.setColor(DPalette::Light, QColor("#454545"));
+        pl.setColor(DPalette::Dark, QColor("#454545"));
+        QColor sbcolor("#000000");
+        sbcolor.setAlphaF(0.08);
+        pl.setColor(DPalette::Shadow, sbcolor);
+        m_search->setPalette(pl);
+    }
 }
 
 void SearchLyricsWidget::initUI()
@@ -95,13 +127,20 @@ void SearchLyricsWidget::initUI()
     });
 }
 
+void SearchLyricsWidget::initConnection()
+{
+    connect(m_keyWord, &DLineEdit::textChanged, this, &SearchLyricsWidget::slottextChanged);
+    connect(m_singer, &DLineEdit::textChanged, this, &SearchLyricsWidget::slottextChanged);
+    slottextChanged("");
+}
+
 void SearchLyricsWidget::createList()
 {
     for (int i = 0; i < m_lyricList.size(); ++i) {
         QListWidgetItem *listItem = new QListWidgetItem;
         listItem->setSizeHint(QSize(330, 64));
         m_listWidget->addItem(listItem);
-        DFrame *frame = new DFrame;
+        DWidget *frame = new DWidget;
         frame->setFixedSize(330, 64);
 
         // DPalette framepl = frame->palette();
@@ -271,4 +310,14 @@ void SearchLyricsWidget::mySelectionIndex(int index)
 {
     QString path = m_lyricList[index].path;
     emit lyricPath(path);
+}
+
+void SearchLyricsWidget::slottextChanged(const QString &str)
+{
+    if (m_keyWord->lineEdit()->text().isEmpty() && m_singer->lineEdit()->text().isEmpty()) {
+        m_search->setEnabled(false);
+    } else {
+        m_search->setEnabled(true);
+    }
+
 }

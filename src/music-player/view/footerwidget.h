@@ -88,6 +88,7 @@ public slots:
     void onUpdateMetaCodec(const MetaPtr meta);
     void setDefaultCover(QString defaultCover);
     void onMediaLibraryClean();
+    void slotTheme(int type);
 
 protected:
     virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;

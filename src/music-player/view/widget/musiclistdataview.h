@@ -46,6 +46,9 @@ public:
 
     PlayMusicTypePtrList playMusicTypePtrList() const;
 
+    void setThemeType(int type);
+    int getThemeType() const;
+
 signals:
     void requestCustomContextMenu(const QPoint &pos);
     void playMedia(const MetaPtr meta);

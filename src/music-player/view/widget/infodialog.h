@@ -36,6 +36,8 @@ public:
     void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
     void updateInfo(const MetaPtr meta);
 
+    void setThemeType(int type);
+
 private:
     QScopedPointer<InfoDialogPrivate> d_ptr;
     Q_DECLARE_PRIVATE_D(qGetPtrHelper(d_ptr), InfoDialog)

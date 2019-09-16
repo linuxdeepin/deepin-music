@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include <DFrame>
+#include <DWidget>
 
 #include "../core/playlist.h"
 
@@ -34,7 +34,7 @@ class MusicListWidget : public DWidget
     Q_OBJECT
 public:
     explicit MusicListWidget(QWidget *parent = Q_NULLPTR);
-    void initData(QList<PlaylistPtr > playlists, PlaylistPtr last);
+    //void initData(QList<PlaylistPtr > playlists, PlaylistPtr last);
 
 signals:
     void addPlaylist(bool editmode);
@@ -63,6 +63,7 @@ public slots:
     void onMusicListAdded(PlaylistPtr playlist, const MetaPtrList metalist);
     void onMusicListRemoved(PlaylistPtr playlist, const MetaPtrList metalist);
     void onMusiclistUpdate();
+    void slotTheme(int type);
 
     void onCustomContextMenuRequest(const QPoint &pos,
                                     PlaylistPtr selectedlist,
@@ -78,6 +79,9 @@ private:
     MusicListView         *m_dataBaseListview;
     MusicListView         *m_customizeListview;
     MusicListDataWidget   *m_dataListView;
+    DWidget               *leftFrame;
+    DLabel                *dataBaseLabel;
+    DLabel                *customizeLabel;
     bool                   addFlag = false;
 };
 

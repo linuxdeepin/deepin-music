@@ -51,7 +51,7 @@ public slots:
     void setCoverBackground(QString coverBackground);
     void onSelectImportDirectory();
     void onSelectImportFiles();
-
+    void slotTheme(int type);
 protected:
     virtual void enterEvent(QEvent *event) Q_DECL_OVERRIDE;
     virtual bool eventFilter(QObject *obj, QEvent *e) Q_DECL_OVERRIDE;

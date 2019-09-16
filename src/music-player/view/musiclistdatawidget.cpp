@@ -34,6 +34,8 @@
 #include <DComboBox>
 #include <DLabel>
 
+#include "util/pinyinsearch.h"
+
 #include "widget/playlistview.h"
 #include "widget/musiclistdataview.h"
 #include "widget/ddropdown.h"
@@ -70,6 +72,10 @@ public:
     Q_DECLARE_PUBLIC(MusicListDataWidget)
 };
 
+inline bool isChinese(const QChar &c)
+{
+    return c.unicode() < 0x9FBF && c.unicode() > 0x4E00;
+}
 
 void MusicListDataWidgetPrivate::initData(PlaylistPtr playlist)
 {
@@ -77,6 +83,14 @@ void MusicListDataWidgetPrivate::initData(PlaylistPtr playlist)
 
     curPlaylist = playlist;
     QString searchStr = playlist->searchStr();
+    if (searchStr.size() == 1) {
+        if (isChinese(searchStr[0])) {
+            auto searchtextList = DMusic::PinyinSearch::simpleChineseSplit(searchStr);
+            if (searchtextList.size() == 1) {
+                searchStr = searchtextList.first();
+            }
+        }
+    }
 
     QFontMetrics titleFm(titleLabel->font());
     auto text = titleFm.elidedText(playlist->displayName(), Qt::ElideRight, 300);
@@ -88,9 +102,22 @@ void MusicListDataWidgetPrivate::initData(PlaylistPtr playlist)
         int musicCount = 0;
         int musicListCount = 0;
         for (auto action : playMusicTypePtrList) {
-            if (searchStr.isEmpty() || action->name.contains(searchStr, Qt::CaseInsensitive)) {
+            if (searchStr.isEmpty()) {
                 musicCount += action->playlistMeta.sortMetas.size();
                 musicListCount++;
+            } else {
+                if (searchStr.size() == 1) {
+                    auto curTextList = DMusic::PinyinSearch::simpleChineseSplit(action->name);
+                    if (!curTextList.isEmpty() && curTextList.first().contains(searchStr, Qt::CaseInsensitive)) {
+                        musicCount += action->playlistMeta.sortMetas.size();
+                        musicListCount++;
+                    }
+                } else {
+                    if (action->name.contains(searchStr, Qt::CaseInsensitive)) {
+                        musicCount += action->playlistMeta.sortMetas.size();
+                        musicListCount++;
+                    }
+                }
             }
         }
         QString infoStr;
@@ -133,9 +160,22 @@ void MusicListDataWidgetPrivate::initData(PlaylistPtr playlist)
         int musicCount = 0;
         int musicListCount = 0;
         for (auto action : playMusicTypePtrList) {
-            if (searchStr.isEmpty() || action->name.contains(searchStr, Qt::CaseInsensitive)) {
+            if (searchStr.isEmpty()) {
                 musicCount += action->playlistMeta.sortMetas.size();
                 musicListCount++;
+            } else {
+                if (searchStr.size() == 1) {
+                    auto curTextList = DMusic::PinyinSearch::simpleChineseSplit(action->name);
+                    if (!curTextList.isEmpty() && curTextList.first().contains(searchStr, Qt::CaseInsensitive)) {
+                        musicCount += action->playlistMeta.sortMetas.size();
+                        musicListCount++;
+                    }
+                } else {
+                    if (action->name.contains(searchStr, Qt::CaseInsensitive)) {
+                        musicCount += action->playlistMeta.sortMetas.size();
+                        musicListCount++;
+                    }
+                }
             }
         }
         QString infoStr;
@@ -175,8 +215,19 @@ void MusicListDataWidgetPrivate::initData(PlaylistPtr playlist)
         QString infoStr;
         int musicCount = 0;
         for (auto action : playlist->allmusic()) {
-            if (searchStr.isEmpty() || action->title.contains(searchStr, Qt::CaseInsensitive)) {
+            if (searchStr.isEmpty()) {
                 musicCount ++;
+            } else {
+                if (searchStr.size() == 1) {
+                    auto curTextList = DMusic::PinyinSearch::simpleChineseSplit(action->title);
+                    if (!curTextList.isEmpty() && curTextList.first().contains(searchStr, Qt::CaseInsensitive)) {
+                        musicCount ++;
+                    }
+                } else {
+                    if (action->title.contains(searchStr, Qt::CaseInsensitive)) {
+                        musicCount ++;
+                    }
+                }
             }
         }
         if (playlist->allmusic().size() == 0) {
@@ -349,12 +400,12 @@ void MusicListDataWidgetPrivate::initConntion()
 
     q->connect(artistListView, &MusicListDataView::musiclistRemove,
     q, [ = ](const MetaPtrList  & metalist) {
-        Q_EMIT q->musiclistRemove(albumListView->playlist(), metalist);
+        Q_EMIT q->musiclistRemove(artistListView->playlist(), metalist);
     });
 
     q->connect(artistListView, &MusicListDataView::musiclistDelete,
     q, [ = ](const MetaPtrList  & metalist) {
-        Q_EMIT q->musiclistDelete(albumListView->playlist(), metalist);
+        Q_EMIT q->musiclistDelete(artistListView->playlist(), metalist);
     });
 
     q->connect(artistListView, &MusicListDataView::modeChanged,
@@ -691,6 +742,27 @@ void MusicListDataWidget::onMusicPlayed(PlaylistPtr playlist, const MetaPtr Meta
     d->artistListView->setPlaying(Meta);
     d->albumListView->update();
     d->artistListView->update();
+}
+
+void MusicListDataWidget::slotTheme(int type)
+{
+    Q_D(MusicListDataWidget);
+    if (type == 1) {
+        auto palette = this->palette();
+        QColor background("#FFFFFF");
+        background.setAlphaF(0.1);
+        palette.setColor(DPalette::Background, background);
+        setPalette(palette);
+    } else {
+        auto palette = this->palette();
+        QColor background("#252525");
+        palette.setColor(DPalette::Background, background);
+        setPalette(palette);
+    }
+
+    d->albumListView->setThemeType(type);
+    d->artistListView->setThemeType(type);
+    d->musicListView->setThemeType(type);
 }
 
 void MusicListDataWidget::onCustomContextMenuRequest(const QPoint &pos, PlaylistPtr selectedlist, PlaylistPtr favlist, QList<PlaylistPtr> newlists, char type)

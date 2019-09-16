@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include <DFrame>
+#include <DWidget>
 
 #include "../core/playlist.h"
 
@@ -42,6 +42,7 @@ public slots:
     void onMusicListAdded(PlaylistPtr playlist, const MetaPtrList metalist);
     void onMusiclistUpdate();
     void onMusicPlayed(PlaylistPtr playlist, const MetaPtr);
+    void slotTheme(int type);
 
     void onCustomContextMenuRequest(const QPoint &pos,
                                     PlaylistPtr selectedlist,

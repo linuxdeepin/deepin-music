@@ -41,12 +41,16 @@ public:
         m_path = dir;
     }
     void setDefault(QString song, QString singer);
+
+    void setThemeType(int type);
+
 public slots:
     void searchLyrics();
 
 private slots:
     void mySelection(QModelIndex index);
     void mySelectionIndex(int index);
+    void slottextChanged(const QString &str);
 signals:
     //点击歌词列表item传出歌词路径
     void lyricPath(QString path);
@@ -54,6 +58,7 @@ signals:
 private:
     //第一个linedit歌曲名，第二个歌手名
     void initUI();
+    void initConnection();
     void createList();
 
     DPushButton             *m_search;

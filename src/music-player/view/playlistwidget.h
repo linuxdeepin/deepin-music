@@ -50,6 +50,8 @@ public slots:
                                     PlaylistPtr favlist,
                                     QList<PlaylistPtr >newlists);
 
+    void slotTheme(int type);
+
 signals:
     void playall(PlaylistPtr playlist);
     void resort(PlaylistPtr playlist, int sortType);

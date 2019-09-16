@@ -45,6 +45,8 @@ public:
                          PlaylistPtr favPlaylist,
                          QList<PlaylistPtr > newPlaylists);
 
+    void setThemeType(int type);
+
 signals:
     void requestCustomContextMenu(const QPoint &pos);
     void playMedia(const MetaPtr meta);

@@ -447,6 +447,25 @@ MetaPtr Playlist::removeOneMusic(const MetaPtr meta)
         qCritical() << "Cannot remove empty id" << meta->hash << meta->title;
         return MetaPtr();
     }
+    if (id() == AlbumMusicListID ) {
+        if (playMusicTypePtrListData.metas.contains(meta->album)) {
+            playMusicTypePtrListData.metas[meta->album]->playlistMeta.sortMetas.removeOne(meta->hash);
+            playMusicTypePtrListData.metas[meta->album]->playlistMeta.metas.remove(meta->hash);
+            if (playMusicTypePtrListData.metas[meta->album]->playlistMeta.metas.isEmpty()) {
+                playMusicTypePtrListData.sortMetas.removeOne(meta->album);
+                playMusicTypePtrListData.metas.remove(meta->album);
+            }
+        }
+    } else if (id() == ArtistMusicListID) {
+        if (playMusicTypePtrListData.metas.contains(meta->artist)) {
+            playMusicTypePtrListData.metas[meta->artist]->playlistMeta.sortMetas.removeOne(meta->hash);
+            playMusicTypePtrListData.metas[meta->artist]->playlistMeta.metas.remove(meta->hash);
+            if (playMusicTypePtrListData.metas[meta->artist]->playlistMeta.metas.isEmpty()) {
+                playMusicTypePtrListData.sortMetas.removeOne(meta->artist);
+                playMusicTypePtrListData.metas.remove(meta->artist);
+            }
+        }
+    }
     if (!playlistMeta.metas.contains(meta->hash)) {
 //        qWarning() << "no such id in playlist" << meta->hash << meta->localPath << listmeta->displayName;
         return MetaPtr();
